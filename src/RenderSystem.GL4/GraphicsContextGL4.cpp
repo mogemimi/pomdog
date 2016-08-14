@@ -307,6 +307,21 @@ void SetRenderTargets(
     POMDOG_CHECK_ERROR_GL4("glDrawBuffers");
 }
 
+#if defined(DEBUG) && !defined(NDEBUG)
+void CheckUnbindingRenderTargetsError(
+    const std::vector<std::weak_ptr<RenderTarget2D>>& renderTargets,
+    const std::vector<std::weak_ptr<Texture>>& textures)
+{
+    for (auto & renderTarget: renderTargets) {
+        for (auto & texture: textures) {
+            if (!renderTarget.expired() && !texture.expired()) {
+                POMDOG_ASSERT(renderTarget.lock() != texture.lock());
+            }
+        }
+    }
+}
+#endif
+
 } // unnamed namespace
 
 template<> struct TypesafeHelperGL4::Traits<FrameBufferGL4> {
@@ -339,6 +354,13 @@ GraphicsContextGL4::GraphicsContextGL4(
 
     // NOTE: Set default values for graphics context
     this->SetBlendFactor(Color::White);
+
+#if defined(DEBUG) && !defined(NDEBUG)
+    auto graphicsCapbilities = this->GetCapabilities();
+
+    POMDOG_ASSERT(graphicsCapbilities.SamplerSlotCount > 0);
+    weakTextures.resize(graphicsCapbilities.SamplerSlotCount);
+#endif
 }
 
 GraphicsContextGL4::~GraphicsContextGL4()
@@ -391,6 +413,10 @@ void GraphicsContextGL4::ApplyPipelineState()
 
 void GraphicsContextGL4::Draw(std::size_t vertexCount)
 {
+#if defined(DEBUG) && !defined(NDEBUG)
+    CheckUnbindingRenderTargetsError(weakRenderTargets, weakTextures);
+#endif
+
     ApplyPipelineState();
 
     // Draw
@@ -408,6 +434,10 @@ void GraphicsContextGL4::Draw(std::size_t vertexCount)
 
 void GraphicsContextGL4::DrawIndexed(std::size_t indexCount)
 {
+#if defined(DEBUG) && !defined(NDEBUG)
+    CheckUnbindingRenderTargetsError(weakRenderTargets, weakTextures);
+#endif
+
     ApplyPipelineState();
 
     // Bind index buffer
@@ -432,6 +462,10 @@ void GraphicsContextGL4::DrawIndexed(std::size_t indexCount)
 void GraphicsContextGL4::DrawInstanced(
     std::size_t vertexCount, std::size_t instanceCount)
 {
+#if defined(DEBUG) && !defined(NDEBUG)
+    CheckUnbindingRenderTargetsError(weakRenderTargets, weakTextures);
+#endif
+
     ApplyPipelineState();
 
     // Draw
@@ -454,6 +488,10 @@ void GraphicsContextGL4::DrawIndexedInstanced(
     std::size_t indexCount,
     std::size_t instanceCount)
 {
+#if defined(DEBUG) && !defined(NDEBUG)
+    CheckUnbindingRenderTargetsError(weakRenderTargets, weakTextures);
+#endif
+
     ApplyPipelineState();
 
     // Bind index buffer
@@ -575,6 +613,12 @@ void GraphicsContextGL4::SetTexture(int index)
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(index < static_cast<int>(textures.size()));
 
+#if defined(DEBUG) && !defined(NDEBUG)
+    POMDOG_ASSERT(!weakTextures.empty());
+    POMDOG_ASSERT(index < static_cast<int>(weakTextures.size()));
+    weakTextures[index].reset();
+#endif
+
     if (textures[index])
     {
         glActiveTexture(ToTextureUnitIndexGL4(index));
@@ -592,6 +636,12 @@ void GraphicsContextGL4::SetTexture(int index, const std::shared_ptr<Texture2D>&
     POMDOG_ASSERT(!textures.empty());
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(index < static_cast<int>(textures.size()));
+
+#if defined(DEBUG) && !defined(NDEBUG)
+    POMDOG_ASSERT(!weakTextures.empty());
+    POMDOG_ASSERT(index < static_cast<int>(weakTextures.size()));
+    weakTextures[index] = textureIn;
+#endif
 
     constexpr GLenum textureType = GL_TEXTURE_2D;
 
@@ -615,6 +665,12 @@ void GraphicsContextGL4::SetTexture(int index, const std::shared_ptr<RenderTarge
     POMDOG_ASSERT(!textures.empty());
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(index < static_cast<int>(textures.size()));
+
+#if defined(DEBUG) && !defined(NDEBUG)
+    POMDOG_ASSERT(!weakTextures.empty());
+    POMDOG_ASSERT(index < static_cast<int>(weakTextures.size()));
+    weakTextures[index] = textureIn;
+#endif
 
     constexpr GLenum textureType = GL_TEXTURE_2D;
 

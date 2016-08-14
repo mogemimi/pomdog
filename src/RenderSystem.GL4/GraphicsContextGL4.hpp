@@ -83,6 +83,10 @@ private:
 
 private:
     std::vector<VertexBufferBinding> vertexBuffers;
+#if defined(DEBUG) && !defined(NDEBUG)
+    std::vector<std::weak_ptr<Texture>> weakTextures;
+    std::vector<std::weak_ptr<RenderTarget2D>> weakRenderTargets;
+#endif
     std::shared_ptr<OpenGLContext> nativeContext;
     std::shared_ptr<PipelineStateGL4> pipelineState;
     std::shared_ptr<IndexBuffer> indexBuffer;

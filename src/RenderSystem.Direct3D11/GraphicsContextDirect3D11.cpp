@@ -94,6 +94,21 @@ void UseBackBufferAsRenderTarget(
         renderTargets.front()->GetDepthStencilView());
 }
 
+#if defined(DEBUG) && !defined(NDEBUG)
+void CheckUnbindingRenderTargetsError(
+    const std::vector<std::weak_ptr<RenderTarget2D>>& renderTargets,
+    const std::vector<std::weak_ptr<Texture>>& textures)
+{
+    for (auto & renderTarget: renderTargets) {
+        for (auto & texture: textures) {
+            if (!renderTarget.expired() && !texture.expired()) {
+                POMDOG_ASSERT(renderTarget.lock() != texture.lock());
+            }
+        }
+    }
+}
+#endif
+
 } // unnamed namespace
 
 GraphicsContextDirect3D11::GraphicsContextDirect3D11(
@@ -190,6 +205,13 @@ GraphicsContextDirect3D11::GraphicsContextDirect3D11(
 
     // NOTE: Set default values for graphics context
     this->SetBlendFactor(Color::White);
+
+#if defined(DEBUG) && !defined(NDEBUG)
+    auto graphicsCapbilities = this->GetCapabilities();
+
+    POMDOG_ASSERT(graphicsCapbilities.SamplerSlotCount > 0);
+    weakTextures.resize(graphicsCapbilities.SamplerSlotCount);
+#endif
 }
 
 GraphicsContextDirect3D11::~GraphicsContextDirect3D11()
@@ -220,6 +242,9 @@ void GraphicsContextDirect3D11::ApplyPipelineState()
 void GraphicsContextDirect3D11::Draw(std::size_t vertexCount)
 {
     POMDOG_ASSERT(deviceContext);
+#if defined(DEBUG) && !defined(NDEBUG)
+    CheckUnbindingRenderTargetsError(weakRenderTargets, weakTextures);
+#endif
 
     ApplyPipelineState();
 
@@ -229,6 +254,9 @@ void GraphicsContextDirect3D11::Draw(std::size_t vertexCount)
 void GraphicsContextDirect3D11::DrawIndexed(std::size_t indexCount)
 {
     POMDOG_ASSERT(deviceContext);
+#if defined(DEBUG) && !defined(NDEBUG)
+    CheckUnbindingRenderTargetsError(weakRenderTargets, weakTextures);
+#endif
 
     ApplyPipelineState();
 
@@ -239,6 +267,9 @@ void GraphicsContextDirect3D11::DrawInstanced(
     std::size_t vertexCount, std::size_t instanceCount)
 {
     POMDOG_ASSERT(deviceContext);
+#if defined(DEBUG) && !defined(NDEBUG)
+    CheckUnbindingRenderTargetsError(weakRenderTargets, weakTextures);
+#endif
 
     ApplyPipelineState();
 
@@ -249,6 +280,9 @@ void GraphicsContextDirect3D11::DrawIndexedInstanced(
     std::size_t indexCount, std::size_t instanceCount)
 {
     POMDOG_ASSERT(deviceContext);
+#if defined(DEBUG) && !defined(NDEBUG)
+    CheckUnbindingRenderTargetsError(weakRenderTargets, weakTextures);
+#endif
 
     ApplyPipelineState();
 
@@ -386,6 +420,12 @@ void GraphicsContextDirect3D11::SetTexture(int index)
     POMDOG_ASSERT(index < D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT);
     POMDOG_ASSERT(index < static_cast<int>(textureResourceViews.size()));
 
+#if defined(DEBUG) && !defined(NDEBUG)
+    POMDOG_ASSERT(!weakTextures.empty());
+    POMDOG_ASSERT(index < static_cast<int>(weakTextures.size()));
+    weakTextures[index].reset();
+#endif
+
     textureResourceViews[index] = nullptr;
 
     POMDOG_ASSERT(deviceContext);
@@ -399,6 +439,12 @@ void GraphicsContextDirect3D11::SetTexture(int index, const std::shared_ptr<Text
     POMDOG_ASSERT(index < static_cast<int>(textureResourceViews.size()));
     POMDOG_ASSERT(textureIn);
     POMDOG_ASSERT(textureIn->GetNativeTexture2D() != nullptr);
+
+#if defined(DEBUG) && !defined(NDEBUG)
+    POMDOG_ASSERT(!weakTextures.empty());
+    POMDOG_ASSERT(index < static_cast<int>(weakTextures.size()));
+    weakTextures[index] = textureIn;
+#endif
 
     auto texture = static_cast<Texture2DDirect3D11*>(textureIn->GetNativeTexture2D());
 
@@ -418,6 +464,12 @@ void GraphicsContextDirect3D11::SetTexture(int index, const std::shared_ptr<Rend
     POMDOG_ASSERT(index < static_cast<int>(textureResourceViews.size()));
     POMDOG_ASSERT(textureIn);
     POMDOG_ASSERT(textureIn->GetNativeRenderTarget2D() != nullptr);
+
+#if defined(DEBUG) && !defined(NDEBUG)
+    POMDOG_ASSERT(!weakTextures.empty());
+    POMDOG_ASSERT(index < static_cast<int>(weakTextures.size()));
+    weakTextures[index] = textureIn;
+#endif
 
     auto texture = static_cast<RenderTarget2DDirect3D11*>(textureIn->GetNativeRenderTarget2D());
 

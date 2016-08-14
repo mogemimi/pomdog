@@ -78,6 +78,10 @@ private:
     Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext;
     Microsoft::WRL::ComPtr<IDXGISwapChain> swapChain;
     std::vector<std::shared_ptr<RenderTarget2DDirect3D11>> renderTargets;
+#if defined(DEBUG) && !defined(NDEBUG)
+    std::vector<std::weak_ptr<Texture>> weakTextures;
+    std::vector<std::weak_ptr<RenderTarget2D>> weakRenderTargets;
+#endif
     static constexpr std::size_t MaxTextureCount = 8;
     std::array<ID3D11ShaderResourceView*, MaxTextureCount> textureResourceViews;
     std::shared_ptr<RenderTarget2DDirect3D11> backBuffer;

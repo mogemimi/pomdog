@@ -84,6 +84,21 @@ void SetScissorRectangle(
     [commandEncoder setScissorRect:rect];
 }
 
+#if defined(DEBUG) && !defined(NDEBUG)
+void CheckUnbindingRenderTargetsError(
+    const std::vector<std::weak_ptr<RenderTarget2D>>& renderTargets,
+    const std::vector<std::weak_ptr<Texture>>& textures)
+{
+    for (auto & renderTarget: renderTargets) {
+        for (auto & texture: textures) {
+            if (!renderTarget.expired() && !texture.expired()) {
+                POMDOG_ASSERT(renderTarget.lock() != texture.lock());
+            }
+        }
+    }
+}
+#endif
+
 } // unnamed namespace
 
 GraphicsContextMetal::GraphicsContextMetal(
@@ -100,6 +115,13 @@ GraphicsContextMetal::GraphicsContextMetal(
 
     // NOTE: Set default values for graphics context
     this->SetBlendFactor(Color::White);
+
+#if defined(DEBUG) && !defined(NDEBUG)
+    auto graphicsCapbilities = this->GetCapabilities();
+
+    POMDOG_ASSERT(graphicsCapbilities.SamplerSlotCount > 0);
+    weakTextures.resize(graphicsCapbilities.SamplerSlotCount);
+#endif
 }
 
 GraphicsContextMetal::~GraphicsContextMetal() = default;
@@ -124,6 +146,10 @@ void GraphicsContextMetal::Draw(std::size_t vertexCount)
     POMDOG_ASSERT(commandEncoder != nil);
     POMDOG_ASSERT(vertexCount > 0);
 
+#if defined(DEBUG) && !defined(NDEBUG)
+    CheckUnbindingRenderTargetsError(weakRenderTargets, weakTextures);
+#endif
+
     [commandEncoder drawPrimitives:primitiveType
         vertexStart:0
         vertexCount:vertexCount];
@@ -133,6 +159,10 @@ void GraphicsContextMetal::DrawIndexed(std::size_t indexCount)
 {
     POMDOG_ASSERT(commandEncoder != nil);
     POMDOG_ASSERT(indexCount > 0);
+
+#if defined(DEBUG) && !defined(NDEBUG)
+    CheckUnbindingRenderTargetsError(weakRenderTargets, weakTextures);
+#endif
 
     [commandEncoder drawIndexedPrimitives:primitiveType
         indexCount:indexCount
@@ -149,6 +179,10 @@ void GraphicsContextMetal::DrawInstanced(
     POMDOG_ASSERT(vertexCount > 0);
     POMDOG_ASSERT(instanceCount > 0);
 
+#if defined(DEBUG) && !defined(NDEBUG)
+    CheckUnbindingRenderTargetsError(weakRenderTargets, weakTextures);
+#endif
+
     [commandEncoder drawPrimitives:primitiveType
         vertexStart:0
         vertexCount:vertexCount
@@ -162,6 +196,10 @@ void GraphicsContextMetal::DrawIndexedInstanced(
     POMDOG_ASSERT(commandEncoder != nil);
     POMDOG_ASSERT(indexCount > 0);
     POMDOG_ASSERT(instanceCount > 0);
+
+#if defined(DEBUG) && !defined(NDEBUG)
+    CheckUnbindingRenderTargetsError(weakRenderTargets, weakTextures);
+#endif
 
     [commandEncoder drawIndexedPrimitives:primitiveType
         indexCount:indexCount
@@ -264,6 +302,13 @@ void GraphicsContextMetal::SetTexture(int index)
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(commandEncoder != nil);
+
+#if defined(DEBUG) && !defined(NDEBUG)
+    POMDOG_ASSERT(!weakTextures.empty());
+    POMDOG_ASSERT(index < static_cast<int>(weakTextures.size()));
+    weakTextures[index].reset();
+#endif
+
     [commandEncoder setVertexTexture:nil atIndex:index];
     [commandEncoder setFragmentTexture:nil atIndex:index];
 }
@@ -272,6 +317,12 @@ void GraphicsContextMetal::SetTexture(int index, const std::shared_ptr<Texture2D
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(textureIn);
+
+#if defined(DEBUG) && !defined(NDEBUG)
+    POMDOG_ASSERT(!weakTextures.empty());
+    POMDOG_ASSERT(index < static_cast<int>(weakTextures.size()));
+    weakTextures[index] = textureIn;
+#endif
 
     auto textureMetal = static_cast<Texture2DMetal*>(textureIn->GetNativeTexture2D());
 
@@ -289,6 +340,12 @@ void GraphicsContextMetal::SetTexture(int index, const std::shared_ptr<RenderTar
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(textureIn);
 
+#if defined(DEBUG) && !defined(NDEBUG)
+    POMDOG_ASSERT(!weakTextures.empty());
+    POMDOG_ASSERT(index < static_cast<int>(weakTextures.size()));
+    weakTextures[index] = textureIn;
+#endif
+
     auto renderTargetMetal = static_cast<RenderTarget2DMetal*>(textureIn->GetNativeRenderTarget2D());
 
     POMDOG_ASSERT(renderTargetMetal != nullptr);
@@ -304,6 +361,13 @@ void GraphicsContextMetal::SetRenderPass(const RenderPass& renderPass)
 {
     POMDOG_ASSERT(!renderPass.RenderTargets.empty());
     POMDOG_ASSERT(renderPass.RenderTargets.size() <= 8);
+
+#if defined(DEBUG) && !defined(NDEBUG)
+    weakRenderTargets.clear();
+    for (auto& renderTarget : renderPass.RenderTargets) {
+        weakRenderTargets.push_back(std::get<0>(renderTarget));
+    }
+#endif
 
     MTLRenderPassDescriptor* renderPassDescriptor = [[MTLRenderPassDescriptor alloc] init];
     POMDOG_ASSERT(renderPassDescriptor != nil);

@@ -7,6 +7,7 @@
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Utility/Optional.hpp"
 #include <memory>
+#include <vector>
 #import <Metal/Metal.h>
 
 namespace Pomdog {
@@ -60,6 +61,10 @@ public:
     void SetTexture(int index, const std::shared_ptr<RenderTarget2D>& texture) override;
 
 private:
+#if defined(DEBUG) && !defined(NDEBUG)
+    std::vector<std::weak_ptr<Texture>> weakTextures;
+    std::vector<std::weak_ptr<RenderTarget2D>> weakRenderTargets;
+#endif
     id<MTLCommandQueue> commandQueue;
     id<MTLCommandBuffer> commandBuffer;
     id<MTLRenderCommandEncoder> commandEncoder;
