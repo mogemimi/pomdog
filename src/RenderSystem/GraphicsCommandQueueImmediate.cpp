@@ -2,7 +2,7 @@
 
 #include "GraphicsCommandQueueImmediate.hpp"
 #include "GraphicsCommandListImmediate.hpp"
-#include "GraphicsContext.hpp"
+#include "NativeGraphicsContext.hpp"
 #include "Pomdog/Graphics/GraphicsCommandList.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
@@ -10,7 +10,7 @@ namespace Pomdog {
 namespace Detail {
 
 GraphicsCommandQueueImmediate::GraphicsCommandQueueImmediate(
-    const std::shared_ptr<Detail::GraphicsContext>& graphicsContextIn)
+    const std::shared_ptr<NativeGraphicsContext>& graphicsContextIn)
     : graphicsContext(graphicsContextIn)
 {
 }

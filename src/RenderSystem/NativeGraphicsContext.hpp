@@ -49,13 +49,13 @@ public:
 
     virtual void SetConstantBuffer(int index, const std::shared_ptr<NativeBuffer>& constantBuffer) = 0;
 
-    virtual void SetSampler(int index, NativeSamplerState* sampler) = 0;
+    virtual void SetSampler(int index, const std::shared_ptr<NativeSamplerState>& sampler) = 0;
 
     virtual void SetTexture(int index) = 0;
 
-    virtual void SetTexture(int index, Texture2D & texture) = 0;
+    virtual void SetTexture(int index, const std::shared_ptr<Texture2D>& texture) = 0;
 
-    virtual void SetTexture(int index, RenderTarget2D & texture) = 0;
+    virtual void SetTexture(int index, const std::shared_ptr<RenderTarget2D>& texture) = 0;
 };
 
 } // namespace Detail

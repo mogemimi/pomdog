@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
 
 #include "GraphicsCommandListImmediate.hpp"
-#include "GraphicsContext.hpp"
+#include "NativeGraphicsContext.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
@@ -19,7 +19,7 @@ using Detail::GraphicsCommand;
 struct DrawCommand final: public GraphicsCommand {
     std::size_t vertexCount;
 
-    void Execute(GraphicsContext & graphicsContext) override
+    void Execute(NativeGraphicsContext & graphicsContext) override
     {
         graphicsContext.Draw(vertexCount);
     }
@@ -28,7 +28,7 @@ struct DrawCommand final: public GraphicsCommand {
 struct DrawIndexedCommand final: public GraphicsCommand {
     std::size_t indexCount;
 
-    void Execute(GraphicsContext & graphicsContext) override
+    void Execute(NativeGraphicsContext & graphicsContext) override
     {
         graphicsContext.DrawIndexed(indexCount);
     }
@@ -38,7 +38,7 @@ struct DrawInstancedCommand final: public GraphicsCommand {
     std::size_t vertexCount;
     std::size_t instanceCount;
 
-    void Execute(GraphicsContext & graphicsContext) override
+    void Execute(NativeGraphicsContext & graphicsContext) override
     {
         graphicsContext.DrawInstanced(vertexCount, instanceCount);
     }
@@ -48,7 +48,7 @@ struct DrawIndexedInstancedCommand final: public GraphicsCommand {
     std::size_t indexCount;
     std::size_t instanceCount;
 
-    void Execute(GraphicsContext & graphicsContext) override
+    void Execute(NativeGraphicsContext & graphicsContext) override
     {
         graphicsContext.DrawIndexedInstanced(indexCount, instanceCount);
     }
@@ -57,7 +57,7 @@ struct DrawIndexedInstancedCommand final: public GraphicsCommand {
 struct SetPrimitiveTopologyCommand final: public GraphicsCommand {
     PrimitiveTopology primitiveTopology;
 
-    void Execute(GraphicsContext & graphicsContext) override
+    void Execute(NativeGraphicsContext & graphicsContext) override
     {
         graphicsContext.SetPrimitiveTopology(primitiveTopology);
     }
@@ -66,7 +66,7 @@ struct SetPrimitiveTopologyCommand final: public GraphicsCommand {
 struct SetBlendFactorCommand final: public GraphicsCommand {
     Color blendFactor;
 
-    void Execute(GraphicsContext & graphicsContext) override
+    void Execute(NativeGraphicsContext & graphicsContext) override
     {
         graphicsContext.SetBlendFactor(blendFactor);
     }
@@ -75,7 +75,7 @@ struct SetBlendFactorCommand final: public GraphicsCommand {
 struct SetVertexBuffersCommand final: public GraphicsCommand {
     std::vector<VertexBufferBinding> vertexBuffers;
 
-    void Execute(GraphicsContext & graphicsContext) override
+    void Execute(NativeGraphicsContext & graphicsContext) override
     {
         graphicsContext.SetVertexBuffers(vertexBuffers);
     }
@@ -84,7 +84,7 @@ struct SetVertexBuffersCommand final: public GraphicsCommand {
 struct SetIndexBufferCommand final: public GraphicsCommand {
     std::shared_ptr<IndexBuffer> indexBuffer;
 
-    void Execute(GraphicsContext & graphicsContext) override
+    void Execute(NativeGraphicsContext & graphicsContext) override
     {
         graphicsContext.SetIndexBuffer(indexBuffer);
     }
@@ -93,7 +93,7 @@ struct SetIndexBufferCommand final: public GraphicsCommand {
 struct SetPipelineStateCommand final: public GraphicsCommand {
     std::shared_ptr<NativePipelineState> pipelineState;
 
-    void Execute(GraphicsContext & graphicsContext) override
+    void Execute(NativeGraphicsContext & graphicsContext) override
     {
         POMDOG_ASSERT(pipelineState);
         graphicsContext.SetPipelineState(pipelineState);
@@ -104,7 +104,7 @@ struct SetConstantBufferCommand final: public GraphicsCommand {
     std::shared_ptr<NativeBuffer> constantBuffer;
     int slotIndex;
 
-    void Execute(GraphicsContext & graphicsContext) override
+    void Execute(NativeGraphicsContext & graphicsContext) override
     {
         POMDOG_ASSERT(constantBuffer);
         POMDOG_ASSERT(slotIndex >= 0);
@@ -116,7 +116,7 @@ struct SetSamplerStateCommand final: public GraphicsCommand {
     std::shared_ptr<NativeSamplerState> sampler;
     int slotIndex;
 
-    void Execute(GraphicsContext & graphicsContext) override
+    void Execute(NativeGraphicsContext & graphicsContext) override
     {
         if (sampler) {
             graphicsContext.SetSampler(slotIndex, sampler);
@@ -131,7 +131,7 @@ struct SetTextureCommand final: public GraphicsCommand {
     std::shared_ptr<Texture2D> texture;
     int slotIndex;
 
-    void Execute(GraphicsContext & graphicsContext) override
+    void Execute(NativeGraphicsContext & graphicsContext) override
     {
         if (texture) {
             graphicsContext.SetTexture(slotIndex, texture);
@@ -146,7 +146,7 @@ struct SetTextureRenderTarget2DCommand final: public GraphicsCommand {
     std::shared_ptr<RenderTarget2D> texture;
     int slotIndex;
 
-    void Execute(GraphicsContext & graphicsContext) override
+    void Execute(NativeGraphicsContext & graphicsContext) override
     {
         if (texture) {
             graphicsContext.SetTexture(slotIndex, texture);
@@ -160,7 +160,7 @@ struct SetTextureRenderTarget2DCommand final: public GraphicsCommand {
 struct SetRenderPassCommand final : public GraphicsCommand {
     RenderPass renderPass;
 
-    void Execute(GraphicsContext & graphicsContext) override
+    void Execute(NativeGraphicsContext & graphicsContext) override
     {
         graphicsContext.SetRenderPass(renderPass);
     }
@@ -329,7 +329,7 @@ void GraphicsCommandListImmediate::SetTexture(int index, const std::shared_ptr<R
     commands.push_back(std::move(command));
 }
 
-void GraphicsCommandListImmediate::ExecuteImmediate(GraphicsContext & graphicsContext) const
+void GraphicsCommandListImmediate::ExecuteImmediate(NativeGraphicsContext & graphicsContext) const
 {
     for (auto & command : commands) {
         POMDOG_ASSERT(command);

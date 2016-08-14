@@ -11,13 +11,13 @@
 namespace Pomdog {
 namespace Detail {
 
-class GraphicsContext;
+class NativeGraphicsContext;
 
 class GraphicsCommand {
 public:
     virtual ~GraphicsCommand() = default;
 
-    virtual void Execute(GraphicsContext & graphicsContext) = 0;
+    virtual void Execute(NativeGraphicsContext & graphicsContext) = 0;
 };
 
 class GraphicsCommandListImmediate final: public NativeGraphicsCommandList {
@@ -78,7 +78,7 @@ public:
     void SetTexture(
         int index, const std::shared_ptr<RenderTarget2D>& texture) override;
 
-    void ExecuteImmediate(GraphicsContext & graphicsContext) const;
+    void ExecuteImmediate(NativeGraphicsContext & graphicsContext) const;
 
 private:
     std::vector<std::unique_ptr<Detail::GraphicsCommand>> commands;

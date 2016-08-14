@@ -10,7 +10,7 @@
 namespace Pomdog {
 namespace Detail {
 
-class GraphicsContext;
+class NativeGraphicsContext;
 
 class GraphicsCommandQueueImmediate final : public NativeGraphicsCommandQueue {
 public:
@@ -19,7 +19,7 @@ public:
     GraphicsCommandQueueImmediate & operator=(const GraphicsCommandQueueImmediate&) = delete;
 
     explicit GraphicsCommandQueueImmediate(
-        const std::shared_ptr<GraphicsContext>& graphicsContext);
+        const std::shared_ptr<NativeGraphicsContext>& graphicsContext);
 
     void Reset() override;
 
@@ -34,7 +34,7 @@ public:
 
 private:
     std::vector<std::shared_ptr<GraphicsCommandList>> commandLists;
-    std::shared_ptr<GraphicsContext> graphicsContext;
+    std::shared_ptr<NativeGraphicsContext> graphicsContext;
 };
 
 } // namespace Detail
