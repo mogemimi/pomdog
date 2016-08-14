@@ -58,7 +58,6 @@
 		3EC9EB32476FB3E3C3713D72 /* Bootstrap.mm in Sources */ = {isa = PBXBuildFile; fileRef = F0C11BC845983DFAFDEC6756 /* Bootstrap.mm */; };
 		3F941E8F3AB564A6641C4B0E /* StringHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D07BE9AF32EED1D5F74BE69A /* StringHelper.cpp */; };
 		4282457DCED6C0F50EC6CE7E /* SamplerStateGL4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC908E294094E4F0DBC625D1 /* SamplerStateGL4.cpp */; };
-		4519841F68EB2E2836F4E02D /* GraphicsContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FC9223DBAF706552AD1C54C8 /* GraphicsContext.cpp */; };
 		460526B2F0D0E531DBE74416 /* BoundingCircle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B85BC78383398FBF4414326 /* BoundingCircle.cpp */; };
 		46937FE2B1FC98BBA39A1C3D /* PNGTextureReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7855CAE795F3A9F1B3F59EC5 /* PNGTextureReader.cpp */; };
 		48657AD97E278FA04C4994B4 /* ConnectionList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B2AEB843C0EAE82FED23106B /* ConnectionList.cpp */; };
@@ -226,7 +225,6 @@
 		F255E1A99BBAD960C7E5D44E /* PipelineState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7E14E3AE6B465875CD29816 /* PipelineState.cpp */; };
 		F29D13A39818F150CD4219B3 /* GraphicsCommandQueueImmediate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CA6CF7478713A3FBFCCEA57D /* GraphicsCommandQueueImmediate.cpp */; };
 		F5A8EACCAE89C0C9FC90E66C /* OpenGLContextCocoa.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6795D43CC878CEB35FA67CB3 /* OpenGLContextCocoa.mm */; };
-		F6ACD0A3DF47C65FA528016E /* GraphicsContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FC9223DBAF706552AD1C54C8 /* GraphicsContext.cpp */; };
 		F8CEA52C304DD8A4BBEAA042 /* ShaderBuilder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F597E6DCF0608CD6B745C3E /* ShaderBuilder.cpp */; };
 		FB449C29F6AE9D0C12E0B224 /* EffectBinaryParameter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8EB459D4407794972524D9B2 /* EffectBinaryParameter.cpp */; };
 		FC16EE3B4D5C9E58010BCD0A /* PipelineStateGL4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 860807EA5D77E832BD5DBCB4 /* PipelineStateGL4.cpp */; };
@@ -557,7 +555,6 @@
 		CA6CF7478713A3FBFCCEA57D /* GraphicsCommandQueueImmediate.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GraphicsCommandQueueImmediate.cpp; sourceTree = "<group>"; };
 		CB812182FDF6BA677492B4D3 /* RasterizerStateGL4.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = RasterizerStateGL4.hpp; sourceTree = "<group>"; };
 		CD1546A63406E72834E314CA /* Tagged.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = Tagged.hpp; sourceTree = "<group>"; };
-		CD4B9CDBC9AE87567F386BE8 /* GraphicsContext.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = GraphicsContext.hpp; sourceTree = "<group>"; };
 		CD99DA1957060FD9ABEDE985 /* LogEntry.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = LogEntry.hpp; sourceTree = "<group>"; };
 		CFB01062DBC62463D243E231 /* NativeBuffer.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = NativeBuffer.hpp; sourceTree = "<group>"; };
 		CFB5F934ACE826A22A466032 /* AssetLoader.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = AssetLoader.hpp; sourceTree = "<group>"; };
@@ -622,7 +619,6 @@
 		FA837DAFD014705086479CB4 /* Log.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Log.cpp; sourceTree = "<group>"; };
 		FAD0748160DFD77FCBD9729C /* GamepadCapabilities.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = GamepadCapabilities.hpp; sourceTree = "<group>"; };
 		FBB43FBECEC56612A3BDC867 /* Coordinate2D.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = Coordinate2D.hpp; sourceTree = "<group>"; };
-		FC9223DBAF706552AD1C54C8 /* GraphicsContext.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GraphicsContext.cpp; sourceTree = "<group>"; };
 		FD511C7803B65801B0EE8EE8 /* GraphicsCapabilities.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = GraphicsCapabilities.hpp; sourceTree = "<group>"; };
 		FDB14E0E5E4036DB4FF8716B /* Connection.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Connection.cpp; sourceTree = "<group>"; };
 		FDF31397BF0CF2C9021CEEA9 /* Texture2D.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Texture2D.cpp; sourceTree = "<group>"; };
@@ -1054,8 +1050,6 @@
 				619758CD1D4C74D6834B96C4 /* GraphicsCommandListImmediate.hpp */,
 				CA6CF7478713A3FBFCCEA57D /* GraphicsCommandQueueImmediate.cpp */,
 				2C9E2849CA475881BA1265F6 /* GraphicsCommandQueueImmediate.hpp */,
-				FC9223DBAF706552AD1C54C8 /* GraphicsContext.cpp */,
-				CD4B9CDBC9AE87567F386BE8 /* GraphicsContext.hpp */,
 				CFB01062DBC62463D243E231 /* NativeBuffer.hpp */,
 				D3AD2D4AC6E0202375C4C4C3 /* NativeEffectReflection.hpp */,
 				8E53A6628F00F2AA00C3BE67 /* NativeGraphicsCommandList.hpp */,
@@ -1584,7 +1578,6 @@
 				0497572B05C5E009716C044A /* FloatingPointVector4.cpp in Sources */,
 				378F438407DEF79BEA69E81C /* GraphicsCommandListImmediate.cpp in Sources */,
 				F29D13A39818F150CD4219B3 /* GraphicsCommandQueueImmediate.cpp in Sources */,
-				F6ACD0A3DF47C65FA528016E /* GraphicsContext.cpp in Sources */,
 				1C60BD023919A0C8916DB3E2 /* SurfaceFormatHelper.cpp in Sources */,
 				E7645392D6AC421C2703DF5E /* TextureHelper.cpp in Sources */,
 				C0B84A37FCB13D340E04120C /* Connection.cpp in Sources */,
@@ -1696,7 +1689,6 @@
 				F03B5A2733D5B0585DFBBB89 /* FloatingPointVector4.cpp in Sources */,
 				650D5B589129410AF7580726 /* GraphicsCommandListImmediate.cpp in Sources */,
 				6FA8A4ED33396758E9052EAD /* GraphicsCommandQueueImmediate.cpp in Sources */,
-				4519841F68EB2E2836F4E02D /* GraphicsContext.cpp in Sources */,
 				A5F5B45161ACFD33A1652F9C /* SurfaceFormatHelper.cpp in Sources */,
 				55635C9F9A88D4C77235D6EB /* TextureHelper.cpp in Sources */,
 				B8B5DF3E58503D84B8D7E2D9 /* Connection.cpp in Sources */,

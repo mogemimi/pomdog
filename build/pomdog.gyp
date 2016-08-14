@@ -270,8 +270,6 @@
       '../src/RenderSystem/GraphicsCommandListImmediate.hpp',
       '../src/RenderSystem/GraphicsCommandQueueImmediate.cpp',
       '../src/RenderSystem/GraphicsCommandQueueImmediate.hpp',
-      '../src/RenderSystem/GraphicsContext.cpp',
-      '../src/RenderSystem/GraphicsContext.hpp',
       '../src/RenderSystem/NativeBuffer.hpp',
       '../src/RenderSystem/NativeEffectReflection.hpp',
       '../src/RenderSystem/NativeGraphicsCommandList.hpp',
