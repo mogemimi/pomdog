@@ -244,7 +244,7 @@ void PongGame::Initialize()
             auto viewMatrix = Matrix4x4::CreateRotationX(MathHelper::ToRadians<float>(15.0f))
                 * Matrix4x4::CreateLookAtLH(Vector3{0, 0, -512.0f}, Vector3::Zero, Vector3::UnitY);
             auto projectionMatrix = Matrix4x4::CreatePerspectiveFieldOfViewLH(
-                MathHelper::ToRadians<float>(45.0f), viewport.GetAspectRatio(), 0.0f, 1000.0f);
+                MathHelper::ToRadians<float>(45.0f), viewport.GetAspectRatio(), 0.01f, 1000.0f);
 
             this->viewProjection = viewMatrix * projectionMatrix;
 
