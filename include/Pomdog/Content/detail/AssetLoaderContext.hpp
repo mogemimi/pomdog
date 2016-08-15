@@ -11,7 +11,7 @@
 namespace Pomdog {
 namespace Detail {
 
-class POMDOG_EXPORT AssetLoaderContext {
+class POMDOG_EXPORT AssetLoaderContext final {
 public:
     std::string RootDirectory;
     std::weak_ptr<Pomdog::GraphicsDevice> GraphicsDevice;

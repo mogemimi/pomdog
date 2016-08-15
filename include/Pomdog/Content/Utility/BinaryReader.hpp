@@ -14,7 +14,7 @@
 namespace Pomdog {
 namespace Detail {
 
-struct POMDOG_EXPORT BinaryReader {
+struct POMDOG_EXPORT BinaryReader final {
     template <typename T, class Stream>
     static std::vector<T> ReadArray(Stream & stream, std::size_t elementCount)
     {

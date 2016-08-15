@@ -17,7 +17,7 @@ class AssetLoaderContext;
 namespace AssetBuilders {
 
 template <>
-class POMDOG_EXPORT Builder<PipelineState> {
+class POMDOG_EXPORT Builder<PipelineState> final {
 public:
     explicit Builder(const Detail::AssetLoaderContext& loaderContext);
 

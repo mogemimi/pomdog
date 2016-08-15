@@ -20,7 +20,7 @@ class AssetLoaderContext;
 namespace AssetBuilders {
 
 template <>
-class POMDOG_EXPORT Builder<Shader> {
+class POMDOG_EXPORT Builder<Shader> final {
 public:
     Builder(
         const Detail::AssetLoaderContext& loaderContext,

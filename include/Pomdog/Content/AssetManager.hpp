@@ -10,7 +10,7 @@
 
 namespace Pomdog {
 
-class POMDOG_EXPORT AssetManager {
+class POMDOG_EXPORT AssetManager final {
 public:
     explicit AssetManager(Detail::AssetLoaderContext && loaderContext);
 

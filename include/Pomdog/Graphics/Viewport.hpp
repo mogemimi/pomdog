@@ -7,7 +7,7 @@
 
 namespace Pomdog {
 
-class POMDOG_EXPORT Viewport {
+class POMDOG_EXPORT Viewport final {
 public:
     int TopLeftX;
     int TopLeftY;

@@ -10,7 +10,7 @@
 
 namespace Pomdog {
 
-class POMDOG_EXPORT EffectReflection {
+class POMDOG_EXPORT EffectReflection final {
 public:
     EffectReflection() = delete;
     EffectReflection(const EffectReflection&) = delete;
