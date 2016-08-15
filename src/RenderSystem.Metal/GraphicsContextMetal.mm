@@ -244,15 +244,15 @@ void GraphicsContextMetal::SetConstantBuffer(int index, const std::shared_ptr<Na
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 
-void GraphicsContextMetal::SetSampler(int index, NativeSamplerState* sampler)
+void GraphicsContextMetal::SetSampler(int index, const std::shared_ptr<NativeSamplerState>& sampler)
 {
     POMDOG_ASSERT(sampler != nullptr);
     POMDOG_ASSERT(index >= 0);
 
-    auto samplerStateMetal = static_cast<SamplerStateMetal*>(sampler);
+    auto samplerStateMetal = std::static_pointer_cast<SamplerStateMetal>(sampler);
 
     POMDOG_ASSERT(samplerStateMetal != nullptr);
-    POMDOG_ASSERT(samplerStateMetal != dynamic_cast<SamplerStateMetal*>(sampler));
+    POMDOG_ASSERT(samplerStateMetal == std::dynamic_pointer_cast<SamplerStateMetal>(sampler));
     POMDOG_ASSERT(samplerStateMetal->GetSamplerState() != nil);
 
     POMDOG_ASSERT(commandEncoder != nil);
@@ -268,14 +268,15 @@ void GraphicsContextMetal::SetTexture(int index)
     [commandEncoder setFragmentTexture:nil atIndex:index];
 }
 
-void GraphicsContextMetal::SetTexture(int index, Texture2D & texture)
+void GraphicsContextMetal::SetTexture(int index, const std::shared_ptr<Texture2D>& textureIn)
 {
     POMDOG_ASSERT(index >= 0);
+    POMDOG_ASSERT(textureIn);
 
-    auto textureMetal = static_cast<Texture2DMetal*>(texture.GetNativeTexture2D());
+    auto textureMetal = static_cast<Texture2DMetal*>(textureIn->GetNativeTexture2D());
 
     POMDOG_ASSERT(textureMetal != nullptr);
-    POMDOG_ASSERT(textureMetal != dynamic_cast<Texture2DMetal*>(texture.GetNativeTexture2D()));
+    POMDOG_ASSERT(textureMetal == dynamic_cast<Texture2DMetal*>(textureIn->GetNativeTexture2D()));
     POMDOG_ASSERT(textureMetal->GetTexture() != nil);
 
     POMDOG_ASSERT(commandEncoder != nil);
@@ -283,14 +284,15 @@ void GraphicsContextMetal::SetTexture(int index, Texture2D & texture)
     [commandEncoder setFragmentTexture:textureMetal->GetTexture() atIndex:index];
 }
 
-void GraphicsContextMetal::SetTexture(int index, RenderTarget2D & renderTarget)
+void GraphicsContextMetal::SetTexture(int index, const std::shared_ptr<RenderTarget2D>& textureIn)
 {
     POMDOG_ASSERT(index >= 0);
+    POMDOG_ASSERT(textureIn);
 
-    auto renderTargetMetal = static_cast<RenderTarget2DMetal*>(renderTarget.GetNativeRenderTarget2D());
+    auto renderTargetMetal = static_cast<RenderTarget2DMetal*>(textureIn->GetNativeRenderTarget2D());
 
     POMDOG_ASSERT(renderTargetMetal != nullptr);
-    POMDOG_ASSERT(renderTargetMetal != dynamic_cast<RenderTarget2DMetal*>(renderTarget.GetNativeRenderTarget2D()));
+    POMDOG_ASSERT(renderTargetMetal == dynamic_cast<RenderTarget2DMetal*>(textureIn->GetNativeRenderTarget2D()));
     POMDOG_ASSERT(renderTargetMetal->GetTexture() != nil);
 
     POMDOG_ASSERT(commandEncoder != nil);

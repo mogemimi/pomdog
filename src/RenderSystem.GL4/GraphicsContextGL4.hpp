@@ -70,13 +70,13 @@ public:
 
     void SetConstantBuffer(int index, const std::shared_ptr<NativeBuffer>& constantBuffer) override;
 
-    void SetSampler(int index, NativeSamplerState* sampler) override;
+    void SetSampler(int index, const std::shared_ptr<NativeSamplerState>& sampler) override;
 
     void SetTexture(int index) override;
 
-    void SetTexture(int index, Texture2D & texture) override;
+    void SetTexture(int index, const std::shared_ptr<Texture2D>& texture) override;
 
-    void SetTexture(int index, RenderTarget2D & texture) override;
+    void SetTexture(int index, const std::shared_ptr<RenderTarget2D>& texture) override;
 
 private:
     void ApplyPipelineState();

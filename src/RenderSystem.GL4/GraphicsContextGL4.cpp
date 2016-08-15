@@ -551,7 +551,7 @@ void GraphicsContextGL4::SetConstantBuffer(int index, const std::shared_ptr<Nati
     ApplyConstantBuffer(index, *constantBuffer);
 }
 
-void GraphicsContextGL4::SetSampler(int index, NativeSamplerState* sampler)
+void GraphicsContextGL4::SetSampler(int index, const std::shared_ptr<NativeSamplerState>& sampler)
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(sampler != nullptr);
@@ -561,74 +561,76 @@ void GraphicsContextGL4::SetSampler(int index, NativeSamplerState* sampler)
     POMDOG_ASSERT(index < static_cast<int>(capabilities.SamplerSlotCount));
 #endif
 
-    auto samplerStateGL = static_cast<SamplerStateGL4*>(sampler);
+    auto samplerStateGL = std::static_pointer_cast<SamplerStateGL4>(sampler);
 
     POMDOG_ASSERT(samplerStateGL != nullptr);
-    POMDOG_ASSERT(samplerStateGL == dynamic_cast<SamplerStateGL4*>(sampler));
+    POMDOG_ASSERT(samplerStateGL == std::dynamic_pointer_cast<SamplerStateGL4>(sampler));
 
     samplerStateGL->Apply(index);
 }
 
-void GraphicsContextGL4::SetTexture(int textureUnit)
+void GraphicsContextGL4::SetTexture(int index)
 {
     POMDOG_ASSERT(!textures.empty());
-    POMDOG_ASSERT(textureUnit >= 0);
-    POMDOG_ASSERT(textureUnit < static_cast<int>(textures.size()));
+    POMDOG_ASSERT(index >= 0);
+    POMDOG_ASSERT(index < static_cast<int>(textures.size()));
 
-    if (textures[textureUnit])
+    if (textures[index])
     {
-        glActiveTexture(ToTextureUnitIndexGL4(textureUnit));
+        glActiveTexture(ToTextureUnitIndexGL4(index));
         POMDOG_CHECK_ERROR_GL4("glActiveTexture");
 
-        glBindTexture(*textures[textureUnit], 0);
+        glBindTexture(*textures[index], 0);
         POMDOG_CHECK_ERROR_GL4("glBindTexture");
     }
 
-    textures[textureUnit] = Pomdog::NullOpt;
+    textures[index] = Pomdog::NullOpt;
 }
 
-void GraphicsContextGL4::SetTexture(int textureUnit, Texture2D & textureIn)
+void GraphicsContextGL4::SetTexture(int index, const std::shared_ptr<Texture2D>& textureIn)
 {
     POMDOG_ASSERT(!textures.empty());
-    POMDOG_ASSERT(textureUnit >= 0);
-    POMDOG_ASSERT(textureUnit < static_cast<int>(textures.size()));
+    POMDOG_ASSERT(index >= 0);
+    POMDOG_ASSERT(index < static_cast<int>(textures.size()));
 
     constexpr GLenum textureType = GL_TEXTURE_2D;
 
-    if (textures[textureUnit] && *textures[textureUnit] != textureType) {
+    if (textures[index] && *textures[index] != textureType) {
         // Unbind texture
-        SetTexture(textureUnit);
+        SetTexture(index);
     }
 
-    textures[textureUnit] = textureType;
+    textures[index] = textureType;
 
-    POMDOG_ASSERT(textureIn.GetNativeTexture2D());
-    auto textureGL4 = dynamic_cast<Texture2DGL4*>(textureIn.GetNativeTexture2D());
+    auto textureGL4 = static_cast<Texture2DGL4*>(textureIn->GetNativeTexture2D());
 
     POMDOG_ASSERT(textureGL4 != nullptr);
-    ApplyTexture2D(textureUnit, textureGL4->GetTextureHandle());
+    POMDOG_ASSERT(textureGL4 == dynamic_cast<Texture2DGL4*>(textureIn->GetNativeTexture2D()));
+
+    ApplyTexture2D(index, textureGL4->GetTextureHandle());
 }
 
-void GraphicsContextGL4::SetTexture(int textureUnit, RenderTarget2D & textureIn)
+void GraphicsContextGL4::SetTexture(int index, const std::shared_ptr<RenderTarget2D>& textureIn)
 {
     POMDOG_ASSERT(!textures.empty());
-    POMDOG_ASSERT(textureUnit >= 0);
-    POMDOG_ASSERT(textureUnit < static_cast<int>(textures.size()));
+    POMDOG_ASSERT(index >= 0);
+    POMDOG_ASSERT(index < static_cast<int>(textures.size()));
 
     constexpr GLenum textureType = GL_TEXTURE_2D;
 
-    if (textures[textureUnit] && *textures[textureUnit] != textureType) {
+    if (textures[index] && *textures[index] != textureType) {
         // Unbind texture
-        SetTexture(textureUnit);
+        SetTexture(index);
     }
 
-    textures[textureUnit] = textureType;
+    textures[index] = textureType;
 
-    POMDOG_ASSERT(textureIn.GetNativeRenderTarget2D());
-    auto renderTargetGL4 = dynamic_cast<RenderTarget2DGL4*>(textureIn.GetNativeRenderTarget2D());
+    auto renderTargetGL4 = static_cast<RenderTarget2DGL4*>(textureIn->GetNativeRenderTarget2D());
 
     POMDOG_ASSERT(renderTargetGL4 != nullptr);
-    ApplyTexture2D(textureUnit, renderTargetGL4->GetTextureHandle());
+    POMDOG_ASSERT(renderTargetGL4 == dynamic_cast<RenderTarget2DGL4*>(textureIn->GetNativeRenderTarget2D()));
+
+    ApplyTexture2D(index, renderTargetGL4->GetTextureHandle());
 }
 
 void GraphicsContextGL4::SetRenderPass(const RenderPass& renderPass)
