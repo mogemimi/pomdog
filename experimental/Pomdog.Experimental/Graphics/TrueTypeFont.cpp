@@ -15,7 +15,7 @@ namespace Pomdog {
 
 using Detail::SpriteFonts::Glyph;
 
-class TrueTypeFont::Impl {
+class TrueTypeFont::Impl final {
 public:
     typedef Detail::SpriteFonts::Glyph Glyph;
     std::vector<std::uint8_t> ttfBinary;
@@ -23,7 +23,7 @@ public:
 
     void Reset();
 
-    void LoadFont(AssetManager const& assets, std::string const& fontPath);
+    void LoadFont(const AssetManager& assets, const std::string& fontPath);
 };
 
 void TrueTypeFont::Impl::Reset()
@@ -33,7 +33,7 @@ void TrueTypeFont::Impl::Reset()
     }
 }
 
-void TrueTypeFont::Impl::LoadFont(AssetManager const& assets, std::string const& fontPath)
+void TrueTypeFont::Impl::LoadFont(const AssetManager& assets, const std::string& fontPath)
 {
     auto binaryFile = assets.OpenStream(fontPath);
     if (!binaryFile.Stream) {
@@ -59,7 +59,7 @@ void TrueTypeFont::Impl::LoadFont(AssetManager const& assets, std::string const&
     }
 }
 
-TrueTypeFont::TrueTypeFont(AssetManager const& assets, std::string const& fontPath)
+TrueTypeFont::TrueTypeFont(const AssetManager& assets, const std::string& fontPath)
     : impl(std::make_unique<Impl>())
 {
     POMDOG_ASSERT(impl);
@@ -75,8 +75,9 @@ TrueTypeFont::~TrueTypeFont()
 Optional<Detail::SpriteFonts::Glyph>
 TrueTypeFont::RasterizeGlyph(
     char32_t codePoint,
-    float pixelHeight, int textureWidth,
-    std::function<void(int width, int height, Point2D & point, std::uint8_t* & output)> callback)
+    float pixelHeight,
+    int textureWidth,
+    const std::function<void(int width, int height, Point2D & point, std::uint8_t* & output)>& callback)
 {
     if (impl->ttfBinary.empty()) {
         // error

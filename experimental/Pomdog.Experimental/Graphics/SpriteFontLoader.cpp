@@ -279,7 +279,7 @@ Detail::SpriteFonts::Glyph ParseGlyph(std::istream & stream)
 } // unnamed namespace
 
 std::shared_ptr<SpriteFont> SpriteFontLoader::Load(
-    AssetManager & assets, std::string const& assetName)
+    AssetManager & assets, const std::string& assetName)
 {
     auto binaryFile = assets.OpenStream(assetName);
 
@@ -334,7 +334,7 @@ std::shared_ptr<SpriteFont> SpriteFontLoader::Load(
     }
     POMDOG_ASSERT(!pages.empty());
 
-    auto pageLess = [](BitmapFontPage const& a, BitmapFontPage const& b){
+    auto pageLess = [](const BitmapFontPage& a, const BitmapFontPage& b) {
         return a.Id < b.Id;
     };
 

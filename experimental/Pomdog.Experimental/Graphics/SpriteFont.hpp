@@ -34,20 +34,22 @@ class TrueTypeFont;
 
 class SpriteFont final {
 public:
-    SpriteFont(std::vector<std::shared_ptr<Texture2D>> && textures,
-        std::vector<Detail::SpriteFonts::Glyph> const& glyphs,
+    SpriteFont(
+        std::vector<std::shared_ptr<Texture2D>> && textures,
+        const std::vector<Detail::SpriteFonts::Glyph>& glyphs,
         char32_t defaultCharacter,
         std::int16_t spacing,
         std::int16_t lineSpacing);
 
-    SpriteFont(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-        std::shared_ptr<TrueTypeFont> const& font,
+    SpriteFont(
+        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+        const std::shared_ptr<TrueTypeFont>& font,
         char32_t defaultCharacter,
         std::int16_t lineSpacing);
 
     ~SpriteFont();
 
-    Vector2 MeasureString(std::string const& text) const;
+    Vector2 MeasureString(const std::string& text) const;
 
     char32_t GetDefaultCharacter() const;
 
@@ -60,31 +62,31 @@ public:
     bool ContainsCharacter(char32_t character) const;
 
     void Begin(
-        std::shared_ptr<GraphicsCommandList> const& commandList,
+        const std::shared_ptr<GraphicsCommandList>& commandList,
         SpriteBatchRenderer & spriteBatch,
-        Matrix4x4 const& transformMatrix);
+        const Matrix4x4& transformMatrix);
 
     void Draw(
         SpriteBatchRenderer & spriteBatch,
-        std::string const& text,
-        Vector2 const& position,
-        Color const& color);
+        const std::string& text,
+        const Vector2& position,
+        const Color& color);
 
     void Draw(
         SpriteBatchRenderer & spriteBatch,
-        std::string const& text,
-        Vector2 const& position,
-        Color const& color,
-        Radian<float> const& rotation,
+        const std::string& text,
+        const Vector2& position,
+        const Color& color,
+        const Radian<float>& rotation,
         float scale);
 
     void Draw(
         SpriteBatchRenderer & spriteBatch,
-        std::string const& text,
-        Vector2 const& position,
-        Color const& color,
-        Radian<float> const& rotation,
-        Vector2 const& scale);
+        const std::string& text,
+        const Vector2& position,
+        const Color& color,
+        const Radian<float>& rotation,
+        const Vector2& scale);
 
     void End(SpriteBatchRenderer & spriteBatch);
 

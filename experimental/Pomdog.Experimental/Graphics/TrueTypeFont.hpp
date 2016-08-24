@@ -13,15 +13,18 @@
 
 namespace Pomdog {
 
-class TrueTypeFont {
+class TrueTypeFont final {
 public:
-    TrueTypeFont(AssetManager const& assets, std::string const& fontPath);
+    TrueTypeFont(const AssetManager& assets, const std::string& fontPath);
 
     ~TrueTypeFont();
 
     Optional<Detail::SpriteFonts::Glyph>
-    RasterizeGlyph(char32_t codePoint, float pixelHeight, int textureWidth,
-        std::function<void(int width, int height, Point2D & point, std::uint8_t* & output)> callback);
+    RasterizeGlyph(
+        char32_t codePoint,
+        float pixelHeight,
+        int textureWidth,
+        const std::function<void(int width, int height, Point2D & point, std::uint8_t* & output)>& callback);
 
 private:
     class Impl;

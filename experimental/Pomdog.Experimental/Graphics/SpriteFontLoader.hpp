@@ -13,7 +13,7 @@ class AssetManager;
 class SpriteFontLoader final {
 public:
     static std::shared_ptr<SpriteFont> Load(
-        AssetManager & assets, std::string const& assetName);
+        AssetManager & assets, const std::string& assetName);
 };
 
 } // namespace Pomdog
