@@ -20,7 +20,7 @@ public:
     ~TrueTypeFont();
 
     Optional<Detail::SpriteFonts::Glyph>
-    RasterizeGlyph(std::uint32_t codePoint, float pixelHeight, int textureWidth,
+    RasterizeGlyph(char32_t codePoint, float pixelHeight, int textureWidth,
         std::function<void(int width, int height, Point2D & point, std::uint8_t* & output)> callback);
 
 private:

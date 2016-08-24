@@ -18,7 +18,7 @@ struct Glyph {
     Rectangle Subrect;
 
     ///@note UTF-32
-    std::uint32_t Character;
+    char32_t Character;
 
     std::int16_t XOffset;
     std::int16_t YOffset;
@@ -36,28 +36,28 @@ class SpriteFont final {
 public:
     SpriteFont(std::vector<std::shared_ptr<Texture2D>> && textures,
         std::vector<Detail::SpriteFonts::Glyph> const& glyphs,
-        std::uint32_t defaultCharacter,
+        char32_t defaultCharacter,
         std::int16_t spacing,
         std::int16_t lineSpacing);
 
     SpriteFont(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
         std::shared_ptr<TrueTypeFont> const& font,
-        std::uint32_t defaultCharacter,
+        char32_t defaultCharacter,
         std::int16_t lineSpacing);
 
     ~SpriteFont();
 
     Vector2 MeasureString(std::string const& text) const;
 
-    std::uint32_t GetDefaultCharacter() const;
+    char32_t GetDefaultCharacter() const;
 
-    void SetDefaultCharacter(std::uint32_t character);
+    void SetDefaultCharacter(char32_t character);
 
     float GetLineSpacing() const;
 
     void SetLineSpacing(float lineSpacing);
 
-    bool ContainsCharacter(std::uint32_t character) const;
+    bool ContainsCharacter(char32_t character) const;
 
     void Begin(
         std::shared_ptr<GraphicsCommandList> const& commandList,

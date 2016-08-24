@@ -7,7 +7,6 @@
 #include <utility>
 #include <fstream>
 #include <algorithm>
-#include <sstream>
 #include <regex>
 
 namespace Pomdog {
@@ -245,8 +244,7 @@ Detail::SpriteFonts::Glyph ParseGlyph(std::istream & stream)
             auto arguments = match[3].str();
 
             if (name == "id") {
-                std::stringstream ss(arguments);
-                ss >> result.Character;
+                result.Character = std::stoi(arguments);
             }
             else if (name == "page") {
                 result.TexturePage = std::stoi(arguments);
@@ -361,8 +359,7 @@ std::shared_ptr<SpriteFont> SpriteFontLoader::Load(
     }
 
     POMDOG_ASSERT(!glyphs.empty());
-    std::uint32_t defaultCharacter = glyphs.front().Character;
-
+    auto defaultCharacter = glyphs.front().Character;
 
     auto spriteFont = std::make_shared<SpriteFont>(std::move(textures), glyphs,
         defaultCharacter, info.PaddingLeft + info.PaddingRight, common.LineHeight);

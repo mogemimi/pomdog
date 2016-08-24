@@ -73,7 +73,8 @@ TrueTypeFont::~TrueTypeFont()
 }
 
 Optional<Detail::SpriteFonts::Glyph>
-TrueTypeFont::RasterizeGlyph(std::uint32_t codePoint,
+TrueTypeFont::RasterizeGlyph(
+    char32_t codePoint,
     float pixelHeight, int textureWidth,
     std::function<void(int width, int height, Point2D & point, std::uint8_t* & output)> callback)
 {
@@ -157,7 +158,7 @@ TrueTypeFont::RasterizeGlyph(std::uint32_t codePoint,
 //    ///@todo ASCII codes [32, 127)
 //    std::array<stbtt_bakedchar, 96> characters;
 //
-//    std::uint32_t startCodePoint = 32;
+//    char32_t startCodePoint = 32;
 //
 //    stbtt_BakeFontBitmap(impl->ttfBinary.data(),
 //        0, fontSize, output, width, height,
@@ -166,7 +167,7 @@ TrueTypeFont::RasterizeGlyph(std::uint32_t codePoint,
 //    std::vector<Glyph> glyphs;
 //    glyphs.reserve(characters.size());
 //
-//    std::uint32_t codePoint = startCodePoint;
+//    char32_t codePoint = startCodePoint;
 //    for (auto c: characters) {
 //        Glyph glyph;
 //        glyph.Subrect.X = c.x0;

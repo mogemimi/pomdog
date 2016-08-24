@@ -50,21 +50,21 @@ public:
     static constexpr int TextureWidth = 512;
     static constexpr int TextureHeight = 512;
 
-    std::unordered_map<std::uint32_t, Glyph> spriteFontMap;
+    std::unordered_map<char32_t, Glyph> spriteFontMap;
 
-    std::uint32_t defaultCharacter;
+    char32_t defaultCharacter;
     float lineSpacing;
     std::uint16_t spacing;
 
     Impl(std::vector<std::shared_ptr<Texture2D>> && textures,
         std::vector<Detail::SpriteFonts::Glyph> const& glyphs,
-        std::uint32_t defaultCharacter,
+        char32_t defaultCharacter,
         std::int16_t spacing,
         std::int16_t lineSpacing);
 
     Impl(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
         std::shared_ptr<TrueTypeFont> const& font,
-        std::uint32_t defaultCharacter,
+        char32_t defaultCharacter,
         std::int16_t lineSpacing);
 
     Vector2 MeasureString(std::string const& text) const;
@@ -99,7 +99,7 @@ constexpr int SpriteFont::Impl::TextureHeight;
 
 SpriteFont::Impl::Impl(std::vector<std::shared_ptr<Texture2D>> && texturesIn,
     std::vector<Detail::SpriteFonts::Glyph> const& glyphsIn,
-    std::uint32_t defaultCharacterIn, std::int16_t spacingIn, std::int16_t lineSpacingIn)
+    char32_t defaultCharacterIn, std::int16_t spacingIn, std::int16_t lineSpacingIn)
     : textures(std::move(texturesIn))
     , defaultCharacter(defaultCharacterIn)
     , spacing(spacingIn)
@@ -112,7 +112,7 @@ SpriteFont::Impl::Impl(std::vector<std::shared_ptr<Texture2D>> && texturesIn,
 
 SpriteFont::Impl::Impl(std::shared_ptr<GraphicsDevice> const& graphicsDeviceIn,
     std::shared_ptr<TrueTypeFont> const& fontIn,
-    std::uint32_t defaultCharacterIn,
+    char32_t defaultCharacterIn,
     std::int16_t lineSpacingIn)
     : graphicsDevice(graphicsDeviceIn)
     , font(fontIn)
@@ -353,7 +353,7 @@ void SpriteFont::Impl::Draw(SpriteBatchRenderer & spriteBatch,
 SpriteFont::SpriteFont(
     std::vector<std::shared_ptr<Texture2D>> && textures,
     std::vector<Detail::SpriteFonts::Glyph> const& glyphs,
-    std::uint32_t defaultCharacter,
+    char32_t defaultCharacter,
     std::int16_t spacing,
     std::int16_t lineSpacing)
     : impl(std::make_unique<Impl>(std::move(textures), glyphs, defaultCharacter, spacing, lineSpacing))
@@ -363,7 +363,7 @@ SpriteFont::SpriteFont(
 SpriteFont::SpriteFont(
     std::shared_ptr<GraphicsDevice> const& graphicsDevice,
     std::shared_ptr<TrueTypeFont> const& font,
-    std::uint32_t defaultCharacter,
+    char32_t defaultCharacter,
     std::int16_t lineSpacing)
     : impl(std::make_unique<Impl>(graphicsDevice, font, defaultCharacter, lineSpacing))
 {
@@ -379,13 +379,13 @@ Vector2 SpriteFont::MeasureString(std::string const& utf8String) const
     return impl->MeasureString(utf8String);
 }
 
-std::uint32_t SpriteFont::GetDefaultCharacter() const
+char32_t SpriteFont::GetDefaultCharacter() const
 {
     POMDOG_ASSERT(impl);
     return impl->defaultCharacter;
 }
 
-void SpriteFont::SetDefaultCharacter(std::uint32_t character)
+void SpriteFont::SetDefaultCharacter(char32_t character)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(ContainsCharacter(character));
@@ -404,7 +404,7 @@ void SpriteFont::SetLineSpacing(float lineSpacingIn)
     impl->lineSpacing = lineSpacingIn;
 }
 
-bool SpriteFont::ContainsCharacter(std::uint32_t character) const
+bool SpriteFont::ContainsCharacter(char32_t character) const
 {
     POMDOG_ASSERT(impl);
     return impl->spriteFontMap.find(character) != std::end(impl->spriteFontMap);
