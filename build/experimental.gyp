@@ -28,6 +28,8 @@
       '<@(pomdog_expr_dir)/Gameplay/EntityID.hpp',
       '<@(pomdog_expr_dir)/Gameplay/EntityManager.cpp',
       '<@(pomdog_expr_dir)/Gameplay/EntityManager.hpp',
+      '<@(pomdog_expr_dir)/Gameplay/Scene.cpp',
+      '<@(pomdog_expr_dir)/Gameplay/Scene.hpp',
       '<@(pomdog_expr_dir)/Gameplay/detail/ComponentTypeIndex.cpp',
       '<@(pomdog_expr_dir)/Gameplay/detail/ComponentTypeIndex.hpp',
 
@@ -50,6 +52,8 @@
       '<@(pomdog_expr_dir)/Gameplay2D/PrimitiveRenderable.hpp',
     #   '<@(pomdog_expr_dir)/Gameplay2D/RectangleRenderable.cpp',
     #   '<@(pomdog_expr_dir)/Gameplay2D/RectangleRenderable.hpp',
+      '<@(pomdog_expr_dir)/Gameplay2D/Simple2DGameEngine.cpp',
+      '<@(pomdog_expr_dir)/Gameplay2D/Simple2DGameEngine.hpp',
     #   '<@(pomdog_expr_dir)/Gameplay2D/SkinnedMeshRenderable.cpp',
     #   '<@(pomdog_expr_dir)/Gameplay2D/SkinnedMeshRenderable.hpp',
       '<@(pomdog_expr_dir)/Gameplay2D/SpriteRenderable.cpp',

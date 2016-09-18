@@ -1,9 +1,9 @@
 #pragma once
 
-#include <Pomdog.Experimental/Graphics/PolygonBatch.hpp>
-#include <Pomdog.Experimental/Graphics/SpriteBatchRenderer.hpp>
+#include <Pomdog.Experimental/Gameplay/Scene.hpp>
 #include <Pomdog.Experimental/Graphics/SpriteFont.hpp>
-#include <Pomdog.Experimental/ImageEffects/PostProcessCompositor.hpp>
+#include <Pomdog.Experimental/Gameplay2D/Simple2DGameEngine.hpp>
+#include <Pomdog.Experimental/Gameplay2D/CameraComponent.hpp>
 #include <Pomdog/Pomdog.hpp>
 #include <deque>
 #include <map>
@@ -13,10 +13,22 @@ namespace Pong {
 using namespace Pomdog;
 
 struct Paddle {
-    Vector2 Position = Vector2::Zero;
+    std::shared_ptr<Transform> transform;
     Vector2 PositionOld = Vector2::Zero;
     float Speed = 540.0f;
     float Height = 50.0f;
+
+    Vector2 GetPosition() const
+    {
+        POMDOG_ASSERT(transform);
+        return transform->GetPosition2D();
+    }
+
+    void SetPosition(const Vector2& positionIn)
+    {
+        POMDOG_ASSERT(transform);
+        return transform->SetPosition2D(positionIn);
+    }
 
     BoundingBox2D GetCollider() const
     {
@@ -24,28 +36,60 @@ struct Paddle {
         const auto halfWidth = width / 2;
         const auto halfHeight = Height / 2;
         BoundingBox2D box;
-        box.Min = Position - Vector2{halfWidth, halfHeight};
-        box.Max = Position + Vector2{halfWidth, halfHeight};
+        box.Min = GetPosition() - Vector2{halfWidth, halfHeight};
+        box.Max = GetPosition() + Vector2{halfWidth, halfHeight};
         return std::move(box);
     }
 };
 
 struct Ball {
-    Vector2 Position = Vector2::Zero;
+    std::shared_ptr<Transform> transform;
     Vector2 PositionOld = Vector2::Zero;
     Vector2 Velocity = Vector2::Zero;
+
+    Vector2 GetPosition() const
+    {
+        POMDOG_ASSERT(transform);
+        return transform->GetPosition2D();
+    }
+
+    void SetPosition(const Vector2& positionIn)
+    {
+        POMDOG_ASSERT(transform);
+        return transform->SetPosition2D(positionIn);
+    }
 
     BoundingCircle GetCollider() const
     {
         BoundingCircle circle;
         circle.Radius = 3;
-        circle.Center = Position;
+        circle.Center = GetPosition();
         return std::move(circle);
     }
 };
 
-struct Player {
-    int Score;
+class Player {
+private:
+    int score;
+
+public:
+    Player()
+        : score(0)
+    {
+    }
+
+    int GetScore() const
+    {
+        return score;
+    }
+
+    void SetScore(int scoreIn)
+    {
+        score = scoreIn;
+        ScoreChanged(score);
+    }
+
+    Signal<void(int score)> ScoreChanged;
 };
 
 class Input {
@@ -107,72 +151,6 @@ public:
     }
 };
 
-struct PongState {
-    std::function<void()> Enter;
-    std::function<void()> Update;
-    std::function<void()> Exit;
-};
-
-using PongTask = std::function<void()>;
-
-class PongScheduler {
-private:
-    std::vector<PongTask> taskQueue;
-    std::map<std::string, PongState> states;
-    std::string currentTaskName;
-
-public:
-    void Transit(std::string const& name)
-    {
-        auto oldTaskName = currentTaskName;
-        currentTaskName = name;
-
-        {
-            auto taskIter = states.find(oldTaskName);
-            if (taskIter != std::end(states)) {
-                auto & task = taskIter->second;
-                taskQueue.push_back(task.Exit);
-            }
-        }
-        {
-            auto taskIter = states.find(currentTaskName);
-            if (taskIter != std::end(states)) {
-                auto & task = taskIter->second;
-                taskQueue.push_back(task.Enter);
-                taskQueue.push_back(task.Update);
-            }
-        }
-    }
-
-    void Add(std::string const& name, PongState const& task)
-    {
-        states.emplace(name, task);
-    }
-
-    void Update()
-    {
-        std::vector<PongTask> temporaryQueue;
-        std::swap(taskQueue, temporaryQueue);
-
-        for (auto & task: temporaryQueue) {
-            if (task) {
-                task();
-            }
-        }
-
-        auto taskIter = states.find(currentTaskName);
-        if (taskIter != std::end(states)) {
-            auto & task = taskIter->second;
-            taskQueue.push_back(task.Update);
-        }
-    }
-
-    std::string GetCurrentName() const
-    {
-        return currentTaskName;
-    }
-};
-
 class PongGame : public Game {
 public:
     explicit PongGame(const std::shared_ptr<GameHost>& gameHost);
@@ -184,32 +162,29 @@ public:
     void Draw() override;
 
 private:
+    std::shared_ptr<GameScene> CreateNewGameScene();
+
+    std::shared_ptr<GameScene> CreatePlayScene();
+
+private:
     std::shared_ptr<GameHost> gameHost;
     std::shared_ptr<GameWindow> window;
     std::shared_ptr<GraphicsDevice> graphicsDevice;
+    std::shared_ptr<GraphicsCommandQueue> commandQueue;
     std::shared_ptr<AssetManager> assets;
     std::shared_ptr<GameClock> clock;
     std::shared_ptr<AudioEngine> audioEngine;
+
+    Simple2DGameEngine gameEngine;
 
     std::shared_ptr<SoundEffect> soundEffect1;
     std::shared_ptr<SoundEffect> soundEffect2;
     std::shared_ptr<SoundEffect> soundEffect3;
 
-    std::shared_ptr<GraphicsCommandQueue> commandQueue;
-    std::shared_ptr<GraphicsCommandList> commandList;
-    std::shared_ptr<RenderTarget2D> renderTarget;
-
-    Matrix4x4 viewProjection;
-    PostProcessCompositor postProcessCompositor;
-    SpriteBatchRenderer spriteBatch;
-    PolygonBatch polygonBatch;
-
-    std::unique_ptr<SpriteFont> spriteFont;
-    std::string headerText;
-    std::string bottomText;
+    std::shared_ptr<SpriteFont> spriteFont;
     Timer textTimer;
 
-    PongScheduler scheduler;
+    SceneDirector sceneDirector;
     Input input1;
     Input input2;
     Player player1;
@@ -217,10 +192,9 @@ private:
     Ball ball;
     Paddle paddle1;
     Paddle paddle2;
-    Viewport viewport;
     Rectangle gameFieldSize;
     ConnectionList connect;
-    Connection pressedStartConnection;
+    std::vector<Entity> scoreTextLabels;
 };
 
 } // namespace Pong
