@@ -2,36 +2,67 @@
 
 #pragma once
 
-#include "Renderable.hpp"
-#include "Pomdog.Experimental/Rendering/Commands/SpriteCommand.hpp"
+#include "Pomdog.Experimental/Gameplay/detail/ComponentTypeIndex.hpp"
+#include "Pomdog.Experimental/Gameplay2D/GraphicsComponent.hpp"
+#include "Pomdog.Experimental/Graphics/TextureRegion.hpp"
+#include "Pomdog.Experimental/Rendering/Commands/SpriteBatchCommand.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Math/Vector2.hpp"
 #include <Pomdog/Pomdog.hpp>
+#include <functional>
 #include <memory>
 
 namespace Pomdog {
 
-class SpriteRenderable: public Renderable {
+class SpriteRenderable final : public GraphicsComponent {
 public:
-    explicit SpriteRenderable(std::shared_ptr<Texture2D> const& texture);
-
-    SpriteRenderable(std::shared_ptr<Texture2D> const& texture, TextureRegion const& textureRegion);
+    SpriteRenderable();
 
     void Visit(Entity & entity, Renderer & renderer) override;
 
-    void OriginPivot(Vector2 const& originPivot);
-    Vector2 OriginPivot() const;
+    std::shared_ptr<Texture2D> GetTexture();
 
-    void Region(TextureRegion const& region);
-    TextureRegion const& Region() const;
+    void SetTexture(const std::shared_ptr<Texture2D>& texture);
 
-    Rectangle BoundingBox() const;
+    const Rectangle& GetTextureRegion();
+
+    void SetTextureRegion(const Rectangle& textureRegion);
+
+    Vector2 GetOriginPivot();
+
+    void SetOriginPivot(const Vector2& originPivot);
+
+    Color GetColor();
+
+    void SetColor(const Color& color);
 
 private:
-    Detail::Rendering::SpriteCommand command;
+    std::shared_ptr<Texture2D> texture;
     Matrix3x2 offsetMatrix;
+    Matrix3x2 transformForDrawCommand;
+    Rectangle textureRegion;
+    Pomdog::Rendering::SpriteBatchCommand command;
     Vector2 originPivot;
+    Vector2 originPivotForDrawCommand;
+    Color color;
     std::uint32_t dirtyFlags;
+
+//    bool rotate;
+//    Detail::Rendering::SpriteCommand command;
+//    Matrix3x2 offsetMatrix;
+};
+
+template <>
+struct ComponentTypeDeclaration<SpriteRenderable> final {
+    static std::uint8_t GetTypeIndex();
+};
+
+template <>
+class ComponentCreator<SpriteRenderable> final : public ComponentCreatorBase {
+public:
+    std::shared_ptr<Component> CreateComponent() override;
+
+    std::uint8_t GetComponentType() override;
 };
 
 } // namespace Pomdog

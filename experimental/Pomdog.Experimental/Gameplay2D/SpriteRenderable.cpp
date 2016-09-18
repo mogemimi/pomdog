@@ -1,129 +1,170 @@
 // Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
 
-#include "SpriteRenderable.hpp"
-#include "../Rendering/Renderer.hpp"
-#include <Pomdog.Experimental/Gameplay2D/Transform2D.hpp>
+#include "Pomdog.Experimental/Gameplay2D/SpriteRenderable.hpp"
+#include "Pomdog.Experimental/Gameplay2D/Transform.hpp"
+#include "Pomdog.Experimental/Graphics/SpriteBatchRenderer.hpp"
+#include "Pomdog.Experimental/Rendering/Renderer.hpp"
 #include <limits>
 
 namespace Pomdog {
 namespace {
 
-static Matrix3x2 CreateTransformMatrix3x2(Transform2D const& transform)
-{
-    return Matrix3x2::CreateScale(transform.Scale)
-        * Matrix3x2::CreateRotation(transform.Rotation)
-        * Matrix3x2::CreateTranslation(transform.Position);
-}
-
-static TextureRegion CreateTextureRegionFromTexture(std::shared_ptr<Texture2D> const& texture)
-{
-    POMDOG_ASSERT(texture);
-    TextureRegion textureRegion;
-    textureRegion.Subrect.X = 0;
-    textureRegion.Subrect.Y = 0;
-    textureRegion.Subrect.Width = texture->Width();
-    textureRegion.Subrect.Height = texture->Height();
-    textureRegion.XOffset = 0;
-    textureRegion.YOffset = 0;
-    textureRegion.Width = texture->Width();
-    textureRegion.Height = texture->Height();
-    textureRegion.Rotate = false;
-    return std::move(textureRegion);
-}
-
 namespace SpriteRenderableDirtyFlags {
 
-static constexpr std::uint32_t OriginPivot = 0x1;
-static constexpr std::uint32_t Region = 0x2;
+constexpr std::uint32_t OriginPivot = 0b001;
+constexpr std::uint32_t Region = 0b010;
 
-}// namespace SpriteRenderableDirtyFlags
+} // namespace SpriteRenderableDirtyFlags
 
-}// unnamed namespace
+Matrix3x2 CreateTransformMatrix3x2(const Transform& transform)
+{
+    return Matrix3x2::CreateScale(transform.GetScale2D())
+        * Matrix3x2::CreateRotation(transform.GetRotation2D())
+        * Matrix3x2::CreateTranslation(transform.GetPosition2D());
+}
 
-SpriteRenderable::SpriteRenderable(std::shared_ptr<Texture2D> const& texture)
-    : SpriteRenderable(texture, CreateTextureRegionFromTexture(texture))
-{}
+//TextureRegion CreateTextureRegionFromTexture(std::shared_ptr<Texture2D> const& texture)
+//{
+//    POMDOG_ASSERT(texture);
+//    TextureRegion textureRegion;
+//    textureRegion.Subrect.X = 0;
+//    textureRegion.Subrect.Y = 0;
+//    textureRegion.Subrect.Width = texture->Width();
+//    textureRegion.Subrect.Height = texture->Height();
+//    textureRegion.XOffset = 0;
+//    textureRegion.YOffset = 0;
+//    textureRegion.Width = texture->Width();
+//    textureRegion.Height = texture->Height();
+//    textureRegion.Rotate = false;
+//    return std::move(textureRegion);
+//}
 
-SpriteRenderable::SpriteRenderable(std::shared_ptr<Texture2D> const& textureIn, TextureRegion const& textureRegionIn)
-    : originPivot{0.5f, 0.5f}
-    , dirtyFlags{std::numeric_limits<std::uint32_t>::max()}
+} // unnamed namespace
+
+SpriteRenderable::SpriteRenderable()
+    : originPivot(0.5f, 0.5f)
+    , color(Color::White)
+    , dirtyFlags(std::numeric_limits<std::uint32_t>::max())
+{
+    command.drawOrder = 0;
+    offsetMatrix = Matrix3x2::Identity;
+    textureRegion.X = 0;
+    textureRegion.Y = 0;
+    textureRegion.Width = 1;
+    textureRegion.Height = 1;
+}
+
+std::shared_ptr<Texture2D> SpriteRenderable::GetTexture()
+{
+    return texture;
+}
+
+void SpriteRenderable::SetTexture(const std::shared_ptr<Texture2D>& textureIn)
 {
     POMDOG_ASSERT(textureIn);
-    command.texture = textureIn;
-    command.textureRegion = textureRegionIn;
-    command.transform = Matrix3x2::Identity;
-    command.color = Material.Color;
-    command.originPivot = {0.5f, 0.5f};
-    command.drawOrder = 0;
+    texture = textureIn;
+    dirtyFlags |= SpriteRenderableDirtyFlags::OriginPivot;
+    dirtyFlags |= SpriteRenderableDirtyFlags::Region;
 }
 
-void SpriteRenderable::Visit(GameObject & gameObject, Renderer & renderer)
+const Rectangle& SpriteRenderable::GetTextureRegion()
 {
-    if (!IsVisible) {
-        return;
-    }
-
-    if (dirtyFlags & SpriteRenderableDirtyFlags::Region)
-    {
-        auto & region = command.textureRegion;
-        offsetMatrix = Matrix3x2::CreateTranslation(Vector2(region.XOffset, region.Height - (region.YOffset + region.Subrect.Height)));
-        command.originPivot = originPivot * Vector2(region.Width, region.Height) / Vector2(region.Subrect.Width, region.Subrect.Height);
-    }
-    else if (dirtyFlags & SpriteRenderableDirtyFlags::OriginPivot)
-    {
-        auto & region = command.textureRegion;
-        command.originPivot = originPivot * Vector2(region.Width, region.Height) / Vector2(region.Subrect.Width, region.Subrect.Height);
-    }
-    dirtyFlags = 0;
-
-    command.drawOrder = DrawOrder;
-    command.color = Material.Color;
-
-    if (auto transform = gameObject.Component<Transform2D>())
-    {
-        if (transform->Scale.X == 0.0f || transform->Scale.Y == 0.0f) {
-            return;
-        }
-        command.transform = offsetMatrix * CreateTransformMatrix3x2(*transform);
-    }
-    else {
-        command.transform = offsetMatrix;
-    }
-
-    POMDOG_ASSERT(command.texture);
-    POMDOG_ASSERT(command.textureRegion.Width > 0);
-    POMDOG_ASSERT(command.textureRegion.Height > 0);
-    POMDOG_ASSERT(command.textureRegion.Subrect.Width > 0);
-    POMDOG_ASSERT(command.textureRegion.Subrect.Height > 0);
-
-    renderer.PushCommand(command);
+    return textureRegion;
 }
 
-void SpriteRenderable::OriginPivot(Vector2 const& originPivotIn)
+void SpriteRenderable::SetTextureRegion(const Rectangle& textureRegionIn)
+{
+    textureRegion = textureRegionIn;
+    dirtyFlags |= SpriteRenderableDirtyFlags::Region;
+
+    POMDOG_ASSERT(textureRegion.X >= 0);
+    POMDOG_ASSERT(textureRegion.Y >= 0);
+    POMDOG_ASSERT(textureRegion.Width > 0);
+    POMDOG_ASSERT(textureRegion.Height > 0);
+}
+
+Vector2 SpriteRenderable::GetOriginPivot()
+{
+    return originPivot;
+}
+
+void SpriteRenderable::SetOriginPivot(const Vector2& originPivotIn)
 {
     originPivot = originPivotIn;
     dirtyFlags |= SpriteRenderableDirtyFlags::OriginPivot;
 }
 
-Vector2 SpriteRenderable::OriginPivot() const
+Color SpriteRenderable::GetColor()
 {
-    return originPivot;
+    return color;
 }
 
-void SpriteRenderable::Region(TextureRegion const& regionIn)
+void SpriteRenderable::SetColor(const Color& colorIn)
 {
-    command.textureRegion = regionIn;
-    dirtyFlags |= SpriteRenderableDirtyFlags::Region;
+    color = colorIn;
 }
 
-TextureRegion const& SpriteRenderable::Region() const
+void SpriteRenderable::Visit(Entity & entity, Renderer & renderer)
 {
-    return command.textureRegion;
+    if (!IsVisible()) {
+        return;
+    }
+
+    if (!texture) {
+        return;
+    }
+
+    POMDOG_ASSERT(texture);
+    POMDOG_ASSERT(textureRegion.X >= 0);
+    POMDOG_ASSERT(textureRegion.Y >= 0);
+    POMDOG_ASSERT(textureRegion.Width > 0);
+    POMDOG_ASSERT(textureRegion.Height > 0);
+
+    if (dirtyFlags & SpriteRenderableDirtyFlags::Region) {
+        offsetMatrix = Matrix3x2::CreateTranslation(Vector2(
+            textureRegion.X,
+            texture->GetHeight() - (textureRegion.Y + textureRegion.Height)));
+        originPivotForDrawCommand = originPivot * Vector2(texture->GetWidth(), texture->GetHeight()) / Vector2(textureRegion.Width, textureRegion.Height);
+    }
+    else if (dirtyFlags & SpriteRenderableDirtyFlags::OriginPivot) {
+        originPivotForDrawCommand = originPivot * Vector2(texture->GetWidth(), texture->GetHeight()) / Vector2(textureRegion.Width, textureRegion.Height);
+    }
+
+    dirtyFlags = 0;
+
+    if (auto transform = entity.GetComponent<Transform>()) {
+        auto& scale = transform->GetScale();
+        if (scale.X == 0.0f || scale.Y == 0.0f) {
+            return;
+        }
+        transformForDrawCommand = offsetMatrix * CreateTransformMatrix3x2(*transform);
+    }
+    else {
+        transformForDrawCommand = offsetMatrix;
+    }
+
+    command.onDraw = [this](SpriteBatchRenderer & spriteBatch) {
+        spriteBatch.Draw(texture, transformForDrawCommand, textureRegion, color, originPivotForDrawCommand);
+    };
+
+    command.drawOrder = GetDrawOrder();
+    renderer.PushCommand(command);
 }
 
-Rectangle SpriteRenderable::BoundingBox() const
+std::uint8_t ComponentTypeDeclaration<SpriteRenderable>::GetTypeIndex()
 {
-    return {0, 0, command.textureRegion.Width, command.textureRegion.Height};
+    return Detail::Gameplay::ComponentTypeIndex::Index<GraphicsComponent>();
 }
 
-}// namespace Pomdog
+std::shared_ptr<Component> ComponentCreator<SpriteRenderable>::CreateComponent()
+{
+    auto component = std::make_shared<SpriteRenderable>();
+    return component;
+}
+
+std::uint8_t ComponentCreator<SpriteRenderable>::GetComponentType()
+{
+    return ComponentTypeDeclaration<SpriteRenderable>::GetTypeIndex();
+}
+
+} // namespace Pomdog
