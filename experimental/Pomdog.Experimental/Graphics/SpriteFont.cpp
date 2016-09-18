@@ -328,8 +328,8 @@ void SpriteFont::Impl::Draw(
         const auto character = utf8::next(textIter, textIterEnd);
 
         if (character == U'\n') {
-            currentPosition.X = 0.0f;
-            currentPosition.Y += lineSpacing * scale.Y;
+            currentPosition.X = position.X;
+            currentPosition.Y -= lineSpacing * scale.Y;
             continue;
         }
 
@@ -354,7 +354,7 @@ void SpriteFont::Impl::Draw(
                 glyph.Subrect, color, 0.0f, Vector2{0.0f, 1.0f}, scale);
         }
 
-        currentPosition.X += (glyph.XAdvance - spacing) * scale.X;
+        currentPosition.X += ((glyph.XAdvance - spacing) * scale.X);
     }
 }
 
