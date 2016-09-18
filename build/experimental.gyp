@@ -30,6 +30,8 @@
       '<@(pomdog_expr_dir)/Gameplay/detail/ComponentTypeIndex.cpp',
       '<@(pomdog_expr_dir)/Gameplay/detail/ComponentTypeIndex.hpp',
 
+      '<@(pomdog_expr_dir)/Gameplay2D/ActorComponent.cpp',
+      '<@(pomdog_expr_dir)/Gameplay2D/ActorComponent.hpp',
       '<@(pomdog_expr_dir)/Gameplay2D/Animator.cpp',
       '<@(pomdog_expr_dir)/Gameplay2D/Animator.hpp',
     #   '<@(pomdog_expr_dir)/Gameplay2D/BeamRenderable.cpp',
