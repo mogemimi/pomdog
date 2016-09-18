@@ -2,9 +2,8 @@
 
 #pragma once
 
-#include "detail/ComponentBase.hpp"
-#include "EntityID.hpp"
-#include "EntityContext.hpp"
+#include "Pomdog.Experimental/Gameplay/EntityID.hpp"
+#include "Pomdog.Experimental/Gameplay/EntityContext.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <cstdint>
 #include <type_traits>
@@ -18,21 +17,17 @@ class Entity final {
 public:
     Entity() = default;
 
-    explicit Entity(std::shared_ptr<EntityContext> const& context);
-    explicit Entity(std::shared_ptr<EntityContext> && context);
+    Entity(EntityContext* context, const EntityID& id) noexcept;
 
-    Entity(std::shared_ptr<EntityContext> const& context, EntityID const& id);
-    Entity(std::shared_ptr<EntityContext> && context, EntityID const& id);
+    explicit operator bool() const noexcept;
 
-    explicit operator bool() const;
+    bool operator==(const Entity& entity) const noexcept;
+    bool operator!=(const Entity& entity) const noexcept;
 
-    bool operator==(Entity const& entity) const;
-    bool operator!=(Entity const& entity) const;
-
-    EntityID GetEntityID() const noexcept;
+    EntityID GetID() const noexcept;
 
     template <typename T>
-    std::shared_ptr<T const> GetComponent() const;
+    std::shared_ptr<T> GetComponent() const;
 
     template <typename T>
     std::shared_ptr<T> GetComponent();
@@ -40,33 +35,21 @@ public:
     template <typename T>
     bool HasComponent() const;
 
-    template <typename T>
-    std::shared_ptr<T> AddComponent(std::shared_ptr<T> && component);
-
-    template <typename T, typename...Arguments>
-    std::shared_ptr<T> AddComponent(Arguments && ...arguments);
-
-    template <typename T>
-    void RemoveComponent();
-
     void Destroy();
 
     void DestroyImmediate();
 
 private:
-    std::shared_ptr<EntityContext> context;
+    // NOTE: This pointer should be weak or raw pointer instead of shared_ptr.
+    EntityContext* context = nullptr;
     EntityID id;
 };
 
-template <class T>
-class Component;
-
 template <typename T>
-std::shared_ptr<T const> Entity::GetComponent() const
+std::shared_ptr<T> Entity::GetComponent() const
 {
-    static_assert(std::is_base_of<Detail::Gameplay::ComponentBase, T>::value, "");
-    static_assert(std::is_base_of<Pomdog::Component<T>, T>::value, "TOOD: Not implemented");
-    POMDOG_ASSERT(context);
+    static_assert(std::is_base_of<Component, T>::value, "");
+    POMDOG_ASSERT(context != nullptr);
     POMDOG_ASSERT(context->Valid(id));
     return context->GetComponent<T>(id);
 }
@@ -74,8 +57,8 @@ std::shared_ptr<T const> Entity::GetComponent() const
 template <typename T>
 std::shared_ptr<T> Entity::GetComponent()
 {
-    static_assert(std::is_base_of<Detail::Gameplay::ComponentBase, T>::value, "");
-    POMDOG_ASSERT(context);
+    static_assert(std::is_base_of<Component, T>::value, "");
+    POMDOG_ASSERT(context != nullptr);
     POMDOG_ASSERT(context->Valid(id));
     return context->GetComponent<T>(id);
 }
@@ -83,38 +66,10 @@ std::shared_ptr<T> Entity::GetComponent()
 template <typename T>
 bool Entity::HasComponent() const
 {
-    static_assert(std::is_base_of<Detail::Gameplay::ComponentBase, T>::value, "");
-    static_assert(std::is_base_of<Pomdog::Component<T>, T>::value, "TOOD: Not implemented");
-    POMDOG_ASSERT(context);
+    static_assert(std::is_base_of<Component, T>::value, "");
+    POMDOG_ASSERT(context != nullptr);
     POMDOG_ASSERT(context->Valid(id));
     return context->HasComponent<T>(id);
-}
-
-template <typename T>
-std::shared_ptr<T> Entity::AddComponent(std::shared_ptr<T> && component)
-{
-    static_assert(std::is_base_of<Detail::Gameplay::ComponentBase, T>::value, "");
-    POMDOG_ASSERT(context);
-    POMDOG_ASSERT(context->Valid(id));
-    return context->AddComponent<T>(id, std::move(component));
-}
-
-template <typename T, typename...Arguments>
-std::shared_ptr<T> Entity::AddComponent(Arguments && ...arguments)
-{
-    static_assert(std::is_base_of<Detail::Gameplay::ComponentBase, T>::value, "");
-    POMDOG_ASSERT(context);
-    POMDOG_ASSERT(context->Valid(id));
-    return context->AddComponent<T>(id, std::forward<Arguments>(arguments)...);
-}
-
-template <typename T>
-void Entity::RemoveComponent()
-{
-    static_assert(std::is_base_of<Detail::Gameplay::ComponentBase, T>::value, "");
-    POMDOG_ASSERT(context);
-    POMDOG_ASSERT(context->Valid(id));
-    context->RemoveComponent<T>(id);
 }
 
 } // namespace Pomdog

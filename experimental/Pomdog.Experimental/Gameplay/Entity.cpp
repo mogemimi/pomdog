@@ -4,63 +4,47 @@
 
 namespace Pomdog {
 
-Entity::Entity(std::shared_ptr<EntityContext> const& contextIn)
-    : context(contextIn)
-    , id(context->Create())
-{}
-
-Entity::Entity(std::shared_ptr<EntityContext> && contextIn)
-    : context(std::move(contextIn))
-    , id(context->Create())
-{}
-
-Entity::Entity(std::shared_ptr<EntityContext> const& contextIn, EntityID const& idIn)
+Entity::Entity(EntityContext* contextIn, const EntityID& idIn) noexcept
     : context(contextIn)
     , id(idIn)
 {}
 
-Entity::Entity(std::shared_ptr<EntityContext> && contextIn, EntityID const& idIn)
-    : context(std::move(contextIn))
-    , id(idIn)
-{}
-
-Entity::operator bool() const
+Entity::operator bool() const noexcept
 {
-    return context && context->Valid(id);
+    return (context != nullptr) && context->Valid(id);
 }
 
-bool Entity::operator==(Entity const& entity) const
+bool Entity::operator==(const Entity& other) const noexcept
 {
-    POMDOG_ASSERT((!context || !entity.context) || context == entity.context);
-    return (context && entity.context) && (id == entity.id);
+    return (context == other.context) && (id == other.id);
 }
 
-bool Entity::operator!=(Entity const& entity) const
+bool Entity::operator!=(const Entity& other) const noexcept
 {
-    POMDOG_ASSERT((!context || !entity.context) || context == entity.context);
-    return (!context || !entity.context) || (id != entity.id);
+    return (context != other.context) || (id != other.id);
 }
 
 void Entity::Destroy()
 {
-    if (context && context->Valid(id)) {
+    if ((context != nullptr) && context->Valid(id)) {
         context->Destroy(id);
     }
+    context = nullptr;
+    id = EntityID{0, 0};
 }
 
 void Entity::DestroyImmediate()
 {
-    POMDOG_ASSERT(context);
-    POMDOG_ASSERT(context->Valid(id));
-
-    if (context->Valid(id)) {
+    if ((context != nullptr) && context->Valid(id)) {
         context->DestroyImmediate(id);
     }
+    context = nullptr;
+    id = EntityID{0, 0};
 }
 
-EntityID Entity::GetEntityID() const noexcept
+EntityID Entity::GetID() const noexcept
 {
-    POMDOG_ASSERT(context && context->Valid(id));
+    POMDOG_ASSERT((context != nullptr) && context->Valid(id));
     return id;
 }
 

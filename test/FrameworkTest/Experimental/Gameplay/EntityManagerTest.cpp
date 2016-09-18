@@ -2,110 +2,81 @@
 
 #include <Pomdog.Experimental/Gameplay/EntityManager.hpp>
 #include <Pomdog.Experimental/Gameplay/Entity.hpp>
+#include <Pomdog.Experimental/Gameplay2D/ActorComponent.hpp>
+#include <Pomdog.Experimental/Gameplay2D/Transform.hpp>
 #include <gtest/iutest_switch.hpp>
 #include <cstdint>
 
 using namespace Pomdog;
 
-namespace {
-
-struct TransformComponent: public Component<TransformComponent>
-{
-    TransformComponent() = default;
-    TransformComponent(int xIn, int yIn, int zIn)
-        : x(xIn), y(yIn), z(zIn)
-    {}
-
-    int x, y, z;
-};
-
-struct PhysicsComponent: public Component<PhysicsComponent>
-{
-    PhysicsComponent() = default;
-    explicit PhysicsComponent(int vIn)
-        : v(vIn)
-    {}
-
-    int v;
-};
-
-struct RendererComponent: public Component<RendererComponent>
-{
-    virtual ~RendererComponent() = default;
-
-    virtual void SetZOrder(int z) = 0;
-    virtual int GetZOrder() const = 0;
-};
-
-struct MeshRendererComponent final: public RendererComponent
-{
-    void SetZOrder(int zIn) override {
-        this->z = zIn;
-    }
-    int GetZOrder() const override {
-        return z;
-    }
-
-private:
-    int z;
-};
-
-}// unnamed namespace
-
 TEST(EntityManager, CreateEntity)
 {
     EntityManager manager;
     {
-        auto entity = manager.CreateEntity();
-        entity.AddComponent<TransformComponent>();
-        entity.AddComponent<PhysicsComponent>();
+        auto entity = manager.CreateEntity({});
+        EXPECT_TRUE(entity);
+        EXPECT_FALSE(entity.HasComponent<Transform>());
+        EXPECT_FALSE(entity.HasComponent<ActorComponent>());
     }
     {
-        auto entity = manager.CreateEntity();
-        entity.AddComponent<TransformComponent>();
-        entity.AddComponent<PhysicsComponent>();
+        auto entity = manager.CreateEntity({
+            AddComponent<Transform>()
+        });
+        EXPECT_TRUE(entity);
+        EXPECT_TRUE(entity.HasComponent<Transform>());
+        EXPECT_FALSE(entity.HasComponent<ActorComponent>());
     }
     {
-        auto entity = manager.CreateEntity();
-        entity.AddComponent<PhysicsComponent>();
+        auto entity = manager.CreateEntity({
+            AddComponent<ActorComponent>()
+        });
+        EXPECT_TRUE(entity);
+        EXPECT_FALSE(entity.HasComponent<Transform>());
+        EXPECT_TRUE(entity.HasComponent<ActorComponent>());
     }
     {
-        auto entity = manager.CreateEntity();
+        auto entity = manager.CreateEntity({
+            AddComponent<Transform>(),
+            AddComponent<ActorComponent>()
+        });
+        EXPECT_TRUE(entity);
+        EXPECT_TRUE(entity.HasComponent<Transform>());
+        EXPECT_TRUE(entity.HasComponent<ActorComponent>());
     }
     {
-        auto entitys = manager.QueryComponents<TransformComponent, PhysicsComponent>();
-        EXPECT_EQ(2, entitys.size());
+        auto entities = manager.QueryComponents<Transform, ActorComponent>();
+        EXPECT_EQ(1, entities.size());
     }
     {
-        auto entitys = manager.QueryComponents<PhysicsComponent, TransformComponent>();
-        EXPECT_EQ(2, entitys.size());
+        auto entities = manager.QueryComponents<Transform>();
+        EXPECT_EQ(2, entities.size());
     }
     {
-        auto entitys = manager.QueryComponents<PhysicsComponent>();
-        EXPECT_EQ(3, entitys.size());
+        auto entities = manager.QueryComponents<ActorComponent>();
+        EXPECT_EQ(2, entities.size());
     }
     {
-        auto entitys = manager.QueryComponents<TransformComponent>();
-        EXPECT_EQ(2, entitys.size());
+        auto entities = manager.QueryComponents<Transform>();
+        EXPECT_EQ(2, entities.size());
 
-        for (auto & objects: entitys) {
-            objects.DestroyImmediate();
+        for (auto & entity : entities) {
+            entity.DestroyImmediate();
         }
 
-        entitys = manager.QueryComponents<TransformComponent>();
-        EXPECT_TRUE(entitys.empty());
+        entities = manager.QueryComponents<Transform>();
+        EXPECT_TRUE(entities.empty());
     }
     {
-        auto entitys = manager.QueryComponents<TransformComponent, PhysicsComponent>();
-        EXPECT_TRUE(entitys.empty());
+        auto entities = manager.QueryComponents<Transform, ActorComponent>();
+        EXPECT_TRUE(entities.empty());
     }
     {
-        auto entitys = manager.QueryComponents<PhysicsComponent, TransformComponent>();
-        EXPECT_TRUE(entitys.empty());
+        auto entities = manager.QueryComponents<ActorComponent, Transform>();
+        EXPECT_TRUE(entities.empty());
     }
     {
-        auto entitys = manager.QueryComponents<PhysicsComponent>();
-        EXPECT_EQ(1, entitys.size());
+        auto entities = manager.QueryComponents<ActorComponent>();
+        EXPECT_EQ(1, entities.size());
     }
 }
 

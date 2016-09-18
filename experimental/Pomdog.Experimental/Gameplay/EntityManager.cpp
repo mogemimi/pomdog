@@ -5,50 +5,44 @@
 
 namespace Pomdog {
 
-EntityManager::EntityManager()
-    : context(std::make_shared<EntityContext>())
-{}
-
-Entity EntityManager::CreateEntity()
+Entity EntityManager::CreateEntity(
+    std::vector<std::shared_ptr<ComponentCreatorBase>> && componentCreators)
 {
-    POMDOG_ASSERT(context);
-    Entity entity {context};
-    entities.push_back(entity.GetEntityID());
+    Entity entity(&context, context.Create(std::move(componentCreators)));
+    entities.push_back(entity.GetID());
     return std::move(entity);
 }
 
-bool EntityManager::Valid(EntityID const& objectID) const
+bool EntityManager::Valid(const EntityID& objectID) const noexcept
 {
-    POMDOG_ASSERT(context);
-    return context->Valid(objectID);
+    return context.Valid(objectID);
 }
 
 void EntityManager::Refresh()
 {
-    POMDOG_ASSERT(context);
-    context->Refresh();
+    const auto entityCount = context.GetCount();
+    context.Refresh();
 
-    entities.erase(std::remove_if(std::begin(entities), std::end(entities),
-        [this](EntityID const& id){ return !context->Valid(id); }),
-        std::end(entities));
+    if (entityCount != context.GetCount()) {
+        entities.erase(std::remove_if(std::begin(entities), std::end(entities),
+            [this](EntityID const& id){ return !context.Valid(id); }),
+            std::end(entities));
+    }
 }
 
 std::size_t EntityManager::GetCount() const noexcept
 {
-    POMDOG_ASSERT(context);
-    return context->GetCount();
+    return context.GetCount();
 }
 
 std::size_t EntityManager::GetCapacity() const noexcept
 {
-    POMDOG_ASSERT(context);
-    return context->GetCapacity();
+    return context.GetCapacity();
 }
 
 void EntityManager::Clear()
 {
-    POMDOG_ASSERT(context);
-    context->Clear();
+    context.Clear();
 }
 
 } // namespace Pomdog

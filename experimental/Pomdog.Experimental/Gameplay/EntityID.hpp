@@ -7,11 +7,11 @@
 
 namespace Pomdog {
 
-class EntityID {
+class EntityID final {
 public:
-    EntityID() : id(0x0) {}
+    EntityID() noexcept : id(0x0) {}
 
-    EntityID(std::uint32_t sequenceNumber, std::uint32_t index)
+    EntityID(std::uint32_t sequenceNumber, std::uint32_t index) noexcept
         : id((static_cast<std::uint64_t>(sequenceNumber) << 32) | (index & 0xffffffffUL))
     {}
 
