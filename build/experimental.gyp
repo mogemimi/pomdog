@@ -46,6 +46,8 @@
       '<@(pomdog_expr_dir)/Gameplay2D/HierarchyNode.hpp',
     #   '<@(pomdog_expr_dir)/Gameplay2D/ParticleRenderable.cpp',
     #   '<@(pomdog_expr_dir)/Gameplay2D/ParticleRenderable.hpp',
+      '<@(pomdog_expr_dir)/Gameplay2D/PrimitiveRenderable.cpp',
+      '<@(pomdog_expr_dir)/Gameplay2D/PrimitiveRenderable.hpp',
     #   '<@(pomdog_expr_dir)/Gameplay2D/RectangleRenderable.cpp',
     #   '<@(pomdog_expr_dir)/Gameplay2D/RectangleRenderable.hpp',
     #   '<@(pomdog_expr_dir)/Gameplay2D/SkinnedMeshRenderable.cpp',
