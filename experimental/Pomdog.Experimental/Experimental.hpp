@@ -5,6 +5,7 @@
 #include "Actions/Action.hpp"
 #include "Actions/MoveToAction.hpp"
 #include "Actions/RemoveActorAction.hpp"
+#include "Actions/RotateToAction.hpp"
 #include "Actions/ScaleToAction.hpp"
 #include "Actions/SequenceAction.hpp"
 #include "Actions/TintToAction.hpp"
