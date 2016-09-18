@@ -5,17 +5,35 @@
 #include <cmath>
 
 namespace Pomdog {
+namespace {
+
+constexpr std::size_t DefaultMaxVertexCount = 4096;
+constexpr std::size_t DefaultMinVertexCount = 256;
+
+} // unnamed namespace
 
 PolygonShapeBuilder::PolygonShapeBuilder()
+    : maxVertexCount(DefaultMaxVertexCount)
+    , minVertexCount(DefaultMinVertexCount)
 {
-    vertices.reserve(MinVertexCount);
+    POMDOG_ASSERT(minVertexCount <= maxVertexCount);
+    vertices.reserve(minVertexCount);
+}
+
+PolygonShapeBuilder::PolygonShapeBuilder(std::size_t maxVertexCountIn)
+    : maxVertexCount(maxVertexCountIn)
+    , minVertexCount(1)
+{
+    POMDOG_ASSERT(3 <= maxVertexCount);
+    POMDOG_ASSERT(minVertexCount <= maxVertexCount);
 }
 
 void PolygonShapeBuilder::Reset()
 {
-    if (vertices.capacity() > MaxVertexCount) {
-        POMDOG_ASSERT(vertices.size() <= MaxVertexCount);
-        vertices.resize(MaxVertexCount);
+    POMDOG_ASSERT(minVertexCount <= maxVertexCount);
+    if (vertices.capacity() > maxVertexCount) {
+        POMDOG_ASSERT(vertices.size() <= maxVertexCount);
+        vertices.resize(maxVertexCount);
         vertices.shrink_to_fit();
     }
     vertices.clear();
@@ -34,6 +52,11 @@ std::size_t PolygonShapeBuilder::GetVertexCount() const noexcept
 bool PolygonShapeBuilder::IsEmpty() const noexcept
 {
     return vertices.empty();
+}
+
+std::size_t PolygonShapeBuilder::GetMaxVertexCount() const noexcept
+{
+    return maxVertexCount;
 }
 
 void PolygonShapeBuilder::DrawArc(
@@ -517,13 +540,16 @@ void PolygonShapeBuilder::DrawTriangle(
     Vector4 const& color2,
     Vector4 const& color3)
 {
-    if (vertices.size() + 3 > MaxVertexCount) {
+    POMDOG_ASSERT(minVertexCount <= maxVertexCount);
+    POMDOG_ASSERT(3 < maxVertexCount);
+
+    if (vertices.size() + 3 > maxVertexCount) {
         if (onFlush) {
             onFlush();
         }
     }
 
-    POMDOG_ASSERT(vertices.size() + 3 <= MaxVertexCount);
+    POMDOG_ASSERT(vertices.size() + 3 <= maxVertexCount);
     vertices.push_back(Vertex{point1, color1});
     vertices.push_back(Vertex{point2, color2});
     vertices.push_back(Vertex{point3, color3});

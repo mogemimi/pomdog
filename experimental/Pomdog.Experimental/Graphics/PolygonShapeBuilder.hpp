@@ -26,16 +26,16 @@ struct PolygonBatchVertex {
 
 class PolygonShapeBuilder {
 private:
-    static constexpr std::size_t MaxVertexCount = 4096;
-    static constexpr std::size_t MinVertexCount = 256;
-
     typedef PolygonBatchVertex Vertex;
     std::vector<PolygonBatchVertex> vertices;
-
+    std::size_t maxVertexCount;
+    std::size_t minVertexCount;
     std::function<void()> onFlush;
 
 public:
     PolygonShapeBuilder();
+
+    explicit PolygonShapeBuilder(std::size_t maxVertexCount);
 
     void Reset();
 
@@ -45,9 +45,7 @@ public:
 
     bool IsEmpty() const noexcept;
 
-    static constexpr std::size_t GetMaxVertexCount() noexcept {
-        return MaxVertexCount;
-    }
+    std::size_t GetMaxVertexCount() const noexcept;
 
     void DrawArc(
         Vector2 const& position,

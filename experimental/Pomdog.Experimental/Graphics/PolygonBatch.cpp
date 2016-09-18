@@ -377,7 +377,7 @@ void PolygonBatch::DrawTriangle(
 
 std::size_t PolygonBatch::GetMaxVertexCount() const noexcept
 {
-    return PolygonShapeBuilder::GetMaxVertexCount();
+    return impl->polygonShapes.GetMaxVertexCount();
 }
 
 int PolygonBatch::GetDrawCallCount() const noexcept
