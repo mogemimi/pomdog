@@ -47,8 +47,8 @@ class SpriteFont::Impl {
 public:
     typedef Detail::SpriteFonts::Glyph Glyph;
 
-    static constexpr int TextureWidth = 512;
-    static constexpr int TextureHeight = 512;
+    static constexpr int TextureWidth = 1024;
+    static constexpr int TextureHeight = 1024;
 
     std::unordered_map<char32_t, Glyph> spriteFontMap;
 
