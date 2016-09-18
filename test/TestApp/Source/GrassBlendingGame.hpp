@@ -38,7 +38,8 @@ private:
     std::shared_ptr<GameHost> gameHost;
     std::shared_ptr<GameWindow> window;
     std::shared_ptr<GraphicsDevice> graphicsDevice;
-    std::shared_ptr<GraphicsContext> graphicsContext;
+    std::shared_ptr<GraphicsCommandQueue> commandQueue;
+    std::shared_ptr<GraphicsCommandList> commandList;
 
     std::shared_ptr<Texture2D> texture;
     std::unique_ptr<SpriteRenderer> spriteRenderer;
@@ -81,4 +82,4 @@ private:
     std::unique_ptr<PolygonBatch> polygonBatch;
 };
 
-}// namespace TestApp
+} // namespace TestApp

@@ -112,7 +112,7 @@ LineBatch::Impl::Impl(
             .SetPixelShader(pixelShader.Build())
             .SetInputLayout(inputLayout.CreateInputLayout())
             .SetBlendState(BlendDescription::CreateNonPremultiplied())
-            .SetDepthStencilState(DepthStencilDescription::CreateNone())
+            .SetDepthStencilState(DepthStencilDescription::CreateDefault())
             .SetConstantBufferBindSlot("TransformMatrix", 0)
             .Build();
     }

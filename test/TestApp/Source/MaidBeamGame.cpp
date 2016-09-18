@@ -12,7 +12,7 @@ MaidBeamGame::MaidBeamGame(std::shared_ptr<GameHost> const& gameHostIn)
     : gameHost(gameHostIn)
     , window(gameHostIn->Window())
     , graphicsDevice(gameHostIn->GraphicsDevice())
-    , graphicsContext(gameHostIn->GraphicsContext())
+    , commandQueue(gameHostIn->GraphicsCommandQueue())
     , sandboxMode(false)
 {}
 
@@ -27,6 +27,8 @@ void MaidBeamGame::Initialize()
     auto clientBounds = window->GetClientBounds();
 
     {
+        commandList = std::make_shared<GraphicsCommandList>(*graphicsDevice);
+
         renderTarget = std::make_shared<RenderTarget2D>(graphicsDevice,
             clientBounds.Width, clientBounds.Height,
             false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
@@ -144,7 +146,7 @@ void MaidBeamGame::Update()
 
     {
         gameEditor->Update();
-        textBlock1->Text(StringFormat("Draw Calls: %d", renderer.DrawCallCount()));
+        textBlock1->Text(StringHelper::Format("Draw Calls: %d", renderer.DrawCallCount()));
     }
 }
 
@@ -207,7 +209,7 @@ void MaidBeamGame::Draw()
     }
 
     {
-        auto viewport = graphicsContext->GetViewport();
+        auto & viewport = clientViewport;
 
         if (!sandboxMode)
         {
@@ -256,7 +258,7 @@ void MaidBeamGame::Draw()
     }
 
     gameEditor->DrawGUI(*graphicsContext);
-    graphicsContext->Present();
+    commandQueue->Present();
 }
 
-}// namespace TestApp
+} // namespace TestApp

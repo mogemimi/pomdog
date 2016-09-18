@@ -21,6 +21,7 @@ def main():
     GenerateProjects('test/TestApp/TestApp.gyp', format)
     GenerateProjects('examples/QuickStart/QuickStart.gyp', format)
     GenerateProjects('examples/Pong/Pong.gyp', format)
+    GenerateProjects('examples/TestGame/TestGame.gyp', format)
 
 
 if __name__ == '__main__':

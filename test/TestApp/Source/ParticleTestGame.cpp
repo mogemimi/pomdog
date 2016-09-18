@@ -10,7 +10,7 @@ ParticleTestGame::ParticleTestGame(std::shared_ptr<GameHost> const& gameHostIn)
     : gameHost(gameHostIn)
     , window(gameHostIn->Window())
     , graphicsDevice(gameHostIn->GraphicsDevice())
-    , graphicsContext(gameHostIn->GraphicsContext())
+    , commandQueue(gameHostIn->GraphicsCommandQueue())
 {}
 
 ParticleTestGame::~ParticleTestGame() = default;
@@ -21,23 +21,24 @@ void ParticleTestGame::Initialize()
     window->SetAllowUserResizing(false);
 
     auto assets = gameHost->AssetManager();
+    auto clientBounds = window->GetClientBounds();
 
     {
+        commandList = std::make_shared<GraphicsCommandList>(*graphicsDevice);
+
         renderTarget = std::make_shared<RenderTarget2D>(graphicsDevice,
-            window->GetClientBounds().Width, window->GetClientBounds().Height,
+            clientBounds.Width, clientBounds.Height,
             false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
     }
     {
         fxaa = std::make_unique<FXAA>(graphicsDevice, *assets);
-        auto bounds = window->GetClientBounds();
-        fxaa->SetViewport(bounds.Width, bounds.Height);
+        fxaa->SetViewport(clientBounds.Width, clientBounds.Height);
         screenQuad = std::make_unique<ScreenQuad>(graphicsDevice);
     }
     {
         gameEditor = std::make_unique<SceneEditor::InGameEditor>(gameHost);
         editorBackground = std::make_unique<SceneEditor::EditorBackground>(gameHost);
     }
-
     {
         mainCamera = gameWorld.CreateObject();
         mainCamera.AddComponent<Transform2D>();
@@ -49,9 +50,7 @@ void ParticleTestGame::Initialize()
         auto texture = assets->Load<Texture2D>("Particles/smoke.png");
         particleObject.AddComponent(std::make_unique<ParticleRenderable>(texture));
     }
-
     {
-        auto clientBounds = window->GetClientBounds();
         scenePanel = std::make_shared<UI::ScenePanel>(clientBounds.Width, clientBounds.Height);
         scenePanel->cameraObject = mainCamera;
         gameEditor->AddView(scenePanel);
@@ -76,27 +75,23 @@ void ParticleTestGame::Initialize()
             stackPanel->AddChild(slider2);
         }
     }
-    {
-        scenePanel->SceneTouch.Connect([this](Vector2 const& positionInView) {
-            auto transform = mainCamera.Component<Transform2D>();
-            auto camera = mainCamera.Component<Camera2D>();
 
-            POMDOG_ASSERT(transform && camera);
-            auto inverseViewMatrix3D = Matrix4x4::Invert(SandboxHelper::CreateViewMatrix(*transform, *camera));
-
-            auto viewport = graphicsContext->GetViewport();
-
-            auto position = Vector3::Transform(Vector3(
-                positionInView.X - viewport.Width / 2,
-                positionInView.Y - viewport.Height / 2,
-                0), inverseViewMatrix3D);
-
-            touchPoint = Vector2{position.X, position.Y};
-        });
-    }
-
-    auto clientBounds = window->GetClientBounds();
     clientViewport = Viewport{0, 0, clientBounds.Width, clientBounds.Height};
+
+    connections.Connect(scenePanel->SceneTouch, [this](Vector2 const& positionInView) {
+        auto transform = mainCamera.Component<Transform2D>();
+        auto camera = mainCamera.Component<Camera2D>();
+
+        POMDOG_ASSERT(transform && camera);
+        auto inverseViewMatrix3D = Matrix4x4::Invert(SandboxHelper::CreateViewMatrix(*transform, *camera));
+
+        auto position = Vector3::Transform(Vector3(
+            positionInView.X - clientViewport.Width / 2,
+            positionInView.Y - clientViewport.Height / 2,
+            0), inverseViewMatrix3D);
+
+        touchPoint = Vector2{position.X, position.Y};
+    });
 }
 
 void ParticleTestGame::Update()
@@ -177,7 +172,7 @@ void ParticleTestGame::Draw()
     }
 
     gameEditor->DrawGUI(*graphicsContext);
-    graphicsContext->Present();
+    commandQueue->Present();
 }
 
-}// namespace TestApp
+} // namespace TestApp

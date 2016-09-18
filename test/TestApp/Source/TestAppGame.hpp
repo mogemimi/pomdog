@@ -23,6 +23,8 @@ public:
 private:
     std::shared_ptr<GameHost> gameHost;
     std::unique_ptr<Game> game;
+    std::shared_ptr<GraphicsCommandQueue> commandQueue;
+    std::shared_ptr<GraphicsCommandList> commandList;
 };
 
 } // namespace TestApp

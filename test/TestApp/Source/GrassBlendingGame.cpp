@@ -11,7 +11,7 @@ GrassBlendingGame::GrassBlendingGame(std::shared_ptr<GameHost> const& gameHostIn
     : gameHost(gameHostIn)
     , window(gameHostIn->Window())
     , graphicsDevice(gameHostIn->GraphicsDevice())
-    , graphicsContext(gameHostIn->GraphicsContext())
+    , commandQueue(gameHostIn->GraphicsCommandQueue())
 {}
 
 GrassBlendingGame::~GrassBlendingGame() = default;
@@ -25,21 +25,23 @@ void GrassBlendingGame::Initialize()
     auto clientBounds = window->GetClientBounds();
 
     {
+        commandList = std::make_shared<GraphicsCommandList>(*graphicsDevice);
+
         samplerPoint = std::make_shared<SamplerState>(graphicsDevice,
             SamplerDescription::CreateLinearWrap());
 
         texture = std::make_shared<Texture2D>(graphicsDevice,
             1, 1, false, SurfaceFormat::R8G8B8A8_UNorm);
+
         std::array<std::uint32_t, 1> pixelData = {0xffffffff};
         texture->SetData(pixelData.data());
-    }
-    {
+
         renderTarget = std::make_shared<RenderTarget2D>(graphicsDevice,
             clientBounds.Width, clientBounds.Height,
             false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
     }
     {
-        spriteRenderer = std::make_unique<SpriteRenderer>(graphicsContext, graphicsDevice, *assets);
+        spriteRenderer = std::make_unique<SpriteRenderer>(graphicsDevice, *assets);
         fxaa = std::make_unique<FXAA>(graphicsDevice, *assets);
         fxaa->SetViewport(clientBounds.Width, clientBounds.Height);
         screenQuad = std::make_unique<ScreenQuad>(graphicsDevice);
@@ -240,9 +242,8 @@ void GrassBlendingGame::DrawSkinnedMesh()
 
         POMDOG_ASSERT(transform && camera);
         auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);
-        auto viewport = graphicsContext->GetViewport();
         auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
-            viewport.Width, viewport.Height, 0.1f, 1000.0f);
+            clientViewport.Width, clientViewport.Height, 0.1f, 1000.0f);
 
         maidSkinningEffect->SetWorldViewProjection(viewMatrix * projectionMatrix);
 
@@ -298,9 +299,8 @@ void GrassBlendingGame::Draw()
 
         POMDOG_ASSERT(transform && camera);
         auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);
-        auto viewport = graphicsContext->GetViewport();
         auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
-            viewport.Width, viewport.Height, 0.1f, 1000.0f);
+            clientViewport.Width, clientViewport.Height, 0.1f, 1000.0f);
 
         editorBackground->SetViewProjection(viewMatrix * projectionMatrix);
     }
@@ -321,7 +321,7 @@ void GrassBlendingGame::Draw()
     }
 
     gameEditor->DrawGUI(*graphicsContext);
-    graphicsContext->Present();
+    commandQueue->Present();
 }
 
-}// namespace TestApp
+} // namespace TestApp

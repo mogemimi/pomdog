@@ -13,6 +13,7 @@ namespace TestApp {
 
 TestAppGame::TestAppGame(std::shared_ptr<GameHost> const& gameHostIn)
     : gameHost(gameHostIn)
+    , commandQueue(gameHostIn->GraphicsCommandQueue())
 {}
 
 TestAppGame::~TestAppGame() = default;
@@ -28,13 +29,19 @@ void TestAppGame::Initialize()
     if (game) {
         game->Initialize();
     }
+
+    auto graphicsDevice = gameHost->GraphicsDevice();
+    commandList = std::make_shared<GraphicsCommandList>(*graphicsDevice);
+    commandList->Reset();
+    commandList->Clear(Color::CornflowerBlue);
+    commandList->Close();
 }
 
 void TestAppGame::Update()
 {
     if (!game) {
         auto window = gameHost->Window();
-        window->SetTitle(StringFormat(
+        window->SetTitle(StringHelper::Format(
             "%3.0f fps, FrameNumber = %6d",
             std::round(gameHost->Clock()->FrameRate()),
             gameHost->Clock()->FrameNumber()));
@@ -47,9 +54,9 @@ void TestAppGame::Update()
 void TestAppGame::Draw()
 {
     if (!game) {
-        auto graphicsContext = gameHost->GraphicsContext();
-        graphicsContext->Clear(Color::CornflowerBlue);
-        graphicsContext->Present();
+        commandQueue->Reset();
+        commandQueue->PushbackCommandList(commandList);
+        commandQueue->Present();
         return;
     }
 

@@ -54,6 +54,8 @@
     #   '<@(pomdog_expr_dir)/Gameplay2D/SkinnedMeshRenderable.hpp',
     #   '<@(pomdog_expr_dir)/Gameplay2D/SpriteRenderable.cpp',
     #   '<@(pomdog_expr_dir)/Gameplay2D/SpriteRenderable.hpp',
+      '<@(pomdog_expr_dir)/Gameplay2D/TextRenderable.cpp',
+      '<@(pomdog_expr_dir)/Gameplay2D/TextRenderable.hpp',
       '<@(pomdog_expr_dir)/Gameplay2D/Transform.cpp',
       '<@(pomdog_expr_dir)/Gameplay2D/Transform.hpp',
 

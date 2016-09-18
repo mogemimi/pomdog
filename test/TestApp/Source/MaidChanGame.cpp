@@ -11,7 +11,7 @@ MaidChanGame::MaidChanGame(std::shared_ptr<GameHost> const& gameHostIn)
     : gameHost(gameHostIn)
     , window(gameHostIn->Window())
     , graphicsDevice(gameHostIn->GraphicsDevice())
-    , graphicsContext(gameHostIn->GraphicsContext())
+    , commandQueue(gameHostIn->GraphicsCommandQueue())
 {}
 
 MaidChanGame::~MaidChanGame() = default;
@@ -25,6 +25,8 @@ void MaidChanGame::Initialize()
     auto clientBounds = window->GetClientBounds();
 
     {
+        commandList = std::make_shared<GraphicsCommandList>(*graphicsDevice);
+
         samplerPoint = std::make_shared<SamplerState>(graphicsDevice,
             SamplerDescription::CreateLinearWrap());
 
@@ -39,7 +41,7 @@ void MaidChanGame::Initialize()
             false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
     }
     {
-        spriteRenderer = std::make_unique<SpriteRenderer>(graphicsContext, graphicsDevice, *assets);
+        spriteRenderer = std::make_unique<SpriteRenderer>(graphicsDevice, *assets);
         fxaa = std::make_unique<FXAA>(graphicsDevice, *assets);
         fxaa->SetViewport(clientBounds.Width, clientBounds.Height);
         screenQuad = std::make_unique<ScreenQuad>(graphicsDevice);
@@ -48,7 +50,6 @@ void MaidChanGame::Initialize()
         gameEditor = std::make_unique<SceneEditor::InGameEditor>(gameHost);
         editorBackground = std::make_unique<SceneEditor::EditorBackground>(gameHost);
     }
-
 
     {
         mainCamera = gameWorld.CreateObject();
@@ -173,9 +174,8 @@ void MaidChanGame::DrawSprites()
 
     POMDOG_ASSERT(transform && camera);
     auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);
-    auto viewport = graphicsContext->GetViewport();
     auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
-        viewport.Width, viewport.Height, 0.1f, 1000.0f);
+        clientViewport.Width, clientViewport.Height, 0.1f, 1000.0f);
 
     editorBackground->SetViewProjection(viewMatrix * projectionMatrix);
 
@@ -258,7 +258,7 @@ void MaidChanGame::Draw()
     }
 
     gameEditor->DrawGUI(*graphicsContext);
-    graphicsContext->Present();
+    commandQueue->Present();
 }
 
-}// namespace TestApp
+} // namespace TestApp

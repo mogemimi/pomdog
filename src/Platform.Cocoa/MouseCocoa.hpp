@@ -13,7 +13,6 @@ class MouseCocoa final : public Mouse {
 public:
     MouseCocoa();
 
-    ///@copydoc Pomdog::Mouse
     MouseState GetState() const override;
 
     void Position(const Point2D& position);

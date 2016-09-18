@@ -35,8 +35,8 @@ private:
     std::shared_ptr<GameHost> gameHost;
     std::shared_ptr<GameWindow> window;
     std::shared_ptr<GraphicsDevice> graphicsDevice;
-    std::shared_ptr<GraphicsContext> graphicsContext;
-
+    std::shared_ptr<GraphicsCommandQueue> commandQueue;
+    std::shared_ptr<GraphicsCommandList> commandList;
 
     std::unique_ptr<SceneEditor::InGameEditor> gameEditor;
     std::unique_ptr<SceneEditor::EditorBackground> editorBackground;
@@ -63,4 +63,4 @@ private:
     Viewport clientViewport;
 };
 
-}// namespace TestApp
+} // namespace TestApp

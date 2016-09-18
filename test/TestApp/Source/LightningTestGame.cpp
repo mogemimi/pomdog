@@ -10,7 +10,7 @@ LightningTestGame::LightningTestGame(std::shared_ptr<GameHost> const& gameHostIn
     : gameHost(gameHostIn)
     , window(gameHostIn->Window())
     , graphicsDevice(gameHostIn->GraphicsDevice())
-    , graphicsContext(gameHostIn->GraphicsContext())
+    , commandQueue(gameHostIn->GraphicsCommandQueue())
 {}
 
 LightningTestGame::~LightningTestGame() = default;
@@ -28,8 +28,9 @@ void LightningTestGame::Initialize()
         editorBackground = std::make_unique<SceneEditor::EditorBackground>(gameHost);
     }
     {
+        commandList = std::make_shared<GraphicsCommandList>(*graphicsDevice);
+
         //samplerPoint = SamplerState::CreatePointWrap(graphicsDevice);
-        //graphicsContext->SetSamplerState(0, samplerPoint);
 
         texture = assets->Load<Texture2D>("Particles/lightning.png");
     }
@@ -39,8 +40,8 @@ void LightningTestGame::Initialize()
             false, SurfaceFormat::R8G8B8A8_UNorm, DepthFormat::None);
     }
     {
-        spriteBatch = std::make_unique<SpriteBatch>(graphicsContext, graphicsDevice, *assets);
-        spriteRenderer = std::make_unique<SpriteRenderer>(graphicsContext, graphicsDevice, *assets);
+        spriteBatch = std::make_unique<SpriteBatch>(graphicsDevice, *assets);
+        spriteRenderer = std::make_unique<SpriteRenderer>(graphicsDevice, *assets);
         fxaa = std::make_unique<FXAA>(graphicsDevice, *assets);
         fxaa->SetViewport(clientBounds.Width, clientBounds.Height);
         screenQuad = std::make_unique<ScreenQuad>(graphicsDevice);
@@ -128,26 +129,23 @@ void LightningTestGame::Initialize()
             stackPanel->AddChild(slider5);
         }
     }
-    {
-        scenePanel->SceneTouch.Connect([this](Vector2 const& positionInView) {
-            auto transform = mainCamera.Component<Transform2D>();
-            auto camera = mainCamera.Component<Camera2D>();
-
-            POMDOG_ASSERT(transform && camera);
-            auto inverseViewMatrix3D = Matrix4x4::Invert(SandboxHelper::CreateViewMatrix(*transform, *camera));
-
-            auto viewport = graphicsContext->GetViewport();
-
-            auto position = Vector3::Transform(Vector3(
-                positionInView.X - viewport.Width / 2,
-                positionInView.Y - viewport.Height / 2,
-                0), inverseViewMatrix3D);
-
-            touchPoint = Vector2{position.X, position.Y};
-        });
-    }
 
     clientViewport = Viewport{0, 0, clientBounds.Width, clientBounds.Height};
+
+    connections.Connect(scenePanel->SceneTouch, [this](Vector2 const& positionInView) {
+        auto transform = mainCamera.Component<Transform2D>();
+        auto camera = mainCamera.Component<Camera2D>();
+
+        POMDOG_ASSERT(transform && camera);
+        auto inverseViewMatrix3D = Matrix4x4::Invert(SandboxHelper::CreateViewMatrix(*transform, *camera));
+
+        auto position = Vector3::Transform(Vector3(
+            positionInView.X - clientViewport.Width / 2,
+            positionInView.Y - clientViewport.Height / 2,
+            0), inverseViewMatrix3D);
+
+        touchPoint = Vector2{position.X, position.Y};
+    });
 
     connections.Connect(window->ClientSizeChanged, [this](int width, int height) {
         clientViewport = Viewport{0, 0, width, height};
@@ -190,9 +188,8 @@ void LightningTestGame::DrawSprites()
 
     POMDOG_ASSERT(transform && camera);
     auto viewMatrix = SandboxHelper::CreateViewMatrix(*transform, *camera);
-    auto viewport = graphicsContext->GetViewport();
     auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
-        viewport.Width, viewport.Height, 0.1f, 1000.0f);
+        clientViewport.Width, clientViewport.Height, 0.1f, 1000.0f);
 
     editorBackground->SetViewProjection(viewMatrix * projectionMatrix);
 
@@ -259,7 +256,7 @@ void LightningTestGame::Draw()
     }
 
     gameEditor->DrawGUI(*graphicsContext);
-    graphicsContext->Present();
+    commandQueue->Present();
 }
 
-}// namespace TestApp
+} // namespace TestApp

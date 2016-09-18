@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "Pomdog/Signals/Signal.hpp"
 #include "Pomdog/Basic/Export.hpp"
 
 namespace Pomdog {
@@ -17,6 +18,16 @@ public:
     virtual ~Mouse() = default;
 
     virtual MouseState GetState() const = 0;
+
+//    Signal<void(MouseEvent const& mouseEvent)> MouseMove;
+//
+//    Signal<void(MouseEvent const& mouseEvent)> ButtonDown;
+//
+//    Signal<void(MouseEvent const& mouseEvent)> ButtonUp;
+//
+//    Signal<void(MouseEvent const& mouseEvent)> Click;
+//
+//    Signal<void(MouseEvent const& mouseEvent)> Wheel;
 };
 
 } // namespace Pomdog
