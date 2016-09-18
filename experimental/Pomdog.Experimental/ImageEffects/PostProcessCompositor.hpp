@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "ImageEffectBase.hpp"
-#include "../Graphics/ScreenQuad.hpp"
+#include "Pomdog.Experimental/ImageEffects/ImageEffectBase.hpp"
+#include "Pomdog.Experimental/Graphics/ScreenQuad.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
 #include <vector>
@@ -38,6 +38,8 @@ public:
         GraphicsCommandList & commandList,
         std::shared_ptr<RenderTarget2D> const& source,
         std::shared_ptr<RenderTarget2D> const& destination);
+
+    bool CanSkipPostProcess() const noexcept;
 
 private:
     void BuildRenderTargets(

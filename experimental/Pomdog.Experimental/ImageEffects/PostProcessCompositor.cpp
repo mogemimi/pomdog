@@ -155,4 +155,9 @@ void PostProcessCompositor::Draw(
     commandList.SetTexture(0);
 }
 
+bool PostProcessCompositor::CanSkipPostProcess() const noexcept
+{
+    return imageEffects.empty();
+}
+
 } // namespace Pomdog
