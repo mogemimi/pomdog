@@ -13,8 +13,8 @@ namespace Pomdog {
 class SequenceAction final : public Action {
 private:
     std::array<std::unique_ptr<Action>, 4> actions;
-    std::uint32_t const actionCount;
-    std::uint32_t index;
+    int const actionCount;
+    int index;
     bool isCompleted;
 
 public:
@@ -61,6 +61,7 @@ public:
             return;
         }
 
+        POMDOG_ASSERT(index >= 0);
         POMDOG_ASSERT(index < actions.size());
         POMDOG_ASSERT(index < actionCount);
 

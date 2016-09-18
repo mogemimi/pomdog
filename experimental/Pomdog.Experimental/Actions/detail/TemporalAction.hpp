@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Pomdog.Experimental/Actions/Action.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
 namespace Detail {
@@ -48,13 +49,15 @@ public:
             began = true;
         }
 
+        POMDOG_ASSERT(duration > AnimationTimeInterval::zero());
         time += frameDuration;
         float normalizedTime = time.count() / duration.count();
 
         if (time >= duration) {
             isCompleted = true;
             normalizedTime = 1.f;
-        } else {
+        }
+        else {
             normalizedTime = interpolation.Apply(normalizedTime);
         }
 
@@ -66,12 +69,12 @@ public:
         return isCompleted;
     }
 
-    AnimationTimeInterval Time() const
+    AnimationTimeInterval GetTime() const noexcept
     {
         return time;
     }
 
-    AnimationTimeInterval Duration() const
+    AnimationTimeInterval GetDuration() const noexcept
     {
         return duration;
     }

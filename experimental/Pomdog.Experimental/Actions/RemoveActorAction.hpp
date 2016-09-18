@@ -20,11 +20,9 @@ public:
         }
 
         POMDOG_ASSERT(entity);
-
         if (entity) {
             entity.Destroy();
         }
-
         isCompleted = true;
     }
 

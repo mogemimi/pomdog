@@ -4,8 +4,8 @@
 
 #include "detail/TemporalAction.hpp"
 #include "Pomdog.Experimental/Gameplay/Entity.hpp"
-#include "Pomdog.Experimental/Gameplay2D/Transform2D.hpp"
-#include "Pomdog/Math/Vector2.hpp"
+#include "Pomdog.Experimental/Gameplay2D/Transform.hpp"
+#include "Pomdog/Math/Vector3.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
@@ -14,30 +14,34 @@ namespace Actions {
 
 class ScaleTo final {
 private:
-    Vector2 startScale;
-    Vector2 endScale;
+    Vector3 startScale;
+    Vector3 endScale;
 
 public:
-    explicit ScaleTo(Vector2 const& scaleIn)
+    explicit ScaleTo(Vector3 const& scaleIn)
         : endScale(scaleIn)
+    {}
+
+    explicit ScaleTo(float scale)
+        : endScale(scale, scale, scale)
     {}
 
     void Begin(Entity const& entity)
     {
         POMDOG_ASSERT(entity);
-        POMDOG_ASSERT(entity.HasComponent<Transform2D>());
+        POMDOG_ASSERT(entity.HasComponent<Transform>());
 
-        auto transform = entity.GetComponent<Transform2D>();
-        startScale = transform->Scale;
+        auto transform = entity.GetComponent<Transform>();
+        startScale = transform->GetScale();
     }
 
     void Update(Entity & entity, float normalizedTime)
     {
         POMDOG_ASSERT(entity);
-        POMDOG_ASSERT(entity.HasComponent<Transform2D>());
+        POMDOG_ASSERT(entity.HasComponent<Transform>());
 
-        auto transform = entity.GetComponent<Transform2D>();
-        transform->Scale = Vector2::Lerp(startScale, endScale, normalizedTime);
+        auto transform = entity.GetComponent<Transform>();
+        transform->SetScale(Vector3::Lerp(startScale, endScale, normalizedTime));
     }
 };
 

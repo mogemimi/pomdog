@@ -4,7 +4,7 @@
 
 #include "detail/TemporalAction.hpp"
 #include "Pomdog.Experimental/Gameplay/Entity.hpp"
-#include "Pomdog.Experimental/Gameplay2D/Transform2D.hpp"
+#include "Pomdog.Experimental/Gameplay2D/Transform.hpp"
 #include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
@@ -25,19 +25,19 @@ public:
     void Begin(Entity const& entity)
     {
         POMDOG_ASSERT(entity);
-        POMDOG_ASSERT(entity.HasComponent<Transform2D>());
+        POMDOG_ASSERT(entity.HasComponent<Transform>());
 
-        auto transform = entity.GetComponent<Transform2D>();
-        startPosition = transform->Position;
+        auto transform = entity.GetComponent<Transform>();
+        startPosition = transform->GetPosition2D();
     }
 
     void Update(Entity & entity, float normalizedTime)
     {
         POMDOG_ASSERT(entity);
-        POMDOG_ASSERT(entity.HasComponent<Transform2D>());
+        POMDOG_ASSERT(entity.HasComponent<Transform>());
 
-        auto transform = entity.GetComponent<Transform2D>();
-        transform->Position = Vector2::Lerp(startPosition, endPosition, normalizedTime);
+        auto transform = entity.GetComponent<Transform>();
+        transform->SetPosition2D(Vector2::Lerp(startPosition, endPosition, normalizedTime));
     }
 };
 
