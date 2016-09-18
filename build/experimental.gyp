@@ -41,6 +41,8 @@
     #   '<@(pomdog_expr_dir)/Gameplay2D/BeamRenderable.hpp',
       '<@(pomdog_expr_dir)/Gameplay2D/CameraComponent.cpp',
       '<@(pomdog_expr_dir)/Gameplay2D/CameraComponent.hpp',
+      '<@(pomdog_expr_dir)/Gameplay2D/Collider2D.cpp',
+      '<@(pomdog_expr_dir)/Gameplay2D/Collider2D.hpp',
       '<@(pomdog_expr_dir)/Gameplay2D/GameLevel.hpp',
       '<@(pomdog_expr_dir)/Gameplay2D/GraphicsComponent.cpp',
       '<@(pomdog_expr_dir)/Gameplay2D/GraphicsComponent.hpp',
