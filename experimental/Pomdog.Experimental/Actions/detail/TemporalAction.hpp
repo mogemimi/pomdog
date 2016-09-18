@@ -17,7 +17,7 @@ public:
 };
 
 template <typename ActionClass>
-class TemporalAction: public Action {
+class TemporalAction final : public Action {
 private:
     AnimationTimeInterval const duration;
     AnimationTimeInterval time;

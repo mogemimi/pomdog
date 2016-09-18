@@ -10,7 +10,7 @@
 
 namespace Pomdog {
 
-class SequenceAction: public Action {
+class SequenceAction final : public Action {
 private:
     std::array<std::unique_ptr<Action>, 4> actions;
     std::uint32_t const actionCount;

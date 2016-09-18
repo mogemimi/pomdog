@@ -12,7 +12,7 @@ namespace Pomdog {
 namespace Detail {
 namespace Actions {
 
-class ScaleTo {
+class ScaleTo final {
 private:
     Vector2 startScale;
     Vector2 endScale;

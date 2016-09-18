@@ -8,7 +8,7 @@
 
 namespace Pomdog {
 
-class RemoveActorAction: public Action {
+class RemoveActorAction final : public Action {
 private:
     bool isCompleted = false;
 

@@ -12,7 +12,7 @@ namespace Pomdog {
 namespace Detail {
 namespace Actions {
 
-class MoveTo {
+class MoveTo final {
 private:
     Vector2 startPosition;
     Vector2 endPosition;

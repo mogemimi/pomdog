@@ -12,7 +12,7 @@ namespace Pomdog {
 namespace Detail {
 namespace Actions {
 
-class TintTo {
+class TintTo final {
 private:
     Color startColor;
     Color endColor;
