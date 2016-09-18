@@ -20,7 +20,7 @@ public:
 
     void Clear();
 
-    void Enumerate(std::function<void(RenderCommand &)> const& callback) const;
+    void Enumerate(const std::function<void(RenderCommand &)>& callback) const;
 
 private:
     std::vector<std::reference_wrapper<RenderCommand>> negativeCommands;

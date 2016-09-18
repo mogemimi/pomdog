@@ -1,18 +1,18 @@
 // Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
 
-#include "PrimitiveCommand.hpp"
+#include "SpriteBatchCommand.hpp"
 #include <typeinfo>
 
 namespace Pomdog {
 namespace Rendering {
 
-std::type_index PrimitiveCommand::GetType() const noexcept
+std::type_index SpriteBatchCommand::GetType() const noexcept
 {
-    static const std::type_index index = typeid(PrimitiveCommand);
+    static const std::type_index index = typeid(SpriteBatchCommand);
     return index;
 }
 
-float PrimitiveCommand::GetDrawOrder() const noexcept
+float SpriteBatchCommand::GetDrawOrder() const noexcept
 {
     return drawOrder;
 }

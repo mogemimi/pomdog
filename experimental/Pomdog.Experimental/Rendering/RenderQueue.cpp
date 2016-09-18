@@ -9,19 +9,19 @@
 namespace Pomdog {
 namespace {
 
-bool CompareRenderCommands(RenderCommand const& a, RenderCommand const& b)
+bool CompareRenderCommands(const RenderCommand& a, const RenderCommand& b)
 {
-    return a.DrawOrder() < b.DrawOrder();
+    return a.GetDrawOrder() < b.GetDrawOrder();
 }
 
 } // unnamed namespace
 
 void RenderQueue::PushBack(std::reference_wrapper<RenderCommand> && command)
 {
-    if (command.get().DrawOrder() > 0.0f) {
+    if (command.get().GetDrawOrder() > 0.0f) {
         positiveCommands.push_back(std::move(command));
     }
-    else if (command.get().DrawOrder() == 0.0f) {
+    else if (command.get().GetDrawOrder() == 0.0f) {
         zeroCommands.push_back(std::move(command));
     }
     else {
@@ -49,7 +49,7 @@ void RenderQueue::Clear()
     negativeCommands.clear();
 }
 
-void RenderQueue::Enumerate(std::function<void(RenderCommand&)> const& callback) const
+void RenderQueue::Enumerate(const std::function<void(RenderCommand&)>& callback) const
 {
     POMDOG_ASSERT(callback);
 

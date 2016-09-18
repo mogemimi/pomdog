@@ -2,18 +2,17 @@
 
 #pragma once
 
+#include "Pomdog.Experimental/Graphics/SpriteBatchRenderer.hpp"
 #include "Pomdog.Experimental/Rendering/RenderCommandProcessor.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Math/Matrix4x4.hpp"
-#include <Pomdog/Pomdog.hpp>
-#include <memory>
 
 namespace Pomdog {
 namespace Rendering {
 
-class PrimitiveCommandProcessor final : public RenderCommandProcessor {
+class SpriteBatchCommandProcessor final : public RenderCommandProcessor {
 public:
-    PrimitiveCommandProcessor(
+    SpriteBatchCommandProcessor(
         const std::shared_ptr<GraphicsDevice>& graphicsDevice,
         AssetManager & assets);
 
@@ -34,8 +33,8 @@ public:
     std::type_index GetCommandType() const noexcept override;
 
 public:
-    std::shared_ptr<PipelineState> pipelineState;
     Matrix4x4 viewProjection;
+    SpriteBatchRenderer spriteBatch;
     int drawCallCount;
 };
 

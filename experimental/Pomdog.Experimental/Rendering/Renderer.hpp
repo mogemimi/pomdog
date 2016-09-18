@@ -5,7 +5,6 @@
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Math/Matrix4x4.hpp"
 #include <cstdint>
-#include <typeindex>
 #include <memory>
 
 namespace Pomdog {
@@ -15,23 +14,21 @@ class RenderCommandProcessor;
 
 class Renderer final {
 public:
-    Renderer();
+    explicit Renderer(const std::shared_ptr<GraphicsDevice>& graphicsDevice);
 
     ~Renderer();
 
-    void SetViewMatrix(Matrix4x4 const& viewMatrix);
+    void SetViewMatrix(const Matrix4x4& viewMatrix);
 
-    void SetProjectionMatrix(Matrix4x4 const& projectionMatrix);
+    void SetProjectionMatrix(const Matrix4x4& projectionMatrix);
 
-    void Render(GraphicsCommandQueue & commandQueue);
+    std::shared_ptr<GraphicsCommandList> Render();
 
     void PushCommand(std::reference_wrapper<RenderCommand> && command);
 
     void Clear();
 
-    void AddProcessor(
-        std::type_index const& index,
-        std::unique_ptr<RenderCommandProcessor> && processor);
+    void AddProcessor(std::unique_ptr<RenderCommandProcessor> && processor);
 
     int GetDrawCallCount() const noexcept;
 
