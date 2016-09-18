@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Renderable.hpp"
+#include "GraphicsComponent.hpp"
 #include "Pomdog.Experimental/Rendering/Commands/SkinnedMeshCommand.hpp"
 #include "Pomdog.Experimental/Graphics/PolygonBatch.hpp"
 #include <Pomdog/Pomdog.hpp>
@@ -10,7 +10,7 @@
 
 namespace Pomdog {
 
-class SkinnedMeshRenderable: public Renderable {
+class SkinnedMeshRenderable : public GraphicsComponent {
 public:
     SkinnedMeshRenderable(
         std::shared_ptr<Skeleton> const& skeleton,

@@ -3,8 +3,8 @@
 #include "ScenePanel.hpp"
 #include "PointerPoint.hpp"
 #include "UIEventDispatcher.hpp"
-#include "Pomdog.Experimental/Gameplay2D/Transform2D.hpp"
-#include "Pomdog.Experimental/Gameplay2D/Camera2D.hpp"
+#include "Pomdog.Experimental/Gameplay2D/Transform.hpp"
+#include "Pomdog.Experimental/Gameplay2D/CameraComponent.hpp"
 
 namespace Pomdog {
 namespace UI {

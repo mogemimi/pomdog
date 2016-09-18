@@ -6,7 +6,7 @@
 namespace Pomdog {
 namespace {
 
-Matrix3x2 CreateTransformMatrix(Particle const& particle)
+Matrix3x2 CreateTransformMatrix(const Particle& particle)
 {
     return Matrix3x2::CreateScale(particle.Size)
         * Matrix3x2::CreateRotation(particle.Rotation)
@@ -16,7 +16,7 @@ Matrix3x2 CreateTransformMatrix(Particle const& particle)
 } // unnamed namespace
 
 ParticleBatchCommandProcessor::ParticleBatchCommandProcessor(
-    std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
     AssetManager & assets)
     : spriteBatch(graphicsDevice, assets)
     , drawCallCount(0)
@@ -58,7 +58,7 @@ int ParticleBatchCommandProcessor::GetDrawCallCount() const noexcept
     return drawCallCount;
 }
 
-void ParticleBatchCommandProcessor::SetViewProjection(Matrix4x4 const& view, Matrix4x4 const& projection)
+void ParticleBatchCommandProcessor::SetViewProjection(const Matrix4x4& view, const Matrix4x4& projection)
 {
     auto viewProjection = view * projection;
     spriteBatch.SetProjectionMatrix(viewProjection);

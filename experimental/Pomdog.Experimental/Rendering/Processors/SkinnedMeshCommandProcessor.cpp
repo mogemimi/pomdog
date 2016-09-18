@@ -6,7 +6,7 @@
 namespace Pomdog {
 namespace {
 
-void SetMatrixPalette(SkinnedEffect & skinnedEffect, Skeleton const& skeleton, SkeletonTransform const& skeletonTransform)
+void SetMatrixPalette(SkinnedEffect & skinnedEffect, const Skeleton& skeleton, const SkeletonTransform& skeletonTransform)
 {
     std::array<Matrix3x2, 64> matrices;
 
@@ -23,8 +23,8 @@ void SetMatrixPalette(SkinnedEffect & skinnedEffect, Skeleton const& skeleton, S
 }
 
 //
-//static void DrawSkeleton(std::unique_ptr<PolygonBatch> const& polygonBatch,
-//    Matrix4x4 const& modelViewProjection)
+//static void DrawSkeleton(const std::unique_ptr<PolygonBatch>& polygonBatch,
+//    const Matrix4x4& modelViewProjection)
 //{
 //    POMDOG_ASSERT(polygonBatch);
 //    polygonBatch->Begin(modelViewProjection);
@@ -57,7 +57,7 @@ void SetMatrixPalette(SkinnedEffect & skinnedEffect, Skeleton const& skeleton, S
 } // unnamed namespace
 
 SkinnedMeshCommandProcessor::SkinnedMeshCommandProcessor(
-    std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
     AssetManager & assets)
     : skinnedEffect(*graphicsDevice, assets)
     , drawCallCount(0)
@@ -125,7 +125,7 @@ int SkinnedMeshCommandProcessor::GetDrawCallCount() const noexcept
     return drawCallCount;
 }
 
-void SkinnedMeshCommandProcessor::SetViewProjection(Matrix4x4 const& view, Matrix4x4 const& projection)
+void SkinnedMeshCommandProcessor::SetViewProjection(const Matrix4x4& view, const Matrix4x4& projection)
 {
     viewProjection = view * projection;
 }

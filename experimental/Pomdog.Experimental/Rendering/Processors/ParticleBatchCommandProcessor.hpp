@@ -11,7 +11,7 @@ namespace Pomdog {
 class ParticleBatchCommandProcessor final : public RenderCommandProcessor {
 public:
     ParticleBatchCommandProcessor(
-        std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
         AssetManager & assets);
 
     void Begin(GraphicsCommandQueue & commandQueue) override;
@@ -22,7 +22,7 @@ public:
 
     int GetDrawCallCount() const noexcept override;
 
-    void SetViewProjection(Matrix4x4 const& view, Matrix4x4 const& projection) override;
+    void SetViewProjection(const Matrix4x4& view, const Matrix4x4& projection) override;
 
 public:
     SpriteBatchRenderer spriteBatch;

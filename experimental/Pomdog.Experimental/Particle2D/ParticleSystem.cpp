@@ -11,8 +11,12 @@ namespace Pomdog {
 namespace {
 
 template <typename RandomGenerator>
-Particle CreateParticle(RandomGenerator & random, ParticleClip const& clip,
-    ParticleEmitter const& emitter, float normalizedTime, Transform2D const& transform)
+Particle CreateParticle(
+    RandomGenerator & random,
+    ParticleClip const& clip,
+    ParticleEmitter const& emitter,
+    float normalizedTime,
+    Transform const& transform)
 {
     Particle particle;
     {
@@ -27,13 +31,13 @@ Particle CreateParticle(RandomGenerator & random, ParticleClip const& clip,
         clip.Shape->Compute(random, emitPosition, emitAngle);
 
         // Position
-        auto worldMatrix = Matrix4x4::CreateRotationZ(transform.Rotation) * Matrix4x4::CreateTranslation({transform.Position, 0});
+        auto worldMatrix = Matrix4x4::CreateRotationZ(transform.GetRotation2D()) * Matrix4x4::CreateTranslation({transform.GetPosition2D(), 0});
         particle.Position = Vector2::Transform(emitPosition, worldMatrix);
 
         // Velocity
         POMDOG_ASSERT(clip.StartSpeed);
         auto radius = clip.StartSpeed->Compute(normalizedTime, random);
-        auto angle = (emitAngle + transform.Rotation).value;
+        auto angle = (emitAngle + transform.GetRotation2D()).value;
 
         particle.Velocity.X = std::cos(angle) * radius;
         particle.Velocity.Y = std::sin(angle) * radius;
@@ -88,8 +92,8 @@ void ParticleSystem::Simulate(Entity & entity, Duration const& duration)
         return;
     }
 
-    Transform2D emitterTransform;
-    if (auto transform = entity.GetComponent<Transform2D>()) {
+    Transform emitterTransform;
+    if (auto transform = entity.GetComponent<Transform>()) {
         emitterTransform = *transform;
     }
 

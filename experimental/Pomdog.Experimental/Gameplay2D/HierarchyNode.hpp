@@ -14,7 +14,7 @@ class Entity;
 class EntityManager;
 
 class POMDOG_EXPORT HierarchyNode final
-    : public Component<HierarchyNode>
+    : public Component
     , public std::enable_shared_from_this<HierarchyNode> {
 public:
     HierarchyNode() = default;

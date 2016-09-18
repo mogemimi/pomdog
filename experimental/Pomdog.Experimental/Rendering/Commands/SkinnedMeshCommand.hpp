@@ -13,7 +13,7 @@ namespace Pomdog {
 namespace Detail {
 namespace Rendering {
 
-class SkinnedMeshCommand final: public RenderCommand {
+class SkinnedMeshCommand final : public RenderCommand {
 public:
     std::type_index TypeIndex() const override;
 

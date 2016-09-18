@@ -4,7 +4,7 @@
 
 #include "Particle.hpp"
 #include "ParticleEmitter.hpp"
-#include "Pomdog.Experimental/Gameplay2D/Transform2D.hpp"
+#include "Pomdog.Experimental/Gameplay2D/Transform.hpp"
 #include "Pomdog.Experimental/Gameplay/Entity.hpp"
 #include "Pomdog/Application/Duration.hpp"
 #include <cstdint>
@@ -15,7 +15,7 @@ namespace Pomdog {
 
 class ParticleClip;
 
-class ParticleSystem: public Component<ParticleSystem> {
+class ParticleSystem final : public Component {
 public:
     explicit ParticleSystem(std::shared_ptr<ParticleClip const> const& clip);
 

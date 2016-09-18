@@ -13,7 +13,7 @@ class Skeleton;
 class SkeletonTransform;
 class AnimationGraph;
 
-class Animator final : public Component<Animator> {
+class Animator final : public Component {
 public:
     Animator(
         std::shared_ptr<Skeleton> const& skeleton,

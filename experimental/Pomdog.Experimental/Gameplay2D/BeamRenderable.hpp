@@ -12,7 +12,7 @@
 
 namespace Pomdog {
 
-class BeamRenderable: public Renderable {
+class BeamRenderable final : public Renderable {
 public:
     BeamRenderable();
 

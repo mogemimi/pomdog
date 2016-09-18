@@ -147,12 +147,11 @@ BeamSystem::BeamSystem()
     beams.reserve(emitter.MaxBeams);
 }
 
-void BeamSystem::Update(Duration const& frameDuration, Transform2D const& emitterTransform, Vector2 const& target)
+void BeamSystem::Update(Duration const& frameDuration, Transform const& emitterTransform, Vector2 const& target)
 {
     erapsedTime += frameDuration;
 
-    if (emitter.Looping && erapsedTime > emitter.Duration)
-    {
+    if (emitter.Looping && erapsedTime > emitter.Duration) {
         erapsedTime = Duration::zero();
     }
 
@@ -201,7 +200,7 @@ void BeamSystem::Update(Duration const& frameDuration, Transform2D const& emitte
         {
             emissionTimer -= emissionInterval;
 
-            Vector2 tangent = target - emitterTransform.Position;
+            Vector2 tangent = target - emitterTransform.GetPosition2D();
             Vector2 normal {-tangent.Y, tangent.X};
             Vector2 end = target + (Vector2::Normalize(normal) * distribution(random));
 
@@ -210,12 +209,12 @@ void BeamSystem::Update(Duration const& frameDuration, Transform2D const& emitte
             POMDOG_ASSERT(emitter.StartLifetime > 0.0f);
             beam.TimeToLive = emitter.StartLifetime;
             beam.Points = CreateJaggedLine(emitter, emitter.InterpolationPoints,
-                emitterTransform.Position, end, random);
+                emitterTransform.GetPosition2D(), end, random);
             beam.Color = emitter.StartColor;
             beam.Thickness = emitter.StartThickness;
 
             beams.push_back(std::move(beam));
-            CreateBranchBeam(beams.size() - 1, emitterTransform.Position, target);
+            CreateBranchBeam(beams.size() - 1, emitterTransform.GetPosition2D(), target);
         }
     }
     {
@@ -235,12 +234,12 @@ void BeamSystem::Update(Duration const& frameDuration, Transform2D const& emitte
     }
 }
 
-Vector2 BeamSystem::CreateTarget(Transform2D const& emitterTransform, float distance)
+Vector2 BeamSystem::CreateTarget(Transform const& emitterTransform, float distance)
 {
     Vector2 tangent {
-        distance * std::cos(emitterTransform.Rotation.value),
-        distance * std::sin(emitterTransform.Rotation.value)};
-    auto targetPosition = emitterTransform.Position + tangent;
+        distance * std::cos(emitterTransform.GetRotation2D().value),
+        distance * std::sin(emitterTransform.GetRotation2D().value)};
+    auto targetPosition = emitterTransform.GetPosition2D() + tangent;
     return targetPosition;
 }
 
