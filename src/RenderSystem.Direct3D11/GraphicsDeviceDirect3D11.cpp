@@ -104,7 +104,7 @@ void AdapterManager::Clear()
     adapters.clear();
 }
 
-static ID3D11InfoQueue* BuildInfoQueue(ID3D11Device* nativeDevice)
+ID3D11InfoQueue* BuildInfoQueue(ID3D11Device* nativeDevice)
 {
     POMDOG_ASSERT(nativeDevice);
 
@@ -144,7 +144,7 @@ static ID3D11InfoQueue* BuildInfoQueue(ID3D11Device* nativeDevice)
     return std::move(infoQueue);
 }
 
-static void CheckError(ID3D11InfoQueue* infoQueue)
+void CheckError(ID3D11InfoQueue* infoQueue)
 {
 #if defined(DEBUG) && !defined(NDEBUG)
     POMDOG_ASSERT(infoQueue);
@@ -178,7 +178,7 @@ static void CheckError(ID3D11InfoQueue* infoQueue)
     }
 }
 
-static D3D11_BIND_FLAG ToBindFlag(BufferBindMode bindMode) noexcept
+D3D11_BIND_FLAG ToBindFlag(BufferBindMode bindMode) noexcept
 {
     switch (bindMode) {
     case BufferBindMode::ConstantBuffer: return D3D11_BIND_CONSTANT_BUFFER;

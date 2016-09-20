@@ -18,7 +18,7 @@ namespace {
 
 constexpr Keys Keys_None = static_cast<Keys>(0);
 
-static Keys TranslateKey(Display* display, unsigned int keyCode)
+Keys TranslateKey(Display* display, unsigned int keyCode)
 {
     if (keyCode < 8 || keyCode > 255) {
         return Keys_None;
@@ -168,7 +168,7 @@ static Keys TranslateKey(Display* display, unsigned int keyCode)
     return Keys_None;
 }
 
-static void BuildKeyMap(Display* display, std::array<Keys, 256> & keys)
+void BuildKeyMap(Display* display, std::array<Keys, 256> & keys)
 {
     std::fill(std::begin(keys), std::end(keys), Keys_None);
 
@@ -260,7 +260,7 @@ static void BuildKeyMap(Display* display, std::array<Keys, 256> & keys)
     }
 }
 
-static Keys ToKeys(const std::array<Keys, 256>& keys, unsigned int keyCode)
+Keys ToKeys(const std::array<Keys, 256>& keys, unsigned int keyCode)
 {
     if (keyCode < 8 || keyCode > keys.size()) {
         return Keys_None;
