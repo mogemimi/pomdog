@@ -681,7 +681,7 @@ template <typename TFunction>
 POMDOG_EXPORT
 auto CreateTask(
     const TFunction& func,
-    const std::shared_ptr<Scheduler>& scheduler = GetAmbientScheduler())
+    const std::shared_ptr<Scheduler>& scheduler)
     -> Task<Detail::TaskResultOf<TFunction>>
 {
     POMDOG_ASSERT(scheduler);
