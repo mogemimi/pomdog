@@ -6,6 +6,15 @@
 
 namespace Pomdog {
 namespace Concurrency {
+namespace {
+
+template <class TDeferredTask>
+bool Compare(const TDeferredTask& a, const TDeferredTask& b) noexcept
+{
+    return a.StartTime < b.StartTime;
+}
+
+} // unnamed namespace
 
 void QueuedScheduler::Schedule(
     std::function<void()> && task,
@@ -78,7 +87,7 @@ void QueuedScheduler::MergeTasks()
 
     for (auto & deferred : temporaryTasks) {
         auto iter = std::lower_bound(
-            std::begin(tasks), std::end(tasks), deferred);
+            std::begin(tasks), std::end(tasks), deferred, Compare<DeferredTask>);
 
         if (iter == std::end(tasks)) {
             tasks.push_back(std::move(deferred));
@@ -88,7 +97,7 @@ void QueuedScheduler::MergeTasks()
         }
     }
 
-    POMDOG_ASSERT(std::is_sorted(std::begin(tasks), std::end(tasks)));
+    POMDOG_ASSERT(std::is_sorted(std::begin(tasks), std::end(tasks), Compare<DeferredTask>));
 }
 
 } // namespace Concurrency

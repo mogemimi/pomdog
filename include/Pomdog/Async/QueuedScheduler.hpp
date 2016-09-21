@@ -17,11 +17,6 @@ private:
     struct DeferredTask {
         std::function<void()> Function;
         TimePoint StartTime;
-
-        bool operator<(const DeferredTask& other) const noexcept
-        {
-            return this->StartTime < other.StartTime;
-        }
     };
 
     std::vector<DeferredTask> tasks;
