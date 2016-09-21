@@ -11,6 +11,12 @@
 #include "Application/TimePoint.hpp"
 #include "Application/Timer.hpp"
 
+#include "Async/Helpers.hpp"
+#include "Async/ImmediateScheduler.hpp"
+#include "Async/QueuedScheduler.hpp"
+#include "Async/Scheduler.hpp"
+#include "Async/Task.hpp"
+
 #include "Audio/AudioChannels.hpp"
 #include "Audio/AudioClip.hpp"
 #include "Audio/AudioEmitter.hpp"
@@ -116,6 +122,12 @@
 #include "Input/PlayerIndex.hpp"
 #include "Input/TouchLocation.hpp"
 #include "Input/TouchLocationState.hpp"
+
+#include "Reactive/Observable.hpp"
+#include "Reactive/ObservableBase.hpp"
+#include "Reactive/ObservableBuilder.hpp"
+#include "Reactive/Observer.hpp"
+#include "Reactive/Subscriber.hpp"
 
 #include "Signals/Connection.hpp"
 #include "Signals/ConnectionList.hpp"
