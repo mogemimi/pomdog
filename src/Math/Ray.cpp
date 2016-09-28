@@ -112,7 +112,7 @@ Optional<float> Ray::Intersects(const BoundingBox& box) const
     }
 
     POMDOG_ASSERT(tNear <= tFar && tFar >= 0);
-    return tFar;
+    return tNear;
 }
 
 Optional<float> Ray::Intersects(const BoundingSphere& sphere) const
