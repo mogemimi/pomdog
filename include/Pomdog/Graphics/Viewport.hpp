@@ -28,11 +28,11 @@ public:
 
     Vector3 Project(
         const Vector3& source,
-        const Matrix4x4& worldViewProjection);
+        const Matrix4x4& worldViewProjection) const;
 
     Vector3 Unproject(
         const Vector3& source,
-        const Matrix4x4& worldViewProjection);
+        const Matrix4x4& worldViewProjection) const;
 
     Rectangle GetBounds() const noexcept;
 

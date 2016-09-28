@@ -40,7 +40,7 @@ Viewport::Viewport(int xIn, int yIn, int widthIn, int heightIn,
 
 Vector3 Viewport::Project(
     const Vector3& source,
-    const Matrix4x4& worldViewProjection)
+    const Matrix4x4& worldViewProjection) const
 {
     auto result = Vector3::Transform(source, worldViewProjection);
     auto divisor = source.X * worldViewProjection(0, 3)
@@ -60,7 +60,7 @@ Vector3 Viewport::Project(
 
 Vector3 Viewport::Unproject(
     const Vector3& source,
-    const Matrix4x4& worldViewProjection)
+    const Matrix4x4& worldViewProjection) const
 {
     Vector3 vec;
     vec.X = ((source.X - static_cast<float>(TopLeftX)) / static_cast<float>(Width) * 2.0f) - 1.0f;
