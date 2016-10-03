@@ -3,7 +3,7 @@
 #include <Pomdog/Utility/StringHelper.hpp>
 #include <gtest/iutest_switch.hpp>
 
-using Pomdog::StringHelper;
+namespace StringHelper = Pomdog::StringHelper;
 
 TEST(StringHelper, FirstCase)
 {
