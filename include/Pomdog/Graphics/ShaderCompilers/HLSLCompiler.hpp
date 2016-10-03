@@ -4,6 +4,7 @@
 
 #include "Pomdog/Graphics/ShaderPipelineStage.hpp"
 #include "Pomdog/Basic/Export.hpp"
+#include "Pomdog/Utility/Optional.hpp"
 #include <memory>
 #include <cstddef>
 #include <string>
@@ -27,7 +28,8 @@ struct POMDOG_EXPORT HLSLCompiler final {
         const void* shaderSource,
         std::size_t byteLength,
         const std::string& entryPoint,
-        ShaderPipelineStage pipelineStage);
+        ShaderPipelineStage pipelineStage,
+        const Optional<std::string>& currentDirectory);
 };
 
 } // namespace ShaderCompilers

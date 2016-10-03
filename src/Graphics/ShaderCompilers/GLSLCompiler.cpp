@@ -19,7 +19,8 @@ std::unique_ptr<Shader> GLSLCompiler::CreateShader(
     GraphicsDevice & graphicsDevice,
     const void* shaderSource,
     std::size_t byteLength,
-    ShaderPipelineStage pipelineStage)
+    ShaderPipelineStage pipelineStage,
+    const Optional<std::string>& currentDirectory)
 {
     POMDOG_ASSERT(shaderSource != nullptr);
     POMDOG_ASSERT(byteLength > 0);
@@ -35,6 +36,10 @@ std::unique_ptr<Shader> GLSLCompiler::CreateShader(
     compileOptions.EntryPoint = "main";
     compileOptions.Profile.PipelineStage = pipelineStage;
     compileOptions.Precompiled = false;
+
+    if (currentDirectory) {
+        compileOptions.CurrentDirectory = *currentDirectory;
+    }
 
     return nativeGraphicsDevice->CreateShader(shaderBytecode, compileOptions);
 }
