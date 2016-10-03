@@ -11,14 +11,18 @@
 #include "Pomdog/Graphics/Shader.hpp"
 #include "Pomdog/Graphics/ShaderLanguage.hpp"
 #include "Pomdog/Graphics/ShaderPipelineStage.hpp"
+#include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include "Pomdog/Utility/FileSystem.hpp"
 #include "Pomdog/Utility/Optional.hpp"
 #include "Pomdog/Utility/PathHelper.hpp"
+#include "Pomdog/Utility/StringHelper.hpp"
 #include <fstream>
 #include <vector>
 #include <utility>
+#include <set>
+#include <regex>
 
 using Pomdog::Detail::BinaryReader;
 using Pomdog::Detail::ShaderBytecode;
@@ -28,7 +32,56 @@ using Pomdog::ShaderCompilers::MetalCompiler;
 
 namespace Pomdog {
 namespace AssetBuilders {
+namespace {
 
+Optional<std::string> IncludeGLSLFilesRecursive(
+    const std::string& path, std::set<std::string> & includes)
+{
+    if (FileSystem::IsDirectory(path)) {
+        Log::Warning("Pomdog", "error: " + path + "is directory, not text file.");
+        return NullOpt;
+    }
+
+    std::ifstream input(path);
+    if (!input) {
+        return NullOpt;
+    }
+    std::istreambuf_iterator<char> start(input);
+    std::istreambuf_iterator<char> end;
+    std::string text(start, end);
+    input.close();
+
+    auto currentDirectory = PathHelper::GetDirectoryName(PathHelper::Normalize(path));
+
+    auto lines = StringHelper::Split(text, '\n');
+    text.clear();
+    for (const auto& line : lines) {
+        std::regex includeRegex(R"(\s*#\s*include\s+\"([\w\.\/\\]+)\")");
+        std::smatch match;
+
+        bool matched = std::regex_match(line, match, includeRegex);
+        if (!matched || match.size() != 2) {
+            text += line;
+            text += '\n';
+            continue;
+        }
+
+        auto includePath = PathHelper::Join(currentDirectory,  match[1]);
+        if (includes.find(includePath) == includes.end()) {
+            includes.insert(includePath);
+            auto result = IncludeGLSLFilesRecursive(includePath, includes);
+            if (!result) {
+                return NullOpt;
+            }
+            text += *result;
+        }
+        text += '\n';
+    }
+
+    return text;
+}
+
+} // unnamed namespace
 
 // explicit instantiations
 template class Builder<Shader>;
@@ -113,6 +166,22 @@ Builder<Shader> & Builder<Shader>::SetGLSLFromFile(const std::string& assetName)
 
         if (impl->shaderBlob.empty()) {
             POMDOG_THROW_EXCEPTION(std::runtime_error, "The file is too small");
+        }
+
+        {
+            // NOTE: Using the #include in GLSL support
+            std::set<std::string> includes;
+            auto includeResult = IncludeGLSLFilesRecursive(
+                PathHelper::Join(impl->loaderContext.get().RootDirectory, assetName),
+                includes);
+
+            if (includeResult) {
+                auto & shaderCode = *includeResult;
+                impl->shaderBlob.clear();
+                impl->shaderBlob.resize(shaderCode.size() + 1);
+                impl->shaderBlob[shaderCode.size()] = 0;
+                std::memcpy(impl->shaderBlob.data(), shaderCode.data(), shaderCode.size());
+            }
         }
 
         impl->shaderBytecode.Code = impl->shaderBlob.data();
