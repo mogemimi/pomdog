@@ -14,6 +14,7 @@ namespace Pomdog {
 
 class PostProcessCompositor {
 private:
+    std::vector<std::shared_ptr<ImageEffectPreRenderable>> preRenderables;
     std::vector<std::shared_ptr<ImageEffectBase>> imageEffects;
     std::array<std::shared_ptr<RenderTarget2D>, 2> renderTargets;
     std::shared_ptr<ConstantBuffer> constantBuffer;
@@ -25,7 +26,12 @@ public:
         std::shared_ptr<GraphicsDevice> const& graphicsDevice,
         int width, int height, SurfaceFormat surfaceFormat);
 
-    void Composite(std::vector<std::shared_ptr<ImageEffectBase>> && imageEffects);
+    void Composite(
+        std::vector<std::shared_ptr<ImageEffectBase>> && imageEffects);
+
+    void Composite(
+        std::vector<std::shared_ptr<ImageEffectBase>> && imageEffects,
+        std::vector<std::shared_ptr<ImageEffectPreRenderable>> && preRenderableEffects);
 
     void SetViewportSize(
         GraphicsDevice & graphicsDevice, int width, int height);

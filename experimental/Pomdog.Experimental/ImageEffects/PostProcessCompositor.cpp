@@ -97,6 +97,34 @@ void PostProcessCompositor::Composite(std::vector<std::shared_ptr<ImageEffectBas
 {
     POMDOG_ASSERT(!imageEffectsIn.empty());
     imageEffects = std::move(imageEffectsIn);
+
+    preRenderables.clear();
+    for (const auto& e : imageEffects) {
+        auto effect = std::dynamic_pointer_cast<ImageEffectPreRenderable>(e);
+        if (effect) {
+            preRenderables.push_back(std::move(effect));
+        }
+    }
+}
+
+void PostProcessCompositor::Composite(
+    std::vector<std::shared_ptr<ImageEffectBase>> && imageEffectsIn,
+    std::vector<std::shared_ptr<ImageEffectPreRenderable>> && preRenderableEffectsIn)
+{
+    POMDOG_ASSERT(!imageEffectsIn.empty());
+    imageEffects = std::move(imageEffectsIn);
+
+    preRenderables = std::move(preRenderableEffectsIn);
+    for (const auto& e : imageEffects) {
+        auto effect = std::dynamic_pointer_cast<ImageEffectPreRenderable>(e);
+        if (effect) {
+            preRenderables.push_back(std::move(effect));
+        }
+    }
+    std::sort(std::begin(preRenderables), std::end(preRenderables));
+    preRenderables.erase(
+        std::unique(std::begin(preRenderables), std::end(preRenderables)),
+        std::end(preRenderables));
 }
 
 void PostProcessCompositor::Draw(
@@ -115,6 +143,12 @@ void PostProcessCompositor::Draw(
     auto readTarget = renderTargets.front();
     auto writeTarget = renderTargets.back();
 
+    for (auto & effect : preRenderables) {
+        effect->PreRender(commandList, constantBuffer, [&] {
+            screenQuad.DrawQuad(commandList);
+        });
+    }
+
     for (std::size_t index = 0; index < imageEffects.size(); ++index) {
         std::shared_ptr<RenderTarget2D> currentSource;
         if (index == 0) {
@@ -124,9 +158,6 @@ void PostProcessCompositor::Draw(
         }
 
         auto & effect = imageEffects[index];
-        effect->PreRender(commandList, constantBuffer, [&] {
-            screenQuad.DrawQuad(commandList);
-        });
 
         bool isLast = (index + 1) >= imageEffects.size();
         if (isLast) {
