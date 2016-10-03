@@ -7,6 +7,7 @@
 #include "Pomdog/Utility/Optional.hpp"
 #include <memory>
 #include <cstddef>
+#include <string>
 
 namespace Pomdog {
 
