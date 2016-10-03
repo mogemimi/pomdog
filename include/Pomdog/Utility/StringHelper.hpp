@@ -4,11 +4,21 @@
 
 #include "Pomdog/Basic/Export.hpp"
 #include <string>
+#include <vector>
 
 namespace Pomdog {
+namespace StringHelper {
 
-struct POMDOG_EXPORT StringHelper {
-    static std::string Format(const char* format, ...)
+POMDOG_EXPORT
+std::vector<std::string>
+Split(const std::string& source, char separator);
+
+POMDOG_EXPORT
+std::vector<std::string>
+Split(const std::string& source, const std::string& separator);
+
+POMDOG_EXPORT
+std::string Format(const char* format, ...)
 #if defined(__has_attribute)
 #if __has_attribute(format)
     __attribute__((__format__(printf, 1, 2)));
@@ -18,6 +28,6 @@ struct POMDOG_EXPORT StringHelper {
 #else
     ;
 #endif
-};
 
+} // namespace StringHelper
 } // namespace Pomdog
