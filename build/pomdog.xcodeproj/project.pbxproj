@@ -174,6 +174,8 @@
 		A997F7071CAEFC4900926392 /* ShaderMetal.mm in Sources */ = {isa = PBXBuildFile; fileRef = A997F6F31CAEFC4800926392 /* ShaderMetal.mm */; };
 		A997F7081CAEFC4900926392 /* Texture2DMetal.mm in Sources */ = {isa = PBXBuildFile; fileRef = A997F6F51CAEFC4800926392 /* Texture2DMetal.mm */; };
 		A997F7091CAEFC4900926392 /* Texture2DMetal.mm in Sources */ = {isa = PBXBuildFile; fileRef = A997F6F51CAEFC4800926392 /* Texture2DMetal.mm */; };
+		A9A822731DAB7BF60091497F /* libgiflib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A9A822701DAB7B310091497F /* libgiflib.a */; };
+		A9A822761DAB7C060091497F /* libgiflib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A9A822701DAB7B310091497F /* libgiflib.a */; };
 		A9D18E8D1CA427270011A6CE /* MetalCompiler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9D18E8C1CA427270011A6CE /* MetalCompiler.cpp */; };
 		A9D18E8E1CA427270011A6CE /* MetalCompiler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9D18E8C1CA427270011A6CE /* MetalCompiler.cpp */; };
 		A9D641861C342F59006E14E0 /* libpng.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BFBE06E0DEEBFD77A7D8BBB0 /* libpng.a */; };
@@ -246,6 +248,27 @@
 			proxyType = 2;
 			remoteGlobalIDString = 71C051910E94E0D5C79129A5;
 			remoteInfo = zlib_static;
+		};
+		A9A8226F1DAB7B310091497F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A9A8226B1DAB7B310091497F /* giflib.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 02416B678B4C01D8DEE485DE;
+			remoteInfo = giflib_static;
+		};
+		A9A822711DAB7BF00091497F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A9A8226B1DAB7B310091497F /* giflib.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = BB3AA630872B81D9D9D29660;
+			remoteInfo = giflib_static;
+		};
+		A9A822741DAB7C010091497F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A9A8226B1DAB7B310091497F /* giflib.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = BB3AA630872B81D9D9D29660;
+			remoteInfo = giflib_static;
 		};
 		A9D641881C342FBF006E14E0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -544,6 +567,7 @@
 		A997F6F31CAEFC4800926392 /* ShaderMetal.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ShaderMetal.mm; sourceTree = "<group>"; };
 		A997F6F41CAEFC4800926392 /* Texture2DMetal.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Texture2DMetal.hpp; sourceTree = "<group>"; };
 		A997F6F51CAEFC4800926392 /* Texture2DMetal.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Texture2DMetal.mm; sourceTree = "<group>"; };
+		A9A8226B1DAB7B310091497F /* giflib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = giflib.xcodeproj; path = dependencies/giflib.xcodeproj; sourceTree = "<group>"; };
 		A9AE680DD0E3FCEA11AF8F48 /* FloatingPointVector4.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = FloatingPointVector4.cpp; sourceTree = "<group>"; };
 		A9D18E8B1CA426FA0011A6CE /* MetalCompiler.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MetalCompiler.hpp; sourceTree = "<group>"; };
 		A9D18E8C1CA427270011A6CE /* MetalCompiler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MetalCompiler.cpp; sourceTree = "<group>"; };
@@ -666,6 +690,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9A822731DAB7BF60091497F /* libgiflib.a in Frameworks */,
 				A9D641861C342F59006E14E0 /* libpng.a in Frameworks */,
 				A9D641871C342F5F006E14E0 /* libzlib.a in Frameworks */,
 				A997F6DF1CAEFB3E00926392 /* AudioToolbox.framework in Frameworks */,
@@ -681,6 +706,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9A822761DAB7C060091497F /* libgiflib.a in Frameworks */,
 				77A462A40D237A6A1041B607 /* libpng.a in Frameworks */,
 				4D3F6C1E105B1A1149475635 /* libzlib.a in Frameworks */,
 				A997F6E01CAEFB4900926392 /* AudioToolbox.framework in Frameworks */,
@@ -764,6 +790,7 @@
 		166F96D1F5F98868F33D04C6 /* Projects */ = {
 			isa = PBXGroup;
 			children = (
+				A9A8226B1DAB7B310091497F /* giflib.xcodeproj */,
 				31E97AB9CDD9BFFD39388913 /* libpng.xcodeproj */,
 				0EEE1584DE8DFC5F422E85CC /* zlib.xcodeproj */,
 			);
@@ -1263,6 +1290,14 @@
 			path = RenderSystem.Metal;
 			sourceTree = "<group>";
 		};
+		A9A8226C1DAB7B310091497F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A9A822701DAB7B310091497F /* libgiflib.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		AAF4E64073F0BBFB4C0B0C43 /* Signals */ = {
 			isa = PBXGroup;
 			children = (
@@ -1538,6 +1573,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				A9A822751DAB7C010091497F /* PBXTargetDependency */,
 				12C6FD6DDFE9A44EBCBDF554 /* PBXTargetDependency */,
 				47F28AE6D095659B888571B6 /* PBXTargetDependency */,
 			);
@@ -1556,6 +1592,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				A9A822721DAB7BF00091497F /* PBXTargetDependency */,
 				A9D641891C342FBF006E14E0 /* PBXTargetDependency */,
 				A9D6418B1C342FC2006E14E0 /* PBXTargetDependency */,
 			);
@@ -1584,6 +1621,10 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = A9A8226C1DAB7B310091497F /* Products */;
+					ProjectRef = A9A8226B1DAB7B310091497F /* giflib.xcodeproj */;
+				},
+				{
 					ProductGroup = D324FA616DB54DD0143F2C11 /* Products */;
 					ProjectRef = 31E97AB9CDD9BFFD39388913 /* libpng.xcodeproj */;
 				},
@@ -1606,6 +1647,13 @@
 			fileType = archive.ar;
 			path = libzlib.a;
 			remoteRef = 93D3906E16C2153B31989B6D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		A9A822701DAB7B310091497F /* libgiflib.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libgiflib.a;
+			remoteRef = A9A8226F1DAB7B310091497F /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		BFBE06E0DEEBFD77A7D8BBB0 /* libpng.a */ = {
@@ -1859,6 +1907,16 @@
 			name = zlib_static;
 			targetProxy = AF51FD32A252F532881CF170 /* PBXContainerItemProxy */;
 		};
+		A9A822721DAB7BF00091497F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = giflib_static;
+			targetProxy = A9A822711DAB7BF00091497F /* PBXContainerItemProxy */;
+		};
+		A9A822751DAB7C010091497F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = giflib_static;
+			targetProxy = A9A822741DAB7C010091497F /* PBXContainerItemProxy */;
+		};
 		A9D641891C342FBF006E14E0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = libpng_static;
@@ -1966,6 +2024,7 @@
 					../include,
 					../dependencies/libpng,
 					../dependencies/vendor/libpng,
+					../dependencies/vendor/giflib/lib,
 				);
 			};
 			name = Release;
@@ -2034,6 +2093,7 @@
 					../include,
 					../dependencies/libpng,
 					../dependencies/vendor/libpng,
+					../dependencies/vendor/giflib/lib,
 				);
 				ONLY_ACTIVE_ARCH = YES;
 			};

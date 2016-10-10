@@ -3,6 +3,13 @@ Open Source Software used in Pomdog
 
 All of the dependencies that [Pomdog](https://github.com/mogemimi/pomdog) needs to build or run.
 
+### GIFLIB
+
+* [The GIFLIB project](http://giflib.sourceforge.net/)
+* License
+  * MIT/X Consortium License
+  * Please see: [vendor/giflib/COPYING][license-giflib]
+
 ### GLEW
 
 * [SourceForge](http://glew.sourceforge.net/)
@@ -56,6 +63,7 @@ All of the dependencies that [Pomdog](https://github.com/mogemimi/pomdog) needs 
   * zlib License
   * Please see: [zlib/README][license-zlib]
 
+[license-giflib]: vendor/giflib/COPYING
 [license-glew]: glew/LICENSE.txt
 [license-iutest]: iutest/LICENSE
 [license-libpng]: libpng/LICENSE

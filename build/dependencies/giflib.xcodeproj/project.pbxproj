@@ -1,0 +1,211 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A9A822611DAB7AFE0091497F /* dgif_lib.c in Sources */ = {isa = PBXBuildFile; fileRef = A9A822561DAB7AFE0091497F /* dgif_lib.c */; };
+		A9A822621DAB7AFE0091497F /* egif_lib.c in Sources */ = {isa = PBXBuildFile; fileRef = A9A822571DAB7AFE0091497F /* egif_lib.c */; };
+		A9A822631DAB7AFE0091497F /* gif_err.c in Sources */ = {isa = PBXBuildFile; fileRef = A9A822581DAB7AFE0091497F /* gif_err.c */; };
+		A9A822641DAB7AFE0091497F /* gif_font.c in Sources */ = {isa = PBXBuildFile; fileRef = A9A822591DAB7AFE0091497F /* gif_font.c */; };
+		A9A822651DAB7AFE0091497F /* gif_hash.c in Sources */ = {isa = PBXBuildFile; fileRef = A9A8225A1DAB7AFE0091497F /* gif_hash.c */; };
+		A9A822661DAB7AFE0091497F /* gifalloc.c in Sources */ = {isa = PBXBuildFile; fileRef = A9A8225E1DAB7AFE0091497F /* gifalloc.c */; };
+		A9A822671DAB7AFE0091497F /* openbsd-reallocarray.c in Sources */ = {isa = PBXBuildFile; fileRef = A9A8225F1DAB7AFE0091497F /* openbsd-reallocarray.c */; };
+		A9A822681DAB7AFE0091497F /* quantize.c in Sources */ = {isa = PBXBuildFile; fileRef = A9A822601DAB7AFE0091497F /* quantize.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		02416B678B4C01D8DEE485DE /* libgiflib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libgiflib.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		A9A822561DAB7AFE0091497F /* dgif_lib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = dgif_lib.c; sourceTree = "<group>"; };
+		A9A822571DAB7AFE0091497F /* egif_lib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = egif_lib.c; sourceTree = "<group>"; };
+		A9A822581DAB7AFE0091497F /* gif_err.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gif_err.c; sourceTree = "<group>"; };
+		A9A822591DAB7AFE0091497F /* gif_font.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gif_font.c; sourceTree = "<group>"; };
+		A9A8225A1DAB7AFE0091497F /* gif_hash.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gif_hash.c; sourceTree = "<group>"; };
+		A9A8225B1DAB7AFE0091497F /* gif_hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gif_hash.h; sourceTree = "<group>"; };
+		A9A8225C1DAB7AFE0091497F /* gif_lib_private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gif_lib_private.h; sourceTree = "<group>"; };
+		A9A8225D1DAB7AFE0091497F /* gif_lib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gif_lib.h; sourceTree = "<group>"; };
+		A9A8225E1DAB7AFE0091497F /* gifalloc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gifalloc.c; sourceTree = "<group>"; };
+		A9A8225F1DAB7AFE0091497F /* openbsd-reallocarray.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "openbsd-reallocarray.c"; sourceTree = "<group>"; };
+		A9A822601DAB7AFE0091497F /* quantize.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = quantize.c; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3A372CE2713BE998323A2251 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4380831A880E7D53F3D2C3E0 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				A9A822561DAB7AFE0091497F /* dgif_lib.c */,
+				A9A822571DAB7AFE0091497F /* egif_lib.c */,
+				A9A822581DAB7AFE0091497F /* gif_err.c */,
+				A9A822591DAB7AFE0091497F /* gif_font.c */,
+				A9A8225A1DAB7AFE0091497F /* gif_hash.c */,
+				A9A8225B1DAB7AFE0091497F /* gif_hash.h */,
+				A9A8225C1DAB7AFE0091497F /* gif_lib_private.h */,
+				A9A8225D1DAB7AFE0091497F /* gif_lib.h */,
+				A9A8225E1DAB7AFE0091497F /* gifalloc.c */,
+				A9A8225F1DAB7AFE0091497F /* openbsd-reallocarray.c */,
+				A9A822601DAB7AFE0091497F /* quantize.c */,
+			);
+			name = Source;
+			path = ../../dependencies/vendor/giflib/lib;
+			sourceTree = "<group>";
+		};
+		717EC18129E451361407C607 = {
+			isa = PBXGroup;
+			children = (
+				4380831A880E7D53F3D2C3E0 /* Source */,
+				96FFC72C8DCD570FD6B811F5 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		96FFC72C8DCD570FD6B811F5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				02416B678B4C01D8DEE485DE /* libgiflib.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		BB3AA630872B81D9D9D29660 /* giflib_static */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E927BDE2F61CEB2F90B4AC69 /* Build configuration list for PBXNativeTarget "giflib_static" */;
+			buildPhases = (
+				B285C959F238B9F114DA0E4F /* Sources */,
+				3A372CE2713BE998323A2251 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = giflib_static;
+			productName = giflib;
+			productReference = 02416B678B4C01D8DEE485DE /* libgiflib.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		9F40137356D3C1EBDC64D8F4 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+			};
+			buildConfigurationList = E59F0CB691A189BFBA39BD7C /* Build configuration list for PBXProject "giflib" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 717EC18129E451361407C607;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				BB3AA630872B81D9D9D29660 /* giflib_static */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		B285C959F238B9F114DA0E4F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A9A822661DAB7AFE0091497F /* gifalloc.c in Sources */,
+				A9A822621DAB7AFE0091497F /* egif_lib.c in Sources */,
+				A9A822671DAB7AFE0091497F /* openbsd-reallocarray.c in Sources */,
+				A9A822631DAB7AFE0091497F /* gif_err.c in Sources */,
+				A9A822681DAB7AFE0091497F /* quantize.c in Sources */,
+				A9A822651DAB7AFE0091497F /* gif_hash.c in Sources */,
+				A9A822611DAB7AFE0091497F /* dgif_lib.c in Sources */,
+				A9A822641DAB7AFE0091497F /* gif_font.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1DBE095BD1EAF32DDD64DD7E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INTERMEDIATE_DIR = "$(PROJECT_DERIVED_FILE_DIR)/$(CONFIGURATION)";
+				SHARED_INTERMEDIATE_DIR = "$(SYMROOT)/DerivedSources/$(CONFIGURATION)";
+			};
+			name = Release;
+		};
+		AFBF6B8783E31D91BA7CA7D9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = c89;
+				GCC_PREPROCESSOR_DEFINITIONS = NDEBUG;
+				HEADER_SEARCH_PATHS = ../../dependencies/vendor/giflib/lib;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				PRODUCT_NAME = giflib;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		B2216A42A569813AE1B2968D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = c89;
+				GCC_PREPROCESSOR_DEFINITIONS = _DEBUG;
+				HEADER_SEARCH_PATHS = ../../dependencies/vendor/giflib/lib;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				PRODUCT_NAME = giflib;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		FF0B05B12C3BB5EA9C57D943 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INTERMEDIATE_DIR = "$(PROJECT_DERIVED_FILE_DIR)/$(CONFIGURATION)";
+				SHARED_INTERMEDIATE_DIR = "$(SYMROOT)/DerivedSources/$(CONFIGURATION)";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E59F0CB691A189BFBA39BD7C /* Build configuration list for PBXProject "giflib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DBE095BD1EAF32DDD64DD7E /* Release */,
+				FF0B05B12C3BB5EA9C57D943 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 1;
+			defaultConfigurationName = Release;
+		};
+		E927BDE2F61CEB2F90B4AC69 /* Build configuration list for PBXNativeTarget "giflib_static" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AFBF6B8783E31D91BA7CA7D9 /* Release */,
+				B2216A42A569813AE1B2968D /* Debug */,
+			);
+			defaultConfigurationIsVisible = 1;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 9F40137356D3C1EBDC64D8F4 /* Project object */;
+}

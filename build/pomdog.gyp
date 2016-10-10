@@ -527,11 +527,13 @@
   'target_defaults': {
     'dependencies': [
       'dependencies/libpng.gyp:libpng_static',
+      'dependencies/giflib.gyp:giflib_static',
     ],
     'include_dirs': [
       '../include',
       '../dependencies/libpng',
       '../dependencies/vendor/libpng',
+      '../dependencies/vendor/giflib/lib',
     ],
     'sources': [
       '<@(pomdog_library_core_sources)',
