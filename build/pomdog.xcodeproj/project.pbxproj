@@ -176,6 +176,10 @@
 		A997F7091CAEFC4900926392 /* Texture2DMetal.mm in Sources */ = {isa = PBXBuildFile; fileRef = A997F6F51CAEFC4800926392 /* Texture2DMetal.mm */; };
 		A9A822731DAB7BF60091497F /* libgiflib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A9A822701DAB7B310091497F /* libgiflib.a */; };
 		A9A822761DAB7C060091497F /* libgiflib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A9A822701DAB7B310091497F /* libgiflib.a */; };
+		A9A8228D1DAB7FB70091497F /* GifImageLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9A8228B1DAB7FB70091497F /* GifImageLoader.cpp */; };
+		A9A8228E1DAB7FB70091497F /* GifImageLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9A8228B1DAB7FB70091497F /* GifImageLoader.cpp */; };
+		A9A8228F1DAB7FB70091497F /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9A8228C1DAB7FB70091497F /* Image.cpp */; };
+		A9A822901DAB7FB70091497F /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9A8228C1DAB7FB70091497F /* Image.cpp */; };
 		A9D18E8D1CA427270011A6CE /* MetalCompiler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9D18E8C1CA427270011A6CE /* MetalCompiler.cpp */; };
 		A9D18E8E1CA427270011A6CE /* MetalCompiler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9D18E8C1CA427270011A6CE /* MetalCompiler.cpp */; };
 		A9D641861C342F59006E14E0 /* libpng.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BFBE06E0DEEBFD77A7D8BBB0 /* libpng.a */; };
@@ -568,6 +572,11 @@
 		A997F6F41CAEFC4800926392 /* Texture2DMetal.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Texture2DMetal.hpp; sourceTree = "<group>"; };
 		A997F6F51CAEFC4800926392 /* Texture2DMetal.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Texture2DMetal.mm; sourceTree = "<group>"; };
 		A9A8226B1DAB7B310091497F /* giflib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = giflib.xcodeproj; path = dependencies/giflib.xcodeproj; sourceTree = "<group>"; };
+		A9A822841DAB7F990091497F /* GifImage.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GifImage.hpp; sourceTree = "<group>"; };
+		A9A822851DAB7F990091497F /* GifImageLoader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GifImageLoader.hpp; sourceTree = "<group>"; };
+		A9A822861DAB7F990091497F /* Image.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Image.hpp; sourceTree = "<group>"; };
+		A9A8228B1DAB7FB70091497F /* GifImageLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GifImageLoader.cpp; sourceTree = "<group>"; };
+		A9A8228C1DAB7FB70091497F /* Image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Image.cpp; sourceTree = "<group>"; };
 		A9AE680DD0E3FCEA11AF8F48 /* FloatingPointVector4.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = FloatingPointVector4.cpp; sourceTree = "<group>"; };
 		A9D18E8B1CA426FA0011A6CE /* MetalCompiler.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MetalCompiler.hpp; sourceTree = "<group>"; };
 		A9D18E8C1CA427270011A6CE /* MetalCompiler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MetalCompiler.cpp; sourceTree = "<group>"; };
@@ -956,6 +965,7 @@
 				30C4D948BA52EE418FB78842 /* Audio */,
 				A94ACC581C287C8100AFCC36 /* Basic */,
 				0A858AD16F086BA4A3B2C499 /* Content */,
+				A9A822811DAB7F650091497F /* Experimental */,
 				C75D42DC2FCD94A2C16953DC /* Graphics */,
 				A4530A8C4CEA403D2E7D71ED /* Input */,
 				34C6330F2DF6F100237B8429 /* InputSystem */,
@@ -1298,6 +1308,41 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		A9A8227E1DAB7EFF0091497F /* Experimental */ = {
+			isa = PBXGroup;
+			children = (
+				A9A8227F1DAB7F2B0091497F /* Image */,
+			);
+			path = Experimental;
+			sourceTree = "<group>";
+		};
+		A9A8227F1DAB7F2B0091497F /* Image */ = {
+			isa = PBXGroup;
+			children = (
+				A9A822841DAB7F990091497F /* GifImage.hpp */,
+				A9A822851DAB7F990091497F /* GifImageLoader.hpp */,
+				A9A822861DAB7F990091497F /* Image.hpp */,
+			);
+			path = Image;
+			sourceTree = "<group>";
+		};
+		A9A822811DAB7F650091497F /* Experimental */ = {
+			isa = PBXGroup;
+			children = (
+				A9A822821DAB7F6B0091497F /* Image */,
+			);
+			path = Experimental;
+			sourceTree = "<group>";
+		};
+		A9A822821DAB7F6B0091497F /* Image */ = {
+			isa = PBXGroup;
+			children = (
+				A9A8228B1DAB7FB70091497F /* GifImageLoader.cpp */,
+				A9A8228C1DAB7FB70091497F /* Image.cpp */,
+			);
+			path = Image;
+			sourceTree = "<group>";
+		};
 		AAF4E64073F0BBFB4C0B0C43 /* Signals */ = {
 			isa = PBXGroup;
 			children = (
@@ -1482,6 +1527,7 @@
 				3713F7C1D9D48DC0DC2D209A /* Audio */,
 				70831D9D2DD4F8C879C18406 /* Basic */,
 				67207A51EBA7F1D865FF9800 /* Content */,
+				A9A8227E1DAB7EFF0091497F /* Experimental */,
 				D90112D019DEC9CB7B5D46EC /* Graphics */,
 				68CED7E1D2108A668492B923 /* Input */,
 				0ADCD7A9C3ACD3EAEBA70750 /* Logging */,
@@ -1673,9 +1719,11 @@
 				0E2F4D65374135E36FE1DD6D /* GameClock.cpp in Sources */,
 				E7BC935B83D4E596AE1FDDC6 /* Timer.cpp in Sources */,
 				A997F6FC1CAEFC4800926392 /* GraphicsDeviceMetal.mm in Sources */,
+				A9A8228D1DAB7FB70091497F /* GifImageLoader.cpp in Sources */,
 				4EE6EBE03E9AD9C3BEF652F2 /* AudioClip.cpp in Sources */,
 				A997F7041CAEFC4900926392 /* SamplerStateMetal.mm in Sources */,
 				B7E9DD7713CD0E5323210193 /* AudioEngine.cpp in Sources */,
+				A9A8228F1DAB7FB70091497F /* Image.cpp in Sources */,
 				A997F7001CAEFC4800926392 /* PipelineStateMetal.mm in Sources */,
 				B25BC69FDA812635B36D2CAC /* SoundEffect.cpp in Sources */,
 				5F8F4C5C0179D8889EC7B4D2 /* AssetDictionary.cpp in Sources */,
@@ -1787,9 +1835,11 @@
 				219021114F3127B13F14D421 /* GameClock.cpp in Sources */,
 				25FE89B66D5561E80E0EE6FE /* Timer.cpp in Sources */,
 				A997F6FD1CAEFC4800926392 /* GraphicsDeviceMetal.mm in Sources */,
+				A9A8228E1DAB7FB70091497F /* GifImageLoader.cpp in Sources */,
 				8F708C4B18D750ED37EFCF6B /* AudioClip.cpp in Sources */,
 				A997F7051CAEFC4900926392 /* SamplerStateMetal.mm in Sources */,
 				3EB59864165741842C8DD788 /* AudioEngine.cpp in Sources */,
+				A9A822901DAB7FB70091497F /* Image.cpp in Sources */,
 				A997F7011CAEFC4800926392 /* PipelineStateMetal.mm in Sources */,
 				615FEBD97D48A4D57BDA54C4 /* SoundEffect.cpp in Sources */,
 				E4D0DB6D0CBC0C51449C182B /* AssetDictionary.cpp in Sources */,

@@ -318,6 +318,13 @@
       '../src/Utility/ScopeGuard.hpp',
       '../src/Utility/StringHelper.cpp',
     ],
+    'pomdog_library_experimental_sources': [
+      '../include/Pomdog/Experimental/Image/GifImage.hpp',
+      '../include/Pomdog/Experimental/Image/GifImageLoader.hpp',
+      '../include/Pomdog/Experimental/Image/Image.hpp',
+      '../src/Experimental/Image/GifImageLoader.cpp',
+      '../src/Experimental/Image/Image.cpp',
+    ],
     'pomdog_library_opengl4_sources': [
       '../src/RenderSystem.GL4/BlendStateGL4.cpp',
       '../src/RenderSystem.GL4/BlendStateGL4.hpp',
@@ -537,6 +544,7 @@
     ],
     'sources': [
       '<@(pomdog_library_core_sources)',
+      '<@(pomdog_library_experimental_sources)',
       '../include/Pomdog/Pomdog.hpp',
     ],
     'msbuild_settings': {
