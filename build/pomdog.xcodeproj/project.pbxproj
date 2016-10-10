@@ -180,6 +180,10 @@
 		A9A8228E1DAB7FB70091497F /* GifImageLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9A8228B1DAB7FB70091497F /* GifImageLoader.cpp */; };
 		A9A8228F1DAB7FB70091497F /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9A8228C1DAB7FB70091497F /* Image.cpp */; };
 		A9A822901DAB7FB70091497F /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9A8228C1DAB7FB70091497F /* Image.cpp */; };
+		A9A822931DAB7FBE0091497F /* TextureAtlasGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9A822911DAB7FBE0091497F /* TextureAtlasGenerator.cpp */; };
+		A9A822941DAB7FBE0091497F /* TextureAtlasGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9A822911DAB7FBE0091497F /* TextureAtlasGenerator.cpp */; };
+		A9A822951DAB7FBE0091497F /* TextureAtlasLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9A822921DAB7FBE0091497F /* TextureAtlasLoader.cpp */; };
+		A9A822961DAB7FBE0091497F /* TextureAtlasLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9A822921DAB7FBE0091497F /* TextureAtlasLoader.cpp */; };
 		A9D18E8D1CA427270011A6CE /* MetalCompiler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9D18E8C1CA427270011A6CE /* MetalCompiler.cpp */; };
 		A9D18E8E1CA427270011A6CE /* MetalCompiler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9D18E8C1CA427270011A6CE /* MetalCompiler.cpp */; };
 		A9D641861C342F59006E14E0 /* libpng.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BFBE06E0DEEBFD77A7D8BBB0 /* libpng.a */; };
@@ -575,8 +579,14 @@
 		A9A822841DAB7F990091497F /* GifImage.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GifImage.hpp; sourceTree = "<group>"; };
 		A9A822851DAB7F990091497F /* GifImageLoader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GifImageLoader.hpp; sourceTree = "<group>"; };
 		A9A822861DAB7F990091497F /* Image.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Image.hpp; sourceTree = "<group>"; };
+		A9A822871DAB7FA10091497F /* TextureAtlas.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TextureAtlas.hpp; sourceTree = "<group>"; };
+		A9A822881DAB7FA10091497F /* TextureAtlasGenerator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TextureAtlasGenerator.hpp; sourceTree = "<group>"; };
+		A9A822891DAB7FA10091497F /* TextureAtlasLoader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TextureAtlasLoader.hpp; sourceTree = "<group>"; };
+		A9A8228A1DAB7FA10091497F /* TextureRegion.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TextureRegion.hpp; sourceTree = "<group>"; };
 		A9A8228B1DAB7FB70091497F /* GifImageLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GifImageLoader.cpp; sourceTree = "<group>"; };
 		A9A8228C1DAB7FB70091497F /* Image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Image.cpp; sourceTree = "<group>"; };
+		A9A822911DAB7FBE0091497F /* TextureAtlasGenerator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextureAtlasGenerator.cpp; sourceTree = "<group>"; };
+		A9A822921DAB7FBE0091497F /* TextureAtlasLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextureAtlasLoader.cpp; sourceTree = "<group>"; };
 		A9AE680DD0E3FCEA11AF8F48 /* FloatingPointVector4.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = FloatingPointVector4.cpp; sourceTree = "<group>"; };
 		A9D18E8B1CA426FA0011A6CE /* MetalCompiler.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MetalCompiler.hpp; sourceTree = "<group>"; };
 		A9D18E8C1CA427270011A6CE /* MetalCompiler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MetalCompiler.cpp; sourceTree = "<group>"; };
@@ -1312,6 +1322,7 @@
 			isa = PBXGroup;
 			children = (
 				A9A8227F1DAB7F2B0091497F /* Image */,
+				A9A822801DAB7F510091497F /* TexturePacker */,
 			);
 			path = Experimental;
 			sourceTree = "<group>";
@@ -1326,10 +1337,22 @@
 			path = Image;
 			sourceTree = "<group>";
 		};
+		A9A822801DAB7F510091497F /* TexturePacker */ = {
+			isa = PBXGroup;
+			children = (
+				A9A822871DAB7FA10091497F /* TextureAtlas.hpp */,
+				A9A822881DAB7FA10091497F /* TextureAtlasGenerator.hpp */,
+				A9A822891DAB7FA10091497F /* TextureAtlasLoader.hpp */,
+				A9A8228A1DAB7FA10091497F /* TextureRegion.hpp */,
+			);
+			path = TexturePacker;
+			sourceTree = "<group>";
+		};
 		A9A822811DAB7F650091497F /* Experimental */ = {
 			isa = PBXGroup;
 			children = (
 				A9A822821DAB7F6B0091497F /* Image */,
+				A9A822831DAB7F6F0091497F /* TexturePacker */,
 			);
 			path = Experimental;
 			sourceTree = "<group>";
@@ -1341,6 +1364,15 @@
 				A9A8228C1DAB7FB70091497F /* Image.cpp */,
 			);
 			path = Image;
+			sourceTree = "<group>";
+		};
+		A9A822831DAB7F6F0091497F /* TexturePacker */ = {
+			isa = PBXGroup;
+			children = (
+				A9A822911DAB7FBE0091497F /* TextureAtlasGenerator.cpp */,
+				A9A822921DAB7FBE0091497F /* TextureAtlasLoader.cpp */,
+			);
+			path = TexturePacker;
 			sourceTree = "<group>";
 		};
 		AAF4E64073F0BBFB4C0B0C43 /* Signals */ = {
@@ -1728,6 +1760,7 @@
 				B25BC69FDA812635B36D2CAC /* SoundEffect.cpp in Sources */,
 				5F8F4C5C0179D8889EC7B4D2 /* AssetDictionary.cpp in Sources */,
 				9EA7C97EE18F199AE5272E24 /* AssetLoaderContext.cpp in Sources */,
+				A9A822951DAB7FBE0091497F /* TextureAtlasLoader.cpp in Sources */,
 				E8D6D7F610B157019B03A800 /* AssetManager.cpp in Sources */,
 				AD987379388ED5E890CB221A /* PipelineStateBuilder.cpp in Sources */,
 				07B330A5B3BE47D6311109E8 /* ShaderBuilder.cpp in Sources */,
@@ -1787,6 +1820,7 @@
 				C0B84A37FCB13D340E04120C /* Connection.cpp in Sources */,
 				DD35FD410F3B10D3D7108DD5 /* ConnectionList.cpp in Sources */,
 				162657EF7F7D8D1E34C76882 /* EventQueue.cpp in Sources */,
+				A9A822931DAB7FBE0091497F /* TextureAtlasGenerator.cpp in Sources */,
 				9439AAF08FDF6A7046F2F994 /* ScopedConnection.cpp in Sources */,
 				8650CF18F26DB3A0F89ABAE3 /* CRC32.cpp in Sources */,
 				A997F7081CAEFC4900926392 /* Texture2DMetal.mm in Sources */,
@@ -1844,6 +1878,7 @@
 				615FEBD97D48A4D57BDA54C4 /* SoundEffect.cpp in Sources */,
 				E4D0DB6D0CBC0C51449C182B /* AssetDictionary.cpp in Sources */,
 				2492DBED0FC08DE1484FDA24 /* AssetLoaderContext.cpp in Sources */,
+				A9A822961DAB7FBE0091497F /* TextureAtlasLoader.cpp in Sources */,
 				07AC7D00AF95EB8A551A0CC7 /* AssetManager.cpp in Sources */,
 				0B0F472CF35B5E06E17342B1 /* PipelineStateBuilder.cpp in Sources */,
 				F8CEA52C304DD8A4BBEAA042 /* ShaderBuilder.cpp in Sources */,
@@ -1903,6 +1938,7 @@
 				B8B5DF3E58503D84B8D7E2D9 /* Connection.cpp in Sources */,
 				48657AD97E278FA04C4994B4 /* ConnectionList.cpp in Sources */,
 				5D895FC546DFD02F64646AF7 /* EventQueue.cpp in Sources */,
+				A9A822941DAB7FBE0091497F /* TextureAtlasGenerator.cpp in Sources */,
 				023F583DEDA9BCB1C9E19C1C /* ScopedConnection.cpp in Sources */,
 				65B8BEF3D1E04BF859631ADE /* CRC32.cpp in Sources */,
 				A997F7091CAEFC4900926392 /* Texture2DMetal.mm in Sources */,

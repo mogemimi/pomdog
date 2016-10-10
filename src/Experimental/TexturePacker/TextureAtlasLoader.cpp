@@ -1,13 +1,13 @@
 // Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
 
-#include "TextureAtlasLoader.hpp"
+#include "Pomdog/Experimental/TexturePacker/TextureAtlasLoader.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
-#include <utility>
-#include <fstream>
 #include <algorithm>
+#include <fstream>
 #include <sstream>
+#include <utility>
 
 namespace Pomdog {
 namespace TexturePacker {
@@ -21,7 +21,7 @@ enum class ParserState {
     ParsingError,
 };
 
-TextureAtlasRegion CreateAtlasRegion(std::string const& line, std::int16_t pageIndex)
+TextureAtlasRegion CreateAtlasRegion(const std::string& line, std::int16_t pageIndex)
 {
     TextureAtlasRegion region;
     region.Name = line;
@@ -34,12 +34,12 @@ TextureAtlasRegion CreateAtlasRegion(std::string const& line, std::int16_t pageI
     region.Region.YOffset = 0;
     region.Region.Rotate = false;
 
-    return std::move(region);
+    return region;
 }
 
 } // unnamed namespace
 
-TextureAtlas TextureAtlasLoader::Load(AssetManager const& assets, std::string const& assetName)
+TextureAtlas TextureAtlasLoader::Load(const AssetManager& assets, const std::string& assetName)
 {
     auto binaryFile = assets.OpenStream(assetName);
 
@@ -161,7 +161,7 @@ TextureAtlas TextureAtlasLoader::Load(AssetManager const& assets, std::string co
             }
             break;
         }
-        } // switch (state)
+        } // end of switch-case
 
         if (state == ParserState::ParsingError) {
             break;
@@ -173,7 +173,7 @@ TextureAtlas TextureAtlasLoader::Load(AssetManager const& assets, std::string co
         result.regions.clear();
     }
 
-    return std::move(result);
+    return result;
 }
 
 } // namespace TexturePacker

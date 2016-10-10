@@ -88,7 +88,6 @@
       '<@(pomdog_expr_dir)/Graphics/SpriteSortMode.hpp',
     #   '<@(pomdog_expr_dir)/Graphics/SpriteRenderer.cpp',
     #   '<@(pomdog_expr_dir)/Graphics/SpriteRenderer.hpp',
-      '<@(pomdog_expr_dir)/Graphics/TextureRegion.hpp',
       '<@(pomdog_expr_dir)/Graphics/TrueTypeFont.cpp',
       '<@(pomdog_expr_dir)/Graphics/TrueTypeFont.hpp',
 
@@ -219,10 +218,6 @@
       '<@(pomdog_expr_dir)/Spine/SkinnedMeshLoader.hpp',
       '<@(pomdog_expr_dir)/Spine/SpriteAnimationLoader.cpp',
       '<@(pomdog_expr_dir)/Spine/SpriteAnimationLoader.hpp',
-
-      '<@(pomdog_expr_dir)/TexturePacker/TextureAtlas.hpp',
-      '<@(pomdog_expr_dir)/TexturePacker/TextureAtlasLoader.cpp',
-      '<@(pomdog_expr_dir)/TexturePacker/TextureAtlasLoader.hpp',
 
       '<@(pomdog_expr_dir)/Tween/EasingHelper.cpp',
       '<@(pomdog_expr_dir)/Tween/EasingHelper.hpp',

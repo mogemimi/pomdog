@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Pomdog.Experimental/TexturePacker/TextureAtlas.hpp"
+#include "Pomdog/Experimental/TexturePacker/TextureAtlas.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Math/Vector2.hpp"
 #include <memory>

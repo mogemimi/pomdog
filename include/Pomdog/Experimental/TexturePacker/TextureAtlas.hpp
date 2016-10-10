@@ -2,7 +2,8 @@
 
 #pragma once
 
-#include "Pomdog.Experimental/Graphics/TextureRegion.hpp"
+#include "Pomdog/Basic/Export.hpp"
+#include "Pomdog/Experimental/TexturePacker/TextureRegion.hpp"
 #include <cstdint>
 #include <string>
 #include <vector>
@@ -11,17 +12,17 @@
 namespace Pomdog {
 namespace TexturePacker {
 
-struct TextureAtlasPage {
+struct POMDOG_EXPORT TextureAtlasPage final {
     std::string Name;
 };
 
-struct TextureAtlasRegion {
+struct POMDOG_EXPORT TextureAtlasRegion final {
     std::string Name;
     TextureRegion Region;
     std::int16_t TexturePage;
 };
 
-class TextureAtlas {
+class POMDOG_EXPORT TextureAtlas {
 public:
     std::vector<TextureAtlasPage> pages;
     std::vector<TextureAtlasRegion> regions;

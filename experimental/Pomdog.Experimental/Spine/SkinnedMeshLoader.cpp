@@ -5,7 +5,7 @@
 #include "Pomdog.Experimental/Skeletal2D/SkeletonPose.hpp"
 #include "Pomdog.Experimental/Skeletal2D/SkinnedVertex.hpp"
 #include "Pomdog.Experimental/Skeletal2D/SkinnedMesh.hpp"
-#include "Pomdog.Experimental/TexturePacker/TextureAtlas.hpp"
+#include "Pomdog/Experimental/TexturePacker/TextureAtlas.hpp"
 #include "Pomdog/Math/MathHelper.hpp"
 #include <algorithm>
 #include <utility>

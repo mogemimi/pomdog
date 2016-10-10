@@ -4,10 +4,10 @@
 
 #include "Pomdog.Experimental/Gameplay/detail/ComponentTypeIndex.hpp"
 #include "Pomdog.Experimental/Gameplay2D/GraphicsComponent.hpp"
-#include "Pomdog.Experimental/Graphics/TextureRegion.hpp"
 #include "Pomdog.Experimental/Rendering/Commands/SpriteBatchCommand.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Math/Vector2.hpp"
+#include "Pomdog/Experimental/TexturePacker/TextureRegion.hpp"
 #include <Pomdog/Pomdog.hpp>
 #include <functional>
 #include <memory>
