@@ -8,6 +8,13 @@
       'include_dirs': [
         '../../dependencies/vendor/giflib/lib',
       ],
+      'conditions': [
+        ['OS == "win"', {
+          'include_dirs': [
+            '../../dependencies/vendor/giflib/windows',
+          ],
+        }],
+      ],
       'sources': [
         '../../dependencies/vendor/giflib/lib/dgif_lib.c',
         '../../dependencies/vendor/giflib/lib/egif_lib.c',
