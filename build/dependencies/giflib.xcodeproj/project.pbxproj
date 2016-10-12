@@ -104,6 +104,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 0800;
 			};
 			buildConfigurationList = E59F0CB691A189BFBA39BD7C /* Build configuration list for PBXProject "giflib" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -179,7 +180,9 @@
 		FF0B05B12C3BB5EA9C57D943 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ENABLE_TESTABILITY = YES;
 				INTERMEDIATE_DIR = "$(PROJECT_DERIVED_FILE_DIR)/$(CONFIGURATION)";
+				ONLY_ACTIVE_ARCH = YES;
 				SHARED_INTERMEDIATE_DIR = "$(SYMROOT)/DerivedSources/$(CONFIGURATION)";
 			};
 			name = Debug;
