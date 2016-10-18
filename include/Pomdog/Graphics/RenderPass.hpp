@@ -5,8 +5,8 @@
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
 #include "Pomdog/Graphics/Viewport.hpp"
-#include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
+#include "Pomdog/Math/Vector4.hpp"
 #include "Pomdog/Utility/Optional.hpp"
 #include <cstdint>
 #include <memory>
@@ -14,7 +14,7 @@
 
 namespace Pomdog {
 
-using RenderTargetAndClearColor = std::tuple<std::shared_ptr<RenderTarget2D>, Optional<Color>>;
+using RenderTargetAndClearColor = std::tuple<std::shared_ptr<RenderTarget2D>, Optional<Vector4>>;
 
 struct POMDOG_EXPORT RenderPass {
     std::vector<RenderTargetAndClearColor> RenderTargets;

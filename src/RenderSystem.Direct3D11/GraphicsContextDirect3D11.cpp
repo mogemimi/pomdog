@@ -586,12 +586,11 @@ void GraphicsContextDirect3D11::SetRenderPass(const RenderPass& renderPass)
     for (std::size_t i = 0; i < renderTargets.size(); ++i) {
         auto & clearColor = std::get<1>(renderPass.RenderTargets[i]);
         if (clearColor) {
-            auto colorVector = clearColor->ToVector4();
             auto & renderTarget = renderTargets[i];
             POMDOG_ASSERT(renderTarget);
 
             deviceContext->ClearRenderTargetView(
-                renderTarget->GetRenderTargetView(), colorVector.Data());
+                renderTarget->GetRenderTargetView(), clearColor->Data());
         }
     }
 

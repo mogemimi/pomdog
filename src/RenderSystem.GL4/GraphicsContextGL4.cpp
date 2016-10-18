@@ -728,8 +728,7 @@ void GraphicsContextGL4::SetRenderPass(const RenderPass& renderPass)
 
         if (clearColor) {
             mask |= GL_COLOR_BUFFER_BIT;
-            auto colorVector = clearColor->ToVector4();
-            glClearColor(colorVector.X, colorVector.Y, colorVector.Z, colorVector.W);
+            glClearColor(clearColor->X, clearColor->Y, clearColor->Z, clearColor->W);
             POMDOG_CHECK_ERROR_GL4("glClearColor");
         }
         if (mask != 0) {

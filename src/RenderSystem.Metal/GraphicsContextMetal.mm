@@ -46,10 +46,9 @@ MTLIndexType ToIndexType(IndexElementSize elementSize) noexcept
     return MTLIndexTypeUInt16;
 }
 
-MTLClearColor ToClearColor(const Color& color) noexcept
+MTLClearColor ToClearColor(const Vector4& color) noexcept
 {
-    auto vec = color.ToVector4();
-    return MTLClearColorMake(vec.X, vec.Y, vec.Z, vec.W);
+    return MTLClearColorMake(color.X, color.Y, color.Z, color.W);
 }
 
 void SetViewport(
