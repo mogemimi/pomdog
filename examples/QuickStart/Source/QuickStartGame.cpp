@@ -107,7 +107,7 @@ void QuickStartGame::Initialize()
         auto createGraphicsCommands = [this](int width, int height) {
             Viewport viewport = {0, 0, width, height};
             RenderPass pass;
-            pass.RenderTargets.emplace_back(nullptr, Color::CornflowerBlue);
+            pass.RenderTargets.emplace_back(nullptr, Color::CornflowerBlue.ToVector4());
             pass.ClearDepth = 1.0f;
             pass.ClearStencil = 0;
             pass.Viewport = viewport;
