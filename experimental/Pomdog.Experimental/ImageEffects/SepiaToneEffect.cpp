@@ -48,7 +48,7 @@ SepiaToneEffect::SepiaToneEffect(
         .SetVertexShader(vertexShader.Build())
         .SetPixelShader(pixelShader.Build())
         .SetInputLayout(inputLayout.CreateInputLayout())
-        .SetBlendState(BlendDescription::CreateNonPremultiplied())
+        .SetBlendState(BlendDescription::CreateOpaque())
         .SetDepthStencilState(DepthStencilDescription::CreateNone())
         .SetConstantBufferBindSlot("ImageEffectConstants", 0)
         .Build();
