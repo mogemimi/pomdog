@@ -42,7 +42,6 @@
 //#include "Graphics/SpriteLine.hpp"
 #include "Graphics/SpriteSortMode.hpp"
 //#include "Graphics/SpriteRenderer.hpp"
-#include "Graphics/TextureRegion.hpp"
 
 #include "ImageEffects/ChromaticAberration.hpp"
 #include "ImageEffects/FishEyeEffect.hpp"
@@ -101,9 +100,6 @@
 #include "Spine/SkinLoader.hpp"
 #include "Spine/SkinnedMeshLoader.hpp"
 #include "Spine/SpriteAnimationLoader.hpp"
-
-#include "TexturePacker/TextureAtlas.hpp"
-#include "TexturePacker/TextureAtlasLoader.hpp"
 
 #include "Tween/EasingHelper.hpp"
 
