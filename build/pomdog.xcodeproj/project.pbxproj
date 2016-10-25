@@ -145,6 +145,24 @@
 		A93CA6531D92F34E00B65171 /* QueuedScheduler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A93CA64E1D92F34E00B65171 /* QueuedScheduler.cpp */; };
 		A93CA6541D92F34E00B65171 /* Task.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A93CA64F1D92F34E00B65171 /* Task.cpp */; };
 		A93CA6551D92F34E00B65171 /* Task.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A93CA64F1D92F34E00B65171 /* Task.cpp */; };
+		A961F33E1C74B73800724CF2 /* BufferVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A961F32C1C74B73800724CF2 /* BufferVulkan.cpp */; };
+		A961F33F1C74B73800724CF2 /* BufferVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A961F32C1C74B73800724CF2 /* BufferVulkan.cpp */; };
+		A961F3401C74B73800724CF2 /* EffectReflectionVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A961F32E1C74B73800724CF2 /* EffectReflectionVulkan.cpp */; };
+		A961F3411C74B73800724CF2 /* EffectReflectionVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A961F32E1C74B73800724CF2 /* EffectReflectionVulkan.cpp */; };
+		A961F3421C74B73800724CF2 /* GraphicsDeviceVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A961F3301C74B73800724CF2 /* GraphicsDeviceVulkan.cpp */; };
+		A961F3431C74B73800724CF2 /* GraphicsDeviceVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A961F3301C74B73800724CF2 /* GraphicsDeviceVulkan.cpp */; };
+		A961F3441C74B73800724CF2 /* PipelineStateVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A961F3321C74B73800724CF2 /* PipelineStateVulkan.cpp */; };
+		A961F3451C74B73800724CF2 /* PipelineStateVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A961F3321C74B73800724CF2 /* PipelineStateVulkan.cpp */; };
+		A961F3461C74B73800724CF2 /* RenderTexture2DVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A961F3341C74B73800724CF2 /* RenderTexture2DVulkan.cpp */; };
+		A961F3471C74B73800724CF2 /* RenderTexture2DVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A961F3341C74B73800724CF2 /* RenderTexture2DVulkan.cpp */; };
+		A961F3481C74B73800724CF2 /* SamplerStateVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A961F3361C74B73800724CF2 /* SamplerStateVulkan.cpp */; };
+		A961F3491C74B73800724CF2 /* SamplerStateVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A961F3361C74B73800724CF2 /* SamplerStateVulkan.cpp */; };
+		A961F34A1C74B73800724CF2 /* ShaderVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A961F3381C74B73800724CF2 /* ShaderVulkan.cpp */; };
+		A961F34B1C74B73800724CF2 /* ShaderVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A961F3381C74B73800724CF2 /* ShaderVulkan.cpp */; };
+		A961F34C1C74B73800724CF2 /* Texture2DVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A961F33A1C74B73800724CF2 /* Texture2DVulkan.cpp */; };
+		A961F34D1C74B73800724CF2 /* Texture2DVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A961F33A1C74B73800724CF2 /* Texture2DVulkan.cpp */; };
+		A961F34E1C74B73800724CF2 /* VulkanFormatHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A961F33C1C74B73800724CF2 /* VulkanFormatHelper.cpp */; };
+		A961F34F1C74B73800724CF2 /* VulkanFormatHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A961F33C1C74B73800724CF2 /* VulkanFormatHelper.cpp */; };
 		A98CB91E8C51E158141731F1 /* PipelineState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7E14E3AE6B465875CD29816 /* PipelineState.cpp */; };
 		A992AF021C2B1168003170C9 /* Coordinate2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A992AF001C2B1168003170C9 /* Coordinate2D.cpp */; };
 		A992AF031C2B1168003170C9 /* Coordinate2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A992AF001C2B1168003170C9 /* Coordinate2D.cpp */; };
@@ -186,6 +204,10 @@
 		A9A822961DAB7FBE0091497F /* TextureAtlasLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9A822921DAB7FBE0091497F /* TextureAtlasLoader.cpp */; };
 		A9D18E8D1CA427270011A6CE /* MetalCompiler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9D18E8C1CA427270011A6CE /* MetalCompiler.cpp */; };
 		A9D18E8E1CA427270011A6CE /* MetalCompiler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9D18E8C1CA427270011A6CE /* MetalCompiler.cpp */; };
+		A9BCA1431C78254200FB3294 /* GraphicsCommandListVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9BCA13F1C78254200FB3294 /* GraphicsCommandListVulkan.cpp */; };
+		A9BCA1441C78254200FB3294 /* GraphicsCommandListVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9BCA13F1C78254200FB3294 /* GraphicsCommandListVulkan.cpp */; };
+		A9BCA1451C78254200FB3294 /* GraphicsCommandQueueVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9BCA1411C78254200FB3294 /* GraphicsCommandQueueVulkan.cpp */; };
+		A9BCA1461C78254200FB3294 /* GraphicsCommandQueueVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9BCA1411C78254200FB3294 /* GraphicsCommandQueueVulkan.cpp */; };
 		A9D641861C342F59006E14E0 /* libpng.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BFBE06E0DEEBFD77A7D8BBB0 /* libpng.a */; };
 		A9D641871C342F5F006E14E0 /* libzlib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 63DEC4E495A2A3E49BFD61E5 /* libzlib.a */; };
 		A9D641921C34301C006E14E0 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E67C9ABE05AB8179C6615644 /* OpenAL.framework */; };
@@ -551,6 +573,24 @@
 		A93CA64E1D92F34E00B65171 /* QueuedScheduler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = QueuedScheduler.cpp; path = Async/QueuedScheduler.cpp; sourceTree = "<group>"; };
 		A93CA64F1D92F34E00B65171 /* Task.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Task.cpp; path = Async/Task.cpp; sourceTree = "<group>"; };
 		A94ACC591C287C9100AFCC36 /* ConditionalCompilation.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ConditionalCompilation.hpp; sourceTree = "<group>"; };
+		A961F32C1C74B73800724CF2 /* BufferVulkan.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BufferVulkan.cpp; sourceTree = "<group>"; };
+		A961F32D1C74B73800724CF2 /* BufferVulkan.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = BufferVulkan.hpp; sourceTree = "<group>"; };
+		A961F32E1C74B73800724CF2 /* EffectReflectionVulkan.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EffectReflectionVulkan.cpp; sourceTree = "<group>"; };
+		A961F32F1C74B73800724CF2 /* EffectReflectionVulkan.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = EffectReflectionVulkan.hpp; sourceTree = "<group>"; };
+		A961F3301C74B73800724CF2 /* GraphicsDeviceVulkan.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GraphicsDeviceVulkan.cpp; sourceTree = "<group>"; };
+		A961F3311C74B73800724CF2 /* GraphicsDeviceVulkan.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GraphicsDeviceVulkan.hpp; sourceTree = "<group>"; };
+		A961F3321C74B73800724CF2 /* PipelineStateVulkan.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PipelineStateVulkan.cpp; sourceTree = "<group>"; };
+		A961F3331C74B73800724CF2 /* PipelineStateVulkan.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PipelineStateVulkan.hpp; sourceTree = "<group>"; };
+		A961F3341C74B73800724CF2 /* RenderTexture2DVulkan.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderTexture2DVulkan.cpp; sourceTree = "<group>"; };
+		A961F3351C74B73800724CF2 /* RenderTexture2DVulkan.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = RenderTexture2DVulkan.hpp; sourceTree = "<group>"; };
+		A961F3361C74B73800724CF2 /* SamplerStateVulkan.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SamplerStateVulkan.cpp; sourceTree = "<group>"; };
+		A961F3371C74B73800724CF2 /* SamplerStateVulkan.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SamplerStateVulkan.hpp; sourceTree = "<group>"; };
+		A961F3381C74B73800724CF2 /* ShaderVulkan.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ShaderVulkan.cpp; sourceTree = "<group>"; };
+		A961F3391C74B73800724CF2 /* ShaderVulkan.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ShaderVulkan.hpp; sourceTree = "<group>"; };
+		A961F33A1C74B73800724CF2 /* Texture2DVulkan.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Texture2DVulkan.cpp; sourceTree = "<group>"; };
+		A961F33B1C74B73800724CF2 /* Texture2DVulkan.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Texture2DVulkan.hpp; sourceTree = "<group>"; };
+		A961F33C1C74B73800724CF2 /* VulkanFormatHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VulkanFormatHelper.cpp; sourceTree = "<group>"; };
+		A961F33D1C74B73800724CF2 /* VulkanFormatHelper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = VulkanFormatHelper.hpp; sourceTree = "<group>"; };
 		A992AF001C2B1168003170C9 /* Coordinate2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Coordinate2D.cpp; sourceTree = "<group>"; };
 		A992AF011C2B1168003170C9 /* Coordinate3D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Coordinate3D.cpp; sourceTree = "<group>"; };
 		A997F6DB1CAEFB0800926392 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
@@ -590,6 +630,11 @@
 		A9AE680DD0E3FCEA11AF8F48 /* FloatingPointVector4.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = FloatingPointVector4.cpp; sourceTree = "<group>"; };
 		A9D18E8B1CA426FA0011A6CE /* MetalCompiler.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MetalCompiler.hpp; sourceTree = "<group>"; };
 		A9D18E8C1CA427270011A6CE /* MetalCompiler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MetalCompiler.cpp; sourceTree = "<group>"; };
+		A9BCA13F1C78254200FB3294 /* GraphicsCommandListVulkan.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GraphicsCommandListVulkan.cpp; sourceTree = "<group>"; };
+		A9BCA1401C78254200FB3294 /* GraphicsCommandListVulkan.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GraphicsCommandListVulkan.hpp; sourceTree = "<group>"; };
+		A9BCA1411C78254200FB3294 /* GraphicsCommandQueueVulkan.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GraphicsCommandQueueVulkan.cpp; sourceTree = "<group>"; };
+		A9BCA1421C78254200FB3294 /* GraphicsCommandQueueVulkan.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GraphicsCommandQueueVulkan.hpp; sourceTree = "<group>"; };
+		A9D641901C343012006E14E0 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		AA4220AFBD6F377F07163A1E /* EffectAnnotation.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = EffectAnnotation.hpp; sourceTree = "<group>"; };
 		ABEE70990030BA68A5F9002D /* PipelineStateGL4.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = PipelineStateGL4.hpp; sourceTree = "<group>"; };
 		AC349E78729FC3024C1BC5D9 /* Assert.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = Assert.hpp; sourceTree = "<group>"; };
@@ -986,6 +1031,7 @@
 				8360309E4667B011AD3E6F2F /* RenderSystem */,
 				DE5CBBB57ACC2516919030E9 /* RenderSystem.GL4 */,
 				A997F6E11CAEFC2200926392 /* RenderSystem.Metal */,
+				A961F32B1C74B62000724CF2 /* RenderSystem.Vulkan */,
 				30140D8CEFA462A690107323 /* Signals */,
 				017714392C6763961A9404CF /* SoundSystem.OpenAL */,
 				582932A6CEFF570AC75B5E15 /* Utility */,
@@ -1375,6 +1421,35 @@
 			path = TexturePacker;
 			sourceTree = "<group>";
 		};
+		A961F32B1C74B62000724CF2 /* RenderSystem.Vulkan */ = {
+			isa = PBXGroup;
+			children = (
+				A961F32C1C74B73800724CF2 /* BufferVulkan.cpp */,
+				A961F32D1C74B73800724CF2 /* BufferVulkan.hpp */,
+				A961F32E1C74B73800724CF2 /* EffectReflectionVulkan.cpp */,
+				A961F32F1C74B73800724CF2 /* EffectReflectionVulkan.hpp */,
+				A9BCA13F1C78254200FB3294 /* GraphicsCommandListVulkan.cpp */,
+				A9BCA1401C78254200FB3294 /* GraphicsCommandListVulkan.hpp */,
+				A9BCA1411C78254200FB3294 /* GraphicsCommandQueueVulkan.cpp */,
+				A9BCA1421C78254200FB3294 /* GraphicsCommandQueueVulkan.hpp */,
+				A961F3301C74B73800724CF2 /* GraphicsDeviceVulkan.cpp */,
+				A961F3311C74B73800724CF2 /* GraphicsDeviceVulkan.hpp */,
+				A961F3321C74B73800724CF2 /* PipelineStateVulkan.cpp */,
+				A961F3331C74B73800724CF2 /* PipelineStateVulkan.hpp */,
+				A961F3341C74B73800724CF2 /* RenderTexture2DVulkan.cpp */,
+				A961F3351C74B73800724CF2 /* RenderTexture2DVulkan.hpp */,
+				A961F3361C74B73800724CF2 /* SamplerStateVulkan.cpp */,
+				A961F3371C74B73800724CF2 /* SamplerStateVulkan.hpp */,
+				A961F3381C74B73800724CF2 /* ShaderVulkan.cpp */,
+				A961F3391C74B73800724CF2 /* ShaderVulkan.hpp */,
+				A961F33A1C74B73800724CF2 /* Texture2DVulkan.cpp */,
+				A961F33B1C74B73800724CF2 /* Texture2DVulkan.hpp */,
+				A961F33C1C74B73800724CF2 /* VulkanFormatHelper.cpp */,
+				A961F33D1C74B73800724CF2 /* VulkanFormatHelper.hpp */,
+			);
+			path = RenderSystem.Vulkan;
+			sourceTree = "<group>";
+		};
 		AAF4E64073F0BBFB4C0B0C43 /* Signals */ = {
 			isa = PBXGroup;
 			children = (
@@ -1748,6 +1823,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A961F3441C74B73800724CF2 /* PipelineStateVulkan.cpp in Sources */,
 				0E2F4D65374135E36FE1DD6D /* GameClock.cpp in Sources */,
 				E7BC935B83D4E596AE1FDDC6 /* Timer.cpp in Sources */,
 				A997F6FC1CAEFC4800926392 /* GraphicsDeviceMetal.mm in Sources */,
@@ -1789,19 +1865,23 @@
 				A997F7061CAEFC4900926392 /* ShaderMetal.mm in Sources */,
 				8187A830E800AA46A814B09C /* GLSLCompiler.cpp in Sources */,
 				A992AF021C2B1168003170C9 /* Coordinate2D.cpp in Sources */,
+				A961F3401C74B73800724CF2 /* EffectReflectionVulkan.cpp in Sources */,
 				96250C0AF1475E290503FBF7 /* HLSLCompiler.cpp in Sources */,
 				6AC6140DEE87DAE2DC52FFE7 /* KeyboardState.cpp in Sources */,
 				6E7FC2384465DDDB5C5B0A25 /* InputDeviceFactory.cpp in Sources */,
+				A9BCA1431C78254200FB3294 /* GraphicsCommandListVulkan.cpp in Sources */,
 				1650793D0884E1424679277F /* Log.cpp in Sources */,
 				D5CAE3F16D482B36E58155CA /* LogChannel.cpp in Sources */,
 				5FC19F99728314D0AB72DDB8 /* BoundingBox.cpp in Sources */,
 				C256D286DB58A59C3115A07E /* BoundingBox2D.cpp in Sources */,
+				A961F34E1C74B73800724CF2 /* VulkanFormatHelper.cpp in Sources */,
 				460526B2F0D0E531DBE74416 /* BoundingCircle.cpp in Sources */,
 				972D8345F3491175B7E8411B /* BoundingSphere.cpp in Sources */,
 				A0FF034BB1ABF16181CC7340 /* Color.cpp in Sources */,
 				5B1D2792F76709A593451042 /* MathHelper.cpp in Sources */,
 				9402075D41A1A97AE8090BF9 /* Ray.cpp in Sources */,
 				A93CA6521D92F34E00B65171 /* QueuedScheduler.cpp in Sources */,
+				A961F33E1C74B73800724CF2 /* BufferVulkan.cpp in Sources */,
 				0D2BB710020E127DFCD9A463 /* Rectangle.cpp in Sources */,
 				C3A63B50AA37BB77F4224857 /* FloatingPointMatrix2x2.cpp in Sources */,
 				FFDFEBC545EB6A4B2D810F99 /* FloatingPointMatrix3x2.cpp in Sources */,
@@ -1815,8 +1895,11 @@
 				0497572B05C5E009716C044A /* FloatingPointVector4.cpp in Sources */,
 				378F438407DEF79BEA69E81C /* GraphicsCommandListImmediate.cpp in Sources */,
 				F29D13A39818F150CD4219B3 /* GraphicsCommandQueueImmediate.cpp in Sources */,
+				F6ACD0A3DF47C65FA528016E /* GraphicsContext.cpp in Sources */,
+				A9BCA1451C78254200FB3294 /* GraphicsCommandQueueVulkan.cpp in Sources */,
 				1C60BD023919A0C8916DB3E2 /* SurfaceFormatHelper.cpp in Sources */,
 				E7645392D6AC421C2703DF5E /* TextureHelper.cpp in Sources */,
+				A961F3481C74B73800724CF2 /* SamplerStateVulkan.cpp in Sources */,
 				C0B84A37FCB13D340E04120C /* Connection.cpp in Sources */,
 				DD35FD410F3B10D3D7108DD5 /* ConnectionList.cpp in Sources */,
 				162657EF7F7D8D1E34C76882 /* EventQueue.cpp in Sources */,
@@ -1839,15 +1922,18 @@
 				74D477E9B36CBB96B59576DA /* GraphicsDeviceGL4.cpp in Sources */,
 				BD5C4B6ACB960141061065E7 /* InputLayoutGL4.cpp in Sources */,
 				616958519334C7EF67A9B08E /* PipelineStateGL4.cpp in Sources */,
+				A961F34A1C74B73800724CF2 /* ShaderVulkan.cpp in Sources */,
 				373CF27D2193F65F489FA975 /* RasterizerStateGL4.cpp in Sources */,
 				A233F262232DDD6C16C06D31 /* RenderTarget2DGL4.cpp in Sources */,
 				0B2A073EC556AE4DF301E6DA /* SamplerStateGL4.cpp in Sources */,
 				9F7601D5C7E771D3423E81EC /* ShaderGL4.cpp in Sources */,
+				A961F3461C74B73800724CF2 /* RenderTexture2DVulkan.cpp in Sources */,
 				68C77475A849DB821AEC1312 /* Texture2DGL4.cpp in Sources */,
 				5D45742CD0787C6A52ED8F29 /* AudioClipAL.cpp in Sources */,
 				6DED53A00BC530C5F59A2547 /* AudioEngineAL.cpp in Sources */,
 				7760B64AC769ED3067368A8C /* ContextOpenAL.cpp in Sources */,
 				7A500C8DE0D6DC20D936D25D /* ErrorCheckerAL.cpp in Sources */,
+				A961F34C1C74B73800724CF2 /* Texture2DVulkan.cpp in Sources */,
 				63571970C7BE520D7EE1BB02 /* SoundEffectAL.cpp in Sources */,
 				3EC9EB32476FB3E3C3713D72 /* Bootstrap.mm in Sources */,
 				03F46EF697B70E1EE9B2533B /* CocoaWindowDelegate.mm in Sources */,
@@ -1859,6 +1945,7 @@
 				741BC5CE33F127A7361B1681 /* PomdogOpenGLView.mm in Sources */,
 				57F63AE13143A86E9FB8C7B4 /* FileSystemApple.mm in Sources */,
 				9416DEA36AC0AD131A3AB7D7 /* TimeSourceApple.cpp in Sources */,
+				A961F3421C74B73800724CF2 /* GraphicsDeviceVulkan.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1866,6 +1953,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A961F3451C74B73800724CF2 /* PipelineStateVulkan.cpp in Sources */,
 				219021114F3127B13F14D421 /* GameClock.cpp in Sources */,
 				25FE89B66D5561E80E0EE6FE /* Timer.cpp in Sources */,
 				A997F6FD1CAEFC4800926392 /* GraphicsDeviceMetal.mm in Sources */,
@@ -1907,19 +1995,23 @@
 				A997F7071CAEFC4900926392 /* ShaderMetal.mm in Sources */,
 				119BF64DD4319D35290995CD /* GLSLCompiler.cpp in Sources */,
 				A992AF031C2B1168003170C9 /* Coordinate2D.cpp in Sources */,
+				A961F3411C74B73800724CF2 /* EffectReflectionVulkan.cpp in Sources */,
 				10C3C865D4638E1512AD0274 /* HLSLCompiler.cpp in Sources */,
 				2C6A8330B306F09980C8EFE0 /* KeyboardState.cpp in Sources */,
 				D7EAEFE80CEE8FFAA2DB9282 /* InputDeviceFactory.cpp in Sources */,
+				A9BCA1441C78254200FB3294 /* GraphicsCommandListVulkan.cpp in Sources */,
 				1F0E6CB61ABDCD22F870F258 /* Log.cpp in Sources */,
 				2253F43FA13A0B293FE79749 /* LogChannel.cpp in Sources */,
 				15C4EF0C411554073735CCF7 /* BoundingBox.cpp in Sources */,
 				77E3632C4F2E245C2F8B6927 /* BoundingBox2D.cpp in Sources */,
+				A961F34F1C74B73800724CF2 /* VulkanFormatHelper.cpp in Sources */,
 				A6F13789F98E66A501FCF50A /* BoundingCircle.cpp in Sources */,
 				AB379BED1D868790638B95CB /* BoundingSphere.cpp in Sources */,
 				66DF4B1D8D85D2B963D5A0D5 /* Color.cpp in Sources */,
 				E58ECD9915BC55D5134950F9 /* MathHelper.cpp in Sources */,
 				DA4579E5970831E615EA005D /* Ray.cpp in Sources */,
 				A93CA6531D92F34E00B65171 /* QueuedScheduler.cpp in Sources */,
+				A961F33F1C74B73800724CF2 /* BufferVulkan.cpp in Sources */,
 				E4C4ADB64ED81496C05CB580 /* Rectangle.cpp in Sources */,
 				E971CF40D05A93F09E489D10 /* FloatingPointMatrix2x2.cpp in Sources */,
 				2A792456A91A1FCD600F40C7 /* FloatingPointMatrix3x2.cpp in Sources */,
@@ -1933,8 +2025,11 @@
 				F03B5A2733D5B0585DFBBB89 /* FloatingPointVector4.cpp in Sources */,
 				650D5B589129410AF7580726 /* GraphicsCommandListImmediate.cpp in Sources */,
 				6FA8A4ED33396758E9052EAD /* GraphicsCommandQueueImmediate.cpp in Sources */,
+				4519841F68EB2E2836F4E02D /* GraphicsContext.cpp in Sources */,
+				A9BCA1461C78254200FB3294 /* GraphicsCommandQueueVulkan.cpp in Sources */,
 				A5F5B45161ACFD33A1652F9C /* SurfaceFormatHelper.cpp in Sources */,
 				55635C9F9A88D4C77235D6EB /* TextureHelper.cpp in Sources */,
+				A961F3491C74B73800724CF2 /* SamplerStateVulkan.cpp in Sources */,
 				B8B5DF3E58503D84B8D7E2D9 /* Connection.cpp in Sources */,
 				48657AD97E278FA04C4994B4 /* ConnectionList.cpp in Sources */,
 				5D895FC546DFD02F64646AF7 /* EventQueue.cpp in Sources */,
@@ -1957,15 +2052,18 @@
 				FD3FD836F0346B587EDB61DE /* GraphicsDeviceGL4.cpp in Sources */,
 				B3BF71F0DA976F207A41EC64 /* InputLayoutGL4.cpp in Sources */,
 				FC16EE3B4D5C9E58010BCD0A /* PipelineStateGL4.cpp in Sources */,
+				A961F34B1C74B73800724CF2 /* ShaderVulkan.cpp in Sources */,
 				8DDEFF00D7FE9464C037A933 /* RasterizerStateGL4.cpp in Sources */,
 				1A274366E26BECBB63B60751 /* RenderTarget2DGL4.cpp in Sources */,
 				4282457DCED6C0F50EC6CE7E /* SamplerStateGL4.cpp in Sources */,
 				019FA0785E7D88B8C880AFD9 /* ShaderGL4.cpp in Sources */,
+				A961F3471C74B73800724CF2 /* RenderTexture2DVulkan.cpp in Sources */,
 				6591378FB9E160A17D96D06A /* Texture2DGL4.cpp in Sources */,
 				0997B2307F87B872762B0A2B /* AudioClipAL.cpp in Sources */,
 				9FFA1FA5C22F2299B1FD7B50 /* AudioEngineAL.cpp in Sources */,
 				D2C0DD27D04FFFC6B898AA80 /* ContextOpenAL.cpp in Sources */,
 				4B6482395A34745225470B08 /* ErrorCheckerAL.cpp in Sources */,
+				A961F34D1C74B73800724CF2 /* Texture2DVulkan.cpp in Sources */,
 				526DFCDBB8C6C2F2C6EC26D2 /* SoundEffectAL.cpp in Sources */,
 				99DE12DBE8D4B0D14FDACD5F /* Bootstrap.mm in Sources */,
 				E8ACB94BC7A78F57A854EC2C /* CocoaWindowDelegate.mm in Sources */,
@@ -1977,6 +2075,7 @@
 				0B4B6C232BC86463B6B58E08 /* PomdogOpenGLView.mm in Sources */,
 				524B4BB95C016A6F5BFC6407 /* FileSystemApple.mm in Sources */,
 				C9B073D4347551C9C9FBC668 /* TimeSourceApple.cpp in Sources */,
+				A961F3431C74B73800724CF2 /* GraphicsDeviceVulkan.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2113,6 +2212,7 @@
 					../dependencies/libpng,
 					../dependencies/vendor/libpng,
 					../dependencies/vendor/giflib/lib,
+					../dependencies/vulkan/src,
 				);
 			};
 			name = Release;
@@ -2184,6 +2284,7 @@
 					../dependencies/libpng,
 					../dependencies/vendor/libpng,
 					../dependencies/vendor/giflib/lib,
+					../dependencies/vulkan/src,
 				);
 				ONLY_ACTIVE_ARCH = YES;
 			};
