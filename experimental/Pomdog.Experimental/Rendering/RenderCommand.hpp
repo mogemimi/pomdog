@@ -13,7 +13,18 @@ public:
 
     virtual std::type_index GetType() const noexcept = 0;
 
-    virtual float GetDrawOrder() const noexcept = 0;
+    float GetDrawOrder() const noexcept
+    {
+        return drawOrder;
+    }
+
+    void SetDrawOrder(float drawOrderIn) noexcept
+    {
+        drawOrder = drawOrderIn;
+    }
+
+private:
+    float drawOrder = 0;
 };
 
 } // namespace Pomdog

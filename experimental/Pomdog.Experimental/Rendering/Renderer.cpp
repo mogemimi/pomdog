@@ -89,11 +89,12 @@ std::shared_ptr<GraphicsCommandList> Renderer::Impl::Render()
     commandList->Reset();
 
     drawCallCount = 0;
+    const auto viewProjection = viewMatrix * projectionMatrix;
 
-    for (auto & iter: processors) {
+    for (auto & iter : processors) {
         auto & processor = iter.second;
         POMDOG_ASSERT(processor);
-        processor->SetViewProjection(viewMatrix, projectionMatrix);
+        processor->Begin(commandList, viewProjection);
     }
 
     auto prevIter = std::end(processors);
@@ -107,18 +108,11 @@ std::shared_ptr<GraphicsCommandList> Renderer::Impl::Render()
             if (prevIter != std::end(processors)) {
                 auto & processor = prevIter->second;
                 POMDOG_ASSERT(processor);
-                processor->End(commandList);
+                processor->FlushBatch();
 
                 POMDOG_ASSERT(processor->GetDrawCallCount() >= 0);
                 drawCallCount += processor->GetDrawCallCount();
             }
-
-            if (iter != std::end(processors)) {
-                auto & processor = iter->second;
-                POMDOG_ASSERT(processor);
-                processor->Begin(commandList);
-            }
-
             prevIter = iter;
         }
 
@@ -140,7 +134,7 @@ std::shared_ptr<GraphicsCommandList> Renderer::Impl::Render()
     if (std::end(processors) != prevIter) {
         POMDOG_ASSERT(prevIter->second);
         auto & processor = prevIter->second;
-        processor->End(commandList);
+        processor->End();
 
         POMDOG_ASSERT(processor->GetDrawCallCount() >= 0);
         drawCallCount += processor->GetDrawCallCount();

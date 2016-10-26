@@ -13,19 +13,17 @@ class RenderCommandProcessor {
 public:
     virtual ~RenderCommandProcessor() = default;
 
-    virtual void SetViewProjection(
-        const Matrix4x4& view,
-        const Matrix4x4& projection) = 0;
-
     virtual void Begin(
-        const std::shared_ptr<GraphicsCommandList>& commandList) = 0;
+        const std::shared_ptr<GraphicsCommandList>& commandList,
+        const Matrix4x4& viewProjection) = 0;
 
     virtual void Draw(
         const std::shared_ptr<GraphicsCommandList>& commandList,
         RenderCommand & command) = 0;
 
-    virtual void End(
-        const std::shared_ptr<GraphicsCommandList>& commandList) = 0;
+    virtual void FlushBatch() = 0;
+
+    virtual void End() = 0;
 
     virtual int GetDrawCallCount() const noexcept = 0;
 
