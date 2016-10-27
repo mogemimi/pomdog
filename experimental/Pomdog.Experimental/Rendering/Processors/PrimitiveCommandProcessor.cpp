@@ -96,8 +96,8 @@ void PrimitiveCommandProcessor::SetViewProjection(
 
 std::type_index PrimitiveCommandProcessor::GetCommandType() const noexcept
 {
-    const std::type_index index = typeid(PrimitiveCommand);
-    return std::move(index);
+    std::type_index index = typeid(PrimitiveCommand);
+    return index;
 }
 
 } // namespace Rendering

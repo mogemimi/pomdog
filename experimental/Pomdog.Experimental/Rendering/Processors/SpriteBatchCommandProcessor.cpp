@@ -53,8 +53,8 @@ void SpriteBatchCommandProcessor::SetViewProjection(
 
 std::type_index SpriteBatchCommandProcessor::GetCommandType() const noexcept
 {
-    const std::type_index index = typeid(SpriteBatchCommand);
-    return std::move(index);
+    std::type_index index = typeid(SpriteBatchCommand);
+    return index;
 }
 
 } // namespace Rendering
