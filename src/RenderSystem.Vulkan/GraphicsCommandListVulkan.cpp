@@ -67,28 +67,66 @@ std::size_t GraphicsCommandListVulkan::GetCount() const noexcept
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 
-void GraphicsCommandListVulkan::Draw(std::size_t vertexCount)
+void GraphicsCommandListVulkan::Draw(
+    std::size_t vertexCount,
+    std::size_t startVertexLocation)
 {
-    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
+    POMDOG_ASSERT(commandBuffer != nullptr);
+
+    vkCmdDraw(
+        commandBuffer,
+        static_cast<uint32_t>(vertexCount),
+        0,
+        static_cast<uint32_t>(startVertexLocation),
+        0);
 }
 
-void GraphicsCommandListVulkan::DrawIndexed(std::size_t indexCount)
+void GraphicsCommandListVulkan::DrawIndexed(
+    std::size_t indexCount,
+    std::size_t startIndexLocation)
 {
-    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
+    POMDOG_ASSERT(commandBuffer != nullptr);
+
+    vkCmdDrawIndexed(
+        commandBuffer,
+        static_cast<uint32_t>(indexCount),
+        0,
+        static_cast<uint32_t>(startIndexLocation),
+        0,
+        0);
 }
 
 void GraphicsCommandListVulkan::DrawInstanced(
-    std::size_t vertexCount,
-    std::size_t instanceCount)
+    std::size_t vertexCountPerInstance,
+    std::size_t instanceCount,
+    std::size_t startVertexLocation,
+    std::size_t startInstanceLocation)
 {
-    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
+    POMDOG_ASSERT(commandBuffer != nullptr);
+
+    vkCmdDraw(
+        commandBuffer,
+        static_cast<uint32_t>(vertexCountPerInstance),
+        static_cast<uint32_t>(instanceCount),
+        static_cast<uint32_t>(startVertexLocation),
+        static_cast<uint32_t>(startInstanceLocation));
 }
 
 void GraphicsCommandListVulkan::DrawIndexedInstanced(
-    std::size_t indexCount,
-    std::size_t instanceCount)
+    std::size_t indexCountPerInstance,
+    std::size_t instanceCount,
+    std::size_t startIndexLocation,
+    std::size_t startInstanceLocation)
 {
-    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
+    POMDOG_ASSERT(commandBuffer != nullptr);
+
+    vkCmdDrawIndexed(
+        commandBuffer,
+        static_cast<uint32_t>(indexCountPerInstance),
+        static_cast<uint32_t>(instanceCount),
+        static_cast<uint32_t>(startIndexLocation),
+        0,
+        static_cast<uint32_t>(startInstanceLocation));
 }
 
 void GraphicsCommandListVulkan::SetRenderPass(RenderPass && renderPass)

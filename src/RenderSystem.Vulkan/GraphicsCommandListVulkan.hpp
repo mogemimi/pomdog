@@ -20,17 +20,25 @@ public:
 
     std::size_t GetCount() const noexcept override;
 
-    void Draw(std::size_t vertexCount) override;
+    void Draw(
+        std::size_t vertexCount,
+        std::size_t startVertexLocation) override;
 
-    void DrawIndexed(std::size_t indexCount) override;
+    void DrawIndexed(
+        std::size_t indexCount,
+        std::size_t startIndexLocation) override;
 
     void DrawInstanced(
-        std::size_t vertexCount,
-        std::size_t instanceCount) override;
+        std::size_t vertexCountPerInstance,
+        std::size_t instanceCount,
+        std::size_t startVertexLocation,
+        std::size_t startInstanceLocation) override;
 
     void DrawIndexedInstanced(
-        std::size_t indexCount,
-        std::size_t instanceCount) override;
+        std::size_t indexCountPerInstance,
+        std::size_t instanceCount,
+        std::size_t startIndexLocation,
+        std::size_t startInstanceLocation) override;
 
     void SetRenderPass(RenderPass && renderPass) override;
 

@@ -239,7 +239,9 @@ void GraphicsContextDirect3D11::ApplyPipelineState()
     }
 }
 
-void GraphicsContextDirect3D11::Draw(std::size_t vertexCount)
+void GraphicsContextDirect3D11::Draw(
+    std::size_t vertexCount,
+    std::size_t startVertexLocation)
 {
     POMDOG_ASSERT(deviceContext);
 #if defined(DEBUG) && !defined(NDEBUG)
@@ -248,10 +250,12 @@ void GraphicsContextDirect3D11::Draw(std::size_t vertexCount)
 
     ApplyPipelineState();
 
-    deviceContext->Draw(vertexCount, 0);
+    deviceContext->Draw(vertexCount, startVertexLocation);
 }
 
-void GraphicsContextDirect3D11::DrawIndexed(std::size_t indexCount)
+void GraphicsContextDirect3D11::DrawIndexed(
+    std::size_t indexCount,
+    std::size_t startIndexLocation)
 {
     POMDOG_ASSERT(deviceContext);
 #if defined(DEBUG) && !defined(NDEBUG)
@@ -260,11 +264,14 @@ void GraphicsContextDirect3D11::DrawIndexed(std::size_t indexCount)
 
     ApplyPipelineState();
 
-    deviceContext->DrawIndexed(indexCount, 0, 0);
+    deviceContext->DrawIndexed(indexCount, startIndexLocation, 0);
 }
 
 void GraphicsContextDirect3D11::DrawInstanced(
-    std::size_t vertexCount, std::size_t instanceCount)
+    std::size_t vertexCountPerInstance,
+    std::size_t instanceCount,
+    std::size_t startVertexLocation,
+    std::size_t startInstanceLocation)
 {
     POMDOG_ASSERT(deviceContext);
 #if defined(DEBUG) && !defined(NDEBUG)
@@ -273,11 +280,18 @@ void GraphicsContextDirect3D11::DrawInstanced(
 
     ApplyPipelineState();
 
-    deviceContext->DrawInstanced(vertexCount, instanceCount, 0, 0);
+    deviceContext->DrawInstanced(
+        vertexCountPerInstance,
+        instanceCount,
+        startVertexLocation,
+        startInstanceLocation);
 }
 
 void GraphicsContextDirect3D11::DrawIndexedInstanced(
-    std::size_t indexCount, std::size_t instanceCount)
+    std::size_t indexCountPerInstance,
+    std::size_t instanceCount,
+    std::size_t startIndexLocation,
+    std::size_t startInstanceLocation)
 {
     POMDOG_ASSERT(deviceContext);
 #if defined(DEBUG) && !defined(NDEBUG)
@@ -286,7 +300,12 @@ void GraphicsContextDirect3D11::DrawIndexedInstanced(
 
     ApplyPipelineState();
 
-    deviceContext->DrawIndexedInstanced(indexCount, instanceCount, 0, 0, 0);
+    deviceContext->DrawIndexedInstanced(
+        indexCountPerInstance,
+        instanceCount,
+        startIndexLocation,
+        0,
+        startInstanceLocation);
 }
 
 void GraphicsContextDirect3D11::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer)

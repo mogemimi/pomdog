@@ -26,17 +26,25 @@ public:
 
     virtual void Present() = 0;
 
-    virtual void Draw(std::size_t vertexCount) = 0;
+    virtual void Draw(
+        std::size_t vertexCount,
+        std::size_t startVertexLocation) = 0;
 
-    virtual void DrawIndexed(std::size_t indexCount) = 0;
+    virtual void DrawIndexed(
+        std::size_t indexCount,
+        std::size_t startIndexLocation) = 0;
 
     virtual void DrawInstanced(
-        std::size_t vertexCount,
-        std::size_t instanceCount) = 0;
+        std::size_t vertexCountPerInstance,
+        std::size_t instanceCount,
+        std::size_t startVertexLocation,
+        std::size_t startInstanceLocation) = 0;
 
     virtual void DrawIndexedInstanced(
-        std::size_t indexCount,
-        std::size_t instanceCount) = 0;
+        std::size_t indexCountPerInstance,
+        std::size_t instanceCount,
+        std::size_t startIndexLocation,
+        std::size_t startInstanceLocation) = 0;
 
     virtual void SetRenderPass(const RenderPass& renderPass) = 0;
 

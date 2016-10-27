@@ -48,39 +48,54 @@ std::size_t GraphicsCommandList::GetCount() const noexcept
     return nativeCommandList->GetCount();
 }
 
-void GraphicsCommandList::Draw(std::size_t vertexCount)
+void GraphicsCommandList::Draw(
+    std::size_t vertexCount,
+    std::size_t startVertexLocation)
 {
     POMDOG_ASSERT(nativeCommandList);
-    nativeCommandList->Draw(vertexCount);
+    nativeCommandList->Draw(vertexCount, startVertexLocation);
 }
 
 void GraphicsCommandList::DrawIndexed(
     const std::shared_ptr<IndexBuffer>& indexBuffer,
-    std::size_t indexCount)
+    std::size_t indexCount,
+    std::size_t startIndexLocation)
 {
     POMDOG_ASSERT(indexBuffer);
     POMDOG_ASSERT(nativeCommandList);
     nativeCommandList->SetIndexBuffer(indexBuffer);
-    nativeCommandList->DrawIndexed(indexCount);
+    nativeCommandList->DrawIndexed(indexCount, startIndexLocation);
 }
 
 void GraphicsCommandList::DrawInstanced(
-    std::size_t vertexCount,
-    std::size_t instanceCount)
+    std::size_t vertexCountPerInstance,
+    std::size_t instanceCount,
+    std::size_t startVertexLocation,
+    std::size_t startInstanceLocation)
 {
     POMDOG_ASSERT(nativeCommandList);
-    nativeCommandList->DrawInstanced(vertexCount, instanceCount);
+    nativeCommandList->DrawInstanced(
+        vertexCountPerInstance,
+        instanceCount,
+        startVertexLocation,
+        startInstanceLocation);
 }
 
 void GraphicsCommandList::DrawIndexedInstanced(
     const std::shared_ptr<IndexBuffer>& indexBuffer,
-    std::size_t indexCount,
-    std::size_t instanceCount)
+    std::size_t indexCountPerInstance,
+    std::size_t instanceCount,
+    std::size_t startIndexLocation,
+    std::size_t startInstanceLocation)
 {
     POMDOG_ASSERT(indexBuffer);
     POMDOG_ASSERT(nativeCommandList);
     nativeCommandList->SetIndexBuffer(indexBuffer);
-    nativeCommandList->DrawIndexedInstanced(indexCount, instanceCount);
+    nativeCommandList->DrawIndexedInstanced(
+        indexCountPerInstance,
+        instanceCount,
+        startIndexLocation,
+        startInstanceLocation);
 }
 
 void GraphicsCommandList::SetRenderPass(RenderPass && renderPass)

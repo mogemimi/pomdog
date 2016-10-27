@@ -140,7 +140,9 @@ void GraphicsContextMetal::Present()
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 
-void GraphicsContextMetal::Draw(std::size_t vertexCount)
+void GraphicsContextMetal::Draw(
+    std::size_t vertexCount,
+    std::size_t startVertexLocation)
 {
     POMDOG_ASSERT(commandEncoder != nil);
     POMDOG_ASSERT(vertexCount > 0);
@@ -150,11 +152,13 @@ void GraphicsContextMetal::Draw(std::size_t vertexCount)
 #endif
 
     [commandEncoder drawPrimitives:primitiveType
-        vertexStart:0
+        vertexStart:startVertexLocation
         vertexCount:vertexCount];
 }
 
-void GraphicsContextMetal::DrawIndexed(std::size_t indexCount)
+void GraphicsContextMetal::DrawIndexed(
+    std::size_t indexCount,
+    std::size_t startIndexLocation)
 {
     POMDOG_ASSERT(commandEncoder != nil);
     POMDOG_ASSERT(indexCount > 0);
@@ -167,15 +171,17 @@ void GraphicsContextMetal::DrawIndexed(std::size_t indexCount)
         indexCount:indexCount
         indexType:indexType
         indexBuffer:indexBuffer
-        indexBufferOffset:0];
+        indexBufferOffset:startIndexLocation];
 }
 
 void GraphicsContextMetal::DrawInstanced(
-    std::size_t vertexCount,
-    std::size_t instanceCount)
+    std::size_t vertexCountPerInstance,
+    std::size_t instanceCount,
+    std::size_t startVertexLocation,
+    std::size_t startInstanceLocation)
 {
     POMDOG_ASSERT(commandEncoder != nil);
-    POMDOG_ASSERT(vertexCount > 0);
+    POMDOG_ASSERT(vertexCountPerInstance > 0);
     POMDOG_ASSERT(instanceCount > 0);
 
 #if defined(DEBUG) && !defined(NDEBUG)
@@ -183,17 +189,20 @@ void GraphicsContextMetal::DrawInstanced(
 #endif
 
     [commandEncoder drawPrimitives:primitiveType
-        vertexStart:0
-        vertexCount:vertexCount
-        instanceCount:instanceCount];
+        vertexStart:startVertexLocation
+        vertexCount:vertexCountPerInstance
+        instanceCount:instanceCount
+        baseInstance:startInstanceLocation];
 }
 
 void GraphicsContextMetal::DrawIndexedInstanced(
-    std::size_t indexCount,
-    std::size_t instanceCount)
+    std::size_t indexCountPerInstance,
+    std::size_t instanceCount,
+    std::size_t startIndexLocation,
+    std::size_t startInstanceLocation)
 {
     POMDOG_ASSERT(commandEncoder != nil);
-    POMDOG_ASSERT(indexCount > 0);
+    POMDOG_ASSERT(indexCountPerInstance > 0);
     POMDOG_ASSERT(instanceCount > 0);
 
 #if defined(DEBUG) && !defined(NDEBUG)
@@ -201,11 +210,13 @@ void GraphicsContextMetal::DrawIndexedInstanced(
 #endif
 
     [commandEncoder drawIndexedPrimitives:primitiveType
-        indexCount:indexCount
+        indexCount:indexCountPerInstance
         indexType:indexType
         indexBuffer:indexBuffer
         indexBufferOffset:0
-        instanceCount:instanceCount];
+        instanceCount:instanceCount
+        baseVertex:0
+        baseInstance:startInstanceLocation];
 }
 
 void GraphicsContextMetal::SetPrimitiveTopology(PrimitiveTopology primitiveTopology)

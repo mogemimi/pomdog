@@ -9,10 +9,12 @@
 #include "RenderTarget2DGL4.hpp"
 #include "SamplerStateGL4.hpp"
 #include "TypesafeHelperGL4.hpp"
+#include "../RenderSystem/BufferHelper.hpp"
 #include "../RenderSystem/GraphicsCapabilities.hpp"
 #include "../RenderSystem/NativeRenderTarget2D.hpp"
 #include "../RenderSystem/NativeTexture2D.hpp"
 #include "../Utility/ScopeGuard.hpp"
+#include "Pomdog/Basic/Platform.hpp"
 #include "Pomdog/Graphics/IndexBuffer.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
 #include "Pomdog/Graphics/RenderPass.hpp"
@@ -322,6 +324,14 @@ void CheckUnbindingRenderTargetsError(
 }
 #endif
 
+const GLvoid* ComputeStartIndexLocationPointer(
+    IndexElementSize indexElementSize,
+    std::size_t startIndexLocation) noexcept
+{
+    auto offset = startIndexLocation * Detail::BufferHelper::ToIndexElementOffsetBytes(indexElementSize);
+    return static_cast<const std::int8_t*>(nullptr) + offset;
+}
+
 } // unnamed namespace
 
 template<> struct TypesafeHelperGL4::Traits<FrameBufferGL4> {
@@ -411,7 +421,9 @@ void GraphicsContextGL4::ApplyPipelineState()
     }
 }
 
-void GraphicsContextGL4::Draw(std::size_t vertexCount)
+void GraphicsContextGL4::Draw(
+    std::size_t vertexCount,
+    std::size_t startVertexLocation)
 {
 #if defined(DEBUG) && !defined(NDEBUG)
     CheckUnbindingRenderTargetsError(weakRenderTargets, weakTextures);
@@ -427,12 +439,14 @@ void GraphicsContextGL4::Draw(std::size_t vertexCount)
 
     glDrawArrays(
         primitiveTopology.value,
-        0,
+        static_cast<GLint>(startVertexLocation),
         static_cast<GLsizei>(vertexCount));
     POMDOG_CHECK_ERROR_GL4("glDrawArrays");
 }
 
-void GraphicsContextGL4::DrawIndexed(std::size_t indexCount)
+void GraphicsContextGL4::DrawIndexed(
+    std::size_t indexCount,
+    std::size_t startIndexLocation)
 {
 #if defined(DEBUG) && !defined(NDEBUG)
     CheckUnbindingRenderTargetsError(weakRenderTargets, weakTextures);
@@ -451,16 +465,21 @@ void GraphicsContextGL4::DrawIndexed(std::size_t indexCount)
     POMDOG_ASSERT(indexCount > 0);
     POMDOG_ASSERT(indexCount <= indexBuffer->GetIndexCount());
 
+    const auto indexElementSize = indexBuffer->GetElementSize();
+
     glDrawElements(
         primitiveTopology.value,
         static_cast<GLsizei>(indexCount),
-        ToIndexElementType(indexBuffer->GetElementSize()),
-        nullptr);
+        ToIndexElementType(indexElementSize),
+        ComputeStartIndexLocationPointer(indexElementSize, startIndexLocation));
     POMDOG_CHECK_ERROR_GL4("glDrawElements");
 }
 
 void GraphicsContextGL4::DrawInstanced(
-    std::size_t vertexCount, std::size_t instanceCount)
+    std::size_t vertexCountPerInstance,
+    std::size_t instanceCount,
+    std::size_t startVertexLocation,
+    std::size_t startInstanceLocation)
 {
 #if defined(DEBUG) && !defined(NDEBUG)
     CheckUnbindingRenderTargetsError(weakRenderTargets, weakTextures);
@@ -471,22 +490,42 @@ void GraphicsContextGL4::DrawInstanced(
     // Draw
     POMDOG_ASSERT(!vertexBuffers.empty());
     POMDOG_ASSERT(vertexBuffers.front().VertexBuffer);
-    POMDOG_ASSERT(vertexCount > 0);
-    POMDOG_ASSERT(vertexCount <= vertexBuffers.front().VertexBuffer->GetVertexCount());
+    POMDOG_ASSERT(vertexCountPerInstance > 0);
+    POMDOG_ASSERT(vertexCountPerInstance <= vertexBuffers.front().VertexBuffer->GetVertexCount());
     POMDOG_ASSERT(instanceCount > 0);
     POMDOG_ASSERT(instanceCount <= static_cast<decltype(instanceCount)>(std::numeric_limits<GLsizei>::max()));
 
-    glDrawArraysInstanced(
+#if defined(POMDOG_PLATFORM_MACOSX)
+    // NOTE:
+    // 'glDrawElementsInstancedBaseInstance' is supported in OpenGL 4.2 and later.
+    // But unfortunately, macOS Sierra (latest version of Mac 2016) still uses OpenGL 4.1.
+    POMDOG_ASSERT_MESSAGE(startInstanceLocation == 0, "This feature is not supported yet on Mac.");
+    if (startInstanceLocation == 0) {
+        glDrawArraysInstanced(
+            primitiveTopology.value,
+            static_cast<GLint>(startVertexLocation),
+            static_cast<GLsizei>(vertexCountPerInstance),
+            static_cast<GLsizei>(instanceCount));
+        POMDOG_CHECK_ERROR_GL4("glDrawArraysInstanced");
+    }
+#endif
+
+#if !defined(POMDOG_PLATFORM_MACOSX)
+    glDrawArraysInstancedBaseInstance(
         primitiveTopology.value,
-        0,
-        static_cast<GLsizei>(vertexCount),
-        static_cast<GLsizei>(instanceCount));
-    POMDOG_CHECK_ERROR_GL4("glDrawArraysInstanced");
+        static_cast<GLint>(startVertexLocation),
+        static_cast<GLsizei>(vertexCountPerInstance),
+        static_cast<GLsizei>(instanceCount),
+        static_cast<GLuint>(startInstanceLocation));
+    POMDOG_CHECK_ERROR_GL4("glDrawArraysInstancedBaseInstance");
+#endif
 }
 
 void GraphicsContextGL4::DrawIndexedInstanced(
-    std::size_t indexCount,
-    std::size_t instanceCount)
+    std::size_t indexCountPerInstance,
+    std::size_t instanceCount,
+    std::size_t startIndexLocation,
+    std::size_t startInstanceLocation)
 {
 #if defined(DEBUG) && !defined(NDEBUG)
     CheckUnbindingRenderTargetsError(weakRenderTargets, weakTextures);
@@ -501,18 +540,39 @@ void GraphicsContextGL4::DrawIndexedInstanced(
     indexBufferGL->BindBuffer();
 
     // Draw
-    POMDOG_ASSERT(indexCount > 0);
-    POMDOG_ASSERT(indexCount <= indexBuffer->GetIndexCount());
+    POMDOG_ASSERT(indexCountPerInstance > 0);
+    POMDOG_ASSERT(indexCountPerInstance <= indexBuffer->GetIndexCount());
     POMDOG_ASSERT(instanceCount > 0);
     POMDOG_ASSERT(instanceCount < static_cast<decltype(instanceCount)>(std::numeric_limits<GLsizei>::max()));
 
-    glDrawElementsInstanced(
+    const auto indexElementSize = indexBuffer->GetElementSize();
+
+#if defined(POMDOG_PLATFORM_MACOSX)
+    // NOTE:
+    // 'glDrawElementsInstancedBaseInstance' is supported in OpenGL 4.2 and later.
+    // But unfortunately, macOS Sierra (latest version of Mac 2016) still uses OpenGL 4.1.
+    POMDOG_ASSERT_MESSAGE(startInstanceLocation == 0, "This feature is not supported yet on Mac.");
+    if (startInstanceLocation == 0) {
+        glDrawElementsInstanced(
+            primitiveTopology.value,
+            static_cast<GLsizei>(indexCountPerInstance),
+            ToIndexElementType(indexElementSize),
+            ComputeStartIndexLocationPointer(indexElementSize, startIndexLocation),
+            static_cast<GLsizei>(instanceCount));
+        POMDOG_CHECK_ERROR_GL4("glDrawElementsInstanced");
+    }
+#endif
+
+#if !defined(POMDOG_PLATFORM_MACOSX)
+    glDrawElementsInstancedBaseInstance(
         primitiveTopology.value,
-        static_cast<GLsizei>(indexCount),
-        ToIndexElementType(indexBuffer->GetElementSize()),
-        nullptr,
-        static_cast<GLsizei>(instanceCount));
-    POMDOG_CHECK_ERROR_GL4("glDrawElementsInstanced");
+        static_cast<GLsizei>(indexCountPerInstance),
+        ToIndexElementType(indexElementSize),
+        ComputeStartIndexLocationPointer(indexElementSize, startIndexLocation),
+        static_cast<GLsizei>(instanceCount),
+        static_cast<GLuint>(startInstanceLocation));
+    POMDOG_CHECK_ERROR_GL4("glDrawElementsInstancedBaseInstance");
+#endif
 }
 
 GraphicsCapabilities GraphicsContextGL4::GetCapabilities() const

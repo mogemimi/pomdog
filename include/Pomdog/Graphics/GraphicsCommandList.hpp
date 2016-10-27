@@ -28,20 +28,29 @@ public:
 
     std::size_t GetCount() const noexcept;
 
-    void Draw(std::size_t vertexCount);
+    ///@param vertexCount Number of vertices to draw.
+    ///@param startVertexLocation Index of the first vertex to draw.
+    void Draw(
+        std::size_t vertexCount,
+        std::size_t startVertexLocation);
 
     void DrawIndexed(
         const std::shared_ptr<IndexBuffer>& indexBuffer,
-        std::size_t indexCount);
+        std::size_t indexCount,
+        std::size_t startIndexLocation);
 
     void DrawInstanced(
-        std::size_t vertexCount,
-        std::size_t instanceCount);
+        std::size_t vertexCountPerInstance,
+        std::size_t instanceCount,
+        std::size_t startVertexLocation,
+        std::size_t startInstanceLocation);
 
     void DrawIndexedInstanced(
         const std::shared_ptr<IndexBuffer>& indexBuffer,
-        std::size_t indexCount,
-        std::size_t instanceCount);
+        std::size_t indexCountPerInstance,
+        std::size_t instanceCount,
+        std::size_t startIndexLocation,
+        std::size_t startInstanceLocation);
 
     void SetRenderPass(RenderPass && renderPass);
 

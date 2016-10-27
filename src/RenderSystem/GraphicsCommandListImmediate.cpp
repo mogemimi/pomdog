@@ -18,39 +18,53 @@ using Detail::GraphicsCommand;
 
 struct DrawCommand final: public GraphicsCommand {
     std::size_t vertexCount;
+    std::size_t startVertexLocation;
 
     void Execute(NativeGraphicsContext & graphicsContext) override
     {
-        graphicsContext.Draw(vertexCount);
+        graphicsContext.Draw(vertexCount, startVertexLocation);
     }
 };
 
 struct DrawIndexedCommand final: public GraphicsCommand {
     std::size_t indexCount;
+    std::size_t startIndexLocation;
 
     void Execute(NativeGraphicsContext & graphicsContext) override
     {
-        graphicsContext.DrawIndexed(indexCount);
+        graphicsContext.DrawIndexed(indexCount, startIndexLocation);
     }
 };
 
 struct DrawInstancedCommand final: public GraphicsCommand {
-    std::size_t vertexCount;
+    std::size_t vertexCountPerInstance;
     std::size_t instanceCount;
+    std::size_t startVertexLocation;
+    std::size_t startInstanceLocation;
 
     void Execute(NativeGraphicsContext & graphicsContext) override
     {
-        graphicsContext.DrawInstanced(vertexCount, instanceCount);
+        graphicsContext.DrawInstanced(
+            vertexCountPerInstance,
+            instanceCount,
+            startVertexLocation,
+            startInstanceLocation);
     }
 };
 
 struct DrawIndexedInstancedCommand final: public GraphicsCommand {
-    std::size_t indexCount;
+    std::size_t indexCountPerInstance;
     std::size_t instanceCount;
+    std::size_t startIndexLocation;
+    std::size_t startInstanceLocation;
 
     void Execute(NativeGraphicsContext & graphicsContext) override
     {
-        graphicsContext.DrawIndexedInstanced(indexCount, instanceCount);
+        graphicsContext.DrawIndexedInstanced(
+            indexCountPerInstance,
+            instanceCount,
+            startIndexLocation,
+            startInstanceLocation);
     }
 };
 
@@ -185,42 +199,55 @@ std::size_t GraphicsCommandListImmediate::GetCount() const noexcept
     return commands.size();
 }
 
-void GraphicsCommandListImmediate::Draw(std::size_t vertexCount)
+void GraphicsCommandListImmediate::Draw(
+    std::size_t vertexCount,
+    std::size_t startVertexLocation)
 {
     POMDOG_ASSERT(vertexCount >= 1);
     auto command = std::make_unique<DrawCommand>();
     command->vertexCount = vertexCount;
+    command->startVertexLocation = startVertexLocation;
     commands.push_back(std::move(command));
 }
 
 void GraphicsCommandListImmediate::DrawIndexed(
-    std::size_t indexCount)
+    std::size_t indexCount,
+    std::size_t startIndexLocation)
 {
     POMDOG_ASSERT(indexCount >= 1);
     auto command = std::make_unique<DrawIndexedCommand>();
     command->indexCount = indexCount;
+    command->startIndexLocation = startIndexLocation;
     commands.push_back(std::move(command));
 }
 
 void GraphicsCommandListImmediate::DrawInstanced(
-    std::size_t vertexCount,
-    std::size_t instanceCount)
+    std::size_t vertexCountPerInstance,
+    std::size_t instanceCount,
+    std::size_t startVertexLocation,
+    std::size_t startInstanceLocation)
 {
-    POMDOG_ASSERT(vertexCount >= 1);
+    POMDOG_ASSERT(vertexCountPerInstance >= 1);
     auto command = std::make_unique<DrawInstancedCommand>();
-    command->vertexCount = vertexCount;
+    command->vertexCountPerInstance = vertexCountPerInstance;
     command->instanceCount = instanceCount;
+    command->startVertexLocation = startVertexLocation;
+    command->startInstanceLocation = startInstanceLocation;
     commands.push_back(std::move(command));
 }
 
 void GraphicsCommandListImmediate::DrawIndexedInstanced(
-    std::size_t indexCount,
-    std::size_t instanceCount)
+    std::size_t indexCountPerInstance,
+    std::size_t instanceCount,
+    std::size_t startIndexLocation,
+    std::size_t startInstanceLocation)
 {
-    POMDOG_ASSERT(indexCount >= 1);
+    POMDOG_ASSERT(indexCountPerInstance >= 1);
     auto command = std::make_unique<DrawIndexedInstancedCommand>();
-    command->indexCount = indexCount;
+    command->indexCountPerInstance = indexCountPerInstance;
     command->instanceCount = instanceCount;
+    command->startIndexLocation = startIndexLocation;
+    command->startInstanceLocation = startInstanceLocation;
     commands.push_back(std::move(command));
 }
 
