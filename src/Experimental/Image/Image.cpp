@@ -62,11 +62,12 @@ const Color& Image::GetPixel(int x, int y) const
 {
     POMDOG_ASSERT(width > 0);
     POMDOG_ASSERT(height > 0);
-    POMDOG_ASSERT(x < width);
-    POMDOG_ASSERT(y < height);
+    POMDOG_ASSERT(x >= 0 && x < width);
+    POMDOG_ASSERT(y >= 0 && y < height);
     POMDOG_ASSERT((width * height) == static_cast<int>(data.size()));
 
     const auto index = x + y * width;
+    POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(index < static_cast<int>(data.size()));
     return data[index];
 }
@@ -75,11 +76,12 @@ void Image::SetPixel(int x, int y, const Color& color)
 {
     POMDOG_ASSERT(width > 0);
     POMDOG_ASSERT(height > 0);
-    POMDOG_ASSERT(x < width);
-    POMDOG_ASSERT(y < height);
+    POMDOG_ASSERT(x >= 0 && x < width);
+    POMDOG_ASSERT(y >= 0 && y < height);
     POMDOG_ASSERT((width * height) == static_cast<int>(data.size()));
 
     const auto index = x + y * width;
+    POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(index < static_cast<int>(data.size()));
     data[index] = color;
 }
