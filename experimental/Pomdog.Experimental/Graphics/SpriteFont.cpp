@@ -420,22 +420,6 @@ bool SpriteFont::ContainsCharacter(char32_t character) const
     return impl->spriteFontMap.find(character) != std::end(impl->spriteFontMap);
 }
 
-void SpriteFont::Begin(
-    const std::shared_ptr<GraphicsCommandList>& commandList,
-    SpriteBatchRenderer & spriteBatch,
-    const Matrix4x4& transformMatrix)
-{
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(commandList);
-
-    spriteBatch.Begin(commandList, transformMatrix);
-
-//    spriteBatch.Begin(SpriteSortMode::Deferred, Matrix4x4::CreateRotationZ(rotation)
-//        * Matrix4x4::CreateScale({scale, 1.0f})
-//        * Matrix4x4::CreateTranslation({position, 0.0f})
-//        * transformMatrix);
-}
-
 void SpriteFont::Draw(
     SpriteBatchRenderer & spriteBatch,
     const std::string& text,
@@ -479,11 +463,6 @@ void SpriteFont::Draw(
     impl->PrepareFonts(text);
     impl->Draw(spriteBatch, text, position, color,
         rotation, scale);
-}
-
-void SpriteFont::End(SpriteBatchRenderer & spriteBatch)
-{
-    spriteBatch.End();
 }
 
 } // namespace Pomdog

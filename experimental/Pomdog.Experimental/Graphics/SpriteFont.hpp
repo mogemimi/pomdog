@@ -61,11 +61,6 @@ public:
 
     bool ContainsCharacter(char32_t character) const;
 
-    void Begin(
-        const std::shared_ptr<GraphicsCommandList>& commandList,
-        SpriteBatchRenderer & spriteBatch,
-        const Matrix4x4& transformMatrix);
-
     void Draw(
         SpriteBatchRenderer & spriteBatch,
         const std::string& text,
@@ -87,8 +82,6 @@ public:
         const Color& color,
         const Radian<float>& rotation,
         const Vector2& scale);
-
-    void End(SpriteBatchRenderer & spriteBatch);
 
 private:
     class Impl;
