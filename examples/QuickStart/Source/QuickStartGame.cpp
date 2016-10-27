@@ -121,7 +121,7 @@ void QuickStartGame::Initialize()
             commandList->SetVertexBuffer(vertexBuffer);
             commandList->SetPipelineState(pipelineState);
             commandList->SetPrimitiveTopology(PrimitiveTopology::TriangleList);
-            commandList->DrawIndexed(indexBuffer, indexBuffer->GetIndexCount());
+            commandList->DrawIndexed(indexBuffer, indexBuffer->GetIndexCount(), 0);
             commandList->Close();
         };
 
