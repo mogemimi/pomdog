@@ -497,7 +497,7 @@ void GraphicsContextGL4::DrawInstanced(
 
 #if defined(POMDOG_PLATFORM_MACOSX)
     // NOTE:
-    // 'glDrawElementsInstancedBaseInstance' is supported in OpenGL 4.2 and later.
+    // 'glDrawArraysInstancedBaseInstance' is supported in OpenGL 4.2 and later.
     // But unfortunately, macOS Sierra (latest version of Mac 2016) still uses OpenGL 4.1.
     POMDOG_ASSERT_MESSAGE(startInstanceLocation == 0, "This feature is not supported yet on Mac.");
     if (startInstanceLocation == 0) {
