@@ -1,27 +1,13 @@
 // Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Graphics/IndexBuffer.hpp"
+#include "../RenderSystem/BufferHelper.hpp"
 #include "../RenderSystem/NativeBuffer.hpp"
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
-namespace {
-
-std::uint32_t ToIndexElementOffsetBytes(IndexElementSize elementSize) noexcept
-{
-    switch (elementSize) {
-    case IndexElementSize::ThirtyTwoBits: return 4;
-    case IndexElementSize::SixteenBits: return 2;
-    };
-#ifdef _MSC_VER
-    // FUS RO DAH!
-    return 4;
-#endif
-}
-
-} // unnamed namespace
 
 IndexBuffer::IndexBuffer(
     GraphicsDevice & graphicsDevice,
@@ -35,7 +21,7 @@ IndexBuffer::IndexBuffer(
 {
     POMDOG_ASSERT(indexCount > 0);
 
-    auto sizeInBytes = indexCount * ToIndexElementOffsetBytes(elementSize);
+    auto sizeInBytes = indexCount * Detail::BufferHelper::ToIndexElementOffsetBytes(elementSize);
     auto nativeDevice = graphicsDevice.GetNativeGraphicsDevice();
 
     POMDOG_ASSERT(nativeDevice != nullptr);
@@ -59,7 +45,7 @@ IndexBuffer::IndexBuffer(
     POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
     POMDOG_ASSERT(indexCount > 0);
 
-    auto sizeInBytes = indexCount * ToIndexElementOffsetBytes(elementSize);
+    auto sizeInBytes = indexCount * Detail::BufferHelper::ToIndexElementOffsetBytes(elementSize);
     auto nativeDevice = graphicsDevice.GetNativeGraphicsDevice();
 
     POMDOG_ASSERT(nativeDevice != nullptr);
@@ -107,7 +93,7 @@ IndexElementSize IndexBuffer::GetElementSize() const noexcept
 std::size_t IndexBuffer::GetSizeInBytes() const noexcept
 {
     POMDOG_ASSERT(indexCount > 0);
-    return indexCount * ToIndexElementOffsetBytes(elementSize);
+    return indexCount * Detail::BufferHelper::ToIndexElementOffsetBytes(elementSize);
 }
 
 BufferUsage IndexBuffer::GetBufferUsage() const noexcept
@@ -123,7 +109,7 @@ void IndexBuffer::SetData(const void* source, std::size_t elementCountIn)
     POMDOG_ASSERT(nativeIndexBuffer);
     POMDOG_ASSERT(bufferUsage != Pomdog::BufferUsage::Immutable);
     nativeIndexBuffer->SetData(0, source,
-        ToIndexElementOffsetBytes(elementSize) * elementCountIn);
+        Detail::BufferHelper::ToIndexElementOffsetBytes(elementSize) * elementCountIn);
 }
 
 void IndexBuffer::SetData(
@@ -137,7 +123,7 @@ void IndexBuffer::SetData(
     POMDOG_ASSERT(nativeIndexBuffer);
     POMDOG_ASSERT(bufferUsage != Pomdog::BufferUsage::Immutable);
     nativeIndexBuffer->SetData(offsetInBytes, source,
-        ToIndexElementOffsetBytes(elementSize) * elementCountIn);
+        Detail::BufferHelper::ToIndexElementOffsetBytes(elementSize) * elementCountIn);
 }
 
 Detail::NativeBuffer* IndexBuffer::NativeIndexBuffer()

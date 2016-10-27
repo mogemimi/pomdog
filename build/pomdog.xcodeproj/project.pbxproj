@@ -145,6 +145,8 @@
 		A93CA6531D92F34E00B65171 /* QueuedScheduler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A93CA64E1D92F34E00B65171 /* QueuedScheduler.cpp */; };
 		A93CA6541D92F34E00B65171 /* Task.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A93CA64F1D92F34E00B65171 /* Task.cpp */; };
 		A93CA6551D92F34E00B65171 /* Task.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A93CA64F1D92F34E00B65171 /* Task.cpp */; };
+		A9854B9E1DC115D400650729 /* BufferHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9854B9C1DC115D400650729 /* BufferHelper.cpp */; };
+		A9854B9F1DC115D400650729 /* BufferHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9854B9C1DC115D400650729 /* BufferHelper.cpp */; };
 		A98CB91E8C51E158141731F1 /* PipelineState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7E14E3AE6B465875CD29816 /* PipelineState.cpp */; };
 		A992AF021C2B1168003170C9 /* Coordinate2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A992AF001C2B1168003170C9 /* Coordinate2D.cpp */; };
 		A992AF031C2B1168003170C9 /* Coordinate2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A992AF001C2B1168003170C9 /* Coordinate2D.cpp */; };
@@ -551,6 +553,8 @@
 		A93CA64E1D92F34E00B65171 /* QueuedScheduler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = QueuedScheduler.cpp; path = Async/QueuedScheduler.cpp; sourceTree = "<group>"; };
 		A93CA64F1D92F34E00B65171 /* Task.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Task.cpp; path = Async/Task.cpp; sourceTree = "<group>"; };
 		A94ACC591C287C9100AFCC36 /* ConditionalCompilation.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ConditionalCompilation.hpp; sourceTree = "<group>"; };
+		A9854B9C1DC115D400650729 /* BufferHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BufferHelper.cpp; sourceTree = "<group>"; };
+		A9854B9D1DC115D400650729 /* BufferHelper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = BufferHelper.hpp; sourceTree = "<group>"; };
 		A992AF001C2B1168003170C9 /* Coordinate2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Coordinate2D.cpp; sourceTree = "<group>"; };
 		A992AF011C2B1168003170C9 /* Coordinate3D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Coordinate3D.cpp; sourceTree = "<group>"; };
 		A997F6DB1CAEFB0800926392 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
@@ -1129,6 +1133,8 @@
 		8360309E4667B011AD3E6F2F /* RenderSystem */ = {
 			isa = PBXGroup;
 			children = (
+				A9854B9C1DC115D400650729 /* BufferHelper.cpp */,
+				A9854B9D1DC115D400650729 /* BufferHelper.hpp */,
 				FD511C7803B65801B0EE8EE8 /* GraphicsCapabilities.hpp */,
 				13DFD59376FA25B8994E3399 /* GraphicsCommandListImmediate.cpp */,
 				619758CD1D4C74D6834B96C4 /* GraphicsCommandListImmediate.hpp */,
@@ -1807,6 +1813,7 @@
 				FFDFEBC545EB6A4B2D810F99 /* FloatingPointMatrix3x2.cpp in Sources */,
 				51184430EB95428FD308DC8F /* FloatingPointMatrix3x3.cpp in Sources */,
 				A997F7021CAEFC4800926392 /* RenderTarget2DMetal.mm in Sources */,
+				A9854B9E1DC115D400650729 /* BufferHelper.cpp in Sources */,
 				A9D18E8D1CA427270011A6CE /* MetalCompiler.cpp in Sources */,
 				7BFC36E8777C887934E3F02B /* FloatingPointMatrix4x4.cpp in Sources */,
 				1A671762A001893355AC4247 /* FloatingPointQuaternion.cpp in Sources */,
@@ -1925,6 +1932,7 @@
 				2A792456A91A1FCD600F40C7 /* FloatingPointMatrix3x2.cpp in Sources */,
 				D8E9871132965BADBA4BE734 /* FloatingPointMatrix3x3.cpp in Sources */,
 				A997F7031CAEFC4900926392 /* RenderTarget2DMetal.mm in Sources */,
+				A9854B9F1DC115D400650729 /* BufferHelper.cpp in Sources */,
 				A9D18E8E1CA427270011A6CE /* MetalCompiler.cpp in Sources */,
 				B64D84284045847B155F4CD3 /* FloatingPointMatrix4x4.cpp in Sources */,
 				043C1238BFC3C906AEAEEA09 /* FloatingPointQuaternion.cpp in Sources */,
