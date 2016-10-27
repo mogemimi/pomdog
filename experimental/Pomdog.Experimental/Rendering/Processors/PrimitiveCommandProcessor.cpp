@@ -73,7 +73,7 @@ void PrimitiveCommandProcessor::Draw(
 
     commandList->SetVertexBuffer(primitiveCommand.vertexBuffer);
     commandList->SetConstantBuffer(0, primitiveCommand.constantBuffer);
-    commandList->Draw(primitiveCommand.vertexCount);
+    commandList->Draw(primitiveCommand.vertexCount, 0);
 
     ++drawCallCount;
 }

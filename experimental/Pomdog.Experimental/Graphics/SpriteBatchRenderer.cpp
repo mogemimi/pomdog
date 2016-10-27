@@ -296,7 +296,11 @@ void SpriteBatchRenderer::Impl::DrawInstance(std::vector<SpriteInfo> const& spri
     commandList->SetConstantBuffer(1, constantBuffer);
     commandList->SetPrimitiveTopology(PrimitiveTopology::TriangleList);
     commandList->DrawIndexedInstanced(
-        planeIndices, planeIndices->GetIndexCount(), sprites.size());
+        planeIndices,
+        planeIndices->GetIndexCount(),
+        sprites.size(),
+        0,
+        currentVertexOffset);
 
     currentVertexOffset += sprites.size();
     ++drawCallCount;

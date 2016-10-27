@@ -140,7 +140,7 @@ void PolygonBatch::Impl::Flush()
     commandList->SetPipelineState(pipelineState);
     commandList->SetConstantBuffer(0, constantBuffer);
     commandList->SetPrimitiveTopology(PrimitiveTopology::TriangleList);
-    commandList->Draw(polygonShapes.GetVertexCount());
+    commandList->Draw(polygonShapes.GetVertexCount(), 0);
 
     ++drawCallCount;
 

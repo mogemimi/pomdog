@@ -151,7 +151,7 @@ void LineBatch::Impl::Flush()
     commandList->SetPipelineState(pipelineState);
     commandList->SetConstantBuffer(0, constantBuffer);
     commandList->SetPrimitiveTopology(PrimitiveTopology::LineList);
-    commandList->Draw(vertices.size());
+    commandList->Draw(vertices.size(), 0);
 
     vertices.clear();
 }
