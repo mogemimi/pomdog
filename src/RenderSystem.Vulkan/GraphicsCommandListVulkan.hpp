@@ -12,6 +12,8 @@ namespace Vulkan {
 
 class GraphicsCommandListVulkan final : public NativeGraphicsCommandList {
 public:
+    GraphicsCommandListVulkan();
+
     void Close() override;
 
     void Reset() override;
@@ -55,6 +57,7 @@ public:
     void SetTexture(int index, const std::shared_ptr<RenderTarget2D>& texture) override;
 
 private:
+    VkCommandBuffer commandBuffer;
 };
 
 } // namespace Vulkan

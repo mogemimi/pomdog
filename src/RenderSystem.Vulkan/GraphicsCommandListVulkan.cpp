@@ -44,6 +44,14 @@ VkIndexType ToVkIndexType(IndexElementSize elementSize) noexcept
 
 } // unnamed namespace
 
+GraphicsCommandListVulkan::GraphicsCommandListVulkan()
+{
+    // TODO: Not implemented
+    commandBuffer = nullptr;
+
+    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
+}
+
 void GraphicsCommandListVulkan::Close()
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
