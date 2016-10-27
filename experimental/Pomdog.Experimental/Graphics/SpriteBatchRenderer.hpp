@@ -13,61 +13,66 @@ namespace Pomdog {
 class SpriteBatchRenderer {
 public:
     SpriteBatchRenderer(
-        std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+        AssetManager & assets);
+
+    SpriteBatchRenderer(
+        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+        const BlendDescription& blendDescription,
         AssetManager & assets);
 
     ~SpriteBatchRenderer();
 
     void Begin(
-        std::shared_ptr<GraphicsCommandList> const& commandList,
-        Matrix4x4 const& transformMatrix);
+        const std::shared_ptr<GraphicsCommandList>& commandList,
+        const Matrix4x4& transformMatrix);
 
     void Draw(
-        std::shared_ptr<Texture2D> const& texture,
-        Matrix3x2 const& worldMatrix,
-        Color const& color,
-        Vector2 const& originPivot);
+        const std::shared_ptr<Texture2D>& texture,
+        const Matrix3x2& worldMatrix,
+        const Color& color,
+        const Vector2& originPivot);
 
     void Draw(
-        std::shared_ptr<Texture2D> const& texture,
-        Matrix3x2 const& worldMatrix,
-        Rectangle const& sourceRect,
-        Color const& color,
-        Vector2 const& originPivot);
+        const std::shared_ptr<Texture2D>& texture,
+        const Matrix3x2& worldMatrix,
+        const Rectangle& sourceRect,
+        const Color& color,
+        const Vector2& originPivot);
 
     void Draw(
-        std::shared_ptr<Texture2D> const& texture,
-        Rectangle const& sourceRect,
-        Color const& color);
+        const std::shared_ptr<Texture2D>& texture,
+        const Rectangle& sourceRect,
+        const Color& color);
 
     void Draw(
-        std::shared_ptr<Texture2D> const& texture,
-        Vector2 const& position,
-        Color const& color);
+        const std::shared_ptr<Texture2D>& texture,
+        const Vector2& position,
+        const Color& color);
 
     void Draw(
-        std::shared_ptr<Texture2D> const& texture,
-        Vector2 const& position,
-        Rectangle const& sourceRect,
-        Color const& color);
+        const std::shared_ptr<Texture2D>& texture,
+        const Vector2& position,
+        const Rectangle& sourceRect,
+        const Color& color);
 
     void Draw(
-        std::shared_ptr<Texture2D> const& texture,
-        Vector2 const& position,
-        Rectangle const& sourceRect,
-        Color const& color,
-        Radian<float> const& rotation,
-        Vector2 const& originPivot,
+        const std::shared_ptr<Texture2D>& texture,
+        const Vector2& position,
+        const Rectangle& sourceRect,
+        const Color& color,
+        const Radian<float>& rotation,
+        const Vector2& originPivot,
         float scale);
 
     void Draw(
-        std::shared_ptr<Texture2D> const& texture,
-        Vector2 const& position,
-        Rectangle const& sourceRect,
-        Color const& color,
-        Radian<float> const& rotation,
-        Vector2 const& originPivot,
-        Vector2 const& scale);
+        const std::shared_ptr<Texture2D>& texture,
+        const Vector2& position,
+        const Rectangle& sourceRect,
+        const Color& color,
+        const Radian<float>& rotation,
+        const Vector2& originPivot,
+        const Vector2& scale);
 
     void End();
 
