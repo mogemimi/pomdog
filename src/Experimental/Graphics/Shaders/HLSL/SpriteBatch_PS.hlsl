@@ -4,11 +4,11 @@ struct VS_OUTPUT {
     float2 TextureCoord : TEXCOORD0;
 };
 
-Texture2D<float4> DiffuseTexture : register(t0);
+Texture2D<float4> Texture : register(t0);
 SamplerState      TextureSampler : register(s0);
 
 float4 SpriteBatchPS(VS_OUTPUT input): SV_Target
 {
-    float4 color = DiffuseTexture.Sample(TextureSampler, input.TextureCoord.xy);
+    float4 color = Texture.Sample(TextureSampler, input.TextureCoord.xy);
     return color * input.Color;
 }

@@ -75,8 +75,6 @@
       '<@(pomdog_expr_dir)/Graphics/ScreenQuad.hpp',
     #   '<@(pomdog_expr_dir)/Graphics/SkinnedEffect.cpp',
     #   '<@(pomdog_expr_dir)/Graphics/SkinnedEffect.hpp',
-    #   '<@(pomdog_expr_dir)/Graphics/SpriteBatch.cpp',
-    #   '<@(pomdog_expr_dir)/Graphics/SpriteBatch.hpp',
       '<@(pomdog_expr_dir)/Graphics/SpriteBatchRenderer.cpp',
       '<@(pomdog_expr_dir)/Graphics/SpriteBatchRenderer.hpp',
       '<@(pomdog_expr_dir)/Graphics/SpriteFont.cpp',

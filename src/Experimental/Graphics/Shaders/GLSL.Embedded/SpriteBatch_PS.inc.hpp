@@ -3,9 +3,10 @@
 char const* Builtin_GLSL_SpriteBatch_PS =
 "#version 330\n"
 "in VertexData{\n"
-"vec2 TextureCoord;\n"
-"vec4 Color;}In;\n"
-"uniform sampler2D DiffuseTexture;\n"
+"vec4 Color;\n"
+"vec2 TextureCoord;}In;\n"
+"uniform sampler2D Texture;\n"
 "out vec4 FragColor;\n"
 "void main(){\n"
-"FragColor=texture(DiffuseTexture,In.TextureCoord.xy).xyzw*In.Color.xyzw;}\n";
+"vec4 color=texture(Texture,In.TextureCoord.xy);\n"
+"FragColor=color*In.Color.xyzw;}\n";

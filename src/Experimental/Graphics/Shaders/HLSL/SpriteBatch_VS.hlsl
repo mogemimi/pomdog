@@ -7,8 +7,8 @@ struct VS_INPUT {
     // {xy__} = position.xy
     // {__zw} = scale.xy
     float4 Translation          : SV_Position;
-    // {xy__} = xy
-    // {__zw} = {width, height}
+    // {xy__} = {rect.xy}
+    // {__zw} = {rect.width, rect.height}
     float4 SourceRect           : BINORMAL;
     // {xy__} = originPivot.xy
     // {__z_} = rotation
@@ -29,6 +29,10 @@ struct VS_OUTPUT {
 
 cbuffer SpriteBatchConstants : register(b0) {
     matrix<float, 4, 4> ViewProjection;
+};
+
+cbuffer TextureConstants : register(b1) {
+    // {xy__} = {1.0f / textureWidth, 1.0f / textureHeight}
     vector<float, 2>    InverseTextureSize;
 };
 
@@ -51,13 +55,14 @@ VS_OUTPUT SpriteBatchVS(VS_INPUT input)
         float3(0.0f, 1.0f, 0.0f),
         float3(input.Translation.xy, 1.0f));
 
-    float3x3 Transform = mul(mul(scaling, rotate), translate);
+    float3x3 transform = mul(mul(scaling, rotate), translate);
 
-    float3 position = mul(float3(input.PositionTextureCoord.xy - input.OriginRotationDepth.xy, 1), Transform);
+    float3 position = mul(float3(input.PositionTextureCoord.xy - input.OriginRotationDepth.xy, 1), transform);
 
     VS_OUTPUT output = (VS_OUTPUT)0;
 
-    output.Position = float4(mul(float4(position.xy, 0, 1), ViewProjection).xy, input.OriginRotationDepth.w, 1);
+    float4 finalPosition = mul(float4(position.xy, 0, 1), ViewProjection);
+    output.Position = float4(finalPosition.xy, input.OriginRotationDepth.w, 1);
 
     output.TextureCoord = (input.PositionTextureCoord.zw * input.SourceRect.zw + input.SourceRect.xy) * InverseTextureSize.xy;
 

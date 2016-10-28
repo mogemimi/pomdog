@@ -322,6 +322,7 @@
       '../src/Utility/StringHelper.cpp',
     ],
     'pomdog_library_experimental_sources': [
+      '../include/Pomdog/Experimental/Graphics/SpriteBatch.hpp',
       '../include/Pomdog/Experimental/Image/GifImage.hpp',
       '../include/Pomdog/Experimental/Image/GifImageLoader.hpp',
       '../include/Pomdog/Experimental/Image/Image.hpp',
@@ -329,6 +330,7 @@
       '../include/Pomdog/Experimental/TexturePacker/TextureAtlasGenerator.hpp',
       '../include/Pomdog/Experimental/TexturePacker/TextureAtlasLoader.hpp',
       '../include/Pomdog/Experimental/TexturePacker/TextureRegion.hpp',
+      '../src/Experimental/Graphics/SpriteBatch.cpp',
       '../src/Experimental/Image/GifImageLoader.cpp',
       '../src/Experimental/Image/Image.cpp',
       '../src/Experimental/TexturePacker/TextureAtlasGenerator.cpp',
