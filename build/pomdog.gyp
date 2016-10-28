@@ -314,6 +314,7 @@
       '../src/Signals/ConnectionList.cpp',
       '../src/Signals/EventQueue.cpp',
       '../src/Signals/ScopedConnection.cpp',
+      '../src/Utility/AlignedNew.hpp',
       '../src/Utility/CRC32.cpp',
       '../src/Utility/Noncopyable.hpp',
       '../src/Utility/PathHelper.cpp',

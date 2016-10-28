@@ -594,6 +594,7 @@
 		A9AE680DD0E3FCEA11AF8F48 /* FloatingPointVector4.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = FloatingPointVector4.cpp; sourceTree = "<group>"; };
 		A9D18E8B1CA426FA0011A6CE /* MetalCompiler.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MetalCompiler.hpp; sourceTree = "<group>"; };
 		A9D18E8C1CA427270011A6CE /* MetalCompiler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MetalCompiler.cpp; sourceTree = "<group>"; };
+		A9FC99071DC3D89300C78D63 /* AlignedNew.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AlignedNew.hpp; sourceTree = "<group>"; };
 		AA4220AFBD6F377F07163A1E /* EffectAnnotation.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = EffectAnnotation.hpp; sourceTree = "<group>"; };
 		ABEE70990030BA68A5F9002D /* PipelineStateGL4.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = PipelineStateGL4.hpp; sourceTree = "<group>"; };
 		AC349E78729FC3024C1BC5D9 /* Assert.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = Assert.hpp; sourceTree = "<group>"; };
@@ -1011,6 +1012,7 @@
 		582932A6CEFF570AC75B5E15 /* Utility */ = {
 			isa = PBXGroup;
 			children = (
+				A9FC99071DC3D89300C78D63 /* AlignedNew.hpp */,
 				874BAF3803BCB9751C9574C4 /* CRC32.cpp */,
 				2749362BB85096C3C6B6347F /* Noncopyable.hpp */,
 				5DAB111727E9143A507A0C10 /* PathHelper.cpp */,
