@@ -181,7 +181,7 @@ SpriteBatch::Impl::Impl(
             BufferUsage::Immutable);
     }
     {
-        auto maxBatchSize = MaxBatchSize;
+        const auto maxBatchSize = MaxBatchSize;
         instanceVertices = std::make_shared<VertexBuffer>(
             graphicsDevice,
             maxBatchSize,
@@ -239,6 +239,7 @@ void SpriteBatch::Impl::Begin(
     POMDOG_ASSERT(commandListIn);
     this->commandList = commandListIn;
 
+    POMDOG_ASSERT(constantBufferMatrices);
     constantBufferMatrices->SetValue(transformMatrix);
 
     startInstanceLocation = 0;
@@ -248,6 +249,10 @@ void SpriteBatch::Impl::Begin(
 void SpriteBatch::Impl::End()
 {
     FlushBatch();
+
+    if (drawCallCount > 0) {
+        commandList->SetTexture(0);
+    }
     commandList.reset();
 }
 
@@ -259,7 +264,7 @@ void SpriteBatch::Impl::FlushBatch()
 
     POMDOG_ASSERT(currentTexture != nullptr);
     POMDOG_ASSERT(!spriteQueue.empty());
-    POMDOG_ASSERT(spriteQueue.size() <= MaxBatchSize);
+    POMDOG_ASSERT((startInstanceLocation + spriteQueue.size()) <= MaxBatchSize);
 
     RenderBatch(currentTexture, spriteQueue);
 
@@ -273,7 +278,8 @@ void SpriteBatch::Impl::RenderBatch(
 {
     POMDOG_ASSERT(commandList);
     POMDOG_ASSERT(texture);
-    POMDOG_ASSERT(sprites.size() <= MaxBatchSize);
+    POMDOG_ASSERT(!sprites.empty());
+    POMDOG_ASSERT((startInstanceLocation + sprites.size()) <= MaxBatchSize);
 
     POMDOG_ASSERT(drawCallCount >= 0);
     POMDOG_ASSERT(drawCallCount < static_cast<int>(constantBuffers.size()));
@@ -334,6 +340,11 @@ void SpriteBatch::Impl::RenderBatch(
         0,
         startInstanceLocation);
 #endif
+
+    startInstanceLocation += sprites.size();
+    POMDOG_ASSERT(startInstanceLocation <= MaxBatchSize);
+
+    ++drawCallCount;
 }
 
 void SpriteBatch::Impl::CompareTexture(const std::shared_ptr<Texture2D>& texture)
@@ -379,13 +390,16 @@ void SpriteBatch::Impl::Draw(
         return;
     }
 
-    if (spriteQueue.size() >= MaxBatchSize) {
+    if ((startInstanceLocation + spriteQueue.size()) >= MaxBatchSize) {
+        FlushBatch();
+        POMDOG_ASSERT(spriteQueue.empty());
+
         // TODO: Not implemented
         //GrowSpriteQueue();
         return;
     }
 
-    POMDOG_ASSERT(spriteQueue.size() < MaxBatchSize);
+    POMDOG_ASSERT((startInstanceLocation + spriteQueue.size()) < MaxBatchSize);
 
     CompareTexture(texture);
 
@@ -411,7 +425,7 @@ void SpriteBatch::Impl::Draw(
     info.Color = color.ToVector4();
 
     spriteQueue.push_back(std::move(info));
-    POMDOG_ASSERT(spriteQueue.size() <= MaxBatchSize);
+    POMDOG_ASSERT((startInstanceLocation + spriteQueue.size()) <= MaxBatchSize);
 }
 
 void SpriteBatch::Impl::Draw(
@@ -438,13 +452,16 @@ void SpriteBatch::Impl::Draw(
         return;
     }
 
-    if (spriteQueue.size() >= MaxBatchSize) {
+    if ((startInstanceLocation + spriteQueue.size()) >= MaxBatchSize) {
+        FlushBatch();
+        POMDOG_ASSERT(spriteQueue.empty());
+
         // TODO: Not implemented
         //GrowSpriteQueue();
         return;
     }
 
-    POMDOG_ASSERT(spriteQueue.size() < MaxBatchSize);
+    POMDOG_ASSERT((startInstanceLocation + spriteQueue.size()) < MaxBatchSize);
     POMDOG_ASSERT(sourceRect.Width > 0);
     POMDOG_ASSERT(sourceRect.Height > 0);
 
@@ -472,7 +489,7 @@ void SpriteBatch::Impl::Draw(
     info.Color = color.ToVector4();
 
     spriteQueue.push_back(std::move(info));
-    POMDOG_ASSERT(spriteQueue.size() <= MaxBatchSize);
+    POMDOG_ASSERT((startInstanceLocation + spriteQueue.size()) <= MaxBatchSize);
 }
 
 // MARK: - SpriteBatch
