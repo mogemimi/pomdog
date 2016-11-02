@@ -21,13 +21,13 @@ class PointerPoint;
 
 class UIElement {
 public:
-    explicit UIElement(std::shared_ptr<UIEventDispatcher> const& dispatcher);
+    explicit UIElement(const std::shared_ptr<UIEventDispatcher>& dispatcher);
 
     virtual ~UIElement() = default;
 
     std::shared_ptr<UIEventDispatcher> Dispatcher() const;
 
-    void Parent(std::shared_ptr<UIElement> const& parentIn);
+    void Parent(const std::shared_ptr<UIElement>& parentIn);
     std::shared_ptr<UIElement const> Parent() const;
     std::shared_ptr<UIElement> Parent();
 
@@ -46,7 +46,7 @@ public:
     int DrawOrder() const;
 
     Matrix3x2 Transform() const;
-    void Transform(Matrix3x2 const& matrix);
+    void Transform(const Matrix3x2& matrix);
     void Transform(Matrix3x2 && matrix);
 
     Matrix3x2 GlobalTransform() const;
@@ -61,27 +61,27 @@ public:
 
     virtual void Draw(DrawingContext & drawingContext);
 
-    virtual void UpdateAnimation(Duration const& frameDuration);
+    virtual void UpdateAnimation(const Duration& frameDuration);
 
     virtual void OnEnter();
 
     virtual void OnRenderSizeChanged(int width, int height);
 
-    virtual void OnPointerCanceled(PointerPoint const& pointerPoint);
+    virtual void OnPointerCanceled(const PointerPoint& pointerPoint);
 
-    virtual void OnPointerCaptureLost(PointerPoint const& pointerPoint);
+    virtual void OnPointerCaptureLost(const PointerPoint& pointerPoint);
 
-    virtual void OnPointerEntered(PointerPoint const& pointerPoint);
+    virtual void OnPointerEntered(const PointerPoint& pointerPoint);
 
-    virtual void OnPointerExited(PointerPoint const& pointerPoint);
+    virtual void OnPointerExited(const PointerPoint& pointerPoint);
 
-    virtual void OnPointerMoved(PointerPoint const& pointerPoint);
+    virtual void OnPointerMoved(const PointerPoint& pointerPoint);
 
-    virtual void OnPointerPressed(PointerPoint const& pointerPoint);
+    virtual void OnPointerPressed(const PointerPoint& pointerPoint);
 
-    virtual void OnPointerReleased(PointerPoint const& pointerPoint);
+    virtual void OnPointerReleased(const PointerPoint& pointerPoint);
 
-    virtual void OnPointerWheelChanged(PointerPoint const& pointerPoint);
+    virtual void OnPointerWheelChanged(const PointerPoint& pointerPoint);
 
     void SetCursor(MouseCursor cursor);
 

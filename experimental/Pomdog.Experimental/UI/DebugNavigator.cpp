@@ -6,8 +6,8 @@
 namespace Pomdog {
 namespace UI {
 
-DebugNavigator::DebugNavigator(std::shared_ptr<UIEventDispatcher> const& dispatcher,
-    std::shared_ptr<GameClock> const& clockIn)
+DebugNavigator::DebugNavigator(const std::shared_ptr<UIEventDispatcher>& dispatcher,
+    const std::shared_ptr<GameClock>& clockIn)
     : UIElement(dispatcher)
     , clock(clockIn)
     , duration(Duration::zero())

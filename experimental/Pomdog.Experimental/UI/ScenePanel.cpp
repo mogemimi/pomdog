@@ -10,7 +10,7 @@ namespace Pomdog {
 namespace UI {
 namespace {
 //
-//Radian<float> SampleTumbleGesture(Vector2 const& position, Vector2 & startPosition, Rectangle const& viewportSize)
+//Radian<float> SampleTumbleGesture(const Vector2& position, Vector2 & startPosition, const Rectangle& viewportSize)
 //{
 //    constexpr float threshold = 1.0f;
 //
@@ -44,7 +44,7 @@ namespace {
 //    return delta;
 //}
 //
-//Vector2 SampleTrackGesture(Vector2 const& position, Vector2 & startPosition)
+//Vector2 SampleTrackGesture(const Vector2& position, Vector2 & startPosition)
 //{
 //    constexpr float threshold = 2.0f;
 //
@@ -63,7 +63,7 @@ static const auto ZoomAnimationInterval = std::chrono::milliseconds(400);
 } // unnamed namespace
 
 ScenePanel::ScenePanel(
-    std::shared_ptr<UIEventDispatcher> const& dispatcher,
+    const std::shared_ptr<UIEventDispatcher>& dispatcher,
     int widthIn,
     int heightIn)
     : UIElement(dispatcher)
@@ -97,7 +97,7 @@ bool ScenePanel::IsFocused() const
 
 // MARK: - Member Functions
 
-Vector2 ScenePanel::ConvertToPanelSpace(Point2D const& point) const
+Vector2 ScenePanel::ConvertToPanelSpace(const Point2D& point) const
 {
     return Vector2(point.X, Height() - point.Y);
 }
@@ -108,7 +108,7 @@ void ScenePanel::OnEnter()
     connection = dispatcher->Connect(shared_from_this());
 }
 
-void ScenePanel::OnPointerWheelChanged(PointerPoint const& pointerPoint)
+void ScenePanel::OnPointerWheelChanged(const PointerPoint& pointerPoint)
 {
     scrollWheelSampler.AddWheelDelta(pointerPoint.MouseWheelDelta);
     auto wheelDeltaUnit = scrollWheelSampler.GetScrollWheelDeltaAverage();
@@ -135,17 +135,17 @@ void ScenePanel::OnPointerWheelChanged(PointerPoint const& pointerPoint)
     }
 }
 
-void ScenePanel::OnPointerEntered(PointerPoint const& pointerPoint)
+void ScenePanel::OnPointerEntered(const PointerPoint& pointerPoint)
 {
     isFocused = true;
 }
 
-void ScenePanel::OnPointerExited(PointerPoint const& pointerPoint)
+void ScenePanel::OnPointerExited(const PointerPoint& pointerPoint)
 {
     isFocused = false;
 }
 
-void ScenePanel::OnPointerPressed(PointerPoint const& pointerPoint)
+void ScenePanel::OnPointerPressed(const PointerPoint& pointerPoint)
 {
     POMDOG_ASSERT(pointerPoint.MouseEvent);
 
@@ -164,7 +164,7 @@ void ScenePanel::OnPointerPressed(PointerPoint const& pointerPoint)
     }
 }
 
-void ScenePanel::OnPointerMoved(PointerPoint const& pointerPoint)
+void ScenePanel::OnPointerMoved(const PointerPoint& pointerPoint)
 {
     POMDOG_ASSERT(pointerPoint.MouseEvent);
 
@@ -183,20 +183,20 @@ void ScenePanel::OnPointerMoved(PointerPoint const& pointerPoint)
     }
 }
 
-void ScenePanel::OnPointerReleased(PointerPoint const& pointerPoint)
+void ScenePanel::OnPointerReleased(const PointerPoint& pointerPoint)
 {
     tumbleStartPosition = Pomdog::NullOpt;
     trackStartPosition = Pomdog::NullOpt;
 }
 
-void ScenePanel::OnMouseLeftButtonPressed(PointerPoint const& pointerPoint)
+void ScenePanel::OnMouseLeftButtonPressed(const PointerPoint& pointerPoint)
 {
     if (!tumbleStartPosition) {
         tumbleStartPosition = ConvertToPanelSpace(pointerPoint.Position);
     }
 }
 
-void ScenePanel::OnMouseLeftButtonMoved(PointerPoint const& pointerPoint)
+void ScenePanel::OnMouseLeftButtonMoved(const PointerPoint& pointerPoint)
 {
     if (!isEnabled) {
         return;
@@ -229,12 +229,12 @@ void ScenePanel::OnMouseLeftButtonMoved(PointerPoint const& pointerPoint)
 //    }
 }
 
-void ScenePanel::OnMouseMiddleButtonPressed(PointerPoint const& pointerPoint)
+void ScenePanel::OnMouseMiddleButtonPressed(const PointerPoint& pointerPoint)
 {
     trackStartPosition = ConvertToPanelSpace(pointerPoint.Position);
 }
 
-void ScenePanel::OnMouseMiddleButtonMoved(PointerPoint const& pointerPoint)
+void ScenePanel::OnMouseMiddleButtonMoved(const PointerPoint& pointerPoint)
 {
     if (!isEnabled) {
         return;
@@ -263,17 +263,17 @@ void ScenePanel::OnMouseMiddleButtonMoved(PointerPoint const& pointerPoint)
 //    transform->Position -= {matrix(2, 0), matrix(2, 1)};
 }
 
-void ScenePanel::OnMouseRightButtonPressed(PointerPoint const& pointerPoint)
+void ScenePanel::OnMouseRightButtonPressed(const PointerPoint& pointerPoint)
 {
     SceneTouch(ConvertToPanelSpace(pointerPoint.Position));
 }
 
-void ScenePanel::OnMouseRightButtonMoved(PointerPoint const& pointerPoint)
+void ScenePanel::OnMouseRightButtonMoved(const PointerPoint& pointerPoint)
 {
     SceneTouch(ConvertToPanelSpace(pointerPoint.Position));
 }
 
-void ScenePanel::UpdateAnimation(Duration const& frameDuration)
+void ScenePanel::UpdateAnimation(const Duration& frameDuration)
 {
     timer = std::max(timer - frameDuration, Duration::zero());
 

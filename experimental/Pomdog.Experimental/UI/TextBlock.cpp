@@ -9,7 +9,7 @@
 namespace Pomdog {
 namespace UI {
 
-TextBlock::TextBlock(std::shared_ptr<UIEventDispatcher> const& dispatcher)
+TextBlock::TextBlock(const std::shared_ptr<UIEventDispatcher>& dispatcher)
     : UIElement(dispatcher)
 {
     SetSize(50, 15);
@@ -22,7 +22,7 @@ std::string TextBlock::Text() const
     return this->text;
 }
 
-void TextBlock::Text(std::string const& textIn)
+void TextBlock::Text(const std::string& textIn)
 {
     this->text = textIn;
 }

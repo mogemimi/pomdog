@@ -12,8 +12,8 @@ namespace UI {
 
 class DebugNavigator: public UIElement {
 public:
-    DebugNavigator(std::shared_ptr<UIEventDispatcher> const& dispatcher,
-        std::shared_ptr<GameClock> const& clock);
+    DebugNavigator(const std::shared_ptr<UIEventDispatcher>& dispatcher,
+        const std::shared_ptr<GameClock>& clock);
 
     void Draw(DrawingContext & drawingContext) override;
 

@@ -24,8 +24,8 @@ private:
 public:
     UIEventConnection() = default;
 
-    UIEventConnection(std::weak_ptr<DispatcherType> const& weakDispatcherIn,
-        std::weak_ptr<UIElement> const& weakListenerIn)
+    UIEventConnection(const std::weak_ptr<DispatcherType>& weakDispatcherIn,
+        const std::weak_ptr<UIElement>& weakListenerIn)
         : weakDispatcher(weakDispatcherIn)
         , weakListener(weakListenerIn)
     {
@@ -38,8 +38,8 @@ public:
         Disconnect();
     }
 
-    UIEventConnection(UIEventConnection const& connection) = delete;
-    UIEventConnection & operator=(UIEventConnection const& connection) = delete;
+    UIEventConnection(const UIEventConnection& connection) = delete;
+    UIEventConnection & operator=(const UIEventConnection& connection) = delete;
 
     UIEventConnection(UIEventConnection && connection)
     {

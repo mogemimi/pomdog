@@ -47,13 +47,13 @@ private:
 
 public:
     Slider(
-        std::shared_ptr<UIEventDispatcher> const& dispatcher,
+        const std::shared_ptr<UIEventDispatcher>& dispatcher,
         double minimum,
         double maximum);
 
     Slider(
-        std::shared_ptr<UIEventDispatcher> const& dispatcher,
-        SliderColorScheme const& colorScheme,
+        const std::shared_ptr<UIEventDispatcher>& dispatcher,
+        const SliderColorScheme& colorScheme,
         double minimum,
         double maximum);
 
@@ -72,21 +72,21 @@ public:
 
     void OnEnter() override;
 
-    void OnPointerEntered(PointerPoint const& pointerPoint) override;
+    void OnPointerEntered(const PointerPoint& pointerPoint) override;
 
-    void OnPointerExited(PointerPoint const& pointerPoint) override;
+    void OnPointerExited(const PointerPoint& pointerPoint) override;
 
-    void OnPointerPressed(PointerPoint const& pointerPoint) override;
+    void OnPointerPressed(const PointerPoint& pointerPoint) override;
 
-    void OnPointerMoved(PointerPoint const& pointerPoint) override;
+    void OnPointerMoved(const PointerPoint& pointerPoint) override;
 
-    void OnPointerReleased(PointerPoint const& pointerPoint) override;
+    void OnPointerReleased(const PointerPoint& pointerPoint) override;
 
     void OnRenderSizeChanged(int width, int height) override;
 
     void Draw(DrawingContext & drawingContext) override;
 
-    void UpdateAnimation(Duration const& frameDuration) override;
+    void UpdateAnimation(const Duration& frameDuration) override;
 
     Signal<void(float)> ValueChanged;
 };

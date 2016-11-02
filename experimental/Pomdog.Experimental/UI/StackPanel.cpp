@@ -10,7 +10,7 @@ namespace Pomdog {
 namespace UI {
 
 StackPanel::StackPanel(
-    std::shared_ptr<UIEventDispatcher> const& dispatcher,
+    const std::shared_ptr<UIEventDispatcher>& dispatcher,
     std::uint32_t widthIn,
     std::uint32_t heightIn)
     : UIElement(dispatcher)
@@ -26,7 +26,7 @@ void StackPanel::OnEnter()
     connection = dispatcher->Connect(shared_from_this());
 }
 
-void StackPanel::OnPointerPressed(PointerPoint const& pointerPoint)
+void StackPanel::OnPointerPressed(const PointerPoint& pointerPoint)
 {
     Rectangle captionBar{0, 0, Width(), barHeight + padding.Top};
 
@@ -38,7 +38,7 @@ void StackPanel::OnPointerPressed(PointerPoint const& pointerPoint)
     startTouchPoint = Vector2(pointInView.X, pointInView.Y);
 }
 
-void StackPanel::OnPointerMoved(PointerPoint const& pointerPoint)
+void StackPanel::OnPointerMoved(const PointerPoint& pointerPoint)
 {
     if (!startTouchPoint) {
         return;
@@ -67,7 +67,7 @@ void StackPanel::OnPointerMoved(PointerPoint const& pointerPoint)
     }
 }
 
-void StackPanel::OnPointerReleased(PointerPoint const& pointerPoint)
+void StackPanel::OnPointerReleased(const PointerPoint& pointerPoint)
 {
     if (!startTouchPoint) {
         return;
@@ -81,7 +81,7 @@ void StackPanel::OnRenderSizeChanged(int widthIn, int heightIn)
     SetSize(widthIn, heightIn);
 }
 
-void StackPanel::AddChild(std::shared_ptr<UIElement> const& element)
+void StackPanel::AddChild(const std::shared_ptr<UIElement>& element)
 {
     POMDOG_ASSERT(!element->Parent());
 
@@ -151,7 +151,7 @@ void StackPanel::Draw(DrawingContext & drawingContext)
     drawingContext.Pop();
 }
 
-void StackPanel::UpdateAnimation(Duration const& frameDuration)
+void StackPanel::UpdateAnimation(const Duration& frameDuration)
 {
 }
 

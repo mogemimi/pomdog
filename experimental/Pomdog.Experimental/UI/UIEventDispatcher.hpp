@@ -21,31 +21,31 @@ class UIEventConnection;
 
 class UIEventDispatcher: public std::enable_shared_from_this<UIEventDispatcher> {
 public:
-    explicit UIEventDispatcher(std::shared_ptr<GameWindow> const& window);
+    explicit UIEventDispatcher(const std::shared_ptr<GameWindow>& window);
 
     void UpdateChildren();
 
-    void Touch(MouseState const& mouseState);
+    void Touch(const MouseState& mouseState);
 
-    void UpdateAnimation(Duration const& frameDuration);
+    void UpdateAnimation(const Duration& frameDuration);
 
-    Detail::UIEventConnection Connect(std::weak_ptr<UIElement> const& child);
+    Detail::UIEventConnection Connect(const std::weak_ptr<UIElement>& child);
 
 private:
-    void PointerEntered(Point2D const& position, MouseState const& mouseState,
-        std::shared_ptr<UIElement> const& node);
+    void PointerEntered(const Point2D& position, const MouseState& mouseState,
+        const std::shared_ptr<UIElement>& node);
 
-    void PointerExited(Point2D const& position);
+    void PointerExited(const Point2D& position);
 
-    void PointerPressed(Point2D const& position);
+    void PointerPressed(const Point2D& position);
 
-    void PointerMoved(Point2D const& position);
+    void PointerMoved(const Point2D& position);
 
-    void PointerReleased(Point2D const& position);
+    void PointerReleased(const Point2D& position);
 
-    Optional<PointerMouseEvent> FindPointerMouseEvent(MouseState const& mouseState) const;
+    Optional<PointerMouseEvent> FindPointerMouseEvent(const MouseState& mouseState) const;
 
-    ButtonState CheckMouseButton(MouseState const& mouseState, PointerMouseEvent const& pointerMouseEvent) const;
+    ButtonState CheckMouseButton(const MouseState& mouseState, const PointerMouseEvent& pointerMouseEvent) const;
 
     void Sort();
 

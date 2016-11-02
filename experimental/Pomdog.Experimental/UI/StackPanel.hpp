@@ -15,7 +15,7 @@ namespace UI {
 class StackPanel: public UIElement, public std::enable_shared_from_this<StackPanel> {
 public:
     StackPanel(
-        std::shared_ptr<UIEventDispatcher> const& dispatcher,
+        const std::shared_ptr<UIEventDispatcher>& dispatcher,
         std::uint32_t widthIn,
         std::uint32_t heightIn);
 
@@ -23,19 +23,19 @@ public:
 
     void OnEnter() override;
 
-    void OnPointerPressed(PointerPoint const& pointerPoint) override;
+    void OnPointerPressed(const PointerPoint& pointerPoint) override;
 
-    void OnPointerMoved(PointerPoint const& pointerPoint) override;
+    void OnPointerMoved(const PointerPoint& pointerPoint) override;
 
-    void OnPointerReleased(PointerPoint const& pointerPoint) override;
+    void OnPointerReleased(const PointerPoint& pointerPoint) override;
 
     void OnRenderSizeChanged(int width, int height) override;
 
     void Draw(DrawingContext & drawingContext) override;
 
-    void UpdateAnimation(Duration const& frameDuration) override;
+    void UpdateAnimation(const Duration& frameDuration) override;
 
-    void AddChild(std::shared_ptr<UIElement> const& element);
+    void AddChild(const std::shared_ptr<UIElement>& element);
 
     void UpdateTransform() override final;
 

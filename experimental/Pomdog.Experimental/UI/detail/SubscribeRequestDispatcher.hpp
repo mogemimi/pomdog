@@ -12,7 +12,7 @@ namespace Detail {
 template <class ListenerType>
 class SubscribeRequestDispatcher {
 public:
-    void AddChild(ListenerType const& child)
+    void AddChild(const ListenerType& child)
     {
         Added.push_back(child);
     }
@@ -22,7 +22,7 @@ public:
         Added.push_back(std::move(child));
     }
 
-    void RemoveChild(ListenerType const& child)
+    void RemoveChild(const ListenerType& child)
     {
         Removed.push_back(child);
     }

@@ -10,7 +10,7 @@ namespace UI {
 int UIElement::Width() const { return width; }
 int UIElement::Height() const { return height; }
 
-UIElement::UIElement(std::shared_ptr<UIEventDispatcher> const& dispatcherIn)
+UIElement::UIElement(const std::shared_ptr<UIEventDispatcher>& dispatcherIn)
     : parentTransform(Matrix3x2::Identity)
     , transform(Matrix3x2::Identity)
     , weakDispatcher(dispatcherIn)
@@ -28,7 +28,7 @@ std::shared_ptr<UIEventDispatcher> UIElement::Dispatcher() const
     return weakDispatcher.lock();
 }
 
-void UIElement::Parent(std::shared_ptr<UIElement> const& parentIn)
+void UIElement::Parent(const std::shared_ptr<UIElement>& parentIn)
 {
     this->weakParent = parentIn;
     POMDOG_ASSERT(this->weakDispatcher.lock() == parentIn->Dispatcher());
@@ -111,7 +111,7 @@ Matrix3x2 UIElement::Transform() const
     return transform;
 }
 
-void UIElement::Transform(Matrix3x2 const& transformMatrixIn)
+void UIElement::Transform(const Matrix3x2& transformMatrixIn)
 {
     this->transform = transformMatrixIn;
 }
@@ -123,27 +123,27 @@ void UIElement::Transform(Matrix3x2 && transformMatrixIn)
 
 void UIElement::OnEnter() {}
 
-void UIElement::OnPointerCanceled(PointerPoint const&) {}
+void UIElement::OnPointerCanceled(const PointerPoint&) {}
 
-void UIElement::OnPointerCaptureLost(PointerPoint const&) {}
+void UIElement::OnPointerCaptureLost(const PointerPoint&) {}
 
-void UIElement::OnPointerWheelChanged(PointerPoint const&) {}
+void UIElement::OnPointerWheelChanged(const PointerPoint&) {}
 
-void UIElement::OnPointerEntered(PointerPoint const&) {}
+void UIElement::OnPointerEntered(const PointerPoint&) {}
 
-void UIElement::OnPointerExited(PointerPoint const&) {}
+void UIElement::OnPointerExited(const PointerPoint&) {}
 
-void UIElement::OnPointerPressed(PointerPoint const&) {}
+void UIElement::OnPointerPressed(const PointerPoint&) {}
 
-void UIElement::OnPointerMoved(PointerPoint const&) {}
+void UIElement::OnPointerMoved(const PointerPoint&) {}
 
-void UIElement::OnPointerReleased(PointerPoint const&) {}
+void UIElement::OnPointerReleased(const PointerPoint&) {}
 
 void UIElement::OnRenderSizeChanged(int, int) {}
 
 void UIElement::Draw(DrawingContext &) {}
 
-void UIElement::UpdateAnimation(Duration const&) {}
+void UIElement::UpdateAnimation(const Duration&) {}
 
 void UIElement::SetCursor(MouseCursor cursorIn)
 {

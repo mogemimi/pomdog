@@ -7,7 +7,7 @@
 namespace Pomdog {
 namespace UI {
 
-UIElementHierarchy::UIElementHierarchy(std::shared_ptr<GameWindow> const& window)
+UIElementHierarchy::UIElementHierarchy(const std::shared_ptr<GameWindow>& window)
     : dispatcher(std::make_shared<UIEventDispatcher>(window))
 {
 }
@@ -18,7 +18,7 @@ std::shared_ptr<UIEventDispatcher> UIElementHierarchy::Dispatcher() const
     return dispatcher;
 }
 
-void UIElementHierarchy::Touch(MouseState const& mouseState)
+void UIElementHierarchy::Touch(const MouseState& mouseState)
 {
     POMDOG_ASSERT(dispatcher);
     dispatcher->Touch(mouseState);
@@ -33,7 +33,7 @@ void UIElementHierarchy::UpdateLayout()
     }
 }
 
-void UIElementHierarchy::AddChild(std::shared_ptr<UIElement> const& element)
+void UIElementHierarchy::AddChild(const std::shared_ptr<UIElement>& element)
 {
     POMDOG_ASSERT(element);
     POMDOG_ASSERT(!element->Parent());
@@ -49,7 +49,7 @@ void UIElementHierarchy::AddChild(std::shared_ptr<UIElement> && element)
     element->OnEnter();
 }
 
-void UIElementHierarchy::UpdateAnimation(Duration const& frameDuration)
+void UIElementHierarchy::UpdateAnimation(const Duration& frameDuration)
 {
     POMDOG_ASSERT(dispatcher);
     dispatcher->UpdateAnimation(frameDuration);

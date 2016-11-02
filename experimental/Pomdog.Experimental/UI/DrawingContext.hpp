@@ -31,28 +31,28 @@ public:
 
     virtual Matrix3x2 Top() const = 0;
 
-    virtual void Push(Matrix3x2 const& matrix) = 0;
+    virtual void Push(const Matrix3x2& matrix) = 0;
 
     virtual void Pop() = 0;
 
     virtual void DrawRectangle(
-        Matrix3x2 const& transform,
-        Color const& color,
-        Rectangle const& rectangle) = 0;
+        const Matrix3x2& transform,
+        const Color& color,
+        const Rectangle& rectangle) = 0;
 
     virtual void DrawLine(
-        Matrix3x2 const& transform,
-        Color const& color,
+        const Matrix3x2& transform,
+        const Color& color,
         float penSize,
-        Vector2 const& point1,
-        Vector2 const& point2) = 0;
+        const Vector2& point1,
+        const Vector2& point2) = 0;
 
     virtual void DrawString(
-        Matrix3x2 const& transform,
-        Color const& color,
+        const Matrix3x2& transform,
+        const Color& color,
         FontWeight fontWeight,
         FontSize fontSize,
-        std::string const& text) = 0;
+        const std::string& text) = 0;
 
     //void DrawEllipse();
 

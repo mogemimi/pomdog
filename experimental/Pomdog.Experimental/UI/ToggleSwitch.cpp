@@ -9,7 +9,7 @@
 namespace Pomdog {
 namespace UI {
 
-ToggleSwitch::ToggleSwitch(std::shared_ptr<UIEventDispatcher> const& dispatcher)
+ToggleSwitch::ToggleSwitch(const std::shared_ptr<UIEventDispatcher>& dispatcher)
     : UIElement(dispatcher)
     , button(50, 18)
     , onContent(u8"On")
@@ -48,13 +48,13 @@ void ToggleSwitch::IsEnabled(bool isEnabledIn)
 std::string ToggleSwitch::OnContent() const
 { return this->onContent; }
 
-void ToggleSwitch::OnContent(std::string const& onContentIn)
+void ToggleSwitch::OnContent(const std::string& onContentIn)
 { this->onContent = onContentIn; }
 
 std::string ToggleSwitch::OffContent() const
 { return this->offContent; }
 
-void ToggleSwitch::OffContent(std::string const& offContentIn)
+void ToggleSwitch::OffContent(const std::string& offContentIn)
 { this->offContent = offContentIn; }
 
 // MARK: - Events
@@ -65,11 +65,11 @@ void ToggleSwitch::OnEnter()
     connection = dispatcher->Connect(shared_from_this());
 }
 
-void ToggleSwitch::OnPointerPressed(PointerPoint const& pointerPoint)
+void ToggleSwitch::OnPointerPressed(const PointerPoint& pointerPoint)
 {
 }
 
-void ToggleSwitch::OnPointerReleased(PointerPoint const& pointerPoint)
+void ToggleSwitch::OnPointerReleased(const PointerPoint& pointerPoint)
 {
     if (!isEnabled) {
         return;

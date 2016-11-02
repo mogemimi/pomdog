@@ -9,15 +9,15 @@ namespace Pomdog {
 namespace UI {
 namespace {
 
-bool Intersects(Point2D const& position, UIElement & element)
+bool Intersects(const Point2D& position, UIElement & element)
 {
     auto bounds = element.Bounds();
     auto positionInChild = UIHelper::ConvertToChildSpace(position, element.GlobalTransform());
     return bounds.Contains(positionInChild);
 }
 
-std::shared_ptr<UIElement> Find(Point2D const& position,
-    std::vector<std::weak_ptr<UIElement>> const& children)
+std::shared_ptr<UIElement> Find(const Point2D& position,
+    const std::vector<std::weak_ptr<UIElement>>& children)
 {
     for (auto & weakChild: children)
     {
@@ -31,7 +31,7 @@ std::shared_ptr<UIElement> Find(Point2D const& position,
 
 } // unnamed namespace
 
-UIEventDispatcher::UIEventDispatcher(std::shared_ptr<GameWindow> const& windowIn)
+UIEventDispatcher::UIEventDispatcher(const std::shared_ptr<GameWindow>& windowIn)
     : window(windowIn)
 {}
 
@@ -52,7 +52,7 @@ void UIEventDispatcher::UpdateChildren()
             }
 
             auto child = weakChild.lock();
-            auto f = [&child](std::weak_ptr<UIElement> const& p) {
+            auto f = [&child](const std::weak_ptr<UIElement>& p) {
                 return p.lock() == child;
             };
 
@@ -61,15 +61,15 @@ void UIEventDispatcher::UpdateChildren()
     }
 
     children.erase(std::remove_if(std::begin(children), std::end(children),
-        [](std::weak_ptr<UIElement> const& p) { return p.expired(); }),
+        [](const std::weak_ptr<UIElement>& p) { return p.expired(); }),
         std::end(children));
 
     Sort();
     POMDOG_ASSERT(std::end(children) == std::unique(std::begin(children), std::end(children),
-        [](std::weak_ptr<UIElement> const& a, std::weak_ptr<UIElement> const& b){ return a.lock() == b.lock(); }));
+        [](const std::weak_ptr<UIElement>& a, const std::weak_ptr<UIElement>& b){ return a.lock() == b.lock(); }));
 }
 
-void UIEventDispatcher::Touch(MouseState const& mouseState)
+void UIEventDispatcher::Touch(const MouseState& mouseState)
 {
     auto const position = mouseState.Position;
 
@@ -148,8 +148,8 @@ void UIEventDispatcher::Touch(MouseState const& mouseState)
     }
 }
 
-void UIEventDispatcher::PointerEntered(Point2D const& position,
-    MouseState const& mouseState, std::shared_ptr<UIElement> const& node)
+void UIEventDispatcher::PointerEntered(const Point2D& position,
+    const MouseState& mouseState, const std::shared_ptr<UIElement>& node)
 {
     POMDOG_ASSERT(!pointerState);
     pointerState = std::make_unique<PointerState>();
@@ -171,7 +171,7 @@ void UIEventDispatcher::PointerEntered(Point2D const& position,
     pointerState->focusedElement = node;
 }
 
-void UIEventDispatcher::PointerExited(Point2D const& position)
+void UIEventDispatcher::PointerExited(const Point2D& position)
 {
     POMDOG_ASSERT(pointerState);
 
@@ -190,7 +190,7 @@ void UIEventDispatcher::PointerExited(Point2D const& position)
     window->SetMouseCursor(MouseCursor::Arrow);
 }
 
-void UIEventDispatcher::PointerPressed(Point2D const& position)
+void UIEventDispatcher::PointerPressed(const Point2D& position)
 {
     POMDOG_ASSERT(pointerState);
 
@@ -207,7 +207,7 @@ void UIEventDispatcher::PointerPressed(Point2D const& position)
     focusedElement->OnPointerPressed(pointerState->pointerPoint);
 }
 
-void UIEventDispatcher::PointerMoved(Point2D const& position)
+void UIEventDispatcher::PointerMoved(const Point2D& position)
 {
     POMDOG_ASSERT(pointerState);
 
@@ -223,7 +223,7 @@ void UIEventDispatcher::PointerMoved(Point2D const& position)
     focusedElement->OnPointerMoved(pointerState->pointerPoint);
 }
 
-void UIEventDispatcher::PointerReleased(Point2D const& position)
+void UIEventDispatcher::PointerReleased(const Point2D& position)
 {
     POMDOG_ASSERT(pointerState);
 
@@ -239,7 +239,7 @@ void UIEventDispatcher::PointerReleased(Point2D const& position)
     focusedElement->OnPointerReleased(pointerState->pointerPoint);
 }
 
-Detail::UIEventConnection UIEventDispatcher::Connect(std::weak_ptr<UIElement> const& child)
+Detail::UIEventConnection UIEventDispatcher::Connect(const std::weak_ptr<UIElement>& child)
 {
     std::shared_ptr<SubscribeRequestDispatcherType> sharedDispatcher(
         shared_from_this(), &subscribeRequests);
@@ -250,7 +250,7 @@ Detail::UIEventConnection UIEventDispatcher::Connect(std::weak_ptr<UIElement> co
     return std::move(connection);
 }
 
-void UIEventDispatcher::UpdateAnimation(Duration const& frameDuration)
+void UIEventDispatcher::UpdateAnimation(const Duration& frameDuration)
 {
     for (auto & weakChild: children)
     {
@@ -261,7 +261,7 @@ void UIEventDispatcher::UpdateAnimation(Duration const& frameDuration)
 }
 
 Optional<UI::PointerMouseEvent> UIEventDispatcher::FindPointerMouseEvent(
-    MouseState const& mouseState) const
+    const MouseState& mouseState) const
 {
     using Pomdog::UI::PointerMouseEvent;
     if (mouseState.LeftButton == ButtonState::Pressed) {
@@ -282,8 +282,8 @@ Optional<UI::PointerMouseEvent> UIEventDispatcher::FindPointerMouseEvent(
     return Pomdog::NullOpt;
 }
 
-ButtonState UIEventDispatcher::CheckMouseButton(MouseState const& mouseState,
-    UI::PointerMouseEvent const& pointerMouseEvent) const
+ButtonState UIEventDispatcher::CheckMouseButton(const MouseState& mouseState,
+    const UI::PointerMouseEvent& pointerMouseEvent) const
 {
     using Pomdog::UI::PointerMouseEvent;
     switch (pointerMouseEvent) {
@@ -307,11 +307,11 @@ ButtonState UIEventDispatcher::CheckMouseButton(MouseState const& mouseState,
 void UIEventDispatcher::Sort()
 {
     children.erase(std::remove_if(std::begin(children), std::end(children),
-        [](std::weak_ptr<UIElement> const& a){ return a.expired(); }),
+        [](const std::weak_ptr<UIElement>& a){ return a.expired(); }),
         std::end(children));
 
     std::sort(std::begin(children), std::end(children),
-        [](std::weak_ptr<UIElement> const& a, std::weak_ptr<UIElement> const& b) {
+        [](const std::weak_ptr<UIElement>& a, const std::weak_ptr<UIElement>& b) {
             auto sharedA = a.lock();
             auto sharedB = b.lock();
             if (!sharedA) {

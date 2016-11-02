@@ -18,15 +18,15 @@ class UIElement;
 
 class UIElementHierarchy {
 public:
-    explicit UIElementHierarchy(std::shared_ptr<GameWindow> const& window);
+    explicit UIElementHierarchy(const std::shared_ptr<GameWindow>& window);
 
-    void Touch(MouseState const& mouseState);
+    void Touch(const MouseState& mouseState);
 
     void UpdateLayout();
 
-    void UpdateAnimation(Duration const& frameDuration);
+    void UpdateAnimation(const Duration& frameDuration);
 
-    void AddChild(std::shared_ptr<UIElement> const& child);
+    void AddChild(const std::shared_ptr<UIElement>& child);
 
     void AddChild(std::shared_ptr<UIElement> && child);
 

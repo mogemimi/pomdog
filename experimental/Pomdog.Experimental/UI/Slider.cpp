@@ -9,13 +9,13 @@
 namespace Pomdog {
 namespace UI {
 
-Slider::Slider(std::shared_ptr<UIEventDispatcher> const& dispatcher,
+Slider::Slider(const std::shared_ptr<UIEventDispatcher>& dispatcher,
     double minimumIn, double maximumIn)
     : Slider(dispatcher, SliderColorScheme{}, minimumIn, maximumIn)
 {}
 
-Slider::Slider(std::shared_ptr<UIEventDispatcher> const& dispatcher,
-    SliderColorScheme const& colorSchemeIn, double minimumIn, double maximumIn)
+Slider::Slider(const std::shared_ptr<UIEventDispatcher>& dispatcher,
+    const SliderColorScheme& colorSchemeIn, double minimumIn, double maximumIn)
     : UIElement(dispatcher)
     , minimum(minimumIn)
     , maximum(maximumIn)
@@ -77,7 +77,7 @@ void Slider::OnEnter()
     connection = dispatcher->Connect(shared_from_this());
 }
 
-void Slider::OnPointerEntered(PointerPoint const& pointerPoint)
+void Slider::OnPointerEntered(const PointerPoint& pointerPoint)
 {
     if (!isEnabled) {
         return;
@@ -91,7 +91,7 @@ void Slider::OnPointerEntered(PointerPoint const& pointerPoint)
     colorAnimation = animation;
 }
 
-void Slider::OnPointerExited(PointerPoint const& pointerPoint)
+void Slider::OnPointerExited(const PointerPoint& pointerPoint)
 {
     ColorAnimation animation;
     animation.duration = 0.15f;
@@ -102,7 +102,7 @@ void Slider::OnPointerExited(PointerPoint const& pointerPoint)
     colorAnimation = animation;
 }
 
-void Slider::OnPointerPressed(PointerPoint const& pointerPoint)
+void Slider::OnPointerPressed(const PointerPoint& pointerPoint)
 {
     if (pointerPoint.MouseEvent && *pointerPoint.MouseEvent != UI::PointerMouseEvent::LeftButtonPressed) {
         return;
@@ -123,7 +123,7 @@ void Slider::OnPointerPressed(PointerPoint const& pointerPoint)
     isDragging = true;
 }
 
-void Slider::OnPointerMoved(PointerPoint const& pointerPoint)
+void Slider::OnPointerMoved(const PointerPoint& pointerPoint)
 {
     if (pointerPoint.MouseEvent && *pointerPoint.MouseEvent != UI::PointerMouseEvent::LeftButtonPressed) {
         return;
@@ -143,12 +143,12 @@ void Slider::OnPointerMoved(PointerPoint const& pointerPoint)
     Value(MathHelper::Clamp(amount * (maximum - minimum) + minimum, minimum, maximum));
 }
 
-void Slider::OnPointerReleased(PointerPoint const& pointerPoint)
+void Slider::OnPointerReleased(const PointerPoint& pointerPoint)
 {
     isDragging = false;
 }
 
-void Slider::UpdateAnimation(Duration const& frameDuration)
+void Slider::UpdateAnimation(const Duration& frameDuration)
 {
     if (!colorAnimation) {
         return;

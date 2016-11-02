@@ -10,7 +10,7 @@ namespace UI {
 
 class ToggleSwitch: public UIElement, public std::enable_shared_from_this<ToggleSwitch> {
 public:
-    explicit ToggleSwitch(std::shared_ptr<UIEventDispatcher> const& dispatcher);
+    explicit ToggleSwitch(const std::shared_ptr<UIEventDispatcher>& dispatcher);
 
     bool IsOn() const;
     void IsOn(bool isOn);
@@ -19,19 +19,19 @@ public:
     void IsEnabled(bool isEnabled);
 
     std::string OnContent() const;
-    void OnContent(std::string const& onContent);
+    void OnContent(const std::string& onContent);
 
     std::string OffContent() const;
-    void OffContent(std::string const& offContent);
+    void OffContent(const std::string& offContent);
 
     UI::HorizontalAlignment HorizontalAlignment() const override { return UI::HorizontalAlignment::Stretch; }
     UI::VerticalAlignment VerticalAlignment() const override { return UI::VerticalAlignment::Top; }
 
     void OnEnter() override;
 
-    void OnPointerPressed(PointerPoint const& pointerPoint) override;
+    void OnPointerPressed(const PointerPoint& pointerPoint) override;
 
-    void OnPointerReleased(PointerPoint const& pointerPoint) override;
+    void OnPointerReleased(const PointerPoint& pointerPoint) override;
 
     void OnRenderSizeChanged(int width, int height) override;
 

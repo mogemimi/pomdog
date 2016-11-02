@@ -13,7 +13,7 @@ namespace UI {
 
 class ScenePanel: public UIElement, public std::enable_shared_from_this<ScenePanel> {
 public:
-    ScenePanel(std::shared_ptr<UIEventDispatcher> const& dispatcher,
+    ScenePanel(const std::shared_ptr<UIEventDispatcher>& dispatcher,
         int widthIn, int heightIn);
 
     bool IsEnabled() const;
@@ -27,36 +27,36 @@ public:
 
     void OnEnter() override;
 
-    void OnPointerWheelChanged(PointerPoint const& pointerPoint) override;
+    void OnPointerWheelChanged(const PointerPoint& pointerPoint) override;
 
-    void OnPointerEntered(PointerPoint const& pointerPoint) override;
+    void OnPointerEntered(const PointerPoint& pointerPoint) override;
 
-    void OnPointerExited(PointerPoint const& pointerPoint) override;
+    void OnPointerExited(const PointerPoint& pointerPoint) override;
 
-    void OnPointerPressed(PointerPoint const& pointerPoint) override;
+    void OnPointerPressed(const PointerPoint& pointerPoint) override;
 
-    void OnPointerMoved(PointerPoint const& pointerPoint) override;
+    void OnPointerMoved(const PointerPoint& pointerPoint) override;
 
-    void OnPointerReleased(PointerPoint const& pointerPoint) override;
+    void OnPointerReleased(const PointerPoint& pointerPoint) override;
 
     void OnRenderSizeChanged(int width, int height) override;
 
     void Draw(DrawingContext & drawingContext) override;
 
-    void UpdateAnimation(Duration const& frameDuration) override;
+    void UpdateAnimation(const Duration& frameDuration) override;
 
     // Events:
-    Signal<void(Vector2 const& point)> SceneTouch;
+    Signal<void(const Vector2& point)> SceneTouch;
 
 private:
-    void OnMouseLeftButtonPressed(PointerPoint const& pointerPoint);
-    void OnMouseLeftButtonMoved(PointerPoint const& pointerPoint);
-    void OnMouseMiddleButtonPressed(PointerPoint const& pointerPoint);
-    void OnMouseMiddleButtonMoved(PointerPoint const& pointerPoint);
-    void OnMouseRightButtonPressed(PointerPoint const& pointerPoint);
-    void OnMouseRightButtonMoved(PointerPoint const& pointerPoint);
+    void OnMouseLeftButtonPressed(const PointerPoint& pointerPoint);
+    void OnMouseLeftButtonMoved(const PointerPoint& pointerPoint);
+    void OnMouseMiddleButtonPressed(const PointerPoint& pointerPoint);
+    void OnMouseMiddleButtonMoved(const PointerPoint& pointerPoint);
+    void OnMouseRightButtonPressed(const PointerPoint& pointerPoint);
+    void OnMouseRightButtonMoved(const PointerPoint& pointerPoint);
 
-    Vector2 ConvertToPanelSpace(Point2D const& point) const;
+    Vector2 ConvertToPanelSpace(const Point2D& point) const;
 
 private:
     Detail::UIEventConnection connection;
