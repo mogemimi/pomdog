@@ -19,7 +19,7 @@ class UIEventConnection;
 
 } // namespace Detail
 
-class UIEventDispatcher: public std::enable_shared_from_this<UIEventDispatcher> {
+class UIEventDispatcher : public std::enable_shared_from_this<UIEventDispatcher> {
 public:
     explicit UIEventDispatcher(const std::shared_ptr<GameWindow>& window);
 
@@ -32,7 +32,9 @@ public:
     Detail::UIEventConnection Connect(const std::weak_ptr<UIElement>& child);
 
 private:
-    void PointerEntered(const Point2D& position, const MouseState& mouseState,
+    void PointerEntered(
+        const Point2D& position,
+        const MouseState& mouseState,
         const std::shared_ptr<UIElement>& node);
 
     void PointerExited(const Point2D& position);
@@ -45,7 +47,9 @@ private:
 
     Optional<PointerMouseEvent> FindPointerMouseEvent(const MouseState& mouseState) const;
 
-    ButtonState CheckMouseButton(const MouseState& mouseState, const PointerMouseEvent& pointerMouseEvent) const;
+    ButtonState CheckMouseButton(
+        const MouseState& mouseState,
+        const PointerMouseEvent& pointerMouseEvent) const;
 
     void Sort();
 

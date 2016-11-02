@@ -11,8 +11,8 @@ namespace UI {
 
 StackPanel::StackPanel(
     const std::shared_ptr<UIEventDispatcher>& dispatcher,
-    std::uint32_t widthIn,
-    std::uint32_t heightIn)
+    int widthIn,
+    int heightIn)
     : UIElement(dispatcher)
     , padding{12, 8, 10, 8}
     , barHeight(18)
@@ -20,17 +20,22 @@ StackPanel::StackPanel(
     SetSize(widthIn, heightIn);
 }
 
+bool StackPanel::SizeToFitContent() const
+{
+    return false;
+}
+
 void StackPanel::OnEnter()
 {
-    auto dispatcher = Dispatcher();
+    auto dispatcher = GetDispatcher();
     connection = dispatcher->Connect(shared_from_this());
 }
 
 void StackPanel::OnPointerPressed(const PointerPoint& pointerPoint)
 {
-    Rectangle captionBar{0, 0, Width(), barHeight + padding.Top};
+    Rectangle captionBar{0, 0, GetWidth(), barHeight + padding.Top};
 
-    auto pointInView = UIHelper::ConvertToChildSpace(pointerPoint.Position, GlobalTransform());
+    auto pointInView = UIHelper::ConvertToChildSpace(pointerPoint.Position, GetGlobalTransform());
     if (!captionBar.Contains(pointInView)) {
         return;
     }
@@ -44,23 +49,21 @@ void StackPanel::OnPointerMoved(const PointerPoint& pointerPoint)
         return;
     }
 
-    auto pointInView = UIHelper::ConvertToChildSpace(pointerPoint.Position, GlobalTransform());
+    auto pointInView = UIHelper::ConvertToChildSpace(pointerPoint.Position, GetGlobalTransform());
     auto position = Vector2(pointInView.X, pointInView.Y);
 
     auto tangent = position - *startTouchPoint;
     auto distanceSquared = tangent.LengthSquared();
 
-    if (distanceSquared >= 1.4143f)
-    {
-        Transform(Transform() * Matrix3x2::CreateTranslation(tangent));
+    if (distanceSquared >= 1.4143f) {
+        SetTransform(GetTransform() * Matrix3x2::CreateTranslation(tangent));
 
         ///@note recalculate position in current coordinate system
-        pointInView = UIHelper::ConvertToChildSpace(pointerPoint.Position, GlobalTransform());
+        pointInView = UIHelper::ConvertToChildSpace(pointerPoint.Position, GetGlobalTransform());
         position = Vector2(pointInView.X, pointInView.Y);
         startTouchPoint = position;
 
-        for (auto & child: children)
-        {
+        for (auto & child : children) {
             POMDOG_ASSERT(child);
             child->MarkParentTransformDirty();
         }
@@ -83,14 +86,13 @@ void StackPanel::OnRenderSizeChanged(int widthIn, int heightIn)
 
 void StackPanel::AddChild(const std::shared_ptr<UIElement>& element)
 {
-    POMDOG_ASSERT(!element->Parent());
+    POMDOG_ASSERT(!element->GetParent());
 
     Vector2 position(padding.Left, padding.Top + barHeight);
 
     constexpr float innerMarginBottom = 14.0f;
-    for (auto & child: children)
-    {
-        position.Y += child->Height();
+    for (auto & child : children) {
+        position.Y += child->GetHeight();
         position.Y += innerMarginBottom;
     }
 
@@ -100,50 +102,48 @@ void StackPanel::AddChild(const std::shared_ptr<UIElement>& element)
     element->MarkParentTransformDirty();
 
     POMDOG_ASSERT(shared_from_this());
-    element->Parent(shared_from_this());
+    element->SetParent(shared_from_this());
     element->OnEnter();
 
-    element->Transform(Matrix3x2::CreateTranslation(position));
-    switch (element->HorizontalAlignment()) {
+    element->SetTransform(Matrix3x2::CreateTranslation(position));
+    switch (element->GetHorizontalAlignment()) {
     case HorizontalAlignment::Stretch: {
-        auto childWidth = Width() - (padding.Left + padding.Right);
-        element->SetSize(childWidth, element->Height());
+        auto childWidth = GetWidth() - (padding.Left + padding.Right);
+        element->SetSize(childWidth, element->GetHeight());
         break;
     }
     case HorizontalAlignment::Left:
         break;
     }
 
-    position.Y += element->Height();
+    position.Y += element->GetHeight();
     position.Y += padding.Bottom;
 
-    if (position.Y > Height())
-    {
-        SetSize(Width(), position.Y);
+    if (position.Y > GetHeight()) {
+        SetSize(GetWidth(), position.Y);
     }
 }
 
 void StackPanel::Draw(DrawingContext & drawingContext)
 {
-    auto transform = Transform() * drawingContext.Top();
+    auto transform = GetTransform() * drawingContext.Top();
 
     drawingContext.DrawRectangle(transform, Color{45, 45, 48, 225},
-        Rectangle(0, 0, Width(), Height()));
+        Rectangle(0, 0, GetWidth(), GetHeight()));
 
     Color const borderColor{40, 40, 40, 255};
 
-    drawingContext.DrawLine(transform, borderColor, 1.0f, {0.0f, 0.0f}, {static_cast<float>(Width()), 0.0f});
-    drawingContext.DrawLine(transform, borderColor, 1.0f, {0.0f, 0.0f}, {0.0f, static_cast<float>(Height())});
-    drawingContext.DrawLine(transform, borderColor, 1.0f, Vector2(0.0f, Height()), Vector2(Width(), Height()));
-    drawingContext.DrawLine(transform, borderColor, 1.0f, Vector2(Width(), 0.0f), Vector2(Width(), Height()));
+    drawingContext.DrawLine(transform, borderColor, 1.0f, {0.0f, 0.0f}, {static_cast<float>(GetWidth()), 0.0f});
+    drawingContext.DrawLine(transform, borderColor, 1.0f, {0.0f, 0.0f}, {0.0f, static_cast<float>(GetHeight())});
+    drawingContext.DrawLine(transform, borderColor, 1.0f, Vector2(0.0f, GetHeight()), Vector2(GetWidth(), GetHeight()));
+    drawingContext.DrawLine(transform, borderColor, 1.0f, Vector2(GetWidth(), 0.0f), Vector2(GetWidth(), GetHeight()));
 
     Color const highlightColor{106, 106, 106, 255};
-    drawingContext.DrawLine(transform, highlightColor, 1.0f, {1.0f, 1.0f}, {static_cast<float>(Width()) - 1.0f, 1.0f});
+    drawingContext.DrawLine(transform, highlightColor, 1.0f, {1.0f, 1.0f}, {static_cast<float>(GetWidth()) - 1.0f, 1.0f});
 
     drawingContext.Push(transform);
 
-    for (auto & child: children)
-    {
+    for (auto & child : children) {
         POMDOG_ASSERT(child);
         child->Draw(drawingContext);
     }
@@ -159,8 +159,7 @@ void StackPanel::UpdateTransform()
 {
     UIElement::UpdateTransform();
 
-    for (auto & child: children)
-    {
+    for (auto & child : children) {
         POMDOG_ASSERT(child);
         child->UpdateTransform();
     }

@@ -25,39 +25,39 @@ public:
 
     virtual ~UIElement() = default;
 
-    std::shared_ptr<UIEventDispatcher> Dispatcher() const;
+    std::shared_ptr<UIEventDispatcher> GetDispatcher() const;
 
-    void Parent(const std::shared_ptr<UIElement>& parentIn);
-    std::shared_ptr<UIElement const> Parent() const;
-    std::shared_ptr<UIElement> Parent();
+    void SetParent(const std::shared_ptr<UIElement>& parentIn);
+    std::shared_ptr<UIElement const> GetParent() const;
+    std::shared_ptr<UIElement> GetParent();
 
     void SetSize(int width, int height);
 
-    Rectangle Bounds() const;
+    Rectangle GetBounds() const;
 
-    int Width() const;
-    int Height() const;
+    int GetWidth() const;
+    int GetHeight() const;
 
     void MarkParentDrawOrderDirty();
 
-    int GlobalDrawOrder();
+    int GetGlobalDrawOrder();
 
-    void DrawOrder(int drawOrder);
-    int DrawOrder() const;
+    void SetDrawOrder(int drawOrder);
+    int GetDrawOrder() const;
 
-    Matrix3x2 Transform() const;
-    void Transform(const Matrix3x2& matrix);
-    void Transform(Matrix3x2 && matrix);
+    Matrix3x2 GetTransform() const;
+    void SetTransform(const Matrix3x2& matrix);
+    void SetTransform(Matrix3x2 && matrix);
 
-    Matrix3x2 GlobalTransform() const;
+    Matrix3x2 GetGlobalTransform() const;
 
     void MarkParentTransformDirty();
 
     virtual void UpdateTransform();
 
-    virtual bool SizeToFitContent() const { return false; }
-    virtual HorizontalAlignment HorizontalAlignment() const { return UI::HorizontalAlignment::Stretch; }
-    virtual VerticalAlignment VerticalAlignment() const { return UI::VerticalAlignment::Stretch; }
+    virtual bool SizeToFitContent() const;
+    virtual HorizontalAlignment GetHorizontalAlignment() const noexcept;
+    virtual VerticalAlignment GetVerticalAlignment() const noexcept;
 
     virtual void Draw(DrawingContext & drawingContext);
 
@@ -87,13 +87,12 @@ public:
 
     void ResetCursor();
 
-    Optional<MouseCursor> CurrentCursor() const;
+    Optional<MouseCursor> GetCurrentCursor() const;
 
 //    void Hide();
 //    void Show();
-//    virtual Thickness Padding() const = 0;
-//    virtual Vector2 Origin() const = 0;
-//    virtual Thickness Margin() const = 0;
+//    virtual Thickness GetPadding() const = 0;
+//    virtual Thickness GetMargin() const = 0;
 
 private:
     Matrix3x2 transform;
@@ -103,8 +102,8 @@ private:
     std::weak_ptr<UIElement> weakParent;
     std::int32_t parentDrawOrder;
     std::int32_t localDrawOrder;
-    std::int16_t height;
-    std::int16_t width;
+    int height;
+    int width;
     Optional<MouseCursor> cursor;
     bool isParentDrawOrderDirty;
     bool isParentTransformDirty;

@@ -8,7 +8,9 @@
 namespace Pomdog {
 namespace UI {
 
-class ToggleSwitch: public UIElement, public std::enable_shared_from_this<ToggleSwitch> {
+class ToggleSwitch final
+    : public UIElement
+    , public std::enable_shared_from_this<ToggleSwitch> {
 public:
     explicit ToggleSwitch(const std::shared_ptr<UIEventDispatcher>& dispatcher);
 
@@ -16,16 +18,16 @@ public:
     void IsOn(bool isOn);
 
     bool IsEnabled() const;
-    void IsEnabled(bool isEnabled);
+    void SetEnabled(bool isEnabled);
 
-    std::string OnContent() const;
-    void OnContent(const std::string& onContent);
+    std::string GetOnContent() const;
+    void SetOnContent(const std::string& onContent);
 
-    std::string OffContent() const;
-    void OffContent(const std::string& offContent);
+    std::string GetOffContent() const;
+    void SetOffContent(const std::string& offContent);
 
-    UI::HorizontalAlignment HorizontalAlignment() const override { return UI::HorizontalAlignment::Stretch; }
-    UI::VerticalAlignment VerticalAlignment() const override { return UI::VerticalAlignment::Top; }
+    HorizontalAlignment GetHorizontalAlignment() const noexcept override;
+    VerticalAlignment GetVerticalAlignment() const noexcept override;
 
     void OnEnter() override;
 
@@ -43,12 +45,12 @@ public:
 private:
     class ToggleSwitchButton {
     public:
-        ToggleSwitchButton(std::uint16_t width, std::uint16_t height);
+        ToggleSwitchButton(int width, int height);
 
         void Draw(DrawingContext & drawingContext, bool isOn, bool isEnabled);
 
-        std::uint16_t Width;
-        std::uint16_t Height;
+        int Width;
+        int Height;
     };
 
     ToggleSwitchButton button;

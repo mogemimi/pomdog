@@ -20,13 +20,15 @@ struct SliderColorScheme {
     Color FocusedThumbColor {229, 20, 0, 255};
 };
 
-class Slider: public UIElement, public std::enable_shared_from_this<Slider> {
+class Slider final
+    : public UIElement
+    , public std::enable_shared_from_this<Slider> {
 private:
     double minimum;
     double maximum;
     double value;
 
-    struct ColorAnimation {
+    struct ColorAnimation final {
         Color startColor;
         Color targetColor;
         float duration = 1;
@@ -57,18 +59,18 @@ public:
         double minimum,
         double maximum);
 
-    void Value(double valueIn);
-    double Value() const;
+    void SetValue(double valueIn);
+    double GetValue() const;
 
-    double Minimum() const;
-    double Maximum() const;
+    double GetMinimum() const;
+    double GetMaximum() const;
 
     bool IsEnabled() const;
-    void IsEnabled(bool isEnabled);
+    void SetEnabled(bool isEnabled);
 
-    UI::VerticalAlignment VerticalAlignment() const override { return UI::VerticalAlignment::Top; }
+    VerticalAlignment GetVerticalAlignment() const noexcept override;
 
-    bool SizeToFitContent() const override { return false; }
+    bool SizeToFitContent() const override;
 
     void OnEnter() override;
 

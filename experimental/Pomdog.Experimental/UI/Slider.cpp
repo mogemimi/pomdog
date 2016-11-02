@@ -9,13 +9,18 @@
 namespace Pomdog {
 namespace UI {
 
-Slider::Slider(const std::shared_ptr<UIEventDispatcher>& dispatcher,
-    double minimumIn, double maximumIn)
+Slider::Slider(
+    const std::shared_ptr<UIEventDispatcher>& dispatcher,
+    double minimumIn,
+    double maximumIn)
     : Slider(dispatcher, SliderColorScheme{}, minimumIn, maximumIn)
 {}
 
-Slider::Slider(const std::shared_ptr<UIEventDispatcher>& dispatcher,
-    const SliderColorScheme& colorSchemeIn, double minimumIn, double maximumIn)
+Slider::Slider(
+    const std::shared_ptr<UIEventDispatcher>& dispatcher,
+    const SliderColorScheme& colorSchemeIn,
+    double minimumIn,
+    double maximumIn)
     : UIElement(dispatcher)
     , minimum(minimumIn)
     , maximum(maximumIn)
@@ -37,7 +42,7 @@ Slider::Slider(const std::shared_ptr<UIEventDispatcher>& dispatcher,
 
 // MARK: - Properties
 
-void Slider::Value(double valueIn)
+void Slider::SetValue(double valueIn)
 {
     if (value == valueIn) {
         return;
@@ -46,19 +51,27 @@ void Slider::Value(double valueIn)
     ValueChanged(this->value);
 }
 
-double Slider::Value() const
-{ return value; }
+double Slider::GetValue() const
+{
+    return value;
+}
 
-double Slider::Minimum() const
-{ return minimum; }
+double Slider::GetMinimum() const
+{
+    return minimum;
+}
 
-double Slider::Maximum() const
-{ return maximum; }
+double Slider::GetMaximum() const
+{
+    return maximum;
+}
 
 bool Slider::IsEnabled() const
-{ return isEnabled; }
+{
+    return isEnabled;
+}
 
-void Slider::IsEnabled(bool isEnabledIn)
+void Slider::SetEnabled(bool isEnabledIn)
 {
     this->isEnabled = isEnabledIn;
     if (isEnabled) {
@@ -69,11 +82,21 @@ void Slider::IsEnabled(bool isEnabledIn)
     }
 }
 
+VerticalAlignment Slider::GetVerticalAlignment() const noexcept
+{
+    return UI::VerticalAlignment::Top;
+}
+
+bool Slider::SizeToFitContent() const
+{
+    return false;
+}
+
 // MARK: - Events
 
 void Slider::OnEnter()
 {
-    auto dispatcher = Dispatcher();
+    auto dispatcher = GetDispatcher();
     connection = dispatcher->Connect(shared_from_this());
 }
 
@@ -112,14 +135,14 @@ void Slider::OnPointerPressed(const PointerPoint& pointerPoint)
         return;
     }
 
-    POMDOG_ASSERT(Width() > 0);
+    POMDOG_ASSERT(GetWidth() > 0);
 
     // NOTE: float thumbOffset = thumbWidth / 2
     constexpr float thumbOffset = 5;
 
-    auto pointInView = UIHelper::ConvertToChildSpace(pointerPoint.Position, GlobalTransform());
-    auto amount = (pointInView.X - thumbOffset / 2) / (Width() - 2 * thumbOffset);
-    Value(MathHelper::Clamp(amount * (maximum - minimum) + minimum, minimum, maximum));
+    auto pointInView = UIHelper::ConvertToChildSpace(pointerPoint.Position, GetGlobalTransform());
+    auto amount = (pointInView.X - thumbOffset / 2) / (GetWidth() - 2 * thumbOffset);
+    SetValue(MathHelper::Clamp(amount * (maximum - minimum) + minimum, minimum, maximum));
     isDragging = true;
 }
 
@@ -133,14 +156,14 @@ void Slider::OnPointerMoved(const PointerPoint& pointerPoint)
         return;
     }
 
-    POMDOG_ASSERT(Width() > 0);
+    POMDOG_ASSERT(GetWidth() > 0);
 
     // NOTE: float thumbOffset = thumbWidth / 2
     constexpr float thumbOffset = 5;
 
-    auto pointInView = UIHelper::ConvertToChildSpace(pointerPoint.Position, GlobalTransform());
-    auto amount = (pointInView.X - thumbOffset / 2) / (Width() - 2 * thumbOffset);
-    Value(MathHelper::Clamp(amount * (maximum - minimum) + minimum, minimum, maximum));
+    auto pointInView = UIHelper::ConvertToChildSpace(pointerPoint.Position, GetGlobalTransform());
+    auto amount = (pointInView.X - thumbOffset / 2) / (GetWidth() - 2 * thumbOffset);
+    SetValue(MathHelper::Clamp(amount * (maximum - minimum) + minimum, minimum, maximum));
 }
 
 void Slider::OnPointerReleased(const PointerPoint& pointerPoint)
@@ -177,32 +200,30 @@ void Slider::Draw(DrawingContext & drawingContext)
     POMDOG_ASSERT(value >= minimum);
     POMDOG_ASSERT(value <= maximum);
 
-    auto sliderWidth2 = Width() * ((value - minimum) / (maximum - minimum));
-    auto controlPosition2 = (Width() - Height()) * ((value - minimum) / (maximum - minimum));
+    auto sliderWidth2 = GetWidth() * ((value - minimum) / (maximum - minimum));
+    auto controlPosition2 = (GetWidth() - GetHeight()) * ((value - minimum) / (maximum - minimum));
 
-    auto transform = Transform() * drawingContext.Top();
+    auto transform = GetTransform() * drawingContext.Top();
 
-    drawingContext.DrawString(transform * Matrix3x2::CreateTranslation(Vector2(Width() + 5, -2.5f)),
+    drawingContext.DrawString(transform * Matrix3x2::CreateTranslation(Vector2(GetWidth() + 5, -2.5f)),
         Color::White, FontWeight::Normal, FontSize::Medium, StringHelper::Format("%5.3lf", value));
-    drawingContext.DrawRectangle(transform, trackColor, Rectangle(0, 0, Width(), Height()));
-    drawingContext.DrawRectangle(transform, fillColor, Rectangle(0, 0, sliderWidth2, Height()));
+    drawingContext.DrawRectangle(transform, trackColor, Rectangle(0, 0, GetWidth(), GetHeight()));
+    drawingContext.DrawRectangle(transform, fillColor, Rectangle(0, 0, sliderWidth2, GetHeight()));
 
-    if (isEnabled && isDragging)
-    {
+    if (isEnabled && isDragging) {
         constexpr float pixel = 2.0f;
 
         auto pos = Vector2(controlPosition2 - pixel, -pixel);
-        auto size = Vector2(Height() + 2 * pixel, Height() + 2 * pixel);
+        auto size = Vector2(GetHeight() + 2 * pixel, GetHeight() + 2 * pixel);
 
         drawingContext.DrawRectangle(transform, colorScheme.FocusedThumbColor,
             Rectangle(pos.X, pos.Y, size.X, size.Y));
     }
 
-    if (isEnabled)
-    {
+    if (isEnabled) {
         auto pos = Vector2(controlPosition2, 0);
         drawingContext.DrawRectangle(transform, colorScheme.ThumbColor,
-            Rectangle(pos.X, pos.Y, Height(), Height()));
+            Rectangle(pos.X, pos.Y, GetHeight(), GetHeight()));
     }
 }
 

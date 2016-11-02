@@ -12,14 +12,16 @@
 namespace Pomdog {
 namespace UI {
 
-class StackPanel: public UIElement, public std::enable_shared_from_this<StackPanel> {
+class StackPanel final
+    : public UIElement
+    , public std::enable_shared_from_this<StackPanel> {
 public:
     StackPanel(
         const std::shared_ptr<UIEventDispatcher>& dispatcher,
-        std::uint32_t widthIn,
-        std::uint32_t heightIn);
+        int widthIn,
+        int heightIn);
 
-    bool SizeToFitContent() const override { return false; }
+    bool SizeToFitContent() const override;
 
     void OnEnter() override;
 
@@ -44,7 +46,7 @@ private:
     UIElementCollection children;
     Detail::UIEventConnection connection;
     Thickness padding;
-    std::uint16_t barHeight;
+    int barHeight;
     Optional<Vector2> startTouchPoint;
 };
 

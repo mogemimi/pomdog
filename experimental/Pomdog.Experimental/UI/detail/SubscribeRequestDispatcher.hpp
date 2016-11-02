@@ -10,7 +10,7 @@ namespace UI {
 namespace Detail {
 
 template <class ListenerType>
-class SubscribeRequestDispatcher {
+class SubscribeRequestDispatcher final {
 public:
     void AddChild(const ListenerType& child)
     {

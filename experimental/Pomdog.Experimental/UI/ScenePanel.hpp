@@ -11,13 +11,17 @@
 namespace Pomdog {
 namespace UI {
 
-class ScenePanel: public UIElement, public std::enable_shared_from_this<ScenePanel> {
+class ScenePanel final
+    : public UIElement
+    , public std::enable_shared_from_this<ScenePanel> {
 public:
-    ScenePanel(const std::shared_ptr<UIEventDispatcher>& dispatcher,
-        int widthIn, int heightIn);
+    ScenePanel(
+        const std::shared_ptr<UIEventDispatcher>& dispatcher,
+        int width,
+        int height);
 
     bool IsEnabled() const;
-    void IsEnabled(bool isEnabled);
+    void SetEnabled(bool isEnabled);
 
     bool IsFocused() const;
 

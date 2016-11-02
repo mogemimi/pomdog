@@ -10,9 +10,10 @@
 namespace Pomdog {
 namespace UI {
 
-class DebugNavigator: public UIElement {
+class DebugNavigator final : public UIElement {
 public:
-    DebugNavigator(const std::shared_ptr<UIEventDispatcher>& dispatcher,
+    DebugNavigator(
+        const std::shared_ptr<UIEventDispatcher>& dispatcher,
         const std::shared_ptr<GameClock>& clock);
 
     void Draw(DrawingContext & drawingContext) override;

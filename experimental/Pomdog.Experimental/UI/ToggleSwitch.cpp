@@ -24,17 +24,21 @@ ToggleSwitch::ToggleSwitch(const std::shared_ptr<UIEventDispatcher>& dispatcher)
 // MARK: - Properties
 
 bool ToggleSwitch::IsOn() const
-{ return isOn; }
+{
+    return isOn;
+}
 
 void ToggleSwitch::IsOn(bool isOnIn)
-{ this->isOn = isOnIn; }
+{
+    this->isOn = isOnIn;
+}
 
 bool ToggleSwitch::IsEnabled() const
 {
     return isEnabled;
 }
 
-void ToggleSwitch::IsEnabled(bool isEnabledIn)
+void ToggleSwitch::SetEnabled(bool isEnabledIn)
 {
     this->isEnabled = isEnabledIn;
     if (isEnabled) {
@@ -45,23 +49,41 @@ void ToggleSwitch::IsEnabled(bool isEnabledIn)
     }
 }
 
-std::string ToggleSwitch::OnContent() const
-{ return this->onContent; }
+std::string ToggleSwitch::GetOnContent() const
+{
+    return this->onContent;
+}
 
-void ToggleSwitch::OnContent(const std::string& onContentIn)
-{ this->onContent = onContentIn; }
+void ToggleSwitch::SetOnContent(const std::string& onContentIn)
+{
+    this->onContent = onContentIn;
+}
 
-std::string ToggleSwitch::OffContent() const
-{ return this->offContent; }
+std::string ToggleSwitch::GetOffContent() const
+{
+    return this->offContent;
+}
 
-void ToggleSwitch::OffContent(const std::string& offContentIn)
-{ this->offContent = offContentIn; }
+void ToggleSwitch::SetOffContent(const std::string& offContentIn)
+{
+    this->offContent = offContentIn;
+}
+
+HorizontalAlignment ToggleSwitch::GetHorizontalAlignment() const noexcept
+{
+    return UI::HorizontalAlignment::Stretch;
+}
+
+VerticalAlignment ToggleSwitch::GetVerticalAlignment() const noexcept
+{
+    return UI::VerticalAlignment::Top;
+}
 
 // MARK: - Events
 
 void ToggleSwitch::OnEnter()
 {
-    auto dispatcher = Dispatcher();
+    auto dispatcher = GetDispatcher();
     connection = dispatcher->Connect(shared_from_this());
 }
 
@@ -85,9 +107,9 @@ void ToggleSwitch::OnRenderSizeChanged(int widthIn, int heightIn)
 
 void ToggleSwitch::Draw(DrawingContext & drawingContext)
 {
-    auto transform = Transform() * drawingContext.Top();
+    auto transform = GetTransform() * drawingContext.Top();
 
-    drawingContext.Push(Matrix3x2::CreateTranslation(Vector2(Width() - button.Width, 0.0f)) * transform);
+    drawingContext.Push(Matrix3x2::CreateTranslation(Vector2(GetWidth() - button.Width, 0.0f)) * transform);
     button.Draw(drawingContext, isOn, isEnabled);
     drawingContext.Pop();
 
@@ -101,7 +123,7 @@ void ToggleSwitch::Draw(DrawingContext & drawingContext)
     }
 }
 
-ToggleSwitch::ToggleSwitchButton::ToggleSwitchButton(std::uint16_t widthIn, std::uint16_t heightIn)
+ToggleSwitch::ToggleSwitchButton::ToggleSwitchButton(int widthIn, int heightIn)
     : Width(widthIn)
     , Height(heightIn)
 {
@@ -121,14 +143,12 @@ void ToggleSwitch::ToggleSwitchButton::Draw(DrawingContext & drawingContext, boo
 
     constexpr int lineThickness = 2;
 
-    if (!isEnabledIn)
-    {
+    if (!isEnabledIn) {
         innerColor = disabledInnerColor;
         thumbColor = disabledThumbColor;
     }
 
-    if (isOnIn && isEnabledIn)
-    {
+    if (isOnIn && isEnabledIn) {
         innerColor = toggleOnInnerColor;
     }
 
@@ -140,7 +160,7 @@ void ToggleSwitch::ToggleSwitchButton::Draw(DrawingContext & drawingContext, boo
         Width - (lineThickness * 2 + innerLineThickness * 2),
         Height - (lineThickness * 2 + innerLineThickness * 2)));
 
-    constexpr std::uint16_t thumbWidth = 12;
+    constexpr int thumbWidth = 12;
     if (isOnIn) {
         drawingContext.DrawRectangle(transform, backgroundColor, Rectangle(0, 0, lineThickness, Height));
         drawingContext.DrawRectangle(transform, thumbColor, Rectangle(Width - thumbWidth, 0, thumbWidth, Height));

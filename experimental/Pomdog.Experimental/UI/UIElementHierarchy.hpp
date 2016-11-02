@@ -16,7 +16,7 @@ class DrawingContext;
 class GameEditorView;
 class UIElement;
 
-class UIElementHierarchy {
+class UIElementHierarchy final {
 public:
     explicit UIElementHierarchy(const std::shared_ptr<GameWindow>& window);
 
@@ -32,9 +32,9 @@ public:
 
     void Draw(DrawingContext & drawingContext);
 
-    void RenderSizeChanged(std::uint32_t width, std::uint32_t height);
+    void RenderSizeChanged(int width, int height);
 
-    std::shared_ptr<UIEventDispatcher> Dispatcher() const;
+    std::shared_ptr<UIEventDispatcher> GetDispatcher() const;
 
 private:
     std::vector<std::shared_ptr<UIElement>> children;

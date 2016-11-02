@@ -75,7 +75,7 @@ ScenePanel::ScenePanel(
     , isEnabled(true)
 {
     SetSize(widthIn, heightIn);
-    DrawOrder(10000);
+    SetDrawOrder(10000);
 }
 
 // MARK: - Properties
@@ -85,7 +85,7 @@ bool ScenePanel::IsEnabled() const
     return isEnabled;
 }
 
-void ScenePanel::IsEnabled(bool isEnabledIn)
+void ScenePanel::SetEnabled(bool isEnabledIn)
 {
     this->isEnabled = isEnabledIn;
 }
@@ -99,12 +99,12 @@ bool ScenePanel::IsFocused() const
 
 Vector2 ScenePanel::ConvertToPanelSpace(const Point2D& point) const
 {
-    return Vector2(point.X, Height() - point.Y);
+    return Vector2(point.X, GetHeight() - point.Y);
 }
 
 void ScenePanel::OnEnter()
 {
-    auto dispatcher = Dispatcher();
+    auto dispatcher = GetDispatcher();
     connection = dispatcher->Connect(shared_from_this());
 }
 

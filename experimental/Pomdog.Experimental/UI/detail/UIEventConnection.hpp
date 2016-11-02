@@ -24,7 +24,8 @@ private:
 public:
     UIEventConnection() = default;
 
-    UIEventConnection(const std::weak_ptr<DispatcherType>& weakDispatcherIn,
+    UIEventConnection(
+        const std::weak_ptr<DispatcherType>& weakDispatcherIn,
         const std::weak_ptr<UIElement>& weakListenerIn)
         : weakDispatcher(weakDispatcherIn)
         , weakListener(weakListenerIn)

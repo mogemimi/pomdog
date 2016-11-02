@@ -17,14 +17,24 @@ TextBlock::TextBlock(const std::shared_ptr<UIEventDispatcher>& dispatcher)
 
 // MARK: - Properties
 
-std::string TextBlock::Text() const
+std::string TextBlock::GetText() const
 {
     return this->text;
 }
 
-void TextBlock::Text(const std::string& textIn)
+void TextBlock::SetText(const std::string& textIn)
 {
     this->text = textIn;
+}
+
+HorizontalAlignment TextBlock::GetHorizontalAlignment() const noexcept
+{
+    return UI::HorizontalAlignment::Stretch;
+}
+
+VerticalAlignment TextBlock::GetVerticalAlignment() const noexcept
+{
+    return UI::VerticalAlignment::Top;
 }
 
 // MARK: - Events
@@ -36,7 +46,7 @@ void TextBlock::OnRenderSizeChanged(int widthIn, int heightIn)
 
 void TextBlock::Draw(DrawingContext & drawingContext)
 {
-    auto transform = Transform() * drawingContext.Top();
+    auto transform = GetTransform() * drawingContext.Top();
 
     drawingContext.DrawString(transform, Color::White, FontWeight::Normal, FontSize::Medium, text);
 }

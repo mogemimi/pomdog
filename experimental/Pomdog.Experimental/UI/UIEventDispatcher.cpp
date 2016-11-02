@@ -11,16 +11,16 @@ namespace {
 
 bool Intersects(const Point2D& position, UIElement & element)
 {
-    auto bounds = element.Bounds();
-    auto positionInChild = UIHelper::ConvertToChildSpace(position, element.GlobalTransform());
+    auto bounds = element.GetBounds();
+    auto positionInChild = UIHelper::ConvertToChildSpace(position, element.GetGlobalTransform());
     return bounds.Contains(positionInChild);
 }
 
-std::shared_ptr<UIElement> Find(const Point2D& position,
+std::shared_ptr<UIElement> Find(
+    const Point2D& position,
     const std::vector<std::weak_ptr<UIElement>>& children)
 {
-    for (auto & weakChild: children)
-    {
+    for (auto & weakChild : children) {
         auto child = weakChild.lock();
         if (child && Intersects(position, *child)) {
             return child;
@@ -37,16 +37,13 @@ UIEventDispatcher::UIEventDispatcher(const std::shared_ptr<GameWindow>& windowIn
 
 void UIEventDispatcher::UpdateChildren()
 {
-    if (!subscribeRequests.Added.empty())
-    {
+    if (!subscribeRequests.Added.empty()) {
         children.insert(std::end(children), std::begin(subscribeRequests.Added), std::end(subscribeRequests.Added));
         subscribeRequests.Added.clear();
     }
 
-    if (!subscribeRequests.Removed.empty())
-    {
-        for (auto & weakChild: subscribeRequests.Removed)
-        {
+    if (!subscribeRequests.Removed.empty()) {
+        for (auto & weakChild: subscribeRequests.Removed) {
             if (weakChild.expired()) {
                 continue;
             }
@@ -73,10 +70,8 @@ void UIEventDispatcher::Touch(const MouseState& mouseState)
 {
     auto const position = mouseState.Position;
 
-    if (!pointerState)
-    {
-        if (auto node = Find(position, children))
-        {
+    if (!pointerState) {
+        if (auto node = Find(position, children)) {
             POMDOG_ASSERT(!pointerState);
             PointerEntered(position, mouseState, node);
         }
@@ -148,8 +143,10 @@ void UIEventDispatcher::Touch(const MouseState& mouseState)
     }
 }
 
-void UIEventDispatcher::PointerEntered(const Point2D& position,
-    const MouseState& mouseState, const std::shared_ptr<UIElement>& node)
+void UIEventDispatcher::PointerEntered(
+    const Point2D& position,
+    const MouseState& mouseState,
+    const std::shared_ptr<UIElement>& node)
 {
     POMDOG_ASSERT(!pointerState);
     pointerState = std::make_unique<PointerState>();
@@ -161,8 +158,8 @@ void UIEventDispatcher::PointerEntered(const Point2D& position,
     pointerState->PrevScrollWheel = mouseState.ScrollWheel;
 
     node->OnPointerEntered(pointerState->pointerPoint);
-    if (node->CurrentCursor()) {
-        window->SetMouseCursor(*node->CurrentCursor());
+    if (node->GetCurrentCursor()) {
+        window->SetMouseCursor(*node->GetCurrentCursor());
     }
     else {
         window->SetMouseCursor(MouseCursor::Arrow);
@@ -252,8 +249,7 @@ Detail::UIEventConnection UIEventDispatcher::Connect(const std::weak_ptr<UIEleme
 
 void UIEventDispatcher::UpdateAnimation(const Duration& frameDuration)
 {
-    for (auto & weakChild: children)
-    {
+    for (auto & weakChild : children) {
         if (auto child = weakChild.lock()) {
             child->UpdateAnimation(frameDuration);
         }
@@ -282,7 +278,8 @@ Optional<UI::PointerMouseEvent> UIEventDispatcher::FindPointerMouseEvent(
     return Pomdog::NullOpt;
 }
 
-ButtonState UIEventDispatcher::CheckMouseButton(const MouseState& mouseState,
+ButtonState UIEventDispatcher::CheckMouseButton(
+    const MouseState& mouseState,
     const UI::PointerMouseEvent& pointerMouseEvent) const
 {
     using Pomdog::UI::PointerMouseEvent;
@@ -320,7 +317,7 @@ void UIEventDispatcher::Sort()
             if (!sharedB) {
                 return true;
             }
-            return sharedA->GlobalDrawOrder() < sharedB->GlobalDrawOrder();
+            return sharedA->GetGlobalDrawOrder() < sharedB->GetGlobalDrawOrder();
         });
 }
 

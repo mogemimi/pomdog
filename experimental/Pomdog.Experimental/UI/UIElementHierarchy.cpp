@@ -12,7 +12,7 @@ UIElementHierarchy::UIElementHierarchy(const std::shared_ptr<GameWindow>& window
 {
 }
 
-std::shared_ptr<UIEventDispatcher> UIElementHierarchy::Dispatcher() const
+std::shared_ptr<UIEventDispatcher> UIElementHierarchy::GetDispatcher() const
 {
     POMDOG_ASSERT(dispatcher);
     return dispatcher;
@@ -27,7 +27,7 @@ void UIElementHierarchy::Touch(const MouseState& mouseState)
 
 void UIElementHierarchy::UpdateLayout()
 {
-    for (auto & child: children) {
+    for (auto & child : children) {
         POMDOG_ASSERT(child);
         child->UpdateTransform();
     }
@@ -36,7 +36,7 @@ void UIElementHierarchy::UpdateLayout()
 void UIElementHierarchy::AddChild(const std::shared_ptr<UIElement>& element)
 {
     POMDOG_ASSERT(element);
-    POMDOG_ASSERT(!element->Parent());
+    POMDOG_ASSERT(!element->GetParent());
     children.push_back(element);
     element->OnEnter();
 }
@@ -44,7 +44,7 @@ void UIElementHierarchy::AddChild(const std::shared_ptr<UIElement>& element)
 void UIElementHierarchy::AddChild(std::shared_ptr<UIElement> && element)
 {
     POMDOG_ASSERT(element);
-    POMDOG_ASSERT(!element->Parent());
+    POMDOG_ASSERT(!element->GetParent());
     children.push_back(element);
     element->OnEnter();
 }
@@ -61,7 +61,7 @@ void UIElementHierarchy::Draw(DrawingContext & drawingContext)
 
     drawingContext.Push(Matrix3x2::Identity);
 
-    for (auto & child: children) {
+    for (auto & child : children) {
         POMDOG_ASSERT(child);
         child->Draw(drawingContext);
     }
@@ -69,9 +69,9 @@ void UIElementHierarchy::Draw(DrawingContext & drawingContext)
     drawingContext.Pop();
 }
 
-void UIElementHierarchy::RenderSizeChanged(std::uint32_t width, std::uint32_t height)
+void UIElementHierarchy::RenderSizeChanged(int width, int height)
 {
-    for (auto & child: children) {
+    for (auto & child : children) {
         POMDOG_ASSERT(child);
         if (child->SizeToFitContent()) {
             child->OnRenderSizeChanged(width, height);

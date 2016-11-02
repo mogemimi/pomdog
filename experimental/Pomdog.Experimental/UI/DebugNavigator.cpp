@@ -6,7 +6,8 @@
 namespace Pomdog {
 namespace UI {
 
-DebugNavigator::DebugNavigator(const std::shared_ptr<UIEventDispatcher>& dispatcher,
+DebugNavigator::DebugNavigator(
+    const std::shared_ptr<UIEventDispatcher>& dispatcher,
     const std::shared_ptr<GameClock>& clockIn)
     : UIElement(dispatcher)
     , clock(clockIn)
@@ -20,36 +21,33 @@ void DebugNavigator::Draw(DrawingContext & drawingContext)
 {
     constexpr float minFramerate = 10.0f;
     constexpr float maxFramerate = 60.0f;
-    constexpr std::uint16_t maxHistories = 20;
+    constexpr std::size_t maxHistories = 20;
 
     {
-        if (clock->GetTotalGameTime() - duration > Duration(0.2))
-        {
+        if (clock->GetTotalGameTime() - duration > Duration(0.2)) {
             auto frameRate = clock->GetFrameRate();
             frameRateString = StringHelper::Format("%4.2f fps", frameRate);
             frameRates.push_back(std::round(MathHelper::Clamp(frameRate, minFramerate, maxFramerate)));
 
-            if (frameRates.size() > maxHistories)
-            {
+            if (frameRates.size() > maxHistories) {
                 frameRates.pop_front();
             }
             duration = clock->GetTotalGameTime();
         }
     }
 
-    auto transform = Transform() * drawingContext.Top();
+    auto transform = GetTransform() * drawingContext.Top();
     {
         auto graphTransform = Matrix3x2::CreateTranslation(Vector2{0, 16}) * transform;
 
         constexpr std::uint16_t maxGraphHeight = 26;
         constexpr float graphMarginLeft = 1.0f;
 
-        auto graghWidth = (static_cast<float>(Width()) / maxHistories);
+        auto graghWidth = (static_cast<float>(GetWidth()) / maxHistories);
 
         std::int32_t startPosition = graghWidth * (maxHistories - frameRates.size());
         std::int32_t graphX = startPosition;
-        for (auto & frameRate: frameRates)
-        {
+        for (auto & frameRate : frameRates) {
             auto amount = ((frameRate - minFramerate) / (maxFramerate - minFramerate));
             auto graphHeight = MathHelper::Clamp<std::uint16_t>(maxGraphHeight * amount, 1, maxGraphHeight);
 

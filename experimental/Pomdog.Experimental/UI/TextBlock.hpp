@@ -8,15 +8,17 @@
 namespace Pomdog {
 namespace UI {
 
-class TextBlock: public UIElement, public std::enable_shared_from_this<TextBlock> {
+class TextBlock final
+    : public UIElement
+    , public std::enable_shared_from_this<TextBlock> {
 public:
     explicit TextBlock(const std::shared_ptr<UIEventDispatcher>& dispatcher);
 
-    std::string Text() const;
-    void Text(const std::string& text);
+    std::string GetText() const;
+    void SetText(const std::string& text);
 
-    UI::HorizontalAlignment HorizontalAlignment() const override { return UI::HorizontalAlignment::Stretch; }
-    UI::VerticalAlignment VerticalAlignment() const override { return UI::VerticalAlignment::Top; }
+    HorizontalAlignment GetHorizontalAlignment() const noexcept override;
+    VerticalAlignment GetVerticalAlignment() const noexcept override;
 
     void OnRenderSizeChanged(int width, int height) override;
 
