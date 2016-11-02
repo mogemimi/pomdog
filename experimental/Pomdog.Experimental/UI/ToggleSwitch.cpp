@@ -28,7 +28,7 @@ bool ToggleSwitch::IsOn() const
     return isOn;
 }
 
-void ToggleSwitch::IsOn(bool isOnIn)
+void ToggleSwitch::SetOn(bool isOnIn)
 {
     this->isOn = isOnIn;
 }

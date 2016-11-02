@@ -15,7 +15,7 @@ public:
     explicit ToggleSwitch(const std::shared_ptr<UIEventDispatcher>& dispatcher);
 
     bool IsOn() const;
-    void IsOn(bool isOn);
+    void SetOn(bool isOn);
 
     bool IsEnabled() const;
     void SetEnabled(bool isEnabled);
