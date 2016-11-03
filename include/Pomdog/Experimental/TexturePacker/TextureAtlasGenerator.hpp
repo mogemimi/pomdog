@@ -17,6 +17,7 @@ namespace TexturePacker {
 struct POMDOG_EXPORT TextureAtlasGeneratorResult final {
     std::shared_ptr<Image> Image;
     TextureAtlas Atlas;
+    bool HasError;
 };
 
 struct POMDOG_EXPORT TextureAtlasGeneratorSource final {

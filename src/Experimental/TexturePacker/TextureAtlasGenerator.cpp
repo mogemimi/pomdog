@@ -169,7 +169,7 @@ TextureAtlasGeneratorResult TextureAtlasGenerator::Generate(
         POMDOG_ASSERT(regions.at(indices[source.Image]).Name == source.Name);
     }
 
-    bool hasError = false;
+    result.HasError = false;
 
     auto root = std::make_shared<TexturePackNode>(Rectangle{0, 0, width, height});
 
@@ -180,8 +180,10 @@ TextureAtlasGeneratorResult TextureAtlasGenerator::Generate(
         POMDOG_ASSERT(node);
         if (!node) {
             // TODO: error handling
-            hasError = true;
+            result.HasError = true;
+        #if defined(DEBUG)
             std::printf("Cannot pack the texture '%s'", regions[indices[image]].Name.c_str());
+        #endif
             break;
         }
         node->image = image;
