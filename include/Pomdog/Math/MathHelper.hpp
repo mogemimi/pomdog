@@ -4,6 +4,7 @@
 
 #include "Pomdog/Math/Degree.hpp"
 #include "Pomdog/Math/Radian.hpp"
+#include "Pomdog/Basic/Export.hpp"
 #include <type_traits>
 
 namespace Pomdog {
@@ -123,6 +124,14 @@ Degree<T> ToDegrees(const T& radians) noexcept
     constexpr auto scaleFactor = T{180} * (T{1} / MathConstants<T>::Pi());
     return Degree<T>(radians * scaleFactor);
 }
+
+POMDOG_EXPORT Point2D ToPoint2D(const Vector2& vec) noexcept;
+
+POMDOG_EXPORT Vector2 ToVector2(const Point2D& point) noexcept;
+
+POMDOG_EXPORT Point3D ToPoint3D(const Vector3& vec) noexcept;
+
+POMDOG_EXPORT Vector3 ToVector3(const Point3D& point) noexcept;
 
 } // namespace MathHelper
 } // namespace Pomdog
