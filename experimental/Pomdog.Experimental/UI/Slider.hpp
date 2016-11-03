@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "UIElement.hpp"
-#include "detail/UIEventConnection.hpp"
+#include "Pomdog.Experimental/UI/UIElement.hpp"
+#include "Pomdog.Experimental/UI/detail/UIEventConnection.hpp"
 #include "Pomdog/Utility/Optional.hpp"
 #include <Pomdog/Pomdog.hpp>
 

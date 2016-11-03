@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
 
-#include "ScenePanel.hpp"
-#include "PointerPoint.hpp"
-#include "UIEventDispatcher.hpp"
+#include "Pomdog.Experimental/UI/ScenePanel.hpp"
+#include "Pomdog.Experimental/UI/PointerPoint.hpp"
+#include "Pomdog.Experimental/UI/UIEventDispatcher.hpp"
 #include "Pomdog.Experimental/Gameplay2D/Transform.hpp"
 #include "Pomdog.Experimental/Gameplay2D/CameraComponent.hpp"
 

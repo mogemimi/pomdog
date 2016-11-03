@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "SubscribeRequestDispatcher.hpp"
+#include "Pomdog.Experimental/UI/detail/SubscribeRequestDispatcher.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <memory>
 #include <utility>

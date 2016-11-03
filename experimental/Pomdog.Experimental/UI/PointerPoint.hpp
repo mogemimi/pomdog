@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "PointerEventType.hpp"
+#include "Pomdog.Experimental/UI/PointerEventType.hpp"
 #include "Pomdog/Utility/Optional.hpp"
 #include <cstdint>
 

@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "UIElement.hpp"
-#include "Thickness.hpp"
-#include "detail/UIEventConnection.hpp"
+#include "Pomdog.Experimental/UI/UIElement.hpp"
+#include "Pomdog.Experimental/UI/Thickness.hpp"
+#include "Pomdog.Experimental/UI/detail/UIEventConnection.hpp"
 #include "Pomdog/Utility/Optional.hpp"
 #include <Pomdog/Pomdog.hpp>
 #include <list>

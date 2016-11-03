@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "HorizontalAlignment.hpp"
-#include "VerticalAlignment.hpp"
+#include "Pomdog.Experimental/UI/HorizontalAlignment.hpp"
+#include "Pomdog.Experimental/UI/VerticalAlignment.hpp"
 #include "Pomdog/Application/MouseCursor.hpp"
 #include "Pomdog/Math/Matrix3x2.hpp"
 #include "Pomdog/Math/Vector2.hpp"

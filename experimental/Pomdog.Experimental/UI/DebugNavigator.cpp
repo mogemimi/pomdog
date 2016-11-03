@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
 
-#include "DebugNavigator.hpp"
-#include "DrawingContext.hpp"
+#include "Pomdog.Experimental/UI/DebugNavigator.hpp"
+#include "Pomdog.Experimental/UI/DrawingContext.hpp"
 
 namespace Pomdog {
 namespace UI {
