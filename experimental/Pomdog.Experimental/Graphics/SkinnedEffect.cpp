@@ -89,19 +89,19 @@ SkinnedEffect::SkinnedEffect(GraphicsDevice & graphicsDevice,
 
 SkinnedEffect::~SkinnedEffect() = default;
 
-void SkinnedEffect::SetWorldViewProjection(Matrix4x4 const& worldViewProjectionIn)
+void SkinnedEffect::SetWorldViewProjection(const Matrix4x4& worldViewProjectionIn)
 {
     POMDOG_ASSERT(impl);
     impl->worldViewProjection = worldViewProjectionIn;
 }
 
-void SkinnedEffect::SetTexture(std::shared_ptr<Texture2D> const& textureIn)
+void SkinnedEffect::SetTexture(const std::shared_ptr<Texture2D>& textureIn)
 {
     POMDOG_ASSERT(impl);
     impl->texture = textureIn;
 }
 
-void SkinnedEffect::SetColor(Color const& colorIn)
+void SkinnedEffect::SetColor(const Color& colorIn)
 {
     POMDOG_ASSERT(impl);
     impl->color = colorIn;

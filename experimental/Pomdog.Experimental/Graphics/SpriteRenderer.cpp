@@ -85,32 +85,32 @@ private:
 
 public:
     Impl(
-        std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
         AssetManager & assets);
 
-    void ResetProjectionMatrix(Matrix4x4 const& projectionMatrix);
+    void ResetProjectionMatrix(const Matrix4x4& projectionMatrix);
 
     void Begin(SpriteSortMode sortMode);
 
-    void Begin(SpriteSortMode sortMode, Matrix4x4 const& transformMatrix);
+    void Begin(SpriteSortMode sortMode, const Matrix4x4& transformMatrix);
 
-    void Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
-        Vector2 const& position, Color const& color,
-        Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth);
+    void Draw(const std::shared_ptr<Texture2D>& texture, const Matrix3x2& worldMatrix,
+        const Vector2& position, const Color& color,
+        const Radian<float>& rotation, const Vector2& originPivot, const Vector2& scale, float layerDepth);
 
-    void Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
-        Vector2 const& position, Rectangle const& sourceRect, Color const& color,
-        Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth);
+    void Draw(const std::shared_ptr<Texture2D>& texture, const Matrix3x2& worldMatrix,
+        const Vector2& position, const Rectangle& sourceRect, const Color& color,
+        const Radian<float>& rotation, const Vector2& originPivot, const Vector2& scale, float layerDepth);
 
     void End();
 
 private:
     void Flush();
-    void DrawInstance(std::shared_ptr<Texture2D> const& texture, std::vector<SpriteInfo> const& sprites);
+    void DrawInstance(const std::shared_ptr<Texture2D>& texture, const std::vector<SpriteInfo>& sprites);
 };
 
 SpriteRenderer::Impl::Impl(
-    std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
     AssetManager & assets)
     : graphicsContext(graphicsContextIn)
     , sortMode(SpriteSortMode::BackToFront)
@@ -178,7 +178,7 @@ SpriteRenderer::Impl::Impl(
     }
 }
 
-void SpriteRenderer::Impl::ResetProjectionMatrix(Matrix4x4 const& projectionMatrixIn)
+void SpriteRenderer::Impl::ResetProjectionMatrix(const Matrix4x4& projectionMatrixIn)
 {
     this->projectionMatrix = projectionMatrixIn;
 }
@@ -193,7 +193,7 @@ void SpriteRenderer::Impl::Begin(SpriteSortMode sortModeIn)
     parameter->SetValue(projection);
 }
 
-void SpriteRenderer::Impl::Begin(SpriteSortMode sortModeIn, Matrix4x4 const& transformMatrix)
+void SpriteRenderer::Impl::Begin(SpriteSortMode sortModeIn, const Matrix4x4& transformMatrix)
 {
     this->sortMode = sortModeIn;
 
@@ -225,12 +225,12 @@ void SpriteRenderer::Impl::Flush()
 
         switch (sortMode) {
         case SpriteSortMode::BackToFront:
-            std::sort(std::begin(sprites), std::end(sprites), [](SpriteInfo const& a, SpriteInfo const& b) {
+            std::sort(std::begin(sprites), std::end(sprites), [](const SpriteInfo& a, const SpriteInfo& b) {
                 return a.TransformMatrix2.Z > b.TransformMatrix2.Z;
             });
             break;
         case SpriteSortMode::FrontToBack:
-            std::sort(std::begin(sprites), std::end(sprites), [](SpriteInfo const& a, SpriteInfo const& b) {
+            std::sort(std::begin(sprites), std::end(sprites), [](const SpriteInfo& a, const SpriteInfo& b) {
                 return a.TransformMatrix2.Z < b.TransformMatrix2.Z;
             });
             break;
@@ -246,7 +246,7 @@ void SpriteRenderer::Impl::Flush()
     spriteQueues.clear();
 }
 
-void SpriteRenderer::Impl::DrawInstance(std::shared_ptr<Texture2D> const& texture, std::vector<SpriteInfo> const& sprites)
+void SpriteRenderer::Impl::DrawInstance(const std::shared_ptr<Texture2D>& texture, const std::vector<SpriteInfo>& sprites)
 {
     POMDOG_ASSERT(texture);
     POMDOG_ASSERT(sprites.size() <= MaxBatchSize);
@@ -276,9 +276,9 @@ void SpriteRenderer::Impl::DrawInstance(std::shared_ptr<Texture2D> const& textur
         planeIndices, planeIndices->GetIndexCount(), sprites.size());
 }
 
-void SpriteRenderer::Impl::Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
-    Vector2 const& position, Color const& color,
-    Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth)
+void SpriteRenderer::Impl::Draw(const std::shared_ptr<Texture2D>& texture, const Matrix3x2& worldMatrix,
+    const Vector2& position, const Color& color,
+    const Radian<float>& rotation, const Vector2& originPivot, const Vector2& scale, float layerDepth)
 {
     if (scale.X == 0.0f || scale.Y == 0.0f) {
         return;
@@ -311,9 +311,9 @@ void SpriteRenderer::Impl::Draw(std::shared_ptr<Texture2D> const& texture, Matri
     POMDOG_ASSERT(spriteQueues.size() <= MaxBatchSize);
 }
 
-void SpriteRenderer::Impl::Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
-    Vector2 const& position, Rectangle const& sourceRect, Color const& color,
-    Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth)
+void SpriteRenderer::Impl::Draw(const std::shared_ptr<Texture2D>& texture, const Matrix3x2& worldMatrix,
+    const Vector2& position, const Rectangle& sourceRect, const Color& color,
+    const Radian<float>& rotation, const Vector2& originPivot, const Vector2& scale, float layerDepth)
 {
     if (scale.X == 0.0f || scale.Y == 0.0f) {
         return;
@@ -352,14 +352,14 @@ void SpriteRenderer::Impl::Draw(std::shared_ptr<Texture2D> const& texture, Matri
 // MARK: - SpriteRenderer
 
 SpriteRenderer::SpriteRenderer(
-    std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
     AssetManager & assets)
     : impl(std::make_unique<Impl>(graphicsContext, graphicsDevice, assets))
 {}
 
 SpriteRenderer::~SpriteRenderer() = default;
 
-void SpriteRenderer::SetProjectionMatrix(Matrix4x4 const& projectionMatrix)
+void SpriteRenderer::SetProjectionMatrix(const Matrix4x4& projectionMatrix)
 {
     POMDOG_ASSERT(impl);
     impl->ResetProjectionMatrix(projectionMatrix);
@@ -371,7 +371,7 @@ void SpriteRenderer::Begin(SpriteSortMode sortMode)
     impl->Begin(sortMode);
 }
 
-void SpriteRenderer::Begin(SpriteSortMode sortMode, Matrix4x4 const& transformMatrixIn)
+void SpriteRenderer::Begin(SpriteSortMode sortMode, const Matrix4x4& transformMatrixIn)
 {
     POMDOG_ASSERT(impl);
     impl->Begin(sortMode, transformMatrixIn);
@@ -383,38 +383,38 @@ void SpriteRenderer::End()
     impl->End();
 }
 
-void SpriteRenderer::Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
-    Rectangle const& sourceRect, Color const& color)
+void SpriteRenderer::Draw(const std::shared_ptr<Texture2D>& texture, const Matrix3x2& worldMatrix,
+    const Rectangle& sourceRect, const Color& color)
 {
     POMDOG_ASSERT(impl);
     impl->Draw(texture, worldMatrix, {0, 0}, sourceRect, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, 0.0f);
 }
 
-void SpriteRenderer::Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
-    Vector2 const& position, Color const& color)
+void SpriteRenderer::Draw(const std::shared_ptr<Texture2D>& texture, const Matrix3x2& worldMatrix,
+    const Vector2& position, const Color& color)
 {
     POMDOG_ASSERT(impl);
     impl->Draw(texture, worldMatrix, position, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, 0.0f);
 }
 
-void SpriteRenderer::Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
-    Vector2 const& position, Rectangle const& sourceRect, Color const& color)
+void SpriteRenderer::Draw(const std::shared_ptr<Texture2D>& texture, const Matrix3x2& worldMatrix,
+    const Vector2& position, const Rectangle& sourceRect, const Color& color)
 {
     POMDOG_ASSERT(impl);
     impl->Draw(texture, worldMatrix, position, sourceRect, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, 0.0f);
 }
 
-void SpriteRenderer::Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
-    Vector2 const& position, Rectangle const& sourceRect, Color const& color,
-    Radian<float> const& rotation, Vector2 const& originPivot, float scale, float layerDepth)
+void SpriteRenderer::Draw(const std::shared_ptr<Texture2D>& texture, const Matrix3x2& worldMatrix,
+    const Vector2& position, const Rectangle& sourceRect, const Color& color,
+    const Radian<float>& rotation, const Vector2& originPivot, float scale, float layerDepth)
 {
     POMDOG_ASSERT(impl);
     impl->Draw(texture, worldMatrix, position, sourceRect, color, rotation, originPivot, {scale, scale}, layerDepth);
 }
 
-void SpriteRenderer::Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
-    Vector2 const& position, Rectangle const& sourceRect, Color const& color,
-    Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth)
+void SpriteRenderer::Draw(const std::shared_ptr<Texture2D>& texture, const Matrix3x2& worldMatrix,
+    const Vector2& position, const Rectangle& sourceRect, const Color& color,
+    const Radian<float>& rotation, const Vector2& originPivot, const Vector2& scale, float layerDepth)
 {
     POMDOG_ASSERT(impl);
     impl->Draw(texture, worldMatrix, position, sourceRect, color, rotation, originPivot, scale, layerDepth);

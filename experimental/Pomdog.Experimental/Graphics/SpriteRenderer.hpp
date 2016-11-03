@@ -19,33 +19,33 @@ namespace Pomdog {
 class SpriteRenderer {
 public:
     SpriteRenderer(
-        std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
         AssetManager & assets);
 
     ~SpriteRenderer();
 
-    void SetProjectionMatrix(Matrix4x4 const& projectionMatrix);
+    void SetProjectionMatrix(const Matrix4x4& projectionMatrix);
 
     void Begin(SpriteSortMode sortMode);
 
-    void Begin(SpriteSortMode sortMode, Matrix4x4 const& transformMatrix);
+    void Begin(SpriteSortMode sortMode, const Matrix4x4& transformMatrix);
 
-    void Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
-        Rectangle const& sourceRect, Color const& color);
+    void Draw(const std::shared_ptr<Texture2D>& texture, const Matrix3x2& worldMatrix,
+        const Rectangle& sourceRect, const Color& color);
 
-    void Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
-        Vector2 const& position, Color const& color);
+    void Draw(const std::shared_ptr<Texture2D>& texture, const Matrix3x2& worldMatrix,
+        const Vector2& position, const Color& color);
 
-    void Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
-        Vector2 const& position, Rectangle const& sourceRect, Color const& color);
+    void Draw(const std::shared_ptr<Texture2D>& texture, const Matrix3x2& worldMatrix,
+        const Vector2& position, const Rectangle& sourceRect, const Color& color);
 
-    void Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
-        Vector2 const& position, Rectangle const& sourceRect, Color const& color,
-        Radian<float> const& rotation, Vector2 const& originPivot, float scale, float layerDepth);
+    void Draw(const std::shared_ptr<Texture2D>& texture, const Matrix3x2& worldMatrix,
+        const Vector2& position, const Rectangle& sourceRect, const Color& color,
+        const Radian<float>& rotation, const Vector2& originPivot, float scale, float layerDepth);
 
-    void Draw(std::shared_ptr<Texture2D> const& texture, Matrix3x2 const& worldMatrix,
-        Vector2 const& position, Rectangle const& sourceRect, Color const& color,
-        Radian<float> const& rotation, Vector2 const& originPivot, Vector2 const& scale, float layerDepth);
+    void Draw(const std::shared_ptr<Texture2D>& texture, const Matrix3x2& worldMatrix,
+        const Vector2& position, const Rectangle& sourceRect, const Color& color,
+        const Radian<float>& rotation, const Vector2& originPivot, const Vector2& scale, float layerDepth);
 
     void End();
 

@@ -4,8 +4,8 @@
 
 namespace Pomdog {
 
-void SpriteLine::Draw(SpriteBatch & spriteBatch, Vector2 const& point1, Vector2 const& point2,
-        float lineThickness, Color const& color, float layerDepth)
+void SpriteLine::Draw(SpriteBatch & spriteBatch, const Vector2& point1, const Vector2& point2,
+        float lineThickness, const Color& color, float layerDepth)
 {
     auto lineLength = Vector2::Distance(point2, point1);
 

@@ -16,11 +16,11 @@ public:
 
     ~SkinnedEffect();
 
-    void SetWorldViewProjection(Matrix4x4 const& worldViewProjection);
+    void SetWorldViewProjection(const Matrix4x4& worldViewProjection);
 
-    void SetTexture(std::shared_ptr<Texture2D> const& texture);
+    void SetTexture(const std::shared_ptr<Texture2D>& texture);
 
-    void SetColor(Color const& color);
+    void SetColor(const Color& color);
 
     void SetBoneTransforms(Matrix3x2 const* boneTransforms, std::size_t count);
 
