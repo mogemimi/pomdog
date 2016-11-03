@@ -13,7 +13,7 @@
 
 namespace Pomdog {
 
-ScreenQuad::ScreenQuad(std::shared_ptr<GraphicsDevice> const& graphicsDevice)
+ScreenQuad::ScreenQuad(const std::shared_ptr<GraphicsDevice>& graphicsDevice)
 {
     struct ScreenQuadVertex {
         Vector3 Position;

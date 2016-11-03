@@ -54,16 +54,16 @@ public:
     int drawCallCount;
 
 public:
-    Impl(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+    Impl(const std::shared_ptr<GraphicsDevice>& graphicsDevice,
         AssetManager & assets);
 
     void Begin(
-        std::shared_ptr<GraphicsCommandList> const& commandListIn,
-        Matrix4x4 const& transformMatrix);
+        const std::shared_ptr<GraphicsCommandList>& commandListIn,
+        const Matrix4x4& transformMatrix);
 
     void DrawTriangle(
-        Vector2 const& point1, Vector2 const& point2, Vector2 const& point3,
-        Vector4 const& color1, Vector4 const& color2, Vector4 const& color3);
+        const Vector2& point1, const Vector2& point2, const Vector2& point3,
+        const Vector4& color1, const Vector4& color2, const Vector4& color3);
 
     void End();
 
@@ -71,7 +71,7 @@ public:
 };
 
 PolygonBatch::Impl::Impl(
-    std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
     AssetManager & assets)
     : drawCallCount(0)
 {
@@ -108,8 +108,8 @@ PolygonBatch::Impl::Impl(
 }
 
 void PolygonBatch::Impl::Begin(
-    std::shared_ptr<GraphicsCommandList> const& commandListIn,
-    Matrix4x4 const& transformMatrix)
+    const std::shared_ptr<GraphicsCommandList>& commandListIn,
+    const Matrix4x4& transformMatrix)
 {
     POMDOG_ASSERT(commandListIn);
     commandList = commandListIn;
@@ -150,7 +150,7 @@ void PolygonBatch::Impl::Flush()
 // MARK: - PolygonBatch
 
 PolygonBatch::PolygonBatch(
-    std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
     AssetManager & assets)
     : impl(std::make_unique<Impl>(graphicsDevice, assets))
 {}
@@ -158,8 +158,8 @@ PolygonBatch::PolygonBatch(
 PolygonBatch::~PolygonBatch() = default;
 
 void PolygonBatch::Begin(
-    std::shared_ptr<GraphicsCommandList> const& commandListIn,
-    Matrix4x4 const& transformMatrixIn)
+    const std::shared_ptr<GraphicsCommandList>& commandListIn,
+    const Matrix4x4& transformMatrixIn)
 {
     POMDOG_ASSERT(impl);
     impl->Begin(commandListIn, transformMatrixIn);
@@ -172,12 +172,12 @@ void PolygonBatch::End()
 }
 
 void PolygonBatch::DrawArc(
-    Vector2 const& position,
+    const Vector2& position,
     float radius,
-    Radian<float> const& startAngle,
-    Radian<float> const& arcAngle,
+    const Radian<float>& startAngle,
+    const Radian<float>& arcAngle,
     std::size_t segments,
-    Color const& color)
+    const Color& color)
 {
     POMDOG_ASSERT(impl);
     impl->polygonShapes.DrawArc(
@@ -185,56 +185,56 @@ void PolygonBatch::DrawArc(
 }
 
 void PolygonBatch::DrawBox(
-    BoundingBox const& box,
-    Color const& color)
+    const BoundingBox& box,
+    const Color& color)
 {
     POMDOG_ASSERT(impl);
     impl->polygonShapes.DrawBox(box.Min, box.Max - box.Min, color);
 }
 
 void PolygonBatch::DrawBox(
-    Vector3 const& position,
-    Vector3 const& scale,
-    Color const& color)
+    const Vector3& position,
+    const Vector3& scale,
+    const Color& color)
 {
     POMDOG_ASSERT(impl);
     impl->polygonShapes.DrawBox(position, scale, color);
 }
 
 void PolygonBatch::DrawBox(
-    Vector3 const& position,
-    Vector3 const& scale,
-    Vector3 const& originPivot,
-    Color const& color)
+    const Vector3& position,
+    const Vector3& scale,
+    const Vector3& originPivot,
+    const Color& color)
 {
     POMDOG_ASSERT(impl);
     impl->polygonShapes.DrawBox(position, scale, originPivot, color);
 }
 
 void PolygonBatch::DrawCircle(
-    Vector2 const& position,
+    const Vector2& position,
     float radius,
     std::size_t segments,
-    Color const& color)
+    const Color& color)
 {
     POMDOG_ASSERT(impl);
     impl->polygonShapes.DrawCircle(position, radius, segments, color);
 }
 
 void PolygonBatch::DrawCircle(
-    Vector3 const& position,
+    const Vector3& position,
     float radius,
     std::size_t segments,
-    Color const& color)
+    const Color& color)
 {
     POMDOG_ASSERT(impl);
     impl->polygonShapes.DrawCircle(position, radius, segments, color);
 }
 
 void PolygonBatch::DrawLine(
-    Vector2 const& start,
-    Vector2 const& end,
-    Color const& color,
+    const Vector2& start,
+    const Vector2& end,
+    const Color& color,
     float weight)
 {
     POMDOG_ASSERT(impl);
@@ -242,10 +242,10 @@ void PolygonBatch::DrawLine(
 }
 
 void PolygonBatch::DrawLine(
-    Vector2 const& start,
-    Vector2 const& end,
-    Color const& startColor,
-    Color const& endColor,
+    const Vector2& start,
+    const Vector2& end,
+    const Color& startColor,
+    const Color& endColor,
     float weight)
 {
     POMDOG_ASSERT(impl);
@@ -253,28 +253,28 @@ void PolygonBatch::DrawLine(
 }
 
 void PolygonBatch::DrawPolyline(
-    std::vector<Vector2> const& points,
+    const std::vector<Vector2>& points,
     float thickness,
-    Color const& color)
+    const Color& color)
 {
     POMDOG_ASSERT(impl);
     impl->polygonShapes.DrawPolyline(points, thickness, color);
 }
 
 void PolygonBatch::DrawRectangle(
-    Rectangle const& sourceRect,
-    Color const& color)
+    const Rectangle& sourceRect,
+    const Color& color)
 {
     POMDOG_ASSERT(impl);
     impl->polygonShapes.DrawRectangle(sourceRect, color);
 }
 
 void PolygonBatch::DrawRectangle(
-    Rectangle const& sourceRect,
-    Color const& color1,
-    Color const& color2,
-    Color const& color3,
-    Color const& color4)
+    const Rectangle& sourceRect,
+    const Color& color1,
+    const Color& color2,
+    const Color& color3,
+    const Color& color4)
 {
     POMDOG_ASSERT(impl);
     impl->polygonShapes.DrawRectangle(
@@ -282,21 +282,21 @@ void PolygonBatch::DrawRectangle(
 }
 
 void PolygonBatch::DrawRectangle(
-    Matrix3x2 const& matrix,
-    Rectangle const& sourceRect,
-    Color const& color)
+    const Matrix3x2& matrix,
+    const Rectangle& sourceRect,
+    const Color& color)
 {
     POMDOG_ASSERT(impl);
     impl->polygonShapes.DrawRectangle(matrix, sourceRect, color);
 }
 
 void PolygonBatch::DrawRectangle(
-    Matrix3x2 const& matrix,
-    Rectangle const& sourceRect,
-    Color const& color1,
-    Color const& color2,
-    Color const& color3,
-    Color const& color4)
+    const Matrix3x2& matrix,
+    const Rectangle& sourceRect,
+    const Color& color1,
+    const Color& color2,
+    const Color& color3,
+    const Color& color4)
 {
     POMDOG_ASSERT(impl);
     impl->polygonShapes.DrawRectangle(
@@ -304,11 +304,11 @@ void PolygonBatch::DrawRectangle(
 }
 
 void PolygonBatch::DrawRectangle(
-    Vector2 const& position,
+    const Vector2& position,
     float width,
     float height,
-    Vector2 const& originPivot,
-    Color const& color)
+    const Vector2& originPivot,
+    const Color& color)
 {
     POMDOG_ASSERT(impl);
     impl->polygonShapes.DrawRectangle(
@@ -316,9 +316,9 @@ void PolygonBatch::DrawRectangle(
 }
 
 void PolygonBatch::DrawSphere(
-    Vector3 const& position,
+    const Vector3& position,
     float radius,
-    Color const& color,
+    const Color& color,
     std::size_t segments)
 {
     POMDOG_ASSERT(impl);
@@ -327,22 +327,22 @@ void PolygonBatch::DrawSphere(
 }
 
 void PolygonBatch::DrawTriangle(
-    Vector2 const& point1,
-    Vector2 const& point2,
-    Vector2 const& point3,
-    Color const& color)
+    const Vector2& point1,
+    const Vector2& point2,
+    const Vector2& point3,
+    const Color& color)
 {
     POMDOG_ASSERT(impl);
     impl->polygonShapes.DrawTriangle(point1, point2, point3, color);
 }
 
 void PolygonBatch::DrawTriangle(
-    Vector2 const& point1,
-    Vector2 const& point2,
-    Vector2 const& point3,
-    Color const& color1,
-    Color const& color2,
-    Color const& color3)
+    const Vector2& point1,
+    const Vector2& point2,
+    const Vector2& point3,
+    const Color& color1,
+    const Color& color2,
+    const Color& color3)
 {
     POMDOG_ASSERT(impl);
     impl->polygonShapes.DrawTriangle(
@@ -350,12 +350,12 @@ void PolygonBatch::DrawTriangle(
 }
 
 void PolygonBatch::DrawTriangle(
-    Vector3 const& point1,
-    Vector3 const& point2,
-    Vector3 const& point3,
-    Color const& color1,
-    Color const& color2,
-    Color const& color3)
+    const Vector3& point1,
+    const Vector3& point2,
+    const Vector3& point3,
+    const Color& color1,
+    const Color& color2,
+    const Color& color3)
 {
     POMDOG_ASSERT(impl);
     impl->polygonShapes.DrawTriangle(
@@ -363,12 +363,12 @@ void PolygonBatch::DrawTriangle(
 }
 
 void PolygonBatch::DrawTriangle(
-    Vector3 const& point1,
-    Vector3 const& point2,
-    Vector3 const& point3,
-    Vector4 const& color1,
-    Vector4 const& color2,
-    Vector4 const& color3)
+    const Vector3& point1,
+    const Vector3& point2,
+    const Vector3& point3,
+    const Vector4& color1,
+    const Vector4& color2,
+    const Vector4& color3)
 {
     POMDOG_ASSERT(impl);
     impl->polygonShapes.DrawTriangle(

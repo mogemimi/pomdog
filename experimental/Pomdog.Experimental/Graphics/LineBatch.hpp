@@ -12,102 +12,102 @@ namespace Pomdog {
 class LineBatch {
 public:
     LineBatch(
-        std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
         AssetManager & assets);
 
     ~LineBatch();
 
     void Begin(
-        std::shared_ptr<GraphicsCommandList> const& commandList,
-        Matrix4x4 const& transformMatrix);
+        const std::shared_ptr<GraphicsCommandList>& commandList,
+        const Matrix4x4& transformMatrix);
 
     //void DrawArc(
-    //    Vector2 const& position,
+    //    const Vector2& position,
     //    float radius,
-    //    Radian<float> const& startAngle,
-    //    Radian<float> const& arcAngle,
-    //    Color const& color);
+    //    const Radian<float>& startAngle,
+    //    const Radian<float>& arcAngle,
+    //    const Color& color);
 
     void DrawBox(
-        BoundingBox const& box,
-        Color const& color);
+        const BoundingBox& box,
+        const Color& color);
 
     void DrawBox(
-        Vector3 const& position,
-        Vector3 const& scale,
-        Color const& color);
+        const Vector3& position,
+        const Vector3& scale,
+        const Color& color);
 
     void DrawBox(
-        Vector3 const& position,
-        Vector3 const& scale,
-        Vector3 const& originPivot,
-        Color const& color);
+        const Vector3& position,
+        const Vector3& scale,
+        const Vector3& originPivot,
+        const Color& color);
 
     void DrawCircle(
-        Vector2 const& position,
+        const Vector2& position,
         float radius,
-        Color const& color,
+        const Color& color,
         std::size_t segments);
 
     //void DrawEllipse();
 
     void DrawLine(
-        Vector2 const& start,
-        Vector2 const& end,
-        Color const& color);
+        const Vector2& start,
+        const Vector2& end,
+        const Color& color);
 
     void DrawLine(
-        Vector2 const& start,
-        Vector2 const& end,
-        Color const& startColor,
-        Color const& endColor);
+        const Vector2& start,
+        const Vector2& end,
+        const Color& startColor,
+        const Color& endColor);
 
     void DrawLine(
-        Vector3 const& start,
-        Vector3 const& end,
-        Color const& color);
+        const Vector3& start,
+        const Vector3& end,
+        const Color& color);
 
     void DrawLine(
-        Vector3 const& start,
-        Vector3 const& end,
-        Color const& startColor,
-        Color const& endColor);
+        const Vector3& start,
+        const Vector3& end,
+        const Color& startColor,
+        const Color& endColor);
 
     void DrawRectangle(
-        Rectangle const& sourceRect,
-        Color const& color);
+        const Rectangle& sourceRect,
+        const Color& color);
 
     void DrawRectangle(
-        Rectangle const& sourceRect,
-        Color const& color1,
-        Color const& color2,
-        Color const& color3,
-        Color const& color4);
+        const Rectangle& sourceRect,
+        const Color& color1,
+        const Color& color2,
+        const Color& color3,
+        const Color& color4);
 
     void DrawRectangle(
-        Matrix3x2 const& matrix,
-        Rectangle const& sourceRect,
-        Color const& color);
+        const Matrix3x2& matrix,
+        const Rectangle& sourceRect,
+        const Color& color);
 
     void DrawSphere(
-        Vector3 const& position,
+        const Vector3& position,
         float radius,
-        Color const& color,
+        const Color& color,
         std::size_t segments);
 
     void DrawTriangle(
-        Vector2 const& point1,
-        Vector2 const& point2,
-        Vector2 const& point3,
-        Color const& color);
+        const Vector2& point1,
+        const Vector2& point2,
+        const Vector2& point3,
+        const Color& color);
 
     void DrawTriangle(
-        Vector2 const& point1,
-        Vector2 const& point2,
-        Vector2 const& point3,
-        Color const& color1,
-        Color const& color2,
-        Color const& color3);
+        const Vector2& point1,
+        const Vector2& point2,
+        const Vector2& point3,
+        const Color& color1,
+        const Color& color2,
+        const Color& color3);
 
     void End();
 

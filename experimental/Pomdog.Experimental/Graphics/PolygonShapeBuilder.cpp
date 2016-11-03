@@ -60,12 +60,12 @@ std::size_t PolygonShapeBuilder::GetMaxVertexCount() const noexcept
 }
 
 void PolygonShapeBuilder::DrawArc(
-    Vector2 const& position,
+    const Vector2& position,
     float radius,
-    Radian<float> const& startAngle,
-    Radian<float> const& arcAngle,
+    const Radian<float>& startAngle,
+    const Radian<float>& arcAngle,
     std::size_t segments,
-    Color const& color)
+    const Color& color)
 {
     POMDOG_ASSERT(radius >= 0);
     POMDOG_ASSERT(arcAngle >= 0);
@@ -102,18 +102,18 @@ void PolygonShapeBuilder::DrawArc(
 }
 
 void PolygonShapeBuilder::DrawBox(
-    Vector3 const& position,
-    Vector3 const& scale,
-    Color const& color)
+    const Vector3& position,
+    const Vector3& scale,
+    const Color& color)
 {
     DrawBox(position, scale, Vector3{0.0f, 0.0f, 0.0f}, color);
 }
 
 void PolygonShapeBuilder::DrawBox(
-    Vector3 const& position,
-    Vector3 const& scale,
-    Vector3 const& originPivot,
-    Color const& color)
+    const Vector3& position,
+    const Vector3& scale,
+    const Vector3& originPivot,
+    const Color& color)
 {
     Vector3 boxVertices[] = {
         // top
@@ -183,10 +183,10 @@ void PolygonShapeBuilder::DrawBox(
 }
 
 void PolygonShapeBuilder::DrawCircle(
-    Vector2 const& position,
+    const Vector2& position,
     float radius,
     std::size_t segments,
-    Color const& color)
+    const Color& color)
 {
     POMDOG_ASSERT(segments >= 3);
     POMDOG_ASSERT(radius >= 0);
@@ -195,10 +195,10 @@ void PolygonShapeBuilder::DrawCircle(
 }
 
 void PolygonShapeBuilder::DrawCircle(
-    Vector3 const& position,
+    const Vector3& position,
     float radius,
     std::size_t segments,
-    Color const& color)
+    const Color& color)
 {
     POMDOG_ASSERT(segments >= 3);
     POMDOG_ASSERT(radius >= 0);
@@ -231,19 +231,19 @@ void PolygonShapeBuilder::DrawCircle(
 }
 
 void PolygonShapeBuilder::DrawLine(
-    Vector2 const& start,
-    Vector2 const& end,
-    Color const& color,
+    const Vector2& start,
+    const Vector2& end,
+    const Color& color,
     float weight)
 {
     DrawLine(start, end, color, color, weight);
 }
 
 void PolygonShapeBuilder::DrawLine(
-    Vector2 const& start,
-    Vector2 const& end,
-    Color const& startColor,
-    Color const& endColor,
+    const Vector2& start,
+    const Vector2& end,
+    const Color& startColor,
+    const Color& endColor,
     float weight)
 {
     auto halfWeight = weight / 2;
@@ -268,9 +268,9 @@ void PolygonShapeBuilder::DrawLine(
 }
 
 void PolygonShapeBuilder::DrawPolyline(
-    std::vector<Vector2> const& points,
+    const std::vector<Vector2>& points,
     float thickness,
-    Color const& color)
+    const Color& color)
 {
     if (points.size() < 2) {
         return;
@@ -305,18 +305,18 @@ void PolygonShapeBuilder::DrawPolyline(
 }
 
 void PolygonShapeBuilder::DrawRectangle(
-    Rectangle const& sourceRect,
-    Color const& color)
+    const Rectangle& sourceRect,
+    const Color& color)
 {
     DrawRectangle(sourceRect, color, color, color, color);
 }
 
 void PolygonShapeBuilder::DrawRectangle(
-    Rectangle const& sourceRect,
-    Color const& color1,
-    Color const& color2,
-    Color const& color3,
-    Color const& color4)
+    const Rectangle& sourceRect,
+    const Color& color1,
+    const Color& color2,
+    const Color& color3,
+    const Color& color4)
 {
     if (sourceRect.Width <= 0 || sourceRect.Height <= 0) {
         return;
@@ -343,20 +343,20 @@ void PolygonShapeBuilder::DrawRectangle(
 }
 
 void PolygonShapeBuilder::DrawRectangle(
-    Matrix3x2 const& matrix,
-    Rectangle const& sourceRect,
-    Color const& color)
+    const Matrix3x2& matrix,
+    const Rectangle& sourceRect,
+    const Color& color)
 {
     DrawRectangle(matrix, sourceRect, color, color, color, color);
 }
 
 void PolygonShapeBuilder::DrawRectangle(
-        Matrix3x2 const& matrix,
-        Rectangle const& sourceRect,
-        Color const& color1,
-        Color const& color2,
-        Color const& color3,
-        Color const& color4)
+        const Matrix3x2& matrix,
+        const Rectangle& sourceRect,
+        const Color& color1,
+        const Color& color2,
+        const Color& color3,
+        const Color& color4)
 {
     if (sourceRect.Width <= 0 || sourceRect.Height <= 0) {
         return;
@@ -389,11 +389,11 @@ void PolygonShapeBuilder::DrawRectangle(
 }
 
 void PolygonShapeBuilder::DrawRectangle(
-    Vector2 const& position,
+    const Vector2& position,
     float width,
     float height,
-    Vector2 const& originPivot,
-    Color const& color)
+    const Vector2& originPivot,
+    const Color& color)
 {
     if (width <= 0 || height <= 0) {
         return;
@@ -423,9 +423,9 @@ void PolygonShapeBuilder::DrawRectangle(
 }
 
 void PolygonShapeBuilder::DrawSphere(
-    Vector3 const& position,
+    const Vector3& position,
     float radius,
-    Color const& color,
+    const Color& color,
     std::size_t segments)
 {
     POMDOG_ASSERT(segments >= 4);
@@ -490,10 +490,10 @@ void PolygonShapeBuilder::DrawSphere(
 }
 
 void PolygonShapeBuilder::DrawTriangle(
-    Vector2 const& point1,
-    Vector2 const& point2,
-    Vector2 const& point3,
-    Color const& color)
+    const Vector2& point1,
+    const Vector2& point2,
+    const Vector2& point3,
+    const Color& color)
 {
     auto colorVector = color.ToVector4();
     DrawTriangle(
@@ -504,12 +504,12 @@ void PolygonShapeBuilder::DrawTriangle(
 }
 
 void PolygonShapeBuilder::DrawTriangle(
-    Vector2 const& point1,
-    Vector2 const& point2,
-    Vector2 const& point3,
-    Color const& color1,
-    Color const& color2,
-    Color const& color3)
+    const Vector2& point1,
+    const Vector2& point2,
+    const Vector2& point3,
+    const Color& color1,
+    const Color& color2,
+    const Color& color3)
 {
     DrawTriangle(
         Vector3{point1, 0.0f},
@@ -521,24 +521,24 @@ void PolygonShapeBuilder::DrawTriangle(
 }
 
 void PolygonShapeBuilder::DrawTriangle(
-    Vector3 const& point1,
-    Vector3 const& point2,
-    Vector3 const& point3,
-    Color const& color1,
-    Color const& color2,
-    Color const& color3)
+    const Vector3& point1,
+    const Vector3& point2,
+    const Vector3& point3,
+    const Color& color1,
+    const Color& color2,
+    const Color& color3)
 {
     DrawTriangle(point1, point2, point3,
         color1.ToVector4(), color2.ToVector4(), color3.ToVector4());
 }
 
 void PolygonShapeBuilder::DrawTriangle(
-    Vector3 const& point1,
-    Vector3 const& point2,
-    Vector3 const& point3,
-    Vector4 const& color1,
-    Vector4 const& color2,
-    Vector4 const& color3)
+    const Vector3& point1,
+    const Vector3& point2,
+    const Vector3& point3,
+    const Vector4& color1,
+    const Vector4& color2,
+    const Vector4& color3)
 {
     POMDOG_ASSERT(minVertexCount <= maxVertexCount);
     POMDOG_ASSERT(3 < maxVertexCount);
