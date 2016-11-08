@@ -105,7 +105,6 @@
 
 #include "Rendering/RenderCommand.hpp"
 #include "Rendering/Renderer.hpp"
-#include "Rendering/RenderQueue.hpp"
 
 #include "UI/DebugNavigator.hpp"
 #include "UI/DrawingContext.hpp"

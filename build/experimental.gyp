@@ -224,8 +224,6 @@
       '<@(pomdog_expr_dir)/Rendering/RenderCommandProcessor.hpp',
       '<@(pomdog_expr_dir)/Rendering/Renderer.cpp',
       '<@(pomdog_expr_dir)/Rendering/Renderer.hpp',
-      '<@(pomdog_expr_dir)/Rendering/RenderQueue.cpp',
-      '<@(pomdog_expr_dir)/Rendering/RenderQueue.hpp',
     #   '<@(pomdog_expr_dir)/Rendering/Commands/ParticleBatchCommand.cpp',
     #   '<@(pomdog_expr_dir)/Rendering/Commands/ParticleBatchCommand.hpp',
       '<@(pomdog_expr_dir)/Rendering/Commands/PrimitiveCommand.cpp',
