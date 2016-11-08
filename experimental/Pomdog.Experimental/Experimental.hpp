@@ -107,6 +107,7 @@
 #include "Rendering/Renderer.hpp"
 
 #include "UI/DebugNavigator.hpp"
+#include "UI/DisclosureTriangleButton.hpp"
 #include "UI/DrawingContext.hpp"
 #include "UI/FontSize.hpp"
 #include "UI/FontWeight.hpp"
@@ -121,6 +122,7 @@
 #include "UI/TextBlock.hpp"
 #include "UI/Thickness.hpp"
 #include "UI/ToggleSwitch.hpp"
+#include "UI/TreeView.hpp"
 #include "UI/UIElement.hpp"
 #include "UI/UIElementHierarchy.hpp"
 #include "UI/UIEventDispatcher.hpp"

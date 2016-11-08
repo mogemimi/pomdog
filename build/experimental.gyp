@@ -245,6 +245,8 @@
 
       '<@(pomdog_expr_dir)/UI/DebugNavigator.cpp',
       '<@(pomdog_expr_dir)/UI/DebugNavigator.hpp',
+      '<@(pomdog_expr_dir)/UI/DisclosureTriangleButton.cpp',
+      '<@(pomdog_expr_dir)/UI/DisclosureTriangleButton.hpp',
       '<@(pomdog_expr_dir)/UI/DrawingContext.cpp',
       '<@(pomdog_expr_dir)/UI/DrawingContext.hpp',
       '<@(pomdog_expr_dir)/UI/FontSize.hpp',
@@ -267,6 +269,8 @@
       '<@(pomdog_expr_dir)/UI/Thickness.hpp',
       '<@(pomdog_expr_dir)/UI/ToggleSwitch.cpp',
       '<@(pomdog_expr_dir)/UI/ToggleSwitch.hpp',
+      '<@(pomdog_expr_dir)/UI/TreeView.cpp',
+      '<@(pomdog_expr_dir)/UI/TreeView.hpp',
       '<@(pomdog_expr_dir)/UI/UIElement.cpp',
       '<@(pomdog_expr_dir)/UI/UIElement.hpp',
       '<@(pomdog_expr_dir)/UI/UIElementHierarchy.cpp',
