@@ -11,7 +11,7 @@ TextRenderable::TextRenderable()
     : originPivot(0.5f, 0.5f)
     , textColor(Color::Black)
 {
-    command.drawOrder = 0;
+    command.SetDrawOrder(0.0f);
 }
 
 void TextRenderable::Visit(Entity & entity, Renderer & renderer)
@@ -43,11 +43,13 @@ void TextRenderable::Visit(Entity & entity, Renderer & renderer)
         scale.Y = 1.0f;
     }
 
-    command.onDraw = [this, position, scale](SpriteBatchRenderer & spriteBatch) {
-        spriteFont->Draw(spriteBatch, text, position, textColor, 0.0f, scale);
-    };
-
-    command.drawOrder = GetDrawOrder();
+    command.SetColor(textColor);
+    command.SetFont(spriteFont);
+    command.SetDrawOrder(GetDrawOrder());
+    command.SetText(text);
+    command.SetPosition(position);
+    command.SetRotation(0.0f);
+    command.SetScale(scale);
     renderer.PushCommand(command);
 }
 

@@ -10,7 +10,7 @@ PrimitiveRenderable::PrimitiveRenderable(
     const std::shared_ptr<GraphicsDevice>& graphicsDeviceIn)
     : graphicsDevice(graphicsDeviceIn)
 {
-    command.drawOrder = 0;
+    command.SetDrawOrder(0.0f);
 
     constexpr std::size_t MinVertexCount = 128;
     command.vertexBuffer = std::make_shared<VertexBuffer>(
@@ -48,7 +48,7 @@ void PrimitiveRenderable::Visit(Entity & entity, Renderer & renderer)
     command.vertexBuffer->SetData(
         shapeBuilder.GetData(), shapeBuilder.GetVertexCount());
     command.vertexCount = shapeBuilder.GetVertexCount();
-    command.drawOrder = GetDrawOrder();
+    command.SetDrawOrder(GetDrawOrder());
 
     if (auto transform = entity.GetComponent<Transform>()) {
         command.worldMatrix = transform->GetTransformMatrix();

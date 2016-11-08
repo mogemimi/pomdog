@@ -28,7 +28,7 @@ public:
 
 private:
     std::shared_ptr<SpriteFont> spriteFont;
-    Pomdog::Rendering::SpriteBatchCommand command;
+    Pomdog::Rendering::SpriteFontCommand command;
     Vector2 originPivot;
     std::string text;
     Color textColor;
