@@ -282,7 +282,7 @@ void LineBatch::DrawBox(
     draw(1, 5);
 }
 
-void LineBatch::DrawCircle(const Vector2& position, float radius, const Color& color, std::size_t segments)
+void LineBatch::DrawCircle(const Vector2& position, float radius, const Color& color, int segments)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(segments >= 3);
@@ -300,8 +300,7 @@ void LineBatch::DrawCircle(const Vector2& position, float radius, const Color& c
 
     auto colorVector = color.ToVector4();
 
-    for (std::size_t i = 0; i < segments; ++i)
-    {
+    for (int i = 0; i < segments; ++i) {
         auto rad = centralAngle * (i + 1);
         auto cos = std::cos(rad.value);
         auto sin = std::sin(rad.value);
@@ -406,7 +405,7 @@ void LineBatch::DrawSphere(
     const Vector3& position,
     float radius,
     const Color& color,
-    std::size_t segments)
+    int segments)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(segments >= 4);

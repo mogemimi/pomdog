@@ -176,7 +176,7 @@ void PolygonBatch::DrawArc(
     float radius,
     const Radian<float>& startAngle,
     const Radian<float>& arcAngle,
-    std::size_t segments,
+    int segments,
     const Color& color)
 {
     POMDOG_ASSERT(impl);
@@ -214,7 +214,7 @@ void PolygonBatch::DrawBox(
 void PolygonBatch::DrawCircle(
     const Vector2& position,
     float radius,
-    std::size_t segments,
+    int segments,
     const Color& color)
 {
     POMDOG_ASSERT(impl);
@@ -224,7 +224,7 @@ void PolygonBatch::DrawCircle(
 void PolygonBatch::DrawCircle(
     const Vector3& position,
     float radius,
-    std::size_t segments,
+    int segments,
     const Color& color)
 {
     POMDOG_ASSERT(impl);
@@ -319,7 +319,7 @@ void PolygonBatch::DrawSphere(
     const Vector3& position,
     float radius,
     const Color& color,
-    std::size_t segments)
+    int segments)
 {
     POMDOG_ASSERT(impl);
     impl->polygonShapes.DrawSphere(

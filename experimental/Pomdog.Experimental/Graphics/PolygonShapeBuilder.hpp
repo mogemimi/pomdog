@@ -52,7 +52,7 @@ public:
         float radius,
         const Radian<float>& startAngle,
         const Radian<float>& arcAngle,
-        std::size_t segments,
+        int segments,
         const Color& color);
 
     void DrawBox(
@@ -69,13 +69,13 @@ public:
     void DrawCircle(
         const Vector2& position,
         float radius,
-        std::size_t segments,
+        int segments,
         const Color& color);
 
     void DrawCircle(
         const Vector3& position,
         float radius,
-        std::size_t segments,
+        int segments,
         const Color& color);
 
     //void DrawEllipse();
@@ -147,7 +147,7 @@ public:
         const Vector3& position,
         float radius,
         const Color& color,
-        std::size_t segments);
+        int segments);
 
     void DrawTriangle(
         const Vector2& point1,

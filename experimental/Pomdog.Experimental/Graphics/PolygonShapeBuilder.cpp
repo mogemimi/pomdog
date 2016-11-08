@@ -64,7 +64,7 @@ void PolygonShapeBuilder::DrawArc(
     float radius,
     const Radian<float>& startAngle,
     const Radian<float>& arcAngle,
-    std::size_t segments,
+    int segments,
     const Color& color)
 {
     POMDOG_ASSERT(radius >= 0);
@@ -83,7 +83,7 @@ void PolygonShapeBuilder::DrawArc(
     const Radian<float> centralAngle =
         std::min(arcAngle.value, MathConstants<float>::TwoPi()) / segments;
 
-    auto computePoint = [&](std::size_t index){
+    auto computePoint = [&](int index) {
         auto rad =  startAngle + centralAngle * index;
         auto cos = std::cos(rad.value);
         auto sin = std::sin(rad.value);
@@ -93,7 +93,7 @@ void PolygonShapeBuilder::DrawArc(
     auto prevPoint = computePoint(0);
     auto colorVector = color.ToVector4();
 
-    for (std::size_t i = 0; i < segments; ++i) {
+    for (int i = 0; i < segments; ++i) {
         auto nextPoint = computePoint(i + 1);
         DrawTriangle(nextPoint, prevPoint, center,
             colorVector, colorVector, colorVector);
@@ -185,7 +185,7 @@ void PolygonShapeBuilder::DrawBox(
 void PolygonShapeBuilder::DrawCircle(
     const Vector2& position,
     float radius,
-    std::size_t segments,
+    int segments,
     const Color& color)
 {
     POMDOG_ASSERT(segments >= 3);
@@ -197,7 +197,7 @@ void PolygonShapeBuilder::DrawCircle(
 void PolygonShapeBuilder::DrawCircle(
     const Vector3& position,
     float radius,
-    std::size_t segments,
+    int segments,
     const Color& color)
 {
     POMDOG_ASSERT(segments >= 3);
@@ -219,7 +219,7 @@ void PolygonShapeBuilder::DrawCircle(
 
     auto colorVector = color.ToVector4();
 
-    for (std::size_t i = 0; i < segments; ++i) {
+    for (int i = 0; i < segments; ++i) {
         auto rad = centralAngle * (i + 1);
         auto cos = std::cos(rad.value);
         auto sin = std::sin(rad.value);
@@ -426,7 +426,7 @@ void PolygonShapeBuilder::DrawSphere(
     const Vector3& position,
     float radius,
     const Color& color,
-    std::size_t segments)
+    int segments)
 {
     POMDOG_ASSERT(segments >= 4);
     POMDOG_ASSERT(radius >= 0);

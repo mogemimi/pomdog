@@ -63,7 +63,7 @@ void PrimitiveRenderable::Visit(Entity & entity, Renderer & renderer)
 //    float radius,
 //    const Radian<float>& startAngle,
 //    const Radian<float>& arcAngle,
-//    std::size_t segments,
+//    int segments,
 //    const Color& color)
 //{
 //}
@@ -92,7 +92,7 @@ void PrimitiveRenderable::Visit(Entity & entity, Renderer & renderer)
 void PrimitiveRenderable::DrawCircle(
     const Vector2& position,
     float radius,
-    std::size_t segments,
+    int segments,
     const Color& color)
 {
     shapeBuilder.DrawCircle(position, radius, segments, color);
@@ -101,7 +101,7 @@ void PrimitiveRenderable::DrawCircle(
 void PrimitiveRenderable::DrawCircle(
     const Vector3& position,
     float radius,
-    std::size_t segments,
+    int segments,
     const Color& color)
 {
     shapeBuilder.DrawCircle(position, radius, segments, color);
@@ -183,7 +183,7 @@ void PrimitiveRenderable::DrawSphere(
     const Vector3& position,
     float radius,
     const Color& color,
-    std::size_t segments)
+    int segments)
 {
     shapeBuilder.DrawSphere(position, radius, color, segments);
 }
