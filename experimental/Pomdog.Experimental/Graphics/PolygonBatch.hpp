@@ -170,6 +170,8 @@ public:
         const Vector4& color2,
         const Vector4& color3);
 
+    void Flush();
+
     void End();
 
     std::size_t GetMaxVertexCount() const noexcept;

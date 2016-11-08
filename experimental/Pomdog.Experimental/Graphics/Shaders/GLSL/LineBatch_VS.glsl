@@ -13,6 +13,7 @@ uniform TransformMatrix {
 
 void main()
 {
+    // NOTE: 'ViewProjection' has already been transposed.
     gl_Position = vec4(Position.xyz, 1.0) * ViewProjection;
     Out.DestinationColor = Color;
 }

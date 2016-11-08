@@ -13,6 +13,7 @@
 #include "Pomdog/Graphics/InputLayoutHelper.hpp"
 #include "Pomdog/Graphics/PipelineState.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
+#include "Pomdog/Graphics/RasterizerDescription.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
 #include "Pomdog/Graphics/VertexBuffer.hpp"
 #include "Pomdog/Math/BoundingBox.hpp"
@@ -51,10 +52,12 @@ private:
 
 public:
     PolygonShapeBuilder polygonShapes;
+    std::size_t startVertexLocation;
     int drawCallCount;
 
 public:
-    Impl(const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+    Impl(
+        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
         AssetManager & assets);
 
     void Begin(
@@ -73,7 +76,8 @@ public:
 PolygonBatch::Impl::Impl(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
     AssetManager & assets)
-    : drawCallCount(0)
+    : startVertexLocation(0)
+    , drawCallCount(0)
 {
     {
         auto maxVertexCount = polygonShapes.GetMaxVertexCount();
@@ -99,6 +103,7 @@ PolygonBatch::Impl::Impl(
             .SetInputLayout(inputLayout.CreateInputLayout())
             .SetBlendState(BlendDescription::CreateNonPremultiplied())
             .SetDepthStencilState(DepthStencilDescription::CreateNone())
+            .SetRasterizerState(RasterizerDescription::CreateCullCounterClockwise())
             .SetConstantBufferBindSlot("TransformMatrix", 0)
             .Build();
     }
@@ -114,34 +119,42 @@ void PolygonBatch::Impl::Begin(
     POMDOG_ASSERT(commandListIn);
     commandList = commandListIn;
 
-    alignas(16) Matrix4x4 transposed = Matrix4x4::Transpose(transformMatrix);
-    constantBuffer->SetValue(transposed);
+    alignas(16) Matrix4x4 transposedMatrix = Matrix4x4::Transpose(transformMatrix);
+    constantBuffer->SetValue(transposedMatrix);
 
+    startVertexLocation = 0;
     drawCallCount = 0;
 }
 
 void PolygonBatch::Impl::End()
 {
-    if (polygonShapes.IsEmpty()) {
-        return;
-    }
-
     Flush();
 }
 
 void PolygonBatch::Impl::Flush()
 {
+    if (polygonShapes.IsEmpty()) {
+        return;
+    }
+
     POMDOG_ASSERT(commandList);
     POMDOG_ASSERT(!polygonShapes.IsEmpty());
-    POMDOG_ASSERT(polygonShapes.GetVertexCount() <= polygonShapes.GetMaxVertexCount());
-    vertexBuffer->SetData(polygonShapes.GetData(), polygonShapes.GetVertexCount());
+    POMDOG_ASSERT((startVertexLocation + polygonShapes.GetVertexCount()) <= polygonShapes.GetMaxVertexCount());
+
+    const auto vertexOffsetBytes = sizeof(Vertex) * startVertexLocation;
+    vertexBuffer->SetData(
+        vertexOffsetBytes,
+        polygonShapes.GetData(),
+        polygonShapes.GetVertexCount(),
+        sizeof(Vertex));
 
     commandList->SetVertexBuffer(vertexBuffer);
     commandList->SetPipelineState(pipelineState);
     commandList->SetConstantBuffer(0, constantBuffer);
     commandList->SetPrimitiveTopology(PrimitiveTopology::TriangleList);
-    commandList->Draw(polygonShapes.GetVertexCount(), 0);
+    commandList->Draw(polygonShapes.GetVertexCount(), startVertexLocation);
 
+    startVertexLocation += polygonShapes.GetVertexCount();
     ++drawCallCount;
 
     polygonShapes.Reset();
@@ -392,8 +405,15 @@ void PolygonBatch::DrawTriangle(
         point1, point2, point3, color1, color2, color3);
 }
 
+void PolygonBatch::Flush()
+{
+    POMDOG_ASSERT(impl);
+    impl->Flush();
+}
+
 std::size_t PolygonBatch::GetMaxVertexCount() const noexcept
 {
+    POMDOG_ASSERT(impl);
     return impl->polygonShapes.GetMaxVertexCount();
 }
 
