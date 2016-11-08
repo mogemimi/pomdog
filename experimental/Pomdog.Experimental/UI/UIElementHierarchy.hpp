@@ -22,13 +22,9 @@ public:
 
     void Touch(const MouseState& mouseState);
 
-    void UpdateLayout();
-
     void UpdateAnimation(const Duration& frameDuration);
 
     void AddChild(const std::shared_ptr<UIElement>& child);
-
-    void AddChild(std::shared_ptr<UIElement> && child);
 
     void Draw(DrawingContext & drawingContext);
 
@@ -39,6 +35,7 @@ public:
 private:
     std::vector<std::shared_ptr<UIElement>> children;
     std::shared_ptr<UIEventDispatcher> dispatcher;
+    int viewportHeight;
 };
 
 } // namespace UI

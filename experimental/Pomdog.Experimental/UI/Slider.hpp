@@ -4,6 +4,8 @@
 
 #include "Pomdog.Experimental/UI/UIElement.hpp"
 #include "Pomdog.Experimental/UI/detail/UIEventConnection.hpp"
+#include "Pomdog.Experimental/Rendering/Commands/PrimitivePolygonCommand.hpp"
+#include "Pomdog.Experimental/Rendering/Commands/SpriteBatchCommand.hpp"
 #include "Pomdog/Utility/Optional.hpp"
 #include <Pomdog/Pomdog.hpp>
 
@@ -36,6 +38,8 @@ private:
     };
 
     Optional<ColorAnimation> colorAnimation;
+    Rendering::PrimitiveFunctionCommand renderCommand;
+    Rendering::SpriteFontCommand spriteCommand;
 
     Detail::UIEventConnection connection;
 
@@ -46,6 +50,7 @@ private:
     Color trackColor;
     bool isDragging;
     bool isEnabled;
+    bool isTextVisible;
 
 public:
     Slider(
@@ -68,6 +73,8 @@ public:
     bool IsEnabled() const;
     void SetEnabled(bool isEnabled);
 
+    void SetTextVisible(bool isTextVisible);
+
     VerticalAlignment GetVerticalAlignment() const noexcept override;
 
     bool SizeToFitContent() const override;
@@ -83,8 +90,6 @@ public:
     void OnPointerMoved(const PointerPoint& pointerPoint) override;
 
     void OnPointerReleased(const PointerPoint& pointerPoint) override;
-
-    void OnRenderSizeChanged(int width, int height) override;
 
     void Draw(DrawingContext & drawingContext) override;
 

@@ -43,8 +43,6 @@ public:
 
     void OnPointerReleased(const PointerPoint& pointerPoint) override;
 
-    void OnRenderSizeChanged(int width, int height) override;
-
     void Draw(DrawingContext & drawingContext) override;
 
     void UpdateAnimation(const Duration& frameDuration) override;

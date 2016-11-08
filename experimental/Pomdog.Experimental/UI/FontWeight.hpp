@@ -7,11 +7,10 @@
 namespace Pomdog {
 namespace UI {
 
-enum class HorizontalAlignment : std::uint8_t {
-    Left,
-    //Center,
-    Stretch,
-    Right,
+enum class FontWeight : std::uint8_t {
+    Light,
+    Normal,
+    Bold,
 };
 
 } // namespace UI

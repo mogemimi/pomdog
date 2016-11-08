@@ -5,6 +5,13 @@
 
 namespace Pomdog {
 namespace UI {
+namespace {
+
+constexpr float minFramerate = 10.0f;
+constexpr float maxFramerate = 60.0f;
+constexpr std::size_t maxHistories = 40;
+
+} // unnamed namespace
 
 DebugNavigator::DebugNavigator(
     const std::shared_ptr<UIEventDispatcher>& dispatcher,
@@ -19,10 +26,6 @@ DebugNavigator::DebugNavigator(
 
 void DebugNavigator::Draw(DrawingContext & drawingContext)
 {
-    constexpr float minFramerate = 10.0f;
-    constexpr float maxFramerate = 60.0f;
-    constexpr std::size_t maxHistories = 20;
-
     {
         if (clock->GetTotalGameTime() - duration > Duration(0.2)) {
             auto frameRate = clock->GetFrameRate();
@@ -37,28 +40,53 @@ void DebugNavigator::Draw(DrawingContext & drawingContext)
     }
 
     auto transform = GetTransform() * drawingContext.Top();
-    {
-        auto graphTransform = Matrix3x2::CreateTranslation(Vector2{0, 16}) * transform;
 
-        constexpr std::uint16_t maxGraphHeight = 26;
-        constexpr float graphMarginLeft = 1.0f;
+    constexpr float maxGraphHeight = 26.0f;
 
-        auto graghWidth = (static_cast<float>(GetWidth()) / maxHistories);
+    renderCommand.SetInvoker([transform, maxGraphHeight, this](PolygonBatch & polygonBatch) {
+        constexpr float graphInnerMarginLeft = 1.0f;
+        constexpr float graphMargin = 2.0f;
 
-        std::int32_t startPosition = graghWidth * (maxHistories - frameRates.size());
-        std::int32_t graphX = startPosition;
+        const auto graghWidth = (static_cast<float>(GetWidth()) - (graphMargin * 2.0f)) / maxHistories;
+        const auto barWidth = graghWidth - graphInnerMarginLeft;
+
+        const Color chartBackgroundColor = {109, 109, 109, 255};
+        const Color chartBarColor = {112, 202, 255, 255};
+
+        polygonBatch.DrawRectangle(
+            transform,
+            Vector2::Zero,
+            GetWidth(),
+            maxGraphHeight,
+            chartBackgroundColor);
+
+        auto startPosition = graphMargin + (graghWidth * static_cast<float>(maxHistories - frameRates.size()));
+        auto graphX = startPosition;
         for (auto & frameRate : frameRates) {
             auto amount = ((frameRate - minFramerate) / (maxFramerate - minFramerate));
-            auto graphHeight = MathHelper::Clamp<std::uint16_t>(maxGraphHeight * amount, 1, maxGraphHeight);
+            auto barHeight = MathHelper::Clamp((maxGraphHeight - (graphMargin * 2)) * amount, 1.0f, maxGraphHeight);
 
-            drawingContext.DrawRectangle(graphTransform, Color::CornflowerBlue,
-                Rectangle(graphX, maxGraphHeight - graphHeight, graghWidth - graphMarginLeft, graphHeight));
+            polygonBatch.DrawRectangle(
+                transform,
+                Vector2{graphX, graphMargin},
+                barWidth,
+                barHeight,
+                chartBarColor);
             graphX += graghWidth;
         }
-    }
+    });
 
-    drawingContext.DrawString(transform * Matrix3x2::CreateTranslation({0.5f, -2.5f}),
-        Color::White, FontWeight::Bold, FontSize::Medium, frameRateString);
+    drawingContext.PushCommand(renderCommand);
+
+    auto textPosition = Vector2{transform(2, 0), transform(2, 1)} + Vector2{0.0f, maxGraphHeight + 5.0f};
+
+    spriteCommand.SetText(frameRateString);
+    spriteCommand.SetDrawOrder(5.0f);
+    spriteCommand.SetFont(drawingContext.GetFont(FontWeight::Bold, FontSize::Medium));
+    spriteCommand.SetColor(Color{198, 198, 198, 255});
+    spriteCommand.SetPosition(textPosition);
+
+    drawingContext.PushCommand(spriteCommand);
 }
 
 } // namespace UI

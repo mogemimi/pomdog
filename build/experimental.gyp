@@ -245,7 +245,10 @@
 
       '<@(pomdog_expr_dir)/UI/DebugNavigator.cpp',
       '<@(pomdog_expr_dir)/UI/DebugNavigator.hpp',
+      '<@(pomdog_expr_dir)/UI/DrawingContext.cpp',
       '<@(pomdog_expr_dir)/UI/DrawingContext.hpp',
+      '<@(pomdog_expr_dir)/UI/FontSize.hpp',
+      '<@(pomdog_expr_dir)/UI/FontWeight.hpp',
       '<@(pomdog_expr_dir)/UI/HorizontalAlignment.hpp',
       '<@(pomdog_expr_dir)/UI/PointerEventType.hpp',
       '<@(pomdog_expr_dir)/UI/PointerPoint.hpp',

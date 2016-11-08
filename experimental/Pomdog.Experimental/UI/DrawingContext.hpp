@@ -2,61 +2,64 @@
 
 #pragma once
 
+#include "Pomdog.Experimental/UI/FontSize.hpp"
+#include "Pomdog.Experimental/UI/FontWeight.hpp"
+#include "Pomdog.Experimental/Graphics/SpriteBatchRenderer.hpp"
+#include "Pomdog.Experimental/Graphics/SpriteFont.hpp"
+#include "Pomdog.Experimental/Graphics/TrueTypeFont.hpp"
+#include "Pomdog.Experimental/Rendering/Renderer.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Matrix3x2.hpp"
 #include "Pomdog/Math/Matrix4x4.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Math/Vector2.hpp"
+#include <Pomdog/Pomdog.hpp>
 #include <cstdint>
+#include <memory>
 #include <string>
+#include <unordered_map>
+#include <vector>
+
+namespace Pomdog {
+
+class RenderCommand;
+class SpriteFont;
+
+} // namespace Pomdog
 
 namespace Pomdog {
 namespace UI {
 
-enum class FontWeight : std::uint8_t {
-    Light,
-    Normal,
-    Bold,
-};
+class DrawingContext final {
+private:
+    Renderer renderer;
+    std::unordered_map<std::string, std::shared_ptr<SpriteFont>> spriteFonts;
+    std::shared_ptr<TrueTypeFont> fontRegular;
+    std::shared_ptr<TrueTypeFont> fontBold;
 
-enum class FontSize : std::uint8_t {
-    Small,
-    Medium,
-    Large,
-};
+    std::shared_ptr<GraphicsDevice> graphicsDevice;
+    std::vector<Matrix3x2> matrixStack;
+    int viewportWidth;
+    int viewportHeight;
 
-class DrawingContext {
 public:
-    virtual ~DrawingContext() = default;
+    DrawingContext(
+        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+        AssetManager & assets);
 
-    virtual Matrix3x2 Top() const = 0;
+    Matrix3x2 Top() const;
 
-    virtual void Push(const Matrix3x2& matrix) = 0;
+    void Push(const Matrix3x2& matrix);
 
-    virtual void Pop() = 0;
+    void Pop();
 
-    virtual void DrawRectangle(
-        const Matrix3x2& transform,
-        const Color& color,
-        const Rectangle& rectangle) = 0;
+    std::shared_ptr<GraphicsCommandList> Render();
 
-    virtual void DrawLine(
-        const Matrix3x2& transform,
-        const Color& color,
-        float penSize,
-        const Vector2& point1,
-        const Vector2& point2) = 0;
+    void Reset(int viewportWidth, int viewportHeight);
 
-    virtual void DrawString(
-        const Matrix3x2& transform,
-        const Color& color,
-        FontWeight fontWeight,
-        FontSize fontSize,
-        const std::string& text) = 0;
+    void PushCommand(std::reference_wrapper<RenderCommand> && command);
 
-    //void DrawEllipse();
-
-    //void DrawSprite();
+    std::shared_ptr<SpriteFont> GetFont(FontWeight fontWeight, FontSize fontSize);
 };
 
 } // namespace UI

@@ -75,14 +75,17 @@ int UIElement::GetGlobalDrawOrder()
         }
         isParentDrawOrderDirty = false;
     }
-
     return localDrawOrder + parentDrawOrder;
 }
 
-void UIElement::UpdateTransform()
+void UIElement::MarkParentTransformDirty()
 {
-    if (isParentTransformDirty)
-    {
+    this->isParentTransformDirty = true;
+}
+
+Matrix3x2 UIElement::GetGlobalTransform()
+{
+    if (isParentTransformDirty) {
         if (auto element = weakParent.lock()) {
             parentTransform = element->GetGlobalTransform();
         }
@@ -91,15 +94,7 @@ void UIElement::UpdateTransform()
         }
         isParentTransformDirty = false;
     }
-}
 
-void UIElement::MarkParentTransformDirty()
-{
-    this->isParentTransformDirty = true;
-}
-
-Matrix3x2 UIElement::GetGlobalTransform() const
-{
     POMDOG_ASSERT(!isParentTransformDirty);
     return transform * parentTransform;
 }
@@ -124,9 +119,12 @@ void UIElement::SetTransform(const Matrix3x2& transformMatrixIn)
     this->transform = transformMatrixIn;
 }
 
-void UIElement::SetTransform(Matrix3x2 && transformMatrixIn)
+void UIElement::MarkContentLayoutDirty()
 {
-    this->transform = std::move(transformMatrixIn);
+}
+
+void UIElement::DoLayout()
+{
 }
 
 bool UIElement::SizeToFitContent() const
@@ -177,10 +175,6 @@ void UIElement::OnPointerMoved(const PointerPoint&)
 }
 
 void UIElement::OnPointerReleased(const PointerPoint&)
-{
-}
-
-void UIElement::OnRenderSizeChanged(int, int)
 {
 }
 

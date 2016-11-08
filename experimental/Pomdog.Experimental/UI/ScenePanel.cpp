@@ -297,11 +297,6 @@ double ScenePanel::GetScrollWheel() const
     return cameraZoom;
 }
 
-void ScenePanel::OnRenderSizeChanged(int widthIn, int heightIn)
-{
-    SetSize(widthIn, heightIn);
-}
-
 void ScenePanel::Draw(DrawingContext &)
 {
 }

@@ -46,14 +46,16 @@ public:
     int GetDrawOrder() const;
 
     Matrix3x2 GetTransform() const;
-    void SetTransform(const Matrix3x2& matrix);
-    void SetTransform(Matrix3x2 && matrix);
 
-    Matrix3x2 GetGlobalTransform() const;
+    virtual void SetTransform(const Matrix3x2& matrix);
 
-    void MarkParentTransformDirty();
+    Matrix3x2 GetGlobalTransform();
 
-    virtual void UpdateTransform();
+    virtual void MarkParentTransformDirty();
+
+    virtual void MarkContentLayoutDirty();
+
+    virtual void DoLayout();
 
     virtual bool SizeToFitContent() const;
     virtual HorizontalAlignment GetHorizontalAlignment() const noexcept;
@@ -64,8 +66,6 @@ public:
     virtual void UpdateAnimation(const Duration& frameDuration);
 
     virtual void OnEnter();
-
-    virtual void OnRenderSizeChanged(int width, int height);
 
     virtual void OnPointerCanceled(const PointerPoint& pointerPoint);
 

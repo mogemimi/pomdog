@@ -4,7 +4,9 @@
 
 #include "Pomdog.Experimental/UI/UIElement.hpp"
 #include "Pomdog.Experimental/UI/Thickness.hpp"
+#include "Pomdog.Experimental/UI/VerticalLayout.hpp"
 #include "Pomdog.Experimental/UI/detail/UIEventConnection.hpp"
+#include "Pomdog.Experimental/Rendering/Commands/SpriteBatchCommand.hpp"
 #include "Pomdog/Utility/Optional.hpp"
 #include <Pomdog/Pomdog.hpp>
 #include <list>
@@ -21,6 +23,12 @@ public:
         int widthIn,
         int heightIn);
 
+    void SetTransform(const Matrix3x2& matrix) override;
+
+    void MarkParentTransformDirty() override;
+
+    void MarkContentLayoutDirty() override;
+
     bool SizeToFitContent() const override;
 
     void OnEnter() override;
@@ -31,23 +39,25 @@ public:
 
     void OnPointerReleased(const PointerPoint& pointerPoint) override;
 
-    void OnRenderSizeChanged(int width, int height) override;
-
     void Draw(DrawingContext & drawingContext) override;
 
     void UpdateAnimation(const Duration& frameDuration) override;
 
     void AddChild(const std::shared_ptr<UIElement>& element);
 
-    void UpdateTransform() override final;
+    void DoLayout() override;
 
 private:
-    using UIElementCollection = std::list<std::shared_ptr<UIElement>>;
-    UIElementCollection children;
+    void UpdateLayout();
+
+private:
+    std::shared_ptr<VerticalLayout> verticalLayout;
     Detail::UIEventConnection connection;
+    Rendering::PrimitiveFunctionCommand renderCommand;
     Thickness padding;
     int barHeight;
     Optional<Vector2> startTouchPoint;
+    bool needToUpdateLayout;
 };
 
 } // namespace UI

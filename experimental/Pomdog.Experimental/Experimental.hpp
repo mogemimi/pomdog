@@ -108,6 +108,8 @@
 
 #include "UI/DebugNavigator.hpp"
 #include "UI/DrawingContext.hpp"
+#include "UI/FontSize.hpp"
+#include "UI/FontWeight.hpp"
 #include "UI/HorizontalAlignment.hpp"
 #include "UI/PointerEventType.hpp"
 #include "UI/PointerPoint.hpp"

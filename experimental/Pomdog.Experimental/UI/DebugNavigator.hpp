@@ -3,6 +3,8 @@
 #pragma once
 
 #include "Pomdog.Experimental/UI/UIElement.hpp"
+#include "Pomdog.Experimental/Rendering/Commands/PrimitivePolygonCommand.hpp"
+#include "Pomdog.Experimental/Rendering/Commands/SpriteBatchCommand.hpp"
 #include "Pomdog/Utility/Optional.hpp"
 #include <Pomdog/Pomdog.hpp>
 #include <deque>
@@ -21,6 +23,8 @@ public:
 private:
     std::shared_ptr<GameClock> clock;
     std::deque<float> frameRates;
+    Rendering::PrimitiveFunctionCommand renderCommand;
+    Rendering::SpriteFontCommand spriteCommand;
     Duration duration;
     std::string frameRateString;
 };

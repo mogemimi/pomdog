@@ -31,6 +31,7 @@ Slider::Slider(
     , trackColor(colorSchemeIn.TrackColor)
     , isDragging(false)
     , isEnabled(true)
+    , isTextVisible(true)
 {
     POMDOG_ASSERT(minimum < maximum);
     POMDOG_ASSERT(value >= minimum);
@@ -80,6 +81,11 @@ void Slider::SetEnabled(bool isEnabledIn)
     else {
         fillColor = colorScheme.DisabledFillColor;
     }
+}
+
+void Slider::SetTextVisible(bool isTextVisibleIn)
+{
+    isTextVisible = isTextVisibleIn;
 }
 
 VerticalAlignment Slider::GetVerticalAlignment() const noexcept
@@ -188,42 +194,83 @@ void Slider::UpdateAnimation(const Duration& frameDuration)
     }
 }
 
-void Slider::OnRenderSizeChanged(int widthIn, int heightIn)
-{
-    SetSize(widthIn, heightIn);
-}
-
 void Slider::Draw(DrawingContext & drawingContext)
 {
-    //MathHelper::Clamp(value, minimum, maximum);
-
     POMDOG_ASSERT(value >= minimum);
     POMDOG_ASSERT(value <= maximum);
 
-    auto sliderWidth2 = GetWidth() * ((value - minimum) / (maximum - minimum));
-    auto controlPosition2 = (GetWidth() - GetHeight()) * ((value - minimum) / (maximum - minimum));
-
     auto transform = GetTransform() * drawingContext.Top();
 
-    drawingContext.DrawString(transform * Matrix3x2::CreateTranslation(Vector2(GetWidth() + 5, -2.5f)),
-        Color::White, FontWeight::Normal, FontSize::Medium, StringHelper::Format("%5.3lf", value));
-    drawingContext.DrawRectangle(transform, trackColor, Rectangle(0, 0, GetWidth(), GetHeight()));
-    drawingContext.DrawRectangle(transform, fillColor, Rectangle(0, 0, sliderWidth2, GetHeight()));
+    renderCommand.SetInvoker([this, transform](PolygonBatch & polygonBatch) {
+        const auto sliderWidth2 = GetWidth() * ((value - minimum) / (maximum - minimum));
+        const auto controlPosition2 = (GetWidth() - GetHeight()) * ((value - minimum) / (maximum - minimum));
 
-    if (isEnabled && isDragging) {
-        constexpr float pixel = 2.0f;
+        const auto sliderHeight = GetHeight();
+        const auto paddingY = (static_cast<float>(GetHeight()) - sliderHeight) * 0.5f;
 
-        auto pos = Vector2(controlPosition2 - pixel, -pixel);
-        auto size = Vector2(GetHeight() + 2 * pixel, GetHeight() + 2 * pixel);
+        polygonBatch.DrawRectangle(
+            transform,
+            Vector2{0.0f, paddingY},
+            GetWidth(),
+            sliderHeight,
+            trackColor);
+        polygonBatch.DrawRectangle(
+            transform,
+            Vector2{0.0f, paddingY},
+            sliderWidth2,
+            sliderHeight,
+            fillColor);
 
-        drawingContext.DrawRectangle(transform, colorScheme.FocusedThumbColor,
-            Rectangle(pos.X, pos.Y, size.X, size.Y));
-    }
+        const auto thumbSize = static_cast<float>(GetHeight());
 
-    if (isEnabled) {
-        auto pos = Vector2(controlPosition2, 0);
-        drawingContext.DrawRectangle(transform, colorScheme.ThumbColor,
-            Rectangle(pos.X, pos.Y, GetHeight(), GetHeight()));
+        if (isEnabled && isDragging) {
+            constexpr float pixel = 2.0f;
+
+            auto pos = Vector2(controlPosition2 - pixel, -pixel);
+            auto size = Vector2(thumbSize + 2 * pixel, thumbSize + 2 * pixel);
+
+            polygonBatch.DrawRectangle(
+                transform,
+                pos,
+                size.X,
+                size.Y,
+                colorScheme.FocusedThumbColor);
+        }
+
+        if (isEnabled) {
+            auto pos = Vector2(controlPosition2, 0);
+            polygonBatch.DrawRectangle(
+                transform,
+                pos,
+                thumbSize,
+                thumbSize,
+                colorScheme.ThumbColor);
+        }
+    });
+    drawingContext.PushCommand(renderCommand);
+
+    if (isTextVisible) {
+        constexpr float textMargin = 2.0f;
+        auto text = StringHelper::Format("%5.3lf", value);
+        auto spriteFont = drawingContext.GetFont(FontWeight::Normal, FontSize::Medium);
+        auto textSize = spriteFont->MeasureString(text);
+
+        if (value < MathHelper::Lerp(minimum, maximum, 0.6)) {
+            auto textPosition = Vector2{transform(2, 0), transform(2, 1)} +
+                Vector2{static_cast<float>(GetWidth()) - (textSize.X + textMargin), textMargin};
+            spriteCommand.SetPosition(textPosition);
+        }
+        else {
+            auto textPosition = Vector2{transform(2, 0), transform(2, 1)} +
+                Vector2{(static_cast<float>(GetWidth()) * 0.4f) - (textSize.X + textMargin), textMargin};
+            spriteCommand.SetPosition(textPosition);
+        }
+
+        spriteCommand.SetText(text);
+        spriteCommand.SetDrawOrder(5.0f);
+        spriteCommand.SetFont(spriteFont);
+        spriteCommand.SetColor(Color::White);
+        drawingContext.PushCommand(spriteCommand);
     }
 }
 
