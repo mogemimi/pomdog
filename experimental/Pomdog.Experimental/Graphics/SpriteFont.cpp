@@ -69,7 +69,7 @@ public:
         char32_t defaultCharacter,
         std::int16_t lineSpacing);
 
-    Vector2 MeasureString(const std::string& text) const;
+    Vector2 MeasureString(const std::string& text);
 
     void Draw(
         SpriteBatchRenderer & spriteBatch,
@@ -209,7 +209,7 @@ void SpriteFont::Impl::PrepareFonts(const std::string& text)
     fetchTextureData();
 }
 
-Vector2 SpriteFont::Impl::MeasureString(const std::string& text) const
+Vector2 SpriteFont::Impl::MeasureString(const std::string& text)
 {
     POMDOG_ASSERT(!text.empty());
 
@@ -231,8 +231,12 @@ Vector2 SpriteFont::Impl::MeasureString(const std::string& text) const
 
         auto iter = spriteFontMap.find(character);
         if (iter == std::end(spriteFontMap)) {
-            iter = spriteFontMap.find(defaultCharacter);
-            POMDOG_ASSERT(iter != std::end(spriteFontMap));
+            PrepareFonts(text);
+            iter = spriteFontMap.find(character);
+            if (iter == std::end(spriteFontMap)) {
+                iter = spriteFontMap.find(defaultCharacter);
+                POMDOG_ASSERT(iter != std::end(spriteFontMap));
+            }
         }
 
         POMDOG_ASSERT(iter != std::end(spriteFontMap));
