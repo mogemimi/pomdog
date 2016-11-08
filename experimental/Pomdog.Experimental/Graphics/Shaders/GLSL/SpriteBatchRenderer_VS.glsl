@@ -17,38 +17,18 @@ layout(location = 2) in vec4 TransformMatrix2Origin;
 layout(location = 3) in vec4 SourceRect;
 // {xyzw} = color.rgba
 layout(location = 4) in vec4 Color;
-// {x___} = textureIndex
-// {_yzw} = unused
-layout(location = 5) in vec4 TextureIndex;
+// {xy__} = {1.0f / textureWidth, 1.0f / textureHeight}
+// {__zw} = unused
+layout(location = 5) in vec4 TextureSize;
 
 out VertexData {
-    vec2 TextureCoord;
     vec4 Color;
-    float TextureIndex;
+    vec2 TextureCoord;
 } Out;
 
-uniform Matrices {
+uniform SpriteBatchConstants {
     mat4x4 ViewProjection;
 };
-
-uniform TextureConstants {
-    vec4 InverseTextureWidths1;
-    vec4 InverseTextureWidths2;
-};
-
-vec2 GetInverseTextureWidth(int textureIndex)
-{
-    if (textureIndex == 0) {
-        return InverseTextureWidths1.xy;
-    }
-    else if (textureIndex == 1) {
-        return InverseTextureWidths1.zw;
-    }
-    else if (textureIndex == 2) {
-        return InverseTextureWidths2.xy;
-    }
-    return InverseTextureWidths2.zw;
-}
 
 void main()
 {
@@ -64,12 +44,11 @@ void main()
         vec2(TransformMatrix2Origin.xy));
     position = (worldMatrix * vec3(position, 1.0)).xy;
 
+    // NOTE: 'ViewProjection' has already been transposed.
     gl_Position = vec4(position.xy, 0.0, 1.0) * ViewProjection;
 
-    int textureIndex = clamp(int(TextureIndex.x), 0, 3);
-    vec2 inverseTextureWidth = GetInverseTextureWidth(textureIndex);
+    vec2 inverseTextureSize = TextureSize.xy;
 
-    Out.TextureCoord = (PositionTextureCoord.zw * SourceRect.zw + SourceRect.xy) * inverseTextureWidth;
+    Out.TextureCoord = (PositionTextureCoord.zw * SourceRect.zw + SourceRect.xy) * inverseTextureSize;
     Out.Color = Color;
-    Out.TextureIndex = textureIndex;
 }

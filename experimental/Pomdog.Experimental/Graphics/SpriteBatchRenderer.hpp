@@ -4,11 +4,23 @@
 
 #include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Graphics/BlendDescription.hpp"
+#include "Pomdog/Graphics/DepthFormat.hpp"
+#include "Pomdog/Graphics/SamplerDescription.hpp"
+#include "Pomdog/Graphics/SurfaceFormat.hpp"
 #include "Pomdog/Math/detail/ForwardDeclarations.hpp"
 #include <cstdint>
 #include <memory>
+#include <vector>
 
 namespace Pomdog {
+
+struct SpriteBatchPipelineStateDescription final {
+    BlendDescription BlendState;
+    SamplerDescription SamplerState;
+    std::vector<SurfaceFormat> RenderTargetViewFormats;
+    DepthFormat DepthStencilViewFormat;
+};
 
 class SpriteBatchRenderer {
 public:
@@ -18,7 +30,7 @@ public:
 
     SpriteBatchRenderer(
         const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-        const BlendDescription& blendDescription,
+        const SpriteBatchPipelineStateDescription& pipelineStateDescription,
         AssetManager & assets);
 
     ~SpriteBatchRenderer();
@@ -73,6 +85,8 @@ public:
         const Radian<float>& rotation,
         const Vector2& originPivot,
         const Vector2& scale);
+
+    void Flush();
 
     void End();
 

@@ -22,9 +22,9 @@ struct VS_INPUT {
     // {xyzw} = color.rgba
     float4 Color: COLOR;
 
-    // {x___} = textureIndex
-    // {_yzw} = unused
-    float4 TextureIndex : POSITION2;
+    // {xy__} = {1.0f / textureWidth, 1.0f / textureHeight}
+    // {__zw} = unused
+    float4 TextureSize : POSITION2;
 
     // per Instance
     uint InstanceID: SV_InstanceID;
@@ -34,21 +34,11 @@ struct VS_OUTPUT {
     float4 Position     : SV_Position;
     float4 Color        : COLOR0;
     float2 TextureCoord : TEXCOORD0;
-    uint TextureIndex   : BLENDINDICES0;
 };
 
-cbuffer Matrices: register(b0) {
+cbuffer SpriteBatchConstants: register(b0) {
     matrix<float, 4, 4> ViewProjection;
 };
-
-cbuffer TextureConstants: register(b1) {
-    vector<float, 2> InverseTextureWidths[4];
-};
-
-float2 GetInverseTextureWidth(uint textureIndex)
-{
-    return InverseTextureWidths[textureIndex].xy;
-}
 
 VS_OUTPUT SpriteBatchRendererVS(VS_INPUT input)
 {
@@ -63,17 +53,14 @@ VS_OUTPUT SpriteBatchRendererVS(VS_INPUT input)
         float2(input.TransformMatrix1.yw),
         float2(input.TransformMatrix2Origin.xy));
 
-    //position = mul(float3(position, 1.0), worldMatrix).xy;
     position = mul(float3(position, 1.0), worldMatrix).xy;
 
-    uint textureIndex = (uint)input.TextureIndex.x;
-    float2 inverseTextureWidth = GetInverseTextureWidth(textureIndex);
+    float2 inverseTextureSize = input.TextureSize.xy;
 
     VS_OUTPUT output = (VS_OUTPUT)0;
     output.Position = mul(float4(position.xy, 0.0, 1.0), ViewProjection);
-    output.TextureCoord = (input.PositionTextureCoord.zw * input.SourceRect.zw + input.SourceRect.xy) * inverseTextureWidth.xy;
+    output.TextureCoord = (input.PositionTextureCoord.zw * input.SourceRect.zw + input.SourceRect.xy) * inverseTextureSize;
     output.Color = input.Color;
-    output.TextureIndex = textureIndex;
 
     return output;
 }
