@@ -296,16 +296,20 @@ void PolygonBatch::DrawRectangle(
 
 void PolygonBatch::DrawRectangle(
     const Matrix3x2& matrix,
-    const Rectangle& sourceRect,
+    const Vector2& position,
+    float width,
+    float height,
     const Color& color)
 {
     POMDOG_ASSERT(impl);
-    impl->polygonShapes.DrawRectangle(matrix, sourceRect, color);
+    impl->polygonShapes.DrawRectangle(matrix, position, width, height, color);
 }
 
 void PolygonBatch::DrawRectangle(
     const Matrix3x2& matrix,
-    const Rectangle& sourceRect,
+    const Vector2& position,
+    float width,
+    float height,
     const Color& color1,
     const Color& color2,
     const Color& color3,
@@ -313,7 +317,7 @@ void PolygonBatch::DrawRectangle(
 {
     POMDOG_ASSERT(impl);
     impl->polygonShapes.DrawRectangle(
-        matrix, sourceRect, color1, color2, color3, color4);
+        matrix, position, width, height, color1, color2, color3, color4);
 }
 
 void PolygonBatch::DrawRectangle(

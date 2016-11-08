@@ -152,21 +152,25 @@ void PrimitiveRenderable::DrawRectangle(
 
 void PrimitiveRenderable::DrawRectangle(
     const Matrix3x2& matrix,
-    const Rectangle& sourceRect,
+    const Vector2& position,
+    float width,
+    float height,
     const Color& color)
 {
-    shapeBuilder.DrawRectangle(matrix, sourceRect, color);
+    shapeBuilder.DrawRectangle(matrix, position, width, height, color);
 }
 
 void PrimitiveRenderable::DrawRectangle(
     const Matrix3x2& matrix,
-    const Rectangle& sourceRect,
+    const Vector2& position,
+    float width,
+    float height,
     const Color& color1,
     const Color& color2,
     const Color& color3,
     const Color& color4)
 {
-    shapeBuilder.DrawRectangle(matrix, sourceRect, color1, color2, color3, color4);
+    shapeBuilder.DrawRectangle(matrix, position, width, height, color1, color2, color3, color4);
 }
 
 void PrimitiveRenderable::DrawRectangle(

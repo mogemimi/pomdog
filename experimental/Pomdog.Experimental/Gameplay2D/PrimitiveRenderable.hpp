@@ -93,7 +93,9 @@ public:
 
     void DrawRectangle(
         const Matrix3x2& matrix,
-        const Rectangle& sourceRect,
+        const Vector2& position,
+        float width,
+        float height,
         const Color& color);
 
     ///@note
@@ -108,7 +110,9 @@ public:
     ///
     void DrawRectangle(
         const Matrix3x2& matrix,
-        const Rectangle& sourceRect,
+        const Vector2& position,
+        float width,
+        float height,
         const Color& color1,
         const Color& color2,
         const Color& color3,

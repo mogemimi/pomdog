@@ -344,29 +344,36 @@ void PolygonShapeBuilder::DrawRectangle(
 
 void PolygonShapeBuilder::DrawRectangle(
     const Matrix3x2& matrix,
-    const Rectangle& sourceRect,
+    const Vector2& position,
+    float width,
+    float height,
     const Color& color)
 {
-    DrawRectangle(matrix, sourceRect, color, color, color, color);
+    DrawRectangle(matrix, position, width, height, color, color, color, color);
 }
 
 void PolygonShapeBuilder::DrawRectangle(
         const Matrix3x2& matrix,
-        const Rectangle& sourceRect,
+        const Vector2& position,
+        float width,
+        float height,
         const Color& color1,
         const Color& color2,
         const Color& color3,
         const Color& color4)
 {
-    if (sourceRect.Width <= 0 || sourceRect.Height <= 0) {
+    if (width <= 0 || height <= 0) {
         return;
     }
 
+    const auto left = position.X;
+    const auto right = position.X + width;
+
     std::array<Vector3, 4> rectVertices = {
-        Vector3(sourceRect.GetLeft(), sourceRect.Y, 0.0f),
-        Vector3(sourceRect.GetLeft(), sourceRect.Y + sourceRect.Height, 0.0f),
-        Vector3(sourceRect.GetRight(), sourceRect.Y + sourceRect.Height, 0.0f),
-        Vector3(sourceRect.GetRight(), sourceRect.Y, 0.0f),
+        Vector3(left, position.Y, 0.0f),
+        Vector3(left, position.Y + height, 0.0f),
+        Vector3(right, position.Y + height, 0.0f),
+        Vector3(right, position.Y, 0.0f),
     };
 
     for (auto & vertex: rectVertices) {
