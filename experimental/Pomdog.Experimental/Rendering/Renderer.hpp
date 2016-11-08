@@ -4,7 +4,6 @@
 
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Math/Matrix4x4.hpp"
-#include <cstdint>
 #include <memory>
 
 namespace Pomdog {
@@ -26,7 +25,7 @@ public:
 
     void PushCommand(std::reference_wrapper<RenderCommand> && command);
 
-    void Clear();
+    void Reset();
 
     void AddProcessor(std::unique_ptr<RenderCommandProcessor> && processor);
 

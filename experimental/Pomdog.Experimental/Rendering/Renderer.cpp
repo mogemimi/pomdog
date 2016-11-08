@@ -1,15 +1,29 @@
 // Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
 
 #include "Renderer.hpp"
-#include "RenderQueue.hpp"
 #include "RenderCommand.hpp"
 #include "Pomdog.Experimental/Rendering/RenderCommandProcessor.hpp"
 #include "Pomdog/Graphics/GraphicsCommandList.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include <unordered_map>
+#include <algorithm>
+#include <functional>
 #include <typeindex>
+#include <unordered_map>
+#include <utility>
+#include <vector>
 
 namespace Pomdog {
+namespace {
+
+bool CompareRenderCommands(const RenderCommand& a, const RenderCommand& b)
+{
+    if (a.GetDrawOrder() == b.GetDrawOrder()) {
+        return a.GetType() < b.GetType();
+    }
+    return a.GetDrawOrder() < b.GetDrawOrder();
+}
+
+} // unnamed namespace
 
 // MARK: - Renderer::Impl
 
@@ -21,18 +35,21 @@ public:
         const std::type_index& index,
         std::unique_ptr<RenderCommandProcessor> && processor);
 
+    void Reset();
+
     std::shared_ptr<GraphicsCommandList> Render();
 
-    void Clear();
+    void SortCommands();
 
 public:
     std::unordered_map<
         std::type_index, std::unique_ptr<RenderCommandProcessor>> processors;
-    RenderQueue renderQueue;
+    std::vector<std::reference_wrapper<RenderCommand>> commands;
     std::shared_ptr<GraphicsCommandList> commandList;
     Matrix4x4 viewMatrix;
     Matrix4x4 projectionMatrix;
     int drawCallCount;
+    bool needToSortCommandList;
 };
 
 Renderer::Impl::Impl(const std::shared_ptr<GraphicsDevice>& graphicsDevice)
@@ -44,12 +61,26 @@ Renderer::Impl::Impl(const std::shared_ptr<GraphicsDevice>& graphicsDevice)
     commandList = std::make_shared<GraphicsCommandList>(graphicsDevice);
 }
 
+void Renderer::Impl::Reset()
+{
+    commands.clear();
+}
+
 void Renderer::Impl::AddProcessor(
     const std::type_index& index,
     std::unique_ptr<RenderCommandProcessor> && processor)
 {
     POMDOG_ASSERT(processor);
     processors.emplace(index, std::move(processor));
+}
+
+void Renderer::Impl::SortCommands()
+{
+    if (!needToSortCommandList) {
+        return;
+    }
+    std::sort(std::begin(commands), std::end(commands), CompareRenderCommands);
+    needToSortCommandList = false;
 }
 
 std::shared_ptr<GraphicsCommandList> Renderer::Impl::Render()
@@ -67,10 +98,10 @@ std::shared_ptr<GraphicsCommandList> Renderer::Impl::Render()
 
     auto prevIter = std::end(processors);
 
-    renderQueue.Sort();
-    renderQueue.Enumerate([&](RenderCommand & command)
-    {
-        auto iter = processors.find(command.GetType());
+    SortCommands();
+
+    for (auto & command : commands) {
+        auto iter = processors.find(command.get().GetType());
 
         if (prevIter != iter) {
             if (prevIter != std::end(processors)) {
@@ -94,8 +125,8 @@ std::shared_ptr<GraphicsCommandList> Renderer::Impl::Render()
         POMDOG_ASSERT(prevIter == iter);
 
         if (iter == std::end(processors)) {
-            // warning
-            return;
+            // NOTE: If the command processor is not found, skipping rendering.
+            continue;
         }
 
         POMDOG_ASSERT(iter != std::end(processors));
@@ -104,7 +135,7 @@ std::shared_ptr<GraphicsCommandList> Renderer::Impl::Render()
         auto & processor = iter->second;
 
         processor->Draw(commandList, command);
-    });
+    }
 
     if (std::end(processors) != prevIter) {
         POMDOG_ASSERT(prevIter->second);
@@ -115,11 +146,6 @@ std::shared_ptr<GraphicsCommandList> Renderer::Impl::Render()
         drawCallCount += processor->GetDrawCallCount();
     }
     return commandList;
-}
-
-void Renderer::Impl::Clear()
-{
-    renderQueue.Clear();
 }
 
 // MARK: - Renderer
@@ -139,7 +165,8 @@ std::shared_ptr<GraphicsCommandList> Renderer::Render()
 void Renderer::PushCommand(std::reference_wrapper<RenderCommand> && command)
 {
     POMDOG_ASSERT(impl);
-    impl->renderQueue.PushBack(std::move(command));
+    impl->commands.push_back(std::move(command));
+    impl->needToSortCommandList = true;
 }
 
 void Renderer::SetViewMatrix(const Matrix4x4& viewMatrixIn)
@@ -160,10 +187,10 @@ int Renderer::GetDrawCallCount() const noexcept
     return impl->drawCallCount;
 }
 
-void Renderer::Clear()
+void Renderer::Reset()
 {
     POMDOG_ASSERT(impl);
-    impl->Clear();
+    impl->Reset();
 }
 
 void Renderer::AddProcessor(std::unique_ptr<RenderCommandProcessor> && processor)

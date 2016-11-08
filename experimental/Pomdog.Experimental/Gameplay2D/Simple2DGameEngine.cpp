@@ -121,7 +121,7 @@ void Simple2DGameEngine::Draw()
         needToUpdateViewProjectionMatrix = false;
     }
 
-    renderer->Clear();
+    renderer->Reset();
 
     for (auto & entity : entityManager.QueryComponents<GraphicsComponent>()) {
         auto graphicsComponent = entity.GetComponent<GraphicsComponent>();
