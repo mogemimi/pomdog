@@ -67,6 +67,13 @@ public:
         float weight);
 
     void DrawLine(
+        const Matrix3x2& matrix,
+        const Vector2& start,
+        const Vector2& end,
+        const Color& color,
+        float weight);
+
+    void DrawLine(
         const Vector2& start,
         const Vector2& end,
         const Color& startColor,

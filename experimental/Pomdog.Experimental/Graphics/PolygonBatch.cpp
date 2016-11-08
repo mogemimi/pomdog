@@ -242,6 +242,19 @@ void PolygonBatch::DrawLine(
 }
 
 void PolygonBatch::DrawLine(
+    const Matrix3x2& matrix,
+    const Vector2& start,
+    const Vector2& end,
+    const Color& color,
+    float weight)
+{
+    POMDOG_ASSERT(impl);
+    auto transformedStart = Vector2::Transform(start, matrix);
+    auto transformedEnd = Vector2::Transform(end, matrix);
+    impl->polygonShapes.DrawLine(transformedStart, transformedEnd, color, weight);
+}
+
+void PolygonBatch::DrawLine(
     const Vector2& start,
     const Vector2& end,
     const Color& startColor,
