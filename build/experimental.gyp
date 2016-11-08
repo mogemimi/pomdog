@@ -116,8 +116,6 @@
     #   '<@(pomdog_expr_dir)/InGameEditor/detail/PrimitiveAxes.hpp',
     #   '<@(pomdog_expr_dir)/InGameEditor/detail/PrimitiveGrid.cpp',
     #   '<@(pomdog_expr_dir)/InGameEditor/detail/PrimitiveGrid.hpp',
-      '<@(pomdog_expr_dir)/InGameEditor/detail/SpriteDrawingContext.cpp',
-      '<@(pomdog_expr_dir)/InGameEditor/detail/SpriteDrawingContext.hpp',
 
       '<@(pomdog_expr_dir)/MagicaVoxel/VoxModel.hpp',
       '<@(pomdog_expr_dir)/MagicaVoxel/VoxModelLoader.cpp',
