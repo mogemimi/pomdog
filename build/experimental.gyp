@@ -250,6 +250,8 @@
       '<@(pomdog_expr_dir)/UI/FontSize.hpp',
       '<@(pomdog_expr_dir)/UI/FontWeight.hpp',
       '<@(pomdog_expr_dir)/UI/HorizontalAlignment.hpp',
+      '<@(pomdog_expr_dir)/UI/HorizontalLayout.cpp',
+      '<@(pomdog_expr_dir)/UI/HorizontalLayout.hpp',
       '<@(pomdog_expr_dir)/UI/PointerEventType.hpp',
       '<@(pomdog_expr_dir)/UI/PointerPoint.hpp',
       '<@(pomdog_expr_dir)/UI/ScenePanel.cpp',
@@ -271,6 +273,8 @@
       '<@(pomdog_expr_dir)/UI/UIEventDispatcher.hpp',
       '<@(pomdog_expr_dir)/UI/UIHelper.hpp',
       '<@(pomdog_expr_dir)/UI/VerticalAlignment.hpp',
+      '<@(pomdog_expr_dir)/UI/VerticalLayout.cpp',
+      '<@(pomdog_expr_dir)/UI/VerticalLayout.hpp',
       '<@(pomdog_expr_dir)/UI/detail/SubscribeRequestDispatcher.hpp',
       '<@(pomdog_expr_dir)/UI/detail/UIEventConnection.hpp',
 
