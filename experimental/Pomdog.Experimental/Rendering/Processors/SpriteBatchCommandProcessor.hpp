@@ -17,25 +17,23 @@ public:
         AssetManager & assets);
 
     void Begin(
-        const std::shared_ptr<GraphicsCommandList>& commandList) override;
+        const std::shared_ptr<GraphicsCommandList>& commandList,
+        const Matrix4x4& viewProjection) override;
 
     void Draw(
         const std::shared_ptr<GraphicsCommandList>& commandList,
         RenderCommand & command) override;
 
-    void End(const std::shared_ptr<GraphicsCommandList>& commandList) override;
+    void FlushBatch() override;
+
+    void End() override;
 
     int GetDrawCallCount() const noexcept override;
-
-    void SetViewProjection(
-        const Matrix4x4& view, const Matrix4x4& projection) override;
 
     std::type_index GetCommandType() const noexcept override;
 
 public:
-    Matrix4x4 viewProjection;
     SpriteBatchRenderer spriteBatch;
-    int drawCallCount;
 };
 
 } // namespace Rendering

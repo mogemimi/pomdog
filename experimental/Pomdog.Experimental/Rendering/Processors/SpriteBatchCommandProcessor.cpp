@@ -1,6 +1,6 @@
 // Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
 
-#include "SpriteBatchCommandProcessor.hpp"
+#include "Pomdog.Experimental/Rendering/Processors/SpriteBatchCommandProcessor.hpp"
 #include "Pomdog.Experimental/Rendering/Commands/SpriteBatchCommand.hpp"
 
 namespace Pomdog {
@@ -10,45 +10,37 @@ SpriteBatchCommandProcessor::SpriteBatchCommandProcessor(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
     AssetManager & assets)
     : spriteBatch(graphicsDevice, assets)
-    , viewProjection(Matrix4x4::Identity)
-    , drawCallCount(0)
 {
 }
 
 void SpriteBatchCommandProcessor::Begin(
-    const std::shared_ptr<GraphicsCommandList>& commandList)
+    const std::shared_ptr<GraphicsCommandList>& commandList,
+    const Matrix4x4& viewProjection)
 {
-    drawCallCount = 0;
     spriteBatch.Begin(commandList, viewProjection);
 }
 
 void SpriteBatchCommandProcessor::Draw(
     const std::shared_ptr<GraphicsCommandList>& commandList,
-    RenderCommand & command)
+    RenderCommand & renderCommand)
 {
-    using Pomdog::Rendering::SpriteBatchCommand;
-    auto & spriteCommand = static_cast<SpriteBatchCommand &>(command);
-    if (spriteCommand.onDraw) {
-        spriteCommand.onDraw(spriteBatch);
-    }
+    auto & command = static_cast<SpriteRenderCommand &>(renderCommand);
+    command.Execute(spriteBatch);
 }
 
-void SpriteBatchCommandProcessor::End(
-    const std::shared_ptr<GraphicsCommandList>& commandList)
+void SpriteBatchCommandProcessor::FlushBatch()
+{
+    spriteBatch.Flush();
+}
+
+void SpriteBatchCommandProcessor::End()
 {
     spriteBatch.End();
-    drawCallCount += spriteBatch.GetDrawCallCount();
 }
 
 int SpriteBatchCommandProcessor::GetDrawCallCount() const noexcept
 {
-    return drawCallCount;
-}
-
-void SpriteBatchCommandProcessor::SetViewProjection(
-    const Matrix4x4& view, const Matrix4x4& projection)
-{
-    viewProjection = view * projection;
+    return spriteBatch.GetDrawCallCount();
 }
 
 std::type_index SpriteBatchCommandProcessor::GetCommandType() const noexcept
