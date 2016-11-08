@@ -109,7 +109,7 @@ void PongGame::Initialize()
         });
     }
     {
-        auto font = std::make_shared<TrueTypeFont>(*assets, "fonts/NotoSans-BoldItalic.ttf");
+        auto font = std::make_shared<TrueTypeFont>(*assets, "fonts/NotoSans/NotoSans-BoldItalic.ttf");
         spriteFont = std::make_shared<SpriteFont>(graphicsDevice, font, '?', 26);
     }
     {
