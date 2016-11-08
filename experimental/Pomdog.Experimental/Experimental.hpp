@@ -112,6 +112,7 @@
 #include "UI/FontWeight.hpp"
 #include "UI/HorizontalAlignment.hpp"
 #include "UI/HorizontalLayout.hpp"
+#include "UI/HorizontalLine.hpp"
 #include "UI/PointerEventType.hpp"
 #include "UI/PointerPoint.hpp"
 #include "UI/ScenePanel.hpp"

@@ -252,6 +252,8 @@
       '<@(pomdog_expr_dir)/UI/HorizontalAlignment.hpp',
       '<@(pomdog_expr_dir)/UI/HorizontalLayout.cpp',
       '<@(pomdog_expr_dir)/UI/HorizontalLayout.hpp',
+      '<@(pomdog_expr_dir)/UI/HorizontalLine.cpp',
+      '<@(pomdog_expr_dir)/UI/HorizontalLine.hpp',
       '<@(pomdog_expr_dir)/UI/PointerEventType.hpp',
       '<@(pomdog_expr_dir)/UI/PointerPoint.hpp',
       '<@(pomdog_expr_dir)/UI/ScenePanel.cpp',
