@@ -36,12 +36,10 @@
 #include "Graphics/PolygonBatch.hpp"
 #include "Graphics/ScreenQuad.hpp"
 //#include "Graphics/SkinnedEffect.hpp"
-//#include "Graphics/SpriteBatch.hpp"
 #include "Graphics/SpriteFont.hpp"
 #include "Graphics/SpriteFontLoader.hpp"
 //#include "Graphics/SpriteLine.hpp"
 #include "Graphics/SpriteSortMode.hpp"
-//#include "Graphics/SpriteRenderer.hpp"
 
 #include "ImageEffects/ChromaticAberration.hpp"
 #include "ImageEffects/FishEyeEffect.hpp"
