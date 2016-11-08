@@ -4,6 +4,7 @@
 #include "Pomdog.Experimental/Gameplay2D/ActorComponent.hpp"
 #include "Pomdog.Experimental/Gameplay2D/GraphicsComponent.hpp"
 #include "Pomdog.Experimental/Rendering/Processors/PrimitiveCommandProcessor.hpp"
+#include "Pomdog.Experimental/Rendering/Processors/PrimitivePolygonCommandProcessor.hpp"
 #include "Pomdog.Experimental/Rendering/Processors/SpriteBatchCommandProcessor.hpp"
 
 namespace Pomdog {
@@ -32,6 +33,8 @@ Simple2DGameEngine::Simple2DGameEngine(const std::shared_ptr<GameHost>& gameHost
 
         renderer->AddProcessor(std::make_unique<
             Rendering::PrimitiveCommandProcessor>(graphicsDevice, *assets));
+        renderer->AddProcessor(std::make_unique<
+            Rendering::PrimitivePolygonCommandProcessor>(graphicsDevice, *assets));
         renderer->AddProcessor(std::make_unique<
             Rendering::SpriteBatchCommandProcessor>(graphicsDevice, *assets));
     }
