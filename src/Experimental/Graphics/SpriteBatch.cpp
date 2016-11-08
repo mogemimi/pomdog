@@ -240,7 +240,8 @@ void SpriteBatch::Impl::Begin(
     this->commandList = commandListIn;
 
     POMDOG_ASSERT(constantBufferMatrices);
-    constantBufferMatrices->SetValue(transformMatrix);
+    alignas(16) Matrix4x4 transposedMatrix = Matrix4x4::Transpose(transformMatrix);
+    constantBufferMatrices->SetValue(transposedMatrix);
 
     startInstanceLocation = 0;
     drawCallCount = 0;

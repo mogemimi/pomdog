@@ -53,7 +53,9 @@ void main()
     mat3x3 transform = translate * (rotate * scaling);
     vec3 position = (transform * vec3(PositionTextureCoord.xy - OriginRotationDepth.xy, 1.0));
 
-    vec4 finalPosition = ViewProjection * vec4(position.xy, 0.0, 1.0);
+    // NOTE: 'ViewProjection' has already been transposed.
+    vec4 finalPosition = vec4(position.xy, 0.0, 1.0) * ViewProjection;
+
     gl_Position = vec4(finalPosition.xy, OriginRotationDepth.w, 1.0);
 
     Out.TextureCoord = (PositionTextureCoord.zw * SourceRect.zw + SourceRect.xy) * InverseTextureSize.xy;
