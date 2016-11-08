@@ -43,13 +43,11 @@ PrimitiveCommandProcessor::PrimitiveCommandProcessor(
 }
 
 void PrimitiveCommandProcessor::Begin(
-    const std::shared_ptr<GraphicsCommandList>& commandList)
+    const std::shared_ptr<GraphicsCommandList>& commandList,
+    const Matrix4x4& viewProjectionIn)
 {
     drawCallCount = 0;
-
-    POMDOG_ASSERT(commandList);
-    commandList->SetPipelineState(pipelineState);
-    commandList->SetPrimitiveTopology(PrimitiveTopology::TriangleList);
+    viewProjection = viewProjectionIn;
 }
 
 void PrimitiveCommandProcessor::Draw(
@@ -71,6 +69,8 @@ void PrimitiveCommandProcessor::Draw(
     POMDOG_ASSERT(primitiveCommand.vertexCount > 0);
     POMDOG_ASSERT(primitiveCommand.vertexCount <= primitiveCommand.vertexBuffer->GetVertexCount());
 
+    commandList->SetPipelineState(pipelineState);
+    commandList->SetPrimitiveTopology(PrimitiveTopology::TriangleList);
     commandList->SetVertexBuffer(primitiveCommand.vertexBuffer);
     commandList->SetConstantBuffer(0, primitiveCommand.constantBuffer);
     commandList->Draw(primitiveCommand.vertexCount, 0);
@@ -78,20 +78,17 @@ void PrimitiveCommandProcessor::Draw(
     ++drawCallCount;
 }
 
-void PrimitiveCommandProcessor::End(
-    const std::shared_ptr<GraphicsCommandList>& commandList)
+void PrimitiveCommandProcessor::End()
+{
+}
+
+void PrimitiveCommandProcessor::FlushBatch()
 {
 }
 
 int PrimitiveCommandProcessor::GetDrawCallCount() const noexcept
 {
     return drawCallCount;
-}
-
-void PrimitiveCommandProcessor::SetViewProjection(
-    const Matrix4x4& view, const Matrix4x4& projection)
-{
-    viewProjection = view * projection;
 }
 
 std::type_index PrimitiveCommandProcessor::GetCommandType() const noexcept

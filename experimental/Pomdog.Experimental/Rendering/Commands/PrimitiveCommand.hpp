@@ -13,14 +13,11 @@ class PrimitiveCommand final : public RenderCommand {
 public:
     std::type_index GetType() const noexcept override;
 
-    float GetDrawOrder() const noexcept override;
-
 public:
     std::shared_ptr<VertexBuffer> vertexBuffer;
     std::shared_ptr<ConstantBuffer> constantBuffer;
     std::size_t vertexCount;
     Matrix4x4 worldMatrix;
-    float drawOrder;
 };
 
 } // namespace Rendering

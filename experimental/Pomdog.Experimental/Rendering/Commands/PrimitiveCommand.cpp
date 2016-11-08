@@ -12,10 +12,5 @@ std::type_index PrimitiveCommand::GetType() const noexcept
     return index;
 }
 
-float PrimitiveCommand::GetDrawOrder() const noexcept
-{
-    return drawOrder;
-}
-
 } // namespace Rendering
 } // namespace Pomdog
