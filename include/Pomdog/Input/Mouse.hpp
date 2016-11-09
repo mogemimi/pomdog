@@ -2,8 +2,11 @@
 
 #pragma once
 
+#include "Pomdog/Input/MouseButtons.hpp"
+#include "Pomdog/Math/Point2D.hpp"
 #include "Pomdog/Signals/Signal.hpp"
 #include "Pomdog/Basic/Export.hpp"
+#include <cstdint>
 
 namespace Pomdog {
 
@@ -19,15 +22,15 @@ public:
 
     virtual MouseState GetState() const = 0;
 
-//    Signal<void(MouseEvent const& mouseEvent)> MouseMove;
-//
-//    Signal<void(MouseEvent const& mouseEvent)> ButtonDown;
-//
-//    Signal<void(MouseEvent const& mouseEvent)> ButtonUp;
-//
-//    Signal<void(MouseEvent const& mouseEvent)> Click;
-//
-//    Signal<void(MouseEvent const& mouseEvent)> Wheel;
+    Signal<void(const Point2D& position)> Moved;
+
+    Signal<void(MouseButtons mouseButton)> ButtonDown;
+
+    Signal<void(MouseButtons mouseButton)> ButtonUp;
+
+    Signal<void(std::int32_t delta)> ScrollWheel;
+
+    //Signal<void(MouseButtons mouseButton)> Click;
 };
 
 } // namespace Pomdog
