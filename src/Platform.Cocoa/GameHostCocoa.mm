@@ -20,7 +20,6 @@
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Graphics/Viewport.hpp"
-#include "Pomdog/Input/KeyState.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/FileSystem.hpp"
@@ -392,55 +391,11 @@ void GameHostCocoa::Impl::ProcessSystemEvents(const Event& event)
             "ViewDidEndLiveResizeEvent: {w: %d, h: %d}",
             rect.Width, rect.Height));
     }
-    else if (auto keyEvent = event.As<InputKeyEvent>())
-    {
+    else {
         POMDOG_ASSERT(keyboard);
-        keyboard->SetKey(keyEvent->Key, keyEvent->State);
-    }
-    else if (auto inputTextEvent = event.As<InputTextEvent>())
-    {
-        POMDOG_ASSERT(keyboard);
-        keyboard->Keyboard::TextInput(inputTextEvent->text);
-    }
-    else if (auto mousePositionEvent = event.As<MousePositionEvent>())
-    {
         POMDOG_ASSERT(mouse);
-        mouse->Position(mousePositionEvent->Position);
-    }
-    else if (auto mouseButtonEvent = event.As<MouseButtonEvent>())
-    {
-        POMDOG_ASSERT(mouse);
-        if (mouseButtonEvent->Button == MouseButtons::Left) {
-            mouse->LeftButton(mouseButtonEvent->State == MouseButtonState::Up
-                ? ButtonState::Released
-                : ButtonState::Pressed);
-        }
-        else if (mouseButtonEvent->Button == MouseButtons::Right) {
-            mouse->RightButton(mouseButtonEvent->State == MouseButtonState::Up
-                ? ButtonState::Released
-                : ButtonState::Pressed);
-        }
-        else if (mouseButtonEvent->Button == MouseButtons::Middle) {
-            mouse->MiddleButton(mouseButtonEvent->State == MouseButtonState::Up
-                ? ButtonState::Released
-                : ButtonState::Pressed);
-        }
-        else if (mouseButtonEvent->Button == MouseButtons::XButton1) {
-            mouse->XButton1(mouseButtonEvent->State == MouseButtonState::Up
-                ? ButtonState::Released
-                : ButtonState::Pressed);
-        }
-        else if (mouseButtonEvent->Button == MouseButtons::XButton2) {
-            mouse->XButton2(mouseButtonEvent->State == MouseButtonState::Up
-                ? ButtonState::Released
-                : ButtonState::Pressed);
-        }
-        mouse->Position(mouseButtonEvent->Position);
-    }
-    else if (auto scrollWheelEvent = event.As<ScrollWheelEvent>())
-    {
-        POMDOG_ASSERT(mouse);
-        mouse->WheelDelta(scrollWheelEvent->ScrollingDeltaY);
+        keyboard->HandleEvent(event);
+        mouse->HandleEvent(event);
     }
 }
 

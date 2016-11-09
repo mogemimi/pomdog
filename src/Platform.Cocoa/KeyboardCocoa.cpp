@@ -1,7 +1,10 @@
 // Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
 
 #include "KeyboardCocoa.hpp"
+#include "../Application/SystemEvents.hpp"
 #include "Pomdog/Input/KeyState.hpp"
+#include "Pomdog/Signals/Event.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
 namespace Detail {
@@ -14,23 +17,31 @@ KeyboardState KeyboardCocoa::GetState() const
     return state;
 }
 
-void KeyboardCocoa::SetKey(Keys key, KeyState keyState)
+void KeyboardCocoa::HandleEvent(const Event& event)
 {
-    bool isKeyDown = state.IsKeyDown(key);
+    if (auto keyEvent = event.As<InputKeyEvent>()) {
+        const auto key = keyEvent->Key;
+        const auto keyState = keyEvent->State;
 
-    state.SetKey(key, keyState);
+        bool isKeyDown = state.IsKeyDown(key);
 
-    switch (keyState) {
-    case KeyState::Down:
-        if (!isKeyDown) {
-            Keyboard::KeyDown(key);
+        state.SetKey(key, keyState);
+
+        switch (keyState) {
+        case KeyState::Down:
+            if (!isKeyDown) {
+                Keyboard::KeyDown(key);
+            }
+            break;
+        case KeyState::Up:
+            if (isKeyDown) {
+                Keyboard::KeyUp(key);
+            }
+            break;
         }
-        break;
-    case KeyState::Up:
-        if (isKeyDown) {
-            Keyboard::KeyUp(key);
-        }
-        break;
+    }
+    else if (auto inputTextEvent = event.As<InputTextEvent>()) {
+        Keyboard::TextInput(inputTextEvent->text);
     }
 }
 

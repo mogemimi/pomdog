@@ -6,6 +6,12 @@
 #include "Pomdog/Input/KeyboardState.hpp"
 
 namespace Pomdog {
+
+class Event;
+
+} // namespace Pomdog
+
+namespace Pomdog {
 namespace Detail {
 namespace Cocoa {
 
@@ -15,7 +21,7 @@ public:
 
     KeyboardState GetState() const override;
 
-    void SetKey(Keys key, KeyState keyState);
+    void HandleEvent(const Event& event);
 
 private:
     KeyboardState state;

@@ -6,6 +6,12 @@
 #include "Pomdog/Input/MouseState.hpp"
 
 namespace Pomdog {
+
+class Event;
+
+} // namespace Pomdog
+
+namespace Pomdog {
 namespace Detail {
 namespace Cocoa {
 
@@ -15,14 +21,7 @@ public:
 
     MouseState GetState() const override;
 
-    void Position(const Point2D& position);
-    void LeftButton(ButtonState buttonState);
-    void RightButton(ButtonState buttonState);
-    void MiddleButton(ButtonState buttonState);
-    void XButton1(ButtonState buttonState);
-    void XButton2(ButtonState buttonState);
-
-    void WheelDelta(double wheelDelta);
+    void HandleEvent(const Event& event);
 
 private:
     MouseState state;
