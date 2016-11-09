@@ -5,6 +5,7 @@
 #include "Pomdog/Input/ButtonState.hpp"
 #include "Pomdog/Input/KeyState.hpp"
 #include "Pomdog/Input/Keys.hpp"
+#include "Pomdog/Input/MouseButtons.hpp"
 #include "Pomdog/Math/Point2D.hpp"
 #include <string>
 
@@ -36,14 +37,6 @@ enum class MouseEventType {
 struct MousePositionEvent {
     Point2D Position;
     MouseEventType Type;
-};
-
-enum class MouseButtons {
-    Left,
-    Middle,
-    Right,
-    XButton1,
-    XButton2,
 };
 
 enum class MouseButtonState {

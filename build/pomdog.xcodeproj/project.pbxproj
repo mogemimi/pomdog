@@ -555,6 +555,7 @@
 		A93CA64E1D92F34E00B65171 /* QueuedScheduler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = QueuedScheduler.cpp; path = Async/QueuedScheduler.cpp; sourceTree = "<group>"; };
 		A93CA64F1D92F34E00B65171 /* Task.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Task.cpp; path = Async/Task.cpp; sourceTree = "<group>"; };
 		A94ACC591C287C9100AFCC36 /* ConditionalCompilation.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ConditionalCompilation.hpp; sourceTree = "<group>"; };
+		A94F1C2B1DD30851001DC8E5 /* MouseButtons.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MouseButtons.hpp; sourceTree = "<group>"; };
 		A9854B9C1DC115D400650729 /* BufferHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BufferHelper.cpp; sourceTree = "<group>"; };
 		A9854B9D1DC115D400650729 /* BufferHelper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = BufferHelper.hpp; sourceTree = "<group>"; };
 		A992AF001C2B1168003170C9 /* Coordinate2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Coordinate2D.cpp; sourceTree = "<group>"; };
@@ -1053,6 +1054,7 @@
 				C992E4CA07FD4BEA490B8AEF /* KeyboardState.hpp */,
 				0BCA87AFE51C8126772E2361 /* Keys.hpp */,
 				2D965456EE785A751623A147 /* Mouse.hpp */,
+				A94F1C2B1DD30851001DC8E5 /* MouseButtons.hpp */,
 				8347BA9645EEE40BD15B3FD7 /* MouseState.hpp */,
 				1AEA83A100F195FE0816B39C /* PlayerIndex.hpp */,
 				AF7B9F1EA82DCFB0FC8B79A1 /* TouchLocation.hpp */,

@@ -139,6 +139,7 @@
       '../include/Pomdog/Input/KeyState.hpp',
       '../include/Pomdog/Input/Keys.hpp',
       '../include/Pomdog/Input/Mouse.hpp',
+      '../include/Pomdog/Input/MouseButtons.hpp',
       '../include/Pomdog/Input/MouseState.hpp',
       '../include/Pomdog/Input/PlayerIndex.hpp',
       '../include/Pomdog/Input/TouchLocation.hpp',

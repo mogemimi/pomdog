@@ -118,6 +118,7 @@
 #include "Input/Keys.hpp"
 #include "Input/KeyState.hpp"
 #include "Input/Mouse.hpp"
+#include "Input/MouseButtons.hpp"
 #include "Input/MouseState.hpp"
 #include "Input/PlayerIndex.hpp"
 #include "Input/TouchLocation.hpp"
