@@ -446,7 +446,7 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
 
     NSPoint locationInView = [self convertPoint:[theEvent locationInWindow] fromView:nil];
 
-    event.State = MouseButtonState::Up;
+    event.State = MouseButtonState::Down;
     event.Position = ToPoint2D(locationInView);
     eventQueue->Enqueue(Event{std::move(event)});
 }
