@@ -1,13 +1,16 @@
 // Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
 
 #include "MouseX11.hpp"
+#include "Pomdog/Input/MouseButtons.hpp"
+#include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Utility/Optional.hpp"
 
 namespace Pomdog {
 namespace Detail {
 namespace X11 {
 namespace {
 
-static ButtonState* ToMouseButton(MouseState & mouseState, unsigned int buttonIndex)
+ButtonState* GetButtonByIndex(MouseState & mouseState, unsigned int buttonIndex)
 {
     switch (buttonIndex) {
     case 1: return &mouseState.LeftButton;
@@ -17,6 +20,18 @@ static ButtonState* ToMouseButton(MouseState & mouseState, unsigned int buttonIn
         break;
     }
     return nullptr;
+}
+
+Optional<MouseButtons> ToMouseButtons(unsigned int buttonIndex)
+{
+    switch (buttonIndex) {
+    case 1: return MouseButtons::Left;
+    case 2: return MouseButtons::Middle;
+    case 3: return MouseButtons::Right;
+    default:
+        break;
+    }
+    return NullOpt;
 }
 
 } // unnamed namespace
@@ -30,8 +45,12 @@ void MouseX11::HandleEvent(XEvent & event)
 {
     switch (event.type) {
     case ButtonPress: {
-        if (auto button = ToMouseButton(mouseState, event.xbutton.button)) {
+        if (auto button = GetButtonByIndex(mouseState, event.xbutton.button)) {
             *button = ButtonState::Pressed;
+
+            auto mouseButton = ToMouseButtons(event.xbutton.button);
+            POMDOG_ASSERT(mouseButton);
+            Mouse::ButtonDown(*mouseButton);
         }
 //        else if (event.xbutton.button == 4) {
 //            mouseState.ScrollWheel += 1;
@@ -42,8 +61,12 @@ void MouseX11::HandleEvent(XEvent & event)
         break;
     }
     case ButtonRelease: {
-        if (auto button = ToMouseButton(mouseState, event.xbutton.button)) {
+        if (auto button = GetButtonByIndex(mouseState, event.xbutton.button)) {
             *button = ButtonState::Released;
+
+            auto mouseButton = ToMouseButtons(event.xbutton.button);
+            POMDOG_ASSERT(mouseButton);
+            Mouse::ButtonUp(*mouseButton);
         }
 //        else if (event.xbutton.button == 4) {
 //            mouseState.ScrollWheel += 1;
@@ -59,6 +82,7 @@ void MouseX11::HandleEvent(XEvent & event)
     case MotionNotify: {
         mouseState.Position.X = event.xmotion.x;
         mouseState.Position.Y = event.xmotion.y;
+        Mouse::Moved(mouseState.Position);
         break;
     }
     case LeaveNotify: {
