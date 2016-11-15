@@ -288,6 +288,24 @@ void GraphicsDeviceDirect3D11::Impl::BuildDevice()
             break;
         };
     }
+    {
+        D3D11_FEATURE_DATA_D3D11_OPTIONS d3d11Options;
+        hr = device->CheckFeatureSupport(
+            D3D11_FEATURE_D3D11_OPTIONS,
+            &d3d11Options,
+            sizeof(D3D11_FEATURE_DATA_D3D11_OPTIONS));
+
+        if (FAILED(hr)) {
+            // FUS RO DAH!
+            POMDOG_THROW_EXCEPTION(std::runtime_error,
+                "Failed to call CheckFeatureSupport");
+        }
+
+        Log::Internal("MapNoOverwriteOnDynamicBufferSRV: "
+            + std::to_string(d3d11Options.MapNoOverwriteOnDynamicBufferSRV));
+        Log::Internal("MapNoOverwriteOnDynamicConstantBuffer: "
+            + std::to_string(d3d11Options.MapNoOverwriteOnDynamicConstantBuffer));
+    }
 #endif
 }
 

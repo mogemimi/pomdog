@@ -84,6 +84,28 @@ ID3D11Buffer* CreateNativeBuffer(
     return std::move(buffer);
 }
 
+D3D11_MAP GetMapTypeForWriting(D3D11_BIND_FLAG bindFlag) noexcept
+{
+    if (bindFlag == D3D11_BIND_CONSTANT_BUFFER) {
+        return D3D11_MAP_WRITE_DISCARD;
+    }
+
+    // NOTE:
+    // Basically, `D3D11_MAP_WRITE_NO_OVERWRITE` cannot be used on
+    // a resource created with the `D3D11_BIND_CONSTANT_BUFFER` flag.
+    // Please see https://msdn.microsoft.com/en-us/library/ff476181(v=vs.85).aspx
+    //
+    // However, Direct3D 11.1 runtime enables mapping dynamic constant buffers
+    // with D3D11_MAP_WRITE_NO_OVERWRITE.
+    // For more information, please see this option,
+    // D3D11_FEATURE_DATA_D3D11_OPTIONS::MapNoOverwriteOnDynamicConstantBuffer
+    // https://msdn.microsoft.com/en-us/library/windows/desktop/hh404457(v=vs.85).aspx
+    POMDOG_ASSERT(
+        bindFlag == D3D11_BIND_INDEX_BUFFER ||
+        bindFlag == D3D11_BIND_VERTEX_BUFFER);
+    return D3D11_MAP_WRITE_NO_OVERWRITE;
+}
+
 } // unnamed namespace
 
 BufferDirect3D11::BufferDirect3D11(
@@ -93,6 +115,7 @@ BufferDirect3D11::BufferDirect3D11(
     BufferUsage bufferUsage,
     D3D11_BIND_FLAG bindFlag)
     : deviceContext(deviceContextIn)
+    , mapTypeForWriting(GetMapTypeForWriting(bindFlag))
 {
     buffer = CreateNativeBuffer(device, sizeInBytes,
         nullptr, bufferUsage, bindFlag);
@@ -106,6 +129,7 @@ BufferDirect3D11::BufferDirect3D11(
     BufferUsage bufferUsage,
     D3D11_BIND_FLAG bindFlag)
     : deviceContext(deviceContextIn)
+    , mapTypeForWriting(GetMapTypeForWriting(bindFlag))
 {
     buffer = CreateNativeBuffer(device, sizeInBytes,
         sourceData, bufferUsage, bindFlag);
@@ -147,12 +171,9 @@ void BufferDirect3D11::SetData(
     POMDOG_ASSERT(source != nullptr);
     POMDOG_ASSERT(sizeInBytes > 0);
 
-    //constexpr D3D11_MAP mapType = D3D11_MAP_WRITE_DISCARD;
-    constexpr D3D11_MAP mapType = D3D11_MAP_WRITE_NO_OVERWRITE;
-
     D3D11_MAPPED_SUBRESOURCE mappedResource;
     auto hr = deviceContext->Map(buffer.Get(), 0,
-        mapType, 0, &mappedResource);
+        mapTypeForWriting, 0, &mappedResource);
 
     if (FAILED(hr)) {
         // FUS RO DAH!

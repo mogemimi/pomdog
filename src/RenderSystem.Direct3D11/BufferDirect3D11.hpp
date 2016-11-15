@@ -43,6 +43,7 @@ public:
 private:
     Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext;
     Microsoft::WRL::ComPtr<ID3D11Buffer> buffer;
+    D3D11_MAP mapTypeForWriting;
 };
 
 } // namespace Direct3D11
