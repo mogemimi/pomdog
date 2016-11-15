@@ -36,6 +36,7 @@ public:
 private:
     std::array<RenderTargetBlendDescGL4, 8> renderTargets;
     bool independentBlendEnable;
+    bool alphaToCoverageEnable;
 };
 
 } // namespace GL4

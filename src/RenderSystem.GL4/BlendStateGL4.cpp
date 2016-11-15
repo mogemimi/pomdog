@@ -78,6 +78,7 @@ void ToRenderTargetBlendGL4(
 
 BlendStateGL4::BlendStateGL4(const BlendDescription& description)
     : independentBlendEnable(description.IndependentBlendEnable)
+    , alphaToCoverageEnable(description.AlphaToCoverageEnable)
 {
     for (std::size_t i = 0; i < description.RenderTargets.size(); ++i) {
         POMDOG_ASSERT(i < renderTargets.size());
@@ -133,12 +134,12 @@ void BlendStateGL4::Apply()
         POMDOG_CHECK_ERROR_GL4("glBlendFuncSeparate");
     }
 
-    ///@todo Not implemented alpha to coverage.
-    //{
-    //    // Alpha to coverage
-    //    glEnable(GL_MULTISAMPLE);
-    //    glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE);
-    //}
+    if (alphaToCoverageEnable) {
+        glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE);
+    }
+    else {
+        glDisable(GL_SAMPLE_ALPHA_TO_COVERAGE);
+    }
 }
 
 } // namespace GL4
