@@ -56,34 +56,34 @@ void MouseWin32::HandleMessage(const RAWMOUSE& mouse)
     if (mouse.usButtonFlags & RI_MOUSE_BUTTON_1_DOWN) {
         previousState.LeftButton = state.LeftButton;
         state.LeftButton = ButtonState::Pressed;
-        Mouse::ButtonDown(MouseButtons::LeftButton);
+        Mouse::ButtonDown(MouseButtons::Left);
     }
     else if (mouse.usButtonFlags & RI_MOUSE_BUTTON_1_UP) {
         previousState.LeftButton = state.LeftButton;
         state.LeftButton = ButtonState::Released;
-        Mouse::ButtonUp(MouseButtons::LeftButton);
+        Mouse::ButtonUp(MouseButtons::Left);
     }
 
     if (mouse.usButtonFlags & RI_MOUSE_BUTTON_2_DOWN) {
         previousState.RightButton = state.RightButton;
         state.RightButton = ButtonState::Pressed;
-        Mouse::ButtonDown(MouseButtons::RightButton);
+        Mouse::ButtonDown(MouseButtons::Right);
     }
     else if (mouse.usButtonFlags & RI_MOUSE_BUTTON_2_UP) {
         previousState.RightButton = state.RightButton;
         state.RightButton = ButtonState::Released;
-        Mouse::ButtonUp(MouseButtons::RightButton);
+        Mouse::ButtonUp(MouseButtons::Right);
     }
 
     if (mouse.usButtonFlags & RI_MOUSE_BUTTON_3_DOWN) {
         previousState.MiddleButton = state.MiddleButton;
         state.MiddleButton = ButtonState::Pressed;
-        Mouse::ButtonDown(MouseButtons::MiddleButton);
+        Mouse::ButtonDown(MouseButtons::Middle);
     }
     else if (mouse.usButtonFlags & RI_MOUSE_BUTTON_3_UP) {
         previousState.MiddleButton = state.MiddleButton;
         state.MiddleButton = ButtonState::Released;
-        Mouse::ButtonUp(MouseButtons::MiddleButton);
+        Mouse::ButtonUp(MouseButtons::Middle);
     }
 
     if (mouse.usButtonFlags & RI_MOUSE_BUTTON_4_DOWN) {
