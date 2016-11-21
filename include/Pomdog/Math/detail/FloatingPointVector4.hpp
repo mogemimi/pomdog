@@ -65,6 +65,10 @@ public:
 
     static void Normalize(const FloatingPointVector4& source, FloatingPointVector4 & result) noexcept;
 
+    static FloatingPointVector4 Transform(
+        const FloatingPointVector4& position,
+        const FloatingPointMatrix4x4<T>& matrix) noexcept;
+
     ///@brief Returns pointer to the first element.
     const T* Data() const noexcept;
 

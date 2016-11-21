@@ -1,8 +1,10 @@
 // Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
 
 #include <Pomdog/Math/Vector3.hpp>
+#include <Pomdog/Math/Matrix4x4.hpp>
 #include <gtest/iutest_switch.hpp>
 
+using Pomdog::Matrix4x4;
 using Pomdog::Vector3;
 
 TEST(Vector3, TrivialCase)
@@ -63,4 +65,10 @@ TEST(Vector3, Lerp)
     EXPECT_EQ(Vector3(1.0f, 2.0f, 3.0f), Vector3::Lerp(Vector3(1.0f, 2.0f, 3.0f), Vector3(4.0f, 5.0f, 6.0f), 0.0f));
     EXPECT_EQ(Vector3(2.5f, 3.5f, 4.5f), Vector3::Lerp(Vector3(1.0f, 2.0f, 3.0f), Vector3(4.0f, 5.0f, 6.0f), 0.5f));
     EXPECT_EQ(Vector3(4.0f, 5.0f, 6.0f), Vector3::Lerp(Vector3(1.0f, 2.0f, 3.0f), Vector3(4.0f, 5.0f, 6.0f), 1.0f));
+}
+
+TEST(Vector3, Transform_IdentityMatrix)
+{
+    EXPECT_EQ(Vector3(0.0f, 0.0f, 0.0f), Vector3::Transform(Vector3(0.0f, 0.0f, 0.0f), Matrix4x4::Identity));
+    EXPECT_EQ(Vector3(41.0f, 42.0f, 43.0f), Vector3::Transform(Vector3(41.0f, 42.0f, 43.0f), Matrix4x4::Identity));
 }

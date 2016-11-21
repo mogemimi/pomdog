@@ -1,6 +1,7 @@
 // Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Math/detail/FloatingPointVector4.hpp"
+#include "Pomdog/Math/detail/FloatingPointMatrix4x4.hpp"
 #include "Pomdog/Math/detail/FloatingPointVector3.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <cfloat>
@@ -208,6 +209,18 @@ void FloatingPointVector4<T>::Normalize(const FloatingPointVector4& source, Floa
         result.Z = source.Z * inverseLength;
         result.W = source.W * inverseLength;
     }
+}
+
+template <typename T>
+FloatingPointVector4<T>
+FloatingPointVector4<T>::Transform(const FloatingPointVector4& vector, const FloatingPointMatrix4x4<T>& matrix) noexcept
+{
+    return FloatingPointVector4{
+        (vector.X * matrix.m[0][0]) + (vector.Y * matrix.m[1][0]) + (vector.Z * matrix.m[2][0]) + (vector.W * matrix.m[3][0]),
+        (vector.X * matrix.m[0][1]) + (vector.Y * matrix.m[1][1]) + (vector.Z * matrix.m[2][1]) + (vector.W * matrix.m[3][1]),
+        (vector.X * matrix.m[0][2]) + (vector.Y * matrix.m[1][2]) + (vector.Z * matrix.m[2][2]) + (vector.W * matrix.m[3][2]),
+        (vector.X * matrix.m[0][3]) + (vector.Y * matrix.m[1][3]) + (vector.Z * matrix.m[2][3]) + (vector.W * matrix.m[3][3])
+    };
 }
 
 template <typename T>
