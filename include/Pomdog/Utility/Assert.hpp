@@ -24,7 +24,7 @@ namespace Detail {
 #    define POMDOG_ASSERT_MESSAGE(expression, message) \
         do {\
             if (!(expression)) {\
-                assert(message && expression);\
+                assert(message && (expression));\
             }\
         } while(false)
 #elif defined(DEBUG) && defined(_MSC_VER)
