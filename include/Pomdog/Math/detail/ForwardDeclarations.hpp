@@ -71,8 +71,10 @@ using Radian = Detail::TaggedArithmetic<T, Detail::Tags::RadianTag>;
 class BoundingBox;
 class BoundingBox2D;
 class BoundingCircle;
+class BoundingFrustum;
 class BoundingSphere;
 class Color;
+class Plane;
 class Ray;
 class Rectangle;
 

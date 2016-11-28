@@ -3,6 +3,7 @@
 #include "Pomdog/Math/BoundingSphere.hpp"
 #include "Pomdog/Math/ContainmentType.hpp"
 #include "Pomdog/Math/BoundingBox.hpp"
+#include "Pomdog/Math/Plane.hpp"
 #include "Pomdog/Math/Ray.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
@@ -79,6 +80,11 @@ bool BoundingSphere::Intersects(const BoundingSphere& sphere) const
 {
     auto distance = Vector3::Distance(this->Center, sphere.Center);
     return distance <= this->Radius + sphere.Radius;
+}
+
+PlaneIntersectionType BoundingSphere::Intersects(const Plane& plane) const
+{
+    return plane.Intersects(*this);
 }
 
 Optional<float> BoundingSphere::Intersects(const Ray& ray) const

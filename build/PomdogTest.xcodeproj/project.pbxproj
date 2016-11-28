@@ -85,6 +85,10 @@
 		A93CA65E1D92F37300B65171 /* TaskTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A93CA65A1D92F37300B65171 /* TaskTest.cpp */; };
 		A9D641961C343074006E14E0 /* libpomdog.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A9D641721C337AED006E14E0 /* libpomdog.a */; };
 		A9D641971C343079006E14E0 /* Pomdog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9D641741C337AED006E14E0 /* Pomdog.framework */; };
+		A9F213631DE35F8D0027FA45 /* BoundingFrustumTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9F213621DE35F8D0027FA45 /* BoundingFrustumTest.cpp */; };
+		A9F213641DE35F8D0027FA45 /* BoundingFrustumTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9F213621DE35F8D0027FA45 /* BoundingFrustumTest.cpp */; };
+		A9F213681DE35F980027FA45 /* PlaneTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9F213671DE35F980027FA45 /* PlaneTest.cpp */; };
+		A9F213691DE35F980027FA45 /* PlaneTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9F213671DE35F980027FA45 /* PlaneTest.cpp */; };
 		AC56D633978BEDDEB68EA566 /* BoundingCircleTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3A704A1D8CC2ECB7F4A0A035 /* BoundingCircleTest.cpp */; };
 		AC82087613EF8055F7E48199 /* SignalTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7CE69F5DD42360EB98DFF3D /* SignalTest.cpp */; };
 		BAF063DC0F2785FEA8874D59 /* ScopedConnectionTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0CE270B535A446A0D84F83E4 /* ScopedConnectionTest.cpp */; };
@@ -182,6 +186,8 @@
 		A90B09B21C25A774006E749D /* PomdogUnitTest (Framework) */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "PomdogUnitTest (Framework)"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A93CA6591D92F37300B65171 /* SchedulerTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SchedulerTest.cpp; path = Async/SchedulerTest.cpp; sourceTree = "<group>"; };
 		A93CA65A1D92F37300B65171 /* TaskTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TaskTest.cpp; path = Async/TaskTest.cpp; sourceTree = "<group>"; };
+		A9F213621DE35F8D0027FA45 /* BoundingFrustumTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BoundingFrustumTest.cpp; sourceTree = "<group>"; };
+		A9F213671DE35F980027FA45 /* PlaneTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlaneTest.cpp; sourceTree = "<group>"; };
 		A9FF23A61C258DD300AE7D7B /* pomdog.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = pomdog.xcodeproj; path = build/pomdog.xcodeproj; sourceTree = "<group>"; };
 		A9FF23B11C258DDC00AE7D7B /* zlib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = zlib.xcodeproj; path = build/dependencies/zlib.xcodeproj; sourceTree = "<group>"; };
 		A9FF23B71C258DE200AE7D7B /* libpng.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libpng.xcodeproj; path = build/dependencies/libpng.xcodeproj; sourceTree = "<group>"; };
@@ -256,6 +262,7 @@
 				A4667EB105E02A19A15C9B22 /* BoundingBox2DTest.cpp */,
 				E103ADD5CEE2DD6ED7F47820 /* BoundingBoxTest.cpp */,
 				3A704A1D8CC2ECB7F4A0A035 /* BoundingCircleTest.cpp */,
+				A9F213621DE35F8D0027FA45 /* BoundingFrustumTest.cpp */,
 				9B0A27C53B61D53FB2C8FCF9 /* BoundingSphereTest.cpp */,
 				7BE654D231E2A773E422E584 /* ColorTest.cpp */,
 				376805FE63E41EFD9C37166F /* MathHelperTest.cpp */,
@@ -263,6 +270,7 @@
 				793253BD07364C31B209B99C /* Matrix3x2Test.cpp */,
 				F856CBF8E69B9257B5D59BFB /* Matrix3x3Test.cpp */,
 				525994F92EF41DECA5032478 /* Matrix4x4Test.cpp */,
+				A9F213671DE35F980027FA45 /* PlaneTest.cpp */,
 				19E3F65528477B8C2E65DA98 /* Point2DTest.cpp */,
 				70DCE2E0050E8DDDF4055A97 /* Point3DTest.cpp */,
 				4BCA9759FC4E3E6735E7531D /* QuaternionTest.cpp */,
@@ -539,6 +547,8 @@
 				DE967E47909AFDBEEFB99607 /* GameClockTest.cpp in Sources */,
 				25A46BAA758E95C752ADFA75 /* TimerTest.cpp in Sources */,
 				EF5E058E267E05B5BD3C9510 /* PathHelperTest.cpp in Sources */,
+				A9F213681DE35F980027FA45 /* PlaneTest.cpp in Sources */,
+				A9F213631DE35F8D0027FA45 /* BoundingFrustumTest.cpp in Sources */,
 				A3EC3906EE7827D6DC7AFC91 /* InputLayoutHelperTest.cpp in Sources */,
 				17740616D4C88403530D1997 /* KeyboardStateTest.cpp in Sources */,
 				E1E487ED4722D7527BC63C12 /* KeysTest.cpp in Sources */,
@@ -587,6 +597,8 @@
 				A90B09801C25A774006E749D /* GameClockTest.cpp in Sources */,
 				A90B09811C25A774006E749D /* TimerTest.cpp in Sources */,
 				A90B09821C25A774006E749D /* PathHelperTest.cpp in Sources */,
+				A9F213691DE35F980027FA45 /* PlaneTest.cpp in Sources */,
+				A9F213641DE35F8D0027FA45 /* BoundingFrustumTest.cpp in Sources */,
 				A90B09831C25A774006E749D /* InputLayoutHelperTest.cpp in Sources */,
 				A90B09841C25A774006E749D /* KeyboardStateTest.cpp in Sources */,
 				A90B09851C25A774006E749D /* KeysTest.cpp in Sources */,

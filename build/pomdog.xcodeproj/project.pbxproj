@@ -194,6 +194,10 @@
 		A9D641931C343023006E14E0 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB039FAE65C607A60DDBB49C /* OpenGL.framework */; };
 		A9D641941C34302C006E14E0 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F247CD851F16A8BCEC2E5BA1 /* Cocoa.framework */; };
 		A9D641951C343034006E14E0 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A0AE4521498F69CE846F2EFB /* QuartzCore.framework */; };
+		A9F2135A1DE35F380027FA45 /* BoundingFrustum.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9F213591DE35F380027FA45 /* BoundingFrustum.cpp */; };
+		A9F2135B1DE35F380027FA45 /* BoundingFrustum.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9F213591DE35F380027FA45 /* BoundingFrustum.cpp */; };
+		A9F2135D1DE35F420027FA45 /* Plane.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9F2135C1DE35F420027FA45 /* Plane.cpp */; };
+		A9F2135E1DE35F420027FA45 /* Plane.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9F2135C1DE35F420027FA45 /* Plane.cpp */; };
 		A9FC99051DC3D87F00C78D63 /* SpriteBatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9FC99041DC3D87F00C78D63 /* SpriteBatch.cpp */; };
 		A9FC99061DC3D87F00C78D63 /* SpriteBatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9FC99041DC3D87F00C78D63 /* SpriteBatch.cpp */; };
 		AB379BED1D868790638B95CB /* BoundingSphere.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 23AD66A6372EA23853297EBF /* BoundingSphere.cpp */; };
@@ -597,7 +601,11 @@
 		A9AE680DD0E3FCEA11AF8F48 /* FloatingPointVector4.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = FloatingPointVector4.cpp; sourceTree = "<group>"; };
 		A9D18E8B1CA426FA0011A6CE /* MetalCompiler.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MetalCompiler.hpp; sourceTree = "<group>"; };
 		A9D18E8C1CA427270011A6CE /* MetalCompiler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MetalCompiler.cpp; sourceTree = "<group>"; };
+		A9F213561DE35F1B0027FA45 /* BoundingFrustum.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BoundingFrustum.hpp; sourceTree = "<group>"; };
+		A9F213571DE35F260027FA45 /* Plane.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Plane.hpp; sourceTree = "<group>"; };
 		A9F213581DE35F260027FA45 /* PlaneIntersectionType.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PlaneIntersectionType.hpp; sourceTree = "<group>"; };
+		A9F213591DE35F380027FA45 /* BoundingFrustum.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BoundingFrustum.cpp; sourceTree = "<group>"; };
+		A9F2135C1DE35F420027FA45 /* Plane.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Plane.cpp; sourceTree = "<group>"; };
 		A9FC99041DC3D87F00C78D63 /* SpriteBatch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SpriteBatch.cpp; path = Graphics/SpriteBatch.cpp; sourceTree = "<group>"; };
 		A9FC99071DC3D89300C78D63 /* AlignedNew.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AlignedNew.hpp; sourceTree = "<group>"; };
 		A9FC99091DC3D8F100C78D63 /* SpriteBatch.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = SpriteBatch.hpp; path = Graphics/SpriteBatch.hpp; sourceTree = "<group>"; };
@@ -866,9 +874,11 @@
 				48BCAC6E648E7B5E3B773BA6 /* BoundingBox.cpp */,
 				1511246CD9A277492F0FC3DD /* BoundingBox2D.cpp */,
 				0B85BC78383398FBF4414326 /* BoundingCircle.cpp */,
+				A9F213591DE35F380027FA45 /* BoundingFrustum.cpp */,
 				23AD66A6372EA23853297EBF /* BoundingSphere.cpp */,
 				8C4D55AF0FA9C943AFEB7E91 /* Color.cpp */,
 				7D3FB9357487DBB6F9C5AAC0 /* MathHelper.cpp */,
+				A9F2135C1DE35F420027FA45 /* Plane.cpp */,
 				2EB2111ED9B45715040451A9 /* Ray.cpp */,
 				F39F11986F92AD3E6A55D633 /* Rectangle.cpp */,
 			);
@@ -1098,6 +1108,7 @@
 				9261A5C8CC110C7A0805C129 /* BoundingBox.hpp */,
 				0073BA717DEC5E7D0730424D /* BoundingBox2D.hpp */,
 				8E64B8426534A3361C6E3CAE /* BoundingCircle.hpp */,
+				A9F213561DE35F1B0027FA45 /* BoundingFrustum.hpp */,
 				7BE8F0655A5C5914A46AFAF1 /* BoundingSphere.hpp */,
 				E49E415B7CFEC3E4A2E76613 /* Color.hpp */,
 				843C8115583E56D5C028FC6D /* ContainmentType.hpp */,
@@ -1107,6 +1118,7 @@
 				211DF3307743EF32DCF7B5E3 /* Matrix3x2.hpp */,
 				E5337A376FA0A6EBD3ABCC3E /* Matrix3x3.hpp */,
 				7D2475FB0663DB29223CDFEF /* Matrix4x4.hpp */,
+				A9F213571DE35F260027FA45 /* Plane.hpp */,
 				A9F213581DE35F260027FA45 /* PlaneIntersectionType.hpp */,
 				A6992141FF0635255A2A7757 /* Point2D.hpp */,
 				5E6DA4FAA64CDD7156D3968C /* Point3D.hpp */,
@@ -1794,6 +1806,7 @@
 				B25BC69FDA812635B36D2CAC /* SoundEffect.cpp in Sources */,
 				5F8F4C5C0179D8889EC7B4D2 /* AssetDictionary.cpp in Sources */,
 				9EA7C97EE18F199AE5272E24 /* AssetLoaderContext.cpp in Sources */,
+				A9F2135D1DE35F420027FA45 /* Plane.cpp in Sources */,
 				A9A822951DAB7FBE0091497F /* TextureAtlasLoader.cpp in Sources */,
 				E8D6D7F610B157019B03A800 /* AssetManager.cpp in Sources */,
 				AD987379388ED5E890CB221A /* PipelineStateBuilder.cpp in Sources */,
@@ -1880,6 +1893,7 @@
 				0B2A073EC556AE4DF301E6DA /* SamplerStateGL4.cpp in Sources */,
 				9F7601D5C7E771D3423E81EC /* ShaderGL4.cpp in Sources */,
 				68C77475A849DB821AEC1312 /* Texture2DGL4.cpp in Sources */,
+				A9F2135A1DE35F380027FA45 /* BoundingFrustum.cpp in Sources */,
 				5D45742CD0787C6A52ED8F29 /* AudioClipAL.cpp in Sources */,
 				6DED53A00BC530C5F59A2547 /* AudioEngineAL.cpp in Sources */,
 				7760B64AC769ED3067368A8C /* ContextOpenAL.cpp in Sources */,
@@ -1914,6 +1928,7 @@
 				615FEBD97D48A4D57BDA54C4 /* SoundEffect.cpp in Sources */,
 				E4D0DB6D0CBC0C51449C182B /* AssetDictionary.cpp in Sources */,
 				2492DBED0FC08DE1484FDA24 /* AssetLoaderContext.cpp in Sources */,
+				A9F2135E1DE35F420027FA45 /* Plane.cpp in Sources */,
 				A9A822961DAB7FBE0091497F /* TextureAtlasLoader.cpp in Sources */,
 				07AC7D00AF95EB8A551A0CC7 /* AssetManager.cpp in Sources */,
 				0B0F472CF35B5E06E17342B1 /* PipelineStateBuilder.cpp in Sources */,
@@ -2000,6 +2015,7 @@
 				4282457DCED6C0F50EC6CE7E /* SamplerStateGL4.cpp in Sources */,
 				019FA0785E7D88B8C880AFD9 /* ShaderGL4.cpp in Sources */,
 				6591378FB9E160A17D96D06A /* Texture2DGL4.cpp in Sources */,
+				A9F2135B1DE35F380027FA45 /* BoundingFrustum.cpp in Sources */,
 				0997B2307F87B872762B0A2B /* AudioClipAL.cpp in Sources */,
 				9FFA1FA5C22F2299B1FD7B50 /* AudioEngineAL.cpp in Sources */,
 				D2C0DD27D04FFFC6B898AA80 /* ContextOpenAL.cpp in Sources */,

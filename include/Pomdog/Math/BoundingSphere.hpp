@@ -32,6 +32,8 @@ public:
 
     bool Intersects(const BoundingSphere& sphere) const;
 
+    PlaneIntersectionType Intersects(const Plane& plane) const;
+
     Optional<float> Intersects(const Ray& ray) const;
 };
 

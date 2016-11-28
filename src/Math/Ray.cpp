@@ -2,7 +2,9 @@
 
 #include "Pomdog/Math/Ray.hpp"
 #include "Pomdog/Math/BoundingBox.hpp"
+#include "Pomdog/Math/BoundingFrustum.hpp"
 #include "Pomdog/Math/BoundingSphere.hpp"
+#include "Pomdog/Math/Plane.hpp"
 #include <cmath>
 #include <algorithm>
 
@@ -115,6 +117,11 @@ Optional<float> Ray::Intersects(const BoundingBox& box) const
     return tNear;
 }
 
+Optional<float> Ray::Intersects(const BoundingFrustum& frustum) const
+{
+    return frustum.Intersects(*this);
+}
+
 Optional<float> Ray::Intersects(const BoundingSphere& sphere) const
 {
     const auto toSphere = sphere.Center - this->Position;
@@ -135,6 +142,23 @@ Optional<float> Ray::Intersects(const BoundingSphere& sphere) const
         return Pomdog::NullOpt;
     }
     return std::max(distance - std::sqrt(discriminant), 0.0f);
+}
+
+Optional<float> Ray::Intersects(const Plane& plane) const
+{
+    constexpr auto Epsilon = 1e-6f;
+
+    const auto denom = Vector3::Dot(plane.Normal, Direction);
+    if (std::abs(denom) < Epsilon) {
+        return Pomdog::NullOpt;
+    }
+
+    const auto dot = Vector3::Dot(plane.Normal, Position) + plane.Distance;
+    const auto distance = -dot / denom;
+    if (distance < 0.0f) {
+        return Pomdog::NullOpt;
+    }
+    return distance;
 }
 
 } // namespace Pomdog

@@ -35,6 +35,8 @@ public:
 
     bool Intersects(const BoundingSphere& sphere) const;
 
+    PlaneIntersectionType Intersects(const Plane& plane) const;
+
     Optional<float> Intersects(const Ray& ray) const;
 
     std::array<Vector3, CornerCount> GetCorners() const noexcept;

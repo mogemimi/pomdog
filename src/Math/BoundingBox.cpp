@@ -3,6 +3,7 @@
 #include "Pomdog/Math/BoundingBox.hpp"
 #include "Pomdog/Math/ContainmentType.hpp"
 #include "Pomdog/Math/BoundingSphere.hpp"
+#include "Pomdog/Math/Plane.hpp"
 #include "Pomdog/Math/Ray.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
@@ -93,6 +94,11 @@ bool BoundingBox::Intersects(const BoundingSphere& sphere) const
     auto clamped = Vector3::Clamp(sphere.Center, this->Min, this->Max);
     auto distanceSquared = Vector3::DistanceSquared(sphere.Center, clamped);
     return distanceSquared <= sphere.Radius * sphere.Radius;
+}
+
+PlaneIntersectionType BoundingBox::Intersects(const Plane& plane) const
+{
+    return plane.Intersects(*this);
 }
 
 Optional<float> BoundingBox::Intersects(const Ray& ray) const

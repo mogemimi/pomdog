@@ -24,7 +24,11 @@ public:
 
     Optional<float> Intersects(const BoundingBox& box) const;
 
+    Optional<float> Intersects(const BoundingFrustum& frustum) const;
+
     Optional<float> Intersects(const BoundingSphere& sphere) const;
+
+    Optional<float> Intersects(const Plane& plane) const;
 };
 
 } // namespace Pomdog
