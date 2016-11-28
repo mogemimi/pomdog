@@ -41,6 +41,7 @@
 #include "Math/Matrix3x2.hpp"
 #include "Math/Matrix3x3.hpp"
 #include "Math/Matrix4x4.hpp"
+#include "Math/PlaneIntersectionType.hpp"
 #include "Math/Point2D.hpp"
 #include "Math/Point3D.hpp"
 #include "Math/Quaternion.hpp"

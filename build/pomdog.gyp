@@ -160,6 +160,7 @@
       '../include/Pomdog/Math/Matrix3x2.hpp',
       '../include/Pomdog/Math/Matrix3x3.hpp',
       '../include/Pomdog/Math/Matrix4x4.hpp',
+      '../include/Pomdog/Math/PlaneIntersectionType.hpp',
       '../include/Pomdog/Math/Point2D.hpp',
       '../include/Pomdog/Math/Point3D.hpp',
       '../include/Pomdog/Math/Quaternion.hpp',

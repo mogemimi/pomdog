@@ -78,5 +78,6 @@ class Rectangle;
 
 // Enumerations:
 enum class ContainmentType : std::uint8_t;
+enum class PlaneIntersectionType : std::uint8_t;
 
 } // namespace Pomdog

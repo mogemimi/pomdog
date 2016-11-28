@@ -597,6 +597,7 @@
 		A9AE680DD0E3FCEA11AF8F48 /* FloatingPointVector4.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = FloatingPointVector4.cpp; sourceTree = "<group>"; };
 		A9D18E8B1CA426FA0011A6CE /* MetalCompiler.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MetalCompiler.hpp; sourceTree = "<group>"; };
 		A9D18E8C1CA427270011A6CE /* MetalCompiler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MetalCompiler.cpp; sourceTree = "<group>"; };
+		A9F213581DE35F260027FA45 /* PlaneIntersectionType.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PlaneIntersectionType.hpp; sourceTree = "<group>"; };
 		A9FC99041DC3D87F00C78D63 /* SpriteBatch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SpriteBatch.cpp; path = Graphics/SpriteBatch.cpp; sourceTree = "<group>"; };
 		A9FC99071DC3D89300C78D63 /* AlignedNew.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AlignedNew.hpp; sourceTree = "<group>"; };
 		A9FC99091DC3D8F100C78D63 /* SpriteBatch.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = SpriteBatch.hpp; path = Graphics/SpriteBatch.hpp; sourceTree = "<group>"; };
@@ -1106,6 +1107,7 @@
 				211DF3307743EF32DCF7B5E3 /* Matrix3x2.hpp */,
 				E5337A376FA0A6EBD3ABCC3E /* Matrix3x3.hpp */,
 				7D2475FB0663DB29223CDFEF /* Matrix4x4.hpp */,
+				A9F213581DE35F260027FA45 /* PlaneIntersectionType.hpp */,
 				A6992141FF0635255A2A7757 /* Point2D.hpp */,
 				5E6DA4FAA64CDD7156D3968C /* Point3D.hpp */,
 				A4CAD3D235945C6E9A3B3D53 /* Quaternion.hpp */,
