@@ -21,12 +21,12 @@ constexpr auto Epsilon2 = 0.0000001f;
 
 TEST(BoundingFrustum, TrivialCase)
 {
-    constexpr float width = 800.0f;
-    constexpr float height = 480.0f;
-    constexpr float near = 0.1f;
-    constexpr float far = 100.0f;
+    constexpr auto width = 800.0f;
+    constexpr auto height = 480.0f;
+    constexpr auto zNear = 0.1f;
+    constexpr auto zFar = 100.0f;
     const auto view = Matrix4x4::CreateTranslation(Vector3{3.0f, 4.0f, 7.0f});
-    const auto projection = Matrix4x4::CreatePerspectiveFieldOfViewLH(PI / 4.0f, width / height, near, far);
+    const auto projection = Matrix4x4::CreatePerspectiveFieldOfViewLH(PI / 4.0f, width / height, zNear, zFar);
 
     BoundingFrustum frustum(view * projection);
     EXPECT_NEAR(-frustum.GetNear().Normal.X, frustum.GetFar().Normal.X, Epsilon2);
