@@ -67,6 +67,47 @@ TEST(Vector3, Lerp)
     EXPECT_EQ(Vector3(4.0f, 5.0f, 6.0f), Vector3::Lerp(Vector3(1.0f, 2.0f, 3.0f), Vector3(4.0f, 5.0f, 6.0f), 1.0f));
 }
 
+TEST(Vector3, Cross_AssociativeLow)
+{
+    // NOTE: Associative low of vectors
+    const Vector3 p = Vector3::UnitX;
+    const Vector3 q = Vector3::UnitY;
+    const Vector3 r = Vector3::UnitZ;
+
+    EXPECT_EQ(3.0f * Vector3::Cross(Vector3::Zero, p), Vector3::Cross(Vector3::Zero, 3.0f * p));
+    EXPECT_EQ(-7.0f * Vector3::Cross(Vector3::Zero, q), Vector3::Cross(Vector3::Zero, -7.0f * q));
+    EXPECT_EQ(42.0f * Vector3::Cross(Vector3::Zero, r), Vector3::Cross(Vector3::Zero, 42.0f * r));
+    
+    const Vector3 a = {42.0f, 7.0f, 13.0f};
+    const Vector3 b = {5.0f, -8.0f, 9.0f};
+    const Vector3 c = {-81.0f, -63.0f, -2.0f};
+
+    EXPECT_EQ(5.0f * Vector3::Cross(a, b), Vector3::Cross(5.0f * a, b));
+    EXPECT_EQ(5.0f * Vector3::Cross(a, b), Vector3::Cross(a, 5.0f * b));
+    EXPECT_EQ(-14.0f * Vector3::Cross(b, c), Vector3::Cross(-14.0f * b, c));
+    EXPECT_EQ(-14.0f * Vector3::Cross(b, c), Vector3::Cross(b, -14.0f * c));
+    EXPECT_EQ(-72.0f * Vector3::Cross(c, a), Vector3::Cross(-72.0f * c, a));
+    EXPECT_EQ(-72.0f * Vector3::Cross(c, a), Vector3::Cross(c, -72.0f * a));
+}
+
+TEST(Vector3, Cross_CommutativeProperty)
+{
+    // NOTE: Commutative property of vectors
+    EXPECT_EQ(Vector3::Zero, Vector3::Cross(Vector3::Zero, Vector3::Zero));
+
+    EXPECT_EQ(-Vector3::Cross(Vector3::UnitX, Vector3::Zero), Vector3::Cross(Vector3::Zero, Vector3::UnitX));
+    EXPECT_EQ(-Vector3::Cross(Vector3::UnitY, Vector3::Zero), Vector3::Cross(Vector3::Zero, Vector3::UnitY));
+    EXPECT_EQ(-Vector3::Cross(Vector3::UnitZ, Vector3::Zero), Vector3::Cross(Vector3::Zero, Vector3::UnitZ));
+    
+    const Vector3 a = {42.0f, 7.0f, 13.0f};
+    const Vector3 b = {5.0f, -8.0f, 9.0f};
+    const Vector3 c = {-81.0f, -63.0f, -2.0f};
+
+    EXPECT_EQ(-Vector3::Cross(a, b), Vector3::Cross(b, a));
+    EXPECT_EQ(-Vector3::Cross(a, c), Vector3::Cross(c, a));
+    EXPECT_EQ(-Vector3::Cross(b, c), Vector3::Cross(c, b));
+}
+
 TEST(Vector3, Transform_IdentityMatrix)
 {
     EXPECT_EQ(Vector3(0.0f, 0.0f, 0.0f), Vector3::Transform(Vector3(0.0f, 0.0f, 0.0f), Matrix4x4::Identity));
