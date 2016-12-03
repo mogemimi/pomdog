@@ -79,15 +79,21 @@ void QuickStartGame::Initialize()
         auto vertexShader = assets->CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
             .SetGLSLFromFile("SimpleEffect_VS.glsl")
             .SetHLSLFromFile("SimpleEffect_VS.hlsl", "SimpleEffectVS")
+            .SetMetalFromFile("SimpleEffect.metal", "SimpleEffectVS")
             .Build();
 
         auto pixelShader = assets->CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
             .SetGLSLFromFile("SimpleEffect_PS.glsl")
             .SetHLSLFromFile("SimpleEffect_PS.hlsl", "SimpleEffectPS")
+            .SetMetalFromFile("SimpleEffect.metal", "SimpleEffectPS")
             .Build();
 
         // Create pipeline state
         pipelineState = assets->CreateBuilder<PipelineState>()
+            .SetRenderTargetViewFormats(std::vector<SurfaceFormat>{
+                gameHost->GetBackBufferSurfaceFormat()
+            })
+            .SetDepthStencilViewFormat(gameHost->GetBackBufferDepthStencilFormat())
             .SetInputLayout(inputLayout)
             .SetVertexShader(std::move(vertexShader))
             .SetPixelShader(std::move(pixelShader))
@@ -115,7 +121,12 @@ void QuickStartGame::Initialize()
 
             commandList->Reset();
             commandList->SetRenderPass(std::move(pass));
-            commandList->SetConstantBuffer(0, constantBuffer);
+            if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::Metal) {
+                commandList->SetConstantBuffer(1, constantBuffer);
+            }
+            else {
+                commandList->SetConstantBuffer(0, constantBuffer);
+            }
             commandList->SetSamplerState(0, sampler);
             commandList->SetTexture(0, texture);
             commandList->SetVertexBuffer(vertexBuffer);

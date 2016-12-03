@@ -1,8 +1,6 @@
 #import <Cocoa/Cocoa.h>
-#import "GameView.h"
+#import <Pomdog/Platform/Cocoa/PomdogMetalViewController.hpp>
 
-@interface GameViewController : NSViewController
-
-@property (assign) IBOutlet GameView *gameView;
+@interface GameViewController : PomdogMetalViewController
 
 @end

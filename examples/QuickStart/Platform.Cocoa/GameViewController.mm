@@ -1,46 +1,35 @@
 #import "GameViewController.h"
-#include "../Source/QuickStartGame.hpp"
-#include <Pomdog/Platform/Cocoa/Bootstrap.hpp>
-#include <Pomdog/Pomdog.hpp>
-#ifdef DEBUG
-#include <iostream>
-#endif
+#import <Metal/Metal.h>
+#import <simd/simd.h>
+#import <MetalKit/MetalKit.h>
+#import "SharedStructures.h"
+#include <Pomdog/Math/Vector3.hpp>
+#include <Pomdog/Math/Vector4.hpp>
+#include <Pomdog/Math/Matrix3x3.hpp>
+#include <Pomdog/Math/Matrix4x4.hpp>
+#include <Pomdog/Math/Quaternion.hpp>
+#include <Pomdog/Math/Radian.hpp>
+#include <Pomdog/Graphics/ConstantBuffer.hpp>
+#include <Pomdog/Graphics/GraphicsDevice.hpp>
+#include <Pomdog/Graphics/PipelineState.hpp>
+#include <Pomdog/Graphics/VertexBuffer.hpp>
+#include "QuickStartGame.hpp"
+#include <memory>
 
 @implementation GameViewController
 {
-#ifdef DEBUG
-    Pomdog::ScopedConnection connection;
-#endif
-    Pomdog::Cocoa::Bootstrap bootstrap;
+    std::shared_ptr<Pomdog::Game> game;
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+}
 
-    using Pomdog::Log;
-    using Pomdog::LogLevel;
-
-#ifdef DEBUG
-    connection = Log::Connect([](Pomdog::LogEntry const& entry) {
-        std::cout << entry.Message << std::endl;
-    });
-    Log::SetLevel(LogLevel::Verbose);
-#else
-    Log::SetLevel(LogLevel::Critical);
-#endif
-
-    bootstrap.SetView([self gameView]);
-    bootstrap.OnCompleted([=] {
-        [[[self gameView] window] close];
-
-        // Shutdown your application
-        [NSApp terminate:nil];
-    });
-
-    bootstrap.Run([](std::shared_ptr<Pomdog::GameHost> const& gameHost) {
-        return std::make_unique<QuickStart::QuickStartGame>(gameHost);
-    });
+- (void)loadAssetsPomdog:(std::shared_ptr<Pomdog::GameHost>)gameHost
+{
+    game = std::make_shared<QuickStart::QuickStartGame>(gameHost);
+    [self startGame:game];
 }
 
 @end
