@@ -10,6 +10,7 @@
 namespace Pomdog {
 namespace Detail {
 
+class GraphicsCommandListImmediate;
 class NativeGraphicsContext;
 
 class GraphicsCommandQueueImmediate final : public NativeGraphicsCommandQueue {
@@ -33,7 +34,7 @@ public:
     std::size_t GetCommandCount() const noexcept override;
 
 private:
-    std::vector<std::shared_ptr<GraphicsCommandList>> commandLists;
+    std::vector<std::shared_ptr<GraphicsCommandListImmediate>> commandLists;
     std::shared_ptr<NativeGraphicsContext> graphicsContext;
 };
 

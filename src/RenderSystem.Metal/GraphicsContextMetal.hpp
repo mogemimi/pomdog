@@ -25,6 +25,9 @@ public:
 
     GraphicsCapabilities GetCapabilities() const override;
 
+    void ExecuteCommandLists(
+        const std::vector<std::shared_ptr<GraphicsCommandListImmediate>>& commandLists) override;
+
     void Present() override;
 
     void Draw(

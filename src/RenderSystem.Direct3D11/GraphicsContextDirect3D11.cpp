@@ -8,6 +8,7 @@
 #include "Texture2DDirect3D11.hpp"
 #include "../RenderSystem.DXGI/DXGIFormatHelper.hpp"
 #include "../RenderSystem/GraphicsCapabilities.hpp"
+#include "../RenderSystem/GraphicsCommandListImmediate.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Vector4.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
@@ -221,6 +222,15 @@ GraphicsContextDirect3D11::~GraphicsContextDirect3D11()
     backBuffer.reset();
     swapChain.Reset();
     deviceContext.Reset();
+}
+
+void GraphicsContextDirect3D11::ExecuteCommandLists(
+    const std::vector<std::shared_ptr<GraphicsCommandListImmediate>>& commandLists)
+{
+    for (auto & commandList : commandLists) {
+        POMDOG_ASSERT(commandList);
+        commandList->ExecuteImmediate(*this);
+    }
 }
 
 void GraphicsContextDirect3D11::Present()

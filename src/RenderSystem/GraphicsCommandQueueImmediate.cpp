@@ -25,24 +25,16 @@ void GraphicsCommandQueueImmediate::PushbackCommandList(
 {
     POMDOG_ASSERT(commandList);
     if (commandList) {
-        commandLists.push_back(commandList);
+        auto commandListImmediate = dynamic_cast<GraphicsCommandListImmediate*>(
+            commandList->GetNativeGraphicsCommandList());
+        std::shared_ptr<GraphicsCommandListImmediate> shared(commandList, commandListImmediate);
+        commandLists.push_back(shared);
     }
 }
 
 void GraphicsCommandQueueImmediate::ExecuteCommandLists()
 {
-    for (auto & commandList : commandLists) {
-        POMDOG_ASSERT(graphicsContext);
-        POMDOG_ASSERT(commandList);
-
-        ///@todo badcode
-        auto commandListImmediate = dynamic_cast<GraphicsCommandListImmediate*>(
-            commandList->GetNativeGraphicsCommandList());
-
-        if (commandListImmediate) {
-            commandListImmediate->ExecuteImmediate(*graphicsContext);
-        }
-    }
+    graphicsContext->ExecuteCommandLists(commandLists);
 }
 
 void GraphicsCommandQueueImmediate::Present()

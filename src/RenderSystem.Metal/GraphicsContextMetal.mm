@@ -7,6 +7,7 @@
 #include "../RenderSystem.Metal/SamplerStateMetal.hpp"
 #include "../RenderSystem.Metal/Texture2DMetal.hpp"
 #include "../RenderSystem/GraphicsCapabilities.hpp"
+#include "../RenderSystem/GraphicsCommandListImmediate.hpp"
 #include "Pomdog/Graphics/IndexBuffer.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
@@ -147,6 +148,15 @@ void GraphicsContextMetal::SetMTKView(MTKView* view)
 {
     POMDOG_ASSERT(view != nil);
     targetView = view;
+}
+
+void GraphicsContextMetal::ExecuteCommandLists(
+    const std::vector<std::shared_ptr<GraphicsCommandListImmediate>>& commandLists)
+{
+    for (auto & commandList : commandLists) {
+        POMDOG_ASSERT(commandList);
+        commandList->ExecuteImmediate(*this);
+    }
 }
 
 void GraphicsContextMetal::Present()

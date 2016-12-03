@@ -11,6 +11,7 @@
 #include "TypesafeHelperGL4.hpp"
 #include "../RenderSystem/BufferHelper.hpp"
 #include "../RenderSystem/GraphicsCapabilities.hpp"
+#include "../RenderSystem/GraphicsCommandListImmediate.hpp"
 #include "../RenderSystem/NativeRenderTarget2D.hpp"
 #include "../RenderSystem/NativeTexture2D.hpp"
 #include "../Utility/ScopeGuard.hpp"
@@ -389,6 +390,15 @@ GraphicsContextGL4::~GraphicsContextGL4()
 
     nativeContext.reset();
     gameWindow.reset();
+}
+
+void GraphicsContextGL4::ExecuteCommandLists(
+    const std::vector<std::shared_ptr<GraphicsCommandListImmediate>>& commandLists)
+{
+    for (auto & commandList : commandLists) {
+        POMDOG_ASSERT(commandList);
+        commandList->ExecuteImmediate(*this);
+    }
 }
 
 void GraphicsContextGL4::Present()

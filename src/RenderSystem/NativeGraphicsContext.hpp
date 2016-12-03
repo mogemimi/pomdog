@@ -11,6 +11,7 @@
 namespace Pomdog {
 namespace Detail {
 
+class GraphicsCommandListImmediate;
 struct GraphicsCapabilities;
 
 class NativeGraphicsContext {
@@ -23,6 +24,9 @@ public:
 
     ///@brief Retrieves the capabilities of a GraphicsContext
     virtual GraphicsCapabilities GetCapabilities() const = 0;
+
+    virtual void ExecuteCommandLists(
+        const std::vector<std::shared_ptr<GraphicsCommandListImmediate>>& commandLists) = 0;
 
     virtual void Present() = 0;
 
