@@ -4,6 +4,7 @@
 #include "Pomdog/Graphics/BufferUsage.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
+#include "Pomdog/Logging/Log.hpp"
 #include <cstring>
 #import <Metal/Metal.h>
 
@@ -29,15 +30,43 @@ MTLResourceOptions ToResourceOptions(BufferUsage bufferUsage)
 #endif
 }
 
+std::size_t ComputeAlignedSize(std::size_t sizeInBytes, BufferBindMode bindMode)
+{
+    if (bindMode != BufferBindMode::ConstantBuffer) {
+        return sizeInBytes;
+    }
+
+#if (defined(MAC_OS_X_VERSION_10_11) && (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_11))
+    // NOTE:
+    // For buffers in the constant address space, the offset must be aligned to 256 bytes in macOS.
+    // https://developer.apple.com/reference/metal/mtlrendercommandencoder/1515829-setvertexbuffer?language=objc
+
+    constexpr std::size_t alignmentSize = 256;
+    if (sizeInBytes % alignmentSize != 0) {
+#if defined(DEBUG) && !defined(NDEBUG)
+        Log::Warning("Pomdog",
+            "You must set the sizeInBytes value in multiples of 256.\n"
+            "ConstantBuffer size also needs to be a multiples of 256.");
+#endif
+        const auto offset = sizeInBytes % alignmentSize;
+        POMDOG_ASSERT(offset < alignmentSize);
+        sizeInBytes += (alignmentSize - offset);
+    }
+#endif
+    return sizeInBytes;
+}
+
 } // unnamed namespace
 
 BufferMetal::BufferMetal(
     id<MTLDevice> device,
     std::size_t sizeInBytes,
-    BufferUsage bufferUsage)
+    BufferUsage bufferUsage,
+    BufferBindMode bindMode)
     : nativeBuffer(nil)
 {
-    nativeBuffer = [device newBufferWithLength:sizeInBytes
+    const auto alignedSize = ComputeAlignedSize(sizeInBytes, bindMode);
+    nativeBuffer = [device newBufferWithLength:alignedSize
         options:ToResourceOptions(bufferUsage)];
 
    if (nativeBuffer == nil) {
@@ -53,10 +82,12 @@ BufferMetal::BufferMetal(
     id<MTLDevice> device,
     const void* vertices,
     std::size_t sizeInBytes,
-    BufferUsage bufferUsage)
+    BufferUsage bufferUsage,
+    BufferBindMode bindMode)
     : nativeBuffer(nil)
 {
-    nativeBuffer = [device newBufferWithLength:sizeInBytes
+    const auto alignedSize = ComputeAlignedSize(sizeInBytes, bindMode);
+    nativeBuffer = [device newBufferWithLength:alignedSize
         options:ToResourceOptions(bufferUsage)];
 
    if (nativeBuffer == nil) {

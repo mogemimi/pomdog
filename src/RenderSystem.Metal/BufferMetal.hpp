@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "../RenderSystem/BufferBindMode.hpp"
 #include "../RenderSystem/NativeBuffer.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #import <Metal/MTLBuffer.h>
@@ -15,13 +16,15 @@ public:
     BufferMetal(
         id<MTLDevice> device,
         std::size_t sizeInBytes,
-        BufferUsage bufferUsage);
+        BufferUsage bufferUsage,
+        BufferBindMode bindMode);
 
     BufferMetal(
         id<MTLDevice> device,
         const void* vertices,
         std::size_t sizeInBytes,
-        BufferUsage bufferUsage);
+        BufferUsage bufferUsage,
+        BufferBindMode bindMode);
 
     void GetData(
         std::size_t offsetInBytes,

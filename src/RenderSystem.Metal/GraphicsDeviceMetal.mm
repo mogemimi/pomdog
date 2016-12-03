@@ -7,6 +7,7 @@
 #include "SamplerStateMetal.hpp"
 #include "ShaderMetal.hpp"
 #include "Texture2DMetal.hpp"
+#include "../RenderSystem/BufferBindMode.hpp"
 #include "../RenderSystem/GraphicsCommandListImmediate.hpp"
 #include "../RenderSystem/ShaderBytecode.hpp"
 #include "../RenderSystem/ShaderCompileOptions.hpp"
@@ -79,12 +80,12 @@ GraphicsDeviceMetal::CreateShader(
 
 std::unique_ptr<NativeBuffer>
 GraphicsDeviceMetal::CreateBuffer(
-    std::size_t sizeInBytes, BufferUsage bufferUsage, BufferBindMode)
+    std::size_t sizeInBytes, BufferUsage bufferUsage, BufferBindMode bindMode)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->device != nil);
     return std::make_unique<BufferMetal>(
-        impl->device, sizeInBytes, bufferUsage);
+        impl->device, sizeInBytes, bufferUsage, bindMode);
 }
 
 std::unique_ptr<NativeBuffer>
@@ -92,12 +93,12 @@ GraphicsDeviceMetal::CreateBuffer(
     const void* sourceData,
     std::size_t sizeInBytes,
     BufferUsage bufferUsage,
-    BufferBindMode)
+    BufferBindMode bindMode)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->device != nil);
     return std::make_unique<BufferMetal>(
-        impl->device, sourceData, sizeInBytes, bufferUsage);
+        impl->device, sourceData, sizeInBytes, bufferUsage, bindMode);
 }
 
 std::unique_ptr<NativeSamplerState>
