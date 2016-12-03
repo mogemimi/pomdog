@@ -586,6 +586,7 @@
 		A997F6F31CAEFC4800926392 /* ShaderMetal.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ShaderMetal.mm; sourceTree = "<group>"; };
 		A997F6F41CAEFC4800926392 /* Texture2DMetal.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Texture2DMetal.hpp; sourceTree = "<group>"; };
 		A997F6F51CAEFC4800926392 /* Texture2DMetal.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Texture2DMetal.mm; sourceTree = "<group>"; };
+		A99908F01DF28FC60077539E /* BufferBindMode.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BufferBindMode.hpp; sourceTree = "<group>"; };
 		A9A8226B1DAB7B310091497F /* giflib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = giflib.xcodeproj; path = dependencies/giflib.xcodeproj; sourceTree = "<group>"; };
 		A9A822841DAB7F990091497F /* GifImage.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GifImage.hpp; sourceTree = "<group>"; };
 		A9A822851DAB7F990091497F /* GifImageLoader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GifImageLoader.hpp; sourceTree = "<group>"; };
@@ -1155,6 +1156,7 @@
 		8360309E4667B011AD3E6F2F /* RenderSystem */ = {
 			isa = PBXGroup;
 			children = (
+				A99908F01DF28FC60077539E /* BufferBindMode.hpp */,
 				A9854B9C1DC115D400650729 /* BufferHelper.cpp */,
 				A9854B9D1DC115D400650729 /* BufferHelper.hpp */,
 				FD511C7803B65801B0EE8EE8 /* GraphicsCapabilities.hpp */,

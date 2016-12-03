@@ -17,12 +17,7 @@ class NativeSamplerState;
 class NativeTexture2D;
 class ShaderBytecode;
 struct ShaderCompileOptions;
-
-enum class BufferBindMode {
-    ConstantBuffer,
-    IndexBuffer,
-    VertexBuffer,
-};
+enum class BufferBindMode;
 
 class NativeGraphicsDevice {
 public:

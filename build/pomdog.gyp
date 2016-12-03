@@ -293,6 +293,7 @@
       '../src/Math/detail/FloatingPointVector2.cpp',
       '../src/Math/detail/FloatingPointVector3.cpp',
       '../src/Math/detail/FloatingPointVector4.cpp',
+      '../src/RenderSystem/BufferBindMode.hpp',
       '../src/RenderSystem/BufferHelper.cpp',
       '../src/RenderSystem/BufferHelper.hpp',
       '../src/RenderSystem/GraphicsCapabilities.hpp',

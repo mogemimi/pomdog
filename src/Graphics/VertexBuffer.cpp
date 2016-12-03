@@ -1,6 +1,7 @@
 // Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Graphics/VertexBuffer.hpp"
+#include "../RenderSystem/BufferBindMode.hpp"
 #include "../RenderSystem/NativeBuffer.hpp"
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
 #include "Pomdog/Graphics/BufferUsage.hpp"

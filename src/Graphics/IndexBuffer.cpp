@@ -1,6 +1,7 @@
 // Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Graphics/IndexBuffer.hpp"
+#include "../RenderSystem/BufferBindMode.hpp"
 #include "../RenderSystem/BufferHelper.hpp"
 #include "../RenderSystem/NativeBuffer.hpp"
 #include "../RenderSystem/NativeGraphicsDevice.hpp"

@@ -8,6 +8,7 @@
 #include "ShaderGL4.hpp"
 #include "RenderTarget2DGL4.hpp"
 #include "Texture2DGL4.hpp"
+#include "../RenderSystem/BufferBindMode.hpp"
 #include "../RenderSystem/GraphicsCommandListImmediate.hpp"
 #include "../RenderSystem/ShaderCompileOptions.hpp"
 #include "Pomdog/Graphics/ShaderLanguage.hpp"

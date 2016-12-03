@@ -8,6 +8,7 @@
 #include "SamplerStateDirect3D11.hpp"
 #include "ShaderDirect3D11.hpp"
 #include "Texture2DDirect3D11.hpp"
+#include "../RenderSystem/BufferBindMode.hpp"
 #include "../RenderSystem/GraphicsCommandListImmediate.hpp"
 #include "../RenderSystem/ShaderBytecode.hpp"
 #include "../RenderSystem/ShaderCompileOptions.hpp"
