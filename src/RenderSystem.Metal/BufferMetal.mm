@@ -117,7 +117,7 @@ void BufferMetal::SetData(
     std::size_t sizeInBytes)
 {
     POMDOG_ASSERT(nativeBuffer != nil);
-    POMDOG_ASSERT([nativeBuffer length] <= sizeInBytes);
+    POMDOG_ASSERT([nativeBuffer length] >= (sizeInBytes + offsetInBytes));
     auto destination = reinterpret_cast<std::uint8_t*>([nativeBuffer contents]);
     std::memcpy(destination + offsetInBytes, source, sizeInBytes);
 }
