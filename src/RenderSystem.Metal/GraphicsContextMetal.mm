@@ -153,15 +153,49 @@ void GraphicsContextMetal::SetMTKView(MTKView* view)
 void GraphicsContextMetal::ExecuteCommandLists(
     const std::vector<std::shared_ptr<GraphicsCommandListImmediate>>& commandLists)
 {
+    POMDOG_ASSERT(commandQueue != nil);
+    POMDOG_ASSERT(targetView != nil);
+    POMDOG_ASSERT(commandBuffer == nil);
+    POMDOG_ASSERT(commandEncoder == nil);
+
+    // Create a new command buffer for each renderpass to the current drawable
+    commandBuffer = [commandQueue commandBuffer];
+    commandBuffer.label = @"PomdogCommand";
+
+    // Call the view's completion handler which is required by the view
+    // since it will signal its semaphore and set up the next buffer
+    __block dispatch_semaphore_t blockSema = inflightSemaphore;
+    [commandBuffer addCompletedHandler:^(id<MTLCommandBuffer> buffer) {
+        dispatch_semaphore_signal(blockSema);
+    }];
+
+    POMDOG_ASSERT(commandBuffer != nil);
+
     for (auto & commandList : commandLists) {
         POMDOG_ASSERT(commandList);
         commandList->ExecuteImmediate(*this);
     }
+
+    if (commandEncoder != nil) {
+        // We're done encoding commands
+        [commandEncoder popDebugGroup];
+        [commandEncoder endEncoding];
+        commandEncoder = nil;
+    }
+
+    POMDOG_ASSERT(commandBuffer != nil);
+
+    // Schedule a present once the framebuffer is complete using the current drawable
+    [commandBuffer presentDrawable:targetView.currentDrawable];
+
+    // Finalize rendering here & push the command buffer to the GPU
+    [commandBuffer commit];
+    commandBuffer = nil;
 }
 
 void GraphicsContextMetal::Present()
 {
-    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
+    // NOTE: commandBuffer::commit() has already been called at GraphicsContextMetal::ExecuteCommandLists().
 }
 
 void GraphicsContextMetal::Draw(
@@ -429,16 +463,22 @@ void GraphicsContextMetal::SetRenderPass(const RenderPass& renderPass)
     renderPassDescriptor.stencilAttachment.loadAction = MTLLoadActionDontCare;
 
     int renderTargetIndex = 0;
-    for (const auto& view: renderPass.RenderTargets) {
-        //auto & renderTarget = std::get<0>(view);
-        auto & clearColor = std::get<1>(view);
+    for (const auto& renderTargetView: renderPass.RenderTargets) {
+        auto & renderTarget = std::get<0>(renderTargetView);
+        auto & clearColor = std::get<1>(renderTargetView);
 
-        // TODO: Not implemented
-        //if (!renderTarget) {
-        //    renderPassDescriptor.colorAttachments[renderTargetIndex].texture = [_view.currentDrawable texture];
-        //    renderPassDescriptor.depthAttachment.texture = ;
-        //    renderPassDescriptor.stencilAttachment.texture = ;
-        //}
+        if (!renderTarget) {
+            renderPassDescriptor.colorAttachments[renderTargetIndex].texture = targetView.currentDrawable.texture;
+            renderPassDescriptor.depthAttachment.texture = targetView.currentRenderPassDescriptor.depthAttachment.texture;
+            renderPassDescriptor.stencilAttachment.texture = targetView.currentRenderPassDescriptor.stencilAttachment.texture;
+        }
+        else {
+//            // TODO: Not implemented
+//            renderPassDescriptor.colorAttachments[renderTargetIndex].texture = [_view.currentDrawable texture];
+//            renderPassDescriptor.depthAttachment.texture = ;
+//            renderPassDescriptor.stencilAttachment.texture = ;
+            POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
+        }
 
         if (clearColor) {
             renderPassDescriptor.colorAttachments[renderTargetIndex].loadAction = MTLLoadActionClear;
@@ -460,11 +500,13 @@ void GraphicsContextMetal::SetRenderPass(const RenderPass& renderPass)
         renderPassDescriptor.stencilAttachment.clearStencil = *renderPass.ClearStencil;
     }
 
-    POMDOG_ASSERT(commandQueue != nil);
-    commandBuffer = [commandQueue commandBuffer];
 
+    POMDOG_ASSERT(commandBuffer != nil);
+
+     // Create a render command encoder so we can render into something
     commandEncoder = [commandBuffer renderCommandEncoderWithDescriptor:renderPassDescriptor];
     commandEncoder.label = @"PomdogRenderEncoder";
+    [commandEncoder pushDebugGroup:@"PomdogDraw"];
 
     [commandEncoder setFrontFacingWinding:MTLWindingClockwise];
 
@@ -474,10 +516,6 @@ void GraphicsContextMetal::SetRenderPass(const RenderPass& renderPass)
     if (renderPass.ScissorRect) {
         SetScissorRectangle(commandEncoder, *renderPass.ScissorRect);
     }
-
-    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
-
-    // TODO: set render targets
 }
 
 } // namespace Metal
