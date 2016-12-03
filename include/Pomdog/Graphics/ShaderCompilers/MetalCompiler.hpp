@@ -22,6 +22,11 @@ struct POMDOG_EXPORT MetalCompiler final {
         std::size_t byteLength,
         const std::string& entryPoint,
         ShaderPipelineStage pipelineStage);
+
+    static std::unique_ptr<Shader> CreateShaderFromLibrary(
+        GraphicsDevice & graphicsDevice,
+        const std::string& entryPoint,
+        ShaderPipelineStage pipelineStage);
 };
 
 } // namespace ShaderCompilers

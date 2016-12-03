@@ -21,6 +21,11 @@ public:
         const ShaderBytecode& shaderBytecode,
         const ShaderCompileOptions& compileOptions);
 
+    ShaderMetal(
+        id<MTLDevice> device,
+        id<MTLLibrary> library,
+        const ShaderCompileOptions& compileOptions);
+
     id<MTLFunction> GetShader() const;
 
 private:

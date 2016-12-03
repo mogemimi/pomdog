@@ -8,6 +8,8 @@
 #include "ShaderMetal.hpp"
 #include "Texture2DMetal.hpp"
 #include "../RenderSystem/GraphicsCommandListImmediate.hpp"
+#include "../RenderSystem/ShaderBytecode.hpp"
+#include "../RenderSystem/ShaderCompileOptions.hpp"
 #include "Pomdog/Graphics/ShaderLanguage.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
@@ -20,6 +22,7 @@ namespace Metal {
 class GraphicsDeviceMetal::Impl final {
 public:
     id<MTLDevice> device;
+    id<MTLLibrary> defaultLibrary;
 
 public:
     Impl();
@@ -27,8 +30,14 @@ public:
 
 GraphicsDeviceMetal::Impl::Impl()
     : device(nil)
+    , defaultLibrary(nil)
 {
     device = MTLCreateSystemDefaultDevice();
+
+    POMDOG_ASSERT(device != nil);
+
+    // Load all the shader files with a metal file extension in the project
+    defaultLibrary = [device newDefaultLibrary];
 }
 
 GraphicsDeviceMetal::GraphicsDeviceMetal()
@@ -56,6 +65,14 @@ GraphicsDeviceMetal::CreateShader(
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->device != nil);
+
+    if (shaderBytecode.Code == nullptr
+        && shaderBytecode.ByteLength == 0
+        && !compileOptions.EntryPoint.empty()) {
+        return std::make_unique<ShaderMetal>(
+            impl->device, impl->defaultLibrary, compileOptions);
+    }
+
     return std::make_unique<ShaderMetal>(
         impl->device, shaderBytecode, compileOptions);
 }

@@ -40,5 +40,27 @@ std::unique_ptr<Shader> MetalCompiler::CreateShaderFromSource(
     return nativeGraphicsDevice->CreateShader(shaderBytecode, compileOptions);
 }
 
+std::unique_ptr<Shader> MetalCompiler::CreateShaderFromLibrary(
+    GraphicsDevice & graphicsDevice,
+    const std::string& entryPoint,
+    ShaderPipelineStage pipelineStage)
+{
+    POMDOG_ASSERT(!entryPoint.empty());
+    POMDOG_ASSERT(graphicsDevice.GetSupportedLanguage() == ShaderLanguage::Metal);
+
+    auto nativeGraphicsDevice = graphicsDevice.GetNativeGraphicsDevice();
+
+    ShaderBytecode shaderBytecode;
+    shaderBytecode.Code = nullptr;
+    shaderBytecode.ByteLength = 0;
+
+    ShaderCompileOptions compileOptions;
+    compileOptions.EntryPoint = entryPoint;
+    compileOptions.Profile.PipelineStage = pipelineStage;
+    compileOptions.Precompiled = false;
+
+    return nativeGraphicsDevice->CreateShader(shaderBytecode, compileOptions);
+}
+
 } // namespace ShaderCompilers
 } // namespace Pomdog

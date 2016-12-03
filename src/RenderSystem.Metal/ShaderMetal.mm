@@ -47,6 +47,24 @@ ShaderMetal::ShaderMetal(
         [NSString stringWithUTF8String:compileOptions.EntryPoint.c_str()]];
 }
 
+ShaderMetal::ShaderMetal(
+    id<MTLDevice> device,
+    id<MTLLibrary> library,
+    const ShaderCompileOptions& compileOptions)
+{
+    POMDOG_ASSERT(device != nil);
+    POMDOG_ASSERT(library != nil);
+
+    if (library == nil) {
+        POMDOG_THROW_EXCEPTION(std::runtime_error, "MTLLibrary is nil");
+    }
+
+    POMDOG_ASSERT(!compileOptions.EntryPoint.empty());
+
+    NSString* entryPoint = [NSString stringWithUTF8String:compileOptions.EntryPoint.c_str()];
+    this->shader = [library newFunctionWithName:entryPoint];
+}
+
 id<MTLFunction> ShaderMetal::GetShader() const
 {
     return shader;

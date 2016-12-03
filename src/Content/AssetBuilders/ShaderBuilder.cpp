@@ -95,6 +95,7 @@ public:
     std::string entryPoint;
     Optional<std::string> shaderFilePath;
     bool precompiled;
+    bool fromLibrary;
 
 public:
     explicit Impl(const Detail::AssetLoaderContext& context);
@@ -109,6 +110,7 @@ Builder<Shader>::Impl::Impl(const Detail::AssetLoaderContext& contextIn)
     : loaderContext(contextIn)
     , pipelineStage(ShaderPipelineStage::VertexShader)
     , precompiled(false)
+    , fromLibrary(false)
 {
 }
 
@@ -273,9 +275,6 @@ std::shared_ptr<Shader> Builder<Shader>::Build()
     auto graphicsDevice = impl->GetDevice();
     POMDOG_ASSERT(graphicsDevice);
 
-    POMDOG_ASSERT(impl->shaderBytecode.Code != nullptr);
-    POMDOG_ASSERT(impl->shaderBytecode.ByteLength > 0);
-
     const auto shaderLanguage = graphicsDevice->GetSupportedLanguage();
     Optional<std::string> currentDirectory;
     if (impl->shaderFilePath) {
@@ -284,6 +283,8 @@ std::shared_ptr<Shader> Builder<Shader>::Build()
     }
 
     if (shaderLanguage == ShaderLanguage::GLSL) {
+        POMDOG_ASSERT(impl->shaderBytecode.Code != nullptr);
+        POMDOG_ASSERT(impl->shaderBytecode.ByteLength > 0);
         return GLSLCompiler::CreateShader(
             *graphicsDevice,
             impl->shaderBytecode.Code,
@@ -292,6 +293,8 @@ std::shared_ptr<Shader> Builder<Shader>::Build()
             currentDirectory);
     }
     if (shaderLanguage == ShaderLanguage::HLSL) {
+        POMDOG_ASSERT(impl->shaderBytecode.Code != nullptr);
+        POMDOG_ASSERT(impl->shaderBytecode.ByteLength > 0);
         if (impl->precompiled) {
             return HLSLCompiler::CreateShaderFromBinary(
                 *graphicsDevice,
@@ -310,6 +313,14 @@ std::shared_ptr<Shader> Builder<Shader>::Build()
     }
     if (shaderLanguage == ShaderLanguage::Metal) {
         POMDOG_ASSERT(!impl->entryPoint.empty());
+        if (impl->fromLibrary) {
+            return MetalCompiler::CreateShaderFromLibrary(
+                *graphicsDevice,
+                impl->entryPoint,
+                impl->pipelineStage);
+        }
+        POMDOG_ASSERT(impl->shaderBytecode.Code != nullptr);
+        POMDOG_ASSERT(impl->shaderBytecode.ByteLength > 0);
         return MetalCompiler::CreateShaderFromSource(
             *graphicsDevice,
             impl->shaderBytecode.Code,
