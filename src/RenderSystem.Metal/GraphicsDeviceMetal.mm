@@ -154,6 +154,13 @@ GraphicsDeviceMetal::CreateRenderTarget2D(
         format, depthStencilFormat, multiSampleCount);
 }
 
+id<MTLDevice> GraphicsDeviceMetal::GetMTLDevice()
+{
+    POMDOG_ASSERT(impl);
+    POMDOG_ASSERT(impl->device != nil);
+    return impl->device;
+}
+
 } // namespace Metal
 } // namespace Detail
 } // namespace Pomdog

@@ -5,6 +5,8 @@
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
 #include <memory>
 
+#import <Metal/Metal.h>
+
 namespace Pomdog {
 namespace Detail {
 namespace Metal {
@@ -64,6 +66,8 @@ public:
         SurfaceFormat format,
         DepthFormat depthStencilFormat,
         std::int32_t multiSampleCount) override;
+
+    id<MTLDevice> GetMTLDevice();
 
 private:
     class Impl;
