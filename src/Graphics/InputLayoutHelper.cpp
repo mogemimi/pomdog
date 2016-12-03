@@ -1,34 +1,12 @@
 // Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Graphics/InputLayoutHelper.hpp"
+#include "../RenderSystem/BufferHelper.hpp"
 #include "Pomdog/Graphics/InputElementFormat.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {
 namespace {
-
-std::uint8_t ToByteSize(InputElementFormat format) noexcept
-{
-    static_assert(sizeof(float) == 4, "FUS RO DAH");
-    switch (format) {
-    case InputElementFormat::Byte4:
-    case InputElementFormat::Float:
-    case InputElementFormat::HalfFloat2:
-        return 4;
-    case InputElementFormat::Float2:
-    case InputElementFormat::HalfFloat4:
-        return 8;
-    case InputElementFormat::Float3:
-        return 12;
-    case InputElementFormat::Int4:
-    case InputElementFormat::Float4:
-        return 16;
-    }
-#ifdef _MSC_VER
-    POMDOG_ASSERT("cannot find format.");
-    return 4;
-#endif
-}
 
 #ifdef DEBUG
 static constexpr std::uint16_t MaxInputSlotCount = 16;
@@ -45,8 +23,9 @@ InputLayoutHelper & InputLayoutHelper::PushBack(InputElementFormat format)
     element.InstanceStepRate = instanceStepRate;
     element.ByteOffset = byteOffset;
 
-    byteOffset += ToByteSize(format);
+    byteOffset += Detail::BufferHelper::ToByteSize(format);
     elements.push_back(std::move(element));
+    POMDOG_ASSERT_MESSAGE(element.ByteOffset < byteOffset, "Overflowing of unsigned int.");
 
     return *this;
 }
