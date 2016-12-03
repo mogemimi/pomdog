@@ -109,6 +109,12 @@ GraphicsContextMetal::GraphicsContextMetal(
 {
     POMDOG_ASSERT(nativeDevice != nil);
 
+    // The max number of command buffers in flight
+    constexpr NSUInteger kMaxInflightBuffers = 1;
+
+    // Create semaphore for Metal
+    inflightSemaphore = dispatch_semaphore_create(kMaxInflightBuffers);
+
     // NOTE: Create a new command queue
     commandQueue = [nativeDevice newCommandQueue];
 
@@ -133,6 +139,17 @@ GraphicsCapabilities GraphicsContextMetal::GetCapabilities() const
     caps.ConstantBufferSlotCount = 31;
     caps.SamplerSlotCount = 16;
     return caps;
+}
+
+void GraphicsContextMetal::DispatchSemaphoreWait()
+{
+    dispatch_semaphore_wait(inflightSemaphore, DISPATCH_TIME_FOREVER);
+}
+
+void GraphicsContextMetal::SetMTKView(MTKView* view)
+{
+    POMDOG_ASSERT(view != nil);
+    targetView = view;
 }
 
 void GraphicsContextMetal::Present()

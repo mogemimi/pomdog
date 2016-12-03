@@ -9,6 +9,7 @@
 #include <memory>
 #include <vector>
 #import <Metal/Metal.h>
+#import <MetalKit/MetalKit.h>
 
 namespace Pomdog {
 namespace Detail {
@@ -68,17 +69,23 @@ public:
 
     void SetTexture(int index, const std::shared_ptr<RenderTarget2D>& texture) override;
 
+    void DispatchSemaphoreWait();
+
+    void SetMTKView(MTKView* view);
+
 private:
 #if defined(DEBUG) && !defined(NDEBUG)
     std::vector<std::weak_ptr<Texture>> weakTextures;
     std::vector<std::weak_ptr<RenderTarget2D>> weakRenderTargets;
 #endif
+    dispatch_semaphore_t inflightSemaphore;
     id<MTLCommandQueue> commandQueue;
     id<MTLCommandBuffer> commandBuffer;
     id<MTLRenderCommandEncoder> commandEncoder;
     MTLPrimitiveType primitiveType;
     id<MTLBuffer> indexBuffer;
     MTLIndexType indexType;
+    MTKView* targetView;
 };
 
 } // namespace Metal
