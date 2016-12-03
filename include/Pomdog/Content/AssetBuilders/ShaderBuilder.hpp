@@ -50,6 +50,12 @@ public:
         const std::string& filePath,
         const std::string& entryPoint);
 
+    Builder & SetMetalFromFile(
+        const std::string& filePath,
+        const std::string& entryPoint);
+
+    Builder & SetMetalFromLibrary(const std::string& entryPoint);
+
     std::shared_ptr<Shader> Build();
 
 private:

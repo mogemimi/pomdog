@@ -270,6 +270,62 @@ Builder<Shader> & Builder<Shader>::SetHLSLFromFile(
     return *this;
 }
 
+Builder<Shader> & Builder<Shader>::SetMetalFromFile(
+    const std::string& assetName, const std::string& entryPointIn)
+{
+    POMDOG_ASSERT(!assetName.empty());
+    POMDOG_ASSERT(!entryPointIn.empty());
+
+    auto graphicsDevice = impl->GetDevice();
+    POMDOG_ASSERT(graphicsDevice);
+
+    if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::Metal)
+    {
+        auto binaryFile = impl->loaderContext.get().OpenStream(assetName);
+
+        if (!binaryFile.Stream) {
+            POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to open file.");
+        }
+
+        if (binaryFile.SizeInBytes <= 0) {
+            POMDOG_THROW_EXCEPTION(std::runtime_error, "The file is too small");
+        }
+
+        impl->shaderBlob = BinaryReader::ReadString<std::uint8_t>(
+            binaryFile.Stream, binaryFile.SizeInBytes);
+
+        if (impl->shaderBlob.empty()) {
+            POMDOG_THROW_EXCEPTION(std::runtime_error, "The file is too small");
+        }
+
+        impl->shaderBytecode.Code = impl->shaderBlob.data();
+        impl->shaderBytecode.ByteLength = impl->shaderBlob.size();
+        impl->entryPoint = entryPointIn;
+        impl->precompiled = false;
+        impl->fromLibrary = false;
+    }
+    return *this;
+}
+
+Builder<Shader> & Builder<Shader>::SetMetalFromLibrary(
+    const std::string& entryPointIn)
+{
+    POMDOG_ASSERT(!entryPointIn.empty());
+
+    auto graphicsDevice = impl->GetDevice();
+    POMDOG_ASSERT(graphicsDevice);
+
+    if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::Metal)
+    {
+        impl->shaderBytecode.Code = nullptr;
+        impl->shaderBytecode.ByteLength = 0;
+        impl->entryPoint = entryPointIn;
+        impl->precompiled = false;
+        impl->fromLibrary = true;
+    }
+    return *this;
+}
+
 std::shared_ptr<Shader> Builder<Shader>::Build()
 {
     auto graphicsDevice = impl->GetDevice();
