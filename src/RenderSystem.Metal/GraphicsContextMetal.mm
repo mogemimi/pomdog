@@ -287,9 +287,28 @@ void GraphicsContextMetal::SetPipelineState(const std::shared_ptr<NativePipeline
     nativePipelineState->Apply(commandEncoder);
 }
 
-void GraphicsContextMetal::SetConstantBuffer(int index, const std::shared_ptr<NativeBuffer>& constantBuffer)
+void GraphicsContextMetal::SetConstantBuffer(int index, const std::shared_ptr<NativeBuffer>& constantBufferIn)
 {
-    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
+    POMDOG_ASSERT(index >= 0);
+    POMDOG_ASSERT(constantBufferIn);
+
+#if defined(DEBUG) && !defined(NDEBUG)
+    static const auto capabilities = GetCapabilities();
+    POMDOG_ASSERT(index < static_cast<int>(capabilities.ConstantBufferSlotCount));
+#endif
+
+    auto constantBuffer = std::static_pointer_cast<BufferMetal>(constantBufferIn);
+
+    POMDOG_ASSERT(constantBuffer);
+    POMDOG_ASSERT(constantBuffer == std::dynamic_pointer_cast<BufferMetal>(constantBufferIn));
+
+    POMDOG_ASSERT(constantBuffer->GetBuffer() != nil);
+    [commandEncoder setVertexBuffer:constantBuffer->GetBuffer()
+        offset:0
+        atIndex:index];
+    [commandEncoder setFragmentBuffer:constantBuffer->GetBuffer()
+        offset:0
+        atIndex:index];
 }
 
 void GraphicsContextMetal::SetSampler(int index, const std::shared_ptr<NativeSamplerState>& sampler)
