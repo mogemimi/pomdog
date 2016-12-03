@@ -82,7 +82,9 @@ SamplerStateMetal::SamplerStateMetal(id<MTLDevice> device, const SamplerDescript
 
     descriptor.lodMaxClamp = description.MaxMipLevel;
     descriptor.lodMinClamp = description.MinMipLevel;
-    descriptor.maxAnisotropy = description.MaxAnisotropy;
+
+    // NOTE: `MTLSamplerDescriptor's max anisotropy value must be >= one.
+    descriptor.maxAnisotropy = std::max<std::uint32_t>(description.MaxAnisotropy, 1);
 
     samplerState = [device newSamplerStateWithDescriptor:descriptor];
     if (samplerState == nil) {
