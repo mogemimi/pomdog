@@ -2,6 +2,7 @@
 
 #include "PipelineStateMetal.hpp"
 #include "MetalFormatHelper.hpp"
+#include "../RenderSystem/BufferHelper.hpp"
 #include "Pomdog/Graphics/DepthFormat.hpp"
 #include "Pomdog/Graphics/PipelineStateDescription.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -43,18 +44,22 @@ MTLVertexDescriptor* ToVertexDescriptor(const InputLayoutDescription& inputLayou
 {
     MTLVertexDescriptor* vertexDescriptor = [MTLVertexDescriptor new];
 
-    int bufferIndex = 0;
+    int attributeIndex = 0;
     for (auto & element : inputLayout.InputElements) {
-        auto bufferLayout = vertexDescriptor.layouts[bufferIndex];
-        bufferLayout.stride = element.ByteOffset;
-        bufferLayout.stepRate = element.InstanceStepRate;
+        auto bufferLayout = vertexDescriptor.layouts[element.InputSlot];
+        bufferLayout.stride = element.ByteOffset + BufferHelper::ToByteSize(element.Format);
         bufferLayout.stepFunction = ToVertexStepFunction(element.InputSlotClass);
+        bufferLayout.stepRate = element.InstanceStepRate;
+        if (element.InputSlotClass == InputClassification::InputPerVertex) {
+            // NOTE: `stepRate` must be one if stepFunction is MTLVertexStepFunctionPerVertex.
+            bufferLayout.stepRate = 1;
+        }
 
-        auto attribute = vertexDescriptor.attributes[bufferIndex];
+        auto attribute = vertexDescriptor.attributes[attributeIndex];
         attribute.format = ToVertexFormat(element.Format);
         attribute.offset = element.ByteOffset;
-        attribute.bufferIndex = bufferIndex;
-        ++bufferIndex;
+        attribute.bufferIndex = element.InputSlot;
+        ++attributeIndex;
     }
 
     return vertexDescriptor;
