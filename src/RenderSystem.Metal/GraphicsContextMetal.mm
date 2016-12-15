@@ -469,15 +469,23 @@ void GraphicsContextMetal::SetRenderPass(const RenderPass& renderPass)
 
         if (!renderTarget) {
             renderPassDescriptor.colorAttachments[renderTargetIndex].texture = targetView.currentDrawable.texture;
-            renderPassDescriptor.depthAttachment.texture = targetView.currentRenderPassDescriptor.depthAttachment.texture;
-            renderPassDescriptor.stencilAttachment.texture = targetView.currentRenderPassDescriptor.stencilAttachment.texture;
+
+            if (renderTargetIndex == 0) {
+                renderPassDescriptor.depthAttachment.texture = targetView.currentRenderPassDescriptor.depthAttachment.texture;
+                renderPassDescriptor.stencilAttachment.texture = targetView.currentRenderPassDescriptor.stencilAttachment.texture;
+            }
         }
         else {
-//            // TODO: Not implemented
-//            renderPassDescriptor.colorAttachments[renderTargetIndex].texture = [_view.currentDrawable texture];
-//            renderPassDescriptor.depthAttachment.texture = ;
-//            renderPassDescriptor.stencilAttachment.texture = ;
-            POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
+            POMDOG_ASSERT(renderTarget->GetNativeRenderTarget2D() != nullptr);
+            auto nativeRenderTarget = static_cast<RenderTarget2DMetal*>(renderTarget->GetNativeRenderTarget2D());
+            POMDOG_ASSERT(nativeRenderTarget = dynamic_cast<RenderTarget2DMetal*>(renderTarget->GetNativeRenderTarget2D()));
+
+            renderPassDescriptor.colorAttachments[renderTargetIndex].texture = nativeRenderTarget->GetTexture();
+
+            if (renderTargetIndex == 0) {
+                renderPassDescriptor.depthAttachment.texture = nativeRenderTarget->GetDepthStencilTexture();
+                renderPassDescriptor.stencilAttachment.texture = nativeRenderTarget->GetDepthStencilTexture();
+            }
         }
 
         if (clearColor) {
@@ -485,7 +493,6 @@ void GraphicsContextMetal::SetRenderPass(const RenderPass& renderPass)
             renderPassDescriptor.colorAttachments[renderTargetIndex].clearColor = ToClearColor(*clearColor);
         }
         else {
-            // TOOD: Not implemented
             renderPassDescriptor.colorAttachments[renderTargetIndex].loadAction = MTLLoadActionDontCare;
         }
         ++renderTargetIndex;
@@ -502,6 +509,13 @@ void GraphicsContextMetal::SetRenderPass(const RenderPass& renderPass)
 
 
     POMDOG_ASSERT(commandBuffer != nil);
+
+    if (commandEncoder != nil) {
+        // We're done encoding commands
+        [commandEncoder popDebugGroup];
+        [commandEncoder endEncoding];
+        commandEncoder = nil;
+    }
 
      // Create a render command encoder so we can render into something
     commandEncoder = [commandBuffer renderCommandEncoderWithDescriptor:renderPassDescriptor];

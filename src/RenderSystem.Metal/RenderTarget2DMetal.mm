@@ -62,6 +62,12 @@ RenderTarget2DMetal::RenderTarget2DMetal(
             height:pixelHeight
             mipmapped:(levelCount > 1 ? YES: NO)];
 
+        [descriptor setUsage:MTLTextureUsageRenderTarget|MTLTextureUsageShaderRead];
+//        [descriptor setStorageMode:];
+//        [descriptor setResourceOptions:];
+//        [descriptor setSampleCount:];
+//        [descriptor setMipmapLevelCount:];
+
         texture = [device newTextureWithDescriptor:descriptor];
         if (texture == nil) {
             // FUS RO DAH!
@@ -78,6 +84,12 @@ RenderTarget2DMetal::RenderTarget2DMetal(
             height:pixelHeight
             mipmapped:(levelCount > 1 ? YES: NO)];
 
+        MTLResourceOptions resourceOptions = 0;
+        resourceOptions |= MTLResourceStorageModePrivate;
+
+        [descriptor setUsage:MTLTextureUsageRenderTarget];
+        [descriptor setResourceOptions:resourceOptions];
+
         depthStencilTexture = [device newTextureWithDescriptor:descriptor];
         if (depthStencilTexture == nil) {
             // FUS RO DAH!
@@ -90,6 +102,11 @@ RenderTarget2DMetal::RenderTarget2DMetal(
 id<MTLTexture> RenderTarget2DMetal::GetTexture() const noexcept
 {
     return texture;
+}
+
+id<MTLTexture> RenderTarget2DMetal::GetDepthStencilTexture() const noexcept
+{
+    return depthStencilTexture;
 }
 
 } // namespace Metal

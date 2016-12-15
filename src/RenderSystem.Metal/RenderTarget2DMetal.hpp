@@ -23,6 +23,8 @@ public:
 
     id<MTLTexture> GetTexture() const noexcept;
 
+    id<MTLTexture> GetDepthStencilTexture() const noexcept;
+
 private:
     id<MTLTexture> texture;
     id<MTLTexture> depthStencilTexture;
