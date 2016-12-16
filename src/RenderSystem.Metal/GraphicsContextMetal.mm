@@ -469,23 +469,13 @@ void GraphicsContextMetal::SetRenderPass(const RenderPass& renderPass)
 
         if (!renderTarget) {
             renderPassDescriptor.colorAttachments[renderTargetIndex].texture = targetView.currentDrawable.texture;
-
-            if (renderTargetIndex == 0) {
-                renderPassDescriptor.depthAttachment.texture = targetView.currentRenderPassDescriptor.depthAttachment.texture;
-                renderPassDescriptor.stencilAttachment.texture = targetView.currentRenderPassDescriptor.stencilAttachment.texture;
-            }
         }
         else {
-            POMDOG_ASSERT(renderTarget->GetNativeRenderTarget2D() != nullptr);
             auto nativeRenderTarget = static_cast<RenderTarget2DMetal*>(renderTarget->GetNativeRenderTarget2D());
             POMDOG_ASSERT(nativeRenderTarget = dynamic_cast<RenderTarget2DMetal*>(renderTarget->GetNativeRenderTarget2D()));
+            POMDOG_ASSERT(nativeRenderTarget != nullptr);
 
             renderPassDescriptor.colorAttachments[renderTargetIndex].texture = nativeRenderTarget->GetTexture();
-
-            if (renderTargetIndex == 0) {
-                renderPassDescriptor.depthAttachment.texture = nativeRenderTarget->GetDepthStencilTexture();
-                renderPassDescriptor.stencilAttachment.texture = nativeRenderTarget->GetDepthStencilTexture();
-            }
         }
 
         if (clearColor) {
@@ -498,6 +488,24 @@ void GraphicsContextMetal::SetRenderPass(const RenderPass& renderPass)
         ++renderTargetIndex;
     }
 
+    {
+        auto renderTargetView = renderPass.RenderTargets[0];
+        auto & renderTarget = std::get<0>(renderTargetView);
+
+        if (!renderTarget) {
+            renderPassDescriptor.depthAttachment.texture = targetView.currentRenderPassDescriptor.depthAttachment.texture;
+            renderPassDescriptor.stencilAttachment.texture = targetView.currentRenderPassDescriptor.stencilAttachment.texture;
+        }
+        else {
+            auto nativeRenderTarget = static_cast<RenderTarget2DMetal*>(renderTarget->GetNativeRenderTarget2D());
+            POMDOG_ASSERT(nativeRenderTarget = dynamic_cast<RenderTarget2DMetal*>(renderTarget->GetNativeRenderTarget2D()));
+            POMDOG_ASSERT(nativeRenderTarget != nullptr);
+
+            renderPassDescriptor.depthAttachment.texture = nativeRenderTarget->GetDepthStencilTexture();
+            renderPassDescriptor.stencilAttachment.texture = nativeRenderTarget->GetDepthStencilTexture();
+        }
+    }
+
     if (renderPass.ClearDepth) {
         renderPassDescriptor.depthAttachment.loadAction = MTLLoadActionClear;
         renderPassDescriptor.depthAttachment.clearDepth = *renderPass.ClearDepth;
@@ -506,7 +514,6 @@ void GraphicsContextMetal::SetRenderPass(const RenderPass& renderPass)
         renderPassDescriptor.depthAttachment.loadAction = MTLLoadActionClear;
         renderPassDescriptor.stencilAttachment.clearStencil = *renderPass.ClearStencil;
     }
-
 
     POMDOG_ASSERT(commandBuffer != nil);
 
