@@ -13,11 +13,30 @@ namespace Detail {
 
 class NativeGraphicsContext;
 
+enum class GraphicsCommandType : std::int8_t {
+    DrawCommand,
+    DrawIndexedCommand,
+    DrawInstancedCommand,
+    DrawIndexedInstancedCommand,
+    SetPrimitiveTopologyCommand,
+    SetBlendFactorCommand,
+    SetVertexBuffersCommand,
+    SetIndexBufferCommand,
+    SetPipelineStateCommand,
+    SetConstantBufferCommand,
+    SetSamplerStateCommand,
+    SetTextureCommand,
+    SetTextureRenderTarget2DCommand,
+    SetRenderPassCommand,
+};
+
 class GraphicsCommand {
 public:
     virtual ~GraphicsCommand() = default;
 
     virtual void Execute(NativeGraphicsContext & graphicsContext) = 0;
+
+    GraphicsCommandType commandType;
 };
 
 class GraphicsCommandListImmediate final: public NativeGraphicsCommandList {
@@ -86,10 +105,13 @@ public:
     void SetTexture(
         int index, const std::shared_ptr<RenderTarget2D>& texture) override;
 
-    void ExecuteImmediate(NativeGraphicsContext & graphicsContext) const;
+    void ExecuteImmediate(NativeGraphicsContext & graphicsContext);
 
 private:
-    std::vector<std::unique_ptr<Detail::GraphicsCommand>> commands;
+    void SortCommandsForMetal();
+
+private:
+    std::vector<std::shared_ptr<Detail::GraphicsCommand>> commands;
 };
 
 } // namespace Detail
