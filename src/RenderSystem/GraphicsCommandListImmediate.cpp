@@ -393,7 +393,6 @@ void GraphicsCommandListImmediate::SortCommandsForMetal()
 {
     // NOTE: This function do sorting, duplicating and removing commands for MTLRenderCommandEncoder.
 
-    std::shared_ptr<GraphicsCommand> setRenderPassCommand;
     std::shared_ptr<GraphicsCommand> setPipelineStateCommand;
     std::shared_ptr<GraphicsCommand> setPrimitiveTopologyCommand;
     std::shared_ptr<GraphicsCommand> setBlendFactorCommand;
@@ -416,7 +415,7 @@ void GraphicsCommandListImmediate::SortCommandsForMetal()
         POMDOG_ASSERT(command != nullptr);
         switch (command->commandType) {
         case GraphicsCommandType::SetRenderPassCommand:
-            setRenderPassCommand = command;
+            newCommands.push_back(std::move(command));
             needToFlushCommands = true;
             break;
         case GraphicsCommandType::SetPipelineStateCommand:
@@ -463,9 +462,6 @@ void GraphicsCommandListImmediate::SortCommandsForMetal()
         case GraphicsCommandType::DrawInstancedCommand:
         case GraphicsCommandType::DrawIndexedInstancedCommand: {
             if (needToFlushCommands) {
-                if (setRenderPassCommand) {
-                    newCommands.push_back(setRenderPassCommand);
-                }
                 if (setPipelineStateCommand) {
                     newCommands.push_back(setPipelineStateCommand);
                 }
