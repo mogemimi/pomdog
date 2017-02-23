@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2016 mogemimi.
+// Copyright (c) 2013-2017 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "Pomdog.Experimental/UI/UIElement.hpp"

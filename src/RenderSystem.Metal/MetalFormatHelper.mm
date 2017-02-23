@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
+// Copyright (c) 2013-2017 mogemimi. Distributed under the MIT license.
 
 #include "MetalFormatHelper.hpp"
 #include "Pomdog/Graphics/SurfaceFormat.hpp"

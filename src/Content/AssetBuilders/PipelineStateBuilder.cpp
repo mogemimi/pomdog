@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2016 mogemimi. Distributed under the MIT license.
+// Copyright (c) 2013-2017 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Content/AssetBuilders/PipelineStateBuilder.hpp"
 #include "Pomdog/Content/detail/AssetLoaderContext.hpp"
