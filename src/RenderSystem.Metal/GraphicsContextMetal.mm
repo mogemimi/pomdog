@@ -319,7 +319,7 @@ void GraphicsContextMetal::SetVertexBuffers(const std::vector<VertexBufferBindin
 
 void GraphicsContextMetal::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBufferIn)
 {
-    POMDOG_ASSERT(indexBuffer);
+    POMDOG_ASSERT(indexBufferIn != nullptr);
 
     auto nativeIndexBuffer = static_cast<BufferMetal*>(
         indexBufferIn->NativeIndexBuffer());
