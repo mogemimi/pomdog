@@ -1,8 +1,8 @@
 #import <Cocoa/Cocoa.h>
-#import "GameView.h"
+#import <Pomdog/Platform/Cocoa/PomdogOpenGLView.hpp>
 
 @interface GameViewController : NSViewController
 
-@property (assign) IBOutlet GameView *gameView;
+@property (assign) IBOutlet PomdogOpenGLView *gameView;
 
 @end

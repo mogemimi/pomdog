@@ -66,22 +66,19 @@
             'Platform.CocoaGL4/main.mm',
             'Platform.CocoaGL4/AppDelegate.h',
             'Platform.CocoaGL4/AppDelegate.mm',
-            'Platform.CocoaGL4/GameView.h',
-            'Platform.CocoaGL4/GameView.mm',
             'Platform.CocoaGL4/GameViewController.h',
             'Platform.CocoaGL4/GameViewController.mm',
           ],
           'xcode_settings': {
-            'INFOPLIST_FILE': 'Platform.Cocoa/Info.plist',
+            'INFOPLIST_FILE': 'Platform.CocoaGL4/Info.plist',
             'LD_RUNPATH_SEARCH_PATHS': [
               '$(inherited)',
               '@executable_path/../Frameworks',
             ],
           },
           'mac_bundle_resources': [
-            'Platform.Cocoa/Base.lproj/MainMenu.xib',
-            'Platform.Cocoa/English.lproj/InfoPlist.strings',
-            'Platform.Cocoa/Images.xcassets/',
+            'Platform.CocoaGL4/Assets.xcassets/',
+            'Platform.CocoaGL4/Base.lproj/MainMenu.xib',
           ],
         }],
         ['OS == "linux"', {

@@ -35,11 +35,11 @@
         <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
         <menu title="Main Menu" systemMenu="main" id="AYu-sK-qS6">
             <items>
-                <menuItem title="Metal Mac Template" id="1Xt-HY-uBw">
+                <menuItem title="QuickStart" id="1Xt-HY-uBw">
                     <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="Metal Mac Template" systemMenu="apple" id="uQy-DD-JDr">
+                    <menu key="submenu" title="QuickStart" systemMenu="apple" id="uQy-DD-JDr">
                         <items>
-                            <menuItem title="About Metal Mac Template" id="5kV-Vb-QxS">
+                            <menuItem title="About QuickStart" id="5kV-Vb-QxS">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="orderFrontStandardAboutPanel:" target="-1" id="Exp-CZ-Vem"/>
@@ -53,7 +53,7 @@
                                 <menu key="submenu" title="Services" systemMenu="services" id="hz9-B4-Xy5"/>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="4je-JR-u6R"/>
-                            <menuItem title="Hide Metal Mac Template" keyEquivalent="h" id="Olw-nP-bQN">
+                            <menuItem title="Hide QuickStart" keyEquivalent="h" id="Olw-nP-bQN">
                                 <connections>
                                     <action selector="hide:" target="-1" id="PnN-Uc-m68"/>
                                 </connections>
@@ -71,7 +71,7 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="kCx-OE-vgT"/>
-                            <menuItem title="Quit Metal Mac Template" keyEquivalent="q" id="4sb-4s-VLi">
+                            <menuItem title="Quit QuickStart" keyEquivalent="q" id="4sb-4s-VLi">
                                 <connections>
                                     <action selector="terminate:" target="-1" id="Te7-pn-YzF"/>
                                 </connections>
@@ -672,7 +672,7 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Help" systemMenu="help" id="F2S-fz-NVQ">
                         <items>
-                            <menuItem title="Metal Mac Template Help" keyEquivalent="?" id="FKE-Sm-Kum">
+                            <menuItem title="QuickStart Help" keyEquivalent="?" id="FKE-Sm-Kum">
                                 <connections>
                                     <action selector="showHelp:" target="-1" id="y7X-2Q-9no"/>
                                 </connections>
