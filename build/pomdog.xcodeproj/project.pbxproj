@@ -147,6 +147,10 @@
 		A93CA6551D92F34E00B65171 /* Task.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A93CA64F1D92F34E00B65171 /* Task.cpp */; };
 		A9854B9E1DC115D400650729 /* BufferHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9854B9C1DC115D400650729 /* BufferHelper.cpp */; };
 		A9854B9F1DC115D400650729 /* BufferHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9854B9C1DC115D400650729 /* BufferHelper.cpp */; };
+		A958BDF81CC3E65A00E15834 /* PomdogMetalViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = A958BDF71CC3E65A00E15834 /* PomdogMetalViewController.mm */; };
+		A958BDF91CC3E65A00E15834 /* PomdogMetalViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = A958BDF71CC3E65A00E15834 /* PomdogMetalViewController.mm */; };
+		A98BE0D41CC22915008696A8 /* GameHostMetal.mm in Sources */ = {isa = PBXBuildFile; fileRef = A98BE0D31CC22915008696A8 /* GameHostMetal.mm */; };
+		A98BE0D51CC22915008696A8 /* GameHostMetal.mm in Sources */ = {isa = PBXBuildFile; fileRef = A98BE0D31CC22915008696A8 /* GameHostMetal.mm */; };
 		A98CB91E8C51E158141731F1 /* PipelineState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7E14E3AE6B465875CD29816 /* PipelineState.cpp */; };
 		A992AF021C2B1168003170C9 /* Coordinate2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A992AF001C2B1168003170C9 /* Coordinate2D.cpp */; };
 		A992AF031C2B1168003170C9 /* Coordinate2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A992AF001C2B1168003170C9 /* Coordinate2D.cpp */; };
@@ -562,6 +566,10 @@
 		A94F1C2B1DD30851001DC8E5 /* MouseButtons.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MouseButtons.hpp; sourceTree = "<group>"; };
 		A9854B9C1DC115D400650729 /* BufferHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BufferHelper.cpp; sourceTree = "<group>"; };
 		A9854B9D1DC115D400650729 /* BufferHelper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = BufferHelper.hpp; sourceTree = "<group>"; };
+		A958BDF71CC3E65A00E15834 /* PomdogMetalViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PomdogMetalViewController.mm; sourceTree = "<group>"; };
+		A958BE021CC3E8AF00E15834 /* PomdogMetalViewController.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PomdogMetalViewController.hpp; sourceTree = "<group>"; };
+		A98BE0D21CC22915008696A8 /* GameHostMetal.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameHostMetal.hpp; sourceTree = "<group>"; };
+		A98BE0D31CC22915008696A8 /* GameHostMetal.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GameHostMetal.mm; sourceTree = "<group>"; };
 		A992AF001C2B1168003170C9 /* Coordinate2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Coordinate2D.cpp; sourceTree = "<group>"; };
 		A992AF011C2B1168003170C9 /* Coordinate3D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Coordinate3D.cpp; sourceTree = "<group>"; };
 		A997F6DB1CAEFB0800926392 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
@@ -1215,6 +1223,7 @@
 			isa = PBXGroup;
 			children = (
 				3CD68D9350D98D440EC18B73 /* Bootstrap.hpp */,
+				A958BE021CC3E8AF00E15834 /* PomdogMetalViewController.hpp */,
 				E55E2F9EEAD922DB4865C75C /* PomdogOpenGLView.hpp */,
 			);
 			path = Platform/Cocoa;
@@ -1660,6 +1669,8 @@
 				3382639C9E3AA9238472ABB9 /* CocoaWindowDelegate.mm */,
 				9F86BCF5C7F5F574139096EB /* GameHostCocoa.hpp */,
 				D9C3D114115E6C3A619E8CF9 /* GameHostCocoa.mm */,
+				A98BE0D21CC22915008696A8 /* GameHostMetal.hpp */,
+				A98BE0D31CC22915008696A8 /* GameHostMetal.mm */,
 				6458C532D52F0D7D7E006E78 /* GameWindowCocoa.hpp */,
 				14F99439DD2A820772CCB45F /* GameWindowCocoa.mm */,
 				678BDC1DC932B3C09FAEFEC2 /* KeyboardCocoa.cpp */,
@@ -1668,6 +1679,7 @@
 				A31DC30F758D511C19EA979E /* MouseCocoa.hpp */,
 				0B6694594E7E18CC18E2B069 /* OpenGLContextCocoa.hpp */,
 				6795D43CC878CEB35FA67CB3 /* OpenGLContextCocoa.mm */,
+				A958BDF71CC3E65A00E15834 /* PomdogMetalViewController.mm */,
 				95A9AA9F5E520A294039FF38 /* PomdogOpenGLView.mm */,
 			);
 			path = Platform.Cocoa;
@@ -1847,11 +1859,13 @@
 				C256D286DB58A59C3115A07E /* BoundingBox2D.cpp in Sources */,
 				460526B2F0D0E531DBE74416 /* BoundingCircle.cpp in Sources */,
 				972D8345F3491175B7E8411B /* BoundingSphere.cpp in Sources */,
+				A98BE0D41CC22915008696A8 /* GameHostMetal.mm in Sources */,
 				A0FF034BB1ABF16181CC7340 /* Color.cpp in Sources */,
 				5B1D2792F76709A593451042 /* MathHelper.cpp in Sources */,
 				9402075D41A1A97AE8090BF9 /* Ray.cpp in Sources */,
 				A93CA6521D92F34E00B65171 /* QueuedScheduler.cpp in Sources */,
 				0D2BB710020E127DFCD9A463 /* Rectangle.cpp in Sources */,
+				A958BDF81CC3E65A00E15834 /* PomdogMetalViewController.mm in Sources */,
 				C3A63B50AA37BB77F4224857 /* FloatingPointMatrix2x2.cpp in Sources */,
 				FFDFEBC545EB6A4B2D810F99 /* FloatingPointMatrix3x2.cpp in Sources */,
 				51184430EB95428FD308DC8F /* FloatingPointMatrix3x3.cpp in Sources */,
@@ -1969,11 +1983,13 @@
 				77E3632C4F2E245C2F8B6927 /* BoundingBox2D.cpp in Sources */,
 				A6F13789F98E66A501FCF50A /* BoundingCircle.cpp in Sources */,
 				AB379BED1D868790638B95CB /* BoundingSphere.cpp in Sources */,
+				A98BE0D51CC22915008696A8 /* GameHostMetal.mm in Sources */,
 				66DF4B1D8D85D2B963D5A0D5 /* Color.cpp in Sources */,
 				E58ECD9915BC55D5134950F9 /* MathHelper.cpp in Sources */,
 				DA4579E5970831E615EA005D /* Ray.cpp in Sources */,
 				A93CA6531D92F34E00B65171 /* QueuedScheduler.cpp in Sources */,
 				E4C4ADB64ED81496C05CB580 /* Rectangle.cpp in Sources */,
+				A958BDF91CC3E65A00E15834 /* PomdogMetalViewController.mm in Sources */,
 				E971CF40D05A93F09E489D10 /* FloatingPointMatrix2x2.cpp in Sources */,
 				2A792456A91A1FCD600F40C7 /* FloatingPointMatrix3x2.cpp in Sources */,
 				D8E9871132965BADBA4BE734 /* FloatingPointMatrix3x3.cpp in Sources */,
