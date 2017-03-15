@@ -63,13 +63,13 @@
         }],
         ['OS == "mac"', {
           'sources': [
-            'Platform.Cocoa/main.mm',
-            'Platform.Cocoa/AppDelegate.h',
-            'Platform.Cocoa/AppDelegate.mm',
-            'Platform.Cocoa/GameView.h',
-            'Platform.Cocoa/GameView.mm',
-            'Platform.Cocoa/GameViewController.h',
-            'Platform.Cocoa/GameViewController.mm',
+            'Platform.CocoaGL4/main.mm',
+            'Platform.CocoaGL4/AppDelegate.h',
+            'Platform.CocoaGL4/AppDelegate.mm',
+            'Platform.CocoaGL4/GameView.h',
+            'Platform.CocoaGL4/GameView.mm',
+            'Platform.CocoaGL4/GameViewController.h',
+            'Platform.CocoaGL4/GameViewController.mm',
           ],
           'xcode_settings': {
             'INFOPLIST_FILE': 'Platform.Cocoa/Info.plist',
