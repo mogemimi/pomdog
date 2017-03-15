@@ -9,12 +9,6 @@
 namespace Pomdog {
 namespace Detail {
 
-class NativeBuffer;
-class NativeEffectReflection;
-class NativePipelineState;
-class NativeRenderTarget2D;
-class NativeSamplerState;
-class NativeTexture2D;
 class ShaderBytecode;
 struct ShaderCompileOptions;
 enum class BufferBindMode;
