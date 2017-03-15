@@ -459,6 +459,12 @@
       '../src/Platform.Cocoa/OpenGLContextCocoa.mm',
       '../src/Platform.Cocoa/PomdogOpenGLView.mm',
     ],
+    'pomdog_library_cocoa_metal_sources': [
+      '../include/Pomdog/Platform/Cocoa/PomdogMetalViewController.hpp',
+      '../src/Platform.Cocoa/GameHostMetal.hpp',
+      '../src/Platform.Cocoa/GameHostMetal.mm',
+      '../src/Platform.Cocoa/PomdogMetalViewController.mm',
+    ],
     'pomdog_library_dxgi_sources': [
       '../src/RenderSystem.DXGI/DXGIFormatHelper.cpp',
       '../src/RenderSystem.DXGI/DXGIFormatHelper.hpp',
@@ -663,6 +669,9 @@
         ],
       }],
       ['"Metal" in renderers and OS == "mac"', {
+        'sources': [
+          '<@(pomdog_library_cocoa_metal_sources)',
+        ],
         'link_settings': {
           'libraries': [
             '$(SDKROOT)/System/Library/Frameworks/Metal.framework',
