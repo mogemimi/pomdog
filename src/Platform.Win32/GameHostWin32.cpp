@@ -206,6 +206,10 @@ public:
 
     std::shared_ptr<Mouse> GetMouse();
 
+    SurfaceFormat GetBackBufferSurfaceFormat() const noexcept;
+
+    DepthFormat GetBackBufferDepthStencilFormat() const noexcept;
+
 private:
     void RenderFrame(Game & game);
 
@@ -234,6 +238,8 @@ private:
     std::shared_ptr<MouseWin32> mouse;
 
     Duration presentationInterval;
+    SurfaceFormat backBufferSurfaceFormat;
+    DepthFormat backBufferDepthStencilFormat;
     bool exitRequest;
     bool surfaceResizeRequest;
 };
@@ -247,6 +253,8 @@ GameHostWin32::Impl::Impl(
     : eventQueue(eventQueueIn)
     , window(windowIn)
     , inputDeviceFactory(std::move(inputDeviceFactoryIn))
+    , backBufferSurfaceFormat(presentationParameters.BackBufferFormat)
+    , backBufferDepthStencilFormat(presentationParameters.DepthStencilFormat)
     , exitRequest(false)
     , surfaceResizeRequest(false)
 {
@@ -433,6 +441,16 @@ std::shared_ptr<Mouse> GameHostWin32::Impl::GetMouse()
     return mouse;
 }
 
+SurfaceFormat GameHostWin32::Impl::GetBackBufferSurfaceFormat() const noexcept
+{
+    return backBufferSurfaceFormat;
+}
+
+DepthFormat GameHostWin32::Impl::GetBackBufferDepthStencilFormat() const noexcept
+{
+    return backBufferDepthStencilFormat;
+}
+
 GameHostWin32::GameHostWin32(
     const std::shared_ptr<GameWindowWin32>& window,
     const std::shared_ptr<EventQueue>& eventQueue,
@@ -507,6 +525,18 @@ std::shared_ptr<Mouse> GameHostWin32::GetMouse()
 {
     POMDOG_ASSERT(impl);
     return impl->GetMouse();
+}
+
+SurfaceFormat GameHostWin32::GetBackBufferSurfaceFormat() const
+{
+    POMDOG_ASSERT(impl);
+    return impl->GetBackBufferSurfaceFormat();
+}
+
+DepthFormat GameHostWin32::GetBackBufferDepthStencilFormat() const
+{
+    POMDOG_ASSERT(impl);
+    return impl->GetBackBufferDepthStencilFormat();
 }
 
 } // namespace Win32

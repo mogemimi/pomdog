@@ -50,6 +50,10 @@ public:
 
     std::shared_ptr<Mouse> GetMouse() override;
 
+    SurfaceFormat GetBackBufferSurfaceFormat() const override;
+
+    DepthFormat GetBackBufferDepthStencilFormat() const override;
+
 private:
     class Impl;
     std::unique_ptr<Impl> impl;

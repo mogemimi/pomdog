@@ -181,6 +181,10 @@ public:
 
     void Exit();
 
+    SurfaceFormat GetBackBufferSurfaceFormat() const noexcept;
+
+    DepthFormat GetBackBufferDepthStencilFormat() const noexcept;
+
 private:
     void MessagePump();
     void ProcessEvent(::XEvent & event);
@@ -200,11 +204,15 @@ public:
     std::unique_ptr<KeyboardX11> keyboard;
     MouseX11 mouse;
     Duration presentationInterval;
+    SurfaceFormat backBufferSurfaceFormat;
+    DepthFormat backBufferDepthStencilFormat;
     bool exitRequest;
 };
 
 GameHostX11::Impl::Impl(const PresentationParameters& presentationParameters)
-    : exitRequest(false)
+    : backBufferSurfaceFormat(presentationParameters.BackBufferFormat)
+    , backBufferDepthStencilFormat(presentationParameters.DepthStencilFormat)
+    , exitRequest(false)
 {
     POMDOG_ASSERT(presentationParameters.PresentationInterval > 0);
     presentationInterval = Duration(1.0) / presentationParameters.PresentationInterval;
@@ -352,6 +360,16 @@ void GameHostX11::Impl::RenderFrame(Game & game)
     game.Draw();
 }
 
+SurfaceFormat GameHostX11::Impl::GetBackBufferSurfaceFormat() const noexcept
+{
+    return backBufferSurfaceFormat;
+}
+
+DepthFormat GameHostX11::Impl::GetBackBufferDepthStencilFormat() const noexcept
+{
+    return backBufferDepthStencilFormat;
+}
+
 // MARK: - GameHostX11
 
 GameHostX11::GameHostX11(const PresentationParameters& presentationParameters)
@@ -431,6 +449,18 @@ std::shared_ptr<Mouse> GameHostX11::GetMouse()
     auto gameHost = shared_from_this();
     std::shared_ptr<Mouse> sharedMouse(gameHost, &impl->mouse);
     return std::move(sharedMouse);
+}
+
+SurfaceFormat GameHostX11::GetBackBufferSurfaceFormat() const
+{
+    POMDOG_ASSERT(impl);
+    return impl->GetBackBufferSurfaceFormat();
+}
+
+DepthFormat GameHostX11::GetBackBufferDepthStencilFormat() const
+{
+    POMDOG_ASSERT(impl);
+    return impl->GetBackBufferDepthStencilFormat();
 }
 
 } // namespace X11

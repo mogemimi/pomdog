@@ -79,6 +79,10 @@ public:
 
     std::shared_ptr<Mouse> GetMouse();
 
+    SurfaceFormat GetBackBufferSurfaceFormat() const noexcept;
+
+    DepthFormat GetBackBufferDepthStencilFormat() const noexcept;
+
 private:
     void GameLoop();
 
@@ -122,6 +126,8 @@ private:
 
     __weak PomdogOpenGLView* openGLView;
     Duration presentationInterval;
+    SurfaceFormat backBufferSurfaceFormat;
+    DepthFormat backBufferDepthStencilFormat;
     bool exitRequest;
     bool displayLinkEnabled;
 };
@@ -137,6 +143,8 @@ GameHostCocoa::Impl::Impl(
     , window(windowIn)
     , openGLView(openGLViewIn)
     , presentationInterval(Duration(1) / 60)
+    , backBufferSurfaceFormat(presentationParameters.BackBufferFormat)
+    , backBufferDepthStencilFormat(presentationParameters.DepthStencilFormat)
     , exitRequest(false)
     , displayLinkEnabled(true)
 {
@@ -455,6 +463,16 @@ std::shared_ptr<Mouse> GameHostCocoa::Impl::GetMouse()
     return mouse;
 }
 
+SurfaceFormat GameHostCocoa::Impl::GetBackBufferSurfaceFormat() const noexcept
+{
+    return backBufferSurfaceFormat;
+}
+
+DepthFormat GameHostCocoa::Impl::GetBackBufferDepthStencilFormat() const noexcept
+{
+    return backBufferDepthStencilFormat;
+}
+
 // MARK: - GameHostCocoa
 
 GameHostCocoa::GameHostCocoa(
@@ -527,6 +545,18 @@ std::shared_ptr<Mouse> GameHostCocoa::GetMouse()
 {
     POMDOG_ASSERT(impl);
     return impl->GetMouse();
+}
+
+SurfaceFormat GameHostCocoa::GetBackBufferSurfaceFormat() const
+{
+    POMDOG_ASSERT(impl);
+    return impl->GetBackBufferSurfaceFormat();
+}
+
+DepthFormat GameHostCocoa::GetBackBufferDepthStencilFormat() const
+{
+    POMDOG_ASSERT(impl);
+    return impl->GetBackBufferDepthStencilFormat();
 }
 
 } // namespace Cocoa

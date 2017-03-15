@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <memory>
 
@@ -41,6 +42,10 @@ public:
     virtual std::shared_ptr<Keyboard> GetKeyboard() = 0;
 
     virtual std::shared_ptr<Mouse> GetMouse() = 0;
+
+    virtual SurfaceFormat GetBackBufferSurfaceFormat() const = 0;
+
+    virtual DepthFormat GetBackBufferDepthStencilFormat() const = 0;
 };
 
 } // namespace Pomdog
