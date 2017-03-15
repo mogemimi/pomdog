@@ -28,7 +28,7 @@ namespace Detail {
 namespace X11 {
 namespace {
 
-static bool CheckFrameBufferConfigSupport(::Display* display)
+bool CheckFrameBufferConfigSupport(::Display* display)
 {
     int major = 0;
     int minor = 0;
@@ -40,7 +40,7 @@ static bool CheckFrameBufferConfigSupport(::Display* display)
     return (((major == 1) && (minor >= 3)) || (major >= 2));
 }
 
-static GLXFBConfig ChooseFramebufferConfig(
+GLXFBConfig ChooseFramebufferConfig(
     Display* display,
     const PresentationParameters& presentationParameters)
 {
