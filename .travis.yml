@@ -11,6 +11,8 @@ install:
 script:
   - xcodebuild -project build/PomdogTest.xcodeproj clean
   - xcodebuild -project build/PomdogTest.xcodeproj
+  - xcodebuild -project examples/QuickStart/Builds/QuickStart.xcodeproj clean
+  - xcodebuild -project examples/QuickStart/Builds/QuickStart.xcodeproj
   - build/build/Release/PomdogUnitTest
 
 notifications:
