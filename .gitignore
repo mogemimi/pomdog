@@ -3,15 +3,19 @@
 *.so
 .DS_Store
 /out/
-/build/build
 /build/Debug
 /build/Release
 /build.makefiles
+/tools/gyp
+/tools/python
+
+## Build output for Xcode
+/build/build
+/build/dependencies/build
+/dependencies/build
 /examples/QuickStart/build
 /test/FrameworkTest/build
 /test/TestApp/build
-/tools/gyp
-/tools/python
 
 ## Third Party (Backwards compatibility)
 /third-party
