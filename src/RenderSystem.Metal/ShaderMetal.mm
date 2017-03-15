@@ -45,6 +45,10 @@ ShaderMetal::ShaderMetal(
 
     this->shader = [library newFunctionWithName:
         [NSString stringWithUTF8String:compileOptions.EntryPoint.c_str()]];
+
+    if (shader == nil) {
+        POMDOG_THROW_EXCEPTION(std::runtime_error, "MTLFunction is nil");
+    }
 }
 
 ShaderMetal::ShaderMetal(
