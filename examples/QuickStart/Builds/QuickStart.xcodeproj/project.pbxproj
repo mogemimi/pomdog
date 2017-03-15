@@ -23,6 +23,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		A9759F1C1E799C590027B889 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A98BE0C61CC2282A008696A8 /* pomdog.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 71A79DF0C5C7BA4F7EB13021;
+			remoteInfo = "Pomdog Mac (Pomdog.framework)";
+		};
 		A98BE0CD1CC2282B008696A8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = A98BE0C61CC2282A008696A8 /* pomdog.xcodeproj */;
@@ -176,6 +183,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				A9759F1D1E799C590027B889 /* PBXTargetDependency */,
 			);
 			name = QuickStart;
 			productName = QuickStart;
@@ -263,6 +271,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A9759F1D1E799C590027B889 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Pomdog Mac (Pomdog.framework)";
+			targetProxy = A9759F1C1E799C590027B889 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		A98BE0A21CC21D8D008696A8 /* MainMenu.xib */ = {
