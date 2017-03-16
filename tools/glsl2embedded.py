@@ -84,19 +84,6 @@ def CompressGLSLCode(source):
     return preformatted
 
 
-def ConvertGLSL2EmbeddedCode(source):
-    formatted = CompressGLSLCode(source)
-    result = ""
-    for line in formatted.split('\n'):
-        if not line or line == '\n':
-            continue
-        line = line.replace('"', '\\"')
-        result += '"'
-        result += line
-        result += '\\n"\n'
-    return result
-
-
 def GetSourceHeader():
     return """// Copyright (c) 2013-2017 mogemimi. Distributed under the MIT license.
 
@@ -107,9 +94,9 @@ def CreateEmbeddedCode(identifier, content):
     name = "Builtin_GLSL_"
     name += identifier.replace('.', '_').replace('\\', '_').replace('/', '_')
     result = GetSourceHeader()
-    result += "char const* {0} =\n".format(name)
+    result += 'constexpr auto {0} = R"(\n'.format(name)
     result += content.rstrip()
-    result += ';\n'
+    result += '\n)";\n'
     return result
 
 
@@ -134,7 +121,7 @@ def main():
         return
 
     source = ReadGLSLSource(path)
-    embedded = CreateEmbeddedCode(identifier, ConvertGLSL2EmbeddedCode(source))
+    embedded = CreateEmbeddedCode(identifier, CompressGLSLCode(source))
     dest = directory + ".Embedded/" + identifier + '.inc.hpp'
     SaveEmbeddedCode(dest, embedded)
 
