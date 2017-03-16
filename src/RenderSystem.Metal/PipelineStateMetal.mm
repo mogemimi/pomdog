@@ -236,6 +236,10 @@ PipelineStateMetal::PipelineStateMetal(
 
     std::size_t index = 0;
     for (auto & renderTarget : description.BlendState.RenderTargets) {
+        if (index >= description.RenderTargetViewFormats.size()) {
+            break;
+        }
+
         auto colorAttachment = descriptor.colorAttachments[index];
         colorAttachment.rgbBlendOperation = ToBlendOperation(renderTarget.ColorBlendOperation);
         colorAttachment.alphaBlendOperation = ToBlendOperation(renderTarget.AlphaBlendOperation);
@@ -245,14 +249,9 @@ PipelineStateMetal::PipelineStateMetal(
         colorAttachment.destinationAlphaBlendFactor = ToBlendFactor(renderTarget.AlphaDestinationBlend);
         colorAttachment.blendingEnabled = renderTarget.BlendEnable;
 
-        if (index < description.RenderTargetViewFormats.size()) {
-            auto pixelFormat = MetalFormatHelper::ToMTLPixelFormat(description.RenderTargetViewFormats[index]);
-            POMDOG_ASSERT(pixelFormat);
-            colorAttachment.pixelFormat = *pixelFormat;
-        }
-        else {
-            colorAttachment.pixelFormat = MTLPixelFormatInvalid;
-        }
+        auto pixelFormat = MetalFormatHelper::ToMTLPixelFormat(description.RenderTargetViewFormats[index]);
+        POMDOG_ASSERT(pixelFormat);
+        colorAttachment.pixelFormat = *pixelFormat;
 
         // TODO: Not implemented
         colorAttachment.writeMask = MTLColorWriteMaskAll;
