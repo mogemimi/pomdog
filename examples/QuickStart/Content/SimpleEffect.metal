@@ -3,22 +3,20 @@
 
 using namespace metal;
 
-typedef struct __attribute__((__aligned__(256)))
-{
+struct __attribute__((__aligned__(256))) MyShaderConstants {
     matrix_float4x4 Model;
     matrix_float4x4 ViewProjection;
-} MyShaderConstants;
+};
 
-typedef struct
-{
+struct VS_INPUT {
     float3 Position [[attribute(0)]];
     float2 TextureCoord [[attribute(1)]];
-} VS_INPUT;
+};
 
-typedef struct {
+struct VS_OUTPUT {
     float4 Position [[position]];
     float2 TextureCoord;
-} VS_OUTPUT;
+};
 
 // Vertex shader function
 vertex VS_OUTPUT SimpleEffectVS(
