@@ -1,30 +1,31 @@
 // Copyright (c) 2013-2017 mogemimi. Distributed under the MIT license.
 
-char const* Builtin_GLSL_SkinnedEffect_VS =
-"#version 330\n"
-"layout(location=0)in vec4 PositionTextureCoord;\n"
-"layout(location=1)in vec4 Weights;\n"
-"layout(location=2)in ivec4 JointIndices;\n"
-"out VertexData{\n"
-"vec2 TextureCoord;\n"
-"vec4 Color;}Out;\n"
-"uniform SkinningConstants{\n"
-"vec4 Bones[192];};\n"
-"uniform Constants{\n"
-"mat4x4 ModelViewProjection;\n"
-"vec4 MainColor;};\n"
-"void main(){\n"
-"mat3x2 skinning=mat3x2(0.0);\n"
-"for(int i=0; i<4; ++i){\n"
-"int jointIndex=JointIndices[i];\n"
-"if(jointIndex<0){\n"
-"break;}\n"
-"mat3x2 boneMatrix=mat3x2(\n"
-"vec2(Bones[jointIndex*2].xy),\n"
-"vec2(Bones[jointIndex*2].zw),\n"
-"vec2(Bones[jointIndex*2+1].xy));\n"
-"skinning += boneMatrix*Weights[i];}\n"
-"vec2 position=(skinning*vec3(PositionTextureCoord.xy,1.0)).xy;\n"
-"gl_Position=vec4(position.xy,0.0,1.0)*ModelViewProjection;\n"
-"Out.TextureCoord=PositionTextureCoord.zw;\n"
-"Out.Color=MainColor;}\n";
+constexpr auto Builtin_GLSL_SkinnedEffect_VS = R"(
+#version 330
+layout(location=0)in vec4 PositionTextureCoord;
+layout(location=1)in vec4 Weights;
+layout(location=2)in ivec4 JointIndices;
+out VertexData{
+vec2 TextureCoord;
+vec4 Color;}Out;
+uniform SkinningConstants{
+vec4 Bones[192];};
+uniform Constants{
+mat4x4 ModelViewProjection;
+vec4 MainColor;};
+void main(){
+mat3x2 skinning=mat3x2(0.0);
+for(int i=0; i<4; ++i){
+int jointIndex=JointIndices[i];
+if(jointIndex<0){
+break;}
+mat3x2 boneMatrix=mat3x2(
+vec2(Bones[jointIndex*2].xy),
+vec2(Bones[jointIndex*2].zw),
+vec2(Bones[jointIndex*2+1].xy));
+skinning += boneMatrix*Weights[i];}
+vec2 position=(skinning*vec3(PositionTextureCoord.xy,1.0)).xy;
+gl_Position=vec4(position.xy,0.0,1.0)*ModelViewProjection;
+Out.TextureCoord=PositionTextureCoord.zw;
+Out.Color=MainColor;}
+)";

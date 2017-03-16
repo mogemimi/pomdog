@@ -1,9 +1,10 @@
 // Copyright (c) 2013-2017 mogemimi. Distributed under the MIT license.
 
-char const* Builtin_GLSL_LineBatch_PS =
-"#version 330\n"
-"in VertexData{\n"
-"vec4 DestinationColor;}In;\n"
-"out vec4 FragColor;\n"
-"void main(){\n"
-"FragColor=In.DestinationColor;}\n";
+constexpr auto Builtin_GLSL_LineBatch_PS = R"(
+#version 330
+in VertexData{
+vec4 DestinationColor;}In;
+out vec4 FragColor;
+void main(){
+FragColor=In.DestinationColor;}
+)";
