@@ -138,7 +138,7 @@ Matrix4x4 CameraComponent::ComputeProjectionMatrix() const noexcept
             viewport.Height,
             viewport.MinDepth,
             viewport.MaxDepth);
-        return std::move(projectionMatrix);
+        return projectionMatrix;
     }
 
     POMDOG_ASSERT(fieldOfView.value > 0);
@@ -151,7 +151,7 @@ Matrix4x4 CameraComponent::ComputeProjectionMatrix() const noexcept
         viewport.GetAspectRatio(),
         viewport.MinDepth,
         viewport.MaxDepth);
-    return std::move(projectionMatrix);
+    return projectionMatrix;
 }
 
 std::uint8_t ComponentTypeDeclaration<CameraComponent>::GetTypeIndex()

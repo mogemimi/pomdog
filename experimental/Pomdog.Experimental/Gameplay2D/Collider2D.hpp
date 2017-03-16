@@ -32,7 +32,7 @@ public:
         BoundingBox2D box;
         box.Min = position - Vector2{halfWidth, halfHeight};
         box.Max = position + Vector2{halfWidth, halfHeight};
-        return std::move(box);
+        return box;
     }
 
     void SetWidth(float width) noexcept
@@ -62,7 +62,7 @@ public:
         BoundingCircle circle;
         circle.Radius = radius;
         circle.Center = position;
-        return std::move(circle);
+        return circle;
     }
 
     void SetRadius(float radiusIn) noexcept

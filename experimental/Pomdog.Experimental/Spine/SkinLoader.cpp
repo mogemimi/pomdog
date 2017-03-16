@@ -121,7 +121,7 @@ std::vector<RigidSlot> CreateSlots(std::vector<SlotDesc> const& slotDescs,
         ++drawOrder;
     }
 
-    return std::move(slots);
+    return slots;
 }
 
 } // unnamed namespace
@@ -150,7 +150,7 @@ Skin CreateSkin(SkeletonDesc const& skeletonDesc,
 //    }
 
     Skin skin(CreateSlots(skeletonDesc.Slots, iter->Slots, textureAtlas));
-    return std::move(skin);
+    return skin;
 }
 
 } // namespace Spine

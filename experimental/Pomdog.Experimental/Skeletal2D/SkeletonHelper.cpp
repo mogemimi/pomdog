@@ -63,7 +63,7 @@ std::vector<Matrix3x2> SkeletonHelper::ToGlobalPose(Skeleton const& skeleton,
 {
     std::vector<Matrix3x2> globalPose(skeleton.JointCount());
     SkeletonHelper::ToGlobalPose(skeleton, skeletonPose, globalPose);
-    return std::move(globalPose);
+    return globalPose;
 }
 
 } // namespace Pomdog

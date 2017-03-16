@@ -244,7 +244,7 @@ Detail::UIEventConnection UIEventDispatcher::Connect(const std::weak_ptr<UIEleme
     Detail::UIEventConnection connection {std::move(sharedDispatcher), child};
     subscribeRequests.AddChild(child);
 
-    return std::move(connection);
+    return connection;
 }
 
 void UIEventDispatcher::UpdateAnimation(const Duration& frameDuration)

@@ -75,7 +75,7 @@ std::vector<Vector2> CreateJaggedLine(
 
     POMDOG_ASSERT(!points.empty());
     POMDOG_ASSERT(points.size() >= 2);
-    return std::move(points);
+    return points;
 }
 
 std::vector<Vector2> CreateBranch(BeamEmitter const& emitter,

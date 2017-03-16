@@ -190,7 +190,7 @@ std::shared_ptr<AnimationGraph> LoadAnimationGraph(SkeletonDesc const& skeletonD
 
     animationGraph->Inputs = std::move(inputs);
 
-    return std::move(animationGraph);
+    return animationGraph;
 }
 
 } // namespace Spine

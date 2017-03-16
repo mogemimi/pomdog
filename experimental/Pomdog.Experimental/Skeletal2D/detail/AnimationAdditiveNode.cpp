@@ -21,7 +21,7 @@ SkeletonPose CreateEmptyPose(Skeleton const& skeleton)
     jointPose.Rotation = 0;
     jointPose.Translate = Vector2::Zero;
     skeletonPose.JointPoses.resize(skeleton.JointCount(), jointPose);
-    return std::move(skeletonPose);
+    return skeletonPose;
 }
 
 } // unnamed namespace

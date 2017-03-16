@@ -10,7 +10,7 @@ Entity EntityManager::CreateEntity(
 {
     Entity entity(&context, context.Create(std::move(componentCreators)));
     entities.push_back(entity.GetID());
-    return std::move(entity);
+    return entity;
 }
 
 bool EntityManager::Valid(const EntityID& objectID) const noexcept

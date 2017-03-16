@@ -120,7 +120,7 @@ VoxModel VoxModelLoader::Load(AssetManager const& assets, std::string const& ass
         stream.seekg(chunkEnd, std::ios::beg);
     }
 
-    return std::move(model);
+    return model;
 }
 
 } // namespace MagicaVoxel

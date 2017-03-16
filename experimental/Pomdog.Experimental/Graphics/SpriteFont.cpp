@@ -36,7 +36,7 @@ std::vector<std::uint8_t> ConvertTextureDataByteToByte4(const std::uint8_t* sour
         output.push_back(255);
         output.push_back(source[i]);
     }
-    return std::move(output);
+    return output;
 }
 
 } // unnamed namespace
@@ -248,7 +248,7 @@ Vector2 SpriteFont::Impl::MeasureString(const std::string& text)
         result.Y = std::max(result.Y, currentPosition.Y);
     }
 
-    return std::move(result);
+    return result;
 }
 
 void SpriteFont::Impl::Draw(

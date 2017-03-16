@@ -38,7 +38,7 @@ AnimationTimeInterval WrapTime(AnimationTimeInterval const& source, AnimationTim
     POMDOG_ASSERT(time >= AnimationTimeInterval::zero());
     POMDOG_ASSERT(time <= max);
 
-    return std::move(time);
+    return time;
 }
 
 class AnimationCrossFadeNode final : public AnimationNode {

@@ -98,7 +98,7 @@ SkinnedMeshSlot CreateSkinnedMeshSlot(SlotDesc const& slotDesc,
         vertex.PositionTextureCoord.W = position.Y;
     }
 
-    return std::move(slot);
+    return slot;
 }
 
 SkinnedMeshSlot CreateSkinnedMeshSlot(
@@ -146,7 +146,7 @@ SkinnedMeshSlot CreateSkinnedMeshSlot(
         meshSlot.Vertices.push_back(std::move(vertex));
     }
     meshSlot.Indices = attachment.Indices;
-    return std::move(meshSlot);
+    return meshSlot;
 }
 
 SkinnedMeshData
@@ -281,7 +281,7 @@ CreateVertices(std::vector<SlotDesc> const& slots, SkinDesc const& skin,
             result.Indices.insert(std::end(result.Indices), std::begin(slot.Indices), std::end(slot.Indices));
         }
     }
-    return std::move(result);
+    return result;
 }
 
 } // unnamed namespace
@@ -323,7 +323,7 @@ SkinnedMesh CreateSkinnedMesh(
         meshData.Indices.data(), meshData.Indices.size(), BufferUsage::Immutable);
     skinnedMesh.MeshParts = std::move(meshData.MeshParts);
 
-    return std::move(skinnedMesh);
+    return skinnedMesh;
 }
 
 } // namespace Spine

@@ -52,7 +52,7 @@ std::vector<Entity> EntityManager::QueryComponents()
             }
         }
     }
-    return std::move(result);
+    return result;
 }
 
 } // namespace Pomdog

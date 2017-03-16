@@ -60,7 +60,7 @@ std::vector<Matrix3x2> CreateInverseBindPoseByJoints(Skeleton const& skeleton)
     {
         matrix = Matrix3x2::Invert(matrix);
     }
-    return std::move(bindPose);
+    return bindPose;
 }
 
 std::vector<Joint> CreateBones(std::vector<BoneDesc> const& boneDescriptions)
@@ -123,7 +123,7 @@ std::vector<Joint> CreateBones(std::vector<BoneDesc> const& boneDescriptions)
         }
     }
 
-    return std::move(joints);
+    return joints;
 }
 
 } // unnamed namespace
@@ -141,7 +141,7 @@ Skeleton CreateSkeleton(std::vector<Spine::BoneDesc> const& bones)
         joint.InverseBindPose = inverseBindPose[*joint.Index];
     }
 
-    return std::move(skeleton);
+    return skeleton;
 }
 
 } // namespace Spine

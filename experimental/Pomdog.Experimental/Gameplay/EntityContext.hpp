@@ -108,7 +108,7 @@ std::bitset<MaxComponentCapacity> ComponentMask()
 
     auto mask = ComponentMask<MaxComponentCapacity, Components...>();
     mask[typeIndex] = true;
-    return std::move(mask);
+    return mask;
 }
 
 } // namespace Helper

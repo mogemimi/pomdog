@@ -68,7 +68,7 @@ Particle CreateParticle(
         POMDOG_ASSERT(clip.SizeOverLifetime);
         particle.SizeVariance = clip.SizeOverLifetime->GenerateVariance(random);
     }
-    return std::move(particle);
+    return particle;
 }
 
 } // unnamed namespace

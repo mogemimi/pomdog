@@ -19,7 +19,7 @@ template <typename T>
 rapidjson::Value ToJsonValue(T const& v)
 {
     auto value = rapidjson::Value(v);
-    return std::move(value);
+    return value;
 }
 
 rapidjson::Value ToJsonValue(std::string const& s)
@@ -27,7 +27,7 @@ rapidjson::Value ToJsonValue(std::string const& s)
     auto value = rapidjson::Value(
         s.c_str(),
         static_cast<rapidjson::SizeType>(s.size()));
-    return std::move(value);
+    return value;
 }
 
 template <typename T, typename Func>

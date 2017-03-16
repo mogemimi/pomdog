@@ -13,7 +13,7 @@ SkeletonPose SkeletonPose::CreateBindPose(Skeleton const& skeleton)
         skeletonPose.JointPoses.push_back(joint.BindPose);
     }
 
-    return std::move(skeletonPose);
+    return skeletonPose;
 }
 
 } // namespace Pomdog

@@ -276,7 +276,7 @@ ParticleClip ReadParticleClip(rapidjson::Value const& object)
         clip.Shape = std::make_unique<ParticleEmitterShapeBox>(halfWidth * 2, halfHeight * 2);
     }
 
-    return std::move(clip);
+    return clip;
 }
 
 } // unnamed namespace

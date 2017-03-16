@@ -153,7 +153,7 @@ BitmapFontInfo ParseInfo(std::istream & stream)
         }
     }
 
-    return std::move(info);
+    return info;
 }
 
 BitmapFontCommon ParseCommon(std::istream & stream)
@@ -192,7 +192,7 @@ BitmapFontCommon ParseCommon(std::istream & stream)
         }
     }
 
-    return std::move(result);
+    return result;
 }
 
 BitmapFontPage ParsePage(std::istream & stream)
@@ -225,7 +225,7 @@ BitmapFontPage ParsePage(std::istream & stream)
         }
     }
 
-    return std::move(result);
+    return result;
 }
 
 Detail::SpriteFonts::Glyph ParseGlyph(std::istream & stream)
@@ -273,7 +273,7 @@ Detail::SpriteFonts::Glyph ParseGlyph(std::istream & stream)
         }
     }
 
-    return std::move(result);
+    return result;
 }
 
 } // unnamed namespace
@@ -363,7 +363,7 @@ std::shared_ptr<SpriteFont> SpriteFontLoader::Load(
 
     auto spriteFont = std::make_shared<SpriteFont>(std::move(textures), glyphs,
         defaultCharacter, info.PaddingLeft + info.PaddingRight, common.LineHeight);
-    return std::move(spriteFont);
+    return spriteFont;
 }
 
 } // namespace Pomdog
