@@ -87,8 +87,8 @@ public:
     SignalBody(const SignalBody&) = delete;
     SignalBody & operator=(const SignalBody&) = delete;
 
-    SignalBody(SignalBody &&) = delete;///@todo
-    SignalBody & operator=(SignalBody &&) = delete;///@todo
+    SignalBody(SignalBody &&) = delete;
+    SignalBody & operator=(SignalBody &&) = delete;
 
     template <typename Function>
     std::unique_ptr<ConnectionBodyType> Connect(Function && slot);
