@@ -270,6 +270,28 @@ Builder<Shader> & Builder<Shader>::SetHLSLFromFile(
     return *this;
 }
 
+Builder<Shader> & Builder<Shader>::SetMetal(
+    const void* shaderSourceIn,
+    std::size_t byteLengthIn,
+    const std::string& entryPointIn)
+{
+    POMDOG_ASSERT(shaderSourceIn != nullptr);
+    POMDOG_ASSERT(byteLengthIn > 0);
+    POMDOG_ASSERT(!entryPointIn.empty());
+
+    auto graphicsDevice = impl->GetDevice();
+    POMDOG_ASSERT(graphicsDevice);
+
+    if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::Metal) {
+        impl->shaderBytecode.Code = shaderSourceIn;
+        impl->shaderBytecode.ByteLength = byteLengthIn;
+        impl->entryPoint = entryPointIn;
+        impl->precompiled = false;
+        impl->shaderFilePath = NullOpt;
+    }
+    return *this;
+}
+
 Builder<Shader> & Builder<Shader>::SetMetalFromFile(
     const std::string& assetName, const std::string& entryPointIn)
 {

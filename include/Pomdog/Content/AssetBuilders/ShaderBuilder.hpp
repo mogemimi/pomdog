@@ -50,6 +50,11 @@ public:
         const std::string& filePath,
         const std::string& entryPoint);
 
+    Builder & SetMetal(
+        const void* shaderSource,
+        std::size_t byteLength,
+        const std::string& entryPoint);
+
     Builder & SetMetalFromFile(
         const std::string& filePath,
         const std::string& entryPoint);
