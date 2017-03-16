@@ -28,11 +28,9 @@ enum class InputElementFormat : std::uint8_t {
     ///@brief A four-component, 32-bit unsigned integer format.
     Byte4,
 
-    ///@deprecated Not supported
     ///@brief A two-component, 32-bit floating-point format.
     HalfFloat2,
 
-    ///@deprecated Not supported
     ///@brief A four-component, 64-bit floating-point format.
     HalfFloat4,
 };
