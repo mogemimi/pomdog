@@ -61,6 +61,9 @@ std::shared_ptr<PipelineState> Builder<PipelineState>::Impl::Load()
         hasDepthStencilState = true;
     }
 
+    POMDOG_ASSERT(hasRenderTargetViewFormats);
+    POMDOG_ASSERT(hasDepthStencilViewFormat);
+
     if (!hasRenderTargetViewFormats) {
 #if defined(DEBUG) && !defined(NDEBUG)
         Log::Warning(
@@ -193,6 +196,17 @@ Builder<PipelineState> & Builder<PipelineState>::SetConstantBufferBindSlot(
 #endif
 
     impl->description.ConstantBufferBindSlots.emplace(name, slotIndex);
+    return *this;
+}
+
+Builder<PipelineState> & Builder<PipelineState>::SetRenderTargetViewFormat(
+    SurfaceFormat renderTargetViewFormat)
+{
+    POMDOG_ASSERT(impl);
+    POMDOG_ASSERT(!impl->hasRenderTargetViewFormats);
+    impl->description.RenderTargetViewFormats.clear();
+    impl->description.RenderTargetViewFormats.push_back(renderTargetViewFormat);
+    impl->hasRenderTargetViewFormats = true;
     return *this;
 }
 

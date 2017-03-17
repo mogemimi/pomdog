@@ -47,6 +47,8 @@ public:
 
     Builder & SetConstantBufferBindSlot(const std::string& name, int slotIndex);
 
+    Builder & SetRenderTargetViewFormat(SurfaceFormat renderTargetViewFormat);
+
     Builder & SetRenderTargetViewFormats(const std::vector<SurfaceFormat>& renderTargetViewFormats);
 
     Builder & SetRenderTargetViewFormats(std::vector<SurfaceFormat> && renderTargetViewFormats);
