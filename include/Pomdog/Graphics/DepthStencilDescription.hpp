@@ -70,7 +70,7 @@ struct POMDOG_EXPORT DepthStencilDescription {
         desc.DepthBufferEnable = false;
         desc.DepthBufferWriteEnable = false;
         desc.StencilEnable = false;
-        desc.DepthBufferFunction = ComparisonFunction::LessEqual;
+        desc.DepthBufferFunction = ComparisonFunction::Always;
         desc.ReferenceStencil = 0;
         desc.StencilMask = std::numeric_limits<std::uint32_t>::max();
         desc.StencilWriteMask = std::numeric_limits<std::uint32_t>::max();
