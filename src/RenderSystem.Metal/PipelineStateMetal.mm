@@ -282,7 +282,10 @@ PipelineStateMetal::PipelineStateMetal(
 
     MTLDepthStencilDescriptor* depthStencilDesc = [[MTLDepthStencilDescriptor alloc] init];
     depthStencilDesc.label = @"Pomdog.DepthStencilState";
-    depthStencilDesc.depthCompareFunction = ToComparisonFunction(description.DepthStencilState.DepthBufferFunction);
+    depthStencilDesc.depthCompareFunction = ToComparisonFunction(
+        description.DepthStencilState.DepthBufferEnable
+        ? description.DepthStencilState.DepthBufferFunction
+        : ComparisonFunction::Always);
     depthStencilDesc.depthWriteEnabled = description.DepthStencilState.DepthBufferWriteEnable ? YES : NO;
 
     ToDepthStencilOperation(
