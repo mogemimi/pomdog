@@ -34,9 +34,9 @@ vertex VS_OUTPUT SimpleEffectVS(
 // Fragment shader function
 fragment half4 SimpleEffectPS(
     VS_OUTPUT in [[stage_in]],
-    texture2d<float> diffuseTexture [[texture(0)]])
+    texture2d<float> diffuseTexture [[texture(0)]],
+    sampler textureSampler [[sampler(0)]])
 {
-    constexpr sampler sampleLinear(filter::linear);
-    float4 color = diffuseTexture.sample(sampleLinear, in.TextureCoord);
+    float4 color = diffuseTexture.sample(textureSampler, in.TextureCoord);
     return half4(color);
 }
