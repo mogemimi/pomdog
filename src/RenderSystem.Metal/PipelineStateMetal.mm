@@ -134,16 +134,18 @@ MTLCompareFunction ToComparisonFunction(ComparisonFunction compareFunction) noex
     return MTLCompareFunctionLessEqual;
 }
 
-void ToDepthStencilOperation(MTLStencilDescriptor* desc, const DepthStencilOperation& description)
+void ToDepthStencilOperation(
+    MTLStencilDescriptor* desc,
+    const DepthStencilOperation& operation,
+    const DepthStencilDescription& description)
 {
-    desc.stencilCompareFunction = ToComparisonFunction(description.StencilFunction);
-    desc.depthStencilPassOperation = ToStencilOperation(description.StencilPass);
-    desc.stencilFailureOperation = ToStencilOperation(description.StencilFail);
-    desc.depthFailureOperation = ToStencilOperation(description.StencilDepthBufferFail);
+    desc.stencilCompareFunction = ToComparisonFunction(operation.StencilFunction);
+    desc.depthStencilPassOperation = ToStencilOperation(operation.StencilPass);
+    desc.stencilFailureOperation = ToStencilOperation(operation.StencilFail);
+    desc.depthFailureOperation = ToStencilOperation(operation.StencilDepthBufferFail);
 
-    // TODO: Not implemented
-    //desc.readMask = 0xff;
-    //desc.writeMask = 0xff;
+    desc.readMask = description.StencilMask;
+    desc.writeMask = description.StencilWriteMask;
 }
 
 MTLCullMode ToCullMode(CullMode cullMode) noexcept
@@ -278,20 +280,22 @@ PipelineStateMetal::PipelineStateMetal(
                 [[error domain] UTF8String]));
     }
 
-    MTLDepthStencilDescriptor* depthStateDesc = [[MTLDepthStencilDescriptor alloc] init];
-    depthStateDesc.label = @"Pomdog.DepthStencilState";
-    depthStateDesc.depthCompareFunction = MTLCompareFunctionLess;
-    depthStateDesc.depthWriteEnabled = YES;
+    MTLDepthStencilDescriptor* depthStencilDesc = [[MTLDepthStencilDescriptor alloc] init];
+    depthStencilDesc.label = @"Pomdog.DepthStencilState";
+    depthStencilDesc.depthCompareFunction = ToComparisonFunction(description.DepthStencilState.DepthBufferFunction);
+    depthStencilDesc.depthWriteEnabled = description.DepthStencilState.DepthBufferWriteEnable ? YES : NO;
 
     ToDepthStencilOperation(
-        depthStateDesc.frontFaceStencil,
-        description.DepthStencilState.ClockwiseFace);
+        depthStencilDesc.frontFaceStencil,
+        description.DepthStencilState.ClockwiseFace,
+        description.DepthStencilState);
 
     ToDepthStencilOperation(
-        depthStateDesc.backFaceStencil,
-        description.DepthStencilState.CounterClockwiseFace);
+        depthStencilDesc.backFaceStencil,
+        description.DepthStencilState.CounterClockwiseFace,
+        description.DepthStencilState);
 
-    depthStencilState = [device newDepthStencilStateWithDescriptor:depthStateDesc];
+    depthStencilState = [device newDepthStencilStateWithDescriptor:depthStencilDesc];
     if (!this->depthStencilState) {
         POMDOG_THROW_EXCEPTION(std::runtime_error,
             "Failed to create depth stencil state for Metal");
