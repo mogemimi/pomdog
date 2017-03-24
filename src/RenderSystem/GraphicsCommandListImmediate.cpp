@@ -391,122 +391,159 @@ void GraphicsCommandListImmediate::ExecuteImmediate(NativeGraphicsContext & grap
 
 void GraphicsCommandListImmediate::SortCommandsForMetal()
 {
-    // NOTE: This function do sorting, duplicating and removing commands for MTLRenderCommandEncoder.
+    // NOTE: Sort commands for MTLRenderCommandEncoder by using odd-even sort.
+    for (size_t k = 0; k < commands.size(); ++k) {
+        bool swapped = false;
+        for (size_t i = 1 + (k % 2); i < commands.size(); i += 2) {
+            auto & a = commands[i - 1];
+            auto & b = commands[i];
+            if ((b->commandType == GraphicsCommandType::SetRenderPassCommand) &&
+                (a->commandType != GraphicsCommandType::SetRenderPassCommand) &&
+                (a->commandType != GraphicsCommandType::DrawCommand) &&
+                (a->commandType != GraphicsCommandType::DrawIndexedCommand) &&
+                (a->commandType != GraphicsCommandType::DrawInstancedCommand) &&
+                (a->commandType != GraphicsCommandType::DrawIndexedInstancedCommand)) {
+                std::swap(a, b);
+                swapped = true;
+            }
+        }
+        if (!swapped) {
+            break;
+        }
+    }
 
-    std::shared_ptr<GraphicsCommand> setPipelineStateCommand;
-    std::shared_ptr<GraphicsCommand> setPrimitiveTopologyCommand;
-    std::shared_ptr<GraphicsCommand> setBlendFactorCommand;
-    std::shared_ptr<GraphicsCommand> setVertexBuffersCommand;
-    std::shared_ptr<GraphicsCommand> setIndexBufferCommand;
-    std::vector<std::shared_ptr<GraphicsCommand>> setConstantBufferCommands;
-    std::vector<std::shared_ptr<GraphicsCommand>> setSamplerCommands;
-    std::vector<std::shared_ptr<GraphicsCommand>> setTextureCommands;
+#if 0
+    // NOTE: Remove a redundant 'SetRenderPassCommand' command.
+    bool isPrevRenderPassCommand = false;
+    for (auto iter = commands.rbegin(); iter != commands.rend();) {
+        if ((*iter)->commandType == GraphicsCommandType::SetRenderPassCommand) {
+            if (isPrevRenderPassCommand) {
+                std::advance(iter, 1);
+                commands.erase(iter.base());
+                continue;
+            }
+            isPrevRenderPassCommand = true;
+        }
+        else {
+            isPrevRenderPassCommand = false;
+        }
+        ++iter;
+    }
+#endif
 
-    setConstantBufferCommands.resize(8, nullptr);
-    setSamplerCommands.resize(8, nullptr);
-    setTextureCommands.resize(8, nullptr);
+    // NOTE: Duplicate missing commands for MTLRenderCommandEncoder.
+    std::size_t renderPassCommandIndex = 0;
+    Optional<std::size_t> setPipelineStateCommand;
+    Optional<std::size_t> setPrimitiveTopologyCommand;
+    Optional<std::size_t> setBlendFactorCommand;
+    Optional<std::size_t> setVertexBuffersCommand;
+    Optional<std::size_t> setIndexBufferCommand;
+    std::vector<Optional<std::size_t>> setConstantBufferCommands;
+    std::vector<Optional<std::size_t>> setSamplerCommands;
+    std::vector<Optional<std::size_t>> setTextureCommands;
 
-    std::vector<std::shared_ptr<GraphicsCommand>> newCommands;
-    std::size_t index = 0;
-    std::size_t lastDrawCommandIndex = 0;
+    setConstantBufferCommands.resize(8, NullOpt);
+    setSamplerCommands.resize(8, NullOpt);
+    setTextureCommands.resize(8, NullOpt);
+
+    std::vector<std::shared_ptr<GraphicsCommand>> oldCommands;
     bool needToFlushCommands = true;
 
-    for (auto & command : commands) {
+    std::swap(commands, oldCommands);
+
+    for (auto & command : oldCommands) {
         POMDOG_ASSERT(command != nullptr);
+
+        bool isDrawCommand = false;
+
         switch (command->commandType) {
         case GraphicsCommandType::SetRenderPassCommand:
-            newCommands.push_back(std::move(command));
+            renderPassCommandIndex = commands.size();
             needToFlushCommands = true;
             break;
         case GraphicsCommandType::SetPipelineStateCommand:
-            setPipelineStateCommand = command;
+            setPipelineStateCommand = commands.size();
             break;
         case GraphicsCommandType::SetPrimitiveTopologyCommand:
-            setPrimitiveTopologyCommand = command;
+            setPrimitiveTopologyCommand = commands.size();
             break;
         case GraphicsCommandType::SetBlendFactorCommand:
-            setBlendFactorCommand = command;
+            setBlendFactorCommand = commands.size();
             break;
         case GraphicsCommandType::SetVertexBuffersCommand:
-            setVertexBuffersCommand = command;
+            setVertexBuffersCommand = commands.size();
             break;
         case GraphicsCommandType::SetIndexBufferCommand:
-            setIndexBufferCommand = command;
+            setIndexBufferCommand = commands.size();
             break;
         case GraphicsCommandType::SetConstantBufferCommand: {
             auto c = std::static_pointer_cast<SetConstantBufferCommand>(command);
             POMDOG_ASSERT(c->slotIndex < static_cast<int>(setConstantBufferCommands.size()));
-            setConstantBufferCommands[c->slotIndex] = c;
+            setConstantBufferCommands[c->slotIndex] = commands.size();
             break;
         }
         case GraphicsCommandType::SetSamplerStateCommand: {
             auto c = std::static_pointer_cast<SetSamplerStateCommand>(command);
             POMDOG_ASSERT(c->slotIndex < static_cast<int>(setSamplerCommands.size()));
-            setSamplerCommands[c->slotIndex] = c;
+            setSamplerCommands[c->slotIndex] = commands.size();
             break;
         }
         case GraphicsCommandType::SetTextureCommand: {
-            auto c = std::static_pointer_cast<SetTextureCommand>(command);
+            auto c = std::static_pointer_cast<SetTextureCommand>(std::move(command));
             POMDOG_ASSERT(c->slotIndex < static_cast<int>(setTextureCommands.size()));
-            setTextureCommands[c->slotIndex] = c;
+            setTextureCommands[c->slotIndex] = commands.size();
             break;
         }
         case GraphicsCommandType::SetTextureRenderTarget2DCommand: {
-            auto c = std::static_pointer_cast<SetTextureRenderTarget2DCommand>(command);
+            auto c = std::static_pointer_cast<SetTextureRenderTarget2DCommand>(std::move(command));
             POMDOG_ASSERT(c->slotIndex < static_cast<int>(setTextureCommands.size()));
-            setTextureCommands[c->slotIndex] = c;
+            setTextureCommands[c->slotIndex] = commands.size();
             break;
         }
         case GraphicsCommandType::DrawCommand:
         case GraphicsCommandType::DrawIndexedCommand:
         case GraphicsCommandType::DrawInstancedCommand:
         case GraphicsCommandType::DrawIndexedInstancedCommand: {
-            if (needToFlushCommands) {
-                if (setPipelineStateCommand) {
-                    newCommands.push_back(setPipelineStateCommand);
-                }
-                if (setPrimitiveTopologyCommand) {
-                    newCommands.push_back(setPrimitiveTopologyCommand);
-                }
-                if (setBlendFactorCommand) {
-                    newCommands.push_back(setBlendFactorCommand);
-                }
-                if (setVertexBuffersCommand) {
-                    newCommands.push_back(setVertexBuffersCommand);
-                }
-                if (setIndexBufferCommand) {
-                    newCommands.push_back(setIndexBufferCommand);
-                }
-                for (auto & c : setConstantBufferCommands) {
-                    if (c) {
-                        newCommands.push_back(c);
-                    }
-                }
-                for (auto & c : setSamplerCommands) {
-                    if (c) {
-                        newCommands.push_back(c);
-                    }
-                }
-                for (auto & c : setTextureCommands) {
-                    if (c) {
-                        newCommands.push_back(c);
-                    }
-                }
-                needToFlushCommands = false;
-            }
-            newCommands.push_back(std::move(command));
-            lastDrawCommandIndex = index;
+            isDrawCommand = true;
             break;
         }
         }
-        ++index;
-    }
 
-    for (auto i = lastDrawCommandIndex + 1; i < commands.size(); ++i) {
-        newCommands.push_back(std::move(commands[i]));
+        if (isDrawCommand && needToFlushCommands) {
+            if (setPipelineStateCommand && (*setPipelineStateCommand < renderPassCommandIndex)) {
+                commands.push_back(commands[*setPipelineStateCommand]);
+            }
+            if (setPrimitiveTopologyCommand && (*setPrimitiveTopologyCommand < renderPassCommandIndex)) {
+                commands.push_back(commands[*setPrimitiveTopologyCommand]);
+            }
+            if (setBlendFactorCommand && (*setBlendFactorCommand < renderPassCommandIndex)) {
+                commands.push_back(commands[*setBlendFactorCommand]);
+            }
+            if (setVertexBuffersCommand && (*setVertexBuffersCommand < renderPassCommandIndex)) {
+                commands.push_back(commands[*setVertexBuffersCommand]);
+            }
+            if (setIndexBufferCommand && (*setIndexBufferCommand < renderPassCommandIndex)) {
+                commands.push_back(commands[*setIndexBufferCommand]);
+            }
+            for (auto & commandIndex : setConstantBufferCommands) {
+                if (commandIndex && (*commandIndex < renderPassCommandIndex)) {
+                    commands.push_back(commands[*commandIndex]);
+                }
+            }
+            for (auto & commandIndex : setSamplerCommands) {
+                if (commandIndex && (*commandIndex < renderPassCommandIndex)) {
+                    commands.push_back(commands[*commandIndex]);
+                }
+            }
+            for (auto & commandIndex : setTextureCommands) {
+                if (commandIndex && (*commandIndex < renderPassCommandIndex)) {
+                    commands.push_back(commands[*commandIndex]);
+                }
+            }
+            needToFlushCommands = false;
+        }
+        commands.push_back(std::move(command));
     }
-
-    std::swap(newCommands, commands);
 }
 
 } // namespace Detail
