@@ -1,5 +1,5 @@
 #import "GameViewController.h"
-#include "QuickStartGame.hpp"
+#include "../Source/QuickStartGame.hpp"
 #include <Pomdog/Pomdog.hpp>
 #include <memory>
 #ifdef DEBUG
