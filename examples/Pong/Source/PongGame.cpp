@@ -390,7 +390,7 @@ std::shared_ptr<GameScene> PongGame::CreateNewGameScene()
             component->SetVisible(false);
         }
     };
-    return std::move(scene);
+    return scene;
 }
 
 std::shared_ptr<GameScene> PongGame::CreatePlayScene()
@@ -467,7 +467,7 @@ std::shared_ptr<GameScene> PongGame::CreatePlayScene()
             soundEffect1->Play();
         }
     };
-    return std::move(scene);
+    return scene;
 }
 
 void PongGame::Update()
