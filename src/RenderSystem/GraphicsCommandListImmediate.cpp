@@ -489,13 +489,13 @@ void GraphicsCommandListImmediate::SortCommandsForMetal()
             break;
         }
         case GraphicsCommandType::SetTextureCommand: {
-            auto c = std::static_pointer_cast<SetTextureCommand>(std::move(command));
+            auto c = std::static_pointer_cast<SetTextureCommand>(command);
             POMDOG_ASSERT(c->slotIndex < static_cast<int>(setTextureCommands.size()));
             setTextureCommands[c->slotIndex] = commands.size();
             break;
         }
         case GraphicsCommandType::SetTextureRenderTarget2DCommand: {
-            auto c = std::static_pointer_cast<SetTextureRenderTarget2DCommand>(std::move(command));
+            auto c = std::static_pointer_cast<SetTextureRenderTarget2DCommand>(command);
             POMDOG_ASSERT(c->slotIndex < static_cast<int>(setTextureCommands.size()));
             setTextureCommands[c->slotIndex] = commands.size();
             break;
