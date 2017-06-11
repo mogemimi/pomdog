@@ -16,14 +16,6 @@ namespace Pomdog {
 namespace Detail {
 
 template <typename T>
-FloatingPointMatrix4x4<T> const
-FloatingPointMatrix4x4<T>::Identity = {
-    1, 0, 0, 0,
-    0, 1, 0, 0,
-    0, 0, 1, 0,
-    0, 0, 0, 1};
-
-template <typename T>
 FloatingPointMatrix4x4<T>::FloatingPointMatrix4x4(
     T m00, T m01, T m02, T m03,
     T m10, T m11, T m12, T m13,

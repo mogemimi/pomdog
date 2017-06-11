@@ -117,6 +117,9 @@ public:
 };
 
 template <typename T>
+FloatingPointQuaternion<T> const FloatingPointQuaternion<T>::Identity = {0, 0, 0, 1};
+
+template <typename T>
 FloatingPointQuaternion<T> POMDOG_EXPORT
 operator*(T scaleFactor, const FloatingPointQuaternion<T>& quaternion) noexcept;
 

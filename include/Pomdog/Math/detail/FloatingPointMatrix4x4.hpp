@@ -242,6 +242,14 @@ public:
 };
 
 template <typename T>
+FloatingPointMatrix4x4<T> const FloatingPointMatrix4x4<T>::Identity = {
+    1, 0, 0, 0,
+    0, 1, 0, 0,
+    0, 0, 1, 0,
+    0, 0, 0, 1,
+};
+
+template <typename T>
 FloatingPointMatrix4x4<T> POMDOG_EXPORT
 operator*(T scaleFactor, const FloatingPointMatrix4x4<T>& matrix) noexcept;
 

@@ -108,9 +108,12 @@ public:
     ///@brief Returns pointer to the first element.
     T* Data() noexcept;
 
-    ///@note (0, 0, 0)
+    ///@note (0, 0)
     static FloatingPointVector2 const Zero;
 };
+
+template <typename T>
+FloatingPointVector2<T> const FloatingPointVector2<T>::Zero = {0, 0};
 
 template <typename T>
 FloatingPointVector2<T> POMDOG_EXPORT

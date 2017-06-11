@@ -16,9 +16,6 @@ namespace Pomdog {
 namespace Detail {
 
 template <typename T>
-FloatingPointQuaternion<T> const FloatingPointQuaternion<T>::Identity(0, 0, 0, 1);
-
-template <typename T>
 FloatingPointQuaternion<T>::FloatingPointQuaternion(T x, T y, T z, T w) noexcept
     : X(x), Y(y), Z(z), W(w)
 {}

@@ -15,18 +15,6 @@ namespace Pomdog {
 namespace Detail {
 
 template <typename T>
-FloatingPointVector3<T> const FloatingPointVector3<T>::Zero(0, 0, 0);
-
-template <typename T>
-FloatingPointVector3<T> const FloatingPointVector3<T>::UnitX(1, 0, 0);
-
-template <typename T>
-FloatingPointVector3<T> const FloatingPointVector3<T>::UnitY(0, 1, 0);
-
-template <typename T>
-FloatingPointVector3<T> const FloatingPointVector3<T>::UnitZ(0, 0, 1);
-
-template <typename T>
 FloatingPointVector3<T>::FloatingPointVector3(T x, T y, T z) noexcept
     : X(x), Y(y), Z(z)
 {}

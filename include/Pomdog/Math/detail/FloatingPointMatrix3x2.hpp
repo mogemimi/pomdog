@@ -121,6 +121,13 @@ public:
 };
 
 template <typename T>
+FloatingPointMatrix3x2<T> const FloatingPointMatrix3x2<T>::Identity = {
+    1, 0,
+    0, 1,
+    0, 0,
+};
+
+template <typename T>
 FloatingPointMatrix3x2<T> POMDOG_EXPORT
 operator*(T scaleFactor, const FloatingPointMatrix3x2<T>& matrix) noexcept;
 

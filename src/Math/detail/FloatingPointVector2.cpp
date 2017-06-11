@@ -14,9 +14,6 @@ namespace Pomdog {
 namespace Detail {
 
 template <typename T>
-FloatingPointVector2<T> const FloatingPointVector2<T>::Zero(0, 0);
-
-template <typename T>
 FloatingPointVector2<T>::FloatingPointVector2(T x, T y) noexcept
     : X(x), Y(y)
 {}
