@@ -38,7 +38,7 @@ struct Paddle {
         BoundingBox2D box;
         box.Min = GetPosition() - Vector2{halfWidth, halfHeight};
         box.Max = GetPosition() + Vector2{halfWidth, halfHeight};
-        return std::move(box);
+        return box;
     }
 };
 
@@ -64,7 +64,7 @@ struct Ball {
         BoundingCircle circle;
         circle.Radius = 3;
         circle.Center = GetPosition();
-        return std::move(circle);
+        return circle;
     }
 };
 
