@@ -145,10 +145,10 @@
 		A93CA6531D92F34E00B65171 /* QueuedScheduler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A93CA64E1D92F34E00B65171 /* QueuedScheduler.cpp */; };
 		A93CA6541D92F34E00B65171 /* Task.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A93CA64F1D92F34E00B65171 /* Task.cpp */; };
 		A93CA6551D92F34E00B65171 /* Task.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A93CA64F1D92F34E00B65171 /* Task.cpp */; };
-		A9854B9E1DC115D400650729 /* BufferHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9854B9C1DC115D400650729 /* BufferHelper.cpp */; };
-		A9854B9F1DC115D400650729 /* BufferHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9854B9C1DC115D400650729 /* BufferHelper.cpp */; };
 		A958BDF81CC3E65A00E15834 /* PomdogMetalViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = A958BDF71CC3E65A00E15834 /* PomdogMetalViewController.mm */; };
 		A958BDF91CC3E65A00E15834 /* PomdogMetalViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = A958BDF71CC3E65A00E15834 /* PomdogMetalViewController.mm */; };
+		A9854B9E1DC115D400650729 /* BufferHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9854B9C1DC115D400650729 /* BufferHelper.cpp */; };
+		A9854B9F1DC115D400650729 /* BufferHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9854B9C1DC115D400650729 /* BufferHelper.cpp */; };
 		A98BE0D41CC22915008696A8 /* GameHostMetal.mm in Sources */ = {isa = PBXBuildFile; fileRef = A98BE0D31CC22915008696A8 /* GameHostMetal.mm */; };
 		A98BE0D51CC22915008696A8 /* GameHostMetal.mm in Sources */ = {isa = PBXBuildFile; fileRef = A98BE0D31CC22915008696A8 /* GameHostMetal.mm */; };
 		A98CB91E8C51E158141731F1 /* PipelineState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7E14E3AE6B465875CD29816 /* PipelineState.cpp */; };
@@ -564,10 +564,10 @@
 		A93CA64F1D92F34E00B65171 /* Task.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Task.cpp; path = Async/Task.cpp; sourceTree = "<group>"; };
 		A94ACC591C287C9100AFCC36 /* ConditionalCompilation.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ConditionalCompilation.hpp; sourceTree = "<group>"; };
 		A94F1C2B1DD30851001DC8E5 /* MouseButtons.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MouseButtons.hpp; sourceTree = "<group>"; };
-		A9854B9C1DC115D400650729 /* BufferHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BufferHelper.cpp; sourceTree = "<group>"; };
-		A9854B9D1DC115D400650729 /* BufferHelper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = BufferHelper.hpp; sourceTree = "<group>"; };
 		A958BDF71CC3E65A00E15834 /* PomdogMetalViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PomdogMetalViewController.mm; sourceTree = "<group>"; };
 		A958BE021CC3E8AF00E15834 /* PomdogMetalViewController.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PomdogMetalViewController.hpp; sourceTree = "<group>"; };
+		A9854B9C1DC115D400650729 /* BufferHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BufferHelper.cpp; sourceTree = "<group>"; };
+		A9854B9D1DC115D400650729 /* BufferHelper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = BufferHelper.hpp; sourceTree = "<group>"; };
 		A98BE0D21CC22915008696A8 /* GameHostMetal.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameHostMetal.hpp; sourceTree = "<group>"; };
 		A98BE0D31CC22915008696A8 /* GameHostMetal.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GameHostMetal.mm; sourceTree = "<group>"; };
 		A992AF001C2B1168003170C9 /* Coordinate2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Coordinate2D.cpp; sourceTree = "<group>"; };
