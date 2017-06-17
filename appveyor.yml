@@ -1,5 +1,5 @@
 version: 0.0.{build}
-os: Visual Studio 2015
+os: Visual Studio 2017
 configuration: Debug
 
 # shallow_clone: true
@@ -15,7 +15,7 @@ install:
 before_build:
 - ps: >-
     python tools/gyp/gyp_main.py test/FrameworkTest/unittest.gyp `
-        --depth=. -f msvs -G msvs_version=2015 `
+        --depth=. -f msvs -G msvs_version=2017 `
         --generator-output=build.msvs `
         -D component=static_library
 
