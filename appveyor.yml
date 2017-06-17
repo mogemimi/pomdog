@@ -10,18 +10,18 @@ init:
 
 install:
 - git submodule update --init --quiet
-- git clone -q --depth 1 https://chromium.googlesource.com/external/gyp.git tools\gyp
+- git clone -q --depth 1 https://chromium.googlesource.com/external/gyp.git tools/gyp
 
 before_build:
 - ps: >-
-    python tools\gyp\gyp_main.py test/FrameworkTest/unittest.gyp `
+    python tools/gyp/gyp_main.py test/FrameworkTest/unittest.gyp `
         --depth=. -f msvs -G msvs_version=2015 `
         --generator-output=build.msvs `
         -D component=static_library
 
 build:
-  project: build.msvs\test\FrameworkTest\unittest.sln
+  project: build.msvs/test/FrameworkTest/unittest.sln
   verbosity: minimal
 
 test_script:
-- ps: build.msvs\test\FrameworkTest\Debug\unittest
+- ps: build.msvs/test/FrameworkTest/Debug/unittest
