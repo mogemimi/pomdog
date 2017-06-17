@@ -10,11 +10,6 @@ namespace Pomdog {
 namespace Detail {
 
 template <typename T>
-FloatingPointMatrix2x2<T> const FloatingPointMatrix2x2<T>::Identity = {
-    1, 0,
-    0, 1};
-
-template <typename T>
 FloatingPointMatrix2x2<T>::FloatingPointMatrix2x2(T m00, T m01, T m10, T m11) noexcept
 {
     m[0][0] = m00;

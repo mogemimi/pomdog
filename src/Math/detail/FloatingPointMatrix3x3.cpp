@@ -17,12 +17,6 @@ namespace Pomdog {
 namespace Detail {
 
 template <typename T>
-FloatingPointMatrix3x3<T> const FloatingPointMatrix3x3<T>::Identity = {
-    1, 0, 0,
-    0, 1, 0,
-    0, 0, 1};
-
-template <typename T>
 FloatingPointMatrix3x3<T>::FloatingPointMatrix3x3(
     T m00, T m01, T m02,
     T m10, T m11, T m12,
