@@ -22,9 +22,9 @@ namespace Pomdog {
 ///             /  |      /  |
 ///            /   |     /   |    RightPlane
 /// LeftPlane /  f3|_ _ /_ _ |f2
-///          /___／____/    ／
-///        n0| ／      |n1／
-///          |_________|／ BottomPlane
+///          /____/____/    /
+///        n0|  /      |n1/
+///          |/________|/  BottomPlane
 ///         n3        n2
 ///          NearPlane
 ///
