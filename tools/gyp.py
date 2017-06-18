@@ -18,7 +18,7 @@ def CreateGYPCommands(gypfile, format, option=None):
         '--depth=.',
     ]
     msvsOptions = [
-        '-f msvs -G msvs_version=2015',
+        '-f msvs -G msvs_version=2017',
         '--generator-output=build.msvs',
         '-Dcomponent=static_library',
     ]
