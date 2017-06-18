@@ -571,6 +571,7 @@ TEST_F(TaskTest, WhenAny)
     ASSERT_FALSE(task2.IsDone());
     ASSERT_FALSE(task3.IsDone());
     EXPECT_FALSE(whenAny.IsDone());
+    wait(std::chrono::milliseconds(1));
     wait(std::chrono::milliseconds(100));
     ASSERT_TRUE(task1.IsDone());
     ASSERT_FALSE(task2.IsDone());
@@ -672,9 +673,9 @@ TEST_F(TaskTest, WhenAll_Result)
 
 TEST_F(TaskTest, WhenAll_WithDelay)
 {
-    auto task1 = Concurrency::Delay(std::chrono::milliseconds(50), scheduler);
-    auto task2 = Concurrency::Delay(std::chrono::milliseconds(100), scheduler);
-    auto task3 = Concurrency::Delay(std::chrono::milliseconds(150), scheduler);
+    auto task1 = Concurrency::Delay(std::chrono::milliseconds(100), scheduler);
+    auto task2 = Concurrency::Delay(std::chrono::milliseconds(200), scheduler);
+    auto task3 = Concurrency::Delay(std::chrono::milliseconds(300), scheduler);
 
     std::vector<Task<void>> tasks = {task1, task2, task3};
     auto whenAll = Concurrency::WhenAll(tasks, scheduler);
@@ -684,17 +685,18 @@ TEST_F(TaskTest, WhenAll_WithDelay)
     ASSERT_FALSE(task2.IsDone());
     ASSERT_FALSE(task3.IsDone());
     EXPECT_FALSE(whenAll.IsDone());
-    wait(std::chrono::milliseconds(50));
+    wait(std::chrono::milliseconds(1));
+    wait(std::chrono::milliseconds(100));
     ASSERT_TRUE(task1.IsDone());
     ASSERT_FALSE(task2.IsDone());
     ASSERT_FALSE(task3.IsDone());
     EXPECT_FALSE(whenAll.IsDone());
-    wait(std::chrono::milliseconds(50));
+    wait(std::chrono::milliseconds(100));
     ASSERT_TRUE(task1.IsDone());
     ASSERT_TRUE(task2.IsDone());
     ASSERT_FALSE(task3.IsDone());
     EXPECT_FALSE(whenAll.IsDone());
-    wait(std::chrono::milliseconds(50));
+    wait(std::chrono::milliseconds(100));
     ASSERT_TRUE(task1.IsDone());
     ASSERT_TRUE(task2.IsDone());
     ASSERT_TRUE(task3.IsDone());
