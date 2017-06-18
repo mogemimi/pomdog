@@ -87,40 +87,72 @@ public:
 
 namespace TypeTraitsImpl {
 
-template <typename Result, typename...Args>
-Result Invoke(Result(*)(Args...));
+#if __cplusplus <= 201402L
+template <class...>
+struct MakeVoid {
+    using type = void;
+};
 
-template <class T, typename Result, typename...Args>
-Result Invoke(Result(T::*)(Args...));
+template <class... T>
+using void_t = typename MakeVoid<T...>::type;
+#else
+template <class... T>
+using void_t = typename std::void_t<T...>;
+#endif
 
-template <class T, typename Result, typename...Args>
-Result Invoke(Result(T::*)(Args...) const);
+template <class F, class = void_t<>>
+struct ResultOf {};
 
-template <typename T, typename Function = decltype(&T::operator())>
-decltype(Invoke(std::declval<Function>())) Invoke(T*);
+template <class Functor>
+struct ResultOf<Functor, void_t<decltype(&Functor::operator())>>
+    : ResultOf<decltype(&Functor::operator())> {
+};
 
-template <typename Result, typename Arg>
-Arg GetArg(Result(*)(Arg));
+template <class Result, class T, class... Args>
+struct ResultOf<Result(T::*)(Args...)> {
+    using Type = Result;
+};
 
-template <class T, typename Result, typename Arg>
-Arg GetArg(Result(T::*)(Arg));
+template <class Result, class T, class... Args>
+struct ResultOf<Result(T::*)(Args...) const> {
+    using Type = Result;
+};
 
-template <class T, typename Result, typename Arg>
-Arg GetArg(Result(T::*)(Arg) const);
+template <class Result, class... Args>
+struct ResultOf<Result(*)(Args...)> {
+    using Type = Result;
+};
 
-template <typename T, typename Function = decltype(&T::operator())>
-decltype(GetArg(std::declval<Function>())) GetArg(T*);
+template <class F, class = void_t<>>
+struct ArgOf {};
+
+template <class Functor>
+struct ArgOf<Functor, void_t<decltype(&Functor::operator())>>
+    : ArgOf<decltype(&Functor::operator())> {
+};
+
+template <class Result, class T, class Arg>
+struct ArgOf<Result(T::*)(Arg)> {
+    using Type = Arg;
+};
+
+template <class Result, class T, class Arg>
+struct ArgOf<Result(T::*)(Arg) const> {
+    using Type = Arg;
+};
+
+template <class Result, class Arg>
+struct ArgOf<Result(*)(Arg)> {
+    using Type = Arg;
+};
 
 } // namespace TypeTraitsImpl
 
-template <typename TFunction>
-using ResultOf = decltype(TypeTraitsImpl::Invoke(
-    std::declval<std::remove_pointer_t<TFunction>*>()));
+template <typename Function>
+using ResultOf = typename TypeTraitsImpl::ResultOf<Function>::Type;
 
-template <typename TFunction>
-using ArgumentOf = std::remove_const_t<std::remove_reference_t<
-    decltype(TypeTraitsImpl::GetArg(
-    std::declval<std::remove_pointer_t<TFunction>*>()))>>;
+template <typename Function>
+using ArgumentOf = std::remove_const_t<std::remove_reference_t<typename TypeTraitsImpl::ArgOf<Function>::Type>>;
 
 template <typename T, typename U>
 using IsSame = typename std::enable_if<
