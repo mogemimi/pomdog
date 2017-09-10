@@ -472,7 +472,7 @@ void GraphicsContextMetal::SetRenderPass(const RenderPass& renderPass)
         }
         else {
             auto nativeRenderTarget = static_cast<RenderTarget2DMetal*>(renderTarget->GetNativeRenderTarget2D());
-            POMDOG_ASSERT(nativeRenderTarget = dynamic_cast<RenderTarget2DMetal*>(renderTarget->GetNativeRenderTarget2D()));
+            POMDOG_ASSERT(nativeRenderTarget == dynamic_cast<RenderTarget2DMetal*>(renderTarget->GetNativeRenderTarget2D()));
             POMDOG_ASSERT(nativeRenderTarget != nullptr);
 
             renderPassDescriptor.colorAttachments[renderTargetIndex].texture = nativeRenderTarget->GetTexture();
@@ -498,7 +498,7 @@ void GraphicsContextMetal::SetRenderPass(const RenderPass& renderPass)
         }
         else {
             auto nativeRenderTarget = static_cast<RenderTarget2DMetal*>(renderTarget->GetNativeRenderTarget2D());
-            POMDOG_ASSERT(nativeRenderTarget = dynamic_cast<RenderTarget2DMetal*>(renderTarget->GetNativeRenderTarget2D()));
+            POMDOG_ASSERT(nativeRenderTarget == dynamic_cast<RenderTarget2DMetal*>(renderTarget->GetNativeRenderTarget2D()));
             POMDOG_ASSERT(nativeRenderTarget != nullptr);
 
             renderPassDescriptor.depthAttachment.texture = nativeRenderTarget->GetDepthStencilTexture();
