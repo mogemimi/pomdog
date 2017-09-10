@@ -78,7 +78,7 @@ GetPhysicalDeviceQueueFamilyProperties(VkPhysicalDevice device) noexcept
     POMDOG_ASSERT(queueCount >= 1);
     std::vector<VkQueueFamilyProperties> queueFamilyProps;
     queueFamilyProps.resize(queueCount);
-    return std::move(queueFamilyProps);
+    return queueFamilyProps;
 }
 
 //void GetPhysicalDeviceProperties(VkPhysicalDevice device) noexcept
