@@ -62,6 +62,10 @@ Vector3 Viewport::Unproject(
     const Vector3& source,
     const Matrix4x4& worldViewProjection) const
 {
+    POMDOG_ASSERT(Width > 0);
+    POMDOG_ASSERT(Height > 0);
+    POMDOG_ASSERT((MaxDepth - MinDepth) != 0.0f);
+
     Vector3 vec;
     vec.X = ((source.X - static_cast<float>(TopLeftX)) / static_cast<float>(Width) * 2.0f) - 1.0f;
     vec.Y = -(((source.Y - static_cast<float>(TopLeftY)) / static_cast<float>(Height) * 2.0f) - 1.0f);
