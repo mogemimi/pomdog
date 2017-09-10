@@ -104,12 +104,14 @@ void GraphicsCommandList::SetRenderPass(RenderPass && renderPass)
 
 #if defined(DEBUG) && !defined(NDEBUG)
     if (renderPass.Viewport) {
-        POMDOG_ASSERT(renderPass.Viewport->Width > 0);
-        POMDOG_ASSERT(renderPass.Viewport->Height > 0);
+        const auto& viewport = *renderPass.Viewport;
+        POMDOG_ASSERT(viewport.Width > 0);
+        POMDOG_ASSERT(viewport.Height > 0);
     }
     if (renderPass.ScissorRect) {
-        POMDOG_ASSERT(renderPass.Viewport->Width > 0);
-        POMDOG_ASSERT(renderPass.Viewport->Height > 0);
+        const auto& scissorRect = *renderPass.ScissorRect;
+        POMDOG_ASSERT(scissorRect.Width > 0);
+        POMDOG_ASSERT(scissorRect.Height > 0);
     }
 #endif
 
