@@ -516,7 +516,7 @@ void GraphicsContextMetal::SetRenderPass(const RenderPass& renderPass)
         renderPassDescriptor.depthAttachment.clearDepth = *renderPass.ClearDepth;
     }
     if (renderPass.ClearStencil) {
-        renderPassDescriptor.depthAttachment.loadAction = MTLLoadActionClear;
+        renderPassDescriptor.stencilAttachment.loadAction = MTLLoadActionClear;
         renderPassDescriptor.stencilAttachment.clearStencil = *renderPass.ClearStencil;
     }
 
