@@ -35,7 +35,7 @@ VkBufferCreateInfo ToVkBufferCreateInfo(
     info.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
     info.queueFamilyIndexCount = 0;
     info.pQueueFamilyIndices = nullptr;
-    return std::move(info);
+    return info;
 }
 
 } // unnamed namespace

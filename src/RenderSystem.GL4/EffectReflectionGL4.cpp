@@ -23,7 +23,7 @@ GLint GetActiveUniformBlockIntValue(
     glGetActiveUniformBlockiv(shaderProgram.value, uniformBlockIndex, parameterName, &result);
     POMDOG_CHECK_ERROR_GL4("glGetActiveUniformBlockiv");
 
-    return std::move(result);
+    return result;
 }
 
 std::string GetActiveUniformBlockName(

@@ -42,7 +42,7 @@ std::array<std::uint32_t, 256U> MakeCRCTable() noexcept
         }
         crctable[i] = c;
     }
-    return std::move(crctable);
+    return crctable;
 }
 
 static const std::array<std::uint32_t, 256U> crctable = MakeCRCTable();
