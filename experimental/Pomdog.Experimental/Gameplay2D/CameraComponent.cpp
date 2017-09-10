@@ -11,11 +11,13 @@ namespace Pomdog {
 CameraComponent::CameraComponent() noexcept
     : zoom(1.0f)
     , fieldOfView(MathHelper::ToRadians<float>(45.0f))
-    , viewport(0, 0, 800, 480, 0.01f, 1000.0f)
+    , viewport(0, 0, 800, 480)
     , normalizedViewportX(0.0f)
     , normalizedViewportY(0.0f)
     , normalizedViewportWidth(1.0f)
     , normalizedViewportHeight(1.0f)
+    , distanceToNearPlane(0.001f)
+    , distanceToFarPlane(1000.0f)
     , backgroundColor(Color::CornflowerBlue)
     , projectionType(ProjectionType::Perspective)
 {
@@ -33,22 +35,22 @@ void CameraComponent::SetZoom(float zoomIn) noexcept
 
 float CameraComponent::GetNear() const noexcept
 {
-    return viewport.MinDepth;
+    return distanceToNearPlane;
 }
 
 void CameraComponent::SetNear(float nearIn) noexcept
 {
-    viewport.MinDepth = nearIn;
+    distanceToNearPlane = nearIn;
 }
 
 float CameraComponent::GetFar() const noexcept
 {
-    return viewport.MaxDepth;
+    return distanceToFarPlane;
 }
 
 void CameraComponent::SetFar(float farIn) noexcept
 {
-    viewport.MaxDepth = farIn;
+    distanceToFarPlane = farIn;
 }
 
 Radian<float> CameraComponent::GetFieldOfView() const noexcept
@@ -136,21 +138,21 @@ Matrix4x4 CameraComponent::ComputeProjectionMatrix() const noexcept
         auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
             viewport.Width,
             viewport.Height,
-            viewport.MinDepth,
-            viewport.MaxDepth);
+            distanceToNearPlane,
+            distanceToFarPlane);
         return projectionMatrix;
     }
 
     POMDOG_ASSERT(fieldOfView.value > 0);
     POMDOG_ASSERT(viewport.GetAspectRatio() != 0);
-    POMDOG_ASSERT(viewport.MinDepth > 0);
-    POMDOG_ASSERT(viewport.MaxDepth > 0);
+    POMDOG_ASSERT(distanceToNearPlane > 0);
+    POMDOG_ASSERT(distanceToFarPlane > 0);
 
     auto projectionMatrix = Matrix4x4::CreatePerspectiveFieldOfViewLH(
         fieldOfView,
         viewport.GetAspectRatio(),
-        viewport.MinDepth,
-        viewport.MaxDepth);
+        distanceToNearPlane,
+        distanceToFarPlane);
     return projectionMatrix;
 }
 

@@ -47,7 +47,7 @@ Simple2DGameEngine::Simple2DGameEngine(const std::shared_ptr<GameHost>& gameHost
         });
 
         auto bounds = window->GetClientBounds();
-        viewport = {0, 0, bounds.Width, bounds.Height, 0.0f, 1000.0f};
+        viewport = {0, 0, bounds.Width, bounds.Height};
         OnViewportSizeChanged(bounds.Width, bounds.Height);
     }
 }
@@ -109,11 +109,13 @@ void Simple2DGameEngine::Draw()
             if (mainCamera) {
                 return mainCamera->ComputeProjectionMatrix();
             }
+            constexpr float distanceToNearPlane = 0.001f;
+            constexpr float distanceToFarPlane = 1000.0f;
             return Matrix4x4::CreatePerspectiveFieldOfViewLH(
                 MathHelper::ToRadians<float>(45.0f),
                 viewport.GetAspectRatio(),
-                viewport.MinDepth,
-                viewport.MaxDepth);
+                distanceToNearPlane,
+                distanceToFarPlane);
         }();
 
         this->viewProjection = viewMatrix * projectionMatrix;

@@ -79,6 +79,8 @@ private:
     float normalizedViewportY;
     float normalizedViewportWidth;
     float normalizedViewportHeight;
+    float distanceToNearPlane;
+    float distanceToFarPlane;
 
     Color backgroundColor;
     ProjectionType projectionType;
