@@ -13,7 +13,11 @@ public:
     int TopLeftY;
     int Width;
     int Height;
+
+    // The minimum depth of the viewport. It must be between 0.0 and 1.0.
     float MinDepth;
+
+    // The maximum depth of the viewport. It must be between 0.0 and 1.0.
     float MaxDepth;
 
 public:
