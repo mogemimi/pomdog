@@ -171,15 +171,6 @@ void Simple2DGameEngine::Draw()
         // Reset graphics commands
         commandListPostRender->Reset();
 
-        // Set the back buffer as the target
-        RenderPass renderPass;
-        renderPass.RenderTargets.emplace_back(nullptr, NullOpt);
-        renderPass.Viewport = viewport;
-        renderPass.ScissorRect = viewport.GetBounds();
-        renderPass.ClearDepth = NullOpt;
-        renderPass.ClearStencil = NullOpt;
-        commandListPostRender->SetRenderPass(std::move(renderPass));
-
         // Post processing
         postProcessCompositor.Draw(*commandListPostRender, renderTarget);
 
