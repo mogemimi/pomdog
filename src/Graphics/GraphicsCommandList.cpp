@@ -112,6 +112,7 @@ void GraphicsCommandList::SetRenderPass(RenderPass && renderPass)
         // Please see the following article(s):
         // - https://developer.apple.com/documentation/metal/mtlrendercommandencoder/1515527-setviewport
         // - https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glDepthRange.xhtml
+        // - https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkViewport.html
         // - https://msdn.microsoft.com/en-us/library/windows/desktop/ff476260(v=vs.85).aspx
         POMDOG_ASSERT((0.0f <= viewport.MinDepth) && (viewport.MinDepth <= 1.0f));
         POMDOG_ASSERT((0.0f <= viewport.MaxDepth) && (viewport.MaxDepth <= 1.0f));
