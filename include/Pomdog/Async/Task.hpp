@@ -27,7 +27,7 @@ class TaskCompletionSource;
 template <>
 class TaskCompletionSource<void>;
 
-class ConcurrencyException : public std::exception {
+class ConcurrencyException final : public std::exception {
 };
 
 template <typename TResult>
@@ -37,12 +37,12 @@ auto CreateTask(const TaskCompletionSource<TResult>& tcs) -> Task<TResult>;
 namespace Detail {
 
 template <typename TResult>
-struct TaskResult {
+struct TaskResult final {
     TResult value;
 };
 
 template <>
-struct TaskResult<void> {};
+struct TaskResult<void> final {};
 
 struct TaskImpl;
 
@@ -280,7 +280,7 @@ public:
 };
 
 template <typename TResult>
-class POMDOG_EXPORT Task {
+class POMDOG_EXPORT Task final {
 private:
     friend struct Detail::TaskImpl;
 
@@ -545,7 +545,7 @@ struct POMDOG_EXPORT TaskImpl {
 };
 
 template <typename TException>
-struct POMDOG_EXPORT InnerHandleException {
+struct POMDOG_EXPORT InnerHandleException final {
     template <typename Function>
     static void Perform(const std::exception_ptr& exception, const Function& onRejection)
     {
@@ -563,7 +563,7 @@ struct POMDOG_EXPORT InnerHandleException {
 };
 
 template <>
-struct POMDOG_EXPORT InnerHandleException<std::exception_ptr> {
+struct POMDOG_EXPORT InnerHandleException<std::exception_ptr> final {
     template <typename Function>
     static void Perform(const std::exception_ptr& exception, const Function& onRejection)
     {
@@ -756,13 +756,13 @@ Task<void> FromResult(
 
 namespace Detail {
 
-struct WhenAnyPromise {
+struct WhenAnyPromise final {
     std::mutex mutex;
     bool isAnyTaskComplete;
 };
 
 template <typename TResult>
-struct WhenAllPromise {
+struct WhenAllPromise final {
     std::mutex mutex;
     int count;
     bool isRejected;
@@ -770,14 +770,14 @@ struct WhenAllPromise {
 };
 
 template <>
-struct WhenAllPromise<void> {
+struct WhenAllPromise<void> final {
     std::mutex mutex;
     int count;
     bool isRejected;
 };
 
 template <typename TResult>
-struct POMDOG_EXPORT TaskFromDefaultResult {
+struct POMDOG_EXPORT TaskFromDefaultResult final {
     static Task<TResult> Perform(const std::shared_ptr<Scheduler>& scheduler)
     {
         return FromResult<TResult>({}, scheduler);
@@ -785,7 +785,7 @@ struct POMDOG_EXPORT TaskFromDefaultResult {
 };
 
 template <>
-struct POMDOG_EXPORT TaskFromDefaultResult<void> {
+struct POMDOG_EXPORT TaskFromDefaultResult<void> final {
     static Task<void> Perform(const std::shared_ptr<Scheduler>& scheduler)
     {
         return FromResult(scheduler);
