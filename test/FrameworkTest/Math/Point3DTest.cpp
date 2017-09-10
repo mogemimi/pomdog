@@ -27,6 +27,11 @@ TEST(Point3D, FirstTestCase)
     EXPECT_EQ(coodinate.Z, std::numeric_limits<int>::denorm_min());
 }
 
+TEST(Point3D, Constants)
+{
+    EXPECT_EQ(Point3D(0, 0, 0), Point3D::Zero);
+}
+
 TEST(Point3D, Addition)
 {
     EXPECT_EQ(Point3D(0, 0, 0), Point3D(0, 0, 0) + Point3D(0, 0, 0));

@@ -23,6 +23,11 @@ TEST(Point2D, FirstTestCase)
     EXPECT_EQ(coodinate.Y, std::numeric_limits<int>::min());
 }
 
+TEST(Point2D, Constants)
+{
+    EXPECT_EQ(Point2D(0, 0), Point2D::Zero);
+}
+
 TEST(Point2D, Addition)
 {
     EXPECT_EQ(Point2D(0, 0), Point2D(0, 0) + Point2D(0, 0));

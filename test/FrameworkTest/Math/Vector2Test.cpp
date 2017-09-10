@@ -16,6 +16,11 @@ TEST(Vector2, TrivialCase)
     EXPECT_EQ(vec.Y, 2.0f);
 }
 
+TEST(Vector2, Constants)
+{
+    EXPECT_EQ(Vector2(0.0f, 0.0f), Vector2::Zero);
+}
+
 TEST(Vector2, Addition)
 {
     EXPECT_EQ(Vector2(5, 7), Vector2(2, 3) + Vector2(3, 4));

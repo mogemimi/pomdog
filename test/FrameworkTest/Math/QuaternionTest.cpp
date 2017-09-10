@@ -19,3 +19,8 @@ TEST(Quaternion, TrivialCase)
     EXPECT_EQ(quaternion.Z, 2.0f);
     EXPECT_EQ(quaternion.W, 1.0f);
 }
+
+TEST(Quaternion, Constants)
+{
+    EXPECT_EQ(Quaternion(0.0f, 0.0f, 0.0f, 1.0f), Quaternion::Identity);
+}
