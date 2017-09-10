@@ -10,15 +10,18 @@
 #if defined(linux) || defined(__linux) || defined(__linux__)
     // Linux
     #define POMDOG_PLATFORM_LINUX
-#elif defined(__PS4__) && defined(__FreeBSD__)
+#elif defined(__ORBIS__)
     // PlayStation 4
     #define POMDOG_PLATFORM_PLAYSTATION4
 #elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)
     // BSD
     #define POMDOG_PLATFORM_BSD
-#elif defined(_XBOX_ONE) && defined(_TITLE)
+#elif defined(_XBOX_ONE)
     // Xbox One
     #define POMDOG_PLATFORM_XBOX_ONE
+#elif defined(__NX__)
+    // Switch
+    #define POMDOG_PLATFORM_SWITCH
 #elif defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
     // Windows
     #define POMDOG_PLATFORM_WIN32
