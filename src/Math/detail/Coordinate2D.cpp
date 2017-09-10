@@ -8,9 +8,6 @@ namespace Pomdog {
 namespace Detail {
 
 template <typename T>
-Coordinate2D<T> const Coordinate2D<T>::Zero(0, 0);
-
-template <typename T>
 Coordinate2D<T>::Coordinate2D(T x, T y) noexcept
     : X(x), Y(y)
 {}

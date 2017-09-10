@@ -49,6 +49,9 @@ public:
 };
 
 template <typename T>
+Coordinate3D<T> const Coordinate3D<T>::Zero = {0, 0, 0};
+
+template <typename T>
 Coordinate3D<T> POMDOG_EXPORT
 operator*(T scaleFactor, const Coordinate3D<T>& coordinate) noexcept;
 
