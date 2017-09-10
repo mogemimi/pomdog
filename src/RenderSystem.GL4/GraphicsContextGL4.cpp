@@ -187,6 +187,11 @@ void SetViewport(
     POMDOG_ASSERT(!std::isnan(viewport.MinDepth));
     POMDOG_ASSERT(!std::isnan(viewport.MaxDepth));
 
+    // NOTE: The MinDepth and MaxDepth must be between 0.0 and 1.0, respectively.
+    // Please see https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glDepthRange.xhtml
+    POMDOG_ASSERT((0.0f <= viewport.MinDepth) && (viewport.MinDepth <= 1.0f));
+    POMDOG_ASSERT((0.0f <= viewport.MaxDepth) && (viewport.MaxDepth <= 1.0f));
+
     glDepthRangef(viewport.MinDepth, viewport.MaxDepth);
     POMDOG_CHECK_ERROR_GL4("glDepthRangef");
 }

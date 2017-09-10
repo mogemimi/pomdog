@@ -59,6 +59,11 @@ void SetViewport(
     POMDOG_ASSERT(viewportIn.Height > 0);
     POMDOG_ASSERT(commandEncoder != nil);
 
+    // NOTE: The MinDepth and MaxDepth must be between 0.0 and 1.0, respectively.
+    // Please see https://developer.apple.com/documentation/metal/mtlrendercommandencoder/1515527-setviewport
+    POMDOG_ASSERT((0.0f <= viewportIn.MinDepth) && (viewportIn.MinDepth <= 1.0f));
+    POMDOG_ASSERT((0.0f <= viewportIn.MaxDepth) && (viewportIn.MaxDepth <= 1.0f));
+
     MTLViewport viewport;
     viewport.originX = viewportIn.TopLeftX;
     viewport.originY = viewportIn.TopLeftY;

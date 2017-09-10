@@ -560,6 +560,11 @@ void GraphicsContextDirect3D11::SetRenderPass(const RenderPass& renderPass)
         POMDOG_ASSERT(D3D11_VIEWPORT_BOUNDS_MAX >= viewportIn.TopLeftX + viewportIn.Width);
         POMDOG_ASSERT(D3D11_VIEWPORT_BOUNDS_MAX >= viewportIn.TopLeftY + viewportIn.Height);
 
+        // NOTE: The MinDepth and MaxDepth must be between 0 and 1, respectively.
+        // Please see https://msdn.microsoft.com/en-us/library/windows/desktop/ff476260(v=vs.85).aspx
+        POMDOG_ASSERT((0.0f <= viewportIn.MinDepth) && (viewportIn.MinDepth <= 1.0f));
+        POMDOG_ASSERT((0.0f <= viewportIn.MaxDepth) && (viewportIn.MaxDepth <= 1.0f));
+
         D3D11_VIEWPORT viewport;
         viewport.Width = static_cast<FLOAT>(viewportIn.Width);
         viewport.Height = static_cast<FLOAT>(viewportIn.Height);

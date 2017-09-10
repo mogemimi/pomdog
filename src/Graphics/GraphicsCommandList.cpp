@@ -107,6 +107,14 @@ void GraphicsCommandList::SetRenderPass(RenderPass && renderPass)
         const auto& viewport = *renderPass.Viewport;
         POMDOG_ASSERT(viewport.Width > 0);
         POMDOG_ASSERT(viewport.Height > 0);
+
+        // NOTE: The MinDepth and MaxDepth must be between 0.0 and 1.0, respectively.
+        // Please see the following article(s):
+        // - https://developer.apple.com/documentation/metal/mtlrendercommandencoder/1515527-setviewport
+        // - https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glDepthRange.xhtml
+        // - https://msdn.microsoft.com/en-us/library/windows/desktop/ff476260(v=vs.85).aspx
+        POMDOG_ASSERT((0.0f <= viewport.MinDepth) && (viewport.MinDepth <= 1.0f));
+        POMDOG_ASSERT((0.0f <= viewport.MaxDepth) && (viewport.MaxDepth <= 1.0f));
     }
     if (renderPass.ScissorRect) {
         const auto& scissorRect = *renderPass.ScissorRect;
