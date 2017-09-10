@@ -17,6 +17,7 @@ public:
         const PipelineStateDescription& description);
 
 private:
+    VkPipeline pipeline;
 };
 
 } // namespace Vulkan

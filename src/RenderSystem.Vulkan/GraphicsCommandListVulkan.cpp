@@ -1,6 +1,8 @@
 // Copyright (c) 2013-2017 mogemimi. Distributed under the MIT license.
 
 #include "GraphicsCommandListVulkan.hpp"
+#include "../RenderSystem.Vulkan/BufferVulkan.hpp"
+#include "../RenderSystem.Vulkan/PipelineStateVulkan.hpp"
 #include "../RenderSystem/GraphicsCapabilities.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Vector4.hpp"
@@ -9,6 +11,7 @@
 #include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
+#include "Pomdog/Graphics/RenderPass.hpp"
 #include "Pomdog/Graphics/Texture2D.hpp"
 #include "Pomdog/Graphics/VertexBuffer.hpp"
 #include "Pomdog/Graphics/VertexBufferBinding.hpp"
@@ -131,6 +134,45 @@ void GraphicsCommandListVulkan::DrawIndexedInstanced(
 
 void GraphicsCommandListVulkan::SetRenderPass(RenderPass && renderPass)
 {
+    POMDOG_ASSERT(commandBuffer != nullptr);
+
+    if (renderPass.Viewport) {
+        const auto& viewportIn = *renderPass.Viewport;
+
+        POMDOG_ASSERT(viewportIn.Width > 0);
+        POMDOG_ASSERT(viewportIn.Height > 0);
+
+        // NOTE: The MinDepth and MaxDepth must be between 0.0 and 1.0, respectively.
+        // Please see https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkViewport.html
+        POMDOG_ASSERT((0.0f <= viewportIn.MinDepth) && (viewportIn.MinDepth <= 1.0f));
+        POMDOG_ASSERT((0.0f <= viewportIn.MaxDepth) && (viewportIn.MaxDepth <= 1.0f));
+
+        VkViewport viewport;
+        viewport.x = viewportIn.TopLeftX;
+        viewport.y = viewportIn.TopLeftY;
+        viewport.width = viewportIn.Width;
+        viewport.height = viewportIn.Height;
+        viewport.minDepth = viewportIn.MinDepth;
+        viewport.maxDepth = viewportIn.MaxDepth;
+
+        vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
+    }
+
+    if (renderPass.ScissorRect) {
+        const auto& rectangle = *renderPass.ScissorRect;
+
+        POMDOG_ASSERT(rectangle.Width > 0);
+        POMDOG_ASSERT(rectangle.Height > 0);
+
+        VkRect2D scissorRect;
+        scissorRect.offset.x = rectangle.X;
+        scissorRect.offset.y = rectangle.Y;
+        scissorRect.extent.width = rectangle.Width;
+        scissorRect.extent.height = rectangle.Height;
+
+        vkCmdSetScissor(commandBuffer, 0, 1, &scissorRect);
+    }
+
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 
@@ -141,7 +183,9 @@ void GraphicsCommandListVulkan::SetPrimitiveTopology(PrimitiveTopology primitive
 
 void GraphicsCommandListVulkan::SetBlendFactor(const Color& blendFactor)
 {
-    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
+    POMDOG_ASSERT(commandBuffer != nullptr);
+    const auto colorVector = blendFactor.ToVector4();
+    vkCmdSetBlendConstants(commandBuffer, colorVector.Data());
 }
 
 void GraphicsCommandListVulkan::SetVertexBuffers(const std::vector<VertexBufferBinding>& vertexBuffers)
@@ -154,8 +198,22 @@ void GraphicsCommandListVulkan::SetVertexBuffers(std::vector<VertexBufferBinding
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 
-void GraphicsCommandListVulkan::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer)
+void GraphicsCommandListVulkan::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBufferIn)
 {
+    POMDOG_ASSERT(commandBuffer != nullptr);
+    POMDOG_ASSERT(indexBufferIn != nullptr);
+
+    const auto nativeIndexBuffer = static_cast<BufferVulkan*>(indexBufferIn->NativeIndexBuffer());
+
+    POMDOG_ASSERT(nativeIndexBuffer != nullptr);
+    POMDOG_ASSERT(nativeIndexBuffer == dynamic_cast<BufferVulkan*>(indexBufferIn->NativeIndexBuffer()));
+
+    constexpr VkDeviceSize offset = 0;
+    const auto indexBuffer = nativeIndexBuffer->GetBuffer();
+    const auto indexType = ToVkIndexType(indexBufferIn->GetElementSize());
+
+    vkCmdBindIndexBuffer(commandBuffer, indexBuffer, offset, indexType);
+
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 
