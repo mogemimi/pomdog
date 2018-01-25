@@ -1,7 +1,7 @@
 Pomdog is made available under the [MIT License](http://opensource.org/licenses/MIT):
 
 ```
-Copyright (c) 2013-2017 mogemimi (mogemimi at enginetrouble.net)
+Copyright (c) 2013-2018 mogemimi (mogemimi at enginetrouble.net)
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
