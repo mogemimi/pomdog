@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2017 mogemimi. Distributed under the MIT license.
+// Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog.Experimental/Gameplay2D/TextRenderable.hpp"
 #include "Pomdog.Experimental/Rendering/Renderer.hpp"

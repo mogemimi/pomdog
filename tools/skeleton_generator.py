@@ -1,4 +1,4 @@
-# Copyright (c) 2013-2017 mogemimi. Distributed under the MIT license.
+# Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
 # Help:
 # >>> python skeleton_generator.py -h
@@ -119,7 +119,7 @@ def GetGitUserName():
 
 def CreateHeader(copyright_holder):
     return Template("""// Copyright (c) $year $copyright_holder. Distributed under the MIT license.
-""").substitute(year="2013-2017", copyright_holder=copyright_holder)
+""").substitute(year="2013-2018", copyright_holder=copyright_holder)
 
 
 def CreateNamespace(name, content="\n// Insert code here to run your application\n"):

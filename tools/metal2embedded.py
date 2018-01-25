@@ -1,4 +1,4 @@
-# Copyright (c) 2013-2017 mogemimi. Distributed under the MIT license.
+# Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
 
 import sys
@@ -87,7 +87,7 @@ def CompressMetalCode(source):
 
 
 def GetSourceHeader():
-    return """// Copyright (c) 2013-2017 mogemimi. Distributed under the MIT license.
+    return """// Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
 """
 

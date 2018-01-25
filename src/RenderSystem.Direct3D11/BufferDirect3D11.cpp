@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2017 mogemimi. Distributed under the MIT license.
+// Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
 #include "BufferDirect3D11.hpp"
 #include "Pomdog/Graphics/BufferUsage.hpp"

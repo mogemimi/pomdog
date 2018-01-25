@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2017 mogemimi. Distributed under the MIT license.
+// Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
 #include "AnimationClipNode.hpp"
 #include "Pomdog.Experimental/Skeletal2D/AnimationClip.hpp"
