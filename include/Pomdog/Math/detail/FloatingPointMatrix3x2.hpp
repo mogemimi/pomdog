@@ -7,7 +7,6 @@
 #include <cstddef>
 #include <cstdint>
 #include <type_traits>
-#include <array>
 
 namespace Pomdog {
 namespace Detail {
@@ -18,7 +17,7 @@ public:
     static_assert(std::is_floating_point<T>::value, "T is floating point.");
     typedef T value_type;
 
-    std::array<std::array<T, 2>, 3> m;
+    T m[3][2];
 
 private:
     static constexpr std::size_t RowSize = 3;

@@ -381,14 +381,14 @@ template <typename T>
 const T* FloatingPointMatrix3x2<T>::Data() const noexcept
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number");
-    return m[0].data();
+    return m[0];
 }
 
 template <typename T>
 T* FloatingPointMatrix3x2<T>::Data() noexcept
 {
     static_assert(std::is_floating_point<T>::value, "T is floating point number");
-    return m[0].data();
+    return m[0];
 }
 
 template <typename T>
