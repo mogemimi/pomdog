@@ -85,9 +85,6 @@ std::shared_ptr<PipelineState> Builder<PipelineState>::Impl::Load()
     return pipelineState;
 }
 
-// explicit instantiations
-template class Builder<PipelineState>;
-
 Builder<PipelineState>::Builder(const Detail::AssetLoaderContext& contextIn)
     : impl(std::make_unique<Impl>())
 {

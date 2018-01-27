@@ -83,9 +83,6 @@ Optional<std::string> IncludeGLSLFilesRecursive(
 
 } // unnamed namespace
 
-// explicit instantiations
-template class Builder<Shader>;
-
 class Builder<Shader>::Impl {
 public:
     std::reference_wrapper<Detail::AssetLoaderContext const> loaderContext;
