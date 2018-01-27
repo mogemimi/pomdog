@@ -44,7 +44,7 @@ python Tools/gyp/gyp_main.py examples/QuickStart/QuickStart.gyp --depth=. \
 export CC=clang
 export CXX=clang++
 export LINK=clang++
-export CXXFLAGS="-std=c++14 -stdlib=libc++"
+export CXXFLAGS="-std=c++17 -stdlib=libc++"
 export LDFLAGS="-stdlib=libc++"
 make -C build.makefiles
 ```
