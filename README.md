@@ -2,7 +2,7 @@
 
 [![Join the chat at https://gitter.im/mogemimi/pomdog](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/mogemimi/pomdog?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-Pomdog is an experimental game engine, written in C++14 or later, developed as a hobby.
+Pomdog is an experimental game engine, written in C++17 or later, developed as a hobby.
 It is open source and distributed under the [MIT License](http://opensource.org/licenses/MIT).
 
 * [Homepage](http://enginetrouble.net/pomdog)
