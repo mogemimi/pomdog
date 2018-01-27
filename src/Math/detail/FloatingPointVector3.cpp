@@ -6,6 +6,7 @@
 #include "Pomdog/Math/detail/FloatingPointVector2.hpp"
 #include "Pomdog/Math/MathHelper.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include <algorithm>
 #include <cfloat>
 #include <cmath>
 #include <limits>

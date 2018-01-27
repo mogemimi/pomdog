@@ -6,6 +6,7 @@
 #include "Pomdog/Math/detail/FloatingPointQuaternion.hpp"
 #include "Pomdog/Math/MathHelper.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include <algorithm>
 #include <cfloat>
 #include <cmath>
 #include <limits>
