@@ -2,6 +2,7 @@
 
 #include "PolygonShapeBuilder.hpp"
 #include "Pomdog/Math/MathHelper.hpp"
+#include <array>
 #include <cmath>
 
 namespace Pomdog {
