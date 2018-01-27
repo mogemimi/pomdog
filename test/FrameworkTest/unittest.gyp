@@ -21,7 +21,7 @@
     },
     'xcode_settings': {
       'GCC_VERSION': 'com.apple.compilers.llvm.clang.1_0',
-      'CLANG_CXX_LANGUAGE_STANDARD': 'c++14',
+      'CLANG_CXX_LANGUAGE_STANDARD': 'c++17',
       'MACOSX_DEPLOYMENT_TARGET': '10.11',
       'CLANG_CXX_LIBRARY': 'libc++',
       # Warnings (Clang):
