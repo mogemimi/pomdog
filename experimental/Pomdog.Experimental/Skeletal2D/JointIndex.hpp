@@ -27,14 +27,14 @@ public:
 
     constexpr bool operator==(OptionalUnsigned const& v) const noexcept
     {
-        return POMDOG_CONSTEXPR_ASSERT(Data != std::numeric_limits<T>::max()),
-            Data == v.Data;
+        POMDOG_ASSERT(Data != std::numeric_limits<T>::max());
+        return Data == v.Data;
     }
 
     constexpr bool operator!=(OptionalUnsigned const& v) const noexcept
     {
-        return POMDOG_CONSTEXPR_ASSERT(Data != std::numeric_limits<T>::max()),
-            Data != v.Data;
+        POMDOG_ASSERT(Data != std::numeric_limits<T>::max());
+        return Data != v.Data;
     }
 
     T const& operator*() const
