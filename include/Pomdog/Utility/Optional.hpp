@@ -71,7 +71,8 @@ public:
 
     constexpr const T* operator->() const noexcept
     {
-        return POMDOG_CONSTEXPR_ASSERT(valid), &data;
+        POMDOG_ASSERT(valid);
+        return &data;
     }
 
     T* operator->() noexcept
@@ -82,7 +83,8 @@ public:
 
     constexpr const T& operator*() const
     {
-        return POMDOG_CONSTEXPR_ASSERT(valid), data;
+        POMDOG_ASSERT(valid);
+        return data;
     }
 
     T & operator*()
@@ -98,7 +100,8 @@ public:
 
     constexpr const T& value() const
     {
-        return POMDOG_CONSTEXPR_ASSERT(valid), data;
+        POMDOG_ASSERT(valid);
+        return data;
     }
 
     T & value()
