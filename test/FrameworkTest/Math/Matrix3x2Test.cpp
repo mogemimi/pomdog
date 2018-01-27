@@ -200,3 +200,14 @@ TEST(Matrix3x2, CreateSkew)
     EXPECT_EQ(0.0f, matrix(2, 0));
     EXPECT_EQ(0.0f, matrix(2, 1));
 }
+
+TEST(Matrix3x2, Data)
+{
+    Matrix3x2 matrix{0.0f, 1.0f, 2.0f, 3.0f, 4.0f, 5.0f};
+    EXPECT_EQ(0.0f, *(matrix.Data() + 0));
+    EXPECT_EQ(1.0f, *(matrix.Data() + 1));
+    EXPECT_EQ(2.0f, *(matrix.Data() + 2));
+    EXPECT_EQ(3.0f, *(matrix.Data() + 3));
+    EXPECT_EQ(4.0f, *(matrix.Data() + 4));
+    EXPECT_EQ(5.0f, *(matrix.Data() + 5));
+}

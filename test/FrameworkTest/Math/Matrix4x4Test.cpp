@@ -270,3 +270,29 @@ TEST(Matrix4x4, CreateRotationZ)
     EXPECT_EQ(0.0f, matrix(3, 2));
     EXPECT_EQ(1.0f, matrix(3, 3));
 }
+
+TEST(Matrix4x4, Data)
+{
+    Matrix4x4 matrix {
+        0.0f, 1.0f, 2.0f, 3.0f,
+        4.0f, 5.0f, 6.0f, 7.0f,
+        8.0f, 9.0f, 10.0f, 11.0f,
+        12.0f, 13.0f, 14.0f, 15.0f
+    };
+    EXPECT_EQ(0.0f, *(matrix.Data() + 0));
+    EXPECT_EQ(1.0f, *(matrix.Data() + 1));
+    EXPECT_EQ(2.0f, *(matrix.Data() + 2));
+    EXPECT_EQ(3.0f, *(matrix.Data() + 3));
+    EXPECT_EQ(4.0f, *(matrix.Data() + 4));
+    EXPECT_EQ(5.0f, *(matrix.Data() + 5));
+    EXPECT_EQ(6.0f, *(matrix.Data() + 6));
+    EXPECT_EQ(7.0f, *(matrix.Data() + 7));
+    EXPECT_EQ(8.0f, *(matrix.Data() + 8));
+    EXPECT_EQ(9.0f, *(matrix.Data() + 9));
+    EXPECT_EQ(10.0f, *(matrix.Data() + 10));
+    EXPECT_EQ(11.0f, *(matrix.Data() + 11));
+    EXPECT_EQ(12.0f, *(matrix.Data() + 12));
+    EXPECT_EQ(13.0f, *(matrix.Data() + 13));
+    EXPECT_EQ(14.0f, *(matrix.Data() + 14));
+    EXPECT_EQ(15.0f, *(matrix.Data() + 15));
+}
