@@ -73,3 +73,12 @@ TEST(Matrix2x2, Multiply_Matrix)
             Matrix2x2(3.0f, 4.0f, 8.0f, 9.0f),
             Matrix2x2(2.0f, 7.0f, 10.0f, 5.0f)));
 }
+
+TEST(Matrix2x2, Data)
+{
+    Matrix2x2 matrix{0.0f, 1.0f, 2.0f, 3.0f};
+    EXPECT_EQ(0.0f, *(matrix.Data() + 0));
+    EXPECT_EQ(1.0f, *(matrix.Data() + 1));
+    EXPECT_EQ(2.0f, *(matrix.Data() + 2));
+    EXPECT_EQ(3.0f, *(matrix.Data() + 3));
+}
