@@ -130,7 +130,7 @@ Optional<float> Ray::Intersects(const BoundingSphere& sphere) const
     const auto sphereRadiusSquared = sphere.Radius * sphere.Radius;
 
     if (toSphereLengthSquared < sphereRadiusSquared) {
-        return 0;
+        return 0.0f;
     }
 
     const auto distance = Vector3::Dot(this->Direction, toSphere);
