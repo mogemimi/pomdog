@@ -5,6 +5,7 @@
 #include "Pomdog/Math/BoundingFrustum.hpp"
 #include "Pomdog/Math/BoundingSphere.hpp"
 #include "Pomdog/Math/Plane.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 #include <cmath>
 #include <algorithm>
 
