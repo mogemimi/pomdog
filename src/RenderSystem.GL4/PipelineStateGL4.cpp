@@ -186,7 +186,7 @@ void PipelineStateGL4::ApplyShaders()
 ShaderProgramGL4 PipelineStateGL4::GetShaderProgram() const
 {
     POMDOG_ASSERT(shaderProgram);
-    return shaderProgram.value();
+    return *shaderProgram;
 }
 
 InputLayoutGL4* PipelineStateGL4::GetInputLayout() const

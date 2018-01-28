@@ -306,7 +306,7 @@ void Texture2DGL4::GenerateMipmap()
 const Texture2DObjectGL4& Texture2DGL4::GetTextureHandle() const
 {
     POMDOG_ASSERT(textureObject);
-    return textureObject.value();
+    return *textureObject;
 }
 
 } // namespace GL4

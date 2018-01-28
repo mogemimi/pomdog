@@ -43,7 +43,7 @@ Optional<GLuint> CompileShader(const ShaderBytecode& source, GLenum pipelineStag
 
     auto result = MakeOptional<GLuint>(glCreateShader(pipelineStage));
 
-    if (result.value() == 0) {
+    if (*result == 0) {
         // error
         return Pomdog::NullOpt;
     }
@@ -55,27 +55,27 @@ Optional<GLuint> CompileShader(const ShaderBytecode& source, GLenum pipelineStag
     POMDOG_ASSERT(source.ByteLength < static_cast<decltype(source.ByteLength)>(std::numeric_limits<GLint>::max()));
     GLint const sourceLength = static_cast<GLint>(source.ByteLength);
 
-    glShaderSource(result.value(), 1, shaderSource.data(), &sourceLength);
+    glShaderSource(*result, 1, shaderSource.data(), &sourceLength);
 
-    glCompileShader(result.value());
+    glCompileShader(*result);
     POMDOG_CHECK_ERROR_GL4("glCompileShader");
 
     GLint compileSuccess = 0;
-    glGetShaderiv(result.value(), GL_COMPILE_STATUS, &compileSuccess);
+    glGetShaderiv(*result, GL_COMPILE_STATUS, &compileSuccess);
 
     if (compileSuccess == GL_FALSE)
     {
 #ifdef DEBUG
         std::array<GLchar, 256> messageBuffer;
 
-        glGetShaderInfoLog(result.value(), messageBuffer.size(), 0, messageBuffer.data());
+        glGetShaderInfoLog(*result, messageBuffer.size(), 0, messageBuffer.data());
         std::string const message = messageBuffer.data();
 
         Log::Critical("Pomdog.RenderSystem", StringHelper::Format(
             "Failed to compile shader.\nerror: %s", message.c_str()));
 #endif // defined(DEBUG)
 
-        glDeleteShader(result.value());
+        glDeleteShader(*result);
         return Pomdog::NullOpt;
     }
 
