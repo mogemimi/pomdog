@@ -26,6 +26,9 @@
           'WIN32_LEAN_AND_MEAN',
           'NOMINMAX',
         ],
+        'AdditionalOptions': [
+          '/std:c++latest',
+        ],
       },
     },
     'xcode_settings': {
