@@ -16,7 +16,6 @@ TEST(Optional, FirstCase)
     ASSERT_TRUE(number);
     ASSERT_FALSE(!number);
     ASSERT_EQ(42, *number);
-    ASSERT_EQ(42, number.value());
 
     number = Pomdog::NullOpt;
     ASSERT_FALSE(number);
@@ -43,7 +42,6 @@ TEST(Optional, CopyConstructor)
         ASSERT_TRUE(other);
         ASSERT_FALSE(!other);
         ASSERT_EQ(42, *other);
-        ASSERT_EQ(42, other.value());
     }
 
     number = Pomdog::NullOpt;

@@ -2,119 +2,36 @@
 
 #pragma once
 
-#include "Pomdog/Utility/Assert.hpp"
-#include <type_traits>
-#include <utility>
+#if defined(_MSC_VER) && (_MSC_VER > 1910)
+#include <optional>
+#else
+#include <experimental/optional>
+#endif
 
 namespace Pomdog {
 
-struct NullOptionalType final {
-    struct init { constexpr init() = default; };
-    constexpr explicit NullOptionalType(init) noexcept {}
-};
+#if defined(_MSC_VER) && (_MSC_VER > 1910)
+template <typename T>
+using Optional = std::optional<T>;
 
-constexpr NullOptionalType NullOpt{ NullOptionalType::init{} };
+constexpr auto NullOpt = std::nullopt;
 
 template <typename T>
-class Optional final {
-private:
-    T data;
-    bool valid;
-
-public:
-    constexpr Optional()
-        : data()
-        , valid(false)
-    {}
-
-    constexpr Optional(const NullOptionalType&)
-        : data()
-        , valid(false)
-    {}
-
-    Optional(const Optional&) = default;
-    Optional(Optional &&) = default;
-
-    constexpr Optional(const T& v)
-        : data(v)
-        , valid(true)
-    {}
-
-    constexpr Optional(T && v)
-        : data(std::move(v))
-        , valid(true)
-    {}
-
-    Optional & operator=(const NullOptionalType&)
-    {
-        valid = false;
-        data.~T();
-        return *this;
-    }
-
-    Optional & operator=(const Optional&) = default;
-    Optional & operator=(Optional &&) = default;
-
-    Optional & operator=(const T& v)
-    {
-        this->valid = true;
-        this->data = v;
-        return *this;
-    }
-
-    Optional & operator=(T && v)
-    {
-        this->valid = true;
-        this->data = std::move(v);
-        return *this;
-    }
-
-    constexpr const T* operator->() const noexcept
-    {
-        POMDOG_ASSERT(valid);
-        return &data;
-    }
-
-    T* operator->() noexcept
-    {
-        POMDOG_ASSERT(valid);
-        return &data;
-    }
-
-    constexpr const T& operator*() const
-    {
-        POMDOG_ASSERT(valid);
-        return data;
-    }
-
-    T & operator*()
-    {
-        POMDOG_ASSERT(valid);
-        return data;
-    }
-
-    constexpr explicit operator bool() const noexcept
-    {
-        return valid;
-    }
-
-    constexpr const T& value() const
-    {
-        POMDOG_ASSERT(valid);
-        return data;
-    }
-
-    T & value()
-    {
-        POMDOG_ASSERT(valid);
-        return data;
-    }
-};
-
-template <typename T>
-inline constexpr Optional<T> MakeOptional(T v)
+inline constexpr Optional<T> MakeOptional(T && v)
 {
-    return Optional<T>(v);
+    return std::make_optional(std::forward<T>(v));
 }
+#else
+template <typename T>
+using Optional = std::experimental::optional<T>;
+
+constexpr auto NullOpt = std::experimental::nullopt;
+
+template <typename T>
+inline constexpr Optional<T> MakeOptional(T && v)
+{
+    return std::experimental::make_optional(std::forward<T>(v));
+}
+#endif
 
 } // namespace Pomdog
