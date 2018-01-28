@@ -7,6 +7,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Math/MathHelper.hpp"
+#include <algorithm>
 
 namespace Pomdog {
 namespace Detail {
