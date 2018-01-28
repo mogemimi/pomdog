@@ -19,7 +19,7 @@ struct GameScene final {
     std::function<void()> OnExit;
     std::string name;
     ConnectionList connections;
-    Optional<std::uint32_t> frameNumber;
+    Optional<std::int64_t> frameNumber;
 
     void Enter();
 

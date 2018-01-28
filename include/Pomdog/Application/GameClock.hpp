@@ -28,7 +28,7 @@ public:
 
     Duration GetTotalGameTime() const noexcept;
 
-    std::uint32_t GetFrameNumber() const noexcept;
+    std::int64_t GetFrameNumber() const noexcept;
 
     Duration GetFrameDuration() const noexcept;
 

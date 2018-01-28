@@ -42,7 +42,7 @@ public:
 
     Duration GetTotalGameTime() const noexcept;
 
-    std::uint32_t GetFrameNumber() const noexcept;
+    std::int64_t GetFrameNumber() const noexcept;
 
     Duration GetFrameDuration() const noexcept;
 
@@ -64,7 +64,7 @@ public:
     Duration predictedFrameTime;
     Duration accumulatedCurrentTime;
     CompensatedSumAccumulator<Duration> accumulator;
-    std::uint32_t frameNumber;
+    std::int64_t frameNumber;
 };
 
 GameClock::Impl::Impl(int framesPerSecond)
@@ -132,6 +132,7 @@ void GameClock::Impl::Tick()
 
     accumulator(accumulatedCurrentTime, predictedFrameTime);
     ++frameNumber;
+    POMDOG_ASSERT(frameNumber > 0);
 }
 
 Duration GameClock::Impl::GetTotalGameTime() const noexcept
@@ -139,7 +140,7 @@ Duration GameClock::Impl::GetTotalGameTime() const noexcept
     return accumulatedCurrentTime;
 }
 
-std::uint32_t GameClock::Impl::GetFrameNumber() const noexcept
+std::int64_t GameClock::Impl::GetFrameNumber() const noexcept
 {
     return frameNumber;
 }
@@ -189,7 +190,7 @@ Duration GameClock::GetTotalGameTime() const noexcept
     return impl->GetTotalGameTime();
 }
 
-std::uint32_t GameClock::GetFrameNumber() const noexcept
+std::int64_t GameClock::GetFrameNumber() const noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->GetFrameNumber();
