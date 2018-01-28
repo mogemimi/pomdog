@@ -53,7 +53,7 @@ All of the dependencies that [Pomdog](https://github.com/mogemimi/pomdog) needs 
 * [UTF8-CPP - GitHub](https://github.com/nemtrif/utfcpp)
 * License
   * Boost Software License - Version 1.0
-  * Please see: [source/utf8cpp/utf8.h][license-utf8cpp]
+  * Please see: [utfcpp/source/utf8.h][license-utfcpp]
 
 ### zlib
 
@@ -69,5 +69,5 @@ All of the dependencies that [Pomdog](https://github.com/mogemimi/pomdog) needs 
 [license-libpng]: libpng/LICENSE
 [license-lua]: lua/LICENSE.md
 [license-rapidjson]: rapidjson/license.txt
-[license-utf8cpp]: utf8cpp/utf8.h
-[license-zlib]: zlib/LICENSE
+[license-utfcpp]: utfcpp/source/utf8.h
+[license-zlib]: zlib/README
