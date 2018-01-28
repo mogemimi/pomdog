@@ -104,9 +104,9 @@ void Timer::SetInterval(const Duration& intervalIn)
     this->interval = intervalIn;
 }
 
-void Timer::SetInterval(const Optional<Duration>& intervalIn)
+void Timer::SetInterval()
 {
-    this->interval = intervalIn;
+    this->interval = NullOpt;
 }
 
 } // namespace Pomdog

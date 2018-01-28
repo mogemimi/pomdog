@@ -49,7 +49,7 @@ public:
 
     void SetInterval(const Duration& interval);
 
-    void SetInterval(const Optional<Duration>& interval);
+    void SetInterval();
 
     Signal<void()> Elapsed;
 

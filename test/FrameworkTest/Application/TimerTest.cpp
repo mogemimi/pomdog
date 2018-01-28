@@ -29,7 +29,7 @@ TEST(Timer, Interval)
     ASSERT_TRUE(timer.GetInterval());
     EXPECT_EQ(std::chrono::milliseconds(10), *timer.GetInterval());
 
-    timer.SetInterval(Pomdog::NullOpt);
+    timer.SetInterval();
     EXPECT_FALSE(timer.GetInterval());
 }
 
