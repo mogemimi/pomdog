@@ -76,6 +76,9 @@
         '<@(pomdog_dir)/experimental',
         '<@(pomdog_dir)/dependencies/iutest/include',
       ],
+      'defines': [
+        'IUTEST_CHECK_STRICT=0',
+      ],
       'sources': [
         'main.cpp',
         'Application/GameClockTest.cpp',
