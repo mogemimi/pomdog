@@ -144,10 +144,10 @@ std::shared_ptr<AnimationGraph> LoadAnimationGraph(SkeletonDesc const& skeletonD
 
             if (desc.Type == AnimationNodeType::Clip
                 && nodeObject.HasMember("name") && nodeObject["name"].IsString()) {
-                desc.ClipName = nodeObject["name"].GetString();
+                desc.ClipName = MakeOptional<std::string>(nodeObject["name"].GetString());
             }
             if (nodeObject.HasMember("param_name") && nodeObject["param_name"].IsString()) {
-                desc.Parameter = nodeObject["param_name"].GetString();
+                desc.Parameter = MakeOptional<std::string>(nodeObject["param_name"].GetString());
             }
             if (nodeObject.HasMember("in") && nodeObject["in"].IsArray())
             {
@@ -156,7 +156,7 @@ std::shared_ptr<AnimationGraph> LoadAnimationGraph(SkeletonDesc const& skeletonD
                 for (int i = 0; i < count; ++i)
                 {
                     POMDOG_ASSERT(inputs[i].IsString());
-                    desc.Inputs[i] = inputs[i].GetString();
+                    desc.Inputs[i] = MakeOptional<std::string>(inputs[i].GetString());
                 }
             }
             nodes.push_back(std::move(desc));
