@@ -2,11 +2,9 @@
 
 #pragma once
 
-#include "Pomdog/Async/Scheduler.hpp"
-#include "Pomdog/Application/Duration.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Basic/Export.hpp"
-#include <condition_variable>
+#include <atomic>
 #include <exception>
 #include <functional>
 #include <memory>
@@ -30,15 +28,11 @@ class TaskCompletionSource<void>;
 class ConcurrencyException final : public std::exception {
 };
 
-template <typename TResult>
-POMDOG_EXPORT
-auto CreateTask(const TaskCompletionSource<TResult>& tcs) -> Task<TResult>;
-
 namespace Detail {
 
-template <typename TResult>
+template <typename T>
 struct TaskResult final {
-    TResult value;
+    T value;
 };
 
 template <>
@@ -46,42 +40,69 @@ struct TaskResult<void> final {};
 
 struct TaskImpl;
 
+enum class TaskStatus : std::int8_t {
+    Created,
+    RanToCompletion,
+    Rejected,
+};
+
 template <typename TResult>
 class POMDOG_EXPORT TaskBody final
     : public std::enable_shared_from_this<TaskBody<TResult>> {
 public:
-    std::weak_ptr<Scheduler> scheduler;
-    Detail::TaskResult<TResult> result;
+    TaskResult<TResult> result;
     std::exception_ptr exceptionPointer;
     std::vector<std::function<void()>> continuations;
     std::mutex mutex;
-    std::condition_variable condition;
-    bool ranToCompletion;
+    std::atomic<TaskStatus> status;
 
     friend class TaskCompletionSource<TResult>;
 
 public:
-    TaskBody() = delete;
     TaskBody(const TaskBody&) = delete;
     TaskBody & operator=(const TaskBody&) = delete;
 
-    explicit TaskBody(const std::shared_ptr<Scheduler>& schedulerIn)
-        : scheduler(schedulerIn)
-        , ranToCompletion(false)
+    TaskBody()
+        : status(TaskStatus::Created)
     {
-        POMDOG_ASSERT(!scheduler.expired());
     }
 
-    void RunContinuations()
+    bool IsDone() const noexcept
     {
-        POMDOG_ASSERT(!scheduler.expired());
-        auto sharedScheduler = scheduler.lock();
-        POMDOG_ASSERT(sharedScheduler);
+        const auto s = status.load();
+        return (s == TaskStatus::RanToCompletion) || (s == TaskStatus::Rejected);
+    }
 
-        for (auto & continuation : continuations) {
-            sharedScheduler->Schedule(std::move(continuation));
+    void SetResult(TaskResult<TResult> && resultIn)
+    {
+        POMDOG_ASSERT(!this->IsDone());
+        status.store(TaskStatus::RanToCompletion);
+
+        std::vector<std::function<void()>> swapped;
+        {
+            std::lock_guard<std::mutex> lock(mutex);
+            result = std::forward<TaskResult<TResult>>(resultIn);
+            std::swap(continuations, swapped);
         }
-        continuations.clear();
+        for (auto & continuation : swapped) {
+            continuation();
+        }
+    }
+
+    void SetException(const std::exception_ptr& exception)
+    {
+        POMDOG_ASSERT(!this->IsDone());
+        status.store(TaskStatus::Rejected);
+
+        std::vector<std::function<void()>> swapped;
+        {
+            std::lock_guard<std::mutex> lock(mutex);
+            exceptionPointer = exception;
+            std::swap(continuations, swapped);
+        }
+        for (auto & continuation : swapped) {
+            continuation();
+        }
     }
 };
 
@@ -159,11 +180,6 @@ using IsSame = typename std::enable_if<
     std::is_same<T, U>::value, std::nullptr_t>::type;
 
 template <typename T>
-using IsTaskResult = typename std::enable_if<
-    !std::is_convertible<T, std::shared_ptr<Scheduler>>::value,
-    std::nullptr_t>::type;
-
-template <typename T>
 struct TaskTypeTraits {
     typedef T ResultType;
 };
@@ -176,21 +192,7 @@ struct TaskTypeTraits<Task<T>> {
 template <typename TFunction>
 using TaskResultOf = typename TaskTypeTraits<ResultOf<TFunction>>::ResultType;
 
-template <typename TResult, typename T>
-void InnerSetTaskResult(TaskResult<TResult> & result, T && value)
-{
-    result.value = std::forward<T>(value);
-}
-
-inline void InnerSetTaskResult(TaskResult<void> &) {}
-
 } // namespace Detail
-
-POMDOG_EXPORT
-std::shared_ptr<Scheduler> GetAmbientScheduler();
-
-POMDOG_EXPORT
-void SetAmbientScheduler(const std::shared_ptr<Scheduler>& scheduler);
 
 template <typename TResult>
 class POMDOG_EXPORT TaskCompletionSource final {
@@ -200,39 +202,21 @@ private:
 
 public:
     TaskCompletionSource()
-        : TaskCompletionSource(GetAmbientScheduler())
+        : body(std::make_shared<Detail::TaskBody<TResult>>())
     {}
 
-    explicit TaskCompletionSource(const std::shared_ptr<Scheduler>& scheduler)
-        : body(std::make_shared<Detail::TaskBody<TResult>>(scheduler))
-    {}
-
-    bool SetResult(const TResult& result) const
+    void SetResult(const TResult& result) const
     {
-        POMDOG_ASSERT(this->body);
-        std::lock_guard<std::mutex> lock(body->mutex);
-        if (body->ranToCompletion) {
-            return false;
-        }
-        body->ranToCompletion = true;
-        InnerSetTaskResult(body->result, result);
-        body->RunContinuations();
-        body->condition.notify_all();
-        return true;
+        POMDOG_ASSERT(body);
+        Detail::TaskResult<TResult> wrapper;
+        wrapper.value = result;
+        body->SetResult(std::move(wrapper));
     }
 
-    bool SetException(const std::exception_ptr& exception) const
+    void SetException(const std::exception_ptr& exception) const
     {
-        POMDOG_ASSERT(this->body);
-        std::lock_guard<std::mutex> lock(body->mutex);
-        if (body->ranToCompletion) {
-            return false;
-        }
-        body->ranToCompletion = true;
-        body->exceptionPointer = exception;
-        body->RunContinuations();
-        body->condition.notify_all();
-        return true;
+        POMDOG_ASSERT(body);
+        body->SetException(exception);
     }
 };
 
@@ -244,38 +228,20 @@ private:
 
 public:
     TaskCompletionSource()
-        : TaskCompletionSource(GetAmbientScheduler())
+        : body(std::make_shared<Detail::TaskBody<void>>())
     {}
 
-    explicit TaskCompletionSource(const std::shared_ptr<Scheduler>& scheduler)
-        : body(std::make_shared<Detail::TaskBody<void>>(scheduler))
-    {}
-
-    bool SetResult() const
+    void SetResult() const
     {
-        POMDOG_ASSERT(this->body);
-        std::lock_guard<std::mutex> lock(body->mutex);
-        if (body->ranToCompletion) {
-            return false;
-        }
-        body->ranToCompletion = true;
-        body->RunContinuations();
-        body->condition.notify_all();
-        return true;
+        POMDOG_ASSERT(body);
+        Detail::TaskResult<void> wrapper;
+        body->SetResult(std::move(wrapper));
     }
 
-    bool SetException(const std::exception_ptr& exception) const
+    void SetException(const std::exception_ptr& exception) const
     {
-        POMDOG_ASSERT(this->body);
-        std::lock_guard<std::mutex> lock(body->mutex);
-        if (body->ranToCompletion) {
-            return false;
-        }
-        body->ranToCompletion = true;
-        body->exceptionPointer = exception;
-        body->RunContinuations();
-        body->condition.notify_all();
-        return true;
+        POMDOG_ASSERT(body);
+        body->SetException(exception);
     }
 };
 
@@ -287,10 +253,8 @@ private:
     std::shared_ptr<Detail::TaskBody<TResult>> body;
 
 public:
-    Task() : Task(GetAmbientScheduler()) {}
-
-    explicit Task(const std::shared_ptr<Scheduler>& scheduler)
-        : body(std::make_shared<Detail::TaskBody<TResult>>(scheduler))
+    Task()
+        : body(std::make_shared<Detail::TaskBody<TResult>>())
     {}
 
     explicit Task(const TaskCompletionSource<TResult>& tcs)
@@ -304,58 +268,22 @@ public:
         -> Task<Detail::TaskResultOf<TFunction>>;
 
     template <typename TFunction>
-    auto Then(
-        const TFunction& continuation,
-        const std::shared_ptr<Scheduler>& scheduler) const
-        -> Task<Detail::TaskResultOf<TFunction>>;
-
-    template <typename TFunction>
     Task<void> Catch(const TFunction& func) const;
-
-    template <typename TFunction>
-    Task<void> Catch(
-        const TFunction& func,
-        const std::shared_ptr<Scheduler>& scheduler) const;
 
     template <typename TFunction>
     auto ContinueWith(const TFunction& continuation) const
         -> Task<Detail::TaskResultOf<TFunction>>;
 
-    template <typename TFunction>
-    auto ContinueWith(
-        const TFunction& continuation,
-        const std::shared_ptr<Scheduler>& scheduler) const
-        -> Task<Detail::TaskResultOf<TFunction>>;
-
-    void Wait() const
-    {
-        POMDOG_ASSERT(body);
-        std::unique_lock<std::mutex> lock(body->mutex);
-        if (body->ranToCompletion) {
-            return;
-        }
-        body->condition.wait(lock, [this]{ return body->ranToCompletion; });
-    }
-
     bool IsDone() const
     {
         POMDOG_ASSERT(body);
-        std::lock_guard<std::mutex> lock(body->mutex);
-        return body->ranToCompletion;
+        return body->IsDone();
     }
 
     bool IsRejected() const
     {
         POMDOG_ASSERT(body);
-        std::lock_guard<std::mutex> lock(body->mutex);
-        return body->exceptionPointer.operator bool();
-    }
-
-    std::shared_ptr<Scheduler> GetScheduler() const noexcept
-    {
-        POMDOG_ASSERT(body);
-        std::lock_guard<std::mutex> lock(body->mutex);
-        return body->scheduler.lock();
+        return body->status.load() == Detail::TaskStatus::Rejected;
     }
 };
 
@@ -381,13 +309,10 @@ auto InnerGetTask(
 
 struct POMDOG_EXPORT TaskImpl {
     template <typename T, typename Func>
-    static void ScheduleContinuation(
-        const Task<T>& task,
-        const std::shared_ptr<Scheduler>& scheduler,
-        Func && continuation)
+    static void ScheduleContinuation(const Task<T>& task, Func && continuation)
     {
         if (task.IsDone()) {
-            scheduler->Schedule(std::move(continuation));
+            continuation();
         }
         else {
             std::lock_guard<std::mutex> lock(task.body->mutex);
@@ -436,10 +361,8 @@ struct POMDOG_EXPORT TaskImpl {
         IsSame<ResultOf<TFunction>, Task<TResult>> = nullptr)
     {
         auto task = func();
-        auto scheduler = task.GetScheduler();
-        POMDOG_ASSERT(scheduler);
 
-        ScheduleContinuation(task, scheduler, [antecedent = task.body, tcs] {
+        ScheduleContinuation(task, [antecedent = task.body, tcs] {
             if (antecedent->exceptionPointer) {
                 tcs.SetException(antecedent->exceptionPointer);
                 return;
@@ -498,10 +421,8 @@ struct POMDOG_EXPORT TaskImpl {
         IsSame<ResultOf<TFunction>, Task<TContinuationResult>> = nullptr)
     {
         auto task = InnerGetTask(continuation, result);
-        auto scheduler = task.GetScheduler();
-        POMDOG_ASSERT(scheduler);
 
-        ScheduleContinuation(task, scheduler, [antecedent = task.body, tcs] {
+        ScheduleContinuation(task, [antecedent = task.body, tcs] {
             if (antecedent->exceptionPointer) {
                 tcs.SetException(antecedent->exceptionPointer);
                 return;
@@ -581,26 +502,14 @@ auto Task<TResult>::Then(const TFunction& continuation) const
     -> Task<Detail::TaskResultOf<TFunction>>
 {
     POMDOG_ASSERT(body);
-    return Then(continuation, body->scheduler.lock());
-}
-
-template <typename TResult>
-template <typename TFunction>
-auto Task<TResult>::Then(
-    const TFunction& continuation,
-    const std::shared_ptr<Scheduler>& scheduler) const
-    -> Task<Detail::TaskResultOf<TFunction>>
-{
-    POMDOG_ASSERT(body);
-    POMDOG_ASSERT(scheduler);
 
     using TContinuationResult = Detail::TaskResultOf<TFunction>;
-    TaskCompletionSource<TContinuationResult> tcs(scheduler);
+    TaskCompletionSource<TContinuationResult> tcs;
 
-    Detail::TaskImpl::ScheduleContinuation(*this, scheduler,
+    Detail::TaskImpl::ScheduleContinuation(*this,
         [antecedent = body, continuation, tcs] {
             POMDOG_ASSERT(antecedent);
-            POMDOG_ASSERT(antecedent->ranToCompletion);
+            POMDOG_ASSERT(antecedent->IsDone());
             if (antecedent->exceptionPointer) {
                 tcs.SetException(antecedent->exceptionPointer);
                 return;
@@ -614,7 +523,8 @@ auto Task<TResult>::Then(
             }
         });
 
-    return CreateTask(tcs);
+    Task<TContinuationResult> task(std::move(tcs));
+    return task;
 }
 
 template <typename TResult>
@@ -622,30 +532,21 @@ template <typename TFunction>
 Task<void> Task<TResult>::Catch(const TFunction& func) const
 {
     POMDOG_ASSERT(body);
-    return Catch(func, body->scheduler.lock());
-}
-
-template <typename TResult>
-template <typename TFunction>
-Task<void> Task<TResult>::Catch(
-    const TFunction& func,
-    const std::shared_ptr<Scheduler>& scheduler) const
-{
-    POMDOG_ASSERT(body);
-    POMDOG_ASSERT(scheduler);
 
     using TException = Detail::ArgumentOf<TFunction>;
-    TaskCompletionSource<void> tcs(scheduler);
+    TaskCompletionSource<void> tcs;
 
-    Detail::TaskImpl::ScheduleContinuation(*this, scheduler,
+    Detail::TaskImpl::ScheduleContinuation(*this,
         [antecedent = body, onRejection = func, tcs] {
-            POMDOG_ASSERT(antecedent->ranToCompletion);
+            POMDOG_ASSERT(antecedent);
+            POMDOG_ASSERT(antecedent->IsDone());
             Detail::InnerHandleException<TException>::Perform(
                 antecedent->exceptionPointer, onRejection);
             tcs.SetResult();
         });
 
-    return CreateTask(tcs);
+    Task<void> task(std::move(tcs));
+    return task;
 }
 
 template <typename TResult>
@@ -654,26 +555,14 @@ auto Task<TResult>::ContinueWith(const TFunction& continuation) const
     -> Task<Detail::TaskResultOf<TFunction>>
 {
     POMDOG_ASSERT(body);
-    return ContinueWith(continuation, body->scheduler.lock());
-}
-
-template <typename TResult>
-template <typename TFunction>
-auto Task<TResult>::ContinueWith(
-    const TFunction& continuation,
-    const std::shared_ptr<Scheduler>& scheduler) const
-    -> Task<Detail::TaskResultOf<TFunction>>
-{
-    POMDOG_ASSERT(body);
-    POMDOG_ASSERT(scheduler);
 
     using TContinuationResult = Detail::TaskResultOf<TFunction>;
-    TaskCompletionSource<TContinuationResult> tcs(scheduler);
+    TaskCompletionSource<TContinuationResult> tcs;
 
-    Detail::TaskImpl::ScheduleContinuation(*this, scheduler,
+    Detail::TaskImpl::ScheduleContinuation(*this,
         [antecedent = *this, continuation, tcs] {
             POMDOG_ASSERT(antecedent.body);
-            POMDOG_ASSERT(antecedent.body->ranToCompletion);
+            POMDOG_ASSERT(antecedent.body->IsDone());
             try {
                 Detail::TaskImpl::InnerInvokeContinuationWithTask(
                     continuation, tcs, antecedent);
@@ -683,82 +572,35 @@ auto Task<TResult>::ContinueWith(
             }
         });
 
-    return CreateTask(tcs);
+    Task<TContinuationResult> task(std::move(tcs));
+    return task;
+}
+
+template <typename TResult, typename TFunction>
+POMDOG_EXPORT
+auto CreateTask(const TFunction& func) -> Task<TResult>
+{
+    TaskCompletionSource<TResult> tcs;
+    func(tcs);
+    Task<TResult> task(std::move(tcs));
+    return task;
 }
 
 template <typename TResult>
 POMDOG_EXPORT
-auto Get(const Task<TResult>& task) -> TResult
+Task<TResult> FromResult(TResult && result)
 {
-    task.Wait();
-    if (auto execption = Detail::TaskImpl::GetExceptionPointer(task)) {
-        std::rethrow_exception(execption);
-    }
-    return Detail::TaskImpl::GetResult(task).value;
-}
-
-POMDOG_EXPORT
-void Get(const Task<void>& task);
-
-
-template <typename TResult>
-POMDOG_EXPORT
-auto CreateTask(const TaskCompletionSource<TResult>& tcs) -> Task<TResult>
-{
-    Task<TResult> task(tcs);
-    return std::move(task);
-}
-
-template <typename TFunction>
-POMDOG_EXPORT
-auto CreateTask(
-    const TFunction& func,
-    const std::shared_ptr<Scheduler>& scheduler)
-    -> Task<Detail::TaskResultOf<TFunction>>
-{
-    POMDOG_ASSERT(scheduler);
-    using TResult = Detail::TaskResultOf<TFunction>;
-    TaskCompletionSource<TResult> tcs(scheduler);
-
-    scheduler->Schedule([=] {
-        try {
-            Detail::TaskImpl::InnerInvoke(func, tcs);
-        }
-        catch (...) {
-            tcs.SetException(std::current_exception());
-        }
-    });
-    return CreateTask(tcs);
-}
-
-POMDOG_EXPORT
-Task<void> Delay(
-    const Duration& dueTime,
-    const std::shared_ptr<Scheduler>& scheduler = GetAmbientScheduler());
-
-template <typename TResult, Detail::IsTaskResult<TResult> = nullptr>
-POMDOG_EXPORT
-Task<TResult> FromResult(
-    TResult && result,
-    const std::shared_ptr<Scheduler>& scheduler = GetAmbientScheduler())
-{
-    static_assert(!std::is_convertible<TResult, std::shared_ptr<Scheduler>>::value, "");
     static_assert(!std::is_reference<TResult>::value, "");
-    POMDOG_ASSERT(scheduler);
-    TaskCompletionSource<TResult> tcs(scheduler);
+    TaskCompletionSource<TResult> tcs;
     tcs.SetResult(std::forward<TResult>(result));
-    return CreateTask(tcs);
+    Task<TResult> task(std::move(tcs));
+    return task;
 }
-
-POMDOG_EXPORT
-Task<void> FromResult(
-    const std::shared_ptr<Scheduler>& scheduler = GetAmbientScheduler());
 
 namespace Detail {
 
 struct WhenAnyPromise final {
-    std::mutex mutex;
-    bool isAnyTaskComplete;
+    std::atomic_bool isAnyTaskComplete;
 };
 
 template <typename TResult>
@@ -778,71 +620,34 @@ struct WhenAllPromise<void> final {
 
 template <typename TResult>
 struct POMDOG_EXPORT TaskFromDefaultResult final {
-    static Task<TResult> Perform(const std::shared_ptr<Scheduler>& scheduler)
+    static Task<TResult> Perform()
     {
-        return FromResult<TResult>({}, scheduler);
+        return FromResult<TResult>({});
     }
 };
 
 template <>
 struct POMDOG_EXPORT TaskFromDefaultResult<void> final {
-    static Task<void> Perform(const std::shared_ptr<Scheduler>& scheduler)
+    static Task<void> Perform()
     {
-        return FromResult(scheduler);
+        TaskCompletionSource<void> tcs;
+        tcs.SetResult();
+        Task<void> task(std::move(tcs));
+        return task;
     }
 };
 
 template <typename TResult>
 POMDOG_EXPORT
-Task<TResult> WhenAnyImpl(
-    const std::vector<Task<TResult>>& tasks,
-    const std::shared_ptr<Scheduler>& scheduler)
+Task<std::vector<TResult>> WhenAllImpl(const std::vector<Task<TResult>>& tasks)
 {
     if (tasks.empty()) {
-        return TaskFromDefaultResult<TResult>::Perform(scheduler);
+        return FromResult<std::vector<TResult>>({});
     }
 
     POMDOG_ASSERT(!tasks.empty());
-    POMDOG_ASSERT(scheduler);
 
-    TaskCompletionSource<TResult> tcs(scheduler);
-    auto whenAnyPromise = std::make_shared<Detail::WhenAnyPromise>();
-    whenAnyPromise->isAnyTaskComplete = false;
-
-    for (auto & task : tasks) {
-        task.ContinueWith([tcs, whenAnyPromise](const Task<TResult>& t) {
-            {
-                std::lock_guard<std::mutex> lock(whenAnyPromise->mutex);
-                if (whenAnyPromise->isAnyTaskComplete) {
-                    return;
-                }
-                whenAnyPromise->isAnyTaskComplete = true;
-            }
-            if (t.IsRejected()) {
-                tcs.SetException(TaskImpl::GetExceptionPointer(t));
-            }
-            else {
-                TaskImpl::InnerSetResult(tcs, TaskImpl::GetResult(t));
-            }
-        });
-    }
-    return CreateTask(tcs);
-}
-
-template <typename TResult>
-POMDOG_EXPORT
-Task<std::vector<TResult>> WhenAllImpl(
-    const std::vector<Task<TResult>>& tasks,
-    const std::shared_ptr<Scheduler>& scheduler)
-{
-    if (tasks.empty()) {
-        return FromResult<std::vector<TResult>>({}, scheduler);
-    }
-
-    POMDOG_ASSERT(!tasks.empty());
-    POMDOG_ASSERT(scheduler);
-
-    TaskCompletionSource<std::vector<TResult>> tcs(scheduler);
+    TaskCompletionSource<std::vector<TResult>> tcs;
     auto whenAllPromise = std::make_shared<Detail::WhenAllPromise<TResult>>();
     whenAllPromise->count = static_cast<int>(tasks.size());
     whenAllPromise->isRejected = false;
@@ -868,33 +673,51 @@ Task<std::vector<TResult>> WhenAllImpl(
             }
         });
     }
-    return CreateTask(tcs);
+    Task<std::vector<TResult>> task(std::move(tcs));
+    return task;
 }
 
 POMDOG_EXPORT
-Task<void> WhenAllImpl(
-    const std::vector<Task<void>>& tasks,
-    const std::shared_ptr<Scheduler>& scheduler);
+Task<void> WhenAllImpl(const std::vector<Task<void>>& tasks);
 
 } // namespace Detail
 
 template <typename TResult>
 POMDOG_EXPORT
-Task<TResult> WhenAny(
-    const std::vector<Task<TResult>>& tasks,
-    const std::shared_ptr<Scheduler>& scheduler = GetAmbientScheduler())
+Task<TResult> WhenAny(const std::vector<Task<TResult>>& tasks)
 {
-    return Detail::WhenAnyImpl(tasks, scheduler);
+    if (tasks.empty()) {
+        return Detail::TaskFromDefaultResult<TResult>::Perform();
+    }
+
+    POMDOG_ASSERT(!tasks.empty());
+
+    TaskCompletionSource<TResult> tcs;
+    auto whenAnyPromise = std::make_shared<Detail::WhenAnyPromise>();
+    whenAnyPromise->isAnyTaskComplete.store(false);
+
+    for (auto & task : tasks) {
+        task.ContinueWith([tcs, whenAnyPromise](const Task<TResult>& t) {
+            if (whenAnyPromise->isAnyTaskComplete.exchange(true)) {
+                return;
+            }
+            if (t.IsRejected()) {
+                tcs.SetException(Detail::TaskImpl::GetExceptionPointer(t));
+            }
+            else {
+                Detail::TaskImpl::InnerSetResult(tcs, Detail::TaskImpl::GetResult(t));
+            }
+        });
+    }
+    Task<TResult> task(std::move(tcs));
+    return task;
 }
 
 template <typename TaskType>
 POMDOG_EXPORT
-auto WhenAll(
-    const std::vector<TaskType>& tasks,
-    const std::shared_ptr<Scheduler>& scheduler = GetAmbientScheduler())
-    -> decltype(Detail::WhenAllImpl(tasks, scheduler))
+auto WhenAll(const std::vector<TaskType>& tasks) -> decltype(Detail::WhenAllImpl(tasks))
 {
-    return Detail::WhenAllImpl(tasks, scheduler);
+    return Detail::WhenAllImpl(tasks);
 }
 
 } // namespace Concurrency

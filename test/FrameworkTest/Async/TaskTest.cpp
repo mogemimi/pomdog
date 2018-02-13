@@ -1,101 +1,103 @@
 // Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
 #include <Pomdog/Async/Task.hpp>
-#include <Pomdog/Async/Scheduler.hpp>
-#include <Pomdog/Async/ImmediateScheduler.hpp>
-#include <Pomdog/Async/QueuedScheduler.hpp>
 #include <Pomdog/Async/Helpers.hpp>
 #include <gtest/iutest_switch.hpp>
 #include <thread>
 
-using Pomdog::Duration;
 using Pomdog::Concurrency::Task;
 using Pomdog::Concurrency::TaskCompletionSource;
-using Pomdog::Concurrency::ImmediateScheduler;
-using Pomdog::Concurrency::QueuedScheduler;
 namespace Concurrency = Pomdog::Concurrency;
 
-struct TaskTest : public ::testing::Test
-{
-    std::shared_ptr<QueuedScheduler> scheduler;
-    std::function<void(std::chrono::duration<double>)> wait;
+//POMDOG_EXPORT
+//Task<void> Delay(const Duration& dueTime, const std::shared_ptr<Scheduler>& scheduler)
+//{
+//    POMDOG_ASSERT(scheduler);
+//    TaskCompletionSource<void> tcs;
+//    scheduler->Schedule([tcs] { tcs.SetResult(); }, dueTime);
+//    Task<void> task(std::move(tcs));
+//    return task;
+//}
 
-    void SetUp() override
-    {
-        scheduler = std::make_shared<QueuedScheduler>();
-        wait = [&](const Pomdog::Duration& duration) {
-            std::this_thread::sleep_for(
-                std::chrono::duration_cast<std::chrono::nanoseconds>(duration));
-            scheduler->Update();
-        };
-    }
-};
+//TEST(Task, Delay)
+//{
+//    Task<void> task = Concurrency::Delay(std::chrono::milliseconds(20), scheduler);
+//    EXPECT_FALSE(task.IsDone());
+//    EXPECT_FALSE(task.IsRejected());
+//    wait(std::chrono::nanoseconds(1));
+//    EXPECT_FALSE(task.IsDone());
+//    EXPECT_FALSE(task.IsRejected());
+//    wait(std::chrono::milliseconds(30));
+//    EXPECT_TRUE(task.IsDone());
+//    EXPECT_FALSE(task.IsRejected());
+//}
 
-TEST_F(TaskTest, Delay)
+TEST(Task, CreateTask)
 {
-    Task<void> task = Concurrency::Delay(std::chrono::milliseconds(20), scheduler);
-    EXPECT_FALSE(task.IsDone());
-    EXPECT_FALSE(task.IsRejected());
-    wait(std::chrono::nanoseconds(1));
-    EXPECT_FALSE(task.IsDone());
-    EXPECT_FALSE(task.IsRejected());
-    wait(std::chrono::milliseconds(30));
+    auto task = Concurrency::CreateTask<void>([](auto tcs) {
+        tcs.SetResult();
+    });
     EXPECT_TRUE(task.IsDone());
     EXPECT_FALSE(task.IsRejected());
 }
 
-TEST_F(TaskTest, CreateTask)
+TEST(Task, CreateTask_Defer)
 {
-    auto task = Concurrency::CreateTask([]{}, scheduler);
+    std::function<void()> defer;
+    auto task = Concurrency::CreateTask<void>([&](auto tcs) {
+        defer = [tcs]{ tcs.SetResult(); };
+    });
 
     EXPECT_FALSE(task.IsDone());
     EXPECT_FALSE(task.IsRejected());
-    wait(std::chrono::nanoseconds(1));
+    defer();
     EXPECT_TRUE(task.IsDone());
     EXPECT_FALSE(task.IsRejected());
 }
 
-TEST_F(TaskTest, CreateTask_ThrowException)
+TEST(Task, CreateTask_ThrowException)
 {
-    auto task = Concurrency::CreateTask([] {
-        throw std::domain_error("Bug");
-    }, scheduler);
+    auto task = Concurrency::CreateTask<void>([](auto tcs) {
+        try {
+            throw std::domain_error("FUS RO DAH");
+        } catch (...) {
+            tcs.SetException(std::current_exception());
+        }
+    });
 
-    EXPECT_FALSE(task.IsDone());
-    EXPECT_FALSE(task.IsRejected());
-    wait(std::chrono::nanoseconds(1));
     EXPECT_TRUE(task.IsDone());
     EXPECT_TRUE(task.IsRejected());
+
+    std::string result;
+    task.Catch([&](const std::exception_ptr& p) {
+        try {
+            std::rethrow_exception(p);
+        }
+        catch (const std::domain_error& e) {
+            result = e.what();
+        }
+    });
+
+    ASSERT_TRUE(task.IsDone());
+    ASSERT_TRUE(task.IsRejected());
+    EXPECT_EQ("FUS RO DAH", result);
 }
 
-TEST_F(TaskTest, CreateTask_ReturnTask)
+TEST(Task, CreateTask_ThrowException_Defer)
 {
-    auto task = Concurrency::CreateTask([&] {
-        return Concurrency::FromResult(42, scheduler);
-    }, scheduler);
-
-    int result = 0;
-    task.Then([&](int x) { result = x; }, scheduler);
+    std::function<void()> defer;
+    auto task = Concurrency::CreateTask<void>([&](auto tcs) {
+        defer = [tcs] {
+            try {
+                throw std::domain_error("FUS RO DAH");
+            } catch (...) {
+                tcs.SetException(std::current_exception());
+            }
+        };
+    });
 
     EXPECT_FALSE(task.IsDone());
     EXPECT_FALSE(task.IsRejected());
-    wait(std::chrono::nanoseconds(1));
-    EXPECT_FALSE(task.IsDone());
-    EXPECT_FALSE(task.IsRejected());
-    wait(std::chrono::nanoseconds(1));
-    EXPECT_TRUE(task.IsDone());
-    EXPECT_FALSE(task.IsRejected());
-    wait(std::chrono::nanoseconds(1));
-    EXPECT_EQ(42, result);
-}
-
-TEST_F(TaskTest, CreateTask_ReturnRejectedTask)
-{
-    auto task = Concurrency::CreateTask([&] {
-        return Concurrency::CreateTask([] {
-            throw std::domain_error("FUS RO DAH");
-        }, scheduler);
-    }, scheduler);
 
     std::string result;
     task.Catch([&](const std::exception_ptr& p) {
@@ -109,78 +111,56 @@ TEST_F(TaskTest, CreateTask_ReturnRejectedTask)
 
     EXPECT_FALSE(task.IsDone());
     EXPECT_FALSE(task.IsRejected());
-    wait(std::chrono::nanoseconds(1));
-    wait(std::chrono::nanoseconds(1));
-    EXPECT_FALSE(task.IsDone());
-    EXPECT_FALSE(task.IsRejected());
-    wait(std::chrono::nanoseconds(1));
+    EXPECT_TRUE(result.empty());
+    defer();
     EXPECT_TRUE(task.IsDone());
     EXPECT_TRUE(task.IsRejected());
-    wait(std::chrono::nanoseconds(1));
     EXPECT_EQ("FUS RO DAH", result);
 }
 
-TEST_F(TaskTest, Then_Deferred)
+TEST(Task, Then_Deferred)
 {
-    auto task = Concurrency::CreateTask([]{}, scheduler);
+    std::function<void()> defer;
+    auto task = Concurrency::CreateTask<void>([&](auto tcs) {
+        defer = [tcs]{ tcs.SetResult(); };
+    });
     auto task2 = task.Then([]{});
 
     EXPECT_FALSE(task.IsDone());
     EXPECT_FALSE(task.IsRejected());
     EXPECT_FALSE(task2.IsDone());
     EXPECT_FALSE(task2.IsRejected());
-
-    wait(std::chrono::nanoseconds(1));
+    defer();
     EXPECT_TRUE(task.IsDone());
     EXPECT_FALSE(task.IsRejected());
-    wait(std::chrono::nanoseconds(1));
     EXPECT_TRUE(task2.IsDone());
     EXPECT_FALSE(task2.IsRejected());
 }
 
-TEST_F(TaskTest, Then_Immediate)
+TEST(Task, Then_Immediate)
 {
-    auto task = Concurrency::CreateTask([]{}, scheduler);
+    auto task = Concurrency::CreateTask<void>([](auto tcs) {
+        tcs.SetResult();
+    });
 
-    EXPECT_FALSE(task.IsDone());
-    EXPECT_FALSE(task.IsRejected());
-    wait(std::chrono::nanoseconds(1));
     EXPECT_TRUE(task.IsDone());
     EXPECT_FALSE(task.IsRejected());
 
     auto task2 = task.Then([]{});
-    EXPECT_FALSE(task2.IsDone());
-    EXPECT_FALSE(task2.IsRejected());
-    wait(std::chrono::nanoseconds(1));
     EXPECT_TRUE(task2.IsDone());
     EXPECT_FALSE(task2.IsRejected());
 }
 
-TEST_F(TaskTest, Then_WithScheduler)
+TEST(Task, Then_Results)
 {
-    auto task = Concurrency::CreateTask([]{}, scheduler);
-
-    EXPECT_FALSE(task.IsDone());
-    EXPECT_FALSE(task.IsRejected());
-    wait(std::chrono::nanoseconds(1));
-    EXPECT_TRUE(task.IsDone());
-    EXPECT_FALSE(task.IsRejected());
-
-    auto task2 = task.Then([]{}, scheduler);
-    EXPECT_FALSE(task2.IsDone());
-    EXPECT_FALSE(task2.IsRejected());
-    wait(std::chrono::nanoseconds(1));
-    EXPECT_TRUE(task2.IsDone());
-    EXPECT_FALSE(task2.IsRejected());
-}
-
-TEST_F(TaskTest, Then_Results)
-{
+    std::function<void()> defer;
     std::vector<std::string> results;
-    auto task = Concurrency::CreateTask([&]()-> std::string {
-        results.push_back("chuck");
-        return "chuck";
-    }, scheduler);
+    auto task = Concurrency::CreateTask<std::string>([&](auto tcs) {
+        defer = [&results, tcs] {
+            results.push_back("chuck");
+            tcs.SetResult("chuck");
+        };
+    });
     auto task2 = task.Then([&](const std::string& name)->std::string {
         EXPECT_EQ("chuck", name);
         results.push_back(name + " ");
@@ -194,19 +174,15 @@ TEST_F(TaskTest, Then_Results)
 
     EXPECT_FALSE(task.IsDone());
     EXPECT_FALSE(task.IsRejected());
-    wait(std::chrono::nanoseconds(1));
-    EXPECT_TRUE(task.IsDone());
-    EXPECT_FALSE(task.IsRejected());
-
     EXPECT_FALSE(task2.IsDone());
     EXPECT_FALSE(task2.IsRejected());
-    wait(std::chrono::nanoseconds(1));
-    EXPECT_TRUE(task2.IsDone());
-    EXPECT_FALSE(task2.IsRejected());
-
     EXPECT_FALSE(task3.IsDone());
     EXPECT_FALSE(task3.IsRejected());
-    wait(std::chrono::nanoseconds(1));
+    defer();
+    EXPECT_TRUE(task.IsDone());
+    EXPECT_FALSE(task.IsRejected());
+    EXPECT_TRUE(task2.IsDone());
+    EXPECT_FALSE(task2.IsRejected());
     EXPECT_TRUE(task3.IsDone());
     EXPECT_FALSE(task3.IsRejected());
 
@@ -216,322 +192,382 @@ TEST_F(TaskTest, Then_Results)
     EXPECT_EQ("chuck norris", results[2]);
 }
 
-TEST_F(TaskTest, Then_MethodChaining)
+TEST(Task, Then_MethodChaining)
 {
     std::string result;
-    auto task = Concurrency::FromResult<int>(42, scheduler)
+    auto task = Concurrency::FromResult<int>(42)
         .Then([](int x){ return std::to_string(x); })
         .Then([&](const std::string& s){ result = s; });
 
-    wait(std::chrono::nanoseconds(1));
-    EXPECT_FALSE(task.IsDone());
-    wait(std::chrono::nanoseconds(1));
     EXPECT_TRUE(task.IsDone());
     EXPECT_FALSE(task.IsRejected());
     EXPECT_EQ("42", result);
 }
 
-TEST_F(TaskTest, Then_ReturnTask)
+TEST(Task, Then_ReturnTask)
 {
+    std::function<void()> defer1;
+    std::function<void()> defer2;
+    std::function<void()> defer3;
     std::vector<std::string> result;
 
-    auto task1 = Concurrency::FromResult(scheduler);
+    auto task1 = Concurrency::CreateTask<void>([&](auto tcs) {
+        defer1 = [tcs] { tcs.SetResult(); };
+    });
     auto task2 = task1.Then([&] {
-        result.push_back("Delay");
-        return Concurrency::Delay(std::chrono::milliseconds(40), scheduler);
+        result.push_back("A");
+        return Concurrency::CreateTask<void>([&](auto tcs) {
+            result.push_back("B");
+            defer2 = [&result, tcs] {
+                result.push_back("C");
+                tcs.SetResult();
+            };
+        });
     });
     auto task3 = task2.Then([&] {
-        result.push_back("FromResult");
-        return Concurrency::FromResult(42, scheduler);
+        result.push_back("D");
+        return Concurrency::CreateTask<int>([&](auto tcs) {
+            result.push_back("E");
+            defer3 = [&result, tcs] {
+                result.push_back("F");
+                tcs.SetResult(42);
+            };
+        });
     });
     auto task4 = task3.Then([&](int x) {
+        result.push_back("G");
         result.push_back(std::to_string(x));
     });
 
+    EXPECT_FALSE(task1.IsDone());
+    EXPECT_FALSE(task2.IsDone());
+    EXPECT_FALSE(task3.IsDone());
+    EXPECT_FALSE(task4.IsDone());
+    ASSERT_TRUE(result.empty());
+    defer1();
+    ASSERT_EQ(2, result.size());
+    EXPECT_EQ("A", result[0]);
+    EXPECT_EQ("B", result[1]);
     EXPECT_TRUE(task1.IsDone());
     EXPECT_FALSE(task2.IsDone());
-
-    wait(std::chrono::nanoseconds(1));
-    ASSERT_EQ(1, result.size());
-    EXPECT_EQ("Delay", result.back());
-    EXPECT_FALSE(task2.IsDone());
-
-    wait(std::chrono::milliseconds(60));
-    EXPECT_FALSE(task2.IsDone());
-
-    wait(std::chrono::nanoseconds(1));
+    EXPECT_FALSE(task3.IsDone());
+    EXPECT_FALSE(task4.IsDone());
+    defer2();
+    ASSERT_EQ(5, result.size());
+    EXPECT_EQ("C", result[2]);
+    EXPECT_EQ("D", result[3]);
+    EXPECT_EQ("E", result[4]);
     EXPECT_TRUE(task2.IsDone());
     EXPECT_FALSE(task3.IsDone());
-
-    wait(std::chrono::nanoseconds(1));
-    ASSERT_EQ(2, result.size());
-    EXPECT_EQ("FromResult", result.back());
-    EXPECT_FALSE(task3.IsDone());
-
-    wait(std::chrono::nanoseconds(1));
-    EXPECT_TRUE(task3.IsDone());
     EXPECT_FALSE(task4.IsDone());
-
-    wait(std::chrono::nanoseconds(1));
+    defer3();
+    ASSERT_EQ(8, result.size());
+    EXPECT_EQ("F", result[5]);
+    EXPECT_EQ("G", result[6]);
+    EXPECT_EQ("42", result[7]);
+    EXPECT_TRUE(task3.IsDone());
     EXPECT_TRUE(task4.IsDone());
-    ASSERT_EQ(3, result.size());
-    EXPECT_EQ("42", result.back());
 }
 
-TEST_F(TaskTest, Then_ReturnRejectedTask)
+TEST(Task, Then_ReturnRejectedTask)
 {
+    std::function<void()> defer1;
+    std::function<void()> defer2;
     std::vector<std::string> result;
 
-    auto task1 = Concurrency::FromResult(scheduler);
+    auto task1 = Concurrency::CreateTask<void>([&](auto tcs) {
+        defer1 = [&result, tcs] {
+            result.push_back("A");
+            tcs.SetResult();
+        };
+    });
     auto task2 = task1.Then([&] {
-        result.push_back("fromResult.then");
-        return Concurrency::CreateTask([&] {
-            result.push_back("fromResult.then.createTask");
-            throw std::domain_error("FUS RO DAH");
-        }, scheduler);
+        result.push_back("B");
+        return Concurrency::CreateTask<void>([&](auto tcs) {
+            result.push_back("C");
+            defer2 = [&result, tcs]{
+                try {
+                    result.push_back("D");
+                    throw std::domain_error("FUS RO DAH");
+                } catch (...) {
+                    tcs.SetException(std::current_exception());
+                }
+            };
+        });
     });
     auto task3 = task2.Catch([&](const std::exception_ptr& p) {
         try {
+            result.push_back("E");
             std::rethrow_exception(p);
         }
         catch (const std::domain_error& e) {
             result.push_back(e.what());
         }
-    }, scheduler);
+    });
 
+    EXPECT_FALSE(task1.IsDone());
+    EXPECT_FALSE(task2.IsDone());
+    EXPECT_FALSE(task3.IsDone());
+    defer1();
+    ASSERT_EQ(3, result.size());
+    EXPECT_EQ("A", result[0]);
+    EXPECT_EQ("B", result[1]);
+    EXPECT_EQ("C", result[2]);
     EXPECT_TRUE(task1.IsDone());
+    EXPECT_FALSE(task1.IsRejected());
     EXPECT_FALSE(task2.IsDone());
-
-    wait(std::chrono::nanoseconds(1));
-    ASSERT_EQ(1, result.size());
-    EXPECT_EQ("fromResult.then", result.back());
-    EXPECT_FALSE(task2.IsDone());
-
-    wait(std::chrono::nanoseconds(1));
-    EXPECT_FALSE(task2.IsDone());
-
-    wait(std::chrono::nanoseconds(1));
-    ASSERT_EQ(2, result.size());
-    EXPECT_EQ("fromResult.then.createTask", result.back());
+    EXPECT_FALSE(task2.IsRejected());
+    EXPECT_FALSE(task3.IsDone());
+    defer2();
+    ASSERT_EQ(6, result.size());
+    EXPECT_EQ("D", result[3]);
+    EXPECT_EQ("E", result[4]);
+    EXPECT_EQ("FUS RO DAH", result[5]);
     EXPECT_TRUE(task2.IsDone());
     EXPECT_TRUE(task2.IsRejected());
-    EXPECT_FALSE(task3.IsDone());
-
-    wait(std::chrono::nanoseconds(1));
-    ASSERT_EQ(3, result.size());
-    EXPECT_EQ("FUS RO DAH", result.back());
     EXPECT_TRUE(task3.IsDone());
     EXPECT_FALSE(task3.IsRejected());
 }
 
-TEST_F(TaskTest, Catch_ExceptionPtr)
+TEST(Task, Catch_ExceptionPtr)
 {
-    auto task = Concurrency::CreateTask([] {
-        throw std::domain_error(
-            "When Chuck Norris throws exceptions, it's across the room.");
-    }, scheduler);
-
-    std::vector<std::string> result;
-    task.Catch([&](const std::exception_ptr& e) {
+    auto task = Concurrency::CreateTask<void>([&](auto tcs) {
         try {
-            std::rethrow_exception(e);
-        }
-        catch (const std::domain_error& ex) {
-            result.push_back(ex.what());
+            throw std::domain_error("When Chuck Norris throws exceptions, it's across the room.");
+        } catch (...) {
+            tcs.SetException(std::current_exception());
         }
     });
 
-    EXPECT_FALSE(task.IsDone());
-    EXPECT_FALSE(task.IsRejected());
-    EXPECT_TRUE(result.empty());
+    std::string result;
+    task.Catch([&](const std::exception_ptr& p) {
+        try {
+            std::rethrow_exception(p);
+        }
+        catch (const std::domain_error& e) {
+            result = e.what();
+        }
+    });
 
-    wait(std::chrono::nanoseconds(1));
     EXPECT_TRUE(task.IsDone());
     EXPECT_TRUE(task.IsRejected());
-
-    EXPECT_TRUE(result.empty());
-    wait(std::chrono::nanoseconds(1));
-
-    ASSERT_EQ(1, result.size());
-    EXPECT_EQ("When Chuck Norris throws exceptions, it's across the room.", result.back());
+    EXPECT_EQ("When Chuck Norris throws exceptions, it's across the room.", result);
 }
 
-TEST_F(TaskTest, Catch_ExceptionType)
+TEST(Task, Catch_ExceptionType)
 {
-    auto task = Concurrency::CreateTask([] {
-        throw std::domain_error(
-            "When Chuck Norris throws exceptions, it's across the room.");
-    }, scheduler);
+    auto task = Concurrency::CreateTask<void>([&](auto tcs) {
+        try {
+            throw std::domain_error("When Chuck Norris throws exceptions, it's across the room.");
+        } catch (...) {
+            tcs.SetException(std::current_exception());
+        }
+    });
 
-    std::vector<std::string> result;
+    std::string result;
     task.Catch([&](const std::domain_error& e) {
-        result.push_back(e.what());
+        result = e.what();
     });
 
-    EXPECT_FALSE(task.IsDone());
-    EXPECT_FALSE(task.IsRejected());
-    EXPECT_TRUE(result.empty());
-
-    wait(std::chrono::nanoseconds(1));
     EXPECT_TRUE(task.IsDone());
     EXPECT_TRUE(task.IsRejected());
-
-    EXPECT_TRUE(result.empty());
-    wait(std::chrono::nanoseconds(1));
-
-    ASSERT_EQ(1, result.size());
-    EXPECT_EQ("When Chuck Norris throws exceptions, it's across the room.", result.back());
+    EXPECT_EQ("When Chuck Norris throws exceptions, it's across the room.", result);
 }
 
-TEST_F(TaskTest, Catch_Then)
+TEST(Task, Catch_Then)
 {
-    auto task = Concurrency::CreateTask([] {
-        throw std::domain_error(
-            "When Chuck Norris throws exceptions, it's across the room.");
-    }, scheduler);
-
+    std::function<void()> defer;
     std::vector<std::string> result;
 
-    auto task2 = task.Then([]{});
-    task2.Catch([&](const std::domain_error& e) {
+    auto task1 = Concurrency::CreateTask<void>([&](auto tcs) {
+        defer = [&result, tcs] {
+            try {
+                result.push_back("A");
+                throw std::domain_error("When Chuck Norris throws exceptions, it's across the room.");
+            }
+            catch (...) {
+                tcs.SetException(std::current_exception());
+            }
+        };
+    });
+
+    auto task2 = task1.Then([&] {
+        result.push_back("B");
+    });
+    auto task3 = task2.Catch([&](const std::domain_error& e) {
+        result.push_back("C");
         result.push_back(e.what());
     });
 
-    EXPECT_FALSE(task.IsDone());
-    EXPECT_FALSE(task.IsRejected());
     EXPECT_TRUE(result.empty());
-
-    wait(std::chrono::nanoseconds(1));
-    EXPECT_TRUE(task.IsDone());
-    EXPECT_TRUE(task.IsRejected());
-    EXPECT_FALSE(task2.IsDone());
-    EXPECT_FALSE(task2.IsRejected());
-
+    EXPECT_FALSE(task1.IsDone());
+    EXPECT_FALSE(task1.IsRejected());
     EXPECT_TRUE(result.empty());
-    wait(std::chrono::nanoseconds(1));
-
+    defer();
+    ASSERT_EQ(3, result.size());
+    EXPECT_EQ("A", result[0]);
+    EXPECT_EQ("C", result[1]);
+    EXPECT_EQ("When Chuck Norris throws exceptions, it's across the room.", result[2]);
+    EXPECT_TRUE(task1.IsDone());
+    EXPECT_TRUE(task1.IsRejected());
     EXPECT_TRUE(task2.IsDone());
     EXPECT_TRUE(task2.IsRejected());
-
-    EXPECT_TRUE(result.empty());
-    wait(std::chrono::nanoseconds(1));
-
-    ASSERT_EQ(1, result.size());
-    EXPECT_EQ("When Chuck Norris throws exceptions, it's across the room.", result.back());
+    EXPECT_TRUE(task3.IsDone());
+    EXPECT_FALSE(task3.IsRejected());
 }
 
-TEST_F(TaskTest, Catch_WhenAll)
+TEST(Task, Catch_WhenAll)
 {
-    auto task1 = Concurrency::CreateTask([] {
-        throw std::domain_error(
-            "When Chuck Norris throws exceptions, it's across the room.");
-    }, scheduler);
-    auto task2 = Concurrency::CreateTask([] {
-        throw std::domain_error(
-            "When Chuck Norris throws exceptions, it's across the room.");
-    }, scheduler);
+    std::function<void()> defer1;
+    std::function<void()> defer2;
+
+    auto task1 = Concurrency::CreateTask<void>([&](auto tcs) {
+        defer1 = [tcs] {
+            try {
+                throw std::domain_error("When Chuck Norris throws exceptions, it's across the room.");
+            } catch (...) {
+                tcs.SetException(std::current_exception());
+            }
+        };
+    });
+    auto task2 = Concurrency::CreateTask<void>([&](auto tcs) {
+        defer2 = [tcs] {
+            try {
+                throw std::domain_error("FUS RO DAH");
+            } catch (...) {
+                tcs.SetException(std::current_exception());
+            }
+        };
+    });
 
     std::vector<std::string> result;
 
     std::vector<Task<void>> tasks = {task1, task2};
-    auto whenAll = Concurrency::WhenAll(tasks, scheduler);
+    auto whenAll = Concurrency::WhenAll(tasks);
     whenAll.Catch([&](const std::domain_error& e) {
         result.push_back(e.what());
-    }, scheduler);
+    });
 
-    wait(std::chrono::nanoseconds(1));
+    ASSERT_FALSE(task1.IsDone());
+    ASSERT_FALSE(task1.IsRejected());
     EXPECT_FALSE(whenAll.IsDone());
     EXPECT_FALSE(whenAll.IsRejected());
     EXPECT_TRUE(result.empty());
-
-    wait(std::chrono::nanoseconds(1));
+    defer1();
+    ASSERT_TRUE(task1.IsDone());
+    ASSERT_TRUE(task1.IsRejected());
+    ASSERT_FALSE(task2.IsDone());
+    ASSERT_FALSE(task2.IsRejected());
     EXPECT_TRUE(whenAll.IsDone());
     EXPECT_TRUE(whenAll.IsRejected());
-    EXPECT_TRUE(result.empty());
-
-    wait(std::chrono::nanoseconds(1));
     ASSERT_EQ(1, result.size());
     EXPECT_EQ("When Chuck Norris throws exceptions, it's across the room.", result.back());
+    defer2();
+    ASSERT_TRUE(task2.IsDone());
+    ASSERT_TRUE(task2.IsRejected());
+    ASSERT_EQ(1, result.size());
 }
 
-TEST_F(TaskTest, Catch_WhenAny)
+TEST(Task, Catch_WhenAny)
 {
-    auto task1 = Concurrency::CreateTask([] {
-        throw std::domain_error(
-            "When Chuck Norris throws exceptions, it's across the room.");
-    }, scheduler);
-    auto task2 = Concurrency::CreateTask([] {
-        throw std::domain_error(
-            "When Chuck Norris throws exceptions, it's across the room.");
-    }, scheduler);
+    std::function<void()> defer1;
+    std::function<void()> defer2;
+
+    auto task1 = Concurrency::CreateTask<void>([&](auto tcs) {
+        defer1 = [tcs] {
+            try {
+                throw std::domain_error("When Chuck Norris throws exceptions, it's across the room.");
+            } catch (...) {
+                tcs.SetException(std::current_exception());
+            }
+        };
+    });
+    auto task2 = Concurrency::CreateTask<void>([&](auto tcs) {
+        defer2 = [tcs] {
+            try {
+                throw std::domain_error("FUS RO DAH");
+            } catch (...) {
+                tcs.SetException(std::current_exception());
+            }
+        };
+    });
 
     std::vector<std::string> result;
-    std::vector<Task<void>> tasks = {task1, task2};
 
-    auto whenAny = Concurrency::WhenAny(std::move(tasks), scheduler);
+    std::vector<Task<void>> tasks = {task1, task2};
+    auto whenAny = Concurrency::WhenAny(tasks);
     whenAny.Catch([&](const std::domain_error& e) {
         result.push_back(e.what());
     });
 
-    wait(std::chrono::nanoseconds(1));
+    ASSERT_FALSE(task1.IsDone());
+    ASSERT_FALSE(task1.IsRejected());
     EXPECT_FALSE(whenAny.IsDone());
     EXPECT_FALSE(whenAny.IsRejected());
     EXPECT_TRUE(result.empty());
-
-    wait(std::chrono::nanoseconds(1));
+    defer1();
+    ASSERT_TRUE(task1.IsDone());
+    ASSERT_TRUE(task1.IsRejected());
+    ASSERT_FALSE(task2.IsDone());
+    ASSERT_FALSE(task2.IsRejected());
     EXPECT_TRUE(whenAny.IsDone());
     EXPECT_TRUE(whenAny.IsRejected());
-    EXPECT_TRUE(result.empty());
-
-    wait(std::chrono::nanoseconds(1));
     ASSERT_EQ(1, result.size());
     EXPECT_EQ("When Chuck Norris throws exceptions, it's across the room.", result.back());
+    defer2();
+    ASSERT_TRUE(task2.IsDone());
+    ASSERT_TRUE(task2.IsRejected());
+    ASSERT_EQ(1, result.size());
 }
 
-TEST_F(TaskTest, ContinueWith_Deferred)
+TEST(Task, ContinueWith_Deferred)
 {
-    auto task = Concurrency::CreateTask([]{}, scheduler);
-    auto task2 = task.ContinueWith([](const Task<void>&){});
+    std::function<void()> defer;
+    auto task1 = Concurrency::CreateTask<void>([&](auto tcs) {
+        defer = [tcs] { tcs.SetResult(); };
+    });
+    auto task2 = task1.ContinueWith([&](const Task<void>&) {
+    });
 
-    EXPECT_FALSE(task.IsDone());
-    EXPECT_FALSE(task.IsRejected());
+    EXPECT_FALSE(task1.IsDone());
+    EXPECT_FALSE(task1.IsRejected());
     EXPECT_FALSE(task2.IsDone());
     EXPECT_FALSE(task2.IsRejected());
-
-    wait(std::chrono::nanoseconds(1));
-    EXPECT_TRUE(task.IsDone());
-    EXPECT_FALSE(task.IsRejected());
-    wait(std::chrono::nanoseconds(1));
+    defer();
+    EXPECT_TRUE(task1.IsDone());
+    EXPECT_FALSE(task1.IsRejected());
     EXPECT_TRUE(task2.IsDone());
     EXPECT_FALSE(task2.IsRejected());
 }
 
-TEST_F(TaskTest, ContinueWith_Immediate)
+TEST(Task, ContinueWith_Immediate)
 {
-    auto task = Concurrency::CreateTask([]{}, scheduler);
-
-    EXPECT_FALSE(task.IsDone());
-    EXPECT_FALSE(task.IsRejected());
-    wait(std::chrono::nanoseconds(1));
-    EXPECT_TRUE(task.IsDone());
-    EXPECT_FALSE(task.IsRejected());
-
-    auto task2 = task.ContinueWith([](const Task<void>&){});
-    EXPECT_FALSE(task2.IsDone());
-    EXPECT_FALSE(task2.IsRejected());
-    wait(std::chrono::nanoseconds(1));
+    auto task1 = Concurrency::CreateTask<void>([](auto tcs) {
+        tcs.SetResult();
+    });
+    EXPECT_TRUE(task1.IsDone());
+    EXPECT_FALSE(task1.IsRejected());
+    auto task2 = task1.ContinueWith([](const Task<void>&){});
     EXPECT_TRUE(task2.IsDone());
     EXPECT_FALSE(task2.IsRejected());
 }
 
-TEST_F(TaskTest, ContinueWith_CatchException)
+TEST(Task, ContinueWith_CatchException)
 {
+    std::function<void()> defer;
     std::string result;
-    auto task = Concurrency::CreateTask([] {
-        throw std::domain_error{"fus ro dah"};
-    }, scheduler);
 
-    auto task2 = task.ContinueWith([&](const Task<void>& t) {
+    auto task1 = Concurrency::CreateTask<void>([&](auto tcs) {
+        defer = [tcs] {
+            try {
+                throw std::domain_error("fus ro dah");
+            }
+            catch (...) {
+                tcs.SetException(std::current_exception());
+            }
+        };
+    });
+    auto task2 = task1.ContinueWith([&](const Task<void>& t) {
         if (t.IsRejected()) {
             result = "rejected";
         }
@@ -540,275 +576,197 @@ TEST_F(TaskTest, ContinueWith_CatchException)
         }
     });
 
-    EXPECT_FALSE(task.IsDone());
-    EXPECT_FALSE(task.IsRejected());
+    EXPECT_FALSE(task1.IsDone());
+    EXPECT_FALSE(task1.IsRejected());
     EXPECT_FALSE(task2.IsDone());
     EXPECT_FALSE(task2.IsRejected());
-
-    wait(std::chrono::nanoseconds(1));
-    EXPECT_TRUE(task.IsDone());
-    EXPECT_TRUE(task.IsRejected());
-    wait(std::chrono::nanoseconds(1));
+    defer();
+    EXPECT_TRUE(task1.IsDone());
+    EXPECT_TRUE(task1.IsRejected());
     EXPECT_TRUE(task2.IsDone());
     EXPECT_FALSE(task2.IsRejected());
     EXPECT_EQ("rejected", result);
 }
 
-TEST_F(TaskTest, WhenAny)
+TEST(Task, WhenAny)
 {
-    auto task1 = Concurrency::Delay(std::chrono::milliseconds(200), scheduler);
-    auto task2 = Concurrency::Delay(std::chrono::milliseconds(400), scheduler);
-    auto task3 = Concurrency::Delay(std::chrono::milliseconds(600), scheduler);
+    std::function<void()> defer1;
+    std::function<void()> defer2;
+    std::function<void()> defer3;
+    auto task1 = Concurrency::CreateTask<void>([&](auto tcs) {
+        defer1 = [tcs] { tcs.SetResult(); };
+    });
+    auto task2 = Concurrency::CreateTask<void>([&](auto tcs) {
+        defer2 = [tcs] { tcs.SetResult(); };
+    });
+    auto task3 = Concurrency::CreateTask<void>([&](auto tcs) {
+        defer3 = [tcs] { tcs.SetResult(); };
+    });
 
     std::vector<Task<void>> tasks = {task1, task2, task3};
-    auto whenAny = Concurrency::WhenAny(tasks, scheduler);
+    auto whenAny = Concurrency::WhenAny(tasks);
 
     EXPECT_FALSE(whenAny.IsDone());
     EXPECT_FALSE(whenAny.IsRejected());
 
-    wait(std::chrono::nanoseconds(1));
     ASSERT_FALSE(task1.IsDone());
     ASSERT_FALSE(task2.IsDone());
     ASSERT_FALSE(task3.IsDone());
     EXPECT_FALSE(whenAny.IsDone());
-    wait(std::chrono::milliseconds(1));
-    wait(std::chrono::milliseconds(200));
+    EXPECT_FALSE(whenAny.IsRejected());
+    defer1();
     ASSERT_TRUE(task1.IsDone());
     ASSERT_FALSE(task2.IsDone());
     ASSERT_FALSE(task3.IsDone());
-    EXPECT_FALSE(whenAny.IsDone());
-    wait(std::chrono::milliseconds(200));
+    EXPECT_TRUE(whenAny.IsDone());
+    EXPECT_FALSE(whenAny.IsRejected());
+    defer2();
     ASSERT_TRUE(task1.IsDone());
     ASSERT_TRUE(task2.IsDone());
     ASSERT_FALSE(task3.IsDone());
     EXPECT_TRUE(whenAny.IsDone());
     EXPECT_FALSE(whenAny.IsRejected());
-    wait(std::chrono::milliseconds(200));
+    defer3();
     ASSERT_TRUE(task1.IsDone());
     ASSERT_TRUE(task2.IsDone());
     ASSERT_TRUE(task3.IsDone());
+    EXPECT_TRUE(whenAny.IsDone());
+    EXPECT_FALSE(whenAny.IsRejected());
 }
 
-TEST_F(TaskTest, WhenAny_Result)
+TEST(Task, WhenAny_Result)
 {
-    auto task1 = Concurrency::FromResult(42, scheduler);
-    auto task2 = Concurrency::FromResult(42, scheduler);
-
-    std::vector<Task<int>> tasks;
-    tasks.push_back(task1);
-    tasks.push_back(task2);
+    std::function<void()> defer1;
+    std::function<void()> defer2;
+    auto task1 = Concurrency::CreateTask<int>([&](auto tcs) {
+        defer1 = [tcs] { tcs.SetResult(42); };
+    });
+    auto task2 = Concurrency::CreateTask<int>([&](auto tcs) {
+        defer2 = [tcs] { tcs.SetResult(43); };
+    });
 
     std::vector<int> results;
+    std::vector<Task<int>> tasks = { task1, task2 };
 
-    auto whenAny = Concurrency::WhenAny(std::move(tasks), scheduler);
+    auto whenAny = Concurrency::WhenAny(std::move(tasks));
     whenAny.Then([&](int x) {
         results.push_back(x);
     });
 
     EXPECT_FALSE(whenAny.IsDone());
     EXPECT_FALSE(whenAny.IsRejected());
-
-    wait(std::chrono::nanoseconds(1));
+    defer1();
+    ASSERT_TRUE(task1.IsDone());
+    ASSERT_FALSE(task2.IsDone());
+    EXPECT_TRUE(whenAny.IsDone());
+    EXPECT_FALSE(whenAny.IsRejected());
+    ASSERT_EQ(1, results.size());
+    EXPECT_EQ(42, results.back());
+    defer2();
     ASSERT_TRUE(task1.IsDone());
     ASSERT_TRUE(task2.IsDone());
-    ASSERT_TRUE(whenAny.IsDone());
-    EXPECT_FALSE(whenAny.IsRejected());
-    ASSERT_TRUE(results.empty());
-    wait(std::chrono::milliseconds(1));
     ASSERT_EQ(1, results.size());
-    EXPECT_EQ(42, results.front());
+    ASSERT_EQ(42, results.back());
 }
 
-TEST_F(TaskTest, WhenAll)
+TEST(Task, WhenAll)
 {
-    auto task1 = Concurrency::CreateTask([]{}, scheduler);
-    auto task2 = Concurrency::CreateTask([]{}, scheduler);
-    auto task3 = Concurrency::CreateTask([]{}, scheduler);
+    std::function<void()> defer1;
+    std::function<void()> defer2;
+    std::function<void()> defer3;
+    auto task1 = Concurrency::CreateTask<void>([&](auto tcs) {
+        defer1 = [tcs] { tcs.SetResult(); };
+    });
+    auto task2 = Concurrency::CreateTask<void>([&](auto tcs) {
+        defer2 = [tcs] { tcs.SetResult(); };
+    });
+    auto task3 = Concurrency::CreateTask<void>([&](auto tcs) {
+        defer3 = [tcs] { tcs.SetResult(); };
+    });
 
     std::vector<Task<void>> tasks = {task1, task2, task3};
-    auto whenAll = Concurrency::WhenAll(tasks, scheduler);
+    auto whenAll = Concurrency::WhenAll(tasks);
 
     ASSERT_FALSE(task1.IsDone());
     ASSERT_FALSE(task2.IsDone());
     ASSERT_FALSE(task3.IsDone());
-    wait(std::chrono::nanoseconds(1));
+    defer1();
+    ASSERT_TRUE(task1.IsDone());
+    ASSERT_FALSE(task2.IsDone());
+    ASSERT_FALSE(task3.IsDone());
+    defer2();
+    ASSERT_TRUE(task1.IsDone());
+    ASSERT_TRUE(task2.IsDone());
+    ASSERT_FALSE(task3.IsDone());
+    EXPECT_FALSE(whenAll.IsDone());
+    EXPECT_FALSE(whenAll.IsRejected());
+    defer3();
     ASSERT_TRUE(task1.IsDone());
     ASSERT_TRUE(task2.IsDone());
     ASSERT_TRUE(task3.IsDone());
-
-    EXPECT_FALSE(whenAll.IsDone());
-    EXPECT_FALSE(whenAll.IsRejected());
-    wait(std::chrono::nanoseconds(1));
     EXPECT_TRUE(whenAll.IsDone());
     EXPECT_FALSE(whenAll.IsRejected());
 }
 
-TEST_F(TaskTest, WhenAll_Result)
+TEST(Task, WhenAll_Result)
 {
-    auto task1 = Concurrency::FromResult(42, scheduler);
-    auto task2 = Concurrency::FromResult(42, scheduler);
+    std::function<void()> defer1;
+    std::function<void()> defer2;
+    auto task1 = Concurrency::CreateTask<int>([&](auto tcs) {
+        defer1 = [tcs] { tcs.SetResult(42); };
+    });
+    auto task2 = Concurrency::CreateTask<int>([&](auto tcs) {
+        defer2 = [tcs] { tcs.SetResult(43); };
+    });
 
-    std::vector<Task<int>> tasks = {task1, task2};
     std::vector<int> results;
+    std::vector<Task<int>> tasks = { task1, task2 };
 
-    auto whenAll = Concurrency::WhenAll(std::move(tasks), scheduler);
+    auto whenAll = Concurrency::WhenAll(std::move(tasks));
     whenAll.Then([&](const std::vector<int>& v) {
         results = v;
     });
 
     EXPECT_FALSE(whenAll.IsDone());
     EXPECT_FALSE(whenAll.IsRejected());
-
-    wait(std::chrono::nanoseconds(1));
+    defer1();
     ASSERT_TRUE(task1.IsDone());
-    ASSERT_TRUE(task2.IsDone());
-    ASSERT_TRUE(whenAll.IsDone());
+    ASSERT_FALSE(task2.IsDone());
+    EXPECT_FALSE(whenAll.IsDone());
     EXPECT_FALSE(whenAll.IsRejected());
     ASSERT_TRUE(results.empty());
-    wait(std::chrono::milliseconds(1));
-    ASSERT_EQ(2, results.size());
-    EXPECT_EQ(42, results[0]);
-    EXPECT_EQ(42, results[1]);
-}
-
-TEST_F(TaskTest, WhenAll_WithDelay)
-{
-    auto task1 = Concurrency::Delay(std::chrono::milliseconds(200), scheduler);
-    auto task2 = Concurrency::Delay(std::chrono::milliseconds(400), scheduler);
-    auto task3 = Concurrency::Delay(std::chrono::milliseconds(600), scheduler);
-
-    std::vector<Task<void>> tasks = {task1, task2, task3};
-    auto whenAll = Concurrency::WhenAll(tasks, scheduler);
-
-    wait(std::chrono::nanoseconds(1));
-    ASSERT_FALSE(task1.IsDone());
-    ASSERT_FALSE(task2.IsDone());
-    ASSERT_FALSE(task3.IsDone());
-    EXPECT_FALSE(whenAll.IsDone());
-    wait(std::chrono::milliseconds(1));
-    wait(std::chrono::milliseconds(200));
-    ASSERT_TRUE(task1.IsDone());
-    ASSERT_FALSE(task2.IsDone());
-    ASSERT_FALSE(task3.IsDone());
-    EXPECT_FALSE(whenAll.IsDone());
-    wait(std::chrono::milliseconds(200));
+    defer2();
     ASSERT_TRUE(task1.IsDone());
     ASSERT_TRUE(task2.IsDone());
-    ASSERT_FALSE(task3.IsDone());
-    EXPECT_FALSE(whenAll.IsDone());
-    wait(std::chrono::milliseconds(200));
-    ASSERT_TRUE(task1.IsDone());
-    ASSERT_TRUE(task2.IsDone());
-    ASSERT_TRUE(task3.IsDone());
-
-    EXPECT_FALSE(whenAll.IsDone());
-    EXPECT_FALSE(whenAll.IsRejected());
-    wait(std::chrono::milliseconds(1));
     EXPECT_TRUE(whenAll.IsDone());
     EXPECT_FALSE(whenAll.IsRejected());
+    ASSERT_EQ(2, results.size());
+    EXPECT_EQ(42, results[0]);
+    EXPECT_EQ(43, results[1]);
 }
 
-TEST_F(TaskTest, FromResult_Void)
+TEST(Task, FromResult_Int)
 {
     int number = 0;
-    auto task = Concurrency::FromResult(scheduler);
-    auto task2 = task.Then([&] { number = 42; });
+    auto task1 = Concurrency::FromResult(42);
+    auto task2 = task1.Then([&](int x){ number = x; });
 
-    EXPECT_TRUE(task.IsDone());
-    EXPECT_FALSE(task.IsRejected());
-    EXPECT_FALSE(task2.IsDone());
-    ASSERT_EQ(0, number);
-    wait(std::chrono::milliseconds(20));
+    EXPECT_TRUE(task1.IsDone());
+    EXPECT_FALSE(task1.IsRejected());
     EXPECT_TRUE(task2.IsDone());
     EXPECT_FALSE(task2.IsRejected());
     EXPECT_EQ(42, number);
-}
-
-TEST_F(TaskTest, FromResult_Int)
-{
-    int number = 0;
-    auto task = Concurrency::FromResult(42, scheduler);
-    auto task2 = task.Then([&](int x){ number = x; });
-
-    EXPECT_TRUE(task.IsDone());
-    EXPECT_FALSE(task.IsRejected());
-    EXPECT_FALSE(task2.IsDone());
-    ASSERT_EQ(0, number);
-    wait(std::chrono::milliseconds(20));
-    EXPECT_TRUE(task2.IsDone());
-    EXPECT_FALSE(task2.IsRejected());
-    EXPECT_EQ(42, number);
-}
-
-TEST_F(TaskTest, Wait_AlreadyDone)
-{
-    auto task = Concurrency::CreateTask([]{}, scheduler);
-
-    EXPECT_FALSE(task.IsDone());
-    wait(std::chrono::nanoseconds::zero());
-    task.Wait();
-    EXPECT_TRUE(task.IsDone());
-}
-
-//TEST_F(TaskTest, Wait_DeadlockCase)
-//{
-//    auto task = Concurrency::CreateTask([]{}, scheduler);
-//
-//    EXPECT_FALSE(task.IsDone());
-//    task.Wait();
-//    wait(std::chrono::nanoseconds::zero());
-//    EXPECT_TRUE(task.IsDone());
-//}
-
-TEST_F(TaskTest, Wait_FromResult)
-{
-    auto task = Concurrency::FromResult(42, scheduler);
-
-    EXPECT_TRUE(task.IsDone());
-    task.Wait();
-    EXPECT_TRUE(task.IsDone());
-}
-
-TEST_F(TaskTest, Consturctor_Default)
-{
-    Task<int> task;
-    task = Concurrency::FromResult(42, scheduler);
-
-    EXPECT_TRUE(task.IsDone());
-    EXPECT_EQ(scheduler, task.GetScheduler());
-}
-
-TEST_F(TaskTest, Get_Result)
-{
-    auto task = Concurrency::FromResult(42, scheduler);
-    EXPECT_EQ(42, Concurrency::Get(task));
-}
-
-TEST_F(TaskTest, Get_Exception)
-{
-    auto task = Concurrency::CreateTask([] {
-        throw std::domain_error("Megumi Hayashibara");
-    }, scheduler);
-    wait(std::chrono::nanoseconds::zero());
-
-    std::string message;
-    try {
-        Concurrency::Get(task);
-    }
-    catch (const std::domain_error& e) {
-        message = e.what();
-    }
-
-    EXPECT_EQ("Megumi Hayashibara", message);
 }
 
 TEST(Task, Scheduler_ImmediateExecutor)
 {
-    auto scheduler = std::make_shared<ImmediateScheduler>();
-
-    auto task = Concurrency::CreateTask([]{
-        throw std::domain_error("When Chuck Norris throws exceptions, it's across the room.");
-    }, scheduler);
+    auto task = Concurrency::CreateTask<void>([&](auto tcs) {
+        try {
+            throw std::domain_error("When Chuck Norris throws exceptions, it's across the room.");
+        } catch (...) {
+            tcs.SetException(std::current_exception());
+        }
+    });
 
     EXPECT_TRUE(task.IsDone());
     EXPECT_TRUE(task.IsRejected());
@@ -832,10 +790,12 @@ TEST(Task, Scheduler_ImmediateExecutor)
 
 TEST(Task, ChainingSuchAsPromise_1)
 {
-    auto scheduler = std::make_shared<ImmediateScheduler>();
     std::vector<std::string> result;
 
-    auto task = Concurrency::CreateTask([&]{ result.push_back("start"); }, scheduler);
+    auto task = Concurrency::CreateTask<void>([&](auto tcs) {
+        result.push_back("start");
+        tcs.SetResult();
+    });
     task.Then([&]{ result.push_back("task A"); })
         .Then([&]{ result.push_back("task B"); })
         .Catch([&](std::exception_ptr){ result.push_back("onRejected"); })
@@ -850,10 +810,12 @@ TEST(Task, ChainingSuchAsPromise_1)
 
 TEST(Task, ChainingSuchAsPromise_2)
 {
-    auto scheduler = std::make_shared<ImmediateScheduler>();
     std::vector<std::string> result;
 
-    auto task = Concurrency::CreateTask([&]{ result.push_back("start"); }, scheduler);
+    auto task = Concurrency::CreateTask<void>([&](auto tcs) {
+        result.push_back("start");
+        tcs.SetResult();
+    });
     task.Then([&] {
             result.push_back("task A");
             throw std::domain_error("throw error at Task A");
@@ -871,22 +833,28 @@ TEST(Task, ChainingSuchAsPromise_2)
 
 TEST(Task, ChainingSuchAsPromise_3)
 {
-    auto scheduler = std::make_shared<ImmediateScheduler>();
+    std::function<void()> defer;
     std::vector<std::string> result;
 
-    auto task = Concurrency::CreateTask([&] { result.push_back("start"); }, scheduler);
+    auto task = Concurrency::CreateTask<void>([&](auto tcs) {
+        result.push_back("start");
+        tcs.SetResult();
+    });
     task.Then([&] {
         result.push_back("Delay");
-        return Concurrency::Delay(std::chrono::milliseconds(10), scheduler);
+        return Concurrency::CreateTask<void>([&](auto tcs) {
+            defer = [tcs] { tcs.SetResult(); };
+        });
     })
     .Then([&] {
         result.push_back("FromResult");
-        return Concurrency::FromResult(42, scheduler);
+        return Concurrency::FromResult(42);
     })
     .Then([&](int x) {
         result.push_back(std::to_string(x));
     });
 
+    defer();
     ASSERT_EQ(4, result.size());
     EXPECT_EQ("start", result[0]);
     EXPECT_EQ("Delay", result[1]);
@@ -896,62 +864,56 @@ TEST(Task, ChainingSuchAsPromise_3)
 
 TEST(TaskCompletionSource, SetResult_Void)
 {
-    auto scheduler = std::make_shared<ImmediateScheduler>();
     std::vector<int> result;
 
-    TaskCompletionSource<void> tcs(scheduler);
-    auto task = Concurrency::CreateTask(tcs);
-
+    auto task = Concurrency::CreateTask<void>([&](auto tcs) {
+        EXPECT_TRUE(result.empty());
+        tcs.SetResult();
+        EXPECT_TRUE(result.empty());
+    });
+    EXPECT_TRUE(result.empty());
     task.Then([&] {
         result.push_back(42);
     });
-
-    ASSERT_TRUE(result.empty());
-    tcs.SetResult();
-
     ASSERT_EQ(1, result.size());
     EXPECT_EQ(42, result.front());
 }
 
 TEST(TaskCompletionSource, SetResult_Int)
 {
-    auto scheduler = std::make_shared<ImmediateScheduler>();
     std::vector<int> result;
 
-    TaskCompletionSource<int> tcs(scheduler);
-    auto task = Concurrency::CreateTask(tcs);
-
+    auto task = Concurrency::CreateTask<int>([&](auto tcs) {
+        EXPECT_TRUE(result.empty());
+        tcs.SetResult(42);
+        EXPECT_TRUE(result.empty());
+    });
+    EXPECT_TRUE(result.empty());
     task.Then([&](int x) {
         result.push_back(x);
     });
-
-    ASSERT_TRUE(result.empty());
-    tcs.SetResult(42);
-
     ASSERT_EQ(1, result.size());
     EXPECT_EQ(42, result.front());
 }
 
 TEST(TaskCompletionSource, SetException)
 {
-    auto scheduler = std::make_shared<ImmediateScheduler>();
     std::vector<std::string> result;
 
-    TaskCompletionSource<int> tcs(scheduler);
-    auto task = Concurrency::CreateTask(tcs);
-
+    auto task = Concurrency::CreateTask<int>([&](auto tcs) {
+        try {
+            throw std::domain_error("FUS RO DAH");
+        }
+        catch (...) {
+            EXPECT_TRUE(result.empty());
+            tcs.SetException(std::current_exception());
+            EXPECT_TRUE(result.empty());
+        }
+    });
+    EXPECT_TRUE(result.empty());
     task.Catch([&](const std::domain_error& e) {
         result.push_back(e.what());
     });
-
-    ASSERT_TRUE(result.empty());
-    try {
-        throw std::domain_error("FUS RO DAH");
-    }
-    catch (const std::domain_error& e) {
-        tcs.SetException(std::make_exception_ptr(e));
-    }
-
     ASSERT_EQ(1, result.size());
     EXPECT_EQ("FUS RO DAH", result.front());
 }
@@ -961,18 +923,15 @@ TEST(TaskCompletionSource, WithSignal)
     using Pomdog::Signal;
     using Pomdog::Signals::ConnectSingleShot;
 
-    auto scheduler = std::make_shared<ImmediateScheduler>();
-    TaskCompletionSource<std::string> tcs(scheduler);
-
     Signal<void(std::string const&)> nameChanged;
-
-    ConnectSingleShot(nameChanged, [tcs](std::string const& n) {
-        tcs.SetResult(n);
-    });
 
     std::vector<std::string> result;
 
-    auto task = Concurrency::CreateTask(tcs);
+    auto task = Concurrency::CreateTask<std::string>([&](auto tcs) {
+        ConnectSingleShot(nameChanged, [tcs](std::string const& n) {
+            tcs.SetResult(n);
+        });
+    });
     task.Then([&](std::string const& n) {
         result.push_back(n);
     });
@@ -991,12 +950,11 @@ TEST(TaskCompletionSource, FromSingleShotSignal)
 {
     using Pomdog::Signal;
 
-    auto scheduler = std::make_shared<ImmediateScheduler>();
     Signal<void(std::string const&)> nameChanged;
 
     std::vector<std::string> result;
 
-    auto task = Concurrency::FromSingleShotSignal(nameChanged, scheduler);
+    auto task = Concurrency::FromSingleShotSignal(nameChanged);
     task.Then([&](std::string const& n) {
         result.push_back(n);
     });

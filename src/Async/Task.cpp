@@ -1,70 +1,26 @@
 // Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Async/Task.hpp"
-#include "Pomdog/Async/ImmediateScheduler.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <atomic>
 
 namespace Pomdog {
 namespace Concurrency {
-namespace {
-
-static std::shared_ptr<Scheduler> ambientScheduler =
-    std::make_shared<ImmediateScheduler>();
-
-} // unnamed namespace
-
-std::shared_ptr<Scheduler> GetAmbientScheduler()
-{
-    return ambientScheduler;
-}
-
-void SetAmbientScheduler(const std::shared_ptr<Scheduler>& scheduler)
-{
-    ambientScheduler = scheduler;
-}
-
-void Get(const Task<void>& task)
-{
-    task.Wait();
-    if (auto execption = Detail::TaskImpl::GetExceptionPointer(task)) {
-        std::rethrow_exception(execption);
-    }
-}
-
-Task<void> Delay(
-    const Duration& dueTime,
-    const std::shared_ptr<Scheduler>& scheduler)
-{
-    POMDOG_ASSERT(scheduler);
-    TaskCompletionSource<void> tcs(scheduler);
-    scheduler->Schedule([tcs] { tcs.SetResult(); }, dueTime);
-    return CreateTask(tcs);
-}
-
-Task<void> FromResult(
-    const std::shared_ptr<Scheduler>& scheduler)
-{
-    POMDOG_ASSERT(scheduler);
-    TaskCompletionSource<void> tcs(scheduler);
-    tcs.SetResult();
-    return CreateTask(tcs);
-}
 
 namespace Detail {
 
-Task<void> WhenAllImpl(
-    const std::vector<Task<void>>& tasks,
-    const std::shared_ptr<Scheduler>& scheduler)
+Task<void> WhenAllImpl(const std::vector<Task<void>>& tasks)
 {
     if (tasks.empty()) {
-        return FromResult(scheduler);
+        TaskCompletionSource<void> tcs;
+        tcs.SetResult();
+        Task<void> task(std::move(tcs));
+        return task;
     }
 
     POMDOG_ASSERT(!tasks.empty());
-    POMDOG_ASSERT(scheduler);
 
-    TaskCompletionSource<void> tcs(scheduler);
+    TaskCompletionSource<void> tcs;
     auto whenAllPromise = std::make_shared<Detail::WhenAllPromise<void>>();
     whenAllPromise->count = static_cast<int>(tasks.size());
     whenAllPromise->isRejected = false;
@@ -88,7 +44,8 @@ Task<void> WhenAllImpl(
             }
         });
     }
-    return CreateTask(tcs);
+    Task<void> task(std::move(tcs));
+    return task;
 }
 
 } // namespace Detail

@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "Pomdog/Application/Duration.hpp"
 #include "Pomdog/Async/Task.hpp"
 #include "Pomdog/Signals/Signal.hpp"
 #include "Pomdog/Signals/Helpers.hpp"
@@ -9,23 +10,19 @@
 #include "Pomdog/Basic/Export.hpp"
 #include <memory>
 
-namespace Pomdog {
-namespace Concurrency {
+namespace Pomdog::Concurrency {
 
 template <typename Argument> POMDOG_EXPORT
-auto FromSingleShotSignal(
-    Signal<void(Argument)> & signal,
-    const std::shared_ptr<Scheduler>& scheduler)
+auto FromSingleShotSignal(Signal<void(Argument)> & signal)
     -> Task<std::remove_const_t<std::remove_reference_t<Argument>>>
 {
-    POMDOG_ASSERT(scheduler);
     using TResult = std::remove_const_t<std::remove_reference_t<Argument>>;
-    TaskCompletionSource<TResult> tcs(scheduler);
+    TaskCompletionSource<TResult> tcs;
     Signals::ConnectSingleShot(signal, [tcs](const TResult& arg) {
         tcs.SetResult(arg);
     });
-    return Concurrency::CreateTask(tcs);
+    Task<TResult> task(std::move(tcs));
+    return task;
 }
 
-} // namespace Concurrency
-} // namespace Pomdog
+} // namespace Pomdog::Concurrency
