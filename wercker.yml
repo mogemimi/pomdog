@@ -12,9 +12,9 @@ build:
       name: unittest
       code: |
         python tools/gyp.py test/FrameworkTest/unittest.gyp -f make
-        export CC=clang-5.0
-        export CXX=clang++-5.0
-        export LINK=clang++-5.0
+        export CC=clang
+        export CXX=clang++
+        export LINK=clang++
         export CXXFLAGS="-std=c++17 -stdlib=libc++"
         export LDFLAGS="-stdlib=libc++"
         make -C build.makefiles
