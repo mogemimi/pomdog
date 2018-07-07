@@ -25,8 +25,8 @@ constexpr int segments = 12;
 
 ToggleSwitch::ToggleSwitch(const std::shared_ptr<UIEventDispatcher>& dispatcher)
     : UIElement(dispatcher)
-    , isEnabled(true)
     , isOn(true)
+    , isEnabled(true)
 {
     SetSize(48, static_cast<int>(thumbRadius) * 2);
     SetCursor(MouseCursor::PointingHand);

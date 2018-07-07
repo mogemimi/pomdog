@@ -141,8 +141,8 @@ SpriteBatchRenderer::Impl::Impl(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
     const SpriteBatchPipelineStateDescription& pipelineStateDescription,
     AssetManager & assets)
-    : drawCallCount(0)
-    , startInstanceLocation(0)
+    : startInstanceLocation(0)
+    , drawCallCount(0)
 {
     {
         using PositionTextureCoord = Vector4;

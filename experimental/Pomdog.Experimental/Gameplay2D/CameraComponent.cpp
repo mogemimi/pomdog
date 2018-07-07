@@ -10,8 +10,8 @@ namespace Pomdog {
 
 CameraComponent::CameraComponent() noexcept
     : zoom(1.0f)
-    , fieldOfView(MathHelper::ToRadians<float>(45.0f))
     , viewport(0, 0, 800, 480)
+    , fieldOfView(MathHelper::ToRadians<float>(45.0f))
     , normalizedViewportX(0.0f)
     , normalizedViewportY(0.0f)
     , normalizedViewportWidth(1.0f)

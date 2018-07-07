@@ -11,8 +11,8 @@ namespace UI {
 
 DisclosureTriangleButton::DisclosureTriangleButton(const std::shared_ptr<UIEventDispatcher>& dispatcher)
     : UIElement(dispatcher)
-    , isEnabled(true)
     , isOn(true)
+    , isEnabled(true)
 {
     SetSize(8, 8);
     SetCursor(MouseCursor::PointingHand);

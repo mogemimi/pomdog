@@ -105,10 +105,10 @@ SpriteFont::Impl::Impl(
     char32_t defaultCharacterIn,
     std::int16_t spacingIn,
     std::int16_t lineSpacingIn)
-    : textures(std::move(texturesIn))
-    , defaultCharacter(defaultCharacterIn)
-    , spacing(spacingIn)
+    : defaultCharacter(defaultCharacterIn)
     , lineSpacing(lineSpacingIn)
+    , spacing(spacingIn)
+    , textures(std::move(texturesIn))
 {
     for (auto & glyph: glyphsIn) {
         spriteFontMap.emplace(glyph.Character, glyph);
@@ -120,11 +120,11 @@ SpriteFont::Impl::Impl(
     const std::shared_ptr<TrueTypeFont>& fontIn,
     char32_t defaultCharacterIn,
     std::int16_t lineSpacingIn)
-    : graphicsDevice(graphicsDeviceIn)
-    , font(fontIn)
-    , defaultCharacter(defaultCharacterIn)
-    , spacing(0)
+    : defaultCharacter(defaultCharacterIn)
     , lineSpacing(lineSpacingIn)
+    , spacing(0)
+    , graphicsDevice(graphicsDeviceIn)
+    , font(fontIn)
 {
     POMDOG_ASSERT(font);
 
