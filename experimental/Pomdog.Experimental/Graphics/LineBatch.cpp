@@ -355,12 +355,12 @@ void LineBatch::DrawRectangle(const Rectangle& sourceRect,
         return;
     }
 
-    std::array<Vector2, 4> rectVertices = {
-        Vector2(sourceRect.GetLeft(), sourceRect.Y - sourceRect.Height),
-        Vector2(sourceRect.GetLeft(), sourceRect.Y),
-        Vector2(sourceRect.GetRight(), sourceRect.Y),
-        Vector2(sourceRect.GetRight(), sourceRect.Y - sourceRect.Height),
-    };
+    std::array<Vector2, 4> rectVertices = {{
+        Vector2{static_cast<float>(sourceRect.GetLeft()), static_cast<float>(sourceRect.Y - sourceRect.Height)},
+        Vector2{static_cast<float>(sourceRect.GetLeft()), static_cast<float>(sourceRect.Y)},
+        Vector2{static_cast<float>(sourceRect.GetRight()), static_cast<float>(sourceRect.Y)},
+        Vector2{static_cast<float>(sourceRect.GetRight()), static_cast<float>(sourceRect.Y - sourceRect.Height)},
+    }};
 
     auto colorVector1 = color1.ToVector4();
     auto colorVector2 = color2.ToVector4();
@@ -382,12 +382,12 @@ void LineBatch::DrawRectangle(const Matrix3x2& matrix,
         return;
     }
 
-    std::array<Vector2, 4> rectVertices = {
-        Vector2(sourceRect.GetLeft(), sourceRect.Y - sourceRect.Height),
-        Vector2(sourceRect.GetLeft(), sourceRect.Y),
-        Vector2(sourceRect.GetRight(), sourceRect.Y),
-        Vector2(sourceRect.GetRight(), sourceRect.Y - sourceRect.Height),
-    };
+    std::array<Vector2, 4> rectVertices = {{
+        Vector2{static_cast<float>(sourceRect.GetLeft()), static_cast<float>(sourceRect.Y - sourceRect.Height)},
+        Vector2{static_cast<float>(sourceRect.GetLeft()), static_cast<float>(sourceRect.Y)},
+        Vector2{static_cast<float>(sourceRect.GetRight()), static_cast<float>(sourceRect.Y)},
+        Vector2{static_cast<float>(sourceRect.GetRight()), static_cast<float>(sourceRect.Y - sourceRect.Height)},
+    }};
 
     for (auto & vertex: rectVertices) {
         vertex = Vector2::Transform(vertex, matrix);

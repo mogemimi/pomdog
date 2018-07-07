@@ -40,8 +40,8 @@ SkinnedMeshSlot CreateSkinnedMeshSlot(SlotDesc const& slotDesc,
 
     ///@todo Not implemented
 
-    std::array<float, 4> weights = {1, 0, 0, 0};
-    std::array<std::int32_t, 4> joints = {*slotDesc.Joint, -1, -1, -1};
+    std::array<float, 4> weights = {{1, 0, 0, 0}};
+    std::array<std::int32_t, 4> joints = {{*slotDesc.Joint, -1, -1, -1}};
 
     slot.Vertices = {
         {Vector4{0.0f, 0.0f, 0.0f, 1.0f}, weights, joints},

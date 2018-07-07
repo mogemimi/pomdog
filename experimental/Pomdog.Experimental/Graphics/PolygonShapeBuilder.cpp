@@ -323,12 +323,12 @@ void PolygonShapeBuilder::DrawRectangle(
         return;
     }
 
-    std::array<Vector3, 4> rectVertices = {
-        Vector3(sourceRect.GetLeft(), sourceRect.Y, 0.0f),
-        Vector3(sourceRect.GetLeft(), sourceRect.Y + sourceRect.Height, 0.0f),
-        Vector3(sourceRect.GetRight(), sourceRect.Y + sourceRect.Height, 0.0f),
-        Vector3(sourceRect.GetRight(), sourceRect.Y, 0.0f),
-    };
+    std::array<Vector3, 4> rectVertices = {{
+        Vector3{static_cast<float>(sourceRect.GetLeft()), static_cast<float>(sourceRect.Y), 0.0f},
+        Vector3{static_cast<float>(sourceRect.GetLeft()), static_cast<float>(sourceRect.Y + sourceRect.Height), 0.0f},
+        Vector3{static_cast<float>(sourceRect.GetRight()), static_cast<float>(sourceRect.Y + sourceRect.Height), 0.0f},
+        Vector3{static_cast<float>(sourceRect.GetRight()), static_cast<float>(sourceRect.Y), 0.0f},
+    }};
 
     auto colorVector1 = color1.ToVector4();
     auto colorVector2 = color2.ToVector4();
@@ -370,12 +370,12 @@ void PolygonShapeBuilder::DrawRectangle(
     const auto left = position.X;
     const auto right = position.X + width;
 
-    std::array<Vector3, 4> rectVertices = {
-        Vector3(left, position.Y, 0.0f),
-        Vector3(left, position.Y + height, 0.0f),
-        Vector3(right, position.Y + height, 0.0f),
-        Vector3(right, position.Y, 0.0f),
-    };
+    std::array<Vector3, 4> rectVertices = {{
+        Vector3{left, position.Y, 0.0f},
+        Vector3{left, position.Y + height, 0.0f},
+        Vector3{right, position.Y + height, 0.0f},
+        Vector3{right, position.Y, 0.0f},
+    }};
 
     for (auto & vertex: rectVertices) {
         auto vec2 = Vector2::Transform(Vector2{vertex.X, vertex.Y}, matrix);
@@ -413,12 +413,12 @@ void PolygonShapeBuilder::DrawRectangle(
     const auto maxX = position.X + width - anchorOffset.X;
     const auto maxY = position.Y + height - anchorOffset.Y;
 
-    std::array<Vector3, 4> rectVertices = {
-        Vector3(minX, minY, 0.0f),
-        Vector3(minX, maxY, 0.0f),
-        Vector3(maxX, maxY, 0.0f),
-        Vector3(maxX, minY, 0.0f),
-    };
+    std::array<Vector3, 4> rectVertices = {{
+        Vector3{minX, minY, 0.0f},
+        Vector3{minX, maxY, 0.0f},
+        Vector3{maxX, maxY, 0.0f},
+        Vector3{maxX, minY, 0.0f},
+    }};
 
     auto colorVector = color.ToVector4();
 

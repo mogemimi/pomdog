@@ -147,12 +147,12 @@ SpriteBatchRenderer::Impl::Impl(
     {
         using PositionTextureCoord = Vector4;
 
-        std::array<PositionTextureCoord, 4> const verticesCombo = {
+        std::array<PositionTextureCoord, 4> const verticesCombo = {{
             Vector4{0.0f, 0.0f, 0.0f, 1.0f},
             Vector4{0.0f, 1.0f, 0.0f, 0.0f},
             Vector4{1.0f, 1.0f, 1.0f, 0.0f},
             Vector4{1.0f, 0.0f, 1.0f, 1.0f},
-        };
+        }};
 
         planeVertices = std::make_shared<VertexBuffer>(
             graphicsDevice,
@@ -162,10 +162,10 @@ SpriteBatchRenderer::Impl::Impl(
             BufferUsage::Immutable);
     }
     {
-        std::array<std::uint16_t, 6> const indices = {
+        std::array<std::uint16_t, 6> const indices = {{
             0, 1, 2,
             2, 3, 0
-        };
+        }};
 
         // Create index buffer
         planeIndices = std::make_shared<IndexBuffer>(

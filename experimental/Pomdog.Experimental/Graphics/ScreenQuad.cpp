@@ -20,12 +20,12 @@ ScreenQuad::ScreenQuad(const std::shared_ptr<GraphicsDevice>& graphicsDevice)
         Vector2 TextureCoord;
     };
 
-    std::array<ScreenQuadVertex, 4> verticesCombo = {
-        Vector3{-1.0f, -1.0f, 0.5f}, Vector2{0.0f, 0.0f},
-        Vector3{-1.0f,  1.0f, 0.5f}, Vector2{0.0f, 1.0f},
-        Vector3{ 1.0f,  1.0f, 0.5f}, Vector2{1.0f, 1.0f},
-        Vector3{ 1.0f, -1.0f, 0.5f}, Vector2{1.0f, 0.0f},
-    };
+    std::array<ScreenQuadVertex, 4> verticesCombo = {{
+        ScreenQuadVertex{Vector3{-1.0f, -1.0f, 0.5f}, Vector2{0.0f, 0.0f}},
+        ScreenQuadVertex{Vector3{-1.0f,  1.0f, 0.5f}, Vector2{0.0f, 1.0f}},
+        ScreenQuadVertex{Vector3{ 1.0f,  1.0f, 0.5f}, Vector2{1.0f, 1.0f}},
+        ScreenQuadVertex{Vector3{ 1.0f, -1.0f, 0.5f}, Vector2{1.0f, 0.0f}},
+    }};
 
     if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::HLSL)
     {
@@ -35,10 +35,10 @@ ScreenQuad::ScreenQuad(const std::shared_ptr<GraphicsDevice>& graphicsDevice)
         }
     }
 
-    std::array<ScreenQuadVertex, 6> const vertices = {
+    std::array<ScreenQuadVertex, 6> const vertices = {{
         verticesCombo[0], verticesCombo[1], verticesCombo[2],
         verticesCombo[2], verticesCombo[3], verticesCombo[0],
-    };
+    }};
 
     vertexBuffer = std::make_shared<VertexBuffer>(graphicsDevice,
         vertices.data(), vertices.size(),
