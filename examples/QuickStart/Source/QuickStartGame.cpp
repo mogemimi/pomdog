@@ -8,9 +8,9 @@ QuickStartGame::QuickStartGame(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
     , window(gameHostIn->GetWindow())
     , graphicsDevice(gameHostIn->GetGraphicsDevice())
-    , commandQueue(gameHostIn->GetGraphicsCommandQueue())
     , assets(gameHostIn->GetAssetManager())
     , clock(gameHostIn->GetClock())
+    , commandQueue(gameHostIn->GetGraphicsCommandQueue())
 {
 }
 
@@ -37,12 +37,12 @@ void QuickStartGame::Initialize()
             Vector2 TextureCoord;
         };
 
-        std::array<VertexCombined, 4> verticesCombo = {
-            Vector3(-1.0f, -1.0f, 0.0f), Vector2(0.0f, 1.0f),
-            Vector3(-1.0f,  1.0f, 0.0f), Vector2(0.0f, 0.0f),
-            Vector3( 1.0f,  1.0f, 0.0f), Vector2(1.0f, 0.0f),
-            Vector3( 1.0f, -1.0f, 0.0f), Vector2(1.0f, 1.0f),
-        };
+        std::array<VertexCombined, 4> verticesCombo = {{
+            VertexCombined{Vector3{-1.0f, -1.0f, 0.0f}, Vector2{0.0f, 1.0f}},
+            VertexCombined{Vector3{-1.0f,  1.0f, 0.0f}, Vector2{0.0f, 0.0f}},
+            VertexCombined{Vector3{ 1.0f,  1.0f, 0.0f}, Vector2{1.0f, 0.0f}},
+            VertexCombined{Vector3{ 1.0f, -1.0f, 0.0f}, Vector2{1.0f, 1.0f}},
+        }};
 
         vertexBuffer = std::make_shared<VertexBuffer>(
             graphicsDevice,
@@ -53,7 +53,7 @@ void QuickStartGame::Initialize()
     }
     {
         // Create index buffer
-        std::array<std::uint16_t, 6> indices = {0, 1, 2, 2, 3, 0};
+        std::array<std::uint16_t, 6> indices = {{0, 1, 2, 2, 3, 0}};
 
         indexBuffer = std::make_shared<IndexBuffer>(
             graphicsDevice,
