@@ -6,22 +6,38 @@ configuration: Debug
 clone_depth: 15
 
 init:
-- git config --global core.autocrlf input
+  - git config --global core.autocrlf input
 
 install:
-- git submodule update --init --quiet
-- git clone -q --depth 1 https://chromium.googlesource.com/external/gyp.git tools/gyp
+  - git submodule update --init --quiet
+  - git clone -q --depth 1 https://chromium.googlesource.com/external/gyp.git tools/gyp
 
 before_build:
-- ps: >-
-    python tools/gyp/gyp_main.py test/FrameworkTest/unittest.gyp `
-        --depth=. -f msvs -G msvs_version=2017 `
-        --generator-output=build.msvs `
-        -D component=static_library
+  # for GYP
+  - ps: >-
+      python tools/gyp/gyp_main.py test/FrameworkTest/unittest.gyp `
+          --depth=. -f msvs -G msvs_version=2017 `
+          --generator-output=build.msvs `
+          -D component=static_library
+  # for CMake
+  - ps: mkdir build.cmake
+  - ps: cd build.cmake
+  - ps: cmake ../build/PomdogTest/
+  - ps: cd ..
 
+# for GYP
 build:
   project: build.msvs/test/FrameworkTest/unittest.sln
   verbosity: minimal
 
+# for CMake
+after_build:
+  - ps: cd build.cmake
+  - ps: cmake --build . --config Release
+  - ps: cd ..
+
 test_script:
-- ps: build.msvs/test/FrameworkTest/Debug/unittest
+  # for GYP
+  - ps: build.msvs/test/FrameworkTest/Debug/unittest
+  # for CMake
+  - ps: build.cmake/Release/PomdogTest
