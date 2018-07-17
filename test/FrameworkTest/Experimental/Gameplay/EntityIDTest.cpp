@@ -2,6 +2,7 @@
 
 #include <Pomdog.Experimental/Gameplay/EntityID.hpp>
 #include <gtest/iutest_switch.hpp>
+#include <algorithm>
 #include <cstdint>
 
 using Pomdog::EntityID;
