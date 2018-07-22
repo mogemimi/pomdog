@@ -402,7 +402,7 @@ std::shared_ptr<GameClock> GameHostX11::GetClock()
     POMDOG_ASSERT(impl);
     auto gameHost = shared_from_this();
     std::shared_ptr<GameClock> sharedClock(gameHost, &impl->clock);
-    return std::move(sharedClock);
+    return sharedClock;
 }
 
 std::shared_ptr<GraphicsDevice> GameHostX11::GetGraphicsDevice()
@@ -431,7 +431,7 @@ std::shared_ptr<AssetManager> GameHostX11::GetAssetManager()
     auto gameHost = shared_from_this();
     std::shared_ptr<AssetManager> sharedAssetManager(
         gameHost, impl->assetManager.get());
-    return std::move(sharedAssetManager);
+    return sharedAssetManager;
 }
 
 std::shared_ptr<Keyboard> GameHostX11::GetKeyboard()
@@ -440,7 +440,7 @@ std::shared_ptr<Keyboard> GameHostX11::GetKeyboard()
     auto gameHost = shared_from_this();
     std::shared_ptr<Keyboard> sharedKeyboard(
         gameHost, impl->keyboard.get());
-    return std::move(sharedKeyboard);
+    return sharedKeyboard;
 }
 
 std::shared_ptr<Mouse> GameHostX11::GetMouse()
@@ -448,7 +448,7 @@ std::shared_ptr<Mouse> GameHostX11::GetMouse()
     POMDOG_ASSERT(impl);
     auto gameHost = shared_from_this();
     std::shared_ptr<Mouse> sharedMouse(gameHost, &impl->mouse);
-    return std::move(sharedMouse);
+    return sharedMouse;
 }
 
 SurfaceFormat GameHostX11::GetBackBufferSurfaceFormat() const
