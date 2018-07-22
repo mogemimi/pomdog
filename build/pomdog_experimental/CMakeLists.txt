@@ -11,6 +11,21 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
 set(CMAKE_CXX_EXTENSIONS off)
 
+source_group(Actions      REGULAR_EXPRESSION Pomdog.Experimental/Actions/*)
+source_group(Gameplay     REGULAR_EXPRESSION Pomdog.Experimental/Gameplay/*)
+source_group(Gameplay2D   REGULAR_EXPRESSION Pomdog.Experimental/Gameplay2D/*)
+source_group(Graphics     REGULAR_EXPRESSION Pomdog.Experimental/Graphics/*)
+source_group(ImageEffects REGULAR_EXPRESSION Pomdog.Experimental/ImageEffects/*)
+source_group(InGameEditor REGULAR_EXPRESSION Pomdog.Experimental/InGameEditor/*)
+source_group(MagicaVoxel  REGULAR_EXPRESSION Pomdog.Experimental/MagicaVoxel/*)
+source_group(Particle2D   REGULAR_EXPRESSION Pomdog.Experimental/Particle2D/*)
+source_group(Skeletal2D   REGULAR_EXPRESSION Pomdog.Experimental/Skeletal2D/*)
+source_group(Spine        REGULAR_EXPRESSION Pomdog.Experimental/Spine/*)
+source_group(Tween        REGULAR_EXPRESSION Pomdog.Experimental/Tween/*)
+source_group(Rendering    REGULAR_EXPRESSION Pomdog.Experimental/Rendering/*)
+source_group(UI           REGULAR_EXPRESSION Pomdog.Experimental/UI/*)
+source_group(Utility      REGULAR_EXPRESSION Pomdog.Experimental/Utility/*)
+
 set(SOURCE_FILES
   ${POMDOG_EXPERIMENTAL_DIR}/Experimental.hpp
 

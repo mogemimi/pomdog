@@ -12,6 +12,17 @@ set(CMAKE_CXX_STANDARD_REQUIRED on)
 set(CMAKE_CXX_EXTENSIONS off)
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
 
+source_group(Application            REGULAR_EXPRESSION test/FrameworkTest/Application/*)
+source_group(Async                  REGULAR_EXPRESSION test/FrameworkTest/Async/*)
+source_group(Content                REGULAR_EXPRESSION test/FrameworkTest/Content/*)
+source_group(Experimental/Gameplay  REGULAR_EXPRESSION test/FrameworkTest/Experimental/Gameplay/*)
+source_group(Graphics               REGULAR_EXPRESSION test/FrameworkTest/Graphics/*)
+source_group(Input                  REGULAR_EXPRESSION test/FrameworkTest/Input/*)
+source_group(Logging                REGULAR_EXPRESSION test/FrameworkTest/Logging/*)
+source_group(Math                   REGULAR_EXPRESSION test/FrameworkTest/Math/*)
+source_group(Signals                REGULAR_EXPRESSION test/FrameworkTest/Signals/*)
+source_group(Utility                REGULAR_EXPRESSION test/FrameworkTest/Utility/*)
+
 set(SOURCE_FILES
   ${POMDOG_TEST_DIR}/main.cpp
   ${POMDOG_TEST_DIR}/Application/GameClockTest.cpp
