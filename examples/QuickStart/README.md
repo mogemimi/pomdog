@@ -4,16 +4,16 @@
 
 #### Runtime requirements
 
-* Mac OS X 10.9+
-* Windows 8+
+* Mac OS X 10.11+
+* Windows 10+
 * OpenGL 4, DirectX 11 or DirectX 12
 
 #### Build requirements
 
 * Python 2.7
-* Clang 3.6 (for Linux)
-* Xcode 6.3 and later
-* Visual Studio 2015 and later
+* Clang 6.0 (for Linux)
+* Xcode 9.2 and later
+* Visual Studio 2017 and later
 
 #### Pulling all dependencies using Git
 
@@ -31,38 +31,37 @@ git clone --depth=1 https://chromium.googlesource.com/external/gyp.git Tools/gyp
 
 ### Building under Linux
 
-**1. Generating Makefiles**
-
 ```sh
-python Tools/gyp/gyp_main.py examples/QuickStart/QuickStart.gyp --depth=. \
-  -f make --generator-output=build.makefiles -Dcomponent=static_library
-```
+cd path/to/QuickStart
 
-**2. Building (Release/Debug)**
+# Creating a build directory
+mkdir -p build && cd build
 
-```sh
+# Generate Makefile
 export CC=clang
 export CXX=clang++
 export LINK=clang++
 export CXXFLAGS="-std=c++17 -stdlib=libc++"
 export LDFLAGS="-stdlib=libc++"
-make -C build.makefiles
+cmake -DCMAKE_BUILD_TYPE=Debug ..
+
+# Building application
+make
 ```
 
-To build in release mode, use `BUILDTYPE` option:
+To build in release mode, use `-DCMAKE_BUILD_TYPE` option:
 
 ```sh
-make -C build.makefiles BUILDTYPE="Release"
+cmake -DCMAKE_BUILD_TYPE=Release ..
 ```
 
-**3. Running app**
+To running your application
 
 ```sh
-# Copy asset files to output directory
-cp -R examples/QuickStart/Content/ build.makefiles/out/Release/Content
+cd path/to/QuickStart/build
 
 # Run
-build.makefiles/out/Release/QuickStart
+./QuickStart
 ```
 
 ### Building under Mac OS X and Xcode
