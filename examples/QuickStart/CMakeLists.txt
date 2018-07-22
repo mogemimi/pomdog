@@ -86,6 +86,19 @@ if(WIN32)
   set_target_properties(${PRODUCT_NAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
 endif()
 
+if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+  # Copying 'Content' directory into shippable directory after building executable
+  add_custom_command(
+    COMMENT "Copying contents to ${CMAKE_BINARY_DIR}/Content"
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/Content
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+      ${CMAKE_CURRENT_SOURCE_DIR}/Content
+      ${CMAKE_CURRENT_BINARY_DIR}/Content
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/Content
+  )
+endif()
+
 if(APPLE)
   set_source_files_properties(
     ${RESOURCE_FILES}
