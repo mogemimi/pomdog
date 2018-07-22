@@ -722,6 +722,7 @@ target_compile_definitions(${PRODUCT_NAME} PRIVATE
 if ((CMAKE_CXX_COMPILER_ID MATCHES "Clang") OR (CMAKE_CXX_COMPILER_ID MATCHES "GNU"))
   target_compile_options(${PRODUCT_NAME} PRIVATE
     -Wall
+    -Werror
     "$<$<CONFIG:DEBUG>:-g;-O0>"
     "$<$<CONFIG:RELEASE>:-O3>"
   )
