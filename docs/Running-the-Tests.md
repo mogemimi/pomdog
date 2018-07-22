@@ -3,22 +3,24 @@
 ## Build and run the unit tests on Linux
 
 ```sh
+cd path/to/pomdog
+
 # Creating a build directory
 mkdir -p build.cmake && cd build.cmake
 
 # Generate Makefile
-cmake -G Xcode ../build/PomdogTest/
-
-# Compiling source code
 export CC=clang
 export CXX=clang++
 export LINK=clang++
 export CXXFLAGS="-std=c++17 -stdlib=libc++"
 export LDFLAGS="-stdlib=libc++"
+cmake -DCMAKE_BUILD_TYPE=Release ../build/PomdogTest/
+
+# Compiling source code
 make
 
 # Run the unit tests
-./build/PomdogTest/PomdogTest        
+./PomdogTest        
 ```
 
 ## Build and run the unit tests on Mac OS X
