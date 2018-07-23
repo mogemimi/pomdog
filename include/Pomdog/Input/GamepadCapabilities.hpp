@@ -7,7 +7,7 @@
 
 namespace Pomdog {
 
-struct GamepadCapabilities {
+struct GamepadCapabilities final {
     GamepadType GamepadType = GamepadType::Unknown;
 
     bool IsConnected = false;

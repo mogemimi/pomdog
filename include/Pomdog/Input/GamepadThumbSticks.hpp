@@ -6,7 +6,7 @@
 
 namespace Pomdog {
 
-struct GamepadThumbSticks {
+struct GamepadThumbSticks final {
     Vector2 Left = Vector2::Zero;
     Vector2 Right = Vector2::Zero;
 };

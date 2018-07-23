@@ -6,7 +6,7 @@
 
 namespace Pomdog {
 
-struct GamepadDPad {
+struct GamepadDPad final {
     ButtonState Down = ButtonState::Released;
     ButtonState Up = ButtonState::Released;
     ButtonState Left = ButtonState::Released;
