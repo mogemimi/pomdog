@@ -3,7 +3,6 @@
 #pragma once
 
 #include "Pomdog/Input/GamepadType.hpp"
-#include <cstdint>
 
 namespace Pomdog {
 

@@ -3,7 +3,6 @@
 #pragma once
 
 #include "Pomdog/Input/ButtonState.hpp"
-#include <cstdint>
 
 namespace Pomdog {
 
