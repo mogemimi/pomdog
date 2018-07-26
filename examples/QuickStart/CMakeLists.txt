@@ -51,7 +51,7 @@ endif()
 add_executable(${PRODUCT_NAME} WIN32 ${SOURCE_FILES} ${RESOURCE_FILES})
 
 target_compile_definitions(${PRODUCT_NAME} PRIVATE
-  "$<$<CONFIG:DEBUG>:_DEBUG>"
+  "$<$<CONFIG:DEBUG>:DEBUG>"
   "$<$<CONFIG:RELEASE>:NDEBUG>"
 )
 
