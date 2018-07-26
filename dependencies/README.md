@@ -46,7 +46,7 @@ All of the dependencies that [Pomdog](https://github.com/mogemimi/pomdog) needs 
 * [SDL_GameControllerDB - GitHub](https://github.com/gabomdq/SDL_GameControllerDB)
 * License
   * zlib License
-  * Please see: [SDL_GameControllerDB/README](SDL_GameControllerDB/LICENSE)
+  * Please see: [SDL_GameControllerDB/LICENSE](SDL_GameControllerDB/LICENSE)
 
 ### stb
 
