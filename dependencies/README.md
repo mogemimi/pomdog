@@ -8,7 +8,7 @@ All of the dependencies that [Pomdog](https://github.com/mogemimi/pomdog) needs 
 * [The GIFLIB project](http://giflib.sourceforge.net/)
 * License
   * MIT/X Consortium License
-  * Please see: [vendor/giflib/COPYING][license-giflib]
+  * Please see: [vendor/giflib/COPYING](vendor/giflib/COPYING)
 
 ### GLEW
 
@@ -16,7 +16,7 @@ All of the dependencies that [Pomdog](https://github.com/mogemimi/pomdog) needs 
 * [GLEW - GitHub](https://github.com/nigels-com/glew)
 * License
   * Modified BSD License
-  * Please see: [glew/LICENSE.txt][license-glew]
+  * Please see: [glew/LICENSE.txt](glew/LICENSE.txt)
 
 ### iutest - iris unit test framework
 
@@ -24,14 +24,14 @@ All of the dependencies that [Pomdog](https://github.com/mogemimi/pomdog) needs 
 * [iutest - GitHub](https://github.com/srz-zumix/iutest)
 * License
   * New (3-clause) BSD License
-  * Please see: [iutest/LICENSE][license-iutest]
+  * Please see: [iutest/LICENSE](iutest/LICENSE)
 
 ### libpng
 
 * [libpng Home Page](http://www.libpng.org/pub/png/libpng.html)
 * License
   * libpng License
-  * Please see: [libpng/LICENSE][license-libpng]
+  * Please see: [libpng/LICENSE](libpng/LICENSE)
 
 ### RapidJSON
 
@@ -39,7 +39,7 @@ All of the dependencies that [Pomdog](https://github.com/mogemimi/pomdog) needs 
 * [RapidJSON Documentation](http://miloyip.github.io/rapidjson/)
 * License
   * MIT License
-  * Please see: [rapidjson/license.txt][license-rapidjson]
+  * Please see: [rapidjson/license.txt](rapidjson/license.txt)
 
 ### stb
 
@@ -53,7 +53,7 @@ All of the dependencies that [Pomdog](https://github.com/mogemimi/pomdog) needs 
 * [UTF8-CPP - GitHub](https://github.com/nemtrif/utfcpp)
 * License
   * Boost Software License - Version 1.0
-  * Please see: [utfcpp/source/utf8.h][license-utfcpp]
+  * Please see: [utfcpp/source/utf8.h](utfcpp/source/utf8.h)
 
 ### zlib
 
@@ -61,13 +61,4 @@ All of the dependencies that [Pomdog](https://github.com/mogemimi/pomdog) needs 
 * [zlib - GitHub](https://github.com/madler/zlib)
 * License
   * zlib License
-  * Please see: [zlib/README][license-zlib]
-
-[license-giflib]: vendor/giflib/COPYING
-[license-glew]: glew/LICENSE.txt
-[license-iutest]: iutest/LICENSE
-[license-libpng]: libpng/LICENSE
-[license-lua]: lua/LICENSE.md
-[license-rapidjson]: rapidjson/license.txt
-[license-utfcpp]: utfcpp/source/utf8.h
-[license-zlib]: zlib/README
+  * Please see: [zlib/README](zlib/README)
