@@ -206,6 +206,8 @@
 		A9E4B873210CDDEB003F87DC /* GamepadIOKit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9E4B871210CDDEB003F87DC /* GamepadIOKit.cpp */; };
 		A9E4B875210CDE03003F87DC /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9E4B874210CDE03003F87DC /* IOKit.framework */; };
 		A9E4B876210CDE12003F87DC /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9E4B874210CDE03003F87DC /* IOKit.framework */; };
+		A9E4B879210CDEA2003F87DC /* GamepadFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9E4B877210CDEA2003F87DC /* GamepadFactory.cpp */; };
+		A9E4B87A210CDEA2003F87DC /* GamepadFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9E4B877210CDEA2003F87DC /* GamepadFactory.cpp */; };
 		A9F2135A1DE35F380027FA45 /* BoundingFrustum.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9F213591DE35F380027FA45 /* BoundingFrustum.cpp */; };
 		A9F2135B1DE35F380027FA45 /* BoundingFrustum.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9F213591DE35F380027FA45 /* BoundingFrustum.cpp */; };
 		A9F2135D1DE35F420027FA45 /* Plane.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9F2135C1DE35F420027FA45 /* Plane.cpp */; };
@@ -626,6 +628,8 @@
 		A9E4B870210CDDEB003F87DC /* GamepadIOKit.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = GamepadIOKit.hpp; path = ../InputSystem.IOKit/GamepadIOKit.hpp; sourceTree = "<group>"; };
 		A9E4B871210CDDEB003F87DC /* GamepadIOKit.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GamepadIOKit.cpp; path = ../InputSystem.IOKit/GamepadIOKit.cpp; sourceTree = "<group>"; };
 		A9E4B874210CDE03003F87DC /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		A9E4B877210CDEA2003F87DC /* GamepadFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GamepadFactory.cpp; sourceTree = "<group>"; };
+		A9E4B878210CDEA2003F87DC /* GamepadFactory.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GamepadFactory.hpp; sourceTree = "<group>"; };
 		A9F213561DE35F1B0027FA45 /* BoundingFrustum.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BoundingFrustum.hpp; sourceTree = "<group>"; };
 		A9F213571DE35F260027FA45 /* Plane.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Plane.hpp; sourceTree = "<group>"; };
 		A9F213581DE35F260027FA45 /* PlaneIntersectionType.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PlaneIntersectionType.hpp; sourceTree = "<group>"; };
@@ -936,6 +940,8 @@
 		34C6330F2DF6F100237B8429 /* InputSystem */ = {
 			isa = PBXGroup;
 			children = (
+				A9E4B877210CDEA2003F87DC /* GamepadFactory.cpp */,
+				A9E4B878210CDEA2003F87DC /* GamepadFactory.hpp */,
 				A9E4B868210CD9C0003F87DC /* GamepadHelper.cpp */,
 				A9E4B869210CD9C0003F87DC /* GamepadHelper.hpp */,
 				A9E4B866210CD9C0003F87DC /* GamepadMappings.cpp */,
@@ -1924,6 +1930,7 @@
 				A9A822931DAB7FBE0091497F /* TextureAtlasGenerator.cpp in Sources */,
 				A9FC99051DC3D87F00C78D63 /* SpriteBatch.cpp in Sources */,
 				9439AAF08FDF6A7046F2F994 /* ScopedConnection.cpp in Sources */,
+				A9E4B879210CDEA2003F87DC /* GamepadFactory.cpp in Sources */,
 				8650CF18F26DB3A0F89ABAE3 /* CRC32.cpp in Sources */,
 				A997F7081CAEFC4900926392 /* Texture2DMetal.mm in Sources */,
 				566D366B6621FECC73232526 /* PathHelper.cpp in Sources */,
@@ -2051,6 +2058,7 @@
 				A9A822941DAB7FBE0091497F /* TextureAtlasGenerator.cpp in Sources */,
 				A9FC99061DC3D87F00C78D63 /* SpriteBatch.cpp in Sources */,
 				023F583DEDA9BCB1C9E19C1C /* ScopedConnection.cpp in Sources */,
+				A9E4B87A210CDEA2003F87DC /* GamepadFactory.cpp in Sources */,
 				65B8BEF3D1E04BF859631ADE /* CRC32.cpp in Sources */,
 				A997F7091CAEFC4900926392 /* Texture2DMetal.mm in Sources */,
 				8B19A1DD45CD8F8791C5B725 /* PathHelper.cpp in Sources */,
