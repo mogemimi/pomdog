@@ -30,6 +30,7 @@ source_group(Utility                  REGULAR_EXPRESSION "(include/Pomdog|src)/U
 source_group(Application              REGULAR_EXPRESSION "(include/Pomdog|src)/Application/*")
 source_group(InputSystem              REGULAR_EXPRESSION src/InputSystem/*)
 source_group(InputSystem.DirectInput  REGULAR_EXPRESSION src/InputSystem.DirectInput/*)
+source_group(InputSystem.Linux        REGULAR_EXPRESSION src/InputSystem.Linux/*)
 source_group(Platform.Apple           REGULAR_EXPRESSION src/Platform.Apple/*)
 source_group(Platform.Linux           REGULAR_EXPRESSION src/Platform.Linux/*)
 source_group(RenderSystem             REGULAR_EXPRESSION src/RenderSystem/*)
@@ -282,6 +283,7 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/src/InputSystem/InputDeviceCreator.hpp
   ${POMDOG_DIR}/src/InputSystem/InputDeviceFactory.cpp
   ${POMDOG_DIR}/src/InputSystem/InputDeviceFactory.hpp
+  ${POMDOG_DIR}/src/InputSystem/NativeGamepad.hpp
   ${POMDOG_DIR}/src/Logging/Log.cpp
   ${POMDOG_DIR}/src/Logging/LogChannel.cpp
   ${POMDOG_DIR}/src/Math/BoundingBox.cpp
@@ -556,6 +558,8 @@ set(POMDOG_SOURCES_X11
 )
 
 set(POMDOG_SOURCES_LINUX
+  ${POMDOG_DIR}/src/InputSystem.Linux/GamepadLinux.cpp
+  ${POMDOG_DIR}/src/InputSystem.Linux/GamepadLinux.hpp
   ${POMDOG_DIR}/src/Platform.Linux/FileSystemLinux.cpp
   ${POMDOG_DIR}/src/Platform.Linux/TimeSourceLinux.cpp
   ${POMDOG_DIR}/src/Platform.Linux/TimeSourceLinux.hpp
