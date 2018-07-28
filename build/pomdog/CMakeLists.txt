@@ -277,6 +277,8 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/src/Graphics/ShaderCompilers/HLSLCompiler.cpp
   ${POMDOG_DIR}/src/Graphics/ShaderCompilers/MetalCompiler.cpp
   ${POMDOG_DIR}/src/Input/KeyboardState.cpp
+  ${POMDOG_DIR}/src/InputSystem/GamepadFactory.cpp
+  ${POMDOG_DIR}/src/InputSystem/GamepadFactory.hpp
   ${POMDOG_DIR}/src/InputSystem/GamepadHelper.cpp
   ${POMDOG_DIR}/src/InputSystem/GamepadHelper.hpp
   ${POMDOG_DIR}/src/InputSystem/GamepadMappings.cpp

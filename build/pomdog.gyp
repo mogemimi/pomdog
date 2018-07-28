@@ -268,6 +268,8 @@
       '../src/Graphics/ShaderCompilers/HLSLCompiler.cpp',
       '../src/Graphics/ShaderCompilers/MetalCompiler.cpp',
       '../src/Input/KeyboardState.cpp',
+      '../src/InputSystem/GamepadFactory.cpp',
+      '../src/InputSystem/GamepadFactory.hpp',
       '../src/InputSystem/GamepadHelper.cpp',
       '../src/InputSystem/GamepadHelper.hpp',
       '../src/InputSystem/GamepadMappings.cpp',
