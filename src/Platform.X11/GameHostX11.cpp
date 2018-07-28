@@ -30,14 +30,14 @@ namespace {
 
 bool CheckFrameBufferConfigSupport(::Display* display)
 {
-    int major = 0;
-    int minor = 0;
+    int majorVer = 0;
+    int minorVer = 0;
 
-    if (glXQueryVersion(display, &major, &minor) == False) {
+    if (glXQueryVersion(display, &majorVer, &minorVer) == False) {
         return false;
     }
 
-    return (((major == 1) && (minor >= 3)) || (major >= 2));
+    return (((majorVer == 1) && (minorVer >= 3)) || (majorVer >= 2));
 }
 
 GLXFBConfig ChooseFramebufferConfig(

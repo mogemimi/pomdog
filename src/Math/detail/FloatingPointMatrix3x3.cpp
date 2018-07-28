@@ -309,7 +309,7 @@ FloatingPointMatrix2x2<T> FloatingPointMatrix3x3<T>::Minor2x2(std::size_t row, s
     // r1 |21, 22, 23| Minor2x2(mat, r2, c1) |21, 23. x|
     // r2 |31, 32, 33| --------------------> | x,  x, x|
 
-    FloatingPointMatrix2x2<T> minor;
+    FloatingPointMatrix2x2<T> minorMatrix;
     for (std::size_t i = 0, s = 0; i < RowSize; ++i)
     {
         if (row == i) {
@@ -324,12 +324,12 @@ FloatingPointMatrix2x2<T> FloatingPointMatrix3x3<T>::Minor2x2(std::size_t row, s
 
             POMDOG_ASSERT(s < 2);
             POMDOG_ASSERT(t < 2);
-            minor(s, t) = m[i][j];
+            minorMatrix(s, t) = m[i][j];
             ++t;
         }
         ++s;
     }
-    return std::move(minor);
+    return std::move(minorMatrix);
 }
 
 template <typename T>
