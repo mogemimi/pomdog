@@ -187,7 +187,7 @@ AudioEngineXAudio2::AudioEngineXAudio2()
     }
 
     UINT32 flags = 0;
-#if (_WIN32_WINNT < 0x0602 /*_WIN32_WINNT_WIN8*/) && defined(_DEBUG)
+#if (_WIN32_WINNT < 0x0602 /*_WIN32_WINNT_WIN8*/) && !defined(NDEBUG)
     flags |= XAUDIO2_DEBUG_ENGINE;
 #endif
 
@@ -197,7 +197,7 @@ AudioEngineXAudio2::AudioEngineXAudio2()
         POMDOG_THROW_EXCEPTION(std::runtime_error, GetErrorDesc(hr, "XAudio2Create"));
     }
 
-#if (_WIN32_WINNT < 0x0602 /*_WIN32_WINNT_WIN8*/) && defined(_DEBUG)
+#if (_WIN32_WINNT < 0x0602 /*_WIN32_WINNT_WIN8*/) && !defined(NDEBUG)
     {
         XAUDIO2_DEBUG_CONFIGURATION debugConfig;
         debugConfig.TraceMask = XAUDIO2_LOG_ERRORS | XAUDIO2_LOG_WARNINGS;
