@@ -3,11 +3,18 @@
 #pragma once
 
 #include "Pomdog/Input/GamepadType.hpp"
+#include <string>
 
 namespace Pomdog {
 
 struct GamepadCapabilities final {
     GamepadType GamepadType = GamepadType::Unknown;
+
+    std::string Name;
+
+    int ButtonCount = 0;
+
+    int ThumbStickCount = 0;
 
     bool IsConnected = false;
 
