@@ -14,7 +14,7 @@
         'application_platform%': 'Cocoa',
         'renderers%': ['GL4'],
         'audio%': 'OpenAL',
-        'input_devices%': [],
+        'input_devices%': ['IOKit'],
       },
     }],
     ['OS == "ios"', {
@@ -446,6 +446,10 @@
       '../src/Platform.Apple/TimeSourceApple.cpp',
       '../src/Platform.Apple/TimeSourceApple.hpp',
     ],
+    'pomdog_library_iokit_sources': [
+      '../src/InputSystem.IOKit/GamepadIOKit.cpp',
+      '../src/InputSystem.IOKit/GamepadIOKit.hpp',
+    ],
     'pomdog_library_cocoa_sources': [
       '../include/Pomdog/Platform/Cocoa/Bootstrap.hpp',
       '../include/Pomdog/Platform/Cocoa/PomdogOpenGLView.hpp',
@@ -740,6 +744,16 @@
           ],
         },
       }], # audio == "XAudio2"
+      ['"IOKit" in input_devices', {
+        'sources': [
+          '<@(pomdog_library_iokit_sources)',
+        ],
+        'link_settings': {
+          'libraries': [
+            '$(SDKROOT)/System/Library/Frameworks/IOKit.framework',
+          ],
+        },
+      }],
       ['"DirectInput" in input_devices', {
         'sources': [
           '<@(pomdog_library_directinput_sources)',

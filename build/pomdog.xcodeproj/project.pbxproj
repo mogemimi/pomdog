@@ -202,6 +202,10 @@
 		A9E4B86B210CD9C1003F87DC /* GamepadMappings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9E4B866210CD9C0003F87DC /* GamepadMappings.cpp */; };
 		A9E4B86C210CD9C1003F87DC /* GamepadHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9E4B868210CD9C0003F87DC /* GamepadHelper.cpp */; };
 		A9E4B86D210CD9C1003F87DC /* GamepadHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9E4B868210CD9C0003F87DC /* GamepadHelper.cpp */; };
+		A9E4B872210CDDEB003F87DC /* GamepadIOKit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9E4B871210CDDEB003F87DC /* GamepadIOKit.cpp */; };
+		A9E4B873210CDDEB003F87DC /* GamepadIOKit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9E4B871210CDDEB003F87DC /* GamepadIOKit.cpp */; };
+		A9E4B875210CDE03003F87DC /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9E4B874210CDE03003F87DC /* IOKit.framework */; };
+		A9E4B876210CDE12003F87DC /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9E4B874210CDE03003F87DC /* IOKit.framework */; };
 		A9F2135A1DE35F380027FA45 /* BoundingFrustum.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9F213591DE35F380027FA45 /* BoundingFrustum.cpp */; };
 		A9F2135B1DE35F380027FA45 /* BoundingFrustum.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9F213591DE35F380027FA45 /* BoundingFrustum.cpp */; };
 		A9F2135D1DE35F420027FA45 /* Plane.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9F2135C1DE35F420027FA45 /* Plane.cpp */; };
@@ -619,6 +623,9 @@
 		A9E4B868210CD9C0003F87DC /* GamepadHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GamepadHelper.cpp; sourceTree = "<group>"; };
 		A9E4B869210CD9C0003F87DC /* GamepadHelper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GamepadHelper.hpp; sourceTree = "<group>"; };
 		A9E4B86E210CDCC7003F87DC /* NativeGamepad.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = NativeGamepad.hpp; sourceTree = "<group>"; };
+		A9E4B870210CDDEB003F87DC /* GamepadIOKit.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = GamepadIOKit.hpp; path = ../InputSystem.IOKit/GamepadIOKit.hpp; sourceTree = "<group>"; };
+		A9E4B871210CDDEB003F87DC /* GamepadIOKit.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GamepadIOKit.cpp; path = ../InputSystem.IOKit/GamepadIOKit.cpp; sourceTree = "<group>"; };
+		A9E4B874210CDE03003F87DC /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		A9F213561DE35F1B0027FA45 /* BoundingFrustum.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BoundingFrustum.hpp; sourceTree = "<group>"; };
 		A9F213571DE35F260027FA45 /* Plane.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Plane.hpp; sourceTree = "<group>"; };
 		A9F213581DE35F260027FA45 /* PlaneIntersectionType.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PlaneIntersectionType.hpp; sourceTree = "<group>"; };
@@ -751,6 +758,7 @@
 				A9D641871C342F5F006E14E0 /* libzlib.a in Frameworks */,
 				A997F6DF1CAEFB3E00926392 /* AudioToolbox.framework in Frameworks */,
 				A9D641941C34302C006E14E0 /* Cocoa.framework in Frameworks */,
+				A9E4B875210CDE03003F87DC /* IOKit.framework in Frameworks */,
 				A997F6DC1CAEFB0800926392 /* Metal.framework in Frameworks */,
 				A9D641921C34301C006E14E0 /* OpenAL.framework in Frameworks */,
 				A9D641931C343023006E14E0 /* OpenGL.framework in Frameworks */,
@@ -767,6 +775,7 @@
 				4D3F6C1E105B1A1149475635 /* libzlib.a in Frameworks */,
 				A997F6E01CAEFB4900926392 /* AudioToolbox.framework in Frameworks */,
 				667D66568DF02EFA74F073DE /* Cocoa.framework in Frameworks */,
+				A9E4B876210CDE12003F87DC /* IOKit.framework in Frameworks */,
 				A997F6DD1CAEFB1800926392 /* Metal.framework in Frameworks */,
 				BECB75C4B0471C4F7255D067 /* OpenAL.framework in Frameworks */,
 				3731B1EE2512BA451CA8E5D7 /* OpenGL.framework in Frameworks */,
@@ -1023,6 +1032,7 @@
 				C75D42DC2FCD94A2C16953DC /* Graphics */,
 				A4530A8C4CEA403D2E7D71ED /* Input */,
 				34C6330F2DF6F100237B8429 /* InputSystem */,
+				A9E4B86F210CDDB9003F87DC /* InputSystem.IOKit */,
 				6A0441A5D4CDAD2C95CF69B3 /* Logging */,
 				2694DA612683E85FCA7EC307 /* Math */,
 				D0E09111DB852231F1413898 /* Platform.Apple */,
@@ -1430,6 +1440,16 @@
 			path = TexturePacker;
 			sourceTree = "<group>";
 		};
+		A9E4B86F210CDDB9003F87DC /* InputSystem.IOKit */ = {
+			isa = PBXGroup;
+			children = (
+				A9E4B871210CDDEB003F87DC /* GamepadIOKit.cpp */,
+				A9E4B870210CDDEB003F87DC /* GamepadIOKit.hpp */,
+			);
+			name = InputSystem.IOKit;
+			path = "New Group";
+			sourceTree = "<group>";
+		};
 		A9FC99031DC3D86C00C78D63 /* Graphics */ = {
 			isa = PBXGroup;
 			children = (
@@ -1648,6 +1668,7 @@
 		E5BCF0B13AAAF8E1F45AEBD5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A9E4B874210CDE03003F87DC /* IOKit.framework */,
 				A997F6DE1CAEFB3E00926392 /* AudioToolbox.framework */,
 				F247CD851F16A8BCEC2E5BA1 /* Cocoa.framework */,
 				A997F6DB1CAEFB0800926392 /* Metal.framework */,
@@ -1830,6 +1851,7 @@
 				A997F7041CAEFC4900926392 /* SamplerStateMetal.mm in Sources */,
 				B7E9DD7713CD0E5323210193 /* AudioEngine.cpp in Sources */,
 				A9A8228F1DAB7FB70091497F /* Image.cpp in Sources */,
+				A9E4B872210CDDEB003F87DC /* GamepadIOKit.cpp in Sources */,
 				A997F7001CAEFC4800926392 /* PipelineStateMetal.mm in Sources */,
 				B25BC69FDA812635B36D2CAC /* SoundEffect.cpp in Sources */,
 				5F8F4C5C0179D8889EC7B4D2 /* AssetDictionary.cpp in Sources */,
@@ -1956,6 +1978,7 @@
 				A997F7051CAEFC4900926392 /* SamplerStateMetal.mm in Sources */,
 				3EB59864165741842C8DD788 /* AudioEngine.cpp in Sources */,
 				A9A822901DAB7FB70091497F /* Image.cpp in Sources */,
+				A9E4B873210CDDEB003F87DC /* GamepadIOKit.cpp in Sources */,
 				A997F7011CAEFC4800926392 /* PipelineStateMetal.mm in Sources */,
 				615FEBD97D48A4D57BDA54C4 /* SoundEffect.cpp in Sources */,
 				E4D0DB6D0CBC0C51449C182B /* AssetDictionary.cpp in Sources */,

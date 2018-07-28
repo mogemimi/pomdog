@@ -121,6 +121,7 @@ if(APPLE)
   set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework OpenAL")
   set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework Cocoa")
   set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework QuartzCore")
+  set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework IOKit")
   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${LINK_FRAMEWORKS}")
 endif()
 

@@ -30,6 +30,7 @@ source_group(Utility                  REGULAR_EXPRESSION "(include/Pomdog|src)/U
 source_group(Application              REGULAR_EXPRESSION "(include/Pomdog|src)/Application/*")
 source_group(InputSystem              REGULAR_EXPRESSION src/InputSystem/*)
 source_group(InputSystem.DirectInput  REGULAR_EXPRESSION src/InputSystem.DirectInput/*)
+source_group(InputSystem.IOKit        REGULAR_EXPRESSION src/InputSystem.IOKit/*)
 source_group(InputSystem.Linux        REGULAR_EXPRESSION src/InputSystem.Linux/*)
 source_group(Platform.Apple           REGULAR_EXPRESSION src/Platform.Apple/*)
 source_group(Platform.Linux           REGULAR_EXPRESSION src/Platform.Linux/*)
@@ -416,6 +417,11 @@ set(POMDOG_SOURCES_COCOA
   ${POMDOG_DIR}/src/Platform.Cocoa/PomdogOpenGLView.mm
 )
 
+set(POMDOG_SOURCES_IOKIT
+  ${POMDOG_DIR}/src/InputSystem.IOKit/GamepadIOKit.cpp
+  ${POMDOG_DIR}/src/InputSystem.IOKit/GamepadIOKit.hpp
+)
+
 set(POMDOG_SOURCES_DIRECT3D
   ${POMDOG_DIR}/src/RenderSystem.DXGI/DXGIFormatHelper.cpp
   ${POMDOG_DIR}/src/RenderSystem.DXGI/DXGIFormatHelper.hpp
@@ -576,6 +582,7 @@ if(APPLE)
   set(POMDOG_USE_OPENAL      true    CACHE BOOL   "Use OpenAL")
   set(POMDOG_USE_XAUDIO2     false   CACHE BOOL   "Use XAudio2")
   set(POMDOG_USE_DIRECTINPUT false   CACHE BOOL   "Use DirectInput")
+  set(POMDOG_USE_IOKIT       true    CACHE BOOL   "Use IOKit")
   set(POMDOG_USE_X11         false   CACHE BOOL   "Use X11")
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   set(POMDOG_TARGET_PLATFORM "Linux" CACHE STRING "Choose platform")
@@ -586,6 +593,7 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   set(POMDOG_USE_OPENAL      true    CACHE BOOL   "Use OpenAL")
   set(POMDOG_USE_XAUDIO2     false   CACHE BOOL   "Use XAudio2")
   set(POMDOG_USE_DIRECTINPUT false   CACHE BOOL   "Use DirectInput")
+  set(POMDOG_USE_IOKIT       false   CACHE BOOL   "Use IOKit")
   set(POMDOG_USE_X11         true    CACHE BOOL   "Use X11")
 elseif(WIN32)
   set(POMDOG_TARGET_PLATFORM "Win32" CACHE STRING "Choose platform")
@@ -596,6 +604,7 @@ elseif(WIN32)
   set(POMDOG_USE_OPENAL      false   CACHE BOOL   "Use OpenAL")
   set(POMDOG_USE_XAUDIO2     true    CACHE BOOL   "Use XAudio2")
   set(POMDOG_USE_DIRECTINPUT true    CACHE BOOL   "Use DirectInput")
+  set(POMDOG_USE_IOKIT       false   CACHE BOOL   "Use IOKit")
   set(POMDOG_USE_X11         false   CACHE BOOL   "Use X11")
 endif()
 
@@ -642,6 +651,10 @@ if(POMDOG_USE_X11)
   list(APPEND SOURCE_FILES ${POMDOG_SOURCES_X11})
 endif()
 
+if(POMDOG_USE_IOKIT)
+  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_IOKIT})
+endif()
+
 # NOTE: Linking libraries for Mac and Xcode
 if(POMDOG_USE_METAL)
   # list(APPEND LINK_FRAMEWORKS "$(SDKROOT)/System/Library/Frameworks/Metal.framework")
@@ -653,6 +666,11 @@ if(POMDOG_USE_OPENAL AND (POMDOG_TARGET_PLATFORM MATCHES "Mac"))
   # list(APPEND LINK_FRAMEWORKS "$(SDKROOT)/System/Library/Frameworks/OpenAL.framework")
   set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework AudioToolBox")
   set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework OpenAL")
+endif()
+
+if(POMDOG_USE_IOKIT AND (POMDOG_TARGET_PLATFORM MATCHES "Mac"))
+  # list(APPEND LINK_FRAMEWORKS "$(SDKROOT)/System/Library/Frameworks/IOKit.framework")
+  set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework IOKit")
 endif()
 
 if(POMDOG_TARGET_PLATFORM MATCHES "Mac")
