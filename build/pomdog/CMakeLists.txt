@@ -275,6 +275,10 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/src/Graphics/ShaderCompilers/HLSLCompiler.cpp
   ${POMDOG_DIR}/src/Graphics/ShaderCompilers/MetalCompiler.cpp
   ${POMDOG_DIR}/src/Input/KeyboardState.cpp
+  ${POMDOG_DIR}/src/InputSystem/GamepadHelper.cpp
+  ${POMDOG_DIR}/src/InputSystem/GamepadHelper.hpp
+  ${POMDOG_DIR}/src/InputSystem/GamepadMappings.cpp
+  ${POMDOG_DIR}/src/InputSystem/GamepadMappings.hpp
   ${POMDOG_DIR}/src/InputSystem/InputDeviceCreator.hpp
   ${POMDOG_DIR}/src/InputSystem/InputDeviceFactory.cpp
   ${POMDOG_DIR}/src/InputSystem/InputDeviceFactory.hpp
@@ -664,6 +668,7 @@ target_include_directories(${PRODUCT_NAME} PRIVATE
   ${POMDOG_DIR}/include
   ${POMDOG_DIR}/dependencies/libpng
   ${POMDOG_DIR}/dependencies/vendor/libpng
+  ${POMDOG_DIR}/dependencies/vendor/SDL_GameControllerDB
 )
 
 add_subdirectory(${POMDOG_DIR}/build/dependencies/libpng "${CMAKE_CURRENT_BINARY_DIR}/libpng_build")
