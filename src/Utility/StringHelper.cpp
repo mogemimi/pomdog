@@ -2,6 +2,7 @@
 
 #include "Pomdog/Utility/StringHelper.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include <algorithm>
 #include <cstdarg>
 
 namespace Pomdog {
