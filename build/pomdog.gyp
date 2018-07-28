@@ -268,6 +268,10 @@
       '../src/Graphics/ShaderCompilers/HLSLCompiler.cpp',
       '../src/Graphics/ShaderCompilers/MetalCompiler.cpp',
       '../src/Input/KeyboardState.cpp',
+      '../src/InputSystem/GamepadHelper.cpp',
+      '../src/InputSystem/GamepadHelper.hpp',
+      '../src/InputSystem/GamepadMappings.cpp',
+      '../src/InputSystem/GamepadMappings.hpp',
       '../src/InputSystem/InputDeviceCreator.hpp',
       '../src/InputSystem/InputDeviceFactory.cpp',
       '../src/InputSystem/InputDeviceFactory.hpp',
@@ -565,6 +569,7 @@
       '../dependencies/libpng',
       '../dependencies/vendor/libpng',
       '../dependencies/vendor/giflib/lib',
+      '../dependencies/vendor/SDL_GameControllerDB',
     ],
     'sources': [
       '<@(pomdog_library_core_sources)',

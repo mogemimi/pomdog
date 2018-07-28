@@ -198,6 +198,10 @@
 		A9D641931C343023006E14E0 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB039FAE65C607A60DDBB49C /* OpenGL.framework */; };
 		A9D641941C34302C006E14E0 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F247CD851F16A8BCEC2E5BA1 /* Cocoa.framework */; };
 		A9D641951C343034006E14E0 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A0AE4521498F69CE846F2EFB /* QuartzCore.framework */; };
+		A9E4B86A210CD9C1003F87DC /* GamepadMappings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9E4B866210CD9C0003F87DC /* GamepadMappings.cpp */; };
+		A9E4B86B210CD9C1003F87DC /* GamepadMappings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9E4B866210CD9C0003F87DC /* GamepadMappings.cpp */; };
+		A9E4B86C210CD9C1003F87DC /* GamepadHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9E4B868210CD9C0003F87DC /* GamepadHelper.cpp */; };
+		A9E4B86D210CD9C1003F87DC /* GamepadHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9E4B868210CD9C0003F87DC /* GamepadHelper.cpp */; };
 		A9F2135A1DE35F380027FA45 /* BoundingFrustum.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9F213591DE35F380027FA45 /* BoundingFrustum.cpp */; };
 		A9F2135B1DE35F380027FA45 /* BoundingFrustum.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9F213591DE35F380027FA45 /* BoundingFrustum.cpp */; };
 		A9F2135D1DE35F420027FA45 /* Plane.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9F2135C1DE35F420027FA45 /* Plane.cpp */; };
@@ -610,6 +614,10 @@
 		A9AE680DD0E3FCEA11AF8F48 /* FloatingPointVector4.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = FloatingPointVector4.cpp; sourceTree = "<group>"; };
 		A9D18E8B1CA426FA0011A6CE /* MetalCompiler.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MetalCompiler.hpp; sourceTree = "<group>"; };
 		A9D18E8C1CA427270011A6CE /* MetalCompiler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MetalCompiler.cpp; sourceTree = "<group>"; };
+		A9E4B866210CD9C0003F87DC /* GamepadMappings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GamepadMappings.cpp; sourceTree = "<group>"; };
+		A9E4B867210CD9C0003F87DC /* GamepadMappings.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GamepadMappings.hpp; sourceTree = "<group>"; };
+		A9E4B868210CD9C0003F87DC /* GamepadHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GamepadHelper.cpp; sourceTree = "<group>"; };
+		A9E4B869210CD9C0003F87DC /* GamepadHelper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GamepadHelper.hpp; sourceTree = "<group>"; };
 		A9F213561DE35F1B0027FA45 /* BoundingFrustum.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BoundingFrustum.hpp; sourceTree = "<group>"; };
 		A9F213571DE35F260027FA45 /* Plane.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Plane.hpp; sourceTree = "<group>"; };
 		A9F213581DE35F260027FA45 /* PlaneIntersectionType.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PlaneIntersectionType.hpp; sourceTree = "<group>"; };
@@ -918,6 +926,10 @@
 		34C6330F2DF6F100237B8429 /* InputSystem */ = {
 			isa = PBXGroup;
 			children = (
+				A9E4B868210CD9C0003F87DC /* GamepadHelper.cpp */,
+				A9E4B869210CD9C0003F87DC /* GamepadHelper.hpp */,
+				A9E4B866210CD9C0003F87DC /* GamepadMappings.cpp */,
+				A9E4B867210CD9C0003F87DC /* GamepadMappings.hpp */,
 				1C7CBAD3B25BA6B0D155A5E6 /* InputDeviceCreator.hpp */,
 				B7379F84C54E861AD074AA1C /* InputDeviceFactory.cpp */,
 				5672D00947C663520B460134 /* InputDeviceFactory.hpp */,
@@ -1884,6 +1896,7 @@
 				C0B84A37FCB13D340E04120C /* Connection.cpp in Sources */,
 				DD35FD410F3B10D3D7108DD5 /* ConnectionList.cpp in Sources */,
 				162657EF7F7D8D1E34C76882 /* EventQueue.cpp in Sources */,
+				A9E4B86A210CD9C1003F87DC /* GamepadMappings.cpp in Sources */,
 				A9A822931DAB7FBE0091497F /* TextureAtlasGenerator.cpp in Sources */,
 				A9FC99051DC3D87F00C78D63 /* SpriteBatch.cpp in Sources */,
 				9439AAF08FDF6A7046F2F994 /* ScopedConnection.cpp in Sources */,
@@ -1899,6 +1912,7 @@
 				A997F6FE1CAEFC4800926392 /* MetalFormatHelper.mm in Sources */,
 				A93CA6541D92F34E00B65171 /* Task.cpp in Sources */,
 				A992AF041C2B1168003170C9 /* Coordinate3D.cpp in Sources */,
+				A9E4B86C210CD9C1003F87DC /* GamepadHelper.cpp in Sources */,
 				A997F6F61CAEFC4800926392 /* BufferMetal.mm in Sources */,
 				D036ADDD0CD6E4CE27AC1A93 /* GraphicsContextGL4.cpp in Sources */,
 				74D477E9B36CBB96B59576DA /* GraphicsDeviceGL4.cpp in Sources */,
@@ -2008,6 +2022,7 @@
 				B8B5DF3E58503D84B8D7E2D9 /* Connection.cpp in Sources */,
 				48657AD97E278FA04C4994B4 /* ConnectionList.cpp in Sources */,
 				5D895FC546DFD02F64646AF7 /* EventQueue.cpp in Sources */,
+				A9E4B86B210CD9C1003F87DC /* GamepadMappings.cpp in Sources */,
 				A9A822941DAB7FBE0091497F /* TextureAtlasGenerator.cpp in Sources */,
 				A9FC99061DC3D87F00C78D63 /* SpriteBatch.cpp in Sources */,
 				023F583DEDA9BCB1C9E19C1C /* ScopedConnection.cpp in Sources */,
@@ -2023,6 +2038,7 @@
 				A997F6FF1CAEFC4800926392 /* MetalFormatHelper.mm in Sources */,
 				A93CA6551D92F34E00B65171 /* Task.cpp in Sources */,
 				A992AF051C2B1168003170C9 /* Coordinate3D.cpp in Sources */,
+				A9E4B86D210CD9C1003F87DC /* GamepadHelper.cpp in Sources */,
 				A997F6F71CAEFC4800926392 /* BufferMetal.mm in Sources */,
 				C7615C67C153671C670F649B /* GraphicsContextGL4.cpp in Sources */,
 				FD3FD836F0346B587EDB61DE /* GraphicsDeviceGL4.cpp in Sources */,
@@ -2192,6 +2208,7 @@
 					../dependencies/libpng,
 					../dependencies/vendor/libpng,
 					../dependencies/vendor/giflib/lib,
+					../dependencies/vendor/SDL_GameControllerDB,
 				);
 			};
 			name = Release;
@@ -2270,6 +2287,7 @@
 					../dependencies/libpng,
 					../dependencies/vendor/libpng,
 					../dependencies/vendor/giflib/lib,
+					../dependencies/vendor/SDL_GameControllerDB,
 				);
 				ONLY_ACTIVE_ARCH = YES;
 			};
