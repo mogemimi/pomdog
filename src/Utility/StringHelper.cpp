@@ -44,7 +44,7 @@ std::string StringHelper::TrimLeft(const std::string& source, char separator)
 std::string
 StringHelper::TrimRight(const std::string& source, std::function<bool(char)> isSeparator)
 {
-    auto func = std::not1(std::move(isSeparator));
+    auto func = std::not_fn(std::move(isSeparator));
     std::string result(
         std::begin(source), std::find_if(std::rbegin(source), std::rend(source), func).base());
     return result;
@@ -52,7 +52,7 @@ StringHelper::TrimRight(const std::string& source, std::function<bool(char)> isS
 
 std::string StringHelper::TrimLeft(const std::string& source, std::function<bool(char)> isSeparator)
 {
-    auto func = std::not1(std::move(isSeparator));
+    auto func = std::not_fn(std::move(isSeparator));
     std::string result(std::find_if(std::begin(source), std::end(source), func), std::end(source));
     return result;
 }
