@@ -527,6 +527,14 @@ std::shared_ptr<Mouse> GameHostWin32::GetMouse()
     return impl->GetMouse();
 }
 
+std::shared_ptr<Gamepad> GameHostWin32::GetGamepad()
+{
+    POMDOG_ASSERT(impl);
+    // FIXME: Add DirectInput support
+    // https://github.com/mogemimi/pomdog/pull/16
+    return nullptr;
+}
+
 SurfaceFormat GameHostWin32::GetBackBufferSurfaceFormat() const
 {
     POMDOG_ASSERT(impl);

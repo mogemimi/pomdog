@@ -11,6 +11,7 @@ namespace Pomdog {
 class AssetManager;
 class AudioEngine;
 class GameClock;
+class Gamepad;
 class GameWindow;
 class GraphicsCommandQueue;
 class GraphicsDevice;
@@ -42,6 +43,8 @@ public:
     virtual std::shared_ptr<Keyboard> GetKeyboard() = 0;
 
     virtual std::shared_ptr<Mouse> GetMouse() = 0;
+
+    virtual std::shared_ptr<Gamepad> GetGamepad() = 0;
 
     virtual SurfaceFormat GetBackBufferSurfaceFormat() const = 0;
 

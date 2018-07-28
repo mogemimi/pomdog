@@ -5,6 +5,7 @@
 #include "OpenGLContextCocoa.hpp"
 #include "KeyboardCocoa.hpp"
 #include "MouseCocoa.hpp"
+#include "../InputSystem.IOKit/GamepadIOKit.hpp"
 #include "../RenderSystem/GraphicsCommandQueueImmediate.hpp"
 #include "../RenderSystem.GL4/GraphicsContextGL4.hpp"
 #include "../RenderSystem.GL4/GraphicsDeviceGL4.hpp"
@@ -32,6 +33,7 @@
 
 using Pomdog::Detail::GL4::GraphicsDeviceGL4;
 using Pomdog::Detail::GL4::GraphicsContextGL4;
+using Pomdog::Detail::InputSystem::Apple::GamepadIOKit;
 
 namespace Pomdog {
 namespace Detail {
@@ -79,6 +81,8 @@ public:
 
     std::shared_ptr<Mouse> GetMouse();
 
+    std::shared_ptr<Gamepad> GetGamepad();
+
     SurfaceFormat GetBackBufferSurfaceFormat() const noexcept;
 
     DepthFormat GetBackBufferDepthStencilFormat() const noexcept;
@@ -123,6 +127,7 @@ private:
     std::unique_ptr<Pomdog::AssetManager> assetManager;
     std::shared_ptr<KeyboardCocoa> keyboard;
     std::shared_ptr<MouseCocoa> mouse;
+    std::shared_ptr<GamepadIOKit> gamepad;
 
     __weak PomdogOpenGLView* openGLView;
     Duration presentationInterval;
@@ -174,6 +179,7 @@ GameHostCocoa::Impl::Impl(
     audioEngine = std::make_shared<Pomdog::AudioEngine>();
     keyboard = std::make_shared<KeyboardCocoa>();
     mouse = std::make_shared<MouseCocoa>();
+    gamepad = std::make_shared<GamepadIOKit>();
 
     // Connect to system event signal
     POMDOG_ASSERT(eventQueue);
@@ -205,6 +211,7 @@ GameHostCocoa::Impl::~Impl()
 
     systemEventConnection.Disconnect();
     assetManager.reset();
+    gamepad.reset();
     keyboard.reset();
     mouse.reset();
     audioEngine.reset();
@@ -463,6 +470,11 @@ std::shared_ptr<Mouse> GameHostCocoa::Impl::GetMouse()
     return mouse;
 }
 
+std::shared_ptr<Gamepad> GameHostCocoa::Impl::GetGamepad()
+{
+    return gamepad;
+}
+
 SurfaceFormat GameHostCocoa::Impl::GetBackBufferSurfaceFormat() const noexcept
 {
     return backBufferSurfaceFormat;
@@ -545,6 +557,12 @@ std::shared_ptr<Mouse> GameHostCocoa::GetMouse()
 {
     POMDOG_ASSERT(impl);
     return impl->GetMouse();
+}
+
+std::shared_ptr<Gamepad> GameHostCocoa::GetGamepad()
+{
+    POMDOG_ASSERT(impl);
+    return impl->GetGamepad();
 }
 
 SurfaceFormat GameHostCocoa::GetBackBufferSurfaceFormat() const

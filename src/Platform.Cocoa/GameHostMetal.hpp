@@ -54,6 +54,8 @@ public:
 
     std::shared_ptr<Mouse> GetMouse() override;
 
+    std::shared_ptr<Gamepad> GetGamepad() override;
+
     SurfaceFormat GetBackBufferSurfaceFormat() const override;
 
     DepthFormat GetBackBufferDepthStencilFormat() const override;
