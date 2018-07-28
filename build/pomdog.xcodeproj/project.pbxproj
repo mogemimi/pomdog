@@ -618,6 +618,7 @@
 		A9E4B867210CD9C0003F87DC /* GamepadMappings.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GamepadMappings.hpp; sourceTree = "<group>"; };
 		A9E4B868210CD9C0003F87DC /* GamepadHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GamepadHelper.cpp; sourceTree = "<group>"; };
 		A9E4B869210CD9C0003F87DC /* GamepadHelper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GamepadHelper.hpp; sourceTree = "<group>"; };
+		A9E4B86E210CDCC7003F87DC /* NativeGamepad.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = NativeGamepad.hpp; sourceTree = "<group>"; };
 		A9F213561DE35F1B0027FA45 /* BoundingFrustum.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BoundingFrustum.hpp; sourceTree = "<group>"; };
 		A9F213571DE35F260027FA45 /* Plane.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Plane.hpp; sourceTree = "<group>"; };
 		A9F213581DE35F260027FA45 /* PlaneIntersectionType.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PlaneIntersectionType.hpp; sourceTree = "<group>"; };
@@ -933,6 +934,7 @@
 				1C7CBAD3B25BA6B0D155A5E6 /* InputDeviceCreator.hpp */,
 				B7379F84C54E861AD074AA1C /* InputDeviceFactory.cpp */,
 				5672D00947C663520B460134 /* InputDeviceFactory.hpp */,
+				A9E4B86E210CDCC7003F87DC /* NativeGamepad.hpp */,
 			);
 			path = InputSystem;
 			sourceTree = "<group>";

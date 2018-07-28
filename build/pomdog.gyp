@@ -30,7 +30,7 @@
         'application_platform%': 'X11',
         'renderers%': ['GL4'],
         'audio%': 'OpenAL',
-        'input_devices%': [],
+        'input_devices%': ['Linux'],
       },
     }],
   ],
@@ -275,6 +275,7 @@
       '../src/InputSystem/InputDeviceCreator.hpp',
       '../src/InputSystem/InputDeviceFactory.cpp',
       '../src/InputSystem/InputDeviceFactory.hpp',
+      '../src/InputSystem/NativeGamepad.hpp',
       '../src/Logging/Log.cpp',
       '../src/Logging/LogChannel.cpp',
       '../src/Math/BoundingBox.cpp',
@@ -558,6 +559,10 @@
       '../src/Platform.Linux/TimeSourceLinux.cpp',
       '../src/Platform.Linux/TimeSourceLinux.hpp',
     ],
+    'pomdog_library_input_linux_sources': [
+      '../src/InputSystem.Linux/GamepadLinux.cpp',
+      '../src/InputSystem.Linux/GamepadLinux.hpp',
+    ],
   },
   'target_defaults': {
     'dependencies': [
@@ -745,6 +750,11 @@
             '-ldxguid.lib',
           ],
         },
+      }],
+      ['"Linux" in input_devices', {
+        'sources': [
+          '<@(pomdog_library_input_linux_sources)',
+        ],
       }],
       ['application_platform == "X11"', {
         'sources': [
