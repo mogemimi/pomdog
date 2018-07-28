@@ -4,6 +4,7 @@
 #include "GameWindowCocoa.hpp"
 #include "KeyboardCocoa.hpp"
 #include "MouseCocoa.hpp"
+#include "../InputSystem.IOKit/GamepadIOKit.hpp"
 #include "../RenderSystem/GraphicsCommandQueueImmediate.hpp"
 #include "../RenderSystem.Metal/GraphicsContextMetal.hpp"
 #include "../RenderSystem.Metal/GraphicsDeviceMetal.hpp"
@@ -35,6 +36,7 @@
 
 using Pomdog::Detail::Metal::GraphicsContextMetal;
 using Pomdog::Detail::Metal::GraphicsDeviceMetal;
+using Pomdog::Detail::InputSystem::Apple::GamepadIOKit;
 
 namespace Pomdog {
 namespace Detail {
@@ -114,6 +116,8 @@ public:
 
     std::shared_ptr<Mouse> GetMouse();
 
+    std::shared_ptr<Gamepad> GetGamepad();
+
     SurfaceFormat GetBackBufferSurfaceFormat() const noexcept;
 
     DepthFormat GetBackBufferDepthStencilFormat() const noexcept;
@@ -145,6 +149,7 @@ private:
     std::unique_ptr<Pomdog::AssetManager> assetManager;
     std::shared_ptr<KeyboardCocoa> keyboard;
     std::shared_ptr<MouseCocoa> mouse;
+    std::shared_ptr<GamepadIOKit> gamepad;
 
     __weak MTKView* metalView;
     Duration presentationInterval;
@@ -206,6 +211,7 @@ GameHostMetal::Impl::Impl(
     audioEngine = std::make_shared<AudioEngine>();
     keyboard = std::make_shared<KeyboardCocoa>();
     mouse = std::make_shared<MouseCocoa>();
+    gamepad = std::make_shared<GamepadIOKit>();
 
     // Connect to system event signal
     POMDOG_ASSERT(eventQueue);
@@ -225,6 +231,7 @@ GameHostMetal::Impl::~Impl()
 {
     systemEventConnection.Disconnect();
     assetManager.reset();
+    gamepad.reset();
     keyboard.reset();
     mouse.reset();
     audioEngine.reset();
@@ -428,6 +435,11 @@ std::shared_ptr<Mouse> GameHostMetal::Impl::GetMouse()
     return mouse;
 }
 
+std::shared_ptr<Gamepad> GameHostMetal::Impl::GetGamepad()
+{
+    return gamepad;
+}
+
 SurfaceFormat GameHostMetal::Impl::GetBackBufferSurfaceFormat() const noexcept
 {
     return backBufferSurfaceFormat;
@@ -522,6 +534,12 @@ std::shared_ptr<Mouse> GameHostMetal::GetMouse()
 {
     POMDOG_ASSERT(impl);
     return impl->GetMouse();
+}
+
+std::shared_ptr<Gamepad> GameHostMetal::GetGamepad()
+{
+    POMDOG_ASSERT(impl);
+    return impl->GetGamepad();
 }
 
 SurfaceFormat GameHostMetal::GetBackBufferSurfaceFormat() const

@@ -4,6 +4,8 @@
 #include "../RenderSystem.GL4/GraphicsContextGL4.hpp"
 #include "../RenderSystem.GL4/GraphicsDeviceGL4.hpp"
 #include "../RenderSystem/GraphicsCommandQueueImmediate.hpp"
+#include "../InputSystem/GamepadFactory.hpp"
+#include "../InputSystem/NativeGamepad.hpp"
 #include "Pomdog/Application/Game.hpp"
 #include "Pomdog/Audio/AudioEngine.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
@@ -22,6 +24,7 @@
 
 using Pomdog::Detail::GL4::GraphicsContextGL4;
 using Pomdog::Detail::GL4::GraphicsDeviceGL4;
+using Pomdog::Detail::InputSystem::NativeGamepad;
 
 namespace Pomdog {
 namespace Detail {
@@ -203,6 +206,7 @@ public:
     std::unique_ptr<Pomdog::AssetManager> assetManager;
     std::unique_ptr<KeyboardX11> keyboard;
     MouseX11 mouse;
+    std::unique_ptr<NativeGamepad> gamepad;
     Duration presentationInterval;
     SurfaceFormat backBufferSurfaceFormat;
     DepthFormat backBufferDepthStencilFormat;
@@ -254,6 +258,7 @@ GameHostX11::Impl::Impl(const PresentationParameters& presentationParameters)
     audioEngine = std::make_shared<Pomdog::AudioEngine>();
 
     keyboard = std::make_unique<KeyboardX11>(x11Context->Display);
+    gamepad = Detail::InputSystem::CreateGamepad();
 
     Detail::AssetLoaderContext loaderContext;
     loaderContext.RootDirectory = PathHelper::Join(FileSystem::GetResourceDirectoryPath(), "Content");
@@ -263,6 +268,7 @@ GameHostX11::Impl::Impl(const PresentationParameters& presentationParameters)
 
 GameHostX11::Impl::~Impl()
 {
+    gamepad.reset();
     keyboard.reset();
     assetManager.reset();
     audioEngine.reset();
@@ -332,6 +338,7 @@ void GameHostX11::Impl::Run(Game & game)
     {
         clock.Tick();
         MessagePump();
+        gamepad->PollEvents();
 
         game.Update();
         RenderFrame(game);
@@ -449,6 +456,14 @@ std::shared_ptr<Mouse> GameHostX11::GetMouse()
     auto gameHost = shared_from_this();
     std::shared_ptr<Mouse> sharedMouse(gameHost, &impl->mouse);
     return sharedMouse;
+}
+
+std::shared_ptr<Gamepad> GameHostX11::GetGamepad()
+{
+    POMDOG_ASSERT(impl);
+    auto gameHost = shared_from_this();
+    std::shared_ptr<Gamepad> sharedGamepad(gameHost, impl->gamepad.get());
+    return sharedGamepad;
 }
 
 SurfaceFormat GameHostX11::GetBackBufferSurfaceFormat() const
