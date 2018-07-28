@@ -3,11 +3,30 @@
 #pragma once
 
 #include "Pomdog/Basic/Export.hpp"
+#include <functional>
 #include <string>
 #include <vector>
 
 namespace Pomdog {
 namespace StringHelper {
+
+POMDOG_EXPORT
+bool HasPrefix(const std::string& s, const std::string& prefix);
+
+POMDOG_EXPORT
+bool HasSuffix(const std::string& s, const std::string& suffix);
+
+POMDOG_EXPORT
+std::string TrimRight(const std::string& source, char separator);
+
+POMDOG_EXPORT
+std::string TrimLeft(const std::string& source, char separator);
+
+POMDOG_EXPORT
+std::string TrimRight(const std::string& source, std::function<bool(char)> isSeparator);
+
+POMDOG_EXPORT
+std::string TrimLeft(const std::string& source, std::function<bool(char)> isSeparator);
 
 POMDOG_EXPORT
 std::vector<std::string>

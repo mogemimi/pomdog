@@ -6,6 +6,56 @@
 
 namespace Pomdog {
 
+bool StringHelper::HasPrefix(const std::string& s, const std::string& prefix)
+{
+    if (s.size() < prefix.size()) {
+        return false;
+    }
+    return (s.compare(0, prefix.size(), prefix) == 0);
+}
+
+bool StringHelper::HasSuffix(const std::string& s, const std::string& suffix)
+{
+    if (suffix.empty()) {
+        return true;
+    }
+    if (s.size() < suffix.size()) {
+        return false;
+    }
+    return (s.compare(s.size() - suffix.size(), suffix.size(), suffix) == 0);
+}
+
+std::string StringHelper::TrimRight(const std::string& source, char separator)
+{
+    const auto func = [&](char c) { return c != separator; };
+    std::string result(
+        std::begin(source), std::find_if(std::rbegin(source), std::rend(source), func).base());
+    return result;
+}
+
+std::string StringHelper::TrimLeft(const std::string& source, char separator)
+{
+    const auto func = [&](char c) { return c != separator; };
+    std::string result(std::find_if(std::begin(source), std::end(source), func), std::end(source));
+    return result;
+}
+
+std::string
+StringHelper::TrimRight(const std::string& source, std::function<bool(char)> isSeparator)
+{
+    auto func = std::not1(std::move(isSeparator));
+    std::string result(
+        std::begin(source), std::find_if(std::rbegin(source), std::rend(source), func).base());
+    return result;
+}
+
+std::string StringHelper::TrimLeft(const std::string& source, std::function<bool(char)> isSeparator)
+{
+    auto func = std::not1(std::move(isSeparator));
+    std::string result(std::find_if(std::begin(source), std::end(source), func), std::end(source));
+    return result;
+}
+
 std::vector<std::string>
 StringHelper::Split(const std::string& source, char separator)
 {
