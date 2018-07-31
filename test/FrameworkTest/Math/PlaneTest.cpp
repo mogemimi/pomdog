@@ -174,7 +174,7 @@ TEST(Plane, Intersects_Vector3_UnitX)
 TEST(Plane, Intersects_Vector3_UnitY)
 {
     Plane plane{Vector3::UnitY, -42.0f};
-    
+
     // NOTE:
     // Y
     // ^

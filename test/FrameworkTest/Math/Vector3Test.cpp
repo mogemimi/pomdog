@@ -77,7 +77,7 @@ TEST(Vector3, Cross_AssociativeLow)
     EXPECT_EQ(3.0f * Vector3::Cross(Vector3::Zero, p), Vector3::Cross(Vector3::Zero, 3.0f * p));
     EXPECT_EQ(-7.0f * Vector3::Cross(Vector3::Zero, q), Vector3::Cross(Vector3::Zero, -7.0f * q));
     EXPECT_EQ(42.0f * Vector3::Cross(Vector3::Zero, r), Vector3::Cross(Vector3::Zero, 42.0f * r));
-    
+
     const Vector3 a = {42.0f, 7.0f, 13.0f};
     const Vector3 b = {5.0f, -8.0f, 9.0f};
     const Vector3 c = {-81.0f, -63.0f, -2.0f};
@@ -98,7 +98,7 @@ TEST(Vector3, Cross_CommutativeProperty)
     EXPECT_EQ(-Vector3::Cross(Vector3::UnitX, Vector3::Zero), Vector3::Cross(Vector3::Zero, Vector3::UnitX));
     EXPECT_EQ(-Vector3::Cross(Vector3::UnitY, Vector3::Zero), Vector3::Cross(Vector3::Zero, Vector3::UnitY));
     EXPECT_EQ(-Vector3::Cross(Vector3::UnitZ, Vector3::Zero), Vector3::Cross(Vector3::Zero, Vector3::UnitZ));
-    
+
     const Vector3 a = {42.0f, 7.0f, 13.0f};
     const Vector3 b = {5.0f, -8.0f, 9.0f};
     const Vector3 c = {-81.0f, -63.0f, -2.0f};
