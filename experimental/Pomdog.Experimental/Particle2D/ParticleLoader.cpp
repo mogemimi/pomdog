@@ -40,7 +40,7 @@ namespace {
 //
 //    clip.Duration = std::chrono::milliseconds(10);
 //
-//    //clip.Shape = std::make_unique<ParticleEmitterShapeSector>(MathConstants<float>::PiOver4());
+//    //clip.Shape = std::make_unique<ParticleEmitterShapeSector>(Math::PiOver4<float>);
 //    clip.Shape = std::make_unique<ParticleEmitterShapeBox>(0, 100);
 //
 //    clip.StartSpeed = std::make_unique<ParticleParameterRandom<float>>(40.0f, 128.0f);
@@ -79,11 +79,11 @@ namespace {
 //
 //    //clip.StartRotation = std::make_unique<ParticleParameterConstant<Radian<float>>>(0);
 //    clip.StartRotation = std::make_unique<ParticleParameterRandom<Radian<float>>>(
-//        0, MathConstants<float>::TwoPi());
+//        0, Math::TwoPi<float>);
 //
 //    //clip.Emitter.RotationOverLifetime = std::make_unique<ParticleParameterConstant<Radian<float>>>(0);
 //    clip.RotationOverLifetime = std::make_unique<ParticleParameterRandom<Radian<float>>>(
-//        -MathConstants<float>::PiOver4(), MathConstants<float>::PiOver4());
+//        -Math::PiOver4<float>, Math::PiOver4<float>);
 //
 //    //clip.StartSize = std::make_unique<ParticleParameterConstant<float>>(1.0f);
 //    clip.StartSize = std::make_unique<ParticleParameterRandom<float>>(0.8f, 1.2f);

@@ -104,7 +104,7 @@ void ParticleTestGame::Update()
     if (auto transform = particleObject.Component<Transform2D>())
     {
         transform->Position = touchPoint;
-        transform->Rotation = MathConstants<float>::PiOver2();
+        transform->Rotation = Math::PiOver2<float>;
         transform->Scale = {1, 1};
     }
 

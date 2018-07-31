@@ -159,10 +159,10 @@ void TestGame::Initialize()
             std::make_unique<ScaleToAction>(std::chrono::milliseconds(500), Vector3(2.5f, 1.5f, 2.5f)),
             std::make_unique<ScaleToAction>(std::chrono::milliseconds(900), 1.0f)));
         actor->RunAction(std::make_unique<SequenceAction>(
-            std::make_unique<RotateToAction>(std::chrono::seconds(40), 0, 10 * MathConstants<float>::TwoPi(), 0),
-            std::make_unique<RotateToAction>(std::chrono::seconds(40), 0, 10 * MathConstants<float>::TwoPi(), 0),
-            std::make_unique<RotateToAction>(std::chrono::seconds(40), 0, 10 * MathConstants<float>::TwoPi(), 0),
-            std::make_unique<RotateToAction>(std::chrono::seconds(40), 0, 10 * MathConstants<float>::TwoPi(), 0)));
+            std::make_unique<RotateToAction>(std::chrono::seconds(40), 0, 10 * Math::TwoPi<float>, 0),
+            std::make_unique<RotateToAction>(std::chrono::seconds(40), 0, 10 * Math::TwoPi<float>, 0),
+            std::make_unique<RotateToAction>(std::chrono::seconds(40), 0, 10 * Math::TwoPi<float>, 0),
+            std::make_unique<RotateToAction>(std::chrono::seconds(40), 0, 10 * Math::TwoPi<float>, 0)));
     }
     {
         // Sprite

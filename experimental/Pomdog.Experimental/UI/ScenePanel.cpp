@@ -218,11 +218,11 @@ void ScenePanel::OnMouseLeftButtonMoved(const PointerPoint& pointerPoint)
 //        // Tumble Gesture
 //        transform->Rotation += SampleTumbleGesture(ConvertToPanelSpace(pointerPoint.Position), *tumbleStartPosition,
 //            Rectangle{0, 0, Width(), Height()});
-//        if (transform->Rotation > MathConstants<float>::TwoPi()) {
-//            transform->Rotation -= MathConstants<float>::TwoPi();
+//        if (transform->Rotation > Math::TwoPi<float>) {
+//            transform->Rotation -= Math::TwoPi<float>;
 //        }
-//        else if (transform->Rotation < -MathConstants<float>::TwoPi()) {
-//            transform->Rotation += MathConstants<float>::TwoPi();
+//        else if (transform->Rotation < -Math::TwoPi<float>) {
+//            transform->Rotation += Math::TwoPi<float>;
 //        }
 //        POMDOG_ASSERT(transform->Rotation != std::numeric_limits<float>::quiet_NaN());
 //        POMDOG_ASSERT(transform->Rotation != std::numeric_limits<float>::infinity());

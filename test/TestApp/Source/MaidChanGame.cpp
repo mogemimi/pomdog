@@ -190,9 +190,9 @@ void MaidChanGame::DrawSprites()
         {
             auto & matrix = globalPoses[*joint.Index];
             spriteRenderer->Draw(texture, matrix, Vector2::Zero, {0, 0, 5, 5},
-                Color::Red, MathConstants<float>::PiOver4(), {0.5f, 0.5f}, 1.0f, 2/100.0f);
+                Color::Red, Math::PiOver4<float>, {0.5f, 0.5f}, 1.0f, 2/100.0f);
             spriteRenderer->Draw(texture, matrix, Vector2::Zero, {0, 0, 2, 2},
-                Color::White, MathConstants<float>::PiOver4(), {0.5f, 0.5f}, 1.0f, 1/100.0f);
+                Color::White, Math::PiOver4<float>, {0.5f, 0.5f}, 1.0f, 1/100.0f);
             spriteRenderer->Draw(texture, matrix, Vector2::Zero, {0, 0, 32, 2},
                 Color::Black, 0.0f, {0.0f, 0.5f}, 1.0f, 4/100.0f);
         }
@@ -204,7 +204,7 @@ void MaidChanGame::DrawSprites()
         for (auto & slot: maidSkin.Slots()) {
             auto layerDepth = static_cast<float>(slotCount - slot.DrawOrder) / slotCount;
             spriteRenderer->Draw(maidTexture, globalPoses[*slot.JointIndex], slot.Translate, slot.Subrect,
-                slot.Color, (slot.TextureRotate ? slot.Rotation - MathConstants<float>::PiOver2(): slot.Rotation),
+                slot.Color, (slot.TextureRotate ? slot.Rotation - Math::PiOver2<float>: slot.Rotation),
                 slot.Origin, slot.Scale, layerDepth);
         }
     }
@@ -220,7 +220,7 @@ void MaidChanGame::DrawSprites()
             auto layerDepth = static_cast<float>(slotCount - slot.DrawOrder) / slotCount;
             spriteRenderer->Draw(texture, globalPoses[*slot.JointIndex], slot.Translate, slot.Subrect,
                 {0, 0, 0, 40},
-                (slot.TextureRotate ? slot.Rotation - MathConstants<float>::PiOver2(): slot.Rotation),
+                (slot.TextureRotate ? slot.Rotation - Math::PiOver2<float>: slot.Rotation),
                 slot.Origin, slot.Scale, layerDepth);
         }
 

@@ -295,7 +295,7 @@ void LineBatch::DrawCircle(const Vector2& position, float radius, const Color& c
     POMDOG_ASSERT(radius > 0);
 
     POMDOG_ASSERT(segments >= 3);
-    Radian<float> centralAngle = MathConstants<float>::TwoPi() / segments;
+    Radian<float> centralAngle = Math::TwoPi<float> / segments;
     Vector2 prevPoint = position + Vector2{radius, 0};
 
     auto colorVector = color.ToVector4();
@@ -430,11 +430,11 @@ void LineBatch::DrawSphere(
     // Create sphere vertices
     sphereVertices.push_back(Vector3{0.0f, 1.0f, 0.0f});
     for (int ring = 1; ring < rings; ++ring) {
-        const auto latitude = MathConstants<float>::Pi() * ring * R;
+        const auto latitude = Math::Pi<float> * ring * R;
         const auto y = std::cos(latitude);
         const auto r = std::sin(latitude);
         for (int s = 0; s < sectors; ++s) {
-            auto longitude = MathConstants<float>::TwoPi() * s * S;
+            auto longitude = Math::TwoPi<float> * s * S;
             auto x = r * std::cos(longitude);
             auto z = r * std::sin(longitude);
             sphereVertices.push_back(Vector3{x, y, z});

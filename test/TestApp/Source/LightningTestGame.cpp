@@ -79,7 +79,7 @@ void LightningTestGame::Initialize()
 //
 //        transform.Position = {i * 64 * 2.0f, 0};
 //        transform.Scale = {2.0f, 2.0f};
-//        transform.Rotation = (0.5f * i) * MathConstants<float>::PiOver4();
+//        transform.Rotation = (0.5f * i) * Math::PiOver4<float>;
 //        sprite.Origin = Vector2{0.5f, 0.5f};
 //        sprite.Subrect = Rectangle(0, 0, texture->Width(), texture->Height());//Rectangle(0, 0, 16, 28);
 //

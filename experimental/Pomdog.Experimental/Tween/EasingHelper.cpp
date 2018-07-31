@@ -53,7 +53,7 @@ T Sine(T time)
         "You can only use floating-point types");
 
     // Sinusoidal easing
-    return 1 - std::cos(time * MathConstants<T>::PiOver2());
+    return 1 - std::cos(time * Math::PiOver2<T>);
 }
 
 template <typename T>
@@ -87,7 +87,7 @@ T Elastic(T time)
     constexpr auto s = period / 4;
     const auto postFix = std::pow(2, 10 * (time - 1));
     return (time <= 0 || time >= 1) ? time
-        : - (postFix * std::sin(((time - 1) - s) * MathConstants<T>::TwoPi() / period));
+        : - (postFix * std::sin(((time - 1) - s) * Math::TwoPi<T> / period));
 }
 
 template <typename T>

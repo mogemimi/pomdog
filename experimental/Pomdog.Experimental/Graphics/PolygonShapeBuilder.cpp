@@ -82,7 +82,7 @@ void PolygonShapeBuilder::DrawArc(
 
     const auto center = Vector3{position, 0.0f};
     const Radian<float> centralAngle =
-        std::min(arcAngle.value, MathConstants<float>::TwoPi()) / segments;
+        std::min(arcAngle.value, Math::TwoPi<float>) / segments;
 
     auto computePoint = [&](int index) {
         auto rad =  startAngle + centralAngle * index;
@@ -215,7 +215,7 @@ void PolygonShapeBuilder::DrawCircle(
     POMDOG_ASSERT(radius > 0);
     POMDOG_ASSERT(segments >= 3);
 
-    Radian<float> centralAngle = MathConstants<float>::TwoPi() / segments;
+    Radian<float> centralAngle = Math::TwoPi<float> / segments;
     auto prevPoint = position + Vector3{radius, 0, 0};
 
     auto colorVector = color.ToVector4();
@@ -453,11 +453,11 @@ void PolygonShapeBuilder::DrawSphere(
     const auto S = 1.0f / static_cast<float>(sectors - 1);
 
     for (int ring = 0; ring < rings; ++ring) {
-        const auto latitude = MathConstants<float>::Pi() * ring * R;
+        const auto latitude = Math::Pi<float> * ring * R;
         const auto y = std::cos(latitude);
         const auto r = std::sin(latitude);
         for (int s = 0; s < sectors; ++s) {
-            const auto longitude = MathConstants<float>::TwoPi() * s * S;
+            const auto longitude = Math::TwoPi<float> * s * S;
             const auto x = r * std::cos(longitude);
             const auto z = r * std::sin(longitude);
             sphereVertices.push_back(Vector3{x, y, z} * radius + position);

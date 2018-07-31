@@ -9,14 +9,14 @@ namespace {
 
 float NormalizeRadian(float radian)
 {
-    while (radian > MathConstants<float>::TwoPi()) {
-        radian -= MathConstants<float>::TwoPi();
+    while (radian > Math::TwoPi<float>) {
+        radian -= Math::TwoPi<float>;
     }
     while (radian < 0) {
-        radian += MathConstants<float>::TwoPi();
+        radian += Math::TwoPi<float>;
     }
     POMDOG_ASSERT(radian >= 0);
-    POMDOG_ASSERT(radian <= MathConstants<float>::TwoPi());
+    POMDOG_ASSERT(radian <= Math::TwoPi<float>);
     return radian;
 }
 

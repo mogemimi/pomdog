@@ -69,7 +69,7 @@ SkinnedMeshSlot CreateSkinnedMeshSlot(SlotDesc const& slotDesc,
     Matrix3x2 scaling = Matrix3x2::CreateScale(attachment.Scale * size);
     Matrix3x2 rotate = Matrix3x2::CreateRotation(attachment.Rotation);
     if (textureRegion.Rotate) {
-        rotate = Matrix3x2::CreateRotation(-MathConstants<float>::PiOver2()) * rotate;
+        rotate = Matrix3x2::CreateRotation(-Math::PiOver2<float>) * rotate;
     }
     Matrix3x2 translate = Matrix3x2::CreateTranslation(attachment.Translate);
 

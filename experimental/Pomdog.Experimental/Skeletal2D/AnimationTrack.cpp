@@ -62,8 +62,8 @@ void RotationTrack::Apply(AnimationTimeInterval const& time, Skeleton const& ske
         POMDOG_ASSERT((time <= keys.front().Time) || (time >= keys.back().Time));
 
         auto diff = pointPair.first->Rotation.ToFloat();
-        POMDOG_ASSERT(diff <= MathConstants<float>::Pi());
-        POMDOG_ASSERT(diff >= -MathConstants<float>::Pi());
+        POMDOG_ASSERT(diff <= Math::Pi<float>);
+        POMDOG_ASSERT(diff >= -Math::Pi<float>);
         pose.Rotation = bindPose.Rotation + diff;
         return;
     }
@@ -81,10 +81,10 @@ void RotationTrack::Apply(AnimationTimeInterval const& time, Skeleton const& ske
     auto rotation1 = pointPair.first->Rotation.ToFloat();
     auto rotation2 = pointPair.second->Rotation.ToFloat();
 
-    POMDOG_ASSERT(rotation1 <= MathConstants<float>::Pi());
-    POMDOG_ASSERT(rotation1 >= -MathConstants<float>::Pi());
-    POMDOG_ASSERT(rotation2 <= MathConstants<float>::Pi());
-    POMDOG_ASSERT(rotation2 >= -MathConstants<float>::Pi());
+    POMDOG_ASSERT(rotation1 <= Math::Pi<float>);
+    POMDOG_ASSERT(rotation1 >= -Math::Pi<float>);
+    POMDOG_ASSERT(rotation2 <= Math::Pi<float>);
+    POMDOG_ASSERT(rotation2 >= -Math::Pi<float>);
 
     pose.Rotation = bindPose.Rotation + MathHelper::Lerp(rotation1, rotation2, amount);
 }
