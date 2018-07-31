@@ -26,7 +26,7 @@ vertex VS_OUTPUT SimpleEffectVS(
     VS_OUTPUT out;
 
     float4 position = float4(in.Position, 1.0);
-    out.Position = (uniforms.ViewProjection * (uniforms.Model * position));
+    out.Position = ((position * uniforms.Model) * uniforms.ViewProjection);
     out.TextureCoord = in.TextureCoord.xy;
     return out;
 }
