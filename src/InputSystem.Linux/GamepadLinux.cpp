@@ -307,6 +307,7 @@ GamepadLinux::~GamepadLinux()
 GamepadCapabilities GamepadLinux::GetCapabilities(PlayerIndex playerIndex) const
 {
     const auto index = GamepadHelper::ToInt(playerIndex);
+    POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(index < static_cast<int>(gamepads.size()));
     return gamepads[index].caps;
 }
@@ -314,6 +315,7 @@ GamepadCapabilities GamepadLinux::GetCapabilities(PlayerIndex playerIndex) const
 GamepadState GamepadLinux::GetState(PlayerIndex playerIndex) const
 {
     const auto index = GamepadHelper::ToInt(playerIndex);
+    POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(index < static_cast<int>(gamepads.size()));
     return gamepads[index].state;
 }
