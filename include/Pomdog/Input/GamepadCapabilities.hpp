@@ -13,8 +13,6 @@ struct GamepadCapabilities final {
 
     int ThumbStickCount = 0;
 
-    bool IsConnected = false;
-
     bool HasLeftXThumbStick = false;
     bool HasLeftYThumbStick = false;
     bool HasRightXThumbStick = false;
