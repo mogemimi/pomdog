@@ -37,13 +37,7 @@ void AppendDeviceMatching(CFMutableArrayRef matcher, uint32_t page, uint32_t usa
     CFRelease(result);
 }
 
-ButtonState GetTriggerButtonValue(IOHIDValueRef valueRef)
-{
-    const auto value = IOHIDValueGetIntegerValue(valueRef);
-    return (value > 0) ? ButtonState::Pressed: ButtonState::Released;
-}
-
-float GetThumbStickValue(IOHIDValueRef valueRef, const ThumbStickInfo& info)
+float NormalizeAxisValue(IOHIDValueRef valueRef, const ThumbStickInfo& info)
 {
     const auto value = IOHIDValueGetIntegerValue(valueRef);
     return static_cast<float>(info.InvertDirection * ((value - info.Minimum) * 2 - info.Range)) / info.Range;
@@ -65,9 +59,9 @@ void GamepadDevice::Close()
     std::swap(caps, emptyCaps);
 }
 
-void GamepadDevice::OnDeviceInput(IOReturn result, void* sender, IOHIDValueRef value)
+void GamepadDevice::OnDeviceInput(IOReturn result, void* sender, IOHIDValueRef valueRef)
 {
-    const auto element = IOHIDValueGetElement(value);
+    const auto element = IOHIDValueGetElement(valueRef);
     const auto usagePage = IOHIDElementGetUsagePage(element);
     const auto usage = IOHIDElementGetUsage(element);
 
@@ -75,7 +69,7 @@ void GamepadDevice::OnDeviceInput(IOReturn result, void* sender, IOHIDValueRef v
     case kIOHIDElementTypeInput_Button: {
         const auto buttonIndex = static_cast<int>(usage) - 1;
         if (auto button = GetButton(state, mappings.buttons, buttonIndex); button != nullptr) {
-            (*button) = (IOHIDValueGetIntegerValue(value) != 0)
+            (*button) = (IOHIDValueGetIntegerValue(valueRef) != 0)
                 ? ButtonState::Pressed
                 : ButtonState::Released;
         }
@@ -97,28 +91,24 @@ void GamepadDevice::OnDeviceInput(IOReturn result, void* sender, IOHIDValueRef v
                 POMDOG_ASSERT(axisIndex < static_cast<int>(mappings.axes.size()));
                 POMDOG_ASSERT(axisIndex < static_cast<int>(thumbStickInfos.size()));
 
-                switch (mappings.axes[axisIndex]) {
-                case AxesKind::LeftTrigger:
-                    state.Buttons.LeftTrigger = GetTriggerButtonValue(value);
-                    break;
-                case AxesKind::RightTrigger:
-                    state.Buttons.RightTrigger = GetTriggerButtonValue(value);
-                    break;
-                case AxesKind::LeftStickX:
-                    state.ThumbSticks.Left.X = GetThumbStickValue(value, thumbStickInfos[axisIndex]);
-                    break;
-                case AxesKind::LeftStickY:
-                    state.ThumbSticks.Left.Y = GetThumbStickValue(value, thumbStickInfos[axisIndex]);
-                    break;
-                case AxesKind::RightStickX:
-                    state.ThumbSticks.Right.X = GetThumbStickValue(value, thumbStickInfos[axisIndex]);
-                    break;
-                case AxesKind::RightStickY:
-                    state.ThumbSticks.Right.Y = GetThumbStickValue(value, thumbStickInfos[axisIndex]);
-                    break;
-                default:
-                    break;
+                const auto& mapper = mappings.axes[axisIndex];
+
+                if (auto thumbStick = GetThumbStick(state, mapper.thumbStick); thumbStick != nullptr) {
+                    (*thumbStick) = NormalizeAxisValue(valueRef, thumbStickInfos[axisIndex]);
                 }
+
+                if (auto button = GetButton(state, mapper.positiveTrigger); button != nullptr) {
+                    const auto value = NormalizeAxisValue(valueRef, thumbStickInfos[axisIndex]);
+                    constexpr float threshold = 0.05f;
+                    (*button) = (value > threshold) ? ButtonState::Pressed : ButtonState::Released;
+                }
+
+                if (auto button = GetButton(state, mapper.negativeTrigger); button != nullptr) {
+                    const auto value = NormalizeAxisValue(valueRef, thumbStickInfos[axisIndex]);
+                    constexpr float threshold = -0.05f;
+                    (*button) = (value < threshold) ? ButtonState::Pressed : ButtonState::Released;
+                }
+
                 break;
             }
             case kHIDUsage_GD_Hatswitch: {
@@ -127,7 +117,7 @@ void GamepadDevice::OnDeviceInput(IOReturn result, void* sender, IOHIDValueRef v
                 state.DPad.Left = ButtonState::Released;
                 state.DPad.Right = ButtonState::Released;
 
-                switch (IOHIDValueGetIntegerValue(value)) {
+                switch (IOHIDValueGetIntegerValue(valueRef)) {
                 case 0:
                     state.DPad.Up = ButtonState::Pressed;
                     break;
@@ -353,8 +343,16 @@ void GamepadIOKit::OnDeviceAttached(IOReturn result, void* sender, IOHIDDeviceRe
                         POMDOG_ASSERT(axisIndex >= 0);
                         POMDOG_ASSERT(axisIndex < static_cast<int>(gamepad->mappings.axes.size()));
 
-                        if (auto hasAxis = HasAxis(gamepad->caps, gamepad->mappings, axisIndex); hasAxis != nullptr) {
-                            (*hasAxis) = true;
+                        const auto& mapper = gamepad->mappings.axes[axisIndex];
+
+                        if (auto hasThumbStick = HasThumbStick(gamepad->caps, mapper.thumbStick); hasThumbStick != nullptr) {
+                            (*hasThumbStick) = true;
+                        }
+                        if (auto hasButton = HasButton(gamepad->caps, mapper.positiveTrigger); hasButton != nullptr) {
+                            (*hasButton) = true;
+                        }
+                        if (auto hasButton = HasButton(gamepad->caps, mapper.negativeTrigger); hasButton != nullptr) {
+                            (*hasButton) = true;
                         }
 
                         POMDOG_ASSERT(axisIndex >= 0);
@@ -365,9 +363,9 @@ void GamepadIOKit::OnDeviceAttached(IOReturn result, void* sender, IOHIDDeviceRe
                         auto& info = gamepad->thumbStickInfos[axisIndex];
                         info.Minimum = minimum;
                         info.Range = std::max(1, maximum - minimum);
-                        switch (gamepad->mappings.axes[axisIndex]) {
-                        case AxesKind::LeftStickY:
-                        case AxesKind::RightStickY:
+                        switch (mapper.thumbStick) {
+                        case ThumbStickKind::LeftStickY:
+                        case ThumbStickKind::RightStickY:
                             // Set to -1 to reverse the Y axis (vertical)
                             info.InvertDirection = -1;
                             break;

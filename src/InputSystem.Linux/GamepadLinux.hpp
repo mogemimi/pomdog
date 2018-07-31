@@ -25,11 +25,11 @@ struct ThumbStickInfo final {
 class GamepadDevice final {
 public:
     int fd = -1;
-    int deviceEventIndex = 0;
+    int deviceEventIndex = -1;
     GamepadCapabilities caps;
     GamepadState state;
     GamepadMappings mappings;
-    std::array<int8_t, 16> keyMap;
+    std::array<int8_t, 32> keyMap;
     std::array<ThumbStickInfo, 6> thumbStickInfos;
     PlayerIndex playerIndex;
 

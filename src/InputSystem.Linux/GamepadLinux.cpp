@@ -28,12 +28,7 @@ bool HasBit(const T& array, uint32_t bit)
     return ((1 << (bit % 8)) & array[bit / 8]) != 0;
 }
 
-ButtonState GetTriggerButtonValue(int value)
-{
-    return (value > 0) ? ButtonState::Pressed : ButtonState::Released;
-}
-
-float GetThumbStickValue(int value, const ThumbStickInfo& info)
+float NormalizeAxisValue(int value, const ThumbStickInfo& info)
 {
     return static_cast<float>(info.InvertDirection * ((value - info.Minimum) * 2 - info.Range)) / info.Range;
 }
@@ -99,7 +94,7 @@ bool GamepadDevice::Open(int deviceIndex)
 
     for (int i = BTN_JOYSTICK; i < KEY_MAX; ++i) {
         if (HasBit(keyBits, static_cast<uint32_t>(i))) {
-            const auto index = i - BTN_GAMEPAD;
+            const auto index = i - BTN_JOYSTICK;
             if ((index < 0) || (index >= static_cast<int>(keyMap.size()))) {
                 continue;
             }
@@ -115,6 +110,9 @@ bool GamepadDevice::Open(int deviceIndex)
         }
     }
 
+    static_assert(ABS_X == 0, "");
+    static_assert(ABS_RZ == 5, "");
+
     for (int i = ABS_X; i <= ABS_RZ; ++i) {
         if (HasBit(absBits, i)) {
             struct input_absinfo absInfo;
@@ -125,8 +123,16 @@ bool GamepadDevice::Open(int deviceIndex)
             POMDOG_ASSERT(i >= 0);
             POMDOG_ASSERT(i < static_cast<int>(mappings.axes.size()));
 
-            if (auto hasAxis = HasAxis(caps, mappings, i); hasAxis != nullptr) {
-                (*hasAxis) = true;
+            const auto& mapper = mappings.axes[i];
+
+            if (auto hasThumbStick = HasThumbStick(caps, mapper.thumbStick); hasThumbStick != nullptr) {
+                (*hasThumbStick) = true;
+            }
+            if (auto hasButton = HasButton(caps, mapper.positiveTrigger); hasButton != nullptr) {
+                (*hasButton) = true;
+            }
+            if (auto hasButton = HasButton(caps, mapper.negativeTrigger); hasButton != nullptr) {
+                (*hasButton) = true;
             }
 
             POMDOG_ASSERT(i >= 0);
@@ -135,9 +141,9 @@ bool GamepadDevice::Open(int deviceIndex)
             info.Minimum = absInfo.minimum;
             info.Range = std::max(1, absInfo.maximum - absInfo.minimum);
 
-            switch (mappings.axes[i]) {
-            case AxesKind::LeftStickY:
-            case AxesKind::RightStickY:
+            switch (mapper.thumbStick) {
+            case ThumbStickKind::LeftStickY:
+            case ThumbStickKind::RightStickY:
                 // Set to -1 to reverse the Y axis (vertical)
                 info.InvertDirection = -1;
                 break;
@@ -202,8 +208,8 @@ bool GamepadDevice::PollEvents()
 
         switch (event.type) {
         case EV_KEY: {
-            const auto physicalIndex = static_cast<int>(event.code) - BTN_GAMEPAD;
-            if (physicalIndex >= static_cast<int>(keyMap.size())) {
+            const auto physicalIndex = static_cast<int>(event.code) - BTN_JOYSTICK;
+            if ((physicalIndex < 0) || (physicalIndex >= static_cast<int>(keyMap.size()))) {
                 break;
             }
             const auto buttonIndex = keyMap[physicalIndex];
@@ -257,7 +263,7 @@ bool GamepadDevice::PollEvents()
             case ABS_Z:
             case ABS_RX:
             case ABS_RY:
-            case ABS_RZ:
+            case ABS_RZ: {
                 static_assert(ABS_X == 0, "");
                 static_assert(ABS_Y == 1, "");
                 static_assert(ABS_Z == 2, "");
@@ -268,29 +274,25 @@ bool GamepadDevice::PollEvents()
                 POMDOG_ASSERT(event.code < static_cast<int>(mappings.axes.size()));
                 POMDOG_ASSERT(event.code < static_cast<int>(thumbStickInfos.size()));
 
-                switch (mappings.axes[event.code]) {
-                case AxesKind::LeftTrigger:
-                    state.Buttons.LeftTrigger = GetTriggerButtonValue(event.value);
-                    break;
-                case AxesKind::RightTrigger:
-                    state.Buttons.RightTrigger = GetTriggerButtonValue(event.value);
-                    break;
-                case AxesKind::LeftStickX:
-                    state.ThumbSticks.Left.X = GetThumbStickValue(event.value, thumbStickInfos[event.code]);
-                    break;
-                case AxesKind::LeftStickY:
-                    state.ThumbSticks.Left.Y = GetThumbStickValue(event.value, thumbStickInfos[event.code]);
-                    break;
-                case AxesKind::RightStickX:
-                    state.ThumbSticks.Right.X = GetThumbStickValue(event.value, thumbStickInfos[event.code]);
-                    break;
-                case AxesKind::RightStickY:
-                    state.ThumbSticks.Right.Y = GetThumbStickValue(event.value, thumbStickInfos[event.code]);
-                    break;
-                default:
-                    break;
+                const auto& mapper = mappings.axes[event.code];
+
+                if (auto thumbStick = GetThumbStick(state, mapper.thumbStick); thumbStick != nullptr) {
+                    (*thumbStick) = NormalizeAxisValue(event.value, thumbStickInfos[event.code]);
+                }
+
+                if (auto button = GetButton(state, mapper.positiveTrigger); button != nullptr) {
+                    const auto value = NormalizeAxisValue(event.value, thumbStickInfos[event.code]);
+                    constexpr float threshold = 0.05f;
+                    (*button) = (value > threshold) ? ButtonState::Pressed : ButtonState::Released;
+                }
+
+                if (auto button = GetButton(state, mapper.negativeTrigger); button != nullptr) {
+                    const auto value = NormalizeAxisValue(event.value, thumbStickInfos[event.code]);
+                    constexpr float threshold = -0.05f;
+                    (*button) = (value < threshold) ? ButtonState::Pressed : ButtonState::Released;
                 }
                 break;
+            }
             default:
                 break;
             }
@@ -299,6 +301,7 @@ bool GamepadDevice::PollEvents()
             break;
         }
     }
+
     return true;
 }
 
