@@ -105,8 +105,6 @@ void ParseMapping(const char* source, GamepadMappings& mappings, std::string& na
         std::tie(key, source) = Parse(source, ':');
         std::tie(index, source) = Parse(source, ',');
 
-        Log::Internal(key + " " + index);
-
         if (index[0] == 'b') {
             int i = std::atoi(StringHelper::TrimLeft(index, 'b').c_str());
             if ((i >= 0) && (i < static_cast<int>(mappings.buttons.size()))) {
