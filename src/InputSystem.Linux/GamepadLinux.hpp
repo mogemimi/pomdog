@@ -31,6 +31,7 @@ public:
     GamepadMappings mappings;
     std::array<int8_t, 16> keyMap;
     std::array<ThumbStickInfo, 6> thumbStickInfos;
+    PlayerIndex playerIndex;
 
 public:
     bool Open(int deviceIndex);
@@ -39,7 +40,7 @@ public:
 
     bool HasFileDescriptor() const;
 
-    void PollEvents();
+    bool PollEvents();
 };
 
 class GamepadLinux final : public NativeGamepad {

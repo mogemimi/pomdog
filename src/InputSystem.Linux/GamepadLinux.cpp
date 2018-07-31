@@ -186,7 +186,7 @@ bool GamepadDevice::HasFileDescriptor() const
     return fd >= 0;
 }
 
-void GamepadDevice::PollEvents()
+bool GamepadDevice::PollEvents()
 {
     for (;;) {
         struct input_event event;
@@ -195,7 +195,7 @@ void GamepadDevice::PollEvents()
         if (::read(fd, &event, sizeof(event)) < 0) {
             if (errno == ENODEV) {
                 Log::Internal("Disconnect gamepad: " + caps.Name);
-                Close();
+                return false;
             }
             break;
         }
@@ -299,10 +299,15 @@ void GamepadDevice::PollEvents()
             break;
         }
     }
+    return true;
 }
 
 GamepadLinux::GamepadLinux()
 {
+    gamepads[0].playerIndex = PlayerIndex::One;
+    gamepads[1].playerIndex = PlayerIndex::Two;
+    gamepads[2].playerIndex = PlayerIndex::Three;
+    gamepads[3].playerIndex = PlayerIndex::Four;
 }
 
 GamepadLinux::~GamepadLinux()
@@ -357,6 +362,8 @@ void GamepadLinux::EnumerateDevices()
             gamepad->Close();
             continue;
         }
+
+        this->Connected(gamepad->playerIndex, gamepad->caps);
     }
 }
 
@@ -367,7 +374,11 @@ void GamepadLinux::PollEvents()
             continue;
         }
 
-        gamepad.PollEvents();
+        if (!gamepad.PollEvents()) {
+            auto caps = gamepad.caps;
+            gamepad.Close();
+            this->Disconnected(gamepad.playerIndex, caps);
+        }
     }
 }
 
