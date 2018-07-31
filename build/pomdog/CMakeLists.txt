@@ -11,38 +11,40 @@ set(CMAKE_CXX_STANDARD_REQUIRED on)
 set(CMAKE_CXX_EXTENSIONS off)
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
 
-source_group(Application              REGULAR_EXPRESSION "(include/Pomdog|src)/Application/*")
-source_group(Async                    REGULAR_EXPRESSION "(include/Pomdog|src)/Async/*")
-source_group(Audio                    REGULAR_EXPRESSION "(include/Pomdog|src)/Audio/*")
-source_group(Basic                    REGULAR_EXPRESSION "(include/Pomdog|src)/Basic/*")
-source_group(Content                  REGULAR_EXPRESSION "(include/Pomdog|src)/Content/*")
-source_group(Experimental             REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/*")
-source_group(Graphics                 REGULAR_EXPRESSION "(include/Pomdog|src)/Graphics/*")
-source_group(Input                    REGULAR_EXPRESSION "(include/Pomdog|src)/Input/*")
-source_group(Logging                  REGULAR_EXPRESSION "(include/Pomdog|src)/Logging/*")
-source_group(Math                     REGULAR_EXPRESSION "(include/Pomdog|src)/Math/*")
-source_group(Platform.Cocoa           REGULAR_EXPRESSION "(include/Pomdog/Platform/Cocoa|src/Platform.Cocoa)/*")
-source_group(Platform.Win32           REGULAR_EXPRESSION "(include/Pomdog/Platform/Win32|src/Platform.Win32)/*")
-source_group(Platform.X11             REGULAR_EXPRESSION "(include/Pomdog/Platform/X11|src/Platform.X11)/*")
-source_group(Reactive                 REGULAR_EXPRESSION "(include/Pomdog|src)/Reactive/*")
-source_group(Signals                  REGULAR_EXPRESSION "(include/Pomdog|src)/Signals/*")
-source_group(Utility                  REGULAR_EXPRESSION "(include/Pomdog|src)/Utility/*")
-source_group(Application              REGULAR_EXPRESSION "(include/Pomdog|src)/Application/*")
-source_group(InputSystem              REGULAR_EXPRESSION src/InputSystem/*)
-source_group(InputSystem.DirectInput  REGULAR_EXPRESSION src/InputSystem.DirectInput/*)
-source_group(InputSystem.IOKit        REGULAR_EXPRESSION src/InputSystem.IOKit/*)
-source_group(InputSystem.Linux        REGULAR_EXPRESSION src/InputSystem.Linux/*)
-source_group(Platform.Apple           REGULAR_EXPRESSION src/Platform.Apple/*)
-source_group(Platform.Linux           REGULAR_EXPRESSION src/Platform.Linux/*)
-source_group(RenderSystem             REGULAR_EXPRESSION src/RenderSystem/*)
-source_group(RenderSystem.DXGI        REGULAR_EXPRESSION src/RenderSystem.DXGI/*)
-source_group(RenderSystem.Direct3D    REGULAR_EXPRESSION src/RenderSystem.Direct3D/*)
-source_group(RenderSystem.Direct3D11  REGULAR_EXPRESSION src/RenderSystem.Direct3D11/*)
-source_group(RenderSystem.GL4         REGULAR_EXPRESSION src/RenderSystem.GL4/*)
-source_group(RenderSystem.Metal       REGULAR_EXPRESSION src/RenderSystem.Metal/*)
-source_group(RenderSystem.Vulkan      REGULAR_EXPRESSION src/RenderSystem.Vulkan/*)
-source_group(SoundSystem.OpenAL       REGULAR_EXPRESSION src/SoundSystem.OpenAL/*)
-source_group(SoundSystem.XAudio2      REGULAR_EXPRESSION src/SoundSystem.XAudio2/*)
+source_group(Application                REGULAR_EXPRESSION "(include/Pomdog|src)/Application/*")
+source_group(Async                      REGULAR_EXPRESSION "(include/Pomdog|src)/Async/*")
+source_group(Audio                      REGULAR_EXPRESSION "(include/Pomdog|src)/Audio/*")
+source_group(Basic                      REGULAR_EXPRESSION "(include/Pomdog|src)/Basic/*")
+source_group(Content                    REGULAR_EXPRESSION "(include/Pomdog|src)/Content/*")
+source_group(Graphics                   REGULAR_EXPRESSION "(include/Pomdog|src)/Graphics/*")
+source_group(Input                      REGULAR_EXPRESSION "(include/Pomdog|src)/Input/*")
+source_group(Logging                    REGULAR_EXPRESSION "(include/Pomdog|src)/Logging/*")
+source_group(Math                       REGULAR_EXPRESSION "(include/Pomdog|src)/Math/*")
+source_group(Platform.Cocoa             REGULAR_EXPRESSION "(include/Pomdog/Platform/Cocoa|src/Platform.Cocoa)/*")
+source_group(Platform.Win32             REGULAR_EXPRESSION "(include/Pomdog/Platform/Win32|src/Platform.Win32)/*")
+source_group(Platform.X11               REGULAR_EXPRESSION "(include/Pomdog/Platform/X11|src/Platform.X11)/*")
+source_group(Reactive                   REGULAR_EXPRESSION "(include/Pomdog|src)/Reactive/*")
+source_group(Signals                    REGULAR_EXPRESSION "(include/Pomdog|src)/Signals/*")
+source_group(Utility                    REGULAR_EXPRESSION "(include/Pomdog|src)/Utility/*")
+source_group(Application                REGULAR_EXPRESSION "(include/Pomdog|src)/Application/*")
+source_group(Experimental\\Graphics      REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Graphics/*")
+source_group(Experimental\\Image         REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Image/*")
+source_group(Experimental\\TexturePacker REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/TexturePacker/*")
+source_group(InputSystem                REGULAR_EXPRESSION src/InputSystem/*)
+source_group(InputSystem.DirectInput    REGULAR_EXPRESSION src/InputSystem.DirectInput/*)
+source_group(InputSystem.IOKit          REGULAR_EXPRESSION src/InputSystem.IOKit/*)
+source_group(InputSystem.Linux          REGULAR_EXPRESSION src/InputSystem.Linux/*)
+source_group(Platform.Apple             REGULAR_EXPRESSION src/Platform.Apple/*)
+source_group(Platform.Linux             REGULAR_EXPRESSION src/Platform.Linux/*)
+source_group(RenderSystem               REGULAR_EXPRESSION src/RenderSystem/*)
+source_group(RenderSystem.DXGI          REGULAR_EXPRESSION src/RenderSystem.DXGI/*)
+source_group(RenderSystem.Direct3D      REGULAR_EXPRESSION src/RenderSystem.Direct3D/*)
+source_group(RenderSystem.Direct3D11    REGULAR_EXPRESSION src/RenderSystem.Direct3D11/*)
+source_group(RenderSystem.GL4           REGULAR_EXPRESSION src/RenderSystem.GL4/*)
+source_group(RenderSystem.Metal         REGULAR_EXPRESSION src/RenderSystem.Metal/*)
+source_group(RenderSystem.Vulkan        REGULAR_EXPRESSION src/RenderSystem.Vulkan/*)
+source_group(SoundSystem.OpenAL         REGULAR_EXPRESSION src/SoundSystem.OpenAL/*)
+source_group(SoundSystem.XAudio2        REGULAR_EXPRESSION src/SoundSystem.XAudio2/*)
 
 set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/include/Pomdog/Application/Duration.hpp
@@ -345,6 +347,22 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/src/Utility/StringHelper.cpp
 )
 
+set(POMDOG_SOURCES_EXPERIMENTAL
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/SpriteBatch.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Image/GifImage.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Image/GifImageLoader.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Image/Image.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureAtlas.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureAtlasGenerator.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureAtlasLoader.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureRegion.hpp
+  ${POMDOG_DIR}/src/Experimental/Graphics/SpriteBatch.cpp
+  ${POMDOG_DIR}/src/Experimental/Image/GifImageLoader.cpp
+  ${POMDOG_DIR}/src/Experimental/Image/Image.cpp
+  ${POMDOG_DIR}/src/Experimental/TexturePacker/TextureAtlasGenerator.cpp
+  ${POMDOG_DIR}/src/Experimental/TexturePacker/TextureAtlasLoader.cpp
+)
+
 set(POMDOG_SOURCES_GL4
   ${POMDOG_DIR}/src/RenderSystem.GL4/BlendStateGL4.cpp
   ${POMDOG_DIR}/src/RenderSystem.GL4/BlendStateGL4.hpp
@@ -573,7 +591,7 @@ set(POMDOG_SOURCES_LINUX
   ${POMDOG_DIR}/src/Platform.Linux/TimeSourceLinux.hpp
 )
 
-set(SOURCE_FILES ${POMDOG_SOURCES_CORE})
+set(SOURCE_FILES ${POMDOG_SOURCES_CORE} ${POMDOG_SOURCES_EXPERIMENTAL})
 
 if(APPLE)
   set(POMDOG_TARGET_PLATFORM "Mac"   CACHE STRING "Choose platform")
