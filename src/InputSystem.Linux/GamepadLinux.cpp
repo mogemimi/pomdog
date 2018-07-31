@@ -342,8 +342,6 @@ void GamepadLinux::EnumerateDevices()
 
 void GamepadLinux::PollEvents()
 {
-    EnumerateDevices();
-
     for (auto& gamepad : gamepads) {
         if (!gamepad.HasFileDescriptor()) {
             continue;

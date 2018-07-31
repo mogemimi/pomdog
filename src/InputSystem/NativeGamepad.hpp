@@ -12,6 +12,8 @@ class NativeGamepad : public Gamepad {
 public:
     virtual ~NativeGamepad() = default;
 
+    virtual void EnumerateDevices() = 0;
+
     virtual void PollEvents() = 0;
 };
 

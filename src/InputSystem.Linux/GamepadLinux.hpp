@@ -51,7 +51,7 @@ public:
 
     GamepadState GetState(PlayerIndex index) const override;
 
-    void EnumerateDevices();
+    void EnumerateDevices() override;
 
     void PollEvents() override;
 

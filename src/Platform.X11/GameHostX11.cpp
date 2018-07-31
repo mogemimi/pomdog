@@ -338,6 +338,10 @@ void GameHostX11::Impl::Run(Game & game)
     {
         clock.Tick();
         MessagePump();
+        constexpr int64_t gamepadDetectionInterval = 240;
+        if (((clock.GetFrameNumber() % gamepadDetectionInterval) == 1) && (clock.GetFrameRate() >= 30.0f)) {
+            gamepad->EnumerateDevices();
+        }
         gamepad->PollEvents();
 
         game.Update();
