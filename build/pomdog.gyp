@@ -133,7 +133,6 @@
       '../include/Pomdog/Input/GamepadDPad.hpp',
       '../include/Pomdog/Input/GamepadState.hpp',
       '../include/Pomdog/Input/GamepadThumbSticks.hpp',
-      '../include/Pomdog/Input/GamepadType.hpp',
       '../include/Pomdog/Input/GamepadUUID.hpp',
       '../include/Pomdog/Input/Keyboard.hpp',
       '../include/Pomdog/Input/KeyboardState.hpp',

@@ -144,7 +144,6 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/include/Pomdog/Input/GamepadDPad.hpp
   ${POMDOG_DIR}/include/Pomdog/Input/GamepadState.hpp
   ${POMDOG_DIR}/include/Pomdog/Input/GamepadThumbSticks.hpp
-  ${POMDOG_DIR}/include/Pomdog/Input/GamepadType.hpp
   ${POMDOG_DIR}/include/Pomdog/Input/GamepadUUID.hpp
   ${POMDOG_DIR}/include/Pomdog/Input/Keyboard.hpp
   ${POMDOG_DIR}/include/Pomdog/Input/KeyboardState.hpp

@@ -681,7 +681,6 @@
 		C5DA6989A7C77DAC68BD5355 /* Texture2DLoader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Texture2DLoader.cpp; sourceTree = "<group>"; };
 		C7B6B9ADFEE35269D5B261C8 /* ConstantBuffer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ConstantBuffer.cpp; sourceTree = "<group>"; };
 		C80CF7400944C955DC0F99EA /* BufferGL4.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BufferGL4.cpp; sourceTree = "<group>"; };
-		C858F3F8861EC0933DD5F6B2 /* GamepadType.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = GamepadType.hpp; sourceTree = "<group>"; };
 		C992E4CA07FD4BEA490B8AEF /* KeyboardState.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = KeyboardState.hpp; sourceTree = "<group>"; };
 		CA6CF7478713A3FBFCCEA57D /* GraphicsCommandQueueImmediate.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GraphicsCommandQueueImmediate.cpp; sourceTree = "<group>"; };
 		CB812182FDF6BA677492B4D3 /* RasterizerStateGL4.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = RasterizerStateGL4.hpp; sourceTree = "<group>"; };
@@ -1102,7 +1101,6 @@
 				44A3977F46E88AA90475BA62 /* GamepadDPad.hpp */,
 				B8D261783FA846F7C3A474EC /* GamepadState.hpp */,
 				78E0F1EFDF25209303CBEA26 /* GamepadThumbSticks.hpp */,
-				C858F3F8861EC0933DD5F6B2 /* GamepadType.hpp */,
 				A943BA1A210E86A900DA852D /* GamepadUUID.hpp */,
 				BF21647EDAA1F6DF3A311D39 /* KeyState.hpp */,
 				7056C40C787B58417326C40C /* Keyboard.hpp */,
