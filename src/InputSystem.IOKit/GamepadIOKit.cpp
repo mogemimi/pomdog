@@ -89,12 +89,12 @@ void GamepadDevice::OnDeviceInput(IOReturn result, void* sender, IOHIDValueRef v
             case kHIDUsage_GD_Rx:
             case kHIDUsage_GD_Ry:
             case kHIDUsage_GD_Rz: {
-                const auto thumbStickIndex = static_cast<int>(usage - kHIDUsage_GD_X);
-                POMDOG_ASSERT(thumbStickIndex >= 0);
-                POMDOG_ASSERT(thumbStickIndex < static_cast<int>(mappings.axes.size()));
-                POMDOG_ASSERT(thumbStickIndex < static_cast<int>(thumbStickInfos.size()));
+                const auto axisIndex = static_cast<int>(usage - kHIDUsage_GD_X);
+                POMDOG_ASSERT(axisIndex >= 0);
+                POMDOG_ASSERT(axisIndex < static_cast<int>(mappings.axes.size()));
+                POMDOG_ASSERT(axisIndex < static_cast<int>(thumbStickInfos.size()));
 
-                switch (mappings.axes[thumbStickIndex]) {
+                switch (mappings.axes[axisIndex]) {
                 case AxesKind::LeftTrigger:
                     state.Buttons.LeftTrigger = GetTriggerButtonValue(value);
                     break;
@@ -102,16 +102,16 @@ void GamepadDevice::OnDeviceInput(IOReturn result, void* sender, IOHIDValueRef v
                     state.Buttons.RightTrigger = GetTriggerButtonValue(value);
                     break;
                 case AxesKind::LeftStickX:
-                    state.ThumbSticks.Left.X = GetThumbStickValue(value, thumbStickInfos[thumbStickIndex]);
+                    state.ThumbSticks.Left.X = GetThumbStickValue(value, thumbStickInfos[axisIndex]);
                     break;
                 case AxesKind::LeftStickY:
-                    state.ThumbSticks.Left.Y = GetThumbStickValue(value, thumbStickInfos[thumbStickIndex]);
+                    state.ThumbSticks.Left.Y = GetThumbStickValue(value, thumbStickInfos[axisIndex]);
                     break;
                 case AxesKind::RightStickX:
-                    state.ThumbSticks.Right.X = GetThumbStickValue(value, thumbStickInfos[thumbStickIndex]);
+                    state.ThumbSticks.Right.X = GetThumbStickValue(value, thumbStickInfos[axisIndex]);
                     break;
                 case AxesKind::RightStickY:
-                    state.ThumbSticks.Right.Y = GetThumbStickValue(value, thumbStickInfos[thumbStickIndex]);
+                    state.ThumbSticks.Right.Y = GetThumbStickValue(value, thumbStickInfos[axisIndex]);
                     break;
                 default:
                     break;
@@ -119,62 +119,41 @@ void GamepadDevice::OnDeviceInput(IOReturn result, void* sender, IOHIDValueRef v
                 break;
             }
             case kHIDUsage_GD_Hatswitch: {
-                // TODO: Need to refactor later.
+                state.DPad.Up = ButtonState::Released;
+                state.DPad.Down = ButtonState::Released;
+                state.DPad.Left = ButtonState::Released;
+                state.DPad.Right = ButtonState::Released;
+
                 switch (IOHIDValueGetIntegerValue(value)) {
                 case 0:
                     state.DPad.Up = ButtonState::Pressed;
-                    state.DPad.Right = ButtonState::Released;
-                    state.DPad.Down = ButtonState::Released;
-                    state.DPad.Left = ButtonState::Released;
                     break;
                 case 1:
                     state.DPad.Up = ButtonState::Pressed;
                     state.DPad.Right = ButtonState::Pressed;
-                    state.DPad.Down = ButtonState::Released;
-                    state.DPad.Left = ButtonState::Released;
                     break;
                 case 2:
-                    state.DPad.Up = ButtonState::Released;
                     state.DPad.Right = ButtonState::Pressed;
-                    state.DPad.Down = ButtonState::Released;
-                    state.DPad.Left = ButtonState::Released;
                     break;
                 case 3:
-                    state.DPad.Up = ButtonState::Released;
                     state.DPad.Right = ButtonState::Pressed;
                     state.DPad.Down = ButtonState::Pressed;
-                    state.DPad.Left = ButtonState::Released;
                     break;
                 case 4:
-                    state.DPad.Up = ButtonState::Released;
-                    state.DPad.Right = ButtonState::Released;
                     state.DPad.Down = ButtonState::Pressed;
-                    state.DPad.Left = ButtonState::Released;
                     break;
                 case 5:
-                    state.DPad.Up = ButtonState::Released;
-                    state.DPad.Right = ButtonState::Released;
                     state.DPad.Down = ButtonState::Pressed;
                     state.DPad.Left = ButtonState::Pressed;
                     break;
                 case 6:
-                    state.DPad.Up = ButtonState::Released;
-                    state.DPad.Right = ButtonState::Released;
-                    state.DPad.Down = ButtonState::Released;
                     state.DPad.Left = ButtonState::Pressed;
                     break;
                 case 7:
                     state.DPad.Up = ButtonState::Pressed;
-                    state.DPad.Right = ButtonState::Released;
-                    state.DPad.Down = ButtonState::Released;
                     state.DPad.Left = ButtonState::Pressed;
                     break;
-                case 8:
                 default:
-                    state.DPad.Up = ButtonState::Released;
-                    state.DPad.Down = ButtonState::Released;
-                    state.DPad.Left = ButtonState::Released;
-                    state.DPad.Right = ButtonState::Released;
                     break;
                 }
                 break;
@@ -266,6 +245,7 @@ GamepadIOKit::~GamepadIOKit()
 GamepadCapabilities GamepadIOKit::GetCapabilities(PlayerIndex playerIndex) const
 {
     const auto index = GamepadHelper::ToInt(playerIndex);
+    POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(index < static_cast<int>(gamepads.size()));
     return gamepads[index].caps;
 }
@@ -273,6 +253,7 @@ GamepadCapabilities GamepadIOKit::GetCapabilities(PlayerIndex playerIndex) const
 GamepadState GamepadIOKit::GetState(PlayerIndex playerIndex) const
 {
     const auto index = GamepadHelper::ToInt(playerIndex);
+    POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(index < static_cast<int>(gamepads.size()));
     return gamepads[index].state;
 }
