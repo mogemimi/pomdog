@@ -1,8 +1,11 @@
 // Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
 #include "GamepadIOKit.hpp"
+#include "../Application/SystemEvents.hpp"
 #include "../InputSystem/GamepadHelper.hpp"
 #include "Pomdog/Logging/Log.hpp"
+#include "Pomdog/Signals/Event.hpp"
+#include "Pomdog/Signals/EventQueue.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include <algorithm>
@@ -188,9 +191,15 @@ void GamepadDevice::OnDeviceInput(IOReturn result, void* sender, IOHIDValueRef v
     }
 }
 
-GamepadIOKit::GamepadIOKit()
-    : hidManager(nullptr)
+GamepadIOKit::GamepadIOKit(const std::shared_ptr<EventQueue>& eventQueueIn)
+    : eventQueue(eventQueueIn)
+    , hidManager(nullptr)
 {
+    gamepads[0].playerIndex = PlayerIndex::One;
+    gamepads[1].playerIndex = PlayerIndex::Two;
+    gamepads[2].playerIndex = PlayerIndex::Three;
+    gamepads[3].playerIndex = PlayerIndex::Four;
+
     hidManager = IOHIDManagerCreate(kCFAllocatorDefault, kIOHIDOptionsTypeNone);
     if (hidManager == nullptr) {
         POMDOG_THROW_EXCEPTION(std::runtime_error, "Error: Failed to call IOHIDManagerCreate");
@@ -387,6 +396,7 @@ void GamepadIOKit::OnDeviceAttached(IOReturn result, void* sender, IOHIDDeviceRe
     }
 
     Log::Internal("Attached device: " + gamepad->caps.Name);
+    eventQueue->Enqueue<GamepadConnectedEvent>(gamepad->playerIndex, gamepad->caps);
 
     IOHIDDeviceOpen(device, kIOHIDOptionsTypeNone);
     IOHIDDeviceScheduleWithRunLoop(device, CFRunLoopGetCurrent(), kCFRunLoopCommonModes);
@@ -411,7 +421,20 @@ void GamepadIOKit::OnDeviceDetached(IOReturn result, void* sender, IOHIDDeviceRe
     }
 
     Log::Internal("Detached device: " + gamepad->caps.Name);
+
+    auto caps = gamepad->caps;
     gamepad->Close();
+    eventQueue->Enqueue<GamepadDisconnectedEvent>(gamepad->playerIndex, caps);
+}
+
+void GamepadIOKit::HandleEvent(const Event& event)
+{
+    if (auto connected = event.As<GamepadConnectedEvent>()) {
+        Connected(connected->PlayerIndex, connected->Capabilities);
+    }
+    else if (auto disconnected = event.As<GamepadDisconnectedEvent>()) {
+        Disconnected(disconnected->PlayerIndex, disconnected->Capabilities);
+    }
 }
 
 } // namespace Apple

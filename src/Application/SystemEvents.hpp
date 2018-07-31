@@ -3,9 +3,11 @@
 #pragma once
 
 #include "Pomdog/Input/ButtonState.hpp"
+#include "Pomdog/Input/GamepadCapabilities.hpp"
 #include "Pomdog/Input/KeyState.hpp"
 #include "Pomdog/Input/Keys.hpp"
 #include "Pomdog/Input/MouseButtons.hpp"
+#include "Pomdog/Input/PlayerIndex.hpp"
 #include "Pomdog/Math/Point2D.hpp"
 #include <string>
 
@@ -53,6 +55,16 @@ struct MouseButtonEvent {
 
 struct ScrollWheelEvent {
     double ScrollingDeltaY;
+};
+
+struct GamepadConnectedEvent {
+    PlayerIndex PlayerIndex;
+    GamepadCapabilities Capabilities;
+};
+
+struct GamepadDisconnectedEvent {
+    PlayerIndex PlayerIndex;
+    GamepadCapabilities Capabilities;
 };
 
 } // namespace Detail

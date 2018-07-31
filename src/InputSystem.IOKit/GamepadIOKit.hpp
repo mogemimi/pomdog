@@ -12,6 +12,13 @@
 #include <memory>
 
 namespace Pomdog {
+
+class Event;
+class EventQueue;
+
+} // namespace Pomdog
+
+namespace Pomdog {
 namespace Detail {
 namespace InputSystem {
 namespace Apple {
@@ -29,6 +36,7 @@ public:
     IOHIDDeviceRef device = nullptr;
     GamepadMappings mappings;
     std::array<ThumbStickInfo, 6> thumbStickInfos;
+    PlayerIndex playerIndex;
 
 public:
     bool Open();
@@ -40,7 +48,7 @@ public:
 
 class GamepadIOKit final : public Gamepad {
 public:
-    GamepadIOKit();
+    explicit GamepadIOKit(const std::shared_ptr<EventQueue>& eventQueue);
 
     ~GamepadIOKit();
 
@@ -48,7 +56,10 @@ public:
 
     GamepadState GetState(PlayerIndex index) const override;
 
+    void HandleEvent(const Event& event);
+
 private:
+    std::shared_ptr<EventQueue> eventQueue;
     std::array<GamepadDevice, 4> gamepads;
     IOHIDManagerRef hidManager;
 

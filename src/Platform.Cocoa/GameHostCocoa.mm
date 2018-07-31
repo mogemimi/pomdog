@@ -179,7 +179,7 @@ GameHostCocoa::Impl::Impl(
     audioEngine = std::make_shared<Pomdog::AudioEngine>();
     keyboard = std::make_shared<KeyboardCocoa>();
     mouse = std::make_shared<MouseCocoa>();
-    gamepad = std::make_shared<GamepadIOKit>();
+    gamepad = std::make_shared<GamepadIOKit>(eventQueue);
 
     // Connect to system event signal
     POMDOG_ASSERT(eventQueue);
@@ -409,8 +409,10 @@ void GameHostCocoa::Impl::ProcessSystemEvents(const Event& event)
     else {
         POMDOG_ASSERT(keyboard);
         POMDOG_ASSERT(mouse);
+        POMDOG_ASSERT(gamepad);
         keyboard->HandleEvent(event);
         mouse->HandleEvent(event);
+        gamepad->HandleEvent(event);
     }
 }
 
