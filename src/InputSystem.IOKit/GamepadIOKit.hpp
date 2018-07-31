@@ -19,6 +19,7 @@ namespace Apple {
 struct ThumbStickInfo final {
     std::int32_t Minimum = 0;
     std::int32_t Range = 0;
+    std::int32_t InvertDirection = 1;
 };
 
 class GamepadDevice final {

@@ -43,7 +43,7 @@ ButtonState GetTriggerButtonValue(IOHIDValueRef valueRef)
 float GetThumbStickValue(IOHIDValueRef valueRef, const ThumbStickInfo& info)
 {
     const auto value = IOHIDValueGetIntegerValue(valueRef);
-    return (static_cast<float>((value - info.Minimum) * 2 - info.Range) / info.Range);
+    return static_cast<float>(info.InvertDirection * ((value - info.Minimum) * 2 - info.Range)) / info.Range;
 }
 
 } // unnamed namespace
@@ -356,6 +356,16 @@ void GamepadIOKit::OnDeviceAttached(IOReturn result, void* sender, IOHIDDeviceRe
                         auto& info = gamepad->thumbStickInfos[axisIndex];
                         info.Minimum = minimum;
                         info.Range = std::max(1, maximum - minimum);
+                        switch (gamepad->mappings.axes[axisIndex]) {
+                        case AxesKind::LeftStickY:
+                        case AxesKind::RightStickY:
+                            // Set to -1 to reverse the Y axis (vertical)
+                            info.InvertDirection = -1;
+                            break;
+                        default:
+                            info.InvertDirection = 1;
+                            break;
+                        }
                         break;
                     }
                     default:

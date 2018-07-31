@@ -35,7 +35,7 @@ ButtonState GetTriggerButtonValue(int value)
 
 float GetThumbStickValue(int value, const ThumbStickInfo& info)
 {
-    return (static_cast<float>((value - info.Minimum) * 2 - info.Range) / info.Range);
+    return static_cast<float>(info.InvertDirection * ((value - info.Minimum) * 2 - info.Range)) / info.Range;
 }
 
 } // unnamed namespace
@@ -134,6 +134,17 @@ bool GamepadDevice::Open(int deviceIndex)
             auto& info = thumbStickInfos[i];
             info.Minimum = absInfo.minimum;
             info.Range = std::max(1, absInfo.maximum - absInfo.minimum);
+
+            switch (mappings.axes[i]) {
+            case AxesKind::LeftStickY:
+            case AxesKind::RightStickY:
+                // Set to -1 to reverse the Y axis (vertical)
+                info.InvertDirection = -1;
+                break;
+            default:
+                info.InvertDirection = 1;
+                break;
+            }
         }
     }
 
