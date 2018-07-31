@@ -5,6 +5,7 @@
 #include "GamepadHelper.hpp"
 #include "Pomdog/Input/GamepadCapabilities.hpp"
 #include "Pomdog/Input/GamepadState.hpp"
+#include "Pomdog/Input/GamepadUUID.hpp"
 #include <array>
 #include <cstdint>
 #include <memory>
@@ -53,7 +54,13 @@ struct GamepadMappings {
 
 ButtonState* GetButton(GamepadState& state, const GamepadButtonMappings& mappings, int index);
 
-std::tuple<GamepadMappings, std::string> GetMappings(const GamepadDeviceID& uuid);
+bool* HasButton(GamepadCapabilities& caps, const GamepadButtonMappings& mappings, int index);
+
+bool* HasAxis(GamepadCapabilities& caps, const GamepadMappings& mappings, int index);
+
+std::tuple<GamepadMappings, std::string> GetMappings(const GamepadUUID& uuid);
+
+std::tuple<GamepadMappings, std::string> GetMappings(const std::string& uuid);
 
 } // namespace InputSystem
 } // namespace Detail

@@ -11,46 +11,6 @@
 namespace Pomdog {
 namespace Detail {
 namespace InputSystem {
-namespace {
-
-template <typename T>
-T SwapEndian(T u)
-{
-    static_assert(sizeof(uint8_t) == 1, "");
-    union {
-        T u;
-        uint8_t u8[sizeof(T)];
-    } source, dest;
-    source.u = u;
-    for (size_t k = 0; k < sizeof(T); k++) {
-        dest.u8[k] = source.u8[sizeof(T) - k - 1];
-    }
-    return dest.u;
-}
-
-} // namespace
-
-std::string GamepadHelper::ToString(const GamepadDeviceID& device)
-{
-    std::array<uint16_t, 8> uuid;
-    std::fill(std::begin(uuid), std::end(uuid), static_cast<uint16_t>(0));
-    if ((device.Vendor != 0) && (device.Product != 0)) {
-        uuid[0] = device.BusType;
-        uuid[1] = 0;
-        uuid[2] = device.Vendor;
-        uuid[3] = 0;
-        uuid[4] = device.Product;
-        uuid[5] = 0;
-        uuid[6] = device.Version;
-        uuid[7] = 0;
-    }
-
-    std::string s;
-    for (auto u : uuid) {
-        s += StringHelper::Format("%04x", SwapEndian(u));
-    }
-    return s;
-}
 
 int GamepadHelper::ToInt(PlayerIndex index)
 {

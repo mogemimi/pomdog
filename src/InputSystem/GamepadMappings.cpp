@@ -169,14 +169,72 @@ ButtonState* GetButton(GamepadState& state, const GamepadButtonMappings& mapping
     return buttons[index];
 }
 
-std::tuple<GamepadMappings, std::string> GetMappings(const GamepadDeviceID& uuid)
+bool* HasButton(GamepadCapabilities& caps, const GamepadButtonMappings& mappings, int physicalIndex)
 {
-    auto uuidString = GamepadHelper::ToString(uuid);
+    const auto buttonKind = ToButtonIndex(physicalIndex, mappings);
+    if (buttonKind == ButtonKind::None) {
+        return nullptr;
+    }
+    const auto index = static_cast<int>(buttonKind);
 
-    Log::Internal("UUID: " + uuidString);
+    std::array<bool*, 15> buttons = {{
+        &caps.HasAButton,
+        &caps.HasBButton,
+        &caps.HasXButton,
+        &caps.HasYButton,
+        &caps.HasLeftShoulderButton,
+        &caps.HasRightShoulderButton,
+        &caps.HasLeftTrigger,
+        &caps.HasRightTrigger,
+        &caps.HasLeftMenuButton,
+        &caps.HasRightMenuButton,
+        &caps.HasLeftStickButton,
+        &caps.HasRightStickButton,
+        &caps.HasGuideButton,
+        &caps.HasExtra1Button,
+        &caps.HasExtra2Button,
+    }};
+    POMDOG_ASSERT(index >= 0);
+    POMDOG_ASSERT(index < static_cast<int>(buttons.size()));
+    return buttons[index];
+}
 
+bool* HasAxis(GamepadCapabilities& caps, const GamepadMappings& mappings, int physicalIndex)
+{
+    if ((physicalIndex < 0) || (physicalIndex >= static_cast<int>(mappings.axes.size()))) {
+        return nullptr;
+    }
+    POMDOG_ASSERT(physicalIndex >= 0);
+    POMDOG_ASSERT(physicalIndex < static_cast<int>(mappings.axes.size()));
+
+    const auto axisKind = mappings.axes[physicalIndex];
+    if (axisKind == AxesKind::None) {
+        return nullptr;
+    }
+    const auto index = static_cast<int>(axisKind);
+
+    std::array<bool*, 6> axes = {{
+        &caps.HasLeftXThumbStick,
+        &caps.HasLeftYThumbStick,
+        &caps.HasLeftTrigger,
+        &caps.HasRightXThumbStick,
+        &caps.HasRightYThumbStick,
+        &caps.HasRightTrigger,
+    }};
+    POMDOG_ASSERT(index >= 0);
+    POMDOG_ASSERT(index < static_cast<int>(axes.size()));
+    return axes[index];
+}
+
+std::tuple<GamepadMappings, std::string> GetMappings(const GamepadUUID& uuid)
+{
+    return GetMappings(uuid.ToString());
+}
+
+std::tuple<GamepadMappings, std::string> GetMappings(const std::string& uuidString)
+{
     GamepadMappings mappings;
-#ifdef POMDOG_PLATFORM_LINUX
+#if defined(POMDOG_PLATFORM_LINUX)
     // NOTE: Please see this header
     // https://github.com/torvalds/linux/blob/4982327ff6755377a8a66e84113f496f3a6c53bc/include/uapi/linux/input-event-codes.h#L379-L398
     mappings.buttons = {{
@@ -197,8 +255,7 @@ std::tuple<GamepadMappings, std::string> GetMappings(const GamepadDeviceID& uuid
         ButtonKind::None,
         ButtonKind::None,
     }};
-#else
-    // POMDOG_PLATFORM_MACOSX
+#elif defined(POMDOG_PLATFORM_MACOSX)
     mappings.buttons = {{
         ButtonKind::A,
         ButtonKind::B,
@@ -215,6 +272,25 @@ std::tuple<GamepadMappings, std::string> GetMappings(const GamepadDeviceID& uuid
         ButtonKind::Guide,
         ButtonKind::Extra1,
         ButtonKind::Extra2,
+        ButtonKind::None,
+    }};
+#else
+    mappings.buttons = {{
+        ButtonKind::A,
+        ButtonKind::B,
+        ButtonKind::X,
+        ButtonKind::Y,
+        ButtonKind::LeftShoulder,
+        ButtonKind::RightShoulder,
+        ButtonKind::LeftMenu,
+        ButtonKind::RightMenu,
+        ButtonKind::LeftStick,
+        ButtonKind::RightStick,
+        ButtonKind::Guide,
+        ButtonKind::Extra1,
+        ButtonKind::Extra2,
+        ButtonKind::None,
+        ButtonKind::None,
         ButtonKind::None,
     }};
 #endif

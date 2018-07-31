@@ -17,8 +17,8 @@ namespace InputSystem {
 namespace Apple {
 
 struct ThumbStickInfo final {
-    int32_t Minimum = 0;
-    int32_t Range = 0;
+    std::int32_t Minimum = 0;
+    std::int32_t Range = 0;
 };
 
 class GamepadDevice final {

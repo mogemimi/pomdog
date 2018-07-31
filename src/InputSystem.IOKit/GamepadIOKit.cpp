@@ -58,9 +58,8 @@ void GamepadDevice::Close()
     GamepadHelper::ClearState(state);
     state.IsConnected = false;
 
-    caps.Name = "";
-    caps.ThumbStickCount = 0;
-    caps.ButtonCount = 0;
+    GamepadCapabilities emptyCaps;
+    std::swap(caps, emptyCaps);
 }
 
 void GamepadDevice::OnDeviceInput(IOReturn result, void* sender, IOHIDValueRef value)
@@ -291,48 +290,42 @@ void GamepadIOKit::OnDeviceAttached(IOReturn result, void* sender, IOHIDDeviceRe
     gamepad->device = device;
     gamepad->state.IsConnected = true;
 
-    auto deviceName = reinterpret_cast<CFStringRef>(IOHIDDeviceGetProperty(device, CFSTR(kIOHIDProductKey)));
-    if (deviceName != nullptr) {
-        std::array<char, 256> buffer;
-        std::fill(std::begin(buffer), std::end(buffer), 0);
-        CFStringGetCString(deviceName, buffer.data(), buffer.size(), kCFStringEncodingUTF8);
-        gamepad->caps.Name = buffer.data();
-    }
-    else {
-        gamepad->caps.Name = "unknown";
+    std::int32_t vendor = 0;
+    std::int32_t product = 0;
+    std::int32_t version = 0;
+
+    auto vendorIDKey = reinterpret_cast<CFNumberRef>(IOHIDDeviceGetProperty(device, CFSTR(kIOHIDVendorIDKey)));
+    if (vendorIDKey != nullptr) {
+        CFNumberGetValue(vendorIDKey, kCFNumberSInt32Type, &vendor);
     }
 
-    int32_t vendor = 0;
-    int32_t product = 0;
-    int32_t version = 0;
-
-    auto vendorID = reinterpret_cast<CFNumberRef>(IOHIDDeviceGetProperty(device, CFSTR(kIOHIDVendorIDKey)));
-    if (vendorID != nullptr) {
-        CFNumberGetValue(vendorID, kCFNumberSInt32Type, &vendor);
+    auto productIDKey = reinterpret_cast<CFNumberRef>(IOHIDDeviceGetProperty(device, CFSTR(kIOHIDProductIDKey)));
+    if (productIDKey != nullptr) {
+        CFNumberGetValue(productIDKey, kCFNumberSInt32Type, &product);
     }
 
-    auto productID = reinterpret_cast<CFNumberRef>(IOHIDDeviceGetProperty(device, CFSTR(kIOHIDProductIDKey)));
-    if (productID != nullptr) {
-        CFNumberGetValue(productID, kCFNumberSInt32Type, &product);
+    auto versionNumberKey = reinterpret_cast<CFNumberRef>(IOHIDDeviceGetProperty(device, CFSTR(kIOHIDVersionNumberKey)));
+    if (versionNumberKey != nullptr) {
+        CFNumberGetValue(versionNumberKey, kCFNumberSInt32Type, &version);
     }
 
-    auto versionNumber = reinterpret_cast<CFNumberRef>(IOHIDDeviceGetProperty(device, CFSTR(kIOHIDVersionNumberKey)));
-    if (versionNumber != nullptr) {
-        CFNumberGetValue(versionNumber, kCFNumberSInt32Type, &version);
-    }
+    constexpr std::uint16_t busUSB = 0x03;
 
-    constexpr uint16_t busUSB = 0x03;
-
-    GamepadDeviceID uuid;
+    auto& uuid = gamepad->caps.DeviceUUID;
     uuid.BusType = busUSB;
-    uuid.Vendor = static_cast<uint16_t>(vendor);
-    uuid.Product = static_cast<uint16_t>(product);
-    uuid.Version = static_cast<uint16_t>(version);
+    uuid.VendorID = static_cast<uint16_t>(vendor);
+    uuid.ProductID = static_cast<uint16_t>(product);
+    uuid.VersionNumber = static_cast<uint16_t>(version);
 
-    std::string controllerName;
-    std::tie(gamepad->mappings, controllerName) = GetMappings(uuid);
-    if (!controllerName.empty()) {
-        gamepad->caps.Name = controllerName;
+    std::tie(gamepad->mappings, gamepad->caps.Name) = GetMappings(uuid);
+    if (gamepad->caps.Name.empty()) {
+        auto productKey = reinterpret_cast<CFStringRef>(IOHIDDeviceGetProperty(device, CFSTR(kIOHIDProductKey)));
+        if (productKey != nullptr) {
+            std::array<char, 256> buffer;
+            std::fill(std::begin(buffer), std::end(buffer), 0);
+            CFStringGetCString(productKey, buffer.data(), buffer.size(), kCFStringEncodingUTF8);
+            gamepad->caps.Name = buffer.data();
+        }
     }
 
     auto elements = IOHIDDeviceCopyMatchingElements(device, nullptr, kIOHIDOptionsTypeNone);
@@ -347,8 +340,14 @@ void GamepadIOKit::OnDeviceAttached(IOReturn result, void* sender, IOHIDDeviceRe
             const auto usage = IOHIDElementGetUsage(element);
 
             switch (IOHIDElementGetType(element)) {
+            case kIOHIDElementTypeInput_Button: {
+                const auto buttonIndex = static_cast<int>(usage) - 1;
+                if (auto hasButton = HasButton(gamepad->caps, gamepad->mappings.buttons, buttonIndex); hasButton != nullptr) {
+                    (*hasButton) = true;
+                }
+                break;
+            }
             case kIOHIDElementTypeInput_Axis:
-            case kIOHIDElementTypeInput_Button:
             case kIOHIDElementTypeInput_Misc:
                 switch (usagePage) {
                 case kHIDPage_GenericDesktop:
@@ -359,14 +358,23 @@ void GamepadIOKit::OnDeviceAttached(IOReturn result, void* sender, IOHIDDeviceRe
                     case kHIDUsage_GD_Rx:
                     case kHIDUsage_GD_Ry:
                     case kHIDUsage_GD_Rz: {
-                        const auto thumbStickIndex = static_cast<int>(usage - kHIDUsage_GD_X);
-                        POMDOG_ASSERT(thumbStickIndex >= 0);
-                        POMDOG_ASSERT(thumbStickIndex < static_cast<int>(gamepad->thumbStickInfos.size()));
+                        const auto axisIndex = static_cast<int>(usage - kHIDUsage_GD_X);
+
+                        POMDOG_ASSERT(axisIndex >= 0);
+                        POMDOG_ASSERT(axisIndex < static_cast<int>(gamepad->mappings.axes.size()));
+
+                        if (auto hasAxis = HasAxis(gamepad->caps, gamepad->mappings, axisIndex); hasAxis != nullptr) {
+                            (*hasAxis) = true;
+                        }
+
+                        POMDOG_ASSERT(axisIndex >= 0);
+                        POMDOG_ASSERT(axisIndex < static_cast<int>(gamepad->thumbStickInfos.size()));
 
                         const auto minimum = static_cast<int32_t>(IOHIDElementGetLogicalMin(element));
                         const auto maximum = static_cast<int32_t>(IOHIDElementGetLogicalMax(element));
-                        gamepad->thumbStickInfos[thumbStickIndex].Minimum = minimum;
-                        gamepad->thumbStickInfos[thumbStickIndex].Range = std::max(1, maximum - minimum);
+                        auto& info = gamepad->thumbStickInfos[axisIndex];
+                        info.Minimum = minimum;
+                        info.Range = std::max(1, maximum - minimum);
                         break;
                     }
                     default:

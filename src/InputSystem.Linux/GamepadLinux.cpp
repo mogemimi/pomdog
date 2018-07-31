@@ -59,11 +59,11 @@ bool GamepadDevice::Open(int deviceIndex)
         return false;
     }
 
-    GamepadDeviceID uuid;
+    auto& uuid = caps.DeviceUUID;
     uuid.BusType = static_cast<uint16_t>(inputId.bustype);
-    uuid.Vendor = static_cast<uint16_t>(inputId.vendor);
-    uuid.Product = static_cast<uint16_t>(inputId.product);
-    uuid.Version = static_cast<uint16_t>(inputId.version);
+    uuid.VendorID = static_cast<uint16_t>(inputId.vendor);
+    uuid.ProductID = static_cast<uint16_t>(inputId.product);
+    uuid.VersionNumber = static_cast<uint16_t>(inputId.version);
 
     // TODO: Use udev-joystick-blacklist here
     // https://github.com/denilsonsa/udev-joystick-blacklist
@@ -92,6 +92,8 @@ bool GamepadDevice::Open(int deviceIndex)
         return false;
     }
 
+    std::tie(this->mappings, this->caps.Name) = GetMappings(uuid);
+
     int numOfButtons = 0;
     std::fill(std::begin(keyMap), std::end(keyMap), -1);
 
@@ -102,11 +104,17 @@ bool GamepadDevice::Open(int deviceIndex)
                 continue;
             }
             keyMap[index] = static_cast<int8_t>(numOfButtons);
+
+            POMDOG_ASSERT(numOfButtons >= 0);
+            POMDOG_ASSERT(numOfButtons < static_cast<int>(mappings.buttons.size()));
+
+            if (auto hasButton = HasButton(caps, mappings.buttons, numOfButtons); hasButton != nullptr) {
+                (*hasButton) = true;
+            }
             ++numOfButtons;
         }
     }
 
-    int numOfAxis = 0;
     for (int i = ABS_X; i <= ABS_RZ; ++i) {
         if (HasBit(absBits, i)) {
             struct input_absinfo absInfo;
@@ -115,28 +123,28 @@ bool GamepadDevice::Open(int deviceIndex)
             }
 
             POMDOG_ASSERT(i >= 0);
+            POMDOG_ASSERT(i < static_cast<int>(mappings.axes.size()));
+
+            if (auto hasAxis = HasAxis(caps, mappings, i); hasAxis != nullptr) {
+                (*hasAxis) = true;
+            }
+
+            POMDOG_ASSERT(i >= 0);
             POMDOG_ASSERT(i < static_cast<int>(thumbStickInfos.size()));
-            thumbStickInfos[i].Minimum = absInfo.minimum;
-            thumbStickInfos[i].Range = std::max(1, absInfo.maximum - absInfo.minimum);
-            ++numOfAxis;
+            auto& info = thumbStickInfos[i];
+            info.Minimum = absInfo.minimum;
+            info.Range = std::max(1, absInfo.maximum - absInfo.minimum);
         }
     }
 
-    std::array<char, 256> gamepadName;
-    std::fill(std::begin(gamepadName), std::end(gamepadName), 0);
-    if (::ioctl(fd, EVIOCGNAME(255), gamepadName.data()) < 0) {
-        Close();
-        return false;
-    }
-
-    caps.Name = gamepadName.data();
-    caps.ThumbStickCount = std::max(0, numOfAxis);
-    caps.ButtonCount = std::max(0, numOfButtons);
-
-    std::string controllerName;
-    std::tie(this->mappings, controllerName) = GetMappings(uuid);
-    if (!controllerName.empty()) {
-        this->caps.Name = controllerName;
+    if (caps.Name.empty()) {
+        std::array<char, 256> gamepadName;
+        std::fill(std::begin(gamepadName), std::end(gamepadName), 0);
+        if (::ioctl(fd, EVIOCGNAME(255), gamepadName.data()) < 0) {
+            Close();
+            return false;
+        }
+        caps.Name = gamepadName.data();
     }
 
     GamepadHelper::ClearState(state);
@@ -158,9 +166,8 @@ void GamepadDevice::Close()
     GamepadHelper::ClearState(state);
     state.IsConnected = false;
 
-    caps.Name = "";
-    caps.ThumbStickCount = 0;
-    caps.ButtonCount = 0;
+    GamepadCapabilities emptyCaps;
+    std::swap(caps, emptyCaps);
 }
 
 bool GamepadDevice::HasFileDescriptor() const
