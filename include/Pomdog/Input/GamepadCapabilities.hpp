@@ -16,11 +16,8 @@ struct GamepadCapabilities final {
     bool IsConnected = false;
 
     bool HasLeftXThumbStick = false;
-
     bool HasLeftYThumbStick = false;
-
     bool HasRightXThumbStick = false;
-
     bool HasRightYThumbStick = false;
 };
 
