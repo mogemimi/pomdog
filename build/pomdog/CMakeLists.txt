@@ -145,6 +145,7 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/include/Pomdog/Input/GamepadState.hpp
   ${POMDOG_DIR}/include/Pomdog/Input/GamepadThumbSticks.hpp
   ${POMDOG_DIR}/include/Pomdog/Input/GamepadType.hpp
+  ${POMDOG_DIR}/include/Pomdog/Input/GamepadUUID.hpp
   ${POMDOG_DIR}/include/Pomdog/Input/Keyboard.hpp
   ${POMDOG_DIR}/include/Pomdog/Input/KeyboardState.hpp
   ${POMDOG_DIR}/include/Pomdog/Input/KeyState.hpp
@@ -278,6 +279,7 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/src/Graphics/ShaderCompilers/GLSLCompiler.cpp
   ${POMDOG_DIR}/src/Graphics/ShaderCompilers/HLSLCompiler.cpp
   ${POMDOG_DIR}/src/Graphics/ShaderCompilers/MetalCompiler.cpp
+  ${POMDOG_DIR}/src/Input/GamepadUUID.cpp
   ${POMDOG_DIR}/src/Input/KeyboardState.cpp
   ${POMDOG_DIR}/src/InputSystem/GamepadFactory.cpp
   ${POMDOG_DIR}/src/InputSystem/GamepadFactory.hpp

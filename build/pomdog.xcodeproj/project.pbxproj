@@ -145,6 +145,8 @@
 		A93CA6531D92F34E00B65171 /* QueuedScheduler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A93CA64E1D92F34E00B65171 /* QueuedScheduler.cpp */; };
 		A93CA6541D92F34E00B65171 /* Task.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A93CA64F1D92F34E00B65171 /* Task.cpp */; };
 		A93CA6551D92F34E00B65171 /* Task.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A93CA64F1D92F34E00B65171 /* Task.cpp */; };
+		A943BA1C210E86B900DA852D /* GamepadUUID.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A943BA1B210E86B900DA852D /* GamepadUUID.cpp */; };
+		A943BA1D210E86B900DA852D /* GamepadUUID.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A943BA1B210E86B900DA852D /* GamepadUUID.cpp */; };
 		A958BDF81CC3E65A00E15834 /* PomdogMetalViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = A958BDF71CC3E65A00E15834 /* PomdogMetalViewController.mm */; };
 		A958BDF91CC3E65A00E15834 /* PomdogMetalViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = A958BDF71CC3E65A00E15834 /* PomdogMetalViewController.mm */; };
 		A9854B9E1DC115D400650729 /* BufferHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9854B9C1DC115D400650729 /* BufferHelper.cpp */; };
@@ -572,6 +574,8 @@
 		A93CA64D1D92F34E00B65171 /* ImmediateScheduler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImmediateScheduler.cpp; path = Async/ImmediateScheduler.cpp; sourceTree = "<group>"; };
 		A93CA64E1D92F34E00B65171 /* QueuedScheduler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = QueuedScheduler.cpp; path = Async/QueuedScheduler.cpp; sourceTree = "<group>"; };
 		A93CA64F1D92F34E00B65171 /* Task.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Task.cpp; path = Async/Task.cpp; sourceTree = "<group>"; };
+		A943BA1A210E86A900DA852D /* GamepadUUID.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GamepadUUID.hpp; sourceTree = "<group>"; };
+		A943BA1B210E86B900DA852D /* GamepadUUID.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GamepadUUID.cpp; sourceTree = "<group>"; };
 		A94ACC591C287C9100AFCC36 /* ConditionalCompilation.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ConditionalCompilation.hpp; sourceTree = "<group>"; };
 		A94F1C2B1DD30851001DC8E5 /* MouseButtons.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MouseButtons.hpp; sourceTree = "<group>"; };
 		A958BDF71CC3E65A00E15834 /* PomdogMetalViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PomdogMetalViewController.mm; sourceTree = "<group>"; };
@@ -1099,6 +1103,7 @@
 				B8D261783FA846F7C3A474EC /* GamepadState.hpp */,
 				78E0F1EFDF25209303CBEA26 /* GamepadThumbSticks.hpp */,
 				C858F3F8861EC0933DD5F6B2 /* GamepadType.hpp */,
+				A943BA1A210E86A900DA852D /* GamepadUUID.hpp */,
 				BF21647EDAA1F6DF3A311D39 /* KeyState.hpp */,
 				7056C40C787B58417326C40C /* Keyboard.hpp */,
 				C992E4CA07FD4BEA490B8AEF /* KeyboardState.hpp */,
@@ -1272,6 +1277,7 @@
 		A4530A8C4CEA403D2E7D71ED /* Input */ = {
 			isa = PBXGroup;
 			children = (
+				A943BA1B210E86B900DA852D /* GamepadUUID.cpp */,
 				D7D5A98E477FB0CDE2089FBD /* KeyboardState.cpp */,
 			);
 			path = Input;
@@ -1921,6 +1927,7 @@
 				0497572B05C5E009716C044A /* FloatingPointVector4.cpp in Sources */,
 				378F438407DEF79BEA69E81C /* GraphicsCommandListImmediate.cpp in Sources */,
 				F29D13A39818F150CD4219B3 /* GraphicsCommandQueueImmediate.cpp in Sources */,
+				A943BA1C210E86B900DA852D /* GamepadUUID.cpp in Sources */,
 				1C60BD023919A0C8916DB3E2 /* SurfaceFormatHelper.cpp in Sources */,
 				E7645392D6AC421C2703DF5E /* TextureHelper.cpp in Sources */,
 				C0B84A37FCB13D340E04120C /* Connection.cpp in Sources */,
@@ -2049,6 +2056,7 @@
 				F03B5A2733D5B0585DFBBB89 /* FloatingPointVector4.cpp in Sources */,
 				650D5B589129410AF7580726 /* GraphicsCommandListImmediate.cpp in Sources */,
 				6FA8A4ED33396758E9052EAD /* GraphicsCommandQueueImmediate.cpp in Sources */,
+				A943BA1D210E86B900DA852D /* GamepadUUID.cpp in Sources */,
 				A5F5B45161ACFD33A1652F9C /* SurfaceFormatHelper.cpp in Sources */,
 				55635C9F9A88D4C77235D6EB /* TextureHelper.cpp in Sources */,
 				B8B5DF3E58503D84B8D7E2D9 /* Connection.cpp in Sources */,

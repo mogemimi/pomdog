@@ -116,6 +116,7 @@
 #include "Input/GamepadState.hpp"
 #include "Input/GamepadThumbSticks.hpp"
 #include "Input/GamepadType.hpp"
+#include "Input/GamepadUUID.hpp"
 #include "Input/Keyboard.hpp"
 #include "Input/KeyboardState.hpp"
 #include "Input/Keys.hpp"
