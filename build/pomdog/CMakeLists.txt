@@ -762,7 +762,10 @@ if(POMDOG_USE_XAUDIO2 AND (POMDOG_TARGET_PLATFORM MATCHES "Win32"))
 endif()
 
 if(POMDOG_USE_DIRECTINPUT AND (POMDOG_TARGET_PLATFORM MATCHES "Win32"))
-  target_link_libraries(${PRODUCT_NAME} INTERFACE dinput8.lib dxguid.lib)
+  target_link_libraries(${PRODUCT_NAME} INTERFACE
+    dinput8.lib
+    dxguid.lib
+  )
 endif()
 
 target_compile_definitions(${PRODUCT_NAME} PRIVATE
