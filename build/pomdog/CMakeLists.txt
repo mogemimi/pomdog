@@ -692,11 +692,15 @@ target_include_directories(${PRODUCT_NAME} PRIVATE
   ${POMDOG_DIR}/include
   ${POMDOG_DIR}/dependencies/libpng
   ${POMDOG_DIR}/dependencies/vendor/libpng
+  ${POMDOG_DIR}/dependencies/vendor/giflib/lib
   ${POMDOG_DIR}/dependencies/vendor/SDL_GameControllerDB
 )
 
 add_subdirectory(${POMDOG_DIR}/build/dependencies/libpng "${CMAKE_CURRENT_BINARY_DIR}/libpng_build")
 target_link_libraries(${PRODUCT_NAME} INTERFACE png)
+
+add_subdirectory(${POMDOG_DIR}/build/dependencies/giflib "${CMAKE_CURRENT_BINARY_DIR}/giflib_build")
+target_link_libraries(${PRODUCT_NAME} INTERFACE giflib)
 
 if(POMDOG_USE_OPENAL AND (POMDOG_TARGET_PLATFORM MATCHES "Linux"))
   target_link_libraries(${PRODUCT_NAME} INTERFACE openal)
