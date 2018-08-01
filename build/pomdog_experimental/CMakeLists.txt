@@ -4,7 +4,6 @@ project(Pomdog CXX)
 # NOTE: Remove /RTC1 option from default compiler options for Visual Studio
 STRING(REGEX REPLACE "/RTC(su|[1su])" "" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
 
-set(PRODUCT_NAME pomdog_experimental)
 set(POMDOG_DIR "../..")
 set(POMDOG_EXPERIMENTAL_DIR "../../experimental/Pomdog.Experimental")
 set(CMAKE_CXX_STANDARD 17)
@@ -319,29 +318,29 @@ include_directories(
   ${POMDOG_DIR}/dependencies
 )
 
-add_library(${PRODUCT_NAME} STATIC ${SOURCE_FILES})
+add_library(pomdog_experimental STATIC ${SOURCE_FILES})
 
-target_compile_definitions(${PRODUCT_NAME} PRIVATE
+target_compile_definitions(pomdog_experimental PRIVATE
   "$<$<CONFIG:DEBUG>:_DEBUG;DEBUG=1>"
   "$<$<CONFIG:RELEASE>:NDEBUG>"
 )
 
 if ((CMAKE_CXX_COMPILER_ID MATCHES "Clang") OR (CMAKE_CXX_COMPILER_ID MATCHES "GNU"))
-  target_compile_options(${PRODUCT_NAME} PRIVATE
+  target_compile_options(pomdog_experimental PRIVATE
     "$<$<CONFIG:DEBUG>:-g;-O0>"
     "$<$<CONFIG:RELEASE>:-O3>"
   )
 endif()
 
 if(WIN32)
-  target_compile_options(${PRODUCT_NAME} PRIVATE
+  target_compile_options(pomdog_experimental PRIVATE
     /W4
     # /WX
     "$<$<CONFIG:DEBUG>:/Od;/MTd>"
     "$<$<CONFIG:RELEASE>:/O2;/Ob2;/MT>"
   )
 
-  target_compile_definitions(${PRODUCT_NAME} PRIVATE
+  target_compile_definitions(pomdog_experimental PRIVATE
     _WIN32_WINNT=0x0602 # Windows 8 or later
     WIN32_LEAN_AND_MEAN
     NOMINMAX
@@ -349,7 +348,7 @@ if(WIN32)
 endif()
 
 set_target_properties(
-  ${PRODUCT_NAME} PROPERTIES
+  pomdog_experimental PROPERTIES
   XCODE_ATTRIBUTE_GCC_OPTIMIZATION_LEVEL[variant=Debug] "0" # -O0
   XCODE_ATTRIBUTE_GCC_OPTIMIZATION_LEVEL[variant=Release] "3" # -O3
   XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH[variant=Debug] "YES"
@@ -405,4 +404,4 @@ set_target_properties(
 )
 
 add_subdirectory(${POMDOG_DIR}/build/pomdog ${CMAKE_CURRENT_BINARY_DIR}/pomdog_build)
-target_link_libraries(${PRODUCT_NAME} INTERFACE pomdog_static)
+target_link_libraries(pomdog_experimental INTERFACE pomdog_static)

@@ -4,7 +4,6 @@ project(PomdogTest CXX)
 # NOTE: Remove /RTC1 option from default compiler options for Visual Studio
 STRING(REGEX REPLACE "/RTC(su|[1su])" "" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
 
-set(PRODUCT_NAME PomdogTest)
 set(POMDOG_DIR "../..")
 set(POMDOG_TEST_DIR "${POMDOG_DIR}/test/FrameworkTest")
 set(CMAKE_CXX_STANDARD 17)
@@ -81,9 +80,9 @@ include_directories(
   ${POMDOG_DIR}/dependencies/iutest/include
 )
 
-add_executable(${PRODUCT_NAME} ${SOURCE_FILES})
+add_executable(PomdogTest ${SOURCE_FILES})
 
-target_compile_definitions(${PRODUCT_NAME} PRIVATE
+target_compile_definitions(PomdogTest PRIVATE
   "$<$<CONFIG:DEBUG>:_DEBUG;DEBUG=1>"
   "$<$<CONFIG:RELEASE>:NDEBUG>"
   IUTEST_CHECK_STRICT=0
@@ -91,7 +90,7 @@ target_compile_definitions(${PRODUCT_NAME} PRIVATE
 
 if(APPLE)
   # TODO: Replace with the following, CMake >= 3.12
-  # `target_link_options(${PRODUCT_NAME} PUBLIC "${LINK_FRAMEWORKS}")`
+  # `target_link_options(PomdogTest PUBLIC "${LINK_FRAMEWORKS}")`
   # https://cmake.org/cmake/help/git-stage/command/target_link_options.html
   set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework Metal")
   set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework AudioToolBox")
@@ -103,20 +102,20 @@ if(APPLE)
 endif()
 
 if(WIN32)
-  target_compile_options(${PRODUCT_NAME} PRIVATE
+  target_compile_options(PomdogTest PRIVATE
     /W4
     /WX
     "$<$<CONFIG:DEBUG>:/Od;/MTd>"
     "$<$<CONFIG:RELEASE>:/O2;/Ob2;/MT>"
   )
 
-  target_compile_definitions(${PRODUCT_NAME} PRIVATE
+  target_compile_definitions(PomdogTest PRIVATE
     WIN32_LEAN_AND_MEAN
     NOMINMAX
   )
 
   # Replace with target_link_options() when upgrading CMake 3.12
-  target_link_libraries(${PRODUCT_NAME}
+  target_link_libraries(PomdogTest
     debug -INCREMENTAL
     debug -DEBUG
     optimized -INCREMENTAL:NO
@@ -125,7 +124,7 @@ if(WIN32)
 endif()
 
 set_target_properties(
-  ${PRODUCT_NAME} PROPERTIES
+  PomdogTest PROPERTIES
   XCODE_ATTRIBUTE_GCC_OPTIMIZATION_LEVEL[variant=Debug] "0" # -O0
   XCODE_ATTRIBUTE_GCC_OPTIMIZATION_LEVEL[variant=Release] "3" # -O3
   XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH[variant=Debug] "YES"
@@ -182,4 +181,4 @@ set_target_properties(
 )
 
 add_subdirectory("${POMDOG_DIR}/build/pomdog_experimental" "${CMAKE_CURRENT_BINARY_DIR}/pomdog_experimental_build")
-target_link_libraries(${PRODUCT_NAME} pomdog_experimental)
+target_link_libraries(PomdogTest pomdog_experimental)
