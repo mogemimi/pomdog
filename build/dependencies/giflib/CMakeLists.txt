@@ -30,7 +30,7 @@ target_compile_definitions(giflib PRIVATE
 )
 
 if ((CMAKE_CXX_COMPILER_ID MATCHES "Clang") OR (CMAKE_CXX_COMPILER_ID MATCHES "GNU"))
-  target_compile_options(z PRIVATE
+  target_compile_options(giflib PRIVATE
     -Wno-implicit-function-declaration
     "$<$<CONFIG:DEBUG>:-g;-O0>"
     "$<$<CONFIG:RELEASE>:-O3>"
