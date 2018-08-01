@@ -1,6 +1,7 @@
 // Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Input/GamepadUUID.hpp"
+#include "../Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Utility/StringHelper.hpp"
 #include <algorithm>
 #include <array>
@@ -13,6 +14,9 @@ namespace {
 template <typename T>
 T SwapEndian(T u)
 {
+#if defined(POMDOG_BYTEORDER_BIG_ENDIAN)
+    return u;
+#else
     static_assert(sizeof(std::uint8_t) == 1, "");
     union {
         T u;
@@ -23,6 +27,7 @@ T SwapEndian(T u)
         dest.u8[i] = source.u8[(sizeof(T) - i) - 1];
     }
     return dest.u;
+#endif
 }
 
 } // namespace

@@ -90,6 +90,7 @@
         'Experimental/Gameplay/EntityTest.cpp',
         'Experimental/Gameplay/EntityManagerTest.cpp',
         'Graphics/InputLayoutHelperTest.cpp',
+        'Input/GamepadUUIDTest.cpp',
         'Input/KeyboardStateTest.cpp',
         'Input/KeysTest.cpp',
         'Input/MouseStateTest.cpp',

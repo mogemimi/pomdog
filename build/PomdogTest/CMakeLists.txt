@@ -36,6 +36,7 @@ set(SOURCE_FILES
   ${POMDOG_TEST_DIR}/Experimental/Gameplay/EntityManagerTest.cpp
 
   ${POMDOG_TEST_DIR}/Graphics/InputLayoutHelperTest.cpp
+  ${POMDOG_TEST_DIR}/Input/GamepadUUIDTest.cpp
   ${POMDOG_TEST_DIR}/Input/KeyboardStateTest.cpp
   ${POMDOG_TEST_DIR}/Input/KeysTest.cpp
   ${POMDOG_TEST_DIR}/Input/MouseStateTest.cpp
