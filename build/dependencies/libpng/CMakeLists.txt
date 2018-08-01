@@ -90,4 +90,4 @@ set_target_properties(png PROPERTIES
 )
 
 add_subdirectory("${POMDOG_DIR}/build/dependencies/zlib" "${CMAKE_CURRENT_BINARY_DIR}/zlib_build")
-target_link_libraries(png INTERFACE z)
+target_link_libraries(png INTERFACE zlib)

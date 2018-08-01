@@ -6,7 +6,7 @@ STRING(REGEX REPLACE "/RTC(su|[1su])" "" CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DE
 
 set(THIRDPARTY_DIR "../../../dependencies")
 
-add_library(z STATIC
+add_library(zlib STATIC
   ${THIRDPARTY_DIR}/zlib/adler32.c
   ${THIRDPARTY_DIR}/zlib/compress.c
   ${THIRDPARTY_DIR}/zlib/crc32.c
@@ -35,25 +35,29 @@ add_library(z STATIC
   ${THIRDPARTY_DIR}/zlib/zutil.h
 )
 
-target_include_directories(z PRIVATE
+target_include_directories(zlib PRIVATE
   ${THIRDPARTY_DIR}/zlib
 )
 
-target_compile_definitions(z PRIVATE
+target_compile_definitions(zlib PRIVATE
   "$<$<CONFIG:DEBUG>:_DEBUG>"
   "$<$<CONFIG:RELEASE>:NDEBUG>"
 )
 
 if ((CMAKE_CXX_COMPILER_ID MATCHES "Clang") OR (CMAKE_CXX_COMPILER_ID MATCHES "GNU"))
-  target_compile_options(z PRIVATE
+  target_compile_options(zlib PRIVATE
     -Wno-implicit-function-declaration
     "$<$<CONFIG:DEBUG>:-g;-O0>"
     "$<$<CONFIG:RELEASE>:-O3>"
   )
 endif()
 
+if(UNIX)
+  set_target_properties(zlib PROPERTIES OUTPUT_NAME z)
+endif()
+
 if(WIN32)
-  target_compile_options(z PRIVATE
+  target_compile_options(zlib PRIVATE
     /nologo
     /W3
     /O2
@@ -65,7 +69,7 @@ if(WIN32)
     "$<$<CONFIG:RELEASE>:/MT>"
   )
 
-  target_compile_definitions(z PRIVATE
+  target_compile_definitions(zlib PRIVATE
     WIN32
     _WINDOWS
     _CRT_NONSTDC_NO_DEPRECATE
@@ -75,7 +79,7 @@ if(WIN32)
   )
 endif()
 
-set_target_properties(z PROPERTIES
+set_target_properties(zlib PROPERTIES
   XCODE_ATTRIBUTE_GCC_OPTIMIZATION_LEVEL[variant=Debug] "0" # -O0
   XCODE_ATTRIBUTE_GCC_OPTIMIZATION_LEVEL[variant=Release] "3" # -O3
   XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH[variant=Debug] "YES"
