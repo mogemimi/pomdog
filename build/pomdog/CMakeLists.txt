@@ -4,7 +4,6 @@ project(Pomdog CXX)
 # NOTE: Remove /RTC1 option from default compiler options for Visual Studio
 STRING(REGEX REPLACE "/RTC(su|[1su])" "" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
 
-set(PRODUCT_NAME pomdog)
 set(POMDOG_DIR "../..")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
@@ -701,10 +700,15 @@ if(POMDOG_TARGET_PLATFORM MATCHES "Mac")
 endif()
 
 # NOTE: static library
-add_library(${PRODUCT_NAME} STATIC ${SOURCE_FILES})
-#install(TARGETS ${PRODUCT_NAME} DESTINATION lib)
+add_library(pomdog_static STATIC ${SOURCE_FILES})
+#install(TARGETS pomdog_static DESTINATION lib)
 
-target_include_directories(${PRODUCT_NAME} PRIVATE
+if(UNIX)
+  # On Unix platforms, the library is called `libpomdog.a`.
+  set_target_properties(pomdog_static PROPERTIES OUTPUT_NAME pomdog)
+endif()
+
+target_include_directories(pomdog_static PRIVATE
   ${POMDOG_DIR}/include
   ${POMDOG_DIR}/dependencies/libpng
   ${POMDOG_DIR}/dependencies/vendor/libpng
@@ -713,41 +717,41 @@ target_include_directories(${PRODUCT_NAME} PRIVATE
 )
 
 add_subdirectory(${POMDOG_DIR}/build/dependencies/libpng "${CMAKE_CURRENT_BINARY_DIR}/libpng_build")
-target_link_libraries(${PRODUCT_NAME} INTERFACE png)
+target_link_libraries(pomdog_static INTERFACE png)
 
 add_subdirectory(${POMDOG_DIR}/build/dependencies/giflib "${CMAKE_CURRENT_BINARY_DIR}/giflib_build")
-target_link_libraries(${PRODUCT_NAME} INTERFACE giflib)
+target_link_libraries(pomdog_static INTERFACE giflib)
 
 if(POMDOG_USE_OPENAL AND (POMDOG_TARGET_PLATFORM MATCHES "Linux"))
-  target_link_libraries(${PRODUCT_NAME} INTERFACE openal)
+  target_link_libraries(pomdog_static INTERFACE openal)
 endif()
 
 if(POMDOG_USE_X11 AND (POMDOG_TARGET_PLATFORM MATCHES "Linux"))
-  target_include_directories(${PRODUCT_NAME} PRIVATE
+  target_include_directories(pomdog_static PRIVATE
     /usr/X11R6/include
     ${POMDOG_DIR}/dependencies/vendor/glew/include
   )
   link_directories(
     /usr/X11R6/lib
   )
-  target_compile_definitions(${PRODUCT_NAME} PRIVATE GLEW_STATIC)
+  target_compile_definitions(pomdog_static PRIVATE GLEW_STATIC)
 
   add_subdirectory(${POMDOG_DIR}/build/dependencies/glew "${CMAKE_CURRENT_BINARY_DIR}/glew_build")
-  target_link_libraries(${PRODUCT_NAME} INTERFACE X11 GL glew_static)
+  target_link_libraries(pomdog_static INTERFACE X11 GL glew_static)
 endif()
 
 if(POMDOG_USE_GL4 AND (POMDOG_TARGET_PLATFORM MATCHES "Win32"))
-  target_include_directories(${PRODUCT_NAME} PRIVATE
+  target_include_directories(pomdog_static PRIVATE
     ${POMDOG_DIR}/dependencies/vendor/glew/include
   )
-  target_compile_definitions(${PRODUCT_NAME} PRIVATE GLEW_STATIC)
+  target_compile_definitions(pomdog_static PRIVATE GLEW_STATIC)
 
   add_subdirectory(${POMDOG_DIR}/build/dependencies/glew "${CMAKE_CURRENT_BINARY_DIR}/glew_build")
-  target_link_libraries(${PRODUCT_NAME} INTERFACE opengl32.lib glew_static)
+  target_link_libraries(pomdog_static INTERFACE opengl32.lib glew_static)
 endif()
 
 if(POMDOG_USE_DIRECT3D11 AND (POMDOG_TARGET_PLATFORM MATCHES "Win32"))
-  target_link_libraries(${PRODUCT_NAME} INTERFACE
+  target_link_libraries(pomdog_static INTERFACE
     dxgi.lib
     d3d11.lib
     d3dcompiler.lib
@@ -756,23 +760,23 @@ if(POMDOG_USE_DIRECT3D11 AND (POMDOG_TARGET_PLATFORM MATCHES "Win32"))
 endif()
 
 if(POMDOG_USE_XAUDIO2 AND (POMDOG_TARGET_PLATFORM MATCHES "Win32"))
-  target_link_libraries(${PRODUCT_NAME} INTERFACE xaudio2.lib)
+  target_link_libraries(pomdog_static INTERFACE xaudio2.lib)
 endif()
 
 if(POMDOG_USE_DIRECTINPUT AND (POMDOG_TARGET_PLATFORM MATCHES "Win32"))
-  target_link_libraries(${PRODUCT_NAME} INTERFACE
+  target_link_libraries(pomdog_static INTERFACE
     dinput8.lib
     dxguid.lib
   )
 endif()
 
-target_compile_definitions(${PRODUCT_NAME} PRIVATE
+target_compile_definitions(pomdog_static PRIVATE
   "$<$<CONFIG:DEBUG>:_DEBUG;DEBUG=1>"
   "$<$<CONFIG:RELEASE>:NDEBUG>"
 )
 
 if ((CMAKE_CXX_COMPILER_ID MATCHES "Clang") OR (CMAKE_CXX_COMPILER_ID MATCHES "GNU"))
-  target_compile_options(${PRODUCT_NAME} PRIVATE
+  target_compile_options(pomdog_static PRIVATE
     -Wall
     -Werror
     "$<$<CONFIG:DEBUG>:-g;-O0>"
@@ -781,19 +785,19 @@ if ((CMAKE_CXX_COMPILER_ID MATCHES "Clang") OR (CMAKE_CXX_COMPILER_ID MATCHES "G
 endif()
 
 if(POMDOG_TARGET_PLATFORM MATCHES "Win32")
-  target_compile_options(${PRODUCT_NAME} PRIVATE
+  target_compile_options(pomdog_static PRIVATE
     /W4
     "$<$<CONFIG:DEBUG>:/Od;/MTd>"
     "$<$<CONFIG:RELEASE>:/O2;/Ob2;/MT>"
   )
 
-  target_compile_definitions(${PRODUCT_NAME} PRIVATE
+  target_compile_definitions(pomdog_static PRIVATE
     _WIN32_WINNT=0x0602 # Windows 8 or later
     WIN32_LEAN_AND_MEAN
     NOMINMAX
   )
 
-  target_link_libraries(${PRODUCT_NAME} INTERFACE
+  target_link_libraries(pomdog_static INTERFACE
     kernel32.lib
     user32.lib
     gdi32.lib
@@ -813,14 +817,14 @@ endif()
 
 if (POMDOG_TARGET_PLATFORM MATCHES "Mac")
   # TODO: Replace with the following, CMake >= 3.12
-  # `target_link_options(${PRODUCT_NAME} PUBLIC "${LINK_FRAMEWORKS}")`
+  # `target_link_options(pomdog_static PUBLIC "${LINK_FRAMEWORKS}")`
   # https://cmake.org/cmake/help/git-stage/command/target_link_options.html
   set(CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS} ${LINK_FRAMEWORKS}")
 endif()
 
 # NOTE: For dynamic library
 # NOTE: see https://cmake.org/cmake/help/v3.9/prop_tgt/FRAMEWORK.html
-# set_target_properties(${PRODUCT_NAME} PROPERTIES
+# set_target_properties(pomdog_static PROPERTIES
 #   XCODE_ATTRIBUTE_PRODUCT_NAME "Pomdog"
 #   XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER "net.enginetrouble.pomdog"
 #   XCODE_ATTRIBUTE_INFOPLIST_FILE "src/Platform.Apple/Info.plist"
@@ -829,7 +833,7 @@ endif()
 #   XCODE_ATTRIBUTE_LD_RUNPATH_SEARCH_PATHS "$(inherited);@executable_path/../Frameworks;@loader_path/Frameworks"
 # )
 
-set_target_properties(${PRODUCT_NAME} PROPERTIES
+set_target_properties(pomdog_static PROPERTIES
   XCODE_ATTRIBUTE_GCC_OPTIMIZATION_LEVEL[variant=Debug] "0" # -O0
   XCODE_ATTRIBUTE_GCC_OPTIMIZATION_LEVEL[variant=Release] "3" # -O3
   XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH[variant=Debug] "YES"

@@ -405,4 +405,4 @@ set_target_properties(
 )
 
 add_subdirectory(${POMDOG_DIR}/build/pomdog ${CMAKE_CURRENT_BINARY_DIR}/pomdog_build)
-target_link_libraries(${PRODUCT_NAME} INTERFACE pomdog)
+target_link_libraries(${PRODUCT_NAME} INTERFACE pomdog_static)
