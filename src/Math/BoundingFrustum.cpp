@@ -190,14 +190,14 @@ void BoundingFrustum::CreatePlanes()
     // NOTE: Left-handed coordinate system
     //
     //   NLT
-    //    |\
-    //    |  \
+    //    |\.
+    //    |  \.
     //    |  =======> Normal
-    //    |      \
-    //    |------- \
+    //    |      \.
+    //    |------- \.
     //   NLB        NRB
     //
-    // Normal == Normalize(Cross(NLT-NLB, NRB-NLT))
+    // Normal == Normalize(Cross(NLT - NLB, NRB - NLT))
 
     planes[PlaneIndex::Near] = Plane{corners[NLB], corners[NLT], corners[NRB]};
     planes[PlaneIndex::Far] = Plane{corners[FRB], corners[FRT], corners[FLB]};
