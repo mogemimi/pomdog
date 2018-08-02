@@ -56,7 +56,7 @@ void RasterizerStateGL4::Apply()
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
         break;
-    };
+    }
 
     // FillMode:
     glPolygonMode(GL_FRONT_AND_BACK, fillMode.value);

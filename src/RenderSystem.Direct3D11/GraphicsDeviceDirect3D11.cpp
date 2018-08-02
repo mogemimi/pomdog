@@ -287,7 +287,7 @@ void GraphicsDeviceDirect3D11::Impl::BuildDevice()
         case D3D_DRIVER_TYPE_REFERENCE:
             Log::Internal("Direct3D11 DriverType: Reference Device.");
             break;
-        };
+        }
     }
     {
         D3D11_FEATURE_DATA_D3D11_OPTIONS d3d11Options;

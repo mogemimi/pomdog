@@ -44,7 +44,7 @@ GLenum ToInternalFormatGL4(SurfaceFormat format) noexcept
         return GL_R32F;
     case SurfaceFormat::A8_UNorm:
         return GL_R8;
-    };
+    }
 
 #ifdef _MSC_VER
     return GL_R8;
@@ -75,7 +75,7 @@ GLenum ToFormatComponents(SurfaceFormat format) noexcept
     case SurfaceFormat::BlockComp3_UNorm:
         // Cannot find format
         return GL_RED;
-    };
+    }
 
 #ifdef _MSC_VER
     return GL_RED;
@@ -106,7 +106,7 @@ GLenum ToPixelFundamentalType(SurfaceFormat format) noexcept
     case SurfaceFormat::BlockComp3_UNorm:
         // Cannot find format
         return GL_UNSIGNED_BYTE;
-    };
+    }
 
 #ifdef _MSC_VER
     return GL_UNSIGNED_BYTE;

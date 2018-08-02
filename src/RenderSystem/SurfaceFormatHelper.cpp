@@ -28,7 +28,7 @@ int SurfaceFormatHelper::ToBytesPerBlock(SurfaceFormat format)
         return 8;
     case SurfaceFormat::R32G32B32A32_Float:
         return 16;
-    };
+    }
 
 #ifdef _MSC_VER
     // FUS RO DAH!
