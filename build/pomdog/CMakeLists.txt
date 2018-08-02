@@ -699,6 +699,8 @@ if(POMDOG_TARGET_PLATFORM MATCHES "Mac")
   set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework QuartzCore")
 endif()
 
+list(SORT SOURCE_FILES)
+
 # NOTE: static library
 add_library(pomdog_static STATIC ${SOURCE_FILES})
 #install(TARGETS pomdog_static DESTINATION lib)

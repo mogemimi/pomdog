@@ -318,6 +318,8 @@ include_directories(
   ${POMDOG_DIR}/dependencies
 )
 
+list(SORT SOURCE_FILES)
+
 add_library(pomdog_experimental STATIC ${SOURCE_FILES})
 
 target_compile_definitions(pomdog_experimental PRIVATE
