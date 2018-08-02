@@ -27,8 +27,6 @@ public:
         const std::string& channelName,
         std::function<void(const LogEntry&)> && slot);
 
-    void RemoveUnusedChannel();
-
     LogLevel GetLevel() const;
 
     void SetLevel(LogLevel verbosity);
@@ -123,16 +121,6 @@ Connection Logger::Connect(
         defaultChannel.Log(entry);
     });
     return channel.Connect(std::move(slot));
-}
-
-void Logger::RemoveUnusedChannel()
-{
-    std::lock_guard<std::recursive_mutex> lock(channelsProtection);
-
-    channels.erase(std::remove_if(std::begin(channels), std::end(channels),
-        [](const ChannelTuple& tuple) {
-            return tuple.channel.ConnectionCount() <= 0;
-        }), std::end(channels));
 }
 
 LogLevel Logger::GetLevel() const
