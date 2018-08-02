@@ -278,7 +278,7 @@ std::vector<SkinnedMeshVertexDesc> ReadSkinnedMeshVertices(
         struct LocalVertex {
             Vector2 Position;
             float Weight;
-            JointIndex JointIndex;
+            Pomdog::JointIndex JointIndex;
         };
 
         POMDOG_ASSERT(verticesArray[verticesIter].IsUint());
