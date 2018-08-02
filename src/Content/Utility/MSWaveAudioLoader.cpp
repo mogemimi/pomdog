@@ -19,17 +19,16 @@
 #include "Pomdog/Utility/Exception.hpp"
 #include "Pomdog/Logging/Log.hpp"
 
-//#if defined(POMDOG_PLATFORM_MACOSX) \
-//    || defined(POMDOG_PLATFORM_APPLE_IOS) \
-//    || defined(POMDOG_PLATFORM_LINUX)
-//#include <AudioToolbox/AudioFile.h>
-//#include <AudioToolbox/AudioConverter.h>
-//#elif defined(POMDOG_PLATFORM_WIN32) \
-//    || defined(POMDOG_PLATFORM_XBOX_ONE)
-//#include "Pomdog/Content/Utility/MakeFourCC.hpp"
-//#include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
-//#include <mmsystem.h>
-//#endif
+#if 0
+#if defined(POMDOG_PLATFORM_MACOSX) || defined(POMDOG_PLATFORM_APPLE_IOS)
+#include <AudioToolbox/AudioFile.h>
+#include <AudioToolbox/AudioConverter.h>
+#elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
+#include "Pomdog/Content/Utility/MakeFourCC.hpp"
+#include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
+#include <mmsystem.h>
+#endif
+#endif
 
 #include <vector>
 #include <memory>
