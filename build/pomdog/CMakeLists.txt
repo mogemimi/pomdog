@@ -247,6 +247,7 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/src/Audio/AudioEngine.cpp
   ${POMDOG_DIR}/src/Audio/SoundEffect.cpp
   ${POMDOG_DIR}/src/Basic/ConditionalCompilation.hpp
+  ${POMDOG_DIR}/src/Basic/Unreachable.hpp
   ${POMDOG_DIR}/src/Content/AssetDictionary.cpp
   ${POMDOG_DIR}/src/Content/AssetLoaderContext.cpp
   ${POMDOG_DIR}/src/Content/AssetManager.cpp

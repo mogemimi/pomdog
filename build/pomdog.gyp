@@ -237,6 +237,7 @@
       '../src/Audio/AudioEngine.cpp',
       '../src/Audio/SoundEffect.cpp',
       '../src/Basic/ConditionalCompilation.hpp',
+      '../src/Basic/Unreachable.hpp',
       '../src/Content/AssetDictionary.cpp',
       '../src/Content/AssetLoaderContext.cpp',
       '../src/Content/AssetManager.cpp',
