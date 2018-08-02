@@ -48,7 +48,7 @@ private:
 namespace std {
 
 template <>
-struct std::hash<Pomdog::EntityID> {
+struct hash<Pomdog::EntityID> {
     std::size_t operator()(Pomdog::EntityID const& key)
     {
         return std::hash<std::uint64_t>()(key.Value());
