@@ -9,6 +9,7 @@
 #include "RenderTarget2DGL4.hpp"
 #include "SamplerStateGL4.hpp"
 #include "TypesafeHelperGL4.hpp"
+#include "../Basic/Unreachable.hpp"
 #include "../RenderSystem/BufferHelper.hpp"
 #include "../RenderSystem/GraphicsCapabilities.hpp"
 #include "../RenderSystem/GraphicsCommandListImmediate.hpp"
@@ -52,9 +53,7 @@ GLenum ToPrimitiveTopology(PrimitiveTopology primitiveTopology) noexcept
     case PrimitiveTopology::LineList: return GL_LINES;
     case PrimitiveTopology::LineStrip: return GL_LINE_STRIP;
     }
-#ifdef _MSC_VER
-    return GL_TRIANGLES;
-#endif
+    POMDOG_UNREACHABLE("Unsupported primitive topology");
 }
 
 GLenum ToIndexElementType(IndexElementSize indexElementSize) noexcept
@@ -66,9 +65,7 @@ GLenum ToIndexElementType(IndexElementSize indexElementSize) noexcept
     case IndexElementSize::SixteenBits: return GL_UNSIGNED_SHORT;
     case IndexElementSize::ThirtyTwoBits: return GL_UNSIGNED_INT;
     }
-#ifdef _MSC_VER
-    return GL_UNSIGNED_INT;
-#endif
+    POMDOG_UNREACHABLE("Unsupported index element size");
 }
 
 template <typename T>

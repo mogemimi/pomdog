@@ -1,6 +1,7 @@
 // Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
 #include "SurfaceFormatHelper.hpp"
+#include "../Basic/Unreachable.hpp"
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
 
 namespace Pomdog {
@@ -29,11 +30,7 @@ int SurfaceFormatHelper::ToBytesPerBlock(SurfaceFormat format)
     case SurfaceFormat::R32G32B32A32_Float:
         return 16;
     }
-
-#ifdef _MSC_VER
-    // FUS RO DAH!
-    return 1;
-#endif
+    POMDOG_UNREACHABLE("Unsupported surface format");
 }
 
 } // namespace Detail

@@ -3,6 +3,7 @@
 #include "Texture2DGL4.hpp"
 #include "ErrorChecker.hpp"
 #include "TypesafeHelperGL4.hpp"
+#include "../Basic/Unreachable.hpp"
 #include "../RenderSystem/SurfaceFormatHelper.hpp"
 #include "../Utility/ScopeGuard.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -45,10 +46,7 @@ GLenum ToInternalFormatGL4(SurfaceFormat format) noexcept
     case SurfaceFormat::A8_UNorm:
         return GL_R8;
     }
-
-#ifdef _MSC_VER
-    return GL_R8;
-#endif
+    POMDOG_UNREACHABLE("Unsupported surface format");
 }
 
 GLenum ToFormatComponents(SurfaceFormat format) noexcept
@@ -76,10 +74,7 @@ GLenum ToFormatComponents(SurfaceFormat format) noexcept
         // Cannot find format
         return GL_RED;
     }
-
-#ifdef _MSC_VER
-    return GL_RED;
-#endif
+    POMDOG_UNREACHABLE("Unsupported surface format");
 }
 
 GLenum ToPixelFundamentalType(SurfaceFormat format) noexcept
@@ -107,10 +102,7 @@ GLenum ToPixelFundamentalType(SurfaceFormat format) noexcept
         // Cannot find format
         return GL_UNSIGNED_BYTE;
     }
-
-#ifdef _MSC_VER
-    return GL_UNSIGNED_BYTE;
-#endif
+    POMDOG_UNREACHABLE("Unsupported surface format");
 }
 
 GLsizei MipmapImageDataBytes(

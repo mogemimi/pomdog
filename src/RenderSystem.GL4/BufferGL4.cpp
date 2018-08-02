@@ -3,6 +3,7 @@
 #include "BufferGL4.hpp"
 #include "ErrorChecker.hpp"
 #include "TypesafeHelperGL4.hpp"
+#include "../Basic/Unreachable.hpp"
 #include "../Utility/ScopeGuard.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Graphics/BufferUsage.hpp"
@@ -19,9 +20,7 @@ GLenum ToBufferUsage(BufferUsage bufferUsage) noexcept
     case BufferUsage::Dynamic: return GL_DYNAMIC_DRAW;
     case BufferUsage::Immutable: return GL_STATIC_DRAW;
     }
-#ifdef _MSC_VER
-    return GL_STATIC_DRAW;
-#endif
+    POMDOG_UNREACHABLE("Unsupported buffer usage");
 }
 
 template <class Tag>

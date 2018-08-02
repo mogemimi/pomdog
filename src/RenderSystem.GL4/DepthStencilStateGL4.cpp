@@ -2,6 +2,7 @@
 
 #include "DepthStencilStateGL4.hpp"
 #include "ErrorChecker.hpp"
+#include "../Basic/Unreachable.hpp"
 #include "Pomdog/Graphics/DepthStencilDescription.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
@@ -23,9 +24,7 @@ GLenum ToComparisonFunctionGL4NonTypesafe(ComparisonFunction comparison) noexcep
     case ComparisonFunction::Never: return GL_NEVER;
     case ComparisonFunction::NotEqual: return GL_NOTEQUAL;
     }
-#ifdef _MSC_VER
-    return GL_LEQUAL;
-#endif
+    POMDOG_UNREACHABLE("Unsupported comparison function");
 }
 
 GLenum ToStencilOperationGL4NonTypesafe(StencilOperation operation) noexcept
@@ -44,9 +43,7 @@ GLenum ToStencilOperationGL4NonTypesafe(StencilOperation operation) noexcept
     case StencilOperation::Replace: return GL_REPLACE;
     case StencilOperation::Zero: return GL_ZERO;
     }
-#ifdef _MSC_VER
-    return GL_KEEP;
-#endif
+    POMDOG_UNREACHABLE("Unsupported stencil operation");
 }
 
 ComparisonFunctionGL4

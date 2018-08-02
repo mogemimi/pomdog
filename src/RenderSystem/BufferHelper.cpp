@@ -1,6 +1,7 @@
 // Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
 #include "BufferHelper.hpp"
+#include "../Basic/Unreachable.hpp"
 #include "Pomdog/Graphics/IndexElementSize.hpp"
 #include "Pomdog/Graphics/InputElementFormat.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -15,10 +16,7 @@ std::size_t ToIndexElementOffsetBytes(IndexElementSize elementSize) noexcept
     case IndexElementSize::ThirtyTwoBits: return 4;
     case IndexElementSize::SixteenBits: return 2;
     }
-#ifdef _MSC_VER
-    // FUS RO DAH!
-    return 4;
-#endif
+    POMDOG_UNREACHABLE("Unsupported index element size");
 }
 
 std::uint16_t ToByteSize(InputElementFormat format) noexcept
@@ -38,10 +36,7 @@ std::uint16_t ToByteSize(InputElementFormat format) noexcept
     case InputElementFormat::Float4:
         return 16;
     }
-#ifdef _MSC_VER
-    POMDOG_ASSERT("cannot find format.");
-    return 4;
-#endif
+    POMDOG_UNREACHABLE("Unsupported input element format");
 }
 
 } // namespace BufferHelper

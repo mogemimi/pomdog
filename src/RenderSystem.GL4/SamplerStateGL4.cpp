@@ -2,6 +2,7 @@
 
 #include "SamplerStateGL4.hpp"
 #include "ErrorChecker.hpp"
+#include "../Basic/Unreachable.hpp"
 #include "Pomdog/Graphics/SamplerDescription.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <algorithm>
@@ -19,9 +20,7 @@ GLenum ToTextureAddressMode(TextureAddressMode address) noexcept
     case TextureAddressMode::Mirror: return GL_MIRRORED_REPEAT;
     case TextureAddressMode::Wrap: return GL_REPEAT;
     }
-#ifdef _MSC_VER
-    return GL_REPEAT;
-#endif
+    POMDOG_UNREACHABLE("Unsupported texture address mode");
 }
 
 } // unnamed namespace

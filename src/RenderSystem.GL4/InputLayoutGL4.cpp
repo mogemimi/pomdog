@@ -4,6 +4,7 @@
 #include "BufferGL4.hpp"
 #include "ErrorChecker.hpp"
 #include "TypesafeHelperGL4.hpp"
+#include "../Basic/Unreachable.hpp"
 #include "../Utility/ScopeGuard.hpp"
 #include "Pomdog/Graphics/InputLayoutDescription.hpp"
 #include "Pomdog/Graphics/VertexBuffer.hpp"
@@ -394,9 +395,7 @@ ScalarTypeGL4 ToScalarTypeGL4(InputElementFormat format)
     case InputElementFormat::Int4:
         return {GL_INT};
     }
-#ifdef _MSC_VER
-    return {GL_FLOAT};
-#endif
+    POMDOG_UNREACHABLE("Unsupported input element format");
 }
 
 std::int8_t ToComponentsGL4(InputElementFormat format)
@@ -415,9 +414,7 @@ std::int8_t ToComponentsGL4(InputElementFormat format)
     case InputElementFormat::Int4:
         return 4;
     }
-#ifdef _MSC_VER
-    return 1;
-#endif
+    POMDOG_UNREACHABLE("Unsupported input element format");
 }
 
 GLuint GetMaxAttributeCount()
