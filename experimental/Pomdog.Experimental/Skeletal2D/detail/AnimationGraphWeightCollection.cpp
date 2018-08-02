@@ -2,6 +2,7 @@
 
 #include "AnimationGraphWeightCollection.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include <limits>
 
 namespace Pomdog {
 namespace Detail {

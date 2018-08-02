@@ -26,6 +26,7 @@
 #include "Pomdog/Math/Vector3.hpp"
 #include "Pomdog/Math/Vector4.hpp"
 #include <cmath>
+#include <cstring>
 
 namespace Pomdog {
 namespace {

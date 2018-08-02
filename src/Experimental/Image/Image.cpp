@@ -2,6 +2,7 @@
 
 #include "Pomdog/Experimental/Image/Image.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include <cstring>
 #include <utility>
 
 namespace Pomdog {

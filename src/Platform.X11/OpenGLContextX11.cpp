@@ -5,6 +5,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include <X11/Xlib.h>
+#include <cstring>
 
 namespace Pomdog {
 namespace Detail {

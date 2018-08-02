@@ -14,6 +14,7 @@
 #include "Pomdog/Graphics/SamplerState.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include <cstring>
 
 namespace Pomdog {
 namespace {

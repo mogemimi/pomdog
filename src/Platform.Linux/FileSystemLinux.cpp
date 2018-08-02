@@ -6,6 +6,7 @@
 #include "Pomdog/Utility/PathHelper.hpp"
 #include <array>
 #include <algorithm>
+#include <climits>
 #include <cstdio>
 #include <sys/types.h>
 #include <sys/stat.h>

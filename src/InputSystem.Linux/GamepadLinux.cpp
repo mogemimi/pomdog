@@ -5,6 +5,7 @@
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <linux/input.h>
+#include <cstring>
 #include <errno.h>
 #include <unistd.h>
 #include <fcntl.h>

@@ -25,6 +25,7 @@
 #include "Pomdog/Math/Vector4.hpp"
 #include <algorithm>
 #include <cmath>
+#include <cstring>
 
 namespace Pomdog {
 namespace {

@@ -2,6 +2,7 @@
 
 #include "PrimitiveCommandProcessor.hpp"
 #include "Pomdog.Experimental/Rendering/Commands/PrimitiveCommand.hpp"
+#include <cstring>
 
 namespace Pomdog {
 namespace Rendering {

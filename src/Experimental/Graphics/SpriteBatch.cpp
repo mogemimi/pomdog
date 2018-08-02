@@ -30,6 +30,7 @@
 #include "Pomdog/Math/Vector3.hpp"
 #include "Pomdog/Math/Vector4.hpp"
 #include <algorithm>
+#include <cstring>
 #include <vector>
 #include <tuple>
 

@@ -2,6 +2,7 @@
 
 #include "Pomdog.Experimental/UI/DebugNavigator.hpp"
 #include "Pomdog.Experimental/UI/DrawingContext.hpp"
+#include <cmath>
 
 namespace Pomdog {
 namespace UI {

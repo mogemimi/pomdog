@@ -25,6 +25,7 @@
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Math/Vector4.hpp"
+#include <cstring>
 #include <tuple>
 
 namespace Pomdog {

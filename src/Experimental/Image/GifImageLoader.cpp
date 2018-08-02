@@ -3,6 +3,7 @@
 #include "Pomdog/Experimental/Image/GifImageLoader.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <gif_lib.h>
+#include <cstring>
 #include <functional>
 
 namespace Pomdog {

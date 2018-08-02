@@ -9,6 +9,7 @@
 extern "C" {
     #include <png.h>
 }
+#include <cstring>
 #include <vector>
 
 namespace Pomdog {

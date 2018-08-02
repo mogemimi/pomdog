@@ -4,6 +4,7 @@
 #include "SkeletonDesc.hpp"
 #include "Pomdog.Experimental/Skeletal2D/Skin.hpp"
 #include "Pomdog/Utility/detail/CRC32.hpp"
+#include <algorithm>
 
 namespace Pomdog {
 namespace Spine {

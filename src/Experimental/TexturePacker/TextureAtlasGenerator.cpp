@@ -4,6 +4,7 @@
 #include "Pomdog/Experimental/Image/Image.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <array>
+#include <cstring>
 #include <functional>
 #include <unordered_map>
 

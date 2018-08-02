@@ -9,6 +9,7 @@
 #include <X11/XKBlib.h>
 #include <X11/Xutil.h>
 #include <algorithm>
+#include <cstring>
 #include <map>
 
 namespace Pomdog {

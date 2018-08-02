@@ -16,6 +16,7 @@
 #include "Pomdog/Graphics/Shader.hpp"
 #include "Pomdog/Math/MathHelper.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include <cstring>
 
 namespace Pomdog {
 namespace {
