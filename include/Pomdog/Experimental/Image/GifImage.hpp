@@ -14,7 +14,7 @@ using GifDuration = std::chrono::duration<long long, std::ratio<1LL, 100LL>>;
 
 class POMDOG_EXPORT GifImageFrame final {
 public:
-    std::shared_ptr<Image> Image;
+    std::shared_ptr<Pomdog::Image> Image;
     GifDuration Delay;
 };
 

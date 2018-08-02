@@ -396,7 +396,7 @@ struct PcmWaveFormat {
 };
 
 struct WaveFormat {
-    PcmWaveFormat PcmWaveFormat;
+    Pomdog::Detail::PcmWaveFormat PcmWaveFormat;
     std::uint16_t ExtraBytes;
     std::vector<std::uint8_t> ExtraData;
 };

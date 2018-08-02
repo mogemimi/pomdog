@@ -28,7 +28,7 @@ class SlotDesc {
 public:
     std::string Name;
     std::string Attachement;
-    Color Color;
+    Pomdog::Color Color;
     JointIndex Joint;
 };
 

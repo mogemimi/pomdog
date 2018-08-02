@@ -15,13 +15,13 @@ class Image;
 namespace TexturePacker {
 
 struct POMDOG_EXPORT TextureAtlasGeneratorResult final {
-    std::shared_ptr<Image> Image;
+    std::shared_ptr<Pomdog::Image> Image;
     TextureAtlas Atlas;
     bool HasError;
 };
 
 struct POMDOG_EXPORT TextureAtlasGeneratorSource final {
-    std::shared_ptr<Image> Image;
+    std::shared_ptr<Pomdog::Image> Image;
     std::string Name;
 };
 
