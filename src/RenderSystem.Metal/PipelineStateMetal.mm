@@ -3,6 +3,7 @@
 #include "PipelineStateMetal.hpp"
 #include "MetalFormatHelper.hpp"
 #include "ShaderMetal.hpp"
+#include "../Basic/Unreachable.hpp"
 #include "../RenderSystem/BufferHelper.hpp"
 #include "Pomdog/Graphics/DepthFormat.hpp"
 #include "Pomdog/Graphics/PipelineStateDescription.hpp"
@@ -24,6 +25,7 @@ MTLVertexStepFunction ToVertexStepFunction(InputClassification classification) n
     case InputClassification::InputPerInstance:
         return MTLVertexStepFunctionPerInstance;
     }
+    POMDOG_UNREACHABLE("Unsupported input classsification");
 }
 
 MTLVertexFormat ToVertexFormat(InputElementFormat format) noexcept
@@ -38,6 +40,7 @@ MTLVertexFormat ToVertexFormat(InputElementFormat format) noexcept
     case InputElementFormat::HalfFloat2: return MTLVertexFormatHalf2;
     case InputElementFormat::HalfFloat4: return MTLVertexFormatHalf4;
     }
+    POMDOG_UNREACHABLE("Unsupported input element format");
 }
 
 MTLVertexDescriptor* ToVertexDescriptor(const InputLayoutDescription& inputLayout)
@@ -74,9 +77,10 @@ MTLBlendOperation ToBlendOperation(BlendOperation blendOperation) noexcept
     case BlendOperation::Min: return MTLBlendOperationMin;
     case BlendOperation::Max: return MTLBlendOperationMax;
     }
+    POMDOG_UNREACHABLE("Unsupported blend operation");
 }
 
-MTLBlendFactor ToBlendFactor(Blend blend)
+MTLBlendFactor ToBlendFactor(Blend blend) noexcept
 {
     switch (blend) {
     case Blend::Zero: return MTLBlendFactorZero;
@@ -90,18 +94,16 @@ MTLBlendFactor ToBlendFactor(Blend blend)
     case Blend::DestinationColor: return MTLBlendFactorDestinationColor;
     case Blend::InverseDestinationColor: return MTLBlendFactorOneMinusDestinationColor;
     case Blend::SourceAlphaSaturation: return MTLBlendFactorSourceAlphaSaturated;
-    case Blend::Source1Color: return MTLBlendFactorBlendColor;
-    case Blend::InverseSource1Color: return MTLBlendFactorOneMinusBlendColor;
-    case Blend::Source1Alpha: return MTLBlendFactorBlendAlpha;
-    case Blend::InverseSource1Alpha: return MTLBlendFactorOneMinusBlendAlpha;
-    case Blend::BlendFactor:
-        break;
-    case Blend::InvereseBlendFactor:
-        break;
+    case Blend::BlendFactor: return MTLBlendFactorBlendColor;
+    case Blend::InvereseBlendFactor: return MTLBlendFactorOneMinusBlendColor;
+    // case Blend::BlendFactorAlpha: return MTLBlendFactorBlendAlpha;
+    // case Blend::InvereseBlendFactorAlpha: return MTLBlendFactorOneMinusBlendAlpha;
+    case Blend::Source1Color: return MTLBlendFactorSource1Color;
+    case Blend::InverseSource1Color: return MTLBlendFactorOneMinusSource1Color;
+    case Blend::Source1Alpha: return MTLBlendFactorSource1Alpha;
+    case Blend::InverseSource1Alpha: return MTLBlendFactorOneMinusSource1Alpha;
     }
-
-    POMDOG_THROW_EXCEPTION(std::runtime_error, "Invalid blend factor");
-    return MTLBlendFactorOne;
+    POMDOG_UNREACHABLE("Unsupported blend factor");
 }
 
 MTLStencilOperation ToStencilOperation(StencilOperation operation) noexcept
@@ -116,7 +118,7 @@ MTLStencilOperation ToStencilOperation(StencilOperation operation) noexcept
     case StencilOperation::Increment: return MTLStencilOperationIncrementWrap;
     case StencilOperation::Decrement: return MTLStencilOperationDecrementWrap;
     }
-    return MTLStencilOperationKeep;
+    POMDOG_UNREACHABLE("Unsupported stencil operation");
 }
 
 MTLCompareFunction ToComparisonFunction(ComparisonFunction compareFunction) noexcept
@@ -131,7 +133,7 @@ MTLCompareFunction ToComparisonFunction(ComparisonFunction compareFunction) noex
     case ComparisonFunction::GreaterEqual: return MTLCompareFunctionGreaterEqual;
     case ComparisonFunction::Always: return MTLCompareFunctionAlways;
     }
-    return MTLCompareFunctionLessEqual;
+    POMDOG_UNREACHABLE("Unsupported comparison function");
 }
 
 void ToDepthStencilOperation(
@@ -155,7 +157,7 @@ MTLCullMode ToCullMode(CullMode cullMode) noexcept
     case CullMode::CounterClockwiseFace: return MTLCullModeBack;
     case CullMode::None: return MTLCullModeNone;
     }
-    return MTLCullModeBack;
+    POMDOG_UNREACHABLE("Unsupported cull mode");
 }
 
 MTLTriangleFillMode ToFillMode(FillMode fillMode) noexcept
@@ -164,26 +166,7 @@ MTLTriangleFillMode ToFillMode(FillMode fillMode) noexcept
     case FillMode::WireFrame: return MTLTriangleFillModeLines;
     case FillMode::Solid: return MTLTriangleFillModeFill;
     }
-    return MTLTriangleFillModeFill;
-}
-
-MTLPixelFormat ToDepthPixelFormat(DepthFormat depthFormat) noexcept
-{
-    // Not supported:
-    POMDOG_ASSERT(depthFormat != DepthFormat::Depth16);
-
-    switch (depthFormat) {
-    case DepthFormat::Depth16: return MTLPixelFormatDepth32Float;
-    case DepthFormat::Depth32: return MTLPixelFormatDepth32Float;
-#if defined(MAC_OS_X_VERSION_10_11) && (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_11)
-    case DepthFormat::Depth24Stencil8: return MTLPixelFormatDepth24Unorm_Stencil8;
-#else
-    case DepthFormat::Depth24Stencil8: return MTLPixelFormatDepth32Float_Stencil8;
-#endif
-    case DepthFormat::Depth32_Float_Stencil8_Uint: return MTLPixelFormatDepth32Float_Stencil8;
-    case DepthFormat::None: return MTLPixelFormatInvalid;
-    }
-    return MTLPixelFormatDepth32Float;
+    POMDOG_UNREACHABLE("Unsupported fill mode");
 }
 
 } // unnamed namespace
@@ -225,7 +208,7 @@ PipelineStateMetal::PipelineStateMetal(
     ///@todo MSAA is not implemented yet
     constexpr int multiSampleCount = 1;
 
-    const auto depthStencilFormat = ToDepthPixelFormat(description.DepthStencilViewFormat);
+    const auto depthStencilFormat = ToPixelFormat(description.DepthStencilViewFormat);
 
     MTLRenderPipelineDescriptor* descriptor = [[MTLRenderPipelineDescriptor alloc] init];
     descriptor.label = @"Pomdog.RenderPipeline";
@@ -243,6 +226,7 @@ PipelineStateMetal::PipelineStateMetal(
         }
 
         auto colorAttachment = descriptor.colorAttachments[index];
+        colorAttachment.pixelFormat = ToPixelFormat(description.RenderTargetViewFormats[index]);
         colorAttachment.rgbBlendOperation = ToBlendOperation(renderTarget.ColorBlendOperation);
         colorAttachment.alphaBlendOperation = ToBlendOperation(renderTarget.AlphaBlendOperation);
         colorAttachment.sourceRGBBlendFactor = ToBlendFactor(renderTarget.ColorSourceBlend);
@@ -250,10 +234,6 @@ PipelineStateMetal::PipelineStateMetal(
         colorAttachment.destinationRGBBlendFactor = ToBlendFactor(renderTarget.ColorDestinationBlend);
         colorAttachment.destinationAlphaBlendFactor = ToBlendFactor(renderTarget.AlphaDestinationBlend);
         colorAttachment.blendingEnabled = renderTarget.BlendEnable;
-
-        auto pixelFormat = MetalFormatHelper::ToMTLPixelFormat(description.RenderTargetViewFormats[index]);
-        POMDOG_ASSERT(pixelFormat);
-        colorAttachment.pixelFormat = *pixelFormat;
 
         // TODO: Not implemented
         colorAttachment.writeMask = MTLColorWriteMaskAll;

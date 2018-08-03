@@ -10,9 +10,8 @@ namespace Pomdog {
 namespace Detail {
 namespace Metal {
 
-struct MetalFormatHelper final {
-    static Optional<MTLPixelFormat> ToMTLPixelFormat(SurfaceFormat format) noexcept;
-};
+MTLPixelFormat ToPixelFormat(SurfaceFormat format) noexcept;
+MTLPixelFormat ToPixelFormat(DepthFormat format) noexcept;
 
 } // namespace Metal
 } // namespace Detail

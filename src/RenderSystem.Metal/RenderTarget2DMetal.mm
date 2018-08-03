@@ -11,28 +11,6 @@
 namespace Pomdog {
 namespace Detail {
 namespace Metal {
-namespace {
-
-MTLPixelFormat ToMTLPixelFormat(DepthFormat depthFormat)
-{
-    POMDOG_ASSERT(depthFormat != DepthFormat::None);
-    POMDOG_ASSERT_MESSAGE(depthFormat != DepthFormat::Depth16, "Not supported");
-
-    switch (depthFormat) {
-    case DepthFormat::Depth16: return MTLPixelFormatDepth32Float;
-    case DepthFormat::Depth32: return MTLPixelFormatDepth32Float;
-#if defined(MAC_OS_X_VERSION_10_11) && (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_11)
-    case DepthFormat::Depth24Stencil8: return MTLPixelFormatDepth24Unorm_Stencil8;
-#else
-    case DepthFormat::Depth24Stencil8: return MTLPixelFormatDepth32Float_Stencil8;
-#endif
-    case DepthFormat::Depth32_Float_Stencil8_Uint: return MTLPixelFormatDepth32Float_Stencil8;
-    case DepthFormat::None: return MTLPixelFormatInvalid;
-    }
-    return MTLPixelFormatDepth32Float;
-}
-
-} // unnamed namespace
 
 RenderTarget2DMetal::RenderTarget2DMetal(
     id<MTLDevice> device,
@@ -48,16 +26,8 @@ RenderTarget2DMetal::RenderTarget2DMetal(
 {
     POMDOG_ASSERT(device != nil);
     {
-        auto pixelFormat = MetalFormatHelper::ToMTLPixelFormat(format);
-
-        if (!pixelFormat) {
-            // FUS RO DAH!
-            POMDOG_THROW_EXCEPTION(std::runtime_error,
-                "This platform does not support this pixel format.");
-        }
-
         MTLTextureDescriptor* descriptor = [MTLTextureDescriptor
-            texture2DDescriptorWithPixelFormat:*pixelFormat
+            texture2DDescriptorWithPixelFormat:ToPixelFormat(format)
             width:pixelWidth
             height:pixelHeight
             mipmapped:(levelCount > 1 ? YES: NO)];
@@ -78,7 +48,7 @@ RenderTarget2DMetal::RenderTarget2DMetal(
 
     if (depthStencilFormat != DepthFormat::None) {
         MTLTextureDescriptor* descriptor = [MTLTextureDescriptor
-            texture2DDescriptorWithPixelFormat:ToMTLPixelFormat(depthStencilFormat)
+            texture2DDescriptorWithPixelFormat:ToPixelFormat(depthStencilFormat)
             width:pixelWidth
             height:pixelHeight
             mipmapped:(levelCount > 1 ? YES: NO)];

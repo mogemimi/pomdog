@@ -1,6 +1,7 @@
 // Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
 #include "GraphicsContextMetal.hpp"
+#include "../Basic/Unreachable.hpp"
 #include "../RenderSystem.Metal/BufferMetal.hpp"
 #include "../RenderSystem.Metal/PipelineStateMetal.hpp"
 #include "../RenderSystem.Metal/RenderTarget2DMetal.hpp"
@@ -35,7 +36,7 @@ MTLPrimitiveType ToPrimitiveType(PrimitiveTopology primitiveTopology) noexcept
     case PrimitiveTopology::LineList: return MTLPrimitiveTypeLine;
     case PrimitiveTopology::LineStrip: return MTLPrimitiveTypeLineStrip;
     }
-    return MTLPrimitiveTypePoint;
+    POMDOG_UNREACHABLE("Unsupported primitive topology");
 }
 
 MTLIndexType ToIndexType(IndexElementSize elementSize) noexcept
@@ -44,7 +45,7 @@ MTLIndexType ToIndexType(IndexElementSize elementSize) noexcept
     case IndexElementSize::SixteenBits: return MTLIndexTypeUInt16;
     case IndexElementSize::ThirtyTwoBits: return MTLIndexTypeUInt32;
     }
-    return MTLIndexTypeUInt16;
+    POMDOG_UNREACHABLE("Unsupported index element size");
 }
 
 MTLClearColor ToClearColor(const Vector4& color) noexcept

@@ -48,7 +48,6 @@ EffectVariableType ToEffectVariableType(MTLDataType variableType) noexcept
 EffectVariableClass ToEffectVariableClass(MTLDataType variableClass) noexcept
 {
     switch (variableClass) {
-
     case MTLDataTypeFloat:
     case MTLDataTypeHalf:
     case MTLDataTypeInt:

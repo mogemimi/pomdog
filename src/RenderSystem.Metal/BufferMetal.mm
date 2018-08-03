@@ -1,6 +1,7 @@
 // Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
 #include "BufferMetal.hpp"
+#include "../Basic/Unreachable.hpp"
 #include "Pomdog/Graphics/BufferUsage.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -13,21 +14,15 @@ namespace Detail {
 namespace Metal {
 namespace {
 
-MTLResourceOptions ToResourceOptions(BufferUsage bufferUsage)
+MTLResourceOptions ToResourceOptions(BufferUsage bufferUsage) noexcept
 {
-#if (defined(MAC_OS_X_VERSION_10_11) && (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_11)) \
-    || (defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && (__IPHONE_OS_VERSION_MIN_REQUIRED >= 90000))
     switch (bufferUsage) {
     case BufferUsage::Immutable:
         return MTLResourceStorageModeShared;
-        break;
     case BufferUsage::Dynamic:
         return MTLResourceCPUCacheModeWriteCombined | MTLResourceStorageModeShared;
-        break;
     }
-#else
-    return MTLResourceCPUCacheModeDefaultCache;
-#endif
+    POMDOG_UNREACHABLE("Unsupported buffer usage");
 }
 
 std::size_t ComputeAlignedSize(std::size_t sizeInBytes, BufferBindMode bindMode)

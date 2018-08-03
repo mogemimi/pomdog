@@ -32,16 +32,8 @@ Texture2DMetal::Texture2DMetal(
 {
     POMDOG_ASSERT(device != nil);
 
-    auto pixelFormat = MetalFormatHelper::ToMTLPixelFormat(format);
-
-    if (!pixelFormat) {
-        // FUS RO DAH!
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "This platform does not support this pixel format.");
-    }
-
     MTLTextureDescriptor* descriptor = [MTLTextureDescriptor
-        texture2DDescriptorWithPixelFormat:*pixelFormat
+        texture2DDescriptorWithPixelFormat:ToPixelFormat(format)
         width:pixelWidth
         height:pixelHeight
         mipmapped:(levelCount > 1 ? YES: NO)];
