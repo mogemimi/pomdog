@@ -24,4 +24,4 @@ struct POMDOG_EXPORT CRC32 {
 };
 
 } // namespace Detail
-} // namespace Pomdof
+} // namespace Pomdog
