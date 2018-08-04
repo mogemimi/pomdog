@@ -73,27 +73,25 @@ SamplerStateGL4::SamplerStateGL4(const SamplerDescription& description)
         glSamplerParameteri(samplerObject->value, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
         glSamplerParameteri(samplerObject->value, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         break;
-    case TextureFilter::Anisotropic:
-        {
-            ///@todo Not implemented:
-            glSamplerParameteri(samplerObject->value, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-            glSamplerParameteri(samplerObject->value, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-            POMDOG_CHECK_ERROR_GL4("glSamplerParameteri");
+    case TextureFilter::Anisotropic: {
+        // FIXME: Not implemented
+        glSamplerParameteri(samplerObject->value, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glSamplerParameteri(samplerObject->value, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        POMDOG_CHECK_ERROR_GL4("glSamplerParameteri");
 
-            POMDOG_ASSERT(1 <= description.MaxAnisotropy && description.MaxAnisotropy <= 16);
+        POMDOG_ASSERT(1 <= description.MaxAnisotropy && description.MaxAnisotropy <= 16);
 
-            GLfloat deviceMaxAnisotropy = 1.0f;
+        GLfloat deviceMaxAnisotropy = 1.0f;
+        glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &deviceMaxAnisotropy);
+        POMDOG_CHECK_ERROR_GL4("glGetFloatv");
 
-            glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &deviceMaxAnisotropy);
-            POMDOG_CHECK_ERROR_GL4("glGetFloatv");
+        deviceMaxAnisotropy = std::min(deviceMaxAnisotropy,
+            static_cast<decltype(deviceMaxAnisotropy)>(description.MaxAnisotropy));
 
-            deviceMaxAnisotropy = std::min(deviceMaxAnisotropy,
-                static_cast<decltype(deviceMaxAnisotropy)>(description.MaxAnisotropy));
-
-            glSamplerParameterf(samplerObject->value, GL_TEXTURE_MAX_ANISOTROPY_EXT, deviceMaxAnisotropy);
-            POMDOG_CHECK_ERROR_GL4("glSamplerParameterf");
-        }
+        glSamplerParameterf(samplerObject->value, GL_TEXTURE_MAX_ANISOTROPY_EXT, deviceMaxAnisotropy);
+        POMDOG_CHECK_ERROR_GL4("glSamplerParameterf");
         break;
+    }
     }
 
     {
