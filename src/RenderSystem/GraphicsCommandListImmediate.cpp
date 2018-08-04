@@ -16,7 +16,7 @@ namespace {
 
 using Detail::GraphicsCommand;
 
-struct DrawCommand final: public GraphicsCommand {
+struct DrawCommand final : public GraphicsCommand {
     std::size_t vertexCount;
     std::size_t startVertexLocation;
 
@@ -26,7 +26,7 @@ struct DrawCommand final: public GraphicsCommand {
     }
 };
 
-struct DrawIndexedCommand final: public GraphicsCommand {
+struct DrawIndexedCommand final : public GraphicsCommand {
     std::size_t indexCount;
     std::size_t startIndexLocation;
 
@@ -36,7 +36,7 @@ struct DrawIndexedCommand final: public GraphicsCommand {
     }
 };
 
-struct DrawInstancedCommand final: public GraphicsCommand {
+struct DrawInstancedCommand final : public GraphicsCommand {
     std::size_t vertexCountPerInstance;
     std::size_t instanceCount;
     std::size_t startVertexLocation;
@@ -52,7 +52,7 @@ struct DrawInstancedCommand final: public GraphicsCommand {
     }
 };
 
-struct DrawIndexedInstancedCommand final: public GraphicsCommand {
+struct DrawIndexedInstancedCommand final : public GraphicsCommand {
     std::size_t indexCountPerInstance;
     std::size_t instanceCount;
     std::size_t startIndexLocation;
@@ -68,7 +68,7 @@ struct DrawIndexedInstancedCommand final: public GraphicsCommand {
     }
 };
 
-struct SetPrimitiveTopologyCommand final: public GraphicsCommand {
+struct SetPrimitiveTopologyCommand final : public GraphicsCommand {
     PrimitiveTopology primitiveTopology;
 
     void Execute(NativeGraphicsContext & graphicsContext) override
@@ -77,7 +77,7 @@ struct SetPrimitiveTopologyCommand final: public GraphicsCommand {
     }
 };
 
-struct SetBlendFactorCommand final: public GraphicsCommand {
+struct SetBlendFactorCommand final : public GraphicsCommand {
     Color blendFactor;
 
     void Execute(NativeGraphicsContext & graphicsContext) override
@@ -86,7 +86,7 @@ struct SetBlendFactorCommand final: public GraphicsCommand {
     }
 };
 
-struct SetVertexBuffersCommand final: public GraphicsCommand {
+struct SetVertexBuffersCommand final : public GraphicsCommand {
     std::vector<VertexBufferBinding> vertexBuffers;
 
     void Execute(NativeGraphicsContext & graphicsContext) override
@@ -95,7 +95,7 @@ struct SetVertexBuffersCommand final: public GraphicsCommand {
     }
 };
 
-struct SetIndexBufferCommand final: public GraphicsCommand {
+struct SetIndexBufferCommand final : public GraphicsCommand {
     std::shared_ptr<IndexBuffer> indexBuffer;
 
     void Execute(NativeGraphicsContext & graphicsContext) override
@@ -104,7 +104,7 @@ struct SetIndexBufferCommand final: public GraphicsCommand {
     }
 };
 
-struct SetPipelineStateCommand final: public GraphicsCommand {
+struct SetPipelineStateCommand final : public GraphicsCommand {
     std::shared_ptr<NativePipelineState> pipelineState;
 
     void Execute(NativeGraphicsContext & graphicsContext) override
@@ -114,7 +114,7 @@ struct SetPipelineStateCommand final: public GraphicsCommand {
     }
 };
 
-struct SetConstantBufferCommand final: public GraphicsCommand {
+struct SetConstantBufferCommand final : public GraphicsCommand {
     std::shared_ptr<NativeBuffer> constantBuffer;
     int slotIndex;
 
@@ -126,7 +126,7 @@ struct SetConstantBufferCommand final: public GraphicsCommand {
     }
 };
 
-struct SetSamplerStateCommand final: public GraphicsCommand {
+struct SetSamplerStateCommand final : public GraphicsCommand {
     std::shared_ptr<NativeSamplerState> sampler;
     int slotIndex;
 
@@ -141,7 +141,7 @@ struct SetSamplerStateCommand final: public GraphicsCommand {
     }
 };
 
-struct SetTextureCommand final: public GraphicsCommand {
+struct SetTextureCommand final : public GraphicsCommand {
     std::shared_ptr<Texture2D> texture;
     int slotIndex;
 
@@ -156,7 +156,7 @@ struct SetTextureCommand final: public GraphicsCommand {
     }
 };
 
-struct SetTextureRenderTarget2DCommand final: public GraphicsCommand {
+struct SetTextureRenderTarget2DCommand final : public GraphicsCommand {
     std::shared_ptr<RenderTarget2D> texture;
     int slotIndex;
 
