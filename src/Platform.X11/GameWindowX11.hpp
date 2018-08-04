@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "../RenderSystem.GL4/OpenGLPrerequisites.hpp"
 #include "Pomdog/Application/GameWindow.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
 #include <GL/glx.h>
