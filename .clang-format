@@ -1,10 +1,14 @@
-# clang-format >= 6.0
+# clang-format >= 8.0
 BasedOnStyle: LLVM
 IndentWidth: 4
+ColumnLimit: 0
 UseTab: Never
 Language: Cpp
 Standard: Cpp11
 AccessModifierOffset: -4
+AlignAfterOpenBracket: DontAlign
+AlignTrailingComments: false
+AllowAllParametersOfDeclarationOnNextLine: true
 AllowShortFunctionsOnASingleLine: Inline
 AllowShortIfStatementsOnASingleLine: false
 AllowShortLoopsOnASingleLine: false
