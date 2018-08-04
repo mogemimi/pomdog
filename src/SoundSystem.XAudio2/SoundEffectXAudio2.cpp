@@ -71,8 +71,7 @@ SoundEffectXAudio2::SoundEffectXAudio2(
 
 SoundEffectXAudio2::~SoundEffectXAudio2()
 {
-    if (sourceVoice)
-    {
+    if (sourceVoice) {
         this->Stop();
         sourceVoice->DestroyVoice();
         sourceVoice = nullptr;

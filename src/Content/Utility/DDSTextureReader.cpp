@@ -87,8 +87,7 @@ SurfaceFormat ToSurfaceFormatFromDDSPixelFormat(const DDSPixelFormat& pixelForma
 {
     constexpr std::uint32_t FourCC_A32B32G32R32_Float = 0x00000074;
 
-    if (pixelFormat.Flags & DirectDrawPixelFormat::FourCC)
-    {
+    if (pixelFormat.Flags & DirectDrawPixelFormat::FourCC) {
         if (pixelFormat.FourCC == MakeFourCC('D', 'X', 'T', '1')) {
             return SurfaceFormat::BlockComp1_UNorm;
         }
@@ -108,30 +107,26 @@ SurfaceFormat ToSurfaceFormatFromDDSPixelFormat(const DDSPixelFormat& pixelForma
             return SurfaceFormat::R32G32B32A32_Float;
         }
     }
-    else if (pixelFormat.Flags & DirectDrawPixelFormat::RGB)
-    {
+    else if (pixelFormat.Flags & DirectDrawPixelFormat::RGB) {
         switch (pixelFormat.RgbBitCount) {
         case 32:
             if (
                 (0x000000ff == pixelFormat.RedBitMask) &&
                 (0x0000ff00 == pixelFormat.GreenBitMask) &&
                 (0x00ff0000 == pixelFormat.BlueBitMask) &&
-                (0xff000000 == pixelFormat.AlphaBitMask))
-            {
+                (0xff000000 == pixelFormat.AlphaBitMask)) {
                 return SurfaceFormat::R8G8B8A8_UNorm;
             }
             else if (
                 (0x000000ff == pixelFormat.BlueBitMask) &&
                 (0x0000ff00 == pixelFormat.GreenBitMask) &&
                 (0x00ff0000 == pixelFormat.RedBitMask) &&
-                (0xff000000 == pixelFormat.AlphaBitMask))
-            {
+                (0xff000000 == pixelFormat.AlphaBitMask)) {
                 return SurfaceFormat::B8G8R8A8_UNorm;
             }
             else if (
                 (0x0000ffff == pixelFormat.RedBitMask) &&
-                (0xffff0000 == pixelFormat.GreenBitMask))
-            {
+                (0xffff0000 == pixelFormat.GreenBitMask)) {
                 return SurfaceFormat::R16G16_Float;
             }
             break;
@@ -142,22 +137,19 @@ SurfaceFormat ToSurfaceFormatFromDDSPixelFormat(const DDSPixelFormat& pixelForma
             break;
         }
     }
-    else if (pixelFormat.Flags & DirectDrawPixelFormat::Alpha)
-    {
+    else if (pixelFormat.Flags & DirectDrawPixelFormat::Alpha) {
         if (8 == pixelFormat.RgbBitCount) {
             return SurfaceFormat::A8_UNorm;
         }
     }
-    else if (pixelFormat.Flags & DirectDrawPixelFormat::Luminance)
-    {
+    else if (pixelFormat.Flags & DirectDrawPixelFormat::Luminance) {
         switch (pixelFormat.RgbBitCount) {
         case 8:
             if (
                 (0x000000ff == pixelFormat.RedBitMask) &&
                 (0x00000000 == pixelFormat.GreenBitMask) &&
                 (0x00000000 == pixelFormat.BlueBitMask) &&
-                (0x00000000 == pixelFormat.AlphaBitMask))
-            {
+                (0x00000000 == pixelFormat.AlphaBitMask)) {
                 return SurfaceFormat::R8_UNorm;
             }
             break;
@@ -167,8 +159,7 @@ SurfaceFormat ToSurfaceFormatFromDDSPixelFormat(const DDSPixelFormat& pixelForma
                 (0x000000ff == pixelFormat.RedBitMask) &&
                 (0x00000000 == pixelFormat.GreenBitMask) &&
                 (0x00000000 == pixelFormat.BlueBitMask) &&
-                (0x0000ff00 == pixelFormat.AlphaBitMask))
-            {
+                (0x0000ff00 == pixelFormat.AlphaBitMask)) {
                 return SurfaceFormat::R8G8_UNorm;
             }
             break;
@@ -190,8 +181,7 @@ std::size_t ComputePixelDataByteLength(const DDSHeader& ddsHeader)
     std::size_t mipMapPixelWidth = ddsHeader.PixelWidth;
     std::size_t mipMapPixelHeight = ddsHeader.PixelHeight;
 
-    for (std::uint32_t mipmapLevel = 0; mipmapLevel < levelCount; ++mipmapLevel)
-    {
+    for (std::uint32_t mipmapLevel = 0; mipmapLevel < levelCount; ++mipmapLevel) {
         std::size_t const strideBytesPerMipMap = ((mipMapPixelWidth + 3)/4) * ((mipMapPixelHeight + 3)/4) * bytesPerBlock;
 
         result += strideBytesPerMipMap;
@@ -215,32 +205,27 @@ std::shared_ptr<Texture2D> DDSTextureReader::Read(
 
     std::size_t offsetBytes = 0;
 
-    if (!BinaryReader::CanRead<DDSHeader>(byteLength - offsetBytes))
-    {
+    if (!BinaryReader::CanRead<DDSHeader>(byteLength - offsetBytes)) {
         POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented.");
     }
     auto const ddsHeader = BinaryReader::Read<DDSHeader>(data);
     offsetBytes += sizeof(ddsHeader);
 
-    if (ddsHeader.ByteSize != sizeof(DDSHeader))
-    {
+    if (ddsHeader.ByteSize != sizeof(DDSHeader)) {
         POMDOG_THROW_EXCEPTION(std::domain_error, "DDSHeader has invalid format.");
     }
-    if (ddsHeader.PixelFormat.ByteSize != sizeof(DDSPixelFormat))
-    {
+    if (ddsHeader.PixelFormat.ByteSize != sizeof(DDSPixelFormat)) {
         POMDOG_THROW_EXCEPTION(std::domain_error, "DDSHeader has invalid format.");
     }
 
     bool hasDXT10Header = false;
 
     if ((ddsHeader.PixelFormat.Flags & DirectDrawPixelFormat::FourCC) &&
-        (MakeFourCC('D','X','1','0') == ddsHeader.PixelFormat.FourCC))
-    {
+        (MakeFourCC('D', 'X', '1', '0') == ddsHeader.PixelFormat.FourCC)) {
         hasDXT10Header = true;
     }
 
-    if (hasDXT10Header)
-    {
+    if (hasDXT10Header) {
         ///@todo Not implemented.
         POMDOG_THROW_EXCEPTION(std::runtime_error, "Sorry, DXT10 header is not supported.");
     }
@@ -250,16 +235,14 @@ std::shared_ptr<Texture2D> DDSTextureReader::Read(
     SurfaceFormat surfaceFormat = ToSurfaceFormatFromDDSPixelFormat(ddsHeader.PixelFormat);
     bool const generateMipmap = (ddsHeader.MipMapCount > 0);
 
-    if ((byteLength - offsetBytes) < ComputePixelDataByteLength(ddsHeader))
-    {
+    if ((byteLength - offsetBytes) < ComputePixelDataByteLength(ddsHeader)) {
         POMDOG_THROW_EXCEPTION(std::domain_error, "DDSHeader has invalid format.");
     }
 
     auto texture = std::make_shared<Texture2D>(graphicsDevice,
         pixelWidth, pixelHeight, generateMipmap, surfaceFormat);
 
-    if (texture)
-    {
+    if (texture) {
         texture->SetData(data + offsetBytes);
     }
 

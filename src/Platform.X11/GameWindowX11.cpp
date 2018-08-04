@@ -154,16 +154,14 @@ void GameWindowX11::SetTitle(const std::string& titleIn)
 
     const auto& atoms = x11Context->Atoms;
 
-    if (atoms.NetWmName != None)
-    {
+    if (atoms.NetWmName != None) {
         XChangeProperty(display, window, atoms.NetWmName,
             x11Context->Atoms.Utf8String, 8, PropModeReplace,
             reinterpret_cast<const unsigned char*>(title.c_str()),
             static_cast<int>(title.size()));
     }
 
-    if (x11Context->Atoms.NetWmIconName != None)
-    {
+    if (x11Context->Atoms.NetWmIconName != None) {
         XChangeProperty(display, window, atoms.NetWmIconName,
             atoms.Utf8String, 8, PropModeReplace,
             reinterpret_cast<const unsigned char*>(title.c_str()),
@@ -257,8 +255,7 @@ void GameWindowX11::ProcessEvent(::XEvent & event)
         clientBounds.Y = event.xconfigure.y;
 
         if (clientBounds.Width != event.xconfigure.width
-            || clientBounds.Height != event.xconfigure.height)
-        {
+            || clientBounds.Height != event.xconfigure.height) {
             clientBounds.Width = event.xconfigure.width;
             clientBounds.Height = event.xconfigure.height;
             clientSizeChanged = true;
@@ -294,8 +291,7 @@ void GameWindowX11::ProcessEvent(::XEvent & event)
         break;
     }
 
-    if (clientSizeChanged)
-    {
+    if (clientSizeChanged) {
         this->ClientSizeChanged(clientBounds.Width, clientBounds.Height);
     }
 }

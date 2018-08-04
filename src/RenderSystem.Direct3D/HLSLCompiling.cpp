@@ -145,8 +145,7 @@ void CompileFromShaderFile(
         nullptr, preprocessorMacros, &shaderInclude,
         entrypoint.c_str(), shaderProfile.c_str(), shaderFlags, 0, ppBlobOut, &errorBlob);
 
-    if (FAILED(hr))
-    {
+    if (FAILED(hr)) {
         if (errorBlob) {
             POMDOG_THROW_EXCEPTION(std::runtime_error, StringHelper::Format(
                 "Failed to compile shader.\n"
@@ -174,8 +173,7 @@ Microsoft::WRL::ComPtr<ID3DBlob> HLSLCompiling::CompileShader(
     std::vector<D3D_SHADER_MACRO> defines;
     defines.reserve(compileOptions.PreprocessorMacros.size());
 
-    for (auto & macro: compileOptions.PreprocessorMacros)
-    {
+    for (auto& macro : compileOptions.PreprocessorMacros) {
         if (macro.Name.empty()) {
             continue;
         }
@@ -186,8 +184,7 @@ Microsoft::WRL::ComPtr<ID3DBlob> HLSLCompiling::CompileShader(
         defines.push_back(std::move(shaderMacro));
     }
 
-    if (!defines.empty())
-    {
+    if (!defines.empty()) {
         D3D_SHADER_MACRO shaderMacro;
         shaderMacro.Name = nullptr;
         shaderMacro.Definition = nullptr;

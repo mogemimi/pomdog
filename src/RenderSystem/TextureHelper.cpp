@@ -29,8 +29,7 @@ std::int32_t TextureHelper::ComputeMipmapLevelCount(std::int32_t width, std::int
 
     POMDOG_ASSERT(size >= 0);
 
-    while (size > 1)
-    {
+    while (size > 1) {
         size = size / 2;
         ++levelCount;
     }
@@ -53,8 +52,7 @@ std::int32_t TextureHelper::ComputeTextureSizeInBytes(
     std::int32_t mipMapWidth = pixelWidth;
     std::int32_t mipMapHeight = pixelHeight;
 
-    for (int mipmapLevel = 0; mipmapLevel < levelCount; ++mipmapLevel)
-    {
+    for (int mipmapLevel = 0; mipmapLevel < levelCount; ++mipmapLevel) {
         sizeInBytes += MipmapImageDataBytes(
             mipMapWidth, mipMapHeight, bytesPerBlock);
 

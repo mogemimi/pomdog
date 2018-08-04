@@ -148,8 +148,7 @@ Builder<Shader> & Builder<Shader>::SetGLSLFromFile(const std::string& assetName)
     auto graphicsDevice = impl->GetDevice();
     POMDOG_ASSERT(graphicsDevice);
 
-    if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::GLSL)
-    {
+    if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::GLSL) {
         auto binaryFile = impl->loaderContext.get().OpenStream(assetName);
 
         if (!binaryFile.Stream) {
@@ -239,8 +238,7 @@ Builder<Shader> & Builder<Shader>::SetHLSLFromFile(
     auto graphicsDevice = impl->GetDevice();
     POMDOG_ASSERT(graphicsDevice);
 
-    if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::HLSL)
-    {
+    if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::HLSL) {
         auto binaryFile = impl->loaderContext.get().OpenStream(assetName);
 
         if (!binaryFile.Stream) {
@@ -298,8 +296,7 @@ Builder<Shader> & Builder<Shader>::SetMetalFromFile(
     auto graphicsDevice = impl->GetDevice();
     POMDOG_ASSERT(graphicsDevice);
 
-    if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::Metal)
-    {
+    if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::Metal) {
         auto binaryFile = impl->loaderContext.get().OpenStream(assetName);
 
         if (!binaryFile.Stream) {
@@ -334,8 +331,7 @@ Builder<Shader> & Builder<Shader>::SetMetalFromLibrary(
     auto graphicsDevice = impl->GetDevice();
     POMDOG_ASSERT(graphicsDevice);
 
-    if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::Metal)
-    {
+    if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::Metal) {
         impl->shaderBytecode.Code = nullptr;
         impl->shaderBytecode.ByteLength = 0;
         impl->entryPoint = entryPointIn;

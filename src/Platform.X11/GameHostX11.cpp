@@ -139,13 +139,11 @@ GLXFBConfig ChooseFramebufferConfig(
     Optional<GLXFBConfig> bestConfig;
     int bestSampleCount = 0;
 
-    for (int index = 0; index < framebufferConfigCount; ++index)
-    {
+    for (int index = 0; index < framebufferConfigCount; ++index) {
         auto framebufferConfig = framebufferConfigs[index];
         auto visualInfo = glXGetVisualFromFBConfig(display, framebufferConfig);
 
-        if (visualInfo != nullptr)
-        {
+        if (visualInfo != nullptr) {
             int sampleBuffers = 0;
             int sampleCount = 0;
             glXGetFBConfigAttrib(display, framebufferConfig, GLX_SAMPLE_BUFFERS, &sampleBuffers);
@@ -334,8 +332,7 @@ void GameHostX11::Impl::Run(Game & game)
 {
     game.Initialize();
 
-    while (!exitRequest)
-    {
+    while (!exitRequest) {
         clock.Tick();
         MessagePump();
         constexpr int64_t gamepadDetectionInterval = 240;

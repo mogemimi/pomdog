@@ -43,8 +43,7 @@ void ErrorCheckerAL::CheckError(const char* command, const char* filename, int l
     constexpr std::size_t maxLine = 30;
 
     static std::size_t lines = 0;
-    if (lines < maxLine)
-    {
+    if (lines < maxLine) {
         std::stringstream stream;
         stream << ">>> File " << filename
             << ", line " << line

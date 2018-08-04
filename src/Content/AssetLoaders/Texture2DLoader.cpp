@@ -57,8 +57,7 @@ std::shared_ptr<Texture2D> AssetLoader<Texture2D>::operator()(
         POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented.");
     }
 
-    if (IsPNGFormat(signature))
-    {
+    if (IsPNGFormat(signature)) {
         constexpr auto SignatureLength = sizeof(std::uint8_t) * 8;
 
         POMDOG_ASSERT(stream.tellg() == std::streampos(SignatureLength));
@@ -71,8 +70,7 @@ std::shared_ptr<Texture2D> AssetLoader<Texture2D>::operator()(
 
         return PNGTextureReader::Read(graphicsDevice, binaryWithoutSignature.data(), binaryWithoutSignature.size());
     }
-    else if (IsDDSFormat(signature))
-    {
+    else if (IsDDSFormat(signature)) {
         constexpr auto FourCCLength = sizeof(std::uint8_t) * 4;
 
         stream.seekg(FourCCLength, stream.beg);

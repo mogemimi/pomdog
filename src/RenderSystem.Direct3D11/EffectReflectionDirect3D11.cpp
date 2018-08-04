@@ -38,8 +38,7 @@ std::vector<EffectVariable> EnumerateEffectVariables(
         variables.reserve(constantBufferDesc.Variables);
     }
 
-    for (UINT index = 0; index < constantBufferDesc.Variables; ++index)
-    {
+    for (UINT index = 0; index < constantBufferDesc.Variables; ++index) {
         D3D11_SHADER_VARIABLE_DESC shaderVariableDesc;
         D3D11_SHADER_TYPE_DESC shaderVariableTypeDesc;
 
@@ -100,8 +99,7 @@ void EnumerateConstantBuffer(
             "Failed to get shader description");
     }
 
-    for (UINT index = 0; index < shaderDesc.ConstantBuffers; ++index)
-    {
+    for (UINT index = 0; index < shaderDesc.ConstantBuffers; ++index) {
         POMDOG_ASSERT(shaderReflector);
         auto constantBufferReflector = shaderReflector->GetConstantBufferByIndex(index);
 
@@ -168,8 +166,7 @@ std::vector<EffectConstantDescription> EffectReflectionDirect3D11::GetConstantBu
 
     auto equal = [](const EffectConstantDescription& a, const EffectConstantDescription& b) {
     #if defined(DEBUG) && !defined(NDEBUG)
-        if (a.Name == b.Name)
-        {
+        if (a.Name == b.Name) {
             POMDOG_ASSERT(a.ByteSize == b.ByteSize);
             POMDOG_ASSERT(a.Variables.size() == b.Variables.size());
 

@@ -129,8 +129,7 @@ std::vector<AudioDeviceDetails> EnumerateAudioDevices()
     POMDOG_ASSERT(count >= 1);
     result.reserve(count);
 
-    for (unsigned int index = 0; index < count; ++index)
-    {
+    for (unsigned int index = 0; index < count; ++index) {
         ComPtr<IDeviceInformation> deviceInfo;
         hr = devices->GetAt(index, deviceInfo.GetAddressOf());
 
@@ -241,8 +240,7 @@ AudioEngineXAudio2::AudioEngineXAudio2()
     }
 
     UINT32 preferredDevice = 0;
-    for (UINT32 index = 0; index < deviceCount; ++index)
-    {
+    for (UINT32 index = 0; index < deviceCount; ++index) {
         XAUDIO2_DEVICE_DETAILS deviceDetails;
         hr = xAudio2->GetDeviceDetails(index, &deviceDetails);
 
@@ -253,8 +251,7 @@ AudioEngineXAudio2::AudioEngineXAudio2()
         }
 
         constexpr WORD stereoChannels = 2;
-        if (stereoChannels < deviceDetails.OutputFormat.Format.nChannels)
-        {
+        if (stereoChannels < deviceDetails.OutputFormat.Format.nChannels) {
             preferredDevice = index;
             break;
         }

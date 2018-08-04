@@ -42,13 +42,11 @@ ShaderDirect3D11<NativeShaderType>::ShaderDirect3D11(
     POMDOG_ASSERT(shaderBytecode.Code != nullptr);
     POMDOG_ASSERT(shaderBytecode.ByteLength > 0);
 
-    if (compileOptions.Precompiled)
-    {
+    if (compileOptions.Precompiled) {
         codeBlob.resize(shaderBytecode.ByteLength);
         std::memcpy(codeBlob.data(), shaderBytecode.Code, codeBlob.size());
     }
-    else
-    {
+    else {
         auto compiledShaderBlob = Direct3D::HLSLCompiling::CompileShader(
             shaderBytecode, compileOptions);
         POMDOG_ASSERT(compiledShaderBlob.Get() != nullptr);

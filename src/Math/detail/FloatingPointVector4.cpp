@@ -201,8 +201,7 @@ void FloatingPointVector4<T>::Normalize(const FloatingPointVector4& source, Floa
 {
     auto const length = source.Length();
 
-    if (length > std::numeric_limits<decltype(length)>::epsilon())
-    {
+    if (length > std::numeric_limits<decltype(length)>::epsilon()) {
         constexpr T One = 1;
         auto const inverseLength = One / length;
         result.X = source.X * inverseLength;

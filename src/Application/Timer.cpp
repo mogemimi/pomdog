@@ -28,7 +28,8 @@ Timer::Timer(GameClock & clock)
 
             if (isSingleShot) {
                 enabled = false;
-            } else {
+            }
+            else {
                 totalTime = Duration::zero();
             }
         }

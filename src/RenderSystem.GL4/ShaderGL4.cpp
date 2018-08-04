@@ -63,8 +63,7 @@ Optional<GLuint> CompileShader(const ShaderBytecode& source, GLenum pipelineStag
     GLint compileSuccess = 0;
     glGetShaderiv(*result, GL_COMPILE_STATUS, &compileSuccess);
 
-    if (compileSuccess == GL_FALSE)
-    {
+    if (compileSuccess == GL_FALSE) {
 #ifdef DEBUG
         std::array<GLchar, 256> messageBuffer;
 

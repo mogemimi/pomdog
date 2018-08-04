@@ -372,14 +372,12 @@ FloatingPointMatrix3x3<T> FloatingPointMatrix4x4<T>::Minor3x3(std::size_t row, s
     // r3 |41, 42, 43, 44|                       | x,  x,  x, x|
 
     FloatingPointMatrix3x3<T> minorMatrix;
-    for (std::size_t i = 0, s = 0; i < 4; ++i)
-    {
+    for (std::size_t i = 0, s = 0; i < 4; ++i) {
         if (row == i) {
             continue;
         }
 
-        for (std::size_t j = 0, t = 0; j < 4; ++j)
-        {
+        for (std::size_t j = 0, t = 0; j < 4; ++j) {
             if (column == j) {
                 continue;
             }

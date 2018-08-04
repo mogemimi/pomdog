@@ -52,8 +52,7 @@ Texture2DParsingData ReadPNG(const std::uint8_t* data, std::size_t byteLength)
     auto infoPtr = ::png_create_info_struct(pngPtr);
 
     ScopeGuard scopedDestroyReadStruct([&] {
-        if (nullptr != pngPtr)
-        {
+        if (nullptr != pngPtr) {
             if (nullptr != infoPtr) {
                 ::png_destroy_read_struct(&pngPtr, &infoPtr, nullptr);
             }

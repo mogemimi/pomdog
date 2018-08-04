@@ -40,8 +40,7 @@ Optional<ShaderProgramGL4> LinkShaders(
     GLint linkSuccess = 0;
     glGetProgramiv(program.value, GL_LINK_STATUS, &linkSuccess);
 
-    if (linkSuccess == GL_FALSE)
-    {
+    if (linkSuccess == GL_FALSE) {
 #ifdef DEBUG
         std::array<GLchar, 256> messageBuffer;
 
@@ -125,8 +124,7 @@ PipelineStateGL4::PipelineStateGL4(const PipelineStateDescription& description)
         auto uniforms = shaderReflection.GetNativeUniforms();
 
         std::uint16_t slotIndex = 0;
-        for (auto & uniform: uniforms)
-        {
+        for (auto& uniform : uniforms) {
             switch (uniform.Type) {
             case GL_SAMPLER_1D:
             case GL_SAMPLER_2D:
@@ -177,7 +175,7 @@ void PipelineStateGL4::ApplyShaders()
     glUseProgram(shaderProgram->value);
     POMDOG_CHECK_ERROR_GL4("glUseProgram");
 
-    for (auto & binding: textureBindings) {
+    for (auto& binding : textureBindings) {
         glUniform1i(binding.UniformLocation, binding.SlotIndex);
         POMDOG_CHECK_ERROR_GL4("glUniform1i");
     }

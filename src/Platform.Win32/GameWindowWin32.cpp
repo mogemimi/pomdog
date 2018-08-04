@@ -141,15 +141,13 @@ GameWindowWin32::Impl::Impl(
         windowStyle |= WS_CLIPSIBLINGS;
     }
 
-    if (isFullScreen)
-    {
+    if (isFullScreen) {
         windowStyleEx |= WS_EX_TOPMOST;
         windowStyle |= WS_POPUP;
         clientBounds.X = 0;
         clientBounds.Y = 0;
     }
-    else
-    {
+    else {
         DWORD const fixedWindowStyle(WS_OVERLAPPED | WS_BORDER | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX);
         windowStyle |= fixedWindowStyle;
 
@@ -190,8 +188,7 @@ GameWindowWin32::Impl::Impl(
         iconSmall
     };
 
-    if (0 == ::RegisterClassEx(&wcex))
-    {
+    if (0 == ::RegisterClassEx(&wcex)) {
         ///@todo Not implemented
         //POMDOG_THROW_EXCEPTION(ExceptionCode::RuntimeAssertionFailed,
         //    "Call to RegisterClassEx failed!",
@@ -201,8 +198,7 @@ GameWindowWin32::Impl::Impl(
     windowHandle = CreateWindowEx(windowStyleEx, wcex.lpszClassName, title.c_str(), windowStyle,
         CW_USEDEFAULT, CW_USEDEFAULT, adjustedWidth, adjustedHeight, nullptr, nullptr, instanceHandle, nullptr);
 
-    if (nullptr == windowHandle)
-    {
+    if (nullptr == windowHandle) {
         ///@todo Not implemented
         //POMDOG_THROW_EXCEPTION(ExceptionCode::RuntimeAssertionFailed,
         //    "Call to CreateWindow failed!",
@@ -211,8 +207,7 @@ GameWindowWin32::Impl::Impl(
 
     ///@note See http://msdn.microsoft.com/ja-jp/library/ff485844(v=vs.85).aspx
     //if (FAILED(::CoInitialize(0)))
-    if (FAILED(::CoInitializeEx(nullptr, COINIT_MULTITHREADED | COINIT_DISABLE_OLE1DDE)))
-    {
+    if (FAILED(::CoInitializeEx(nullptr, COINIT_MULTITHREADED | COINIT_DISABLE_OLE1DDE))) {
         ///@todo Not implemented
         //POMDOG_THROW_EXCEPTION(ExceptionCode::RuntimeAssertionFailed,
         //    "Failed to CoInitializeEX",
@@ -228,8 +223,7 @@ GameWindowWin32::Impl::Impl(
 
     {
         POINT point = { 0, 0 };
-        if (0 != ::ClientToScreen(windowHandle, &point))
-        {
+        if (0 != ::ClientToScreen(windowHandle, &point)) {
             clientBounds.X = static_cast<std::int32_t>(point.x);
             clientBounds.Y = static_cast<std::int32_t>(point.y);
         }
@@ -242,8 +236,7 @@ GameWindowWin32::Impl::Impl(
 
 GameWindowWin32::Impl::~Impl()
 {
-    if (nullptr != windowHandle)
-    {
+    if (nullptr != windowHandle) {
         ::DestroyWindow(windowHandle);
         ::SetWindowLong(windowHandle, GWL_USERDATA, 0);
         windowHandle = nullptr;
@@ -274,15 +267,13 @@ void GameWindowWin32::Impl::SetAllowUserResizing(bool allowResizingIn)
         windowStyle &= ~WS_THICKFRAME;
     }
 
-    if (0 == ::SetWindowLongPtr(windowHandle, GWL_STYLE, windowStyle))
-    {
+    if (0 == ::SetWindowLongPtr(windowHandle, GWL_STYLE, windowStyle)) {
         ///@todo Not implemented
         return;
     }
 
     if (0 == ::SetWindowPos(windowHandle, 0, 0, 0, 0, 0,
-        SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOSIZE | SWP_FRAMECHANGED))
-    {
+        SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOSIZE | SWP_FRAMECHANGED)) {
         ///@todo Not implemented
         return;
     }

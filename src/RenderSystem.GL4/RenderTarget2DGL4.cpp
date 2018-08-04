@@ -37,8 +37,7 @@ RenderTarget2DGL4::RenderTarget2DGL4(
     , generateMipmap(levelCount > 1)
     , multiSampleEnabled(multiSampleCount > 1)
 {
-    if (DepthFormat::None != depthStencilFormat)
-    {
+    if (DepthFormat::None != depthStencilFormat) {
         renderBuffer = ([] {
             RenderBuffer2DGL4 nativeBuffer;
             glGenRenderbuffers(1, nativeBuffer.Data());

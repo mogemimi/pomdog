@@ -121,8 +121,7 @@ Optional<FrameBufferGL4> CreateFrameBuffer()
     // Check framebuffer
     auto const status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
-    if (GL_FRAMEBUFFER_UNSUPPORTED == status)
-    {
+    if (GL_FRAMEBUFFER_UNSUPPORTED == status) {
         return Pomdog::NullOpt;
     }
 
@@ -274,8 +273,7 @@ void SetRenderTargets(
 
     // Attach textures
     int index = 0;
-    for (const auto& renderTarget : renderTargetViewsIn)
-    {
+    for (const auto& renderTarget : renderTargetViewsIn) {
         POMDOG_ASSERT(renderTarget);
 
         auto const nativeRenderTarget = static_cast<RenderTarget2DGL4*>(renderTarget->GetNativeRenderTarget2D());
@@ -691,8 +689,7 @@ void GraphicsContextGL4::SetTexture(int index)
     weakTextures[index].reset();
 #endif
 
-    if (textures[index])
-    {
+    if (textures[index]) {
         glActiveTexture(ToTextureUnitIndexGL4(index));
         POMDOG_CHECK_ERROR_GL4("glActiveTexture");
 

@@ -72,8 +72,7 @@ void AdapterManager::EnumAdapters()
 
     UINT i = 0;
     Microsoft::WRL::ComPtr<IDXGIAdapter1> newAdapter;
-    while ((hr = dxgiFactory->EnumAdapters1(i, &newAdapter)) != DXGI_ERROR_NOT_FOUND)
-    {
+    while ((hr = dxgiFactory->EnumAdapters1(i, &newAdapter)) != DXGI_ERROR_NOT_FOUND) {
         if (FAILED(hr)) {
             // FUS RO DAH!
             POMDOG_THROW_EXCEPTION(std::runtime_error,
@@ -158,8 +157,7 @@ void CheckError(ID3D11InfoQueue* infoQueue)
     const auto storedMessageCount = infoQueue->GetNumStoredMessages();
 
     std::string message;
-    for (UINT64 i = 0; i < storedMessageCount; ++i)
-    {
+    for (UINT64 i = 0; i < storedMessageCount; ++i) {
         SIZE_T messageByteLength = 0;
         infoQueue->GetMessage(i, nullptr, &messageByteLength);
 
@@ -173,8 +171,7 @@ void CheckError(ID3D11InfoQueue* infoQueue)
         message += "\n";
     }
 
-    if (message.empty())
-    {
+    if (message.empty()) {
         Log::Internal(message);
     }
 }
@@ -249,8 +246,7 @@ void GraphicsDeviceDirect3D11::Impl::BuildDevice()
     HRESULT hr = S_OK;
 
     auto adapter = adapters.ActiveAdapter();
-    for (auto & type: driverTypes)
-    {
+    for (auto& type : driverTypes) {
         driverType = type;
         hr = D3D11CreateDevice(
             adapter,

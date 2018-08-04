@@ -73,8 +73,7 @@ void GetActiveUniformsIntValue(
     glGetActiveUniformsiv(shaderProgram.value, uniformCount,
         uniformIndices.data(), parameter, values.data());
 
-    for (GLsizei index = 0; index < uniformCount; ++index)
-    {
+    for (GLsizei index = 0; index < uniformCount; ++index) {
         func(index, values[index]);
     }
 }
@@ -122,16 +121,14 @@ EnumerateUniformBlocks(const ShaderProgramGL4& shaderProgram)
     glGetProgramiv(shaderProgram.value, GL_ACTIVE_UNIFORM_BLOCKS, &uniformBlockCount);
     POMDOG_CHECK_ERROR_GL4("glGetProgramiv");
 
-    if (uniformBlockCount <= 0)
-    {
+    if (uniformBlockCount <= 0) {
         ///@note This shader has no uniform-block.
         return {};
     }
 
     std::vector<UniformBlockGL4> uniformBlocks;
 
-    for (GLint index = 0; index < uniformBlockCount; ++index)
-    {
+    for (GLint index = 0; index < uniformBlockCount; ++index) {
         auto const uniformBlockIndex = static_cast<GLuint>(index);
 
         UniformBlockGL4 uniformBlock;
@@ -156,8 +153,7 @@ std::vector<UniformGL4> EnumerateUniforms(const ShaderProgramGL4& shaderProgram)
     glGetProgramiv(shaderProgram.value, GL_ACTIVE_UNIFORMS, &uniformCount);
     POMDOG_CHECK_ERROR_GL4("glGetProgramiv");
 
-    if (uniformCount <= 0)
-    {
+    if (uniformCount <= 0) {
         ///@note This shader has no uniform.
         return {};
     }
@@ -166,8 +162,7 @@ std::vector<UniformGL4> EnumerateUniforms(const ShaderProgramGL4& shaderProgram)
     glGetProgramiv(shaderProgram.value, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxUniformNameLength);
     POMDOG_CHECK_ERROR_GL4("glGetProgramiv");
 
-    if (maxUniformNameLength <= 0)
-    {
+    if (maxUniformNameLength <= 0) {
         return {};
     }
 
@@ -176,8 +171,7 @@ std::vector<UniformGL4> EnumerateUniforms(const ShaderProgramGL4& shaderProgram)
 
     std::vector<UniformGL4> uniformVariables;
 
-    for (GLuint uniformIndex = 0; uniformIndex < static_cast<GLuint>(uniformCount); ++uniformIndex)
-    {
+    for (GLuint uniformIndex = 0; uniformIndex < static_cast<GLuint>(uniformCount); ++uniformIndex) {
         GLint arrayCount = 0;
         GLenum uniformType = 0;
         GLint uniformNameLength = 0;
@@ -581,8 +575,7 @@ std::vector<EffectVariable> GetEffectVariables(const std::vector<UniformVariable
     std::vector<EffectVariable> result;
     result.reserve(uniforms.size());
 
-    for (auto & uniform: uniforms)
-    {
+    for (auto& uniform : uniforms) {
         EffectVariable effectVariable;
         effectVariable.Name = uniform.Name;
         effectVariable.StartOffset = uniform.StartOffset;
@@ -597,8 +590,7 @@ void DebugLogUniformBlocks(const std::vector<UniformBlockGL4>& uniformBlocks)
 {
     std::stringstream stream;
 
-    for (const auto& uniformBlock: uniformBlocks)
-    {
+    for (const auto& uniformBlock : uniformBlocks) {
         stream
         << "-[UniformBlock]-------------------\n"
         << "         Name: " << uniformBlock.Name << "\n"
@@ -606,7 +598,7 @@ void DebugLogUniformBlocks(const std::vector<UniformBlockGL4>& uniformBlocks)
         << "     ByteSize: " << uniformBlock.ByteSize << "\n"
         << "Uniforms.size: " << uniformBlock.Uniforms.size() << "\n";
 
-        for (const auto& uniform: uniformBlock.Uniforms) {
+        for (const auto& uniform : uniformBlock.Uniforms) {
             stream
             << ":- - - - - - - - - - - - - -\n"
             << "         Name: " << uniform.Name << "\n"
@@ -626,7 +618,7 @@ void DebugLogUniformBlocks(const std::vector<UniformBlockGL4>& uniformBlocks)
 void DebugLogUniforms(const std::vector<UniformGL4>& uniforms)
 {
     std::stringstream stream;
-    for (const auto& uniform: uniforms) {
+    for (const auto& uniform : uniforms) {
         stream
         << "-[Uniform]-------------------\n"
         << "      Name: " << uniform.Name << "\n"
@@ -675,8 +667,7 @@ std::vector<EffectConstantDescription> EffectReflectionGL4::GetConstantBuffers()
 
     std::vector<EffectConstantDescription> result;
 
-    for (auto & uniformBlock: uniformBlocks)
-    {
+    for (auto& uniformBlock : uniformBlocks) {
         EffectConstantDescription description;
         description.Name = uniformBlock.Name;
         description.ByteSize = uniformBlock.ByteSize;

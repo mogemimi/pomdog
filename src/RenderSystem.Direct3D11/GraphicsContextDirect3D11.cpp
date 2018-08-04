@@ -60,8 +60,7 @@ void ChooseMultiSampleSetting(
         preferredMultiSampleCount,
         D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT);
 
-    for (int sampleCount = maxSampleCount; sampleCount >= 1; --sampleCount)
-    {
+    for (int sampleCount = maxSampleCount; sampleCount >= 1; --sampleCount) {
         UINT qualityLevels = 0;
 
         auto hr = device->CheckMultisampleQualityLevels(
@@ -371,8 +370,7 @@ void GraphicsContextDirect3D11::SetVertexBuffers(
     std::vector<ID3D11Buffer*> vertexBuffers;
     vertexBuffers.reserve(vertexBuffersIn.size());
 
-    for (auto & binding: vertexBuffersIn)
-    {
+    for (auto & binding : vertexBuffersIn) {
         auto & vertexBuffer = binding.VertexBuffer;
 
         POMDOG_ASSERT(vertexBuffer);

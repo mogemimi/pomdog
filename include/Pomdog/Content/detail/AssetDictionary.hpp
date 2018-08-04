@@ -34,8 +34,7 @@ public:
         std::type_index const typeIndex = typeid(std::shared_ptr<T>);
 
         auto const iter = assets.find(assetName);
-        if (iter != std::end(assets))
-        {
+        if (iter != std::end(assets)) {
             auto & assetHolder = iter->second;
 
             if (assetHolder.Type() == typeIndex) {

@@ -182,8 +182,7 @@ FloatingPointQuaternion<T>::Normalize(const FloatingPointQuaternion& source, Flo
 {
     auto const length = source.Length();
 
-    if (length > std::numeric_limits<decltype(length)>::epsilon())
-    {
+    if (length > std::numeric_limits<decltype(length)>::epsilon()) {
         auto const InverseLength = 1 / length;
         result.X = source.X * InverseLength;
         result.Y = source.Y * InverseLength;
@@ -234,8 +233,7 @@ void
 FloatingPointQuaternion<T>::Inverse(const FloatingPointQuaternion& source, FloatingPointQuaternion & result)
 {
     auto const lengthSquared = source.LengthSquared();
-    if (0 < lengthSquared)
-    {
+    if (0 < lengthSquared) {
         auto const inverseLengthSquared = 1 / lengthSquared;
         result.X = source.X * -inverseLengthSquared;
         result.Y = source.Y * -inverseLengthSquared;
@@ -291,8 +289,7 @@ void CreateFromRotationMatrixImplementation(const MatrixClass& rotation, Floatin
     auto const trace = rotation(0, 0) + rotation(1, 1) + rotation(2, 2);
     constexpr T half = T{0.5};
 
-    if (trace > 0)
-    {
+    if (trace > 0) {
         auto root = std::sqrt(trace + 1);
         result.W = half * root;
         root = half / root;
@@ -300,8 +297,7 @@ void CreateFromRotationMatrixImplementation(const MatrixClass& rotation, Floatin
         result.Y = (rotation(0, 2) - rotation(2, 0)) * root;
         result.Z = (rotation(1, 0) - rotation(0, 1)) * root;
     }
-    else
-    {
+    else {
         std::size_t i = 0;
         if (rotation(1, 1) > rotation(0, 0))
             i = 1;

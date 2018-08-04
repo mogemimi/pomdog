@@ -135,8 +135,7 @@ void SetPixelDataTexture2DCompressedGL4(
     GLsizei mipMapPixelWidth = pixelWidth;
     GLsizei mipMapPixelHeight = pixelHeight;
 
-    for (GLint mipmapLevel = 0; mipmapLevel < levelCount; ++mipmapLevel)
-    {
+    for (GLint mipmapLevel = 0; mipmapLevel < levelCount; ++mipmapLevel) {
         POMDOG_ASSERT(mipMapPixelWidth > 0);
         POMDOG_ASSERT(mipMapPixelHeight > 0);
 
@@ -183,8 +182,7 @@ void SetPixelDataTexture2DGL4(
 
     std::size_t startOffset = 0;
 
-    for (GLint mipmapLevel = 0; mipmapLevel < levelCount; ++mipmapLevel)
-    {
+    for (GLint mipmapLevel = 0; mipmapLevel < levelCount; ++mipmapLevel) {
         GLsizei const strideBytesPerMipmap = MipmapImageDataBytes(
             mipMapPixelWidth, mipMapPixelHeight, bytesPerBlock);
 

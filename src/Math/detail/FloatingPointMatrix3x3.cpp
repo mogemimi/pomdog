@@ -310,14 +310,12 @@ FloatingPointMatrix2x2<T> FloatingPointMatrix3x3<T>::Minor2x2(std::size_t row, s
     // r2 |31, 32, 33| --------------------> | x,  x, x|
 
     FloatingPointMatrix2x2<T> minorMatrix;
-    for (std::size_t i = 0, s = 0; i < RowSize; ++i)
-    {
+    for (std::size_t i = 0, s = 0; i < RowSize; ++i) {
         if (row == i) {
             continue;
         }
 
-        for (std::size_t j = 0, t = 0; j < ColumnSize; ++j)
-        {
+        for (std::size_t j = 0, t = 0; j < ColumnSize; ++j) {
             if (column == j) {
                 continue;
             }
