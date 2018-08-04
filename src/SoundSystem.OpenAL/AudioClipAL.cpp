@@ -54,9 +54,9 @@ AudioClipAL::AudioClipAL(
         return std::move(nativeBuffer);
     })();
 
-    #ifdef DEBUG
+#ifdef DEBUG
     ErrorCheckerAL::CheckError("alGenBuffers", __FILE__, __LINE__);
-    #endif
+#endif
 
     POMDOG_ASSERT(buffer);
 
@@ -66,9 +66,9 @@ AudioClipAL::AudioClipAL(
     ALenum format = ToFormat(channel, bitsPerSample);
     alBufferData(*buffer, format, data, static_cast<ALsizei>(size), sampleRate);
 
-    #ifdef DEBUG
+#ifdef DEBUG
     ErrorCheckerAL::CheckError("alBufferData", __FILE__, __LINE__);
-    #endif
+#endif
 }
 
 AudioClipAL::~AudioClipAL()

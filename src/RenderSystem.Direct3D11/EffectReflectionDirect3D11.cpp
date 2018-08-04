@@ -165,7 +165,7 @@ std::vector<EffectConstantDescription> EffectReflectionDirect3D11::GetConstantBu
         });
 
     auto equal = [](const EffectConstantDescription& a, const EffectConstantDescription& b) {
-    #if defined(DEBUG) && !defined(NDEBUG)
+#if defined(DEBUG) && !defined(NDEBUG)
         if (a.Name == b.Name) {
             POMDOG_ASSERT(a.ByteSize == b.ByteSize);
             POMDOG_ASSERT(a.Variables.size() == b.Variables.size());
@@ -180,7 +180,7 @@ std::vector<EffectConstantDescription> EffectReflectionDirect3D11::GetConstantBu
                 POMDOG_ASSERT(a.Variables[i].Annotation.RowCount == b.Variables[i].Annotation.RowCount);
             }
         }
-    #endif
+#endif
         return a.Name == b.Name;
     };
 

@@ -25,16 +25,16 @@ public:
         static_assert(alignment > 8, "");
         static_assert(IsPowerOfTwo(static_cast<int>(alignment)), "Must be integer power of 2.");
 
-    #if defined(_MSC_VER)
+#if defined(_MSC_VER)
         auto ptr = ::_aligned_malloc(size, alignment);
-    #elif (__STDC_VERSION__ > 201112L)
+#elif (__STDC_VERSION__ > 201112L)
         auto ptr = std::aligned_alloc(alignment, size);
-    #else
+#else
         void* ptr = nullptr;
         if (posix_memalign(&ptr, alignment, size) != 0) {
             ptr = nullptr;
         }
-    #endif
+#endif
 
         if (nullptr == ptr) {
             throw std::bad_alloc();
@@ -44,12 +44,12 @@ public:
 
     static void operator delete(void * ptr)
     {
-    #if defined(_MSC_VER)
+#if defined(_MSC_VER)
         ::_aligned_free(ptr);
-    #else
+#else
         // NOTE: When using `std::aligned_alloc` or `posix_memalign`, you can call `free(3)`.
         free(ptr);
-    #endif
+#endif
     }
 
     static void* operator new[](size_t size)

@@ -643,9 +643,9 @@ std::vector<UniformBlockGL4> EffectReflectionGL4::GetNativeUniformBlocks()
 {
     auto uniformBlocks = EnumerateUniformBlocks(shaderProgram);
 
-    #ifdef DEBUG
+#ifdef DEBUG
     DebugLogUniformBlocks(uniformBlocks);
-    #endif
+#endif
 
     return uniformBlocks;
 }
@@ -654,9 +654,9 @@ std::vector<UniformGL4> EffectReflectionGL4::GetNativeUniforms()
 {
     auto uniforms = EnumerateUniforms(shaderProgram);
 
-    #ifdef DEBUG
+#ifdef DEBUG
     DebugLogUniforms(uniforms);
-    #endif
+#endif
 
     return uniforms;
 }

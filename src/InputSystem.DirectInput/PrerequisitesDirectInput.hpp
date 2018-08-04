@@ -5,10 +5,10 @@
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 
 #ifndef DIRECTINPUT_VERSION
-#    ifdef DIRECTINPUT_HEADER_VERSION
-#        define DIRECTINPUT_VERSION DIRECTINPUT_HEADER_VERSION
-#    else
-#        define DIRECTINPUT_VERSION 0x0800
-#    endif
+#ifdef DIRECTINPUT_HEADER_VERSION
+#define DIRECTINPUT_VERSION DIRECTINPUT_HEADER_VERSION
+#else
+#define DIRECTINPUT_VERSION 0x0800
+#endif
 #endif
 #include <dinput.h>

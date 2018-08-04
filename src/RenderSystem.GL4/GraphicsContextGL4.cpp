@@ -130,7 +130,7 @@ Optional<FrameBufferGL4> CreateFrameBuffer()
 
 void ApplyTexture2D(int index, const Texture2DObjectGL4& textureObject)
 {
-    #if defined(DEBUG) && !defined(NDEBUG)
+#if defined(DEBUG) && !defined(NDEBUG)
     {
         static const auto MaxCombinedTextureImageUnits = ([]{
             GLint units = 0;
@@ -139,7 +139,7 @@ void ApplyTexture2D(int index, const Texture2DObjectGL4& textureObject)
         })();
         POMDOG_ASSERT(index < MaxCombinedTextureImageUnits);
     }
-    #endif
+#endif
 
     glActiveTexture(ToTextureUnitIndexGL4(index));
     POMDOG_CHECK_ERROR_GL4("glActiveTexture");

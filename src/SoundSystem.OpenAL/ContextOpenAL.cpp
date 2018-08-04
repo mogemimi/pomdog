@@ -15,17 +15,17 @@ ContextOpenAL::ContextOpenAL()
 {
     device = alcOpenDevice(nullptr);
 
-    #ifdef DEBUG
+#ifdef DEBUG
     ErrorCheckerAL::CheckError("alcOpenDevice", __FILE__, __LINE__);
-    #endif
+#endif
 
     POMDOG_ASSERT(device);
     context = alcCreateContext(device, nullptr);
     alcMakeContextCurrent(context);
 
-    #ifdef DEBUG
+#ifdef DEBUG
     ErrorCheckerAL::CheckError("alcMakeContextCurrent", __FILE__, __LINE__);
-    #endif
+#endif
 }
 
 ContextOpenAL::~ContextOpenAL()

@@ -124,13 +124,13 @@ void DepthStencilStateGL4::ApplyStencilTest()
 
     glEnable(GL_STENCIL_TEST);
 
-    #if defined(DEBUG) && !defined(NDEBUG)
+#if defined(DEBUG) && !defined(NDEBUG)
     {
         GLint frontFace;
         glGetIntegerv(GL_FRONT_FACE, &frontFace);
         POMDOG_ASSERT(GL_CW == frontFace);
     }
-    #endif
+#endif
 
     // ClockwiseFace:
     glStencilFuncSeparate(GL_FRONT,

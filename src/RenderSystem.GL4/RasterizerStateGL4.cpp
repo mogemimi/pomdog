@@ -34,13 +34,13 @@ RasterizerStateGL4::RasterizerStateGL4(const RasterizerDescription& description)
 
 void RasterizerStateGL4::Apply()
 {
-    #if defined(DEBUG) && !defined(NDEBUG)
+#if defined(DEBUG) && !defined(NDEBUG)
     {
         GLint frontFace;
         glGetIntegerv(GL_FRONT_FACE, &frontFace);
         POMDOG_ASSERT(GL_CW == frontFace);
     }
-    #endif
+#endif
 
     // CullMode:
     switch (cullMode) {
