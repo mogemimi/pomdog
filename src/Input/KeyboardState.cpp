@@ -1,12 +1,12 @@
 // Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Input/KeyboardState.hpp"
-#include "Pomdog/Input/Keys.hpp"
 #include "Pomdog/Input/KeyState.hpp"
+#include "Pomdog/Input/Keys.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include <type_traits>
 #include <cstdint>
 #include <limits>
+#include <type_traits>
 #include <utility>
 
 namespace Pomdog {

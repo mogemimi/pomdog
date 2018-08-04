@@ -2,9 +2,9 @@
 
 #pragma once
 
+#include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Graphics/Blend.hpp"
 #include "Pomdog/Graphics/BlendOperation.hpp"
-#include "Pomdog/Basic/Export.hpp"
 #include <utility>
 
 namespace Pomdog {

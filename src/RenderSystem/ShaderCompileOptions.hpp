@@ -4,8 +4,8 @@
 
 #include "Pomdog/Graphics/ShaderPipelineStage.hpp"
 #include <cstdint>
-#include <vector>
 #include <string>
+#include <vector>
 
 namespace Pomdog {
 namespace Detail {

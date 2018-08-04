@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "Pomdog/Signals/Signal.hpp"
 #include "Pomdog/Basic/Export.hpp"
-#include <string>
+#include "Pomdog/Signals/Signal.hpp"
 #include <cstdint>
+#include <string>
 
 namespace Pomdog {
 

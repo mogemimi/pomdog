@@ -2,14 +2,14 @@
 
 #pragma once
 
-#include "Pomdog/Signals/detail/ForwardDeclarations.hpp"
-#include "Pomdog/Signals/Event.hpp"
 #include "Pomdog/Basic/Export.hpp"
-#include <memory>
+#include "Pomdog/Signals/Event.hpp"
+#include "Pomdog/Signals/detail/ForwardDeclarations.hpp"
 #include <functional>
+#include <memory>
+#include <mutex>
 #include <utility>
 #include <vector>
-#include <mutex>
 
 namespace Pomdog {
 

@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include <typeinfo>
 #include <type_traits>
+#include <typeinfo>
 #include <utility>
 
 namespace Pomdog {

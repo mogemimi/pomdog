@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Basic/Export.hpp"
-#include <memory>
+#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <cstdlib>
+#include <memory>
 
 namespace Pomdog {
 

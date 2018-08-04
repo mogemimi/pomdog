@@ -2,9 +2,9 @@
 
 #pragma once
 
+#include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Math/Degree.hpp"
 #include "Pomdog/Math/Radian.hpp"
-#include "Pomdog/Basic/Export.hpp"
 #include <type_traits>
 
 namespace Pomdog {

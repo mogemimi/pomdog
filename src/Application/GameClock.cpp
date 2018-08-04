@@ -3,10 +3,10 @@
 #include "Pomdog/Application/GameClock.hpp"
 #include "TimeSource.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include <deque>
 #include <algorithm>
-#include <numeric>
 #include <chrono>
+#include <deque>
+#include <numeric>
 
 namespace Pomdog {
 namespace {

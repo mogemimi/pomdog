@@ -8,12 +8,12 @@
 #include "SamplerStateVulkan.hpp"
 #include "ShaderVulkan.hpp"
 #include "Texture2DVulkan.hpp"
+#include "Pomdog/Basic/Platform.hpp"
+#include "Pomdog/Basic/Version.hpp"
 #include "Pomdog/Graphics/ShaderLanguage.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include "Pomdog/Utility/Optional.hpp"
-#include "Pomdog/Basic/Platform.hpp"
-#include "Pomdog/Basic/Version.hpp"
 #include <vulkan/vulkan.h>
 #include <array>
 #include <tuple>

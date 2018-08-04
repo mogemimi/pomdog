@@ -6,8 +6,8 @@
 #include "../Basic/Unreachable.hpp"
 #include "../RenderSystem/SurfaceFormatHelper.hpp"
 #include "../Utility/ScopeGuard.hpp"
-#include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 #include <algorithm>
 
 namespace Pomdog {

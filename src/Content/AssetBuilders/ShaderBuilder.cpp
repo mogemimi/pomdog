@@ -2,13 +2,13 @@
 
 #include "Pomdog/Content/AssetBuilders/ShaderBuilder.hpp"
 #include "../../RenderSystem/ShaderBytecode.hpp"
-#include "Pomdog/Content/detail/AssetLoaderContext.hpp"
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
+#include "Pomdog/Content/detail/AssetLoaderContext.hpp"
+#include "Pomdog/Graphics/GraphicsDevice.hpp"
+#include "Pomdog/Graphics/Shader.hpp"
 #include "Pomdog/Graphics/ShaderCompilers/GLSLCompiler.hpp"
 #include "Pomdog/Graphics/ShaderCompilers/HLSLCompiler.hpp"
 #include "Pomdog/Graphics/ShaderCompilers/MetalCompiler.hpp"
-#include "Pomdog/Graphics/GraphicsDevice.hpp"
-#include "Pomdog/Graphics/Shader.hpp"
 #include "Pomdog/Graphics/ShaderLanguage.hpp"
 #include "Pomdog/Graphics/ShaderPipelineStage.hpp"
 #include "Pomdog/Logging/Log.hpp"
@@ -19,10 +19,10 @@
 #include "Pomdog/Utility/PathHelper.hpp"
 #include "Pomdog/Utility/StringHelper.hpp"
 #include <fstream>
-#include <vector>
-#include <utility>
-#include <set>
 #include <regex>
+#include <set>
+#include <utility>
+#include <vector>
 
 using Pomdog::Detail::BinaryReader;
 using Pomdog::Detail::ShaderBytecode;

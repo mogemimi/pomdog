@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
-#include "Pomdog/Graphics/InputElementFormat.hpp"
-#include "Pomdog/Graphics/InputElement.hpp"
-#include "Pomdog/Graphics/InputLayoutDescription.hpp"
 #include "Pomdog/Basic/Export.hpp"
+#include "Pomdog/Graphics/InputElement.hpp"
+#include "Pomdog/Graphics/InputElementFormat.hpp"
+#include "Pomdog/Graphics/InputLayoutDescription.hpp"
+#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <cstdint>
 
 namespace Pomdog {

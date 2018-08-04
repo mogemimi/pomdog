@@ -3,10 +3,10 @@
 #pragma once
 
 #include "Pomdog/Basic/Export.hpp"
-#include "Pomdog/Graphics/SurfaceFormat.hpp"
 #include "Pomdog/Graphics/DepthFormat.hpp"
-#include <memory>
+#include "Pomdog/Graphics/SurfaceFormat.hpp"
 #include <functional>
+#include <memory>
 
 namespace Pomdog {
 

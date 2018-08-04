@@ -9,9 +9,6 @@
 #include "../RenderSystem.DXGI/DXGIFormatHelper.hpp"
 #include "../RenderSystem/GraphicsCapabilities.hpp"
 #include "../RenderSystem/GraphicsCommandListImmediate.hpp"
-#include "Pomdog/Math/Color.hpp"
-#include "Pomdog/Math/Vector4.hpp"
-#include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Graphics/IndexBuffer.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
@@ -21,9 +18,12 @@
 #include "Pomdog/Graphics/VertexBuffer.hpp"
 #include "Pomdog/Graphics/VertexBufferBinding.hpp"
 #include "Pomdog/Graphics/Viewport.hpp"
+#include "Pomdog/Logging/Log.hpp"
+#include "Pomdog/Math/Color.hpp"
+#include "Pomdog/Math/Rectangle.hpp"
+#include "Pomdog/Math/Vector4.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
-#include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/StringHelper.hpp"
 #include <algorithm>
 

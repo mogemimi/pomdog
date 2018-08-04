@@ -3,8 +3,8 @@
 #pragma once
 
 #include "Pomdog/Basic/Export.hpp"
-#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Content/Utility/BinaryFileStream.hpp"
+#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <memory>
 #include <string>
 

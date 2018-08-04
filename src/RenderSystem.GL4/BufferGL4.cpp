@@ -5,8 +5,8 @@
 #include "TypesafeHelperGL4.hpp"
 #include "../Basic/Unreachable.hpp"
 #include "../Utility/ScopeGuard.hpp"
-#include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Graphics/BufferUsage.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 #include <utility>
 
 namespace Pomdog {

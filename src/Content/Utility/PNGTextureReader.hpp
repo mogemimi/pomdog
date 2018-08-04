@@ -3,8 +3,8 @@
 #pragma once
 
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
-#include <cstdint>
 #include <cstddef>
+#include <cstdint>
 #include <memory>
 
 namespace Pomdog {

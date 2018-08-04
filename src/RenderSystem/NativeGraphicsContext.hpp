@@ -5,8 +5,8 @@
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Math/detail/ForwardDeclarations.hpp"
 #include <cstddef>
-#include <vector>
 #include <memory>
+#include <vector>
 
 namespace Pomdog {
 namespace Detail {

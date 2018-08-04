@@ -2,16 +2,16 @@
 
 #pragma once
 
-#include "Pomdog/Reactive/Observable.hpp"
-#include "Pomdog/Reactive/Observer.hpp"
 #include "Pomdog/Application/GameClock.hpp"
 #include "Pomdog/Application/GameHost.hpp"
 #include "Pomdog/Input/Keyboard.hpp"
+#include "Pomdog/Reactive/Observable.hpp"
+#include "Pomdog/Reactive/Observer.hpp"
 #include "Pomdog/Signals/ScopedConnection.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <functional>
-#include <vector>
 #include <memory>
+#include <vector>
 
 namespace Pomdog {
 namespace Reactive {

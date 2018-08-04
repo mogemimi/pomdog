@@ -2,8 +2,8 @@
 
 #include "Pomdog/Graphics/Viewport.hpp"
 #include "Pomdog/Math/Matrix4x4.hpp"
-#include "Pomdog/Math/Vector3.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
+#include "Pomdog/Math/Vector3.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <cmath>
 #include <limits>

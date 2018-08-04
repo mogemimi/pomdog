@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Basic/Export.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 #include <atomic>
 #include <exception>
 #include <functional>

@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "Pomdog/Signals/detail/ForwardDeclarations.hpp"
-#include "Pomdog/Signals/Connection.hpp"
 #include "Pomdog/Basic/Export.hpp"
+#include "Pomdog/Signals/Connection.hpp"
+#include "Pomdog/Signals/detail/ForwardDeclarations.hpp"
 
 namespace Pomdog {
 

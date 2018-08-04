@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "Pomdog/Logging/LogLevel.hpp"
 #include "Pomdog/Basic/Export.hpp"
+#include "Pomdog/Logging/LogLevel.hpp"
 #include "Pomdog/Signals/Signal.hpp"
 #include <functional>
 #include <string>

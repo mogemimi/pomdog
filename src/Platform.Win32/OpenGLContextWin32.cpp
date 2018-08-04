@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
 #include "OpenGLContextWin32.hpp"
-#include "../RenderSystem.GL4/OpenGLPrerequisites.hpp"
 #include "../RenderSystem.GL4/ErrorChecker.hpp"
+#include "../RenderSystem.GL4/OpenGLPrerequisites.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"

@@ -3,18 +3,18 @@
 #include "Pomdog/Content/detail/AssetLoaders/Texture2DLoader.hpp"
 #include "../Utility/DDSTextureReader.hpp"
 #include "../Utility/PNGTextureReader.hpp"
-#include "Pomdog/Content/detail/AssetLoaderContext.hpp"
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
 #include "Pomdog/Content/Utility/MakeFourCC.hpp"
+#include "Pomdog/Content/detail/AssetLoaderContext.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
-#include <fstream>
-#include <array>
-#include <vector>
 #include <algorithm>
-#include <utility>
-#include <string>
+#include <array>
+#include <fstream>
 #include <memory>
+#include <string>
+#include <utility>
+#include <vector>
 
 namespace Pomdog {
 namespace Detail {

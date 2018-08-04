@@ -12,9 +12,9 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include "Pomdog/Utility/StringHelper.hpp"
+#include <array>
 #include <type_traits>
 #include <unordered_set>
-#include <array>
 
 namespace Pomdog {
 namespace Detail {

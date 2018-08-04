@@ -5,9 +5,9 @@
 #include "PrerequisitesDirect3D11.hpp"
 #include "../RenderSystem/NativeGraphicsContext.hpp"
 #include <wrl/client.h>
+#include <array>
 #include <memory>
 #include <vector>
-#include <array>
 
 namespace Pomdog {
 namespace Detail {

@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Logging/Log.hpp"
-#include "Pomdog/Logging/LogEntry.hpp"
 #include "Pomdog/Logging/LogChannel.hpp"
+#include "Pomdog/Logging/LogEntry.hpp"
 #include "Pomdog/Signals/Connection.hpp"
 #include "Pomdog/Signals/ScopedConnection.hpp"
 #include <algorithm>

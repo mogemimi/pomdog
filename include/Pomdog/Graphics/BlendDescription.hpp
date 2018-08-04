@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "Pomdog/Graphics/RenderTargetBlendDescription.hpp"
 #include "Pomdog/Basic/Export.hpp"
-#include <cstdint>
+#include "Pomdog/Graphics/RenderTargetBlendDescription.hpp"
 #include <array>
+#include <cstdint>
 #include <utility>
 
 namespace Pomdog {

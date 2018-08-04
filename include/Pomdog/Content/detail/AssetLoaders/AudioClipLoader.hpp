@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "Pomdog/Content/detail/AssetLoader.hpp"
 #include "Pomdog/Basic/Export.hpp"
-#include <string>
+#include "Pomdog/Content/detail/AssetLoader.hpp"
 #include <memory>
+#include <string>
 
 namespace Pomdog {
 

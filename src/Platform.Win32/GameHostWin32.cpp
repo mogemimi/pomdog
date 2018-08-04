@@ -6,15 +6,15 @@
 #include "MouseWin32.hpp"
 #include "../InputSystem/NativeGamepad.hpp"
 #if !defined(POMDOG_DISABLE_GL4)
-#include "../RenderSystem/GraphicsCommandQueueImmediate.hpp"
 #include "../Platform.Win32/OpenGLContextWin32.hpp"
 #include "../RenderSystem.GL4/GraphicsContextGL4.hpp"
 #include "../RenderSystem.GL4/GraphicsDeviceGL4.hpp"
+#include "../RenderSystem/GraphicsCommandQueueImmediate.hpp"
 #endif
 #if !defined(POMDOG_DISABLE_DIRECT3D11)
-#include "../RenderSystem/GraphicsCommandQueueImmediate.hpp"
 #include "../RenderSystem.Direct3D11/GraphicsContextDirect3D11.hpp"
 #include "../RenderSystem.Direct3D11/GraphicsDeviceDirect3D11.hpp"
+#include "../RenderSystem/GraphicsCommandQueueImmediate.hpp"
 #endif
 #include "../Application/SubsystemScheduler.hpp"
 #include "../Application/SystemEvents.hpp"
@@ -26,16 +26,16 @@
 #include "Pomdog/Graphics/GraphicsCommandQueue.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
-#include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Logging/Log.hpp"
+#include "Pomdog/Math/Rectangle.hpp"
+#include "Pomdog/Signals/EventQueue.hpp"
+#include "Pomdog/Signals/ScopedConnection.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include "Pomdog/Utility/FileSystem.hpp"
 #include "Pomdog/Utility/PathHelper.hpp"
-#include "Pomdog/Signals/EventQueue.hpp"
-#include "Pomdog/Signals/ScopedConnection.hpp"
-#include <thread>
 #include <chrono>
+#include <thread>
 
 using Pomdog::Detail::InputSystem::NativeGamepad;
 using Pomdog::Detail::Win32::GameWindowWin32;

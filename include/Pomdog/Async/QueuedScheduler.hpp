@@ -3,8 +3,8 @@
 #pragma once
 
 #include "Pomdog/Async/Scheduler.hpp"
-#include <vector>
 #include <mutex>
+#include <vector>
 
 namespace Pomdog {
 namespace Concurrency {

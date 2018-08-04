@@ -3,11 +3,11 @@
 #include "GameWindowX11.hpp"
 #include "X11Context.hpp"
 #include "../Utility/ScopeGuard.hpp"
+#include "Pomdog/Basic/Platform.hpp"
+#include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include "Pomdog/Utility/Optional.hpp"
-#include "Pomdog/Basic/Platform.hpp"
-#include "Pomdog/Logging/Log.hpp"
 #include <X11/Xutil.h>
 
 namespace Pomdog {

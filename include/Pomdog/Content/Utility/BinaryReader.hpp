@@ -2,14 +2,14 @@
 
 #pragma once
 
-#include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Basic/Export.hpp"
-#include <cstddef>
-#include <type_traits>
+#include "Pomdog/Utility/Assert.hpp"
 #include <array>
+#include <cstddef>
 #include <cstring>
-#include <vector>
+#include <type_traits>
 #include <utility>
+#include <vector>
 
 namespace Pomdog {
 namespace Detail {

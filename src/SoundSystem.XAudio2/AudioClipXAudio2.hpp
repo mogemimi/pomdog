@@ -4,8 +4,8 @@
 
 #include "PrerequisitesXAudio2.hpp"
 #include "../Utility/Noncopyable.hpp"
-#include <cstdint>
 #include <cstddef>
+#include <cstdint>
 #include <vector>
 
 namespace Pomdog {

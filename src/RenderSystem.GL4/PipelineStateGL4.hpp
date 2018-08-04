@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "OpenGLPrerequisites.hpp"
 #include "BlendStateGL4.hpp"
 #include "DepthStencilStateGL4.hpp"
+#include "OpenGLPrerequisites.hpp"
 #include "RasterizerStateGL4.hpp"
 #include "TypesafeGL4.hpp"
 #include "../RenderSystem/NativePipelineState.hpp"

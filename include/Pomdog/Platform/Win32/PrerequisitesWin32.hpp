@@ -12,5 +12,5 @@
 #define NOMINMAX
 #endif
 
-#include <tchar.h>
 #include <Windows.h>
+#include <tchar.h>

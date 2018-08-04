@@ -3,8 +3,8 @@
 #pragma once
 
 #include "Pomdog/Application/GameWindow.hpp"
-#include "Pomdog/Signals/EventQueue.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
+#include "Pomdog/Signals/EventQueue.hpp"
 #import <Cocoa/Cocoa.h>
 
 @class NSWindow;

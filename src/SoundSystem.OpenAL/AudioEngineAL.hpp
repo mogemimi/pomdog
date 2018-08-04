@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "PrerequisitesOpenAL.hpp"
 #include "ContextOpenAL.hpp"
+#include "PrerequisitesOpenAL.hpp"
 #include "../Utility/Noncopyable.hpp"
 
 namespace Pomdog {

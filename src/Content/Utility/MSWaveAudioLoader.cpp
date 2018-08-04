@@ -15,14 +15,14 @@
 #include "Pomdog/Audio/AudioClip.hpp"
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
 #include "Pomdog/Content/Utility/MakeFourCC.hpp"
+#include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
-#include "Pomdog/Logging/Log.hpp"
 
 #if 0
 #if defined(POMDOG_PLATFORM_MACOSX) || defined(POMDOG_PLATFORM_APPLE_IOS)
-#include <AudioToolbox/AudioFile.h>
 #include <AudioToolbox/AudioConverter.h>
+#include <AudioToolbox/AudioFile.h>
 #elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
 #include "Pomdog/Content/Utility/MakeFourCC.hpp"
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
@@ -30,9 +30,9 @@
 #endif
 #endif
 
-#include <vector>
 #include <memory>
 #include <utility>
+#include <vector>
 
 namespace Pomdog {
 namespace Detail {

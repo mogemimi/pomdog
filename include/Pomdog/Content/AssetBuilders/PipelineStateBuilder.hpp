@@ -2,11 +2,11 @@
 
 #pragma once
 
+#include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Content/AssetBuilders/Builder.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
-#include "Pomdog/Basic/Export.hpp"
-#include <string>
 #include <memory>
+#include <string>
 #include <vector>
 
 namespace Pomdog {

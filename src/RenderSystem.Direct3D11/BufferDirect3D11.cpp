@@ -2,9 +2,9 @@
 
 #include "BufferDirect3D11.hpp"
 #include "Pomdog/Graphics/BufferUsage.hpp"
+#include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
-#include "Pomdog/Logging/Log.hpp"
 #include <utility>
 
 namespace Pomdog {

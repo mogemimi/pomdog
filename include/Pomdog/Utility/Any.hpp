@@ -2,13 +2,13 @@
 
 #pragma once
 
-#include "Pomdog/Utility/detail/CRC32.hpp"
-#include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Basic/Export.hpp"
+#include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Utility/detail/CRC32.hpp"
+#include <memory>
+#include <type_traits>
 #include <typeindex>
 #include <typeinfo>
-#include <type_traits>
-#include <memory>
 #include <utility>
 
 namespace Pomdog {

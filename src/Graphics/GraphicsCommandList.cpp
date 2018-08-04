@@ -1,10 +1,8 @@
 // Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Graphics/GraphicsCommandList.hpp"
-#include "../RenderSystem/NativeGraphicsDevice.hpp"
 #include "../RenderSystem/NativeGraphicsCommandList.hpp"
-#include "Pomdog/Math/Color.hpp"
-#include "Pomdog/Math/Rectangle.hpp"
+#include "../RenderSystem/NativeGraphicsDevice.hpp"
 #include "Pomdog/Graphics/ConstantBuffer.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/PipelineState.hpp"
@@ -12,6 +10,8 @@
 #include "Pomdog/Graphics/SamplerState.hpp"
 #include "Pomdog/Graphics/VertexBufferBinding.hpp"
 #include "Pomdog/Graphics/Viewport.hpp"
+#include "Pomdog/Math/Color.hpp"
+#include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {

@@ -5,8 +5,8 @@
 #include "PrerequisitesDirect3D11.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
 #include <wrl/client.h>
-#include <vector>
 #include <cstdint>
+#include <vector>
 
 namespace Pomdog {
 namespace Detail {

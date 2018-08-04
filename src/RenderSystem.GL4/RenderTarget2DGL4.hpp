@@ -6,8 +6,8 @@
 #include "Texture2DGL4.hpp"
 #include "../RenderSystem/NativeRenderTarget2D.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
-#include "Pomdog/Utility/detail/Tagged.hpp"
 #include "Pomdog/Utility/Optional.hpp"
+#include "Pomdog/Utility/detail/Tagged.hpp"
 
 namespace Pomdog {
 namespace Detail {

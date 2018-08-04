@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "Pomdog/Audio/detail/ForwardDeclarations.hpp"
-#include "Pomdog/Audio/AudioChannels.hpp"
 #include "Pomdog/Application/Duration.hpp"
+#include "Pomdog/Audio/AudioChannels.hpp"
+#include "Pomdog/Audio/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <cstdint>
 #include <memory>

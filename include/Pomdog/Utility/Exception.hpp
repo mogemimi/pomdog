@@ -2,9 +2,9 @@
 
 #pragma once
 
+#include <sstream>
 #include <stdexcept>
 #include <string>
-#include <sstream>
 
 namespace Pomdog {
 namespace Detail {

@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include "Pomdog/Reactive/Observable.hpp"
-#include "Pomdog/Reactive/Observer.hpp"
 #include "Pomdog/Application/Duration.hpp"
 #include "Pomdog/Application/GameClock.hpp"
 #include "Pomdog/Application/GameHost.hpp"
 #include "Pomdog/Application/Timer.hpp"
+#include "Pomdog/Reactive/Observable.hpp"
+#include "Pomdog/Reactive/Observer.hpp"
 #include "Pomdog/Signals/ScopedConnection.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <functional>

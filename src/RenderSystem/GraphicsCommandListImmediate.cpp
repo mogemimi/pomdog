@@ -2,12 +2,12 @@
 
 #include "GraphicsCommandListImmediate.hpp"
 #include "NativeGraphicsContext.hpp"
-#include "Pomdog/Math/Color.hpp"
-#include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/RenderPass.hpp"
 #include "Pomdog/Graphics/VertexBufferBinding.hpp"
 #include "Pomdog/Graphics/Viewport.hpp"
+#include "Pomdog/Math/Color.hpp"
+#include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {

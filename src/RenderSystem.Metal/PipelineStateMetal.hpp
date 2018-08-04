@@ -4,9 +4,9 @@
 
 #include "../RenderSystem/NativePipelineState.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
-#import <Metal/MTLRenderPipeline.h>
 #import <Metal/MTLDepthStencil.h>
 #import <Metal/MTLRenderCommandEncoder.h>
+#import <Metal/MTLRenderPipeline.h>
 
 namespace Pomdog {
 namespace Detail {

@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 #include "Pomdog/Input/Mouse.hpp"
 #include "Pomdog/Input/MouseState.hpp"
+#include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 
 namespace Pomdog {
 namespace Detail {

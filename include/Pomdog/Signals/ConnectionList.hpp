@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "Pomdog/Signals/Connection.hpp"
 #include "Pomdog/Basic/Export.hpp"
-#include <vector>
+#include "Pomdog/Signals/Connection.hpp"
 #include <utility>
+#include <vector>
 
 namespace Pomdog {
 

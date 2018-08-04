@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include <fstream>
 #include <cstddef>
+#include <fstream>
 
 namespace Pomdog {
 namespace Detail {

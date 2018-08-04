@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include "Pomdog/Signals/detail/SignalBody.hpp"
-#include "Pomdog/Signals/Connection.hpp"
 #include "Pomdog/Basic/Export.hpp"
-#include <memory>
+#include "Pomdog/Signals/Connection.hpp"
+#include "Pomdog/Signals/detail/SignalBody.hpp"
 #include <functional>
+#include <memory>
 #include <utility>
 
 namespace Pomdog {

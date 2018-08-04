@@ -4,8 +4,8 @@
 
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Signals/detail/ForwardDeclarations.hpp"
-#include <memory>
 #include <functional>
+#include <memory>
 
 #import <Cocoa/Cocoa.h>
 #import <MetalKit/MTKView.h>

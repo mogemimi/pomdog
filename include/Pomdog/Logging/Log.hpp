@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "Pomdog/Logging/LogLevel.hpp"
 #include "Pomdog/Basic/Export.hpp"
-#include <string>
+#include "Pomdog/Logging/LogLevel.hpp"
 #include <functional>
+#include <string>
 
 namespace Pomdog {
 

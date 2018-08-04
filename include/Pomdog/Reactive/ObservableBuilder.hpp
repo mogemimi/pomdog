@@ -2,9 +2,13 @@
 
 #pragma once
 
+#include "Pomdog/Application/GameHost.hpp"
+#include "Pomdog/Reactive/Observable.hpp"
+#include "Pomdog/Reactive/ObservableBase.hpp"
+#include "Pomdog/Reactive/Observer.hpp"
 #include "Pomdog/Reactive/Operators/BufferOperator.hpp"
-#include "Pomdog/Reactive/Operators/DelayOperator.hpp"
 #include "Pomdog/Reactive/Operators/DebounceOperator.hpp"
+#include "Pomdog/Reactive/Operators/DelayOperator.hpp"
 #include "Pomdog/Reactive/Operators/DistinctOperator.hpp"
 #include "Pomdog/Reactive/Operators/DoOperator.hpp"
 #include "Pomdog/Reactive/Operators/FilterOperator.hpp"
@@ -18,11 +22,7 @@
 #include "Pomdog/Reactive/Operators/TakeOperator.hpp"
 #include "Pomdog/Reactive/Operators/TimeoutOperator.hpp"
 #include "Pomdog/Reactive/Operators/ZipOperator.hpp"
-#include "Pomdog/Reactive/Observable.hpp"
-#include "Pomdog/Reactive/ObservableBase.hpp"
-#include "Pomdog/Reactive/Observer.hpp"
 #include "Pomdog/Reactive/Subscriber.hpp"
-#include "Pomdog/Application/GameHost.hpp"
 #include <functional>
 #include <memory>
 

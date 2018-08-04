@@ -4,9 +4,9 @@
 
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Experimental/Image/Image.hpp"
+#include <chrono>
 #include <memory>
 #include <vector>
-#include <chrono>
 
 namespace Pomdog {
 

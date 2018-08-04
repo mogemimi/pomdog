@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Signals/EventQueue.hpp"
-#include "Pomdog/Signals/detail/SignalBody.hpp"
 #include "Pomdog/Signals/Connection.hpp"
+#include "Pomdog/Signals/detail/SignalBody.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <algorithm>
 

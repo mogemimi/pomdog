@@ -7,9 +7,9 @@
 #include "Pomdog/Logging/LogLevel.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/StringHelper.hpp"
-#include <utility>
 #include <algorithm>
 #include <sstream>
+#include <utility>
 
 namespace Pomdog {
 namespace Detail {

@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
-#include "Pomdog/Graphics/SurfaceFormat.hpp"
-#include "Pomdog/Graphics/DepthFormat.hpp"
 #include "Pomdog/Basic/Export.hpp"
-#include <memory>
+#include "Pomdog/Graphics/DepthFormat.hpp"
+#include "Pomdog/Graphics/SurfaceFormat.hpp"
+#include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 #include <functional>
+#include <memory>
 
 namespace Pomdog {
 

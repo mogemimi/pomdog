@@ -3,9 +3,9 @@
 #pragma once
 
 #include "Pomdog/Basic/Export.hpp"
-#include <string>
-#include <cstdint>
 #include <cstddef>
+#include <cstdint>
+#include <string>
 #include <type_traits>
 
 namespace Pomdog {

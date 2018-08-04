@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include "Pomdog/Graphics/ShaderPipelineStage.hpp"
 #include "Pomdog/Basic/Export.hpp"
+#include "Pomdog/Graphics/ShaderPipelineStage.hpp"
 #include "Pomdog/Utility/Optional.hpp"
-#include <memory>
 #include <cstddef>
+#include <memory>
 #include <string>
 
 namespace Pomdog {

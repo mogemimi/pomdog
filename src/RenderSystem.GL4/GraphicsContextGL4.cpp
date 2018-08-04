@@ -16,6 +16,7 @@
 #include "../RenderSystem/NativeRenderTarget2D.hpp"
 #include "../RenderSystem/NativeTexture2D.hpp"
 #include "../Utility/ScopeGuard.hpp"
+#include "Pomdog/Application/GameWindow.hpp"
 #include "Pomdog/Basic/Platform.hpp"
 #include "Pomdog/Graphics/IndexBuffer.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
@@ -24,20 +25,16 @@
 #include "Pomdog/Graphics/Texture2D.hpp"
 #include "Pomdog/Graphics/VertexBuffer.hpp"
 #include "Pomdog/Graphics/Viewport.hpp"
-#include "Pomdog/Application/GameWindow.hpp"
+#include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Math/Vector4.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
-
-// logging
-#include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/StringHelper.hpp"
-
-#include <limits>
-#include <cmath>
 #include <array>
+#include <cmath>
+#include <limits>
 #include <utility>
 
 namespace Pomdog {

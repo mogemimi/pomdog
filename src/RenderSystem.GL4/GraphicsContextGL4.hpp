@@ -5,10 +5,10 @@
 #include "OpenGLPrerequisites.hpp"
 #include "../RenderSystem/NativeGraphicsContext.hpp"
 #include "Pomdog/Graphics/VertexBufferBinding.hpp"
-#include "Pomdog/Utility/detail/Tagged.hpp"
 #include "Pomdog/Utility/Optional.hpp"
-#include <vector>
+#include "Pomdog/Utility/detail/Tagged.hpp"
 #include <memory>
+#include <vector>
 
 namespace Pomdog {
 

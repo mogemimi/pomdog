@@ -8,10 +8,10 @@
 #include "Pomdog/Input/Gamepad.hpp"
 #include "Pomdog/Input/GamepadCapabilities.hpp"
 #include "Pomdog/Input/GamepadState.hpp"
+#include <wrl/client.h>
 #include <array>
 #include <cstdint>
 #include <memory>
-#include <wrl/client.h>
 
 namespace Pomdog {
 namespace Detail {

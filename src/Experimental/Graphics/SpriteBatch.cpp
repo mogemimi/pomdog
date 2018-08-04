@@ -2,9 +2,9 @@
 
 #include "Pomdog/Experimental/Graphics/SpriteBatch.hpp"
 #include "../../Utility/AlignedNew.hpp"
-#include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Content/AssetBuilders/PipelineStateBuilder.hpp"
 #include "Pomdog/Content/AssetBuilders/ShaderBuilder.hpp"
+#include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Graphics/BlendDescription.hpp"
 #include "Pomdog/Graphics/BufferUsage.hpp"
 #include "Pomdog/Graphics/ConstantBuffer.hpp"
@@ -31,8 +31,8 @@
 #include "Pomdog/Math/Vector4.hpp"
 #include <algorithm>
 #include <cstring>
-#include <vector>
 #include <tuple>
+#include <vector>
 
 using Pomdog::Detail::AlignedNew;
 

@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 #include "Pomdog/Application/GameWindow.hpp"
+#include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 #include "Pomdog/Signals/EventQueue.hpp"
 #include <memory>
 

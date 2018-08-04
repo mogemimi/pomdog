@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Math/BoundingCircle.hpp"
-#include "Pomdog/Math/ContainmentType.hpp"
 #include "Pomdog/Math/BoundingBox2D.hpp"
+#include "Pomdog/Math/ContainmentType.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {

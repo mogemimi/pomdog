@@ -3,8 +3,8 @@
 #pragma once
 
 #include "Pomdog/Basic/Export.hpp"
-#include <type_traits>
 #include <functional>
+#include <type_traits>
 #include <utility>
 
 namespace Pomdog {

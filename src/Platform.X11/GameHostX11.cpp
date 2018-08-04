@@ -1,26 +1,26 @@
 // Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
 #include "GameHostX11.hpp"
+#include "../InputSystem/GamepadFactory.hpp"
+#include "../InputSystem/NativeGamepad.hpp"
 #include "../RenderSystem.GL4/GraphicsContextGL4.hpp"
 #include "../RenderSystem.GL4/GraphicsDeviceGL4.hpp"
 #include "../RenderSystem/GraphicsCommandQueueImmediate.hpp"
-#include "../InputSystem/GamepadFactory.hpp"
-#include "../InputSystem/NativeGamepad.hpp"
 #include "Pomdog/Application/Game.hpp"
 #include "Pomdog/Audio/AudioEngine.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Graphics/GraphicsCommandQueue.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
+#include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include "Pomdog/Utility/FileSystem.hpp"
 #include "Pomdog/Utility/PathHelper.hpp"
-#include "Pomdog/Logging/Log.hpp"
-#include <string>
-#include <vector>
 #include <chrono>
+#include <string>
 #include <thread>
+#include <vector>
 
 using Pomdog::Detail::GL4::GraphicsContextGL4;
 using Pomdog::Detail::GL4::GraphicsDeviceGL4;

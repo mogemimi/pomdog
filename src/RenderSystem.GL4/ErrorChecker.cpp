@@ -2,8 +2,8 @@
 
 #include "ErrorChecker.hpp"
 #include "OpenGLPrerequisites.hpp"
-#include "Pomdog/Utility/detail/Tagged.hpp"
 #include "Pomdog/Logging/Log.hpp"
+#include "Pomdog/Utility/detail/Tagged.hpp"
 #include <sstream>
 
 namespace Pomdog {

@@ -2,17 +2,17 @@
 
 #include "Pomdog/Content/detail/AssetLoaders/AudioClipLoader.hpp"
 #include "../Utility/MSWaveAudioLoader.hpp"
-#include "Pomdog/Content/detail/AssetLoaderContext.hpp"
+#include "Pomdog/Audio/AudioClip.hpp"
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
 #include "Pomdog/Content/Utility/MakeFourCC.hpp"
-#include "Pomdog/Audio/AudioClip.hpp"
+#include "Pomdog/Content/detail/AssetLoaderContext.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include <fstream>
-#include <vector>
-#include <utility>
-#include <string>
 #include <memory>
+#include <string>
+#include <utility>
+#include <vector>
 
 namespace Pomdog {
 namespace Detail {

@@ -2,14 +2,14 @@
 
 #pragma once
 
-#include "Pomdog/Content/AssetBuilders/Builder.hpp"
-#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
-#include "Pomdog/Graphics/ShaderPipelineStage.hpp"
 #include "Pomdog/Basic/Export.hpp"
-#include <cstdint>
+#include "Pomdog/Content/AssetBuilders/Builder.hpp"
+#include "Pomdog/Graphics/ShaderPipelineStage.hpp"
+#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <cstddef>
-#include <string>
+#include <cstdint>
 #include <memory>
+#include <string>
 
 namespace Pomdog {
 

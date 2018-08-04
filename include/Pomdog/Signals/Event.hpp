@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include "Pomdog/Signals/detail/EventBody.hpp"
 #include "Pomdog/Basic/Export.hpp"
+#include "Pomdog/Signals/detail/EventBody.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include <memory>
 #include <type_traits>
 #include <utility>
-#include <memory>
 
 namespace Pomdog {
 

@@ -5,8 +5,8 @@
 #include "PrerequisitesOpenAL.hpp"
 #include "../Utility/Noncopyable.hpp"
 #include "Pomdog/Utility/Optional.hpp"
-#include <cstdint>
 #include <cstddef>
+#include <cstdint>
 
 namespace Pomdog {
 

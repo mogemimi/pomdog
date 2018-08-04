@@ -2,9 +2,9 @@
 
 #pragma once
 
+#include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Signals/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Basic/Export.hpp"
 #include <algorithm>
 #include <cstdint>
 #include <functional>

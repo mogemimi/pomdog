@@ -6,8 +6,8 @@
 #include "Pomdog/Experimental/TexturePacker/TextureRegion.hpp"
 #include <cstdint>
 #include <string>
-#include <vector>
 #include <utility>
+#include <vector>
 
 namespace Pomdog {
 namespace TexturePacker {

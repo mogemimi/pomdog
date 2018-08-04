@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "Pomdog/Signals/EventQueue.hpp"
 #include "Pomdog/Application/GameHost.hpp"
+#include "Pomdog/Signals/EventQueue.hpp"
 #include <memory>
 
 #import <MetalKit/MTKView.h>

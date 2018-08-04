@@ -2,14 +2,14 @@
 
 #include "GameWindowWin32.hpp"
 #include "../Application/SystemEvents.hpp"
-#include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Application/MouseCursor.hpp"
+#include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Optional.hpp"
 #include <objbase.h>
-#include <string>
 #include <array>
+#include <string>
 
 namespace Pomdog {
 namespace Detail {

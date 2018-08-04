@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
 #include "KeyboardWin32.hpp"
-#include "Pomdog/Input/Keys.hpp"
 #include "Pomdog/Input/KeyState.hpp"
+#include "Pomdog/Input/Keys.hpp"
 #include "Pomdog/Utility/Optional.hpp"
 
 namespace Pomdog {

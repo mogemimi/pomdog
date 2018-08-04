@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Application/Duration.hpp"
+#include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Signals/ScopedConnection.hpp"
 #include "Pomdog/Signals/Signal.hpp"
 #include "Pomdog/Utility/Optional.hpp"

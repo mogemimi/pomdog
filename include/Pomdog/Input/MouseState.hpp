@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "Pomdog/Input/ButtonState.hpp"
 #include "Pomdog/Basic/Export.hpp"
+#include "Pomdog/Input/ButtonState.hpp"
 #include "Pomdog/Math/Point2D.hpp"
 #include <cstdint>
 

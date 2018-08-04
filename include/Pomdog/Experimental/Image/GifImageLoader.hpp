@@ -5,8 +5,8 @@
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Experimental/Image/GifImage.hpp"
 #include "Pomdog/Utility/Optional.hpp"
-#include <vector>
 #include <string>
+#include <vector>
 
 namespace Pomdog {
 

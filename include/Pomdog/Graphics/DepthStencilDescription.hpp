@@ -2,9 +2,9 @@
 
 #pragma once
 
+#include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Graphics/ComparisonFunction.hpp"
 #include "Pomdog/Graphics/DepthStencilOperation.hpp"
-#include "Pomdog/Basic/Export.hpp"
 #include <cstdint>
 #include <limits>
 

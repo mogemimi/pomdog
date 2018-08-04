@@ -6,18 +6,18 @@
 #include "Pomdog/Utility/Exception.hpp"
 
 #if (_WIN32_WINNT >= 0x0602 /*_WIN32_WINNT_WIN8*/) && !defined(__cplusplus_winrt)
-#include <wrl/wrappers/corewrappers.h>
-#include <wrl/client.h>
-#include <wrl/event.h>
 #include <Windows.Devices.Enumeration.h>
 #include <Windows.Foundation.Collections.h>
-#pragma comment(lib,"runtimeobject.lib")
+#include <wrl/client.h>
+#include <wrl/event.h>
+#include <wrl/wrappers/corewrappers.h>
+#pragma comment(lib, "runtimeobject.lib")
 #endif
 
-#include <vector>
+#include <algorithm>
 #include <string>
 #include <utility>
-#include <algorithm>
+#include <vector>
 
 namespace Pomdog {
 namespace Detail {

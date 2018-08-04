@@ -5,6 +5,6 @@
 #if defined(_XBOX_ONE) && defined(_TITLE)
 #include <d3dcompiler_x.h>
 #else
-#include <d3dcompiler.h>
 #include <d3dcommon.h>
+#include <d3dcompiler.h>
 #endif

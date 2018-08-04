@@ -2,12 +2,12 @@
 
 #pragma once
 
+#include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Signals/Connection.hpp"
 #include "Pomdog/Signals/Signal.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Basic/Export.hpp"
-#include <utility>
 #include <memory>
+#include <utility>
 
 namespace Pomdog {
 namespace Signals {

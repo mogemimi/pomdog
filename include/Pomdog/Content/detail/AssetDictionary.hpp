@@ -2,15 +2,15 @@
 
 #pragma once
 
-#include "Pomdog/Content/detail/AssetLoaders/AudioClipLoader.hpp"
 #include "AssetLoaders/Texture2DLoader.hpp"
+#include "Pomdog/Content/detail/AssetLoaders/AudioClipLoader.hpp"
 #include "Pomdog/Utility/Any.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include <unordered_map>
+#include <memory>
+#include <string>
 #include <typeindex>
 #include <typeinfo>
-#include <string>
-#include <memory>
+#include <unordered_map>
 
 namespace Pomdog {
 namespace Detail {

@@ -6,10 +6,10 @@
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Utility/Optional.hpp"
-#include <memory>
-#include <vector>
 #import <Metal/Metal.h>
 #import <MetalKit/MetalKit.h>
+#include <memory>
+#include <vector>
 
 namespace Pomdog {
 namespace Detail {

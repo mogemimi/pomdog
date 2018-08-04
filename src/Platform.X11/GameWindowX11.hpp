@@ -4,10 +4,10 @@
 
 #include "Pomdog/Application/GameWindow.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
-#include <X11/Xlib.h>
 #include <GL/glx.h>
-#include <string>
+#include <X11/Xlib.h>
 #include <memory>
+#include <string>
 
 namespace Pomdog {
 namespace Detail {

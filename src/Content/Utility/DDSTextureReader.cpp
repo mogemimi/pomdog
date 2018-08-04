@@ -4,10 +4,10 @@
 #include "../../Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
 #include "Pomdog/Content/Utility/MakeFourCC.hpp"
+#include "Pomdog/Graphics/SurfaceFormat.hpp"
+#include "Pomdog/Graphics/Texture2D.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
-#include "Pomdog/Graphics/Texture2D.hpp"
-#include "Pomdog/Graphics/SurfaceFormat.hpp"
 
 namespace Pomdog {
 namespace Detail {

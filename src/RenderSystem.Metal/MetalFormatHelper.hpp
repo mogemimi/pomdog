@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "Pomdog/Utility/Optional.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Utility/Optional.hpp"
 #import <Metal/MTLTexture.h>
 
 namespace Pomdog {
