@@ -16,8 +16,10 @@ namespace Detail {
 
 template <typename T>
 FloatingPointVector2<T>::FloatingPointVector2(T x, T y) noexcept
-    : X(x), Y(y)
-{}
+    : X(x)
+    , Y(y)
+{
+}
 
 template <typename T>
 FloatingPointVector2<T>& FloatingPointVector2<T>::operator+=(const FloatingPointVector2& other) noexcept

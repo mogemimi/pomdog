@@ -15,13 +15,21 @@ namespace Detail {
 
 template <typename T>
 FloatingPointVector4<T>::FloatingPointVector4(const FloatingPointVector3<T>& xyz, T w) noexcept
-    : X(xyz.X), Y(xyz.Y), Z(xyz.Z), W(w)
-{}
+    : X(xyz.X)
+    , Y(xyz.Y)
+    , Z(xyz.Z)
+    , W(w)
+{
+}
 
 template <typename T>
 FloatingPointVector4<T>::FloatingPointVector4(T x, T y, T z, T w) noexcept
-    : X(x), Y(y), Z(z), W(w)
-{}
+    : X(x)
+    , Y(y)
+    , Z(z)
+    , W(w)
+{
+}
 
 template <typename T>
 FloatingPointVector4<T> & FloatingPointVector4<T>::operator+=(const FloatingPointVector4& other) noexcept

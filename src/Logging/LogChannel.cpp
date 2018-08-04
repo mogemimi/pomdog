@@ -10,7 +10,8 @@ namespace Pomdog {
 LogChannel::LogChannel(const std::string& channnelName)
     : name(channnelName)
     , level(LogLevel::Verbose)
-{}
+{
+}
 
 void LogChannel::Log(const std::string& message, LogLevel verbosity)
 {

@@ -10,8 +10,10 @@ namespace Pomdog {
 constexpr int BoundingBox2D::CornerCount;
 
 BoundingBox2D::BoundingBox2D(const Vector2& minIn, const Vector2& maxIn)
-    : Min(minIn), Max(maxIn)
-{}
+    : Min(minIn)
+    , Max(maxIn)
+{
+}
 
 bool BoundingBox2D::operator==(const BoundingBox2D& box) const noexcept
 {

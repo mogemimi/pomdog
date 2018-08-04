@@ -62,13 +62,15 @@ public:
         : source(nullptr)
         , startPos(std::string::npos)
         , endPos(std::string::npos)
-    {}
+    {
+    }
 
     PathIterator(const std::string& path_, std::string::size_type start_, std::string::size_type end_)
         : source(&path_)
         , startPos(start_)
         , endPos(end_)
-    {}
+    {
+    }
 
     std::string operator*() const
     {

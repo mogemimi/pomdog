@@ -9,8 +9,10 @@ namespace Detail {
 
 template <typename T>
 Coordinate2D<T>::Coordinate2D(T x, T y) noexcept
-    : X(x), Y(y)
-{}
+    : X(x)
+    , Y(y)
+{
+}
 
 template <typename T>
 Coordinate2D<T> & Coordinate2D<T>::operator+=(const Coordinate2D& other) noexcept

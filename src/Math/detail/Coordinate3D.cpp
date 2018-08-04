@@ -9,8 +9,11 @@ namespace Detail {
 
 template <typename T>
 Coordinate3D<T>::Coordinate3D(T x, T y, T z) noexcept
-    : X(x), Y(y), Z(z)
-{}
+    : X(x)
+    , Y(y)
+    , Z(z)
+{
+}
 
 template <typename T>
 Coordinate3D<T> & Coordinate3D<T>::operator+=(const Coordinate3D& other) noexcept

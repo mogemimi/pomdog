@@ -582,7 +582,8 @@ template<> struct TypesafeHelperGL4::Traits<VertexArrayGL4> {
 
 InputLayoutGL4::InputLayoutGL4(const ShaderProgramGL4& shaderProgram)
     : InputLayoutGL4(shaderProgram, {})
-{}
+{
+}
 
 InputLayoutGL4::InputLayoutGL4(
     const ShaderProgramGL4& shaderProgram,

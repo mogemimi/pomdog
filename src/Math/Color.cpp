@@ -51,8 +51,12 @@ const Color Color::TransparentBlack{0, 0, 0, 0};
 
 Color::Color(
     std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a) noexcept
-    : R(r), G(g), B(b), A(a)
-{}
+    : R(r)
+    , G(g)
+    , B(b)
+    , A(a)
+{
+}
 
 Color::Color(const Vector3& vector)
     : R(PackFromNormal(vector.X))

@@ -10,7 +10,8 @@ namespace Pomdog {
 
 EventQueue::EventQueue()
     : signalBody(std::make_shared<SignalBody>())
-{}
+{
+}
 
 Connection EventQueue::Connect(const std::function<void(const Event&)>& slot)
 {

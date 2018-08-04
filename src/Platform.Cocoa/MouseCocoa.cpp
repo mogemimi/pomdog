@@ -26,8 +26,9 @@ ButtonState ToButtonState(MouseButtonState mouseButtonState)
 } // unnamed namespace
 
 MouseCocoa::MouseCocoa()
-: scrollWheel(0)
-{}
+    : scrollWheel(0)
+{
+}
 
 MouseState MouseCocoa::GetState() const
 {

@@ -123,7 +123,8 @@ public:
         const std::shared_ptr<GraphicsContextDirect3D11>& graphicsContextIn)
         : graphicsDevice(graphicsDeviceIn)
         , graphicsContext(graphicsContextIn)
-    {}
+    {
+    }
 
     void OnClientSizeChanged(int width, int height)
     {
@@ -475,7 +476,8 @@ GameHostWin32::GameHostWin32(
         gamepad,
         presentationParameters,
         useOpenGL))
-{}
+{
+}
 
 GameHostWin32::~GameHostWin32() = default;
 

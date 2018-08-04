@@ -17,8 +17,12 @@ namespace Detail {
 
 template <typename T>
 FloatingPointQuaternion<T>::FloatingPointQuaternion(T x, T y, T z, T w) noexcept
-    : X(x), Y(y), Z(z), W(w)
-{}
+    : X(x)
+    , Y(y)
+    , Z(z)
+    , W(w)
+{
+}
 
 template <typename T>
 FloatingPointQuaternion<T> & FloatingPointQuaternion<T>::operator+=(const FloatingPointQuaternion& other) noexcept

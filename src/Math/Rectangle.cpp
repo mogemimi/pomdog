@@ -11,7 +11,8 @@ Rectangle::Rectangle(std::int32_t x, std::int32_t y,
     , Y(y)
     , Width(width)
     , Height(height)
-{}
+{
+}
 
 Rectangle::Rectangle(const Point2D& position,
     std::int32_t width, std::int32_t height) noexcept
@@ -19,7 +20,8 @@ Rectangle::Rectangle(const Point2D& position,
     , Y(position.Y)
     , Width(width)
     , Height(height)
-{}
+{
+}
 
 bool Rectangle::operator==(const Rectangle& other) const noexcept
 {

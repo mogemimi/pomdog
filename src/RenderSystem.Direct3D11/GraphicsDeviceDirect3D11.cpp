@@ -308,7 +308,8 @@ void GraphicsDeviceDirect3D11::Impl::BuildDevice()
 
 GraphicsDeviceDirect3D11::GraphicsDeviceDirect3D11()
     : impl(std::make_unique<Impl>())
-{}
+{
+}
 
 GraphicsDeviceDirect3D11::~GraphicsDeviceDirect3D11() = default;
 

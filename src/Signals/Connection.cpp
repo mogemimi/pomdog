@@ -6,7 +6,8 @@ namespace Pomdog {
 
 Connection::Connection(std::unique_ptr<ConnectionBody> && bodyIn)
     : body(std::forward<std::unique_ptr<ConnectionBody>>(bodyIn))
-{}
+{
+}
 
 Connection::Connection(const Connection& connection)
 {

@@ -7,11 +7,13 @@ namespace Pomdog {
 
 ScopedConnection::ScopedConnection(const Connection& c)
     : connection(c)
-{}
+{
+}
 
 ScopedConnection::ScopedConnection(Connection && c)
     : connection(std::move(c))
-{}
+{
+}
 
 ScopedConnection::~ScopedConnection()
 {

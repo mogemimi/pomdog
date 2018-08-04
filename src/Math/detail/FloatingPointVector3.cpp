@@ -17,13 +17,19 @@ namespace Detail {
 
 template <typename T>
 FloatingPointVector3<T>::FloatingPointVector3(T x, T y, T z) noexcept
-    : X(x), Y(y), Z(z)
-{}
+    : X(x)
+    , Y(y)
+    , Z(z)
+{
+}
 
 template <typename T>
 FloatingPointVector3<T>::FloatingPointVector3(const FloatingPointVector2<T>& vec, T z) noexcept
-    : X(vec.X), Y(vec.Y), Z(z)
-{}
+    : X(vec.X)
+    , Y(vec.Y)
+    , Z(z)
+{
+}
 
 template <typename T>
 FloatingPointVector3<T> & FloatingPointVector3<T>::operator+=(const FloatingPointVector3& vec) noexcept

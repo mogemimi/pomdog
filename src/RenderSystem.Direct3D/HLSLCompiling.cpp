@@ -60,7 +60,8 @@ private:
 public:
     explicit HLSLCodeInclude(const std::string& curentDirectoryIn)
         : currentDirectory(curentDirectoryIn)
-    {}
+    {
+    }
 
     HRESULT __stdcall Open(D3D_INCLUDE_TYPE includeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID* ppData, UINT* pBytes)
     {
