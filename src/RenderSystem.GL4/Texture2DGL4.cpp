@@ -213,14 +213,14 @@ Texture2DGL4::Texture2DGL4(std::int32_t pixelWidth, std::int32_t pixelHeight,
     std::int32_t levelCount, SurfaceFormat format)
 {
     // Create Texture2D
-    textureObject = ([]{
+    textureObject = ([] {
         Texture2DObjectGL4 nativeTexture;
         glGenTextures(1, nativeTexture.Data());
         return nativeTexture;
     })();
 
     auto const prevTexture = TypesafeHelperGL4::Get<Texture2DObjectGL4>();
-    ScopeGuard scope([&prevTexture]{
+    ScopeGuard scope([&prevTexture] {
         TypesafeHelperGL4::BindTexture(prevTexture);
     });
 

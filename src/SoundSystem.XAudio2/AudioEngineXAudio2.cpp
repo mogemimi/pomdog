@@ -101,7 +101,7 @@ std::vector<AudioDeviceDetails> EnumerateAudioDevices()
     }
 
     auto callback = Callback<IAsyncOperationCompletedHandler<DeviceInformationCollection*>>(
-        [&findCompleted](IAsyncOperation<DeviceInformationCollection*>*, AsyncStatus)-> HRESULT {
+        [&findCompleted](IAsyncOperation<DeviceInformationCollection*>*, AsyncStatus) -> HRESULT {
             SetEvent(findCompleted.Get());
             return S_OK;
         });

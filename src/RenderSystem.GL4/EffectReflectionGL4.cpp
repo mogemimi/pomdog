@@ -86,25 +86,24 @@ std::vector<UniformVariableGL4> EnumerateUniformVariables(
     std::vector<UniformVariableGL4> uniforms(uniformIndices.size());
 
     GetActiveUniformsIntValue(shaderProgram, uniformIndices, GL_UNIFORM_OFFSET,
-        [&](GLsizei index, GLint value){ uniforms[index].StartOffset = value; });
+        [&](GLsizei index, GLint value) { uniforms[index].StartOffset = value; });
 
     GetActiveUniformsIntValue(shaderProgram, uniformIndices, GL_UNIFORM_SIZE,
-        [&](GLsizei index, GLint value){ uniforms[index].Elements = value; });
+        [&](GLsizei index, GLint value) { uniforms[index].Elements = value; });
 
     GetActiveUniformsIntValue(shaderProgram, uniformIndices, GL_UNIFORM_TYPE,
-        [&](GLsizei index, GLint value){ uniforms[index].Type = value; });
+        [&](GLsizei index, GLint value) { uniforms[index].Type = value; });
 
     GetActiveUniformsIntValue(shaderProgram, uniformIndices, GL_UNIFORM_ARRAY_STRIDE,
-        [&](GLsizei index, GLint value){ uniforms[index].ArrayStride = value; });
+        [&](GLsizei index, GLint value) { uniforms[index].ArrayStride = value; });
 
     GetActiveUniformsIntValue(shaderProgram, uniformIndices, GL_UNIFORM_MATRIX_STRIDE,
-        [&](GLsizei index, GLint value){ uniforms[index].MatrixStride = value; });
+        [&](GLsizei index, GLint value) { uniforms[index].MatrixStride = value; });
 
     GetActiveUniformsIntValue(shaderProgram, uniformIndices, GL_UNIFORM_IS_ROW_MAJOR,
-        [&](GLsizei index, GLint value){ uniforms[index].IsRowMajor = (value != 0); });
+        [&](GLsizei index, GLint value) { uniforms[index].IsRowMajor = (value != 0); });
 
-    GetActiveUniformsIntValue(shaderProgram, uniformIndices, GL_UNIFORM_NAME_LENGTH, [&](GLsizei index, GLint value)
-    {
+    GetActiveUniformsIntValue(shaderProgram, uniformIndices, GL_UNIFORM_NAME_LENGTH, [&](GLsizei index, GLint value) {
         std::vector<GLchar> uniformName(value + 1, '\0');
         GLsizei uniformNameLength = 0;
         glGetActiveUniformName(shaderProgram.value, uniformIndices[index], value, &uniformNameLength, uniformName.data());
@@ -236,7 +235,7 @@ std::vector<UniformGL4> EnumerateUniforms(const ShaderProgramGL4& shaderProgram)
 
     ///@todo Replace the following code by GL_ARB_shading_language_420pack on OpenGL 4.2+:
     std::sort(std::begin(uniformVariables), std::end(uniformVariables),
-        [](const UniformGL4& a, const UniformGL4& b){ return a.Name < b.Name; });
+        [](const UniformGL4& a, const UniformGL4& b) { return a.Name < b.Name; });
 
     return uniformVariables;
 }

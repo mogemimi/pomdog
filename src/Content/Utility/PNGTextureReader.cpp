@@ -139,7 +139,7 @@ Texture2DParsingData ReadPNG(const std::uint8_t* data, std::size_t byteLength)
     Texture2DParsingData parsingData;
     parsingData.Width = pixelWidth;
     parsingData.Height = pixelHeight;
-    parsingData.Format = ([](::png_byte colorTypeIn)-> SurfaceFormat {
+    parsingData.Format = ([](::png_byte colorTypeIn) -> SurfaceFormat {
         POMDOG_ASSERT(colorTypeIn != PNG_COLOR_TYPE_RGB);
         switch (colorTypeIn) {
         case PNG_COLOR_TYPE_GRAY:

@@ -132,7 +132,7 @@ void ApplyTexture2D(int index, const Texture2DObjectGL4& textureObject)
 {
 #if defined(DEBUG) && !defined(NDEBUG)
     {
-        static const auto MaxCombinedTextureImageUnits = ([]{
+        static const auto MaxCombinedTextureImageUnits = ([] {
             GLint units = 0;
             glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &units);
             return units;
