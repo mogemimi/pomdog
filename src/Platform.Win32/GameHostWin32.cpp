@@ -37,8 +37,8 @@
 #include <thread>
 #include <chrono>
 
-using Pomdog::Detail::Win32::GameWindowWin32;
 using Pomdog::Detail::InputSystem::NativeGamepad;
+using Pomdog::Detail::Win32::GameWindowWin32;
 #if !defined(POMDOG_DISABLE_DIRECT3D11)
 using Pomdog::Detail::Direct3D11::GraphicsContextDirect3D11;
 using Pomdog::Detail::Direct3D11::GraphicsDeviceDirect3D11;
@@ -81,8 +81,8 @@ CreateGraphicsDeviceResult CreateGraphicsDeviceGL4(
     const std::shared_ptr<GameWindowWin32>& window,
     const PresentationParameters& presentationParameters)
 {
-    using Pomdog::Detail::GL4::GraphicsDeviceGL4;
     using Pomdog::Detail::GL4::GraphicsContextGL4;
+    using Pomdog::Detail::GL4::GraphicsDeviceGL4;
 
     auto openGLContext = std::make_shared<Win32::OpenGLContextWin32>(
         window->NativeWindowHandle(), presentationParameters);

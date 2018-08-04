@@ -11,8 +11,8 @@ namespace Detail {
 namespace Direct3D11 {
 namespace {
 
-using Microsoft::WRL::ComPtr;
 using DXGI::DXGIFormatHelper;
+using Microsoft::WRL::ComPtr;
 
 void BuildRenderTarget(
     ID3D11Device* device,
