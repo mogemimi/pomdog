@@ -63,7 +63,6 @@ Texture2DVulkan::Texture2DVulkan(
     imageCreateInfo.pQueueFamilyIndices = nullptr;
     imageCreateInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 
-
     // FUS RO DAH!
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 

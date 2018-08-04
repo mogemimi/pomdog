@@ -113,7 +113,6 @@ private:
     std::int32_t nestedMethodCallCount = 0;
 };
 
-
 template <typename...Arguments>
 template <typename Function>
 auto SignalBody<void(Arguments...)>::Connect(Function && slot)
