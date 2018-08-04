@@ -42,7 +42,7 @@ public:
         return ptr;
     }
 
-    static void operator delete(void * ptr)
+    static void operator delete(void* ptr)
     {
 #if defined(_MSC_VER)
         ::_aligned_free(ptr);
@@ -57,7 +57,7 @@ public:
         return operator new(size);
     }
 
-    static void operator delete[](void * ptr)
+    static void operator delete[](void* ptr)
     {
         operator delete(ptr);
     }

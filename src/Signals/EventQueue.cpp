@@ -43,7 +43,7 @@ void EventQueue::Emit()
         std::swap(notifications, events);
     }
 
-    for (auto & event: notifications) {
+    for (auto& event : notifications) {
         signalBody->operator()(event);
     }
 }

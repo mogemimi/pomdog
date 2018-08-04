@@ -17,7 +17,7 @@ public:
         ID3D11Device* device,
         const PipelineStateDescription& description);
 
-    void Apply(ID3D11DeviceContext * deviceContext, FLOAT const blendFactor[4]);
+    void Apply(ID3D11DeviceContext* deviceContext, FLOAT const blendFactor[4]);
 
 private:
     Microsoft::WRL::ComPtr<ID3D11VertexShader> vertexShader;

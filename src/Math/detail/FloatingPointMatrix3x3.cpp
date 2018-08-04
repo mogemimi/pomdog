@@ -590,7 +590,7 @@ FloatingPointMatrix3x3<T>::CreateFromAxisAngle(const FloatingPointVector3<T>& ax
     auto const sinAngle = std::sin(angle.value);
     auto const cosAngle = std::cos(angle.value);
 
-    auto const t  = T{1} - cosAngle;
+    auto const t = T{1} - cosAngle;
     auto const xx = axis.X * axis.X;
     auto const yy = axis.Y * axis.Y;
     auto const zz = axis.Z * axis.Z;

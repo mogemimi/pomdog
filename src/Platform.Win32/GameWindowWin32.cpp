@@ -20,7 +20,7 @@ template <typename T>
 LPTSTR MakeIntegerResource(T && resource) noexcept
 {
 #pragma warning(push)
-#pragma warning(disable:4302)
+#pragma warning(disable : 4302)
     return MAKEINTRESOURCE(std::forward<T>(resource));
 #pragma warning(pop)
 }
