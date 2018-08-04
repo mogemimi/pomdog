@@ -14,7 +14,7 @@ namespace Detail {
 namespace {
 
 #if defined(POMDOG_COMPILER_MSVC)
-#pragma pack(push,1)
+#pragma pack(push, 1)
 #endif
 
 #if defined(POMDOG_DETAIL_PACKED)

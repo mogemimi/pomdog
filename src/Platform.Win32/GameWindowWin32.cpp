@@ -430,7 +430,7 @@ LRESULT CALLBACK GameWindowWin32::Impl::WindowProcedure(
         return 0;
     }
     case WM_SETCURSOR: {
-        auto hitTest= lParam & 0xffff;
+        auto hitTest = lParam & 0xffff;
         if (hitTest == HTCLIENT && window->gameCursor) {
             SetCursor(*window->gameCursor);
             return FALSE;

@@ -31,7 +31,7 @@ bool IsPNGFormat(const std::array<std::uint8_t, 8>& signature)
 
 bool IsDDSFormat(const std::array<std::uint8_t, 8>& signature)
 {
-    constexpr auto fourCC = MakeFourCC('D','D','S',' ');
+    constexpr auto fourCC = MakeFourCC('D', 'D', 'S', ' ');
     static_assert(fourCC == 0x20534444, "The four character code value is 'DDS '");
     return (MakeFourCC(signature[0], signature[1], signature[2], signature[3]) == fourCC);
 }

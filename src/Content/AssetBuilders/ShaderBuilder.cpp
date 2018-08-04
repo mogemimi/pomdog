@@ -66,7 +66,7 @@ Optional<std::string> IncludeGLSLFilesRecursive(
             continue;
         }
 
-        auto includePath = PathHelper::Join(currentDirectory,  match[1]);
+        auto includePath = PathHelper::Join(currentDirectory, match[1]);
         if (includes.find(includePath) == includes.end()) {
             includes.insert(includePath);
             auto result = IncludeGLSLFilesRecursive(includePath, includes);

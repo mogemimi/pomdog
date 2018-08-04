@@ -75,7 +75,7 @@ float Plane::DotCoordinate(const Vector3& vec) const noexcept
 
 float Plane::DotNormal(const Vector3& vec) const noexcept
 {
-    return  Vector3::Dot(this->Normal, vec);
+    return Vector3::Dot(this->Normal, vec);
 }
 
 float Plane::GetDistanceToPoint(const Vector3& point) const noexcept

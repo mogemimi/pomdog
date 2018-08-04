@@ -46,7 +46,7 @@ const Color Color::Red{255, 0, 0, 255};
 const Color Color::Green{0, 255, 0, 255};
 const Color Color::Blue{0, 0, 255, 255};
 const Color Color::Yellow{255, 255, 0, 255};
-const Color Color::CornflowerBlue{100, 149 ,237, 255};
+const Color Color::CornflowerBlue{100, 149, 237, 255};
 const Color Color::TransparentBlack{0, 0, 0, 0};
 
 Color::Color(
