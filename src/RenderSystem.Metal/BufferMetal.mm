@@ -102,8 +102,8 @@ void BufferMetal::GetData(
     std::size_t sizeInBytes) const
 {
     POMDOG_ASSERT(nativeBuffer != nil);
-    auto source = [nativeBuffer contents];
-    std::memcpy(destination, source, sizeInBytes);
+    auto source = reinterpret_cast<const uint8_t*>([nativeBuffer contents]);
+    std::memcpy(destination, source + offsetInBytes, sizeInBytes);
 }
 
 void BufferMetal::SetData(
