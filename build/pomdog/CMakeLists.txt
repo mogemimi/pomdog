@@ -782,7 +782,6 @@ if ((CMAKE_CXX_COMPILER_ID MATCHES "Clang") OR (CMAKE_CXX_COMPILER_ID MATCHES "G
   target_compile_options(pomdog_static PRIVATE
     -Wall
     -Werror
-    -Wextra
     -Wimplicit-fallthrough
     "$<$<CONFIG:DEBUG>:-g;-O0>"
     "$<$<CONFIG:RELEASE>:-O3>"
@@ -794,6 +793,15 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     -Wcomma
     -Wextra-semi
     -Wmost
+
+    # FIXME: Use -Wextra instead of the following options.
+    -Wignored-qualifiers
+    -Winitializer-overrides
+    -Wmissing-field-initializers
+    -Wmissing-method-return-type
+    -Wsemicolon-before-method-body
+    -Wsign-compare
+    # -Wunused-parameter
   )
 endif()
 
