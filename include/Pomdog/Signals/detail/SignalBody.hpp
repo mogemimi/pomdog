@@ -40,12 +40,14 @@ public:
     ConnectionBodyOverride(WeakSignal && weakSignalIn, WeakSlot && weakSlotIn)
         : weakSignal(std::forward<WeakSignal>(weakSignalIn))
         , weakSlot(std::forward<WeakSlot>(weakSlotIn))
-    {}
+    {
+    }
 
     ConnectionBodyOverride(const WeakSignal& weakSignalIn, const WeakSlot& weakSlotIn)
         : weakSignal(weakSignalIn)
         , weakSlot(weakSlotIn)
-    {}
+    {
+    }
 
     void Disconnect() override
     {

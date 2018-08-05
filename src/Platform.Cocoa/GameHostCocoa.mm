@@ -491,7 +491,8 @@ GameHostCocoa::GameHostCocoa(
     const std::shared_ptr<EventQueue>& eventQueue,
     const PresentationParameters& presentationParameters)
     : impl(std::make_unique<Impl>(openGLView, window, eventQueue, presentationParameters))
-{}
+{
+}
 
 GameHostCocoa::~GameHostCocoa() = default;
 

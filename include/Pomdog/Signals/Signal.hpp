@@ -36,7 +36,8 @@ private:
 template <typename...Arguments>
 Signal<void(Arguments...)>::Signal()
     : body(std::make_shared<SignalBody>())
-{}
+{
+}
 
 template <typename...Arguments>
 Connection Signal<void(Arguments...)>::Connect(

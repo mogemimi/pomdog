@@ -56,7 +56,8 @@ ConstantBuffer::ConstantBuffer(
     std::size_t sizeInBytesIn,
     BufferUsage bufferUsageIn)
     : ConstantBuffer(*graphicsDevice, sizeInBytesIn, bufferUsageIn)
-{}
+{
+}
 
 ConstantBuffer::ConstantBuffer(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
@@ -64,7 +65,8 @@ ConstantBuffer::ConstantBuffer(
     std::size_t sizeInBytesIn,
     BufferUsage bufferUsageIn)
     : ConstantBuffer(*graphicsDevice, sourceData, sizeInBytesIn, bufferUsageIn)
-{}
+{
+}
 
 ConstantBuffer::~ConstantBuffer() = default;
 

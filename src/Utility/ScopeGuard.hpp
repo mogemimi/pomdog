@@ -17,11 +17,13 @@ public:
 
     explicit ScopeGuard(const std::function<void()>& f)
         : func(f)
-    {}
+    {
+    }
 
     explicit ScopeGuard(std::function<void()> && f)
         : func(std::move(f))
-    {}
+    {
+    }
 
     ~ScopeGuard()
     {

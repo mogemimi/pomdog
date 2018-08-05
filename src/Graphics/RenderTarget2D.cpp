@@ -22,7 +22,8 @@ RenderTarget2D::RenderTarget2D(
         false,
         SurfaceFormat::R8G8B8A8_UNorm,
         DepthFormat::None)
-{}
+{
+}
 
 RenderTarget2D::RenderTarget2D(
     GraphicsDevice & graphicsDevice,
@@ -63,7 +64,8 @@ RenderTarget2D::RenderTarget2D(
         false,
         SurfaceFormat::R8G8B8A8_UNorm,
         DepthFormat::None)
-{}
+{
+}
 
 RenderTarget2D::RenderTarget2D(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
@@ -79,7 +81,8 @@ RenderTarget2D::RenderTarget2D(
         generateMipmap,
         formatIn,
         depthStencilFormatIn)
-{}
+{
+}
 
 RenderTarget2D::~RenderTarget2D() = default;
 

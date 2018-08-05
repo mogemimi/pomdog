@@ -203,7 +203,8 @@ private:
 public:
     TaskCompletionSource()
         : body(std::make_shared<Detail::TaskBody<TResult>>())
-    {}
+    {
+    }
 
     void SetResult(const TResult& result) const
     {
@@ -229,7 +230,8 @@ private:
 public:
     TaskCompletionSource()
         : body(std::make_shared<Detail::TaskBody<void>>())
-    {}
+    {
+    }
 
     void SetResult() const
     {
@@ -255,7 +257,8 @@ private:
 public:
     Task()
         : body(std::make_shared<Detail::TaskBody<TResult>>())
-    {}
+    {
+    }
 
     explicit Task(const TaskCompletionSource<TResult>& tcs)
         : body(tcs.body)

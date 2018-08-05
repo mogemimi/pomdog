@@ -7,7 +7,8 @@ namespace Pomdog {
 
 AssetManager::AssetManager(Detail::AssetLoaderContext && loaderContextIn)
     : loaderContext(std::move(loaderContextIn))
-{}
+{
+}
 
 void AssetManager::Unload()
 {

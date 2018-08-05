@@ -26,7 +26,8 @@ GraphicsCommandList::GraphicsCommandList(GraphicsDevice & graphicsDevice)
 
 GraphicsCommandList::GraphicsCommandList(const std::shared_ptr<GraphicsDevice>& graphicsDevice)
     : GraphicsCommandList(*graphicsDevice)
-{}
+{
+}
 
 GraphicsCommandList::~GraphicsCommandList() = default;
 

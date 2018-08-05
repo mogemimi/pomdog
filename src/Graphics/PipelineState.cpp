@@ -23,7 +23,8 @@ PipelineState::PipelineState(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
     const PipelineStateDescription& description)
     : PipelineState(*graphicsDevice, description)
-{}
+{
+}
 
 PipelineState::~PipelineState() = default;
 

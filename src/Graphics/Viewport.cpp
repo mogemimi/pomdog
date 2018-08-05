@@ -17,7 +17,8 @@ Viewport::Viewport(const Rectangle& bounds) noexcept
     , Height(bounds.Height)
     , MinDepth(0.0f)
     , MaxDepth(1.0f)
-{}
+{
+}
 
 Viewport::Viewport(int xIn, int yIn, int widthIn, int heightIn) noexcept
     : TopLeftX(xIn)
@@ -26,7 +27,8 @@ Viewport::Viewport(int xIn, int yIn, int widthIn, int heightIn) noexcept
     , Height(heightIn)
     , MinDepth(0.0f)
     , MaxDepth(1.0f)
-{}
+{
+}
 
 Viewport::Viewport(int xIn, int yIn, int widthIn, int heightIn,
     float minDepthIn, float maxDepthIn) noexcept
@@ -36,7 +38,8 @@ Viewport::Viewport(int xIn, int yIn, int widthIn, int heightIn,
     , Height(heightIn)
     , MinDepth(minDepthIn)
     , MaxDepth(maxDepthIn)
-{}
+{
+}
 
 Vector3 Viewport::Project(
     const Vector3& source,

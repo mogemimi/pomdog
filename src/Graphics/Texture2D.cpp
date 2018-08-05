@@ -16,7 +16,8 @@ Texture2D::Texture2D(
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn)
     : Texture2D(graphicsDevice, pixelWidthIn, pixelHeightIn, false, SurfaceFormat::R8G8B8A8_UNorm)
-{}
+{
+}
 
 Texture2D::Texture2D(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,

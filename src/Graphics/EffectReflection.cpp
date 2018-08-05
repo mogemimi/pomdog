@@ -33,7 +33,8 @@ EffectReflection::EffectReflection(
         *graphicsDevice,
         pipelineStateDescription,
         pipelineState)
-{}
+{
+}
 
 EffectReflection::~EffectReflection() = default;
 

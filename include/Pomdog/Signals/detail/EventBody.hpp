@@ -44,7 +44,8 @@ public:
     template <typename...Arguments>
     explicit EventBodyOverride(Arguments &&...argument)
         : data(std::forward<Arguments>(argument)...)
-    {}
+    {
+    }
 
     std::size_t HashCode() const noexcept override
     {

@@ -456,7 +456,8 @@ GameHostMetal::GameHostMetal(
     const std::shared_ptr<EventQueue>& eventQueue,
     const PresentationParameters& presentationParameters)
     : impl(std::make_unique<Impl>(metalView, window, eventQueue, presentationParameters))
-{}
+{
+}
 
 GameHostMetal::~GameHostMetal() = default;
 

@@ -29,10 +29,14 @@ public:
     Tagged & operator=(Tagged &&) = default;
 
     Tagged(const value_type& v)
-        : value(v) {}
+        : value(v)
+    {
+    }
 
     Tagged(value_type && v)
-        : value(std::move(v)) {}
+        : value(std::move(v))
+    {
+    }
 
     constexpr const T* Data() const noexcept
     {

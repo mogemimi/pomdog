@@ -32,7 +32,8 @@ public:
 
     TaggedArithmetic(T v) noexcept
         : value(v)
-    {}
+    {
+    }
 
     // Assignment operators:
     TaggedArithmetic & operator+=(const TaggedArithmetic& v) noexcept
