@@ -299,8 +299,7 @@ void GraphicsContextMetal::SetVertexBuffers(const std::vector<VertexBufferBindin
     POMDOG_ASSERT(!vertexBuffers.empty());
 
     NSUInteger atIndex = 0;
-    for (auto & binding: vertexBuffers)
-    {
+    for (auto& binding : vertexBuffers) {
         auto & vertexBuffer = binding.VertexBuffer;
 
         POMDOG_ASSERT(vertexBuffer);
@@ -529,7 +528,7 @@ void GraphicsContextMetal::SetRenderPass(const RenderPass& renderPass)
         commandEncoder = nil;
     }
 
-     // Create a render command encoder so we can render into something
+    // Create a render command encoder so we can render into something
     commandEncoder = [commandBuffer renderCommandEncoderWithDescriptor:renderPassDescriptor];
     commandEncoder.label = @"PomdogRenderEncoder";
     [commandEncoder pushDebugGroup:@"PomdogDraw"];

@@ -88,7 +88,7 @@ SamplerStateMetal::SamplerStateMetal(id<MTLDevice> device, const SamplerDescript
 
     samplerState = [device newSamplerStateWithDescriptor:descriptor];
     if (samplerState == nil) {
-     // FUS RO DAH!
+        // FUS RO DAH!
         POMDOG_THROW_EXCEPTION(std::runtime_error,
             "Failed to create MTLSamplerState.");
     }

@@ -69,7 +69,7 @@ BufferMetal::BufferMetal(
     nativeBuffer = [device newBufferWithLength:alignedSize
         options:ToResourceOptions(bufferUsage)];
 
-   if (nativeBuffer == nil) {
+    if (nativeBuffer == nil) {
         // FUS RO DAH!
         POMDOG_THROW_EXCEPTION(std::runtime_error,
             "Failed to create MTLBuffer");
@@ -90,7 +90,7 @@ BufferMetal::BufferMetal(
     nativeBuffer = [device newBufferWithLength:alignedSize
         options:ToResourceOptions(bufferUsage)];
 
-   if (nativeBuffer == nil) {
+    if (nativeBuffer == nil) {
         // FUS RO DAH!
         POMDOG_THROW_EXCEPTION(std::runtime_error,
             "Failed to create MTLBuffer");
