@@ -76,8 +76,7 @@ RenderTarget2DMetal::RenderTarget2DMetal(
         }
     }
 
-    if (depthStencilFormat != DepthFormat::None)
-    {
+    if (depthStencilFormat != DepthFormat::None) {
         MTLTextureDescriptor* descriptor = [MTLTextureDescriptor
             texture2DDescriptorWithPixelFormat:ToMTLPixelFormat(depthStencilFormat)
             width:pixelWidth

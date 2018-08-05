@@ -77,8 +77,7 @@ void Texture2DMetal::SetData(
     auto mipMapPixelHeight = pixelHeight;
     std::size_t startOffset = 0;
 
-    for (int mipmapLevel = 0; mipmapLevel < levelCount; ++mipmapLevel)
-    {
+    for (int mipmapLevel = 0; mipmapLevel < levelCount; ++mipmapLevel) {
         MTLRegion region = MTLRegionMake2D(0, 0, mipMapPixelWidth, mipMapPixelHeight);
 
         const auto bytesPerRow = mipMapPixelWidth * bytesPerPixel;

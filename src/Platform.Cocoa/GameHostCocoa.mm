@@ -383,24 +383,20 @@ void GameHostCocoa::Impl::DoEvents()
 
 void GameHostCocoa::Impl::ProcessSystemEvents(const Event& event)
 {
-    if (event.Is<WindowShouldCloseEvent>())
-    {
+    if (event.Is<WindowShouldCloseEvent>()) {
         Log::Internal("WindowShouldCloseEvent");
         this->Exit();
     }
-    else if (event.Is<WindowWillCloseEvent>())
-    {
+    else if (event.Is<WindowWillCloseEvent>()) {
         Log::Internal("WindowWillCloseEvent");
     }
-    else if (event.Is<ViewWillStartLiveResizeEvent>())
-    {
+    else if (event.Is<ViewWillStartLiveResizeEvent>()) {
         auto rect = window->GetClientBounds();
         Log::Internal(StringHelper::Format(
             "ViewWillStartLiveResizeEvent: {w: %d, h: %d}",
             rect.Width, rect.Height));
     }
-    else if (event.Is<ViewDidEndLiveResizeEvent>())
-    {
+    else if (event.Is<ViewDidEndLiveResizeEvent>()) {
         auto rect = window->GetClientBounds();
         Log::Internal(StringHelper::Format(
             "ViewDidEndLiveResizeEvent: {w: %d, h: %d}",
