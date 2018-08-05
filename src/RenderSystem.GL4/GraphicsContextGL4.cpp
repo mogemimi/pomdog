@@ -326,8 +326,9 @@ const GLvoid* ComputeStartIndexLocationPointer(
     IndexElementSize indexElementSize,
     std::size_t startIndexLocation) noexcept
 {
-    auto offset = startIndexLocation * Detail::BufferHelper::ToIndexElementOffsetBytes(indexElementSize);
-    return static_cast<const std::int8_t*>(nullptr) + offset;
+    using Detail::BufferHelper::ToIndexElementOffsetBytes;
+    auto offsetBytes = startIndexLocation * ToIndexElementOffsetBytes(indexElementSize);
+    return reinterpret_cast<const GLvoid*>(offsetBytes);
 }
 
 } // unnamed namespace

@@ -496,10 +496,10 @@ std::vector<InputElementGL4> BuildInputElements(
 }
 
 template <typename T>
-const GLubyte* ComputeBufferOffset(T const offsetBytes)
+const GLvoid* ComputeBufferOffset(T const offsetBytes)
 {
     static_assert(std::is_unsigned<T>::value, "T is unsigned type.");
-    return reinterpret_cast<const GLubyte*>(0) + offsetBytes;
+    return reinterpret_cast<const GLvoid*>(offsetBytes);
 }
 
 void ApplyInputElements(
