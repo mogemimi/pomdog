@@ -445,7 +445,7 @@ EffectVariableClass ToEffectVariableClass(GLenum uniformType)
 }
 
 // ToComponents returns RowCount and ColumnCount.
-std::tuple<std::uint8_t, std::uint8_t> ToComponents(GLenum uniformType)
+std::tuple<int, int> ToComponents(GLenum uniformType)
 {
     switch (uniformType) {
     case GL_FLOAT:
@@ -566,10 +566,11 @@ std::tuple<std::uint8_t, std::uint8_t> ToComponents(GLenum uniformType)
 EffectAnnotation ToEffectAnnotation(const UniformVariableGL4& uniform)
 {
     EffectAnnotation annotation;
-
     annotation.VariableType = ToEffectVariableType(uniform.Type);
     annotation.VariableClass = ToEffectVariableClass(uniform.Type);
-    std::tie(annotation.RowCount, annotation.ColumnCount) = ToComponents(uniform.Type);
+    const auto [rowCount, columnCount] = ToComponents(uniform.Type);
+    annotation.RowCount = static_cast<std::uint8_t>(rowCount);
+    annotation.ColumnCount = static_cast<std::uint8_t>(columnCount);
     annotation.Elements = (uniform.Elements > 1) ? static_cast<decltype(annotation.Elements)>(uniform.Elements): 0;
     POMDOG_ASSERT(annotation.Elements != 1);
     return annotation;
