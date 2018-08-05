@@ -299,11 +299,11 @@ void GameHostCocoa::Impl::Exit()
 }
 
 CVReturn GameHostCocoa::Impl::DisplayLinkCallback(
-    CVDisplayLinkRef displayLink,
-    const CVTimeStamp* now,
-    const CVTimeStamp* outputTime,
-    CVOptionFlags flagsIn,
-    CVOptionFlags* flagsOut,
+    [[maybe_unused]] CVDisplayLinkRef displayLink,
+    [[maybe_unused]] const CVTimeStamp* now,
+    [[maybe_unused]] const CVTimeStamp* outputTime,
+    [[maybe_unused]] CVOptionFlags flagsIn,
+    [[maybe_unused]] CVOptionFlags* flagsOut,
     void* displayLinkContext)
 {
     auto gameHost = reinterpret_cast<GameHostCocoa::Impl*>(displayLinkContext);
