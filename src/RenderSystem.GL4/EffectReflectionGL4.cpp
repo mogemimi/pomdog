@@ -9,6 +9,7 @@
 #include "Pomdog/Utility/StringHelper.hpp"
 #include <algorithm>
 #include <sstream>
+#include <tuple>
 #include <utility>
 
 namespace Pomdog {
@@ -443,7 +444,8 @@ EffectVariableClass ToEffectVariableClass(GLenum uniformType)
     return EffectVariableClass::Struct;
 }
 
-void ToComponents(GLenum uniformType, std::uint8_t & RowCount, std::uint8_t & ColumnCount)
+// ToComponents returns RowCount and ColumnCount.
+std::tuple<std::uint8_t, std::uint8_t> ToComponents(GLenum uniformType)
 {
     switch (uniformType) {
     case GL_FLOAT:
@@ -491,70 +493,74 @@ void ToComponents(GLenum uniformType, std::uint8_t & RowCount, std::uint8_t & Co
     case GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE_ARRAY:
     case GL_UNSIGNED_INT_SAMPLER_BUFFER:
     case GL_UNSIGNED_INT_SAMPLER_2D_RECT:
-        RowCount = 1; ColumnCount = 1;
+        return std::make_tuple(1, 1);
 
     case GL_FLOAT_VEC2:
     case GL_INT_VEC2:
     case GL_UNSIGNED_INT_VEC2:
     case GL_DOUBLE_VEC2:
     case GL_BOOL_VEC2:
-        RowCount = 1; ColumnCount = 2; return;
+        return std::make_tuple(1, 2);
 
     case GL_FLOAT_VEC3:
     case GL_INT_VEC3:
     case GL_UNSIGNED_INT_VEC3:
     case GL_DOUBLE_VEC3:
     case GL_BOOL_VEC3:
-        RowCount = 1; ColumnCount = 3; return;
+        return std::make_tuple(1, 3);
 
     case GL_FLOAT_VEC4:
     case GL_INT_VEC4:
     case GL_UNSIGNED_INT_VEC4:
     case GL_DOUBLE_VEC4:
     case GL_BOOL_VEC4:
-        RowCount = 1; ColumnCount = 4; return;
+        return std::make_tuple(1, 4);
 
     case GL_FLOAT_MAT2:
     case GL_DOUBLE_MAT2:
-        RowCount = 2; ColumnCount = 2; return;
+        return std::make_tuple(2, 2);
 
     case GL_FLOAT_MAT3:
     case GL_DOUBLE_MAT3:
-        RowCount = 3; ColumnCount = 3; return;
+        return std::make_tuple(3, 3);
 
     case GL_FLOAT_MAT4:
     case GL_DOUBLE_MAT4:
-        RowCount = 4; ColumnCount = 4; return;
+        return std::make_tuple(4, 4);
 
     case GL_FLOAT_MAT2x3:
     case GL_DOUBLE_MAT2x3:
-        RowCount = 2; ColumnCount = 3; return;
+        return std::make_tuple(2, 3);
 
     case GL_FLOAT_MAT3x2:
     case GL_DOUBLE_MAT3x2:
-        RowCount = 3; ColumnCount = 2; return;
+        return std::make_tuple(3, 2);
 
     case GL_FLOAT_MAT2x4:
     case GL_DOUBLE_MAT2x4:
-        RowCount = 2; ColumnCount = 4; return;
+        return std::make_tuple(2, 4);
 
     case GL_FLOAT_MAT4x2:
     case GL_DOUBLE_MAT4x2:
-        RowCount = 4; ColumnCount = 2; return;
+        return std::make_tuple(4, 2);
 
     case GL_FLOAT_MAT3x4:
     case GL_DOUBLE_MAT3x4:
-        RowCount = 3; ColumnCount = 4; return;
+        return std::make_tuple(3, 4);
 
     case GL_FLOAT_MAT4x3:
     case GL_DOUBLE_MAT4x3:
-        RowCount = 4; ColumnCount = 3; return;
+        return std::make_tuple(4, 3);
+    
+    default:
+        break;
     }
 
 #ifdef DEBUG
     Log::Internal(StringHelper::Format(
         "Failed to find uniform type '%d'.", uniformType));
 #endif
+    return std::make_tuple(1, 1);
 }
 
 EffectAnnotation ToEffectAnnotation(const UniformVariableGL4& uniform)
@@ -563,7 +569,7 @@ EffectAnnotation ToEffectAnnotation(const UniformVariableGL4& uniform)
 
     annotation.VariableType = ToEffectVariableType(uniform.Type);
     annotation.VariableClass = ToEffectVariableClass(uniform.Type);
-    ToComponents(uniform.Type, annotation.RowCount, annotation.ColumnCount);
+    std::tie(annotation.RowCount, annotation.ColumnCount) = ToComponents(uniform.Type);
     annotation.Elements = (uniform.Elements > 1) ? static_cast<decltype(annotation.Elements)>(uniform.Elements): 0;
     POMDOG_ASSERT(annotation.Elements != 1);
     return annotation;
