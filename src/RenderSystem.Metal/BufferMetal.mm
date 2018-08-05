@@ -2,11 +2,11 @@
 
 #include "BufferMetal.hpp"
 #include "Pomdog/Graphics/BufferUsage.hpp"
+#include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
-#include "Pomdog/Logging/Log.hpp"
-#include <cstring>
 #import <Metal/Metal.h>
+#include <cstring>
 
 namespace Pomdog {
 namespace Detail {

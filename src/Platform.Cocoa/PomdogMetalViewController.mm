@@ -5,13 +5,13 @@
 #include "GameHostMetal.hpp"
 #include "GameWindowCocoa.hpp"
 #include "../Application/SystemEvents.hpp"
-#include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Signals/Event.hpp"
-#include "Pomdog/Math/Point2D.hpp"
-#include "Pomdog/Input/ButtonState.hpp"
-#include "Pomdog/Input/Keys.hpp"
 #include "../RenderSystem.Metal/GraphicsContextMetal.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
+#include "Pomdog/Input/ButtonState.hpp"
+#include "Pomdog/Input/Keys.hpp"
+#include "Pomdog/Math/Point2D.hpp"
+#include "Pomdog/Signals/Event.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 
 #import <Metal/Metal.h>
 #import <MetalKit/MetalKit.h>

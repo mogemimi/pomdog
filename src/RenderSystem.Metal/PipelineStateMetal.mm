@@ -2,13 +2,13 @@
 
 #include "PipelineStateMetal.hpp"
 #include "MetalFormatHelper.hpp"
+#include "ShaderMetal.hpp"
 #include "../RenderSystem/BufferHelper.hpp"
 #include "Pomdog/Graphics/DepthFormat.hpp"
 #include "Pomdog/Graphics/PipelineStateDescription.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include "Pomdog/Utility/StringHelper.hpp"
-#include "ShaderMetal.hpp"
 #import <Metal/MTLVertexDescriptor.h>
 
 namespace Pomdog {

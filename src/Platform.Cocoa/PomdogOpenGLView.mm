@@ -5,11 +5,11 @@
 #include "GameHostCocoa.hpp"
 #include "OpenGLContextCocoa.hpp"
 #include "../Application/SystemEvents.hpp"
-#include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Signals/Event.hpp"
-#include "Pomdog/Math/Point2D.hpp"
 #include "Pomdog/Input/ButtonState.hpp"
 #include "Pomdog/Input/Keys.hpp"
+#include "Pomdog/Math/Point2D.hpp"
+#include "Pomdog/Signals/Event.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 #include <memory>
 #include <utility>
 

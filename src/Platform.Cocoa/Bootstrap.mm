@@ -1,13 +1,13 @@
 // Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Platform/Cocoa/Bootstrap.hpp"
-#include "GameWindowCocoa.hpp"
 #include "GameHostCocoa.hpp"
+#include "GameWindowCocoa.hpp"
 #include "Pomdog/Application/Game.hpp"
 #include "Pomdog/Application/GameHost.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
-#include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Logging/Log.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 #import "Pomdog/Platform/Cocoa/PomdogOpenGLView.hpp"
 
 using Pomdog::Detail::Cocoa::GameHostCocoa;
