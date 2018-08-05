@@ -93,12 +93,12 @@ bool Color::operator!=(const Color& color) const noexcept
 
 Vector3 Color::ToVector3() const noexcept
 {
-    return {R/255.0f, G/255.0f, B/255.0f};
+    return {R / 255.0f, G / 255.0f, B / 255.0f};
 }
 
 Vector4 Color::ToVector4() const noexcept
 {
-    return {R/255.0f, G/255.0f, B/255.0f, A/255.0f};
+    return {R / 255.0f, G / 255.0f, B / 255.0f, A / 255.0f};
 }
 
 std::uint32_t Color::ToPackedValue() const noexcept

@@ -33,7 +33,6 @@ private:
     std::shared_ptr<SignalBody> body;
 };
 
-
 template <typename...Arguments>
 Signal<void(Arguments...)>::Signal()
     : body(std::make_shared<SignalBody>())

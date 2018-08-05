@@ -124,7 +124,7 @@ void GameWindowCocoa::SetMouseCursorVisible(bool visibleIn)
 
 void GameWindowCocoa::SetMouseCursor(MouseCursor cursor)
 {
-    auto nativeCursor = ([cursor]()-> NSCursor* {
+    auto nativeCursor = ([cursor]() -> NSCursor* {
         switch (cursor) {
         case MouseCursor::Arrow:
             return [NSCursor arrowCursor];
