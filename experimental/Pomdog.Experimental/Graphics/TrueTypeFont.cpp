@@ -5,11 +5,19 @@
 #include "Pomdog/Math/Point2D.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
-#define STB_TRUETYPE_IMPLEMENTATION
-#include <stb_truetype.h>
 #include <utility>
 #include <vector>
 #include <locale>
+
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wcomma"
+#endif
+#define STB_TRUETYPE_IMPLEMENTATION
+#include <stb_truetype.h>
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif
 
 namespace Pomdog {
 

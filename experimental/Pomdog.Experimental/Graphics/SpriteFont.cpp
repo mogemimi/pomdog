@@ -10,17 +10,16 @@
 #include "Pomdog/Math/Radian.hpp"
 #include "Pomdog/Graphics/Texture2D.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include <unordered_map>
 
-#ifndef _MSC_VER
+#if defined(__clang__)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wshadow"
 #endif
 #include <utfcpp/source/utf8.h>
-#ifndef _MSC_VER
+#if defined(__clang__)
 #pragma clang diagnostic pop
 #endif
-
-#include <unordered_map>
 
 namespace Pomdog {
 namespace {
