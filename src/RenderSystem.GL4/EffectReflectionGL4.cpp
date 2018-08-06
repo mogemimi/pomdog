@@ -551,7 +551,7 @@ std::tuple<int, int> ToComponents(GLenum uniformType)
     case GL_FLOAT_MAT4x3:
     case GL_DOUBLE_MAT4x3:
         return std::make_tuple(4, 3);
-    
+
     default:
         break;
     }
