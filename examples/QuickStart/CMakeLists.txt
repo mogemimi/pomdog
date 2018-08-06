@@ -11,6 +11,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED on)
 set(CMAKE_CXX_EXTENSIONS off)
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
 
+source_group(Source   REGULAR_EXPRESSION "Source/*")
+source_group(Platform REGULAR_EXPRESSION "Platform.*/*")
+
 set(SOURCE_FILES
   Source/QuickStartGame.cpp
   Source/QuickStartGame.hpp
