@@ -3,6 +3,7 @@
 #include "GraphicsContextMetal.hpp"
 #include "../Basic/Unreachable.hpp"
 #include "../RenderSystem.Metal/BufferMetal.hpp"
+#include "../RenderSystem.Metal/ConstantsMetal.hpp"
 #include "../RenderSystem.Metal/PipelineStateMetal.hpp"
 #include "../RenderSystem.Metal/RenderTarget2DMetal.hpp"
 #include "../RenderSystem.Metal/SamplerStateMetal.hpp"
@@ -313,10 +314,11 @@ void GraphicsContextMetal::SetVertexBuffers(const std::vector<VertexBufferBindin
         POMDOG_ASSERT(nativeVertexBuffer == dynamic_cast<BufferMetal*>(
             vertexBuffer->GetNativeVertexBuffer()));
 
+        POMDOG_ASSERT(atIndex + VertexBufferSlotOffset < MaxVertexBufferSlotCount);
         POMDOG_ASSERT(nativeVertexBuffer->GetBuffer() != nil);
         [commandEncoder setVertexBuffer:nativeVertexBuffer->GetBuffer()
             offset:binding.VertexOffset
-            atIndex:atIndex];
+            atIndex:atIndex + VertexBufferSlotOffset];
 
         ++atIndex;
     }

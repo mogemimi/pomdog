@@ -475,6 +475,7 @@ set(POMDOG_SOURCES_DIRECT3D11
 set(POMDOG_SOURCES_METAL
   ${POMDOG_DIR}/src/RenderSystem.Metal/BufferMetal.hpp
   ${POMDOG_DIR}/src/RenderSystem.Metal/BufferMetal.mm
+  ${POMDOG_DIR}/src/RenderSystem.Metal/ConstantsMetal.hpp
   ${POMDOG_DIR}/src/RenderSystem.Metal/EffectReflectionMetal.hpp
   ${POMDOG_DIR}/src/RenderSystem.Metal/EffectReflectionMetal.mm
   ${POMDOG_DIR}/src/RenderSystem.Metal/GraphicsContextMetal.hpp

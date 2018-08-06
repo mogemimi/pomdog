@@ -21,7 +21,7 @@ struct VS_OUTPUT {
 // Vertex shader function
 vertex VS_OUTPUT SimpleEffectVS(
     VS_INPUT in [[stage_in]],
-    constant MyShaderConstants& uniforms [[ buffer(1) ]])
+    constant MyShaderConstants& uniforms [[buffer(0)]])
 {
     VS_OUTPUT out;
 

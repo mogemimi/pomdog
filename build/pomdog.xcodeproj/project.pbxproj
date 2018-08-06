@@ -580,6 +580,7 @@
 		A9854B9D1DC115D400650729 /* BufferHelper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = BufferHelper.hpp; sourceTree = "<group>"; };
 		A98BE0D21CC22915008696A8 /* GameHostMetal.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameHostMetal.hpp; sourceTree = "<group>"; };
 		A98BE0D31CC22915008696A8 /* GameHostMetal.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GameHostMetal.mm; sourceTree = "<group>"; };
+		A98CFCA421180B0000D4D033 /* ConstantsMetal.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ConstantsMetal.hpp; sourceTree = "<group>"; };
 		A992AF001C2B1168003170C9 /* Coordinate2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Coordinate2D.cpp; sourceTree = "<group>"; };
 		A992AF011C2B1168003170C9 /* Coordinate3D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Coordinate3D.cpp; sourceTree = "<group>"; };
 		A997F6DB1CAEFB0800926392 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
@@ -1355,6 +1356,7 @@
 			children = (
 				A997F6E21CAEFC4800926392 /* BufferMetal.hpp */,
 				A997F6E31CAEFC4800926392 /* BufferMetal.mm */,
+				A98CFCA421180B0000D4D033 /* ConstantsMetal.hpp */,
 				A997F6E41CAEFC4800926392 /* EffectReflectionMetal.hpp */,
 				A997F6E51CAEFC4800926392 /* EffectReflectionMetal.mm */,
 				A997F6E61CAEFC4800926392 /* GraphicsContextMetal.hpp */,

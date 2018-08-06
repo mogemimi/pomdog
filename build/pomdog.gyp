@@ -386,6 +386,7 @@
     'pomdog_library_metal_sources': [
       '../src/RenderSystem.Metal/BufferMetal.hpp',
       '../src/RenderSystem.Metal/BufferMetal.mm',
+      '../src/RenderSystem.Metal/ConstantsMetal.hpp',
       '../src/RenderSystem.Metal/EffectReflectionMetal.hpp',
       '../src/RenderSystem.Metal/EffectReflectionMetal.mm',
       '../src/RenderSystem.Metal/GraphicsContextMetal.hpp',

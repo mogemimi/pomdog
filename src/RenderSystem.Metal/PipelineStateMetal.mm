@@ -1,6 +1,7 @@
 // Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
 #include "PipelineStateMetal.hpp"
+#include "ConstantsMetal.hpp"
 #include "MetalFormatHelper.hpp"
 #include "ShaderMetal.hpp"
 #include "../Basic/Unreachable.hpp"
@@ -49,7 +50,10 @@ MTLVertexDescriptor* ToVertexDescriptor(const InputLayoutDescription& inputLayou
 
     int attributeIndex = 0;
     for (auto & element : inputLayout.InputElements) {
-        auto bufferLayout = vertexDescriptor.layouts[element.InputSlot];
+        const auto slotIndex = element.InputSlot + VertexBufferSlotOffset;
+        POMDOG_ASSERT(slotIndex < MaxVertexBufferSlotCount);
+
+        auto bufferLayout = vertexDescriptor.layouts[slotIndex];
         bufferLayout.stride = element.ByteOffset + BufferHelper::ToByteSize(element.Format);
         bufferLayout.stepFunction = ToVertexStepFunction(element.InputSlotClass);
         bufferLayout.stepRate = element.InstanceStepRate;
@@ -61,7 +65,7 @@ MTLVertexDescriptor* ToVertexDescriptor(const InputLayoutDescription& inputLayou
         auto attribute = vertexDescriptor.attributes[attributeIndex];
         attribute.format = ToVertexFormat(element.Format);
         attribute.offset = element.ByteOffset;
-        attribute.bufferIndex = element.InputSlot;
+        attribute.bufferIndex = slotIndex;
         ++attributeIndex;
     }
 

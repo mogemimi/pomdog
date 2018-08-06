@@ -121,12 +121,7 @@ void QuickStartGame::Initialize()
 
             commandList->Reset();
             commandList->SetRenderPass(std::move(pass));
-            if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::Metal) {
-                commandList->SetConstantBuffer(1, constantBuffer);
-            }
-            else {
-                commandList->SetConstantBuffer(0, constantBuffer);
-            }
+            commandList->SetConstantBuffer(0, constantBuffer);
             commandList->SetSamplerState(0, sampler);
             commandList->SetTexture(0, texture);
             commandList->SetVertexBuffer(vertexBuffer);
