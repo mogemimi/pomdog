@@ -9,6 +9,7 @@
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include <array>
 
 namespace Pomdog {
 namespace Detail {
@@ -391,18 +392,52 @@ void GraphicsCommandListImmediate::ExecuteImmediate(NativeGraphicsContext & grap
 
 void GraphicsCommandListImmediate::SortCommandsForMetal()
 {
+    static_assert(static_cast<int>(GraphicsCommandType::DrawCommand) == 0, "");
+    static_assert(static_cast<int>(GraphicsCommandType::DrawIndexedCommand) == 1, "");
+    static_assert(static_cast<int>(GraphicsCommandType::DrawInstancedCommand) == 2, "");
+    static_assert(static_cast<int>(GraphicsCommandType::DrawIndexedInstancedCommand) == 3, "");
+    static_assert(static_cast<int>(GraphicsCommandType::SetPrimitiveTopologyCommand) == 4, "");
+    static_assert(static_cast<int>(GraphicsCommandType::SetBlendFactorCommand) == 5, "");
+    static_assert(static_cast<int>(GraphicsCommandType::SetVertexBuffersCommand) == 6, "");
+    static_assert(static_cast<int>(GraphicsCommandType::SetIndexBufferCommand) == 7, "");
+    static_assert(static_cast<int>(GraphicsCommandType::SetPipelineStateCommand) == 8, "");
+    static_assert(static_cast<int>(GraphicsCommandType::SetConstantBufferCommand) == 9, "");
+    static_assert(static_cast<int>(GraphicsCommandType::SetSamplerStateCommand) == 10, "");
+    static_assert(static_cast<int>(GraphicsCommandType::SetTextureCommand) == 11, "");
+    static_assert(static_cast<int>(GraphicsCommandType::SetTextureRenderTarget2DCommand) == 12, "");
+    static_assert(static_cast<int>(GraphicsCommandType::SetRenderPassCommand) == 13, "");
+
+    constexpr std::int8_t priorityDrawCommand = 31;
+    constexpr std::int8_t priorityDefault = 30;
+
+    const std::array<std::int8_t, 14> priorities = {{
+        priorityDrawCommand, // DrawCommand
+        priorityDrawCommand, // DrawIndexedCommand
+        priorityDrawCommand, // DrawInstancedCommand
+        priorityDrawCommand, // DrawIndexedInstancedCommand
+        priorityDefault, // SetPrimitiveTopologyCommand
+        priorityDefault, // SetBlendFactorCommand
+        priorityDefault, // SetVertexBuffersCommand
+        priorityDefault, // SetIndexBufferCommand
+        priorityDefault, // SetPipelineStateCommand
+        priorityDefault, // SetConstantBufferCommand
+        priorityDefault, // SetSamplerStateCommand
+        priorityDefault, // SetTextureCommand
+        priorityDefault, // SetTextureRenderTarget2DCommand
+        0, // SetRenderPassCommand
+    }};
+
     // NOTE: Sort commands for MTLRenderCommandEncoder by using odd-even sort.
     for (size_t k = 0; k < commands.size(); ++k) {
         bool swapped = false;
         for (size_t i = 1 + (k % 2); i < commands.size(); i += 2) {
             auto & a = commands[i - 1];
             auto & b = commands[i];
-            if ((b->commandType == GraphicsCommandType::SetRenderPassCommand) &&
-                (a->commandType != GraphicsCommandType::SetRenderPassCommand) &&
-                (a->commandType != GraphicsCommandType::DrawCommand) &&
-                (a->commandType != GraphicsCommandType::DrawIndexedCommand) &&
-                (a->commandType != GraphicsCommandType::DrawInstancedCommand) &&
-                (a->commandType != GraphicsCommandType::DrawIndexedInstancedCommand)) {
+            const auto x = static_cast<std::int8_t>(a->commandType);
+            const auto y = static_cast<std::int8_t>(b->commandType);
+            POMDOG_ASSERT(x <= static_cast<std::int8_t>(priorities.size()));
+            POMDOG_ASSERT(y <= static_cast<std::int8_t>(priorities.size()));
+            if ((priorities[x] > priorities[y]) && (priorities[x] != priorityDrawCommand)) {
                 std::swap(a, b);
                 swapped = true;
             }
