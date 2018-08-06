@@ -100,10 +100,6 @@ public:
 
     std::shared_ptr<Gamepad> GetGamepad();
 
-    SurfaceFormat GetBackBufferSurfaceFormat() const noexcept;
-
-    DepthFormat GetBackBufferDepthStencilFormat() const noexcept;
-
 private:
     void RenderFrame();
 
@@ -135,8 +131,6 @@ private:
 
     __weak MTKView* metalView;
     Duration presentationInterval;
-    SurfaceFormat backBufferSurfaceFormat;
-    DepthFormat backBufferDepthStencilFormat;
     bool exitRequest;
 };
 
@@ -150,8 +144,6 @@ GameHostMetal::Impl::Impl(
     , window(windowIn)
     , metalView(metalViewIn)
     , presentationInterval(Duration(1) / 60)
-    , backBufferSurfaceFormat(presentationParameters.BackBufferFormat)
-    , backBufferDepthStencilFormat(presentationParameters.DepthStencilFormat)
     , exitRequest(false)
 {
     POMDOG_ASSERT(window);
@@ -161,7 +153,7 @@ GameHostMetal::Impl::Impl(
 
     // Create graphics device
     graphicsDevice = std::make_shared<GraphicsDevice>(
-        std::make_unique<GraphicsDeviceMetal>());
+        std::make_unique<GraphicsDeviceMetal>(presentationParameters));
 
     // Get MTLDevice object
     POMDOG_ASSERT(graphicsDevice);
@@ -369,7 +361,13 @@ void GameHostMetal::Impl::ProcessSystemEvents(const Event& event)
 
 void GameHostMetal::Impl::ClientSizeChanged()
 {
+    POMDOG_ASSERT(graphicsDevice);
+    POMDOG_ASSERT(graphicsDevice->GetNativeGraphicsDevice());
+
+    auto nativeDevice = static_cast<GraphicsDeviceMetal*>(graphicsDevice->GetNativeGraphicsDevice());
     auto bounds = window->GetClientBounds();
+
+    nativeDevice->ClientSizeChanged(bounds.Width, bounds.Height);
     window->ClientSizeChanged(bounds.Width, bounds.Height);
 }
 
@@ -418,16 +416,6 @@ std::shared_ptr<Mouse> GameHostMetal::Impl::GetMouse()
 std::shared_ptr<Gamepad> GameHostMetal::Impl::GetGamepad()
 {
     return gamepad;
-}
-
-SurfaceFormat GameHostMetal::Impl::GetBackBufferSurfaceFormat() const noexcept
-{
-    return backBufferSurfaceFormat;
-}
-
-DepthFormat GameHostMetal::Impl::GetBackBufferDepthStencilFormat() const noexcept
-{
-    return backBufferDepthStencilFormat;
 }
 
 // MARK: GameHostMetal
@@ -521,18 +509,6 @@ std::shared_ptr<Gamepad> GameHostMetal::GetGamepad()
 {
     POMDOG_ASSERT(impl);
     return impl->GetGamepad();
-}
-
-SurfaceFormat GameHostMetal::GetBackBufferSurfaceFormat() const
-{
-    POMDOG_ASSERT(impl);
-    return impl->GetBackBufferSurfaceFormat();
-}
-
-DepthFormat GameHostMetal::GetBackBufferDepthStencilFormat() const
-{
-    POMDOG_ASSERT(impl);
-    return impl->GetBackBufferDepthStencilFormat();
 }
 
 } // namespace Cocoa

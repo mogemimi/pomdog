@@ -13,11 +13,13 @@ namespace Metal {
 
 class GraphicsDeviceMetal final : public NativeGraphicsDevice {
 public:
-    GraphicsDeviceMetal();
+    explicit GraphicsDeviceMetal(const PresentationParameters& presentationParameters);
 
     ~GraphicsDeviceMetal();
 
     ShaderLanguage GetSupportedLanguage() const noexcept override;
+
+    PresentationParameters GetPresentationParameters() const noexcept override;
 
     std::unique_ptr<NativeGraphicsCommandList>
     CreateGraphicsCommandList() override;
@@ -68,6 +70,8 @@ public:
         std::int32_t multiSampleCount) override;
 
     id<MTLDevice> GetMTLDevice();
+
+    void ClientSizeChanged(int width, int height);
 
 private:
     class Impl;

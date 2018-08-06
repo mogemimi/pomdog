@@ -23,6 +23,8 @@ public:
 
     virtual ShaderLanguage GetSupportedLanguage() const noexcept = 0;
 
+    virtual PresentationParameters GetPresentationParameters() const noexcept = 0;
+
     virtual std::unique_ptr<NativeGraphicsCommandList>
     CreateGraphicsCommandList() = 0;
 

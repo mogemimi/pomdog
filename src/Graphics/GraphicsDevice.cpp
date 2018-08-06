@@ -2,6 +2,7 @@
 
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
+#include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <utility>
 
@@ -19,6 +20,12 @@ ShaderLanguage GraphicsDevice::GetSupportedLanguage() const noexcept
 {
     POMDOG_ASSERT(nativeGraphicsDevice);
     return nativeGraphicsDevice->GetSupportedLanguage();
+}
+
+PresentationParameters GraphicsDevice::GetPresentationParameters() const noexcept
+{
+    POMDOG_ASSERT(nativeGraphicsDevice);
+    return nativeGraphicsDevice->GetPresentationParameters();
 }
 
 Detail::NativeGraphicsDevice* GraphicsDevice::GetNativeGraphicsDevice()

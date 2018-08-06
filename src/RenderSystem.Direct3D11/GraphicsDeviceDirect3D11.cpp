@@ -14,6 +14,7 @@
 #include "../RenderSystem/ShaderCompileOptions.hpp"
 #include "Pomdog/Graphics/BufferUsage.hpp"
 #include "Pomdog/Graphics/PipelineStateDescription.hpp"
+#include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Graphics/ShaderLanguage.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -197,17 +198,19 @@ public:
     ComPtr<ID3D11InfoQueue> infoQueue;
     D3D_DRIVER_TYPE driverType;
     D3D_FEATURE_LEVEL featureLevel;
+    PresentationParameters presentationParameters;
 
 public:
-    Impl();
+    explicit Impl(const PresentationParameters& presentationParameters);
 
 private:
     void BuildDevice();
 };
 
-GraphicsDeviceDirect3D11::Impl::Impl()
+GraphicsDeviceDirect3D11::Impl::Impl(const PresentationParameters& presentationParametersIn)
     : driverType(D3D_DRIVER_TYPE_NULL)
     , featureLevel(D3D_FEATURE_LEVEL_11_1)
+    , presentationParameters(presentationParametersIn)
 {
     adapters.EnumAdapters();
     BuildDevice();
@@ -306,8 +309,8 @@ void GraphicsDeviceDirect3D11::Impl::BuildDevice()
 #endif
 }
 
-GraphicsDeviceDirect3D11::GraphicsDeviceDirect3D11()
-    : impl(std::make_unique<Impl>())
+GraphicsDeviceDirect3D11::GraphicsDeviceDirect3D11(const PresentationParameters& presentationParameters)
+    : impl(std::make_unique<Impl>(presentationParameters))
 {
 }
 
@@ -316,6 +319,12 @@ GraphicsDeviceDirect3D11::~GraphicsDeviceDirect3D11() = default;
 ShaderLanguage GraphicsDeviceDirect3D11::GetSupportedLanguage() const noexcept
 {
     return ShaderLanguage::HLSL;
+}
+
+PresentationParameters GraphicsDeviceDirect3D11::GetPresentationParameters() const noexcept
+{
+    POMDOG_ASSERT(impl);
+    return impl->presentationParameters;
 }
 
 std::unique_ptr<NativeGraphicsCommandList>
@@ -483,6 +492,13 @@ Microsoft::WRL::ComPtr<IDXGIFactory1> GraphicsDeviceDirect3D11::GetDXGIFactory()
 {
     POMDOG_ASSERT(impl);
     return impl->adapters.GetFactory();
+}
+
+void GraphicsDeviceDirect3D11::ClientSizeChanged(int width, int height)
+{
+    POMDOG_ASSERT(impl);
+    impl->presentationParameters.BackBufferWidth = width;
+    impl->presentationParameters.BackBufferHeight = height;
 }
 
 } // namespace Direct3D11

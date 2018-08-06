@@ -54,10 +54,6 @@ public:
 
     std::shared_ptr<Gamepad> GetGamepad() override;
 
-    SurfaceFormat GetBackBufferSurfaceFormat() const override;
-
-    DepthFormat GetBackBufferDepthStencilFormat() const override;
-
 private:
     class Impl;
     std::unique_ptr<Impl> impl;

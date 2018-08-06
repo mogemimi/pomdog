@@ -11,6 +11,7 @@
 #include "../RenderSystem/GraphicsCommandListImmediate.hpp"
 #include "../RenderSystem/ShaderBytecode.hpp"
 #include "../RenderSystem/ShaderCompileOptions.hpp"
+#include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Graphics/ShaderLanguage.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
@@ -24,14 +25,16 @@ class GraphicsDeviceMetal::Impl final {
 public:
     id<MTLDevice> device;
     id<MTLLibrary> defaultLibrary;
+    PresentationParameters presentationParameters;
 
 public:
-    Impl();
+    explicit Impl(const PresentationParameters& presentationParameters);
 };
 
-GraphicsDeviceMetal::Impl::Impl()
+GraphicsDeviceMetal::Impl::Impl(const PresentationParameters& presentationParametersIn)
     : device(nil)
     , defaultLibrary(nil)
+    , presentationParameters(presentationParametersIn)
 {
     device = MTLCreateSystemDefaultDevice();
 
@@ -41,8 +44,8 @@ GraphicsDeviceMetal::Impl::Impl()
     defaultLibrary = [device newDefaultLibrary];
 }
 
-GraphicsDeviceMetal::GraphicsDeviceMetal()
-    : impl(std::make_unique<Impl>())
+GraphicsDeviceMetal::GraphicsDeviceMetal(const PresentationParameters& presentationParameters)
+    : impl(std::make_unique<Impl>(presentationParameters))
 {
 }
 
@@ -51,6 +54,12 @@ GraphicsDeviceMetal::~GraphicsDeviceMetal() = default;
 ShaderLanguage GraphicsDeviceMetal::GetSupportedLanguage() const noexcept
 {
     return ShaderLanguage::Metal;
+}
+
+PresentationParameters GraphicsDeviceMetal::GetPresentationParameters() const noexcept
+{
+    POMDOG_ASSERT(impl);
+    return impl->presentationParameters;
 }
 
 std::unique_ptr<NativeGraphicsCommandList>
@@ -159,6 +168,13 @@ id<MTLDevice> GraphicsDeviceMetal::GetMTLDevice()
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->device != nil);
     return impl->device;
+}
+
+void GraphicsDeviceMetal::ClientSizeChanged(int width, int height)
+{
+    POMDOG_ASSERT(impl);
+    impl->presentationParameters.BackBufferWidth = width;
+    impl->presentationParameters.BackBufferHeight = height;
 }
 
 } // namespace Metal

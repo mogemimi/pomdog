@@ -14,11 +14,13 @@ namespace Direct3D11 {
 
 class GraphicsDeviceDirect3D11 final : public NativeGraphicsDevice {
 public:
-    GraphicsDeviceDirect3D11();
+    explicit GraphicsDeviceDirect3D11(const PresentationParameters& presentationParameters);
 
     ~GraphicsDeviceDirect3D11();
 
     ShaderLanguage GetSupportedLanguage() const noexcept override;
+
+    PresentationParameters GetPresentationParameters() const noexcept override;
 
     std::unique_ptr<NativeGraphicsCommandList>
     CreateGraphicsCommandList() override;
@@ -73,6 +75,8 @@ public:
     Microsoft::WRL::ComPtr<ID3D11DeviceContext> GetDeviceContext() const;
 
     Microsoft::WRL::ComPtr<IDXGIFactory1> GetDXGIFactory() const;
+
+    void ClientSizeChanged(int width, int height);
 
 private:
     class Impl;

@@ -182,10 +182,6 @@ public:
 
     void Exit();
 
-    SurfaceFormat GetBackBufferSurfaceFormat() const noexcept;
-
-    DepthFormat GetBackBufferDepthStencilFormat() const noexcept;
-
 private:
     void MessagePump();
     void ProcessEvent(::XEvent & event);
@@ -245,15 +241,15 @@ GameHostX11::Impl::Impl(const PresentationParameters& presentationParameters)
         POMDOG_THROW_EXCEPTION(std::runtime_error, description);
     }
 
-    graphicsDevice = std::make_shared<Pomdog::GraphicsDevice>(
-        std::make_unique<GraphicsDeviceGL4>());
+    graphicsDevice = std::make_shared<GraphicsDevice>(
+        std::make_unique<GraphicsDeviceGL4>(presentationParameters));
 
     graphicsContext = std::make_shared<GraphicsContextGL4>(openGLContext, window);
 
-    graphicsCommandQueue = std::make_shared<Pomdog::GraphicsCommandQueue>(
+    graphicsCommandQueue = std::make_shared<GraphicsCommandQueue>(
         std::make_unique<GraphicsCommandQueueImmediate>(graphicsContext));
 
-    audioEngine = std::make_shared<Pomdog::AudioEngine>();
+    audioEngine = std::make_shared<AudioEngine>();
 
     keyboard = std::make_unique<KeyboardX11>(x11Context->Display);
     gamepad = Detail::InputSystem::CreateGamepad();
@@ -261,7 +257,7 @@ GameHostX11::Impl::Impl(const PresentationParameters& presentationParameters)
     Detail::AssetLoaderContext loaderContext;
     loaderContext.RootDirectory = PathHelper::Join(FileSystem::GetResourceDirectoryPath(), "Content");
     loaderContext.GraphicsDevice = graphicsDevice;
-    assetManager = std::make_unique<Pomdog::AssetManager>(std::move(loaderContext));
+    assetManager = std::make_unique<AssetManager>(std::move(loaderContext));
 }
 
 GameHostX11::Impl::~Impl()
@@ -305,6 +301,17 @@ void GameHostX11::Impl::ProcessEvent(::XEvent & event)
         if (static_cast<Atom>(event.xclient.data.l[0]) == atoms.WmDeleteWindow) {
             Log::Internal("X11: wmDeleteMessage");
             exitRequest = true;
+        }
+        break;
+    }
+    case ConfigureNotify: {
+        POMDOG_ASSERT(graphicsDevice);
+        POMDOG_ASSERT(graphicsDevice->GetNativeGraphicsDevice());
+        auto nativeDevice = static_cast<GraphicsDeviceGL4*>(graphicsDevice->GetNativeGraphicsDevice());
+        auto presentationParameters = nativeDevice->GetPresentationParameters();
+        if ((presentationParameters.BackBufferWidth != event.xconfigure.width) ||
+            (presentationParameters.BackBufferHeight != event.xconfigure.height)) {
+            nativeDevice->ClientSizeChanged(event.xconfigure.width, event.xconfigure.height);
         }
         break;
     }
@@ -366,16 +373,6 @@ void GameHostX11::Impl::RenderFrame(Game & game)
     }
 
     game.Draw();
-}
-
-SurfaceFormat GameHostX11::Impl::GetBackBufferSurfaceFormat() const noexcept
-{
-    return backBufferSurfaceFormat;
-}
-
-DepthFormat GameHostX11::Impl::GetBackBufferDepthStencilFormat() const noexcept
-{
-    return backBufferDepthStencilFormat;
 }
 
 // MARK: - GameHostX11
@@ -465,18 +462,6 @@ std::shared_ptr<Gamepad> GameHostX11::GetGamepad()
     auto gameHost = shared_from_this();
     std::shared_ptr<Gamepad> sharedGamepad(gameHost, impl->gamepad.get());
     return sharedGamepad;
-}
-
-SurfaceFormat GameHostX11::GetBackBufferSurfaceFormat() const
-{
-    POMDOG_ASSERT(impl);
-    return impl->GetBackBufferSurfaceFormat();
-}
-
-DepthFormat GameHostX11::GetBackBufferDepthStencilFormat() const
-{
-    POMDOG_ASSERT(impl);
-    return impl->GetBackBufferDepthStencilFormat();
 }
 
 } // namespace X11

@@ -83,10 +83,6 @@ public:
 
     std::shared_ptr<Gamepad> GetGamepad();
 
-    SurfaceFormat GetBackBufferSurfaceFormat() const noexcept;
-
-    DepthFormat GetBackBufferDepthStencilFormat() const noexcept;
-
 private:
     void GameLoop();
 
@@ -131,8 +127,6 @@ private:
 
     __weak PomdogOpenGLView* openGLView;
     Duration presentationInterval;
-    SurfaceFormat backBufferSurfaceFormat;
-    DepthFormat backBufferDepthStencilFormat;
     bool exitRequest;
     bool displayLinkEnabled;
 };
@@ -148,8 +142,6 @@ GameHostCocoa::Impl::Impl(
     , window(windowIn)
     , openGLView(openGLViewIn)
     , presentationInterval(Duration(1) / 60)
-    , backBufferSurfaceFormat(presentationParameters.BackBufferFormat)
-    , backBufferDepthStencilFormat(presentationParameters.DepthStencilFormat)
     , exitRequest(false)
     , displayLinkEnabled(true)
 {
@@ -168,10 +160,11 @@ GameHostCocoa::Impl::Impl(
     openGLContext->SetView(openGLView);
     openGLContext->MakeCurrent();
 
-    graphicsDevice = std::make_shared<Pomdog::GraphicsDevice>(std::make_unique<GraphicsDeviceGL4>());
+    graphicsDevice = std::make_shared<GraphicsDevice>(
+        std::make_unique<GraphicsDeviceGL4>(presentationParameters));
 
     graphicsContext = std::make_shared<GraphicsContextGL4>(openGLContext, window);
-    graphicsCommandQueue = std::make_shared<Pomdog::GraphicsCommandQueue>(
+    graphicsCommandQueue = std::make_shared<GraphicsCommandQueue>(
         std::make_unique<GraphicsCommandQueueImmediate>(graphicsContext));
     openGLContext->Unlock();
 
@@ -416,13 +409,19 @@ void GameHostCocoa::Impl::ClientSizeChanged()
 {
     openGLContext->Lock();
     openGLContext->MakeCurrent();
-    {
-        POMDOG_ASSERT(openGLContext->NativeOpenGLContext() != nil);
-        [openGLContext->NativeOpenGLContext() update];
 
-        auto bounds = window->GetClientBounds();
-        window->ClientSizeChanged(bounds.Width, bounds.Height);
-    }
+    POMDOG_ASSERT(openGLContext->NativeOpenGLContext() != nil);
+    [openGLContext->NativeOpenGLContext() update];
+
+    POMDOG_ASSERT(graphicsDevice);
+    POMDOG_ASSERT(graphicsDevice->GetNativeGraphicsDevice());
+
+    auto nativeDevice = static_cast<GraphicsDeviceGL4*>(graphicsDevice->GetNativeGraphicsDevice());
+    auto bounds = window->GetClientBounds();
+
+    nativeDevice->ClientSizeChanged(bounds.Width, bounds.Height);
+    window->ClientSizeChanged(bounds.Width, bounds.Height);
+
     openGLContext->Unlock();
 }
 
@@ -471,16 +470,6 @@ std::shared_ptr<Mouse> GameHostCocoa::Impl::GetMouse()
 std::shared_ptr<Gamepad> GameHostCocoa::Impl::GetGamepad()
 {
     return gamepad;
-}
-
-SurfaceFormat GameHostCocoa::Impl::GetBackBufferSurfaceFormat() const noexcept
-{
-    return backBufferSurfaceFormat;
-}
-
-DepthFormat GameHostCocoa::Impl::GetBackBufferDepthStencilFormat() const noexcept
-{
-    return backBufferDepthStencilFormat;
 }
 
 // MARK: - GameHostCocoa
@@ -562,18 +551,6 @@ std::shared_ptr<Gamepad> GameHostCocoa::GetGamepad()
 {
     POMDOG_ASSERT(impl);
     return impl->GetGamepad();
-}
-
-SurfaceFormat GameHostCocoa::GetBackBufferSurfaceFormat() const
-{
-    POMDOG_ASSERT(impl);
-    return impl->GetBackBufferSurfaceFormat();
-}
-
-DepthFormat GameHostCocoa::GetBackBufferDepthStencilFormat() const
-{
-    POMDOG_ASSERT(impl);
-    return impl->GetBackBufferDepthStencilFormat();
 }
 
 } // namespace Cocoa

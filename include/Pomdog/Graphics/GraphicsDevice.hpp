@@ -20,6 +20,8 @@ public:
 
     ShaderLanguage GetSupportedLanguage() const noexcept;
 
+    PresentationParameters GetPresentationParameters() const noexcept;
+
     Detail::NativeGraphicsDevice* GetNativeGraphicsDevice();
 
 private:

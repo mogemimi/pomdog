@@ -75,9 +75,19 @@ using CreateGraphicsDeviceResult = std::tuple<
 #if !defined(POMDOG_DISABLE_GL4)
 
 class GraphicsBridgeWin32GL4 final : public GraphicsBridgeWin32 {
+private:
+    std::shared_ptr<GraphicsDeviceGL4> graphicsDevice;
+
 public:
-    void OnClientSizeChanged(int, int)
+    explicit GraphicsBridgeWin32GL4(const std::shared_ptr<GraphicsDeviceGL4>& graphicsDeviceIn)
+        : graphicsDevice(graphicsDeviceIn)
     {
+    }
+
+    void OnClientSizeChanged(int width, int height)
+    {
+        POMDOG_ASSERT(graphicsDevice);
+        graphicsDevice->ClientSizeChanged(width, height);
     }
 };
 
@@ -95,18 +105,28 @@ CreateGraphicsDeviceResult CreateGraphicsDeviceGL4(
 
     openGLContext->MakeCurrent();
 
-    auto nativeGraphicsDevice = std::make_unique<GraphicsDeviceGL4>();
-    auto graphicsDevice = std::make_shared<GraphicsDevice>(std::move(nativeGraphicsDevice));
+    auto graphicsDevice = std::make_shared<GraphicsDevice>(
+        std::make_unique<GraphicsDeviceGL4>(presentationParameters));
 
     auto graphicsContext = std::make_shared<GraphicsContextGL4>(openGLContext, window);
 
     auto graphicsCommandQueue = std::make_shared<GraphicsCommandQueue>(
         std::make_unique<GraphicsCommandQueueImmediate>(graphicsContext));
 
+    POMDOG_ASSERT(graphicsDevice);
+    POMDOG_ASSERT(graphicsContext);
+    POMDOG_ASSERT(graphicsCommandQueue);
+
+    auto sharedNativeDevice = std::shared_ptr<GraphicsDeviceGL4>(
+        graphicsDevice,
+        static_cast<GraphicsDeviceGL4*>(graphicsDevice->GetNativeGraphicsDevice()));
+
+    POMDOG_ASSERT(sharedNativeDevice);
+
     return CreateGraphicsDeviceResult{
         std::move(graphicsDevice),
         std::move(graphicsCommandQueue),
-        std::make_unique<GraphicsBridgeWin32GL4>(),
+        std::make_unique<GraphicsBridgeWin32GL4>(std::move(sharedNativeDevice)),
     };
 }
 #endif
@@ -129,8 +149,11 @@ public:
 
     void OnClientSizeChanged(int width, int height)
     {
+        POMDOG_ASSERT(graphicsDevice);
+        POMDOG_ASSERT(graphicsContext);
         auto device = graphicsDevice->GetDevice();
         graphicsContext->ResizeBackBuffers(device.Get(), width, height);
+        graphicsDevice->ClientSizeChanged(width, height);
     }
 };
 
@@ -138,7 +161,7 @@ CreateGraphicsDeviceResult CreateGraphicsDeviceDirect3D11(
     const std::shared_ptr<GameWindowWin32>& window,
     const PresentationParameters& presentationParameters)
 {
-    auto nativeGraphicsDevice = std::make_unique<GraphicsDeviceDirect3D11>();
+    auto nativeGraphicsDevice = std::make_unique<GraphicsDeviceDirect3D11>(presentationParameters);
     auto device = nativeGraphicsDevice->GetDevice();
     auto deviceContext = nativeGraphicsDevice->GetDeviceContext();
     auto dxgiFactory = nativeGraphicsDevice->GetDXGIFactory();
@@ -210,10 +233,6 @@ public:
     std::shared_ptr<Mouse> GetMouse();
 
     std::shared_ptr<Gamepad> GetGamepad();
-
-    SurfaceFormat GetBackBufferSurfaceFormat() const noexcept;
-
-    DepthFormat GetBackBufferDepthStencilFormat() const noexcept;
 
 private:
     void RenderFrame(Game & game);
@@ -455,16 +474,6 @@ std::shared_ptr<Gamepad> GameHostWin32::Impl::GetGamepad()
     return gamepad;
 }
 
-SurfaceFormat GameHostWin32::Impl::GetBackBufferSurfaceFormat() const noexcept
-{
-    return backBufferSurfaceFormat;
-}
-
-DepthFormat GameHostWin32::Impl::GetBackBufferDepthStencilFormat() const noexcept
-{
-    return backBufferDepthStencilFormat;
-}
-
 GameHostWin32::GameHostWin32(
     const std::shared_ptr<GameWindowWin32>& window,
     const std::shared_ptr<EventQueue>& eventQueue,
@@ -546,18 +555,6 @@ std::shared_ptr<Gamepad> GameHostWin32::GetGamepad()
 {
     POMDOG_ASSERT(impl);
     return impl->GetGamepad();
-}
-
-SurfaceFormat GameHostWin32::GetBackBufferSurfaceFormat() const
-{
-    POMDOG_ASSERT(impl);
-    return impl->GetBackBufferSurfaceFormat();
-}
-
-DepthFormat GameHostWin32::GetBackBufferDepthStencilFormat() const
-{
-    POMDOG_ASSERT(impl);
-    return impl->GetBackBufferDepthStencilFormat();
 }
 
 } // namespace Win32

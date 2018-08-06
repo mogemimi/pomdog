@@ -3,6 +3,7 @@
 #pragma once
 
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
+#include "Pomdog/Graphics/PresentationParameters.hpp"
 #include <memory>
 
 namespace Pomdog {
@@ -11,7 +12,11 @@ namespace GL4 {
 
 class GraphicsDeviceGL4 final : public NativeGraphicsDevice {
 public:
+    explicit GraphicsDeviceGL4(const PresentationParameters& presentationParameters);
+
     ShaderLanguage GetSupportedLanguage() const noexcept override;
+
+    PresentationParameters GetPresentationParameters() const noexcept override;
 
     std::unique_ptr<NativeGraphicsCommandList>
     CreateGraphicsCommandList() override;
@@ -60,6 +65,11 @@ public:
         SurfaceFormat format,
         DepthFormat depthStencilFormat,
         std::int32_t multiSampleCount) override;
+
+    void ClientSizeChanged(int width, int height);
+
+private:
+    PresentationParameters presentationParameters;
 };
 
 } // namespace GL4
