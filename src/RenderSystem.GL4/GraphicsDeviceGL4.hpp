@@ -11,7 +11,7 @@ namespace GL4 {
 
 class GraphicsDeviceGL4 final : public NativeGraphicsDevice {
 public:
-    ShaderLanguage GetSupportedLanguage() const override;
+    ShaderLanguage GetSupportedLanguage() const noexcept override;
 
     std::unique_ptr<NativeGraphicsCommandList>
     CreateGraphicsCommandList() override;

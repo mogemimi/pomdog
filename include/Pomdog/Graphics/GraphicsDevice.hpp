@@ -18,7 +18,7 @@ public:
 
     ~GraphicsDevice();
 
-    ShaderLanguage GetSupportedLanguage() const;
+    ShaderLanguage GetSupportedLanguage() const noexcept;
 
     Detail::NativeGraphicsDevice* GetNativeGraphicsDevice();
 

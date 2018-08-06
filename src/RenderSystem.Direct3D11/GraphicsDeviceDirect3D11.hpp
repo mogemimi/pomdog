@@ -18,7 +18,7 @@ public:
 
     ~GraphicsDeviceDirect3D11();
 
-    ShaderLanguage GetSupportedLanguage() const override;
+    ShaderLanguage GetSupportedLanguage() const noexcept override;
 
     std::unique_ptr<NativeGraphicsCommandList>
     CreateGraphicsCommandList() override;

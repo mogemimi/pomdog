@@ -21,7 +21,7 @@ public:
 
     virtual ~NativeGraphicsDevice() = default;
 
-    virtual ShaderLanguage GetSupportedLanguage() const = 0;
+    virtual ShaderLanguage GetSupportedLanguage() const noexcept = 0;
 
     virtual std::unique_ptr<NativeGraphicsCommandList>
     CreateGraphicsCommandList() = 0;

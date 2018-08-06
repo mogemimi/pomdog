@@ -313,7 +313,7 @@ GraphicsDeviceDirect3D11::GraphicsDeviceDirect3D11()
 
 GraphicsDeviceDirect3D11::~GraphicsDeviceDirect3D11() = default;
 
-ShaderLanguage GraphicsDeviceDirect3D11::GetSupportedLanguage() const
+ShaderLanguage GraphicsDeviceDirect3D11::GetSupportedLanguage() const noexcept
 {
     return ShaderLanguage::HLSL;
 }

@@ -19,7 +19,7 @@ namespace Pomdog {
 namespace Detail {
 namespace GL4 {
 
-ShaderLanguage GraphicsDeviceGL4::GetSupportedLanguage() const
+ShaderLanguage GraphicsDeviceGL4::GetSupportedLanguage() const noexcept
 {
     return ShaderLanguage::GLSL;
 }

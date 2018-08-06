@@ -48,7 +48,7 @@ GraphicsDeviceMetal::GraphicsDeviceMetal()
 
 GraphicsDeviceMetal::~GraphicsDeviceMetal() = default;
 
-ShaderLanguage GraphicsDeviceMetal::GetSupportedLanguage() const
+ShaderLanguage GraphicsDeviceMetal::GetSupportedLanguage() const noexcept
 {
     return ShaderLanguage::Metal;
 }
