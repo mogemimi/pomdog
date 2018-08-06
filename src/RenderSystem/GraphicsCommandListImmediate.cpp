@@ -407,7 +407,7 @@ void GraphicsCommandListImmediate::SortCommandsForMetal()
                 swapped = true;
             }
         }
-        if (!swapped) {
+        if (!swapped && (k > 0)) {
             break;
         }
     }
