@@ -21,7 +21,6 @@ set(RESOURCE_FILES Content)
 include_directories(
   ${POMDOG_DIR}/include
   ${POMDOG_DIR}/experimental
-  ${POMDOG_DIR}/dependencies/iutest/include
 )
 
 if(APPLE)
