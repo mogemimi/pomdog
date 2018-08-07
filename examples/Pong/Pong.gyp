@@ -64,13 +64,11 @@
         }],
         ['OS == "mac"', {
           'sources': [
-            'Platform.Cocoa/main.mm',
-            'Platform.Cocoa/AppDelegate.h',
-            'Platform.Cocoa/AppDelegate.mm',
-            'Platform.Cocoa/GameView.h',
-            'Platform.Cocoa/GameView.mm',
-            'Platform.Cocoa/GameViewController.h',
-            'Platform.Cocoa/GameViewController.mm',
+            'Platform.CocoaGL4/main.mm',
+            'Platform.CocoaGL4/AppDelegate.h',
+            'Platform.CocoaGL4/AppDelegate.mm',
+            'Platform.CocoaGL4/GameViewController.h',
+            'Platform.CocoaGL4/GameViewController.mm',
           ],
         }],
         ['OS == "linux"', {
@@ -80,13 +78,12 @@
         }],
       ],
       'mac_bundle_resources': [
-        'Platform.Cocoa/Base.lproj/MainMenu.xib',
-        'Platform.Cocoa/English.lproj/InfoPlist.strings',
-        'Platform.Cocoa/Images.xcassets/',
+        'Platform.CocoaGL4/Assets.xcassets/',
+        'Platform.CocoaGL4/Base.lproj/MainMenu.xib',
         'Content/',
       ],
       'xcode_settings': {
-        'INFOPLIST_FILE': 'Platform.Cocoa/Info.plist',
+        'INFOPLIST_FILE': 'Platform.CocoaGL4/Info.plist',
         'CLANG_ENABLE_OBJC_ARC': 'YES',
         'LD_RUNPATH_SEARCH_PATHS': [
           '$(inherited)',

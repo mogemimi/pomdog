@@ -1,17 +1,17 @@
 #import "GameViewController.h"
 #include "../Source/PongGame.hpp"
+#include <Pomdog/Platform/Cocoa/Bootstrap.hpp>
 #include <Pomdog/Pomdog.hpp>
-#include <memory>
 #ifdef DEBUG
 #include <iostream>
 #endif
 
 @implementation GameViewController
 {
-    std::shared_ptr<Pomdog::Game> game;
 #ifdef DEBUG
     Pomdog::ScopedConnection connection;
 #endif
+    Pomdog::Cocoa::Bootstrap bootstrap;
 }
 
 - (void)viewDidLoad
@@ -29,12 +29,18 @@
 #else
     Log::SetLevel(LogLevel::Critical);
 #endif
-}
 
-- (void)loadAssetsPomdog:(std::shared_ptr<Pomdog::GameHost>)gameHost
-{
-    game = std::make_shared<Pong::PongGame>(gameHost);
-    [self startGame:game];
+    bootstrap.SetView([self gameView]);
+    bootstrap.OnCompleted([=] {
+        [[[self gameView] window] close];
+
+        // Shutdown your application
+        [NSApp terminate:nil];
+    });
+
+    bootstrap.Run([](std::shared_ptr<Pomdog::GameHost> const& gameHost) {
+        return std::make_unique<Pong::PongGame>(gameHost);
+    });
 }
 
 @end
