@@ -6,86 +6,93 @@
 
 #### Runtime requirements
 
-* Mac OS X 10.9+
-* Windows 8+
-* OpenGL 4, DirectX 11 or DirectX 12
+* Mac OS X 10.11 and later
+* Windows 10 and later
+* Ubuntu 18.04 LTS and later
+* DirectX 11, OpenGL4 or Metal
 
 #### Build requirements
 
-* Python 2.7
-* Xcode 6.3 and later
-* Visual Studio 2015 and later
-
-#### Pulling all dependencies using Git
-
-Make sure git is installed.
-From the root of your project directory, run:
-
-```shell
-cd Pong
-git clone --depth=1 https://github.com/mogemimi/pomdog.git ThirdParty/pomdog
-git clone --depth=1 https://github.com/mogemimi/pomdog-third-party.git ThirdParty/pomdog/third-party
-git clone --depth=1 https://chromium.googlesource.com/external/gyp.git Tools/gyp
-```
+* CMake 3.10 and later
+* Clang 6.0 (for Linux)
+* Xcode 9.2 and later
+* Visual Studio 2017 and later
 
 ## How to build
 
-### Building under Mac OS X and Xcode
+### Building under Linux
 
-**1. Generating the Xcode project file**
+```sh
+cd path/to/Pong
 
-```shell
-python Tools/gyp/gyp_main.py Pong.gyp --depth=. -f xcode --generator-output=Build.xcodefiles
+# Creating a build directory
+mkdir -p build && cd build
+
+# Generating Makefile
+cmake -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=Debug ..
+
+# Building application
+make -j4
+
+# To run your application, you can use the following
+./Pong
 ```
 
-You can also use `gyp` instead of `python Tools/gyp/gyp_main.py`:
+To build in release mode, use `-DCMAKE_BUILD_TYPE` option:
 
-```shell
-gyp Pong.gyp --depth=. -f xcode --generator-output=Build.xcodefiles
+```sh
+cmake -DCMAKE_BUILD_TYPE=Release ..
 ```
 
-For information on how to install gyp, please see [How to Install GYP](https://github.com/mogemimi/pomdog/wiki/How-to-Install-GYP) on the GitHub wiki.
+### Building under Mac and Xcode
 
-**2. Building (Release/Debug)**
+```sh
+cd path/to/Pong
 
-```shell
-xcodebuild -project Build.xcodefiles/Pong.xcodeproj
+# Creating a build directory
+mkdir -p build && cd build
+
+# Generating Xcode project files
+cmake -G Xcode ..
+
+# Building your project
+xcodebuild -project Pong.xcodeproj -configuration Debug
+
+# To run your application, you can use the following
+open Debug/Pong.app
 ```
 
 To build in release mode, use `-configuration` option:
 
-```shell
-xcodebuild -project Build.xcodefiles/Pong.xcodeproj -configuration Release
+```sh
+xcodebuild -project Pong.xcodeproj -configuration Release
 ```
 
-**3. Running app**
+To develop your application on Xcode, please open `Pong.xcodeproj` in Xcode.
 
-```shell
-open build/Release/Pong.app
+### Building under Visual Studio 2017
+
+```sh
+# Git Bash (MinGW)
+cd path/to/Pong
+
+# Creating a build directory
+mkdir -p build && cd build
+
+# Generating projects for Visual Studio 2017
+cmake -G "Visual Studio 15" ..
+
+# Building projects using CMake and MSBuild
+cmake --build . --config Debug
+
+# To run your application, you can use the following
+./Debug/Pong
 ```
 
-### Building under Visual Studio 2015
+To build in release mode, use `--config` option:
 
-Generate the Visual Studio project files:
-
-**PowerShell**
-
-```powershell
-python Tools/gyp/gyp_main.py Pong.gyp --depth=. -f msvs `
-    -G msvs_version=2015 --generator-output=Build.msvs
+```sh
+cmake --build . --config Release
 ```
 
-**Git Bash (MinGW)**
-
-```shell
-python Tools/gyp/gyp_main.py Pong.gyp --depth=. -f msvs \
-    -G msvs_version=2015 --generator-output=Build.msvs
-```
-
-Open `Build.msvs/Pong.sln` in Visual Studio and build your app.
-To run your app, change Pong project property to the following
-at `Configuration Properties > Debugging > Working Directory` in Visual Studio:
-
-|||
-|:----|:----|
-|Working Directory|`$(ProjectDir)..`|
+To develop your application on Visual Studio, please open `Pong.sln` in Visual Studio.

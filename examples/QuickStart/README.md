@@ -4,28 +4,17 @@
 
 #### Runtime requirements
 
-* Mac OS X 10.11+
-* Windows 10+
-* OpenGL 4, DirectX 11 or DirectX 12
+* Mac OS X 10.11 and later
+* Windows 10 and later
+* Ubuntu 18.04 LTS and later
+* DirectX 11, OpenGL4 or Metal
 
 #### Build requirements
 
-* Python 2.7
+* CMake 3.10 and later
 * Clang 6.0 (for Linux)
 * Xcode 9.2 and later
 * Visual Studio 2017 and later
-
-#### Pulling all dependencies using Git
-
-Make sure git is installed.
-From the root of your project directory, run:
-
-```sh
-cd QuickStart
-git clone --depth=1 https://github.com/mogemimi/pomdog.git ThirdParty/pomdog
-git clone --depth=1 https://github.com/mogemimi/pomdog-third-party.git ThirdParty/pomdog/third-party
-git clone --depth=1 https://chromium.googlesource.com/external/gyp.git Tools/gyp
-```
 
 ## How to build
 
@@ -37,16 +26,14 @@ cd path/to/QuickStart
 # Creating a build directory
 mkdir -p build && cd build
 
-# Generate Makefile
-export CC=clang
-export CXX=clang++
-export LINK=clang++
-export CXXFLAGS="-std=c++17 -stdlib=libc++"
-export LDFLAGS="-stdlib=libc++"
-cmake -DCMAKE_BUILD_TYPE=Debug ..
+# Generating Makefile
+cmake -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=Debug ..
 
 # Building application
-make
+make -j4
+
+# To run your application, you can use the following
+./QuickStart
 ```
 
 To build in release mode, use `-DCMAKE_BUILD_TYPE` option:
@@ -55,63 +42,55 @@ To build in release mode, use `-DCMAKE_BUILD_TYPE` option:
 cmake -DCMAKE_BUILD_TYPE=Release ..
 ```
 
-To running your application
+### Building under Mac and Xcode
 
 ```sh
-cd path/to/QuickStart/build
+cd path/to/QuickStart
 
-# Run
-./QuickStart
-```
+# Creating a build directory
+mkdir -p build && cd build
 
-### Building under Mac OS X and Xcode
+# Generating Xcode project files
+cmake -G Xcode ..
 
-**1. Generating the Xcode project file**
+# Building your project
+xcodebuild -project QuickStart.xcodeproj -configuration Debug
 
-```sh
-python Tools/gyp/gyp_main.py QuickStart.gyp --depth=. -f xcode --generator-output=Build.xcodefiles
-```
-
-**2. Building (Release/Debug)**
-
-```sh
-xcodebuild -project Build.xcodefiles/QuickStart.xcodeproj
+# To run your application, you can use the following
+open Debug/QuickStart.app
 ```
 
 To build in release mode, use `-configuration` option:
 
 ```sh
-xcodebuild -project Build.xcodefiles/QuickStart.xcodeproj -configuration Release
+xcodebuild -project QuickStart.xcodeproj -configuration Release
 ```
 
-**3. Running app**
+To develop your application on Xcode, please open `QuickStart.xcodeproj` in Xcode.
+
+### Building under Visual Studio 2017
 
 ```sh
-open build/Release/QuickStart.app
+# Git Bash (MinGW)
+cd path/to/QuickStart
+
+# Creating a build directory
+mkdir -p build && cd build
+
+# Generating projects for Visual Studio 2017
+cmake -G "Visual Studio 15" ..
+
+# Building projects using CMake and MSBuild
+cmake --build . --config Debug
+
+# To run your application, you can use the following
+./Debug/QuickStart
 ```
 
-### Building under Visual Studio 2015
-
-Generate the Visual Studio project files:
-
-**PowerShell**
-
-```powershell
-python Tools/gyp/gyp_main.py QuickStart.gyp --depth=. -f msvs `
-    -G msvs_version=2015 --generator-output=Build.msvs
-```
-
-**Git Bash (MinGW)**
+To build in release mode, use `--config` option:
 
 ```sh
-python Tools/gyp/gyp_main.py QuickStart.gyp --depth=. -f msvs \
-    -G msvs_version=2015 --generator-output=Build.msvs
+cmake --build . --config Release
 ```
 
-Open `Build.msvs/QuickStart.sln` in Visual Studio and build your app.
-To run your app, change QuickStart project property to the following
-at `Configuration Properties > Debugging > Working Directory` in Visual Studio:
-
-|||
-|:----|:----|
-|Working Directory|`$(ProjectDir)..`|
+To develop your application on Visual Studio, please open `QuickStart.sln` in Visual Studio.
