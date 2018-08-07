@@ -12,6 +12,7 @@
 #include "Pomdog/Graphics/IndexElementSize.hpp"
 #include "Pomdog/Graphics/InputLayoutHelper.hpp"
 #include "Pomdog/Graphics/PipelineState.hpp"
+#include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
 #include "Pomdog/Graphics/SamplerState.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
@@ -36,6 +37,7 @@ namespace {
 #include "Shaders/GLSL.Embedded/SpriteBatchRenderer_PS.inc.hpp"
 #include "Shaders/HLSL.Embedded/SpriteBatchRenderer_VS.inc.hpp"
 #include "Shaders/HLSL.Embedded/SpriteBatchRenderer_PS.inc.hpp"
+#include "Shaders/Metal.Embedded/SpriteBatchRenderer.inc.hpp"
 
 SpriteBatchPipelineStateDescription CreateDefaultPipelineState() noexcept
 {
@@ -203,11 +205,13 @@ SpriteBatchRenderer::Impl::Impl(
 
         auto vertexShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
             .SetGLSL(Builtin_GLSL_SpriteBatchRenderer_VS, std::strlen(Builtin_GLSL_SpriteBatchRenderer_VS))
-            .SetHLSLPrecompiled(BuiltinHLSL_SpriteBatchRenderer_VS, sizeof(BuiltinHLSL_SpriteBatchRenderer_VS));
+            .SetHLSLPrecompiled(BuiltinHLSL_SpriteBatchRenderer_VS, sizeof(BuiltinHLSL_SpriteBatchRenderer_VS))
+            .SetMetal(Builtin_Metal_SpriteBatchRenderer, std::strlen(Builtin_Metal_SpriteBatchRenderer), "SpriteBatchRendererVS");
 
         auto pixelShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
             .SetGLSL(Builtin_GLSL_SpriteBatchRenderer_PS, std::strlen(Builtin_GLSL_SpriteBatchRenderer_PS))
-            .SetHLSLPrecompiled(BuiltinHLSL_SpriteBatchRenderer_PS, sizeof(BuiltinHLSL_SpriteBatchRenderer_PS));
+            .SetHLSLPrecompiled(BuiltinHLSL_SpriteBatchRenderer_PS, sizeof(BuiltinHLSL_SpriteBatchRenderer_PS))
+            .SetMetal(Builtin_Metal_SpriteBatchRenderer, std::strlen(Builtin_Metal_SpriteBatchRenderer), "SpriteBatchRendererPS");
 
         pipelineState = assets.CreateBuilder<PipelineState>()
             .SetVertexShader(vertexShader.Build())
