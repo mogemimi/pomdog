@@ -88,12 +88,12 @@ void QuickStartGame::Initialize()
             .SetMetalFromFile("SimpleEffect.metal", "SimpleEffectPS")
             .Build();
 
+        auto presentationParameters = graphicsDevice->GetPresentationParameters();
+
         // Create pipeline state
         pipelineState = assets->CreateBuilder<PipelineState>()
-            .SetRenderTargetViewFormats(std::vector<SurfaceFormat>{
-                gameHost->GetBackBufferSurfaceFormat()
-            })
-            .SetDepthStencilViewFormat(gameHost->GetBackBufferDepthStencilFormat())
+            .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
+            .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
             .SetInputLayout(inputLayout)
             .SetVertexShader(std::move(vertexShader))
             .SetPixelShader(std::move(pixelShader))
