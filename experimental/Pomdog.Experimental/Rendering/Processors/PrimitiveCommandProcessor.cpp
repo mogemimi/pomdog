@@ -32,8 +32,7 @@ PrimitiveCommandProcessor::PrimitiveCommandProcessor(
         .SetGLSL(Builtin_GLSL_LineBatch_PS, std::strlen(Builtin_GLSL_LineBatch_PS))
         .SetHLSLPrecompiled(BuiltinHLSL_LineBatch_PS, sizeof(BuiltinHLSL_LineBatch_PS));
 
-    auto builder = assets.CreateBuilder<PipelineState>();
-    pipelineState = builder
+    pipelineState = assets.CreateBuilder<PipelineState>()
         .SetVertexShader(vertexShader.Build())
         .SetPixelShader(pixelShader.Build())
         .SetInputLayout(inputLayout.CreateInputLayout())
