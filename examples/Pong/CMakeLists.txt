@@ -106,8 +106,7 @@ if(APPLE)
   set_source_files_properties(
     ${RESOURCE_FILES}
     PROPERTIES
-    MACOSX_PACKAGE_LOCATION
-    Resources
+    MACOSX_PACKAGE_LOCATION Resources
   )
 
   set_target_properties(
