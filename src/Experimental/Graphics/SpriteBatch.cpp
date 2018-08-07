@@ -15,6 +15,7 @@
 #include "Pomdog/Graphics/IndexElementSize.hpp"
 #include "Pomdog/Graphics/InputLayoutHelper.hpp"
 #include "Pomdog/Graphics/PipelineState.hpp"
+#include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
 #include "Pomdog/Graphics/ShaderLanguage.hpp"
@@ -44,6 +45,7 @@ namespace {
 #include "Shaders/GLSL.Embedded/SpriteBatch_PS.inc.hpp"
 #include "Shaders/HLSL.Embedded/SpriteBatch_VS.inc.hpp"
 #include "Shaders/HLSL.Embedded/SpriteBatch_PS.inc.hpp"
+#include "Shaders/Metal.Embedded/SpriteBatch.inc.hpp"
 
 } // unnamed namespace
 
@@ -212,13 +214,19 @@ SpriteBatch::Impl::Impl(
 
         auto vertexShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
             .SetGLSL(Builtin_GLSL_SpriteBatch_VS, std::strlen(Builtin_GLSL_SpriteBatch_VS))
-            .SetHLSLPrecompiled(BuiltinHLSL_SpriteBatch_VS, sizeof(BuiltinHLSL_SpriteBatch_VS));
+            .SetHLSLPrecompiled(BuiltinHLSL_SpriteBatch_VS, sizeof(BuiltinHLSL_SpriteBatch_VS))
+            .SetMetal(Builtin_Metal_SpriteBatch, sizeof(Builtin_Metal_SpriteBatch), "SpriteBatchVS");
 
         auto pixelShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
             .SetGLSL(Builtin_GLSL_SpriteBatch_PS, std::strlen(Builtin_GLSL_SpriteBatch_PS))
-            .SetHLSLPrecompiled(BuiltinHLSL_SpriteBatch_PS, sizeof(BuiltinHLSL_SpriteBatch_PS));
+            .SetHLSLPrecompiled(BuiltinHLSL_SpriteBatch_PS, sizeof(BuiltinHLSL_SpriteBatch_PS))
+            .SetMetal(Builtin_Metal_SpriteBatch, sizeof(Builtin_Metal_SpriteBatch), "SpriteBatchPS");
+
+        auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
         pipelineState = assets.CreateBuilder<PipelineState>()
+            .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
+            .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
             .SetVertexShader(vertexShader.Build())
             .SetPixelShader(pixelShader.Build())
             .SetInputLayout(inputLayout.CreateInputLayout())
