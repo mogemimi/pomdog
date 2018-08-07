@@ -12,7 +12,7 @@ namespace Pomdog {
 class FishEyeEffect final: public ImageEffectBase {
 public:
     FishEyeEffect(
-        std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
         AssetManager & assets);
 
     void SetStrength(float strength);

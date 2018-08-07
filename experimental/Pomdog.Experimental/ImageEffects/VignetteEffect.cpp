@@ -33,7 +33,7 @@ struct VignetteBlock {
 } // unnamed namespace
 
 VignetteEffect::VignetteEffect(
-    std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
     AssetManager & assets)
 {
     samplerLinear = std::make_shared<SamplerState>(graphicsDevice,

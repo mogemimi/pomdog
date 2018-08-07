@@ -12,7 +12,7 @@ namespace Pomdog {
 class VignetteEffect final: public ImageEffectBase {
 public:
     VignetteEffect(
-        std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
         AssetManager & assets);
 
     void SetIntensity(float intensity);

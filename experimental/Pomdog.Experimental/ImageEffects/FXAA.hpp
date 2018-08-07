@@ -12,7 +12,7 @@ namespace Pomdog {
 class FXAA final: public ImageEffectBase {
 public:
     FXAA(
-        std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
         AssetManager & assets);
 
     void Apply(

@@ -28,7 +28,7 @@ namespace {
 } // unnamed namespace
 
 ChromaticAberration::ChromaticAberration(
-    std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
     AssetManager & assets)
 {
     samplerState = std::make_shared<SamplerState>(graphicsDevice,

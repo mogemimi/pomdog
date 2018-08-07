@@ -62,7 +62,8 @@ private:
     std::shared_ptr<ConstantBuffer> constantBuffer;
 
 public:
-    Impl(const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+    Impl(
+        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
         AssetManager & assets);
 
     void Begin(

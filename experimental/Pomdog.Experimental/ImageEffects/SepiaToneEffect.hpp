@@ -12,7 +12,7 @@ namespace Pomdog {
 class SepiaToneEffect final: public ImageEffectBase {
 public:
     SepiaToneEffect(
-        std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
         AssetManager & assets);
 
     void Apply(

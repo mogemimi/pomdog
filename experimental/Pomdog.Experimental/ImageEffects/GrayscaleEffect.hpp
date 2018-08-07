@@ -12,7 +12,7 @@ namespace Pomdog {
 class GrayscaleEffect final: public ImageEffectBase {
 public:
     GrayscaleEffect(
-        std::shared_ptr<GraphicsDevice> const& graphicsDevice,
+        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
         AssetManager & assets);
 
     void Apply(
