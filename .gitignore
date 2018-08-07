@@ -62,5 +62,8 @@ xcuserdata
 # Python
 tools/*.pyc
 
+# Visual Studio Code
+.vscode/
+
 # IntelliJ IDEA
 .idea/
