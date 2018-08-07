@@ -26,6 +26,8 @@ namespace {
 #include "Shaders/GLSL.Embedded/FishEye_PS.inc.hpp"
 #include "Shaders/HLSL.Embedded/ScreenQuad_VS.inc.hpp"
 #include "Shaders/HLSL.Embedded/FishEye_PS.inc.hpp"
+#include "Shaders/Metal.Embedded/ScreenQuad_VS.inc.hpp"
+#include "Shaders/Metal.Embedded/FishEye_PS.inc.hpp"
 
 struct FishEyeBlock {
     float Strength;
@@ -45,11 +47,13 @@ FishEyeEffect::FishEyeEffect(
 
     auto vertexShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
         .SetGLSL(Builtin_GLSL_ScreenQuad_VS, std::strlen(Builtin_GLSL_ScreenQuad_VS))
-        .SetHLSLPrecompiled(BuiltinHLSL_ScreenQuad_VS, sizeof(BuiltinHLSL_ScreenQuad_VS));
+        .SetHLSLPrecompiled(BuiltinHLSL_ScreenQuad_VS, sizeof(BuiltinHLSL_ScreenQuad_VS))
+        .SetMetal(Builtin_Metal_ScreenQuad_VS, std::strlen(Builtin_Metal_ScreenQuad_VS), "ScreenQuadVS");
 
     auto pixelShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
         .SetGLSL(Builtin_GLSL_FishEye_PS, std::strlen(Builtin_GLSL_FishEye_PS))
-        .SetHLSLPrecompiled(BuiltinHLSL_FishEye_PS, sizeof(BuiltinHLSL_FishEye_PS));
+        .SetHLSLPrecompiled(BuiltinHLSL_FishEye_PS, sizeof(BuiltinHLSL_FishEye_PS))
+        .SetMetal(Builtin_Metal_FishEye_PS, std::strlen(Builtin_Metal_FishEye_PS), "FishEyePS");
 
     pipelineState = assets.CreateBuilder<PipelineState>()
         .SetVertexShader(vertexShader.Build())

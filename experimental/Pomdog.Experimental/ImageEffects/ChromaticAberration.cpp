@@ -24,6 +24,8 @@ namespace {
 #include "Shaders/GLSL.Embedded/ChromaticAberration_PS.inc.hpp"
 #include "Shaders/HLSL.Embedded/ScreenQuad_VS.inc.hpp"
 #include "Shaders/HLSL.Embedded/ChromaticAberration_PS.inc.hpp"
+#include "Shaders/Metal.Embedded/ScreenQuad_VS.inc.hpp"
+#include "Shaders/Metal.Embedded/ChromaticAberration_PS.inc.hpp"
 
 } // unnamed namespace
 
@@ -39,11 +41,13 @@ ChromaticAberration::ChromaticAberration(
 
     auto vertexShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
         .SetGLSL(Builtin_GLSL_ScreenQuad_VS, std::strlen(Builtin_GLSL_ScreenQuad_VS))
-        .SetHLSLPrecompiled(BuiltinHLSL_ScreenQuad_VS, sizeof(BuiltinHLSL_ScreenQuad_VS));
+        .SetHLSLPrecompiled(BuiltinHLSL_ScreenQuad_VS, sizeof(BuiltinHLSL_ScreenQuad_VS))
+        .SetMetal(Builtin_Metal_ScreenQuad_VS, std::strlen(Builtin_Metal_ScreenQuad_VS), "ScreenQuadVS");
 
     auto pixelShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
         .SetGLSL(Builtin_GLSL_ChromaticAberration_PS, std::strlen(Builtin_GLSL_ChromaticAberration_PS))
-        .SetHLSLPrecompiled(BuiltinHLSL_ChromaticAberration_PS, sizeof(BuiltinHLSL_ChromaticAberration_PS));
+        .SetHLSLPrecompiled(BuiltinHLSL_ChromaticAberration_PS, sizeof(BuiltinHLSL_ChromaticAberration_PS))
+        .SetMetal(Builtin_Metal_ChromaticAberration_PS, std::strlen(Builtin_Metal_ChromaticAberration_PS), "ChromaticAberrationPS");
 
     pipelineState = assets.CreateBuilder<PipelineState>()
         .SetVertexShader(vertexShader.Build())

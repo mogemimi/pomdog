@@ -24,6 +24,7 @@ namespace {
 #include "Shaders/GLSL.Embedded/FXAA_PS.inc.hpp"
 #include "Shaders/HLSL.Embedded/FXAA_VS.inc.hpp"
 #include "Shaders/HLSL.Embedded/FXAA_PS.inc.hpp"
+#include "Shaders/Metal.Embedded/FXAA.inc.hpp"
 
 } // unnamed namespace
 
@@ -39,11 +40,13 @@ FXAA::FXAA(
 
     auto vertexShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
         .SetGLSL(Builtin_GLSL_FXAA_VS, std::strlen(Builtin_GLSL_FXAA_VS))
-        .SetHLSLPrecompiled(BuiltinHLSL_FXAA_VS, sizeof(BuiltinHLSL_FXAA_VS));
+        .SetHLSLPrecompiled(BuiltinHLSL_FXAA_VS, sizeof(BuiltinHLSL_FXAA_VS))
+        .SetMetal(Builtin_Metal_FXAA, std::strlen(Builtin_Metal_FXAA), "FxaaVS");
 
     auto pixelShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
         .SetGLSL(Builtin_GLSL_FXAA_PS, std::strlen(Builtin_GLSL_FXAA_PS))
-        .SetHLSLPrecompiled(BuiltinHLSL_FXAA_PS, sizeof(BuiltinHLSL_FXAA_PS));
+        .SetHLSLPrecompiled(BuiltinHLSL_FXAA_PS, sizeof(BuiltinHLSL_FXAA_PS))
+        .SetMetal(Builtin_Metal_FXAA, std::strlen(Builtin_Metal_FXAA), "FxaaPS");
 
     pipelineState = assets.CreateBuilder<PipelineState>()
         .SetVertexShader(vertexShader.Build())

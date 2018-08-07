@@ -36,6 +36,7 @@ namespace {
 #include "Shaders/GLSL.Embedded/LineBatch_PS.inc.hpp"
 #include "Shaders/HLSL.Embedded/LineBatch_VS.inc.hpp"
 #include "Shaders/HLSL.Embedded/LineBatch_PS.inc.hpp"
+#include "Shaders/Metal.Embedded/LineBatch.inc.hpp"
 
 } // unnamed namespace
 
@@ -91,11 +92,13 @@ PolygonBatch::Impl::Impl(
 
         auto vertexShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
             .SetGLSL(Builtin_GLSL_LineBatch_VS, std::strlen(Builtin_GLSL_LineBatch_VS))
-            .SetHLSLPrecompiled(BuiltinHLSL_LineBatch_VS, sizeof(BuiltinHLSL_LineBatch_VS));
+            .SetHLSLPrecompiled(BuiltinHLSL_LineBatch_VS, sizeof(BuiltinHLSL_LineBatch_VS))
+            .SetMetal(Builtin_Metal_LineBatch, std::strlen(Builtin_Metal_LineBatch), "LineBatchVS");
 
         auto pixelShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
             .SetGLSL(Builtin_GLSL_LineBatch_PS, std::strlen(Builtin_GLSL_LineBatch_PS))
-            .SetHLSLPrecompiled(BuiltinHLSL_LineBatch_PS, sizeof(BuiltinHLSL_LineBatch_PS));
+            .SetHLSLPrecompiled(BuiltinHLSL_LineBatch_PS, sizeof(BuiltinHLSL_LineBatch_PS))
+            .SetMetal(Builtin_Metal_LineBatch, std::strlen(Builtin_Metal_LineBatch), "LineBatchPS");
 
         auto builder = assets.CreateBuilder<PipelineState>();
         pipelineState = builder
