@@ -22,9 +22,8 @@ private:
     Rectangle viewport;
 
 public:
-    PostProcessCompositor(
-        std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-        int width, int height, SurfaceFormat surfaceFormat);
+    explicit PostProcessCompositor(
+        const std::shared_ptr<GraphicsDevice>& graphicsDevice);
 
     void Composite(
         std::vector<std::shared_ptr<ImageEffectBase>> && imageEffects);
@@ -34,7 +33,10 @@ public:
         std::vector<std::shared_ptr<ImageEffectPreRenderable>> && preRenderableEffects);
 
     void SetViewportSize(
-        GraphicsDevice & graphicsDevice, int width, int height);
+        GraphicsDevice & graphicsDevice,
+        int width,
+        int height,
+        DepthFormat depthFormat);
 
     void Draw(
         GraphicsCommandList & commandList,
@@ -52,7 +54,8 @@ private:
         GraphicsDevice & graphicsDevice,
         int width,
         int height,
-        SurfaceFormat surfaceFormat);
+        SurfaceFormat surfaceFormat,
+        DepthFormat depthFormat);
 
     void UpdateConstantBuffer();
 };

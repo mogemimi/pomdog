@@ -11,6 +11,7 @@
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/InputLayoutHelper.hpp"
 #include "Pomdog/Graphics/PipelineState.hpp"
+#include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
 #include "Pomdog/Graphics/VertexBuffer.hpp"
@@ -112,7 +113,11 @@ LineBatch::Impl::Impl(
             .SetHLSLPrecompiled(BuiltinHLSL_LineBatch_PS, sizeof(BuiltinHLSL_LineBatch_PS))
             .SetMetal(Builtin_Metal_LineBatch, std::strlen(Builtin_Metal_LineBatch), "LineBatchPS");
 
+        auto presentationParameters = graphicsDevice->GetPresentationParameters();
+
         pipelineState = assets.CreateBuilder<PipelineState>()
+            .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
+            .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
             .SetVertexShader(vertexShader.Build())
             .SetPixelShader(pixelShader.Build())
             .SetInputLayout(inputLayout.CreateInputLayout())

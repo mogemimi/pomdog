@@ -39,13 +39,14 @@ namespace {
 #include "Shaders/HLSL.Embedded/SpriteBatchRenderer_PS.inc.hpp"
 #include "Shaders/Metal.Embedded/SpriteBatchRenderer.inc.hpp"
 
-SpriteBatchPipelineStateDescription CreateDefaultPipelineState() noexcept
+SpriteBatchPipelineStateDescription CreateDefaultPipelineState(
+    const PresentationParameters& presentationParameters) noexcept
 {
     SpriteBatchPipelineStateDescription desc;
     desc.BlendState = BlendDescription::CreateNonPremultiplied();
     desc.SamplerState = SamplerDescription::CreateLinearWrap();
-    desc.RenderTargetViewFormats.push_back(SurfaceFormat::R8G8B8A8_UNorm);
-    desc.DepthStencilViewFormat = DepthFormat::Depth24Stencil8;
+    desc.RenderTargetViewFormats.push_back(presentationParameters.BackBufferFormat);
+    desc.DepthStencilViewFormat = presentationParameters.DepthStencilFormat;
     return desc;
 }
 
@@ -475,7 +476,7 @@ SpriteBatchRenderer::SpriteBatchRenderer(
     AssetManager & assets)
     : SpriteBatchRenderer(
         graphicsDevice,
-        CreateDefaultPipelineState(),
+        CreateDefaultPipelineState(graphicsDevice->GetPresentationParameters()),
         assets)
 {}
 

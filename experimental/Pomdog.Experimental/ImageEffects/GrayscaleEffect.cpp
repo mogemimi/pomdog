@@ -9,6 +9,7 @@
 #include "Pomdog/Graphics/GraphicsCommandList.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/InputLayoutHelper.hpp"
+#include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Graphics/PipelineState.hpp"
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
 #include "Pomdog/Graphics/SamplerState.hpp"
@@ -49,7 +50,11 @@ GrayscaleEffect::GrayscaleEffect(
         .SetHLSLPrecompiled(BuiltinHLSL_Grayscale_PS, sizeof(BuiltinHLSL_Grayscale_PS))
         .SetMetal(Builtin_Metal_Grayscale_PS, std::strlen(Builtin_Metal_Grayscale_PS), "GrayscalePS");
 
+    auto presentationParameters = graphicsDevice->GetPresentationParameters();
+
     pipelineState = assets.CreateBuilder<PipelineState>()
+        .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
+        .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
         .SetVertexShader(vertexShader.Build())
         .SetPixelShader(pixelShader.Build())
         .SetInputLayout(inputLayout.CreateInputLayout())

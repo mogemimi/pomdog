@@ -12,21 +12,19 @@ namespace Pomdog {
 Simple2DGameEngine::Simple2DGameEngine(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
     , gameTimer(gameHostIn->GetClock())
-    , postProcessCompositor(
-        gameHost->GetGraphicsDevice(),
-        gameHost->GetWindow()->GetClientBounds().Width,
-        gameHost->GetWindow()->GetClientBounds().Height,
-        SurfaceFormat::R8G8B8A8_UNorm)
+    , postProcessCompositor(gameHost->GetGraphicsDevice())
     , needToUpdateViewProjectionMatrix(true)
 {
     auto graphicsDevice = gameHost->GetGraphicsDevice();
     auto assets = gameHost->GetAssetManager();
     auto window = gameHost->GetWindow();
-
-    auto clientBounds = window->GetClientBounds();
+    auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
     postProcessCompositor.SetViewportSize(
-        *graphicsDevice, clientBounds.Width, clientBounds.Height);
+        *graphicsDevice,
+        presentationParameters.BackBufferWidth,
+        presentationParameters.BackBufferHeight,
+        presentationParameters.DepthStencilFormat);
 
     {
         renderer = std::make_unique<Renderer>(graphicsDevice);
@@ -60,16 +58,24 @@ Simple2DGameEngine::~Simple2DGameEngine()
 void Simple2DGameEngine::OnViewportSizeChanged(int width, int height)
 {
     auto graphicsDevice = gameHost->GetGraphicsDevice();
+    auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
     viewport.Width = width;
     viewport.Height = height;
 
     renderTarget = std::make_shared<RenderTarget2D>(
-        graphicsDevice, width, height, false,
-        SurfaceFormat::R8G8B8A8_UNorm,
-        DepthFormat::Depth24Stencil8);
+        graphicsDevice,
+        width,
+        height,
+        false,
+        presentationParameters.BackBufferFormat,
+        presentationParameters.DepthStencilFormat);
 
-    postProcessCompositor.SetViewportSize(*graphicsDevice, width, height);
+    postProcessCompositor.SetViewportSize(
+        *graphicsDevice,
+        width,
+        height,
+        presentationParameters.DepthStencilFormat);
 
     if (mainCamera) {
         mainCamera->SetViewportSize(width, height);

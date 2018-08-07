@@ -12,6 +12,7 @@
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/InputLayoutHelper.hpp"
 #include "Pomdog/Graphics/PipelineState.hpp"
+#include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
 #include "Pomdog/Graphics/RasterizerDescription.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
@@ -100,8 +101,12 @@ PolygonBatch::Impl::Impl(
             .SetHLSLPrecompiled(BuiltinHLSL_LineBatch_PS, sizeof(BuiltinHLSL_LineBatch_PS))
             .SetMetal(Builtin_Metal_LineBatch, std::strlen(Builtin_Metal_LineBatch), "LineBatchPS");
 
+        auto presentationParameters = graphicsDevice->GetPresentationParameters();
+
         auto builder = assets.CreateBuilder<PipelineState>();
         pipelineState = builder
+            .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
+            .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
             .SetVertexShader(vertexShader.Build())
             .SetPixelShader(pixelShader.Build())
             .SetInputLayout(inputLayout.CreateInputLayout())

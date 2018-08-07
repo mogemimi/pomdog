@@ -4,6 +4,8 @@
 #include "Pomdog/Graphics/BufferUsage.hpp"
 #include "Pomdog/Graphics/ConstantBuffer.hpp"
 #include "Pomdog/Graphics/GraphicsCommandList.hpp"
+#include "Pomdog/Graphics/GraphicsDevice.hpp"
+#include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Graphics/RenderPass.hpp"
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
 #include "Pomdog/Graphics/Viewport.hpp"
@@ -25,29 +27,38 @@ struct PostProcessInfo {
 } // unnamed namespace
 
 PostProcessCompositor::PostProcessCompositor(
-    std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-    int width, int height, SurfaceFormat surfaceFormat)
+    const std::shared_ptr<GraphicsDevice>& graphicsDevice)
     : screenQuad(graphicsDevice)
 {
-    POMDOG_ASSERT(width > 0);
-    POMDOG_ASSERT(height > 0);
+    auto presentationParameters = graphicsDevice->GetPresentationParameters();
+
+    POMDOG_ASSERT(presentationParameters.BackBufferWidth > 0);
+    POMDOG_ASSERT(presentationParameters.BackBufferHeight > 0);
 
     viewport.X = 0;
     viewport.Y = 0;
-    viewport.Width = width;
-    viewport.Height = height;
+    viewport.Width = presentationParameters.BackBufferWidth;
+    viewport.Height = presentationParameters.BackBufferHeight;
 
     constantBuffer = std::make_shared<ConstantBuffer>(
         *graphicsDevice,
         sizeof(PostProcessInfo),
         BufferUsage::Dynamic);
 
-    BuildRenderTargets(*graphicsDevice, width, height, surfaceFormat);
+    BuildRenderTargets(
+        *graphicsDevice,
+        presentationParameters.BackBufferWidth,
+        presentationParameters.BackBufferHeight,
+        presentationParameters.BackBufferFormat,
+        presentationParameters.DepthStencilFormat);
     UpdateConstantBuffer();
 }
 
 void PostProcessCompositor::SetViewportSize(
-    GraphicsDevice & graphicsDevice, int width, int height)
+    GraphicsDevice & graphicsDevice,
+    int width,
+    int height,
+    DepthFormat depthFormat)
 {
     POMDOG_ASSERT(!renderTargets.empty());
     POMDOG_ASSERT(width > 0);
@@ -60,15 +71,21 @@ void PostProcessCompositor::SetViewportSize(
     viewport.Width = width;
     viewport.Height = height;
 
-    BuildRenderTargets(graphicsDevice,
-        viewport.Width, viewport.Height,
-        renderTargets.front()->GetFormat());
+    BuildRenderTargets(
+        graphicsDevice,
+        viewport.Width,
+        viewport.Height,
+        renderTargets.front()->GetFormat(),
+        depthFormat);
     UpdateConstantBuffer();
 }
 
 void PostProcessCompositor::BuildRenderTargets(
     GraphicsDevice & graphicsDevice,
-    int width, int height, SurfaceFormat surfaceFormat)
+    int width,
+    int height,
+    SurfaceFormat surfaceFormat,
+    DepthFormat depthFormat)
 {
     POMDOG_ASSERT(width > 0);
     POMDOG_ASSERT(height > 0);
@@ -76,7 +93,11 @@ void PostProcessCompositor::BuildRenderTargets(
     for (auto & renderTarget: renderTargets) {
         renderTarget = std::make_shared<RenderTarget2D>(
             graphicsDevice,
-            width, height, false, surfaceFormat, DepthFormat::None);
+            width,
+            height,
+            false,
+            surfaceFormat,
+            depthFormat);
     }
 }
 
