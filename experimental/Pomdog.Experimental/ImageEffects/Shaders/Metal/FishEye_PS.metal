@@ -93,8 +93,8 @@ float2 FishEye(float2 texCoord, float2 resolution, float strength)
 
 fragment float4 FishEyePS(
     VS_OUTPUT input [[stage_in]],
-    constant ImageEffectConstants& uniforms [[ buffer(1) ]],
-    constant FishEyeBlock& fishEyeUniforms [[ buffer(2) ]],
+    constant ImageEffectConstants& uniforms [[buffer(0)]],
+    constant FishEyeBlock& fishEyeUniforms [[buffer(1)]],
     texture2d<float> diffuseTexture [[texture(0)]],
     sampler textureSampler [[sampler(0)]])
 {

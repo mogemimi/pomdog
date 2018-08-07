@@ -29,7 +29,7 @@ float SquaredVignette(float2 textureCoord, float radius, float softness)
 
 fragment float4 VignettePS(
     VS_OUTPUT input [[stage_in]],
-    constant VignetteBlock& vignetteUniforms [[ buffer(2) ]],
+    constant VignetteBlock& vignetteUniforms [[buffer(1)]],
     texture2d<float> diffuseTexture [[texture(0)]],
     sampler textureSampler [[sampler(0)]])
 {

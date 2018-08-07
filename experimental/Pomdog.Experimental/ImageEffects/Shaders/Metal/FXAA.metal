@@ -23,7 +23,7 @@ struct __attribute__((__aligned__(256))) ImageEffectConstants {
 
 vertex VS_OUTPUT FxaaVS(
     VS_INPUT input [[stage_in]],
-    constant ImageEffectConstants& uniforms [[ buffer(1) ]])
+    constant ImageEffectConstants& uniforms [[buffer(0)]])
 {
     VS_OUTPUT output;
 
@@ -120,7 +120,7 @@ float4 FxaaPixelShader(FxaaTex tex, float4 posPos, float2 rcpFrame)
 
 fragment float4 FxaaPS(
     VS_OUTPUT input [[stage_in]],
-    constant ImageEffectConstants& uniforms [[ buffer(1) ]],
+    constant ImageEffectConstants& uniforms [[buffer(0)]],
     texture2d<float> diffuseTexture [[texture(0)]],
     sampler textureSampler [[sampler(0)]])
 {

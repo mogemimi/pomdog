@@ -53,8 +53,8 @@ uv=p;}
 uv.y=uv.y*prop;
 return uv;}}fragment float4 FishEyePS(
 VS_OUTPUT input [[stage_in]],
-constant ImageEffectConstants& uniforms [[ buffer(1)]],
-constant FishEyeBlock& fishEyeUniforms [[ buffer(2)]],
+constant ImageEffectConstants& uniforms [[buffer(0)]],
+constant FishEyeBlock& fishEyeUniforms [[buffer(1)]],
 texture2d<float> diffuseTexture [[texture(0)]],
 sampler textureSampler [[sampler(0)]]){
 float2 uv=FishEye(input.TextureCoord.xy,uniforms.RenderTargetPixelSize.xy,fishEyeUniforms.Strength);

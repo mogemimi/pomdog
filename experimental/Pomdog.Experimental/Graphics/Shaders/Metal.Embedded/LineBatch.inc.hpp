@@ -14,7 +14,7 @@ float4 Position [[position]];
 float4 DestinationColor;};
 vertex VS_OUTPUT LineBatchVS(
 VS_INPUT input [[stage_in]],
-constant TransformMatrix& uniforms [[ buffer(1)]]){
+constant TransformMatrix& uniforms [[buffer(0)]]){
 VS_OUTPUT out;
 out.Position=float4(input.Position,1.0)*uniforms.ViewProjection;
 out.DestinationColor=input.Color;

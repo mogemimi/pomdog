@@ -16,7 +16,7 @@ float2 squaredPos=position*position;
 float len=sqrt(length(squaredPos));
 return smoothstep(radius,radius-softness,len);}}fragment float4 VignettePS(
 VS_OUTPUT input [[stage_in]],
-constant VignetteBlock& vignetteUniforms [[ buffer(2)]],
+constant VignetteBlock& vignetteUniforms [[buffer(1)]],
 texture2d<float> diffuseTexture [[texture(0)]],
 sampler textureSampler [[sampler(0)]]){
 float radius=0.68-(0.05*vignetteUniforms.Intensity);

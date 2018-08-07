@@ -15,7 +15,7 @@ float2 RenderTargetPixelSize;
 float2 RcpFrame;};
 vertex VS_OUTPUT FxaaVS(
 VS_INPUT input [[stage_in]],
-constant ImageEffectConstants& uniforms [[ buffer(1)]]){
+constant ImageEffectConstants& uniforms [[buffer(0)]]){
 VS_OUTPUT output;
 output.Position=float4(input.Position.xyz,1);
 const float FxaaSubpixShift=0.25;
@@ -67,7 +67,7 @@ if((lumaB<lumaMin)||(lumaB>lumaMax)){
 rgbB.xyz=rgbA.xyz*0.5;}
 return float4(rgbB,1.0);}}fragment float4 FxaaPS(
 VS_OUTPUT input [[stage_in]],
-constant ImageEffectConstants& uniforms [[ buffer(1)]],
+constant ImageEffectConstants& uniforms [[buffer(0)]],
 texture2d<float> diffuseTexture [[texture(0)]],
 sampler textureSampler [[sampler(0)]]){
 FxaaTex fxaaTex={ diffuseTexture,textureSampler };

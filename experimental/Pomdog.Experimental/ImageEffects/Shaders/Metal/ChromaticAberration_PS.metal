@@ -46,7 +46,7 @@ float3 ChromaticAberration(
 
 fragment float4 ChromaticAberrationPS(
     VS_OUTPUT input [[stage_in]],
-    constant ImageEffectConstants& uniforms [[ buffer(1) ]],
+    constant ImageEffectConstants& uniforms [[buffer(0)]],
     texture2d<float> diffuseTexture [[texture(0)]],
     sampler textureSampler [[sampler(0)]])
 {

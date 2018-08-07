@@ -21,7 +21,7 @@ float artifact=cos(texCoord.y*resolution.y*2.0)*0.5+0.5;
 float x=artifact*blendFactor;
 return max(color.rgb-float3(x,x,x),float3(0,0,0));}}fragment float4 RetroCrtEffectPS(
 VS_OUTPUT input [[stage_in]],
-constant ImageEffectConstants& uniforms [[ buffer(1)]],
+constant ImageEffectConstants& uniforms [[buffer(0)]],
 texture2d<float> diffuseTexture [[texture(0)]],
 sampler textureSampler [[sampler(0)]]){
 float3 color=RetroCrtEffect(
