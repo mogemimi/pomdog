@@ -827,6 +827,7 @@ endif()
 if(POMDOG_TARGET_PLATFORM MATCHES "Win32")
   target_compile_options(pomdog_static PRIVATE
     /W4
+    /WX
     "$<$<CONFIG:DEBUG>:/Od;/MTd>"
     "$<$<CONFIG:RELEASE>:/O2;/Ob2;/MT>"
   )
