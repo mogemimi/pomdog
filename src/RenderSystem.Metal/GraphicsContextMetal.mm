@@ -467,9 +467,6 @@ void GraphicsContextMetal::SetRenderPass(const RenderPass& renderPass)
     MTLRenderPassDescriptor* renderPassDescriptor = [[MTLRenderPassDescriptor alloc] init];
     POMDOG_ASSERT(renderPassDescriptor != nil);
 
-    renderPassDescriptor.depthAttachment.loadAction = MTLLoadActionDontCare;
-    renderPassDescriptor.stencilAttachment.loadAction = MTLLoadActionDontCare;
-
     int renderTargetIndex = 0;
     for (const auto& renderTargetView: renderPass.RenderTargets) {
         auto & renderTarget = std::get<0>(renderTargetView);
@@ -493,6 +490,8 @@ void GraphicsContextMetal::SetRenderPass(const RenderPass& renderPass)
         else {
             renderPassDescriptor.colorAttachments[renderTargetIndex].loadAction = MTLLoadActionDontCare;
         }
+
+        renderPassDescriptor.colorAttachments[renderTargetIndex].storeAction = MTLStoreActionStore;
         ++renderTargetIndex;
     }
 
@@ -512,6 +511,15 @@ void GraphicsContextMetal::SetRenderPass(const RenderPass& renderPass)
             renderPassDescriptor.depthAttachment.texture = nativeRenderTarget->GetDepthStencilTexture();
             renderPassDescriptor.stencilAttachment.texture = nativeRenderTarget->GetDepthStencilTexture();
         }
+    }
+
+    if (renderPassDescriptor.depthAttachment.texture != nil) {
+        renderPassDescriptor.depthAttachment.loadAction = MTLLoadActionLoad;
+        renderPassDescriptor.depthAttachment.storeAction = MTLStoreActionStore;
+    }
+    if (renderPassDescriptor.stencilAttachment.texture != nil) {
+        renderPassDescriptor.stencilAttachment.loadAction = MTLLoadActionLoad;
+        renderPassDescriptor.stencilAttachment.storeAction = MTLStoreActionStore;
     }
 
     if (renderPass.ClearDepth) {
