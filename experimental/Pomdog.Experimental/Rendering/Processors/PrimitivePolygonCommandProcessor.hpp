@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "Pomdog.Experimental/Graphics/PolygonBatch.hpp"
 #include "Pomdog.Experimental/Rendering/RenderCommandProcessor.hpp"
+#include "Pomdog/Experimental/Graphics/PolygonBatch.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Math/Matrix4x4.hpp"
 

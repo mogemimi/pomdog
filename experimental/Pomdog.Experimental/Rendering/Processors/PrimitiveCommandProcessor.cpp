@@ -9,11 +9,12 @@ namespace Rendering {
 namespace {
 
 // Built-in shaders
-#include "../../Graphics/Shaders/GLSL.Embedded/LineBatch_VS.inc.hpp"
-#include "../../Graphics/Shaders/GLSL.Embedded/LineBatch_PS.inc.hpp"
-#include "../../Graphics/Shaders/HLSL.Embedded/LineBatch_VS.inc.hpp"
-#include "../../Graphics/Shaders/HLSL.Embedded/LineBatch_PS.inc.hpp"
-#include "../../Graphics/Shaders/Metal.Embedded/LineBatch.inc.hpp"
+// FIXME: Bad include paths
+#include "../../../../src/Experimental/Graphics/Shaders/GLSL.Embedded/LineBatch_VS.inc.hpp"
+#include "../../../../src/Experimental/Graphics/Shaders/GLSL.Embedded/LineBatch_PS.inc.hpp"
+#include "../../../../src/Experimental/Graphics/Shaders/HLSL.Embedded/LineBatch_VS.inc.hpp"
+#include "../../../../src/Experimental/Graphics/Shaders/HLSL.Embedded/LineBatch_PS.inc.hpp"
+#include "../../../../src/Experimental/Graphics/Shaders/Metal.Embedded/LineBatch.inc.hpp"
 
 } // unnamed namespace
 

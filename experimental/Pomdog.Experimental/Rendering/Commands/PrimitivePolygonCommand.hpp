@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Pomdog.Experimental/Rendering/RenderCommand.hpp"
-#include "Pomdog.Experimental/Graphics/PolygonBatch.hpp"
+#include "Pomdog/Experimental/Graphics/PolygonBatch.hpp"
 #include <Pomdog/Pomdog.hpp>
 #include <memory>
 

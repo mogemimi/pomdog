@@ -5,7 +5,7 @@
 #include "Pomdog.Experimental/Gameplay/detail/ComponentTypeIndex.hpp"
 #include "Pomdog.Experimental/Gameplay2D/GraphicsComponent.hpp"
 #include "Pomdog.Experimental/Rendering/Commands/PrimitiveCommand.hpp"
-#include "Pomdog.Experimental/Graphics/PolygonShapeBuilder.hpp"
+#include "Pomdog/Experimental/Graphics/PolygonShapeBuilder.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Math/Vector2.hpp"
 #include <Pomdog/Pomdog.hpp>

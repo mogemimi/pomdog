@@ -1,9 +1,9 @@
 #pragma once
 
 #include <Pomdog.Experimental/Gameplay/Scene.hpp>
-#include <Pomdog.Experimental/Graphics/SpriteFont.hpp>
 #include <Pomdog.Experimental/Gameplay2D/Simple2DGameEngine.hpp>
 #include <Pomdog.Experimental/Gameplay2D/CameraComponent.hpp>
+#include <Pomdog/Experimental/Graphics/SpriteFont.hpp>
 #include <Pomdog/Pomdog.hpp>
 #include <deque>
 #include <map>

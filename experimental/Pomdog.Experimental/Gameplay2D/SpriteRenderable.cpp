@@ -2,8 +2,8 @@
 
 #include "Pomdog.Experimental/Gameplay2D/SpriteRenderable.hpp"
 #include "Pomdog.Experimental/Gameplay2D/Transform.hpp"
-#include "Pomdog.Experimental/Graphics/SpriteBatchRenderer.hpp"
 #include "Pomdog.Experimental/Rendering/Renderer.hpp"
+#include "Pomdog/Experimental/Graphics/SpriteBatchRenderer.hpp"
 #include <limits>
 
 namespace Pomdog {
