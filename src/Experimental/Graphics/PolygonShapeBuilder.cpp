@@ -1,6 +1,6 @@
 // Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
-#include "PolygonShapeBuilder.hpp"
+#include "Pomdog/Experimental/Graphics/PolygonShapeBuilder.hpp"
 #include "Pomdog/Math/MathHelper.hpp"
 #include <array>
 #include <cmath>
@@ -40,7 +40,7 @@ void PolygonShapeBuilder::Reset()
     vertices.clear();
 }
 
-PolygonBatchVertex const* PolygonShapeBuilder::GetData() const noexcept
+const PolygonBatchVertex* PolygonShapeBuilder::GetData() const noexcept
 {
     return vertices.data();
 }
@@ -85,7 +85,7 @@ void PolygonShapeBuilder::DrawArc(
         std::min(arcAngle.value, Math::TwoPi<float>) / segments;
 
     auto computePoint = [&](int index) {
-        auto rad =  startAngle + centralAngle * index;
+        auto rad = startAngle + centralAngle * index;
         auto cos = std::cos(rad.value);
         auto sin = std::sin(rad.value);
         return center + Vector3{radius * Vector2{cos, sin}, 0};

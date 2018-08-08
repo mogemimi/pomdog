@@ -1,8 +1,9 @@
 // Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
-#include "SpriteBatchRenderer.hpp"
+#include "Pomdog/Experimental/Graphics/SpriteBatchRenderer.hpp"
 #include "Pomdog/Content/AssetBuilders/PipelineStateBuilder.hpp"
 #include "Pomdog/Content/AssetBuilders/ShaderBuilder.hpp"
+#include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Graphics/BufferUsage.hpp"
 #include "Pomdog/Graphics/ConstantBuffer.hpp"
 #include "Pomdog/Graphics/DepthStencilDescription.hpp"
@@ -33,10 +34,10 @@ namespace Pomdog {
 namespace {
 
 // Built-in shaders
-#include "Shaders/GLSL.Embedded/SpriteBatchRenderer_VS.inc.hpp"
 #include "Shaders/GLSL.Embedded/SpriteBatchRenderer_PS.inc.hpp"
-#include "Shaders/HLSL.Embedded/SpriteBatchRenderer_VS.inc.hpp"
+#include "Shaders/GLSL.Embedded/SpriteBatchRenderer_VS.inc.hpp"
 #include "Shaders/HLSL.Embedded/SpriteBatchRenderer_PS.inc.hpp"
+#include "Shaders/HLSL.Embedded/SpriteBatchRenderer_VS.inc.hpp"
 #include "Shaders/Metal.Embedded/SpriteBatchRenderer.inc.hpp"
 
 SpriteBatchPipelineStateDescription CreateDefaultPipelineState(
@@ -290,7 +291,6 @@ void SpriteBatchRenderer::Impl::RenderBatch(
         sizeof(SpriteInfo));
 
     commandList->SetTexture(0, texture);
-
     commandList->SetSamplerState(0, sampler);
 
     commandList->SetPipelineState(pipelineState);
@@ -319,21 +319,23 @@ void SpriteBatchRenderer::Impl::CompareTexture(const std::shared_ptr<Texture2D>&
 {
     POMDOG_ASSERT(texture != nullptr);
 
-    if (texture != currentTexture) {
-        if (currentTexture != nullptr) {
-            FlushBatch();
-        }
-        POMDOG_ASSERT(spriteQueue.empty());
-        POMDOG_ASSERT(currentTexture == nullptr);
-
-        currentTexture = texture;
-
-        POMDOG_ASSERT(texture->GetWidth() > 0);
-        POMDOG_ASSERT(texture->GetHeight() > 0);
-
-        inverseTextureSize.X = (texture->GetWidth() > 0) ? (1.0f / static_cast<float>(texture->GetWidth())) : 0.0f;
-        inverseTextureSize.Y = (texture->GetHeight() > 0) ? (1.0f / static_cast<float>(texture->GetHeight())) : 0.0f;
+    if (texture == currentTexture) {
+        return;
     }
+
+    if (currentTexture != nullptr) {
+        FlushBatch();
+    }
+    POMDOG_ASSERT(spriteQueue.empty());
+    POMDOG_ASSERT(currentTexture == nullptr);
+
+    currentTexture = texture;
+
+    POMDOG_ASSERT(texture->GetWidth() > 0);
+    POMDOG_ASSERT(texture->GetHeight() > 0);
+
+    inverseTextureSize.X = (texture->GetWidth() > 0) ? (1.0f / static_cast<float>(texture->GetWidth())) : 0.0f;
+    inverseTextureSize.Y = (texture->GetHeight() > 0) ? (1.0f / static_cast<float>(texture->GetHeight())) : 0.0f;
 }
 
 void SpriteBatchRenderer::Impl::Draw(
@@ -462,14 +464,16 @@ SpriteBatchRenderer::SpriteBatchRenderer(
         graphicsDevice,
         CreateDefaultPipelineState(graphicsDevice->GetPresentationParameters()),
         assets)
-{}
+{
+}
 
 SpriteBatchRenderer::SpriteBatchRenderer(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
     const SpriteBatchPipelineStateDescription& pipelineStateDescription,
     AssetManager & assets)
     : impl(std::make_unique<Impl>(graphicsDevice, pipelineStateDescription, assets))
-{}
+{
+}
 
 SpriteBatchRenderer::~SpriteBatchRenderer() = default;
 

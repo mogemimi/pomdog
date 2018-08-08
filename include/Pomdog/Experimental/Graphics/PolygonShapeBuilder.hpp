@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Matrix3x2.hpp"
 #include "Pomdog/Math/Matrix4x4.hpp"
@@ -16,7 +17,7 @@
 
 namespace Pomdog {
 
-struct PolygonBatchVertex {
+struct PolygonBatchVertex final {
     // {xyz} = position.xyz
     Vector3 Position;
 
@@ -24,9 +25,9 @@ struct PolygonBatchVertex {
     Vector4 Color;
 };
 
-class PolygonShapeBuilder {
+class POMDOG_EXPORT PolygonShapeBuilder final {
 private:
-    typedef PolygonBatchVertex Vertex;
+    using Vertex = PolygonBatchVertex;
     std::vector<PolygonBatchVertex> vertices;
     std::size_t maxVertexCount;
     std::size_t minVertexCount;
@@ -39,7 +40,7 @@ public:
 
     void Reset();
 
-    PolygonBatchVertex const* GetData() const noexcept;
+    const PolygonBatchVertex* GetData() const noexcept;
 
     std::size_t GetVertexCount() const noexcept;
 

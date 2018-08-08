@@ -1,6 +1,8 @@
 // Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
-#include "SpriteFontLoader.hpp"
+#include "Pomdog/Experimental/Graphics/SpriteFontLoader.hpp"
+#include "Pomdog/Experimental/Graphics/FontGlyph.hpp"
+#include "Pomdog/Experimental/Graphics/SpriteFont.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include "Pomdog/Utility/PathHelper.hpp"
@@ -228,17 +230,15 @@ BitmapFontPage ParsePage(std::istream & stream)
     return result;
 }
 
-Detail::SpriteFonts::Glyph ParseGlyph(std::istream & stream)
+FontGlyph ParseGlyph(std::istream & stream)
 {
-    Detail::SpriteFonts::Glyph result;
+    FontGlyph result;
 
     std::string source;
-    while (stream >> source && !stream.fail())
-    {
+    while (stream >> source && !stream.fail()) {
         auto expr = std::regex("([a-zA-Z_][a-zA-Z0-9_]*)(=)(.*)");
         std::smatch match;
-        if (std::regex_match(source, match, expr))
-        {
+        if (std::regex_match(source, match, expr)) {
             POMDOG_ASSERT(match.size() >= 4);
             auto name = match[1].str();
             auto arguments = match[3].str();
@@ -292,7 +292,7 @@ std::shared_ptr<SpriteFont> SpriteFontLoader::Load(
     }
 
     std::vector<BitmapFontPage> pages;
-    std::vector<Detail::SpriteFonts::Glyph> glyphs;
+    std::vector<FontGlyph> glyphs;
     glyphs.reserve(127);
 
     BitmapFontInfo info;
@@ -351,9 +351,7 @@ std::shared_ptr<SpriteFont> SpriteFontLoader::Load(
     std::vector<std::shared_ptr<Texture2D>> textures;
     {
         auto directoryName = std::get<0>(PathHelper::Split(assetName));
-
-        for (auto & page: pages)
-        {
+        for (auto & page: pages) {
             textures.push_back(assets.Load<Texture2D>(directoryName + page.Path));
         }
     }

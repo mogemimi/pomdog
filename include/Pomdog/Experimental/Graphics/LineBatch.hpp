@@ -2,14 +2,16 @@
 
 #pragma once
 
-#include "Pomdog/Content/AssetManager.hpp"
+#include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Math/detail/ForwardDeclarations.hpp"
 #include <memory>
 
 namespace Pomdog {
 
-class LineBatch {
+class AssetManager;
+
+class POMDOG_EXPORT LineBatch final {
 public:
     LineBatch(
         const std::shared_ptr<GraphicsDevice>& graphicsDevice,

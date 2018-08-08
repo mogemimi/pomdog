@@ -2,18 +2,20 @@
 
 #pragma once
 
-#include "Pomdog/Content/AssetManager.hpp"
-#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Graphics/BlendDescription.hpp"
 #include "Pomdog/Graphics/DepthFormat.hpp"
 #include "Pomdog/Graphics/SamplerDescription.hpp"
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
+#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Math/detail/ForwardDeclarations.hpp"
 #include <cstdint>
 #include <memory>
 #include <vector>
 
 namespace Pomdog {
+
+class AssetManager;
 
 struct SpriteBatchPipelineStateDescription final {
     BlendDescription BlendState;
@@ -22,7 +24,7 @@ struct SpriteBatchPipelineStateDescription final {
     DepthFormat DepthStencilViewFormat;
 };
 
-class SpriteBatchRenderer {
+class POMDOG_EXPORT SpriteBatchRenderer final {
 public:
     SpriteBatchRenderer(
         const std::shared_ptr<GraphicsDevice>& graphicsDevice,

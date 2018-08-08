@@ -2,10 +2,9 @@
 
 #pragma once
 
-#include "Pomdog.Experimental/Graphics/SpriteFont.hpp"
-#include <Pomdog/Content/AssetManager.hpp>
-#include <Pomdog/Utility/Optional.hpp>
-#include <Pomdog/Math/detail/ForwardDeclarations.hpp>
+#include "Pomdog/Basic/Export.hpp"
+#include "Pomdog/Utility/Optional.hpp"
+#include "Pomdog/Math/detail/ForwardDeclarations.hpp"
 #include <cstdint>
 #include <memory>
 #include <string>
@@ -13,14 +12,16 @@
 
 namespace Pomdog {
 
-class TrueTypeFont final {
+class AssetManager;
+struct FontGlyph;
+
+class POMDOG_EXPORT TrueTypeFont final {
 public:
     TrueTypeFont(const AssetManager& assets, const std::string& fontPath);
 
     ~TrueTypeFont();
 
-    Optional<Detail::SpriteFonts::Glyph>
-    RasterizeGlyph(
+    Optional<FontGlyph> RasterizeGlyph(
         char32_t codePoint,
         float pixelHeight,
         int textureWidth,

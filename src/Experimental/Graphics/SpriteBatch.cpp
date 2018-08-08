@@ -41,10 +41,10 @@ namespace Pomdog {
 namespace {
 
 // Built-in shaders
-#include "Shaders/GLSL.Embedded/SpriteBatch_VS.inc.hpp"
 #include "Shaders/GLSL.Embedded/SpriteBatch_PS.inc.hpp"
-#include "Shaders/HLSL.Embedded/SpriteBatch_VS.inc.hpp"
+#include "Shaders/GLSL.Embedded/SpriteBatch_VS.inc.hpp"
 #include "Shaders/HLSL.Embedded/SpriteBatch_PS.inc.hpp"
+#include "Shaders/HLSL.Embedded/SpriteBatch_VS.inc.hpp"
 #include "Shaders/Metal.Embedded/SpriteBatch.inc.hpp"
 
 } // unnamed namespace
@@ -502,7 +502,8 @@ SpriteBatch::SpriteBatch(
     const BlendDescription& blendDescription,
     AssetManager & assets)
     : impl(std::make_unique<Impl>(graphicsDevice, blendDescription, assets))
-{}
+{
+}
 
 SpriteBatch::~SpriteBatch() = default;
 

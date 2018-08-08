@@ -1,6 +1,9 @@
 // Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
-#include "TrueTypeFont.hpp"
+#include "Pomdog/Experimental/Graphics/TrueTypeFont.hpp"
+#include "Pomdog/Experimental/Graphics/FontGlyph.hpp"
+#include "Pomdog/Experimental/Graphics/SpriteFont.hpp"
+#include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
 #include "Pomdog/Math/Point2D.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -12,6 +15,7 @@
 #if defined(__clang__)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wcomma"
+#pragma clang diagnostic ignored "-Wimplicit-fallthrough"
 #endif
 #define STB_TRUETYPE_IMPLEMENTATION
 #include <stb_truetype.h>
@@ -21,11 +25,8 @@
 
 namespace Pomdog {
 
-using Detail::SpriteFonts::Glyph;
-
 class TrueTypeFont::Impl final {
 public:
-    typedef Detail::SpriteFonts::Glyph Glyph;
     std::vector<std::uint8_t> ttfBinary;
     stbtt_fontinfo fontInfo;
 
@@ -80,8 +81,7 @@ TrueTypeFont::~TrueTypeFont()
     impl->Reset();
 }
 
-Optional<Detail::SpriteFonts::Glyph>
-TrueTypeFont::RasterizeGlyph(
+Optional<FontGlyph> TrueTypeFont::RasterizeGlyph(
     char32_t codePoint,
     float pixelHeight,
     int textureWidth,
@@ -128,7 +128,7 @@ TrueTypeFont::RasterizeGlyph(
             glyphWidth, glyphHeight, textureWidth, scale, scale, g);
     }
 
-    Glyph glyph;
+    FontGlyph glyph;
     glyph.Subrect.X = point.X;
     glyph.Subrect.Y = point.Y;
     glyph.Subrect.Width = glyphWidth;

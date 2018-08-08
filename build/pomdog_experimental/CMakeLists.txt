@@ -91,29 +91,15 @@ set(SOURCE_FILES
   ${POMDOG_EXPERIMENTAL_DIR}/Gameplay2D/Transform.cpp
   ${POMDOG_EXPERIMENTAL_DIR}/Gameplay2D/Transform.hpp
 
-  ${POMDOG_EXPERIMENTAL_DIR}/Graphics/LineBatch.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Graphics/LineBatch.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Graphics/PolygonBatch.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Graphics/PolygonBatch.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Graphics/PolygonShapeBuilder.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Graphics/PolygonShapeBuilder.hpp
   ${POMDOG_EXPERIMENTAL_DIR}/Graphics/ScreenQuad.cpp
   ${POMDOG_EXPERIMENTAL_DIR}/Graphics/ScreenQuad.hpp
   # ${POMDOG_EXPERIMENTAL_DIR}/Graphics/SkinnedEffect.cpp
   # ${POMDOG_EXPERIMENTAL_DIR}/Graphics/SkinnedEffect.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Graphics/SpriteBatchRenderer.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Graphics/SpriteBatchRenderer.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Graphics/SpriteFont.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Graphics/SpriteFont.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Graphics/SpriteFontLoader.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Graphics/SpriteFontLoader.hpp
   # ${POMDOG_EXPERIMENTAL_DIR}/Graphics/SpriteLine.cpp
   # ${POMDOG_EXPERIMENTAL_DIR}/Graphics/SpriteLine.hpp
   ${POMDOG_EXPERIMENTAL_DIR}/Graphics/SpriteSortMode.hpp
   # ${POMDOG_EXPERIMENTAL_DIR}/Graphics/SpriteRenderer.cpp
   # ${POMDOG_EXPERIMENTAL_DIR}/Graphics/SpriteRenderer.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Graphics/TrueTypeFont.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Graphics/TrueTypeFont.hpp
 
   ${POMDOG_EXPERIMENTAL_DIR}/ImageEffects/ChromaticAberration.cpp
   ${POMDOG_EXPERIMENTAL_DIR}/ImageEffects/ChromaticAberration.hpp
@@ -318,8 +304,6 @@ include_directories(
   ${POMDOG_DIR}/experimental
   ${POMDOG_DIR}/include
   ${POMDOG_DIR}/dependencies/rapidjson/include
-  ${POMDOG_DIR}/dependencies/stb
-  ${POMDOG_DIR}/dependencies
 )
 
 list(SORT SOURCE_FILES)

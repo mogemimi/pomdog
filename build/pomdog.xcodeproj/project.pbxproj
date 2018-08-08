@@ -153,6 +153,20 @@
 		A98BE0D41CC22915008696A8 /* GameHostMetal.mm in Sources */ = {isa = PBXBuildFile; fileRef = A98BE0D31CC22915008696A8 /* GameHostMetal.mm */; };
 		A98BE0D51CC22915008696A8 /* GameHostMetal.mm in Sources */ = {isa = PBXBuildFile; fileRef = A98BE0D31CC22915008696A8 /* GameHostMetal.mm */; };
 		A98CB91E8C51E158141731F1 /* PipelineState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7E14E3AE6B465875CD29816 /* PipelineState.cpp */; };
+		A98F591A211B2B89002960C1 /* LineBatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A98F5917211B2B89002960C1 /* LineBatch.cpp */; };
+		A98F591B211B2B89002960C1 /* LineBatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A98F5917211B2B89002960C1 /* LineBatch.cpp */; };
+		A98F591C211B2B89002960C1 /* PolygonShapeBuilder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A98F5918211B2B89002960C1 /* PolygonShapeBuilder.cpp */; };
+		A98F591D211B2B89002960C1 /* PolygonShapeBuilder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A98F5918211B2B89002960C1 /* PolygonShapeBuilder.cpp */; };
+		A98F591E211B2B89002960C1 /* PolygonBatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A98F5919211B2B89002960C1 /* PolygonBatch.cpp */; };
+		A98F591F211B2B89002960C1 /* PolygonBatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A98F5919211B2B89002960C1 /* PolygonBatch.cpp */; };
+		A98F5924211B2B9A002960C1 /* SpriteFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A98F5920211B2B9A002960C1 /* SpriteFont.cpp */; };
+		A98F5925211B2B9A002960C1 /* SpriteFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A98F5920211B2B9A002960C1 /* SpriteFont.cpp */; };
+		A98F5926211B2B9A002960C1 /* SpriteFontLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A98F5921211B2B9A002960C1 /* SpriteFontLoader.cpp */; };
+		A98F5927211B2B9A002960C1 /* SpriteFontLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A98F5921211B2B9A002960C1 /* SpriteFontLoader.cpp */; };
+		A98F5928211B2B9A002960C1 /* SpriteBatchRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A98F5922211B2B9A002960C1 /* SpriteBatchRenderer.cpp */; };
+		A98F5929211B2B9A002960C1 /* SpriteBatchRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A98F5922211B2B9A002960C1 /* SpriteBatchRenderer.cpp */; };
+		A98F592A211B2B9A002960C1 /* TrueTypeFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A98F5923211B2B9A002960C1 /* TrueTypeFont.cpp */; };
+		A98F592B211B2B9A002960C1 /* TrueTypeFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A98F5923211B2B9A002960C1 /* TrueTypeFont.cpp */; };
 		A992AF021C2B1168003170C9 /* Coordinate2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A992AF001C2B1168003170C9 /* Coordinate2D.cpp */; };
 		A992AF031C2B1168003170C9 /* Coordinate2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A992AF001C2B1168003170C9 /* Coordinate2D.cpp */; };
 		A992AF041C2B1168003170C9 /* Coordinate3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A992AF011C2B1168003170C9 /* Coordinate3D.cpp */; };
@@ -581,6 +595,21 @@
 		A98BE0D21CC22915008696A8 /* GameHostMetal.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameHostMetal.hpp; sourceTree = "<group>"; };
 		A98BE0D31CC22915008696A8 /* GameHostMetal.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GameHostMetal.mm; sourceTree = "<group>"; };
 		A98CFCA421180B0000D4D033 /* ConstantsMetal.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ConstantsMetal.hpp; sourceTree = "<group>"; };
+		A98F5917211B2B89002960C1 /* LineBatch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LineBatch.cpp; path = Graphics/LineBatch.cpp; sourceTree = "<group>"; };
+		A98F5918211B2B89002960C1 /* PolygonShapeBuilder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PolygonShapeBuilder.cpp; path = Graphics/PolygonShapeBuilder.cpp; sourceTree = "<group>"; };
+		A98F5919211B2B89002960C1 /* PolygonBatch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PolygonBatch.cpp; path = Graphics/PolygonBatch.cpp; sourceTree = "<group>"; };
+		A98F5920211B2B9A002960C1 /* SpriteFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SpriteFont.cpp; path = Graphics/SpriteFont.cpp; sourceTree = "<group>"; };
+		A98F5921211B2B9A002960C1 /* SpriteFontLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SpriteFontLoader.cpp; path = Graphics/SpriteFontLoader.cpp; sourceTree = "<group>"; };
+		A98F5922211B2B9A002960C1 /* SpriteBatchRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SpriteBatchRenderer.cpp; path = Graphics/SpriteBatchRenderer.cpp; sourceTree = "<group>"; };
+		A98F5923211B2B9A002960C1 /* TrueTypeFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TrueTypeFont.cpp; path = Graphics/TrueTypeFont.cpp; sourceTree = "<group>"; };
+		A98F592C211B2BB6002960C1 /* PolygonBatch.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = PolygonBatch.hpp; path = Graphics/PolygonBatch.hpp; sourceTree = "<group>"; };
+		A98F592D211B2BB6002960C1 /* PolygonShapeBuilder.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = PolygonShapeBuilder.hpp; path = Graphics/PolygonShapeBuilder.hpp; sourceTree = "<group>"; };
+		A98F592E211B2BB7002960C1 /* FontGlyph.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = FontGlyph.hpp; path = Graphics/FontGlyph.hpp; sourceTree = "<group>"; };
+		A98F592F211B2BB7002960C1 /* LineBatch.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = LineBatch.hpp; path = Graphics/LineBatch.hpp; sourceTree = "<group>"; };
+		A98F5930211B2BBD002960C1 /* SpriteBatchRenderer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = SpriteBatchRenderer.hpp; path = Graphics/SpriteBatchRenderer.hpp; sourceTree = "<group>"; };
+		A98F5931211B2BBD002960C1 /* SpriteFont.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = SpriteFont.hpp; path = Graphics/SpriteFont.hpp; sourceTree = "<group>"; };
+		A98F5932211B2BBD002960C1 /* SpriteFontLoader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = SpriteFontLoader.hpp; path = Graphics/SpriteFontLoader.hpp; sourceTree = "<group>"; };
+		A98F5933211B2BBD002960C1 /* TrueTypeFont.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = TrueTypeFont.hpp; path = Graphics/TrueTypeFont.hpp; sourceTree = "<group>"; };
 		A992AF001C2B1168003170C9 /* Coordinate2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Coordinate2D.cpp; sourceTree = "<group>"; };
 		A992AF011C2B1168003170C9 /* Coordinate3D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Coordinate3D.cpp; sourceTree = "<group>"; };
 		A997F6DB1CAEFB0800926392 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
@@ -1459,7 +1488,14 @@
 		A9FC99031DC3D86C00C78D63 /* Graphics */ = {
 			isa = PBXGroup;
 			children = (
+				A98F5917211B2B89002960C1 /* LineBatch.cpp */,
+				A98F5919211B2B89002960C1 /* PolygonBatch.cpp */,
+				A98F5918211B2B89002960C1 /* PolygonShapeBuilder.cpp */,
 				A9FC99041DC3D87F00C78D63 /* SpriteBatch.cpp */,
+				A98F5922211B2B9A002960C1 /* SpriteBatchRenderer.cpp */,
+				A98F5920211B2B9A002960C1 /* SpriteFont.cpp */,
+				A98F5921211B2B9A002960C1 /* SpriteFontLoader.cpp */,
+				A98F5923211B2B9A002960C1 /* TrueTypeFont.cpp */,
 			);
 			name = Graphics;
 			sourceTree = "<group>";
@@ -1467,7 +1503,15 @@
 		A9FC99081DC3D8E100C78D63 /* Graphics */ = {
 			isa = PBXGroup;
 			children = (
+				A98F592E211B2BB7002960C1 /* FontGlyph.hpp */,
+				A98F592F211B2BB7002960C1 /* LineBatch.hpp */,
+				A98F592C211B2BB6002960C1 /* PolygonBatch.hpp */,
+				A98F592D211B2BB6002960C1 /* PolygonShapeBuilder.hpp */,
 				A9FC99091DC3D8F100C78D63 /* SpriteBatch.hpp */,
+				A98F5930211B2BBD002960C1 /* SpriteBatchRenderer.hpp */,
+				A98F5931211B2BBD002960C1 /* SpriteFont.hpp */,
+				A98F5932211B2BBD002960C1 /* SpriteFontLoader.hpp */,
+				A98F5933211B2BBD002960C1 /* TrueTypeFont.hpp */,
 			);
 			name = Graphics;
 			sourceTree = "<group>";
@@ -1896,6 +1940,7 @@
 				6AC6140DEE87DAE2DC52FFE7 /* KeyboardState.cpp in Sources */,
 				1650793D0884E1424679277F /* Log.cpp in Sources */,
 				D5CAE3F16D482B36E58155CA /* LogChannel.cpp in Sources */,
+				A98F591E211B2B89002960C1 /* PolygonBatch.cpp in Sources */,
 				5FC19F99728314D0AB72DDB8 /* BoundingBox.cpp in Sources */,
 				C256D286DB58A59C3115A07E /* BoundingBox2D.cpp in Sources */,
 				460526B2F0D0E531DBE74416 /* BoundingCircle.cpp in Sources */,
@@ -1924,8 +1969,10 @@
 				1C60BD023919A0C8916DB3E2 /* SurfaceFormatHelper.cpp in Sources */,
 				E7645392D6AC421C2703DF5E /* TextureHelper.cpp in Sources */,
 				C0B84A37FCB13D340E04120C /* Connection.cpp in Sources */,
+				A98F5924211B2B9A002960C1 /* SpriteFont.cpp in Sources */,
 				DD35FD410F3B10D3D7108DD5 /* ConnectionList.cpp in Sources */,
 				162657EF7F7D8D1E34C76882 /* EventQueue.cpp in Sources */,
+				A98F591C211B2B89002960C1 /* PolygonShapeBuilder.cpp in Sources */,
 				A9E4B86A210CD9C1003F87DC /* GamepadMappings.cpp in Sources */,
 				A9A822931DAB7FBE0091497F /* TextureAtlasGenerator.cpp in Sources */,
 				A9FC99051DC3D87F00C78D63 /* SpriteBatch.cpp in Sources */,
@@ -1936,6 +1983,7 @@
 				566D366B6621FECC73232526 /* PathHelper.cpp in Sources */,
 				3F941E8F3AB564A6641C4B0E /* StringHelper.cpp in Sources */,
 				C2373F7B8F6A07427D757B02 /* BlendStateGL4.cpp in Sources */,
+				A98F592A211B2B9A002960C1 /* TrueTypeFont.cpp in Sources */,
 				7A376FB1B427C73FA45B705F /* BufferGL4.cpp in Sources */,
 				2939F626E9115C7EE5EA0E3A /* DepthStencilStateGL4.cpp in Sources */,
 				B41EB006F4BCD3004879EB93 /* EffectReflectionGL4.cpp in Sources */,
@@ -1947,6 +1995,7 @@
 				A997F6F61CAEFC4800926392 /* BufferMetal.mm in Sources */,
 				D036ADDD0CD6E4CE27AC1A93 /* GraphicsContextGL4.cpp in Sources */,
 				74D477E9B36CBB96B59576DA /* GraphicsDeviceGL4.cpp in Sources */,
+				A98F5928211B2B9A002960C1 /* SpriteBatchRenderer.cpp in Sources */,
 				BD5C4B6ACB960141061065E7 /* InputLayoutGL4.cpp in Sources */,
 				616958519334C7EF67A9B08E /* PipelineStateGL4.cpp in Sources */,
 				373CF27D2193F65F489FA975 /* RasterizerStateGL4.cpp in Sources */,
@@ -1959,8 +2008,10 @@
 				6DED53A00BC530C5F59A2547 /* AudioEngineAL.cpp in Sources */,
 				7760B64AC769ED3067368A8C /* ContextOpenAL.cpp in Sources */,
 				7A500C8DE0D6DC20D936D25D /* ErrorCheckerAL.cpp in Sources */,
+				A98F591A211B2B89002960C1 /* LineBatch.cpp in Sources */,
 				63571970C7BE520D7EE1BB02 /* SoundEffectAL.cpp in Sources */,
 				3EC9EB32476FB3E3C3713D72 /* Bootstrap.mm in Sources */,
+				A98F5926211B2B9A002960C1 /* SpriteFontLoader.cpp in Sources */,
 				03F46EF697B70E1EE9B2533B /* CocoaWindowDelegate.mm in Sources */,
 				2A5B52A528596019ABF40617 /* GameHostCocoa.mm in Sources */,
 				E6DAE91B1C77C1736DB66CD7 /* GameWindowCocoa.mm in Sources */,
@@ -2024,6 +2075,7 @@
 				2C6A8330B306F09980C8EFE0 /* KeyboardState.cpp in Sources */,
 				1F0E6CB61ABDCD22F870F258 /* Log.cpp in Sources */,
 				2253F43FA13A0B293FE79749 /* LogChannel.cpp in Sources */,
+				A98F591F211B2B89002960C1 /* PolygonBatch.cpp in Sources */,
 				15C4EF0C411554073735CCF7 /* BoundingBox.cpp in Sources */,
 				77E3632C4F2E245C2F8B6927 /* BoundingBox2D.cpp in Sources */,
 				A6F13789F98E66A501FCF50A /* BoundingCircle.cpp in Sources */,
@@ -2052,8 +2104,10 @@
 				A5F5B45161ACFD33A1652F9C /* SurfaceFormatHelper.cpp in Sources */,
 				55635C9F9A88D4C77235D6EB /* TextureHelper.cpp in Sources */,
 				B8B5DF3E58503D84B8D7E2D9 /* Connection.cpp in Sources */,
+				A98F5925211B2B9A002960C1 /* SpriteFont.cpp in Sources */,
 				48657AD97E278FA04C4994B4 /* ConnectionList.cpp in Sources */,
 				5D895FC546DFD02F64646AF7 /* EventQueue.cpp in Sources */,
+				A98F591D211B2B89002960C1 /* PolygonShapeBuilder.cpp in Sources */,
 				A9E4B86B210CD9C1003F87DC /* GamepadMappings.cpp in Sources */,
 				A9A822941DAB7FBE0091497F /* TextureAtlasGenerator.cpp in Sources */,
 				A9FC99061DC3D87F00C78D63 /* SpriteBatch.cpp in Sources */,
@@ -2064,6 +2118,7 @@
 				8B19A1DD45CD8F8791C5B725 /* PathHelper.cpp in Sources */,
 				854A4F7DC911E624593C541D /* StringHelper.cpp in Sources */,
 				056E111E471F4C597FE6CE2D /* BlendStateGL4.cpp in Sources */,
+				A98F592B211B2B9A002960C1 /* TrueTypeFont.cpp in Sources */,
 				ECAB34E1967EA1239EBCAD19 /* BufferGL4.cpp in Sources */,
 				70602D1132700C62F76B98C7 /* DepthStencilStateGL4.cpp in Sources */,
 				14B5A80EB2F7EDF1D4226B3D /* EffectReflectionGL4.cpp in Sources */,
@@ -2075,6 +2130,7 @@
 				A997F6F71CAEFC4800926392 /* BufferMetal.mm in Sources */,
 				C7615C67C153671C670F649B /* GraphicsContextGL4.cpp in Sources */,
 				FD3FD836F0346B587EDB61DE /* GraphicsDeviceGL4.cpp in Sources */,
+				A98F5929211B2B9A002960C1 /* SpriteBatchRenderer.cpp in Sources */,
 				B3BF71F0DA976F207A41EC64 /* InputLayoutGL4.cpp in Sources */,
 				FC16EE3B4D5C9E58010BCD0A /* PipelineStateGL4.cpp in Sources */,
 				8DDEFF00D7FE9464C037A933 /* RasterizerStateGL4.cpp in Sources */,
@@ -2087,8 +2143,10 @@
 				9FFA1FA5C22F2299B1FD7B50 /* AudioEngineAL.cpp in Sources */,
 				D2C0DD27D04FFFC6B898AA80 /* ContextOpenAL.cpp in Sources */,
 				4B6482395A34745225470B08 /* ErrorCheckerAL.cpp in Sources */,
+				A98F591B211B2B89002960C1 /* LineBatch.cpp in Sources */,
 				526DFCDBB8C6C2F2C6EC26D2 /* SoundEffectAL.cpp in Sources */,
 				99DE12DBE8D4B0D14FDACD5F /* Bootstrap.mm in Sources */,
+				A98F5927211B2B9A002960C1 /* SpriteFontLoader.cpp in Sources */,
 				E8ACB94BC7A78F57A854EC2C /* CocoaWindowDelegate.mm in Sources */,
 				0AECD9F61617195B0205EFEF /* GameHostCocoa.mm in Sources */,
 				71E352760BC127DCF199C59B /* GameWindowCocoa.mm in Sources */,
@@ -2238,7 +2296,9 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					../include,
+					../dependencies,
 					../dependencies/libpng,
+					../dependencies/stb,
 					../dependencies/vendor/libpng,
 					../dependencies/vendor/giflib/lib,
 					../dependencies/vendor/SDL_GameControllerDB,
@@ -2317,7 +2377,9 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					../include,
+					../dependencies,
 					../dependencies/libpng,
+					../dependencies/stb,
 					../dependencies/vendor/libpng,
 					../dependencies/vendor/giflib/lib,
 					../dependencies/vendor/SDL_GameControllerDB,

@@ -1,9 +1,10 @@
 // Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
-#include "PolygonBatch.hpp"
-#include "Pomdog.Experimental/Graphics/PolygonShapeBuilder.hpp"
+#include "Pomdog/Experimental/Graphics/PolygonBatch.hpp"
 #include "Pomdog/Content/AssetBuilders/PipelineStateBuilder.hpp"
 #include "Pomdog/Content/AssetBuilders/ShaderBuilder.hpp"
+#include "Pomdog/Content/AssetManager.hpp"
+#include "Pomdog/Experimental/Graphics/PolygonShapeBuilder.hpp"
 #include "Pomdog/Graphics/BlendDescription.hpp"
 #include "Pomdog/Graphics/BufferUsage.hpp"
 #include "Pomdog/Graphics/ConstantBuffer.hpp"
@@ -33,10 +34,10 @@ namespace Pomdog {
 namespace {
 
 // Built-in shaders
-#include "Shaders/GLSL.Embedded/LineBatch_VS.inc.hpp"
 #include "Shaders/GLSL.Embedded/LineBatch_PS.inc.hpp"
-#include "Shaders/HLSL.Embedded/LineBatch_VS.inc.hpp"
+#include "Shaders/GLSL.Embedded/LineBatch_VS.inc.hpp"
 #include "Shaders/HLSL.Embedded/LineBatch_PS.inc.hpp"
+#include "Shaders/HLSL.Embedded/LineBatch_VS.inc.hpp"
 #include "Shaders/Metal.Embedded/LineBatch.inc.hpp"
 
 } // unnamed namespace
@@ -138,6 +139,7 @@ void PolygonBatch::Impl::Begin(
 void PolygonBatch::Impl::End()
 {
     Flush();
+    commandList.reset();
 }
 
 void PolygonBatch::Impl::Flush()
@@ -175,7 +177,8 @@ PolygonBatch::PolygonBatch(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
     AssetManager & assets)
     : impl(std::make_unique<Impl>(graphicsDevice, assets))
-{}
+{
+}
 
 PolygonBatch::~PolygonBatch() = default;
 

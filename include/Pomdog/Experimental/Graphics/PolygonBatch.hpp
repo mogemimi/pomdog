@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Pomdog/Content/AssetManager.hpp"
+#include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Math/detail/ForwardDeclarations.hpp"
 #include <cstdint>
@@ -11,7 +11,9 @@
 
 namespace Pomdog {
 
-class PolygonBatch {
+class AssetManager;
+
+class POMDOG_EXPORT PolygonBatch final {
 public:
     PolygonBatch(
         const std::shared_ptr<GraphicsDevice>& graphicsDevice,

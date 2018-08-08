@@ -2,41 +2,25 @@
 
 #pragma once
 
+#include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Math/detail/ForwardDeclarations.hpp"
-#include "Pomdog/Math/Rectangle.hpp"
 #include <cstdint>
 #include <memory>
 #include <vector>
 #include <string>
 
 namespace Pomdog {
-namespace Detail {
-namespace SpriteFonts {
 
-struct Glyph {
-    Rectangle Subrect;
-
-    ///@note UTF-32
-    char32_t Character;
-
-    std::int16_t XOffset;
-    std::int16_t YOffset;
-    std::int16_t XAdvance;
-    std::int16_t TexturePage;
-};
-
-} // namespace SpriteFonts
-} // namespace Detail
-
+struct FontGlyph;
 class SpriteBatchRenderer;
 class TrueTypeFont;
 
-class SpriteFont final {
+class POMDOG_EXPORT SpriteFont final {
 public:
     SpriteFont(
         std::vector<std::shared_ptr<Texture2D>> && textures,
-        const std::vector<Detail::SpriteFonts::Glyph>& glyphs,
+        const std::vector<FontGlyph>& glyphs,
         char32_t defaultCharacter,
         std::int16_t spacing,
         std::int16_t lineSpacing);

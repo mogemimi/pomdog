@@ -1,10 +1,12 @@
 // Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
-#include "SpriteFont.hpp"
-#include "TrueTypeFont.hpp"
-#include "SpriteBatchRenderer.hpp"
+#include "Pomdog/Experimental/Graphics/SpriteFont.hpp"
+#include "Pomdog/Experimental/Graphics/FontGlyph.hpp"
+#include "Pomdog/Experimental/Graphics/TrueTypeFont.hpp"
+#include "Pomdog/Experimental/Graphics/SpriteBatchRenderer.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Matrix4x4.hpp"
+#include "Pomdog/Math/Point2D.hpp"
 #include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Math/Vector3.hpp"
 #include "Pomdog/Math/Radian.hpp"
@@ -42,14 +44,12 @@ std::vector<std::uint8_t> ConvertTextureDataByteToByte4(const std::uint8_t* sour
 
 // MARK: - SpriteFont::Impl
 
-class SpriteFont::Impl {
+class SpriteFont::Impl final {
 public:
-    typedef Detail::SpriteFonts::Glyph Glyph;
-
     static constexpr int TextureWidth = 1024;
     static constexpr int TextureHeight = 1024;
 
-    std::unordered_map<char32_t, Glyph> spriteFontMap;
+    std::unordered_map<char32_t, FontGlyph> spriteFontMap;
 
     char32_t defaultCharacter;
     float lineSpacing;
@@ -57,7 +57,7 @@ public:
 
     Impl(
         std::vector<std::shared_ptr<Texture2D>> && textures,
-        const std::vector<Detail::SpriteFonts::Glyph>& glyphs,
+        const std::vector<FontGlyph>& glyphs,
         char32_t defaultCharacter,
         std::int16_t spacing,
         std::int16_t lineSpacing);
@@ -100,7 +100,7 @@ constexpr int SpriteFont::Impl::TextureHeight;
 
 SpriteFont::Impl::Impl(
     std::vector<std::shared_ptr<Texture2D>> && texturesIn,
-    const std::vector<Detail::SpriteFonts::Glyph>& glyphsIn,
+    const std::vector<FontGlyph>& glyphsIn,
     char32_t defaultCharacterIn,
     std::int16_t spacingIn,
     std::int16_t lineSpacingIn)
@@ -365,7 +365,7 @@ void SpriteFont::Impl::Draw(
 
 SpriteFont::SpriteFont(
     std::vector<std::shared_ptr<Texture2D>> && textures,
-    const std::vector<Detail::SpriteFonts::Glyph>& glyphs,
+    const std::vector<FontGlyph>& glyphs,
     char32_t defaultCharacter,
     std::int16_t spacing,
     std::int16_t lineSpacing)
