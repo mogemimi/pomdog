@@ -788,6 +788,7 @@ if(POMDOG_USE_DIRECTINPUT AND (POMDOG_TARGET_PLATFORM MATCHES "Win32"))
   target_link_libraries(pomdog_static INTERFACE
     dinput8.lib
     dxguid.lib
+    oleaut32.lib # for SysAllocString
   )
 endif()
 

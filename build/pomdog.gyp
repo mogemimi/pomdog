@@ -781,6 +781,7 @@
           'libraries': [
             '-ldinput8.lib',
             '-ldxguid.lib',
+            '-loleaut32.lib', # for SysAllocString
           ],
         },
       }],
