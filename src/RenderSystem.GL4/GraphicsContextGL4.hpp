@@ -92,6 +92,8 @@ public:
 private:
     void ApplyPipelineState();
 
+    void EmulateStartInstanceLocation(std::size_t startInstanceLocation);
+
 private:
     std::vector<VertexBufferBinding> vertexBuffers;
 #if defined(DEBUG) && !defined(NDEBUG)

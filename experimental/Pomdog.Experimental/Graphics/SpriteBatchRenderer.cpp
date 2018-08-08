@@ -297,21 +297,6 @@ void SpriteBatchRenderer::Impl::RenderBatch(
     commandList->SetConstantBuffer(0, constantBuffer);
     commandList->SetPrimitiveTopology(PrimitiveTopology::TriangleList);
 
-#define POMDOG_USE_OPENGL4_1_COMPATIBLE_MODE 1
-#if POMDOG_USE_OPENGL4_1_COMPATIBLE_MODE
-    commandList->SetVertexBuffers({
-        VertexBufferBinding{planeVertices},
-        VertexBufferBinding{instanceVertices, instanceOffsetBytes}
-    });
-
-    commandList->DrawIndexedInstanced(
-        planeIndices,
-        planeIndices->GetIndexCount(),
-        sprites.size(),
-        0,
-        0);
-#else
-    // The following code is supported on OpenGL 4.2+, not OpenGL 4.1.
     commandList->SetVertexBuffers({
         VertexBufferBinding{planeVertices},
         VertexBufferBinding{instanceVertices}
@@ -323,7 +308,6 @@ void SpriteBatchRenderer::Impl::RenderBatch(
         sprites.size(),
         0,
         startInstanceLocation);
-#endif
 
     startInstanceLocation += sprites.size();
     POMDOG_ASSERT(startInstanceLocation <= MaxBatchSize);

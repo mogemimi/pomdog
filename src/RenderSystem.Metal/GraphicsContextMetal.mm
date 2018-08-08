@@ -316,6 +316,7 @@ void GraphicsContextMetal::SetVertexBuffers(const std::vector<VertexBufferBindin
 
         POMDOG_ASSERT(atIndex + VertexBufferSlotOffset < MaxVertexBufferSlotCount);
         POMDOG_ASSERT(nativeVertexBuffer->GetBuffer() != nil);
+        POMDOG_ASSERT((binding.VertexOffset % 256) == 0);
         [commandEncoder setVertexBuffer:nativeVertexBuffer->GetBuffer()
             offset:binding.VertexOffset
             atIndex:atIndex + VertexBufferSlotOffset];

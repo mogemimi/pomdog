@@ -429,6 +429,31 @@ void GraphicsContextGL4::ApplyPipelineState()
     }
 }
 
+void GraphicsContextGL4::EmulateStartInstanceLocation(std::size_t startInstanceLocation)
+{
+    if (startInstanceLocation == 0) {
+        // NOTE: nothing to do
+        return;
+    }
+
+    auto newVertexBuffers = vertexBuffers;
+    for (size_t i = 1; i < newVertexBuffers.size(); i++) {
+        // NOTE: `i >= 1` is equality to instanced vertex buffer.
+        auto& binding = newVertexBuffers[i];
+        const auto strideBytes = binding.VertexBuffer->GetStrideBytes();
+        POMDOG_ASSERT(strideBytes > 0);
+        binding.VertexOffset += (strideBytes * startInstanceLocation);
+    }
+
+    auto inputLayout = pipelineState->GetInputLayout();
+    POMDOG_ASSERT(inputLayout);
+    POMDOG_ASSERT(!newVertexBuffers.empty());
+
+    // NOTE: The following code is a hack.
+    inputLayout->Apply(newVertexBuffers);
+    needToApplyInputLayout = true;
+}
+
 void GraphicsContextGL4::Draw(
     std::size_t vertexCount,
     std::size_t startVertexLocation)
@@ -507,18 +532,14 @@ void GraphicsContextGL4::DrawInstanced(
     // NOTE:
     // 'glDrawArraysInstancedBaseInstance' is supported in OpenGL 4.2 and later.
     // But unfortunately, macOS Sierra (latest version of Mac 2016) still uses OpenGL 4.1.
-    POMDOG_ASSERT_MESSAGE(startInstanceLocation == 0, "This feature is not supported yet on Mac.");
-    if (startInstanceLocation == 0) {
-        glDrawArraysInstanced(
-            primitiveTopology.value,
-            static_cast<GLint>(startVertexLocation),
-            static_cast<GLsizei>(vertexCountPerInstance),
-            static_cast<GLsizei>(instanceCount));
-        POMDOG_CHECK_ERROR_GL4("glDrawArraysInstanced");
-    }
-#endif
-
-#if !defined(POMDOG_PLATFORM_MACOSX)
+    EmulateStartInstanceLocation(startInstanceLocation);
+    glDrawArraysInstanced(
+        primitiveTopology.value,
+        static_cast<GLint>(startVertexLocation),
+        static_cast<GLsizei>(vertexCountPerInstance),
+        static_cast<GLsizei>(instanceCount));
+    POMDOG_CHECK_ERROR_GL4("glDrawArraysInstanced");
+#else
     glDrawArraysInstancedBaseInstance(
         primitiveTopology.value,
         static_cast<GLint>(startVertexLocation),
@@ -559,19 +580,15 @@ void GraphicsContextGL4::DrawIndexedInstanced(
     // NOTE:
     // 'glDrawElementsInstancedBaseInstance' is supported in OpenGL 4.2 and later.
     // But unfortunately, macOS Sierra (latest version of Mac 2016) still uses OpenGL 4.1.
-    POMDOG_ASSERT_MESSAGE(startInstanceLocation == 0, "This feature is not supported yet on Mac.");
-    if (startInstanceLocation == 0) {
-        glDrawElementsInstanced(
-            primitiveTopology.value,
-            static_cast<GLsizei>(indexCountPerInstance),
-            ToIndexElementType(indexElementSize),
-            ComputeStartIndexLocationPointer(indexElementSize, startIndexLocation),
-            static_cast<GLsizei>(instanceCount));
-        POMDOG_CHECK_ERROR_GL4("glDrawElementsInstanced");
-    }
-#endif
-
-#if !defined(POMDOG_PLATFORM_MACOSX)
+    EmulateStartInstanceLocation(startInstanceLocation);
+    glDrawElementsInstanced(
+        primitiveTopology.value,
+        static_cast<GLsizei>(indexCountPerInstance),
+        ToIndexElementType(indexElementSize),
+        ComputeStartIndexLocationPointer(indexElementSize, startIndexLocation),
+        static_cast<GLsizei>(instanceCount));
+    POMDOG_CHECK_ERROR_GL4("glDrawElementsInstanced");
+#else
     glDrawElementsInstancedBaseInstance(
         primitiveTopology.value,
         static_cast<GLsizei>(indexCountPerInstance),
