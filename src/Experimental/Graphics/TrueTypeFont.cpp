@@ -98,8 +98,9 @@ Optional<FontGlyph> TrueTypeFont::RasterizeGlyph(
 
     const int g = stbtt_FindGlyphIndex(&f, codePoint);
 
+    // FIXME: Use `UnicodeData.txt`-generated character table instead of std::locale and std::isspace.
     std::locale defaultLocale;
-    const bool isSpace = (std::isspace<char>(codePoint, defaultLocale) != 0) && (codePoint != '\n');
+    const bool isSpace = (std::isspace(static_cast<char>(codePoint), defaultLocale) != 0) && (codePoint != '\n');
 
     if (g <= 0 && !isSpace) {
         // error: not found
@@ -128,15 +129,17 @@ Optional<FontGlyph> TrueTypeFont::RasterizeGlyph(
             glyphWidth, glyphHeight, textureWidth, scale, scale, g);
     }
 
+    POMDOG_ASSERT(static_cast<int>(scale * advance) <= static_cast<int>(std::numeric_limits<std::int16_t>::max()));
+
     FontGlyph glyph;
     glyph.Subrect.X = point.X;
     glyph.Subrect.Y = point.Y;
     glyph.Subrect.Width = glyphWidth;
     glyph.Subrect.Height = glyphHeight;
     glyph.TexturePage = 0;
-    glyph.XAdvance = scale * advance;
-    glyph.XOffset = x0;
-    glyph.YOffset = y0;
+    glyph.XAdvance = static_cast<std::int16_t>(scale * advance);
+    glyph.XOffset = static_cast<std::int16_t>(x0);
+    glyph.YOffset = static_cast<std::int16_t>(y0);
     glyph.Character = codePoint;
     return std::move(glyph);
 }

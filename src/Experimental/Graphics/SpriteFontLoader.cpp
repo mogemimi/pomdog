@@ -110,7 +110,8 @@ BitmapFontInfo ParseInfo(std::istream & stream)
                 }
             }
             else if (name == "size") {
-                info.Size = std::stoul(arguments);
+                static_assert(std::is_same<decltype(info.Size), std::uint16_t>::value, "");
+                info.Size = static_cast<std::uint16_t>(std::stoi(arguments));
             }
             else if (name == "bold") {
                 info.Bold = std::stoul(arguments) != 0;
@@ -128,7 +129,8 @@ BitmapFontInfo ParseInfo(std::istream & stream)
                 info.Unicode = std::stoul(arguments) != 0;
             }
             else if (name == "stretchH") {
-                info.StretchHeight = std::stoi(arguments);
+                static_assert(std::is_same<decltype(info.StretchHeight), std::uint16_t>::value, "");
+                info.StretchHeight = static_cast<std::uint16_t>(std::stoi(arguments));
             }
             else if (name == "smooth") {
                 info.Smooth = std::stoul(arguments) != 0;
@@ -138,18 +140,24 @@ BitmapFontInfo ParseInfo(std::istream & stream)
             }
             else if (name == "padding") {
                 if (std::regex_match(arguments, match2, exprVector4)) {
+                    static_assert(std::is_same<decltype(info.PaddingTop), std::uint16_t>::value, "");
+                    static_assert(std::is_same<decltype(info.PaddingRight), std::uint16_t>::value, "");
+                    static_assert(std::is_same<decltype(info.PaddingBottom), std::uint16_t>::value, "");
+                    static_assert(std::is_same<decltype(info.PaddingLeft), std::uint16_t>::value, "");
                     POMDOG_ASSERT(match2.size() >= 5);
-                    info.PaddingTop = std::stoi(match2[1]);
-                    info.PaddingRight = std::stoi(match2[2]);
-                    info.PaddingBottom = std::stoi(match2[3]);
-                    info.PaddingLeft = std::stoi(match2[4]);
+                    info.PaddingTop = static_cast<std::uint16_t>(std::stoi(match2[1]));
+                    info.PaddingRight = static_cast<std::uint16_t>(std::stoi(match2[2]));
+                    info.PaddingBottom = static_cast<std::uint16_t>(std::stoi(match2[3]));
+                    info.PaddingLeft = static_cast<std::uint16_t>(std::stoi(match2[4]));
                 }
             }
             else if (name == "spacing") {
                 if (std::regex_match(arguments, match2, exprVector2)) {
+                    static_assert(std::is_same<decltype(info.SpacingX), std::uint16_t>::value, "");
+                    static_assert(std::is_same<decltype(info.SpacingY), std::uint16_t>::value, "");
                     POMDOG_ASSERT(match2.size() >= 3);
-                    info.SpacingX = std::stoi(match2[1]);
-                    info.SpacingY = std::stoi(match2[2]);
+                    info.SpacingX = static_cast<std::uint16_t>(std::stoi(match2[1]));
+                    info.SpacingY = static_cast<std::uint16_t>(std::stoi(match2[2]));
                 }
             }
         }
@@ -174,19 +182,24 @@ BitmapFontCommon ParseCommon(std::istream & stream)
             auto arguments = match[3].str();
 
             if (name == "lineHeight") {
-                result.LineHeight = std::stoul(arguments);
+                static_assert(std::is_same<decltype(result.LineHeight), std::uint16_t>::value, "");
+                result.LineHeight = static_cast<std::uint16_t>(std::stoi(arguments));
             }
             else if (name == "base") {
-                result.Base = std::stoul(arguments);
+                static_assert(std::is_same<decltype(result.Base), std::uint16_t>::value, "");
+                result.Base = static_cast<std::uint16_t>(std::stoi(arguments));
             }
             else if (name == "scaleW") {
-                result.ScaleWidth = std::stoul(arguments);
+                static_assert(std::is_same<decltype(result.ScaleWidth), std::uint16_t>::value, "");
+                result.ScaleWidth = static_cast<std::uint16_t>(std::stoi(arguments));
             }
             else if (name == "scaleH") {
-                result.ScaleHeight = std::stoul(arguments);
+                static_assert(std::is_same<decltype(result.ScaleHeight), std::uint16_t>::value, "");
+                result.ScaleHeight = static_cast<std::uint16_t>(std::stoi(arguments));
             }
             else if (name == "pages") {
-                result.Pages = std::stoul(arguments);
+                static_assert(std::is_same<decltype(result.Pages), std::uint16_t>::value, "");
+                result.Pages = static_cast<std::uint16_t>(std::stoi(arguments));
             }
             else if (name == "packed") {
                 result.Packed = std::stoul(arguments) != 0;
@@ -222,7 +235,8 @@ BitmapFontPage ParsePage(std::istream & stream)
                 }
             }
             else if (name == "id") {
-                result.Id = std::stoul(arguments);
+                static_assert(std::is_same<decltype(result.Id), std::uint16_t>::value, "");
+                result.Id = static_cast<std::uint16_t>(std::stoul(arguments));
             }
         }
     }
@@ -233,6 +247,15 @@ BitmapFontPage ParsePage(std::istream & stream)
 FontGlyph ParseGlyph(std::istream & stream)
 {
     FontGlyph result;
+    result.Subrect.X = 0;
+    result.Subrect.Y = 0;
+    result.Subrect.Width = 1;
+    result.Subrect.Height = 1;
+    result.Character = 0;
+    result.XOffset = 0;
+    result.YOffset = 0;
+    result.XAdvance = 0;
+    result.TexturePage = 0;
 
     std::string source;
     while (stream >> source && !stream.fail()) {
@@ -247,7 +270,8 @@ FontGlyph ParseGlyph(std::istream & stream)
                 result.Character = std::stoi(arguments);
             }
             else if (name == "page") {
-                result.TexturePage = std::stoi(arguments);
+                static_assert(std::is_same<decltype(result.TexturePage), std::int16_t>::value, "");
+                result.TexturePage = static_cast<std::int16_t>(std::stoi(arguments));
             }
             else if (name == "x") {
                 result.Subrect.X = std::stoi(arguments);
@@ -262,13 +286,16 @@ FontGlyph ParseGlyph(std::istream & stream)
                 result.Subrect.Height = std::stoi(arguments);
             }
             else if (name == "xoffset") {
-                result.XOffset = std::stoi(arguments);
+                static_assert(std::is_same<decltype(result.XOffset), std::int16_t>::value, "");
+                result.XOffset = static_cast<std::int16_t>(std::stoi(arguments));
             }
             else if (name == "yoffset") {
-                result.YOffset = std::stoi(arguments);
+                static_assert(std::is_same<decltype(result.YOffset), std::int16_t>::value, "");
+                result.YOffset = static_cast<std::int16_t>(std::stoi(arguments));
             }
             else if (name == "xadvance") {
-                result.XAdvance = std::stoi(arguments);
+                static_assert(std::is_same<decltype(result.XAdvance), std::int16_t>::value, "");
+                result.XAdvance = static_cast<std::int16_t>(std::stoi(arguments));
             }
         }
     }
@@ -359,8 +386,18 @@ std::shared_ptr<SpriteFont> SpriteFontLoader::Load(
     POMDOG_ASSERT(!glyphs.empty());
     auto defaultCharacter = glyphs.front().Character;
 
-    auto spriteFont = std::make_shared<SpriteFont>(std::move(textures), glyphs,
-        defaultCharacter, info.PaddingLeft + info.PaddingRight, common.LineHeight);
+    // FIXME: Replace the types of the following variables with signed 16-bit integer (std::int16_t).
+    static_assert(std::is_same<decltype(info.PaddingLeft), std::uint16_t>::value, "");
+    static_assert(std::is_same<decltype(info.PaddingRight), std::uint16_t>::value, "");
+    static_assert(std::is_same<decltype(common.LineHeight), std::uint16_t>::value, "");
+
+    auto spriteFont = std::make_shared<SpriteFont>(
+        std::move(textures),
+        std::move(glyphs),
+        defaultCharacter,
+        static_cast<std::int16_t>(info.PaddingLeft + info.PaddingRight),
+        static_cast<std::int16_t>(common.LineHeight));
+
     return spriteFont;
 }
 

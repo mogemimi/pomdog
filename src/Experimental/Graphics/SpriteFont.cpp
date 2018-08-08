@@ -175,7 +175,7 @@ void SpriteFont::Impl::PrepareFonts(const std::string& text)
             }
             if (currentPoint.Y + glyphHeight + 1 >= TextureHeight) {
                 fetchTextureData();
-                std::fill(std::begin(pixelData), std::end(pixelData), 0);
+                std::fill(std::begin(pixelData), std::end(pixelData), static_cast<std::uint8_t>(0));
 
                 auto textureNew = std::make_shared<Texture2D>(graphicsDevice,
                     TextureWidth, TextureHeight, false, SurfaceFormat::R8G8B8A8_UNorm);
@@ -199,7 +199,7 @@ void SpriteFont::Impl::PrepareFonts(const std::string& text)
         bottomY = std::max(bottomY, currentPoint.Y + glyph->Subrect.Height + 1);
 
         POMDOG_ASSERT(!textures.empty() && textures.size() > 0);
-        glyph->TexturePage = textures.size() - 1;
+        glyph->TexturePage = static_cast<std::int16_t>(textures.size()) - 1;
 
         spriteFontMap.emplace(glyph->Character, *glyph);
         needToFetchPixelData = true;
@@ -296,7 +296,7 @@ void SpriteFont::Impl::Draw(
             POMDOG_ASSERT(glyph.TexturePage < static_cast<int>(textures.size()));
 
             spriteBatch.Draw(textures[glyph.TexturePage],
-                currentPosition + Vector2(glyph.XOffset, -glyph.YOffset),
+                currentPosition + Vector2{static_cast<float>(glyph.XOffset), static_cast<float>(-glyph.YOffset)},
                 glyph.Subrect, color, 0.0f, Vector2{0.0f, 1.0f}, Vector2{1.0f, 1.0f});
         }
 
@@ -353,8 +353,8 @@ void SpriteFont::Impl::Draw(
             POMDOG_ASSERT(glyph.TexturePage < static_cast<int>(textures.size()));
 
             spriteBatch.Draw(textures[glyph.TexturePage],
-                currentPosition + Vector2(glyph.XOffset, -glyph.YOffset) * scale,
-                glyph.Subrect, color, 0.0f, Vector2{0.0f, 1.0f}, scale);
+                currentPosition + Vector2{static_cast<float>(glyph.XOffset), static_cast<float>(-glyph.YOffset)} *scale,
+                glyph.Subrect, color, rotation, Vector2{0.0f, 1.0f}, scale);
         }
 
         currentPosition.X += ((glyph.XAdvance - spacing) * scale.X);

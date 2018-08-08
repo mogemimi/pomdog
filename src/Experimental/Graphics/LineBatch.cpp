@@ -314,7 +314,7 @@ void LineBatch::DrawCircle(const Vector2& position, float radius, const Color& c
     auto colorVector = color.ToVector4();
 
     for (int i = 0; i < segments; ++i) {
-        auto rad = centralAngle * (i + 1);
+        auto rad = centralAngle * static_cast<float>(i + 1);
         auto cos = std::cos(rad.value);
         auto sin = std::sin(rad.value);
         auto nextPoint = position + (radius * Vector2{cos, sin});

@@ -85,7 +85,7 @@ void PolygonShapeBuilder::DrawArc(
         std::min(arcAngle.value, Math::TwoPi<float>) / segments;
 
     auto computePoint = [&](int index) {
-        auto rad = startAngle + centralAngle * index;
+        auto rad = startAngle + centralAngle * static_cast<float>(index);
         auto cos = std::cos(rad.value);
         auto sin = std::sin(rad.value);
         return center + Vector3{radius * Vector2{cos, sin}, 0};
@@ -221,7 +221,7 @@ void PolygonShapeBuilder::DrawCircle(
     auto colorVector = color.ToVector4();
 
     for (int i = 0; i < segments; ++i) {
-        auto rad = centralAngle * (i + 1);
+        auto rad = centralAngle * static_cast<float>(i + 1);
         auto cos = std::cos(rad.value);
         auto sin = std::sin(rad.value);
         auto nextPoint = position + Vector3{radius * Vector2{cos, sin}, 0};
