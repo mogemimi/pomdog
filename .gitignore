@@ -8,6 +8,7 @@
 /build.makefiles
 /tools/gyp
 /tools/python
+/docs/html
 
 # Build output for Xcode
 /build/build
