@@ -1,0 +1,16 @@
+DOXYFILE_ENCODING      = UTF-8
+PROJECT_NAME           = "Pomdog"
+PROJECT_BRIEF          = "An open source game engine for C++17"
+OUTPUT_DIRECTORY       = "docs"
+INPUT                  = "include"
+RECURSIVE              = YES
+FILE_PATTERNS          = *.hpp
+CREATE_SUBDIRS         = YES
+ALLOW_UNICODE_NAMES    = YES
+JAVADOC_AUTOBRIEF      = YES
+GENERATE_LATEX         = NO
+GENERATE_MAN           = NO
+GENERATE_RTF           = NO
+GENERATE_XML           = NO
+GENERATE_DOCBOOOK      = NO
+GENERATE_HTML          = YES
