@@ -60,3 +60,45 @@ build-clang-release:
     - script:
       name: run test
       code: ./build.cmake/PomdogTest
+
+build-gcc-debug:
+  box: mogemimi/gamedev-archlinux
+  steps:
+    - script:
+      name: clone third party libraries
+      code: git submodule update --init
+    - script:
+      name: build with gcc in debug mode
+      code: |
+        mkdir build.cmake && cd build.cmake
+        cmake \
+          -G Ninja \
+          -DCMAKE_C_COMPILER=gcc \
+          -DCMAKE_CXX_COMPILER=g++ \
+          -DCMAKE_BUILD_TYPE=Debug \
+          ../build/PomdogTest/
+        ninja
+    - script:
+      name: run test
+      code: ./build.cmake/PomdogTest
+
+build-gcc-release:
+  box: mogemimi/gamedev-archlinux
+  steps:
+    - script:
+      name: clone third party libraries
+      code: git submodule update --init
+    - script:
+      name: build with gcc in release mode
+      code: |
+        mkdir build.cmake && cd build.cmake
+        cmake \
+          -G Ninja \
+          -DCMAKE_C_COMPILER=gcc \
+          -DCMAKE_CXX_COMPILER=g++ \
+          -DCMAKE_BUILD_TYPE=Release \
+          ../build/PomdogTest/
+        ninja
+    - script:
+      name: run test
+      code: ./build.cmake/PomdogTest
