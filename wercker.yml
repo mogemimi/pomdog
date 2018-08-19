@@ -1,6 +1,7 @@
-box: mogemimi/ubuntu-gamedev-wercker
+box: mogemimi/gamedev-ubuntu
 
 build:
+  box: mogemimi/gamedev-ubuntu
   steps:
     - script:
       name: clone dependencies
@@ -9,7 +10,7 @@ build:
         git clone --depth=1 https://chromium.googlesource.com/external/gyp.git tools/gyp
 
     - script:
-      name: unittest-gyp
+      name: build and run tests with gyp
       code: |
         python tools/gyp.py test/FrameworkTest/unittest.gyp -f make
         export CC=clang
@@ -20,17 +21,42 @@ build:
         make -C build.makefiles
         ./build.makefiles/out/Release/unittest
 
+build-clang-debug:
+  box: mogemimi/gamedev-ubuntu
+  steps:
     - script:
-      name: unittest-cmake
+      name: clone third party libraries
+      code: git submodule update --init
+    - script:
+      name: build with clang in debug mode
       code: |
-        export CC=clang
-        export CXX=clang++
-        export LINK=clang++
-        export CXXFLAGS="-std=c++17 -stdlib=libc++"
-        export LDFLAGS="-stdlib=libc++"
-        mkdir build.cmake
-        cd build.cmake
-        cmake ..
-        make
-        cd ..
-        ./build.cmake/build/PomdogTest/PomdogTest
+        mkdir build.cmake && cd build.cmake
+        cmake \
+          -DCMAKE_C_COMPILER=clang \
+          -DCMAKE_CXX_COMPILER=clang++ \
+          -DCMAKE_BUILD_TYPE=Debug \
+          ../build/PomdogTest/
+        make -j4
+    - script:
+      name: run test
+      code: ./build.cmake/PomdogTest
+
+build-clang-release:
+  box: mogemimi/gamedev-ubuntu
+  steps:
+    - script:
+      name: clone third party libraries
+      code: git submodule update --init
+    - script:
+      name: build with clang in release mode
+      code: |
+        mkdir build.cmake && cd build.cmake
+        cmake \
+          -DCMAKE_C_COMPILER=clang \
+          -DCMAKE_CXX_COMPILER=clang++ \
+          -DCMAKE_BUILD_TYPE=Release \
+          ../build/PomdogTest/
+        make -j4
+    - script:
+      name: run test
+      code: ./build.cmake/PomdogTest
