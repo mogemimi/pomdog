@@ -72,8 +72,7 @@ def CopyTemplates(templateDirectory, projectRoot):
         "Platform.X11",
         "Source",
         ".gitignore",
-        "common.gypi",
-        "QuickStart.gyp",
+        "CMakeLists.txt",
         "README.md",
     ]
     CopySourceFiles(templateDirectory, projectRoot, templateFiles)
@@ -90,28 +89,22 @@ def CopyFrameworkFiles(pomdogPath, projectRoot):
     ]
     thirdPartyFiles = [
         "glew",
-        "zlib",
         "libpng",
-    ]
-    minimumGypFiles = [
-        "pylib",
-        "gyp",
-        "gyp.bat",
-        "gyp_main.py",
-        "setup.py",
+        "rapidjson",
+        "SDL_GameControllerDB",
+        "stb",
+        "utfcpp",
+        "vendor",
+        "zlib",
     ]
     CopySourceFiles(
         pomdogPath,
         os.path.join(projectRoot, "ThirdParty/pomdog"),
         sourceFiles)
     CopySourceFiles(
-        os.path.join(pomdogPath, "third-party"),
-        os.path.join(projectRoot, "ThirdParty/pomdog/third-party"),
+        os.path.join(pomdogPath, "dependencies"),
+        os.path.join(projectRoot, "ThirdParty/pomdog/dependencies"),
         thirdPartyFiles)
-    CopySourceFiles(
-        os.path.join(pomdogPath, "tools/gyp"),
-        os.path.join(projectRoot, "Tools/gyp"),
-        minimumGypFiles)
 
 
 def RenameSourceContent(project_root, identifier, source):
@@ -128,6 +121,7 @@ def RenameSourceContent(project_root, identifier, source):
     f = open(path, 'w')
     content = content.replace('QuickStart'.encode('utf_8'), identifier)
     content = content.replace('QUICKSTART'.encode('utf_8'), identifier.upper())
+    content = content.replace('set(POMDOG_DIR "../..")'.encode('utf_8'), 'set(POMDOG_DIR "ThirdParty/pomdog")'.encode('utf_8'))
     f.write(content)
     f.close()
 
@@ -184,7 +178,7 @@ def CreateNewProject(config):
     CopyFrameworkFiles(pomdogPath, project_root)
     RenameContentByUrl(project_root, project_url, 'Platform.Cocoa/Info.plist')
     RenameSourceContent(project_root, identifier, 'README.md')
-    RenameSourceContent(project_root, identifier, 'QuickStart.gyp')
+    RenameSourceContent(project_root, identifier, 'CMakeLists.txt')
     RenameSourceContent(project_root, identifier, 'Source/QuickStartGame.cpp')
     RenameSourceContent(project_root, identifier, 'Source/QuickStartGame.hpp')
     RenameSourceContent(project_root, identifier, 'Platform.Cocoa/AppDelegate.mm')
@@ -193,7 +187,6 @@ def CreateNewProject(config):
     RenameSourceContent(project_root, identifier, 'Platform.Cocoa/Base.lproj/MainMenu.xib')
     RenameSourceContent(project_root, identifier, 'Platform.Win32/main.cpp')
     RenameSourceContent(project_root, identifier, 'Platform.X11/main.cpp')
-    RenameFilename(project_root, identifier, 'QuickStart.gyp')
     RenameFilename(project_root, identifier, 'Source/QuickStartGame.cpp')
     RenameFilename(project_root, identifier, 'Source/QuickStartGame.hpp')
 
