@@ -4,11 +4,11 @@ build:
   box: mogemimi/gamedev-ubuntu
   steps:
     - script:
-      name: clone dependencies
-      code: |
-        git submodule update --init
-        git clone --depth=1 https://chromium.googlesource.com/external/gyp.git tools/gyp
-
+      name: clone third party libraries
+      code: git submodule update --init
+    - script:
+      name: clone gyp
+      code: git clone --depth=1 https://chromium.googlesource.com/external/gyp.git tools/gyp
     - script:
       name: build and run tests with gyp
       code: |
@@ -18,7 +18,7 @@ build:
         export LINK=clang++
         export CXXFLAGS="-std=c++17 -stdlib=libc++"
         export LDFLAGS="-stdlib=libc++"
-        make -C build.makefiles
+        make -C build.makefiles -j4
         ./build.makefiles/out/Release/unittest
 
 build-clang-debug:
