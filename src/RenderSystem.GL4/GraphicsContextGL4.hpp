@@ -4,9 +4,9 @@
 
 #include "OpenGLPrerequisites.hpp"
 #include "../RenderSystem/NativeGraphicsContext.hpp"
+#include "../Utility/Tagged.hpp"
 #include "Pomdog/Graphics/VertexBufferBinding.hpp"
 #include "Pomdog/Utility/Optional.hpp"
-#include "Pomdog/Utility/detail/Tagged.hpp"
 #include <memory>
 #include <vector>
 

@@ -224,7 +224,6 @@
       '../include/Pomdog/Utility/PathHelper.hpp',
       '../include/Pomdog/Utility/StringHelper.hpp',
       '../include/Pomdog/Utility/detail/CRC32.hpp',
-      '../include/Pomdog/Utility/detail/Tagged.hpp',
       '../src/Application/GameClock.cpp',
       '../src/Application/SubsystemScheduler.hpp',
       '../src/Application/SystemEvents.hpp',
@@ -333,6 +332,7 @@
       '../src/Utility/PathHelper.cpp',
       '../src/Utility/ScopeGuard.hpp',
       '../src/Utility/StringHelper.cpp',
+      '../src/Utility/Tagged.hpp',
     ],
     'pomdog_library_experimental_sources': [
       '../include/Pomdog/Experimental/Graphics/FontGlyph.hpp',

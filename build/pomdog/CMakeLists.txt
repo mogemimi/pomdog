@@ -234,7 +234,6 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/include/Pomdog/Utility/PathHelper.hpp
   ${POMDOG_DIR}/include/Pomdog/Utility/StringHelper.hpp
   ${POMDOG_DIR}/include/Pomdog/Utility/detail/CRC32.hpp
-  ${POMDOG_DIR}/include/Pomdog/Utility/detail/Tagged.hpp
   ${POMDOG_DIR}/src/Application/GameClock.cpp
   ${POMDOG_DIR}/src/Application/SubsystemScheduler.hpp
   ${POMDOG_DIR}/src/Application/SystemEvents.hpp
@@ -343,6 +342,7 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/src/Utility/PathHelper.cpp
   ${POMDOG_DIR}/src/Utility/ScopeGuard.hpp
   ${POMDOG_DIR}/src/Utility/StringHelper.cpp
+  ${POMDOG_DIR}/src/Utility/Tagged.hpp
 )
 
 set(POMDOG_SOURCES_EXPERIMENTAL

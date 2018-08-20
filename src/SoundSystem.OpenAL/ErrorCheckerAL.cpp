@@ -2,8 +2,8 @@
 
 #include "ErrorCheckerAL.hpp"
 #include "PrerequisitesOpenAL.hpp"
+#include "../Utility/Tagged.hpp"
 #include "Pomdog/Logging/Log.hpp"
-#include "Pomdog/Utility/detail/Tagged.hpp"
 #include <cstddef>
 #include <sstream>
 

@@ -634,6 +634,7 @@
 		A997F6F31CAEFC4800926392 /* ShaderMetal.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ShaderMetal.mm; sourceTree = "<group>"; };
 		A997F6F41CAEFC4800926392 /* Texture2DMetal.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Texture2DMetal.hpp; sourceTree = "<group>"; };
 		A997F6F51CAEFC4800926392 /* Texture2DMetal.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Texture2DMetal.mm; sourceTree = "<group>"; };
+		A998A72C212B2EC70063E6F7 /* Tagged.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Tagged.hpp; sourceTree = "<group>"; };
 		A99908F01DF28FC60077539E /* BufferBindMode.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BufferBindMode.hpp; sourceTree = "<group>"; };
 		A9A4F0472113A6E00010DBD9 /* Unreachable.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Unreachable.hpp; sourceTree = "<group>"; };
 		A9A8226B1DAB7B310091497F /* giflib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = giflib.xcodeproj; path = dependencies/giflib.xcodeproj; sourceTree = "<group>"; };
@@ -710,7 +711,6 @@
 		C992E4CA07FD4BEA490B8AEF /* KeyboardState.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = KeyboardState.hpp; sourceTree = "<group>"; };
 		CA6CF7478713A3FBFCCEA57D /* GraphicsCommandQueueImmediate.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GraphicsCommandQueueImmediate.cpp; sourceTree = "<group>"; };
 		CB812182FDF6BA677492B4D3 /* RasterizerStateGL4.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = RasterizerStateGL4.hpp; sourceTree = "<group>"; };
-		CD1546A63406E72834E314CA /* Tagged.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = Tagged.hpp; sourceTree = "<group>"; };
 		CD99DA1957060FD9ABEDE985 /* LogEntry.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = LogEntry.hpp; sourceTree = "<group>"; };
 		CFB01062DBC62463D243E231 /* NativeBuffer.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = NativeBuffer.hpp; sourceTree = "<group>"; };
 		CFB5F934ACE826A22A466032 /* AssetLoader.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = AssetLoader.hpp; sourceTree = "<group>"; };
@@ -1099,6 +1099,7 @@
 				5DAB111727E9143A507A0C10 /* PathHelper.cpp */,
 				53571F5D60F1E9D4FAF76256 /* ScopeGuard.hpp */,
 				D07BE9AF32EED1D5F74BE69A /* StringHelper.cpp */,
+				A998A72C212B2EC70063E6F7 /* Tagged.hpp */,
 			);
 			path = Utility;
 			sourceTree = "<group>";
@@ -1648,7 +1649,6 @@
 			isa = PBXGroup;
 			children = (
 				EB11FBFA369AF955FB2B0C50 /* CRC32.hpp */,
-				CD1546A63406E72834E314CA /* Tagged.hpp */,
 			);
 			path = detail;
 			sourceTree = "<group>";
