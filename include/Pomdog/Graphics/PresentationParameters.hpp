@@ -8,7 +8,7 @@
 
 namespace Pomdog {
 
-struct PresentationParameters {
+struct PresentationParameters final {
     std::int32_t BackBufferWidth;
     std::int32_t BackBufferHeight;
     std::int32_t PresentationInterval;

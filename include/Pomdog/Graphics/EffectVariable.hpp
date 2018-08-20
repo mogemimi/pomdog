@@ -8,7 +8,7 @@
 
 namespace Pomdog {
 
-struct EffectVariable {
+struct EffectVariable final {
     std::string Name;
     EffectAnnotation Annotation;
     std::uint32_t StartOffset;

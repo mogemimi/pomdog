@@ -10,7 +10,7 @@
 
 namespace Pomdog {
 
-class POMDOG_EXPORT GameClock {
+class POMDOG_EXPORT GameClock final {
 public:
     GameClock();
 

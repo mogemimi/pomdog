@@ -12,7 +12,7 @@ namespace Pomdog {
 class Connection;
 class LogEntry;
 
-class POMDOG_EXPORT Log {
+class POMDOG_EXPORT Log final {
 public:
     static Connection Connect(const std::function<void(const LogEntry&)>& slot);
 

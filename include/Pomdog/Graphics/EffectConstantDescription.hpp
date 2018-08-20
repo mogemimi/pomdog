@@ -9,7 +9,7 @@
 
 namespace Pomdog {
 
-struct EffectConstantDescription {
+struct EffectConstantDescription final {
     std::vector<EffectVariable> Variables;
     std::string Name;
     std::uint32_t ByteSize;

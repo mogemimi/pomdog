@@ -9,7 +9,7 @@
 
 namespace Pomdog {
 
-class POMDOG_EXPORT BoundingSphere {
+class POMDOG_EXPORT BoundingSphere final {
 public:
     Vector3 Center;
     float Radius;

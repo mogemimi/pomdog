@@ -9,7 +9,7 @@
 
 namespace Pomdog {
 
-class POMDOG_EXPORT Ray {
+class POMDOG_EXPORT Ray final {
 public:
     Vector3 Position;
     Vector3 Direction;

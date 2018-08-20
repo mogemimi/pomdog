@@ -9,7 +9,7 @@
 
 namespace Pomdog {
 
-struct POMDOG_EXPORT RenderTargetBlendDescription {
+struct POMDOG_EXPORT RenderTargetBlendDescription final {
     Blend ColorSourceBlend;
     Blend ColorDestinationBlend;
     BlendOperation ColorBlendOperation;

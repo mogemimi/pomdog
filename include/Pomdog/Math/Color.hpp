@@ -8,7 +8,7 @@
 
 namespace Pomdog {
 
-class POMDOG_EXPORT Color {
+class POMDOG_EXPORT Color final {
 public:
     std::uint8_t R, G, B, A;
 

@@ -11,7 +11,7 @@
 
 namespace Pomdog {
 
-struct POMDOG_EXPORT SamplerDescription {
+struct POMDOG_EXPORT SamplerDescription final {
     std::uint32_t MaxAnisotropy;
     float MinMipLevel;
     float MaxMipLevel;
