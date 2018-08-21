@@ -145,8 +145,8 @@ TEST(Singal, CustomClass)
     struct Chuck {
         int value;
 
-        Chuck(): value(0) {};
-        Chuck(int v): value(v) {};
+        Chuck(): value(0) {}
+        Chuck(int v): value(v) {}
 
         Chuck(Chuck const&) = delete;
         Chuck(Chuck &&) = delete;
