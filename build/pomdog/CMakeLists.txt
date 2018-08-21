@@ -709,12 +709,15 @@ if(POMDOG_USE_IOKIT AND (POMDOG_TARGET_PLATFORM MATCHES "Mac"))
   set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework IOKit")
 endif()
 
+if(POMDOG_USE_GL4 AND (POMDOG_TARGET_PLATFORM MATCHES "Mac"))
+  # list(APPEND LINK_FRAMEWORKS "$(SDKROOT)/System/Library/Frameworks/OpenGL.framework")
+  set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework OpenGL")
+endif()
+
 if(POMDOG_TARGET_PLATFORM MATCHES "Mac")
   # list(APPEND LINK_FRAMEWORKS "$(SDKROOT)/System/Library/Frameworks/Cocoa.framework")
-  # list(APPEND LINK_FRAMEWORKS "$(SDKROOT)/System/Library/Frameworks/OpenGL.framework")
   # list(APPEND LINK_FRAMEWORKS "$(SDKROOT)/System/Library/Frameworks/QuartzCore.framework")
   set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework Cocoa")
-  set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework OpenGL")
   set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework QuartzCore")
 endif()
 
@@ -795,45 +798,11 @@ if(POMDOG_USE_DIRECTINPUT AND (POMDOG_TARGET_PLATFORM MATCHES "Win32"))
 endif()
 
 target_compile_definitions(pomdog_static PRIVATE
-  "$<$<CONFIG:DEBUG>:_DEBUG;DEBUG=1>"
-  "$<$<CONFIG:RELEASE>:NDEBUG>"
+  $<$<CONFIG:DEBUG>:_DEBUG;DEBUG=1>
+  $<$<CONFIG:RELEASE>:NDEBUG>
 )
 
-if ((CMAKE_CXX_COMPILER_ID MATCHES "Clang") OR (CMAKE_CXX_COMPILER_ID MATCHES "GNU"))
-  target_compile_options(pomdog_static PRIVATE
-    -Wall
-    -Werror
-    -Wimplicit-fallthrough
-    "$<$<CONFIG:DEBUG>:-g;-O0>"
-    "$<$<CONFIG:RELEASE>:-O3>"
-  )
-endif()
-
-if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  target_compile_options(pomdog_static PRIVATE
-    -Wcomma
-    -Wextra-semi
-    -Wmost
-
-    # FIXME: Use -Wextra instead of the following options.
-    -Wignored-qualifiers
-    -Winitializer-overrides
-    -Wmissing-field-initializers
-    -Wmissing-method-return-type
-    -Wsemicolon-before-method-body
-    -Wsign-compare
-    # -Wunused-parameter
-  )
-endif()
-
 if(POMDOG_TARGET_PLATFORM MATCHES "Win32")
-  target_compile_options(pomdog_static PRIVATE
-    /W4
-    /WX
-    "$<$<CONFIG:DEBUG>:/Od;/MTd>"
-    "$<$<CONFIG:RELEASE>:/O2;/Ob2;/MT>"
-  )
-
   target_compile_definitions(pomdog_static PRIVATE
     _WIN32_WINNT=0x0602 # Windows 8 or later
     WIN32_LEAN_AND_MEAN
@@ -857,6 +826,45 @@ if(POMDOG_TARGET_PLATFORM MATCHES "Win32")
     # odbccp32.lib
   )
 endif()
+
+target_compile_options(pomdog_static PRIVATE
+  # Clang
+  $<$<CXX_COMPILER_ID:Clang>:
+    -Wcomma
+    -Wextra-semi
+    -Wmost
+    -Wmove
+    -Wimplicit-fallthrough
+
+    # FIXME: Use -Wextra instead of the following options.
+    -Wignored-qualifiers
+    -Winitializer-overrides
+    -Wmissing-field-initializers
+    -Wmissing-method-return-type
+    -Wsemicolon-before-method-body
+    -Wsign-compare
+    # -Wunused-parameter
+  >
+  # GCC
+  $<$<CXX_COMPILER_ID:GNU>:
+    -Wimplicit-fallthrough
+    -pedantic
+  >
+  # Clang and GCC
+  $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>:
+    -Wall
+    -Werror
+    $<$<CONFIG:DEBUG>:-g;-O0>
+    $<$<CONFIG:RELEASE>:-O3>
+  >
+  # MSVC
+  $<$<CXX_COMPILER_ID:MSVC>:
+    /W4
+    /WX
+    $<$<CONFIG:DEBUG>:/Od;/MTd>
+    $<$<CONFIG:RELEASE>:/O2;/Ob2;/MT>
+  >
+)
 
 if (POMDOG_TARGET_PLATFORM MATCHES "Mac")
   # TODO: Replace with the following, CMake >= 3.12

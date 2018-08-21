@@ -14,69 +14,76 @@ set(CMAKE_CONFIGURATION_TYPES Debug Release)
 source_group(Source   REGULAR_EXPRESSION "Source/*")
 source_group(Platform REGULAR_EXPRESSION "Platform.*/*")
 
-set(SOURCE_FILES
+set(RESOURCE_FILES
+  # `Content` directory
+  Content
+
+  # On Mac
+  $<$<PLATFORM_ID:Darwin>:
+    Platform.Cocoa/Assets.xcassets
+    Platform.Cocoa/Base.lproj/MainMenu.xib
+  >
+)
+
+add_executable(${PRODUCT_NAME} WIN32
   Source/QuickStartGame.cpp
   Source/QuickStartGame.hpp
-)
+  ${RESOURCE_FILES}
 
-set(RESOURCE_FILES Content)
-
-include_directories(
-  ${POMDOG_DIR}/include
-  ${POMDOG_DIR}/experimental
-)
-
-if(APPLE)
-  list(APPEND SOURCE_FILES
+  # On Mac
+  $<$<PLATFORM_ID:Darwin>:
     Platform.Cocoa/main.mm
     Platform.Cocoa/AppDelegate.h
     Platform.Cocoa/AppDelegate.mm
     Platform.Cocoa/GameViewController.h
     Platform.Cocoa/GameViewController.mm
-  )
-  list(APPEND RESOURCE_FILES
-    Platform.Cocoa/Assets.xcassets
-    Platform.Cocoa/Base.lproj/MainMenu.xib
-  )
-elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-  list(APPEND SOURCE_FILES
+  >
+
+  # On Linux
+  $<$<PLATFORM_ID:Linux>:
     Platform.X11/main.cpp
-  )
-elseif(WIN32)
-  list(APPEND SOURCE_FILES
+  >
+
+  # On Windows
+  $<$<PLATFORM_ID:Windows>:
     Platform.Win32/main.cpp
     Platform.Win32/Resource.hpp
     Platform.Win32/game.rc
-  )
-endif()
-
-add_executable(${PRODUCT_NAME} WIN32 ${SOURCE_FILES} ${RESOURCE_FILES})
-
-target_compile_definitions(${PRODUCT_NAME} PRIVATE
-  "$<$<CONFIG:DEBUG>:DEBUG>"
-  "$<$<CONFIG:RELEASE>:NDEBUG>"
+  >
 )
 
-if ((CMAKE_CXX_COMPILER_ID MATCHES "Clang") OR (CMAKE_CXX_COMPILER_ID MATCHES "GNU"))
-  target_compile_options(${PRODUCT_NAME} PRIVATE
-    -pedantic
-    "$<$<CONFIG:DEBUG>:-g;-O0>"
-    "$<$<CONFIG:RELEASE>:-O3>"
-  )
-endif()
+target_include_directories(${PRODUCT_NAME} PRIVATE
+  ${POMDOG_DIR}/include
+  ${POMDOG_DIR}/experimental
+)
 
-if(WIN32)
-  target_compile_options(${PRODUCT_NAME} PRIVATE
-    /W4
-    "$<$<CONFIG:DEBUG>:/Od;/MTd>"
-    "$<$<CONFIG:RELEASE>:/O2;/Ob2;/MT>"
-  )
+target_compile_definitions(${PRODUCT_NAME} PRIVATE
+  $<$<CONFIG:DEBUG>:DEBUG>
+  $<$<CONFIG:RELEASE>:NDEBUG>
 
-  target_compile_definitions(${PRODUCT_NAME} PRIVATE
+  # On Windows
+  $<$<PLATFORM_ID:Windows>:
     WIN32_LEAN_AND_MEAN
     NOMINMAX
-  )
+  >
+)
 
+target_compile_options(${PRODUCT_NAME} PRIVATE
+  # Clang and GCC
+  $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>:
+    -pedantic
+    $<$<CONFIG:DEBUG>:-g;-O0>
+    $<$<CONFIG:RELEASE>:-O3>
+  >
+  # MSVC
+  $<$<CXX_COMPILER_ID:MSVC>:
+    /W4
+    $<$<CONFIG:DEBUG>:/Od;/MTd>
+    $<$<CONFIG:RELEASE>:/O2;/Ob2;/MT>
+  >
+)
+
+if(WIN32)
   # Replace with target_link_options() when upgrading CMake 3.12
   target_link_libraries(${PRODUCT_NAME}
     debug -INCREMENTAL
@@ -84,8 +91,6 @@ if(WIN32)
     optimized -INCREMENTAL:NO
     optimized -OPT:REF
   )
-
-  set_target_properties(${PRODUCT_NAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
 endif()
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
@@ -128,6 +133,10 @@ if(APPLE)
 endif()
 
 set_target_properties(${PRODUCT_NAME} PROPERTIES
+  # Change working directory in Visual Studio
+  VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+
+  # Xcode
   XCODE_ATTRIBUTE_GCC_OPTIMIZATION_LEVEL[variant=Debug] "0" # -O0
   XCODE_ATTRIBUTE_GCC_OPTIMIZATION_LEVEL[variant=Release] "3" # -O3
   XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH[variant=Debug] "YES"

@@ -31,7 +31,7 @@ source_group(UI                       REGULAR_EXPRESSION Pomdog.Experimental/UI/
 source_group(UI\\detail               REGULAR_EXPRESSION Pomdog.Experimental/UI/detail/*)
 source_group(Utility                  REGULAR_EXPRESSION Pomdog.Experimental/Utility/*)
 
-set(SOURCE_FILES
+add_library(pomdog_experimental STATIC
   ${POMDOG_EXPERIMENTAL_DIR}/Actions/Action.hpp
   ${POMDOG_EXPERIMENTAL_DIR}/Actions/MoveToAction.hpp
   ${POMDOG_EXPERIMENTAL_DIR}/Actions/RemoveActorAction.hpp
@@ -300,42 +300,37 @@ set(SOURCE_FILES
   ${POMDOG_EXPERIMENTAL_DIR}/Utility/UserPreferences.hpp
 )
 
-include_directories(
+target_include_directories(pomdog_experimental PRIVATE
   ${POMDOG_DIR}/experimental
   ${POMDOG_DIR}/include
   ${POMDOG_DIR}/dependencies/rapidjson/include
 )
 
-list(SORT SOURCE_FILES)
-
-add_library(pomdog_experimental STATIC ${SOURCE_FILES})
-
 target_compile_definitions(pomdog_experimental PRIVATE
-  "$<$<CONFIG:DEBUG>:_DEBUG;DEBUG=1>"
-  "$<$<CONFIG:RELEASE>:NDEBUG>"
-)
+  $<$<CONFIG:DEBUG>:_DEBUG;DEBUG=1>
+  $<$<CONFIG:RELEASE>:NDEBUG>
 
-if ((CMAKE_CXX_COMPILER_ID MATCHES "Clang") OR (CMAKE_CXX_COMPILER_ID MATCHES "GNU"))
-  target_compile_options(pomdog_experimental PRIVATE
-    "$<$<CONFIG:DEBUG>:-g;-O0>"
-    "$<$<CONFIG:RELEASE>:-O3>"
-  )
-endif()
-
-if(WIN32)
-  target_compile_options(pomdog_experimental PRIVATE
-    /W4
-    # /WX
-    "$<$<CONFIG:DEBUG>:/Od;/MTd>"
-    "$<$<CONFIG:RELEASE>:/O2;/Ob2;/MT>"
-  )
-
-  target_compile_definitions(pomdog_experimental PRIVATE
+  # On Windows
+  $<$<PLATFORM_ID:Windows>:
     _WIN32_WINNT=0x0602 # Windows 8 or later
     WIN32_LEAN_AND_MEAN
     NOMINMAX
-  )
-endif()
+  >
+)
+
+target_compile_options(pomdog_experimental PRIVATE
+  # Clang and GCC
+  $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>:
+    $<$<CONFIG:DEBUG>:-g;-O0>
+    $<$<CONFIG:RELEASE>:-O3>
+  >
+  # MSVC
+  $<$<CXX_COMPILER_ID:MSVC>:
+    /W4
+    $<$<CONFIG:DEBUG>:/Od;/MTd>
+    $<$<CONFIG:RELEASE>:/O2;/Ob2;/MT>
+  >
+)
 
 set_target_properties(
   pomdog_experimental PROPERTIES
