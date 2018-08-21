@@ -28,7 +28,6 @@ source_group(Platform.X11                 REGULAR_EXPRESSION "(include/Pomdog/Pl
 source_group(Reactive                     REGULAR_EXPRESSION "(include/Pomdog|src)/Reactive/*")
 source_group(Signals                      REGULAR_EXPRESSION "(include/Pomdog|src)/Signals/*")
 source_group(Utility                      REGULAR_EXPRESSION "(include/Pomdog|src)/Utility/*")
-source_group(Application                  REGULAR_EXPRESSION "(include/Pomdog|src)/Application/*")
 source_group(Experimental\\Graphics       REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Graphics/*")
 source_group(Experimental\\Image          REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Image/*")
 source_group(Experimental\\TexturePacker  REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/TexturePacker/*")
