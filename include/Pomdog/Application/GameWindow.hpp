@@ -12,6 +12,14 @@ namespace Pomdog {
 class Rectangle;
 enum class MouseCursor : std::uint8_t;
 
+/// Base interface for application window that contains the game.
+///
+/// Instances of this class are unique.
+///
+/// @todo Implement window resizing in X11 backend.
+/// @todo Implement cursor visibility in X11 backend.
+/// @todo Implement cursor setting in X11 backend.
+/// @todo ClientSizeChanged should fire in Cocoa and Win32 backends.
 class POMDOG_EXPORT GameWindow {
 public:
     GameWindow() = default;
@@ -20,25 +28,46 @@ public:
 
     virtual ~GameWindow() = default;
 
+    /// @return If window can be resized by user.
+    /// @warning Not implemented in X11 !
     virtual bool GetAllowUserResizing() const = 0;
 
+    /// Set if window can be resized by user.
+    /// @param allowResizing New value of the resizing flag.
+    /// @warning Not implemented in X11 !
     virtual void SetAllowUserResizing(bool allowResizing) = 0;
 
+    /// @return Title of the window.
     virtual std::string GetTitle() const = 0;
 
+    /// Set title of the window.
+    /// @param title New title of the window.
     virtual void SetTitle(const std::string& title) = 0;
 
+    /// @return Rectangle that describes windows position and size.
     virtual Rectangle GetClientBounds() const = 0;
 
+    /// Moves the window to the @p clientBounds x and y, and sets windows 
+    /// width and height according to the method parameter.
+    /// @param clientBounds Rectangle that will adjust the window.
     virtual void SetClientBounds(const Rectangle& clientBounds) = 0;
 
-    ///@brief Return true if the mouse cursor is visible, false otherwise.
+    /// @return True if the mouse cursor is visible, false otherwise.
+    /// @warning Not implemented in X11 !
     virtual bool IsMouseCursorVisible() const = 0;
 
+    /// Set visibility of the cursor in the window
+    /// @param visible New value of the cursor visibility flag.
+    /// @warning Not implemented in X11 !
     virtual void SetMouseCursorVisible(bool visible) = 0;
 
+    /// Set mouse cursor system provided asset.
+    /// @param cursor New mouse cursor asset.
+    /// @warning Not implemented in X11 !
     virtual void SetMouseCursor(MouseCursor cursor) = 0;
 
+    /// Signal that fires when windows size is changed.
+    /// @warning Do not fire in Cocoa and Win32 !
     Signal<void(int width, int height)> ClientSizeChanged;
 };
 
