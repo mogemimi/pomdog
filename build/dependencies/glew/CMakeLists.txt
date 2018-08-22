@@ -17,35 +17,30 @@ target_include_directories(glew_static PRIVATE
   ${THIRDPARTY_DIR}/vendor/glew/include
 )
 
-target_compile_definitions(glew_static PRIVATE GLEW_STATIC)
-
 target_compile_definitions(glew_static PRIVATE
-  "$<$<CONFIG:DEBUG>:_DEBUG>"
-  "$<$<CONFIG:RELEASE>:NDEBUG>"
+  GLEW_STATIC
+  $<$<CONFIG:DEBUG>:_DEBUG>
+  $<$<CONFIG:RELEASE>:NDEBUG>
+  $<$<PLATFORM_ID:Windows>:
+    WIN32
+    _LIB
+    WIN32_LEAN_AND_MEAN
+  >
 )
 
-if ((CMAKE_CXX_COMPILER_ID MATCHES "Clang") OR (CMAKE_CXX_COMPILER_ID MATCHES "GNU"))
-  target_compile_options(glew_static PRIVATE
-    "$<$<CONFIG:DEBUG>:-g;-O0>"
-    "$<$<CONFIG:RELEASE>:-O3>"
-  )
-endif()
-
-if(WIN32)
-  target_compile_options(glew_static PRIVATE
+target_compile_options(glew_static PRIVATE
+  $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>:
+    $<$<CONFIG:DEBUG>:-g;-O0>
+    $<$<CONFIG:RELEASE>:-O3>
+  >
+  $<$<CXX_COMPILER_ID:MSVC>:
     /nologo
     /W3
     /O2
     /Ob1
     /GF
     /Gy
-    "$<$<CONFIG:DEBUG>:/MTd>"
-    "$<$<CONFIG:RELEASE>:/MT>"
-  )
-
-  target_compile_definitions(glew_static PRIVATE
-    WIN32
-    _LIB
-    WIN32_LEAN_AND_MEAN
-  )
-endif()
+    $<$<CONFIG:DEBUG>:/MTd>
+    $<$<CONFIG:RELEASE>:/MT>
+  >
+)
