@@ -22,7 +22,9 @@ add_library(giflib STATIC
 
 target_include_directories(giflib PRIVATE
   ${THIRDPARTY_DIR}/vendor/giflib/lib
-  $<$<PLATFORM_ID:Windows>:${THIRDPARTY_DIR}/vendor/giflib/windows>
+  $<$<PLATFORM_ID:Windows>:
+    ${THIRDPARTY_DIR}/vendor/giflib/windows
+  >
 )
 
 target_compile_definitions(giflib PRIVATE
