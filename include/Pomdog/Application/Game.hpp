@@ -7,7 +7,8 @@
 namespace Pomdog {
 
 /// Core application class that describes game logic and rendering.
-/// Instances of this class is unique.
+///
+/// Instances of this class are unique.
 class POMDOG_EXPORT Game {
 public:
     Game() = default;
