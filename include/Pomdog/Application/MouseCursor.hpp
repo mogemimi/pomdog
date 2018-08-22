@@ -6,6 +6,8 @@
 
 namespace Pomdog {
 
+/// Avaliable system provided cursor assets.
+/// @todo Add preview images.
 enum class MouseCursor : std::uint8_t {
     Arrow,
     IBeam,
