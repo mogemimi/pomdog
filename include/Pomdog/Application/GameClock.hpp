@@ -12,7 +12,7 @@ namespace Pomdog {
 
 /// Application-based time storage.
 ///
-/// Instances of this class is unique.
+/// Instances of this class are unique.
 class POMDOG_EXPORT GameClock {
 public:
     /// Constructs GameClock with default value of FPS.
