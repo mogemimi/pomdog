@@ -1,6 +1,5 @@
 version: 0.0.{build}
 os: Visual Studio 2017
-configuration: Debug
 
 # shallow_clone: true
 clone_depth: 15
@@ -10,34 +9,20 @@ init:
 
 install:
   - git submodule update --init --quiet
-  - git clone -q --depth 1 https://chromium.googlesource.com/external/gyp.git tools/gyp
 
 before_build:
-  # for GYP
-  - ps: >-
-      python tools/gyp/gyp_main.py test/FrameworkTest/unittest.gyp `
-          --depth=. -f msvs -G msvs_version=2017 `
-          --generator-output=build.msvs `
-          -D component=static_library
-  # for CMake
-  - ps: mkdir build.cmake
-  - ps: cd build.cmake
-  - ps: cmake ../build/PomdogTest/
-  - ps: cd ..
+  - mkdir build.cmake && cd build.cmake
+  - cmake ../build/PomdogTest/
+  - cd ..
 
-# for GYP
+configuration:
+  - Debug
+  - Release
+
 build:
-  project: build.msvs/test/FrameworkTest/unittest.sln
+  project: build.cmake/PomdogTest.sln
   verbosity: minimal
-
-# for CMake
-after_build:
-  - ps: cd build.cmake
-  - ps: cmake --build . --config Release
-  - ps: cd ..
+  parallel: true
 
 test_script:
-  # for GYP
-  - ps: build.msvs/test/FrameworkTest/Debug/unittest
-  # for CMake
-  - ps: build.cmake/Release/PomdogTest
+  - build.cmake\%CONFIGURATION%\PomdogTest
