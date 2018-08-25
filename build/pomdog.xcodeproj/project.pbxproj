@@ -554,36 +554,36 @@
 		A82762A5077C6D85775D0E02 /* GraphicsCommandList.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = GraphicsCommandList.hpp; sourceTree = "<group>"; };
 		A8BC4737AB841D7D4D455F04 /* SoundEffectAL.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = SoundEffectAL.hpp; sourceTree = "<group>"; };
 		A902A2AFE9C3DDA017612435 /* DepthFormat.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = DepthFormat.hpp; sourceTree = "<group>"; };
-		A93CA62E1D92F2FD00B65171 /* Observable.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Observable.hpp; path = Reactive/Observable.hpp; sourceTree = "<group>"; };
-		A93CA62F1D92F2FD00B65171 /* ObservableBase.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ObservableBase.hpp; path = Reactive/ObservableBase.hpp; sourceTree = "<group>"; };
-		A93CA6301D92F2FD00B65171 /* ObservableBuilder.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ObservableBuilder.hpp; path = Reactive/ObservableBuilder.hpp; sourceTree = "<group>"; };
-		A93CA6311D92F2FD00B65171 /* Observer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Observer.hpp; path = Reactive/Observer.hpp; sourceTree = "<group>"; };
-		A93CA6341D92F2FD00B65171 /* Subscriber.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Subscriber.hpp; path = Reactive/Subscriber.hpp; sourceTree = "<group>"; };
-		A93CA6371D92F31B00B65171 /* KeyDownSubject.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = KeyDownSubject.hpp; path = Reactive/Subjects/KeyDownSubject.hpp; sourceTree = "<group>"; };
-		A93CA6381D92F32300B65171 /* BufferOperator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = BufferOperator.hpp; path = Reactive/Operators/BufferOperator.hpp; sourceTree = "<group>"; };
-		A93CA6391D92F32300B65171 /* DebounceOperator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = DebounceOperator.hpp; path = Reactive/Operators/DebounceOperator.hpp; sourceTree = "<group>"; };
-		A93CA63A1D92F32300B65171 /* DelayOperator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = DelayOperator.hpp; path = Reactive/Operators/DelayOperator.hpp; sourceTree = "<group>"; };
-		A93CA63B1D92F32300B65171 /* DistinctOperator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = DistinctOperator.hpp; path = Reactive/Operators/DistinctOperator.hpp; sourceTree = "<group>"; };
-		A93CA63C1D92F32300B65171 /* DoOperator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = DoOperator.hpp; path = Reactive/Operators/DoOperator.hpp; sourceTree = "<group>"; };
-		A93CA63D1D92F32300B65171 /* FilterOperator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = FilterOperator.hpp; path = Reactive/Operators/FilterOperator.hpp; sourceTree = "<group>"; };
-		A93CA63E1D92F32300B65171 /* FirstOperator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = FirstOperator.hpp; path = Reactive/Operators/FirstOperator.hpp; sourceTree = "<group>"; };
-		A93CA63F1D92F32300B65171 /* LastOperator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = LastOperator.hpp; path = Reactive/Operators/LastOperator.hpp; sourceTree = "<group>"; };
-		A93CA6401D92F32300B65171 /* MapOperator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MapOperator.hpp; path = Reactive/Operators/MapOperator.hpp; sourceTree = "<group>"; };
-		A93CA6411D92F32300B65171 /* MergeOperator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = MergeOperator.hpp; path = Reactive/Operators/MergeOperator.hpp; sourceTree = "<group>"; };
-		A93CA6421D92F32300B65171 /* ScanOperator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ScanOperator.hpp; path = Reactive/Operators/ScanOperator.hpp; sourceTree = "<group>"; };
-		A93CA6431D92F32300B65171 /* SkipLastOperator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = SkipLastOperator.hpp; path = Reactive/Operators/SkipLastOperator.hpp; sourceTree = "<group>"; };
-		A93CA6441D92F32300B65171 /* SkipOperator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = SkipOperator.hpp; path = Reactive/Operators/SkipOperator.hpp; sourceTree = "<group>"; };
-		A93CA6451D92F32300B65171 /* TakeOperator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = TakeOperator.hpp; path = Reactive/Operators/TakeOperator.hpp; sourceTree = "<group>"; };
-		A93CA6461D92F32300B65171 /* TimeoutOperator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = TimeoutOperator.hpp; path = Reactive/Operators/TimeoutOperator.hpp; sourceTree = "<group>"; };
-		A93CA6471D92F32300B65171 /* ZipOperator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ZipOperator.hpp; path = Reactive/Operators/ZipOperator.hpp; sourceTree = "<group>"; };
-		A93CA6481D92F33A00B65171 /* Helpers.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Helpers.hpp; path = Async/Helpers.hpp; sourceTree = "<group>"; };
-		A93CA6491D92F33A00B65171 /* ImmediateScheduler.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ImmediateScheduler.hpp; path = Async/ImmediateScheduler.hpp; sourceTree = "<group>"; };
-		A93CA64A1D92F33A00B65171 /* QueuedScheduler.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = QueuedScheduler.hpp; path = Async/QueuedScheduler.hpp; sourceTree = "<group>"; };
-		A93CA64B1D92F33A00B65171 /* Scheduler.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Scheduler.hpp; path = Async/Scheduler.hpp; sourceTree = "<group>"; };
-		A93CA64C1D92F33A00B65171 /* Task.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Task.hpp; path = Async/Task.hpp; sourceTree = "<group>"; };
-		A93CA64D1D92F34E00B65171 /* ImmediateScheduler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImmediateScheduler.cpp; path = Async/ImmediateScheduler.cpp; sourceTree = "<group>"; };
-		A93CA64E1D92F34E00B65171 /* QueuedScheduler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = QueuedScheduler.cpp; path = Async/QueuedScheduler.cpp; sourceTree = "<group>"; };
-		A93CA64F1D92F34E00B65171 /* Task.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Task.cpp; path = Async/Task.cpp; sourceTree = "<group>"; };
+		A93CA62E1D92F2FD00B65171 /* Observable.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Observable.hpp; sourceTree = "<group>"; };
+		A93CA62F1D92F2FD00B65171 /* ObservableBase.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ObservableBase.hpp; sourceTree = "<group>"; };
+		A93CA6301D92F2FD00B65171 /* ObservableBuilder.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ObservableBuilder.hpp; sourceTree = "<group>"; };
+		A93CA6311D92F2FD00B65171 /* Observer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Observer.hpp; sourceTree = "<group>"; };
+		A93CA6341D92F2FD00B65171 /* Subscriber.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Subscriber.hpp; sourceTree = "<group>"; };
+		A93CA6371D92F31B00B65171 /* KeyDownSubject.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = KeyDownSubject.hpp; sourceTree = "<group>"; };
+		A93CA6381D92F32300B65171 /* BufferOperator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BufferOperator.hpp; sourceTree = "<group>"; };
+		A93CA6391D92F32300B65171 /* DebounceOperator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = DebounceOperator.hpp; sourceTree = "<group>"; };
+		A93CA63A1D92F32300B65171 /* DelayOperator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = DelayOperator.hpp; sourceTree = "<group>"; };
+		A93CA63B1D92F32300B65171 /* DistinctOperator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = DistinctOperator.hpp; sourceTree = "<group>"; };
+		A93CA63C1D92F32300B65171 /* DoOperator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = DoOperator.hpp; sourceTree = "<group>"; };
+		A93CA63D1D92F32300B65171 /* FilterOperator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = FilterOperator.hpp; sourceTree = "<group>"; };
+		A93CA63E1D92F32300B65171 /* FirstOperator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = FirstOperator.hpp; sourceTree = "<group>"; };
+		A93CA63F1D92F32300B65171 /* LastOperator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = LastOperator.hpp; sourceTree = "<group>"; };
+		A93CA6401D92F32300B65171 /* MapOperator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MapOperator.hpp; sourceTree = "<group>"; };
+		A93CA6411D92F32300B65171 /* MergeOperator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MergeOperator.hpp; sourceTree = "<group>"; };
+		A93CA6421D92F32300B65171 /* ScanOperator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ScanOperator.hpp; sourceTree = "<group>"; };
+		A93CA6431D92F32300B65171 /* SkipLastOperator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SkipLastOperator.hpp; sourceTree = "<group>"; };
+		A93CA6441D92F32300B65171 /* SkipOperator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SkipOperator.hpp; sourceTree = "<group>"; };
+		A93CA6451D92F32300B65171 /* TakeOperator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TakeOperator.hpp; sourceTree = "<group>"; };
+		A93CA6461D92F32300B65171 /* TimeoutOperator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TimeoutOperator.hpp; sourceTree = "<group>"; };
+		A93CA6471D92F32300B65171 /* ZipOperator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ZipOperator.hpp; sourceTree = "<group>"; };
+		A93CA6481D92F33A00B65171 /* Helpers.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Helpers.hpp; sourceTree = "<group>"; };
+		A93CA6491D92F33A00B65171 /* ImmediateScheduler.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ImmediateScheduler.hpp; sourceTree = "<group>"; };
+		A93CA64A1D92F33A00B65171 /* QueuedScheduler.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = QueuedScheduler.hpp; sourceTree = "<group>"; };
+		A93CA64B1D92F33A00B65171 /* Scheduler.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Scheduler.hpp; sourceTree = "<group>"; };
+		A93CA64C1D92F33A00B65171 /* Task.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Task.hpp; sourceTree = "<group>"; };
+		A93CA64D1D92F34E00B65171 /* ImmediateScheduler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ImmediateScheduler.cpp; sourceTree = "<group>"; };
+		A93CA64E1D92F34E00B65171 /* QueuedScheduler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = QueuedScheduler.cpp; sourceTree = "<group>"; };
+		A93CA64F1D92F34E00B65171 /* Task.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Task.cpp; sourceTree = "<group>"; };
 		A943BA1A210E86A900DA852D /* GamepadUUID.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GamepadUUID.hpp; sourceTree = "<group>"; };
 		A943BA1B210E86B900DA852D /* GamepadUUID.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GamepadUUID.cpp; sourceTree = "<group>"; };
 		A94ACC591C287C9100AFCC36 /* ConditionalCompilation.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ConditionalCompilation.hpp; sourceTree = "<group>"; };
@@ -595,21 +595,21 @@
 		A98BE0D21CC22915008696A8 /* GameHostMetal.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameHostMetal.hpp; sourceTree = "<group>"; };
 		A98BE0D31CC22915008696A8 /* GameHostMetal.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GameHostMetal.mm; sourceTree = "<group>"; };
 		A98CFCA421180B0000D4D033 /* ConstantsMetal.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ConstantsMetal.hpp; sourceTree = "<group>"; };
-		A98F5917211B2B89002960C1 /* LineBatch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LineBatch.cpp; path = Graphics/LineBatch.cpp; sourceTree = "<group>"; };
-		A98F5918211B2B89002960C1 /* PolygonShapeBuilder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PolygonShapeBuilder.cpp; path = Graphics/PolygonShapeBuilder.cpp; sourceTree = "<group>"; };
-		A98F5919211B2B89002960C1 /* PolygonBatch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PolygonBatch.cpp; path = Graphics/PolygonBatch.cpp; sourceTree = "<group>"; };
-		A98F5920211B2B9A002960C1 /* SpriteFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SpriteFont.cpp; path = Graphics/SpriteFont.cpp; sourceTree = "<group>"; };
-		A98F5921211B2B9A002960C1 /* SpriteFontLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SpriteFontLoader.cpp; path = Graphics/SpriteFontLoader.cpp; sourceTree = "<group>"; };
-		A98F5922211B2B9A002960C1 /* SpriteBatchRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SpriteBatchRenderer.cpp; path = Graphics/SpriteBatchRenderer.cpp; sourceTree = "<group>"; };
-		A98F5923211B2B9A002960C1 /* TrueTypeFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TrueTypeFont.cpp; path = Graphics/TrueTypeFont.cpp; sourceTree = "<group>"; };
-		A98F592C211B2BB6002960C1 /* PolygonBatch.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = PolygonBatch.hpp; path = Graphics/PolygonBatch.hpp; sourceTree = "<group>"; };
-		A98F592D211B2BB6002960C1 /* PolygonShapeBuilder.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = PolygonShapeBuilder.hpp; path = Graphics/PolygonShapeBuilder.hpp; sourceTree = "<group>"; };
-		A98F592E211B2BB7002960C1 /* FontGlyph.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = FontGlyph.hpp; path = Graphics/FontGlyph.hpp; sourceTree = "<group>"; };
-		A98F592F211B2BB7002960C1 /* LineBatch.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = LineBatch.hpp; path = Graphics/LineBatch.hpp; sourceTree = "<group>"; };
-		A98F5930211B2BBD002960C1 /* SpriteBatchRenderer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = SpriteBatchRenderer.hpp; path = Graphics/SpriteBatchRenderer.hpp; sourceTree = "<group>"; };
-		A98F5931211B2BBD002960C1 /* SpriteFont.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = SpriteFont.hpp; path = Graphics/SpriteFont.hpp; sourceTree = "<group>"; };
-		A98F5932211B2BBD002960C1 /* SpriteFontLoader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = SpriteFontLoader.hpp; path = Graphics/SpriteFontLoader.hpp; sourceTree = "<group>"; };
-		A98F5933211B2BBD002960C1 /* TrueTypeFont.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = TrueTypeFont.hpp; path = Graphics/TrueTypeFont.hpp; sourceTree = "<group>"; };
+		A98F5917211B2B89002960C1 /* LineBatch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LineBatch.cpp; sourceTree = "<group>"; };
+		A98F5918211B2B89002960C1 /* PolygonShapeBuilder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PolygonShapeBuilder.cpp; sourceTree = "<group>"; };
+		A98F5919211B2B89002960C1 /* PolygonBatch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PolygonBatch.cpp; sourceTree = "<group>"; };
+		A98F5920211B2B9A002960C1 /* SpriteFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SpriteFont.cpp; sourceTree = "<group>"; };
+		A98F5921211B2B9A002960C1 /* SpriteFontLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SpriteFontLoader.cpp; sourceTree = "<group>"; };
+		A98F5922211B2B9A002960C1 /* SpriteBatchRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SpriteBatchRenderer.cpp; sourceTree = "<group>"; };
+		A98F5923211B2B9A002960C1 /* TrueTypeFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TrueTypeFont.cpp; sourceTree = "<group>"; };
+		A98F592C211B2BB6002960C1 /* PolygonBatch.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PolygonBatch.hpp; sourceTree = "<group>"; };
+		A98F592D211B2BB6002960C1 /* PolygonShapeBuilder.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PolygonShapeBuilder.hpp; sourceTree = "<group>"; };
+		A98F592E211B2BB7002960C1 /* FontGlyph.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = FontGlyph.hpp; sourceTree = "<group>"; };
+		A98F592F211B2BB7002960C1 /* LineBatch.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = LineBatch.hpp; sourceTree = "<group>"; };
+		A98F5930211B2BBD002960C1 /* SpriteBatchRenderer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SpriteBatchRenderer.hpp; sourceTree = "<group>"; };
+		A98F5931211B2BBD002960C1 /* SpriteFont.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SpriteFont.hpp; sourceTree = "<group>"; };
+		A98F5932211B2BBD002960C1 /* SpriteFontLoader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SpriteFontLoader.hpp; sourceTree = "<group>"; };
+		A98F5933211B2BBD002960C1 /* TrueTypeFont.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TrueTypeFont.hpp; sourceTree = "<group>"; };
 		A992AF001C2B1168003170C9 /* Coordinate2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Coordinate2D.cpp; sourceTree = "<group>"; };
 		A992AF011C2B1168003170C9 /* Coordinate3D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Coordinate3D.cpp; sourceTree = "<group>"; };
 		A997F6DB1CAEFB0800926392 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
@@ -667,9 +667,9 @@
 		A9F213581DE35F260027FA45 /* PlaneIntersectionType.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PlaneIntersectionType.hpp; sourceTree = "<group>"; };
 		A9F213591DE35F380027FA45 /* BoundingFrustum.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BoundingFrustum.cpp; sourceTree = "<group>"; };
 		A9F2135C1DE35F420027FA45 /* Plane.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Plane.cpp; sourceTree = "<group>"; };
-		A9FC99041DC3D87F00C78D63 /* SpriteBatch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SpriteBatch.cpp; path = Graphics/SpriteBatch.cpp; sourceTree = "<group>"; };
+		A9FC99041DC3D87F00C78D63 /* SpriteBatch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SpriteBatch.cpp; sourceTree = "<group>"; };
 		A9FC99071DC3D89300C78D63 /* AlignedNew.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AlignedNew.hpp; sourceTree = "<group>"; };
-		A9FC99091DC3D8F100C78D63 /* SpriteBatch.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = SpriteBatch.hpp; path = Graphics/SpriteBatch.hpp; sourceTree = "<group>"; };
+		A9FC99091DC3D8F100C78D63 /* SpriteBatch.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SpriteBatch.hpp; sourceTree = "<group>"; };
 		AA4220AFBD6F377F07163A1E /* EffectAnnotation.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = EffectAnnotation.hpp; sourceTree = "<group>"; };
 		ABEE70990030BA68A5F9002D /* PipelineStateGL4.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = PipelineStateGL4.hpp; sourceTree = "<group>"; };
 		AC349E78729FC3024C1BC5D9 /* Assert.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = Assert.hpp; sourceTree = "<group>"; };
@@ -1314,7 +1314,7 @@
 				A93CA64B1D92F33A00B65171 /* Scheduler.hpp */,
 				A93CA64C1D92F33A00B65171 /* Task.hpp */,
 			);
-			name = Async;
+			path = Async;
 			sourceTree = "<group>";
 		};
 		A93CA62C1D92F29F00B65171 /* Async */ = {
@@ -1324,7 +1324,7 @@
 				A93CA64E1D92F34E00B65171 /* QueuedScheduler.cpp */,
 				A93CA64F1D92F34E00B65171 /* Task.cpp */,
 			);
-			name = Async;
+			path = Async;
 			sourceTree = "<group>";
 		};
 		A93CA62D1D92F2C600B65171 /* Reactive */ = {
@@ -1338,7 +1338,7 @@
 				A93CA6311D92F2FD00B65171 /* Observer.hpp */,
 				A93CA6341D92F2FD00B65171 /* Subscriber.hpp */,
 			);
-			name = Reactive;
+			path = Reactive;
 			sourceTree = "<group>";
 		};
 		A93CA6351D92F30500B65171 /* Operators */ = {
@@ -1361,7 +1361,7 @@
 				A93CA6461D92F32300B65171 /* TimeoutOperator.hpp */,
 				A93CA6471D92F32300B65171 /* ZipOperator.hpp */,
 			);
-			name = Operators;
+			path = Operators;
 			sourceTree = "<group>";
 		};
 		A93CA6361D92F30B00B65171 /* Subjects */ = {
@@ -1369,7 +1369,7 @@
 			children = (
 				A93CA6371D92F31B00B65171 /* KeyDownSubject.hpp */,
 			);
-			name = Subjects;
+			path = Subjects;
 			sourceTree = "<group>";
 		};
 		A94ACC581C287C8100AFCC36 /* Basic */ = {
@@ -1498,7 +1498,7 @@
 				A98F5921211B2B9A002960C1 /* SpriteFontLoader.cpp */,
 				A98F5923211B2B9A002960C1 /* TrueTypeFont.cpp */,
 			);
-			name = Graphics;
+			path = Graphics;
 			sourceTree = "<group>";
 		};
 		A9FC99081DC3D8E100C78D63 /* Graphics */ = {
@@ -1514,7 +1514,7 @@
 				A98F5932211B2BBD002960C1 /* SpriteFontLoader.hpp */,
 				A98F5933211B2BBD002960C1 /* TrueTypeFont.hpp */,
 			);
-			name = Graphics;
+			path = Graphics;
 			sourceTree = "<group>";
 		};
 		AAF4E64073F0BBFB4C0B0C43 /* Signals */ = {
