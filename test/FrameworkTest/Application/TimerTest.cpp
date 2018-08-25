@@ -4,6 +4,7 @@
 #include <Pomdog/Application/GameClock.hpp>
 #include <gtest/iutest_switch.hpp>
 #include <chrono>
+#include <thread>
 
 using namespace Pomdog;
 
@@ -46,4 +47,23 @@ TEST(Timer, Scale)
 
     timer.SetScale(-0.5);
     EXPECT_EQ(-0.5, timer.GetScale());
+}
+
+TEST(Timer, Scaling)
+{
+    constexpr double scale = 0.4;
+    constexpr double epsilon = 0.001;
+
+    GameClock clock;
+    Timer timer(clock);
+    timer.SetScale(scale);
+    timer.Start();
+
+    for (int i = 0; i < 100; i++) {
+        clock.Tick();
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    }
+
+    ASSERT_EQ(scale, timer.GetScale());
+    EXPECT_NEAR(clock.GetTotalGameTime().count() * scale, timer.GetTotalTime().count(), epsilon);
 }

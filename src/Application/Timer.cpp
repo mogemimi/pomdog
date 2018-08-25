@@ -19,7 +19,7 @@ Timer::Timer(GameClock & clock)
             return;
         }
         this->frameDuration = (frameDurationIn * this->scale);
-        this->totalTime += (frameDuration * this->scale);
+        totalTime += (frameDurationIn * scale);
 
         if (interval && (totalTime >= *interval)) {
             totalTime = *interval;
