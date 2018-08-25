@@ -63,7 +63,7 @@ T Exponential(T time) noexcept
         "You can only use floating-point types");
 
     // Exponential easing
-    return std::pow(2, 10 * (time - 1));
+    return std::pow(T(2), 10 * (time - 1));
 }
 
 template <typename T>
@@ -85,7 +85,7 @@ T Elastic(T time) noexcept
     // Elastic easing
     constexpr auto period = T(0.3);
     constexpr auto s = period / 4;
-    const auto postFix = std::pow(2, 10 * (time - 1));
+    const auto postFix = std::pow(T(2), 10 * (time - 1));
     return (time <= 0 || time >= 1)
         ? time
         : -(postFix * std::sin(((time - 1) - s) * Math::TwoPi<T> / period));
@@ -101,19 +101,20 @@ T Bounce(T time) noexcept
     time = 1 - time;
 
     if (time < 1 / 2.75) {
-        return 1 - (7.5625 * time * time);
+        return 1 - (T(7.5625) * time * time);
     }
     else if (time < 2 / 2.75) {
-        auto t = time - 1.5 / 2.75;
-        return 1 - (7.5625 * t * t + 0.75);
+        auto t = time - T(1.5 / 2.75);
+        return 1 - (T(7.5625) * t * t + T(0.75));
     }
     else if (time < 2.5 / 2.75) {
-        auto t = time - 2.25 / 2.75;
-        return 1 - (7.5625 * t * t + 0.9375);
+        auto t = time - T(2.25 / 2.75);
+        return 1 - (T(7.5625) * t * t + T(0.9375));
     }
 
-    auto postFix = time -= 2.625 / 2.75;
-    return 1 - (7.5625 * postFix * time + 0.984375);
+    time -= T(2.625 / 2.75);
+    auto postFix = time;
+    return 1 - (T(7.5625) * postFix * time + T(0.984375));
 }
 
 template <typename T>
