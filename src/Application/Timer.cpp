@@ -9,7 +9,6 @@ namespace Pomdog {
 
 Timer::Timer(GameClock & clock)
     : totalTime(Duration::zero())
-    , frameDuration(Duration::zero())
     , scale(1)
     , enabled(true)
     , isSingleShot(false)
@@ -18,7 +17,6 @@ Timer::Timer(GameClock & clock)
         if (!enabled) {
             return;
         }
-        this->frameDuration = (frameDurationIn * this->scale);
         totalTime += (frameDurationIn * scale);
 
         if (interval && (totalTime >= *interval)) {
@@ -68,11 +66,6 @@ bool Timer::IsEnabled() const
 Duration Timer::GetTotalTime() const
 {
     return this->totalTime;
-}
-
-Duration Timer::GetFrameDuration() const
-{
-    return this->frameDuration;
 }
 
 bool Timer::IsSingleShot() const

@@ -16,7 +16,6 @@ TEST(Timer, TrivialCase)
     EXPECT_TRUE(timer.IsEnabled());
     EXPECT_FALSE(timer.IsSingleShot());
     EXPECT_FALSE(timer.GetInterval());
-    EXPECT_EQ(Duration::zero(), timer.GetFrameDuration());
     EXPECT_EQ(Duration::zero(), timer.GetTotalTime());
     EXPECT_EQ(1.0, timer.GetScale());
 }
