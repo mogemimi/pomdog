@@ -30,6 +30,7 @@ source_group(Signals                      REGULAR_EXPRESSION "(include/Pomdog|sr
 source_group(Utility                      REGULAR_EXPRESSION "(include/Pomdog|src)/Utility/*")
 source_group(Experimental\\Graphics       REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Graphics/*")
 source_group(Experimental\\Image          REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Image/*")
+source_group(Experimental\\MagicaVoxel    REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/MagicaVoxel/*")
 source_group(Experimental\\TexturePacker  REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/TexturePacker/*")
 source_group(InputSystem                  REGULAR_EXPRESSION src/InputSystem/*)
 source_group(InputSystem.DirectInput      REGULAR_EXPRESSION src/InputSystem.DirectInput/*)
@@ -360,6 +361,9 @@ set(POMDOG_SOURCES_EXPERIMENTAL
   ${POMDOG_DIR}/include/Pomdog/Experimental/Image/GifImage.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Image/GifImageLoader.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Image/Image.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/MagicaVoxel/VoxModel.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/MagicaVoxel/VoxModelExporter.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/MagicaVoxel/VoxModelLoader.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureAtlas.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureAtlasGenerator.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureAtlasLoader.hpp
@@ -374,6 +378,9 @@ set(POMDOG_SOURCES_EXPERIMENTAL
   ${POMDOG_DIR}/src/Experimental/Graphics/TrueTypeFont.cpp
   ${POMDOG_DIR}/src/Experimental/Image/GifImageLoader.cpp
   ${POMDOG_DIR}/src/Experimental/Image/Image.cpp
+  ${POMDOG_DIR}/src/Experimental/MagicaVoxel/VoxChunkHeader.hpp
+  ${POMDOG_DIR}/src/Experimental/MagicaVoxel/VoxModelLoader.cpp
+  ${POMDOG_DIR}/src/Experimental/MagicaVoxel/VoxModelExporter.cpp
   ${POMDOG_DIR}/src/Experimental/TexturePacker/TextureAtlasGenerator.cpp
   ${POMDOG_DIR}/src/Experimental/TexturePacker/TextureAtlasLoader.cpp
 )

@@ -1,26 +1,26 @@
 // Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
-#include "VoxModelLoader.hpp"
-#include "detail/VoxChunkHeader.hpp"
+#include "Pomdog/Experimental/MagicaVoxel/VoxModelLoader.hpp"
+#include "VoxChunkHeader.hpp"
+#include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
 #include "Pomdog/Content/Utility/MakeFourCC.hpp"
-#include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
-#include <fstream>
 #include <algorithm>
+#include <fstream>
 #include <utility>
 
 namespace Pomdog {
 namespace MagicaVoxel {
 namespace {
 
-std::string Error(std::string const& assetName, std::string const& description)
+std::string Error(const std::string& assetName, const std::string& description)
 {
     return description + (": " + assetName);
 }
 
-std::ifstream::pos_type ChunkSize(std::ifstream & stream, MagicaVoxel::VoxChunkHeader const& chunk)
+std::ifstream::pos_type ChunkSize(std::ifstream& stream, const VoxChunkHeader& chunk)
 {
     POMDOG_ASSERT(chunk.ContentSize >= 0);
     POMDOG_ASSERT(chunk.ChildrenSize >= 0);
@@ -31,9 +31,8 @@ std::ifstream::pos_type ChunkSize(std::ifstream & stream, MagicaVoxel::VoxChunkH
 
 } // unnamed namespace
 
-VoxModel VoxModelLoader::Load(AssetManager const& assets, std::string const& assetName)
+VoxModel VoxModelLoader::Load(const AssetManager& assets, const std::string& assetName)
 {
-    using MagicaVoxel::VoxChunkHeader;
     using Detail::BinaryReader;
     using Detail::MakeFourCC;
 
@@ -45,7 +44,7 @@ VoxModel VoxModelLoader::Load(AssetManager const& assets, std::string const& ass
     constexpr auto IdRGBA = MakeFourCC('R', 'G', 'B', 'A');
 
     auto binaryFile = assets.OpenStream(assetName);
-    auto & stream = binaryFile.Stream;
+    auto& stream = binaryFile.Stream;
 
     if (stream.fail()) {
         POMDOG_THROW_EXCEPTION(std::invalid_argument,
@@ -75,8 +74,7 @@ VoxModel VoxModelLoader::Load(AssetManager const& assets, std::string const& ass
 
     MagicaVoxel::VoxModel model;
 
-    while (stream.tellg() < mainChunkEnd)
-    {
+    while (stream.tellg() < mainChunkEnd) {
         const auto chunk = BinaryReader::Read<VoxChunkHeader>(stream);
         const auto chunkEnd = ChunkSize(stream, chunk);
 

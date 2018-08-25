@@ -1,27 +1,27 @@
 // Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
-#include "VoxModelExporter.hpp"
-#include "detail/VoxChunkHeader.hpp"
-#include "VoxModel.hpp"
+#include "Pomdog/Experimental/MagicaVoxel/VoxModelExporter.hpp"
+#include "VoxChunkHeader.hpp"
 #include "Pomdog/Content/Utility/MakeFourCC.hpp"
+#include "Pomdog/Experimental/MagicaVoxel/VoxModel.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
-#include <fstream>
 #include <algorithm>
+#include <fstream>
 #include <utility>
 
 namespace Pomdog {
 namespace MagicaVoxel {
 namespace {
 
-std::string Error(std::string const& assetName, std::string const& description)
+std::string Error(const std::string& assetName, const std::string& description)
 {
     return description + (": " + assetName);
 }
 
 } // unnamed namespace
 
-void VoxModelExporter::Export(MagicaVoxel::VoxModel const& model, std::string const& filePath)
+void VoxModelExporter::Export(const MagicaVoxel::VoxModel& model, const std::string& filePath)
 {
     using Detail::MakeFourCC;
 
@@ -86,32 +86,22 @@ void VoxModelExporter::Export(MagicaVoxel::VoxModel const& model, std::string co
         + sizeof(xyziChunk) + xyziChunk.ContentSize
         + sizeof(rgbaChunk) + rgbaChunk.ContentSize;
 
-//    std::printf("\n========\n");
-//    std::printf("mainChunk.ContentSize: %d\n", mainChunk.ContentSize);
-//    std::printf("mainChunk.ChildrenSize: %d\n", mainChunk.ChildrenSize);
-//    std::printf("sizeChunk.ContentSize: %d\n", sizeChunk.ContentSize);
-//    std::printf("sizeChunk.ChildrenSize: %d\n", sizeChunk.ChildrenSize);
-//    std::printf("xyziChunk.ContentSize: %d\n", xyziChunk.ContentSize);
-//    std::printf("xyziChunk.ChildrenSize: %d\n", xyziChunk.ChildrenSize);
-//    std::printf("rgbaChunk.ContentSize: %d\n", rgbaChunk.ContentSize);
-//    std::printf("rgbaChunk.ChildrenSize: %d\n", rgbaChunk.ChildrenSize);
-
     std::ofstream stream(filePath, std::ios::binary);
 
     if (stream.fail()) {
         POMDOG_THROW_EXCEPTION(std::invalid_argument, Error(filePath, "cannot open file"));
     }
 
-    stream.write(reinterpret_cast<char const*>(&fourCC), sizeof(fourCC));
-    stream.write(reinterpret_cast<char const*>(&MagicaVoxelVersion), sizeof(MagicaVoxelVersion));
-    stream.write(reinterpret_cast<char const*>(&mainChunk), sizeof(mainChunk));
-    stream.write(reinterpret_cast<char const*>(&sizeChunk), sizeof(sizeChunk));
-    stream.write(reinterpret_cast<char const*>(&size), sizeof(size));
-    stream.write(reinterpret_cast<char const*>(&xyziChunk), sizeof(xyziChunk));
-    stream.write(reinterpret_cast<char const*>(&voxelCount), sizeof(voxelCount));
-    stream.write(reinterpret_cast<char const*>(voxels.data()), sizeof(voxels.front()) * voxels.size());
-    stream.write(reinterpret_cast<char const*>(&rgbaChunk), sizeof(rgbaChunk));
-    stream.write(reinterpret_cast<char const*>(colors.data()), sizeof(colors.front()) * colors.size());
+    stream.write(reinterpret_cast<const char*>(&fourCC), sizeof(fourCC));
+    stream.write(reinterpret_cast<const char*>(&MagicaVoxelVersion), sizeof(MagicaVoxelVersion));
+    stream.write(reinterpret_cast<const char*>(&mainChunk), sizeof(mainChunk));
+    stream.write(reinterpret_cast<const char*>(&sizeChunk), sizeof(sizeChunk));
+    stream.write(reinterpret_cast<const char*>(&size), sizeof(size));
+    stream.write(reinterpret_cast<const char*>(&xyziChunk), sizeof(xyziChunk));
+    stream.write(reinterpret_cast<const char*>(&voxelCount), sizeof(voxelCount));
+    stream.write(reinterpret_cast<const char*>(voxels.data()), sizeof(voxels.front()) * voxels.size());
+    stream.write(reinterpret_cast<const char*>(&rgbaChunk), sizeof(rgbaChunk));
+    stream.write(reinterpret_cast<const char*>(colors.data()), sizeof(colors.front()) * colors.size());
 }
 
 } // namespace MagicaVoxel

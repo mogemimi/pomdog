@@ -46,10 +46,6 @@
 
 //#include "InGameEditor/InGameEditor.hpp"
 
-#include "MagicaVoxel/VoxModel.hpp"
-#include "MagicaVoxel/VoxModelExporter.hpp"
-#include "MagicaVoxel/VoxModelLoader.hpp"
-
 #include "Particle2D/Beam.hpp"
 #include "Particle2D/BeamEmitter.hpp"
 #include "Particle2D/BeamSystem.hpp"

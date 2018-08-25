@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "Pomdog/Basic/Export.hpp"
 #include <string>
 
 namespace Pomdog {
@@ -9,10 +10,10 @@ namespace MagicaVoxel {
 
 class VoxModel;
 
-struct VoxModelExporter {
+struct POMDOG_EXPORT VoxModelExporter final {
     static void Export(
-        MagicaVoxel::VoxModel const& model,
-        std::string const& filePath);
+        const MagicaVoxel::VoxModel& model,
+        const std::string& filePath);
 };
 
 } // namespace MagicaVoxel

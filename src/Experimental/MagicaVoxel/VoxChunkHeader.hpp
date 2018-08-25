@@ -7,7 +7,7 @@
 namespace Pomdog {
 namespace MagicaVoxel {
 
-struct VoxChunkHeader {
+struct VoxChunkHeader final {
     std::int32_t ID;
     std::int32_t ContentSize;
     std::int32_t ChildrenSize;

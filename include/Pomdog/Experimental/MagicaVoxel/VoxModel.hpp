@@ -3,21 +3,21 @@
 #pragma once
 
 #include "Pomdog/Math/Color.hpp"
-#include <vector>
 #include <array>
 #include <cstdint>
+#include <vector>
 
 namespace Pomdog {
 namespace MagicaVoxel {
 
-struct Voxel {
+struct Voxel final {
     std::uint8_t X;
     std::uint8_t Y;
     std::uint8_t Z;
     std::uint8_t ColorIndex;
 };
 
-class VoxModel {
+class VoxModel final {
 public:
     std::array<Color, 256> ColorPalette;
     std::vector<Voxel> Voxels;

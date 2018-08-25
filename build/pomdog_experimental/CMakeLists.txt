@@ -17,7 +17,6 @@ source_group(Gameplay2D               REGULAR_EXPRESSION Pomdog.Experimental/Gam
 source_group(Graphics                 REGULAR_EXPRESSION Pomdog.Experimental/Graphics/*)
 source_group(ImageEffects             REGULAR_EXPRESSION Pomdog.Experimental/ImageEffects/*)
 source_group(InGameEditor             REGULAR_EXPRESSION Pomdog.Experimental/InGameEditor/*)
-source_group(MagicaVoxel              REGULAR_EXPRESSION Pomdog.Experimental/MagicaVoxel/*)
 source_group(Particle2D               REGULAR_EXPRESSION Pomdog.Experimental/Particle2D/*)
 source_group(Particle2D\\detail       REGULAR_EXPRESSION Pomdog.Experimental/Particle2D/detail/*)
 source_group(Skeletal2D               REGULAR_EXPRESSION Pomdog.Experimental/Skeletal2D/*)
@@ -128,13 +127,6 @@ add_library(pomdog_experimental STATIC
   # ${POMDOG_EXPERIMENTAL_DIR}/InGameEditor/detail/PrimitiveAxes.hpp
   # ${POMDOG_EXPERIMENTAL_DIR}/InGameEditor/detail/PrimitiveGrid.cpp
   # ${POMDOG_EXPERIMENTAL_DIR}/InGameEditor/detail/PrimitiveGrid.hpp
-
-  ${POMDOG_EXPERIMENTAL_DIR}/MagicaVoxel/VoxModel.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/MagicaVoxel/VoxModelLoader.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/MagicaVoxel/VoxModelLoader.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/MagicaVoxel/VoxModelExporter.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/MagicaVoxel/VoxModelExporter.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/MagicaVoxel/detail/VoxChunkHeader.hpp
 
   ${POMDOG_EXPERIMENTAL_DIR}/Particle2D/Beam.hpp
   ${POMDOG_EXPERIMENTAL_DIR}/Particle2D/BeamBranching.hpp

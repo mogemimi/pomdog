@@ -2,7 +2,8 @@
 
 #pragma once
 
-#include "VoxModel.hpp"
+#include "Pomdog/Basic/Export.hpp"
+#include "Pomdog/Experimental/MagicaVoxel/VoxModel.hpp"
 
 namespace Pomdog {
 
@@ -10,10 +11,10 @@ class AssetManager;
 
 namespace MagicaVoxel {
 
-struct VoxModelLoader {
+struct POMDOG_EXPORT VoxModelLoader final {
     static VoxModel Load(
-        AssetManager const& assets,
-        std::string const& assetName);
+        const AssetManager& assets,
+        const std::string& assetName);
 };
 
 } // namespace MagicaVoxel
