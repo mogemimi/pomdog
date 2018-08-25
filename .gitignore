@@ -6,8 +6,6 @@
 /build/Debug
 /build/Release
 /build.makefiles
-/tools/gyp
-/tools/python
 
 # Build output for Xcode
 /build/build
@@ -16,18 +14,6 @@
 /examples/QuickStart/build
 /test/FrameworkTest/build
 /test/TestApp/build
-
-# Third Party (Backwards compatibility)
-/third-party
-/third-party/libpng/build
-/third-party/lua/build
-/third-party/zlib/build
-
-# Visual Studio (Backwards compatibility)
-/build.msvs
-
-# Xcode (Backwards compatibility)
-/build.xcodefiles
 
 # CMake
 /build.cmake
@@ -58,9 +44,6 @@ xcuserdata
 *.moved-aside
 *.xcuserstate
 *.xcscmblueprint
-
-# Python
-tools/*.pyc
 
 # Visual Studio Code
 .vscode/
