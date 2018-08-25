@@ -35,8 +35,6 @@ public:
 
     Duration GetTotalTime() const;
 
-    Duration GetFrameDuration() const;
-
     bool IsSingleShot() const;
 
     void SetSingleShot(bool isSingleShot);
@@ -57,7 +55,6 @@ private:
     ScopedConnection connection;
     Optional<Duration> interval;
     Duration totalTime;
-    Duration frameDuration;
     double scale;
     bool enabled;
     bool isSingleShot;
