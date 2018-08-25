@@ -15,7 +15,7 @@ namespace Detail {
 namespace X11 {
 namespace {
 
-static Rectangle GetWindowClientBounds(::Display* display, ::Window window)
+Rectangle GetWindowClientBounds(::Display* display, ::Window window)
 {
     XWindowAttributes windowAttributes;
     XGetWindowAttributes(display, window, &windowAttributes);
