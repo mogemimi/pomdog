@@ -146,6 +146,12 @@
 		A93CA6551D92F34E00B65171 /* Task.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A93CA64F1D92F34E00B65171 /* Task.cpp */; };
 		A943BA1C210E86B900DA852D /* GamepadUUID.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A943BA1B210E86B900DA852D /* GamepadUUID.cpp */; };
 		A943BA1D210E86B900DA852D /* GamepadUUID.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A943BA1B210E86B900DA852D /* GamepadUUID.cpp */; };
+		A94F2DCB2131FEE900718DB0 /* VoxModelExporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A94F2DC92131FED600718DB0 /* VoxModelExporter.cpp */; };
+		A94F2DCC2131FEEA00718DB0 /* VoxModelExporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A94F2DC92131FED600718DB0 /* VoxModelExporter.cpp */; };
+		A94F2DCD2131FEEC00718DB0 /* VoxModelLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A94F2DCA2131FED600718DB0 /* VoxModelLoader.cpp */; };
+		A94F2DCE2131FEED00718DB0 /* VoxModelLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A94F2DCA2131FED600718DB0 /* VoxModelLoader.cpp */; };
+		A94F2DD12131FEFB00718DB0 /* EasingHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A94F2DD02131FEFB00718DB0 /* EasingHelper.cpp */; };
+		A94F2DD22131FEFB00718DB0 /* EasingHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A94F2DD02131FEFB00718DB0 /* EasingHelper.cpp */; };
 		A958BDF81CC3E65A00E15834 /* PomdogMetalViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = A958BDF71CC3E65A00E15834 /* PomdogMetalViewController.mm */; };
 		A958BDF91CC3E65A00E15834 /* PomdogMetalViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = A958BDF71CC3E65A00E15834 /* PomdogMetalViewController.mm */; };
 		A9854B9E1DC115D400650729 /* BufferHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9854B9C1DC115D400650729 /* BufferHelper.cpp */; };
@@ -588,6 +594,14 @@
 		A943BA1B210E86B900DA852D /* GamepadUUID.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GamepadUUID.cpp; sourceTree = "<group>"; };
 		A94ACC591C287C9100AFCC36 /* ConditionalCompilation.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ConditionalCompilation.hpp; sourceTree = "<group>"; };
 		A94F1C2B1DD30851001DC8E5 /* MouseButtons.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MouseButtons.hpp; sourceTree = "<group>"; };
+		A94F2DC22131FE9E00718DB0 /* VoxModel.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = VoxModel.hpp; sourceTree = "<group>"; };
+		A94F2DC32131FE9E00718DB0 /* VoxModelExporter.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = VoxModelExporter.hpp; sourceTree = "<group>"; };
+		A94F2DC42131FE9E00718DB0 /* VoxModelLoader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = VoxModelLoader.hpp; sourceTree = "<group>"; };
+		A94F2DC62131FEAD00718DB0 /* EasingHelper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = EasingHelper.hpp; sourceTree = "<group>"; };
+		A94F2DC82131FED600718DB0 /* VoxChunkHeader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = VoxChunkHeader.hpp; sourceTree = "<group>"; };
+		A94F2DC92131FED600718DB0 /* VoxModelExporter.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = VoxModelExporter.cpp; sourceTree = "<group>"; };
+		A94F2DCA2131FED600718DB0 /* VoxModelLoader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = VoxModelLoader.cpp; sourceTree = "<group>"; };
+		A94F2DD02131FEFB00718DB0 /* EasingHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EasingHelper.cpp; sourceTree = "<group>"; };
 		A958BDF71CC3E65A00E15834 /* PomdogMetalViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PomdogMetalViewController.mm; sourceTree = "<group>"; };
 		A958BE021CC3E8AF00E15834 /* PomdogMetalViewController.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PomdogMetalViewController.hpp; sourceTree = "<group>"; };
 		A9854B9C1DC115D400650729 /* BufferHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BufferHelper.cpp; sourceTree = "<group>"; };
@@ -1381,6 +1395,42 @@
 			path = Basic;
 			sourceTree = "<group>";
 		};
+		A94F2DC12131FE9E00718DB0 /* MagicaVoxel */ = {
+			isa = PBXGroup;
+			children = (
+				A94F2DC22131FE9E00718DB0 /* VoxModel.hpp */,
+				A94F2DC32131FE9E00718DB0 /* VoxModelExporter.hpp */,
+				A94F2DC42131FE9E00718DB0 /* VoxModelLoader.hpp */,
+			);
+			path = MagicaVoxel;
+			sourceTree = "<group>";
+		};
+		A94F2DC52131FEAD00718DB0 /* Tween */ = {
+			isa = PBXGroup;
+			children = (
+				A94F2DC62131FEAD00718DB0 /* EasingHelper.hpp */,
+			);
+			path = Tween;
+			sourceTree = "<group>";
+		};
+		A94F2DC72131FED600718DB0 /* MagicaVoxel */ = {
+			isa = PBXGroup;
+			children = (
+				A94F2DC82131FED600718DB0 /* VoxChunkHeader.hpp */,
+				A94F2DC92131FED600718DB0 /* VoxModelExporter.cpp */,
+				A94F2DCA2131FED600718DB0 /* VoxModelLoader.cpp */,
+			);
+			path = MagicaVoxel;
+			sourceTree = "<group>";
+		};
+		A94F2DCF2131FEFB00718DB0 /* Tween */ = {
+			isa = PBXGroup;
+			children = (
+				A94F2DD02131FEFB00718DB0 /* EasingHelper.cpp */,
+			);
+			path = Tween;
+			sourceTree = "<group>";
+		};
 		A997F6E11CAEFC2200926392 /* RenderSystem.Metal */ = {
 			isa = PBXGroup;
 			children = (
@@ -1421,8 +1471,10 @@
 			isa = PBXGroup;
 			children = (
 				A9FC99081DC3D8E100C78D63 /* Graphics */,
+				A94F2DC12131FE9E00718DB0 /* MagicaVoxel */,
 				A9A8227F1DAB7F2B0091497F /* Image */,
 				A9A822801DAB7F510091497F /* TexturePacker */,
+				A94F2DC52131FEAD00718DB0 /* Tween */,
 			);
 			path = Experimental;
 			sourceTree = "<group>";
@@ -1452,8 +1504,10 @@
 			isa = PBXGroup;
 			children = (
 				A9FC99031DC3D86C00C78D63 /* Graphics */,
+				A94F2DC72131FED600718DB0 /* MagicaVoxel */,
 				A9A822821DAB7F6B0091497F /* Image */,
 				A9A822831DAB7F6F0091497F /* TexturePacker */,
+				A94F2DCF2131FEFB00718DB0 /* Tween */,
 			);
 			path = Experimental;
 			sourceTree = "<group>";
@@ -1907,6 +1961,7 @@
 				5F8F4C5C0179D8889EC7B4D2 /* AssetDictionary.cpp in Sources */,
 				9EA7C97EE18F199AE5272E24 /* AssetLoaderContext.cpp in Sources */,
 				A9F2135D1DE35F420027FA45 /* Plane.cpp in Sources */,
+				A94F2DCE2131FEED00718DB0 /* VoxModelLoader.cpp in Sources */,
 				A9A822951DAB7FBE0091497F /* TextureAtlasLoader.cpp in Sources */,
 				E8D6D7F610B157019B03A800 /* AssetManager.cpp in Sources */,
 				AD987379388ED5E890CB221A /* PipelineStateBuilder.cpp in Sources */,
@@ -1942,6 +1997,7 @@
 				D5CAE3F16D482B36E58155CA /* LogChannel.cpp in Sources */,
 				A98F591E211B2B89002960C1 /* PolygonBatch.cpp in Sources */,
 				5FC19F99728314D0AB72DDB8 /* BoundingBox.cpp in Sources */,
+				A94F2DCC2131FEEA00718DB0 /* VoxModelExporter.cpp in Sources */,
 				C256D286DB58A59C3115A07E /* BoundingBox2D.cpp in Sources */,
 				460526B2F0D0E531DBE74416 /* BoundingCircle.cpp in Sources */,
 				972D8345F3491175B7E8411B /* BoundingSphere.cpp in Sources */,
@@ -1950,6 +2006,7 @@
 				5B1D2792F76709A593451042 /* MathHelper.cpp in Sources */,
 				9402075D41A1A97AE8090BF9 /* Ray.cpp in Sources */,
 				A93CA6521D92F34E00B65171 /* QueuedScheduler.cpp in Sources */,
+				A94F2DD12131FEFB00718DB0 /* EasingHelper.cpp in Sources */,
 				0D2BB710020E127DFCD9A463 /* Rectangle.cpp in Sources */,
 				A958BDF81CC3E65A00E15834 /* PomdogMetalViewController.mm in Sources */,
 				C3A63B50AA37BB77F4224857 /* FloatingPointMatrix2x2.cpp in Sources */,
@@ -2042,6 +2099,7 @@
 				E4D0DB6D0CBC0C51449C182B /* AssetDictionary.cpp in Sources */,
 				2492DBED0FC08DE1484FDA24 /* AssetLoaderContext.cpp in Sources */,
 				A9F2135E1DE35F420027FA45 /* Plane.cpp in Sources */,
+				A94F2DCD2131FEEC00718DB0 /* VoxModelLoader.cpp in Sources */,
 				A9A822961DAB7FBE0091497F /* TextureAtlasLoader.cpp in Sources */,
 				07AC7D00AF95EB8A551A0CC7 /* AssetManager.cpp in Sources */,
 				0B0F472CF35B5E06E17342B1 /* PipelineStateBuilder.cpp in Sources */,
@@ -2077,6 +2135,7 @@
 				2253F43FA13A0B293FE79749 /* LogChannel.cpp in Sources */,
 				A98F591F211B2B89002960C1 /* PolygonBatch.cpp in Sources */,
 				15C4EF0C411554073735CCF7 /* BoundingBox.cpp in Sources */,
+				A94F2DCB2131FEE900718DB0 /* VoxModelExporter.cpp in Sources */,
 				77E3632C4F2E245C2F8B6927 /* BoundingBox2D.cpp in Sources */,
 				A6F13789F98E66A501FCF50A /* BoundingCircle.cpp in Sources */,
 				AB379BED1D868790638B95CB /* BoundingSphere.cpp in Sources */,
@@ -2085,6 +2144,7 @@
 				E58ECD9915BC55D5134950F9 /* MathHelper.cpp in Sources */,
 				DA4579E5970831E615EA005D /* Ray.cpp in Sources */,
 				A93CA6531D92F34E00B65171 /* QueuedScheduler.cpp in Sources */,
+				A94F2DD22131FEFB00718DB0 /* EasingHelper.cpp in Sources */,
 				E4C4ADB64ED81496C05CB580 /* Rectangle.cpp in Sources */,
 				A958BDF91CC3E65A00E15834 /* PomdogMetalViewController.mm in Sources */,
 				E971CF40D05A93F09E489D10 /* FloatingPointMatrix2x2.cpp in Sources */,
