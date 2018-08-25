@@ -11,7 +11,6 @@ namespace Pomdog {
 
 Simple2DGameEngine::Simple2DGameEngine(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
-    , gameTimer(gameHostIn->GetClock())
     , postProcessCompositor(gameHost->GetGraphicsDevice())
     , needToUpdateViewProjectionMatrix(true)
 {
@@ -86,9 +85,12 @@ void Simple2DGameEngine::OnViewportSizeChanged(int width, int height)
 
 void Simple2DGameEngine::Update()
 {
+    auto clock = gameHost->GetClock();
+    auto frameDuration = clock->GetFrameDuration();
+
     for (auto & entity : entityManager.QueryComponents<ActorComponent>()) {
         auto actor = entity.GetComponent<ActorComponent>();
-        actor->Act(entity, gameTimer.GetFrameDuration());
+        actor->Act(entity, frameDuration);
     }
 
     entityManager.Refresh();
