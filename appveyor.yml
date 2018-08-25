@@ -12,7 +12,7 @@ install:
 
 before_build:
   - mkdir build.cmake && cd build.cmake
-  - cmake ../build/PomdogTest/
+  - cmake ../test
   - cd ..
 
 configuration:

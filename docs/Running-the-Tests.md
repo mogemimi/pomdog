@@ -13,7 +13,7 @@ cmake \
     -DCMAKE_C_COMPILER=clang \
     -DCMAKE_CXX_COMPILER=clang++ \
     -DCMAKE_BUILD_TYPE=Release \
-    ../build/PomdogTest/
+    ../test
 
 # Compiling source code
 make -j4
@@ -31,7 +31,7 @@ cmake \
     -DCMAKE_C_COMPILER=gcc \
     -DCMAKE_CXX_COMPILER=g++ \
     -DCMAKE_BUILD_TYPE=Release \
-    ../build/PomdogTest/
+    ../test
 ```
 
 You can also override the compiler options by setting the environment variables such as `expor CXX=...` or `export CXXFLAGS=...`.
@@ -42,7 +42,7 @@ export CXX=clang++
 export LINK=clang++
 export CXXFLAGS="-std=c++17 -stdlib=libc++"
 export LDFLAGS="-stdlib=libc++"
-cmake -DCMAKE_BUILD_TYPE=Release ../build/PomdogTest/
+cmake -DCMAKE_BUILD_TYPE=Release ../test
 ```
 
 ### Building with Ninja instead of GNU Make
@@ -56,7 +56,7 @@ cmake \
     -DCMAKE_C_COMPILER=clang \
     -DCMAKE_CXX_COMPILER=clang++ \
     -DCMAKE_BUILD_TYPE=Release \
-    ../build/PomdogTest/
+    ../test
 
 # Build with Ninja
 ninja
@@ -73,7 +73,7 @@ cd path/to/pomdog
 mkdir -p build.cmake && cd build.cmake
 
 # Generating Xcode project files
-cmake -G Xcode ../build/PomdogTest/
+cmake -G Xcode ../test
 
 # Compiling source code
 xcodebuild -project PomdogTest.xcodeproj -configuration Release
@@ -92,7 +92,7 @@ mkdir build.cmake
 cd build.cmake
 
 # Generating projects for Visual Studio 2017
-cmake -G "Visual Studio 15" ../build/PomdogTest/
+cmake -G "Visual Studio 15" ../test
 
 # Building projects using CMake and MSBuild
 cmake --build . --config Release

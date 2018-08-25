@@ -15,7 +15,7 @@ script:
   - xcodebuild -project examples/QuickStart/Builds/QuickStart.xcodeproj
   - build/build/Release/PomdogUnitTest
   - mkdir build.cmake && cd build.cmake
-  - cmake -G Xcode ../build/PomdogTest
+  - cmake -G Xcode ../test
   - xcodebuild -project PomdogTest.xcodeproj -configuration Debug
   - xcodebuild -project PomdogTest.xcodeproj -configuration Release
   - Debug/PomdogTest
