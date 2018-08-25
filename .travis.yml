@@ -15,10 +15,12 @@ script:
   - xcodebuild -project examples/QuickStart/Builds/QuickStart.xcodeproj
   - build/build/Release/PomdogUnitTest
   - mkdir build.cmake && cd build.cmake
-  - cmake -G Xcode ..
+  - cmake -G Xcode ../build/PomdogTest
+  - xcodebuild -project PomdogTest.xcodeproj -configuration Debug
+  - xcodebuild -project PomdogTest.xcodeproj -configuration Release
+  - Debug/PomdogTest
+  - Release/PomdogTest
   - cd ..
-  - xcodebuild -project build.cmake/Pomdog.xcodeproj
-  - build.cmake/build/PomdogTest/Debug/PomdogTest
 
 notifications:
   email: false
