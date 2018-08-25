@@ -6,27 +6,10 @@ build:
     - script:
       name: clone third party libraries
       code: git submodule update --init
-    - script:
-      name: clone gyp
-      code: git clone --depth=1 https://chromium.googlesource.com/external/gyp.git tools/gyp
-    - script:
-      name: build and run tests with gyp
-      code: |
-        python tools/gyp.py test/FrameworkTest/unittest.gyp -f make
-        export CC=clang
-        export CXX=clang++
-        export LINK=clang++
-        export CXXFLAGS="-std=c++17 -stdlib=libc++"
-        export LDFLAGS="-stdlib=libc++"
-        make -C build.makefiles -j4
-        ./build.makefiles/out/Release/unittest
 
 build-clang-debug:
   box: mogemimi/gamedev-ubuntu
   steps:
-    - script:
-      name: clone third party libraries
-      code: git submodule update --init
     - script:
       name: build with clang in debug mode
       code: |
@@ -45,9 +28,6 @@ build-clang-release:
   box: mogemimi/gamedev-ubuntu
   steps:
     - script:
-      name: clone third party libraries
-      code: git submodule update --init
-    - script:
       name: build with clang in release mode
       code: |
         mkdir build.cmake && cd build.cmake
@@ -64,9 +44,6 @@ build-clang-release:
 build-gcc-debug:
   box: mogemimi/gamedev-archlinux
   steps:
-    - script:
-      name: clone third party libraries
-      code: git submodule update --init
     - script:
       name: build with gcc in debug mode
       code: |
@@ -85,9 +62,6 @@ build-gcc-debug:
 build-gcc-release:
   box: mogemimi/gamedev-archlinux
   steps:
-    - script:
-      name: clone third party libraries
-      code: git submodule update --init
     - script:
       name: build with gcc in release mode
       code: |
