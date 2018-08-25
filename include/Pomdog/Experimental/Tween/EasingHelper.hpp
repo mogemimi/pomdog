@@ -2,18 +2,20 @@
 
 #pragma once
 
+#include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Math/MathHelper.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include <type_traits>
 #include <cmath>
+#include <type_traits>
 
 namespace Pomdog {
 namespace Detail {
 namespace Easings {
 
-template <typename T, T(*Function)(T)>
-class Ease {
+template <typename T, T (*Function)(T)>
+class POMDOG_EXPORT Ease final {
 public:
+    static_assert(Function != nullptr);
     static_assert(std::is_floating_point<T>::value,
         "You can only use floating-point types");
 
@@ -37,34 +39,34 @@ public:
 };
 
 template <typename T>
-T Quadratic(T time);
+T POMDOG_EXPORT Quadratic(T time) noexcept;
 
 template <typename T>
-T Cubic(T time);
+T POMDOG_EXPORT Cubic(T time) noexcept;
 
 template <typename T>
-T Quartic(T time);
+T POMDOG_EXPORT Quartic(T time) noexcept;
 
 template <typename T>
-T Quintic(T time);
+T POMDOG_EXPORT Quintic(T time) noexcept;
 
 template <typename T>
-T Sine(T time);
+T POMDOG_EXPORT Sine(T time) noexcept;
 
 template <typename T>
-T Exponential(T time);
+T POMDOG_EXPORT Exponential(T time) noexcept;
 
 template <typename T>
-T Circle(T time);
+T POMDOG_EXPORT Circle(T time) noexcept;
 
 template <typename T>
-T Elastic(T time);
+T POMDOG_EXPORT Elastic(T time) noexcept;
 
 template <typename T>
-T Bounce(T time);
+T POMDOG_EXPORT Bounce(T time) noexcept;
 
 template <typename T>
-T Back(T time);
+T POMDOG_EXPORT Back(T time) noexcept;
 
 template <typename T>
 using EaseBack = Ease<T, Back<T>>;

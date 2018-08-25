@@ -22,7 +22,6 @@ source_group(Particle2D\\detail       REGULAR_EXPRESSION Pomdog.Experimental/Par
 source_group(Skeletal2D               REGULAR_EXPRESSION Pomdog.Experimental/Skeletal2D/*)
 source_group(Skeletal2D\\detail       REGULAR_EXPRESSION Pomdog.Experimental/Skeletal2D/detail/*)
 source_group(Spine                    REGULAR_EXPRESSION Pomdog.Experimental/Spine/*)
-source_group(Tween                    REGULAR_EXPRESSION Pomdog.Experimental/Tween/*)
 source_group(Rendering                REGULAR_EXPRESSION Pomdog.Experimental/Rendering/*)
 source_group(Rendering\\Commands      REGULAR_EXPRESSION Pomdog.Experimental/Rendering/Commands/*)
 source_group(Rendering\\Processors    REGULAR_EXPRESSION Pomdog.Experimental/Rendering/Processors/*)
@@ -218,9 +217,6 @@ add_library(pomdog_experimental STATIC
   ${POMDOG_EXPERIMENTAL_DIR}/Spine/SkinnedMeshLoader.hpp
   ${POMDOG_EXPERIMENTAL_DIR}/Spine/SpriteAnimationLoader.cpp
   ${POMDOG_EXPERIMENTAL_DIR}/Spine/SpriteAnimationLoader.hpp
-
-  ${POMDOG_EXPERIMENTAL_DIR}/Tween/EasingHelper.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Tween/EasingHelper.hpp
 
   ${POMDOG_EXPERIMENTAL_DIR}/Rendering/RenderCommand.hpp
   ${POMDOG_EXPERIMENTAL_DIR}/Rendering/RenderCommandProcessor.hpp

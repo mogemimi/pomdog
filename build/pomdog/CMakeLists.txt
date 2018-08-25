@@ -32,6 +32,7 @@ source_group(Experimental\\Graphics       REGULAR_EXPRESSION "(include/Pomdog|sr
 source_group(Experimental\\Image          REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Image/*")
 source_group(Experimental\\MagicaVoxel    REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/MagicaVoxel/*")
 source_group(Experimental\\TexturePacker  REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/TexturePacker/*")
+source_group(Experimental\\Tween          REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Tween/*")
 source_group(InputSystem                  REGULAR_EXPRESSION src/InputSystem/*)
 source_group(InputSystem.DirectInput      REGULAR_EXPRESSION src/InputSystem.DirectInput/*)
 source_group(InputSystem.IOKit            REGULAR_EXPRESSION src/InputSystem.IOKit/*)
@@ -368,6 +369,7 @@ set(POMDOG_SOURCES_EXPERIMENTAL
   ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureAtlasGenerator.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureAtlasLoader.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureRegion.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Tween/EasingHelper.hpp
   ${POMDOG_DIR}/src/Experimental/Graphics/LineBatch.cpp
   ${POMDOG_DIR}/src/Experimental/Graphics/PolygonBatch.cpp
   ${POMDOG_DIR}/src/Experimental/Graphics/PolygonShapeBuilder.cpp
@@ -383,6 +385,7 @@ set(POMDOG_SOURCES_EXPERIMENTAL
   ${POMDOG_DIR}/src/Experimental/MagicaVoxel/VoxModelExporter.cpp
   ${POMDOG_DIR}/src/Experimental/TexturePacker/TextureAtlasGenerator.cpp
   ${POMDOG_DIR}/src/Experimental/TexturePacker/TextureAtlasLoader.cpp
+  ${POMDOG_DIR}/src/Experimental/Tween/EasingHelper.cpp
 )
 
 set(POMDOG_SOURCES_GL4
