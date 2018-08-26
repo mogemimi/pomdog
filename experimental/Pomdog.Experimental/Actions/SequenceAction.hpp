@@ -62,7 +62,7 @@ public:
         }
 
         POMDOG_ASSERT(index >= 0);
-        POMDOG_ASSERT(index < actions.size());
+        POMDOG_ASSERT(index < static_cast<int>(actions.size()));
         POMDOG_ASSERT(index < actionCount);
 
         auto & action = actions[index];
