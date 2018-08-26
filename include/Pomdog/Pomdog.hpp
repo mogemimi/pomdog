@@ -3,7 +3,7 @@
 #pragma once
 
 /// Root namespace for the Pomdog game engine.
-namespace Pomdog {};
+namespace Pomdog {}
 
 #include "Application/Duration.hpp"
 #include "Application/Game.hpp"
