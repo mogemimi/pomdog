@@ -61,8 +61,10 @@ private:
     ::Window window;
     std::string title;
     Rectangle clientBounds;
+    MouseCursor mouseCursor;
     bool allowUserResizing;
     bool isMinimized;
+    bool isMouseCursorVisible;
 };
 
 } // namespace X11

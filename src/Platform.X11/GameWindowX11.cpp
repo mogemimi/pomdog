@@ -3,11 +3,13 @@
 #include "GameWindowX11.hpp"
 #include "X11Context.hpp"
 #include "../Utility/ScopeGuard.hpp"
+#include "Pomdog/Application/MouseCursor.hpp"
 #include "Pomdog/Basic/Platform.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include "Pomdog/Utility/Optional.hpp"
+#include <X11/cursorfont.h>
 #include <X11/Xutil.h>
 
 namespace Pomdog {
@@ -51,6 +53,55 @@ void UpdateNormalHints(::Display* display, ::Window window, int width, int heigh
     XFree(hints);
 }
 
+int ToMouseCursor(MouseCursor cursor) noexcept
+{
+    switch (cursor) {
+    case MouseCursor::Arrow:
+        return XC_left_ptr;
+    case MouseCursor::IBeam:
+        return XC_xterm;
+    case MouseCursor::PointingHand:
+        return XC_hand1;
+    case MouseCursor::ResizeHorizontal:
+        return XC_sb_h_double_arrow;
+    case MouseCursor::ResizeVertical:
+        return XC_sb_v_double_arrow;
+    }
+    return XC_arrow;
+}
+
+void UpdateMouseCursor(::Display* display, ::Window window, Optional<MouseCursor> mouseCursor)
+{
+    POMDOG_ASSERT(display != nullptr);
+    POMDOG_ASSERT(window != None);
+
+    if (!mouseCursor) {
+        constexpr char data[] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+        XColor black;
+        black.red = 0;
+        black.green = 0;
+        black.blue = 0;
+        auto blankBitmap = XCreateBitmapFromData(display, window, data, 8, 8);
+        POMDOG_ASSERT(blankBitmap != None);
+
+        auto cursor = XCreatePixmapCursor(display, blankBitmap, blankBitmap, &black, &black, 0, 0);
+        XDefineCursor(display, window, cursor);
+        XFreeCursor(display, cursor);
+
+        XFreePixmap(display, blankBitmap);
+        return;
+    }
+
+    if (*mouseCursor == MouseCursor::Arrow) {
+        XUndefineCursor(display, window);
+    }
+    else {
+        auto cursor = XCreateFontCursor(display, ToMouseCursor(*mouseCursor));
+        XDefineCursor(display, window, cursor);
+        XFreeCursor(display, cursor);
+    }
+}
+
 } // unnamed namespace
 
 GameWindowX11::GameWindowX11(
@@ -62,8 +113,10 @@ GameWindowX11::GameWindowX11(
     , framebufferConfigID(0)
     , colormap(0)
     , window(0)
+    , mouseCursor(MouseCursor::Arrow)
     , allowUserResizing(true)
     , isMinimized(false)
+    , isMouseCursorVisible(true)
 {
     POMDOG_ASSERT(x11Context);
 
@@ -223,21 +276,34 @@ void GameWindowX11::SetClientBounds(const Rectangle& clientBoundsIn)
 
 bool GameWindowX11::IsMouseCursorVisible() const
 {
-    ///@todo Not implemented
-    //POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
-    return true;
+    return isMouseCursorVisible;
 }
 
-void GameWindowX11::SetMouseCursorVisible(bool /*visible*/)
+void GameWindowX11::SetMouseCursorVisible(bool visible)
 {
-    ///@todo Not implemented
-    //POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
+    if (isMouseCursorVisible == visible) {
+        return;
+    }
+    isMouseCursorVisible = visible;
+
+    if (isMouseCursorVisible) {
+        UpdateMouseCursor(x11Context->Display, window, mouseCursor);
+    }
+    else {
+        UpdateMouseCursor(x11Context->Display, window, Pomdog::NullOpt);
+    }
 }
 
-void GameWindowX11::SetMouseCursor(MouseCursor /*cursor*/)
+void GameWindowX11::SetMouseCursor(MouseCursor mouseCursorIn)
 {
-    ///@todo Not implemented
-    //POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
+    if (mouseCursor == mouseCursorIn) {
+        return;
+    }
+    mouseCursor = mouseCursorIn;
+
+    if (isMouseCursorVisible) {
+        UpdateMouseCursor(x11Context->Display, window, mouseCursor);
+    }
 }
 
 ::Display* GameWindowX11::NativeDisplay() const

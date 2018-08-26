@@ -16,9 +16,6 @@ enum class MouseCursor : std::uint8_t;
 ///
 /// Instances of this class are unique.
 ///
-/// @todo Implement window resizing in X11 backend.
-/// @todo Implement cursor visibility in X11 backend.
-/// @todo Implement cursor setting in X11 backend.
 /// @todo ClientSizeChanged should fire in Cocoa and Win32 backends.
 class POMDOG_EXPORT GameWindow {
 public:
@@ -30,12 +27,10 @@ public:
     virtual ~GameWindow() = default;
 
     /// @return If window can be resized by user.
-    /// @warning Not implemented in X11 !
     virtual bool GetAllowUserResizing() const = 0;
 
     /// Set if window can be resized by user.
     /// @param allowResizing New value of the resizing flag.
-    /// @warning Not implemented in X11 !
     virtual void SetAllowUserResizing(bool allowResizing) = 0;
 
     /// @return Title of the window.
@@ -54,17 +49,14 @@ public:
     virtual void SetClientBounds(const Rectangle& clientBounds) = 0;
 
     /// @return True if the mouse cursor is visible, false otherwise.
-    /// @warning Not implemented in X11 !
     virtual bool IsMouseCursorVisible() const = 0;
 
     /// Set visibility of the cursor in the window
     /// @param visible New value of the cursor visibility flag.
-    /// @warning Not implemented in X11 !
     virtual void SetMouseCursorVisible(bool visible) = 0;
 
     /// Set mouse cursor system provided asset.
     /// @param cursor New mouse cursor asset.
-    /// @warning Not implemented in X11 !
     virtual void SetMouseCursor(MouseCursor cursor) = 0;
 
     /// Signal that fires when windows size is changed.
