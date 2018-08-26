@@ -842,9 +842,10 @@ target_compile_options(pomdog_static PRIVATE
   $<$<CXX_COMPILER_ID:Clang>:
     -Wcomma
     -Wextra-semi
+    -Wimplicit-fallthrough
     -Wmost
     -Wmove
-    -Wimplicit-fallthrough
+    -Wnewline-eof
 
     # FIXME: Use -Wextra instead of the following options.
     -Wignored-qualifiers
@@ -857,13 +858,24 @@ target_compile_options(pomdog_static PRIVATE
   >
   # GCC
   $<$<CXX_COMPILER_ID:GNU>:
-    -Wimplicit-fallthrough
     -pedantic
+
+    # FIXME: Use -Wextra instead of the following options.
+    -Wclobbered
+    -Wcast-function-type
+    -Wempty-body
+    -Wignored-qualifiers
+    -Wimplicit-fallthrough=3
+    -Wmissing-field-initializers
+    # -Wtype-limits
+    -Wuninitialized
+    -Wshift-negative-value
   >
   # Clang and GCC
   $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>:
     -Wall
     -Werror
+    -Wnon-virtual-dtor
     $<$<CONFIG:DEBUG>:-g;-O0>
     $<$<CONFIG:RELEASE>:-O3>
   >
