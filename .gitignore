@@ -6,6 +6,7 @@
 /build/Debug
 /build/Release
 /build.makefiles
+/docs/html
 
 # Build output for Xcode
 /build/build
