@@ -15,11 +15,11 @@ script:
   - xcodebuild -project examples/QuickStart/Builds/QuickStart.xcodeproj
   - build/build/Release/PomdogUnitTest
   - mkdir build.cmake && cd build.cmake
-  - cmake -G Xcode ../test
-  - xcodebuild -project PomdogTest.xcodeproj -configuration Debug
-  - xcodebuild -project PomdogTest.xcodeproj -configuration Release
-  - Debug/PomdogTest
-  - Release/PomdogTest
+  - cmake -G Xcode ..
+  - xcodebuild -project Pomdog.xcodeproj -configuration Debug
+  - xcodebuild -project Pomdog.xcodeproj -configuration Release
+  - test/Debug/PomdogTest
+  - test/Release/PomdogTest
   - cd ..
 
 notifications:

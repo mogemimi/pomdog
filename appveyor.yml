@@ -12,7 +12,7 @@ install:
 
 before_build:
   - mkdir build.cmake && cd build.cmake
-  - cmake ../test
+  - cmake ..
   - cd ..
 
 configuration:
@@ -20,9 +20,9 @@ configuration:
   - Release
 
 build:
-  project: build.cmake/PomdogTest.sln
+  project: build.cmake/Pomdog.sln
   verbosity: minimal
   parallel: true
 
 test_script:
-  - build.cmake\%CONFIGURATION%\PomdogTest
+  - build.cmake\test\%CONFIGURATION%\PomdogTest

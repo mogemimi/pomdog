@@ -18,11 +18,11 @@ build-clang-debug:
           -DCMAKE_C_COMPILER=clang \
           -DCMAKE_CXX_COMPILER=clang++ \
           -DCMAKE_BUILD_TYPE=Debug \
-          ../test
+          ..
         make -j4
     - script:
       name: run test
-      code: ./build.cmake/PomdogTest
+      code: ./build.cmake/test/PomdogTest
 
 build-clang-release:
   box: mogemimi/gamedev-ubuntu
@@ -35,11 +35,11 @@ build-clang-release:
           -DCMAKE_C_COMPILER=clang \
           -DCMAKE_CXX_COMPILER=clang++ \
           -DCMAKE_BUILD_TYPE=Release \
-          ../test
+          ..
         make -j4
     - script:
       name: run test
-      code: ./build.cmake/PomdogTest
+      code: ./build.cmake/test/PomdogTest
 
 build-gcc-debug:
   box: mogemimi/gamedev-archlinux
@@ -53,11 +53,11 @@ build-gcc-debug:
           -DCMAKE_C_COMPILER=gcc \
           -DCMAKE_CXX_COMPILER=g++ \
           -DCMAKE_BUILD_TYPE=Debug \
-          ../test
+          ..
         ninja
     - script:
       name: run test
-      code: ./build.cmake/PomdogTest
+      code: ./build.cmake/test/PomdogTest
 
 build-gcc-release:
   box: mogemimi/gamedev-archlinux
@@ -71,8 +71,8 @@ build-gcc-release:
           -DCMAKE_C_COMPILER=gcc \
           -DCMAKE_CXX_COMPILER=g++ \
           -DCMAKE_BUILD_TYPE=Release \
-          ../test
+          ..
         ninja
     - script:
       name: run test
-      code: ./build.cmake/PomdogTest
+      code: ./build.cmake/test/PomdogTest
