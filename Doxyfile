@@ -5,6 +5,7 @@ OUTPUT_DIRECTORY       = "docs"
 INPUT                  = "include"
 BUILTIN_STL_SUPPORT    = YES
 CLASS_DIAGRAMS         = YES
+JAVADOC_AUTOBRIEF      = YES
 RECURSIVE              = YES
 EXTRACT_ALL            = NO
 SHOW_NAMESPACES        = YES
