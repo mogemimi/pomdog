@@ -376,5 +376,7 @@ set_target_properties(
   XCODE_ATTRIBUTE_GCC_SYMBOLS_PRIVATE_EXTERN "YES" # -fvisibility=hidden
 )
 
-add_subdirectory(${POMDOG_DIR}/build/pomdog ${CMAKE_CURRENT_BINARY_DIR}/pomdog_build)
+if(NOT POMDOG_BUILD_TARGET_ALL)
+  add_subdirectory(${POMDOG_DIR}/build/pomdog ${CMAKE_CURRENT_BINARY_DIR}/pomdog_build)
+endif()
 target_link_libraries(pomdog_experimental INTERFACE pomdog_static)
