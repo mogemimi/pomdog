@@ -35,11 +35,19 @@ Please refer to [Architecture](https://github.com/mogemimi/pomdog/wiki/Architect
     git submodule update --init
     ```
 
-3. To automagically generate all project files (.xcodeproj or .vcxproj), run `tools/generate_projects.py`:
+3. To generate all project files (.xcodeproj or .vcxproj), run the following command:
 
     ```shell
     cd path/to/pomdog
-    python tools/generate_projects.py
+
+    # Generate Xcode project
+    cmake -Bbuild.cmake -H. -G Xcode
+
+    # Generate projects for Visual Studio 2017
+    cmake -Bbuild.cmake -H. -G "Visual Studio 15"
+
+    # Generate Ninja files
+    cmake -Bbuild.cmake -H. -G Ninja
     ```
 
 After generating, open the .xcodeproj or .vcxproj in Xcode/Visual Studio.
