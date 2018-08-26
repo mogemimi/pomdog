@@ -22,6 +22,7 @@ enum class MouseCursor : std::uint8_t;
 /// @todo ClientSizeChanged should fire in Cocoa and Win32 backends.
 class POMDOG_EXPORT GameWindow {
 public:
+    /// Constructs plaftorm-default GameWindow.
     GameWindow() = default;
     GameWindow(const GameWindow&) = delete;
     GameWindow & operator=(const GameWindow&) = delete;

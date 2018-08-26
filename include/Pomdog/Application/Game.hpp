@@ -11,10 +11,11 @@ namespace Pomdog {
 /// Instances of this class are unique.
 class POMDOG_EXPORT Game {
 public:
+    /// Constructs empty Game.
     Game() = default;
-    Game(const Game&) = delete;
-    Game & operator=(const Game&) = delete;
 
+    Game(const Game&) = delete;
+    Game & operator=(const Game&) = delete; 
     virtual ~Game() = default;
 
     /// Initialization phase of the game. 
