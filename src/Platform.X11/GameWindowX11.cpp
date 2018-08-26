@@ -15,7 +15,7 @@ namespace Detail {
 namespace X11 {
 namespace {
 
-static Rectangle GetWindowClientBounds(::Display* display, ::Window window)
+Rectangle GetWindowClientBounds(::Display* display, ::Window window)
 {
     XWindowAttributes windowAttributes;
     XGetWindowAttributes(display, window, &windowAttributes);
@@ -23,6 +23,32 @@ static Rectangle GetWindowClientBounds(::Display* display, ::Window window)
     return Rectangle {
         windowAttributes.x, windowAttributes.y,
         windowAttributes.width, windowAttributes.height};
+}
+
+void UpdateNormalHints(::Display* display, ::Window window, int width, int height, bool allowResizing)
+{
+    auto hints = XAllocSizeHints();
+    POMDOG_ASSERT(hints != nullptr);
+
+    hints->flags |= (PMinSize | PMaxSize);
+    if (allowResizing) {
+        hints->min_width = 1;
+        hints->max_width = 16384;
+        hints->min_height = 1;
+        hints->max_height = 16384;
+    }
+    else {
+        hints->min_width = width;
+        hints->max_width = width;
+        hints->min_height = height;
+        hints->max_height = height;
+    }
+
+    hints->flags |= PWinGravity;
+    hints->win_gravity = StaticGravity;
+
+    XSetWMNormalHints(display, window, hints);
+    XFree(hints);
 }
 
 } // unnamed namespace
@@ -36,6 +62,7 @@ GameWindowX11::GameWindowX11(
     , framebufferConfigID(0)
     , colormap(0)
     , window(0)
+    , allowUserResizing(true)
     , isMinimized(false)
 {
     POMDOG_ASSERT(x11Context);
@@ -121,15 +148,18 @@ GameWindowX11::~GameWindowX11()
 
 bool GameWindowX11::GetAllowUserResizing() const
 {
-    ///@todo Not implemented
-    //POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
-    return true;
+    return this->allowUserResizing;
 }
 
-void GameWindowX11::SetAllowUserResizing(bool /*allowResizing*/)
+void GameWindowX11::SetAllowUserResizing(bool allowResizing)
 {
-    ///@todo Not implemented
-    //POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
+    if (this->allowUserResizing == allowResizing) {
+        return;
+    }
+    this->allowUserResizing = allowResizing;
+
+    UpdateNormalHints(x11Context->Display, window,
+        clientBounds.Width, clientBounds.Height, allowUserResizing);
 }
 
 std::string GameWindowX11::GetTitle() const
@@ -182,6 +212,11 @@ void GameWindowX11::SetClientBounds(const Rectangle& clientBoundsIn)
 
     XMoveWindow(x11Context->Display, window, clientBounds.X, clientBounds.Y);
     XResizeWindow(x11Context->Display, window, clientBounds.Width, clientBounds.Height);
+
+    if (!allowUserResizing) {
+        UpdateNormalHints(x11Context->Display, window,
+            clientBounds.Width, clientBounds.Height, allowUserResizing);
+    }
 
     XFlush(x11Context->Display);
 }

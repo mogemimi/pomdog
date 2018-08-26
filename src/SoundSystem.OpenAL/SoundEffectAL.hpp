@@ -4,8 +4,8 @@
 
 #include "PrerequisitesOpenAL.hpp"
 #include "../Utility/Noncopyable.hpp"
+#include "../Utility/Tagged.hpp"
 #include "Pomdog/Utility/Optional.hpp"
-#include "Pomdog/Utility/detail/Tagged.hpp"
 #include <memory>
 
 namespace Pomdog {

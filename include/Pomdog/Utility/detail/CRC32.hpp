@@ -12,7 +12,7 @@ namespace Pomdog {
 namespace Detail {
 
 // CRC-32 (Cyclic Redundancy Check for 32bit)
-struct POMDOG_EXPORT CRC32 {
+struct POMDOG_EXPORT CRC32 final {
     static std::uint32_t ComputeCRC32(const void* data, std::size_t length) noexcept;
 
     template <typename CharT>

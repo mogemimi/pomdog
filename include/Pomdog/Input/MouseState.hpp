@@ -9,7 +9,7 @@
 
 namespace Pomdog {
 
-class POMDOG_EXPORT MouseState {
+class POMDOG_EXPORT MouseState final {
 public:
     ///@brief Position of the mouse cursor
     Point2D Position {0, 0};

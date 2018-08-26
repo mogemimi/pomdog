@@ -8,7 +8,7 @@
 
 namespace Pomdog {
 
-struct InputElement {
+struct InputElement final {
     std::uint16_t ByteOffset;
     std::uint16_t InputSlot;
     InputElementFormat Format;

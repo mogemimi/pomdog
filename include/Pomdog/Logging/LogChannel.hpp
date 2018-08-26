@@ -12,7 +12,7 @@ namespace Pomdog {
 
 class LogEntry;
 
-class POMDOG_EXPORT LogChannel {
+class POMDOG_EXPORT LogChannel final {
 public:
     explicit LogChannel(const std::string& name);
 

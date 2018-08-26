@@ -14,16 +14,7 @@
 .DS_Store
 /out/
 /build
-/Build.msvs
 /ThirdParty/pomdog
-/Tools/gyp
-/Tools/python
-
-# Build output for Xcode (backward compatibility)
-/Build/build
-/Build/Debug
-/Build/Release
-/Build.xcodefiles
 
 # Build output for Xcode
 /Builds/build

@@ -178,9 +178,14 @@ void GraphicsContextMetal::ExecuteCommandLists(
 
     POMDOG_ASSERT(commandBuffer != nil);
 
-    for (auto & commandList : commandLists) {
-        POMDOG_ASSERT(commandList);
-        commandList->ExecuteImmediate(*this);
+    // NOTE: Skip rendering when the graphics device is lost.
+    const bool skipRender = (targetView.currentDrawable.texture.pixelFormat == MTLPixelFormatInvalid);
+
+    if (!skipRender) {
+        for (auto & commandList : commandLists) {
+            POMDOG_ASSERT(commandList);
+            commandList->ExecuteImmediate(*this);
+        }
     }
 
     if (commandEncoder != nil) {

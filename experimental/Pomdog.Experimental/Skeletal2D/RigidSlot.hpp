@@ -17,9 +17,9 @@ public:
     Vector2 Translate;
     Vector2 Scale;
     Radian<float> Rotation;
-    Color Color;
+    Pomdog::Color Color;
     Vector2 Origin;
-    JointIndex JointIndex;
+    Pomdog::JointIndex JointIndex;
     std::uint32_t HashId;
     std::int16_t DrawOrder;
     std::int16_t TexturePage;

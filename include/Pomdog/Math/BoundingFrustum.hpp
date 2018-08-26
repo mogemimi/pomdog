@@ -36,7 +36,7 @@ namespace Pomdog {
 ///     (4) Top    = [n0, n1, f1, f0]
 ///     (5) Bottom = [n2, f2, f3, n3]
 /// @endcode
-class POMDOG_EXPORT BoundingFrustum {
+class POMDOG_EXPORT BoundingFrustum final {
 private:
     static constexpr int CornerCount = 8;
     static constexpr int PlaneCount = 6;

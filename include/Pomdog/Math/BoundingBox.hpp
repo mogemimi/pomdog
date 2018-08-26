@@ -10,7 +10,7 @@
 
 namespace Pomdog {
 
-class POMDOG_EXPORT BoundingBox {
+class POMDOG_EXPORT BoundingBox final {
 public:
     Vector3 Min;
     Vector3 Max;

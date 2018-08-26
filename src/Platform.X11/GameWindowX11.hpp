@@ -61,6 +61,7 @@ private:
     ::Window window;
     std::string title;
     Rectangle clientBounds;
+    bool allowUserResizing;
     bool isMinimized;
 };
 

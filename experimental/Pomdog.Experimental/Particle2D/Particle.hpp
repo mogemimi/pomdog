@@ -14,8 +14,8 @@ public:
     Vector2 Position {0, 0};
     Vector2 Velocity {1, 1};
 
-    Color StartColor = Color::White;
-    Color Color = Color::White;
+    Pomdog::Color StartColor = Pomdog::Color::White;
+    Pomdog::Color Color = Pomdog::Color::White;
     float ColorVariance = 0;
 
     Radian<float> Rotation = 0;

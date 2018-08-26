@@ -15,7 +15,10 @@ source_group(Async                        REGULAR_EXPRESSION "(include/Pomdog|sr
 source_group(Audio                        REGULAR_EXPRESSION "(include/Pomdog|src)/Audio/*")
 source_group(Basic                        REGULAR_EXPRESSION "(include/Pomdog|src)/Basic/*")
 source_group(Content                      REGULAR_EXPRESSION "(include/Pomdog|src)/Content/*")
+source_group(Content\\AssetBuilders       REGULAR_EXPRESSION "(include/Pomdog|src)/Content/AssetBuilders/*")
+source_group(Content\\Utility             REGULAR_EXPRESSION "(include/Pomdog|src)/Content/Utility/*")
 source_group(Graphics                     REGULAR_EXPRESSION "(include/Pomdog|src)/Graphics/*")
+source_group(Graphics\\ShaderCompilers    REGULAR_EXPRESSION "(include/Pomdog|src)/Graphics/ShaderCompilers/*")
 source_group(Input                        REGULAR_EXPRESSION "(include/Pomdog|src)/Input/*")
 source_group(Logging                      REGULAR_EXPRESSION "(include/Pomdog|src)/Logging/*")
 source_group(Math                         REGULAR_EXPRESSION "(include/Pomdog|src)/Math/*")
@@ -25,10 +28,11 @@ source_group(Platform.X11                 REGULAR_EXPRESSION "(include/Pomdog/Pl
 source_group(Reactive                     REGULAR_EXPRESSION "(include/Pomdog|src)/Reactive/*")
 source_group(Signals                      REGULAR_EXPRESSION "(include/Pomdog|src)/Signals/*")
 source_group(Utility                      REGULAR_EXPRESSION "(include/Pomdog|src)/Utility/*")
-source_group(Application                  REGULAR_EXPRESSION "(include/Pomdog|src)/Application/*")
 source_group(Experimental\\Graphics       REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Graphics/*")
 source_group(Experimental\\Image          REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Image/*")
+source_group(Experimental\\MagicaVoxel    REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/MagicaVoxel/*")
 source_group(Experimental\\TexturePacker  REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/TexturePacker/*")
+source_group(Experimental\\Tween          REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Tween/*")
 source_group(InputSystem                  REGULAR_EXPRESSION src/InputSystem/*)
 source_group(InputSystem.DirectInput      REGULAR_EXPRESSION src/InputSystem.DirectInput/*)
 source_group(InputSystem.IOKit            REGULAR_EXPRESSION src/InputSystem.IOKit/*)
@@ -234,7 +238,6 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/include/Pomdog/Utility/PathHelper.hpp
   ${POMDOG_DIR}/include/Pomdog/Utility/StringHelper.hpp
   ${POMDOG_DIR}/include/Pomdog/Utility/detail/CRC32.hpp
-  ${POMDOG_DIR}/include/Pomdog/Utility/detail/Tagged.hpp
   ${POMDOG_DIR}/src/Application/GameClock.cpp
   ${POMDOG_DIR}/src/Application/SubsystemScheduler.hpp
   ${POMDOG_DIR}/src/Application/SystemEvents.hpp
@@ -343,6 +346,7 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/src/Utility/PathHelper.cpp
   ${POMDOG_DIR}/src/Utility/ScopeGuard.hpp
   ${POMDOG_DIR}/src/Utility/StringHelper.cpp
+  ${POMDOG_DIR}/src/Utility/Tagged.hpp
 )
 
 set(POMDOG_SOURCES_EXPERIMENTAL
@@ -358,10 +362,14 @@ set(POMDOG_SOURCES_EXPERIMENTAL
   ${POMDOG_DIR}/include/Pomdog/Experimental/Image/GifImage.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Image/GifImageLoader.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Image/Image.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/MagicaVoxel/VoxModel.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/MagicaVoxel/VoxModelExporter.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/MagicaVoxel/VoxModelLoader.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureAtlas.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureAtlasGenerator.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureAtlasLoader.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureRegion.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Tween/EasingHelper.hpp
   ${POMDOG_DIR}/src/Experimental/Graphics/LineBatch.cpp
   ${POMDOG_DIR}/src/Experimental/Graphics/PolygonBatch.cpp
   ${POMDOG_DIR}/src/Experimental/Graphics/PolygonShapeBuilder.cpp
@@ -372,8 +380,12 @@ set(POMDOG_SOURCES_EXPERIMENTAL
   ${POMDOG_DIR}/src/Experimental/Graphics/TrueTypeFont.cpp
   ${POMDOG_DIR}/src/Experimental/Image/GifImageLoader.cpp
   ${POMDOG_DIR}/src/Experimental/Image/Image.cpp
+  ${POMDOG_DIR}/src/Experimental/MagicaVoxel/VoxChunkHeader.hpp
+  ${POMDOG_DIR}/src/Experimental/MagicaVoxel/VoxModelLoader.cpp
+  ${POMDOG_DIR}/src/Experimental/MagicaVoxel/VoxModelExporter.cpp
   ${POMDOG_DIR}/src/Experimental/TexturePacker/TextureAtlasGenerator.cpp
   ${POMDOG_DIR}/src/Experimental/TexturePacker/TextureAtlasLoader.cpp
+  ${POMDOG_DIR}/src/Experimental/Tween/EasingHelper.cpp
 )
 
 set(POMDOG_SOURCES_GL4
@@ -707,12 +719,15 @@ if(POMDOG_USE_IOKIT AND (POMDOG_TARGET_PLATFORM MATCHES "Mac"))
   set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework IOKit")
 endif()
 
+if(POMDOG_USE_GL4 AND (POMDOG_TARGET_PLATFORM MATCHES "Mac"))
+  # list(APPEND LINK_FRAMEWORKS "$(SDKROOT)/System/Library/Frameworks/OpenGL.framework")
+  set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework OpenGL")
+endif()
+
 if(POMDOG_TARGET_PLATFORM MATCHES "Mac")
   # list(APPEND LINK_FRAMEWORKS "$(SDKROOT)/System/Library/Frameworks/Cocoa.framework")
-  # list(APPEND LINK_FRAMEWORKS "$(SDKROOT)/System/Library/Frameworks/OpenGL.framework")
   # list(APPEND LINK_FRAMEWORKS "$(SDKROOT)/System/Library/Frameworks/QuartzCore.framework")
   set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework Cocoa")
-  set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework OpenGL")
   set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework QuartzCore")
 endif()
 
@@ -793,45 +808,11 @@ if(POMDOG_USE_DIRECTINPUT AND (POMDOG_TARGET_PLATFORM MATCHES "Win32"))
 endif()
 
 target_compile_definitions(pomdog_static PRIVATE
-  "$<$<CONFIG:DEBUG>:_DEBUG;DEBUG=1>"
-  "$<$<CONFIG:RELEASE>:NDEBUG>"
+  $<$<CONFIG:DEBUG>:_DEBUG;DEBUG=1>
+  $<$<CONFIG:RELEASE>:NDEBUG>
 )
 
-if ((CMAKE_CXX_COMPILER_ID MATCHES "Clang") OR (CMAKE_CXX_COMPILER_ID MATCHES "GNU"))
-  target_compile_options(pomdog_static PRIVATE
-    -Wall
-    -Werror
-    -Wimplicit-fallthrough
-    "$<$<CONFIG:DEBUG>:-g;-O0>"
-    "$<$<CONFIG:RELEASE>:-O3>"
-  )
-endif()
-
-if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  target_compile_options(pomdog_static PRIVATE
-    -Wcomma
-    -Wextra-semi
-    -Wmost
-
-    # FIXME: Use -Wextra instead of the following options.
-    -Wignored-qualifiers
-    -Winitializer-overrides
-    -Wmissing-field-initializers
-    -Wmissing-method-return-type
-    -Wsemicolon-before-method-body
-    -Wsign-compare
-    # -Wunused-parameter
-  )
-endif()
-
 if(POMDOG_TARGET_PLATFORM MATCHES "Win32")
-  target_compile_options(pomdog_static PRIVATE
-    /W4
-    /WX
-    "$<$<CONFIG:DEBUG>:/Od;/MTd>"
-    "$<$<CONFIG:RELEASE>:/O2;/Ob2;/MT>"
-  )
-
   target_compile_definitions(pomdog_static PRIVATE
     _WIN32_WINNT=0x0602 # Windows 8 or later
     WIN32_LEAN_AND_MEAN
@@ -855,6 +836,45 @@ if(POMDOG_TARGET_PLATFORM MATCHES "Win32")
     # odbccp32.lib
   )
 endif()
+
+target_compile_options(pomdog_static PRIVATE
+  # Clang
+  $<$<CXX_COMPILER_ID:Clang>:
+    -Wcomma
+    -Wextra-semi
+    -Wmost
+    -Wmove
+    -Wimplicit-fallthrough
+
+    # FIXME: Use -Wextra instead of the following options.
+    -Wignored-qualifiers
+    -Winitializer-overrides
+    -Wmissing-field-initializers
+    -Wmissing-method-return-type
+    -Wsemicolon-before-method-body
+    -Wsign-compare
+    # -Wunused-parameter
+  >
+  # GCC
+  $<$<CXX_COMPILER_ID:GNU>:
+    -Wimplicit-fallthrough
+    -pedantic
+  >
+  # Clang and GCC
+  $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>:
+    -Wall
+    -Werror
+    $<$<CONFIG:DEBUG>:-g;-O0>
+    $<$<CONFIG:RELEASE>:-O3>
+  >
+  # MSVC
+  $<$<CXX_COMPILER_ID:MSVC>:
+    /W4
+    /WX
+    $<$<CONFIG:DEBUG>:/Od;/MTd>
+    $<$<CONFIG:RELEASE>:/O2;/Ob2;/MT>
+  >
+)
 
 if (POMDOG_TARGET_PLATFORM MATCHES "Mac")
   # TODO: Replace with the following, CMake >= 3.12

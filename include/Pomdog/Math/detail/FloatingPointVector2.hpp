@@ -13,7 +13,7 @@ namespace Detail {
 
 ///@brief vector in two-dimensional space.
 template <typename T>
-class POMDOG_EXPORT FloatingPointVector2 {
+class POMDOG_EXPORT FloatingPointVector2 final {
 public:
     static_assert(std::is_floating_point<T>::value, "T is floating point.");
     typedef T value_type;

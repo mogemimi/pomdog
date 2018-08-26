@@ -22,7 +22,7 @@ source_group(Math                   REGULAR_EXPRESSION test/FrameworkTest/Math/*
 source_group(Signals                REGULAR_EXPRESSION test/FrameworkTest/Signals/*)
 source_group(Utility                REGULAR_EXPRESSION test/FrameworkTest/Utility/*)
 
-set(SOURCE_FILES
+add_executable(PomdogTest
   ${POMDOG_TEST_DIR}/main.cpp
   ${POMDOG_TEST_DIR}/Application/GameClockTest.cpp
   ${POMDOG_TEST_DIR}/Application/TimerTest.cpp
@@ -74,18 +74,50 @@ set(SOURCE_FILES
   ${POMDOG_TEST_DIR}/Utility/StringHelperTest.cpp
 )
 
-include_directories(
+target_include_directories(PomdogTest PRIVATE
   ${POMDOG_DIR}/include
   ${POMDOG_DIR}/experimental
   ${POMDOG_DIR}/dependencies/iutest/include
 )
 
-add_executable(PomdogTest ${SOURCE_FILES})
-
 target_compile_definitions(PomdogTest PRIVATE
-  "$<$<CONFIG:DEBUG>:_DEBUG;DEBUG=1>"
-  "$<$<CONFIG:RELEASE>:NDEBUG>"
   IUTEST_CHECK_STRICT=0
+  $<$<CONFIG:DEBUG>:_DEBUG;DEBUG=1>
+  $<$<CONFIG:RELEASE>:NDEBUG>
+
+  # On Windows
+  $<$<PLATFORM_ID:Windows>:
+    WIN32_LEAN_AND_MEAN
+    NOMINMAX
+  >
+)
+
+target_compile_options(PomdogTest PRIVATE
+  # Clang
+  $<$<CXX_COMPILER_ID:Clang>:
+    -Wcomma
+    -Wmost
+    -Wmove
+    -Wimplicit-fallthrough
+  >
+  # GCC
+  $<$<CXX_COMPILER_ID:GNU>:
+    -Wimplicit-fallthrough
+  >
+  # Clang and GCC
+  $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>:
+    -Wall
+    -Werror
+    $<$<CONFIG:DEBUG>:-g;-O0>
+    $<$<CONFIG:RELEASE>:-O3>
+  >
+  # MSVC
+  $<$<CXX_COMPILER_ID:MSVC>:
+    /W4
+    /WX
+    $<$<CONFIG:DEBUG>:/Od;/MTd>
+    $<$<CONFIG:RELEASE>:/O2;/Ob2;/MT>
+  >
 )
 
 if(APPLE)
@@ -102,18 +134,6 @@ if(APPLE)
 endif()
 
 if(WIN32)
-  target_compile_options(PomdogTest PRIVATE
-    /W4
-    /WX
-    "$<$<CONFIG:DEBUG>:/Od;/MTd>"
-    "$<$<CONFIG:RELEASE>:/O2;/Ob2;/MT>"
-  )
-
-  target_compile_definitions(PomdogTest PRIVATE
-    WIN32_LEAN_AND_MEAN
-    NOMINMAX
-  )
-
   # Replace with target_link_options() when upgrading CMake 3.12
   target_link_libraries(PomdogTest
     debug -INCREMENTAL

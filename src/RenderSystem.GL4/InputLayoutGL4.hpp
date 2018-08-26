@@ -4,9 +4,9 @@
 
 #include "OpenGLPrerequisites.hpp"
 #include "TypesafeGL4.hpp"
+#include "../Utility/Tagged.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Utility/Optional.hpp"
-#include "Pomdog/Utility/detail/Tagged.hpp"
 #include <memory>
 #include <vector>
 

@@ -20,7 +20,7 @@ namespace Pomdog {
 ///
 ///     Bottom = y + height
 ///@endcode
-class POMDOG_EXPORT Rectangle {
+class POMDOG_EXPORT Rectangle final {
 public:
     std::int32_t X, Y;
     std::int32_t Width, Height;

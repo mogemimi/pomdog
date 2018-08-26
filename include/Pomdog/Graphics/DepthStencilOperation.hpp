@@ -7,7 +7,7 @@
 
 namespace Pomdog {
 
-struct DepthStencilOperation {
+struct DepthStencilOperation final {
     StencilOperation StencilDepthBufferFail;
     StencilOperation StencilFail;
     StencilOperation StencilPass;

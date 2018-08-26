@@ -7,7 +7,7 @@
 
 namespace Pomdog {
 
-class LogEntry {
+class LogEntry final {
 public:
     std::string Message;
     std::string Tag;

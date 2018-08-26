@@ -40,19 +40,20 @@ target_include_directories(png PRIVATE
 )
 
 target_compile_definitions(png PRIVATE
-  "$<$<CONFIG:DEBUG>:_DEBUG>"
-  "$<$<CONFIG:RELEASE>:NDEBUG>"
+  $<$<CONFIG:DEBUG>:_DEBUG>
+  $<$<CONFIG:RELEASE>:NDEBUG>
+  $<$<PLATFORM_ID:Windows>:
+    WIN32
+    _WINDOWS
+  >
 )
 
-if ((CMAKE_CXX_COMPILER_ID MATCHES "Clang") OR (CMAKE_CXX_COMPILER_ID MATCHES "GNU"))
-  target_compile_options(png PRIVATE
-    "$<$<CONFIG:DEBUG>:-g;-O0>"
-    "$<$<CONFIG:RELEASE>:-O3>"
-  )
-endif()
-
-if(WIN32)
-  target_compile_options(png PRIVATE
+target_compile_options(png PRIVATE
+  $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>:
+    $<$<CONFIG:DEBUG>:-g;-O0>
+    $<$<CONFIG:RELEASE>:-O3>
+  >
+  $<$<CXX_COMPILER_ID:MSVC>:
     /nologo
     /W4
     /Ox
@@ -65,15 +66,10 @@ if(WIN32)
     /wd"4996"
     /wd"4127"
     /Zc:wchar_t-
-    "$<$<CONFIG:DEBUG>:/MTd>"
-    "$<$<CONFIG:RELEASE>:/MT>"
-  )
-
-  target_compile_definitions(png PRIVATE
-    WIN32
-    _WINDOWS
-  )
-endif()
+    $<$<CONFIG:DEBUG>:/MTd>
+    $<$<CONFIG:RELEASE>:/MT>
+  >
+)
 
 set_target_properties(png PROPERTIES
   XCODE_ATTRIBUTE_GCC_OPTIMIZATION_LEVEL[variant=Debug] "0" # -O0

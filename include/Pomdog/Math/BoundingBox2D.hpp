@@ -9,7 +9,7 @@
 
 namespace Pomdog {
 
-class POMDOG_EXPORT BoundingBox2D {
+class POMDOG_EXPORT BoundingBox2D final {
 public:
     Vector2 Min;
     Vector2 Max;

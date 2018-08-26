@@ -10,7 +10,7 @@
 
 namespace Pomdog {
 
-struct POMDOG_EXPORT DepthStencilDescription {
+struct POMDOG_EXPORT DepthStencilDescription final {
     DepthStencilOperation ClockwiseFace;
     DepthStencilOperation CounterClockwiseFace;
     std::int32_t ReferenceStencil;

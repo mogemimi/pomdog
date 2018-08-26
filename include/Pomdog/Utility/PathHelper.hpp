@@ -9,7 +9,7 @@
 
 namespace Pomdog {
 
-struct POMDOG_EXPORT PathHelper {
+struct POMDOG_EXPORT PathHelper final {
     static std::string Join(const std::string& path1, const std::string& path2);
 
     static Detail::BinaryFileStream OpenStream(const std::string& path);

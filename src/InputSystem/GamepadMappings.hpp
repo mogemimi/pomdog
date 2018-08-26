@@ -47,7 +47,7 @@ enum class ThumbStickKind : std::int8_t {
     RightStickY = 3,
 };
 
-struct AxisMapper {
+struct AxisMapper final {
     ThumbStickKind thumbStick = ThumbStickKind::None;
     ButtonKind positiveTrigger = ButtonKind::None;
     ButtonKind negativeTrigger = ButtonKind::None;
@@ -55,7 +55,7 @@ struct AxisMapper {
 
 using GamepadButtonMappings = std::array<ButtonKind, 16>;
 
-struct GamepadMappings {
+struct GamepadMappings final {
     GamepadButtonMappings buttons;
     std::array<AxisMapper, 6> axes;
 };

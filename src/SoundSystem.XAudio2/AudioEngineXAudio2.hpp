@@ -10,7 +10,7 @@ namespace Detail {
 namespace SoundSystem {
 namespace XAudio2 {
 
-class AudioEngineXAudio2 {
+class AudioEngineXAudio2 final {
 public:
     AudioEngineXAudio2();
 

@@ -7,8 +7,8 @@
 
 namespace Pomdog {
 
-struct InputLayoutDescription {
-    std::vector<InputElement> InputElements;
+struct InputLayoutDescription final {
+    std::vector<Pomdog::InputElement> InputElements;
 };
 
 } // namespace Pomdog

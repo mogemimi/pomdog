@@ -10,7 +10,7 @@
 
 namespace Pomdog {
 
-struct POMDOG_EXPORT VertexBufferBinding {
+struct POMDOG_EXPORT VertexBufferBinding final {
     std::shared_ptr<Pomdog::VertexBuffer> VertexBuffer;
     std::size_t VertexOffset;
 

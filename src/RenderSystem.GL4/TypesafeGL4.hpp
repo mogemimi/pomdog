@@ -3,7 +3,7 @@
 #pragma once
 
 #include "OpenGLPrerequisites.hpp"
-#include "Pomdog/Utility/detail/Tagged.hpp"
+#include "../Utility/Tagged.hpp"
 
 namespace Pomdog {
 namespace Detail {

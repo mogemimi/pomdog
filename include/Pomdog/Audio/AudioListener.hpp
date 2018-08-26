@@ -6,7 +6,7 @@
 
 namespace Pomdog {
 
-class AudioListener {
+class AudioListener final {
 public:
     Vector3 Forward;
     Vector3 Position;

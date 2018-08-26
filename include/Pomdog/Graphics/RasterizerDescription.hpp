@@ -9,11 +9,11 @@
 
 namespace Pomdog {
 
-struct POMDOG_EXPORT RasterizerDescription {
+struct POMDOG_EXPORT RasterizerDescription final {
     std::int32_t DepthBias;
     float SlopeScaledDepthBias;
-    CullMode CullMode;
-    FillMode FillMode;
+    Pomdog::CullMode CullMode;
+    Pomdog::FillMode FillMode;
     bool MultisampleEnable;
     bool ScissorTestEnable;
 

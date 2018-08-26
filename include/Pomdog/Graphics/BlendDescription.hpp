@@ -10,7 +10,7 @@
 
 namespace Pomdog {
 
-struct POMDOG_EXPORT BlendDescription {
+struct POMDOG_EXPORT BlendDescription final {
     std::array<RenderTargetBlendDescription, 8> RenderTargets;
     bool AlphaToCoverageEnable;
     bool IndependentBlendEnable;

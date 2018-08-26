@@ -8,7 +8,7 @@
 
 namespace Pomdog {
 
-class POMDOG_EXPORT Plane {
+class POMDOG_EXPORT Plane final {
 public:
     Vector3 Normal;
     float Distance;

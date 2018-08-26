@@ -192,7 +192,7 @@ void GraphicsCommandListImmediate::Close()
 #else
     constexpr bool useMetal = false;
 #endif
-    if (useMetal) {
+    if constexpr (useMetal) {
         SortCommandsForMetal();
     }
     commands.shrink_to_fit();

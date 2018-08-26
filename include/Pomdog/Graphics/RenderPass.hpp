@@ -16,7 +16,7 @@ namespace Pomdog {
 
 using RenderTargetAndClearColor = std::tuple<std::shared_ptr<RenderTarget2D>, Optional<Vector4>>;
 
-struct POMDOG_EXPORT RenderPass {
+struct POMDOG_EXPORT RenderPass final {
     std::vector<RenderTargetAndClearColor> RenderTargets;
     Optional<Pomdog::Viewport> Viewport;
     Optional<Rectangle> ScissorRect;

@@ -58,10 +58,6 @@ public:
     /// @return Total elapsed time while timer was running.
     Duration GetTotalTime() const;
 
-    /// @see GameClock::GetFrameDuration
-    /// @return Last frame duration from GameClock.
-    Duration GetFrameDuration() const;
-
     /// @return If timer is executing the task only once.
     bool IsSingleShot() const;
 
@@ -95,7 +91,6 @@ private:
     ScopedConnection connection;
     Optional<Duration> interval;
     Duration totalTime;
-    Duration frameDuration;
     double scale;
     bool enabled;
     bool isSingleShot;

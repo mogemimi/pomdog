@@ -40,24 +40,25 @@ target_include_directories(zlib PRIVATE
 )
 
 target_compile_definitions(zlib PRIVATE
-  "$<$<CONFIG:DEBUG>:_DEBUG>"
-  "$<$<CONFIG:RELEASE>:NDEBUG>"
+  $<$<CONFIG:DEBUG>:_DEBUG>
+  $<$<CONFIG:RELEASE>:NDEBUG>
+  $<$<PLATFORM_ID:Windows>:
+    WIN32
+    _WINDOWS
+    _CRT_NONSTDC_NO_DEPRECATE
+    _CRT_SECURE_NO_DEPRECATE
+    _CRT_NONSTDC_NO_WARNINGS
+    $<$<CONFIG:RELEASE>:ASMV;ASMINF>
+  >
 )
 
-if ((CMAKE_CXX_COMPILER_ID MATCHES "Clang") OR (CMAKE_CXX_COMPILER_ID MATCHES "GNU"))
-  target_compile_options(zlib PRIVATE
+target_compile_options(zlib PRIVATE
+  $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>:
     -Wno-implicit-function-declaration
-    "$<$<CONFIG:DEBUG>:-g;-O0>"
-    "$<$<CONFIG:RELEASE>:-O3>"
-  )
-endif()
-
-if(UNIX)
-  set_target_properties(zlib PROPERTIES OUTPUT_NAME z)
-endif()
-
-if(WIN32)
-  target_compile_options(zlib PRIVATE
+    $<$<CONFIG:DEBUG>:-g;-O0>
+    $<$<CONFIG:RELEASE>:-O3>
+  >
+  $<$<CXX_COMPILER_ID:MSVC>:
     /nologo
     /W3
     /O2
@@ -65,18 +66,13 @@ if(WIN32)
     /GF
     /Gy
     /GS-
-    "$<$<CONFIG:DEBUG>:/MTd>"
-    "$<$<CONFIG:RELEASE>:/MT>"
-  )
+    $<$<CONFIG:DEBUG>:/MTd>
+    $<$<CONFIG:RELEASE>:/MT>
+  >
+)
 
-  target_compile_definitions(zlib PRIVATE
-    WIN32
-    _WINDOWS
-    _CRT_NONSTDC_NO_DEPRECATE
-    _CRT_SECURE_NO_DEPRECATE
-    _CRT_NONSTDC_NO_WARNINGS
-    "$<$<CONFIG:RELEASE>:ASMV;ASMINF>"
-  )
+if(UNIX)
+  set_target_properties(zlib PROPERTIES OUTPUT_NAME z)
 endif()
 
 set_target_properties(zlib PROPERTIES

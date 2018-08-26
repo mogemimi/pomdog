@@ -32,7 +32,6 @@ private:
 private:
     std::shared_ptr<GameHost> gameHost;
     ConnectionList connections;
-    Timer gameTimer;
 
     PostProcessCompositor postProcessCompositor;
     std::shared_ptr<GraphicsCommandList> commandListPreRender;

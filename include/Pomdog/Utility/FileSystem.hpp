@@ -7,7 +7,7 @@
 
 namespace Pomdog {
 
-struct POMDOG_EXPORT FileSystem {
+struct POMDOG_EXPORT FileSystem final {
     static bool CreateDirectory(const std::string& path);
 
     static bool CreateDirectories(const std::string& path);

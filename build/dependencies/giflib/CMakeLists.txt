@@ -22,27 +22,31 @@ add_library(giflib STATIC
 
 target_include_directories(giflib PRIVATE
   ${THIRDPARTY_DIR}/vendor/giflib/lib
+  $<$<PLATFORM_ID:Windows>:
+    ${THIRDPARTY_DIR}/vendor/giflib/windows
+  >
 )
 
 target_compile_definitions(giflib PRIVATE
-  "$<$<CONFIG:DEBUG>:_DEBUG>"
-  "$<$<CONFIG:RELEASE>:NDEBUG>"
+  $<$<CONFIG:DEBUG>:_DEBUG>
+  $<$<CONFIG:RELEASE>:NDEBUG>
+  $<$<PLATFORM_ID:Windows>:
+    WIN32
+    _WINDOWS
+    _CRT_NONSTDC_NO_DEPRECATE
+    _CRT_SECURE_NO_DEPRECATE
+    _CRT_NONSTDC_NO_WARNINGS
+    $<$<CONFIG:RELEASE>:ASMV;ASMINF>
+  >
 )
 
-if ((CMAKE_CXX_COMPILER_ID MATCHES "Clang") OR (CMAKE_CXX_COMPILER_ID MATCHES "GNU"))
-  target_compile_options(giflib PRIVATE
+target_compile_options(giflib PRIVATE
+  $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>:
     -Wno-implicit-function-declaration
-    "$<$<CONFIG:DEBUG>:-g;-O0>"
-    "$<$<CONFIG:RELEASE>:-O3>"
-  )
-endif()
-
-if(WIN32)
-  target_include_directories(giflib PRIVATE
-    ${THIRDPARTY_DIR}/vendor/giflib/windows
-  )
-
-  target_compile_options(giflib PRIVATE
+    $<$<CONFIG:DEBUG>:-g;-O0>
+    $<$<CONFIG:RELEASE>:-O3>
+  >
+  $<$<CXX_COMPILER_ID:MSVC>:
     /nologo
     /W3
     /O2
@@ -50,19 +54,10 @@ if(WIN32)
     /GF
     /Gy
     /GS-
-    "$<$<CONFIG:DEBUG>:/MTd>"
-    "$<$<CONFIG:RELEASE>:/MT>"
-  )
-
-  target_compile_definitions(giflib PRIVATE
-    WIN32
-    _WINDOWS
-    _CRT_NONSTDC_NO_DEPRECATE
-    _CRT_SECURE_NO_DEPRECATE
-    _CRT_NONSTDC_NO_WARNINGS
-    "$<$<CONFIG:RELEASE>:ASMV;ASMINF>"
-  )  
-endif()
+    $<$<CONFIG:DEBUG>:/MTd>
+    $<$<CONFIG:RELEASE>:/MT>
+  >
+)
 
 set_target_properties(giflib PROPERTIES
   XCODE_ATTRIBUTE_GCC_OPTIMIZATION_LEVEL[variant=Debug] "0" # -O0

@@ -6,7 +6,7 @@
 
 namespace Pomdog {
 
-class AudioEmitter {
+class AudioEmitter final {
 public:
     Vector3 Forward;
     Vector3 Position;

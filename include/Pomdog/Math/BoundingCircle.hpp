@@ -8,7 +8,7 @@
 
 namespace Pomdog {
 
-class POMDOG_EXPORT BoundingCircle {
+class POMDOG_EXPORT BoundingCircle final {
 public:
     Vector2 Center;
     float Radius;

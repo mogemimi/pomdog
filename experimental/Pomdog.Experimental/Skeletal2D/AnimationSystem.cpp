@@ -17,9 +17,9 @@ namespace {
 
 class SkeletonAnimationContext {
 public:
-    std::shared_ptr<AnimationState> AnimationState;
-    std::shared_ptr<Skeleton const> Skeleton;
-    std::shared_ptr<SkeletonPose> SkeletonPose;
+    std::shared_ptr<Pomdog::AnimationState> AnimationState;
+    std::shared_ptr<Pomdog::Skeleton const> Skeleton;
+    std::shared_ptr<Pomdog::SkeletonPose> SkeletonPose;
 };
 
 } // unnamed namespace

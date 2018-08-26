@@ -11,7 +11,7 @@ namespace Pomdog {
 class Beam {
 public:
     std::vector<Vector2> Points;
-    Color Color;
+    Pomdog::Color Color;
     float Thickness;
     float TimeToLive;
 };

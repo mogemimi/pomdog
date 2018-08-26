@@ -16,7 +16,7 @@ struct ShaderModel {
 };
 
 struct ShaderProfile {
-    ShaderModel ShaderModel;
+    Pomdog::Detail::ShaderModel ShaderModel;
     ShaderPipelineStage PipelineStage;
 };
 
