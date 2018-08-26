@@ -6,6 +6,7 @@
 
 namespace Pomdog {
 
+/// Basic time unit (ms).
 using Duration = std::chrono::duration<double>;
 
 } // namespace Pomdog
