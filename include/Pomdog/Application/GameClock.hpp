@@ -37,20 +37,20 @@ public:
     /// Fires @ref OnTick.
     void Tick();
 
-    /// @return Total amount of elapsed time in milliseconds since the game launch.
+    /// @return Total amount of elapsed time in seconds since the game launch.
     Duration GetTotalGameTime() const noexcept;
 
     /// @return Number of current frame in usage.
     /// @note Can't be greater than framesPerSecond in GameClock(int).
     std::int64_t GetFrameNumber() const noexcept;
 
-    /// @return Duration in milliseconds of one frame per one second.
+    /// @return Duration in seconds of one frame per one second.
     Duration GetFrameDuration() const noexcept;
 
     /// @return Approximate quantity of actual frames per second.
     float GetFrameRate() const noexcept;
 
-    /// @return Total amount of elasped time in milliseconds since last Tick().
+    /// @return Total amount of elasped time in seconds since last Tick().
     Duration GetElapsedTime() const noexcept;
 
     /// Signal that fires on every Tick().
