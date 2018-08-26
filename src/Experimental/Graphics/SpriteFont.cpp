@@ -13,15 +13,7 @@
 #include "Pomdog/Graphics/Texture2D.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <unordered_map>
-
-#if defined(__clang__)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wshadow"
-#endif
 #include <utfcpp/source/utf8.h>
-#if defined(__clang__)
-#pragma clang diagnostic pop
-#endif
 
 namespace Pomdog {
 namespace {
