@@ -2,7 +2,7 @@
 
 #pragma once
 
-#if defined(_MSC_VER) && (_MSC_VER > 1910)
+#if __has_include(<optional>)
 #include <optional>
 #else
 #include <experimental/optional>
@@ -10,7 +10,7 @@
 
 namespace Pomdog {
 
-#if defined(_MSC_VER) && (_MSC_VER > 1910)
+#if defined(__cpp_lib_optional)
 template <typename T>
 using Optional = std::optional<T>;
 
