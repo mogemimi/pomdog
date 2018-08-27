@@ -10,7 +10,7 @@
 
 namespace Pomdog {
 
-#if defined(__cpp_lib_optional)
+#if __has_include(<optional>)
 template <typename T>
 using Optional = std::optional<T>;
 
