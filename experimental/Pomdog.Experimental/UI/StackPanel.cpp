@@ -102,7 +102,7 @@ void StackPanel::OnPointerMoved(const PointerPoint& pointerPoint)
 
         ///@note recalculate position in current coordinate system
         pointInView = UIHelper::ConvertToChildSpace(pointerPoint.Position, GetGlobalTransform());
-        position = Vector2(pointInView.X, pointInView.Y);
+        position = MathHelper::ToVector2(pointInView);
         startTouchPoint = position;
     }
 }

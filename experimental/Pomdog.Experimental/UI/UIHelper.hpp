@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "Pomdog/Math/MathHelper.hpp"
 #include "Pomdog/Math/Point2D.hpp"
 #include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Math/Matrix3x2.hpp"
@@ -19,8 +20,8 @@ struct UIHelper {
     static Point2D ConvertToChildSpace(
         const Point2D& position, const Matrix3x2& transform)
     {
-        auto positionInChild = ConvertToChildSpace(Vector2(position.X, position.Y), transform);
-        return Point2D(positionInChild.X, positionInChild.Y);
+        auto positionInChild = ConvertToChildSpace(MathHelper::ToVector2(position), transform);
+        return MathHelper::ToPoint2D(positionInChild);
     }
 };
 
