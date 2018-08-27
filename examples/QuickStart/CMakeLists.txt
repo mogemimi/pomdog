@@ -134,7 +134,7 @@ endif()
 
 set_target_properties(${PRODUCT_NAME} PROPERTIES
   # Change working directory in Visual Studio
-  VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+  VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
 
   # Xcode
   XCODE_ATTRIBUTE_GCC_OPTIMIZATION_LEVEL[variant=Debug] "0" # -O0
