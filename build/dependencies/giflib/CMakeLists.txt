@@ -36,7 +36,6 @@ target_compile_definitions(giflib PRIVATE
     _CRT_NONSTDC_NO_DEPRECATE
     _CRT_SECURE_NO_DEPRECATE
     _CRT_NONSTDC_NO_WARNINGS
-    $<$<CONFIG:RELEASE>:ASMV;ASMINF>
   >
 )
 
@@ -54,6 +53,9 @@ target_compile_options(giflib PRIVATE
     /GF
     /Gy
     /GS-
+    /wd"4018"
+    /wd"4028"
+    /wd"4244"
     $<$<CONFIG:DEBUG>:/MTd>
     $<$<CONFIG:RELEASE>:/MT>
   >
