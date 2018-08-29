@@ -4,10 +4,10 @@
 
 #include "AnimationTimeInterval.hpp"
 #include "Skin.hpp"
-#include "Pomdog/Utility/Optional.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Math/Vector2.hpp"
 #include <cstdint>
+#include <optional>
 #include <vector>
 
 namespace Pomdog {
@@ -34,7 +34,7 @@ public:
 private:
     std::vector<SpriteKeyframe> keys;
     std::uint32_t slotHashId;
-    Optional<std::uint16_t> slotIndex;
+    std::optional<std::uint16_t> slotIndex;
 };
 
 } // namespace Skeletal2D

@@ -7,6 +7,7 @@
 #include <functional>
 #include <map>
 #include <memory>
+#include <optional>
 #include <string>
 #include <utility>
 #include <vector>
@@ -19,7 +20,7 @@ struct GameScene final {
     std::function<void()> OnExit;
     std::string name;
     ConnectionList connections;
-    Optional<std::int64_t> frameNumber;
+    std::optional<std::int64_t> frameNumber;
 
     void Enter();
 

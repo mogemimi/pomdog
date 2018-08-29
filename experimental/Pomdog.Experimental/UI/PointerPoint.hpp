@@ -3,8 +3,8 @@
 #pragma once
 
 #include "Pomdog.Experimental/UI/PointerEventType.hpp"
-#include "Pomdog/Utility/Optional.hpp"
 #include <cstdint>
+#include <optional>
 
 namespace Pomdog {
 namespace UI {
@@ -23,7 +23,7 @@ public:
     Point2D Position {0, 0};
     std::int32_t MouseWheelDelta = 0;
     PointerEventType Event = PointerEventType::CaptureLost;
-    Optional<PointerMouseEvent> MouseEvent;
+    std::optional<PointerMouseEvent> MouseEvent;
     std::uint32_t Id = 0;
 };
 

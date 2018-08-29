@@ -113,7 +113,7 @@ void StackPanel::OnPointerReleased(const PointerPoint& pointerPoint)
         return;
     }
 
-    startTouchPoint = Pomdog::NullOpt;
+    startTouchPoint = std::nullopt;
 }
 
 void StackPanel::AddChild(const std::shared_ptr<UIElement>& element)

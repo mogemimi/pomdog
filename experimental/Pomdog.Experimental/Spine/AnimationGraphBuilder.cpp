@@ -11,6 +11,7 @@
 #include "Pomdog/Utility/Exception.hpp"
 #include <rapidjson/document.h>
 #include <fstream>
+#include <optional>
 #include <vector>
 
 namespace Pomdog {
@@ -25,10 +26,10 @@ enum class AnimationNodeType: std::uint8_t {
 };
 
 struct AnimationNodeDesc {
-    Optional<std::string> ClipName;
-    Optional<std::string> Parameter;
-    std::array<Optional<std::string>, 4> Inputs;
-    Optional<float> DefaultParameter;
+    std::optional<std::string> ClipName;
+    std::optional<std::string> Parameter;
+    std::array<std::optional<std::string>, 4> Inputs;
+    std::optional<float> DefaultParameter;
     std::string Name;
     AnimationNodeType Type;
 };
@@ -144,10 +145,10 @@ std::shared_ptr<AnimationGraph> LoadAnimationGraph(SkeletonDesc const& skeletonD
 
             if (desc.Type == AnimationNodeType::Clip
                 && nodeObject.HasMember("name") && nodeObject["name"].IsString()) {
-                desc.ClipName = MakeOptional<std::string>(nodeObject["name"].GetString());
+                desc.ClipName = std::make_optional(nodeObject["name"].GetString());
             }
             if (nodeObject.HasMember("param_name") && nodeObject["param_name"].IsString()) {
-                desc.Parameter = MakeOptional<std::string>(nodeObject["param_name"].GetString());
+                desc.Parameter = std::make_optional(nodeObject["param_name"].GetString());
             }
             if (nodeObject.HasMember("in") && nodeObject["in"].IsArray())
             {
@@ -156,7 +157,7 @@ std::shared_ptr<AnimationGraph> LoadAnimationGraph(SkeletonDesc const& skeletonD
                 for (int i = 0; i < count; ++i)
                 {
                     POMDOG_ASSERT(inputs[i].IsString());
-                    desc.Inputs[i] = MakeOptional<std::string>(inputs[i].GetString());
+                    desc.Inputs[i] = std::make_optional(inputs[i].GetString());
                 }
             }
             nodes.push_back(std::move(desc));

@@ -31,12 +31,12 @@ rapidjson::Value ToJsonValue(std::string const& s)
 }
 
 template <typename T, typename Func>
-Optional<T> GetJsonValue(std::string const& jsonData, std::string const& key, Func const& func)
+std::optional<T> GetJsonValue(const std::string& jsonData, const std::string& key, Func func)
 {
     POMDOG_ASSERT(!key.empty());
 
     if (jsonData.empty()) {
-        return NullOpt;
+        return std::nullopt;
     }
 
     rapidjson::Document doc;
@@ -46,7 +46,7 @@ Optional<T> GetJsonValue(std::string const& jsonData, std::string const& key, Fu
     POMDOG_ASSERT(doc.IsObject());
 
     if (!doc.HasMember(key.c_str())) {
-        return NullOpt;
+        return std::nullopt;
     }
 
     auto & v = doc[key.c_str()];
@@ -54,7 +54,7 @@ Optional<T> GetJsonValue(std::string const& jsonData, std::string const& key, Fu
 }
 
 template <typename T>
-void SetJsonValue(std::string & jsonData, std::string const& key, T const& value)
+void SetJsonValue(std::string& jsonData, const std::string& key, const T& value)
 {
     POMDOG_ASSERT(!key.empty());
 
@@ -127,55 +127,55 @@ UserPreferences::UserPreferences()
     Log::Internal("UserPreferences path: " + filePath);
 }
 
-Optional<bool> UserPreferences::GetBool(std::string const& key) const
+std::optional<bool> UserPreferences::GetBool(const std::string& key) const
 {
     POMDOG_ASSERT(!key.empty());
 
     return GetJsonValue<bool>(jsonData, key,
-        [](rapidjson::Value const& v)->Optional<bool> {
+        [](const rapidjson::Value& v) -> std::optional<bool> {
             if (v.IsBool()) {
                 return v.GetBool();
             }
-            return NullOpt;
+            return std::nullopt;
         });
 }
 
-Optional<float> UserPreferences::GetFloat(std::string const& key) const
+std::optional<float> UserPreferences::GetFloat(const std::string& key) const
 {
     POMDOG_ASSERT(!key.empty());
 
     return GetJsonValue<float>(jsonData, key,
-        [](rapidjson::Value const& v)->Optional<float> {
+        [](const rapidjson::Value& v) -> std::optional<float> {
             if (v.IsNumber()) {
                 return static_cast<float>(v.GetDouble());
             }
-            return NullOpt;
+            return std::nullopt;
         });
 }
 
-Optional<int> UserPreferences::GetInt(std::string const& key) const
+std::optional<int> UserPreferences::GetInt(const std::string& key) const
 {
     return GetJsonValue<int>(jsonData, key,
-        [](rapidjson::Value const& v)->Optional<int> {
+        [](const rapidjson::Value& v) -> std::optional<int> {
             if (v.IsInt()) {
                 return v.GetInt();
             }
             if (v.IsUint()) {
                 return v.GetUint();
             }
-            return NullOpt;
+            return std::nullopt;
         });
 }
 
-Optional<std::string> UserPreferences::GetString(std::string const& key) const
+std::optional<std::string> UserPreferences::GetString(const std::string& key) const
 {
     return GetJsonValue<std::string>(jsonData, key,
-        [](rapidjson::Value const& v)->Optional<std::string> {
+        [](const rapidjson::Value& v) -> std::optional<std::string> {
             if (v.IsString()) {
                 std::string value = v.GetString();
                 return std::move(value);
             }
-            return NullOpt;
+            return std::nullopt;
         });
 }
 

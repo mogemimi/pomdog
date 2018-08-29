@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Pomdog/Utility/Optional.hpp"
+#include <optional>
 #include <vector>
 #include <string>
 
@@ -12,13 +12,13 @@ class UserPreferences {
 public:
     UserPreferences();
 
-    Optional<bool> GetBool(std::string const& key) const;
+    std::optional<bool> GetBool(const std::string& key) const;
 
-    Optional<float> GetFloat(std::string const& key) const;
+    std::optional<float> GetFloat(const std::string& key) const;
 
-    Optional<int> GetInt(std::string const& key) const;
+    std::optional<int> GetInt(const std::string& key) const;
 
-    Optional<std::string> GetString(std::string const& key) const;
+    std::optional<std::string> GetString(const std::string& key) const;
 
     bool HasKey(std::string const& key);
 

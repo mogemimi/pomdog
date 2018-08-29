@@ -10,6 +10,7 @@
 #include "Pomdog.Experimental/Skeletal2D/SkeletonHelper.hpp"
 #include "Pomdog.Experimental/Skeletal2D/SkeletonTransform.hpp"
 #include <cmath>
+#include <optional>
 
 namespace Pomdog {
 namespace {
@@ -128,7 +129,7 @@ public:
     std::shared_ptr<Skeleton> skeleton;
     std::shared_ptr<SkeletonTransform> skeletonTransform;
     SkeletonAnimationState currentAnimation;
-    Optional<SkeletonAnimationState> nextAnimation;
+    std::optional<SkeletonAnimationState> nextAnimation;
     std::shared_ptr<AnimationGraph const> animationGraph;
     AnimationTimeInterval time;
     float playbackRate;
@@ -186,7 +187,7 @@ void Animator::Impl::Update(Duration const& frameDuration)
                 currentAnimation.Name = nextAnimation->Name;
                 nextAnimation->Node.reset();
                 nextAnimation->Name.clear();
-                nextAnimation = Pomdog::NullOpt;
+                nextAnimation = std::nullopt;
 
                 time = WrapTime(time, currentAnimation.Node->Length());
                 POMDOG_ASSERT(time >= AnimationTimeInterval::zero());

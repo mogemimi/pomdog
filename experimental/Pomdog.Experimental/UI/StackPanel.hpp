@@ -7,9 +7,9 @@
 #include "Pomdog.Experimental/UI/VerticalLayout.hpp"
 #include "Pomdog.Experimental/UI/detail/UIEventConnection.hpp"
 #include "Pomdog.Experimental/Rendering/Commands/SpriteBatchCommand.hpp"
-#include "Pomdog/Utility/Optional.hpp"
 #include <Pomdog/Pomdog.hpp>
 #include <list>
+#include <optional>
 
 namespace Pomdog {
 namespace UI {
@@ -56,7 +56,7 @@ private:
     Rendering::PrimitiveFunctionCommand renderCommand;
     Thickness padding;
     int barHeight;
-    Optional<Vector2> startTouchPoint;
+    std::optional<Vector2> startTouchPoint;
     bool needToUpdateLayout;
 };
 

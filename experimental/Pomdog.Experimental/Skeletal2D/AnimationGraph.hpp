@@ -5,9 +5,9 @@
 #include "AnimationBlendInput.hpp"
 #include "AnimationNode.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Optional.hpp"
 #include <cstdint>
 #include <memory>
+#include <optional>
 #include <vector>
 #include <algorithm>
 
@@ -24,7 +24,7 @@ public:
     std::vector<AnimationGraphState> States;
     std::vector<AnimationBlendInput> Inputs;
 
-    Optional<std::uint16_t> FindParameter(std::string const& name) const
+    std::optional<std::uint16_t> FindParameter(const std::string& name) const
     {
         auto iter = std::find_if(std::begin(Inputs), std::end(Inputs), [&name](AnimationBlendInput const& input) {
             return input.Name == name;
@@ -37,7 +37,7 @@ public:
             POMDOG_ASSERT(d <= std::numeric_limits<std::uint16_t>::max());
             return static_cast<std::uint16_t>(d);
         }
-        return Pomdog::NullOpt;
+        return std::nullopt;
     }
 };
 

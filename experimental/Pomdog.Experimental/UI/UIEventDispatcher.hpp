@@ -45,7 +45,7 @@ private:
 
     void PointerReleased(const Point2D& position);
 
-    Optional<PointerMouseEvent> FindPointerMouseEvent(const MouseState& mouseState) const;
+    std::optional<PointerMouseEvent> FindPointerMouseEvent(const MouseState& mouseState) const;
 
     ButtonState CheckMouseButton(
         const MouseState& mouseState,
