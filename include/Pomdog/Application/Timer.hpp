@@ -6,8 +6,8 @@
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Signals/ScopedConnection.hpp"
 #include "Pomdog/Signals/Signal.hpp"
-#include "Pomdog/Utility/Optional.hpp"
 #include <memory>
+#include <optional>
 
 namespace Pomdog {
 
@@ -74,7 +74,7 @@ public:
     void SetScale(double scale);
 
     /// @return Interval between task execution, if was given.
-    Optional<Duration> GetInterval() const;
+    std::optional<Duration> GetInterval() const;
 
     /// Sets interval between task execution.
     /// @param interval New interval value.
@@ -89,7 +89,7 @@ public:
 
 private:
     ScopedConnection connection;
-    Optional<Duration> interval;
+    std::optional<Duration> interval;
     Duration totalTime;
     double scale;
     bool enabled;

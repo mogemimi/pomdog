@@ -4,7 +4,7 @@
 
 #include "OpenGLPrerequisites.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
-#include "Pomdog/Utility/Optional.hpp"
+#include <optional>
 
 namespace Pomdog {
 namespace Detail {
@@ -40,7 +40,7 @@ private:
     #endif
         , "");
 
-    Optional<GLuint> shader;
+    std::optional<GLuint> shader;
 };
 
 using VertexShaderGL4 = ShaderGL4<GL_VERTEX_SHADER>;

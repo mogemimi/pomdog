@@ -6,8 +6,8 @@
 #include "../RenderSystem/NativeGraphicsContext.hpp"
 #include "../Utility/Tagged.hpp"
 #include "Pomdog/Graphics/VertexBufferBinding.hpp"
-#include "Pomdog/Utility/Optional.hpp"
 #include <memory>
+#include <optional>
 #include <vector>
 
 namespace Pomdog {
@@ -104,8 +104,8 @@ private:
     std::shared_ptr<PipelineStateGL4> pipelineState;
     std::shared_ptr<IndexBuffer> indexBuffer;
     std::weak_ptr<GameWindow> gameWindow;
-    std::vector<Optional<GLenum>> textures;
-    Optional<FrameBufferGL4> frameBuffer;
+    std::vector<std::optional<GLenum>> textures;
+    std::optional<FrameBufferGL4> frameBuffer;
     std::vector<std::shared_ptr<RenderTarget2DGL4>> renderTargets;
     PrimitiveTopologyGL4 primitiveTopology;
     bool needToApplyInputLayout;

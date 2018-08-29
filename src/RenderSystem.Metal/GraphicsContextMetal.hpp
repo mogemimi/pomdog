@@ -5,7 +5,6 @@
 #include "../RenderSystem/NativeGraphicsContext.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Math/Color.hpp"
-#include "Pomdog/Utility/Optional.hpp"
 #import <Metal/Metal.h>
 #import <MetalKit/MetalKit.h>
 #include <memory>

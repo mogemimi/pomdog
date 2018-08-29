@@ -6,9 +6,9 @@
 #include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Optional.hpp"
 #include <objbase.h>
 #include <array>
+#include <optional>
 #include <string>
 
 namespace Pomdog {
@@ -103,7 +103,7 @@ public:
     std::shared_ptr<EventQueue> eventQueue;
     std::string title;
     Rectangle clientBounds;
-    Optional<HCURSOR> gameCursor;
+    std::optional<HCURSOR> gameCursor;
     HINSTANCE instanceHandle;
     HWND windowHandle;
     bool allowUserResizing;

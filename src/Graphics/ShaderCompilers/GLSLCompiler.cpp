@@ -20,7 +20,7 @@ std::unique_ptr<Shader> GLSLCompiler::CreateShader(
     const void* shaderSource,
     std::size_t byteLength,
     ShaderPipelineStage pipelineStage,
-    const Optional<std::string>& currentDirectory)
+    std::optional<std::string>&& currentDirectory)
 {
     POMDOG_ASSERT(shaderSource != nullptr);
     POMDOG_ASSERT(byteLength > 0);
@@ -38,7 +38,7 @@ std::unique_ptr<Shader> GLSLCompiler::CreateShader(
     compileOptions.Precompiled = false;
 
     if (currentDirectory) {
-        compileOptions.CurrentDirectory = *currentDirectory;
+        compileOptions.CurrentDirectory = std::move(*currentDirectory);
     }
 
     return nativeGraphicsDevice->CreateShader(shaderBytecode, compileOptions);

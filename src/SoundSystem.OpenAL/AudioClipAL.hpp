@@ -4,9 +4,9 @@
 
 #include "PrerequisitesOpenAL.hpp"
 #include "../Utility/Noncopyable.hpp"
-#include "Pomdog/Utility/Optional.hpp"
 #include <cstddef>
 #include <cstdint>
+#include <optional>
 
 namespace Pomdog {
 
@@ -32,7 +32,7 @@ public:
     ALuint NativeBuffer() const;
 
 private:
-    Optional<ALuint> buffer;
+    std::optional<ALuint> buffer;
     std::size_t sizeInBytes;
 };
 

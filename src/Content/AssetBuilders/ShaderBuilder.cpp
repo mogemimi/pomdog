@@ -15,10 +15,10 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include "Pomdog/Utility/FileSystem.hpp"
-#include "Pomdog/Utility/Optional.hpp"
 #include "Pomdog/Utility/PathHelper.hpp"
 #include "Pomdog/Utility/StringHelper.hpp"
 #include <fstream>
+#include <optional>
 #include <regex>
 #include <set>
 #include <utility>
@@ -34,17 +34,17 @@ namespace Pomdog {
 namespace AssetBuilders {
 namespace {
 
-Optional<std::string> IncludeGLSLFilesRecursive(
+std::optional<std::string> IncludeGLSLFilesRecursive(
     const std::string& path, std::set<std::string> & includes)
 {
     if (FileSystem::IsDirectory(path)) {
         Log::Warning("Pomdog", "error: " + path + "is directory, not text file.");
-        return NullOpt;
+        return std::nullopt;
     }
 
     std::ifstream input(path);
     if (!input) {
-        return NullOpt;
+        return std::nullopt;
     }
     std::istreambuf_iterator<char> start(input);
     std::istreambuf_iterator<char> end;
@@ -71,7 +71,7 @@ Optional<std::string> IncludeGLSLFilesRecursive(
             includes.insert(includePath);
             auto result = IncludeGLSLFilesRecursive(includePath, includes);
             if (!result) {
-                return NullOpt;
+                return std::nullopt;
             }
             text += *result;
         }
@@ -90,7 +90,7 @@ public:
     ShaderPipelineStage pipelineStage;
     ShaderBytecode shaderBytecode;
     std::string entryPoint;
-    Optional<std::string> shaderFilePath;
+    std::optional<std::string> shaderFilePath;
     bool precompiled;
     bool fromLibrary;
 
@@ -136,7 +136,7 @@ Builder<Shader> & Builder<Shader>::SetGLSL(
         impl->shaderBytecode.Code = shaderSourceIn;
         impl->shaderBytecode.ByteLength = byteLengthIn;
         impl->precompiled = false;
-        impl->shaderFilePath = NullOpt;
+        impl->shaderFilePath = std::nullopt;
     }
     return *this;
 }
@@ -206,7 +206,7 @@ Builder<Shader> & Builder<Shader>::SetHLSL(
         impl->shaderBytecode.ByteLength = byteLengthIn;
         impl->entryPoint = entryPointIn;
         impl->precompiled = false;
-        impl->shaderFilePath = NullOpt;
+        impl->shaderFilePath = std::nullopt;
     }
     return *this;
 }
@@ -224,7 +224,7 @@ Builder<Shader> & Builder<Shader>::SetHLSLPrecompiled(
         impl->shaderBytecode.Code = shaderSourceIn;
         impl->shaderBytecode.ByteLength = byteLengthIn;
         impl->precompiled = true;
-        impl->shaderFilePath = NullOpt;
+        impl->shaderFilePath = std::nullopt;
     }
     return *this;
 }
@@ -282,7 +282,7 @@ Builder<Shader> & Builder<Shader>::SetMetal(
         impl->shaderBytecode.ByteLength = byteLengthIn;
         impl->entryPoint = entryPointIn;
         impl->precompiled = false;
-        impl->shaderFilePath = NullOpt;
+        impl->shaderFilePath = std::nullopt;
     }
     return *this;
 }
@@ -347,13 +347,14 @@ std::shared_ptr<Shader> Builder<Shader>::Build()
     POMDOG_ASSERT(graphicsDevice);
 
     const auto shaderLanguage = graphicsDevice->GetSupportedLanguage();
-    Optional<std::string> currentDirectory;
+    std::optional<std::string> currentDirectory;
     if (impl->shaderFilePath) {
         currentDirectory = PathHelper::Normalize(
             PathHelper::GetDirectoryName(*impl->shaderFilePath));
     }
 
-    if (shaderLanguage == ShaderLanguage::GLSL) {
+    switch (shaderLanguage) {
+    case ShaderLanguage::GLSL: {
         POMDOG_ASSERT(impl->shaderBytecode.Code != nullptr);
         POMDOG_ASSERT(impl->shaderBytecode.ByteLength > 0);
         return GLSLCompiler::CreateShader(
@@ -361,9 +362,9 @@ std::shared_ptr<Shader> Builder<Shader>::Build()
             impl->shaderBytecode.Code,
             impl->shaderBytecode.ByteLength,
             impl->pipelineStage,
-            currentDirectory);
+            std::move(currentDirectory));
     }
-    if (shaderLanguage == ShaderLanguage::HLSL) {
+    case ShaderLanguage::HLSL: {
         POMDOG_ASSERT(impl->shaderBytecode.Code != nullptr);
         POMDOG_ASSERT(impl->shaderBytecode.ByteLength > 0);
         if (impl->precompiled) {
@@ -380,9 +381,9 @@ std::shared_ptr<Shader> Builder<Shader>::Build()
             impl->shaderBytecode.ByteLength,
             impl->entryPoint,
             impl->pipelineStage,
-            currentDirectory);
+            std::move(currentDirectory));
     }
-    if (shaderLanguage == ShaderLanguage::Metal) {
+    case ShaderLanguage::Metal: {
         POMDOG_ASSERT(!impl->entryPoint.empty());
         if (impl->fromLibrary) {
             return MetalCompiler::CreateShaderFromLibrary(
@@ -398,6 +399,7 @@ std::shared_ptr<Shader> Builder<Shader>::Build()
             impl->shaderBytecode.ByteLength,
             impl->entryPoint,
             impl->pipelineStage);
+    }
     }
 
     // error: FUS RO DAH!

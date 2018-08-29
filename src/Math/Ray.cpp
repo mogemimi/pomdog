@@ -29,7 +29,7 @@ bool Ray::operator!=(const Ray& ray) const noexcept
         || this->Direction != ray.Direction;
 }
 
-Optional<float> Ray::Intersects(const BoundingBox& box) const
+std::optional<float> Ray::Intersects(const BoundingBox& box) const
 {
     typedef float T;
 
@@ -44,7 +44,7 @@ Optional<float> Ray::Intersects(const BoundingBox& box) const
 
     if (std::abs(ray.Direction.X) < Epsilon) {
         if (ray.Position.X < box.Min.X || ray.Position.X > box.Max.X) {
-            return Pomdog::NullOpt;
+            return std::nullopt;
         }
     }
     else {
@@ -62,13 +62,13 @@ Optional<float> Ray::Intersects(const BoundingBox& box) const
         tFar = t2;
 
         if (tNear > tFar || tFar < 0) {
-            return Pomdog::NullOpt;
+            return std::nullopt;
         }
     }
 
     if (std::abs(ray.Direction.Y) < Epsilon) {
         if (ray.Position.Y < box.Min.Y || ray.Position.Y > box.Max.Y) {
-            return Pomdog::NullOpt;
+            return std::nullopt;
         }
     }
     else {
@@ -86,13 +86,13 @@ Optional<float> Ray::Intersects(const BoundingBox& box) const
             tFar = t2;
         }
         if (tNear > tFar || tFar < 0) {
-            return Pomdog::NullOpt;
+            return std::nullopt;
         }
     }
 
     if (std::abs(ray.Direction.Z) < Epsilon) {
         if (ray.Position.Z < box.Min.Z || ray.Position.Z > box.Max.Z) {
-            return Pomdog::NullOpt;
+            return std::nullopt;
         }
     }
     else {
@@ -110,7 +110,7 @@ Optional<float> Ray::Intersects(const BoundingBox& box) const
             tFar = t2;
         }
         if (tNear > tFar || tFar < 0) {
-            return Pomdog::NullOpt;
+            return std::nullopt;
         }
     }
 
@@ -118,12 +118,12 @@ Optional<float> Ray::Intersects(const BoundingBox& box) const
     return tNear;
 }
 
-Optional<float> Ray::Intersects(const BoundingFrustum& frustum) const
+std::optional<float> Ray::Intersects(const BoundingFrustum& frustum) const
 {
     return frustum.Intersects(*this);
 }
 
-Optional<float> Ray::Intersects(const BoundingSphere& sphere) const
+std::optional<float> Ray::Intersects(const BoundingSphere& sphere) const
 {
     const auto toSphere = sphere.Center - this->Position;
     const auto toSphereLengthSquared = toSphere.LengthSquared();
@@ -135,29 +135,29 @@ Optional<float> Ray::Intersects(const BoundingSphere& sphere) const
 
     const auto distance = Vector3::Dot(this->Direction, toSphere);
     if (distance < 0) {
-        return Pomdog::NullOpt;
+        return std::nullopt;
     }
 
     const auto discriminant = sphereRadiusSquared + distance * distance - toSphereLengthSquared;
     if (discriminant < 0) {
-        return Pomdog::NullOpt;
+        return std::nullopt;
     }
     return std::max(distance - std::sqrt(discriminant), 0.0f);
 }
 
-Optional<float> Ray::Intersects(const Plane& plane) const
+std::optional<float> Ray::Intersects(const Plane& plane) const
 {
     constexpr auto Epsilon = 1e-6f;
 
     const auto denom = Vector3::Dot(plane.Normal, Direction);
     if (std::abs(denom) < Epsilon) {
-        return Pomdog::NullOpt;
+        return std::nullopt;
     }
 
     const auto dot = Vector3::Dot(plane.Normal, Position) + plane.Distance;
     const auto distance = -dot / denom;
     if (distance < 0.0f) {
-        return Pomdog::NullOpt;
+        return std::nullopt;
     }
     return distance;
 }

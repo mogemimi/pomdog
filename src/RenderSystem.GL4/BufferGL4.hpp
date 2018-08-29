@@ -6,7 +6,7 @@
 #include "../RenderSystem/NativeBuffer.hpp"
 #include "../Utility/Tagged.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
-#include "Pomdog/Utility/Optional.hpp"
+#include <optional>
 
 namespace Pomdog {
 namespace Detail {
@@ -45,7 +45,7 @@ public:
 
 private:
     typedef BufferObjectGL4<Tag> BufferObject;
-    Optional<BufferObjectGL4<Tag>> bufferObject;
+    std::optional<BufferObjectGL4<Tag>> bufferObject;
 };
 
 using ConstantBufferGL4 = BufferGL4<ConstantBuffer>;

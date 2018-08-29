@@ -87,7 +87,7 @@ PlaneIntersectionType BoundingSphere::Intersects(const Plane& plane) const
     return plane.Intersects(*this);
 }
 
-Optional<float> BoundingSphere::Intersects(const Ray& ray) const
+std::optional<float> BoundingSphere::Intersects(const Ray& ray) const
 {
     return ray.Intersects(*this);
 }

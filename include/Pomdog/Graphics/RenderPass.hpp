@@ -7,21 +7,21 @@
 #include "Pomdog/Graphics/Viewport.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Math/Vector4.hpp"
-#include "Pomdog/Utility/Optional.hpp"
 #include <cstdint>
 #include <memory>
+#include <optional>
 #include <tuple>
 
 namespace Pomdog {
 
-using RenderTargetAndClearColor = std::tuple<std::shared_ptr<RenderTarget2D>, Optional<Vector4>>;
+using RenderTargetAndClearColor = std::tuple<std::shared_ptr<RenderTarget2D>, std::optional<Vector4>>;
 
 struct POMDOG_EXPORT RenderPass final {
     std::vector<RenderTargetAndClearColor> RenderTargets;
-    Optional<Pomdog::Viewport> Viewport;
-    Optional<Rectangle> ScissorRect;
-    Optional<float> ClearDepth;
-    Optional<std::uint8_t> ClearStencil;
+    std::optional<Pomdog::Viewport> Viewport;
+    std::optional<Rectangle> ScissorRect;
+    std::optional<float> ClearDepth;
+    std::optional<std::uint8_t> ClearStencil;
 };
 
 } // namespace Pomdog

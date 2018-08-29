@@ -22,7 +22,7 @@ SoundEffectAL::SoundEffectAL(
     source = ([] {
         ALuint nativeSource;
         alGenSources(1, &nativeSource);
-        return MakeOptional<AudioSourceAL>(nativeSource);
+        return std::make_optional(nativeSource);
     })();
 
 #ifdef DEBUG

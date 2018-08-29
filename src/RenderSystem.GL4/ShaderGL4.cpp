@@ -15,7 +15,7 @@ namespace Detail {
 namespace GL4 {
 namespace {
 
-Optional<GLuint> CompileShader(const ShaderBytecode& source, GLenum pipelineStage)
+std::optional<GLuint> CompileShader(const ShaderBytecode& source, GLenum pipelineStage)
 {
 #if defined(DEBUG)
     {
@@ -41,11 +41,11 @@ Optional<GLuint> CompileShader(const ShaderBytecode& source, GLenum pipelineStag
     POMDOG_ASSERT(source.Code != nullptr);
     POMDOG_ASSERT(source.ByteLength > 0);
 
-    auto result = MakeOptional<GLuint>(glCreateShader(pipelineStage));
+    auto result = std::make_optional(glCreateShader(pipelineStage));
 
     if (*result == 0) {
         // error
-        return Pomdog::NullOpt;
+        return std::nullopt;
     }
 
     std::array<const GLchar*, 1> shaderSource = {{
@@ -75,7 +75,7 @@ Optional<GLuint> CompileShader(const ShaderBytecode& source, GLenum pipelineStag
 #endif // defined(DEBUG)
 
         glDeleteShader(*result);
-        return Pomdog::NullOpt;
+        return std::nullopt;
     }
 
     return result;
@@ -100,7 +100,7 @@ ShaderGL4<PipelineStage>::~ShaderGL4()
 {
     if (shader) {
         glDeleteShader(*shader);
-        shader = Pomdog::NullOpt;
+        shader = std::nullopt;
     }
 }
 

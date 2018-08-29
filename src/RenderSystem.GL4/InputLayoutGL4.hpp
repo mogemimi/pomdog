@@ -6,8 +6,8 @@
 #include "TypesafeGL4.hpp"
 #include "../Utility/Tagged.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
-#include "Pomdog/Utility/Optional.hpp"
 #include <memory>
+#include <optional>
 #include <vector>
 
 namespace Pomdog {
@@ -62,7 +62,7 @@ public:
 private:
     std::vector<InputElementGL4> inputElements;
     std::vector<VertexDeclarationGL4> vertexDeclarations;
-    Optional<VertexArrayGL4> inputLayout;
+    std::optional<VertexArrayGL4> inputLayout;
 };
 
 } // namespace GL4
