@@ -16,21 +16,21 @@
 #import <Metal/Metal.h>
 #import <MetalKit/MetalKit.h>
 
-using Pomdog::SurfaceFormat;
 using Pomdog::DepthFormat;
-using Pomdog::PresentationParameters;
 using Pomdog::Detail::Cocoa::GameHostMetal;
 using Pomdog::Detail::Cocoa::GameWindowCocoa;
-using Pomdog::EventQueue;
-using Pomdog::Event;
-using Pomdog::KeyState;
-using Pomdog::MouseButtons;
-using Pomdog::Point2D;
-using Pomdog::Detail::MousePositionEvent;
+using Pomdog::Detail::InputKeyEvent;
 using Pomdog::Detail::MouseButtonEvent;
 using Pomdog::Detail::MouseButtonState;
 using Pomdog::Detail::MouseEventType;
-using Pomdog::Detail::InputKeyEvent;
+using Pomdog::Detail::MousePositionEvent;
+using Pomdog::Event;
+using Pomdog::EventQueue;
+using Pomdog::KeyState;
+using Pomdog::MouseButtons;
+using Pomdog::Point2D;
+using Pomdog::PresentationParameters;
+using Pomdog::SurfaceFormat;
 
 namespace {
 
@@ -183,8 +183,7 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
 
 } // unnamed namespace
 
-@implementation PomdogMetalViewController
-{
+@implementation PomdogMetalViewController {
     std::shared_ptr<GameHostMetal> gameHost;
     std::shared_ptr<EventQueue> eventQueue;
     BOOL wasAcceptingMouseEvents;
