@@ -221,6 +221,14 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
         self.view = [[NSView alloc] initWithFrame:self.view.frame];
     }
 
+    // NOTE: Tracking mouse cursor position
+    NSTrackingArea* trackingArea = [[NSTrackingArea alloc]
+        initWithRect:self.view.bounds
+        options:NSTrackingMouseMoved | NSTrackingMouseEnteredAndExited | NSTrackingActiveInKeyWindow | NSTrackingActiveAlways
+        owner:self
+        userInfo:nil];
+    [self.view addTrackingArea:trackingArea];
+
     [[self.view window] makeFirstResponder:self];
 }
 
