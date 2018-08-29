@@ -7,10 +7,10 @@
 #include "Pomdog/Application/MouseCursor.hpp"
 #include "Pomdog/Math/Matrix3x2.hpp"
 #include "Pomdog/Math/Vector2.hpp"
-#include "Pomdog/Utility/Optional.hpp"
 #include <Pomdog/Pomdog.hpp>
 #include <cstdint>
 #include <memory>
+#include <optional>
 
 namespace Pomdog {
 namespace UI {
@@ -87,7 +87,7 @@ public:
 
     void ResetCursor();
 
-    Optional<MouseCursor> GetCurrentCursor() const;
+    std::optional<MouseCursor> GetCurrentCursor() const;
 
 //    void Hide();
 //    void Show();
@@ -104,7 +104,7 @@ private:
     std::int32_t localDrawOrder;
     int height;
     int width;
-    Optional<MouseCursor> cursor;
+    std::optional<MouseCursor> cursor;
     bool isParentDrawOrderDirty;
     bool isParentTransformDirty;
 };

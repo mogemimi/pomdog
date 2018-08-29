@@ -193,10 +193,10 @@ void UIElement::SetCursor(MouseCursor cursorIn)
 
 void UIElement::ResetCursor()
 {
-    cursor = Pomdog::NullOpt;
+    cursor = std::nullopt;
 }
 
-Optional<MouseCursor> UIElement::GetCurrentCursor() const
+std::optional<MouseCursor> UIElement::GetCurrentCursor() const
 {
     return cursor;
 }

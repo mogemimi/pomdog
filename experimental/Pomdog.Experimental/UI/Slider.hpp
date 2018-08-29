@@ -6,8 +6,8 @@
 #include "Pomdog.Experimental/UI/detail/UIEventConnection.hpp"
 #include "Pomdog.Experimental/Rendering/Commands/PrimitivePolygonCommand.hpp"
 #include "Pomdog.Experimental/Rendering/Commands/SpriteBatchCommand.hpp"
-#include "Pomdog/Utility/Optional.hpp"
 #include <Pomdog/Pomdog.hpp>
+#include <optional>
 
 namespace Pomdog {
 namespace UI {
@@ -37,7 +37,7 @@ private:
         float time = 0;
     };
 
-    Optional<ColorAnimation> colorAnimation;
+    std::optional<ColorAnimation> colorAnimation;
     Rendering::PrimitiveFunctionCommand renderCommand;
     Rendering::SpriteFontCommand spriteCommand;
 

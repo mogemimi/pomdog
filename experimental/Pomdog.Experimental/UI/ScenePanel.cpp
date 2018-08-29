@@ -185,8 +185,8 @@ void ScenePanel::OnPointerMoved(const PointerPoint& pointerPoint)
 
 void ScenePanel::OnPointerReleased(const PointerPoint& pointerPoint)
 {
-    tumbleStartPosition = Pomdog::NullOpt;
-    trackStartPosition = Pomdog::NullOpt;
+    tumbleStartPosition = std::nullopt;
+    trackStartPosition = std::nullopt;
 }
 
 void ScenePanel::OnMouseLeftButtonPressed(const PointerPoint& pointerPoint)

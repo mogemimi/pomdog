@@ -190,7 +190,7 @@ void Slider::UpdateAnimation(const Duration& frameDuration)
         colorAnimation->time / colorAnimation->duration);
 
     if (colorAnimation->time >= colorAnimation->duration) {
-        colorAnimation = Pomdog::NullOpt;
+        colorAnimation = std::nullopt;
     }
 }
 

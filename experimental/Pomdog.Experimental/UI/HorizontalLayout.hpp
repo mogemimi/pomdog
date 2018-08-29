@@ -6,7 +6,6 @@
 #include "Pomdog.Experimental/UI/Thickness.hpp"
 #include "Pomdog.Experimental/UI/detail/UIEventConnection.hpp"
 #include "Pomdog.Experimental/Rendering/Commands/PrimitivePolygonCommand.hpp"
-#include "Pomdog/Utility/Optional.hpp"
 #include <Pomdog/Pomdog.hpp>
 #include <list>
 

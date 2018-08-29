@@ -256,7 +256,7 @@ void UIEventDispatcher::UpdateAnimation(const Duration& frameDuration)
     }
 }
 
-Optional<UI::PointerMouseEvent> UIEventDispatcher::FindPointerMouseEvent(
+std::optional<UI::PointerMouseEvent> UIEventDispatcher::FindPointerMouseEvent(
     const MouseState& mouseState) const
 {
     using Pomdog::UI::PointerMouseEvent;
@@ -275,7 +275,7 @@ Optional<UI::PointerMouseEvent> UIEventDispatcher::FindPointerMouseEvent(
     else if (mouseState.XButton2 == ButtonState::Pressed) {
         return PointerMouseEvent::XButton2Pressed;
     }
-    return Pomdog::NullOpt;
+    return std::nullopt;
 }
 
 ButtonState UIEventDispatcher::CheckMouseButton(

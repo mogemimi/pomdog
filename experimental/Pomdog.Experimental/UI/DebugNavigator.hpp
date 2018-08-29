@@ -5,7 +5,6 @@
 #include "Pomdog.Experimental/UI/UIElement.hpp"
 #include "Pomdog.Experimental/Rendering/Commands/PrimitivePolygonCommand.hpp"
 #include "Pomdog.Experimental/Rendering/Commands/SpriteBatchCommand.hpp"
-#include "Pomdog/Utility/Optional.hpp"
 #include <Pomdog/Pomdog.hpp>
 #include <deque>
 

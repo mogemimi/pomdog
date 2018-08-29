@@ -5,8 +5,8 @@
 #include "Pomdog.Experimental/UI/UIElement.hpp"
 #include "Pomdog.Experimental/UI/detail/UIEventConnection.hpp"
 #include "Pomdog.Experimental/Gameplay/Entity.hpp"
-#include "Pomdog/Utility/Optional.hpp"
 #include <Pomdog/Pomdog.hpp>
+#include <optional>
 
 namespace Pomdog {
 namespace UI {
@@ -63,8 +63,8 @@ private:
 private:
     Detail::UIEventConnection connection;
 
-    Optional<Vector2> tumbleStartPosition;
-    Optional<Vector2> trackStartPosition;
+    std::optional<Vector2> tumbleStartPosition;
+    std::optional<Vector2> trackStartPosition;
 
     Duration timer;
     float normalizedScrollDirection;
@@ -77,7 +77,7 @@ private:
     class ScrollWheelSampler {
     private:
         ///@todo replace with std::deque<float>
-        Optional<float> average;
+        std::optional<float> average;
 
     public:
         void AddWheelDelta(int wheelDelta)
