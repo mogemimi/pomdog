@@ -148,7 +148,6 @@ namespace Pomdog {}
 #include "Utility/Assert.hpp"
 #include "Utility/Exception.hpp"
 #include "Utility/FileSystem.hpp"
-#include "Utility/Optional.hpp"
 #include "Utility/PathHelper.hpp"
 #include "Utility/StringHelper.hpp"
 

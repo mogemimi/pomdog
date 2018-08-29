@@ -234,7 +234,6 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/include/Pomdog/Utility/Assert.hpp
   ${POMDOG_DIR}/include/Pomdog/Utility/Exception.hpp
   ${POMDOG_DIR}/include/Pomdog/Utility/FileSystem.hpp
-  ${POMDOG_DIR}/include/Pomdog/Utility/Optional.hpp
   ${POMDOG_DIR}/include/Pomdog/Utility/PathHelper.hpp
   ${POMDOG_DIR}/include/Pomdog/Utility/StringHelper.hpp
   ${POMDOG_DIR}/include/Pomdog/Utility/detail/CRC32.hpp
