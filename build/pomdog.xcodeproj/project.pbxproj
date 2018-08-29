@@ -489,7 +489,6 @@
 		6FA7E5627F938A07E599E894 /* PipelineState.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = PipelineState.hpp; sourceTree = "<group>"; };
 		6FEF518DFA0D88D584748D4A /* SurfaceFormatHelper.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = SurfaceFormatHelper.hpp; sourceTree = "<group>"; };
 		7056C40C787B58417326C40C /* Keyboard.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = Keyboard.hpp; sourceTree = "<group>"; };
-		7185E7CA90AF57C1C02FFC82 /* Optional.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = Optional.hpp; sourceTree = "<group>"; };
 		72397B6027D9DE47C449E8A9 /* EventQueue.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = EventQueue.cpp; sourceTree = "<group>"; };
 		72CA22E1FE9B445BAA963FBF /* RenderTarget2DGL4.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = RenderTarget2DGL4.cpp; sourceTree = "<group>"; };
 		74C791C392D2DF46A553FC0F /* ErrorChecker.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ErrorChecker.cpp; sourceTree = "<group>"; };
@@ -892,7 +891,6 @@
 				AC349E78729FC3024C1BC5D9 /* Assert.hpp */,
 				31FBEAA10D334ADAB5DBA52F /* Exception.hpp */,
 				B287AAFFF99539C6D6462CD8 /* FileSystem.hpp */,
-				7185E7CA90AF57C1C02FFC82 /* Optional.hpp */,
 				E9B28A755CD1F1F43CA87DC7 /* PathHelper.hpp */,
 				5A8B5ACA584E5FAFC97F8269 /* StringHelper.hpp */,
 			);

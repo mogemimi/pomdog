@@ -30,7 +30,6 @@
 		6129C2109DE7037DF83E0A9B /* RectangleTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 59FAE4E36E7F1AAE4C407249 /* RectangleTest.cpp */; };
 		6C7A6F69812868116B079288 /* HelpersTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63C0EEE2389B31A820E16FC6 /* HelpersTest.cpp */; };
 		7E14449EE47BF435E52F1C65 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C8B6E715F53F2A76D934FF5 /* OpenAL.framework */; };
-		8032E3672467CDE73CE05648 /* OptionalTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CF09AA6292C4D37900470F54 /* OptionalTest.cpp */; };
 		898EC5DF217E2CB9E105A128 /* ColorTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7BE654D231E2A773E422E584 /* ColorTest.cpp */; };
 		9A05AEA543A1E079508C15CB /* EventQueueTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 428A57A57AE039FA558896B7 /* EventQueueTest.cpp */; };
 		A3EC3906EE7827D6DC7AFC91 /* InputLayoutHelperTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 686C1E3D26ECF58CB051CDA2 /* InputLayoutHelperTest.cpp */; };
@@ -72,7 +71,6 @@
 		A90B09A11C25A774006E749D /* SignalTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7CE69F5DD42360EB98DFF3D /* SignalTest.cpp */; };
 		A90B09A21C25A774006E749D /* AnyTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 77663FF3E685ADC8A75D0FD7 /* AnyTest.cpp */; };
 		A90B09A31C25A774006E749D /* CRC32Test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 88F7365A44BD5B233D38B9E8 /* CRC32Test.cpp */; };
-		A90B09A41C25A774006E749D /* OptionalTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CF09AA6292C4D37900470F54 /* OptionalTest.cpp */; };
 		A90B09A51C25A774006E749D /* StringHelperTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 688D76EAF77908A3BB3B8E58 /* StringHelperTest.cpp */; };
 		A90B09AA1C25A774006E749D /* AudioToolBox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF2591B788324D90FD154981 /* AudioToolBox.framework */; };
 		A90B09AB1C25A774006E749D /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C8B6E715F53F2A76D934FF5 /* OpenAL.framework */; };
@@ -195,7 +193,6 @@
 		A9FF23B11C258DDC00AE7D7B /* zlib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = zlib.xcodeproj; path = build/dependencies/zlib.xcodeproj; sourceTree = "<group>"; };
 		A9FF23B71C258DE200AE7D7B /* libpng.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libpng.xcodeproj; path = build/dependencies/libpng.xcodeproj; sourceTree = "<group>"; };
 		AA8FF4E1E145E644B6DCBF5B /* KeysTest.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KeysTest.cpp; sourceTree = "<group>"; };
-		CF09AA6292C4D37900470F54 /* OptionalTest.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = OptionalTest.cpp; sourceTree = "<group>"; };
 		D052B39A97086C615E3B21C9 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		D8F1F6F7CC0ACB1CF8F7DD09 /* KeyboardStateTest.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KeyboardStateTest.cpp; sourceTree = "<group>"; };
 		DF87E2EA6D1C796C51A886A7 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
@@ -408,7 +405,6 @@
 			children = (
 				77663FF3E685ADC8A75D0FD7 /* AnyTest.cpp */,
 				88F7365A44BD5B233D38B9E8 /* CRC32Test.cpp */,
-				CF09AA6292C4D37900470F54 /* OptionalTest.cpp */,
 				688D76EAF77908A3BB3B8E58 /* StringHelperTest.cpp */,
 			);
 			path = Utility;
@@ -588,7 +584,6 @@
 				AC82087613EF8055F7E48199 /* SignalTest.cpp in Sources */,
 				DFE8014D0200C170A0A7C358 /* AnyTest.cpp in Sources */,
 				0CF0D48D88520AB807097760 /* CRC32Test.cpp in Sources */,
-				8032E3672467CDE73CE05648 /* OptionalTest.cpp in Sources */,
 				4C0C4CC3655F3CFB6B5028DD /* StringHelperTest.cpp in Sources */,
 				A93CA65D1D92F37300B65171 /* TaskTest.cpp in Sources */,
 			);
@@ -639,7 +634,6 @@
 				A90B09A11C25A774006E749D /* SignalTest.cpp in Sources */,
 				A90B09A21C25A774006E749D /* AnyTest.cpp in Sources */,
 				A90B09A31C25A774006E749D /* CRC32Test.cpp in Sources */,
-				A90B09A41C25A774006E749D /* OptionalTest.cpp in Sources */,
 				A90B09A51C25A774006E749D /* StringHelperTest.cpp in Sources */,
 				A93CA65E1D92F37300B65171 /* TaskTest.cpp in Sources */,
 			);
