@@ -109,7 +109,7 @@ public:
 
 namespace TypeTraitsImpl {
 
-#if __cplusplus <= 201402L
+#if __cpp_lib_void_t < 201411
 template <class...>
 struct MakeVoid {
     using type = void;
