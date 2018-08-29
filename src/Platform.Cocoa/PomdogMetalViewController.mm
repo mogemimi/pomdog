@@ -25,6 +25,7 @@ using Pomdog::EventQueue;
 using Pomdog::Event;
 using Pomdog::KeyState;
 using Pomdog::MouseButtons;
+using Pomdog::Point2D;
 using Pomdog::Detail::MousePositionEvent;
 using Pomdog::Detail::MouseButtonEvent;
 using Pomdog::Detail::MouseButtonState;
@@ -33,11 +34,11 @@ using Pomdog::Detail::InputKeyEvent;
 
 namespace {
 
-Pomdog::Point2D ToPoint2D(const NSPoint& point)
+Point2D ToPoint2D(const NSPoint& point, const NSSize& bounds)
 {
-    ///@todo FIXME
-    return Pomdog::Point2D(point.x - 2, point.y - 2);
-    //return Pomdog::Point2D(point.x, point.y);
+    // NOTE: Convert from cartesian coordinates to screen coordinate system.
+    // FIXME: Avoid using magic number `-2`
+    return Point2D(point.x - 2, bounds.height - point.y - 2);
 }
 
 Pomdog::Keys TranslateKey(std::uint16_t keyCode)
@@ -298,7 +299,7 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
 
     NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
     eventQueue->Enqueue<MousePositionEvent>(
-        ToPoint2D(locationInView),
+        ToPoint2D(locationInView, self.view.bounds.size),
         MouseEventType::Entered);
 }
 
@@ -307,7 +308,7 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
     if (eventQueue) {
         NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
         eventQueue->Enqueue<MousePositionEvent>(
-            ToPoint2D(locationInView),
+            ToPoint2D(locationInView, self.view.bounds.size),
             MouseEventType::Moved);
     }
 }
@@ -319,7 +320,7 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
     if (eventQueue) {
         NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
         eventQueue->Enqueue<MousePositionEvent>(
-            ToPoint2D(locationInView),
+            ToPoint2D(locationInView, self.view.bounds.size),
             MouseEventType::Exited);
     }
 }
@@ -329,7 +330,7 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
     if (eventQueue) {
         NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
         eventQueue->Enqueue<MouseButtonEvent>(
-            ToPoint2D(locationInView),
+            ToPoint2D(locationInView, self.view.bounds.size),
             MouseButtons::Left,
             MouseButtonState::Down);
     }
@@ -340,7 +341,7 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
     if (eventQueue) {
         NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
         eventQueue->Enqueue<MouseButtonEvent>(
-            ToPoint2D(locationInView),
+            ToPoint2D(locationInView, self.view.bounds.size),
             MouseButtons::Left,
             MouseButtonState::Dragged);
     }
@@ -351,7 +352,7 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
     if (eventQueue) {
         NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
         eventQueue->Enqueue<MouseButtonEvent>(
-            ToPoint2D(locationInView),
+            ToPoint2D(locationInView, self.view.bounds.size),
             MouseButtons::Left,
             MouseButtonState::Up);
     }
@@ -362,7 +363,7 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
     if (eventQueue) {
         NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
         eventQueue->Enqueue<MouseButtonEvent>(
-            ToPoint2D(locationInView),
+            ToPoint2D(locationInView, self.view.bounds.size),
             MouseButtons::Right,
             MouseButtonState::Down);
     }
@@ -373,7 +374,7 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
     if (eventQueue) {
         NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
         eventQueue->Enqueue<MouseButtonEvent>(
-            ToPoint2D(locationInView),
+            ToPoint2D(locationInView, self.view.bounds.size),
             MouseButtons::Right,
             MouseButtonState::Dragged);
     }
@@ -384,7 +385,7 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
     if (eventQueue) {
         NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
         eventQueue->Enqueue<MouseButtonEvent>(
-            ToPoint2D(locationInView),
+            ToPoint2D(locationInView, self.view.bounds.size),
             MouseButtons::Right,
             MouseButtonState::Up);
     }
@@ -412,7 +413,7 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
     NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
 
     event.State = MouseButtonState::Down;
-    event.Position = ToPoint2D(locationInView);
+    event.Position = ToPoint2D(locationInView, self.view.bounds.size);
     eventQueue->Enqueue(Event{std::move(event)});
 }
 
@@ -438,7 +439,7 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
     NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
 
     event.State = MouseButtonState::Dragged;
-    event.Position = ToPoint2D(locationInView);
+    event.Position = ToPoint2D(locationInView, self.view.bounds.size);
     eventQueue->Enqueue(Event{std::move(event)});
 }
 
@@ -464,7 +465,7 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
     NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
 
     event.State = MouseButtonState::Up;
-    event.Position = ToPoint2D(locationInView);
+    event.Position = ToPoint2D(locationInView, self.view.bounds.size);
     eventQueue->Enqueue(Event{std::move(event)});
 }
 
