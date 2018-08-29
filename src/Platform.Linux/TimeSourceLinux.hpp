@@ -8,7 +8,7 @@ namespace Pomdog {
 namespace Detail {
 namespace Linux {
 
-class TimeSourceLinux {
+class TimeSourceLinux final {
 public:
     TimeSourceLinux() = default;
 

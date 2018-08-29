@@ -8,7 +8,7 @@ namespace Pomdog {
 namespace Detail {
 namespace Win32 {
 
-class TimeSourceWin32 {
+class TimeSourceWin32 final {
 public:
     TimeSourceWin32();
 
