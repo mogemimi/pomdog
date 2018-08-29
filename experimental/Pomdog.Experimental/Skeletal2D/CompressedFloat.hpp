@@ -34,25 +34,26 @@ public:
         return *this;
     }
 
-    float ToFloat() const
+    float ToFloat() const noexcept
     {
-        static_assert(Denominator != 0, "");
-        return data * (1.0f / Denominator);
+        static_assert(Denominator != 0);
+        constexpr float scale = 1.0f / Denominator;
+        return data * scale;
     }
 
-    constexpr static float Max()
+    constexpr static float Max() noexcept
     {
-        static_assert(Denominator != 0, "");
-        return std::numeric_limits<T>::max()/Denominator;
+        static_assert(Denominator != 0);
+        return static_cast<float>(std::numeric_limits<T>::max()) / Denominator;
     }
 
-    constexpr static float Min()
+    constexpr static float Min() noexcept
     {
-        static_assert(Denominator != 0, "");
-        return std::numeric_limits<T>::min()/Denominator;
+        static_assert(Denominator != 0);
+        return static_cast<float>(std::numeric_limits<T>::min()) / Denominator;
     }
 
-    bool operator<(CompressedFloat const& other) const
+    bool operator<(const CompressedFloat& other) const noexcept
     {
         return data < other.data;
     }
