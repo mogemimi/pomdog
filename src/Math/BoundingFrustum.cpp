@@ -379,21 +379,21 @@ PlaneIntersectionType BoundingFrustum::Intersects(const Plane& plane) const noex
     return result;
 }
 
-Optional<float> BoundingFrustum::Intersects(const Ray& ray) const noexcept
+std::optional<float> BoundingFrustum::Intersects(const Ray& ray) const noexcept
 {
-    std::array<Optional<float>, PlaneCount> distances;
+    std::array<std::optional<float>, PlaneCount> distances;
     for (int i = 0; i < PlaneCount; ++i) {
         auto & plane = planes[i];
         const auto d = ray.Intersects(plane);
         const auto distanceToRayPosition = plane.DotCoordinate(ray.Position);
         if ((distanceToRayPosition < 0.0f) && !d) {
-            return Pomdog::NullOpt;
+            return std::nullopt;
         }
         distances[i] = d;
         POMDOG_ASSERT(!distances[i] || *distances[i] >= 0.0f);
     }
 
-    Optional<float> d = distances.front();
+    auto d = distances.front();
     POMDOG_ASSERT(!d || *d >= 0.0f);
     for (int i = 1; i < PlaneCount; ++i) {
         if (!d) {

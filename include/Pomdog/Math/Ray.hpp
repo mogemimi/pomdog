@@ -5,7 +5,7 @@
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Math/Vector3.hpp"
 #include "Pomdog/Math/detail/ForwardDeclarations.hpp"
-#include "Pomdog/Utility/Optional.hpp"
+#include <optional>
 
 namespace Pomdog {
 
@@ -22,13 +22,13 @@ public:
     bool operator==(const Ray&) const noexcept;
     bool operator!=(const Ray&) const noexcept;
 
-    Optional<float> Intersects(const BoundingBox& box) const;
+    std::optional<float> Intersects(const BoundingBox& box) const;
 
-    Optional<float> Intersects(const BoundingFrustum& frustum) const;
+    std::optional<float> Intersects(const BoundingFrustum& frustum) const;
 
-    Optional<float> Intersects(const BoundingSphere& sphere) const;
+    std::optional<float> Intersects(const BoundingSphere& sphere) const;
 
-    Optional<float> Intersects(const Plane& plane) const;
+    std::optional<float> Intersects(const Plane& plane) const;
 };
 
 } // namespace Pomdog

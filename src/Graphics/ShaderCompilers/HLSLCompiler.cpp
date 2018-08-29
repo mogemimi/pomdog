@@ -44,7 +44,7 @@ std::unique_ptr<Shader> HLSLCompiler::CreateShaderFromSource(
     std::size_t byteLength,
     const std::string& entryPoint,
     ShaderPipelineStage pipelineStage,
-    const Optional<std::string>& currentDirectory)
+    std::optional<std::string>&& currentDirectory)
 {
     POMDOG_ASSERT(shaderSource != nullptr);
     POMDOG_ASSERT(byteLength > 0);
@@ -64,7 +64,7 @@ std::unique_ptr<Shader> HLSLCompiler::CreateShaderFromSource(
     compileOptions.Precompiled = false;
 
     if (currentDirectory) {
-        compileOptions.CurrentDirectory = *currentDirectory;
+        compileOptions.CurrentDirectory = std::move(*currentDirectory);
     }
 
     return nativeGraphicsDevice->CreateShader(shaderBytecode, compileOptions);

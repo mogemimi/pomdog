@@ -33,11 +33,11 @@ void DumpExtensions(
 
 } // unnamed namespace
 
-Optional<GifImage> GifLoader::Open(const std::string& filePath)
+std::optional<GifImage> GifLoader::Open(const std::string& filePath)
 {
     if (filePath.empty()) {
         // error
-        return NullOpt;
+        return std::nullopt;
     }
 
     int gifError = 0;
@@ -51,12 +51,12 @@ Optional<GifImage> GifLoader::Open(const std::string& filePath)
 
     if (gifError != 0) {
         //throw CannotOpenGifFileException{};
-        return NullOpt;
+        return std::nullopt;
     }
 
     if (DGifSlurp(gifFileIn.get()) == GIF_ERROR) {
         //throw CannotOpenGifFileException{};
-        return NullOpt;
+        return std::nullopt;
     }
 
     GifImage result;

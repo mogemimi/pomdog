@@ -6,7 +6,7 @@
 #include "../RenderSystem/NativeSamplerState.hpp"
 #include "../Utility/Tagged.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
-#include "Pomdog/Utility/Optional.hpp"
+#include <optional>
 
 namespace Pomdog {
 namespace Detail {
@@ -23,7 +23,7 @@ public:
     void Apply(int index);
 
 private:
-    Optional<SamplerObjectGL4> samplerObject;
+    std::optional<SamplerObjectGL4> samplerObject;
 };
 
 } // namespace GL4

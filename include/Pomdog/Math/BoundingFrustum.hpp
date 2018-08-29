@@ -7,8 +7,8 @@
 #include "Pomdog/Math/Plane.hpp"
 #include "Pomdog/Math/Vector3.hpp"
 #include "Pomdog/Math/detail/ForwardDeclarations.hpp"
-#include "Pomdog/Utility/Optional.hpp"
 #include <array>
+#include <optional>
 
 namespace Pomdog {
 
@@ -78,7 +78,7 @@ public:
 
     PlaneIntersectionType Intersects(const Plane& plane) const noexcept;
 
-    Optional<float> Intersects(const Ray& ray) const noexcept;
+    std::optional<float> Intersects(const Ray& ray) const noexcept;
 
 private:
     void CreatePlanes();

@@ -88,7 +88,7 @@ double Timer::GetScale() const
     return this->scale;
 }
 
-Optional<Duration> Timer::GetInterval() const
+std::optional<Duration> Timer::GetInterval() const
 {
     return this->interval;
 }
@@ -100,7 +100,7 @@ void Timer::SetInterval(const Duration& intervalIn)
 
 void Timer::SetInterval()
 {
-    this->interval = NullOpt;
+    this->interval = std::nullopt;
 }
 
 } // namespace Pomdog

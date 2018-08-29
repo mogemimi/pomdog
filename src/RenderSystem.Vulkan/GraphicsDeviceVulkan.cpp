@@ -13,7 +13,6 @@
 #include "Pomdog/Graphics/ShaderLanguage.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
-#include "Pomdog/Utility/Optional.hpp"
 #include <vulkan/vulkan.h>
 #include <array>
 #include <tuple>

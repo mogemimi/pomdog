@@ -4,7 +4,7 @@
 
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Experimental/Image/GifImage.hpp"
-#include "Pomdog/Utility/Optional.hpp"
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -12,7 +12,7 @@ namespace Pomdog {
 
 class POMDOG_EXPORT GifLoader final {
 public:
-    static Optional<GifImage> Open(const std::string& filePath);
+    static std::optional<GifImage> Open(const std::string& filePath);
 };
 
 } // namespace Pomdog

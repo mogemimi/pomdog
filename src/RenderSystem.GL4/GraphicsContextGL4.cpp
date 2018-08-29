@@ -102,7 +102,7 @@ GLenum ToColorAttachment(T index) noexcept
     return static_cast<GLenum>(GL_COLOR_ATTACHMENT0 + index);
 }
 
-Optional<FrameBufferGL4> CreateFrameBuffer()
+std::optional<FrameBufferGL4> CreateFrameBuffer()
 {
     auto const prevFrameBuffer = TypesafeHelperGL4::Get<FrameBufferGL4>();
     ScopeGuard scope([&prevFrameBuffer] {
@@ -119,7 +119,7 @@ Optional<FrameBufferGL4> CreateFrameBuffer()
     auto const status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
     if (GL_FRAMEBUFFER_UNSUPPORTED == status) {
-        return Pomdog::NullOpt;
+        return std::nullopt;
     }
 
     return std::move(frameBuffer);
@@ -210,7 +210,7 @@ void SetScissorRectangle(
 }
 
 void SetRenderTarget(
-    const Optional<FrameBufferGL4>& frameBuffer,
+    const std::optional<FrameBufferGL4>& frameBuffer,
     std::vector<std::shared_ptr<RenderTarget2DGL4>> & renderTargets)
 {
     POMDOG_ASSERT(frameBuffer);
@@ -238,7 +238,7 @@ void SetRenderTarget(
 }
 
 void SetRenderTargets(
-    const Optional<FrameBufferGL4>& frameBuffer,
+    const std::optional<FrameBufferGL4>& frameBuffer,
     std::vector<std::shared_ptr<RenderTarget2DGL4>> & renderTargets,
     const std::vector<std::shared_ptr<RenderTarget2D>>& renderTargetViewsIn)
 {
@@ -383,7 +383,7 @@ GraphicsContextGL4::~GraphicsContextGL4()
     if (frameBuffer) {
         glDeleteFramebuffers(1, frameBuffer->Data());
         POMDOG_CHECK_ERROR_GL4("glDeleteFramebuffers");
-        frameBuffer = Pomdog::NullOpt;
+        frameBuffer = std::nullopt;
     }
 
     nativeContext.reset();
@@ -712,7 +712,7 @@ void GraphicsContextGL4::SetTexture(int index)
         POMDOG_CHECK_ERROR_GL4("glBindTexture");
     }
 
-    textures[index] = Pomdog::NullOpt;
+    textures[index] = std::nullopt;
 }
 
 void GraphicsContextGL4::SetTexture(int index, const std::shared_ptr<Texture2D>& textureIn)

@@ -3,10 +3,10 @@
 #pragma once
 
 #include "Pomdog/Basic/Export.hpp"
-#include "Pomdog/Utility/Optional.hpp"
 #include "Pomdog/Math/detail/ForwardDeclarations.hpp"
 #include <cstdint>
 #include <memory>
+#include <optional>
 #include <string>
 #include <functional>
 
@@ -21,7 +21,7 @@ public:
 
     ~TrueTypeFont();
 
-    Optional<FontGlyph> RasterizeGlyph(
+    std::optional<FontGlyph> RasterizeGlyph(
         char32_t codePoint,
         float pixelHeight,
         int textureWidth,

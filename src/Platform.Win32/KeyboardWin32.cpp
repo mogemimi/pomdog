@@ -3,14 +3,14 @@
 #include "KeyboardWin32.hpp"
 #include "Pomdog/Input/KeyState.hpp"
 #include "Pomdog/Input/Keys.hpp"
-#include "Pomdog/Utility/Optional.hpp"
+#include <optional>
 
 namespace Pomdog {
 namespace Detail {
 namespace Win32 {
 namespace {
 
-Optional<Keys> ToKeys(USHORT keyCode) noexcept
+std::optional<Keys> ToKeys(USHORT keyCode) noexcept
 {
     switch (keyCode) {
     // Function keys
@@ -150,7 +150,7 @@ Optional<Keys> ToKeys(USHORT keyCode) noexcept
         break;
     }
 
-    return Pomdog::NullOpt;
+    return std::nullopt;
 }
 
 } // unnamed namespace

@@ -103,7 +103,7 @@ PlaneIntersectionType BoundingBox::Intersects(const Plane& plane) const
     return plane.Intersects(*this);
 }
 
-Optional<float> BoundingBox::Intersects(const Ray& ray) const
+std::optional<float> BoundingBox::Intersects(const Ray& ray) const
 {
     return ray.Intersects(*this);
 }

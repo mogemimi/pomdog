@@ -8,9 +8,9 @@
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
-#include "Pomdog/Utility/Optional.hpp"
 #include <X11/cursorfont.h>
 #include <X11/Xutil.h>
+#include <optional>
 
 namespace Pomdog {
 namespace Detail {
@@ -70,7 +70,7 @@ int ToMouseCursor(MouseCursor cursor) noexcept
     return XC_arrow;
 }
 
-void UpdateMouseCursor(::Display* display, ::Window window, Optional<MouseCursor> mouseCursor)
+void UpdateMouseCursor(::Display* display, ::Window window, std::optional<MouseCursor> mouseCursor)
 {
     POMDOG_ASSERT(display != nullptr);
     POMDOG_ASSERT(window != None);
@@ -290,7 +290,7 @@ void GameWindowX11::SetMouseCursorVisible(bool visible)
         UpdateMouseCursor(x11Context->Display, window, mouseCursor);
     }
     else {
-        UpdateMouseCursor(x11Context->Display, window, Pomdog::NullOpt);
+        UpdateMouseCursor(x11Context->Display, window, std::nullopt);
     }
 }
 

@@ -136,7 +136,7 @@ GLXFBConfig ChooseFramebufferConfig(
             "Failed to retrieve FBConfig");
     }
 
-    Optional<GLXFBConfig> bestConfig;
+    std::optional<GLXFBConfig> bestConfig;
     int bestSampleCount = 0;
 
     for (int index = 0; index < framebufferConfigCount; ++index) {

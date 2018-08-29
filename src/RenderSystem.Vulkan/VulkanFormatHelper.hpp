@@ -3,15 +3,15 @@
 #pragma once
 
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
-#include "Pomdog/Utility/Optional.hpp"
 #include <vulkan/vulkan.h>
+#include <optional>
 
 namespace Pomdog {
 namespace Detail {
 namespace Vulkan {
 
 struct VulkanFormatHelper final {
-    static Optional<VkFormat> ToVkFormat(SurfaceFormat format) noexcept;
+    static std::optional<VkFormat> ToVkFormat(SurfaceFormat format) noexcept;
 };
 
 } // namespace Vulkan

@@ -6,7 +6,7 @@
 #include "../RenderSystem/NativeTexture2D.hpp"
 #include "../Utility/Tagged.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
-#include "Pomdog/Utility/Optional.hpp"
+#include <optional>
 
 namespace Pomdog {
 namespace Detail {
@@ -36,7 +36,7 @@ public:
     const Texture2DObjectGL4& GetTextureHandle() const;
 
 private:
-    Optional<Texture2DObjectGL4> textureObject;
+    std::optional<Texture2DObjectGL4> textureObject;
 };
 
 } // namespace GL4

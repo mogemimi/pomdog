@@ -3,7 +3,7 @@
 #include "MouseX11.hpp"
 #include "Pomdog/Input/MouseButtons.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Optional.hpp"
+#include <optional>
 
 namespace Pomdog {
 namespace Detail {
@@ -22,7 +22,7 @@ ButtonState* GetButtonByIndex(MouseState & mouseState, unsigned int buttonIndex)
     return nullptr;
 }
 
-Optional<MouseButtons> ToMouseButtons(unsigned int buttonIndex)
+std::optional<MouseButtons> ToMouseButtons(unsigned int buttonIndex)
 {
     switch (buttonIndex) {
     case 1: return MouseButtons::Left;
@@ -31,7 +31,7 @@ Optional<MouseButtons> ToMouseButtons(unsigned int buttonIndex)
     default:
         break;
     }
-    return NullOpt;
+    return std::nullopt;
 }
 
 } // unnamed namespace

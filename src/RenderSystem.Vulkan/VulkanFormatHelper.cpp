@@ -8,7 +8,7 @@ namespace Pomdog {
 namespace Detail {
 namespace Vulkan {
 
-Optional<VkFormat> VulkanFormatHelper::ToVkFormat(SurfaceFormat format) noexcept
+std::optional<VkFormat> VulkanFormatHelper::ToVkFormat(SurfaceFormat format) noexcept
 {
     switch (format) {
     case SurfaceFormat::A8_UNorm: return VK_FORMAT_R8_UNORM;
@@ -26,7 +26,7 @@ Optional<VkFormat> VulkanFormatHelper::ToVkFormat(SurfaceFormat format) noexcept
     case SurfaceFormat::R8G8_UNorm: return VK_FORMAT_R8G8_UNORM;
     case SurfaceFormat::R8_UNorm: return VK_FORMAT_R8_UNORM;
     }
-    return Pomdog::NullOpt;
+    return std::nullopt;
 }
 
 } // namespace Vulkan

@@ -5,8 +5,8 @@
 #include "PrerequisitesOpenAL.hpp"
 #include "../Utility/Noncopyable.hpp"
 #include "../Utility/Tagged.hpp"
-#include "Pomdog/Utility/Optional.hpp"
 #include <memory>
+#include <optional>
 
 namespace Pomdog {
 class AudioEmitter;
@@ -27,7 +27,7 @@ class AudioEngineAL;
 class SoundEffectAL final : Noncopyable {
 private:
     std::shared_ptr<AudioClipAL> audioClip;
-    Optional<AudioSourceAL> source;
+    std::optional<AudioSourceAL> source;
 
 public:
     SoundEffectAL(

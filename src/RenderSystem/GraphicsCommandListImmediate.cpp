@@ -271,7 +271,7 @@ void GraphicsCommandListImmediate::SetRenderPass(RenderPass && renderPass)
     command->renderPass = std::move(renderPass);
 
     if (command->renderPass.RenderTargets.empty()) {
-        command->renderPass.RenderTargets.emplace_back(nullptr, Pomdog::NullOpt);
+        command->renderPass.RenderTargets.emplace_back(nullptr, std::nullopt);
     }
     commands.push_back(std::move(command));
 }
@@ -468,18 +468,18 @@ void GraphicsCommandListImmediate::SortCommandsForMetal()
 
     // NOTE: Duplicate missing commands for MTLRenderCommandEncoder.
     std::size_t renderPassCommandIndex = 0;
-    Optional<std::size_t> setPipelineStateCommand;
-    Optional<std::size_t> setPrimitiveTopologyCommand;
-    Optional<std::size_t> setBlendFactorCommand;
-    Optional<std::size_t> setVertexBuffersCommand;
-    Optional<std::size_t> setIndexBufferCommand;
-    std::vector<Optional<std::size_t>> setConstantBufferCommands;
-    std::vector<Optional<std::size_t>> setSamplerCommands;
-    std::vector<Optional<std::size_t>> setTextureCommands;
+    std::optional<std::size_t> setPipelineStateCommand;
+    std::optional<std::size_t> setPrimitiveTopologyCommand;
+    std::optional<std::size_t> setBlendFactorCommand;
+    std::optional<std::size_t> setVertexBuffersCommand;
+    std::optional<std::size_t> setIndexBufferCommand;
+    std::vector<std::optional<std::size_t>> setConstantBufferCommands;
+    std::vector<std::optional<std::size_t>> setSamplerCommands;
+    std::vector<std::optional<std::size_t>> setTextureCommands;
 
-    setConstantBufferCommands.resize(8, NullOpt);
-    setSamplerCommands.resize(8, NullOpt);
-    setTextureCommands.resize(8, NullOpt);
+    setConstantBufferCommands.resize(8, std::nullopt);
+    setSamplerCommands.resize(8, std::nullopt);
+    setTextureCommands.resize(8, std::nullopt);
 
     std::vector<std::shared_ptr<GraphicsCommand>> oldCommands;
     bool needToFlushCommands = true;

@@ -81,7 +81,7 @@ TrueTypeFont::~TrueTypeFont()
     impl->Reset();
 }
 
-Optional<FontGlyph> TrueTypeFont::RasterizeGlyph(
+std::optional<FontGlyph> TrueTypeFont::RasterizeGlyph(
     char32_t codePoint,
     float pixelHeight,
     int textureWidth,
@@ -89,7 +89,7 @@ Optional<FontGlyph> TrueTypeFont::RasterizeGlyph(
 {
     if (impl->ttfBinary.empty()) {
         // error
-        return Pomdog::NullOpt;
+        return std::nullopt;
     }
 
     const auto & f = impl->fontInfo;
@@ -104,7 +104,7 @@ Optional<FontGlyph> TrueTypeFont::RasterizeGlyph(
 
     if (g <= 0 && !isSpace) {
         // error: not found
-        return Pomdog::NullOpt;
+        return std::nullopt;
     }
 
     int advance, lsb, x0, y0, x1, y1;

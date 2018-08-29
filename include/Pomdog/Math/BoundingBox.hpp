@@ -5,8 +5,8 @@
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Math/Vector3.hpp"
 #include "Pomdog/Math/detail/ForwardDeclarations.hpp"
-#include "Pomdog/Utility/Optional.hpp"
 #include <array>
+#include <optional>
 
 namespace Pomdog {
 
@@ -37,7 +37,7 @@ public:
 
     PlaneIntersectionType Intersects(const Plane& plane) const;
 
-    Optional<float> Intersects(const Ray& ray) const;
+    std::optional<float> Intersects(const Ray& ray) const;
 
     std::array<Vector3, CornerCount> GetCorners() const noexcept;
 };
