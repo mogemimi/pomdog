@@ -5,6 +5,7 @@
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <atomic>
+#include <cstdint>
 #include <exception>
 #include <functional>
 #include <memory>
