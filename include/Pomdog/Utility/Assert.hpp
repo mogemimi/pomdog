@@ -45,7 +45,7 @@ namespace Detail {
 #    elif defined(__ppc__) || defined(__powerpc__)
 #        define POMDOG_DEBUGBREAK() asm {trap}
 #    else
-#        define POMDOG_DEBUGBREAK() __asm { int 3 } // MS-style inline assembly
+#        define POMDOG_DEBUGBREAK() asm("int $3")
 #    endif
 #    define POMDOG_ASSERT(expression) assert(expression)
 #    define POMDOG_ASSERT_MESSAGE(expression, message) \
