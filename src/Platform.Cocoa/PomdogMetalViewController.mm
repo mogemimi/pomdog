@@ -190,6 +190,7 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
     std::shared_ptr<GameHostMetal> gameHost;
     std::shared_ptr<EventQueue> eventQueue;
     std::shared_ptr<Game> game;
+    NSTrackingArea* trackingArea;
     BOOL wasAcceptingMouseEvents;
 }
 
@@ -228,15 +229,25 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
         self.view = [[NSView alloc] initWithFrame:self.view.frame];
     }
 
-    // NOTE: Tracking mouse cursor position
-    NSTrackingArea* trackingArea = [[NSTrackingArea alloc]
-        initWithRect:self.view.bounds
+    // NOTE: To enable mouse tracking, add TrackingArea to view.
+    [self setMouseTrackingArea:self.view.bounds view:self.view];
+
+    [[self.view window] makeFirstResponder:self];
+}
+
+- (void)setMouseTrackingArea:(NSRect)bounds view:(NSView*)view
+{
+    if (trackingArea != nil) {
+        [view removeTrackingArea:trackingArea];
+        trackingArea = nil;
+    }
+
+    trackingArea = [[NSTrackingArea alloc]
+        initWithRect:bounds
         options:NSTrackingMouseMoved | NSTrackingMouseEnteredAndExited | NSTrackingActiveInKeyWindow | NSTrackingActiveAlways
         owner:self
         userInfo:nil];
-    [self.view addTrackingArea:trackingArea];
-
-    [[self.view window] makeFirstResponder:self];
+    [view addTrackingArea:trackingArea];
 }
 
 - (void)_setupMetal:(const PresentationParameters&)presentationParameters
@@ -283,6 +294,10 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
 //    if (eventQueue) {
 //        eventQueue->Enqueue<ViewWillStartLiveResizeEvent>();
 //    }
+
+    // NOTE: To enable mouse tracking, add TrackingArea to view.
+    [self setMouseTrackingArea:view.bounds view:view];
+
     if (eventQueue) {
         eventQueue->Enqueue<ViewDidEndLiveResizeEvent>();
     }
