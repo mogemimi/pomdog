@@ -11,6 +11,7 @@
 #import <AppKit/NSWindow.h>
 
 @class PomdogOpenGLView;
+@class PomdogMetalViewController;
 
 namespace Pomdog {
 
@@ -21,6 +22,7 @@ namespace Detail {
 namespace Cocoa {
 
 class GameHostCocoa;
+class GameHostMetal;
 
 } // namespace Cocoa
 } // namespace Detail
@@ -29,27 +31,31 @@ namespace Cocoa {
 
 class POMDOG_EXPORT Bootstrap final {
 public:
-    void SetView(PomdogOpenGLView* openGLView);
+    void SetWindow(NSWindow* window);
 
-    void SetSurfaceFormat(SurfaceFormat surfaceFormat);
+    void SetOpenGLEnabled(bool enabled);
 
-    void SetDepthFormat(DepthFormat depthFormat);
+    void SetOpenGLSurfaceFormat(SurfaceFormat surfaceFormat);
 
-    void OnError(std::function<void(const std::exception&)> onError);
+    void SetOpenGLDepthFormat(DepthFormat depthFormat);
 
-    void OnCompleted(std::function<void()> onCompleted);
+    void OnError(std::function<void(const std::exception&)>&& onError);
 
-    void Run(
-        const std::function<std::unique_ptr<Game>(const std::shared_ptr<GameHost>&)>& createApp);
+    void OnCompleted(std::function<void()>&& onCompleted);
+
+    void Run(std::function<std::shared_ptr<Game>(const std::shared_ptr<GameHost>&)>&& createGame);
 
 private:
     std::function<void()> onCompleted;
     std::function<void(const std::exception&)> onError;
-    std::shared_ptr<Pomdog::Detail::Cocoa::GameHostCocoa> gameHost;
+    std::shared_ptr<Pomdog::Detail::Cocoa::GameHostCocoa> gameHostCocoa;
+    std::shared_ptr<Pomdog::Detail::Cocoa::GameHostMetal> gameHostMetal;
     std::shared_ptr<Game> game;
-    __weak PomdogOpenGLView* openGLView = nil;
+    __weak NSWindow* nativeWindow = nil;
+    PomdogMetalViewController* viewController = nil;
     SurfaceFormat surfaceFormat = SurfaceFormat::R8G8B8A8_UNorm;
     DepthFormat depthFormat = DepthFormat::Depth24Stencil8;
+    bool openGLEnabled = false;
 };
 
 } // namespace Cocoa

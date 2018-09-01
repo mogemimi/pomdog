@@ -3,12 +3,14 @@
 #include "Pomdog/Platform/Cocoa/Bootstrap.hpp"
 #include "GameHostCocoa.hpp"
 #include "GameWindowCocoa.hpp"
+#include "PomdogOpenGLView.hpp"
+#include "PomdogMetalViewController.hpp"
 #include "Pomdog/Application/Game.hpp"
 #include "Pomdog/Application/GameHost.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#import "Pomdog/Platform/Cocoa/PomdogOpenGLView.hpp"
+#import <MetalKit/MTKView.h>
 
 using Pomdog::Detail::Cocoa::GameHostCocoa;
 using Pomdog::Detail::Cocoa::GameWindowCocoa;
@@ -16,80 +18,122 @@ using Pomdog::Detail::Cocoa::GameWindowCocoa;
 namespace Pomdog {
 namespace Cocoa {
 
-void Bootstrap::SetView(PomdogOpenGLView* openGLViewIn)
+void Bootstrap::SetWindow(NSWindow* window)
 {
-    POMDOG_ASSERT(openGLViewIn != nil);
-    openGLView = openGLViewIn;
+    POMDOG_ASSERT(window != nil);
+    nativeWindow = window;
 }
 
-void Bootstrap::SetSurfaceFormat(SurfaceFormat surfaceFormatIn)
+void Bootstrap::SetOpenGLEnabled(bool enabled)
+{
+    openGLEnabled = enabled;
+}
+
+void Bootstrap::SetOpenGLSurfaceFormat(SurfaceFormat surfaceFormatIn)
 {
     surfaceFormat = surfaceFormatIn;
 }
 
-void Bootstrap::SetDepthFormat(DepthFormat depthFormatIn)
+void Bootstrap::SetOpenGLDepthFormat(DepthFormat depthFormatIn)
 {
     depthFormat = depthFormatIn;
 }
 
-void Bootstrap::OnError(std::function<void(const std::exception&)> onErrorIn)
+void Bootstrap::OnError(std::function<void(const std::exception&)>&& onErrorIn)
 {
     POMDOG_ASSERT(onErrorIn);
-    onError = onErrorIn;
+    onError = std::move(onErrorIn);
 }
 
-void Bootstrap::OnCompleted(std::function<void()> onCompletedIn)
+void Bootstrap::OnCompleted(std::function<void()>&& onCompletedIn)
 {
     POMDOG_ASSERT(onCompletedIn);
-    onCompleted = [=] {
+    onCompleted = [this, onCompletedIn = std::move(onCompletedIn)] {
         this->game.reset();
-        this->gameHost.reset();
+        this->gameHostCocoa.reset();
+        this->gameHostMetal.reset();
         onCompletedIn();
     };
 }
 
-void Bootstrap::Run(
-    const std::function<std::unique_ptr<Game>(const std::shared_ptr<GameHost>&)>& createApp)
+void Bootstrap::Run(std::function<std::shared_ptr<Game>(const std::shared_ptr<GameHost>&)>&& createGame)
 {
-    POMDOG_ASSERT(openGLView != nil);
-    POMDOG_ASSERT(createApp);
-
-    NSWindow* nativeWindow = [openGLView window];
     POMDOG_ASSERT(nativeWindow != nil);
+    POMDOG_ASSERT(createGame);
 
-    NSRect bounds = [openGLView bounds];
-
-    PresentationParameters presentationParameters;
-    presentationParameters.BackBufferFormat = surfaceFormat;
-    presentationParameters.DepthStencilFormat = depthFormat;
-    presentationParameters.PresentationInterval = 60;
-    presentationParameters.MultiSampleCount = 1;
-    presentationParameters.BackBufferWidth = bounds.size.width;
-    presentationParameters.BackBufferHeight = bounds.size.height;
-    presentationParameters.IsFullScreen = false;
-
-    try {
-        auto eventQueue = std::make_shared<EventQueue>();
-
-        auto gameWindow = std::make_shared<GameWindowCocoa>(
-            nativeWindow, eventQueue);
-
-        gameHost = std::make_shared<GameHostCocoa>(
-            openGLView, gameWindow, eventQueue, presentationParameters);
-
-        game = createApp(gameHost);
-        gameHost->Run(game, onCompleted);
+    if (!onCompleted) {
+        onCompleted = [window = nativeWindow] {
+            [window close];
+            [NSApp terminate:nil];
+        };
     }
-    catch (const std::exception& e) {
-        if (onError) {
-            onError(e);
+
+    if (openGLEnabled) {
+        NSRect bounds = nativeWindow.frame;
+
+        PomdogOpenGLView* view = [[PomdogOpenGLView alloc] initWithFrame:bounds];
+        view.hidden = NO;
+        view.needsDisplay = YES;
+        view.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+
+        [nativeWindow setContentView:view];
+        [nativeWindow makeKeyAndOrderFront:nil];
+        [nativeWindow orderFrontRegardless];
+
+        PresentationParameters presentationParameters;
+        presentationParameters.BackBufferFormat = surfaceFormat;
+        presentationParameters.DepthStencilFormat = depthFormat;
+        presentationParameters.PresentationInterval = 60;
+        presentationParameters.MultiSampleCount = 1;
+        presentationParameters.BackBufferWidth = bounds.size.width;
+        presentationParameters.BackBufferHeight = bounds.size.height;
+        presentationParameters.IsFullScreen = false;
+
+        try {
+            POMDOG_ASSERT(onCompleted);
+            POMDOG_ASSERT(createGame);
+
+            auto eventQueue = std::make_shared<EventQueue>();
+            auto gameWindow = std::make_shared<GameWindowCocoa>(nativeWindow, eventQueue);
+
+            gameHostCocoa = std::make_shared<GameHostCocoa>(
+                view, gameWindow, eventQueue, presentationParameters);
+
+            game = createGame(gameHostCocoa);
+            gameHostCocoa->Run(game, std::move(onCompleted));
         }
-        else {
-#if defined(DEBUG) && !defined(NDEBUG)
-            Log::Critical("Pomdog", e.what());
-#endif
-            throw e;
+        catch (const std::exception& e) {
+            if (onError) {
+                onError(e);
+            }
+            else {
+    #if defined(DEBUG) && !defined(NDEBUG)
+                Log::Critical("Pomdog", e.what());
+    #endif
+                throw e;
+            }
         }
+    }
+    else {
+        viewController = [[PomdogMetalViewController alloc] initWithNibName:nil bundle:nil];
+        [viewController startGame:std::move(createGame) completed:std::move(onCompleted)];
+
+        NSRect bounds = nativeWindow.frame;
+
+        // NOTE: To avoid linking error, use NSClassFromString indirectly instead of MTKView.
+        MTKView* view = [[NSClassFromString(@"MTKView") alloc] initWithFrame:bounds];
+
+        view.delegate = viewController;
+        view.hidden = NO;
+        view.needsDisplay = YES;
+        view.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+
+        [nativeWindow setContentView:view];
+        [nativeWindow makeKeyAndOrderFront:nil];
+        [nativeWindow orderFrontRegardless];
+
+        [viewController setView:view];
+        [viewController viewDidLoad];
     }
 }
 

@@ -444,7 +444,6 @@ set(POMDOG_SOURCES_APPLE
 
 set(POMDOG_SOURCES_COCOA
   ${POMDOG_DIR}/include/Pomdog/Platform/Cocoa/Bootstrap.hpp
-  ${POMDOG_DIR}/include/Pomdog/Platform/Cocoa/PomdogOpenGLView.hpp
   ${POMDOG_DIR}/src/Platform.Cocoa/Bootstrap.mm
   ${POMDOG_DIR}/src/Platform.Cocoa/CocoaWindowDelegate.hpp
   ${POMDOG_DIR}/src/Platform.Cocoa/CocoaWindowDelegate.mm
@@ -458,6 +457,7 @@ set(POMDOG_SOURCES_COCOA
   ${POMDOG_DIR}/src/Platform.Cocoa/MouseCocoa.cpp
   ${POMDOG_DIR}/src/Platform.Cocoa/OpenGLContextCocoa.hpp
   ${POMDOG_DIR}/src/Platform.Cocoa/OpenGLContextCocoa.mm
+  ${POMDOG_DIR}/src/Platform.Cocoa/PomdogOpenGLView.hpp
   ${POMDOG_DIR}/src/Platform.Cocoa/PomdogOpenGLView.mm
 )
 
@@ -520,9 +520,9 @@ set(POMDOG_SOURCES_METAL
   ${POMDOG_DIR}/src/RenderSystem.Metal/ShaderMetal.mm
   ${POMDOG_DIR}/src/RenderSystem.Metal/Texture2DMetal.hpp
   ${POMDOG_DIR}/src/RenderSystem.Metal/Texture2DMetal.mm
-  ${POMDOG_DIR}/include/Pomdog/Platform/Cocoa/PomdogMetalViewController.hpp
   ${POMDOG_DIR}/src/Platform.Cocoa/GameHostMetal.hpp
   ${POMDOG_DIR}/src/Platform.Cocoa/GameHostMetal.mm
+  ${POMDOG_DIR}/src/Platform.Cocoa/PomdogMetalViewController.hpp
   ${POMDOG_DIR}/src/Platform.Cocoa/PomdogMetalViewController.mm
 )
 

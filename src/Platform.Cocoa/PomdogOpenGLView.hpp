@@ -2,11 +2,9 @@
 
 #pragma once
 
-#include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Signals/detail/ForwardDeclarations.hpp"
 #include <functional>
 #include <memory>
-
 #import <Cocoa/Cocoa.h>
 
 namespace Pomdog {
@@ -19,7 +17,7 @@ class OpenGLContextCocoa;
 } // namespace Detail
 } // namespace Pomdog
 
-POMDOG_EXPORT @interface PomdogOpenGLView : NSView
+@interface PomdogOpenGLView : NSView
 
 - (instancetype)initWithFrame:(NSRect)frameRect;
 

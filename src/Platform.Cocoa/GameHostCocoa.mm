@@ -5,6 +5,7 @@
 #include "KeyboardCocoa.hpp"
 #include "MouseCocoa.hpp"
 #include "OpenGLContextCocoa.hpp"
+#include "PomdogOpenGLView.hpp"
 #include "../Application/SystemEvents.hpp"
 #include "../InputSystem.IOKit/GamepadIOKit.hpp"
 #include "../RenderSystem.GL4/GraphicsContextGL4.hpp"
@@ -19,7 +20,6 @@
 #include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Graphics/Viewport.hpp"
 #include "Pomdog/Logging/Log.hpp"
-#include "Pomdog/Platform/Cocoa/PomdogOpenGLView.hpp"
 #include "Pomdog/Signals/Event.hpp"
 #include "Pomdog/Signals/ScopedConnection.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -61,7 +61,7 @@ public:
     ~Impl();
 
     void Run(const std::weak_ptr<Game>& game,
-        const std::function<void()>& onCompleted);
+        std::function<void()>&& onCompleted);
 
     void Exit();
 
@@ -219,12 +219,12 @@ GameHostCocoa::Impl::~Impl()
 
 void GameHostCocoa::Impl::Run(
     const std::weak_ptr<Game>& weakGameIn,
-    const std::function<void()>& onCompletedIn)
+    std::function<void()>&& onCompletedIn)
 {
     POMDOG_ASSERT(!weakGameIn.expired());
     POMDOG_ASSERT(onCompletedIn);
     weakGame = weakGameIn;
-    onCompleted = onCompletedIn;
+    onCompleted = std::move(onCompletedIn);
 
     POMDOG_ASSERT(!weakGame.expired());
     auto game = weakGame.lock();
@@ -487,10 +487,10 @@ GameHostCocoa::~GameHostCocoa() = default;
 
 void GameHostCocoa::Run(
     const std::weak_ptr<Game>& game,
-    const std::function<void()>& onCompleted)
+    std::function<void()>&& onCompleted)
 {
     POMDOG_ASSERT(impl);
-    impl->Run(game, onCompleted);
+    impl->Run(game, std::move(onCompleted));
 }
 
 void GameHostCocoa::Exit()

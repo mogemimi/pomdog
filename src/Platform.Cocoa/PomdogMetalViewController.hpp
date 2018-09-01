@@ -2,11 +2,9 @@
 
 #pragma once
 
-#include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Signals/detail/ForwardDeclarations.hpp"
 #include <functional>
 #include <memory>
-
 #import <Cocoa/Cocoa.h>
 #import <MetalKit/MTKView.h>
 
@@ -19,10 +17,9 @@ class GraphicsCommandQueue;
 
 } // namespace Pomdog
 
-POMDOG_EXPORT
 @interface PomdogMetalViewController : NSViewController<MTKViewDelegate>
 
-- (void)loadAssetsPomdog:(std::shared_ptr<Pomdog::GameHost>)gameHost;
-- (void)startGame:(std::shared_ptr<Pomdog::Game>)game;
+- (void)startGame:(std::function<std::shared_ptr<Pomdog::Game>(const std::shared_ptr<Pomdog::GameHost>&)>&&)createGame
+    completed:(std::function<void()>&&) onCompleted;
 
 @end

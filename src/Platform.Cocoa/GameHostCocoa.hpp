@@ -30,7 +30,7 @@ public:
 
     void Run(
         const std::weak_ptr<Game>& game,
-        const std::function<void()>& onCompleted);
+        std::function<void()>&& onCompleted);
 
     void Exit() override;
 

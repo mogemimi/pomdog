@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
-#import "Pomdog/Platform/Cocoa/PomdogMetalViewController.hpp"
-
+#include "PomdogMetalViewController.hpp"
 #include "GameHostMetal.hpp"
 #include "GameWindowCocoa.hpp"
 #include "../Application/SystemEvents.hpp"
@@ -26,6 +25,8 @@ using Pomdog::Detail::MouseEventType;
 using Pomdog::Detail::MousePositionEvent;
 using Pomdog::Event;
 using Pomdog::EventQueue;
+using Pomdog::Game;
+using Pomdog::Keys;
 using Pomdog::KeyState;
 using Pomdog::MouseButtons;
 using Pomdog::Point2D;
@@ -184,14 +185,20 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
 } // unnamed namespace
 
 @implementation PomdogMetalViewController {
+    std::function<std::shared_ptr<Pomdog::Game>(const std::shared_ptr<Pomdog::GameHost>&)> createGame;
+    std::function<void()> onCompleted;
     std::shared_ptr<GameHostMetal> gameHost;
     std::shared_ptr<EventQueue> eventQueue;
+    std::shared_ptr<Game> game;
     BOOL wasAcceptingMouseEvents;
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
+    POMDOG_ASSERT(!gameHost);
+    POMDOG_ASSERT(!game);
 
     wasAcceptingMouseEvents = NO;
 
@@ -213,7 +220,7 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
     if (gameHost->IsMetalSupported()) {
         MTKView* metalView = static_cast<MTKView *>(self.view);
         metalView.delegate = self;
-        [self loadAssetsPomdog:gameHost];
+        [self runGame];
     }
     else {
         // Fallback to a blank NSView, an application could also fallback to OpenGL here.
@@ -245,24 +252,27 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
         metalView, gameWindow, eventQueue, presentationParameters);
 }
 
-- (void)loadAssetsPomdog:(std::shared_ptr<Pomdog::GameHost>)gameHost
+- (void)runGame
 {
-}
+    POMDOG_ASSERT(createGame);
+    POMDOG_ASSERT(gameHost);
 
-- (void)startGame:(std::shared_ptr<Pomdog::Game>)game
-{
-    std::function<void()> onCompleted = [=] {
-        [[self.view window] close];
-
-        // Shutdown your application
-        [NSApp terminate:nil];
-    };
+    game = createGame(gameHost);
+    POMDOG_ASSERT(game);
 
     gameHost->InitializeGame(game, std::move(onCompleted));
 }
 
+- (void)startGame:(std::function<std::shared_ptr<Pomdog::Game>(const std::shared_ptr<Pomdog::GameHost>&)>&&)createGameIn
+    completed:(std::function<void()>&&) onCompletedIn
+{
+    createGame = std::move(createGameIn);
+    onCompleted = std::move(onCompletedIn);
+}
+
 - (void)_render
 {
+    POMDOG_ASSERT(gameHost);
     gameHost->GameLoop();
 }
 
