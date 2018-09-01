@@ -308,7 +308,7 @@ target_compile_definitions(pomdog_experimental PRIVATE
 
 target_compile_options(pomdog_experimental PRIVATE
   # Clang and GCC
-  $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>:
+  $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>,$<STREQUAL:${CMAKE_GENERATOR},Xcode>>:
     $<$<CONFIG:DEBUG>:-g;-O0>
     $<$<CONFIG:RELEASE>:-O3>
   >

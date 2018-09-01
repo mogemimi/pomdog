@@ -70,7 +70,7 @@ target_compile_definitions(${PRODUCT_NAME} PRIVATE
 
 target_compile_options(${PRODUCT_NAME} PRIVATE
   # Clang and GCC
-  $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>:
+  $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>,$<STREQUAL:${CMAKE_GENERATOR},Xcode>>:
     -pedantic
     $<$<CONFIG:DEBUG>:-g;-O0>
     $<$<CONFIG:RELEASE>:-O3>

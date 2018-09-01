@@ -838,7 +838,7 @@ endif()
 
 target_compile_options(pomdog_static PRIVATE
   # Clang
-  $<$<CXX_COMPILER_ID:Clang>:
+  $<$<OR:$<CXX_COMPILER_ID:Clang>,$<STREQUAL:${CMAKE_GENERATOR},Xcode>>:
     -Wcomma
     -Wextra-semi
     -Wimplicit-fallthrough
@@ -871,7 +871,7 @@ target_compile_options(pomdog_static PRIVATE
     -Wshift-negative-value
   >
   # Clang and GCC
-  $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>:
+  $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>,$<STREQUAL:${CMAKE_GENERATOR},Xcode>>:
     -Wall
     -Werror
     -Wnon-virtual-dtor

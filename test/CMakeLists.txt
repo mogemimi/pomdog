@@ -93,7 +93,7 @@ target_compile_definitions(PomdogTest PRIVATE
 
 target_compile_options(PomdogTest PRIVATE
   # Clang
-  $<$<CXX_COMPILER_ID:Clang>:
+  $<$<OR:$<CXX_COMPILER_ID:Clang>,$<STREQUAL:${CMAKE_GENERATOR},Xcode>>:
     -Wcomma
     -Wmost
     -Wmove
@@ -104,7 +104,7 @@ target_compile_options(PomdogTest PRIVATE
     -Wimplicit-fallthrough
   >
   # Clang and GCC
-  $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>:
+  $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>,$<STREQUAL:${CMAKE_GENERATOR},Xcode>>:
     -Wall
     -Werror
     $<$<CONFIG:DEBUG>:-g;-O0>
