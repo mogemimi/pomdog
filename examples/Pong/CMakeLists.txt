@@ -35,8 +35,6 @@ add_executable(${PRODUCT_NAME} WIN32
     Platform.Cocoa/main.mm
     Platform.Cocoa/AppDelegate.h
     Platform.Cocoa/AppDelegate.mm
-    Platform.Cocoa/GameViewController.h
-    Platform.Cocoa/GameViewController.mm
   >
 
   # On Linux

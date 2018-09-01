@@ -35,8 +35,6 @@ add_executable(${PRODUCT_NAME} WIN32
     Platform.Cocoa/main.mm
     Platform.Cocoa/AppDelegate.h
     Platform.Cocoa/AppDelegate.mm
-    Platform.Cocoa/GameViewController.h
-    Platform.Cocoa/GameViewController.mm
   >
 
   # On Linux
@@ -54,7 +52,6 @@ add_executable(${PRODUCT_NAME} WIN32
 
 target_include_directories(${PRODUCT_NAME} PRIVATE
   ${POMDOG_DIR}/include
-  ${POMDOG_DIR}/experimental
 )
 
 target_compile_definitions(${PRODUCT_NAME} PRIVATE

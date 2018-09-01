@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		A96EB80D1CE77935001B45ED /* QuickStartGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A96EB80B1CE77935001B45ED /* QuickStartGame.cpp */; };
 		A96EB8171CE79129001B45ED /* Content in Resources */ = {isa = PBXBuildFile; fileRef = A96EB8161CE79129001B45ED /* Content */; };
-		A98BE09C1CC21D8D008696A8 /* GameViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = A98BE09B1CC21D8D008696A8 /* GameViewController.mm */; };
 		A98BE0A11CC21D8D008696A8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A98BE0A01CC21D8D008696A8 /* Assets.xcassets */; };
 		A98BE0A41CC21D8D008696A8 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = A98BE0A21CC21D8D008696A8 /* MainMenu.xib */; };
 		A98BE0BA1CC22511008696A8 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = A98BE0B91CC22511008696A8 /* AppDelegate.mm */; };
@@ -64,8 +63,6 @@
 		A96EB80C1CE77935001B45ED /* QuickStartGame.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = QuickStartGame.hpp; path = ../Source/QuickStartGame.hpp; sourceTree = "<group>"; };
 		A96EB8161CE79129001B45ED /* Content */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Content; path = ../Content; sourceTree = "<group>"; };
 		A98BE0911CC21D8D008696A8 /* QuickStart.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QuickStart.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A98BE09A1CC21D8D008696A8 /* GameViewController.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; name = GameViewController.h; path = Platform.Cocoa/GameViewController.h; sourceTree = "<group>"; };
-		A98BE09B1CC21D8D008696A8 /* GameViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = GameViewController.mm; path = Platform.Cocoa/GameViewController.mm; sourceTree = "<group>"; };
 		A98BE0A01CC21D8D008696A8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Platform.Cocoa/Assets.xcassets; sourceTree = "<group>"; };
 		A98BE0A31CC21D8D008696A8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		A98BE0A51CC21D8D008696A8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = Platform.Cocoa/Info.plist; sourceTree = "<group>"; };
@@ -129,8 +126,6 @@
 			children = (
 				A98BE0B81CC22511008696A8 /* AppDelegate.h */,
 				A98BE0B91CC22511008696A8 /* AppDelegate.mm */,
-				A98BE09A1CC21D8D008696A8 /* GameViewController.h */,
-				A98BE09B1CC21D8D008696A8 /* GameViewController.mm */,
 				A98BE0A01CC21D8D008696A8 /* Assets.xcassets */,
 				A98BE0A21CC21D8D008696A8 /* MainMenu.xib */,
 				A98BE0A51CC21D8D008696A8 /* Info.plist */,
@@ -266,7 +261,6 @@
 				A96EB80D1CE77935001B45ED /* QuickStartGame.cpp in Sources */,
 				A98BE0BC1CC2259B008696A8 /* main.mm in Sources */,
 				A98BE0BA1CC22511008696A8 /* AppDelegate.mm in Sources */,
-				A98BE09C1CC21D8D008696A8 /* GameViewController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
