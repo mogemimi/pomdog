@@ -49,7 +49,7 @@ namespace std {
 
 template <>
 struct hash<Pomdog::EntityID> {
-    std::size_t operator()(Pomdog::EntityID const& key)
+    std::size_t operator()(const Pomdog::EntityID& key) const
     {
         return std::hash<std::uint64_t>()(key.Value());
     }

@@ -73,7 +73,7 @@ namespace std {
 
 template <typename T, class U>
 struct hash<Pomdog::Detail::Tagged<T, U>> {
-    std::size_t operator()(const Pomdog::Detail::Tagged<T, U>& key)
+    std::size_t operator()(const Pomdog::Detail::Tagged<T, U>& key) const
     {
         return std::hash<T>()(key.value);
     }
