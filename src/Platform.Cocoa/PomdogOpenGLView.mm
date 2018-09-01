@@ -12,30 +12,30 @@
 #include <memory>
 #include <utility>
 
-using Pomdog::EventQueue;
 using Pomdog::Detail::Cocoa::OpenGLContextCocoa;
-using Pomdog::Event;
-using Pomdog::KeyState;
-using Pomdog::MouseButtons;
-using Pomdog::Detail::MousePositionEvent;
+using Pomdog::Detail::InputKeyEvent;
 using Pomdog::Detail::MouseButtonEvent;
 using Pomdog::Detail::MouseButtonState;
 using Pomdog::Detail::MouseEventType;
-using Pomdog::Detail::InputKeyEvent;
+using Pomdog::Detail::MousePositionEvent;
+using Pomdog::Event;
+using Pomdog::EventQueue;
+using Pomdog::KeyState;
+using Pomdog::Keys;
+using Pomdog::MouseButtons;
+using Pomdog::Point2D;
 
 namespace {
 
-Pomdog::Point2D ToPoint2D(const NSPoint& point)
+Point2D ToPoint2D(const NSPoint& point)
 {
-    ///@todo FIXME
-    return Pomdog::Point2D(point.x - 2, point.y - 2);
-    //return Pomdog::Point2D(point.x, point.y);
+    // NOTE: Convert from cartesian coordinates to screen coordinate system.
+    // FIXME: Avoid using magic number `-2`
+    return Point2D(point.x - 2, point.y - 2);
 }
 
-Pomdog::Keys TranslateKey(std::uint16_t keyCode)
+Keys TranslateKey(std::uint16_t keyCode)
 {
-    using Pomdog::Keys;
-
     constexpr Keys keyTable[127] = {
         /* 0x00 */ Keys::A, // kVK_ANSI_A
         /* 0x01 */ Keys::S, // kVK_ANSI_S

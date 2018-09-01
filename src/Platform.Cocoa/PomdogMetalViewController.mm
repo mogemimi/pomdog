@@ -42,10 +42,8 @@ Point2D ToPoint2D(const NSPoint& point, const NSSize& bounds)
     return Point2D(point.x - 2, bounds.height - point.y - 2);
 }
 
-Pomdog::Keys TranslateKey(std::uint16_t keyCode)
+Keys TranslateKey(std::uint16_t keyCode)
 {
-    using Pomdog::Keys;
-
     constexpr Keys keyTable[127] = {
         /* 0x00 */ Keys::A, // kVK_ANSI_A
         /* 0x01 */ Keys::S, // kVK_ANSI_S
@@ -517,7 +515,7 @@ Pomdog::Keys TranslateKey(std::uint16_t keyCode)
 - (void)keyDown:(NSEvent *)theEvent
 {
     auto key = TranslateKey([theEvent keyCode]);
-    if (key != Pomdog::Keys::None) {
+    if (key != Keys::None) {
         eventQueue->Enqueue<InputKeyEvent>(KeyState::Down, key);
     }
 
