@@ -14,9 +14,9 @@ public:
     ~AudioEngine();
 
     AudioEngine(const AudioEngine&) = delete;
-    AudioEngine & operator=(const AudioEngine&) = delete;
-    AudioEngine(AudioEngine &&) = default;
-    AudioEngine & operator=(AudioEngine &&) = default;
+    AudioEngine& operator=(const AudioEngine&) = delete;
+    AudioEngine(AudioEngine&&) = default;
+    AudioEngine& operator=(AudioEngine&&) = default;
 
     float GetMasterVolume() const;
 

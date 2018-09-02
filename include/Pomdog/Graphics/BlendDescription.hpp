@@ -25,7 +25,7 @@ struct POMDOG_EXPORT BlendDescription final {
         BlendDescription desc;
         desc.AlphaToCoverageEnable = false;
         desc.IndependentBlendEnable = false;
-        for (auto & renderTarget: desc.RenderTargets) {
+        for (auto& renderTarget : desc.RenderTargets) {
             renderTarget = RenderTargetBlendDescription::CreateAdditive();
         }
         return desc;
@@ -36,7 +36,7 @@ struct POMDOG_EXPORT BlendDescription final {
         BlendDescription desc;
         desc.AlphaToCoverageEnable = false;
         desc.IndependentBlendEnable = false;
-        for (auto & renderTarget : desc.RenderTargets) {
+        for (auto& renderTarget : desc.RenderTargets) {
             renderTarget = RenderTargetBlendDescription::CreateAlphaBlend();
         }
         return desc;
@@ -47,7 +47,7 @@ struct POMDOG_EXPORT BlendDescription final {
         BlendDescription desc;
         desc.AlphaToCoverageEnable = false;
         desc.IndependentBlendEnable = false;
-        for (auto & renderTarget : desc.RenderTargets) {
+        for (auto& renderTarget : desc.RenderTargets) {
             renderTarget = RenderTargetBlendDescription::CreateNonPremultiplied();
         }
         return desc;
@@ -58,7 +58,7 @@ struct POMDOG_EXPORT BlendDescription final {
         BlendDescription desc;
         desc.AlphaToCoverageEnable = false;
         desc.IndependentBlendEnable = false;
-        for (auto & renderTarget : desc.RenderTargets) {
+        for (auto& renderTarget : desc.RenderTargets) {
             renderTarget = RenderTargetBlendDescription::CreateOpaque();
         }
         return desc;

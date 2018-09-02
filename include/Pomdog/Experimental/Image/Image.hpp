@@ -14,10 +14,10 @@ public:
 
     Image() = delete;
     Image(const Image&) = delete;
-    Image(Image &&);
+    Image(Image&&);
 
-    Image & operator=(const Image&) = delete;
-    Image & operator=(Image &&);
+    Image& operator=(const Image&) = delete;
+    Image& operator=(Image&&);
 
     int GetWidth() const noexcept;
 
@@ -27,7 +27,7 @@ public:
 
     void SetData(const Color* pixelData);
 
-    void SetData(std::vector<Color> && pixelData);
+    void SetData(std::vector<Color>&& pixelData);
 
     const Color& GetPixel(int x, int y) const;
 

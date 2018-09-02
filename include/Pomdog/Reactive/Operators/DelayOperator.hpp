@@ -40,7 +40,7 @@ public:
             POMDOG_ASSERT(interval >= Duration::zero());
             auto iter = events.begin();
             while (iter != events.end()) {
-                auto & event = *iter;
+                auto& event = *iter;
 
                 // TODO: kahan velvel algorithm
                 event.totalTime += frameDuration;

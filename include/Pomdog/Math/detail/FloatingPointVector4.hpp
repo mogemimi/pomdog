@@ -29,10 +29,10 @@ public:
     FloatingPointVector4(const FloatingPointVector3<T>& xyz, T w) noexcept;
 
     // Assignment operators:
-    FloatingPointVector4 & operator+=(const FloatingPointVector4& other) noexcept;
-    FloatingPointVector4 & operator-=(const FloatingPointVector4& other) noexcept;
-    FloatingPointVector4 & operator*=(T scaleFactor) noexcept;
-    FloatingPointVector4 & operator/=(T scaleFactor);
+    FloatingPointVector4& operator+=(const FloatingPointVector4& other) noexcept;
+    FloatingPointVector4& operator-=(const FloatingPointVector4& other) noexcept;
+    FloatingPointVector4& operator*=(T scaleFactor) noexcept;
+    FloatingPointVector4& operator/=(T scaleFactor);
 
     // Unary operators:
     FloatingPointVector4 operator+() const noexcept;
@@ -63,7 +63,7 @@ public:
 
     static FloatingPointVector4 Normalize(const FloatingPointVector4& source) noexcept;
 
-    static void Normalize(const FloatingPointVector4& source, FloatingPointVector4 & result) noexcept;
+    static void Normalize(const FloatingPointVector4& source, FloatingPointVector4& result) noexcept;
 
     static FloatingPointVector4 Transform(
         const FloatingPointVector4& position,

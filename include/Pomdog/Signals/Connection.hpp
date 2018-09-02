@@ -18,13 +18,13 @@ private:
 public:
     Connection() = default;
 
-    explicit Connection(std::unique_ptr<ConnectionBody> && body);
+    explicit Connection(std::unique_ptr<ConnectionBody>&& body);
 
     Connection(const Connection& connection);
-    Connection(Connection && connection) = default;
+    Connection(Connection&& connection) = default;
 
-    Connection & operator=(const Connection& connection);
-    Connection & operator=(Connection && connection) = default;
+    Connection& operator=(const Connection& connection);
+    Connection& operator=(Connection&& connection) = default;
 
     operator bool() const noexcept;
 

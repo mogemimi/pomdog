@@ -15,10 +15,10 @@ public:
     Game() = default;
 
     Game(const Game&) = delete;
-    Game & operator=(const Game&) = delete; 
+    Game& operator=(const Game&) = delete;
     virtual ~Game() = default;
 
-    /// Initialization phase of the game. 
+    /// Initialization phase of the game.
     ///
     /// Called by GameHost once before any Update() or Draw().
     virtual void Initialize() = 0;
@@ -29,7 +29,7 @@ public:
     ///
     /// Logic updates are frame-independent. More specifically, they are guarnteed
     /// to be called once in a *presentation interval*, which is set in a Bootstrap.
-    /// @see X11::Bootstrap::SetPresentationInterval, 
+    /// @see X11::Bootstrap::SetPresentationInterval,
     ///      Win32::Bootstrap::SetPresentationInterval
     /// @note In Cocoa, *presentation interval* is always 60
     virtual void Update() = 0;

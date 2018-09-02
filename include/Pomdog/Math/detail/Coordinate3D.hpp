@@ -25,10 +25,10 @@ public:
     Coordinate3D(T x, T y, T z) noexcept;
 
     // Assignment operators:
-    Coordinate3D & operator+=(const Coordinate3D&) noexcept;
-    Coordinate3D & operator-=(const Coordinate3D&) noexcept;
-    Coordinate3D & operator*=(T scaleFactor) noexcept;
-    Coordinate3D & operator/=(T scaleFactor);
+    Coordinate3D& operator+=(const Coordinate3D&) noexcept;
+    Coordinate3D& operator-=(const Coordinate3D&) noexcept;
+    Coordinate3D& operator*=(T scaleFactor) noexcept;
+    Coordinate3D& operator/=(T scaleFactor);
 
     // Unary operators:
     Coordinate3D operator+() const noexcept;

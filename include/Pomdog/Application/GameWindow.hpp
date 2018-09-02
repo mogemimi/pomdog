@@ -22,7 +22,7 @@ public:
     /// Constructs plaftorm-default GameWindow.
     GameWindow() = default;
     GameWindow(const GameWindow&) = delete;
-    GameWindow & operator=(const GameWindow&) = delete;
+    GameWindow& operator=(const GameWindow&) = delete;
 
     virtual ~GameWindow() = default;
 
@@ -43,7 +43,7 @@ public:
     /// @return Rectangle that describes windows position and size.
     virtual Rectangle GetClientBounds() const = 0;
 
-    /// Moves the window to the @p clientBounds x and y, and sets windows 
+    /// Moves the window to the @p clientBounds x and y, and sets windows
     /// width and height according to the method parameter.
     /// @param clientBounds Rectangle that will adjust the window.
     virtual void SetClientBounds(const Rectangle& clientBounds) = 0;

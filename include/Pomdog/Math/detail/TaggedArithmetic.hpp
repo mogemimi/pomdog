@@ -36,63 +36,63 @@ public:
     }
 
     // Assignment operators:
-    TaggedArithmetic & operator+=(const TaggedArithmetic& v) noexcept
+    TaggedArithmetic& operator+=(const TaggedArithmetic& v) noexcept
     {
         value += v.value;
         return *this;
     }
 
-    TaggedArithmetic & operator+=(TaggedArithmetic && v) noexcept
+    TaggedArithmetic& operator+=(TaggedArithmetic&& v) noexcept
     {
         value += std::move(v.value);
         return *this;
     }
 
-    TaggedArithmetic & operator-=(const TaggedArithmetic& v) noexcept
+    TaggedArithmetic& operator-=(const TaggedArithmetic& v) noexcept
     {
         value -= v.value;
         return *this;
     }
 
-    TaggedArithmetic & operator-=(TaggedArithmetic && v) noexcept
+    TaggedArithmetic& operator-=(TaggedArithmetic&& v) noexcept
     {
         value -= std::move(v.value);
         return *this;
     }
 
-    TaggedArithmetic & operator*=(const TaggedArithmetic& v) noexcept
+    TaggedArithmetic& operator*=(const TaggedArithmetic& v) noexcept
     {
         value *= v.value;
         return *this;
     }
 
-    TaggedArithmetic & operator*=(TaggedArithmetic && v) noexcept
+    TaggedArithmetic& operator*=(TaggedArithmetic&& v) noexcept
     {
         value *= std::move(v.value);
         return *this;
     }
 
-    TaggedArithmetic & operator/=(const TaggedArithmetic& v)
+    TaggedArithmetic& operator/=(const TaggedArithmetic& v)
     {
         POMDOG_ASSERT(v.value != 0);
         value /= v.value;
         return *this;
     }
 
-    TaggedArithmetic & operator/=(TaggedArithmetic && v)
+    TaggedArithmetic& operator/=(TaggedArithmetic&& v)
     {
         POMDOG_ASSERT(v.value != 0);
         value /= std::move(v.value);
         return *this;
     }
 
-    TaggedArithmetic & operator*=(const T& scale) noexcept
+    TaggedArithmetic& operator*=(const T& scale) noexcept
     {
         value *= scale;
         return *this;
     }
 
-    TaggedArithmetic & operator/=(const T& scale)
+    TaggedArithmetic& operator/=(const T& scale)
     {
         POMDOG_ASSERT(scale != 0);
         value /= scale;

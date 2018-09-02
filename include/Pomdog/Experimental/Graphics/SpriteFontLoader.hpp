@@ -15,7 +15,7 @@ class SpriteFont;
 class POMDOG_EXPORT SpriteFontLoader final {
 public:
     static std::shared_ptr<SpriteFont> Load(
-        AssetManager & assets, const std::string& assetName);
+        AssetManager& assets, const std::string& assetName);
 };
 
 } // namespace Pomdog

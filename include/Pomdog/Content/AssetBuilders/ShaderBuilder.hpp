@@ -26,40 +26,40 @@ public:
         const Detail::AssetLoaderContext& loaderContext,
         ShaderPipelineStage pipelineStage);
 
-    Builder(Builder &&) = default;
+    Builder(Builder&&) = default;
     Builder(const Builder&) = default;
-    Builder & operator=(Builder &&) = default;
-    Builder & operator=(const Builder&) = default;
+    Builder& operator=(Builder&&) = default;
+    Builder& operator=(const Builder&) = default;
 
     ~Builder();
 
-    Builder & SetGLSL(const void* shaderSource, std::size_t byteLength);
+    Builder& SetGLSL(const void* shaderSource, std::size_t byteLength);
 
-    Builder & SetGLSLFromFile(const std::string& filePath);
+    Builder& SetGLSLFromFile(const std::string& filePath);
 
-    Builder & SetHLSL(
+    Builder& SetHLSL(
         const void* shaderSource,
         std::size_t byteLength,
         const std::string& entryPoint);
 
-    Builder & SetHLSLPrecompiled(
+    Builder& SetHLSLPrecompiled(
         const void* shaderSource,
         std::size_t byteLength);
 
-    Builder & SetHLSLFromFile(
+    Builder& SetHLSLFromFile(
         const std::string& filePath,
         const std::string& entryPoint);
 
-    Builder & SetMetal(
+    Builder& SetMetal(
         const void* shaderSource,
         std::size_t byteLength,
         const std::string& entryPoint);
 
-    Builder & SetMetalFromFile(
+    Builder& SetMetalFromFile(
         const std::string& filePath,
         const std::string& entryPoint);
 
-    Builder & SetMetalFromLibrary(const std::string& entryPoint);
+    Builder& SetMetalFromLibrary(const std::string& entryPoint);
 
     std::shared_ptr<Shader> Build();
 

@@ -26,7 +26,7 @@ struct POMDOG_EXPORT VertexBufferBinding final {
     }
 
     VertexBufferBinding(
-        std::shared_ptr<Pomdog::VertexBuffer> && vertexBufferIn) noexcept
+        std::shared_ptr<Pomdog::VertexBuffer>&& vertexBufferIn) noexcept
         : VertexBufferBinding(std::move(vertexBufferIn), 0)
     {
     }
@@ -40,7 +40,7 @@ struct POMDOG_EXPORT VertexBufferBinding final {
     }
 
     VertexBufferBinding(
-        std::shared_ptr<Pomdog::VertexBuffer> && vertexBufferIn,
+        std::shared_ptr<Pomdog::VertexBuffer>&& vertexBufferIn,
         std::size_t offsetIn) noexcept
         : VertexBuffer(std::move(vertexBufferIn))
         , VertexOffset(offsetIn)

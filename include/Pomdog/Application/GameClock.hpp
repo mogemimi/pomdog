@@ -26,10 +26,10 @@ public:
     explicit GameClock(int framesPerSecond);
 
     GameClock(const GameClock&) = delete;
-    GameClock(GameClock &&) = default;
+    GameClock(GameClock&&) = default;
 
-    GameClock & operator=(const GameClock&) = delete;
-    GameClock & operator=(GameClock &&) = default;
+    GameClock& operator=(const GameClock&) = delete;
+    GameClock& operator=(GameClock&&) = default;
 
     ~GameClock();
 

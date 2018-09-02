@@ -34,11 +34,11 @@ public:
         T m20, T m21, T m22) noexcept;
 
     // Assignment operators:
-    FloatingPointMatrix3x3 & operator*=(const FloatingPointMatrix3x3& other) noexcept;
-    FloatingPointMatrix3x3 & operator+=(const FloatingPointMatrix3x3& other) noexcept;
-    FloatingPointMatrix3x3 & operator-=(const FloatingPointMatrix3x3& other) noexcept;
-    FloatingPointMatrix3x3 & operator*=(T scaleFactor) noexcept;
-    FloatingPointMatrix3x3 & operator/=(T scaleFactor);
+    FloatingPointMatrix3x3& operator*=(const FloatingPointMatrix3x3& other) noexcept;
+    FloatingPointMatrix3x3& operator+=(const FloatingPointMatrix3x3& other) noexcept;
+    FloatingPointMatrix3x3& operator-=(const FloatingPointMatrix3x3& other) noexcept;
+    FloatingPointMatrix3x3& operator*=(T scaleFactor) noexcept;
+    FloatingPointMatrix3x3& operator/=(T scaleFactor);
 
     // Unary operators:
     FloatingPointMatrix3x3 operator+() const noexcept;
@@ -56,7 +56,7 @@ public:
 
     // Function-call operators:
     const T& operator()(std::size_t row, std::size_t column) const;
-    T & operator()(std::size_t row, std::size_t column);
+    T& operator()(std::size_t row, std::size_t column);
 
     void SetScale(const FloatingPointVector3<T>& scale) noexcept;
 
@@ -76,69 +76,69 @@ public:
     Adjoint(const FloatingPointMatrix3x3& matrix);
 
     static void
-    Transpose(const FloatingPointMatrix3x3& matrix, FloatingPointMatrix3x3 & result) noexcept;
+    Transpose(const FloatingPointMatrix3x3& matrix, FloatingPointMatrix3x3& result) noexcept;
 
     static FloatingPointMatrix3x3
     Transpose(const FloatingPointMatrix3x3& matrix) noexcept;
 
     static void
-    Invert(const FloatingPointMatrix3x3& matrix, FloatingPointMatrix3x3 & result);
+    Invert(const FloatingPointMatrix3x3& matrix, FloatingPointMatrix3x3& result);
 
     static FloatingPointMatrix3x3
     Invert(const FloatingPointMatrix3x3& matrix);
 
     static void
     Lerp(const FloatingPointMatrix3x3& source1, const FloatingPointMatrix3x3& source2,
-        T amount, FloatingPointMatrix3x3 & result) noexcept;
+        T amount, FloatingPointMatrix3x3& result) noexcept;
 
     static FloatingPointMatrix3x3
     Lerp(const FloatingPointMatrix3x3& source1, const FloatingPointMatrix3x3& source2,
         T amount) noexcept;
 
     static void
-    CreateTranslation(const FloatingPointVector2<T>& position, FloatingPointMatrix3x3 & result) noexcept;
+    CreateTranslation(const FloatingPointVector2<T>& position, FloatingPointMatrix3x3& result) noexcept;
 
     static FloatingPointMatrix3x3
     CreateTranslation(const FloatingPointVector2<T>& position) noexcept;
 
     static void
-    CreateScale(T scale, FloatingPointMatrix3x3 & result) noexcept;
+    CreateScale(T scale, FloatingPointMatrix3x3& result) noexcept;
 
     static FloatingPointMatrix3x3
     CreateScale(T scale) noexcept;
 
     static void
-    CreateScale(const FloatingPointVector3<T>& scale, FloatingPointMatrix3x3 & result) noexcept;
+    CreateScale(const FloatingPointVector3<T>& scale, FloatingPointMatrix3x3& result) noexcept;
 
     static FloatingPointMatrix3x3
     CreateScale(const FloatingPointVector3<T>& scale) noexcept;
 
     static void
-    CreateRotationX(const Radian<T>& angle, FloatingPointMatrix3x3 & result);
+    CreateRotationX(const Radian<T>& angle, FloatingPointMatrix3x3& result);
 
     static FloatingPointMatrix3x3
     CreateRotationX(const Radian<T>& angle);
 
     static void
-    CreateRotationY(const Radian<T>& angle, FloatingPointMatrix3x3 & result);
+    CreateRotationY(const Radian<T>& angle, FloatingPointMatrix3x3& result);
 
     static FloatingPointMatrix3x3
     CreateRotationY(const Radian<T>& angle);
 
     static void
-    CreateRotationZ(const Radian<T>& angle, FloatingPointMatrix3x3 & result);
+    CreateRotationZ(const Radian<T>& angle, FloatingPointMatrix3x3& result);
 
     static FloatingPointMatrix3x3
     CreateRotationZ(const Radian<T>& angle);
 
     static void
-    CreateFromQuaternion(const FloatingPointQuaternion<T>& quaternion, FloatingPointMatrix3x3 & result);
+    CreateFromQuaternion(const FloatingPointQuaternion<T>& quaternion, FloatingPointMatrix3x3& result);
 
     static FloatingPointMatrix3x3
     CreateFromQuaternion(const FloatingPointQuaternion<T>& quaternion);
 
     static void
-    CreateFromAxisAngle(const FloatingPointVector3<T>& axis, const Radian<T>& angle, FloatingPointMatrix3x3 & result);
+    CreateFromAxisAngle(const FloatingPointVector3<T>& axis, const Radian<T>& angle, FloatingPointMatrix3x3& result);
 
     static FloatingPointMatrix3x3
     CreateFromAxisAngle(const FloatingPointVector3<T>& axis, const Radian<T>& angle);

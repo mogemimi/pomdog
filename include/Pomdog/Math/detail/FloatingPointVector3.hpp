@@ -30,10 +30,10 @@ public:
     FloatingPointVector3(const FloatingPointVector2<T>& vec, T z) noexcept;
 
     // Assignment operators:
-    FloatingPointVector3 & operator+=(const FloatingPointVector3&) noexcept;
-    FloatingPointVector3 & operator-=(const FloatingPointVector3&) noexcept;
-    FloatingPointVector3 & operator*=(T) noexcept;
-    FloatingPointVector3 & operator/=(T);
+    FloatingPointVector3& operator+=(const FloatingPointVector3&) noexcept;
+    FloatingPointVector3& operator-=(const FloatingPointVector3&) noexcept;
+    FloatingPointVector3& operator*=(T) noexcept;
+    FloatingPointVector3& operator/=(T);
 
     // Unary operators:
     FloatingPointVector3 operator+() const noexcept;
@@ -85,7 +85,7 @@ public:
 
     static FloatingPointVector3 Normalize(const FloatingPointVector3& source) noexcept;
 
-    static void Normalize(const FloatingPointVector3&, FloatingPointVector3 & result) noexcept;
+    static void Normalize(const FloatingPointVector3&, FloatingPointVector3& result) noexcept;
 
     static FloatingPointVector3 Transform(
         const FloatingPointVector3& position,

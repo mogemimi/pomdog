@@ -28,7 +28,7 @@ public:
 };
 
 template <typename Function>
-class ConnectionBodyOverride final: public ConnectionBody {
+class ConnectionBodyOverride final : public ConnectionBody {
 private:
     typedef std::weak_ptr<Slot<Function>> WeakSlot;
     typedef std::weak_ptr<SignalBody<Function>> WeakSignal;
@@ -37,7 +37,7 @@ private:
     WeakSlot weakSlot;
 
 public:
-    ConnectionBodyOverride(WeakSignal && weakSignalIn, WeakSlot && weakSlotIn)
+    ConnectionBodyOverride(WeakSignal&& weakSignalIn, WeakSlot&& weakSlotIn)
         : weakSignal(std::forward<WeakSignal>(weakSignalIn))
         , weakSlot(std::forward<WeakSlot>(weakSlotIn))
     {
@@ -76,7 +76,7 @@ public:
     }
 };
 
-template <typename...Arguments>
+template <typename... Arguments>
 class SignalBody<void(Arguments...)> final
     : public std::enable_shared_from_this<SignalBody<void(Arguments...)>> {
 private:
@@ -87,17 +87,17 @@ public:
     SignalBody() = default;
 
     SignalBody(const SignalBody&) = delete;
-    SignalBody & operator=(const SignalBody&) = delete;
+    SignalBody& operator=(const SignalBody&) = delete;
 
-    SignalBody(SignalBody &&) = delete;
-    SignalBody & operator=(SignalBody &&) = delete;
+    SignalBody(SignalBody&&) = delete;
+    SignalBody& operator=(SignalBody&&) = delete;
 
     template <typename Function>
-    std::unique_ptr<ConnectionBodyType> Connect(Function && slot);
+    std::unique_ptr<ConnectionBodyType> Connect(Function&& slot);
 
     void Disconnect(const SlotType* observer);
 
-    void operator()(Arguments &&... arguments);
+    void operator()(Arguments&&... arguments);
 
     std::size_t InvocationCount() const;
 
@@ -115,10 +115,10 @@ private:
     std::int32_t nestedMethodCallCount = 0;
 };
 
-template <typename...Arguments>
+template <typename... Arguments>
 template <typename Function>
-auto SignalBody<void(Arguments...)>::Connect(Function && slot)
-    ->std::unique_ptr<ConnectionBodyType>
+auto SignalBody<void(Arguments...)>::Connect(Function&& slot)
+    -> std::unique_ptr<ConnectionBodyType>
 {
     POMDOG_ASSERT(slot);
     auto observer = std::make_shared<SlotType>(std::forward<Function>(slot));
@@ -135,7 +135,7 @@ auto SignalBody<void(Arguments...)>::Connect(Function && slot)
     return std::make_unique<ConnectionBodyType>(std::move(weakSignal), observer);
 }
 
-template <typename...Arguments>
+template <typename... Arguments>
 void SignalBody<void(Arguments...)>::Disconnect(const SlotType* observer)
 {
     POMDOG_ASSERT(observer);
@@ -162,7 +162,7 @@ void SignalBody<void(Arguments...)>::Disconnect(const SlotType* observer)
     iter->reset();
 }
 
-template <typename...Arguments>
+template <typename... Arguments>
 void SignalBody<void(Arguments...)>::PushBackAddedListeners()
 {
     std::vector<std::shared_ptr<SlotType>> temporarySlots;
@@ -173,7 +173,7 @@ void SignalBody<void(Arguments...)>::PushBackAddedListeners()
     {
         std::lock_guard<std::recursive_mutex> lock(slotsProtection);
 
-        for (auto & slot: temporarySlots) {
+        for (auto& slot : temporarySlots) {
             POMDOG_ASSERT(std::end(observers) == std::find(
                 std::begin(observers), std::end(observers), slot));
             observers.push_back(slot);
@@ -181,7 +181,7 @@ void SignalBody<void(Arguments...)>::PushBackAddedListeners()
     }
 }
 
-template <typename...Arguments>
+template <typename... Arguments>
 void SignalBody<void(Arguments...)>::EraseRemovedListeners()
 {
     std::lock_guard<std::recursive_mutex> lock(slotsProtection);
@@ -191,8 +191,8 @@ void SignalBody<void(Arguments...)>::EraseRemovedListeners()
         std::end(observers));
 }
 
-template <typename...Arguments>
-void SignalBody<void(Arguments...)>::operator()(Arguments &&... arguments)
+template <typename... Arguments>
+void SignalBody<void(Arguments...)>::operator()(Arguments&&... arguments)
 {
     if (nestedMethodCallCount <= 0) {
         PushBackAddedListeners();
@@ -206,7 +206,7 @@ void SignalBody<void(Arguments...)>::operator()(Arguments &&... arguments)
     ++nestedMethodCallCount;
 
     try {
-        for (auto & observer: observers) {
+        for (auto& observer : observers) {
             if (auto scoped = observer) {
                 scoped->operator()(std::forward<Arguments>(arguments)...);
             }
@@ -225,7 +225,7 @@ void SignalBody<void(Arguments...)>::operator()(Arguments &&... arguments)
     }
 }
 
-template <typename...Arguments>
+template <typename... Arguments>
 std::size_t SignalBody<void(Arguments...)>::InvocationCount() const
 {
     return observers.size();

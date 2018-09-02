@@ -17,15 +17,15 @@ class POMDOG_EXPORT RenderTarget2D final : public Texture {
 public:
     RenderTarget2D() = delete;
     RenderTarget2D(const RenderTarget2D&) = delete;
-    RenderTarget2D(RenderTarget2D &&) = default;
+    RenderTarget2D(RenderTarget2D&&) = default;
 
     RenderTarget2D(
-        GraphicsDevice & graphicsDevice,
+        GraphicsDevice& graphicsDevice,
         std::int32_t width,
         std::int32_t height);
 
     RenderTarget2D(
-        GraphicsDevice & graphicsDevice,
+        GraphicsDevice& graphicsDevice,
         std::int32_t width,
         std::int32_t height,
         bool generateMipmap,
@@ -47,8 +47,8 @@ public:
 
     ~RenderTarget2D();
 
-    RenderTarget2D & operator=(const RenderTarget2D&) = delete;
-    RenderTarget2D & operator=(RenderTarget2D &&) = default;
+    RenderTarget2D& operator=(const RenderTarget2D&) = delete;
+    RenderTarget2D& operator=(RenderTarget2D&&) = default;
 
     std::int32_t GetWidth() const;
 

@@ -26,7 +26,7 @@ private:
 
 public:
     void Schedule(
-        std::function<void()> && task,
+        std::function<void()>&& task,
         const Duration& delayTime = Duration::zero()) override;
 
     void Update();

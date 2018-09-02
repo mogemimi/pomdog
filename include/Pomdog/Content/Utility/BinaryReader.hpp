@@ -16,7 +16,7 @@ namespace Detail {
 
 struct POMDOG_EXPORT BinaryReader final {
     template <typename T, class Stream>
-    static std::vector<T> ReadArray(Stream & stream, std::size_t elementCount)
+    static std::vector<T> ReadArray(Stream& stream, std::size_t elementCount)
     {
         static_assert(std::is_pod<T>::value, "You can only use POD types.");
 
@@ -31,7 +31,7 @@ struct POMDOG_EXPORT BinaryReader final {
     }
 
     template <typename T, std::size_t ElementCount, class Stream>
-    static std::array<T, ElementCount> ReadArray(Stream & stream)
+    static std::array<T, ElementCount> ReadArray(Stream& stream)
     {
         static_assert(std::is_pod<T>::value, "You can only use POD types.");
         POMDOG_ASSERT(stream);
@@ -42,7 +42,7 @@ struct POMDOG_EXPORT BinaryReader final {
     }
 
     template <typename T, class Stream>
-    static T Read(Stream & stream)
+    static T Read(Stream& stream)
     {
         POMDOG_ASSERT(stream);
         static_assert(std::is_pod<T>::value, "You can only use POD types.");
@@ -50,7 +50,7 @@ struct POMDOG_EXPORT BinaryReader final {
     }
 
     template <typename T, class Stream>
-    static std::vector<T> ReadString(Stream & stream, std::size_t elementCount)
+    static std::vector<T> ReadString(Stream& stream, std::size_t elementCount)
     {
         static_assert(std::is_integral<T>::value, "You can only use POD types.");
         auto result = ReadArray<T>(stream, elementCount);

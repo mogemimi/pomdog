@@ -25,7 +25,7 @@ public:
     /// Constructs GameHost with platform-default components.
     GameHost() = default;
     GameHost(const GameHost&) = delete;
-    GameHost & operator=(const GameHost&) = delete;
+    GameHost& operator=(const GameHost&) = delete;
 
     virtual ~GameHost() = default;
 

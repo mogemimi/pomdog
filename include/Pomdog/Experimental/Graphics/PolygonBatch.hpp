@@ -6,8 +6,8 @@
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Math/detail/ForwardDeclarations.hpp"
 #include <cstdint>
-#include <vector>
 #include <memory>
+#include <vector>
 
 namespace Pomdog {
 
@@ -17,7 +17,7 @@ class POMDOG_EXPORT PolygonBatch final {
 public:
     PolygonBatch(
         const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-        AssetManager & assets);
+        AssetManager& assets);
 
     ~PolygonBatch();
 

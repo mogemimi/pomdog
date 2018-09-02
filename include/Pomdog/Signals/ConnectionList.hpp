@@ -16,16 +16,16 @@ private:
 public:
     ConnectionList() = default;
     ConnectionList(const ConnectionList&) = delete;
-    ConnectionList & operator=(const ConnectionList&) = delete;
-    ConnectionList(ConnectionList &&) = default;
-    ConnectionList & operator=(ConnectionList &&) = default;
+    ConnectionList& operator=(const ConnectionList&) = delete;
+    ConnectionList(ConnectionList&&) = default;
+    ConnectionList& operator=(ConnectionList&&) = default;
 
     ~ConnectionList();
 
-    void operator+=(Connection && connection);
+    void operator+=(Connection&& connection);
 
-    template <typename...Args, typename Func>
-    Connection operator()(Signal<void(Args...)> & signal, Func && func)
+    template <typename... Args, typename Func>
+    Connection operator()(Signal<void(Args...)>& signal, Func&& func)
     {
         auto connection = signal.Connect(std::forward<Func>(func));
         connections.push_back(connection);

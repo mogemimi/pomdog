@@ -13,23 +13,23 @@ namespace Pomdog {
 
 class POMDOG_EXPORT InputLayoutHelper final {
 public:
-    InputLayoutHelper & PushBack(InputElementFormat format);
+    InputLayoutHelper& PushBack(InputElementFormat format);
 
-    InputLayoutHelper & Byte4();
+    InputLayoutHelper& Byte4();
 
-    InputLayoutHelper & Float();
+    InputLayoutHelper& Float();
 
-    InputLayoutHelper & Float2();
+    InputLayoutHelper& Float2();
 
-    InputLayoutHelper & Float3();
+    InputLayoutHelper& Float3();
 
-    InputLayoutHelper & Float4();
+    InputLayoutHelper& Float4();
 
-    InputLayoutHelper & Int4();
+    InputLayoutHelper& Int4();
 
-    InputLayoutHelper & AddInputSlot();
+    InputLayoutHelper& AddInputSlot();
 
-    InputLayoutHelper & AddInputSlot(
+    InputLayoutHelper& AddInputSlot(
         InputClassification slotClass,
         std::uint16_t instanceStepRate);
 

@@ -16,7 +16,7 @@ class POMDOG_EXPORT Keyboard {
 public:
     Keyboard() = default;
     Keyboard(const Keyboard&) = delete;
-    Keyboard & operator=(const Keyboard&) = delete;
+    Keyboard& operator=(const Keyboard&) = delete;
 
     virtual ~Keyboard() = default;
 

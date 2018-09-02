@@ -18,7 +18,7 @@ namespace Detail {
 template <class T1, class T2, class TResult>
 class ZipOperator final : public Observable<TResult> {
 public:
-    explicit ZipOperator(std::function<TResult(const T1&, const T2&)> && zipperIn)
+    explicit ZipOperator(std::function<TResult(const T1&, const T2&)>&& zipperIn)
         : zipper(std::move(zipperIn))
         , isStopped(false)
     {

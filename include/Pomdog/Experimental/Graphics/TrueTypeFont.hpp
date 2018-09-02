@@ -5,10 +5,10 @@
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Math/detail/ForwardDeclarations.hpp"
 #include <cstdint>
+#include <functional>
 #include <memory>
 #include <optional>
 #include <string>
-#include <functional>
 
 namespace Pomdog {
 
@@ -25,7 +25,7 @@ public:
         char32_t codePoint,
         float pixelHeight,
         int textureWidth,
-        const std::function<void(int width, int height, Point2D & point, std::uint8_t* & output)>& callback);
+        const std::function<void(int width, int height, Point2D& point, std::uint8_t*& output)>& callback);
 
 private:
     class Impl;

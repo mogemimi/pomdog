@@ -11,18 +11,18 @@
 
 namespace Pomdog {
 
-template <typename...Arguments>
+template <typename... Arguments>
 class POMDOG_EXPORT Signal<void(Arguments...)> final {
 public:
     Signal();
     Signal(const Signal&) = delete;
-    Signal(Signal &&) = default;
-    Signal & operator=(const Signal&) = delete;
-    Signal & operator=(Signal &&) = default;
+    Signal(Signal&&) = default;
+    Signal& operator=(const Signal&) = delete;
+    Signal& operator=(Signal&&) = default;
 
     Connection Connect(const std::function<void(Arguments...)>& slot);
 
-    Connection Connect(std::function<void(Arguments...)> && slot);
+    Connection Connect(std::function<void(Arguments...)>&& slot);
 
     void operator()(Arguments... arguments);
 
@@ -33,13 +33,13 @@ private:
     std::shared_ptr<SignalBody> body;
 };
 
-template <typename...Arguments>
+template <typename... Arguments>
 Signal<void(Arguments...)>::Signal()
     : body(std::make_shared<SignalBody>())
 {
 }
 
-template <typename...Arguments>
+template <typename... Arguments>
 Connection Signal<void(Arguments...)>::Connect(
     const std::function<void(Arguments...)>& slot)
 {
@@ -48,23 +48,23 @@ Connection Signal<void(Arguments...)>::Connect(
     return Connection{body->Connect(slot)};
 }
 
-template <typename...Arguments>
+template <typename... Arguments>
 Connection Signal<void(Arguments...)>::Connect(
-    std::function<void(Arguments...)> && slot)
+    std::function<void(Arguments...)>&& slot)
 {
     POMDOG_ASSERT(slot);
     POMDOG_ASSERT(body);
     return Connection{body->Connect(std::move(slot))};
 }
 
-template <typename...Arguments>
+template <typename... Arguments>
 void Signal<void(Arguments...)>::operator()(Arguments... arguments)
 {
     POMDOG_ASSERT(body);
     body->operator()(std::forward<Arguments>(arguments)...);
 }
 
-template <typename...Arguments>
+template <typename... Arguments>
 std::size_t Signal<void(Arguments...)>::InvocationCount() const
 {
     return body->InvocationCount();

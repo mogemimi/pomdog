@@ -18,13 +18,13 @@ namespace ShaderCompilers {
 
 struct POMDOG_EXPORT HLSLCompiler final {
     static std::unique_ptr<Shader> CreateShaderFromBinary(
-        GraphicsDevice & graphicsDevice,
+        GraphicsDevice& graphicsDevice,
         const void* shaderSource,
         std::size_t byteLength,
         ShaderPipelineStage pipelineStage);
 
     static std::unique_ptr<Shader> CreateShaderFromSource(
-        GraphicsDevice & graphicsDevice,
+        GraphicsDevice& graphicsDevice,
         const void* shaderSource,
         std::size_t byteLength,
         const std::string& entryPoint,

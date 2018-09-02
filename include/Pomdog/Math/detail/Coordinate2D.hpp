@@ -25,10 +25,10 @@ public:
     Coordinate2D(T x, T y) noexcept;
 
     // Assignment operators:
-    Coordinate2D & operator+=(const Coordinate2D&) noexcept;
-    Coordinate2D & operator-=(const Coordinate2D&) noexcept;
-    Coordinate2D & operator*=(T scaleFactor) noexcept;
-    Coordinate2D & operator/=(T scaleFactor);
+    Coordinate2D& operator+=(const Coordinate2D&) noexcept;
+    Coordinate2D& operator-=(const Coordinate2D&) noexcept;
+    Coordinate2D& operator*=(T scaleFactor) noexcept;
+    Coordinate2D& operator/=(T scaleFactor);
 
     // Unary operators:
     Coordinate2D operator+() const noexcept;

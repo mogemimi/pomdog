@@ -19,14 +19,14 @@ class DoOperator final
     , public Observable<T> {
 public:
     template <class NextAction>
-    explicit DoOperator(NextAction && onNextIn)
+    explicit DoOperator(NextAction&& onNextIn)
         : onNext(std::forward<NextAction>(onNextIn))
     {
         POMDOG_ASSERT(onNext);
     }
 
     template <class NextAction, class ErrorAction>
-    DoOperator(NextAction && onNextIn, ErrorAction && onErrorIn)
+    DoOperator(NextAction&& onNextIn, ErrorAction&& onErrorIn)
         : onNext(std::forward<NextAction>(onNextIn))
         , onError(std::forward<ErrorAction>(onErrorIn))
     {
@@ -35,7 +35,7 @@ public:
     }
 
     template <class NextAction, class ErrorAction, class CompletedAction>
-    DoOperator(NextAction && onNextIn, ErrorAction && onErrorIn, CompletedAction && onCompletedIn)
+    DoOperator(NextAction&& onNextIn, ErrorAction&& onErrorIn, CompletedAction&& onCompletedIn)
         : onNext(std::forward<NextAction>(onNextIn))
         , onError(std::forward<ErrorAction>(onErrorIn))
         , onCompleted(std::forward<CompletedAction>(onCompletedIn))

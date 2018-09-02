@@ -16,7 +16,7 @@ class POMDOG_EXPORT Log final {
 public:
     static Connection Connect(const std::function<void(const LogEntry&)>& slot);
 
-    static Connection Connect(std::function<void(const LogEntry&)> && slot);
+    static Connection Connect(std::function<void(const LogEntry&)>&& slot);
 
     static Connection Connect(
         const std::string& channelName,
@@ -24,7 +24,7 @@ public:
 
     static Connection Connect(
         const std::string& channelName,
-        std::function<void(const LogEntry&)> && slot);
+        std::function<void(const LogEntry&)>&& slot);
 
     static LogLevel GetLevel();
 

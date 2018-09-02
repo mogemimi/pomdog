@@ -18,7 +18,7 @@ class ScanOperator final
     : public Observer<T>
     , public Observable<T> {
 public:
-    explicit ScanOperator(std::function<T(const T& accumulation, const T& value)> && accumulatorIn)
+    explicit ScanOperator(std::function<T(const T& accumulation, const T& value)>&& accumulatorIn)
         : accumulator(std::move(accumulatorIn))
         , needToInitialize(false)
     {

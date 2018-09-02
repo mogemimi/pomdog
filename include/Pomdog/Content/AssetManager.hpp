@@ -12,7 +12,7 @@ namespace Pomdog {
 
 class POMDOG_EXPORT AssetManager final {
 public:
-    explicit AssetManager(Detail::AssetLoaderContext && loaderContext);
+    explicit AssetManager(Detail::AssetLoaderContext&& loaderContext);
 
     template <typename T>
     std::shared_ptr<T> Load(const std::string& assetName)
@@ -20,8 +20,8 @@ public:
         return assets.Load<T>(loaderContext, assetName);
     }
 
-    template <typename T, typename ...Arguments>
-    AssetBuilders::Builder<T> CreateBuilder(Arguments && ...arguments)
+    template <typename T, typename... Arguments>
+    AssetBuilders::Builder<T> CreateBuilder(Arguments&&... arguments)
     {
         AssetBuilders::Builder<T> builder(loaderContext,
             std::forward<Arguments>(arguments)...);

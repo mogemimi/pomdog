@@ -61,7 +61,7 @@ public:
 
 public:
     TaskBody(const TaskBody&) = delete;
-    TaskBody & operator=(const TaskBody&) = delete;
+    TaskBody& operator=(const TaskBody&) = delete;
 
     TaskBody()
         : status(TaskStatus::Created)
@@ -74,7 +74,7 @@ public:
         return (s == TaskStatus::RanToCompletion) || (s == TaskStatus::Rejected);
     }
 
-    void SetResult(TaskResult<TResult> && resultIn)
+    void SetResult(TaskResult<TResult>&& resultIn)
     {
         POMDOG_ASSERT(!this->IsDone());
         status.store(TaskStatus::RanToCompletion);
@@ -85,7 +85,7 @@ public:
             result = std::forward<TaskResult<TResult>>(resultIn);
             std::swap(continuations, swapped);
         }
-        for (auto & continuation : swapped) {
+        for (auto& continuation : swapped) {
             continuation();
         }
     }
@@ -101,7 +101,7 @@ public:
             exceptionPointer = exception;
             std::swap(continuations, swapped);
         }
-        for (auto & continuation : swapped) {
+        for (auto& continuation : swapped) {
             continuation();
         }
     }
@@ -313,7 +313,7 @@ auto InnerGetTask(
 
 struct POMDOG_EXPORT TaskImpl {
     template <typename T, typename Func>
-    static void ScheduleContinuation(const Task<T>& task, Func && continuation)
+    static void ScheduleContinuation(const Task<T>& task, Func&& continuation)
     {
         if (task.IsDone()) {
             continuation();
@@ -408,7 +408,7 @@ struct POMDOG_EXPORT TaskImpl {
 
 #ifdef _MSC_VER
 #pragma warning(push)
-#pragma warning(disable: 4702)
+#pragma warning(disable : 4702)
 #endif
     template <typename TFunction>
     static void InnerInvokeContinuation(
@@ -663,7 +663,7 @@ Task<std::vector<TResult>> WhenAllImpl(const std::vector<Task<TResult>>& tasks)
     whenAllPromise->count = static_cast<int>(tasks.size());
     whenAllPromise->isRejected = false;
 
-    for (auto & task : tasks) {
+    for (auto& task : tasks) {
         task.ContinueWith([tcs, whenAllPromise](const Task<TResult>& t) {
             std::lock_guard<std::mutex> lock(whenAllPromise->mutex);
             if (whenAllPromise->isRejected) {
@@ -707,7 +707,7 @@ Task<TResult> WhenAny(const std::vector<Task<TResult>>& tasks)
     auto whenAnyPromise = std::make_shared<Detail::WhenAnyPromise>();
     whenAnyPromise->isAnyTaskComplete.store(false);
 
-    for (auto & task : tasks) {
+    for (auto& task : tasks) {
         task.ContinueWith([tcs, whenAnyPromise](const Task<TResult>& t) {
             if (whenAnyPromise->isAnyTaskComplete.exchange(true)) {
                 return;

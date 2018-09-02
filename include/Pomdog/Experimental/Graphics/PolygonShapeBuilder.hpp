@@ -6,11 +6,11 @@
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Matrix3x2.hpp"
 #include "Pomdog/Math/Matrix4x4.hpp"
+#include "Pomdog/Math/Radian.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Math/Vector3.hpp"
 #include "Pomdog/Math/Vector4.hpp"
-#include "Pomdog/Math/Radian.hpp"
 #include <cstdint>
 #include <functional>
 #include <vector>

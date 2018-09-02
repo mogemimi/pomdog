@@ -13,16 +13,16 @@ namespace Pomdog {
 class POMDOG_EXPORT SoundEffect final {
 public:
     SoundEffect(
-        AudioEngine & audioEngine,
+        AudioEngine& audioEngine,
         const std::shared_ptr<AudioClip>& audioClip,
         bool isLooped);
 
     ~SoundEffect();
 
     SoundEffect(const SoundEffect&) = delete;
-    SoundEffect(SoundEffect &&) = default;
-    SoundEffect & operator=(const SoundEffect&) = delete;
-    SoundEffect & operator=(SoundEffect &&) = default;
+    SoundEffect(SoundEffect&&) = default;
+    SoundEffect& operator=(const SoundEffect&) = delete;
+    SoundEffect& operator=(SoundEffect&&) = default;
 
     void Pause();
 

@@ -15,17 +15,17 @@ class POMDOG_EXPORT IndexBuffer final {
 public:
     IndexBuffer() = delete;
     IndexBuffer(const IndexBuffer&) = delete;
-    IndexBuffer(IndexBuffer &&) = default;
+    IndexBuffer(IndexBuffer&&) = default;
 
     IndexBuffer(
-        GraphicsDevice & graphicsDevice,
+        GraphicsDevice& graphicsDevice,
         IndexElementSize elementSize,
         const void* indices,
         std::size_t indexCount,
         BufferUsage bufferUsage);
 
     IndexBuffer(
-        GraphicsDevice & graphicsDevice,
+        GraphicsDevice& graphicsDevice,
         IndexElementSize elementSize,
         std::size_t indexCount,
         BufferUsage bufferUsage);
@@ -45,8 +45,8 @@ public:
 
     ~IndexBuffer();
 
-    IndexBuffer & operator=(const IndexBuffer&) = delete;
-    IndexBuffer & operator=(IndexBuffer &&) = default;
+    IndexBuffer& operator=(const IndexBuffer&) = delete;
+    IndexBuffer& operator=(IndexBuffer&&) = default;
 
     std::size_t GetIndexCount() const noexcept;
 

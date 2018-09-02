@@ -18,9 +18,9 @@ public:
 
     LogChannel() = default;
     LogChannel(const LogChannel&) = delete;
-    LogChannel(LogChannel &&) = default;
-    LogChannel & operator=(const LogChannel&) = delete;
-    LogChannel & operator=(LogChannel &&) = default;
+    LogChannel(LogChannel&&) = default;
+    LogChannel& operator=(const LogChannel&) = delete;
+    LogChannel& operator=(LogChannel&&) = default;
 
     void Log(const std::string& message, LogLevel verbosity);
 
@@ -28,7 +28,7 @@ public:
 
     Connection Connect(const std::function<void(const LogEntry&)>& slot);
 
-    Connection Connect(std::function<void(const LogEntry&)> && slot);
+    Connection Connect(std::function<void(const LogEntry&)>&& slot);
 
     const std::string& Name() const;
 

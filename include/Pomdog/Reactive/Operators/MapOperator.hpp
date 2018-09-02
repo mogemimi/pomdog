@@ -18,7 +18,7 @@ class MapOperator final
     : public Observer<T>
     , public Observable<TResult> {
 public:
-    explicit MapOperator(std::function<TResult(T && value)> && mapIn)
+    explicit MapOperator(std::function<TResult(T&& value)>&& mapIn)
         : map(std::move(mapIn))
     {
         POMDOG_ASSERT(map);
@@ -54,7 +54,7 @@ public:
 
 private:
     std::shared_ptr<Observer<TResult>> observer;
-    std::function<TResult(T && value)> map;
+    std::function<TResult(T&& value)> map;
 };
 
 } // namespace Detail

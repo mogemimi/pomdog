@@ -18,10 +18,10 @@ class POMDOG_EXPORT ConstantBuffer final {
 public:
     ConstantBuffer() = delete;
     ConstantBuffer(const ConstantBuffer&) = delete;
-    ConstantBuffer & operator=(const ConstantBuffer&) = delete;
+    ConstantBuffer& operator=(const ConstantBuffer&) = delete;
 
     ConstantBuffer(
-        GraphicsDevice & graphicsDevice,
+        GraphicsDevice& graphicsDevice,
         std::size_t sizeInBytes,
         BufferUsage bufferUsage);
 
@@ -31,7 +31,7 @@ public:
         BufferUsage bufferUsage);
 
     ConstantBuffer(
-        GraphicsDevice & graphicsDevice,
+        GraphicsDevice& graphicsDevice,
         const void* sourceData,
         std::size_t sizeInBytes,
         BufferUsage bufferUsage);

@@ -13,7 +13,7 @@ class POMDOG_EXPORT SamplerState final {
 public:
     SamplerState() = delete;
     SamplerState(const SamplerState&) = delete;
-    SamplerState & operator=(const SamplerState&) = delete;
+    SamplerState& operator=(const SamplerState&) = delete;
 
     SamplerState(
         const std::shared_ptr<GraphicsDevice>& graphicsDevice,

@@ -18,7 +18,7 @@ class FilterOperator final
     : public Observer<T>
     , public Observable<T> {
 public:
-    explicit FilterOperator(std::function<bool(const T& value)> && filterIn)
+    explicit FilterOperator(std::function<bool(const T& value)>&& filterIn)
         : filter(std::move(filterIn))
     {
         POMDOG_ASSERT(filter);

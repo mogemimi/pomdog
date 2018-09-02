@@ -35,7 +35,7 @@ public:
 
         auto const iter = assets.find(assetName);
         if (iter != std::end(assets)) {
-            auto & assetHolder = iter->second;
+            auto& assetHolder = iter->second;
 
             if (assetHolder.Type() == typeIndex) {
                 return assetHolder.As<std::shared_ptr<T>>();

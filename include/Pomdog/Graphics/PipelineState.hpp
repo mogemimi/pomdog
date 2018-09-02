@@ -12,10 +12,10 @@ class POMDOG_EXPORT PipelineState final {
 public:
     PipelineState() = delete;
     PipelineState(const PipelineState&) = delete;
-    PipelineState(PipelineState &&) = default;
+    PipelineState(PipelineState&&) = default;
 
     PipelineState(
-        GraphicsDevice & graphicsDevice,
+        GraphicsDevice& graphicsDevice,
         const PipelineStateDescription& description);
 
     PipelineState(
@@ -24,8 +24,8 @@ public:
 
     ~PipelineState();
 
-    PipelineState & operator=(const PipelineState&) = delete;
-    PipelineState & operator=(PipelineState &&) = default;
+    PipelineState& operator=(const PipelineState&) = delete;
+    PipelineState& operator=(PipelineState&&) = default;
 
     Detail::NativePipelineState* GetNativePipelineState();
 

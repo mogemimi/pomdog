@@ -17,18 +17,18 @@ class POMDOG_EXPORT EventQueue final {
 public:
     EventQueue();
     EventQueue(const EventQueue&) = delete;
-    EventQueue(EventQueue &&) = delete;
-    EventQueue & operator=(const EventQueue&) = delete;
-    EventQueue & operator=(EventQueue &&) = delete;
+    EventQueue(EventQueue&&) = delete;
+    EventQueue& operator=(const EventQueue&) = delete;
+    EventQueue& operator=(EventQueue&&) = delete;
 
     Connection Connect(const std::function<void(const Event&)>& slot);
 
-    Connection Connect(std::function<void(const Event&)> && slot);
+    Connection Connect(std::function<void(const Event&)>&& slot);
 
-    void Enqueue(Event && event);
+    void Enqueue(Event&& event);
 
     template <typename T, typename... Arguments>
-    void Enqueue(Arguments &&... arguments)
+    void Enqueue(Arguments&&... arguments)
     {
         Enqueue(Event{T{std::forward<Arguments>(arguments)...}});
     }

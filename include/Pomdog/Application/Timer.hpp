@@ -28,7 +28,7 @@ public:
     /// The timer starts instantly after construction in repeated execution mode
     /// with zero duration.
     /// @param clock Working GameClock instance.
-    explicit Timer(GameClock & clock);
+    explicit Timer(GameClock& clock);
 
     /// Creates the Timer which is connected to given GameClock pointer.
     /// @see Timer(GameClock&).
@@ -37,9 +37,9 @@ public:
 
     Timer() = delete;
     Timer(const Timer&) = delete;
-    Timer(Timer &&) = default;
-    Timer & operator=(const Timer&) = delete;
-    Timer & operator=(Timer &&) = default;
+    Timer(Timer&&) = default;
+    Timer& operator=(const Timer&) = delete;
+    Timer& operator=(Timer&&) = default;
 
     ~Timer();
 

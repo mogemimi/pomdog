@@ -12,9 +12,9 @@ class POMDOG_EXPORT GraphicsDevice final {
 public:
     GraphicsDevice() = delete;
     GraphicsDevice(const GraphicsDevice&) = delete;
-    GraphicsDevice & operator=(const GraphicsDevice&) = delete;
+    GraphicsDevice& operator=(const GraphicsDevice&) = delete;
 
-    explicit GraphicsDevice(std::unique_ptr<Detail::NativeGraphicsDevice> && nativeDevice);
+    explicit GraphicsDevice(std::unique_ptr<Detail::NativeGraphicsDevice>&& nativeDevice);
 
     ~GraphicsDevice();
 

@@ -27,11 +27,11 @@ public:
     FloatingPointQuaternion(T x, T y, T z, T w) noexcept;
 
     // Assignment operators:
-    FloatingPointQuaternion & operator+=(const FloatingPointQuaternion&) noexcept;
-    FloatingPointQuaternion & operator-=(const FloatingPointQuaternion&) noexcept;
-    FloatingPointQuaternion & operator*=(const FloatingPointQuaternion&) noexcept;
-    FloatingPointQuaternion & operator*=(T scaleFactor) noexcept;
-    FloatingPointQuaternion & operator/=(T scaleFactor);
+    FloatingPointQuaternion& operator+=(const FloatingPointQuaternion&) noexcept;
+    FloatingPointQuaternion& operator-=(const FloatingPointQuaternion&) noexcept;
+    FloatingPointQuaternion& operator*=(const FloatingPointQuaternion&) noexcept;
+    FloatingPointQuaternion& operator*=(T scaleFactor) noexcept;
+    FloatingPointQuaternion& operator/=(T scaleFactor);
 
     // Unary operators:
     FloatingPointQuaternion operator+() const noexcept;
@@ -57,23 +57,23 @@ public:
 
     static FloatingPointQuaternion Normalize(const FloatingPointQuaternion& quaternion) noexcept;
 
-    static void Normalize(const FloatingPointQuaternion& quaternion, FloatingPointQuaternion & result) noexcept;
+    static void Normalize(const FloatingPointQuaternion& quaternion, FloatingPointQuaternion& result) noexcept;
 
     static void
-    Slerp(const FloatingPointQuaternion& begin, const FloatingPointQuaternion& end, T amount, FloatingPointQuaternion & result);
+    Slerp(const FloatingPointQuaternion& begin, const FloatingPointQuaternion& end, T amount, FloatingPointQuaternion& result);
 
     static FloatingPointQuaternion
     Slerp(const FloatingPointQuaternion& begin, const FloatingPointQuaternion& end, T amount);
 
     static void
-    Inverse(const FloatingPointQuaternion& source, FloatingPointQuaternion & result);
+    Inverse(const FloatingPointQuaternion& source, FloatingPointQuaternion& result);
 
     static FloatingPointQuaternion
     Inverse(const FloatingPointQuaternion& source);
 
     ///@param axis The normalized axis of the rotation.
     static void
-    CreateFromAxisAngle(const FloatingPointVector3<T>& axis, const Radian<T>& angle, FloatingPointQuaternion & result);
+    CreateFromAxisAngle(const FloatingPointVector3<T>& axis, const Radian<T>& angle, FloatingPointQuaternion& result);
 
     ///@param axis The normalized axis of the rotation.
     static FloatingPointQuaternion
@@ -81,7 +81,7 @@ public:
 
     ///@brief Convert rotation matrix to quaternion.
     static void
-    CreateFromRotationMatrix(const FloatingPointMatrix4x4<T>& rotation, FloatingPointQuaternion & result);
+    CreateFromRotationMatrix(const FloatingPointMatrix4x4<T>& rotation, FloatingPointQuaternion& result);
 
     ///@brief Convert rotation matrix to quaternion.
     static FloatingPointQuaternion
@@ -89,7 +89,7 @@ public:
 
     ///@brief Convert rotation matrix to quaternion.
     static void
-    CreateFromRotationMatrix(const FloatingPointMatrix3x3<T>& rotation, FloatingPointQuaternion & result);
+    CreateFromRotationMatrix(const FloatingPointMatrix3x3<T>& rotation, FloatingPointQuaternion& result);
 
     ///@brief Convert rotation matrix to quaternion.
     static FloatingPointQuaternion
@@ -99,7 +99,7 @@ public:
     ///@param pitch The rotation around the x-axis in radians.
     ///@param roll The rotation around the z-axis in radians.
     static void
-    CreateFromYawPitchRoll(const Radian<T>& yaw, const Radian<T>& pitch, const Radian<T>& roll, FloatingPointQuaternion & result);
+    CreateFromYawPitchRoll(const Radian<T>& yaw, const Radian<T>& pitch, const Radian<T>& roll, FloatingPointQuaternion& result);
 
     ///@param yaw The rotation around the y-axis in radians.
     ///@param pitch The rotation around the x-axis in radians.

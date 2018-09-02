@@ -14,9 +14,9 @@ class POMDOG_EXPORT GraphicsCommandList final {
 public:
     GraphicsCommandList() = delete;
     GraphicsCommandList(const GraphicsCommandList&) = delete;
-    GraphicsCommandList & operator=(const GraphicsCommandList&) = delete;
+    GraphicsCommandList& operator=(const GraphicsCommandList&) = delete;
 
-    explicit GraphicsCommandList(GraphicsDevice & graphicsDevice);
+    explicit GraphicsCommandList(GraphicsDevice& graphicsDevice);
 
     explicit GraphicsCommandList(const std::shared_ptr<GraphicsDevice>& graphicsDevice);
 
@@ -52,7 +52,7 @@ public:
         std::size_t startIndexLocation,
         std::size_t startInstanceLocation);
 
-    void SetRenderPass(RenderPass && renderPass);
+    void SetRenderPass(RenderPass&& renderPass);
 
     void SetPrimitiveTopology(PrimitiveTopology primitiveTopology);
 
@@ -66,7 +66,7 @@ public:
 
     void SetVertexBuffers(const std::vector<VertexBufferBinding>& vertexBuffers);
 
-    void SetVertexBuffers(std::vector<VertexBufferBinding> && vertexBuffers);
+    void SetVertexBuffers(std::vector<VertexBufferBinding>&& vertexBuffers);
 
     void SetPipelineState(const std::shared_ptr<PipelineState>& pipelineState);
 

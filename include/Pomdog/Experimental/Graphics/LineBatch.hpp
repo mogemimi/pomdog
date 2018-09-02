@@ -15,7 +15,7 @@ class POMDOG_EXPORT LineBatch final {
 public:
     LineBatch(
         const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-        AssetManager & assets);
+        AssetManager& assets);
 
     ~LineBatch();
 

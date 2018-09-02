@@ -15,7 +15,7 @@ class POMDOG_EXPORT Texture2D final : public Texture {
 public:
     Texture2D() = delete;
     Texture2D(const Texture2D&) = delete;
-    Texture2D(Texture2D &&) = default;
+    Texture2D(Texture2D&&) = default;
 
     Texture2D(
         const std::shared_ptr<GraphicsDevice>& graphicsDevice,
@@ -31,8 +31,8 @@ public:
 
     ~Texture2D();
 
-    Texture2D & operator=(const Texture2D&) = delete;
-    Texture2D & operator=(Texture2D &&) = default;
+    Texture2D& operator=(const Texture2D&) = delete;
+    Texture2D& operator=(Texture2D&&) = default;
 
     std::int32_t GetWidth() const;
 
