@@ -151,7 +151,7 @@ public:
     }
 };
 
-class PongGame : public Game {
+class PongGame final : public Game {
 public:
     explicit PongGame(const std::shared_ptr<GameHost>& gameHost);
 

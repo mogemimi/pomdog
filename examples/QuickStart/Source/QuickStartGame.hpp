@@ -11,7 +11,7 @@ struct alignas(16) MyShaderConstants {
     Matrix4x4 ViewProjection;
 };
 
-class QuickStartGame : public Game {
+class QuickStartGame final : public Game {
 public:
     explicit QuickStartGame(const std::shared_ptr<GameHost>& gameHost);
 
