@@ -10,21 +10,60 @@ namespace Pomdog {
 namespace Detail {
 namespace ExceptionInternal {
 
-template <typename T> constexpr
-const char* ToString() { return "Exception"; }
+template <typename T>
+constexpr const char* ToString() noexcept
+{
+    return "Exception";
+}
 
 // Logic errors
-template<> constexpr const char* ToString<std::logic_error>(){ return "Logic error exception"; }
-template<> constexpr const char* ToString<std::domain_error>(){ return "Domain error exception"; }
-template<> constexpr const char* ToString<std::invalid_argument>(){ return "Invalid argument exception"; }
-template<> constexpr const char* ToString<std::length_error>(){ return "Length error exception"; }
-template<> constexpr const char* ToString<std::out_of_range>(){ return "Out of range exception"; }
+template <>
+constexpr const char* ToString<std::logic_error>() noexcept
+{
+    return "Logic error exception";
+}
+template <>
+constexpr const char* ToString<std::domain_error>() noexcept
+{
+    return "Domain error exception";
+}
+template <>
+constexpr const char* ToString<std::invalid_argument>() noexcept
+{
+    return "Invalid argument exception";
+}
+template <>
+constexpr const char* ToString<std::length_error>() noexcept
+{
+    return "Length error exception";
+}
+template <>
+constexpr const char* ToString<std::out_of_range>() noexcept
+{
+    return "Out of range exception";
+}
 
 // Runtime errors
-template<> constexpr const char* ToString<std::runtime_error>(){ return "Runtime error exception"; }
-template<> constexpr const char* ToString<std::range_error>(){ return "Range error exception"; }
-template<> constexpr const char* ToString<std::overflow_error>(){ return "Overflow error exception"; }
-template<> constexpr const char* ToString<std::underflow_error>(){ return "Underflow error exception"; }
+template <>
+constexpr const char* ToString<std::runtime_error>() noexcept
+{
+    return "Runtime error exception";
+}
+template <>
+constexpr const char* ToString<std::range_error>() noexcept
+{
+    return "Range error exception";
+}
+template <>
+constexpr const char* ToString<std::overflow_error>() noexcept
+{
+    return "Overflow error exception";
+}
+template <>
+constexpr const char* ToString<std::underflow_error>() noexcept
+{
+    return "Underflow error exception";
+}
 
 template <typename T>
 T CreateException(const std::string& description, const std::string& source, const char* filename, int line)
