@@ -13,25 +13,41 @@
 namespace Pomdog {
 
 struct FontGlyph;
-class SpriteBatchRenderer;
+class SpriteBatch;
 class TrueTypeFont;
+
+// NOTE: SpriteFont uses the Cartesian coordinate system in which text is drawn.
+// Also the `originPivot` represents a anchor point of text label.
+// If you want to align the bottom-left corner, the pivot is set to (0, 0).
+// If you want to align the top-right corner, the pivot is set to (1, 1).
+//
+//                             width
+//              <----------------------------------->
+//           (0, 1)                              (1, 1)
+//        ^     +-----------------------------------+
+//        |     |                                   |
+// height |     |                *                  |
+//        |     |            (0.5, 0.5)             |
+//        v     +-----------------------------------+
+//           (0, 0)                               (1, 0)
 
 class POMDOG_EXPORT SpriteFont final {
 public:
     SpriteFont(
         std::vector<std::shared_ptr<Texture2D>> && textures,
         const std::vector<FontGlyph>& glyphs,
-        char32_t defaultCharacter,
-        std::int16_t spacing,
-        std::int16_t lineSpacing);
+        float spacing,
+        float lineSpacing);
 
     SpriteFont(
         const std::shared_ptr<GraphicsDevice>& graphicsDevice,
         const std::shared_ptr<TrueTypeFont>& font,
-        char32_t defaultCharacter,
-        std::int16_t lineSpacing);
+        float fontSize,
+        float lineSpacing);
 
     ~SpriteFont();
+
+    void PrepareFonts(const std::string& text);
 
     Vector2 MeasureString(const std::string& text) const;
 
@@ -46,25 +62,27 @@ public:
     bool ContainsCharacter(char32_t character) const;
 
     void Draw(
-        SpriteBatchRenderer & spriteBatch,
+        SpriteBatch& spriteBatch,
         const std::string& text,
         const Vector2& position,
         const Color& color);
 
     void Draw(
-        SpriteBatchRenderer & spriteBatch,
+        SpriteBatch& spriteBatch,
         const std::string& text,
         const Vector2& position,
         const Color& color,
         const Radian<float>& rotation,
+        const Vector2& originPivot,
         float scale);
 
     void Draw(
-        SpriteBatchRenderer & spriteBatch,
+        SpriteBatch& spriteBatch,
         const std::string& text,
         const Vector2& position,
         const Color& color,
         const Radian<float>& rotation,
+        const Vector2& originPivot,
         const Vector2& scale);
 
 private:
