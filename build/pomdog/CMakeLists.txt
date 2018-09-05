@@ -341,7 +341,6 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/src/Signals/ScopedConnection.cpp
   ${POMDOG_DIR}/src/Utility/AlignedNew.hpp
   ${POMDOG_DIR}/src/Utility/CRC32.cpp
-  ${POMDOG_DIR}/src/Utility/Noncopyable.hpp
   ${POMDOG_DIR}/src/Utility/PathHelper.cpp
   ${POMDOG_DIR}/src/Utility/ScopeGuard.hpp
   ${POMDOG_DIR}/src/Utility/StringHelper.cpp

@@ -3,20 +3,21 @@
 #pragma once
 
 #include "PrerequisitesOpenAL.hpp"
-#include "../Utility/Noncopyable.hpp"
 
 namespace Pomdog {
 namespace Detail {
 namespace SoundSystem {
 namespace OpenAL {
 
-class ContextOpenAL final : Noncopyable {
+class ContextOpenAL final {
 private:
     ALCdevice* device;
     ALCcontext* context;
 
 public:
     ContextOpenAL();
+    ContextOpenAL(const ContextOpenAL&) = delete;
+    ContextOpenAL& operator=(const ContextOpenAL&) = delete;
     ~ContextOpenAL();
 };
 

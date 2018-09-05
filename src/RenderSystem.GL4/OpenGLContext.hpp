@@ -2,13 +2,11 @@
 
 #pragma once
 
-#include "../Utility/Noncopyable.hpp"
-
 namespace Pomdog {
 namespace Detail {
 namespace GL4 {
 
-class OpenGLContext : Noncopyable {
+class OpenGLContext {
 public:
     virtual ~OpenGLContext() = default;
 

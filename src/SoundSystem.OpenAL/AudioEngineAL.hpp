@@ -4,16 +4,17 @@
 
 #include "ContextOpenAL.hpp"
 #include "PrerequisitesOpenAL.hpp"
-#include "../Utility/Noncopyable.hpp"
 
 namespace Pomdog {
 namespace Detail {
 namespace SoundSystem {
 namespace OpenAL {
 
-class AudioEngineAL final : Noncopyable {
+class AudioEngineAL final {
 public:
     AudioEngineAL();
+    AudioEngineAL(const AudioEngineAL&) = delete;
+    AudioEngineAL& operator=(const AudioEngineAL&) = delete;
     ~AudioEngineAL();
 
     float GetMasterVolume() const;

@@ -16,6 +16,8 @@ namespace Win32 {
 class OpenGLContextWin32 final : public GL4::OpenGLContext {
 public:
     OpenGLContextWin32() = delete;
+    OpenGLContextWin32(const OpenGLContextWin32&) = delete;
+    OpenGLContextWin32& operator=(const OpenGLContextWin32&) = delete;
 
     OpenGLContextWin32(
         HWND windowHandle,

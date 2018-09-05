@@ -16,6 +16,8 @@ class GameWindowX11;
 class OpenGLContextX11 final : public GL4::OpenGLContext {
 public:
     OpenGLContextX11() = delete;
+    OpenGLContextX11(const OpenGLContextX11&) = delete;
+    OpenGLContextX11& operator=(const OpenGLContextX11&) = delete;
 
     OpenGLContextX11(
         const std::shared_ptr<GameWindowX11>& window,

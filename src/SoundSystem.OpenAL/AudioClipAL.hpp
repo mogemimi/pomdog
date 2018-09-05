@@ -3,7 +3,6 @@
 #pragma once
 
 #include "PrerequisitesOpenAL.hpp"
-#include "../Utility/Noncopyable.hpp"
 #include <cstddef>
 #include <cstdint>
 #include <optional>
@@ -16,7 +15,7 @@ namespace Detail {
 namespace SoundSystem {
 namespace OpenAL {
 
-class AudioClipAL final : Noncopyable {
+class AudioClipAL final {
 public:
     AudioClipAL(
         const void* data,
@@ -24,6 +23,9 @@ public:
         int sampleRate,
         int bitsPerSample,
         AudioChannels channel);
+
+    AudioClipAL(const AudioClipAL&) = delete;
+    AudioClipAL& operator=(const AudioClipAL&) = delete;
 
     ~AudioClipAL();
 

@@ -3,7 +3,6 @@
 #pragma once
 
 #include "PrerequisitesXAudio2.hpp"
-#include "../Utility/Noncopyable.hpp"
 #include <memory>
 
 namespace Pomdog {
@@ -19,12 +18,15 @@ namespace XAudio2 {
 class AudioClipXAudio2;
 class AudioEngineXAudio2;
 
-class SoundEffectXAudio2 final : Noncopyable {
+class SoundEffectXAudio2 final {
 public:
     SoundEffectXAudio2(
         AudioEngineXAudio2 & audioEngine,
         const std::shared_ptr<AudioClipXAudio2>& audioClip,
         bool isLooped);
+
+    SoundEffectXAudio2(const SoundEffectXAudio2&) = delete;
+    SoundEffectXAudio2& operator=(const SoundEffectXAudio2&) = delete;
 
     ~SoundEffectXAudio2();
 

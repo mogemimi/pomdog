@@ -3,7 +3,6 @@
 #pragma once
 
 #include "PrerequisitesOpenAL.hpp"
-#include "../Utility/Noncopyable.hpp"
 #include "../Utility/Tagged.hpp"
 #include <memory>
 #include <optional>
@@ -24,7 +23,7 @@ using AudioSourceAL = Tagged<ALuint, AudioSourceALTag>;
 class AudioClipAL;
 class AudioEngineAL;
 
-class SoundEffectAL final : Noncopyable {
+class SoundEffectAL final {
 private:
     std::shared_ptr<AudioClipAL> audioClip;
     std::optional<AudioSourceAL> source;
@@ -34,6 +33,9 @@ public:
         AudioEngineAL & audioEngine,
         const std::shared_ptr<AudioClipAL>& audioClip,
         bool isLooped);
+
+    SoundEffectAL(const SoundEffectAL&) = delete;
+    SoundEffectAL& operator=(const SoundEffectAL&) = delete;
 
     ~SoundEffectAL();
 

@@ -2,14 +2,17 @@
 
 #pragma once
 
-#include "../Utility/Noncopyable.hpp"
 #include "Pomdog/Signals/Signal.hpp"
 
 namespace Pomdog {
 namespace Detail {
 
-class SubsystemScheduler : Noncopyable {
+class SubsystemScheduler final {
 public:
+    SubsystemScheduler() = default;
+    SubsystemScheduler(const SubsystemScheduler&) = delete;
+    SubsystemScheduler& operator=(const SubsystemScheduler&) = delete;
+
     Signal<void()> OnUpdate;
 };
 
