@@ -5,6 +5,7 @@
 #include "Pomdog/Content/AssetBuilders/PipelineStateBuilder.hpp"
 #include "Pomdog/Content/AssetBuilders/ShaderBuilder.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
+#include "Pomdog/Experimental/TexturePacker/TextureRegion.hpp"
 #include "Pomdog/Graphics/BlendDescription.hpp"
 #include "Pomdog/Graphics/BufferUsage.hpp"
 #include "Pomdog/Graphics/ConstantBuffer.hpp"
@@ -48,6 +49,31 @@ namespace {
 #include "Shaders/HLSL.Embedded/SpriteBatch_PS.inc.hpp"
 #include "Shaders/HLSL.Embedded/SpriteBatch_VS.inc.hpp"
 #include "Shaders/Metal.Embedded/SpriteBatch.inc.hpp"
+
+Vector2 ComputeSpriteOffset(const TextureRegion& region, const Vector2& originPivot) noexcept
+{
+    if ((region.Subrect.Width <= 0) || (region.Subrect.Height <= 0)) {
+        return Vector2::Zero;
+    }
+
+    POMDOG_ASSERT(region.Subrect.Width > 0);
+    POMDOG_ASSERT(region.Subrect.Height > 0);
+
+    const auto regionSize = Vector2{
+        static_cast<float>(region.Width),
+        static_cast<float>(region.Height)};
+
+    const auto baseOffset = regionSize * originPivot;
+
+    const auto w = static_cast<float>(region.Subrect.Width);
+    const auto h = static_cast<float>(region.Subrect.Height);
+
+    auto offset = Vector2{
+        static_cast<float>(region.XOffset),
+        regionSize.Y - (static_cast<float>(region.YOffset) + h)};
+    offset = (baseOffset - offset) / Vector2{w, h};
+    return offset;
+}
 
 } // unnamed namespace
 
@@ -535,6 +561,36 @@ void SpriteBatch::Draw(
     POMDOG_ASSERT(impl);
     constexpr float layerDepth = 0.0f;
     impl->Draw(texture, position, sourceRect, color, rotation, originPivot, scale, layerDepth);
+}
+
+void SpriteBatch::Draw(
+    const std::shared_ptr<Texture2D>& texture,
+    const Vector2& position,
+    const TextureRegion& textureRegion,
+    const Color& color,
+    const Radian<float>& rotation,
+    const Vector2& originPivot,
+    float scale)
+{
+    POMDOG_ASSERT(impl);
+    auto offset = ComputeSpriteOffset(textureRegion, originPivot);
+    constexpr float layerDepth = 0.0f;
+    impl->Draw(texture, position, textureRegion.Subrect, color, rotation, offset, {scale, scale}, layerDepth);
+}
+
+void SpriteBatch::Draw(
+    const std::shared_ptr<Texture2D>& texture,
+    const Vector2& position,
+    const TextureRegion& textureRegion,
+    const Color& color,
+    const Radian<float>& rotation,
+    const Vector2& originPivot,
+    const Vector2& scale)
+{
+    POMDOG_ASSERT(impl);
+    auto offset = ComputeSpriteOffset(textureRegion, originPivot);
+    constexpr float layerDepth = 0.0f;
+    impl->Draw(texture, position, textureRegion.Subrect, color, rotation, offset, scale, layerDepth);
 }
 
 int SpriteBatch::GetDrawCallCount() const noexcept

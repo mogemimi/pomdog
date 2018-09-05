@@ -13,6 +13,7 @@
 namespace Pomdog {
 
 class AssetManager;
+struct TextureRegion;
 
 // NOTE: SpriteBatch uses the Cartesian coordinate system in which sprite is drawn.
 // Also the `originPivot` represents a anchor point of sprite.
@@ -87,6 +88,24 @@ public:
         const std::shared_ptr<Texture2D>& texture,
         const Vector2& position,
         const Rectangle& sourceRect,
+        const Color& color,
+        const Radian<float>& rotation,
+        const Vector2& originPivot,
+        const Vector2& scale);
+
+    void Draw(
+        const std::shared_ptr<Texture2D>& texture,
+        const Vector2& position,
+        const TextureRegion& textureRegion,
+        const Color& color,
+        const Radian<float>& rotation,
+        const Vector2& originPivot,
+        float scale);
+
+    void Draw(
+        const std::shared_ptr<Texture2D>& texture,
+        const Vector2& position,
+        const TextureRegion& textureRegion,
         const Color& color,
         const Radian<float>& rotation,
         const Vector2& originPivot,
