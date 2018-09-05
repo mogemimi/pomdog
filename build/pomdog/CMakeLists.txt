@@ -353,7 +353,6 @@ set(POMDOG_SOURCES_EXPERIMENTAL
   ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/PolygonBatch.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/PolygonShapeBuilder.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/SpriteBatch.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/SpriteBatchRenderer.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/SpriteFont.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/SpriteFontLoader.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/TrueTypeFont.hpp
@@ -372,7 +371,6 @@ set(POMDOG_SOURCES_EXPERIMENTAL
   ${POMDOG_DIR}/src/Experimental/Graphics/PolygonBatch.cpp
   ${POMDOG_DIR}/src/Experimental/Graphics/PolygonShapeBuilder.cpp
   ${POMDOG_DIR}/src/Experimental/Graphics/SpriteBatch.cpp
-  ${POMDOG_DIR}/src/Experimental/Graphics/SpriteBatchRenderer.cpp
   ${POMDOG_DIR}/src/Experimental/Graphics/SpriteFont.cpp
   ${POMDOG_DIR}/src/Experimental/Graphics/SpriteFontLoader.cpp
   ${POMDOG_DIR}/src/Experimental/Graphics/TrueTypeFont.cpp
