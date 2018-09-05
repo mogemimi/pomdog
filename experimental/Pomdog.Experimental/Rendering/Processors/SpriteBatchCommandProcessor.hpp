@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Pomdog.Experimental/Rendering/RenderCommandProcessor.hpp"
-#include "Pomdog/Experimental/Graphics/SpriteBatchRenderer.hpp"
+#include "Pomdog/Experimental/Graphics/SpriteBatch.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Math/Matrix4x4.hpp"
 
@@ -33,7 +33,7 @@ public:
     std::type_index GetCommandType() const noexcept override;
 
 public:
-    SpriteBatchRenderer spriteBatch;
+    SpriteBatch spriteBatch;
 };
 
 } // namespace Rendering

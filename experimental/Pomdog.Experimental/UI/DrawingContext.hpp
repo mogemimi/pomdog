@@ -5,7 +5,7 @@
 #include "Pomdog.Experimental/Rendering/Renderer.hpp"
 #include "Pomdog.Experimental/UI/FontSize.hpp"
 #include "Pomdog.Experimental/UI/FontWeight.hpp"
-#include "Pomdog/Experimental/Graphics/SpriteBatchRenderer.hpp"
+#include "Pomdog/Experimental/Graphics/SpriteBatch.hpp"
 #include "Pomdog/Experimental/Graphics/SpriteFont.hpp"
 #include "Pomdog/Experimental/Graphics/TrueTypeFont.hpp"
 #include "Pomdog/Math/Color.hpp"

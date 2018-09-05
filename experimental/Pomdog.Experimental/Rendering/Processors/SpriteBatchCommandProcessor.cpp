@@ -30,7 +30,8 @@ void SpriteBatchCommandProcessor::Draw(
 
 void SpriteBatchCommandProcessor::FlushBatch()
 {
-    spriteBatch.Flush();
+    // FIXME
+    // spriteBatch.Flush();
 }
 
 void SpriteBatchCommandProcessor::End()
