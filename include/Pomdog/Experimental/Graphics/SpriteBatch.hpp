@@ -3,13 +3,33 @@
 #pragma once
 
 #include "Pomdog/Basic/Export.hpp"
+#include "Pomdog/Graphics/BlendDescription.hpp"
+#include "Pomdog/Graphics/SamplerDescription.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Math/detail/ForwardDeclarations.hpp"
 #include <memory>
+#include <optional>
 
 namespace Pomdog {
 
 class AssetManager;
+
+// NOTE: SpriteBatch uses the Cartesian coordinate system in which sprite is drawn.
+// Also the `originPivot` represents a anchor point of sprite.
+// If you want to align the bottom-left corner, the pivot is set to (0, 0).
+// If you want to align the top-right corner, the pivot is set to (1, 1).
+//
+//                     width
+//              <------------------->
+//           (0, 1)              (1, 1)
+//        ^     +-------------------+
+//        |     |                   |
+//        |     |                   |
+// height |     |         *         |
+//        |     |     (0.5, 0.5)    |
+//        |     |                   |
+//        v     +-------------------+
+//           (0, 0)              (1, 0)
 
 class POMDOG_EXPORT SpriteBatch final {
 public:
@@ -19,8 +39,18 @@ public:
 
     SpriteBatch(
         const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-        const BlendDescription& blendDescription,
+        std::optional<BlendDescription>&& blendDesc,
+        std::optional<SamplerDescription>&& samplerDesc,
+        std::optional<SurfaceFormat>&& renderTargetViewFormat,
+        std::optional<DepthFormat>&& depthStencilViewFormat,
         AssetManager & assets);
+
+    SpriteBatch() = delete;
+    SpriteBatch(const SpriteBatch&) = delete;
+    SpriteBatch(SpriteBatch&&) = default;
+
+    SpriteBatch& operator=(const SpriteBatch&) = delete;
+    SpriteBatch& operator=(SpriteBatch&&) = default;
 
     ~SpriteBatch();
 
