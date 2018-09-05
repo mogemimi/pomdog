@@ -125,7 +125,8 @@ std::shared_ptr<SpriteFont> DrawingContext::GetFont(FontWeight fontWeight, FontS
         break;
     }
 
-    auto spriteFont = std::make_shared<SpriteFont>(graphicsDevice, font, '?', fontPointSize);
+    auto spriteFont = std::make_shared<SpriteFont>(graphicsDevice, font, fontPointSize, fontPointSize);
+    spriteFont->SetDefaultCharacter(U'?');
     spriteFont->MeasureString("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,-+*/?&!");
     spriteFonts.emplace(fontId, spriteFont);
 

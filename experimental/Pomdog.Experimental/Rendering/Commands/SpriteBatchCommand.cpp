@@ -12,15 +12,15 @@ std::type_index SpriteRenderCommand::GetType() const noexcept
     return index;
 }
 
-void SpriteBatchCommand::Execute(SpriteBatchRenderer & spriteBatch)
+void SpriteBatchCommand::Execute(SpriteBatch& spriteBatch)
 {
     spriteBatch.Draw(texture, position, sourceRect, color, rotation, originPivot, scale);
 }
 
-void SpriteFontCommand::Execute(SpriteBatchRenderer& spriteBatch)
+void SpriteFontCommand::Execute(SpriteBatch& spriteBatch)
 {
     POMDOG_ASSERT(spriteFont);
-    spriteFont->Draw(spriteBatch, text, position, color, rotation, scale);
+    spriteFont->Draw(spriteBatch, text, position, color, rotation, Vector2{0.0f, 0.0f}, scale);
 }
 
 } // namespace Rendering

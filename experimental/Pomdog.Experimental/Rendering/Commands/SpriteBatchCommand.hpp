@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Pomdog.Experimental/Rendering/RenderCommand.hpp"
-#include "Pomdog/Experimental/Graphics/SpriteBatchRenderer.hpp"
+#include "Pomdog/Experimental/Graphics/SpriteBatch.hpp"
 #include "Pomdog/Experimental/Graphics/SpriteFont.hpp"
 #include "Pomdog/Experimental/TexturePacker/TextureRegion.hpp"
 #include <Pomdog/Pomdog.hpp>
@@ -16,7 +16,7 @@ class SpriteRenderCommand : public RenderCommand {
 public:
     virtual ~SpriteRenderCommand() = default;
 
-    virtual void Execute(SpriteBatchRenderer & spriteBatch) = 0;
+    virtual void Execute(SpriteBatch& spriteBatch) = 0;
 
     std::type_index GetType() const noexcept override final;
 };
@@ -93,7 +93,7 @@ public:
         originPivot = originPivotIn;
     }
 
-    void Execute(SpriteBatchRenderer & spriteBatch) override;
+    void Execute(SpriteBatch& spriteBatch) override;
 
 private:
     std::shared_ptr<Texture2D> texture;
@@ -145,7 +145,7 @@ public:
         text = textIn;
     }
 
-    void Execute(SpriteBatchRenderer& spriteBatch) override;
+    void Execute(SpriteBatch& spriteBatch) override;
 
 private:
     std::shared_ptr<SpriteFont> spriteFont;
