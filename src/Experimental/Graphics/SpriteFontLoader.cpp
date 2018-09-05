@@ -394,9 +394,9 @@ std::shared_ptr<SpriteFont> SpriteFontLoader::Load(
     auto spriteFont = std::make_shared<SpriteFont>(
         std::move(textures),
         std::move(glyphs),
-        defaultCharacter,
         static_cast<std::int16_t>(info.PaddingLeft + info.PaddingRight),
         static_cast<std::int16_t>(common.LineHeight));
+    spriteFont->SetDefaultCharacter(defaultCharacter);
 
     return spriteFont;
 }

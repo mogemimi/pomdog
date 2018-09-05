@@ -162,39 +162,4 @@ std::optional<FontGlyph> TrueTypeFont::RasterizeGlyph(
 //    return baseline;
 //}
 
-//std::vector<Glyph> TrueTypeFont::BakeFontBitmap(float fontSize, int width, int height, std::uint8_t* output)
-//{
-//    POMDOG_ASSERT(!impl->ttfBinary.empty());
-//    POMDOG_ASSERT(fontSize > 0);
-//
-//    ///@todo ASCII codes [32, 127)
-//    std::array<stbtt_bakedchar, 96> characters;
-//
-//    char32_t startCodePoint = 32;
-//
-//    stbtt_BakeFontBitmap(impl->ttfBinary.data(),
-//        0, fontSize, output, width, height,
-//        startCodePoint, characters.size(), characters.data());
-//
-//    std::vector<Glyph> glyphs;
-//    glyphs.reserve(characters.size());
-//
-//    char32_t codePoint = startCodePoint;
-//    for (auto c: characters) {
-//        Glyph glyph;
-//        glyph.Subrect.X = c.x0;
-//        glyph.Subrect.Y = c.y0;
-//        glyph.Subrect.Width = c.x1 - c.x0;
-//        glyph.Subrect.Height = c.y1 - c.y0;
-//        glyph.TexturePage = 0;
-//        glyph.XAdvance = c.xadvance;
-//        glyph.XOffset = c.xoff;
-//        glyph.YOffset = c.yoff;
-//        glyph.Character = codePoint;
-//        glyphs.push_back(std::move(glyph));
-//        ++codePoint;
-//    }
-//    return std::move(glyphs);
-//}
-
 } // namespace Pomdog
