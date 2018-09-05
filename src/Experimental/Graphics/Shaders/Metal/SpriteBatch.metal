@@ -26,6 +26,10 @@ struct InstanceVertex {
 
     // {xyzw} = color.rgba
     float4 Color [[attribute(4)]];
+
+    // {xy__} = {1.0f / textureWidth, 1.0f / textureHeight}
+    // {__zw} = unused
+    float2 InverseTextureSize [[attribute(5)]];
 };
 
 struct VS_OUTPUT {
@@ -38,16 +42,10 @@ struct __attribute__((__aligned__(256))) SpriteBatchConstants {
     matrix_float4x4 ViewProjection;
 };
 
-struct __attribute__((__aligned__(256))) TextureConstants {
-    // {xy__} = {1.0f / textureWidth, 1.0f / textureHeight}
-    float2 InverseTextureSize;
-};
-
 vertex VS_OUTPUT SpriteBatchVS(
     VS_INPUT                       input            [[stage_in]],
     constant InstanceVertex*       instanceVertices [[buffer(1 + PomdogVertexBufferSlotOffset)]],
-    constant SpriteBatchConstants& uniforms1        [[buffer(0)]],
-    constant TextureConstants&     uniforms2        [[buffer(1)]],
+    constant SpriteBatchConstants& uniforms         [[buffer(0)]],
     ushort                         vertexIndex      [[vertex_id]],
     ushort                         instanceIndex    [[instance_id]])
 {
@@ -61,8 +59,8 @@ vertex VS_OUTPUT SpriteBatchVS(
     float cosRotation = cos(perInstance.OriginRotationDepth.z);
     float sinRotation = sin(perInstance.OriginRotationDepth.z);
     matrix_float3x3 rotate = matrix_float3x3(
-        float3(cosRotation, sinRotation, 0.0),
-        float3(-sinRotation, cosRotation, 0.0),
+        float3(cosRotation, -sinRotation, 0.0),
+        float3(sinRotation, cosRotation, 0.0),
         float3(0.0, 0.0, 1.0));
 
     matrix_float3x3 translate = matrix_float3x3(
@@ -70,15 +68,15 @@ vertex VS_OUTPUT SpriteBatchVS(
         float3(0.0, 1.0, perInstance.Translation.y),
         float3(0.0, 0.0, 1.0));
 
-    matrix_float3x3 transform = ((scaling * rotate) * translate);
+    matrix_float3x3 transform = (scaling * rotate) * translate;
     float3 position = float3(input.PositionTextureCoord.xy - perInstance.OriginRotationDepth.xy, 1.0) * transform;
 
-    float4 finalPosition = float4(position.xy, 0.0, 1.0) * uniforms1.ViewProjection;
+    float4 finalPosition = float4(position.xy, 0.0, 1.0) * uniforms.ViewProjection;
 
     VS_OUTPUT output;
     output.Position = float4(finalPosition.xy, perInstance.OriginRotationDepth.w, 1.0);
     output.TextureCoord = ((input.PositionTextureCoord.zw * perInstance.SourceRect.zw)
-        + perInstance.SourceRect.xy) * uniforms2.InverseTextureSize.xy;
+        + perInstance.SourceRect.xy) * perInstance.InverseTextureSize.xy;
     output.Color = perInstance.Color;
 
     return output;

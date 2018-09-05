@@ -7,15 +7,26 @@ struct VS_INPUT {
     // {xy__} = position.xy
     // {__zw} = scale.xy
     float4 Translation          : SV_Position;
+
+    // per Instance
     // {xy__} = {rect.xy}
     // {__zw} = {rect.width, rect.height}
     float4 SourceRect           : BINORMAL;
+
+    // per Instance
     // {xy__} = originPivot.xy
     // {__z_} = rotation
     // {___w} = layerDepth
     float4 OriginRotationDepth  : NORMAL;
+
+    // per Instance
     // {xyzw} = color.rgba
     float4 Color                : COLOR;
+
+    // per Instance
+    // {xy__} = {1.0f / textureWidth, 1.0f / textureHeight}
+    // {__zw} = unused
+    float4 InverseTextureSize   : TEXCOORD0;
 
     // per Instance
     uint InstanceID : SV_InstanceID;
@@ -29,11 +40,6 @@ struct VS_OUTPUT {
 
 cbuffer SpriteBatchConstants : register(b0) {
     matrix<float, 4, 4> ViewProjection;
-};
-
-cbuffer TextureConstants : register(b1) {
-    // {xy__} = {1.0f / textureWidth, 1.0f / textureHeight}
-    vector<float, 2>    InverseTextureSize;
 };
 
 VS_OUTPUT SpriteBatchVS(VS_INPUT input)
@@ -64,7 +70,7 @@ VS_OUTPUT SpriteBatchVS(VS_INPUT input)
     float4 finalPosition = mul(float4(position.xy, 0, 1), ViewProjection);
     output.Position = float4(finalPosition.xy, input.OriginRotationDepth.w, 1);
 
-    output.TextureCoord = (input.PositionTextureCoord.zw * input.SourceRect.zw + input.SourceRect.xy) * InverseTextureSize.xy;
+    output.TextureCoord = (input.PositionTextureCoord.zw * input.SourceRect.zw + input.SourceRect.xy) * input.InverseTextureSize.xy;
 
     output.Color = input.Color;
 

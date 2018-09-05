@@ -17,6 +17,8 @@
 #include "Pomdog/Graphics/PipelineState.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
+#include "Pomdog/Graphics/RasterizerDescription.hpp"
+#include "Pomdog/Graphics/SamplerState.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
 #include "Pomdog/Graphics/ShaderLanguage.hpp"
 #include "Pomdog/Graphics/Texture2D.hpp"
@@ -51,7 +53,7 @@ namespace {
 
 // MARK: - SpriteBatch::Impl
 
-class alignas(16) SpriteBatch::Impl final : public AlignedNew<SpriteBatch::Impl> {
+class SpriteBatch::Impl final {
 private:
     static constexpr std::size_t MaxBatchSize = 2048;
     static constexpr std::size_t MinBatchSize = 128;
@@ -59,7 +61,7 @@ private:
 
     static_assert(MaxBatchSize >= MinBatchSize, "");
 
-    struct alignas(16) SpriteInfo final {
+    struct alignas(16) SpriteInfo final : public AlignedNew<SpriteInfo> {
         // {xy__} = position.xy
         // {__zw} = scale.xy
         Vector4 Translation;
@@ -76,19 +78,14 @@ private:
         // {rgb_} = color.rgb
         // {___a} = color.a
         Vector4 Color;
-    };
 
-private:
-    struct alignas(16) TextureConstant final {
         // {xy__} = {1.0f / textureWidth, 1.0f / textureHeight}
         // {__zw} = unused
         Vector4 InverseTextureSize;
     };
 
-    TextureConstant textureConstant;
-
+private:
     std::vector<SpriteInfo> spriteQueue;
-    std::vector<std::shared_ptr<ConstantBuffer>> constantBuffers;
 
     std::shared_ptr<GraphicsCommandList> commandList;
     std::shared_ptr<Texture2D> currentTexture;
@@ -98,8 +95,10 @@ private:
     std::shared_ptr<VertexBuffer> instanceVertices;
 
     std::shared_ptr<PipelineState> pipelineState;
-    std::shared_ptr<ConstantBuffer> constantBufferMatrices;
+    std::shared_ptr<ConstantBuffer> constantBuffer;
+    std::shared_ptr<SamplerState> sampler;
 
+    Vector2 inverseTextureSize;
     std::size_t startInstanceLocation;
 
 public:
@@ -108,21 +107,15 @@ public:
 public:
     Impl(
         const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-        const BlendDescription& blendDescription,
+        std::optional<BlendDescription>&& blendState,
+        std::optional<SamplerDescription>&& samplerState,
+        std::optional<SurfaceFormat>&& renderTargetViewFormat,
+        std::optional<DepthFormat>&& depthStencilViewFormat,
         AssetManager & assets);
 
     void Begin(
         const std::shared_ptr<GraphicsCommandList>& commandListIn,
         const Matrix4x4& transformMatrix);
-
-    void Draw(
-        const std::shared_ptr<Texture2D>& texture,
-        const Vector2& position,
-        const Color& color,
-        const Radian<float>& rotation,
-        const Vector2& originPivot,
-        const Vector2& scale,
-        float layerDepth);
 
     void Draw(
         const std::shared_ptr<Texture2D>& texture,
@@ -148,11 +141,34 @@ private:
 
 SpriteBatch::Impl::Impl(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-    const BlendDescription& blendDescription,
+    std::optional<BlendDescription>&& blendDesc,
+    std::optional<SamplerDescription>&& samplerDesc,
+    std::optional<SurfaceFormat>&& renderTargetViewFormat,
+    std::optional<DepthFormat>&& depthStencilViewFormat,
     AssetManager & assets)
     : startInstanceLocation(0)
     , drawCallCount(0)
 {
+    auto presentationParameters = graphicsDevice->GetPresentationParameters();
+
+    if (!blendDesc) {
+        blendDesc = BlendDescription::CreateNonPremultiplied();
+    }
+    if (!samplerDesc) {
+        samplerDesc = SamplerDescription::CreateLinearWrap();
+    }
+    if (!renderTargetViewFormat) {
+        renderTargetViewFormat = presentationParameters.BackBufferFormat;
+    }
+    if (!depthStencilViewFormat) {
+        depthStencilViewFormat = presentationParameters.DepthStencilFormat;
+    }
+
+    POMDOG_ASSERT(blendDesc);
+    POMDOG_ASSERT(samplerDesc);
+    POMDOG_ASSERT(renderTargetViewFormat);
+    POMDOG_ASSERT(depthStencilViewFormat);
+
     {
         using PositionTextureCoord = Vector4;
 
@@ -192,25 +208,21 @@ SpriteBatch::Impl::Impl(
             BufferUsage::Dynamic);
     }
     {
-        constantBufferMatrices = std::make_shared<ConstantBuffer>(
+        constantBuffer = std::make_shared<ConstantBuffer>(
             graphicsDevice,
             sizeof(Matrix4x4),
             BufferUsage::Dynamic);
 
-        for (std::size_t i = 0; i < MaxDrawCallCount; ++i) {
-            auto textureConstants = std::make_shared<ConstantBuffer>(
-                graphicsDevice,
-                sizeof(TextureConstant),
-                BufferUsage::Dynamic);
-            constantBuffers.push_back(std::move(textureConstants));
-        }
+        sampler = std::make_shared<SamplerState>(
+            graphicsDevice,
+            *samplerDesc);
     }
     {
         auto inputLayout = InputLayoutHelper{}
             .AddInputSlot()
             .Float4()
             .AddInputSlot(InputClassification::InputPerInstance, 1)
-            .Float4().Float4().Float4().Float4();
+            .Float4().Float4().Float4().Float4().Float4();
 
         auto vertexShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
             .SetGLSL(Builtin_GLSL_SpriteBatch_VS, std::strlen(Builtin_GLSL_SpriteBatch_VS))
@@ -222,23 +234,20 @@ SpriteBatch::Impl::Impl(
             .SetHLSLPrecompiled(BuiltinHLSL_SpriteBatch_PS, sizeof(BuiltinHLSL_SpriteBatch_PS))
             .SetMetal(Builtin_Metal_SpriteBatch, sizeof(Builtin_Metal_SpriteBatch), "SpriteBatchPS");
 
-        auto presentationParameters = graphicsDevice->GetPresentationParameters();
-
         pipelineState = assets.CreateBuilder<PipelineState>()
-            .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
-            .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
+            .SetRenderTargetViewFormat(*renderTargetViewFormat)
+            .SetDepthStencilViewFormat(*depthStencilViewFormat)
             .SetVertexShader(vertexShader.Build())
             .SetPixelShader(pixelShader.Build())
             .SetInputLayout(inputLayout.CreateInputLayout())
-            .SetBlendState(blendDescription)
+            .SetBlendState(*blendDesc)
             .SetDepthStencilState(DepthStencilDescription::CreateNone())
+            .SetRasterizerState(RasterizerDescription::CreateCullNone())
             .SetConstantBufferBindSlot("SpriteBatchConstants", 0)
-            .SetConstantBufferBindSlot("TextureConstants", 1)
             .Build();
     }
-    {
-        spriteQueue.reserve(MinBatchSize);
-    }
+
+    spriteQueue.reserve(MinBatchSize);
 }
 
 void SpriteBatch::Impl::Begin(
@@ -248,9 +257,9 @@ void SpriteBatch::Impl::Begin(
     POMDOG_ASSERT(commandListIn);
     this->commandList = commandListIn;
 
-    POMDOG_ASSERT(constantBufferMatrices);
+    POMDOG_ASSERT(constantBuffer);
     alignas(16) Matrix4x4 transposedMatrix = Matrix4x4::Transpose(transformMatrix);
-    constantBufferMatrices->SetValue(transposedMatrix);
+    constantBuffer->SetValue(transposedMatrix);
 
     startInstanceLocation = 0;
     drawCallCount = 0;
@@ -292,18 +301,6 @@ void SpriteBatch::Impl::RenderBatch(
     POMDOG_ASSERT((startInstanceLocation + sprites.size()) <= MaxBatchSize);
 
     POMDOG_ASSERT(drawCallCount >= 0);
-    POMDOG_ASSERT(drawCallCount < static_cast<int>(constantBuffers.size()));
-    if (drawCallCount >= static_cast<int>(constantBuffers.size())) {
-        // FUS RO DAH
-        ///@todo throw exception
-        return;
-    }
-
-    POMDOG_ASSERT(drawCallCount < static_cast<int>(constantBuffers.size()));
-    const auto& constantBuffer = constantBuffers[drawCallCount];
-
-    POMDOG_ASSERT(constantBuffer);
-    constantBuffer->SetValue(textureConstant);
 
     POMDOG_ASSERT(sprites.size() <= MaxBatchSize);
     const auto instanceOffsetBytes = sizeof(SpriteInfo) * startInstanceLocation;
@@ -314,13 +311,10 @@ void SpriteBatch::Impl::RenderBatch(
         sizeof(SpriteInfo));
 
     commandList->SetTexture(0, texture);
-
-    // TODO:
-    //commandList->SetSamplerState(0, sampler);
+    commandList->SetSamplerState(0, sampler);
 
     commandList->SetPipelineState(pipelineState);
-    commandList->SetConstantBuffer(0, constantBufferMatrices);
-    commandList->SetConstantBuffer(1, constantBuffer);
+    commandList->SetConstantBuffer(0, constantBuffer);
     commandList->SetPrimitiveTopology(PrimitiveTopology::TriangleList);
 
     commandList->SetVertexBuffers({
@@ -357,69 +351,12 @@ void SpriteBatch::Impl::CompareTexture(const std::shared_ptr<Texture2D>& texture
         POMDOG_ASSERT(texture->GetWidth() > 0);
         POMDOG_ASSERT(texture->GetHeight() > 0);
 
-        Vector2 inverseTextureSize {
-            (texture->GetWidth() > 0) ? (1.0f / static_cast<float>(texture->GetWidth())) : 0.0f,
-            (texture->GetHeight() > 0) ? (1.0f / static_cast<float>(texture->GetHeight())) : 0.0f
-        };
+        const float w = static_cast<float>(texture->GetWidth());
+        const float h = static_cast<float>(texture->GetHeight());
 
-        textureConstant.InverseTextureSize.X = inverseTextureSize.X;
-        textureConstant.InverseTextureSize.Y = inverseTextureSize.Y;
+        inverseTextureSize.X = (w > 0.0f) ? (1.0f / w) : 0.0f;
+        inverseTextureSize.Y = (h > 0.0f) ? (1.0f / h) : 0.0f;
     }
-}
-
-void SpriteBatch::Impl::Draw(
-    const std::shared_ptr<Texture2D>& texture,
-    const Vector2& position,
-    const Color& color,
-    const Radian<float>& rotation,
-    const Vector2& originPivot,
-    const Vector2& scale,
-    float layerDepth)
-{
-    POMDOG_ASSERT(texture);
-    POMDOG_ASSERT(texture->GetWidth() > 0);
-    POMDOG_ASSERT(texture->GetHeight() > 0);
-
-    if (scale.X == 0.0f || scale.Y == 0.0f) {
-        return;
-    }
-
-    if ((startInstanceLocation + spriteQueue.size()) >= MaxBatchSize) {
-        FlushBatch();
-        POMDOG_ASSERT(spriteQueue.empty());
-
-        // TODO: Not implemented
-        //GrowSpriteQueue();
-        return;
-    }
-
-    POMDOG_ASSERT((startInstanceLocation + spriteQueue.size()) < MaxBatchSize);
-
-    CompareTexture(texture);
-
-    SpriteInfo info;
-    info.Translation = Vector4{
-        position.X,
-        position.Y,
-        scale.X,
-        scale.Y
-    };
-    info.SourceRect = Vector4{
-        0.0f,
-        0.0f,
-        static_cast<float>(texture->GetWidth()),
-        static_cast<float>(texture->GetHeight())
-    };
-    info.OriginRotationLayerDepth = Vector4{
-        originPivot.X,
-        originPivot.Y,
-        rotation.value,
-        layerDepth
-    };
-    info.Color = color.ToVector4();
-
-    spriteQueue.push_back(std::move(info));
-    POMDOG_ASSERT((startInstanceLocation + spriteQueue.size()) <= MaxBatchSize);
 }
 
 void SpriteBatch::Impl::Draw(
@@ -451,7 +388,7 @@ void SpriteBatch::Impl::Draw(
         POMDOG_ASSERT(spriteQueue.empty());
 
         // TODO: Not implemented
-        //GrowSpriteQueue();
+        // GrowSpriteQueue();
         return;
     }
 
@@ -481,6 +418,12 @@ void SpriteBatch::Impl::Draw(
         layerDepth
     };
     info.Color = color.ToVector4();
+    info.InverseTextureSize = Vector4{
+        inverseTextureSize.X,
+        inverseTextureSize.Y,
+        0.0f,
+        0.0f,
+    };
 
     spriteQueue.push_back(std::move(info));
     POMDOG_ASSERT((startInstanceLocation + spriteQueue.size()) <= MaxBatchSize);
@@ -493,15 +436,28 @@ SpriteBatch::SpriteBatch(
     AssetManager & assets)
     : SpriteBatch(
         graphicsDevice,
-        BlendDescription::CreateNonPremultiplied(),
+        std::nullopt,
+        std::nullopt,
+        std::nullopt,
+        std::nullopt,
         assets)
-{}
+{
+}
 
 SpriteBatch::SpriteBatch(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-    const BlendDescription& blendDescription,
+    std::optional<BlendDescription>&& blendDesc,
+    std::optional<SamplerDescription>&& samplerDesc,
+    std::optional<SurfaceFormat>&& renderTargetViewFormat,
+    std::optional<DepthFormat>&& depthStencilViewFormat,
     AssetManager & assets)
-    : impl(std::make_unique<Impl>(graphicsDevice, blendDescription, assets))
+    : impl(std::make_unique<Impl>(
+        graphicsDevice,
+        std::move(blendDesc),
+        std::move(samplerDesc),
+        std::move(renderTargetViewFormat),
+        std::move(depthStencilViewFormat),
+        assets))
 {
 }
 
@@ -538,7 +494,8 @@ void SpriteBatch::Draw(
 {
     POMDOG_ASSERT(impl);
     constexpr float layerDepth = 0.0f;
-    impl->Draw(texture, position, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, layerDepth);
+    const Rectangle sourceRect = {0, 0, texture->GetWidth(), texture->GetHeight()};
+    impl->Draw(texture, position, sourceRect, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, layerDepth);
 }
 
 void SpriteBatch::Draw(
