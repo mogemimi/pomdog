@@ -93,32 +93,32 @@ TEST(LogChannel, GetName)
 {
     {
         LogChannel channel("test");
-        EXPECT_EQ("test", channel.Name());
+        EXPECT_EQ("test", channel.GetName());
     }
     {
         LogChannel channel("Chuck Norris");
-        EXPECT_EQ("Chuck Norris", channel.Name());
+        EXPECT_EQ("Chuck Norris", channel.GetName());
     }
 }
 
-TEST(LogChannel, SetLogLevel)
+TEST(LogChannel, SetLevel)
 {
     LogChannel channel("test");
 
-    channel.Level(LogLevel::Critical);
-    EXPECT_EQ(LogLevel::Critical, channel.Level());
+    channel.SetLevel(LogLevel::Critical);
+    EXPECT_EQ(LogLevel::Critical, channel.GetLevel());
 
-    channel.Level(LogLevel::Warning);
-    EXPECT_EQ(LogLevel::Warning, channel.Level());
+    channel.SetLevel(LogLevel::Warning);
+    EXPECT_EQ(LogLevel::Warning, channel.GetLevel());
 
-    channel.Level(LogLevel::Info);
-    EXPECT_EQ(LogLevel::Info, channel.Level());
+    channel.SetLevel(LogLevel::Info);
+    EXPECT_EQ(LogLevel::Info, channel.GetLevel());
 
-    channel.Level(LogLevel::Verbose);
-    EXPECT_EQ(LogLevel::Verbose, channel.Level());
+    channel.SetLevel(LogLevel::Verbose);
+    EXPECT_EQ(LogLevel::Verbose, channel.GetLevel());
 
-    channel.Level(LogLevel::Internal);
-    EXPECT_EQ(LogLevel::Internal, channel.Level());
+    channel.SetLevel(LogLevel::Internal);
+    EXPECT_EQ(LogLevel::Internal, channel.GetLevel());
 }
 
 TEST(LogChannel, VerbosityLevelThreshold)
@@ -137,7 +137,7 @@ TEST(LogChannel, VerbosityLevelThreshold)
         channel.Log(facts, verbosity);
     };
 
-    channel.Level(LogLevel::Critical);
+    channel.SetLevel(LogLevel::Critical);
     ResetMessageAndSendLog(LogLevel::Critical);
     EXPECT_EQ(message, facts);
     ResetMessageAndSendLog(LogLevel::Warning);
@@ -149,7 +149,7 @@ TEST(LogChannel, VerbosityLevelThreshold)
     ResetMessageAndSendLog(LogLevel::Internal);
     EXPECT_TRUE(message.empty());
 
-    channel.Level(LogLevel::Warning);
+    channel.SetLevel(LogLevel::Warning);
     ResetMessageAndSendLog(LogLevel::Critical);
     EXPECT_EQ(message, facts);
     ResetMessageAndSendLog(LogLevel::Warning);
@@ -161,7 +161,7 @@ TEST(LogChannel, VerbosityLevelThreshold)
     ResetMessageAndSendLog(LogLevel::Internal);
     EXPECT_TRUE(message.empty());
 
-    channel.Level(LogLevel::Info);
+    channel.SetLevel(LogLevel::Info);
     ResetMessageAndSendLog(LogLevel::Critical);
     EXPECT_EQ(message, facts);
     ResetMessageAndSendLog(LogLevel::Warning);
@@ -173,7 +173,7 @@ TEST(LogChannel, VerbosityLevelThreshold)
     ResetMessageAndSendLog(LogLevel::Internal);
     EXPECT_TRUE(message.empty());
 
-    channel.Level(LogLevel::Verbose);
+    channel.SetLevel(LogLevel::Verbose);
     ResetMessageAndSendLog(LogLevel::Critical);
     EXPECT_EQ(message, facts);
     ResetMessageAndSendLog(LogLevel::Warning);
@@ -185,7 +185,7 @@ TEST(LogChannel, VerbosityLevelThreshold)
     ResetMessageAndSendLog(LogLevel::Internal);
     EXPECT_TRUE(message.empty());
 
-    channel.Level(LogLevel::Internal);
+    channel.SetLevel(LogLevel::Internal);
     ResetMessageAndSendLog(LogLevel::Critical);
     EXPECT_EQ(message, facts);
     ResetMessageAndSendLog(LogLevel::Warning);

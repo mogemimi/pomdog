@@ -30,13 +30,13 @@ public:
 
     Connection Connect(std::function<void(const LogEntry&)>&& slot);
 
-    const std::string& Name() const;
+    const std::string& GetName() const;
 
-    LogLevel Level() const;
+    LogLevel GetLevel() const noexcept;
 
-    void Level(LogLevel level);
+    void SetLevel(LogLevel level) noexcept;
 
-    std::size_t ConnectionCount() const;
+    std::size_t GetConnectionCount() const;
 
 private:
     Signal<void(const LogEntry&)> signal;

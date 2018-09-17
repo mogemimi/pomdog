@@ -13,7 +13,7 @@
 namespace Pomdog {
 namespace {
 
-class Logger {
+class Logger final {
 public:
     Connection Connect(const std::function<void(const LogEntry&)>& slot);
 
@@ -65,7 +65,7 @@ auto FindChannnel(const std::string& channelName, T & channels)
 {
     return std::find_if(std::begin(channels), std::end(channels),
         [&channelName](const decltype(channels.front())& tuple) {
-            return channelName == tuple.channel.Name();
+            return channelName == tuple.channel.GetName();
         });
 }
 
@@ -85,7 +85,7 @@ Connection Logger::Connect(
     }
 
     POMDOG_ASSERT(iter != std::end(channels));
-    POMDOG_ASSERT(channelName == iter->channel.Name());
+    POMDOG_ASSERT(channelName == iter->channel.GetName());
 
     auto & channel = iter->channel;
     auto & connection = iter->connection;
@@ -112,7 +112,7 @@ Connection Logger::Connect(
     }
 
     POMDOG_ASSERT(iter != std::end(channels));
-    POMDOG_ASSERT(channelName == iter->channel.Name());
+    POMDOG_ASSERT(channelName == iter->channel.GetName());
 
     auto & channel = iter->channel;
     auto & connection = iter->connection;
@@ -125,28 +125,28 @@ Connection Logger::Connect(
 
 LogLevel Logger::GetLevel() const
 {
-    return defaultChannel.Level();
+    return defaultChannel.GetLevel();
 }
 
 void Logger::SetLevel(LogLevel level)
 {
-    defaultChannel.Level(level);
+    defaultChannel.SetLevel(level);
 }
 
 LogLevel Logger::GetLevel(const std::string& channelName) const
 {
     auto iter = FindChannnel(channelName, channels);
     if (iter != std::end(channels)) {
-        return iter->channel.Level();
+        return iter->channel.GetLevel();
     }
-    return defaultChannel.Level();
+    return defaultChannel.GetLevel();
 }
 
 void Logger::SetLevel(const std::string& channelName, LogLevel level)
 {
     auto iter = FindChannnel(channelName, channels);
     if (iter != std::end(channels)) {
-        iter->channel.Level(level);
+        iter->channel.SetLevel(level);
     }
 }
 

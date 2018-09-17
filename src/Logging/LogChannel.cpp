@@ -39,22 +39,22 @@ Connection LogChannel::Connect(std::function<void(const LogEntry&)> && slot)
     return signal.Connect(std::move(slot));
 }
 
-const std::string& LogChannel::Name() const
+const std::string& LogChannel::GetName() const
 {
     return name;
 }
 
-LogLevel LogChannel::Level() const
+LogLevel LogChannel::GetLevel() const noexcept
 {
     return this->level;
 }
 
-void LogChannel::Level(LogLevel levelIn)
+void LogChannel::SetLevel(LogLevel levelIn) noexcept
 {
     this->level = levelIn;
 }
 
-std::size_t LogChannel::ConnectionCount() const
+std::size_t LogChannel::GetConnectionCount() const
 {
     return signal.InvocationCount();
 }
