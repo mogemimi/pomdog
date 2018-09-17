@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 
@@ -59,6 +60,12 @@ func createEmbeddedFile(src string, compileOptions compileOptions) error {
 		}
 		content = createEmbeddedCode(base, prefix, minifyCode(string(dat)))
 	case shaderLanguageMetal:
+		if exec.Command("xcrun", "--help").Run() == nil {
+			// NOTE: When running on Mac, check compilation result
+			if _, err := compileMetal(src, dst); err != nil {
+				return errors.Wrapf(err, "failed to compile a shader \"%s\"", src)
+			}
+		}
 		prefix := "Builtin_Metal_"
 		dat, err := ioutil.ReadFile(src)
 		if err != nil {
