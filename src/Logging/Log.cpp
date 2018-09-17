@@ -226,16 +226,16 @@ void Log::SetLevel(const std::string& channelName, LogLevel verbosity)
     return logger.SetLevel(channelName, verbosity);
 }
 
-void Log::Critical(const std::string& channel, const std::string& message)
+void Log::Critical(const std::string& channelName, const std::string& message)
 {
     auto & logger = GetLoggerInstance();
-    logger.Log(LogEntry{message, channel, LogLevel::Critical});
+    logger.Log(LogEntry{message, channelName, LogLevel::Critical});
 }
 
-void Log::Warning(const std::string& channel, const std::string& message)
+void Log::Warning(const std::string& channelName, const std::string& message)
 {
     auto & logger = GetLoggerInstance();
-    logger.Log(LogEntry{message, channel, LogLevel::Warning});
+    logger.Log(LogEntry{message, channelName, LogLevel::Warning});
 }
 
 void Log::Info(const std::string& message)
@@ -244,10 +244,10 @@ void Log::Info(const std::string& message)
     logger.Log(message, LogLevel::Info);
 }
 
-void Log::Info(const std::string& channel, const std::string& message)
+void Log::Info(const std::string& channelName, const std::string& message)
 {
     auto & logger = GetLoggerInstance();
-    logger.Log(LogEntry{message, channel, LogLevel::Info});
+    logger.Log(LogEntry{message, channelName, LogLevel::Info});
 }
 
 void Log::Verbose(const std::string& message)
@@ -256,10 +256,10 @@ void Log::Verbose(const std::string& message)
     logger.Log(message, LogLevel::Verbose);
 }
 
-void Log::Verbose(const std::string& channel, const std::string& message)
+void Log::Verbose(const std::string& channelName, const std::string& message)
 {
     auto & logger = GetLoggerInstance();
-    logger.Log(LogEntry{message, channel, LogLevel::Verbose});
+    logger.Log(LogEntry{message, channelName, LogLevel::Verbose});
 }
 
 void Log::Internal(const std::string& message)
@@ -268,10 +268,10 @@ void Log::Internal(const std::string& message)
     logger.Log(message, LogLevel::Internal);
 }
 
-void Log::Internal(const std::string& channel, const std::string& message)
+void Log::Internal(const std::string& channelName, const std::string& message)
 {
     auto & logger = GetLoggerInstance();
-    logger.Log(LogEntry{message, channel, LogLevel::Internal});
+    logger.Log(LogEntry{message, channelName, LogLevel::Internal});
 }
 
 } // namespace Pomdog

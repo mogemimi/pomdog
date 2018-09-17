@@ -34,21 +34,21 @@ public:
 
     static void SetLevel(const std::string& channelName, LogLevel verbosity);
 
-    static void Critical(const std::string& channel, const std::string& message);
+    static void Critical(const std::string& channelName, const std::string& message);
 
-    static void Warning(const std::string& channel, const std::string& message);
+    static void Warning(const std::string& channelName, const std::string& message);
 
     static void Info(const std::string& message);
 
-    static void Info(const std::string& channel, const std::string& message);
+    static void Info(const std::string& channelName, const std::string& message);
 
     static void Verbose(const std::string& message);
 
-    static void Verbose(const std::string& channel, const std::string& message);
+    static void Verbose(const std::string& channelName, const std::string& message);
 
     static void Internal(const std::string& message);
 
-    static void Internal(const std::string& channel, const std::string& message);
+    static void Internal(const std::string& channelName, const std::string& message);
 };
 
 } // namespace Pomdog
