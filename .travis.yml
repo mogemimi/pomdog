@@ -8,19 +8,22 @@ compiler:
 install:
   - git submodule update --init --depth 1
 
+env:
+  matrix:
+    - XCODE_PROJECT=build/PomdogTest.xcodeproj                      BUILD_CONFIG=Debug    TEST_APP=build/build/Debug/PomdogUnitTest
+    - XCODE_PROJECT=build/PomdogTest.xcodeproj                      BUILD_CONFIG=Release  TEST_APP=build/build/Release/PomdogUnitTest
+    - XCODE_PROJECT=examples/QuickStart/Builds/QuickStart.xcodeproj BUILD_CONFIG=Debug    TEST_APP=true
+    - XCODE_PROJECT=examples/QuickStart/Builds/QuickStart.xcodeproj BUILD_CONFIG=Release  TEST_APP=true
+    - XCODE_PROJECT=build.cmake/Pomdog.xcodeproj                    BUILD_CONFIG=Debug    TEST_APP=build.cmake/test/Debug/PomdogTest
+    - XCODE_PROJECT=build.cmake/Pomdog.xcodeproj                    BUILD_CONFIG=Release  TEST_APP=build.cmake/test/Release/PomdogTest
+
 script:
-  - xcodebuild -project build/PomdogTest.xcodeproj clean
-  - xcodebuild -project build/PomdogTest.xcodeproj
-  - xcodebuild -project examples/QuickStart/Builds/QuickStart.xcodeproj clean
-  - xcodebuild -project examples/QuickStart/Builds/QuickStart.xcodeproj
-  - build/build/Release/PomdogUnitTest
   - mkdir build.cmake && cd build.cmake
   - cmake -G Xcode ..
-  - xcodebuild -project Pomdog.xcodeproj -configuration Debug
-  - xcodebuild -project Pomdog.xcodeproj -configuration Release
-  - test/Debug/PomdogTest
-  - test/Release/PomdogTest
   - cd ..
+  - xcodebuild -project $XCODE_PROJECT clean
+  - xcodebuild -project $XCODE_PROJECT -configuration $BUILD_CONFIG
+  - $TEST_APP
 
 notifications:
   email: false
