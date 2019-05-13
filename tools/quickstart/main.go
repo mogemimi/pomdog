@@ -110,7 +110,7 @@ func createProject(config projectConfig) error {
 		"Source/QuickStartGame.cpp",
 		"Source/QuickStartGame.hpp",
 		"Platform.Cocoa/AppDelegate.mm",
-		"Platform.Cocoa/GameViewController.mm",
+		"Platform.Cocoa/main.mm",
 		"Platform.Cocoa/Info.plist",
 		"Platform.Cocoa/Base.lproj/MainMenu.xib",
 		"Platform.Win32/main.cpp",

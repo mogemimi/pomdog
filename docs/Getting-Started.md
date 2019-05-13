@@ -17,21 +17,22 @@
 ## Create a new project
 
 ```sh
-python pomdog/tools/quickstart.py
+go get -u github.com/fatih/color
+go get -u github.com/pkg/errors
+go run pomdog/tools/quickstart/main.go
 ```
 
 e.g.
 
 ```sh
-$ git clone https://github.com/mogemimi/pomdog.git
-$ python pomdog/tools/quickstart.py
-Configure your new project
-
+$ git clone https://github.com/mogemimi/pomdog.git && cd pomdog
+$ git submodule update --init
+$ cd ..
+$ go run pomdog/tools/quickstart/main.go
+> Where is a Pomdog directory? (e.g. path/to/pomdog) ./pomdog
 > Where do you want to create your new gamedev project? [.] .
 > What is your project name? (e.g. MyGame) HelloWorld
 > What is your project URL? [com.example.HelloWorld]
-HelloWorld: Create a new directory.
-Create a new project at 'HelloWorld'.
 Done.
 
 $ cd HelloWorld
