@@ -20,7 +20,7 @@ Feedback, issues and pull requests are always welcome!
 
 Pomdog is available and supported on the following platforms:
 
-* Mac OS X 10.11 and later [![Build Status](https://travis-ci.org/mogemimi/pomdog.svg?branch=master)](https://travis-ci.org/mogemimi/pomdog)
+* macOS 10.12 and later [![Build Status](https://travis-ci.org/mogemimi/pomdog.svg?branch=master)](https://travis-ci.org/mogemimi/pomdog)
 * Windows 10 and later [![Build Status](https://ci.appveyor.com/api/projects/status/hywx5fmkrk7gpdpl/branch/master?svg=true)](https://ci.appveyor.com/project/mogemimi/pomdog/branch/master)
 * Linux (Ubuntu 18.04 LTS and Arch Linux) [![wercker status](https://app.wercker.com/status/e7bab185762fa586284d832580e89561/s/master "wercker status")](https://app.wercker.com/project/bykey/e7bab185762fa586284d832580e89561)
 

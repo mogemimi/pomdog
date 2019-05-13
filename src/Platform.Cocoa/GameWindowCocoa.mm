@@ -38,7 +38,7 @@ GameWindowCocoa::~GameWindowCocoa()
 bool GameWindowCocoa::GetAllowUserResizing() const
 {
     NSUInteger styleMask = [nativeWindow styleMask];
-    return (styleMask & NSResizableWindowMask) == NSResizableWindowMask;
+    return (styleMask & NSWindowStyleMaskResizable) == NSWindowStyleMaskResizable;
 }
 
 void GameWindowCocoa::SetAllowUserResizing(bool allowResizing)
@@ -47,13 +47,13 @@ void GameWindowCocoa::SetAllowUserResizing(bool allowResizing)
 
     NSUInteger styleMask = [nativeWindow styleMask];
     if (allowResizing) {
-        styleMask |= NSResizableWindowMask;
-        POMDOG_ASSERT((styleMask & NSResizableWindowMask) == NSResizableWindowMask);
+        styleMask |= NSWindowStyleMaskResizable;
+        POMDOG_ASSERT((styleMask & NSWindowStyleMaskResizable) == NSWindowStyleMaskResizable);
     }
     else {
-        styleMask |= NSResizableWindowMask;
-        styleMask ^= NSResizableWindowMask;
-        POMDOG_ASSERT((styleMask & NSResizableWindowMask) != NSResizableWindowMask);
+        styleMask |= NSWindowStyleMaskResizable;
+        styleMask ^= NSWindowStyleMaskResizable;
+        POMDOG_ASSERT((styleMask & NSWindowStyleMaskResizable) != NSWindowStyleMaskResizable);
     }
 
     dispatch_async(dispatch_get_main_queue(), [=] {

@@ -6,7 +6,7 @@
 
 #### Runtime requirements
 
-* Mac OS X 10.11 and later
+* macOS 10.12 and later
 * Windows 10 and later
 * Ubuntu 18.04 LTS and later
 * DirectX 11, OpenGL4 or Metal
