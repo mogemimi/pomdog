@@ -6,7 +6,7 @@
 
 * macOS 10.12 and later
 * Windows 10 and later
-* Ubuntu 18.04 LTS and later
+* Ubuntu 19.04 and later
 * DirectX 11, OpenGL4 or Metal
 
 #### Build requirements

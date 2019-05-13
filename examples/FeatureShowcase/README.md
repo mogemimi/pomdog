@@ -6,13 +6,13 @@
 
 * macOS 10.12 and later
 * Windows 10 and later
-* Ubuntu 18.04 LTS and later
+* Ubuntu 19.04 and later
 * DirectX 11, OpenGL4 or Metal
 
 #### Build requirements
 
 * CMake 3.10 and later
-* Clang 6.0 (for Linux)
+* Clang 8.0 (for Linux)
 * Xcode 9.2 and later
 * Visual Studio 2017 and later
 
