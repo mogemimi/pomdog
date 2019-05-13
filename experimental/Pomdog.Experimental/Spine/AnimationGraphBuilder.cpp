@@ -62,6 +62,8 @@ std::unique_ptr<AnimationNode> CreateAnimationNode(
 
         auto node1 = CreateAnimationNode(*iter1, inputs, nodes, skeletonDesc);
         auto node2 = CreateAnimationNode(*iter2, inputs, nodes, skeletonDesc);
+        POMDOG_ASSERT(node1 != nullptr);
+        POMDOG_ASSERT(node2 != nullptr);
 
         if (desc.Parameter) {
             inputs.push_back({*desc.Parameter, AnimationBlendInputType::Float});
@@ -75,6 +77,7 @@ std::unique_ptr<AnimationNode> CreateAnimationNode(
         break;
     }
     }
+    return nullptr;
 }
 
 } // unnamed namespace
