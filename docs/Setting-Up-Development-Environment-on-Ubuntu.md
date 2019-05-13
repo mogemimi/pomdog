@@ -47,9 +47,10 @@ sudo apt clean
 #### Installing Git, Build Tools and Libraries
 
 ```sh
-sudo apt install
+sudo apt install \
     git \
     make \
+    ninja-build \
     cmake \
     libc++-dev \
     libc++abi-dev

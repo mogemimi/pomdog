@@ -15,11 +15,12 @@ build-clang-debug:
       code: |
         mkdir build.cmake && cd build.cmake
         cmake \
+          -G Ninja \
           -DCMAKE_C_COMPILER=clang \
           -DCMAKE_CXX_COMPILER=clang++ \
           -DCMAKE_BUILD_TYPE=Debug \
           ..
-        make -j4
+        ninja
     - script:
       name: run test
       code: ./build.cmake/test/PomdogTest
@@ -32,11 +33,12 @@ build-clang-release:
       code: |
         mkdir build.cmake && cd build.cmake
         cmake \
+          -G Ninja \
           -DCMAKE_C_COMPILER=clang \
           -DCMAKE_CXX_COMPILER=clang++ \
           -DCMAKE_BUILD_TYPE=Release \
           ..
-        make -j4
+        ninja
     - script:
       name: run test
       code: ./build.cmake/test/PomdogTest
