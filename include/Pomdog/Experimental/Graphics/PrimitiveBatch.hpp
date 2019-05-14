@@ -13,13 +13,13 @@ namespace Pomdog {
 
 class AssetManager;
 
-class POMDOG_EXPORT PolygonBatch final {
+class POMDOG_EXPORT PrimitiveBatch final {
 public:
-    PolygonBatch(
+    PrimitiveBatch(
         const std::shared_ptr<GraphicsDevice>& graphicsDevice,
         AssetManager& assets);
 
-    ~PolygonBatch();
+    ~PrimitiveBatch();
 
     void Begin(
         const std::shared_ptr<GraphicsCommandList>& commandList,
@@ -88,7 +88,7 @@ public:
         const Color& color);
 
     //void DrawPolygon(
-    //    const std::vector<PolygonBatchVertex>& vertices,
+    //    const std::vector<PrimitiveBatchVertex>& vertices,
     //    const Color& color);
 
     void DrawRectangle(

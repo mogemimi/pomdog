@@ -13,9 +13,12 @@ set(CMAKE_CONFIGURATION_TYPES Debug Release)
 
 source_group(Source                       REGULAR_EXPRESSION "Source/*")
 source_group(Source\\EntityComponentTest  REGULAR_EXPRESSION "Source/EntityComponentTest/*")
-source_group(Source\\PolygonBatchTest     REGULAR_EXPRESSION "Source/PolygonBatchTest/*")
+source_group(Source\\LineBatchTest        REGULAR_EXPRESSION "Source/LineBatchTest/*")
+source_group(Source\\PolylineDrawingTest  REGULAR_EXPRESSION "Source/PolylineDrawingTest/*")
+source_group(Source\\PrimitiveBatchTest   REGULAR_EXPRESSION "Source/PrimitiveBatchTest/*")
 source_group(Source\\SpriteBatchTest      REGULAR_EXPRESSION "Source/SpriteBatchTest/*")
 source_group(Source\\SpriteFontTest       REGULAR_EXPRESSION "Source/SpriteFontTest/*")
+source_group(Source\\SpriteLineTest       REGULAR_EXPRESSION "Source/SpriteLineTest/*")
 source_group(Platform                     REGULAR_EXPRESSION "Platform.*/*")
 
 set(RESOURCE_FILES
@@ -32,12 +35,18 @@ set(RESOURCE_FILES
 add_executable(${PRODUCT_NAME} WIN32
   Source/FeatureShowcaseGame.cpp
   Source/FeatureShowcaseGame.hpp
-  Source/PolygonBatchTest/PolygonBatchTest.cpp
-  Source/PolygonBatchTest/PolygonBatchTest.hpp
+  Source/LineBatchTest/LineBatchTest.cpp
+  Source/LineBatchTest/LineBatchTest.hpp
+  Source/PolylineDrawingTest/PolylineDrawingTest.cpp
+  Source/PolylineDrawingTest/PolylineDrawingTest.hpp
+  Source/PrimitiveBatchTest/PrimitiveBatchTest.cpp
+  Source/PrimitiveBatchTest/PrimitiveBatchTest.hpp
   Source/SpriteBatchTest/SpriteBatchTest.cpp
   Source/SpriteBatchTest/SpriteBatchTest.hpp
   Source/SpriteFontTest/SpriteFontTest.cpp
   Source/SpriteFontTest/SpriteFontTest.hpp
+  Source/SpriteLineTest/SpriteLineTest.cpp
+  Source/SpriteLineTest/SpriteLineTest.hpp
   ${RESOURCE_FILES}
 
   # On Mac

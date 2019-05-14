@@ -40,7 +40,7 @@ void PolygonShapeBuilder::Reset()
     vertices.clear();
 }
 
-const PolygonBatchVertex* PolygonShapeBuilder::GetData() const noexcept
+const PrimitiveBatchVertex* PolygonShapeBuilder::GetData() const noexcept
 {
     return vertices.data();
 }

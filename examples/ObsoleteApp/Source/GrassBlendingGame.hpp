@@ -79,7 +79,7 @@ private:
     ConnectionList connections;
     Viewport clientViewport;
 
-    std::unique_ptr<PolygonBatch> polygonBatch;
+    std::unique_ptr<PrimitiveBatch> primitiveBatch;
 };
 
 } // namespace TestApp

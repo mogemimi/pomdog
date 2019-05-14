@@ -28,11 +28,11 @@ mat3x3 translate=mat3x3(
 vec3(1.0,0.0,Translation.x),
 vec3(0.0,1.0,Translation.y),
 vec3(0.0,0.0,1.0));
-mat3x3 transform =(scaling*rotate)* translate;
-vec3 position=vec3(PositionTextureCoord.xy-OriginRotationDepth.xy,1.0)* transform;
-vec4 finalPosition=vec4(position.xy,0.0,1.0)* ViewProjection;
+mat3x3 transform=(scaling*rotate)*translate;
+vec3 position=vec3(PositionTextureCoord.xy-OriginRotationDepth.xy,1.0)*transform;
+vec4 finalPosition=vec4(position.xy,0.0,1.0)*ViewProjection;
 gl_Position=vec4(finalPosition.xy,OriginRotationDepth.w,1.0);
-Out.TextureCoord =(PositionTextureCoord.zw*SourceRect.zw+SourceRect.xy)* InverseTextureSize.xy;
+Out.TextureCoord=(PositionTextureCoord.zw*SourceRect.zw+SourceRect.xy)*InverseTextureSize.xy;
 Out.Color=Color;
 }
 )";

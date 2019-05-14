@@ -4,7 +4,7 @@
 #include <Pomdog/Experimental/Graphics/SpriteBatch.hpp>
 #include <Pomdog/Experimental/Graphics/SpriteFont.hpp>
 #include <Pomdog/Experimental/Graphics/TrueTypeFont.hpp>
-#include <Pomdog/Experimental/Graphics/PolygonBatch.hpp>
+#include <Pomdog/Experimental/Graphics/PrimitiveBatch.hpp>
 
 namespace FeatureShowcase {
 
@@ -54,7 +54,7 @@ private:
 
     std::shared_ptr<Timer> timer;
     std::shared_ptr<Timer> fpsTimer;
-    std::shared_ptr<PolygonBatch> polygonBatch;
+    std::shared_ptr<PrimitiveBatch> primitiveBatch;
     std::shared_ptr<SpriteBatch> spriteBatch;
     std::shared_ptr<SpriteFont> spriteFont;
 

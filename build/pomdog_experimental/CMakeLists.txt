@@ -93,11 +93,7 @@ add_library(pomdog_experimental STATIC
   ${POMDOG_EXPERIMENTAL_DIR}/Graphics/ScreenQuad.hpp
   # ${POMDOG_EXPERIMENTAL_DIR}/Graphics/SkinnedEffect.cpp
   # ${POMDOG_EXPERIMENTAL_DIR}/Graphics/SkinnedEffect.hpp
-  # ${POMDOG_EXPERIMENTAL_DIR}/Graphics/SpriteLine.cpp
-  # ${POMDOG_EXPERIMENTAL_DIR}/Graphics/SpriteLine.hpp
   ${POMDOG_EXPERIMENTAL_DIR}/Graphics/SpriteSortMode.hpp
-  # ${POMDOG_EXPERIMENTAL_DIR}/Graphics/SpriteRenderer.cpp
-  # ${POMDOG_EXPERIMENTAL_DIR}/Graphics/SpriteRenderer.hpp
 
   ${POMDOG_EXPERIMENTAL_DIR}/ImageEffects/ChromaticAberration.cpp
   ${POMDOG_EXPERIMENTAL_DIR}/ImageEffects/ChromaticAberration.hpp

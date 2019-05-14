@@ -19,7 +19,7 @@ void SpriteBatchTest::Initialize()
     auto assets = gameHost->GetAssetManager();
     auto clock = gameHost->GetClock();
     commandList = std::make_shared<GraphicsCommandList>(*graphicsDevice);
-    polygonBatch = std::make_shared<PolygonBatch>(graphicsDevice, *assets);
+    primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
     spriteBatch = std::make_shared<SpriteBatch>(
         graphicsDevice,
         BlendDescription::CreateAlphaBlend(),
@@ -137,14 +137,14 @@ void SpriteBatchTest::Draw()
     // Drawing line
     const auto w = static_cast<float>(presentationParameters.BackBufferWidth);
     const auto h = static_cast<float>(presentationParameters.BackBufferHeight);
-    polygonBatch->Begin(commandList, projectionMatrix);
-    polygonBatch->DrawLine(Vector2{-w * 0.5f, 0.0f}, Vector2{w * 0.5f, 0.0f}, Color{221, 220, 218, 160}, 1.0f);
-    polygonBatch->DrawLine(Vector2{0.0f, -h * 0.5f}, Vector2{0.0f, h * 0.5f}, Color{221, 220, 218, 160}, 1.0f);
-    polygonBatch->DrawLine(Vector2{-w * 0.5f, h * 0.25f}, Vector2{w * 0.5f, h * 0.25f}, Color{221, 220, 218, 60}, 1.0f);
-    polygonBatch->DrawLine(Vector2{-w * 0.5f, -h * 0.25f}, Vector2{w * 0.5f, -h * 0.25f}, Color{221, 220, 218, 60}, 1.0f);
-    polygonBatch->DrawLine(Vector2{-w * 0.25f, -h * 0.5f}, Vector2{-w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
-    polygonBatch->DrawLine(Vector2{w * 0.25f, -h * 0.5f}, Vector2{w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
-    polygonBatch->End();
+    primitiveBatch->Begin(commandList, projectionMatrix);
+    primitiveBatch->DrawLine(Vector2{-w * 0.5f, 0.0f}, Vector2{w * 0.5f, 0.0f}, Color{221, 220, 218, 160}, 1.0f);
+    primitiveBatch->DrawLine(Vector2{0.0f, -h * 0.5f}, Vector2{0.0f, h * 0.5f}, Color{221, 220, 218, 160}, 1.0f);
+    primitiveBatch->DrawLine(Vector2{-w * 0.5f, h * 0.25f}, Vector2{w * 0.5f, h * 0.25f}, Color{221, 220, 218, 60}, 1.0f);
+    primitiveBatch->DrawLine(Vector2{-w * 0.5f, -h * 0.25f}, Vector2{w * 0.5f, -h * 0.25f}, Color{221, 220, 218, 60}, 1.0f);
+    primitiveBatch->DrawLine(Vector2{-w * 0.25f, -h * 0.5f}, Vector2{-w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
+    primitiveBatch->DrawLine(Vector2{w * 0.25f, -h * 0.5f}, Vector2{w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
+    primitiveBatch->End();
 
     spriteBatch->Begin(commandList, projectionMatrix);
 

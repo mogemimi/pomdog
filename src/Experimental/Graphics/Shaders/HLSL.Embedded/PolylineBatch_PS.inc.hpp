@@ -1,6 +1,6 @@
 // Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
-constexpr uint8_t BuiltinHLSL_LineBatch_PS[] = {
+constexpr uint8_t BuiltinHLSL_PolylineBatch_PS[] = {
     68,  88,  66,  67,  106, 13,  201, 192, 159, 81,  48,  161, 97,  76,  133,
     29,  69,  154, 83,  230, 1,   0,   0,   0,   196, 1,   0,   0,   5,   0,
     0,   0,   52,  0,   0,   0,   128, 0,   0,   0,   212, 0,   0,   0,   8,

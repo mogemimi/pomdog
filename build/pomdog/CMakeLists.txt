@@ -350,11 +350,13 @@ set(POMDOG_SOURCES_CORE
 set(POMDOG_SOURCES_EXPERIMENTAL
   ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/FontGlyph.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/LineBatch.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/PolygonBatch.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/PolylineBatch.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/PolygonShapeBuilder.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/PrimitiveBatch.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/SpriteBatch.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/SpriteFont.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/SpriteFontLoader.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/SpriteLine.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/TrueTypeFont.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Image/GifImage.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Image/GifImageLoader.hpp
@@ -368,11 +370,13 @@ set(POMDOG_SOURCES_EXPERIMENTAL
   ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureRegion.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Tween/EasingHelper.hpp
   ${POMDOG_DIR}/src/Experimental/Graphics/LineBatch.cpp
-  ${POMDOG_DIR}/src/Experimental/Graphics/PolygonBatch.cpp
+  ${POMDOG_DIR}/src/Experimental/Graphics/PolylineBatch.cpp
   ${POMDOG_DIR}/src/Experimental/Graphics/PolygonShapeBuilder.cpp
+  ${POMDOG_DIR}/src/Experimental/Graphics/PrimitiveBatch.cpp
   ${POMDOG_DIR}/src/Experimental/Graphics/SpriteBatch.cpp
   ${POMDOG_DIR}/src/Experimental/Graphics/SpriteFont.cpp
   ${POMDOG_DIR}/src/Experimental/Graphics/SpriteFontLoader.cpp
+  ${POMDOG_DIR}/src/Experimental/Graphics/SpriteLine.cpp
   ${POMDOG_DIR}/src/Experimental/Graphics/TrueTypeFont.cpp
   ${POMDOG_DIR}/src/Experimental/Image/GifImageLoader.cpp
   ${POMDOG_DIR}/src/Experimental/Image/Image.cpp

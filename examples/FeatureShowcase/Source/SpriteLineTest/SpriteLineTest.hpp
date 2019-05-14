@@ -9,9 +9,9 @@ namespace FeatureShowcase {
 
 using namespace Pomdog;
 
-class SpriteBatchTest final : public Game {
+class SpriteLineTest final : public Game {
 public:
-    explicit SpriteBatchTest(const std::shared_ptr<GameHost>& gameHost);
+    explicit SpriteLineTest(const std::shared_ptr<GameHost>& gameHost);
 
     void Initialize() override;
 
@@ -26,23 +26,11 @@ private:
     std::shared_ptr<GraphicsCommandList> commandList;
     ConnectionList connect;
 
-    TexturePacker::TextureAtlas textureAtlas;
     std::shared_ptr<Texture2D> texture;
-    std::shared_ptr<Texture2D> texture2;
     std::shared_ptr<SpriteBatch> spriteBatch;
-    std::shared_ptr<Timer> timer;
-    std::shared_ptr<Timer> animationTimer;
-    int currentFrameIndex;
-
-    struct SpriteInstance final {
-        Vector2 Position;
-        Pomdog::Color Color;
-        Vector2 Scale;
-        int StartFrameIndex;
-    };
-    std::vector<SpriteInstance> sprites;
 
     std::shared_ptr<PrimitiveBatch> primitiveBatch;
+    Vector2 mousePosition;
 };
 
 } // namespace FeatureShowcase

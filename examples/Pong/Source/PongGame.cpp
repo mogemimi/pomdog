@@ -7,7 +7,6 @@
 #include <Pomdog.Experimental/Gameplay2D/PrimitiveRenderable.hpp>
 #include <Pomdog.Experimental/Gameplay2D/SpriteRenderable.hpp>
 #include <Pomdog.Experimental/Gameplay2D/TextRenderable.hpp>
-#include <Pomdog/Experimental/Graphics/PolygonBatch.hpp>
 #include <Pomdog/Experimental/Graphics/SpriteBatch.hpp>
 #include <Pomdog/Experimental/Graphics/TrueTypeFont.hpp>
 #include <utility>
@@ -96,7 +95,7 @@ void PongGame::Initialize()
             }
             paddle2.SetPosition(position);
         });
-        
+
         connect(input2.Down, [this] {
             paddle2.PositionOld = paddle2.GetPosition();
             auto position = paddle2.GetPosition();

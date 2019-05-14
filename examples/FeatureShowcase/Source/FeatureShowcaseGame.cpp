@@ -1,7 +1,10 @@
 #include "FeatureShowcaseGame.hpp"
-#include "PolygonBatchTest/PolygonBatchTest.hpp"
+#include "LineBatchTest/LineBatchTest.hpp"
+#include "PolylineDrawingTest/PolylineDrawingTest.hpp"
+#include "PrimitiveBatchTest/PrimitiveBatchTest.hpp"
 #include "SpriteBatchTest/SpriteBatchTest.hpp"
 #include "SpriteFontTest/SpriteFontTest.hpp"
+#include "SpriteLineTest/SpriteLineTest.hpp"
 #include <cmath>
 #include <utility>
 
@@ -19,29 +22,45 @@ FeatureShowcaseGame::FeatureShowcaseGame(const std::shared_ptr<GameHost>& gameHo
 
 void FeatureShowcaseGame::Initialize()
 {
-    window->SetTitle("FeatureShowcase");
+    window->SetTitle("Feature Showcase");
     commandList = std::make_shared<GraphicsCommandList>(*graphicsDevice);
 
     auto font = std::make_shared<TrueTypeFont>(*assets, "Fonts/NotoSans/NotoSans-Regular.ttf");
-    spriteFont = std::make_shared<SpriteFont>(graphicsDevice, font, 20, 20);
+    spriteFont = std::make_shared<SpriteFont>(graphicsDevice, font, 20.0f, 20.0f);
     spriteBatch = std::make_shared<SpriteBatch>(graphicsDevice, *assets);
     spriteFont->PrepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
-    polygonBatch = std::make_shared<PolygonBatch>(graphicsDevice, *assets);
+    primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
     timer = std::make_shared<Timer>(clock);
     timer->SetInterval(std::chrono::seconds(1));
     timer->SetScale(1.0);
 
-    buttons.emplace_back("PolygonBatch Test", [this] {
-        subGame = std::make_shared<FeatureShowcase::PolygonBatchTest>(gameHost);
+    buttons.emplace_back("LineBatch Test", [this] {
+        window->SetTitle("Feature Showcase > LineBatch Test");
+        subGame = std::make_shared<FeatureShowcase::LineBatchTest>(gameHost);
+    });
+    buttons.emplace_back("PolylineDrawing Test", [this] {
+        window->SetTitle("Feature Showcase > PolylineDrawing Test");
+        subGame = std::make_shared<FeatureShowcase::PolylineDrawingTest>(gameHost);
+    });
+    buttons.emplace_back("PrimitiveBatch Test", [this] {
+        window->SetTitle("Feature Showcase > PrimitiveBatch Test");
+        subGame = std::make_shared<FeatureShowcase::PrimitiveBatchTest>(gameHost);
     });
     buttons.emplace_back("SpriteBatch Test", [this] {
+        window->SetTitle("Feature Showcase > SpriteBatch Test");
         subGame = std::make_shared<FeatureShowcase::SpriteBatchTest>(gameHost);
     });
     buttons.emplace_back("SpriteFont Test", [this] {
+        window->SetTitle("Feature Showcase > SpriteFont Test");
         subGame = std::make_shared<FeatureShowcase::SpriteFontTest>(gameHost);
+    });
+    buttons.emplace_back("SpriteLine Test", [this] {
+        window->SetTitle("Feature Showcase > SpriteLine Test");
+        subGame = std::make_shared<FeatureShowcase::SpriteLineTest>(gameHost);
     });
 
     hudButtons.emplace_back("Back", [this] {
+        window->SetTitle("Feature Showcase");
         subGame.reset();
     });
 
@@ -185,7 +204,7 @@ void FeatureShowcaseGame::DrawMenu()
                     0.5f + 0.5f * std::cos(Math::TwoPi<float> * static_cast<float>(timer->GetTotalTime().count())));
             }
 
-            polygonBatch->DrawRectangle(
+            primitiveBatch->DrawRectangle(
                 Vector2{static_cast<float>(button.Rect.X), static_cast<float>(button.Rect.Y)},
                 static_cast<float>(button.Rect.Width),
                 static_cast<float>(button.Rect.Height),
@@ -214,7 +233,7 @@ void FeatureShowcaseGame::DrawMenu()
 
     commandList->Reset();
     commandList->SetRenderPass(std::move(pass));
-    polygonBatch->Begin(commandList, viewProjection);
+    primitiveBatch->Begin(commandList, viewProjection);
     spriteBatch->Begin(commandList, viewProjection);
     if (subGame) {
         for (const auto& button : hudButtons) {
@@ -234,7 +253,7 @@ void FeatureShowcaseGame::DrawMenu()
             drawButton(button);
         }
     }
-    polygonBatch->End();
+    primitiveBatch->End();
     spriteBatch->End();
 
     commandList->Close();

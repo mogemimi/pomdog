@@ -17,7 +17,7 @@
 
 namespace Pomdog {
 
-struct PolygonBatchVertex final {
+struct PrimitiveBatchVertex final {
     // {xyz} = position.xyz
     Vector3 Position;
 
@@ -27,8 +27,8 @@ struct PolygonBatchVertex final {
 
 class POMDOG_EXPORT PolygonShapeBuilder final {
 private:
-    using Vertex = PolygonBatchVertex;
-    std::vector<PolygonBatchVertex> vertices;
+    using Vertex = PrimitiveBatchVertex;
+    std::vector<PrimitiveBatchVertex> vertices;
     std::size_t maxVertexCount;
     std::size_t minVertexCount;
     std::function<void()> onFlush;
@@ -40,7 +40,7 @@ public:
 
     void Reset();
 
-    const PolygonBatchVertex* GetData() const noexcept;
+    const PrimitiveBatchVertex* GetData() const noexcept;
 
     std::size_t GetVertexCount() const noexcept;
 
@@ -100,7 +100,7 @@ public:
         const Color& color);
 
     //void DrawPolygon(
-    //    const std::vector<PolygonBatchVertex>& vertices,
+    //    const std::vector<PrimitiveBatchVertex>& vertices,
     //    const Color& color);
 
     void DrawRectangle(

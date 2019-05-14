@@ -1,15 +1,15 @@
 #pragma once
 
+#include <Pomdog/Experimental/Graphics/PolylineBatch.hpp>
 #include <Pomdog/Pomdog.hpp>
-#include <Pomdog/Experimental/Graphics/PolygonBatch.hpp>
 
 namespace FeatureShowcase {
 
 using namespace Pomdog;
 
-class PolygonBatchTest final : public Game {
+class PolylineDrawingTest final : public Game {
 public:
-    explicit PolygonBatchTest(const std::shared_ptr<GameHost>& gameHost);
+    explicit PolylineDrawingTest(const std::shared_ptr<GameHost>& gameHost);
 
     void Initialize() override;
 
@@ -24,8 +24,11 @@ private:
     std::shared_ptr<GraphicsCommandList> commandList;
     ConnectionList connect;
 
-    std::shared_ptr<PolygonBatch> polygonBatch;
-    std::shared_ptr<Timer> timer;
+    std::shared_ptr<PolylineBatch> lineBatch;
+    std::vector<Vector2> path;
+
+    float lineWidth = 4.0f;
+    bool polylineClosed = false;
 };
 
 } // namespace FeatureShowcase

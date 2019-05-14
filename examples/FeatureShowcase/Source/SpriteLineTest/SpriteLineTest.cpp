@@ -1,40 +1,53 @@
-#include "SpriteFontTest.hpp"
+#include "SpriteLineTest.hpp"
+#include <Pomdog/Experimental/Graphics/SpriteLine.hpp>
+#include <Pomdog/Experimental/TexturePacker/TextureAtlasGenerator.hpp>
+#include <Pomdog/Experimental/Tween/EasingHelper.hpp>
+#include <random>
 
 namespace FeatureShowcase {
 
-SpriteFontTest::SpriteFontTest(const std::shared_ptr<GameHost>& gameHostIn)
+SpriteLineTest::SpriteLineTest(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
     , graphicsDevice(gameHostIn->GetGraphicsDevice())
     , commandQueue(gameHostIn->GetGraphicsCommandQueue())
 {
 }
 
-void SpriteFontTest::Initialize()
+void SpriteLineTest::Initialize()
 {
     auto assets = gameHost->GetAssetManager();
     auto clock = gameHost->GetClock();
     commandList = std::make_shared<GraphicsCommandList>(*graphicsDevice);
     primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
-    spriteBatch = std::make_shared<SpriteBatch>(graphicsDevice, *assets);
+    spriteBatch = std::make_shared<SpriteBatch>(
+        graphicsDevice,
+        BlendDescription::CreateAlphaBlend(),
+        SamplerDescription::CreateLinearWrap(),
+        std::nullopt,
+        std::nullopt,
+        *assets);
 
-    auto font = std::make_shared<TrueTypeFont>(*assets, "Fonts/NotoSans/NotoSans-Regular.ttf");
-    spriteFont = std::make_shared<SpriteFont>(graphicsDevice, font, 32.0f, 32.0f);
-    spriteFont->PrepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
+    texture = assets->Load<Texture2D>("Textures/pomdog.png");
+    mousePosition = Vector2{100.0f, 100.0f};
 }
 
-void SpriteFontTest::Update()
+void SpriteLineTest::Update()
 {
+    auto mouse = gameHost->GetMouse();
+    auto window = gameHost->GetWindow();
+    auto pos = mouse->GetState().Position;
+
+    if (mouse->GetState().LeftButton == ButtonState::Pressed) {
+        pos.X = pos.X - (window->GetClientBounds().Width / 2);
+        pos.Y = -pos.Y + (window->GetClientBounds().Height / 2);
+
+        mousePosition = MathHelper::ToVector2(pos);
+    }
 }
 
-void SpriteFontTest::Draw()
+void SpriteLineTest::Draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
-
-    auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
-        static_cast<float>(presentationParameters.BackBufferWidth),
-        static_cast<float>(presentationParameters.BackBufferHeight),
-        0.0f,
-        100.0f);
 
     Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
     RenderPass pass;
@@ -46,8 +59,13 @@ void SpriteFontTest::Draw()
 
     commandList->Reset();
     commandList->SetRenderPass(std::move(pass));
+    commandList->Close();
 
-    constexpr auto text = "Hello, world!\n0123456789\nABCDEFghijk";
+    auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
+        presentationParameters.BackBufferWidth,
+        presentationParameters.BackBufferHeight,
+        0.0f,
+        100.0f);
 
     // Drawing line
     const auto w = static_cast<float>(presentationParameters.BackBufferWidth);
@@ -59,23 +77,22 @@ void SpriteFontTest::Draw()
     primitiveBatch->DrawLine(Vector2{-w * 0.5f, -h * 0.25f}, Vector2{w * 0.5f, -h * 0.25f}, Color{221, 220, 218, 60}, 1.0f);
     primitiveBatch->DrawLine(Vector2{-w * 0.25f, -h * 0.5f}, Vector2{-w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
     primitiveBatch->DrawLine(Vector2{w * 0.25f, -h * 0.5f}, Vector2{w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
-
-    const auto size = spriteFont->MeasureString(text);
-    primitiveBatch->DrawLine(Vector2::Zero, Vector2{0.0f, 1.0f} * size, Color::Blue, 1.0f);
-    primitiveBatch->DrawLine(Vector2::Zero, Vector2{1.0f, 0.0f} * size, Color::Blue, 1.0f);
-    primitiveBatch->DrawLine(size, Vector2{0.0f, 1.0f} * size, Color::Blue, 1.0f);
-    primitiveBatch->DrawLine(size, Vector2{1.0f, 0.0f} * size, Color::Blue, 1.0f);
-
     primitiveBatch->End();
 
     spriteBatch->Begin(commandList, projectionMatrix);
-    spriteFont->Draw(*spriteBatch, text, Vector2::Zero, Color::White, 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
-    spriteFont->Draw(*spriteBatch, text, Vector2::Zero, Color::Green, MathHelper::ToRadians(-90.0f), Vector2{0.0f, 0.0f}, 1.0f);
-    spriteFont->Draw(*spriteBatch, text, Vector2::Zero, Color::Red, MathHelper::ToRadians(90.0f), Vector2{0.5f, 0.0f}, Vector2{-1.0f, 0.5f});
-    spriteFont->Draw(*spriteBatch, text, Vector2{-100.0f, 100.0f}, Color::Blue, MathHelper::ToRadians(-45.0f), Vector2{0.5f, 0.5f}, 0.7f);
-    spriteBatch->End();
 
-    commandList->Close();
+    SpriteLine spriteLine;
+    spriteLine.Draw(*spriteBatch,
+                    texture,
+                    Rectangle{0, 0, 10, 32},
+                    Rectangle{10, 0, 12, 32},
+                    Rectangle{22, 0, 10, 32},
+                    Vector2{0.0f, 0.0f},
+                    mousePosition,
+                    1.0f,
+                    Color::White);
+
+    spriteBatch->End();
 
     constexpr bool isStandalone = false;
     if constexpr (isStandalone) {

@@ -45,7 +45,7 @@ void GrassBlendingGame::Initialize()
         fxaa = std::make_unique<FXAA>(graphicsDevice, *assets);
         fxaa->SetViewport(clientBounds.Width, clientBounds.Height);
         screenQuad = std::make_unique<ScreenQuad>(graphicsDevice);
-        polygonBatch = std::make_unique<PolygonBatch>(graphicsContext, graphicsDevice, *assets);
+        primitiveBatch = std::make_unique<PrimitiveBatch>(graphicsContext, graphicsDevice, *assets);
     }
     {
         gameEditor = std::make_unique<SceneEditor::InGameEditor>(gameHost);
@@ -204,8 +204,8 @@ void GrassBlendingGame::DrawSprites()
     auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
         clientBounds.Width, clientBounds.Height, 0.1f, 1000.0f);
 
-    POMDOG_ASSERT(polygonBatch);
-    polygonBatch->Begin(viewMatrix * projectionMatrix);
+    POMDOG_ASSERT(primitiveBatch);
+    primitiveBatch->Begin(viewMatrix * projectionMatrix);
 
     auto const& globalPoses = maidGlobalPose;
 
@@ -219,19 +219,19 @@ void GrassBlendingGame::DrawSprites()
 
             if (maidSkeleton->Root().Index != joint.Index)
             {
-                polygonBatch->DrawTriangle(
+                primitiveBatch->DrawTriangle(
                     Vector2::Transform({1.7f, -4.7f}, matrix),
                     Vector2::Transform({1.7f, 4.7f}, matrix),
                     Vector2::Transform({25, 0}, matrix), boneColor);
             }
 
             auto center = Vector2::Transform(Vector2::Zero, matrix);
-            polygonBatch->DrawCircle(center, 5.0f, boneColor, 18);
-            polygonBatch->DrawCircle(center, 3.0f, Color::White, 13);
+            primitiveBatch->DrawCircle(center, 5.0f, boneColor, 18);
+            primitiveBatch->DrawCircle(center, 3.0f, Color::White, 13);
         }
     }
 
-    polygonBatch->End();
+    primitiveBatch->End();
 }
 
 void GrassBlendingGame::DrawSkinnedMesh()
