@@ -9,7 +9,7 @@ namespace Rendering {
 PrimitivePolygonCommandProcessor::PrimitivePolygonCommandProcessor(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
     AssetManager & assets)
-    : polygonBatch(graphicsDevice, assets)
+    : primitiveBatch(graphicsDevice, assets)
 {
 }
 
@@ -17,7 +17,7 @@ void PrimitivePolygonCommandProcessor::Begin(
     const std::shared_ptr<GraphicsCommandList>& commandList,
     const Matrix4x4& viewProjection)
 {
-    polygonBatch.Begin(commandList, viewProjection);
+    primitiveBatch.Begin(commandList, viewProjection);
 }
 
 void PrimitivePolygonCommandProcessor::Draw(
@@ -25,22 +25,22 @@ void PrimitivePolygonCommandProcessor::Draw(
     RenderCommand & renderCommand)
 {
     auto & command = static_cast<PrimitivePolygonCommand &>(renderCommand);
-    command.Execute(polygonBatch);
+    command.Execute(primitiveBatch);
 }
 
 void PrimitivePolygonCommandProcessor::FlushBatch()
 {
-    polygonBatch.Flush();
+    primitiveBatch.Flush();
 }
 
 void PrimitivePolygonCommandProcessor::End()
 {
-    polygonBatch.End();
+    primitiveBatch.End();
 }
 
 int PrimitivePolygonCommandProcessor::GetDrawCallCount() const noexcept
 {
-    return polygonBatch.GetDrawCallCount();
+    return primitiveBatch.GetDrawCallCount();
 }
 
 std::type_index PrimitivePolygonCommandProcessor::GetCommandType() const noexcept

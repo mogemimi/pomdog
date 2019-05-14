@@ -167,7 +167,7 @@ void VerticalLayout::Draw(DrawingContext & drawingContext)
     auto transform = GetTransform() * drawingContext.Top();
 
 #if 0
-    renderCommand.SetInvoker([transform, this](PolygonBatch & polygonBatch) {
+    renderCommand.SetInvoker([transform, this](PrimitiveBatch& primitiveBatch) {
         const Color backgroundColor = {45, 45, 48, 225};
         const Color borderColor = {40, 40, 40, 255};
         const Color highlightColor = {106, 106, 106, 255};
@@ -175,12 +175,12 @@ void VerticalLayout::Draw(DrawingContext & drawingContext)
         const auto width = static_cast<float>(GetWidth());
         const auto height = static_cast<float>(GetHeight());
 
-        polygonBatch.DrawRectangle(transform, Vector2::Zero, width, height, backgroundColor);
+        primitiveBatch.DrawRectangle(transform, Vector2::Zero, width, height, backgroundColor);
 
-        polygonBatch.DrawLine(transform, Vector2{0.0f, 0.0f}, Vector2{width, 0.0f}, borderColor, 1.0f);
-        polygonBatch.DrawLine(transform, Vector2{0.0f, 0.0f}, Vector2{0.0f, height}, borderColor, 1.0f);
-        polygonBatch.DrawLine(transform, Vector2{0.0f, height}, Vector2{width, height}, borderColor, 1.0f);
-        polygonBatch.DrawLine(transform, Vector2{width, 0.0f}, Vector2{width, height}, borderColor, 1.0f);
+        primitiveBatch.DrawLine(transform, Vector2{0.0f, 0.0f}, Vector2{width, 0.0f}, borderColor, 1.0f);
+        primitiveBatch.DrawLine(transform, Vector2{0.0f, 0.0f}, Vector2{0.0f, height}, borderColor, 1.0f);
+        primitiveBatch.DrawLine(transform, Vector2{0.0f, height}, Vector2{width, height}, borderColor, 1.0f);
+        primitiveBatch.DrawLine(transform, Vector2{width, 0.0f}, Vector2{width, height}, borderColor, 1.0f);
     });
     drawingContext.PushCommand(renderCommand);
 #endif

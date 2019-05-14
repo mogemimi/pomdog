@@ -16,7 +16,7 @@ PrimitiveRenderable::PrimitiveRenderable(
     command.vertexBuffer = std::make_shared<VertexBuffer>(
         graphicsDevice,
         MinVertexCount,
-        sizeof(PolygonBatchVertex),
+        sizeof(PrimitiveBatchVertex),
         BufferUsage::Dynamic);
 
     command.constantBuffer = std::make_shared<ConstantBuffer>(
@@ -41,7 +41,7 @@ void PrimitiveRenderable::Visit(Entity & entity, Renderer & renderer)
         command.vertexBuffer = std::make_shared<VertexBuffer>(
             graphicsDevice,
             shapeBuilder.GetVertexCount(),
-            sizeof(PolygonBatchVertex),
+            sizeof(PrimitiveBatchVertex),
             BufferUsage::Dynamic);
     }
 

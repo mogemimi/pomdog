@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Pomdog.Experimental/Rendering/RenderCommandProcessor.hpp"
-#include "Pomdog/Experimental/Graphics/PolygonBatch.hpp"
+#include "Pomdog/Experimental/Graphics/PrimitiveBatch.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Math/Matrix4x4.hpp"
 
@@ -33,7 +33,7 @@ public:
     std::type_index GetCommandType() const noexcept override;
 
 public:
-    PolygonBatch polygonBatch;
+    PrimitiveBatch primitiveBatch;
 };
 
 } // namespace Rendering

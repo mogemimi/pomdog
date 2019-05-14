@@ -201,20 +201,20 @@ void Slider::Draw(DrawingContext & drawingContext)
 
     auto transform = GetTransform() * drawingContext.Top();
 
-    renderCommand.SetInvoker([this, transform](PolygonBatch & polygonBatch) {
+    renderCommand.SetInvoker([this, transform](PrimitiveBatch& primitiveBatch) {
         const auto sliderWidth2 = GetWidth() * ((value - minimum) / (maximum - minimum));
         const auto controlPosition2 = (GetWidth() - GetHeight()) * ((value - minimum) / (maximum - minimum));
 
         const auto sliderHeight = GetHeight();
         const auto paddingY = (static_cast<float>(GetHeight()) - sliderHeight) * 0.5f;
 
-        polygonBatch.DrawRectangle(
+        primitiveBatch.DrawRectangle(
             transform,
             Vector2{0.0f, paddingY},
             GetWidth(),
             sliderHeight,
             trackColor);
-        polygonBatch.DrawRectangle(
+        primitiveBatch.DrawRectangle(
             transform,
             Vector2{0.0f, paddingY},
             sliderWidth2,
@@ -229,7 +229,7 @@ void Slider::Draw(DrawingContext & drawingContext)
             auto pos = Vector2(controlPosition2 - pixel, -pixel);
             auto size = Vector2(thumbSize + 2 * pixel, thumbSize + 2 * pixel);
 
-            polygonBatch.DrawRectangle(
+            primitiveBatch.DrawRectangle(
                 transform,
                 pos,
                 size.X,
@@ -239,7 +239,7 @@ void Slider::Draw(DrawingContext & drawingContext)
 
         if (isEnabled) {
             auto pos = Vector2(controlPosition2, 0);
-            polygonBatch.DrawRectangle(
+            primitiveBatch.DrawRectangle(
                 transform,
                 pos,
                 thumbSize,

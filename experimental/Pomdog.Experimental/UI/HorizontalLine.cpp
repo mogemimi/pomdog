@@ -29,11 +29,11 @@ void HorizontalLine::Draw(DrawingContext & drawingContext)
 {
     auto transform = GetTransform() * drawingContext.Top();
 
-    renderCommand.SetInvoker([this, transform](PolygonBatch & polygonBatch) {
+    renderCommand.SetInvoker([this, transform](PrimitiveBatch& primitiveBatch) {
         auto offset = Vector2{transform(2, 0), transform(2, 1)};
         auto start = offset + Vector2{0.0f, 0.0f};
         auto end = offset + Vector2{static_cast<float>(GetWidth()), 0.0f};
-        polygonBatch.DrawLine(start, end, Color{92, 91, 90, 255}, 1.0f);
+        primitiveBatch.DrawLine(start, end, Color{92, 91, 90, 255}, 1.0f);
     });
     drawingContext.PushCommand(renderCommand);
 }

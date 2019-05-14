@@ -44,7 +44,7 @@ void DebugNavigator::Draw(DrawingContext & drawingContext)
 
     constexpr float maxGraphHeight = 26.0f;
 
-    renderCommand.SetInvoker([transform, maxGraphHeight, this](PolygonBatch & polygonBatch) {
+    renderCommand.SetInvoker([transform, maxGraphHeight, this](PrimitiveBatch& primitiveBatch) {
         constexpr float graphInnerMarginLeft = 1.0f;
         constexpr float graphMargin = 2.0f;
 
@@ -54,7 +54,7 @@ void DebugNavigator::Draw(DrawingContext & drawingContext)
         const Color chartBackgroundColor = {109, 109, 109, 255};
         const Color chartBarColor = {112, 202, 255, 255};
 
-        polygonBatch.DrawRectangle(
+        primitiveBatch.DrawRectangle(
             transform,
             Vector2::Zero,
             GetWidth(),
@@ -67,7 +67,7 @@ void DebugNavigator::Draw(DrawingContext & drawingContext)
             auto amount = ((frameRate - minFramerate) / (maxFramerate - minFramerate));
             auto barHeight = MathHelper::Clamp((maxGraphHeight - (graphMargin * 2)) * amount, 1.0f, maxGraphHeight);
 
-            polygonBatch.DrawRectangle(
+            primitiveBatch.DrawRectangle(
                 transform,
                 Vector2{graphX, graphMargin},
                 barWidth,

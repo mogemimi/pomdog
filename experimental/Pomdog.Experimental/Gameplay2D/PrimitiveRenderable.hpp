@@ -77,7 +77,7 @@ public:
 //        const Color& color);
 
 //    //void DrawPolygon(
-//    //    const std::vector<PolygonBatchVertex>& vertices,
+//    //    const std::vector<PrimitiveBatchVertex>& vertices,
 //    //    const Color& color);
 
     void DrawRectangle(

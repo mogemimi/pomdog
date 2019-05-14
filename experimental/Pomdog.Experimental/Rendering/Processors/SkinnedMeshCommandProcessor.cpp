@@ -23,11 +23,11 @@ void SetMatrixPalette(SkinnedEffect & skinnedEffect, const Skeleton& skeleton, c
 }
 
 //
-//static void DrawSkeleton(const std::unique_ptr<PolygonBatch>& polygonBatch,
+//static void DrawSkeleton(const std::unique_ptr<PrimitiveBatch>& primitiveBatch,
 //    const Matrix4x4& modelViewProjection)
 //{
-//    POMDOG_ASSERT(polygonBatch);
-//    polygonBatch->Begin(modelViewProjection);
+//    POMDOG_ASSERT(primitiveBatch);
+//    primitiveBatch->Begin(modelViewProjection);
 //
 //    Pomdog::Color boneColor {160, 160, 160, 255};
 //
@@ -40,18 +40,18 @@ void SetMatrixPalette(SkinnedEffect & skinnedEffect, const Skeleton& skeleton, c
 //
 //        if (skeleton->Root().Index != joint.Index)
 //        {
-//            polygonBatch->DrawTriangle(
+//            primitiveBatch->DrawTriangle(
 //                Vector2::Transform({1.7f, -4.7f}, matrix),
 //                Vector2::Transform({1.7f, 4.7f}, matrix),
 //                Vector2::Transform({25, 0}, matrix), boneColor);
 //        }
 //
 //        auto center = Vector2::Transform(Vector2::Zero, matrix);
-//        polygonBatch->DrawCircle(center, 5.0f, boneColor, 18);
-//        polygonBatch->DrawCircle(center, 3.0f, Color::White, 13);
+//        primitiveBatch->DrawCircle(center, 5.0f, boneColor, 18);
+//        primitiveBatch->DrawCircle(center, 3.0f, Color::White, 13);
 //    }
 //
-//    polygonBatch->End();
+//    primitiveBatch->End();
 //}
 
 } // unnamed namespace

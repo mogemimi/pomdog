@@ -4,7 +4,7 @@
 
 #include "GraphicsComponent.hpp"
 #include "Pomdog.Experimental/Rendering/Commands/SkinnedMeshCommand.hpp"
-#include "Pomdog.Experimental/Graphics/PolygonBatch.hpp"
+#include "Pomdog.Experimental/Graphics/PrimitiveBatch.hpp"
 #include <Pomdog/Pomdog.hpp>
 #include <memory>
 

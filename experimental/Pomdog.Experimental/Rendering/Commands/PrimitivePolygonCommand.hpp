@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Pomdog.Experimental/Rendering/RenderCommand.hpp"
-#include "Pomdog/Experimental/Graphics/PolygonBatch.hpp"
+#include "Pomdog/Experimental/Graphics/PrimitiveBatch.hpp"
 #include <Pomdog/Pomdog.hpp>
 #include <memory>
 
@@ -14,7 +14,7 @@ class PrimitivePolygonCommand : public RenderCommand {
 public:
     virtual ~PrimitivePolygonCommand() = default;
 
-    virtual void Execute(PolygonBatch & spriteBatch) = 0;
+    virtual void Execute(PrimitiveBatch & spriteBatch) = 0;
 
     std::type_index GetType() const noexcept override final;
 };
@@ -61,7 +61,7 @@ public:
         color = colorIn;
     }
 
-    void Execute(PolygonBatch & polygonBatch) override;
+    void Execute(PrimitiveBatch& primitiveBatch) override;
 
 private:
     Vector2 position;
@@ -101,7 +101,7 @@ public:
         color = colorIn;
     }
 
-    void Execute(PolygonBatch & polygonBatch) override;
+    void Execute(PrimitiveBatch& primitiveBatch) override;
 
 private:
     std::vector<Vector2> points;
@@ -115,16 +115,16 @@ public:
     {
     }
 
-    void SetInvoker(std::function<void(PolygonBatch &)> && invokerIn)
+    void SetInvoker(std::function<void(PrimitiveBatch &)> && invokerIn)
     {
         POMDOG_ASSERT(invokerIn);
         invoker = std::move(invokerIn);
     }
 
-    void Execute(PolygonBatch & polygonBatch) override;
+    void Execute(PrimitiveBatch& primitiveBatch) override;
 
 private:
-    std::function<void(PolygonBatch & polygonBatch)> invoker;
+    std::function<void(PrimitiveBatch& primitiveBatch)> invoker;
 };
 
 } // namespace Rendering

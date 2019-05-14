@@ -12,21 +12,21 @@ std::type_index PrimitivePolygonCommand::GetType() const noexcept
     return index;
 }
 
-void PrimitivePolygonArcCommand::Execute(PolygonBatch & polygonBatch)
+void PrimitivePolygonArcCommand::Execute(PrimitiveBatch& primitiveBatch)
 {
-    polygonBatch.DrawArc(position, radius, startAngle, arcAngle, segments, color);
+    primitiveBatch.DrawArc(position, radius, startAngle, arcAngle, segments, color);
 }
 
-void PrimitivePolylineCommand::Execute(PolygonBatch & polygonBatch)
+void PrimitivePolylineCommand::Execute(PrimitiveBatch& primitiveBatch)
 {
-    polygonBatch.DrawPolyline(points, thickness, color);
+    primitiveBatch.DrawPolyline(points, thickness, color);
 }
 
-void PrimitiveFunctionCommand::Execute(PolygonBatch & polygonBatch)
+void PrimitiveFunctionCommand::Execute(PrimitiveBatch& primitiveBatch)
 {
     POMDOG_ASSERT(invoker);
     if (invoker) {
-        invoker(polygonBatch);
+        invoker(primitiveBatch);
     }
 }
 

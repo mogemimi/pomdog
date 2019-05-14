@@ -10,11 +10,11 @@ namespace {
 
 // Built-in shaders
 // FIXME: Bad include paths
-#include "../../../../src/Experimental/Graphics/Shaders/GLSL.Embedded/LineBatch_VS.inc.hpp"
-#include "../../../../src/Experimental/Graphics/Shaders/GLSL.Embedded/LineBatch_PS.inc.hpp"
-#include "../../../../src/Experimental/Graphics/Shaders/HLSL.Embedded/LineBatch_VS.inc.hpp"
-#include "../../../../src/Experimental/Graphics/Shaders/HLSL.Embedded/LineBatch_PS.inc.hpp"
-#include "../../../../src/Experimental/Graphics/Shaders/Metal.Embedded/LineBatch.inc.hpp"
+#include "../../../../src/Experimental/Graphics/Shaders/GLSL.Embedded/PrimitiveBatch_VS.inc.hpp"
+#include "../../../../src/Experimental/Graphics/Shaders/GLSL.Embedded/PrimitiveBatch_PS.inc.hpp"
+#include "../../../../src/Experimental/Graphics/Shaders/HLSL.Embedded/PrimitiveBatch_VS.inc.hpp"
+#include "../../../../src/Experimental/Graphics/Shaders/HLSL.Embedded/PrimitiveBatch_PS.inc.hpp"
+#include "../../../../src/Experimental/Graphics/Shaders/Metal.Embedded/PrimitiveBatch.inc.hpp"
 
 } // unnamed namespace
 
@@ -27,14 +27,14 @@ PrimitiveCommandProcessor::PrimitiveCommandProcessor(
         .Float3().Float4();
 
     auto vertexShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
-        .SetGLSL(Builtin_GLSL_LineBatch_VS, std::strlen(Builtin_GLSL_LineBatch_VS))
-        .SetHLSLPrecompiled(BuiltinHLSL_LineBatch_VS, sizeof(BuiltinHLSL_LineBatch_VS))
-        .SetMetal(Builtin_Metal_LineBatch, std::strlen(Builtin_Metal_LineBatch), "LineBatchVS");
+        .SetGLSL(Builtin_GLSL_PrimitiveBatch_VS, std::strlen(Builtin_GLSL_PrimitiveBatch_VS))
+        .SetHLSLPrecompiled(BuiltinHLSL_PrimitiveBatch_VS, sizeof(BuiltinHLSL_PrimitiveBatch_VS))
+        .SetMetal(Builtin_Metal_PrimitiveBatch, std::strlen(Builtin_Metal_PrimitiveBatch), "PrimitiveBatchVS");
 
     auto pixelShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
-        .SetGLSL(Builtin_GLSL_LineBatch_PS, std::strlen(Builtin_GLSL_LineBatch_PS))
-        .SetHLSLPrecompiled(BuiltinHLSL_LineBatch_PS, sizeof(BuiltinHLSL_LineBatch_PS))
-        .SetMetal(Builtin_Metal_LineBatch, std::strlen(Builtin_Metal_LineBatch), "LineBatchPS");
+        .SetGLSL(Builtin_GLSL_PrimitiveBatch_PS, std::strlen(Builtin_GLSL_PrimitiveBatch_PS))
+        .SetHLSLPrecompiled(BuiltinHLSL_PrimitiveBatch_PS, sizeof(BuiltinHLSL_PrimitiveBatch_PS))
+        .SetMetal(Builtin_Metal_PrimitiveBatch, std::strlen(Builtin_Metal_PrimitiveBatch), "PrimitiveBatchPS");
 
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 

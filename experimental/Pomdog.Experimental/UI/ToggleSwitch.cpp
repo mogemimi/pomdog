@@ -95,7 +95,7 @@ void ToggleSwitch::Draw(DrawingContext & drawingContext)
 {
     auto transform = GetTransform() * drawingContext.Top();
 
-    renderCommand.SetInvoker([this, transform](PolygonBatch & polygonBatch) {
+    renderCommand.SetInvoker([this, transform](PrimitiveBatch& primitiveBatch) {
         Color innerColor = {109, 109, 109, 255};
         Color thumbColor = Color::White;
 
@@ -117,7 +117,7 @@ void ToggleSwitch::Draw(DrawingContext & drawingContext)
 
         const auto transformOffset = Vector2{transform(2, 0), transform(2, 1)};
 
-        polygonBatch.DrawArc(
+        primitiveBatch.DrawArc(
             transformOffset + Vector2{
                 static_cast<float>(GetWidth()) - (thumbRadius + thumbPadding),
                 (thumbRadius + thumbPadding)
@@ -128,7 +128,7 @@ void ToggleSwitch::Draw(DrawingContext & drawingContext)
             segments,
             innerColor);
 
-        polygonBatch.DrawArc(
+        primitiveBatch.DrawArc(
             transformOffset + Vector2{
                 (thumbRadius + thumbPadding),
                 (thumbRadius + thumbPadding)
@@ -139,7 +139,7 @@ void ToggleSwitch::Draw(DrawingContext & drawingContext)
             segments,
             innerColor);
 
-        polygonBatch.DrawRectangle(
+        primitiveBatch.DrawRectangle(
             transform,
             Vector2{
                 (thumbRadius + thumbPadding),
@@ -150,7 +150,7 @@ void ToggleSwitch::Draw(DrawingContext & drawingContext)
             innerColor);
 
         if (isOn) {
-            polygonBatch.DrawCircle(
+            primitiveBatch.DrawCircle(
                 transformOffset + Vector2{
                     static_cast<float>(GetWidth()) - (thumbRadius + thumbPadding),
                     (thumbRadius + thumbPadding)
@@ -160,7 +160,7 @@ void ToggleSwitch::Draw(DrawingContext & drawingContext)
                 thumbColor);
         }
         else {
-            polygonBatch.DrawCircle(
+            primitiveBatch.DrawCircle(
                 transformOffset + Vector2{
                     (thumbRadius + thumbPadding),
                     (thumbRadius + thumbPadding)

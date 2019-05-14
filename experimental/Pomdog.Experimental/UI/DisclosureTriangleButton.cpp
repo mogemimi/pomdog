@@ -81,14 +81,14 @@ void DisclosureTriangleButton::Draw(DrawingContext & drawingContext)
 {
     auto transform = GetTransform() * drawingContext.Top();
 
-    renderCommand.SetInvoker([this, transform](PolygonBatch & polygonBatch) {
+    renderCommand.SetInvoker([this, transform](PrimitiveBatch& primitiveBatch) {
         Color thumbColor = isOn ? Color{27, 161, 226, 255} : Color{162, 160, 161, 255};
 
         const auto transformOffset = Vector2{transform(2, 0), transform(2, 1)};
 
         const auto triangleWidth = 6.0f;
         if (isOn) {
-            polygonBatch.DrawTriangle(
+            primitiveBatch.DrawTriangle(
                 transformOffset + Vector2{0.0f, 0.0f},
                 transformOffset + Vector2{triangleWidth, triangleWidth},
                 transformOffset + Vector2{triangleWidth, 0.0f},
@@ -96,7 +96,7 @@ void DisclosureTriangleButton::Draw(DrawingContext & drawingContext)
         }
         else {
             const float squareRoot = 1.41421356f;
-            polygonBatch.DrawTriangle(
+            primitiveBatch.DrawTriangle(
                 transformOffset + Vector2{0.0f, 0.0f},
                 transformOffset + Vector2{0.0f, triangleWidth * squareRoot},
                 transformOffset + Vector2{triangleWidth / squareRoot, triangleWidth * 0.5f * squareRoot},
