@@ -61,11 +61,11 @@ If you need further information about building runtime libraries and developing 
 
 ## Getting started
 
-To create a new project with Pomdog, run `tools/quickstart.py`:
+To create a new project with Pomdog, run `tools/quickstart/main.go`:
 
-```shell
-cd path/to/your-directory
-python pomdog/tools/quickstart.py
+```sh
+cd path/to/your/directory
+go run pomdog/tools/quickstart/main.go
 ```
 
 For more information, please see [Getting Started](https://github.com/mogemimi/pomdog/wiki/Getting-Started).
