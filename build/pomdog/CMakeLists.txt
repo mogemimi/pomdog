@@ -745,10 +745,10 @@ endif()
 target_include_directories(pomdog_static PRIVATE
   ${POMDOG_DIR}/include
   ${POMDOG_DIR}/dependencies
+  ${POMDOG_DIR}/dependencies/giflib
   ${POMDOG_DIR}/dependencies/libpng
   ${POMDOG_DIR}/dependencies/stb
   ${POMDOG_DIR}/dependencies/vendor/libpng
-  ${POMDOG_DIR}/dependencies/vendor/giflib/lib
   ${POMDOG_DIR}/dependencies/vendor/SDL_GameControllerDB
 )
 

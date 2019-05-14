@@ -7,21 +7,21 @@ STRING(REGEX REPLACE "/RTC(su|[1su])" "" CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DE
 set(THIRDPARTY_DIR "../../../dependencies")
 
 add_library(giflib STATIC
-  ${THIRDPARTY_DIR}/vendor/giflib/lib/dgif_lib.c
-  ${THIRDPARTY_DIR}/vendor/giflib/lib/egif_lib.c
-  ${THIRDPARTY_DIR}/vendor/giflib/lib/gif_err.c
-  ${THIRDPARTY_DIR}/vendor/giflib/lib/gif_font.c
-  ${THIRDPARTY_DIR}/vendor/giflib/lib/gif_hash.c
-  ${THIRDPARTY_DIR}/vendor/giflib/lib/gif_hash.h
-  ${THIRDPARTY_DIR}/vendor/giflib/lib/gif_lib_private.h
-  ${THIRDPARTY_DIR}/vendor/giflib/lib/gif_lib.h
-  ${THIRDPARTY_DIR}/vendor/giflib/lib/gifalloc.c
-  ${THIRDPARTY_DIR}/vendor/giflib/lib/openbsd-reallocarray.c
-  ${THIRDPARTY_DIR}/vendor/giflib/lib/quantize.c
+  ${THIRDPARTY_DIR}/giflib/dgif_lib.c
+  ${THIRDPARTY_DIR}/giflib/egif_lib.c
+  ${THIRDPARTY_DIR}/giflib/gif_err.c
+  ${THIRDPARTY_DIR}/giflib/gif_font.c
+  ${THIRDPARTY_DIR}/giflib/gif_hash.c
+  ${THIRDPARTY_DIR}/giflib/gif_hash.h
+  ${THIRDPARTY_DIR}/giflib/gif_lib_private.h
+  ${THIRDPARTY_DIR}/giflib/gif_lib.h
+  ${THIRDPARTY_DIR}/giflib/gifalloc.c
+  ${THIRDPARTY_DIR}/giflib/openbsd-reallocarray.c
+  ${THIRDPARTY_DIR}/giflib/quantize.c
 )
 
 target_include_directories(giflib PRIVATE
-  ${THIRDPARTY_DIR}/vendor/giflib/lib
+  ${THIRDPARTY_DIR}/giflib
   $<$<PLATFORM_ID:Windows>:
     ${THIRDPARTY_DIR}/vendor/giflib/windows
   >

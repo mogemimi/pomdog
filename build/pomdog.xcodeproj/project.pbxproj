@@ -2370,10 +2370,10 @@
 				HEADER_SEARCH_PATHS = (
 					../include,
 					../dependencies,
+					../dependencies/giflib,
 					../dependencies/libpng,
 					../dependencies/stb,
 					../dependencies/vendor/libpng,
-					../dependencies/vendor/giflib/lib,
 					../dependencies/vendor/SDL_GameControllerDB,
 				);
 			};
@@ -2455,10 +2455,10 @@
 				HEADER_SEARCH_PATHS = (
 					../include,
 					../dependencies,
+					../dependencies/giflib,
 					../dependencies/libpng,
 					../dependencies/stb,
 					../dependencies/vendor/libpng,
-					../dependencies/vendor/giflib/lib,
 					../dependencies/vendor/SDL_GameControllerDB,
 				);
 				ONLY_ACTIVE_ARCH = YES;

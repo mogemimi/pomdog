@@ -25,3 +25,6 @@
 [submodule "dependencies/SDL_GameControllerDB"]
 	path = dependencies/SDL_GameControllerDB
 	url = https://github.com/gabomdq/SDL_GameControllerDB.git
+[submodule "dependencies/giflib"]
+	path = dependencies/giflib
+	url = https://git.code.sf.net/p/giflib/code

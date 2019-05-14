@@ -8,7 +8,7 @@ All of the dependencies that [Pomdog](https://github.com/mogemimi/pomdog) needs 
 * [The GIFLIB project](http://giflib.sourceforge.net/)
 * License
   * MIT/X Consortium License
-  * Please see: [vendor/giflib/COPYING](vendor/giflib/COPYING)
+  * Please see: [giflib/COPYING](giflib/COPYING)
 
 ### GLEW
 
