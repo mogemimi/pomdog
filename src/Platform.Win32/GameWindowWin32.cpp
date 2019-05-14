@@ -374,7 +374,19 @@ LRESULT CALLBACK GameWindowWin32::Impl::WindowProcedure(
     case WM_KEYDOWN: {
         return 0;
     }
+    case WM_UNICHAR:
+        [[fallthrough]];
+    case WM_SYSCHAR:
+        [[fallthrough]];
     case WM_CHAR: {
+        if ((msg == WM_UNICHAR) && (wParam == UNICODE_NOCHAR)) {
+            // TODO: Not implemented
+            return TRUE;
+        }
+
+        std::string text;
+        text += static_cast<char>(wParam);
+        window->eventQueue->Enqueue<InputTextEvent>(text);
         return 0;
     }
     case WM_ENTERSIZEMOVE: {

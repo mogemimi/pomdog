@@ -406,6 +406,9 @@ void GameHostWin32::Impl::ProcessSystemEvents(const Event& event)
     else if (auto mouseEvent = event.As<RAWMOUSE>()) {
         mouse->HandleMessage(*mouseEvent);
     }
+    else if (auto textEvent = event.As<InputTextEvent>()) {
+        keyboard->TextInput(textEvent->text);
+    }
 }
 
 void GameHostWin32::Impl::ClientSizeChanged()
