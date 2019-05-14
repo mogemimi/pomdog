@@ -38,7 +38,7 @@ namespace {
 #endif
 #endif
 
-#include "SDL_gamecontrollerdb.h"
+#include "SDL_gamecontrollerdb2.0.9.h"
 
 std::tuple<std::string, const char*> Parse(const char* source, char delimiter)
 {

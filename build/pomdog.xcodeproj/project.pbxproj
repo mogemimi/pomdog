@@ -2372,9 +2372,10 @@
 					../dependencies,
 					../dependencies/giflib,
 					../dependencies/libpng,
+					../dependencies/SDL_GameControllerDB/data,
 					../dependencies/stb,
 					../dependencies/vendor/libpng,
-					../dependencies/vendor/SDL_GameControllerDB,
+					../dependencies/vendor/SDL_GameControllerDB/include,
 				);
 			};
 			name = Release;
@@ -2457,9 +2458,10 @@
 					../dependencies,
 					../dependencies/giflib,
 					../dependencies/libpng,
+					../dependencies/SDL_GameControllerDB/data,
 					../dependencies/stb,
 					../dependencies/vendor/libpng,
-					../dependencies/vendor/SDL_GameControllerDB,
+					../dependencies/vendor/SDL_GameControllerDB/include,
 				);
 				ONLY_ACTIVE_ARCH = YES;
 			};
