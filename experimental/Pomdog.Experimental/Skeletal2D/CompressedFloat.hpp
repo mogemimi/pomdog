@@ -30,7 +30,7 @@ public:
     {
         POMDOG_ASSERT(scalar < Max());
         POMDOG_ASSERT(scalar >= Min());
-        data = scalar * Denominator;
+        data = scalar * static_cast<T>(Denominator);
         return *this;
     }
 

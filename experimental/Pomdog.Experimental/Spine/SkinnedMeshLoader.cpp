@@ -59,7 +59,10 @@ SkinnedMeshSlot CreateSkinnedMeshSlot(SlotDesc const& slotDesc,
     origin.X = static_cast<float>(textureRegion.Width/2 - textureRegion.XOffset)/textureRegion.Subrect.Width;
     origin.Y = static_cast<float>(textureRegion.Height/2 - textureRegion.YOffset)/textureRegion.Subrect.Height;
 
-    Vector2 size(textureRegion.Subrect.Width, textureRegion.Subrect.Height);
+    auto size = Vector2{
+        static_cast<float>(textureRegion.Subrect.Width),
+        static_cast<float>(textureRegion.Subrect.Height),
+    };
 
     if (textureRegion.Rotate) {
         std::swap(size.X, size.Y);
@@ -88,7 +91,7 @@ SkinnedMeshSlot CreateSkinnedMeshSlot(SlotDesc const& slotDesc,
     {
         auto position = Vector2(vertex.PositionTextureCoord.Z, vertex.PositionTextureCoord.W)
             * size
-            + Vector2(textureRegion.Subrect.X, textureRegion.Subrect.Y);
+            + Vector2{static_cast<float>(textureRegion.Subrect.X), static_cast<float>(textureRegion.Subrect.Y)};
 
         POMDOG_ASSERT(textureSize.X > 0);
         POMDOG_ASSERT(textureSize.Y > 0);
@@ -115,8 +118,14 @@ SkinnedMeshSlot CreateSkinnedMeshSlot(
         POMDOG_ASSERT(*source.Joints.front() < bindPosesInGlobal.size());
         auto position = Vector2::Transform(source.Position, bindPosesInGlobal[*source.Joints.front()]);
 
-        Vector2 originInUV(textureRegion.Subrect.X, textureRegion.Subrect.Y);
-        Vector2 sizeInUV(textureRegion.Subrect.Width, textureRegion.Subrect.Height);
+        auto originInUV = Vector2{
+            static_cast<float>(textureRegion.Subrect.X),
+            static_cast<float>(textureRegion.Subrect.Y),
+        };
+        auto sizeInUV = Vector2{
+            static_cast<float>(textureRegion.Subrect.Width),
+            static_cast<float>(textureRegion.Subrect.Height),
+        };
 
         Vector2 textureCoordInUV = (textureRegion.Rotate
             ? Vector2{source.TextureCoordinate.Y * sizeInUV.Y, (1 - source.TextureCoordinate.X) * sizeInUV.X}

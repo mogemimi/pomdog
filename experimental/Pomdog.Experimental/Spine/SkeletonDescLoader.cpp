@@ -12,10 +12,32 @@
 #include <fstream>
 #include <vector>
 #include <algorithm>
+#include <type_traits>
 
 namespace Pomdog {
 namespace Spine {
 namespace {
+
+template <typename T>
+JointIndex ToJointIndex(T index)
+{
+    static_assert(std::is_integral_v<T>);
+    static_assert(!std::is_floating_point_v<T>);
+    static_assert(!std::is_pointer_v<T>);
+    static_assert(std::is_same_v<decltype(std::declval<JointIndex>().Data), std::uint8_t>);
+
+    POMDOG_ASSERT(index >= 0);
+    POMDOG_ASSERT(index <= std::numeric_limits<std::uint8_t>::max());
+    return static_cast<std::uint8_t>(index);
+}
+
+template <typename T>
+std::uint16_t ToUInt16(T n)
+{
+    static_assert(std::is_unsigned_v<T>);
+    POMDOG_ASSERT(n <= std::numeric_limits<std::uint16_t>::max());
+    return static_cast<std::uint16_t>(n);
+}
 
 void ReadJsonMember(rapidjson::Value const& object, char const* memberName, std::string & output)
 {
@@ -37,7 +59,7 @@ void ReadJsonMember(rapidjson::Value const& object, char const* memberName, floa
 
     auto & memberObject = object[memberName];
     if (memberObject.IsNumber()) {
-        output = memberObject.GetDouble();
+        output = memberObject.GetFloat();
     }
 }
 
@@ -49,7 +71,7 @@ void ReadJsonMember(rapidjson::Value const& object, char const* memberName, Anim
 
     auto & memberObject = object[memberName];
     if (memberObject.IsNumber()) {
-        output = AnimationTimeInterval(memberObject.GetDouble());
+        output = AnimationTimeInterval(memberObject.GetFloat());
     }
 }
 
@@ -61,18 +83,18 @@ void ReadJsonMember(rapidjson::Value const& object, char const* memberName, Radi
 
     auto & memberObject = object[memberName];
     if (memberObject.IsNumber()) {
-        Degree<double> degreeAngle = memberObject.GetDouble();
-        while (degreeAngle > 180) {
-            degreeAngle -= 360;
+        Degree<float> degreeAngle = memberObject.GetFloat();
+        while (degreeAngle > 180.0f) {
+            degreeAngle -= 360.0f;
         }
-        while (degreeAngle < -180) {
-            degreeAngle += 360;
+        while (degreeAngle < -180.0f) {
+            degreeAngle += 360.0f;
         }
-        output = MathHelper::ToRadians(degreeAngle).value;
+        output = MathHelper::ToRadians(degreeAngle);
     }
 }
 
-void ReadJsonMember(rapidjson::Value const& object, char const* memberName, Degree<double> & output)
+void ReadJsonMember(const rapidjson::Value& object, const char* memberName, Degree<float>& output)
 {
     if (!object.HasMember(memberName)) {
         return;
@@ -80,7 +102,7 @@ void ReadJsonMember(rapidjson::Value const& object, char const* memberName, Degr
 
     auto & memberObject = object[memberName];
     if (memberObject.IsNumber()) {
-        output.value = memberObject.GetDouble();
+        output.value = memberObject.GetFloat();
     }
 }
 
@@ -94,7 +116,7 @@ void ReadJsonMember(rapidjson::Value const& object, char const* memberName,
 
     auto & memberObject = object[memberName];
     if (memberObject.IsNumber()) {
-        output = memberObject.GetDouble();
+        output = memberObject.GetFloat();
     }
 }
 
@@ -125,7 +147,7 @@ void ReadJsonMember(rapidjson::Value const& object, char const* memberName, std:
 
     auto & memberObject = object[memberName];
     if (memberObject.IsUint()) {
-        output = memberObject.GetUint();
+        output = static_cast<std::uint16_t>(memberObject.GetUint());
     }
 }
 
@@ -206,7 +228,7 @@ JointIndex FindJointIndex(char const* boneName, std::vector<BoneDesc> const& bon
         // Error: Cannot find bone
         return {};
     }
-    return std::distance(std::begin(bones), iter);
+    return ToJointIndex(std::distance(std::begin(bones), iter));
 }
 
 std::vector<SlotDesc> ReadSlots(rapidjson::Value const& slotsDOM, std::vector<BoneDesc> const& bones)
@@ -282,7 +304,11 @@ std::vector<SkinnedMeshVertexDesc> ReadSkinnedMeshVertices(
         };
 
         POMDOG_ASSERT(verticesArray[verticesIter].IsUint());
-        std::uint8_t const sourceBoneCount = verticesArray[verticesIter].GetUint();
+        const auto sourceBoneCount = [](std::uint32_t x) -> std::uint8_t {
+            POMDOG_ASSERT(x >= 0);
+            POMDOG_ASSERT(x <= std::numeric_limits<std::uint8_t>::max());
+            return static_cast<std::uint8_t>(x);
+        }(verticesArray[verticesIter].GetUint());
         ++verticesIter;
         POMDOG_ASSERT(sourceBoneCount > 0);
 
@@ -296,19 +322,19 @@ std::vector<SkinnedMeshVertexDesc> ReadSkinnedMeshVertices(
             LocalVertex vertex;
 
             POMDOG_ASSERT(verticesArray[verticesIter].IsUint());
-            vertex.JointIndex = verticesArray[verticesIter].GetUint();
+            vertex.JointIndex = ToJointIndex(verticesArray[verticesIter].GetUint());
             ++verticesIter;
 
             POMDOG_ASSERT(verticesArray[verticesIter].IsNumber());
-            vertex.Position.X = verticesArray[verticesIter].GetDouble();
+            vertex.Position.X = verticesArray[verticesIter].GetFloat();
             ++verticesIter;
 
             POMDOG_ASSERT(verticesArray[verticesIter].IsNumber());
-            vertex.Position.Y = verticesArray[verticesIter].GetDouble();
+            vertex.Position.Y = verticesArray[verticesIter].GetFloat();
             ++verticesIter;
 
             POMDOG_ASSERT(verticesArray[verticesIter].IsNumber());
-            vertex.Weight = verticesArray[verticesIter].GetDouble();
+            vertex.Weight = verticesArray[verticesIter].GetFloat();
             ++verticesIter;
 
             localVertices.push_back(std::move(vertex));
@@ -358,11 +384,11 @@ std::vector<SkinnedMeshVertexDesc> ReadSkinnedMeshVertices(
         }
 
         POMDOG_ASSERT(uvsIter->IsNumber());
-        vertex.TextureCoordinate.X = uvsIter->GetDouble();
+        vertex.TextureCoordinate.X = uvsIter->GetFloat();
         ++uvsIter;
         POMDOG_ASSERT(uvsIter != uvsArray.End());
         POMDOG_ASSERT(uvsIter->IsNumber());
-        vertex.TextureCoordinate.Y = uvsIter->GetDouble();
+        vertex.TextureCoordinate.Y = uvsIter->GetFloat();
         ++uvsIter;
 
         vertices.push_back(std::move(vertex));
@@ -381,7 +407,7 @@ std::vector<std::uint16_t> ReadSkinnedMeshIndices(rapidjson::Value const& indice
     for (auto iter = indicesArray.Begin(); iter != indicesArray.End(); ++iter)
     {
         POMDOG_ASSERT(iter->IsUint());
-        indices.push_back(iter->GetUint());
+        indices.push_back(ToUInt16(iter->GetUint()));
     }
 
     return indices;
@@ -590,13 +616,13 @@ std::vector<AnimationSamplePointRotate> ReadAnimationRotateSamples(rapidjson::Va
         ReadJsonMember(*iter, "time", samplePoint.Time);
         ReadJsonMember(*iter, "curve", samplePoint.Curve);
 
-        Degree<double> degreeAngle = 0;
+        Degree<float> degreeAngle = 0.0f;
         ReadJsonMember(*iter, "angle", degreeAngle);
-        while (degreeAngle.value > 180) {
-            degreeAngle.value -= 360;
+        while (degreeAngle > 180.0f) {
+            degreeAngle -= 360.0f;
         }
-        while (degreeAngle.value < -180) {
-            degreeAngle.value += 360;
+        while (degreeAngle < -180.0f) {
+            degreeAngle += 360.0f;
         }
         samplePoint.Rotation = MathHelper::ToRadians(degreeAngle).value;
 
