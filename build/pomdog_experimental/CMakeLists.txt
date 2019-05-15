@@ -89,29 +89,9 @@ add_library(pomdog_experimental STATIC
   ${POMDOG_EXPERIMENTAL_DIR}/Gameplay2D/Transform.cpp
   ${POMDOG_EXPERIMENTAL_DIR}/Gameplay2D/Transform.hpp
 
-  ${POMDOG_EXPERIMENTAL_DIR}/Graphics/ScreenQuad.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Graphics/ScreenQuad.hpp
   # ${POMDOG_EXPERIMENTAL_DIR}/Graphics/SkinnedEffect.cpp
   # ${POMDOG_EXPERIMENTAL_DIR}/Graphics/SkinnedEffect.hpp
   ${POMDOG_EXPERIMENTAL_DIR}/Graphics/SpriteSortMode.hpp
-
-  ${POMDOG_EXPERIMENTAL_DIR}/ImageEffects/ChromaticAberration.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/ImageEffects/ChromaticAberration.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/ImageEffects/FishEyeEffect.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/ImageEffects/FishEyeEffect.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/ImageEffects/FXAA.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/ImageEffects/FXAA.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/ImageEffects/GrayscaleEffect.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/ImageEffects/GrayscaleEffect.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/ImageEffects/ImageEffectBase.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/ImageEffects/PostProcessCompositor.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/ImageEffects/PostProcessCompositor.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/ImageEffects/RetroCrtEffect.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/ImageEffects/RetroCrtEffect.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/ImageEffects/SepiaToneEffect.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/ImageEffects/SepiaToneEffect.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/ImageEffects/VignetteEffect.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/ImageEffects/VignetteEffect.hpp
 
   # ${POMDOG_EXPERIMENTAL_DIR}/InGameEditor/InGameEditor.cpp
   # ${POMDOG_EXPERIMENTAL_DIR}/InGameEditor/InGameEditor.hpp

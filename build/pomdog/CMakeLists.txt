@@ -29,6 +29,7 @@ source_group(Reactive                     REGULAR_EXPRESSION "(include/Pomdog|sr
 source_group(Signals                      REGULAR_EXPRESSION "(include/Pomdog|src)/Signals/*")
 source_group(Utility                      REGULAR_EXPRESSION "(include/Pomdog|src)/Utility/*")
 source_group(Experimental\\Graphics       REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Graphics/*")
+source_group(Experimental\\ImageEffects   REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/ImageEffects/*")
 source_group(Experimental\\Image          REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Image/*")
 source_group(Experimental\\MagicaVoxel    REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/MagicaVoxel/*")
 source_group(Experimental\\TexturePacker  REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/TexturePacker/*")
@@ -361,6 +362,16 @@ set(POMDOG_SOURCES_EXPERIMENTAL
   ${POMDOG_DIR}/include/Pomdog/Experimental/Image/GifImage.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Image/GifImageLoader.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Image/Image.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/ImageEffects/ChromaticAberration.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/ImageEffects/FishEyeEffect.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/ImageEffects/FXAA.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/ImageEffects/GrayscaleEffect.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/ImageEffects/ImageEffectBase.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/ImageEffects/PostProcessCompositor.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/ImageEffects/RetroCrtEffect.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/ImageEffects/ScreenQuad.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/ImageEffects/SepiaToneEffect.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/ImageEffects/VignetteEffect.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/MagicaVoxel/VoxModel.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/MagicaVoxel/VoxModelExporter.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/MagicaVoxel/VoxModelLoader.hpp
@@ -380,6 +391,15 @@ set(POMDOG_SOURCES_EXPERIMENTAL
   ${POMDOG_DIR}/src/Experimental/Graphics/TrueTypeFont.cpp
   ${POMDOG_DIR}/src/Experimental/Image/GifImageLoader.cpp
   ${POMDOG_DIR}/src/Experimental/Image/Image.cpp
+  ${POMDOG_DIR}/src/Experimental/ImageEffects/ChromaticAberration.cpp
+  ${POMDOG_DIR}/src/Experimental/ImageEffects/FishEyeEffect.cpp
+  ${POMDOG_DIR}/src/Experimental/ImageEffects/FXAA.cpp
+  ${POMDOG_DIR}/src/Experimental/ImageEffects/GrayscaleEffect.cpp
+  ${POMDOG_DIR}/src/Experimental/ImageEffects/PostProcessCompositor.cpp
+  ${POMDOG_DIR}/src/Experimental/ImageEffects/RetroCrtEffect.cpp
+  ${POMDOG_DIR}/src/Experimental/ImageEffects/ScreenQuad.cpp
+  ${POMDOG_DIR}/src/Experimental/ImageEffects/SepiaToneEffect.cpp
+  ${POMDOG_DIR}/src/Experimental/ImageEffects/VignetteEffect.cpp
   ${POMDOG_DIR}/src/Experimental/MagicaVoxel/VoxChunkHeader.hpp
   ${POMDOG_DIR}/src/Experimental/MagicaVoxel/VoxModelLoader.cpp
   ${POMDOG_DIR}/src/Experimental/MagicaVoxel/VoxModelExporter.cpp

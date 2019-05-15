@@ -5,8 +5,8 @@
 #include "Pomdog.Experimental/Gameplay2D/CameraComponent.hpp"
 #include "Pomdog.Experimental/Gameplay2D/Transform.hpp"
 #include "Pomdog.Experimental/Gameplay/EntityManager.hpp"
-#include "Pomdog.Experimental/ImageEffects/PostProcessCompositor.hpp"
 #include "Pomdog.Experimental/Rendering/Renderer.hpp"
+#include "Pomdog/Experimental/ImageEffects/PostProcessCompositor.hpp"
 #include <Pomdog/Pomdog.hpp>
 #include <memory>
 

@@ -12,7 +12,7 @@ set(CMAKE_CXX_EXTENSIONS off)
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
 
 source_group(Source                       REGULAR_EXPRESSION "Source/*")
-source_group(Source\\EntityComponentTest  REGULAR_EXPRESSION "Source/EntityComponentTest/*")
+source_group(Source\\ImageEffectsTest     REGULAR_EXPRESSION "Source/ImageEffectsTest/*")
 source_group(Source\\LineBatchTest        REGULAR_EXPRESSION "Source/LineBatchTest/*")
 source_group(Source\\PolylineDrawingTest  REGULAR_EXPRESSION "Source/PolylineDrawingTest/*")
 source_group(Source\\PrimitiveBatchTest   REGULAR_EXPRESSION "Source/PrimitiveBatchTest/*")
@@ -35,6 +35,8 @@ set(RESOURCE_FILES
 add_executable(${PRODUCT_NAME} WIN32
   Source/FeatureShowcaseGame.cpp
   Source/FeatureShowcaseGame.hpp
+  Source/ImageEffectsTest/ImageEffectsTest.cpp
+  Source/ImageEffectsTest/ImageEffectsTest.hpp
   Source/LineBatchTest/LineBatchTest.cpp
   Source/LineBatchTest/LineBatchTest.hpp
   Source/PolylineDrawingTest/PolylineDrawingTest.cpp

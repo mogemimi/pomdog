@@ -1,7 +1,5 @@
 #include "SpriteLineTest.hpp"
 #include <Pomdog/Experimental/Graphics/SpriteLine.hpp>
-#include <Pomdog/Experimental/TexturePacker/TextureAtlasGenerator.hpp>
-#include <Pomdog/Experimental/Tween/EasingHelper.hpp>
 #include <random>
 
 namespace FeatureShowcase {

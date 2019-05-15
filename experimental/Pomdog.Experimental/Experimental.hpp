@@ -32,17 +32,9 @@
 #include "Gameplay2D/TextRenderable.hpp"
 #include "Gameplay2D/Transform.hpp"
 
-#include "Graphics/ScreenQuad.hpp"
 //#include "Graphics/SkinnedEffect.hpp"
 //#include "Graphics/SpriteLine.hpp"
 #include "Graphics/SpriteSortMode.hpp"
-
-#include "ImageEffects/ChromaticAberration.hpp"
-#include "ImageEffects/FishEyeEffect.hpp"
-#include "ImageEffects/FXAA.hpp"
-#include "ImageEffects/GrayscaleEffect.hpp"
-#include "ImageEffects/SepiaToneEffect.hpp"
-#include "ImageEffects/VignetteEffect.hpp"
 
 //#include "InGameEditor/InGameEditor.hpp"
 

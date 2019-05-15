@@ -2,15 +2,16 @@
 
 #include <Pomdog/Experimental/Graphics/PrimitiveBatch.hpp>
 #include <Pomdog/Experimental/Graphics/SpriteBatch.hpp>
+#include <Pomdog/Experimental/ImageEffects/PostProcessCompositor.hpp>
 #include <Pomdog/Pomdog.hpp>
 
 namespace FeatureShowcase {
 
 using namespace Pomdog;
 
-class SpriteLineTest final : public Game {
+class ImageEffectsTest final : public Game {
 public:
-    explicit SpriteLineTest(const std::shared_ptr<GameHost>& gameHost);
+    explicit ImageEffectsTest(const std::shared_ptr<GameHost>& gameHost);
 
     void Initialize() override;
 
@@ -25,11 +26,9 @@ private:
     std::shared_ptr<GraphicsCommandList> commandList;
     ConnectionList connect;
 
-    std::shared_ptr<Texture2D> texture;
-    std::shared_ptr<SpriteBatch> spriteBatch;
-
+    std::shared_ptr<RenderTarget2D> renderTarget;
     std::shared_ptr<PrimitiveBatch> primitiveBatch;
-    Vector2 mousePosition;
+    PostProcessCompositor postProcessCompositor;
 };
 
 } // namespace FeatureShowcase

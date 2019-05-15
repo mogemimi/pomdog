@@ -1,4 +1,5 @@
 #include "FeatureShowcaseGame.hpp"
+#include "ImageEffectsTest/ImageEffectsTest.hpp"
 #include "LineBatchTest/LineBatchTest.hpp"
 #include "PolylineDrawingTest/PolylineDrawingTest.hpp"
 #include "PrimitiveBatchTest/PrimitiveBatchTest.hpp"
@@ -57,6 +58,10 @@ void FeatureShowcaseGame::Initialize()
     buttons.emplace_back("SpriteLine Test", [this] {
         window->SetTitle("Feature Showcase > SpriteLine Test");
         subGame = std::make_shared<FeatureShowcase::SpriteLineTest>(gameHost);
+    });
+    buttons.emplace_back("ImageEffects Test", [this] {
+        window->SetTitle("Feature Showcase > ImageEffects Test");
+        subGame = std::make_shared<FeatureShowcase::ImageEffectsTest>(gameHost);
     });
 
     hudButtons.emplace_back("Back", [this] {

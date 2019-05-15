@@ -264,6 +264,24 @@
 		D7334DCB228AC80200232225 /* PrimitiveBatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334DC7228AC80200232225 /* PrimitiveBatch.cpp */; };
 		D7334DCD228AC81F00232225 /* SpriteLine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334DCC228AC81F00232225 /* SpriteLine.cpp */; };
 		D7334DCE228AC81F00232225 /* SpriteLine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334DCC228AC81F00232225 /* SpriteLine.cpp */; };
+		D7334E17228AEC1300232225 /* PostProcessCompositor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E0E228AEC1200232225 /* PostProcessCompositor.cpp */; };
+		D7334E18228AEC1300232225 /* PostProcessCompositor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E0E228AEC1200232225 /* PostProcessCompositor.cpp */; };
+		D7334E19228AEC1300232225 /* FXAA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E0F228AEC1200232225 /* FXAA.cpp */; };
+		D7334E1A228AEC1300232225 /* FXAA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E0F228AEC1200232225 /* FXAA.cpp */; };
+		D7334E1B228AEC1300232225 /* FishEyeEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E10228AEC1200232225 /* FishEyeEffect.cpp */; };
+		D7334E1C228AEC1300232225 /* FishEyeEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E10228AEC1200232225 /* FishEyeEffect.cpp */; };
+		D7334E1D228AEC1300232225 /* VignetteEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E11228AEC1200232225 /* VignetteEffect.cpp */; };
+		D7334E1E228AEC1300232225 /* VignetteEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E11228AEC1200232225 /* VignetteEffect.cpp */; };
+		D7334E1F228AEC1300232225 /* SepiaToneEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E12228AEC1200232225 /* SepiaToneEffect.cpp */; };
+		D7334E20228AEC1300232225 /* SepiaToneEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E12228AEC1200232225 /* SepiaToneEffect.cpp */; };
+		D7334E21228AEC1300232225 /* ScreenQuad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E13228AEC1200232225 /* ScreenQuad.cpp */; };
+		D7334E22228AEC1300232225 /* ScreenQuad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E13228AEC1200232225 /* ScreenQuad.cpp */; };
+		D7334E23228AEC1300232225 /* RetroCrtEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E14228AEC1200232225 /* RetroCrtEffect.cpp */; };
+		D7334E24228AEC1300232225 /* RetroCrtEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E14228AEC1200232225 /* RetroCrtEffect.cpp */; };
+		D7334E25228AEC1300232225 /* ChromaticAberration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E15228AEC1200232225 /* ChromaticAberration.cpp */; };
+		D7334E26228AEC1300232225 /* ChromaticAberration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E15228AEC1200232225 /* ChromaticAberration.cpp */; };
+		D7334E27228AEC1300232225 /* GrayscaleEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E16228AEC1200232225 /* GrayscaleEffect.cpp */; };
+		D7334E28228AEC1300232225 /* GrayscaleEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E16228AEC1200232225 /* GrayscaleEffect.cpp */; };
 		D8E9871132965BADBA4BE734 /* FloatingPointMatrix3x3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 029A2B232511421D3FDB9FAC /* FloatingPointMatrix3x3.cpp */; };
 		DA4579E5970831E615EA005D /* Ray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EB2111ED9B45715040451A9 /* Ray.cpp */; };
 		DC83323F55585B855108ED51 /* AudioClipLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9524A580BCEF4C5E9F56EB43 /* AudioClipLoader.cpp */; };
@@ -740,6 +758,25 @@
 		D7334DE2228AC86900232225 /* TrueTypeFont.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TrueTypeFont.hpp; sourceTree = "<group>"; };
 		D7334DE3228AC86900232225 /* PolylineBatch.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PolylineBatch.hpp; sourceTree = "<group>"; };
 		D7334DE4228AC86900232225 /* PolygonShapeBuilder.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PolygonShapeBuilder.hpp; sourceTree = "<group>"; };
+		D7334E03228AEB9B00232225 /* PostProcessCompositor.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PostProcessCompositor.hpp; sourceTree = "<group>"; };
+		D7334E04228AEB9B00232225 /* RetroCrtEffect.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RetroCrtEffect.hpp; sourceTree = "<group>"; };
+		D7334E05228AEB9B00232225 /* FXAA.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = FXAA.hpp; sourceTree = "<group>"; };
+		D7334E06228AEB9B00232225 /* VignetteEffect.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = VignetteEffect.hpp; sourceTree = "<group>"; };
+		D7334E07228AEB9B00232225 /* ImageEffectBase.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ImageEffectBase.hpp; sourceTree = "<group>"; };
+		D7334E08228AEB9B00232225 /* GrayscaleEffect.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GrayscaleEffect.hpp; sourceTree = "<group>"; };
+		D7334E09228AEB9B00232225 /* ScreenQuad.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ScreenQuad.hpp; sourceTree = "<group>"; };
+		D7334E0A228AEB9B00232225 /* SepiaToneEffect.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SepiaToneEffect.hpp; sourceTree = "<group>"; };
+		D7334E0B228AEB9B00232225 /* ChromaticAberration.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ChromaticAberration.hpp; sourceTree = "<group>"; };
+		D7334E0C228AEB9B00232225 /* FishEyeEffect.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = FishEyeEffect.hpp; sourceTree = "<group>"; };
+		D7334E0E228AEC1200232225 /* PostProcessCompositor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PostProcessCompositor.cpp; sourceTree = "<group>"; };
+		D7334E0F228AEC1200232225 /* FXAA.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FXAA.cpp; sourceTree = "<group>"; };
+		D7334E10228AEC1200232225 /* FishEyeEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FishEyeEffect.cpp; sourceTree = "<group>"; };
+		D7334E11228AEC1200232225 /* VignetteEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VignetteEffect.cpp; sourceTree = "<group>"; };
+		D7334E12228AEC1200232225 /* SepiaToneEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SepiaToneEffect.cpp; sourceTree = "<group>"; };
+		D7334E13228AEC1200232225 /* ScreenQuad.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScreenQuad.cpp; sourceTree = "<group>"; };
+		D7334E14228AEC1200232225 /* RetroCrtEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RetroCrtEffect.cpp; sourceTree = "<group>"; };
+		D7334E15228AEC1200232225 /* ChromaticAberration.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ChromaticAberration.cpp; sourceTree = "<group>"; };
+		D7334E16228AEC1200232225 /* GrayscaleEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GrayscaleEffect.cpp; sourceTree = "<group>"; };
 		D74FD9BD064B46464D340F2E /* IndexBuffer.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = IndexBuffer.hpp; sourceTree = "<group>"; };
 		D752AEDF8093680A757220C6 /* GraphicsCommandQueue.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = GraphicsCommandQueue.hpp; sourceTree = "<group>"; };
 		D7D5A98E477FB0CDE2089FBD /* KeyboardState.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KeyboardState.cpp; sourceTree = "<group>"; };
@@ -1476,6 +1513,7 @@
 				A9FC99081DC3D8E100C78D63 /* Graphics */,
 				A94F2DC12131FE9E00718DB0 /* MagicaVoxel */,
 				A9A8227F1DAB7F2B0091497F /* Image */,
+				D7334E02228AEB6A00232225 /* ImageEffects */,
 				A9A822801DAB7F510091497F /* TexturePacker */,
 				A94F2DC52131FEAD00718DB0 /* Tween */,
 			);
@@ -1507,8 +1545,9 @@
 			isa = PBXGroup;
 			children = (
 				A9FC99031DC3D86C00C78D63 /* Graphics */,
-				A94F2DC72131FED600718DB0 /* MagicaVoxel */,
 				A9A822821DAB7F6B0091497F /* Image */,
+				D7334E0D228AEBEE00232225 /* ImageEffects */,
+				A94F2DC72131FED600718DB0 /* MagicaVoxel */,
 				A9A822831DAB7F6F0091497F /* TexturePacker */,
 				A94F2DCF2131FEFB00718DB0 /* Tween */,
 			);
@@ -1645,6 +1684,39 @@
 				BFBE06E0DEEBFD77A7D8BBB0 /* libpng.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		D7334E02228AEB6A00232225 /* ImageEffects */ = {
+			isa = PBXGroup;
+			children = (
+				D7334E0B228AEB9B00232225 /* ChromaticAberration.hpp */,
+				D7334E0C228AEB9B00232225 /* FishEyeEffect.hpp */,
+				D7334E05228AEB9B00232225 /* FXAA.hpp */,
+				D7334E08228AEB9B00232225 /* GrayscaleEffect.hpp */,
+				D7334E07228AEB9B00232225 /* ImageEffectBase.hpp */,
+				D7334E03228AEB9B00232225 /* PostProcessCompositor.hpp */,
+				D7334E04228AEB9B00232225 /* RetroCrtEffect.hpp */,
+				D7334E09228AEB9B00232225 /* ScreenQuad.hpp */,
+				D7334E0A228AEB9B00232225 /* SepiaToneEffect.hpp */,
+				D7334E06228AEB9B00232225 /* VignetteEffect.hpp */,
+			);
+			path = ImageEffects;
+			sourceTree = "<group>";
+		};
+		D7334E0D228AEBEE00232225 /* ImageEffects */ = {
+			isa = PBXGroup;
+			children = (
+				D7334E15228AEC1200232225 /* ChromaticAberration.cpp */,
+				D7334E10228AEC1200232225 /* FishEyeEffect.cpp */,
+				D7334E0F228AEC1200232225 /* FXAA.cpp */,
+				D7334E16228AEC1200232225 /* GrayscaleEffect.cpp */,
+				D7334E0E228AEC1200232225 /* PostProcessCompositor.cpp */,
+				D7334E14228AEC1200232225 /* RetroCrtEffect.cpp */,
+				D7334E13228AEC1200232225 /* ScreenQuad.cpp */,
+				D7334E12228AEC1200232225 /* SepiaToneEffect.cpp */,
+				D7334E11228AEC1200232225 /* VignetteEffect.cpp */,
+			);
+			path = ImageEffects;
 			sourceTree = "<group>";
 		};
 		D90112D019DEC9CB7B5D46EC /* Graphics */ = {
@@ -1960,6 +2032,7 @@
 				A9A8228D1DAB7FB70091497F /* GifImageLoader.cpp in Sources */,
 				4EE6EBE03E9AD9C3BEF652F2 /* AudioClip.cpp in Sources */,
 				A997F7041CAEFC4900926392 /* SamplerStateMetal.mm in Sources */,
+				D7334E1D228AEC1300232225 /* VignetteEffect.cpp in Sources */,
 				B7E9DD7713CD0E5323210193 /* AudioEngine.cpp in Sources */,
 				A9A8228F1DAB7FB70091497F /* Image.cpp in Sources */,
 				A9E4B872210CDDEB003F87DC /* GamepadIOKit.cpp in Sources */,
@@ -1978,6 +2051,7 @@
 				EC2E27BB5CDE6B796CFD767F /* Texture2DLoader.cpp in Sources */,
 				5A778C274019DF20B4A89035 /* DDSTextureReader.cpp in Sources */,
 				6AF7B562E9CA059894EB5359 /* MSWaveAudioLoader.cpp in Sources */,
+				D7334E23228AEC1300232225 /* RetroCrtEffect.cpp in Sources */,
 				0B000E134EE1FB9B23D549AA /* PNGTextureReader.cpp in Sources */,
 				56943E805DA5A66B2B412B6E /* ConstantBuffer.cpp in Sources */,
 				30E3441F3697C393B219D621 /* EffectBinaryParameter.cpp in Sources */,
@@ -2015,11 +2089,13 @@
 				A93CA6521D92F34E00B65171 /* QueuedScheduler.cpp in Sources */,
 				A94F2DD12131FEFB00718DB0 /* EasingHelper.cpp in Sources */,
 				0D2BB710020E127DFCD9A463 /* Rectangle.cpp in Sources */,
+				D7334E19228AEC1300232225 /* FXAA.cpp in Sources */,
 				A958BDF81CC3E65A00E15834 /* PomdogMetalViewController.mm in Sources */,
 				C3A63B50AA37BB77F4224857 /* FloatingPointMatrix2x2.cpp in Sources */,
 				FFDFEBC545EB6A4B2D810F99 /* FloatingPointMatrix3x2.cpp in Sources */,
 				51184430EB95428FD308DC8F /* FloatingPointMatrix3x3.cpp in Sources */,
 				A997F7021CAEFC4800926392 /* RenderTarget2DMetal.mm in Sources */,
+				D7334E25228AEC1300232225 /* ChromaticAberration.cpp in Sources */,
 				A9854B9E1DC115D400650729 /* BufferHelper.cpp in Sources */,
 				A9D18E8D1CA427270011A6CE /* MetalCompiler.cpp in Sources */,
 				7BFC36E8777C887934E3F02B /* FloatingPointMatrix4x4.cpp in Sources */,
@@ -2037,6 +2113,7 @@
 				DD35FD410F3B10D3D7108DD5 /* ConnectionList.cpp in Sources */,
 				162657EF7F7D8D1E34C76882 /* EventQueue.cpp in Sources */,
 				A98F591C211B2B89002960C1 /* PolygonShapeBuilder.cpp in Sources */,
+				D7334E1F228AEC1300232225 /* SepiaToneEffect.cpp in Sources */,
 				A9E4B86A210CD9C1003F87DC /* GamepadMappings.cpp in Sources */,
 				A9A822931DAB7FBE0091497F /* TextureAtlasGenerator.cpp in Sources */,
 				A9FC99051DC3D87F00C78D63 /* SpriteBatch.cpp in Sources */,
@@ -2047,10 +2124,12 @@
 				A997F7081CAEFC4900926392 /* Texture2DMetal.mm in Sources */,
 				566D366B6621FECC73232526 /* PathHelper.cpp in Sources */,
 				3F941E8F3AB564A6641C4B0E /* StringHelper.cpp in Sources */,
+				D7334E21228AEC1300232225 /* ScreenQuad.cpp in Sources */,
 				C2373F7B8F6A07427D757B02 /* BlendStateGL4.cpp in Sources */,
 				D7334DCD228AC81F00232225 /* SpriteLine.cpp in Sources */,
 				A98F592A211B2B9A002960C1 /* TrueTypeFont.cpp in Sources */,
 				7A376FB1B427C73FA45B705F /* BufferGL4.cpp in Sources */,
+				D7334E27228AEC1300232225 /* GrayscaleEffect.cpp in Sources */,
 				2939F626E9115C7EE5EA0E3A /* DepthStencilStateGL4.cpp in Sources */,
 				B41EB006F4BCD3004879EB93 /* EffectReflectionGL4.cpp in Sources */,
 				9BD2B7E492D96A784F54C910 /* ErrorChecker.cpp in Sources */,
@@ -2076,7 +2155,9 @@
 				A98F591A211B2B89002960C1 /* LineBatch.cpp in Sources */,
 				63571970C7BE520D7EE1BB02 /* SoundEffectAL.cpp in Sources */,
 				3EC9EB32476FB3E3C3713D72 /* Bootstrap.mm in Sources */,
+				D7334E1B228AEC1300232225 /* FishEyeEffect.cpp in Sources */,
 				A98F5926211B2B9A002960C1 /* SpriteFontLoader.cpp in Sources */,
+				D7334E17228AEC1300232225 /* PostProcessCompositor.cpp in Sources */,
 				03F46EF697B70E1EE9B2533B /* CocoaWindowDelegate.mm in Sources */,
 				2A5B52A528596019ABF40617 /* GameHostCocoa.mm in Sources */,
 				E6DAE91B1C77C1736DB66CD7 /* GameWindowCocoa.mm in Sources */,
@@ -2099,6 +2180,7 @@
 				A9A8228E1DAB7FB70091497F /* GifImageLoader.cpp in Sources */,
 				8F708C4B18D750ED37EFCF6B /* AudioClip.cpp in Sources */,
 				A997F7051CAEFC4900926392 /* SamplerStateMetal.mm in Sources */,
+				D7334E1E228AEC1300232225 /* VignetteEffect.cpp in Sources */,
 				3EB59864165741842C8DD788 /* AudioEngine.cpp in Sources */,
 				A9A822901DAB7FB70091497F /* Image.cpp in Sources */,
 				A9E4B873210CDDEB003F87DC /* GamepadIOKit.cpp in Sources */,
@@ -2117,6 +2199,7 @@
 				BD62DB67E515FA42A9D8F788 /* Texture2DLoader.cpp in Sources */,
 				97D9BB458E1CCD768983FA5F /* DDSTextureReader.cpp in Sources */,
 				7EA811ADD537C1D53C100DDC /* MSWaveAudioLoader.cpp in Sources */,
+				D7334E24228AEC1300232225 /* RetroCrtEffect.cpp in Sources */,
 				46937FE2B1FC98BBA39A1C3D /* PNGTextureReader.cpp in Sources */,
 				712667FE9F33A8F7581022FC /* ConstantBuffer.cpp in Sources */,
 				FB449C29F6AE9D0C12E0B224 /* EffectBinaryParameter.cpp in Sources */,
@@ -2154,11 +2237,13 @@
 				A93CA6531D92F34E00B65171 /* QueuedScheduler.cpp in Sources */,
 				A94F2DD22131FEFB00718DB0 /* EasingHelper.cpp in Sources */,
 				E4C4ADB64ED81496C05CB580 /* Rectangle.cpp in Sources */,
+				D7334E1A228AEC1300232225 /* FXAA.cpp in Sources */,
 				A958BDF91CC3E65A00E15834 /* PomdogMetalViewController.mm in Sources */,
 				E971CF40D05A93F09E489D10 /* FloatingPointMatrix2x2.cpp in Sources */,
 				2A792456A91A1FCD600F40C7 /* FloatingPointMatrix3x2.cpp in Sources */,
 				D8E9871132965BADBA4BE734 /* FloatingPointMatrix3x3.cpp in Sources */,
 				A997F7031CAEFC4900926392 /* RenderTarget2DMetal.mm in Sources */,
+				D7334E26228AEC1300232225 /* ChromaticAberration.cpp in Sources */,
 				A9854B9F1DC115D400650729 /* BufferHelper.cpp in Sources */,
 				A9D18E8E1CA427270011A6CE /* MetalCompiler.cpp in Sources */,
 				B64D84284045847B155F4CD3 /* FloatingPointMatrix4x4.cpp in Sources */,
@@ -2176,6 +2261,7 @@
 				48657AD97E278FA04C4994B4 /* ConnectionList.cpp in Sources */,
 				5D895FC546DFD02F64646AF7 /* EventQueue.cpp in Sources */,
 				A98F591D211B2B89002960C1 /* PolygonShapeBuilder.cpp in Sources */,
+				D7334E20228AEC1300232225 /* SepiaToneEffect.cpp in Sources */,
 				A9E4B86B210CD9C1003F87DC /* GamepadMappings.cpp in Sources */,
 				A9A822941DAB7FBE0091497F /* TextureAtlasGenerator.cpp in Sources */,
 				A9FC99061DC3D87F00C78D63 /* SpriteBatch.cpp in Sources */,
@@ -2186,10 +2272,12 @@
 				A997F7091CAEFC4900926392 /* Texture2DMetal.mm in Sources */,
 				8B19A1DD45CD8F8791C5B725 /* PathHelper.cpp in Sources */,
 				854A4F7DC911E624593C541D /* StringHelper.cpp in Sources */,
+				D7334E22228AEC1300232225 /* ScreenQuad.cpp in Sources */,
 				056E111E471F4C597FE6CE2D /* BlendStateGL4.cpp in Sources */,
 				D7334DCE228AC81F00232225 /* SpriteLine.cpp in Sources */,
 				A98F592B211B2B9A002960C1 /* TrueTypeFont.cpp in Sources */,
 				ECAB34E1967EA1239EBCAD19 /* BufferGL4.cpp in Sources */,
+				D7334E28228AEC1300232225 /* GrayscaleEffect.cpp in Sources */,
 				70602D1132700C62F76B98C7 /* DepthStencilStateGL4.cpp in Sources */,
 				14B5A80EB2F7EDF1D4226B3D /* EffectReflectionGL4.cpp in Sources */,
 				70214CEF1A1CF63D334FD75E /* ErrorChecker.cpp in Sources */,
@@ -2215,7 +2303,9 @@
 				A98F591B211B2B89002960C1 /* LineBatch.cpp in Sources */,
 				526DFCDBB8C6C2F2C6EC26D2 /* SoundEffectAL.cpp in Sources */,
 				99DE12DBE8D4B0D14FDACD5F /* Bootstrap.mm in Sources */,
+				D7334E1C228AEC1300232225 /* FishEyeEffect.cpp in Sources */,
 				A98F5927211B2B9A002960C1 /* SpriteFontLoader.cpp in Sources */,
+				D7334E18228AEC1300232225 /* PostProcessCompositor.cpp in Sources */,
 				E8ACB94BC7A78F57A854EC2C /* CocoaWindowDelegate.mm in Sources */,
 				0AECD9F61617195B0205EFEF /* GameHostCocoa.mm in Sources */,
 				71E352760BC127DCF199C59B /* GameWindowCocoa.mm in Sources */,
