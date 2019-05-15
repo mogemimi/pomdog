@@ -229,7 +229,7 @@ GameWindowWin32::Impl::Impl(
         }
     }
 
-    ::SetWindowLong(windowHandle, GWL_USERDATA, reinterpret_cast<LONG_PTR>(this));
+    ::SetWindowLongPtr(windowHandle, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
 
     RegisterInputDevices(windowHandle);
 }
@@ -238,7 +238,7 @@ GameWindowWin32::Impl::~Impl()
 {
     if (nullptr != windowHandle) {
         ::DestroyWindow(windowHandle);
-        ::SetWindowLong(windowHandle, GWL_USERDATA, 0);
+        ::SetWindowLongPtr(windowHandle, GWLP_USERDATA, 0);
         windowHandle = nullptr;
 
         ::CoUninitialize();
@@ -353,7 +353,7 @@ void GameWindowWin32::Impl::SetMouseCursor(MouseCursor cursorIn)
 LRESULT CALLBACK GameWindowWin32::Impl::WindowProcedure(
     HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-    auto window = reinterpret_cast<GameWindowWin32::Impl*>(::GetWindowLong(hWnd, GWL_USERDATA));
+    auto window = reinterpret_cast<GameWindowWin32::Impl*>(::GetWindowLongPtr(hWnd, GWLP_USERDATA));
 
     POMDOG_ASSERT(WM_QUIT != msg);
 
