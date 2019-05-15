@@ -1,6 +1,6 @@
 // Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
-#include "BeamSystem.hpp"
+#include "Pomdog/Experimental/Particle2D/BeamSystem.hpp"
 #include "Pomdog/Math/MathHelper.hpp"
 #include <algorithm>
 
@@ -8,13 +8,13 @@ namespace Pomdog {
 namespace {
 
 std::vector<Vector2> CreateJaggedLine(
-    BeamEmitter const& emitter,
+    const BeamEmitter& emitter,
     std::uint32_t interpolationPoints,
-    Vector2 const& start, Vector2 const& end, std::mt19937 & random)
+    const Vector2& start, const Vector2& end, std::mt19937& random)
 {
-    ///@todo Not implemented
-    POMDOG_ASSERT_MESSAGE(Vector2::DistanceSquared(start, end) > std::numeric_limits<float>::epsilon(),
-        "TODO: Not implemented");
+    if (Vector2::DistanceSquared(start, end) <= std::numeric_limits<float>::epsilon()) {
+        return {};
+    }
 
     auto tangent = end - start;
     auto normal = Vector2{-tangent.Y, tangent.X};
@@ -31,7 +31,6 @@ std::vector<Vector2> CreateJaggedLine(
 
     std::sort(std::begin(positions), std::end(positions), std::less<float>());
 
-
     std::vector<Vector2> points;
     points.reserve(interpolationPoints + 2);
     points.push_back(start);
@@ -43,8 +42,7 @@ std::vector<Vector2> CreateJaggedLine(
     auto length = std::max(Vector2::Distance(start, end), std::numeric_limits<float>::epsilon());
     POMDOG_ASSERT(length > 0);
 
-    for (auto & position: positions)
-    {
+    for (auto& position : positions) {
         POMDOG_ASSERT(emitter.Jaggedness >= 0);
         float scale = position - prevPosition;
         scale = std::min((scale * interpolationPoints) * emitter.Jaggedness, 1.0f);
@@ -78,9 +76,10 @@ std::vector<Vector2> CreateJaggedLine(
     return points;
 }
 
-std::vector<Vector2> CreateBranch(BeamEmitter const& emitter,
-    BeamBranching const& branching,
-    Vector2 const& sourceStart, Vector2 const& sourceEnd, Beam const& parentBeam, std::mt19937 & random)
+std::vector<Vector2> CreateBranch(
+    const BeamEmitter& emitter,
+    const BeamBranching& branching,
+    const Vector2& sourceStart, const Vector2& sourceEnd, const Beam& parentBeam, std::mt19937& random)
 {
     POMDOG_ASSERT(!parentBeam.Points.empty());
     POMDOG_ASSERT(parentBeam.Points.size() >= 2);
@@ -117,8 +116,9 @@ std::vector<Vector2> CreateBranch(BeamEmitter const& emitter,
     Vector2 end = sourceEnd + (Vector2::Normalize(normal) * distribution(random) * amount);
 
     auto scale = Vector2::Distance(end, start) / Vector2::Distance(sourceEnd, sourceStart);
+    auto scaledPoints = static_cast<uint32_t>(emitter.InterpolationPoints * scale);
 
-    return CreateJaggedLine(emitter, emitter.InterpolationPoints * scale, start, end, random);
+    return CreateJaggedLine(emitter, scaledPoints, start, end, random);
 }
 
 } // unnamed namespace
@@ -147,7 +147,7 @@ BeamSystem::BeamSystem()
     beams.reserve(emitter.MaxBeams);
 }
 
-void BeamSystem::Update(Duration const& frameDuration, Transform const& emitterTransform, Vector2 const& target)
+void BeamSystem::Update(const Duration& frameDuration, const Vector2& emitterPosition, const Vector2& target)
 {
     erapsedTime += frameDuration;
 
@@ -155,8 +155,7 @@ void BeamSystem::Update(Duration const& frameDuration, Transform const& emitterT
         erapsedTime = Duration::zero();
     }
 
-    if (emitter.Looping || erapsedTime <= emitter.Duration)
-    {
+    if (emitter.Looping || erapsedTime <= emitter.Duration) {
         emissionTimer += frameDuration;
 
         POMDOG_ASSERT(emitter.EmissionRate > 0);
@@ -168,8 +167,7 @@ void BeamSystem::Update(Duration const& frameDuration, Transform const& emitterT
         POMDOG_ASSERT(emitter.Duration.count() > 0);
         //float normalizedTime = erapsedTime / emitter.Duration;
 
-        auto CreateBranchBeam = [this](std::size_t parentBeamIndex, Vector2 const& sourceStart, Vector2 const& sourceEnd)
-        {
+        auto CreateBranchBeam = [this](std::size_t parentBeamIndex, const Vector2& sourceStart, const Vector2& sourceEnd) {
             std::uniform_real_distribution<float> distribution(0.0f, branching.MaxBranches * branching.BranchingRate);
             auto const maxBranches = distribution(random);
 
@@ -178,7 +176,7 @@ void BeamSystem::Update(Duration const& frameDuration, Transform const& emitterT
                     break;
                 }
 
-                auto & beam = beams[parentBeamIndex];
+                auto& beam = beams[parentBeamIndex];
 
                 Beam branchBeam;
                 branchBeam.Points = CreateBranch(emitter, branching, sourceStart, sourceEnd, beam, random);
@@ -187,8 +185,7 @@ void BeamSystem::Update(Duration const& frameDuration, Transform const& emitterT
                 branchBeam.Thickness = beam.Thickness * branching.InheritThickness;
                 beams.push_back(std::move(branchBeam));
 
-                if (branching.BranchingRate < std::generate_canonical<float, std::numeric_limits<float>::digits>(random))
-                {
+                if (branching.BranchingRate < std::generate_canonical<float, std::numeric_limits<float>::digits>(random)) {
                     parentBeamIndex = beams.size() - 1;
                 }
             }
@@ -196,30 +193,32 @@ void BeamSystem::Update(Duration const& frameDuration, Transform const& emitterT
 
         auto distribution = std::uniform_real_distribution<float>(-emitter.ShapeWidth/2, emitter.ShapeWidth/2);
 
-        while ((beams.size() < emitter.MaxBeams) && (emissionTimer >= emissionInterval))
-        {
+        while ((beams.size() < emitter.MaxBeams) && (emissionTimer >= emissionInterval)) {
             emissionTimer -= emissionInterval;
 
-            Vector2 tangent = target - emitterTransform.GetPosition2D();
-            Vector2 normal {-tangent.Y, tangent.X};
-            Vector2 end = target + (Vector2::Normalize(normal) * distribution(random));
+            const auto tangent = target - emitterPosition;
+            const auto normal = Vector2{-tangent.Y, tangent.X};
+            const auto end = target + (Vector2::Normalize(normal) * distribution(random));
 
             Beam beam;
 
             POMDOG_ASSERT(emitter.StartLifetime > 0.0f);
             beam.TimeToLive = emitter.StartLifetime;
-            beam.Points = CreateJaggedLine(emitter, emitter.InterpolationPoints,
-                emitterTransform.GetPosition2D(), end, random);
+            beam.Points = CreateJaggedLine(
+                emitter, emitter.InterpolationPoints, emitterPosition, end, random);
             beam.Color = emitter.StartColor;
             beam.Thickness = emitter.StartThickness;
 
+            if (beam.Points.empty()) {
+                continue;
+            }
             beams.push_back(std::move(beam));
-            CreateBranchBeam(beams.size() - 1, emitterTransform.GetPosition2D(), target);
+            CreateBranchBeam(beams.size() - 1, emitterPosition, target);
         }
     }
     {
-        for (auto & beam: beams) {
-            beam.TimeToLive -= frameDuration.count();
+        for (auto& beam : beams) {
+            beam.TimeToLive -= static_cast<float>(frameDuration.count());
             if (beam.TimeToLive <= 0.0f) {
                 continue;
             }
@@ -230,16 +229,20 @@ void BeamSystem::Update(Duration const& frameDuration, Transform const& emitterT
         }
 
         beams.erase(std::remove_if(std::begin(beams), std::end(beams),
-            [](Beam const& beam){ return beam.TimeToLive <= 0; }), std::end(beams));
+            [](const Beam& beam){ return beam.TimeToLive <= 0; }), std::end(beams));
     }
 }
 
-Vector2 BeamSystem::CreateTarget(Transform const& emitterTransform, float distance)
+Vector2 BeamSystem::CreateTarget(
+    const Vector2& emitterPosition,
+    const Radian<float>& emitterRotation,
+    float distance)
 {
-    Vector2 tangent {
-        distance * std::cos(emitterTransform.GetRotation2D().value),
-        distance * std::sin(emitterTransform.GetRotation2D().value)};
-    auto targetPosition = emitterTransform.GetPosition2D() + tangent;
+    auto tangent = Vector2{
+        distance * std::cos(emitterRotation.value),
+        distance * std::sin(emitterRotation.value),
+    };
+    auto targetPosition = emitterPosition + tangent;
     return targetPosition;
 }
 

@@ -38,15 +38,6 @@
 
 //#include "InGameEditor/InGameEditor.hpp"
 
-#include "Particle2D/Beam.hpp"
-#include "Particle2D/BeamEmitter.hpp"
-#include "Particle2D/BeamSystem.hpp"
-#include "Particle2D/Particle.hpp"
-#include "Particle2D/ParticleClip.hpp"
-#include "Particle2D/ParticleEmitter.hpp"
-#include "Particle2D/ParticleLoader.hpp"
-#include "Particle2D/ParticleSystem.hpp"
-
 #include "Skeletal2D/AnimationBlendInput.hpp"
 #include "Skeletal2D/AnimationBlendInputType.hpp"
 #include "Skeletal2D/AnimationClip.hpp"

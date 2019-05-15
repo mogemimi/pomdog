@@ -2,17 +2,17 @@
 
 #pragma once
 
-#include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Radian.hpp"
+#include "Pomdog/Math/Vector3.hpp"
 #include <cstdint>
 
 namespace Pomdog {
 
-class Particle {
+class Particle final {
 public:
-    Vector2 Position {0, 0};
-    Vector2 Velocity {1, 1};
+    Vector3 Position{0.0f, 0.0f, 0.0f};
+    Vector3 Velocity{1.0f, 1.0f, 1.0f};
 
     Pomdog::Color StartColor = Pomdog::Color::White;
     Pomdog::Color Color = Pomdog::Color::White;

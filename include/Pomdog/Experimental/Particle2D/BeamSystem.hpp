@@ -2,25 +2,27 @@
 
 #pragma once
 
-#include "Beam.hpp"
-#include "BeamBranching.hpp"
-#include "BeamEmitter.hpp"
-#include "Pomdog.Experimental/Gameplay2D/Transform.hpp"
+#include "Pomdog/Experimental/Particle2D/Beam.hpp"
+#include "Pomdog/Experimental/Particle2D/BeamBranching.hpp"
+#include "Pomdog/Experimental/Particle2D/BeamEmitter.hpp"
 #include "Pomdog/Application/Duration.hpp"
 #include "Pomdog/Math/Vector2.hpp"
 #include <cstdint>
-#include <vector>
 #include <random>
+#include <vector>
 
 namespace Pomdog {
 
-class BeamSystem {
+class BeamSystem final {
 public:
     BeamSystem();
 
-    void Update(Duration const& frameDuration, Transform const& emitterTransform, Vector2 const& target);
+    void Update(const Duration& frameDuration, const Vector2& emitterPosition, const Vector2& target);
 
-    static Vector2 CreateTarget(Transform const& emitterTransform, float distance);
+    static Vector2 CreateTarget(
+        const Vector2& emitterPosition,
+        const Radian<float>& emitterRotation,
+        float distance);
 
 public:
     BeamEmitter emitter;

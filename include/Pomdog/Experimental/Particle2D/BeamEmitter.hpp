@@ -9,9 +9,9 @@
 
 namespace Pomdog {
 
-class BeamEmitter {
+class BeamEmitter final {
 public:
-    Pomdog::Duration Duration {5.0};
+    Pomdog::Duration Duration{5.0};
     bool Looping = true;
 
     Color StartColor = Color::White;
@@ -20,7 +20,7 @@ public:
     ///@note [0, std::numelic_limits<T>::max()]
     std::uint32_t InterpolationPoints = 90;
 
-    std::uniform_real_distribution<float> SwayRange {-8.0f, 8.0f};
+    std::uniform_real_distribution<float> SwayRange{-8.0f, 8.0f};
 
     float ShapeWidth = 0;
 

@@ -2,24 +2,24 @@
 
 #pragma once
 
-#include "ParticleParameter.hpp"
 #include "ParticleCurveLerp.hpp"
-#include <random>
+#include "ParticleParameter.hpp"
 #include <limits>
+#include <random>
 
 namespace Pomdog {
 namespace Detail {
 namespace Particles {
 
 template <typename T>
-class ParticleParameterRandom final: public ParticleParameter<T> {
+class ParticleParameterRandom final : public ParticleParameter<T> {
 private:
     T min;
     T max;
 
 public:
     template <typename Type1, typename Type2>
-    explicit ParticleParameterRandom(Type1 && minIn, Type2 && maxIn)
+    explicit ParticleParameterRandom(Type1&& minIn, Type2&& maxIn)
         : min(std::move(minIn))
         , max(std::move(maxIn))
     {
@@ -27,13 +27,13 @@ public:
         static_assert(std::is_convertible<Type2, T>::value, "");
     }
 
-    T Compute(std::mt19937 & random) const
+    T Compute(std::mt19937& random) const
     {
         return Detail::Particles::ParticleCurveLerp<T>()(min, max,
             std::generate_canonical<float, std::numeric_limits<float>::digits>(random));
     }
 
-    T Compute(float, std::mt19937 & random) const override
+    T Compute(float, std::mt19937& random) const override
     {
         return Compute(random);
     }
@@ -43,7 +43,7 @@ public:
         return Detail::Particles::ParticleCurveLerp<T>()(min, max, amount);
     }
 
-    float GenerateVariance(std::mt19937 & random) const override
+    float GenerateVariance(std::mt19937& random) const override
     {
         return std::generate_canonical<float, std::numeric_limits<float>::digits>(random);
     }

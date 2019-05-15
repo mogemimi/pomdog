@@ -9,7 +9,7 @@ namespace Pomdog {
 namespace Detail {
 namespace Particles {
 
-class ParticleEmitterShapeBox final: public ParticleEmitterShape {
+class ParticleEmitterShapeBox final : public ParticleEmitterShape {
 private:
     float width;
     float height;
@@ -18,9 +18,10 @@ public:
     ParticleEmitterShapeBox(float widthIn, float heightIn)
         : width(widthIn)
         , height(heightIn)
-    {}
+    {
+    }
 
-    void Compute(std::mt19937 & random, Vector2 & emitPosition, Radian<float> & emitAngle) const override
+    void Compute(std::mt19937& random, Vector3& emitPosition, Radian<float>& emitAngle) const override
     {
         POMDOG_ASSERT(width >= 0.0f);
         POMDOG_ASSERT(height >= 0.0f);
@@ -28,6 +29,7 @@ public:
         std::uniform_real_distribution<float> distribution(-0.5f, 0.5f);
         emitPosition.X = width * distribution(random);
         emitPosition.Y = height * distribution(random);
+        emitPosition.Z = 0.0f;
         emitAngle = 0.0f;
     }
 };

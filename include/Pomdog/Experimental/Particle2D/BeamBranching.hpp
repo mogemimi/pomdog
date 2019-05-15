@@ -7,9 +7,9 @@
 
 namespace Pomdog {
 
-class BeamBranching {
+class BeamBranching final {
 public:
-    std::uniform_real_distribution<float> SpreadRange {-5.0f, 5.0f};
+    std::uniform_real_distribution<float> SpreadRange{-5.0f, 5.0f};
 
     float BranchingRate = 0.7f;
 

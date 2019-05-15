@@ -2,9 +2,10 @@
 
 #pragma once
 
-#include "Pomdog/Math/MathHelper.hpp"
 #include "Pomdog/Math/Color.hpp"
+#include "Pomdog/Math/MathHelper.hpp"
 #include "Pomdog/Math/Radian.hpp"
+#include "Pomdog/Math/Vector3.hpp"
 
 namespace Pomdog {
 namespace Detail {
@@ -12,7 +13,7 @@ namespace Particles {
 
 template <typename T>
 struct ParticleCurveLerp {
-    T operator()(T const& a, T const& b, float amount)
+    T operator()(const T& a, const T& b, float amount)
     {
         return MathHelper::Lerp(a, b, amount);
     }
@@ -20,7 +21,7 @@ struct ParticleCurveLerp {
 
 template <>
 struct ParticleCurveLerp<Radian<float>> {
-    Radian<float> operator()(Radian<float> const& a, Radian<float> const& b, float amount)
+    Radian<float> operator()(const Radian<float>& a, const Radian<float>& b, float amount)
     {
         return MathHelper::Lerp(a.value, b.value, amount);
     }
@@ -28,9 +29,17 @@ struct ParticleCurveLerp<Radian<float>> {
 
 template <>
 struct ParticleCurveLerp<Color> {
-    Color operator()(Color const& a, Color const& b, float amount)
+    Color operator()(const Color& a, const Color& b, float amount)
     {
         return Color::Lerp(a, b, amount);
+    }
+};
+
+template <>
+struct ParticleCurveLerp<Vector3> {
+    Vector3 operator()(const Vector3& a, const Vector3& b, float amount)
+    {
+        return Vector3::Lerp(a, b, amount);
     }
 };
 

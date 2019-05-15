@@ -6,7 +6,7 @@
 
 namespace Pomdog {
 
-class ParticleEmitter {
+class ParticleEmitter final {
 public:
     float StartDelay = 0;
 
@@ -18,13 +18,13 @@ public:
 
     std::uint16_t EmissionRate = 16;
 
-    //float InheritVelocity;
+    // float InheritVelocity;
 
-    //ParticleSimulationSpace SimulationSpace;
+    // ParticleSimulationSpace SimulationSpace;
 
     bool Looping = true;
 
-    //bool Prewarm = false;
+    // bool Prewarm = false;
 };
 
 } // namespace Pomdog

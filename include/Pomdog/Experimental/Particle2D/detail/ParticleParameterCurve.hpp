@@ -2,26 +2,26 @@
 
 #pragma once
 
-#include "ParticleParameter.hpp"
 #include "ParticleCurveKey.hpp"
 #include "ParticleCurveLerp.hpp"
+#include "ParticleParameter.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include <vector>
 #include <algorithm>
 #include <utility>
+#include <vector>
 
 namespace Pomdog {
 namespace Detail {
 namespace Particles {
 
 template <typename ForwardIterator, typename KeyType>
-std::pair<ForwardIterator, ForwardIterator> BinarySearchNearestPoints(ForwardIterator first, ForwardIterator last, KeyType const& value)
+std::pair<ForwardIterator, ForwardIterator> BinarySearchNearestPoints(ForwardIterator first, ForwardIterator last, const KeyType& value)
 {
     //static_assert(std::is_same<typename std::remove_reference<decltype(*first)>::type, T>::value, "");
     POMDOG_ASSERT(first != last);
 
     auto it = std::lower_bound(first, last, value,
-        [](KeyType const& a, KeyType const& b){ return a.TimeSeconds < b.TimeSeconds; });
+        [](const KeyType& a, const KeyType& b){ return a.TimeSeconds < b.TimeSeconds; });
 
     if (it == last) {
         return std::make_pair(std::prev(last), std::prev(last));
@@ -32,9 +32,8 @@ std::pair<ForwardIterator, ForwardIterator> BinarySearchNearestPoints(ForwardIte
     return std::make_pair(std::prev(it), it);
 }
 
-
 template <typename T>
-class ParticleParameterCurve final: public ParticleParameter<T> {
+class ParticleParameterCurve final : public ParticleParameter<T> {
 private:
     std::vector<ParticleCurveKey<T>> keys;
 
@@ -42,18 +41,20 @@ public:
     ParticleParameterCurve() = delete;
 
     template <typename InType>
-    explicit ParticleParameterCurve(InType && keysIn)
+    explicit ParticleParameterCurve(InType&& keysIn)
         : keys(std::move(keysIn))
     {
         static_assert(std::is_convertible<InType, decltype(keys)>::value, "");
         POMDOG_ASSERT(!keys.empty());
 
-        typedef ParticleCurveKey<T> CurveKeyType;
+#if defined(DEBUG) && !defined(NDEBUG)
+        using CurveKeyType = ParticleCurveKey<T>;
 
         POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys),
-            [](CurveKeyType const& a, CurveKeyType const& b){ return a.TimeSeconds < b.TimeSeconds; }));
+            [](const CurveKeyType& a, const CurveKeyType& b){ return a.TimeSeconds < b.TimeSeconds; }));
         POMDOG_ASSERT(std::find_if(std::begin(keys), std::end(keys),
-            [](CurveKeyType const& p){ return p.TimeSeconds < 0 || p.TimeSeconds > 1; }) == std::end(keys));
+            [](const CurveKeyType& p){ return p.TimeSeconds < 0 || p.TimeSeconds > 1; }) == std::end(keys));
+#endif
     }
 
     T Compute(float normalizedScale) const
@@ -65,8 +66,7 @@ public:
         using Detail::Particles::BinarySearchNearestPoints;
         auto pair = BinarySearchNearestPoints(std::begin(keys), std::end(keys), key);
 
-        if (pair.first == pair.second)
-        {
+        if (pair.first == pair.second) {
             return pair.first->Value;
         }
 
@@ -82,7 +82,7 @@ public:
         return ParticleCurveLerp<T>()(pair.first->Value, pair.second->Value, amount);
     }
 
-    T Compute(float normalizedScale, std::mt19937 &) const override
+    T Compute(float normalizedScale, std::mt19937&) const override
     {
         return Compute(normalizedScale);
     }
@@ -92,7 +92,7 @@ public:
         return Compute(normalizedScale);
     }
 
-    float GenerateVariance(std::mt19937 &) const override
+    float GenerateVariance(std::mt19937&) const override
     {
         return 1.0f;
     }

@@ -32,6 +32,7 @@ source_group(Experimental\\Graphics       REGULAR_EXPRESSION "(include/Pomdog|sr
 source_group(Experimental\\ImageEffects   REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/ImageEffects/*")
 source_group(Experimental\\Image          REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Image/*")
 source_group(Experimental\\MagicaVoxel    REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/MagicaVoxel/*")
+source_group(Experimental\\Particle2D     REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Particle2D/*")
 source_group(Experimental\\TexturePacker  REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/TexturePacker/*")
 source_group(Experimental\\Tween          REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Tween/*")
 source_group(InputSystem                  REGULAR_EXPRESSION src/InputSystem/*)
@@ -375,6 +376,24 @@ set(POMDOG_SOURCES_EXPERIMENTAL
   ${POMDOG_DIR}/include/Pomdog/Experimental/MagicaVoxel/VoxModel.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/MagicaVoxel/VoxModelExporter.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/MagicaVoxel/VoxModelLoader.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/Beam.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/BeamBranching.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/BeamEmitter.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/BeamSystem.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/Particle.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/ParticleClip.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/ParticleEmitter.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/ParticleSystem.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/detail/ParticleCurveKey.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/detail/ParticleCurveLerp.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/detail/ParticleEmitterShape.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/detail/ParticleEmitterShapeBox.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/detail/ParticleEmitterShapeSector.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/detail/ParticleParameter.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/detail/ParticleParameterConstant.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/detail/ParticleParameterCurve.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/detail/ParticleParameterRandom.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/detail/ParticleParameterRandomCurves.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureAtlas.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureAtlasGenerator.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureAtlasLoader.hpp
@@ -403,6 +422,8 @@ set(POMDOG_SOURCES_EXPERIMENTAL
   ${POMDOG_DIR}/src/Experimental/MagicaVoxel/VoxChunkHeader.hpp
   ${POMDOG_DIR}/src/Experimental/MagicaVoxel/VoxModelLoader.cpp
   ${POMDOG_DIR}/src/Experimental/MagicaVoxel/VoxModelExporter.cpp
+  ${POMDOG_DIR}/src/Experimental/Particle2D/BeamSystem.cpp
+  ${POMDOG_DIR}/src/Experimental/Particle2D/ParticleSystem.cpp
   ${POMDOG_DIR}/src/Experimental/TexturePacker/TextureAtlasGenerator.cpp
   ${POMDOG_DIR}/src/Experimental/TexturePacker/TextureAtlasLoader.cpp
   ${POMDOG_DIR}/src/Experimental/Tween/EasingHelper.cpp

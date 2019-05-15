@@ -282,6 +282,10 @@
 		D7334E26228AEC1300232225 /* ChromaticAberration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E15228AEC1200232225 /* ChromaticAberration.cpp */; };
 		D7334E27228AEC1300232225 /* GrayscaleEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E16228AEC1200232225 /* GrayscaleEffect.cpp */; };
 		D7334E28228AEC1300232225 /* GrayscaleEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E16228AEC1200232225 /* GrayscaleEffect.cpp */; };
+		D7334E34228C689C00232225 /* ParticleSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E32228C689C00232225 /* ParticleSystem.cpp */; };
+		D7334E35228C689C00232225 /* ParticleSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E32228C689C00232225 /* ParticleSystem.cpp */; };
+		D7334E36228C689C00232225 /* BeamSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E33228C689C00232225 /* BeamSystem.cpp */; };
+		D7334E37228C689C00232225 /* BeamSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E33228C689C00232225 /* BeamSystem.cpp */; };
 		D8E9871132965BADBA4BE734 /* FloatingPointMatrix3x3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 029A2B232511421D3FDB9FAC /* FloatingPointMatrix3x3.cpp */; };
 		DA4579E5970831E615EA005D /* Ray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EB2111ED9B45715040451A9 /* Ray.cpp */; };
 		DC83323F55585B855108ED51 /* AudioClipLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9524A580BCEF4C5E9F56EB43 /* AudioClipLoader.cpp */; };
@@ -777,6 +781,26 @@
 		D7334E14228AEC1200232225 /* RetroCrtEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RetroCrtEffect.cpp; sourceTree = "<group>"; };
 		D7334E15228AEC1200232225 /* ChromaticAberration.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ChromaticAberration.cpp; sourceTree = "<group>"; };
 		D7334E16228AEC1200232225 /* GrayscaleEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GrayscaleEffect.cpp; sourceTree = "<group>"; };
+		D7334E32228C689C00232225 /* ParticleSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ParticleSystem.cpp; sourceTree = "<group>"; };
+		D7334E33228C689C00232225 /* BeamSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BeamSystem.cpp; sourceTree = "<group>"; };
+		D7334E39228C68E500232225 /* BeamBranching.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BeamBranching.hpp; sourceTree = "<group>"; };
+		D7334E3A228C68E500232225 /* ParticleSystem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleSystem.hpp; sourceTree = "<group>"; };
+		D7334E3B228C68E500232225 /* Particle.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Particle.hpp; sourceTree = "<group>"; };
+		D7334E3C228C68E500232225 /* BeamSystem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BeamSystem.hpp; sourceTree = "<group>"; };
+		D7334E3D228C68E500232225 /* ParticleEmitter.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleEmitter.hpp; sourceTree = "<group>"; };
+		D7334E3E228C68E500232225 /* BeamEmitter.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BeamEmitter.hpp; sourceTree = "<group>"; };
+		D7334E3F228C68E500232225 /* Beam.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Beam.hpp; sourceTree = "<group>"; };
+		D7334E40228C68E500232225 /* ParticleClip.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleClip.hpp; sourceTree = "<group>"; };
+		D7334E43228C691500232225 /* ParticleParameterRandom.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleParameterRandom.hpp; sourceTree = "<group>"; };
+		D7334E44228C691500232225 /* ParticleParameterRandomCurves.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleParameterRandomCurves.hpp; sourceTree = "<group>"; };
+		D7334E45228C691500232225 /* ParticleCurveKey.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleCurveKey.hpp; sourceTree = "<group>"; };
+		D7334E46228C691500232225 /* ParticleParameterCurve.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleParameterCurve.hpp; sourceTree = "<group>"; };
+		D7334E47228C691500232225 /* ParticleEmitterShapeSector.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleEmitterShapeSector.hpp; sourceTree = "<group>"; };
+		D7334E48228C691500232225 /* ParticleParameter.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleParameter.hpp; sourceTree = "<group>"; };
+		D7334E49228C691500232225 /* ParticleParameterConstant.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleParameterConstant.hpp; sourceTree = "<group>"; };
+		D7334E4A228C691500232225 /* ParticleEmitterShapeBox.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleEmitterShapeBox.hpp; sourceTree = "<group>"; };
+		D7334E4B228C691500232225 /* ParticleEmitterShape.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleEmitterShape.hpp; sourceTree = "<group>"; };
+		D7334E4C228C691500232225 /* ParticleCurveLerp.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleCurveLerp.hpp; sourceTree = "<group>"; };
 		D74FD9BD064B46464D340F2E /* IndexBuffer.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = IndexBuffer.hpp; sourceTree = "<group>"; };
 		D752AEDF8093680A757220C6 /* GraphicsCommandQueue.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = GraphicsCommandQueue.hpp; sourceTree = "<group>"; };
 		D7D5A98E477FB0CDE2089FBD /* KeyboardState.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KeyboardState.cpp; sourceTree = "<group>"; };
@@ -1510,6 +1534,7 @@
 		A9A8227E1DAB7EFF0091497F /* Experimental */ = {
 			isa = PBXGroup;
 			children = (
+				D7334E38228C68AA00232225 /* Particle2D */,
 				A9FC99081DC3D8E100C78D63 /* Graphics */,
 				A94F2DC12131FE9E00718DB0 /* MagicaVoxel */,
 				A9A8227F1DAB7F2B0091497F /* Image */,
@@ -1548,6 +1573,7 @@
 				A9A822821DAB7F6B0091497F /* Image */,
 				D7334E0D228AEBEE00232225 /* ImageEffects */,
 				A94F2DC72131FED600718DB0 /* MagicaVoxel */,
+				D7334E31228C685100232225 /* Particle2D */,
 				A9A822831DAB7F6F0091497F /* TexturePacker */,
 				A94F2DCF2131FEFB00718DB0 /* Tween */,
 			);
@@ -1717,6 +1743,48 @@
 				D7334E11228AEC1200232225 /* VignetteEffect.cpp */,
 			);
 			path = ImageEffects;
+			sourceTree = "<group>";
+		};
+		D7334E31228C685100232225 /* Particle2D */ = {
+			isa = PBXGroup;
+			children = (
+				D7334E33228C689C00232225 /* BeamSystem.cpp */,
+				D7334E32228C689C00232225 /* ParticleSystem.cpp */,
+			);
+			path = Particle2D;
+			sourceTree = "<group>";
+		};
+		D7334E38228C68AA00232225 /* Particle2D */ = {
+			isa = PBXGroup;
+			children = (
+				D7334E42228C68FA00232225 /* detail */,
+				D7334E3F228C68E500232225 /* Beam.hpp */,
+				D7334E39228C68E500232225 /* BeamBranching.hpp */,
+				D7334E3E228C68E500232225 /* BeamEmitter.hpp */,
+				D7334E3C228C68E500232225 /* BeamSystem.hpp */,
+				D7334E3B228C68E500232225 /* Particle.hpp */,
+				D7334E40228C68E500232225 /* ParticleClip.hpp */,
+				D7334E3D228C68E500232225 /* ParticleEmitter.hpp */,
+				D7334E3A228C68E500232225 /* ParticleSystem.hpp */,
+			);
+			path = Particle2D;
+			sourceTree = "<group>";
+		};
+		D7334E42228C68FA00232225 /* detail */ = {
+			isa = PBXGroup;
+			children = (
+				D7334E45228C691500232225 /* ParticleCurveKey.hpp */,
+				D7334E4C228C691500232225 /* ParticleCurveLerp.hpp */,
+				D7334E4B228C691500232225 /* ParticleEmitterShape.hpp */,
+				D7334E4A228C691500232225 /* ParticleEmitterShapeBox.hpp */,
+				D7334E47228C691500232225 /* ParticleEmitterShapeSector.hpp */,
+				D7334E48228C691500232225 /* ParticleParameter.hpp */,
+				D7334E49228C691500232225 /* ParticleParameterConstant.hpp */,
+				D7334E46228C691500232225 /* ParticleParameterCurve.hpp */,
+				D7334E43228C691500232225 /* ParticleParameterRandom.hpp */,
+				D7334E44228C691500232225 /* ParticleParameterRandomCurves.hpp */,
+			);
+			path = detail;
 			sourceTree = "<group>";
 		};
 		D90112D019DEC9CB7B5D46EC /* Graphics */ = {
@@ -2122,8 +2190,10 @@
 				8650CF18F26DB3A0F89ABAE3 /* CRC32.cpp in Sources */,
 				D7334DCA228AC80200232225 /* PrimitiveBatch.cpp in Sources */,
 				A997F7081CAEFC4900926392 /* Texture2DMetal.mm in Sources */,
+				D7334E34228C689C00232225 /* ParticleSystem.cpp in Sources */,
 				566D366B6621FECC73232526 /* PathHelper.cpp in Sources */,
 				3F941E8F3AB564A6641C4B0E /* StringHelper.cpp in Sources */,
+				D7334E36228C689C00232225 /* BeamSystem.cpp in Sources */,
 				D7334E21228AEC1300232225 /* ScreenQuad.cpp in Sources */,
 				C2373F7B8F6A07427D757B02 /* BlendStateGL4.cpp in Sources */,
 				D7334DCD228AC81F00232225 /* SpriteLine.cpp in Sources */,
@@ -2270,8 +2340,10 @@
 				65B8BEF3D1E04BF859631ADE /* CRC32.cpp in Sources */,
 				D7334DCB228AC80200232225 /* PrimitiveBatch.cpp in Sources */,
 				A997F7091CAEFC4900926392 /* Texture2DMetal.mm in Sources */,
+				D7334E35228C689C00232225 /* ParticleSystem.cpp in Sources */,
 				8B19A1DD45CD8F8791C5B725 /* PathHelper.cpp in Sources */,
 				854A4F7DC911E624593C541D /* StringHelper.cpp in Sources */,
+				D7334E37228C689C00232225 /* BeamSystem.cpp in Sources */,
 				D7334E22228AEC1300232225 /* ScreenQuad.cpp in Sources */,
 				056E111E471F4C597FE6CE2D /* BlendStateGL4.cpp in Sources */,
 				D7334DCE228AC81F00232225 /* SpriteLine.cpp in Sources */,

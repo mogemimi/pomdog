@@ -10,19 +10,19 @@ namespace Detail {
 namespace Particles {
 
 template <typename T>
-class ParticleParameterConstant final: public ParticleParameter<T> {
+class ParticleParameterConstant final : public ParticleParameter<T> {
 private:
     T value;
 
 public:
     template <typename InType>
-    explicit ParticleParameterConstant(InType && valueIn)
+    explicit ParticleParameterConstant(InType&& valueIn)
         : value(std::move(valueIn))
     {
         static_assert(std::is_convertible<InType, T>::value, "");
     }
 
-    T Compute(float, std::mt19937 &) const override
+    T Compute(float, std::mt19937&) const override
     {
         return value;
     }
@@ -32,7 +32,7 @@ public:
         return value;
     }
 
-    float GenerateVariance(std::mt19937 &) const override
+    float GenerateVariance(std::mt19937&) const override
     {
         return 1.0f;
     }

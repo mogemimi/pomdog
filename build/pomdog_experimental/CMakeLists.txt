@@ -103,29 +103,8 @@ add_library(pomdog_experimental STATIC
   # ${POMDOG_EXPERIMENTAL_DIR}/InGameEditor/detail/PrimitiveGrid.cpp
   # ${POMDOG_EXPERIMENTAL_DIR}/InGameEditor/detail/PrimitiveGrid.hpp
 
-  ${POMDOG_EXPERIMENTAL_DIR}/Particle2D/Beam.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Particle2D/BeamBranching.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Particle2D/BeamEmitter.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Particle2D/BeamSystem.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Particle2D/BeamSystem.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Particle2D/Particle.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Particle2D/ParticleClip.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Particle2D/ParticleClip.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Particle2D/ParticleEmitter.hpp
   ${POMDOG_EXPERIMENTAL_DIR}/Particle2D/ParticleLoader.cpp
   ${POMDOG_EXPERIMENTAL_DIR}/Particle2D/ParticleLoader.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Particle2D/ParticleSystem.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Particle2D/ParticleSystem.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Particle2D/detail/ParticleCurveKey.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Particle2D/detail/ParticleCurveLerp.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Particle2D/detail/ParticleEmitterShape.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Particle2D/detail/ParticleEmitterShapeBox.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Particle2D/detail/ParticleEmitterShapeSector.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Particle2D/detail/ParticleParameter.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Particle2D/detail/ParticleParameterConstant.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Particle2D/detail/ParticleParameterCurve.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Particle2D/detail/ParticleParameterRandom.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Particle2D/detail/ParticleParameterRandomCurves.hpp
 
   ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/AnimationBlendInput.hpp
   ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/AnimationBlendInputType.hpp

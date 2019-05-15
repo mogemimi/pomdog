@@ -8,7 +8,7 @@ namespace Particles {
 
 template <typename T>
 struct ParticleCurveKey {
-    //std::uint8_t NormalizedTime;
+    // std::uint8_t NormalizedTime;
     float TimeSeconds;
     T Value;
 };

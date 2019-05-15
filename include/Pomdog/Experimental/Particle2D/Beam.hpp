@@ -2,13 +2,13 @@
 
 #pragma once
 
-#include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Math/Color.hpp"
+#include "Pomdog/Math/Vector2.hpp"
 #include <vector>
 
 namespace Pomdog {
 
-class Beam {
+class Beam final {
 public:
     std::vector<Vector2> Points;
     Pomdog::Color Color;

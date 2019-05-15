@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Math/Radian.hpp"
+#include "Pomdog/Math/Vector3.hpp"
 #include <random>
 
 namespace Pomdog {
@@ -14,7 +14,7 @@ class ParticleEmitterShape {
 public:
     virtual ~ParticleEmitterShape() = default;
 
-    virtual void Compute(std::mt19937 & random, Vector2 & emitPosition, Radian<float> & emitAngle) const = 0;
+    virtual void Compute(std::mt19937& random, Vector3& emitPosition, Radian<float>& emitAngle) const = 0;
 };
 
 } // namespace Particles

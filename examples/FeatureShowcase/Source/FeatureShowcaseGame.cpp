@@ -1,6 +1,8 @@
 #include "FeatureShowcaseGame.hpp"
+#include "Beam2DTest/Beam2DTest.hpp"
 #include "ImageEffectsTest/ImageEffectsTest.hpp"
 #include "LineBatchTest/LineBatchTest.hpp"
+#include "Particle2DTest/Particle2DTest.hpp"
 #include "PolylineDrawingTest/PolylineDrawingTest.hpp"
 #include "PrimitiveBatchTest/PrimitiveBatchTest.hpp"
 #include "SpriteBatchTest/SpriteBatchTest.hpp"
@@ -62,6 +64,14 @@ void FeatureShowcaseGame::Initialize()
     buttons.emplace_back("ImageEffects Test", [this] {
         window->SetTitle("Feature Showcase > ImageEffects Test");
         subGame = std::make_shared<FeatureShowcase::ImageEffectsTest>(gameHost);
+    });
+    buttons.emplace_back("Particle2D Test", [this] {
+        window->SetTitle("Feature Showcase > Particle2D Test");
+        subGame = std::make_shared<FeatureShowcase::Particle2DTest>(gameHost);
+    });
+    buttons.emplace_back("Beam2D Test", [this] {
+        window->SetTitle("Feature Showcase > Beam2D Test");
+        subGame = std::make_shared<FeatureShowcase::Beam2DTest>(gameHost);
     });
 
     hudButtons.emplace_back("Back", [this] {

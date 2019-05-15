@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "detail/ParticleEmitterShape.hpp"
-#include "detail/ParticleParameter.hpp"
-#include "ParticleEmitter.hpp"
+#include "Pomdog/Experimental/Particle2D/detail/ParticleEmitterShape.hpp"
+#include "Pomdog/Experimental/Particle2D/detail/ParticleParameter.hpp"
+#include "Pomdog/Experimental/Particle2D/ParticleEmitter.hpp"
 #include "Pomdog/Application/Duration.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Radian.hpp"
@@ -13,7 +13,7 @@
 
 namespace Pomdog {
 
-class ParticleClip {
+class ParticleClip final {
 public:
     ParticleEmitter Emitter;
 
@@ -34,7 +34,7 @@ public:
 
     std::unique_ptr<Detail::Particles::ParticleParameter<float>> SizeOverLifetime;
 
-    Pomdog::Duration Duration = std::chrono::seconds(5);
+    Pomdog::Duration Duration = std::chrono::seconds{5};
 };
 
 } // namespace Pomdog
