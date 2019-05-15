@@ -89,7 +89,7 @@ void UseBackBufferAsRenderTarget(
         backBuffer->GetRenderTargetView() };
 
     deviceContext->OMSetRenderTargets(
-        renderTargetViews.size(),
+        static_cast<UINT>(renderTargetViews.size()),
         renderTargetViews.data(),
         renderTargets.front()->GetDepthStencilView());
 }
@@ -259,7 +259,7 @@ void GraphicsContextDirect3D11::Draw(
 
     ApplyPipelineState();
 
-    deviceContext->Draw(vertexCount, startVertexLocation);
+    deviceContext->Draw(static_cast<UINT>(vertexCount), static_cast<UINT>(startVertexLocation));
 }
 
 void GraphicsContextDirect3D11::DrawIndexed(
@@ -273,7 +273,7 @@ void GraphicsContextDirect3D11::DrawIndexed(
 
     ApplyPipelineState();
 
-    deviceContext->DrawIndexed(indexCount, startIndexLocation, 0);
+    deviceContext->DrawIndexed(static_cast<UINT>(indexCount), static_cast<UINT>(startIndexLocation), 0);
 }
 
 void GraphicsContextDirect3D11::DrawInstanced(
@@ -290,10 +290,10 @@ void GraphicsContextDirect3D11::DrawInstanced(
     ApplyPipelineState();
 
     deviceContext->DrawInstanced(
-        vertexCountPerInstance,
-        instanceCount,
-        startVertexLocation,
-        startInstanceLocation);
+        static_cast<UINT>(vertexCountPerInstance),
+        static_cast<UINT>(instanceCount),
+        static_cast<UINT>(startVertexLocation),
+        static_cast<UINT>(startInstanceLocation));
 }
 
 void GraphicsContextDirect3D11::DrawIndexedInstanced(
@@ -310,11 +310,11 @@ void GraphicsContextDirect3D11::DrawIndexedInstanced(
     ApplyPipelineState();
 
     deviceContext->DrawIndexedInstanced(
-        indexCountPerInstance,
-        instanceCount,
-        startIndexLocation,
+        static_cast<UINT>(indexCountPerInstance),
+        static_cast<UINT>(instanceCount),
+        static_cast<UINT>(startIndexLocation),
         0,
-        startInstanceLocation);
+        static_cast<UINT>(startInstanceLocation));
 }
 
 void GraphicsContextDirect3D11::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer)
@@ -384,13 +384,17 @@ void GraphicsContextDirect3D11::SetVertexBuffers(
             vertexBuffer->GetNativeVertexBuffer()));
 
         vertexBuffers.push_back(nativeVertexBuffer->GetBuffer());
-        strides.push_back(vertexBuffer->GetStrideBytes());
-        offsets.push_back(binding.VertexOffset);
+        strides.push_back(static_cast<UINT>(vertexBuffer->GetStrideBytes()));
+        offsets.push_back(static_cast<UINT>(binding.VertexOffset));
     }
 
     POMDOG_ASSERT(deviceContext);
-    deviceContext->IASetVertexBuffers(0, vertexBuffers.size(), vertexBuffers.data(),
-        strides.data(), offsets.data());
+    deviceContext->IASetVertexBuffers(
+        0,
+        static_cast<UINT>(vertexBuffers.size()),
+        vertexBuffers.data(),
+        strides.data(),
+        offsets.data());
 }
 
 void GraphicsContextDirect3D11::SetPipelineState(const std::shared_ptr<NativePipelineState>& pipelineStateIn)
@@ -438,7 +442,7 @@ void GraphicsContextDirect3D11::SetSampler(int index, const std::shared_ptr<Nati
         sampler->GetSamplerState() };
 
     POMDOG_ASSERT(deviceContext);
-    deviceContext->PSSetSamplers(index, states.size(), states.data());
+    deviceContext->PSSetSamplers(index, static_cast<UINT>(states.size()), states.data());
 }
 
 void GraphicsContextDirect3D11::SetTexture(int index)
@@ -546,7 +550,7 @@ void GraphicsContextDirect3D11::SetRenderPass(const RenderPass& renderPass)
         }
 
         deviceContext->OMSetRenderTargets(
-            renderTargetsIn.size(),
+            static_cast<UINT>(renderTargetsIn.size()),
             renderTargetViews.data(),
             renderTargets.front()->GetDepthStencilView());
     }

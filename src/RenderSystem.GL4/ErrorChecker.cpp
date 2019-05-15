@@ -4,6 +4,7 @@
 #include "OpenGLPrerequisites.hpp"
 #include "../Utility/Tagged.hpp"
 #include "Pomdog/Logging/Log.hpp"
+#include <ios>
 #include <sstream>
 
 namespace Pomdog {
@@ -29,7 +30,7 @@ std::string ToString(const ErrorCodeGL4& errorCode)
 #endif
     }
     std::stringstream ss;
-    ss << "ErrorCode '" << reinterpret_cast<const void*>(errorCode.value) << "'";
+    ss << "ErrorCode '" << std::hex << errorCode.value << "'";
     return ss.str();
 }
 

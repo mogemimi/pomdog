@@ -144,7 +144,7 @@ ComPtr<ID3D11BlendState> CreateBlendState(
     blendDesc.IndependentBlendEnable = ToD3D11Boolean(description.IndependentBlendEnable);
 
     const auto renderTargetCount = std::min<int>(
-        description.RenderTargets.size(),
+        static_cast<int>(description.RenderTargets.size()),
         D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT);
 
     for (int i = 0; i < renderTargetCount; ++i) {
@@ -431,8 +431,10 @@ Microsoft::WRL::ComPtr<ID3D11InputLayout> CreateInputLayout(
 
     Microsoft::WRL::ComPtr<ID3D11InputLayout> nativeInputLayout;
     HRESULT hr = device->CreateInputLayout(
-        inputElements.data(), inputElements.size(),
-        vertexShaderBytecode.Code, vertexShaderBytecode.ByteLength,
+        inputElements.data(),
+        static_cast<UINT>(inputElements.size()),
+        vertexShaderBytecode.Code,
+        vertexShaderBytecode.ByteLength,
         &nativeInputLayout);
 
     if (FAILED(hr)) {

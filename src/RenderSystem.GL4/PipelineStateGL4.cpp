@@ -44,7 +44,7 @@ std::optional<ShaderProgramGL4> LinkShaders(
 #ifdef DEBUG
         std::array<GLchar, 256> messageBuffer;
 
-        glGetProgramInfoLog(program.value, messageBuffer.size(), 0, messageBuffer.data());
+        glGetProgramInfoLog(program.value, static_cast<GLsizei>(messageBuffer.size()), 0, messageBuffer.data());
         std::string const message = messageBuffer.data();
 
         Log::Critical("Pomdog.RenderSystem", StringHelper::Format(

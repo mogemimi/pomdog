@@ -64,7 +64,9 @@ void RegisterInputDevices(HWND windowHandle)
     keyboard.hwndTarget = windowHandle;
 
     BOOL success = RegisterRawInputDevices(
-        inputDevices.data(), inputDevices.size(), sizeof(inputDevices[0]));
+        inputDevices.data(),
+        static_cast<UINT>(inputDevices.size()),
+        static_cast<UINT>(sizeof(inputDevices[0])));
 
     if (success == FALSE) {
         ///@todo throw exception

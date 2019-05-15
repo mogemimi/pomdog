@@ -20,7 +20,7 @@ void BuildXAudioBuffer(
     XAUDIO2_BUFFER & bufferDesc)
 {
     bufferDesc.Flags = XAUDIO2_END_OF_STREAM;
-    bufferDesc.AudioBytes = audioClip.SizeInBytes();
+    bufferDesc.AudioBytes = static_cast<UINT32>(audioClip.SizeInBytes());
     bufferDesc.pAudioData = audioClip.Data();
     bufferDesc.PlayBegin = 0;
     bufferDesc.PlayLength = 0;

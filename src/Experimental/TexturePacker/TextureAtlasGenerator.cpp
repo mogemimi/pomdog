@@ -166,7 +166,7 @@ TextureAtlasGeneratorResult TextureAtlasGenerator::Generate(
         region.Name = source.Name;
         regions.push_back(region);
 
-        indices.emplace(source.Image, regions.size() - 1);
+        indices.emplace(source.Image, static_cast<int>(regions.size()) - 1);
         POMDOG_ASSERT(regions.at(indices[source.Image]).Name == source.Name);
     }
 

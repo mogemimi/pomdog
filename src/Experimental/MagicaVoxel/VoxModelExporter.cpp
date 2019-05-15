@@ -75,7 +75,7 @@ void VoxModelExporter::Export(const MagicaVoxel::VoxModel& model, const std::str
 
     VoxChunkHeader rgbaChunk;
     rgbaChunk.ID = IdRGBA;
-    rgbaChunk.ContentSize = (sizeof(Color) * colors.size());
+    rgbaChunk.ContentSize = static_cast<int32_t>(sizeof(Color) * colors.size());
     rgbaChunk.ChildrenSize = 0;
 
     VoxChunkHeader mainChunk;

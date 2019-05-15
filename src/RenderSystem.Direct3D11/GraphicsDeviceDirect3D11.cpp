@@ -137,7 +137,7 @@ ID3D11InfoQueue* BuildInfoQueue(ID3D11Device* nativeDevice)
     };
 
     filter.DenyList.pSeverityList = severityList.data();
-    filter.DenyList.NumSeverities = severityList.size();
+    filter.DenyList.NumSeverities = static_cast<UINT>(severityList.size());
 
     infoQueue->AddStorageFilterEntries(&filter);
     infoQueue->AddRetrievalFilterEntries(&filter);
