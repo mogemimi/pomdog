@@ -43,8 +43,8 @@ Please refer to [Architecture](https://github.com/mogemimi/pomdog/wiki/Architect
     # Generate Xcode project
     cmake -Bbuild.cmake -H. -G Xcode
 
-    # Generate projects for Visual Studio 2017
-    cmake -Bbuild.cmake -H. -G "Visual Studio 15"
+    # Generate projects for Visual Studio 2019
+    cmake -Bbuild.cmake -H. -G "Visual Studio 16"
 
     # Generate Ninja files
     cmake -Bbuild.cmake -H. -G Ninja

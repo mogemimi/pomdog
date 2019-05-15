@@ -91,8 +91,8 @@ cd path/to/pomdog
 mkdir build.cmake
 cd build.cmake
 
-# Generating projects for Visual Studio 2017
-cmake -G "Visual Studio 15" ../test
+# Generating projects for Visual Studio 2019
+cmake -G "Visual Studio 16" ../test
 
 # Building projects using CMake and MSBuild
 cmake --build . --config Release

@@ -13,10 +13,10 @@
 
 #### Build requirements
 
-* CMake 3.10 and later
-* Clang 6.0 (for Linux)
-* Xcode 9.2 and later
-* Visual Studio 2017 and later
+* CMake 3.11 and later
+* Clang 8.0 (for Linux)
+* Xcode 10.2 and later
+* Visual Studio 2019 and later
 
 ## How to build
 
@@ -70,7 +70,7 @@ xcodebuild -project Pong.xcodeproj -configuration Release
 
 To develop your application on Xcode, please open `Pong.xcodeproj` in Xcode.
 
-### Building under Visual Studio 2017
+### Building under Visual Studio 2019
 
 ```sh
 # Git Bash (MinGW)
@@ -79,8 +79,8 @@ cd path/to/Pong
 # Creating a build directory
 mkdir -p build && cd build
 
-# Generating projects for Visual Studio 2017
-cmake -G "Visual Studio 15" ..
+# Generating projects for Visual Studio 2019
+cmake -G "Visual Studio 16" ..
 
 # Building projects using CMake and MSBuild
 cmake --build . --config Debug
