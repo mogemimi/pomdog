@@ -3,6 +3,13 @@ Open Source Software used in Pomdog
 
 All of the dependencies that [Pomdog](https://github.com/mogemimi/pomdog) needs to build or run.
 
+### Catch2
+
+* [Catch2 - GitHub](https://github.com/catchorg/Catch2)
+* License
+  * Boost Software License - Version 1.0
+  * Please see: [Catch2/LICENSE.txt](Catch2/LICENSE.txt)
+
 ### GIFLIB
 
 * [The GIFLIB project](http://giflib.sourceforge.net/)
