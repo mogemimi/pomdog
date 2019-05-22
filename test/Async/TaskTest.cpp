@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
-#include <Pomdog/Async/Task.hpp>
-#include <Pomdog/Async/Helpers.hpp>
-#include <gtest/iutest_switch.hpp>
+#include "Pomdog/Async/Task.hpp"
+#include "Pomdog/Async/Helpers.hpp"
+#include "catch.hpp"
 #include <thread>
 
 using Pomdog::Concurrency::Task;
@@ -19,43 +19,43 @@ namespace Concurrency = Pomdog::Concurrency;
 //    return task;
 //}
 
-//TEST(Task, Delay)
+//TEST_CASE("Task::Delay", "[Task]")
 //{
 //    Task<void> task = Concurrency::Delay(std::chrono::milliseconds(20), scheduler);
-//    EXPECT_FALSE(task.IsDone());
-//    EXPECT_FALSE(task.IsRejected());
+//    REQUIRE_FALSE(task.IsDone());
+//    REQUIRE_FALSE(task.IsRejected());
 //    wait(std::chrono::nanoseconds(1));
-//    EXPECT_FALSE(task.IsDone());
-//    EXPECT_FALSE(task.IsRejected());
+//    REQUIRE_FALSE(task.IsDone());
+//    REQUIRE_FALSE(task.IsRejected());
 //    wait(std::chrono::milliseconds(30));
-//    EXPECT_TRUE(task.IsDone());
-//    EXPECT_FALSE(task.IsRejected());
+//    REQUIRE(task.IsDone());
+//    REQUIRE_FALSE(task.IsRejected());
 //}
 
-TEST(Task, CreateTask)
+TEST_CASE("Task::CreateTask", "[Task]")
 {
     auto task = Concurrency::CreateTask<void>([](auto tcs) {
         tcs.SetResult();
     });
-    EXPECT_TRUE(task.IsDone());
-    EXPECT_FALSE(task.IsRejected());
+    REQUIRE(task.IsDone());
+    REQUIRE_FALSE(task.IsRejected());
 }
 
-TEST(Task, CreateTask_Defer)
+TEST_CASE("Task::CreateTask_Defer", "[Task]")
 {
     std::function<void()> defer;
     auto task = Concurrency::CreateTask<void>([&](auto tcs) {
         defer = [tcs]{ tcs.SetResult(); };
     });
 
-    EXPECT_FALSE(task.IsDone());
-    EXPECT_FALSE(task.IsRejected());
+    REQUIRE_FALSE(task.IsDone());
+    REQUIRE_FALSE(task.IsRejected());
     defer();
-    EXPECT_TRUE(task.IsDone());
-    EXPECT_FALSE(task.IsRejected());
+    REQUIRE(task.IsDone());
+    REQUIRE_FALSE(task.IsRejected());
 }
 
-TEST(Task, CreateTask_ThrowException)
+TEST_CASE("Task::CreateTask_ThrowException", "[Task]")
 {
     auto task = Concurrency::CreateTask<void>([](auto tcs) {
         try {
@@ -65,8 +65,8 @@ TEST(Task, CreateTask_ThrowException)
         }
     });
 
-    EXPECT_TRUE(task.IsDone());
-    EXPECT_TRUE(task.IsRejected());
+    REQUIRE(task.IsDone());
+    REQUIRE(task.IsRejected());
 
     std::string result;
     task.Catch([&](const std::exception_ptr& p) {
@@ -78,12 +78,12 @@ TEST(Task, CreateTask_ThrowException)
         }
     });
 
-    ASSERT_TRUE(task.IsDone());
-    ASSERT_TRUE(task.IsRejected());
-    EXPECT_EQ("FUS RO DAH", result);
+    REQUIRE(task.IsDone());
+    REQUIRE(task.IsRejected());
+    REQUIRE(result == "FUS RO DAH");
 }
 
-TEST(Task, CreateTask_ThrowException_Defer)
+TEST_CASE("Task::CreateTask_ThrowException_Defer", "[Task]")
 {
     std::function<void()> defer;
     auto task = Concurrency::CreateTask<void>([&](auto tcs) {
@@ -96,8 +96,8 @@ TEST(Task, CreateTask_ThrowException_Defer)
         };
     });
 
-    EXPECT_FALSE(task.IsDone());
-    EXPECT_FALSE(task.IsRejected());
+    REQUIRE_FALSE(task.IsDone());
+    REQUIRE_FALSE(task.IsRejected());
 
     std::string result;
     task.Catch([&](const std::exception_ptr& p) {
@@ -109,16 +109,16 @@ TEST(Task, CreateTask_ThrowException_Defer)
         }
     });
 
-    EXPECT_FALSE(task.IsDone());
-    EXPECT_FALSE(task.IsRejected());
-    EXPECT_TRUE(result.empty());
+    REQUIRE_FALSE(task.IsDone());
+    REQUIRE_FALSE(task.IsRejected());
+    REQUIRE(result.empty());
     defer();
-    EXPECT_TRUE(task.IsDone());
-    EXPECT_TRUE(task.IsRejected());
-    EXPECT_EQ("FUS RO DAH", result);
+    REQUIRE(task.IsDone());
+    REQUIRE(task.IsRejected());
+    REQUIRE(result == "FUS RO DAH");
 }
 
-TEST(Task, Then_Deferred)
+TEST_CASE("Task::Then_Deferred", "[Task]")
 {
     std::function<void()> defer;
     auto task = Concurrency::CreateTask<void>([&](auto tcs) {
@@ -126,32 +126,32 @@ TEST(Task, Then_Deferred)
     });
     auto task2 = task.Then([]{});
 
-    EXPECT_FALSE(task.IsDone());
-    EXPECT_FALSE(task.IsRejected());
-    EXPECT_FALSE(task2.IsDone());
-    EXPECT_FALSE(task2.IsRejected());
+    REQUIRE_FALSE(task.IsDone());
+    REQUIRE_FALSE(task.IsRejected());
+    REQUIRE_FALSE(task2.IsDone());
+    REQUIRE_FALSE(task2.IsRejected());
     defer();
-    EXPECT_TRUE(task.IsDone());
-    EXPECT_FALSE(task.IsRejected());
-    EXPECT_TRUE(task2.IsDone());
-    EXPECT_FALSE(task2.IsRejected());
+    REQUIRE(task.IsDone());
+    REQUIRE_FALSE(task.IsRejected());
+    REQUIRE(task2.IsDone());
+    REQUIRE_FALSE(task2.IsRejected());
 }
 
-TEST(Task, Then_Immediate)
+TEST_CASE("Task::Then_Immediate", "[Task]")
 {
     auto task = Concurrency::CreateTask<void>([](auto tcs) {
         tcs.SetResult();
     });
 
-    EXPECT_TRUE(task.IsDone());
-    EXPECT_FALSE(task.IsRejected());
+    REQUIRE(task.IsDone());
+    REQUIRE_FALSE(task.IsRejected());
 
     auto task2 = task.Then([]{});
-    EXPECT_TRUE(task2.IsDone());
-    EXPECT_FALSE(task2.IsRejected());
+    REQUIRE(task2.IsDone());
+    REQUIRE_FALSE(task2.IsRejected());
 }
 
-TEST(Task, Then_Results)
+TEST_CASE("Task::Then_Results", "[Task]")
 {
     std::function<void()> defer;
     std::vector<std::string> results;
@@ -162,49 +162,49 @@ TEST(Task, Then_Results)
         };
     });
     auto task2 = task.Then([&](const std::string& name)->std::string {
-        EXPECT_EQ("chuck", name);
+        REQUIRE(name == "chuck");
         results.push_back(name + " ");
         return name + " ";
     });
     auto task3 = task2.Then([&](const std::string& name)->std::string {
-        EXPECT_EQ("chuck ", name);
+        REQUIRE(name == "chuck ");
         results.push_back(name + "norris");
         return name + "norris";
     });
 
-    EXPECT_FALSE(task.IsDone());
-    EXPECT_FALSE(task.IsRejected());
-    EXPECT_FALSE(task2.IsDone());
-    EXPECT_FALSE(task2.IsRejected());
-    EXPECT_FALSE(task3.IsDone());
-    EXPECT_FALSE(task3.IsRejected());
+    REQUIRE_FALSE(task.IsDone());
+    REQUIRE_FALSE(task.IsRejected());
+    REQUIRE_FALSE(task2.IsDone());
+    REQUIRE_FALSE(task2.IsRejected());
+    REQUIRE_FALSE(task3.IsDone());
+    REQUIRE_FALSE(task3.IsRejected());
     defer();
-    EXPECT_TRUE(task.IsDone());
-    EXPECT_FALSE(task.IsRejected());
-    EXPECT_TRUE(task2.IsDone());
-    EXPECT_FALSE(task2.IsRejected());
-    EXPECT_TRUE(task3.IsDone());
-    EXPECT_FALSE(task3.IsRejected());
+    REQUIRE(task.IsDone());
+    REQUIRE_FALSE(task.IsRejected());
+    REQUIRE(task2.IsDone());
+    REQUIRE_FALSE(task2.IsRejected());
+    REQUIRE(task3.IsDone());
+    REQUIRE_FALSE(task3.IsRejected());
 
-    ASSERT_EQ(3, results.size());
-    EXPECT_EQ("chuck", results[0]);
-    EXPECT_EQ("chuck ", results[1]);
-    EXPECT_EQ("chuck norris", results[2]);
+    REQUIRE(results.size() == 3);
+    REQUIRE(results[0] == "chuck");
+    REQUIRE(results[1] == "chuck ");
+    REQUIRE(results[2] == "chuck norris");
 }
 
-TEST(Task, Then_MethodChaining)
+TEST_CASE("Task::Then_MethodChaining", "[Task]")
 {
     std::string result;
     auto task = Concurrency::FromResult<int>(42)
         .Then([](int x){ return std::to_string(x); })
         .Then([&](const std::string& s){ result = s; });
 
-    EXPECT_TRUE(task.IsDone());
-    EXPECT_FALSE(task.IsRejected());
-    EXPECT_EQ("42", result);
+    REQUIRE(task.IsDone());
+    REQUIRE_FALSE(task.IsRejected());
+    REQUIRE(result == "42");
 }
 
-TEST(Task, Then_ReturnTask)
+TEST_CASE("Task::Then_ReturnTask", "[Task]")
 {
     std::function<void()> defer1;
     std::function<void()> defer2;
@@ -239,37 +239,37 @@ TEST(Task, Then_ReturnTask)
         result.push_back(std::to_string(x));
     });
 
-    EXPECT_FALSE(task1.IsDone());
-    EXPECT_FALSE(task2.IsDone());
-    EXPECT_FALSE(task3.IsDone());
-    EXPECT_FALSE(task4.IsDone());
-    ASSERT_TRUE(result.empty());
+    REQUIRE_FALSE(task1.IsDone());
+    REQUIRE_FALSE(task2.IsDone());
+    REQUIRE_FALSE(task3.IsDone());
+    REQUIRE_FALSE(task4.IsDone());
+    REQUIRE(result.empty());
     defer1();
-    ASSERT_EQ(2, result.size());
-    EXPECT_EQ("A", result[0]);
-    EXPECT_EQ("B", result[1]);
-    EXPECT_TRUE(task1.IsDone());
-    EXPECT_FALSE(task2.IsDone());
-    EXPECT_FALSE(task3.IsDone());
-    EXPECT_FALSE(task4.IsDone());
+    REQUIRE(result.size() == 2);
+    REQUIRE(result[0] == "A");
+    REQUIRE(result[1] == "B");
+    REQUIRE(task1.IsDone());
+    REQUIRE_FALSE(task2.IsDone());
+    REQUIRE_FALSE(task3.IsDone());
+    REQUIRE_FALSE(task4.IsDone());
     defer2();
-    ASSERT_EQ(5, result.size());
-    EXPECT_EQ("C", result[2]);
-    EXPECT_EQ("D", result[3]);
-    EXPECT_EQ("E", result[4]);
-    EXPECT_TRUE(task2.IsDone());
-    EXPECT_FALSE(task3.IsDone());
-    EXPECT_FALSE(task4.IsDone());
+    REQUIRE(result.size() == 5);
+    REQUIRE(result[2] == "C");
+    REQUIRE(result[3] == "D");
+    REQUIRE(result[4] == "E");
+    REQUIRE(task2.IsDone());
+    REQUIRE_FALSE(task3.IsDone());
+    REQUIRE_FALSE(task4.IsDone());
     defer3();
-    ASSERT_EQ(8, result.size());
-    EXPECT_EQ("F", result[5]);
-    EXPECT_EQ("G", result[6]);
-    EXPECT_EQ("42", result[7]);
-    EXPECT_TRUE(task3.IsDone());
-    EXPECT_TRUE(task4.IsDone());
+    REQUIRE(result.size() == 8);
+    REQUIRE(result[5] == "F");
+    REQUIRE(result[6] == "G");
+    REQUIRE(result[7] == "42");
+    REQUIRE(task3.IsDone());
+    REQUIRE(task4.IsDone());
 }
 
-TEST(Task, Then_ReturnRejectedTask)
+TEST_CASE("Task::Then_ReturnRejectedTask", "[Task]")
 {
     std::function<void()> defer1;
     std::function<void()> defer2;
@@ -305,31 +305,31 @@ TEST(Task, Then_ReturnRejectedTask)
         }
     });
 
-    EXPECT_FALSE(task1.IsDone());
-    EXPECT_FALSE(task2.IsDone());
-    EXPECT_FALSE(task3.IsDone());
+    REQUIRE_FALSE(task1.IsDone());
+    REQUIRE_FALSE(task2.IsDone());
+    REQUIRE_FALSE(task3.IsDone());
     defer1();
-    ASSERT_EQ(3, result.size());
-    EXPECT_EQ("A", result[0]);
-    EXPECT_EQ("B", result[1]);
-    EXPECT_EQ("C", result[2]);
-    EXPECT_TRUE(task1.IsDone());
-    EXPECT_FALSE(task1.IsRejected());
-    EXPECT_FALSE(task2.IsDone());
-    EXPECT_FALSE(task2.IsRejected());
-    EXPECT_FALSE(task3.IsDone());
+    REQUIRE(result.size() == 3);
+    REQUIRE(result[0] == "A");
+    REQUIRE(result[1] == "B");
+    REQUIRE(result[2] == "C");
+    REQUIRE(task1.IsDone());
+    REQUIRE_FALSE(task1.IsRejected());
+    REQUIRE_FALSE(task2.IsDone());
+    REQUIRE_FALSE(task2.IsRejected());
+    REQUIRE_FALSE(task3.IsDone());
     defer2();
-    ASSERT_EQ(6, result.size());
-    EXPECT_EQ("D", result[3]);
-    EXPECT_EQ("E", result[4]);
-    EXPECT_EQ("FUS RO DAH", result[5]);
-    EXPECT_TRUE(task2.IsDone());
-    EXPECT_TRUE(task2.IsRejected());
-    EXPECT_TRUE(task3.IsDone());
-    EXPECT_FALSE(task3.IsRejected());
+    REQUIRE(result.size() == 6);
+    REQUIRE(result[3] == "D");
+    REQUIRE(result[4] == "E");
+    REQUIRE(result[5] == "FUS RO DAH");
+    REQUIRE(task2.IsDone());
+    REQUIRE(task2.IsRejected());
+    REQUIRE(task3.IsDone());
+    REQUIRE_FALSE(task3.IsRejected());
 }
 
-TEST(Task, Catch_ExceptionPtr)
+TEST_CASE("Task::Catch_ExceptionPtr", "[Task]")
 {
     auto task = Concurrency::CreateTask<void>([&](auto tcs) {
         try {
@@ -349,12 +349,12 @@ TEST(Task, Catch_ExceptionPtr)
         }
     });
 
-    EXPECT_TRUE(task.IsDone());
-    EXPECT_TRUE(task.IsRejected());
-    EXPECT_EQ("When Chuck Norris throws exceptions, it's across the room.", result);
+    REQUIRE(task.IsDone());
+    REQUIRE(task.IsRejected());
+    REQUIRE(result == "When Chuck Norris throws exceptions, it's across the room.");
 }
 
-TEST(Task, Catch_ExceptionType)
+TEST_CASE("Task::Catch_ExceptionType", "[Task]")
 {
     auto task = Concurrency::CreateTask<void>([&](auto tcs) {
         try {
@@ -369,12 +369,12 @@ TEST(Task, Catch_ExceptionType)
         result = e.what();
     });
 
-    EXPECT_TRUE(task.IsDone());
-    EXPECT_TRUE(task.IsRejected());
-    EXPECT_EQ("When Chuck Norris throws exceptions, it's across the room.", result);
+    REQUIRE(task.IsDone());
+    REQUIRE(task.IsRejected());
+    REQUIRE(result == "When Chuck Norris throws exceptions, it's across the room.");
 }
 
-TEST(Task, Catch_Then)
+TEST_CASE("Task::Catch_Then", "[Task]")
 {
     std::function<void()> defer;
     std::vector<std::string> result;
@@ -399,24 +399,24 @@ TEST(Task, Catch_Then)
         result.push_back(e.what());
     });
 
-    EXPECT_TRUE(result.empty());
-    EXPECT_FALSE(task1.IsDone());
-    EXPECT_FALSE(task1.IsRejected());
-    EXPECT_TRUE(result.empty());
+    REQUIRE(result.empty());
+    REQUIRE_FALSE(task1.IsDone());
+    REQUIRE_FALSE(task1.IsRejected());
+    REQUIRE(result.empty());
     defer();
-    ASSERT_EQ(3, result.size());
-    EXPECT_EQ("A", result[0]);
-    EXPECT_EQ("C", result[1]);
-    EXPECT_EQ("When Chuck Norris throws exceptions, it's across the room.", result[2]);
-    EXPECT_TRUE(task1.IsDone());
-    EXPECT_TRUE(task1.IsRejected());
-    EXPECT_TRUE(task2.IsDone());
-    EXPECT_TRUE(task2.IsRejected());
-    EXPECT_TRUE(task3.IsDone());
-    EXPECT_FALSE(task3.IsRejected());
+    REQUIRE(result.size() == 3);
+    REQUIRE(result[0] == "A");
+    REQUIRE(result[1] == "C");
+    REQUIRE(result[2] == "When Chuck Norris throws exceptions, it's across the room.");
+    REQUIRE(task1.IsDone());
+    REQUIRE(task1.IsRejected());
+    REQUIRE(task2.IsDone());
+    REQUIRE(task2.IsRejected());
+    REQUIRE(task3.IsDone());
+    REQUIRE_FALSE(task3.IsRejected());
 }
 
-TEST(Task, Catch_WhenAll)
+TEST_CASE("Task::Catch_WhenAll", "[Task]")
 {
     std::function<void()> defer1;
     std::function<void()> defer2;
@@ -448,27 +448,27 @@ TEST(Task, Catch_WhenAll)
         result.push_back(e.what());
     });
 
-    ASSERT_FALSE(task1.IsDone());
-    ASSERT_FALSE(task1.IsRejected());
-    EXPECT_FALSE(whenAll.IsDone());
-    EXPECT_FALSE(whenAll.IsRejected());
-    EXPECT_TRUE(result.empty());
+    REQUIRE_FALSE(task1.IsDone());
+    REQUIRE_FALSE(task1.IsRejected());
+    REQUIRE_FALSE(whenAll.IsDone());
+    REQUIRE_FALSE(whenAll.IsRejected());
+    REQUIRE(result.empty());
     defer1();
-    ASSERT_TRUE(task1.IsDone());
-    ASSERT_TRUE(task1.IsRejected());
-    ASSERT_FALSE(task2.IsDone());
-    ASSERT_FALSE(task2.IsRejected());
-    EXPECT_TRUE(whenAll.IsDone());
-    EXPECT_TRUE(whenAll.IsRejected());
-    ASSERT_EQ(1, result.size());
-    EXPECT_EQ("When Chuck Norris throws exceptions, it's across the room.", result.back());
+    REQUIRE(task1.IsDone());
+    REQUIRE(task1.IsRejected());
+    REQUIRE_FALSE(task2.IsDone());
+    REQUIRE_FALSE(task2.IsRejected());
+    REQUIRE(whenAll.IsDone());
+    REQUIRE(whenAll.IsRejected());
+    REQUIRE(result.size() == 1);
+    REQUIRE(result.back() == "When Chuck Norris throws exceptions, it's across the room.");
     defer2();
-    ASSERT_TRUE(task2.IsDone());
-    ASSERT_TRUE(task2.IsRejected());
-    ASSERT_EQ(1, result.size());
+    REQUIRE(task2.IsDone());
+    REQUIRE(task2.IsRejected());
+    REQUIRE(result.size() == 1);
 }
 
-TEST(Task, Catch_WhenAny)
+TEST_CASE("Task::Catch_WhenAny", "[Task]")
 {
     std::function<void()> defer1;
     std::function<void()> defer2;
@@ -500,27 +500,27 @@ TEST(Task, Catch_WhenAny)
         result.push_back(e.what());
     });
 
-    ASSERT_FALSE(task1.IsDone());
-    ASSERT_FALSE(task1.IsRejected());
-    EXPECT_FALSE(whenAny.IsDone());
-    EXPECT_FALSE(whenAny.IsRejected());
-    EXPECT_TRUE(result.empty());
+    REQUIRE_FALSE(task1.IsDone());
+    REQUIRE_FALSE(task1.IsRejected());
+    REQUIRE_FALSE(whenAny.IsDone());
+    REQUIRE_FALSE(whenAny.IsRejected());
+    REQUIRE(result.empty());
     defer1();
-    ASSERT_TRUE(task1.IsDone());
-    ASSERT_TRUE(task1.IsRejected());
-    ASSERT_FALSE(task2.IsDone());
-    ASSERT_FALSE(task2.IsRejected());
-    EXPECT_TRUE(whenAny.IsDone());
-    EXPECT_TRUE(whenAny.IsRejected());
-    ASSERT_EQ(1, result.size());
-    EXPECT_EQ("When Chuck Norris throws exceptions, it's across the room.", result.back());
+    REQUIRE(task1.IsDone());
+    REQUIRE(task1.IsRejected());
+    REQUIRE_FALSE(task2.IsDone());
+    REQUIRE_FALSE(task2.IsRejected());
+    REQUIRE(whenAny.IsDone());
+    REQUIRE(whenAny.IsRejected());
+    REQUIRE(result.size() == 1);
+    REQUIRE(result.back() == "When Chuck Norris throws exceptions, it's across the room.");
     defer2();
-    ASSERT_TRUE(task2.IsDone());
-    ASSERT_TRUE(task2.IsRejected());
-    ASSERT_EQ(1, result.size());
+    REQUIRE(task2.IsDone());
+    REQUIRE(task2.IsRejected());
+    REQUIRE(result.size() == 1);
 }
 
-TEST(Task, ContinueWith_Deferred)
+TEST_CASE("Task::ContinueWith_Deferred", "[Task]")
 {
     std::function<void()> defer;
     auto task1 = Concurrency::CreateTask<void>([&](auto tcs) {
@@ -529,30 +529,30 @@ TEST(Task, ContinueWith_Deferred)
     auto task2 = task1.ContinueWith([&](const Task<void>&) {
     });
 
-    EXPECT_FALSE(task1.IsDone());
-    EXPECT_FALSE(task1.IsRejected());
-    EXPECT_FALSE(task2.IsDone());
-    EXPECT_FALSE(task2.IsRejected());
+    REQUIRE_FALSE(task1.IsDone());
+    REQUIRE_FALSE(task1.IsRejected());
+    REQUIRE_FALSE(task2.IsDone());
+    REQUIRE_FALSE(task2.IsRejected());
     defer();
-    EXPECT_TRUE(task1.IsDone());
-    EXPECT_FALSE(task1.IsRejected());
-    EXPECT_TRUE(task2.IsDone());
-    EXPECT_FALSE(task2.IsRejected());
+    REQUIRE(task1.IsDone());
+    REQUIRE_FALSE(task1.IsRejected());
+    REQUIRE(task2.IsDone());
+    REQUIRE_FALSE(task2.IsRejected());
 }
 
-TEST(Task, ContinueWith_Immediate)
+TEST_CASE("Task::ContinueWith_Immediate", "[Task]")
 {
     auto task1 = Concurrency::CreateTask<void>([](auto tcs) {
         tcs.SetResult();
     });
-    EXPECT_TRUE(task1.IsDone());
-    EXPECT_FALSE(task1.IsRejected());
+    REQUIRE(task1.IsDone());
+    REQUIRE_FALSE(task1.IsRejected());
     auto task2 = task1.ContinueWith([](const Task<void>&){});
-    EXPECT_TRUE(task2.IsDone());
-    EXPECT_FALSE(task2.IsRejected());
+    REQUIRE(task2.IsDone());
+    REQUIRE_FALSE(task2.IsRejected());
 }
 
-TEST(Task, ContinueWith_CatchException)
+TEST_CASE("Task::ContinueWith_CatchException", "[Task]")
 {
     std::function<void()> defer;
     std::string result;
@@ -576,19 +576,19 @@ TEST(Task, ContinueWith_CatchException)
         }
     });
 
-    EXPECT_FALSE(task1.IsDone());
-    EXPECT_FALSE(task1.IsRejected());
-    EXPECT_FALSE(task2.IsDone());
-    EXPECT_FALSE(task2.IsRejected());
+    REQUIRE_FALSE(task1.IsDone());
+    REQUIRE_FALSE(task1.IsRejected());
+    REQUIRE_FALSE(task2.IsDone());
+    REQUIRE_FALSE(task2.IsRejected());
     defer();
-    EXPECT_TRUE(task1.IsDone());
-    EXPECT_TRUE(task1.IsRejected());
-    EXPECT_TRUE(task2.IsDone());
-    EXPECT_FALSE(task2.IsRejected());
-    EXPECT_EQ("rejected", result);
+    REQUIRE(task1.IsDone());
+    REQUIRE(task1.IsRejected());
+    REQUIRE(task2.IsDone());
+    REQUIRE_FALSE(task2.IsRejected());
+    REQUIRE(result == "rejected");
 }
 
-TEST(Task, WhenAny)
+TEST_CASE("Task::WhenAny", "[Task]")
 {
     std::function<void()> defer1;
     std::function<void()> defer2;
@@ -606,35 +606,35 @@ TEST(Task, WhenAny)
     std::vector<Task<void>> tasks = {task1, task2, task3};
     auto whenAny = Concurrency::WhenAny(tasks);
 
-    EXPECT_FALSE(whenAny.IsDone());
-    EXPECT_FALSE(whenAny.IsRejected());
+    REQUIRE_FALSE(whenAny.IsDone());
+    REQUIRE_FALSE(whenAny.IsRejected());
 
-    ASSERT_FALSE(task1.IsDone());
-    ASSERT_FALSE(task2.IsDone());
-    ASSERT_FALSE(task3.IsDone());
-    EXPECT_FALSE(whenAny.IsDone());
-    EXPECT_FALSE(whenAny.IsRejected());
+    REQUIRE_FALSE(task1.IsDone());
+    REQUIRE_FALSE(task2.IsDone());
+    REQUIRE_FALSE(task3.IsDone());
+    REQUIRE_FALSE(whenAny.IsDone());
+    REQUIRE_FALSE(whenAny.IsRejected());
     defer1();
-    ASSERT_TRUE(task1.IsDone());
-    ASSERT_FALSE(task2.IsDone());
-    ASSERT_FALSE(task3.IsDone());
-    EXPECT_TRUE(whenAny.IsDone());
-    EXPECT_FALSE(whenAny.IsRejected());
+    REQUIRE(task1.IsDone());
+    REQUIRE_FALSE(task2.IsDone());
+    REQUIRE_FALSE(task3.IsDone());
+    REQUIRE(whenAny.IsDone());
+    REQUIRE_FALSE(whenAny.IsRejected());
     defer2();
-    ASSERT_TRUE(task1.IsDone());
-    ASSERT_TRUE(task2.IsDone());
-    ASSERT_FALSE(task3.IsDone());
-    EXPECT_TRUE(whenAny.IsDone());
-    EXPECT_FALSE(whenAny.IsRejected());
+    REQUIRE(task1.IsDone());
+    REQUIRE(task2.IsDone());
+    REQUIRE_FALSE(task3.IsDone());
+    REQUIRE(whenAny.IsDone());
+    REQUIRE_FALSE(whenAny.IsRejected());
     defer3();
-    ASSERT_TRUE(task1.IsDone());
-    ASSERT_TRUE(task2.IsDone());
-    ASSERT_TRUE(task3.IsDone());
-    EXPECT_TRUE(whenAny.IsDone());
-    EXPECT_FALSE(whenAny.IsRejected());
+    REQUIRE(task1.IsDone());
+    REQUIRE(task2.IsDone());
+    REQUIRE(task3.IsDone());
+    REQUIRE(whenAny.IsDone());
+    REQUIRE_FALSE(whenAny.IsRejected());
 }
 
-TEST(Task, WhenAny_Result)
+TEST_CASE("Task::WhenAny_Result", "[Task]")
 {
     std::function<void()> defer1;
     std::function<void()> defer2;
@@ -653,23 +653,23 @@ TEST(Task, WhenAny_Result)
         results.push_back(x);
     });
 
-    EXPECT_FALSE(whenAny.IsDone());
-    EXPECT_FALSE(whenAny.IsRejected());
+    REQUIRE_FALSE(whenAny.IsDone());
+    REQUIRE_FALSE(whenAny.IsRejected());
     defer1();
-    ASSERT_TRUE(task1.IsDone());
-    ASSERT_FALSE(task2.IsDone());
-    EXPECT_TRUE(whenAny.IsDone());
-    EXPECT_FALSE(whenAny.IsRejected());
-    ASSERT_EQ(1, results.size());
-    EXPECT_EQ(42, results.back());
+    REQUIRE(task1.IsDone());
+    REQUIRE_FALSE(task2.IsDone());
+    REQUIRE(whenAny.IsDone());
+    REQUIRE_FALSE(whenAny.IsRejected());
+    REQUIRE(results.size() == 1);
+    REQUIRE(results.back() == 42);
     defer2();
-    ASSERT_TRUE(task1.IsDone());
-    ASSERT_TRUE(task2.IsDone());
-    ASSERT_EQ(1, results.size());
-    ASSERT_EQ(42, results.back());
+    REQUIRE(task1.IsDone());
+    REQUIRE(task2.IsDone());
+    REQUIRE(results.size() == 1);
+    REQUIRE(results.back() == 42);
 }
 
-TEST(Task, WhenAll)
+TEST_CASE("Task::WhenAll", "[Task]")
 {
     std::function<void()> defer1;
     std::function<void()> defer2;
@@ -687,28 +687,28 @@ TEST(Task, WhenAll)
     std::vector<Task<void>> tasks = {task1, task2, task3};
     auto whenAll = Concurrency::WhenAll(tasks);
 
-    ASSERT_FALSE(task1.IsDone());
-    ASSERT_FALSE(task2.IsDone());
-    ASSERT_FALSE(task3.IsDone());
+    REQUIRE_FALSE(task1.IsDone());
+    REQUIRE_FALSE(task2.IsDone());
+    REQUIRE_FALSE(task3.IsDone());
     defer1();
-    ASSERT_TRUE(task1.IsDone());
-    ASSERT_FALSE(task2.IsDone());
-    ASSERT_FALSE(task3.IsDone());
+    REQUIRE(task1.IsDone());
+    REQUIRE_FALSE(task2.IsDone());
+    REQUIRE_FALSE(task3.IsDone());
     defer2();
-    ASSERT_TRUE(task1.IsDone());
-    ASSERT_TRUE(task2.IsDone());
-    ASSERT_FALSE(task3.IsDone());
-    EXPECT_FALSE(whenAll.IsDone());
-    EXPECT_FALSE(whenAll.IsRejected());
+    REQUIRE(task1.IsDone());
+    REQUIRE(task2.IsDone());
+    REQUIRE_FALSE(task3.IsDone());
+    REQUIRE_FALSE(whenAll.IsDone());
+    REQUIRE_FALSE(whenAll.IsRejected());
     defer3();
-    ASSERT_TRUE(task1.IsDone());
-    ASSERT_TRUE(task2.IsDone());
-    ASSERT_TRUE(task3.IsDone());
-    EXPECT_TRUE(whenAll.IsDone());
-    EXPECT_FALSE(whenAll.IsRejected());
+    REQUIRE(task1.IsDone());
+    REQUIRE(task2.IsDone());
+    REQUIRE(task3.IsDone());
+    REQUIRE(whenAll.IsDone());
+    REQUIRE_FALSE(whenAll.IsRejected());
 }
 
-TEST(Task, WhenAll_Result)
+TEST_CASE("Task::WhenAll_Result", "[Task]")
 {
     std::function<void()> defer1;
     std::function<void()> defer2;
@@ -727,38 +727,38 @@ TEST(Task, WhenAll_Result)
         results = v;
     });
 
-    EXPECT_FALSE(whenAll.IsDone());
-    EXPECT_FALSE(whenAll.IsRejected());
+    REQUIRE_FALSE(whenAll.IsDone());
+    REQUIRE_FALSE(whenAll.IsRejected());
     defer1();
-    ASSERT_TRUE(task1.IsDone());
-    ASSERT_FALSE(task2.IsDone());
-    EXPECT_FALSE(whenAll.IsDone());
-    EXPECT_FALSE(whenAll.IsRejected());
-    ASSERT_TRUE(results.empty());
+    REQUIRE(task1.IsDone());
+    REQUIRE_FALSE(task2.IsDone());
+    REQUIRE_FALSE(whenAll.IsDone());
+    REQUIRE_FALSE(whenAll.IsRejected());
+    REQUIRE(results.empty());
     defer2();
-    ASSERT_TRUE(task1.IsDone());
-    ASSERT_TRUE(task2.IsDone());
-    EXPECT_TRUE(whenAll.IsDone());
-    EXPECT_FALSE(whenAll.IsRejected());
-    ASSERT_EQ(2, results.size());
-    EXPECT_EQ(42, results[0]);
-    EXPECT_EQ(43, results[1]);
+    REQUIRE(task1.IsDone());
+    REQUIRE(task2.IsDone());
+    REQUIRE(whenAll.IsDone());
+    REQUIRE_FALSE(whenAll.IsRejected());
+    REQUIRE(results.size() == 2);
+    REQUIRE(results[0] == 42);
+    REQUIRE(results[1] == 43);
 }
 
-TEST(Task, FromResult_Int)
+TEST_CASE("Task::FromResult_Int", "[Task]")
 {
     int number = 0;
     auto task1 = Concurrency::FromResult(42);
     auto task2 = task1.Then([&](int x){ number = x; });
 
-    EXPECT_TRUE(task1.IsDone());
-    EXPECT_FALSE(task1.IsRejected());
-    EXPECT_TRUE(task2.IsDone());
-    EXPECT_FALSE(task2.IsRejected());
-    EXPECT_EQ(42, number);
+    REQUIRE(task1.IsDone());
+    REQUIRE_FALSE(task1.IsRejected());
+    REQUIRE(task2.IsDone());
+    REQUIRE_FALSE(task2.IsRejected());
+    REQUIRE(number == 42);
 }
 
-TEST(Task, Scheduler_ImmediateExecutor)
+TEST_CASE("Task::Scheduler_ImmediateExecutor", "[Task]")
 {
     auto task = Concurrency::CreateTask<void>([&](auto tcs) {
         try {
@@ -768,8 +768,8 @@ TEST(Task, Scheduler_ImmediateExecutor)
         }
     });
 
-    EXPECT_TRUE(task.IsDone());
-    EXPECT_TRUE(task.IsRejected());
+    REQUIRE(task.IsDone());
+    REQUIRE(task.IsRejected());
 
     std::vector<std::string> result;
 
@@ -777,18 +777,18 @@ TEST(Task, Scheduler_ImmediateExecutor)
         result.push_back("ok");
     });
 
-    EXPECT_TRUE(task2.IsDone());
-    EXPECT_TRUE(task2.IsRejected());
+    REQUIRE(task2.IsDone());
+    REQUIRE(task2.IsRejected());
 
     task2.Catch([&](const std::domain_error& e) {
         result.push_back(e.what());
     });
 
-    ASSERT_EQ(1, result.size());
-    EXPECT_EQ("When Chuck Norris throws exceptions, it's across the room.", result.back());
+    REQUIRE(result.size() == 1);
+    REQUIRE(result.back() == "When Chuck Norris throws exceptions, it's across the room.");
 }
 
-TEST(Task, ChainingSuchAsPromise_1)
+TEST_CASE("Task::ChainingSuchAsPromise_1", "[Task]")
 {
     std::vector<std::string> result;
 
@@ -801,14 +801,14 @@ TEST(Task, ChainingSuchAsPromise_1)
         .Catch([&](std::exception_ptr){ result.push_back("onRejected"); })
         .Then([&]{ result.push_back("task C"); });
 
-    ASSERT_EQ(4, result.size());
-    EXPECT_EQ("start", result[0]);
-    EXPECT_EQ("task A", result[1]);
-    EXPECT_EQ("task B", result[2]);
-    EXPECT_EQ("task C", result[3]);
+    REQUIRE(result.size() == 4);
+    REQUIRE(result[0] == "start");
+    REQUIRE(result[1] == "task A");
+    REQUIRE(result[2] == "task B");
+    REQUIRE(result[3] == "task C");
 }
 
-TEST(Task, ChainingSuchAsPromise_2)
+TEST_CASE("Task::ChainingSuchAsPromise_2", "[Task]")
 {
     std::vector<std::string> result;
 
@@ -824,14 +824,14 @@ TEST(Task, ChainingSuchAsPromise_2)
         .Catch([&](const std::domain_error& e){result.push_back(e.what()); })
         .Then([&]{ result.push_back("task C"); });
 
-    ASSERT_EQ(4, result.size());
-    EXPECT_EQ("start", result[0]);
-    EXPECT_EQ("task A", result[1]);
-    EXPECT_EQ("throw error at Task A", result[2]);
-    EXPECT_EQ("task C", result[3]);
+    REQUIRE(result.size() == 4);
+    REQUIRE(result[0] == "start");
+    REQUIRE(result[1] == "task A");
+    REQUIRE(result[2] == "throw error at Task A");
+    REQUIRE(result[3] == "task C");
 }
 
-TEST(Task, ChainingSuchAsPromise_3)
+TEST_CASE("Task::ChainingSuchAsPromise_3", "[Task]")
 {
     std::function<void()> defer;
     std::vector<std::string> result;
@@ -855,48 +855,48 @@ TEST(Task, ChainingSuchAsPromise_3)
     });
 
     defer();
-    ASSERT_EQ(4, result.size());
-    EXPECT_EQ("start", result[0]);
-    EXPECT_EQ("Delay", result[1]);
-    EXPECT_EQ("FromResult", result[2]);
-    EXPECT_EQ("42", result[3]);
+    REQUIRE(result.size() == 4);
+    REQUIRE(result[0] == "start");
+    REQUIRE(result[1] == "Delay");
+    REQUIRE(result[2] == "FromResult");
+    REQUIRE(result[3] == "42");
 }
 
-TEST(TaskCompletionSource, SetResult_Void)
+TEST_CASE("TaskCompletionSource::SetResult_Void", "[TaskCompletionSource]")
 {
     std::vector<int> result;
 
     auto task = Concurrency::CreateTask<void>([&](auto tcs) {
-        EXPECT_TRUE(result.empty());
+        REQUIRE(result.empty());
         tcs.SetResult();
-        EXPECT_TRUE(result.empty());
+        REQUIRE(result.empty());
     });
-    EXPECT_TRUE(result.empty());
+    REQUIRE(result.empty());
     task.Then([&] {
         result.push_back(42);
     });
-    ASSERT_EQ(1, result.size());
-    EXPECT_EQ(42, result.front());
+    REQUIRE(result.size() == 1);
+    REQUIRE(result.front() == 42);
 }
 
-TEST(TaskCompletionSource, SetResult_Int)
+TEST_CASE("TaskCompletionSource::SetResult_Int", "[TaskCompletionSource]")
 {
     std::vector<int> result;
 
     auto task = Concurrency::CreateTask<int>([&](auto tcs) {
-        EXPECT_TRUE(result.empty());
+        REQUIRE(result.empty());
         tcs.SetResult(42);
-        EXPECT_TRUE(result.empty());
+        REQUIRE(result.empty());
     });
-    EXPECT_TRUE(result.empty());
+    REQUIRE(result.empty());
     task.Then([&](int x) {
         result.push_back(x);
     });
-    ASSERT_EQ(1, result.size());
-    EXPECT_EQ(42, result.front());
+    REQUIRE(result.size() == 1);
+    REQUIRE(result.front() == 42);
 }
 
-TEST(TaskCompletionSource, SetException)
+TEST_CASE("TaskCompletionSource::SetException", "[TaskCompletionSource]")
 {
     std::vector<std::string> result;
 
@@ -905,20 +905,20 @@ TEST(TaskCompletionSource, SetException)
             throw std::domain_error("FUS RO DAH");
         }
         catch (...) {
-            EXPECT_TRUE(result.empty());
+            REQUIRE(result.empty());
             tcs.SetException(std::current_exception());
-            EXPECT_TRUE(result.empty());
+            REQUIRE(result.empty());
         }
     });
-    EXPECT_TRUE(result.empty());
+    REQUIRE(result.empty());
     task.Catch([&](const std::domain_error& e) {
         result.push_back(e.what());
     });
-    ASSERT_EQ(1, result.size());
-    EXPECT_EQ("FUS RO DAH", result.front());
+    REQUIRE(result.size() == 1);
+    REQUIRE(result.front() == "FUS RO DAH");
 }
 
-TEST(TaskCompletionSource, WithSignal)
+TEST_CASE("TaskCompletionSource::WithSignal", "[TaskCompletionSource]")
 {
     using Pomdog::Signal;
     using Pomdog::Signals::ConnectSingleShot;
@@ -936,17 +936,17 @@ TEST(TaskCompletionSource, WithSignal)
         result.push_back(n);
     });
 
-    ASSERT_TRUE(result.empty());
+    REQUIRE(result.empty());
 
     nameChanged("chuck");
-    EXPECT_EQ(1, result.size());
-    EXPECT_EQ("chuck", result.back());
+    REQUIRE(result.size() == 1);
+    REQUIRE(result.back() == "chuck");
 
     nameChanged("norris");
-    EXPECT_EQ(1, result.size());
+    REQUIRE(result.size() == 1);
 }
 
-TEST(TaskCompletionSource, FromSingleShotSignal)
+TEST_CASE("TaskCompletionSource::FromSingleShotSignal", "[TaskCompletionSource]")
 {
     using Pomdog::Signal;
 
@@ -959,12 +959,12 @@ TEST(TaskCompletionSource, FromSingleShotSignal)
         result.push_back(n);
     });
 
-    ASSERT_TRUE(result.empty());
+    REQUIRE(result.empty());
 
     nameChanged("chuck");
-    EXPECT_EQ(1, result.size());
-    EXPECT_EQ("chuck", result.back());
+    REQUIRE(result.size() == 1);
+    REQUIRE(result.back() == "chuck");
 
     nameChanged("norris");
-    EXPECT_EQ(1, result.size());
+    REQUIRE(result.size() == 1);
 }

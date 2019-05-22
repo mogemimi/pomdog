@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
-#include <Pomdog/Signals/Signal.hpp>
-#include <Pomdog/Signals/Helpers.hpp>
-#include <gtest/iutest_switch.hpp>
+#include "Pomdog/Signals/Signal.hpp"
+#include "Pomdog/Signals/Helpers.hpp"
+#include "catch.hpp"
 #include <string>
 #include <utility>
 #include <vector>
@@ -10,48 +10,50 @@
 using Pomdog::Signal;
 using namespace Pomdog::Signals;
 
-TEST(Signals_Helpers, ConnectSingleShot)
+TEST_CASE("helpers for Signals", "[Signals]")
 {
-    Pomdog::Signal<void(std::string const&)> nameChanged;
+    SECTION("ConnectSingleShot")
+    {
+        Pomdog::Signal<void(std::string const&)> nameChanged;
 
-    std::vector<std::string> result;
-    auto connection = ConnectSingleShot(nameChanged, [&](std::string const& n) {
-        result.push_back(n);
-    });
+        std::vector<std::string> result;
+        auto connection = ConnectSingleShot(nameChanged, [&](std::string const& n) {
+            result.push_back(n);
+        });
 
-    ASSERT_TRUE(result.empty());
-    EXPECT_TRUE(connection);
+        REQUIRE(result.empty());
+        REQUIRE(connection);
 
-    nameChanged("chuck");
-    EXPECT_EQ(1, result.size());
-    EXPECT_EQ("chuck", result.back());
-    EXPECT_FALSE(connection);
+        nameChanged("chuck");
+        REQUIRE(result.size() == 1);
+        REQUIRE(result.back() == "chuck");
+        REQUIRE_FALSE(connection);
 
-    nameChanged("norris");
-    EXPECT_EQ(1, result.size());
-    EXPECT_FALSE(connection);
-}
+        nameChanged("norris");
+        REQUIRE(result.size() == 1);
+        REQUIRE_FALSE(connection);
+    }
+    SECTION("ConnectSingleShot Disconnect")
+    {
+        Pomdog::Signal<void(std::string const&)> nameChanged;
 
-TEST(Signals_Helpers, ConnectSingleShot_Disconnect)
-{
-    Pomdog::Signal<void(std::string const&)> nameChanged;
+        std::vector<std::string> result;
+        auto connection = ConnectSingleShot(nameChanged, [&](std::string const& n) {
+            result.push_back(n);
+        });
 
-    std::vector<std::string> result;
-    auto connection = ConnectSingleShot(nameChanged, [&](std::string const& n) {
-        result.push_back(n);
-    });
+        REQUIRE(result.empty());
+        REQUIRE(connection);
 
-    ASSERT_TRUE(result.empty());
-    EXPECT_TRUE(connection);
+        connection.Disconnect();
+        REQUIRE_FALSE(connection);
 
-    connection.Disconnect();
-    EXPECT_FALSE(connection);
+        nameChanged("chuck");
+        REQUIRE(result.empty());
+        REQUIRE_FALSE(connection);
 
-    nameChanged("chuck");
-    EXPECT_TRUE(result.empty());
-    EXPECT_FALSE(connection);
-
-    nameChanged("norris");
-    EXPECT_TRUE(result.empty());
-    EXPECT_FALSE(connection);
+        nameChanged("norris");
+        REQUIRE(result.empty());
+        REQUIRE_FALSE(connection);
+    }
 }

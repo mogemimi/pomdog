@@ -1,190 +1,187 @@
 // Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
-#include <Pomdog/Utility/PathHelper.hpp>
-#include <Pomdog/Utility/FileSystem.hpp>
-#include <Pomdog/Basic/Platform.hpp>
-#include <gtest/iutest_switch.hpp>
+#include "Pomdog/Utility/PathHelper.hpp"
+#include "Pomdog/Utility/FileSystem.hpp"
+#include "Pomdog/Basic/Platform.hpp"
+#include "catch.hpp"
 
 using Pomdog::PathHelper;
 using Pomdog::FileSystem;
 
-TEST(PathHelper, Join)
+TEST_CASE("PathHelper", "[PathHelper]")
 {
-    EXPECT_EQ("", PathHelper::Join("", ""));
+    SECTION("Join")
+    {
+        REQUIRE(PathHelper::Join("", "") == "");
 #if defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
-    EXPECT_EQ("Chirico\\Cuvie", PathHelper::Join("Chirico", "Cuvie"));
-    EXPECT_EQ("Cuvie", PathHelper::Join("", "Cuvie"));
-    EXPECT_EQ("Chirico", PathHelper::Join("Chirico", ""));
-    EXPECT_EQ("PS/Chirico\\Cuvie", PathHelper::Join("PS/Chirico", "Cuvie"));
-    EXPECT_EQ("Chirico\\Cuvie/AT", PathHelper::Join("Chirico", "Cuvie/AT"));
-    EXPECT_EQ("PS/Chirico\\Cuvie/AT", PathHelper::Join("PS/Chirico", "Cuvie/AT"));
+        REQUIRE(PathHelper::Join("Chirico", "Cuvie") == "Chirico\\Cuvie");
+        REQUIRE(PathHelper::Join("", "Cuvie") == "Cuvie");
+        REQUIRE(PathHelper::Join("Chirico", "") == "Chirico");
+        REQUIRE(PathHelper::Join("PS/Chirico", "Cuvie") == "PS/Chirico\\Cuvie");
+        REQUIRE(PathHelper::Join("Chirico", "Cuvie/AT") == "Chirico\\Cuvie/AT");
+        REQUIRE(PathHelper::Join("PS/Chirico", "Cuvie/AT") == "PS/Chirico\\Cuvie/AT");
 #else
-    EXPECT_EQ("Chirico/Cuvie", PathHelper::Join("Chirico", "Cuvie"));
-    EXPECT_EQ("Cuvie", PathHelper::Join("", "Cuvie"));
-    EXPECT_EQ("Chirico", PathHelper::Join("Chirico", ""));
-    EXPECT_EQ("PS/Chirico/Cuvie", PathHelper::Join("PS/Chirico", "Cuvie"));
-    EXPECT_EQ("Chirico/Cuvie/AT", PathHelper::Join("Chirico", "Cuvie/AT"));
-    EXPECT_EQ("PS/Chirico/Cuvie/AT", PathHelper::Join("PS/Chirico", "Cuvie/AT"));
+        REQUIRE(PathHelper::Join("Chirico", "Cuvie") == "Chirico/Cuvie");
+        REQUIRE(PathHelper::Join("", "Cuvie") == "Cuvie");
+        REQUIRE(PathHelper::Join("Chirico", "") == "Chirico");
+        REQUIRE(PathHelper::Join("PS/Chirico", "Cuvie") == "PS/Chirico/Cuvie");
+        REQUIRE(PathHelper::Join("Chirico", "Cuvie/AT") == "Chirico/Cuvie/AT");
+        REQUIRE(PathHelper::Join("PS/Chirico", "Cuvie/AT") == "PS/Chirico/Cuvie/AT");
 #endif
-}
+    }
+    SECTION("GetBaseName")
+    {
+        REQUIRE(PathHelper::GetBaseName("Fiana") == "Fiana");
+        REQUIRE(PathHelper::GetBaseName("Phantam Lady/Fiana") == "Fiana");
+        REQUIRE(PathHelper::GetBaseName("Proto One/Phantam Lady/Fiana") == "Fiana");
+        REQUIRE(PathHelper::GetBaseName("PS/Proto One/Phantam Lady/Fiana") == "Fiana");
+    }
+    SECTION("GetDirectoryName")
+    {
+        REQUIRE(PathHelper::GetDirectoryName("Fiana") == "");
+        REQUIRE(PathHelper::GetDirectoryName("Phantam Lady/Fiana") == "Phantam Lady");
+        REQUIRE(PathHelper::GetDirectoryName("Proto One/Phantam Lady/Fiana") == "Proto One/Phantam Lady");
+        REQUIRE(PathHelper::GetDirectoryName("PS/Proto One/Phantam Lady/Fiana") == "PS/Proto One/Phantam Lady");
+    }
+    SECTION("Split")
+    {
+        auto result = PathHelper::Split("Fiana");
+        REQUIRE(std::get<0>(result) == "");
+        REQUIRE(std::get<1>(result) == "Fiana");
 
-TEST(PathHelper, GetBaseName)
-{
-    EXPECT_EQ("Fiana", PathHelper::GetBaseName("Fiana"));
-    EXPECT_EQ("Fiana", PathHelper::GetBaseName("Phantam Lady/Fiana"));
-    EXPECT_EQ("Fiana", PathHelper::GetBaseName("Proto One/Phantam Lady/Fiana"));
-    EXPECT_EQ("Fiana", PathHelper::GetBaseName("PS/Proto One/Phantam Lady/Fiana"));
-}
+        result = PathHelper::Split("Phantam Lady/Fiana");
+        REQUIRE(std::get<0>(result) == "Phantam Lady");
+        REQUIRE(std::get<1>(result) == "Fiana");
 
-TEST(PathHelper, GetDirectoryName)
-{
-    EXPECT_EQ("", PathHelper::GetDirectoryName("Fiana"));
-    EXPECT_EQ("Phantam Lady", PathHelper::GetDirectoryName("Phantam Lady/Fiana"));
-    EXPECT_EQ("Proto One/Phantam Lady", PathHelper::GetDirectoryName("Proto One/Phantam Lady/Fiana"));
-    EXPECT_EQ("PS/Proto One/Phantam Lady", PathHelper::GetDirectoryName("PS/Proto One/Phantam Lady/Fiana"));
-}
+        result = PathHelper::Split("Proto One/Phantam Lady/Fiana");
+        REQUIRE(std::get<0>(result) == "Proto One/Phantam Lady");
+        REQUIRE(std::get<1>(result) == "Fiana");
 
-TEST(PathHelper, Split)
-{
-    auto result = PathHelper::Split("Fiana");
-    EXPECT_EQ("", std::get<0>(result));
-    EXPECT_EQ("Fiana", std::get<1>(result));
+        result = PathHelper::Split("PS/Proto One/Phantam Lady/Fiana");
+        REQUIRE(std::get<0>(result) == "PS/Proto One/Phantam Lady");
+        REQUIRE(std::get<1>(result) == "Fiana");
 
-    result = PathHelper::Split("Phantam Lady/Fiana");
-    EXPECT_EQ("Phantam Lady", std::get<0>(result));
-    EXPECT_EQ("Fiana", std::get<1>(result));
+        result = PathHelper::Split("PS/Proto One/Phantam Lady/Fiana.sotai");
+        REQUIRE(std::get<0>(result) == "PS/Proto One/Phantam Lady");
+        REQUIRE(std::get<1>(result) == "Fiana.sotai");
+    }
+    SECTION("SplitExtension")
+    {
+        auto result = PathHelper::SplitExtension("Fiana");
+        REQUIRE(std::get<0>(result) == "Fiana");
+        REQUIRE(std::get<1>(result) == "");
 
-    result = PathHelper::Split("Proto One/Phantam Lady/Fiana");
-    EXPECT_EQ("Proto One/Phantam Lady", std::get<0>(result));
-    EXPECT_EQ("Fiana", std::get<1>(result));
+        result = PathHelper::SplitExtension("Phantam Lady.Fiana");
+        REQUIRE(std::get<0>(result) == "Phantam Lady");
+        REQUIRE(std::get<1>(result) == "Fiana");
 
-    result = PathHelper::Split("PS/Proto One/Phantam Lady/Fiana");
-    EXPECT_EQ("PS/Proto One/Phantam Lady", std::get<0>(result));
-    EXPECT_EQ("Fiana", std::get<1>(result));
+        result = PathHelper::SplitExtension("Proto One/Phantam Lady.Fiana");
+        REQUIRE(std::get<0>(result) == "Proto One/Phantam Lady");
+        REQUIRE(std::get<1>(result) == "Fiana");
 
-    result = PathHelper::Split("PS/Proto One/Phantam Lady/Fiana.sotai");
-    EXPECT_EQ("PS/Proto One/Phantam Lady", std::get<0>(result));
-    EXPECT_EQ("Fiana.sotai", std::get<1>(result));
-}
+        result = PathHelper::SplitExtension("PS/Proto One/Phantam Lady.Fiana");
+        REQUIRE(std::get<0>(result) == "PS/Proto One/Phantam Lady");
+        REQUIRE(std::get<1>(result) == "Fiana");
 
-TEST(PathHelper, SplitExtension)
-{
-    auto result = PathHelper::SplitExtension("Fiana");
-    EXPECT_EQ("Fiana", std::get<0>(result));
-    EXPECT_EQ("", std::get<1>(result));
+        result = PathHelper::SplitExtension("PS/Proto One/Phantam Lady.Fiana.sotai");
+        REQUIRE(std::get<0>(result) == "PS/Proto One/Phantam Lady.Fiana");
+        REQUIRE(std::get<1>(result) == "sotai");
 
-    result = PathHelper::SplitExtension("Phantam Lady.Fiana");
-    EXPECT_EQ("Phantam Lady", std::get<0>(result));
-    EXPECT_EQ("Fiana", std::get<1>(result));
-
-    result = PathHelper::SplitExtension("Proto One/Phantam Lady.Fiana");
-    EXPECT_EQ("Proto One/Phantam Lady", std::get<0>(result));
-    EXPECT_EQ("Fiana", std::get<1>(result));
-
-    result = PathHelper::SplitExtension("PS/Proto One/Phantam Lady.Fiana");
-    EXPECT_EQ("PS/Proto One/Phantam Lady", std::get<0>(result));
-    EXPECT_EQ("Fiana", std::get<1>(result));
-
-    result = PathHelper::SplitExtension("PS/Proto One/Phantam Lady.Fiana.sotai");
-    EXPECT_EQ("PS/Proto One/Phantam Lady.Fiana", std::get<0>(result));
-    EXPECT_EQ("sotai", std::get<1>(result));
-
-    result = PathHelper::SplitExtension("PS.Proto One/Phantam Lady.Fiana.sotai");
-    EXPECT_EQ("PS.Proto One/Phantam Lady.Fiana", std::get<0>(result));
-    EXPECT_EQ("sotai", std::get<1>(result));
-}
-
-TEST(PathHelper, Normalize)
-{
-    const auto normalize = PathHelper::Normalize;
-    const auto cwd = FileSystem::GetCurrentWorkingDirectory();
-    EXPECT_EQ(cwd, normalize(""));
-    EXPECT_EQ(cwd, normalize("."));
-    EXPECT_EQ(cwd, normalize("./"));
+        result = PathHelper::SplitExtension("PS.Proto One/Phantam Lady.Fiana.sotai");
+        REQUIRE(std::get<0>(result) == "PS.Proto One/Phantam Lady.Fiana");
+        REQUIRE(std::get<1>(result) == "sotai");
+    }
+    SECTION("Normalize")
+    {
+        const auto normalize = PathHelper::Normalize;
+        const auto cwd = FileSystem::GetCurrentWorkingDirectory();
+        REQUIRE(cwd == normalize(""));
+        REQUIRE(cwd == normalize("."));
+        REQUIRE(cwd == normalize("./"));
 
 #if defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
-    EXPECT_EQ("/usr\\local\\bin", normalize("/usr/local/bin"));
-    EXPECT_EQ("/usr\\local\\bin", normalize("/usr/local/bin/"));
-    EXPECT_EQ("/usr\\local\\bin", normalize("/usr/local/bin/."));
-    EXPECT_EQ("/usr\\local\\bin", normalize("/usr/local/bin/./"));
-    EXPECT_EQ("/usr\\local\\bin", normalize("/usr/local/./bin"));
-    EXPECT_EQ("/usr\\local\\bin", normalize("/usr/./local/bin"));
-    EXPECT_EQ("/usr\\local", normalize("/usr/local/bin/.."));
-    EXPECT_EQ("/usr\\local", normalize("/usr/local/bin/../"));
-    EXPECT_EQ("/usr", normalize("/usr/local/bin/../.."));
-    EXPECT_EQ("/usr", normalize("/usr/local/bin/../../"));
-    EXPECT_EQ("/usr\\local\\bin", normalize("/usr/local/../local/bin"));
-    EXPECT_EQ("/usr\\local", normalize("/usr/local/../local/bin/.."));
+        REQUIRE(normalize("/usr/local/bin") == "/usr\\local\\bin");
+        REQUIRE(normalize("/usr/local/bin/") == "/usr\\local\\bin");
+        REQUIRE(normalize("/usr/local/bin/.") == "/usr\\local\\bin");
+        REQUIRE(normalize("/usr/local/bin/./") == "/usr\\local\\bin");
+        REQUIRE(normalize("/usr/local/./bin") == "/usr\\local\\bin");
+        REQUIRE(normalize("/usr/./local/bin") == "/usr\\local\\bin");
+        REQUIRE(normalize("/usr/local/bin/..") == "/usr\\local");
+        REQUIRE(normalize("/usr/local/bin/../") == "/usr\\local");
+        REQUIRE(normalize("/usr/local/bin/../..") == "/usr");
+        REQUIRE(normalize("/usr/local/bin/../../") == "/usr");
+        REQUIRE(normalize("/usr/local/../local/bin") == "/usr\\local\\bin");
+        REQUIRE(normalize("/usr/local/../local/bin/..") == "/usr\\local");
 #else
-    EXPECT_EQ("/usr/local/bin", normalize("/usr/local/bin"));
-    EXPECT_EQ("/usr/local/bin", normalize("/usr/local/bin/"));
-    EXPECT_EQ("/usr/local/bin", normalize("/usr/local/bin/."));
-    EXPECT_EQ("/usr/local/bin", normalize("/usr/local/bin/./"));
-    EXPECT_EQ("/usr/local/bin", normalize("/usr/local/./bin"));
-    EXPECT_EQ("/usr/local/bin", normalize("/usr/./local/bin"));
-    EXPECT_EQ("/usr/local", normalize("/usr/local/bin/.."));
-    EXPECT_EQ("/usr/local", normalize("/usr/local/bin/../"));
-    EXPECT_EQ("/usr", normalize("/usr/local/bin/../.."));
-    EXPECT_EQ("/usr", normalize("/usr/local/bin/../../"));
-    EXPECT_EQ("/usr/local/bin", normalize("/usr/local/../local/bin"));
-    EXPECT_EQ("/usr/local", normalize("/usr/local/../local/bin/.."));
+        REQUIRE(normalize("/usr/local/bin") == "/usr/local/bin");
+        REQUIRE(normalize("/usr/local/bin/") == "/usr/local/bin");
+        REQUIRE(normalize("/usr/local/bin/.") == "/usr/local/bin");
+        REQUIRE(normalize("/usr/local/bin/./") == "/usr/local/bin");
+        REQUIRE(normalize("/usr/local/./bin") == "/usr/local/bin");
+        REQUIRE(normalize("/usr/./local/bin") == "/usr/local/bin");
+        REQUIRE(normalize("/usr/local/bin/..") == "/usr/local");
+        REQUIRE(normalize("/usr/local/bin/../") == "/usr/local");
+        REQUIRE(normalize("/usr/local/bin/../..") == "/usr");
+        REQUIRE(normalize("/usr/local/bin/../../") == "/usr");
+        REQUIRE(normalize("/usr/local/../local/bin") == "/usr/local/bin");
+        REQUIRE(normalize("/usr/local/../local/bin/..") == "/usr/local");
 #endif
-}
-
-TEST(PathHelper, Relative)
-{
-    const auto relative = PathHelper::Relative;
+    }
+    SECTION("Relative")
+    {
+        const auto relative = PathHelper::Relative;
 #if defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
-    EXPECT_EQ(".", relative("/usr/local/bin", "/usr/local/bin"));
-    EXPECT_EQ(".", relative("/usr/local/bin/.", "/usr/local/bin"));
-    EXPECT_EQ(".", relative("/usr/local/bin/./", "/usr/local/bin"));
-    EXPECT_EQ(".", relative("/usr/local/bin/././", "/usr/local/bin"));
-    EXPECT_EQ(".", relative("/usr/local/bin/./././", "/usr/local/bin"));
-    EXPECT_EQ("..", relative("/usr/local/bin/..", "/usr/local/bin"));
-    EXPECT_EQ("..", relative("/usr/local/bin/../", "/usr/local/bin"));
-    EXPECT_EQ("..", relative("/usr/local/bin/.././", "/usr/local/bin"));
-    EXPECT_EQ("..", relative("/usr/local/bin/./../", "/usr/local/bin"));
-    EXPECT_EQ("..\\..", relative("/usr/local/bin/../../", "/usr/local/bin"));
-    EXPECT_EQ("..\\..", relative("/usr/local/bin/../..", "/usr/local/bin"));
-    EXPECT_EQ("..\\..", relative("/usr/local/bin/../../.", "/usr/local/bin"));
-    EXPECT_EQ("..\\..", relative("/usr/local/bin/.././../", "/usr/local/bin"));
-    EXPECT_EQ("..\\..", relative("/usr/local/bin/./../../", "/usr/local/bin"));
+        REQUIRE(relative("/usr/local/bin", "/usr/local/bin") == ".");
+        REQUIRE(relative("/usr/local/bin/.", "/usr/local/bin") == ".");
+        REQUIRE(relative("/usr/local/bin/./", "/usr/local/bin") == ".");
+        REQUIRE(relative("/usr/local/bin/././", "/usr/local/bin") == ".");
+        REQUIRE(relative("/usr/local/bin/./././", "/usr/local/bin") == ".");
+        REQUIRE(relative("/usr/local/bin/..", "/usr/local/bin") == "..");
+        REQUIRE(relative("/usr/local/bin/../", "/usr/local/bin") == "..");
+        REQUIRE(relative("/usr/local/bin/.././", "/usr/local/bin") == "..");
+        REQUIRE(relative("/usr/local/bin/./../", "/usr/local/bin") == "..");
+        REQUIRE(relative("/usr/local/bin/../../", "/usr/local/bin") == "..\\..");
+        REQUIRE(relative("/usr/local/bin/../..", "/usr/local/bin") == "..\\..");
+        REQUIRE(relative("/usr/local/bin/../../.", "/usr/local/bin") == "..\\..");
+        REQUIRE(relative("/usr/local/bin/.././../", "/usr/local/bin") == "..\\..");
+        REQUIRE(relative("/usr/local/bin/./../../", "/usr/local/bin") == "..\\..");
 
-    EXPECT_EQ(".", relative("/usr/local/../local/bin", "/usr/local/bin"));
-    EXPECT_EQ("..", relative("/usr/local", "/usr/local/bin"));
-    EXPECT_EQ("..\\..", relative("/usr", "/usr/local/bin"));
-    EXPECT_EQ("..\\..", relative("/usr/local/..", "/usr/local/bin"));
-    EXPECT_EQ("..\\..", relative("/usr/local/../local/..", "/usr/local/bin"));
+        REQUIRE(relative("/usr/local/../local/bin", "/usr/local/bin") == ".");
+        REQUIRE(relative("/usr/local", "/usr/local/bin") == "..");
+        REQUIRE(relative("/usr", "/usr/local/bin") == "..\\..");
+        REQUIRE(relative("/usr/local/..", "/usr/local/bin") == "..\\..");
+        REQUIRE(relative("/usr/local/../local/..", "/usr/local/bin") == "..\\..");
 
-    EXPECT_EQ("gcc", relative("/usr/local/bin/gcc", "/usr/local/bin"));
-    EXPECT_EQ("..\\opt", relative("/usr/local/opt", "/usr/local/bin"));
-    EXPECT_EQ("..\\..\\share", relative("/usr/share", "/usr/local/bin"));
-    EXPECT_EQ("..\\..\\share\\dict", relative("/usr/share/dict", "/usr/local/bin"));
+        REQUIRE(relative("/usr/local/bin/gcc", "/usr/local/bin") == "gcc");
+        REQUIRE(relative("/usr/local/opt", "/usr/local/bin") == "..\\opt");
+        REQUIRE(relative("/usr/share", "/usr/local/bin") == "..\\..\\share");
+        REQUIRE(relative("/usr/share/dict", "/usr/local/bin") == "..\\..\\share\\dict");
 #else
-    EXPECT_EQ(".", relative("/usr/local/bin", "/usr/local/bin"));
-    EXPECT_EQ(".", relative("/usr/local/bin/.", "/usr/local/bin"));
-    EXPECT_EQ(".", relative("/usr/local/bin/./", "/usr/local/bin"));
-    EXPECT_EQ(".", relative("/usr/local/bin/././", "/usr/local/bin"));
-    EXPECT_EQ(".", relative("/usr/local/bin/./././", "/usr/local/bin"));
-    EXPECT_EQ("..", relative("/usr/local/bin/..", "/usr/local/bin"));
-    EXPECT_EQ("..", relative("/usr/local/bin/../", "/usr/local/bin"));
-    EXPECT_EQ("..", relative("/usr/local/bin/.././", "/usr/local/bin"));
-    EXPECT_EQ("..", relative("/usr/local/bin/./../", "/usr/local/bin"));
-    EXPECT_EQ("../..", relative("/usr/local/bin/../../", "/usr/local/bin"));
-    EXPECT_EQ("../..", relative("/usr/local/bin/../..", "/usr/local/bin"));
-    EXPECT_EQ("../..", relative("/usr/local/bin/../../.", "/usr/local/bin"));
-    EXPECT_EQ("../..", relative("/usr/local/bin/.././../", "/usr/local/bin"));
-    EXPECT_EQ("../..", relative("/usr/local/bin/./../../", "/usr/local/bin"));
+        REQUIRE(relative("/usr/local/bin", "/usr/local/bin") == ".");
+        REQUIRE(relative("/usr/local/bin/.", "/usr/local/bin") == ".");
+        REQUIRE(relative("/usr/local/bin/./", "/usr/local/bin") == ".");
+        REQUIRE(relative("/usr/local/bin/././", "/usr/local/bin") == ".");
+        REQUIRE(relative("/usr/local/bin/./././", "/usr/local/bin") == ".");
+        REQUIRE(relative("/usr/local/bin/..", "/usr/local/bin") == "..");
+        REQUIRE(relative("/usr/local/bin/../", "/usr/local/bin") == "..");
+        REQUIRE(relative("/usr/local/bin/.././", "/usr/local/bin") == "..");
+        REQUIRE(relative("/usr/local/bin/./../", "/usr/local/bin") == "..");
+        REQUIRE(relative("/usr/local/bin/../../", "/usr/local/bin") == "../..");
+        REQUIRE(relative("/usr/local/bin/../..", "/usr/local/bin") == "../..");
+        REQUIRE(relative("/usr/local/bin/../../.", "/usr/local/bin") == "../..");
+        REQUIRE(relative("/usr/local/bin/.././../", "/usr/local/bin") == "../..");
+        REQUIRE(relative("/usr/local/bin/./../../", "/usr/local/bin") == "../..");
 
-    EXPECT_EQ(".", relative("/usr/local/../local/bin", "/usr/local/bin"));
-    EXPECT_EQ("..", relative("/usr/local", "/usr/local/bin"));
-    EXPECT_EQ("../..", relative("/usr", "/usr/local/bin"));
-    EXPECT_EQ("../..", relative("/usr/local/..", "/usr/local/bin"));
-    EXPECT_EQ("../..", relative("/usr/local/../local/..", "/usr/local/bin"));
+        REQUIRE(relative("/usr/local/../local/bin", "/usr/local/bin") == ".");
+        REQUIRE(relative("/usr/local", "/usr/local/bin") == "..");
+        REQUIRE(relative("/usr", "/usr/local/bin") == "../..");
+        REQUIRE(relative("/usr/local/..", "/usr/local/bin") == "../..");
+        REQUIRE(relative("/usr/local/../local/..", "/usr/local/bin") == "../..");
 
-    EXPECT_EQ("gcc", relative("/usr/local/bin/gcc", "/usr/local/bin"));
-    EXPECT_EQ("../opt", relative("/usr/local/opt", "/usr/local/bin"));
-    EXPECT_EQ("../../share", relative("/usr/share", "/usr/local/bin"));
-    EXPECT_EQ("../../share/dict", relative("/usr/share/dict", "/usr/local/bin"));
+        REQUIRE(relative("/usr/local/bin/gcc", "/usr/local/bin") == "gcc");
+        REQUIRE(relative("/usr/local/opt", "/usr/local/bin") == "../opt");
+        REQUIRE(relative("/usr/share", "/usr/local/bin") == "../../share");
+        REQUIRE(relative("/usr/share/dict", "/usr/local/bin") == "../../share/dict");
 #endif
+    }
 }
