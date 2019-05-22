@@ -664,13 +664,12 @@
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
-					"IUTEST_CHECK_STRICT=0",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = (
 					../include,
-					../dependencies/iutest/include,
+					../dependencies/Catch2/single_include/catch2,
 				);
 				LIBRARY_SEARCH_PATHS = "$(SDKROOT)/System/Library/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
@@ -688,13 +687,12 @@
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"NDEBUG=1",
-					"IUTEST_CHECK_STRICT=0",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = (
 					../include,
-					../dependencies/iutest/include,
+					../dependencies/Catch2/single_include/catch2,
 				);
 				LIBRARY_SEARCH_PATHS = "$(SDKROOT)/System/Library/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
@@ -811,13 +809,12 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"POMDOG_USING_LIBRARY_EXPORTS=1",
 					"NDEBUG=1",
-					"IUTEST_CHECK_STRICT=0",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = (
 					../include,
-					../dependencies/iutest/include,
+					../dependencies/Catch2/single_include/catch2,
 				);
 				LIBRARY_SEARCH_PATHS = "$(SDKROOT)/System/Library/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
@@ -834,13 +831,12 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"POMDOG_USING_LIBRARY_EXPORTS=1",
 					"DEBUG=1",
-					"IUTEST_CHECK_STRICT=0",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = (
 					../include,
-					../dependencies/iutest/include,
+					../dependencies/Catch2/single_include/catch2,
 				);
 				LIBRARY_SEARCH_PATHS = "$(SDKROOT)/System/Library/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;

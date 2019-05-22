@@ -26,9 +26,9 @@ add_executable(PomdogTest
   ${POMDOG_TEST_DIR}/main.cpp
   ${POMDOG_TEST_DIR}/Application/GameClockTest.cpp
   ${POMDOG_TEST_DIR}/Application/TimerTest.cpp
-  ${POMDOG_TEST_DIR}/Content/PathHelperTest.cpp
   ${POMDOG_TEST_DIR}/Async/SchedulerTest.cpp
   ${POMDOG_TEST_DIR}/Async/TaskTest.cpp
+  ${POMDOG_TEST_DIR}/Content/PathHelperTest.cpp
 
   ${POMDOG_TEST_DIR}/Experimental/Gameplay/EntityIDTest.cpp
   ${POMDOG_TEST_DIR}/Experimental/Gameplay/EntityTest.cpp
@@ -76,11 +76,10 @@ add_executable(PomdogTest
 target_include_directories(PomdogTest PRIVATE
   ${POMDOG_DIR}/include
   ${POMDOG_DIR}/experimental
-  ${POMDOG_DIR}/dependencies/iutest/include
+  ${POMDOG_DIR}/dependencies/Catch2/single_include/catch2
 )
 
 target_compile_definitions(PomdogTest PRIVATE
-  IUTEST_CHECK_STRICT=0
   $<$<CONFIG:DEBUG>:_DEBUG;DEBUG=1>
   $<$<CONFIG:RELEASE>:NDEBUG>
 

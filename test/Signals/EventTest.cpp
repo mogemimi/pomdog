@@ -1,86 +1,85 @@
 // Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
-#include <Pomdog/Signals/Event.hpp>
-#include <gtest/iutest_switch.hpp>
+#include "Pomdog/Signals/Event.hpp"
+#include "catch.hpp"
 #include <utility>
 #include <cstdint>
 
 using Pomdog::Event;
 
-TEST(Event, String)
+TEST_CASE("Event", "[Event]")
 {
-    Event event(std::string{"ChuckNorris"});
+    SECTION("String")
+    {
+        Event event(std::string{"ChuckNorris"});
 
-    EXPECT_TRUE(event.Is<std::string>());
-    ASSERT_NE(nullptr, event.As<std::string>());
-    EXPECT_EQ("ChuckNorris", *event.As<std::string>());
-}
+        REQUIRE(event.Is<std::string>());
+        REQUIRE(event.As<std::string>() != nullptr);
+        REQUIRE(*event.As<std::string>() == "ChuckNorris");
+    }
+    SECTION("Struct")
+    {
+        struct Message;
 
-TEST(Event, Struct)
-{
-    struct Message;
+        {
+            Event event(int{42});
+            REQUIRE_FALSE(event.Is<Message>());
+        }
 
+        struct Message
+        {
+            int code;
+            std::string description;
+        };
+
+        Event event(Message{42, "the answer to life the universe and everything"});
+
+        REQUIRE(event.Is<Message>());
+        REQUIRE_FALSE(event.Is<int>());
+        REQUIRE_FALSE(event.Is<std::string>());
+
+        REQUIRE(event.As<Message>() != nullptr);
+        REQUIRE(event.As<Message>()->code == 42);
+        REQUIRE(event.As<Message>()->description == "the answer to life the universe and everything");
+    }
+    SECTION("Int")
     {
         Event event(int{42});
-        EXPECT_FALSE(event.Is<Message>());
+
+        REQUIRE(event.Is<int>());
+        REQUIRE_FALSE(event.Is<char>());
+        REQUIRE_FALSE(event.Is<float>());
+        REQUIRE_FALSE(event.Is<double>());
+        REQUIRE_FALSE(event.Is<unsigned int>());
+        REQUIRE_FALSE(event.Is<std::string>());
+
+        REQUIRE(event.As<int>() != nullptr);
+        REQUIRE(*event.As<int>() == 42);
     }
-
-    struct Message
+    SECTION("Int32")
     {
-        int code;
-        std::string description;
-    };
+        Event event(std::int32_t{42});
 
-    Event event(Message{42, "the answer to life the universe and everything"});
+        REQUIRE(event.Is<std::int32_t>());
+        REQUIRE_FALSE(event.Is<std::int8_t>());
+        REQUIRE_FALSE(event.Is<std::int16_t>());
+        REQUIRE_FALSE(event.Is<std::int64_t>());
+        REQUIRE_FALSE(event.Is<std::uint32_t>());
 
-    EXPECT_TRUE(event.Is<Message>());
-    ASSERT_FALSE(event.Is<int>());
-    ASSERT_FALSE(event.Is<std::string>());
+        REQUIRE(event.As<std::int32_t>() != nullptr);
+        REQUIRE(*event.As<std::int32_t>() == 42);
+    }
+    SECTION("Int64")
+    {
+        Event event(std::int64_t{42});
 
-    ASSERT_NE(nullptr, event.As<Message>());
-    EXPECT_EQ(42, event.As<Message>()->code);
-    EXPECT_EQ("the answer to life the universe and everything", event.As<Message>()->description);
-}
+        REQUIRE(event.Is<std::int64_t>());
+        REQUIRE_FALSE(event.Is<std::int8_t>());
+        REQUIRE_FALSE(event.Is<std::int16_t>());
+        REQUIRE_FALSE(event.Is<std::int32_t>());
+        REQUIRE_FALSE(event.Is<std::uint64_t>());
 
-TEST(Event, Int)
-{
-    Event event(int{42});
-
-    EXPECT_TRUE(event.Is<int>());
-    ASSERT_FALSE(event.Is<char>());
-    ASSERT_FALSE(event.Is<float>());
-    ASSERT_FALSE(event.Is<double>());
-    ASSERT_FALSE(event.Is<unsigned int>());
-    ASSERT_FALSE(event.Is<std::string>());
-
-    ASSERT_NE(nullptr, event.As<int>());
-    EXPECT_EQ(42, *event.As<int>());
-}
-
-TEST(Event, Int32)
-{
-    Event event(std::int32_t{42});
-
-    EXPECT_TRUE(event.Is<std::int32_t>());
-    ASSERT_FALSE(event.Is<std::int8_t>());
-    ASSERT_FALSE(event.Is<std::int16_t>());
-    ASSERT_FALSE(event.Is<std::int64_t>());
-    ASSERT_FALSE(event.Is<std::uint32_t>());
-
-    ASSERT_NE(nullptr, event.As<std::int32_t>());
-    EXPECT_EQ(42, *event.As<std::int32_t>());
-}
-
-TEST(Event, Int64)
-{
-    Event event(std::int64_t{42});
-
-    EXPECT_TRUE(event.Is<std::int64_t>());
-    ASSERT_FALSE(event.Is<std::int8_t>());
-    ASSERT_FALSE(event.Is<std::int16_t>());
-    ASSERT_FALSE(event.Is<std::int32_t>());
-    ASSERT_FALSE(event.Is<std::uint64_t>());
-
-    ASSERT_NE(nullptr, event.As<std::int64_t>());
-    EXPECT_EQ(42, *event.As<std::int64_t>());
+        REQUIRE(event.As<std::int64_t>() != nullptr);
+        REQUIRE(*event.As<std::int64_t>() == 42);
+    }
 }

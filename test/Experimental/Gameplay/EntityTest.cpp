@@ -1,16 +1,16 @@
 // Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
-#include <Pomdog.Experimental/Gameplay/Entity.hpp>
-#include <Pomdog.Experimental/Gameplay2D/ActorComponent.hpp>
-#include <Pomdog.Experimental/Gameplay2D/TextRenderable.hpp>
-#include <Pomdog.Experimental/Gameplay2D/Transform.hpp>
-#include <gtest/iutest_switch.hpp>
+#include "Pomdog.Experimental/Gameplay/Entity.hpp"
+#include "Pomdog.Experimental/Gameplay2D/ActorComponent.hpp"
+#include "Pomdog.Experimental/Gameplay2D/TextRenderable.hpp"
+#include "Pomdog.Experimental/Gameplay2D/Transform.hpp"
+#include "catch.hpp"
 #include <cstdint>
 #include <memory>
 
 using namespace Pomdog;
 
-TEST(Entity, AddComponent)
+TEST_CASE("Entity AddComponent", "[Entity]")
 {
     EntityContext context;
     Entity entity{&context, context.Create({
@@ -18,18 +18,18 @@ TEST(Entity, AddComponent)
         AddComponent<ActorComponent>()
     })};
 
-    EXPECT_TRUE(entity.HasComponent<Transform>());
-    EXPECT_TRUE(entity.GetComponent<Transform>());
+    REQUIRE(entity.HasComponent<Transform>());
+    REQUIRE(entity.GetComponent<Transform>());
 
-    EXPECT_TRUE(entity.HasComponent<ActorComponent>());
-    EXPECT_TRUE(entity.GetComponent<ActorComponent>());
+    REQUIRE(entity.HasComponent<ActorComponent>());
+    REQUIRE(entity.GetComponent<ActorComponent>());
 
     entity.GetComponent<Transform>()->SetPosition({3.0f, 4.0f, 5.0f});
 
-    EXPECT_EQ(Vector3(3.0f, 4.0f, 5.0f), entity.GetComponent<Transform>()->GetPosition());
+    REQUIRE(entity.GetComponent<Transform>()->GetPosition() == Vector3{3.0f, 4.0f, 5.0f});
 }
 
-TEST(Entity, AddComponent_WithInheritance)
+TEST_CASE("Entity AddComponent_WithInheritance", "[Entity]")
 {
     EntityContext context;
     Entity entity{&context, context.Create({
@@ -37,45 +37,45 @@ TEST(Entity, AddComponent_WithInheritance)
         AddComponent<TextRenderable>()
     })};
 
-    EXPECT_TRUE(entity.HasComponent<TextRenderable>());
-    EXPECT_TRUE(entity.HasComponent<GraphicsComponent>());
+    REQUIRE(entity.HasComponent<TextRenderable>());
+    REQUIRE(entity.HasComponent<GraphicsComponent>());
 
-    ASSERT_TRUE(entity.GetComponent<TextRenderable>());
-    ASSERT_TRUE(entity.GetComponent<GraphicsComponent>());
+    REQUIRE(entity.GetComponent<TextRenderable>());
+    REQUIRE(entity.GetComponent<GraphicsComponent>());
 
     auto text = entity.GetComponent<TextRenderable>();
     text->SetDrawOrder(42);
-    EXPECT_EQ(42, entity.GetComponent<TextRenderable>()->GetDrawOrder());
-    EXPECT_EQ(42, entity.GetComponent<GraphicsComponent>()->GetDrawOrder());
+    REQUIRE(entity.GetComponent<TextRenderable>()->GetDrawOrder() == 42);
+    REQUIRE(entity.GetComponent<GraphicsComponent>()->GetDrawOrder() == 42);
 
     auto graphicsComponent = entity.GetComponent<GraphicsComponent>();
     graphicsComponent->SetDrawOrder(73);
-    EXPECT_EQ(73, entity.GetComponent<TextRenderable>()->GetDrawOrder());
-    EXPECT_EQ(73, entity.GetComponent<GraphicsComponent>()->GetDrawOrder());
+    REQUIRE(entity.GetComponent<TextRenderable>()->GetDrawOrder() == 73);
+    REQUIRE(entity.GetComponent<GraphicsComponent>()->GetDrawOrder() == 73);
 
-    EXPECT_TRUE(std::dynamic_pointer_cast<TextRenderable>(graphicsComponent));
-    EXPECT_EQ(text, std::dynamic_pointer_cast<TextRenderable>(graphicsComponent));
-    EXPECT_EQ(73, std::dynamic_pointer_cast<TextRenderable>(graphicsComponent)->GetDrawOrder());
+    REQUIRE(std::dynamic_pointer_cast<TextRenderable>(graphicsComponent));
+    REQUIRE(std::dynamic_pointer_cast<TextRenderable>(graphicsComponent) == text);
+    REQUIRE(std::dynamic_pointer_cast<TextRenderable>(graphicsComponent)->GetDrawOrder() == 73);
 }
 
-TEST(Entity, Component_Const)
+TEST_CASE("Entity Component_Const", "[Entity]")
 {
     EntityContext context;
     auto entity = std::make_shared<Entity>(&context, context.Create({
         AddComponent<Transform>()
     }));
 
-    EXPECT_TRUE(entity->HasComponent<Transform>());
-    ASSERT_NE(nullptr, entity->GetComponent<Transform>());
+    REQUIRE(entity->HasComponent<Transform>());
+    REQUIRE(entity->GetComponent<Transform>() != nullptr);
 
     entity->GetComponent<Transform>()->SetPositionX(42.0f);
-    EXPECT_EQ(42.0f, entity->GetComponent<Transform>()->GetPosition().X);
+    REQUIRE(entity->GetComponent<Transform>()->GetPosition().X == 42.0f);
 
     {
         std::shared_ptr<Entity const> entityConstRef = entity;
-        EXPECT_TRUE(entityConstRef->HasComponent<Transform>());
-        ASSERT_NE(nullptr, entityConstRef->GetComponent<Transform>());
-        EXPECT_EQ(42.0f, entityConstRef->GetComponent<Transform>()->GetPosition().X);
+        REQUIRE(entityConstRef->HasComponent<Transform>());
+        REQUIRE(entityConstRef->GetComponent<Transform>() != nullptr);
+        REQUIRE(entityConstRef->GetComponent<Transform>()->GetPosition().X == 42.0f);
     }
 }
 
@@ -84,11 +84,11 @@ namespace {
 struct Behavior final : public Pomdog::Component {
     void Do(Pomdog::Entity & self)
     {
-        EXPECT_TRUE(self);
-        EXPECT_TRUE(self.HasComponent<Behavior>());
+        REQUIRE(self);
+        REQUIRE(self.HasComponent<Behavior>());
         self.DestroyImmediate();
-        EXPECT_FALSE(self);
-        //EXPECT_FALSE(self.HasComponent<Behavior>());
+        REQUIRE_FALSE(self);
+        //REQUIRE_FALSE(self.HasComponent<Behavior>());
     }
 
     std::shared_ptr<int> ptr = std::make_shared<int>(42);
@@ -123,27 +123,27 @@ public:
 
 } // namespace Pomdog
 
-TEST(Entity, DestroyImmediate)
+TEST_CASE("Entity DestroyImmediate", "[Entity]")
 {
     {
         EntityContext context;
         Entity entity{&context, context.Create({})};
 
-        EXPECT_TRUE(entity);
-        EXPECT_EQ(1, context.GetCount());
+        REQUIRE(entity);
+        REQUIRE(context.GetCount() == 1);
         entity.DestroyImmediate();
-        EXPECT_FALSE(entity);
-        EXPECT_EQ(0, context.GetCount());
+        REQUIRE_FALSE(entity);
+        REQUIRE(context.GetCount() == 0);
     }
     {
         EntityContext context;
         Entity entity{&context, context.Create({})};
 
-        EXPECT_TRUE(entity);
-        EXPECT_EQ(1, context.GetCount());
+        REQUIRE(entity);
+        REQUIRE(context.GetCount() == 1);
         context.DestroyImmediate(entity.GetID());
-        EXPECT_FALSE(entity);
-        EXPECT_EQ(0, context.GetCount());
+        REQUIRE_FALSE(entity);
+        REQUIRE(context.GetCount() == 0);
     }
     {
         EntityContext context;
@@ -151,25 +151,25 @@ TEST(Entity, DestroyImmediate)
         Entity entity2{&context, context.Create({})};
         Entity entity3{&context, context.Create({})};
 
-        EXPECT_TRUE(entity1);
-        EXPECT_TRUE(entity2);
-        EXPECT_TRUE(entity3);
-        EXPECT_EQ(3, context.GetCount());
+        REQUIRE(entity1);
+        REQUIRE(entity2);
+        REQUIRE(entity3);
+        REQUIRE(context.GetCount() == 3);
         entity1.DestroyImmediate();
-        EXPECT_FALSE(entity1);
-        EXPECT_TRUE(entity2);
-        EXPECT_TRUE(entity3);
-        EXPECT_EQ(2, context.GetCount());
+        REQUIRE_FALSE(entity1);
+        REQUIRE(entity2);
+        REQUIRE(entity3);
+        REQUIRE(context.GetCount() == 2);
         entity3.DestroyImmediate();
-        EXPECT_FALSE(entity1);
-        EXPECT_TRUE(entity2);
-        EXPECT_FALSE(entity3);
-        EXPECT_EQ(1, context.GetCount());
+        REQUIRE_FALSE(entity1);
+        REQUIRE(entity2);
+        REQUIRE_FALSE(entity3);
+        REQUIRE(context.GetCount() == 1);
         entity2.DestroyImmediate();
-        EXPECT_FALSE(entity1);
-        EXPECT_FALSE(entity2);
-        EXPECT_FALSE(entity3);
-        EXPECT_EQ(0, context.GetCount());
+        REQUIRE_FALSE(entity1);
+        REQUIRE_FALSE(entity2);
+        REQUIRE_FALSE(entity3);
+        REQUIRE(context.GetCount() == 0);
     }
 
     {
@@ -178,53 +178,53 @@ TEST(Entity, DestroyImmediate)
             AddComponent<Behavior>()
         })};
         auto behavior = entity.GetComponent<Behavior>();
-        ASSERT_NE(nullptr, behavior);
+        REQUIRE(behavior != nullptr);
         std::weak_ptr<int> weak = behavior->ptr;
 
-        EXPECT_TRUE(entity);
-        EXPECT_TRUE(entity.HasComponent<Behavior>());
-        EXPECT_EQ(behavior, entity.GetComponent<Behavior>());
-        EXPECT_FALSE(weak.expired());
-        EXPECT_EQ(1, context.GetCount());
+        REQUIRE(entity);
+        REQUIRE(entity.HasComponent<Behavior>());
+        REQUIRE(entity.GetComponent<Behavior>() == behavior);
+        REQUIRE_FALSE(weak.expired());
+        REQUIRE(context.GetCount() == 1);
         behavior->Do(entity);
-        EXPECT_FALSE(entity);
-        //EXPECT_FALSE(entity.HasComponent<Behavior>());
-        //EXPECT_FALSE(entity.GetComponent<Behavior>());
-        EXPECT_TRUE(behavior);
-        EXPECT_FALSE(weak.expired());
+        REQUIRE_FALSE(entity);
+        //REQUIRE_FALSE(entity.HasComponent<Behavior>());
+        //REQUIRE_FALSE(entity.GetComponent<Behavior>());
+        REQUIRE(behavior);
+        REQUIRE_FALSE(weak.expired());
         behavior.reset();
-        EXPECT_TRUE(weak.expired());
-        EXPECT_EQ(0, context.GetCount());
+        REQUIRE(weak.expired());
+        REQUIRE(context.GetCount() == 0);
     }
 }
 
-TEST(Entity, Destroy)
+TEST_CASE("Destroy", "[Entity]")
 {
     {
         EntityContext context;
         Entity entity{&context, context.Create({})};
 
-        EXPECT_TRUE(entity);
-        EXPECT_EQ(1, context.GetCount());
+        REQUIRE(entity);
+        REQUIRE(context.GetCount() == 1);
         entity.Destroy();
-        EXPECT_FALSE(entity);
-        EXPECT_EQ(0, context.GetCount());
+        REQUIRE_FALSE(entity);
+        REQUIRE(context.GetCount() == 0);
         context.Refresh();
-        EXPECT_FALSE(entity);
-        EXPECT_EQ(0, context.GetCount());
+        REQUIRE_FALSE(entity);
+        REQUIRE(context.GetCount() == 0);
     }
     {
         EntityContext context;
         Entity entity{&context, context.Create({})};
 
-        EXPECT_TRUE(entity);
-        EXPECT_EQ(1, context.GetCount());
+        REQUIRE(entity);
+        REQUIRE(context.GetCount() == 1);
         context.Destroy(entity.GetID());
-        EXPECT_FALSE(entity);
-        EXPECT_EQ(0, context.GetCount());
+        REQUIRE_FALSE(entity);
+        REQUIRE(context.GetCount() == 0);
         context.Refresh();
-        EXPECT_FALSE(entity);
-        EXPECT_EQ(0, context.GetCount());
+        REQUIRE_FALSE(entity);
+        REQUIRE(context.GetCount() == 0);
     }
     {
         EntityContext context;
@@ -232,30 +232,30 @@ TEST(Entity, Destroy)
         Entity entity2{&context, context.Create({})};
         Entity entity3{&context, context.Create({})};
 
-        EXPECT_TRUE(entity1);
-        EXPECT_TRUE(entity2);
-        EXPECT_TRUE(entity3);
-        EXPECT_EQ(3, context.GetCount());
+        REQUIRE(entity1);
+        REQUIRE(entity2);
+        REQUIRE(entity3);
+        REQUIRE(context.GetCount() == 3);
         entity1.Destroy();
-        EXPECT_FALSE(entity1);
-        EXPECT_TRUE(entity2);
-        EXPECT_TRUE(entity3);
-        EXPECT_EQ(2, context.GetCount());
+        REQUIRE_FALSE(entity1);
+        REQUIRE(entity2);
+        REQUIRE(entity3);
+        REQUIRE(context.GetCount() == 2);
         entity3.Destroy();
-        EXPECT_FALSE(entity1);
-        EXPECT_TRUE(entity2);
-        EXPECT_FALSE(entity3);
-        EXPECT_EQ(1, context.GetCount());
+        REQUIRE_FALSE(entity1);
+        REQUIRE(entity2);
+        REQUIRE_FALSE(entity3);
+        REQUIRE(context.GetCount() == 1);
         entity2.Destroy();
-        EXPECT_FALSE(entity1);
-        EXPECT_FALSE(entity2);
-        EXPECT_FALSE(entity3);
-        EXPECT_EQ(0, context.GetCount());
+        REQUIRE_FALSE(entity1);
+        REQUIRE_FALSE(entity2);
+        REQUIRE_FALSE(entity3);
+        REQUIRE(context.GetCount() == 0);
         context.Refresh();
-        EXPECT_FALSE(entity1);
-        EXPECT_FALSE(entity2);
-        EXPECT_FALSE(entity3);
-        EXPECT_EQ(0, context.GetCount());
+        REQUIRE_FALSE(entity1);
+        REQUIRE_FALSE(entity2);
+        REQUIRE_FALSE(entity3);
+        REQUIRE(context.GetCount() == 0);
     }
 
     {
@@ -264,33 +264,33 @@ TEST(Entity, Destroy)
             AddComponent<Behavior>()
         })};
         auto behavior = entity.GetComponent<Behavior>();
-        ASSERT_NE(nullptr, behavior);
+        REQUIRE(behavior != nullptr);
         std::weak_ptr<int> weak = behavior->ptr;
 
-        EXPECT_TRUE(entity);
-        EXPECT_TRUE(entity.HasComponent<Behavior>());
-        EXPECT_EQ(behavior, entity.GetComponent<Behavior>());
-        EXPECT_FALSE(weak.expired());
-        EXPECT_EQ(1, context.GetCount());
+        REQUIRE(entity);
+        REQUIRE(entity.HasComponent<Behavior>());
+        REQUIRE(entity.GetComponent<Behavior>() == behavior);
+        REQUIRE_FALSE(weak.expired());
+        REQUIRE(context.GetCount() == 1);
         behavior->Do(entity);
-        EXPECT_FALSE(entity);
-        //EXPECT_FALSE(entity.HasComponent<Behavior>());
-        //EXPECT_EQ(nullptr, entity.GetComponent<Behavior>());
-        EXPECT_FALSE(weak.expired());
-        EXPECT_EQ(0, context.GetCount());
+        REQUIRE_FALSE(entity);
+        //REQUIRE_FALSE(entity.HasComponent<Behavior>());
+        //REQUIRE(entity.GetComponent<Behavior>() == nullptr);
+        REQUIRE_FALSE(weak.expired());
+        REQUIRE(context.GetCount() == 0);
         context.Refresh();
-        EXPECT_FALSE(entity);
-        //EXPECT_FALSE(entity.HasComponent<Behavior>());
-        //EXPECT_FALSE(entity.GetComponent<Behavior>());
-        EXPECT_FALSE(weak.expired());
-        EXPECT_TRUE(behavior);
+        REQUIRE_FALSE(entity);
+        //REQUIRE_FALSE(entity.HasComponent<Behavior>());
+        //REQUIRE_FALSE(entity.GetComponent<Behavior>());
+        REQUIRE_FALSE(weak.expired());
+        REQUIRE(behavior);
         behavior.reset();
-        EXPECT_TRUE(weak.expired());
-        EXPECT_EQ(0, context.GetCount());
+        REQUIRE(weak.expired());
+        REQUIRE(context.GetCount() == 0);
     }
 }
 
-TEST(Entity, Clear)
+TEST_CASE("Clear", "[Entity]")
 {
     {
         EntityContext context;
@@ -298,15 +298,15 @@ TEST(Entity, Clear)
         Entity entity2{&context, context.Create({})};
         Entity entity3{&context, context.Create({})};
 
-        EXPECT_TRUE(entity1);
-        EXPECT_TRUE(entity2);
-        EXPECT_TRUE(entity3);
-        EXPECT_EQ(3, context.GetCount());
+        REQUIRE(entity1);
+        REQUIRE(entity2);
+        REQUIRE(entity3);
+        REQUIRE(context.GetCount() == 3);
         context.Clear();
-        EXPECT_FALSE(entity1);
-        EXPECT_FALSE(entity2);
-        EXPECT_FALSE(entity3);
-        EXPECT_EQ(0, context.GetCount());
+        REQUIRE_FALSE(entity1);
+        REQUIRE_FALSE(entity2);
+        REQUIRE_FALSE(entity3);
+        REQUIRE(context.GetCount() == 0);
     }
     {
         EntityContext context;
@@ -321,34 +321,34 @@ TEST(Entity, Clear)
             AddComponent<ActorComponent>()
         })};
 
-        EXPECT_TRUE(entity1);
-        EXPECT_TRUE(entity2);
-        EXPECT_TRUE(entity3);
-        EXPECT_NE(entity1.GetID(), entity2.GetID());
-        EXPECT_NE(entity2.GetID(), entity3.GetID());
-        EXPECT_EQ(3, context.GetCount());
+        REQUIRE(entity1);
+        REQUIRE(entity2);
+        REQUIRE(entity3);
+        REQUIRE(entity1.GetID() != entity2.GetID());
+        REQUIRE(entity2.GetID() != entity3.GetID());
+        REQUIRE(context.GetCount() == 3);
         context.Clear();
-        EXPECT_FALSE(entity1);
-        EXPECT_FALSE(entity2);
-        EXPECT_FALSE(entity3);
-        EXPECT_EQ(0, context.GetCount());
+        REQUIRE_FALSE(entity1);
+        REQUIRE_FALSE(entity2);
+        REQUIRE_FALSE(entity3);
+        REQUIRE(context.GetCount() == 0);
     }
     {
         EntityContext context;
         Entity entity{&context, context.Create({})};
         auto oldId = entity.GetID();
 
-        EXPECT_TRUE(entity);
-        EXPECT_EQ(1, context.GetCount());
+        REQUIRE(entity);
+        REQUIRE(context.GetCount() == 1);
         context.Clear();
-        EXPECT_FALSE(entity);
-        EXPECT_EQ(0, context.GetCount());
+        REQUIRE_FALSE(entity);
+        REQUIRE(context.GetCount() == 0);
 
         entity = Entity{&context, context.Create({})};
         auto newId = entity.GetID();
-        EXPECT_NE(oldId, newId);
-        EXPECT_NE(oldId.SequenceNumber(), newId.SequenceNumber());
-        EXPECT_EQ(oldId.Index(), newId.Index());
+        REQUIRE(oldId != newId);
+        REQUIRE(oldId.SequenceNumber() != newId.SequenceNumber());
+        REQUIRE(oldId.Index() == newId.Index());
     }
 
     {
@@ -357,21 +357,21 @@ TEST(Entity, Clear)
             AddComponent<Behavior>()
         })};
         auto behavior = entity.GetComponent<Behavior>();
-        ASSERT_NE(nullptr, behavior);
+        REQUIRE(behavior != nullptr);
         std::weak_ptr<int> weak = behavior->ptr;
 
-        EXPECT_TRUE(entity);
-        EXPECT_TRUE(entity.HasComponent<Behavior>());
-        EXPECT_EQ(behavior, entity.GetComponent<Behavior>());
-        EXPECT_FALSE(weak.expired());
-        EXPECT_EQ(1, context.GetCount());
+        REQUIRE(entity);
+        REQUIRE(entity.HasComponent<Behavior>());
+        REQUIRE(entity.GetComponent<Behavior>() == behavior);
+        REQUIRE_FALSE(weak.expired());
+        REQUIRE(context.GetCount() == 1);
         context.Clear();
-        EXPECT_FALSE(entity);
-        EXPECT_TRUE(behavior);
-        EXPECT_FALSE(weak.expired());
+        REQUIRE_FALSE(entity);
+        REQUIRE(behavior);
+        REQUIRE_FALSE(weak.expired());
         behavior.reset();
-        EXPECT_TRUE(weak.expired());
-        EXPECT_EQ(0, context.GetCount());
+        REQUIRE(weak.expired());
+        REQUIRE(context.GetCount() == 0);
     }
     {
         EntityContext context;
@@ -380,95 +380,95 @@ TEST(Entity, Clear)
         })};
         Entity entity2{&context, context.Create({})};
         auto behavior = entity1.GetComponent<Behavior>();
-        ASSERT_NE(nullptr, behavior);
+        REQUIRE(behavior != nullptr);
         std::weak_ptr<int> weak = behavior->ptr;
 
         auto oldId1 = entity1.GetID();
         auto oldId2 = entity2.GetID();
 
-        EXPECT_TRUE(entity1);
-        EXPECT_TRUE(entity2);
-        EXPECT_EQ(2, context.GetCount());
+        REQUIRE(entity1);
+        REQUIRE(entity2);
+        REQUIRE(context.GetCount() == 2);
         context.Clear();
-        EXPECT_FALSE(entity1);
-        EXPECT_FALSE(entity2);
-        EXPECT_EQ(0, context.GetCount());
+        REQUIRE_FALSE(entity1);
+        REQUIRE_FALSE(entity2);
+        REQUIRE(context.GetCount() == 0);
 
         entity1 = Entity{&context, context.Create({})};
         entity2 = Entity{&context, context.Create({})};
 
-        EXPECT_NE(oldId1, oldId2);
-        EXPECT_NE(oldId1, entity1.GetID());
-        EXPECT_NE(oldId2, entity2.GetID());
-        EXPECT_NE(oldId1.SequenceNumber(), entity1.GetID().SequenceNumber());
-        EXPECT_NE(oldId2.SequenceNumber(), entity2.GetID().SequenceNumber());
-        EXPECT_EQ(oldId1.Index(), entity1.GetID().Index());
-        EXPECT_EQ(oldId2.Index(), entity2.GetID().Index());
+        REQUIRE(oldId1 != oldId2);
+        REQUIRE(entity1.GetID() != oldId1);
+        REQUIRE(entity2.GetID() != oldId2);
+        REQUIRE(entity1.GetID().SequenceNumber() != oldId1.SequenceNumber());
+        REQUIRE(entity2.GetID().SequenceNumber() != oldId2.SequenceNumber());
+        REQUIRE(entity1.GetID().Index() == oldId1.Index());
+        REQUIRE(entity2.GetID().Index() == oldId2.Index());
     }
 }
 
-TEST(Entity, EntityID)
+TEST_CASE("Entity::GetID", "[Entity]")
 {
     EntityContext context;
     Entity entity{&context, context.Create({})};
 
     auto id = entity.GetID();
-    EXPECT_EQ(id, entity.GetID());
+    REQUIRE(entity.GetID() == id);
 
     Entity entity2{&context, context.Create({})};
 
-    EXPECT_NE(entity.GetID(), entity2.GetID());
-    EXPECT_EQ(0, entity.GetID().Index());
-    EXPECT_EQ(1, entity2.GetID().Index());
-    EXPECT_EQ(1, entity.GetID().SequenceNumber());
-    EXPECT_EQ(1, entity2.GetID().SequenceNumber());
+    REQUIRE(entity.GetID() != entity2.GetID());
+    REQUIRE(entity.GetID().Index() == 0);
+    REQUIRE(entity2.GetID().Index() == 1);
+    REQUIRE(entity.GetID().SequenceNumber() == 1);
+    REQUIRE(entity2.GetID().SequenceNumber() == 1);
 }
 
-TEST(Entity, EntityID_Sequence)
+TEST_CASE("EntityID Sequence", "[Entity]")
 {
     EntityContext context;
     {
         Entity entity{&context, context.Create({})};
-        EXPECT_EQ(0U, entity.GetID().Index());
-        EXPECT_NE(0U, entity.GetID().SequenceNumber());
-        EXPECT_EQ(1U, entity.GetID().SequenceNumber());
+        REQUIRE(entity.GetID().Index() == 0U);
+        REQUIRE(entity.GetID().SequenceNumber() != 0U);
+        REQUIRE(entity.GetID().SequenceNumber() == 1U);
     }
     {
         Entity entity{&context, context.Create({})};
-        EXPECT_EQ(1U, entity.GetID().Index());
-        EXPECT_NE(0U, entity.GetID().SequenceNumber());
-        EXPECT_EQ(1U, entity.GetID().SequenceNumber());
+        REQUIRE(entity.GetID().Index() == 1U);
+        REQUIRE(entity.GetID().SequenceNumber() != 0U);
+        REQUIRE(entity.GetID().SequenceNumber() == 1U);
         entity.DestroyImmediate();
     }
     {
         Entity entity{&context, context.Create({})};
-        EXPECT_EQ(1U, entity.GetID().Index());
-        EXPECT_NE(0U, entity.GetID().SequenceNumber());
-        EXPECT_EQ(2U, entity.GetID().SequenceNumber());
+        REQUIRE(entity.GetID().Index() == 1U);
+        REQUIRE(entity.GetID().SequenceNumber() != 0U);
+        REQUIRE(entity.GetID().SequenceNumber() == 2U);
         entity.DestroyImmediate();
     }
     {
         Entity entity{&context, context.Create({})};
-        EXPECT_EQ(1U, entity.GetID().Index());
-        EXPECT_NE(0U, entity.GetID().SequenceNumber());
-        EXPECT_EQ(3U, entity.GetID().SequenceNumber());
+        REQUIRE(entity.GetID().Index() == 1U);
+        REQUIRE(entity.GetID().SequenceNumber() != 0U);
+        REQUIRE(entity.GetID().SequenceNumber() == 3U);
         entity.DestroyImmediate();
     }
     {
         Entity entity1{&context, context.Create({})};
-        EXPECT_EQ(1U, entity1.GetID().Index());
-        EXPECT_NE(0U, entity1.GetID().SequenceNumber());
-        EXPECT_EQ(4U, entity1.GetID().SequenceNumber());
+        REQUIRE(entity1.GetID().Index() == 1U);
+        REQUIRE(entity1.GetID().SequenceNumber() != 0U);
+        REQUIRE(entity1.GetID().SequenceNumber() == 4U);
 
         Entity entity2{&context, context.Create({})};
-        EXPECT_EQ(2U, entity2.GetID().Index());
-        EXPECT_NE(0U, entity2.GetID().SequenceNumber());
-        EXPECT_EQ(1U, entity2.GetID().SequenceNumber());
+        REQUIRE(entity2.GetID().Index() == 2U);
+        REQUIRE(entity2.GetID().SequenceNumber() != 0U);
+        REQUIRE(entity2.GetID().SequenceNumber() == 1U);
 
         Entity entity3{&context, context.Create({})};
-        EXPECT_EQ(3U, entity3.GetID().Index());
-        EXPECT_NE(0U, entity3.GetID().SequenceNumber());
-        EXPECT_EQ(1U, entity3.GetID().SequenceNumber());
+        REQUIRE(entity3.GetID().Index() == 3U);
+        REQUIRE(entity3.GetID().SequenceNumber() != 0U);
+        REQUIRE(entity3.GetID().SequenceNumber() == 1U);
 
         entity1.DestroyImmediate();
         entity2.DestroyImmediate();
@@ -476,74 +476,74 @@ TEST(Entity, EntityID_Sequence)
     }
 }
 
-TEST(Entity, Cast_Bool)
+TEST_CASE("Entity Cast Bool", "[Entity]")
 {
     EntityContext context;
     {
         Entity entity{&context, context.Create({})};
-        EXPECT_TRUE(entity);
+        REQUIRE(entity);
         entity.DestroyImmediate();
-        EXPECT_FALSE(entity);
+        REQUIRE_FALSE(entity);
     }
     {
         Entity entity1{&context, context.Create({})};
         Entity entity2{&context, context.Create({})};
-        EXPECT_TRUE(entity1);
-        EXPECT_TRUE(entity2);
+        REQUIRE(entity1);
+        REQUIRE(entity2);
         entity1.DestroyImmediate();
-        EXPECT_FALSE(entity1);
-        EXPECT_TRUE(entity2);
+        REQUIRE_FALSE(entity1);
+        REQUIRE(entity2);
         entity2.DestroyImmediate();
-        EXPECT_FALSE(entity1);
-        EXPECT_FALSE(entity2);
+        REQUIRE_FALSE(entity1);
+        REQUIRE_FALSE(entity2);
     }
     {
         Entity entity{&context, context.Create({})};
         auto copiedObject = entity;
-        EXPECT_TRUE(entity);
-        EXPECT_TRUE(copiedObject);
+        REQUIRE(entity);
+        REQUIRE(copiedObject);
         entity.DestroyImmediate();
-        EXPECT_FALSE(entity);
-        EXPECT_FALSE(copiedObject);
+        REQUIRE_FALSE(entity);
+        REQUIRE_FALSE(copiedObject);
     }
     {
         Entity entity{&context, context.Create({})};
         auto copiedObject = entity;
-        EXPECT_TRUE(entity);
-        EXPECT_TRUE(copiedObject);
+        REQUIRE(entity);
+        REQUIRE(copiedObject);
         copiedObject.DestroyImmediate();
-        EXPECT_FALSE(entity);
-        EXPECT_FALSE(copiedObject);
+        REQUIRE_FALSE(entity);
+        REQUIRE_FALSE(copiedObject);
     }
 }
 
-TEST(Entity, EqualOperator)
+TEST_CASE("Entity EqualOperator", "[Entity]")
 {
     EntityContext context;
     Entity entity1{&context, context.Create({})};
     Entity entity2{&context, context.Create({})};
-    EXPECT_NE(entity1, entity2);
-    EXPECT_EQ(entity1, entity1);
-    EXPECT_EQ(entity2, entity2);
+    REQUIRE(entity1 != entity2);
+    REQUIRE(entity1 == entity1);
+    REQUIRE(entity2 == entity2);
 
     Entity entity3 = entity1;
-    EXPECT_EQ(entity3, entity1);
-    EXPECT_NE(entity3, entity2);
+    REQUIRE(entity3 == entity1);
+    REQUIRE(entity3 != entity2);
 
     entity3.DestroyImmediate();
-    EXPECT_NE(entity3, entity1);
-    EXPECT_NE(entity3, entity2);
+    REQUIRE(entity3 != entity1);
+    REQUIRE(entity3 != entity2);
 
     entity1.DestroyImmediate();
-    EXPECT_EQ(entity1, entity3);
-    EXPECT_NE(entity1, entity2);
+    REQUIRE(entity1 == entity3);
+    REQUIRE(entity1 != entity2);
 
     entity2.DestroyImmediate();
-    EXPECT_EQ(entity2, entity1);
-    EXPECT_EQ(entity2, entity3);
+    REQUIRE(entity2 == entity1);
+    REQUIRE(entity2 == entity3);
 }
 
-TEST(Entity, EntityID_Unique)
+TEST_CASE("Entity EntityID Unique", "[Entity]")
 {
     std::vector<Entity> objects;
     std::vector<EntityID> uniqueIdents;
@@ -574,7 +574,7 @@ TEST(Entity, EntityID_Unique)
         if (count % 11 == 8)
         {
             if (!objects.empty()) {
-                ASSERT_TRUE(objects.front());
+                REQUIRE(objects.front());
                 objects.front().DestroyImmediate();
                 objects.erase(objects.begin());
                 //printf("### Remove Object \n");
@@ -588,7 +588,7 @@ TEST(Entity, EntityID_Unique)
                 auto const randomNumber = distribution(random);
 
                 for (auto & object: objects) {
-                    ASSERT_TRUE(object);
+                    REQUIRE(object);
                     if (object.GetID().Value() % randomNumber == 0) {
                         object.DestroyImmediate();
                     }
@@ -603,13 +603,9 @@ TEST(Entity, EntityID_Unique)
 
     //printf("## maxSequenceNumber = %u\n## maxIndex = %u\n", maxSequenceNumber, maxIndex);
 
-    ASSERT_FALSE(uniqueIdents.empty());
+    REQUIRE_FALSE(uniqueIdents.empty());
 
     std::sort(std::begin(uniqueIdents), std::end(uniqueIdents));
     auto iter = std::adjacent_find(std::begin(uniqueIdents), std::end(uniqueIdents));
-#ifdef _MSC_VER
-    EXPECT_TRUE(std::end(uniqueIdents) == iter);
-#else
-    EXPECT_EQ(std::end(uniqueIdents), iter);
-#endif
+    REQUIRE(iter == std::end(uniqueIdents));
 }

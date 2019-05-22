@@ -1,36 +1,36 @@
 // Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
-#include <Pomdog/Async/ImmediateScheduler.hpp>
-#include <Pomdog/Async/QueuedScheduler.hpp>
-#include <gtest/iutest_switch.hpp>
+#include "Pomdog/Async/ImmediateScheduler.hpp"
+#include "Pomdog/Async/QueuedScheduler.hpp"
+#include "catch.hpp"
 #include <thread>
 
 using Pomdog::Concurrency::QueuedScheduler;
 
-TEST(Scheduler, Schedule_Simply)
+TEST_CASE("Schedule_Simply", "[Scheduler]")
 {
     std::vector<std::string> output;
 
     auto scheduler = std::make_shared<QueuedScheduler>();
     auto task = [&]{ output.push_back("hello"); };
-    scheduler->Schedule(std::move(task), std::chrono::milliseconds(30));
+    scheduler->Schedule(std::move(task), std::chrono::milliseconds(60));
 
     auto wait = [&](std::chrono::milliseconds millis) {
         std::this_thread::sleep_for(millis);
         scheduler->Update();
     };
 
-    ASSERT_TRUE(output.empty());
+    REQUIRE(output.empty());
     wait(std::chrono::milliseconds(1));
-    EXPECT_TRUE(output.empty());
+    REQUIRE(output.empty());
     wait(std::chrono::milliseconds(2));
-    EXPECT_TRUE(output.empty());
-    wait(std::chrono::milliseconds(35));
-    ASSERT_EQ(1, output.size());
-    EXPECT_EQ("hello", output.back());
+    REQUIRE(output.empty());
+    wait(std::chrono::milliseconds(65));
+    REQUIRE(output.size() == 1);
+    REQUIRE(output.back() == "hello");
 }
 
-TEST(Scheduler, Schedule_Nested)
+TEST_CASE("Schedule_Nested", "[Scheduler]")
 {
     std::vector<std::string> output;
 
@@ -45,16 +45,16 @@ TEST(Scheduler, Schedule_Nested)
         scheduler->Update();
     };
 
-    ASSERT_TRUE(output.empty());
+    REQUIRE(output.empty());
     wait(std::chrono::milliseconds(10));
-    ASSERT_EQ(1, output.size());
-    EXPECT_EQ("ok", output.back());
+    REQUIRE(output.size() == 1);
+    REQUIRE(output.back() == "ok");
     wait(std::chrono::milliseconds(7));
-    ASSERT_EQ(2, output.size());
-    EXPECT_EQ("hello", output.back());
+    REQUIRE(output.size() == 2);
+    REQUIRE(output.back() == "hello");
 }
 
-TEST(Scheduler, Schedule_NestedDelay)
+TEST_CASE("Schedule_NestedDelay", "[Scheduler]")
 {
     std::vector<std::string> output;
 
@@ -69,18 +69,18 @@ TEST(Scheduler, Schedule_NestedDelay)
         scheduler->Update();
     };
 
-    ASSERT_TRUE(output.empty());
+    REQUIRE(output.empty());
     wait(std::chrono::milliseconds(1));
-    EXPECT_TRUE(output.empty());
+    REQUIRE(output.empty());
     wait(std::chrono::milliseconds(24));
-    ASSERT_EQ(1, output.size());
-    EXPECT_EQ("ok", output.back());
+    REQUIRE(output.size() == 1);
+    REQUIRE(output.back() == "ok");
     wait(std::chrono::milliseconds(1));
-    ASSERT_EQ(2, output.size());
-    EXPECT_EQ("hello", output.back());
+    REQUIRE(output.size() == 2);
+    REQUIRE(output.back() == "hello");
 }
 
-TEST(Scheduler, Schedule_NestedDelay2)
+TEST_CASE("Schedule_NestedDelay2", "[Scheduler]")
 {
     std::vector<std::string> output;
 
@@ -97,15 +97,15 @@ TEST(Scheduler, Schedule_NestedDelay2)
         scheduler->Update();
     };
 
-    ASSERT_TRUE(output.empty());
+    REQUIRE(output.empty());
     wait(std::chrono::milliseconds(1));
-    EXPECT_TRUE(output.empty());
+    REQUIRE(output.empty());
     wait(std::chrono::milliseconds(20));
-    ASSERT_EQ(1, output.size());
-    EXPECT_EQ("ok", output.back());
+    REQUIRE(output.size() == 1);
+    REQUIRE(output.back() == "ok");
     wait(std::chrono::milliseconds(1));
-    EXPECT_EQ(1, output.size());
+    REQUIRE(output.size() == 1);
     wait(std::chrono::milliseconds(30));
-    EXPECT_EQ(2, output.size());
-    EXPECT_EQ("hello", output.back());
+    REQUIRE(output.size() == 2);
+    REQUIRE(output.back() == "hello");
 }

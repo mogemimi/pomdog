@@ -1,160 +1,158 @@
 // Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
-#include <Pomdog/Signals/ConnectionList.hpp>
-#include <Pomdog/Signals/Signal.hpp>
-#include <gtest/iutest_switch.hpp>
+#include "Pomdog/Signals/ConnectionList.hpp"
+#include "Pomdog/Signals/Signal.hpp"
+#include "catch.hpp"
 #include <utility>
 
 using Pomdog::ConnectionList;
 using Pomdog::Signal;
 
-TEST(ConnectionList, Disconnect)
+TEST_CASE("Disconnect", "[ConnectionList]")
 {
-    Signal<void(std::string)> nameChanged;
-    ConnectionList connections;
-    std::string name;
-
-    connections += nameChanged.Connect([&](std::string const& n) {
-        name = n;
-    });
-
-    nameChanged("alice");
-    EXPECT_EQ("alice", name);
-    nameChanged("bob");
-    EXPECT_EQ("bob", name);
-    nameChanged("chuck");
-    EXPECT_EQ("chuck", name);
-
-    connections.Disconnect();
-
-    nameChanged("norris");
-    EXPECT_EQ("chuck", name);
-}
-
-TEST(ConnectionList, MoveAssignmentOperator)
-{
-    Signal<void(std::string)> nameChanged;
-    std::string name;
-
-    ConnectionList connections1;
+    SECTION("Disconnect")
     {
-        ConnectionList connections2;
+        Signal<void(std::string)> nameChanged;
+        ConnectionList connections;
+        std::string name;
 
-        connections2 += nameChanged.Connect([&](std::string const& n) {
+        connections += nameChanged.Connect([&](std::string const& n) {
             name = n;
         });
 
         nameChanged("alice");
-        EXPECT_EQ("alice", name);
-
-        connections1 = std::move(connections2);
-
+        REQUIRE(name == "alice");
         nameChanged("bob");
-        EXPECT_EQ("bob", name);
-
-        connections2.Disconnect();
-
+        REQUIRE(name == "bob");
         nameChanged("chuck");
-        EXPECT_EQ("chuck", name);
+        REQUIRE(name == "chuck");
+
+        connections.Disconnect();
+
+        nameChanged("norris");
+        REQUIRE(name == "chuck");
     }
-
-    nameChanged("norris");
-    EXPECT_EQ("norris", name);
-
-    connections1.Disconnect();
-
-    nameChanged("gates");
-    EXPECT_EQ("norris", name);
-}
-
-TEST(ConnectionList, ScopeGuard)
-{
-    Signal<void(int)> valueChanged;
-    std::vector<int> integers;
+    SECTION("MoveAssignmentOperator")
     {
-        ConnectionList connections;
-        auto slot = [&](int n){ integers.push_back(n); };
-        connections += valueChanged.Connect(slot);
+        Signal<void(std::string)> nameChanged;
+        std::string name;
 
-        valueChanged(42);
-        valueChanged(43);
+        ConnectionList connections1;
+        {
+            ConnectionList connections2;
+
+            connections2 += nameChanged.Connect([&](std::string const& n) {
+                name = n;
+            });
+
+            nameChanged("alice");
+            REQUIRE(name == "alice");
+
+            connections1 = std::move(connections2);
+
+            nameChanged("bob");
+            REQUIRE(name == "bob");
+
+            connections2.Disconnect();
+
+            nameChanged("chuck");
+            REQUIRE(name == "chuck");
+        }
+
+        nameChanged("norris");
+        REQUIRE(name == "norris");
+
+        connections1.Disconnect();
+
+        nameChanged("gates");
+        REQUIRE(name == "norris");
     }
-    valueChanged(44);
-
-    ASSERT_EQ(2, integers.size());
-    EXPECT_EQ(42, integers[0]);
-    EXPECT_EQ(43, integers[1]);
-}
-
-TEST(ConnectionList, ScopeGuardWithThreeConnections)
-{
-    Signal<void(int)> valueChanged;
-    std::vector<int> integers;
+    SECTION("ScopeGuard")
     {
-        ConnectionList connections;
-        auto slot = [&](int n){ integers.push_back(n); };
-        connections += valueChanged.Connect(slot);
-        connections += valueChanged.Connect(slot);
-        connections += valueChanged.Connect(slot);
+        Signal<void(int)> valueChanged;
+        std::vector<int> integers;
+        {
+            ConnectionList connections;
+            auto slot = [&](int n){ integers.push_back(n); };
+            connections += valueChanged.Connect(slot);
 
-        valueChanged(42);
-        valueChanged(43);
+            valueChanged(42);
+            valueChanged(43);
+        }
+        valueChanged(44);
+
+        REQUIRE(integers.size() == 2);
+        REQUIRE(integers[0] == 42);
+        REQUIRE(integers[1] == 43);
     }
-    valueChanged(44);
-
-    ASSERT_EQ(6, integers.size());
-    EXPECT_EQ(42, integers[0]);
-    EXPECT_EQ(42, integers[1]);
-    EXPECT_EQ(42, integers[2]);
-    EXPECT_EQ(43, integers[3]);
-    EXPECT_EQ(43, integers[4]);
-    EXPECT_EQ(43, integers[5]);
-}
-
-TEST(ConnectionList, QtStyleConnect)
-{
-    Signal<void(int)> valueChanged;
-    std::vector<int> integers;
+    SECTION("ScopeGuardWithThreeConnections")
     {
-        ConnectionList connect;
-        auto slot = [&](int n){ integers.push_back(n); };
-        connect(valueChanged, slot);
-        connect(valueChanged, slot);
-        connect(valueChanged, slot);
+        Signal<void(int)> valueChanged;
+        std::vector<int> integers;
+        {
+            ConnectionList connections;
+            auto slot = [&](int n){ integers.push_back(n); };
+            connections += valueChanged.Connect(slot);
+            connections += valueChanged.Connect(slot);
+            connections += valueChanged.Connect(slot);
 
-        valueChanged(42);
-        valueChanged(43);
+            valueChanged(42);
+            valueChanged(43);
+        }
+        valueChanged(44);
+
+        REQUIRE(integers.size() == 6);
+        REQUIRE(integers[0] == 42);
+        REQUIRE(integers[1] == 42);
+        REQUIRE(integers[2] == 42);
+        REQUIRE(integers[3] == 43);
+        REQUIRE(integers[4] == 43);
+        REQUIRE(integers[5] == 43);
     }
-    valueChanged(44);
-
-    ASSERT_EQ(6, integers.size());
-    EXPECT_EQ(42, integers[0]);
-    EXPECT_EQ(42, integers[1]);
-    EXPECT_EQ(42, integers[2]);
-    EXPECT_EQ(43, integers[3]);
-    EXPECT_EQ(43, integers[4]);
-    EXPECT_EQ(43, integers[5]);
-}
-
-TEST(ConnectionList, QtStyleConnect_ReturnConnection)
-{
-    Signal<void(int)> valueChanged;
-    std::vector<int> integers;
-    Pomdog::Connection connection;
+    SECTION("QtStyleConnect")
     {
-        ConnectionList connect;
-        auto slot = [&](int n){ integers.push_back(n); };
-        connection = connect(valueChanged, slot);
+        Signal<void(int)> valueChanged;
+        std::vector<int> integers;
+        {
+            ConnectionList connect;
+            auto slot = [&](int n){ integers.push_back(n); };
+            connect(valueChanged, slot);
+            connect(valueChanged, slot);
+            connect(valueChanged, slot);
 
-        ASSERT_TRUE(connection);
-        valueChanged(42);
-        valueChanged(43);
-        EXPECT_TRUE(connection);
+            valueChanged(42);
+            valueChanged(43);
+        }
+        valueChanged(44);
+
+        REQUIRE(integers.size() == 6);
+        REQUIRE(integers[0] == 42);
+        REQUIRE(integers[1] == 42);
+        REQUIRE(integers[2] == 42);
+        REQUIRE(integers[3] == 43);
+        REQUIRE(integers[4] == 43);
+        REQUIRE(integers[5] == 43);
     }
-    EXPECT_FALSE(connection);
-    valueChanged(44);
+    SECTION("QtStyleConnect_ReturnConnection")
+    {
+        Signal<void(int)> valueChanged;
+        std::vector<int> integers;
+        Pomdog::Connection connection;
+        {
+            ConnectionList connect;
+            auto slot = [&](int n){ integers.push_back(n); };
+            connection = connect(valueChanged, slot);
 
-    ASSERT_EQ(2, integers.size());
-    EXPECT_EQ(42, integers[0]);
-    EXPECT_EQ(43, integers[1]);
+            REQUIRE(connection);
+            valueChanged(42);
+            valueChanged(43);
+            REQUIRE(connection);
+        }
+        REQUIRE_FALSE(connection);
+        valueChanged(44);
+
+        REQUIRE(integers.size() == 2);
+        REQUIRE(integers[0] == 42);
+        REQUIRE(integers[1] == 43);
+    }
 }
