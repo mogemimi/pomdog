@@ -1,9 +1,6 @@
 [submodule "dependencies/glew"]
 	path = dependencies/glew
 	url = https://github.com/nigels-com/glew
-[submodule "dependencies/iutest"]
-	path = dependencies/iutest
-	url = https://github.com/srz-zumix/iutest
 [submodule "dependencies/libpng"]
 	path = dependencies/libpng
 	url = https://github.com/glennrp/libpng

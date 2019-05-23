@@ -25,14 +25,6 @@ All of the dependencies that [Pomdog](https://github.com/mogemimi/pomdog) needs 
   * Modified BSD License
   * Please see: [glew/LICENSE.txt](glew/LICENSE.txt)
 
-### iutest - iris unit test framework
-
-* [SourceForge](http://iutest.sourceforge.jp/)
-* [iutest - GitHub](https://github.com/srz-zumix/iutest)
-* License
-  * New (3-clause) BSD License
-  * Please see: [iutest/LICENSE](iutest/LICENSE)
-
 ### libpng
 
 * [libpng Home Page](http://www.libpng.org/pub/png/libpng.html)
