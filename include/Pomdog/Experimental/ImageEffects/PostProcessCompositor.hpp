@@ -26,24 +26,24 @@ public:
         const std::shared_ptr<GraphicsDevice>& graphicsDevice);
 
     void Composite(
-        std::vector<std::shared_ptr<ImageEffectBase>> && imageEffects);
+        std::vector<std::shared_ptr<ImageEffectBase>>&& imageEffects);
 
     void Composite(
-        std::vector<std::shared_ptr<ImageEffectBase>> && imageEffects,
-        std::vector<std::shared_ptr<ImageEffectPreRenderable>> && preRenderableEffects);
+        std::vector<std::shared_ptr<ImageEffectBase>>&& imageEffects,
+        std::vector<std::shared_ptr<ImageEffectPreRenderable>>&& preRenderableEffects);
 
     void SetViewportSize(
-        GraphicsDevice & graphicsDevice,
+        GraphicsDevice& graphicsDevice,
         int width,
         int height,
         DepthFormat depthFormat);
 
     void Draw(
-        GraphicsCommandList & commandList,
+        GraphicsCommandList& commandList,
         const std::shared_ptr<RenderTarget2D>& source);
 
     void Draw(
-        GraphicsCommandList & commandList,
+        GraphicsCommandList& commandList,
         const std::shared_ptr<RenderTarget2D>& source,
         const std::shared_ptr<RenderTarget2D>& destination);
 
@@ -51,7 +51,7 @@ public:
 
 private:
     void BuildRenderTargets(
-        GraphicsDevice & graphicsDevice,
+        GraphicsDevice& graphicsDevice,
         int width,
         int height,
         SurfaceFormat surfaceFormat,

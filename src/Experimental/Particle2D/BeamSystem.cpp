@@ -191,7 +191,7 @@ void BeamSystem::Update(const Duration& frameDuration, const Vector2& emitterPos
             }
         };
 
-        auto distribution = std::uniform_real_distribution<float>(-emitter.ShapeWidth/2, emitter.ShapeWidth/2);
+        auto distribution = std::uniform_real_distribution<float>(-emitter.ShapeWidth / 2, emitter.ShapeWidth / 2);
 
         while ((beams.size() < emitter.MaxBeams) && (emissionTimer >= emissionInterval)) {
             emissionTimer -= emissionInterval;

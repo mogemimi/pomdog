@@ -7,8 +7,8 @@
 #include "Pomdog/Math/detail/ForwardDeclarations.hpp"
 #include <cstdint>
 #include <memory>
-#include <vector>
 #include <string>
+#include <vector>
 
 namespace Pomdog {
 
@@ -34,7 +34,7 @@ class TrueTypeFont;
 class POMDOG_EXPORT SpriteFont final {
 public:
     SpriteFont(
-        std::vector<std::shared_ptr<Texture2D>> && textures,
+        std::vector<std::shared_ptr<Texture2D>>&& textures,
         const std::vector<FontGlyph>& glyphs,
         float spacing,
         float lineSpacing);

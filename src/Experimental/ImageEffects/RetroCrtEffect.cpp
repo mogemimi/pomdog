@@ -32,7 +32,7 @@ namespace {
 
 RetroCrtEffect::RetroCrtEffect(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-    AssetManager & assets)
+    AssetManager& assets)
 {
     samplerState = std::make_shared<SamplerState>(
         graphicsDevice, SamplerDescription::CreateLinearClamp());
@@ -64,7 +64,7 @@ RetroCrtEffect::RetroCrtEffect(
         .Build();
 }
 
-void RetroCrtEffect::Apply(GraphicsCommandList & commandList,
+void RetroCrtEffect::Apply(GraphicsCommandList& commandList,
     std::shared_ptr<RenderTarget2D> const& source,
     std::shared_ptr<ConstantBuffer> const& constantBuffer)
 {

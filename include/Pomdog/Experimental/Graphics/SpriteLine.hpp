@@ -4,8 +4,8 @@
 
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
-#include "Pomdog/Math/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Math/Vector2.hpp"
+#include "Pomdog/Math/detail/ForwardDeclarations.hpp"
 #include <memory>
 
 namespace Pomdog {

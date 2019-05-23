@@ -11,7 +11,7 @@
 namespace Pomdog {
 
 ConstantBuffer::ConstantBuffer(
-    GraphicsDevice & graphicsDevice,
+    GraphicsDevice& graphicsDevice,
     std::size_t sizeInBytesIn,
     BufferUsage bufferUsageIn)
     : sizeInBytes(static_cast<decltype(sizeInBytes)>(sizeInBytesIn))
@@ -31,7 +31,7 @@ ConstantBuffer::ConstantBuffer(
 }
 
 ConstantBuffer::ConstantBuffer(
-    GraphicsDevice & graphicsDevice,
+    GraphicsDevice& graphicsDevice,
     const void* sourceData,
     std::size_t sizeInBytesIn,
     BufferUsage bufferUsageIn)

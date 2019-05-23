@@ -32,7 +32,7 @@ namespace {
 
 GrayscaleEffect::GrayscaleEffect(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-    AssetManager & assets)
+    AssetManager& assets)
 {
     samplerLinear = std::make_shared<SamplerState>(
         graphicsDevice, SamplerDescription::CreateLinearWrap());
@@ -64,7 +64,7 @@ GrayscaleEffect::GrayscaleEffect(
         .Build();
 }
 
-void GrayscaleEffect::Apply(GraphicsCommandList & commandList,
+void GrayscaleEffect::Apply(GraphicsCommandList& commandList,
     std::shared_ptr<RenderTarget2D> const& source,
     std::shared_ptr<ConstantBuffer> const& constantBuffer)
 {

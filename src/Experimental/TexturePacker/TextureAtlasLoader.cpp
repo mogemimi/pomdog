@@ -125,7 +125,7 @@ TextureAtlas TextureAtlasLoader::Load(const AssetManager& assets, const std::str
             }
 
             POMDOG_ASSERT(!result.regions.empty());
-            auto & region = result.regions.back();
+            auto& region = result.regions.back();
 
             if ("rotate" == propertyName) {
                 std::string value;

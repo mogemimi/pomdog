@@ -13,12 +13,12 @@ class FishEyeEffect final : public ImageEffectBase {
 public:
     FishEyeEffect(
         const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-        AssetManager & assets);
+        AssetManager& assets);
 
     void SetStrength(float strength);
 
     void Apply(
-        GraphicsCommandList & commandList,
+        GraphicsCommandList& commandList,
         const std::shared_ptr<RenderTarget2D>& source,
         const std::shared_ptr<ConstantBuffer>& constantBuffer) override;
 

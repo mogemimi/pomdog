@@ -55,7 +55,7 @@ PostProcessCompositor::PostProcessCompositor(
 }
 
 void PostProcessCompositor::SetViewportSize(
-    GraphicsDevice & graphicsDevice,
+    GraphicsDevice& graphicsDevice,
     int width,
     int height,
     DepthFormat depthFormat)
@@ -81,7 +81,7 @@ void PostProcessCompositor::SetViewportSize(
 }
 
 void PostProcessCompositor::BuildRenderTargets(
-    GraphicsDevice & graphicsDevice,
+    GraphicsDevice& graphicsDevice,
     int width,
     int height,
     SurfaceFormat surfaceFormat,
@@ -115,7 +115,7 @@ void PostProcessCompositor::UpdateConstantBuffer()
     constantBuffer->SetValue(info);
 }
 
-void PostProcessCompositor::Composite(std::vector<std::shared_ptr<ImageEffectBase>> && imageEffectsIn)
+void PostProcessCompositor::Composite(std::vector<std::shared_ptr<ImageEffectBase>>&& imageEffectsIn)
 {
     POMDOG_ASSERT(!imageEffectsIn.empty());
     imageEffects = std::move(imageEffectsIn);
@@ -130,8 +130,8 @@ void PostProcessCompositor::Composite(std::vector<std::shared_ptr<ImageEffectBas
 }
 
 void PostProcessCompositor::Composite(
-    std::vector<std::shared_ptr<ImageEffectBase>> && imageEffectsIn,
-    std::vector<std::shared_ptr<ImageEffectPreRenderable>> && preRenderableEffectsIn)
+    std::vector<std::shared_ptr<ImageEffectBase>>&& imageEffectsIn,
+    std::vector<std::shared_ptr<ImageEffectPreRenderable>>&& preRenderableEffectsIn)
 {
     POMDOG_ASSERT(!imageEffectsIn.empty());
     imageEffects = std::move(imageEffectsIn);
@@ -150,7 +150,7 @@ void PostProcessCompositor::Composite(
 }
 
 void PostProcessCompositor::Draw(
-    GraphicsCommandList & commandList,
+    GraphicsCommandList& commandList,
     std::shared_ptr<RenderTarget2D> const& source)
 {
     if (imageEffects.empty()) {

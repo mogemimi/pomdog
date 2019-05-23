@@ -6,10 +6,10 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include "Pomdog/Utility/PathHelper.hpp"
-#include <utility>
-#include <fstream>
 #include <algorithm>
+#include <fstream>
 #include <regex>
+#include <utility>
 
 namespace Pomdog {
 
@@ -81,13 +81,12 @@ struct BitmapFontPage {
 //    EXPECT_FALSE(std::regex_match("padding=-2,-45,-3,-2,4", r));
 //}
 
-BitmapFontInfo ParseInfo(std::istream & stream)
+BitmapFontInfo ParseInfo(std::istream& stream)
 {
     BitmapFontInfo info;
 
     std::string source;
-    while (stream >> source && !stream.fail())
-    {
+    while (stream >> source && !stream.fail()) {
         auto expr = std::regex("([a-zA-Z_][a-zA-Z0-9_]*)(=)(.*)");
         auto exprString = std::regex("\\\"([a-zA-Z0-9_\\-/.]*)\\\"");
         //auto exprNumber = std::regex("\\-?[0-9]*");
@@ -95,8 +94,7 @@ BitmapFontInfo ParseInfo(std::istream & stream)
         auto exprVector4 = std::regex("(\\-?[0-9]*),(\\-?[0-9]*),(\\-?[0-9]*),(\\-?[0-9]*)");
 
         std::smatch match;
-        if (std::regex_match(source, match, expr))
-        {
+        if (std::regex_match(source, match, expr)) {
             POMDOG_ASSERT(match.size() >= 4);
             auto name = match[1].str();
             auto arguments = match[3].str();
@@ -166,17 +164,15 @@ BitmapFontInfo ParseInfo(std::istream & stream)
     return info;
 }
 
-BitmapFontCommon ParseCommon(std::istream & stream)
+BitmapFontCommon ParseCommon(std::istream& stream)
 {
     BitmapFontCommon result;
 
     std::string source;
-    while (stream >> source && !stream.fail())
-    {
+    while (stream >> source && !stream.fail()) {
         auto expr = std::regex("([a-zA-Z_][a-zA-Z0-9_]*)(=)(.*)");
         std::smatch match;
-        if (std::regex_match(source, match, expr))
-        {
+        if (std::regex_match(source, match, expr)) {
             POMDOG_ASSERT(match.size() >= 4);
             auto name = match[1].str();
             auto arguments = match[3].str();
@@ -210,18 +206,16 @@ BitmapFontCommon ParseCommon(std::istream & stream)
     return result;
 }
 
-BitmapFontPage ParsePage(std::istream & stream)
+BitmapFontPage ParsePage(std::istream& stream)
 {
     BitmapFontPage result;
 
     std::string source;
-    while (stream >> source && !stream.fail())
-    {
+    while (stream >> source && !stream.fail()) {
         auto expr = std::regex("([a-zA-Z_][a-zA-Z0-9_]*)(=)(.*)");
         auto exprString = std::regex("\\\"([a-zA-Z0-9_\\-/.]*)\\\"");
         std::smatch match;
-        if (std::regex_match(source, match, expr))
-        {
+        if (std::regex_match(source, match, expr)) {
             POMDOG_ASSERT(match.size() >= 4);
             auto name = match[1].str();
             auto arguments = match[3].str();
@@ -244,7 +238,7 @@ BitmapFontPage ParsePage(std::istream & stream)
     return result;
 }
 
-FontGlyph ParseGlyph(std::istream & stream)
+FontGlyph ParseGlyph(std::istream& stream)
 {
     FontGlyph result;
     result.Subrect.X = 0;
@@ -306,7 +300,7 @@ FontGlyph ParseGlyph(std::istream & stream)
 } // unnamed namespace
 
 std::shared_ptr<SpriteFont> SpriteFontLoader::Load(
-    AssetManager & assets, const std::string& assetName)
+    AssetManager& assets, const std::string& assetName)
 {
     auto binaryFile = assets.OpenStream(assetName);
 
@@ -326,8 +320,7 @@ std::shared_ptr<SpriteFont> SpriteFontLoader::Load(
     BitmapFontCommon common;
 
     std::string line;
-    while (std::getline(binaryFile.Stream, line))
-    {
+    while (std::getline(binaryFile.Stream, line)) {
         if (line.empty()) {
             continue;
         }
@@ -378,7 +371,7 @@ std::shared_ptr<SpriteFont> SpriteFontLoader::Load(
     std::vector<std::shared_ptr<Texture2D>> textures;
     {
         auto directoryName = std::get<0>(PathHelper::Split(assetName));
-        for (auto & page: pages) {
+        for (auto& page : pages) {
             textures.push_back(assets.Load<Texture2D>(directoryName + page.Path));
         }
     }

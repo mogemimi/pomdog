@@ -2,9 +2,9 @@
 
 #pragma once
 
+#include "Pomdog/Application/Duration.hpp"
 #include "Pomdog/Experimental/Particle2D/Particle.hpp"
 #include "Pomdog/Experimental/Particle2D/ParticleEmitter.hpp"
-#include "Pomdog/Application/Duration.hpp"
 #include <cstdint>
 #include <memory>
 #include <random>
@@ -37,7 +37,7 @@ public:
     void SetLoop(bool loop) noexcept { emitter.Looping = loop; }
 
 private:
-    enum class ParticleSystemState: std::uint8_t {
+    enum class ParticleSystemState : std::uint8_t {
         Paused,
         Playing,
         Stopped

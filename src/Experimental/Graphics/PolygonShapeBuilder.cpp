@@ -154,7 +154,7 @@ void PolygonShapeBuilder::DrawBox(
         Vector3(0.0f, 1.0f, 1.0f),
     };
 
-    for (auto & v : boxVertices) {
+    for (auto& v : boxVertices) {
         v = ((v - originPivot) * scale) + position;
     }
 
@@ -286,8 +286,8 @@ void PolygonShapeBuilder::DrawPolyline(
     ///@todo Please reimplementation this function:
 
     for (std::size_t i = 0; i + 1 < points.size(); ++i) {
-        auto & start = points[i];
-        auto & end = points[i + 1];
+        auto& start = points[i];
+        auto& end = points[i + 1];
 
         auto vec = end - start;
         std::swap(vec.X, vec.Y);
@@ -354,14 +354,14 @@ void PolygonShapeBuilder::DrawRectangle(
 }
 
 void PolygonShapeBuilder::DrawRectangle(
-        const Matrix3x2& matrix,
-        const Vector2& position,
-        float width,
-        float height,
-        const Color& color1,
-        const Color& color2,
-        const Color& color3,
-        const Color& color4)
+    const Matrix3x2& matrix,
+    const Vector2& position,
+    float width,
+    float height,
+    const Color& color1,
+    const Color& color2,
+    const Color& color3,
+    const Color& color4)
 {
     if (width <= 0 || height <= 0) {
         return;
@@ -377,7 +377,7 @@ void PolygonShapeBuilder::DrawRectangle(
         Vector3{right, position.Y, 0.0f},
     }};
 
-    for (auto & vertex: rectVertices) {
+    for (auto& vertex : rectVertices) {
         auto vec2 = Vector2::Transform(Vector2{vertex.X, vertex.Y}, matrix);
         vertex.X = vec2.X;
         vertex.Y = vec2.Y;

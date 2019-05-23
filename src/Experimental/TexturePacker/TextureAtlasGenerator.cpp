@@ -20,7 +20,8 @@ struct TexturePackNode {
 
     explicit TexturePackNode(const Rectangle& rectIn)
         : rect(rectIn)
-    {}
+    {
+    }
 };
 
 std::shared_ptr<TexturePackNode> Insert(
@@ -157,10 +158,10 @@ TextureAtlasGeneratorResult TextureAtlasGenerator::Generate(
     POMDOG_ASSERT(height > 0);
 
     TextureAtlasGeneratorResult result;
-    auto & regions = result.Atlas.regions;
+    auto& regions = result.Atlas.regions;
     std::unordered_map<std::shared_ptr<Image>, int> indices;
 
-    for (auto & source : sources) {
+    for (auto& source : sources) {
         POMDOG_ASSERT(!source.Name.empty());
         TextureAtlasRegion region;
         region.Name = source.Name;
@@ -174,17 +175,17 @@ TextureAtlasGeneratorResult TextureAtlasGenerator::Generate(
 
     auto root = std::make_shared<TexturePackNode>(Rectangle{0, 0, width, height});
 
-    for (auto & source : sources) {
-        auto & image = source.Image;
+    for (auto& source : sources) {
+        auto& image = source.Image;
         auto clipBounds = Clip(image);
         auto node = Insert(root, clipBounds.Width, clipBounds.Height);
         POMDOG_ASSERT(node);
         if (!node) {
             // TODO: error handling
             result.HasError = true;
-        #if defined(DEBUG)
+#if defined(DEBUG)
             std::printf("Cannot pack the texture '%s'", regions[indices[image]].Name.c_str());
-        #endif
+#endif
             break;
         }
         node->image = image;
@@ -196,7 +197,7 @@ TextureAtlasGeneratorResult TextureAtlasGenerator::Generate(
 
     Traverse(root, [&](const TexturePackNode& node) {
         const auto image = node.image;
-        auto & region = regions[indices[image]].Region;
+        auto& region = regions[indices[image]].Region;
         region.Subrect.X = static_cast<int>(node.rect.X);
         region.Subrect.Y = static_cast<int>(node.rect.Y);
         region.Subrect.Width = node.clipBounds.Width;

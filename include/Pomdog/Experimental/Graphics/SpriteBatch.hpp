@@ -36,7 +36,7 @@ class POMDOG_EXPORT SpriteBatch final {
 public:
     SpriteBatch(
         const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-        AssetManager & assets);
+        AssetManager& assets);
 
     SpriteBatch(
         const std::shared_ptr<GraphicsDevice>& graphicsDevice,
@@ -44,7 +44,7 @@ public:
         std::optional<SamplerDescription>&& samplerDesc,
         std::optional<SurfaceFormat>&& renderTargetViewFormat,
         std::optional<DepthFormat>&& depthStencilViewFormat,
-        AssetManager & assets);
+        AssetManager& assets);
 
     SpriteBatch() = delete;
     SpriteBatch(const SpriteBatch&) = delete;

@@ -1,16 +1,16 @@
 // Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Experimental/Graphics/TrueTypeFont.hpp"
-#include "Pomdog/Experimental/Graphics/FontGlyph.hpp"
-#include "Pomdog/Experimental/Graphics/SpriteFont.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
+#include "Pomdog/Experimental/Graphics/FontGlyph.hpp"
+#include "Pomdog/Experimental/Graphics/SpriteFont.hpp"
 #include "Pomdog/Math/Point2D.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
+#include <locale>
 #include <utility>
 #include <vector>
-#include <locale>
 
 #if defined(__clang__)
 #pragma clang diagnostic push
@@ -85,14 +85,14 @@ std::optional<FontGlyph> TrueTypeFont::RasterizeGlyph(
     char32_t codePoint,
     float pixelHeight,
     int textureWidth,
-    const std::function<void(int width, int height, Point2D & point, std::uint8_t* & output)>& callback)
+    const std::function<void(int width, int height, Point2D& point, std::uint8_t*& output)>& callback)
 {
     if (impl->ttfBinary.empty()) {
         // error
         return std::nullopt;
     }
 
-    const auto & f = impl->fontInfo;
+    const auto& f = impl->fontInfo;
 
     const float scale = stbtt_ScaleForPixelHeight(&f, pixelHeight);
 

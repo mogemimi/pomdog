@@ -13,7 +13,7 @@ public:
     virtual ~ImageEffectPreRenderable() = default;
 
     virtual void PreRender(
-        GraphicsCommandList & commandList,
+        GraphicsCommandList& commandList,
         const std::shared_ptr<ConstantBuffer>& constantBuffer,
         const std::function<void()>& draw) = 0;
 };
@@ -23,7 +23,7 @@ public:
     virtual ~ImageEffectBase() = default;
 
     virtual void Apply(
-        GraphicsCommandList & commandList,
+        GraphicsCommandList& commandList,
         const std::shared_ptr<RenderTarget2D>& source,
         const std::shared_ptr<ConstantBuffer>& constantBuffer) = 0;
 };

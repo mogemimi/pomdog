@@ -32,7 +32,7 @@ namespace {
 
 SepiaToneEffect::SepiaToneEffect(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-    AssetManager & assets)
+    AssetManager& assets)
 {
     samplerLinear = std::make_shared<SamplerState>(
         graphicsDevice, SamplerDescription::CreateLinearWrap());
@@ -64,7 +64,7 @@ SepiaToneEffect::SepiaToneEffect(
         .Build();
 }
 
-void SepiaToneEffect::Apply(GraphicsCommandList & commandList,
+void SepiaToneEffect::Apply(GraphicsCommandList& commandList,
     std::shared_ptr<RenderTarget2D> const& source,
     std::shared_ptr<ConstantBuffer> const& constantBuffer)
 {

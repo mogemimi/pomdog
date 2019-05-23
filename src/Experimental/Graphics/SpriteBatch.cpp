@@ -137,7 +137,7 @@ public:
         std::optional<SamplerDescription>&& samplerState,
         std::optional<SurfaceFormat>&& renderTargetViewFormat,
         std::optional<DepthFormat>&& depthStencilViewFormat,
-        AssetManager & assets);
+        AssetManager& assets);
 
     void Begin(
         const std::shared_ptr<GraphicsCommandList>& commandListIn,
@@ -171,7 +171,7 @@ SpriteBatch::Impl::Impl(
     std::optional<SamplerDescription>&& samplerDesc,
     std::optional<SurfaceFormat>&& renderTargetViewFormat,
     std::optional<DepthFormat>&& depthStencilViewFormat,
-    AssetManager & assets)
+    AssetManager& assets)
     : startInstanceLocation(0)
     , drawCallCount(0)
 {
@@ -459,7 +459,7 @@ void SpriteBatch::Impl::Draw(
 
 SpriteBatch::SpriteBatch(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-    AssetManager & assets)
+    AssetManager& assets)
     : SpriteBatch(
         graphicsDevice,
         std::nullopt,
@@ -476,7 +476,7 @@ SpriteBatch::SpriteBatch(
     std::optional<SamplerDescription>&& samplerDesc,
     std::optional<SurfaceFormat>&& renderTargetViewFormat,
     std::optional<DepthFormat>&& depthStencilViewFormat,
-    AssetManager & assets)
+    AssetManager& assets)
     : impl(std::make_unique<Impl>(
         graphicsDevice,
         std::move(blendDesc),

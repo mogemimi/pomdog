@@ -2,10 +2,10 @@
 
 #pragma once
 
+#include "Pomdog/Application/Duration.hpp"
 #include "Pomdog/Experimental/Particle2D/Beam.hpp"
 #include "Pomdog/Experimental/Particle2D/BeamBranching.hpp"
 #include "Pomdog/Experimental/Particle2D/BeamEmitter.hpp"
-#include "Pomdog/Application/Duration.hpp"
 #include "Pomdog/Math/Vector2.hpp"
 #include <cstdint>
 #include <random>

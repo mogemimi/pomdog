@@ -120,7 +120,7 @@ std::optional<GifImage> GifLoader::Open(const std::string& filePath)
                 GifColorType& colorFromMap =
                     colorMap->Colors[colorIndex];
 
-                bool isTransparent = [&]{
+                bool isTransparent = [&] {
                     if (!hasGCB) {
                         return false;
                     }

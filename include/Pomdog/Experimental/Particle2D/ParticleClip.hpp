@@ -2,10 +2,10 @@
 
 #pragma once
 
+#include "Pomdog/Application/Duration.hpp"
+#include "Pomdog/Experimental/Particle2D/ParticleEmitter.hpp"
 #include "Pomdog/Experimental/Particle2D/detail/ParticleEmitterShape.hpp"
 #include "Pomdog/Experimental/Particle2D/detail/ParticleParameter.hpp"
-#include "Pomdog/Experimental/Particle2D/ParticleEmitter.hpp"
-#include "Pomdog/Application/Duration.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Radian.hpp"
 #include <cstdint>

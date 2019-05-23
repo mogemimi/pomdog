@@ -16,14 +16,14 @@ Image::Image(int widthIn, int heightIn)
     data.resize(width * height);
 }
 
-Image::Image(Image && other)
+Image::Image(Image&& other)
 {
     data = std::move(other.data);
     width = other.width;
     height = other.height;
 }
 
-Image & Image::operator=(Image && other)
+Image& Image::operator=(Image&& other)
 {
     data = std::move(other.data);
     width = other.width;
@@ -52,7 +52,7 @@ void Image::SetData(const Color* pixelData)
     std::memcpy(data.data(), pixelData, data.size());
 }
 
-void Image::SetData(std::vector<Color> && pixelData)
+void Image::SetData(std::vector<Color>&& pixelData)
 {
     POMDOG_ASSERT(!pixelData.empty());
     POMDOG_ASSERT(data.size() == pixelData.size());
@@ -87,14 +87,14 @@ void Image::SetPixel(int x, int y, const Color& color)
     data[index] = color;
 }
 
-void Image::Fill(const Color &color)
+void Image::Fill(const Color& color)
 {
     std::fill(std::begin(data), std::end(data), color);
 }
 
 void Image::PremultiplyAlpha()
 {
-    for (auto & pixel : data) {
+    for (auto& pixel : data) {
         const auto alpha = pixel.A;
         pixel = Color::Multiply(pixel, static_cast<float>(alpha) / 255.0f);
         pixel.A = alpha;

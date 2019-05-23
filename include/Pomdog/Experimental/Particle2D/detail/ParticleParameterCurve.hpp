@@ -21,7 +21,7 @@ std::pair<ForwardIterator, ForwardIterator> BinarySearchNearestPoints(ForwardIte
     POMDOG_ASSERT(first != last);
 
     auto it = std::lower_bound(first, last, value,
-        [](const KeyType& a, const KeyType& b){ return a.TimeSeconds < b.TimeSeconds; });
+        [](const KeyType& a, const KeyType& b) { return a.TimeSeconds < b.TimeSeconds; });
 
     if (it == last) {
         return std::make_pair(std::prev(last), std::prev(last));
@@ -51,7 +51,7 @@ public:
         using CurveKeyType = ParticleCurveKey<T>;
 
         POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys),
-            [](const CurveKeyType& a, const CurveKeyType& b){ return a.TimeSeconds < b.TimeSeconds; }));
+            [](const CurveKeyType& a, const CurveKeyType& b) { return a.TimeSeconds < b.TimeSeconds; }));
         POMDOG_ASSERT(std::find_if(std::begin(keys), std::end(keys),
             [](const CurveKeyType& p){ return p.TimeSeconds < 0 || p.TimeSeconds > 1; }) == std::end(keys));
 #endif
@@ -76,7 +76,7 @@ public:
         auto frameTime = pair.second->TimeSeconds - pair.first->TimeSeconds;
 
         POMDOG_ASSERT(frameTime != 0.0f);
-        auto amount =  diffTime / frameTime;
+        auto amount = diffTime / frameTime;
 
         using Detail::Particles::ParticleCurveLerp;
         return ParticleCurveLerp<T>()(pair.first->Value, pair.second->Value, amount);

@@ -2,20 +2,20 @@
 
 #include "Pomdog/Experimental/Graphics/SpriteFont.hpp"
 #include "Pomdog/Experimental/Graphics/FontGlyph.hpp"
-#include "Pomdog/Experimental/Graphics/TrueTypeFont.hpp"
 #include "Pomdog/Experimental/Graphics/SpriteBatch.hpp"
+#include "Pomdog/Experimental/Graphics/TrueTypeFont.hpp"
+#include "Pomdog/Graphics/Texture2D.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Matrix3x2.hpp"
 #include "Pomdog/Math/Matrix4x4.hpp"
 #include "Pomdog/Math/Point2D.hpp"
+#include "Pomdog/Math/Radian.hpp"
 #include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Math/Vector3.hpp"
-#include "Pomdog/Math/Radian.hpp"
-#include "Pomdog/Graphics/Texture2D.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include <utfcpp/source/utf8.h>
 #include <algorithm>
 #include <unordered_map>
-#include <utfcpp/source/utf8.h>
 
 namespace Pomdog {
 namespace {
@@ -56,7 +56,7 @@ public:
     float fontSize;
 
     Impl(
-        std::vector<std::shared_ptr<Texture2D>> && textures,
+        std::vector<std::shared_ptr<Texture2D>>&& textures,
         const std::vector<FontGlyph>& glyphs,
         float spacing,
         float lineSpacing);
@@ -96,7 +96,7 @@ constexpr int SpriteFont::Impl::TextureWidth;
 constexpr int SpriteFont::Impl::TextureHeight;
 
 SpriteFont::Impl::Impl(
-    std::vector<std::shared_ptr<Texture2D>> && texturesIn,
+    std::vector<std::shared_ptr<Texture2D>>&& texturesIn,
     const std::vector<FontGlyph>& glyphsIn,
     float spacingIn,
     float lineSpacingIn)
@@ -106,7 +106,7 @@ SpriteFont::Impl::Impl(
     , fontSize(0)
     , textures(std::move(texturesIn))
 {
-    for (auto & glyph: glyphsIn) {
+    for (auto& glyph : glyphsIn) {
         spriteFontMap.emplace(glyph.Character, glyph);
     }
 }
@@ -343,7 +343,7 @@ void SpriteFont::Impl::Draw(
 // MARK: - SpriteFont
 
 SpriteFont::SpriteFont(
-    std::vector<std::shared_ptr<Texture2D>> && textures,
+    std::vector<std::shared_ptr<Texture2D>>&& textures,
     const std::vector<FontGlyph>& glyphs,
     float spacing,
     float lineSpacing)

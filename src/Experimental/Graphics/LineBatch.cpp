@@ -67,7 +67,7 @@ private:
 public:
     Impl(
         const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-        AssetManager & assets);
+        AssetManager& assets);
 
     void Begin(
         const std::shared_ptr<GraphicsCommandList>& commandListIn,
@@ -92,7 +92,7 @@ public:
 
 LineBatch::Impl::Impl(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-    AssetManager & assets)
+    AssetManager& assets)
 {
     vertices.reserve(MinVertexCount);
     {
@@ -215,7 +215,7 @@ void LineBatch::Impl::DrawTriangle(
 
 LineBatch::LineBatch(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-    AssetManager & assets)
+    AssetManager& assets)
     : impl(std::make_unique<Impl>(graphicsDevice, assets))
 {
 }
@@ -268,7 +268,7 @@ void LineBatch::DrawBox(
         Vector3{1.0f, 1.0f, 1.0f},
     };
 
-    for (auto & v : boxVertices) {
+    for (auto& v : boxVertices) {
         v = ((v - originPivot) * scale) + position;
     }
 
@@ -402,7 +402,7 @@ void LineBatch::DrawRectangle(const Matrix3x2& matrix,
         Vector2{static_cast<float>(sourceRect.GetRight()), static_cast<float>(sourceRect.Y - sourceRect.Height)},
     }};
 
-    for (auto & vertex: rectVertices) {
+    for (auto& vertex : rectVertices) {
         vertex = Vector2::Transform(vertex, matrix);
     }
 
@@ -456,7 +456,7 @@ void LineBatch::DrawSphere(
     sphereVertices.push_back(Vector3{0.0f, -1.0f, 0.0f});
 
     // Scaling and translation
-    for (auto & v : sphereVertices) {
+    for (auto& v : sphereVertices) {
         v = v * radius + position;
     }
 

@@ -62,7 +62,7 @@ public:
 public:
     Impl(
         const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-        AssetManager & assets);
+        AssetManager& assets);
 
     void Begin(
         const std::shared_ptr<GraphicsCommandList>& commandListIn,
@@ -79,7 +79,7 @@ public:
 
 PrimitiveBatch::Impl::Impl(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-    AssetManager & assets)
+    AssetManager& assets)
     : startVertexLocation(0)
     , drawCallCount(0)
 {
@@ -175,7 +175,7 @@ void PrimitiveBatch::Impl::Flush()
 
 PrimitiveBatch::PrimitiveBatch(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-    AssetManager & assets)
+    AssetManager& assets)
     : impl(std::make_unique<Impl>(graphicsDevice, assets))
 {
 }

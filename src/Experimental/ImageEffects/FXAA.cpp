@@ -31,7 +31,7 @@ namespace {
 
 FXAA::FXAA(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-    AssetManager & assets)
+    AssetManager& assets)
 {
     samplerLinear = std::make_shared<SamplerState>(
         graphicsDevice, SamplerDescription::CreateLinearClamp());
@@ -63,7 +63,7 @@ FXAA::FXAA(
         .Build();
 }
 
-void FXAA::Apply(GraphicsCommandList & commandList,
+void FXAA::Apply(GraphicsCommandList& commandList,
     std::shared_ptr<RenderTarget2D> const& source,
     std::shared_ptr<ConstantBuffer> const& constantBuffer)
 {
