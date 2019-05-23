@@ -10,22 +10,22 @@
 namespace Pomdog {
 namespace Detail {
 
-struct ShaderModel {
+struct ShaderModel final {
     std::uint8_t Major;
     std::uint8_t Minor;
 };
 
-struct ShaderProfile {
+struct ShaderProfile final {
     Pomdog::Detail::ShaderModel ShaderModel;
     ShaderPipelineStage PipelineStage;
 };
 
-struct ShaderMacro {
+struct ShaderMacro final {
     std::string Name;
     std::string Definition;
 };
 
-struct ShaderCompileOptions {
+struct ShaderCompileOptions final {
     std::string EntryPoint;
     std::string CurrentDirectory;
     std::vector<ShaderMacro> PreprocessorMacros;

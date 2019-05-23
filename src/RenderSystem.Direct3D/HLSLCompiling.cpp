@@ -52,7 +52,7 @@ std::string ToString(const ShaderProfile& profile)
     return std::move(output);
 }
 
-class HLSLCodeInclude : public ID3DInclude {
+class HLSLCodeInclude final : public ID3DInclude {
 private:
     std::string currentDirectory;
     std::vector<std::uint8_t> outputSource;

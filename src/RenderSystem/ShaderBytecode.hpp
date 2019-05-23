@@ -7,7 +7,7 @@
 namespace Pomdog {
 namespace Detail {
 
-class ShaderBytecode {
+class ShaderBytecode final {
 public:
     const void* Code = nullptr;
     std::size_t ByteLength = 0;

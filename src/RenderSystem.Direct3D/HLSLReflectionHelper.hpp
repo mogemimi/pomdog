@@ -9,7 +9,7 @@ namespace Pomdog {
 namespace Detail {
 namespace Direct3D {
 
-struct HLSLReflectionHelper {
+struct HLSLReflectionHelper final {
     static EffectVariableType
     ToEffectVariableType(D3D_SHADER_VARIABLE_TYPE variableType) noexcept;
 

@@ -21,7 +21,7 @@ namespace GL4 {
 
 class InputLayoutGL4;
 
-struct TextureBindingGL4 {
+struct TextureBindingGL4 final {
     GLint UniformLocation;
     std::uint16_t SlotIndex;
 };

@@ -24,7 +24,7 @@ struct VertexArrayTag {};
 using ScalarTypeGL4 = Tagged<GLuint, Tags::ScalarDataTypeTag>;
 using VertexArrayGL4 = Tagged<GLuint, Tags::VertexArrayTag>;
 
-struct InputElementGL4 {
+struct InputElementGL4 final {
     GLuint AttributeLocation;
 
     // Input element offset.
@@ -43,7 +43,7 @@ struct InputElementGL4 {
     bool IsInteger = false;
 };
 
-struct VertexDeclarationGL4 {
+struct VertexDeclarationGL4 final {
     GLsizei StrideBytes;
 };
 
