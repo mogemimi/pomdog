@@ -143,12 +143,12 @@ TEST_CASE("Disconnect", "[ConnectionList]")
             auto slot = [&](int n){ integers.push_back(n); };
             connection = connect(valueChanged, slot);
 
-            REQUIRE(connection);
+            REQUIRE(connection.IsConnected());
             valueChanged(42);
             valueChanged(43);
-            REQUIRE(connection);
+            REQUIRE(connection.IsConnected());
         }
-        REQUIRE_FALSE(connection);
+        REQUIRE_FALSE(connection.IsConnected());
         valueChanged(44);
 
         REQUIRE(integers.size() == 2);

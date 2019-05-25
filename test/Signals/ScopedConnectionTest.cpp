@@ -20,9 +20,13 @@ TEST_CASE("ScopeGuard", "[ScopedConnection]")
             ScopedConnection connection;
             auto slot = [&](int n){ integers.push_back(n); };
             connection = valueChanged.Connect(slot);
+            REQUIRE(connection.IsConnected());
 
             valueChanged(42);
+            REQUIRE(connection.IsConnected());
+
             valueChanged(43);
+            REQUIRE(connection.IsConnected());
         }
         valueChanged(44);
 
@@ -38,11 +42,17 @@ TEST_CASE("ScopeGuard", "[ScopedConnection]")
 
         auto slot = [&](int n){ integers.push_back(n); };
         connection = valueChanged.Connect(slot);
+        REQUIRE(connection.IsConnected());
 
         valueChanged(42);
+        REQUIRE(connection.IsConnected());
+
         valueChanged(43);
+        REQUIRE(connection.IsConnected());
+
         connection.Disconnect();
         valueChanged(44);
+        REQUIRE_FALSE(connection.IsConnected());
 
         REQUIRE(integers.size() == 2);
         REQUIRE(integers[0] == 42);
@@ -54,16 +64,33 @@ TEST_CASE("ScopeGuard", "[ScopedConnection]")
         std::vector<int> integers;
 
         ScopedConnection connection1;
+        REQUIRE_FALSE(connection1.IsConnected());
+
         {
             auto slot = [&](int n){ integers.push_back(n); };
             ScopedConnection connection2 = valueChanged.Connect(slot);
+            REQUIRE_FALSE(connection1.IsConnected());
+            REQUIRE(connection2.IsConnected());
+
             valueChanged(42);
+            REQUIRE_FALSE(connection1.IsConnected());
+            REQUIRE(connection2.IsConnected());
+
             connection1 = std::move(connection2);
+            REQUIRE(connection1.IsConnected());
+            REQUIRE_FALSE(connection2.IsConnected());
+
             valueChanged(43);
         }
 
+        REQUIRE(connection1.IsConnected());
+
         valueChanged(44);
+        REQUIRE(connection1.IsConnected());
+
         connection1.Disconnect();
+        REQUIRE_FALSE(connection1.IsConnected());
+
         valueChanged(45);
 
         REQUIRE(integers.size() == 3);

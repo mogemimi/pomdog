@@ -39,4 +39,9 @@ void ScopedConnection::Disconnect()
     connection.Disconnect();
 }
 
+bool ScopedConnection::IsConnected() const
+{
+    return connection.IsConnected();
+}
+
 } // namespace Pomdog

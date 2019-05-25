@@ -22,16 +22,16 @@ TEST_CASE("helpers for Signals", "[Signals]")
         });
 
         REQUIRE(result.empty());
-        REQUIRE(connection);
+        REQUIRE(connection.IsConnected());
 
         nameChanged("chuck");
         REQUIRE(result.size() == 1);
         REQUIRE(result.back() == "chuck");
-        REQUIRE_FALSE(connection);
+        REQUIRE_FALSE(connection.IsConnected());
 
         nameChanged("norris");
         REQUIRE(result.size() == 1);
-        REQUIRE_FALSE(connection);
+        REQUIRE_FALSE(connection.IsConnected());
     }
     SECTION("ConnectSingleShot Disconnect")
     {
@@ -43,17 +43,17 @@ TEST_CASE("helpers for Signals", "[Signals]")
         });
 
         REQUIRE(result.empty());
-        REQUIRE(connection);
+        REQUIRE(connection.IsConnected());
 
         connection.Disconnect();
-        REQUIRE_FALSE(connection);
+        REQUIRE_FALSE(connection.IsConnected());
 
         nameChanged("chuck");
         REQUIRE(result.empty());
-        REQUIRE_FALSE(connection);
+        REQUIRE_FALSE(connection.IsConnected());
 
         nameChanged("norris");
         REQUIRE(result.empty());
-        REQUIRE_FALSE(connection);
+        REQUIRE_FALSE(connection.IsConnected());
     }
 }

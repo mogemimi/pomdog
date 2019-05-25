@@ -24,17 +24,17 @@ Connection & Connection::operator=(const Connection& connection)
     return *this;
 }
 
-Connection::operator bool() const noexcept
-{
-    return body && body->Valid();
-}
-
 void Connection::Disconnect()
 {
     if (body) {
         body->Disconnect();
         body.reset();
     }
+}
+
+bool Connection::IsConnected() const noexcept
+{
+    return body && body->Valid();
 }
 
 } // namespace Pomdog
