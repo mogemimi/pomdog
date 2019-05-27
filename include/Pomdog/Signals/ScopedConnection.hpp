@@ -29,6 +29,8 @@ public:
     ScopedConnection& operator=(Connection&& c);
 
     void Disconnect();
+
+    bool IsConnected() const;
 };
 
 } // namespace Pomdog

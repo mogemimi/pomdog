@@ -26,9 +26,9 @@ public:
     Connection& operator=(const Connection& connection);
     Connection& operator=(Connection&& connection) = default;
 
-    operator bool() const noexcept;
-
     void Disconnect();
+
+    bool IsConnected() const noexcept;
 };
 
 } // namespace Pomdog
