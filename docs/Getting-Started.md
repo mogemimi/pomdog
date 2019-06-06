@@ -11,7 +11,7 @@
 2. Make sure that submodules are checked out and up-to-date:
 
     ```shell
-    git submodule update --init
+    git submodule update --init --recursive
     ```
 
 ## Create a new project
@@ -26,7 +26,7 @@ e.g.
 
 ```sh
 $ git clone https://github.com/mogemimi/pomdog.git && cd pomdog
-$ git submodule update --init
+$ git submodule update --init --recursive
 $ cd ..
 $ go run pomdog/tools/quickstart/main.go
 > Where is a Pomdog directory? (e.g. path/to/pomdog) ./pomdog
