@@ -32,7 +32,7 @@ Please refer to [Architecture](https://github.com/mogemimi/pomdog/wiki/Architect
 2. Make sure that submodules are checked out and up-to-date:
 
     ```shell
-    git submodule update --init
+    git submodule update --init --recursive
     ```
 
 3. To generate all project files (.xcodeproj or .vcxproj), run the following command:

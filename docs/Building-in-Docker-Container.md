@@ -25,7 +25,7 @@ To build your Linux application with Pomdog inside Docker container, run the fol
 
     ```sh
     git clone https://github.com/mogemimi/pomdog.git && cd pomdog
-    git submodule update --init
+    git submodule update --init --recursive
     ```
 
 4. Building and running test

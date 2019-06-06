@@ -5,14 +5,14 @@ environment:
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
 
-# shallow_clone: true
 clone_depth: 15
 
 init:
   - git config --global core.autocrlf input
 
 install:
-  - git submodule update --init --quiet
+  - git submodule update --init
+  - git submodule update --init --recursive dependencies/mbedtls
 
 before_build:
   - mkdir build.cmake && cd build.cmake

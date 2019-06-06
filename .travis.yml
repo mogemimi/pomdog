@@ -6,7 +6,8 @@ compiler:
   - clang
 
 install:
-  - git submodule update --init --depth 1
+  - git submodule update --init
+  - git submodule update --init --recursive dependencies/mbedtls
 
 env:
   matrix:

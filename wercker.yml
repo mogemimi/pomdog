@@ -5,7 +5,9 @@ build:
   steps:
     - script:
       name: clone third party libraries
-      code: git submodule update --init
+      code: |
+        git submodule update --init
+        git submodule update --init --recursive dependencies/mbedtls
 
 build-clang-debug:
   box: mogemimi/gamedev-ubuntu
