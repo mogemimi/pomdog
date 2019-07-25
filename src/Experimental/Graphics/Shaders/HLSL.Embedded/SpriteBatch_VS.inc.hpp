@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
+// Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
 constexpr uint8_t BuiltinHLSL_SpriteBatch_VS[] = {
     68,  88,  66,  67,  50,  87,  147, 123, 181, 144, 171, 0,   122, 97,  58,

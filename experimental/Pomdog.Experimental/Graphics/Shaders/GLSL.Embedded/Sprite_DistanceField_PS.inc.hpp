@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
+// Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
 constexpr auto Builtin_GLSL_Sprite_DistanceField_PS = R"(
 #version 330
