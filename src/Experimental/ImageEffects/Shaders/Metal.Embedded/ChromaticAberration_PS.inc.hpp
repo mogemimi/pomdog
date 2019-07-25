@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
+// Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
 constexpr auto Builtin_Metal_ChromaticAberration_PS = R"(
 #include <metal_stdlib>

@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
+// Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
 #include "ParticleLoader.hpp"
 // #include "Pomdog/Experimental/Particle2D/detail/ParticleCurveKey.hpp"

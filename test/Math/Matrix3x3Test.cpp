@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2018 mogemimi. Distributed under the MIT license.
+// Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Math/Matrix3x3.hpp"
 #include "Pomdog/Math/Vector2.hpp"
