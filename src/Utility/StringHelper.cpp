@@ -7,7 +7,7 @@
 
 namespace Pomdog {
 
-bool StringHelper::HasPrefix(const std::string& s, const std::string& prefix)
+bool StringHelper::HasPrefix(const std::string_view& s, const std::string_view& prefix)
 {
     if (s.size() < prefix.size()) {
         return false;
@@ -15,7 +15,7 @@ bool StringHelper::HasPrefix(const std::string& s, const std::string& prefix)
     return (s.compare(0, prefix.size(), prefix) == 0);
 }
 
-bool StringHelper::HasSuffix(const std::string& s, const std::string& suffix)
+bool StringHelper::HasSuffix(const std::string_view& s, const std::string_view& suffix)
 {
     if (suffix.empty()) {
         return true;
@@ -26,41 +26,65 @@ bool StringHelper::HasSuffix(const std::string& s, const std::string& suffix)
     return (s.compare(s.size() - suffix.size(), suffix.size(), suffix) == 0);
 }
 
-std::string StringHelper::TrimRight(const std::string& source, char separator)
+std::string_view
+StringHelper::TrimRight(const std::string_view& source, char separator)
 {
-    const auto func = [&](char c) { return c != separator; };
-    std::string result(
-        std::begin(source), std::find_if(std::rbegin(source), std::rend(source), func).base());
-    return result;
+    auto v = source;
+    auto pos = v.find_last_not_of(separator);
+    if (pos != v.npos) {
+        POMDOG_ASSERT(v.size() >= (pos + 1));
+        v.remove_suffix(v.size() - (pos + 1));
+    }
+    else {
+        v.remove_suffix(v.size());
+    }
+    return v;
 }
 
-std::string StringHelper::TrimLeft(const std::string& source, char separator)
+std::string_view
+StringHelper::TrimLeft(const std::string_view& source, char separator)
 {
-    const auto func = [&](char c) { return c != separator; };
-    std::string result(std::find_if(std::begin(source), std::end(source), func), std::end(source));
-    return result;
+    auto v = source;
+    v.remove_prefix(std::min(v.find_first_not_of(separator), v.size()));
+    return v;
 }
 
-std::string
-StringHelper::TrimRight(const std::string& source, std::function<bool(char)> isSeparator)
+std::string_view
+StringHelper::TrimRight(const std::string_view& source, std::function<bool(char)> isSeparator)
 {
     auto func = std::not_fn(std::move(isSeparator));
-    std::string result(
-        std::begin(source), std::find_if(std::rbegin(source), std::rend(source), func).base());
-    return result;
+    auto v = source;
+    auto iter = std::find_if(std::rbegin(v), std::rend(v), func);
+    if (iter != std::rend(v)) {
+        auto pos = std::distance(std::rbegin(v), iter);
+        v.remove_suffix(pos);
+    }
+    else {
+        v.remove_suffix(v.size());
+    }
+    return v;
 }
 
-std::string StringHelper::TrimLeft(const std::string& source, std::function<bool(char)> isSeparator)
+std::string_view
+StringHelper::TrimLeft(const std::string_view& source, std::function<bool(char)> isSeparator)
 {
     auto func = std::not_fn(std::move(isSeparator));
-    std::string result(std::find_if(std::begin(source), std::end(source), func), std::end(source));
-    return result;
+    auto v = source;
+    auto iter = std::find_if(std::begin(source), std::end(source), func);
+    if (iter != std::end(v)) {
+        auto pos = std::distance(std::begin(v), iter);
+        v.remove_prefix(pos);
+    }
+    else {
+        v.remove_prefix(v.size());
+    }
+    return v;
 }
 
-std::vector<std::string>
-StringHelper::Split(const std::string& source, char separator)
+std::vector<std::string_view>
+StringHelper::Split(const std::string_view& source, char separator)
 {
-    std::vector<std::string> tokens;
+    std::vector<std::string_view> tokens;
     std::string::size_type start = 0;
     std::string::size_type end = 0;
     while ((end = source.find(separator, start)) != std::string::npos) {
@@ -71,10 +95,10 @@ StringHelper::Split(const std::string& source, char separator)
     return tokens;
 }
 
-std::vector<std::string>
-StringHelper::Split(const std::string& source, const std::string& separator)
+std::vector<std::string_view>
+StringHelper::Split(const std::string_view& source, const std::string_view& separator)
 {
-    std::vector<std::string> tokens;
+    std::vector<std::string_view> tokens;
     std::string::size_type start = 0;
     std::string::size_type end = 0;
     while ((end = source.find(separator, start)) != std::string::npos) {
