@@ -55,7 +55,8 @@ std::optional<std::string> IncludeGLSLFilesRecursive(
 
     auto lines = StringHelper::Split(text, '\n');
     text.clear();
-    for (const auto& line : lines) {
+    for (const auto& lineView : lines) {
+        std::string line{lineView};
         std::regex includeRegex(R"(\s*#\s*include\s+\"([\w\.\/\\]+)\")");
         std::smatch match;
 
