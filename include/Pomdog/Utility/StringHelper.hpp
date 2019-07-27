@@ -5,36 +5,37 @@
 #include "Pomdog/Basic/Export.hpp"
 #include <functional>
 #include <string>
+#include <string_view>
 #include <vector>
 
 namespace Pomdog {
 namespace StringHelper {
 
 POMDOG_EXPORT
-bool HasPrefix(const std::string& s, const std::string& prefix);
+bool HasPrefix(const std::string_view& s, const std::string_view& prefix);
 
 POMDOG_EXPORT
-bool HasSuffix(const std::string& s, const std::string& suffix);
+bool HasSuffix(const std::string_view& s, const std::string_view& suffix);
 
 POMDOG_EXPORT
-std::string TrimRight(const std::string& source, char separator);
+std::string_view TrimRight(const std::string_view& source, char separator);
 
 POMDOG_EXPORT
-std::string TrimLeft(const std::string& source, char separator);
+std::string_view TrimLeft(const std::string_view& source, char separator);
 
 POMDOG_EXPORT
-std::string TrimRight(const std::string& source, std::function<bool(char)> isSeparator);
+std::string_view TrimRight(const std::string_view& source, std::function<bool(char)> isSeparator);
 
 POMDOG_EXPORT
-std::string TrimLeft(const std::string& source, std::function<bool(char)> isSeparator);
+std::string_view TrimLeft(const std::string_view& source, std::function<bool(char)> isSeparator);
 
 POMDOG_EXPORT
-std::vector<std::string>
-Split(const std::string& source, char separator);
+std::vector<std::string_view>
+Split(const std::string_view& source, char separator);
 
 POMDOG_EXPORT
-std::vector<std::string>
-Split(const std::string& source, const std::string& separator);
+std::vector<std::string_view>
+Split(const std::string_view& source, const std::string_view& separator);
 
 POMDOG_EXPORT
 std::string Format(const char* format, ...)
