@@ -9,6 +9,7 @@
 #include "Pomdog/Utility/StringHelper.hpp"
 #include <algorithm>
 #include <array>
+#include <charconv>
 #include <unordered_map>
 #include <utility>
 
@@ -99,7 +100,11 @@ void ParseMapping(const char* source, GamepadMappings& mappings, std::string& na
         }
 
         if (index[0] == 'b') {
-            int i = std::atoi(StringHelper::TrimLeft(index, 'b').c_str());
+            auto s = StringHelper::TrimLeft(index, 'b');
+            int i = 0;
+            if (auto[p, err] = std::from_chars(s.data(), s.data() + s.size(), i); err != std::errc{}) {
+                i = -1;
+            }
             if ((i >= 0) && (i < static_cast<int>(mappings.buttons.size()))) {
                 mappings.buttons[i] = std::get<ButtonKind>(kind->second);
             }
@@ -107,7 +112,10 @@ void ParseMapping(const char* source, GamepadMappings& mappings, std::string& na
         else if (index[0] == 'a') {
             auto s = StringHelper::TrimRight(index, '~');
             s = StringHelper::TrimLeft(s, 'a');
-            int i = std::atoi(s.c_str());
+            int i = 0;
+            if (auto[p, err] = std::from_chars(s.data(), s.data() + s.size(), i); err != std::errc{}) {
+                i = -1;
+            }
             if ((i >= 0) && (i < static_cast<int>(mappings.axes.size()))) {
                 mappings.axes[i].thumbStick = std::get<ThumbStickKind>(kind->second);
                 mappings.axes[i].positiveTrigger = std::get<ButtonKind>(kind->second);
@@ -117,7 +125,10 @@ void ParseMapping(const char* source, GamepadMappings& mappings, std::string& na
             auto s = StringHelper::TrimRight(index, '~');
             s = StringHelper::TrimLeft(s, '+');
             s = StringHelper::TrimLeft(s, 'a');
-            int i = std::atoi(s.c_str());
+            int i = 0;
+            if (auto[p, err] = std::from_chars(s.data(), s.data() + s.size(), i); err != std::errc{}) {
+                i = -1;
+            }
             if ((i >= 0) && (i < static_cast<int>(mappings.axes.size()))) {
                 mappings.axes[i].positiveTrigger = std::get<ButtonKind>(kind->second);
             }
@@ -126,7 +137,10 @@ void ParseMapping(const char* source, GamepadMappings& mappings, std::string& na
             auto s = StringHelper::TrimRight(index, '~');
             s = StringHelper::TrimLeft(s, '-');
             s = StringHelper::TrimLeft(s, 'a');
-            int i = std::atoi(s.c_str());
+            int i = 0;
+            if (auto[p, err] = std::from_chars(s.data(), s.data() + s.size(), i); err != std::errc{}) {
+                i = -1;
+            }
             if ((i >= 0) && (i < static_cast<int>(mappings.axes.size()))) {
                 mappings.axes[i].negativeTrigger = std::get<ButtonKind>(kind->second);
             }
