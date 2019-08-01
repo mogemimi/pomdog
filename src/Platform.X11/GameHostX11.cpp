@@ -178,15 +178,15 @@ public:
 
     ~Impl();
 
-    void Run(Game & game);
+    void Run(Game& game);
 
     void Exit();
 
 private:
     void MessagePump();
-    void ProcessEvent(::XEvent & event);
+    void ProcessEvent(::XEvent& event);
 
-    void RenderFrame(Game & game);
+    void RenderFrame(Game& game);
 
 public:
     GameClock clock;
@@ -434,34 +434,32 @@ std::shared_ptr<AssetManager> GameHostX11::GetAssetManager()
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->assetManager);
     auto gameHost = shared_from_this();
-    std::shared_ptr<AssetManager> sharedAssetManager(
-        gameHost, impl->assetManager.get());
-    return sharedAssetManager;
+    std::shared_ptr<AssetManager> shared{gameHost, impl->assetManager.get()};
+    return shared;
 }
 
 std::shared_ptr<Keyboard> GameHostX11::GetKeyboard()
 {
     POMDOG_ASSERT(impl);
     auto gameHost = shared_from_this();
-    std::shared_ptr<Keyboard> sharedKeyboard(
-        gameHost, impl->keyboard.get());
-    return sharedKeyboard;
+    std::shared_ptr<Keyboard> shared{gameHost, impl->keyboard.get()};
+    return shared;
 }
 
 std::shared_ptr<Mouse> GameHostX11::GetMouse()
 {
     POMDOG_ASSERT(impl);
     auto gameHost = shared_from_this();
-    std::shared_ptr<Mouse> sharedMouse(gameHost, &impl->mouse);
-    return sharedMouse;
+    std::shared_ptr<Mouse> shared{gameHost, &impl->mouse};
+    return shared;
 }
 
 std::shared_ptr<Gamepad> GameHostX11::GetGamepad()
 {
     POMDOG_ASSERT(impl);
     auto gameHost = shared_from_this();
-    std::shared_ptr<Gamepad> sharedGamepad(gameHost, impl->gamepad.get());
-    return sharedGamepad;
+    std::shared_ptr<Gamepad> shared{gameHost, impl->gamepad.get()};
+    return shared;
 }
 
 } // namespace X11

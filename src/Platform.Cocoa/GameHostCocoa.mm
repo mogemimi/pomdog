@@ -67,13 +67,13 @@ public:
 
     std::shared_ptr<GameWindow> GetWindow();
 
-    std::shared_ptr<GameClock> GetClock(std::shared_ptr<GameHost> && gameHost);
+    std::shared_ptr<GameClock> GetClock(std::shared_ptr<GameHost>&& gameHost);
 
     std::shared_ptr<GraphicsDevice> GetGraphicsDevice();
 
     std::shared_ptr<GraphicsCommandQueue> GetGraphicsCommandQueue();
 
-    std::shared_ptr<AssetManager> GetAssetManager(std::shared_ptr<GameHost> && gameHost);
+    std::shared_ptr<AssetManager> GetAssetManager(std::shared_ptr<GameHost>&& gameHost);
 
     std::shared_ptr<AudioEngine> GetAudioEngine();
 
@@ -430,10 +430,10 @@ std::shared_ptr<GameWindow> GameHostCocoa::Impl::GetWindow()
     return window;
 }
 
-std::shared_ptr<GameClock> GameHostCocoa::Impl::GetClock(std::shared_ptr<GameHost> && gameHost)
+std::shared_ptr<GameClock> GameHostCocoa::Impl::GetClock(std::shared_ptr<GameHost>&& gameHost)
 {
-    std::shared_ptr<GameClock> sharedClock(gameHost, &clock);
-    return sharedClock;
+    std::shared_ptr<GameClock> shared{gameHost, &clock};
+    return shared;
 }
 
 std::shared_ptr<GraphicsDevice> GameHostCocoa::Impl::GetGraphicsDevice()
@@ -451,10 +451,10 @@ std::shared_ptr<AudioEngine> GameHostCocoa::Impl::GetAudioEngine()
     return audioEngine;
 }
 
-std::shared_ptr<AssetManager> GameHostCocoa::Impl::GetAssetManager(std::shared_ptr<GameHost> && gameHost)
+std::shared_ptr<AssetManager> GameHostCocoa::Impl::GetAssetManager(std::shared_ptr<GameHost>&& gameHost)
 {
-    std::shared_ptr<AssetManager> sharedAssetManager(gameHost, assetManager.get());
-    return sharedAssetManager;
+    std::shared_ptr<AssetManager> shared{gameHost, assetManager.get()};
+    return shared;
 }
 
 std::shared_ptr<Keyboard> GameHostCocoa::Impl::GetKeyboard()

@@ -376,10 +376,10 @@ std::shared_ptr<GameWindow> GameHostMetal::Impl::GetWindow()
     return window;
 }
 
-std::shared_ptr<GameClock> GameHostMetal::Impl::GetClock(std::shared_ptr<GameHost> && gameHost)
+std::shared_ptr<GameClock> GameHostMetal::Impl::GetClock(std::shared_ptr<GameHost>&& gameHost)
 {
-    std::shared_ptr<GameClock> sharedClock(gameHost, &clock);
-    return sharedClock;
+    std::shared_ptr<GameClock> shared{gameHost, &clock};
+    return shared;
 }
 
 std::shared_ptr<GraphicsDevice> GameHostMetal::Impl::GetGraphicsDevice()
@@ -397,10 +397,10 @@ std::shared_ptr<AudioEngine> GameHostMetal::Impl::GetAudioEngine()
     return audioEngine;
 }
 
-std::shared_ptr<AssetManager> GameHostMetal::Impl::GetAssetManager(std::shared_ptr<GameHost> && gameHost)
+std::shared_ptr<AssetManager> GameHostMetal::Impl::GetAssetManager(std::shared_ptr<GameHost>&& gameHost)
 {
-    std::shared_ptr<AssetManager> sharedAssetManager(gameHost, assetManager.get());
-    return sharedAssetManager;
+    std::shared_ptr<AssetManager> shared{gameHost, assetManager.get()};
+    return shared;
 }
 
 std::shared_ptr<Keyboard> GameHostMetal::Impl::GetKeyboard()

@@ -212,13 +212,13 @@ public:
 
     ~Impl();
 
-    void Run(Game & game);
+    void Run(Game& game);
 
     void Exit();
 
     std::shared_ptr<GameWindow> GetWindow();
 
-    std::shared_ptr<GameClock> GetClock(std::shared_ptr<GameHost> && gameHost);
+    std::shared_ptr<GameClock> GetClock(std::shared_ptr<GameHost>&& gameHost);
 
     std::shared_ptr<GraphicsCommandQueue> GetGraphicsCommandQueue();
 
@@ -226,7 +226,7 @@ public:
 
     std::shared_ptr<AudioEngine> GetAudioEngine();
 
-    std::shared_ptr<AssetManager> GetAssetManager(std::shared_ptr<GameHost> && gameHost);
+    std::shared_ptr<AssetManager> GetAssetManager(std::shared_ptr<GameHost>&& gameHost);
 
     std::shared_ptr<Keyboard> GetKeyboard();
 
@@ -235,7 +235,7 @@ public:
     std::shared_ptr<Gamepad> GetGamepad();
 
 private:
-    void RenderFrame(Game & game);
+    void RenderFrame(Game& game);
 
     void DoEvents();
 
@@ -333,7 +333,7 @@ GameHostWin32::Impl::~Impl()
     window.reset();
 }
 
-void GameHostWin32::Impl::Run(Game & game)
+void GameHostWin32::Impl::Run(Game& game)
 {
     game.Initialize();
 
@@ -369,7 +369,7 @@ void GameHostWin32::Impl::Exit()
     exitRequest = true;
 }
 
-void GameHostWin32::Impl::RenderFrame(Game & game)
+void GameHostWin32::Impl::RenderFrame(Game& game)
 {
     POMDOG_ASSERT(window);
 
@@ -427,53 +427,52 @@ std::shared_ptr<GameWindow> GameHostWin32::Impl::GetWindow()
 }
 
 std::shared_ptr<GameClock> GameHostWin32::Impl::GetClock(
-    std::shared_ptr<GameHost> && gameHost)
+    std::shared_ptr<GameHost>&& gameHost)
 {
-    std::shared_ptr<GameClock> sharedClock(std::move(gameHost), &clock);
-    return std::move(sharedClock);
+    std::shared_ptr<GameClock> shared{std::move(gameHost), &clock};
+    return shared;
 }
 
 std::shared_ptr<GraphicsCommandQueue> GameHostWin32::Impl::GetGraphicsCommandQueue()
 {
-    POMDOG_ASSERT(graphicsCommandQueue);
+    POMDOG_ASSERT(graphicsCommandQueue != nullptr);
     return graphicsCommandQueue;
 }
 
 std::shared_ptr<GraphicsDevice> GameHostWin32::Impl::GetGraphicsDevice()
 {
-    POMDOG_ASSERT(graphicsDevice);
+    POMDOG_ASSERT(graphicsDevice != nullptr);
     return graphicsDevice;
 }
 
 std::shared_ptr<AudioEngine> GameHostWin32::Impl::GetAudioEngine()
 {
-    POMDOG_ASSERT(audioEngine);
+    POMDOG_ASSERT(audioEngine != nullptr);
     return audioEngine;
 }
 
-std::shared_ptr<AssetManager> GameHostWin32::Impl::GetAssetManager(
-    std::shared_ptr<GameHost> && gameHost)
+std::shared_ptr<AssetManager> GameHostWin32::Impl::GetAssetManager(std::shared_ptr<GameHost>&& gameHost)
 {
-    POMDOG_ASSERT(assetManager);
-    std::shared_ptr<AssetManager> sharedAssetManager(std::move(gameHost), assetManager.get());
-    return std::move(sharedAssetManager);
+    POMDOG_ASSERT(assetManager != nullptr);
+    std::shared_ptr<AssetManager> shared{std::move(gameHost), assetManager.get()};
+    return shared;
 }
 
 std::shared_ptr<Keyboard> GameHostWin32::Impl::GetKeyboard()
 {
-    POMDOG_ASSERT(keyboard);
+    POMDOG_ASSERT(keyboard != nullptr);
     return keyboard;
 }
 
 std::shared_ptr<Mouse> GameHostWin32::Impl::GetMouse()
 {
-    POMDOG_ASSERT(mouse);
+    POMDOG_ASSERT(mouse != nullptr);
     return mouse;
 }
 
 std::shared_ptr<Gamepad> GameHostWin32::Impl::GetGamepad()
 {
-    POMDOG_ASSERT(gamepad);
+    POMDOG_ASSERT(gamepad != nullptr);
     return gamepad;
 }
 
