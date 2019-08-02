@@ -236,6 +236,7 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/include/Pomdog/Signals/detail/SignalBody.hpp
   ${POMDOG_DIR}/include/Pomdog/Utility/Any.hpp
   ${POMDOG_DIR}/include/Pomdog/Utility/Assert.hpp
+  ${POMDOG_DIR}/include/Pomdog/Utility/Errors.hpp
   ${POMDOG_DIR}/include/Pomdog/Utility/Exception.hpp
   ${POMDOG_DIR}/include/Pomdog/Utility/FileSystem.hpp
   ${POMDOG_DIR}/include/Pomdog/Utility/PathHelper.hpp
@@ -345,6 +346,7 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/src/Signals/ScopedConnection.cpp
   ${POMDOG_DIR}/src/Utility/AlignedNew.hpp
   ${POMDOG_DIR}/src/Utility/CRC32.cpp
+  ${POMDOG_DIR}/src/Utility/Errors.cpp
   ${POMDOG_DIR}/src/Utility/PathHelper.cpp
   ${POMDOG_DIR}/src/Utility/ScopeGuard.hpp
   ${POMDOG_DIR}/src/Utility/StringHelper.cpp

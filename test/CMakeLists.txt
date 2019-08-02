@@ -71,6 +71,7 @@ add_executable(PomdogTest
   ${POMDOG_TEST_DIR}/Signals/SignalTest.cpp
   ${POMDOG_TEST_DIR}/Utility/AnyTest.cpp
   ${POMDOG_TEST_DIR}/Utility/CRC32Test.cpp
+  ${POMDOG_TEST_DIR}/Utility/ErrorsTest.cpp
   ${POMDOG_TEST_DIR}/Utility/StringHelperTest.cpp
 )
 
