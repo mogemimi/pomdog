@@ -63,6 +63,7 @@ add_executable(PomdogTest
   ${POMDOG_TEST_DIR}/Math/Vector4Test.cpp
   ${POMDOG_TEST_DIR}/Signals/ConnectionTest.cpp
   ${POMDOG_TEST_DIR}/Signals/ConnectionListTest.cpp
+  ${POMDOG_TEST_DIR}/Signals/DelegateTest.cpp
   ${POMDOG_TEST_DIR}/Signals/EventQueueTest.cpp
   ${POMDOG_TEST_DIR}/Signals/EventTest.cpp
   ${POMDOG_TEST_DIR}/Signals/HelpersTest.cpp

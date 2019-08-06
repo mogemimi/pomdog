@@ -224,11 +224,13 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/include/Pomdog/Reactive/Subjects/KeyDownSubject.hpp
   ${POMDOG_DIR}/include/Pomdog/Signals/Connection.hpp
   ${POMDOG_DIR}/include/Pomdog/Signals/ConnectionList.hpp
+  ${POMDOG_DIR}/include/Pomdog/Signals/Delegate.hpp
   ${POMDOG_DIR}/include/Pomdog/Signals/Event.hpp
   ${POMDOG_DIR}/include/Pomdog/Signals/EventQueue.hpp
   ${POMDOG_DIR}/include/Pomdog/Signals/Helpers.hpp
   ${POMDOG_DIR}/include/Pomdog/Signals/ScopedConnection.hpp
   ${POMDOG_DIR}/include/Pomdog/Signals/Signal.hpp
+  ${POMDOG_DIR}/include/Pomdog/Signals/detail/DelegateBody.hpp
   ${POMDOG_DIR}/include/Pomdog/Signals/detail/EventBody.hpp
   ${POMDOG_DIR}/include/Pomdog/Signals/detail/ForwardDeclarations.hpp
   ${POMDOG_DIR}/include/Pomdog/Signals/detail/SignalBody.hpp

@@ -13,6 +13,9 @@ using Slot = std::function<Function>;
 template <typename Function>
 class SignalBody;
 
+template <typename Function>
+class DelegateBody;
+
 } // namespace Detail::Signals
 
 class Event;
@@ -25,5 +28,8 @@ class ConnectionList;
 
 template <typename Function>
 class Signal;
+
+template <typename Function>
+class Delegate;
 
 } // namespace Pomdog
