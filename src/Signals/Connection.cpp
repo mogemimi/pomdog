@@ -33,7 +33,7 @@ void Connection::Disconnect()
     }
 }
 
-bool Connection::IsConnected() const noexcept
+bool Connection::IsConnected() const
 {
     return (body != nullptr) && body->Valid();
 }

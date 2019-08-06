@@ -22,7 +22,7 @@ class POMDOG_EXPORT ConnectionBody {
 public:
     virtual ~ConnectionBody() = default;
     virtual void Disconnect() = 0;
-    virtual bool Valid() const noexcept = 0;
+    [[nodiscard]] virtual bool Valid() const = 0;
     virtual std::unique_ptr<ConnectionBody> DeepCopy() const = 0;
 };
 
@@ -58,7 +58,7 @@ public:
         slotIndex = std::nullopt;
     }
 
-    bool Valid() const noexcept override
+    bool Valid() const override
     {
         if (slotIndex == std::nullopt) {
             return false;

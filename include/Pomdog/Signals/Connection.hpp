@@ -27,7 +27,7 @@ public:
 
     void Disconnect();
 
-    bool IsConnected() const noexcept;
+    [[nodiscard]] bool IsConnected() const;
 };
 
 } // namespace Pomdog
