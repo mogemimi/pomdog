@@ -12,6 +12,8 @@ mkdir -p build.cmake && cd build.cmake
 cmake \
     -DCMAKE_C_COMPILER=clang \
     -DCMAKE_CXX_COMPILER=clang++ \
+    -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
+    -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++ -lc++abi" \
     -DCMAKE_BUILD_TYPE=Release \
     ../test
 
@@ -55,6 +57,8 @@ cmake \
     -G Ninja \
     -DCMAKE_C_COMPILER=clang \
     -DCMAKE_CXX_COMPILER=clang++ \
+    -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
+    -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++ -lc++abi" \
     -DCMAKE_BUILD_TYPE=Release \
     ../test
 

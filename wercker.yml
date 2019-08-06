@@ -18,6 +18,8 @@ build-clang-debug:
           -G Ninja \
           -DCMAKE_C_COMPILER=clang \
           -DCMAKE_CXX_COMPILER=clang++ \
+          -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
+          -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++ -lc++abi" \
           -DCMAKE_BUILD_TYPE=Debug \
           ..
         ninja
@@ -36,6 +38,8 @@ build-clang-release:
           -G Ninja \
           -DCMAKE_C_COMPILER=clang \
           -DCMAKE_CXX_COMPILER=clang++ \
+          -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
+          -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++ -lc++abi" \
           -DCMAKE_BUILD_TYPE=Release \
           ..
         ninja
