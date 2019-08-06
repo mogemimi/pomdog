@@ -20,7 +20,7 @@ sudo apt upgrade -y
 sudo apt install -y wget gnupg
 echo "deb http://apt.llvm.org/disco/ llvm-toolchain-disco-8 main" | tee /etc/apt/sources.list.d/llvm.list
 echo "deb-src http://apt.llvm.org/disco/ llvm-toolchain-disco-8 main" | tee -a /etc/apt/sources.list.d/llvm.list
-wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -
+wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
 sudo apt update
 sudo apt install -y \
     clang-8 \
