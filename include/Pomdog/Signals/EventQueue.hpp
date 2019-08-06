@@ -21,9 +21,9 @@ public:
     EventQueue& operator=(const EventQueue&) = delete;
     EventQueue& operator=(EventQueue&&) = delete;
 
-    Connection Connect(const std::function<void(const Event&)>& slot);
+    [[nodiscard]] Connection Connect(const std::function<void(const Event&)>& slot);
 
-    Connection Connect(std::function<void(const Event&)>&& slot);
+    [[nodiscard]] Connection Connect(std::function<void(const Event&)>&& slot);
 
     void Enqueue(Event&& event);
 

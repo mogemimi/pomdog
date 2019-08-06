@@ -49,12 +49,13 @@ TEST_CASE("EventQueue", "[EventQueue]")
         };
 
         EventQueue eventQueue;
-        eventQueue.Connect([&](Event const& event){
+        auto conn = eventQueue.Connect([&](Event const& event){
             REQUIRE(event.Is<User>());
             auto user = event.As<User>();
             names.push_back(user->name);
             integers.push_back(user->id);
         });
+        REQUIRE(conn.IsConnected());
 
         eventQueue.Enqueue<User>("Donald", 42);
         eventQueue.Enqueue<User>("Goofy", 43);
@@ -84,9 +85,13 @@ TEST_CASE("EventQueue", "[EventQueue]")
     SECTION("Conenct")
     {
         EventQueue eventQueue;
-        eventQueue.Connect(slot);
-        eventQueue.Connect(slot);
-        eventQueue.Connect(slot);
+        auto conn1 = eventQueue.Connect(slot);
+        auto conn2 = eventQueue.Connect(slot);
+        auto conn3 = eventQueue.Connect(slot);
+
+        REQUIRE(conn1.IsConnected());
+        REQUIRE(conn2.IsConnected());
+        REQUIRE(conn3.IsConnected());
 
         eventQueue.Enqueue<int>(42);
         REQUIRE(integers.empty());
@@ -100,9 +105,11 @@ TEST_CASE("EventQueue", "[EventQueue]")
     SECTION("RecursiveConnection")
     {
         EventQueue eventQueue;
-        auto connection = eventQueue.Connect([&](Event const&) {
-            eventQueue.Connect(slot);
+        auto conn = eventQueue.Connect([&](Event const&) {
+            auto conn2 = eventQueue.Connect(slot);
+            REQUIRE(conn2.IsConnected());
         });
+        REQUIRE(conn.IsConnected());
 
         eventQueue.Enqueue<int>(42);
         REQUIRE(integers.empty());
@@ -119,15 +126,21 @@ TEST_CASE("EventQueue", "[EventQueue]")
     SECTION("CallingDisconnect")
     {
         EventQueue eventQueue;
-        Connection connection;
-        connection = eventQueue.Connect([&](Event const& event){
+        Connection conn;
+        REQUIRE(!conn.IsConnected());
+        conn = eventQueue.Connect([&](Event const& event){
             slot(event);
-            connection.Disconnect();
+            REQUIRE(conn.IsConnected());
+            conn.Disconnect();
+            REQUIRE(!conn.IsConnected());
         });
+        REQUIRE(conn.IsConnected());
 
         eventQueue.Enqueue<int>(42);
+        REQUIRE(conn.IsConnected());
         REQUIRE(integers.empty());
         eventQueue.Emit();
+        REQUIRE(!conn.IsConnected());
         REQUIRE(integers.size() == 1);
         REQUIRE(integers[0] == 42);
 
@@ -140,9 +153,10 @@ TEST_CASE("EventQueue", "[EventQueue]")
     SECTION("ArgumentPerfectForwarding")
     {
         EventQueue eventQueue;
-        auto connection = eventQueue.Connect([&](Event const& event){
+        auto conn = eventQueue.Connect([&](Event const& event){
             REQUIRE(event.Is<std::shared_ptr<int>>());
         });
+        REQUIRE(conn.IsConnected());
 
         {
             auto pointer = std::make_shared<int>(42);

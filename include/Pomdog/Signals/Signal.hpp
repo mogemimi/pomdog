@@ -20,9 +20,9 @@ public:
     Signal& operator=(const Signal&) = delete;
     Signal& operator=(Signal&&) = default;
 
-    Connection Connect(const std::function<void(Arguments...)>& slot);
+    [[nodiscard]] Connection Connect(const std::function<void(Arguments...)>& slot);
 
-    Connection Connect(std::function<void(Arguments...)>&& slot);
+    [[nodiscard]] Connection Connect(std::function<void(Arguments...)>&& slot);
 
     void operator()(Arguments... arguments);
 

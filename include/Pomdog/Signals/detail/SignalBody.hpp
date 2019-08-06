@@ -96,7 +96,7 @@ public:
     SignalBody& operator=(SignalBody&&) = delete;
 
     template <typename Function>
-    std::unique_ptr<ConnectionBodyType> Connect(Function&& slot);
+    [[nodiscard]] std::unique_ptr<ConnectionBodyType> Connect(Function&& slot);
 
     void Disconnect(std::int32_t slotIndex);
 
