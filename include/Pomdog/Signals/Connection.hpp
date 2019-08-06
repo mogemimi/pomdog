@@ -6,13 +6,12 @@
 #include "Pomdog/Signals/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Signals/detail/SignalBody.hpp"
 #include <memory>
-#include <utility>
 
 namespace Pomdog {
 
 class POMDOG_EXPORT Connection final {
 private:
-    typedef Detail::Signals::ConnectionBody ConnectionBody;
+    using ConnectionBody = Detail::Signals::ConnectionBody;
     std::unique_ptr<ConnectionBody> body;
 
 public:

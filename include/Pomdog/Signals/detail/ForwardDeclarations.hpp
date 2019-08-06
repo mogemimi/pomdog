@@ -5,8 +5,7 @@
 #include <functional>
 
 namespace Pomdog {
-namespace Detail {
-namespace Signals {
+namespace Detail::Signals {
 
 template <typename Function>
 using Slot = std::function<Function>;
@@ -14,8 +13,7 @@ using Slot = std::function<Function>;
 template <typename Function>
 class SignalBody;
 
-} // namespace Signals
-} // namespace Detail
+} // namespace Detail::Signals
 
 class Event;
 class EventQueue;

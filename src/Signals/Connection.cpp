@@ -1,24 +1,25 @@
 // Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Signals/Connection.hpp"
+#include <utility>
 
 namespace Pomdog {
 
-Connection::Connection(std::unique_ptr<ConnectionBody> && bodyIn)
-    : body(std::forward<std::unique_ptr<ConnectionBody>>(bodyIn))
+Connection::Connection(std::unique_ptr<ConnectionBody>&& bodyIn)
+    : body(std::move(bodyIn))
 {
 }
 
 Connection::Connection(const Connection& connection)
 {
-    if (connection.body) {
+    if (connection.body != nullptr) {
         body = connection.body->DeepCopy();
     }
 }
 
-Connection & Connection::operator=(const Connection& connection)
+Connection& Connection::operator=(const Connection& connection)
 {
-    if (connection.body) {
+    if (connection.body != nullptr) {
         body = connection.body->DeepCopy();
     }
     return *this;
@@ -26,7 +27,7 @@ Connection & Connection::operator=(const Connection& connection)
 
 void Connection::Disconnect()
 {
-    if (body) {
+    if (body != nullptr) {
         body->Disconnect();
         body.reset();
     }
@@ -34,7 +35,7 @@ void Connection::Disconnect()
 
 bool Connection::IsConnected() const noexcept
 {
-    return body && body->Valid();
+    return (body != nullptr) && body->Valid();
 }
 
 } // namespace Pomdog

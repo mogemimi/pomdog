@@ -29,7 +29,7 @@ public:
     {
         auto connection = signal.Connect(std::forward<Func>(func));
         connections.push_back(connection);
-        return std::move(connection);
+        return connection;
     }
 
     void Disconnect();

@@ -29,7 +29,7 @@ public:
     std::size_t InvocationCount() const;
 
 private:
-    typedef Detail::Signals::SignalBody<void(Arguments...)> SignalBody;
+    using SignalBody = Detail::Signals::SignalBody<void(Arguments...)>;
     std::shared_ptr<SignalBody> body;
 };
 
@@ -45,7 +45,8 @@ Connection Signal<void(Arguments...)>::Connect(
 {
     POMDOG_ASSERT(slot);
     POMDOG_ASSERT(body);
-    return Connection{body->Connect(slot)};
+    Connection conn{body->Connect(slot)};
+    return conn;
 }
 
 template <typename... Arguments>
@@ -54,7 +55,8 @@ Connection Signal<void(Arguments...)>::Connect(
 {
     POMDOG_ASSERT(slot);
     POMDOG_ASSERT(body);
-    return Connection{body->Connect(std::move(slot))};
+    Connection conn{body->Connect(std::move(slot))};
+    return conn;
 }
 
 template <typename... Arguments>

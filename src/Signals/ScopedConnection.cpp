@@ -10,7 +10,7 @@ ScopedConnection::ScopedConnection(const Connection& c)
 {
 }
 
-ScopedConnection::ScopedConnection(Connection && c)
+ScopedConnection::ScopedConnection(Connection&& c)
     : connection(std::move(c))
 {
 }
@@ -20,14 +20,14 @@ ScopedConnection::~ScopedConnection()
     connection.Disconnect();
 }
 
-ScopedConnection & ScopedConnection::operator=(const Connection& c)
+ScopedConnection& ScopedConnection::operator=(const Connection& c)
 {
     connection.Disconnect();
     connection = c;
     return *this;
 }
 
-ScopedConnection & ScopedConnection::operator=(Connection && c)
+ScopedConnection& ScopedConnection::operator=(Connection&& c)
 {
     connection.Disconnect();
     connection = std::move(c);

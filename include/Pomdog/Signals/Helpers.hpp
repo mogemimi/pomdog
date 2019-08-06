@@ -9,11 +9,10 @@
 #include <memory>
 #include <utility>
 
-namespace Pomdog {
-namespace Signals {
+namespace Pomdog::Signals {
 
 template <typename...Arguments, typename Func> POMDOG_EXPORT
-Connection ConnectSingleShot(Signal<void(Arguments...)> & signal, Func && func)
+Connection ConnectSingleShot(Signal<void(Arguments...)>& signal, Func&& func)
 {
     auto connection = std::make_shared<Connection>();
     *connection = signal.Connect([
@@ -27,5 +26,4 @@ Connection ConnectSingleShot(Signal<void(Arguments...)> & signal, Func && func)
     return *connection;
 }
 
-} // namespace Signals
-} // namespace Pomdog
+} // namespace Pomdog::Signals

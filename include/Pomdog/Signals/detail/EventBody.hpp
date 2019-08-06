@@ -6,8 +6,7 @@
 #include <typeinfo>
 #include <utility>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 template <class T>
 struct EventHashCode final {
@@ -55,5 +54,4 @@ public:
     T data;
 };
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

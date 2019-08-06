@@ -15,9 +15,7 @@
 #include <utility>
 #include <vector>
 
-namespace Pomdog {
-namespace Detail {
-namespace Signals {
+namespace Pomdog::Detail::Signals {
 
 class POMDOG_EXPORT ConnectionBody {
 public:
@@ -31,7 +29,7 @@ template <typename Function>
 class ConnectionBodyOverride final : public ConnectionBody {
 private:
     typedef std::weak_ptr<Slot<Function>> WeakSlot;
-    typedef std::weak_ptr<SignalBody<Function>> WeakSignal;
+    using WeakSignal = std::weak_ptr<SignalBody<Function>>;
 
     WeakSignal weakSignal;
     WeakSlot weakSlot;
@@ -80,8 +78,8 @@ template <typename... Arguments>
 class SignalBody<void(Arguments...)> final
     : public std::enable_shared_from_this<SignalBody<void(Arguments...)>> {
 private:
-    typedef Slot<void(Arguments...)> SlotType;
-    typedef ConnectionBodyOverride<void(Arguments...)> ConnectionBodyType;
+    using SlotType = Slot<void(Arguments...)>;
+    using ConnectionBodyType = ConnectionBodyOverride<void(Arguments...)>;
 
 public:
     SignalBody() = default;
@@ -231,6 +229,4 @@ std::size_t SignalBody<void(Arguments...)>::InvocationCount() const
     return observers.size();
 }
 
-} // namespace Signals
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Signals
