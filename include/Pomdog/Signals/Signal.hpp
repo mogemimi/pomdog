@@ -26,7 +26,7 @@ public:
 
     void operator()(Arguments... arguments);
 
-    std::size_t InvocationCount() const;
+    [[nodiscard]] std::size_t GetInvocationCount() const;
 
 private:
     using SignalBody = Detail::Signals::SignalBody<void(Arguments...)>;
@@ -63,13 +63,13 @@ template <typename... Arguments>
 void Signal<void(Arguments...)>::operator()(Arguments... arguments)
 {
     POMDOG_ASSERT(body);
-    body->operator()(std::forward<Arguments>(arguments)...);
+    body->Emit(std::forward<Arguments>(arguments)...);
 }
 
 template <typename... Arguments>
-std::size_t Signal<void(Arguments...)>::InvocationCount() const
+std::size_t Signal<void(Arguments...)>::GetInvocationCount() const
 {
-    return body->InvocationCount();
+    return body->GetInvocationCount();
 }
 
 } // namespace Pomdog

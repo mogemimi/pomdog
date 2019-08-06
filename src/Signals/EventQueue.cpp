@@ -44,7 +44,7 @@ void EventQueue::Emit()
     }
 
     for (auto& event : notifications) {
-        signalBody->operator()(event);
+        signalBody->Emit(event);
     }
 }
 

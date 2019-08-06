@@ -56,7 +56,7 @@ void LogChannel::SetLevel(LogLevel levelIn) noexcept
 
 std::size_t LogChannel::GetConnectionCount() const
 {
-    return signal.InvocationCount();
+    return signal.GetInvocationCount();
 }
 
 } // namespace Pomdog

@@ -100,9 +100,9 @@ public:
 
     void Disconnect(std::int32_t slotIndex);
 
-    void operator()(Arguments&&... arguments);
+    void Emit(Arguments&&... arguments);
 
-    std::size_t InvocationCount() const;
+    [[nodiscard]] std::size_t GetInvocationCount();
 
     [[nodiscard]] bool IsConnected(std::int32_t slotIndex);
 
@@ -211,7 +211,7 @@ void SignalBody<void(Arguments...)>::EraseRemovedListeners()
 }
 
 template <typename... Arguments>
-void SignalBody<void(Arguments...)>::operator()(Arguments&&... arguments)
+void SignalBody<void(Arguments...)>::Emit(Arguments&&... arguments)
 {
     if (nestedMethodCallCount <= 0) {
         PushBackAddedListeners();
@@ -247,7 +247,7 @@ void SignalBody<void(Arguments...)>::operator()(Arguments&&... arguments)
 }
 
 template <typename... Arguments>
-std::size_t SignalBody<void(Arguments...)>::InvocationCount() const
+std::size_t SignalBody<void(Arguments...)>::GetInvocationCount()
 {
     auto count = [this]() -> std::size_t {
         std::lock_guard<std::recursive_mutex> lock{addingProtection};
