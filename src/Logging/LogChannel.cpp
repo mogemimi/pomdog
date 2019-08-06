@@ -33,7 +33,7 @@ Connection LogChannel::Connect(const std::function<void(const LogEntry&)>& slot)
     return signal.Connect(slot);
 }
 
-Connection LogChannel::Connect(std::function<void(const LogEntry&)> && slot)
+Connection LogChannel::Connect(std::function<void(const LogEntry&)>&& slot)
 {
     POMDOG_ASSERT(slot);
     return signal.Connect(std::move(slot));

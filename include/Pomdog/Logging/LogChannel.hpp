@@ -26,17 +26,17 @@ public:
 
     void Log(const LogEntry& logEntry);
 
-    Connection Connect(const std::function<void(const LogEntry&)>& slot);
+    [[nodiscard]] Connection Connect(const std::function<void(const LogEntry&)>& slot);
 
-    Connection Connect(std::function<void(const LogEntry&)>&& slot);
+    [[nodiscard]] Connection Connect(std::function<void(const LogEntry&)>&& slot);
 
-    const std::string& GetName() const;
+    [[nodiscard]] const std::string& GetName() const;
 
-    LogLevel GetLevel() const noexcept;
+    [[nodiscard]] LogLevel GetLevel() const noexcept;
 
     void SetLevel(LogLevel level) noexcept;
 
-    std::size_t GetConnectionCount() const;
+    [[nodiscard]] std::size_t GetConnectionCount() const;
 
 private:
     Signal<void(const LogEntry&)> signal;

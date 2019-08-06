@@ -27,7 +27,7 @@ TEST_CASE("Log", "[Log]")
 
     SECTION("FirstCase")
     {
-        ScopedConnection connection = Log::Connect([&](LogEntry const& entry) {
+        ScopedConnection connection = Log::Connect([&](const LogEntry& entry) {
             messages.push_back(entry.Message);
             tags.push_back(entry.Tag);
             levels.push_back(entry.Verbosity);
@@ -45,7 +45,7 @@ TEST_CASE("Log", "[Log]")
     }
     SECTION("ConnectToChannel")
     {
-        ScopedConnection connection = Log::Connect("#TestChannel", [&](LogEntry const& entry) {
+        ScopedConnection connection = Log::Connect("#TestChannel", [&](const LogEntry& entry) {
             messages.push_back(entry.Message);
             tags.push_back(entry.Tag);
             levels.push_back(entry.Verbosity);
@@ -65,13 +65,13 @@ TEST_CASE("Log", "[Log]")
     }
     SECTION("ConnectToChannel2")
     {
-        ScopedConnection connectionDog = Log::Connect("#Dog", [&](LogEntry const& entry) {
+        ScopedConnection connectionDog = Log::Connect("#Dog", [&](const LogEntry& entry) {
             messages.push_back(entry.Message + "(in Dog)");
             tags.push_back(entry.Tag + "(in Dog)");
             levels.push_back(entry.Verbosity);
         });
 
-        ScopedConnection connectionCat = Log::Connect("#Cat", [&](LogEntry const& entry) {
+        ScopedConnection connectionCat = Log::Connect("#Cat", [&](const LogEntry& entry) {
             messages.push_back(entry.Message + "(in Cat)");
             tags.push_back(entry.Tag + "(in Cat)");
             levels.push_back(entry.Verbosity);
@@ -91,13 +91,13 @@ TEST_CASE("Log", "[Log]")
     }
     SECTION("ConnectToDefaultChannel")
     {
-        ScopedConnection connection = Log::Connect([&](LogEntry const& entry) {
+        ScopedConnection connection = Log::Connect([&](const LogEntry& entry) {
             messages.push_back(entry.Message);
             tags.push_back(entry.Tag);
             levels.push_back(entry.Verbosity);
         });
 
-        ScopedConnection connectionCat = Log::Connect("#Cat", [&](LogEntry const& entry) {
+        ScopedConnection connectionCat = Log::Connect("#Cat", [&](const LogEntry& entry) {
             messages.push_back(entry.Message + "(in Cat)");
             tags.push_back(entry.Tag + "(in Cat)");
             levels.push_back(entry.Verbosity);
@@ -120,7 +120,7 @@ TEST_CASE("Log", "[Log]")
     }
     SECTION("SetVerbosityLevels")
     {
-        ScopedConnection connection = Log::Connect("TestChannel", [&](LogEntry const& entry) {
+        ScopedConnection connection = Log::Connect("TestChannel", [&](const LogEntry& entry) {
             messages.push_back(entry.Message);
             tags.push_back(entry.Tag);
             levels.push_back(entry.Verbosity);
@@ -202,13 +202,13 @@ TEST_CASE("Log", "[Log]")
     }
     SECTION("SendToUserChannels")
     {
-        auto handler = [&](LogEntry const& entry){
+        auto handler = [&](const LogEntry& entry) {
             messages.push_back(entry.Message);
             tags.push_back(entry.Tag);
         };
 
-        ScopedConnection connection1(Log::Connect("#Test1", handler));
-        ScopedConnection connection2(Log::Connect("#Test2", handler));
+        ScopedConnection connection1 = Log::Connect("#Test1", handler);
+        ScopedConnection connection2 = Log::Connect("#Test2", handler);
 
         Log::SetLevel("Test1", LogLevel::Verbose);
         Log::SetLevel("Test2", LogLevel::Verbose);
@@ -219,7 +219,7 @@ TEST_CASE("Log", "[Log]")
         Log::Info("#NyanNyanCat", "(D) Send to nonexistent channel");
 
         // Connect
-        ScopedConnection connection3(Log::Connect("#NyanNyanCat", handler));
+        ScopedConnection connection3 = Log::Connect("#NyanNyanCat", handler);
         Log::SetLevel("#NyanNyanCat", LogLevel::Verbose);
 
         Log::Info("#NyanNyanCat", "(E) Send to new channel");
@@ -245,7 +245,7 @@ TEST_CASE("Log", "[Log]")
     {
         ScopedConnection connectionA, connectionB;
 
-        connectionA = Log::Connect([&](LogEntry const& entry){
+        connectionA = Log::Connect([&](const LogEntry& entry) {
             messages.push_back(entry.Message + " at A");
 
             if (entry.Message == "Disconnect B") {
@@ -253,7 +253,7 @@ TEST_CASE("Log", "[Log]")
             }
         });
 
-        connectionB = Log::Connect([&](LogEntry const& entry){
+        connectionB = Log::Connect([&](const LogEntry& entry) {
             messages.push_back(entry.Message + " at B");
         });
 
@@ -274,7 +274,7 @@ TEST_CASE("Log", "[Log]")
     {
         ScopedConnection connectionA;
 
-        connectionA = Log::Connect([&](LogEntry const& entry){
+        connectionA = Log::Connect([&](const LogEntry& entry) {
             messages.push_back(entry.Message + " at A");
 
             if (entry.Message == "Disconnect") {

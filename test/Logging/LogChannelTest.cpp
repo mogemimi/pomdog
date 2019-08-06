@@ -34,7 +34,7 @@ TEST_CASE("LogChannel", "[LogChannel]")
         LogChannel channel("test");
         std::string message;
 
-        channel.Connect([&message](Pomdog::LogEntry const& entry){
+        auto conn = channel.Connect([&](const LogEntry& entry) {
             message = entry.Message;
         });
 
@@ -43,13 +43,15 @@ TEST_CASE("LogChannel", "[LogChannel]")
 
         channel.Log("With his bare hands.", LogLevel::Critical);
         REQUIRE(message == "With his bare hands.");
+
+        conn.Disconnect();
     }
     SECTION("Disconnect")
     {
         LogChannel channel("test");
         std::string message;
 
-        auto connection = channel.Connect([&message](Pomdog::LogEntry const& entry){
+        auto connection = channel.Connect([&](const LogEntry& entry) {
             message = entry.Message;
         });
 
@@ -67,13 +69,13 @@ TEST_CASE("LogChannel", "[LogChannel]")
         LogChannel channel("test");
         std::string message;
 
-        auto connectionA = channel.Connect([&message](Pomdog::LogEntry const& entry){
+        auto connA = channel.Connect([&](const LogEntry& entry) {
             message += "connection(A): ";
             message += entry.Message;
             message += ", ";
         });
 
-        channel.Connect([&message](Pomdog::LogEntry const& entry){
+        auto connB = channel.Connect([&](const LogEntry& entry) {
             message += "connection(B): ";
             message += entry.Message;
         });
@@ -82,10 +84,12 @@ TEST_CASE("LogChannel", "[LogChannel]")
         REQUIRE(message == "connection(A): Hi, connection(B): Hi");
 
         message.clear();
-        connectionA.Disconnect();
+        connA.Disconnect();
 
         channel.Log("A disconnect", LogLevel::Critical);
         REQUIRE(message == "connection(B): A disconnect");
+
+        connB.Disconnect();
     }
     SECTION("GetName")
     {
@@ -122,13 +126,13 @@ TEST_CASE("LogChannel", "[LogChannel]")
         LogChannel channel("test");
         std::string message;
 
-        channel.Connect([&message](Pomdog::LogEntry const& entry){
+        auto conn = channel.Connect([&](const LogEntry& entry) {
             message = entry.Message;
         });
 
         constexpr auto facts = "Chuck Norris's keyboard has an F13 key";
 
-        auto ResetMessageAndSendLog = [&](Pomdog::LogLevel verbosity){
+        auto ResetMessageAndSendLog = [&](LogLevel verbosity) {
             message.clear();
             channel.Log(facts, verbosity);
         };
@@ -192,5 +196,7 @@ TEST_CASE("LogChannel", "[LogChannel]")
         REQUIRE(message == facts);
         ResetMessageAndSendLog(LogLevel::Internal);
         REQUIRE(message == facts);
+
+        conn.Disconnect();
     }
 }
