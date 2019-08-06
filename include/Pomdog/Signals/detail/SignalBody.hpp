@@ -11,6 +11,7 @@
 #include <limits>
 #include <memory>
 #include <mutex>
+#include <optional>
 #include <type_traits>
 #include <utility>
 #include <vector>
@@ -28,49 +29,53 @@ public:
 template <typename Function>
 class ConnectionBodyOverride final : public ConnectionBody {
 private:
-    typedef std::weak_ptr<Slot<Function>> WeakSlot;
     using WeakSignal = std::weak_ptr<SignalBody<Function>>;
 
     WeakSignal weakSignal;
-    WeakSlot weakSlot;
+    std::optional<std::int32_t> slotIndex;
 
 public:
-    ConnectionBodyOverride(WeakSignal&& weakSignalIn, WeakSlot&& weakSlotIn)
-        : weakSignal(std::forward<WeakSignal>(weakSignalIn))
-        , weakSlot(std::forward<WeakSlot>(weakSlotIn))
-    {
-    }
+    ConnectionBodyOverride() = default;
+    ConnectionBodyOverride(const ConnectionBodyOverride&) = delete;
+    ConnectionBodyOverride& operator=(const ConnectionBodyOverride&) = delete;
 
-    ConnectionBodyOverride(const WeakSignal& weakSignalIn, const WeakSlot& weakSlotIn)
-        : weakSignal(weakSignalIn)
-        , weakSlot(weakSlotIn)
+    ConnectionBodyOverride(WeakSignal&& weakSignalIn, std::int32_t slotIndexIn)
+        : weakSignal(std::forward<WeakSignal>(weakSignalIn))
+        , slotIndex(slotIndexIn)
     {
     }
 
     void Disconnect() override
     {
-        if (weakSlot.expired()) {
+        if (slotIndex == std::nullopt) {
             return;
         }
 
-        auto lockedSlot = weakSlot.lock();
-
-        if (auto lockedSignal = weakSignal.lock()) {
-            lockedSignal->Disconnect(lockedSlot.get());
+        if (auto lockedSignal = weakSignal.lock(); lockedSignal != nullptr) {
+            lockedSignal->Disconnect(*slotIndex);
             weakSignal.reset();
         }
-
-        weakSlot.reset();
+        slotIndex = std::nullopt;
     }
 
     bool Valid() const noexcept override
     {
-        return !weakSlot.expired() && !weakSignal.expired();
+        if (slotIndex == std::nullopt) {
+            return false;
+        }
+
+        if (auto lockedSignal = weakSignal.lock(); lockedSignal != nullptr) {
+            return lockedSignal->IsConnected(*slotIndex);
+        }
+        return false;
     }
 
     std::unique_ptr<ConnectionBody> DeepCopy() const override
     {
-        return std::make_unique<ConnectionBodyOverride>(weakSignal, weakSlot);
+        auto conn = std::make_unique<ConnectionBodyOverride>();
+        conn->weakSignal = weakSignal;
+        conn->slotIndex = slotIndex;
+        return conn;
     }
 };
 
@@ -93,24 +98,27 @@ public:
     template <typename Function>
     std::unique_ptr<ConnectionBodyType> Connect(Function&& slot);
 
-    void Disconnect(const SlotType* observer);
+    void Disconnect(std::int32_t slotIndex);
 
     void operator()(Arguments&&... arguments);
 
     std::size_t InvocationCount() const;
+
+    [[nodiscard]] bool IsConnected(std::int32_t slotIndex);
 
 private:
     void PushBackAddedListeners();
     void EraseRemovedListeners();
 
 private:
-    std::vector<std::shared_ptr<SlotType>> observers;
-    std::vector<std::shared_ptr<SlotType>> addedObservers;
+    std::vector<std::pair<std::int32_t, SlotType>> observers;
+    std::vector<std::pair<std::int32_t, SlotType>> addedObservers;
 
     std::recursive_mutex addingProtection;
     std::recursive_mutex slotsProtection;
 
     std::int32_t nestedMethodCallCount = 0;
+    std::int32_t nextSlotIndex = 0;
 };
 
 template <typename... Arguments>
@@ -119,51 +127,59 @@ auto SignalBody<void(Arguments...)>::Connect(Function&& slot)
     -> std::unique_ptr<ConnectionBodyType>
 {
     POMDOG_ASSERT(slot);
-    auto observer = std::make_shared<SlotType>(std::forward<Function>(slot));
+    std::int32_t slotIndex = 0;
     {
         std::lock_guard<std::recursive_mutex> lock(addingProtection);
 
-        POMDOG_ASSERT(std::end(addedObservers) == std::find(
-            std::begin(addedObservers), std::end(addedObservers), observer));
-        addedObservers.push_back(observer);
+        slotIndex = nextSlotIndex;
+        ++nextSlotIndex;
+
+        POMDOG_ASSERT(std::end(addedObservers) == std::find_if(
+            std::begin(addedObservers),
+            std::end(addedObservers),
+            [&](const auto& pair) { return pair.first == slotIndex; }));
+        addedObservers.emplace_back(slotIndex, std::forward<Function>(slot));
     }
 
     std::weak_ptr<SignalBody> weakSignal = this->shared_from_this();
     POMDOG_ASSERT(!weakSignal.expired());
-    return std::make_unique<ConnectionBodyType>(std::move(weakSignal), observer);
+    return std::make_unique<ConnectionBodyType>(std::move(weakSignal), slotIndex);
 }
 
 template <typename... Arguments>
-void SignalBody<void(Arguments...)>::Disconnect(const SlotType* observer)
+void SignalBody<void(Arguments...)>::Disconnect(std::int32_t slotIndex)
 {
-    POMDOG_ASSERT(observer);
+    POMDOG_ASSERT(slotIndex <= nextSlotIndex);
     {
         std::lock_guard<std::recursive_mutex> lock(addingProtection);
 
-        addedObservers.erase(std::remove_if(std::begin(addedObservers), std::end(addedObservers),
-            [observer](const std::shared_ptr<SlotType>& p) {
-                return p.get() == observer;
-            }),
-            std::end(addedObservers));
+        auto iter = std::find_if(
+            std::begin(addedObservers),
+            std::end(addedObservers),
+            [&](const auto& pair) { return pair.first == slotIndex; });
+
+        if (iter != std::end(addedObservers)) {
+            addedObservers.erase(iter);
+            return;
+        }
     }
 
-    auto const iter = std::find_if(std::begin(observers), std::end(observers),
-        [observer](const std::shared_ptr<SlotType>& p) {
-            return p.get() == observer;
-        });
+    std::lock_guard<std::recursive_mutex> lock(slotsProtection);
 
-    if (std::end(observers) == iter) {
-        // FUS RO DAH
-        return;
+    auto const iter = std::find_if(
+        std::begin(observers),
+        std::end(observers),
+        [&](const auto& pair) { return pair.first == slotIndex; });
+
+    if (iter != std::end(observers)) {
+        iter->second = nullptr;
     }
-
-    iter->reset();
 }
 
 template <typename... Arguments>
 void SignalBody<void(Arguments...)>::PushBackAddedListeners()
 {
-    std::vector<std::shared_ptr<SlotType>> temporarySlots;
+    decltype(addedObservers) temporarySlots;
     {
         std::lock_guard<std::recursive_mutex> lock(addingProtection);
         std::swap(temporarySlots, addedObservers);
@@ -172,9 +188,11 @@ void SignalBody<void(Arguments...)>::PushBackAddedListeners()
         std::lock_guard<std::recursive_mutex> lock(slotsProtection);
 
         for (auto& slot : temporarySlots) {
-            POMDOG_ASSERT(std::end(observers) == std::find(
-                std::begin(observers), std::end(observers), slot));
-            observers.push_back(slot);
+            POMDOG_ASSERT(std::end(observers) == std::find_if(
+                std::begin(observers),
+                std::end(observers),
+                [&](const auto& pair) { return pair.first == slot.first; }));
+            observers.push_back(std::move(slot));
         }
     }
 }
@@ -184,8 +202,11 @@ void SignalBody<void(Arguments...)>::EraseRemovedListeners()
 {
     std::lock_guard<std::recursive_mutex> lock(slotsProtection);
 
-    observers.erase(std::remove_if(std::begin(observers), std::end(observers),
-        [](const std::shared_ptr<SlotType>& slot){ return !slot; }),
+    observers.erase(
+        std::remove_if(
+            std::begin(observers),
+            std::end(observers),
+            [](const auto& pair){ return pair.second == nullptr; }),
         std::end(observers));
 }
 
@@ -204,9 +225,11 @@ void SignalBody<void(Arguments...)>::operator()(Arguments&&... arguments)
     ++nestedMethodCallCount;
 
     try {
-        for (auto& observer : observers) {
-            if (auto scoped = observer) {
-                scoped->operator()(std::forward<Arguments>(arguments)...);
+        for (auto& pair : observers) {
+            // NOTE: Copy the function object to a temporary object to call it
+            // safely because std::function can be self-destroyed during call.
+            if (auto f = pair.second; f != nullptr) {
+                f(std::forward<Arguments>(arguments)...);
             }
         }
     }
@@ -226,7 +249,44 @@ void SignalBody<void(Arguments...)>::operator()(Arguments&&... arguments)
 template <typename... Arguments>
 std::size_t SignalBody<void(Arguments...)>::InvocationCount() const
 {
-    return observers.size();
+    auto count = [this]() -> std::size_t {
+        std::lock_guard<std::recursive_mutex> lock{addingProtection};
+        return addedObservers.size();
+    }();
+
+    std::lock_guard<std::recursive_mutex> lock{slotsProtection};
+    for (auto& pair : observers) {
+        if (pair.second != nullptr) {
+            ++count;
+        }
+    }
+    return count;
+}
+
+template <typename... Arguments>
+bool SignalBody<void(Arguments...)>::IsConnected(std::int32_t slotIndex)
+{
+    {
+        std::lock_guard<std::recursive_mutex> lock{slotsProtection};
+
+        auto iter = std::find_if(
+            std::begin(observers),
+            std::end(observers),
+            [&](const auto& pair) { return pair.first == slotIndex; });
+
+        if (iter != std::end(observers)) {
+            return (iter->second != nullptr);
+        }
+    }
+
+    std::lock_guard<std::recursive_mutex> lock{addingProtection};
+
+    auto iter = std::find_if(
+        std::begin(addedObservers),
+        std::end(addedObservers),
+        [&](const auto& pair) { return pair.first == slotIndex; });
+
+    return (iter != std::end(addedObservers)) && (iter->second != nullptr);
 }
 
 } // namespace Pomdog::Detail::Signals
