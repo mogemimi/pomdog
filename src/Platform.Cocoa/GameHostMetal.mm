@@ -84,13 +84,13 @@ public:
 
     std::shared_ptr<GameWindow> GetWindow();
 
-    std::shared_ptr<GameClock> GetClock(std::shared_ptr<GameHost> && gameHost);
+    std::shared_ptr<GameClock> GetClock(std::shared_ptr<GameHost>&& gameHost);
 
     std::shared_ptr<GraphicsDevice> GetGraphicsDevice();
 
     std::shared_ptr<GraphicsCommandQueue> GetGraphicsCommandQueue();
 
-    std::shared_ptr<AssetManager> GetAssetManager(std::shared_ptr<GameHost> && gameHost);
+    std::shared_ptr<AssetManager> GetAssetManager(std::shared_ptr<GameHost>&& gameHost);
 
     std::shared_ptr<AudioEngine> GetAudioEngine();
 
