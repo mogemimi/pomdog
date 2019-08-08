@@ -160,9 +160,7 @@ void SignalBody<void(Arguments...)>::Disconnect(std::int32_t slotIndex)
             [&](const auto& pair) { return pair.first == slotIndex; });
 
         if (iter != std::end(addedObservers)) {
-            [[maybe_unused]] auto f = std::move(iter->second);
             addedObservers.erase(iter);
-            lock.~lock_guard();
             return;
         }
     }
@@ -175,9 +173,7 @@ void SignalBody<void(Arguments...)>::Disconnect(std::int32_t slotIndex)
         [&](const auto& pair) { return pair.first == slotIndex; });
 
     if (iter != std::end(observers)) {
-        [[maybe_unused]] auto f = std::move(iter->second);
         iter->second = nullptr;
-        lock.~lock_guard();
         return;
     }
 }
