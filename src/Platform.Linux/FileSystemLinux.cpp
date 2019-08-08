@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <array>
 #include <climits>
+#include <cstddef>
 #include <cstdio>
 
 namespace Pomdog {
@@ -84,9 +85,13 @@ std::string FileSystem::GetResourceDirectoryPath()
 {
     std::array<char, PATH_MAX + 1> buf;
     std::fill(std::begin(buf), std::end(buf), 0);
-    ::readlink("/proc/self/exe", buf.data(), PATH_MAX);
+    auto size = ::readlink("/proc/self/exe", buf.data(), PATH_MAX);
+    if (size < 0) {
+        // TODO: Add error handling
+        return "";
+    }
 
-    std::string executablePath = buf.data();
+    std::string executablePath{buf.data(), static_cast<std::size_t>(size)};
     return PathHelper::GetDirectoryName(executablePath);
 }
 
