@@ -350,6 +350,7 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/src/Utility/Errors.cpp
   ${POMDOG_DIR}/src/Utility/PathHelper.cpp
   ${POMDOG_DIR}/src/Utility/ScopeGuard.hpp
+  ${POMDOG_DIR}/src/Utility/SpinLock.cpp
   ${POMDOG_DIR}/src/Utility/StringHelper.cpp
   ${POMDOG_DIR}/src/Utility/Tagged.hpp
 )
