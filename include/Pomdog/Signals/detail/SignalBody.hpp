@@ -5,6 +5,7 @@
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Signals/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Utility/detail/SpinLock.hpp"
 #include <algorithm>
 #include <cstdint>
 #include <functional>
@@ -114,8 +115,8 @@ private:
     std::vector<std::pair<std::int32_t, SlotType>> observers;
     std::vector<std::pair<std::int32_t, SlotType>> addedObservers;
 
-    std::recursive_mutex addingProtection;
-    std::recursive_mutex slotsProtection;
+    SpinLock addingProtection;
+    SpinLock slotsProtection;
 
     std::int32_t nestedMethodCallCount = 0;
     std::int32_t nextSlotIndex = 0;
@@ -129,7 +130,7 @@ auto SignalBody<void(Arguments...)>::Connect(Function&& slot)
     POMDOG_ASSERT(slot);
     std::int32_t slotIndex = 0;
     {
-        std::lock_guard<std::recursive_mutex> lock(addingProtection);
+        std::lock_guard<SpinLock> lock{addingProtection};
 
         slotIndex = nextSlotIndex;
         ++nextSlotIndex;
@@ -151,7 +152,7 @@ void SignalBody<void(Arguments...)>::Disconnect(std::int32_t slotIndex)
 {
     POMDOG_ASSERT(slotIndex <= nextSlotIndex);
     {
-        std::lock_guard<std::recursive_mutex> lock(addingProtection);
+        std::lock_guard<SpinLock> lock{addingProtection};
 
         auto iter = std::find_if(
             std::begin(addedObservers),
@@ -159,12 +160,14 @@ void SignalBody<void(Arguments...)>::Disconnect(std::int32_t slotIndex)
             [&](const auto& pair) { return pair.first == slotIndex; });
 
         if (iter != std::end(addedObservers)) {
+            [[maybe_unused]] auto f = std::move(iter->second);
             addedObservers.erase(iter);
+            lock.~lock_guard();
             return;
         }
     }
 
-    std::lock_guard<std::recursive_mutex> lock(slotsProtection);
+    std::lock_guard<SpinLock> lock{slotsProtection};
 
     auto const iter = std::find_if(
         std::begin(observers),
@@ -172,7 +175,10 @@ void SignalBody<void(Arguments...)>::Disconnect(std::int32_t slotIndex)
         [&](const auto& pair) { return pair.first == slotIndex; });
 
     if (iter != std::end(observers)) {
+        [[maybe_unused]] auto f = std::move(iter->second);
         iter->second = nullptr;
+        lock.~lock_guard();
+        return;
     }
 }
 
@@ -181,11 +187,11 @@ void SignalBody<void(Arguments...)>::PushBackAddedListeners()
 {
     decltype(addedObservers) temporarySlots;
     {
-        std::lock_guard<std::recursive_mutex> lock(addingProtection);
+        std::lock_guard<SpinLock> lock{addingProtection};
         std::swap(temporarySlots, addedObservers);
     }
     {
-        std::lock_guard<std::recursive_mutex> lock(slotsProtection);
+        std::lock_guard<SpinLock> lock{slotsProtection};
 
         for (auto& slot : temporarySlots) {
             POMDOG_ASSERT(std::end(observers) == std::find_if(
@@ -200,7 +206,7 @@ void SignalBody<void(Arguments...)>::PushBackAddedListeners()
 template <typename... Arguments>
 void SignalBody<void(Arguments...)>::EraseRemovedListeners()
 {
-    std::lock_guard<std::recursive_mutex> lock(slotsProtection);
+    std::lock_guard<SpinLock> lock{slotsProtection};
 
     observers.erase(
         std::remove_if(
@@ -250,11 +256,11 @@ template <typename... Arguments>
 std::size_t SignalBody<void(Arguments...)>::GetInvocationCount()
 {
     auto count = [this]() -> std::size_t {
-        std::lock_guard<std::recursive_mutex> lock{addingProtection};
+        std::lock_guard<SpinLock> lock{addingProtection};
         return addedObservers.size();
     }();
 
-    std::lock_guard<std::recursive_mutex> lock{slotsProtection};
+    std::lock_guard<SpinLock> lock{slotsProtection};
     for (auto& pair : observers) {
         if (pair.second != nullptr) {
             ++count;
@@ -267,7 +273,7 @@ template <typename... Arguments>
 bool SignalBody<void(Arguments...)>::IsConnected(std::int32_t slotIndex)
 {
     {
-        std::lock_guard<std::recursive_mutex> lock{slotsProtection};
+        std::lock_guard<SpinLock> lock{slotsProtection};
 
         auto iter = std::find_if(
             std::begin(observers),
@@ -279,7 +285,7 @@ bool SignalBody<void(Arguments...)>::IsConnected(std::int32_t slotIndex)
         }
     }
 
-    std::lock_guard<std::recursive_mutex> lock{addingProtection};
+    std::lock_guard<SpinLock> lock{addingProtection};
 
     auto iter = std::find_if(
         std::begin(addedObservers),

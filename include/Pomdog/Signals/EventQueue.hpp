@@ -5,9 +5,9 @@
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Signals/Event.hpp"
 #include "Pomdog/Signals/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Utility/detail/SpinLock.hpp"
 #include <functional>
 #include <memory>
-#include <mutex>
 #include <utility>
 #include <vector>
 
@@ -39,7 +39,7 @@ private:
     using SignalBody = Detail::Signals::SignalBody<void(const Event&)>;
     std::vector<Event> events;
     std::shared_ptr<SignalBody> signalBody;
-    std::recursive_mutex notificationProtection;
+    Detail::SpinLock notificationProtection;
 };
 
 } // namespace Pomdog

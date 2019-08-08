@@ -5,6 +5,7 @@
 #include "Pomdog/Signals/detail/SignalBody.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <algorithm>
+#include <mutex>
 
 namespace Pomdog {
 
@@ -29,7 +30,7 @@ Connection EventQueue::Connect(std::function<void(const Event&)> && slot)
 
 void EventQueue::Enqueue(Event && event)
 {
-    std::lock_guard<std::recursive_mutex> lock(notificationProtection);
+    std::lock_guard<Detail::SpinLock> lock{notificationProtection};
     events.emplace_back(std::move(event));
 }
 
@@ -39,7 +40,7 @@ void EventQueue::Emit()
 
     std::vector<Event> notifications;
     {
-        std::lock_guard<std::recursive_mutex> lock(notificationProtection);
+        std::lock_guard<Detail::SpinLock> lock{notificationProtection};
         std::swap(notifications, events);
     }
 
