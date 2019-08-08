@@ -19,7 +19,6 @@ source_group(Graphics               REGULAR_EXPRESSION test/Graphics/*)
 source_group(Input                  REGULAR_EXPRESSION test/Input/*)
 source_group(Logging                REGULAR_EXPRESSION test/Logging/*)
 source_group(Math                   REGULAR_EXPRESSION test/Math/*)
-source_group(Network                REGULAR_EXPRESSION test/Network/*)
 source_group(Signals                REGULAR_EXPRESSION test/Signals/*)
 source_group(Utility                REGULAR_EXPRESSION test/Utility/*)
 
@@ -62,11 +61,6 @@ add_executable(PomdogTest
   ${POMDOG_TEST_DIR}/Math/Vector2Test.cpp
   ${POMDOG_TEST_DIR}/Math/Vector3Test.cpp
   ${POMDOG_TEST_DIR}/Math/Vector4Test.cpp
-  ${POMDOG_TEST_DIR}/Network/Executor.hpp
-  ${POMDOG_TEST_DIR}/Network/HTTPClientTest.cpp
-  ${POMDOG_TEST_DIR}/Network/UDPStreamTest.cpp
-  ${POMDOG_TEST_DIR}/Network/TCPStreamTest.cpp
-  ${POMDOG_TEST_DIR}/Network/TLSStreamTest.cpp
   ${POMDOG_TEST_DIR}/Signals/ConnectionTest.cpp
   ${POMDOG_TEST_DIR}/Signals/ConnectionListTest.cpp
   ${POMDOG_TEST_DIR}/Signals/DelegateTest.cpp
@@ -78,7 +72,6 @@ add_executable(PomdogTest
   ${POMDOG_TEST_DIR}/Utility/AnyTest.cpp
   ${POMDOG_TEST_DIR}/Utility/CRC32Test.cpp
   ${POMDOG_TEST_DIR}/Utility/ErrorsTest.cpp
-  ${POMDOG_TEST_DIR}/Utility/ResultTest.cpp
   ${POMDOG_TEST_DIR}/Utility/SpinLockTest.cpp
   ${POMDOG_TEST_DIR}/Utility/StringHelperTest.cpp
 )
