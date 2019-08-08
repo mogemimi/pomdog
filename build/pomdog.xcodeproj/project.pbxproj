@@ -286,6 +286,10 @@
 		D7334E35228C689C00232225 /* ParticleSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E32228C689C00232225 /* ParticleSystem.cpp */; };
 		D7334E36228C689C00232225 /* BeamSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E33228C689C00232225 /* BeamSystem.cpp */; };
 		D7334E37228C689C00232225 /* BeamSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E33228C689C00232225 /* BeamSystem.cpp */; };
+		D7703DF722FCB1BB00442403 /* SpinLock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7703DF622FCB1BB00442403 /* SpinLock.cpp */; };
+		D7703DF822FCB1BB00442403 /* SpinLock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7703DF622FCB1BB00442403 /* SpinLock.cpp */; };
+		D7703E0D22FCB26800442403 /* Errors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7703E0C22FCB26800442403 /* Errors.cpp */; };
+		D7703E0E22FCB26800442403 /* Errors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7703E0C22FCB26800442403 /* Errors.cpp */; };
 		D8E9871132965BADBA4BE734 /* FloatingPointMatrix3x3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 029A2B232511421D3FDB9FAC /* FloatingPointMatrix3x3.cpp */; };
 		DA4579E5970831E615EA005D /* Ray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EB2111ED9B45715040451A9 /* Ray.cpp */; };
 		DC83323F55585B855108ED51 /* AudioClipLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9524A580BCEF4C5E9F56EB43 /* AudioClipLoader.cpp */; };
@@ -423,7 +427,6 @@
 		23AD66A6372EA23853297EBF /* BoundingSphere.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BoundingSphere.cpp; sourceTree = "<group>"; };
 		249F077975D4964A0E20D323 /* NativeRenderTarget2D.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = NativeRenderTarget2D.hpp; sourceTree = "<group>"; };
 		269AFA5F80C27EA231390663 /* ScopedConnection.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ScopedConnection.cpp; sourceTree = "<group>"; };
-		2749362BB85096C3C6B6347F /* Noncopyable.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = Noncopyable.hpp; sourceTree = "<group>"; };
 		299E154450003A82B25B751A /* Pomdog.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = Pomdog.hpp; sourceTree = "<group>"; };
 		2B2E424CE4D790296C3118BA /* ForwardDeclarations.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = ForwardDeclarations.hpp; sourceTree = "<group>"; };
 		2B7FC36B7F41B9D961BE4A39 /* TypesafeGL4.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = TypesafeGL4.hpp; sourceTree = "<group>"; };
@@ -803,6 +806,12 @@
 		D7334E4C228C691500232225 /* ParticleCurveLerp.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleCurveLerp.hpp; sourceTree = "<group>"; };
 		D74FD9BD064B46464D340F2E /* IndexBuffer.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = IndexBuffer.hpp; sourceTree = "<group>"; };
 		D752AEDF8093680A757220C6 /* GraphicsCommandQueue.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = GraphicsCommandQueue.hpp; sourceTree = "<group>"; };
+		D7703DF522FCB19E00442403 /* SpinLock.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SpinLock.hpp; sourceTree = "<group>"; };
+		D7703DF622FCB1BB00442403 /* SpinLock.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SpinLock.cpp; sourceTree = "<group>"; };
+		D7703DF922FCB1DC00442403 /* DelegateBody.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = DelegateBody.hpp; sourceTree = "<group>"; };
+		D7703DFA22FCB1E800442403 /* Delegate.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Delegate.hpp; sourceTree = "<group>"; };
+		D7703E0C22FCB26800442403 /* Errors.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Errors.cpp; sourceTree = "<group>"; };
+		D7703E0F22FCB28800442403 /* Errors.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Errors.hpp; sourceTree = "<group>"; };
 		D7D5A98E477FB0CDE2089FBD /* KeyboardState.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KeyboardState.cpp; sourceTree = "<group>"; };
 		D9C3D114115E6C3A619E8CF9 /* GameHostCocoa.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = GameHostCocoa.mm; sourceTree = "<group>"; };
 		DA8DDAEB3A97076C2FCB19F3 /* IndexElementSize.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = IndexElementSize.hpp; sourceTree = "<group>"; };
@@ -955,6 +964,7 @@
 				DB8672007B126823189581CA /* detail */,
 				97BB80D15705D98F76D28396 /* Any.hpp */,
 				AC349E78729FC3024C1BC5D9 /* Assert.hpp */,
+				D7703E0F22FCB28800442403 /* Errors.hpp */,
 				31FBEAA10D334ADAB5DBA52F /* Exception.hpp */,
 				B287AAFFF99539C6D6462CD8 /* FileSystem.hpp */,
 				E9B28A755CD1F1F43CA87DC7 /* PathHelper.hpp */,
@@ -1123,6 +1133,7 @@
 		46153A0926ECEA9ACC69D96A /* detail */ = {
 			isa = PBXGroup;
 			children = (
+				D7703DF922FCB1DC00442403 /* DelegateBody.hpp */,
 				BE3D261A7D982FAF5E688BB0 /* EventBody.hpp */,
 				D54F50F64FD8DBB3B83F101C /* ForwardDeclarations.hpp */,
 				7820046A70F49F98D15B5608 /* SignalBody.hpp */,
@@ -1173,9 +1184,10 @@
 			children = (
 				A9FC99071DC3D89300C78D63 /* AlignedNew.hpp */,
 				874BAF3803BCB9751C9574C4 /* CRC32.cpp */,
-				2749362BB85096C3C6B6347F /* Noncopyable.hpp */,
+				D7703E0C22FCB26800442403 /* Errors.cpp */,
 				5DAB111727E9143A507A0C10 /* PathHelper.cpp */,
 				53571F5D60F1E9D4FAF76256 /* ScopeGuard.hpp */,
+				D7703DF622FCB1BB00442403 /* SpinLock.cpp */,
 				D07BE9AF32EED1D5F74BE69A /* StringHelper.cpp */,
 				A998A72C212B2EC70063E6F7 /* Tagged.hpp */,
 			);
@@ -1648,6 +1660,7 @@
 				46153A0926ECEA9ACC69D96A /* detail */,
 				A3C8D192AA170BACB3933E3A /* Connection.hpp */,
 				9CBA3FD6E5BD54CF883984B0 /* ConnectionList.hpp */,
+				D7703DFA22FCB1E800442403 /* Delegate.hpp */,
 				EB6098C50965E896DC08FE3A /* Event.hpp */,
 				BC0B323866B999A632AEF52C /* EventQueue.hpp */,
 				0C0775DB85DA444CD6FEA34E /* Helpers.hpp */,
@@ -1849,6 +1862,7 @@
 			isa = PBXGroup;
 			children = (
 				EB11FBFA369AF955FB2B0C50 /* CRC32.hpp */,
+				D7703DF522FCB19E00442403 /* SpinLock.hpp */,
 			);
 			path = detail;
 			sourceTree = "<group>";
@@ -2152,6 +2166,7 @@
 				972D8345F3491175B7E8411B /* BoundingSphere.cpp in Sources */,
 				A98BE0D41CC22915008696A8 /* GameHostMetal.mm in Sources */,
 				A0FF034BB1ABF16181CC7340 /* Color.cpp in Sources */,
+				D7703E0D22FCB26800442403 /* Errors.cpp in Sources */,
 				5B1D2792F76709A593451042 /* MathHelper.cpp in Sources */,
 				9402075D41A1A97AE8090BF9 /* Ray.cpp in Sources */,
 				A93CA6521D92F34E00B65171 /* QueuedScheduler.cpp in Sources */,
@@ -2174,6 +2189,7 @@
 				378F438407DEF79BEA69E81C /* GraphicsCommandListImmediate.cpp in Sources */,
 				F29D13A39818F150CD4219B3 /* GraphicsCommandQueueImmediate.cpp in Sources */,
 				A943BA1C210E86B900DA852D /* GamepadUUID.cpp in Sources */,
+				D7703DF722FCB1BB00442403 /* SpinLock.cpp in Sources */,
 				1C60BD023919A0C8916DB3E2 /* SurfaceFormatHelper.cpp in Sources */,
 				E7645392D6AC421C2703DF5E /* TextureHelper.cpp in Sources */,
 				C0B84A37FCB13D340E04120C /* Connection.cpp in Sources */,
@@ -2302,6 +2318,7 @@
 				AB379BED1D868790638B95CB /* BoundingSphere.cpp in Sources */,
 				A98BE0D51CC22915008696A8 /* GameHostMetal.mm in Sources */,
 				66DF4B1D8D85D2B963D5A0D5 /* Color.cpp in Sources */,
+				D7703E0E22FCB26800442403 /* Errors.cpp in Sources */,
 				E58ECD9915BC55D5134950F9 /* MathHelper.cpp in Sources */,
 				DA4579E5970831E615EA005D /* Ray.cpp in Sources */,
 				A93CA6531D92F34E00B65171 /* QueuedScheduler.cpp in Sources */,
@@ -2324,6 +2341,7 @@
 				650D5B589129410AF7580726 /* GraphicsCommandListImmediate.cpp in Sources */,
 				6FA8A4ED33396758E9052EAD /* GraphicsCommandQueueImmediate.cpp in Sources */,
 				A943BA1D210E86B900DA852D /* GamepadUUID.cpp in Sources */,
+				D7703DF822FCB1BB00442403 /* SpinLock.cpp in Sources */,
 				A5F5B45161ACFD33A1652F9C /* SurfaceFormatHelper.cpp in Sources */,
 				55635C9F9A88D4C77235D6EB /* TextureHelper.cpp in Sources */,
 				B8B5DF3E58503D84B8D7E2D9 /* Connection.cpp in Sources */,
