@@ -28,6 +28,8 @@ public:
 
     void operator()(Arguments... arguments);
 
+    [[nodiscard]] operator bool() const noexcept;
+
     [[nodiscard]] bool IsConnected() const noexcept;
 
 private:
@@ -67,6 +69,13 @@ void Delegate<void(Arguments...)>::Disconnect()
 {
     POMDOG_ASSERT(body != nullptr);
     body->Disconnect();
+}
+
+template <typename... Arguments>
+Delegate<void(Arguments...)>::operator bool() const noexcept
+{
+    POMDOG_ASSERT(body != nullptr);
+    return body->IsConnected();
 }
 
 template <typename... Arguments>

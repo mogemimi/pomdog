@@ -40,6 +40,28 @@ TEST_CASE("Delegate", "[Signals]")
         REQUIRE(messages[0] == "hi");
         REQUIRE(messages[1] == "hello");
     }
+    SECTION("bool operator") {
+        auto conn = onText.Connect(callback);
+        REQUIRE(conn.IsConnected());
+        REQUIRE(onText.IsConnected());
+        REQUIRE(onText);
+
+        if (onText) {
+            onText("hi");
+        }
+        REQUIRE(messages.size() == 1);
+        REQUIRE(messages.back() == "hi");
+
+        // NOTE: connection has expired
+        conn.Disconnect();
+        REQUIRE(!conn.IsConnected());
+        REQUIRE(!onText.IsConnected());
+        REQUIRE(!onText);
+
+        onText("ok");
+        REQUIRE(messages.size() == 1);
+        REQUIRE(messages[0] == "hi");
+    }
     SECTION("when a new callback is assigned") {
         auto conn1 = onText.Connect(callback);
         REQUIRE(conn1.IsConnected());
