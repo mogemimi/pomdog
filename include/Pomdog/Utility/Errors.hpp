@@ -30,20 +30,20 @@ public:
     [[nodiscard]] std::string ToString() const noexcept;
 };
 
-POMDOG_EXPORT
-[[nodiscard]] std::shared_ptr<IOError>
+[[nodiscard]] POMDOG_EXPORT
+std::shared_ptr<IOError>
 New(std::errc kind, std::string&& reason);
 
-POMDOG_EXPORT
-[[nodiscard]] std::shared_ptr<Error>
+[[nodiscard]] POMDOG_EXPORT
+std::shared_ptr<Error>
 New(std::string&& message);
 
-POMDOG_EXPORT
-[[nodiscard]] std::shared_ptr<Error>
+[[nodiscard]] POMDOG_EXPORT
+std::shared_ptr<Error>
 Wrap(const std::shared_ptr<Error>& err, std::string&& message);
 
-POMDOG_EXPORT
-[[nodiscard]] std::shared_ptr<Error>
+[[nodiscard]] POMDOG_EXPORT
+std::shared_ptr<Error>
 Wrap(std::shared_ptr<Error>&& err, std::string&& message);
 
 } // namespace Pomdog::Errors
