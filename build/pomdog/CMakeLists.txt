@@ -242,6 +242,7 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/include/Pomdog/Utility/PathHelper.hpp
   ${POMDOG_DIR}/include/Pomdog/Utility/StringHelper.hpp
   ${POMDOG_DIR}/include/Pomdog/Utility/detail/CRC32.hpp
+  ${POMDOG_DIR}/include/Pomdog/Utility/detail/SpinLock.hpp
   ${POMDOG_DIR}/src/Application/GameClock.cpp
   ${POMDOG_DIR}/src/Application/SubsystemScheduler.hpp
   ${POMDOG_DIR}/src/Application/SystemEvents.hpp
