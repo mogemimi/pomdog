@@ -885,6 +885,12 @@ if(POMDOG_TARGET_PLATFORM MATCHES "Win32")
   )
 endif()
 
+if(POMDOG_TARGET_PLATFORM MATCHES "Linux")
+  target_link_libraries(pomdog_static INTERFACE
+    pthread
+  )
+endif()
+
 target_compile_options(pomdog_static PRIVATE
   # Clang
   $<$<OR:$<CXX_COMPILER_ID:Clang>,$<STREQUAL:${CMAKE_GENERATOR},Xcode>>:
