@@ -60,7 +60,7 @@ public:
         return false;
     }
 
-    std::unique_ptr<ConnectionBody> DeepCopy() const override
+    [[nodiscard]] std::unique_ptr<ConnectionBody> DeepCopy() const override
     {
         auto conn = std::make_unique<DelegateConnectionBody>();
         conn->weakSignal = weakSignal;
@@ -87,6 +87,7 @@ public:
     {
         slot = std::forward<Function>(slotIn);
         ++slotID;
+        POMDOG_ASSERT(slotID > 0);
 
         if (slot == nullptr) {
             return nullptr;

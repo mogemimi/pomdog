@@ -24,7 +24,7 @@ public:
     virtual ~ConnectionBody() = default;
     virtual void Disconnect() = 0;
     [[nodiscard]] virtual bool Valid() const = 0;
-    virtual std::unique_ptr<ConnectionBody> DeepCopy() const = 0;
+    [[nodiscard]] virtual std::unique_ptr<ConnectionBody> DeepCopy() const = 0;
 };
 
 template <typename Function>
@@ -59,7 +59,7 @@ public:
         slotIndex = std::nullopt;
     }
 
-    bool Valid() const override
+    [[nodiscard]] bool Valid() const override
     {
         if (slotIndex == std::nullopt) {
             return false;
@@ -71,7 +71,7 @@ public:
         return false;
     }
 
-    std::unique_ptr<ConnectionBody> DeepCopy() const override
+    [[nodiscard]] std::unique_ptr<ConnectionBody> DeepCopy() const override
     {
         auto conn = std::make_unique<ConnectionBodyOverride>();
         conn->weakSignal = weakSignal;
