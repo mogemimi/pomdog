@@ -102,8 +102,10 @@ target_compile_options(PomdogTest PRIVATE
   # Clang
   $<$<OR:$<CXX_COMPILER_ID:Clang>,$<STREQUAL:${CMAKE_GENERATOR},Xcode>>:
     -Wcomma
+    -Wextra-semi
     -Wmost
     -Wmove
+    -Wnon-virtual-dtor
     -Wimplicit-fallthrough
   >
   # GCC
