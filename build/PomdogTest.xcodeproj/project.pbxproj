@@ -77,10 +77,6 @@
 		A90B09AC1C25A774006E749D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF87E2EA6D1C796C51A886A7 /* Cocoa.framework */; };
 		A90B09AD1C25A774006E749D /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8740D20FB4E0A88300F8C2A5 /* OpenGL.framework */; };
 		A90B09AE1C25A774006E749D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8821B1A3B9B0B5552E6FBFB6 /* QuartzCore.framework */; };
-		A93CA65B1D92F37300B65171 /* SchedulerTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A93CA6591D92F37300B65171 /* SchedulerTest.cpp */; };
-		A93CA65C1D92F37300B65171 /* SchedulerTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A93CA6591D92F37300B65171 /* SchedulerTest.cpp */; };
-		A93CA65D1D92F37300B65171 /* TaskTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A93CA65A1D92F37300B65171 /* TaskTest.cpp */; };
-		A93CA65E1D92F37300B65171 /* TaskTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A93CA65A1D92F37300B65171 /* TaskTest.cpp */; };
 		A956D88C211132E8005D36A6 /* GamepadUUIDTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A956D889211132E8005D36A6 /* GamepadUUIDTest.cpp */; };
 		A956D88D211132E8005D36A6 /* GamepadUUIDTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A956D889211132E8005D36A6 /* GamepadUUIDTest.cpp */; };
 		A9D641961C343074006E14E0 /* libpomdog.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A9D641721C337AED006E14E0 /* libpomdog.a */; };
@@ -96,6 +92,20 @@
 		C70AF5750080F8927CA84E9F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8821B1A3B9B0B5552E6FBFB6 /* QuartzCore.framework */; };
 		CE0FB9D9F7E58DC14950C6D3 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8740D20FB4E0A88300F8C2A5 /* OpenGL.framework */; };
 		D47D8C92A04AF2FADEC4C5D8 /* MouseStateTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F827C5C4869F36685EEF4376 /* MouseStateTest.cpp */; };
+		D702F08022FD8C1B00886A78 /* TLSStreamTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F07A22FD8C1B00886A78 /* TLSStreamTest.cpp */; };
+		D702F08122FD8C1B00886A78 /* TLSStreamTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F07A22FD8C1B00886A78 /* TLSStreamTest.cpp */; };
+		D702F08222FD8C1B00886A78 /* UDPStreamTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F07B22FD8C1B00886A78 /* UDPStreamTest.cpp */; };
+		D702F08322FD8C1B00886A78 /* UDPStreamTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F07B22FD8C1B00886A78 /* UDPStreamTest.cpp */; };
+		D702F08422FD8C1B00886A78 /* HTTPClientTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F07C22FD8C1B00886A78 /* HTTPClientTest.cpp */; };
+		D702F08522FD8C1B00886A78 /* HTTPClientTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F07C22FD8C1B00886A78 /* HTTPClientTest.cpp */; };
+		D702F08622FD8C1B00886A78 /* TCPStreamTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F07E22FD8C1B00886A78 /* TCPStreamTest.cpp */; };
+		D702F08722FD8C1B00886A78 /* TCPStreamTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F07E22FD8C1B00886A78 /* TCPStreamTest.cpp */; };
+		D702F08822FD8C1B00886A78 /* ArrayViewTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F07F22FD8C1B00886A78 /* ArrayViewTest.cpp */; };
+		D702F08922FD8C1B00886A78 /* ArrayViewTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F07F22FD8C1B00886A78 /* ArrayViewTest.cpp */; };
+		D702F21922FD961800886A78 /* SchedulerTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F21722FD961800886A78 /* SchedulerTest.cpp */; };
+		D702F21A22FD961800886A78 /* SchedulerTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F21722FD961800886A78 /* SchedulerTest.cpp */; };
+		D702F21B22FD961800886A78 /* TaskTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F21822FD961800886A78 /* TaskTest.cpp */; };
+		D702F21C22FD961800886A78 /* TaskTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F21822FD961800886A78 /* TaskTest.cpp */; };
 		D7703E0422FCB22900442403 /* SpinLockTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7703E0122FCB22900442403 /* SpinLockTest.cpp */; };
 		D7703E0522FCB22900442403 /* SpinLockTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7703E0122FCB22900442403 /* SpinLockTest.cpp */; };
 		D7703E0722FCB23400442403 /* ErrorsTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7703E0622FCB23400442403 /* ErrorsTest.cpp */; };
@@ -190,8 +200,6 @@
 		A4667EB105E02A19A15C9B22 /* BoundingBox2DTest.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BoundingBox2DTest.cpp; sourceTree = "<group>"; };
 		A6145724A308D83392503F66 /* Vector4Test.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Vector4Test.cpp; sourceTree = "<group>"; };
 		A90B09B21C25A774006E749D /* PomdogUnitTest (Framework) */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "PomdogUnitTest (Framework)"; sourceTree = BUILT_PRODUCTS_DIR; };
-		A93CA6591D92F37300B65171 /* SchedulerTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SchedulerTest.cpp; path = Async/SchedulerTest.cpp; sourceTree = "<group>"; };
-		A93CA65A1D92F37300B65171 /* TaskTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TaskTest.cpp; path = Async/TaskTest.cpp; sourceTree = "<group>"; };
 		A956D889211132E8005D36A6 /* GamepadUUIDTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GamepadUUIDTest.cpp; sourceTree = "<group>"; };
 		A9F213621DE35F8D0027FA45 /* BoundingFrustumTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BoundingFrustumTest.cpp; sourceTree = "<group>"; };
 		A9F213671DE35F980027FA45 /* PlaneTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlaneTest.cpp; sourceTree = "<group>"; };
@@ -200,6 +208,14 @@
 		A9FF23B71C258DE200AE7D7B /* libpng.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libpng.xcodeproj; path = build/dependencies/libpng.xcodeproj; sourceTree = "<group>"; };
 		AA8FF4E1E145E644B6DCBF5B /* KeysTest.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KeysTest.cpp; sourceTree = "<group>"; };
 		D052B39A97086C615E3B21C9 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		D702F07A22FD8C1B00886A78 /* TLSStreamTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TLSStreamTest.cpp; sourceTree = "<group>"; };
+		D702F07B22FD8C1B00886A78 /* UDPStreamTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UDPStreamTest.cpp; sourceTree = "<group>"; };
+		D702F07C22FD8C1B00886A78 /* HTTPClientTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HTTPClientTest.cpp; sourceTree = "<group>"; };
+		D702F07D22FD8C1B00886A78 /* Executor.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Executor.hpp; sourceTree = "<group>"; };
+		D702F07E22FD8C1B00886A78 /* TCPStreamTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TCPStreamTest.cpp; sourceTree = "<group>"; };
+		D702F07F22FD8C1B00886A78 /* ArrayViewTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ArrayViewTest.cpp; sourceTree = "<group>"; };
+		D702F21722FD961800886A78 /* SchedulerTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SchedulerTest.cpp; sourceTree = "<group>"; };
+		D702F21822FD961800886A78 /* TaskTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TaskTest.cpp; sourceTree = "<group>"; };
 		D7703E0122FCB22900442403 /* SpinLockTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SpinLockTest.cpp; sourceTree = "<group>"; };
 		D7703E0622FCB23400442403 /* ErrorsTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ErrorsTest.cpp; sourceTree = "<group>"; };
 		D7703E0922FCB24700442403 /* DelegateTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DelegateTest.cpp; sourceTree = "<group>"; };
@@ -333,10 +349,10 @@
 		A93CA6561D92F36700B65171 /* Async */ = {
 			isa = PBXGroup;
 			children = (
-				A93CA6591D92F37300B65171 /* SchedulerTest.cpp */,
-				A93CA65A1D92F37300B65171 /* TaskTest.cpp */,
+				D702F21722FD961800886A78 /* SchedulerTest.cpp */,
+				D702F21822FD961800886A78 /* TaskTest.cpp */,
 			);
-			name = Async;
+			path = Async;
 			sourceTree = "<group>";
 		};
 		A9D6416D1C337AED006E14E0 /* Products */ = {
@@ -394,6 +410,7 @@
 				11602A5CA6C255F67E5FECE2 /* Input */,
 				A81D93891C89D5800A86327A /* Logging */,
 				67C1DB70A1EB1F0A7A4340CE /* Math */,
+				D702F07922FD8BFE00886A78 /* Network */,
 				86D6F1716092A379BA13250B /* Signals */,
 				E25FC77762012E4D42007B49 /* Utility */,
 				D052B39A97086C615E3B21C9 /* main.cpp */,
@@ -408,6 +425,19 @@
 				686C1E3D26ECF58CB051CDA2 /* InputLayoutHelperTest.cpp */,
 			);
 			path = Graphics;
+			sourceTree = "<group>";
+		};
+		D702F07922FD8BFE00886A78 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				D702F07F22FD8C1B00886A78 /* ArrayViewTest.cpp */,
+				D702F07D22FD8C1B00886A78 /* Executor.hpp */,
+				D702F07C22FD8C1B00886A78 /* HTTPClientTest.cpp */,
+				D702F07E22FD8C1B00886A78 /* TCPStreamTest.cpp */,
+				D702F07A22FD8C1B00886A78 /* TLSStreamTest.cpp */,
+				D702F07B22FD8C1B00886A78 /* UDPStreamTest.cpp */,
+			);
+			path = Network;
 			sourceTree = "<group>";
 		};
 		E25FC77762012E4D42007B49 /* Utility */ = {
@@ -569,8 +599,9 @@
 				D7703E0722FCB23400442403 /* ErrorsTest.cpp in Sources */,
 				D47D8C92A04AF2FADEC4C5D8 /* MouseStateTest.cpp in Sources */,
 				282CC424528EE843710F84D9 /* LogChannelTest.cpp in Sources */,
-				A93CA65B1D92F37300B65171 /* SchedulerTest.cpp in Sources */,
+				D702F08422FD8C1B00886A78 /* HTTPClientTest.cpp in Sources */,
 				2F58CF2B8CC8E59FB57518B8 /* LogTest.cpp in Sources */,
+				D702F08022FD8C1B00886A78 /* TLSStreamTest.cpp in Sources */,
 				F98236F7B7C5D000B590C534 /* BoundingBoxTest.cpp in Sources */,
 				A956D88C211132E8005D36A6 /* GamepadUUIDTest.cpp in Sources */,
 				48D32CD2D39460D090E46DED /* BoundingBox2DTest.cpp in Sources */,
@@ -578,8 +609,10 @@
 				D9A0B1F8D2EEDA3FAEB1189C /* BoundingSphereTest.cpp in Sources */,
 				898EC5DF217E2CB9E105A128 /* ColorTest.cpp in Sources */,
 				07943350712C1D75FA357DF1 /* MathHelperTest.cpp in Sources */,
+				D702F08222FD8C1B00886A78 /* UDPStreamTest.cpp in Sources */,
 				4ADF5E5905C2947F431F3C3E /* Matrix2x2Test.cpp in Sources */,
 				FD3AC00CC5C4E6EF7E2A6F56 /* Matrix3x2Test.cpp in Sources */,
+				D702F08622FD8C1B00886A78 /* TCPStreamTest.cpp in Sources */,
 				452E1280BD3AF38204440797 /* Matrix3x3Test.cpp in Sources */,
 				1F0DF79A19F2EF16C8F94F32 /* Matrix4x4Test.cpp in Sources */,
 				48F0D9EE5F78AA52835A2E27 /* Point2DTest.cpp in Sources */,
@@ -588,10 +621,12 @@
 				24DE34C8C8561D5B7D9960FA /* RayTest.cpp in Sources */,
 				6129C2109DE7037DF83E0A9B /* RectangleTest.cpp in Sources */,
 				5521A2D3939DC89E3BA1DD45 /* Vector2Test.cpp in Sources */,
+				D702F21B22FD961800886A78 /* TaskTest.cpp in Sources */,
 				0767246319D79AA309F47499 /* Vector3Test.cpp in Sources */,
 				45583F752766FF700ECFB34A /* Vector4Test.cpp in Sources */,
 				C28AF0A1EF021CDF810B9D6E /* ConnectionTest.cpp in Sources */,
 				5A5EB328053CB425874E445B /* ConnectionListTest.cpp in Sources */,
+				D702F21922FD961800886A78 /* SchedulerTest.cpp in Sources */,
 				9A05AEA543A1E079508C15CB /* EventQueueTest.cpp in Sources */,
 				E10BE80AEEB8E18B2538BE38 /* EventTest.cpp in Sources */,
 				6C7A6F69812868116B079288 /* HelpersTest.cpp in Sources */,
@@ -600,8 +635,8 @@
 				DFE8014D0200C170A0A7C358 /* AnyTest.cpp in Sources */,
 				0CF0D48D88520AB807097760 /* CRC32Test.cpp in Sources */,
 				4C0C4CC3655F3CFB6B5028DD /* StringHelperTest.cpp in Sources */,
+				D702F08822FD8C1B00886A78 /* ArrayViewTest.cpp in Sources */,
 				D7703E0A22FCB24700442403 /* DelegateTest.cpp in Sources */,
-				A93CA65D1D92F37300B65171 /* TaskTest.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -622,8 +657,9 @@
 				D7703E0822FCB23400442403 /* ErrorsTest.cpp in Sources */,
 				A90B09861C25A774006E749D /* MouseStateTest.cpp in Sources */,
 				A90B09871C25A774006E749D /* LogChannelTest.cpp in Sources */,
-				A93CA65C1D92F37300B65171 /* SchedulerTest.cpp in Sources */,
+				D702F08522FD8C1B00886A78 /* HTTPClientTest.cpp in Sources */,
 				A90B09881C25A774006E749D /* LogTest.cpp in Sources */,
+				D702F08122FD8C1B00886A78 /* TLSStreamTest.cpp in Sources */,
 				A90B09891C25A774006E749D /* BoundingBoxTest.cpp in Sources */,
 				A956D88D211132E8005D36A6 /* GamepadUUIDTest.cpp in Sources */,
 				A90B098A1C25A774006E749D /* BoundingBox2DTest.cpp in Sources */,
@@ -631,8 +667,10 @@
 				A90B098C1C25A774006E749D /* BoundingSphereTest.cpp in Sources */,
 				A90B098D1C25A774006E749D /* ColorTest.cpp in Sources */,
 				A90B098E1C25A774006E749D /* MathHelperTest.cpp in Sources */,
+				D702F08322FD8C1B00886A78 /* UDPStreamTest.cpp in Sources */,
 				A90B098F1C25A774006E749D /* Matrix2x2Test.cpp in Sources */,
 				A90B09901C25A774006E749D /* Matrix3x2Test.cpp in Sources */,
+				D702F08722FD8C1B00886A78 /* TCPStreamTest.cpp in Sources */,
 				A90B09911C25A774006E749D /* Matrix3x3Test.cpp in Sources */,
 				A90B09921C25A774006E749D /* Matrix4x4Test.cpp in Sources */,
 				A90B09931C25A774006E749D /* Point2DTest.cpp in Sources */,
@@ -641,10 +679,12 @@
 				A90B09961C25A774006E749D /* RayTest.cpp in Sources */,
 				A90B09971C25A774006E749D /* RectangleTest.cpp in Sources */,
 				A90B09981C25A774006E749D /* Vector2Test.cpp in Sources */,
+				D702F21C22FD961800886A78 /* TaskTest.cpp in Sources */,
 				A90B09991C25A774006E749D /* Vector3Test.cpp in Sources */,
 				A90B099A1C25A774006E749D /* Vector4Test.cpp in Sources */,
 				A90B099B1C25A774006E749D /* ConnectionTest.cpp in Sources */,
 				A90B099C1C25A774006E749D /* ConnectionListTest.cpp in Sources */,
+				D702F21A22FD961800886A78 /* SchedulerTest.cpp in Sources */,
 				A90B099D1C25A774006E749D /* EventQueueTest.cpp in Sources */,
 				A90B099E1C25A774006E749D /* EventTest.cpp in Sources */,
 				A90B099F1C25A774006E749D /* HelpersTest.cpp in Sources */,
@@ -653,8 +693,8 @@
 				A90B09A21C25A774006E749D /* AnyTest.cpp in Sources */,
 				A90B09A31C25A774006E749D /* CRC32Test.cpp in Sources */,
 				A90B09A51C25A774006E749D /* StringHelperTest.cpp in Sources */,
+				D702F08922FD8C1B00886A78 /* ArrayViewTest.cpp in Sources */,
 				D7703E0B22FCB24700442403 /* DelegateTest.cpp in Sources */,
-				A93CA65E1D92F37300B65171 /* TaskTest.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
