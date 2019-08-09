@@ -322,8 +322,11 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/src/Network/AddressFamily.hpp
   ${POMDOG_DIR}/src/Network/AddressParser.cpp
   ${POMDOG_DIR}/src/Network/AddressParser.hpp
+  ${POMDOG_DIR}/src/Network/EndPoint.cpp
+  ${POMDOG_DIR}/src/Network/EndPoint.hpp
   ${POMDOG_DIR}/src/Network/ErrorHelper.cpp
   ${POMDOG_DIR}/src/Network/ErrorHelper.hpp
+  ${POMDOG_DIR}/src/Network/SocketProtocol.hpp
   ${POMDOG_DIR}/src/RenderSystem/BufferBindMode.hpp
   ${POMDOG_DIR}/src/RenderSystem/BufferHelper.cpp
   ${POMDOG_DIR}/src/RenderSystem/BufferHelper.hpp
