@@ -258,6 +258,40 @@
 		D36D164E7998A51B8BC0C0DB /* Viewport.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A651CE22C9DE13920AB99E12 /* Viewport.cpp */; };
 		D5CAE3F16D482B36E58155CA /* LogChannel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4406B12793DCB512528775FC /* LogChannel.cpp */; };
 		D6B00FCEBABBF1A29ADD25A1 /* GraphicsDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0732B0AF8F54DAE712BFE595 /* GraphicsDevice.cpp */; };
+		D702F04422FD8AC700886A78 /* HTTPResponse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F03522FD8AC600886A78 /* HTTPResponse.cpp */; };
+		D702F04522FD8AC700886A78 /* HTTPResponse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F03522FD8AC600886A78 /* HTTPResponse.cpp */; };
+		D702F04622FD8AC700886A78 /* HTTPRequest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F03722FD8AC600886A78 /* HTTPRequest.cpp */; };
+		D702F04722FD8AC700886A78 /* HTTPRequest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F03722FD8AC600886A78 /* HTTPRequest.cpp */; };
+		D702F04822FD8AC700886A78 /* HTTPClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F03822FD8AC600886A78 /* HTTPClient.cpp */; };
+		D702F04922FD8AC700886A78 /* HTTPClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F03822FD8AC600886A78 /* HTTPClient.cpp */; };
+		D702F04A22FD8AC700886A78 /* AddressParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F03A22FD8AC600886A78 /* AddressParser.cpp */; };
+		D702F04B22FD8AC700886A78 /* AddressParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F03A22FD8AC600886A78 /* AddressParser.cpp */; };
+		D702F04C22FD8AC700886A78 /* IOService.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F03B22FD8AC600886A78 /* IOService.cpp */; };
+		D702F04D22FD8AC700886A78 /* IOService.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F03B22FD8AC600886A78 /* IOService.cpp */; };
+		D702F04E22FD8AC700886A78 /* UDPStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F03C22FD8AC600886A78 /* UDPStream.cpp */; };
+		D702F04F22FD8AC700886A78 /* UDPStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F03C22FD8AC600886A78 /* UDPStream.cpp */; };
+		D702F05022FD8AC700886A78 /* TCPStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F04022FD8AC700886A78 /* TCPStream.cpp */; };
+		D702F05122FD8AC700886A78 /* TCPStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F04022FD8AC700886A78 /* TCPStream.cpp */; };
+		D702F05222FD8AC700886A78 /* EndPoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F04122FD8AC700886A78 /* EndPoint.cpp */; };
+		D702F05322FD8AC700886A78 /* EndPoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F04122FD8AC700886A78 /* EndPoint.cpp */; };
+		D702F05422FD8AC700886A78 /* ErrorHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F04222FD8AC700886A78 /* ErrorHelper.cpp */; };
+		D702F05522FD8AC700886A78 /* ErrorHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F04222FD8AC700886A78 /* ErrorHelper.cpp */; };
+		D702F05622FD8AC700886A78 /* TLSStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F04322FD8AC700886A78 /* TLSStream.cpp */; };
+		D702F05722FD8AC700886A78 /* TLSStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F04322FD8AC700886A78 /* TLSStream.cpp */; };
+		D702F05F22FD8B1300886A78 /* Certificates.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F05D22FD8B1300886A78 /* Certificates.cpp */; };
+		D702F06022FD8B1300886A78 /* Certificates.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F05D22FD8B1300886A78 /* Certificates.cpp */; };
+		D702F06122FD8B1300886A78 /* TLSStreamMbedTLS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F05E22FD8B1300886A78 /* TLSStreamMbedTLS.cpp */; };
+		D702F06222FD8B1300886A78 /* TLSStreamMbedTLS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F05E22FD8B1300886A78 /* TLSStreamMbedTLS.cpp */; };
+		D702F06922FD8B1B00886A78 /* UDPStreamPOSIX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F06322FD8B1B00886A78 /* UDPStreamPOSIX.cpp */; };
+		D702F06A22FD8B1B00886A78 /* UDPStreamPOSIX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F06322FD8B1B00886A78 /* UDPStreamPOSIX.cpp */; };
+		D702F06B22FD8B1B00886A78 /* SocketHelperPOSIX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F06622FD8B1B00886A78 /* SocketHelperPOSIX.cpp */; };
+		D702F06C22FD8B1B00886A78 /* SocketHelperPOSIX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F06622FD8B1B00886A78 /* SocketHelperPOSIX.cpp */; };
+		D702F06D22FD8B1B00886A78 /* TCPStreamPOSIX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F06722FD8B1B00886A78 /* TCPStreamPOSIX.cpp */; };
+		D702F06E22FD8B1B00886A78 /* TCPStreamPOSIX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F06722FD8B1B00886A78 /* TCPStreamPOSIX.cpp */; };
+		D702F1F622FD914000886A78 /* libmbedtls.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D702F1E022FD8F2800886A78 /* libmbedtls.a */; };
+		D702F1F722FD914000886A78 /* libmbedtls-crypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D702F1E622FD8F2C00886A78 /* libmbedtls-crypto.a */; };
+		D702F1F822FD914900886A78 /* libmbedtls.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D702F1E022FD8F2800886A78 /* libmbedtls.a */; };
+		D702F1F922FD914900886A78 /* libmbedtls-crypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D702F1E622FD8F2C00886A78 /* libmbedtls-crypto.a */; };
 		D7334DC8228AC80200232225 /* PolylineBatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334DC6228AC80200232225 /* PolylineBatch.cpp */; };
 		D7334DC9228AC80200232225 /* PolylineBatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334DC6228AC80200232225 /* PolylineBatch.cpp */; };
 		D7334DCA228AC80200232225 /* PrimitiveBatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334DC7228AC80200232225 /* PrimitiveBatch.cpp */; };
@@ -286,6 +320,8 @@
 		D7334E35228C689C00232225 /* ParticleSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E32228C689C00232225 /* ParticleSystem.cpp */; };
 		D7334E36228C689C00232225 /* BeamSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E33228C689C00232225 /* BeamSystem.cpp */; };
 		D7334E37228C689C00232225 /* BeamSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E33228C689C00232225 /* BeamSystem.cpp */; };
+		D7458C0B23000520007150B4 /* HTTPParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7458C0923000520007150B4 /* HTTPParser.cpp */; };
+		D7458C0C23000520007150B4 /* HTTPParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7458C0923000520007150B4 /* HTTPParser.cpp */; };
 		D7703DF722FCB1BB00442403 /* SpinLock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7703DF622FCB1BB00442403 /* SpinLock.cpp */; };
 		D7703DF822FCB1BB00442403 /* SpinLock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7703DF622FCB1BB00442403 /* SpinLock.cpp */; };
 		D7703E0D22FCB26800442403 /* Errors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7703E0C22FCB26800442403 /* Errors.cpp */; };
@@ -382,6 +418,48 @@
 			proxyType = 1;
 			remoteGlobalIDString = 8ED0FBBBD08C4B5967CE24C3;
 			remoteInfo = libpng_static;
+		};
+		D702F1DF22FD8F2800886A78 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D702F1DB22FD8F2800886A78 /* mbedtls.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D702F09322FD8CAE00886A78;
+			remoteInfo = mbedtls;
+		};
+		D702F1E522FD8F2C00886A78 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D702F1E122FD8F2C00886A78 /* mbedtls-crypto.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D702F0AA22FD8CDA00886A78;
+			remoteInfo = "mbedtls-crypto";
+		};
+		D702F1EC22FD90C900886A78 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D702F1DB22FD8F2800886A78 /* mbedtls.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D702F09222FD8CAE00886A78;
+			remoteInfo = mbedtls_static;
+		};
+		D702F1F022FD90CD00886A78 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D702F1E122FD8F2C00886A78 /* mbedtls-crypto.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D702F0A922FD8CDA00886A78;
+			remoteInfo = "mbedtls-crypto_static";
+		};
+		D702F1F222FD90E300886A78 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D702F1DB22FD8F2800886A78 /* mbedtls.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D702F09222FD8CAE00886A78;
+			remoteInfo = mbedtls_static;
+		};
+		D702F1F422FD90E700886A78 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D702F1E122FD8F2C00886A78 /* mbedtls-crypto.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D702F0A922FD8CDA00886A78;
+			remoteInfo = "mbedtls-crypto_static";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -751,6 +829,43 @@
 		D54F50F64FD8DBB3B83F101C /* ForwardDeclarations.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = ForwardDeclarations.hpp; sourceTree = "<group>"; };
 		D65A120F87F70FCDEF810175 /* FloatingPointQuaternion.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = FloatingPointQuaternion.hpp; sourceTree = "<group>"; };
 		D699D066A1879569575246E4 /* Matrix2x2.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = Matrix2x2.hpp; sourceTree = "<group>"; };
+		D702F02922FD8A7700886A78 /* HTTPMethod.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = HTTPMethod.hpp; sourceTree = "<group>"; };
+		D702F02A22FD8A7700886A78 /* IOService.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = IOService.hpp; sourceTree = "<group>"; };
+		D702F02B22FD8A7800886A78 /* TLSStream.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TLSStream.hpp; sourceTree = "<group>"; };
+		D702F02C22FD8A7800886A78 /* HTTPClient.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = HTTPClient.hpp; sourceTree = "<group>"; };
+		D702F02D22FD8A7800886A78 /* TCPStream.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TCPStream.hpp; sourceTree = "<group>"; };
+		D702F02E22FD8A7800886A78 /* HTTPResponse.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = HTTPResponse.hpp; sourceTree = "<group>"; };
+		D702F02F22FD8A7800886A78 /* UDPStream.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = UDPStream.hpp; sourceTree = "<group>"; };
+		D702F03022FD8A7800886A78 /* HTTPRequest.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = HTTPRequest.hpp; sourceTree = "<group>"; };
+		D702F03122FD8A7E00886A78 /* ArrayView.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ArrayView.hpp; sourceTree = "<group>"; };
+		D702F03322FD8A9F00886A78 /* ForwardDeclarations.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ForwardDeclarations.hpp; sourceTree = "<group>"; };
+		D702F03522FD8AC600886A78 /* HTTPResponse.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HTTPResponse.cpp; sourceTree = "<group>"; };
+		D702F03622FD8AC600886A78 /* EndPoint.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = EndPoint.hpp; sourceTree = "<group>"; };
+		D702F03722FD8AC600886A78 /* HTTPRequest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HTTPRequest.cpp; sourceTree = "<group>"; };
+		D702F03822FD8AC600886A78 /* HTTPClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HTTPClient.cpp; sourceTree = "<group>"; };
+		D702F03922FD8AC600886A78 /* AddressFamily.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AddressFamily.hpp; sourceTree = "<group>"; };
+		D702F03A22FD8AC600886A78 /* AddressParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AddressParser.cpp; sourceTree = "<group>"; };
+		D702F03B22FD8AC600886A78 /* IOService.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IOService.cpp; sourceTree = "<group>"; };
+		D702F03C22FD8AC600886A78 /* UDPStream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UDPStream.cpp; sourceTree = "<group>"; };
+		D702F03D22FD8AC600886A78 /* AddressParser.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AddressParser.hpp; sourceTree = "<group>"; };
+		D702F03E22FD8AC600886A78 /* SocketProtocol.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SocketProtocol.hpp; sourceTree = "<group>"; };
+		D702F03F22FD8AC600886A78 /* ErrorHelper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ErrorHelper.hpp; sourceTree = "<group>"; };
+		D702F04022FD8AC700886A78 /* TCPStream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TCPStream.cpp; sourceTree = "<group>"; };
+		D702F04122FD8AC700886A78 /* EndPoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EndPoint.cpp; sourceTree = "<group>"; };
+		D702F04222FD8AC700886A78 /* ErrorHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ErrorHelper.cpp; sourceTree = "<group>"; };
+		D702F04322FD8AC700886A78 /* TLSStream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TLSStream.cpp; sourceTree = "<group>"; };
+		D702F05B22FD8B1300886A78 /* TLSStreamMbedTLS.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TLSStreamMbedTLS.hpp; sourceTree = "<group>"; };
+		D702F05C22FD8B1300886A78 /* Certificates.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Certificates.hpp; sourceTree = "<group>"; };
+		D702F05D22FD8B1300886A78 /* Certificates.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Certificates.cpp; sourceTree = "<group>"; };
+		D702F05E22FD8B1300886A78 /* TLSStreamMbedTLS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TLSStreamMbedTLS.cpp; sourceTree = "<group>"; };
+		D702F06322FD8B1B00886A78 /* UDPStreamPOSIX.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UDPStreamPOSIX.cpp; sourceTree = "<group>"; };
+		D702F06422FD8B1B00886A78 /* TCPStreamPOSIX.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TCPStreamPOSIX.hpp; sourceTree = "<group>"; };
+		D702F06522FD8B1B00886A78 /* UDPStreamPOSIX.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = UDPStreamPOSIX.hpp; sourceTree = "<group>"; };
+		D702F06622FD8B1B00886A78 /* SocketHelperPOSIX.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SocketHelperPOSIX.cpp; sourceTree = "<group>"; };
+		D702F06722FD8B1B00886A78 /* TCPStreamPOSIX.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TCPStreamPOSIX.cpp; sourceTree = "<group>"; };
+		D702F06822FD8B1B00886A78 /* SocketHelperPOSIX.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SocketHelperPOSIX.hpp; sourceTree = "<group>"; };
+		D702F1DB22FD8F2800886A78 /* mbedtls.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = mbedtls.xcodeproj; path = dependencies/mbedtls.xcodeproj; sourceTree = "<group>"; };
+		D702F1E122FD8F2C00886A78 /* mbedtls-crypto.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "mbedtls-crypto.xcodeproj"; path = "dependencies/mbedtls-crypto.xcodeproj"; sourceTree = "<group>"; };
 		D7334DC6228AC80200232225 /* PolylineBatch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PolylineBatch.cpp; sourceTree = "<group>"; };
 		D7334DC7228AC80200232225 /* PrimitiveBatch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PrimitiveBatch.cpp; sourceTree = "<group>"; };
 		D7334DCC228AC81F00232225 /* SpriteLine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SpriteLine.cpp; sourceTree = "<group>"; };
@@ -804,6 +919,8 @@
 		D7334E4A228C691500232225 /* ParticleEmitterShapeBox.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleEmitterShapeBox.hpp; sourceTree = "<group>"; };
 		D7334E4B228C691500232225 /* ParticleEmitterShape.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleEmitterShape.hpp; sourceTree = "<group>"; };
 		D7334E4C228C691500232225 /* ParticleCurveLerp.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleCurveLerp.hpp; sourceTree = "<group>"; };
+		D7458C0923000520007150B4 /* HTTPParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HTTPParser.cpp; sourceTree = "<group>"; };
+		D7458C0A23000520007150B4 /* HTTPParser.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = HTTPParser.hpp; sourceTree = "<group>"; };
 		D74FD9BD064B46464D340F2E /* IndexBuffer.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = IndexBuffer.hpp; sourceTree = "<group>"; };
 		D752AEDF8093680A757220C6 /* GraphicsCommandQueue.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = GraphicsCommandQueue.hpp; sourceTree = "<group>"; };
 		D7703DF522FCB19E00442403 /* SpinLock.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SpinLock.hpp; sourceTree = "<group>"; };
@@ -875,6 +992,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				A9A822731DAB7BF60091497F /* libgiflib.a in Frameworks */,
+				D702F1F622FD914000886A78 /* libmbedtls.a in Frameworks */,
+				D702F1F722FD914000886A78 /* libmbedtls-crypto.a in Frameworks */,
 				A9D641861C342F59006E14E0 /* libpng.a in Frameworks */,
 				A9D641871C342F5F006E14E0 /* libzlib.a in Frameworks */,
 				A997F6DF1CAEFB3E00926392 /* AudioToolbox.framework in Frameworks */,
@@ -892,6 +1011,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				A9A822761DAB7C060091497F /* libgiflib.a in Frameworks */,
+				D702F1F822FD914900886A78 /* libmbedtls.a in Frameworks */,
+				D702F1F922FD914900886A78 /* libmbedtls-crypto.a in Frameworks */,
 				77A462A40D237A6A1041B607 /* libpng.a in Frameworks */,
 				4D3F6C1E105B1A1149475635 /* libzlib.a in Frameworks */,
 				A997F6E01CAEFB4900926392 /* AudioToolbox.framework in Frameworks */,
@@ -978,6 +1099,8 @@
 			children = (
 				A9A8226B1DAB7B310091497F /* giflib.xcodeproj */,
 				31E97AB9CDD9BFFD39388913 /* libpng.xcodeproj */,
+				D702F1DB22FD8F2800886A78 /* mbedtls.xcodeproj */,
+				D702F1E122FD8F2C00886A78 /* mbedtls-crypto.xcodeproj */,
 				0EEE1584DE8DFC5F422E85CC /* zlib.xcodeproj */,
 			);
 			name = Projects;
@@ -1156,6 +1279,9 @@
 				A9E4B86F210CDDB9003F87DC /* InputSystem.IOKit */,
 				6A0441A5D4CDAD2C95CF69B3 /* Logging */,
 				2694DA612683E85FCA7EC307 /* Math */,
+				D702F03422FD8AAD00886A78 /* Network */,
+				D702F05A22FD8AEE00886A78 /* Network.MbedTLS */,
+				D702F05822FD8ACC00886A78 /* Network.POSIX */,
 				D0E09111DB852231F1413898 /* Platform.Apple */,
 				F8C903E69E0CF28E9DCB001A /* Platform.Cocoa */,
 				8360309E4667B011AD3E6F2F /* RenderSystem */,
@@ -1725,6 +1851,95 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		D702F02822FD8A5A00886A78 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				D702F03222FD8A8400886A78 /* detail */,
+				D702F03122FD8A7E00886A78 /* ArrayView.hpp */,
+				D702F02C22FD8A7800886A78 /* HTTPClient.hpp */,
+				D702F02922FD8A7700886A78 /* HTTPMethod.hpp */,
+				D702F03022FD8A7800886A78 /* HTTPRequest.hpp */,
+				D702F02E22FD8A7800886A78 /* HTTPResponse.hpp */,
+				D702F02A22FD8A7700886A78 /* IOService.hpp */,
+				D702F02D22FD8A7800886A78 /* TCPStream.hpp */,
+				D702F02B22FD8A7800886A78 /* TLSStream.hpp */,
+				D702F02F22FD8A7800886A78 /* UDPStream.hpp */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		D702F03222FD8A8400886A78 /* detail */ = {
+			isa = PBXGroup;
+			children = (
+				D702F03322FD8A9F00886A78 /* ForwardDeclarations.hpp */,
+			);
+			path = detail;
+			sourceTree = "<group>";
+		};
+		D702F03422FD8AAD00886A78 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				D702F03922FD8AC600886A78 /* AddressFamily.hpp */,
+				D702F03A22FD8AC600886A78 /* AddressParser.cpp */,
+				D702F03D22FD8AC600886A78 /* AddressParser.hpp */,
+				D702F04122FD8AC700886A78 /* EndPoint.cpp */,
+				D702F03622FD8AC600886A78 /* EndPoint.hpp */,
+				D702F04222FD8AC700886A78 /* ErrorHelper.cpp */,
+				D702F03F22FD8AC600886A78 /* ErrorHelper.hpp */,
+				D702F03822FD8AC600886A78 /* HTTPClient.cpp */,
+				D7458C0923000520007150B4 /* HTTPParser.cpp */,
+				D7458C0A23000520007150B4 /* HTTPParser.hpp */,
+				D702F03722FD8AC600886A78 /* HTTPRequest.cpp */,
+				D702F03522FD8AC600886A78 /* HTTPResponse.cpp */,
+				D702F03B22FD8AC600886A78 /* IOService.cpp */,
+				D702F03E22FD8AC600886A78 /* SocketProtocol.hpp */,
+				D702F04022FD8AC700886A78 /* TCPStream.cpp */,
+				D702F04322FD8AC700886A78 /* TLSStream.cpp */,
+				D702F03C22FD8AC600886A78 /* UDPStream.cpp */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		D702F05822FD8ACC00886A78 /* Network.POSIX */ = {
+			isa = PBXGroup;
+			children = (
+				D702F06622FD8B1B00886A78 /* SocketHelperPOSIX.cpp */,
+				D702F06822FD8B1B00886A78 /* SocketHelperPOSIX.hpp */,
+				D702F06722FD8B1B00886A78 /* TCPStreamPOSIX.cpp */,
+				D702F06422FD8B1B00886A78 /* TCPStreamPOSIX.hpp */,
+				D702F06322FD8B1B00886A78 /* UDPStreamPOSIX.cpp */,
+				D702F06522FD8B1B00886A78 /* UDPStreamPOSIX.hpp */,
+			);
+			path = Network.POSIX;
+			sourceTree = "<group>";
+		};
+		D702F05A22FD8AEE00886A78 /* Network.MbedTLS */ = {
+			isa = PBXGroup;
+			children = (
+				D702F05D22FD8B1300886A78 /* Certificates.cpp */,
+				D702F05C22FD8B1300886A78 /* Certificates.hpp */,
+				D702F05E22FD8B1300886A78 /* TLSStreamMbedTLS.cpp */,
+				D702F05B22FD8B1300886A78 /* TLSStreamMbedTLS.hpp */,
+			);
+			path = Network.MbedTLS;
+			sourceTree = "<group>";
+		};
+		D702F1DC22FD8F2800886A78 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D702F1E022FD8F2800886A78 /* libmbedtls.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D702F1E222FD8F2C00886A78 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D702F1E622FD8F2C00886A78 /* libmbedtls-crypto.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		D7334E02228AEB6A00232225 /* ImageEffects */ = {
 			isa = PBXGroup;
 			children = (
@@ -1919,6 +2134,7 @@
 				68CED7E1D2108A668492B923 /* Input */,
 				0ADCD7A9C3ACD3EAEBA70750 /* Logging */,
 				754359D56BFF683A4820D9B3 /* Math */,
+				D702F02822FD8A5A00886A78 /* Network */,
 				8C552D14A0990FBC52A70E1A /* Platform/Cocoa */,
 				A93CA62D1D92F2C600B65171 /* Reactive */,
 				AAF4E64073F0BBFB4C0B0C43 /* Signals */,
@@ -2012,6 +2228,8 @@
 			dependencies = (
 				A9A822751DAB7C010091497F /* PBXTargetDependency */,
 				12C6FD6DDFE9A44EBCBDF554 /* PBXTargetDependency */,
+				D702F1F322FD90E300886A78 /* PBXTargetDependency */,
+				D702F1F522FD90E700886A78 /* PBXTargetDependency */,
 				47F28AE6D095659B888571B6 /* PBXTargetDependency */,
 			);
 			name = "Pomdog Mac (Pomdog.framework)";
@@ -2031,6 +2249,8 @@
 			dependencies = (
 				A9A822721DAB7BF00091497F /* PBXTargetDependency */,
 				A9D641891C342FBF006E14E0 /* PBXTargetDependency */,
+				D702F1ED22FD90C900886A78 /* PBXTargetDependency */,
+				D702F1F122FD90CD00886A78 /* PBXTargetDependency */,
 				A9D6418B1C342FC2006E14E0 /* PBXTargetDependency */,
 			);
 			name = "Pomdog Mac (libpomdog.a)";
@@ -2067,6 +2287,14 @@
 					ProjectRef = 31E97AB9CDD9BFFD39388913 /* libpng.xcodeproj */;
 				},
 				{
+					ProductGroup = D702F1E222FD8F2C00886A78 /* Products */;
+					ProjectRef = D702F1E122FD8F2C00886A78 /* mbedtls-crypto.xcodeproj */;
+				},
+				{
+					ProductGroup = D702F1DC22FD8F2800886A78 /* Products */;
+					ProjectRef = D702F1DB22FD8F2800886A78 /* mbedtls.xcodeproj */;
+				},
+				{
 					ProductGroup = E9474A50F9C518D92371B7E0 /* Products */;
 					ProjectRef = 0EEE1584DE8DFC5F422E85CC /* zlib.xcodeproj */;
 				},
@@ -2101,6 +2329,20 @@
 			remoteRef = AFA7BEC911FA91E3A09AEC00 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		D702F1E022FD8F2800886A78 /* libmbedtls.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libmbedtls.a;
+			remoteRef = D702F1DF22FD8F2800886A78 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D702F1E622FD8F2C00886A78 /* libmbedtls-crypto.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libmbedtls-crypto.a";
+			remoteRef = D702F1E522FD8F2C00886A78 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -2111,11 +2353,13 @@
 				0E2F4D65374135E36FE1DD6D /* GameClock.cpp in Sources */,
 				E7BC935B83D4E596AE1FDDC6 /* Timer.cpp in Sources */,
 				A997F6FC1CAEFC4800926392 /* GraphicsDeviceMetal.mm in Sources */,
+				D702F05F22FD8B1300886A78 /* Certificates.cpp in Sources */,
 				A9A8228D1DAB7FB70091497F /* GifImageLoader.cpp in Sources */,
 				4EE6EBE03E9AD9C3BEF652F2 /* AudioClip.cpp in Sources */,
 				A997F7041CAEFC4900926392 /* SamplerStateMetal.mm in Sources */,
 				D7334E1D228AEC1300232225 /* VignetteEffect.cpp in Sources */,
 				B7E9DD7713CD0E5323210193 /* AudioEngine.cpp in Sources */,
+				D702F04A22FD8AC700886A78 /* AddressParser.cpp in Sources */,
 				A9A8228F1DAB7FB70091497F /* Image.cpp in Sources */,
 				A9E4B872210CDDEB003F87DC /* GamepadIOKit.cpp in Sources */,
 				A997F7001CAEFC4800926392 /* PipelineStateMetal.mm in Sources */,
@@ -2147,9 +2391,11 @@
 				A997F6FA1CAEFC4800926392 /* GraphicsContextMetal.mm in Sources */,
 				BD2BE203D2CCE45E6906D99E /* InputLayoutHelper.cpp in Sources */,
 				A98CB91E8C51E158141731F1 /* PipelineState.cpp in Sources */,
+				D702F06D22FD8B1B00886A78 /* TCPStreamPOSIX.cpp in Sources */,
 				267998B10C4AC2842177CC79 /* RenderTarget2D.cpp in Sources */,
 				BD548D0C612A8F01446C119D /* SamplerState.cpp in Sources */,
 				627D0583CB97FD0F3B9A55BE /* Texture2D.cpp in Sources */,
+				D702F04C22FD8AC700886A78 /* IOService.cpp in Sources */,
 				1AB4307E702C25A5D75EEEA9 /* Viewport.cpp in Sources */,
 				3E74C72D64309F88D0335D5F /* VertexBuffer.cpp in Sources */,
 				A997F7061CAEFC4900926392 /* ShaderMetal.mm in Sources */,
@@ -2159,6 +2405,7 @@
 				6AC6140DEE87DAE2DC52FFE7 /* KeyboardState.cpp in Sources */,
 				1650793D0884E1424679277F /* Log.cpp in Sources */,
 				D5CAE3F16D482B36E58155CA /* LogChannel.cpp in Sources */,
+				D702F04622FD8AC700886A78 /* HTTPRequest.cpp in Sources */,
 				5FC19F99728314D0AB72DDB8 /* BoundingBox.cpp in Sources */,
 				A94F2DCC2131FEEA00718DB0 /* VoxModelExporter.cpp in Sources */,
 				C256D286DB58A59C3115A07E /* BoundingBox2D.cpp in Sources */,
@@ -2170,6 +2417,7 @@
 				5B1D2792F76709A593451042 /* MathHelper.cpp in Sources */,
 				9402075D41A1A97AE8090BF9 /* Ray.cpp in Sources */,
 				A93CA6521D92F34E00B65171 /* QueuedScheduler.cpp in Sources */,
+				D702F04E22FD8AC700886A78 /* UDPStream.cpp in Sources */,
 				A94F2DD12131FEFB00718DB0 /* EasingHelper.cpp in Sources */,
 				0D2BB710020E127DFCD9A463 /* Rectangle.cpp in Sources */,
 				D7334E19228AEC1300232225 /* FXAA.cpp in Sources */,
@@ -2184,7 +2432,9 @@
 				7BFC36E8777C887934E3F02B /* FloatingPointMatrix4x4.cpp in Sources */,
 				1A671762A001893355AC4247 /* FloatingPointQuaternion.cpp in Sources */,
 				722648A22471D9FC50128061 /* FloatingPointVector2.cpp in Sources */,
+				D702F05622FD8AC700886A78 /* TLSStream.cpp in Sources */,
 				5B2A7872A04E4938E7E62058 /* FloatingPointVector3.cpp in Sources */,
+				D702F05222FD8AC700886A78 /* EndPoint.cpp in Sources */,
 				0497572B05C5E009716C044A /* FloatingPointVector4.cpp in Sources */,
 				378F438407DEF79BEA69E81C /* GraphicsCommandListImmediate.cpp in Sources */,
 				F29D13A39818F150CD4219B3 /* GraphicsCommandQueueImmediate.cpp in Sources */,
@@ -2200,6 +2450,7 @@
 				D7334E1F228AEC1300232225 /* SepiaToneEffect.cpp in Sources */,
 				A9E4B86A210CD9C1003F87DC /* GamepadMappings.cpp in Sources */,
 				A9A822931DAB7FBE0091497F /* TextureAtlasGenerator.cpp in Sources */,
+				D702F04422FD8AC700886A78 /* HTTPResponse.cpp in Sources */,
 				A9FC99051DC3D87F00C78D63 /* SpriteBatch.cpp in Sources */,
 				9439AAF08FDF6A7046F2F994 /* ScopedConnection.cpp in Sources */,
 				A9E4B879210CDEA2003F87DC /* GamepadFactory.cpp in Sources */,
@@ -2208,6 +2459,7 @@
 				A997F7081CAEFC4900926392 /* Texture2DMetal.mm in Sources */,
 				D7334E34228C689C00232225 /* ParticleSystem.cpp in Sources */,
 				566D366B6621FECC73232526 /* PathHelper.cpp in Sources */,
+				D702F05022FD8AC700886A78 /* TCPStream.cpp in Sources */,
 				3F941E8F3AB564A6641C4B0E /* StringHelper.cpp in Sources */,
 				D7334E36228C689C00232225 /* BeamSystem.cpp in Sources */,
 				D7334E21228AEC1300232225 /* ScreenQuad.cpp in Sources */,
@@ -2219,17 +2471,22 @@
 				2939F626E9115C7EE5EA0E3A /* DepthStencilStateGL4.cpp in Sources */,
 				B41EB006F4BCD3004879EB93 /* EffectReflectionGL4.cpp in Sources */,
 				9BD2B7E492D96A784F54C910 /* ErrorChecker.cpp in Sources */,
+				D702F05422FD8AC700886A78 /* ErrorHelper.cpp in Sources */,
 				A997F6FE1CAEFC4800926392 /* MetalFormatHelper.mm in Sources */,
+				D7458C0B23000520007150B4 /* HTTPParser.cpp in Sources */,
 				A93CA6541D92F34E00B65171 /* Task.cpp in Sources */,
 				A992AF041C2B1168003170C9 /* Coordinate3D.cpp in Sources */,
 				A9E4B86C210CD9C1003F87DC /* GamepadHelper.cpp in Sources */,
+				D702F06B22FD8B1B00886A78 /* SocketHelperPOSIX.cpp in Sources */,
 				A997F6F61CAEFC4800926392 /* BufferMetal.mm in Sources */,
 				D036ADDD0CD6E4CE27AC1A93 /* GraphicsContextGL4.cpp in Sources */,
 				74D477E9B36CBB96B59576DA /* GraphicsDeviceGL4.cpp in Sources */,
 				BD5C4B6ACB960141061065E7 /* InputLayoutGL4.cpp in Sources */,
 				616958519334C7EF67A9B08E /* PipelineStateGL4.cpp in Sources */,
+				D702F04822FD8AC700886A78 /* HTTPClient.cpp in Sources */,
 				373CF27D2193F65F489FA975 /* RasterizerStateGL4.cpp in Sources */,
 				A233F262232DDD6C16C06D31 /* RenderTarget2DGL4.cpp in Sources */,
+				D702F06922FD8B1B00886A78 /* UDPStreamPOSIX.cpp in Sources */,
 				0B2A073EC556AE4DF301E6DA /* SamplerStateGL4.cpp in Sources */,
 				9F7601D5C7E771D3423E81EC /* ShaderGL4.cpp in Sources */,
 				68C77475A849DB821AEC1312 /* Texture2DGL4.cpp in Sources */,
@@ -2239,6 +2496,7 @@
 				7760B64AC769ED3067368A8C /* ContextOpenAL.cpp in Sources */,
 				7A500C8DE0D6DC20D936D25D /* ErrorCheckerAL.cpp in Sources */,
 				A98F591A211B2B89002960C1 /* LineBatch.cpp in Sources */,
+				D702F06122FD8B1300886A78 /* TLSStreamMbedTLS.cpp in Sources */,
 				63571970C7BE520D7EE1BB02 /* SoundEffectAL.cpp in Sources */,
 				3EC9EB32476FB3E3C3713D72 /* Bootstrap.mm in Sources */,
 				D7334E1B228AEC1300232225 /* FishEyeEffect.cpp in Sources */,
@@ -2263,11 +2521,13 @@
 				219021114F3127B13F14D421 /* GameClock.cpp in Sources */,
 				25FE89B66D5561E80E0EE6FE /* Timer.cpp in Sources */,
 				A997F6FD1CAEFC4800926392 /* GraphicsDeviceMetal.mm in Sources */,
+				D702F06022FD8B1300886A78 /* Certificates.cpp in Sources */,
 				A9A8228E1DAB7FB70091497F /* GifImageLoader.cpp in Sources */,
 				8F708C4B18D750ED37EFCF6B /* AudioClip.cpp in Sources */,
 				A997F7051CAEFC4900926392 /* SamplerStateMetal.mm in Sources */,
 				D7334E1E228AEC1300232225 /* VignetteEffect.cpp in Sources */,
 				3EB59864165741842C8DD788 /* AudioEngine.cpp in Sources */,
+				D702F04B22FD8AC700886A78 /* AddressParser.cpp in Sources */,
 				A9A822901DAB7FB70091497F /* Image.cpp in Sources */,
 				A9E4B873210CDDEB003F87DC /* GamepadIOKit.cpp in Sources */,
 				A997F7011CAEFC4800926392 /* PipelineStateMetal.mm in Sources */,
@@ -2299,9 +2559,11 @@
 				A997F6FB1CAEFC4800926392 /* GraphicsContextMetal.mm in Sources */,
 				FFFC25846E3BA96DE4CAD842 /* InputLayoutHelper.cpp in Sources */,
 				F255E1A99BBAD960C7E5D44E /* PipelineState.cpp in Sources */,
+				D702F06E22FD8B1B00886A78 /* TCPStreamPOSIX.cpp in Sources */,
 				D226E17E0F7EBA8B51D1AA0A /* RenderTarget2D.cpp in Sources */,
 				A26E66F1AC2BB1AB2F03033F /* SamplerState.cpp in Sources */,
 				544D8ABEA35E9232F743511A /* Texture2D.cpp in Sources */,
+				D702F04D22FD8AC700886A78 /* IOService.cpp in Sources */,
 				D36D164E7998A51B8BC0C0DB /* Viewport.cpp in Sources */,
 				8455FDB1EFE2A4DC02D36A09 /* VertexBuffer.cpp in Sources */,
 				A997F7071CAEFC4900926392 /* ShaderMetal.mm in Sources */,
@@ -2311,6 +2573,7 @@
 				2C6A8330B306F09980C8EFE0 /* KeyboardState.cpp in Sources */,
 				1F0E6CB61ABDCD22F870F258 /* Log.cpp in Sources */,
 				2253F43FA13A0B293FE79749 /* LogChannel.cpp in Sources */,
+				D702F04722FD8AC700886A78 /* HTTPRequest.cpp in Sources */,
 				15C4EF0C411554073735CCF7 /* BoundingBox.cpp in Sources */,
 				A94F2DCB2131FEE900718DB0 /* VoxModelExporter.cpp in Sources */,
 				77E3632C4F2E245C2F8B6927 /* BoundingBox2D.cpp in Sources */,
@@ -2322,6 +2585,7 @@
 				E58ECD9915BC55D5134950F9 /* MathHelper.cpp in Sources */,
 				DA4579E5970831E615EA005D /* Ray.cpp in Sources */,
 				A93CA6531D92F34E00B65171 /* QueuedScheduler.cpp in Sources */,
+				D702F04F22FD8AC700886A78 /* UDPStream.cpp in Sources */,
 				A94F2DD22131FEFB00718DB0 /* EasingHelper.cpp in Sources */,
 				E4C4ADB64ED81496C05CB580 /* Rectangle.cpp in Sources */,
 				D7334E1A228AEC1300232225 /* FXAA.cpp in Sources */,
@@ -2336,7 +2600,9 @@
 				B64D84284045847B155F4CD3 /* FloatingPointMatrix4x4.cpp in Sources */,
 				043C1238BFC3C906AEAEEA09 /* FloatingPointQuaternion.cpp in Sources */,
 				D147245447821976039CCCC2 /* FloatingPointVector2.cpp in Sources */,
+				D702F05722FD8AC700886A78 /* TLSStream.cpp in Sources */,
 				0A291D8212398840CBEB9A5D /* FloatingPointVector3.cpp in Sources */,
+				D702F05322FD8AC700886A78 /* EndPoint.cpp in Sources */,
 				F03B5A2733D5B0585DFBBB89 /* FloatingPointVector4.cpp in Sources */,
 				650D5B589129410AF7580726 /* GraphicsCommandListImmediate.cpp in Sources */,
 				6FA8A4ED33396758E9052EAD /* GraphicsCommandQueueImmediate.cpp in Sources */,
@@ -2352,6 +2618,7 @@
 				D7334E20228AEC1300232225 /* SepiaToneEffect.cpp in Sources */,
 				A9E4B86B210CD9C1003F87DC /* GamepadMappings.cpp in Sources */,
 				A9A822941DAB7FBE0091497F /* TextureAtlasGenerator.cpp in Sources */,
+				D702F04522FD8AC700886A78 /* HTTPResponse.cpp in Sources */,
 				A9FC99061DC3D87F00C78D63 /* SpriteBatch.cpp in Sources */,
 				023F583DEDA9BCB1C9E19C1C /* ScopedConnection.cpp in Sources */,
 				A9E4B87A210CDEA2003F87DC /* GamepadFactory.cpp in Sources */,
@@ -2360,6 +2627,7 @@
 				A997F7091CAEFC4900926392 /* Texture2DMetal.mm in Sources */,
 				D7334E35228C689C00232225 /* ParticleSystem.cpp in Sources */,
 				8B19A1DD45CD8F8791C5B725 /* PathHelper.cpp in Sources */,
+				D702F05122FD8AC700886A78 /* TCPStream.cpp in Sources */,
 				854A4F7DC911E624593C541D /* StringHelper.cpp in Sources */,
 				D7334E37228C689C00232225 /* BeamSystem.cpp in Sources */,
 				D7334E22228AEC1300232225 /* ScreenQuad.cpp in Sources */,
@@ -2371,17 +2639,22 @@
 				70602D1132700C62F76B98C7 /* DepthStencilStateGL4.cpp in Sources */,
 				14B5A80EB2F7EDF1D4226B3D /* EffectReflectionGL4.cpp in Sources */,
 				70214CEF1A1CF63D334FD75E /* ErrorChecker.cpp in Sources */,
+				D702F05522FD8AC700886A78 /* ErrorHelper.cpp in Sources */,
 				A997F6FF1CAEFC4800926392 /* MetalFormatHelper.mm in Sources */,
+				D7458C0C23000520007150B4 /* HTTPParser.cpp in Sources */,
 				A93CA6551D92F34E00B65171 /* Task.cpp in Sources */,
 				A992AF051C2B1168003170C9 /* Coordinate3D.cpp in Sources */,
 				A9E4B86D210CD9C1003F87DC /* GamepadHelper.cpp in Sources */,
+				D702F06C22FD8B1B00886A78 /* SocketHelperPOSIX.cpp in Sources */,
 				A997F6F71CAEFC4800926392 /* BufferMetal.mm in Sources */,
 				C7615C67C153671C670F649B /* GraphicsContextGL4.cpp in Sources */,
 				FD3FD836F0346B587EDB61DE /* GraphicsDeviceGL4.cpp in Sources */,
 				B3BF71F0DA976F207A41EC64 /* InputLayoutGL4.cpp in Sources */,
 				FC16EE3B4D5C9E58010BCD0A /* PipelineStateGL4.cpp in Sources */,
+				D702F04922FD8AC700886A78 /* HTTPClient.cpp in Sources */,
 				8DDEFF00D7FE9464C037A933 /* RasterizerStateGL4.cpp in Sources */,
 				1A274366E26BECBB63B60751 /* RenderTarget2DGL4.cpp in Sources */,
+				D702F06A22FD8B1B00886A78 /* UDPStreamPOSIX.cpp in Sources */,
 				4282457DCED6C0F50EC6CE7E /* SamplerStateGL4.cpp in Sources */,
 				019FA0785E7D88B8C880AFD9 /* ShaderGL4.cpp in Sources */,
 				6591378FB9E160A17D96D06A /* Texture2DGL4.cpp in Sources */,
@@ -2391,6 +2664,7 @@
 				D2C0DD27D04FFFC6B898AA80 /* ContextOpenAL.cpp in Sources */,
 				4B6482395A34745225470B08 /* ErrorCheckerAL.cpp in Sources */,
 				A98F591B211B2B89002960C1 /* LineBatch.cpp in Sources */,
+				D702F06222FD8B1300886A78 /* TLSStreamMbedTLS.cpp in Sources */,
 				526DFCDBB8C6C2F2C6EC26D2 /* SoundEffectAL.cpp in Sources */,
 				99DE12DBE8D4B0D14FDACD5F /* Bootstrap.mm in Sources */,
 				D7334E1C228AEC1300232225 /* FishEyeEffect.cpp in Sources */,
@@ -2440,6 +2714,26 @@
 			isa = PBXTargetDependency;
 			name = zlib_static;
 			targetProxy = A9D6418A1C342FC2006E14E0 /* PBXContainerItemProxy */;
+		};
+		D702F1ED22FD90C900886A78 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = mbedtls_static;
+			targetProxy = D702F1EC22FD90C900886A78 /* PBXContainerItemProxy */;
+		};
+		D702F1F122FD90CD00886A78 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "mbedtls-crypto_static";
+			targetProxy = D702F1F022FD90CD00886A78 /* PBXContainerItemProxy */;
+		};
+		D702F1F322FD90E300886A78 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = mbedtls_static;
+			targetProxy = D702F1F222FD90E300886A78 /* PBXContainerItemProxy */;
+		};
+		D702F1F522FD90E700886A78 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "mbedtls-crypto_static";
+			targetProxy = D702F1F422FD90E700886A78 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -2552,6 +2846,7 @@
 					../dependencies,
 					../dependencies/giflib,
 					../dependencies/libpng,
+					../dependencies/mbedtls/include,
 					../dependencies/SDL_GameControllerDB/data,
 					../dependencies/stb,
 					../dependencies/vendor/libpng,
@@ -2638,6 +2933,7 @@
 					../dependencies,
 					../dependencies/giflib,
 					../dependencies/libpng,
+					../dependencies/mbedtls/include,
 					../dependencies/SDL_GameControllerDB/data,
 					../dependencies/stb,
 					../dependencies/vendor/libpng,
