@@ -977,8 +977,19 @@ target_compile_options(pomdog_static PRIVATE
   >
   # MSVC
   $<$<CXX_COMPILER_ID:MSVC>:
+    # NOTE: See https://docs.microsoft.com/en-us/cpp/preprocessor/compiler-warnings-that-are-off-by-default
     /W4
     /WX
+    /we4263
+    /we4264
+    /we4266
+    /we4287
+    /we4289
+    /we4412
+    /we4431
+    /we4686
+    /we4928
+    /we4987
     $<$<CONFIG:DEBUG>:/Od;/MTd>
     $<$<CONFIG:RELEASE>:/O2;/Ob2;/MT>
   >
