@@ -14,6 +14,8 @@ class Gamepad;
 class GameWindow;
 class GraphicsCommandQueue;
 class GraphicsDevice;
+class HTTPClient;
+class IOService;
 class Keyboard;
 class Mouse;
 
@@ -58,6 +60,12 @@ public:
 
     /// @return Associated to this host Gamepad.
     virtual std::shared_ptr<Gamepad> GetGamepad() = 0;
+
+    /// @return Associated to this host IOService.
+    virtual std::shared_ptr<IOService> GetIOService() = 0;
+
+    /// @return Associated to this host HTTPClient.
+    virtual std::shared_ptr<HTTPClient> GetHTTPClient() = 0;
 };
 
 } // namespace Pomdog

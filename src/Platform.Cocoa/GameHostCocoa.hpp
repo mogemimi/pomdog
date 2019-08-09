@@ -52,6 +52,10 @@ public:
 
     std::shared_ptr<Gamepad> GetGamepad() override;
 
+    std::shared_ptr<IOService> GetIOService() override;
+
+    std::shared_ptr<HTTPClient> GetHTTPClient() override;
+
 private:
     class Impl;
     std::unique_ptr<Impl> impl;
