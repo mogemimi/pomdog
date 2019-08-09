@@ -22,6 +22,7 @@ source_group(Graphics\\ShaderCompilers    REGULAR_EXPRESSION "(include/Pomdog|sr
 source_group(Input                        REGULAR_EXPRESSION "(include/Pomdog|src)/Input/*")
 source_group(Logging                      REGULAR_EXPRESSION "(include/Pomdog|src)/Logging/*")
 source_group(Math                         REGULAR_EXPRESSION "(include/Pomdog|src)/Math/*")
+source_group(Network                      REGULAR_EXPRESSION "(include/Pomdog|src)/Network/*")
 source_group(Platform.Cocoa               REGULAR_EXPRESSION "(include/Pomdog/Platform/Cocoa|src/Platform.Cocoa)/*")
 source_group(Platform.Win32               REGULAR_EXPRESSION "(include/Pomdog/Platform/Win32|src/Platform.Win32)/*")
 source_group(Platform.X11                 REGULAR_EXPRESSION "(include/Pomdog/Platform/X11|src/Platform.X11)/*")
@@ -317,6 +318,9 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/src/Math/detail/FloatingPointVector2.cpp
   ${POMDOG_DIR}/src/Math/detail/FloatingPointVector3.cpp
   ${POMDOG_DIR}/src/Math/detail/FloatingPointVector4.cpp
+  ${POMDOG_DIR}/src/Network/AddressFamily.hpp
+  ${POMDOG_DIR}/src/Network/AddressParser.cpp
+  ${POMDOG_DIR}/src/Network/AddressParser.hpp
   ${POMDOG_DIR}/src/RenderSystem/BufferBindMode.hpp
   ${POMDOG_DIR}/src/RenderSystem/BufferHelper.cpp
   ${POMDOG_DIR}/src/RenderSystem/BufferHelper.hpp
