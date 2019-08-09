@@ -836,6 +836,7 @@ target_include_directories(pomdog_static PRIVATE
   ${POMDOG_DIR}/dependencies
   ${POMDOG_DIR}/dependencies/giflib
   ${POMDOG_DIR}/dependencies/libpng
+  ${POMDOG_DIR}/dependencies/mbedtls/include
   ${POMDOG_DIR}/dependencies/SDL_GameControllerDB/data
   ${POMDOG_DIR}/dependencies/stb
   ${POMDOG_DIR}/dependencies/vendor/libpng
@@ -847,6 +848,9 @@ target_link_libraries(pomdog_static INTERFACE png)
 
 add_subdirectory(${POMDOG_DIR}/build/dependencies/giflib "${CMAKE_CURRENT_BINARY_DIR}/giflib_build")
 target_link_libraries(pomdog_static INTERFACE giflib)
+
+add_subdirectory(${POMDOG_DIR}/build/dependencies/mbedtls "${CMAKE_CURRENT_BINARY_DIR}/mbedtls_build")
+target_link_libraries(pomdog_static INTERFACE mbedtls)
 
 if(POMDOG_USE_OPENAL AND (POMDOG_TARGET_PLATFORM MATCHES "Linux"))
   target_link_libraries(pomdog_static INTERFACE openal)
