@@ -20,6 +20,8 @@
 #include "Pomdog/Graphics/Viewport.hpp"
 #include "Pomdog/Input/KeyState.hpp"
 #include "Pomdog/Logging/Log.hpp"
+#include "Pomdog/Network/HTTPClient.hpp"
+#include "Pomdog/Network/IOService.hpp"
 #include "Pomdog/Signals/Event.hpp"
 #include "Pomdog/Signals/ScopedConnection.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -100,6 +102,10 @@ public:
 
     std::shared_ptr<Gamepad> GetGamepad();
 
+    std::shared_ptr<IOService> GetIOService(std::shared_ptr<GameHost>&& gameHost);
+
+    std::shared_ptr<HTTPClient> GetHTTPClient(std::shared_ptr<GameHost>&& gameHost);
+
 private:
     void RenderFrame();
 
@@ -128,6 +134,9 @@ private:
     std::shared_ptr<KeyboardCocoa> keyboard;
     std::shared_ptr<MouseCocoa> mouse;
     std::shared_ptr<GamepadIOKit> gamepad;
+
+    std::unique_ptr<IOService> ioService;
+    std::unique_ptr<HTTPClient> httpClient;
 
     __weak MTKView* metalView;
     Duration presentationInterval;
@@ -197,6 +206,12 @@ GameHostMetal::Impl::Impl(
     loaderContext.GraphicsDevice = graphicsDevice;
     assetManager = std::make_unique<Pomdog::AssetManager>(std::move(loaderContext));
 
+    ioService = std::make_unique<IOService>(&clock);
+    if (auto err = ioService->Initialize(); err != nullptr) {
+        Log::Warning("Pomdog", err->ToString());
+    }
+    httpClient = std::make_unique<HTTPClient>(ioService.get());
+
     POMDOG_ASSERT(presentationParameters.PresentationInterval > 0);
     presentationInterval = Duration(1) / presentationParameters.PresentationInterval;
 }
@@ -204,6 +219,11 @@ GameHostMetal::Impl::Impl(
 GameHostMetal::Impl::~Impl()
 {
     systemEventConnection.Disconnect();
+    httpClient.reset();
+    if (auto err = ioService->Shutdown(); err != nullptr) {
+        Log::Warning("Pomdog", err->ToString());
+    }
+    ioService.reset();
     assetManager.reset();
     gamepad.reset();
     keyboard.reset();
@@ -290,6 +310,7 @@ void GameHostMetal::Impl::GameLoop()
 
     clock.Tick();
     DoEvents();
+    ioService->Step();
 
     if (exitRequest) {
         return;
@@ -418,6 +439,20 @@ std::shared_ptr<Gamepad> GameHostMetal::Impl::GetGamepad()
     return gamepad;
 }
 
+std::shared_ptr<IOService> GameHostMetal::Impl::GetIOService(std::shared_ptr<GameHost>&& gameHost)
+{
+    POMDOG_ASSERT(ioService != nullptr);
+    std::shared_ptr<IOService> shared{std::move(gameHost), ioService.get()};
+    return shared;
+}
+
+std::shared_ptr<HTTPClient> GameHostMetal::Impl::GetHTTPClient(std::shared_ptr<GameHost>&& gameHost)
+{
+    POMDOG_ASSERT(httpClient != nullptr);
+    std::shared_ptr<HTTPClient> shared(std::move(gameHost), httpClient.get());
+    return shared;
+}
+
 // MARK: GameHostMetal
 
 GameHostMetal::GameHostMetal(
@@ -509,6 +544,18 @@ std::shared_ptr<Gamepad> GameHostMetal::GetGamepad()
 {
     POMDOG_ASSERT(impl);
     return impl->GetGamepad();
+}
+
+std::shared_ptr<IOService> GameHostMetal::GetIOService()
+{
+    POMDOG_ASSERT(impl);
+    return impl->GetIOService(shared_from_this());
+}
+
+std::shared_ptr<HTTPClient> GameHostMetal::GetHTTPClient()
+{
+    POMDOG_ASSERT(impl);
+    return impl->GetHTTPClient(shared_from_this());
 }
 
 } // namespace Cocoa

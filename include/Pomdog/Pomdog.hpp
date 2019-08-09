@@ -58,6 +58,16 @@ namespace Pomdog {
 #include "Math/Vector3.hpp"
 #include "Math/Vector4.hpp"
 
+#include "Network/ArrayView.hpp"
+#include "Network/HTTPClient.hpp"
+#include "Network/HTTPMethod.hpp"
+#include "Network/HTTPRequest.hpp"
+#include "Network/HTTPResponse.hpp"
+#include "Network/IOService.hpp"
+#include "Network/TCPStream.hpp"
+#include "Network/TLSStream.hpp"
+#include "Network/UDPStream.hpp"
+
 #include "Logging/Log.hpp"
 #include "Logging/LogChannel.hpp"
 #include "Logging/LogEntry.hpp"

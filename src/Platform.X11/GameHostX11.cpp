@@ -13,6 +13,8 @@
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Logging/Log.hpp"
+#include "Pomdog/Network/HTTPClient.hpp"
+#include "Pomdog/Network/IOService.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include "Pomdog/Utility/FileSystem.hpp"
@@ -201,6 +203,8 @@ public:
     std::unique_ptr<KeyboardX11> keyboard;
     MouseX11 mouse;
     std::unique_ptr<NativeGamepad> gamepad;
+    std::unique_ptr<IOService> ioService;
+    std::unique_ptr<HTTPClient> httpClient;
     Duration presentationInterval;
     SurfaceFormat backBufferSurfaceFormat;
     DepthFormat backBufferDepthStencilFormat;
@@ -258,10 +262,21 @@ GameHostX11::Impl::Impl(const PresentationParameters& presentationParameters)
     loaderContext.RootDirectory = PathHelper::Join(FileSystem::GetResourceDirectoryPath(), "Content");
     loaderContext.GraphicsDevice = graphicsDevice;
     assetManager = std::make_unique<AssetManager>(std::move(loaderContext));
+
+    ioService = std::make_unique<IOService>(&clock);
+    if (auto err = ioService->Initialize(); err != nullptr) {
+        Log::Warning("Pomdog", err->ToString());
+    }
+    httpClient = std::make_unique<HTTPClient>(ioService.get());
 }
 
 GameHostX11::Impl::~Impl()
 {
+    httpClient.reset();
+    if (auto err = ioService->Shutdown(); err != nullptr) {
+        Log::Warning("Pomdog", err->ToString());
+    }
+    ioService.reset();
     gamepad.reset();
     keyboard.reset();
     assetManager.reset();
@@ -347,6 +362,7 @@ void GameHostX11::Impl::Run(Game & game)
             gamepad->EnumerateDevices();
         }
         gamepad->PollEvents();
+        ioService->Step();
 
         game.Update();
         RenderFrame(game);
@@ -459,6 +475,24 @@ std::shared_ptr<Gamepad> GameHostX11::GetGamepad()
     POMDOG_ASSERT(impl);
     auto gameHost = shared_from_this();
     std::shared_ptr<Gamepad> shared{gameHost, impl->gamepad.get()};
+    return shared;
+}
+
+std::shared_ptr<IOService> GameHostX11::GetIOService()
+{
+    POMDOG_ASSERT(impl);
+    POMDOG_ASSERT(impl->ioService);
+    auto gameHost = shared_from_this();
+    std::shared_ptr<IOService> shared{gameHost, impl->ioService.get()};
+    return shared;
+}
+
+std::shared_ptr<HTTPClient> GameHostX11::GetHTTPClient()
+{
+    POMDOG_ASSERT(impl);
+    POMDOG_ASSERT(impl->httpClient);
+    auto gameHost = shared_from_this();
+    std::shared_ptr<HTTPClient> shared{gameHost, impl->httpClient.get()};
     return shared;
 }
 

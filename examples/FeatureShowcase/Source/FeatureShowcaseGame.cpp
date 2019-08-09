@@ -1,5 +1,6 @@
 #include "FeatureShowcaseGame.hpp"
 #include "Beam2DTest/Beam2DTest.hpp"
+#include "HTTPClientTest/HTTPClientTest.hpp"
 #include "ImageEffectsTest/ImageEffectsTest.hpp"
 #include "LineBatchTest/LineBatchTest.hpp"
 #include "Particle2DTest/Particle2DTest.hpp"
@@ -72,6 +73,10 @@ void FeatureShowcaseGame::Initialize()
     buttons.emplace_back("Beam2D Test", [this] {
         window->SetTitle("Feature Showcase > Beam2D Test");
         subGame = std::make_shared<FeatureShowcase::Beam2DTest>(gameHost);
+    });
+    buttons.emplace_back("HTTPClient Test", [this] {
+        window->SetTitle("Feature Showcase > HTTPClient Test");
+        subGame = std::make_shared<FeatureShowcase::HTTPClientTest>(gameHost);
     });
 
     hudButtons.emplace_back("Back", [this] {

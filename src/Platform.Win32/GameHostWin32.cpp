@@ -28,6 +28,8 @@
 #include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
+#include "Pomdog/Network/HTTPClient.hpp"
+#include "Pomdog/Network/IOService.hpp"
 #include "Pomdog/Signals/EventQueue.hpp"
 #include "Pomdog/Signals/ScopedConnection.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -234,6 +236,10 @@ public:
 
     std::shared_ptr<Gamepad> GetGamepad();
 
+    std::shared_ptr<IOService> GetIOService(std::shared_ptr<GameHost>&& gameHost);
+
+    std::shared_ptr<HTTPClient> GetHTTPClient(std::shared_ptr<GameHost>&& gameHost);
+
 private:
     void RenderFrame(Game& game);
 
@@ -260,6 +266,9 @@ private:
     std::shared_ptr<KeyboardWin32> keyboard;
     std::shared_ptr<MouseWin32> mouse;
     std::shared_ptr<NativeGamepad> gamepad;
+
+    std::unique_ptr<IOService> ioService;
+    std::unique_ptr<HTTPClient> httpClient;
 
     Duration presentationInterval;
     SurfaceFormat backBufferSurfaceFormat;
@@ -317,11 +326,22 @@ GameHostWin32::Impl::Impl(
         FileSystem::GetResourceDirectoryPath(), "Content");
     loaderContext.GraphicsDevice = graphicsDevice;
     assetManager = std::make_unique<Pomdog::AssetManager>(std::move(loaderContext));
+
+    ioService = std::make_unique<IOService>(&clock);
+    if (auto err = ioService->Initialize(); err != nullptr) {
+        Log::Warning("Pomdog", err->ToString());
+    }
+    httpClient = std::make_unique<HTTPClient>(ioService.get());
 }
 
 GameHostWin32::Impl::~Impl()
 {
     eventQueue.reset();
+    httpClient.reset();
+    if (auto err = ioService->Shutdown(); err != nullptr) {
+        Log::Warning("Pomdog", err->ToString());
+    }
+    ioService.reset();
     assetManager.reset();
     gamepad.reset();
     keyboard.reset();
@@ -346,6 +366,7 @@ void GameHostWin32::Impl::Run(Game& game)
             gamepad->EnumerateDevices();
         }
         gamepad->PollEvents();
+        ioService->Step();
         subsystemScheduler.OnUpdate();
         game.Update();
         RenderFrame(game);
@@ -476,6 +497,20 @@ std::shared_ptr<Gamepad> GameHostWin32::Impl::GetGamepad()
     return gamepad;
 }
 
+std::shared_ptr<IOService> GameHostWin32::Impl::GetIOService(std::shared_ptr<GameHost>&& gameHost)
+{
+    POMDOG_ASSERT(ioService != nullptr);
+    std::shared_ptr<IOService> shared{std::move(gameHost), ioService.get()};
+    return shared;
+}
+
+std::shared_ptr<HTTPClient> GameHostWin32::Impl::GetHTTPClient(std::shared_ptr<GameHost>&& gameHost)
+{
+    POMDOG_ASSERT(httpClient != nullptr);
+    std::shared_ptr<HTTPClient> shared(std::move(gameHost), httpClient.get());
+    return shared;
+}
+
 GameHostWin32::GameHostWin32(
     const std::shared_ptr<GameWindowWin32>& window,
     const std::shared_ptr<EventQueue>& eventQueue,
@@ -557,6 +592,18 @@ std::shared_ptr<Gamepad> GameHostWin32::GetGamepad()
 {
     POMDOG_ASSERT(impl);
     return impl->GetGamepad();
+}
+
+std::shared_ptr<IOService> GameHostWin32::GetIOService()
+{
+    POMDOG_ASSERT(impl);
+    return impl->GetIOService(shared_from_this());
+}
+
+std::shared_ptr<HTTPClient> GameHostWin32::GetHTTPClient()
+{
+    POMDOG_ASSERT(impl);
+    return impl->GetHTTPClient(shared_from_this());
 }
 
 } // namespace Win32
