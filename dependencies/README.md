@@ -32,6 +32,22 @@ All of the dependencies that [Pomdog](https://github.com/mogemimi/pomdog) needs 
   * libpng License
   * Please see: [libpng/LICENSE](libpng/LICENSE)
 
+### Mbed Crypto
+
+* [Mbed Crypto - GitHub](https://github.com/ARMmbed/mbed-crypto)
+* [Mbed Crypto Home Page](https://tls.mbed.org/)
+* License
+  * Apache License 2.0
+  * Please see: [mbedtls/crypto/LICENSE](mbedtls/crypto/LICENSE)
+
+### Mbed TLS
+
+* [Mbed TLS - GitHub](https://github.com/ARMmbed/mbedtls)
+* [Mbed TLS Home Page](https://tls.mbed.org/)
+* License
+  * Apache License 2.0
+  * Please see: [mbedtls/LICENSE](mbedtls/LICENSE)
+
 ### RapidJSON
 
 * [RapidJSON - GitHub](https://github.com/miloyip/rapidjson)
