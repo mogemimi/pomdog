@@ -206,6 +206,7 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/include/Pomdog/Network/ArrayView.hpp
   ${POMDOG_DIR}/include/Pomdog/Network/IOService.hpp
   ${POMDOG_DIR}/include/Pomdog/Network/TCPStream.hpp
+  ${POMDOG_DIR}/include/Pomdog/Network/UDPStream.hpp
   ${POMDOG_DIR}/include/Pomdog/Network/detail/ForwardDeclarations.hpp
   ${POMDOG_DIR}/include/Pomdog/Reactive/Observable.hpp
   ${POMDOG_DIR}/include/Pomdog/Reactive/ObservableBase.hpp
@@ -334,6 +335,7 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/src/Network/IOService.cpp
   ${POMDOG_DIR}/src/Network/SocketProtocol.hpp
   ${POMDOG_DIR}/src/Network/TCPStream.cpp
+  ${POMDOG_DIR}/src/Network/UDPStream.cpp
   ${POMDOG_DIR}/src/RenderSystem/BufferBindMode.hpp
   ${POMDOG_DIR}/src/RenderSystem/BufferHelper.cpp
   ${POMDOG_DIR}/src/RenderSystem/BufferHelper.hpp
@@ -686,6 +688,8 @@ set(POMDOG_SOURCES_NETWORK_POSIX
   ${POMDOG_DIR}/src/Network.POSIX/SocketHelperPOSIX.hpp
   ${POMDOG_DIR}/src/Network.POSIX/TCPStreamPOSIX.cpp
   ${POMDOG_DIR}/src/Network.POSIX/TCPStreamPOSIX.hpp
+  ${POMDOG_DIR}/src/Network.POSIX/UDPStreamPOSIX.cpp
+  ${POMDOG_DIR}/src/Network.POSIX/UDPStreamPOSIX.hpp
 )
 
 set(POMDOG_SOURCES_NETWORK_WIN32
@@ -695,6 +699,8 @@ set(POMDOG_SOURCES_NETWORK_WIN32
   ${POMDOG_DIR}/src/Network.Win32/SocketHelperWin32.hpp
   ${POMDOG_DIR}/src/Network.Win32/TCPStreamWin32.cpp
   ${POMDOG_DIR}/src/Network.Win32/TCPStreamWin32.hpp
+  ${POMDOG_DIR}/src/Network.Win32/UDPStreamWin32.cpp
+  ${POMDOG_DIR}/src/Network.Win32/UDPStreamWin32.hpp
 )
 
 set(SOURCE_FILES ${POMDOG_SOURCES_CORE} ${POMDOG_SOURCES_EXPERIMENTAL})
