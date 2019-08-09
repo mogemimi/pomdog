@@ -40,6 +40,7 @@ source_group(InputSystem                  REGULAR_EXPRESSION src/InputSystem/*)
 source_group(InputSystem.DirectInput      REGULAR_EXPRESSION src/InputSystem.DirectInput/*)
 source_group(InputSystem.IOKit            REGULAR_EXPRESSION src/InputSystem.IOKit/*)
 source_group(InputSystem.Linux            REGULAR_EXPRESSION src/InputSystem.Linux/*)
+source_group(Network.MbedTLS              REGULAR_EXPRESSION src/Network.MbedTLS/*)
 source_group(Network.POSIX                REGULAR_EXPRESSION src/Network.POSIX/*)
 source_group(Network.Win32                REGULAR_EXPRESSION src/Network.Win32/*)
 source_group(Platform.Apple               REGULAR_EXPRESSION src/Platform.Apple/*)
@@ -206,6 +207,7 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/include/Pomdog/Network/ArrayView.hpp
   ${POMDOG_DIR}/include/Pomdog/Network/IOService.hpp
   ${POMDOG_DIR}/include/Pomdog/Network/TCPStream.hpp
+  ${POMDOG_DIR}/include/Pomdog/Network/TLSStream.hpp
   ${POMDOG_DIR}/include/Pomdog/Network/UDPStream.hpp
   ${POMDOG_DIR}/include/Pomdog/Network/detail/ForwardDeclarations.hpp
   ${POMDOG_DIR}/include/Pomdog/Reactive/Observable.hpp
@@ -335,6 +337,7 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/src/Network/IOService.cpp
   ${POMDOG_DIR}/src/Network/SocketProtocol.hpp
   ${POMDOG_DIR}/src/Network/TCPStream.cpp
+  ${POMDOG_DIR}/src/Network/TLSStream.cpp
   ${POMDOG_DIR}/src/Network/UDPStream.cpp
   ${POMDOG_DIR}/src/RenderSystem/BufferBindMode.hpp
   ${POMDOG_DIR}/src/RenderSystem/BufferHelper.cpp
@@ -683,6 +686,13 @@ set(POMDOG_SOURCES_LINUX
   ${POMDOG_DIR}/src/Platform.Linux/TimeSourceLinux.hpp
 )
 
+set(POMDOG_SOURCES_NETWORK_MBEDTLS
+  ${POMDOG_DIR}/src/Network.MbedTLS/Certificates.cpp
+  ${POMDOG_DIR}/src/Network.MbedTLS/Certificates.hpp
+  ${POMDOG_DIR}/src/Network.MbedTLS/TLSStreamMbedTLS.cpp
+  ${POMDOG_DIR}/src/Network.MbedTLS/TLSStreamMbedTLS.hpp
+)
+
 set(POMDOG_SOURCES_NETWORK_POSIX
   ${POMDOG_DIR}/src/Network.POSIX/SocketHelperPOSIX.cpp
   ${POMDOG_DIR}/src/Network.POSIX/SocketHelperPOSIX.hpp
@@ -742,14 +752,17 @@ endif()
 
 if(POMDOG_TARGET_PLATFORM MATCHES "Linux")
   list(APPEND SOURCE_FILES ${POMDOG_SOURCES_LINUX})
+  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_NETWORK_MBEDTLS})
   list(APPEND SOURCE_FILES ${POMDOG_SOURCES_NETWORK_POSIX})
 elseif(POMDOG_TARGET_PLATFORM MATCHES "Mac")
   list(APPEND SOURCE_FILES ${POMDOG_SOURCES_APPLE})
   list(APPEND SOURCE_FILES ${POMDOG_SOURCES_COCOA})
+  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_NETWORK_MBEDTLS})
   list(APPEND SOURCE_FILES ${POMDOG_SOURCES_NETWORK_POSIX})
 elseif(POMDOG_TARGET_PLATFORM MATCHES "Win32")
   list(APPEND SOURCE_FILES ${POMDOG_SOURCES_WIN32})
   list(APPEND SOURCE_FILES ${POMDOG_SOURCES_DIRECTINPUT})
+  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_NETWORK_MBEDTLS})
   list(APPEND SOURCE_FILES ${POMDOG_SOURCES_NETWORK_WIN32})
 endif()
 
