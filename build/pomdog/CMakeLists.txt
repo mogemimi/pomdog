@@ -205,6 +205,10 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/include/Pomdog/Math/detail/ForwardDeclarations.hpp
   ${POMDOG_DIR}/include/Pomdog/Math/detail/TaggedArithmetic.hpp
   ${POMDOG_DIR}/include/Pomdog/Network/ArrayView.hpp
+  ${POMDOG_DIR}/include/Pomdog/Network/HTTPClient.hpp
+  ${POMDOG_DIR}/include/Pomdog/Network/HTTPMethod.hpp
+  ${POMDOG_DIR}/include/Pomdog/Network/HTTPRequest.hpp
+  ${POMDOG_DIR}/include/Pomdog/Network/HTTPResponse.hpp
   ${POMDOG_DIR}/include/Pomdog/Network/IOService.hpp
   ${POMDOG_DIR}/include/Pomdog/Network/TCPStream.hpp
   ${POMDOG_DIR}/include/Pomdog/Network/TLSStream.hpp
@@ -334,6 +338,11 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/src/Network/EndPoint.hpp
   ${POMDOG_DIR}/src/Network/ErrorHelper.cpp
   ${POMDOG_DIR}/src/Network/ErrorHelper.hpp
+  ${POMDOG_DIR}/src/Network/HTTPClient.cpp
+  ${POMDOG_DIR}/src/Network/HTTPParser.cpp
+  ${POMDOG_DIR}/src/Network/HTTPParser.hpp
+  ${POMDOG_DIR}/src/Network/HTTPRequest.cpp
+  ${POMDOG_DIR}/src/Network/HTTPResponse.cpp
   ${POMDOG_DIR}/src/Network/IOService.cpp
   ${POMDOG_DIR}/src/Network/SocketProtocol.hpp
   ${POMDOG_DIR}/src/Network/TCPStream.cpp

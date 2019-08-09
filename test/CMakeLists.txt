@@ -64,6 +64,7 @@ add_executable(PomdogTest
   ${POMDOG_TEST_DIR}/Math/Vector4Test.cpp
   ${POMDOG_TEST_DIR}/Network/ArrayViewTest.cpp
   ${POMDOG_TEST_DIR}/Network/Executor.hpp
+  ${POMDOG_TEST_DIR}/Network/HTTPClientTest.cpp
   ${POMDOG_TEST_DIR}/Network/TCPStreamTest.cpp
   ${POMDOG_TEST_DIR}/Network/TLSStreamTest.cpp
   ${POMDOG_TEST_DIR}/Network/UDPStreamTest.cpp
