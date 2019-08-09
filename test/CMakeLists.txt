@@ -19,6 +19,7 @@ source_group(Graphics               REGULAR_EXPRESSION test/Graphics/*)
 source_group(Input                  REGULAR_EXPRESSION test/Input/*)
 source_group(Logging                REGULAR_EXPRESSION test/Logging/*)
 source_group(Math                   REGULAR_EXPRESSION test/Math/*)
+source_group(Network                REGULAR_EXPRESSION test/Network/*)
 source_group(Signals                REGULAR_EXPRESSION test/Signals/*)
 source_group(Utility                REGULAR_EXPRESSION test/Utility/*)
 
@@ -61,6 +62,7 @@ add_executable(PomdogTest
   ${POMDOG_TEST_DIR}/Math/Vector2Test.cpp
   ${POMDOG_TEST_DIR}/Math/Vector3Test.cpp
   ${POMDOG_TEST_DIR}/Math/Vector4Test.cpp
+  ${POMDOG_TEST_DIR}/Network/ArrayViewTest.cpp
   ${POMDOG_TEST_DIR}/Signals/ConnectionTest.cpp
   ${POMDOG_TEST_DIR}/Signals/ConnectionListTest.cpp
   ${POMDOG_TEST_DIR}/Signals/DelegateTest.cpp

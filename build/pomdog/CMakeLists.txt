@@ -201,6 +201,7 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/include/Pomdog/Math/detail/FloatingPointVector4.hpp
   ${POMDOG_DIR}/include/Pomdog/Math/detail/ForwardDeclarations.hpp
   ${POMDOG_DIR}/include/Pomdog/Math/detail/TaggedArithmetic.hpp
+  ${POMDOG_DIR}/include/Pomdog/Network/ArrayView.hpp
   ${POMDOG_DIR}/include/Pomdog/Reactive/Observable.hpp
   ${POMDOG_DIR}/include/Pomdog/Reactive/ObservableBase.hpp
   ${POMDOG_DIR}/include/Pomdog/Reactive/ObservableBuilder.hpp
