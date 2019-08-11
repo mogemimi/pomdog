@@ -49,6 +49,46 @@ build-clang-release:
       name: run test
       code: ./build.cmake/test/PomdogTest
 
+build-clang-libstdcxx-debug:
+  box: mogemimi/gamedev-ubuntu
+  steps:
+    - script:
+      name: build with clang in debug mode
+      code: |
+        mkdir build.cmake && cd build.cmake
+        cmake \
+          -G Ninja \
+          -DCMAKE_C_COMPILER=clang \
+          -DCMAKE_CXX_COMPILER=clang++ \
+          -DCMAKE_CXX_FLAGS="-stdlib=libstdc++" \
+          -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libstdc++" \
+          -DCMAKE_BUILD_TYPE=Debug \
+          ..
+        ninja
+    - script:
+      name: run test
+      code: ./build.cmake/test/PomdogTest
+
+build-clang-libstdcxx-release:
+  box: mogemimi/gamedev-ubuntu
+  steps:
+    - script:
+      name: build with clang in release mode
+      code: |
+        mkdir build.cmake && cd build.cmake
+        cmake \
+          -G Ninja \
+          -DCMAKE_C_COMPILER=clang \
+          -DCMAKE_CXX_COMPILER=clang++ \
+          -DCMAKE_CXX_FLAGS="-stdlib=libstdc++" \
+          -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libstdc++" \
+          -DCMAKE_BUILD_TYPE=Release \
+          ..
+        ninja
+    - script:
+      name: run test
+      code: ./build.cmake/test/PomdogTest
+
 build-gcc-debug:
   box: mogemimi/gamedev-archlinux
   steps:
