@@ -2,7 +2,6 @@ version: 0.0.{build}
 
 environment:
   matrix:
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
 
 clone_depth: 15
