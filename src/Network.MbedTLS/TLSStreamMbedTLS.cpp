@@ -327,7 +327,7 @@ void TLSStreamMbedTLS::ReadEventLoop()
     }
 
     // NOTE: Read per 1 frame (= 1/60 seconds) for a packet up to 2048 bytes.
-    std::array<uint8_t, 2048> buffer;
+    std::array<std::uint8_t, 2048> buffer;
 
     auto ret = mbedtls_ssl_read(&ssl, reinterpret_cast<unsigned char*>(buffer.data()), buffer.size());
     if ((ret == MBEDTLS_ERR_SSL_WANT_READ) || (ret == MBEDTLS_ERR_SSL_WANT_WRITE)) {

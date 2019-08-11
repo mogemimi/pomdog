@@ -64,9 +64,9 @@ bool GamepadDevice::Open(int deviceIndex)
     // TODO: Use udev-joystick-blacklist here
     // https://github.com/denilsonsa/udev-joystick-blacklist
 
-    std::array<uint8_t, BitCount(EV_MAX)> evBits;
-    std::array<uint8_t, BitCount(KEY_MAX)> keyBits;
-    std::array<uint8_t, BitCount(ABS_MAX)> absBits;
+    std::array<std::uint8_t, BitCount(EV_MAX)> evBits;
+    std::array<std::uint8_t, BitCount(KEY_MAX)> keyBits;
+    std::array<std::uint8_t, BitCount(ABS_MAX)> absBits;
 
     std::fill(std::begin(evBits), std::end(evBits), 0);
     std::fill(std::begin(keyBits), std::end(keyBits), 0);

@@ -40,7 +40,7 @@ public:
 
     /// Writes data to the connection.
     [[nodiscard]] std::shared_ptr<Error>
-    Write(const ArrayView<uint8_t const>& data);
+    Write(const ArrayView<std::uint8_t const>& data);
 
     /// @return True if the socket is connected to a remote host, false otherwise.
     [[nodiscard]] bool IsConnected() const noexcept;
@@ -58,7 +58,7 @@ public:
 
     /// Sets a callback function that is called when a data packet is received.
     [[nodiscard]] Connection
-    OnRead(std::function<void(const ArrayView<uint8_t>&, const std::shared_ptr<Error>&)>&& callback);
+    OnRead(std::function<void(const ArrayView<std::uint8_t>&, const std::shared_ptr<Error>&)>&& callback);
 
 private:
     std::unique_ptr<Detail::NativeTCPStream> nativeStream;

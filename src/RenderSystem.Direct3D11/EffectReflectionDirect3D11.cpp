@@ -65,9 +65,9 @@ std::vector<EffectVariable> EnumerateEffectVariables(
         EffectAnnotation annotation;
         annotation.VariableClass = HLSLReflectionHelper::ToEffectVariableClass(shaderVariableTypeDesc.Class);
         annotation.VariableType = HLSLReflectionHelper::ToEffectVariableType(shaderVariableTypeDesc.Type);
-        annotation.ColumnCount = static_cast<uint8_t>(shaderVariableTypeDesc.Columns);
-        annotation.RowCount = static_cast<uint8_t>(shaderVariableTypeDesc.Rows);
-        annotation.Elements = static_cast<uint8_t>(shaderVariableTypeDesc.Elements);
+        annotation.ColumnCount = static_cast<std::uint8_t>(shaderVariableTypeDesc.Columns);
+        annotation.RowCount = static_cast<std::uint8_t>(shaderVariableTypeDesc.Rows);
+        annotation.Elements = static_cast<std::uint8_t>(shaderVariableTypeDesc.Elements);
 
         POMDOG_ASSERT(shaderVariableTypeDesc.Columns <= std::numeric_limits<decltype(annotation.ColumnCount)>::max());
         POMDOG_ASSERT(shaderVariableTypeDesc.Rows <= std::numeric_limits<decltype(annotation.RowCount)>::max());

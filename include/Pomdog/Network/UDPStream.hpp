@@ -39,11 +39,11 @@ public:
     void Disconnect();
 
     /// Writes data to the connection.
-    std::shared_ptr<Error> Write(const ArrayView<uint8_t const>& data);
+    std::shared_ptr<Error> Write(const ArrayView<std::uint8_t const>& data);
 
     /// Writes data to address.
     std::shared_ptr<Error>
-    WriteTo(const ArrayView<uint8_t const>& data, const std::string_view& address);
+    WriteTo(const ArrayView<std::uint8_t const>& data, const std::string_view& address);
 
     /// Sets a callback function that is called when a connection is successfully established.
     [[nodiscard]] Connection
@@ -51,7 +51,7 @@ public:
 
     /// Sets a callback function that is called when a data packet is received.
     [[nodiscard]] Connection
-    OnRead(std::function<void(const ArrayView<uint8_t>&, const std::shared_ptr<Error>&)>&& callback);
+    OnRead(std::function<void(const ArrayView<std::uint8_t>&, const std::shared_ptr<Error>&)>&& callback);
 
     /// Sets a callback function that is called when a data packet is received from the connection.
     [[nodiscard]] Connection
