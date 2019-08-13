@@ -11,6 +11,20 @@ AllowShortLoopsOnASingleLine: false
 AlwaysBreakTemplateDeclarations: true
 BreakBeforeBraces: Stroustrup
 BreakConstructorInitializersBeforeComma: true
+BreakInheritanceList: BeforeComma
+ContinuationIndentWidth: 4
 DerivePointerAlignment: true
+IncludeCategories:
+  - Regex:           '^"\.\.\/'
+    Priority:        2
+  - Regex:           '^"Pomdog/'
+    Priority:        3
+  - Regex:           '<[[:alnum:]_]+>'
+    Priority:        5
+  - Regex:           '^<[[:alnum:]]+'
+    Priority:        4
+  - Regex:           '.*'
+    Priority:        1
 NamespaceIndentation: None
 PointerAlignment: Left
+ReflowComments: false
