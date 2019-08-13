@@ -2,13 +2,14 @@
 
 #pragma once
 
+#include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <functional>
 #include <memory>
 
 namespace Pomdog {
 
-class ImageEffectPreRenderable {
+class POMDOG_EXPORT ImageEffectPreRenderable {
 public:
     virtual ~ImageEffectPreRenderable() = default;
 

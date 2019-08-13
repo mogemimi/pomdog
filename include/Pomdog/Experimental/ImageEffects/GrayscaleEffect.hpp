@@ -2,14 +2,15 @@
 
 #pragma once
 
-#include "ImageEffectBase.hpp"
+#include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
+#include "Pomdog/Experimental/ImageEffects/ImageEffectBase.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <memory>
 
 namespace Pomdog {
 
-class GrayscaleEffect final : public ImageEffectBase {
+class POMDOG_EXPORT GrayscaleEffect final : public ImageEffectBase {
 public:
     GrayscaleEffect(
         const std::shared_ptr<GraphicsDevice>& graphicsDevice,

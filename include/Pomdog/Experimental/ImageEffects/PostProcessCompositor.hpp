@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Experimental/ImageEffects/ImageEffectBase.hpp"
 #include "Pomdog/Experimental/ImageEffects/ScreenQuad.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
@@ -12,7 +13,7 @@
 
 namespace Pomdog {
 
-class PostProcessCompositor final {
+class POMDOG_EXPORT PostProcessCompositor final {
 private:
     std::vector<std::shared_ptr<ImageEffectPreRenderable>> preRenderables;
     std::vector<std::shared_ptr<ImageEffectBase>> imageEffects;

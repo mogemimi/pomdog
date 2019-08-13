@@ -2,12 +2,13 @@
 
 #pragma once
 
+#include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <memory>
 
 namespace Pomdog {
 
-class ScreenQuad final {
+class POMDOG_EXPORT ScreenQuad final {
 public:
     explicit ScreenQuad(const std::shared_ptr<GraphicsDevice>& graphicsDevice);
 
