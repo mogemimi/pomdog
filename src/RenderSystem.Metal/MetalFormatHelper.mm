@@ -5,9 +5,7 @@
 #include "Pomdog/Graphics/DepthFormat.hpp"
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
 
-namespace Pomdog {
-namespace Detail {
-namespace Metal {
+namespace Pomdog::Detail::Metal {
 
 MTLPixelFormat ToPixelFormat(SurfaceFormat format) noexcept
 {
@@ -46,6 +44,4 @@ MTLPixelFormat ToPixelFormat(DepthFormat depthFormat) noexcept
     POMDOG_UNREACHABLE("Unsupported depth format");
 }
 
-} // namespace Metal
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Metal

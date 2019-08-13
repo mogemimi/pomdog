@@ -8,9 +8,7 @@
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <optional>
 
-namespace Pomdog {
-namespace Detail {
-namespace GL4 {
+namespace Pomdog::Detail::GL4 {
 
 using Texture2DObjectGL4 = Tagged<GLuint, Texture2D>;
 
@@ -39,6 +37,4 @@ private:
     std::optional<Texture2DObjectGL4> textureObject;
 };
 
-} // namespace GL4
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::GL4

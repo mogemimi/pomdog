@@ -8,8 +8,7 @@
 #include <cstdint>
 #include <type_traits>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 template <typename T>
 class POMDOG_EXPORT FloatingPointMatrix4x4 final {
@@ -246,5 +245,4 @@ template <typename T>
 FloatingPointMatrix4x4<T> POMDOG_EXPORT
 operator*(T scaleFactor, const FloatingPointMatrix4x4<T>& matrix) noexcept;
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

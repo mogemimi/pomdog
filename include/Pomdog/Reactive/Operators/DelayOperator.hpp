@@ -14,9 +14,7 @@
 #include <utility>
 #include <vector>
 
-namespace Pomdog {
-namespace Reactive {
-namespace Detail {
+namespace Pomdog::Reactive::Detail {
 
 template <class T>
 class DelayOperator final
@@ -95,6 +93,4 @@ private:
     Duration interval;
 };
 
-} // namespace Detail
-} // namespace Reactive
-} // namespace Pomdog
+} // namespace Pomdog::Reactive::Detail

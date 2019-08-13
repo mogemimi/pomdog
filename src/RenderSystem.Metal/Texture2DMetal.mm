@@ -10,9 +10,7 @@
 #include <algorithm>
 #import <Metal/MTLDevice.h>
 
-namespace Pomdog {
-namespace Detail {
-namespace Metal {
+namespace Pomdog::Detail::Metal {
 namespace {
 
 float MipmapImageDataBytes(float width, float height, float bytesPerPixel)
@@ -93,6 +91,4 @@ id<MTLTexture> Texture2DMetal::GetTexture() const noexcept
     return texture;
 }
 
-} // namespace Metal
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Metal

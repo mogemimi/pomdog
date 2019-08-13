@@ -13,9 +13,7 @@
 #include <unordered_map>
 #include <utility>
 
-namespace Pomdog {
-namespace Detail {
-namespace InputSystem {
+namespace Pomdog::Detail::InputSystem {
 namespace {
 
 #ifdef POMDOG_PLATFORM_MACOSX
@@ -375,6 +373,4 @@ std::tuple<GamepadMappings, std::string> GetMappings(const std::string& uuidStri
     return std::make_tuple(mappings, deviceName);
 }
 
-} // namespace InputSystem
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::InputSystem

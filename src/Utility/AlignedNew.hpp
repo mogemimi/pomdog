@@ -8,8 +8,7 @@
 #include <cstdlib>
 #endif
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 constexpr bool IsPowerOfTwo(int x)
 {
@@ -63,5 +62,4 @@ public:
     }
 };
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

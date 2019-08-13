@@ -9,9 +9,7 @@
 #include <memory>
 #include <vector>
 
-namespace Pomdog {
-namespace Detail {
-namespace Direct3D11 {
+namespace Pomdog::Detail::Direct3D11 {
 
 class PipelineStateDirect3D11;
 class RenderTarget2DDirect3D11;
@@ -106,6 +104,4 @@ private:
     bool needToApplyPipelineState;
 };
 
-} // namespace Direct3D11
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Direct3D11

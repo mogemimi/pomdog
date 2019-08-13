@@ -5,11 +5,9 @@
 #include "Pomdog/Basic/Export.hpp"
 #include <memory>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 template <typename T>
 struct AssetLoader;
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

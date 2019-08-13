@@ -8,12 +8,10 @@
 #include <optional>
 
 namespace Pomdog {
-
 enum class AudioChannels : std::uint8_t;
+} // namespace Pomdog
 
-namespace Detail {
-namespace SoundSystem {
-namespace OpenAL {
+namespace Pomdog::Detail::SoundSystem::OpenAL {
 
 class AudioClipAL final {
 public:
@@ -38,7 +36,4 @@ private:
     std::size_t sizeInBytes;
 };
 
-} // namespace OpenAL
-} // namespace SoundSystem
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::SoundSystem::OpenAL

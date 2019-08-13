@@ -4,8 +4,7 @@
 #include "../Basic/Unreachable.hpp"
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 int SurfaceFormatHelper::ToBytesPerBlock(SurfaceFormat format)
 {
@@ -33,5 +32,4 @@ int SurfaceFormatHelper::ToBytesPerBlock(SurfaceFormat format)
     POMDOG_UNREACHABLE("Unsupported surface format");
 }
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

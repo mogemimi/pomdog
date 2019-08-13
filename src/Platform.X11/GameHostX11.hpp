@@ -18,11 +18,10 @@
 #include <memory>
 
 namespace Pomdog {
-
 class Game;
+} // namespace Pomdog
 
-namespace Detail {
-namespace X11 {
+namespace Pomdog::Detail::X11 {
 
 class GameHostX11 final : public GameHost {
 public:
@@ -63,6 +62,4 @@ private:
     std::unique_ptr<Impl> impl;
 };
 
-} // namespace X11
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::X11

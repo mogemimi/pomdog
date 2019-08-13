@@ -9,9 +9,7 @@
 #include <memory>
 #include <utility>
 
-namespace Pomdog {
-namespace Reactive {
-namespace Detail {
+namespace Pomdog::Reactive::Detail {
 
 template <class T>
 class FilterOperator final
@@ -59,6 +57,4 @@ private:
     std::function<bool(const T& value)> filter;
 };
 
-} // namespace Detail
-} // namespace Reactive
-} // namespace Pomdog
+} // namespace Pomdog::Reactive::Detail

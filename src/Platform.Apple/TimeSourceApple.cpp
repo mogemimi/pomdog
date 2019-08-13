@@ -4,9 +4,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include <mach/mach_time.h>
 
-namespace Pomdog {
-namespace Detail {
-namespace Apple {
+namespace Pomdog::Detail::Apple {
 
 TimeSourceApple::TimeSourceApple()
 {
@@ -26,6 +24,4 @@ TimePoint TimeSourceApple::Now() const
     return TimePoint(Duration(currentSeconds));
 }
 
-} // namespace Apple
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Apple

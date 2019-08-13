@@ -9,9 +9,7 @@
 #include <memory>
 #include <utility>
 
-namespace Pomdog {
-namespace Reactive {
-namespace Detail {
+namespace Pomdog::Reactive::Detail {
 
 template <class T>
 class DoOperator final
@@ -86,6 +84,4 @@ private:
     std::function<void()> onCompleted;
 };
 
-} // namespace Detail
-} // namespace Reactive
-} // namespace Pomdog
+} // namespace Pomdog::Reactive::Detail

@@ -2,8 +2,7 @@
 
 #pragma once
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 class NativeRenderTarget2D {
 public:
@@ -14,5 +13,4 @@ public:
     virtual ~NativeRenderTarget2D() = default;
 };
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

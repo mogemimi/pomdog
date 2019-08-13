@@ -10,9 +10,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include <algorithm>
 
-namespace Pomdog {
-namespace Detail {
-namespace GL4 {
+namespace Pomdog::Detail::GL4 {
 namespace {
 
 GLenum ToInternalFormatGL4(SurfaceFormat format) noexcept
@@ -305,6 +303,4 @@ const Texture2DObjectGL4& Texture2DGL4::GetTextureHandle() const
     return *textureObject;
 }
 
-} // namespace GL4
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::GL4

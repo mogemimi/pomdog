@@ -8,18 +8,13 @@
 #include <string>
 
 namespace Pomdog {
-
 struct GamepadState;
+} // namespace Pomdog
 
-namespace Detail {
-namespace InputSystem {
-namespace GamepadHelper {
+namespace Pomdog::Detail::InputSystem::GamepadHelper {
 
 int ToInt(PlayerIndex index);
 
 void ClearState(GamepadState& state);
 
-} // namespace GamepadHelper
-} // namespace InputSystem
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::InputSystem::GamepadHelper

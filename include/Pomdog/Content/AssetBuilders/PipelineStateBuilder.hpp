@@ -9,12 +9,11 @@
 #include <string>
 #include <vector>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 class AssetLoaderContext;
-} // namespace Detail
+} // namespace Pomdog::Detail
 
-namespace AssetBuilders {
+namespace Pomdog::AssetBuilders {
 
 template <>
 class POMDOG_EXPORT Builder<PipelineState> final {
@@ -67,5 +66,4 @@ private:
     std::unique_ptr<Impl> impl;
 };
 
-} // namespace AssetBuilders
-} // namespace Pomdog
+} // namespace Pomdog::AssetBuilders

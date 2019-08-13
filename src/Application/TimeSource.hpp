@@ -14,8 +14,7 @@
 #error "Platform undefined or not supported."
 #endif
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 #if defined(POMDOG_PLATFORM_MACOSX) || defined(POMDOG_PLATFORM_APPLE_IOS)
 using TimeSource = Detail::Apple::TimeSourceApple;
@@ -27,5 +26,4 @@ using TimeSource = Detail::Linux::TimeSourceLinux;
 #error "Platform undefined or not supported."
 #endif
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

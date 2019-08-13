@@ -10,10 +10,7 @@
 #include "Pomdog/Utility/Exception.hpp"
 #include <algorithm>
 
-namespace Pomdog {
-namespace Detail {
-namespace InputSystem {
-namespace Apple {
+namespace Pomdog::Detail::InputSystem::Apple {
 namespace {
 
 void AppendDeviceMatching(CFMutableArrayRef matcher, uint32_t page, uint32_t usage)
@@ -435,7 +432,4 @@ void GamepadIOKit::HandleEvent(const Event& event)
     }
 }
 
-} // namespace Apple
-} // namespace InputSystem
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::InputSystem::Apple

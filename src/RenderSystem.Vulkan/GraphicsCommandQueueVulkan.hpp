@@ -6,9 +6,7 @@
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <vulkan/vulkan.h>
 
-namespace Pomdog {
-namespace Detail {
-namespace Vulkan {
+namespace Pomdog::Detail::Vulkan {
 
 class GraphicsCommandQueueVulkan final : public NativeGraphicsCommandQueue {
 public:
@@ -25,6 +23,4 @@ public:
 private:
 };
 
-} // namespace Vulkan
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Vulkan

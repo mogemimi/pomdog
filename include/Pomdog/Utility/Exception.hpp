@@ -7,8 +7,7 @@
 #include <string>
 
 namespace Pomdog {
-namespace Detail {
-namespace ExceptionInternal {
+namespace Detail::ExceptionInternal {
 
 template <typename T>
 constexpr const char* ToString() noexcept
@@ -82,8 +81,7 @@ T CreateException(const std::string& description, const std::string& source, con
     return T(ss.str());
 }
 
-} // namespace ExceptionInternal
-} // namespace Detail
+} // namespace Detail::ExceptionInternal
 
 #if !defined(POMDOG_THROW_EXCEPTION)
 

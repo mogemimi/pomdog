@@ -8,8 +8,7 @@
 #include <memory>
 #include <vector>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 class GraphicsCommandListImmediate;
 struct GraphicsCapabilities;
@@ -73,5 +72,4 @@ public:
     virtual void SetTexture(int index, const std::shared_ptr<RenderTarget2D>& texture) = 0;
 };
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

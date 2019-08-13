@@ -11,9 +11,7 @@ class Event;
 
 } // namespace Pomdog
 
-namespace Pomdog {
-namespace Detail {
-namespace Cocoa {
+namespace Pomdog::Detail::Cocoa {
 
 class KeyboardCocoa final : public Keyboard {
 public:
@@ -27,6 +25,4 @@ private:
     KeyboardState state;
 };
 
-} // namespace Cocoa
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Cocoa

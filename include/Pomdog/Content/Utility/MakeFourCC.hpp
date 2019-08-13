@@ -5,8 +5,7 @@
 #include <cstdint>
 #include <type_traits>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 template <typename Character>
 constexpr std::uint32_t MakeFourCC(Character c0, Character c1, Character c2, Character c3) noexcept
@@ -21,5 +20,4 @@ constexpr std::uint32_t MakeFourCC(Character c0, Character c1, Character c2, Cha
         | (static_cast<std::uint32_t>(c3) << 24);
 }
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

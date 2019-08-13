@@ -9,9 +9,7 @@
 #include <memory>
 #include <utility>
 
-namespace Pomdog {
-namespace Reactive {
-namespace Detail {
+namespace Pomdog::Reactive::Detail {
 
 template <class T, class TResult>
 class MapOperator final
@@ -57,6 +55,4 @@ private:
     std::function<TResult(T&& value)> map;
 };
 
-} // namespace Detail
-} // namespace Reactive
-} // namespace Pomdog
+} // namespace Pomdog::Reactive::Detail

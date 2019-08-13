@@ -12,8 +12,7 @@
 #include <limits>
 #include <utility>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 template <typename T>
 FloatingPointQuaternion<T>::FloatingPointQuaternion(T x, T y, T z, T w) noexcept
@@ -440,5 +439,4 @@ template FloatingPointQuaternion<long double>
 operator*<long double>(long double, const FloatingPointQuaternion<long double>&) noexcept;
 #endif
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

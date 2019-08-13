@@ -8,9 +8,7 @@
 #include <array>
 #include <utility>
 
-namespace Pomdog {
-namespace Detail {
-namespace InputSystem {
+namespace Pomdog::Detail::InputSystem {
 
 int GamepadHelper::ToInt(PlayerIndex index)
 {
@@ -44,6 +42,4 @@ void GamepadHelper::ClearState(GamepadState& state)
     state.IsConnected = false;
 }
 
-} // namespace InputSystem
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::InputSystem

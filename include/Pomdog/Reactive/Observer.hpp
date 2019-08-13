@@ -2,8 +2,7 @@
 
 #pragma once
 
-namespace Pomdog {
-namespace Reactive {
+namespace Pomdog::Reactive {
 
 template <class T>
 class Observer {
@@ -17,5 +16,4 @@ public:
     virtual void OnCompleted() = 0;
 };
 
-} // namespace Reactive
-} // namespace Pomdog
+} // namespace Pomdog::Reactive

@@ -7,8 +7,7 @@
 #include <cstdint>
 #include <memory>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 struct PNGTextureReader {
     static std::shared_ptr<Texture2D> Read(
@@ -17,5 +16,4 @@ struct PNGTextureReader {
         std::size_t byteLength);
 };
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

@@ -4,8 +4,7 @@
 #include "Pomdog/Utility/PathHelper.hpp"
 #include <utility>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 BinaryFileStream AssetLoaderContext::OpenStream(const std::string& assetName) const
 {
@@ -13,5 +12,4 @@ BinaryFileStream AssetLoaderContext::OpenStream(const std::string& assetName) co
     return PathHelper::OpenStream(filePath);
 }
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

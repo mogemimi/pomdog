@@ -5,10 +5,7 @@
 #include "Pomdog/Audio/AudioClip.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
-namespace Pomdog {
-namespace Detail {
-namespace SoundSystem {
-namespace OpenAL {
+namespace Pomdog::Detail::SoundSystem::OpenAL {
 namespace {
 
 ALenum ToFormat(AudioChannels channel, std::uint16_t bitPerSample)
@@ -89,7 +86,4 @@ ALuint AudioClipAL::NativeBuffer() const
     return *buffer;
 }
 
-} // namespace OpenAL
-} // namespace SoundSystem
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::SoundSystem::OpenAL

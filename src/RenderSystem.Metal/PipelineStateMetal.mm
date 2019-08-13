@@ -13,9 +13,7 @@
 #include "Pomdog/Utility/StringHelper.hpp"
 #import <Metal/MTLVertexDescriptor.h>
 
-namespace Pomdog {
-namespace Detail {
-namespace Metal {
+namespace Pomdog::Detail::Metal {
 namespace {
 
 MTLVertexStepFunction ToVertexStepFunction(InputClassification classification) noexcept
@@ -302,6 +300,4 @@ void PipelineStateMetal::Apply(id<MTLRenderCommandEncoder> commandEncoder)
         clamp:0.0f];
 }
 
-} // namespace Metal
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Metal

@@ -6,9 +6,7 @@
 #include "../Utility/Tagged.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 
-namespace Pomdog {
-namespace Detail {
-namespace GL4 {
+namespace Pomdog::Detail::GL4 {
 
 using FillModeGL4 = Tagged<GLenum, FillMode>;
 
@@ -29,6 +27,4 @@ private:
     bool scissorTestEnable;
 };
 
-} // namespace GL4
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::GL4

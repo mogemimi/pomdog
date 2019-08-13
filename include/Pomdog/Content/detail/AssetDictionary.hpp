@@ -12,8 +12,7 @@
 #include <typeinfo>
 #include <unordered_map>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 class AssetLoaderContext;
 
@@ -60,5 +59,4 @@ public:
     void Unload();
 };
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

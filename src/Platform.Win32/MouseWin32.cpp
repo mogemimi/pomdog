@@ -4,9 +4,7 @@
 #include "Pomdog/Input/MouseButtons.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
-namespace Pomdog {
-namespace Detail {
-namespace Win32 {
+namespace Pomdog::Detail::Win32 {
 
 MouseWin32::MouseWin32(HWND windowHandleIn)
     : windowHandle(windowHandleIn)
@@ -114,6 +112,4 @@ MouseState MouseWin32::GetState() const
     return state;
 }
 
-} // namespace Win32
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Win32

@@ -5,9 +5,7 @@
 #include "ParticleEmitterShape.hpp"
 #include <random>
 
-namespace Pomdog {
-namespace Detail {
-namespace Particles {
+namespace Pomdog::Detail::Particles {
 
 class ParticleEmitterShapeSector final : public ParticleEmitterShape {
 private:
@@ -29,6 +27,4 @@ public:
     }
 };
 
-} // namespace Particles
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Particles

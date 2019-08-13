@@ -8,10 +8,10 @@
 #include <string>
 
 namespace Pomdog {
-
 class Texture2D;
+} // namespace Pomdog
 
-namespace Detail {
+namespace Pomdog::Detail {
 
 class AssetLoaderContext;
 
@@ -22,5 +22,4 @@ struct POMDOG_EXPORT AssetLoader<Texture2D> final {
         const std::string& assetName);
 };
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

@@ -6,12 +6,10 @@
 #include "Pomdog/Content/Utility/BinaryFileStream.hpp"
 #include <memory>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 struct MSWaveAudioLoader {
     static std::unique_ptr<AudioClip> Load(BinaryFileStream && binaryFile);
 };
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

@@ -6,12 +6,11 @@
 #include "Pomdog/Graphics/Shader.hpp"
 #include <optional>
 
-namespace Pomdog {
-namespace Detail {
-
+namespace Pomdog::Detail {
 class ShaderBytecode;
+} // namespace Pomdog::Detail
 
-namespace GL4 {
+namespace Pomdog::Detail::GL4 {
 
 template <GLenum PipelineStage>
 class ShaderGL4 final : public Shader {
@@ -46,6 +45,4 @@ private:
 using VertexShaderGL4 = ShaderGL4<GL_VERTEX_SHADER>;
 using PixelShaderGL4 = ShaderGL4<GL_FRAGMENT_SHADER>;
 
-} // namespace GL4
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::GL4

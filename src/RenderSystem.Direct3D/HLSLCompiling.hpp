@@ -6,13 +6,12 @@
 #include <wrl/client.h>
 #include <cstdint>
 
-namespace Pomdog {
-namespace Detail {
-
+namespace Pomdog::Detail {
 class ShaderBytecode;
 struct ShaderCompileOptions;
+} // namespace Pomdog::Detail
 
-namespace Direct3D {
+namespace Pomdog::Detail::Direct3D {
 
 struct HLSLCompiling final {
     static Microsoft::WRL::ComPtr<ID3DBlob> CompileShader(
@@ -20,6 +19,4 @@ struct HLSLCompiling final {
         const ShaderCompileOptions& compileOptions);
 };
 
-} // namespace Direct3D
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Direct3D

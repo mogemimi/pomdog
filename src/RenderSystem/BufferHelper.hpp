@@ -6,14 +6,10 @@
 #include <cstdint>
 #include <cstdlib>
 
-namespace Pomdog {
-namespace Detail {
-namespace BufferHelper {
+namespace Pomdog::Detail::BufferHelper {
 
 std::size_t ToIndexElementOffsetBytes(IndexElementSize elementSize) noexcept;
 
 std::uint16_t ToByteSize(InputElementFormat format) noexcept;
 
-} // namespace BufferHelper
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::BufferHelper

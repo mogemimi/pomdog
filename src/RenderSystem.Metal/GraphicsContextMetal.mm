@@ -24,9 +24,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 
-namespace Pomdog {
-namespace Detail {
-namespace Metal {
+namespace Pomdog::Detail::Metal {
 namespace {
 
 MTLPrimitiveType ToPrimitiveType(PrimitiveTopology primitiveTopology) noexcept
@@ -560,6 +558,4 @@ void GraphicsContextMetal::SetRenderPass(const RenderPass& renderPass)
     }
 }
 
-} // namespace Metal
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Metal

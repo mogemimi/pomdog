@@ -8,11 +8,10 @@
 #include <memory>
 
 namespace Pomdog {
-
 struct PresentationParameters;
+} // namespace Pomdog
 
-namespace Detail {
-namespace Win32 {
+namespace Pomdog::Detail::Win32 {
 
 class GameWindowWin32 final : public GameWindow {
 public:
@@ -57,6 +56,4 @@ private:
     std::unique_ptr<Impl> impl;
 };
 
-} // namespace Win32
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Win32

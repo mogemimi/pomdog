@@ -6,9 +6,7 @@
 #include "Pomdog/Input/MouseState.hpp"
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 
-namespace Pomdog {
-namespace Detail {
-namespace Win32 {
+namespace Pomdog::Detail::Win32 {
 
 class MouseWin32 final : public Mouse {
 public:
@@ -24,6 +22,4 @@ private:
     MouseState state;
 };
 
-} // namespace Win32
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Win32

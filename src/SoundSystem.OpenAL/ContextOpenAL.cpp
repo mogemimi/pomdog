@@ -4,10 +4,7 @@
 #include "ErrorCheckerAL.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
-namespace Pomdog {
-namespace Detail {
-namespace SoundSystem {
-namespace OpenAL {
+namespace Pomdog::Detail::SoundSystem::OpenAL {
 
 ContextOpenAL::ContextOpenAL()
     : device(nullptr)
@@ -44,7 +41,4 @@ ContextOpenAL::~ContextOpenAL()
     }
 }
 
-} // namespace OpenAL
-} // namespace SoundSystem
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::SoundSystem::OpenAL

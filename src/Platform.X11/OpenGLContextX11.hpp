@@ -7,9 +7,7 @@
 #include <GL/glx.h>
 #include <memory>
 
-namespace Pomdog {
-namespace Detail {
-namespace X11 {
+namespace Pomdog::Detail::X11 {
 
 class GameWindowX11;
 
@@ -39,6 +37,4 @@ private:
     bool isOpenGL3Supported;
 };
 
-} // namespace X11
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::X11

@@ -8,9 +8,7 @@
 #include <wrl/client.h>
 #include <memory>
 
-namespace Pomdog {
-namespace Detail {
-namespace Direct3D11 {
+namespace Pomdog::Detail::Direct3D11 {
 
 class GraphicsDeviceDirect3D11 final : public NativeGraphicsDevice {
 public:
@@ -83,6 +81,4 @@ private:
     std::unique_ptr<Impl> impl;
 };
 
-} // namespace Direct3D11
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Direct3D11

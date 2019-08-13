@@ -8,8 +8,7 @@
 #include <cstdint>
 #include <type_traits>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 ///@brief vector in two-dimensional space.
 template <typename T>
@@ -119,5 +118,4 @@ template <typename T>
 FloatingPointVector2<T> POMDOG_EXPORT
 operator*(T scaleFactor, const FloatingPointVector2<T>& vector) noexcept;
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

@@ -5,9 +5,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 
-namespace Pomdog {
-namespace Detail {
-namespace Metal {
+namespace Pomdog::Detail::Metal {
 namespace {
 
 EffectVariableType ToEffectVariableType(MTLDataType variableType) noexcept
@@ -175,6 +173,4 @@ std::vector<EffectConstantDescription> EffectReflectionMetal::GetConstantBuffers
     return constants;
 }
 
-} // namespace Metal
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Metal

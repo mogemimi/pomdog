@@ -7,8 +7,7 @@
 #include <functional>
 #include <memory>
 
-namespace Pomdog {
-namespace Reactive {
+namespace Pomdog::Reactive {
 
 template <class T>
 class Subscriber final : public Observer<T> {
@@ -65,5 +64,4 @@ private:
     std::function<void()> onCompleted;
 };
 
-} // namespace Reactive
-} // namespace Pomdog
+} // namespace Pomdog::Reactive

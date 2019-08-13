@@ -17,9 +17,7 @@
 #include <array>
 #include <tuple>
 
-namespace Pomdog {
-namespace Detail {
-namespace Vulkan {
+namespace Pomdog::Detail::Vulkan {
 namespace {
 
 constexpr std::uint32_t GetUint32EngineVersion() noexcept
@@ -316,6 +314,4 @@ GraphicsDeviceVulkan::CreateRenderTarget2D(
         format, depthStencilFormat, multiSampleCount);
 }
 
-} // namespace Vulkan
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Vulkan

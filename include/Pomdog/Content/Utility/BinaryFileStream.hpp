@@ -5,13 +5,11 @@
 #include <cstddef>
 #include <fstream>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 struct BinaryFileStream {
     std::ifstream Stream;
     std::size_t SizeInBytes;
 };
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

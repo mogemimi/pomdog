@@ -4,10 +4,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include <atomic>
 
-namespace Pomdog {
-namespace Concurrency {
-
-namespace Detail {
+namespace Pomdog::Concurrency::Detail {
 
 Task<void> WhenAllImpl(const std::vector<Task<void>>& tasks)
 {
@@ -48,7 +45,4 @@ Task<void> WhenAllImpl(const std::vector<Task<void>>& tasks)
     return task;
 }
 
-} // namespace Detail
-
-} // namespace Concurrency
-} // namespace Pomdog
+} // namespace Pomdog::Concurrency::Detail

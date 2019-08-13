@@ -5,9 +5,7 @@
 #include "Pomdog/Graphics/DepthFormat.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
-namespace Pomdog {
-namespace Detail {
-namespace GL4 {
+namespace Pomdog::Detail::GL4 {
 namespace {
 
 GLenum ToDepthStencilFormat(DepthFormat depthFormat) noexcept
@@ -113,6 +111,4 @@ const Texture2DObjectGL4& RenderTarget2DGL4::GetTextureHandle() const
     return texture.GetTextureHandle();
 }
 
-} // namespace GL4
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::GL4

@@ -10,9 +10,7 @@
 #include <memory>
 #include <vector>
 
-namespace Pomdog {
-namespace Detail {
-namespace Metal {
+namespace Pomdog::Detail::Metal {
 
 class GraphicsContextMetal final : public NativeGraphicsContext {
 public:
@@ -90,6 +88,4 @@ private:
     MTKView* targetView;
 };
 
-} // namespace Metal
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Metal

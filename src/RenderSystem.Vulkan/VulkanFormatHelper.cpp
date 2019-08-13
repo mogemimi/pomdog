@@ -4,9 +4,7 @@
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
-namespace Pomdog {
-namespace Detail {
-namespace Vulkan {
+namespace Pomdog::Detail::Vulkan {
 
 std::optional<VkFormat> VulkanFormatHelper::ToVkFormat(SurfaceFormat format) noexcept
 {
@@ -29,6 +27,4 @@ std::optional<VkFormat> VulkanFormatHelper::ToVkFormat(SurfaceFormat format) noe
     return std::nullopt;
 }
 
-} // namespace Vulkan
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Vulkan

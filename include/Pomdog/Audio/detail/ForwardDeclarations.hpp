@@ -6,8 +6,7 @@
 #include <cstdint>
 
 namespace Pomdog {
-namespace Detail {
-namespace SoundSystem {
+namespace Detail::SoundSystem {
 
 #if defined(POMDOG_PLATFORM_MACOSX) \
     || defined(POMDOG_PLATFORM_APPLE_IOS) \
@@ -41,8 +40,7 @@ using NativeSoundEffect = XAudio2::SoundEffectXAudio2;
 
 #endif
 
-} // namespace SoundSystem
-} // namespace Detail
+} // namespace Detail::SoundSystem
 
 class AudioClip;
 class AudioEmitter;

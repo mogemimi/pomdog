@@ -5,10 +5,7 @@
 #include "ContextOpenAL.hpp"
 #include "PrerequisitesOpenAL.hpp"
 
-namespace Pomdog {
-namespace Detail {
-namespace SoundSystem {
-namespace OpenAL {
+namespace Pomdog::Detail::SoundSystem::OpenAL {
 
 class AudioEngineAL final {
 public:
@@ -25,7 +22,4 @@ private:
     ContextOpenAL context;
 };
 
-} // namespace OpenAL
-} // namespace SoundSystem
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::SoundSystem::OpenAL

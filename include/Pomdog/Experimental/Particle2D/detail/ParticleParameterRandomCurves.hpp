@@ -8,9 +8,7 @@
 #include <limits>
 #include <random>
 
-namespace Pomdog {
-namespace Detail {
-namespace Particles {
+namespace Pomdog::Detail::Particles {
 
 template <typename T>
 class ParticleParameterRandomCurves final : public ParticleParameter<T> {
@@ -46,6 +44,4 @@ public:
     }
 };
 
-} // namespace Particles
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Particles

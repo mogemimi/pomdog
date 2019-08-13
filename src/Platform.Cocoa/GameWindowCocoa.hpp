@@ -11,9 +11,7 @@
 @class NSView;
 @class CocoaWindowDelegate;
 
-namespace Pomdog {
-namespace Detail {
-namespace Cocoa {
+namespace Pomdog::Detail::Cocoa {
 
 class GameWindowCocoa final : public GameWindow {
 public:
@@ -54,6 +52,4 @@ private:
     bool isMouseCursorVisible;
 };
 
-} // namespace Cocoa
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Cocoa

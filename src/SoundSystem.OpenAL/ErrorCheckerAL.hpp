@@ -2,17 +2,11 @@
 
 #pragma once
 
-namespace Pomdog {
-namespace Detail {
-namespace SoundSystem {
-namespace OpenAL {
+namespace Pomdog::Detail::SoundSystem::OpenAL {
 
 class ErrorCheckerAL {
 public:
     static void CheckError(const char* command, const char* filename, int line);
 };
 
-} // namespace OpenAL
-} // namespace SoundSystem
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::SoundSystem::OpenAL

@@ -11,13 +11,11 @@
 #include <memory>
 #include <string>
 
-namespace Pomdog {
-
-namespace Detail {
+namespace Pomdog::Detail {
 class AssetLoaderContext;
-} // namespace Detail
+} // namespace Pomdog::Detail
 
-namespace AssetBuilders {
+namespace Pomdog::AssetBuilders {
 
 template <>
 class POMDOG_EXPORT Builder<Shader> final {
@@ -68,5 +66,4 @@ private:
     std::shared_ptr<Impl> impl;
 };
 
-} // namespace AssetBuilders
-} // namespace Pomdog
+} // namespace Pomdog::AssetBuilders

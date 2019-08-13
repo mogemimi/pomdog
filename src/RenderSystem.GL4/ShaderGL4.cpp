@@ -10,9 +10,7 @@
 #include "Pomdog/Utility/StringHelper.hpp"
 #include <array>
 
-namespace Pomdog {
-namespace Detail {
-namespace GL4 {
+namespace Pomdog::Detail::GL4 {
 namespace {
 
 std::optional<GLuint> CompileShader(const ShaderBytecode& source, GLenum pipelineStage)
@@ -119,6 +117,4 @@ template class ShaderGL4<GL_FRAGMENT_SHADER>;
 //template class ShaderGL4<GL_TESS_EVALUATION_SHADER>;
 //template class ShaderGL4<GL_COMPUTE_SHADER>;
 
-} // namespace GL4
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::GL4

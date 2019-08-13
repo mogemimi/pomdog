@@ -8,13 +8,12 @@
 #include <cstdint>
 #include <vector>
 
-namespace Pomdog {
-namespace Detail {
-
+namespace Pomdog::Detail {
 class ShaderBytecode;
 struct ShaderCompileOptions;
+} // namespace Pomdog::Detail
 
-namespace Direct3D11 {
+namespace Pomdog::Detail::Direct3D11 {
 
 template <class NativeShaderType>
 class ShaderDirect3D11 final : public Shader {
@@ -36,6 +35,4 @@ private:
 using VertexShaderDirect3D11 = ShaderDirect3D11<ID3D11VertexShader>;
 using PixelShaderDirect3D11 = ShaderDirect3D11<ID3D11PixelShader>;
 
-} // namespace Direct3D11
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Direct3D11

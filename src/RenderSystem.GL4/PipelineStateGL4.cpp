@@ -16,9 +16,7 @@
 #include <type_traits>
 #include <unordered_set>
 
-namespace Pomdog {
-namespace Detail {
-namespace GL4 {
+namespace Pomdog::Detail::GL4 {
 namespace {
 
 // NOTE: Please refer to D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT.
@@ -193,6 +191,4 @@ InputLayoutGL4* PipelineStateGL4::GetInputLayout() const
     return inputLayout.get();
 }
 
-} // namespace GL4
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::GL4

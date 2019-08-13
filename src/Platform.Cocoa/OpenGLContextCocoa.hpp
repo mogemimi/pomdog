@@ -8,9 +8,7 @@
 
 @class NSOpenGLContext, NSOpenGLPixelFormat;
 
-namespace Pomdog {
-namespace Detail {
-namespace Cocoa {
+namespace Pomdog::Detail::Cocoa {
 
 struct CocoaOpenGLHelper {
     static NSOpenGLPixelFormat* CreatePixelFormat(
@@ -47,6 +45,4 @@ private:
     __strong NSOpenGLContext* openGLContext;
 };
 
-} // namespace Cocoa
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Cocoa

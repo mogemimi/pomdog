@@ -17,9 +17,7 @@
 #include <limits>
 #include <utility>
 
-namespace Pomdog {
-namespace Detail {
-namespace GL4 {
+namespace Pomdog::Detail::GL4 {
 namespace {
 
 ScalarTypeGL4 ToScalarType(GLenum attributeClass)
@@ -636,6 +634,4 @@ void InputLayoutGL4::Apply(const std::vector<VertexBufferBinding>& vertexBuffers
     ApplyInputElements(inputElements, vertexDeclarations, vertexBuffers);
 }
 
-} // namespace GL4
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::GL4

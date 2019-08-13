@@ -7,10 +7,7 @@
 #include <cstddef>
 #include <sstream>
 
-namespace Pomdog {
-namespace Detail {
-namespace SoundSystem {
-namespace OpenAL {
+namespace Pomdog::Detail::SoundSystem::OpenAL {
 namespace {
 
 struct ErrorCodeTag;
@@ -59,7 +56,4 @@ void ErrorCheckerAL::CheckError(const char* command, const char* filename, int l
     }
 }
 
-} // namespace OpenAL
-} // namespace SoundSystem
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::SoundSystem::OpenAL

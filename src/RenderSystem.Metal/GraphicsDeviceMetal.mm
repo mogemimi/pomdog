@@ -17,9 +17,7 @@
 #include "Pomdog/Utility/Exception.hpp"
 #import <Metal/Metal.h>
 
-namespace Pomdog {
-namespace Detail {
-namespace Metal {
+namespace Pomdog::Detail::Metal {
 
 class GraphicsDeviceMetal::Impl final {
 public:
@@ -177,6 +175,4 @@ void GraphicsDeviceMetal::ClientSizeChanged(int width, int height)
     impl->presentationParameters.BackBufferHeight = height;
 }
 
-} // namespace Metal
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Metal

@@ -10,9 +10,7 @@
 #include <utility>
 #include <vector>
 
-namespace Pomdog {
-namespace Detail {
-namespace Particles {
+namespace Pomdog::Detail::Particles {
 
 template <typename ForwardIterator, typename KeyType>
 std::pair<ForwardIterator, ForwardIterator> BinarySearchNearestPoints(ForwardIterator first, ForwardIterator last, const KeyType& value)
@@ -98,6 +96,4 @@ public:
     }
 };
 
-} // namespace Particles
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Particles

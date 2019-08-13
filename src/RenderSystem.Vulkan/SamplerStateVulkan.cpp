@@ -6,9 +6,7 @@
 #include "Pomdog/Utility/Exception.hpp"
 #include <tuple>
 
-namespace Pomdog {
-namespace Detail {
-namespace Vulkan {
+namespace Pomdog::Detail::Vulkan {
 namespace {
 
 VkSamplerAddressMode ToSamplerAddressMode(TextureAddressMode addressMode) noexcept
@@ -134,6 +132,4 @@ SamplerStateVulkan::~SamplerStateVulkan()
     return sampler;
 }
 
-} // namespace Vulkan
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Vulkan

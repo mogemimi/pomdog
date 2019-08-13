@@ -4,9 +4,7 @@
 
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 
-namespace Pomdog {
-namespace Detail {
-namespace Win32 {
+namespace Pomdog::Detail::Win32 {
 
 struct BootstrapSettingsWin32 {
     HINSTANCE HInstance = nullptr;
@@ -19,6 +17,4 @@ struct BootstrapSettingsWin32 {
     bool OpenGLEnabled = false;
 };
 
-} // namespace Win32
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Win32

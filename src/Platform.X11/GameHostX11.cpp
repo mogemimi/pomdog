@@ -28,9 +28,7 @@ using Pomdog::Detail::GL4::GraphicsContextGL4;
 using Pomdog::Detail::GL4::GraphicsDeviceGL4;
 using Pomdog::Detail::InputSystem::NativeGamepad;
 
-namespace Pomdog {
-namespace Detail {
-namespace X11 {
+namespace Pomdog::Detail::X11 {
 namespace {
 
 bool CheckFrameBufferConfigSupport(::Display* display)
@@ -496,6 +494,4 @@ std::shared_ptr<HTTPClient> GameHostX11::GetHTTPClient()
     return shared;
 }
 
-} // namespace X11
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::X11

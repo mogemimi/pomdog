@@ -12,9 +12,7 @@
 #include <string>
 #include <tuple>
 
-namespace Pomdog {
-namespace Detail {
-namespace InputSystem {
+namespace Pomdog::Detail::InputSystem {
 
 enum class ButtonKind : std::int8_t {
     None = -1,
@@ -74,6 +72,4 @@ std::tuple<GamepadMappings, std::string> GetMappings(const GamepadUUID& uuid);
 
 std::tuple<GamepadMappings, std::string> GetMappings(const std::string& uuid);
 
-} // namespace InputSystem
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::InputSystem

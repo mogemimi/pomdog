@@ -6,9 +6,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 
-namespace Pomdog {
-namespace Detail {
-namespace Direct3D11 {
+namespace Pomdog::Detail::Direct3D11 {
 namespace {
 
 using DXGI::DXGIFormatHelper;
@@ -263,6 +261,4 @@ void RenderTarget2DDirect3D11::ResetBackBuffer()
     texture2D.Reset();
 }
 
-} // namespace Direct3D11
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Direct3D11

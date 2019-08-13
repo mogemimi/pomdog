@@ -8,9 +8,7 @@
 #include "Pomdog/Utility/Exception.hpp"
 #include <memory>
 
-namespace Pomdog {
-namespace Detail {
-namespace Direct3D11 {
+namespace Pomdog::Detail::Direct3D11 {
 namespace {
 
 HRESULT CreateShader(
@@ -90,6 +88,4 @@ template class ShaderDirect3D11<ID3D11PixelShader>;
 //template class ShaderDirect3D11<ID3D11HullShader>;
 //template class ShaderDirect3D11<ID3D11ComputeShader>;
 
-} // namespace Direct3D11
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Direct3D11

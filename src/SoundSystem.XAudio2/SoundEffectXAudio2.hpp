@@ -10,10 +10,7 @@ class AudioEmitter;
 class AudioListener;
 } // namespace Pomdog
 
-namespace Pomdog {
-namespace Detail {
-namespace SoundSystem {
-namespace XAudio2 {
+namespace Pomdog::Detail::SoundSystem::XAudio2 {
 
 class AudioClipXAudio2;
 class AudioEngineXAudio2;
@@ -50,7 +47,4 @@ private:
     bool isLooped;
 };
 
-} // namespace XAudio2
-} // namespace SoundSystem
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::SoundSystem::XAudio2

@@ -6,9 +6,7 @@
 #include "Pomdog/Graphics/PresentationParameters.hpp"
 #include <memory>
 
-namespace Pomdog {
-namespace Detail {
-namespace GL4 {
+namespace Pomdog::Detail::GL4 {
 
 class GraphicsDeviceGL4 final : public NativeGraphicsDevice {
 public:
@@ -72,6 +70,4 @@ private:
     PresentationParameters presentationParameters;
 };
 
-} // namespace GL4
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::GL4

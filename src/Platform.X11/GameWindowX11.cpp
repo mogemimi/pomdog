@@ -12,9 +12,7 @@
 #include <X11/Xutil.h>
 #include <optional>
 
-namespace Pomdog {
-namespace Detail {
-namespace X11 {
+namespace Pomdog::Detail::X11 {
 namespace {
 
 Rectangle GetWindowClientBounds(::Display* display, ::Window window)
@@ -397,6 +395,4 @@ void GameWindowX11::ProcessEvent(::XEvent & event)
     }
 }
 
-} // namespace X11
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::X11

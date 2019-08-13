@@ -14,20 +14,16 @@
 @class PomdogMetalViewController;
 
 namespace Pomdog {
-
 class Game;
 class GameHost;
+} // namespace Pomdog
 
-namespace Detail {
-namespace Cocoa {
-
+namespace Pomdog::Detail::Cocoa {
 class GameHostCocoa;
 class GameHostMetal;
+} // namespace Pomdog::Detail::Cocoa
 
-} // namespace Cocoa
-} // namespace Detail
-
-namespace Cocoa {
+namespace Pomdog::Cocoa {
 
 class POMDOG_EXPORT Bootstrap final {
 public:
@@ -58,5 +54,4 @@ private:
     bool openGLEnabled = false;
 };
 
-} // namespace Cocoa
-} // namespace Pomdog
+} // namespace Pomdog::Cocoa

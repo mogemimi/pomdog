@@ -4,9 +4,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 
-namespace Pomdog {
-namespace Detail {
-namespace Vulkan {
+namespace Pomdog::Detail::Vulkan {
 
 void GraphicsCommandQueueVulkan::Reset()
 {
@@ -33,6 +31,4 @@ std::size_t GraphicsCommandQueueVulkan::GetCommandCount() const noexcept
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 
-} // namespace Vulkan
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Vulkan

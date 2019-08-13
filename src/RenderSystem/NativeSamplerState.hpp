@@ -2,8 +2,7 @@
 
 #pragma once
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 class NativeSamplerState {
 public:
@@ -14,5 +13,4 @@ public:
     virtual ~NativeSamplerState() = default;
 };
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

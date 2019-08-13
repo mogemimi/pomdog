@@ -4,9 +4,7 @@
 
 #include <random>
 
-namespace Pomdog {
-namespace Detail {
-namespace Particles {
+namespace Pomdog::Detail::Particles {
 
 template <typename T>
 class ParticleParameter {
@@ -20,6 +18,4 @@ public:
     virtual float GenerateVariance(std::mt19937& random) const = 0;
 };
 
-} // namespace Particles
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Particles

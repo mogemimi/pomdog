@@ -7,9 +7,7 @@
 
 #import <Metal/Metal.h>
 
-namespace Pomdog {
-namespace Detail {
-namespace Metal {
+namespace Pomdog::Detail::Metal {
 
 class GraphicsDeviceMetal final : public NativeGraphicsDevice {
 public:
@@ -78,6 +76,4 @@ private:
     std::unique_ptr<Impl> impl;
 };
 
-} // namespace Metal
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Metal

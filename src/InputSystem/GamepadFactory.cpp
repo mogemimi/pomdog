@@ -8,9 +8,7 @@
 #include "../InputSystem/NativeGamepad.hpp"
 #endif
 
-namespace Pomdog {
-namespace Detail {
-namespace InputSystem {
+namespace Pomdog::Detail::InputSystem {
 
 std::unique_ptr<NativeGamepad> CreateGamepad()
 {
@@ -21,6 +19,4 @@ std::unique_ptr<NativeGamepad> CreateGamepad()
 #endif
 }
 
-} // namespace InputSystem
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::InputSystem

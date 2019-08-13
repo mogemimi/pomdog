@@ -6,8 +6,7 @@
 #include <functional>
 #include <utility>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 class ScopeGuard final {
 public:
@@ -38,5 +37,4 @@ private:
     std::function<void()> func;
 };
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

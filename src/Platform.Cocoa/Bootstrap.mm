@@ -15,8 +15,7 @@
 using Pomdog::Detail::Cocoa::GameHostCocoa;
 using Pomdog::Detail::Cocoa::GameWindowCocoa;
 
-namespace Pomdog {
-namespace Cocoa {
+namespace Pomdog::Cocoa {
 
 void Bootstrap::SetWindow(NSWindow* window)
 {
@@ -137,5 +136,4 @@ void Bootstrap::Run(std::function<std::shared_ptr<Game>(const std::shared_ptr<Ga
     }
 }
 
-} // namespace Cocoa
-} // namespace Pomdog
+} // namespace Pomdog::Cocoa

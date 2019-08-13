@@ -4,9 +4,7 @@
 
 #include "Pomdog/Application/TimePoint.hpp"
 
-namespace Pomdog {
-namespace Detail {
-namespace Linux {
+namespace Pomdog::Detail::Linux {
 
 class TimeSourceLinux final {
 public:
@@ -15,6 +13,4 @@ public:
     TimePoint Now() const;
 };
 
-} // namespace Linux
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Linux

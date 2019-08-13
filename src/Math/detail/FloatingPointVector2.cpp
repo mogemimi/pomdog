@@ -11,8 +11,7 @@
 #include <cmath>
 #include <limits>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 template <typename T>
 FloatingPointVector2<T>::FloatingPointVector2(T x, T y) noexcept
@@ -303,5 +302,4 @@ template FloatingPointVector2<long double>
 operator*<long double>(long double, const FloatingPointVector2<long double>&) noexcept;
 #endif
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

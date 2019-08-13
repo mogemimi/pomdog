@@ -5,9 +5,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 
-namespace Pomdog {
-namespace Detail {
-namespace Vulkan {
+namespace Pomdog::Detail::Vulkan {
 namespace {
 
 VkFormat ToDepthStencilFormat(DepthFormat depthFormat) noexcept
@@ -39,6 +37,4 @@ RenderTarget2DVulkan::RenderTarget2DVulkan(
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 
-} // namespace Vulkan
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Vulkan

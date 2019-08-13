@@ -9,9 +9,7 @@
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <optional>
 
-namespace Pomdog {
-namespace Detail {
-namespace GL4 {
+namespace Pomdog::Detail::GL4 {
 
 using RenderBuffer2DGL4 = Tagged<GLuint, RenderTarget2D>;
 
@@ -41,6 +39,4 @@ private:
     bool multiSampleEnabled;
 };
 
-} // namespace GL4
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::GL4

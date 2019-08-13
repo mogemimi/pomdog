@@ -37,9 +37,7 @@
 #include <limits>
 #include <utility>
 
-namespace Pomdog {
-namespace Detail {
-namespace GL4 {
+namespace Pomdog::Detail::GL4 {
 namespace {
 
 GLenum ToPrimitiveTopology(PrimitiveTopology primitiveTopology) noexcept
@@ -846,6 +844,4 @@ void GraphicsContextGL4::SetRenderPass(const RenderPass& renderPass)
     }
 }
 
-} // namespace GL4
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::GL4

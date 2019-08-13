@@ -4,14 +4,10 @@
 
 #include <memory>
 
-namespace Pomdog {
-namespace Detail {
-namespace InputSystem {
+namespace Pomdog::Detail::InputSystem {
 
 class NativeGamepad;
 
 std::unique_ptr<NativeGamepad> CreateGamepad();
 
-} // namespace InputSystem
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::InputSystem

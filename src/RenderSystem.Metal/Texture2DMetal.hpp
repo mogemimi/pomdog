@@ -6,9 +6,7 @@
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #import <Metal/MTLTexture.h>
 
-namespace Pomdog {
-namespace Detail {
-namespace Metal {
+namespace Pomdog::Detail::Metal {
 
 class Texture2DMetal final : public NativeTexture2D {
 public:
@@ -32,6 +30,4 @@ private:
     id<MTLTexture> texture;
 };
 
-} // namespace Metal
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Metal

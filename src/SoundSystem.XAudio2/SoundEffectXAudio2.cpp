@@ -8,10 +8,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include <cmath>
 
-namespace Pomdog {
-namespace Detail {
-namespace SoundSystem {
-namespace XAudio2 {
+namespace Pomdog::Detail::SoundSystem::XAudio2 {
 namespace {
 
 void BuildXAudioBuffer(
@@ -145,7 +142,4 @@ void SoundEffectXAudio2::SetVolume(float volume)
     sourceVoice->SetVolume(volume);
 }
 
-} // namespace XAudio2
-} // namespace SoundSystem
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::SoundSystem::XAudio2

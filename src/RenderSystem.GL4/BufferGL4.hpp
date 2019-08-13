@@ -8,9 +8,7 @@
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <optional>
 
-namespace Pomdog {
-namespace Detail {
-namespace GL4 {
+namespace Pomdog::Detail::GL4 {
 
 template <class Tag>
 using BufferObjectGL4 = Tagged<GLuint, Tag>;
@@ -52,6 +50,4 @@ using ConstantBufferGL4 = BufferGL4<ConstantBuffer>;
 using IndexBufferGL4 = BufferGL4<IndexBuffer>;
 using VertexBufferGL4 = BufferGL4<VertexBuffer>;
 
-} // namespace GL4
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::GL4

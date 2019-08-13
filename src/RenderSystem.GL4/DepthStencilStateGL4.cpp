@@ -6,10 +6,7 @@
 #include "Pomdog/Graphics/DepthStencilDescription.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
-namespace Pomdog {
-namespace Detail {
-namespace GL4 {
-
+namespace Pomdog::Detail::GL4 {
 namespace {
 
 GLenum ToComparisonFunctionGL4NonTypesafe(ComparisonFunction comparison) noexcept
@@ -164,6 +161,4 @@ void DepthStencilStateGL4::Apply()
     ApplyStencilTest();
 }
 
-} // namespace GL4
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::GL4

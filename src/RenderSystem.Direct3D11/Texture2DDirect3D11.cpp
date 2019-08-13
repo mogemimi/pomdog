@@ -8,9 +8,7 @@
 #include "Pomdog/Utility/Exception.hpp"
 #include <algorithm>
 
-namespace Pomdog {
-namespace Detail {
-namespace Direct3D11 {
+namespace Pomdog::Detail::Direct3D11 {
 
 using DXGI::DXGIFormatHelper;
 
@@ -104,6 +102,4 @@ ID3D11ShaderResourceView* Texture2DDirect3D11::GetShaderResourceView() const
     return shaderResourceView.Get();
 }
 
-} // namespace Direct3D11
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Direct3D11

@@ -6,9 +6,7 @@
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #import <Metal/MTLSampler.h>
 
-namespace Pomdog {
-namespace Detail {
-namespace Metal {
+namespace Pomdog::Detail::Metal {
 
 class SamplerStateMetal final : public NativeSamplerState {
 public:
@@ -22,6 +20,4 @@ private:
     id<MTLSamplerState> samplerState;
 };
 
-} // namespace Metal
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Metal

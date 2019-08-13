@@ -34,8 +34,7 @@
 #include <utility>
 #include <vector>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 namespace {
 
 AudioChannels ToAudioChannels(std::uint32_t channels) noexcept
@@ -594,5 +593,4 @@ std::unique_ptr<AudioClip> MSWaveAudioLoader::Load(BinaryFileStream && binaryFil
     }
 }
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

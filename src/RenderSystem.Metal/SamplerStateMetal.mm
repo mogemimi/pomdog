@@ -6,9 +6,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 
-namespace Pomdog {
-namespace Detail {
-namespace Metal {
+namespace Pomdog::Detail::Metal {
 namespace {
 
 MTLSamplerAddressMode ToSamplerAddressMode(TextureAddressMode addressMode) noexcept
@@ -100,6 +98,4 @@ id<MTLSamplerState> SamplerStateMetal::GetSamplerState() const noexcept
     return samplerState;
 }
 
-} // namespace Metal
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Metal

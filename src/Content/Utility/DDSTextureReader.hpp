@@ -7,17 +7,11 @@
 #include <cstdint>
 #include <memory>
 
-namespace Pomdog {
-namespace Detail {
-
-namespace DDSTextureReader {
+namespace Pomdog::Detail::DDSTextureReader {
 
 std::shared_ptr<Texture2D> Read(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
     const std::uint8_t* data,
     std::size_t byteLength);
 
-} // namespace DDSTextureReader
-
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::DDSTextureReader

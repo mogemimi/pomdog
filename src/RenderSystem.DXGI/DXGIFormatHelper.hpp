@@ -5,9 +5,7 @@
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <dxgi.h>
 
-namespace Pomdog {
-namespace Detail {
-namespace DXGI {
+namespace Pomdog::Detail::DXGI {
 
 struct DXGIFormatHelper final {
     static DXGI_FORMAT ToDXGIFormat(DepthFormat format) noexcept;
@@ -16,6 +14,4 @@ struct DXGIFormatHelper final {
     static DXGI_FORMAT ToDXGIFormat(InputElementFormat format) noexcept;
 };
 
-} // namespace DXGI
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::DXGI

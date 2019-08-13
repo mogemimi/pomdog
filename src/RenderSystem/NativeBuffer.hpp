@@ -4,8 +4,7 @@
 
 #include <cstddef>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 class NativeBuffer {
 public:
@@ -26,5 +25,4 @@ public:
         std::size_t sizeInBytes) = 0;
 };
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

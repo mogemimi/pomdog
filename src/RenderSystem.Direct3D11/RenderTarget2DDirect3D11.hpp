@@ -7,9 +7,7 @@
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <wrl/client.h>
 
-namespace Pomdog {
-namespace Detail {
-namespace Direct3D11 {
+namespace Pomdog::Detail::Direct3D11 {
 
 class RenderTarget2DDirect3D11 final : public NativeRenderTarget2D {
 public:
@@ -53,6 +51,4 @@ private:
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> textureResourceView;
 };
 
-} // namespace Direct3D11
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Direct3D11

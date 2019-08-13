@@ -5,8 +5,7 @@
 #include "Pomdog/Reactive/ObservableBase.hpp"
 #include <memory>
 
-namespace Pomdog {
-namespace Reactive {
+namespace Pomdog::Reactive {
 
 template <class T>
 class Observer;
@@ -21,5 +20,4 @@ public:
     virtual void Subscribe(const std::shared_ptr<Observer<T>>& observer) = 0;
 };
 
-} // namespace Reactive
-} // namespace Pomdog
+} // namespace Pomdog::Reactive

@@ -5,9 +5,7 @@
 #include "OpenGLPrerequisites.hpp"
 #include <type_traits>
 
-namespace Pomdog {
-namespace Detail {
-namespace GL4 {
+namespace Pomdog::Detail::GL4 {
 
 namespace TypesafeHelperGL4 {
 
@@ -40,6 +38,4 @@ void BindTexture(const Tagged& texture)
 
 } // namespace TypesafeHelperGL4
 
-} // namespace GL4
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::GL4

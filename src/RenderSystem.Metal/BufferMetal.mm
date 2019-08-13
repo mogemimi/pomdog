@@ -9,9 +9,7 @@
 #import <Metal/Metal.h>
 #include <cstring>
 
-namespace Pomdog {
-namespace Detail {
-namespace Metal {
+namespace Pomdog::Detail::Metal {
 namespace {
 
 MTLResourceOptions ToResourceOptions(BufferUsage bufferUsage) noexcept
@@ -122,6 +120,4 @@ id<MTLBuffer> BufferMetal::GetBuffer() const
     return nativeBuffer;
 }
 
-} // namespace Metal
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Metal

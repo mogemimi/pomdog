@@ -7,9 +7,7 @@
 #include <X11/Xlib.h>
 #include <cstring>
 
-namespace Pomdog {
-namespace Detail {
-namespace X11 {
+namespace Pomdog::Detail::X11 {
 namespace {
 
 class GLContextErrorHelper final {
@@ -181,6 +179,4 @@ bool OpenGLContextX11::IsOpenGL3Supported() const noexcept
     return isOpenGL3Supported;
 }
 
-} // namespace X11
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::X11

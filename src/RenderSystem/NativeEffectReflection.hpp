@@ -5,8 +5,7 @@
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <vector>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 class NativeEffectReflection {
 public:
@@ -19,5 +18,4 @@ public:
     virtual std::vector<EffectConstantDescription> GetConstantBuffers() const = 0;
 };
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

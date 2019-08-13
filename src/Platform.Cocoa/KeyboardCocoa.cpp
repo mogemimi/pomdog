@@ -6,9 +6,7 @@
 #include "Pomdog/Signals/Event.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
-namespace Pomdog {
-namespace Detail {
-namespace Cocoa {
+namespace Pomdog::Detail::Cocoa {
 
 KeyboardCocoa::KeyboardCocoa() = default;
 
@@ -45,6 +43,4 @@ void KeyboardCocoa::HandleEvent(const Event& event)
     }
 }
 
-} // namespace Cocoa
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Cocoa

@@ -30,8 +30,7 @@ using Pomdog::ShaderCompilers::GLSLCompiler;
 using Pomdog::ShaderCompilers::HLSLCompiler;
 using Pomdog::ShaderCompilers::MetalCompiler;
 
-namespace Pomdog {
-namespace AssetBuilders {
+namespace Pomdog::AssetBuilders {
 namespace {
 
 std::optional<std::string> IncludeGLSLFilesRecursive(
@@ -408,5 +407,4 @@ std::shared_ptr<Shader> Builder<Shader>::Build()
         "This shading language is not supported");
 }
 
-} // namespace AssetBuilders
-} // namespace Pomdog
+} // namespace Pomdog::AssetBuilders

@@ -19,10 +19,7 @@
 #include <utility>
 #include <vector>
 
-namespace Pomdog {
-namespace Detail {
-namespace SoundSystem {
-namespace XAudio2 {
+namespace Pomdog::Detail::SoundSystem::XAudio2 {
 namespace {
 
 std::string GetErrorDesc(HRESULT hr, const std::string& desc)
@@ -308,7 +305,4 @@ IXAudio2* AudioEngineXAudio2::XAudio2Engine() const
     return xAudio2.Get();
 }
 
-} // namespace XAudio2
-} // namespace SoundSystem
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::SoundSystem::XAudio2

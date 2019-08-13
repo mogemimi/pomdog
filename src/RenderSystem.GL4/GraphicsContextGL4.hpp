@@ -11,11 +11,10 @@
 #include <vector>
 
 namespace Pomdog {
-
 class GameWindow;
+} // namespace Pomdog
 
-namespace Detail {
-namespace GL4 {
+namespace Pomdog::Detail::GL4 {
 
 namespace Tags {
 
@@ -112,6 +111,4 @@ private:
     bool needToApplyPipelineState;
 };
 
-} // namespace GL4
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::GL4

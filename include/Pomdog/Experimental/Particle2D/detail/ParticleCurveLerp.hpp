@@ -7,9 +7,7 @@
 #include "Pomdog/Math/Radian.hpp"
 #include "Pomdog/Math/Vector3.hpp"
 
-namespace Pomdog {
-namespace Detail {
-namespace Particles {
+namespace Pomdog::Detail::Particles {
 
 template <typename T>
 struct ParticleCurveLerp {
@@ -43,6 +41,4 @@ struct ParticleCurveLerp<Vector3> {
     }
 };
 
-} // namespace Particles
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Particles

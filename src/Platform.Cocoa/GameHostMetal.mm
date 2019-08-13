@@ -42,9 +42,7 @@ using Pomdog::Detail::Metal::GraphicsDeviceMetal;
 using Pomdog::Detail::Metal::ToPixelFormat;
 using Pomdog::Detail::InputSystem::Apple::GamepadIOKit;
 
-namespace Pomdog {
-namespace Detail {
-namespace Cocoa {
+namespace Pomdog::Detail::Cocoa {
 namespace {
 
 void SetupMetalView(
@@ -558,6 +556,4 @@ std::shared_ptr<HTTPClient> GameHostMetal::GetHTTPClient()
     return impl->GetHTTPClient(shared_from_this());
 }
 
-} // namespace Cocoa
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Cocoa

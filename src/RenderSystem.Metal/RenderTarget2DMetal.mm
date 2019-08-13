@@ -8,9 +8,7 @@
 #import <Metal/MTLDevice.h>
 #import <Metal/MTLTexture.h>
 
-namespace Pomdog {
-namespace Detail {
-namespace Metal {
+namespace Pomdog::Detail::Metal {
 
 RenderTarget2DMetal::RenderTarget2DMetal(
     id<MTLDevice> device,
@@ -78,6 +76,4 @@ id<MTLTexture> RenderTarget2DMetal::GetDepthStencilTexture() const noexcept
     return depthStencilTexture;
 }
 
-} // namespace Metal
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Metal

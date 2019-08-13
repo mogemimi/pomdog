@@ -6,8 +6,7 @@
 #include <mutex>
 #include <vector>
 
-namespace Pomdog {
-namespace Concurrency {
+namespace Pomdog::Concurrency {
 
 class POMDOG_EXPORT QueuedScheduler final : public Scheduler {
 private:
@@ -37,5 +36,4 @@ private:
     void MergeTasks();
 };
 
-} // namespace Concurrency
-} // namespace Pomdog
+} // namespace Pomdog::Concurrency

@@ -4,8 +4,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include <thread>
 
-namespace Pomdog {
-namespace Concurrency {
+namespace Pomdog::Concurrency {
 
 void ImmediateScheduler::Schedule(
     std::function<void()> && task,
@@ -19,5 +18,4 @@ void ImmediateScheduler::Schedule(
     task();
 }
 
-} // namespace Concurrency
-} // namespace Pomdog
+} // namespace Pomdog::Concurrency

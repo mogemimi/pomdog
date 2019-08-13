@@ -7,9 +7,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include <utility>
 
-namespace Pomdog {
-namespace Detail {
-namespace GL4 {
+namespace Pomdog::Detail::GL4 {
 namespace {
 
 GLenum ToBlendGL4NonTypesafe(Blend blend) noexcept
@@ -141,6 +139,4 @@ void BlendStateGL4::Apply()
     }
 }
 
-} // namespace GL4
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::GL4

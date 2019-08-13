@@ -8,10 +8,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include <array>
 
-namespace Pomdog {
-namespace Detail {
-namespace SoundSystem {
-namespace OpenAL {
+namespace Pomdog::Detail::SoundSystem::OpenAL {
 
 SoundEffectAL::SoundEffectAL(
     AudioEngineAL &,
@@ -160,7 +157,4 @@ void SoundEffectAL::SetVolume(float volume)
 #endif
 }
 
-} // namespace OpenAL
-} // namespace SoundSystem
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::SoundSystem::OpenAL

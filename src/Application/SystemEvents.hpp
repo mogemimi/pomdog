@@ -11,8 +11,7 @@
 #include "Pomdog/Math/Point2D.hpp"
 #include <string>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 struct WindowWillCloseEvent {};
 struct WindowShouldCloseEvent {};
@@ -67,5 +66,4 @@ struct GamepadDisconnectedEvent {
     GamepadCapabilities Capabilities;
 };
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

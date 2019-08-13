@@ -2,9 +2,7 @@
 
 #pragma once
 
-namespace Pomdog {
-namespace Detail {
-namespace GL4 {
+namespace Pomdog::Detail::GL4 {
 
 namespace ErrorChecker {
 void CheckError(const char* command, const char* filename, int line);
@@ -18,6 +16,4 @@ void CheckError(const char* command, const char* filename, int line);
 #define POMDOG_CHECK_ERROR_GL4(name)
 #endif
 
-} // namespace GL4
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::GL4

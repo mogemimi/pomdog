@@ -6,9 +6,7 @@
 #include "Pomdog/Graphics/RasterizerDescription.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
-namespace Pomdog {
-namespace Detail {
-namespace GL4 {
+namespace Pomdog::Detail::GL4 {
 namespace {
 
 FillModeGL4 ToFillModeGL4(const FillMode& fillMode) noexcept
@@ -88,6 +86,4 @@ void RasterizerStateGL4::Apply()
     }
 }
 
-} // namespace GL4
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::GL4

@@ -4,8 +4,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include <algorithm>
 
-namespace Pomdog {
-namespace Concurrency {
+namespace Pomdog::Concurrency {
 namespace {
 
 template <class TDeferredTask>
@@ -100,5 +99,4 @@ void QueuedScheduler::MergeTasks()
     POMDOG_ASSERT(std::is_sorted(std::begin(tasks), std::end(tasks), Compare<DeferredTask>));
 }
 
-} // namespace Concurrency
-} // namespace Pomdog
+} // namespace Pomdog::Concurrency

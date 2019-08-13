@@ -12,8 +12,7 @@
 #include "Pomdog/Utility/Exception.hpp"
 #include <utility>
 
-namespace Pomdog {
-namespace AssetBuilders {
+namespace Pomdog::AssetBuilders {
 
 class Builder<PipelineState>::Impl final {
 public:
@@ -262,5 +261,4 @@ const PipelineStateDescription& Builder<PipelineState>::GetDescription() const
     return impl->description;
 }
 
-} // namespace AssetBuilders
-} // namespace Pomdog
+} // namespace Pomdog::AssetBuilders

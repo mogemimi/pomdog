@@ -9,9 +9,7 @@
 #include <memory>
 #include <type_traits>
 
-namespace Pomdog {
-namespace Detail {
-namespace Win32 {
+namespace Pomdog::Detail::Win32 {
 
 class OpenGLContextWin32 final : public GL4::OpenGLContext {
 public:
@@ -45,6 +43,4 @@ private:
     > glrc;
 };
 
-} // namespace Win32
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Win32

@@ -4,10 +4,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include <utility>
 
-namespace Pomdog {
-namespace Detail {
-namespace SoundSystem {
-namespace XAudio2 {
+namespace Pomdog::Detail::SoundSystem::XAudio2 {
 
 AudioClipXAudio2::AudioClipXAudio2(
     std::vector<std::uint8_t> && audioDataIn,
@@ -38,7 +35,4 @@ std::size_t AudioClipXAudio2::SizeInBytes() const
     return sizeof(std::uint8_t) * audioData.size();
 }
 
-} // namespace XAudio2
-} // namespace SoundSystem
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::SoundSystem::XAudio2

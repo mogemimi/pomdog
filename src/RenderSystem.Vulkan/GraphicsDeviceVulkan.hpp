@@ -5,9 +5,7 @@
 #include "../RenderSystem/NativeGraphicsDevice.hpp"
 #include <memory>
 
-namespace Pomdog {
-namespace Detail {
-namespace Vulkan {
+namespace Pomdog::Detail::Vulkan {
 
 class GraphicsDeviceVulkan final : public NativeGraphicsDevice {
 public:
@@ -70,6 +68,4 @@ private:
     std::unique_ptr<Impl> impl;
 };
 
-} // namespace Vulkan
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Vulkan

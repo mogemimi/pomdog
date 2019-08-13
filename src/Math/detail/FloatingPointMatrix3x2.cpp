@@ -13,8 +13,7 @@
 #include <limits>
 #include <utility>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 template <typename T>
 FloatingPointMatrix3x2<T>::FloatingPointMatrix3x2(
@@ -417,5 +416,4 @@ template FloatingPointMatrix3x2<long double>
 operator*<long double>(long double, const FloatingPointMatrix3x2<long double>&) noexcept;
 #endif
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

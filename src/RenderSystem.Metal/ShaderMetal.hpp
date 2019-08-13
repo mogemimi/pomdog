@@ -6,13 +6,12 @@
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #import <Metal/MTLLibrary.h>
 
-namespace Pomdog {
-namespace Detail {
-
+namespace Pomdog::Detail {
 class ShaderBytecode;
 struct ShaderCompileOptions;
+} // namespace Pomdog::Detail
 
-namespace Metal {
+namespace Pomdog::Detail::Metal {
 
 class ShaderMetal final : public Shader {
 public:
@@ -32,6 +31,4 @@ private:
     id<MTLFunction> shader;
 };
 
-} // namespace Metal
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Metal

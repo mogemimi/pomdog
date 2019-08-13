@@ -26,8 +26,7 @@
 #include <functional>
 #include <memory>
 
-namespace Pomdog {
-namespace Reactive {
+namespace Pomdog::Reactive {
 
 using ObservableConnection = std::vector<std::shared_ptr<ObservableBase>>;
 
@@ -307,5 +306,4 @@ auto FromObservable(
     return observable;
 }
 
-} // namespace Reactive
-} // namespace Pomdog
+} // namespace Pomdog::Reactive

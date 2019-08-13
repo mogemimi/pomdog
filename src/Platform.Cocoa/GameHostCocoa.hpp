@@ -13,8 +13,9 @@ namespace Pomdog {
 class Game;
 struct PresentationParameters;
 
-namespace Detail {
-namespace Cocoa {
+} // namespace Pomdog
+
+namespace Pomdog::Detail::Cocoa {
 
 class GameWindowCocoa;
 
@@ -61,6 +62,4 @@ private:
     std::unique_ptr<Impl> impl;
 };
 
-} // namespace Cocoa
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Cocoa

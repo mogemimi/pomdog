@@ -8,8 +8,7 @@
 #include <cstdint>
 #include <type_traits>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 template <typename T>
 class POMDOG_EXPORT FloatingPointQuaternion final {
@@ -123,5 +122,4 @@ template <typename T>
 FloatingPointQuaternion<T> POMDOG_EXPORT
 operator*(T scaleFactor, const FloatingPointQuaternion<T>& quaternion) noexcept;
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

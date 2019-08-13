@@ -6,8 +6,7 @@
 #include "Pomdog/Graphics/PresentationParameters.hpp"
 #include <utility>
 
-namespace Pomdog {
-namespace X11 {
+namespace Pomdog::X11 {
 
 void Bootstrap::SetSurfaceFormat(SurfaceFormat surfaceFormatIn) noexcept
 {
@@ -81,5 +80,4 @@ void Bootstrap::Run(
     gameHost.reset();
 }
 
-} // namespace X11
-} // namespace Pomdog
+} // namespace Pomdog::X11

@@ -9,8 +9,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 namespace {
 
 #if defined(POMDOG_COMPILER_MSVC)
@@ -249,5 +248,4 @@ std::shared_ptr<Texture2D> DDSTextureReader::Read(
     return texture;
 }
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

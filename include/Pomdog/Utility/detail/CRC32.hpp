@@ -8,8 +8,7 @@
 #include <string>
 #include <type_traits>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 // CRC-32 (Cyclic Redundancy Check for 32bit)
 struct POMDOG_EXPORT CRC32 final {
@@ -23,5 +22,4 @@ struct POMDOG_EXPORT CRC32 final {
     }
 };
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

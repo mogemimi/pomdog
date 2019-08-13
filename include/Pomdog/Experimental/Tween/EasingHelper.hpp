@@ -8,9 +8,7 @@
 #include <cmath>
 #include <type_traits>
 
-namespace Pomdog {
-namespace Detail {
-namespace Easings {
+namespace Pomdog::Detail::Easings {
 
 template <typename T, T (*Function)(T)>
 class POMDOG_EXPORT Ease final {
@@ -98,10 +96,9 @@ using EaseQuintic = Ease<T, Quintic<T>>;
 template <typename T>
 using EaseSine = Ease<T, Sine<T>>;
 
-} // namespace Easings
-} // namespace Detail
+} // namespace Pomdog::Detail::Easings
 
-namespace Easings {
+namespace Pomdog::Easings {
 
 using EaseBack = Detail::Easings::EaseBack<float>;
 using EaseBounce = Detail::Easings::EaseBounce<float>;
@@ -114,5 +111,4 @@ using EaseQuartic = Detail::Easings::EaseQuartic<float>;
 using EaseQuintic = Detail::Easings::EaseQuintic<float>;
 using EaseSine = Detail::Easings::EaseSine<float>;
 
-} // namespace Easings
-} // namespace Pomdog
+} // namespace Pomdog::Easings

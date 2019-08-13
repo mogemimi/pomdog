@@ -4,8 +4,7 @@
 
 #include <cstddef>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 class ShaderBytecode final {
 public:
@@ -13,5 +12,4 @@ public:
     std::size_t ByteLength = 0;
 };
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

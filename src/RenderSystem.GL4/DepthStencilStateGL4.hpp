@@ -6,9 +6,7 @@
 #include "../Utility/Tagged.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 
-namespace Pomdog {
-namespace Detail {
-namespace GL4 {
+namespace Pomdog::Detail::GL4 {
 
 using ComparisonFunctionGL4 = Tagged<GLenum, ComparisonFunction>;
 using StencilOperationGL4 = Tagged<GLenum, StencilOperation>;
@@ -45,6 +43,4 @@ private:
     bool depthBufferEnable;
 };
 
-} // namespace GL4
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::GL4

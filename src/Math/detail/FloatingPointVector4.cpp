@@ -10,8 +10,7 @@
 #include <limits>
 #include <utility>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 template <typename T>
 FloatingPointVector4<T>::FloatingPointVector4(const FloatingPointVector3<T>& xyz, T w) noexcept
@@ -274,5 +273,4 @@ template FloatingPointVector4<long double>
 operator*<long double>(long double, const FloatingPointVector4<long double>&) noexcept;
 #endif
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

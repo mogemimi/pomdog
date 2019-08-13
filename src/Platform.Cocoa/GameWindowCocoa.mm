@@ -6,9 +6,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include <utility>
 
-namespace Pomdog {
-namespace Detail {
-namespace Cocoa {
+namespace Pomdog::Detail::Cocoa {
 
 GameWindowCocoa::GameWindowCocoa(
     NSWindow* nativeWindowIn,
@@ -154,6 +152,4 @@ void GameWindowCocoa::SetView(NSView* gameViewIn) noexcept
     gameView = gameViewIn;
 }
 
-} // namespace Cocoa
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Cocoa

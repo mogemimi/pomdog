@@ -27,9 +27,7 @@
 #include "Pomdog/Utility/StringHelper.hpp"
 #include <algorithm>
 
-namespace Pomdog {
-namespace Detail {
-namespace Direct3D11 {
+namespace Pomdog::Detail::Direct3D11 {
 namespace {
 
 using DXGI::DXGIFormatHelper;
@@ -710,6 +708,4 @@ ID3D11DeviceContext* GraphicsContextDirect3D11::GetDeviceContext()
     return deviceContext.Get();
 }
 
-} // namespace Direct3D11
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Direct3D11

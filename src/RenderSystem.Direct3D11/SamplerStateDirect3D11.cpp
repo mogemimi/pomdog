@@ -6,9 +6,7 @@
 #include "Pomdog/Utility/Exception.hpp"
 #include <array>
 
-namespace Pomdog {
-namespace Detail {
-namespace Direct3D11 {
+namespace Pomdog::Detail::Direct3D11 {
 namespace {
 
 D3D11_FILTER ToFilter(TextureFilter textureFilter) noexcept
@@ -80,6 +78,4 @@ ID3D11SamplerState* SamplerStateDirect3D11::GetSamplerState() const
     return samplerState.Get();
 }
 
-} // namespace Direct3D11
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Direct3D11

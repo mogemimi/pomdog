@@ -4,13 +4,11 @@
 
 #include <cstddef>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 struct GraphicsCapabilities final {
     std::size_t ConstantBufferSlotCount;
     std::size_t SamplerSlotCount;
 };
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

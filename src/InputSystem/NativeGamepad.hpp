@@ -4,9 +4,7 @@
 
 #include "Pomdog/Input/Gamepad.hpp"
 
-namespace Pomdog {
-namespace Detail {
-namespace InputSystem {
+namespace Pomdog::Detail::InputSystem {
 
 class NativeGamepad : public Gamepad {
 public:
@@ -17,6 +15,4 @@ public:
     virtual void PollEvents() = 0;
 };
 
-} // namespace InputSystem
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::InputSystem

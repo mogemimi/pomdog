@@ -4,9 +4,7 @@
 #include "Pomdog/Utility/Exception.hpp"
 #include <ctime>
 
-namespace Pomdog {
-namespace Detail {
-namespace Linux {
+namespace Pomdog::Detail::Linux {
 
 TimePoint TimeSourceLinux::Now() const
 {
@@ -22,6 +20,4 @@ TimePoint TimeSourceLinux::Now() const
         static_cast<double>(now.tv_nsec) * nanoScale}};
 }
 
-} // namespace Linux
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Linux

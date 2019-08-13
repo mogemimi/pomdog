@@ -6,18 +6,16 @@
 #include <memory>
 
 namespace Pomdog {
-
 class EventQueue;
 class Game;
 struct PresentationParameters;
+} // namespace Pomdog
 
-namespace Detail {
-namespace InputSystem {
-
+namespace Pomdog::Detail::InputSystem {
 class NativeGamepad;
+} // namespace Pomdog::Detail::InputSystem
 
-} // namespace InputSystem
-namespace Win32 {
+namespace Pomdog::Detail::Win32 {
 
 class GameWindowWin32;
 
@@ -63,6 +61,4 @@ private:
     std::unique_ptr<Impl> impl;
 };
 
-} // namespace Win32
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Win32

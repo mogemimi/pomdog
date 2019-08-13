@@ -6,8 +6,7 @@
 #include "Pomdog/Basic/Export.hpp"
 #include <functional>
 
-namespace Pomdog {
-namespace Concurrency {
+namespace Pomdog::Concurrency {
 
 class POMDOG_EXPORT Scheduler {
 public:
@@ -18,5 +17,4 @@ public:
         const Duration& delayTime = Duration::zero()) = 0;
 };
 
-} // namespace Concurrency
-} // namespace Pomdog
+} // namespace Pomdog::Concurrency

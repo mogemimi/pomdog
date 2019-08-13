@@ -9,12 +9,11 @@
 #import <MetalKit/MTKView.h>
 
 namespace Pomdog {
-
 class Game;
 struct PresentationParameters;
+} // namespace Pomdog
 
-namespace Detail {
-namespace Cocoa {
+namespace Pomdog::Detail::Cocoa {
 
 class GameWindowCocoa;
 
@@ -65,6 +64,4 @@ private:
     std::unique_ptr<Impl> impl;
 };
 
-} // namespace Cocoa
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Cocoa

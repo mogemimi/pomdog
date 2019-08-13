@@ -9,9 +9,7 @@
 #include <string>
 #include <vector>
 
-namespace Pomdog {
-namespace Detail {
-namespace GL4 {
+namespace Pomdog::Detail::GL4 {
 
 struct UniformVariableGL4 {
     std::string Name;
@@ -53,6 +51,4 @@ private:
     ShaderProgramGL4 shaderProgram;
 };
 
-} // namespace GL4
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::GL4

@@ -7,8 +7,7 @@
 #include <string>
 #include <vector>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 struct ShaderModel final {
     std::uint8_t Major;
@@ -33,5 +32,4 @@ struct ShaderCompileOptions final {
     bool Precompiled;
 };
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

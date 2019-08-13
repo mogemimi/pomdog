@@ -7,15 +7,11 @@
 #include <memory>
 #import <Cocoa/Cocoa.h>
 
-namespace Pomdog {
-namespace Detail {
-namespace Cocoa {
+namespace Pomdog::Detail::Cocoa {
 
 class OpenGLContextCocoa;
 
-} // namespace Cocoa
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Cocoa
 
 @interface PomdogOpenGLView : NSView
 

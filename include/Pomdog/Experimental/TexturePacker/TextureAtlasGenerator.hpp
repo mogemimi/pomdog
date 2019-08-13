@@ -9,10 +9,10 @@
 #include <vector>
 
 namespace Pomdog {
-
 class Image;
+} // namespace Pomdog
 
-namespace TexturePacker {
+namespace Pomdog::TexturePacker {
 
 struct POMDOG_EXPORT TextureAtlasGeneratorResult final {
     std::shared_ptr<Pomdog::Image> Image;
@@ -33,5 +33,4 @@ public:
         int height);
 };
 
-} // namespace TexturePacker
-} // namespace Pomdog
+} // namespace Pomdog::TexturePacker

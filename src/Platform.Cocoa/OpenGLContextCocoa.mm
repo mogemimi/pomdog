@@ -6,9 +6,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include <vector>
 
-namespace Pomdog {
-namespace Detail {
-namespace Cocoa {
+namespace Pomdog::Detail::Cocoa {
 
 NSOpenGLPixelFormat* CocoaOpenGLHelper::CreatePixelFormat(
     const PresentationParameters& presentationParameters)
@@ -151,6 +149,4 @@ NSOpenGLContext* OpenGLContextCocoa::NativeOpenGLContext()
     return openGLContext;
 }
 
-} // namespace Cocoa
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Cocoa

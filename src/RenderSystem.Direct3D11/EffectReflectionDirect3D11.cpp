@@ -11,9 +11,7 @@
 #include <algorithm>
 #include <utility>
 
-namespace Pomdog {
-namespace Detail {
-namespace Direct3D11 {
+namespace Pomdog::Detail::Direct3D11 {
 namespace {
 
 using Direct3D::HLSLReflectionHelper;
@@ -190,6 +188,4 @@ std::vector<EffectConstantDescription> EffectReflectionDirect3D11::GetConstantBu
     return std::move(result);
 }
 
-} // namespace Direct3D11
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Direct3D11

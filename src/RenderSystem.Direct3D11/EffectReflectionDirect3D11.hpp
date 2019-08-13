@@ -7,12 +7,11 @@
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <wrl/client.h>
 
-namespace Pomdog {
-namespace Detail {
-
+namespace Pomdog::Detail {
 class ShaderBytecode;
+} // namespace Pomdog::Detail
 
-namespace Direct3D11 {
+namespace Pomdog::Detail::Direct3D11 {
 
 class EffectReflectionDirect3D11 final : public NativeEffectReflection {
 public:
@@ -27,6 +26,4 @@ private:
     Microsoft::WRL::ComPtr<ID3D11ShaderReflection> pixelShaderReflector;
 };
 
-} // namespace Direct3D11
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Direct3D11

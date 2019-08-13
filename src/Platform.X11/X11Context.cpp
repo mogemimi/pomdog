@@ -3,9 +3,7 @@
 #include "X11Context.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 
-namespace Pomdog {
-namespace Detail {
-namespace X11 {
+namespace Pomdog::Detail::X11 {
 namespace {
 
 void InitializeAtoms(::Display* display, X11AtomCache & atoms)
@@ -58,6 +56,4 @@ X11Context::~X11Context()
     }
 }
 
-} // namespace X11
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::X11

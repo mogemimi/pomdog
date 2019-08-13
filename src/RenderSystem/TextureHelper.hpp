@@ -5,8 +5,7 @@
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <cstdint>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 struct TextureHelper final {
     static std::int32_t ComputeMipmapLevelCount(
@@ -20,5 +19,4 @@ struct TextureHelper final {
         SurfaceFormat format);
 };
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

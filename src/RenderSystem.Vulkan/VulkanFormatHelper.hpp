@@ -6,14 +6,10 @@
 #include <vulkan/vulkan.h>
 #include <optional>
 
-namespace Pomdog {
-namespace Detail {
-namespace Vulkan {
+namespace Pomdog::Detail::Vulkan {
 
 struct VulkanFormatHelper final {
     static std::optional<VkFormat> ToVkFormat(SurfaceFormat format) noexcept;
 };
 
-} // namespace Vulkan
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Vulkan

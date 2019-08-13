@@ -9,9 +9,7 @@
 #include <memory>
 #include <utility>
 
-namespace Pomdog {
-namespace Reactive {
-namespace Detail {
+namespace Pomdog::Reactive::Detail {
 
 template <class T>
 class DistinctOperator final
@@ -61,6 +59,4 @@ private:
     std::shared_ptr<Observer<T>> observer;
 };
 
-} // namespace Detail
-} // namespace Reactive
-} // namespace Pomdog
+} // namespace Pomdog::Reactive::Detail

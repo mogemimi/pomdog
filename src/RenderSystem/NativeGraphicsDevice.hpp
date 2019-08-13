@@ -6,8 +6,7 @@
 #include <memory>
 #include <vector>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 class ShaderBytecode;
 struct ShaderCompileOptions;
@@ -74,5 +73,4 @@ public:
         std::int32_t multiSampleCount) = 0;
 };
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

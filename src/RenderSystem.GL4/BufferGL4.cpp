@@ -9,9 +9,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include <utility>
 
-namespace Pomdog {
-namespace Detail {
-namespace GL4 {
+namespace Pomdog::Detail::GL4 {
 namespace {
 
 GLenum ToBufferUsage(BufferUsage bufferUsage) noexcept
@@ -184,6 +182,4 @@ template class BufferGL4<ConstantBuffer>;
 template class BufferGL4<IndexBuffer>;
 template class BufferGL4<VertexBuffer>;
 
-} // namespace GL4
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::GL4

@@ -12,9 +12,7 @@
 #include <tuple>
 #include <utility>
 
-namespace Pomdog {
-namespace Detail {
-namespace GL4 {
+namespace Pomdog::Detail::GL4 {
 namespace {
 
 GLint GetActiveUniformBlockIntValue(
@@ -684,6 +682,4 @@ std::vector<EffectConstantDescription> EffectReflectionGL4::GetConstantBuffers()
     return result;
 }
 
-} // namespace GL4
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::GL4

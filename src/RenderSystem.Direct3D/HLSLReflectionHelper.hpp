@@ -5,9 +5,7 @@
 #include "PrerequisitesDirect3D.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 
-namespace Pomdog {
-namespace Detail {
-namespace Direct3D {
+namespace Pomdog::Detail::Direct3D {
 
 struct HLSLReflectionHelper final {
     static EffectVariableType
@@ -17,6 +15,4 @@ struct HLSLReflectionHelper final {
     ToEffectVariableClass(D3D_SHADER_VARIABLE_CLASS variableClass) noexcept;
 };
 
-} // namespace Direct3D
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Direct3D

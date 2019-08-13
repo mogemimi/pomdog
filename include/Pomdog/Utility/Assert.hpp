@@ -11,8 +11,7 @@
 #include <csignal>
 #endif
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 // How to use:
 // POMDOG_ASSERT(expr);
@@ -61,5 +60,4 @@ namespace Detail {
 #    define POMDOG_ASSERT_MESSAGE(expression, message)
 #endif
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

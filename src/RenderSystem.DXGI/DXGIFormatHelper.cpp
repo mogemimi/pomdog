@@ -7,9 +7,7 @@
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
-namespace Pomdog {
-namespace Detail {
-namespace DXGI {
+namespace Pomdog::Detail::DXGI {
 
 DXGI_FORMAT DXGIFormatHelper::ToDXGIFormat(DepthFormat format) noexcept
 {
@@ -70,6 +68,4 @@ DXGI_FORMAT DXGIFormatHelper::ToDXGIFormat(InputElementFormat format) noexcept
     return DXGI_FORMAT_R32_FLOAT;
 }
 
-} // namespace DXGI
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::DXGI

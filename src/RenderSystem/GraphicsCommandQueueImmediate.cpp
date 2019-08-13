@@ -6,8 +6,7 @@
 #include "Pomdog/Graphics/GraphicsCommandList.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 GraphicsCommandQueueImmediate::GraphicsCommandQueueImmediate(
     const std::shared_ptr<NativeGraphicsContext>& graphicsContextIn)
@@ -53,5 +52,4 @@ std::size_t GraphicsCommandQueueImmediate::GetCommandCount() const noexcept
     return count;
 }
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

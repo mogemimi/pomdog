@@ -9,9 +9,7 @@
 #include <sstream>
 #include <utility>
 
-namespace Pomdog {
-namespace Detail {
-namespace Win32 {
+namespace Pomdog::Detail::Win32 {
 namespace {
 
 PIXELFORMATDESCRIPTOR ToPixelFormatDescriptor(
@@ -161,6 +159,4 @@ void OpenGLContextWin32::SwapBuffers()
     ::SwapBuffers(hdc.get());
 }
 
-} // namespace Win32
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Win32

@@ -13,8 +13,7 @@
 #include <memory>
 #include <vector>
 
-namespace Pomdog {
-namespace Reactive {
+namespace Pomdog::Reactive {
 
 class KeyDownSubject final : public Observable<Keys> {
 public:
@@ -42,5 +41,4 @@ private:
     ScopedConnection connection;
 };
 
-} // namespace Reactive
-} // namespace Pomdog
+} // namespace Pomdog::Reactive

@@ -11,8 +11,7 @@
 #include <utility>
 #include <vector>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 struct POMDOG_EXPORT BinaryReader final {
     template <typename T, class Stream>
@@ -77,5 +76,4 @@ struct POMDOG_EXPORT BinaryReader final {
     }
 };
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

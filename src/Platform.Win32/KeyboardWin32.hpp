@@ -6,9 +6,7 @@
 #include "Pomdog/Input/KeyboardState.hpp"
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 
-namespace Pomdog {
-namespace Detail {
-namespace Win32 {
+namespace Pomdog::Detail::Win32 {
 
 class KeyboardWin32 final : public Keyboard {
 public:
@@ -20,6 +18,4 @@ private:
     KeyboardState keyboardState;
 };
 
-} // namespace Win32
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Win32

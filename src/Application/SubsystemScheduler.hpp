@@ -4,8 +4,7 @@
 
 #include "Pomdog/Signals/Signal.hpp"
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 class SubsystemScheduler final {
 public:
@@ -16,5 +15,4 @@ public:
     Signal<void()> OnUpdate;
 };
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

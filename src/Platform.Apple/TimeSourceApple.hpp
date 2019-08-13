@@ -4,9 +4,7 @@
 
 #include "Pomdog/Application/TimePoint.hpp"
 
-namespace Pomdog {
-namespace Detail {
-namespace Apple {
+namespace Pomdog::Detail::Apple {
 
 class TimeSourceApple final {
 public:
@@ -18,6 +16,4 @@ private:
     double secondsPerTick;
 };
 
-} // namespace Apple
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Apple

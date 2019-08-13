@@ -9,9 +9,7 @@
 #include <memory>
 #include <utility>
 
-namespace Pomdog {
-namespace Reactive {
-namespace Detail {
+namespace Pomdog::Reactive::Detail {
 
 template <class T>
 class SkipOperator final
@@ -62,6 +60,4 @@ private:
     int remaining;
 };
 
-} // namespace Detail
-} // namespace Reactive
-} // namespace Pomdog
+} // namespace Pomdog::Reactive::Detail

@@ -4,8 +4,7 @@
 
 #include "Pomdog/Async/Scheduler.hpp"
 
-namespace Pomdog {
-namespace Concurrency {
+namespace Pomdog::Concurrency {
 
 class POMDOG_EXPORT ImmediateScheduler final : public Scheduler {
 public:
@@ -14,5 +13,4 @@ public:
         const Duration& delayTime) override;
 };
 
-} // namespace Concurrency
-} // namespace Pomdog
+} // namespace Pomdog::Concurrency

@@ -7,9 +7,7 @@
 #include "Pomdog/Utility/Exception.hpp"
 #include <utility>
 
-namespace Pomdog {
-namespace Detail {
-namespace Direct3D11 {
+namespace Pomdog::Detail::Direct3D11 {
 namespace {
 
 ID3D11Buffer* CreateNativeBuffer(
@@ -193,6 +191,4 @@ ID3D11Buffer* BufferDirect3D11::GetBuffer() const
     return buffer.Get();
 }
 
-} // namespace Direct3D11
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Direct3D11

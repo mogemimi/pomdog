@@ -10,11 +10,11 @@
 #include <string>
 
 namespace Pomdog {
-
 class GraphicsDevice;
 class Shader;
+} // namespace Pomdog
 
-namespace ShaderCompilers {
+namespace Pomdog::ShaderCompilers {
 
 struct POMDOG_EXPORT GLSLCompiler final {
     static std::unique_ptr<Shader> CreateShader(
@@ -25,5 +25,4 @@ struct POMDOG_EXPORT GLSLCompiler final {
         std::optional<std::string>&& currentDirectory);
 };
 
-} // namespace ShaderCompilers
-} // namespace Pomdog
+} // namespace Pomdog::ShaderCompilers

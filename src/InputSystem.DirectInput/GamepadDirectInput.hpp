@@ -13,10 +13,7 @@
 #include <cstdint>
 #include <memory>
 
-namespace Pomdog {
-namespace Detail {
-namespace InputSystem {
-namespace DirectInput {
+namespace Pomdog::Detail::InputSystem::DirectInput {
 
 enum class GamepadStateDirectInput : std::uint8_t {
     NotInitialized,
@@ -70,7 +67,4 @@ private:
     Microsoft::WRL::ComPtr<IDirectInput8> directInput;
 };
 
-} // namespace DirectInput
-} // namespace InputSystem
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::InputSystem::DirectInput

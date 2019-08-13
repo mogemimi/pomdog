@@ -8,8 +8,7 @@
 #include <memory>
 #include <string>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 class POMDOG_EXPORT AssetLoaderContext final {
 public:
@@ -19,5 +18,4 @@ public:
     BinaryFileStream OpenStream(const std::string& assetName) const;
 };
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

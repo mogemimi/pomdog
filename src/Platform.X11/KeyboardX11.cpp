@@ -12,9 +12,7 @@
 #include <cstring>
 #include <map>
 
-namespace Pomdog {
-namespace Detail {
-namespace X11 {
+namespace Pomdog::Detail::X11 {
 namespace {
 
 constexpr Keys Keys_None = static_cast<Keys>(0);
@@ -321,6 +319,4 @@ void KeyboardX11::HandleEvent(XEvent & event)
 #endif
 }
 
-} // namespace X11
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::X11

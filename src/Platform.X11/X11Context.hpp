@@ -5,9 +5,7 @@
 #include "X11AtomCache.hpp"
 #include <X11/Xlib.h>
 
-namespace Pomdog {
-namespace Detail {
-namespace X11 {
+namespace Pomdog::Detail::X11 {
 
 class X11Context {
 public:
@@ -18,6 +16,4 @@ public:
     ::Display* Display;
 };
 
-} // namespace X11
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::X11

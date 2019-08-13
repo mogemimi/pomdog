@@ -6,9 +6,7 @@
 #include "Pomdog/Math/Vector3.hpp"
 #include <random>
 
-namespace Pomdog {
-namespace Detail {
-namespace Particles {
+namespace Pomdog::Detail::Particles {
 
 class ParticleEmitterShape {
 public:
@@ -17,6 +15,4 @@ public:
     virtual void Compute(std::mt19937& random, Vector3& emitPosition, Radian<float>& emitAngle) const = 0;
 };
 
-} // namespace Particles
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Particles

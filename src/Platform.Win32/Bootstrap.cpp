@@ -11,8 +11,7 @@
 
 using Pomdog::Detail::InputSystem::DirectInput::GamepadDirectInput;
 
-namespace Pomdog {
-namespace Win32 {
+namespace Pomdog::Win32 {
 
 void Bootstrap::SetInstance(HINSTANCE hInstanceIn) noexcept
 {
@@ -113,5 +112,4 @@ void Bootstrap::Run(
     gameWindow.reset();
 }
 
-} // namespace Win32
-} // namespace Pomdog
+} // namespace Pomdog::Win32

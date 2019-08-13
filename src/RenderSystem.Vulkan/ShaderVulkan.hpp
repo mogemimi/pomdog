@@ -6,12 +6,11 @@
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <vulkan/vulkan.h>
 
-namespace Pomdog {
-namespace Detail {
-
+namespace Pomdog::Detail {
 class ShaderBytecode;
+} // namespace Pomdog::Detail
 
-namespace Vulkan {
+namespace Pomdog::Detail::Vulkan {
 
 struct ShaderCompileOptions;
 
@@ -30,6 +29,4 @@ private:
     ::VkShaderModule shaderModule;
 };
 
-} // namespace Vulkan
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Vulkan

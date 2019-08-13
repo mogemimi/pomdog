@@ -6,9 +6,7 @@
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #import <Metal/Metal.h>
 
-namespace Pomdog {
-namespace Detail {
-namespace Metal {
+namespace Pomdog::Detail::Metal {
 
 class EffectReflectionMetal final : public NativeEffectReflection {
 public:
@@ -20,6 +18,4 @@ private:
     __strong MTLRenderPipelineReflection* reflection;
 };
 
-} // namespace Metal
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Metal

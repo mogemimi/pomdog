@@ -12,10 +12,7 @@
 #include <array>
 #include <tuple>
 
-namespace Pomdog {
-namespace Detail {
-namespace InputSystem {
-namespace DirectInput {
+namespace Pomdog::Detail::InputSystem::DirectInput {
 namespace {
 
 constexpr LONG ThumbStickMinValue = -32768;
@@ -669,7 +666,4 @@ void GamepadDirectInput::PollEvents()
     }
 }
 
-} // namespace DirectInput
-} // namespace InputSystem
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::InputSystem::DirectInput

@@ -11,8 +11,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include <array>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 namespace {
 
 using Detail::GraphicsCommand;
@@ -581,5 +580,4 @@ void GraphicsCommandListImmediate::SortCommandsForMetal()
     }
 }
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

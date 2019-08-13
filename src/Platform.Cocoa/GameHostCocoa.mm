@@ -37,9 +37,7 @@ using Pomdog::Detail::GL4::GraphicsDeviceGL4;
 using Pomdog::Detail::GL4::GraphicsContextGL4;
 using Pomdog::Detail::InputSystem::Apple::GamepadIOKit;
 
-namespace Pomdog {
-namespace Detail {
-namespace Cocoa {
+namespace Pomdog::Detail::Cocoa {
 namespace {
 
 std::shared_ptr<OpenGLContextCocoa> CreateOpenGLContext(
@@ -600,6 +598,4 @@ std::shared_ptr<HTTPClient> GameHostCocoa::GetHTTPClient()
     return impl->GetHTTPClient(shared_from_this());
 }
 
-} // namespace Cocoa
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Cocoa

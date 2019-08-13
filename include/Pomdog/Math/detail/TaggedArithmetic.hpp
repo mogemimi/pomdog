@@ -7,8 +7,7 @@
 #include <type_traits>
 #include <utility>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 ///@code
 /// struct pixel_tag {};
@@ -209,5 +208,4 @@ public:
     }
 };
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

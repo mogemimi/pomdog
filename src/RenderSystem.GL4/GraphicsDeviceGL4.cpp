@@ -15,9 +15,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 
-namespace Pomdog {
-namespace Detail {
-namespace GL4 {
+namespace Pomdog::Detail::GL4 {
 
 GraphicsDeviceGL4::GraphicsDeviceGL4(const PresentationParameters& presentationParametersIn)
     : presentationParameters(presentationParametersIn)
@@ -151,6 +149,4 @@ void GraphicsDeviceGL4::ClientSizeChanged(int width, int height)
     presentationParameters.BackBufferHeight = height;
 }
 
-} // namespace GL4
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::GL4

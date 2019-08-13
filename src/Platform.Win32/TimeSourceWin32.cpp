@@ -4,9 +4,7 @@
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
-namespace Pomdog {
-namespace Detail {
-namespace Win32 {
+namespace Pomdog::Detail::Win32 {
 
 TimeSourceWin32::TimeSourceWin32()
 {
@@ -27,6 +25,4 @@ TimePoint TimeSourceWin32::Now() const
     return TimePoint(Duration(currentSeconds));
 }
 
-} // namespace Win32
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Win32

@@ -4,9 +4,7 @@
 #include "Pomdog/Graphics/EffectVariableClass.hpp"
 #include "Pomdog/Graphics/EffectVariableType.hpp"
 
-namespace Pomdog {
-namespace Detail {
-namespace Direct3D {
+namespace Pomdog::Detail::Direct3D {
 
 EffectVariableType HLSLReflectionHelper::ToEffectVariableType(
     D3D_SHADER_VARIABLE_TYPE variableType) noexcept
@@ -41,6 +39,4 @@ EffectVariableClass HLSLReflectionHelper::ToEffectVariableClass(
     return EffectVariableClass::Scalar;
 }
 
-} // namespace Direct3D
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Direct3D

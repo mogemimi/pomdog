@@ -8,12 +8,10 @@
 #include <vector>
 
 namespace Pomdog {
-
 enum class AudioChannels : std::uint8_t;
+} // namespace Pomdog
 
-namespace Detail {
-namespace SoundSystem {
-namespace XAudio2 {
+namespace Pomdog::Detail::SoundSystem::XAudio2 {
 
 class AudioClipXAudio2 final {
 public:
@@ -35,7 +33,4 @@ private:
     std::vector<std::uint8_t> waveFormat;
 };
 
-} // namespace XAudio2
-} // namespace SoundSystem
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::SoundSystem::XAudio2

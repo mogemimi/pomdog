@@ -7,11 +7,10 @@
 #include <type_traits>
 
 namespace Pomdog {
-
 class ConstantBuffer;
+} // namespace Pomdog
 
-namespace Detail {
-namespace EffectBinaryParameter {
+namespace Pomdog::Detail::EffectBinaryParameter {
 
 void POMDOG_EXPORT Get(const ConstantBuffer& constantBuffer, bool& result);
 void POMDOG_EXPORT Get(const ConstantBuffer& constantBuffer, std::int32_t& result);
@@ -53,6 +52,4 @@ void Set(ConstantBuffer& constantBuffer, const T& value)
     constantBuffer.SetValue(static_cast<const void*>(&value), sizeof(value));
 }
 
-} // namespace EffectBinaryParameter
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::EffectBinaryParameter

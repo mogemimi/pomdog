@@ -2,11 +2,9 @@
 
 #pragma once
 
-namespace Pomdog {
-namespace AssetBuilders {
+namespace Pomdog::AssetBuilders {
 
 template <typename T>
 class Builder;
 
-} // namespace AssetBuilders
-} // namespace Pomdog
+} // namespace Pomdog::AssetBuilders

@@ -4,9 +4,7 @@
 
 #include <X11/X.h>
 
-namespace Pomdog {
-namespace Detail {
-namespace X11 {
+namespace Pomdog::Detail::X11 {
 
 struct X11AtomCache {
     Atom WmDeleteWindow = None;
@@ -15,6 +13,4 @@ struct X11AtomCache {
     Atom NetWmIconName = None;
 };
 
-} // namespace X11
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::X11

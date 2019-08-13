@@ -4,12 +4,10 @@
 
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 struct SurfaceFormatHelper final {
     static int ToBytesPerBlock(SurfaceFormat format);
 };
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

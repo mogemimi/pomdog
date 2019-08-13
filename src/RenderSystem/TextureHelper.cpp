@@ -5,8 +5,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include <algorithm>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 namespace {
 
 std::int32_t MipmapImageDataBytes(
@@ -63,5 +62,4 @@ std::int32_t TextureHelper::ComputeTextureSizeInBytes(
     return sizeInBytes;
 }
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

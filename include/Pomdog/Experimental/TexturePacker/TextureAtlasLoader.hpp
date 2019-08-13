@@ -7,10 +7,10 @@
 #include <string>
 
 namespace Pomdog {
-
 class AssetManager;
+} // namespace Pomdog
 
-namespace TexturePacker {
+namespace Pomdog::TexturePacker {
 
 class POMDOG_EXPORT TextureAtlasLoader final {
 public:
@@ -19,5 +19,4 @@ public:
         const std::string& assetName);
 };
 
-} // namespace TexturePacker
-} // namespace Pomdog
+} // namespace Pomdog::TexturePacker

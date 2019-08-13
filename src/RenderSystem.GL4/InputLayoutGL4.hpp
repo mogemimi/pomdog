@@ -10,9 +10,7 @@
 #include <optional>
 #include <vector>
 
-namespace Pomdog {
-namespace Detail {
-namespace GL4 {
+namespace Pomdog::Detail::GL4 {
 
 namespace Tags {
 
@@ -65,6 +63,4 @@ private:
     std::optional<VertexArrayGL4> inputLayout;
 };
 
-} // namespace GL4
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::GL4

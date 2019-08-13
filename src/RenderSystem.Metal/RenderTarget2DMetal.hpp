@@ -6,9 +6,7 @@
 #include "../RenderSystem/NativeRenderTarget2D.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 
-namespace Pomdog {
-namespace Detail {
-namespace Metal {
+namespace Pomdog::Detail::Metal {
 
 class RenderTarget2DMetal final : public NativeRenderTarget2D {
 public:
@@ -31,6 +29,4 @@ private:
     //bool multiSampleEnabled;
 };
 
-} // namespace Metal
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Metal

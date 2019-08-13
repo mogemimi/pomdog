@@ -12,8 +12,7 @@ extern "C" {
 #include <cstring>
 #include <vector>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 namespace {
 
 struct PNGBinaryContext {
@@ -184,5 +183,4 @@ std::shared_ptr<Texture2D> PNGTextureReader::Read(
     return texture;
 }
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

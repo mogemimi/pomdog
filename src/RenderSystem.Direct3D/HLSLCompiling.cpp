@@ -15,9 +15,7 @@
 #include <utility>
 #include <vector>
 
-namespace Pomdog {
-namespace Detail {
-namespace Direct3D {
+namespace Pomdog::Detail::Direct3D {
 namespace {
 
 std::string ToString(const ShaderProfile& profile)
@@ -203,6 +201,4 @@ Microsoft::WRL::ComPtr<ID3DBlob> HLSLCompiling::CompileShader(
     return std::move(codeBlob);
 }
 
-} // namespace Direct3D
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Direct3D

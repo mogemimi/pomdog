@@ -6,9 +6,7 @@
 #include "Pomdog/Graphics/InputElementFormat.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
-namespace Pomdog {
-namespace Detail {
-namespace BufferHelper {
+namespace Pomdog::Detail::BufferHelper {
 
 std::size_t ToIndexElementOffsetBytes(IndexElementSize elementSize) noexcept
 {
@@ -39,6 +37,4 @@ std::uint16_t ToByteSize(InputElementFormat format) noexcept
     POMDOG_UNREACHABLE("Unsupported input element format");
 }
 
-} // namespace BufferHelper
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::BufferHelper

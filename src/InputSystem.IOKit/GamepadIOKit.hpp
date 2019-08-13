@@ -18,10 +18,7 @@ class EventQueue;
 
 } // namespace Pomdog
 
-namespace Pomdog {
-namespace Detail {
-namespace InputSystem {
-namespace Apple {
+namespace Pomdog::Detail::InputSystem::Apple {
 
 struct ThumbStickInfo final {
     std::int32_t Minimum = 0;
@@ -67,7 +64,4 @@ private:
     void OnDeviceDetached(IOReturn result, void* sender, IOHIDDeviceRef device);
 };
 
-} // namespace Apple
-} // namespace InputSystem
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::InputSystem::Apple

@@ -7,9 +7,7 @@
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #import <Metal/MTLBuffer.h>
 
-namespace Pomdog {
-namespace Detail {
-namespace Metal {
+namespace Pomdog::Detail::Metal {
 
 class BufferMetal final : public NativeBuffer {
 public:
@@ -42,6 +40,4 @@ private:
     id<MTLBuffer> nativeBuffer;
 };
 
-} // namespace Metal
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Metal

@@ -13,9 +13,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include <cfloat>
 
-namespace Pomdog {
-namespace Detail {
-namespace EffectBinaryParameter {
+namespace Pomdog::Detail::EffectBinaryParameter {
 namespace {
 
 template <typename T> static
@@ -198,6 +196,4 @@ template void Set<double>(ConstantBuffer &, const FloatingPointMatrix4x4<double>
 template void Set<double>(ConstantBuffer &, const FloatingPointQuaternion<double>&);
 #endif
 
-} // namespace EffectBinaryParameter
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::EffectBinaryParameter

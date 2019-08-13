@@ -7,9 +7,7 @@
 #include <ios>
 #include <sstream>
 
-namespace Pomdog {
-namespace Detail {
-namespace GL4 {
+namespace Pomdog::Detail::GL4 {
 namespace {
 
 struct ErrorCodeTag;
@@ -63,6 +61,4 @@ void ErrorChecker::CheckError(const char* command, const char* filename, int lin
     }
 }
 
-} // namespace GL4
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::GL4

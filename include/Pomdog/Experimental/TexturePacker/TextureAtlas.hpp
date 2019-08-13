@@ -9,8 +9,7 @@
 #include <utility>
 #include <vector>
 
-namespace Pomdog {
-namespace TexturePacker {
+namespace Pomdog::TexturePacker {
 
 struct POMDOG_EXPORT TextureAtlasPage final {
     std::string Name;
@@ -28,5 +27,4 @@ public:
     std::vector<TextureAtlasRegion> regions;
 };
 
-} // namespace TexturePacker
-} // namespace Pomdog
+} // namespace Pomdog::TexturePacker

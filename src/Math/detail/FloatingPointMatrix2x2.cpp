@@ -6,8 +6,7 @@
 #include <cmath>
 #include <limits>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 template <typename T>
 FloatingPointMatrix2x2<T>::FloatingPointMatrix2x2(T m00, T m01, T m10, T m11) noexcept
@@ -227,5 +226,4 @@ template FloatingPointMatrix2x2<long double>
 operator*<long double>(long double, const FloatingPointMatrix2x2<long double>&) noexcept;
 #endif
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

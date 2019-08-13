@@ -22,9 +22,7 @@
 #include "Pomdog/Utility/StringHelper.hpp"
 #include <array>
 
-namespace Pomdog {
-namespace Detail {
-namespace Direct3D11 {
+namespace Pomdog::Detail::Direct3D11 {
 namespace {
 
 using Microsoft::WRL::ComPtr;
@@ -501,6 +499,4 @@ void GraphicsDeviceDirect3D11::ClientSizeChanged(int width, int height)
     impl->presentationParameters.BackBufferHeight = height;
 }
 
-} // namespace Direct3D11
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Direct3D11

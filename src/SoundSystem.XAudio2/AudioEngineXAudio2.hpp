@@ -5,10 +5,7 @@
 #include "PrerequisitesXAudio2.hpp"
 #include <wrl/client.h>
 
-namespace Pomdog {
-namespace Detail {
-namespace SoundSystem {
-namespace XAudio2 {
+namespace Pomdog::Detail::SoundSystem::XAudio2 {
 
 class AudioEngineXAudio2 final {
 public:
@@ -27,7 +24,4 @@ private:
     IXAudio2MasteringVoice* masteringVoice;
 };
 
-} // namespace XAudio2
-} // namespace SoundSystem
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::SoundSystem::XAudio2

@@ -8,9 +8,7 @@
 #include <algorithm>
 #include <utility>
 
-namespace Pomdog {
-namespace Detail {
-namespace GL4 {
+namespace Pomdog::Detail::GL4 {
 namespace {
 
 GLenum ToTextureAddressMode(TextureAddressMode address) noexcept
@@ -124,6 +122,4 @@ void SamplerStateGL4::Apply(int index)
     POMDOG_CHECK_ERROR_GL4("glBindSampler");
 }
 
-} // namespace GL4
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::GL4

@@ -5,9 +5,7 @@
 #include "Pomdog/Input/Keys.hpp"
 #include <optional>
 
-namespace Pomdog {
-namespace Detail {
-namespace Win32 {
+namespace Pomdog::Detail::Win32 {
 namespace {
 
 std::optional<Keys> ToKeys(USHORT keyCode) noexcept
@@ -186,6 +184,4 @@ KeyboardState KeyboardWin32::GetState() const
     return keyboardState;
 }
 
-} // namespace Win32
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Win32

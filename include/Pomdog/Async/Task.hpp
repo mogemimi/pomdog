@@ -14,8 +14,7 @@
 #include <utility>
 #include <vector>
 
-namespace Pomdog {
-namespace Concurrency {
+namespace Pomdog::Concurrency {
 
 template <typename TResult>
 class Task;
@@ -731,5 +730,4 @@ auto WhenAll(const std::vector<TaskType>& tasks) -> decltype(Detail::WhenAllImpl
     return Detail::WhenAllImpl(tasks);
 }
 
-} // namespace Concurrency
-} // namespace Pomdog
+} // namespace Pomdog::Concurrency

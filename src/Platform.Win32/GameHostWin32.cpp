@@ -50,9 +50,7 @@ using Pomdog::Detail::Direct3D11::GraphicsContextDirect3D11;
 using Pomdog::Detail::Direct3D11::GraphicsDeviceDirect3D11;
 #endif
 
-namespace Pomdog {
-namespace Detail {
-namespace Win32 {
+namespace Pomdog::Detail::Win32 {
 namespace {
 
 void MessagePump()
@@ -606,6 +604,4 @@ std::shared_ptr<HTTPClient> GameHostWin32::GetHTTPClient()
     return impl->GetHTTPClient(shared_from_this());
 }
 
-} // namespace Win32
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Win32

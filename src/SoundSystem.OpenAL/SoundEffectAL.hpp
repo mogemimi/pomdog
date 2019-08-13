@@ -12,10 +12,7 @@ class AudioEmitter;
 class AudioListener;
 } // namespace Pomdog
 
-namespace Pomdog {
-namespace Detail {
-namespace SoundSystem {
-namespace OpenAL {
+namespace Pomdog::Detail::SoundSystem::OpenAL {
 
 struct AudioSourceALTag {};
 using AudioSourceAL = Tagged<ALuint, AudioSourceALTag>;
@@ -54,7 +51,4 @@ public:
     void SetVolume(float volume);
 };
 
-} // namespace OpenAL
-} // namespace SoundSystem
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::SoundSystem::OpenAL

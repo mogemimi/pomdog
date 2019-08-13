@@ -11,9 +11,7 @@ class Event;
 
 } // namespace Pomdog
 
-namespace Pomdog {
-namespace Detail {
-namespace Cocoa {
+namespace Pomdog::Detail::Cocoa {
 
 class MouseCocoa final : public Mouse {
 public:
@@ -28,6 +26,4 @@ private:
     double scrollWheel;
 };
 
-} // namespace Cocoa
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Cocoa

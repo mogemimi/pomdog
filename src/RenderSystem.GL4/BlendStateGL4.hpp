@@ -8,9 +8,7 @@
 #include "Pomdog/Math/Color.hpp"
 #include <array>
 
-namespace Pomdog {
-namespace Detail {
-namespace GL4 {
+namespace Pomdog::Detail::GL4 {
 
 using BlendGL4 = Tagged<GLenum, Blend>;
 using BlendOperationGL4 = Tagged<GLenum, BlendOperation>;
@@ -39,6 +37,4 @@ private:
     bool alphaToCoverageEnable;
 };
 
-} // namespace GL4
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::GL4

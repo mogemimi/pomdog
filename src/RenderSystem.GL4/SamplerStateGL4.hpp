@@ -8,9 +8,7 @@
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <optional>
 
-namespace Pomdog {
-namespace Detail {
-namespace GL4 {
+namespace Pomdog::Detail::GL4 {
 
 using SamplerObjectGL4 = Tagged<GLuint, SamplerState>;
 
@@ -26,6 +24,4 @@ private:
     std::optional<SamplerObjectGL4> samplerObject;
 };
 
-} // namespace GL4
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::GL4

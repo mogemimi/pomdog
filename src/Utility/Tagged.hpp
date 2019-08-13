@@ -7,8 +7,7 @@
 #include <type_traits>
 #include <utility>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 template <typename T, class Tag>
 class POMDOG_EXPORT Tagged final {
@@ -66,8 +65,7 @@ Tagged<T, Tag> MakeTagged(Arguments &&... arguments)
     return Tagged<T, Tag>(std::forward<T>(arguments)...);
 }
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail
 
 namespace std {
 

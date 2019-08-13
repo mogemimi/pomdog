@@ -7,8 +7,7 @@
 #include <memory>
 #include <vector>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 class GraphicsCommandListImmediate;
 class NativeGraphicsContext;
@@ -38,5 +37,4 @@ private:
     std::shared_ptr<NativeGraphicsContext> graphicsContext;
 };
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

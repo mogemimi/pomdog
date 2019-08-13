@@ -8,9 +8,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 
-namespace Pomdog {
-namespace Detail {
-namespace Vulkan {
+namespace Pomdog::Detail::Vulkan {
 namespace {
 
 VkVertexInputRate ToVkVertexInputRate(InputClassification classification) noexcept
@@ -372,6 +370,4 @@ PipelineStateVulkan::PipelineStateVulkan(
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 
-} // namespace Vulkan
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Vulkan

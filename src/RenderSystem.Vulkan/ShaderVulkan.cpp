@@ -5,9 +5,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 
-namespace Pomdog {
-namespace Detail {
-namespace Vulkan {
+namespace Pomdog::Detail::Vulkan {
 
 ShaderVulkan::ShaderVulkan(
     ::VkDevice deviceIn,
@@ -44,6 +42,4 @@ ShaderVulkan::~ShaderVulkan()
     }
 }
 
-} // namespace Vulkan
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Vulkan

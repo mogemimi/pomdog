@@ -7,9 +7,7 @@
 #include "Pomdog/Utility/Exception.hpp"
 #include <utility>
 
-namespace Pomdog {
-namespace Detail {
-namespace Vulkan {
+namespace Pomdog::Detail::Vulkan {
 namespace {
 
 //VkSharingMode ToSharingMode(BufferUsage bufferUsage)
@@ -159,6 +157,4 @@ VkBuffer BufferVulkan::GetBuffer() const
     return nativeBuffer;
 }
 
-} // namespace Vulkan
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Vulkan

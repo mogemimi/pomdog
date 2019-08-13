@@ -11,9 +11,7 @@
 #include <optional>
 #include <string>
 
-namespace Pomdog {
-namespace Detail {
-namespace Win32 {
+namespace Pomdog::Detail::Win32 {
 namespace {
 
 template <typename T>
@@ -559,6 +557,4 @@ HWND GameWindowWin32::NativeWindowHandle() const
     return impl->windowHandle;
 }
 
-} // namespace Win32
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Win32

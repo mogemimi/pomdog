@@ -8,9 +8,7 @@
 #include "Pomdog/Utility/StringHelper.hpp"
 #import <Metal/Metal.h>
 
-namespace Pomdog {
-namespace Detail {
-namespace Metal {
+namespace Pomdog::Detail::Metal {
 
 ShaderMetal::ShaderMetal(
     id<MTLDevice> device,
@@ -74,6 +72,4 @@ id<MTLFunction> ShaderMetal::GetShader() const
     return shader;
 }
 
-} // namespace Metal
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Metal

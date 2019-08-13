@@ -6,8 +6,7 @@
 #include <cstdlib>
 #include <memory>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 class NativeGraphicsCommandQueue {
 public:
@@ -28,5 +27,4 @@ public:
     virtual std::size_t GetCommandCount() const noexcept = 0;
 };
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

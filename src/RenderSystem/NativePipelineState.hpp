@@ -5,8 +5,7 @@
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <memory>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 class NativePipelineState {
 public:
@@ -17,5 +16,4 @@ public:
     virtual ~NativePipelineState() = default;
 };
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

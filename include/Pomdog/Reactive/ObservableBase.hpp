@@ -2,13 +2,11 @@
 
 #pragma once
 
-namespace Pomdog {
-namespace Reactive {
+namespace Pomdog::Reactive {
 
 class ObservableBase {
 public:
     virtual ~ObservableBase() = default;
 };
 
-} // namespace Reactive
-} // namespace Pomdog
+} // namespace Pomdog::Reactive

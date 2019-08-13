@@ -5,13 +5,9 @@
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #import <Metal/MTLTexture.h>
 
-namespace Pomdog {
-namespace Detail {
-namespace Metal {
+namespace Pomdog::Detail::Metal {
 
 MTLPixelFormat ToPixelFormat(SurfaceFormat format) noexcept;
 MTLPixelFormat ToPixelFormat(DepthFormat format) noexcept;
 
-} // namespace Metal
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Metal

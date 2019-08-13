@@ -13,9 +13,7 @@
 #include <algorithm>
 #include <utility>
 
-namespace Pomdog {
-namespace Detail {
-namespace Direct3D11 {
+namespace Pomdog::Detail::Direct3D11 {
 namespace {
 
 using Microsoft::WRL::ComPtr;
@@ -502,6 +500,4 @@ void PipelineStateDirect3D11::Apply(
     deviceContext->RSSetState(rasterizerState.Get());
 }
 
-} // namespace Direct3D11
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Direct3D11

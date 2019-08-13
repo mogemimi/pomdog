@@ -5,8 +5,7 @@
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <cstdint>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 class NativeTexture2D {
 public:
@@ -24,5 +23,4 @@ public:
         const void* pixelData) = 0;
 };
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

@@ -4,8 +4,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include <cstdint>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 template <typename T>
 Coordinate3D<T>::Coordinate3D(T x, T y, T z) noexcept
@@ -147,5 +146,4 @@ operator*<std::int32_t>(std::int32_t, const Coordinate3D<std::int32_t>&) noexcep
 template Coordinate3D<std::int32_t>
 operator/<std::int32_t>(std::int32_t, const Coordinate3D<std::int32_t>&);
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail
