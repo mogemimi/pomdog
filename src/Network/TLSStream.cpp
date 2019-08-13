@@ -1,9 +1,9 @@
 // Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Network/TLSStream.hpp"
+#include "AddressParser.hpp"
 #include "../Network.MbedTLS/Certificates.hpp"
 #include "../Network.MbedTLS/TLSStreamMbedTLS.hpp"
-#include "AddressParser.hpp"
 
 namespace Pomdog {
 

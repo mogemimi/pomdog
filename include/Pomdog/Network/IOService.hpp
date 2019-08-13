@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Application/GameClock.hpp"
 #include "Pomdog/Application/TimePoint.hpp"
+#include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Signals/Signal.hpp"
 #include "Pomdog/Utility/Errors.hpp"
 #include <functional>

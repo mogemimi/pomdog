@@ -6,8 +6,8 @@
 #include <algorithm>
 #include <cstring>
 #include <optional>
-#include <string_view>
 #include <sstream>
+#include <string_view>
 #include <utility>
 
 namespace Pomdog::Detail {

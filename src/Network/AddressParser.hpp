@@ -3,8 +3,8 @@
 #pragma once
 
 #include "AddressFamily.hpp"
-#include <tuple>
 #include <string>
+#include <tuple>
 
 namespace Pomdog::Detail::AddressParser {
 

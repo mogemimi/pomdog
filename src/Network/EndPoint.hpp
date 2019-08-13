@@ -12,8 +12,8 @@
     || defined(POMDOG_PLATFORM_LINUX)
 #include <netinet/in.h>
 #elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
-#include <WinSock2.h>
 #include <WS2tcpip.h>
+#include <WinSock2.h>
 #endif
 
 namespace Pomdog::Detail {
