@@ -132,6 +132,8 @@ func createProject(config projectConfig) error {
 		"ThirdParty/pomdog/build/dependencies/giflib/CMakeLists.txt",
 		"ThirdParty/pomdog/build/dependencies/glew/CMakeLists.txt",
 		"ThirdParty/pomdog/build/dependencies/libpng/CMakeLists.txt",
+		"ThirdParty/pomdog/build/dependencies/mbedtls/CMakeLists.txt",
+		"ThirdParty/pomdog/build/dependencies/mbedtls-crypto/CMakeLists.txt",
 		"ThirdParty/pomdog/build/dependencies/zlib/CMakeLists.txt",
 	}
 	for _, f := range thirdPartyCMakeFiles {
@@ -203,8 +205,10 @@ func copyFrameworkFiles(sourceRoot, destRoot string) error {
 
 func copyThirdPartyFiles(sourceRoot, destRoot string) error {
 	files := []string{
+		"giflib",
 		"glew",
 		"libpng",
+		"mbedtls",
 		"rapidjson",
 		"SDL_GameControllerDB",
 		"stb",
