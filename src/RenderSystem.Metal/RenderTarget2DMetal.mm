@@ -3,6 +3,7 @@
 #include "RenderTarget2DMetal.hpp"
 #include "MetalFormatHelper.hpp"
 #include "Pomdog/Graphics/DepthFormat.hpp"
+#include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #import <Metal/MTLDevice.h>
@@ -43,6 +44,13 @@ RenderTarget2DMetal::RenderTarget2DMetal(
                 "Failed to create MTLTexture");
         }
     }
+
+#if defined(DEBUG) && !defined(NDEBUG)
+    if ((depthStencilFormat == DepthFormat::Depth24Stencil8) && !device.isDepth24Stencil8PixelFormatSupported) {
+        // NOTE: MTLPixelFormatDepth24Unorm_Stencil8 is only supported in certain devices.
+        Log::Warning("Pomdog", "This device does not support MTLPixelFormatDepth24Unorm_Stencil8.");
+    }
+#endif
 
     if (depthStencilFormat != DepthFormat::None) {
         MTLTextureDescriptor* descriptor = [MTLTextureDescriptor
