@@ -218,8 +218,24 @@ PipelineStateMetal::PipelineStateMetal(
     descriptor.fragmentFunction = pixelShader;
     descriptor.vertexDescriptor = ToVertexDescriptor(description.InputLayout);
     descriptor.sampleCount = multiSampleCount;
-    descriptor.depthAttachmentPixelFormat = depthStencilFormat;
-    descriptor.stencilAttachmentPixelFormat = depthStencilFormat;
+    switch (description.DepthStencilViewFormat) {
+    case DepthFormat::Depth16:
+        [[fallthrough]];
+    case DepthFormat::Depth32:
+        descriptor.depthAttachmentPixelFormat = depthStencilFormat;
+        descriptor.stencilAttachmentPixelFormat = MTLPixelFormatInvalid;
+        break;
+    case DepthFormat::Depth24Stencil8:
+        [[fallthrough]];
+    case DepthFormat::Depth32_Float_Stencil8_Uint:
+        descriptor.depthAttachmentPixelFormat = depthStencilFormat;
+        descriptor.stencilAttachmentPixelFormat = depthStencilFormat;
+        break;
+    case DepthFormat::None:
+        descriptor.depthAttachmentPixelFormat = MTLPixelFormatInvalid;
+        descriptor.stencilAttachmentPixelFormat = MTLPixelFormatInvalid;
+        break;
+    }
 
     std::size_t index = 0;
     for (auto & renderTarget : description.BlendState.RenderTargets) {

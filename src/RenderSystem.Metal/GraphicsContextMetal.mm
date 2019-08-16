@@ -512,7 +512,27 @@ void GraphicsContextMetal::SetRenderPass(const RenderPass& renderPass)
             POMDOG_ASSERT(nativeRenderTarget != nullptr);
 
             renderPassDescriptor.depthAttachment.texture = nativeRenderTarget->GetDepthStencilTexture();
-            renderPassDescriptor.stencilAttachment.texture = nativeRenderTarget->GetDepthStencilTexture();
+
+            bool isStencilRenderable = [&]() -> bool {
+                switch ([nativeRenderTarget->GetDepthStencilTexture() pixelFormat]) {
+                case MTLPixelFormatStencil8:
+                case MTLPixelFormatX24_Stencil8:
+                case MTLPixelFormatX32_Stencil8:
+                case MTLPixelFormatDepth24Unorm_Stencil8:
+                case MTLPixelFormatDepth32Float_Stencil8:
+                    return true;
+                default:
+                    break;
+                }
+                return false;
+            }();
+
+            if (isStencilRenderable) {
+                renderPassDescriptor.stencilAttachment.texture = nativeRenderTarget->GetDepthStencilTexture();
+            }
+            else {
+                renderPassDescriptor.stencilAttachment.texture = nil;
+            }
         }
     }
 
