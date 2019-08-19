@@ -31,6 +31,7 @@ D3D11_TEXTURE_ADDRESS_MODE ToTextureAddressMode(TextureAddressMode addressMode) 
     case TextureAddressMode::Wrap: return D3D11_TEXTURE_ADDRESS_WRAP;
     case TextureAddressMode::Clamp: return D3D11_TEXTURE_ADDRESS_CLAMP;
     case TextureAddressMode::Mirror: return D3D11_TEXTURE_ADDRESS_MIRROR;
+    case TextureAddressMode::Border: return D3D11_TEXTURE_ADDRESS_BORDER;
     }
     return D3D11_TEXTURE_ADDRESS_WRAP;
 }

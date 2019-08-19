@@ -15,6 +15,7 @@ MTLSamplerAddressMode ToSamplerAddressMode(TextureAddressMode addressMode) noexc
     case TextureAddressMode::Wrap: return MTLSamplerAddressModeRepeat;
     case TextureAddressMode::Clamp: return MTLSamplerAddressModeClampToEdge;
     case TextureAddressMode::Mirror: return MTLSamplerAddressModeMirrorRepeat;
+    case TextureAddressMode::Border: return MTLSamplerAddressModeClampToZero;
     }
     POMDOG_UNREACHABLE("Unsupported texture address mode");
 }
