@@ -146,7 +146,13 @@ GraphicsCapabilities GraphicsContextMetal::GetCapabilities() const
 
 void GraphicsContextMetal::DispatchSemaphoreWait()
 {
+    if (!isDrawing) {
+        // NOTE: Skip waiting
+        return;
+    }
+
     dispatch_semaphore_wait(inflightSemaphore, DISPATCH_TIME_FOREVER);
+    isDrawing = false;
 }
 
 void GraphicsContextMetal::SetMTKView(MTKView* view)
@@ -173,6 +179,7 @@ void GraphicsContextMetal::ExecuteCommandLists(
     [commandBuffer addCompletedHandler:^(id<MTLCommandBuffer> buffer) {
         dispatch_semaphore_signal(blockSema);
     }];
+    isDrawing = true;
 
     POMDOG_ASSERT(commandBuffer != nil);
 

@@ -86,6 +86,7 @@ private:
     id<MTLBuffer> indexBuffer;
     MTLIndexType indexType;
     MTKView* targetView;
+    bool isDrawing = false;
 };
 
 } // namespace Pomdog::Detail::Metal
