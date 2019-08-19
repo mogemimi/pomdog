@@ -5,6 +5,7 @@
 #include "Pomdog/Content/AssetBuilders/PipelineStateBuilder.hpp"
 #include "Pomdog/Content/AssetBuilders/ShaderBuilder.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
+#include "Pomdog/Experimental/Graphics/Texture2DView.hpp"
 #include "Pomdog/Experimental/TexturePacker/TextureRegion.hpp"
 #include "Pomdog/Graphics/BlendDescription.hpp"
 #include "Pomdog/Graphics/BufferUsage.hpp"
@@ -19,6 +20,7 @@
 #include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
 #include "Pomdog/Graphics/RasterizerDescription.hpp"
+#include "Pomdog/Graphics/RenderTarget2D.hpp"
 #include "Pomdog/Graphics/SamplerState.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
 #include "Pomdog/Graphics/ShaderLanguage.hpp"
@@ -114,7 +116,7 @@ private:
     std::vector<SpriteInfo> spriteQueue;
 
     std::shared_ptr<GraphicsCommandList> commandList;
-    std::shared_ptr<Texture2D> currentTexture;
+    Texture2DView currentTexture;
 
     std::shared_ptr<VertexBuffer> planeVertices;
     std::shared_ptr<IndexBuffer> planeIndices;
@@ -144,7 +146,7 @@ public:
         const Matrix4x4& transformMatrix);
 
     void Draw(
-        const std::shared_ptr<Texture2D>& texture,
+        const Texture2DView& texture,
         const Vector2& position,
         const Rectangle& sourceRect,
         const Color& color,
@@ -159,10 +161,10 @@ private:
     void FlushBatch();
 
     void RenderBatch(
-        const std::shared_ptr<Texture2D>& texture,
+        const Texture2DView& texture,
         const std::vector<SpriteInfo>& sprites);
 
-    void CompareTexture(const std::shared_ptr<Texture2D>& texture);
+    void CompareTexture(const Texture2DView& texture);
 };
 
 SpriteBatch::Impl::Impl(
@@ -318,7 +320,7 @@ void SpriteBatch::Impl::FlushBatch()
 }
 
 void SpriteBatch::Impl::RenderBatch(
-    const std::shared_ptr<Texture2D>& texture,
+    const Texture2DView& texture,
     const std::vector<SpriteInfo>& sprites)
 {
     POMDOG_ASSERT(commandList);
@@ -336,7 +338,12 @@ void SpriteBatch::Impl::RenderBatch(
         sprites.size(),
         sizeof(SpriteInfo));
 
-    commandList->SetTexture(0, texture);
+    if (texture.GetIndex() == Texture2DViewIndex::Texture2D) {
+        commandList->SetTexture(0, texture.AsTexture2D());
+    }
+    else if (texture.GetIndex() == Texture2DViewIndex::RenderTarget2D) {
+        commandList->SetTexture(0, texture.AsRenderTarget2D());
+    }
     commandList->SetSamplerState(0, sampler);
 
     commandList->SetPipelineState(pipelineState);
@@ -361,7 +368,7 @@ void SpriteBatch::Impl::RenderBatch(
     ++drawCallCount;
 }
 
-void SpriteBatch::Impl::CompareTexture(const std::shared_ptr<Texture2D>& texture)
+void SpriteBatch::Impl::CompareTexture(const Texture2DView& texture)
 {
     POMDOG_ASSERT(texture != nullptr);
 
@@ -386,7 +393,7 @@ void SpriteBatch::Impl::CompareTexture(const std::shared_ptr<Texture2D>& texture
 }
 
 void SpriteBatch::Impl::Draw(
-    const std::shared_ptr<Texture2D>& texture,
+    const Texture2DView& texture,
     const Vector2& position,
     const Rectangle& sourceRect,
     const Color& color,
@@ -580,6 +587,96 @@ void SpriteBatch::Draw(
 
 void SpriteBatch::Draw(
     const std::shared_ptr<Texture2D>& texture,
+    const Vector2& position,
+    const TextureRegion& textureRegion,
+    const Color& color,
+    const Radian<float>& rotation,
+    const Vector2& originPivot,
+    const Vector2& scale)
+{
+    POMDOG_ASSERT(impl);
+    auto offset = ComputeSpriteOffset(textureRegion, originPivot);
+    constexpr float layerDepth = 0.0f;
+    impl->Draw(texture, position, textureRegion.Subrect, color, rotation, offset, scale, layerDepth);
+}
+
+void SpriteBatch::Draw(
+    const std::shared_ptr<RenderTarget2D>& texture,
+    const Rectangle& sourceRect,
+    const Color& color)
+{
+    POMDOG_ASSERT(impl);
+    constexpr float layerDepth = 0.0f;
+    impl->Draw(texture, {0, 0}, sourceRect, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, layerDepth);
+}
+
+void SpriteBatch::Draw(
+    const std::shared_ptr<RenderTarget2D>& texture,
+    const Vector2& position,
+    const Color& color)
+{
+    POMDOG_ASSERT(impl);
+    constexpr float layerDepth = 0.0f;
+    const Rectangle sourceRect = {0, 0, texture->GetWidth(), texture->GetHeight()};
+    impl->Draw(texture, position, sourceRect, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, layerDepth);
+}
+
+void SpriteBatch::Draw(
+    const std::shared_ptr<RenderTarget2D>& texture,
+    const Vector2& position,
+    const Rectangle& sourceRect,
+    const Color& color)
+{
+    POMDOG_ASSERT(impl);
+    constexpr float layerDepth = 0.0f;
+    impl->Draw(texture, position, sourceRect, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, layerDepth);
+}
+
+void SpriteBatch::Draw(
+    const std::shared_ptr<RenderTarget2D>& texture,
+    const Vector2& position,
+    const Rectangle& sourceRect,
+    const Color& color,
+    const Radian<float>& rotation,
+    const Vector2& originPivot,
+    float scale)
+{
+    POMDOG_ASSERT(impl);
+    constexpr float layerDepth = 0.0f;
+    impl->Draw(texture, position, sourceRect, color, rotation, originPivot, {scale, scale}, layerDepth);
+}
+
+void SpriteBatch::Draw(
+    const std::shared_ptr<RenderTarget2D>& texture,
+    const Vector2& position,
+    const Rectangle& sourceRect,
+    const Color& color,
+    const Radian<float>& rotation,
+    const Vector2& originPivot,
+    const Vector2& scale)
+{
+    POMDOG_ASSERT(impl);
+    constexpr float layerDepth = 0.0f;
+    impl->Draw(texture, position, sourceRect, color, rotation, originPivot, scale, layerDepth);
+}
+
+void SpriteBatch::Draw(
+    const std::shared_ptr<RenderTarget2D>& texture,
+    const Vector2& position,
+    const TextureRegion& textureRegion,
+    const Color& color,
+    const Radian<float>& rotation,
+    const Vector2& originPivot,
+    float scale)
+{
+    POMDOG_ASSERT(impl);
+    auto offset = ComputeSpriteOffset(textureRegion, originPivot);
+    constexpr float layerDepth = 0.0f;
+    impl->Draw(texture, position, textureRegion.Subrect, color, rotation, offset, {scale, scale}, layerDepth);
+}
+
+void SpriteBatch::Draw(
+    const std::shared_ptr<RenderTarget2D>& texture,
     const Vector2& position,
     const TextureRegion& textureRegion,
     const Color& color,

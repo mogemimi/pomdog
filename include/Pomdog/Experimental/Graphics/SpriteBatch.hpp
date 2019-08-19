@@ -111,6 +111,58 @@ public:
         const Vector2& originPivot,
         const Vector2& scale);
 
+    void Draw(
+        const std::shared_ptr<RenderTarget2D>& texture,
+        const Rectangle& sourceRect,
+        const Color& color);
+
+    void Draw(
+        const std::shared_ptr<RenderTarget2D>& texture,
+        const Vector2& position,
+        const Color& color);
+
+    void Draw(
+        const std::shared_ptr<RenderTarget2D>& texture,
+        const Vector2& position,
+        const Rectangle& sourceRect,
+        const Color& color);
+
+    void Draw(
+        const std::shared_ptr<RenderTarget2D>& texture,
+        const Vector2& position,
+        const Rectangle& sourceRect,
+        const Color& color,
+        const Radian<float>& rotation,
+        const Vector2& originPivot,
+        float scale);
+
+    void Draw(
+        const std::shared_ptr<RenderTarget2D>& texture,
+        const Vector2& position,
+        const Rectangle& sourceRect,
+        const Color& color,
+        const Radian<float>& rotation,
+        const Vector2& originPivot,
+        const Vector2& scale);
+
+    void Draw(
+        const std::shared_ptr<RenderTarget2D>& texture,
+        const Vector2& position,
+        const TextureRegion& textureRegion,
+        const Color& color,
+        const Radian<float>& rotation,
+        const Vector2& originPivot,
+        float scale);
+
+    void Draw(
+        const std::shared_ptr<RenderTarget2D>& texture,
+        const Vector2& position,
+        const TextureRegion& textureRegion,
+        const Color& color,
+        const Radian<float>& rotation,
+        const Vector2& originPivot,
+        const Vector2& scale);
+
     void End();
 
     int GetDrawCallCount() const noexcept;

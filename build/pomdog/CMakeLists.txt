@@ -396,6 +396,7 @@ set(POMDOG_SOURCES_EXPERIMENTAL
   ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/SpriteFont.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/SpriteFontLoader.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/SpriteLine.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/Texture2DView.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/TrueTypeFont.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Image/GifImage.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Image/GifImageLoader.hpp
@@ -444,6 +445,7 @@ set(POMDOG_SOURCES_EXPERIMENTAL
   ${POMDOG_DIR}/src/Experimental/Graphics/SpriteFont.cpp
   ${POMDOG_DIR}/src/Experimental/Graphics/SpriteFontLoader.cpp
   ${POMDOG_DIR}/src/Experimental/Graphics/SpriteLine.cpp
+  ${POMDOG_DIR}/src/Experimental/Graphics/Texture2DView.cpp
   ${POMDOG_DIR}/src/Experimental/Graphics/TrueTypeFont.cpp
   ${POMDOG_DIR}/src/Experimental/Image/GifImageLoader.cpp
   ${POMDOG_DIR}/src/Experimental/Image/Image.cpp

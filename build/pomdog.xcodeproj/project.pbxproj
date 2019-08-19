@@ -320,6 +320,8 @@
 		D7334E35228C689C00232225 /* ParticleSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E32228C689C00232225 /* ParticleSystem.cpp */; };
 		D7334E36228C689C00232225 /* BeamSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E33228C689C00232225 /* BeamSystem.cpp */; };
 		D7334E37228C689C00232225 /* BeamSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E33228C689C00232225 /* BeamSystem.cpp */; };
+		D740A539230B30BB0077D040 /* Texture2DView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D740A538230B30BB0077D040 /* Texture2DView.cpp */; };
+		D740A53A230B30BB0077D040 /* Texture2DView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D740A538230B30BB0077D040 /* Texture2DView.cpp */; };
 		D7458C0B23000520007150B4 /* HTTPParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7458C0923000520007150B4 /* HTTPParser.cpp */; };
 		D7458C0C23000520007150B4 /* HTTPParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7458C0923000520007150B4 /* HTTPParser.cpp */; };
 		D7703DF722FCB1BB00442403 /* SpinLock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7703DF622FCB1BB00442403 /* SpinLock.cpp */; };
@@ -919,6 +921,8 @@
 		D7334E4A228C691500232225 /* ParticleEmitterShapeBox.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleEmitterShapeBox.hpp; sourceTree = "<group>"; };
 		D7334E4B228C691500232225 /* ParticleEmitterShape.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleEmitterShape.hpp; sourceTree = "<group>"; };
 		D7334E4C228C691500232225 /* ParticleCurveLerp.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleCurveLerp.hpp; sourceTree = "<group>"; };
+		D740A537230B30850077D040 /* Texture2DView.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Texture2DView.hpp; sourceTree = "<group>"; };
+		D740A538230B30BB0077D040 /* Texture2DView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Texture2DView.cpp; sourceTree = "<group>"; };
 		D7458C0923000520007150B4 /* HTTPParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HTTPParser.cpp; sourceTree = "<group>"; };
 		D7458C0A23000520007150B4 /* HTTPParser.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = HTTPParser.hpp; sourceTree = "<group>"; };
 		D74FD9BD064B46464D340F2E /* IndexBuffer.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = IndexBuffer.hpp; sourceTree = "<group>"; };
@@ -1672,11 +1676,11 @@
 		A9A8227E1DAB7EFF0091497F /* Experimental */ = {
 			isa = PBXGroup;
 			children = (
-				D7334E38228C68AA00232225 /* Particle2D */,
 				A9FC99081DC3D8E100C78D63 /* Graphics */,
-				A94F2DC12131FE9E00718DB0 /* MagicaVoxel */,
 				A9A8227F1DAB7F2B0091497F /* Image */,
 				D7334E02228AEB6A00232225 /* ImageEffects */,
+				A94F2DC12131FE9E00718DB0 /* MagicaVoxel */,
+				D7334E38228C68AA00232225 /* Particle2D */,
 				A9A822801DAB7F510091497F /* TexturePacker */,
 				A94F2DC52131FEAD00718DB0 /* Tween */,
 			);
@@ -1757,6 +1761,7 @@
 				A98F5920211B2B9A002960C1 /* SpriteFont.cpp */,
 				A98F5921211B2B9A002960C1 /* SpriteFontLoader.cpp */,
 				D7334DCC228AC81F00232225 /* SpriteLine.cpp */,
+				D740A538230B30BB0077D040 /* Texture2DView.cpp */,
 				A98F5923211B2B9A002960C1 /* TrueTypeFont.cpp */,
 			);
 			path = Graphics;
@@ -1775,6 +1780,7 @@
 				D7334DDD228AC86900232225 /* SpriteFont.hpp */,
 				D7334DDA228AC86800232225 /* SpriteFontLoader.hpp */,
 				D7334DE1228AC86900232225 /* SpriteLine.hpp */,
+				D740A537230B30850077D040 /* Texture2DView.hpp */,
 				D7334DE2228AC86900232225 /* TrueTypeFont.hpp */,
 			);
 			path = Graphics;
@@ -2490,6 +2496,7 @@
 				0B2A073EC556AE4DF301E6DA /* SamplerStateGL4.cpp in Sources */,
 				9F7601D5C7E771D3423E81EC /* ShaderGL4.cpp in Sources */,
 				68C77475A849DB821AEC1312 /* Texture2DGL4.cpp in Sources */,
+				D740A539230B30BB0077D040 /* Texture2DView.cpp in Sources */,
 				A9F2135A1DE35F380027FA45 /* BoundingFrustum.cpp in Sources */,
 				5D45742CD0787C6A52ED8F29 /* AudioClipAL.cpp in Sources */,
 				6DED53A00BC530C5F59A2547 /* AudioEngineAL.cpp in Sources */,
@@ -2658,6 +2665,7 @@
 				4282457DCED6C0F50EC6CE7E /* SamplerStateGL4.cpp in Sources */,
 				019FA0785E7D88B8C880AFD9 /* ShaderGL4.cpp in Sources */,
 				6591378FB9E160A17D96D06A /* Texture2DGL4.cpp in Sources */,
+				D740A53A230B30BB0077D040 /* Texture2DView.cpp in Sources */,
 				A9F2135B1DE35F380027FA45 /* BoundingFrustum.cpp in Sources */,
 				0997B2307F87B872762B0A2B /* AudioClipAL.cpp in Sources */,
 				9FFA1FA5C22F2299B1FD7B50 /* AudioEngineAL.cpp in Sources */,
