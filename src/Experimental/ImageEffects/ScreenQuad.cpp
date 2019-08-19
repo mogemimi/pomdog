@@ -27,7 +27,8 @@ ScreenQuad::ScreenQuad(const std::shared_ptr<GraphicsDevice>& graphicsDevice)
         ScreenQuadVertex{Vector3{ 1.0f, -1.0f, 0.5f}, Vector2{1.0f, 0.0f}},
     }};
 
-    if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::HLSL) {
+    if ((graphicsDevice->GetSupportedLanguage() == ShaderLanguage::HLSL) ||
+        (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::Metal)) {
         // Convert to Texture Coordinates in Direct3D
         for (auto& vertex : verticesCombo) {
             vertex.TextureCoord.Y = (1.0f - vertex.TextureCoord.Y);
