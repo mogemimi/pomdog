@@ -6,14 +6,15 @@
 
 namespace Pomdog {
 
+/// ShaderLanguage specifies the shader language supported by the graphics device.
 enum class ShaderLanguage : std::uint8_t {
-    ///@brief The OpenGL shading language (GLSL)
+    /// The OpenGL shading language (GLSL)
     GLSL,
 
-    ///@brief The DirectX high-level shading language (HLSL)
+    /// The DirectX high-level shading language (HLSL)
     HLSL,
 
-    ///@brief The Metal shading language
+    /// The Metal shading language
     Metal,
 };
 

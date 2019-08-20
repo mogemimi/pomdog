@@ -50,18 +50,25 @@ public:
     RenderTarget2D& operator=(const RenderTarget2D&) = delete;
     RenderTarget2D& operator=(RenderTarget2D&&) = default;
 
+    /// Gets the width of the texture data, in pixels.
     std::int32_t GetWidth() const;
 
+    /// Gets the height of the texture data, in pixels.
     std::int32_t GetHeight() const;
 
+    /// Gets the mipmap level.
     std::int32_t GetLevelCount() const;
 
+    /// Gets the format of the pixel data in the render target.
     SurfaceFormat GetFormat() const;
 
+    /// Gets the format of the pixel data in the depth-stencil buffer.
     DepthFormat GetDepthStencilFormat() const;
 
+    /// Gets the size of the texture resource.
     Rectangle GetBounds() const;
 
+    /// Gets the pointer of the native render target.
     Detail::NativeRenderTarget2D* GetNativeRenderTarget2D();
 
 private:

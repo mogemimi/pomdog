@@ -34,16 +34,22 @@ public:
     Texture2D& operator=(const Texture2D&) = delete;
     Texture2D& operator=(Texture2D&&) = default;
 
+    /// Gets the width of the texture data, in pixels.
     std::int32_t GetWidth() const;
 
+    /// Gets the height of the texture data, in pixels.
     std::int32_t GetHeight() const;
 
+    /// Gets the mipmap level.
     std::int32_t GetLevelCount() const;
 
+    /// Gets the format of the pixel data in the texture.
     SurfaceFormat GetFormat() const;
 
+    /// Sets texture data.
     void SetData(const void* pixelData);
 
+    /// Gets the pointer of the native texture resource.
     Detail::NativeTexture2D* GetNativeTexture2D();
 
 private:

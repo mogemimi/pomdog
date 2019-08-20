@@ -6,6 +6,7 @@
 
 namespace Pomdog {
 
+/// DepthFormat specifies the format used by pixels in the depth-stencil buffer.
 enum class DepthFormat : std::uint8_t {
     /// 16-bit buffer format. 16 bits for depth.
     Depth16,
