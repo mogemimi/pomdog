@@ -31,11 +31,7 @@ MTLPixelFormat ToPixelFormat(SurfaceFormat format) noexcept
 MTLPixelFormat ToPixelFormat(DepthFormat depthFormat) noexcept
 {
     switch (depthFormat) {
-#if defined(MAC_OS_X_VERSION_10_12) && (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_12)
     case DepthFormat::Depth16: return MTLPixelFormatDepth16Unorm;
-#else
-    case DepthFormat::Depth16: return MTLPixelFormatDepth32Float;
-#endif
     case DepthFormat::Depth32: return MTLPixelFormatDepth32Float;
     case DepthFormat::Depth24Stencil8: return MTLPixelFormatDepth24Unorm_Stencil8;
     case DepthFormat::Depth32_Float_Stencil8_Uint: return MTLPixelFormatDepth32Float_Stencil8;
