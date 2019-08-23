@@ -31,35 +31,44 @@ public:
 
     ~Builder();
 
+    /// Sets the string of the GLSL source code, and the entry point of the function.
     Builder& SetGLSL(const void* shaderSource, std::size_t byteLength);
 
+    /// Sets the file path to GLSL file, and the entry point of the function.
     Builder& SetGLSLFromFile(const std::string& filePath);
 
+    /// Sets the string of the HLSL source code, and the entry point of the function.
     Builder& SetHLSL(
         const void* shaderSource,
         std::size_t byteLength,
         const std::string& entryPoint);
 
+    /// Sets the data from a precompiled HLSL binary, and the entry point of the function.
     Builder& SetHLSLPrecompiled(
         const void* shaderSource,
         std::size_t byteLength);
 
+    /// Sets the file path to HLSL file, and the entry point of the function.
     Builder& SetHLSLFromFile(
         const std::string& filePath,
         const std::string& entryPoint);
 
+    /// Sets the string of the Metal source code, and the entry point of the function.
     Builder& SetMetal(
         const void* shaderSource,
         std::size_t byteLength,
         const std::string& entryPoint);
 
+    /// Sets the file path to `.metal` file, and the entry point of the function.
     Builder& SetMetalFromFile(
         const std::string& filePath,
         const std::string& entryPoint);
 
+    /// Sets the entry point of the function in the default library.
     Builder& SetMetalFromLibrary(const std::string& entryPoint);
 
-    std::shared_ptr<Shader> Build();
+    /// Returns an object representing shader function.
+    [[nodiscard]] std::shared_ptr<Shader> Build();
 
 private:
     class Impl;

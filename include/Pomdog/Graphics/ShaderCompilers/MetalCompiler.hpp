@@ -16,7 +16,9 @@ class Shader;
 namespace Pomdog::ShaderCompilers {
 
 struct POMDOG_EXPORT MetalCompiler final {
-    static std::unique_ptr<Shader> CreateShaderFromSource(
+    /// Creates a shader from a string of source code.
+    [[nodiscard]] static std::unique_ptr<Shader>
+    CreateShaderFromSource(
         GraphicsDevice& graphicsDevice,
         const void* shaderSource,
         std::size_t byteLength,

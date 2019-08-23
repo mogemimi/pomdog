@@ -17,13 +17,17 @@ class Shader;
 namespace Pomdog::ShaderCompilers {
 
 struct POMDOG_EXPORT HLSLCompiler final {
-    static std::unique_ptr<Shader> CreateShaderFromBinary(
+    /// Creates a shader from a string of source code.
+    [[nodiscard]] static std::unique_ptr<Shader>
+    CreateShaderFromBinary(
         GraphicsDevice& graphicsDevice,
         const void* shaderSource,
         std::size_t byteLength,
         ShaderPipelineStage pipelineStage);
 
-    static std::unique_ptr<Shader> CreateShaderFromSource(
+    /// Creates a shader from precompiled shader binary data.
+    [[nodiscard]] static std::unique_ptr<Shader>
+    CreateShaderFromSource(
         GraphicsDevice& graphicsDevice,
         const void* shaderSource,
         std::size_t byteLength,
