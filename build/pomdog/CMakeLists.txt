@@ -336,8 +336,6 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/src/Network/AddressParser.hpp
   ${POMDOG_DIR}/src/Network/EndPoint.cpp
   ${POMDOG_DIR}/src/Network/EndPoint.hpp
-  ${POMDOG_DIR}/src/Network/ErrorHelper.cpp
-  ${POMDOG_DIR}/src/Network/ErrorHelper.hpp
   ${POMDOG_DIR}/src/Network/HTTPClient.cpp
   ${POMDOG_DIR}/src/Network/HTTPParser.cpp
   ${POMDOG_DIR}/src/Network/HTTPParser.hpp
@@ -378,6 +376,8 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/src/Signals/ScopedConnection.cpp
   ${POMDOG_DIR}/src/Utility/AlignedNew.hpp
   ${POMDOG_DIR}/src/Utility/CRC32.cpp
+  ${POMDOG_DIR}/src/Utility/ErrorHelper.cpp
+  ${POMDOG_DIR}/src/Utility/ErrorHelper.hpp
   ${POMDOG_DIR}/src/Utility/Errors.cpp
   ${POMDOG_DIR}/src/Utility/PathHelper.cpp
   ${POMDOG_DIR}/src/Utility/ScopeGuard.hpp

@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
 #include "SocketHelperWin32.hpp"
-#include "../Network/ErrorHelper.hpp"
+#include "../Utility/ErrorHelper.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <WS2tcpip.h>
 

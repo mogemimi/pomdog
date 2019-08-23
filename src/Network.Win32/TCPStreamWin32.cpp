@@ -2,7 +2,7 @@
 
 #include "TCPStreamWin32.hpp"
 #include "SocketHelperWin32.hpp"
-#include "../Network/ErrorHelper.hpp"
+#include "../Utility/ErrorHelper.hpp"
 #include "Pomdog/Network/ArrayView.hpp"
 #include "Pomdog/Network/IOService.hpp"
 #include "Pomdog/Utility/Assert.hpp"

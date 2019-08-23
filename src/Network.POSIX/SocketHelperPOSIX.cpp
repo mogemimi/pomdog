@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
 #include "SocketHelperPOSIX.hpp"
-#include "../Network/ErrorHelper.hpp"
+#include "../Utility/ErrorHelper.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <cstring>
 #include <fcntl.h>

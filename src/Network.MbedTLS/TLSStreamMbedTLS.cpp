@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
 #include "TLSStreamMbedTLS.hpp"
-#include "../Network/ErrorHelper.hpp"
+#include "../Utility/ErrorHelper.hpp"
 #include "Pomdog/Basic/Platform.hpp"
 #include "Pomdog/Network/ArrayView.hpp"
 #include "Pomdog/Network/IOService.hpp"

@@ -274,8 +274,6 @@
 		D702F05122FD8AC700886A78 /* TCPStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F04022FD8AC700886A78 /* TCPStream.cpp */; };
 		D702F05222FD8AC700886A78 /* EndPoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F04122FD8AC700886A78 /* EndPoint.cpp */; };
 		D702F05322FD8AC700886A78 /* EndPoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F04122FD8AC700886A78 /* EndPoint.cpp */; };
-		D702F05422FD8AC700886A78 /* ErrorHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F04222FD8AC700886A78 /* ErrorHelper.cpp */; };
-		D702F05522FD8AC700886A78 /* ErrorHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F04222FD8AC700886A78 /* ErrorHelper.cpp */; };
 		D702F05622FD8AC700886A78 /* TLSStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F04322FD8AC700886A78 /* TLSStream.cpp */; };
 		D702F05722FD8AC700886A78 /* TLSStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F04322FD8AC700886A78 /* TLSStream.cpp */; };
 		D702F05F22FD8B1300886A78 /* Certificates.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F05D22FD8B1300886A78 /* Certificates.cpp */; };
@@ -322,6 +320,8 @@
 		D7334E37228C689C00232225 /* BeamSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E33228C689C00232225 /* BeamSystem.cpp */; };
 		D740A539230B30BB0077D040 /* Texture2DView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D740A538230B30BB0077D040 /* Texture2DView.cpp */; };
 		D740A53A230B30BB0077D040 /* Texture2DView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D740A538230B30BB0077D040 /* Texture2DView.cpp */; };
+		D740A54F231010A00077D040 /* ErrorHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D740A54E231010A00077D040 /* ErrorHelper.cpp */; };
+		D740A550231010A00077D040 /* ErrorHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D740A54E231010A00077D040 /* ErrorHelper.cpp */; };
 		D7458C0B23000520007150B4 /* HTTPParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7458C0923000520007150B4 /* HTTPParser.cpp */; };
 		D7458C0C23000520007150B4 /* HTTPParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7458C0923000520007150B4 /* HTTPParser.cpp */; };
 		D7703DF722FCB1BB00442403 /* SpinLock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7703DF622FCB1BB00442403 /* SpinLock.cpp */; };
@@ -851,10 +851,8 @@
 		D702F03C22FD8AC600886A78 /* UDPStream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UDPStream.cpp; sourceTree = "<group>"; };
 		D702F03D22FD8AC600886A78 /* AddressParser.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AddressParser.hpp; sourceTree = "<group>"; };
 		D702F03E22FD8AC600886A78 /* SocketProtocol.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SocketProtocol.hpp; sourceTree = "<group>"; };
-		D702F03F22FD8AC600886A78 /* ErrorHelper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ErrorHelper.hpp; sourceTree = "<group>"; };
 		D702F04022FD8AC700886A78 /* TCPStream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TCPStream.cpp; sourceTree = "<group>"; };
 		D702F04122FD8AC700886A78 /* EndPoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EndPoint.cpp; sourceTree = "<group>"; };
-		D702F04222FD8AC700886A78 /* ErrorHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ErrorHelper.cpp; sourceTree = "<group>"; };
 		D702F04322FD8AC700886A78 /* TLSStream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TLSStream.cpp; sourceTree = "<group>"; };
 		D702F05B22FD8B1300886A78 /* TLSStreamMbedTLS.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TLSStreamMbedTLS.hpp; sourceTree = "<group>"; };
 		D702F05C22FD8B1300886A78 /* Certificates.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Certificates.hpp; sourceTree = "<group>"; };
@@ -923,6 +921,8 @@
 		D7334E4C228C691500232225 /* ParticleCurveLerp.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleCurveLerp.hpp; sourceTree = "<group>"; };
 		D740A537230B30850077D040 /* Texture2DView.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Texture2DView.hpp; sourceTree = "<group>"; };
 		D740A538230B30BB0077D040 /* Texture2DView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Texture2DView.cpp; sourceTree = "<group>"; };
+		D740A54D231010980077D040 /* ErrorHelper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ErrorHelper.hpp; sourceTree = "<group>"; };
+		D740A54E231010A00077D040 /* ErrorHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ErrorHelper.cpp; sourceTree = "<group>"; };
 		D7458C0923000520007150B4 /* HTTPParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HTTPParser.cpp; sourceTree = "<group>"; };
 		D7458C0A23000520007150B4 /* HTTPParser.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = HTTPParser.hpp; sourceTree = "<group>"; };
 		D74FD9BD064B46464D340F2E /* IndexBuffer.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = IndexBuffer.hpp; sourceTree = "<group>"; };
@@ -1314,6 +1314,8 @@
 			children = (
 				A9FC99071DC3D89300C78D63 /* AlignedNew.hpp */,
 				874BAF3803BCB9751C9574C4 /* CRC32.cpp */,
+				D740A54E231010A00077D040 /* ErrorHelper.cpp */,
+				D740A54D231010980077D040 /* ErrorHelper.hpp */,
 				D7703E0C22FCB26800442403 /* Errors.cpp */,
 				5DAB111727E9143A507A0C10 /* PathHelper.cpp */,
 				53571F5D60F1E9D4FAF76256 /* ScopeGuard.hpp */,
@@ -1890,8 +1892,6 @@
 				D702F03D22FD8AC600886A78 /* AddressParser.hpp */,
 				D702F04122FD8AC700886A78 /* EndPoint.cpp */,
 				D702F03622FD8AC600886A78 /* EndPoint.hpp */,
-				D702F04222FD8AC700886A78 /* ErrorHelper.cpp */,
-				D702F03F22FD8AC600886A78 /* ErrorHelper.hpp */,
 				D702F03822FD8AC600886A78 /* HTTPClient.cpp */,
 				D7458C0923000520007150B4 /* HTTPParser.cpp */,
 				D7458C0A23000520007150B4 /* HTTPParser.hpp */,
@@ -2458,6 +2458,7 @@
 				A9A822931DAB7FBE0091497F /* TextureAtlasGenerator.cpp in Sources */,
 				D702F04422FD8AC700886A78 /* HTTPResponse.cpp in Sources */,
 				A9FC99051DC3D87F00C78D63 /* SpriteBatch.cpp in Sources */,
+				D740A54F231010A00077D040 /* ErrorHelper.cpp in Sources */,
 				9439AAF08FDF6A7046F2F994 /* ScopedConnection.cpp in Sources */,
 				A9E4B879210CDEA2003F87DC /* GamepadFactory.cpp in Sources */,
 				8650CF18F26DB3A0F89ABAE3 /* CRC32.cpp in Sources */,
@@ -2477,7 +2478,6 @@
 				2939F626E9115C7EE5EA0E3A /* DepthStencilStateGL4.cpp in Sources */,
 				B41EB006F4BCD3004879EB93 /* EffectReflectionGL4.cpp in Sources */,
 				9BD2B7E492D96A784F54C910 /* ErrorChecker.cpp in Sources */,
-				D702F05422FD8AC700886A78 /* ErrorHelper.cpp in Sources */,
 				A997F6FE1CAEFC4800926392 /* MetalFormatHelper.mm in Sources */,
 				D7458C0B23000520007150B4 /* HTTPParser.cpp in Sources */,
 				A93CA6541D92F34E00B65171 /* Task.cpp in Sources */,
@@ -2627,6 +2627,7 @@
 				A9A822941DAB7FBE0091497F /* TextureAtlasGenerator.cpp in Sources */,
 				D702F04522FD8AC700886A78 /* HTTPResponse.cpp in Sources */,
 				A9FC99061DC3D87F00C78D63 /* SpriteBatch.cpp in Sources */,
+				D740A550231010A00077D040 /* ErrorHelper.cpp in Sources */,
 				023F583DEDA9BCB1C9E19C1C /* ScopedConnection.cpp in Sources */,
 				A9E4B87A210CDEA2003F87DC /* GamepadFactory.cpp in Sources */,
 				65B8BEF3D1E04BF859631ADE /* CRC32.cpp in Sources */,
@@ -2646,7 +2647,6 @@
 				70602D1132700C62F76B98C7 /* DepthStencilStateGL4.cpp in Sources */,
 				14B5A80EB2F7EDF1D4226B3D /* EffectReflectionGL4.cpp in Sources */,
 				70214CEF1A1CF63D334FD75E /* ErrorChecker.cpp in Sources */,
-				D702F05522FD8AC700886A78 /* ErrorHelper.cpp in Sources */,
 				A997F6FF1CAEFC4800926392 /* MetalFormatHelper.mm in Sources */,
 				D7458C0C23000520007150B4 /* HTTPParser.cpp in Sources */,
 				A93CA6551D92F34E00B65171 /* Task.cpp in Sources */,
