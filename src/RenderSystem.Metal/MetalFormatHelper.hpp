@@ -7,7 +7,7 @@
 
 namespace Pomdog::Detail::Metal {
 
-MTLPixelFormat ToPixelFormat(SurfaceFormat format) noexcept;
-MTLPixelFormat ToPixelFormat(DepthFormat format) noexcept;
+[[nodiscard]] MTLPixelFormat ToPixelFormat(SurfaceFormat format) noexcept;
+[[nodiscard]] MTLPixelFormat ToPixelFormat(DepthFormat format) noexcept;
 
 } // namespace Pomdog::Detail::Metal
