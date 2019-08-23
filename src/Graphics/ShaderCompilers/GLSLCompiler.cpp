@@ -12,11 +12,10 @@
 using Pomdog::Detail::ShaderBytecode;
 using Pomdog::Detail::ShaderCompileOptions;
 
-namespace Pomdog {
-namespace ShaderCompilers {
+namespace Pomdog::ShaderCompilers {
 
 std::unique_ptr<Shader> GLSLCompiler::CreateShader(
-    GraphicsDevice & graphicsDevice,
+    GraphicsDevice& graphicsDevice,
     const void* shaderSource,
     std::size_t byteLength,
     ShaderPipelineStage pipelineStage,
@@ -41,8 +40,7 @@ std::unique_ptr<Shader> GLSLCompiler::CreateShader(
         compileOptions.CurrentDirectory = std::move(*currentDirectory);
     }
 
-    return nativeGraphicsDevice->CreateShader(shaderBytecode, compileOptions);
+    return nativeGraphicsDevice->CreateShader(std::move(shaderBytecode), std::move(compileOptions));
 }
 
-} // namespace ShaderCompilers
-} // namespace Pomdog
+} // namespace Pomdog::ShaderCompilers

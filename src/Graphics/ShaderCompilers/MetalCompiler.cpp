@@ -12,11 +12,10 @@
 using Pomdog::Detail::ShaderBytecode;
 using Pomdog::Detail::ShaderCompileOptions;
 
-namespace Pomdog {
-namespace ShaderCompilers {
+namespace Pomdog::ShaderCompilers {
 
 std::unique_ptr<Shader> MetalCompiler::CreateShaderFromSource(
-    GraphicsDevice & graphicsDevice,
+    GraphicsDevice& graphicsDevice,
     const void* shaderSource,
     std::size_t byteLength,
     const std::string& entryPoint,
@@ -37,11 +36,11 @@ std::unique_ptr<Shader> MetalCompiler::CreateShaderFromSource(
     compileOptions.Profile.PipelineStage = pipelineStage;
     compileOptions.Precompiled = false;
 
-    return nativeGraphicsDevice->CreateShader(shaderBytecode, compileOptions);
+    return nativeGraphicsDevice->CreateShader(std::move(shaderBytecode), std::move(compileOptions));
 }
 
 std::unique_ptr<Shader> MetalCompiler::CreateShaderFromLibrary(
-    GraphicsDevice & graphicsDevice,
+    GraphicsDevice& graphicsDevice,
     const std::string& entryPoint,
     ShaderPipelineStage pipelineStage)
 {
@@ -59,8 +58,7 @@ std::unique_ptr<Shader> MetalCompiler::CreateShaderFromLibrary(
     compileOptions.Profile.PipelineStage = pipelineStage;
     compileOptions.Precompiled = false;
 
-    return nativeGraphicsDevice->CreateShader(shaderBytecode, compileOptions);
+    return nativeGraphicsDevice->CreateShader(std::move(shaderBytecode), std::move(compileOptions));
 }
 
-} // namespace ShaderCompilers
-} // namespace Pomdog
+} // namespace Pomdog::ShaderCompilers

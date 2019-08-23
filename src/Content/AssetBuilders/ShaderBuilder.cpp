@@ -122,7 +122,7 @@ Builder<Shader>::Builder(
 
 Builder<Shader>::~Builder() = default;
 
-Builder<Shader> & Builder<Shader>::SetGLSL(
+Builder<Shader>& Builder<Shader>::SetGLSL(
     const void* shaderSourceIn, std::size_t byteLengthIn)
 {
     POMDOG_ASSERT(impl);
@@ -141,7 +141,7 @@ Builder<Shader> & Builder<Shader>::SetGLSL(
     return *this;
 }
 
-Builder<Shader> & Builder<Shader>::SetGLSLFromFile(const std::string& assetName)
+Builder<Shader>& Builder<Shader>::SetGLSLFromFile(const std::string& assetName)
 {
     POMDOG_ASSERT(!assetName.empty());
 
@@ -174,7 +174,7 @@ Builder<Shader> & Builder<Shader>::SetGLSLFromFile(const std::string& assetName)
                 includes);
 
             if (includeResult) {
-                auto & shaderCode = *includeResult;
+                auto& shaderCode = *includeResult;
                 impl->shaderBlob.clear();
                 impl->shaderBlob.resize(shaderCode.size() + 1);
                 impl->shaderBlob[shaderCode.size()] = 0;
@@ -189,7 +189,7 @@ Builder<Shader> & Builder<Shader>::SetGLSLFromFile(const std::string& assetName)
     return *this;
 }
 
-Builder<Shader> & Builder<Shader>::SetHLSL(
+Builder<Shader>& Builder<Shader>::SetHLSL(
     const void* shaderSourceIn,
     std::size_t byteLengthIn,
     const std::string& entryPointIn)
@@ -211,7 +211,7 @@ Builder<Shader> & Builder<Shader>::SetHLSL(
     return *this;
 }
 
-Builder<Shader> & Builder<Shader>::SetHLSLPrecompiled(
+Builder<Shader>& Builder<Shader>::SetHLSLPrecompiled(
     const void* shaderSourceIn, std::size_t byteLengthIn)
 {
     POMDOG_ASSERT(shaderSourceIn != nullptr);
@@ -229,7 +229,7 @@ Builder<Shader> & Builder<Shader>::SetHLSLPrecompiled(
     return *this;
 }
 
-Builder<Shader> & Builder<Shader>::SetHLSLFromFile(
+Builder<Shader>& Builder<Shader>::SetHLSLFromFile(
     const std::string& assetName, const std::string& entryPointIn)
 {
     POMDOG_ASSERT(!assetName.empty());
@@ -265,7 +265,7 @@ Builder<Shader> & Builder<Shader>::SetHLSLFromFile(
     return *this;
 }
 
-Builder<Shader> & Builder<Shader>::SetMetal(
+Builder<Shader>& Builder<Shader>::SetMetal(
     const void* shaderSourceIn,
     std::size_t byteLengthIn,
     const std::string& entryPointIn)
@@ -323,7 +323,7 @@ Builder<Shader> & Builder<Shader>::SetMetalFromFile(
     return *this;
 }
 
-Builder<Shader> & Builder<Shader>::SetMetalFromLibrary(
+Builder<Shader>& Builder<Shader>::SetMetalFromLibrary(
     const std::string& entryPointIn)
 {
     POMDOG_ASSERT(!entryPointIn.empty());
