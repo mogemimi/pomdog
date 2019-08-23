@@ -59,8 +59,19 @@ public:
         std::size_t byteLength,
         const std::string& entryPoint);
 
+    /// Sets the data from a precompiled Metal library, and the entry point of the function.
+    Builder& SetMetalPrecompiled(
+        const void* shaderSource,
+        std::size_t byteLength,
+        const std::string& entryPoint);
+
     /// Sets the file path to `.metal` file, and the entry point of the function.
     Builder& SetMetalFromFile(
+        const std::string& filePath,
+        const std::string& entryPoint);
+
+    /// Sets the file path to `.metallib` file, and the entry point of the function.
+    Builder& SetMetalFromPrecompiledFile(
         const std::string& filePath,
         const std::string& entryPoint);
 

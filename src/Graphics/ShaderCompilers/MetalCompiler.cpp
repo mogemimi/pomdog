@@ -39,7 +39,7 @@ std::unique_ptr<Shader> MetalCompiler::CreateShaderFromSource(
     return nativeGraphicsDevice->CreateShader(std::move(shaderBytecode), std::move(compileOptions));
 }
 
-std::unique_ptr<Shader> MetalCompiler::CreateShaderFromLibrary(
+std::unique_ptr<Shader> MetalCompiler::CreateShaderFromDefaultLibrary(
     GraphicsDevice& graphicsDevice,
     const std::string& entryPoint,
     ShaderPipelineStage pipelineStage)
@@ -57,6 +57,30 @@ std::unique_ptr<Shader> MetalCompiler::CreateShaderFromLibrary(
     compileOptions.EntryPoint = entryPoint;
     compileOptions.Profile.PipelineStage = pipelineStage;
     compileOptions.Precompiled = false;
+
+    return nativeGraphicsDevice->CreateShader(std::move(shaderBytecode), std::move(compileOptions));
+}
+
+std::unique_ptr<Shader> MetalCompiler::CreateShaderFromBinary(
+    GraphicsDevice& graphicsDevice,
+    const void* shaderSource,
+    std::size_t byteLength,
+    const std::string& entryPoint,
+    ShaderPipelineStage pipelineStage)
+{
+    POMDOG_ASSERT(!entryPoint.empty());
+    POMDOG_ASSERT(graphicsDevice.GetSupportedLanguage() == ShaderLanguage::Metal);
+
+    auto nativeGraphicsDevice = graphicsDevice.GetNativeGraphicsDevice();
+
+    ShaderBytecode shaderBytecode;
+    shaderBytecode.Code = shaderSource;
+    shaderBytecode.ByteLength = byteLength;
+
+    ShaderCompileOptions compileOptions;
+    compileOptions.EntryPoint = entryPoint;
+    compileOptions.Profile.PipelineStage = pipelineStage;
+    compileOptions.Precompiled = true;
 
     return nativeGraphicsDevice->CreateShader(std::move(shaderBytecode), std::move(compileOptions));
 }

@@ -21,12 +21,22 @@ ShaderMetal::ShaderMetal(
 
     NSError* compileError = nil;
 
-    auto sourceString = reinterpret_cast<const char*>(shaderBytecode.Code);
+    id<MTLLibrary> library = nil;
+    
+    if (compileOptions.Precompiled) {
+        dispatch_data_t libraryData = dispatch_data_create(
+            shaderBytecode.Code,
+            shaderBytecode.ByteLength,
+            dispatch_get_main_queue(),
+            ^{});
 
-    id<MTLLibrary> library = [device
-        newLibraryWithSource:[NSString stringWithUTF8String:sourceString]
-        options:nil
-        error:&compileError];
+        library = [device newLibraryWithData:libraryData error:&compileError];
+    }
+    else {
+        // NOTE: `shaderBytecode.Code` must be null-terminated string.
+        NSString* sourceString = [NSString stringWithUTF8String:reinterpret_cast<const char*>(shaderBytecode.Code)];
+        library = [device newLibraryWithSource:sourceString options:nil error:&compileError];
+    }
 
     if (compileError != nil) {
         POMDOG_THROW_EXCEPTION(std::runtime_error, StringHelper::Format(

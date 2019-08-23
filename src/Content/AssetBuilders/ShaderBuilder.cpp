@@ -92,7 +92,7 @@ public:
     std::string entryPoint;
     std::optional<std::string> shaderFilePath;
     bool precompiled;
-    bool fromLibrary;
+    bool fromDefaultLibrary;
 
 public:
     explicit Impl(const Detail::AssetLoaderContext& context);
@@ -107,7 +107,7 @@ Builder<Shader>::Impl::Impl(const Detail::AssetLoaderContext& contextIn)
     : loaderContext(contextIn)
     , pipelineStage(ShaderPipelineStage::VertexShader)
     , precompiled(false)
-    , fromLibrary(false)
+    , fromDefaultLibrary(false)
 {
 }
 
@@ -282,12 +282,36 @@ Builder<Shader>& Builder<Shader>::SetMetal(
         impl->shaderBytecode.ByteLength = byteLengthIn;
         impl->entryPoint = entryPointIn;
         impl->precompiled = false;
+        impl->fromDefaultLibrary = false;
         impl->shaderFilePath = std::nullopt;
     }
     return *this;
 }
 
-Builder<Shader> & Builder<Shader>::SetMetalFromFile(
+Builder<Shader>& Builder<Shader>::SetMetalPrecompiled(
+    const void* shaderSourceIn,
+    std::size_t byteLengthIn,
+    const std::string& entryPointIn)
+{
+    POMDOG_ASSERT(shaderSourceIn != nullptr);
+    POMDOG_ASSERT(byteLengthIn > 0);
+    POMDOG_ASSERT(!entryPointIn.empty());
+
+    auto graphicsDevice = impl->GetDevice();
+    POMDOG_ASSERT(graphicsDevice);
+
+    if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::Metal) {
+        impl->shaderBytecode.Code = shaderSourceIn;
+        impl->shaderBytecode.ByteLength = byteLengthIn;
+        impl->entryPoint = entryPointIn;
+        impl->precompiled = true;
+        impl->fromDefaultLibrary = false;
+        impl->shaderFilePath = std::nullopt;
+    }
+    return *this;
+}
+
+Builder<Shader>& Builder<Shader>::SetMetalFromFile(
     const std::string& assetName, const std::string& entryPointIn)
 {
     POMDOG_ASSERT(!assetName.empty());
@@ -318,7 +342,45 @@ Builder<Shader> & Builder<Shader>::SetMetalFromFile(
         impl->shaderBytecode.ByteLength = impl->shaderBlob.size();
         impl->entryPoint = entryPointIn;
         impl->precompiled = false;
-        impl->fromLibrary = false;
+        impl->fromDefaultLibrary = false;
+        impl->shaderFilePath = assetName;
+    }
+    return *this;
+}
+
+Builder<Shader>& Builder<Shader>::SetMetalFromPrecompiledFile(
+    const std::string& assetName, const std::string& entryPointIn)
+{
+    POMDOG_ASSERT(!assetName.empty());
+    POMDOG_ASSERT(!entryPointIn.empty());
+
+    auto graphicsDevice = impl->GetDevice();
+    POMDOG_ASSERT(graphicsDevice);
+
+    if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::Metal) {
+        auto binaryFile = impl->loaderContext.get().OpenStream(assetName);
+
+        if (!binaryFile.Stream) {
+            POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to open file.");
+        }
+
+        if (binaryFile.SizeInBytes <= 0) {
+            POMDOG_THROW_EXCEPTION(std::runtime_error, "The file is too small");
+        }
+
+        impl->shaderBlob = BinaryReader::ReadArray<std::uint8_t>(
+            binaryFile.Stream, binaryFile.SizeInBytes);
+
+        if (impl->shaderBlob.empty()) {
+            POMDOG_THROW_EXCEPTION(std::runtime_error, "The file is too small");
+        }
+
+        impl->shaderBytecode.Code = impl->shaderBlob.data();
+        impl->shaderBytecode.ByteLength = impl->shaderBlob.size();
+        impl->entryPoint = entryPointIn;
+        impl->precompiled = true;
+        impl->fromDefaultLibrary = false;
+        impl->shaderFilePath = assetName;
     }
     return *this;
 }
@@ -336,7 +398,7 @@ Builder<Shader>& Builder<Shader>::SetMetalFromLibrary(
         impl->shaderBytecode.ByteLength = 0;
         impl->entryPoint = entryPointIn;
         impl->precompiled = false;
-        impl->fromLibrary = true;
+        impl->fromDefaultLibrary = true;
     }
     return *this;
 }
@@ -385,14 +447,22 @@ std::shared_ptr<Shader> Builder<Shader>::Build()
     }
     case ShaderLanguage::Metal: {
         POMDOG_ASSERT(!impl->entryPoint.empty());
-        if (impl->fromLibrary) {
-            return MetalCompiler::CreateShaderFromLibrary(
+        if (impl->fromDefaultLibrary) {
+            return MetalCompiler::CreateShaderFromDefaultLibrary(
                 *graphicsDevice,
                 impl->entryPoint,
                 impl->pipelineStage);
         }
         POMDOG_ASSERT(impl->shaderBytecode.Code != nullptr);
         POMDOG_ASSERT(impl->shaderBytecode.ByteLength > 0);
+        if (impl->precompiled) {
+            return MetalCompiler::CreateShaderFromBinary(
+                *graphicsDevice,
+                impl->shaderBytecode.Code,
+                impl->shaderBytecode.ByteLength,
+                impl->entryPoint,
+                impl->pipelineStage);
+        }
         return MetalCompiler::CreateShaderFromSource(
             *graphicsDevice,
             impl->shaderBytecode.Code,

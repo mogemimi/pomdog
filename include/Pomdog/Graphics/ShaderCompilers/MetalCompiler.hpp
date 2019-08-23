@@ -25,8 +25,19 @@ struct POMDOG_EXPORT MetalCompiler final {
         const std::string& entryPoint,
         ShaderPipelineStage pipelineStage);
 
-    static std::unique_ptr<Shader> CreateShaderFromLibrary(
+    /// Creates a shader from a default library.
+    [[nodiscard]] static std::unique_ptr<Shader>
+    CreateShaderFromDefaultLibrary(
         GraphicsDevice& graphicsDevice,
+        const std::string& entryPoint,
+        ShaderPipelineStage pipelineStage);
+
+    /// Creates a shader from precompiled '*.metallib' library data.
+    [[nodiscard]] static std::unique_ptr<Shader>
+    CreateShaderFromBinary(
+        GraphicsDevice& graphicsDevice,
+        const void* shaderSource,
+        std::size_t byteLength,
         const std::string& entryPoint,
         ShaderPipelineStage pipelineStage);
 };
