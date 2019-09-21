@@ -47,6 +47,15 @@ MTLIndexType ToIndexType(IndexElementSize elementSize) noexcept
     POMDOG_UNREACHABLE("Unsupported index element size");
 }
 
+std::size_t ToIndexByteSize(MTLIndexType elementSize) noexcept
+{
+    switch (elementSize) {
+    case MTLIndexTypeUInt16: return 2;
+    case MTLIndexTypeUInt32: return 4;
+    }
+    POMDOG_UNREACHABLE("Unsupported index element size");
+}
+
 MTLClearColor ToClearColor(const Vector4& color) noexcept
 {
     return MTLClearColorMake(color.X, color.Y, color.Z, color.W);
@@ -241,12 +250,13 @@ void GraphicsContextMetal::DrawIndexed(
 #if defined(DEBUG) && !defined(NDEBUG)
     CheckUnbindingRenderTargetsError(weakRenderTargets, weakTextures);
 #endif
+    const auto indexBufferOffset = startIndexLocation * ToIndexByteSize(indexType);
 
     [commandEncoder drawIndexedPrimitives:primitiveType
         indexCount:indexCount
         indexType:indexType
         indexBuffer:indexBuffer
-        indexBufferOffset:startIndexLocation];
+        indexBufferOffset:indexBufferOffset];
 }
 
 void GraphicsContextMetal::DrawInstanced(
@@ -283,12 +293,13 @@ void GraphicsContextMetal::DrawIndexedInstanced(
 #if defined(DEBUG) && !defined(NDEBUG)
     CheckUnbindingRenderTargetsError(weakRenderTargets, weakTextures);
 #endif
+    const auto indexBufferOffset = startIndexLocation * ToIndexByteSize(indexType);
 
     [commandEncoder drawIndexedPrimitives:primitiveType
         indexCount:indexCountPerInstance
         indexType:indexType
         indexBuffer:indexBuffer
-        indexBufferOffset:0
+        indexBufferOffset:indexBufferOffset
         instanceCount:instanceCount
         baseVertex:0
         baseInstance:startInstanceLocation];
