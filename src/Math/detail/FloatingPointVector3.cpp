@@ -252,9 +252,9 @@ template <typename T>
 FloatingPointVector3<T>
 FloatingPointVector3<T>::Normalize(const FloatingPointVector3& source) noexcept
 {
-    FloatingPointVector3 result;
+    auto result = source;
     Normalize(source, result);
-    return std::move(result);
+    return result;
 }
 
 template <typename T>

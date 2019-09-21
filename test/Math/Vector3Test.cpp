@@ -62,6 +62,13 @@ TEST_CASE("Vector3", "[Vector3]")
         REQUIRE(Vector3{2.5f, 3.5f, 4.5f} == Vector3::Lerp(Vector3{1.0f, 2.0f, 3.0f}, Vector3{4.0f, 5.0f, 6.0f}, 0.5f));
         REQUIRE(Vector3{4.0f, 5.0f, 6.0f} == Vector3::Lerp(Vector3{1.0f, 2.0f, 3.0f}, Vector3{4.0f, 5.0f, 6.0f}, 1.0f));
     }
+    SECTION("Normalize")
+    {
+        REQUIRE(Vector3::Normalize(Vector3{0.0f, 0.0f, 0.0f}) == Vector3{0.0f, 0.0f, 0.0f});
+        REQUIRE(Vector3::Normalize(Vector3{1.0f, 0.0f, 0.0f}) == Vector3{1.0f, 0.0f, 0.0f});
+        REQUIRE(Vector3::Normalize(Vector3{0.0f, 1.0f, 0.0f}) == Vector3{0.0f, 1.0f, 0.0f});
+        REQUIRE(Vector3::Normalize(Vector3{0.0f, 0.0f, 1.0f}) == Vector3{0.0f, 0.0f, 1.0f});
+    }
     SECTION("Cross_AssociativeLow")
     {
         // NOTE: Associative low of vectors

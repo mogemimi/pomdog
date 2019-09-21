@@ -55,4 +55,10 @@ TEST_CASE("Vector2", "[Vector2]")
         REQUIRE(Vector2{2.5f, 3.5f} == Vector2::Lerp(Vector2{1.0f, 2.0f}, Vector2{4.0f, 5.0f}, 0.5f));
         REQUIRE(Vector2{4.0f, 5.0f} == Vector2::Lerp(Vector2{1.0f, 2.0f}, Vector2{4.0f, 5.0f}, 1.0f));
     }
+    SECTION("Normalize")
+    {
+        REQUIRE(Vector2::Normalize(Vector2{0.0f, 0.0f}) == Vector2{0.0f, 0.0f});
+        REQUIRE(Vector2::Normalize(Vector2{1.0f, 0.0f}) == Vector2{1.0f, 0.0f});
+        REQUIRE(Vector2::Normalize(Vector2{0.0f, 1.0f}) == Vector2{0.0f, 1.0f});
+    }
 }

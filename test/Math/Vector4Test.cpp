@@ -46,6 +46,14 @@ TEST_CASE("Vector4", "[Vector4]")
         REQUIRE(Vector4{3.f / 4.f, 3.f / 5.f, 3.f / 6.f, 3.f / 7.f} == Vector4{3, 3, 3, 3} / Vector4{4, 5, 6, 7});
         REQUIRE(Vector4{4.f / 3.f, 5.f / 3.f, 6.f / 3.f, 7.f / 3.f} == Vector4{4, 5, 6, 7} / 3.0f);
     }
+    SECTION("Normalize")
+    {
+        REQUIRE(Vector4::Normalize(Vector4{0.0f, 0.0f, 0.0f, 0.0f}) == Vector4{0.0f, 0.0f, 0.0f, 0.0f});
+        REQUIRE(Vector4::Normalize(Vector4{1.0f, 0.0f, 0.0f, 0.0f}) == Vector4{1.0f, 0.0f, 0.0f, 0.0f});
+        REQUIRE(Vector4::Normalize(Vector4{0.0f, 1.0f, 0.0f, 0.0f}) == Vector4{0.0f, 1.0f, 0.0f, 0.0f});
+        REQUIRE(Vector4::Normalize(Vector4{0.0f, 0.0f, 1.0f, 0.0f}) == Vector4{0.0f, 0.0f, 1.0f, 0.0f});
+        REQUIRE(Vector4::Normalize(Vector4{0.0f, 0.0f, 0.0f, 1.0f}) == Vector4{0.0f, 0.0f, 0.0f, 1.0f});
+    }
     SECTION("Transform_IdentityMatrix")
     {
         REQUIRE(Vector4{0.0f, 0.0f, 0.0f, 0.0f} == Vector4::Transform(Vector4{0.0f, 0.0f, 0.0f, 0.0f}, Matrix4x4::Identity));

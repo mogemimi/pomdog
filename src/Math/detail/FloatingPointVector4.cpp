@@ -198,9 +198,9 @@ template <typename T>
 FloatingPointVector4<T>
 FloatingPointVector4<T>::Normalize(const FloatingPointVector4& source) noexcept
 {
-    FloatingPointVector4 result;
+    auto result = source;
     Normalize(source, result);
-    return std::move(result);
+    return result;
 }
 
 template <typename T>

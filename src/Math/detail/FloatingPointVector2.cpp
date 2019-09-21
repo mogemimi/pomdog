@@ -202,7 +202,7 @@ template <typename T>
 FloatingPointVector2<T>
 FloatingPointVector2<T>::Normalize(const FloatingPointVector2& source) noexcept
 {
-    FloatingPointVector2 result;
+    auto result = source;
     Normalize(source, result);
     return result;
 }
