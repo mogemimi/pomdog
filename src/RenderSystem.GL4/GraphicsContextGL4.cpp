@@ -26,7 +26,6 @@
 #include "Pomdog/Graphics/VertexBuffer.hpp"
 #include "Pomdog/Graphics/Viewport.hpp"
 #include "Pomdog/Logging/Log.hpp"
-#include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Math/Vector4.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -360,7 +359,7 @@ GraphicsContextGL4::GraphicsContextGL4(
     primitiveTopology = ToPrimitiveTopology(PrimitiveTopology::TriangleList);
 
     // NOTE: Set default values for graphics context
-    this->SetBlendFactor(Color::White);
+    this->SetBlendFactor(Vector4{1.0f, 1.0f, 1.0f, 1.0f});
 
 #if defined(DEBUG) && !defined(NDEBUG)
     auto graphicsCapbilities = this->GetCapabilities();
@@ -624,10 +623,9 @@ void GraphicsContextGL4::SetPrimitiveTopology(PrimitiveTopology primitiveTopolog
     primitiveTopology = ToPrimitiveTopology(primitiveTopologyIn);
 }
 
-void GraphicsContextGL4::SetBlendFactor(const Color& blendFactor)
+void GraphicsContextGL4::SetBlendFactor(const Vector4& blendFactor)
 {
-    auto colorVector = blendFactor.ToVector4();
-    glBlendColor(colorVector.X, colorVector.Y, colorVector.Z, colorVector.W);
+    glBlendColor(blendFactor.X, blendFactor.Y, blendFactor.Z, blendFactor.W);
     POMDOG_CHECK_ERROR_GL4("glBlendColor");
 }
 

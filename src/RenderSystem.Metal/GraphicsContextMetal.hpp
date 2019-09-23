@@ -4,7 +4,6 @@
 
 #include "../RenderSystem/NativeGraphicsContext.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
-#include "Pomdog/Math/Color.hpp"
 #import <Metal/Metal.h>
 #import <MetalKit/MetalKit.h>
 #include <memory>
@@ -51,7 +50,7 @@ public:
 
     void SetPrimitiveTopology(PrimitiveTopology primitiveTopology) override;
 
-    void SetBlendFactor(const Color& blendFactor) override;
+    void SetBlendFactor(const Vector4& blendFactor) override;
 
     void SetVertexBuffers(const std::vector<VertexBufferBinding>& vertexBuffers) override;
 

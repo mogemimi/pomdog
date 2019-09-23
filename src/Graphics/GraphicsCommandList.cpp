@@ -134,7 +134,7 @@ void GraphicsCommandList::SetPrimitiveTopology(PrimitiveTopology primitiveTopolo
     nativeCommandList->SetPrimitiveTopology(primitiveTopology);
 }
 
-void GraphicsCommandList::SetBlendFactor(const Color& blendFactor)
+void GraphicsCommandList::SetBlendFactor(const Vector4& blendFactor)
 {
     POMDOG_ASSERT(nativeCommandList);
     nativeCommandList->SetBlendFactor(blendFactor);

@@ -19,7 +19,6 @@
 #include "Pomdog/Graphics/VertexBufferBinding.hpp"
 #include "Pomdog/Graphics/Viewport.hpp"
 #include "Pomdog/Logging/Log.hpp"
-#include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Math/Vector4.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -202,7 +201,7 @@ GraphicsContextDirect3D11::GraphicsContextDirect3D11(
     textureResourceViews.fill(nullptr);
 
     // NOTE: Set default values for graphics context
-    this->SetBlendFactor(Color::White);
+    this->SetBlendFactor(Vector4{1.0f, 1.0f, 1.0f, 1.0f});
 
 #if defined(DEBUG) && !defined(NDEBUG)
     auto graphicsCapbilities = this->GetCapabilities();
@@ -344,13 +343,12 @@ void GraphicsContextDirect3D11::SetPrimitiveTopology(PrimitiveTopology primitive
         ToD3D11PrimitiveTopology(primitiveTopology));
 }
 
-void GraphicsContextDirect3D11::SetBlendFactor(const Color& blendFactorIn)
+void GraphicsContextDirect3D11::SetBlendFactor(const Vector4& blendFactorIn)
 {
-    auto vec = blendFactorIn.ToVector4();
-    blendFactor[0] = vec.X;
-    blendFactor[1] = vec.Y;
-    blendFactor[2] = vec.Z;
-    blendFactor[3] = vec.W;
+    blendFactor[0] = blendFactorIn.X;
+    blendFactor[1] = blendFactorIn.Y;
+    blendFactor[2] = blendFactorIn.Z;
+    blendFactor[3] = blendFactorIn.W;
     needToApplyPipelineState = true;
 }
 

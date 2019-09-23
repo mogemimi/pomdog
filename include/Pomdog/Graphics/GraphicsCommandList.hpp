@@ -56,7 +56,7 @@ public:
 
     void SetPrimitiveTopology(PrimitiveTopology primitiveTopology);
 
-    void SetBlendFactor(const Color& blendFactor);
+    void SetBlendFactor(const Vector4& blendFactor);
 
     void SetVertexBuffer(const std::shared_ptr<VertexBuffer>& vertexBuffer);
 

@@ -310,11 +310,10 @@ void GraphicsContextMetal::SetPrimitiveTopology(PrimitiveTopology primitiveTopol
     this->primitiveType = ToPrimitiveType(primitiveTopology);
 }
 
-void GraphicsContextMetal::SetBlendFactor(const Color& blendFactor)
+void GraphicsContextMetal::SetBlendFactor(const Vector4& blendFactor)
 {
     POMDOG_ASSERT(commandEncoder != nil);
-    auto vec = blendFactor.ToVector4();
-    [commandEncoder setBlendColorRed:vec.X green:vec.Y blue:vec.Z alpha:vec.W];
+    [commandEncoder setBlendColorRed:blendFactor.X green:blendFactor.Y blue:blendFactor.Z alpha:blendFactor.W];
 }
 
 void GraphicsContextMetal::SetVertexBuffers(const std::vector<VertexBufferBinding>& vertexBuffers)

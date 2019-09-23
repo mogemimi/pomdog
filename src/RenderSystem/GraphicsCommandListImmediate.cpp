@@ -6,7 +6,6 @@
 #include "Pomdog/Graphics/RenderPass.hpp"
 #include "Pomdog/Graphics/VertexBufferBinding.hpp"
 #include "Pomdog/Graphics/Viewport.hpp"
-#include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <array>
@@ -78,7 +77,7 @@ struct SetPrimitiveTopologyCommand final : public GraphicsCommand {
 };
 
 struct SetBlendFactorCommand final : public GraphicsCommand {
-    Color blendFactor;
+    Vector4 blendFactor;
 
     void Execute(NativeGraphicsContext & graphicsContext) override
     {
@@ -283,7 +282,7 @@ void GraphicsCommandListImmediate::SetPrimitiveTopology(PrimitiveTopology primit
     commands.push_back(std::move(command));
 }
 
-void GraphicsCommandListImmediate::SetBlendFactor(const Color& blendFactor)
+void GraphicsCommandListImmediate::SetBlendFactor(const Vector4& blendFactor)
 {
     auto command = std::make_unique<SetBlendFactorCommand>();
     command->commandType = GraphicsCommandType::SetBlendFactorCommand;
