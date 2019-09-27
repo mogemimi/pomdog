@@ -11,15 +11,14 @@
 namespace Pomdog::Detail::Direct3D11 {
 
 using DXGI::DXGIFormatHelper;
+using Microsoft::WRL::ComPtr;
 
 Texture2DDirect3D11::Texture2DDirect3D11(
     ID3D11Device* device,
-    const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& deviceContextIn,
     std::int32_t pixelWidth,
     std::int32_t pixelHeight,
     std::int32_t levelCount,
     SurfaceFormat format)
-    : deviceContext(deviceContextIn)
 {
     POMDOG_ASSERT(device != nullptr);
     POMDOG_ASSERT(pixelWidth > 0);
@@ -75,11 +74,19 @@ void Texture2DDirect3D11::SetData(
     const void* pixelData)
 {
     POMDOG_ASSERT(texture2D);
-    POMDOG_ASSERT(deviceContext);
+
+    // NOTE: Get the device context
+    ComPtr<ID3D11Device> device;
+    texture2D->GetDevice(&device);
+    ComPtr<ID3D11DeviceContext> deviceContext;
+    device->GetImmediateContext(&deviceContext);
+
+    POMDOG_ASSERT(deviceContext != nullptr);
 
     std::size_t sizeInBytes = TextureHelper::ComputeTextureSizeInBytes(
         pixelWidth, pixelHeight, levelCount, format);
 
+    // NOTE: Map the texture
     D3D11_MAPPED_SUBRESOURCE mappedResource;
     auto hr = deviceContext->Map(texture2D.Get(), 0,
         D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);

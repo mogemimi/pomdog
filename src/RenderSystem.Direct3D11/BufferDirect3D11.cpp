@@ -7,6 +7,8 @@
 #include "Pomdog/Utility/Exception.hpp"
 #include <utility>
 
+using Microsoft::WRL::ComPtr;
+
 namespace Pomdog::Detail::Direct3D11 {
 namespace {
 
@@ -108,12 +110,10 @@ D3D11_MAP GetMapTypeForWriting(D3D11_BIND_FLAG bindFlag) noexcept
 
 BufferDirect3D11::BufferDirect3D11(
     ID3D11Device* device,
-    const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& deviceContextIn,
     std::size_t sizeInBytes,
     BufferUsage bufferUsage,
     D3D11_BIND_FLAG bindFlag)
-    : deviceContext(deviceContextIn)
-    , mapTypeForWriting(GetMapTypeForWriting(bindFlag))
+    : mapTypeForWriting(GetMapTypeForWriting(bindFlag))
 {
     buffer = CreateNativeBuffer(device, sizeInBytes,
         nullptr, bufferUsage, bindFlag);
@@ -121,13 +121,11 @@ BufferDirect3D11::BufferDirect3D11(
 
 BufferDirect3D11::BufferDirect3D11(
     ID3D11Device* device,
-    const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& deviceContextIn,
     const void* sourceData,
     std::size_t sizeInBytes,
     BufferUsage bufferUsage,
     D3D11_BIND_FLAG bindFlag)
-    : deviceContext(deviceContextIn)
-    , mapTypeForWriting(GetMapTypeForWriting(bindFlag))
+    : mapTypeForWriting(GetMapTypeForWriting(bindFlag))
 {
     buffer = CreateNativeBuffer(device, sizeInBytes,
         sourceData, bufferUsage, bindFlag);
@@ -139,10 +137,18 @@ void BufferDirect3D11::GetData(
     std::size_t sizeInBytes) const
 {
     POMDOG_ASSERT(buffer);
-    POMDOG_ASSERT(deviceContext);
     POMDOG_ASSERT(destination != nullptr);
     POMDOG_ASSERT(sizeInBytes > 0);
 
+    // NOTE: Get the device context
+    ComPtr<ID3D11Device> device;
+    buffer->GetDevice(&device);
+    ComPtr<ID3D11DeviceContext> deviceContext;
+    device->GetImmediateContext(&deviceContext);
+
+    POMDOG_ASSERT(deviceContext != nullptr);
+
+    // NOTE: Map the buffer
     D3D11_MAPPED_SUBRESOURCE mappedResource;
     auto hr = deviceContext->Map(buffer.Get(), 0,
         D3D11_MAP_READ, 0, &mappedResource);
@@ -165,10 +171,18 @@ void BufferDirect3D11::SetData(
     std::size_t sizeInBytes)
 {
     POMDOG_ASSERT(buffer);
-    POMDOG_ASSERT(deviceContext);
     POMDOG_ASSERT(source != nullptr);
     POMDOG_ASSERT(sizeInBytes > 0);
 
+    // NOTE: Get the device context
+    ComPtr<ID3D11Device> device;
+    buffer->GetDevice(&device);
+    ComPtr<ID3D11DeviceContext> deviceContext;
+    device->GetImmediateContext(&deviceContext);
+
+    POMDOG_ASSERT(deviceContext != nullptr);
+
+    // NOTE: Map the buffer
     D3D11_MAPPED_SUBRESOURCE mappedResource;
     auto hr = deviceContext->Map(buffer.Get(), 0,
         mapTypeForWriting, 0, &mappedResource);

@@ -13,14 +13,12 @@ class BufferDirect3D11 final : public NativeBuffer {
 public:
     BufferDirect3D11(
         ID3D11Device* device,
-        const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& deviceContext,
         std::size_t sizeInBytes,
         BufferUsage bufferUsage,
         D3D11_BIND_FLAG bindFlag);
 
     BufferDirect3D11(
         ID3D11Device* devuce,
-        const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& deviceContext,
         const void* sourceData,
         std::size_t sizeInBytes,
         BufferUsage bufferUsage,
@@ -39,7 +37,6 @@ public:
     ID3D11Buffer* GetBuffer() const;
 
 private:
-    Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext;
     Microsoft::WRL::ComPtr<ID3D11Buffer> buffer;
     D3D11_MAP mapTypeForWriting;
 };

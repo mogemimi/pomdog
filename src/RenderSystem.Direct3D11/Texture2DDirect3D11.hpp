@@ -13,7 +13,6 @@ class Texture2DDirect3D11 final : public NativeTexture2D {
 public:
     Texture2DDirect3D11(
         ID3D11Device* nativeDevice,
-        const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& deviceContext,
         std::int32_t pixelWidth,
         std::int32_t pixelHeight,
         std::int32_t levelCount,
@@ -31,7 +30,6 @@ public:
 private:
     Microsoft::WRL::ComPtr<ID3D11Texture2D> texture2D;
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shaderResourceView;
-    Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext;
 };
 
 } // namespace Pomdog::Detail::Direct3D11

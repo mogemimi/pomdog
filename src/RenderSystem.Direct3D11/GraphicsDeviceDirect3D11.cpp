@@ -188,7 +188,7 @@ D3D11_BIND_FLAG ToBindFlag(BufferBindMode bindMode) noexcept
 
 } // unnamed namespace
 
-class GraphicsDeviceDirect3D11::Impl {
+class GraphicsDeviceDirect3D11::Impl final {
 public:
     AdapterManager adapters;
     ComPtr<ID3D11Device> device;
@@ -361,7 +361,6 @@ GraphicsDeviceDirect3D11::CreateBuffer(std::size_t sizeInBytes,
     try {
         return std::make_unique<BufferDirect3D11>(
             impl->device.Get(),
-            impl->deviceContext.Get(),
             sizeInBytes,
             bufferUsage,
             ToBindFlag(bindMode));
@@ -386,7 +385,6 @@ GraphicsDeviceDirect3D11::CreateBuffer(
     try {
         return std::make_unique<BufferDirect3D11>(
             impl->device.Get(),
-            impl->deviceContext.Get(),
             sourceData,
             sizeInBytes,
             bufferUsage,
@@ -454,8 +452,12 @@ GraphicsDeviceDirect3D11::CreateTexture2D(std::int32_t width, std::int32_t heigh
     POMDOG_ASSERT(impl->device);
     POMDOG_ASSERT(impl->deviceContext);
 
-    return std::make_unique<Texture2DDirect3D11>(impl->device.Get(),
-        impl->deviceContext, width, height, mipmapLevels, format);
+    return std::make_unique<Texture2DDirect3D11>(
+        impl->device.Get(),
+        width,
+        height,
+        mipmapLevels,
+        format);
 }
 
 std::unique_ptr<NativeRenderTarget2D>
@@ -469,8 +471,13 @@ GraphicsDeviceDirect3D11::CreateRenderTarget2D(
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->device);
-    return std::make_unique<RenderTarget2DDirect3D11>(impl->device.Get(),
-        width, height, mipmapLevels, format, depthStencilFormat,
+    return std::make_unique<RenderTarget2DDirect3D11>(
+        impl->device.Get(),
+        width,
+        height,
+        mipmapLevels,
+        format,
+        depthStencilFormat,
         multiSampleCount);
 }
 
