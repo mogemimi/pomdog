@@ -1,12 +1,11 @@
 // Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Utility/FileSystem.hpp"
+#include "../Utility/ErrorHelper.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include "Pomdog/Utility/PathHelper.hpp"
-#include <experimental/filesystem>
-
-namespace fs = std::experimental::filesystem;
+#include <filesystem>
 
 namespace Pomdog {
 
@@ -14,7 +13,7 @@ bool FileSystem::CreateDirectory(const std::string& path)
 {
     // 'CreateDirectory' means 'CreateDirectoryA' in Win32.
     POMDOG_ASSERT(!path.empty());
-    return fs::create_directory(path);
+    return std::filesystem::create_directory(path);
 }
 
 } // namespace Pomdog
@@ -27,19 +26,19 @@ namespace Pomdog {
 bool FileSystem::CreateDirectories(const std::string& path)
 {
     POMDOG_ASSERT(!path.empty());
-    return fs::create_directories(path);
+    return std::filesystem::create_directories(path);
 }
 
 bool FileSystem::Exists(const std::string& path)
 {
     POMDOG_ASSERT(!path.empty());
-    return fs::exists(path);
+    return std::filesystem::exists(path);
 }
 
 bool FileSystem::IsDirectory(const std::string& path)
 {
     POMDOG_ASSERT(!path.empty());
-    return fs::is_directory(path);
+    return std::filesystem::is_directory(path);
 }
 
 std::string FileSystem::GetLocalAppDataDirectoryPath()
@@ -78,13 +77,13 @@ std::string FileSystem::GetAppDataDirectoryPath()
 
 std::string FileSystem::GetResourceDirectoryPath()
 {
-    auto currentDirectory = fs::current_path();
+    auto currentDirectory = std::filesystem::current_path();
     return currentDirectory.string();
 }
 
 std::string FileSystem::GetTempDirectoryPath()
 {
-    auto path = fs::temp_directory_path();
+    auto path = std::filesystem::temp_directory_path();
     return path.string();
 }
 
