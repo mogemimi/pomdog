@@ -12,7 +12,7 @@ struct POMDOG_EXPORT FileSystem final {
     [[nodiscard]] static bool
     CreateDirectory(const std::string& path);
 
-    /// Create a new directory with the specified path.
+    /// Recursively create a new directory with the specified path.
     [[nodiscard]] static bool
     CreateDirectories(const std::string& path);
 
