@@ -359,7 +359,7 @@ void HTTPSession<SocketStream>::Complete(std::unique_ptr<HTTPResponse>&& respons
     if (response != nullptr) {
         POMDOG_ASSERT(request == nullptr);
         POMDOG_ASSERT(response->Request != nullptr);
-        auto& req = response->Request;
+        auto req = response->Request;
         req->OnCompleted(std::move(response), std::move(err));
         req->OnCompleted.Disconnect();
     }
