@@ -26,7 +26,7 @@ public:
     // Constructors:
     FloatingPointMatrix3x3() noexcept = default;
 
-    ///@brief Construct from floating-point values.
+    /// Construct from floating-point values.
     FloatingPointMatrix3x3(
         T m00, T m01, T m02,
         T m10, T m11, T m12,

@@ -887,7 +887,8 @@ FloatingPointMatrix4x4<T>::CreatePerspectiveFieldOfViewLH(const Radian<T>& fovy,
 template <typename T>
 FloatingPointMatrix4x4<T>
 FloatingPointMatrix4x4<T>::CreatePerspectiveFieldOfViewLH(const Radian<T>& fovy, T aspect, T zNear, T zFar)
-{// Left-handed Cartesian Coordinates
+{
+    // NOTE: Left-handed Cartesian Coordinates
     FloatingPointMatrix4x4 result;
     CreatePerspectiveFieldOfViewLH(fovy, aspect, zNear, zFar, result);
     return std::move(result);
@@ -942,7 +943,8 @@ FloatingPointMatrix4x4<T>::CreatePerspectiveFieldOfViewRH(const Radian<T>& fovy,
 template <typename T>
 FloatingPointMatrix4x4<T>
 FloatingPointMatrix4x4<T>::CreatePerspectiveFieldOfViewRH(const Radian<T>& fovy, T aspect, T zNear, T zFar)
-{// Right-handed Cartesian Coordinates
+{
+    // NOTE: Right-handed Cartesian Coordinates
     FloatingPointMatrix4x4 result;
     CreatePerspectiveFieldOfViewRH(fovy, aspect, zNear, zFar, result);
     return std::move(result);

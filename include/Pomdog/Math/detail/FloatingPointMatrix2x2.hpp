@@ -26,7 +26,7 @@ public:
     // Constructors:
     FloatingPointMatrix2x2() noexcept = default;
 
-    ///@brief Construct from floating-point values.
+    /// Construct from floating-point values.
     FloatingPointMatrix2x2(T m00, T m01, T m10, T m11) noexcept;
 
     // Assignment operators:

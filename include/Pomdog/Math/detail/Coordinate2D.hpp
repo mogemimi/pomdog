@@ -20,7 +20,7 @@ public:
     // Constructors:
     Coordinate2D() noexcept = default;
 
-    ///@brief Construct from T values.
+    /// Construct from T values.
     Coordinate2D(T x, T y) noexcept;
 
     // Assignment operators:

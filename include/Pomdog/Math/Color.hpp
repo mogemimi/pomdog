@@ -15,7 +15,7 @@ public:
 public:
     Color() noexcept = default;
 
-    ///@brief Construct from unsigned integer values.
+    /// Construct from unsigned integer values.
     Color(std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a) noexcept;
 
     explicit Color(const Vector3& vector);

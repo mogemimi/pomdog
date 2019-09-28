@@ -26,7 +26,7 @@ public:
     // Constructors:
     FloatingPointMatrix4x4() noexcept = default;
 
-    ///@brief Construct from floating-point values.
+    /// Construct from floating-point values.
     FloatingPointMatrix4x4(
         T m00, T m01, T m02, T m03,
         T m10, T m11, T m12, T m13,
