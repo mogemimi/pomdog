@@ -19,16 +19,20 @@ public:
 
     Ray(const Vector3& position, const Vector3& direction);
 
-    bool operator==(const Ray&) const noexcept;
-    bool operator!=(const Ray&) const noexcept;
+    [[nodiscard]] bool operator==(const Ray&) const noexcept;
+    [[nodiscard]] bool operator!=(const Ray&) const noexcept;
 
-    std::optional<float> Intersects(const BoundingBox& box) const;
+    [[nodiscard]] std::optional<float>
+    Intersects(const BoundingBox& box) const;
 
-    std::optional<float> Intersects(const BoundingFrustum& frustum) const;
+    [[nodiscard]] std::optional<float>
+    Intersects(const BoundingFrustum& frustum) const;
 
-    std::optional<float> Intersects(const BoundingSphere& sphere) const;
+    [[nodiscard]] std::optional<float>
+    Intersects(const BoundingSphere& sphere) const;
 
-    std::optional<float> Intersects(const Plane& plane) const;
+    [[nodiscard]] std::optional<float>
+    Intersects(const Plane& plane) const;
 };
 
 } // namespace Pomdog

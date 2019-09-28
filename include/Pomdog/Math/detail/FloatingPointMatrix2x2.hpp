@@ -41,32 +41,32 @@ public:
     FloatingPointMatrix2x2 operator-() const noexcept;
 
     // Binary operators:
-    FloatingPointMatrix2x2 operator+(const FloatingPointMatrix2x2& other) const noexcept;
-    FloatingPointMatrix2x2 operator-(const FloatingPointMatrix2x2& other) const noexcept;
-    FloatingPointMatrix2x2 operator*(const FloatingPointMatrix2x2& other) const noexcept;
-    FloatingPointMatrix2x2 operator*(T scaleFactor) const noexcept;
-    FloatingPointMatrix2x2 operator/(T scaleFactor) const;
+    [[nodiscard]] FloatingPointMatrix2x2 operator+(const FloatingPointMatrix2x2& other) const noexcept;
+    [[nodiscard]] FloatingPointMatrix2x2 operator-(const FloatingPointMatrix2x2& other) const noexcept;
+    [[nodiscard]] FloatingPointMatrix2x2 operator*(const FloatingPointMatrix2x2& other) const noexcept;
+    [[nodiscard]] FloatingPointMatrix2x2 operator*(T scaleFactor) const noexcept;
+    [[nodiscard]] FloatingPointMatrix2x2 operator/(T scaleFactor) const;
 
-    bool operator==(const FloatingPointMatrix2x2& other) const noexcept;
-    bool operator!=(const FloatingPointMatrix2x2& other) const noexcept;
+    [[nodiscard]] bool operator==(const FloatingPointMatrix2x2& other) const noexcept;
+    [[nodiscard]] bool operator!=(const FloatingPointMatrix2x2& other) const noexcept;
 
     // Function-call operators:
-    const T& operator()(std::size_t row, std::size_t column) const;
-    T& operator()(std::size_t row, std::size_t column);
+    [[nodiscard]] const T& operator()(std::size_t row, std::size_t column) const;
+    [[nodiscard]] T& operator()(std::size_t row, std::size_t column);
 
-    T Determinant() const noexcept;
+    [[nodiscard]] T Determinant() const noexcept;
 
-    static FloatingPointMatrix2x2
+    [[nodiscard]] static FloatingPointMatrix2x2
     Multiply(const FloatingPointMatrix2x2& matrix1, const FloatingPointMatrix2x2& matrix2) noexcept;
 
-    static FloatingPointMatrix2x2
+    [[nodiscard]] static FloatingPointMatrix2x2
     Multiply(const FloatingPointMatrix2x2& matrix1, T scaleFactor) noexcept;
 
-    ///@brief Returns pointer to the first element.
-    const T* Data() const noexcept;
+    /// Returns pointer to the first element.
+    [[nodiscard]] const T* Data() const noexcept;
 
-    ///@brief Returns pointer to the first element.
-    T* Data() noexcept;
+    /// Returns pointer to the first element.
+    [[nodiscard]] T* Data() noexcept;
 
     static FloatingPointMatrix2x2 const Identity;
 };

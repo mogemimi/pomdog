@@ -110,99 +110,99 @@ public:
     }
 
     // Binary operators:
-    TaggedArithmetic operator+(const TaggedArithmetic& v) const noexcept
+    [[nodiscard]] TaggedArithmetic operator+(const TaggedArithmetic& v) const noexcept
     {
         return {value + v.value};
     }
 
-    TaggedArithmetic operator-(const TaggedArithmetic& v) const noexcept
+    [[nodiscard]] TaggedArithmetic operator-(const TaggedArithmetic& v) const noexcept
     {
         return {value - v.value};
     }
 
-    TaggedArithmetic operator*(const TaggedArithmetic& v) const noexcept
+    [[nodiscard]] TaggedArithmetic operator*(const TaggedArithmetic& v) const noexcept
     {
         return {value * v.value};
     }
 
-    TaggedArithmetic operator/(const TaggedArithmetic& v) const
+    [[nodiscard]] TaggedArithmetic operator/(const TaggedArithmetic& v) const
     {
         POMDOG_ASSERT(v.value != T{0});
         return {value / v.value};
     }
 
-    TaggedArithmetic operator*(T scale) const noexcept
+    [[nodiscard]] TaggedArithmetic operator*(T scale) const noexcept
     {
         return {value * scale};
     }
 
-    TaggedArithmetic operator/(T scale) const
+    [[nodiscard]] TaggedArithmetic operator/(T scale) const
     {
         POMDOG_ASSERT(scale != T{0});
         return {value / scale};
     }
 
-    friend TaggedArithmetic operator*(const T& scale, const TaggedArithmetic& v) noexcept
+    [[nodiscard]] friend TaggedArithmetic operator*(const T& scale, const TaggedArithmetic& v) noexcept
     {
         return {scale * v.value};
     }
 
-    bool operator==(const TaggedArithmetic& v) const noexcept
+    [[nodiscard]] bool operator==(const TaggedArithmetic& v) const noexcept
     {
         return value == v.value;
     }
 
-    bool operator!=(const TaggedArithmetic& v) const noexcept
+    [[nodiscard]] bool operator!=(const TaggedArithmetic& v) const noexcept
     {
         return value != v.value;
     }
 
-    bool operator==(const T& scalar) const noexcept
+    [[nodiscard]] bool operator==(const T& scalar) const noexcept
     {
         return value == scalar;
     }
 
-    bool operator!=(const T& scalar) const noexcept
+    [[nodiscard]] bool operator!=(const T& scalar) const noexcept
     {
         return value != scalar;
     }
 
-    bool operator<(const TaggedArithmetic& v) const noexcept
+    [[nodiscard]] bool operator<(const TaggedArithmetic& v) const noexcept
     {
         return value < v.value;
     }
 
-    bool operator>(const TaggedArithmetic& v) const noexcept
+    [[nodiscard]] bool operator>(const TaggedArithmetic& v) const noexcept
     {
         return value > v.value;
     }
 
-    bool operator<=(const TaggedArithmetic& v) const noexcept
+    [[nodiscard]] bool operator<=(const TaggedArithmetic& v) const noexcept
     {
         return value <= v.value;
     }
 
-    bool operator>=(const TaggedArithmetic& v) const noexcept
+    [[nodiscard]] bool operator>=(const TaggedArithmetic& v) const noexcept
     {
         return value >= v.value;
     }
 
-    bool operator<(const T& scalar) const noexcept
+    [[nodiscard]] bool operator<(const T& scalar) const noexcept
     {
         return value < scalar;
     }
 
-    bool operator>(const T& scalar) const noexcept
+    [[nodiscard]] bool operator>(const T& scalar) const noexcept
     {
         return value > scalar;
     }
 
-    bool operator<=(const T& scalar) const noexcept
+    [[nodiscard]] bool operator<=(const T& scalar) const noexcept
     {
         return value <= scalar;
     }
 
-    bool operator>=(const T& scalar) const noexcept
+    [[nodiscard]] bool operator>=(const T& scalar) const noexcept
     {
         return value >= scalar;
     }

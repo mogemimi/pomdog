@@ -34,15 +34,15 @@ public:
     Coordinate3D operator-() const noexcept;
 
     // Binary operators:
-    Coordinate3D operator+(const Coordinate3D&) const noexcept;
-    Coordinate3D operator-(const Coordinate3D&) const noexcept;
-    Coordinate3D operator*(const Coordinate3D&) const noexcept;
-    Coordinate3D operator/(const Coordinate3D&) const;
-    Coordinate3D operator*(T scaleFactor) const noexcept;
-    Coordinate3D operator/(T scaleFactor) const;
+    [[nodiscard]] Coordinate3D operator+(const Coordinate3D&) const noexcept;
+    [[nodiscard]] Coordinate3D operator-(const Coordinate3D&) const noexcept;
+    [[nodiscard]] Coordinate3D operator*(const Coordinate3D&) const noexcept;
+    [[nodiscard]] Coordinate3D operator/(const Coordinate3D&) const;
+    [[nodiscard]] Coordinate3D operator*(T scaleFactor) const noexcept;
+    [[nodiscard]] Coordinate3D operator/(T scaleFactor) const;
 
-    bool operator==(const Coordinate3D&) const noexcept;
-    bool operator!=(const Coordinate3D&) const noexcept;
+    [[nodiscard]] bool operator==(const Coordinate3D&) const noexcept;
+    [[nodiscard]] bool operator!=(const Coordinate3D&) const noexcept;
 
     static Coordinate3D const Zero;
 };

@@ -44,75 +44,75 @@ public:
     FloatingPointMatrix3x2 operator-() const noexcept;
 
     // Binary operators:
-    FloatingPointMatrix3x2 operator+(const FloatingPointMatrix3x2& other) const noexcept;
-    FloatingPointMatrix3x2 operator-(const FloatingPointMatrix3x2& other) const noexcept;
-    FloatingPointMatrix3x2 operator*(const FloatingPointMatrix3x2& other) const noexcept;
-    FloatingPointMatrix3x2 operator*(T scaleFactor) const noexcept;
-    FloatingPointMatrix3x2 operator/(T scaleFactor) const;
+    [[nodiscard]] FloatingPointMatrix3x2 operator+(const FloatingPointMatrix3x2& other) const noexcept;
+    [[nodiscard]] FloatingPointMatrix3x2 operator-(const FloatingPointMatrix3x2& other) const noexcept;
+    [[nodiscard]] FloatingPointMatrix3x2 operator*(const FloatingPointMatrix3x2& other) const noexcept;
+    [[nodiscard]] FloatingPointMatrix3x2 operator*(T scaleFactor) const noexcept;
+    [[nodiscard]] FloatingPointMatrix3x2 operator/(T scaleFactor) const;
 
-    bool operator==(const FloatingPointMatrix3x2& other) const noexcept;
-    bool operator!=(const FloatingPointMatrix3x2& other) const noexcept;
+    [[nodiscard]] bool operator==(const FloatingPointMatrix3x2& other) const noexcept;
+    [[nodiscard]] bool operator!=(const FloatingPointMatrix3x2& other) const noexcept;
 
     // Function-call operators:
-    const T& operator()(std::size_t row, std::size_t column) const;
-    T& operator()(std::size_t row, std::size_t column);
+    [[nodiscard]] const T& operator()(std::size_t row, std::size_t column) const;
+    [[nodiscard]] T& operator()(std::size_t row, std::size_t column);
 
-    T Determinant() const noexcept;
+    [[nodiscard]] T Determinant() const noexcept;
 
-    static FloatingPointMatrix3x2
+    [[nodiscard]] static FloatingPointMatrix3x2
     Multiply(const FloatingPointMatrix3x2& matrix1, const FloatingPointMatrix3x2& matrix2) noexcept;
 
-    static FloatingPointMatrix3x2
+    [[nodiscard]] static FloatingPointMatrix3x2
     Multiply(const FloatingPointMatrix3x2& matrix1, T scaleFactor) noexcept;
 
     static void
     Invert(const FloatingPointMatrix3x2& matrix, FloatingPointMatrix3x2& result);
 
-    static FloatingPointMatrix3x2
+    [[nodiscard]] static FloatingPointMatrix3x2
     Invert(const FloatingPointMatrix3x2& matrix);
 
     static void
     Lerp(const FloatingPointMatrix3x2& source1, const FloatingPointMatrix3x2& source2,
         T amount, FloatingPointMatrix3x2& result) noexcept;
 
-    static FloatingPointMatrix3x2
+    [[nodiscard]] static FloatingPointMatrix3x2
     Lerp(const FloatingPointMatrix3x2& source1, const FloatingPointMatrix3x2& source2,
         T amount) noexcept;
 
     static void
     CreateTranslation(const FloatingPointVector2<T>& position, FloatingPointMatrix3x2& result) noexcept;
 
-    static FloatingPointMatrix3x2
+    [[nodiscard]] static FloatingPointMatrix3x2
     CreateTranslation(const FloatingPointVector2<T>& position) noexcept;
 
     static void
     CreateScale(T scale, FloatingPointMatrix3x2& result) noexcept;
 
-    static FloatingPointMatrix3x2
+    [[nodiscard]] static FloatingPointMatrix3x2
     CreateScale(T scale) noexcept;
 
     static void
     CreateScale(const FloatingPointVector2<T>& scale, FloatingPointMatrix3x2& result) noexcept;
 
-    static FloatingPointMatrix3x2
+    [[nodiscard]] static FloatingPointMatrix3x2
     CreateScale(const FloatingPointVector2<T>& scale) noexcept;
 
     static void
     CreateRotation(const Radian<T>& angle, FloatingPointMatrix3x2& result);
 
-    static FloatingPointMatrix3x2
+    [[nodiscard]] static FloatingPointMatrix3x2
     CreateRotation(const Radian<T>& angle);
 
     static void
     CreateSkew(const FloatingPointVector2<T>& skew, FloatingPointMatrix3x2& result);
 
-    static FloatingPointMatrix3x2
+    [[nodiscard]] static FloatingPointMatrix3x2
     CreateSkew(const FloatingPointVector2<T>& skew);
 
-    ///@brief Returns pointer to the first element.
+    /// Returns pointer to the first element.
     const T* Data() const noexcept;
 
-    ///@brief Returns pointer to the first element.
+    /// Returns pointer to the first element.
     T* Data() noexcept;
 
     static FloatingPointMatrix3x2 const Identity;

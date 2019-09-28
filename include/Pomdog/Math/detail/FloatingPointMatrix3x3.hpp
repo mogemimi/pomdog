@@ -44,109 +44,111 @@ public:
     FloatingPointMatrix3x3 operator-() const noexcept;
 
     // Binary operators:
-    FloatingPointMatrix3x3 operator+(const FloatingPointMatrix3x3& other) const noexcept;
-    FloatingPointMatrix3x3 operator-(const FloatingPointMatrix3x3& other) const noexcept;
-    FloatingPointMatrix3x3 operator*(const FloatingPointMatrix3x3& other) const noexcept;
-    FloatingPointMatrix3x3 operator*(T scaleFactor) const noexcept;
-    FloatingPointMatrix3x3 operator/(T scaleFactor) const;
+    [[nodiscard]] FloatingPointMatrix3x3 operator+(const FloatingPointMatrix3x3& other) const noexcept;
+    [[nodiscard]] FloatingPointMatrix3x3 operator-(const FloatingPointMatrix3x3& other) const noexcept;
+    [[nodiscard]] FloatingPointMatrix3x3 operator*(const FloatingPointMatrix3x3& other) const noexcept;
+    [[nodiscard]] FloatingPointMatrix3x3 operator*(T scaleFactor) const noexcept;
+    [[nodiscard]] FloatingPointMatrix3x3 operator/(T scaleFactor) const;
 
-    bool operator==(const FloatingPointMatrix3x3& other) const noexcept;
-    bool operator!=(const FloatingPointMatrix3x3& other) const noexcept;
+    [[nodiscard]] bool operator==(const FloatingPointMatrix3x3& other) const noexcept;
+    [[nodiscard]] bool operator!=(const FloatingPointMatrix3x3& other) const noexcept;
 
     // Function-call operators:
-    const T& operator()(std::size_t row, std::size_t column) const;
-    T& operator()(std::size_t row, std::size_t column);
+    [[nodiscard]] const T& operator()(std::size_t row, std::size_t column) const;
+    [[nodiscard]] T& operator()(std::size_t row, std::size_t column);
 
     void SetScale(const FloatingPointVector3<T>& scale) noexcept;
 
-    FloatingPointVector3<T> GetScale() const noexcept;
+    [[nodiscard]] FloatingPointVector3<T>
+    GetScale() const noexcept;
 
-    T Determinant() const noexcept;
+    [[nodiscard]] T Determinant() const noexcept;
 
-    FloatingPointMatrix2x2<T> Minor2x2(std::size_t row, std::size_t column) const;
+    [[nodiscard]] FloatingPointMatrix2x2<T>
+    Minor2x2(std::size_t row, std::size_t column) const;
 
-    static FloatingPointMatrix3x3
+    [[nodiscard]] static FloatingPointMatrix3x3
     Multiply(const FloatingPointMatrix3x3& matrix1, const FloatingPointMatrix3x3& matrix2) noexcept;
 
-    static FloatingPointMatrix3x3
+    [[nodiscard]] static FloatingPointMatrix3x3
     Multiply(const FloatingPointMatrix3x3& matrix1, T scaleFactor) noexcept;
 
-    static FloatingPointMatrix3x3
+    [[nodiscard]] static FloatingPointMatrix3x3
     Adjoint(const FloatingPointMatrix3x3& matrix);
 
     static void
     Transpose(const FloatingPointMatrix3x3& matrix, FloatingPointMatrix3x3& result) noexcept;
 
-    static FloatingPointMatrix3x3
+    [[nodiscard]] static FloatingPointMatrix3x3
     Transpose(const FloatingPointMatrix3x3& matrix) noexcept;
 
     static void
     Invert(const FloatingPointMatrix3x3& matrix, FloatingPointMatrix3x3& result);
 
-    static FloatingPointMatrix3x3
+    [[nodiscard]] static FloatingPointMatrix3x3
     Invert(const FloatingPointMatrix3x3& matrix);
 
     static void
     Lerp(const FloatingPointMatrix3x3& source1, const FloatingPointMatrix3x3& source2,
         T amount, FloatingPointMatrix3x3& result) noexcept;
 
-    static FloatingPointMatrix3x3
+    [[nodiscard]] static FloatingPointMatrix3x3
     Lerp(const FloatingPointMatrix3x3& source1, const FloatingPointMatrix3x3& source2,
         T amount) noexcept;
 
     static void
     CreateTranslation(const FloatingPointVector2<T>& position, FloatingPointMatrix3x3& result) noexcept;
 
-    static FloatingPointMatrix3x3
+    [[nodiscard]] static FloatingPointMatrix3x3
     CreateTranslation(const FloatingPointVector2<T>& position) noexcept;
 
     static void
     CreateScale(T scale, FloatingPointMatrix3x3& result) noexcept;
 
-    static FloatingPointMatrix3x3
+    [[nodiscard]] static FloatingPointMatrix3x3
     CreateScale(T scale) noexcept;
 
     static void
     CreateScale(const FloatingPointVector3<T>& scale, FloatingPointMatrix3x3& result) noexcept;
 
-    static FloatingPointMatrix3x3
+    [[nodiscard]] static FloatingPointMatrix3x3
     CreateScale(const FloatingPointVector3<T>& scale) noexcept;
 
     static void
     CreateRotationX(const Radian<T>& angle, FloatingPointMatrix3x3& result);
 
-    static FloatingPointMatrix3x3
+    [[nodiscard]] static FloatingPointMatrix3x3
     CreateRotationX(const Radian<T>& angle);
 
     static void
     CreateRotationY(const Radian<T>& angle, FloatingPointMatrix3x3& result);
 
-    static FloatingPointMatrix3x3
+    [[nodiscard]] static FloatingPointMatrix3x3
     CreateRotationY(const Radian<T>& angle);
 
     static void
     CreateRotationZ(const Radian<T>& angle, FloatingPointMatrix3x3& result);
 
-    static FloatingPointMatrix3x3
+    [[nodiscard]] static FloatingPointMatrix3x3
     CreateRotationZ(const Radian<T>& angle);
 
     static void
     CreateFromQuaternion(const FloatingPointQuaternion<T>& quaternion, FloatingPointMatrix3x3& result);
 
-    static FloatingPointMatrix3x3
+    [[nodiscard]] static FloatingPointMatrix3x3
     CreateFromQuaternion(const FloatingPointQuaternion<T>& quaternion);
 
     static void
     CreateFromAxisAngle(const FloatingPointVector3<T>& axis, const Radian<T>& angle, FloatingPointMatrix3x3& result);
 
-    static FloatingPointMatrix3x3
+    [[nodiscard]] static FloatingPointMatrix3x3
     CreateFromAxisAngle(const FloatingPointVector3<T>& axis, const Radian<T>& angle);
 
-    ///@brief Returns pointer to the first element.
-    const T* Data() const noexcept;
+    /// Returns pointer to the first element.
+    [[nodiscard]] const T* Data() const noexcept;
 
-    ///@brief Returns pointer to the first element.
-    T* Data() noexcept;
+    /// Returns pointer to the first element.
+    [[nodiscard]] T* Data() noexcept;
 
     static FloatingPointMatrix3x3 const Identity;
 };

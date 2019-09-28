@@ -21,20 +21,26 @@ public:
 
     BoundingBox2D(const Vector2& min, const Vector2& max);
 
-    bool operator==(const BoundingBox2D&) const noexcept;
-    bool operator!=(const BoundingBox2D&) const noexcept;
+    [[nodiscard]] bool operator==(const BoundingBox2D&) const noexcept;
+    [[nodiscard]] bool operator!=(const BoundingBox2D&) const noexcept;
 
-    ContainmentType Contains(const Vector2& point) const;
+    [[nodiscard]] ContainmentType
+    Contains(const Vector2& point) const;
 
-    ContainmentType Contains(const BoundingBox2D& box) const;
+    [[nodiscard]] ContainmentType
+    Contains(const BoundingBox2D& box) const;
 
-    ContainmentType Contains(const BoundingCircle& circle) const;
+    [[nodiscard]] ContainmentType
+    Contains(const BoundingCircle& circle) const;
 
-    bool Intersects(const BoundingBox2D& box) const;
+    [[nodiscard]] bool
+    Intersects(const BoundingBox2D& box) const;
 
-    bool Intersects(const BoundingCircle& circle) const;
+    [[nodiscard]] bool
+    Intersects(const BoundingCircle& circle) const;
 
-    std::array<Vector2, CornerCount> GetCorners() const noexcept;
+    [[nodiscard]] std::array<Vector2, CornerCount>
+    GetCorners() const noexcept;
 };
 
 } // namespace Pomdog

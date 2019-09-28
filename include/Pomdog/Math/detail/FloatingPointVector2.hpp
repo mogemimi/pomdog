@@ -37,75 +37,90 @@ public:
     FloatingPointVector2 operator-() const noexcept;
 
     // Binary operators:
-    FloatingPointVector2 operator+(const FloatingPointVector2&) const noexcept;
-    FloatingPointVector2 operator-(const FloatingPointVector2&) const noexcept;
-    FloatingPointVector2 operator*(const FloatingPointVector2&) const noexcept;
-    FloatingPointVector2 operator/(const FloatingPointVector2&) const;
+    [[nodiscard]] FloatingPointVector2 operator+(const FloatingPointVector2&) const noexcept;
+    [[nodiscard]] FloatingPointVector2 operator-(const FloatingPointVector2&) const noexcept;
+    [[nodiscard]] FloatingPointVector2 operator*(const FloatingPointVector2&) const noexcept;
+    [[nodiscard]] FloatingPointVector2 operator/(const FloatingPointVector2&) const;
 
-    FloatingPointVector2 operator*(T scaleFactor) const noexcept;
-    FloatingPointVector2 operator/(T scaleFactor) const;
+    [[nodiscard]] FloatingPointVector2 operator*(T scaleFactor) const noexcept;
+    [[nodiscard]] FloatingPointVector2 operator/(T scaleFactor) const;
 
-    bool operator==(const FloatingPointVector2& other) const noexcept;
-    bool operator!=(const FloatingPointVector2& other) const noexcept;
+    [[nodiscard]] bool operator==(const FloatingPointVector2& other) const noexcept;
+    [[nodiscard]] bool operator!=(const FloatingPointVector2& other) const noexcept;
 
-    T Length() const noexcept;
+    [[nodiscard]] T Length() const noexcept;
 
-    T LengthSquared() const noexcept;
+    [[nodiscard]] T LengthSquared() const noexcept;
 
-    static T Distance(const FloatingPointVector2& a, const FloatingPointVector2& b) noexcept;
+    [[nodiscard]] static T
+    Distance(const FloatingPointVector2& a, const FloatingPointVector2& b) noexcept;
 
-    static T DistanceSquared(const FloatingPointVector2& a, const FloatingPointVector2& b) noexcept;
+    [[nodiscard]] static T
+    DistanceSquared(const FloatingPointVector2& a, const FloatingPointVector2& b) noexcept;
 
-    static T Dot(const FloatingPointVector2& a, const FloatingPointVector2& b) noexcept;
+    [[nodiscard]] static T
+    Dot(const FloatingPointVector2& a, const FloatingPointVector2& b) noexcept;
 
-    static T Cross(const FloatingPointVector2& a, const FloatingPointVector2& b) noexcept;
+    [[nodiscard]] static T
+    Cross(const FloatingPointVector2& a, const FloatingPointVector2& b) noexcept;
 
-    static FloatingPointVector2 Min(const FloatingPointVector2& a, const FloatingPointVector2& b) noexcept;
+    [[nodiscard]] static FloatingPointVector2
+    Min(const FloatingPointVector2& a, const FloatingPointVector2& b) noexcept;
 
-    static FloatingPointVector2 Max(const FloatingPointVector2& a, const FloatingPointVector2& b) noexcept;
+    [[nodiscard]] static FloatingPointVector2
+    Max(const FloatingPointVector2& a, const FloatingPointVector2& b) noexcept;
 
-    static FloatingPointVector2 Clamp(
+    [[nodiscard]] static FloatingPointVector2
+    Clamp(
         const FloatingPointVector2& source,
         const FloatingPointVector2& min,
         const FloatingPointVector2& max) noexcept;
 
     void Normalize() noexcept;
 
-    static FloatingPointVector2 Normalize(const FloatingPointVector2& source) noexcept;
+    [[nodiscard]] static FloatingPointVector2
+    Normalize(const FloatingPointVector2& source) noexcept;
 
-    static void Normalize(const FloatingPointVector2& source, FloatingPointVector2& result) noexcept;
+    static void
+    Normalize(const FloatingPointVector2& source, FloatingPointVector2& result) noexcept;
 
-    static FloatingPointVector2 Transform(
+    [[nodiscard]] static FloatingPointVector2
+    Transform(
         const FloatingPointVector2& position,
         const FloatingPointMatrix3x2<T>& matrix) noexcept;
 
-    static FloatingPointVector2 Transform(
+    [[nodiscard]] static FloatingPointVector2
+    Transform(
         const FloatingPointVector2& position,
         const FloatingPointMatrix4x4<T>& matrix) noexcept;
 
-    static FloatingPointVector2 Transform(
+    [[nodiscard]] static FloatingPointVector2
+    Transform(
         const FloatingPointVector2& position,
         const FloatingPointQuaternion<T>& rotation) noexcept;
 
-    static FloatingPointVector2 TransformNormal(
+    [[nodiscard]] static FloatingPointVector2
+    TransformNormal(
         const FloatingPointVector2& normal,
         const FloatingPointMatrix4x4<T>& matrix) noexcept;
 
-    static FloatingPointVector2 Lerp(
+    [[nodiscard]] static FloatingPointVector2
+    Lerp(
         const FloatingPointVector2& source1,
         const FloatingPointVector2& source2,
         T amount);
 
-    static FloatingPointVector2 SmoothStep(
+    [[nodiscard]] static FloatingPointVector2
+    SmoothStep(
         const FloatingPointVector2& source1,
         const FloatingPointVector2& source2,
         T amount);
 
-    ///@brief Returns pointer to the first element.
-    const T* Data() const noexcept;
+    /// Returns pointer to the first element.
+    [[nodiscard]] const T* Data() const noexcept;
 
-    ///@brief Returns pointer to the first element.
-    T* Data() noexcept;
+    /// Returns pointer to the first element.
+    [[nodiscard]] T* Data() noexcept;
 
     ///@note (0, 0)
     static FloatingPointVector2 const Zero;

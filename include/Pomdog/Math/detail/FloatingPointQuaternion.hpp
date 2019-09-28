@@ -37,37 +37,40 @@ public:
     FloatingPointQuaternion operator-() const noexcept;
 
     // Binary operators:
-    FloatingPointQuaternion operator+(const FloatingPointQuaternion&) const noexcept;
-    FloatingPointQuaternion operator-(const FloatingPointQuaternion&) const noexcept;
-    FloatingPointQuaternion operator*(const FloatingPointQuaternion&) const noexcept;
-    FloatingPointQuaternion operator*(T scaleFactor) const noexcept;
-    FloatingPointQuaternion operator/(T scaleFactor) const;
+    [[nodiscard]] FloatingPointQuaternion operator+(const FloatingPointQuaternion&) const noexcept;
+    [[nodiscard]] FloatingPointQuaternion operator-(const FloatingPointQuaternion&) const noexcept;
+    [[nodiscard]] FloatingPointQuaternion operator*(const FloatingPointQuaternion&) const noexcept;
+    [[nodiscard]] FloatingPointQuaternion operator*(T scaleFactor) const noexcept;
+    [[nodiscard]] FloatingPointQuaternion operator/(T scaleFactor) const;
 
-    bool operator==(const FloatingPointQuaternion&) const noexcept;
-    bool operator!=(const FloatingPointQuaternion&) const noexcept;
+    [[nodiscard]] bool operator==(const FloatingPointQuaternion&) const noexcept;
+    [[nodiscard]] bool operator!=(const FloatingPointQuaternion&) const noexcept;
 
-    T Length() const noexcept;
+    [[nodiscard]] T Length() const noexcept;
 
-    T LengthSquared() const noexcept;
+    [[nodiscard]] T LengthSquared() const noexcept;
 
-    static T Dot(const FloatingPointQuaternion& a, const FloatingPointQuaternion& b) noexcept;
+    [[nodiscard]] static T
+    Dot(const FloatingPointQuaternion& a, const FloatingPointQuaternion& b) noexcept;
 
     void Normalize() noexcept;
 
-    static FloatingPointQuaternion Normalize(const FloatingPointQuaternion& quaternion) noexcept;
+    [[nodiscard]] static FloatingPointQuaternion
+    Normalize(const FloatingPointQuaternion& quaternion) noexcept;
 
-    static void Normalize(const FloatingPointQuaternion& quaternion, FloatingPointQuaternion& result) noexcept;
+    static void
+    Normalize(const FloatingPointQuaternion& quaternion, FloatingPointQuaternion& result) noexcept;
 
     static void
     Slerp(const FloatingPointQuaternion& begin, const FloatingPointQuaternion& end, T amount, FloatingPointQuaternion& result);
 
-    static FloatingPointQuaternion
+    [[nodiscard]] static FloatingPointQuaternion
     Slerp(const FloatingPointQuaternion& begin, const FloatingPointQuaternion& end, T amount);
 
     static void
     Inverse(const FloatingPointQuaternion& source, FloatingPointQuaternion& result);
 
-    static FloatingPointQuaternion
+    [[nodiscard]] static FloatingPointQuaternion
     Inverse(const FloatingPointQuaternion& source);
 
     ///@param axis The normalized axis of the rotation.
@@ -75,23 +78,23 @@ public:
     CreateFromAxisAngle(const FloatingPointVector3<T>& axis, const Radian<T>& angle, FloatingPointQuaternion& result);
 
     ///@param axis The normalized axis of the rotation.
-    static FloatingPointQuaternion
+    [[nodiscard]] static FloatingPointQuaternion
     CreateFromAxisAngle(const FloatingPointVector3<T>& axis, const Radian<T>& angle);
 
-    ///@brief Convert rotation matrix to quaternion.
+    /// Convert rotation matrix to quaternion.
     static void
     CreateFromRotationMatrix(const FloatingPointMatrix4x4<T>& rotation, FloatingPointQuaternion& result);
 
-    ///@brief Convert rotation matrix to quaternion.
-    static FloatingPointQuaternion
+    /// Convert rotation matrix to quaternion.
+    [[nodiscard]] static FloatingPointQuaternion
     CreateFromRotationMatrix(const FloatingPointMatrix4x4<T>& rotation);
 
-    ///@brief Convert rotation matrix to quaternion.
+    /// Convert rotation matrix to quaternion.
     static void
     CreateFromRotationMatrix(const FloatingPointMatrix3x3<T>& rotation, FloatingPointQuaternion& result);
 
-    ///@brief Convert rotation matrix to quaternion.
-    static FloatingPointQuaternion
+    /// Convert rotation matrix to quaternion.
+    [[nodiscard]] static FloatingPointQuaternion
     CreateFromRotationMatrix(const FloatingPointMatrix3x3<T>& rotation);
 
     ///@param yaw The rotation around the y-axis in radians.
@@ -103,14 +106,14 @@ public:
     ///@param yaw The rotation around the y-axis in radians.
     ///@param pitch The rotation around the x-axis in radians.
     ///@param roll The rotation around the z-axis in radians.
-    static FloatingPointQuaternion
+    [[nodiscard]] static FloatingPointQuaternion
     CreateFromYawPitchRoll(const Radian<T>& yaw, const Radian<T>& pitch, const Radian<T>& roll);
 
-    ///@brief Returns pointer to the first element.
-    const T* Data() const noexcept;
+    /// Returns pointer to the first element.
+    [[nodiscard]] const T* Data() const noexcept;
 
-    ///@brief Returns pointer to the first element.
-    T* Data() noexcept;
+    /// Returns pointer to the first element.
+    [[nodiscard]] T* Data() noexcept;
 
     static FloatingPointQuaternion const Identity;
 };

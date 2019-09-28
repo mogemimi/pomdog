@@ -21,23 +21,29 @@ public:
     explicit Color(const Vector3& vector);
     explicit Color(const Vector4& vector);
 
-    bool operator==(const Color&) const noexcept;
-    bool operator!=(const Color&) const noexcept;
+    [[nodiscard]] bool operator==(const Color&) const noexcept;
+    [[nodiscard]] bool operator!=(const Color&) const noexcept;
 
-    Vector3 ToVector3() const noexcept;
-    Vector4 ToVector4() const noexcept;
+    [[nodiscard]] Vector3 ToVector3() const noexcept;
+    [[nodiscard]] Vector4 ToVector4() const noexcept;
 
-    std::uint32_t ToPackedValue() const noexcept;
+    [[nodiscard]] std::uint32_t
+    ToPackedValue() const noexcept;
 
-    static Color FromPackedValue(std::uint32_t packedValue);
+    [[nodiscard]] static Color
+    FromPackedValue(std::uint32_t packedValue);
 
-    static Color Lerp(const Color& source1, const Color& source2, float amount);
+    [[nodiscard]] static Color
+    Lerp(const Color& source1, const Color& source2, float amount);
 
-    static Color SmoothStep(const Color& source1, const Color& source2, float amount);
+    [[nodiscard]] static Color
+    SmoothStep(const Color& source1, const Color& source2, float amount);
 
-    static Color Multiply(const Color& color, float scale);
+    [[nodiscard]] static Color
+    Multiply(const Color& color, float scale);
 
-    static Color Multiply(const Color& source1, const Color& source2);
+    [[nodiscard]] static Color
+    Multiply(const Color& source1, const Color& source2);
 
     ///@note (R, G, B, A) = (255, 255, 255, 255)
     static const Color White;

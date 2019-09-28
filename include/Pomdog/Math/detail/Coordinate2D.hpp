@@ -34,15 +34,15 @@ public:
     Coordinate2D operator-() const noexcept;
 
     // Binary operators:
-    Coordinate2D operator+(const Coordinate2D&) const noexcept;
-    Coordinate2D operator-(const Coordinate2D&) const noexcept;
-    Coordinate2D operator*(const Coordinate2D&) const noexcept;
-    Coordinate2D operator/(const Coordinate2D&) const;
-    Coordinate2D operator*(T scaleFactor) const noexcept;
-    Coordinate2D operator/(T scaleFactor) const;
+    [[nodiscard]] Coordinate2D operator+(const Coordinate2D&) const noexcept;
+    [[nodiscard]] Coordinate2D operator-(const Coordinate2D&) const noexcept;
+    [[nodiscard]] Coordinate2D operator*(const Coordinate2D&) const noexcept;
+    [[nodiscard]] Coordinate2D operator/(const Coordinate2D&) const;
+    [[nodiscard]] Coordinate2D operator*(T scaleFactor) const noexcept;
+    [[nodiscard]] Coordinate2D operator/(T scaleFactor) const;
 
-    bool operator==(const Coordinate2D&) const noexcept;
-    bool operator!=(const Coordinate2D&) const noexcept;
+    [[nodiscard]] bool operator==(const Coordinate2D&) const noexcept;
+    [[nodiscard]] bool operator!=(const Coordinate2D&) const noexcept;
 
     static Coordinate2D const Zero;
 };

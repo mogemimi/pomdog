@@ -19,22 +19,29 @@ public:
 
     BoundingSphere(const Vector3& center, float radius);
 
-    bool operator==(const BoundingSphere&) const noexcept;
-    bool operator!=(const BoundingSphere&) const noexcept;
+    [[nodiscard]] bool operator==(const BoundingSphere&) const noexcept;
+    [[nodiscard]] bool operator!=(const BoundingSphere&) const noexcept;
 
-    ContainmentType Contains(const Vector3& point) const;
+    [[nodiscard]] ContainmentType
+    Contains(const Vector3& point) const;
 
-    ContainmentType Contains(const BoundingBox& box) const;
+    [[nodiscard]] ContainmentType
+    Contains(const BoundingBox& box) const;
 
-    ContainmentType Contains(const BoundingSphere& sphere) const;
+    [[nodiscard]] ContainmentType
+    Contains(const BoundingSphere& sphere) const;
 
-    bool Intersects(const BoundingBox& box) const;
+    [[nodiscard]] bool
+    Intersects(const BoundingBox& box) const;
 
-    bool Intersects(const BoundingSphere& sphere) const;
+    [[nodiscard]] bool
+    Intersects(const BoundingSphere& sphere) const;
 
-    PlaneIntersectionType Intersects(const Plane& plane) const;
+    [[nodiscard]] PlaneIntersectionType
+    Intersects(const Plane& plane) const;
 
-    std::optional<float> Intersects(const Ray& ray) const;
+    [[nodiscard]] std::optional<float>
+    Intersects(const Ray& ray) const;
 };
 
 } // namespace Pomdog

@@ -22,24 +22,32 @@ public:
 
     BoundingBox(const Vector3& min, const Vector3& max);
 
-    bool operator==(const BoundingBox&) const noexcept;
-    bool operator!=(const BoundingBox&) const noexcept;
+    [[nodiscard]] bool operator==(const BoundingBox&) const noexcept;
+    [[nodiscard]] bool operator!=(const BoundingBox&) const noexcept;
 
-    ContainmentType Contains(const Vector3& point) const;
+    [[nodiscard]] ContainmentType
+    Contains(const Vector3& point) const;
 
-    ContainmentType Contains(const BoundingBox& box) const;
+    [[nodiscard]] ContainmentType
+    Contains(const BoundingBox& box) const;
 
-    ContainmentType Contains(const BoundingSphere& sphere) const;
+    [[nodiscard]] ContainmentType
+    Contains(const BoundingSphere& sphere) const;
 
-    bool Intersects(const BoundingBox& box) const;
+    [[nodiscard]] bool
+    Intersects(const BoundingBox& box) const;
 
-    bool Intersects(const BoundingSphere& sphere) const;
+    [[nodiscard]] bool
+    Intersects(const BoundingSphere& sphere) const;
 
-    PlaneIntersectionType Intersects(const Plane& plane) const;
+    [[nodiscard]] PlaneIntersectionType
+    Intersects(const Plane& plane) const;
 
-    std::optional<float> Intersects(const Ray& ray) const;
+    [[nodiscard]] std::optional<float>
+    Intersects(const Ray& ray) const;
 
-    std::array<Vector3, CornerCount> GetCorners() const noexcept;
+    [[nodiscard]] std::array<Vector3, CornerCount>
+    GetCorners() const noexcept;
 };
 
 } // namespace Pomdog

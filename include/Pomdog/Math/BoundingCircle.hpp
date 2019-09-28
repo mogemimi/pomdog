@@ -18,18 +18,23 @@ public:
 
     BoundingCircle(const Vector2& center, float radius);
 
-    bool operator==(const BoundingCircle&) const noexcept;
-    bool operator!=(const BoundingCircle&) const noexcept;
+    [[nodiscard]] bool operator==(const BoundingCircle&) const noexcept;
+    [[nodiscard]] bool operator!=(const BoundingCircle&) const noexcept;
 
-    ContainmentType Contains(const Vector2& box) const;
+    [[nodiscard]] ContainmentType
+    Contains(const Vector2& box) const;
 
-    ContainmentType Contains(const BoundingBox2D& box) const;
+    [[nodiscard]] ContainmentType
+    Contains(const BoundingBox2D& box) const;
 
-    ContainmentType Contains(const BoundingCircle& circle) const;
+    [[nodiscard]] ContainmentType
+    Contains(const BoundingCircle& circle) const;
 
-    bool Intersects(const BoundingBox2D& box) const;
+    [[nodiscard]] bool
+    Intersects(const BoundingBox2D& box) const;
 
-    bool Intersects(const BoundingCircle& circle) const;
+    [[nodiscard]] bool
+    Intersects(const BoundingCircle& circle) const;
 };
 
 } // namespace Pomdog

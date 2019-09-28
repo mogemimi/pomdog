@@ -39,20 +39,20 @@ public:
         std::int32_t width,
         std::int32_t height) noexcept;
 
-    bool operator==(const Rectangle&) const noexcept;
-    bool operator!=(const Rectangle&) const noexcept;
+    [[nodiscard]] bool operator==(const Rectangle&) const noexcept;
+    [[nodiscard]] bool operator!=(const Rectangle&) const noexcept;
 
-    std::int32_t GetBottom() const noexcept;
+    [[nodiscard]] std::int32_t GetBottom() const noexcept;
 
-    std::int32_t GetRight() const noexcept;
+    [[nodiscard]] std::int32_t GetRight() const noexcept;
 
-    std::int32_t GetTop() const noexcept;
+    [[nodiscard]] std::int32_t GetTop() const noexcept;
 
-    std::int32_t GetLeft() const noexcept;
+    [[nodiscard]] std::int32_t GetLeft() const noexcept;
 
-    Point2D GetCenter() const;
+    [[nodiscard]] Point2D GetCenter() const;
 
-    Point2D GetLocation() const;
+    [[nodiscard]] Point2D GetLocation() const;
 
     void SetLocation(const Point2D& position);
 
@@ -62,13 +62,13 @@ public:
 
     void Offset(const Point2D& offset);
 
-    bool Contains(int x, int y) const noexcept;
+    [[nodiscard]] bool Contains(int x, int y) const noexcept;
 
-    bool Contains(const Point2D& point) const noexcept;
+    [[nodiscard]] bool Contains(const Point2D& point) const noexcept;
 
-    bool Contains(const Rectangle& rectangle) const;
+    [[nodiscard]] bool Contains(const Rectangle& rectangle) const;
 
-    bool Intersects(const Rectangle& rectangle) const;
+    [[nodiscard]] bool Intersects(const Rectangle& rectangle) const;
 };
 
 } // namespace Pomdog
