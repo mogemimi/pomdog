@@ -116,6 +116,23 @@ Rectangle RenderTarget2D::GetBounds() const
     return Rectangle{0, 0, pixelWidth, pixelHeight};
 }
 
+void RenderTarget2D::GetData(void* result, std::size_t offsetInBytes, std::size_t sizeInBytes) const
+{
+    POMDOG_ASSERT(offsetInBytes >= 0);
+    POMDOG_ASSERT(sizeInBytes > 0);
+    POMDOG_ASSERT(result != nullptr);
+    POMDOG_ASSERT(nativeRenderTarget2D);
+
+    nativeRenderTarget2D->GetData(
+        result,
+        offsetInBytes,
+        sizeInBytes,
+        pixelWidth,
+        pixelHeight,
+        levelCount,
+        format);
+}
+
 Detail::NativeRenderTarget2D* RenderTarget2D::GetNativeRenderTarget2D()
 {
     return nativeRenderTarget2D.get();

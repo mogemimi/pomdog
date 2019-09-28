@@ -2,6 +2,7 @@
 
 #include "RenderTarget2DMetal.hpp"
 #include "MetalFormatHelper.hpp"
+#include "../RenderSystem/SurfaceFormatHelper.hpp"
 #include "Pomdog/Graphics/DepthFormat.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -72,6 +73,29 @@ RenderTarget2DMetal::RenderTarget2DMetal(
                 "Failed to create MTLTexture");
         }
     }
+}
+
+void RenderTarget2DMetal::GetData(
+    void* result,
+    std::size_t offsetInBytes,
+    std::size_t sizeInBytes,
+    std::int32_t pixelWidth,
+    std::int32_t pixelHeight,
+    [[maybe_unused]] std::int32_t levelCount,
+    SurfaceFormat format) const
+{
+    POMDOG_ASSERT(texture != nil);
+    POMDOG_ASSERT(result != nullptr);
+    
+    auto const bytesPerPixel = SurfaceFormatHelper::ToBytesPerBlock(format);
+
+    // FIXME: Not implemented yet.
+    POMDOG_ASSERT(offsetInBytes == 0);
+    POMDOG_ASSERT(sizeInBytes == static_cast<std::size_t>(bytesPerPixel * pixelWidth * pixelHeight));
+    MTLRegion region = MTLRegionMake2D(0, 0, pixelWidth, pixelHeight);
+    
+    // NOTE: Don't use getBytes() for textures with MTLResourceStorageModePrivate.
+    [texture getBytes:result bytesPerRow:(bytesPerPixel * pixelWidth) fromRegion:region mipmapLevel:0];
 }
 
 id<MTLTexture> RenderTarget2DMetal::GetTexture() const noexcept

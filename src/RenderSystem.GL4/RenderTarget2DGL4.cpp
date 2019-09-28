@@ -68,6 +68,25 @@ RenderTarget2DGL4::~RenderTarget2DGL4()
     }
 }
 
+void RenderTarget2DGL4::GetData(
+    void* result,
+    std::size_t offsetInBytes,
+    std::size_t sizeInBytes,
+    std::int32_t pixelWidth,
+    std::int32_t pixelHeight,
+    std::int32_t levelCount,
+    SurfaceFormat format) const
+{
+    texture.GetData(
+        result,
+        offsetInBytes,
+        sizeInBytes,
+        pixelWidth,
+        pixelHeight,
+        levelCount,
+        format);
+}
+
 void RenderTarget2DGL4::BindToFramebuffer(GLenum attachmentPoint)
 {
     GLenum textureTarget = (multiSampleEnabled

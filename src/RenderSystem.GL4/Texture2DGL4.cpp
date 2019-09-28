@@ -255,6 +255,40 @@ Texture2DGL4::~Texture2DGL4()
     }
 }
 
+void Texture2DGL4::GetData(
+    void* result,
+    [[maybe_unused]] std::size_t offsetInBytes,
+    std::size_t sizeInBytes,
+    std::int32_t pixelWidth,
+    std::int32_t pixelHeight,
+    [[maybe_unused]] std::int32_t levelCount,
+    SurfaceFormat format) const
+{
+    const auto oldTexture = TypesafeHelperGL4::Get<Texture2DObjectGL4>();
+    ScopeGuard scope([&] { TypesafeHelperGL4::BindTexture(oldTexture); });
+
+    POMDOG_ASSERT(textureObject);
+    TypesafeHelperGL4::BindTexture(*textureObject);
+    POMDOG_CHECK_ERROR_GL4("glBindTexture");
+
+    auto const formatComponents = ToFormatComponents(format);
+    auto const pixelFundamentalType = ToPixelFundamentalType(format);
+    auto const bytesPerBlock = SurfaceFormatHelper::ToBytesPerBlock(format);
+
+    // FIXME: Not implemented yet.
+    POMDOG_ASSERT(sizeInBytes >= static_cast<std::size_t>(bytesPerBlock * pixelWidth * pixelHeight));
+    if (sizeInBytes < static_cast<std::size_t>(bytesPerBlock * pixelWidth * pixelHeight)) {
+        return;
+    }
+
+    glGetTexImage(
+        GL_TEXTURE_2D,
+        0,
+        formatComponents,
+        pixelFundamentalType,
+        result);
+}
+
 void Texture2DGL4::SetData(std::int32_t pixelWidth, std::int32_t pixelHeight,
     std::int32_t levelCount, SurfaceFormat format, const void* pixelData)
 {

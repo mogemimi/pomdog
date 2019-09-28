@@ -25,6 +25,15 @@ public:
 
     ~RenderTarget2DGL4();
 
+    void GetData(
+        void* result,
+        std::size_t offsetInBytes,
+        std::size_t sizeInBytes,
+        std::int32_t pixelWidth,
+        std::int32_t pixelHeight,
+        std::int32_t levelCount,
+        SurfaceFormat format) const override;
+
     void BindToFramebuffer(GLenum attachmentPoint);
     void UnbindFromFramebuffer(GLenum attachmentPoint);
 

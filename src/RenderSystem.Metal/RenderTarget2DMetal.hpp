@@ -19,6 +19,15 @@ public:
         DepthFormat depthStencilFormat,
         std::int32_t multiSampleCount);
 
+    void GetData(
+        void* result,
+        std::size_t offsetInBytes,
+        std::size_t sizeInBytes,
+        std::int32_t pixelWidth,
+        std::int32_t pixelHeight,
+        std::int32_t levelCount,
+        SurfaceFormat format) const override;
+
     id<MTLTexture> GetTexture() const noexcept;
 
     id<MTLTexture> GetDepthStencilTexture() const noexcept;

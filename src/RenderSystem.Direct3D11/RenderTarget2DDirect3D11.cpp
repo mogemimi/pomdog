@@ -18,7 +18,6 @@ void BuildRenderTarget(
     std::int32_t pixelWidth,
     std::int32_t pixelHeight,
     std::int32_t levelCount,
-    bool isSharedTexture,
     ComPtr<ID3D11Texture2D> & texture2D,
     ComPtr<ID3D11RenderTargetView> & renderTargetView,
     ComPtr<ID3D11ShaderResourceView> & textureResourceView)
@@ -40,10 +39,7 @@ void BuildRenderTarget(
     textureDesc.Usage = D3D11_USAGE_DEFAULT;
     textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
     textureDesc.CPUAccessFlags = 0;
-    textureDesc.MiscFlags = (isSharedTexture ? D3D11_RESOURCE_MISC_SHARED_KEYEDMUTEX : 0);
-
-    POMDOG_ASSERT(isSharedTexture
-        ? textureDesc.Format == DXGI_FORMAT_B8G8R8A8_UNORM : true);
+    textureDesc.MiscFlags = 0;
 
     HRESULT hr = device->CreateTexture2D(&textureDesc, nullptr, &texture2D);
 
@@ -182,7 +178,7 @@ RenderTarget2DDirect3D11::RenderTarget2DDirect3D11(
     std::int32_t levelCount,
     SurfaceFormat format,
     DepthFormat depthStencilFormat,
-    std::int32_t multiSampleCount)
+    [[maybe_unused]] std::int32_t multiSampleCount)
 {
     POMDOG_ASSERT(levelCount > 0);
 
@@ -190,7 +186,7 @@ RenderTarget2DDirect3D11::RenderTarget2DDirect3D11(
     UNREFERENCED_PARAMETER(multiSampleCount);
 
     BuildRenderTarget(device, format, pixelWidth, pixelHeight, levelCount,
-        false, texture2D, renderTargetView, textureResourceView);
+        texture2D, renderTargetView, textureResourceView);
 
     BuildDepthBuffer(device, depthStencilFormat, pixelWidth, pixelHeight,
         levelCount, depthStencil, depthStencilView);
@@ -202,7 +198,7 @@ RenderTarget2DDirect3D11::RenderTarget2DDirect3D11(
     std::int32_t pixelWidth,
     std::int32_t pixelHeight,
     DepthFormat depthStencilFormat,
-    std::int32_t multiSampleCount)
+    [[maybe_unused]] std::int32_t multiSampleCount)
 {
     ///@todo MSAA is not implemented yet
     UNREFERENCED_PARAMETER(multiSampleCount);
@@ -214,6 +210,87 @@ RenderTarget2DDirect3D11::RenderTarget2DDirect3D11(
 
     BuildDepthBuffer(device, depthStencilFormat, pixelWidth, pixelHeight,
         backBufferMipLevels, depthStencil, depthStencilView);
+}
+
+void RenderTarget2DDirect3D11::GetData(
+    void* result,
+    std::size_t offsetInBytes,
+    std::size_t sizeInBytes,
+    [[maybe_unused]] std::int32_t pixelWidth,
+    [[maybe_unused]] std::int32_t pixelHeight,
+    [[maybe_unused]] std::int32_t levelCount,
+    [[maybe_unused]] SurfaceFormat format) const
+{
+    POMDOG_ASSERT(texture2D);
+
+    // NOTE: Get the device context
+    ComPtr<ID3D11Device> device;
+    texture2D->GetDevice(&device);
+    ComPtr<ID3D11DeviceContext> deviceContext;
+    device->GetImmediateContext(&deviceContext);
+
+    POMDOG_ASSERT(deviceContext != nullptr);
+
+    // NOTE: Map the texture
+    D3D11_MAPPED_SUBRESOURCE mappedResource;
+    auto hr = deviceContext->Map(
+        texture2D.Get(),
+        0,
+        D3D11_MAP_READ,
+        0,
+        &mappedResource);
+
+    ComPtr<ID3D11Texture2D> mappedTexture;
+
+    if (!FAILED(hr)) {
+        mappedTexture = texture2D;
+    }
+    else if (hr == E_INVALIDARG) {
+        // NOTE: If we failed to map the texture, copy it to a staging resource.
+        D3D11_TEXTURE2D_DESC desc;
+        texture2D->GetDesc(&desc);
+
+        desc.Usage = D3D11_USAGE_STAGING;
+        desc.BindFlags = 0;
+        desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+        desc.MiscFlags = 0;
+
+        ComPtr<ID3D11Texture2D> stagingTexture;
+        hr = device->CreateTexture2D(&desc, nullptr, &stagingTexture);
+        if (FAILED(hr)) {
+            // FUS RO DAH!
+            POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to create staging texture");
+        }
+
+        // NOTE: Copy the texture to a staging resource.
+        deviceContext->CopyResource(stagingTexture.Get(), texture2D.Get());
+
+        // NOTE: Map the staging resource
+        hr = deviceContext->Map(
+            stagingTexture.Get(),
+            0,
+            D3D11_MAP_READ,
+            0,
+            &mappedResource);
+
+        if (FAILED(hr)) {
+            // FUS RO DAH!
+            POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to map staging texture");
+        }
+
+        mappedTexture = std::move(stagingTexture);
+    }
+    else {
+        // FUS RO DAH!
+        POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to map buffer");
+    }
+
+    POMDOG_ASSERT(result != nullptr);
+    POMDOG_ASSERT(sizeInBytes > 0);
+    std::memcpy(result, reinterpret_cast<const BYTE*>(mappedResource.pData) + offsetInBytes, sizeInBytes);
+
+    POMDOG_ASSERT(mappedTexture != nullptr);
+    deviceContext->Unmap(mappedTexture.Get(), 0);
 }
 
 ID3D11RenderTargetView* RenderTarget2DDirect3D11::GetRenderTargetView() const

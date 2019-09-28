@@ -22,6 +22,15 @@ public:
 
     ~Texture2DGL4() override;
 
+    void GetData(
+        void* result,
+        std::size_t offsetInBytes,
+        std::size_t sizeInBytes,
+        std::int32_t pixelWidth,
+        std::int32_t pixelHeight,
+        std::int32_t levelCount,
+        SurfaceFormat format) const;
+
     void SetData(
         std::int32_t pixelWidth,
         std::int32_t pixelHeight,

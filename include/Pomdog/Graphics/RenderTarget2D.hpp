@@ -68,6 +68,18 @@ public:
     /// Gets the size of the texture resource.
     Rectangle GetBounds() const;
 
+    /// Copies the pixel data from texture to memory.
+    template <typename T>
+    void GetData(T* result, std::size_t startIndex, std::size_t elementCount) const
+    {
+        static_assert(std::is_pod_v<T>, "You can only use plain-old-data types.");
+        static_assert(!std::is_void_v<T>);
+        this->GetData(static_cast<void*>(result),  sizeof(T) * startIndex, sizeof(T) * elementCount);
+    }
+
+    /// Copies the pixel data from texture to memory.
+    void GetData(void* result, std::size_t offsetInBytes, std::size_t sizeInBytes) const;
+
     /// Gets the pointer of the native render target.
     Detail::NativeRenderTarget2D* GetNativeRenderTarget2D();
 
