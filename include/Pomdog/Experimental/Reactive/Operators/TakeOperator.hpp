@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "Pomdog/Reactive/Observable.hpp"
-#include "Pomdog/Reactive/Observer.hpp"
+#include "Pomdog/Experimental/Reactive/Observable.hpp"
+#include "Pomdog/Experimental/Reactive/Observer.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <functional>
 #include <memory>
@@ -12,13 +12,14 @@
 namespace Pomdog::Reactive::Detail {
 
 template <class T>
-class DistinctOperator final
+class TakeOperator final
     : public Observer<T>
     , public Observable<T> {
 public:
-    DistinctOperator()
-        : hasValue(false)
+    explicit TakeOperator(int limit)
+        : remaining(limit)
     {
+        POMDOG_ASSERT(remaining > 0);
     }
 
     void Subscribe(const std::shared_ptr<Observer<T>>& observerIn) override
@@ -29,18 +30,28 @@ public:
 
     void OnNext(T value) override
     {
-        if (hasValue && (value == lastValue)) {
+        POMDOG_ASSERT(remaining >= 0);
+        if (remaining == 0) {
             return;
         }
-        lastValue = value;
-        hasValue = true;
+        --remaining;
+        POMDOG_ASSERT(remaining >= 0);
         if (observer) {
             observer->OnNext(std::move(value));
+        }
+        if (remaining == 0) {
+            if (observer) {
+                observer->OnCompleted();
+            }
         }
     }
 
     void OnError() override
     {
+        POMDOG_ASSERT(remaining >= 0);
+        if (remaining == 0) {
+            return;
+        }
         if (observer) {
             observer->OnError();
         }
@@ -48,15 +59,18 @@ public:
 
     void OnCompleted() override
     {
+        POMDOG_ASSERT(remaining >= 0);
+        if (remaining == 0) {
+            return;
+        }
         if (observer) {
             observer->OnCompleted();
         }
     }
 
 private:
-    T lastValue;
-    bool hasValue;
     std::shared_ptr<Observer<T>> observer;
+    int remaining;
 };
 
 } // namespace Pomdog::Reactive::Detail

@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "Pomdog/Reactive/Observable.hpp"
-#include "Pomdog/Reactive/Observer.hpp"
+#include "Pomdog/Experimental/Reactive/Observable.hpp"
+#include "Pomdog/Experimental/Reactive/Observer.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <functional>
 #include <memory>
@@ -11,18 +11,17 @@
 
 namespace Pomdog::Reactive::Detail {
 
-template <class T, class TResult>
-class MapOperator final
+template <class T>
+class DistinctOperator final
     : public Observer<T>
-    , public Observable<TResult> {
+    , public Observable<T> {
 public:
-    explicit MapOperator(std::function<TResult(T&& value)>&& mapIn)
-        : map(std::move(mapIn))
+    DistinctOperator()
+        : hasValue(false)
     {
-        POMDOG_ASSERT(map);
     }
 
-    void Subscribe(const std::shared_ptr<Observer<TResult>>& observerIn) override
+    void Subscribe(const std::shared_ptr<Observer<T>>& observerIn) override
     {
         POMDOG_ASSERT(observerIn);
         observer = observerIn;
@@ -30,9 +29,13 @@ public:
 
     void OnNext(T value) override
     {
-        POMDOG_ASSERT(map);
+        if (hasValue && (value == lastValue)) {
+            return;
+        }
+        lastValue = value;
+        hasValue = true;
         if (observer) {
-            observer->OnNext(map(std::move(value)));
+            observer->OnNext(std::move(value));
         }
     }
 
@@ -51,8 +54,9 @@ public:
     }
 
 private:
-    std::shared_ptr<Observer<TResult>> observer;
-    std::function<TResult(T&& value)> map;
+    T lastValue;
+    bool hasValue;
+    std::shared_ptr<Observer<T>> observer;
 };
 
 } // namespace Pomdog::Reactive::Detail

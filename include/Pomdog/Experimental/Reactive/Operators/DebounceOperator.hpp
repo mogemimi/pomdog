@@ -6,8 +6,8 @@
 #include "Pomdog/Application/GameClock.hpp"
 #include "Pomdog/Application/GameHost.hpp"
 #include "Pomdog/Application/Timer.hpp"
-#include "Pomdog/Reactive/Observable.hpp"
-#include "Pomdog/Reactive/Observer.hpp"
+#include "Pomdog/Experimental/Reactive/Observable.hpp"
+#include "Pomdog/Experimental/Reactive/Observer.hpp"
 #include "Pomdog/Signals/ScopedConnection.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <functional>
@@ -17,25 +17,16 @@
 namespace Pomdog::Reactive::Detail {
 
 template <class T>
-class TimeoutOperator final
+class DebounceOperator final
     : public Observer<T>
     , public Observable<T> {
 public:
-    TimeoutOperator(const Duration& dueTimeIn, const std::shared_ptr<GameHost>& gameHost)
+    DebounceOperator(const Duration& dueTimeIn, const std::shared_ptr<GameHost>& gameHost)
         : timer(gameHost->GetClock())
         , dueTime(dueTimeIn)
-        , isStopped(false)
+        , hasValue(false)
     {
         POMDOG_ASSERT(dueTime >= Duration::zero());
-
-        timer.Stop();
-        timer.SetSingleShot(true);
-        timer.SetInterval(dueTime);
-
-        connection = timer.Elapsed.Connect([this] {
-            POMDOG_ASSERT(!isStopped);
-            this->OnError();
-        });
     }
 
     void Subscribe(const std::shared_ptr<Observer<T>>& observerIn) override
@@ -46,45 +37,37 @@ public:
 
     void OnNext(T value) override
     {
-        if (isStopped) {
-            return;
+        if (hasValue) {
+            connection.Disconnect();
         }
+        lastValue = std::move(value);
+        hasValue = true;
 
         timer.Stop();
         timer.Reset();
+        timer.SetSingleShot(true);
+        timer.SetInterval(dueTime);
         timer.Start();
 
-        if (observer) {
-            observer->OnNext(std::move(value));
-        }
+        connection = timer.Elapsed.Connect([this] {
+            POMDOG_ASSERT(hasValue);
+            if (observer) {
+                observer->OnNext(std::move(lastValue));
+            }
+            connection.Disconnect();
+        });
     }
 
     void OnError() override
     {
-        if (isStopped) {
-            return;
-        }
-
-        isStopped = true;
-        timer.Stop();
-
-        if (observer) {
-            observer->OnError();
-        }
+        // TODO: Not implemented
+        POMDOG_ASSERT(false);
     }
 
     void OnCompleted() override
     {
-        if (isStopped) {
-            return;
-        }
-
-        isStopped = true;
-        timer.Stop();
-
-        if (observer) {
-            observer->OnCompleted();
-        }
+        // TODO: Not implemented
+        POMDOG_ASSERT(false);
     }
 
 private:
@@ -92,7 +75,8 @@ private:
     Timer timer;
     ScopedConnection connection;
     Duration dueTime;
-    bool isStopped;
+    T lastValue;
+    bool hasValue;
 };
 
 } // namespace Pomdog::Reactive::Detail

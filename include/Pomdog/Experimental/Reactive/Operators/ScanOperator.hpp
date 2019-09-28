@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "Pomdog/Reactive/Observable.hpp"
-#include "Pomdog/Reactive/Observer.hpp"
+#include "Pomdog/Experimental/Reactive/Observable.hpp"
+#include "Pomdog/Experimental/Reactive/Observer.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <functional>
 #include <memory>
@@ -12,14 +12,15 @@
 namespace Pomdog::Reactive::Detail {
 
 template <class T>
-class TakeOperator final
+class ScanOperator final
     : public Observer<T>
     , public Observable<T> {
 public:
-    explicit TakeOperator(int limit)
-        : remaining(limit)
+    explicit ScanOperator(std::function<T(const T& accumulation, const T& value)>&& accumulatorIn)
+        : accumulator(std::move(accumulatorIn))
+        , needToInitialize(false)
     {
-        POMDOG_ASSERT(remaining > 0);
+        POMDOG_ASSERT(accumulator);
     }
 
     void Subscribe(const std::shared_ptr<Observer<T>>& observerIn) override
@@ -30,28 +31,22 @@ public:
 
     void OnNext(T value) override
     {
-        POMDOG_ASSERT(remaining >= 0);
-        if (remaining == 0) {
-            return;
+        POMDOG_ASSERT(accumulator);
+        if (needToInitialize) {
+            accumulation = value;
+            needToInitialize = false;
         }
-        --remaining;
-        POMDOG_ASSERT(remaining >= 0);
+        else {
+            accumulation = accumulator(accumulation, value);
+        }
+
         if (observer) {
-            observer->OnNext(std::move(value));
-        }
-        if (remaining == 0) {
-            if (observer) {
-                observer->OnCompleted();
-            }
+            observer->OnNext(accumulation);
         }
     }
 
     void OnError() override
     {
-        POMDOG_ASSERT(remaining >= 0);
-        if (remaining == 0) {
-            return;
-        }
         if (observer) {
             observer->OnError();
         }
@@ -59,10 +54,6 @@ public:
 
     void OnCompleted() override
     {
-        POMDOG_ASSERT(remaining >= 0);
-        if (remaining == 0) {
-            return;
-        }
         if (observer) {
             observer->OnCompleted();
         }
@@ -70,7 +61,9 @@ public:
 
 private:
     std::shared_ptr<Observer<T>> observer;
-    int remaining;
+    std::function<T(const T& accumulation, const T& value)> accumulator;
+    T accumulation;
+    bool needToInitialize;
 };
 
 } // namespace Pomdog::Reactive::Detail

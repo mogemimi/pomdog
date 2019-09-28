@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "Pomdog/Reactive/Observable.hpp"
-#include "Pomdog/Reactive/Observer.hpp"
+#include "Pomdog/Experimental/Reactive/Observable.hpp"
+#include "Pomdog/Experimental/Reactive/Observer.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <functional>
 #include <memory>
@@ -12,14 +12,14 @@
 namespace Pomdog::Reactive::Detail {
 
 template <class T>
-class SkipOperator final
+class FilterOperator final
     : public Observer<T>
     , public Observable<T> {
 public:
-    explicit SkipOperator(int remainingIn)
-        : remaining(remainingIn)
+    explicit FilterOperator(std::function<bool(const T& value)>&& filterIn)
+        : filter(std::move(filterIn))
     {
-        POMDOG_ASSERT(remaining > 0);
+        POMDOG_ASSERT(filter);
     }
 
     void Subscribe(const std::shared_ptr<Observer<T>>& observerIn) override
@@ -30,14 +30,11 @@ public:
 
     void OnNext(T value) override
     {
-        POMDOG_ASSERT(remaining >= 0);
-        if (remaining != 0) {
-            --remaining;
-            return;
-        }
-        POMDOG_ASSERT(remaining == 0);
-        if (observer) {
-            observer->OnNext(std::move(value));
+        POMDOG_ASSERT(filter);
+        if (filter(value)) {
+            if (observer) {
+                observer->OnNext(std::move(value));
+            }
         }
     }
 
@@ -57,7 +54,7 @@ public:
 
 private:
     std::shared_ptr<Observer<T>> observer;
-    int remaining;
+    std::function<bool(const T& value)> filter;
 };
 
 } // namespace Pomdog::Reactive::Detail

@@ -26,7 +26,6 @@ source_group(Network                      REGULAR_EXPRESSION "(include/Pomdog|sr
 source_group(Platform.Cocoa               REGULAR_EXPRESSION "(include/Pomdog/Platform/Cocoa|src/Platform.Cocoa)/*")
 source_group(Platform.Win32               REGULAR_EXPRESSION "(include/Pomdog/Platform/Win32|src/Platform.Win32)/*")
 source_group(Platform.X11                 REGULAR_EXPRESSION "(include/Pomdog/Platform/X11|src/Platform.X11)/*")
-source_group(Reactive                     REGULAR_EXPRESSION "(include/Pomdog|src)/Reactive/*")
 source_group(Signals                      REGULAR_EXPRESSION "(include/Pomdog|src)/Signals/*")
 source_group(Utility                      REGULAR_EXPRESSION "(include/Pomdog|src)/Utility/*")
 source_group(Experimental\\Graphics       REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Graphics/*")
@@ -34,6 +33,7 @@ source_group(Experimental\\ImageEffects   REGULAR_EXPRESSION "(include/Pomdog|sr
 source_group(Experimental\\Image          REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Image/*")
 source_group(Experimental\\MagicaVoxel    REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/MagicaVoxel/*")
 source_group(Experimental\\Particle2D     REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Particle2D/*")
+source_group(Experimental\\Reactive       REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Reactive/*")
 source_group(Experimental\\TexturePacker  REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/TexturePacker/*")
 source_group(Experimental\\Tween          REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Tween/*")
 source_group(InputSystem                  REGULAR_EXPRESSION src/InputSystem/*)
@@ -214,28 +214,6 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/include/Pomdog/Network/TLSStream.hpp
   ${POMDOG_DIR}/include/Pomdog/Network/UDPStream.hpp
   ${POMDOG_DIR}/include/Pomdog/Network/detail/ForwardDeclarations.hpp
-  ${POMDOG_DIR}/include/Pomdog/Reactive/Observable.hpp
-  ${POMDOG_DIR}/include/Pomdog/Reactive/ObservableBase.hpp
-  ${POMDOG_DIR}/include/Pomdog/Reactive/ObservableBuilder.hpp
-  ${POMDOG_DIR}/include/Pomdog/Reactive/Observer.hpp
-  ${POMDOG_DIR}/include/Pomdog/Reactive/Subscriber.hpp
-  ${POMDOG_DIR}/include/Pomdog/Reactive/Operators/BufferOperator.hpp
-  ${POMDOG_DIR}/include/Pomdog/Reactive/Operators/DebounceOperator.hpp
-  ${POMDOG_DIR}/include/Pomdog/Reactive/Operators/DelayOperator.hpp
-  ${POMDOG_DIR}/include/Pomdog/Reactive/Operators/DistinctOperator.hpp
-  ${POMDOG_DIR}/include/Pomdog/Reactive/Operators/DoOperator.hpp
-  ${POMDOG_DIR}/include/Pomdog/Reactive/Operators/FilterOperator.hpp
-  ${POMDOG_DIR}/include/Pomdog/Reactive/Operators/FirstOperator.hpp
-  ${POMDOG_DIR}/include/Pomdog/Reactive/Operators/LastOperator.hpp
-  ${POMDOG_DIR}/include/Pomdog/Reactive/Operators/MapOperator.hpp
-  ${POMDOG_DIR}/include/Pomdog/Reactive/Operators/MergeOperator.hpp
-  ${POMDOG_DIR}/include/Pomdog/Reactive/Operators/ScanOperator.hpp
-  ${POMDOG_DIR}/include/Pomdog/Reactive/Operators/SkipLastOperator.hpp
-  ${POMDOG_DIR}/include/Pomdog/Reactive/Operators/SkipOperator.hpp
-  ${POMDOG_DIR}/include/Pomdog/Reactive/Operators/TakeOperator.hpp
-  ${POMDOG_DIR}/include/Pomdog/Reactive/Operators/TimeoutOperator.hpp
-  ${POMDOG_DIR}/include/Pomdog/Reactive/Operators/ZipOperator.hpp
-  ${POMDOG_DIR}/include/Pomdog/Reactive/Subjects/KeyDownSubject.hpp
   ${POMDOG_DIR}/include/Pomdog/Signals/Connection.hpp
   ${POMDOG_DIR}/include/Pomdog/Signals/ConnectionList.hpp
   ${POMDOG_DIR}/include/Pomdog/Signals/Delegate.hpp
@@ -432,6 +410,28 @@ set(POMDOG_SOURCES_EXPERIMENTAL
   ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/detail/ParticleParameterCurve.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/detail/ParticleParameterRandom.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/detail/ParticleParameterRandomCurves.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Observable.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/ObservableBase.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/ObservableBuilder.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Observer.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Subscriber.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Operators/BufferOperator.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Operators/DebounceOperator.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Operators/DelayOperator.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Operators/DistinctOperator.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Operators/DoOperator.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Operators/FilterOperator.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Operators/FirstOperator.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Operators/LastOperator.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Operators/MapOperator.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Operators/MergeOperator.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Operators/ScanOperator.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Operators/SkipLastOperator.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Operators/SkipOperator.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Operators/TakeOperator.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Operators/TimeoutOperator.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Operators/ZipOperator.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Subjects/KeyDownSubject.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureAtlas.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureAtlasGenerator.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureAtlasLoader.hpp

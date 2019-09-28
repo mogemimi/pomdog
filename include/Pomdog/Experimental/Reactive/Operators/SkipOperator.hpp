@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "Pomdog/Reactive/Observable.hpp"
-#include "Pomdog/Reactive/Observer.hpp"
+#include "Pomdog/Experimental/Reactive/Observable.hpp"
+#include "Pomdog/Experimental/Reactive/Observer.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <functional>
 #include <memory>
@@ -12,13 +12,14 @@
 namespace Pomdog::Reactive::Detail {
 
 template <class T>
-class FirstOperator final
+class SkipOperator final
     : public Observer<T>
     , public Observable<T> {
 public:
-    explicit FirstOperator()
-        : isStopped(false)
+    explicit SkipOperator(int remainingIn)
+        : remaining(remainingIn)
     {
+        POMDOG_ASSERT(remaining > 0);
     }
 
     void Subscribe(const std::shared_ptr<Observer<T>>& observerIn) override
@@ -29,22 +30,19 @@ public:
 
     void OnNext(T value) override
     {
-        if (isStopped) {
+        POMDOG_ASSERT(remaining >= 0);
+        if (remaining != 0) {
+            --remaining;
             return;
         }
-        isStopped = true;
+        POMDOG_ASSERT(remaining == 0);
         if (observer) {
             observer->OnNext(std::move(value));
-            observer->OnCompleted();
         }
     }
 
     void OnError() override
     {
-        if (isStopped) {
-            return;
-        }
-        isStopped = true;
         if (observer) {
             observer->OnError();
         }
@@ -52,10 +50,6 @@ public:
 
     void OnCompleted() override
     {
-        if (isStopped) {
-            return;
-        }
-        isStopped = true;
         if (observer) {
             observer->OnCompleted();
         }
@@ -63,7 +57,7 @@ public:
 
 private:
     std::shared_ptr<Observer<T>> observer;
-    bool isStopped;
+    int remaining;
 };
 
 } // namespace Pomdog::Reactive::Detail

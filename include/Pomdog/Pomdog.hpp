@@ -141,12 +141,6 @@ namespace Pomdog {
 #include "Input/TouchLocation.hpp"
 #include "Input/TouchLocationState.hpp"
 
-#include "Reactive/Observable.hpp"
-#include "Reactive/ObservableBase.hpp"
-#include "Reactive/ObservableBuilder.hpp"
-#include "Reactive/Observer.hpp"
-#include "Reactive/Subscriber.hpp"
-
 #include "Signals/Connection.hpp"
 #include "Signals/ConnectionList.hpp"
 #include "Signals/Delegate.hpp"

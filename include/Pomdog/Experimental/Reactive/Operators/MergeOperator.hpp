@@ -2,26 +2,23 @@
 
 #pragma once
 
-#include "Pomdog/Reactive/Observable.hpp"
-#include "Pomdog/Reactive/Observer.hpp"
+#include "Pomdog/Experimental/Reactive/Observable.hpp"
+#include "Pomdog/Experimental/Reactive/Observer.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <functional>
 #include <memory>
 #include <utility>
-#include <vector>
 
 namespace Pomdog::Reactive::Detail {
 
 template <class T>
-class SkipLastOperator final
+class MergeOperator final
     : public Observer<T>
     , public Observable<T> {
 public:
-    explicit SkipLastOperator(int countIn)
-        : count(countIn)
+    MergeOperator()
+        : isStopped(false)
     {
-        POMDOG_ASSERT(count > 0);
-        events.reserve(count);
     }
 
     void Subscribe(const std::shared_ptr<Observer<T>>& observerIn) override
@@ -32,41 +29,39 @@ public:
 
     void OnNext(T value) override
     {
-        POMDOG_ASSERT(count > 0);
-        POMDOG_ASSERT(events.size() <= count);
-        if (events.size() != count) {
-            events.push_back(std::move(value));
-            POMDOG_ASSERT(events.size() <= count);
+        if (isStopped) {
+            return;
         }
-        else {
-            POMDOG_ASSERT(!events.empty());
-            auto oldValue = std::move(events.front());
-            events.erase(events.begin());
-            events.push_back(std::move(value));
-            if (observer) {
-                observer->OnNext(std::move(oldValue));
-            }
+        if (observer) {
+            observer->OnNext(std::move(value));
         }
     }
 
     void OnError() override
     {
+        if (isStopped) {
+            return;
+        }
         if (observer) {
             observer->OnError();
         }
+        isStopped = true;
     }
 
     void OnCompleted() override
     {
+        if (isStopped) {
+            return;
+        }
         if (observer) {
             observer->OnCompleted();
         }
+        isStopped = true;
     }
 
 private:
     std::shared_ptr<Observer<T>> observer;
-    std::vector<T> events;
-    int count;
+    bool isStopped;
 };
 
 } // namespace Pomdog::Reactive::Detail

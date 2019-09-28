@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "Pomdog/Reactive/Observable.hpp"
-#include "Pomdog/Reactive/Observer.hpp"
+#include "Pomdog/Experimental/Reactive/Observable.hpp"
+#include "Pomdog/Experimental/Reactive/Observer.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <functional>
 #include <memory>
@@ -12,15 +12,13 @@
 namespace Pomdog::Reactive::Detail {
 
 template <class T>
-class ScanOperator final
+class FirstOperator final
     : public Observer<T>
     , public Observable<T> {
 public:
-    explicit ScanOperator(std::function<T(const T& accumulation, const T& value)>&& accumulatorIn)
-        : accumulator(std::move(accumulatorIn))
-        , needToInitialize(false)
+    explicit FirstOperator()
+        : isStopped(false)
     {
-        POMDOG_ASSERT(accumulator);
     }
 
     void Subscribe(const std::shared_ptr<Observer<T>>& observerIn) override
@@ -31,22 +29,22 @@ public:
 
     void OnNext(T value) override
     {
-        POMDOG_ASSERT(accumulator);
-        if (needToInitialize) {
-            accumulation = value;
-            needToInitialize = false;
+        if (isStopped) {
+            return;
         }
-        else {
-            accumulation = accumulator(accumulation, value);
-        }
-
+        isStopped = true;
         if (observer) {
-            observer->OnNext(accumulation);
+            observer->OnNext(std::move(value));
+            observer->OnCompleted();
         }
     }
 
     void OnError() override
     {
+        if (isStopped) {
+            return;
+        }
+        isStopped = true;
         if (observer) {
             observer->OnError();
         }
@@ -54,6 +52,10 @@ public:
 
     void OnCompleted() override
     {
+        if (isStopped) {
+            return;
+        }
+        isStopped = true;
         if (observer) {
             observer->OnCompleted();
         }
@@ -61,9 +63,7 @@ public:
 
 private:
     std::shared_ptr<Observer<T>> observer;
-    std::function<T(const T& accumulation, const T& value)> accumulator;
-    T accumulation;
-    bool needToInitialize;
+    bool isStopped;
 };
 
 } // namespace Pomdog::Reactive::Detail

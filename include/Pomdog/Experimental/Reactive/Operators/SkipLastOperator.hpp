@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "Pomdog/Reactive/Observable.hpp"
-#include "Pomdog/Reactive/Observer.hpp"
+#include "Pomdog/Experimental/Reactive/Observable.hpp"
+#include "Pomdog/Experimental/Reactive/Observer.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <functional>
 #include <memory>
@@ -13,18 +13,18 @@
 namespace Pomdog::Reactive::Detail {
 
 template <class T>
-class BufferOperator final
+class SkipLastOperator final
     : public Observer<T>
-    , public Observable<std::vector<T>> {
+    , public Observable<T> {
 public:
-    explicit BufferOperator(int countIn)
+    explicit SkipLastOperator(int countIn)
         : count(countIn)
     {
         POMDOG_ASSERT(count > 0);
         events.reserve(count);
     }
 
-    void Subscribe(const std::shared_ptr<Observer<std::vector<T>>>& observerIn) override
+    void Subscribe(const std::shared_ptr<Observer<T>>& observerIn) override
     {
         POMDOG_ASSERT(observerIn);
         observer = observerIn;
@@ -32,14 +32,19 @@ public:
 
     void OnNext(T value) override
     {
-        events.push_back(std::move(value));
+        POMDOG_ASSERT(count > 0);
         POMDOG_ASSERT(events.size() <= count);
-        if (events.size() == count) {
-            std::vector<T> temporaryEvents;
-            temporaryEvents.reserve(count);
-            std::swap(events, temporaryEvents);
+        if (events.size() != count) {
+            events.push_back(std::move(value));
+            POMDOG_ASSERT(events.size() <= count);
+        }
+        else {
+            POMDOG_ASSERT(!events.empty());
+            auto oldValue = std::move(events.front());
+            events.erase(events.begin());
+            events.push_back(std::move(value));
             if (observer) {
-                observer->OnNext(std::move(temporaryEvents));
+                observer->OnNext(std::move(oldValue));
             }
         }
     }
@@ -53,21 +58,13 @@ public:
 
     void OnCompleted() override
     {
-        if (!events.empty()) {
-            std::vector<T> temporaryEvents;
-            temporaryEvents.reserve(count);
-            std::swap(events, temporaryEvents);
-            if (observer) {
-                observer->OnNext(std::move(temporaryEvents));
-            }
-        }
         if (observer) {
             observer->OnCompleted();
         }
     }
 
 private:
-    std::shared_ptr<Observer<std::vector<T>>> observer;
+    std::shared_ptr<Observer<T>> observer;
     std::vector<T> events;
     int count;
 };

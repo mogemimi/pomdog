@@ -2,25 +2,29 @@
 
 #pragma once
 
-#include "Pomdog/Reactive/Observer.hpp"
+#include "Pomdog/Experimental/Reactive/Observable.hpp"
+#include "Pomdog/Experimental/Reactive/Observer.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <functional>
 #include <memory>
+#include <utility>
 
-namespace Pomdog::Reactive {
+namespace Pomdog::Reactive::Detail {
 
 template <class T>
-class Subscriber final : public Observer<T> {
+class DoOperator final
+    : public Observer<T>
+    , public Observable<T> {
 public:
     template <class NextAction>
-    explicit Subscriber(NextAction && onNextIn)
+    explicit DoOperator(NextAction&& onNextIn)
         : onNext(std::forward<NextAction>(onNextIn))
     {
         POMDOG_ASSERT(onNext);
     }
 
     template <class NextAction, class ErrorAction>
-    Subscriber(NextAction && onNextIn, ErrorAction && onErrorIn)
+    DoOperator(NextAction&& onNextIn, ErrorAction&& onErrorIn)
         : onNext(std::forward<NextAction>(onNextIn))
         , onError(std::forward<ErrorAction>(onErrorIn))
     {
@@ -29,7 +33,7 @@ public:
     }
 
     template <class NextAction, class ErrorAction, class CompletedAction>
-    Subscriber(NextAction && onNextIn, ErrorAction && onErrorIn, CompletedAction && onCompletedIn)
+    DoOperator(NextAction&& onNextIn, ErrorAction&& onErrorIn, CompletedAction&& onCompletedIn)
         : onNext(std::forward<NextAction>(onNextIn))
         , onError(std::forward<ErrorAction>(onErrorIn))
         , onCompleted(std::forward<CompletedAction>(onCompletedIn))
@@ -37,10 +41,19 @@ public:
         POMDOG_ASSERT(onNext);
     }
 
+    void Subscribe(const std::shared_ptr<Observer<T>>& observerIn) override
+    {
+        POMDOG_ASSERT(observerIn);
+        observer = observerIn;
+    }
+
     void OnNext(T value) override
     {
         if (onNext) {
-            onNext(std::move(value));
+            onNext(value);
+        }
+        if (observer) {
+            observer->OnNext(value);
         }
     }
 
@@ -49,6 +62,9 @@ public:
         if (onError) {
             onError();
         }
+        if (observer) {
+            observer->OnError();
+        }
     }
 
     void OnCompleted() override
@@ -56,12 +72,16 @@ public:
         if (onCompleted) {
             onCompleted();
         }
+        if (observer) {
+            observer->OnCompleted();
+        }
     }
 
 private:
+    std::shared_ptr<Observer<T>> observer;
     std::function<void(const T&)> onNext;
     std::function<void()> onError;
     std::function<void()> onCompleted;
 };
 
-} // namespace Pomdog::Reactive
+} // namespace Pomdog::Reactive::Detail

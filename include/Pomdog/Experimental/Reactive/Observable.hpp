@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Pomdog/Reactive/ObservableBase.hpp"
+#include "Pomdog/Experimental/Reactive/ObservableBase.hpp"
 #include <memory>
 
 namespace Pomdog::Reactive {
