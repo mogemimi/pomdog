@@ -798,6 +798,16 @@ FloatingPointMatrix4x4<T>::CreatePerspectiveLH(T width, T height, T zNear, T zFa
 }
 
 template <typename T>
+FloatingPointMatrix4x4<T>
+FloatingPointMatrix4x4<T>::CreatePerspectiveLH(T width, T height, T zNear, T zFar)
+{
+    // NOTE: Left-handed Cartesian Coordinates
+    FloatingPointMatrix4x4 result;
+    CreatePerspectiveLH(width, height, zNear, zFar, result);
+    return std::move(result);
+}
+
+template <typename T>
 void
 FloatingPointMatrix4x4<T>::CreatePerspectiveRH(T width, T height, T zNear, T zFar, FloatingPointMatrix4x4 & result)
 {
@@ -836,6 +846,16 @@ FloatingPointMatrix4x4<T>::CreatePerspectiveRH(T width, T height, T zNear, T zFa
     result.m[3][1] = 0;
     result.m[3][2] = d;
     result.m[3][3] = 0;
+}
+
+template <typename T>
+FloatingPointMatrix4x4<T>
+FloatingPointMatrix4x4<T>::CreatePerspectiveRH(T width, T height, T zNear, T zFar)
+{
+    // NOTE: Right-handed Cartesian Coordinates
+    FloatingPointMatrix4x4 result;
+    CreatePerspectiveRH(width, height, zNear, zFar, result);
+    return std::move(result);
 }
 
 template <typename T>

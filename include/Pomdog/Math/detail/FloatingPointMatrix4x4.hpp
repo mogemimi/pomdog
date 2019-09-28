@@ -162,8 +162,14 @@ public:
     static void
     CreatePerspectiveLH(T width, T height, T zNear, T zFar, FloatingPointMatrix4x4& result);
 
+    [[nodiscard]] static FloatingPointMatrix4x4
+    CreatePerspectiveLH(T width, T height, T zNear, T zFar);
+
     static void
     CreatePerspectiveRH(T width, T height, T zNear, T zFar, FloatingPointMatrix4x4& result);
+
+    [[nodiscard]] static FloatingPointMatrix4x4
+    CreatePerspectiveRH(T width, T height, T zNear, T zFar);
 
     static void
     CreatePerspectiveFieldOfViewLH(const Radian<T>& fovy, T aspect, T zNear, T zFar,
