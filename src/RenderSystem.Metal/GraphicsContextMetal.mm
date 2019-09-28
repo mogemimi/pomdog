@@ -103,8 +103,8 @@ void CheckUnbindingRenderTargetsError(
     const std::vector<std::weak_ptr<RenderTarget2D>>& renderTargets,
     const std::vector<std::weak_ptr<Texture>>& textures)
 {
-    for (auto & renderTarget: renderTargets) {
-        for (auto & texture: textures) {
+    for (auto& renderTarget: renderTargets) {
+        for (auto& texture: textures) {
             if (!renderTarget.expired() && !texture.expired()) {
                 POMDOG_ASSERT(renderTarget.lock() != texture.lock());
             }
@@ -196,7 +196,7 @@ void GraphicsContextMetal::ExecuteCommandLists(
     const bool skipRender = (targetView.currentDrawable.texture.pixelFormat == MTLPixelFormatInvalid);
 
     if (!skipRender) {
-        for (auto & commandList : commandLists) {
+        for (auto& commandList : commandLists) {
             POMDOG_ASSERT(commandList);
             commandList->ExecuteImmediate(*this);
         }
@@ -322,7 +322,7 @@ void GraphicsContextMetal::SetVertexBuffers(const std::vector<VertexBufferBindin
 
     NSUInteger atIndex = 0;
     for (auto& binding : vertexBuffers) {
-        auto & vertexBuffer = binding.VertexBuffer;
+        auto& vertexBuffer = binding.VertexBuffer;
 
         POMDOG_ASSERT(vertexBuffer);
         POMDOG_ASSERT(vertexBuffer->GetNativeVertexBuffer());
@@ -489,8 +489,8 @@ void GraphicsContextMetal::SetRenderPass(const RenderPass& renderPass)
 
     int renderTargetIndex = 0;
     for (const auto& renderTargetView: renderPass.RenderTargets) {
-        auto & renderTarget = std::get<0>(renderTargetView);
-        auto & clearColor = std::get<1>(renderTargetView);
+        auto& renderTarget = std::get<0>(renderTargetView);
+        auto& clearColor = std::get<1>(renderTargetView);
 
         if (!renderTarget) {
             renderPassDescriptor.colorAttachments[renderTargetIndex].texture = targetView.currentDrawable.texture;
@@ -517,7 +517,7 @@ void GraphicsContextMetal::SetRenderPass(const RenderPass& renderPass)
 
     {
         auto renderTargetView = renderPass.RenderTargets[0];
-        auto & renderTarget = std::get<0>(renderTargetView);
+        auto& renderTarget = std::get<0>(renderTargetView);
 
         if (!renderTarget) {
             renderPassDescriptor.depthAttachment.texture = targetView.currentRenderPassDescriptor.depthAttachment.texture;

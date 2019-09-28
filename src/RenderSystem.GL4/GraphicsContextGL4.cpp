@@ -309,8 +309,8 @@ void CheckUnbindingRenderTargetsError(
     const std::vector<std::weak_ptr<RenderTarget2D>>& renderTargets,
     const std::vector<std::weak_ptr<Texture>>& textures)
 {
-    for (auto & renderTarget: renderTargets) {
-        for (auto & texture: textures) {
+    for (auto& renderTarget: renderTargets) {
+        for (auto& texture: textures) {
             if (!renderTarget.expired() && !texture.expired()) {
                 POMDOG_ASSERT(renderTarget.lock() != texture.lock());
             }
@@ -390,7 +390,7 @@ GraphicsContextGL4::~GraphicsContextGL4()
 void GraphicsContextGL4::ExecuteCommandLists(
     const std::vector<std::shared_ptr<GraphicsCommandListImmediate>>& commandLists)
 {
-    for (auto & commandList : commandLists) {
+    for (auto& commandList : commandLists) {
         POMDOG_ASSERT(commandList);
         commandList->ExecuteImmediate(*this);
     }
@@ -801,8 +801,8 @@ void GraphicsContextGL4::SetRenderPass(const RenderPass& renderPass)
     }();
 
     for (const auto& view: renderPass.RenderTargets) {
-        auto & renderTarget = std::get<0>(view);
-        auto & clearColor = std::get<1>(view);
+        auto& renderTarget = std::get<0>(view);
+        auto& clearColor = std::get<1>(view);
 
         GLbitfield mask = clearDepthStencilMask;
 
@@ -833,8 +833,8 @@ void GraphicsContextGL4::SetRenderPass(const RenderPass& renderPass)
     else {
         // FIXME: Optimize
         std::vector<std::shared_ptr<RenderTarget2D>> temporary;
-        for (auto & tuple : renderPass.RenderTargets) {
-            auto & renderTarget = std::get<0>(tuple);
+        for (auto& tuple : renderPass.RenderTargets) {
+            auto& renderTarget = std::get<0>(tuple);
             temporary.push_back(renderTarget);
         }
         SetRenderTargets(frameBuffer, renderTargets, temporary);

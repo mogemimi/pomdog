@@ -96,8 +96,8 @@ void CheckUnbindingRenderTargetsError(
     const std::vector<std::weak_ptr<RenderTarget2D>>& renderTargets,
     const std::vector<std::weak_ptr<Texture>>& textures)
 {
-    for (auto & renderTarget: renderTargets) {
-        for (auto & texture: textures) {
+    for (auto& renderTarget: renderTargets) {
+        for (auto& texture: textures) {
             if (!renderTarget.expired() && !texture.expired()) {
                 POMDOG_ASSERT(renderTarget.lock() != texture.lock());
             }
@@ -223,7 +223,7 @@ GraphicsContextDirect3D11::~GraphicsContextDirect3D11()
 void GraphicsContextDirect3D11::ExecuteCommandLists(
     const std::vector<std::shared_ptr<GraphicsCommandListImmediate>>& commandLists)
 {
-    for (auto & commandList : commandLists) {
+    for (auto& commandList : commandLists) {
         POMDOG_ASSERT(commandList);
         commandList->ExecuteImmediate(*this);
     }
@@ -366,8 +366,8 @@ void GraphicsContextDirect3D11::SetVertexBuffers(
     std::vector<ID3D11Buffer*> vertexBuffers;
     vertexBuffers.reserve(vertexBuffersIn.size());
 
-    for (auto & binding : vertexBuffersIn) {
-        auto & vertexBuffer = binding.VertexBuffer;
+    for (auto& binding : vertexBuffersIn) {
+        auto& vertexBuffer = binding.VertexBuffer;
 
         POMDOG_ASSERT(vertexBuffer);
         POMDOG_ASSERT(vertexBuffer->GetNativeVertexBuffer());
@@ -413,7 +413,7 @@ void GraphicsContextDirect3D11::SetConstantBuffer(
     POMDOG_ASSERT(index < D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT);
     POMDOG_ASSERT(dynamic_cast<BufferDirect3D11*>(constantBufferIn.get()));
 
-    auto & constantBuffer = static_cast<BufferDirect3D11&>(*constantBufferIn);
+    auto& constantBuffer = static_cast<BufferDirect3D11&>(*constantBufferIn);
     auto buffer = constantBuffer.GetBuffer();
     POMDOG_ASSERT(buffer != nullptr);
 
@@ -520,7 +520,7 @@ void GraphicsContextDirect3D11::SetRenderPass(const RenderPass& renderPass)
         UseBackBufferAsRenderTarget(deviceContext, renderTargets, backBuffer);
     }
     else {
-        auto & renderTargetsIn = renderPass.RenderTargets;
+        auto& renderTargetsIn = renderPass.RenderTargets;
         POMDOG_ASSERT(!renderTargetsIn.empty());
         POMDOG_ASSERT(renderTargetsIn.size() <= D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT);
         POMDOG_ASSERT(renderTargetsIn.size() <= renderTargets.capacity());
@@ -532,7 +532,7 @@ void GraphicsContextDirect3D11::SetRenderPass(const RenderPass& renderPass)
         POMDOG_ASSERT(renderTargetViews.size() >= renderTargetsIn.size());
 
         for (std::size_t i = 0; i < renderTargetsIn.size(); ++i) {
-            auto & renderTarget = std::get<0>(renderTargetsIn[i]);
+            auto& renderTarget = std::get<0>(renderTargetsIn[i]);
             POMDOG_ASSERT(renderTarget);
 
             auto nativeRenderTarget = renderTarget->GetNativeRenderTarget2D();
@@ -616,9 +616,9 @@ void GraphicsContextDirect3D11::SetRenderPass(const RenderPass& renderPass)
 
     POMDOG_ASSERT(renderTargets.size() == renderPass.RenderTargets.size());
     for (std::size_t i = 0; i < renderTargets.size(); ++i) {
-        auto & clearColor = std::get<1>(renderPass.RenderTargets[i]);
+        auto& clearColor = std::get<1>(renderPass.RenderTargets[i]);
         if (clearColor) {
-            auto & renderTarget = renderTargets[i];
+            auto& renderTarget = renderTargets[i];
             POMDOG_ASSERT(renderTarget);
 
             deviceContext->ClearRenderTargetView(
