@@ -16,11 +16,19 @@ layout(location = 3) in vec4 OriginRotationDepth;
 // {xyzw} = color.rgba
 layout(location = 4) in vec4 Color;
 // {xy__} = {1.0f / textureWidth, 1.0f / textureHeight}
-// {__zw} = unused
+// {__z_} = RGBA channel flags (8-bits)
+// {___w} = unused
 layout(location = 5) in vec4 InverseTextureSize;
 
 out VertexData {
     vec4 Color;
+
+    // {x___} = RGB blend factor
+    // {_y__} = Alpha blend factor
+    // {__z_} = RGB compensation factor
+    // {___w} = Alpha compensation factor
+    vec4 BlendFactor;
+
     vec2 TextureCoord;
 } Out;
 
@@ -53,10 +61,29 @@ void main()
     // NOTE: 'ViewProjection' has already been transposed.
     vec4 finalPosition = vec4(position.xy, 0.0, 1.0) * ViewProjection;
 
+    float channelFlags = InverseTextureSize.z;
+    bool sourceRGBEnabled = mod(channelFlags, 2) == 1;
+    bool sourceAlphaEnabled = mod(channelFlags, 4) >= 2;
+    bool compensationRGB = mod(channelFlags, 8) >= 4;
+    bool compensationAlpha = mod(channelFlags, 16) >= 8;
+
+    vec4 blendFactor = vec4(0.0, 0.0, 0.0, 0.0);
+    if (sourceRGBEnabled) {
+        blendFactor.x = 1.0;
+    }
+    if (sourceAlphaEnabled) {
+        blendFactor.y = 1.0;
+    }
+    if (compensationRGB) {
+        blendFactor.z = 1.0;
+    }
+    if (compensationAlpha) {
+        blendFactor.w = 1.0;
+    }
+
     gl_Position = vec4(finalPosition.xy, OriginRotationDepth.w, 1.0);
 
     Out.TextureCoord = (PositionTextureCoord.zw * SourceRect.zw + SourceRect.xy) * InverseTextureSize.xy;
     Out.Color = Color;
-
-    //Out.TextureCoord = PositionTextureCoord.zw;
+    Out.BlendFactor = blendFactor;
 }

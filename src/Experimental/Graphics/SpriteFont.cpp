@@ -20,20 +20,6 @@
 namespace Pomdog {
 namespace {
 
-std::vector<std::uint8_t> ConvertTextureDataByteToByte4(const std::uint8_t* source, size_t size)
-{
-    std::vector<std::uint8_t> output;
-    output.reserve(size * 4);
-
-    for (size_t i = 0; i < size; ++i) {
-        output.push_back(255);
-        output.push_back(255);
-        output.push_back(255);
-        output.push_back(source[i]);
-    }
-    return output;
-}
-
 bool isSpace(char32_t c) noexcept
 {
     return (c == U' ') || (c == U'\t');
@@ -130,7 +116,7 @@ SpriteFont::Impl::Impl(
     bottomY = 1;
 
     auto texture = std::make_shared<Texture2D>(graphicsDevice,
-        TextureWidth, TextureHeight, false, SurfaceFormat::R8G8B8A8_UNorm);
+        TextureWidth, TextureHeight, false, SurfaceFormat::A8_UNorm);
     textures.push_back(texture);
 }
 
@@ -208,10 +194,7 @@ void SpriteFont::Impl::PrepareFonts(const std::string& text)
     auto fetchTextureData = [&] {
         if (needToFetchPixelData) {
             auto texture = textures.back();
-
-            // FIXME: Use R8 or A8 format instead of RGBA8888.
-            texture->SetData(ConvertTextureDataByteToByte4(pixelData.data(), pixelData.size()).data());
-
+            texture->SetData(pixelData.data());
             needToFetchPixelData = false;
         }
     };
@@ -238,7 +221,7 @@ void SpriteFont::Impl::PrepareFonts(const std::string& text)
                 std::fill(std::begin(pixelData), std::end(pixelData), static_cast<std::uint8_t>(0));
 
                 auto textureNew = std::make_shared<Texture2D>(graphicsDevice,
-                    TextureWidth, TextureHeight, false, SurfaceFormat::R8G8B8A8_UNorm);
+                    TextureWidth, TextureHeight, false, SurfaceFormat::A8_UNorm);
                 textures.push_back(textureNew);
                 currentPoint = {1, 1};
                 bottomY = 1;

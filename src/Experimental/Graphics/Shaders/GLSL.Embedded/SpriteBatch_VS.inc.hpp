@@ -10,6 +10,7 @@ layout(location=4)in vec4 Color;
 layout(location=5)in vec4 InverseTextureSize;
 out VertexData{
 vec4 Color;
+vec4 BlendFactor;
 vec2 TextureCoord;}Out;
 uniform SpriteBatchConstants{
 mat4x4 ViewProjection;};
@@ -31,8 +32,22 @@ vec3(0.0,0.0,1.0));
 mat3x3 transform=(scaling*rotate)*translate;
 vec3 position=vec3(PositionTextureCoord.xy-OriginRotationDepth.xy,1.0)*transform;
 vec4 finalPosition=vec4(position.xy,0.0,1.0)*ViewProjection;
+float channelFlags=InverseTextureSize.z;
+bool sourceRGBEnabled=mod(channelFlags,2)==1;
+bool sourceAlphaEnabled=mod(channelFlags,4)>=2;
+bool compensationRGB=mod(channelFlags,8)>=4;
+bool compensationAlpha=mod(channelFlags,16)>=8;
+vec4 blendFactor=vec4(0.0,0.0,0.0,0.0);
+if(sourceRGBEnabled){
+blendFactor.x=1.0;}
+if(sourceAlphaEnabled){
+blendFactor.y=1.0;}
+if(compensationRGB){
+blendFactor.z=1.0;}
+if(compensationAlpha){
+blendFactor.w=1.0;}
 gl_Position=vec4(finalPosition.xy,OriginRotationDepth.w,1.0);
 Out.TextureCoord=(PositionTextureCoord.zw*SourceRect.zw+SourceRect.xy)*InverseTextureSize.xy;
 Out.Color=Color;
-}
+Out.BlendFactor=blendFactor;}
 )";

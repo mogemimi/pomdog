@@ -25,7 +25,8 @@ struct VS_INPUT {
 
     // per Instance
     // {xy__} = {1.0f / textureWidth, 1.0f / textureHeight}
-    // {__zw} = unused
+    // {__z_} = RGBA channel flags (8-bits)
+    // {___w} = unused
     float4 InverseTextureSize   : TEXCOORD0;
 
     // per Instance
@@ -33,8 +34,15 @@ struct VS_INPUT {
 };
 
 struct VS_OUTPUT {
-    float4 Position     : SV_Position;
-    float4 Color        : COLOR0;
+    float4 Position : SV_Position;
+    float4 Color : COLOR0;
+
+    // {x___} = RGB blend factor
+    // {_y__} = Alpha blend factor
+    // {__z_} = RGB compensation factor
+    // {___w} = Alpha compensation factor
+    float4 BlendFactor : COLOR1;
+
     float2 TextureCoord : TEXCOORD0;
 };
 
@@ -68,11 +76,31 @@ VS_OUTPUT SpriteBatchVS(VS_INPUT input)
     VS_OUTPUT output = (VS_OUTPUT)0;
 
     float4 finalPosition = mul(float4(position.xy, 0, 1), ViewProjection);
+
+    float channelFlags = input.InverseTextureSize.z;
+    bool sourceRGBEnabled = fmod(channelFlags, 2) == 1;
+    bool sourceAlphaEnabled = fmod(channelFlags, 4) >= 2;
+    bool compensationRGB = fmod(channelFlags, 8) >= 4;
+    bool compensationAlpha = fmod(channelFlags, 16) >= 8;
+
+    float4 blendFactor = float4(0.0, 0.0, 0.0, 0.0);
+    if (sourceRGBEnabled) {
+        blendFactor.x = 1.0;
+    }
+    if (sourceAlphaEnabled) {
+        blendFactor.y = 1.0;
+    }
+    if (compensationRGB) {
+        blendFactor.z = 1.0;
+    }
+    if (compensationAlpha) {
+        blendFactor.w = 1.0;
+    }
+
     output.Position = float4(finalPosition.xy, input.OriginRotationDepth.w, 1);
-
     output.TextureCoord = (input.PositionTextureCoord.zw * input.SourceRect.zw + input.SourceRect.xy) * input.InverseTextureSize.xy;
-
     output.Color = input.Color;
+    output.BlendFactor = blendFactor;
 
     return output;
 }

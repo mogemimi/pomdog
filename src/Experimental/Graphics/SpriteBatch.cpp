@@ -22,6 +22,7 @@
 #include "Pomdog/Graphics/RasterizerDescription.hpp"
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
 #include "Pomdog/Graphics/SamplerState.hpp"
+#include "Pomdog/Graphics/SurfaceFormat.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
 #include "Pomdog/Graphics/ShaderLanguage.hpp"
 #include "Pomdog/Graphics/Texture2D.hpp"
@@ -108,7 +109,8 @@ private:
         Vector4 Color;
 
         // {xy__} = {1.0f / textureWidth, 1.0f / textureHeight}
-        // {__zw} = unused
+        // {__z_} = RGBA channel flags (8-bits)
+        // {___w} = unused
         Vector4 InverseTextureSize;
     };
 
@@ -425,6 +427,40 @@ void SpriteBatch::Impl::Draw(
         return;
     }
 
+    bool sourceRGBEnabled = true;
+    bool sourceAlphaEnabled = true;
+    bool compensationRGB = false;
+    bool compensationAlpha = false;
+
+    switch (texture->GetFormat()) {
+    case SurfaceFormat::R8_UNorm:
+    case SurfaceFormat::R8G8_UNorm:
+    case SurfaceFormat::R16G16_Float:
+    case SurfaceFormat::R11G11B10_Float:
+    case SurfaceFormat::R32_Float:
+        sourceAlphaEnabled = false;
+        compensationAlpha = true;
+        break;
+    case SurfaceFormat::A8_UNorm:
+        sourceRGBEnabled = false;
+        compensationRGB = true;
+        break;
+    case SurfaceFormat::R8G8B8A8_UNorm:
+    case SurfaceFormat::R10G10B10A2_UNorm:
+    case SurfaceFormat::B8G8R8A8_UNorm:
+    case SurfaceFormat::R16G16B16A16_Float:
+    case SurfaceFormat::R32G32B32A32_Float:
+    case SurfaceFormat::BlockComp1_UNorm:
+    case SurfaceFormat::BlockComp2_UNorm:
+    case SurfaceFormat::BlockComp3_UNorm:
+        break;
+    }
+
+    const int colorModeFlags = (sourceRGBEnabled ? 1 : 0)
+        | (sourceAlphaEnabled ? 2 : 0)
+        | (compensationRGB ? 4 : 0)
+        | (compensationAlpha ? 8 : 0);
+
     POMDOG_ASSERT((startInstanceLocation + spriteQueue.size()) < MaxBatchSize);
     POMDOG_ASSERT(sourceRect.Width > 0);
     POMDOG_ASSERT(sourceRect.Height > 0);
@@ -454,7 +490,7 @@ void SpriteBatch::Impl::Draw(
     info.InverseTextureSize = Vector4{
         inverseTextureSize.X,
         inverseTextureSize.Y,
-        0.0f,
+        static_cast<float>(colorModeFlags),
         0.0f,
     };
 
