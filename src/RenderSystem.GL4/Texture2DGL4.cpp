@@ -127,23 +127,39 @@ void SetPixelDataTexture2DCompressedGL4(
         || format == SurfaceFormat::BlockComp3_UNorm);
 
     auto const internalFormat = ToInternalFormatGL4(format);
-    auto const bytesPerBlock = SurfaceFormatHelper::ToBytesPerBlock(format);
+
+    const auto blockSize = [&format]() -> GLint {
+        switch (format) {
+        case SurfaceFormat::BlockComp1_UNorm:
+            return 8;
+        case SurfaceFormat::BlockComp2_UNorm:
+            return 16;
+        case SurfaceFormat::BlockComp3_UNorm:
+            return 16;
+        default:
+            break;
+        }
+        return 8;
+    }();
+
     std::size_t startOffset = 0;
 
-    GLsizei mipMapPixelWidth = pixelWidth;
-    GLsizei mipMapPixelHeight = pixelHeight;
+    GLsizei mipmapWidth = pixelWidth;
+    GLsizei mipmapHeight = pixelHeight;
 
     for (GLint mipmapLevel = 0; mipmapLevel < levelCount; ++mipmapLevel) {
-        POMDOG_ASSERT(mipMapPixelWidth > 0);
-        POMDOG_ASSERT(mipMapPixelHeight > 0);
+        POMDOG_ASSERT(mipmapWidth > 0);
+        POMDOG_ASSERT(mipmapHeight > 0);
 
-        GLsizei const strideBytesPerMipmap = MipmapImageDataBytes(
-            mipMapPixelWidth, mipMapPixelHeight, bytesPerBlock);
+        const GLsizei strideBytesPerMipmap = ((mipmapWidth + 3) / 4) * ((mipmapHeight + 3) / 4) * blockSize;
 
-        glCompressedTexSubImage2D(GL_TEXTURE_2D,
-            mipmapLevel, 0, 0,
-            mipMapPixelWidth,
-            mipMapPixelHeight,
+        glCompressedTexSubImage2D(
+            GL_TEXTURE_2D,
+            mipmapLevel,
+            0,
+            0,
+            mipmapWidth,
+            mipmapHeight,
             internalFormat,
             strideBytesPerMipmap,
             reinterpret_cast<const std::uint8_t*>(pixelData) + startOffset);
@@ -151,8 +167,8 @@ void SetPixelDataTexture2DCompressedGL4(
 
         startOffset += strideBytesPerMipmap;
 
-        mipMapPixelWidth = std::max((mipMapPixelWidth >> 1), 1);
-        mipMapPixelHeight = std::max((mipMapPixelHeight >> 1), 1);
+        mipmapWidth = std::max((mipmapWidth >> 1), 1);
+        mipmapHeight = std::max((mipmapHeight >> 1), 1);
     }
 }
 
