@@ -11,14 +11,6 @@
 #import <Metal/MTLDevice.h>
 
 namespace Pomdog::Detail::Metal {
-namespace {
-
-float MipmapImageDataBytes(float width, float height, float bytesPerPixel)
-{
-    return width * height * bytesPerPixel;
-}
-
-} // unnamed namespace
 
 Texture2DMetal::Texture2DMetal(
     id<MTLDevice> device,
@@ -57,32 +49,47 @@ void Texture2DMetal::SetData(
     POMDOG_ASSERT(levelCount >= 1);
     POMDOG_ASSERT(pixelData != nullptr);
 
-    POMDOG_ASSERT(format != SurfaceFormat::BlockComp1_UNorm
-        && format != SurfaceFormat::BlockComp2_UNorm
-        && format != SurfaceFormat::BlockComp3_UNorm);
-
     auto const bytesPerPixel = SurfaceFormatHelper::ToBytesPerBlock(format);
 
-    auto mipMapPixelWidth = pixelWidth;
-    auto mipMapPixelHeight = pixelHeight;
+    auto mipmapWidth = pixelWidth;
+    auto mipmapHeight = pixelHeight;
     std::size_t startOffset = 0;
 
     for (int mipmapLevel = 0; mipmapLevel < levelCount; ++mipmapLevel) {
-        MTLRegion region = MTLRegionMake2D(0, 0, mipMapPixelWidth, mipMapPixelHeight);
+        MTLRegion region = MTLRegionMake2D(0, 0, mipmapWidth, mipmapHeight);
 
-        const auto bytesPerRow = mipMapPixelWidth * bytesPerPixel;
+        auto bytesPerRow = mipmapWidth * bytesPerPixel;
+        switch (format) {
+        case SurfaceFormat::BlockComp1_UNorm:
+            bytesPerRow = 8 * (std::max(mipmapWidth, 4) / 4);
+            break;
+        case SurfaceFormat::BlockComp2_UNorm:
+        case SurfaceFormat::BlockComp3_UNorm:
+            bytesPerRow = 16 * (std::max(mipmapWidth, 4) / 4);
+            break;
+        default:
+            break;
+        }
 
         [texture replaceRegion:region
             mipmapLevel:mipmapLevel
             withBytes:reinterpret_cast<const std::uint8_t*>(pixelData) + startOffset
             bytesPerRow:bytesPerRow];
 
-        const auto strideBytesPerMipmap = MipmapImageDataBytes(
-            mipMapPixelWidth, mipMapPixelHeight, bytesPerPixel);
+        auto strideBytesPerMipmap = mipmapWidth * mipmapHeight * bytesPerPixel;
+        switch (format) {
+        case SurfaceFormat::BlockComp1_UNorm:
+        case SurfaceFormat::BlockComp2_UNorm:
+        case SurfaceFormat::BlockComp3_UNorm:
+            strideBytesPerMipmap = bytesPerRow * (std::max(mipmapHeight, 4) / 4);
+            break;
+        default:
+            break;
+        }
 
         startOffset += strideBytesPerMipmap;
-        mipMapPixelWidth = std::max((mipMapPixelWidth >> 1), 1);
-        mipMapPixelHeight = std::max((mipMapPixelHeight >> 1), 1);
+        mipmapWidth = std::max((mipmapWidth >> 1), 1);
+        mipmapHeight = std::max((mipmapHeight >> 1), 1);
     }
 }
 

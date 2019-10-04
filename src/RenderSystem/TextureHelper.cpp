@@ -2,21 +2,11 @@
 
 #include "TextureHelper.hpp"
 #include "SurfaceFormatHelper.hpp"
+#include "Pomdog/Graphics/SurfaceFormat.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <algorithm>
 
 namespace Pomdog::Detail {
-namespace {
-
-std::int32_t MipmapImageDataBytes(
-    std::int32_t pixelWidth,
-    std::int32_t pixelHeight,
-    std::int32_t bytesPerBlock) noexcept
-{
-    return pixelWidth * pixelHeight * bytesPerBlock;
-}
-
-} // unnamed namespace
 
 std::int32_t TextureHelper::ComputeMipmapLevelCount(std::int32_t width, std::int32_t height)
 {
@@ -45,21 +35,44 @@ std::int32_t TextureHelper::ComputeTextureSizeInBytes(
     POMDOG_ASSERT(pixelHeight > 0);
     POMDOG_ASSERT(levelCount >= 1);
 
-    auto const bytesPerBlock = SurfaceFormatHelper::ToBytesPerBlock(format);
+    const auto bytesPerBlock = SurfaceFormatHelper::ToBytesPerBlock(format);
 
-    std::int32_t sizeInBytes = 0;
-    std::int32_t mipMapWidth = pixelWidth;
-    std::int32_t mipMapHeight = pixelHeight;
+    std::int32_t totalBytes = 0;
+    std::int32_t mipmapWidth = pixelWidth;
+    std::int32_t mipmapHeight = pixelHeight;
 
     for (int mipmapLevel = 0; mipmapLevel < levelCount; ++mipmapLevel) {
-        sizeInBytes += MipmapImageDataBytes(
-            mipMapWidth, mipMapHeight, bytesPerBlock);
+        auto bytesPerRow = mipmapWidth * bytesPerBlock;
+        switch (format) {
+        case SurfaceFormat::BlockComp1_UNorm:
+            bytesPerRow = 8 * (std::max(mipmapWidth, 4) / 4);
+            break;
+        case SurfaceFormat::BlockComp2_UNorm:
+        case SurfaceFormat::BlockComp3_UNorm:
+            bytesPerRow = 16 * (std::max(mipmapWidth, 4) / 4);
+            break;
+        default:
+            break;
+        }
 
-        mipMapWidth = std::max((mipMapWidth >> 1), 1);
-        mipMapHeight = std::max((mipMapHeight >> 1), 1);
+        auto strideBytesPerMipmap = bytesPerRow * mipmapHeight;
+        switch (format) {
+        case SurfaceFormat::BlockComp1_UNorm:
+        case SurfaceFormat::BlockComp2_UNorm:
+        case SurfaceFormat::BlockComp3_UNorm:
+            strideBytesPerMipmap = bytesPerRow * (std::max(mipmapHeight, 4) / 4);
+            break;
+        default:
+            break;
+        }
+
+        totalBytes += strideBytesPerMipmap;
+
+        mipmapWidth = std::max((mipmapWidth >> 1), 1);
+        mipmapHeight = std::max((mipmapHeight >> 1), 1);
     }
 
-    return sizeInBytes;
+    return totalBytes;
 }
 
 } // namespace Pomdog::Detail
