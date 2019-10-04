@@ -52,7 +52,7 @@ bool isRootDirectoryName(const std::string& name)
     return false;
 }
 
-class PathIterator {
+class PathIterator final {
     const std::string* source;
     std::string::size_type startPos;
     std::string::size_type endPos;
@@ -268,7 +268,8 @@ TEST(PathIterator, Case_08)
 
 } // unnamed namespace
 
-std::string PathHelper::Join(const std::string& path1, const std::string& path2)
+std::string
+PathHelper::Join(const std::string& path1, const std::string& path2)
 {
     std::string result = path1;
 #if defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
@@ -310,7 +311,8 @@ Detail::BinaryFileStream PathHelper::OpenStream(const std::string& path)
     return result;
 }
 
-std::string PathHelper::GetBaseName(const std::string& path)
+std::string
+PathHelper::GetBaseName(const std::string& path)
 {
     const auto lastIndex = path.find_last_of('/');
     if (std::string::npos != lastIndex) {
@@ -319,7 +321,8 @@ std::string PathHelper::GetBaseName(const std::string& path)
     return path;
 }
 
-std::string PathHelper::GetDirectoryName(const std::string& path)
+std::string
+PathHelper::GetDirectoryName(const std::string& path)
 {
     if (!path.empty() && path.back() == '/') {
         return path;
@@ -331,7 +334,8 @@ std::string PathHelper::GetDirectoryName(const std::string& path)
     return {};
 }
 
-std::tuple<std::string, std::string> PathHelper::Split(const std::string& path)
+std::tuple<std::string, std::string>
+PathHelper::Split(const std::string& path)
 {
     std::tuple<std::string, std::string> result;
     auto lastIndex = path.find_last_of('/');
@@ -345,7 +349,8 @@ std::tuple<std::string, std::string> PathHelper::Split(const std::string& path)
     return result;
 }
 
-std::tuple<std::string, std::string> PathHelper::SplitExtension(const std::string& path)
+std::tuple<std::string, std::string>
+PathHelper::SplitExtension(const std::string& path)
 {
     std::tuple<std::string, std::string> result;
     auto lastIndex = path.find_last_of('.');
@@ -359,7 +364,8 @@ std::tuple<std::string, std::string> PathHelper::SplitExtension(const std::strin
     return result;
 }
 
-std::string PathHelper::Normalize(const std::string& path)
+std::string
+PathHelper::Normalize(const std::string& path)
 {
     const auto isFullPath = [&path]() -> bool {
         if (path.empty()) {
