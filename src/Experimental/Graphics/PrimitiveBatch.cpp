@@ -62,6 +62,7 @@ public:
 public:
     Impl(
         const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+        const DepthStencilDescription& depthStencilDesc,
         AssetManager& assets);
 
     void Begin(
@@ -79,6 +80,7 @@ public:
 
 PrimitiveBatch::Impl::Impl(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+    const DepthStencilDescription& depthStencilDesc,
     AssetManager& assets)
     : startVertexLocation(0)
     , drawCallCount(0)
@@ -112,7 +114,7 @@ PrimitiveBatch::Impl::Impl(
             .SetPixelShader(pixelShader.Build())
             .SetInputLayout(inputLayout.CreateInputLayout())
             .SetBlendState(BlendDescription::CreateNonPremultiplied())
-            .SetDepthStencilState(DepthStencilDescription::CreateNone())
+            .SetDepthStencilState(depthStencilDesc)
             .SetRasterizerState(RasterizerDescription::CreateCullCounterClockwise())
             .SetConstantBufferBindSlot("TransformMatrix", 0)
             .Build();
@@ -176,7 +178,15 @@ void PrimitiveBatch::Impl::Flush()
 PrimitiveBatch::PrimitiveBatch(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
     AssetManager& assets)
-    : impl(std::make_unique<Impl>(graphicsDevice, assets))
+    : PrimitiveBatch(graphicsDevice, DepthStencilDescription::CreateNone(), assets)
+{
+}
+
+PrimitiveBatch::PrimitiveBatch(
+    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+    const DepthStencilDescription& depthStencilDesc,
+    AssetManager& assets)
+    : impl(std::make_unique<Impl>(graphicsDevice, depthStencilDesc, assets))
 {
 }
 

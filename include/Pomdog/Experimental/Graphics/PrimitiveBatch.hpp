@@ -19,6 +19,11 @@ public:
         const std::shared_ptr<GraphicsDevice>& graphicsDevice,
         AssetManager& assets);
 
+    PrimitiveBatch(
+        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+        const DepthStencilDescription& depthStencilDesc,
+        AssetManager& assets);
+
     ~PrimitiveBatch();
 
     void Begin(
