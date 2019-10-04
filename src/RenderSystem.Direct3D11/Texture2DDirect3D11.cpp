@@ -34,10 +34,8 @@ Texture2DDirect3D11::Texture2DDirect3D11(
     textureDesc.SampleDesc.Count = 1;
     textureDesc.SampleDesc.Quality = 0;
     textureDesc.Usage = D3D11_USAGE_DYNAMIC;
-    //textureDesc.Usage = D3D11_USAGE_DEFAULT;
     textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
     textureDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-    //textureDesc.CPUAccessFlags = 0;
     textureDesc.MiscFlags = 0;
 
     auto hr = device->CreateTexture2D(&textureDesc, nullptr, &texture2D);
