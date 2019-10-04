@@ -29,12 +29,17 @@ namespace Pomdog::Detail {
 #elif defined(DEBUG) && defined(_MSC_VER)
 #    // Debug mode under Visual Studio
 #    define POMDOG_ASSERT(expression) \
-        static_cast<void>((!!(expression)) \
-            || (_CrtDbgBreak(), _ASSERT(expression), false))
+        static_cast<void>( \
+            (!!(expression)) || \
+            (1 != _CrtDbgReport(_CRT_ASSERT, __FILE__, __LINE__, nullptr, "%s", #expression)) || \
+            (_CrtDbgBreak(), false) \
+        )
 #    define POMDOG_ASSERT_MESSAGE(expression, message) \
-        static_cast<void>((!!(expression)) \
-            || (1 != _CrtDbgReportW(_CRT_ASSERT, _CRT_WIDE(__FILE__), __LINE__, nullptr, L"%s", message)) \
-            || (_CrtDbgBreak(), false))
+        static_cast<void>( \
+            (!!(expression)) || \
+            (1 != _CrtDbgReport(_CRT_ASSERT, __FILE__, __LINE__, nullptr, "%s", message)) || \
+            (_CrtDbgBreak(), false) \
+        )
 #elif defined(DEBUG)
 #    // Debug mode
 #    if defined(_MSC_VER)
