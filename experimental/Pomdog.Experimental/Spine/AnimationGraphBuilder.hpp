@@ -7,13 +7,11 @@
 #include <memory>
 #include <string>
 
-namespace Pomdog {
-namespace Spine {
+namespace Pomdog::Spine {
 
 class SkeletonDesc;
 
 std::shared_ptr<AnimationGraph> LoadAnimationGraph(SkeletonDesc const& skeletonDesc,
     AssetManager const& assets, std::string const& assetName);
 
-} // namespace Spine
-} // namespace Pomdog
+} // namespace Pomdog::Spine

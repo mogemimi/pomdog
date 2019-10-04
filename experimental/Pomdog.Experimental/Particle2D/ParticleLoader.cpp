@@ -14,16 +14,15 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include <rapidjson/document.h>
-#include <utility>
 #include <fstream>
+#include <utility>
 #include <vector>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 namespace {
 
 template <typename T>
-T GetMemberAs(rapidjson::Value const& object, std::string const& name)
+T GetMemberAs(const rapidjson::Value& object, const std::string& name)
 {
     POMDOG_ASSERT(!name.empty());
     POMDOG_ASSERT(object.HasMember(name.c_str()));
@@ -251,5 +250,4 @@ ParticleClip ParticleLoader::Load(AssetManager & assets, std::string const& asse
     return LoadFromJson(assets, assetName);
 }
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

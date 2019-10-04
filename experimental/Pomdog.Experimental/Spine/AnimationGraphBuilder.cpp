@@ -14,8 +14,7 @@
 #include <optional>
 #include <vector>
 
-namespace Pomdog {
-namespace Spine {
+namespace Pomdog::Spine {
 namespace {
 
 using Detail::BinaryReader;
@@ -197,5 +196,4 @@ std::shared_ptr<AnimationGraph> LoadAnimationGraph(SkeletonDesc const& skeletonD
     return animationGraph;
 }
 
-} // namespace Spine
-} // namespace Pomdog
+} // namespace Pomdog::Spine

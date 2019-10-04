@@ -5,10 +5,10 @@
 #include <Pomdog/Pomdog.hpp>
 
 namespace Pomdog {
-
 class ParticleClip;
+} // namespace Pomdog
 
-namespace Detail {
+namespace Pomdog::Detail {
 
 struct ParticleLoader final {
     static ParticleClip LoadFromJson(AssetManager & assets, std::string const& assetName);
@@ -16,5 +16,4 @@ struct ParticleLoader final {
     static ParticleClip Load(AssetManager & assets, std::string const& assetName);
 };
 
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail

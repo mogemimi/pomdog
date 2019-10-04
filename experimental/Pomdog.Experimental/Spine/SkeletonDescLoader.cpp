@@ -444,7 +444,7 @@ SkinnedMeshAttachmentDesc ReadSkinnedMeshAttachment(rapidjson::Value::ConstMembe
     POMDOG_ASSERT(iter->name.IsString());
     POMDOG_ASSERT(iter->value.IsObject());
 
-    auto & attachmentObject = iter->value;
+    auto& attachmentObject = iter->value;
 
     POMDOG_ASSERT(!(!attachmentObject.HasMember("type")
         || !attachmentObject["type"].IsString()
@@ -488,8 +488,7 @@ std::vector<SkinSlotDesc> ReadSkinSlots(rapidjson::Value const& slotsDOM)
 
     std::vector<SkinSlotDesc> slots;
 
-    for (auto slotIter = slotsDOM.MemberBegin(); slotIter != slotsDOM.MemberEnd(); ++slotIter)
-    {
+    for (auto slotIter = slotsDOM.MemberBegin(); slotIter != slotsDOM.MemberEnd(); ++slotIter) {
         if (!slotIter->name.IsString() || !slotIter->value.IsObject()) {
             ///@todo Not implemented
             // Error
@@ -499,26 +498,23 @@ std::vector<SkinSlotDesc> ReadSkinSlots(rapidjson::Value const& slotsDOM)
         SkinSlotDesc slotDesc;
         slotDesc.SlotName = slotIter->name.GetString();
 
-        auto & attachmentsDOM = slotIter->value;
+        auto& attachmentsDOM = slotIter->value;
 
-        for (auto iter = attachmentsDOM.MemberBegin(); iter != attachmentsDOM.MemberEnd(); ++iter)
-        {
+        for (auto iter = attachmentsDOM.MemberBegin(); iter != attachmentsDOM.MemberEnd(); ++iter) {
             if (!iter->name.IsString() || !iter->value.IsObject()) {
                 ///@todo Not implemented
                 // Error
                 continue;
             }
 
-            auto & attachmentObject = iter->value;
+            auto& attachmentObject = iter->value;
 
             if (attachmentObject.HasMember("type")
                 && attachmentObject["type"].IsString()
-                && std::strcmp(attachmentObject["type"].GetString(), "skinnedmesh") == 0)
-            {
+                && std::strcmp(attachmentObject["type"].GetString(), "skinnedmesh") == 0) {
                 slotDesc.SkinnedMeshAttachments.push_back(ReadSkinnedMeshAttachment(iter));
             }
-            else
-            {
+            else {
                 slotDesc.Attachments.push_back(ReadAttachment(iter));
             }
         }
