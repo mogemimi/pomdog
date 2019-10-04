@@ -38,6 +38,10 @@ std::vector<std::string_view>
 Split(const std::string_view& source, const std::string_view& separator);
 
 POMDOG_EXPORT
+std::string
+ReplaceAll(const std::string_view& s, const std::string_view& from, const std::string_view& to);
+
+POMDOG_EXPORT
 std::string Format(const char* format, ...)
 #if defined(__has_attribute)
 #if __has_attribute(format)

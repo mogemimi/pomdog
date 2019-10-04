@@ -109,6 +109,21 @@ StringHelper::Split(const std::string_view& source, const std::string_view& sepa
     return tokens;
 }
 
+std::string
+StringHelper::ReplaceAll(const std::string_view& s, const std::string_view& from, const std::string_view& to)
+{
+    std::string result = std::string{s};
+    if (from.empty()) {
+        return result;
+    }
+    std::string::size_type start = 0;
+    while ((start = result.find(from, start)) != std::string::npos) {
+        result.replace(start, from.length(), to);
+        start += to.length();
+    }
+    return result;
+}
+
 namespace {
 
 std::string UnsafeToFormatString(const char* format, std::va_list arg)

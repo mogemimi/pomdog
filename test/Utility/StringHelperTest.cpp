@@ -111,4 +111,17 @@ TEST_CASE("StringHelper", "[StringHelper]")
         REQUIRE(StringHelper::TrimRight("ABC  ", isSpace) == "ABC");
         REQUIRE(StringHelper::TrimRight("ABC \t\n \t \n", isSpace) == "ABC");
     }
+    SECTION("ReplaceAll")
+    {
+        REQUIRE(StringHelper::ReplaceAll("", "", "") == "");
+        REQUIRE(StringHelper::ReplaceAll("", "a", "") == "");
+        REQUIRE(StringHelper::ReplaceAll("", "", "a") == "");
+        REQUIRE(StringHelper::ReplaceAll("a", "", "") == "a");
+        REQUIRE(StringHelper::ReplaceAll("a", "a", "") == "");
+        REQUIRE(StringHelper::ReplaceAll("aa", "a", "") == "");
+        REQUIRE(StringHelper::ReplaceAll("a", "aa", "") == "a");
+        REQUIRE(StringHelper::ReplaceAll("aa", "aa", "") == "");
+        REQUIRE(StringHelper::ReplaceAll("/abc/abc/abc/", "/", "") == "abcabcabc");
+        REQUIRE(StringHelper::ReplaceAll("/abc/abc/abc/", "/", ".") == ".abc.abc.abc.");
+    }
 }
