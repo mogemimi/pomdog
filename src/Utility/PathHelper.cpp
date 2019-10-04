@@ -4,6 +4,7 @@
 #include "Pomdog/Basic/Platform.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/FileSystem.hpp"
+#include "Pomdog/Utility/StringHelper.hpp"
 #include <algorithm>
 #include <regex>
 #include <utility>
@@ -367,24 +368,8 @@ PathHelper::SplitExtension(const std::string& path)
 std::string
 PathHelper::Normalize(const std::string& path)
 {
-    const auto isFullPath = [&path]() -> bool {
-        if (path.empty()) {
-            return false;
-        }
-        if (path.front() == '/') {
-            return true;
-        }
-#if defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
-        auto iter = PathIterator::begin(path);
-        if (iter != PathIterator::end(path)) {
-            return isRootDirectoryName(*iter);
-        }
-#endif
-        return false;
-    }();
-
     auto fullPath = path;
-    if (!isFullPath) {
+    if (!IsAbsolute(path)) {
         // NOTE: 'path' is not full path.
         fullPath = PathHelper::Join(
             FileSystem::GetCurrentWorkingDirectory(), fullPath);
@@ -422,6 +407,12 @@ PathHelper::Normalize(const std::string& path)
 }
 
 std::string
+PathHelper::ToSlash(const std::string& path)
+{
+    return StringHelper::ReplaceAll(path, "\\", "/");
+}
+
+std::string
 PathHelper::Relative(const std::string& path, const std::string& start)
 {
     const auto fullPath = PathHelper::Normalize(path);
@@ -451,6 +442,29 @@ PathHelper::Relative(const std::string& path, const std::string& start)
         result = '.';
     }
     return result;
+}
+
+bool
+PathHelper::IsAbsolute(const std::string& path)
+{
+    // NOTE: See https://msdn.microsoft.com/en-us/library/bb773660.aspx
+    if (path.empty()) {
+        return false;
+    }
+    if (path.front() == '/') {
+        return true;
+    }
+#if defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
+    if (StringHelper::HasPrefix(path, "\\\\")) {
+        // NOTE: UNC paths
+        return true;
+    }
+    auto iter = PathIterator::begin(path);
+    if (iter != PathIterator::end(path)) {
+        return isRootDirectoryName(*iter);
+    }
+#endif
+    return false;
 }
 
 } // namespace Pomdog

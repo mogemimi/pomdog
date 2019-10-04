@@ -29,7 +29,6 @@ add_executable(PomdogTest
   ${POMDOG_TEST_DIR}/Application/TimerTest.cpp
   ${POMDOG_TEST_DIR}/Async/SchedulerTest.cpp
   ${POMDOG_TEST_DIR}/Async/TaskTest.cpp
-  ${POMDOG_TEST_DIR}/Content/PathHelperTest.cpp
 
   ${POMDOG_TEST_DIR}/Experimental/Gameplay/EntityIDTest.cpp
   ${POMDOG_TEST_DIR}/Experimental/Gameplay/EntityTest.cpp
@@ -79,6 +78,7 @@ add_executable(PomdogTest
   ${POMDOG_TEST_DIR}/Utility/AnyTest.cpp
   ${POMDOG_TEST_DIR}/Utility/CRC32Test.cpp
   ${POMDOG_TEST_DIR}/Utility/ErrorsTest.cpp
+  ${POMDOG_TEST_DIR}/Utility/PathHelperTest.cpp
   ${POMDOG_TEST_DIR}/Utility/SpinLockTest.cpp
   ${POMDOG_TEST_DIR}/Utility/StringHelperTest.cpp
 )

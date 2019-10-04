@@ -184,4 +184,50 @@ TEST_CASE("PathHelper", "[PathHelper]")
         REQUIRE(relative("/usr/share/dict", "/usr/local/bin") == "../../share/dict");
 #endif
     }
+    SECTION("IsAbsolute")
+    {
+        REQUIRE(PathHelper::IsAbsolute("/"));
+        REQUIRE(PathHelper::IsAbsolute("/a/"));
+        REQUIRE(PathHelper::IsAbsolute("/a/b"));
+        REQUIRE(PathHelper::IsAbsolute("/abc"));
+        REQUIRE(PathHelper::IsAbsolute("/abc/"));
+        REQUIRE(!PathHelper::IsAbsolute(".."));
+        REQUIRE(!PathHelper::IsAbsolute("../"));
+        REQUIRE(!PathHelper::IsAbsolute("../a"));
+        REQUIRE(!PathHelper::IsAbsolute("../a/"));
+        REQUIRE(!PathHelper::IsAbsolute("a"));
+        REQUIRE(!PathHelper::IsAbsolute(""));
+        REQUIRE(!PathHelper::IsAbsolute("."));
+        REQUIRE(!PathHelper::IsAbsolute("./"));
+        REQUIRE(!PathHelper::IsAbsolute("./a"));
+        REQUIRE(!PathHelper::IsAbsolute("./a/"));
+        REQUIRE(!PathHelper::IsAbsolute("./a/b"));
+#if defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
+        REQUIRE(PathHelper::IsAbsolute("C:\\"));
+        REQUIRE(PathHelper::IsAbsolute("D:\\"));
+        REQUIRE(PathHelper::IsAbsolute("C:\\a"));
+        REQUIRE(PathHelper::IsAbsolute("C:\\a\\"));
+        REQUIRE(PathHelper::IsAbsolute("\\\\a"));
+        REQUIRE(PathHelper::IsAbsolute("\\\\a\\"));
+        REQUIRE(PathHelper::IsAbsolute("\\\\a\\b"));
+        REQUIRE(!PathHelper::IsAbsolute("..\\"));
+        REQUIRE(!PathHelper::IsAbsolute("..\\a"));
+        REQUIRE(!PathHelper::IsAbsolute("..\\a\\"));
+        REQUIRE(!PathHelper::IsAbsolute("..\\a\\b"));
+        REQUIRE(!PathHelper::IsAbsolute(".\\"));
+        REQUIRE(!PathHelper::IsAbsolute(".\\a"));
+        REQUIRE(!PathHelper::IsAbsolute(".\\a\\"));
+        REQUIRE(!PathHelper::IsAbsolute(".\\a\\b"));
+#endif
+    }
+    SECTION("ToSlash")
+    {
+        REQUIRE(PathHelper::ToSlash("") == "");
+        REQUIRE(PathHelper::ToSlash("\\") == "/");
+        REQUIRE(PathHelper::ToSlash("\\\\") == "//");
+        REQUIRE(PathHelper::ToSlash("\\a\\b") == "/a/b");
+        REQUIRE(PathHelper::ToSlash("\\a\\b\\") == "/a/b/");
+        REQUIRE(PathHelper::ToSlash("a\\b") == "a/b");
+        REQUIRE(PathHelper::ToSlash("a\\b\\") == "a/b/");
+    }
 }

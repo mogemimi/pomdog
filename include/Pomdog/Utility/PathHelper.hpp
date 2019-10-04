@@ -36,9 +36,17 @@ struct POMDOG_EXPORT PathHelper final {
     [[nodiscard]] static std::string
     Normalize(const std::string& path);
 
+    /// Returns the path of replacing each separator character with a slash ('/').
+    [[nodiscard]] static std::string
+    ToSlash(const std::string& path);
+
     /// Returns a relative path from the start directory.
     [[nodiscard]] static std::string
     Relative(const std::string& path, const std::string& start);
+
+    /// Returns true if the path is absolute, false otherwise.
+    [[nodiscard]] static bool
+    IsAbsolute(const std::string& path);
 };
 
 } // namespace Pomdog
