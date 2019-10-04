@@ -8,7 +8,8 @@
 namespace Pomdog::Detail {
 
 template <typename Character>
-constexpr std::uint32_t MakeFourCC(Character c0, Character c1, Character c2, Character c3) noexcept
+[[nodiscard]] constexpr std::uint32_t
+MakeFourCC(Character c0, Character c1, Character c2, Character c3) noexcept
 {
     static_assert(std::is_integral<Character>::value, "");
     static_assert(sizeof(Character) == 1, "");
