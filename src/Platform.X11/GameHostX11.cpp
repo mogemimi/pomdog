@@ -197,7 +197,7 @@ public:
     std::shared_ptr<GraphicsContextGL4> graphicsContext;
     std::shared_ptr<GraphicsCommandQueue> graphicsCommandQueue;
     std::shared_ptr<AudioEngine> audioEngine;
-    std::unique_ptr<Pomdog::AssetManager> assetManager;
+    std::unique_ptr<AssetManager> assetManager;
     std::unique_ptr<KeyboardX11> keyboard;
     MouseX11 mouse;
     std::unique_ptr<NativeGamepad> gamepad;

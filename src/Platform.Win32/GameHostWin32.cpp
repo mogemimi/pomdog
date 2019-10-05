@@ -258,7 +258,7 @@ private:
     std::unique_ptr<GraphicsBridgeWin32> graphicsBridge;
     std::shared_ptr<GraphicsDevice> graphicsDevice;
     std::shared_ptr<GraphicsCommandQueue> graphicsCommandQueue;
-    std::unique_ptr<Pomdog::AssetManager> assetManager;
+    std::unique_ptr<AssetManager> assetManager;
     std::shared_ptr<AudioEngine> audioEngine;
 
     std::shared_ptr<KeyboardWin32> keyboard;

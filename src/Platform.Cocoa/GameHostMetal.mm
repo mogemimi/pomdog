@@ -128,7 +128,7 @@ private:
     std::shared_ptr<GraphicsContextMetal> graphicsContext;
     std::shared_ptr<GraphicsCommandQueue> graphicsCommandQueue;
     std::shared_ptr<AudioEngine> audioEngine;
-    std::unique_ptr<Pomdog::AssetManager> assetManager;
+    std::unique_ptr<AssetManager> assetManager;
     std::shared_ptr<KeyboardCocoa> keyboard;
     std::shared_ptr<MouseCocoa> mouse;
     std::shared_ptr<GamepadIOKit> gamepad;
