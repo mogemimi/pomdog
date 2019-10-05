@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Pomdog/Basic/Export.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #include <string>
 
 namespace Pomdog {
@@ -23,6 +24,10 @@ struct POMDOG_EXPORT FileSystem final {
     /// Returns true if the file is directory, false otherwise.
     [[nodiscard]] static bool
     IsDirectory(const std::string& path);
+
+    /// Gets the size of the specified file.
+    [[nodiscard]] static std::tuple<std::size_t, std::shared_ptr<Error>>
+    GetFileSize(const std::string& path);
 
     // Windows:
     // - "<user name>\Local Settings\Applicaiton Data\Pomdog"

@@ -1,10 +1,12 @@
 // Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Utility/FileSystem.hpp"
+#include "../Utility/ErrorHelper.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include <Foundation/Foundation.h>
 #include <unistd.h>
+#include <sys/stat.h>
 #include <utility>
 
 namespace Pomdog {
@@ -16,6 +18,19 @@ NSString* ToNSString(const std::string& s)
 }
 
 } // unnamed namespace
+
+std::tuple<std::size_t, std::shared_ptr<Error>>
+FileSystem::GetFileSize(const std::string& path)
+{
+    struct ::stat st;
+    int rc = ::stat(path.data(), &st);
+    
+    if (rc != 0) {
+        auto errorCode = Detail::ToErrc(errno);
+        return std::make_tuple(0, Errors::New(errorCode, "::stat() failed"));
+    }
+    return std::make_tuple(st.st_size, nullptr);
+}
 
 bool FileSystem::CreateDirectory(const std::string& path)
 {

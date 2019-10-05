@@ -41,6 +41,19 @@ bool FileSystem::IsDirectory(const std::string& path)
     return std::filesystem::is_directory(path);
 }
 
+std::tuple<std::size_t, std::shared_ptr<Error>>
+FileSystem::GetFileSize(const std::string& path)
+{
+    struct ::stat st;
+    int rc = ::stat(path.data(), &st);
+
+    if (rc != 0) {
+        auto errorCode = Detail::ToErrc(errno);
+        return std::make_tuple(0, Errors::New(errorCode, "::stat() failed"));
+    }
+    return std::make_tuple(st.st_size, nullptr);
+}
+
 std::string FileSystem::GetLocalAppDataDirectoryPath()
 {
     TCHAR directoryName[MAX_PATH];

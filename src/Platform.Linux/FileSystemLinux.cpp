@@ -1,6 +1,7 @@
 // Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Utility/FileSystem.hpp"
+#include "../Utility/ErrorHelper.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include "Pomdog/Utility/PathHelper.hpp"
@@ -67,6 +68,19 @@ bool FileSystem::IsDirectory(const std::string& path)
         return false;
     }
     return S_ISDIR(st.st_mode);
+}
+
+std::tuple<std::size_t, std::shared_ptr<Error>>
+FileSystem::GetFileSize(const std::string& path)
+{
+    struct ::stat st;
+    int rc = ::stat(path.data(), &st);
+
+    if (rc != 0) {
+        auto errorCode = Detail::ToErrc(errno);
+        return std::make_tuple(0, Errors::New(errorCode, "::stat() failed"));
+    }
+    return std::make_tuple(st.st_size, nullptr);
 }
 
 std::string FileSystem::GetLocalAppDataDirectoryPath()
