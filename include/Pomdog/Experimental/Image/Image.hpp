@@ -19,17 +19,22 @@ public:
     Image& operator=(const Image&) = delete;
     Image& operator=(Image&&);
 
-    int GetWidth() const noexcept;
+    /// Gets the width of the image data, in pixels.
+    [[nodiscard]] int GetWidth() const noexcept;
 
-    int GetHeight() const noexcept;
+    /// Gets the height of the image data, in pixels.
+    [[nodiscard]] int GetHeight() const noexcept;
 
-    const Color* GetData() const;
+    /// Gets image data.
+    const Color* GetData() const noexcept;
 
+    /// Sets image data.
     void SetData(const Color* pixelData);
 
+    /// Sets image data.
     void SetData(std::vector<Color>&& pixelData);
 
-    const Color& GetPixel(int x, int y) const;
+    [[nodiscard]] const Color& GetPixel(int x, int y) const;
 
     void SetPixel(int x, int y, const Color& color);
 

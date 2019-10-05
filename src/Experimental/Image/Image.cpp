@@ -41,8 +41,11 @@ int Image::GetHeight() const noexcept
     return height;
 }
 
-const Color* Image::GetData() const
+const Color* Image::GetData() const noexcept
 {
+    if (data.empty()) {
+        return nullptr;
+    }
     return data.data();
 }
 
