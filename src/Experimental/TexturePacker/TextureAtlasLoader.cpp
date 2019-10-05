@@ -9,8 +9,7 @@
 #include <sstream>
 #include <utility>
 
-namespace Pomdog {
-namespace TexturePacker {
+namespace Pomdog::TexturePacker {
 namespace {
 
 enum class ParserState {
@@ -176,5 +175,4 @@ TextureAtlas TextureAtlasLoader::Load(const AssetManager& assets, const std::str
     return result;
 }
 
-} // namespace TexturePacker
-} // namespace Pomdog
+} // namespace Pomdog::TexturePacker

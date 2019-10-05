@@ -15,7 +15,7 @@ namespace Pomdog {
 
 namespace {
 
-struct BitmapFontInfo {
+struct BitmapFontInfo final {
     std::string Face;
     std::uint16_t Size = 32;
     std::uint16_t StretchHeight = 0;
@@ -32,7 +32,7 @@ struct BitmapFontInfo {
     bool AntiAlias = true;
 };
 
-struct BitmapFontCommon {
+struct BitmapFontCommon final {
     std::uint16_t LineHeight;
     std::uint16_t Base;
     std::uint16_t ScaleWidth;
@@ -41,7 +41,7 @@ struct BitmapFontCommon {
     bool Packed = false;
 };
 
-struct BitmapFontPage {
+struct BitmapFontPage final {
     std::string Path;
     std::uint16_t Id;
 };

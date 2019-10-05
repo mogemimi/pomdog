@@ -21,7 +21,7 @@ struct POMDOG_EXPORT TextureAtlasRegion final {
     std::int16_t TexturePage;
 };
 
-class POMDOG_EXPORT TextureAtlas {
+class POMDOG_EXPORT TextureAtlas final {
 public:
     std::vector<TextureAtlasPage> pages;
     std::vector<TextureAtlasRegion> regions;
