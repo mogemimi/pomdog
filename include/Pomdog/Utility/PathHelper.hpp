@@ -3,7 +3,6 @@
 #pragma once
 
 #include "Pomdog/Basic/Export.hpp"
-#include "Pomdog/Content/Utility/BinaryFileStream.hpp"
 #include <string>
 #include <tuple>
 
@@ -13,8 +12,6 @@ struct POMDOG_EXPORT PathHelper final {
     /// Joins two paths into a single path, adding a separator if necessary.
     [[nodiscard]] static std::string
     Join(const std::string& path1, const std::string& path2);
-
-    static Detail::BinaryFileStream OpenStream(const std::string& path);
 
     /// Returns the last element of path.
     [[nodiscard]] static std::string

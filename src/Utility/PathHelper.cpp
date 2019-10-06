@@ -292,26 +292,6 @@ PathHelper::Join(const std::string& path1, const std::string& path2)
     return result;
 }
 
-Detail::BinaryFileStream PathHelper::OpenStream(const std::string& path)
-{
-    std::ifstream stream(path, std::ios::ate | std::ios::binary);
-    std::size_t fileSize = 0;
-
-    if (stream.is_open()) {
-        const auto pos = stream.tellg();
-        if (pos > 0) {
-            fileSize = static_cast<std::size_t>(pos);
-        }
-        stream.clear();
-        stream.seekg(0, stream.beg);
-    }
-
-    Detail::BinaryFileStream result;
-    result.Stream = std::move(stream);
-    result.SizeInBytes = fileSize;
-    return result;
-}
-
 std::string
 PathHelper::GetBaseName(const std::string& path)
 {
