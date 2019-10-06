@@ -48,17 +48,6 @@ struct POMDOG_EXPORT BinaryReader final {
         return std::move(ReadArray<T, 1>(stream)[0]);
     }
 
-    template <typename T, class Stream>
-    static std::vector<T> ReadString(Stream& stream, std::size_t elementCount)
-    {
-        static_assert(std::is_integral<T>::value, "You can only use POD types.");
-        auto result = ReadArray<T>(stream, elementCount);
-
-        // Insert null at the end of a charater array
-        result.push_back(0);
-        return std::move(result);
-    }
-
     template <typename T>
     static bool CanRead(std::size_t byteLength)
     {

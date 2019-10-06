@@ -8,6 +8,7 @@
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
+#include "Pomdog/Utility/FileSystem.hpp"
 #include "Pomdog/Utility/PathHelper.hpp"
 #include "Pomdog/Utility/StringHelper.hpp"
 #include <fstream>
@@ -92,20 +93,25 @@ public:
         Log::Internal(StringHelper::Format("include shader file : %s", includePath.c_str()));
 #endif
 
-        auto binaryFile = PathHelper::OpenStream(includePath);
+        std::ifstream stream{includePath};
 
-        if (!binaryFile.Stream) {
+        if (!stream) {
             Log::Internal(StringHelper::Format("Could not find a shader source file %s", includePath.c_str()));
             return E_FAIL;
         }
 
-        if (binaryFile.SizeInBytes <= 0) {
+        auto [size, err] = FileSystem::GetFileSize(includePath);
+        if (err != nullptr) {
+            Log::Internal(StringHelper::Format("failed to get file size %s", includePath.c_str()));
+            return E_FAIL;
+        }
+
+        if (size <= 0) {
             Log::Internal(StringHelper::Format("The file is too small %s", includePath.c_str()));
             return E_FAIL;
         }
 
-        outputSource = BinaryReader::ReadString<std::uint8_t>(
-            binaryFile.Stream, binaryFile.SizeInBytes);
+        outputSource = BinaryReader::ReadArray<std::uint8_t>(stream, size);
 
         *ppData = outputSource.data();
         *pBytes = static_cast<UINT>(outputSource.size());
