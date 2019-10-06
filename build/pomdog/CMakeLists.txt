@@ -16,6 +16,9 @@ source_group(Audio                        REGULAR_EXPRESSION "(include/Pomdog|sr
 source_group(Basic                        REGULAR_EXPRESSION "(include/Pomdog|src)/Basic/*")
 source_group(Content                      REGULAR_EXPRESSION "(include/Pomdog|src)/Content/*")
 source_group(Content\\AssetBuilders       REGULAR_EXPRESSION "(include/Pomdog|src)/Content/AssetBuilders/*")
+source_group(Content\\AssetLoaders        REGULAR_EXPRESSION "(include/Pomdog|src)/Content/AssetLoaders/*")
+source_group(Content\\Audio               REGULAR_EXPRESSION "(include/Pomdog|src)/Content/Audio/*")
+source_group(Content\\Image               REGULAR_EXPRESSION "(include/Pomdog|src)/Content/Image/*")
 source_group(Content\\Utility             REGULAR_EXPRESSION "(include/Pomdog|src)/Content/Utility/*")
 source_group(Graphics                     REGULAR_EXPRESSION "(include/Pomdog|src)/Graphics/*")
 source_group(Graphics\\ShaderCompilers    REGULAR_EXPRESSION "(include/Pomdog|src)/Graphics/ShaderCompilers/*")
@@ -85,13 +88,17 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/include/Pomdog/Content/AssetBuilders/PipelineStateBuilder.hpp
   ${POMDOG_DIR}/include/Pomdog/Content/AssetBuilders/ShaderBuilder.hpp
   ${POMDOG_DIR}/include/Pomdog/Content/Utility/BinaryFileStream.hpp
+  ${POMDOG_DIR}/include/Pomdog/Content/Audio/WAV.hpp
+  ${POMDOG_DIR}/include/Pomdog/Content/Image/ImageBuffer.hpp
+  ${POMDOG_DIR}/include/Pomdog/Content/Image/DDS.hpp
+  ${POMDOG_DIR}/include/Pomdog/Content/Image/PNG.hpp
   ${POMDOG_DIR}/include/Pomdog/Content/Utility/BinaryReader.hpp
   ${POMDOG_DIR}/include/Pomdog/Content/Utility/MakeFourCC.hpp
   ${POMDOG_DIR}/include/Pomdog/Content/detail/AssetDictionary.hpp
   ${POMDOG_DIR}/include/Pomdog/Content/detail/AssetLoaderContext.hpp
-  ${POMDOG_DIR}/include/Pomdog/Content/detail/AssetLoader.hpp
-  ${POMDOG_DIR}/include/Pomdog/Content/detail/AssetLoaders/AudioClipLoader.hpp
-  ${POMDOG_DIR}/include/Pomdog/Content/detail/AssetLoaders/Texture2DLoader.hpp
+  ${POMDOG_DIR}/include/Pomdog/Content/AssetLoaders/AssetLoader.hpp
+  ${POMDOG_DIR}/include/Pomdog/Content/AssetLoaders/AudioClipLoader.hpp
+  ${POMDOG_DIR}/include/Pomdog/Content/AssetLoaders/Texture2DLoader.hpp
   ${POMDOG_DIR}/include/Pomdog/Graphics/Blend.hpp
   ${POMDOG_DIR}/include/Pomdog/Graphics/BlendDescription.hpp
   ${POMDOG_DIR}/include/Pomdog/Graphics/BlendOperation.hpp
@@ -255,12 +262,9 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/src/Content/AssetBuilders/ShaderBuilder.cpp
   ${POMDOG_DIR}/src/Content/AssetLoaders/AudioClipLoader.cpp
   ${POMDOG_DIR}/src/Content/AssetLoaders/Texture2DLoader.cpp
-  ${POMDOG_DIR}/src/Content/Utility/DDSTextureReader.cpp
-  ${POMDOG_DIR}/src/Content/Utility/DDSTextureReader.hpp
-  ${POMDOG_DIR}/src/Content/Utility/MSWaveAudioLoader.cpp
-  ${POMDOG_DIR}/src/Content/Utility/MSWaveAudioLoader.hpp
-  ${POMDOG_DIR}/src/Content/Utility/PNGTextureReader.cpp
-  ${POMDOG_DIR}/src/Content/Utility/PNGTextureReader.hpp
+  ${POMDOG_DIR}/src/Content/Audio/WAV.cpp
+  ${POMDOG_DIR}/src/Content/Image/DDS.cpp
+  ${POMDOG_DIR}/src/Content/Image/PNG.cpp
   ${POMDOG_DIR}/src/Graphics/ConstantBuffer.cpp
   ${POMDOG_DIR}/src/Graphics/EffectBinaryParameter.cpp
   ${POMDOG_DIR}/src/Graphics/EffectReflection.cpp

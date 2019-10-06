@@ -1,31 +1,21 @@
 // Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
-#include "PNGTextureReader.hpp"
+#include "Pomdog/Content/Image/PNG.hpp"
 #include "../../Utility/ScopeGuard.hpp"
-#include "Pomdog/Graphics/SurfaceFormat.hpp"
-#include "Pomdog/Graphics/Texture2D.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
 extern "C" {
 #include <png.h>
 }
 #include <cstring>
 #include <vector>
 
-namespace Pomdog::Detail {
+namespace Pomdog::PNG {
 namespace {
 
-struct PNGBinaryContext {
+struct PNGBinaryContext final {
     const std::uint8_t* Data;
     std::size_t ByteLength;
     std::size_t Offset;
-};
-
-struct Texture2DParsingData {
-    std::vector<std::uint8_t> Binary;
-    std::uint32_t Height;
-    std::uint32_t Width;
-    SurfaceFormat Format;
 };
 
 void ReadPNGDataCallback(::png_structp png_ptr, ::png_bytep data, ::png_size_t length)
@@ -41,16 +31,24 @@ void ReadPNGDataCallback(::png_structp png_ptr, ::png_bytep data, ::png_size_t l
     }
 }
 
-Texture2DParsingData ReadPNG(const std::uint8_t* data, std::size_t byteLength)
+} // namespace
+
+std::tuple<ImageBuffer, std::shared_ptr<Error>>
+Decode(const std::uint8_t* data, std::size_t byteLength)
 {
+    ImageBuffer image;
+    image.PixelData = nullptr;
+    image.ByteLength = 0;
+    image.MipmapCount = 0;
+
     auto pngPtr = ::png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
     if (nullptr == pngPtr) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented.");
+        return std::make_tuple(std::move(image), Errors::New("png_create_read_struct() failed"));
     }
 
     auto infoPtr = ::png_create_info_struct(pngPtr);
 
-    ScopeGuard scopedDestroyReadStruct([&] {
+    Detail::ScopeGuard scopedDestroyReadStruct([&] {
         if (nullptr != pngPtr) {
             if (nullptr != infoPtr) {
                 ::png_destroy_read_struct(&pngPtr, &infoPtr, nullptr);
@@ -62,7 +60,7 @@ Texture2DParsingData ReadPNG(const std::uint8_t* data, std::size_t byteLength)
     });
 
     if (nullptr == infoPtr) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented.");
+        return std::make_tuple(std::move(image), Errors::New("infoPtr is null"));
     }
 
     PNGBinaryContext context;
@@ -71,15 +69,16 @@ Texture2DParsingData ReadPNG(const std::uint8_t* data, std::size_t byteLength)
     context.Offset = 0;
     ::png_set_read_fn(pngPtr, &context, ReadPNGDataCallback);
 
-    constexpr auto pngSignatureByteLength = sizeof(std::uint8_t) * 8;
+    // NOTE: If we have already read some of the signature.
+    constexpr auto pngSignatureByteLength = 0;
     ::png_set_sig_bytes(pngPtr, pngSignatureByteLength);
 
-    // Read PNG Header
+    // NOTE: Read PNG header.
     ::png_read_info(pngPtr, infoPtr);
     auto const originalColorType = ::png_get_color_type(pngPtr, infoPtr);
     auto const originalBitDepth = ::png_get_bit_depth(pngPtr, infoPtr);
 
-    // Settings
+    // NOTE: Settings
     if (originalColorType == PNG_COLOR_TYPE_PALETTE) {
         // NOTE: PALETTE => RGB (24 bit)
         ::png_set_palette_to_rgb(pngPtr);
@@ -121,7 +120,7 @@ Texture2DParsingData ReadPNG(const std::uint8_t* data, std::size_t byteLength)
     POMDOG_ASSERT(pixelWidth > 0);
     POMDOG_ASSERT(pixelHeight > 0);
 
-    // Read PNG Image Data
+    // NOTE: Read PNG image data
     auto const rowBytes = ::png_get_rowbytes(pngPtr, infoPtr);
     std::vector<std::uint8_t> rowData(rowBytes * pixelHeight * sizeof(png_byte));
 
@@ -135,10 +134,9 @@ Texture2DParsingData ReadPNG(const std::uint8_t* data, std::size_t byteLength)
     ::png_read_image(pngPtr, bytePointers.data());
     ::png_read_end(pngPtr, nullptr);
 
-    Texture2DParsingData parsingData;
-    parsingData.Width = pixelWidth;
-    parsingData.Height = pixelHeight;
-    parsingData.Format = ([](::png_byte colorTypeIn) -> SurfaceFormat {
+    image.Width = pixelWidth;
+    image.Height = pixelHeight;
+    image.Format = ([](::png_byte colorTypeIn) -> SurfaceFormat {
         POMDOG_ASSERT(colorTypeIn != PNG_COLOR_TYPE_RGB);
         switch (colorTypeIn) {
         case PNG_COLOR_TYPE_GRAY:
@@ -154,33 +152,11 @@ Texture2DParsingData ReadPNG(const std::uint8_t* data, std::size_t byteLength)
         return SurfaceFormat::A8_UNorm;
     })(colorType);
 
-    parsingData.Binary = std::move(rowData);
+    image.RawData = std::move(rowData);
+    image.PixelData = image.RawData.data();
+    image.ByteLength = image.RawData.size();
 
-    return parsingData;
+    return std::make_tuple(std::move(image), nullptr);
 }
 
-} // unnamed namespace
-
-std::shared_ptr<Texture2D> PNGTextureReader::Read(
-    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-    const std::uint8_t* data,
-    std::size_t byteLength)
-{
-    POMDOG_ASSERT(graphicsDevice);
-    POMDOG_ASSERT(data != nullptr);
-    POMDOG_ASSERT(byteLength > 0);
-
-    auto parsingData = ReadPNG(data, byteLength);
-
-    constexpr bool generateMipmap = false;
-
-    auto texture = std::make_shared<Texture2D>(graphicsDevice,
-        parsingData.Width, parsingData.Height,
-        generateMipmap, parsingData.Format);
-
-    POMDOG_ASSERT(!parsingData.Binary.empty());
-    texture->SetData(parsingData.Binary.data());
-    return texture;
-}
-
-} // namespace Pomdog::Detail
+} // namespace Pomdog::PNG

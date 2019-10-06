@@ -1,15 +1,17 @@
 // Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
-#include "DDSTextureReader.hpp"
+#include "Pomdog/Content/Image/DDS.hpp"
 #include "../../Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
 #include "Pomdog/Content/Utility/MakeFourCC.hpp"
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
-#include "Pomdog/Graphics/Texture2D.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
+#include <optional>
 
-namespace Pomdog::Detail {
+using Pomdog::Detail::MakeFourCC;
+using Pomdog::Detail::BinaryReader;
+
+namespace Pomdog::DDS {
 namespace {
 
 #if defined(POMDOG_COMPILER_MSVC)
@@ -28,18 +30,18 @@ namespace {
 #    error "'POMDOG_DETAIL_PACKED' is not supported in this compiler."
 #endif
 
-struct DDSPixelFormat {
+struct DDSPixelFormat final {
     std::uint32_t ByteSize;
     std::uint32_t Flags;
     std::uint32_t FourCC;
-    std::uint32_t RgbBitCount;
+    std::uint32_t RGBBitCount;
     std::uint32_t RedBitMask;
     std::uint32_t GreenBitMask;
     std::uint32_t BlueBitMask;
     std::uint32_t AlphaBitMask;
 } POMDOG_DETAIL_PACKED;
 
-struct DDSHeader {
+struct DDSHeader final {
     std::uint32_t  ByteSize;
     std::uint32_t  Flags;
     std::uint32_t  PixelHeight;
@@ -56,7 +58,7 @@ struct DDSHeader {
     std::uint32_t  Reserved2;
 } POMDOG_DETAIL_PACKED;
 
-struct DDSHeaderDXT10 {
+struct DDSHeaderDXT10 final {
     std::uint32_t DxgiFormat;        // Note: enum DXGI_FORMAT
     std::uint32_t ResourceDimension; // Note: enum D3D10_RESOURCE_DIMENSION
     std::uint32_t MiscFlag;
@@ -82,7 +84,16 @@ static constexpr std::uint32_t Luminance   = 0x00020000; // DDPF_LUMINANCE
 
 } // namespace DirectDrawPixelFormat
 
-SurfaceFormat ToSurfaceFormatFromDDSPixelFormat(const DDSPixelFormat& pixelFormat)
+[[nodiscard]] bool
+IsDDSFormat(std::uint32_t signature) noexcept
+{
+    constexpr auto fourCC = MakeFourCC('D', 'D', 'S', ' ');
+    static_assert(fourCC == 0x20534444, "The four character code value is 'DDS '");
+    return (signature == fourCC);
+}
+
+[[nodiscard]] std::optional<SurfaceFormat>
+ToSurfaceFormat(const DDSPixelFormat& pixelFormat)
 {
     constexpr std::uint32_t FourCC_A32B32G32R32_Float = 0x00000074;
 
@@ -107,7 +118,7 @@ SurfaceFormat ToSurfaceFormatFromDDSPixelFormat(const DDSPixelFormat& pixelForma
         }
     }
     else if (pixelFormat.Flags & DirectDrawPixelFormat::RGB) {
-        switch (pixelFormat.RgbBitCount) {
+        switch (pixelFormat.RGBBitCount) {
         case 32:
             if (
                 (0x000000ff == pixelFormat.RedBitMask) &&
@@ -137,12 +148,12 @@ SurfaceFormat ToSurfaceFormatFromDDSPixelFormat(const DDSPixelFormat& pixelForma
         }
     }
     else if (pixelFormat.Flags & DirectDrawPixelFormat::Alpha) {
-        if (8 == pixelFormat.RgbBitCount) {
+        if (8 == pixelFormat.RGBBitCount) {
             return SurfaceFormat::A8_UNorm;
         }
     }
     else if (pixelFormat.Flags & DirectDrawPixelFormat::Luminance) {
-        switch (pixelFormat.RgbBitCount) {
+        switch (pixelFormat.RGBBitCount) {
         case 8:
             if (
                 (0x000000ff == pixelFormat.RedBitMask) &&
@@ -167,54 +178,78 @@ SurfaceFormat ToSurfaceFormatFromDDSPixelFormat(const DDSPixelFormat& pixelForma
         }
     }
 
-    POMDOG_THROW_EXCEPTION(std::runtime_error,
-        "Cannot find the surface format. Undefined or not supported");
+    return std::nullopt;
 }
 
-std::size_t ComputePixelDataByteLength(const DDSHeader& ddsHeader)
+[[nodiscard]] std::size_t
+ComputePixelDataByteLength(const DDSHeader& ddsHeader, SurfaceFormat format)
 {
-    auto const bytesPerBlock = ddsHeader.PixelFormat.RgbBitCount;
-    auto const levelCount = (ddsHeader.MipMapCount > 0) ? ddsHeader.MipMapCount: 1;
+    const auto levelCount = (ddsHeader.MipMapCount > 0) ? ddsHeader.MipMapCount: 1;
+
+    const auto bytesPerBlock = [&format]() -> int {
+        switch (format) {
+        case SurfaceFormat::BlockComp1_UNorm:
+            return 8;
+        case SurfaceFormat::BlockComp2_UNorm:
+            return 16;
+        case SurfaceFormat::BlockComp3_UNorm:
+            return 16;
+        default:
+            break;
+        }
+        return 16;
+    }();
 
     std::size_t result = 0;
-    std::size_t mipMapPixelWidth = ddsHeader.PixelWidth;
-    std::size_t mipMapPixelHeight = ddsHeader.PixelHeight;
+    std::size_t mipmapPixelWidth = ddsHeader.PixelWidth;
+    std::size_t mipmapPixelHeight = ddsHeader.PixelHeight;
 
     for (std::uint32_t mipmapLevel = 0; mipmapLevel < levelCount; ++mipmapLevel) {
-        std::size_t const strideBytesPerMipMap = ((mipMapPixelWidth + 3)/4) * ((mipMapPixelHeight + 3)/4) * bytesPerBlock;
+        std::size_t const strideBytesPerMipMap = ((mipmapPixelWidth + 3)/4) * ((mipmapPixelHeight + 3)/4) * bytesPerBlock;
 
         result += strideBytesPerMipMap;
 
-        mipMapPixelWidth = (mipMapPixelWidth >> 1) ? (mipMapPixelWidth >> 1): 1;
-        mipMapPixelHeight = (mipMapPixelHeight >> 1) ? (mipMapPixelHeight >> 1): 1;
+        mipmapPixelWidth = (mipmapPixelWidth >> 1) ? (mipmapPixelWidth >> 1): 1;
+        mipmapPixelHeight = (mipmapPixelHeight >> 1) ? (mipmapPixelHeight >> 1): 1;
     }
     return result;
 }
 
-} // unnamed namespace
+} // namespace
 
-std::shared_ptr<Texture2D> DDSTextureReader::Read(
-    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-    const std::uint8_t* data,
-    std::size_t byteLength)
+std::tuple<ImageBuffer, std::shared_ptr<Error>>
+Decode(const std::uint8_t* data, std::size_t size)
 {
-    POMDOG_ASSERT(graphicsDevice);
     POMDOG_ASSERT(data != nullptr);
-    POMDOG_ASSERT(byteLength > 0);
+    POMDOG_ASSERT(size > 0);
+
+    ImageBuffer image;
+    image.PixelData = nullptr;
+    image.ByteLength = 0;
 
     std::size_t offsetBytes = 0;
 
-    if (!BinaryReader::CanRead<DDSHeader>(byteLength - offsetBytes)) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented.");
+    if (!BinaryReader::CanRead<std::uint32_t>(size - offsetBytes)) {
+        return std::make_tuple(std::move(image), Errors::New("cannot find dds signature"));
     }
-    auto const ddsHeader = BinaryReader::Read<DDSHeader>(data);
+    const auto ddsSignature = BinaryReader::Read<std::uint32_t>(data + offsetBytes);
+    offsetBytes += sizeof(ddsSignature);
+
+    if (!IsDDSFormat(ddsSignature)) {
+        return std::make_tuple(std::move(image), Errors::New("invalid format"));
+    }
+
+    if (!BinaryReader::CanRead<DDSHeader>(size - offsetBytes)) {
+        return std::make_tuple(std::move(image), Errors::New("dds header has an invalid format"));
+    }
+    const auto ddsHeader = BinaryReader::Read<DDSHeader>(data + offsetBytes);
     offsetBytes += sizeof(ddsHeader);
 
     if (ddsHeader.ByteSize != sizeof(DDSHeader)) {
-        POMDOG_THROW_EXCEPTION(std::domain_error, "DDSHeader has invalid format.");
+        return std::make_tuple(std::move(image), Errors::New("dds header has an invalid format"));
     }
     if (ddsHeader.PixelFormat.ByteSize != sizeof(DDSPixelFormat)) {
-        POMDOG_THROW_EXCEPTION(std::domain_error, "DDSHeader has invalid format.");
+        return std::make_tuple(std::move(image), Errors::New("dds header has an invalid format"));
     }
 
     bool hasDXT10Header = false;
@@ -225,27 +260,30 @@ std::shared_ptr<Texture2D> DDSTextureReader::Read(
     }
 
     if (hasDXT10Header) {
-        ///@todo Not implemented.
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Sorry, DXT10 header is not supported.");
+        // FIXME: Not implemented yet.
+        return std::make_tuple(std::move(image), Errors::New("Sorry, DXT10 header is not supported yet."));
     }
 
-    std::uint32_t pixelWidth = ddsHeader.PixelWidth;
-    std::uint32_t pixelHeight = ddsHeader.PixelHeight;
-    SurfaceFormat surfaceFormat = ToSurfaceFormatFromDDSPixelFormat(ddsHeader.PixelFormat);
-    bool const generateMipmap = (ddsHeader.MipMapCount > 0);
+    image.Width = ddsHeader.PixelWidth;
+    image.Height = ddsHeader.PixelHeight;
+    image.MipmapCount = ddsHeader.MipMapCount;
 
-    if ((byteLength - offsetBytes) < ComputePixelDataByteLength(ddsHeader)) {
-        POMDOG_THROW_EXCEPTION(std::domain_error, "DDSHeader has invalid format.");
+    if (auto format = ToSurfaceFormat(ddsHeader.PixelFormat); format != std::nullopt) {
+        image.Format = *format;
     }
-
-    auto texture = std::make_shared<Texture2D>(graphicsDevice,
-        pixelWidth, pixelHeight, generateMipmap, surfaceFormat);
-
-    if (texture) {
-        texture->SetData(data + offsetBytes);
+    else {
+        return std::make_tuple(std::move(image), Errors::New("cannot find the surface format. Undefined or not supported"));
     }
+    image.ByteLength = ComputePixelDataByteLength(ddsHeader, image.Format);
 
-    return texture;
+    if ((size - offsetBytes) < image.ByteLength) {
+        return std::make_tuple(std::move(image), Errors::New("dds header has an invalid format"));
+    }
+    image.PixelData = data + offsetBytes;
+
+    POMDOG_ASSERT(image.RawData.empty());
+
+    return std::make_tuple(std::move(image), nullptr);
 }
 
-} // namespace Pomdog::Detail
+} // namespace Pomdog::DDS
