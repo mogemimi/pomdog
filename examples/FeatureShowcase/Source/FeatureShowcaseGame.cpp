@@ -1,4 +1,5 @@
 #include "FeatureShowcaseGame.hpp"
+#include "AudioClipTest/AudioClipTest.hpp"
 #include "Beam2DTest/Beam2DTest.hpp"
 #include "HTTPClientTest/HTTPClientTest.hpp"
 #include "ImageEffectsTest/ImageEffectsTest.hpp"
@@ -9,6 +10,8 @@
 #include "SpriteBatchTest/SpriteBatchTest.hpp"
 #include "SpriteFontTest/SpriteFontTest.hpp"
 #include "SpriteLineTest/SpriteLineTest.hpp"
+#include "Texture2DLoaderTest/Texture2DLoaderTest.hpp"
+#include "VoxelModelTest/VoxelModelTest.hpp"
 #include <cmath>
 #include <utility>
 
@@ -81,6 +84,18 @@ void FeatureShowcaseGame::Initialize()
     buttons.emplace_back("HTTPClient Test", [this] {
         window->SetTitle("Feature Showcase > HTTPClient Test");
         subGame = std::make_shared<FeatureShowcase::HTTPClientTest>(gameHost);
+    });
+    buttons.emplace_back("AudioClip Test", [this] {
+        window->SetTitle("Feature Showcase > AudioClip Test");
+        subGame = std::make_shared<FeatureShowcase::AudioClipTest>(gameHost);
+    });
+    buttons.emplace_back("Texture2DLoader Test", [this] {
+        window->SetTitle("Feature Showcase > Texture2DLoader Test");
+        subGame = std::make_shared<FeatureShowcase::Texture2DLoaderTest>(gameHost);
+    });
+    buttons.emplace_back("VoxelModel Test", [this] {
+        window->SetTitle("Feature Showcase > VoxelModel Test");
+        subGame = std::make_shared<FeatureShowcase::VoxelModelTest>(gameHost);
     });
 
     hudButtons.emplace_back("Back", [this] {

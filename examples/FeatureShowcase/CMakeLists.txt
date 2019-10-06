@@ -12,6 +12,7 @@ set(CMAKE_CXX_EXTENSIONS off)
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
 
 source_group(Source                       REGULAR_EXPRESSION "Source/*")
+source_group(Source\\AudioClipTest        REGULAR_EXPRESSION "Source/AudioClipTest/*")
 source_group(Source\\Beam2DTest           REGULAR_EXPRESSION "Source/Beam2DTest/*")
 source_group(Source\\HTTPClientTest       REGULAR_EXPRESSION "Source/HTTPClientTest/*")
 source_group(Source\\ImageEffectsTest     REGULAR_EXPRESSION "Source/ImageEffectsTest/*")
@@ -22,6 +23,8 @@ source_group(Source\\PrimitiveBatchTest   REGULAR_EXPRESSION "Source/PrimitiveBa
 source_group(Source\\SpriteBatchTest      REGULAR_EXPRESSION "Source/SpriteBatchTest/*")
 source_group(Source\\SpriteFontTest       REGULAR_EXPRESSION "Source/SpriteFontTest/*")
 source_group(Source\\SpriteLineTest       REGULAR_EXPRESSION "Source/SpriteLineTest/*")
+source_group(Source\\Texture2DLoaderTest  REGULAR_EXPRESSION "Source/Texture2DLoaderTest/*")
+source_group(Source\\VoxelModelTest       REGULAR_EXPRESSION "Source/VoxelModelTest/*")
 source_group(Platform                     REGULAR_EXPRESSION "Platform.*/*")
 
 set(RESOURCE_FILES
@@ -38,6 +41,8 @@ set(RESOURCE_FILES
 add_executable(${PRODUCT_NAME} WIN32
   Source/FeatureShowcaseGame.cpp
   Source/FeatureShowcaseGame.hpp
+  Source/AudioClipTest/AudioClipTest.cpp
+  Source/AudioClipTest/AudioClipTest.hpp
   Source/Beam2DTest/Beam2DTest.cpp
   Source/Beam2DTest/Beam2DTest.hpp
   Source/HTTPClientTest/HTTPClientTest.cpp
@@ -58,6 +63,10 @@ add_executable(${PRODUCT_NAME} WIN32
   Source/SpriteFontTest/SpriteFontTest.hpp
   Source/SpriteLineTest/SpriteLineTest.cpp
   Source/SpriteLineTest/SpriteLineTest.hpp
+  Source/Texture2DLoaderTest/Texture2DLoaderTest.cpp
+  Source/Texture2DLoaderTest/Texture2DLoaderTest.hpp
+  Source/VoxelModelTest/VoxelModelTest.cpp
+  Source/VoxelModelTest/VoxelModelTest.hpp
   ${RESOURCE_FILES}
 
   # On Mac
