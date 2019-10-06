@@ -3,6 +3,7 @@
 #include "Pomdog/Content/AssetLoaders/Texture2DLoader.hpp"
 #include "Pomdog/Content/Image/DDS.hpp"
 #include "Pomdog/Content/Image/PNG.hpp"
+#include "Pomdog/Content/Image/PNM.hpp"
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
 #include "Pomdog/Content/Utility/MakeFourCC.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
@@ -35,6 +36,22 @@ bool IsDDSFormat(const std::array<std::uint8_t, 8>& signature) noexcept
     constexpr auto fourCC = MakeFourCC('D', 'D', 'S', ' ');
     static_assert(fourCC == 0x20534444, "The four character code value is 'DDS '");
     return (MakeFourCC(signature[0], signature[1], signature[2], signature[3]) == fourCC);
+}
+
+bool IsPNMFormat(const std::array<std::uint8_t, 8>& signature) noexcept
+{
+    std::string_view view{reinterpret_cast<const char*>(signature.data()), 2};
+    if ((view != "P1") &&
+        (view != "P2") &&
+        (view != "P3") &&
+        (view != "P4") &&
+        (view != "P5") &&
+        (view != "P6")) {
+        return false;
+    }
+
+    auto s = reinterpret_cast<const char*>(signature.data() + 2);
+    return (*s == ' ') || (*s == '\n');
 }
 
 } // namespace
@@ -135,6 +152,36 @@ AssetLoader<Texture2D>::operator()(AssetManager& assets, const std::string& file
         POMDOG_ASSERT(image.PixelData != nullptr);
         POMDOG_ASSERT(image.ByteLength > 0);
 
+        texture->SetData(image.PixelData);
+
+        return std::make_tuple(std::move(texture), nullptr);
+    }
+    else if (IsPNMFormat(signature)) {
+        std::vector<std::uint8_t> binary;
+        binary.resize(byteLength);
+        stream.read(reinterpret_cast<char*>(binary.data()), binary.size());
+        if (!stream) {
+            auto err = Errors::New("failed to read the file " + filePath);
+            return std::make_tuple(nullptr, std::move(err));
+        }
+
+        auto[image, decodeErr] = PNM::Decode(reinterpret_cast<const char*>(binary.data()), binary.size());
+        if (decodeErr != nullptr) {
+            auto err = Errors::Wrap(std::move(decodeErr), "cannot load the PNM texture " + filePath);
+            return std::make_tuple(nullptr, std::move(err));
+        }
+
+        constexpr bool generateMipmap = false;
+
+        auto texture = std::make_shared<Texture2D>(
+            graphicsDevice,
+            image.Width,
+            image.Height,
+            generateMipmap,
+            image.Format);
+
+        POMDOG_ASSERT(image.PixelData != nullptr);
+        POMDOG_ASSERT(image.ByteLength > 0);
         texture->SetData(image.PixelData);
 
         return std::make_tuple(std::move(texture), nullptr);

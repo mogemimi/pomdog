@@ -290,6 +290,8 @@
 		D719A53B23497EB600C1868B /* DDS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D719A53723497EB600C1868B /* DDS.cpp */; };
 		D719A53C23497EB600C1868B /* PNG.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D719A53823497EB600C1868B /* PNG.cpp */; };
 		D719A53D23497EB600C1868B /* PNG.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D719A53823497EB600C1868B /* PNG.cpp */; };
+		D719A53E23497EB600C1868B /* PNM.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D719A53923497EB600C1868B /* PNM.cpp */; };
+		D719A53F23497EB600C1868B /* PNM.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D719A53923497EB600C1868B /* PNM.cpp */; };
 		D7334DC8228AC80200232225 /* PolylineBatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334DC6228AC80200232225 /* PolylineBatch.cpp */; };
 		D7334DC9228AC80200232225 /* PolylineBatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334DC6228AC80200232225 /* PolylineBatch.cpp */; };
 		D7334DCA228AC80200232225 /* PrimitiveBatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334DC7228AC80200232225 /* PrimitiveBatch.cpp */; };
@@ -860,6 +862,7 @@
 		D702F1E122FD8F2C00886A78 /* mbedtls-crypto.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "mbedtls-crypto.xcodeproj"; path = "dependencies/mbedtls-crypto.xcodeproj"; sourceTree = "<group>"; };
 		D719A52623497E4200C1868B /* PNG.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PNG.hpp; sourceTree = "<group>"; };
 		D719A52723497E4200C1868B /* DDS.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = DDS.hpp; sourceTree = "<group>"; };
+		D719A52823497E4200C1868B /* PNM.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PNM.hpp; sourceTree = "<group>"; };
 		D719A52923497E4200C1868B /* ImageBuffer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ImageBuffer.hpp; sourceTree = "<group>"; };
 		D719A52A23497E4F00C1868B /* WAV.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = WAV.hpp; sourceTree = "<group>"; };
 		D719A52C23497E5900C1868B /* Texture2DLoader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Texture2DLoader.hpp; sourceTree = "<group>"; };
@@ -868,6 +871,7 @@
 		D719A53123497EA600C1868B /* WAV.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WAV.cpp; sourceTree = "<group>"; };
 		D719A53723497EB600C1868B /* DDS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DDS.cpp; sourceTree = "<group>"; };
 		D719A53823497EB600C1868B /* PNG.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PNG.cpp; sourceTree = "<group>"; };
+		D719A53923497EB600C1868B /* PNM.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PNM.cpp; sourceTree = "<group>"; };
 		D7334DC6228AC80200232225 /* PolylineBatch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PolylineBatch.cpp; sourceTree = "<group>"; };
 		D7334DC7228AC80200232225 /* PrimitiveBatch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PrimitiveBatch.cpp; sourceTree = "<group>"; };
 		D7334DCC228AC81F00232225 /* SpriteLine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SpriteLine.cpp; sourceTree = "<group>"; };
@@ -1966,6 +1970,7 @@
 				D719A52723497E4200C1868B /* DDS.hpp */,
 				D719A52923497E4200C1868B /* ImageBuffer.hpp */,
 				D719A52623497E4200C1868B /* PNG.hpp */,
+				D719A52823497E4200C1868B /* PNM.hpp */,
 			);
 			path = Image;
 			sourceTree = "<group>";
@@ -1983,6 +1988,7 @@
 			children = (
 				D719A53723497EB600C1868B /* DDS.cpp */,
 				D719A53823497EB600C1868B /* PNG.cpp */,
+				D719A53923497EB600C1868B /* PNM.cpp */,
 			);
 			path = Image;
 			sourceTree = "<group>";
@@ -2513,6 +2519,7 @@
 				D702F06B22FD8B1B00886A78 /* SocketHelperPOSIX.cpp in Sources */,
 				A997F6F61CAEFC4800926392 /* BufferMetal.mm in Sources */,
 				D036ADDD0CD6E4CE27AC1A93 /* GraphicsContextGL4.cpp in Sources */,
+				D719A53E23497EB600C1868B /* PNM.cpp in Sources */,
 				74D477E9B36CBB96B59576DA /* GraphicsDeviceGL4.cpp in Sources */,
 				BD5C4B6ACB960141061065E7 /* InputLayoutGL4.cpp in Sources */,
 				616958519334C7EF67A9B08E /* PipelineStateGL4.cpp in Sources */,
@@ -2682,6 +2689,7 @@
 				D702F06C22FD8B1B00886A78 /* SocketHelperPOSIX.cpp in Sources */,
 				A997F6F71CAEFC4800926392 /* BufferMetal.mm in Sources */,
 				C7615C67C153671C670F649B /* GraphicsContextGL4.cpp in Sources */,
+				D719A53F23497EB600C1868B /* PNM.cpp in Sources */,
 				FD3FD836F0346B587EDB61DE /* GraphicsDeviceGL4.cpp in Sources */,
 				B3BF71F0DA976F207A41EC64 /* InputLayoutGL4.cpp in Sources */,
 				FC16EE3B4D5C9E58010BCD0A /* PipelineStateGL4.cpp in Sources */,

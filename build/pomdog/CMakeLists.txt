@@ -92,6 +92,7 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/include/Pomdog/Content/Image/ImageBuffer.hpp
   ${POMDOG_DIR}/include/Pomdog/Content/Image/DDS.hpp
   ${POMDOG_DIR}/include/Pomdog/Content/Image/PNG.hpp
+  ${POMDOG_DIR}/include/Pomdog/Content/Image/PNM.hpp
   ${POMDOG_DIR}/include/Pomdog/Content/Utility/BinaryReader.hpp
   ${POMDOG_DIR}/include/Pomdog/Content/Utility/MakeFourCC.hpp
   ${POMDOG_DIR}/include/Pomdog/Content/detail/AssetDictionary.hpp
@@ -265,6 +266,7 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/src/Content/Audio/WAV.cpp
   ${POMDOG_DIR}/src/Content/Image/DDS.cpp
   ${POMDOG_DIR}/src/Content/Image/PNG.cpp
+  ${POMDOG_DIR}/src/Content/Image/PNM.cpp
   ${POMDOG_DIR}/src/Graphics/ConstantBuffer.cpp
   ${POMDOG_DIR}/src/Graphics/EffectBinaryParameter.cpp
   ${POMDOG_DIR}/src/Graphics/EffectReflection.cpp
