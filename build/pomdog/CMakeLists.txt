@@ -88,6 +88,7 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/include/Pomdog/Content/AssetBuilders/PipelineStateBuilder.hpp
   ${POMDOG_DIR}/include/Pomdog/Content/AssetBuilders/ShaderBuilder.hpp
   ${POMDOG_DIR}/include/Pomdog/Content/Utility/BinaryFileStream.hpp
+  ${POMDOG_DIR}/include/Pomdog/Content/Audio/Vorbis.hpp
   ${POMDOG_DIR}/include/Pomdog/Content/Audio/WAV.hpp
   ${POMDOG_DIR}/include/Pomdog/Content/Image/ImageBuffer.hpp
   ${POMDOG_DIR}/include/Pomdog/Content/Image/DDS.hpp
@@ -263,6 +264,7 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/src/Content/AssetBuilders/ShaderBuilder.cpp
   ${POMDOG_DIR}/src/Content/AssetLoaders/AudioClipLoader.cpp
   ${POMDOG_DIR}/src/Content/AssetLoaders/Texture2DLoader.cpp
+  ${POMDOG_DIR}/src/Content/Audio/Vorbis.cpp
   ${POMDOG_DIR}/src/Content/Audio/WAV.cpp
   ${POMDOG_DIR}/src/Content/Image/DDS.cpp
   ${POMDOG_DIR}/src/Content/Image/PNG.cpp

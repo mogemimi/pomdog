@@ -286,6 +286,8 @@
 		D702F1F922FD914900886A78 /* libmbedtls-crypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D702F1E622FD8F2C00886A78 /* libmbedtls-crypto.a */; };
 		D719A53323497EA600C1868B /* WAV.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D719A53123497EA600C1868B /* WAV.cpp */; };
 		D719A53423497EA600C1868B /* WAV.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D719A53123497EA600C1868B /* WAV.cpp */; };
+		D719A53523497EA600C1868B /* Vorbis.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D719A53223497EA600C1868B /* Vorbis.cpp */; };
+		D719A53623497EA600C1868B /* Vorbis.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D719A53223497EA600C1868B /* Vorbis.cpp */; };
 		D719A53A23497EB600C1868B /* DDS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D719A53723497EB600C1868B /* DDS.cpp */; };
 		D719A53B23497EB600C1868B /* DDS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D719A53723497EB600C1868B /* DDS.cpp */; };
 		D719A53C23497EB600C1868B /* PNG.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D719A53823497EB600C1868B /* PNG.cpp */; };
@@ -865,10 +867,12 @@
 		D719A52823497E4200C1868B /* PNM.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PNM.hpp; sourceTree = "<group>"; };
 		D719A52923497E4200C1868B /* ImageBuffer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ImageBuffer.hpp; sourceTree = "<group>"; };
 		D719A52A23497E4F00C1868B /* WAV.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = WAV.hpp; sourceTree = "<group>"; };
+		D719A52B23497E4F00C1868B /* Vorbis.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Vorbis.hpp; sourceTree = "<group>"; };
 		D719A52C23497E5900C1868B /* Texture2DLoader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Texture2DLoader.hpp; sourceTree = "<group>"; };
 		D719A52D23497E5900C1868B /* AudioClipLoader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AudioClipLoader.hpp; sourceTree = "<group>"; };
 		D719A52E23497E5900C1868B /* AssetLoader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AssetLoader.hpp; sourceTree = "<group>"; };
 		D719A53123497EA600C1868B /* WAV.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WAV.cpp; sourceTree = "<group>"; };
+		D719A53223497EA600C1868B /* Vorbis.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Vorbis.cpp; sourceTree = "<group>"; };
 		D719A53723497EB600C1868B /* DDS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DDS.cpp; sourceTree = "<group>"; };
 		D719A53823497EB600C1868B /* PNG.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PNG.cpp; sourceTree = "<group>"; };
 		D719A53923497EB600C1868B /* PNM.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PNM.cpp; sourceTree = "<group>"; };
@@ -1959,6 +1963,7 @@
 		D719A52423497E0100C1868B /* Audio */ = {
 			isa = PBXGroup;
 			children = (
+				D719A52B23497E4F00C1868B /* Vorbis.hpp */,
 				D719A52A23497E4F00C1868B /* WAV.hpp */,
 			);
 			path = Audio;
@@ -1978,6 +1983,7 @@
 		D719A52F23497E8400C1868B /* Audio */ = {
 			isa = PBXGroup;
 			children = (
+				D719A53223497EA600C1868B /* Vorbis.cpp */,
 				D719A53123497EA600C1868B /* WAV.cpp */,
 			);
 			path = Audio;
@@ -2397,6 +2403,7 @@
 				4EE6EBE03E9AD9C3BEF652F2 /* AudioClip.cpp in Sources */,
 				A997F7041CAEFC4900926392 /* SamplerStateMetal.mm in Sources */,
 				D7334E1D228AEC1300232225 /* VignetteEffect.cpp in Sources */,
+				D719A53523497EA600C1868B /* Vorbis.cpp in Sources */,
 				B7E9DD7713CD0E5323210193 /* AudioEngine.cpp in Sources */,
 				D702F04A22FD8AC700886A78 /* AddressParser.cpp in Sources */,
 				A9A8228F1DAB7FB70091497F /* Image.cpp in Sources */,
@@ -2567,6 +2574,7 @@
 				8F708C4B18D750ED37EFCF6B /* AudioClip.cpp in Sources */,
 				A997F7051CAEFC4900926392 /* SamplerStateMetal.mm in Sources */,
 				D7334E1E228AEC1300232225 /* VignetteEffect.cpp in Sources */,
+				D719A53623497EA600C1868B /* Vorbis.cpp in Sources */,
 				3EB59864165741842C8DD788 /* AudioEngine.cpp in Sources */,
 				D702F04B22FD8AC700886A78 /* AddressParser.cpp in Sources */,
 				A9A822901DAB7FB70091497F /* Image.cpp in Sources */,

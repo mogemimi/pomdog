@@ -2,12 +2,12 @@
 
 #include "Pomdog/Content/AssetLoaders/AudioClipLoader.hpp"
 #include "Pomdog/Audio/AudioClip.hpp"
+#include "Pomdog/Content/Audio/Vorbis.hpp"
 #include "Pomdog/Content/Audio/WAV.hpp"
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
 #include "Pomdog/Content/Utility/MakeFourCC.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
 #include "Pomdog/Utility/FileSystem.hpp"
 #include <fstream>
 #include <memory>
@@ -65,9 +65,15 @@ AssetLoader<AudioClip>::operator()([[maybe_unused]] AssetManager& assets, const 
         }
     }
     else if (fourCC == MakeFourCC('O', 'g', 'g', 'S')) {
-        // This file format is Ogg Vorbis.
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "Pomdog does not yet supported Ogg Vorbis format.");
+        // NOTE: The file format is Ogg Vorbis.
+        stream.close();
+
+        auto[audioClip, loadErr] = Vorbis::Load(filePath);
+        if (loadErr != nullptr) {
+            auto err = Errors::Wrap(std::move(loadErr), "Cannot load the ogg/vorbis file " + filePath);
+            return std::make_tuple(nullptr, std::move(err));
+        }
+        return std::make_tuple(std::move(audioClip), nullptr);
     }
 
     auto err = Errors::New("This audio file format is not supported " + filePath);
