@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Content/AssetBuilders/PipelineStateBuilder.hpp"
-#include "Pomdog/Content/detail/AssetLoaderContext.hpp"
+#include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Graphics/EffectReflection.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/PipelineState.hpp"
@@ -17,7 +17,7 @@ namespace Pomdog::AssetBuilders {
 class Builder<PipelineState>::Impl final {
 public:
     PipelineStateDescription description;
-    Detail::AssetLoaderContext loaderContext;
+    std::reference_wrapper<AssetManager const> assets;
     std::shared_ptr<GraphicsDevice> graphicsDevice;
     bool hasBlendState;
     bool hasRasterizerState;
@@ -25,14 +25,16 @@ public:
     bool hasRenderTargetViewFormats;
     bool hasDepthStencilViewFormat;
 
-    Impl();
-
 public:
+    explicit Impl(AssetManager& assets);
+
     std::shared_ptr<PipelineState> Load();
 };
 
-Builder<PipelineState>::Impl::Impl()
+Builder<PipelineState>::Impl::Impl(AssetManager& assetsIn)
+    : assets(assetsIn)
 {
+    graphicsDevice = assetsIn.GetGraphicsDevice();
     description.MultiSampleMask = std::numeric_limits<std::uint32_t>::max();
     hasBlendState = false;
     hasRasterizerState = false;
@@ -87,13 +89,9 @@ std::shared_ptr<PipelineState> Builder<PipelineState>::Impl::Load()
     return pipelineState;
 }
 
-Builder<PipelineState>::Builder(const Detail::AssetLoaderContext& contextIn)
-    : impl(std::make_unique<Impl>())
+Builder<PipelineState>::Builder(AssetManager& assetsIn)
+    : impl(std::make_unique<Impl>(assetsIn))
 {
-    POMDOG_ASSERT(impl);
-    impl->loaderContext = contextIn;
-    impl->graphicsDevice = contextIn.GraphicsDevice.lock();
-    POMDOG_ASSERT(impl->graphicsDevice);
 }
 
 Builder<PipelineState>::Builder(Builder<PipelineState> &&) = default;

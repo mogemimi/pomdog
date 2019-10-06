@@ -9,16 +9,16 @@
 #include <string>
 #include <vector>
 
-namespace Pomdog::Detail {
-class AssetLoaderContext;
-} // namespace Pomdog::Detail
+namespace Pomdog {
+class AssetManager;
+} // namespace Pomdog
 
 namespace Pomdog::AssetBuilders {
 
 template <>
 class POMDOG_EXPORT Builder<PipelineState> final {
 public:
-    explicit Builder(const Detail::AssetLoaderContext& loaderContext);
+    explicit Builder(AssetManager& assets);
 
     Builder(Builder&&);
 

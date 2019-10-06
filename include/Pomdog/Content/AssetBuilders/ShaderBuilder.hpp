@@ -11,18 +11,16 @@
 #include <memory>
 #include <string>
 
-namespace Pomdog::Detail {
-class AssetLoaderContext;
-} // namespace Pomdog::Detail
+namespace Pomdog {
+class AssetManager;
+} // namespace Pomdog
 
 namespace Pomdog::AssetBuilders {
 
 template <>
 class POMDOG_EXPORT Builder<Shader> final {
 public:
-    Builder(
-        const Detail::AssetLoaderContext& loaderContext,
-        ShaderPipelineStage pipelineStage);
+    Builder(AssetManager& assets, ShaderPipelineStage pipelineStage);
 
     Builder(Builder&&) = default;
     Builder(const Builder&) = default;
