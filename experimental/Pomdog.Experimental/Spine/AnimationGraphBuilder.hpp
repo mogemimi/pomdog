@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Pomdog.Experimental/Skeletal2D/AnimationGraph.hpp"
-#include "Pomdog/Content/AssetManager.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #include <memory>
 #include <string>
 
@@ -11,7 +11,7 @@ namespace Pomdog::Spine {
 
 class SkeletonDesc;
 
-std::shared_ptr<AnimationGraph> LoadAnimationGraph(SkeletonDesc const& skeletonDesc,
-    AssetManager const& assets, std::string const& assetName);
+[[nodiscard]] std::tuple<std::shared_ptr<AnimationGraph>, std::shared_ptr<Error>>
+LoadAnimationGraph(const SkeletonDesc& skeletonDesc, const std::string& assetName);
 
 } // namespace Pomdog::Spine

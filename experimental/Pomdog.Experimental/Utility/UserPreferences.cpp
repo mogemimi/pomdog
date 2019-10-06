@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
 #include "UserPreferences.hpp"
-#include "Pomdog/Content/Utility/BinaryFileStream.hpp"
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
@@ -98,16 +97,23 @@ UserPreferences::UserPreferences()
     }
 
     if (FileSystem::Exists(filePath)) {
-        auto binaryFile = PathHelper::OpenStream(filePath);
-        if (!binaryFile.Stream) {
+        std::ifstream stream{filePath, std::ifstream::binary};
+
+        if (stream.fail()) {
+            auto err = Errors::New("cannot open the file, " + filePath);
             POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to open file");
         }
 
-        if (binaryFile.SizeInBytes > 0) {
-            auto data = BinaryReader::ReadString<char>(
-                binaryFile.Stream, binaryFile.SizeInBytes);
+        auto[byteLength, err] = FileSystem::GetFileSize(filePath);
+        if (err != nullptr) {
+            POMDOG_THROW_EXCEPTION(std::runtime_error, "failed to get file size, " + filePath);
+        }
+
+        if (byteLength > 0) {
+            auto data = BinaryReader::ReadArray<char>(stream, byteLength);
             jsonData.assign(data.data(), data.size());
             POMDOG_ASSERT(!jsonData.empty());
+            jsonData.push_back('\0');
         }
     }
 

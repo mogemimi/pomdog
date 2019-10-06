@@ -12,7 +12,7 @@
 #include "Pomdog/Experimental/Particle2D/ParticleClip.hpp"
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
+#include "Pomdog/Utility/FileSystem.hpp"
 #include <rapidjson/document.h>
 #include <fstream>
 #include <utility>
@@ -40,7 +40,8 @@ T GetMemberAs(const rapidjson::Value& object, const std::string& name)
     return value.GetDouble();
 }
 
-ParticleClip ReadParticleClip(rapidjson::Value const& object)
+std::tuple<ParticleClip, std::shared_ptr<Error>>
+ReadParticleClip(const rapidjson::Value& object)
 {
     ParticleClip clip;
     auto & emitter = clip.Emitter;
@@ -195,59 +196,64 @@ ParticleClip ReadParticleClip(rapidjson::Value const& object)
         clip.Shape = std::make_unique<ParticleEmitterShapeBox>(halfWidth * 2, halfHeight * 2);
     }
 
-    return clip;
+    return std::make_tuple(std::move(clip), nullptr);
 }
 
 } // unnamed namespace
 
-ParticleClip ParticleLoader::LoadFromJson(AssetManager & assets, std::string const& assetName)
+std::tuple<ParticleClip, std::shared_ptr<Error>>
+ParticleLoader::Load(const std::string& filePath)
 {
-    POMDOG_ASSERT(!assetName.empty());
-
     using Detail::BinaryReader;
 
-    auto binaryFile = assets.OpenStream(assetName);
+    std::ifstream stream{filePath, std::ifstream::binary};
 
-    if (!binaryFile.Stream) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to open file");
+    if (!stream) {
+        auto err = Errors::New("cannot open the file, " + filePath);
+        return std::make_tuple(ParticleClip{}, std::move(err));
     }
 
-    if (binaryFile.SizeInBytes <= 0) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "The file is too small");
+    auto[byteLength, sizeErr] = FileSystem::GetFileSize(filePath);
+    if (sizeErr != nullptr) {
+        auto err = Errors::Wrap(std::move(sizeErr), "failed to get file size, " + filePath);
+        return std::make_tuple(ParticleClip{}, std::move(err));
     }
 
-    auto json = BinaryReader::ReadString<char>(binaryFile.Stream, binaryFile.SizeInBytes);
+    POMDOG_ASSERT(stream);
+
+    if (byteLength <= 0) {
+        auto err = Errors::New("the file is too small " + filePath);
+        return std::make_tuple(ParticleClip{}, std::move(err));
+    }
+
+    auto json = BinaryReader::ReadArray<char>(stream, byteLength);
     POMDOG_ASSERT(!json.empty());
 
     if (json.empty()) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "The file is too small");
+        auto err = Errors::New("the file is too small " + filePath);
+        return std::make_tuple(ParticleClip{}, std::move(err));
     }
+    json.push_back('\0');
 
     rapidjson::Document doc;
     doc.Parse(json.data());
 
     if (doc.HasParseError() || !doc.IsObject() || doc.MemberBegin() == doc.MemberEnd()) {
-        // FUS RO DAH
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to parse JSON");
+        auto err = Errors::New("failed to parse JSON " + filePath);
+        return std::make_tuple(ParticleClip{}, std::move(err));
     }
 
     auto member = doc.MemberBegin();
 
     if (!member->name.IsString() || !member->value.IsObject()) {
-        // FUS RO DAH
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Invalid file format");
+        auto err = Errors::New("invalid file format " + filePath);
+        return std::make_tuple(ParticleClip{}, std::move(err));
     }
 
     POMDOG_ASSERT(member->name.IsString());
     POMDOG_ASSERT(member->value.IsObject());
 
     return ReadParticleClip(member->value);
-}
-
-ParticleClip ParticleLoader::Load(AssetManager & assets, std::string const& assetName)
-{
-    POMDOG_ASSERT(!assetName.empty());
-    return LoadFromJson(assets, assetName);
 }
 
 } // namespace Pomdog::Detail

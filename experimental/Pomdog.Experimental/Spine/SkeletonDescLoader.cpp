@@ -6,7 +6,7 @@
 #include "Pomdog/Math/Degree.hpp"
 #include "Pomdog/Math/MathHelper.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
+#include "Pomdog/Utility/FileSystem.hpp"
 #include <rapidjson/document.h>
 #include <utility>
 #include <fstream>
@@ -439,7 +439,8 @@ AttachmentDesc ReadAttachment(rapidjson::Value::ConstMemberIterator const& iter)
     return attachmentDesc;
 }
 
-SkinnedMeshAttachmentDesc ReadSkinnedMeshAttachment(rapidjson::Value::ConstMemberIterator const& iter)
+std::tuple<SkinnedMeshAttachmentDesc, std::shared_ptr<Error>>
+ReadSkinnedMeshAttachment(const rapidjson::Value::ConstMemberIterator& iter)
 {
     POMDOG_ASSERT(iter->name.IsString());
     POMDOG_ASSERT(iter->value.IsObject());
@@ -452,26 +453,26 @@ SkinnedMeshAttachmentDesc ReadSkinnedMeshAttachment(rapidjson::Value::ConstMembe
     if (!attachmentObject.HasMember("type")
         || !attachmentObject["type"].IsString()
         || std::strcmp(attachmentObject["type"].GetString(), "skinnedmesh") != 0) {
-        // Error
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Error: invalid format");
+        auto err = Errors::New("invalid format");
+        return std::make_tuple(SkinnedMeshAttachmentDesc{}, std::move(err));
     }
 
     POMDOG_ASSERT(!(!attachmentObject.HasMember("triangles") || !attachmentObject["triangles"].IsArray()));
     if (!attachmentObject.HasMember("triangles") || !attachmentObject["triangles"].IsArray()) {
-        // Error
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Error: invalid format");
+        auto err = Errors::New("invalid format");
+        return std::make_tuple(SkinnedMeshAttachmentDesc{}, std::move(err));
     }
 
     POMDOG_ASSERT(!(!attachmentObject.HasMember("vertices") || !attachmentObject["vertices"].IsArray()));
     if (!attachmentObject.HasMember("vertices") || !attachmentObject["vertices"].IsArray()) {
-        // Error
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Error: invalid format");
+        auto err = Errors::New("invalid format");
+        return std::make_tuple(SkinnedMeshAttachmentDesc{}, std::move(err));
     }
 
     POMDOG_ASSERT(!(!attachmentObject.HasMember("uvs") || !attachmentObject["uvs"].IsArray()));
     if (!attachmentObject.HasMember("uvs") || !attachmentObject["uvs"].IsArray()) {
-        // Error
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Error: invalid format");
+        auto err = Errors::New("invalid format");
+        return std::make_tuple(SkinnedMeshAttachmentDesc{}, std::move(err));
     }
 
     SkinnedMeshAttachmentDesc desc;
@@ -479,10 +480,11 @@ SkinnedMeshAttachmentDesc ReadSkinnedMeshAttachment(rapidjson::Value::ConstMembe
     desc.Vertices = ReadSkinnedMeshVertices(attachmentObject["vertices"], attachmentObject["uvs"]);
     desc.Indices = ReadSkinnedMeshIndices(attachmentObject["triangles"]);
 
-    return desc;
+    return std::make_tuple(std::move(desc), nullptr);
 }
 
-std::vector<SkinSlotDesc> ReadSkinSlots(rapidjson::Value const& slotsDOM)
+std::vector<SkinSlotDesc>
+ReadSkinSlots(rapidjson::Value const& slotsDOM)
 {
     POMDOG_ASSERT(slotsDOM.IsObject());
 
@@ -512,7 +514,13 @@ std::vector<SkinSlotDesc> ReadSkinSlots(rapidjson::Value const& slotsDOM)
             if (attachmentObject.HasMember("type")
                 && attachmentObject["type"].IsString()
                 && std::strcmp(attachmentObject["type"].GetString(), "skinnedmesh") == 0) {
-                slotDesc.SkinnedMeshAttachments.push_back(ReadSkinnedMeshAttachment(iter));
+                auto[desc, err] = ReadSkinnedMeshAttachment(iter);
+                if (err != nullptr) {
+                    ///@todo Not implemented
+                    // Error
+                    continue;
+                }
+                slotDesc.SkinnedMeshAttachments.push_back(std::move(desc));
             }
             else {
                 slotDesc.Attachments.push_back(ReadAttachment(iter));
@@ -795,29 +803,42 @@ std::vector<AnimationClipDesc> ReadAnimationClips(rapidjson::Value const& docume
 
 } // unnamed namespace
 
-SkeletonDesc SkeletonDescLoader::Load(AssetManager const& assets, std::string const& assetName)
+std::tuple<SkeletonDesc, std::shared_ptr<Error>>
+SkeletonDescLoader::Load(const std::string& filePath)
 {
     using Detail::BinaryReader;
 
-    auto binaryFile = assets.OpenStream(assetName);
+    std::ifstream stream{filePath, std::ifstream::binary};
 
-    if (!binaryFile.Stream) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to open file");
+    if (!stream) {
+        auto err = Errors::New("cannot open the file, " + filePath);
+        return std::make_tuple(SkeletonDesc{}, std::move(err));
     }
 
-    if (binaryFile.SizeInBytes <= 0) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "The file is too small");
+    auto[byteLength, sizeErr] = FileSystem::GetFileSize(filePath);
+    if (sizeErr != nullptr) {
+        auto err = Errors::Wrap(std::move(sizeErr), "failed to get file size, " + filePath);
+        return std::make_tuple(SkeletonDesc{}, std::move(err));
     }
 
-    auto json = BinaryReader::ReadString<char>(binaryFile.Stream, binaryFile.SizeInBytes);
+    POMDOG_ASSERT(stream);
+
+    if (byteLength <= 0) {
+        auto err = Errors::New("the file is too small " + filePath);
+        return std::make_tuple(SkeletonDesc{}, std::move(err));
+    }
+
+    auto json = BinaryReader::ReadArray<char>(stream, byteLength);
     POMDOG_ASSERT(!json.empty());
+
+    json.push_back('\0');
 
     rapidjson::Document doc;
     doc.Parse(json.data());
 
     if (doc.HasParseError() || !doc.IsObject()) {
-        // FUS RO DAH
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to parse JSON");
+        auto err = Errors::New("failed to parse JSON " + filePath);
+        return std::make_tuple(SkeletonDesc{}, std::move(err));
     }
 
     Spine::SkeletonDesc skeleton;
@@ -835,7 +856,7 @@ SkeletonDesc SkeletonDescLoader::Load(AssetManager const& assets, std::string co
         skeleton.AnimationClips = ReadAnimationClips(doc["animations"]);
     }
 
-    return skeleton;
+    return std::make_tuple(std::move(skeleton), nullptr);
 }
 
 } // namespace Spine

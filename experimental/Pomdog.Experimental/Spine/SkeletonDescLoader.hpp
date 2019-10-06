@@ -3,17 +3,16 @@
 #pragma once
 
 #include "SkeletonDesc.hpp"
+#include "Pomdog/Utility/Errors.hpp"
+#include <memory>
+#include <tuple>
 
-namespace Pomdog {
-
-class AssetManager;
-
-namespace Spine {
+namespace Pomdog::Spine {
 
 class SkeletonDescLoader final {
 public:
-    static SkeletonDesc Load(AssetManager const& assets, std::string const& assetName);
+    [[nodiscard]] static std::tuple<SkeletonDesc, std::shared_ptr<Error>>
+    Load(const std::string& filePath);
 };
 
-} // namespace Spine
-} // namespace Pomdog
+} // namespace Pomdog::Spine

@@ -3,6 +3,7 @@
 #include "Pomdog.Experimental/UI/DrawingContext.hpp"
 #include "Pomdog.Experimental/Rendering/Processors/PrimitivePolygonCommandProcessor.hpp"
 #include "Pomdog.Experimental/Rendering/Processors/SpriteBatchCommandProcessor.hpp"
+#include "Pomdog/Experimental/Graphics/TrueTypeFontLoader.hpp"
 
 namespace Pomdog {
 namespace UI {
@@ -20,8 +21,16 @@ DrawingContext::DrawingContext(
     renderer.AddProcessor(std::make_unique<SpriteBatchCommandProcessor>(graphicsDevice, assets));
     renderer.AddProcessor(std::make_unique<PrimitivePolygonCommandProcessor>(graphicsDevice, assets));
 
-    fontRegular = std::make_shared<TrueTypeFont>(assets, "fonts/NotoSans/NotoSans-Regular.ttf");
-    fontBold = std::make_shared<TrueTypeFont>(assets, "fonts/NotoSans/NotoSans-Bold.ttf");
+    std::shared_ptr<Error> err;
+    std::tie(fontRegular, err) = assets.Load<TrueTypeFont>("fonts/NotoSans/NotoSans-Regular.ttf");
+    if (err != nullptr) {
+        Log::Critical("Pomdog", "failed to load font file");
+    }
+    
+    std::tie(fontBold, err) = assets.Load<TrueTypeFont>("fonts/NotoSans/NotoSans-Bold.ttf");
+    if (err != nullptr) {
+        Log::Critical("Pomdog", "failed to load font file");
+    }
 }
 
 Matrix3x2 DrawingContext::Top() const

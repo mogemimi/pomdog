@@ -8,7 +8,7 @@
 #include "Pomdog.Experimental/Skeletal2D/AnimationClip.hpp"
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
+#include "Pomdog/Utility/FileSystem.hpp"
 #include <rapidjson/document.h>
 #include <fstream>
 #include <optional>
@@ -81,33 +81,45 @@ std::unique_ptr<AnimationNode> CreateAnimationNode(
 
 } // unnamed namespace
 
-std::shared_ptr<AnimationGraph> LoadAnimationGraph(SkeletonDesc const& skeletonDesc,
-    AssetManager const& assets, std::string const& assetName)
+std::tuple<std::shared_ptr<AnimationGraph>, std::shared_ptr<Error>>
+LoadAnimationGraph(const SkeletonDesc& skeletonDesc, const std::string& filePath)
 {
-    auto binaryFile = assets.OpenStream(assetName);
+    std::ifstream stream{filePath, std::ifstream::binary};
 
-    if (!binaryFile.Stream) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to open file");
+    if (!stream) {
+        auto err = Errors::New("cannot open the file, " + filePath);
+        return std::make_tuple(nullptr, std::move(err));
     }
 
-    if (binaryFile.SizeInBytes <= 0) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "The file is too small");
+    auto[byteLength, sizeErr] = FileSystem::GetFileSize(filePath);
+    if (sizeErr != nullptr) {
+        auto err = Errors::Wrap(std::move(sizeErr), "failed to get file size, " + filePath);
+        return std::make_tuple(nullptr, std::move(err));
     }
 
-    auto json = BinaryReader::ReadString<char>(binaryFile.Stream, binaryFile.SizeInBytes);
+    POMDOG_ASSERT(stream);
+
+    if (byteLength <= 0) {
+        auto err = Errors::New("the file is too small " + filePath);
+        return std::make_tuple(nullptr, std::move(err));
+    }
+
+    auto json = BinaryReader::ReadArray<char>(stream, byteLength);
     POMDOG_ASSERT(!json.empty());
+
+    json.push_back('\0');
 
     rapidjson::Document doc;
     doc.Parse(json.data());
 
     if (doc.HasParseError()) {
-        // FUS RO DAH
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to parse JSON");
+        auto err = Errors::New("failed to parse JSON, " + filePath);
+        return std::make_tuple(nullptr, std::move(err));
     }
 
     if (!doc.IsObject()) {
-        // FUS RO DAH
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Invalid file format");
+        auto err = Errors::New("invalid file format " + filePath);
+        return std::make_tuple(nullptr, std::move(err));
     }
 
     std::vector<AnimationNodeDesc> nodes;
@@ -193,7 +205,7 @@ std::shared_ptr<AnimationGraph> LoadAnimationGraph(SkeletonDesc const& skeletonD
 
     animationGraph->Inputs = std::move(inputs);
 
-    return animationGraph;
+    return std::make_tuple(std::move(animationGraph), nullptr);
 }
 
 } // namespace Pomdog::Spine
