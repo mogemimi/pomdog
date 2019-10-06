@@ -319,11 +319,8 @@ GameHostWin32::Impl::Impl(
     mouse = std::make_shared<MouseWin32>(window->NativeWindowHandle());
     gamepad = gamepadIn;
 
-    Detail::AssetLoaderContext loaderContext;
-    loaderContext.RootDirectory = PathHelper::Join(
-        FileSystem::GetResourceDirectoryPath(), "Content");
-    loaderContext.GraphicsDevice = graphicsDevice;
-    assetManager = std::make_unique<Pomdog::AssetManager>(std::move(loaderContext));
+    auto contentDirectory = PathHelper::Join(FileSystem::GetResourceDirectoryPath(), "Content");
+    assetManager = std::make_unique<AssetManager>(std::move(contentDirectory), graphicsDevice);
 
     ioService = std::make_unique<IOService>(&clock);
     if (auto err = ioService->Initialize(); err != nullptr) {

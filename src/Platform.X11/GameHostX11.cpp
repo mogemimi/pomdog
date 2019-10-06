@@ -256,10 +256,8 @@ GameHostX11::Impl::Impl(const PresentationParameters& presentationParameters)
     keyboard = std::make_unique<KeyboardX11>(x11Context->Display);
     gamepad = Detail::InputSystem::CreateGamepad();
 
-    Detail::AssetLoaderContext loaderContext;
-    loaderContext.RootDirectory = PathHelper::Join(FileSystem::GetResourceDirectoryPath(), "Content");
-    loaderContext.GraphicsDevice = graphicsDevice;
-    assetManager = std::make_unique<AssetManager>(std::move(loaderContext));
+    auto contentDirectory = PathHelper::Join(FileSystem::GetResourceDirectoryPath(), "Content");
+    assetManager = std::make_unique<AssetManager>(std::move(contentDirectory), graphicsDevice);
 
     ioService = std::make_unique<IOService>(&clock);
     if (auto err = ioService->Initialize(); err != nullptr) {

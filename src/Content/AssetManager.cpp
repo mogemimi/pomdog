@@ -1,28 +1,41 @@
 // Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Content/AssetManager.hpp"
+#include "Pomdog/Utility/FileSystem.hpp"
 #include <utility>
 
 namespace Pomdog {
 
-AssetManager::AssetManager(Detail::AssetLoaderContext && loaderContextIn)
-    : loaderContext(std::move(loaderContextIn))
+AssetManager::AssetManager(
+    const std::string& contentDirectoryIn,
+    const std::shared_ptr<GraphicsDevice>& graphicsDeviceIn)
+    : contentDirectory(contentDirectoryIn)
+    , graphicsDevice(graphicsDeviceIn)
 {
 }
 
 void AssetManager::Unload()
 {
-    assets.Unload();
+    assets.clear();
 }
 
-std::string AssetManager::GetRootDirectory() const
+std::string AssetManager::GetContentDirectory() const
 {
-    return loaderContext.RootDirectory;
+    return contentDirectory;
 }
 
-Detail::BinaryFileStream AssetManager::OpenStream(const std::string& assetName) const
+std::shared_ptr<GraphicsDevice> AssetManager::GetGraphicsDevice() const
 {
-    return loaderContext.OpenStream(assetName);
+    return graphicsDevice.lock();
+}
+
+std::string AssetManager::GetAssetPath(const std::string& assetName) const
+{
+    if (PathHelper::IsAbsolute(assetName)) {
+        return assetName;
+    }
+
+    return PathHelper::Join(contentDirectory, assetName);
 }
 
 } // namespace Pomdog
