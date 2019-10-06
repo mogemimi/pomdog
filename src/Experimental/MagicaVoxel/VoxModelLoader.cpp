@@ -5,20 +5,19 @@
 #include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
 #include "Pomdog/Content/Utility/MakeFourCC.hpp"
+#include "Pomdog/Experimental/MagicaVoxel/VoxModel.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
+#include "Pomdog/Utility/FileSystem.hpp"
 #include <algorithm>
 #include <fstream>
 #include <utility>
 
-namespace Pomdog {
-namespace MagicaVoxel {
+namespace Pomdog::Detail {
 namespace {
 
-std::string Error(const std::string& assetName, const std::string& description)
-{
-    return description + (": " + assetName);
-}
+using MagicaVoxel::VoxChunkHeader;
+using Detail::BinaryReader;
+using Detail::MakeFourCC;
 
 std::ifstream::pos_type ChunkSize(std::ifstream& stream, const VoxChunkHeader& chunk)
 {
@@ -31,11 +30,10 @@ std::ifstream::pos_type ChunkSize(std::ifstream& stream, const VoxChunkHeader& c
 
 } // unnamed namespace
 
-VoxModel VoxModelLoader::Load(const AssetManager& assets, const std::string& assetName)
-{
-    using Detail::BinaryReader;
-    using Detail::MakeFourCC;
 
+std::tuple<std::shared_ptr<MagicaVoxel::VoxModel>, std::shared_ptr<Error>>
+AssetLoader<MagicaVoxel::VoxModel>::operator()([[maybe_unused]] AssetManager& assets, const std::string& filePath)
+{
     constexpr std::int32_t MagicaVoxelVersion = 150;
     constexpr auto fourCC = MakeFourCC('V', 'O', 'X', ' ');
     constexpr auto IdMain = MakeFourCC('M', 'A', 'I', 'N');
@@ -43,83 +41,95 @@ VoxModel VoxModelLoader::Load(const AssetManager& assets, const std::string& ass
     constexpr auto IdXYZI = MakeFourCC('X', 'Y', 'Z', 'I');
     constexpr auto IdRGBA = MakeFourCC('R', 'G', 'B', 'A');
 
-    auto binaryFile = assets.OpenStream(assetName);
-    auto& stream = binaryFile.Stream;
 
-    if (stream.fail()) {
-        POMDOG_THROW_EXCEPTION(std::invalid_argument,
-            Error(assetName, "cannot open file"));
+    std::ifstream stream{filePath, std::ifstream::binary};
+
+    if (!stream) {
+        auto err = Errors::New("cannot open the file, " + filePath);
+        return std::make_tuple(nullptr, std::move(err));
+    }
+
+    auto[byteLength, sizeErr] = FileSystem::GetFileSize(filePath);
+    if (sizeErr != nullptr) {
+        auto err = Errors::Wrap(std::move(sizeErr), "failed to get file size, " + filePath);
+        return std::make_tuple(nullptr, std::move(err));
+    }
+
+    POMDOG_ASSERT(stream);
+
+    if (byteLength <= 0) {
+        auto err = Errors::New("the font file is too small " + filePath);
+        return std::make_tuple(nullptr, std::move(err));
     }
 
     if (fourCC != BinaryReader::Read<std::uint32_t>(stream)) {
-        POMDOG_THROW_EXCEPTION(std::invalid_argument,
-            Error(assetName, "invalid format"));
+        auto err = Errors::New("invalid VOX format " + filePath);
+        return std::make_tuple(nullptr, std::move(err));
     }
 
     if (MagicaVoxelVersion != BinaryReader::Read<std::int32_t>(stream)) {
-        POMDOG_THROW_EXCEPTION(std::invalid_argument,
-            Error(assetName, "version does not much"));
+        auto err = Errors::New("version does not much " + filePath);
+        return std::make_tuple(nullptr, std::move(err));
     }
 
     const auto mainChunk = BinaryReader::Read<VoxChunkHeader>(stream);
 
     if (mainChunk.ID != IdMain) {
-        POMDOG_THROW_EXCEPTION(std::invalid_argument,
-            Error(assetName, "cannot find main chunk"));
+        auto err = Errors::New("cannot find main chunk " + filePath);
+        return std::make_tuple(nullptr, std::move(err));
     }
 
     const auto mainChunkEnd = ChunkSize(stream, mainChunk);
 
     stream.seekg(mainChunk.ContentSize, std::ios::cur);
 
-    MagicaVoxel::VoxModel model;
+    auto model = std::make_shared<MagicaVoxel::VoxModel>();
 
     while (stream.tellg() < mainChunkEnd) {
         const auto chunk = BinaryReader::Read<VoxChunkHeader>(stream);
         const auto chunkEnd = ChunkSize(stream, chunk);
 
         if (chunk.ID == IdSize) {
-            model.X = BinaryReader::Read<std::int32_t>(stream);
-            model.Y = BinaryReader::Read<std::int32_t>(stream);
-            model.Z = BinaryReader::Read<std::int32_t>(stream);
+            model->X = BinaryReader::Read<std::int32_t>(stream);
+            model->Y = BinaryReader::Read<std::int32_t>(stream);
+            model->Z = BinaryReader::Read<std::int32_t>(stream);
 
-            POMDOG_ASSERT(model.X >= 0);
-            POMDOG_ASSERT(model.Y >= 0);
-            POMDOG_ASSERT(model.Z >= 0);
+            POMDOG_ASSERT(model->X >= 0);
+            POMDOG_ASSERT(model->Y >= 0);
+            POMDOG_ASSERT(model->Z >= 0);
 
-            if (model.X < 0 || model.Y < 0 || model.Z < 0) {
-                POMDOG_THROW_EXCEPTION(std::invalid_argument,
-                    Error(assetName, "invalid format"));
+            if (model->X < 0 || model->Y < 0 || model->Z < 0) {
+                auto err = Errors::New("invalid VOX format " + filePath);
+                return std::make_tuple(nullptr, std::move(err));
             }
         }
         else if (chunk.ID == IdXYZI) {
             const auto voxelCount = BinaryReader::Read<std::int32_t>(stream);
             if (voxelCount < 0) {
-                POMDOG_THROW_EXCEPTION(std::invalid_argument,
-                    Error(assetName, "negative number of voxels"));
+                auto err = Errors::New("negative number of voxels " + filePath);
+                return std::make_tuple(nullptr, std::move(err));
             }
 
             if (voxelCount > 0) {
-                model.Voxels = BinaryReader::ReadArray<MagicaVoxel::Voxel>(stream, voxelCount);
+                model->Voxels = BinaryReader::ReadArray<MagicaVoxel::Voxel>(stream, voxelCount);
             }
         }
         else if (chunk.ID == IdRGBA) {
-            model.ColorPalette = BinaryReader::Read<decltype(model.ColorPalette)>(stream);
+            model->ColorPalette = BinaryReader::Read<decltype(model->ColorPalette)>(stream);
 
-            model.ColorPalette.back() = Color::Black;
+            model->ColorPalette.back() = Color::Black;
 
-            POMDOG_ASSERT(model.ColorPalette.size() == 256);
+            POMDOG_ASSERT(model->ColorPalette.size() == 256);
             std::rotate(
-                std::begin(model.ColorPalette),
-                std::next(std::begin(model.ColorPalette), 255),
-                std::end(model.ColorPalette));
+                std::begin(model->ColorPalette),
+                std::next(std::begin(model->ColorPalette), 255),
+                std::end(model->ColorPalette));
         }
 
         stream.seekg(chunkEnd, std::ios::beg);
     }
 
-    return model;
+    return std::make_tuple(std::move(model), nullptr);
 }
 
-} // namespace MagicaVoxel
-} // namespace Pomdog
+} // namespace Pomdog::Detail

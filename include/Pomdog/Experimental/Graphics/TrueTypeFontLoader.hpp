@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Pomdog/Basic/Export.hpp"
-#include "Pomdog/Content/AssetManager.hpp"
+#include "Pomdog/Content/AssetLoaders/AssetLoader.hpp"
 #include "Pomdog/Utility/Errors.hpp"
 #include <memory>
 #include <string>
@@ -11,14 +11,14 @@
 
 namespace Pomdog {
 class AssetManager;
-class SpriteFont;
+class TrueTypeFont;
 } // namespace Pomdog
 
 namespace Pomdog::Detail {
 
 template <>
-struct POMDOG_EXPORT AssetLoader<SpriteFont> final {
-    [[nodiscard]] std::tuple<std::shared_ptr<SpriteFont>, std::shared_ptr<Error>>
+struct POMDOG_EXPORT AssetLoader<TrueTypeFont> final {
+    [[nodiscard]] std::tuple<std::shared_ptr<TrueTypeFont>, std::shared_ptr<Error>>
     operator()(AssetManager& assets, const std::string& filePath);
 };
 

@@ -38,13 +38,17 @@ TextureAtlasRegion CreateAtlasRegion(const std::string& line, std::int16_t pageI
 
 } // unnamed namespace
 
-TextureAtlas TextureAtlasLoader::Load(const AssetManager& assets, const std::string& assetName)
+std::tuple<TextureAtlas, std::shared_ptr<Error>>
+TextureAtlasLoader::Load(const std::string& filePath)
 {
-    auto binaryFile = assets.OpenStream(assetName);
+    std::ifstream stream{filePath, std::ifstream::binary};
 
-    if (!binaryFile.Stream) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to open file");
+    if (!stream) {
+        auto err = Errors::New("cannot open the file, " + filePath);
+        return std::make_tuple(TextureAtlas{}, std::move(err));
     }
+
+    POMDOG_ASSERT(stream);
 
     TextureAtlas result;
     std::int16_t pageIndex = 0;
@@ -52,7 +56,7 @@ TextureAtlas TextureAtlasLoader::Load(const AssetManager& assets, const std::str
     ParserState state = ParserState::PageName;
 
     std::string line;
-    while (std::getline(binaryFile.Stream, line)) {
+    while (std::getline(stream, line)) {
         switch (state) {
         case ParserState::ParsingError: {
             break;
@@ -170,9 +174,12 @@ TextureAtlas TextureAtlasLoader::Load(const AssetManager& assets, const std::str
     if (state == ParserState::ParsingError) {
         result.pages.clear();
         result.regions.clear();
+
+        auto err = Errors::New("cannot parse the file, " + filePath);
+        return std::make_tuple(TextureAtlas{}, std::move(err));
     }
 
-    return result;
+    return std::make_tuple(std::move(result), nullptr);
 }
 
 } // namespace Pomdog::TexturePacker

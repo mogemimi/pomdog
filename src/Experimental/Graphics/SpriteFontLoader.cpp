@@ -3,16 +3,17 @@
 #include "Pomdog/Experimental/Graphics/SpriteFontLoader.hpp"
 #include "Pomdog/Experimental/Graphics/FontGlyph.hpp"
 #include "Pomdog/Experimental/Graphics/SpriteFont.hpp"
+#include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
+#include "Pomdog/Utility/FileSystem.hpp"
 #include "Pomdog/Utility/PathHelper.hpp"
 #include <algorithm>
 #include <fstream>
 #include <regex>
+#include <sstream>
 #include <utility>
 
-namespace Pomdog {
-
+namespace Pomdog::Detail {
 namespace {
 
 struct BitmapFontInfo final {
@@ -299,17 +300,27 @@ FontGlyph ParseGlyph(std::istream& stream)
 
 } // unnamed namespace
 
-std::shared_ptr<SpriteFont> SpriteFontLoader::Load(
-    AssetManager& assets, const std::string& assetName)
+std::tuple<std::shared_ptr<SpriteFont>, std::shared_ptr<Error>>
+AssetLoader<SpriteFont>::operator()(AssetManager& assets, const std::string& filePath)
 {
-    auto binaryFile = assets.OpenStream(assetName);
+    std::ifstream stream{filePath, std::ifstream::binary};
 
-    if (!binaryFile.Stream) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to open file");
+    if (!stream) {
+        auto err = Errors::New("cannot open the file, " + filePath);
+        return std::make_tuple(nullptr, std::move(err));
     }
 
-    if (binaryFile.SizeInBytes <= 0) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "The file is too small");
+    auto[byteLength, sizeErr] = FileSystem::GetFileSize(filePath);
+    if (sizeErr != nullptr) {
+        auto err = Errors::Wrap(std::move(sizeErr), "failed to get file size, " + filePath);
+        return std::make_tuple(nullptr, std::move(err));
+    }
+
+    POMDOG_ASSERT(stream);
+
+    if (byteLength <= 0) {
+        auto err = Errors::New("the font file is too small " + filePath);
+        return std::make_tuple(nullptr, std::move(err));
     }
 
     std::vector<BitmapFontPage> pages;
@@ -320,7 +331,7 @@ std::shared_ptr<SpriteFont> SpriteFontLoader::Load(
     BitmapFontCommon common;
 
     std::string line;
-    while (std::getline(binaryFile.Stream, line)) {
+    while (std::getline(stream, line)) {
         if (line.empty()) {
             continue;
         }
@@ -349,8 +360,8 @@ std::shared_ptr<SpriteFont> SpriteFontLoader::Load(
     }
 
     if (pages.empty()) {
-        // FUS RO DAH
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Invalid file format");
+        auto err = Errors::New("invalid file format " + filePath);
+        return std::make_tuple(nullptr, std::move(err));
     }
     POMDOG_ASSERT(!pages.empty());
 
@@ -360,8 +371,8 @@ std::shared_ptr<SpriteFont> SpriteFontLoader::Load(
 
     std::sort(std::begin(pages), std::end(pages), pageLess);
     if (std::unique(std::begin(pages), std::end(pages), pageLess) != std::end(pages)) {
-        // FUS RO DAH
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Invalid file format");
+        auto err = Errors::New("invalid file format " + filePath);
+        return std::make_tuple(nullptr, std::move(err));
     }
     POMDOG_ASSERT(std::unique(std::begin(pages), std::end(pages), pageLess) == std::end(pages));
 
@@ -370,9 +381,14 @@ std::shared_ptr<SpriteFont> SpriteFontLoader::Load(
 
     std::vector<std::shared_ptr<Texture2D>> textures;
     {
-        auto directoryName = std::get<0>(PathHelper::Split(assetName));
+        auto directoryName = std::get<0>(PathHelper::Split(filePath));
         for (auto& page : pages) {
-            textures.push_back(assets.Load<Texture2D>(directoryName + page.Path));
+            auto[texture, textureErr] = assets.Load<Texture2D>(directoryName + page.Path);
+            if (textureErr != nullptr) {
+                auto err = Errors::Wrap(std::move(textureErr), "failed to load sprite font texture " + page.Path);
+                return std::make_tuple(nullptr, std::move(err));
+            }
+            textures.push_back(std::move(texture));
         }
     }
 
@@ -391,7 +407,7 @@ std::shared_ptr<SpriteFont> SpriteFontLoader::Load(
         static_cast<std::int16_t>(common.LineHeight));
     spriteFont->SetDefaultCharacter(defaultCharacter);
 
-    return spriteFont;
+    return std::make_tuple(std::move(spriteFont), nullptr);
 }
 
-} // namespace Pomdog
+} // namespace Pomdog::Detail

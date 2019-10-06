@@ -3,19 +3,26 @@
 #pragma once
 
 #include "Pomdog/Basic/Export.hpp"
-#include "Pomdog/Experimental/MagicaVoxel/VoxModel.hpp"
+#include "Pomdog/Content/AssetLoaders/AssetLoader.hpp"
+#include "Pomdog/Utility/Errors.hpp"
+#include <memory>
+#include <string>
+#include <tuple>
 
 namespace Pomdog {
-
 class AssetManager;
+} // namespace Pomdog
 
-namespace MagicaVoxel {
+namespace Pomdog::MagicaVoxel {
+class VoxModel;
+} // namespace Pomdog::MagicaVoxel
 
-struct POMDOG_EXPORT VoxModelLoader final {
-    static VoxModel Load(
-        const AssetManager& assets,
-        const std::string& assetName);
+namespace Pomdog::Detail {
+
+template <>
+struct POMDOG_EXPORT AssetLoader<MagicaVoxel::VoxModel> final {
+    [[nodiscard]] std::tuple<std::shared_ptr<MagicaVoxel::VoxModel>, std::shared_ptr<Error>>
+    operator()(AssetManager& assets, const std::string& filePath);
 };
 
-} // namespace MagicaVoxel
-} // namespace Pomdog
+} // namespace Pomdog::Detail

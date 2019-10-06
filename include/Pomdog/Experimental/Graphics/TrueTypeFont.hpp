@@ -4,6 +4,7 @@
 
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Math/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #include <cstdint>
 #include <functional>
 #include <memory>
@@ -12,14 +13,15 @@
 
 namespace Pomdog {
 
-class AssetManager;
 struct FontGlyph;
 
 class POMDOG_EXPORT TrueTypeFont final {
 public:
-    TrueTypeFont(const AssetManager& assets, const std::string& fontPath);
+    TrueTypeFont();
 
     ~TrueTypeFont();
+
+    [[nodiscard]] std::shared_ptr<Error> Load(const std::string& filePath);
 
     std::optional<FontGlyph> RasterizeGlyph(
         char32_t codePoint,

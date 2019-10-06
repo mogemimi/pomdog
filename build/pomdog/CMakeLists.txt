@@ -384,6 +384,7 @@ set(POMDOG_SOURCES_EXPERIMENTAL
   ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/SpriteLine.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/Texture2DView.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/TrueTypeFont.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/TrueTypeFontLoader.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Image/GifImage.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Image/GifImageLoader.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Image/Image.hpp
@@ -455,6 +456,7 @@ set(POMDOG_SOURCES_EXPERIMENTAL
   ${POMDOG_DIR}/src/Experimental/Graphics/SpriteLine.cpp
   ${POMDOG_DIR}/src/Experimental/Graphics/Texture2DView.cpp
   ${POMDOG_DIR}/src/Experimental/Graphics/TrueTypeFont.cpp
+  ${POMDOG_DIR}/src/Experimental/Graphics/TrueTypeFontLoader.cpp
   ${POMDOG_DIR}/src/Experimental/Image/GifImageLoader.cpp
   ${POMDOG_DIR}/src/Experimental/Image/Image.cpp
   ${POMDOG_DIR}/src/Experimental/ImageEffects/ChromaticAberration.cpp

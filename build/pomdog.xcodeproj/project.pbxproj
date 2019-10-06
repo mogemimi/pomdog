@@ -294,6 +294,8 @@
 		D719A53D23497EB600C1868B /* PNG.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D719A53823497EB600C1868B /* PNG.cpp */; };
 		D719A53E23497EB600C1868B /* PNM.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D719A53923497EB600C1868B /* PNM.cpp */; };
 		D719A53F23497EB600C1868B /* PNM.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D719A53923497EB600C1868B /* PNM.cpp */; };
+		D719A55F2349868200C1868B /* TrueTypeFontLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D719A55E2349868200C1868B /* TrueTypeFontLoader.cpp */; };
+		D719A5602349868200C1868B /* TrueTypeFontLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D719A55E2349868200C1868B /* TrueTypeFontLoader.cpp */; };
 		D7334DC8228AC80200232225 /* PolylineBatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334DC6228AC80200232225 /* PolylineBatch.cpp */; };
 		D7334DC9228AC80200232225 /* PolylineBatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334DC6228AC80200232225 /* PolylineBatch.cpp */; };
 		D7334DCA228AC80200232225 /* PrimitiveBatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334DC7228AC80200232225 /* PrimitiveBatch.cpp */; };
@@ -876,20 +878,22 @@
 		D719A53723497EB600C1868B /* DDS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DDS.cpp; sourceTree = "<group>"; };
 		D719A53823497EB600C1868B /* PNG.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PNG.cpp; sourceTree = "<group>"; };
 		D719A53923497EB600C1868B /* PNM.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PNM.cpp; sourceTree = "<group>"; };
+		D719A5522349864500C1868B /* SpriteLine.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SpriteLine.hpp; sourceTree = "<group>"; };
+		D719A5532349864500C1868B /* Texture2DView.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Texture2DView.hpp; sourceTree = "<group>"; };
+		D719A5542349864500C1868B /* SpriteBatch.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SpriteBatch.hpp; sourceTree = "<group>"; };
+		D719A5552349864500C1868B /* TrueTypeFont.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TrueTypeFont.hpp; sourceTree = "<group>"; };
+		D719A5562349864500C1868B /* TrueTypeFontLoader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TrueTypeFontLoader.hpp; sourceTree = "<group>"; };
+		D719A5572349864500C1868B /* LineBatch.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = LineBatch.hpp; sourceTree = "<group>"; };
+		D719A5582349864500C1868B /* PolylineBatch.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PolylineBatch.hpp; sourceTree = "<group>"; };
+		D719A5592349864500C1868B /* PolygonShapeBuilder.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PolygonShapeBuilder.hpp; sourceTree = "<group>"; };
+		D719A55A2349864500C1868B /* FontGlyph.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = FontGlyph.hpp; sourceTree = "<group>"; };
+		D719A55B2349864500C1868B /* PrimitiveBatch.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PrimitiveBatch.hpp; sourceTree = "<group>"; };
+		D719A55C2349864500C1868B /* SpriteFont.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SpriteFont.hpp; sourceTree = "<group>"; };
+		D719A55D2349864500C1868B /* SpriteFontLoader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SpriteFontLoader.hpp; sourceTree = "<group>"; };
+		D719A55E2349868200C1868B /* TrueTypeFontLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TrueTypeFontLoader.cpp; sourceTree = "<group>"; };
 		D7334DC6228AC80200232225 /* PolylineBatch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PolylineBatch.cpp; sourceTree = "<group>"; };
 		D7334DC7228AC80200232225 /* PrimitiveBatch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PrimitiveBatch.cpp; sourceTree = "<group>"; };
 		D7334DCC228AC81F00232225 /* SpriteLine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SpriteLine.cpp; sourceTree = "<group>"; };
-		D7334DDA228AC86800232225 /* SpriteFontLoader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SpriteFontLoader.hpp; sourceTree = "<group>"; };
-		D7334DDB228AC86900232225 /* BuiltinShaderConstants.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BuiltinShaderConstants.hpp; sourceTree = "<group>"; };
-		D7334DDC228AC86900232225 /* LineBatch.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = LineBatch.hpp; sourceTree = "<group>"; };
-		D7334DDD228AC86900232225 /* SpriteFont.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SpriteFont.hpp; sourceTree = "<group>"; };
-		D7334DDE228AC86900232225 /* FontGlyph.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = FontGlyph.hpp; sourceTree = "<group>"; };
-		D7334DDF228AC86900232225 /* SpriteBatch.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SpriteBatch.hpp; sourceTree = "<group>"; };
-		D7334DE0228AC86900232225 /* PrimitiveBatch.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PrimitiveBatch.hpp; sourceTree = "<group>"; };
-		D7334DE1228AC86900232225 /* SpriteLine.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SpriteLine.hpp; sourceTree = "<group>"; };
-		D7334DE2228AC86900232225 /* TrueTypeFont.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TrueTypeFont.hpp; sourceTree = "<group>"; };
-		D7334DE3228AC86900232225 /* PolylineBatch.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PolylineBatch.hpp; sourceTree = "<group>"; };
-		D7334DE4228AC86900232225 /* PolygonShapeBuilder.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PolygonShapeBuilder.hpp; sourceTree = "<group>"; };
 		D7334E03228AEB9B00232225 /* PostProcessCompositor.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PostProcessCompositor.hpp; sourceTree = "<group>"; };
 		D7334E04228AEB9B00232225 /* RetroCrtEffect.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RetroCrtEffect.hpp; sourceTree = "<group>"; };
 		D7334E05228AEB9B00232225 /* FXAA.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = FXAA.hpp; sourceTree = "<group>"; };
@@ -929,7 +933,6 @@
 		D7334E4A228C691500232225 /* ParticleEmitterShapeBox.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleEmitterShapeBox.hpp; sourceTree = "<group>"; };
 		D7334E4B228C691500232225 /* ParticleEmitterShape.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleEmitterShape.hpp; sourceTree = "<group>"; };
 		D7334E4C228C691500232225 /* ParticleCurveLerp.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleCurveLerp.hpp; sourceTree = "<group>"; };
-		D740A537230B30850077D040 /* Texture2DView.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Texture2DView.hpp; sourceTree = "<group>"; };
 		D740A538230B30BB0077D040 /* Texture2DView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Texture2DView.cpp; sourceTree = "<group>"; };
 		D740A54D231010980077D040 /* ErrorHelper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ErrorHelper.hpp; sourceTree = "<group>"; };
 		D740A54E231010A00077D040 /* ErrorHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ErrorHelper.cpp; sourceTree = "<group>"; };
@@ -1769,6 +1772,7 @@
 				D7334DCC228AC81F00232225 /* SpriteLine.cpp */,
 				D740A538230B30BB0077D040 /* Texture2DView.cpp */,
 				A98F5923211B2B9A002960C1 /* TrueTypeFont.cpp */,
+				D719A55E2349868200C1868B /* TrueTypeFontLoader.cpp */,
 			);
 			path = Graphics;
 			sourceTree = "<group>";
@@ -1776,18 +1780,18 @@
 		A9FC99081DC3D8E100C78D63 /* Graphics */ = {
 			isa = PBXGroup;
 			children = (
-				D7334DDB228AC86900232225 /* BuiltinShaderConstants.hpp */,
-				D7334DDE228AC86900232225 /* FontGlyph.hpp */,
-				D7334DDC228AC86900232225 /* LineBatch.hpp */,
-				D7334DE4228AC86900232225 /* PolygonShapeBuilder.hpp */,
-				D7334DE3228AC86900232225 /* PolylineBatch.hpp */,
-				D7334DE0228AC86900232225 /* PrimitiveBatch.hpp */,
-				D7334DDF228AC86900232225 /* SpriteBatch.hpp */,
-				D7334DDD228AC86900232225 /* SpriteFont.hpp */,
-				D7334DDA228AC86800232225 /* SpriteFontLoader.hpp */,
-				D7334DE1228AC86900232225 /* SpriteLine.hpp */,
-				D740A537230B30850077D040 /* Texture2DView.hpp */,
-				D7334DE2228AC86900232225 /* TrueTypeFont.hpp */,
+				D719A55A2349864500C1868B /* FontGlyph.hpp */,
+				D719A5572349864500C1868B /* LineBatch.hpp */,
+				D719A5592349864500C1868B /* PolygonShapeBuilder.hpp */,
+				D719A5582349864500C1868B /* PolylineBatch.hpp */,
+				D719A55B2349864500C1868B /* PrimitiveBatch.hpp */,
+				D719A5542349864500C1868B /* SpriteBatch.hpp */,
+				D719A55C2349864500C1868B /* SpriteFont.hpp */,
+				D719A55D2349864500C1868B /* SpriteFontLoader.hpp */,
+				D719A5522349864500C1868B /* SpriteLine.hpp */,
+				D719A5532349864500C1868B /* Texture2DView.hpp */,
+				D719A5552349864500C1868B /* TrueTypeFont.hpp */,
+				D719A5562349864500C1868B /* TrueTypeFontLoader.hpp */,
 			);
 			path = Graphics;
 			sourceTree = "<group>";
@@ -2475,6 +2479,7 @@
 				A9D18E8D1CA427270011A6CE /* MetalCompiler.cpp in Sources */,
 				7BFC36E8777C887934E3F02B /* FloatingPointMatrix4x4.cpp in Sources */,
 				1A671762A001893355AC4247 /* FloatingPointQuaternion.cpp in Sources */,
+				D719A55F2349868200C1868B /* TrueTypeFontLoader.cpp in Sources */,
 				722648A22471D9FC50128061 /* FloatingPointVector2.cpp in Sources */,
 				D702F05622FD8AC700886A78 /* TLSStream.cpp in Sources */,
 				D719A53323497EA600C1868B /* WAV.cpp in Sources */,
@@ -2646,6 +2651,7 @@
 				A9D18E8E1CA427270011A6CE /* MetalCompiler.cpp in Sources */,
 				B64D84284045847B155F4CD3 /* FloatingPointMatrix4x4.cpp in Sources */,
 				043C1238BFC3C906AEAEEA09 /* FloatingPointQuaternion.cpp in Sources */,
+				D719A5602349868200C1868B /* TrueTypeFontLoader.cpp in Sources */,
 				D147245447821976039CCCC2 /* FloatingPointVector2.cpp in Sources */,
 				D702F05722FD8AC700886A78 /* TLSStream.cpp in Sources */,
 				D719A53423497EA600C1868B /* WAV.cpp in Sources */,

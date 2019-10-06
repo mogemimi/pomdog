@@ -1,13 +1,13 @@
 // Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Experimental/Graphics/TrueTypeFont.hpp"
-#include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
 #include "Pomdog/Experimental/Graphics/FontGlyph.hpp"
 #include "Pomdog/Experimental/Graphics/SpriteFont.hpp"
 #include "Pomdog/Math/Point2D.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
+#include "Pomdog/Utility/FileSystem.hpp"
+#include <fstream>
 #include <locale>
 #include <utility>
 #include <vector>
@@ -32,7 +32,7 @@ public:
 
     void Reset();
 
-    void LoadFont(const AssetManager& assets, const std::string& fontPath);
+    [[nodiscard]] std::shared_ptr<Error> LoadFont(const std::string& filePath);
 };
 
 void TrueTypeFont::Impl::Reset()
@@ -42,43 +42,56 @@ void TrueTypeFont::Impl::Reset()
     }
 }
 
-void TrueTypeFont::Impl::LoadFont(const AssetManager& assets, const std::string& fontPath)
+std::shared_ptr<Error>
+TrueTypeFont::Impl::LoadFont(const std::string& filePath)
 {
-    auto binaryFile = assets.OpenStream(fontPath);
-    if (!binaryFile.Stream) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to open file");
+    std::ifstream stream{filePath, std::ifstream::binary};
+
+    if (!stream) {
+        return Errors::New("cannot open the file, " + filePath);
     }
 
-    if (binaryFile.SizeInBytes <= 0) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "The file is too small");
+    auto[byteLength, sizeErr] = FileSystem::GetFileSize(filePath);
+    if (sizeErr != nullptr) {
+        return Errors::Wrap(std::move(sizeErr), "failed to get file size, " + filePath);
+    }
+
+    POMDOG_ASSERT(stream);
+
+    if (byteLength <= 0) {
+        return Errors::Wrap(std::move(sizeErr), "the font file is too small " + filePath);
     }
 
     Reset();
 
     using Pomdog::Detail::BinaryReader;
-    ttfBinary = BinaryReader::ReadArray<std::uint8_t>(binaryFile.Stream, binaryFile.SizeInBytes);
+    ttfBinary = BinaryReader::ReadArray<std::uint8_t>(stream, byteLength);
 
     const auto offset = stbtt_GetFontOffsetForIndex(ttfBinary.data(), 0);
     if (!stbtt_InitFont(&fontInfo, ttfBinary.data(), offset)) {
         ttfBinary.clear();
 
-        // FUS RO DAH
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "Failed to initialize truetype font");
+        return Errors::Wrap(std::move(sizeErr), "failed to initialize truetype font " + filePath);
     }
+
+    return nullptr;
 }
 
-TrueTypeFont::TrueTypeFont(const AssetManager& assets, const std::string& fontPath)
+TrueTypeFont::TrueTypeFont()
     : impl(std::make_unique<Impl>())
 {
-    POMDOG_ASSERT(impl);
-    impl->LoadFont(assets, fontPath);
 }
 
 TrueTypeFont::~TrueTypeFont()
 {
     POMDOG_ASSERT(impl);
     impl->Reset();
+}
+
+std::shared_ptr<Error> TrueTypeFont::Load(const std::string& filePath)
+{
+    POMDOG_ASSERT(impl);
+    return impl->LoadFont(filePath);
 }
 
 std::optional<FontGlyph> TrueTypeFont::RasterizeGlyph(

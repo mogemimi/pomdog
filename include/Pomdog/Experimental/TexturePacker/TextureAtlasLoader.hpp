@@ -4,19 +4,17 @@
 
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Experimental/TexturePacker/TextureAtlas.hpp"
+#include "Pomdog/Utility/Errors.hpp"
+#include <memory>
 #include <string>
-
-namespace Pomdog {
-class AssetManager;
-} // namespace Pomdog
+#include <tuple>
 
 namespace Pomdog::TexturePacker {
 
 class POMDOG_EXPORT TextureAtlasLoader final {
 public:
-    static TextureAtlas Load(
-        const AssetManager& assets,
-        const std::string& assetName);
+    [[nodiscard]] static std::tuple<TextureAtlas, std::shared_ptr<Error>>
+    Load(const std::string& filePath);
 };
 
 } // namespace Pomdog::TexturePacker
