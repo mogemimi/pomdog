@@ -87,7 +87,6 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/include/Pomdog/Content/AssetBuilders/Builder.hpp
   ${POMDOG_DIR}/include/Pomdog/Content/AssetBuilders/PipelineStateBuilder.hpp
   ${POMDOG_DIR}/include/Pomdog/Content/AssetBuilders/ShaderBuilder.hpp
-  ${POMDOG_DIR}/include/Pomdog/Content/Utility/BinaryFileStream.hpp
   ${POMDOG_DIR}/include/Pomdog/Content/Audio/Vorbis.hpp
   ${POMDOG_DIR}/include/Pomdog/Content/Audio/WAV.hpp
   ${POMDOG_DIR}/include/Pomdog/Content/Image/ImageBuffer.hpp
@@ -96,8 +95,6 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/include/Pomdog/Content/Image/PNM.hpp
   ${POMDOG_DIR}/include/Pomdog/Content/Utility/BinaryReader.hpp
   ${POMDOG_DIR}/include/Pomdog/Content/Utility/MakeFourCC.hpp
-  ${POMDOG_DIR}/include/Pomdog/Content/detail/AssetDictionary.hpp
-  ${POMDOG_DIR}/include/Pomdog/Content/detail/AssetLoaderContext.hpp
   ${POMDOG_DIR}/include/Pomdog/Content/AssetLoaders/AssetLoader.hpp
   ${POMDOG_DIR}/include/Pomdog/Content/AssetLoaders/AudioClipLoader.hpp
   ${POMDOG_DIR}/include/Pomdog/Content/AssetLoaders/Texture2DLoader.hpp
@@ -257,8 +254,6 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/src/Audio/SoundEffect.cpp
   ${POMDOG_DIR}/src/Basic/ConditionalCompilation.hpp
   ${POMDOG_DIR}/src/Basic/Unreachable.hpp
-  ${POMDOG_DIR}/src/Content/AssetDictionary.cpp
-  ${POMDOG_DIR}/src/Content/AssetLoaderContext.cpp
   ${POMDOG_DIR}/src/Content/AssetManager.cpp
   ${POMDOG_DIR}/src/Content/AssetBuilders/PipelineStateBuilder.cpp
   ${POMDOG_DIR}/src/Content/AssetBuilders/ShaderBuilder.cpp

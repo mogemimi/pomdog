@@ -38,7 +38,6 @@
 		1F0E6CB61ABDCD22F870F258 /* Log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA837DAFD014705086479CB4 /* Log.cpp */; };
 		219021114F3127B13F14D421 /* GameClock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ADAB2A4E3550672F3EC669D9 /* GameClock.cpp */; };
 		2253F43FA13A0B293FE79749 /* LogChannel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4406B12793DCB512528775FC /* LogChannel.cpp */; };
-		2492DBED0FC08DE1484FDA24 /* AssetLoaderContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC27D48A6B2A63C9F1A650A9 /* AssetLoaderContext.cpp */; };
 		24D8F8F7DABD4537E5C53BFB /* MouseCocoa.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 80B5948D01FB98ADEA01D578 /* MouseCocoa.cpp */; };
 		25FE89B66D5561E80E0EE6FE /* Timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A09921A442DDB282C9D44C17 /* Timer.cpp */; };
 		267998B10C4AC2842177CC79 /* RenderTarget2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDFD65037ECF5B4F1E38BB17 /* RenderTarget2D.cpp */; };
@@ -75,7 +74,6 @@
 		5B2A7872A04E4938E7E62058 /* FloatingPointVector3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 01B9F8CE68C05D1EF64A4711 /* FloatingPointVector3.cpp */; };
 		5D45742CD0787C6A52ED8F29 /* AudioClipAL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E1F15A5217D38E950360A6A5 /* AudioClipAL.cpp */; };
 		5D895FC546DFD02F64646AF7 /* EventQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72397B6027D9DE47C449E8A9 /* EventQueue.cpp */; };
-		5F8F4C5C0179D8889EC7B4D2 /* AssetDictionary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 862A27768A8B2F02F49D6548 /* AssetDictionary.cpp */; };
 		5FC19F99728314D0AB72DDB8 /* BoundingBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 48BCAC6E648E7B5E3B773BA6 /* BoundingBox.cpp */; };
 		615FEBD97D48A4D57BDA54C4 /* SoundEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3172893FA0E4885450449F2E /* SoundEffect.cpp */; };
 		616958519334C7EF67A9B08E /* PipelineStateGL4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 860807EA5D77E832BD5DBCB4 /* PipelineStateGL4.cpp */; };
@@ -122,7 +120,6 @@
 		972D8345F3491175B7E8411B /* BoundingSphere.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 23AD66A6372EA23853297EBF /* BoundingSphere.cpp */; };
 		99DE12DBE8D4B0D14FDACD5F /* Bootstrap.mm in Sources */ = {isa = PBXBuildFile; fileRef = F0C11BC845983DFAFDEC6756 /* Bootstrap.mm */; };
 		9BD2B7E492D96A784F54C910 /* ErrorChecker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 74C791C392D2DF46A553FC0F /* ErrorChecker.cpp */; };
-		9EA7C97EE18F199AE5272E24 /* AssetLoaderContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC27D48A6B2A63C9F1A650A9 /* AssetLoaderContext.cpp */; };
 		9F7601D5C7E771D3423E81EC /* ShaderGL4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46AC9E4A07CEF05AAD31AF13 /* ShaderGL4.cpp */; };
 		9FFA1FA5C22F2299B1FD7B50 /* AudioEngineAL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2E6B1323537C7C990BE1436C /* AudioEngineAL.cpp */; };
 		A0FF034BB1ABF16181CC7340 /* Color.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8C4D55AF0FA9C943AFEB7E91 /* Color.cpp */; };
@@ -339,7 +336,6 @@
 		DC83323F55585B855108ED51 /* AudioClipLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9524A580BCEF4C5E9F56EB43 /* AudioClipLoader.cpp */; };
 		DD35FD410F3B10D3D7108DD5 /* ConnectionList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B2AEB843C0EAE82FED23106B /* ConnectionList.cpp */; };
 		E4C4ADB64ED81496C05CB580 /* Rectangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F39F11986F92AD3E6A55D633 /* Rectangle.cpp */; };
-		E4D0DB6D0CBC0C51449C182B /* AssetDictionary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 862A27768A8B2F02F49D6548 /* AssetDictionary.cpp */; };
 		E58ECD9915BC55D5134950F9 /* MathHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7D3FB9357487DBB6F9C5AAC0 /* MathHelper.cpp */; };
 		E6DAE91B1C77C1736DB66CD7 /* GameWindowCocoa.mm in Sources */ = {isa = PBXBuildFile; fileRef = 14F99439DD2A820772CCB45F /* GameWindowCocoa.mm */; };
 		E7645392D6AC421C2703DF5E /* TextureHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C5CAF3CE6CC2A63DB55AA977 /* TextureHelper.cpp */; };
@@ -537,14 +533,12 @@
 		3C99D84B84F43D1176C600FC /* FloatingPointVector2.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = FloatingPointVector2.cpp; sourceTree = "<group>"; };
 		3CD68D9350D98D440EC18B73 /* Bootstrap.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = Bootstrap.hpp; sourceTree = "<group>"; };
 		3E06DBEDBF924D9DF2561581 /* ScopedConnection.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = ScopedConnection.hpp; sourceTree = "<group>"; };
-		3E987C97619CC5BE2D001D55 /* AssetDictionary.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = AssetDictionary.hpp; sourceTree = "<group>"; };
 		3EAD46140ECC58A2DB887205 /* Platform.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = Platform.hpp; sourceTree = "<group>"; };
 		3FAC3AE248BB149CCCA62349 /* AudioClipAL.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = AudioClipAL.hpp; sourceTree = "<group>"; };
 		3FC378D5176FB6E9A8D19927 /* TextureAddressMode.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = TextureAddressMode.hpp; sourceTree = "<group>"; };
 		402A421FDDA31B246E6A1892 /* VertexBuffer.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = VertexBuffer.hpp; sourceTree = "<group>"; };
 		40AA7B09EFB5B395AB0D9B61 /* NativeSamplerState.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = NativeSamplerState.hpp; sourceTree = "<group>"; };
 		4406B12793DCB512528775FC /* LogChannel.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LogChannel.cpp; sourceTree = "<group>"; };
-		44634A8A9CF085678362093D /* AssetLoaderContext.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = AssetLoaderContext.hpp; sourceTree = "<group>"; };
 		44A3977F46E88AA90475BA62 /* GamepadDPad.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = GamepadDPad.hpp; sourceTree = "<group>"; };
 		44E7157E0EF45CD55CA45495 /* TimeSourceApple.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = TimeSourceApple.hpp; sourceTree = "<group>"; };
 		4668E6261D48ECD0F6DDBA02 /* NativeGraphicsContext.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = NativeGraphicsContext.hpp; sourceTree = "<group>"; };
@@ -629,7 +623,6 @@
 		85BA12FF956A55EF787812A4 /* Pomdog.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pomdog.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		85CF88EC5ACA6C3AA968459B /* GraphicsContextGL4.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = GraphicsContextGL4.hpp; sourceTree = "<group>"; };
 		860807EA5D77E832BD5DBCB4 /* PipelineStateGL4.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = PipelineStateGL4.cpp; sourceTree = "<group>"; };
-		862A27768A8B2F02F49D6548 /* AssetDictionary.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AssetDictionary.cpp; sourceTree = "<group>"; };
 		874BAF3803BCB9751C9574C4 /* CRC32.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CRC32.cpp; sourceTree = "<group>"; };
 		88814AFAF19BC361229938AB /* DepthStencilDescription.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = DepthStencilDescription.hpp; sourceTree = "<group>"; };
 		8A8619258242CAE058476558 /* PipelineStateBuilder.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = PipelineStateBuilder.cpp; sourceTree = "<group>"; };
@@ -782,7 +775,6 @@
 		ABEE70990030BA68A5F9002D /* PipelineStateGL4.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = PipelineStateGL4.hpp; sourceTree = "<group>"; };
 		AC349E78729FC3024C1BC5D9 /* Assert.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = Assert.hpp; sourceTree = "<group>"; };
 		ADAB2A4E3550672F3EC669D9 /* GameClock.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GameClock.cpp; sourceTree = "<group>"; };
-		AE273BE1CD89F60330F62AEC /* BinaryFileStream.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = BinaryFileStream.hpp; sourceTree = "<group>"; };
 		AEFAFDEBFCDA65BA568ED7BD /* ErrorCheckerAL.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = ErrorCheckerAL.hpp; sourceTree = "<group>"; };
 		AF7B9F1EA82DCFB0FC8B79A1 /* TouchLocation.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = TouchLocation.hpp; sourceTree = "<group>"; };
 		B03814288BA60EEFD7C81CD9 /* Ray.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = Ray.hpp; sourceTree = "<group>"; };
@@ -950,7 +942,6 @@
 		D9C3D114115E6C3A619E8CF9 /* GameHostCocoa.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = GameHostCocoa.mm; sourceTree = "<group>"; };
 		DA8DDAEB3A97076C2FCB19F3 /* IndexElementSize.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = IndexElementSize.hpp; sourceTree = "<group>"; };
 		DB4F85AB0B59334913B62A4B /* GraphicsCommandList.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GraphicsCommandList.cpp; sourceTree = "<group>"; };
-		DC27D48A6B2A63C9F1A650A9 /* AssetLoaderContext.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AssetLoaderContext.cpp; sourceTree = "<group>"; };
 		DC908E294094E4F0DBC625D1 /* SamplerStateGL4.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SamplerStateGL4.cpp; sourceTree = "<group>"; };
 		DDD1FD28A2F24D79778915D7 /* AudioClip.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AudioClip.cpp; sourceTree = "<group>"; };
 		DDDFE20B906DF86AC65156FD /* NativePipelineState.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = NativePipelineState.hpp; sourceTree = "<group>"; };
@@ -1067,9 +1058,6 @@
 			children = (
 				F1D27C84FF8EC18C34B72DB2 /* AssetBuilders */,
 				459C666AB4F0378D96196D98 /* AssetLoaders */,
-				FF2F2E326C2A608073CE06E4 /* Utility */,
-				862A27768A8B2F02F49D6548 /* AssetDictionary.cpp */,
-				DC27D48A6B2A63C9F1A650A9 /* AssetLoaderContext.cpp */,
 				D719A52F23497E8400C1868B /* Audio */,
 				D719A53023497E9100C1868B /* Image */,
 				2279CD1BE0F50CD696851DA5 /* AssetManager.cpp */,
@@ -1303,15 +1291,6 @@
 			path = src;
 			sourceTree = "<group>";
 		};
-		4C4968B652E4E2098D58F226 /* detail */ = {
-			isa = PBXGroup;
-			children = (
-				3E987C97619CC5BE2D001D55 /* AssetDictionary.hpp */,
-				44634A8A9CF085678362093D /* AssetLoaderContext.hpp */,
-			);
-			path = detail;
-			sourceTree = "<group>";
-		};
 		582932A6CEFF570AC75B5E15 /* Utility */ = {
 			isa = PBXGroup;
 			children = (
@@ -1337,7 +1316,6 @@
 				D719A52423497E0100C1868B /* Audio */,
 				D719A52523497E1600C1868B /* Image */,
 				76B9D602F2B636F094143F65 /* Utility */,
-				4C4968B652E4E2098D58F226 /* detail */,
 				E15589E67EB6BFF7D9957346 /* AssetManager.hpp */,
 			);
 			path = Content;
@@ -1430,7 +1408,6 @@
 		76B9D602F2B636F094143F65 /* Utility */ = {
 			isa = PBXGroup;
 			children = (
-				AE273BE1CD89F60330F62AEC /* BinaryFileStream.hpp */,
 				F604A6D49B4FB60C05F2DD9D /* BinaryReader.hpp */,
 				1EC5597A41696495C978EDC9 /* MakeFourCC.hpp */,
 			);
@@ -2414,8 +2391,6 @@
 				A9E4B872210CDDEB003F87DC /* GamepadIOKit.cpp in Sources */,
 				A997F7001CAEFC4800926392 /* PipelineStateMetal.mm in Sources */,
 				B25BC69FDA812635B36D2CAC /* SoundEffect.cpp in Sources */,
-				5F8F4C5C0179D8889EC7B4D2 /* AssetDictionary.cpp in Sources */,
-				9EA7C97EE18F199AE5272E24 /* AssetLoaderContext.cpp in Sources */,
 				A9F2135D1DE35F420027FA45 /* Plane.cpp in Sources */,
 				D7334DC8228AC80200232225 /* PolylineBatch.cpp in Sources */,
 				A94F2DCE2131FEED00718DB0 /* VoxModelLoader.cpp in Sources */,
@@ -2586,8 +2561,6 @@
 				A9E4B873210CDDEB003F87DC /* GamepadIOKit.cpp in Sources */,
 				A997F7011CAEFC4800926392 /* PipelineStateMetal.mm in Sources */,
 				615FEBD97D48A4D57BDA54C4 /* SoundEffect.cpp in Sources */,
-				E4D0DB6D0CBC0C51449C182B /* AssetDictionary.cpp in Sources */,
-				2492DBED0FC08DE1484FDA24 /* AssetLoaderContext.cpp in Sources */,
 				A9F2135E1DE35F420027FA45 /* Plane.cpp in Sources */,
 				D7334DC9228AC80200232225 /* PolylineBatch.cpp in Sources */,
 				A94F2DCD2131FEEC00718DB0 /* VoxModelLoader.cpp in Sources */,
