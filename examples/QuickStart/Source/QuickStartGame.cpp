@@ -23,7 +23,15 @@ void QuickStartGame::Initialize()
     window->SetTitle("QuickStart");
 
     // Load a PNG as texture
-    texture = assets->Load<Texture2D>("pomdog.png");
+    if (auto[res, err] = assets->Load<Texture2D>("pomdog.png"); err != nullptr) {
+        // Error handling
+        Log::Critical("Game", err->ToString());
+        gameHost->Exit();
+        return;
+    }
+    else {
+        texture = std::move(res);
+    }
 
     // Create sampler state
     sampler = std::make_shared<SamplerState>(

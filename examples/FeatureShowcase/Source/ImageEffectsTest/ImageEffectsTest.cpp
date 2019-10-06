@@ -113,12 +113,12 @@ void ImageEffectsTest::Draw()
     primitiveBatch->DrawLine(Vector2{-w * 0.5f, -h * 0.25f}, Vector2{w * 0.5f, -h * 0.25f}, Color{221, 220, 218, 60}, 1.0f);
     primitiveBatch->DrawLine(Vector2{-w * 0.25f, -h * 0.5f}, Vector2{-w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
     primitiveBatch->DrawLine(Vector2{w * 0.25f, -h * 0.5f}, Vector2{w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
-    
+
     // Drawing rectangle
     primitiveBatch->DrawRectangle(Vector2::Zero, 100, 40, Vector2{1.0f, 1.0f}, Color::White);
     primitiveBatch->DrawRectangle(Vector2::Zero, 40, 100, Vector2{0.0f, 0.0f}, Color::Black);
     primitiveBatch->DrawRectangle(Vector2::Zero, 30, 30, Vector2{0.5f, 0.5f}, Color::Green);
-    
+
     // Drawing triangle
     primitiveBatch->DrawTriangle(
         Vector2{0.0f, -40.0f}, Vector2{40.0f, 0.0f}, Vector2{40.0f, -40.0f},

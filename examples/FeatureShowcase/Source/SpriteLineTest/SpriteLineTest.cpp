@@ -25,7 +25,12 @@ void SpriteLineTest::Initialize()
         std::nullopt,
         *assets);
 
-    texture = assets->Load<Texture2D>("Textures/pomdog.png");
+    std::shared_ptr<Error> err;
+    std::tie(texture, err) = assets->Load<Texture2D>("Textures/pomdog.png");
+    if (err != nullptr) {
+        Log::Verbose("failed to load texture: " + err->ToString());
+    }
+
     mousePosition = Vector2{100.0f, 100.0f};
 }
 

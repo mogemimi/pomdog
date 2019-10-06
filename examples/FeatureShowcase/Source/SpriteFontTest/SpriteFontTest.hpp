@@ -4,6 +4,7 @@
 #include <Pomdog/Experimental/Graphics/SpriteBatch.hpp>
 #include <Pomdog/Experimental/Graphics/SpriteFont.hpp>
 #include <Pomdog/Experimental/Graphics/TrueTypeFont.hpp>
+#include <Pomdog/Experimental/Graphics/TrueTypeFontLoader.hpp>
 #include <Pomdog/Pomdog.hpp>
 
 namespace FeatureShowcase {

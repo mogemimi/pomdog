@@ -29,7 +29,11 @@ void FeatureShowcaseGame::Initialize()
     window->SetTitle("Feature Showcase");
     commandList = std::make_shared<GraphicsCommandList>(*graphicsDevice);
 
-    auto font = std::make_shared<TrueTypeFont>(*assets, "Fonts/NotoSans/NotoSans-Regular.ttf");
+    auto[font, fontErr] = assets->Load<TrueTypeFont>("Fonts/NotoSans/NotoSans-Regular.ttf");
+    if (fontErr != nullptr) {
+        Log::Critical("Error", "failed to load a font file: " + fontErr->ToString());
+    }
+
     spriteFont = std::make_shared<SpriteFont>(graphicsDevice, font, 20.0f, 20.0f);
     spriteBatch = std::make_shared<SpriteBatch>(graphicsDevice, *assets);
     spriteFont->PrepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");

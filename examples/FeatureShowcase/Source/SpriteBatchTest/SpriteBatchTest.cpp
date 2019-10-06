@@ -28,10 +28,15 @@ void SpriteBatchTest::Initialize()
         std::nullopt,
         *assets);
 
-    texture2 = assets->Load<Texture2D>("Textures/pomdog.png");
+    if (auto[res, err] = assets->Load<Texture2D>("Textures/pomdog.png"); err != nullptr) {
+        Log::Verbose("failed to load texture: " + err->ToString());
+    }
+    else {
+        texture2 = std::move(res);
+    }
 
     // Loading GIF image
-    auto gif = GifLoader::Open(PathHelper::Join(assets->GetRootDirectory(), "Textures/punch.gif"));
+    auto gif = GifLoader::Open(PathHelper::Join(assets->GetContentDirectory(), "Textures/punch.gif"));
     POMDOG_ASSERT(gif);
 
     // Generating texture atlas from GIF image
@@ -78,6 +83,7 @@ void SpriteBatchTest::Initialize()
         if (mouseButton != MouseButtons::Left) {
             return;
         }
+
         auto window = gameHost->GetWindow();
         auto mouse = gameHost->GetMouse();
         auto mouseState = mouse->GetState();

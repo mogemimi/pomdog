@@ -26,7 +26,11 @@ void Beam2DTest::Initialize()
         std::nullopt,
         *assets);
 
-    texture = assets->Load<Texture2D>("Textures/particle_lightning.png");
+    std::shared_ptr<Error> err;
+    std::tie(texture, err) = assets->Load<Texture2D>("Textures/particle_lightning.png");
+    if (err != nullptr) {
+        Log::Verbose("failed to load texture: " + err->ToString());
+    }
 
     timer = std::make_shared<Timer>(clock);
     timer->SetInterval(std::chrono::seconds(1));

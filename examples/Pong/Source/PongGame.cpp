@@ -4,6 +4,7 @@
 #include <Pomdog.Experimental/Gameplay2D/TextRenderable.hpp>
 #include <Pomdog/Experimental/Graphics/SpriteBatch.hpp>
 #include <Pomdog/Experimental/Graphics/TrueTypeFont.hpp>
+#include <Pomdog/Experimental/Graphics/TrueTypeFontLoader.hpp>
 #include <Pomdog/Experimental/ImageEffects/ChromaticAberration.hpp>
 #include <Pomdog/Experimental/ImageEffects/FishEyeEffect.hpp>
 #include <Pomdog/Experimental/ImageEffects/FXAA.hpp>
@@ -42,14 +43,26 @@ void PongGame::Initialize()
     auto & entityManager = gameEngine.entityManager;
 
     {
-        soundEffect1 = std::make_shared<SoundEffect>(*audioEngine,
-            assets->Load<AudioClip>("sounds/pong1.wav"), false);
+        if (auto[audioClip, err] = assets->Load<AudioClip>("sounds/pong1.wav"); err != nullptr) {
+            Log::Critical("Pomdog", "error: " + err->ToString());
+        }
+        else {
+            soundEffect1 = std::make_shared<SoundEffect>(*audioEngine, audioClip, false);
+        }
 
-        soundEffect2 = std::make_shared<SoundEffect>(*audioEngine,
-            assets->Load<AudioClip>("sounds/pong2.wav"), false);
+        if (auto[audioClip, err] = assets->Load<AudioClip>("sounds/pong2.wav"); err != nullptr) {
+            Log::Critical("Pomdog", "error: " + err->ToString());
+        }
+        else {
+            soundEffect2 = std::make_shared<SoundEffect>(*audioEngine, audioClip, false);
+        }
 
-        soundEffect3 = std::make_shared<SoundEffect>(*audioEngine,
-            assets->Load<AudioClip>("sounds/pong3.wav"), false);
+        if (auto[audioClip, err] = assets->Load<AudioClip>("sounds/pong3.wav"); err != nullptr) {
+            Log::Critical("Pomdog", "error: " + err->ToString());
+        }
+        else {
+            soundEffect3 = std::make_shared<SoundEffect>(*audioEngine, audioClip, false);
+        }
     }
     {
         gameFieldSize = Rectangle{0, 0, 380, 280};
@@ -108,10 +121,15 @@ void PongGame::Initialize()
         });
     }
     {
-        auto font = std::make_shared<TrueTypeFont>(*assets, "fonts/NotoSans/NotoSans-BoldItalic.ttf");
-        spriteFont = std::make_shared<SpriteFont>(graphicsDevice, font, 26.0f, 26.0f);
-        spriteFont->PrepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
-        spriteFont->SetDefaultCharacter(U'?');
+        auto[font, err] = assets->Load<TrueTypeFont>("fonts/NotoSans/NotoSans-BoldItalic.ttf");
+        if (err != nullptr) {
+            Log::Critical("Pomdog", "error: " + err->ToString());
+        }
+        else {
+            spriteFont = std::make_shared<SpriteFont>(graphicsDevice, font, 26.0f, 26.0f);
+            spriteFont->PrepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
+            spriteFont->SetDefaultCharacter(U'?');
+        }
     }
     {
         auto fxaa = std::make_shared<FXAA>(graphicsDevice, *assets);
