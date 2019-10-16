@@ -2,26 +2,30 @@
 
 ## Build and run the unit tests on Linux
 
+To build with CMake and Ninja, run the following commands:
+
 ```sh
 cd path/to/pomdog
 
-# Creating a build directory
-mkdir -p build.cmake && cd build.cmake
-
-# Generate Makefile
-cmake \
+# Generate Ninja file to the 'build.cmake' directory
+cmake -Bbuild.cmake -H. -G Ninja \
     -DCMAKE_C_COMPILER=clang \
     -DCMAKE_CXX_COMPILER=clang++ \
     -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
     -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++ -lc++abi" \
-    -DCMAKE_BUILD_TYPE=Release \
-    ../test
+    -DCMAKE_BUILD_TYPE=Release
 
 # Compiling source code
-make -j4
+ninja -C build.cmake
 
 # Run the unit tests
-./PomdogTest        
+./build.cmake/test/PomdogTest
+```
+
+To run the 'FeatureShowcase' application, use the following:
+
+```sh
+./build.cmake/examples/FeatureShowcase/FeatureShowcase
 ```
 
 ### Building with a custom toolchain
@@ -29,11 +33,10 @@ make -j4
 To compile with GCC, run the following command:
 
 ```sh
-cmake \
+cmake -Bbuild.cmake -H. -G Ninja \
     -DCMAKE_C_COMPILER=gcc \
     -DCMAKE_CXX_COMPILER=g++ \
-    -DCMAKE_BUILD_TYPE=Release \
-    ../test
+    -DCMAKE_BUILD_TYPE=Release
 ```
 
 You can also override the compiler options by setting the environment variables such as `expor CXX=...` or `export CXXFLAGS=...`.
@@ -44,26 +47,7 @@ export CXX=clang++
 export LINK=clang++
 export CXXFLAGS="-std=c++17 -stdlib=libc++"
 export LDFLAGS="-stdlib=libc++"
-cmake -DCMAKE_BUILD_TYPE=Release ../test
-```
-
-### Building with Ninja instead of GNU Make
-
-To build with Ninja, run the following command:
-
-```sh
-# Generate Ninja file
-cmake \
-    -G Ninja \
-    -DCMAKE_C_COMPILER=clang \
-    -DCMAKE_CXX_COMPILER=clang++ \
-    -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
-    -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++ -lc++abi" \
-    -DCMAKE_BUILD_TYPE=Release \
-    ../test
-
-# Build with Ninja
-ninja
+cmake -Bbuild.cmake -H. -G Ninja -DCMAKE_BUILD_TYPE=Release
 ```
 
 ## Build and run the unit tests on Mac OS X
@@ -73,17 +57,20 @@ To run all unit tests, use:
 ```sh
 cd path/to/pomdog
 
-# Creating a build directory
-mkdir -p build.cmake && cd build.cmake
-
-# Generating Xcode project files
-cmake -G Xcode ../test
+# Generate Xcode project files to the 'build.cmake' directory
+cmake -Bbuild.cmake -H. -G Xcode
 
 # Compiling source code
-xcodebuild -project PomdogTest.xcodeproj -configuration Release
+xcodebuild -project Pomdog.xcodeproj -configuration Release
 
 # Run the unit tests
-./Release/PomdogTest
+./build.cmake/test/Release/PomdogTest
+```
+
+To run the 'FeatureShowcase' application, use the following:
+
+```sh
+open ./build.cmake/examples/FeatureShowcase/Release/FeatureShowcase.app
 ```
 
 ## Build and run the unit tests on Windows
@@ -91,16 +78,22 @@ xcodebuild -project PomdogTest.xcodeproj -configuration Release
 ```sh
 cd path/to/pomdog
 
-# Creating a build directory
-mkdir build.cmake
-cd build.cmake
-
-# Generating projects for Visual Studio 2019
-cmake -G "Visual Studio 16" ../test
+# Generate projects for Visual Studio 2019 to the 'build.cmake' directory
+cmake -Bbuild.cmake -H. -G "Visual Studio 16"
 
 # Building projects using CMake and MSBuild
-cmake --build . --config Release
+cmake --build build.cmake --config Release
 
 # To run all unit tests, use the following:
-./Release/PomdogTest
+./build.cmake/test/Release/PomdogTest
+```
+
+```sh
+cd path/to/pomdog
+
+# Move to the `examples/FeatureShowcase` directory
+cd examples/FeatureShowcase
+
+# To run the 'FeatureShowcase' application, use the following:
+./../../build.cmake/examples/FeatureShowcase/Release/FeatureShowcase.exe
 ```

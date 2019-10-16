@@ -97,23 +97,20 @@ To develop your application on Xcode, please open `HelloWorld.xcodeproj` in Xcod
 # Git Bash (MinGW)
 cd path/to/HelloWorld
 
-# Creating a build directory
-mkdir -p build && cd build
-
-# Generating projects for Visual Studio 2019
-cmake -G "Visual Studio 16" ..
+# Create your 'build' directory and generate projects for Visual Studio 2019
+cmake -Bbuild -H. -G "Visual Studio 16"
 
 # Building projects using CMake and MSBuild
-cmake --build . --config Debug
+cmake --build build --config Debug
 
 # To run your application, you can use the following
-./Debug/HelloWorld
+./build/Debug/HelloWorld
 ```
 
 To build in release mode, use `--config` option:
 
 ```sh
-cmake --build . --config Release
+cmake --build build --config Release
 ```
 
 To develop your application on Visual Studio, please open `HelloWorld.sln` in Visual Studio.
