@@ -7,7 +7,7 @@ It is open source and distributed under the [MIT License](http://opensource.org/
 
 * [Homepage](http://enginetrouble.net/pomdog)
 * [GitHub](https://github.com/mogemimi/pomdog)
-* [Documentation](https://github.com/mogemimi/pomdog/docs)
+* [Documentation](https://github.com/mogemimi/pomdog/tree/master/docs)
 * [Wiki](https://github.com/mogemimi/pomdog/wiki)
 
 Feedback, issues and pull requests are always welcome!
@@ -53,11 +53,8 @@ Please refer to [Architecture](https://github.com/mogemimi/pomdog/wiki/Architect
 After generating, open the .xcodeproj or .vcxproj in Xcode/Visual Studio.
 If you need further information about building runtime libraries and developing apps, please visit:
 
-* [Building Runtime Libraries on Linux](https://github.com/mogemimi/pomdog/wiki/Building-Runtime-Libraries-on-Linux)
-* [Building Runtime Libraries on Mac OS X](https://github.com/mogemimi/pomdog/wiki/Building-Runtime-Libraries-on-Mac-OS-X)
-* [Building Runtime Libraries on Windows](https://github.com/mogemimi/pomdog/wiki/Building-Runtime-Libraries-on-Windows)
-* [Developing on Mac OS X](https://github.com/mogemimi/pomdog/wiki/Developing-on-Mac-OS-X)
-* [Developing on Windows (Visual Studio 2017)](https://github.com/mogemimi/pomdog/wiki/Developing-on-Windows-(Visual-Studio-2017))
+* [Running the Tests](docs/Running-the-Tests.md)
+* [Setting Up Development Environment on Ubuntu](docs/Setting-Up-Development-Environment-on-Ubuntu.md)
 
 ## Getting started
 
