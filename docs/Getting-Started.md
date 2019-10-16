@@ -1,5 +1,21 @@
 # Getting Started
 
+## Prerequisites
+
+The following software is required in order to create and build a new project:
+
+- [Git](https://www.git-scm.com/)
+- [Golang](https://golang.org/)
+- [CMake](https://cmake.org/)
+- For Linux:
+  - [Ninja](https://ninja-build.org/)
+  - Clang or GCC
+  - For more details about installation of build requirements, please see [Setting Up Development Environment on Ubuntu](Setting-Up-Development-Environment-on-Ubuntu.md).
+- For Windows:
+  - Visual Studio
+- For macOS:
+  - Xcode
+
 ## Clone the repo with Git
 
 1. Clone the repository
