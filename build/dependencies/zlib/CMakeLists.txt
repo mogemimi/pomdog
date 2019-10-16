@@ -65,6 +65,7 @@ target_compile_options(zlib PRIVATE
     /GF
     /Gy
     /GS-
+    /wd"4267"
     $<$<CONFIG:DEBUG>:/MTd>
     $<$<CONFIG:RELEASE>:/MT>
   >

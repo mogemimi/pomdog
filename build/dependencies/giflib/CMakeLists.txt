@@ -53,9 +53,13 @@ target_compile_options(giflib PRIVATE
     /GF
     /Gy
     /GS-
+    /wd"4013"
     /wd"4018"
     /wd"4028"
+    /wd"4047"
     /wd"4244"
+    /wd"4247"
+    /wd"4267"
     $<$<CONFIG:DEBUG>:/MTd>
     $<$<CONFIG:RELEASE>:/MT>
   >
