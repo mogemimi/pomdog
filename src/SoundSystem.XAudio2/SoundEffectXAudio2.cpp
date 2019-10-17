@@ -14,7 +14,7 @@ namespace {
 void BuildXAudioBuffer(
     const AudioClipXAudio2& audioClip,
     bool isLooped,
-    XAUDIO2_BUFFER & bufferDesc)
+    XAUDIO2_BUFFER& bufferDesc)
 {
     bufferDesc.Flags = XAUDIO2_END_OF_STREAM;
     bufferDesc.AudioBytes = static_cast<UINT32>(audioClip.SizeInBytes());
@@ -34,7 +34,7 @@ void BuildXAudioBuffer(
 } // unnamed namespace
 
 SoundEffectXAudio2::SoundEffectXAudio2(
-    AudioEngineXAudio2 & audioEngine,
+    AudioEngineXAudio2& audioEngine,
     const std::shared_ptr<AudioClipXAudio2>& audioClipIn,
     bool isLoopedIn)
     : audioClip(audioClipIn)

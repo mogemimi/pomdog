@@ -11,7 +11,7 @@
 namespace Pomdog::Detail::SoundSystem::OpenAL {
 
 SoundEffectAL::SoundEffectAL(
-    AudioEngineAL &,
+    AudioEngineAL&,
     const std::shared_ptr<AudioClipAL>& audioClipIn,
     bool isLooped)
     : audioClip(audioClipIn)
@@ -34,7 +34,7 @@ SoundEffectAL::SoundEffectAL(
 #endif
 
     POMDOG_ASSERT(source);
-    alSourcei(source->value, AL_LOOPING, (isLooped ? AL_TRUE: AL_FALSE));
+    alSourcei(source->value, AL_LOOPING, (isLooped ? AL_TRUE : AL_FALSE));
 
 #ifdef DEBUG
     ErrorCheckerAL::CheckError("alSourcei", __FILE__, __LINE__);

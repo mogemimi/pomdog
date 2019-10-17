@@ -16,8 +16,8 @@ namespace Pomdog::Detail::SoundSystem::XAudio2 {
 class AudioClipXAudio2 final {
 public:
     AudioClipXAudio2(
-        std::vector<std::uint8_t> && audioData,
-        std::vector<std::uint8_t> && waveFormat);
+        std::vector<std::uint8_t>&& audioData,
+        std::vector<std::uint8_t>&& waveFormat);
 
     AudioClipXAudio2(const AudioClipXAudio2&) = delete;
     AudioClipXAudio2& operator=(const AudioClipXAudio2&) = delete;

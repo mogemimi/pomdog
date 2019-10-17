@@ -18,7 +18,7 @@ class AudioEngineXAudio2;
 class SoundEffectXAudio2 final {
 public:
     SoundEffectXAudio2(
-        AudioEngineXAudio2 & audioEngine,
+        AudioEngineXAudio2& audioEngine,
         const std::shared_ptr<AudioClipXAudio2>& audioClip,
         bool isLooped);
 

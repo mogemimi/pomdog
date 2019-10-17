@@ -48,7 +48,7 @@ Duration GetSampleDuration(std::size_t samples, int sampleRate)
 
 } // unnamed namespace
 
-AudioClip::AudioClip(std::unique_ptr<Detail::SoundSystem::NativeAudioClip> && nativeAudioClipIn,
+AudioClip::AudioClip(std::unique_ptr<Detail::SoundSystem::NativeAudioClip>&& nativeAudioClipIn,
     int sampleRateIn, int bitsPerSampleIn, AudioChannels channelsIn)
     : nativeAudioClip(std::move(nativeAudioClipIn))
     , sampleRate(sampleRateIn)

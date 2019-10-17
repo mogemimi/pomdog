@@ -27,7 +27,7 @@ private:
 
 public:
     SoundEffectAL(
-        AudioEngineAL & audioEngine,
+        AudioEngineAL& audioEngine,
         const std::shared_ptr<AudioClipAL>& audioClip,
         bool isLooped);
 

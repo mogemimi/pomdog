@@ -16,11 +16,16 @@ using ErrorCodeAL = Tagged<ALenum, ErrorCodeTag>;
 std::string ToString(const ErrorCodeAL& errorCode)
 {
     switch (errorCode.value) {
-    case AL_NO_ERROR: return "AL_NO_ERROR";
-    case AL_INVALID_ENUM: return "AL_INVALID_ENUM";
-    case AL_INVALID_VALUE: return "AL_INVALID_VALUE";
-    case AL_INVALID_OPERATION: return "AL_INVALID_OPERATION";
-    case AL_OUT_OF_MEMORY: return "AL_OUT_OF_MEMORY";
+    case AL_NO_ERROR:
+        return "AL_NO_ERROR";
+    case AL_INVALID_ENUM:
+        return "AL_INVALID_ENUM";
+    case AL_INVALID_VALUE:
+        return "AL_INVALID_VALUE";
+    case AL_INVALID_OPERATION:
+        return "AL_INVALID_OPERATION";
+    case AL_OUT_OF_MEMORY:
+        return "AL_OUT_OF_MEMORY";
     }
     std::stringstream ss;
     ss << "ErrorCode '" << reinterpret_cast<const void*>(errorCode.value) << "'";

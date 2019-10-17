@@ -7,8 +7,8 @@
 namespace Pomdog::Detail::SoundSystem::XAudio2 {
 
 AudioClipXAudio2::AudioClipXAudio2(
-    std::vector<std::uint8_t> && audioDataIn,
-    std::vector<std::uint8_t> && waveFormatIn)
+    std::vector<std::uint8_t>&& audioDataIn,
+    std::vector<std::uint8_t>&& waveFormatIn)
     : audioData(std::move(audioDataIn))
     , waveFormat(std::move(waveFormatIn))
 {

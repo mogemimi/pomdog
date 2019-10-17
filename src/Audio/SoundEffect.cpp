@@ -29,7 +29,7 @@ GetNativeBuffer(const std::shared_ptr<AudioClip>& audioClip)
 } // unnamed namespace
 
 SoundEffect::SoundEffect(
-    AudioEngine & audioEngine,
+    AudioEngine& audioEngine,
     const std::shared_ptr<AudioClip>& audioClip,
     bool isLoopedIn)
     : pitch(0.0f)
