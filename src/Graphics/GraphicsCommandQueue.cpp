@@ -8,7 +8,7 @@
 namespace Pomdog {
 
 GraphicsCommandQueue::GraphicsCommandQueue(
-    std::unique_ptr<Detail::NativeGraphicsCommandQueue> && nativeCommandQueueIn)
+    std::unique_ptr<Detail::NativeGraphicsCommandQueue>&& nativeCommandQueueIn)
     : nativeCommandQueue(std::move(nativeCommandQueueIn))
 {
 }

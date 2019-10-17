@@ -10,7 +10,7 @@
 namespace Pomdog {
 
 EffectReflection::EffectReflection(
-    GraphicsDevice & graphicsDevice,
+    GraphicsDevice& graphicsDevice,
     const PipelineStateDescription& pipelineStateDescription,
     const std::shared_ptr<PipelineState>& pipelineState)
 {

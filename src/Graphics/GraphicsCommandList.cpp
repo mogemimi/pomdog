@@ -16,7 +16,7 @@
 
 namespace Pomdog {
 
-GraphicsCommandList::GraphicsCommandList(GraphicsDevice & graphicsDevice)
+GraphicsCommandList::GraphicsCommandList(GraphicsDevice& graphicsDevice)
 {
     auto nativeDevice = graphicsDevice.GetNativeGraphicsDevice();
     POMDOG_ASSERT(nativeDevice != nullptr);
@@ -99,7 +99,7 @@ void GraphicsCommandList::DrawIndexedInstanced(
         startInstanceLocation);
 }
 
-void GraphicsCommandList::SetRenderPass(RenderPass && renderPass)
+void GraphicsCommandList::SetRenderPass(RenderPass&& renderPass)
 {
     POMDOG_ASSERT(nativeCommandList);
 
@@ -164,7 +164,7 @@ void GraphicsCommandList::SetVertexBuffers(const std::vector<VertexBufferBinding
     nativeCommandList->SetVertexBuffers(vertexBuffers);
 }
 
-void GraphicsCommandList::SetVertexBuffers(std::vector<VertexBufferBinding> && vertexBuffers)
+void GraphicsCommandList::SetVertexBuffers(std::vector<VertexBufferBinding>&& vertexBuffers)
 {
     POMDOG_ASSERT(!vertexBuffers.empty());
     POMDOG_ASSERT(nativeCommandList);

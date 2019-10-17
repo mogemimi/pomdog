@@ -74,7 +74,7 @@ public:
     {
         static_assert(std::is_pod_v<T>, "You can only use plain-old-data types.");
         static_assert(!std::is_void_v<T>);
-        this->GetData(static_cast<void*>(result),  sizeof(T) * startIndex, sizeof(T) * elementCount);
+        this->GetData(static_cast<void*>(result), sizeof(T) * startIndex, sizeof(T) * elementCount);
     }
 
     /// Copies the pixel data from texture to memory.

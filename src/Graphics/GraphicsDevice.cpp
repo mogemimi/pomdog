@@ -8,7 +8,7 @@
 
 namespace Pomdog {
 
-GraphicsDevice::GraphicsDevice(std::unique_ptr<Detail::NativeGraphicsDevice> && device)
+GraphicsDevice::GraphicsDevice(std::unique_ptr<Detail::NativeGraphicsDevice>&& device)
     : nativeGraphicsDevice(std::move(device))
 {
     POMDOG_ASSERT(nativeGraphicsDevice);

@@ -10,7 +10,7 @@
 namespace Pomdog {
 
 PipelineState::PipelineState(
-    GraphicsDevice & graphicsDevice,
+    GraphicsDevice& graphicsDevice,
     const PipelineStateDescription& description)
 {
     auto nativeDevice = graphicsDevice.GetNativeGraphicsDevice();

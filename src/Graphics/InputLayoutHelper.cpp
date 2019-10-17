@@ -14,7 +14,7 @@ static constexpr std::uint16_t MaxInputSlotCount = 16;
 
 } // unnamed namespace
 
-InputLayoutHelper & InputLayoutHelper::PushBack(InputElementFormat format)
+InputLayoutHelper& InputLayoutHelper::PushBack(InputElementFormat format)
 {
     InputElement element;
     element.Format = format;
@@ -30,43 +30,43 @@ InputLayoutHelper & InputLayoutHelper::PushBack(InputElementFormat format)
     return *this;
 }
 
-InputLayoutHelper & InputLayoutHelper::Byte4()
+InputLayoutHelper& InputLayoutHelper::Byte4()
 {
     PushBack(InputElementFormat::Byte4);
     return *this;
 }
 
-InputLayoutHelper & InputLayoutHelper::Float()
+InputLayoutHelper& InputLayoutHelper::Float()
 {
     PushBack(InputElementFormat::Float);
     return *this;
 }
 
-InputLayoutHelper & InputLayoutHelper::Float2()
+InputLayoutHelper& InputLayoutHelper::Float2()
 {
     PushBack(InputElementFormat::Float2);
     return *this;
 }
 
-InputLayoutHelper & InputLayoutHelper::Float3()
+InputLayoutHelper& InputLayoutHelper::Float3()
 {
     PushBack(InputElementFormat::Float3);
     return *this;
 }
 
-InputLayoutHelper & InputLayoutHelper::Float4()
+InputLayoutHelper& InputLayoutHelper::Float4()
 {
     PushBack(InputElementFormat::Float4);
     return *this;
 }
 
-InputLayoutHelper & InputLayoutHelper::Int4()
+InputLayoutHelper& InputLayoutHelper::Int4()
 {
     PushBack(InputElementFormat::Int4);
     return *this;
 }
 
-InputLayoutHelper & InputLayoutHelper::AddInputSlot()
+InputLayoutHelper& InputLayoutHelper::AddInputSlot()
 {
     if (!elements.empty()) {
         ++inputSlot;
@@ -81,7 +81,7 @@ InputLayoutHelper & InputLayoutHelper::AddInputSlot()
     return *this;
 }
 
-InputLayoutHelper & InputLayoutHelper::AddInputSlot(
+InputLayoutHelper& InputLayoutHelper::AddInputSlot(
     InputClassification slotClassIn, std::uint16_t instanceStepRateIn)
 {
     POMDOG_ASSERT(instanceStepRateIn >= 0);

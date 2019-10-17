@@ -12,7 +12,7 @@
 namespace Pomdog {
 
 RenderTarget2D::RenderTarget2D(
-    GraphicsDevice & graphicsDevice,
+    GraphicsDevice& graphicsDevice,
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn)
     : RenderTarget2D(
@@ -26,7 +26,7 @@ RenderTarget2D::RenderTarget2D(
 }
 
 RenderTarget2D::RenderTarget2D(
-    GraphicsDevice & graphicsDevice,
+    GraphicsDevice& graphicsDevice,
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn,
     bool generateMipmap,
@@ -34,7 +34,7 @@ RenderTarget2D::RenderTarget2D(
     DepthFormat depthStencilFormatIn)
     : pixelWidth(pixelWidthIn)
     , pixelHeight(pixelHeightIn)
-    , levelCount(generateMipmap ? Detail::TextureHelper::ComputeMipmapLevelCount(pixelWidthIn, pixelHeightIn): 1)
+    , levelCount(generateMipmap ? Detail::TextureHelper::ComputeMipmapLevelCount(pixelWidthIn, pixelHeightIn) : 1)
     , format(formatIn)
     , depthStencilFormat(depthStencilFormatIn)
 {

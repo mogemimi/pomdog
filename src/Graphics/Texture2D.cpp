@@ -27,7 +27,7 @@ Texture2D::Texture2D(
     SurfaceFormat formatIn)
     : pixelWidth(pixelWidthIn)
     , pixelHeight(pixelHeightIn)
-    , levelCount(mipMap ? Detail::TextureHelper::ComputeMipmapLevelCount(pixelWidth, pixelHeight): 1)
+    , levelCount(mipMap ? Detail::TextureHelper::ComputeMipmapLevelCount(pixelWidth, pixelHeight) : 1)
     , format(formatIn)
 {
     POMDOG_ASSERT(pixelWidth > 0);

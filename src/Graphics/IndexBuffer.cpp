@@ -11,7 +11,7 @@
 namespace Pomdog {
 
 IndexBuffer::IndexBuffer(
-    GraphicsDevice & graphicsDevice,
+    GraphicsDevice& graphicsDevice,
     IndexElementSize elementSizeIn,
     const void* indices,
     std::size_t indexCountIn,
@@ -35,7 +35,7 @@ IndexBuffer::IndexBuffer(
 }
 
 IndexBuffer::IndexBuffer(
-    GraphicsDevice & graphicsDevice,
+    GraphicsDevice& graphicsDevice,
     IndexElementSize elementSizeIn,
     std::size_t indexCountIn,
     BufferUsage bufferUsageIn)

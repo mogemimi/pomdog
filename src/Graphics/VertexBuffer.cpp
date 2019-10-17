@@ -12,7 +12,7 @@
 namespace Pomdog {
 
 VertexBuffer::VertexBuffer(
-    GraphicsDevice & graphicsDevice,
+    GraphicsDevice& graphicsDevice,
     const void* vertices,
     std::size_t vertexCountIn,
     std::size_t strideInBytesIn,
@@ -38,7 +38,7 @@ VertexBuffer::VertexBuffer(
 }
 
 VertexBuffer::VertexBuffer(
-    GraphicsDevice & graphicsDevice,
+    GraphicsDevice& graphicsDevice,
     std::size_t vertexCountIn,
     std::size_t strideInBytesIn,
     BufferUsage bufferUsageIn)
