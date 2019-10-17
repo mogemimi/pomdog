@@ -42,7 +42,7 @@ ContainmentType BoundingCircle::Contains(const Vector2& point) const
 ContainmentType BoundingCircle::Contains(const BoundingBox2D& box) const
 {
     bool inside = true;
-    for (auto & corner : box.GetCorners()) {
+    for (auto& corner : box.GetCorners()) {
         if (this->Contains(corner) == ContainmentType::Disjoint) {
             inside = false;
             break;

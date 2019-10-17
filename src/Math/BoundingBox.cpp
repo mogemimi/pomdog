@@ -110,7 +110,7 @@ std::optional<float> BoundingBox::Intersects(const Ray& ray) const
 
 std::array<Vector3, BoundingBox::CornerCount> BoundingBox::GetCorners() const noexcept
 {
-    return std::array<Vector3, BoundingBox::CornerCount> {{
+    return std::array<Vector3, BoundingBox::CornerCount>{{
         Vector3{this->Min.X, this->Max.Y, this->Max.Z},
         Vector3{this->Max.X, this->Max.Y, this->Max.Z},
         Vector3{this->Max.X, this->Min.Y, this->Max.Z},

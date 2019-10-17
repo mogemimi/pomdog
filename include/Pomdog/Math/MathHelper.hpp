@@ -12,11 +12,13 @@ namespace Detail {
 
 template <class Tp>
 struct IsTaggedFloatingPoint
-: public std::integral_constant<bool, false> {};
+    : public std::integral_constant<bool, false> {
+};
 
 template <class T, class Tag>
 struct IsTaggedFloatingPoint<TaggedArithmetic<T, Tag>>
-: public std::integral_constant<bool, std::is_floating_point<T>::value> {};
+    : public std::integral_constant<bool, std::is_floating_point<T>::value> {
+};
 
 } // namespace Detail
 

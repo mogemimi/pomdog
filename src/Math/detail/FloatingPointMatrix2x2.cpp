@@ -18,7 +18,7 @@ FloatingPointMatrix2x2<T>::FloatingPointMatrix2x2(T m00, T m01, T m10, T m11) no
 }
 
 template <typename T>
-FloatingPointMatrix2x2<T> &
+FloatingPointMatrix2x2<T>&
 FloatingPointMatrix2x2<T>::operator*=(const FloatingPointMatrix2x2& other) noexcept
 {
     *this = Multiply(*this, other);
@@ -26,7 +26,7 @@ FloatingPointMatrix2x2<T>::operator*=(const FloatingPointMatrix2x2& other) noexc
 }
 
 template <typename T>
-FloatingPointMatrix2x2<T> &
+FloatingPointMatrix2x2<T>&
 FloatingPointMatrix2x2<T>::operator+=(const FloatingPointMatrix2x2& other) noexcept
 {
     m[0][0] += other.m[0][0];
@@ -37,7 +37,7 @@ FloatingPointMatrix2x2<T>::operator+=(const FloatingPointMatrix2x2& other) noexc
 }
 
 template <typename T>
-FloatingPointMatrix2x2<T> &
+FloatingPointMatrix2x2<T>&
 FloatingPointMatrix2x2<T>::operator-=(const FloatingPointMatrix2x2& other) noexcept
 {
     m[0][0] -= other.m[0][0];
@@ -48,7 +48,7 @@ FloatingPointMatrix2x2<T>::operator-=(const FloatingPointMatrix2x2& other) noexc
 }
 
 template <typename T>
-FloatingPointMatrix2x2<T> &
+FloatingPointMatrix2x2<T>&
 FloatingPointMatrix2x2<T>::operator*=(T scaleFactor) noexcept
 {
     m[0][0] *= scaleFactor;
@@ -59,7 +59,7 @@ FloatingPointMatrix2x2<T>::operator*=(T scaleFactor) noexcept
 }
 
 template <typename T>
-FloatingPointMatrix2x2<T> &
+FloatingPointMatrix2x2<T>&
 FloatingPointMatrix2x2<T>::operator/=(T scaleFactor)
 {
     POMDOG_ASSERT(scaleFactor != T{0});
@@ -142,7 +142,7 @@ bool FloatingPointMatrix2x2<T>::operator!=(const FloatingPointMatrix2x2& other) 
 }
 
 template <typename T>
-T & FloatingPointMatrix2x2<T>::operator()(std::size_t row, std::size_t column)
+T& FloatingPointMatrix2x2<T>::operator()(std::size_t row, std::size_t column)
 {
     POMDOG_ASSERT_MESSAGE(row < RowSize, "row: out of range");
     POMDOG_ASSERT_MESSAGE(column < ColumnSize, "column: out of range");

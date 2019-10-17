@@ -209,7 +209,7 @@ FloatingPointVector2<T>::Normalize(const FloatingPointVector2& source) noexcept
 
 template <typename T>
 void
-FloatingPointVector2<T>::Normalize(const FloatingPointVector2& source, FloatingPointVector2 & result) noexcept
+FloatingPointVector2<T>::Normalize(const FloatingPointVector2& source, FloatingPointVector2& result) noexcept
 {
     auto const length = source.Length();
 

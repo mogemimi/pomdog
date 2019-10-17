@@ -37,7 +37,7 @@ std::optional<float> Ray::Intersects(const BoundingBox& box) const
     constexpr auto NegativeInfinity = std::numeric_limits<T>::lowest();
     constexpr auto Epsilon = std::numeric_limits<T>::epsilon();
 
-    auto & ray = *this;
+    auto& ray = *this;
 
     auto tNear = NegativeInfinity;
     auto tFar = PositiveInfinity;

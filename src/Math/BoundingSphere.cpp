@@ -44,7 +44,7 @@ ContainmentType BoundingSphere::Contains(const Vector3& point) const
 ContainmentType BoundingSphere::Contains(const BoundingBox& box) const
 {
     bool inside = true;
-    for (auto & corner : box.GetCorners()) {
+    for (auto& corner : box.GetCorners()) {
         if (this->Contains(corner) == ContainmentType::Disjoint) {
             inside = false;
             break;

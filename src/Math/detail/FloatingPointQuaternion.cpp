@@ -24,7 +24,7 @@ FloatingPointQuaternion<T>::FloatingPointQuaternion(T x, T y, T z, T w) noexcept
 }
 
 template <typename T>
-FloatingPointQuaternion<T> & FloatingPointQuaternion<T>::operator+=(const FloatingPointQuaternion& other) noexcept
+FloatingPointQuaternion<T>& FloatingPointQuaternion<T>::operator+=(const FloatingPointQuaternion& other) noexcept
 {
     X += other.X;
     Y += other.Y;
@@ -34,7 +34,7 @@ FloatingPointQuaternion<T> & FloatingPointQuaternion<T>::operator+=(const Floati
 }
 
 template <typename T>
-FloatingPointQuaternion<T> & FloatingPointQuaternion<T>::operator-=(const FloatingPointQuaternion& other) noexcept
+FloatingPointQuaternion<T>& FloatingPointQuaternion<T>::operator-=(const FloatingPointQuaternion& other) noexcept
 {
     X -= other.X;
     Y -= other.Y;
@@ -44,13 +44,13 @@ FloatingPointQuaternion<T> & FloatingPointQuaternion<T>::operator-=(const Floati
 }
 
 template <typename T>
-FloatingPointQuaternion<T> & FloatingPointQuaternion<T>::operator*=(const FloatingPointQuaternion& other) noexcept
+FloatingPointQuaternion<T>& FloatingPointQuaternion<T>::operator*=(const FloatingPointQuaternion& other) noexcept
 {
     return (*this) = (*this) * other;
 }
 
 template <typename T>
-FloatingPointQuaternion<T> & FloatingPointQuaternion<T>::operator*=(T scaleFactor) noexcept
+FloatingPointQuaternion<T>& FloatingPointQuaternion<T>::operator*=(T scaleFactor) noexcept
 {
     X *= scaleFactor;
     Y *= scaleFactor;
@@ -60,7 +60,7 @@ FloatingPointQuaternion<T> & FloatingPointQuaternion<T>::operator*=(T scaleFacto
 }
 
 template <typename T>
-FloatingPointQuaternion<T> & FloatingPointQuaternion<T>::operator/=(T scaleFactor)
+FloatingPointQuaternion<T>& FloatingPointQuaternion<T>::operator/=(T scaleFactor)
 {
     POMDOG_ASSERT(scaleFactor != 0);
     X /= scaleFactor;
@@ -241,7 +241,7 @@ FloatingPointQuaternion<T>::Inverse(const FloatingPointQuaternion& source, Float
         result.X = source.X * -inverseLengthSquared;
         result.Y = source.Y * -inverseLengthSquared;
         result.Z = source.Z * -inverseLengthSquared;
-        result.W = source.W *  inverseLengthSquared;
+        result.W = source.W * inverseLengthSquared;
     }
     // Failed to calculate inverse
     //result = Identity;
@@ -311,12 +311,12 @@ void CreateFromRotationMatrixImplementation(const MatrixClass& rotation, Floatin
         //std::size_t const j = (i+1) % 3;
         //std::size_t const k = (i+2) % 3;
 
-        static std::size_t const indices[3] = { 1, 2, 0 };
+        static std::size_t const indices[3] = {1, 2, 0};
         std::size_t const j = indices[i];
         std::size_t const k = indices[j];
 
         auto root = std::sqrt(rotation(i, i) - rotation(j, j) - rotation(k, k) + T{1});
-        std::array<T*, 3> const quat = {{ &result.X, &result.Y, &result.Z }};
+        std::array<T*, 3> const quat = {{&result.X, &result.Y, &result.Z}};
         *quat[i] = half * root;
         root = half / root;
         result.W = (rotation(k, j) - rotation(j, k)) * root;

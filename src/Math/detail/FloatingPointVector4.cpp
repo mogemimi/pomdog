@@ -31,7 +31,7 @@ FloatingPointVector4<T>::FloatingPointVector4(T x, T y, T z, T w) noexcept
 }
 
 template <typename T>
-FloatingPointVector4<T> & FloatingPointVector4<T>::operator+=(const FloatingPointVector4& other) noexcept
+FloatingPointVector4<T>& FloatingPointVector4<T>::operator+=(const FloatingPointVector4& other) noexcept
 {
     X += other.X;
     Y += other.Y;
@@ -41,7 +41,7 @@ FloatingPointVector4<T> & FloatingPointVector4<T>::operator+=(const FloatingPoin
 }
 
 template <typename T>
-FloatingPointVector4<T> & FloatingPointVector4<T>::operator-=(const FloatingPointVector4& other) noexcept
+FloatingPointVector4<T>& FloatingPointVector4<T>::operator-=(const FloatingPointVector4& other) noexcept
 {
     X -= other.X;
     Y -= other.Y;
@@ -51,7 +51,7 @@ FloatingPointVector4<T> & FloatingPointVector4<T>::operator-=(const FloatingPoin
 }
 
 template <typename T>
-FloatingPointVector4<T> & FloatingPointVector4<T>::operator*=(T scaleFactor) noexcept
+FloatingPointVector4<T>& FloatingPointVector4<T>::operator*=(T scaleFactor) noexcept
 {
     X *= scaleFactor;
     Y *= scaleFactor;
@@ -61,7 +61,7 @@ FloatingPointVector4<T> & FloatingPointVector4<T>::operator*=(T scaleFactor) noe
 }
 
 template <typename T>
-FloatingPointVector4<T> & FloatingPointVector4<T>::operator/=(T scaleFactor)
+FloatingPointVector4<T>& FloatingPointVector4<T>::operator/=(T scaleFactor)
 {
     X /= scaleFactor;
     Y /= scaleFactor;
@@ -204,7 +204,7 @@ FloatingPointVector4<T>::Normalize(const FloatingPointVector4& source) noexcept
 }
 
 template <typename T>
-void FloatingPointVector4<T>::Normalize(const FloatingPointVector4& source, FloatingPointVector4 & result) noexcept
+void FloatingPointVector4<T>::Normalize(const FloatingPointVector4& source, FloatingPointVector4& result) noexcept
 {
     auto const length = source.Length();
 

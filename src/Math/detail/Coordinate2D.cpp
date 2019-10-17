@@ -14,7 +14,7 @@ Coordinate2D<T>::Coordinate2D(T x, T y) noexcept
 }
 
 template <typename T>
-Coordinate2D<T> & Coordinate2D<T>::operator+=(const Coordinate2D& other) noexcept
+Coordinate2D<T>& Coordinate2D<T>::operator+=(const Coordinate2D& other) noexcept
 {
     X += other.X;
     Y += other.Y;
@@ -22,7 +22,7 @@ Coordinate2D<T> & Coordinate2D<T>::operator+=(const Coordinate2D& other) noexcep
 }
 
 template <typename T>
-Coordinate2D<T> & Coordinate2D<T>::operator-=(const Coordinate2D& other) noexcept
+Coordinate2D<T>& Coordinate2D<T>::operator-=(const Coordinate2D& other) noexcept
 {
     X -= other.X;
     Y -= other.Y;
@@ -30,7 +30,7 @@ Coordinate2D<T> & Coordinate2D<T>::operator-=(const Coordinate2D& other) noexcep
 }
 
 template <typename T>
-Coordinate2D<T> & Coordinate2D<T>::operator*=(T scaleFactor) noexcept
+Coordinate2D<T>& Coordinate2D<T>::operator*=(T scaleFactor) noexcept
 {
     X *= scaleFactor;
     Y *= scaleFactor;
@@ -38,7 +38,7 @@ Coordinate2D<T> & Coordinate2D<T>::operator*=(T scaleFactor) noexcept
 }
 
 template <typename T>
-Coordinate2D<T> & Coordinate2D<T>::operator/=(T scaleFactor)
+Coordinate2D<T>& Coordinate2D<T>::operator/=(T scaleFactor)
 {
     POMDOG_ASSERT(scaleFactor != 0);
     X /= scaleFactor;

@@ -33,14 +33,14 @@ FloatingPointMatrix3x3<T>::FloatingPointMatrix3x3(
 }
 
 template <typename T>
-FloatingPointMatrix3x3<T> & FloatingPointMatrix3x3<T>::operator*=(const FloatingPointMatrix3x3& other) noexcept
+FloatingPointMatrix3x3<T>& FloatingPointMatrix3x3<T>::operator*=(const FloatingPointMatrix3x3& other) noexcept
 {
     *this = Multiply(*this, other);
     return *this;
 }
 
 template <typename T>
-FloatingPointMatrix3x3<T> & FloatingPointMatrix3x3<T>::operator+=(const FloatingPointMatrix3x3& other) noexcept
+FloatingPointMatrix3x3<T>& FloatingPointMatrix3x3<T>::operator+=(const FloatingPointMatrix3x3& other) noexcept
 {
     m[0][0] += other.m[0][0];
     m[0][1] += other.m[0][1];
@@ -55,7 +55,7 @@ FloatingPointMatrix3x3<T> & FloatingPointMatrix3x3<T>::operator+=(const Floating
 }
 
 template <typename T>
-FloatingPointMatrix3x3<T> & FloatingPointMatrix3x3<T>::operator-=(const FloatingPointMatrix3x3& other) noexcept
+FloatingPointMatrix3x3<T>& FloatingPointMatrix3x3<T>::operator-=(const FloatingPointMatrix3x3& other) noexcept
 {
     m[0][0] -= other.m[0][0];
     m[0][1] -= other.m[0][1];
@@ -70,7 +70,7 @@ FloatingPointMatrix3x3<T> & FloatingPointMatrix3x3<T>::operator-=(const Floating
 }
 
 template <typename T>
-FloatingPointMatrix3x3<T> & FloatingPointMatrix3x3<T>::operator*=(T scaleFactor) noexcept
+FloatingPointMatrix3x3<T>& FloatingPointMatrix3x3<T>::operator*=(T scaleFactor) noexcept
 {
     m[0][0] *= scaleFactor;
     m[0][1] *= scaleFactor;
@@ -85,7 +85,7 @@ FloatingPointMatrix3x3<T> & FloatingPointMatrix3x3<T>::operator*=(T scaleFactor)
 }
 
 template <typename T>
-FloatingPointMatrix3x3<T> & FloatingPointMatrix3x3<T>::operator/=(T scaleFactor)
+FloatingPointMatrix3x3<T>& FloatingPointMatrix3x3<T>::operator/=(T scaleFactor)
 {
     POMDOG_ASSERT(scaleFactor != T{0});
     auto const inverseDivider = T{1} / scaleFactor;
@@ -189,7 +189,7 @@ bool FloatingPointMatrix3x3<T>::operator!=(const FloatingPointMatrix3x3& other) 
 }
 
 template <typename T>
-T & FloatingPointMatrix3x3<T>::operator()(std::size_t row, std::size_t column)
+T& FloatingPointMatrix3x3<T>::operator()(std::size_t row, std::size_t column)
 {
     POMDOG_ASSERT_MESSAGE(row < RowSize, "row: out of range");
     POMDOG_ASSERT_MESSAGE(column < ColumnSize, "column: out of range");

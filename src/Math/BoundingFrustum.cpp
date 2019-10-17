@@ -13,24 +13,24 @@ namespace Pomdog {
 namespace {
 
 namespace PlaneIndex {
-    constexpr int Near = 0;
-    constexpr int Far = 1;
-    constexpr int Left = 2;
-    constexpr int Right = 3;
-    constexpr int Top = 4;
-    constexpr int Bottom = 5;
-}
+constexpr int Near = 0;
+constexpr int Far = 1;
+constexpr int Left = 2;
+constexpr int Right = 3;
+constexpr int Top = 4;
+constexpr int Bottom = 5;
+} // namespace PlaneIndex
 
 namespace CornerIndex {
-    constexpr int NearLeftTop = 0;
-    constexpr int NearRightTop = 1;
-    constexpr int NearRightBottom = 2;
-    constexpr int NearLeftBottom = 3;
-    constexpr int FarLeftTop = 4;
-    constexpr int FarRightTop = 5;
-    constexpr int FarRightBottom = 6;
-    constexpr int FarLeftBottom = 7;
-}
+constexpr int NearLeftTop = 0;
+constexpr int NearRightTop = 1;
+constexpr int NearRightBottom = 2;
+constexpr int NearLeftBottom = 3;
+constexpr int FarLeftTop = 4;
+constexpr int FarRightTop = 5;
+constexpr int FarRightBottom = 6;
+constexpr int FarLeftBottom = 7;
+} // namespace CornerIndex
 
 #define POMDOG_CREATE_PLANES_BEFORE_CORNERS 0
 //#define POMDOG_CREATE_PLANES_BEFORE_CORNERS 1
@@ -112,7 +112,7 @@ namespace {
 
 #if POMDOG_CREATE_PLANES_BEFORE_CORNERS
 
-void MakePlane(Plane & plane, float x, float y, float z, float d)
+void MakePlane(Plane& plane, float x, float y, float z, float d)
 {
     plane.Normal.X = x;
     plane.Normal.Y = y;
@@ -183,7 +183,7 @@ void BoundingFrustum::CreatePlanes()
         -matrix(2, 3) - matrix(2, 1),
         -matrix(3, 3) - matrix(3, 1));
 
-    for (auto & plane : planes) {
+    for (auto& plane : planes) {
         plane.Normalize();
     }
 #else
@@ -247,7 +247,7 @@ void BoundingFrustum::CreateCorners()
     corners[FLB] = Vector3{xMin, yMin, zMax};
 
     auto inverseMatrix = Matrix4x4::Invert(matrix);
-    for (auto & corner : corners) {
+    for (auto& corner : corners) {
         corner = Vector3::Transform(corner, inverseMatrix);
     }
 #endif
@@ -257,7 +257,7 @@ ContainmentType BoundingFrustum::Contains(const Vector3& point) const noexcept
 {
 #if 1
     // NOTE: fast mode
-    for (auto & plane : planes) {
+    for (auto& plane : planes) {
         const auto distance = plane.DotCoordinate(point);
         if (distance > 0.0f) {
             return ContainmentType::Disjoint;
@@ -266,7 +266,7 @@ ContainmentType BoundingFrustum::Contains(const Vector3& point) const noexcept
     return ContainmentType::Contains;
 #else
     bool intersects = false;
-    for (auto & plane : planes) {
+    for (auto& plane : planes) {
         const auto distance = plane.DotCoordinate(point);
         if (distance > 0.0f) {
             return ContainmentType::Disjoint;
@@ -285,7 +285,7 @@ ContainmentType BoundingFrustum::Contains(const Vector3& point) const noexcept
 ContainmentType BoundingFrustum::Contains(const BoundingBox& box) const noexcept
 {
     bool intersects = false;
-    for (auto & plane : planes) {
+    for (auto& plane : planes) {
         const auto planeIntersectionType = plane.Intersects(box);
         if (planeIntersectionType == PlaneIntersectionType::Front) {
             return ContainmentType::Disjoint;
@@ -303,7 +303,7 @@ ContainmentType BoundingFrustum::Contains(const BoundingBox& box) const noexcept
 ContainmentType BoundingFrustum::Contains(const BoundingFrustum& frustum) const noexcept
 {
     bool intersects = false;
-    for (auto & plane : planes) {
+    for (auto& plane : planes) {
         const auto planeIntersectionType = plane.Intersects(frustum);
         if (planeIntersectionType == PlaneIntersectionType::Front) {
             return ContainmentType::Disjoint;
@@ -321,7 +321,7 @@ ContainmentType BoundingFrustum::Contains(const BoundingFrustum& frustum) const 
 ContainmentType BoundingFrustum::Contains(const BoundingSphere& sphere) const noexcept
 {
     bool intersects = false;
-    for (auto & plane : planes) {
+    for (auto& plane : planes) {
         const auto planeIntersectionType = plane.Intersects(sphere);
         if (planeIntersectionType == PlaneIntersectionType::Front) {
             return ContainmentType::Disjoint;
@@ -338,7 +338,7 @@ ContainmentType BoundingFrustum::Contains(const BoundingSphere& sphere) const no
 
 bool BoundingFrustum::Intersects(const BoundingBox& box) const noexcept
 {
-    for (auto & plane : planes) {
+    for (auto& plane : planes) {
         if (plane.Intersects(box) == PlaneIntersectionType::Front) {
             return false;
         }
@@ -348,7 +348,7 @@ bool BoundingFrustum::Intersects(const BoundingBox& box) const noexcept
 
 bool BoundingFrustum::Intersects(const BoundingFrustum& frustum) const noexcept
 {
-    for (auto & plane : planes) {
+    for (auto& plane : planes) {
         const auto planeIntersectionType = plane.Intersects(frustum);
         if (planeIntersectionType == PlaneIntersectionType::Front) {
             return false;
@@ -359,7 +359,7 @@ bool BoundingFrustum::Intersects(const BoundingFrustum& frustum) const noexcept
 
 bool BoundingFrustum::Intersects(const BoundingSphere& sphere) const noexcept
 {
-    for (auto & plane : planes) {
+    for (auto& plane : planes) {
         const auto planeIntersectionType = plane.Intersects(sphere);
         if (planeIntersectionType == PlaneIntersectionType::Front) {
             return false;
@@ -383,7 +383,7 @@ std::optional<float> BoundingFrustum::Intersects(const Ray& ray) const noexcept
 {
     std::array<std::optional<float>, PlaneCount> distances;
     for (int i = 0; i < PlaneCount; ++i) {
-        auto & plane = planes[i];
+        auto& plane = planes[i];
         const auto d = ray.Intersects(plane);
         const auto distanceToRayPosition = plane.DotCoordinate(ray.Position);
         if ((distanceToRayPosition < 0.0f) && !d) {
