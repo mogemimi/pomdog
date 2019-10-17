@@ -29,11 +29,11 @@ TransformAddress(const std::string_view& address)
 {
     if (!address.empty() && (address.front() == '[')) {
         // NOTE: IPv6 (e.g. [host]:port)
-        auto[host, port] = Detail::AddressParser::SeparateString(address.substr(1), "]:");
+        auto [host, port] = Detail::AddressParser::SeparateString(address.substr(1), "]:");
         return std::make_tuple(AddressFamily::InterNetworkV6, std::move(host), std::move(port));
     }
 
-    auto[host, port] = Detail::AddressParser::SeparateString(address, ":");
+    auto [host, port] = Detail::AddressParser::SeparateString(address, ":");
     return std::make_tuple(AddressFamily::InterNetworkV4, std::move(host), std::move(port));
 }
 

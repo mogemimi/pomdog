@@ -89,8 +89,15 @@ bool ReadChar(StringIterator& it, StringIterator end, char character)
     return false;
 }
 
-bool isSpace(char c) noexcept { return (c == ' '); }
-bool isLinebreak(char c) noexcept { return (c == '\n') || (c == '\r'); }
+bool isSpace(char c) noexcept
+{
+    return (c == ' ');
+}
+
+bool isLinebreak(char c) noexcept
+{
+    return (c == '\n') || (c == '\r');
+}
 
 std::tuple<std::vector<std::pair<std::string, std::string>>, std::shared_ptr<Error>>
 ParseFields(std::vector<char>::const_iterator& iter, std::vector<char>::const_iterator end)
@@ -147,7 +154,7 @@ std::optional<std::string_view> FindField(T& fields, const std::string_view& key
 std::shared_ptr<Error>
 ParseResponse(HTTPResponse& response, std::vector<char>& rawData)
 {
-    auto[word, iter, err] = GetWord<std::vector<char>::const_iterator>(std::begin(rawData), std::end(rawData), isSpace);
+    auto [word, iter, err] = GetWord<std::vector<char>::const_iterator>(std::begin(rawData), std::end(rawData), isSpace);
     if (err != nullptr) {
         return err;
     }

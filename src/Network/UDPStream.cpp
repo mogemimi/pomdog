@@ -36,7 +36,7 @@ UDPStream::Connect(IOService* service, const std::string_view& address)
     UDPStream stream{service};
     POMDOG_ASSERT(stream.nativeStream != nullptr);
 
-    const auto[family, host, port] = Detail::AddressParser::TransformAddress(address);
+    const auto [family, host, port] = Detail::AddressParser::TransformAddress(address);
 
     if (auto err = stream.nativeStream->Connect(host, port, std::chrono::seconds{5}); err != nullptr) {
         return std::make_tuple(std::move(stream), std::move(err));
@@ -52,7 +52,7 @@ UDPStream::Listen(IOService* service, const std::string_view& address)
     UDPStream stream{service};
     POMDOG_ASSERT(stream.nativeStream != nullptr);
 
-    const auto[family, host, port] = Detail::AddressParser::TransformAddress(address);
+    const auto [family, host, port] = Detail::AddressParser::TransformAddress(address);
 
     if (auto err = stream.nativeStream->Listen(host, port); err != nullptr) {
         return std::make_tuple(std::move(stream), std::move(err));

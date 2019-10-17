@@ -29,7 +29,7 @@ TLSStream::Connect(IOService* service, const std::string_view& address)
     TLSStream stream{service};
     POMDOG_ASSERT(stream.nativeStream != nullptr);
 
-    const auto[family, host, port] = Detail::AddressParser::TransformAddress(address);
+    const auto [family, host, port] = Detail::AddressParser::TransformAddress(address);
 
     const auto certPEM = Detail::GetEmbeddedCertificatePEM();
 
@@ -47,7 +47,7 @@ TLSStream::Connect(IOService* service, const std::string_view& address, const Du
     TLSStream stream{service};
     POMDOG_ASSERT(stream.nativeStream != nullptr);
 
-    const auto[family, host, port] = Detail::AddressParser::TransformAddress(address);
+    const auto [family, host, port] = Detail::AddressParser::TransformAddress(address);
 
     if (auto err = stream.nativeStream->Connect(host, port, timeout, certPEM); err != nullptr) {
         return std::make_tuple(std::move(stream), std::move(err));

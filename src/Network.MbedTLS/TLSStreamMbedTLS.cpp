@@ -134,7 +134,7 @@ TLSStreamMbedTLS::Connect(
     const auto hostBuf = std::string{host};
     const auto portBuf = std::string{port};
 
-    std::thread connectThread([this, hostBuf = std::move(hostBuf), portBuf = std::move(portBuf), connectTimeoutIn]{
+    std::thread connectThread([this, hostBuf = std::move(hostBuf), portBuf = std::move(portBuf), connectTimeoutIn] {
 #if 0
         // NOTE: Start the connection
         auto ret = mbedtls_net_connect(&descriptor, hostBuf.data(), portBuf.data(), MBEDTLS_NET_PROTO_TCP);
@@ -169,7 +169,6 @@ TLSStreamMbedTLS::Connect(
         this->descriptor.fd = static_cast<int>(fd);
         int ret = 0;
 #endif
-
         // NOTE: Set up the SSL/TLS structure
         ret = mbedtls_ssl_config_defaults(
             &sslConfig,
@@ -269,7 +268,7 @@ TLSStreamMbedTLS::Connect(
 
             this->OnConnected(nullptr);
             eventLoopConn.Disconnect();
-            eventLoopConn = service->ScheduleTask([this]{ this->ReadEventLoop(); });
+            eventLoopConn = service->ScheduleTask([this] { this->ReadEventLoop(); });
         });
     });
 

@@ -3,7 +3,6 @@
 #include "SocketHelperPOSIX.hpp"
 #include "../Utility/ErrorHelper.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include <cstring>
 #include <fcntl.h>
 #include <netdb.h>
 #include <netinet/in.h>
@@ -11,6 +10,7 @@
 #include <sys/types.h>
 #include <sys/uio.h>
 #include <unistd.h>
+#include <cstring>
 
 namespace Pomdog::Detail {
 namespace {

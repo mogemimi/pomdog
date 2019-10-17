@@ -36,7 +36,7 @@ TCPStream::Connect(IOService* service, const std::string_view& address)
     TCPStream stream{service};
     POMDOG_ASSERT(stream.nativeStream != nullptr);
 
-    const auto[family, host, port] = Detail::AddressParser::TransformAddress(address);
+    const auto [family, host, port] = Detail::AddressParser::TransformAddress(address);
 
     if (auto err = stream.nativeStream->Connect(host, port, std::chrono::seconds{5}); err != nullptr) {
         return std::make_tuple(std::move(stream), std::move(err));
@@ -52,7 +52,7 @@ TCPStream::Connect(IOService* service, const std::string_view& address, const Du
     TCPStream stream{service};
     POMDOG_ASSERT(stream.nativeStream != nullptr);
 
-    const auto[family, host, port] = Detail::AddressParser::TransformAddress(address);
+    const auto [family, host, port] = Detail::AddressParser::TransformAddress(address);
 
     if (auto err = stream.nativeStream->Connect(host, port, timeout); err != nullptr) {
         return std::make_tuple(std::move(stream), std::move(err));
@@ -78,7 +78,7 @@ Connection TCPStream::OnDisconnect(std::function<void()>&& callback)
     return nativeStream->OnDisconnect.Connect(std::move(callback));
 }
 
-Connection TCPStream::OnRead(std::function<void (const ArrayView<std::uint8_t>&, const std::shared_ptr<Error>&)>&& callback)
+Connection TCPStream::OnRead(std::function<void(const ArrayView<std::uint8_t>&, const std::shared_ptr<Error>&)>&& callback)
 {
     POMDOG_ASSERT(nativeStream != nullptr);
     return nativeStream->OnRead.Connect(std::move(callback));
@@ -90,13 +90,13 @@ std::shared_ptr<Error> TCPStream::Write(const ArrayView<std::uint8_t const>& dat
     return nativeStream->Write(data);
 }
 
- bool TCPStream::IsConnected() const noexcept
- {
+bool TCPStream::IsConnected() const noexcept
+{
     if (nativeStream == nullptr) {
         return false;
     }
     return nativeStream->IsConnected();
- }
+}
 
 void TCPStream::SetTimeout(const Duration& timeout)
 {

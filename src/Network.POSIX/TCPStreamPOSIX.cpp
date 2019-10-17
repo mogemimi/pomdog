@@ -6,12 +6,12 @@
 #include "Pomdog/Network/ArrayView.hpp"
 #include "Pomdog/Network/IOService.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include <array>
-#include <cstring>
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <array>
+#include <cstring>
 
 namespace Pomdog::Detail {
 namespace {
@@ -70,7 +70,7 @@ TCPStreamPOSIX::Connect(const std::string_view& host, const std::string_view& po
     const auto portBuf = std::string{port};
 
     std::thread connectThread([this, hostBuf = std::move(hostBuf), portBuf = std::move(portBuf), connectTimeout = connectTimeout] {
-        auto[fd, err] = Detail::ConnectSocketPOSIX(hostBuf, portBuf, SocketProtocol::TCP, connectTimeout);
+        auto [fd, err] = Detail::ConnectSocketPOSIX(hostBuf, portBuf, SocketProtocol::TCP, connectTimeout);
 
         if (err != nullptr) {
             auto wrapped = Errors::Wrap(std::move(err), "couldn't connect to TCP socket on " + hostBuf + ":" + portBuf);

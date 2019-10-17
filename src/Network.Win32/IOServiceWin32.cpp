@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
 #include "IOServiceWin32.hpp"
-#include <string>
 #include <WinSock2.h>
+#include <string>
 
 namespace Pomdog::Detail::Win32 {
 

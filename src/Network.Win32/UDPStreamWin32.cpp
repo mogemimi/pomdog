@@ -8,9 +8,9 @@
 #include "Pomdog/Network/ArrayView.hpp"
 #include "Pomdog/Network/IOService.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include <WS2tcpip.h>
 #include <array>
 #include <cstring>
-#include <WS2tcpip.h>
 
 namespace Pomdog::Detail {
 namespace {
@@ -51,7 +51,7 @@ UDPStreamWin32::Connect(const std::string_view& host, const std::string_view& po
     const auto portBuf = std::string{port};
 
     std::thread connectThread([this, hostBuf = std::move(hostBuf), portBuf = std::move(portBuf), connectTimeout = connectTimeout] {
-        auto[fd, err] = Detail::ConnectSocketWin32(hostBuf, portBuf, SocketProtocol::UDP, connectTimeout);
+        auto [fd, err] = Detail::ConnectSocketWin32(hostBuf, portBuf, SocketProtocol::UDP, connectTimeout);
 
         if (err != nullptr) {
             auto wrapped = Errors::Wrap(std::move(err), "couldn't connect to UDP socket on " + hostBuf + ":" + portBuf);
@@ -84,7 +84,7 @@ UDPStreamWin32::Listen(const std::string_view& host, const std::string_view& por
     const auto hostBuf = std::string{host};
     const auto portBuf = std::string{port};
 
-    auto[fd, err] = Detail::BindSocketWin32(hostBuf, portBuf, SocketProtocol::UDP);
+    auto [fd, err] = Detail::BindSocketWin32(hostBuf, portBuf, SocketProtocol::UDP);
 
     if (err != nullptr) {
         auto wrapped = Errors::Wrap(std::move(err), "couldn't listen to UDP socket on " + hostBuf + ":" + portBuf);
@@ -139,7 +139,7 @@ UDPStreamWin32::WriteTo(const ArrayView<std::uint8_t const>& data, const std::st
     POMDOG_ASSERT(data.GetData() != nullptr);
     POMDOG_ASSERT(data.GetSize() > 0);
 
-    const auto[family, hostView, portView] = Detail::AddressParser::TransformAddress(address);
+    const auto [family, hostView, portView] = Detail::AddressParser::TransformAddress(address);
     auto host = std::string{hostView};
     auto port = std::string{portView};
 

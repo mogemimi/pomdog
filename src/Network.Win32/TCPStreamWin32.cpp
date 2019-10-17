@@ -57,7 +57,7 @@ TCPStreamWin32::Connect(const std::string_view& host, const std::string_view& po
     const auto portBuf = std::string{port};
 
     std::thread connectThread([this, hostBuf = std::move(hostBuf), portBuf = std::move(portBuf), connectTimeout = connectTimeout] {
-        auto[fd, err] = Detail::ConnectSocketWin32(hostBuf, portBuf, SocketProtocol::TCP, connectTimeout);
+        auto [fd, err] = Detail::ConnectSocketWin32(hostBuf, portBuf, SocketProtocol::TCP, connectTimeout);
 
         if (err != nullptr) {
             auto wrapped = Errors::Wrap(std::move(err), "couldn't connect to TCP socket on " + hostBuf + ":" + portBuf);

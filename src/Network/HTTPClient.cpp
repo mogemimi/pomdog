@@ -263,7 +263,7 @@ void HTTPSession<SocketStream>::CreateSession(
 
         POMDOG_ASSERT(request != nullptr);
 
-        auto[parsedURL, parseErr] = ParseURL(request->URL);
+        auto [parsedURL, parseErr] = ParseURL(request->URL);
         if (parseErr != nullptr) {
             auto err = Errors::Wrap(std::move(parseErr), "invalid url " + request->URL);
             KeepAlive(keeper, std::move(socketAddress), std::move(stream));
@@ -319,7 +319,7 @@ void HTTPSession<SocketStream>::CreateSession(
             return;
         }
 
-        auto[result, err] = parser.Parse(view);
+        auto [result, err] = parser.Parse(view);
         if (err != nullptr) {
             this->Complete(nullptr, std::move(err));
             stream.Disconnect();
@@ -485,7 +485,7 @@ HTTPClient::Impl::Do(const std::shared_ptr<HTTPRequest>& req)
     POMDOG_ASSERT(service != nullptr);
     POMDOG_ASSERT(req != nullptr);
 
-    auto[parsedURL, parseErr] = ParseURL(req->URL);
+    auto [parsedURL, parseErr] = ParseURL(req->URL);
     if (parseErr != nullptr) {
         return Errors::Wrap(std::move(parseErr), "invalid url " + req->URL);
     }
@@ -502,7 +502,7 @@ HTTPClient::Impl::Do(const std::shared_ptr<HTTPRequest>& req)
         }
 
         if (!sessionStream.IsConnected()) {
-            auto[stream, err] = TLSStream::Connect(service, socketAddress);
+            auto [stream, err] = TLSStream::Connect(service, socketAddress);
             if (err != nullptr) {
                 return Errors::Wrap(std::move(err), "failed to connect to server");
             }
@@ -523,7 +523,7 @@ HTTPClient::Impl::Do(const std::shared_ptr<HTTPRequest>& req)
         }
 
         if (!sessionStream.IsConnected()) {
-            auto[stream, err] = TCPStream::Connect(service, socketAddress);
+            auto [stream, err] = TCPStream::Connect(service, socketAddress);
             if (err != nullptr) {
                 return Errors::Wrap(std::move(err), "failed to connect to server");
             }
