@@ -1,6 +1,7 @@
 #include "FeatureShowcaseGame.hpp"
 #include "AudioClipTest/AudioClipTest.hpp"
 #include "Beam2DTest/Beam2DTest.hpp"
+#include "GamepadTest/GamepadTest.hpp"
 #include "HTTPClientTest/HTTPClientTest.hpp"
 #include "ImageEffectsTest/ImageEffectsTest.hpp"
 #include "LineBatchTest/LineBatchTest.hpp"
@@ -96,6 +97,10 @@ void FeatureShowcaseGame::Initialize()
     buttons.emplace_back("VoxelModel Test", [this] {
         window->SetTitle("Feature Showcase > VoxelModel Test");
         subGame = std::make_shared<FeatureShowcase::VoxelModelTest>(gameHost);
+    });
+    buttons.emplace_back("Gamepad Test", [this] {
+        window->SetTitle("Feature Showcase > Gamepad Test");
+        subGame = std::make_shared<FeatureShowcase::GamepadTest>(gameHost);
     });
 
     hudButtons.emplace_back("Back", [this] {

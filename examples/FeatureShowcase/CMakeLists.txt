@@ -14,6 +14,7 @@ set(CMAKE_CONFIGURATION_TYPES Debug Release)
 source_group(Source                       REGULAR_EXPRESSION "Source/*")
 source_group(Source\\AudioClipTest        REGULAR_EXPRESSION "Source/AudioClipTest/*")
 source_group(Source\\Beam2DTest           REGULAR_EXPRESSION "Source/Beam2DTest/*")
+source_group(Source\\GamepadTest          REGULAR_EXPRESSION "Source/GamepadTest/*")
 source_group(Source\\HTTPClientTest       REGULAR_EXPRESSION "Source/HTTPClientTest/*")
 source_group(Source\\ImageEffectsTest     REGULAR_EXPRESSION "Source/ImageEffectsTest/*")
 source_group(Source\\LineBatchTest        REGULAR_EXPRESSION "Source/LineBatchTest/*")
@@ -45,6 +46,8 @@ add_executable(${PRODUCT_NAME} WIN32
   Source/AudioClipTest/AudioClipTest.hpp
   Source/Beam2DTest/Beam2DTest.cpp
   Source/Beam2DTest/Beam2DTest.hpp
+  Source/GamepadTest/GamepadTest.cpp
+  Source/GamepadTest/GamepadTest.hpp
   Source/HTTPClientTest/HTTPClientTest.cpp
   Source/HTTPClientTest/HTTPClientTest.hpp
   Source/ImageEffectsTest/ImageEffectsTest.cpp
