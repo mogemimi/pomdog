@@ -14,10 +14,14 @@ namespace {
 GLenum ToTextureAddressMode(TextureAddressMode address) noexcept
 {
     switch (address) {
-    case TextureAddressMode::Wrap: return GL_REPEAT;
-    case TextureAddressMode::Clamp: return GL_CLAMP_TO_EDGE;
-    case TextureAddressMode::Mirror: return GL_MIRRORED_REPEAT;
-    case TextureAddressMode::Border: return GL_CLAMP_TO_BORDER;
+    case TextureAddressMode::Wrap:
+        return GL_REPEAT;
+    case TextureAddressMode::Clamp:
+        return GL_CLAMP_TO_EDGE;
+    case TextureAddressMode::Mirror:
+        return GL_MIRRORED_REPEAT;
+    case TextureAddressMode::Border:
+        return GL_CLAMP_TO_BORDER;
     }
     POMDOG_UNREACHABLE("Unsupported texture address mode");
 }

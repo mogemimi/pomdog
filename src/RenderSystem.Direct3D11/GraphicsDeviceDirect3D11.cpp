@@ -97,7 +97,7 @@ void AdapterManager::Clear()
 {
     activeAdapter.Reset();
 
-    for (auto & adapter : adapters) {
+    for (auto& adapter : adapters) {
         adapter.Reset();
     }
     adapters.clear();
@@ -178,8 +178,10 @@ void CheckError(ID3D11InfoQueue* infoQueue)
 D3D11_BIND_FLAG ToBindFlag(BufferBindMode bindMode) noexcept
 {
     switch (bindMode) {
-    case BufferBindMode::ConstantBuffer: return D3D11_BIND_CONSTANT_BUFFER;
-    case BufferBindMode::IndexBuffer: return D3D11_BIND_INDEX_BUFFER;
+    case BufferBindMode::ConstantBuffer:
+        return D3D11_BIND_CONSTANT_BUFFER;
+    case BufferBindMode::IndexBuffer:
+        return D3D11_BIND_INDEX_BUFFER;
     case BufferBindMode::VertexBuffer:
         break;
     }
@@ -419,7 +421,7 @@ GraphicsDeviceDirect3D11::CreatePipelineState(const PipelineStateDescription& de
 std::unique_ptr<NativeEffectReflection>
 GraphicsDeviceDirect3D11::CreateEffectReflection(
     const PipelineStateDescription& description,
-    NativePipelineState &)
+    NativePipelineState&)
 {
     auto vertexShader = std::dynamic_pointer_cast<VertexShaderDirect3D11>(
         description.VertexShader);

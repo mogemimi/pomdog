@@ -12,15 +12,24 @@ namespace {
 D3D11_FILTER ToFilter(TextureFilter textureFilter) noexcept
 {
     switch (textureFilter) {
-    case TextureFilter::Anisotropic:    return D3D11_FILTER_ANISOTROPIC;
-    case TextureFilter::Linear:         return D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-    case TextureFilter::Point:          return D3D11_FILTER_MIN_MAG_MIP_POINT;
-    case TextureFilter::LinearMipPoint: return D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
-    case TextureFilter::PointMipLinear: return D3D11_FILTER_MIN_MAG_POINT_MIP_LINEAR;
-    case TextureFilter::MinLinearMagPointMipLinear: return D3D11_FILTER_MIN_LINEAR_MAG_POINT_MIP_LINEAR;
-    case TextureFilter::MinLinearMagPointMipPoint:  return D3D11_FILTER_MIN_LINEAR_MAG_MIP_POINT;
-    case TextureFilter::MinPointMagLinearMipLinear: return D3D11_FILTER_MIN_POINT_MAG_MIP_LINEAR;
-    case TextureFilter::MinPointMagLinearMipPoint:  return D3D11_FILTER_MIN_POINT_MAG_LINEAR_MIP_POINT;
+    case TextureFilter::Anisotropic:
+        return D3D11_FILTER_ANISOTROPIC;
+    case TextureFilter::Linear:
+        return D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+    case TextureFilter::Point:
+        return D3D11_FILTER_MIN_MAG_MIP_POINT;
+    case TextureFilter::LinearMipPoint:
+        return D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
+    case TextureFilter::PointMipLinear:
+        return D3D11_FILTER_MIN_MAG_POINT_MIP_LINEAR;
+    case TextureFilter::MinLinearMagPointMipLinear:
+        return D3D11_FILTER_MIN_LINEAR_MAG_POINT_MIP_LINEAR;
+    case TextureFilter::MinLinearMagPointMipPoint:
+        return D3D11_FILTER_MIN_LINEAR_MAG_MIP_POINT;
+    case TextureFilter::MinPointMagLinearMipLinear:
+        return D3D11_FILTER_MIN_POINT_MAG_MIP_LINEAR;
+    case TextureFilter::MinPointMagLinearMipPoint:
+        return D3D11_FILTER_MIN_POINT_MAG_LINEAR_MIP_POINT;
     }
     return D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 }
@@ -28,10 +37,14 @@ D3D11_FILTER ToFilter(TextureFilter textureFilter) noexcept
 D3D11_TEXTURE_ADDRESS_MODE ToTextureAddressMode(TextureAddressMode addressMode) noexcept
 {
     switch (addressMode) {
-    case TextureAddressMode::Wrap: return D3D11_TEXTURE_ADDRESS_WRAP;
-    case TextureAddressMode::Clamp: return D3D11_TEXTURE_ADDRESS_CLAMP;
-    case TextureAddressMode::Mirror: return D3D11_TEXTURE_ADDRESS_MIRROR;
-    case TextureAddressMode::Border: return D3D11_TEXTURE_ADDRESS_BORDER;
+    case TextureAddressMode::Wrap:
+        return D3D11_TEXTURE_ADDRESS_WRAP;
+    case TextureAddressMode::Clamp:
+        return D3D11_TEXTURE_ADDRESS_CLAMP;
+    case TextureAddressMode::Mirror:
+        return D3D11_TEXTURE_ADDRESS_MIRROR;
+    case TextureAddressMode::Border:
+        return D3D11_TEXTURE_ADDRESS_BORDER;
     }
     return D3D11_TEXTURE_ADDRESS_WRAP;
 }

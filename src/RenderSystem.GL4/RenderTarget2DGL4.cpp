@@ -12,10 +12,14 @@ GLenum ToDepthStencilFormat(DepthFormat depthFormat) noexcept
 {
     POMDOG_ASSERT(depthFormat != DepthFormat::None);
     switch (depthFormat) {
-    case DepthFormat::Depth16: return GL_DEPTH_COMPONENT16;
-    case DepthFormat::Depth24Stencil8: return GL_DEPTH24_STENCIL8;
-    case DepthFormat::Depth32: return GL_DEPTH_COMPONENT32;
-    case DepthFormat::Depth32_Float_Stencil8_Uint: return GL_DEPTH32F_STENCIL8;
+    case DepthFormat::Depth16:
+        return GL_DEPTH_COMPONENT16;
+    case DepthFormat::Depth24Stencil8:
+        return GL_DEPTH24_STENCIL8;
+    case DepthFormat::Depth32:
+        return GL_DEPTH_COMPONENT32;
+    case DepthFormat::Depth32_Float_Stencil8_Uint:
+        return GL_DEPTH32F_STENCIL8;
     case DepthFormat::None:
         break;
     }

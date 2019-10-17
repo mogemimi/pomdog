@@ -42,10 +42,14 @@ namespace {
 GLenum ToPrimitiveTopology(PrimitiveTopology primitiveTopology) noexcept
 {
     switch (primitiveTopology) {
-    case PrimitiveTopology::TriangleList: return GL_TRIANGLES;
-    case PrimitiveTopology::TriangleStrip: return GL_TRIANGLE_STRIP;
-    case PrimitiveTopology::LineList: return GL_LINES;
-    case PrimitiveTopology::LineStrip: return GL_LINE_STRIP;
+    case PrimitiveTopology::TriangleList:
+        return GL_TRIANGLES;
+    case PrimitiveTopology::TriangleStrip:
+        return GL_TRIANGLE_STRIP;
+    case PrimitiveTopology::LineList:
+        return GL_LINES;
+    case PrimitiveTopology::LineStrip:
+        return GL_LINE_STRIP;
     }
     POMDOG_UNREACHABLE("Unsupported primitive topology");
 }
@@ -56,8 +60,10 @@ GLenum ToIndexElementType(IndexElementSize indexElementSize) noexcept
     static_assert(sizeof(GLuint) == 4, "GLuint is not ThirtyTwoBits.");
 
     switch (indexElementSize) {
-    case IndexElementSize::SixteenBits: return GL_UNSIGNED_SHORT;
-    case IndexElementSize::ThirtyTwoBits: return GL_UNSIGNED_INT;
+    case IndexElementSize::SixteenBits:
+        return GL_UNSIGNED_SHORT;
+    case IndexElementSize::ThirtyTwoBits:
+        return GL_UNSIGNED_INT;
     }
     POMDOG_UNREACHABLE("Unsupported index element size");
 }
@@ -208,7 +214,7 @@ void SetScissorRectangle(
 
 void SetRenderTarget(
     const std::optional<FrameBufferGL4>& frameBuffer,
-    std::vector<std::shared_ptr<RenderTarget2DGL4>> & renderTargets)
+    std::vector<std::shared_ptr<RenderTarget2DGL4>>& renderTargets)
 {
     POMDOG_ASSERT(frameBuffer);
 
@@ -236,7 +242,7 @@ void SetRenderTarget(
 
 void SetRenderTargets(
     const std::optional<FrameBufferGL4>& frameBuffer,
-    std::vector<std::shared_ptr<RenderTarget2DGL4>> & renderTargets,
+    std::vector<std::shared_ptr<RenderTarget2DGL4>>& renderTargets,
     const std::vector<std::shared_ptr<RenderTarget2D>>& renderTargetViewsIn)
 {
     POMDOG_ASSERT(!renderTargetViewsIn.empty());
@@ -309,8 +315,8 @@ void CheckUnbindingRenderTargetsError(
     const std::vector<std::weak_ptr<RenderTarget2D>>& renderTargets,
     const std::vector<std::weak_ptr<Texture>>& textures)
 {
-    for (auto& renderTarget: renderTargets) {
-        for (auto& texture: textures) {
+    for (auto& renderTarget : renderTargets) {
+        for (auto& texture : textures) {
             if (!renderTarget.expired() && !texture.expired()) {
                 POMDOG_ASSERT(renderTarget.lock() != texture.lock());
             }
@@ -800,7 +806,7 @@ void GraphicsContextGL4::SetRenderPass(const RenderPass& renderPass)
         return mask;
     }();
 
-    for (const auto& view: renderPass.RenderTargets) {
+    for (const auto& view : renderPass.RenderTargets) {
         auto& renderTarget = std::get<0>(view);
         auto& clearColor = std::get<1>(view);
 

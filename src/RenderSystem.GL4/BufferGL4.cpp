@@ -15,8 +15,10 @@ namespace {
 GLenum ToBufferUsage(BufferUsage bufferUsage) noexcept
 {
     switch (bufferUsage) {
-    case BufferUsage::Dynamic: return GL_DYNAMIC_DRAW;
-    case BufferUsage::Immutable: return GL_STATIC_DRAW;
+    case BufferUsage::Dynamic:
+        return GL_DYNAMIC_DRAW;
+    case BufferUsage::Immutable:
+        return GL_STATIC_DRAW;
     }
     POMDOG_UNREACHABLE("Unsupported buffer usage");
 }

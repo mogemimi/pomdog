@@ -18,9 +18,9 @@ void BuildRenderTarget(
     std::int32_t pixelWidth,
     std::int32_t pixelHeight,
     std::int32_t levelCount,
-    ComPtr<ID3D11Texture2D> & texture2D,
-    ComPtr<ID3D11RenderTargetView> & renderTargetView,
-    ComPtr<ID3D11ShaderResourceView> & textureResourceView)
+    ComPtr<ID3D11Texture2D>& texture2D,
+    ComPtr<ID3D11RenderTargetView>& renderTargetView,
+    ComPtr<ID3D11ShaderResourceView>& textureResourceView)
 {
     POMDOG_ASSERT(device != nullptr);
     POMDOG_ASSERT(pixelWidth > 0);
@@ -89,8 +89,8 @@ void BuildDepthBuffer(
     std::int32_t pixelWidth,
     std::int32_t pixelHeight,
     std::int32_t levelCount,
-    ComPtr<ID3D11Texture2D> & depthStencil,
-    ComPtr<ID3D11DepthStencilView> & depthStencilView)
+    ComPtr<ID3D11Texture2D>& depthStencil,
+    ComPtr<ID3D11DepthStencilView>& depthStencilView)
 {
     if (DepthFormat::None == depthStencilFormat) {
         return;
@@ -143,8 +143,8 @@ void BuildDepthBuffer(
 void BuildBackBufferBySwapChain(
     ID3D11Device* device,
     IDXGISwapChain* swapChain,
-    ComPtr<ID3D11Texture2D> & texture2D,
-    ComPtr<ID3D11RenderTargetView> & renderTargetView)
+    ComPtr<ID3D11Texture2D>& texture2D,
+    ComPtr<ID3D11RenderTargetView>& renderTargetView)
 {
     POMDOG_ASSERT(device);
     POMDOG_ASSERT(swapChain);

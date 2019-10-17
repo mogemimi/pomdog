@@ -35,10 +35,14 @@ D3D11_PRIMITIVE_TOPOLOGY ToD3D11PrimitiveTopology(
     PrimitiveTopology primitiveTopology) noexcept
 {
     switch (primitiveTopology) {
-    case PrimitiveTopology::TriangleStrip: return D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
-    case PrimitiveTopology::TriangleList: return D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-    case PrimitiveTopology::LineList: return D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
-    case PrimitiveTopology::LineStrip: return D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP;
+    case PrimitiveTopology::TriangleStrip:
+        return D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
+    case PrimitiveTopology::TriangleList:
+        return D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+    case PrimitiveTopology::LineList:
+        return D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
+    case PrimitiveTopology::LineStrip:
+        return D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP;
     }
     return D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED;
 }
@@ -47,7 +51,7 @@ void ChooseMultiSampleSetting(
     ID3D11Device* device,
     DXGI_FORMAT backBufferFormat,
     int preferredMultiSampleCount,
-    DXGI_SAMPLE_DESC & sampleDesc)
+    DXGI_SAMPLE_DESC& sampleDesc)
 {
     POMDOG_ASSERT(device != nullptr);
     POMDOG_ASSERT(preferredMultiSampleCount >= 1);
@@ -72,9 +76,9 @@ void ChooseMultiSampleSetting(
 }
 
 void UseBackBufferAsRenderTarget(
-    Microsoft::WRL::ComPtr<ID3D11DeviceContext> & deviceContext,
-    std::vector<std::shared_ptr<RenderTarget2DDirect3D11>> & renderTargets,
-    std::shared_ptr<RenderTarget2DDirect3D11> & backBuffer)
+    Microsoft::WRL::ComPtr<ID3D11DeviceContext>& deviceContext,
+    std::vector<std::shared_ptr<RenderTarget2DDirect3D11>>& renderTargets,
+    std::shared_ptr<RenderTarget2DDirect3D11>& backBuffer)
 {
     POMDOG_ASSERT(deviceContext);
     POMDOG_ASSERT(backBuffer);
@@ -96,8 +100,8 @@ void CheckUnbindingRenderTargetsError(
     const std::vector<std::weak_ptr<RenderTarget2D>>& renderTargets,
     const std::vector<std::weak_ptr<Texture>>& textures)
 {
-    for (auto& renderTarget: renderTargets) {
-        for (auto& texture: textures) {
+    for (auto& renderTarget : renderTargets) {
+        for (auto& texture : textures) {
             if (!renderTarget.expired() && !texture.expired()) {
                 POMDOG_ASSERT(renderTarget.lock() != texture.lock());
             }

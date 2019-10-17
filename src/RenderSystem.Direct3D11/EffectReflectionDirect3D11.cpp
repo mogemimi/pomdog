@@ -84,7 +84,7 @@ std::vector<EffectVariable> EnumerateEffectVariables(
 
 void EnumerateConstantBuffer(
     ID3D11ShaderReflection* shaderReflector,
-    std::vector<EffectConstantDescription> & output)
+    std::vector<EffectConstantDescription>& output)
 {
     POMDOG_ASSERT(shaderReflector);
 

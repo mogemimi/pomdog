@@ -10,7 +10,7 @@ class NativeBuffer {
 public:
     NativeBuffer() = default;
     NativeBuffer(const NativeBuffer&) = delete;
-    NativeBuffer & operator=(const NativeBuffer&) = delete;
+    NativeBuffer& operator=(const NativeBuffer&) = delete;
 
     virtual ~NativeBuffer() = default;
 

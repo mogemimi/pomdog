@@ -16,7 +16,7 @@ class GraphicsCommandQueueImmediate final : public NativeGraphicsCommandQueue {
 public:
     GraphicsCommandQueueImmediate() = delete;
     GraphicsCommandQueueImmediate(const GraphicsCommandQueueImmediate&) = delete;
-    GraphicsCommandQueueImmediate & operator=(const GraphicsCommandQueueImmediate&) = delete;
+    GraphicsCommandQueueImmediate& operator=(const GraphicsCommandQueueImmediate&) = delete;
 
     explicit GraphicsCommandQueueImmediate(
         const std::shared_ptr<NativeGraphicsContext>& graphicsContext);

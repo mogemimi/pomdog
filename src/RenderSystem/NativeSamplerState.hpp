@@ -8,7 +8,7 @@ class NativeSamplerState {
 public:
     NativeSamplerState() = default;
     NativeSamplerState(const NativeSamplerState&) = delete;
-    NativeSamplerState & operator=(const NativeSamplerState&) = delete;
+    NativeSamplerState& operator=(const NativeSamplerState&) = delete;
 
     virtual ~NativeSamplerState() = default;
 };

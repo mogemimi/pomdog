@@ -16,15 +16,23 @@ using ErrorCodeGL4 = Tagged<GLenum, ErrorCodeTag>;
 std::string ToString(const ErrorCodeGL4& errorCode)
 {
     switch (errorCode.value) {
-    case GL_NO_ERROR: return "GL_NO_ERROR";
-    case GL_INVALID_ENUM: return "GL_INVALID_ENUM";
-    case GL_INVALID_VALUE: return "GL_INVALID_VALUE";
-    case GL_INVALID_OPERATION: return "GL_INVALID_OPERATION";
-    case GL_INVALID_FRAMEBUFFER_OPERATION: return "GL_INVALID_FRAMEBUFFER_OPERATION";
-    case GL_OUT_OF_MEMORY: return "GL_OUT_OF_MEMORY";
+    case GL_NO_ERROR:
+        return "GL_NO_ERROR";
+    case GL_INVALID_ENUM:
+        return "GL_INVALID_ENUM";
+    case GL_INVALID_VALUE:
+        return "GL_INVALID_VALUE";
+    case GL_INVALID_OPERATION:
+        return "GL_INVALID_OPERATION";
+    case GL_INVALID_FRAMEBUFFER_OPERATION:
+        return "GL_INVALID_FRAMEBUFFER_OPERATION";
+    case GL_OUT_OF_MEMORY:
+        return "GL_OUT_OF_MEMORY";
 #if defined(GL_VERSION_4_3) && !defined(GL_VERSION_3_2)
-    case GL_STACK_OVERFLOW: return "GL_STACK_OVERFLOW";
-    case GL_STACK_UNDERFLOW: return "GL_STACK_UNDERFLOW";
+    case GL_STACK_OVERFLOW:
+        return "GL_STACK_OVERFLOW";
+    case GL_STACK_UNDERFLOW:
+        return "GL_STACK_UNDERFLOW";
 #endif
     }
     std::stringstream ss;
@@ -36,7 +44,7 @@ std::string ToString(const ErrorCodeGL4& errorCode)
 
 void ErrorChecker::CheckError(const char* command, const char* filename, int line)
 {
-    ErrorCodeGL4 const errorCode{ glGetError() };
+    ErrorCodeGL4 const errorCode{glGetError()};
 
     if (GL_NO_ERROR == errorCode.value) {
         return;

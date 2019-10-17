@@ -91,9 +91,9 @@ PipelineStateGL4::PipelineStateGL4(const PipelineStateDescription& description)
         std::unordered_set<int> reservedSlots;
         std::unordered_set<int> reservedBlocks;
 
-        auto & bindSlots = description.ConstantBufferBindSlots;
+        auto& bindSlots = description.ConstantBufferBindSlots;
 
-        for (auto & uniformBlock : uniformBlocks) {
+        for (auto& uniformBlock : uniformBlocks) {
             auto binding = bindSlots.find(uniformBlock.Name);
             if (binding != std::end(bindSlots)) {
                 auto slotIndex = binding->second;
@@ -104,7 +104,7 @@ PipelineStateGL4::PipelineStateGL4(const PipelineStateDescription& description)
         }
 
         GLuint slotIndex = 0;
-        for (auto & uniformBlock : uniformBlocks) {
+        for (auto& uniformBlock : uniformBlocks) {
             if (reservedBlocks.find(uniformBlock.BlockIndex) != std::end(reservedBlocks)) {
                 continue;
             }

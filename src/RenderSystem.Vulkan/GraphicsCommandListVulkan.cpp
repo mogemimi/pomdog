@@ -26,10 +26,14 @@ VkPrimitiveTopology ToVkPrimitiveTopology(
     PrimitiveTopology primitiveTopology) noexcept
 {
     switch (primitiveTopology) {
-    case PrimitiveTopology::TriangleStrip: return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
-    case PrimitiveTopology::TriangleList: return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-    case PrimitiveTopology::LineList: return VK_PRIMITIVE_TOPOLOGY_LINE_LIST;
-    case PrimitiveTopology::LineStrip: return VK_PRIMITIVE_TOPOLOGY_LINE_STRIP;
+    case PrimitiveTopology::TriangleStrip:
+        return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
+    case PrimitiveTopology::TriangleList:
+        return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+    case PrimitiveTopology::LineList:
+        return VK_PRIMITIVE_TOPOLOGY_LINE_LIST;
+    case PrimitiveTopology::LineStrip:
+        return VK_PRIMITIVE_TOPOLOGY_LINE_STRIP;
     }
     return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 }
@@ -37,8 +41,10 @@ VkPrimitiveTopology ToVkPrimitiveTopology(
 VkIndexType ToVkIndexType(IndexElementSize elementSize) noexcept
 {
     switch (elementSize) {
-    case IndexElementSize::SixteenBits: return VK_INDEX_TYPE_UINT16;
-    case IndexElementSize::ThirtyTwoBits: return VK_INDEX_TYPE_UINT32;
+    case IndexElementSize::SixteenBits:
+        return VK_INDEX_TYPE_UINT16;
+    case IndexElementSize::ThirtyTwoBits:
+        return VK_INDEX_TYPE_UINT32;
     }
     return VK_INDEX_TYPE_UINT16;
 }
@@ -130,7 +136,7 @@ void GraphicsCommandListVulkan::DrawIndexedInstanced(
         static_cast<uint32_t>(startInstanceLocation));
 }
 
-void GraphicsCommandListVulkan::SetRenderPass(RenderPass && renderPass)
+void GraphicsCommandListVulkan::SetRenderPass(RenderPass&& renderPass)
 {
     POMDOG_ASSERT(commandBuffer != nullptr);
 
@@ -191,7 +197,7 @@ void GraphicsCommandListVulkan::SetVertexBuffers(const std::vector<VertexBufferB
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 
-void GraphicsCommandListVulkan::SetVertexBuffers(std::vector<VertexBufferBinding> && vertexBuffers)
+void GraphicsCommandListVulkan::SetVertexBuffers(std::vector<VertexBufferBinding>&& vertexBuffers)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
@@ -225,7 +231,7 @@ void GraphicsCommandListVulkan::SetConstantBuffer(int index, const std::shared_p
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 
-void GraphicsCommandListVulkan::SetSampler(int index, std::shared_ptr<NativeSamplerState> && sampler)
+void GraphicsCommandListVulkan::SetSampler(int index, std::shared_ptr<NativeSamplerState>&& sampler)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }

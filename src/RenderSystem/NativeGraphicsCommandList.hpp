@@ -14,7 +14,7 @@ class NativeGraphicsCommandList {
 public:
     NativeGraphicsCommandList() = default;
     NativeGraphicsCommandList(const NativeGraphicsCommandList&) = delete;
-    NativeGraphicsCommandList & operator=(const NativeGraphicsCommandList&) = delete;
+    NativeGraphicsCommandList& operator=(const NativeGraphicsCommandList&) = delete;
 
     virtual ~NativeGraphicsCommandList() = default;
 
@@ -44,7 +44,7 @@ public:
         std::size_t startIndexLocation,
         std::size_t startInstanceLocation) = 0;
 
-    virtual void SetRenderPass(RenderPass && renderPass) = 0;
+    virtual void SetRenderPass(RenderPass&& renderPass) = 0;
 
     virtual void SetPrimitiveTopology(PrimitiveTopology primitiveTopology) = 0;
 
@@ -52,7 +52,7 @@ public:
 
     virtual void SetVertexBuffers(const std::vector<VertexBufferBinding>& vertexBuffers) = 0;
 
-    virtual void SetVertexBuffers(std::vector<VertexBufferBinding> && vertexBuffers) = 0;
+    virtual void SetVertexBuffers(std::vector<VertexBufferBinding>&& vertexBuffers) = 0;
 
     virtual void SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer) = 0;
 
@@ -60,7 +60,7 @@ public:
 
     virtual void SetConstantBuffer(int index, const std::shared_ptr<NativeBuffer>& constantBuffer) = 0;
 
-    virtual void SetSampler(int index, std::shared_ptr<NativeSamplerState> && sampler) = 0;
+    virtual void SetSampler(int index, std::shared_ptr<NativeSamplerState>&& sampler) = 0;
 
     virtual void SetTexture(int index) = 0;
 

@@ -111,7 +111,7 @@ GraphicsDeviceGL4::CreatePipelineState(const PipelineStateDescription& descripti
 std::unique_ptr<NativeEffectReflection>
 GraphicsDeviceGL4::CreateEffectReflection(
     const PipelineStateDescription&,
-    NativePipelineState & pipelineState)
+    NativePipelineState& pipelineState)
 {
     auto const pipelineStateGL4 = dynamic_cast<PipelineStateGL4*>(&pipelineState);
     POMDOG_ASSERT(pipelineStateGL4 != nullptr);

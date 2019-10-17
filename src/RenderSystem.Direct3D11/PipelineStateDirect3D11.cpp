@@ -21,11 +21,16 @@ using Microsoft::WRL::ComPtr;
 D3D11_BLEND_OP ToBlendOperation(BlendOperation blendOperation) noexcept
 {
     switch (blendOperation) {
-    case BlendOperation::Add: return D3D11_BLEND_OP_ADD;
-    case BlendOperation::Subtract: return D3D11_BLEND_OP_SUBTRACT;
-    case BlendOperation::ReverseSubtract: return D3D11_BLEND_OP_REV_SUBTRACT;
-    case BlendOperation::Min: return D3D11_BLEND_OP_MIN;
-    case BlendOperation::Max: return D3D11_BLEND_OP_MAX;
+    case BlendOperation::Add:
+        return D3D11_BLEND_OP_ADD;
+    case BlendOperation::Subtract:
+        return D3D11_BLEND_OP_SUBTRACT;
+    case BlendOperation::ReverseSubtract:
+        return D3D11_BLEND_OP_REV_SUBTRACT;
+    case BlendOperation::Min:
+        return D3D11_BLEND_OP_MIN;
+    case BlendOperation::Max:
+        return D3D11_BLEND_OP_MAX;
     }
     return D3D11_BLEND_OP_ADD;
 }
@@ -33,23 +38,40 @@ D3D11_BLEND_OP ToBlendOperation(BlendOperation blendOperation) noexcept
 D3D11_BLEND ToBlend(Blend blend) noexcept
 {
     switch (blend) {
-    case Blend::Zero: return D3D11_BLEND_ZERO;
-    case Blend::One: return D3D11_BLEND_ONE;
-    case Blend::SourceColor: return D3D11_BLEND_SRC_COLOR;
-    case Blend::InverseSourceColor: return D3D11_BLEND_INV_SRC_COLOR;
-    case Blend::SourceAlpha: return D3D11_BLEND_SRC_ALPHA;
-    case Blend::InverseSourceAlpha: return D3D11_BLEND_INV_SRC_ALPHA;
-    case Blend::DestinationAlpha: return D3D11_BLEND_DEST_ALPHA;
-    case Blend::InverseDestinationAlpha: return D3D11_BLEND_INV_DEST_ALPHA;
-    case Blend::DestinationColor: return D3D11_BLEND_DEST_COLOR;
-    case Blend::InverseDestinationColor: return D3D11_BLEND_INV_DEST_COLOR;
-    case Blend::SourceAlphaSaturation: return D3D11_BLEND_SRC_ALPHA_SAT;
-    case Blend::BlendFactor: return D3D11_BLEND_BLEND_FACTOR;
-    case Blend::InvereseBlendFactor: return D3D11_BLEND_INV_BLEND_FACTOR;
-    case Blend::Source1Color: return D3D11_BLEND_SRC1_COLOR;
-    case Blend::InverseSource1Color: return D3D11_BLEND_INV_SRC1_COLOR;
-    case Blend::Source1Alpha: return D3D11_BLEND_SRC1_ALPHA;
-    case Blend::InverseSource1Alpha: return D3D11_BLEND_INV_SRC1_ALPHA;
+    case Blend::Zero:
+        return D3D11_BLEND_ZERO;
+    case Blend::One:
+        return D3D11_BLEND_ONE;
+    case Blend::SourceColor:
+        return D3D11_BLEND_SRC_COLOR;
+    case Blend::InverseSourceColor:
+        return D3D11_BLEND_INV_SRC_COLOR;
+    case Blend::SourceAlpha:
+        return D3D11_BLEND_SRC_ALPHA;
+    case Blend::InverseSourceAlpha:
+        return D3D11_BLEND_INV_SRC_ALPHA;
+    case Blend::DestinationAlpha:
+        return D3D11_BLEND_DEST_ALPHA;
+    case Blend::InverseDestinationAlpha:
+        return D3D11_BLEND_INV_DEST_ALPHA;
+    case Blend::DestinationColor:
+        return D3D11_BLEND_DEST_COLOR;
+    case Blend::InverseDestinationColor:
+        return D3D11_BLEND_INV_DEST_COLOR;
+    case Blend::SourceAlphaSaturation:
+        return D3D11_BLEND_SRC_ALPHA_SAT;
+    case Blend::BlendFactor:
+        return D3D11_BLEND_BLEND_FACTOR;
+    case Blend::InvereseBlendFactor:
+        return D3D11_BLEND_INV_BLEND_FACTOR;
+    case Blend::Source1Color:
+        return D3D11_BLEND_SRC1_COLOR;
+    case Blend::InverseSource1Color:
+        return D3D11_BLEND_INV_SRC1_COLOR;
+    case Blend::Source1Alpha:
+        return D3D11_BLEND_SRC1_ALPHA;
+    case Blend::InverseSource1Alpha:
+        return D3D11_BLEND_INV_SRC1_ALPHA;
     }
     return D3D11_BLEND_ONE;
 }
@@ -57,14 +79,22 @@ D3D11_BLEND ToBlend(Blend blend) noexcept
 D3D11_STENCIL_OP ToStencilOperation(StencilOperation operation) noexcept
 {
     switch (operation) {
-    case StencilOperation::Keep: return D3D11_STENCIL_OP_KEEP;
-    case StencilOperation::Zero: return D3D11_STENCIL_OP_ZERO;
-    case StencilOperation::Replace: return D3D11_STENCIL_OP_REPLACE;
-    case StencilOperation::IncrementSaturation: return D3D11_STENCIL_OP_INCR_SAT;
-    case StencilOperation::DecrementSaturation: return D3D11_STENCIL_OP_DECR_SAT;
-    case StencilOperation::Invert: return D3D11_STENCIL_OP_INVERT;
-    case StencilOperation::Increment: return D3D11_STENCIL_OP_INCR;
-    case StencilOperation::Decrement: return D3D11_STENCIL_OP_DECR;
+    case StencilOperation::Keep:
+        return D3D11_STENCIL_OP_KEEP;
+    case StencilOperation::Zero:
+        return D3D11_STENCIL_OP_ZERO;
+    case StencilOperation::Replace:
+        return D3D11_STENCIL_OP_REPLACE;
+    case StencilOperation::IncrementSaturation:
+        return D3D11_STENCIL_OP_INCR_SAT;
+    case StencilOperation::DecrementSaturation:
+        return D3D11_STENCIL_OP_DECR_SAT;
+    case StencilOperation::Invert:
+        return D3D11_STENCIL_OP_INVERT;
+    case StencilOperation::Increment:
+        return D3D11_STENCIL_OP_INCR;
+    case StencilOperation::Decrement:
+        return D3D11_STENCIL_OP_DECR;
     }
     return D3D11_STENCIL_OP_KEEP;
 }
@@ -72,14 +102,22 @@ D3D11_STENCIL_OP ToStencilOperation(StencilOperation operation) noexcept
 D3D11_COMPARISON_FUNC ToComparisonFunction(ComparisonFunction compareFunction) noexcept
 {
     switch (compareFunction) {
-    case ComparisonFunction::Never: return D3D11_COMPARISON_NEVER;
-    case ComparisonFunction::Less:  return D3D11_COMPARISON_LESS;
-    case ComparisonFunction::Equal: return D3D11_COMPARISON_EQUAL;
-    case ComparisonFunction::LessEqual: return D3D11_COMPARISON_LESS_EQUAL;
-    case ComparisonFunction::Greater:   return D3D11_COMPARISON_GREATER;
-    case ComparisonFunction::NotEqual:  return D3D11_COMPARISON_NOT_EQUAL;
-    case ComparisonFunction::GreaterEqual: return D3D11_COMPARISON_GREATER_EQUAL;
-    case ComparisonFunction::Always: return D3D11_COMPARISON_ALWAYS;
+    case ComparisonFunction::Never:
+        return D3D11_COMPARISON_NEVER;
+    case ComparisonFunction::Less:
+        return D3D11_COMPARISON_LESS;
+    case ComparisonFunction::Equal:
+        return D3D11_COMPARISON_EQUAL;
+    case ComparisonFunction::LessEqual:
+        return D3D11_COMPARISON_LESS_EQUAL;
+    case ComparisonFunction::Greater:
+        return D3D11_COMPARISON_GREATER;
+    case ComparisonFunction::NotEqual:
+        return D3D11_COMPARISON_NOT_EQUAL;
+    case ComparisonFunction::GreaterEqual:
+        return D3D11_COMPARISON_GREATER_EQUAL;
+    case ComparisonFunction::Always:
+        return D3D11_COMPARISON_ALWAYS;
     }
     return D3D11_COMPARISON_LESS_EQUAL;
 }
@@ -87,9 +125,12 @@ D3D11_COMPARISON_FUNC ToComparisonFunction(ComparisonFunction compareFunction) n
 D3D11_CULL_MODE ToCullMode(CullMode cullMode) noexcept
 {
     switch (cullMode) {
-    case CullMode::ClockwiseFace: return D3D11_CULL_FRONT;
-    case CullMode::CounterClockwiseFace: return D3D11_CULL_BACK;
-    case CullMode::None: return D3D11_CULL_NONE;
+    case CullMode::ClockwiseFace:
+        return D3D11_CULL_FRONT;
+    case CullMode::CounterClockwiseFace:
+        return D3D11_CULL_BACK;
+    case CullMode::None:
+        return D3D11_CULL_NONE;
     }
     return D3D11_CULL_BACK;
 }
@@ -97,8 +138,10 @@ D3D11_CULL_MODE ToCullMode(CullMode cullMode) noexcept
 D3D11_FILL_MODE ToFillMode(FillMode fillMode) noexcept
 {
     switch (fillMode) {
-    case FillMode::WireFrame: return D3D11_FILL_WIREFRAME;
-    case FillMode::Solid: return D3D11_FILL_SOLID;
+    case FillMode::WireFrame:
+        return D3D11_FILL_WIREFRAME;
+    case FillMode::Solid:
+        return D3D11_FILL_SOLID;
     }
     return D3D11_FILL_SOLID;
 }
@@ -107,8 +150,10 @@ D3D11_INPUT_CLASSIFICATION ToD3D11InputClassification(
     InputClassification slotClass) noexcept
 {
     switch (slotClass) {
-    case InputClassification::InputPerVertex: return D3D11_INPUT_PER_VERTEX_DATA;
-    case InputClassification::InputPerInstance: return D3D11_INPUT_PER_INSTANCE_DATA;
+    case InputClassification::InputPerVertex:
+        return D3D11_INPUT_PER_VERTEX_DATA;
+    case InputClassification::InputPerInstance:
+        return D3D11_INPUT_PER_INSTANCE_DATA;
     }
     return D3D11_INPUT_PER_VERTEX_DATA;
 }
@@ -120,7 +165,7 @@ inline BOOL ToD3D11Boolean(bool is) noexcept
 
 void ToD3D11Desc(
     const RenderTargetBlendDescription& desc,
-    D3D11_RENDER_TARGET_BLEND_DESC & result) noexcept
+    D3D11_RENDER_TARGET_BLEND_DESC& result) noexcept
 {
     result.BlendEnable = ToD3D11Boolean(desc.BlendEnable);
     result.BlendOp = ToBlendOperation(desc.ColorBlendOperation);
@@ -241,8 +286,8 @@ ComPtr<ID3D11RasterizerState> CreateRasterizerState(
 
 void ReflectShaderBytecode(
     const ShaderBytecode& shaderBytecode,
-    Microsoft::WRL::ComPtr<ID3D11ShaderReflection> & shaderReflector,
-    D3D11_SHADER_DESC & shaderDesc)
+    Microsoft::WRL::ComPtr<ID3D11ShaderReflection>& shaderReflector,
+    D3D11_SHADER_DESC& shaderDesc)
 {
     HRESULT hr = D3DReflect(
         shaderBytecode.Code,
@@ -481,7 +526,7 @@ PipelineStateDirect3D11::PipelineStateDirect3D11(
 }
 
 void PipelineStateDirect3D11::Apply(
-    ID3D11DeviceContext * deviceContext,
+    ID3D11DeviceContext* deviceContext,
     FLOAT const blendFactor[4])
 {
     POMDOG_ASSERT(deviceContext);

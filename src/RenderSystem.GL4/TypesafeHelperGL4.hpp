@@ -21,7 +21,7 @@ Tagged Get(Traits<Tagged>* = nullptr)
 
     GLint buffer = 0;
     glGetIntegerv(Traits<Tagged>::BufferBinding, &buffer);
-    return Tagged{ static_cast<value_type>(buffer) };
+    return Tagged{static_cast<value_type>(buffer)};
 }
 
 template <class Tagged>

@@ -12,7 +12,7 @@ class NativeGraphicsCommandQueue {
 public:
     NativeGraphicsCommandQueue() = default;
     NativeGraphicsCommandQueue(const NativeGraphicsCommandQueue&) = delete;
-    NativeGraphicsCommandQueue & operator=(const NativeGraphicsCommandQueue&) = delete;
+    NativeGraphicsCommandQueue& operator=(const NativeGraphicsCommandQueue&) = delete;
 
     virtual ~NativeGraphicsCommandQueue() = default;
 

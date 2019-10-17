@@ -160,7 +160,7 @@ GraphicsDeviceVulkan::Impl::Impl()
 
     physicalDevice = devices.front();
 
-    std::array<float, 1> queuePriorities = { 0.0f };
+    std::array<float, 1> queuePriorities = {0.0f};
 
     VkDeviceQueueCreateInfo queueCreateInfo;
     queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
@@ -280,7 +280,7 @@ GraphicsDeviceVulkan::CreatePipelineState(const PipelineStateDescription& descri
 std::unique_ptr<NativeEffectReflection>
 GraphicsDeviceVulkan::CreateEffectReflection(
     const PipelineStateDescription& description,
-    NativePipelineState & pipelineState)
+    NativePipelineState& pipelineState)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }

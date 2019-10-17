@@ -11,7 +11,7 @@ class NativeTexture2D {
 public:
     NativeTexture2D() = default;
     NativeTexture2D(const NativeTexture2D&) = delete;
-    NativeTexture2D & operator=(const NativeTexture2D&) = delete;
+    NativeTexture2D& operator=(const NativeTexture2D&) = delete;
 
     virtual ~NativeTexture2D() = default;
 

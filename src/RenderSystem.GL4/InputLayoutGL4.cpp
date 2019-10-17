@@ -150,61 +150,61 @@ InputElementSize ToInputElementSize(GLenum attributeClass)
     case GL_UNSIGNED_SHORT:
     // 'GL_UNSIGNED_INT_VEC' See also: http://www.opengl.org/sdk/docs/man/xhtml/glGetActiveAttrib.xml
     //case GL_UNSIGNED_INT_VEC:
-        return { 1, 1 };
+        return {1, 1};
 
     case GL_FLOAT_VEC2:
     case GL_INT_VEC2:
     case GL_UNSIGNED_INT_VEC2:
     case GL_DOUBLE_VEC2:
-        return { 1, 2 };
+        return {1, 2};
 
     case GL_FLOAT_VEC3:
     case GL_INT_VEC3:
     case GL_UNSIGNED_INT_VEC3:
     case GL_DOUBLE_VEC3:
-        return { 1, 3 };
+        return {1, 3};
 
     case GL_FLOAT_VEC4:
     case GL_INT_VEC4:
     case GL_UNSIGNED_INT_VEC4:
     case GL_DOUBLE_VEC4:
-        return { 1, 4 };
+        return {1, 4};
 
     case GL_FLOAT_MAT2:
     case GL_DOUBLE_MAT2:
-        return { 2, 2 };
+        return {2, 2};
 
     case GL_FLOAT_MAT3:
     case GL_DOUBLE_MAT3:
-        return { 3, 3 };
+        return {3, 3};
 
     case GL_FLOAT_MAT4:
     case GL_DOUBLE_MAT4:
-        return { 4, 4 };
+        return {4, 4};
 
     case GL_FLOAT_MAT2x3:
     case GL_DOUBLE_MAT2x3:
-        return { 2, 3 };
+        return {2, 3};
 
     case GL_FLOAT_MAT3x2:
     case GL_DOUBLE_MAT3x2:
-        return { 3, 2 };
+        return {3, 2};
 
     case GL_FLOAT_MAT2x4:
     case GL_DOUBLE_MAT2x4:
-        return { 2, 4 };
+        return {2, 4};
 
     case GL_FLOAT_MAT4x2:
     case GL_DOUBLE_MAT4x2:
-        return { 4, 2 };
+        return {4, 2};
 
     case GL_FLOAT_MAT3x4:
     case GL_DOUBLE_MAT3x4:
-        return { 3, 4 };
+        return {3, 4};
 
     case GL_FLOAT_MAT4x3:
     case GL_DOUBLE_MAT4x3:
-        return { 4, 3 };
+        return {4, 3};
     }
 
     // Not supported:
@@ -215,20 +215,28 @@ InputElementSize ToInputElementSize(GLenum attributeClass)
     Log::Internal(StringHelper::Format(
         "Failed to find class '%d'.", attributeClass));
 #endif // defined(DEBUG)
-    return { 1, 1 };
+    return {1, 1};
 }
 
 std::uint8_t ToByteWithFromScalarTypeGL4(ScalarTypeGL4 scalarType)
 {
     switch (scalarType.value) {
-    case GL_FLOAT: return sizeof(GLfloat);
-    case GL_INT: return sizeof(GLint);
-    case GL_UNSIGNED_INT: return sizeof(GLuint);
-    case GL_DOUBLE: return sizeof(GLdouble);
-    case GL_BYTE: return sizeof(GLbyte);
-    case GL_UNSIGNED_BYTE: return sizeof(GLubyte);
-    case GL_SHORT: return sizeof(GLshort);
-    case GL_UNSIGNED_SHORT: return sizeof(GLushort);
+    case GL_FLOAT:
+        return sizeof(GLfloat);
+    case GL_INT:
+        return sizeof(GLint);
+    case GL_UNSIGNED_INT:
+        return sizeof(GLuint);
+    case GL_DOUBLE:
+        return sizeof(GLdouble);
+    case GL_BYTE:
+        return sizeof(GLbyte);
+    case GL_UNSIGNED_BYTE:
+        return sizeof(GLubyte);
+    case GL_SHORT:
+        return sizeof(GLshort);
+    case GL_UNSIGNED_SHORT:
+        return sizeof(GLushort);
     }
 
     // Not supported:
@@ -349,8 +357,8 @@ std::uint32_t CalculateByteOffset(const InputElementGL4& inputElement)
 }
 
 std::vector<InputElementGL4> BuildInputElements(
-    std::vector<InputElementGL4> && inputElements,
-    std::vector<VertexDeclarationGL4> & vertexDeclarations)
+    std::vector<InputElementGL4>&& inputElements,
+    std::vector<VertexDeclarationGL4>& vertexDeclarations)
 {
     POMDOG_ASSERT(!inputElements.empty());
 
@@ -425,8 +433,8 @@ GLuint GetMaxAttributeCount()
 
 std::vector<InputElementGL4> BuildInputElements(
     const InputLayoutDescription& description,
-    std::vector<InputElementGL4> && attributes,
-    std::vector<VertexDeclarationGL4> & vertexDeclarations)
+    std::vector<InputElementGL4>&& attributes,
+    std::vector<VertexDeclarationGL4>& vertexDeclarations)
 {
     POMDOG_ASSERT(!description.InputElements.empty());
     POMDOG_ASSERT(!attributes.empty());
@@ -517,7 +525,7 @@ void ApplyInputElements(
         POMDOG_ASSERT(inputElement != std::end(inputElements));
         POMDOG_ASSERT(vertexBufferIter != std::end(vertexBuffers));
 
-        auto & vertexBuffer = vertexBufferIter->VertexBuffer;
+        auto& vertexBuffer = vertexBufferIter->VertexBuffer;
         const auto vertexOffset = vertexBufferIter->VertexOffset;
 
         POMDOG_ASSERT(vertexBuffer);

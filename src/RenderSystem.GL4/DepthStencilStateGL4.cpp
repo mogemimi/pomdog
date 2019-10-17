@@ -12,14 +12,22 @@ namespace {
 GLenum ToComparisonFunctionGL4NonTypesafe(ComparisonFunction comparison) noexcept
 {
     switch (comparison) {
-    case ComparisonFunction::Always: return GL_ALWAYS;
-    case ComparisonFunction::Equal: return GL_EQUAL;
-    case ComparisonFunction::Greater: return GL_GREATER;
-    case ComparisonFunction::GreaterEqual: return GL_GEQUAL;
-    case ComparisonFunction::Less: return GL_LESS;
-    case ComparisonFunction::LessEqual: return GL_LEQUAL;
-    case ComparisonFunction::Never: return GL_NEVER;
-    case ComparisonFunction::NotEqual: return GL_NOTEQUAL;
+    case ComparisonFunction::Always:
+        return GL_ALWAYS;
+    case ComparisonFunction::Equal:
+        return GL_EQUAL;
+    case ComparisonFunction::Greater:
+        return GL_GREATER;
+    case ComparisonFunction::GreaterEqual:
+        return GL_GEQUAL;
+    case ComparisonFunction::Less:
+        return GL_LESS;
+    case ComparisonFunction::LessEqual:
+        return GL_LEQUAL;
+    case ComparisonFunction::Never:
+        return GL_NEVER;
+    case ComparisonFunction::NotEqual:
+        return GL_NOTEQUAL;
     }
     POMDOG_UNREACHABLE("Unsupported comparison function");
 }
@@ -31,14 +39,22 @@ GLenum ToStencilOperationGL4NonTypesafe(StencilOperation operation) noexcept
     // `GL_INCR` clamps to the maximum representable unsigned value.
 
     switch (operation) {
-    case StencilOperation::Decrement: return GL_DECR_WRAP;
-    case StencilOperation::DecrementSaturation: return GL_DECR;
-    case StencilOperation::Increment: return GL_INCR_WRAP;
-    case StencilOperation::IncrementSaturation: return GL_INCR;
-    case StencilOperation::Invert: return GL_INVERT;
-    case StencilOperation::Keep: return GL_KEEP;
-    case StencilOperation::Replace: return GL_REPLACE;
-    case StencilOperation::Zero: return GL_ZERO;
+    case StencilOperation::Decrement:
+        return GL_DECR_WRAP;
+    case StencilOperation::DecrementSaturation:
+        return GL_DECR;
+    case StencilOperation::Increment:
+        return GL_INCR_WRAP;
+    case StencilOperation::IncrementSaturation:
+        return GL_INCR;
+    case StencilOperation::Invert:
+        return GL_INVERT;
+    case StencilOperation::Keep:
+        return GL_KEEP;
+    case StencilOperation::Replace:
+        return GL_REPLACE;
+    case StencilOperation::Zero:
+        return GL_ZERO;
     }
     POMDOG_UNREACHABLE("Unsupported stencil operation");
 }
@@ -59,7 +75,7 @@ ToStencilOperationGL4(const StencilOperation& operation) noexcept
 
 void ToDepthStencilFaceOperationGL4(
     const DepthStencilOperation& face,
-    DepthStencilFaceOperationGL4 & result) noexcept
+    DepthStencilFaceOperationGL4& result) noexcept
 {
     result.stencilFunction = ToComparisonFunctionGL4(face.StencilFunction);
     result.stencilDepthBufferFail = ToStencilOperationGL4(face.StencilDepthBufferFail);
@@ -74,7 +90,7 @@ DepthStencilStateGL4::DepthStencilStateGL4(const DepthStencilDescription& descri
     , referenceStencil(description.ReferenceStencil)
     , stencilMask(description.StencilMask)
     , stencilWriteMask(description.StencilWriteMask)
-    , depthBufferWriteEnable(description.DepthBufferWriteEnable ? GL_TRUE: GL_FALSE)
+    , depthBufferWriteEnable(description.DepthBufferWriteEnable ? GL_TRUE : GL_FALSE)
     , stencilEnable(description.StencilEnable)
     , depthBufferEnable(description.DepthBufferEnable)
 {

@@ -45,7 +45,7 @@ void GraphicsCommandQueueImmediate::Present()
 std::size_t GraphicsCommandQueueImmediate::GetCommandCount() const noexcept
 {
     std::size_t count = 0;
-    for (auto & commandList : commandLists) {
+    for (auto& commandList : commandLists) {
         POMDOG_ASSERT(commandList);
         count += commandList->GetCount();
     }

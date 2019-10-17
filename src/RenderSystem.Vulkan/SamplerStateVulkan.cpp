@@ -12,9 +12,12 @@ namespace {
 VkSamplerAddressMode ToSamplerAddressMode(TextureAddressMode addressMode) noexcept
 {
     switch (addressMode) {
-    case TextureAddressMode::Wrap: return VK_SAMPLER_ADDRESS_MODE_REPEAT;
-    case TextureAddressMode::Clamp: return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
-    case TextureAddressMode::Mirror: return VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT;
+    case TextureAddressMode::Wrap:
+        return VK_SAMPLER_ADDRESS_MODE_REPEAT;
+    case TextureAddressMode::Clamp:
+        return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+    case TextureAddressMode::Mirror:
+        return VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT;
     }
     return VK_SAMPLER_ADDRESS_MODE_REPEAT;
 }

@@ -78,8 +78,7 @@ public:
             includePath = pFileName;
         }
 
-        if (D3D_INCLUDE_LOCAL != includeType
-            && D3D_INCLUDE_SYSTEM != includeType) {
+        if (D3D_INCLUDE_LOCAL != includeType && D3D_INCLUDE_SYSTEM != includeType) {
             return E_FAIL;
         }
 
@@ -185,7 +184,7 @@ Microsoft::WRL::ComPtr<ID3DBlob> HLSLCompiling::CompileShader(
 
         D3D_SHADER_MACRO shaderMacro;
         shaderMacro.Name = macro.Name.c_str();
-        shaderMacro.Definition = macro.Definition.empty() ? nullptr: macro.Definition.c_str();
+        shaderMacro.Definition = macro.Definition.empty() ? nullptr : macro.Definition.c_str();
         defines.push_back(std::move(shaderMacro));
     }
 
@@ -201,7 +200,7 @@ Microsoft::WRL::ComPtr<ID3DBlob> HLSLCompiling::CompileShader(
         compileOptions.EntryPoint,
         target,
         compileOptions.CurrentDirectory,
-        (defines.empty() ? nullptr: defines.data()),
+        (defines.empty() ? nullptr : defines.data()),
         &codeBlob);
 
     return std::move(codeBlob);

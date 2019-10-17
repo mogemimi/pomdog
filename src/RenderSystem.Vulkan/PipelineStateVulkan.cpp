@@ -24,48 +24,78 @@ VkVertexInputRate ToVkVertexInputRate(InputClassification classification) noexce
 VkFormat ToVkFormat(InputElementFormat format) noexcept
 {
     switch (format) {
-    case InputElementFormat::Float: return VK_FORMAT_R32_SFLOAT;
-    case InputElementFormat::Float2: return VK_FORMAT_R32G32_SFLOAT;
-    case InputElementFormat::Float3: return VK_FORMAT_R32G32B32_SFLOAT;
-    case InputElementFormat::Float4: return VK_FORMAT_R32G32B32A32_SFLOAT;
-    case InputElementFormat::Int4: return VK_FORMAT_R32G32B32A32_SINT;
-    case InputElementFormat::Byte4: return VK_FORMAT_R8G8B8A8_UINT;
-    case InputElementFormat::HalfFloat2: return VK_FORMAT_R16G16_SFLOAT;
-    case InputElementFormat::HalfFloat4: return VK_FORMAT_R16G16B16A16_SFLOAT;
+    case InputElementFormat::Float:
+        return VK_FORMAT_R32_SFLOAT;
+    case InputElementFormat::Float2:
+        return VK_FORMAT_R32G32_SFLOAT;
+    case InputElementFormat::Float3:
+        return VK_FORMAT_R32G32B32_SFLOAT;
+    case InputElementFormat::Float4:
+        return VK_FORMAT_R32G32B32A32_SFLOAT;
+    case InputElementFormat::Int4:
+        return VK_FORMAT_R32G32B32A32_SINT;
+    case InputElementFormat::Byte4:
+        return VK_FORMAT_R8G8B8A8_UINT;
+    case InputElementFormat::HalfFloat2:
+        return VK_FORMAT_R16G16_SFLOAT;
+    case InputElementFormat::HalfFloat4:
+        return VK_FORMAT_R16G16B16A16_SFLOAT;
     }
 }
 
 VkBlendOp ToVkBlendOp(BlendOperation blendOperation) noexcept
 {
     switch (blendOperation) {
-    case BlendOperation::Add: return VK_BLEND_OP_ADD;
-    case BlendOperation::Subtract: return VK_BLEND_OP_SUBTRACT;
-    case BlendOperation::ReverseSubtract: return VK_BLEND_OP_REVERSE_SUBTRACT;
-    case BlendOperation::Min: return VK_BLEND_OP_MIN;
-    case BlendOperation::Max: return VK_BLEND_OP_MAX;
+    case BlendOperation::Add:
+        return VK_BLEND_OP_ADD;
+    case BlendOperation::Subtract:
+        return VK_BLEND_OP_SUBTRACT;
+    case BlendOperation::ReverseSubtract:
+        return VK_BLEND_OP_REVERSE_SUBTRACT;
+    case BlendOperation::Min:
+        return VK_BLEND_OP_MIN;
+    case BlendOperation::Max:
+        return VK_BLEND_OP_MAX;
     }
 }
 
 VkBlendFactor ToVkBlendFactor(Blend blend) noexcept
 {
     switch (blend) {
-    case Blend::Zero: return VK_BLEND_FACTOR_ZERO;
-    case Blend::One: return VK_BLEND_FACTOR_ONE;
-    case Blend::SourceColor: return VK_BLEND_FACTOR_SRC_COLOR;
-    case Blend::InverseSourceColor: return VK_BLEND_FACTOR_ONE_MINUS_SRC_COLOR;
-    case Blend::SourceAlpha: return VK_BLEND_FACTOR_SRC_ALPHA;
-    case Blend::InverseSourceAlpha: return VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
-    case Blend::DestinationAlpha: return VK_BLEND_FACTOR_DST_ALPHA;
-    case Blend::InverseDestinationAlpha: return VK_BLEND_FACTOR_ONE_MINUS_DST_ALPHA;
-    case Blend::DestinationColor: return VK_BLEND_FACTOR_DST_COLOR;
-    case Blend::InverseDestinationColor: return VK_BLEND_FACTOR_ONE_MINUS_DST_COLOR;
-    case Blend::SourceAlphaSaturation: return VK_BLEND_FACTOR_SRC_ALPHA_SATURATE;
-    case Blend::Source1Color: return VK_BLEND_FACTOR_SRC1_COLOR;
-    case Blend::InverseSource1Color: return VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA;
-    case Blend::Source1Alpha: return VK_BLEND_FACTOR_SRC1_ALPHA;
-    case Blend::InverseSource1Alpha: return VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR;
-    case Blend::BlendFactor: return VK_BLEND_FACTOR_CONSTANT_COLOR;
-    case Blend::InvereseBlendFactor: return VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR;
+    case Blend::Zero:
+        return VK_BLEND_FACTOR_ZERO;
+    case Blend::One:
+        return VK_BLEND_FACTOR_ONE;
+    case Blend::SourceColor:
+        return VK_BLEND_FACTOR_SRC_COLOR;
+    case Blend::InverseSourceColor:
+        return VK_BLEND_FACTOR_ONE_MINUS_SRC_COLOR;
+    case Blend::SourceAlpha:
+        return VK_BLEND_FACTOR_SRC_ALPHA;
+    case Blend::InverseSourceAlpha:
+        return VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+    case Blend::DestinationAlpha:
+        return VK_BLEND_FACTOR_DST_ALPHA;
+    case Blend::InverseDestinationAlpha:
+        return VK_BLEND_FACTOR_ONE_MINUS_DST_ALPHA;
+    case Blend::DestinationColor:
+        return VK_BLEND_FACTOR_DST_COLOR;
+    case Blend::InverseDestinationColor:
+        return VK_BLEND_FACTOR_ONE_MINUS_DST_COLOR;
+    case Blend::SourceAlphaSaturation:
+        return VK_BLEND_FACTOR_SRC_ALPHA_SATURATE;
+    case Blend::Source1Color:
+        return VK_BLEND_FACTOR_SRC1_COLOR;
+    case Blend::InverseSource1Color:
+        return VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA;
+    case Blend::Source1Alpha:
+        return VK_BLEND_FACTOR_SRC1_ALPHA;
+    case Blend::InverseSource1Alpha:
+        return VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR;
+    case Blend::BlendFactor:
+        return VK_BLEND_FACTOR_CONSTANT_COLOR;
+    case Blend::InvereseBlendFactor:
+        return VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR;
     }
     return VK_BLEND_FACTOR_ONE;
 }
@@ -73,14 +103,22 @@ VkBlendFactor ToVkBlendFactor(Blend blend) noexcept
 VkStencilOp ToStencilOperation(StencilOperation operation) noexcept
 {
     switch (operation) {
-    case StencilOperation::Keep: return VK_STENCIL_OP_KEEP;
-    case StencilOperation::Zero: return VK_STENCIL_OP_ZERO;
-    case StencilOperation::Replace: return VK_STENCIL_OP_REPLACE;
-    case StencilOperation::IncrementSaturation: return VK_STENCIL_OP_INCREMENT_AND_CLAMP;
-    case StencilOperation::DecrementSaturation: return VK_STENCIL_OP_DECREMENT_AND_CLAMP;
-    case StencilOperation::Invert: return VK_STENCIL_OP_INVERT;
-    case StencilOperation::Increment: return VK_STENCIL_OP_INCREMENT_AND_WRAP;
-    case StencilOperation::Decrement: return VK_STENCIL_OP_DECREMENT_AND_WRAP;
+    case StencilOperation::Keep:
+        return VK_STENCIL_OP_KEEP;
+    case StencilOperation::Zero:
+        return VK_STENCIL_OP_ZERO;
+    case StencilOperation::Replace:
+        return VK_STENCIL_OP_REPLACE;
+    case StencilOperation::IncrementSaturation:
+        return VK_STENCIL_OP_INCREMENT_AND_CLAMP;
+    case StencilOperation::DecrementSaturation:
+        return VK_STENCIL_OP_DECREMENT_AND_CLAMP;
+    case StencilOperation::Invert:
+        return VK_STENCIL_OP_INVERT;
+    case StencilOperation::Increment:
+        return VK_STENCIL_OP_INCREMENT_AND_WRAP;
+    case StencilOperation::Decrement:
+        return VK_STENCIL_OP_DECREMENT_AND_WRAP;
     }
     return VK_STENCIL_OP_KEEP;
 }
@@ -88,14 +126,22 @@ VkStencilOp ToStencilOperation(StencilOperation operation) noexcept
 VkCompareOp ToComparisonFunction(ComparisonFunction compareFunction) noexcept
 {
     switch (compareFunction) {
-    case ComparisonFunction::Never: return VK_COMPARE_OP_NEVER;
-    case ComparisonFunction::Less: return VK_COMPARE_OP_LESS;
-    case ComparisonFunction::Equal: return VK_COMPARE_OP_EQUAL;
-    case ComparisonFunction::LessEqual: return VK_COMPARE_OP_LESS_OR_EQUAL;
-    case ComparisonFunction::Greater: return VK_COMPARE_OP_GREATER;
-    case ComparisonFunction::NotEqual: return VK_COMPARE_OP_NOT_EQUAL;
-    case ComparisonFunction::GreaterEqual: return VK_COMPARE_OP_GREATER_OR_EQUAL;
-    case ComparisonFunction::Always: return VK_COMPARE_OP_ALWAYS;
+    case ComparisonFunction::Never:
+        return VK_COMPARE_OP_NEVER;
+    case ComparisonFunction::Less:
+        return VK_COMPARE_OP_LESS;
+    case ComparisonFunction::Equal:
+        return VK_COMPARE_OP_EQUAL;
+    case ComparisonFunction::LessEqual:
+        return VK_COMPARE_OP_LESS_OR_EQUAL;
+    case ComparisonFunction::Greater:
+        return VK_COMPARE_OP_GREATER;
+    case ComparisonFunction::NotEqual:
+        return VK_COMPARE_OP_NOT_EQUAL;
+    case ComparisonFunction::GreaterEqual:
+        return VK_COMPARE_OP_GREATER_OR_EQUAL;
+    case ComparisonFunction::Always:
+        return VK_COMPARE_OP_ALWAYS;
     }
     return VK_COMPARE_OP_LESS_OR_EQUAL;
 }
@@ -103,9 +149,12 @@ VkCompareOp ToComparisonFunction(ComparisonFunction compareFunction) noexcept
 VkCullModeFlags ToVkCullModeFlags(CullMode cullMode) noexcept
 {
     switch (cullMode) {
-    case CullMode::ClockwiseFace: return VK_CULL_MODE_FRONT_BIT;
-    case CullMode::CounterClockwiseFace: return VK_CULL_MODE_BACK_BIT;
-    case CullMode::None: return VK_CULL_MODE_NONE;
+    case CullMode::ClockwiseFace:
+        return VK_CULL_MODE_FRONT_BIT;
+    case CullMode::CounterClockwiseFace:
+        return VK_CULL_MODE_BACK_BIT;
+    case CullMode::None:
+        return VK_CULL_MODE_NONE;
     }
     return VK_CULL_MODE_BACK_BIT;
 }
@@ -113,8 +162,10 @@ VkCullModeFlags ToVkCullModeFlags(CullMode cullMode) noexcept
 VkPolygonMode ToVkPolygonMode(FillMode fillMode) noexcept
 {
     switch (fillMode) {
-    case FillMode::WireFrame: return VK_POLYGON_MODE_LINE;
-    case FillMode::Solid: return VK_POLYGON_MODE_FILL;
+    case FillMode::WireFrame:
+        return VK_POLYGON_MODE_LINE;
+    case FillMode::Solid:
+        return VK_POLYGON_MODE_FILL;
     }
     return VK_POLYGON_MODE_FILL;
 }
@@ -145,7 +196,7 @@ VkPipelineColorBlendAttachmentState ToColorBlendAttachmentState(const RenderTarg
 void ToBlendState(
     const BlendDescription& desc,
     const std::vector<VkPipelineColorBlendAttachmentState>& blendAttachments,
-    VkPipelineColorBlendStateCreateInfo & state) noexcept
+    VkPipelineColorBlendStateCreateInfo& state) noexcept
 {
     state.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
     state.pNext = nullptr;
@@ -163,7 +214,7 @@ void ToBlendState(
 void ToDepthStencilOperation(
     const DepthStencilOperation& operation,
     const DepthStencilDescription& description,
-    VkStencilOpState & state) noexcept
+    VkStencilOpState& state) noexcept
 {
     state.failOp = ToStencilOperation(operation.StencilFail);
     state.passOp = ToStencilOperation(operation.StencilPass);
@@ -176,7 +227,7 @@ void ToDepthStencilOperation(
 
 void ToDepthStencilState(
     const DepthStencilDescription& desc,
-    VkPipelineDepthStencilStateCreateInfo & info) noexcept
+    VkPipelineDepthStencilStateCreateInfo& info) noexcept
 {
     info.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
     info.pNext = nullptr;
@@ -198,7 +249,7 @@ void ToDepthStencilState(
 
 void ToRasterizationState(
     const RasterizerDescription& desc,
-    VkPipelineRasterizationStateCreateInfo & info) noexcept
+    VkPipelineRasterizationStateCreateInfo& info) noexcept
 {
     info.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
     info.pNext = nullptr;
@@ -219,7 +270,7 @@ void ToVertexInputState(
     const InputLayoutDescription& inputLayout,
     const std::vector<VkVertexInputBindingDescription>& vertexBindings,
     const std::vector<VkVertexInputAttributeDescription> vertexAttributes,
-    VkPipelineVertexInputStateCreateInfo & info) noexcept
+    VkPipelineVertexInputStateCreateInfo& info) noexcept
 {
     info.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
     info.pNext = nullptr;
@@ -264,7 +315,7 @@ PipelineStateVulkan::PipelineStateVulkan(
     std::vector<VkVertexInputBindingDescription> vertexBindings;
     std::vector<VkVertexInputAttributeDescription> vertexAttributes;
     {
-        for (auto & element : description.InputLayout.InputElements) {
+        for (auto& element : description.InputLayout.InputElements) {
             VkVertexInputBindingDescription inputBinding;
             inputBinding.binding = element.InputSlot; // TODO
             inputBinding.stride = element.ByteOffset + BufferHelper::ToByteSize(element.Format);
@@ -292,7 +343,7 @@ PipelineStateVulkan::PipelineStateVulkan(
     std::vector<VkPipelineColorBlendAttachmentState> blendAttachments;
     {
         std::size_t index = 0;
-        for (auto & renderTarget : description.BlendState.RenderTargets) {
+        for (auto& renderTarget : description.BlendState.RenderTargets) {
             if (index >= description.RenderTargetViewFormats.size()) {
                 break;
             }

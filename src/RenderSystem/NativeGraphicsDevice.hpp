@@ -16,7 +16,7 @@ class NativeGraphicsDevice {
 public:
     NativeGraphicsDevice() = default;
     NativeGraphicsDevice(const NativeGraphicsDevice&) = delete;
-    NativeGraphicsDevice & operator=(const NativeGraphicsDevice&) = delete;
+    NativeGraphicsDevice& operator=(const NativeGraphicsDevice&) = delete;
 
     virtual ~NativeGraphicsDevice() = default;
 
@@ -54,7 +54,7 @@ public:
     virtual std::unique_ptr<NativeEffectReflection>
     CreateEffectReflection(
         const PipelineStateDescription& description,
-        NativePipelineState & pipelineState) = 0;
+        NativePipelineState& pipelineState) = 0;
 
     virtual std::unique_ptr<NativeTexture2D>
     CreateTexture2D(

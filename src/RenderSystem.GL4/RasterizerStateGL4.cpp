@@ -12,8 +12,10 @@ namespace {
 FillModeGL4 ToFillModeGL4(const FillMode& fillMode) noexcept
 {
     switch (fillMode) {
-    case FillMode::Solid: return FillModeGL4{ GL_FILL };
-    case FillMode::WireFrame: return FillModeGL4{ GL_LINE };
+    case FillMode::Solid:
+        return FillModeGL4{GL_FILL};
+    case FillMode::WireFrame:
+        return FillModeGL4{GL_LINE};
     }
     POMDOG_UNREACHABLE("Unsupported fill mode");
 }

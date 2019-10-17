@@ -158,8 +158,7 @@ void BufferDirect3D11::GetData(
         POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to map buffer");
     }
 
-    auto mappedMemory = reinterpret_cast<std::uint8_t*>(mappedResource.pData)
-        + offsetInBytes;
+    auto mappedMemory = reinterpret_cast<std::uint8_t*>(mappedResource.pData) + offsetInBytes;
     std::memcpy(destination, mappedMemory, sizeInBytes);
 
     deviceContext->Unmap(buffer.Get(), 0);
@@ -192,8 +191,7 @@ void BufferDirect3D11::SetData(
         POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to map buffer");
     }
 
-    auto mappedMemory = reinterpret_cast<std::uint8_t*>(mappedResource.pData)
-        + offsetInBytes;
+    auto mappedMemory = reinterpret_cast<std::uint8_t*>(mappedResource.pData) + offsetInBytes;
     std::memcpy(mappedMemory, source, sizeInBytes);
 
     deviceContext->Unmap(buffer.Get(), 0);

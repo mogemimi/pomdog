@@ -569,7 +569,7 @@ EffectAnnotation ToEffectAnnotation(const UniformVariableGL4& uniform)
     const auto [rowCount, columnCount] = ToComponents(uniform.Type);
     annotation.RowCount = static_cast<std::uint8_t>(rowCount);
     annotation.ColumnCount = static_cast<std::uint8_t>(columnCount);
-    annotation.Elements = (uniform.Elements > 1) ? static_cast<decltype(annotation.Elements)>(uniform.Elements): 0;
+    annotation.Elements = (uniform.Elements > 1) ? static_cast<decltype(annotation.Elements)>(uniform.Elements) : 0;
     POMDOG_ASSERT(annotation.Elements != 1);
     return annotation;
 }

@@ -11,7 +11,7 @@ class NativeEffectReflection {
 public:
     NativeEffectReflection() = default;
     NativeEffectReflection(const NativeEffectReflection&) = delete;
-    NativeEffectReflection & operator=(const NativeEffectReflection&) = delete;
+    NativeEffectReflection& operator=(const NativeEffectReflection&) = delete;
 
     virtual ~NativeEffectReflection() = default;
 

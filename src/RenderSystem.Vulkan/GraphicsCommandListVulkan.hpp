@@ -38,7 +38,7 @@ public:
         std::size_t startIndexLocation,
         std::size_t startInstanceLocation) override;
 
-    void SetRenderPass(RenderPass && renderPass) override;
+    void SetRenderPass(RenderPass&& renderPass) override;
 
     void SetPrimitiveTopology(PrimitiveTopology primitiveTopology) override;
 
@@ -46,7 +46,7 @@ public:
 
     void SetVertexBuffers(const std::vector<VertexBufferBinding>& vertexBuffers) override;
 
-    void SetVertexBuffers(std::vector<VertexBufferBinding> && vertexBuffers) override;
+    void SetVertexBuffers(std::vector<VertexBufferBinding>&& vertexBuffers) override;
 
     void SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer) override;
 
@@ -54,7 +54,7 @@ public:
 
     void SetConstantBuffer(int index, const std::shared_ptr<NativeBuffer>& constantBuffer) override;
 
-    void SetSampler(int index, std::shared_ptr<NativeSamplerState> && sampler) override;
+    void SetSampler(int index, std::shared_ptr<NativeSamplerState>&& sampler) override;
 
     void SetTexture(int index) override;
 

@@ -50,7 +50,7 @@ public:
     std::unique_ptr<NativeEffectReflection>
     CreateEffectReflection(
         const PipelineStateDescription& description,
-        NativePipelineState & pipelineState) override;
+        NativePipelineState& pipelineState) override;
 
     std::unique_ptr<NativeTexture2D>
     CreateTexture2D(

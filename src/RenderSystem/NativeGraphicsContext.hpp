@@ -17,7 +17,7 @@ class NativeGraphicsContext {
 public:
     NativeGraphicsContext() = default;
     NativeGraphicsContext(const NativeGraphicsContext&) = delete;
-    NativeGraphicsContext & operator=(const NativeGraphicsContext&) = delete;
+    NativeGraphicsContext& operator=(const NativeGraphicsContext&) = delete;
 
     virtual ~NativeGraphicsContext() = default;
 

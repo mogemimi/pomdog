@@ -11,8 +11,10 @@ namespace Pomdog::Detail::BufferHelper {
 std::size_t ToIndexElementOffsetBytes(IndexElementSize elementSize) noexcept
 {
     switch (elementSize) {
-    case IndexElementSize::ThirtyTwoBits: return 4;
-    case IndexElementSize::SixteenBits: return 2;
+    case IndexElementSize::ThirtyTwoBits:
+        return 4;
+    case IndexElementSize::SixteenBits:
+        return 2;
     }
     POMDOG_UNREACHABLE("Unsupported index element size");
 }

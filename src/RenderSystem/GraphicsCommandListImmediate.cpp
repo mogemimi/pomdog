@@ -19,7 +19,7 @@ struct DrawCommand final : public GraphicsCommand {
     std::size_t vertexCount;
     std::size_t startVertexLocation;
 
-    void Execute(NativeGraphicsContext & graphicsContext) override
+    void Execute(NativeGraphicsContext& graphicsContext) override
     {
         graphicsContext.Draw(vertexCount, startVertexLocation);
     }
@@ -29,7 +29,7 @@ struct DrawIndexedCommand final : public GraphicsCommand {
     std::size_t indexCount;
     std::size_t startIndexLocation;
 
-    void Execute(NativeGraphicsContext & graphicsContext) override
+    void Execute(NativeGraphicsContext& graphicsContext) override
     {
         graphicsContext.DrawIndexed(indexCount, startIndexLocation);
     }
@@ -41,7 +41,7 @@ struct DrawInstancedCommand final : public GraphicsCommand {
     std::size_t startVertexLocation;
     std::size_t startInstanceLocation;
 
-    void Execute(NativeGraphicsContext & graphicsContext) override
+    void Execute(NativeGraphicsContext& graphicsContext) override
     {
         graphicsContext.DrawInstanced(
             vertexCountPerInstance,
@@ -57,7 +57,7 @@ struct DrawIndexedInstancedCommand final : public GraphicsCommand {
     std::size_t startIndexLocation;
     std::size_t startInstanceLocation;
 
-    void Execute(NativeGraphicsContext & graphicsContext) override
+    void Execute(NativeGraphicsContext& graphicsContext) override
     {
         graphicsContext.DrawIndexedInstanced(
             indexCountPerInstance,
@@ -70,7 +70,7 @@ struct DrawIndexedInstancedCommand final : public GraphicsCommand {
 struct SetPrimitiveTopologyCommand final : public GraphicsCommand {
     PrimitiveTopology primitiveTopology;
 
-    void Execute(NativeGraphicsContext & graphicsContext) override
+    void Execute(NativeGraphicsContext& graphicsContext) override
     {
         graphicsContext.SetPrimitiveTopology(primitiveTopology);
     }
@@ -79,7 +79,7 @@ struct SetPrimitiveTopologyCommand final : public GraphicsCommand {
 struct SetBlendFactorCommand final : public GraphicsCommand {
     Vector4 blendFactor;
 
-    void Execute(NativeGraphicsContext & graphicsContext) override
+    void Execute(NativeGraphicsContext& graphicsContext) override
     {
         graphicsContext.SetBlendFactor(blendFactor);
     }
@@ -88,7 +88,7 @@ struct SetBlendFactorCommand final : public GraphicsCommand {
 struct SetVertexBuffersCommand final : public GraphicsCommand {
     std::vector<VertexBufferBinding> vertexBuffers;
 
-    void Execute(NativeGraphicsContext & graphicsContext) override
+    void Execute(NativeGraphicsContext& graphicsContext) override
     {
         graphicsContext.SetVertexBuffers(vertexBuffers);
     }
@@ -97,7 +97,7 @@ struct SetVertexBuffersCommand final : public GraphicsCommand {
 struct SetIndexBufferCommand final : public GraphicsCommand {
     std::shared_ptr<IndexBuffer> indexBuffer;
 
-    void Execute(NativeGraphicsContext & graphicsContext) override
+    void Execute(NativeGraphicsContext& graphicsContext) override
     {
         graphicsContext.SetIndexBuffer(indexBuffer);
     }
@@ -106,7 +106,7 @@ struct SetIndexBufferCommand final : public GraphicsCommand {
 struct SetPipelineStateCommand final : public GraphicsCommand {
     std::shared_ptr<NativePipelineState> pipelineState;
 
-    void Execute(NativeGraphicsContext & graphicsContext) override
+    void Execute(NativeGraphicsContext& graphicsContext) override
     {
         POMDOG_ASSERT(pipelineState);
         graphicsContext.SetPipelineState(pipelineState);
@@ -117,7 +117,7 @@ struct SetConstantBufferCommand final : public GraphicsCommand {
     std::shared_ptr<NativeBuffer> constantBuffer;
     int slotIndex;
 
-    void Execute(NativeGraphicsContext & graphicsContext) override
+    void Execute(NativeGraphicsContext& graphicsContext) override
     {
         POMDOG_ASSERT(constantBuffer);
         POMDOG_ASSERT(slotIndex >= 0);
@@ -129,7 +129,7 @@ struct SetSamplerStateCommand final : public GraphicsCommand {
     std::shared_ptr<NativeSamplerState> sampler;
     int slotIndex;
 
-    void Execute(NativeGraphicsContext & graphicsContext) override
+    void Execute(NativeGraphicsContext& graphicsContext) override
     {
         if (sampler) {
             graphicsContext.SetSampler(slotIndex, sampler);
@@ -144,7 +144,7 @@ struct SetTextureCommand final : public GraphicsCommand {
     std::shared_ptr<Texture2D> texture;
     int slotIndex;
 
-    void Execute(NativeGraphicsContext & graphicsContext) override
+    void Execute(NativeGraphicsContext& graphicsContext) override
     {
         if (texture) {
             graphicsContext.SetTexture(slotIndex, texture);
@@ -159,7 +159,7 @@ struct SetTextureRenderTarget2DCommand final : public GraphicsCommand {
     std::shared_ptr<RenderTarget2D> texture;
     int slotIndex;
 
-    void Execute(NativeGraphicsContext & graphicsContext) override
+    void Execute(NativeGraphicsContext& graphicsContext) override
     {
         if (texture) {
             graphicsContext.SetTexture(slotIndex, texture);
@@ -173,7 +173,7 @@ struct SetTextureRenderTarget2DCommand final : public GraphicsCommand {
 struct SetRenderPassCommand final : public GraphicsCommand {
     RenderPass renderPass;
 
-    void Execute(NativeGraphicsContext & graphicsContext) override
+    void Execute(NativeGraphicsContext& graphicsContext) override
     {
         graphicsContext.SetRenderPass(renderPass);
     }
@@ -262,7 +262,7 @@ void GraphicsCommandListImmediate::DrawIndexedInstanced(
     commands.push_back(std::move(command));
 }
 
-void GraphicsCommandListImmediate::SetRenderPass(RenderPass && renderPass)
+void GraphicsCommandListImmediate::SetRenderPass(RenderPass&& renderPass)
 {
     auto command = std::make_unique<SetRenderPassCommand>();
     command->commandType = GraphicsCommandType::SetRenderPassCommand;
@@ -299,7 +299,7 @@ void GraphicsCommandListImmediate::SetVertexBuffers(const std::vector<VertexBuff
     commands.push_back(std::move(command));
 }
 
-void GraphicsCommandListImmediate::SetVertexBuffers(std::vector<VertexBufferBinding> && vertexBuffers)
+void GraphicsCommandListImmediate::SetVertexBuffers(std::vector<VertexBufferBinding>&& vertexBuffers)
 {
     POMDOG_ASSERT(!vertexBuffers.empty());
     auto command = std::make_unique<SetVertexBuffersCommand>();
@@ -337,7 +337,7 @@ void GraphicsCommandListImmediate::SetConstantBuffer(int index, const std::share
     commands.push_back(std::move(command));
 }
 
-void GraphicsCommandListImmediate::SetSampler(int index, std::shared_ptr<NativeSamplerState> && sampler)
+void GraphicsCommandListImmediate::SetSampler(int index, std::shared_ptr<NativeSamplerState>&& sampler)
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(sampler);
@@ -380,9 +380,9 @@ void GraphicsCommandListImmediate::SetTexture(int index, const std::shared_ptr<R
     commands.push_back(std::move(command));
 }
 
-void GraphicsCommandListImmediate::ExecuteImmediate(NativeGraphicsContext & graphicsContext)
+void GraphicsCommandListImmediate::ExecuteImmediate(NativeGraphicsContext& graphicsContext)
 {
-    for (auto & command : commands) {
+    for (auto& command : commands) {
         POMDOG_ASSERT(command != nullptr);
         command->Execute(graphicsContext);
     }
@@ -429,8 +429,8 @@ void GraphicsCommandListImmediate::SortCommandsForMetal()
     for (size_t k = 0; k < commands.size(); ++k) {
         bool swapped = false;
         for (size_t i = 1 + (k % 2); i < commands.size(); i += 2) {
-            auto & a = commands[i - 1];
-            auto & b = commands[i];
+            auto& a = commands[i - 1];
+            auto& b = commands[i];
             const auto x = static_cast<std::int8_t>(a->commandType);
             const auto y = static_cast<std::int8_t>(b->commandType);
             POMDOG_ASSERT(x <= static_cast<std::int8_t>(priorities.size()));
@@ -484,7 +484,7 @@ void GraphicsCommandListImmediate::SortCommandsForMetal()
 
     std::swap(commands, oldCommands);
 
-    for (auto & command : oldCommands) {
+    for (auto& command : oldCommands) {
         POMDOG_ASSERT(command != nullptr);
 
         bool isDrawCommand = false;
@@ -558,17 +558,17 @@ void GraphicsCommandListImmediate::SortCommandsForMetal()
             if (setIndexBufferCommand && (*setIndexBufferCommand < renderPassCommandIndex)) {
                 commands.push_back(commands[*setIndexBufferCommand]);
             }
-            for (auto & commandIndex : setConstantBufferCommands) {
+            for (auto& commandIndex : setConstantBufferCommands) {
                 if (commandIndex && (*commandIndex < renderPassCommandIndex)) {
                     commands.push_back(commands[*commandIndex]);
                 }
             }
-            for (auto & commandIndex : setSamplerCommands) {
+            for (auto& commandIndex : setSamplerCommands) {
                 if (commandIndex && (*commandIndex < renderPassCommandIndex)) {
                     commands.push_back(commands[*commandIndex]);
                 }
             }
-            for (auto & commandIndex : setTextureCommands) {
+            for (auto& commandIndex : setTextureCommands) {
                 if (commandIndex && (*commandIndex < renderPassCommandIndex)) {
                     commands.push_back(commands[*commandIndex]);
                 }

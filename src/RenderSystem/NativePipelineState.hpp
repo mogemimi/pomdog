@@ -11,7 +11,7 @@ class NativePipelineState {
 public:
     NativePipelineState() = default;
     NativePipelineState(const NativePipelineState&) = delete;
-    NativePipelineState & operator=(const NativePipelineState&) = delete;
+    NativePipelineState& operator=(const NativePipelineState&) = delete;
 
     virtual ~NativePipelineState() = default;
 };

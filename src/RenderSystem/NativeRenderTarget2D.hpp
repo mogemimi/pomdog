@@ -12,7 +12,7 @@ class NativeRenderTarget2D {
 public:
     NativeRenderTarget2D() = default;
     NativeRenderTarget2D(const NativeRenderTarget2D&) = delete;
-    NativeRenderTarget2D & operator=(const NativeRenderTarget2D&) = delete;
+    NativeRenderTarget2D& operator=(const NativeRenderTarget2D&) = delete;
 
     virtual ~NativeRenderTarget2D() = default;
 

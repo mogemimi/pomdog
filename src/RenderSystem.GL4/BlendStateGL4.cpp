@@ -13,25 +13,42 @@ namespace {
 GLenum ToBlendGL4NonTypesafe(Blend blend) noexcept
 {
     switch (blend) {
-    case Blend::Zero: return GL_ZERO;
-    case Blend::One: return GL_ONE;
-    case Blend::SourceColor: return GL_SRC_COLOR;
-    case Blend::InverseSourceColor: return GL_ONE_MINUS_SRC_COLOR;
-    case Blend::SourceAlpha: return GL_SRC_ALPHA;
-    case Blend::InverseSourceAlpha: return GL_ONE_MINUS_SRC_ALPHA;
-    case Blend::DestinationAlpha: return GL_DST_ALPHA;
-    case Blend::InverseDestinationAlpha: return GL_ONE_MINUS_DST_ALPHA;
-    case Blend::DestinationColor: return GL_DST_COLOR;
-    case Blend::InverseDestinationColor: return GL_ONE_MINUS_DST_COLOR;
-    case Blend::SourceAlphaSaturation: return GL_SRC_ALPHA_SATURATE;
-    case Blend::BlendFactor: return GL_CONSTANT_COLOR;
-    case Blend::InvereseBlendFactor: return GL_ONE_MINUS_CONSTANT_COLOR;
+    case Blend::Zero:
+        return GL_ZERO;
+    case Blend::One:
+        return GL_ONE;
+    case Blend::SourceColor:
+        return GL_SRC_COLOR;
+    case Blend::InverseSourceColor:
+        return GL_ONE_MINUS_SRC_COLOR;
+    case Blend::SourceAlpha:
+        return GL_SRC_ALPHA;
+    case Blend::InverseSourceAlpha:
+        return GL_ONE_MINUS_SRC_ALPHA;
+    case Blend::DestinationAlpha:
+        return GL_DST_ALPHA;
+    case Blend::InverseDestinationAlpha:
+        return GL_ONE_MINUS_DST_ALPHA;
+    case Blend::DestinationColor:
+        return GL_DST_COLOR;
+    case Blend::InverseDestinationColor:
+        return GL_ONE_MINUS_DST_COLOR;
+    case Blend::SourceAlphaSaturation:
+        return GL_SRC_ALPHA_SATURATE;
+    case Blend::BlendFactor:
+        return GL_CONSTANT_COLOR;
+    case Blend::InvereseBlendFactor:
+        return GL_ONE_MINUS_CONSTANT_COLOR;
     // case Blend::BlendFactorAlpha: return GL_CONSTANT_ALPHA;
     // case Blend::InvereseBlendFactorAlpha: return GL_ONE_MINUS_CONSTANT_ALPHA;
-    case Blend::Source1Color: return GL_SRC1_COLOR;
-    case Blend::InverseSource1Color: return GL_ONE_MINUS_SRC1_COLOR;
-    case Blend::Source1Alpha: return GL_SRC1_ALPHA;
-    case Blend::InverseSource1Alpha: return GL_ONE_MINUS_SRC1_ALPHA;
+    case Blend::Source1Color:
+        return GL_SRC1_COLOR;
+    case Blend::InverseSource1Color:
+        return GL_ONE_MINUS_SRC1_COLOR;
+    case Blend::Source1Alpha:
+        return GL_SRC1_ALPHA;
+    case Blend::InverseSource1Alpha:
+        return GL_ONE_MINUS_SRC1_ALPHA;
     }
     POMDOG_UNREACHABLE("Unsupported blend factor");
 }
@@ -39,11 +56,16 @@ GLenum ToBlendGL4NonTypesafe(Blend blend) noexcept
 GLenum ToBlendOperationGL4NonTypesafe(BlendOperation operation) noexcept
 {
     switch (operation) {
-    case BlendOperation::Add: return GL_FUNC_ADD;
-    case BlendOperation::Subtract: return GL_FUNC_SUBTRACT;
-    case BlendOperation::ReverseSubtract: return GL_FUNC_REVERSE_SUBTRACT;
-    case BlendOperation::Min: return GL_MIN;
-    case BlendOperation::Max: return GL_MAX;
+    case BlendOperation::Add:
+        return GL_FUNC_ADD;
+    case BlendOperation::Subtract:
+        return GL_FUNC_SUBTRACT;
+    case BlendOperation::ReverseSubtract:
+        return GL_FUNC_REVERSE_SUBTRACT;
+    case BlendOperation::Min:
+        return GL_MIN;
+    case BlendOperation::Max:
+        return GL_MAX;
     }
     POMDOG_UNREACHABLE("Unsupported blend operation");
 }
@@ -60,7 +82,7 @@ BlendOperationGL4 ToBlendOperationGL4(BlendOperation operation) noexcept
 
 void ToRenderTargetBlendGL4(
     const RenderTargetBlendDescription& desc,
-    RenderTargetBlendDescGL4 & result) noexcept
+    RenderTargetBlendDescGL4& result) noexcept
 {
     result.ColorSource = ToBlendGL4(desc.ColorSourceBlend);
     result.ColorDestination = ToBlendGL4(desc.ColorDestinationBlend);
@@ -87,7 +109,7 @@ void BlendStateGL4::Apply()
 {
     if (independentBlendEnable) {
         GLuint index = 0;
-        for (auto & renderTarget : renderTargets) {
+        for (auto& renderTarget : renderTargets) {
             if (renderTarget.BlendEnable) {
                 glEnablei(GL_BLEND, index);
                 POMDOG_CHECK_ERROR_GL4("glEnablei");
@@ -112,7 +134,7 @@ void BlendStateGL4::Apply()
         }
     }
     else {
-        auto & renderTarget = renderTargets.front();
+        auto& renderTarget = renderTargets.front();
         if (renderTarget.BlendEnable) {
             glEnable(GL_BLEND);
         }

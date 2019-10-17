@@ -33,16 +33,16 @@ class GraphicsCommand {
 public:
     virtual ~GraphicsCommand() = default;
 
-    virtual void Execute(NativeGraphicsContext & graphicsContext) = 0;
+    virtual void Execute(NativeGraphicsContext& graphicsContext) = 0;
 
     GraphicsCommandType commandType;
 };
 
-class GraphicsCommandListImmediate final: public NativeGraphicsCommandList {
+class GraphicsCommandListImmediate final : public NativeGraphicsCommandList {
 public:
     GraphicsCommandListImmediate() = default;
     GraphicsCommandListImmediate(const GraphicsCommandListImmediate&) = delete;
-    GraphicsCommandListImmediate & operator=(const GraphicsCommandListImmediate&) = delete;
+    GraphicsCommandListImmediate& operator=(const GraphicsCommandListImmediate&) = delete;
 
     ~GraphicsCommandListImmediate();
 
@@ -72,7 +72,7 @@ public:
         std::size_t startIndexLocation,
         std::size_t startInstanceLocation) override;
 
-    void SetRenderPass(RenderPass && renderPass) override;
+    void SetRenderPass(RenderPass&& renderPass) override;
 
     void SetPrimitiveTopology(PrimitiveTopology primitiveTopology) override;
 
@@ -82,7 +82,7 @@ public:
         const std::vector<VertexBufferBinding>& vertexBuffers) override;
 
     void SetVertexBuffers(
-        std::vector<VertexBufferBinding> && vertexBuffers) override;
+        std::vector<VertexBufferBinding>&& vertexBuffers) override;
 
     void SetIndexBuffer(
         const std::shared_ptr<IndexBuffer>& indexBuffer) override;
@@ -94,7 +94,7 @@ public:
         int index, const std::shared_ptr<NativeBuffer>& constantBuffer) override;
 
     void SetSampler(
-        int index, std::shared_ptr<NativeSamplerState> && sampler) override;
+        int index, std::shared_ptr<NativeSamplerState>&& sampler) override;
 
     void SetTexture(int index) override;
 
@@ -104,7 +104,7 @@ public:
     void SetTexture(
         int index, const std::shared_ptr<RenderTarget2D>& texture) override;
 
-    void ExecuteImmediate(NativeGraphicsContext & graphicsContext);
+    void ExecuteImmediate(NativeGraphicsContext& graphicsContext);
 
 private:
     void SortCommandsForMetal();
