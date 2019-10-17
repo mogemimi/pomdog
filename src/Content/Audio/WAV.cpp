@@ -190,8 +190,10 @@ ReadWaveAudioData(std::ifstream& stream)
     POMDOG_ASSERT(channels <= 2);
 
     switch (channels) {
-    case 1: return AudioChannels::Mono;
-    case 2: return AudioChannels::Stereo;
+    case 1:
+        return AudioChannels::Mono;
+    case 2:
+        return AudioChannels::Stereo;
     default:
         break;
     }
@@ -217,13 +219,13 @@ Load(std::ifstream&& stream, std::size_t byteLength)
         return std::make_tuple(nullptr, std::move(err));
     }
 
-    auto[waveFormat, waveFormatErr] = ReadWaveFormat(stream);
+    auto [waveFormat, waveFormatErr] = ReadWaveFormat(stream);
     if (waveFormatErr != nullptr) {
         auto err = Errors::Wrap(std::move(waveFormatErr), "cannot read the wave format");
         return std::make_tuple(nullptr, std::move(err));
     }
 
-    auto[audioData, audioDataErr] = ReadWaveAudioData(stream);
+    auto [audioData, audioDataErr] = ReadWaveAudioData(stream);
     if (audioDataErr != nullptr) {
         auto err = Errors::Wrap(std::move(audioDataErr), "cannot read the wave audio data");
         return std::make_tuple(nullptr, std::move(err));

@@ -8,8 +8,8 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include <optional>
 
-using Pomdog::Detail::MakeFourCC;
 using Pomdog::Detail::BinaryReader;
+using Pomdog::Detail::MakeFourCC;
 
 namespace Pomdog::DDS {
 namespace {
@@ -42,20 +42,20 @@ struct DDSPixelFormat final {
 } POMDOG_DETAIL_PACKED;
 
 struct DDSHeader final {
-    std::uint32_t  ByteSize;
-    std::uint32_t  Flags;
-    std::uint32_t  PixelHeight;
-    std::uint32_t  PixelWidth;
-    std::uint32_t  LinearSize;
-    std::uint32_t  Depth;
-    std::uint32_t  MipMapCount;
-    std::uint32_t  Reserved1[11];
+    std::uint32_t ByteSize;
+    std::uint32_t Flags;
+    std::uint32_t PixelHeight;
+    std::uint32_t PixelWidth;
+    std::uint32_t LinearSize;
+    std::uint32_t Depth;
+    std::uint32_t MipMapCount;
+    std::uint32_t Reserved1[11];
     DDSPixelFormat PixelFormat;
-    std::uint32_t  Caps;
-    std::uint32_t  Caps2;
-    std::uint32_t  Caps3;
-    std::uint32_t  Caps4;
-    std::uint32_t  Reserved2;
+    std::uint32_t Caps;
+    std::uint32_t Caps2;
+    std::uint32_t Caps3;
+    std::uint32_t Caps4;
+    std::uint32_t Reserved2;
 } POMDOG_DETAIL_PACKED;
 
 struct DDSHeaderDXT10 final {
@@ -184,7 +184,7 @@ ToSurfaceFormat(const DDSPixelFormat& pixelFormat)
 [[nodiscard]] std::size_t
 ComputePixelDataByteLength(const DDSHeader& ddsHeader, SurfaceFormat format)
 {
-    const auto levelCount = (ddsHeader.MipMapCount > 0) ? ddsHeader.MipMapCount: 1;
+    const auto levelCount = (ddsHeader.MipMapCount > 0) ? ddsHeader.MipMapCount : 1;
 
     const auto bytesPerBlock = [&format]() -> int {
         switch (format) {
@@ -205,12 +205,12 @@ ComputePixelDataByteLength(const DDSHeader& ddsHeader, SurfaceFormat format)
     std::size_t mipmapPixelHeight = ddsHeader.PixelHeight;
 
     for (std::uint32_t mipmapLevel = 0; mipmapLevel < levelCount; ++mipmapLevel) {
-        std::size_t const strideBytesPerMipMap = ((mipmapPixelWidth + 3)/4) * ((mipmapPixelHeight + 3)/4) * bytesPerBlock;
+        std::size_t const strideBytesPerMipMap = ((mipmapPixelWidth + 3) / 4) * ((mipmapPixelHeight + 3) / 4) * bytesPerBlock;
 
         result += strideBytesPerMipMap;
 
-        mipmapPixelWidth = (mipmapPixelWidth >> 1) ? (mipmapPixelWidth >> 1): 1;
-        mipmapPixelHeight = (mipmapPixelHeight >> 1) ? (mipmapPixelHeight >> 1): 1;
+        mipmapPixelWidth = (mipmapPixelWidth >> 1) ? (mipmapPixelWidth >> 1) : 1;
+        mipmapPixelHeight = (mipmapPixelHeight >> 1) ? (mipmapPixelHeight >> 1) : 1;
     }
     return result;
 }

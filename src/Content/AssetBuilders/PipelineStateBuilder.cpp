@@ -71,7 +71,7 @@ std::shared_ptr<PipelineState> Builder<PipelineState>::Impl::Load()
             "Pomdog",
             "[Warning] Please call Builder<PipelineState>::SetRenderTargetViewFormats() in your code.");
 #endif
-        description.RenderTargetViewFormats = { SurfaceFormat::R8G8B8A8_UNorm };
+        description.RenderTargetViewFormats = {SurfaceFormat::R8G8B8A8_UNorm};
         hasRenderTargetViewFormats = true;
     }
 
@@ -94,11 +94,11 @@ Builder<PipelineState>::Builder(AssetManager& assetsIn)
 {
 }
 
-Builder<PipelineState>::Builder(Builder<PipelineState> &&) = default;
-Builder<PipelineState> & Builder<PipelineState>::operator=(Builder<PipelineState> &&) = default;
+Builder<PipelineState>::Builder(Builder<PipelineState>&&) = default;
+Builder<PipelineState>& Builder<PipelineState>::operator=(Builder<PipelineState>&&) = default;
 Builder<PipelineState>::~Builder() = default;
 
-Builder<PipelineState> & Builder<PipelineState>::SetVertexShader(
+Builder<PipelineState>& Builder<PipelineState>::SetVertexShader(
     const std::shared_ptr<Shader>& vertexShader)
 {
     POMDOG_ASSERT(impl);
@@ -107,8 +107,8 @@ Builder<PipelineState> & Builder<PipelineState>::SetVertexShader(
     return *this;
 }
 
-Builder<PipelineState> & Builder<PipelineState>::SetVertexShader(
-    std::shared_ptr<Shader> && vertexShader)
+Builder<PipelineState>& Builder<PipelineState>::SetVertexShader(
+    std::shared_ptr<Shader>&& vertexShader)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(vertexShader);
@@ -116,7 +116,7 @@ Builder<PipelineState> & Builder<PipelineState>::SetVertexShader(
     return *this;
 }
 
-Builder<PipelineState> & Builder<PipelineState>::SetPixelShader(
+Builder<PipelineState>& Builder<PipelineState>::SetPixelShader(
     const std::shared_ptr<Shader>& pixelShader)
 {
     POMDOG_ASSERT(impl);
@@ -125,8 +125,8 @@ Builder<PipelineState> & Builder<PipelineState>::SetPixelShader(
     return *this;
 }
 
-Builder<PipelineState> & Builder<PipelineState>::SetPixelShader(
-    std::shared_ptr<Shader> && pixelShader)
+Builder<PipelineState>& Builder<PipelineState>::SetPixelShader(
+    std::shared_ptr<Shader>&& pixelShader)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(pixelShader);
@@ -134,7 +134,7 @@ Builder<PipelineState> & Builder<PipelineState>::SetPixelShader(
     return *this;
 }
 
-Builder<PipelineState> & Builder<PipelineState>::SetInputLayout(
+Builder<PipelineState>& Builder<PipelineState>::SetInputLayout(
     const InputLayoutDescription& inputLayout)
 {
     POMDOG_ASSERT(impl);
@@ -143,8 +143,8 @@ Builder<PipelineState> & Builder<PipelineState>::SetInputLayout(
     return *this;
 }
 
-Builder<PipelineState> & Builder<PipelineState>::SetInputLayout(
-    InputLayoutDescription && inputLayout)
+Builder<PipelineState>& Builder<PipelineState>::SetInputLayout(
+    InputLayoutDescription&& inputLayout)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(!inputLayout.InputElements.empty());
@@ -152,7 +152,7 @@ Builder<PipelineState> & Builder<PipelineState>::SetInputLayout(
     return *this;
 }
 
-Builder<PipelineState> & Builder<PipelineState>::SetBlendState(
+Builder<PipelineState>& Builder<PipelineState>::SetBlendState(
     const BlendDescription& blendState)
 {
     POMDOG_ASSERT(impl);
@@ -161,7 +161,7 @@ Builder<PipelineState> & Builder<PipelineState>::SetBlendState(
     return *this;
 }
 
-Builder<PipelineState> & Builder<PipelineState>::SetRasterizerState(
+Builder<PipelineState>& Builder<PipelineState>::SetRasterizerState(
     const RasterizerDescription& rasterizerState)
 {
     POMDOG_ASSERT(impl);
@@ -170,7 +170,7 @@ Builder<PipelineState> & Builder<PipelineState>::SetRasterizerState(
     return *this;
 }
 
-Builder<PipelineState> & Builder<PipelineState>::SetDepthStencilState(
+Builder<PipelineState>& Builder<PipelineState>::SetDepthStencilState(
     const DepthStencilDescription& depthStencilState)
 {
     POMDOG_ASSERT(impl);
@@ -179,7 +179,7 @@ Builder<PipelineState> & Builder<PipelineState>::SetDepthStencilState(
     return *this;
 }
 
-Builder<PipelineState> & Builder<PipelineState>::SetConstantBufferBindSlot(
+Builder<PipelineState>& Builder<PipelineState>::SetConstantBufferBindSlot(
     const std::string& name, int slotIndex)
 {
     POMDOG_ASSERT(impl);
@@ -187,7 +187,7 @@ Builder<PipelineState> & Builder<PipelineState>::SetConstantBufferBindSlot(
     POMDOG_ASSERT(slotIndex >= 0);
 
 #if defined(DEBUG) && !defined(NDEBUG)
-    for (auto & pair : impl->description.ConstantBufferBindSlots) {
+    for (auto& pair : impl->description.ConstantBufferBindSlots) {
         POMDOG_ASSERT(slotIndex != pair.second);
     }
 #endif
@@ -196,7 +196,7 @@ Builder<PipelineState> & Builder<PipelineState>::SetConstantBufferBindSlot(
     return *this;
 }
 
-Builder<PipelineState> & Builder<PipelineState>::SetRenderTargetViewFormat(
+Builder<PipelineState>& Builder<PipelineState>::SetRenderTargetViewFormat(
     SurfaceFormat renderTargetViewFormat)
 {
     POMDOG_ASSERT(impl);
@@ -207,7 +207,7 @@ Builder<PipelineState> & Builder<PipelineState>::SetRenderTargetViewFormat(
     return *this;
 }
 
-Builder<PipelineState> & Builder<PipelineState>::SetRenderTargetViewFormats(
+Builder<PipelineState>& Builder<PipelineState>::SetRenderTargetViewFormats(
     const std::vector<SurfaceFormat>& renderTargetViewFormats)
 {
     POMDOG_ASSERT(impl);
@@ -216,8 +216,8 @@ Builder<PipelineState> & Builder<PipelineState>::SetRenderTargetViewFormats(
     return *this;
 }
 
-Builder<PipelineState> & Builder<PipelineState>::SetRenderTargetViewFormats(
-    std::vector<SurfaceFormat> && renderTargetViewFormats)
+Builder<PipelineState>& Builder<PipelineState>::SetRenderTargetViewFormats(
+    std::vector<SurfaceFormat>&& renderTargetViewFormats)
 {
     POMDOG_ASSERT(impl);
     impl->description.RenderTargetViewFormats = std::move(renderTargetViewFormats);
@@ -225,7 +225,7 @@ Builder<PipelineState> & Builder<PipelineState>::SetRenderTargetViewFormats(
     return *this;
 }
 
-Builder<PipelineState> & Builder<PipelineState>::SetDepthStencilViewFormat(
+Builder<PipelineState>& Builder<PipelineState>::SetDepthStencilViewFormat(
     DepthFormat depthStencilViewFormat)
 {
     POMDOG_ASSERT(impl);

@@ -2,8 +2,8 @@
 
 #include "Pomdog/Content/AssetBuilders/ShaderBuilder.hpp"
 #include "../../RenderSystem/ShaderBytecode.hpp"
-#include "Pomdog/Content/Utility/BinaryReader.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
+#include "Pomdog/Content/Utility/BinaryReader.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
 #include "Pomdog/Graphics/ShaderCompilers/GLSLCompiler.hpp"
@@ -34,7 +34,7 @@ namespace Pomdog::AssetBuilders {
 namespace {
 
 std::optional<std::string> IncludeGLSLFilesRecursive(
-    const std::string& path, std::set<std::string> & includes)
+    const std::string& path, std::set<std::string>& includes)
 {
     if (FileSystem::IsDirectory(path)) {
         Log::Warning("Pomdog", "error: " + path + "is directory, not text file.");
@@ -125,7 +125,7 @@ Builder<Shader>::Impl::OpenStream(const std::string& filePath) const
         return std::make_tuple(std::move(stream), 0, std::move(err));
     }
 
-    auto[byteLength, sizeErr] = FileSystem::GetFileSize(filePath);
+    auto [byteLength, sizeErr] = FileSystem::GetFileSize(filePath);
     if (sizeErr != nullptr) {
         auto err = Errors::Wrap(std::move(sizeErr), "failed to get file size, " + filePath);
         return std::make_tuple(std::move(stream), 0, std::move(err));
@@ -172,7 +172,7 @@ Builder<Shader>& Builder<Shader>::SetGLSLFromFile(const std::string& assetName)
     if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::GLSL) {
         auto filePath = impl->assets.get().GetAssetPath(assetName);
 
-        auto[stream, byteLength, err] = impl->OpenStream(filePath);
+        auto [stream, byteLength, err] = impl->OpenStream(filePath);
 
         if (err != nullptr) {
             POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to open file. " + err->ToString());
@@ -263,7 +263,7 @@ Builder<Shader>& Builder<Shader>::SetHLSLFromFile(
     if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::HLSL) {
         auto filePath = impl->assets.get().GetAssetPath(assetName);
 
-        auto[stream, byteLength, err] = impl->OpenStream(filePath);
+        auto [stream, byteLength, err] = impl->OpenStream(filePath);
 
         if (err != nullptr) {
             POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to open file. " + err->ToString());
@@ -351,7 +351,7 @@ Builder<Shader>& Builder<Shader>::SetMetalFromFile(
     if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::Metal) {
         auto filePath = impl->assets.get().GetAssetPath(assetName);
 
-        auto[stream, byteLength, err] = impl->OpenStream(filePath);
+        auto [stream, byteLength, err] = impl->OpenStream(filePath);
 
         if (err != nullptr) {
             POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to open file. " + err->ToString());
@@ -394,7 +394,7 @@ Builder<Shader>& Builder<Shader>::SetMetalFromPrecompiledFile(
     if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::Metal) {
         auto filePath = impl->assets.get().GetAssetPath(assetName);
 
-        auto[stream, byteLength, err] = impl->OpenStream(filePath);
+        auto [stream, byteLength, err] = impl->OpenStream(filePath);
 
         if (err != nullptr) {
             POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to open file. " + err->ToString());

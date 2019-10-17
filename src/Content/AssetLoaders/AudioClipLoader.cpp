@@ -2,11 +2,11 @@
 
 #include "Pomdog/Content/AssetLoaders/AudioClipLoader.hpp"
 #include "Pomdog/Audio/AudioClip.hpp"
+#include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Content/Audio/Vorbis.hpp"
 #include "Pomdog/Content/Audio/WAV.hpp"
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
 #include "Pomdog/Content/Utility/MakeFourCC.hpp"
-#include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/FileSystem.hpp"
 #include <fstream>
@@ -27,7 +27,7 @@ AssetLoader<AudioClip>::operator()([[maybe_unused]] AssetManager& assets, const 
         return std::make_tuple(nullptr, std::move(err));
     }
 
-    auto[byteLength, sizeErr] = FileSystem::GetFileSize(filePath);
+    auto [byteLength, sizeErr] = FileSystem::GetFileSize(filePath);
     if (sizeErr != nullptr) {
         auto err = Errors::Wrap(std::move(sizeErr), "failed to get file size, " + filePath);
         return std::make_tuple(nullptr, std::move(err));
@@ -55,7 +55,7 @@ AssetLoader<AudioClip>::operator()([[maybe_unused]] AssetManager& assets, const 
         const auto fccType = MakeFourCC(signature[8], signature[9], signature[10], signature[11]);
         if (fccType == MakeFourCC('W', 'A', 'V', 'E')) {
             // NOTE: This file format is RIFF waveform audio.
-            auto[audioClip, loadErr] = WAV::Load(std::move(stream), byteLength);
+            auto [audioClip, loadErr] = WAV::Load(std::move(stream), byteLength);
 
             if (loadErr != nullptr) {
                 auto err = Errors::Wrap(std::move(loadErr), "Cannot load the wave file " + filePath);
@@ -68,7 +68,7 @@ AssetLoader<AudioClip>::operator()([[maybe_unused]] AssetManager& assets, const 
         // NOTE: The file format is Ogg Vorbis.
         stream.close();
 
-        auto[audioClip, loadErr] = Vorbis::Load(filePath);
+        auto [audioClip, loadErr] = Vorbis::Load(filePath);
         if (loadErr != nullptr) {
             auto err = Errors::Wrap(std::move(loadErr), "Cannot load the ogg/vorbis file " + filePath);
             return std::make_tuple(nullptr, std::move(err));

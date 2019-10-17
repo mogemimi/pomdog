@@ -16,7 +16,7 @@ bool Compare(const TDeferredTask& a, const TDeferredTask& b) noexcept
 } // unnamed namespace
 
 void QueuedScheduler::Schedule(
-    std::function<void()> && task,
+    std::function<void()>&& task,
     const Duration& delayTime)
 {
     POMDOG_ASSERT(task);
@@ -43,7 +43,7 @@ void QueuedScheduler::Update()
     std::lock_guard<std::recursive_mutex> lock(tasksProtection);
 
     auto completedTask = std::begin(tasks);
-    for (auto & task : tasks) {
+    for (auto& task : tasks) {
         if (task.StartTime <= currentTime) {
             POMDOG_ASSERT(task.Function);
             task.Function();
@@ -84,7 +84,7 @@ void QueuedScheduler::MergeTasks()
 
     std::lock_guard<std::recursive_mutex> lock(tasksProtection);
 
-    for (auto & deferred : temporaryTasks) {
+    for (auto& deferred : temporaryTasks) {
         auto iter = std::lower_bound(
             std::begin(tasks), std::end(tasks), deferred, Compare<DeferredTask>);
 

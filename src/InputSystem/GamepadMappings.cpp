@@ -100,7 +100,7 @@ void ParseMapping(const char* source, GamepadMappings& mappings, std::string& na
         if (index[0] == 'b') {
             auto s = StringHelper::TrimLeft(index, 'b');
             int i = 0;
-            if (auto[p, err] = std::from_chars(s.data(), s.data() + s.size(), i); err != std::errc{}) {
+            if (auto [p, err] = std::from_chars(s.data(), s.data() + s.size(), i); err != std::errc{}) {
                 i = -1;
             }
             if ((i >= 0) && (i < static_cast<int>(mappings.buttons.size()))) {
@@ -111,7 +111,7 @@ void ParseMapping(const char* source, GamepadMappings& mappings, std::string& na
             auto s = StringHelper::TrimRight(index, '~');
             s = StringHelper::TrimLeft(s, 'a');
             int i = 0;
-            if (auto[p, err] = std::from_chars(s.data(), s.data() + s.size(), i); err != std::errc{}) {
+            if (auto [p, err] = std::from_chars(s.data(), s.data() + s.size(), i); err != std::errc{}) {
                 i = -1;
             }
             if ((i >= 0) && (i < static_cast<int>(mappings.axes.size()))) {
@@ -124,7 +124,7 @@ void ParseMapping(const char* source, GamepadMappings& mappings, std::string& na
             s = StringHelper::TrimLeft(s, '+');
             s = StringHelper::TrimLeft(s, 'a');
             int i = 0;
-            if (auto[p, err] = std::from_chars(s.data(), s.data() + s.size(), i); err != std::errc{}) {
+            if (auto [p, err] = std::from_chars(s.data(), s.data() + s.size(), i); err != std::errc{}) {
                 i = -1;
             }
             if ((i >= 0) && (i < static_cast<int>(mappings.axes.size()))) {
@@ -136,7 +136,7 @@ void ParseMapping(const char* source, GamepadMappings& mappings, std::string& na
             s = StringHelper::TrimLeft(s, '-');
             s = StringHelper::TrimLeft(s, 'a');
             int i = 0;
-            if (auto[p, err] = std::from_chars(s.data(), s.data() + s.size(), i); err != std::errc{}) {
+            if (auto [p, err] = std::from_chars(s.data(), s.data() + s.size(), i); err != std::errc{}) {
                 i = -1;
             }
             if ((i >= 0) && (i < static_cast<int>(mappings.axes.size()))) {
@@ -344,12 +344,12 @@ std::tuple<GamepadMappings, std::string> GetMappings(const std::string& uuidStri
 #endif
 
     mappings.axes = {{
-        AxisMapper{ ThumbStickKind::LeftStickX, ButtonKind::None, ButtonKind::None },
-        AxisMapper{ ThumbStickKind::LeftStickY, ButtonKind::None, ButtonKind::None },
-        AxisMapper{ ThumbStickKind::None, ButtonKind::LeftTrigger, ButtonKind::None },
-        AxisMapper{ ThumbStickKind::RightStickX, ButtonKind::None, ButtonKind::None },
-        AxisMapper{ ThumbStickKind::RightStickY, ButtonKind::None, ButtonKind::None },
-        AxisMapper{ ThumbStickKind::None, ButtonKind::RightTrigger, ButtonKind::None },
+        AxisMapper{ThumbStickKind::LeftStickX, ButtonKind::None, ButtonKind::None},
+        AxisMapper{ThumbStickKind::LeftStickY, ButtonKind::None, ButtonKind::None},
+        AxisMapper{ThumbStickKind::None, ButtonKind::LeftTrigger, ButtonKind::None},
+        AxisMapper{ThumbStickKind::RightStickX, ButtonKind::None, ButtonKind::None},
+        AxisMapper{ThumbStickKind::RightStickY, ButtonKind::None, ButtonKind::None},
+        AxisMapper{ThumbStickKind::None, ButtonKind::RightTrigger, ButtonKind::None},
     }};
 
     std::string deviceName;

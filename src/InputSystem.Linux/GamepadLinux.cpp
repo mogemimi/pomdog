@@ -212,7 +212,7 @@ bool GamepadDevice::PollEvents()
             }
             const auto buttonIndex = keyMap[physicalIndex];
             if (auto button = GetButton(state, mappings.buttons, buttonIndex); button != nullptr) {
-                (*button) = (event.value != 0) ? ButtonState::Pressed: ButtonState::Released;
+                (*button) = (event.value != 0) ? ButtonState::Pressed : ButtonState::Released;
             }
             break;
         }

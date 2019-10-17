@@ -12,7 +12,7 @@ class MouseX11 final : public Mouse {
 public:
     MouseState GetState() const override;
 
-    void HandleEvent(XEvent & event);
+    void HandleEvent(XEvent& event);
 
 private:
     MouseState mouseState;

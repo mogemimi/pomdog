@@ -4,9 +4,9 @@
 
 #include "Pomdog/Application/GameClock.hpp"
 #include "Pomdog/Application/GameHost.hpp"
-#include "Pomdog/Input/Keyboard.hpp"
 #include "Pomdog/Experimental/Reactive/Observable.hpp"
 #include "Pomdog/Experimental/Reactive/Observer.hpp"
+#include "Pomdog/Input/Keyboard.hpp"
 #include "Pomdog/Signals/ScopedConnection.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <functional>

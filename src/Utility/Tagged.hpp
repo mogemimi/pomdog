@@ -22,17 +22,17 @@ public:
 public:
     Tagged() = default;
     Tagged(const Tagged&) = default;
-    Tagged(Tagged &&) = default;
+    Tagged(Tagged&&) = default;
 
-    Tagged & operator=(const Tagged&) = default;
-    Tagged & operator=(Tagged &&) = default;
+    Tagged& operator=(const Tagged&) = default;
+    Tagged& operator=(Tagged&&) = default;
 
     Tagged(const value_type& v)
         : value(v)
     {
     }
 
-    Tagged(value_type && v)
+    Tagged(value_type&& v)
         : value(std::move(v))
     {
     }
@@ -58,8 +58,8 @@ public:
     }
 };
 
-template <typename T, class Tag, class...Arguments>
-Tagged<T, Tag> MakeTagged(Arguments &&... arguments)
+template <typename T, class Tag, class... Arguments>
+Tagged<T, Tag> MakeTagged(Arguments&&... arguments)
 {
     static_assert(std::is_pod<T>::value, "You can only use plain-old-data types");
     return Tagged<T, Tag>(std::forward<T>(arguments)...);

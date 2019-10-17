@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Content/Image/PNM.hpp"
-#include "Pomdog/Utility/StringHelper.hpp"
 #include "Pomdog/Math/Color.hpp"
+#include "Pomdog/Utility/StringHelper.hpp"
 #include <charconv>
 #include <cstring>
 #include <string_view>
@@ -123,7 +123,7 @@ Decode(const char* data, std::size_t size)
     if (auto word = GetWord(iter, std::end(view)); iter == std::end(view)) {
         return std::make_tuple(std::move(image), Errors::New("Invalid PNM format"));
     }
-    else if (auto[p, err] = std::from_chars(word.data(), word.data() + word.size(), width); err != std::errc{}) {
+    else if (auto [p, err] = std::from_chars(word.data(), word.data() + word.size(), width); err != std::errc{}) {
         return std::make_tuple(std::move(image), Errors::New("Invalid PNM format"));
     }
 
@@ -135,7 +135,7 @@ Decode(const char* data, std::size_t size)
     if (auto word = GetWord(iter, std::end(view)); iter == std::end(view)) {
         return std::make_tuple(std::move(image), Errors::New("Invalid PNM format"));
     }
-    else if (auto[p, err] = std::from_chars(word.data(), word.data() + word.size(), height); err != std::errc{}) {
+    else if (auto [p, err] = std::from_chars(word.data(), word.data() + word.size(), height); err != std::errc{}) {
         return std::make_tuple(std::move(image), Errors::New("Invalid PNM format"));
     }
 
@@ -155,7 +155,7 @@ Decode(const char* data, std::size_t size)
         if (auto word = GetWord(iter, std::end(view)); iter == std::end(view)) {
             return std::make_tuple(std::move(image), Errors::New("Invalid PNM format"));
         }
-        else if (auto[p, err] = std::from_chars(word.data(), word.data() + word.size(), maxLuma); err != std::errc{}) {
+        else if (auto [p, err] = std::from_chars(word.data(), word.data() + word.size(), maxLuma); err != std::errc{}) {
             return std::make_tuple(std::move(image), Errors::New("Invalid PNM format"));
         }
 
@@ -199,7 +199,7 @@ Decode(const char* data, std::size_t size)
     image.Height = height;
 
     const bool hasRGBChannels = (pnmSubtype == PNMSubtype::Pixmap);
-    const std::size_t channelCount = hasRGBChannels ? 4: 1;
+    const std::size_t channelCount = hasRGBChannels ? 4 : 1;
     const auto maxComponentCount = static_cast<std::size_t>(width) * static_cast<std::size_t>(height) * channelCount;
     image.RawData.reserve(maxComponentCount);
 
@@ -232,7 +232,7 @@ Decode(const char* data, std::size_t size)
                 word = GetWord(iter, std::end(view));
             }
 
-            if (auto[p, err] = std::from_chars(word.data(), word.data() + word.size(), perChannel); err != std::errc{}) {
+            if (auto [p, err] = std::from_chars(word.data(), word.data() + word.size(), perChannel); err != std::errc{}) {
                 return std::make_tuple(std::move(image), Errors::New("Invalid PNM format"));
             }
 

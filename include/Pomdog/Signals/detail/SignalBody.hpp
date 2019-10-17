@@ -208,7 +208,7 @@ void SignalBody<void(Arguments...)>::EraseRemovedListeners()
         std::remove_if(
             std::begin(observers),
             std::end(observers),
-            [](const auto& pair){ return pair.second == nullptr; }),
+            [](const auto& pair) { return pair.second == nullptr; }),
         std::end(observers));
 }
 

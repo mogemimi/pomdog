@@ -21,14 +21,14 @@ Connection EventQueue::Connect(const std::function<void(const Event&)>& slot)
     return Connection{signalBody->Connect(slot)};
 }
 
-Connection EventQueue::Connect(std::function<void(const Event&)> && slot)
+Connection EventQueue::Connect(std::function<void(const Event&)>&& slot)
 {
     POMDOG_ASSERT(slot);
     POMDOG_ASSERT(this->signalBody);
     return Connection{signalBody->Connect(slot)};
 }
 
-void EventQueue::Enqueue(Event && event)
+void EventQueue::Enqueue(Event&& event)
 {
     std::lock_guard<Detail::SpinLock> lock{notificationProtection};
     events.emplace_back(std::move(event));

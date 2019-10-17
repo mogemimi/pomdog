@@ -15,9 +15,9 @@
 namespace Pomdog::Detail {
 namespace {
 
-using MagicaVoxel::VoxChunkHeader;
 using Detail::BinaryReader;
 using Detail::MakeFourCC;
+using MagicaVoxel::VoxChunkHeader;
 
 std::ifstream::pos_type ChunkSize(std::ifstream& stream, const VoxChunkHeader& chunk)
 {
@@ -30,7 +30,6 @@ std::ifstream::pos_type ChunkSize(std::ifstream& stream, const VoxChunkHeader& c
 
 } // unnamed namespace
 
-
 std::tuple<std::shared_ptr<MagicaVoxel::VoxModel>, std::shared_ptr<Error>>
 AssetLoader<MagicaVoxel::VoxModel>::operator()([[maybe_unused]] AssetManager& assets, const std::string& filePath)
 {
@@ -41,7 +40,6 @@ AssetLoader<MagicaVoxel::VoxModel>::operator()([[maybe_unused]] AssetManager& as
     constexpr auto IdXYZI = MakeFourCC('X', 'Y', 'Z', 'I');
     constexpr auto IdRGBA = MakeFourCC('R', 'G', 'B', 'A');
 
-
     std::ifstream stream{filePath, std::ifstream::binary};
 
     if (!stream) {
@@ -49,7 +47,7 @@ AssetLoader<MagicaVoxel::VoxModel>::operator()([[maybe_unused]] AssetManager& as
         return std::make_tuple(nullptr, std::move(err));
     }
 
-    auto[byteLength, sizeErr] = FileSystem::GetFileSize(filePath);
+    auto [byteLength, sizeErr] = FileSystem::GetFileSize(filePath);
     if (sizeErr != nullptr) {
         auto err = Errors::Wrap(std::move(sizeErr), "failed to get file size, " + filePath);
         return std::make_tuple(nullptr, std::move(err));

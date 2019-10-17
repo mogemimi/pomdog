@@ -14,7 +14,7 @@ MouseWin32::MouseWin32(HWND windowHandleIn)
     POINT cursorPos;
     GetCursorPos(&cursorPos);
     ScreenToClient(windowHandle, &cursorPos);
-    state.Position = Point2D{ cursorPos.x, cursorPos.y };
+    state.Position = Point2D{cursorPos.x, cursorPos.y};
 }
 
 void MouseWin32::HandleMessage(const RAWMOUSE& mouse)
@@ -26,7 +26,7 @@ void MouseWin32::HandleMessage(const RAWMOUSE& mouse)
         POINT cursorPos;
         GetCursorPos(&cursorPos);
         ScreenToClient(windowHandle, &cursorPos);
-        state.Position = Point2D{ cursorPos.x, cursorPos.y };
+        state.Position = Point2D{cursorPos.x, cursorPos.y};
         Mouse::Moved(state.Position);
     }
     else if (mouse.usFlags & MOUSE_MOVE_ABSOLUTE) {
@@ -36,7 +36,7 @@ void MouseWin32::HandleMessage(const RAWMOUSE& mouse)
         POINT cursorPos;
         GetCursorPos(&cursorPos);
         ScreenToClient(windowHandle, &cursorPos);
-        state.Position = Point2D{ cursorPos.x, cursorPos.y };
+        state.Position = Point2D{cursorPos.x, cursorPos.y};
         Mouse::Moved(state.Position);
     }
 

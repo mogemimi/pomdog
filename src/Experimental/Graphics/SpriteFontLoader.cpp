@@ -1,9 +1,9 @@
 // Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Experimental/Graphics/SpriteFontLoader.hpp"
+#include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Experimental/Graphics/FontGlyph.hpp"
 #include "Pomdog/Experimental/Graphics/SpriteFont.hpp"
-#include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/FileSystem.hpp"
 #include "Pomdog/Utility/PathHelper.hpp"
@@ -310,7 +310,7 @@ AssetLoader<SpriteFont>::operator()(AssetManager& assets, const std::string& fil
         return std::make_tuple(nullptr, std::move(err));
     }
 
-    auto[byteLength, sizeErr] = FileSystem::GetFileSize(filePath);
+    auto [byteLength, sizeErr] = FileSystem::GetFileSize(filePath);
     if (sizeErr != nullptr) {
         auto err = Errors::Wrap(std::move(sizeErr), "failed to get file size, " + filePath);
         return std::make_tuple(nullptr, std::move(err));
@@ -383,7 +383,7 @@ AssetLoader<SpriteFont>::operator()(AssetManager& assets, const std::string& fil
     {
         auto directoryName = std::get<0>(PathHelper::Split(filePath));
         for (auto& page : pages) {
-            auto[texture, textureErr] = assets.Load<Texture2D>(directoryName + page.Path);
+            auto [texture, textureErr] = assets.Load<Texture2D>(directoryName + page.Path);
             if (textureErr != nullptr) {
                 auto err = Errors::Wrap(std::move(textureErr), "failed to load sprite font texture " + page.Path);
                 return std::make_tuple(nullptr, std::move(err));

@@ -46,9 +46,9 @@ public:
     }
 
     ObservableBuilder(
-        std::shared_ptr<GameHost> && gameHostIn,
-        std::vector<std::shared_ptr<ObservableBase>> && frontIn,
-        std::shared_ptr<Observable<T>> && backIn)
+        std::shared_ptr<GameHost>&& gameHostIn,
+        std::vector<std::shared_ptr<ObservableBase>>&& frontIn,
+        std::shared_ptr<Observable<T>>&& backIn)
         : gameHost(std::move(gameHostIn))
         , back(std::move(backIn))
     {
@@ -98,15 +98,15 @@ public:
         return builder;
     }
 
-    ObservableBuilder Do(std::function<void(const T&)> && onNext)
+    ObservableBuilder Do(std::function<void(const T&)>&& onNext)
     {
         POMDOG_ASSERT(onNext);
         return Do(std::move(onNext), nullptr, nullptr);
     }
 
     ObservableBuilder Do(
-        std::function<void(const T&)> && onNext,
-        std::function<void()> && onError)
+        std::function<void(const T&)>&& onNext,
+        std::function<void()>&& onError)
     {
         POMDOG_ASSERT(onNext);
         POMDOG_ASSERT(onError);
@@ -114,9 +114,9 @@ public:
     }
 
     ObservableBuilder Do(
-        std::function<void(const T&)> && onNext,
-        std::function<void()> && onError,
-        std::function<void()> && onCompleted)
+        std::function<void(const T&)>&& onNext,
+        std::function<void()>&& onError,
+        std::function<void()>&& onCompleted)
     {
         auto doOperator = std::make_shared<Detail::DoOperator<T>>(
             std::move(onNext), std::move(onError), std::move(onCompleted));
@@ -127,7 +127,7 @@ public:
         return builder;
     }
 
-    ObservableBuilder Filter(std::function<bool(const T& value)> && filter)
+    ObservableBuilder Filter(std::function<bool(const T& value)>&& filter)
     {
         auto filterOperator = std::make_shared<Detail::FilterOperator<T>>(std::move(filter));
         POMDOG_ASSERT(back);
@@ -158,7 +158,7 @@ public:
     }
 
     template <typename TResult>
-    auto Map(std::function<TResult(T && value)> && map)
+    auto Map(std::function<TResult(T&& value)>&& map)
         -> ObservableBuilder<TResult>
     {
         auto mapOperator = std::make_shared<Detail::MapOperator<T, TResult>>(std::move(map));
@@ -169,7 +169,7 @@ public:
         return builder;
     }
 
-    ObservableBuilder Merge(ObservableBuilder && other)
+    ObservableBuilder Merge(ObservableBuilder&& other)
     {
         auto merge = std::make_shared<Detail::MergeOperator<T>>();
         POMDOG_ASSERT(back);
@@ -183,7 +183,7 @@ public:
         return builder;
     }
 
-    ObservableBuilder Scan(std::function<T(const T& accumulation, const T& value)> && accumulator)
+    ObservableBuilder Scan(std::function<T(const T& accumulation, const T& value)>&& accumulator)
     {
         auto scanOperator = std::make_shared<Detail::ScanOperator<T>>(std::move(accumulator));
         POMDOG_ASSERT(back);
@@ -235,8 +235,8 @@ public:
 
     template <class TOther, class TResult>
     ObservableBuilder Zip(
-        ObservableBuilder<TOther> && other,
-        std::function<TResult(const T& a, const TOther& b)> && zipper)
+        ObservableBuilder<TOther>&& other,
+        std::function<TResult(const T& a, const TOther& b)>&& zipper)
     {
         auto zipOperator = std::make_shared<Detail::ZipOperator<T, TOther, TResult>>(std::move(zipper));
         POMDOG_ASSERT(back);
@@ -259,15 +259,15 @@ public:
         return std::move(front);
     }
 
-    ObservableConnection Subscribe(std::function<void(const T&)> && onNext)
+    ObservableConnection Subscribe(std::function<void(const T&)>&& onNext)
     {
         POMDOG_ASSERT(onNext);
         return Subscribe(std::move(onNext), nullptr, nullptr);
     }
 
     ObservableConnection Subscribe(
-        std::function<void(const T&)> && onNext,
-        std::function<void()> && onError)
+        std::function<void(const T&)>&& onNext,
+        std::function<void()>&& onError)
     {
         POMDOG_ASSERT(onNext);
         POMDOG_ASSERT(onError);
@@ -275,9 +275,9 @@ public:
     }
 
     ObservableConnection Subscribe(
-        std::function<void(const T&)> && onNext,
-        std::function<void()> && onError,
-        std::function<void()> && onCompleted)
+        std::function<void(const T&)>&& onNext,
+        std::function<void()>&& onError,
+        std::function<void()>&& onCompleted)
     {
         POMDOG_ASSERT(onNext);
         POMDOG_ASSERT(back);
@@ -297,7 +297,7 @@ private:
 template <class TObservable>
 auto FromObservable(
     const std::shared_ptr<GameHost>& gameHost,
-    std::shared_ptr<TObservable> && source)
+    std::shared_ptr<TObservable>&& source)
     -> ObservableBuilder<typename TObservable::ObservableType>
 {
     using T = typename TObservable::ObservableType;

@@ -15,7 +15,7 @@ namespace Pomdog::Detail::Win32 {
 namespace {
 
 template <typename T>
-LPTSTR MakeIntegerResource(T && resource) noexcept
+LPTSTR MakeIntegerResource(T&& resource) noexcept
 {
 #pragma warning(push)
 #pragma warning(disable : 4302)
@@ -26,11 +26,16 @@ LPTSTR MakeIntegerResource(T && resource) noexcept
 LPCTSTR ToStandardCursorID(MouseCursor cursor) noexcept
 {
     switch (cursor) {
-    case MouseCursor::Arrow: return IDC_ARROW;
-    case MouseCursor::IBeam: return IDC_IBEAM;
-    case MouseCursor::PointingHand: return IDC_HAND;
-    case MouseCursor::ResizeHorizontal: return IDC_SIZEWE;
-    case MouseCursor::ResizeVertical: return IDC_SIZENS;
+    case MouseCursor::Arrow:
+        return IDC_ARROW;
+    case MouseCursor::IBeam:
+        return IDC_IBEAM;
+    case MouseCursor::PointingHand:
+        return IDC_HAND;
+    case MouseCursor::ResizeHorizontal:
+        return IDC_SIZEWE;
+    case MouseCursor::ResizeVertical:
+        return IDC_SIZENS;
     }
     return IDC_ARROW;
 }
@@ -38,24 +43,24 @@ LPCTSTR ToStandardCursorID(MouseCursor cursor) noexcept
 void RegisterInputDevices(HWND windowHandle)
 {
 #ifndef HID_USAGE_PAGE_GENERIC
-#define HID_USAGE_PAGE_GENERIC ((USHORT) 0x01)
+#define HID_USAGE_PAGE_GENERIC ((USHORT)0x01)
 #endif
 #ifndef HID_USAGE_GENERIC_MOUSE
-#define HID_USAGE_GENERIC_MOUSE ((USHORT) 0x02)
+#define HID_USAGE_GENERIC_MOUSE ((USHORT)0x02)
 #endif
 #ifndef HID_USAGE_GENERIC_KEYBOARD
-#define HID_USAGE_GENERIC_KEYBOARD ((USHORT) 0x06)
+#define HID_USAGE_GENERIC_KEYBOARD ((USHORT)0x06)
 #endif
 
     std::array<RAWINPUTDEVICE, 2> inputDevices;
 
-    auto & mouse = inputDevices[0];
+    auto& mouse = inputDevices[0];
     mouse.usUsagePage = HID_USAGE_PAGE_GENERIC;
     mouse.usUsage = HID_USAGE_GENERIC_MOUSE;
     mouse.dwFlags = 0;
     mouse.hwndTarget = windowHandle;
 
-    auto & keyboard = inputDevices[1];
+    auto& keyboard = inputDevices[1];
     keyboard.usUsagePage = HID_USAGE_PAGE_GENERIC;
     keyboard.usUsage = HID_USAGE_GENERIC_KEYBOARD;
     keyboard.dwFlags = 0;
@@ -151,7 +156,7 @@ GameWindowWin32::Impl::Impl(
         DWORD const fixedWindowStyle(WS_OVERLAPPED | WS_BORDER | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX);
         windowStyle |= fixedWindowStyle;
 
-        RECT windowRect = { 0, 0, static_cast<LONG>(clientBounds.Width), static_cast<LONG>(clientBounds.Height) };
+        RECT windowRect = {0, 0, static_cast<LONG>(clientBounds.Width), static_cast<LONG>(clientBounds.Height)};
         AdjustWindowRect(&windowRect, windowStyle, FALSE);
 
         adjustedWidth = windowRect.right - windowRect.left;
@@ -222,7 +227,7 @@ GameWindowWin32::Impl::Impl(
     }
 
     {
-        POINT point = { 0, 0 };
+        POINT point = {0, 0};
         if (0 != ::ClientToScreen(windowHandle, &point)) {
             clientBounds.X = static_cast<std::int32_t>(point.x);
             clientBounds.Y = static_cast<std::int32_t>(point.y);
@@ -303,7 +308,7 @@ void GameWindowWin32::Impl::SetClientBounds(const Rectangle& clientBoundsIn)
 
     DWORD const dwStyle = static_cast<DWORD>(::GetWindowLong(windowHandle, GWL_STYLE));
 
-    RECT windowRect = { 0, 0, clientBoundsIn.Width, clientBoundsIn.Height };
+    RECT windowRect = {0, 0, clientBoundsIn.Width, clientBoundsIn.Height};
 
     AdjustWindowRect(&windowRect, dwStyle, FALSE);
 

@@ -4,9 +4,9 @@
 
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Content/AssetBuilders/Builder.hpp"
+#include "Pomdog/Content/AssetLoaders/AssetLoader.hpp"
 #include "Pomdog/Content/AssetLoaders/AudioClipLoader.hpp"
 #include "Pomdog/Content/AssetLoaders/Texture2DLoader.hpp"
-#include "Pomdog/Content/AssetLoaders/AssetLoader.hpp"
 #include "Pomdog/Utility/Any.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Errors.hpp"
@@ -56,7 +56,7 @@ public:
         }
 
         Detail::AssetLoader<T> loader;
-        auto[asset, err] = loader(*this, filePath);
+        auto [asset, err] = loader(*this, filePath);
         if (err != nullptr) {
             return std::make_tuple(nullptr, std::move(err));
         }

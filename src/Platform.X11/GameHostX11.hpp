@@ -31,7 +31,7 @@ public:
 
     ~GameHostX11();
 
-    void Run(Game & game);
+    void Run(Game& game);
 
     void Exit() override;
 

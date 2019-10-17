@@ -7,7 +7,7 @@
 
 namespace Pomdog {
 
-Timer::Timer(GameClock & clock)
+Timer::Timer(GameClock& clock)
     : totalTime(Duration::zero())
     , scale(1)
     , enabled(true)

@@ -19,7 +19,6 @@ public:
 
 } // namespace Pomdog
 
-
 namespace Pomdog::Errors {
 
 class POMDOG_EXPORT IOError final : public Error {

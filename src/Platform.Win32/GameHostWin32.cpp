@@ -523,7 +523,7 @@ GameHostWin32::GameHostWin32(
 
 GameHostWin32::~GameHostWin32() = default;
 
-void GameHostWin32::Run(Game & game)
+void GameHostWin32::Run(Game& game)
 {
     POMDOG_ASSERT(impl);
     impl->Run(game);

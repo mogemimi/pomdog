@@ -17,7 +17,7 @@ class Logger final {
 public:
     Connection Connect(const std::function<void(const LogEntry&)>& slot);
 
-    Connection Connect(std::function<void(const LogEntry&)> && slot);
+    Connection Connect(std::function<void(const LogEntry&)>&& slot);
 
     Connection Connect(
         const std::string& channelName,
@@ -25,7 +25,7 @@ public:
 
     Connection Connect(
         const std::string& channelName,
-        std::function<void(const LogEntry&)> && slot);
+        std::function<void(const LogEntry&)>&& slot);
 
     LogLevel GetLevel() const;
 
@@ -54,14 +54,14 @@ Connection Logger::Connect(const std::function<void(const LogEntry&)>& slot)
     return defaultChannel.Connect(slot);
 }
 
-Connection Logger::Connect(std::function<void(const LogEntry&)> && slot)
+Connection Logger::Connect(std::function<void(const LogEntry&)>&& slot)
 {
     return defaultChannel.Connect(std::move(slot));
 }
 
 template <typename T>
-auto FindChannnel(const std::string& channelName, T & channels)
-    ->decltype(channels.begin())
+auto FindChannnel(const std::string& channelName, T& channels)
+    -> decltype(channels.begin())
 {
     return std::find_if(std::begin(channels), std::end(channels),
         [&channelName](const decltype(channels.front())& tuple) {
@@ -74,8 +74,7 @@ Connection Logger::Connect(
     const std::function<void(const LogEntry&)>& slot)
 {
     auto iter = FindChannnel(channelName, channels);
-    if (std::end(channels) == iter)
-    {
+    if (std::end(channels) == iter) {
         std::lock_guard<std::recursive_mutex> lock(channelsProtection);
 
         ChannelTuple tuple;
@@ -87,8 +86,8 @@ Connection Logger::Connect(
     POMDOG_ASSERT(iter != std::end(channels));
     POMDOG_ASSERT(channelName == iter->channel.GetName());
 
-    auto & channel = iter->channel;
-    auto & connection = iter->connection;
+    auto& channel = iter->channel;
+    auto& connection = iter->connection;
 
     connection = channel.Connect([this](const LogEntry& entry) {
         defaultChannel.Log(entry);
@@ -98,11 +97,10 @@ Connection Logger::Connect(
 
 Connection Logger::Connect(
     const std::string& channelName,
-    std::function<void(const LogEntry&)> && slot)
+    std::function<void(const LogEntry&)>&& slot)
 {
     auto iter = FindChannnel(channelName, channels);
-    if (std::end(channels) == iter)
-    {
+    if (std::end(channels) == iter) {
         std::lock_guard<std::recursive_mutex> lock(channelsProtection);
 
         ChannelTuple tuple;
@@ -114,8 +112,8 @@ Connection Logger::Connect(
     POMDOG_ASSERT(iter != std::end(channels));
     POMDOG_ASSERT(channelName == iter->channel.GetName());
 
-    auto & channel = iter->channel;
-    auto & connection = iter->connection;
+    auto& channel = iter->channel;
+    auto& connection = iter->connection;
 
     connection = channel.Connect([this](const LogEntry& entry) {
         defaultChannel.Log(entry);
@@ -166,7 +164,7 @@ void Logger::Log(const LogEntry& entry)
     }
 }
 
-Logger & GetLoggerInstance()
+Logger& GetLoggerInstance()
 {
     static Logger logger;
     return logger;
@@ -178,99 +176,99 @@ Logger & GetLoggerInstance()
 
 Connection Log::Connect(const std::function<void(const LogEntry&)>& slot)
 {
-    auto & logger = GetLoggerInstance();
+    auto& logger = GetLoggerInstance();
     return logger.Connect(slot);
 }
 
-Connection Log::Connect(std::function<void(const LogEntry&)> && slot)
+Connection Log::Connect(std::function<void(const LogEntry&)>&& slot)
 {
-    auto & logger = GetLoggerInstance();
+    auto& logger = GetLoggerInstance();
     return logger.Connect(std::move(slot));
 }
 
 Connection Log::Connect(const std::string& channelName,
     const std::function<void(const LogEntry&)>& slot)
 {
-    auto & logger = GetLoggerInstance();
+    auto& logger = GetLoggerInstance();
     return logger.Connect(channelName, slot);
 }
 
 Connection Log::Connect(const std::string& channelName,
-    std::function<void(const LogEntry&)> && slot)
+    std::function<void(const LogEntry&)>&& slot)
 {
-    auto & logger = GetLoggerInstance();
+    auto& logger = GetLoggerInstance();
     return logger.Connect(channelName, std::move(slot));
 }
 
 LogLevel Log::GetLevel()
 {
-    auto & logger = GetLoggerInstance();
+    auto& logger = GetLoggerInstance();
     return logger.GetLevel();
 }
 
 void Log::SetLevel(LogLevel verbosity)
 {
-    auto & logger = GetLoggerInstance();
+    auto& logger = GetLoggerInstance();
     return logger.SetLevel(verbosity);
 }
 
 LogLevel Log::GetLevel(const std::string& channelName)
 {
-    auto & logger = GetLoggerInstance();
+    auto& logger = GetLoggerInstance();
     return logger.GetLevel(channelName);
 }
 
 void Log::SetLevel(const std::string& channelName, LogLevel verbosity)
 {
-    auto & logger = GetLoggerInstance();
+    auto& logger = GetLoggerInstance();
     return logger.SetLevel(channelName, verbosity);
 }
 
 void Log::Critical(const std::string& channelName, const std::string& message)
 {
-    auto & logger = GetLoggerInstance();
+    auto& logger = GetLoggerInstance();
     logger.Log(LogEntry{message, channelName, LogLevel::Critical});
 }
 
 void Log::Warning(const std::string& channelName, const std::string& message)
 {
-    auto & logger = GetLoggerInstance();
+    auto& logger = GetLoggerInstance();
     logger.Log(LogEntry{message, channelName, LogLevel::Warning});
 }
 
 void Log::Info(const std::string& message)
 {
-    auto & logger = GetLoggerInstance();
+    auto& logger = GetLoggerInstance();
     logger.Log(message, LogLevel::Info);
 }
 
 void Log::Info(const std::string& channelName, const std::string& message)
 {
-    auto & logger = GetLoggerInstance();
+    auto& logger = GetLoggerInstance();
     logger.Log(LogEntry{message, channelName, LogLevel::Info});
 }
 
 void Log::Verbose(const std::string& message)
 {
-    auto & logger = GetLoggerInstance();
+    auto& logger = GetLoggerInstance();
     logger.Log(message, LogLevel::Verbose);
 }
 
 void Log::Verbose(const std::string& channelName, const std::string& message)
 {
-    auto & logger = GetLoggerInstance();
+    auto& logger = GetLoggerInstance();
     logger.Log(LogEntry{message, channelName, LogLevel::Verbose});
 }
 
 void Log::Internal(const std::string& message)
 {
-    auto & logger = GetLoggerInstance();
+    auto& logger = GetLoggerInstance();
     logger.Log(message, LogLevel::Internal);
 }
 
 void Log::Internal(const std::string& channelName, const std::string& message)
 {
-    auto & logger = GetLoggerInstance();
+    auto& logger = GetLoggerInstance();
     logger.Log(LogEntry{message, channelName, LogLevel::Internal});
 }
 

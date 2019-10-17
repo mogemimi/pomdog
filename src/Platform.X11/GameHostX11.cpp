@@ -300,7 +300,7 @@ void GameHostX11::Impl::MessagePump()
     }
 }
 
-void GameHostX11::Impl::ProcessEvent(::XEvent & event)
+void GameHostX11::Impl::ProcessEvent(::XEvent& event)
 {
     if (event.xany.window != window->NativeWindow()) {
         return;
@@ -346,7 +346,7 @@ void GameHostX11::Impl::ProcessEvent(::XEvent & event)
     window->ProcessEvent(event);
 }
 
-void GameHostX11::Impl::Run(Game & game)
+void GameHostX11::Impl::Run(Game& game)
 {
     game.Initialize();
 
@@ -377,7 +377,7 @@ void GameHostX11::Impl::Exit()
     exitRequest = true;
 }
 
-void GameHostX11::Impl::RenderFrame(Game & game)
+void GameHostX11::Impl::RenderFrame(Game& game)
 {
     if (!window || window->IsMinimized()) {
         // skip rendering
@@ -396,7 +396,7 @@ GameHostX11::GameHostX11(const PresentationParameters& presentationParameters)
 
 GameHostX11::~GameHostX11() = default;
 
-void GameHostX11::Run(Game & game)
+void GameHostX11::Run(Game& game)
 {
     POMDOG_ASSERT(impl);
     impl->Run(game);

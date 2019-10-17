@@ -12,14 +12,14 @@ class ScopeGuard final {
 public:
     ScopeGuard() = delete;
     ScopeGuard(const ScopeGuard&) = delete;
-    ScopeGuard(ScopeGuard &&) = default;
+    ScopeGuard(ScopeGuard&&) = default;
 
     explicit ScopeGuard(const std::function<void()>& f)
         : func(f)
     {
     }
 
-    explicit ScopeGuard(std::function<void()> && f)
+    explicit ScopeGuard(std::function<void()>&& f)
         : func(std::move(f))
     {
     }
@@ -30,8 +30,8 @@ public:
         func();
     }
 
-    ScopeGuard & operator=(const ScopeGuard&) = delete;
-    ScopeGuard & operator=(ScopeGuard &&) = default;
+    ScopeGuard& operator=(const ScopeGuard&) = delete;
+    ScopeGuard& operator=(ScopeGuard&&) = default;
 
 private:
     std::function<void()> func;

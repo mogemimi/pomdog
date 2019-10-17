@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Experimental/Graphics/Texture2DView.hpp"
-#include "Pomdog/Graphics/Texture2D.hpp"
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
+#include "Pomdog/Graphics/Texture2D.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <utility>
 

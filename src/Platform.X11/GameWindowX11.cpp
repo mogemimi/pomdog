@@ -20,7 +20,7 @@ Rectangle GetWindowClientBounds(::Display* display, ::Window window)
     XWindowAttributes windowAttributes;
     XGetWindowAttributes(display, window, &windowAttributes);
 
-    return Rectangle {
+    return Rectangle{
         windowAttributes.x, windowAttributes.y,
         windowAttributes.width, windowAttributes.height};
 }
@@ -74,7 +74,7 @@ void UpdateMouseCursor(::Display* display, ::Window window, std::optional<MouseC
     POMDOG_ASSERT(window != None);
 
     if (!mouseCursor) {
-        constexpr char data[] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+        constexpr char data[] = {0, 0, 0, 0, 0, 0, 0, 0};
         XColor black;
         black.red = 0;
         black.green = 0;
@@ -344,7 +344,7 @@ bool GameWindowX11::IsMinimized() const
     return isMinimized;
 }
 
-void GameWindowX11::ProcessEvent(::XEvent & event)
+void GameWindowX11::ProcessEvent(::XEvent& event)
 {
     bool clientSizeChanged = false;
 

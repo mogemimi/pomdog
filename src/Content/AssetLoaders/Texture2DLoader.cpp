@@ -1,12 +1,12 @@
 // Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Content/AssetLoaders/Texture2DLoader.hpp"
+#include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Content/Image/DDS.hpp"
 #include "Pomdog/Content/Image/PNG.hpp"
 #include "Pomdog/Content/Image/PNM.hpp"
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
 #include "Pomdog/Content/Utility/MakeFourCC.hpp"
-#include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
 #include "Pomdog/Graphics/Texture2D.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -66,7 +66,7 @@ AssetLoader<Texture2D>::operator()(AssetManager& assets, const std::string& file
         return std::make_tuple(nullptr, std::move(err));
     }
 
-    auto[byteLength, sizeErr] = FileSystem::GetFileSize(filePath);
+    auto [byteLength, sizeErr] = FileSystem::GetFileSize(filePath);
     if (sizeErr != nullptr) {
         auto err = Errors::Wrap(std::move(sizeErr), "failed to get file size, " + filePath);
         return std::make_tuple(nullptr, std::move(err));
@@ -101,7 +101,7 @@ AssetLoader<Texture2D>::operator()(AssetManager& assets, const std::string& file
             return std::make_tuple(nullptr, std::move(err));
         }
 
-        auto[image, decodeErr] = PNG::Decode(binary.data(), binary.size());
+        auto [image, decodeErr] = PNG::Decode(binary.data(), binary.size());
         if (decodeErr != nullptr) {
             auto err = Errors::Wrap(std::move(decodeErr), "cannot load the PNG texture " + filePath);
             return std::make_tuple(nullptr, std::move(err));
@@ -133,7 +133,7 @@ AssetLoader<Texture2D>::operator()(AssetManager& assets, const std::string& file
             return std::make_tuple(nullptr, std::move(err));
         }
 
-        auto[image, decodeErr] = DDS::Decode(binary.data(), binary.size());
+        auto [image, decodeErr] = DDS::Decode(binary.data(), binary.size());
         if (decodeErr != nullptr) {
             auto err = Errors::Wrap(std::move(decodeErr), "cannot load the DDS texture " + filePath);
             return std::make_tuple(nullptr, std::move(err));
@@ -165,7 +165,7 @@ AssetLoader<Texture2D>::operator()(AssetManager& assets, const std::string& file
             return std::make_tuple(nullptr, std::move(err));
         }
 
-        auto[image, decodeErr] = PNM::Decode(reinterpret_cast<const char*>(binary.data()), binary.size());
+        auto [image, decodeErr] = PNM::Decode(reinterpret_cast<const char*>(binary.data()), binary.size());
         if (decodeErr != nullptr) {
             auto err = Errors::Wrap(std::move(decodeErr), "cannot load the PNM texture " + filePath);
             return std::make_tuple(nullptr, std::move(err));

@@ -13,14 +13,14 @@ template <class T>
 class Subscriber final : public Observer<T> {
 public:
     template <class NextAction>
-    explicit Subscriber(NextAction && onNextIn)
+    explicit Subscriber(NextAction&& onNextIn)
         : onNext(std::forward<NextAction>(onNextIn))
     {
         POMDOG_ASSERT(onNext);
     }
 
     template <class NextAction, class ErrorAction>
-    Subscriber(NextAction && onNextIn, ErrorAction && onErrorIn)
+    Subscriber(NextAction&& onNextIn, ErrorAction&& onErrorIn)
         : onNext(std::forward<NextAction>(onNextIn))
         , onError(std::forward<ErrorAction>(onErrorIn))
     {
@@ -29,7 +29,7 @@ public:
     }
 
     template <class NextAction, class ErrorAction, class CompletedAction>
-    Subscriber(NextAction && onNextIn, ErrorAction && onErrorIn, CompletedAction && onCompletedIn)
+    Subscriber(NextAction&& onNextIn, ErrorAction&& onErrorIn, CompletedAction&& onCompletedIn)
         : onNext(std::forward<NextAction>(onNextIn))
         , onError(std::forward<ErrorAction>(onErrorIn))
         , onCompleted(std::forward<CompletedAction>(onCompletedIn))

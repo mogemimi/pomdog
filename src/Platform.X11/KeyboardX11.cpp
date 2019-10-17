@@ -167,7 +167,7 @@ Keys TranslateKey(Display* display, unsigned int keyCode)
     return Keys_None;
 }
 
-void BuildKeyMap(Display* display, std::array<Keys, 256> & keys)
+void BuildKeyMap(Display* display, std::array<Keys, 256>& keys)
 {
     std::fill(std::begin(keys), std::end(keys), Keys_None);
 
@@ -282,14 +282,14 @@ KeyboardState KeyboardX11::GetState() const
     return keyboardState;
 }
 
-void KeyboardX11::HandleEvent(XEvent & event)
+void KeyboardX11::HandleEvent(XEvent& event)
 {
     if (event.type != KeyPress && event.type != KeyRelease) {
         return;
     }
 
     auto key = ToKeys(mappedKeys, event.xkey.keycode);
-    auto keyState = (event.type == KeyPress ? KeyState::Down: KeyState::Up);
+    auto keyState = (event.type == KeyPress ? KeyState::Down : KeyState::Up);
 
     if (key == Keys_None) {
         return;

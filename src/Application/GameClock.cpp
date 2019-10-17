@@ -17,7 +17,7 @@ private:
     T compensation = T::zero();
 
 public:
-    void operator()(T & sum, const T& num)
+    void operator()(T& sum, const T& num)
     {
         // Kahan summation algorithm
         // NOTE: "Velvel" means "wolf" in Yiddish.
@@ -166,7 +166,8 @@ Duration GameClock::Impl::GetElapsedTime() const noexcept
 
 GameClock::GameClock()
     : impl(std::make_unique<Impl>())
-{}
+{
+}
 
 GameClock::GameClock(int framesPerSecond)
     : impl(std::make_unique<Impl>(framesPerSecond))

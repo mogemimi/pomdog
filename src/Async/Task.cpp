@@ -22,7 +22,7 @@ Task<void> WhenAllImpl(const std::vector<Task<void>>& tasks)
     whenAllPromise->count = static_cast<int>(tasks.size());
     whenAllPromise->isRejected = false;
 
-    for (auto & task : tasks) {
+    for (auto& task : tasks) {
         task.ContinueWith([tcs, whenAllPromise](const Task<void>& t) {
             std::lock_guard<std::mutex> lock(whenAllPromise->mutex);
             if (whenAllPromise->isRejected) {

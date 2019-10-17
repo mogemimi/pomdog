@@ -210,29 +210,29 @@ void SpriteFont::Impl::PrepareFonts(const std::string& text)
         }
 
         auto glyph = font->RasterizeGlyph(character, fontSize, TextureWidth,
-        [&](int glyphWidth, int glyphHeight, Point2D & pointOut, std::uint8_t* & output) {
-            if (currentPoint.X + glyphWidth + 1 >= TextureWidth) {
-                // advance to next row
-                currentPoint.Y = bottomY;
-                currentPoint.X = 1;
-            }
-            if (currentPoint.Y + glyphHeight + 1 >= TextureHeight) {
-                fetchTextureData();
-                std::fill(std::begin(pixelData), std::end(pixelData), static_cast<std::uint8_t>(0));
+            [&](int glyphWidth, int glyphHeight, Point2D& pointOut, std::uint8_t*& output) {
+                if (currentPoint.X + glyphWidth + 1 >= TextureWidth) {
+                    // advance to next row
+                    currentPoint.Y = bottomY;
+                    currentPoint.X = 1;
+                }
+                if (currentPoint.Y + glyphHeight + 1 >= TextureHeight) {
+                    fetchTextureData();
+                    std::fill(std::begin(pixelData), std::end(pixelData), static_cast<std::uint8_t>(0));
 
-                auto textureNew = std::make_shared<Texture2D>(graphicsDevice,
-                    TextureWidth, TextureHeight, false, SurfaceFormat::A8_UNorm);
-                textures.push_back(textureNew);
-                currentPoint = {1, 1};
-                bottomY = 1;
-            }
+                    auto textureNew = std::make_shared<Texture2D>(graphicsDevice,
+                        TextureWidth, TextureHeight, false, SurfaceFormat::A8_UNorm);
+                    textures.push_back(textureNew);
+                    currentPoint = {1, 1};
+                    bottomY = 1;
+                }
 
-            POMDOG_ASSERT(currentPoint.X + glyphWidth < TextureWidth);
-            POMDOG_ASSERT(currentPoint.Y + glyphHeight < TextureHeight);
+                POMDOG_ASSERT(currentPoint.X + glyphWidth < TextureWidth);
+                POMDOG_ASSERT(currentPoint.Y + glyphHeight < TextureHeight);
 
-            pointOut = currentPoint;
-            output = pixelData.data();
-        });
+                pointOut = currentPoint;
+                output = pixelData.data();
+            });
 
         if (!glyph) {
             continue;

@@ -37,7 +37,7 @@ private:
         T Value;
 
         template <typename U>
-        explicit Holder(U && valueIn)
+        explicit Holder(U&& valueIn)
             : Value(std::forward<U>(valueIn))
         {
         }
@@ -52,13 +52,13 @@ private:
 public:
     Any() = delete;
     Any(const Any&) = delete;
-    Any(Any &&) = default;
+    Any(Any&&) = default;
 
     Any& operator=(const Any&) = delete;
-    Any& operator=(Any &&) = default;
+    Any& operator=(Any&&) = default;
 
     template <typename T>
-    Any(T && value)
+    Any(T&& value)
         : data(std::make_unique<Holder<typename std::remove_reference<T>::type>>(std::forward<T>(value)))
         , typeIndex(typeid(T))
         , hashCode(Detail::TypeIdHashing<T>::hashCode)
@@ -89,7 +89,7 @@ public:
     }
 
     template <typename T>
-    T & As()
+    T& As()
     {
         POMDOG_ASSERT(typeIndex == typeid(T)
             || hashCode == Detail::TypeIdHashing<T>::hashCode);

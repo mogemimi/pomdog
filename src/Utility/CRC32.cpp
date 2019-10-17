@@ -23,7 +23,7 @@ std::array<std::uint32_t, 256U> MakeCRCTable() noexcept
     }};
 
     std::uint32_t poly = 0L;
-    for (auto iter: p) {
+    for (auto iter : p) {
         poly |= 1L << (31 - iter);
     }
 #else
@@ -118,7 +118,7 @@ static constexpr std::array<std::uint32_t, 256U> crctable =
 static constexpr std::uint32_t InitValueCRC32 = 0xffffffffUL;
 static constexpr std::uint32_t XorValueCRC32 = 0xffffffffUL;
 
-void UpdateChecksum(std::uint32_t & crcvalue, const std::uint8_t* data, std::size_t length) noexcept
+void UpdateChecksum(std::uint32_t& crcvalue, const std::uint8_t* data, std::size_t length) noexcept
 {
     std::uint32_t crc = crcvalue;
     while (length--) {
@@ -127,7 +127,7 @@ void UpdateChecksum(std::uint32_t & crcvalue, const std::uint8_t* data, std::siz
     crcvalue = crc;
 }
 
-void FinishChecksum(std::uint32_t & crcvalue) noexcept
+void FinishChecksum(std::uint32_t& crcvalue) noexcept
 {
     crcvalue ^= XorValueCRC32;
 }

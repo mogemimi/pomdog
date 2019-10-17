@@ -50,7 +50,7 @@ public:
 
     bool IsMinimized() const;
 
-    void ProcessEvent(::XEvent & event);
+    void ProcessEvent(::XEvent& event);
 
 private:
     std::shared_ptr<X11Context const> x11Context;

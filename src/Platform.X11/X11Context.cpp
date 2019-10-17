@@ -6,7 +6,7 @@
 namespace Pomdog::Detail::X11 {
 namespace {
 
-void InitializeAtoms(::Display* display, X11AtomCache & atoms)
+void InitializeAtoms(::Display* display, X11AtomCache& atoms)
 {
     atoms.WmDeleteWindow = XInternAtom(display, "WM_DELETE_WINDOW", False);
     atoms.Utf8String = XInternAtom(display, "UTF8_STRING", False);

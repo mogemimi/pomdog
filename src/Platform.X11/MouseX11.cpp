@@ -8,12 +8,15 @@
 namespace Pomdog::Detail::X11 {
 namespace {
 
-ButtonState* GetButtonByIndex(MouseState & mouseState, unsigned int buttonIndex)
+ButtonState* GetButtonByIndex(MouseState& mouseState, unsigned int buttonIndex)
 {
     switch (buttonIndex) {
-    case 1: return &mouseState.LeftButton;
-    case 2: return &mouseState.MiddleButton;
-    case 3: return &mouseState.RightButton;
+    case 1:
+        return &mouseState.LeftButton;
+    case 2:
+        return &mouseState.MiddleButton;
+    case 3:
+        return &mouseState.RightButton;
     default:
         break;
     }
@@ -23,9 +26,12 @@ ButtonState* GetButtonByIndex(MouseState & mouseState, unsigned int buttonIndex)
 std::optional<MouseButtons> ToMouseButtons(unsigned int buttonIndex)
 {
     switch (buttonIndex) {
-    case 1: return MouseButtons::Left;
-    case 2: return MouseButtons::Middle;
-    case 3: return MouseButtons::Right;
+    case 1:
+        return MouseButtons::Left;
+    case 2:
+        return MouseButtons::Middle;
+    case 3:
+        return MouseButtons::Right;
     default:
         break;
     }
@@ -39,7 +45,7 @@ MouseState MouseX11::GetState() const
     return mouseState;
 }
 
-void MouseX11::HandleEvent(XEvent & event)
+void MouseX11::HandleEvent(XEvent& event)
 {
     switch (event.type) {
     case ButtonPress: {

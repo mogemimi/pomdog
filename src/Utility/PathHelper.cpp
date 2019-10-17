@@ -376,7 +376,7 @@ PathHelper::Normalize(const std::string& path)
     }
 
     fullPath.clear();
-    for (auto & current : paths) {
+    for (auto& current : paths) {
         if (fullPath.empty() && isRootDirectoryName(current)) {
             fullPath = current;
             continue;

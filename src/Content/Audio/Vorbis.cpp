@@ -92,8 +92,10 @@ struct PCMWaveFormat final {
     POMDOG_ASSERT(channels <= 2);
 
     switch (channels) {
-    case 1: return AudioChannels::Mono;
-    case 2: return AudioChannels::Stereo;
+    case 1:
+        return AudioChannels::Mono;
+    case 2:
+        return AudioChannels::Stereo;
     default:
         break;
     }

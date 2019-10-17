@@ -7,20 +7,20 @@ namespace Pomdog {
 
 ConnectionList::~ConnectionList()
 {
-    for (auto & connection : connections) {
+    for (auto& connection : connections) {
         connection.Disconnect();
     }
 }
 
 void ConnectionList::Disconnect()
 {
-    for (auto & connection : connections) {
+    for (auto& connection : connections) {
         connection.Disconnect();
     }
     connections.clear();
 }
 
-void ConnectionList::operator+=(Connection && connection)
+void ConnectionList::operator+=(Connection&& connection)
 {
     connections.push_back(std::move(connection));
 }

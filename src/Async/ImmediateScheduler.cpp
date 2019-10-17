@@ -7,7 +7,7 @@
 namespace Pomdog::Concurrency {
 
 void ImmediateScheduler::Schedule(
-    std::function<void()> && task,
+    std::function<void()>&& task,
     const Duration& delayTime)
 {
     POMDOG_ASSERT(task);

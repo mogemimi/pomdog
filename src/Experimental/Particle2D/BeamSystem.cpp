@@ -55,7 +55,7 @@ std::vector<Vector2> CreateJaggedLine(
 
         constexpr float threshold = 0.95f;
         constexpr float envelopeScale = (1.0f / (1.0f - threshold));
-        float envelope = (position > threshold) ? envelopeScale * (1.0f - position): 1.0f;
+        float envelope = (position > threshold) ? envelopeScale * (1.0f - position) : 1.0f;
 
         float displacement = MathHelper::SmoothStep(prevDisplacement, distribution(random), scale);
         displacement *= envelope;
