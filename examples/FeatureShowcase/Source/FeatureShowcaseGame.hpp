@@ -61,6 +61,7 @@ private:
     std::vector<Button> buttons;
     std::vector<Button> hudButtons;
     std::string footerString;
+    double scrollY = 0;
 };
 
 } // namespace FeatureShowcase

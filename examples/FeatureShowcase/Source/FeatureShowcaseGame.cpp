@@ -163,12 +163,18 @@ void FeatureShowcaseGame::Update()
             button.Selected = button.Rect.Contains(position);
         }
     }
+
+    connect(mouse->ScrollWheel, [this](std::int32_t delta) {
+        scrollY = std::clamp(scrollY + static_cast<double>(delta) * 0.02, -200.0, 0.0);
+    });
 }
 
 void FeatureShowcaseGame::UpdateMenuLayout()
 {
     {
-        int y = window->GetClientBounds().Height - 36;
+        auto mouse = gameHost->GetMouse();
+
+        int y = window->GetClientBounds().Height - 36 - static_cast<int>(scrollY);
         constexpr int buttonVerticalMargin = 5;
 
         for (auto& button : buttons) {
