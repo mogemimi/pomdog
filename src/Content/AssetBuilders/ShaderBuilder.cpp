@@ -52,8 +52,10 @@ std::optional<std::string> IncludeGLSLFilesRecursive(
 
     auto currentDirectory = PathHelper::GetDirectoryName(PathHelper::Normalize(path));
 
-    auto lines = StringHelper::Split(text, '\n');
+    auto copiedText = text;
     text.clear();
+    auto lines = StringHelper::Split(copiedText, '\n');
+
     for (const auto& lineView : lines) {
         std::string line{lineView};
         std::regex includeRegex(R"(\s*#\s*include\s+\"([\w\.\/\\]+)\")");
@@ -201,12 +203,12 @@ Builder<Shader>& Builder<Shader>::SetGLSLFromFile(const std::string& assetName)
             std::memcpy(impl->shaderBlob.data(), shaderCode.data(), shaderCode.size());
         }
 
-        impl->shaderBytecode.Code = impl->shaderBlob.data();
-        impl->shaderBytecode.ByteLength = impl->shaderBlob.size();
-        impl->shaderFilePath = filePath;
-
         // NOTE: Insert null at the end of a charater array
         impl->shaderBlob.push_back(0);
+
+        impl->shaderBytecode.Code = impl->shaderBlob.data();
+        impl->shaderBytecode.ByteLength = impl->shaderBlob.size() - 1;
+        impl->shaderFilePath = filePath;
     }
     return *this;
 }
@@ -281,14 +283,14 @@ Builder<Shader>& Builder<Shader>::SetHLSLFromFile(
             POMDOG_THROW_EXCEPTION(std::runtime_error, "The file is too small");
         }
 
+        // NOTE: Insert null at the end of a charater array
+        impl->shaderBlob.push_back(0);
+
         impl->shaderBytecode.Code = impl->shaderBlob.data();
-        impl->shaderBytecode.ByteLength = impl->shaderBlob.size();
+        impl->shaderBytecode.ByteLength = impl->shaderBlob.size() - 1;
         impl->entryPoint = entryPointIn;
         impl->precompiled = false;
         impl->shaderFilePath = filePath;
-
-        // NOTE: Insert null at the end of a charater array
-        impl->shaderBlob.push_back(0);
     }
     return *this;
 }
@@ -368,16 +370,16 @@ Builder<Shader>& Builder<Shader>::SetMetalFromFile(
         if (impl->shaderBlob.empty()) {
             POMDOG_THROW_EXCEPTION(std::runtime_error, "The file is too small");
         }
+        
+        // NOTE: Insert null at the end of a charater array
+        impl->shaderBlob.push_back(0);
 
         impl->shaderBytecode.Code = impl->shaderBlob.data();
-        impl->shaderBytecode.ByteLength = impl->shaderBlob.size();
+        impl->shaderBytecode.ByteLength = impl->shaderBlob.size() - 1;
         impl->entryPoint = entryPointIn;
         impl->precompiled = false;
         impl->fromDefaultLibrary = false;
         impl->shaderFilePath = filePath;
-
-        // NOTE: Insert null at the end of a charater array
-        impl->shaderBlob.push_back(0);
     }
     return *this;
 }
