@@ -115,7 +115,7 @@ void QuickStartGame::Initialize()
         auto updateShaderConstants = [this](int width, int height) {
             auto view = Matrix4x4::Identity;
             auto projection = Matrix4x4::CreateOrthographicLH(width, height, 0, 100);
-            myShaderConstants.ViewProjection = Matrix4x4::Transpose(view * projection);
+            myShaderConstants.ViewProjection = view * projection;
         };
 
         auto createGraphicsCommands = [this](int width, int height) {
@@ -173,9 +173,8 @@ void QuickStartGame::Update()
 
     auto rotate = Matrix4x4::CreateRotationZ(std::cos(totalTime));
     auto scale = Matrix4x4::CreateScale(Vector3(texture->GetWidth(), texture->GetHeight(), 1.0f));
-    auto model = scale * rotate;
 
-    myShaderConstants.Model = Matrix4x4::Transpose(model);
+    myShaderConstants.Model = scale * rotate;
     constantBuffer->SetValue(myShaderConstants);
 }
 

@@ -13,27 +13,27 @@ struct VS_INPUT {
     float2 TextureCoord [[attribute(1)]];
 };
 
-struct VS_OUTPUT {
+struct VertexShaderOutput {
     float4 Position [[position]];
     float2 TextureCoord;
 };
 
 // Vertex shader function
-vertex VS_OUTPUT SimpleEffectVS(
+vertex VertexShaderOutput SimpleEffectVS(
     VS_INPUT in [[stage_in]],
     constant MyShaderConstants& uniforms [[buffer(0)]])
 {
-    VS_OUTPUT out;
+    VertexShaderOutput out;
 
-    float4 position = float4(in.Position, 1.0);
-    out.Position = ((position * uniforms.Model) * uniforms.ViewProjection);
+    float4 worldSpacePosition = uniforms.Model * float4(in.Position, 1.0);
+    out.Position = uniforms.ViewProjection * worldSpacePosition;
     out.TextureCoord = in.TextureCoord.xy;
     return out;
 }
 
 // Fragment shader function
 fragment half4 SimpleEffectPS(
-    VS_OUTPUT in [[stage_in]],
+    VertexShaderOutput in [[stage_in]],
     texture2d<float> diffuseTexture [[texture(0)]],
     sampler textureSampler [[sampler(0)]])
 {

@@ -14,6 +14,7 @@ out VertexData {
 
 void main()
 {
-    gl_Position = (vec4(Position.xyz, 1.0) * Model) * ViewProjection;
+    vec4 worldSpacePosition = Model * vec4(Position.xyz, 1.0);
+    gl_Position = ViewProjection * worldSpacePosition;
     Out.TextureCoord = TextureCoord.xy;
 }
