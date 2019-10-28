@@ -47,7 +47,6 @@ void VoxelModelTest::Draw()
 
     commandList->Reset();
     commandList->SetRenderPass(std::move(pass));
-    commandList->Close();
 
     constexpr float orthographicSize = 16.0f;
     constexpr float rotateSpeed = 0.7f;
@@ -78,6 +77,8 @@ void VoxelModelTest::Draw()
     }
 
     primitiveBatch->End();
+
+    commandList->Close();
 
     constexpr bool isStandalone = false;
     if constexpr (isStandalone) {

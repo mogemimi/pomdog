@@ -62,7 +62,6 @@ void SpriteLineTest::Draw()
 
     commandList->Reset();
     commandList->SetRenderPass(std::move(pass));
-    commandList->Close();
 
     auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
         static_cast<float>(presentationParameters.BackBufferWidth),
@@ -96,6 +95,8 @@ void SpriteLineTest::Draw()
                     Color::White);
 
     spriteBatch->End();
+
+    commandList->Close();
 
     constexpr bool isStandalone = false;
     if constexpr (isStandalone) {

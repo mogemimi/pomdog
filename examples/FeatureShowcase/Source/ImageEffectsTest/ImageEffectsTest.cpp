@@ -94,7 +94,6 @@ void ImageEffectsTest::Draw()
 
     commandList->Reset();
     commandList->SetRenderPass(std::move(pass));
-    commandList->Close();
 
     auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
         static_cast<float>(presentationParameters.BackBufferWidth),
@@ -127,6 +126,8 @@ void ImageEffectsTest::Draw()
     primitiveBatch->End();
 
     postProcessCompositor.Draw(*commandList, renderTarget);
+
+    commandList->Close();
 
     constexpr bool isStandalone = false;
     if constexpr (isStandalone) {

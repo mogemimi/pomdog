@@ -189,7 +189,6 @@ void Particle2DTest::Draw()
 
     commandList->Reset();
     commandList->SetRenderPass(std::move(pass));
-    commandList->Close();
 
     auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
         static_cast<float>(presentationParameters.BackBufferWidth),
@@ -223,6 +222,8 @@ void Particle2DTest::Draw()
     }
 
     spriteBatch->End();
+
+    commandList->Close();
 
     constexpr bool isStandalone = false;
     if constexpr (isStandalone) {

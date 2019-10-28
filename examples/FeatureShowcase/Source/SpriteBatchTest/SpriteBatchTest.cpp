@@ -130,7 +130,6 @@ void SpriteBatchTest::Draw()
 
     commandList->Reset();
     commandList->SetRenderPass(std::move(pass));
-    commandList->Close();
 
     auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
         presentationParameters.BackBufferWidth,
@@ -192,6 +191,8 @@ void SpriteBatchTest::Draw()
         2.0f);
 
     spriteBatch->End();
+
+    commandList->Close();
 
     constexpr bool isStandalone = false;
     if constexpr (isStandalone) {
