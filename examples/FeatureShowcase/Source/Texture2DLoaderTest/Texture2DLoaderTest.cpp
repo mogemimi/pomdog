@@ -24,7 +24,6 @@ void Texture2DLoaderTest::Initialize()
     spriteFont = std::make_shared<SpriteFont>(graphicsDevice, font, 24.0f, 24.0f);
     spriteFont->PrepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
 
-
     // NOTE: Load PNG texture.
     if (auto[res, err] = assets->Load<Texture2D>("Textures/pomdog.png"); err != nullptr) {
         Log::Verbose("failed to load texture: " + err->ToString());

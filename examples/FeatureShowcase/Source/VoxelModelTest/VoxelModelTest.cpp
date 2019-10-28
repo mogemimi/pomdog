@@ -1,9 +1,4 @@
 #include "VoxelModelTest.hpp"
-#include <Pomdog/Experimental/Image/GifImage.hpp>
-#include <Pomdog/Experimental/Image/GifImageLoader.hpp>
-#include <Pomdog/Experimental/TexturePacker/TextureAtlasGenerator.hpp>
-#include <Pomdog/Experimental/Tween/EasingHelper.hpp>
-#include <random>
 
 namespace FeatureShowcase {
 

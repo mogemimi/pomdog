@@ -46,7 +46,6 @@ void Beam2DTest::Initialize()
     beamSystem->emitter.SwayRange = std::uniform_real_distribution<float>(-swayRange, swayRange);
     beamSystem->branching.SpreadRange = std::uniform_real_distribution<float>(-spreadRange, spreadRange);
 
-
     emitterTarget = Vector2{200.0, 100.0f};
 
     auto mouse = gameHost->GetMouse();
