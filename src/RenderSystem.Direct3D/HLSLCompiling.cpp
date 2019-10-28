@@ -92,7 +92,7 @@ public:
         Log::Internal(StringHelper::Format("include shader file : %s", includePath.c_str()));
 #endif
 
-        std::ifstream stream{includePath};
+        std::ifstream stream{includePath, std::ifstream::binary};
 
         if (!stream) {
             Log::Internal(StringHelper::Format("Could not find a shader source file %s", includePath.c_str()));

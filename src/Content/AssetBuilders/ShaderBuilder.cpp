@@ -41,7 +41,7 @@ std::optional<std::string> IncludeGLSLFilesRecursive(
         return std::nullopt;
     }
 
-    std::ifstream input(path);
+    std::ifstream input{path, std::ifstream::binary};
     if (!input) {
         return std::nullopt;
     }
