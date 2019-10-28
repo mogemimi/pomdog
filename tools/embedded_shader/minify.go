@@ -14,7 +14,9 @@ func minifyCode(content string) string {
 	lines := strings.Split(content, "\n")
 	for i, line := range lines {
 		line = strings.Trim(line, " \t")
-		if !strings.HasPrefix(line, "#") {
+		if strings.HasPrefix(line, "#") {
+			line = line + "$$"
+		} else {
 			line = strings.Replace(line, " (", "(", -1)
 			line = strings.Replace(line, ") ", ")", -1)
 			line = strings.Replace(line, " {", "{", -1)
@@ -32,7 +34,7 @@ func minifyCode(content string) string {
 	content = strings.Replace(content, "\n(", "(", -1)
 	content = strings.Replace(content, "\n)", ")", -1)
 	content = strings.Replace(content, "\n;", ";", -1)
-
+	content = strings.Replace(content, "$$", "\n", -1)
 	content = removeEmptyLine(content)
 
 	return content
