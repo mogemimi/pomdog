@@ -293,6 +293,8 @@
 		D719A53F23497EB600C1868B /* PNM.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D719A53923497EB600C1868B /* PNM.cpp */; };
 		D719A55F2349868200C1868B /* TrueTypeFontLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D719A55E2349868200C1868B /* TrueTypeFontLoader.cpp */; };
 		D719A5602349868200C1868B /* TrueTypeFontLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D719A55E2349868200C1868B /* TrueTypeFontLoader.cpp */; };
+		D7255BA6236D59AB00B8E4A0 /* BasicEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7255BA5236D59AB00B8E4A0 /* BasicEffect.cpp */; };
+		D7255BA7236D59AB00B8E4A0 /* BasicEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7255BA5236D59AB00B8E4A0 /* BasicEffect.cpp */; };
 		D7334DC8228AC80200232225 /* PolylineBatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334DC6228AC80200232225 /* PolylineBatch.cpp */; };
 		D7334DC9228AC80200232225 /* PolylineBatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334DC6228AC80200232225 /* PolylineBatch.cpp */; };
 		D7334DCA228AC80200232225 /* PrimitiveBatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334DC7228AC80200232225 /* PrimitiveBatch.cpp */; };
@@ -883,6 +885,8 @@
 		D719A55C2349864500C1868B /* SpriteFont.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SpriteFont.hpp; sourceTree = "<group>"; };
 		D719A55D2349864500C1868B /* SpriteFontLoader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SpriteFontLoader.hpp; sourceTree = "<group>"; };
 		D719A55E2349868200C1868B /* TrueTypeFontLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TrueTypeFontLoader.cpp; sourceTree = "<group>"; };
+		D7255BA4236D598C00B8E4A0 /* BasicEffect.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BasicEffect.hpp; sourceTree = "<group>"; };
+		D7255BA5236D59AB00B8E4A0 /* BasicEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BasicEffect.cpp; sourceTree = "<group>"; };
 		D7334DC6228AC80200232225 /* PolylineBatch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PolylineBatch.cpp; sourceTree = "<group>"; };
 		D7334DC7228AC80200232225 /* PrimitiveBatch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PrimitiveBatch.cpp; sourceTree = "<group>"; };
 		D7334DCC228AC81F00232225 /* SpriteLine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SpriteLine.cpp; sourceTree = "<group>"; };
@@ -1739,6 +1743,7 @@
 		A9FC99031DC3D86C00C78D63 /* Graphics */ = {
 			isa = PBXGroup;
 			children = (
+				D7255BA5236D59AB00B8E4A0 /* BasicEffect.cpp */,
 				A98F5917211B2B89002960C1 /* LineBatch.cpp */,
 				A98F5918211B2B89002960C1 /* PolygonShapeBuilder.cpp */,
 				D7334DC6228AC80200232225 /* PolylineBatch.cpp */,
@@ -1757,6 +1762,7 @@
 		A9FC99081DC3D8E100C78D63 /* Graphics */ = {
 			isa = PBXGroup;
 			children = (
+				D7255BA4236D598C00B8E4A0 /* BasicEffect.hpp */,
 				D719A55A2349864500C1868B /* FontGlyph.hpp */,
 				D719A5572349864500C1868B /* LineBatch.hpp */,
 				D719A5592349864500C1868B /* PolygonShapeBuilder.hpp */,
@@ -2531,6 +2537,7 @@
 				A98F5926211B2B9A002960C1 /* SpriteFontLoader.cpp in Sources */,
 				D7334E17228AEC1300232225 /* PostProcessCompositor.cpp in Sources */,
 				03F46EF697B70E1EE9B2533B /* CocoaWindowDelegate.mm in Sources */,
+				D7255BA6236D59AB00B8E4A0 /* BasicEffect.cpp in Sources */,
 				2A5B52A528596019ABF40617 /* GameHostCocoa.mm in Sources */,
 				E6DAE91B1C77C1736DB66CD7 /* GameWindowCocoa.mm in Sources */,
 				E9DF3779DAEBF65FC42EA8CF /* KeyboardCocoa.cpp in Sources */,
@@ -2701,6 +2708,7 @@
 				A98F5927211B2B9A002960C1 /* SpriteFontLoader.cpp in Sources */,
 				D7334E18228AEC1300232225 /* PostProcessCompositor.cpp in Sources */,
 				E8ACB94BC7A78F57A854EC2C /* CocoaWindowDelegate.mm in Sources */,
+				D7255BA7236D59AB00B8E4A0 /* BasicEffect.cpp in Sources */,
 				0AECD9F61617195B0205EFEF /* GameHostCocoa.mm in Sources */,
 				71E352760BC127DCF199C59B /* GameWindowCocoa.mm in Sources */,
 				94FC0ADEB7D7E0AE9084A692 /* KeyboardCocoa.cpp in Sources */,

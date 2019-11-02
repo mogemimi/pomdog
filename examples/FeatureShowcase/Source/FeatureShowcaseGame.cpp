@@ -1,5 +1,6 @@
 #include "FeatureShowcaseGame.hpp"
 #include "AudioClipTest/AudioClipTest.hpp"
+#include "BasicEffectTest/BasicEffectTest.hpp"
 #include "Beam2DTest/Beam2DTest.hpp"
 #include "GamepadTest/GamepadTest.hpp"
 #include "HTTPClientTest/HTTPClientTest.hpp"
@@ -57,6 +58,10 @@ void FeatureShowcaseGame::Initialize()
     buttons.emplace_back("PrimitiveBatch Test", [this] {
         window->SetTitle("Feature Showcase > PrimitiveBatch Test");
         subGame = std::make_shared<FeatureShowcase::PrimitiveBatchTest>(gameHost);
+    });
+    buttons.emplace_back("BasicEffect Test", [this] {
+        window->SetTitle("Feature Showcase > BasicEffect Test");
+        subGame = std::make_shared<FeatureShowcase::BasicEffectTest>(gameHost);
     });
     buttons.emplace_back("SpriteBatch Test", [this] {
         window->SetTitle("Feature Showcase > SpriteBatch Test");

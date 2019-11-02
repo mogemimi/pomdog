@@ -368,6 +368,7 @@ set(POMDOG_SOURCES_CORE
 )
 
 set(POMDOG_SOURCES_EXPERIMENTAL
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/BasicEffect.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/FontGlyph.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/LineBatch.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/PolylineBatch.hpp
@@ -441,6 +442,7 @@ set(POMDOG_SOURCES_EXPERIMENTAL
   ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureAtlasLoader.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureRegion.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Tween/EasingHelper.hpp
+  ${POMDOG_DIR}/src/Experimental/Graphics/BasicEffect.cpp
   ${POMDOG_DIR}/src/Experimental/Graphics/LineBatch.cpp
   ${POMDOG_DIR}/src/Experimental/Graphics/PolylineBatch.cpp
   ${POMDOG_DIR}/src/Experimental/Graphics/PolygonShapeBuilder.cpp
