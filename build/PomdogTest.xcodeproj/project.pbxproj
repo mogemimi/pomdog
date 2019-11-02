@@ -717,6 +717,7 @@
 		30FEBDCAE7D3FF531CAC3B6F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_PREFIX = "";
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
@@ -738,6 +739,7 @@
 		527E9B792B9F9FDD88F76973 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_PREFIX = "";
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
@@ -857,6 +859,7 @@
 		A90B09B01C25A774006E749D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_PREFIX = "";
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
@@ -879,6 +882,7 @@
 		A90B09B11C25A774006E749D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_PREFIX = "";
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
