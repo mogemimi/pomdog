@@ -23,17 +23,22 @@ cd path/to/pomdog
 
 # Convert a vertex shader from HLSL to embedded C++ code
 ./tools/embedded_shader/embedded_shader \
-    -fxc "C:\Program Files (x86)\Windows Kits\10\bin\10.0.17134.0\x64\fxc.exe" \
+    -fxc "C:\Program Files (x86)\Windows Kits\10\bin\10.0.17763.0\x64\fxc.exe" \
     -entrypoint LineBatchVS \
     -profile vs_4_0 \
     src/Experimental/Graphics/Shaders/HLSL/LineBatch_VS.hlsl
 
 # Convert a pixel shader from HLSL to embedded C++ code
 ./tools/embedded_shader/embedded_shader \
-    -fxc "C:\Program Files (x86)\Windows Kits\10\bin\10.0.17134.0\x64\fxc.exe" \
-    -entrypoint LineBatchPS \
+    -fxc "C:\Program Files (x86)\Windows Kits\10\bin\10.0.17763.0\x64\fxc.exe" \
+    -entrypoint SpriteBatchPS \
     -profile ps_4_0 \
     src/Experimental/Graphics/Shaders/HLSL/LineBatch_PS.hlsl
+
+# Convert HLSL to embedded C++ code
+./tools/embedded_shader/embedded_shader \
+    -minify \
+    src/Experimental/Graphics/Shaders/HLSL/BasicEffect.hlsl
 
 # Convert Metal to embedded C++ code
 ./tools/embedded_shader/embedded_shader \

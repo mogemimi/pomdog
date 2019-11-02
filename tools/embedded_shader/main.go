@@ -18,6 +18,7 @@ import (
 var options struct {
 	Verbose      bool
 	HLSLCompiler string
+	Minify       bool
 }
 
 type compileOptions struct {
@@ -28,6 +29,7 @@ type compileOptions struct {
 func main() {
 	var compileOptions compileOptions
 	flag.BoolVar(&options.Verbose, "verbose", false, "verbose")
+	flag.BoolVar(&options.Minify, "minify", false, "minify")
 	flag.StringVar(&compileOptions.EntryPoint, "entrypoint", "", "shader entry point")
 	flag.StringVar(&compileOptions.ShaderProfile, "profile", "", "shader profile (e.g. vs_4_0, ps_4_0)")
 	flag.StringVar(&options.HLSLCompiler, "fxc", "fxc", "path to fxc.exe")
@@ -74,11 +76,19 @@ func createEmbeddedFile(src string, compileOptions compileOptions) error {
 		content = createEmbeddedCode(base, prefix, minifyCode(string(dat)))
 	case shaderLanguageHLSL:
 		prefix := "BuiltinHLSL_"
-		data, err := compileHLSL(src, dst, compileOptions)
-		if err != nil {
-			return errors.Wrapf(err, "failed to compile a shader \"%s\"", src)
+		if options.Minify {
+			dat, err := ioutil.ReadFile(src)
+			if err != nil {
+				return errors.Wrapf(err, "failed to read a file \"%s\"", src)
+			}
+			content = createEmbeddedCode(base, prefix, minifyCode(string(dat)))
+		} else {
+			data, err := compileHLSL(src, dst, compileOptions)
+			if err != nil {
+				return errors.Wrapf(err, "failed to compile a shader \"%s\"", src)
+			}
+			content = createEmbeddedBinary(base, prefix, binaryToByteArrayString(data))
 		}
-		content = createEmbeddedBinary(base, prefix, binaryToByteArrayString(data))
 	}
 
 	f, err := os.Create(dst)
