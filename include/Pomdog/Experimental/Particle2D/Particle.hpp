@@ -16,16 +16,16 @@ public:
 
     Pomdog::Color StartColor = Pomdog::Color::White;
     Pomdog::Color Color = Pomdog::Color::White;
-    float ColorVariance = 0;
+    float ColorVariance = 0.0f;
 
-    Radian<float> Rotation = 0;
-    float RotationVariance = 0;
+    Radian<float> Rotation = 0.0f;
+    float RotationVariance = 0.0f;
 
-    float StartSize = 1;
-    float Size = 1;
-    float SizeVariance = 0;
+    float StartSize = 1.0f;
+    float Size = 1.0f;
+    float SizeVariance = 0.0f;
 
-    float TimeToLive = 2;
+    float TimeToLive = 2.0f;
 };
 
 } // namespace Pomdog

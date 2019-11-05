@@ -8,11 +8,11 @@ namespace Pomdog {
 
 class ParticleEmitter final {
 public:
-    float StartDelay = 0;
+    float StartDelay = 0.0f;
 
-    float StartLifetime = 1;
+    float StartLifetime = 1.0f;
 
-    float GravityModifier = 0;
+    float GravityModifier = 0.0f;
 
     std::uint16_t MaxParticles = 128;
 
