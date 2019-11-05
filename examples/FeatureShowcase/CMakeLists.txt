@@ -11,23 +11,27 @@ set(CMAKE_CXX_STANDARD_REQUIRED on)
 set(CMAKE_CXX_EXTENSIONS off)
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
 
-source_group(Source                       REGULAR_EXPRESSION "Source/*")
-source_group(Source\\AudioClipTest        REGULAR_EXPRESSION "Source/AudioClipTest/*")
-source_group(Source\\BasicEffectTest      REGULAR_EXPRESSION "Source/BasicEffectTest/*")
-source_group(Source\\Beam2DTest           REGULAR_EXPRESSION "Source/Beam2DTest/*")
-source_group(Source\\GamepadTest          REGULAR_EXPRESSION "Source/GamepadTest/*")
-source_group(Source\\HTTPClientTest       REGULAR_EXPRESSION "Source/HTTPClientTest/*")
-source_group(Source\\ImageEffectsTest     REGULAR_EXPRESSION "Source/ImageEffectsTest/*")
-source_group(Source\\LineBatchTest        REGULAR_EXPRESSION "Source/LineBatchTest/*")
-source_group(Source\\Particle2DTest       REGULAR_EXPRESSION "Source/Particle2DTest/*")
-source_group(Source\\PolylineDrawingTest  REGULAR_EXPRESSION "Source/PolylineDrawingTest/*")
-source_group(Source\\PrimitiveBatchTest   REGULAR_EXPRESSION "Source/PrimitiveBatchTest/*")
-source_group(Source\\SpriteBatchTest      REGULAR_EXPRESSION "Source/SpriteBatchTest/*")
-source_group(Source\\SpriteFontTest       REGULAR_EXPRESSION "Source/SpriteFontTest/*")
-source_group(Source\\SpriteLineTest       REGULAR_EXPRESSION "Source/SpriteLineTest/*")
-source_group(Source\\Texture2DLoaderTest  REGULAR_EXPRESSION "Source/Texture2DLoaderTest/*")
-source_group(Source\\VoxelModelTest       REGULAR_EXPRESSION "Source/VoxelModelTest/*")
-source_group(Platform                     REGULAR_EXPRESSION "Platform.*/*")
+source_group(Source                         REGULAR_EXPRESSION "Source/*")
+source_group(Source\\AnimationGraphTest     REGULAR_EXPRESSION "Source/AnimationGraphTest/*")
+source_group(Source\\AudioClipTest          REGULAR_EXPRESSION "Source/AudioClipTest/*")
+source_group(Source\\BasicEffectTest        REGULAR_EXPRESSION "Source/BasicEffectTest/*")
+source_group(Source\\Beam2DTest             REGULAR_EXPRESSION "Source/Beam2DTest/*")
+source_group(Source\\DistanceFieldFontTest  REGULAR_EXPRESSION "Source/DistanceFieldFontTest/*")
+source_group(Source\\GamepadTest            REGULAR_EXPRESSION "Source/GamepadTest/*")
+source_group(Source\\HTTPClientTest         REGULAR_EXPRESSION "Source/HTTPClientTest/*")
+source_group(Source\\ImageEffectsTest       REGULAR_EXPRESSION "Source/ImageEffectsTest/*")
+source_group(Source\\LineBatchTest          REGULAR_EXPRESSION "Source/LineBatchTest/*")
+source_group(Source\\Particle2DTest         REGULAR_EXPRESSION "Source/Particle2DTest/*")
+source_group(Source\\PolylineDrawingTest    REGULAR_EXPRESSION "Source/PolylineDrawingTest/*")
+source_group(Source\\PrimitiveBatchTest     REGULAR_EXPRESSION "Source/PrimitiveBatchTest/*")
+source_group(Source\\Skeletal2DTest         REGULAR_EXPRESSION "Source/Skeletal2DTest/*")
+source_group(Source\\Skinning2DTest         REGULAR_EXPRESSION "Source/Skinning2DTest/*")
+source_group(Source\\SpriteBatchTest        REGULAR_EXPRESSION "Source/SpriteBatchTest/*")
+source_group(Source\\SpriteFontTest         REGULAR_EXPRESSION "Source/SpriteFontTest/*")
+source_group(Source\\SpriteLineTest         REGULAR_EXPRESSION "Source/SpriteLineTest/*")
+source_group(Source\\Texture2DLoaderTest    REGULAR_EXPRESSION "Source/Texture2DLoaderTest/*")
+source_group(Source\\VoxelModelTest         REGULAR_EXPRESSION "Source/VoxelModelTest/*")
+source_group(Platform                       REGULAR_EXPRESSION "Platform.*/*")
 
 set(RESOURCE_FILES
   # `Content` directory
@@ -43,12 +47,16 @@ set(RESOURCE_FILES
 add_executable(${PRODUCT_NAME} WIN32
   Source/FeatureShowcaseGame.cpp
   Source/FeatureShowcaseGame.hpp
+  Source/AnimationGraphTest/AnimationGraphTest.cpp
+  Source/AnimationGraphTest/AnimationGraphTest.hpp
   Source/AudioClipTest/AudioClipTest.cpp
   Source/AudioClipTest/AudioClipTest.hpp
   Source/BasicEffectTest/BasicEffectTest.cpp
   Source/BasicEffectTest/BasicEffectTest.hpp
   Source/Beam2DTest/Beam2DTest.cpp
   Source/Beam2DTest/Beam2DTest.hpp
+  Source/DistanceFieldFontTest/DistanceFieldFontTest.cpp
+  Source/DistanceFieldFontTest/DistanceFieldFontTest.hpp
   Source/GamepadTest/GamepadTest.cpp
   Source/GamepadTest/GamepadTest.hpp
   Source/HTTPClientTest/HTTPClientTest.cpp
@@ -63,6 +71,10 @@ add_executable(${PRODUCT_NAME} WIN32
   Source/PolylineDrawingTest/PolylineDrawingTest.hpp
   Source/PrimitiveBatchTest/PrimitiveBatchTest.cpp
   Source/PrimitiveBatchTest/PrimitiveBatchTest.hpp
+  Source/Skeletal2DTest/Skeletal2DTest.cpp
+  Source/Skeletal2DTest/Skeletal2DTest.hpp
+  Source/Skinning2DTest/Skinning2DTest.cpp
+  Source/Skinning2DTest/Skinning2DTest.hpp
   Source/SpriteBatchTest/SpriteBatchTest.cpp
   Source/SpriteBatchTest/SpriteBatchTest.hpp
   Source/SpriteFontTest/SpriteFontTest.cpp

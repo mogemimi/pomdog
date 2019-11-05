@@ -1,7 +1,9 @@
 #include "FeatureShowcaseGame.hpp"
+#include "AnimationGraphTest/AnimationGraphTest.hpp"
 #include "AudioClipTest/AudioClipTest.hpp"
 #include "BasicEffectTest/BasicEffectTest.hpp"
 #include "Beam2DTest/Beam2DTest.hpp"
+#include "DistanceFieldFontTest/DistanceFieldFontTest.hpp"
 #include "GamepadTest/GamepadTest.hpp"
 #include "HTTPClientTest/HTTPClientTest.hpp"
 #include "ImageEffectsTest/ImageEffectsTest.hpp"
@@ -12,6 +14,8 @@
 #include "SpriteBatchTest/SpriteBatchTest.hpp"
 #include "SpriteFontTest/SpriteFontTest.hpp"
 #include "SpriteLineTest/SpriteLineTest.hpp"
+#include "Skeletal2DTest/Skeletal2DTest.hpp"
+#include "Skinning2DTest/Skinning2DTest.hpp"
 #include "Texture2DLoaderTest/Texture2DLoaderTest.hpp"
 #include "VoxelModelTest/VoxelModelTest.hpp"
 #include <cmath>
@@ -71,6 +75,10 @@ void FeatureShowcaseGame::Initialize()
         window->SetTitle("Feature Showcase > SpriteFont Test");
         subGame = std::make_shared<FeatureShowcase::SpriteFontTest>(gameHost);
     });
+    buttons.emplace_back("DistanceFieldFont Test", [this] {
+        window->SetTitle("Feature Showcase > DistanceFieldFont Test");
+        subGame = std::make_shared<FeatureShowcase::DistanceFieldFontTest>(gameHost);
+    });
     buttons.emplace_back("SpriteLine Test", [this] {
         window->SetTitle("Feature Showcase > SpriteLine Test");
         subGame = std::make_shared<FeatureShowcase::SpriteLineTest>(gameHost);
@@ -106,6 +114,18 @@ void FeatureShowcaseGame::Initialize()
     buttons.emplace_back("Gamepad Test", [this] {
         window->SetTitle("Feature Showcase > Gamepad Test");
         subGame = std::make_shared<FeatureShowcase::GamepadTest>(gameHost);
+    });
+    buttons.emplace_back("Skeletal2D Test", [this] {
+        window->SetTitle("Feature Showcase > Skeletal2D Test");
+        subGame = std::make_shared<FeatureShowcase::Skeletal2DTest>(gameHost);
+    });
+    buttons.emplace_back("Skinning2D Test", [this] {
+        window->SetTitle("Feature Showcase > Skinning2D Test");
+        subGame = std::make_shared<FeatureShowcase::Skinning2DTest>(gameHost);
+    });
+    buttons.emplace_back("AnimationGraph Test", [this] {
+        window->SetTitle("Feature Showcase > AnimationGraph Test");
+        subGame = std::make_shared<FeatureShowcase::AnimationGraphTest>(gameHost);
     });
 
     hudButtons.emplace_back("Back", [this] {
