@@ -15,6 +15,28 @@ namespace Pomdog {
 class AssetManager;
 struct TextureRegion;
 
+enum class SpriteBatchPixelShaderMode : std::uint8_t {
+    /// Default pixel shader
+    Default,
+
+    /// Distance field pixel shader
+    DistanceField,
+};
+
+struct SpriteBatchDistanceFieldParameters final {
+    // NOTE:
+    // Smoothing = 1.0/3.0; // 12pt
+    // Smoothing = 1.0/5.0; // 32pt
+    // Smoothing = 1.0/16.0; // 72pt
+    float Smoothing;
+
+    // NOTE:
+    // Weight = 0.9; // lighter (300)
+    // Weight = 0.54; // normal (400)
+    // Weight = 0.4; // bold (700)
+    float Weight;
+};
+
 // NOTE: SpriteBatch uses the Cartesian coordinate system in which sprite is drawn.
 // Also the `originPivot` represents a anchor point of sprite.
 // If you want to align the bottom-left corner, the pivot is set to (0, 0).
@@ -44,6 +66,7 @@ public:
         std::optional<SamplerDescription>&& samplerDesc,
         std::optional<SurfaceFormat>&& renderTargetViewFormat,
         std::optional<DepthFormat>&& depthStencilViewFormat,
+        SpriteBatchPixelShaderMode pixelShaderMode,
         AssetManager& assets);
 
     SpriteBatch() = delete;
@@ -58,6 +81,11 @@ public:
     void Begin(
         const std::shared_ptr<GraphicsCommandList>& commandList,
         const Matrix4x4& transformMatrix);
+
+    void Begin(
+        const std::shared_ptr<GraphicsCommandList>& commandList,
+        const Matrix4x4& transformMatrix,
+        const SpriteBatchDistanceFieldParameters& distanceFieldParameters);
 
     void Draw(
         const std::shared_ptr<Texture2D>& texture,

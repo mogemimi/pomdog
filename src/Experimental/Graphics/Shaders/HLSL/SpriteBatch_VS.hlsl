@@ -48,6 +48,11 @@ struct VS_OUTPUT {
 
 cbuffer SpriteBatchConstants : register(b0) {
     matrix<float, 4, 4> ViewProjection;
+
+    // {x___} = Smoothing
+    // {_y__} = Weight
+    // {__zw} = unused
+    float4 DistanceFieldParameters;
 };
 
 VS_OUTPUT SpriteBatchVS(VS_INPUT input)

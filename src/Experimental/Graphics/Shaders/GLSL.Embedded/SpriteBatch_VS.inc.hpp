@@ -13,7 +13,8 @@ vec4 Color;
 vec4 BlendFactor;
 vec2 TextureCoord;}Out;
 uniform SpriteBatchConstants{
-mat4x4 ViewProjection;};
+mat4x4 ViewProjection;
+vec4 DistanceFieldParameters;};
 void main(){
 mat3x3 scaling=mat3x3(
 vec3(Translation.z*SourceRect.z,0.0,0.0),

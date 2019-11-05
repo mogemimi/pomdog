@@ -47,8 +47,10 @@ namespace Pomdog {
 namespace {
 
 // Built-in shaders
+#include "Shaders/GLSL.Embedded/SpriteBatchDistanceField_PS.inc.hpp"
 #include "Shaders/GLSL.Embedded/SpriteBatch_PS.inc.hpp"
 #include "Shaders/GLSL.Embedded/SpriteBatch_VS.inc.hpp"
+#include "Shaders/HLSL.Embedded/SpriteBatchDistanceField_PS.inc.hpp"
 #include "Shaders/HLSL.Embedded/SpriteBatch_PS.inc.hpp"
 #include "Shaders/HLSL.Embedded/SpriteBatch_VS.inc.hpp"
 #include "Shaders/Metal.Embedded/SpriteBatch.inc.hpp"
@@ -77,6 +79,15 @@ Vector2 ComputeSpriteOffset(const TextureRegion& region, const Vector2& originPi
     offset = (baseOffset - offset) / Vector2{w, h};
     return offset;
 }
+
+struct alignas(16) SpriteBatchConstantBuffer final {
+    Matrix4x4 ViewProjection;
+
+    // {x___} = Smoothing
+    // {_y__} = Weight
+    // {__zw} = unused
+    Vector4 DistanceFieldParameters;
+};
 
 } // unnamed namespace
 
@@ -141,11 +152,13 @@ public:
         std::optional<SamplerDescription>&& samplerState,
         std::optional<SurfaceFormat>&& renderTargetViewFormat,
         std::optional<DepthFormat>&& depthStencilViewFormat,
+        SpriteBatchPixelShaderMode pixelShaderMode,
         AssetManager& assets);
 
     void Begin(
         const std::shared_ptr<GraphicsCommandList>& commandListIn,
-        const Matrix4x4& transformMatrix);
+        const Matrix4x4& transformMatrix,
+        std::optional<SpriteBatchDistanceFieldParameters>&& distanceFieldParameters);
 
     void Draw(
         const Texture2DView& texture,
@@ -175,6 +188,7 @@ SpriteBatch::Impl::Impl(
     std::optional<SamplerDescription>&& samplerDesc,
     std::optional<SurfaceFormat>&& renderTargetViewFormat,
     std::optional<DepthFormat>&& depthStencilViewFormat,
+    SpriteBatchPixelShaderMode pixelShaderMode,
     AssetManager& assets)
     : startInstanceLocation(0)
     , drawCallCount(0)
@@ -240,7 +254,7 @@ SpriteBatch::Impl::Impl(
     {
         constantBuffer = std::make_shared<ConstantBuffer>(
             graphicsDevice,
-            sizeof(Matrix4x4),
+            sizeof(SpriteBatchConstantBuffer),
             BufferUsage::Dynamic);
 
         sampler = std::make_shared<SamplerState>(
@@ -259,10 +273,20 @@ SpriteBatch::Impl::Impl(
             .SetHLSLPrecompiled(BuiltinHLSL_SpriteBatch_VS, sizeof(BuiltinHLSL_SpriteBatch_VS))
             .SetMetal(Builtin_Metal_SpriteBatch, sizeof(Builtin_Metal_SpriteBatch), "SpriteBatchVS");
 
-        auto pixelShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
-            .SetGLSL(Builtin_GLSL_SpriteBatch_PS, std::strlen(Builtin_GLSL_SpriteBatch_PS))
-            .SetHLSLPrecompiled(BuiltinHLSL_SpriteBatch_PS, sizeof(BuiltinHLSL_SpriteBatch_PS))
-            .SetMetal(Builtin_Metal_SpriteBatch, sizeof(Builtin_Metal_SpriteBatch), "SpriteBatchPS");
+        auto pixelShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::PixelShader);
+
+        switch (pixelShaderMode) {
+        case SpriteBatchPixelShaderMode::Default:
+            pixelShader.SetGLSL(Builtin_GLSL_SpriteBatch_PS, std::strlen(Builtin_GLSL_SpriteBatch_PS));
+            pixelShader.SetHLSLPrecompiled(BuiltinHLSL_SpriteBatch_PS, sizeof(BuiltinHLSL_SpriteBatch_PS));
+            pixelShader.SetMetal(Builtin_Metal_SpriteBatch, sizeof(Builtin_Metal_SpriteBatch), "SpriteBatchPS");
+            break;
+        case SpriteBatchPixelShaderMode::DistanceField:
+            pixelShader.SetGLSL(Builtin_GLSL_SpriteBatchDistanceField_PS, std::strlen(Builtin_GLSL_SpriteBatchDistanceField_PS));
+            pixelShader.SetHLSLPrecompiled(BuiltinHLSL_SpriteBatchDistanceField_PS, sizeof(BuiltinHLSL_SpriteBatchDistanceField_PS));
+            pixelShader.SetMetal(Builtin_Metal_SpriteBatch, sizeof(Builtin_Metal_SpriteBatch), "SpriteBatchDistanceFieldPS");
+            break;
+        }
 
         pipelineState = assets.CreateBuilder<PipelineState>()
             .SetRenderTargetViewFormat(*renderTargetViewFormat)
@@ -282,14 +306,27 @@ SpriteBatch::Impl::Impl(
 
 void SpriteBatch::Impl::Begin(
     const std::shared_ptr<GraphicsCommandList>& commandListIn,
-    const Matrix4x4& transformMatrix)
+    const Matrix4x4& transformMatrix,
+    std::optional<SpriteBatchDistanceFieldParameters>&& distanceFieldParameters)
 {
     POMDOG_ASSERT(commandListIn);
     this->commandList = commandListIn;
 
     POMDOG_ASSERT(constantBuffer);
-    alignas(16) Matrix4x4 transposedMatrix = Matrix4x4::Transpose(transformMatrix);
-    constantBuffer->SetValue(transposedMatrix);
+
+    SpriteBatchConstantBuffer constants;
+    constants.ViewProjection = Matrix4x4::Transpose(transformMatrix);
+
+    if (distanceFieldParameters != std::nullopt) {
+        constants.DistanceFieldParameters.X = distanceFieldParameters->Smoothing;
+        constants.DistanceFieldParameters.Y = distanceFieldParameters->Weight;
+    }
+    else {
+        constants.DistanceFieldParameters.X = 0.25f;
+        constants.DistanceFieldParameters.Y = 0.65f;
+    }
+
+    constantBuffer->SetValue(constants);
 
     startInstanceLocation = 0;
     drawCallCount = 0;
@@ -509,6 +546,7 @@ SpriteBatch::SpriteBatch(
         std::nullopt,
         std::nullopt,
         std::nullopt,
+        SpriteBatchPixelShaderMode::Default,
         assets)
 {
 }
@@ -519,6 +557,7 @@ SpriteBatch::SpriteBatch(
     std::optional<SamplerDescription>&& samplerDesc,
     std::optional<SurfaceFormat>&& renderTargetViewFormat,
     std::optional<DepthFormat>&& depthStencilViewFormat,
+    SpriteBatchPixelShaderMode pixelShaderMode,
     AssetManager& assets)
     : impl(std::make_unique<Impl>(
         graphicsDevice,
@@ -526,6 +565,7 @@ SpriteBatch::SpriteBatch(
         std::move(samplerDesc),
         std::move(renderTargetViewFormat),
         std::move(depthStencilViewFormat),
+        pixelShaderMode,
         assets))
 {
 }
@@ -537,7 +577,16 @@ void SpriteBatch::Begin(
     const Matrix4x4& transformMatrixIn)
 {
     POMDOG_ASSERT(impl);
-    impl->Begin(commandList, transformMatrixIn);
+    impl->Begin(commandList, transformMatrixIn, std::nullopt);
+}
+
+void SpriteBatch::Begin(
+    const std::shared_ptr<GraphicsCommandList>& commandList,
+    const Matrix4x4& transformMatrixIn,
+    const SpriteBatchDistanceFieldParameters& distanceFieldParameters)
+{
+    POMDOG_ASSERT(impl);
+    impl->Begin(commandList, transformMatrixIn, distanceFieldParameters);
 }
 
 void SpriteBatch::End()

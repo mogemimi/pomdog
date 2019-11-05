@@ -26,6 +26,7 @@ void SpriteBatchTest::Initialize()
         SamplerDescription::CreatePointWrap(),
         std::nullopt,
         std::nullopt,
+        SpriteBatchPixelShaderMode::Default,
         *assets);
 
     if (auto[res, err] = assets->Load<Texture2D>("Textures/pomdog.png"); err != nullptr) {

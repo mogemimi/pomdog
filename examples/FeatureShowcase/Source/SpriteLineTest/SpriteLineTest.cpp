@@ -23,6 +23,7 @@ void SpriteLineTest::Initialize()
         SamplerDescription::CreateLinearWrap(),
         std::nullopt,
         std::nullopt,
+        SpriteBatchPixelShaderMode::Default,
         *assets);
 
     std::shared_ptr<Error> err;

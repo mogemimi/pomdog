@@ -34,6 +34,11 @@ out VertexData {
 
 uniform SpriteBatchConstants {
     mat4x4 ViewProjection;
+
+    // {x___} = Smoothing
+    // {_y__} = Weight
+    // {__zw} = unused
+    vec4 DistanceFieldParameters;
 };
 
 void main()

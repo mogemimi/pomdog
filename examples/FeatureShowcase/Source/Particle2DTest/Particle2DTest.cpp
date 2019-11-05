@@ -135,6 +135,7 @@ void Particle2DTest::Initialize()
         SamplerDescription::CreatePointWrap(),
         std::nullopt,
         std::nullopt,
+        SpriteBatchPixelShaderMode::Default,
         *assets);
 
     std::shared_ptr<Error> err;

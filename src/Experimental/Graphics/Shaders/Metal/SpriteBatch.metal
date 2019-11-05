@@ -48,6 +48,11 @@ struct VS_OUTPUT {
 
 struct __attribute__((__aligned__(256))) SpriteBatchConstants {
     matrix_float4x4 ViewProjection;
+
+    // {x___} = Smoothing
+    // {_y__} = Weight
+    // {__zw} = unused
+    float4 DistanceFieldParameters;
 };
 
 vertex VS_OUTPUT SpriteBatchVS(
@@ -121,4 +126,18 @@ fragment half4 SpriteBatchPS(
     float4 compensationFactor = float4(float3(input.BlendFactor.z), input.BlendFactor.w);
     color = min(color * blendFactor + compensationFactor, float4(1.0));
     return half4(color * input.Color);
+}
+
+fragment half4 SpriteBatchDistanceFieldPS(
+    VS_OUTPUT input [[stage_in]],
+    constant SpriteBatchConstants& uniforms [[buffer(0)]],
+    texture2d<float> diffuseTexture [[texture(0)]],
+    sampler textureSampler [[sampler(0)]])
+{
+    float smoothing = uniforms.DistanceFieldParameters.x;
+    float weight = uniforms.DistanceFieldParameters.y;
+
+    float distance = diffuseTexture.sample(textureSampler, input.TextureCoord.xy).a;
+    float alpha = smoothstep(weight - smoothing, weight + smoothing, distance);
+    return half4(float4(input.Color.rgb, input.Color.a * alpha));
 }
