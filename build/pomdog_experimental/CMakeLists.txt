@@ -19,8 +19,6 @@ source_group(ImageEffects             REGULAR_EXPRESSION Pomdog.Experimental/Ima
 source_group(InGameEditor             REGULAR_EXPRESSION Pomdog.Experimental/InGameEditor/*)
 source_group(Particle2D               REGULAR_EXPRESSION Pomdog.Experimental/Particle2D/*)
 source_group(Particle2D\\detail       REGULAR_EXPRESSION Pomdog.Experimental/Particle2D/detail/*)
-source_group(Skeletal2D               REGULAR_EXPRESSION Pomdog.Experimental/Skeletal2D/*)
-source_group(Skeletal2D\\detail       REGULAR_EXPRESSION Pomdog.Experimental/Skeletal2D/detail/*)
 source_group(Spine                    REGULAR_EXPRESSION Pomdog.Experimental/Spine/*)
 source_group(Rendering                REGULAR_EXPRESSION Pomdog.Experimental/Rendering/*)
 source_group(Rendering\\Commands      REGULAR_EXPRESSION Pomdog.Experimental/Rendering/Commands/*)
@@ -59,8 +57,6 @@ add_library(pomdog_experimental STATIC
 
   ${POMDOG_EXPERIMENTAL_DIR}/Gameplay2D/ActorComponent.cpp
   ${POMDOG_EXPERIMENTAL_DIR}/Gameplay2D/ActorComponent.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Gameplay2D/Animator.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Gameplay2D/Animator.hpp
   # ${POMDOG_EXPERIMENTAL_DIR}/Gameplay2D/BeamRenderable.cpp
   # ${POMDOG_EXPERIMENTAL_DIR}/Gameplay2D/BeamRenderable.hpp
   ${POMDOG_EXPERIMENTAL_DIR}/Gameplay2D/CameraComponent.cpp
@@ -105,57 +101,6 @@ add_library(pomdog_experimental STATIC
 
   ${POMDOG_EXPERIMENTAL_DIR}/Particle2D/ParticleLoader.cpp
   ${POMDOG_EXPERIMENTAL_DIR}/Particle2D/ParticleLoader.hpp
-
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/AnimationBlendInput.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/AnimationBlendInputType.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/AnimationClip.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/AnimationClip.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/AnimationGraph.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/AnimationNode.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/AnimationState.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/AnimationState.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/AnimationSystem.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/AnimationSystem.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/AnimationTimeInterval.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/AnimationTrack.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/AnimationTrack.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/CompressedFloat.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/Joint.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/JointIndex.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/JointPose.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/RigidSlot.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/RotationTrack.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/ScaleTrack.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/Skeleton.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/Skeleton.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/SkeletonHelper.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/SkeletonHelper.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/SkeletonPose.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/SkeletonPose.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/SkeletonTransform.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/Skin.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/Skin.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/SkinnedMesh.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/SkinnedMeshPart.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/SkinnedVertex.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/SpriteAnimationTrack.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/SpriteAnimationTrack.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/TranslationTrack.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/detail/AnimationAdditiveNode.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/detail/AnimationAdditiveNode.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/detail/AnimationClipNode.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/detail/AnimationClipNode.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/detail/AnimationGraphWeight.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/detail/AnimationGraphWeight.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/detail/AnimationGraphWeightCollection.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/detail/AnimationGraphWeightCollection.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/detail/AnimationKeyHelper.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/detail/AnimationLerpNode.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/detail/AnimationLerpNode.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/detail/AnimationTimer.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/detail/AnimationTimer.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/detail/WeightBlendingHelper.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Skeletal2D/detail/WeightBlendingHelper.hpp
 
   ${POMDOG_EXPERIMENTAL_DIR}/Spine/AnimationGraphBuilder.cpp
   ${POMDOG_EXPERIMENTAL_DIR}/Spine/AnimationGraphBuilder.hpp

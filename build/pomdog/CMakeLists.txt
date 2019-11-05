@@ -10,53 +10,56 @@ set(CMAKE_CXX_STANDARD_REQUIRED on)
 set(CMAKE_CXX_EXTENSIONS off)
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
 
-source_group(Application                  REGULAR_EXPRESSION "(include/Pomdog|src)/Application/*")
-source_group(Async                        REGULAR_EXPRESSION "(include/Pomdog|src)/Async/*")
-source_group(Audio                        REGULAR_EXPRESSION "(include/Pomdog|src)/Audio/*")
-source_group(Basic                        REGULAR_EXPRESSION "(include/Pomdog|src)/Basic/*")
-source_group(Content                      REGULAR_EXPRESSION "(include/Pomdog|src)/Content/*")
-source_group(Content\\AssetBuilders       REGULAR_EXPRESSION "(include/Pomdog|src)/Content/AssetBuilders/*")
-source_group(Content\\AssetLoaders        REGULAR_EXPRESSION "(include/Pomdog|src)/Content/AssetLoaders/*")
-source_group(Content\\Audio               REGULAR_EXPRESSION "(include/Pomdog|src)/Content/Audio/*")
-source_group(Content\\Image               REGULAR_EXPRESSION "(include/Pomdog|src)/Content/Image/*")
-source_group(Content\\Utility             REGULAR_EXPRESSION "(include/Pomdog|src)/Content/Utility/*")
-source_group(Graphics                     REGULAR_EXPRESSION "(include/Pomdog|src)/Graphics/*")
-source_group(Graphics\\ShaderCompilers    REGULAR_EXPRESSION "(include/Pomdog|src)/Graphics/ShaderCompilers/*")
-source_group(Input                        REGULAR_EXPRESSION "(include/Pomdog|src)/Input/*")
-source_group(Logging                      REGULAR_EXPRESSION "(include/Pomdog|src)/Logging/*")
-source_group(Math                         REGULAR_EXPRESSION "(include/Pomdog|src)/Math/*")
-source_group(Network                      REGULAR_EXPRESSION "(include/Pomdog|src)/Network/*")
-source_group(Platform.Cocoa               REGULAR_EXPRESSION "(include/Pomdog/Platform/Cocoa|src/Platform.Cocoa)/*")
-source_group(Platform.Win32               REGULAR_EXPRESSION "(include/Pomdog/Platform/Win32|src/Platform.Win32)/*")
-source_group(Platform.X11                 REGULAR_EXPRESSION "(include/Pomdog/Platform/X11|src/Platform.X11)/*")
-source_group(Signals                      REGULAR_EXPRESSION "(include/Pomdog|src)/Signals/*")
-source_group(Utility                      REGULAR_EXPRESSION "(include/Pomdog|src)/Utility/*")
-source_group(Experimental\\Graphics       REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Graphics/*")
-source_group(Experimental\\ImageEffects   REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/ImageEffects/*")
-source_group(Experimental\\Image          REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Image/*")
-source_group(Experimental\\MagicaVoxel    REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/MagicaVoxel/*")
-source_group(Experimental\\Particle2D     REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Particle2D/*")
-source_group(Experimental\\Reactive       REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Reactive/*")
-source_group(Experimental\\TexturePacker  REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/TexturePacker/*")
-source_group(Experimental\\Tween          REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Tween/*")
-source_group(InputSystem                  REGULAR_EXPRESSION src/InputSystem/*)
-source_group(InputSystem.DirectInput      REGULAR_EXPRESSION src/InputSystem.DirectInput/*)
-source_group(InputSystem.IOKit            REGULAR_EXPRESSION src/InputSystem.IOKit/*)
-source_group(InputSystem.Linux            REGULAR_EXPRESSION src/InputSystem.Linux/*)
-source_group(Network.MbedTLS              REGULAR_EXPRESSION src/Network.MbedTLS/*)
-source_group(Network.POSIX                REGULAR_EXPRESSION src/Network.POSIX/*)
-source_group(Network.Win32                REGULAR_EXPRESSION src/Network.Win32/*)
-source_group(Platform.Apple               REGULAR_EXPRESSION src/Platform.Apple/*)
-source_group(Platform.Linux               REGULAR_EXPRESSION src/Platform.Linux/*)
-source_group(RenderSystem                 REGULAR_EXPRESSION src/RenderSystem/*)
-source_group(RenderSystem.DXGI            REGULAR_EXPRESSION src/RenderSystem.DXGI/*)
-source_group(RenderSystem.Direct3D        REGULAR_EXPRESSION src/RenderSystem.Direct3D/*)
-source_group(RenderSystem.Direct3D11      REGULAR_EXPRESSION src/RenderSystem.Direct3D11/*)
-source_group(RenderSystem.GL4             REGULAR_EXPRESSION src/RenderSystem.GL4/*)
-source_group(RenderSystem.Metal           REGULAR_EXPRESSION src/RenderSystem.Metal/*)
-source_group(RenderSystem.Vulkan          REGULAR_EXPRESSION src/RenderSystem.Vulkan/*)
-source_group(SoundSystem.OpenAL           REGULAR_EXPRESSION src/SoundSystem.OpenAL/*)
-source_group(SoundSystem.XAudio2          REGULAR_EXPRESSION src/SoundSystem.XAudio2/*)
+source_group(Application                            REGULAR_EXPRESSION "(include/Pomdog|src)/Application/*")
+source_group(Async                                  REGULAR_EXPRESSION "(include/Pomdog|src)/Async/*")
+source_group(Audio                                  REGULAR_EXPRESSION "(include/Pomdog|src)/Audio/*")
+source_group(Basic                                  REGULAR_EXPRESSION "(include/Pomdog|src)/Basic/*")
+source_group(Content                                REGULAR_EXPRESSION "(include/Pomdog|src)/Content/*")
+source_group(Content\\AssetBuilders                 REGULAR_EXPRESSION "(include/Pomdog|src)/Content/AssetBuilders/*")
+source_group(Content\\AssetLoaders                  REGULAR_EXPRESSION "(include/Pomdog|src)/Content/AssetLoaders/*")
+source_group(Content\\Audio                         REGULAR_EXPRESSION "(include/Pomdog|src)/Content/Audio/*")
+source_group(Content\\Image                         REGULAR_EXPRESSION "(include/Pomdog|src)/Content/Image/*")
+source_group(Content\\Utility                       REGULAR_EXPRESSION "(include/Pomdog|src)/Content/Utility/*")
+source_group(Graphics                               REGULAR_EXPRESSION "(include/Pomdog|src)/Graphics/*")
+source_group(Graphics\\ShaderCompilers              REGULAR_EXPRESSION "(include/Pomdog|src)/Graphics/ShaderCompilers/*")
+source_group(Input                                  REGULAR_EXPRESSION "(include/Pomdog|src)/Input/*")
+source_group(Logging                                REGULAR_EXPRESSION "(include/Pomdog|src)/Logging/*")
+source_group(Math                                   REGULAR_EXPRESSION "(include/Pomdog|src)/Math/*")
+source_group(Network                                REGULAR_EXPRESSION "(include/Pomdog|src)/Network/*")
+source_group(Platform.Cocoa                         REGULAR_EXPRESSION "(include/Pomdog/Platform/Cocoa|src/Platform.Cocoa)/*")
+source_group(Platform.Win32                         REGULAR_EXPRESSION "(include/Pomdog/Platform/Win32|src/Platform.Win32)/*")
+source_group(Platform.X11                           REGULAR_EXPRESSION "(include/Pomdog/Platform/X11|src/Platform.X11)/*")
+source_group(Signals                                REGULAR_EXPRESSION "(include/Pomdog|src)/Signals/*")
+source_group(Utility                                REGULAR_EXPRESSION "(include/Pomdog|src)/Utility/*")
+source_group(Experimental\\Graphics                 REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Graphics/*")
+source_group(Experimental\\ImageEffects             REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/ImageEffects/*")
+source_group(Experimental\\Image                    REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Image/*")
+source_group(Experimental\\MagicaVoxel              REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/MagicaVoxel/*")
+source_group(Experimental\\Particle2D               REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Particle2D/*")
+source_group(Experimental\\Reactive                 REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Reactive/*")
+source_group(Experimental\\Skeletal2D               REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Skeletal2D/*")
+source_group(Experimental\\Skeletal2D\\BlendTrees   REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Skeletal2D/BlendTrees/*")
+source_group(Experimental\\Skeletal2D\\Tracks       REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Skeletal2D/Tracks/*")
+source_group(Experimental\\TexturePacker            REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/TexturePacker/*")
+source_group(Experimental\\Tween                    REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Tween/*")
+source_group(InputSystem                            REGULAR_EXPRESSION src/InputSystem/*)
+source_group(InputSystem.DirectInput                REGULAR_EXPRESSION src/InputSystem.DirectInput/*)
+source_group(InputSystem.IOKit                      REGULAR_EXPRESSION src/InputSystem.IOKit/*)
+source_group(InputSystem.Linux                      REGULAR_EXPRESSION src/InputSystem.Linux/*)
+source_group(Network.MbedTLS                        REGULAR_EXPRESSION src/Network.MbedTLS/*)
+source_group(Network.POSIX                          REGULAR_EXPRESSION src/Network.POSIX/*)
+source_group(Network.Win32                          REGULAR_EXPRESSION src/Network.Win32/*)
+source_group(Platform.Apple                         REGULAR_EXPRESSION src/Platform.Apple/*)
+source_group(Platform.Linux                         REGULAR_EXPRESSION src/Platform.Linux/*)
+source_group(RenderSystem                           REGULAR_EXPRESSION src/RenderSystem/*)
+source_group(RenderSystem.DXGI                      REGULAR_EXPRESSION src/RenderSystem.DXGI/*)
+source_group(RenderSystem.Direct3D                  REGULAR_EXPRESSION src/RenderSystem.Direct3D/*)
+source_group(RenderSystem.Direct3D11                REGULAR_EXPRESSION src/RenderSystem.Direct3D11/*)
+source_group(RenderSystem.GL4                       REGULAR_EXPRESSION src/RenderSystem.GL4/*)
+source_group(RenderSystem.Metal                     REGULAR_EXPRESSION src/RenderSystem.Metal/*)
+source_group(RenderSystem.Vulkan                    REGULAR_EXPRESSION src/RenderSystem.Vulkan/*)
+source_group(SoundSystem.OpenAL                     REGULAR_EXPRESSION src/SoundSystem.OpenAL/*)
+source_group(SoundSystem.XAudio2                    REGULAR_EXPRESSION src/SoundSystem.XAudio2/*)
 
 set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/include/Pomdog/Application/Duration.hpp
@@ -437,6 +440,38 @@ set(POMDOG_SOURCES_EXPERIMENTAL
   ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Operators/TimeoutOperator.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Operators/ZipOperator.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Subjects/KeyDownSubject.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/AnimationClip.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/AnimationState.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/AnimationSystem.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/AnimationTimeInterval.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/Animator.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/CompressedFloat.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/Joint.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/JointIndex.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/JointPose.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/RigidSlot.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/Skeleton.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/SkeletonHelper.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/SkeletonPose.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/Skin.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/SkinnedMesh.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/SkinnedMeshPart.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/SkinnedVertex.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/BlendTrees/AnimationAdditiveNode.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/BlendTrees/AnimationBlendInput.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/BlendTrees/AnimationBlendInputType.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/BlendTrees/AnimationClipNode.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/BlendTrees/AnimationCrossFadeNode.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/BlendTrees/AnimationGraph.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/BlendTrees/AnimationGraphWeightCollection.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/BlendTrees/AnimationLerpNode.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/BlendTrees/AnimationNode.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/BlendTrees/WeightBlendingHelper.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/Tracks/AnimationTrack.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/Tracks/RotationTrack.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/Tracks/ScaleTrack.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/Tracks/SpriteAnimationTrack.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/Tracks/TranslationTrack.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureAtlas.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureAtlasGenerator.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureAtlasLoader.hpp
@@ -470,6 +505,23 @@ set(POMDOG_SOURCES_EXPERIMENTAL
   ${POMDOG_DIR}/src/Experimental/MagicaVoxel/VoxModelExporter.cpp
   ${POMDOG_DIR}/src/Experimental/Particle2D/BeamSystem.cpp
   ${POMDOG_DIR}/src/Experimental/Particle2D/ParticleSystem.cpp
+  ${POMDOG_DIR}/src/Experimental/Skeletal2D/AnimationClip.cpp
+  ${POMDOG_DIR}/src/Experimental/Skeletal2D/AnimationState.cpp
+  ${POMDOG_DIR}/src/Experimental/Skeletal2D/AnimationSystem.cpp
+  ${POMDOG_DIR}/src/Experimental/Skeletal2D/Animator.cpp
+  ${POMDOG_DIR}/src/Experimental/Skeletal2D/Skeleton.cpp
+  ${POMDOG_DIR}/src/Experimental/Skeletal2D/SkeletonHelper.cpp
+  ${POMDOG_DIR}/src/Experimental/Skeletal2D/SkeletonPose.cpp
+  ${POMDOG_DIR}/src/Experimental/Skeletal2D/Skin.cpp
+  ${POMDOG_DIR}/src/Experimental/Skeletal2D/BlendTrees/AnimationAdditiveNode.cpp
+  ${POMDOG_DIR}/src/Experimental/Skeletal2D/BlendTrees/AnimationClipNode.cpp
+  ${POMDOG_DIR}/src/Experimental/Skeletal2D/BlendTrees/AnimationCrossFadeNode.cpp
+  ${POMDOG_DIR}/src/Experimental/Skeletal2D/BlendTrees/AnimationGraphWeightCollection.cpp
+  ${POMDOG_DIR}/src/Experimental/Skeletal2D/BlendTrees/AnimationLerpNode.cpp
+  ${POMDOG_DIR}/src/Experimental/Skeletal2D/BlendTrees/WeightBlendingHelper.cpp
+  ${POMDOG_DIR}/src/Experimental/Skeletal2D/Tracks/AnimationKeyHelper.hpp
+  ${POMDOG_DIR}/src/Experimental/Skeletal2D/Tracks/AnimationTrack.cpp
+  ${POMDOG_DIR}/src/Experimental/Skeletal2D/Tracks/SpriteAnimationTrack.cpp
   ${POMDOG_DIR}/src/Experimental/TexturePacker/TextureAtlasGenerator.cpp
   ${POMDOG_DIR}/src/Experimental/TexturePacker/TextureAtlasLoader.cpp
   ${POMDOG_DIR}/src/Experimental/Tween/EasingHelper.cpp
