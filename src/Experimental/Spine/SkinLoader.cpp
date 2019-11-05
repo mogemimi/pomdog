@@ -1,31 +1,32 @@
 // Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
-#include "SkinLoader.hpp"
-#include "SkeletonDesc.hpp"
-#include "Pomdog.Experimental/Skeletal2D/Skin.hpp"
+#include "Pomdog/Experimental/Spine/SkinLoader.hpp"
+#include "Pomdog/Experimental/Skeletal2D/Skin.hpp"
+#include "Pomdog/Experimental/Spine/SkeletonDesc.hpp"
 #include "Pomdog/Utility/detail/CRC32.hpp"
 #include <algorithm>
 
-namespace Pomdog {
-namespace Spine {
+namespace Pomdog::Spine {
 namespace {
 
-std::vector<RigidSlot> CreateSlots(std::vector<SlotDesc> const& slotDescs,
-    std::vector<SkinSlotDesc> const& skinSlotDescs,
-    TexturePacker::TextureAtlas const& textureAtlas)
-{
-    using TexturePacker::TextureAtlas;
-    using TexturePacker::TextureAtlasRegion;
-    using Detail::CRC32;
+using Detail::CRC32;
+using Skeletal2D::RigidSlot;
+using TexturePacker::TextureAtlas;
+using TexturePacker::TextureAtlasRegion;
 
+std::vector<RigidSlot>
+CreateSlots(
+    const std::vector<SlotDesc>& slotDescs,
+    const std::vector<SkinSlotDesc>& skinSlotDescs,
+    const TexturePacker::TextureAtlas& textureAtlas)
+{
     std::vector<RigidSlot> slots;
     slots.reserve(slotDescs.size());
 
     std::int16_t drawOrder = 0;
 
-    for (auto & slotDesc: slotDescs)
-    {
-        auto iter = std::find_if(std::begin(skinSlotDescs), std::end(skinSlotDescs), [&slotDesc](SkinSlotDesc const& desc) {
+    for (auto& slotDesc : slotDescs) {
+        auto iter = std::find_if(std::begin(skinSlotDescs), std::end(skinSlotDescs), [&slotDesc](const SkinSlotDesc& desc) {
             return desc.SlotName == slotDesc.Name;
         });
 
@@ -37,8 +38,7 @@ std::vector<RigidSlot> CreateSlots(std::vector<SlotDesc> const& slotDescs,
             continue;
         }
 
-        if (iter->Attachments.empty() && !iter->SkinnedMeshAttachments.empty())
-        {
+        if (iter->Attachments.empty() && !iter->SkinnedMeshAttachments.empty()) {
             ///@todo Not implemented
 
 //            ///@note push dummy attachment data
@@ -67,7 +67,7 @@ std::vector<RigidSlot> CreateSlots(std::vector<SlotDesc> const& slotDescs,
             continue;
         }
 
-        auto attachment = std::find_if(std::begin(iter->Attachments), std::end(iter->Attachments), [&slotDesc](AttachmentDesc const& desc) {
+        auto attachment = std::find_if(std::begin(iter->Attachments), std::end(iter->Attachments), [&slotDesc](const AttachmentDesc& desc) {
             return desc.Name == slotDesc.Attachement;
         });
 
@@ -79,7 +79,7 @@ std::vector<RigidSlot> CreateSlots(std::vector<SlotDesc> const& slotDescs,
             continue;
         }
 
-        auto textureAtlasRegion = std::find_if(std::begin(textureAtlas.regions), std::end(textureAtlas.regions), [&attachment](TextureAtlasRegion const& region) {
+        auto textureAtlasRegion = std::find_if(std::begin(textureAtlas.regions), std::end(textureAtlas.regions), [&attachment](const TextureAtlasRegion& region) {
             return region.Name == attachment->Name;
         });
 
@@ -95,7 +95,7 @@ std::vector<RigidSlot> CreateSlots(std::vector<SlotDesc> const& slotDescs,
 
         POMDOG_ASSERT(slotDesc.Joint);
         slot.JointIndex = slotDesc.Joint;
-        slot.HashId = CRC32::ComputeCRC32(slotDesc.Name);
+        slot.HashID = CRC32::ComputeCRC32(slotDesc.Name);
 
         slot.Color = Color::White;
         slot.DrawOrder = drawOrder;
@@ -125,17 +125,19 @@ std::vector<RigidSlot> CreateSlots(std::vector<SlotDesc> const& slotDescs,
     return slots;
 }
 
-} // unnamed namespace
+} // namespace
 
-Skin CreateSkin(SkeletonDesc const& skeletonDesc,
-    TexturePacker::TextureAtlas const& textureAtlas,
-    std::string const& skinName)
+std::shared_ptr<Skeletal2D::Skin>
+CreateSkin(
+    const SkeletonDesc& skeletonDesc,
+    const TexturePacker::TextureAtlas& textureAtlas,
+    const std::string& skinName)
 {
     POMDOG_ASSERT(!skeletonDesc.Bones.empty());
     POMDOG_ASSERT(!skeletonDesc.Skins.empty());
 
     auto iter = std::find_if(std::begin(skeletonDesc.Skins), std::end(skeletonDesc.Skins),
-        [&skinName](SkinDesc const& desc){ return desc.Name == skinName; });
+        [&skinName](const SkinDesc& desc) { return desc.Name == skinName; });
 
     POMDOG_ASSERT(iter != std::end(skeletonDesc.Skins));
 
@@ -150,9 +152,9 @@ Skin CreateSkin(SkeletonDesc const& skeletonDesc,
 //        throw NotFound;
 //    }
 
-    Skin skin(CreateSlots(skeletonDesc.Slots, iter->Slots, textureAtlas));
+    auto slots = CreateSlots(skeletonDesc.Slots, iter->Slots, textureAtlas);
+    auto skin = std::make_shared<Skeletal2D::Skin>(std::move(slots));
     return skin;
 }
 
-} // namespace Spine
-} // namespace Pomdog
+} // namespace Pomdog::Spine

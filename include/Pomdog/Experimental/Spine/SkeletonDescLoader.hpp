@@ -2,9 +2,10 @@
 
 #pragma once
 
-#include "SkeletonDesc.hpp"
+#include "Pomdog/Experimental/Spine/SkeletonDesc.hpp"
 #include "Pomdog/Utility/Errors.hpp"
 #include <memory>
+#include <string>
 #include <tuple>
 
 namespace Pomdog::Spine {

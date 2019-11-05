@@ -1,24 +1,30 @@
 // Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
-#include "SkeletonLoader.hpp"
-#include "Pomdog.Experimental/Spine/SkeletonDesc.hpp"
-#include "Pomdog.Experimental/Skeletal2D/JointIndex.hpp"
-#include "Pomdog.Experimental/Skeletal2D/Joint.hpp"
-#include "Pomdog.Experimental/Skeletal2D/Skeleton.hpp"
-#include "Pomdog.Experimental/Skeletal2D/SkeletonPose.hpp"
-#include "Pomdog.Experimental/Skeletal2D/SkeletonHelper.hpp"
-#include <utility>
+#include "Pomdog/Experimental/Spine/SkeletonLoader.hpp"
+#include "Pomdog/Experimental/Skeletal2D/Joint.hpp"
+#include "Pomdog/Experimental/Skeletal2D/JointIndex.hpp"
+#include "Pomdog/Experimental/Skeletal2D/Skeleton.hpp"
+#include "Pomdog/Experimental/Skeletal2D/SkeletonHelper.hpp"
+#include "Pomdog/Experimental/Skeletal2D/SkeletonPose.hpp"
+#include "Pomdog/Experimental/Spine/SkeletonDesc.hpp"
 #include <limits>
+#include <utility>
 
-namespace Pomdog {
-namespace Spine {
+namespace Pomdog::Spine {
 namespace {
 
-auto FindBoneParent(std::string const& parentName,
-    std::vector<Joint> const& bones, std::vector<BoneDesc> const& boneDescs)-> decltype(Joint::Index)
+using Skeletal2D::Joint;
+using Skeletal2D::JointIndex;
+using Skeletal2D::Skeleton;
+
+JointIndex
+FindBoneParent(
+    const std::string& parentName,
+    [[maybe_unused]] const std::vector<Joint>& bones,
+    const std::vector<BoneDesc>& boneDescs)
 {
     auto iter = std::find_if(std::begin(boneDescs), std::end(boneDescs),
-        [&parentName](BoneDesc const& desc) { return desc.Name == parentName; });
+        [&parentName](const BoneDesc& desc) { return desc.Name == parentName; });
 
     if (iter == std::end(boneDescs)) {
         return {};
@@ -27,11 +33,11 @@ auto FindBoneParent(std::string const& parentName,
     std::size_t jointIndex = std::distance(std::begin(boneDescs), iter);
     POMDOG_ASSERT(jointIndex < bones.size());
     POMDOG_ASSERT(jointIndex < std::numeric_limits<typename std::remove_reference<
-        decltype(*decltype(Joint::Index)())>::type>::max());
-    return jointIndex;
+        decltype(*JointIndex())>::type>::max());
+    return JointIndex{static_cast<std::uint8_t>(jointIndex)};
 }
 
-std::vector<Matrix3x2> CreateInverseBindPoseByJoints(Skeleton const& skeleton)
+std::vector<Matrix3x2> CreateInverseBindPoseByJoints(const Skeleton& skeleton)
 {
     POMDOG_ASSERT(skeleton.JointCount() > 0);
     POMDOG_ASSERT(skeleton.Root().Index);
@@ -39,16 +45,14 @@ std::vector<Matrix3x2> CreateInverseBindPoseByJoints(Skeleton const& skeleton)
     std::vector<Matrix3x2> bindPose;
     bindPose.resize(skeleton.JointCount());
 
-    SkeletonHelper::Traverse(skeleton, skeleton.Root().Index, [&bindPose](Joint const& bone)
-    {
+    Skeletal2D::SkeletonHelper::Traverse(skeleton, skeleton.Root().Index, [&bindPose](const Joint& bone) {
         Matrix3x2 matrix = Matrix3x2::CreateScale(bone.BindPose.Scale);
         matrix *= Matrix3x2::CreateRotation(bone.BindPose.Rotation);
         matrix *= Matrix3x2::CreateTranslation(bone.BindPose.Translate);
 
-        if (bone.Parent)
-        {
+        if (bone.Parent) {
             POMDOG_ASSERT(*bone.Parent < bindPose.size());
-            auto & parentMatrix = bindPose[*bone.Parent];
+            auto& parentMatrix = bindPose[*bone.Parent];
             matrix *= parentMatrix;
         }
 
@@ -56,20 +60,18 @@ std::vector<Matrix3x2> CreateInverseBindPoseByJoints(Skeleton const& skeleton)
         bindPose[*bone.Index] = matrix;
     });
 
-    for (auto & matrix: bindPose)
-    {
+    for (auto& matrix : bindPose) {
         matrix = Matrix3x2::Invert(matrix);
     }
     return bindPose;
 }
 
-std::vector<Joint> CreateBones(std::vector<BoneDesc> const& boneDescriptions)
+std::vector<Joint> CreateBones(const std::vector<BoneDesc>& boneDescriptions)
 {
     std::vector<Joint> joints;
     joints.reserve(boneDescriptions.size());
 
-    for (auto & boneDesc: boneDescriptions)
-    {
+    for (auto& boneDesc : boneDescriptions) {
         Joint joint;
         joint.BindPose.Translate = boneDesc.Pose.Translate;
         joint.BindPose.Rotation = boneDesc.Pose.Rotation;
@@ -80,12 +82,11 @@ std::vector<Joint> CreateBones(std::vector<BoneDesc> const& boneDescriptions)
 
     POMDOG_ASSERT(joints.size() == boneDescriptions.size());
 
-    for (std::uint32_t index = 0; index < joints.size(); ++index)
-    {
-        auto & joint = joints[index];
-        joint.Index = index;
+    for (std::uint32_t index = 0; index < joints.size(); ++index) {
+        auto& joint = joints[index];
+        joint.Index = static_cast<std::uint8_t>(index);
 
-        auto & boneDesc = boneDescriptions[index];
+        auto& boneDesc = boneDescriptions[index];
 
         POMDOG_ASSERT(boneDesc.Name != boneDesc.Parent);
         if (boneDesc.Name == boneDesc.Parent) {
@@ -97,8 +98,7 @@ std::vector<Joint> CreateBones(std::vector<BoneDesc> const& boneDescriptions)
 
     POMDOG_ASSERT(!joints.front().Parent);
 
-    for (auto & joint: joints)
-    {
+    for (auto& joint : joints) {
         if (!joint.Parent) {
             continue;
         }
@@ -126,17 +126,16 @@ std::vector<Joint> CreateBones(std::vector<BoneDesc> const& boneDescriptions)
     return joints;
 }
 
-} // unnamed namespace
+} // namespace
 
-Skeleton CreateSkeleton(std::vector<Spine::BoneDesc> const& bones)
+Skeletal2D::Skeleton CreateSkeleton(const std::vector<Spine::BoneDesc>& bones)
 {
     POMDOG_ASSERT(!bones.empty());
 
-    Skeleton skeleton(CreateBones(bones));
+    Skeletal2D::Skeleton skeleton{CreateBones(bones)};
 
     auto inverseBindPose = CreateInverseBindPoseByJoints(skeleton);
-    for (auto & joint: skeleton)
-    {
+    for (auto& joint : skeleton) {
         POMDOG_ASSERT(joint.Index);
         joint.InverseBindPose = inverseBindPose[*joint.Index];
     }
@@ -144,5 +143,4 @@ Skeleton CreateSkeleton(std::vector<Spine::BoneDesc> const& bones)
     return skeleton;
 }
 
-} // namespace Spine
-} // namespace Pomdog
+} // namespace Pomdog::Spine

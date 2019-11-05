@@ -40,6 +40,7 @@ source_group(Experimental\\Reactive                 REGULAR_EXPRESSION "(include
 source_group(Experimental\\Skeletal2D               REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Skeletal2D/*")
 source_group(Experimental\\Skeletal2D\\BlendTrees   REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Skeletal2D/BlendTrees/*")
 source_group(Experimental\\Skeletal2D\\Tracks       REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Skeletal2D/Tracks/*")
+source_group(Experimental\\Spine                    REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Spine/*")
 source_group(Experimental\\TexturePacker            REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/TexturePacker/*")
 source_group(Experimental\\Tween                    REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Tween/*")
 source_group(InputSystem                            REGULAR_EXPRESSION src/InputSystem/*)
@@ -472,6 +473,13 @@ set(POMDOG_SOURCES_EXPERIMENTAL
   ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/Tracks/ScaleTrack.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/Tracks/SpriteAnimationTrack.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/Tracks/TranslationTrack.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Spine/AnimationGraphBuilder.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Spine/AnimationLoader.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Spine/SkeletonDesc.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Spine/SkeletonDescLoader.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Spine/SkeletonLoader.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Spine/SkinLoader.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Spine/SkinnedMeshLoader.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureAtlas.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureAtlasGenerator.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureAtlasLoader.hpp
@@ -522,6 +530,12 @@ set(POMDOG_SOURCES_EXPERIMENTAL
   ${POMDOG_DIR}/src/Experimental/Skeletal2D/Tracks/AnimationKeyHelper.hpp
   ${POMDOG_DIR}/src/Experimental/Skeletal2D/Tracks/AnimationTrack.cpp
   ${POMDOG_DIR}/src/Experimental/Skeletal2D/Tracks/SpriteAnimationTrack.cpp
+  ${POMDOG_DIR}/src/Experimental/Spine/AnimationGraphBuilder.cpp
+  ${POMDOG_DIR}/src/Experimental/Spine/AnimationLoader.cpp
+  ${POMDOG_DIR}/src/Experimental/Spine/SkeletonDescLoader.cpp
+  ${POMDOG_DIR}/src/Experimental/Spine/SkeletonLoader.cpp
+  ${POMDOG_DIR}/src/Experimental/Spine/SkinLoader.cpp
+  ${POMDOG_DIR}/src/Experimental/Spine/SkinnedMeshLoader.cpp
   ${POMDOG_DIR}/src/Experimental/TexturePacker/TextureAtlasGenerator.cpp
   ${POMDOG_DIR}/src/Experimental/TexturePacker/TextureAtlasLoader.cpp
   ${POMDOG_DIR}/src/Experimental/Tween/EasingHelper.cpp
@@ -920,6 +934,7 @@ target_include_directories(pomdog_static PRIVATE
   ${POMDOG_DIR}/dependencies/giflib
   ${POMDOG_DIR}/dependencies/libpng
   ${POMDOG_DIR}/dependencies/mbedtls/include
+  ${POMDOG_DIR}/dependencies/rapidjson/include
   ${POMDOG_DIR}/dependencies/SDL_GameControllerDB/data
   ${POMDOG_DIR}/dependencies/stb
   ${POMDOG_DIR}/dependencies/vendor/libpng

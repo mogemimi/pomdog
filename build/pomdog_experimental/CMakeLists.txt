@@ -19,7 +19,6 @@ source_group(ImageEffects             REGULAR_EXPRESSION Pomdog.Experimental/Ima
 source_group(InGameEditor             REGULAR_EXPRESSION Pomdog.Experimental/InGameEditor/*)
 source_group(Particle2D               REGULAR_EXPRESSION Pomdog.Experimental/Particle2D/*)
 source_group(Particle2D\\detail       REGULAR_EXPRESSION Pomdog.Experimental/Particle2D/detail/*)
-source_group(Spine                    REGULAR_EXPRESSION Pomdog.Experimental/Spine/*)
 source_group(Rendering                REGULAR_EXPRESSION Pomdog.Experimental/Rendering/*)
 source_group(Rendering\\Commands      REGULAR_EXPRESSION Pomdog.Experimental/Rendering/Commands/*)
 source_group(Rendering\\Processors    REGULAR_EXPRESSION Pomdog.Experimental/Rendering/Processors/*)
@@ -101,22 +100,6 @@ add_library(pomdog_experimental STATIC
 
   ${POMDOG_EXPERIMENTAL_DIR}/Particle2D/ParticleLoader.cpp
   ${POMDOG_EXPERIMENTAL_DIR}/Particle2D/ParticleLoader.hpp
-
-  ${POMDOG_EXPERIMENTAL_DIR}/Spine/AnimationGraphBuilder.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Spine/AnimationGraphBuilder.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Spine/AnimationLoader.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Spine/AnimationLoader.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Spine/SkeletonDesc.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Spine/SkeletonDescLoader.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Spine/SkeletonDescLoader.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Spine/SkeletonLoader.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Spine/SkeletonLoader.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Spine/SkinLoader.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Spine/SkinLoader.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Spine/SkinnedMeshLoader.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Spine/SkinnedMeshLoader.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Spine/SpriteAnimationLoader.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/Spine/SpriteAnimationLoader.hpp
 
   ${POMDOG_EXPERIMENTAL_DIR}/Rendering/RenderCommand.hpp
   ${POMDOG_EXPERIMENTAL_DIR}/Rendering/RenderCommandProcessor.hpp
