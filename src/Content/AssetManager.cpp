@@ -24,6 +24,11 @@ std::string AssetManager::GetContentDirectory() const
     return contentDirectory;
 }
 
+void AssetManager::SetContentDirectory(const std::string& dir)
+{
+    contentDirectory = dir;
+}
+
 std::shared_ptr<GraphicsDevice> AssetManager::GetGraphicsDevice() const
 {
     return graphicsDevice.lock();

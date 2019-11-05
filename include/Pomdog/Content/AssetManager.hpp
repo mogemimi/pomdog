@@ -86,6 +86,9 @@ public:
     /// Gets the path to the asset directory.
     std::string GetContentDirectory() const;
 
+    /// Sets the path to the asset directory.
+    void SetContentDirectory(const std::string& dir);
+
     /// Gets the graphics device for creating graphics resources.
     std::shared_ptr<GraphicsDevice> GetGraphicsDevice() const;
 
