@@ -18,14 +18,14 @@ namespace {
 
 struct BitmapFontInfo final {
     std::string Face;
-    std::uint16_t Size = 32;
-    std::uint16_t StretchHeight = 0;
-    std::uint16_t PaddingTop = 0;
-    std::uint16_t PaddingBottom = 0;
-    std::uint16_t PaddingLeft = 0;
-    std::uint16_t PaddingRight = 0;
-    std::uint16_t SpacingX = 0;
-    std::uint16_t SpacingY = 0;
+    std::int16_t Size = 32;
+    std::int16_t StretchHeight = 0;
+    std::int16_t PaddingTop = 0;
+    std::int16_t PaddingBottom = 0;
+    std::int16_t PaddingLeft = 0;
+    std::int16_t PaddingRight = 0;
+    std::int16_t SpacingX = 0;
+    std::int16_t SpacingY = 0;
     bool Bold = false;
     bool Italic = false;
     bool Unicode = false;
@@ -34,17 +34,17 @@ struct BitmapFontInfo final {
 };
 
 struct BitmapFontCommon final {
-    std::uint16_t LineHeight;
-    std::uint16_t Base;
-    std::uint16_t ScaleWidth;
-    std::uint16_t ScaleHeight;
-    std::uint16_t Pages;
+    std::int16_t LineHeight;
+    std::int16_t Base;
+    std::int16_t ScaleWidth;
+    std::int16_t ScaleHeight;
+    std::int16_t Pages;
     bool Packed = false;
 };
 
 struct BitmapFontPage final {
     std::string Path;
-    std::uint16_t Id;
+    std::uint16_t ID;
 };
 
 //TEST(Regex, TrivialCase1)
@@ -109,8 +109,8 @@ BitmapFontInfo ParseInfo(std::istream& stream)
                 }
             }
             else if (name == "size") {
-                static_assert(std::is_same<decltype(info.Size), std::uint16_t>::value, "");
-                info.Size = static_cast<std::uint16_t>(std::stoi(arguments));
+                static_assert(std::is_same<decltype(info.Size), std::int16_t>::value, "");
+                info.Size = static_cast<std::int16_t>(std::stoi(arguments));
             }
             else if (name == "bold") {
                 info.Bold = std::stoul(arguments) != 0;
@@ -128,8 +128,8 @@ BitmapFontInfo ParseInfo(std::istream& stream)
                 info.Unicode = std::stoul(arguments) != 0;
             }
             else if (name == "stretchH") {
-                static_assert(std::is_same<decltype(info.StretchHeight), std::uint16_t>::value, "");
-                info.StretchHeight = static_cast<std::uint16_t>(std::stoi(arguments));
+                static_assert(std::is_same<decltype(info.StretchHeight), std::int16_t>::value, "");
+                info.StretchHeight = static_cast<std::int16_t>(std::stoi(arguments));
             }
             else if (name == "smooth") {
                 info.Smooth = std::stoul(arguments) != 0;
@@ -139,24 +139,24 @@ BitmapFontInfo ParseInfo(std::istream& stream)
             }
             else if (name == "padding") {
                 if (std::regex_match(arguments, match2, exprVector4)) {
-                    static_assert(std::is_same<decltype(info.PaddingTop), std::uint16_t>::value, "");
-                    static_assert(std::is_same<decltype(info.PaddingRight), std::uint16_t>::value, "");
-                    static_assert(std::is_same<decltype(info.PaddingBottom), std::uint16_t>::value, "");
-                    static_assert(std::is_same<decltype(info.PaddingLeft), std::uint16_t>::value, "");
+                    static_assert(std::is_same<decltype(info.PaddingTop), std::int16_t>::value, "");
+                    static_assert(std::is_same<decltype(info.PaddingRight), std::int16_t>::value, "");
+                    static_assert(std::is_same<decltype(info.PaddingBottom), std::int16_t>::value, "");
+                    static_assert(std::is_same<decltype(info.PaddingLeft), std::int16_t>::value, "");
                     POMDOG_ASSERT(match2.size() >= 5);
-                    info.PaddingTop = static_cast<std::uint16_t>(std::stoi(match2[1]));
-                    info.PaddingRight = static_cast<std::uint16_t>(std::stoi(match2[2]));
-                    info.PaddingBottom = static_cast<std::uint16_t>(std::stoi(match2[3]));
-                    info.PaddingLeft = static_cast<std::uint16_t>(std::stoi(match2[4]));
+                    info.PaddingTop = static_cast<std::int16_t>(std::stoi(match2[1]));
+                    info.PaddingRight = static_cast<std::int16_t>(std::stoi(match2[2]));
+                    info.PaddingBottom = static_cast<std::int16_t>(std::stoi(match2[3]));
+                    info.PaddingLeft = static_cast<std::int16_t>(std::stoi(match2[4]));
                 }
             }
             else if (name == "spacing") {
                 if (std::regex_match(arguments, match2, exprVector2)) {
-                    static_assert(std::is_same<decltype(info.SpacingX), std::uint16_t>::value, "");
-                    static_assert(std::is_same<decltype(info.SpacingY), std::uint16_t>::value, "");
+                    static_assert(std::is_same<decltype(info.SpacingX), std::int16_t>::value, "");
+                    static_assert(std::is_same<decltype(info.SpacingY), std::int16_t>::value, "");
                     POMDOG_ASSERT(match2.size() >= 3);
-                    info.SpacingX = static_cast<std::uint16_t>(std::stoi(match2[1]));
-                    info.SpacingY = static_cast<std::uint16_t>(std::stoi(match2[2]));
+                    info.SpacingX = static_cast<std::int16_t>(std::stoi(match2[1]));
+                    info.SpacingY = static_cast<std::int16_t>(std::stoi(match2[2]));
                 }
             }
         }
@@ -179,24 +179,24 @@ BitmapFontCommon ParseCommon(std::istream& stream)
             auto arguments = match[3].str();
 
             if (name == "lineHeight") {
-                static_assert(std::is_same<decltype(result.LineHeight), std::uint16_t>::value, "");
-                result.LineHeight = static_cast<std::uint16_t>(std::stoi(arguments));
+                static_assert(std::is_same<decltype(result.LineHeight), std::int16_t>::value, "");
+                result.LineHeight = static_cast<std::int16_t>(std::stoi(arguments));
             }
             else if (name == "base") {
-                static_assert(std::is_same<decltype(result.Base), std::uint16_t>::value, "");
-                result.Base = static_cast<std::uint16_t>(std::stoi(arguments));
+                static_assert(std::is_same<decltype(result.Base), std::int16_t>::value, "");
+                result.Base = static_cast<std::int16_t>(std::stoi(arguments));
             }
             else if (name == "scaleW") {
-                static_assert(std::is_same<decltype(result.ScaleWidth), std::uint16_t>::value, "");
-                result.ScaleWidth = static_cast<std::uint16_t>(std::stoi(arguments));
+                static_assert(std::is_same<decltype(result.ScaleWidth), std::int16_t>::value, "");
+                result.ScaleWidth = static_cast<std::int16_t>(std::stoi(arguments));
             }
             else if (name == "scaleH") {
-                static_assert(std::is_same<decltype(result.ScaleHeight), std::uint16_t>::value, "");
-                result.ScaleHeight = static_cast<std::uint16_t>(std::stoi(arguments));
+                static_assert(std::is_same<decltype(result.ScaleHeight), std::int16_t>::value, "");
+                result.ScaleHeight = static_cast<std::int16_t>(std::stoi(arguments));
             }
             else if (name == "pages") {
-                static_assert(std::is_same<decltype(result.Pages), std::uint16_t>::value, "");
-                result.Pages = static_cast<std::uint16_t>(std::stoi(arguments));
+                static_assert(std::is_same<decltype(result.Pages), std::int16_t>::value, "");
+                result.Pages = static_cast<std::int16_t>(std::stoi(arguments));
             }
             else if (name == "packed") {
                 result.Packed = std::stoul(arguments) != 0;
@@ -230,8 +230,8 @@ BitmapFontPage ParsePage(std::istream& stream)
                 }
             }
             else if (name == "id") {
-                static_assert(std::is_same<decltype(result.Id), std::uint16_t>::value, "");
-                result.Id = static_cast<std::uint16_t>(std::stoul(arguments));
+                static_assert(std::is_same<decltype(result.ID), std::uint16_t>::value, "");
+                result.ID = static_cast<std::uint16_t>(std::stoul(arguments));
             }
         }
     }
@@ -366,7 +366,7 @@ AssetLoader<SpriteFont>::operator()(AssetManager& assets, const std::string& fil
     POMDOG_ASSERT(!pages.empty());
 
     auto pageLess = [](const BitmapFontPage& a, const BitmapFontPage& b) {
-        return a.Id < b.Id;
+        return a.ID < b.ID;
     };
 
     std::sort(std::begin(pages), std::end(pages), pageLess);
@@ -376,14 +376,14 @@ AssetLoader<SpriteFont>::operator()(AssetManager& assets, const std::string& fil
     }
     POMDOG_ASSERT(std::unique(std::begin(pages), std::end(pages), pageLess) == std::end(pages));
 
-    POMDOG_ASSERT(pages.front().Id == 0);
-    POMDOG_ASSERT(pages.back().Id == (pages.size() - 1));
+    POMDOG_ASSERT(pages.front().ID == 0);
+    POMDOG_ASSERT(pages.back().ID == (pages.size() - 1));
 
     std::vector<std::shared_ptr<Texture2D>> textures;
     {
         auto directoryName = std::get<0>(PathHelper::Split(filePath));
         for (auto& page : pages) {
-            auto [texture, textureErr] = assets.Load<Texture2D>(directoryName + page.Path);
+            auto [texture, textureErr] = assets.Load<Texture2D>(PathHelper::Join(directoryName, page.Path));
             if (textureErr != nullptr) {
                 auto err = Errors::Wrap(std::move(textureErr), "failed to load sprite font texture " + page.Path);
                 return std::make_tuple(nullptr, std::move(err));
@@ -395,10 +395,9 @@ AssetLoader<SpriteFont>::operator()(AssetManager& assets, const std::string& fil
     POMDOG_ASSERT(!glyphs.empty());
     auto defaultCharacter = glyphs.front().Character;
 
-    // FIXME: Replace the types of the following variables with signed 16-bit integer (std::int16_t).
-    static_assert(std::is_same<decltype(info.PaddingLeft), std::uint16_t>::value, "");
-    static_assert(std::is_same<decltype(info.PaddingRight), std::uint16_t>::value, "");
-    static_assert(std::is_same<decltype(common.LineHeight), std::uint16_t>::value, "");
+    for (auto& glyph : glyphs) {
+        glyph.YOffset = glyph.YOffset - common.Base;
+    }
 
     auto spriteFont = std::make_shared<SpriteFont>(
         std::move(textures),
