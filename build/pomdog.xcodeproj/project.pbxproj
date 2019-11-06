@@ -323,6 +323,50 @@
 		D7334E35228C689C00232225 /* ParticleSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E32228C689C00232225 /* ParticleSystem.cpp */; };
 		D7334E36228C689C00232225 /* BeamSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E33228C689C00232225 /* BeamSystem.cpp */; };
 		D7334E37228C689C00232225 /* BeamSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E33228C689C00232225 /* BeamSystem.cpp */; };
+		D7408CEB23727466007E101E /* Skeleton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408CE723727466007E101E /* Skeleton.cpp */; };
+		D7408CEC23727466007E101E /* Skeleton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408CE723727466007E101E /* Skeleton.cpp */; };
+		D7408CED23727466007E101E /* SkeletonHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408CE823727466007E101E /* SkeletonHelper.cpp */; };
+		D7408CEE23727466007E101E /* SkeletonHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408CE823727466007E101E /* SkeletonHelper.cpp */; };
+		D7408CEF23727466007E101E /* SkeletonPose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408CE923727466007E101E /* SkeletonPose.cpp */; };
+		D7408CF023727466007E101E /* SkeletonPose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408CE923727466007E101E /* SkeletonPose.cpp */; };
+		D7408CF123727466007E101E /* Skin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408CEA23727466007E101E /* Skin.cpp */; };
+		D7408CF223727466007E101E /* Skin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408CEA23727466007E101E /* Skin.cpp */; };
+		D7408CF72372746D007E101E /* AnimationState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408CF32372746D007E101E /* AnimationState.cpp */; };
+		D7408CF82372746D007E101E /* AnimationState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408CF32372746D007E101E /* AnimationState.cpp */; };
+		D7408CF92372746D007E101E /* AnimationSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408CF42372746D007E101E /* AnimationSystem.cpp */; };
+		D7408CFA2372746D007E101E /* AnimationSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408CF42372746D007E101E /* AnimationSystem.cpp */; };
+		D7408CFB2372746D007E101E /* Animator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408CF52372746D007E101E /* Animator.cpp */; };
+		D7408CFC2372746D007E101E /* Animator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408CF52372746D007E101E /* Animator.cpp */; };
+		D7408CFD2372746D007E101E /* AnimationClip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408CF62372746D007E101E /* AnimationClip.cpp */; };
+		D7408CFE2372746D007E101E /* AnimationClip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408CF62372746D007E101E /* AnimationClip.cpp */; };
+		D7408D05237274A7007E101E /* SpriteAnimationTrack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408D02237274A7007E101E /* SpriteAnimationTrack.cpp */; };
+		D7408D06237274A7007E101E /* SpriteAnimationTrack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408D02237274A7007E101E /* SpriteAnimationTrack.cpp */; };
+		D7408D07237274A7007E101E /* AnimationTrack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408D04237274A7007E101E /* AnimationTrack.cpp */; };
+		D7408D08237274A7007E101E /* AnimationTrack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408D04237274A7007E101E /* AnimationTrack.cpp */; };
+		D7408D10237274B4007E101E /* AnimationClipNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408D09237274B3007E101E /* AnimationClipNode.cpp */; };
+		D7408D11237274B4007E101E /* AnimationClipNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408D09237274B3007E101E /* AnimationClipNode.cpp */; };
+		D7408D14237274B4007E101E /* WeightBlendingHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408D0B237274B3007E101E /* WeightBlendingHelper.cpp */; };
+		D7408D15237274B4007E101E /* WeightBlendingHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408D0B237274B3007E101E /* WeightBlendingHelper.cpp */; };
+		D7408D16237274B4007E101E /* AnimationLerpNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408D0C237274B3007E101E /* AnimationLerpNode.cpp */; };
+		D7408D17237274B4007E101E /* AnimationLerpNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408D0C237274B3007E101E /* AnimationLerpNode.cpp */; };
+		D7408D18237274B4007E101E /* AnimationCrossFadeNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408D0D237274B3007E101E /* AnimationCrossFadeNode.cpp */; };
+		D7408D19237274B4007E101E /* AnimationCrossFadeNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408D0D237274B3007E101E /* AnimationCrossFadeNode.cpp */; };
+		D7408D1A237274B4007E101E /* AnimationAdditiveNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408D0E237274B4007E101E /* AnimationAdditiveNode.cpp */; };
+		D7408D1B237274B4007E101E /* AnimationAdditiveNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408D0E237274B4007E101E /* AnimationAdditiveNode.cpp */; };
+		D7408D1C237274B4007E101E /* AnimationGraphWeightCollection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408D0F237274B4007E101E /* AnimationGraphWeightCollection.cpp */; };
+		D7408D1D237274B4007E101E /* AnimationGraphWeightCollection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408D0F237274B4007E101E /* AnimationGraphWeightCollection.cpp */; };
+		D7408D24237274C4007E101E /* SkeletonLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408D1E237274C4007E101E /* SkeletonLoader.cpp */; };
+		D7408D25237274C4007E101E /* SkeletonLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408D1E237274C4007E101E /* SkeletonLoader.cpp */; };
+		D7408D26237274C4007E101E /* SkinnedMeshLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408D1F237274C4007E101E /* SkinnedMeshLoader.cpp */; };
+		D7408D27237274C4007E101E /* SkinnedMeshLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408D1F237274C4007E101E /* SkinnedMeshLoader.cpp */; };
+		D7408D28237274C4007E101E /* AnimationLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408D20237274C4007E101E /* AnimationLoader.cpp */; };
+		D7408D29237274C4007E101E /* AnimationLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408D20237274C4007E101E /* AnimationLoader.cpp */; };
+		D7408D2A237274C4007E101E /* SkeletonDescLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408D21237274C4007E101E /* SkeletonDescLoader.cpp */; };
+		D7408D2B237274C4007E101E /* SkeletonDescLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408D21237274C4007E101E /* SkeletonDescLoader.cpp */; };
+		D7408D2C237274C4007E101E /* AnimationGraphBuilder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408D22237274C4007E101E /* AnimationGraphBuilder.cpp */; };
+		D7408D2D237274C4007E101E /* AnimationGraphBuilder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408D22237274C4007E101E /* AnimationGraphBuilder.cpp */; };
+		D7408D2E237274C4007E101E /* SkinLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408D23237274C4007E101E /* SkinLoader.cpp */; };
+		D7408D2F237274C4007E101E /* SkinLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408D23237274C4007E101E /* SkinLoader.cpp */; };
 		D740A539230B30BB0077D040 /* Texture2DView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D740A538230B30BB0077D040 /* Texture2DView.cpp */; };
 		D740A53A230B30BB0077D040 /* Texture2DView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D740A538230B30BB0077D040 /* Texture2DView.cpp */; };
 		D740A54F231010A00077D040 /* ErrorHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D740A54E231010A00077D040 /* ErrorHelper.cpp */; };
@@ -929,6 +973,61 @@
 		D7334E4A228C691500232225 /* ParticleEmitterShapeBox.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleEmitterShapeBox.hpp; sourceTree = "<group>"; };
 		D7334E4B228C691500232225 /* ParticleEmitterShape.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleEmitterShape.hpp; sourceTree = "<group>"; };
 		D7334E4C228C691500232225 /* ParticleCurveLerp.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleCurveLerp.hpp; sourceTree = "<group>"; };
+		D7408CE723727466007E101E /* Skeleton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Skeleton.cpp; sourceTree = "<group>"; };
+		D7408CE823727466007E101E /* SkeletonHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkeletonHelper.cpp; sourceTree = "<group>"; };
+		D7408CE923727466007E101E /* SkeletonPose.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkeletonPose.cpp; sourceTree = "<group>"; };
+		D7408CEA23727466007E101E /* Skin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Skin.cpp; sourceTree = "<group>"; };
+		D7408CF32372746D007E101E /* AnimationState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AnimationState.cpp; sourceTree = "<group>"; };
+		D7408CF42372746D007E101E /* AnimationSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AnimationSystem.cpp; sourceTree = "<group>"; };
+		D7408CF52372746D007E101E /* Animator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Animator.cpp; sourceTree = "<group>"; };
+		D7408CF62372746D007E101E /* AnimationClip.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AnimationClip.cpp; sourceTree = "<group>"; };
+		D7408D02237274A7007E101E /* SpriteAnimationTrack.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SpriteAnimationTrack.cpp; sourceTree = "<group>"; };
+		D7408D03237274A7007E101E /* AnimationKeyHelper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AnimationKeyHelper.hpp; sourceTree = "<group>"; };
+		D7408D04237274A7007E101E /* AnimationTrack.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AnimationTrack.cpp; sourceTree = "<group>"; };
+		D7408D09237274B3007E101E /* AnimationClipNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AnimationClipNode.cpp; sourceTree = "<group>"; };
+		D7408D0B237274B3007E101E /* WeightBlendingHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WeightBlendingHelper.cpp; sourceTree = "<group>"; };
+		D7408D0C237274B3007E101E /* AnimationLerpNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AnimationLerpNode.cpp; sourceTree = "<group>"; };
+		D7408D0D237274B3007E101E /* AnimationCrossFadeNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AnimationCrossFadeNode.cpp; sourceTree = "<group>"; };
+		D7408D0E237274B4007E101E /* AnimationAdditiveNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AnimationAdditiveNode.cpp; sourceTree = "<group>"; };
+		D7408D0F237274B4007E101E /* AnimationGraphWeightCollection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AnimationGraphWeightCollection.cpp; sourceTree = "<group>"; };
+		D7408D1E237274C4007E101E /* SkeletonLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkeletonLoader.cpp; sourceTree = "<group>"; };
+		D7408D1F237274C4007E101E /* SkinnedMeshLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkinnedMeshLoader.cpp; sourceTree = "<group>"; };
+		D7408D20237274C4007E101E /* AnimationLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AnimationLoader.cpp; sourceTree = "<group>"; };
+		D7408D21237274C4007E101E /* SkeletonDescLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkeletonDescLoader.cpp; sourceTree = "<group>"; };
+		D7408D22237274C4007E101E /* AnimationGraphBuilder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AnimationGraphBuilder.cpp; sourceTree = "<group>"; };
+		D7408D23237274C4007E101E /* SkinLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkinLoader.cpp; sourceTree = "<group>"; };
+		D7408D32237274F7007E101E /* AnimationTimeInterval.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AnimationTimeInterval.hpp; sourceTree = "<group>"; };
+		D7408D33237274F7007E101E /* AnimationClip.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AnimationClip.hpp; sourceTree = "<group>"; };
+		D7408D34237274F7007E101E /* AnimationState.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AnimationState.hpp; sourceTree = "<group>"; };
+		D7408D35237274F7007E101E /* AnimationSystem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AnimationSystem.hpp; sourceTree = "<group>"; };
+		D7408D36237274F7007E101E /* Animator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Animator.hpp; sourceTree = "<group>"; };
+		D7408D3723727500007E101E /* SkinnedMeshPart.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SkinnedMeshPart.hpp; sourceTree = "<group>"; };
+		D7408D3823727500007E101E /* SkinnedMesh.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SkinnedMesh.hpp; sourceTree = "<group>"; };
+		D7408D3923727500007E101E /* JointIndex.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = JointIndex.hpp; sourceTree = "<group>"; };
+		D7408D3A23727501007E101E /* SkinnedVertex.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SkinnedVertex.hpp; sourceTree = "<group>"; };
+		D7408D3B23727501007E101E /* Joint.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Joint.hpp; sourceTree = "<group>"; };
+		D7408D3C23727501007E101E /* RigidSlot.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RigidSlot.hpp; sourceTree = "<group>"; };
+		D7408D3D23727501007E101E /* Skin.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Skin.hpp; sourceTree = "<group>"; };
+		D7408D3E23727501007E101E /* JointPose.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = JointPose.hpp; sourceTree = "<group>"; };
+		D7408D3F23727501007E101E /* SkeletonHelper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SkeletonHelper.hpp; sourceTree = "<group>"; };
+		D7408D4023727501007E101E /* Skeleton.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Skeleton.hpp; sourceTree = "<group>"; };
+		D7408D4123727501007E101E /* CompressedFloat.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CompressedFloat.hpp; sourceTree = "<group>"; };
+		D7408D4223727501007E101E /* SkeletonPose.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SkeletonPose.hpp; sourceTree = "<group>"; };
+		D7408D5323727551007E101E /* TranslationTrack.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TranslationTrack.hpp; sourceTree = "<group>"; };
+		D7408D5423727551007E101E /* AnimationTrack.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AnimationTrack.hpp; sourceTree = "<group>"; };
+		D7408D5523727551007E101E /* SpriteAnimationTrack.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SpriteAnimationTrack.hpp; sourceTree = "<group>"; };
+		D7408D5623727551007E101E /* ScaleTrack.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ScaleTrack.hpp; sourceTree = "<group>"; };
+		D7408D5723727551007E101E /* RotationTrack.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RotationTrack.hpp; sourceTree = "<group>"; };
+		D7408D5823727586007E101E /* AnimationLerpNode.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AnimationLerpNode.hpp; sourceTree = "<group>"; };
+		D7408D5923727586007E101E /* AnimationGraphWeightCollection.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AnimationGraphWeightCollection.hpp; sourceTree = "<group>"; };
+		D7408D5A23727586007E101E /* AnimationBlendInput.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AnimationBlendInput.hpp; sourceTree = "<group>"; };
+		D7408D5B23727586007E101E /* AnimationNode.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AnimationNode.hpp; sourceTree = "<group>"; };
+		D7408D5C23727586007E101E /* AnimationClipNode.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AnimationClipNode.hpp; sourceTree = "<group>"; };
+		D7408D5D23727586007E101E /* AnimationBlendInputType.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AnimationBlendInputType.hpp; sourceTree = "<group>"; };
+		D7408D5E23727586007E101E /* WeightBlendingHelper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = WeightBlendingHelper.hpp; sourceTree = "<group>"; };
+		D7408D5F23727586007E101E /* AnimationGraph.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AnimationGraph.hpp; sourceTree = "<group>"; };
+		D7408D6023727586007E101E /* AnimationAdditiveNode.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AnimationAdditiveNode.hpp; sourceTree = "<group>"; };
+		D7408D6123727586007E101E /* AnimationCrossFadeNode.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AnimationCrossFadeNode.hpp; sourceTree = "<group>"; };
 		D740A538230B30BB0077D040 /* Texture2DView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Texture2DView.cpp; sourceTree = "<group>"; };
 		D740A54D231010980077D040 /* ErrorHelper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ErrorHelper.hpp; sourceTree = "<group>"; };
 		D740A54E231010A00077D040 /* ErrorHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ErrorHelper.cpp; sourceTree = "<group>"; };
@@ -1671,6 +1770,8 @@
 				A94F2DC12131FE9E00718DB0 /* MagicaVoxel */,
 				D7334E38228C68AA00232225 /* Particle2D */,
 				A93CA62D1D92F2C600B65171 /* Reactive */,
+				D7408CD723717F08007E101E /* Skeletal2D */,
+				D7408CD623717F03007E101E /* Spine */,
 				A9A822801DAB7F510091497F /* TexturePacker */,
 				A94F2DC52131FEAD00718DB0 /* Tween */,
 			);
@@ -1706,6 +1807,8 @@
 				D7334E0D228AEBEE00232225 /* ImageEffects */,
 				A94F2DC72131FED600718DB0 /* MagicaVoxel */,
 				D7334E31228C685100232225 /* Particle2D */,
+				D7408CD423717E9F007E101E /* Skeletal2D */,
+				D7408CD523717ECF007E101E /* Spine */,
 				A9A822831DAB7F6F0091497F /* TexturePacker */,
 				A94F2DCF2131FEFB00718DB0 /* Tween */,
 			);
@@ -2061,6 +2164,121 @@
 			path = detail;
 			sourceTree = "<group>";
 		};
+		D7408CD423717E9F007E101E /* Skeletal2D */ = {
+			isa = PBXGroup;
+			children = (
+				D7408CFF23727471007E101E /* BlendTrees */,
+				D7408D012372748D007E101E /* Tracks */,
+				D7408CF62372746D007E101E /* AnimationClip.cpp */,
+				D7408CF32372746D007E101E /* AnimationState.cpp */,
+				D7408CF42372746D007E101E /* AnimationSystem.cpp */,
+				D7408CF52372746D007E101E /* Animator.cpp */,
+				D7408CE723727466007E101E /* Skeleton.cpp */,
+				D7408CE823727466007E101E /* SkeletonHelper.cpp */,
+				D7408CE923727466007E101E /* SkeletonPose.cpp */,
+				D7408CEA23727466007E101E /* Skin.cpp */,
+			);
+			path = Skeletal2D;
+			sourceTree = "<group>";
+		};
+		D7408CD523717ECF007E101E /* Spine */ = {
+			isa = PBXGroup;
+			children = (
+				D7408D22237274C4007E101E /* AnimationGraphBuilder.cpp */,
+				D7408D20237274C4007E101E /* AnimationLoader.cpp */,
+				D7408D21237274C4007E101E /* SkeletonDescLoader.cpp */,
+				D7408D1E237274C4007E101E /* SkeletonLoader.cpp */,
+				D7408D23237274C4007E101E /* SkinLoader.cpp */,
+				D7408D1F237274C4007E101E /* SkinnedMeshLoader.cpp */,
+			);
+			path = Spine;
+			sourceTree = "<group>";
+		};
+		D7408CD623717F03007E101E /* Spine */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Spine;
+			sourceTree = "<group>";
+		};
+		D7408CD723717F08007E101E /* Skeletal2D */ = {
+			isa = PBXGroup;
+			children = (
+				D7408D30237274E0007E101E /* BlendTrees */,
+				D7408D31237274E7007E101E /* Tracks */,
+				D7408D33237274F7007E101E /* AnimationClip.hpp */,
+				D7408D34237274F7007E101E /* AnimationState.hpp */,
+				D7408D35237274F7007E101E /* AnimationSystem.hpp */,
+				D7408D32237274F7007E101E /* AnimationTimeInterval.hpp */,
+				D7408D36237274F7007E101E /* Animator.hpp */,
+				D7408D4123727501007E101E /* CompressedFloat.hpp */,
+				D7408D3B23727501007E101E /* Joint.hpp */,
+				D7408D3923727500007E101E /* JointIndex.hpp */,
+				D7408D3E23727501007E101E /* JointPose.hpp */,
+				D7408D3C23727501007E101E /* RigidSlot.hpp */,
+				D7408D4023727501007E101E /* Skeleton.hpp */,
+				D7408D3F23727501007E101E /* SkeletonHelper.hpp */,
+				D7408D4223727501007E101E /* SkeletonPose.hpp */,
+				D7408D3D23727501007E101E /* Skin.hpp */,
+				D7408D3823727500007E101E /* SkinnedMesh.hpp */,
+				D7408D3723727500007E101E /* SkinnedMeshPart.hpp */,
+				D7408D3A23727501007E101E /* SkinnedVertex.hpp */,
+			);
+			path = Skeletal2D;
+			sourceTree = "<group>";
+		};
+		D7408CFF23727471007E101E /* BlendTrees */ = {
+			isa = PBXGroup;
+			children = (
+				D7408D0E237274B4007E101E /* AnimationAdditiveNode.cpp */,
+				D7408D09237274B3007E101E /* AnimationClipNode.cpp */,
+				D7408D0D237274B3007E101E /* AnimationCrossFadeNode.cpp */,
+				D7408D0F237274B4007E101E /* AnimationGraphWeightCollection.cpp */,
+				D7408D0C237274B3007E101E /* AnimationLerpNode.cpp */,
+				D7408D0B237274B3007E101E /* WeightBlendingHelper.cpp */,
+			);
+			path = BlendTrees;
+			sourceTree = "<group>";
+		};
+		D7408D012372748D007E101E /* Tracks */ = {
+			isa = PBXGroup;
+			children = (
+				D7408D03237274A7007E101E /* AnimationKeyHelper.hpp */,
+				D7408D04237274A7007E101E /* AnimationTrack.cpp */,
+				D7408D02237274A7007E101E /* SpriteAnimationTrack.cpp */,
+			);
+			path = Tracks;
+			sourceTree = "<group>";
+		};
+		D7408D30237274E0007E101E /* BlendTrees */ = {
+			isa = PBXGroup;
+			children = (
+				D7408D6023727586007E101E /* AnimationAdditiveNode.hpp */,
+				D7408D5A23727586007E101E /* AnimationBlendInput.hpp */,
+				D7408D5D23727586007E101E /* AnimationBlendInputType.hpp */,
+				D7408D5C23727586007E101E /* AnimationClipNode.hpp */,
+				D7408D6123727586007E101E /* AnimationCrossFadeNode.hpp */,
+				D7408D5F23727586007E101E /* AnimationGraph.hpp */,
+				D7408D5923727586007E101E /* AnimationGraphWeightCollection.hpp */,
+				D7408D5823727586007E101E /* AnimationLerpNode.hpp */,
+				D7408D5B23727586007E101E /* AnimationNode.hpp */,
+				D7408D5E23727586007E101E /* WeightBlendingHelper.hpp */,
+			);
+			path = BlendTrees;
+			sourceTree = "<group>";
+		};
+		D7408D31237274E7007E101E /* Tracks */ = {
+			isa = PBXGroup;
+			children = (
+				D7408D5423727551007E101E /* AnimationTrack.hpp */,
+				D7408D5723727551007E101E /* RotationTrack.hpp */,
+				D7408D5623727551007E101E /* ScaleTrack.hpp */,
+				D7408D5523727551007E101E /* SpriteAnimationTrack.hpp */,
+				D7408D5323727551007E101E /* TranslationTrack.hpp */,
+			);
+			path = Tracks;
+			sourceTree = "<group>";
+		};
 		D90112D019DEC9CB7B5D46EC /* Graphics */ = {
 			isa = PBXGroup;
 			children = (
@@ -2388,6 +2606,7 @@
 				D702F05F22FD8B1300886A78 /* Certificates.cpp in Sources */,
 				A9A8228D1DAB7FB70091497F /* GifImageLoader.cpp in Sources */,
 				4EE6EBE03E9AD9C3BEF652F2 /* AudioClip.cpp in Sources */,
+				D7408CEB23727466007E101E /* Skeleton.cpp in Sources */,
 				A997F7041CAEFC4900926392 /* SamplerStateMetal.mm in Sources */,
 				D7334E1D228AEC1300232225 /* VignetteEffect.cpp in Sources */,
 				D719A53523497EA600C1868B /* Vorbis.cpp in Sources */,
@@ -2403,10 +2622,12 @@
 				A9A822951DAB7FBE0091497F /* TextureAtlasLoader.cpp in Sources */,
 				E8D6D7F610B157019B03A800 /* AssetManager.cpp in Sources */,
 				AD987379388ED5E890CB221A /* PipelineStateBuilder.cpp in Sources */,
+				D7408D2A237274C4007E101E /* SkeletonDescLoader.cpp in Sources */,
 				07B330A5B3BE47D6311109E8 /* ShaderBuilder.cpp in Sources */,
 				EE3B49ABE19A8826A0299A21 /* AudioClipLoader.cpp in Sources */,
 				EC2E27BB5CDE6B796CFD767F /* Texture2DLoader.cpp in Sources */,
 				D7334E23228AEC1300232225 /* RetroCrtEffect.cpp in Sources */,
+				D7408D2E237274C4007E101E /* SkinLoader.cpp in Sources */,
 				56943E805DA5A66B2B412B6E /* ConstantBuffer.cpp in Sources */,
 				30E3441F3697C393B219D621 /* EffectBinaryParameter.cpp in Sources */,
 				B6BD5FE552C47288CCEB50D4 /* EffectReflection.cpp in Sources */,
@@ -2414,7 +2635,9 @@
 				A997F6F81CAEFC4800926392 /* EffectReflectionMetal.mm in Sources */,
 				3AE1B512284C5D5D5C729F68 /* GraphicsCommandList.cpp in Sources */,
 				510B6B7437308E914269F263 /* GraphicsCommandQueue.cpp in Sources */,
+				D7408D05237274A7007E101E /* SpriteAnimationTrack.cpp in Sources */,
 				6CAD968D14E4A83B87CE38BD /* GraphicsDevice.cpp in Sources */,
+				D7408D28237274C4007E101E /* AnimationLoader.cpp in Sources */,
 				3B6622715B81A0FE850348BE /* IndexBuffer.cpp in Sources */,
 				A997F6FA1CAEFC4800926392 /* GraphicsContextMetal.mm in Sources */,
 				BD2BE203D2CCE45E6906D99E /* InputLayoutHelper.cpp in Sources */,
@@ -2422,9 +2645,11 @@
 				D702F06D22FD8B1B00886A78 /* TCPStreamPOSIX.cpp in Sources */,
 				267998B10C4AC2842177CC79 /* RenderTarget2D.cpp in Sources */,
 				BD548D0C612A8F01446C119D /* SamplerState.cpp in Sources */,
+				D7408D18237274B4007E101E /* AnimationCrossFadeNode.cpp in Sources */,
 				627D0583CB97FD0F3B9A55BE /* Texture2D.cpp in Sources */,
 				D702F04C22FD8AC700886A78 /* IOService.cpp in Sources */,
 				1AB4307E702C25A5D75EEEA9 /* Viewport.cpp in Sources */,
+				D7408D16237274B4007E101E /* AnimationLerpNode.cpp in Sources */,
 				3E74C72D64309F88D0335D5F /* VertexBuffer.cpp in Sources */,
 				A997F7061CAEFC4900926392 /* ShaderMetal.mm in Sources */,
 				8187A830E800AA46A814B09C /* GLSLCompiler.cpp in Sources */,
@@ -2439,14 +2664,20 @@
 				C256D286DB58A59C3115A07E /* BoundingBox2D.cpp in Sources */,
 				460526B2F0D0E531DBE74416 /* BoundingCircle.cpp in Sources */,
 				972D8345F3491175B7E8411B /* BoundingSphere.cpp in Sources */,
+				D7408D24237274C4007E101E /* SkeletonLoader.cpp in Sources */,
 				A98BE0D41CC22915008696A8 /* GameHostMetal.mm in Sources */,
+				D7408D26237274C4007E101E /* SkinnedMeshLoader.cpp in Sources */,
 				A0FF034BB1ABF16181CC7340 /* Color.cpp in Sources */,
 				D7703E0D22FCB26800442403 /* Errors.cpp in Sources */,
+				D7408D10237274B4007E101E /* AnimationClipNode.cpp in Sources */,
 				5B1D2792F76709A593451042 /* MathHelper.cpp in Sources */,
+				D7408CFD2372746D007E101E /* AnimationClip.cpp in Sources */,
 				9402075D41A1A97AE8090BF9 /* Ray.cpp in Sources */,
+				D7408CF92372746D007E101E /* AnimationSystem.cpp in Sources */,
 				A93CA6521D92F34E00B65171 /* QueuedScheduler.cpp in Sources */,
 				D702F04E22FD8AC700886A78 /* UDPStream.cpp in Sources */,
 				A94F2DD12131FEFB00718DB0 /* EasingHelper.cpp in Sources */,
+				D7408CED23727466007E101E /* SkeletonHelper.cpp in Sources */,
 				0D2BB710020E127DFCD9A463 /* Rectangle.cpp in Sources */,
 				D7334E19228AEC1300232225 /* FXAA.cpp in Sources */,
 				A958BDF81CC3E65A00E15834 /* PomdogMetalViewController.mm in Sources */,
@@ -2464,12 +2695,14 @@
 				722648A22471D9FC50128061 /* FloatingPointVector2.cpp in Sources */,
 				D702F05622FD8AC700886A78 /* TLSStream.cpp in Sources */,
 				D719A53323497EA600C1868B /* WAV.cpp in Sources */,
+				D7408CEF23727466007E101E /* SkeletonPose.cpp in Sources */,
 				5B2A7872A04E4938E7E62058 /* FloatingPointVector3.cpp in Sources */,
 				D702F05222FD8AC700886A78 /* EndPoint.cpp in Sources */,
 				0497572B05C5E009716C044A /* FloatingPointVector4.cpp in Sources */,
 				378F438407DEF79BEA69E81C /* GraphicsCommandListImmediate.cpp in Sources */,
 				F29D13A39818F150CD4219B3 /* GraphicsCommandQueueImmediate.cpp in Sources */,
 				A943BA1C210E86B900DA852D /* GamepadUUID.cpp in Sources */,
+				D7408D14237274B4007E101E /* WeightBlendingHelper.cpp in Sources */,
 				D7703DF722FCB1BB00442403 /* SpinLock.cpp in Sources */,
 				1C60BD023919A0C8916DB3E2 /* SurfaceFormatHelper.cpp in Sources */,
 				E7645392D6AC421C2703DF5E /* TextureHelper.cpp in Sources */,
@@ -2477,16 +2710,20 @@
 				A98F5924211B2B9A002960C1 /* SpriteFont.cpp in Sources */,
 				DD35FD410F3B10D3D7108DD5 /* ConnectionList.cpp in Sources */,
 				162657EF7F7D8D1E34C76882 /* EventQueue.cpp in Sources */,
+				D7408CFB2372746D007E101E /* Animator.cpp in Sources */,
 				A98F591C211B2B89002960C1 /* PolygonShapeBuilder.cpp in Sources */,
 				D7334E1F228AEC1300232225 /* SepiaToneEffect.cpp in Sources */,
 				A9E4B86A210CD9C1003F87DC /* GamepadMappings.cpp in Sources */,
 				A9A822931DAB7FBE0091497F /* TextureAtlasGenerator.cpp in Sources */,
+				D7408CF123727466007E101E /* Skin.cpp in Sources */,
 				D719A53C23497EB600C1868B /* PNG.cpp in Sources */,
+				D7408D2C237274C4007E101E /* AnimationGraphBuilder.cpp in Sources */,
 				D702F04422FD8AC700886A78 /* HTTPResponse.cpp in Sources */,
 				A9FC99051DC3D87F00C78D63 /* SpriteBatch.cpp in Sources */,
 				D740A54F231010A00077D040 /* ErrorHelper.cpp in Sources */,
 				9439AAF08FDF6A7046F2F994 /* ScopedConnection.cpp in Sources */,
 				A9E4B879210CDEA2003F87DC /* GamepadFactory.cpp in Sources */,
+				D7408D1C237274B4007E101E /* AnimationGraphWeightCollection.cpp in Sources */,
 				8650CF18F26DB3A0F89ABAE3 /* CRC32.cpp in Sources */,
 				D7334DCA228AC80200232225 /* PrimitiveBatch.cpp in Sources */,
 				A997F7081CAEFC4900926392 /* Texture2DMetal.mm in Sources */,
@@ -2507,6 +2744,7 @@
 				A997F6FE1CAEFC4800926392 /* MetalFormatHelper.mm in Sources */,
 				D7458C0B23000520007150B4 /* HTTPParser.cpp in Sources */,
 				A93CA6541D92F34E00B65171 /* Task.cpp in Sources */,
+				D7408D1A237274B4007E101E /* AnimationAdditiveNode.cpp in Sources */,
 				A992AF041C2B1168003170C9 /* Coordinate3D.cpp in Sources */,
 				A9E4B86C210CD9C1003F87DC /* GamepadHelper.cpp in Sources */,
 				D702F06B22FD8B1B00886A78 /* SocketHelperPOSIX.cpp in Sources */,
@@ -2514,11 +2752,13 @@
 				D036ADDD0CD6E4CE27AC1A93 /* GraphicsContextGL4.cpp in Sources */,
 				D719A53E23497EB600C1868B /* PNM.cpp in Sources */,
 				74D477E9B36CBB96B59576DA /* GraphicsDeviceGL4.cpp in Sources */,
+				D7408CF72372746D007E101E /* AnimationState.cpp in Sources */,
 				BD5C4B6ACB960141061065E7 /* InputLayoutGL4.cpp in Sources */,
 				616958519334C7EF67A9B08E /* PipelineStateGL4.cpp in Sources */,
 				D702F04822FD8AC700886A78 /* HTTPClient.cpp in Sources */,
 				373CF27D2193F65F489FA975 /* RasterizerStateGL4.cpp in Sources */,
 				A233F262232DDD6C16C06D31 /* RenderTarget2DGL4.cpp in Sources */,
+				D7408D07237274A7007E101E /* AnimationTrack.cpp in Sources */,
 				D702F06922FD8B1B00886A78 /* UDPStreamPOSIX.cpp in Sources */,
 				0B2A073EC556AE4DF301E6DA /* SamplerStateGL4.cpp in Sources */,
 				9F7601D5C7E771D3423E81EC /* ShaderGL4.cpp in Sources */,
@@ -2559,6 +2799,7 @@
 				D702F06022FD8B1300886A78 /* Certificates.cpp in Sources */,
 				A9A8228E1DAB7FB70091497F /* GifImageLoader.cpp in Sources */,
 				8F708C4B18D750ED37EFCF6B /* AudioClip.cpp in Sources */,
+				D7408CEC23727466007E101E /* Skeleton.cpp in Sources */,
 				A997F7051CAEFC4900926392 /* SamplerStateMetal.mm in Sources */,
 				D7334E1E228AEC1300232225 /* VignetteEffect.cpp in Sources */,
 				D719A53623497EA600C1868B /* Vorbis.cpp in Sources */,
@@ -2574,10 +2815,12 @@
 				A9A822961DAB7FBE0091497F /* TextureAtlasLoader.cpp in Sources */,
 				07AC7D00AF95EB8A551A0CC7 /* AssetManager.cpp in Sources */,
 				0B0F472CF35B5E06E17342B1 /* PipelineStateBuilder.cpp in Sources */,
+				D7408D2B237274C4007E101E /* SkeletonDescLoader.cpp in Sources */,
 				F8CEA52C304DD8A4BBEAA042 /* ShaderBuilder.cpp in Sources */,
 				DC83323F55585B855108ED51 /* AudioClipLoader.cpp in Sources */,
 				BD62DB67E515FA42A9D8F788 /* Texture2DLoader.cpp in Sources */,
 				D7334E24228AEC1300232225 /* RetroCrtEffect.cpp in Sources */,
+				D7408D2F237274C4007E101E /* SkinLoader.cpp in Sources */,
 				712667FE9F33A8F7581022FC /* ConstantBuffer.cpp in Sources */,
 				FB449C29F6AE9D0C12E0B224 /* EffectBinaryParameter.cpp in Sources */,
 				054132B7E4436F540059F098 /* EffectReflection.cpp in Sources */,
@@ -2585,7 +2828,9 @@
 				A997F6F91CAEFC4800926392 /* EffectReflectionMetal.mm in Sources */,
 				A41DDB028BF6E19DB3902864 /* GraphicsCommandList.cpp in Sources */,
 				05E4A1180E076CEA6706E5EC /* GraphicsCommandQueue.cpp in Sources */,
+				D7408D06237274A7007E101E /* SpriteAnimationTrack.cpp in Sources */,
 				D6B00FCEBABBF1A29ADD25A1 /* GraphicsDevice.cpp in Sources */,
+				D7408D29237274C4007E101E /* AnimationLoader.cpp in Sources */,
 				A682ECD746B6B7CEDD6D9D73 /* IndexBuffer.cpp in Sources */,
 				A997F6FB1CAEFC4800926392 /* GraphicsContextMetal.mm in Sources */,
 				FFFC25846E3BA96DE4CAD842 /* InputLayoutHelper.cpp in Sources */,
@@ -2593,9 +2838,11 @@
 				D702F06E22FD8B1B00886A78 /* TCPStreamPOSIX.cpp in Sources */,
 				D226E17E0F7EBA8B51D1AA0A /* RenderTarget2D.cpp in Sources */,
 				A26E66F1AC2BB1AB2F03033F /* SamplerState.cpp in Sources */,
+				D7408D19237274B4007E101E /* AnimationCrossFadeNode.cpp in Sources */,
 				544D8ABEA35E9232F743511A /* Texture2D.cpp in Sources */,
 				D702F04D22FD8AC700886A78 /* IOService.cpp in Sources */,
 				D36D164E7998A51B8BC0C0DB /* Viewport.cpp in Sources */,
+				D7408D17237274B4007E101E /* AnimationLerpNode.cpp in Sources */,
 				8455FDB1EFE2A4DC02D36A09 /* VertexBuffer.cpp in Sources */,
 				A997F7071CAEFC4900926392 /* ShaderMetal.mm in Sources */,
 				119BF64DD4319D35290995CD /* GLSLCompiler.cpp in Sources */,
@@ -2610,14 +2857,20 @@
 				77E3632C4F2E245C2F8B6927 /* BoundingBox2D.cpp in Sources */,
 				A6F13789F98E66A501FCF50A /* BoundingCircle.cpp in Sources */,
 				AB379BED1D868790638B95CB /* BoundingSphere.cpp in Sources */,
+				D7408D25237274C4007E101E /* SkeletonLoader.cpp in Sources */,
 				A98BE0D51CC22915008696A8 /* GameHostMetal.mm in Sources */,
+				D7408D27237274C4007E101E /* SkinnedMeshLoader.cpp in Sources */,
 				66DF4B1D8D85D2B963D5A0D5 /* Color.cpp in Sources */,
 				D7703E0E22FCB26800442403 /* Errors.cpp in Sources */,
+				D7408D11237274B4007E101E /* AnimationClipNode.cpp in Sources */,
 				E58ECD9915BC55D5134950F9 /* MathHelper.cpp in Sources */,
+				D7408CFE2372746D007E101E /* AnimationClip.cpp in Sources */,
 				DA4579E5970831E615EA005D /* Ray.cpp in Sources */,
+				D7408CFA2372746D007E101E /* AnimationSystem.cpp in Sources */,
 				A93CA6531D92F34E00B65171 /* QueuedScheduler.cpp in Sources */,
 				D702F04F22FD8AC700886A78 /* UDPStream.cpp in Sources */,
 				A94F2DD22131FEFB00718DB0 /* EasingHelper.cpp in Sources */,
+				D7408CEE23727466007E101E /* SkeletonHelper.cpp in Sources */,
 				E4C4ADB64ED81496C05CB580 /* Rectangle.cpp in Sources */,
 				D7334E1A228AEC1300232225 /* FXAA.cpp in Sources */,
 				A958BDF91CC3E65A00E15834 /* PomdogMetalViewController.mm in Sources */,
@@ -2635,12 +2888,14 @@
 				D147245447821976039CCCC2 /* FloatingPointVector2.cpp in Sources */,
 				D702F05722FD8AC700886A78 /* TLSStream.cpp in Sources */,
 				D719A53423497EA600C1868B /* WAV.cpp in Sources */,
+				D7408CF023727466007E101E /* SkeletonPose.cpp in Sources */,
 				0A291D8212398840CBEB9A5D /* FloatingPointVector3.cpp in Sources */,
 				D702F05322FD8AC700886A78 /* EndPoint.cpp in Sources */,
 				F03B5A2733D5B0585DFBBB89 /* FloatingPointVector4.cpp in Sources */,
 				650D5B589129410AF7580726 /* GraphicsCommandListImmediate.cpp in Sources */,
 				6FA8A4ED33396758E9052EAD /* GraphicsCommandQueueImmediate.cpp in Sources */,
 				A943BA1D210E86B900DA852D /* GamepadUUID.cpp in Sources */,
+				D7408D15237274B4007E101E /* WeightBlendingHelper.cpp in Sources */,
 				D7703DF822FCB1BB00442403 /* SpinLock.cpp in Sources */,
 				A5F5B45161ACFD33A1652F9C /* SurfaceFormatHelper.cpp in Sources */,
 				55635C9F9A88D4C77235D6EB /* TextureHelper.cpp in Sources */,
@@ -2648,16 +2903,20 @@
 				A98F5925211B2B9A002960C1 /* SpriteFont.cpp in Sources */,
 				48657AD97E278FA04C4994B4 /* ConnectionList.cpp in Sources */,
 				5D895FC546DFD02F64646AF7 /* EventQueue.cpp in Sources */,
+				D7408CFC2372746D007E101E /* Animator.cpp in Sources */,
 				A98F591D211B2B89002960C1 /* PolygonShapeBuilder.cpp in Sources */,
 				D7334E20228AEC1300232225 /* SepiaToneEffect.cpp in Sources */,
 				A9E4B86B210CD9C1003F87DC /* GamepadMappings.cpp in Sources */,
 				A9A822941DAB7FBE0091497F /* TextureAtlasGenerator.cpp in Sources */,
+				D7408CF223727466007E101E /* Skin.cpp in Sources */,
 				D719A53D23497EB600C1868B /* PNG.cpp in Sources */,
+				D7408D2D237274C4007E101E /* AnimationGraphBuilder.cpp in Sources */,
 				D702F04522FD8AC700886A78 /* HTTPResponse.cpp in Sources */,
 				A9FC99061DC3D87F00C78D63 /* SpriteBatch.cpp in Sources */,
 				D740A550231010A00077D040 /* ErrorHelper.cpp in Sources */,
 				023F583DEDA9BCB1C9E19C1C /* ScopedConnection.cpp in Sources */,
 				A9E4B87A210CDEA2003F87DC /* GamepadFactory.cpp in Sources */,
+				D7408D1D237274B4007E101E /* AnimationGraphWeightCollection.cpp in Sources */,
 				65B8BEF3D1E04BF859631ADE /* CRC32.cpp in Sources */,
 				D7334DCB228AC80200232225 /* PrimitiveBatch.cpp in Sources */,
 				A997F7091CAEFC4900926392 /* Texture2DMetal.mm in Sources */,
@@ -2678,6 +2937,7 @@
 				A997F6FF1CAEFC4800926392 /* MetalFormatHelper.mm in Sources */,
 				D7458C0C23000520007150B4 /* HTTPParser.cpp in Sources */,
 				A93CA6551D92F34E00B65171 /* Task.cpp in Sources */,
+				D7408D1B237274B4007E101E /* AnimationAdditiveNode.cpp in Sources */,
 				A992AF051C2B1168003170C9 /* Coordinate3D.cpp in Sources */,
 				A9E4B86D210CD9C1003F87DC /* GamepadHelper.cpp in Sources */,
 				D702F06C22FD8B1B00886A78 /* SocketHelperPOSIX.cpp in Sources */,
@@ -2685,11 +2945,13 @@
 				C7615C67C153671C670F649B /* GraphicsContextGL4.cpp in Sources */,
 				D719A53F23497EB600C1868B /* PNM.cpp in Sources */,
 				FD3FD836F0346B587EDB61DE /* GraphicsDeviceGL4.cpp in Sources */,
+				D7408CF82372746D007E101E /* AnimationState.cpp in Sources */,
 				B3BF71F0DA976F207A41EC64 /* InputLayoutGL4.cpp in Sources */,
 				FC16EE3B4D5C9E58010BCD0A /* PipelineStateGL4.cpp in Sources */,
 				D702F04922FD8AC700886A78 /* HTTPClient.cpp in Sources */,
 				8DDEFF00D7FE9464C037A933 /* RasterizerStateGL4.cpp in Sources */,
 				1A274366E26BECBB63B60751 /* RenderTarget2DGL4.cpp in Sources */,
+				D7408D08237274A7007E101E /* AnimationTrack.cpp in Sources */,
 				D702F06A22FD8B1B00886A78 /* UDPStreamPOSIX.cpp in Sources */,
 				4282457DCED6C0F50EC6CE7E /* SamplerStateGL4.cpp in Sources */,
 				019FA0785E7D88B8C880AFD9 /* ShaderGL4.cpp in Sources */,
@@ -2885,6 +3147,7 @@
 					../dependencies/giflib,
 					../dependencies/libpng,
 					../dependencies/mbedtls/include,
+					../dependencies/rapidjson/include,
 					../dependencies/SDL_GameControllerDB/data,
 					../dependencies/stb,
 					../dependencies/vendor/libpng,
@@ -2972,6 +3235,7 @@
 					../dependencies/giflib,
 					../dependencies/libpng,
 					../dependencies/mbedtls/include,
+					../dependencies/rapidjson/include,
 					../dependencies/SDL_GameControllerDB/data,
 					../dependencies/stb,
 					../dependencies/vendor/libpng,
