@@ -12,8 +12,8 @@ public:
 } // namespace Pomdog
 
 #include <cstdint>
-#include <string>
 #include <memory>
+#include <string>
 
 namespace Pomdog {
 
@@ -32,8 +32,8 @@ struct ComponentTypeDeclaration;
 template <class TComponent>
 class ComponentCreator;
 
-template <class TComponent, typename ...Args>
-inline std::shared_ptr<ComponentCreatorBase> AddComponent(Args &&...args)
+template <class TComponent, typename... Args>
+inline std::shared_ptr<ComponentCreatorBase> AddComponent(Args &&... args)
 {
     return std::make_shared<ComponentCreator<TComponent>>(std::forward<Args>(args)...);
 }

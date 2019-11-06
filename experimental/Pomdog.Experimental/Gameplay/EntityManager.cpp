@@ -6,7 +6,7 @@
 namespace Pomdog {
 
 Entity EntityManager::CreateEntity(
-    std::vector<std::shared_ptr<ComponentCreatorBase>> && componentCreators)
+    std::vector<std::shared_ptr<ComponentCreatorBase>>&& componentCreators)
 {
     Entity entity(&context, context.Create(std::move(componentCreators)));
     entities.push_back(entity.GetID());
@@ -25,7 +25,7 @@ void EntityManager::Refresh()
 
     if (entityCount != context.GetCount()) {
         entities.erase(std::remove_if(std::begin(entities), std::end(entities),
-            [this](EntityID const& id){ return !context.Valid(id); }),
+            [this](const EntityID& id){ return !context.Valid(id); }),
             std::end(entities));
     }
 }

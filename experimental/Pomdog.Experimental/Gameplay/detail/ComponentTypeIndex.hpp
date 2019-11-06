@@ -3,8 +3,8 @@
 #pragma once
 
 #include <cstdint>
-#include <type_traits>
 #include <limits>
+#include <type_traits>
 
 namespace Pomdog {
 namespace Detail {

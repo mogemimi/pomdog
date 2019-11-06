@@ -2,9 +2,9 @@
 
 #pragma once
 
+#include "Pomdog.Experimental/Gameplay/Entity.hpp"
 #include "Pomdog.Experimental/UI/UIElement.hpp"
 #include "Pomdog.Experimental/UI/detail/UIEventConnection.hpp"
-#include "Pomdog.Experimental/Gameplay/Entity.hpp"
 #include <Pomdog/Pomdog.hpp>
 #include <optional>
 
@@ -43,7 +43,7 @@ public:
 
     void OnPointerReleased(const PointerPoint& pointerPoint) override;
 
-    void Draw(DrawingContext & drawingContext) override;
+    void Draw(DrawingContext& drawingContext) override;
 
     void UpdateAnimation(const Duration& frameDuration) override;
 

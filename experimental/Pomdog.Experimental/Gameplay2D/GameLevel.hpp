@@ -11,12 +11,12 @@ class GameHost;
 class GameLevel {
 public:
     GameLevel() = default;
-    GameLevel(GameLevel const&) = delete;
-    GameLevel & operator=(GameLevel const&) = delete;
+    GameLevel(const GameLevel&) = delete;
+    GameLevel& operator=(const GameLevel&) = delete;
 
     virtual ~GameLevel() = default;
 
-    virtual void Update(GameHost & gameHost, EntityManager & manager) = 0;
+    virtual void Update(GameHost& gameHost, EntityManager& manager) = 0;
 };
 
 } // namespace Pomdog

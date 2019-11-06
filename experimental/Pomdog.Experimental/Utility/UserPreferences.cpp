@@ -2,11 +2,11 @@
 
 #include "UserPreferences.hpp"
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
+#include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include "Pomdog/Utility/FileSystem.hpp"
 #include "Pomdog/Utility/PathHelper.hpp"
-#include "Pomdog/Logging/Log.hpp"
 #include <rapidjson/document.h>
 #include <rapidjson/writer.h>
 #include <fstream>
@@ -15,13 +15,13 @@ namespace Pomdog {
 namespace {
 
 template <typename T>
-rapidjson::Value ToJsonValue(T const& v)
+rapidjson::Value ToJsonValue(const T& v)
 {
     auto value = rapidjson::Value(v);
     return value;
 }
 
-rapidjson::Value ToJsonValue(std::string const& s)
+rapidjson::Value ToJsonValue(const std::string& s)
 {
     auto value = rapidjson::Value(
         s.c_str(),
@@ -48,7 +48,7 @@ std::optional<T> GetJsonValue(const std::string& jsonData, const std::string& ke
         return std::nullopt;
     }
 
-    auto & v = doc[key.c_str()];
+    auto& v = doc[key.c_str()];
     return func(v);
 }
 
@@ -104,7 +104,7 @@ UserPreferences::UserPreferences()
             POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to open file");
         }
 
-        auto[byteLength, err] = FileSystem::GetFileSize(filePath);
+        auto [byteLength, err] = FileSystem::GetFileSize(filePath);
         if (err != nullptr) {
             POMDOG_THROW_EXCEPTION(std::runtime_error, "failed to get file size, " + filePath);
         }
@@ -185,7 +185,7 @@ std::optional<std::string> UserPreferences::GetString(const std::string& key) co
         });
 }
 
-bool UserPreferences::HasKey(std::string const& key)
+bool UserPreferences::HasKey(const std::string& key)
 {
     POMDOG_ASSERT(!key.empty());
 
@@ -202,28 +202,28 @@ bool UserPreferences::HasKey(std::string const& key)
     return doc.HasMember(key.c_str());
 }
 
-void UserPreferences::SetBool(std::string const& key, bool value)
+void UserPreferences::SetBool(const std::string& key, bool value)
 {
     POMDOG_ASSERT(!key.empty());
     SetJsonValue(jsonData, key, value);
     needToSave = true;
 }
 
-void UserPreferences::SetFloat(std::string const& key, float value)
+void UserPreferences::SetFloat(const std::string& key, float value)
 {
     POMDOG_ASSERT(!key.empty());
     SetJsonValue(jsonData, key, value);
     needToSave = true;
 }
 
-void UserPreferences::SetInt(std::string const& key, int value)
+void UserPreferences::SetInt(const std::string& key, int value)
 {
     POMDOG_ASSERT(!key.empty());
     SetJsonValue(jsonData, key, value);
     needToSave = true;
 }
 
-void UserPreferences::SetString(std::string const& key, std::string const& value)
+void UserPreferences::SetString(const std::string& key, const std::string& value)
 {
     POMDOG_ASSERT(!key.empty());
     SetJsonValue(jsonData, key, value);

@@ -33,7 +33,7 @@ public:
 
     void AddProcessor(
         const std::type_index& index,
-        std::unique_ptr<RenderCommandProcessor> && processor);
+        std::unique_ptr<RenderCommandProcessor>&& processor);
 
     void Reset();
 
@@ -68,7 +68,7 @@ void Renderer::Impl::Reset()
 
 void Renderer::Impl::AddProcessor(
     const std::type_index& index,
-    std::unique_ptr<RenderCommandProcessor> && processor)
+    std::unique_ptr<RenderCommandProcessor>&& processor)
 {
     POMDOG_ASSERT(processor);
     processors.emplace(index, std::move(processor));
@@ -91,8 +91,8 @@ std::shared_ptr<GraphicsCommandList> Renderer::Impl::Render()
     drawCallCount = 0;
     const auto viewProjection = viewMatrix * projectionMatrix;
 
-    for (auto & iter : processors) {
-        auto & processor = iter.second;
+    for (auto& iter : processors) {
+        auto& processor = iter.second;
         POMDOG_ASSERT(processor);
         processor->Begin(commandList, viewProjection);
     }
@@ -101,12 +101,12 @@ std::shared_ptr<GraphicsCommandList> Renderer::Impl::Render()
 
     SortCommands();
 
-    for (auto & command : commands) {
+    for (auto& command : commands) {
         auto iter = processors.find(command.get().GetType());
 
         if (prevIter != iter) {
             if (prevIter != std::end(processors)) {
-                auto & processor = prevIter->second;
+                auto& processor = prevIter->second;
                 POMDOG_ASSERT(processor);
                 processor->FlushBatch();
 
@@ -126,14 +126,14 @@ std::shared_ptr<GraphicsCommandList> Renderer::Impl::Render()
         POMDOG_ASSERT(iter != std::end(processors));
         POMDOG_ASSERT(iter->second);
 
-        auto & processor = iter->second;
+        auto& processor = iter->second;
 
         processor->Draw(commandList, command);
     }
 
     if (std::end(processors) != prevIter) {
         POMDOG_ASSERT(prevIter->second);
-        auto & processor = prevIter->second;
+        auto& processor = prevIter->second;
         processor->End();
 
         POMDOG_ASSERT(processor->GetDrawCallCount() >= 0);
@@ -146,7 +146,8 @@ std::shared_ptr<GraphicsCommandList> Renderer::Impl::Render()
 
 Renderer::Renderer(const std::shared_ptr<GraphicsDevice>& graphicsDevice)
     : impl(std::make_unique<Impl>(graphicsDevice))
-{}
+{
+}
 
 Renderer::~Renderer() = default;
 
@@ -156,7 +157,7 @@ std::shared_ptr<GraphicsCommandList> Renderer::Render()
     return impl->Render();
 }
 
-void Renderer::PushCommand(std::reference_wrapper<RenderCommand> && command)
+void Renderer::PushCommand(std::reference_wrapper<RenderCommand>&& command)
 {
     POMDOG_ASSERT(impl);
     impl->commands.push_back(std::move(command));
@@ -187,7 +188,7 @@ void Renderer::Reset()
     impl->Reset();
 }
 
-void Renderer::AddProcessor(std::unique_ptr<RenderCommandProcessor> && processor)
+void Renderer::AddProcessor(std::unique_ptr<RenderCommandProcessor>&& processor)
 {
     POMDOG_ASSERT(impl);
     auto typeIndex = processor->GetCommandType();

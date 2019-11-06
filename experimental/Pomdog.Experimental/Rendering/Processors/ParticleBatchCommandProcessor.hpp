@@ -12,13 +12,13 @@ class ParticleBatchCommandProcessor final : public RenderCommandProcessor {
 public:
     ParticleBatchCommandProcessor(
         const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-        AssetManager & assets);
+        AssetManager& assets);
 
-    void Begin(GraphicsCommandQueue & commandQueue) override;
+    void Begin(GraphicsCommandQueue& commandQueue) override;
 
-    void Draw(GraphicsCommandQueue & commandQueue, RenderCommand & command) override;
+    void Draw(GraphicsCommandQueue& commandQueue, RenderCommand& command) override;
 
-    void End(GraphicsCommandQueue & commandQueue) override;
+    void End(GraphicsCommandQueue& commandQueue) override;
 
     int GetDrawCallCount() const noexcept override;
 

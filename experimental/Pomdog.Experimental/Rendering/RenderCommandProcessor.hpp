@@ -19,7 +19,7 @@ public:
 
     virtual void Draw(
         const std::shared_ptr<GraphicsCommandList>& commandList,
-        RenderCommand & command) = 0;
+        RenderCommand& command) = 0;
 
     virtual void FlushBatch() = 0;
 

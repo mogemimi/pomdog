@@ -30,7 +30,7 @@ float CameraComponent::GetZoom() const noexcept
 
 void CameraComponent::SetZoom(float zoomIn) noexcept
 {
-     zoom = zoomIn;
+    zoom = zoomIn;
 }
 
 float CameraComponent::GetNear() const noexcept

@@ -6,8 +6,8 @@
 #include "Pomdog.Experimental/UI/UIEventDispatcher.hpp"
 #include <Pomdog/Pomdog.hpp>
 #include <algorithm>
-#include <vector>
 #include <memory>
+#include <vector>
 
 namespace Pomdog {
 namespace UI {
@@ -26,7 +26,7 @@ public:
 
     void AddChild(const std::shared_ptr<UIElement>& child);
 
-    void Draw(DrawingContext & drawingContext);
+    void Draw(DrawingContext& drawingContext);
 
     void RenderSizeChanged(int width, int height);
 

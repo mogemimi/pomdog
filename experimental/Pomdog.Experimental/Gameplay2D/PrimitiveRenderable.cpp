@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog.Experimental/Gameplay2D/PrimitiveRenderable.hpp"
-#include "Pomdog.Experimental/Rendering/Renderer.hpp"
 #include "Pomdog.Experimental/Gameplay2D/Transform.hpp"
+#include "Pomdog.Experimental/Rendering/Renderer.hpp"
 
 namespace Pomdog {
 
@@ -23,7 +23,7 @@ PrimitiveRenderable::PrimitiveRenderable(
         graphicsDevice, sizeof(Matrix4x4), BufferUsage::Dynamic);
 }
 
-void PrimitiveRenderable::Visit(Entity & entity, Renderer & renderer)
+void PrimitiveRenderable::Visit(Entity& entity, Renderer& renderer)
 {
     if (!IsVisible()) {
         return;
@@ -52,7 +52,8 @@ void PrimitiveRenderable::Visit(Entity & entity, Renderer & renderer)
 
     if (auto transform = entity.GetComponent<Transform>()) {
         command.worldMatrix = transform->GetTransformMatrix();
-    } else {
+    }
+    else {
         command.worldMatrix = Matrix4x4::Identity;
     }
     renderer.PushCommand(command);
@@ -224,7 +225,6 @@ std::uint8_t ComponentTypeDeclaration<PrimitiveRenderable>::GetTypeIndex()
 {
     return Detail::Gameplay::ComponentTypeIndex::Index<GraphicsComponent>();
 }
-
 
 ComponentCreator<PrimitiveRenderable>::ComponentCreator(
     const std::shared_ptr<GraphicsDevice>& graphicsDeviceIn)

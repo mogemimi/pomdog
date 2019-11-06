@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Math/Color.hpp"
+#include "Pomdog/Math/Vector2.hpp"
 #include <vector>
 
 namespace Pomdog {
@@ -14,9 +14,9 @@ namespace SceneEditor {
 
 class PrimitiveGrid {
 public:
-    PrimitiveGrid(Color const& primaryColor, Color const& secondaryColor);
+    PrimitiveGrid(const Color& primaryColor, const Color& secondaryColor);
 
-    void Draw(LineBatch & lineBatch);
+    void Draw(LineBatch& lineBatch);
 
 private:
     struct Line {
@@ -28,5 +28,5 @@ private:
     std::vector<Line> lines;
 };
 
-}// namespace SceneEditor
-}// namespace Pomdog
+} // namespace SceneEditor
+} // namespace Pomdog

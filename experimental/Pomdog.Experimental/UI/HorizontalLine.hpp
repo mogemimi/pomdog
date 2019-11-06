@@ -2,9 +2,9 @@
 
 #pragma once
 
+#include "Pomdog.Experimental/Rendering/Commands/PrimitivePolygonCommand.hpp"
 #include "Pomdog.Experimental/UI/UIElement.hpp"
 #include "Pomdog.Experimental/UI/detail/UIEventConnection.hpp"
-#include "Pomdog.Experimental/Rendering/Commands/PrimitivePolygonCommand.hpp"
 
 namespace Pomdog {
 namespace UI {
@@ -18,7 +18,7 @@ public:
     HorizontalAlignment GetHorizontalAlignment() const noexcept override;
     VerticalAlignment GetVerticalAlignment() const noexcept override;
 
-    void Draw(DrawingContext & drawingContext) override;
+    void Draw(DrawingContext& drawingContext) override;
 
 private:
     Rendering::PrimitiveFunctionCommand renderCommand;

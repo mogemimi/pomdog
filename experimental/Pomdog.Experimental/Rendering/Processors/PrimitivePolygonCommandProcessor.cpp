@@ -8,7 +8,7 @@ namespace Rendering {
 
 PrimitivePolygonCommandProcessor::PrimitivePolygonCommandProcessor(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-    AssetManager & assets)
+    AssetManager& assets)
     : primitiveBatch(graphicsDevice, assets)
 {
 }
@@ -22,9 +22,9 @@ void PrimitivePolygonCommandProcessor::Begin(
 
 void PrimitivePolygonCommandProcessor::Draw(
     const std::shared_ptr<GraphicsCommandList>& commandList,
-    RenderCommand & renderCommand)
+    RenderCommand& renderCommand)
 {
-    auto & command = static_cast<PrimitivePolygonCommand &>(renderCommand);
+    auto& command = static_cast<PrimitivePolygonCommand&>(renderCommand);
     command.Execute(primitiveBatch);
 }
 

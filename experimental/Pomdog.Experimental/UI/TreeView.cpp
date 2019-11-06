@@ -2,11 +2,11 @@
 
 #include "Pomdog.Experimental/UI/TreeView.hpp"
 #include "Pomdog.Experimental/UI/DrawingContext.hpp"
-#include "Pomdog.Experimental/UI/PointerPoint.hpp"
-#include "Pomdog.Experimental/UI/UIHelper.hpp"
-#include "Pomdog.Experimental/UI/UIEventDispatcher.hpp"
 #include "Pomdog.Experimental/UI/FontSize.hpp"
 #include "Pomdog.Experimental/UI/FontWeight.hpp"
+#include "Pomdog.Experimental/UI/PointerPoint.hpp"
+#include "Pomdog.Experimental/UI/UIEventDispatcher.hpp"
+#include "Pomdog.Experimental/UI/UIHelper.hpp"
 
 namespace Pomdog {
 namespace UI {
@@ -67,7 +67,7 @@ void TreeView::OnEnter()
     children.push_back(horizontalLayout);
     children.push_back(verticalLayout);
 
-    for (auto & child : children) {
+    for (auto& child : children) {
         POMDOG_ASSERT(child);
         child->MarkParentDrawOrderDirty();
         child->MarkParentTransformDirty();
@@ -190,7 +190,7 @@ void TreeView::DoLayout()
     UpdateLayout();
 }
 
-void TreeView::Draw(DrawingContext & drawingContext)
+void TreeView::Draw(DrawingContext& drawingContext)
 {
     UpdateLayout();
 

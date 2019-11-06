@@ -3,12 +3,12 @@
 #pragma once
 
 #include <optional>
-#include <vector>
 #include <string>
+#include <vector>
 
 namespace Pomdog {
 
-class UserPreferences {
+class UserPreferences final {
 public:
     UserPreferences();
 
@@ -20,15 +20,15 @@ public:
 
     std::optional<std::string> GetString(const std::string& key) const;
 
-    bool HasKey(std::string const& key);
+    bool HasKey(const std::string& key);
 
-    void SetBool(std::string const& key, bool value);
+    void SetBool(const std::string& key, bool value);
 
-    void SetFloat(std::string const& key, float value);
+    void SetFloat(const std::string& key, float value);
 
-    void SetInt(std::string const& key, int value);
+    void SetInt(const std::string& key, int value);
 
-    void SetString(std::string const& key, std::string const& value);
+    void SetString(const std::string& key, const std::string& value);
 
     void Save();
 

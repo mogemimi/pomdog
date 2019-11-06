@@ -3,8 +3,8 @@
 #include "Pomdog.Experimental/UI/StackPanel.hpp"
 #include "Pomdog.Experimental/UI/DrawingContext.hpp"
 #include "Pomdog.Experimental/UI/PointerPoint.hpp"
-#include "Pomdog.Experimental/UI/UIHelper.hpp"
 #include "Pomdog.Experimental/UI/UIEventDispatcher.hpp"
+#include "Pomdog.Experimental/UI/UIHelper.hpp"
 
 namespace Pomdog {
 namespace UI {
@@ -57,7 +57,7 @@ void StackPanel::OnEnter()
     connection = dispatcher->Connect(shared_from_this());
 
     {
-        auto & child = verticalLayout;
+        auto& child = verticalLayout;
         POMDOG_ASSERT(child);
         child->MarkParentDrawOrderDirty();
         child->MarkParentTransformDirty();
@@ -176,7 +176,7 @@ void StackPanel::DoLayout()
     UpdateLayout();
 }
 
-void StackPanel::Draw(DrawingContext & drawingContext)
+void StackPanel::Draw(DrawingContext& drawingContext)
 {
     UpdateLayout();
     POMDOG_ASSERT(!needToUpdateLayout);

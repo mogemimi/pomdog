@@ -3,8 +3,8 @@
 #include "Pomdog.Experimental/UI/HorizontalLayout.hpp"
 #include "Pomdog.Experimental/UI/DrawingContext.hpp"
 #include "Pomdog.Experimental/UI/PointerPoint.hpp"
-#include "Pomdog.Experimental/UI/UIHelper.hpp"
 #include "Pomdog.Experimental/UI/UIEventDispatcher.hpp"
+#include "Pomdog.Experimental/UI/UIHelper.hpp"
 
 namespace Pomdog {
 namespace UI {
@@ -47,7 +47,7 @@ void HorizontalLayout::SetStackedLayout(bool isStackedLayoutIn)
 void HorizontalLayout::SetTransform(const Matrix3x2& transformMatrixIn)
 {
     UIElement::SetTransform(transformMatrixIn);
-    for (auto & child : children) {
+    for (auto& child : children) {
         POMDOG_ASSERT(child);
         child->MarkParentTransformDirty();
     }
@@ -56,7 +56,7 @@ void HorizontalLayout::SetTransform(const Matrix3x2& transformMatrixIn)
 void HorizontalLayout::MarkParentTransformDirty()
 {
     UIElement::MarkParentTransformDirty();
-    for (auto & child : children) {
+    for (auto& child : children) {
         POMDOG_ASSERT(child);
         child->MarkParentTransformDirty();
     }
@@ -96,7 +96,7 @@ void HorizontalLayout::AddChild(const std::shared_ptr<UIElement>& element)
 
 void HorizontalLayout::UpdateLayout()
 {
-    for (auto & child : children) {
+    for (auto& child : children) {
         child->DoLayout();
     }
 
@@ -106,7 +106,7 @@ void HorizontalLayout::UpdateLayout()
 
     {
         int maxHeight = 0;
-        for (auto & child : children) {
+        for (auto& child : children) {
             maxHeight = std::max(child->GetHeight(), maxHeight);
         }
 
@@ -132,7 +132,7 @@ void HorizontalLayout::UpdateLayout()
 
         int childrenCount = 0;
         int fixedWidth = 0;
-        for (auto & child : children) {
+        for (auto& child : children) {
             if (child->GetHorizontalAlignment() == HorizontalAlignment::Stretch) {
                 ++childrenCount;
             }
@@ -151,7 +151,7 @@ void HorizontalLayout::UpdateLayout()
     int offsetX = margin.Left;
 
     // NOTE: Update layout for children
-    for (auto & child : children) {
+    for (auto& child : children) {
         POMDOG_ASSERT(child);
         Vector2 position = {static_cast<float>(offsetX), 0.0f};
 
@@ -194,7 +194,7 @@ void HorizontalLayout::DoLayout()
     UpdateLayout();
 }
 
-void HorizontalLayout::Draw(DrawingContext & drawingContext)
+void HorizontalLayout::Draw(DrawingContext& drawingContext)
 {
     UpdateLayout();
     POMDOG_ASSERT(!needToUpdateLayout);
@@ -222,7 +222,7 @@ void HorizontalLayout::Draw(DrawingContext & drawingContext)
 
     drawingContext.Push(transform);
 
-    for (auto & child : children) {
+    for (auto& child : children) {
         POMDOG_ASSERT(child);
         child->Draw(drawingContext);
     }

@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "Pomdog.Experimental/Gameplay/detail/ComponentTypeIndex.hpp"
 #include "Pomdog.Experimental/Gameplay/Component.hpp"
+#include "Pomdog.Experimental/Gameplay/detail/ComponentTypeIndex.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Math/Quaternion.hpp"
 #include "Pomdog/Math/Radian.hpp"

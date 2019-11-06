@@ -7,7 +7,8 @@ namespace Pomdog {
 Entity::Entity(EntityContext* contextIn, const EntityID& idIn) noexcept
     : context(contextIn)
     , id(idIn)
-{}
+{
+}
 
 Entity::operator bool() const noexcept
 {

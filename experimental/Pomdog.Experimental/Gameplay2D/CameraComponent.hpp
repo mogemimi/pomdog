@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include "Pomdog.Experimental/Gameplay/detail/ComponentTypeIndex.hpp"
 #include "Pomdog.Experimental/Gameplay/Component.hpp"
+#include "Pomdog.Experimental/Gameplay/detail/ComponentTypeIndex.hpp"
+#include "Pomdog/Basic/Export.hpp"
+#include "Pomdog/Graphics/Viewport.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Radian.hpp"
-#include "Pomdog/Graphics/Viewport.hpp"
-#include "Pomdog/Basic/Export.hpp"
 #include <cstdint>
 
 namespace Pomdog {

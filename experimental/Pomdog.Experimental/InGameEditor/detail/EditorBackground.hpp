@@ -14,11 +14,11 @@ namespace SceneEditor {
 
 class EditorBackground {
 public:
-    explicit EditorBackground(std::shared_ptr<GameHost> const& gameHost);
+    explicit EditorBackground(const std::shared_ptr<GameHost>& gameHost);
 
-    void SetViewProjection(Matrix4x4 const& viewProjection);
+    void SetViewProjection(const Matrix4x4& viewProjection);
 
-    void Draw(GraphicsContext & graphicsContext);
+    void Draw(GraphicsContext& graphicsContext);
 
 private:
     LineBatch lineBatch;
@@ -28,5 +28,5 @@ private:
     SceneEditor::PrimitiveGrid primitiveGrid;
 };
 
-}// namespace SceneEditor
-}// namespace Pomdog
+} // namespace SceneEditor
+} // namespace Pomdog

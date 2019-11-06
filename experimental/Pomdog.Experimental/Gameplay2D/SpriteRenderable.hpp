@@ -5,9 +5,9 @@
 #include "Pomdog.Experimental/Gameplay/detail/ComponentTypeIndex.hpp"
 #include "Pomdog.Experimental/Gameplay2D/GraphicsComponent.hpp"
 #include "Pomdog.Experimental/Rendering/Commands/SpriteBatchCommand.hpp"
+#include "Pomdog/Experimental/TexturePacker/TextureRegion.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Math/Vector2.hpp"
-#include "Pomdog/Experimental/TexturePacker/TextureRegion.hpp"
 #include <Pomdog/Pomdog.hpp>
 #include <functional>
 #include <memory>
@@ -18,7 +18,7 @@ class SpriteRenderable final : public GraphicsComponent {
 public:
     SpriteRenderable();
 
-    void Visit(Entity & entity, Renderer & renderer) override;
+    void Visit(Entity& entity, Renderer& renderer) override;
 
     std::shared_ptr<Texture2D> GetTexture();
 

@@ -20,7 +20,7 @@ namespace {
 
 PrimitiveCommandProcessor::PrimitiveCommandProcessor(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-    AssetManager & assets)
+    AssetManager& assets)
     : drawCallCount(0)
 {
     auto inputLayout = InputLayoutHelper{}
@@ -60,10 +60,10 @@ void PrimitiveCommandProcessor::Begin(
 
 void PrimitiveCommandProcessor::Draw(
     const std::shared_ptr<GraphicsCommandList>& commandList,
-    RenderCommand & command)
+    RenderCommand& command)
 {
     using Pomdog::Rendering::PrimitiveCommand;
-    auto & primitiveCommand = static_cast<PrimitiveCommand &>(command);
+    auto& primitiveCommand = static_cast<PrimitiveCommand&>(command);
     POMDOG_ASSERT(primitiveCommand.vertexBuffer);
     POMDOG_ASSERT(primitiveCommand.constantBuffer);
 

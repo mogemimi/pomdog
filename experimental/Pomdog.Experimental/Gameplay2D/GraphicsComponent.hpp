@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "Pomdog.Experimental/Gameplay/detail/ComponentTypeIndex.hpp"
 #include "Pomdog.Experimental/Gameplay/Component.hpp"
 #include "Pomdog.Experimental/Gameplay/Entity.hpp"
+#include "Pomdog.Experimental/Gameplay/detail/ComponentTypeIndex.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Matrix4x4.hpp"
 
@@ -16,7 +16,7 @@ class GraphicsComponent : public Component {
 public:
     virtual ~GraphicsComponent() = default;
 
-    virtual void Visit(Entity & entity, Renderer & renderer) = 0;
+    virtual void Visit(Entity& entity, Renderer& renderer) = 0;
 
     float GetDrawOrder() const noexcept;
 

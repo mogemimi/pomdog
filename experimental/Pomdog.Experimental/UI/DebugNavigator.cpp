@@ -25,7 +25,7 @@ DebugNavigator::DebugNavigator(
     SetSize(150, 40);
 }
 
-void DebugNavigator::Draw(DrawingContext & drawingContext)
+void DebugNavigator::Draw(DrawingContext& drawingContext)
 {
     {
         if (clock->GetTotalGameTime() - duration > Duration(0.2)) {
@@ -63,7 +63,7 @@ void DebugNavigator::Draw(DrawingContext & drawingContext)
 
         auto startPosition = graphMargin + (graghWidth * static_cast<float>(maxHistories - frameRates.size()));
         auto graphX = startPosition;
-        for (auto & frameRate : frameRates) {
+        for (auto& frameRate : frameRates) {
             auto amount = ((frameRate - minFramerate) / (maxFramerate - minFramerate));
             auto barHeight = MathHelper::Clamp((maxGraphHeight - (graphMargin * 2)) * amount, 1.0f, maxGraphHeight);
 

@@ -13,7 +13,7 @@ private:
     bool isCompleted = false;
 
 public:
-    void Act(Entity & entity, AnimationTimeInterval const&) override
+    void Act(Entity& entity, const AnimationTimeInterval&) override
     {
         if (isCompleted) {
             return;

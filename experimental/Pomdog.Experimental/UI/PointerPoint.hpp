@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Pomdog.Experimental/UI/PointerEventType.hpp"
+#include "Pomdog/Math/Point2D.hpp"
 #include <cstdint>
 #include <optional>
 

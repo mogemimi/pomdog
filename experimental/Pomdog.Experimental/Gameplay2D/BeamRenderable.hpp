@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "Renderable.hpp"
 #include "Pomdog.Experimental/Particle2D/BeamSystem.hpp"
+#include "Renderable.hpp"
 #include "Pomdog/Application/GameClock.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
@@ -16,10 +16,10 @@ class BeamRenderable final : public Renderable {
 public:
     BeamRenderable();
 
-    void Visit(Entity & entity, Renderer & renderer) override;
+    void Visit(Entity& entity, Renderer& renderer) override;
 
-    void Load(std::shared_ptr<GraphicsDevice> const& graphicsDevice, std::shared_ptr<AssetManager> const& assets);
-    void Update(GameClock const& clock);
+    void Load(const std::shared_ptr<GraphicsDevice>& graphicsDevice, const std::shared_ptr<AssetManager>& assets);
+    void Update(const GameClock& clock);
 
     void DrawBeam();
 

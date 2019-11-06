@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "detail/TemporalAction.hpp"
 #include "Pomdog.Experimental/Gameplay/Entity.hpp"
+#include "detail/TemporalAction.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
@@ -17,11 +17,11 @@ namespace Actions {
 //    Color endColor;
 //
 //public:
-//    explicit TintTo(Color const& colorIn)
+//    explicit TintTo(const Color& colorIn)
 //        : endColor(colorIn)
 //    {}
 //
-//    void Begin(Entity const& entity)
+//    void Begin(const Entity& entity)
 //    {
 //        POMDOG_ASSERT(entity);
 //        POMDOG_ASSERT(entity.HasComponent<Renderable>());

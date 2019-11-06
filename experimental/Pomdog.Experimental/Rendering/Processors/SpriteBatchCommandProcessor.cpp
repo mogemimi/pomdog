@@ -8,7 +8,7 @@ namespace Rendering {
 
 SpriteBatchCommandProcessor::SpriteBatchCommandProcessor(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-    AssetManager & assets)
+    AssetManager& assets)
     : spriteBatch(graphicsDevice, assets)
 {
 }
@@ -22,9 +22,9 @@ void SpriteBatchCommandProcessor::Begin(
 
 void SpriteBatchCommandProcessor::Draw(
     const std::shared_ptr<GraphicsCommandList>& commandList,
-    RenderCommand & renderCommand)
+    RenderCommand& renderCommand)
 {
-    auto & command = static_cast<SpriteRenderCommand &>(renderCommand);
+    auto& command = static_cast<SpriteRenderCommand&>(renderCommand);
     command.Execute(spriteBatch);
 }
 

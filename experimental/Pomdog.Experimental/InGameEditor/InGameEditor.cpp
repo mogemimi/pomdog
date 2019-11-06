@@ -21,9 +21,9 @@ namespace {
 #include "Pomdog.Experimental/Graphics/Shaders/HLSL.Embedded/SpriteBatch_VS.inc.hpp"
 #include "Pomdog.Experimental/Graphics/Shaders/HLSL.Embedded/SpriteDistanceField_PS.inc.hpp"
 
-}// unnamed namespace
+} // unnamed namespace
 
-InGameEditor::InGameEditor(std::shared_ptr<GameHost> const& gameHostIn)
+InGameEditor::InGameEditor(const std::shared_ptr<GameHost>& gameHostIn)
     : hierarchy(gameHostIn->Window())
     , gameHost(gameHostIn)
 {
@@ -81,7 +81,7 @@ InGameEditor::InGameEditor(std::shared_ptr<GameHost> const& gameHostIn)
 
 InGameEditor::~InGameEditor() = default;
 
-void InGameEditor::AddView(std::shared_ptr<UI::UIElement> const& view)
+void InGameEditor::AddView(const std::shared_ptr<UI::UIElement>& view)
 {
     POMDOG_ASSERT(!view->Parent());
     hierarchy.AddChild(view);
@@ -97,7 +97,7 @@ void InGameEditor::Update()
     hierarchy.UpdateAnimation(clock->FrameDuration());
 }
 
-void InGameEditor::DrawGUI(GraphicsContext & graphicsContext)
+void InGameEditor::DrawGUI(GraphicsContext& graphicsContext)
 {
     auto depthStencilStateOld = graphicsContext.GetDepthStencilState();
     graphicsContext.SetDepthStencilState(depthStencilState);
@@ -123,5 +123,5 @@ std::shared_ptr<UI::UIEventDispatcher> InGameEditor::Dispatcher() const
     return hierarchy.Dispatcher();
 }
 
-}// namespace SceneEditor
-}// namespace Pomdog
+} // namespace SceneEditor
+} // namespace Pomdog

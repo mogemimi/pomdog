@@ -23,7 +23,8 @@ private:
 public:
     BoxCollider2D()
         : size(1.0f, 1.0f)
-    {}
+    {
+    }
 
     BoundingBox2D GetCollider(const Vector2& position) const noexcept
     {
@@ -55,7 +56,8 @@ private:
 public:
     CircleCollider2D()
         : radius(1.0f)
-    {}
+    {
+    }
 
     BoundingCircle GetCollider(const Vector2& position) const noexcept
     {

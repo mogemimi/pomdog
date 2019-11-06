@@ -27,7 +27,7 @@ HierarchyNode::~HierarchyNode()
     }
 }
 
-void HierarchyNode::AddChild(std::shared_ptr<HierarchyNode> const& child)
+void HierarchyNode::AddChild(const std::shared_ptr<HierarchyNode>& child)
 {
     POMDOG_ASSERT(child);
     child->weakParent = shared_from_this();
@@ -49,7 +49,7 @@ void HierarchyNode::AddChild(std::shared_ptr<HierarchyNode> const& child)
     prevSibling->sibling = child;
 }
 
-void HierarchyNode::RemoveChild(std::shared_ptr<HierarchyNode> const& child)
+void HierarchyNode::RemoveChild(const std::shared_ptr<HierarchyNode>& child)
 {
     POMDOG_ASSERT(child);
     POMDOG_ASSERT(!child->weakParent.expired());
@@ -98,7 +98,7 @@ void HierarchyNode::RemoveFromParent()
 }
 
 void HierarchyNode::EnumerateChildren(
-    std::function<void(std::shared_ptr<HierarchyNode> const& child)> const& callback)
+    const std::function<void(const std::shared_ptr<HierarchyNode>& child)>& callback)
 {
     auto child = firstChild;
     while (child) {

@@ -9,14 +9,14 @@ namespace Pomdog {
 namespace {
 
 ///@todo badcode: Copy and Paste
-static Matrix3x2 CreateTransformMatrix3x2(Transform2D const& transform)
+static Matrix3x2 CreateTransformMatrix3x2(const Transform2D& transform)
 {
     return Matrix3x2::CreateScale(transform.Scale)
         * Matrix3x2::CreateRotation(transform.Rotation)
         * Matrix3x2::CreateTranslation(transform.Position);
 }
 
-}// namespace SpriteRenderableDirtyFlags
+} // namespace
 
 RectangleRenderable::RectangleRenderable()
     : originPivot{0.5f, 0.5f}
@@ -30,7 +30,7 @@ RectangleRenderable::RectangleRenderable()
     command.drawOrder = 0;
 }
 
-void RectangleRenderable::Visit(GameObject & gameObject, Renderer & renderer)
+void RectangleRenderable::Visit(GameObject& gameObject, Renderer& renderer)
 {
     if (!IsVisible) {
         return;
@@ -42,8 +42,7 @@ void RectangleRenderable::Visit(GameObject & gameObject, Renderer & renderer)
 
     auto offsetMatrix = Matrix3x2::CreateTranslation(-Vector2(command.rectangle.Width, command.rectangle.Height) * originPivot);
 
-    if (auto transform = gameObject.Component<Transform2D>())
-    {
+    if (auto transform = gameObject.Component<Transform2D>()) {
         if (transform->Scale.X == 0.0f || transform->Scale.Y == 0.0f) {
             return;
         }
@@ -59,27 +58,27 @@ void RectangleRenderable::Visit(GameObject & gameObject, Renderer & renderer)
     renderer.PushCommand(command);
 }
 
-void RectangleRenderable::LeftTopColor(Pomdog::Color const& color)
+void RectangleRenderable::LeftTopColor(const Pomdog::Color& color)
 {
     command.leftTopColor = color;
 }
 
-void RectangleRenderable::RightTopColor(Pomdog::Color const& color)
+void RectangleRenderable::RightTopColor(const Pomdog::Color& color)
 {
     command.rightTopColor = color;
 }
 
-void RectangleRenderable::LeftBottomColor(Pomdog::Color const& color)
+void RectangleRenderable::LeftBottomColor(const Pomdog::Color& color)
 {
     command.leftBottomColor = color;
 }
 
-void RectangleRenderable::RightBottomColor(Pomdog::Color const& color)
+void RectangleRenderable::RightBottomColor(const Pomdog::Color& color)
 {
     command.rightBottomColor = color;
 }
 
-void RectangleRenderable::OriginPivot(Vector2 const& originPivotIn)
+void RectangleRenderable::OriginPivot(const Vector2& originPivotIn)
 {
     this->originPivot = originPivotIn;
 }
@@ -89,7 +88,7 @@ Vector2 RectangleRenderable::OriginPivot() const
     return originPivot;
 }
 
-void RectangleRenderable::BoundingBox(Rectangle const& rectangle)
+void RectangleRenderable::BoundingBox(const Rectangle& rectangle)
 {
     command.rectangle = rectangle;
 }
@@ -99,4 +98,4 @@ Rectangle RectangleRenderable::BoundingBox() const
     return command.rectangle;
 }
 
-}// namespace Pomdog
+} // namespace Pomdog

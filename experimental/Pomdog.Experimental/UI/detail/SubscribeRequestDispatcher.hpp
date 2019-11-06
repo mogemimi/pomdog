@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include <vector>
 #include <utility>
+#include <vector>
 
 namespace Pomdog {
 namespace UI {
@@ -17,7 +17,7 @@ public:
         Added.push_back(child);
     }
 
-    void AddChild(ListenerType && child)
+    void AddChild(ListenerType&& child)
     {
         Added.push_back(std::move(child));
     }

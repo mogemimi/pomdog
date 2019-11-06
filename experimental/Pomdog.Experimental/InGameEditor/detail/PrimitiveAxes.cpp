@@ -6,7 +6,7 @@
 namespace Pomdog {
 namespace SceneEditor {
 
-PrimitiveAxes::PrimitiveAxes(Color const& xAxisColor, Color const& yAxisColor, Color const& zAxisColor)
+PrimitiveAxes::PrimitiveAxes(const Color& xAxisColor, const Color& yAxisColor, const Color& zAxisColor)
 {
     constexpr float axesPixelLength = 4096.0f;
 
@@ -19,20 +19,18 @@ PrimitiveAxes::PrimitiveAxes(Color const& xAxisColor, Color const& yAxisColor, C
         Vector3(0.0f, 0.0f, -1.0f), Vector3(0.0f, 0.0f, 1.0f), zAxisColor
     };
 
-    for (auto & line: lines)
-    {
+    for (auto& line : lines) {
         line.Point1 *= axesPixelLength;
         line.Point2 *= axesPixelLength;
     }
 }
 
-void PrimitiveAxes::Draw(LineBatch & lineBatch)
+void PrimitiveAxes::Draw(LineBatch& lineBatch)
 {
-    for (auto & line: lines)
-    {
+    for (auto& line : lines) {
         lineBatch.DrawLine(line.Point1, line.Point2, line.Color);
     }
 }
 
-}// namespace SceneEditor
-}// namespace Pomdog
+} // namespace SceneEditor
+} // namespace Pomdog

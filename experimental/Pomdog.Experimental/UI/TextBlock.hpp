@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include "Pomdog.Experimental/UI/UIElement.hpp"
+#include "Pomdog.Experimental/Rendering/Commands/SpriteBatchCommand.hpp"
 #include "Pomdog.Experimental/UI/FontSize.hpp"
 #include "Pomdog.Experimental/UI/FontWeight.hpp"
+#include "Pomdog.Experimental/UI/UIElement.hpp"
 #include "Pomdog.Experimental/UI/detail/UIEventConnection.hpp"
-#include "Pomdog.Experimental/Rendering/Commands/SpriteBatchCommand.hpp"
 
 namespace Pomdog {
 namespace UI {
@@ -31,7 +31,7 @@ public:
     HorizontalAlignment GetHorizontalAlignment() const noexcept override;
     VerticalAlignment GetVerticalAlignment() const noexcept override;
 
-    void Draw(DrawingContext & drawingContext) override;
+    void Draw(DrawingContext& drawingContext) override;
 
 private:
     Rendering::SpriteFontCommand spriteCommand;

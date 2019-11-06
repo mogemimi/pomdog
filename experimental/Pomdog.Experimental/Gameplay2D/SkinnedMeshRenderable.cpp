@@ -2,33 +2,33 @@
 
 #include "SkinnedMeshRenderable.hpp"
 #include "../Rendering/Renderer.hpp"
+#include "Pomdog.Experimental/Gameplay2D/Transform2D.hpp"
 #include "Pomdog.Experimental/Skeletal2D/SkeletonHelper.hpp"
 #include "Pomdog.Experimental/Skeletal2D/SkinnedMesh.hpp"
-#include "Pomdog.Experimental/Gameplay2D/Transform2D.hpp"
 
 namespace Pomdog {
 namespace {
 
-//static Matrix3x2 CreateTransformMatrix3x2(Transform2D const& transform)
+//static Matrix3x2 CreateTransformMatrix3x2(const Transform2D& transform)
 //{
 //    return Matrix3x2::CreateScale(transform.Scale)
 //        * Matrix3x2::CreateRotation(transform.Rotation)
 //        * Matrix3x2::CreateTranslation(transform.Position);
 //}
 
-static Matrix4x4 CreateTransformMatrix4x4(Transform2D const& transform)
+static Matrix4x4 CreateTransformMatrix4x4(const Transform2D& transform)
 {
     return Matrix4x4::CreateScale({transform.Scale.X, transform.Scale.Y, 1.0f})
         * Matrix4x4::CreateRotationZ(transform.Rotation)
         * Matrix4x4::CreateTranslation({transform.Position.X, transform.Position.Y, 1.0f});
 }
 
-}// unnamed namespace
+} // unnamed namespace
 
 SkinnedMeshRenderable::SkinnedMeshRenderable(
-    std::shared_ptr<Skeleton> const& skeletonIn,
-    std::shared_ptr<SkeletonTransform> const& skeletonTransformIn,
-    std::shared_ptr<SkinnedMesh> const& meshIn, std::shared_ptr<Texture2D> const& textureIn)
+    const std::shared_ptr<Skeleton>& skeletonIn,
+    const std::shared_ptr<SkeletonTransform>& skeletonTransformIn,
+    const std::shared_ptr<SkinnedMesh>& meshIn, const std::shared_ptr<Texture2D>& textureIn)
 {
     command.skeleton = skeletonIn;
     command.skeletonTransform = skeletonTransformIn;
@@ -41,7 +41,7 @@ SkinnedMeshRenderable::SkinnedMeshRenderable(
     POMDOG_ASSERT(command.texture);
 }
 
-void SkinnedMeshRenderable::Visit(GameObject & gameObject, Renderer & renderer)
+void SkinnedMeshRenderable::Visit(GameObject& gameObject, Renderer& renderer)
 {
     if (!IsVisible) {
         return;
@@ -61,4 +61,4 @@ void SkinnedMeshRenderable::Visit(GameObject & gameObject, Renderer & renderer)
     renderer.PushCommand(command);
 }
 
-}// namespace Pomdog
+} // namespace Pomdog

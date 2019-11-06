@@ -2,9 +2,9 @@
 
 #pragma once
 
+#include "Pomdog.Experimental/Actions/Action.hpp"
 #include "Pomdog.Experimental/Gameplay/Component.hpp"
 #include "Pomdog.Experimental/Gameplay/Entity.hpp"
-#include "Pomdog.Experimental/Actions/Action.hpp"
 #include <algorithm>
 #include <utility>
 #include <vector>
@@ -13,9 +13,9 @@ namespace Pomdog {
 
 class ActorComponent final : public Component {
 public:
-    void RunAction(std::unique_ptr<Action> && action);
+    void RunAction(std::unique_ptr<Action>&& action);
 
-    void Act(Entity & entity, const AnimationTimeInterval& frameDuration);
+    void Act(Entity& entity, const Skeletal2D::AnimationTimeInterval& frameDuration);
 
     void StopActions();
 

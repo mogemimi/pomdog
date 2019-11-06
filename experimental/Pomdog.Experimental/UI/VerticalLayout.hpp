@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "Pomdog.Experimental/UI/UIElement.hpp"
-#include "Pomdog.Experimental/UI/Thickness.hpp"
-#include "Pomdog.Experimental/UI/detail/UIEventConnection.hpp"
 #include "Pomdog.Experimental/Rendering/Commands/PrimitivePolygonCommand.hpp"
+#include "Pomdog.Experimental/UI/Thickness.hpp"
+#include "Pomdog.Experimental/UI/UIElement.hpp"
+#include "Pomdog.Experimental/UI/detail/UIEventConnection.hpp"
 #include <Pomdog/Pomdog.hpp>
 #include <list>
 
@@ -37,7 +37,7 @@ public:
 
     void OnEnter() override;
 
-    void Draw(DrawingContext & drawingContext) override;
+    void Draw(DrawingContext& drawingContext) override;
 
     void AddChild(const std::shared_ptr<UIElement>& element);
 

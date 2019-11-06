@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog.Experimental/Gameplay2D/TextRenderable.hpp"
-#include "Pomdog.Experimental/Rendering/Renderer.hpp"
 #include "Pomdog.Experimental/Gameplay2D/Transform.hpp"
+#include "Pomdog.Experimental/Rendering/Renderer.hpp"
 #include "Pomdog/Experimental/Graphics/SpriteFont.hpp"
 
 namespace Pomdog {
@@ -14,7 +14,7 @@ TextRenderable::TextRenderable()
     command.SetDrawOrder(0.0f);
 }
 
-void TextRenderable::Visit(Entity & entity, Renderer & renderer)
+void TextRenderable::Visit(Entity& entity, Renderer& renderer)
 {
     if (!IsVisible()) {
         return;

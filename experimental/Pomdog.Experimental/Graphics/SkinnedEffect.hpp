@@ -3,16 +3,16 @@
 #pragma once
 
 #include <Pomdog/Pomdog.hpp>
-#include <cstdint>
 #include <cstddef>
+#include <cstdint>
 #include <memory>
 
 namespace Pomdog {
 
 class SkinnedEffect {
 public:
-    explicit SkinnedEffect(GraphicsDevice & graphicsDevice,
-        AssetManager & assets);
+    explicit SkinnedEffect(GraphicsDevice& graphicsDevice,
+        AssetManager& assets);
 
     ~SkinnedEffect();
 
@@ -24,7 +24,7 @@ public:
 
     void SetBoneTransforms(Matrix3x2 const* boneTransforms, std::size_t count);
 
-    void Apply(GraphicsCommandQueue & commandQueue);
+    void Apply(GraphicsCommandQueue& commandQueue);
 
     static constexpr size_t MaxBones = 96;
 

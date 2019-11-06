@@ -2,13 +2,13 @@
 
 #pragma once
 
-#include "Pomdog.Experimental/Gameplay/EntityID.hpp"
 #include "Pomdog.Experimental/Gameplay/EntityContext.hpp"
+#include "Pomdog.Experimental/Gameplay/EntityID.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include <cstdint>
-#include <type_traits>
 #include <algorithm>
+#include <cstdint>
 #include <memory>
+#include <type_traits>
 #include <utility>
 
 namespace Pomdog {

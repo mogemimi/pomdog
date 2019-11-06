@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include "Pomdog.Experimental/UI/UIElement.hpp"
+#include "Pomdog.Experimental/Rendering/Commands/SpriteBatchCommand.hpp"
 #include "Pomdog.Experimental/UI/Thickness.hpp"
+#include "Pomdog.Experimental/UI/UIElement.hpp"
 #include "Pomdog.Experimental/UI/VerticalLayout.hpp"
 #include "Pomdog.Experimental/UI/detail/UIEventConnection.hpp"
-#include "Pomdog.Experimental/Rendering/Commands/SpriteBatchCommand.hpp"
 #include <Pomdog/Pomdog.hpp>
 #include <list>
 #include <optional>
@@ -39,7 +39,7 @@ public:
 
     void OnPointerReleased(const PointerPoint& pointerPoint) override;
 
-    void Draw(DrawingContext & drawingContext) override;
+    void Draw(DrawingContext& drawingContext) override;
 
     void UpdateAnimation(const Duration& frameDuration) override;
 

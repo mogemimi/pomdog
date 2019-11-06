@@ -2,9 +2,9 @@
 
 #pragma once
 
+#include "Pomdog.Experimental/Gameplay/EntityManager.hpp"
 #include "Pomdog.Experimental/Gameplay2D/CameraComponent.hpp"
 #include "Pomdog.Experimental/Gameplay2D/Transform.hpp"
-#include "Pomdog.Experimental/Gameplay/EntityManager.hpp"
 #include "Pomdog.Experimental/Rendering/Renderer.hpp"
 #include "Pomdog/Experimental/ImageEffects/PostProcessCompositor.hpp"
 #include <Pomdog/Pomdog.hpp>
@@ -22,7 +22,7 @@ public:
 
     void Draw();
 
-    void Composite(std::vector<std::shared_ptr<ImageEffectBase>> && imageEffects);
+    void Composite(std::vector<std::shared_ptr<ImageEffectBase>>&& imageEffects);
 
     void SetCamera(const Entity& cameraObject);
 

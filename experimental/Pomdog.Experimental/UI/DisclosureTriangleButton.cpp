@@ -3,8 +3,8 @@
 #include "Pomdog.Experimental/UI/DisclosureTriangleButton.hpp"
 #include "Pomdog.Experimental/UI/DrawingContext.hpp"
 #include "Pomdog.Experimental/UI/PointerPoint.hpp"
-#include "Pomdog.Experimental/UI/UIHelper.hpp"
 #include "Pomdog.Experimental/UI/UIEventDispatcher.hpp"
+#include "Pomdog.Experimental/UI/UIHelper.hpp"
 
 namespace Pomdog {
 namespace UI {
@@ -77,7 +77,7 @@ void DisclosureTriangleButton::OnPointerReleased(const PointerPoint& pointerPoin
     Toggled(isOn);
 }
 
-void DisclosureTriangleButton::Draw(DrawingContext & drawingContext)
+void DisclosureTriangleButton::Draw(DrawingContext& drawingContext)
 {
     auto transform = GetTransform() * drawingContext.Top();
 

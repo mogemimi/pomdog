@@ -6,9 +6,10 @@
 namespace Pomdog {
 
 BeamRenderable::BeamRenderable()
-{}
+{
+}
 
-void BeamRenderable::Visit(GameObject & gameObject, Renderer & renderer)
+void BeamRenderable::Visit(GameObject& gameObject, Renderer& renderer)
 {
     ///@todo Not implemented
 
@@ -21,13 +22,13 @@ void BeamRenderable::Visit(GameObject & gameObject, Renderer & renderer)
 //    graphicsContext->SetBlendState(blendState);
 }
 
-void BeamRenderable::Load(std::shared_ptr<GraphicsDevice> const& graphicsDevice,
-    std::shared_ptr<AssetManager> const& assets)
+void BeamRenderable::Load(const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+    const std::shared_ptr<AssetManager>& assets)
 {
     texture = assets->Load<Texture2D>("Particles/lightning.png");
 }
 
-void BeamRenderable::Update(GameClock const& clock)
+void BeamRenderable::Update(const GameClock& clock)
 {
     {
         beamSystem.emitter.InterpolationPoints = 95;
@@ -36,12 +37,12 @@ void BeamRenderable::Update(GameClock const& clock)
         beamSystem.branching.InheritThickness = 0.5f;
         beamSystem.emitter.SwayRange = std::uniform_real_distribution<float>(-12.5f, 12.5f);
         beamSystem.branching.SpreadRange = std::uniform_real_distribution<float>(-2.357f, 2.357f);
-        beamSystem.emitter.EndColor = Color{102,122,204,255};
+        beamSystem.emitter.EndColor = Color{102, 122, 204, 255};
         beamSystem.emitter.StartLifetime = 0.4f;
     }
     {
-        //auto const& muzzleRifleMatrix = maidGlobalPose[35];
-        auto const& muzzleRifleMatrix = Matrix3x2::Identity;
+        //const auto& muzzleRifleMatrix = maidGlobalPose[35];
+        const auto& muzzleRifleMatrix = Matrix3x2::Identity;
 
         Transform2D transform;
         transform.Scale = {1.0f, 1.0f};
@@ -70,7 +71,7 @@ void BeamRenderable::DrawBeam()
 //
 //    gameEditor->SetViewProjection(viewMatrix * projectionMatrix);
 //
-//    auto const& muzzleRifleMatrix = maidGlobalPose[35];
+//    const auto& muzzleRifleMatrix = maidGlobalPose[35];
 //    auto transposeMatrix = Matrix4x4{
 //        muzzleRifleMatrix(0, 0), muzzleRifleMatrix(0, 1), 0.0f, 0.0f,
 //        muzzleRifleMatrix(1, 0), muzzleRifleMatrix(1, 1), 0.0f, 0.0f,
@@ -89,7 +90,7 @@ void BeamRenderable::DrawBeam()
 //        spriteLine.MiddleRectangle = {32, 0, 1, 64};
 //        spriteLine.EndRectangle = {33, 0, 31, 64};
 //
-//        auto DrawBeam = [&](std::vector<Vector2> const& points, float lineThickness, Color const& color, float normalizedTime)
+//        auto DrawBeam = [&](const std::vector<Vector2>& points, float lineThickness, const Color& color, float normalizedTime)
 //        {
 //            if (normalizedTime > 0.2f) {
 //                for (std::size_t i = 1; i < points.size(); ++i)
@@ -123,4 +124,4 @@ void BeamRenderable::DrawBeam()
 //    spriteRenderer->End();
 }
 
-}// namespace Pomdog
+} // namespace Pomdog

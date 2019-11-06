@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "detail/TemporalAction.hpp"
 #include "Pomdog.Experimental/Gameplay/Entity.hpp"
 #include "Pomdog.Experimental/Gameplay2D/Transform.hpp"
+#include "detail/TemporalAction.hpp"
 #include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
@@ -18,11 +18,12 @@ private:
     Vector2 endPosition;
 
 public:
-    explicit MoveTo(Vector2 const& positionIn)
+    explicit MoveTo(const Vector2& positionIn)
         : endPosition(positionIn)
-    {}
+    {
+    }
 
-    void Begin(Entity const& entity)
+    void Begin(const Entity& entity)
     {
         POMDOG_ASSERT(entity);
         POMDOG_ASSERT(entity.HasComponent<Transform>());
@@ -31,7 +32,7 @@ public:
         startPosition = transform->GetPosition2D();
     }
 
-    void Update(Entity & entity, float normalizedTime)
+    void Update(Entity& entity, float normalizedTime)
     {
         POMDOG_ASSERT(entity);
         POMDOG_ASSERT(entity.HasComponent<Transform>());

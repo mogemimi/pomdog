@@ -18,7 +18,7 @@ class TextRenderable final : public GraphicsComponent {
 public:
     TextRenderable();
 
-    void Visit(Entity & entity, Renderer & renderer) override;
+    void Visit(Entity& entity, Renderer& renderer) override;
 
     void SetFont(const std::shared_ptr<SpriteFont>& font);
 

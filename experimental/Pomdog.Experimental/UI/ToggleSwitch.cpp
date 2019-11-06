@@ -3,8 +3,8 @@
 #include "Pomdog.Experimental/UI/ToggleSwitch.hpp"
 #include "Pomdog.Experimental/UI/DrawingContext.hpp"
 #include "Pomdog.Experimental/UI/PointerPoint.hpp"
-#include "Pomdog.Experimental/UI/UIHelper.hpp"
 #include "Pomdog.Experimental/UI/UIEventDispatcher.hpp"
+#include "Pomdog.Experimental/UI/UIHelper.hpp"
 
 namespace Pomdog {
 namespace UI {
@@ -91,7 +91,7 @@ void ToggleSwitch::OnPointerReleased(const PointerPoint& pointerPoint)
     Toggled(isOn);
 }
 
-void ToggleSwitch::Draw(DrawingContext & drawingContext)
+void ToggleSwitch::Draw(DrawingContext& drawingContext)
 {
     auto transform = GetTransform() * drawingContext.Top();
 

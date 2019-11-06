@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "Pomdog.Experimental/UI/detail/SubscribeRequestDispatcher.hpp"
-#include "Pomdog.Experimental/UI/UIElement.hpp"
-#include "Pomdog.Experimental/UI/PointerPoint.hpp"
 #include "Pomdog.Experimental/UI/PointerEventType.hpp"
+#include "Pomdog.Experimental/UI/PointerPoint.hpp"
+#include "Pomdog.Experimental/UI/UIElement.hpp"
+#include "Pomdog.Experimental/UI/detail/SubscribeRequestDispatcher.hpp"
 #include <Pomdog/Pomdog.hpp>
 #include <cstdint>
 #include <memory>

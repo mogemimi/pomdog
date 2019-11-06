@@ -42,11 +42,11 @@ void UIElementHierarchy::UpdateAnimation(const Duration& frameDuration)
     dispatcher->UpdateAnimation(frameDuration);
 }
 
-void UIElementHierarchy::Draw(DrawingContext & drawingContext)
+void UIElementHierarchy::Draw(DrawingContext& drawingContext)
 {
     drawingContext.Push(Matrix3x2::Identity);
 
-    for (auto & child : children) {
+    for (auto& child : children) {
         POMDOG_ASSERT(child);
         child->Draw(drawingContext);
     }
@@ -57,7 +57,7 @@ void UIElementHierarchy::Draw(DrawingContext & drawingContext)
 void UIElementHierarchy::RenderSizeChanged(int width, int height)
 {
     viewportHeight = height;
-    for (auto & child : children) {
+    for (auto& child : children) {
         POMDOG_ASSERT(child);
         if (child->SizeToFitContent()) {
             child->SetSize(width, height);

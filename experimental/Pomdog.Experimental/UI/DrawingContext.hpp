@@ -45,7 +45,7 @@ private:
 public:
     DrawingContext(
         const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-        AssetManager & assets);
+        AssetManager& assets);
 
     Matrix3x2 Top() const;
 
@@ -57,7 +57,7 @@ public:
 
     void Reset(int viewportWidth, int viewportHeight);
 
-    void PushCommand(std::reference_wrapper<RenderCommand> && command);
+    void PushCommand(std::reference_wrapper<RenderCommand>&& command);
 
     std::shared_ptr<SpriteFont> GetFont(FontWeight fontWeight, FontSize fontSize);
 };

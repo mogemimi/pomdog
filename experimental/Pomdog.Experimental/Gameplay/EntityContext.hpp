@@ -5,13 +5,13 @@
 #include "Pomdog.Experimental/Gameplay/Component.hpp"
 #include "Pomdog.Experimental/Gameplay/EntityID.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include <bitset>
 #include <cstdint>
-#include <type_traits>
+#include <list>
 #include <memory>
+#include <type_traits>
 #include <utility>
 #include <vector>
-#include <bitset>
-#include <list>
 
 namespace Pomdog {
 namespace Detail {
@@ -30,7 +30,7 @@ public:
     EntityContext();
 
     EntityID Create(
-        std::vector<std::shared_ptr<ComponentCreatorBase>> && componentCreators);
+        std::vector<std::shared_ptr<ComponentCreatorBase>>&& componentCreators);
 
     std::size_t GetCount() const noexcept;
 
@@ -49,7 +49,7 @@ public:
     template <typename Type>
     bool HasComponent(const EntityID& id) const;
 
-    template <typename T, typename...Components>
+    template <typename T, typename... Components>
     bool HasComponents(const EntityID& id) const;
 
     template <typename Type>
@@ -68,7 +68,7 @@ private:
     void AddComponent(
         const EntityID& entityId,
         std::uint8_t componentTypeIndex,
-        std::shared_ptr<Component> && component);
+        std::shared_ptr<Component>&& component);
 
     void DestroyComponents(std::uint32_t index);
 
@@ -99,7 +99,7 @@ std::bitset<MaxComponentCapacity> ComponentMask()
     return std::bitset<MaxComponentCapacity>{};
 }
 
-template <std::uint8_t MaxComponentCapacity, typename Type, typename...Components>
+template <std::uint8_t MaxComponentCapacity, typename Type, typename... Components>
 std::bitset<MaxComponentCapacity> ComponentMask()
 {
     static_assert(std::is_base_of<Component, Type>::value, "");
@@ -114,7 +114,7 @@ std::bitset<MaxComponentCapacity> ComponentMask()
 } // namespace Helper
 
 template <std::uint8_t MaxComponentCapacity>
-template <typename Type, typename...Components>
+template <typename Type, typename... Components>
 bool EntityContext<MaxComponentCapacity>::HasComponents(const EntityID& id) const
 {
     static_assert(std::is_base_of<Component, Type>::value, "");
@@ -139,7 +139,7 @@ auto EntityContext<MaxComponentCapacity>::GetComponent(const EntityID& id)
         return nullptr;
     }
 
-    auto & entities = components[typeIndex];
+    auto& entities = components[typeIndex];
 
     if (id.Index() >= entities.size()) {
         return nullptr;
@@ -174,7 +174,7 @@ auto EntityContext<MaxComponentCapacity>::GetComponent(const EntityID& id)
         return nullptr;
     }
 
-    auto & entities = components[typeIndex];
+    auto& entities = components[typeIndex];
 
     if (id.Index() >= entities.size()) {
         return nullptr;

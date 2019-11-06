@@ -3,9 +3,9 @@
 #pragma once
 
 #include "Pomdog/Math/MathHelper.hpp"
+#include "Pomdog/Math/Matrix3x2.hpp"
 #include "Pomdog/Math/Point2D.hpp"
 #include "Pomdog/Math/Vector2.hpp"
-#include "Pomdog/Math/Matrix3x2.hpp"
 
 namespace Pomdog {
 namespace UI {

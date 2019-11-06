@@ -3,8 +3,8 @@
 #include "Pomdog.Experimental/UI/TextBlock.hpp"
 #include "Pomdog.Experimental/UI/DrawingContext.hpp"
 #include "Pomdog.Experimental/UI/PointerPoint.hpp"
-#include "Pomdog.Experimental/UI/UIHelper.hpp"
 #include "Pomdog.Experimental/UI/UIEventDispatcher.hpp"
+#include "Pomdog.Experimental/UI/UIHelper.hpp"
 
 namespace Pomdog {
 namespace UI {
@@ -72,7 +72,7 @@ VerticalAlignment TextBlock::GetVerticalAlignment() const noexcept
 
 // MARK: - Events
 
-void TextBlock::Draw(DrawingContext & drawingContext)
+void TextBlock::Draw(DrawingContext& drawingContext)
 {
     auto transform = GetTransform() * drawingContext.Top();
     spriteCommand.SetFont(drawingContext.GetFont(fontWeight, fontSize));

@@ -1,10 +1,10 @@
 // Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog.Experimental/UI/ScenePanel.hpp"
+#include "Pomdog.Experimental/Gameplay2D/CameraComponent.hpp"
+#include "Pomdog.Experimental/Gameplay2D/Transform.hpp"
 #include "Pomdog.Experimental/UI/PointerPoint.hpp"
 #include "Pomdog.Experimental/UI/UIEventDispatcher.hpp"
-#include "Pomdog.Experimental/Gameplay2D/Transform.hpp"
-#include "Pomdog.Experimental/Gameplay2D/CameraComponent.hpp"
 
 namespace Pomdog {
 namespace UI {
@@ -123,8 +123,7 @@ void ScenePanel::OnPointerWheelChanged(const PointerPoint& pointerPoint)
         scrollAcceleration += std::abs(pointerPoint.MouseWheelDelta / wheelDeltaUnit);
     }
 
-    if (pointerPoint.MouseWheelDelta != 0)
-    {
+    if (pointerPoint.MouseWheelDelta != 0) {
         auto direction = (pointerPoint.MouseWheelDelta >= 0 ? 1.0f : -1.0f);
 
         if (direction != normalizedScrollDirection) {
@@ -297,7 +296,7 @@ double ScenePanel::GetScrollWheel() const
     return cameraZoom;
 }
 
-void ScenePanel::Draw(DrawingContext &)
+void ScenePanel::Draw(DrawingContext&)
 {
 }
 

@@ -5,8 +5,8 @@
 #include "Pomdog.Experimental/Gameplay/Component.hpp"
 #include "Pomdog.Experimental/Gameplay/Entity.hpp"
 #include "Pomdog/Basic/Export.hpp"
-#include <memory>
 #include <functional>
+#include <memory>
 
 namespace Pomdog {
 
@@ -21,15 +21,15 @@ public:
 
     ~HierarchyNode() final;
 
-    void AddChild(std::shared_ptr<HierarchyNode> const& child);
+    void AddChild(const std::shared_ptr<HierarchyNode>& child);
 
-    void RemoveChild(std::shared_ptr<HierarchyNode> const& child);
+    void RemoveChild(const std::shared_ptr<HierarchyNode>& child);
 
     void RemoveChildren();
 
     void RemoveFromParent();
 
-    void EnumerateChildren(std::function<void(std::shared_ptr<HierarchyNode> const& child)> const& callback);
+    void EnumerateChildren(const std::function<void(const std::shared_ptr<HierarchyNode>& child)>& callback);
 
     std::shared_ptr<HierarchyNode> GetParent() const noexcept;
 

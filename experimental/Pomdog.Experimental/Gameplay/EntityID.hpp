@@ -9,33 +9,43 @@ namespace Pomdog {
 
 class EntityID final {
 public:
-    EntityID() noexcept : id(0x0) {}
+    EntityID() noexcept
+        : id(0x0)
+    {
+    }
 
     EntityID(std::uint32_t sequenceNumber, std::uint32_t index) noexcept
         : id((static_cast<std::uint64_t>(sequenceNumber) << 32) | (index & 0xffffffffUL))
-    {}
+    {
+    }
 
-    std::uint32_t SequenceNumber() const noexcept {
+    std::uint32_t SequenceNumber() const noexcept
+    {
         return id >> 32;
     }
 
-    std::uint32_t Index() const noexcept {
+    std::uint32_t Index() const noexcept
+    {
         return id & 0xffffffffUL;
     }
 
-    std::uint64_t Value() const noexcept {
+    std::uint64_t Value() const noexcept
+    {
         return id;
     }
 
-    bool operator==(EntityID const& other) const noexcept {
+    bool operator==(const EntityID& other) const noexcept
+    {
         return id == other.id;
     }
 
-    bool operator!=(EntityID const& other) const noexcept {
+    bool operator!=(const EntityID& other) const noexcept
+    {
         return id != other.id;
     }
 
-    bool operator<(EntityID const& other) const noexcept {
+    bool operator<(const EntityID& other) const noexcept
+    {
         return id < other.id;
     }
 

@@ -178,7 +178,7 @@ void UIElement::OnPointerReleased(const PointerPoint&)
 {
 }
 
-void UIElement::Draw(DrawingContext &)
+void UIElement::Draw(DrawingContext&)
 {
 }
 

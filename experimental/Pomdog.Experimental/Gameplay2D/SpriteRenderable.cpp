@@ -25,7 +25,7 @@ Matrix3x2 CreateTransformMatrix3x2(const Transform& transform)
 }
 */
 
-//TextureRegion CreateTextureRegionFromTexture(std::shared_ptr<Texture2D> const& texture)
+//TextureRegion CreateTextureRegionFromTexture(const std::shared_ptr<Texture2D>& texture)
 //{
 //    POMDOG_ASSERT(texture);
 //    TextureRegion textureRegion;
@@ -106,7 +106,7 @@ void SpriteRenderable::SetColor(const Color& colorIn)
     command.SetColor(colorIn);
 }
 
-void SpriteRenderable::Visit(Entity & entity, Renderer & renderer)
+void SpriteRenderable::Visit(Entity& entity, Renderer& renderer)
 {
 /*
     if (!IsVisible()) {

@@ -10,14 +10,14 @@ namespace UI {
 
 DrawingContext::DrawingContext(
     const std::shared_ptr<GraphicsDevice>& graphicsDeviceIn,
-    AssetManager & assets)
+    AssetManager& assets)
     : renderer(graphicsDeviceIn)
     , graphicsDevice(graphicsDeviceIn)
     , viewportWidth(1)
     , viewportHeight(1)
 {
-    using Pomdog::Rendering::SpriteBatchCommandProcessor;
     using Pomdog::Rendering::PrimitivePolygonCommandProcessor;
+    using Pomdog::Rendering::SpriteBatchCommandProcessor;
     renderer.AddProcessor(std::make_unique<SpriteBatchCommandProcessor>(graphicsDevice, assets));
     renderer.AddProcessor(std::make_unique<PrimitivePolygonCommandProcessor>(graphicsDevice, assets));
 
@@ -26,7 +26,7 @@ DrawingContext::DrawingContext(
     if (err != nullptr) {
         Log::Critical("Pomdog", "failed to load font file");
     }
-    
+
     std::tie(fontBold, err) = assets.Load<TrueTypeFont>("fonts/NotoSans/NotoSans-Bold.ttf");
     if (err != nullptr) {
         Log::Critical("Pomdog", "failed to load font file");
@@ -142,7 +142,7 @@ std::shared_ptr<SpriteFont> DrawingContext::GetFont(FontWeight fontWeight, FontS
     return spriteFont;
 }
 
-void DrawingContext::PushCommand(std::reference_wrapper<RenderCommand> && command)
+void DrawingContext::PushCommand(std::reference_wrapper<RenderCommand>&& command)
 {
     renderer.PushCommand(std::move(command));
 }

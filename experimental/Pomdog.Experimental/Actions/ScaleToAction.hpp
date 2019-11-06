@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "detail/TemporalAction.hpp"
 #include "Pomdog.Experimental/Gameplay/Entity.hpp"
 #include "Pomdog.Experimental/Gameplay2D/Transform.hpp"
+#include "detail/TemporalAction.hpp"
 #include "Pomdog/Math/Vector3.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
@@ -18,15 +18,17 @@ private:
     Vector3 endScale;
 
 public:
-    explicit ScaleTo(Vector3 const& scaleIn)
+    explicit ScaleTo(const Vector3& scaleIn)
         : endScale(scaleIn)
-    {}
+    {
+    }
 
     explicit ScaleTo(float scale)
         : endScale(scale, scale, scale)
-    {}
+    {
+    }
 
-    void Begin(Entity const& entity)
+    void Begin(const Entity& entity)
     {
         POMDOG_ASSERT(entity);
         POMDOG_ASSERT(entity.HasComponent<Transform>());
@@ -35,7 +37,7 @@ public:
         startScale = transform->GetScale();
     }
 
-    void Update(Entity & entity, float normalizedTime)
+    void Update(Entity& entity, float normalizedTime)
     {
         POMDOG_ASSERT(entity);
         POMDOG_ASSERT(entity.HasComponent<Transform>());

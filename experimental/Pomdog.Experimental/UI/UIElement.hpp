@@ -61,7 +61,7 @@ public:
     virtual HorizontalAlignment GetHorizontalAlignment() const noexcept;
     virtual VerticalAlignment GetVerticalAlignment() const noexcept;
 
-    virtual void Draw(DrawingContext & drawingContext);
+    virtual void Draw(DrawingContext& drawingContext);
 
     virtual void UpdateAnimation(const Duration& frameDuration);
 

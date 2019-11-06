@@ -9,9 +9,10 @@ namespace Pomdog {
 
 RenderLayerCompositor::RenderLayerCompositor()
     : needToSort(true)
-{}
+{
+}
 
-void RenderLayerCompositor::AddLayer(std::shared_ptr<RenderLayer> const& layer)
+void RenderLayerCompositor::AddLayer(const std::shared_ptr<RenderLayer>& layer)
 {
     POMDOG_ASSERT(layer);
     POMDOG_ASSERT(std::end(layers) == std::find(std::begin(layers), std::end(layers), layer));
@@ -19,24 +20,24 @@ void RenderLayerCompositor::AddLayer(std::shared_ptr<RenderLayer> const& layer)
     needToSort = true;
 }
 
-void RenderLayerCompositor::RemoveLayer(std::shared_ptr<RenderLayer> const& layer)
+void RenderLayerCompositor::RemoveLayer(const std::shared_ptr<RenderLayer>& layer)
 {
     POMDOG_ASSERT(layer);
     layers.erase(std::remove(std::begin(layers), std::end(layers), layer), std::end(layers));
 }
 
-void RenderLayerCompositor::Draw(GraphicsCommandQueue & commandQueue, Renderer & renderer)
+void RenderLayerCompositor::Draw(GraphicsCommandQueue& commandQueue, Renderer& renderer)
 {
     if (needToSort) {
         std::sort(std::begin(layers), std::end(layers),
-            [](std::shared_ptr<RenderLayer> const& a, std::shared_ptr<RenderLayer> const& b){
+            [](const std::shared_ptr<RenderLayer>& a, const std::shared_ptr<RenderLayer>& b) {
                 return a->DrawOrder() < b->DrawOrder();
             });
 
         needToSort = false;
     }
 
-    for (auto & layer: layers) {
+    for (auto& layer : layers) {
         POMDOG_ASSERT(layer);
         layer->Draw(commandQueue, renderer);
     }

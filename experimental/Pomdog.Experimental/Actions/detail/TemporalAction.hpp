@@ -29,16 +29,17 @@ private:
     InterpolationLinear interpolation;
 
 public:
-    template <typename...Args>
-    TemporalAction(AnimationTimeInterval const& durationIn, Args &&...args)
+    template <typename... Args>
+    TemporalAction(const AnimationTimeInterval& durationIn, Args&&... args)
         : duration(durationIn)
         , time(AnimationTimeInterval::zero())
         , isCompleted(false)
         , began(false)
         , internalAction(std::forward<Args>(args)...)
-    {}
+    {
+    }
 
-    void Act(Entity & entity, AnimationTimeInterval const& frameDuration) override
+    void Act(Entity& entity, const AnimationTimeInterval& frameDuration) override
     {
         if (isCompleted) {
             return;

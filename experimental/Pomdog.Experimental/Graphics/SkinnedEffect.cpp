@@ -21,9 +21,9 @@ namespace {
 
 class SkinnedEffect::Impl {
 public:
-    explicit Impl(GraphicsDevice & graphicsDevice, AssetManager & assets);
+    explicit Impl(GraphicsDevice& graphicsDevice, AssetManager& assets);
 
-    void Apply(GraphicsCommandQueue & commandQueue);
+    void Apply(GraphicsCommandQueue& commandQueue);
 
 public:
     std::array<std::array<Vector4, 2>, SkinnedEffect::MaxBones> bones;
@@ -34,8 +34,8 @@ public:
     Color color;
 };
 
-SkinnedEffect::Impl::Impl(GraphicsDevice & graphicsDevice,
-    AssetManager & assets)
+SkinnedEffect::Impl::Impl(GraphicsDevice& graphicsDevice,
+    AssetManager& assets)
     : color(Color::White)
 {
     auto inputLayout = InputLayoutHelper{}
@@ -61,7 +61,7 @@ SkinnedEffect::Impl::Impl(GraphicsDevice & graphicsDevice,
     constantBuffers = builder.CreateConstantBuffers(pipelineState);
 }
 
-void SkinnedEffect::Impl::Apply(GraphicsCommandQueue & commandQueue)
+void SkinnedEffect::Impl::Apply(GraphicsCommandQueue& commandQueue)
 {
     struct alignas(16) Constants {
         Matrix4x4 WorldViewProjection;
@@ -82,10 +82,11 @@ void SkinnedEffect::Impl::Apply(GraphicsCommandQueue & commandQueue)
 
 // MARK: - SkinnedEffect
 
-SkinnedEffect::SkinnedEffect(GraphicsDevice & graphicsDevice,
-    AssetManager & assets)
+SkinnedEffect::SkinnedEffect(GraphicsDevice& graphicsDevice,
+    AssetManager& assets)
     : impl(std::make_unique<Impl>(graphicsDevice, assets))
-{}
+{
+}
 
 SkinnedEffect::~SkinnedEffect() = default;
 
@@ -114,10 +115,9 @@ void SkinnedEffect::SetBoneTransforms(Matrix3x2 const* boneTransforms, std::size
     POMDOG_ASSERT(count > 0);
     POMDOG_ASSERT(count <= MaxBones);
 
-    auto & bones = impl->bones;
+    auto& bones = impl->bones;
 
-    for (std::size_t i = 0; i < count; ++i)
-    {
+    for (std::size_t i = 0; i < count; ++i) {
         POMDOG_ASSERT(i < bones.size());
         POMDOG_ASSERT(bones[i].size() == 2);
         bones[i][0].X = boneTransforms[i](0, 0);
@@ -129,7 +129,7 @@ void SkinnedEffect::SetBoneTransforms(Matrix3x2 const* boneTransforms, std::size
     }
 }
 
-void SkinnedEffect::Apply(GraphicsCommandQueue & commandQueue)
+void SkinnedEffect::Apply(GraphicsCommandQueue& commandQueue)
 {
     POMDOG_ASSERT(impl);
     impl->Apply(graphicsContext);

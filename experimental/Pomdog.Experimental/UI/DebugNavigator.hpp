@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "Pomdog.Experimental/UI/UIElement.hpp"
 #include "Pomdog.Experimental/Rendering/Commands/PrimitivePolygonCommand.hpp"
 #include "Pomdog.Experimental/Rendering/Commands/SpriteBatchCommand.hpp"
+#include "Pomdog.Experimental/UI/UIElement.hpp"
 #include <Pomdog/Pomdog.hpp>
 #include <deque>
 
@@ -17,7 +17,7 @@ public:
         const std::shared_ptr<UIEventDispatcher>& dispatcher,
         const std::shared_ptr<GameClock>& clock);
 
-    void Draw(DrawingContext & drawingContext) override;
+    void Draw(DrawingContext& drawingContext) override;
 
 private:
     std::shared_ptr<GameClock> clock;

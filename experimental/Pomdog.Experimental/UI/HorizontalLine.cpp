@@ -3,8 +3,8 @@
 #include "Pomdog.Experimental/UI/HorizontalLine.hpp"
 #include "Pomdog.Experimental/UI/DrawingContext.hpp"
 #include "Pomdog.Experimental/UI/PointerPoint.hpp"
-#include "Pomdog.Experimental/UI/UIHelper.hpp"
 #include "Pomdog.Experimental/UI/UIEventDispatcher.hpp"
+#include "Pomdog.Experimental/UI/UIHelper.hpp"
 
 namespace Pomdog {
 namespace UI {
@@ -25,7 +25,7 @@ VerticalAlignment HorizontalLine::GetVerticalAlignment() const noexcept
     return UI::VerticalAlignment::Top;
 }
 
-void HorizontalLine::Draw(DrawingContext & drawingContext)
+void HorizontalLine::Draw(DrawingContext& drawingContext)
 {
     auto transform = GetTransform() * drawingContext.Top();
 

@@ -2,10 +2,10 @@
 
 #pragma once
 
+#include "Pomdog/Math/Color.hpp"
+#include "Pomdog/Math/Matrix4x4.hpp"
 #include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Math/Vector3.hpp"
-#include "Pomdog/Math/Matrix4x4.hpp"
-#include "Pomdog/Math/Color.hpp"
 #include <array>
 
 namespace Pomdog {
@@ -16,9 +16,9 @@ namespace SceneEditor {
 
 class PrimitiveAxes {
 public:
-    PrimitiveAxes(Color const& xAxisColor, Color const& yAxisColor, Color const& zAxisColor);
+    PrimitiveAxes(const Color& xAxisColor, const Color& yAxisColor, const Color& zAxisColor);
 
-    void Draw(LineBatch & lineBatch);
+    void Draw(LineBatch& lineBatch);
 
 private:
     struct Line {
@@ -30,5 +30,5 @@ private:
     std::array<Line, 3> lines;
 };
 
-}// namespace SceneEditor
-}// namespace Pomdog
+} // namespace SceneEditor
+} // namespace Pomdog

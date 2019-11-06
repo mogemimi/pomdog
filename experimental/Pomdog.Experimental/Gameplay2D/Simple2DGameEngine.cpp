@@ -88,7 +88,7 @@ void Simple2DGameEngine::Update()
     auto clock = gameHost->GetClock();
     auto frameDuration = clock->GetFrameDuration();
 
-    for (auto & entity : entityManager.QueryComponents<ActorComponent>()) {
+    for (auto& entity : entityManager.QueryComponents<ActorComponent>()) {
         auto actor = entity.GetComponent<ActorComponent>();
         actor->Act(entity, frameDuration);
     }
@@ -136,7 +136,7 @@ void Simple2DGameEngine::Draw()
 
     renderer->Reset();
 
-    for (auto & entity : entityManager.QueryComponents<GraphicsComponent>()) {
+    for (auto& entity : entityManager.QueryComponents<GraphicsComponent>()) {
         auto graphicsComponent = entity.GetComponent<GraphicsComponent>();
         POMDOG_ASSERT(graphicsComponent);
         graphicsComponent->Visit(entity, *renderer);
@@ -149,7 +149,7 @@ void Simple2DGameEngine::Draw()
         commandListPreRender->Reset();
 
         // Fill background color
-        auto backgroundColor = [&]()-> Color {
+        auto backgroundColor = [&]() -> Color {
             if (mainCamera) {
                 return mainCamera->GetBackgroundColor();
             }
@@ -174,8 +174,7 @@ void Simple2DGameEngine::Draw()
         commandListPreRender->Close();
     }
 
-    if (!canSkipPostProcess)
-    {
+    if (!canSkipPostProcess) {
         // Reset graphics commands
         commandListPostRender->Reset();
 
@@ -198,7 +197,7 @@ void Simple2DGameEngine::Draw()
 }
 
 void Simple2DGameEngine::Composite(
-    std::vector<std::shared_ptr<ImageEffectBase>> && imageEffects)
+    std::vector<std::shared_ptr<ImageEffectBase>>&& imageEffects)
 {
     postProcessCompositor.Composite(std::move(imageEffects));
 }

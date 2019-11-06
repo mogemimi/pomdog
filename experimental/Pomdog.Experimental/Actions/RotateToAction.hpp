@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "detail/TemporalAction.hpp"
 #include "Pomdog.Experimental/Gameplay/Entity.hpp"
 #include "Pomdog.Experimental/Gameplay2D/Transform.hpp"
+#include "detail/TemporalAction.hpp"
 #include "Pomdog/Math/Quaternion.hpp"
 #include "Pomdog/Math/Vector3.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -19,15 +19,17 @@ private:
     Vector3 endRotation;
 
 public:
-    explicit RotateTo(Quaternion const& rotation)
+    explicit RotateTo(const Quaternion& rotation)
         : endRotation(Vector3::ToEulerAngles(rotation))
-    {}
+    {
+    }
 
     RotateTo(const Radian<float>& rotateX, const Radian<float>& rotateY, const Radian<float>& rotateZ)
         : endRotation(rotateX.value, rotateY.value, rotateZ.value)
-    {}
+    {
+    }
 
-    void Begin(Entity const& entity)
+    void Begin(const Entity& entity)
     {
         POMDOG_ASSERT(entity);
         POMDOG_ASSERT(entity.HasComponent<Transform>());
@@ -36,7 +38,7 @@ public:
         startRotation = Vector3::ToEulerAngles(transform->GetRotation());
     }
 
-    void Update(Entity & entity, float normalizedTime)
+    void Update(Entity& entity, float normalizedTime)
     {
         POMDOG_ASSERT(entity);
         POMDOG_ASSERT(entity.HasComponent<Transform>());

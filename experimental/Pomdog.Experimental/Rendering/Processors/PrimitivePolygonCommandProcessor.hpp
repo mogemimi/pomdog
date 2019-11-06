@@ -14,7 +14,7 @@ class PrimitivePolygonCommandProcessor final : public RenderCommandProcessor {
 public:
     PrimitivePolygonCommandProcessor(
         const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-        AssetManager & assets);
+        AssetManager& assets);
 
     void Begin(
         const std::shared_ptr<GraphicsCommandList>& commandList,
@@ -22,7 +22,7 @@ public:
 
     void Draw(
         const std::shared_ptr<GraphicsCommandList>& commandList,
-        RenderCommand & command) override;
+        RenderCommand& command) override;
 
     void FlushBatch() override;
 

@@ -3,8 +3,8 @@
 #include "Pomdog.Experimental/UI/VerticalLayout.hpp"
 #include "Pomdog.Experimental/UI/DrawingContext.hpp"
 #include "Pomdog.Experimental/UI/PointerPoint.hpp"
-#include "Pomdog.Experimental/UI/UIHelper.hpp"
 #include "Pomdog.Experimental/UI/UIEventDispatcher.hpp"
+#include "Pomdog.Experimental/UI/UIHelper.hpp"
 
 namespace Pomdog {
 namespace UI {
@@ -47,7 +47,7 @@ void VerticalLayout::SetStackedLayout(bool isStackedLayoutIn)
 void VerticalLayout::SetTransform(const Matrix3x2& transformMatrixIn)
 {
     UIElement::SetTransform(transformMatrixIn);
-    for (auto & child : children) {
+    for (auto& child : children) {
         POMDOG_ASSERT(child);
         child->MarkParentTransformDirty();
     }
@@ -56,7 +56,7 @@ void VerticalLayout::SetTransform(const Matrix3x2& transformMatrixIn)
 void VerticalLayout::MarkParentTransformDirty()
 {
     UIElement::MarkParentTransformDirty();
-    for (auto & child : children) {
+    for (auto& child : children) {
         POMDOG_ASSERT(child);
         child->MarkParentTransformDirty();
     }
@@ -96,7 +96,7 @@ void VerticalLayout::AddChild(const std::shared_ptr<UIElement>& element)
 
 void VerticalLayout::UpdateLayout()
 {
-    for (auto & child : children) {
+    for (auto& child : children) {
         child->DoLayout();
     }
 
@@ -109,7 +109,7 @@ void VerticalLayout::UpdateLayout()
     const auto verticalSpacing = (margin.Top + margin.Bottom + lineSpacingAll);
 
     int requiredHeight = verticalSpacing;
-    for (auto & child : children) {
+    for (auto& child : children) {
         requiredHeight += child->GetHeight();
     }
 
@@ -125,7 +125,7 @@ void VerticalLayout::UpdateLayout()
 
     // NOTE: Update layout for children
     int offsetY = margin.Top;
-    for (auto & child : children) {
+    for (auto& child : children) {
         offsetY += child->GetHeight();
         Vector2 position = {
             static_cast<float>(margin.Left),
@@ -159,7 +159,7 @@ void VerticalLayout::DoLayout()
     UpdateLayout();
 }
 
-void VerticalLayout::Draw(DrawingContext & drawingContext)
+void VerticalLayout::Draw(DrawingContext& drawingContext)
 {
     UpdateLayout();
     POMDOG_ASSERT(!needToUpdateLayout);
@@ -187,7 +187,7 @@ void VerticalLayout::Draw(DrawingContext & drawingContext)
 
     drawingContext.Push(transform);
 
-    for (auto & child : children) {
+    for (auto& child : children) {
         POMDOG_ASSERT(child);
         child->Draw(drawingContext);
     }

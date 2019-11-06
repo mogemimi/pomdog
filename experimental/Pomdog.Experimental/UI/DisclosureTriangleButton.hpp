@@ -2,9 +2,9 @@
 
 #pragma once
 
+#include "Pomdog.Experimental/Rendering/Commands/PrimitivePolygonCommand.hpp"
 #include "Pomdog.Experimental/UI/UIElement.hpp"
 #include "Pomdog.Experimental/UI/detail/UIEventConnection.hpp"
-#include "Pomdog.Experimental/Rendering/Commands/PrimitivePolygonCommand.hpp"
 
 namespace Pomdog {
 namespace UI {
@@ -30,7 +30,7 @@ public:
 
     void OnPointerReleased(const PointerPoint& pointerPoint) override;
 
-    void Draw(DrawingContext & drawingContext) override;
+    void Draw(DrawingContext& drawingContext) override;
 
     // Events:
     Signal<void(bool isOn)> Toggled;

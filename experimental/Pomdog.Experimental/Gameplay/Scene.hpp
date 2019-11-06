@@ -35,7 +35,7 @@ struct GameScene final {
 
 class SceneDirector final {
 public:
-    explicit SceneDirector(const std::shared_ptr<GameHost> & gameHost);
+    explicit SceneDirector(const std::shared_ptr<GameHost>& gameHost);
 
     void Run(const std::shared_ptr<GameScene>& scene);
 

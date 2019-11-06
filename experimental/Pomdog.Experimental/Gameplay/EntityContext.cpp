@@ -16,7 +16,7 @@ EntityContext<MaxComponentCapacity>::EntityContext()
 
 template <std::uint8_t MaxComponentCapacity>
 EntityID EntityContext<MaxComponentCapacity>::Create(
-    std::vector<std::shared_ptr<ComponentCreatorBase>> && componentCreators)
+    std::vector<std::shared_ptr<ComponentCreatorBase>>&& componentCreators)
 {
     std::uint32_t index = 0;
     if (deletedIndices.empty()) {
@@ -29,14 +29,13 @@ EntityID EntityContext<MaxComponentCapacity>::Create(
         deletedIndices.pop_front();
     }
 
-    auto & desc = descriptions[index];
+    auto& desc = descriptions[index];
     POMDOG_ASSERT(desc.ComponentBitMask.none());
     POMDOG_ASSERT(desc.IncremantalCounter > 0);
 
 #ifdef DEBUG
     {
-        for (auto & entities: components)
-        {
+        for (auto& entities : components) {
             if (index < entities.size()) {
                 POMDOG_ASSERT(!entities[index]);
             }
@@ -47,7 +46,7 @@ EntityID EntityContext<MaxComponentCapacity>::Create(
     ++entityCount;
     EntityID entity{desc.IncremantalCounter, index};
 
-    for (auto & creator : componentCreators) {
+    for (auto& creator : componentCreators) {
         auto component = creator->CreateComponent();
         auto componentType = creator->GetComponentType();
         POMDOG_ASSERT(component);
@@ -61,7 +60,7 @@ template <std::uint8_t MaxComponentCapacity>
 void EntityContext<MaxComponentCapacity>::AddComponent(
     const EntityID& entityId,
     std::uint8_t componentTypeIndex,
-    std::shared_ptr<Component> && component)
+    std::shared_ptr<Component>&& component)
 {
     const auto typeIndex = componentTypeIndex;
     POMDOG_ASSERT(typeIndex < MaxComponentCapacity);
@@ -76,10 +75,10 @@ void EntityContext<MaxComponentCapacity>::AddComponent(
     }
 
     POMDOG_ASSERT(typeIndex < components.size());
-    auto & entities = components[typeIndex];
+    auto& entities = components[typeIndex];
 
     if (entityId.Index() >= entities.size()) {
-        static_assert(std::is_unsigned<decltype(entityId.Index())>::value, "" );
+        static_assert(std::is_unsigned<decltype(entityId.Index())>::value, "");
         entities.resize(entityId.Index() + 1U);
     }
 
@@ -88,7 +87,7 @@ void EntityContext<MaxComponentCapacity>::AddComponent(
     entities[entityId.Index()] = std::move(component);
 
     POMDOG_ASSERT(entityId.Index() < descriptions.size());
-    auto & desc = descriptions[entityId.Index()];
+    auto& desc = descriptions[entityId.Index()];
 
     POMDOG_ASSERT(desc.IncremantalCounter > 0);
     POMDOG_ASSERT(typeIndex < desc.ComponentBitMask.size());
@@ -115,7 +114,7 @@ template <std::uint8_t MaxComponentCapacity>
 void EntityContext<MaxComponentCapacity>::Clear()
 {
     for (std::uint32_t index = 0; index < descriptions.size(); ++index) {
-        auto & desc = descriptions[index];
+        auto& desc = descriptions[index];
 
         if (desc.ComponentBitMask.any()) {
             DestroyComponents(index);
@@ -138,7 +137,7 @@ void EntityContext<MaxComponentCapacity>::Clear()
 template <std::uint8_t MaxComponentCapacity>
 void EntityContext<MaxComponentCapacity>::DestroyComponents(std::uint32_t index)
 {
-    for (auto & entities : components) {
+    for (auto& entities : components) {
         if (index < entities.size()) {
             entities[index].reset();
         }
@@ -148,7 +147,7 @@ void EntityContext<MaxComponentCapacity>::DestroyComponents(std::uint32_t index)
 template <std::uint8_t MaxComponentCapacity>
 void EntityContext<MaxComponentCapacity>::Refresh()
 {
-    for (auto & id : destroyedObjects) {
+    for (auto& id : destroyedObjects) {
         POMDOG_ASSERT(!Valid(id));
         auto index = id.Index();
         DestroyComponents(index);
@@ -167,7 +166,7 @@ void EntityContext<MaxComponentCapacity>::Destroy(const EntityID& id)
     POMDOG_ASSERT(index < descriptions.size());
     POMDOG_ASSERT(descriptions[index].IncremantalCounter == id.SequenceNumber());
 
-    auto & desc = descriptions[index];
+    auto& desc = descriptions[index];
     desc.ComponentBitMask.reset();
     ++desc.IncremantalCounter;
 
@@ -187,7 +186,7 @@ void EntityContext<MaxComponentCapacity>::DestroyImmediate(const EntityID& id)
     POMDOG_ASSERT(index < descriptions.size());
     POMDOG_ASSERT(descriptions[index].IncremantalCounter == id.SequenceNumber());
 
-    auto & desc = descriptions[index];
+    auto& desc = descriptions[index];
     desc.ComponentBitMask.reset();
     ++desc.IncremantalCounter;
 

@@ -19,7 +19,7 @@ public:
     explicit PrimitiveRenderable(
         const std::shared_ptr<GraphicsDevice>& graphicsDevice);
 
-    void Visit(Entity & entity, Renderer & renderer) override;
+    void Visit(Entity& entity, Renderer& renderer) override;
 
 //    void DrawArc(
 //        const Vector2& position,

@@ -6,20 +6,20 @@
 
 namespace Pomdog {
 
-void ActorComponent::RunAction(std::unique_ptr<Action> && action)
+void ActorComponent::RunAction(std::unique_ptr<Action>&& action)
 {
     POMDOG_ASSERT(action);
     actions.push_back(std::move(action));
 }
 
-void ActorComponent::Act(Entity & entity, const AnimationTimeInterval& frameDuration)
+void ActorComponent::Act(Entity& entity, const Skeletal2D::AnimationTimeInterval& frameDuration)
 {
     POMDOG_ASSERT(entity);
     if (actions.empty()) {
         return;
     }
 
-    for (auto & action : actions) {
+    for (auto& action : actions) {
         POMDOG_ASSERT(action);
         action->Act(entity, frameDuration);
         if (!entity) {

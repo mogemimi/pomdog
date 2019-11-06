@@ -12,22 +12,22 @@ namespace Pomdog {
 class SpriteBatch;
 class SpriteFont;
 
-}// namespace Pomdog
+} // namespace Pomdog
 
 namespace Pomdog {
 namespace SceneEditor {
 
 class InGameEditor {
 public:
-    explicit InGameEditor(std::shared_ptr<GameHost> const& gameHost);
+    explicit InGameEditor(const std::shared_ptr<GameHost>& gameHost);
 
     ~InGameEditor();
 
     void Update();
 
-    void DrawGUI(GraphicsContext & graphicsContext);
+    void DrawGUI(GraphicsContext& graphicsContext);
 
-    void AddView(std::shared_ptr<UI::UIElement> const& element);
+    void AddView(const std::shared_ptr<UI::UIElement>& element);
 
     std::shared_ptr<UI::UIEventDispatcher> Dispatcher() const;
 
@@ -48,5 +48,5 @@ private:
     std::shared_ptr<Texture2D> blankTexture;
 };
 
-}// namespace SceneEditor
-}// namespace Pomdog
+} // namespace SceneEditor
+} // namespace Pomdog

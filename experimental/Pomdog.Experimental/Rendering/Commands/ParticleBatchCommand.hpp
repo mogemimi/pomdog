@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "Pomdog.Experimental/Rendering/RenderCommand.hpp"
 #include "Pomdog.Experimental/Graphics/TextureRegion.hpp"
 #include "Pomdog.Experimental/Particle2D/Particle.hpp"
+#include "Pomdog.Experimental/Rendering/RenderCommand.hpp"
 #include <Pomdog/Pomdog.hpp>
 #include <memory>
 
@@ -15,7 +15,7 @@ class SpriteRenderer;
 namespace Detail {
 namespace Rendering {
 
-class ParticleBatchCommand final: public RenderCommand {
+class ParticleBatchCommand final : public RenderCommand {
 public:
     float DrawOrder() const override
     {

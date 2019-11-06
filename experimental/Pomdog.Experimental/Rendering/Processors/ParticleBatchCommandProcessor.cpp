@@ -17,25 +17,24 @@ Matrix3x2 CreateTransformMatrix(const Particle& particle)
 
 ParticleBatchCommandProcessor::ParticleBatchCommandProcessor(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-    AssetManager & assets)
+    AssetManager& assets)
     : spriteBatch(graphicsDevice, assets)
     , drawCallCount(0)
 {
 }
 
-void ParticleBatchCommandProcessor::Begin(GraphicsCommandQueue &)
+void ParticleBatchCommandProcessor::Begin(GraphicsCommandQueue&)
 {
     drawCallCount = 0;
     spriteBatch.Begin(Matrix4x4::Identity);
 }
 
-void ParticleBatchCommandProcessor::Draw(GraphicsCommandQueue & commandQueue, RenderCommand & command)
+void ParticleBatchCommandProcessor::Draw(GraphicsCommandQueue& commandQueue, RenderCommand& command)
 {
     using Detail::Rendering::ParticleBatchCommand;
 
-    auto & particleCommand = static_cast<ParticleBatchCommand &>(command);
-    for (auto & particle: *particleCommand.particles)
-    {
+    auto& particleCommand = static_cast<ParticleBatchCommand&>(command);
+    for (auto& particle : *particleCommand.particles) {
         auto transform = CreateTransformMatrix(particle);
         spriteBatch.Draw(
             particleCommand.texture,
@@ -46,7 +45,7 @@ void ParticleBatchCommandProcessor::Draw(GraphicsCommandQueue & commandQueue, Re
     }
 }
 
-void ParticleBatchCommandProcessor::End(GraphicsCommandQueue & commandQueue)
+void ParticleBatchCommandProcessor::End(GraphicsCommandQueue& commandQueue)
 {
     spriteBatch.End();
 

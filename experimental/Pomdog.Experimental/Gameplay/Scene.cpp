@@ -35,7 +35,7 @@ std::string GameScene::GetName() const noexcept
     return name;
 }
 
-SceneDirector::SceneDirector(const std::shared_ptr<GameHost> & gameHost)
+SceneDirector::SceneDirector(const std::shared_ptr<GameHost>& gameHost)
     : clock(gameHost->GetClock())
 {
 }
@@ -78,7 +78,7 @@ void SceneDirector::Update()
     }
 
     if (!transitionQueue.empty()) {
-        for (auto & oldScene : transitionQueue) {
+        for (auto& oldScene : transitionQueue) {
             if (!oldScene->frameNumber) {
                 oldScene->Enter();
             }

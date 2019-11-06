@@ -4,8 +4,8 @@
 
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <cstdint>
-#include <vector>
 #include <memory>
+#include <vector>
 
 namespace Pomdog {
 
@@ -16,11 +16,11 @@ class RenderLayerCompositor {
 public:
     RenderLayerCompositor();
 
-    void AddLayer(std::shared_ptr<RenderLayer> const& layer);
+    void AddLayer(const std::shared_ptr<RenderLayer>& layer);
 
-    void RemoveLayer(std::shared_ptr<RenderLayer> const& layer);
+    void RemoveLayer(const std::shared_ptr<RenderLayer>& layer);
 
-    void Draw(GraphicsCommandQueue & commandQueue, Renderer & renderer);
+    void Draw(GraphicsCommandQueue& commandQueue, Renderer& renderer);
 
 private:
     std::vector<std::shared_ptr<RenderLayer>> layers;

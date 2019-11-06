@@ -2,13 +2,13 @@
 
 #pragma once
 
-#include "Pomdog.Experimental/UI/UIElement.hpp"
+#include "Pomdog.Experimental/Rendering/Commands/SpriteBatchCommand.hpp"
 #include "Pomdog.Experimental/UI/DisclosureTriangleButton.hpp"
 #include "Pomdog.Experimental/UI/HorizontalLayout.hpp"
-#include "Pomdog.Experimental/UI/VerticalLayout.hpp"
 #include "Pomdog.Experimental/UI/TextBlock.hpp"
+#include "Pomdog.Experimental/UI/UIElement.hpp"
+#include "Pomdog.Experimental/UI/VerticalLayout.hpp"
 #include "Pomdog.Experimental/UI/detail/UIEventConnection.hpp"
-#include "Pomdog.Experimental/Rendering/Commands/SpriteBatchCommand.hpp"
 
 namespace Pomdog {
 namespace UI {
@@ -36,7 +36,7 @@ public:
 
     void MarkContentLayoutDirty() override;
 
-    void Draw(DrawingContext & drawingContext) override;
+    void Draw(DrawingContext& drawingContext) override;
 
     void AddChild(const std::shared_ptr<UIElement>& element);
 

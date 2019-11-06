@@ -40,9 +40,9 @@ public:
     }
 
     UIEventConnection(const UIEventConnection& connection) = delete;
-    UIEventConnection & operator=(const UIEventConnection& connection) = delete;
+    UIEventConnection& operator=(const UIEventConnection& connection) = delete;
 
-    UIEventConnection(UIEventConnection && connection)
+    UIEventConnection(UIEventConnection&& connection)
     {
         Disconnect();
 
@@ -52,7 +52,7 @@ public:
         std::swap(weakListener, connection.weakListener);
     }
 
-    UIEventConnection & operator=(UIEventConnection && connection)
+    UIEventConnection& operator=(UIEventConnection&& connection)
     {
         Disconnect();
 

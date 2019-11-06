@@ -3,8 +3,8 @@
 #include "Pomdog.Experimental/UI/Slider.hpp"
 #include "Pomdog.Experimental/UI/DrawingContext.hpp"
 #include "Pomdog.Experimental/UI/PointerPoint.hpp"
-#include "Pomdog.Experimental/UI/UIHelper.hpp"
 #include "Pomdog.Experimental/UI/UIEventDispatcher.hpp"
+#include "Pomdog.Experimental/UI/UIHelper.hpp"
 
 namespace Pomdog {
 namespace UI {
@@ -14,7 +14,8 @@ Slider::Slider(
     double minimumIn,
     double maximumIn)
     : Slider(dispatcher, SliderColorScheme{}, minimumIn, maximumIn)
-{}
+{
+}
 
 Slider::Slider(
     const std::shared_ptr<UIEventDispatcher>& dispatcher,
@@ -194,7 +195,7 @@ void Slider::UpdateAnimation(const Duration& frameDuration)
     }
 }
 
-void Slider::Draw(DrawingContext & drawingContext)
+void Slider::Draw(DrawingContext& drawingContext)
 {
     POMDOG_ASSERT(value >= minimum);
     POMDOG_ASSERT(value <= maximum);

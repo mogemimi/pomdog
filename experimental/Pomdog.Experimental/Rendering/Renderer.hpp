@@ -23,11 +23,11 @@ public:
 
     std::shared_ptr<GraphicsCommandList> Render();
 
-    void PushCommand(std::reference_wrapper<RenderCommand> && command);
+    void PushCommand(std::reference_wrapper<RenderCommand>&& command);
 
     void Reset();
 
-    void AddProcessor(std::unique_ptr<RenderCommandProcessor> && processor);
+    void AddProcessor(std::unique_ptr<RenderCommandProcessor>&& processor);
 
     int GetDrawCallCount() const noexcept;
 

@@ -13,7 +13,7 @@ class RenderLayer {
 public:
     virtual ~RenderLayer() = default;
 
-    virtual void Draw(GraphicsCommandQueue & commandQueue, Renderer & renderer) = 0;
+    virtual void Draw(GraphicsCommandQueue& commandQueue, Renderer& renderer) = 0;
 
     std::int32_t DrawOrder() const;
 

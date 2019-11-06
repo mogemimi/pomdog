@@ -14,7 +14,7 @@ class PrimitivePolygonCommand : public RenderCommand {
 public:
     virtual ~PrimitivePolygonCommand() = default;
 
-    virtual void Execute(PrimitiveBatch & spriteBatch) = 0;
+    virtual void Execute(PrimitiveBatch& spriteBatch) = 0;
 
     std::type_index GetType() const noexcept override final;
 };
@@ -115,7 +115,7 @@ public:
     {
     }
 
-    void SetInvoker(std::function<void(PrimitiveBatch &)> && invokerIn)
+    void SetInvoker(std::function<void(PrimitiveBatch&)>&& invokerIn)
     {
         POMDOG_ASSERT(invokerIn);
         invoker = std::move(invokerIn);

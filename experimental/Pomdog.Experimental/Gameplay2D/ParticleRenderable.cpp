@@ -1,23 +1,23 @@
 // Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
 #include "ParticleRenderable.hpp"
-#include "Pomdog.Experimental/Rendering/Renderer.hpp"
 #include "Pomdog.Experimental/Particle2D/ParticleLoader.hpp"
 #include "Pomdog.Experimental/Particle2D/ParticleSystem.hpp"
+#include "Pomdog.Experimental/Rendering/Renderer.hpp"
 
 namespace Pomdog {
 namespace {
 
-static Matrix3x2 CreateTransformMatrix3x2(Transform2D const& transform)
+static Matrix3x2 CreateTransformMatrix3x2(const Transform2D& transform)
 {
     return Matrix3x2::CreateScale(transform.Scale)
         * Matrix3x2::CreateRotation(transform.Rotation)
         * Matrix3x2::CreateTranslation(transform.Position);
 }
 
-}// unnamed namespace
+} // unnamed namespace
 
-ParticleRenderable::ParticleRenderable(std::shared_ptr<Texture2D> const& texture)
+ParticleRenderable::ParticleRenderable(const std::shared_ptr<Texture2D>& texture)
 {
     command.texture = texture;
     command.textureRegion.Subrect = Rectangle{0, 0, texture->Width(), texture->Height()};
@@ -30,7 +30,7 @@ ParticleRenderable::ParticleRenderable(std::shared_ptr<Texture2D> const& texture
     command.particles = nullptr;
 }
 
-void ParticleRenderable::Visit(GameObject & gameObject, Renderer & renderer)
+void ParticleRenderable::Visit(GameObject& gameObject, Renderer& renderer)
 {
     if (!IsVisible) {
         return;
@@ -51,12 +51,11 @@ void ParticleRenderable::Visit(GameObject & gameObject, Renderer & renderer)
     command.particles = &particleSystem->Particles();
     command.drawOrder = DrawOrder;
 
-    if (auto transform = gameObject.Component<Transform2D>())
-    {
+    if (auto transform = gameObject.Component<Transform2D>()) {
         command.transform = CreateTransformMatrix3x2(*transform);
     }
 
     renderer.PushCommand(command);
 }
 
-}// namespace Pomdog
+} // namespace Pomdog

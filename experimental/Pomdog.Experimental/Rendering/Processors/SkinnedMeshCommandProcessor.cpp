@@ -6,12 +6,11 @@
 namespace Pomdog {
 namespace {
 
-void SetMatrixPalette(SkinnedEffect & skinnedEffect, const Skeleton& skeleton, const SkeletonTransform& skeletonTransform)
+void SetMatrixPalette(SkinnedEffect& skinnedEffect, const Skeleton& skeleton, const SkeletonTransform& skeletonTransform)
 {
     std::array<Matrix3x2, 64> matrices;
 
-    for (auto & joint: skeleton)
-    {
+    for (auto& joint : skeleton) {
         POMDOG_ASSERT(joint.Index);
         POMDOG_ASSERT(*joint.Index < matrices.size());
         POMDOG_ASSERT(*joint.Index < skeletonTransform.GlobalPose.size());
@@ -58,22 +57,22 @@ void SetMatrixPalette(SkinnedEffect & skinnedEffect, const Skeleton& skeleton, c
 
 SkinnedMeshCommandProcessor::SkinnedMeshCommandProcessor(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-    AssetManager & assets)
+    AssetManager& assets)
     : skinnedEffect(*graphicsDevice, assets)
     , drawCallCount(0)
 {
 }
 
-void SkinnedMeshCommandProcessor::Begin(GraphicsCommandQueue &)
+void SkinnedMeshCommandProcessor::Begin(GraphicsCommandQueue&)
 {
     drawCallCount = 0;
 }
 
-void SkinnedMeshCommandProcessor::Draw(GraphicsCommandQueue & commandQueue, RenderCommand & command)
+void SkinnedMeshCommandProcessor::Draw(GraphicsCommandQueue& commandQueue, RenderCommand& command)
 {
     using Detail::Rendering::SkinnedMeshCommand;
 
-    auto & skinnedMeshCommand = static_cast<SkinnedMeshCommand &>(command);
+    auto& skinnedMeshCommand = static_cast<SkinnedMeshCommand&>(command);
 
     POMDOG_ASSERT(skinnedMeshCommand.skeleton);
     POMDOG_ASSERT(skinnedMeshCommand.skeletonTransform);
@@ -116,7 +115,7 @@ void SkinnedMeshCommandProcessor::Draw(GraphicsCommandQueue & commandQueue, Rend
 //    }
 }
 
-void SkinnedMeshCommandProcessor::End(GraphicsCommandQueue &)
+void SkinnedMeshCommandProcessor::End(GraphicsCommandQueue&)
 {
 }
 

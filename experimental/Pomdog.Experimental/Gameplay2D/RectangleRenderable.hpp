@@ -11,23 +11,22 @@
 
 namespace Pomdog {
 
-class RectangleRenderable: public Renderable {
+class RectangleRenderable : public Renderable {
 public:
     RectangleRenderable();
 
-    void Visit(Entity & entity, Renderer & renderer) override;
+    void Visit(Entity& entity, Renderer& renderer) override;
 
-    void LeftTopColor(Pomdog::Color const& color);
-    void RightTopColor(Pomdog::Color const& color);
-    void LeftBottomColor(Pomdog::Color const& color);
-    void RightBottomColor(Pomdog::Color const& color);
+    void LeftTopColor(const Pomdog::Color& color);
+    void RightTopColor(const Pomdog::Color& color);
+    void LeftBottomColor(const Pomdog::Color& color);
+    void RightBottomColor(const Pomdog::Color& color);
 
-    void OriginPivot(Vector2 const& originPivot);
+    void OriginPivot(const Vector2& originPivot);
     Vector2 OriginPivot() const;
 
-    void BoundingBox(Rectangle const& rectangle);
+    void BoundingBox(const Rectangle& rectangle);
     Rectangle BoundingBox() const;
-
 
 private:
     Detail::Rendering::PrimitiveCommand command;
