@@ -1,34 +1,25 @@
 #pragma once
 
-#include <Pomdog.Experimental/Gameplay/Scene.hpp>
-#include <Pomdog.Experimental/Gameplay2D/Simple2DGameEngine.hpp>
-#include <Pomdog.Experimental/Gameplay2D/CameraComponent.hpp>
+#include <Pomdog/Experimental/Graphics/PrimitiveBatch.hpp>
+#include <Pomdog/Experimental/Graphics/SpriteBatch.hpp>
 #include <Pomdog/Experimental/Graphics/SpriteFont.hpp>
+#include <Pomdog/Experimental/Graphics/TrueTypeFont.hpp>
+#include <Pomdog/Experimental/Graphics/TrueTypeFontLoader.hpp>
+#include <Pomdog/Experimental/ImageEffects/PostProcessCompositor.hpp>
 #include <Pomdog/Pomdog.hpp>
-#include <deque>
-#include <map>
+#include <functional>
+#include <memory>
+#include <string>
 
 namespace Pong {
 
 using namespace Pomdog;
 
-struct Paddle {
-    std::shared_ptr<Transform> transform;
+struct Paddle final {
+    Vector2 Position = Vector2::Zero;
     Vector2 PositionOld = Vector2::Zero;
     float Speed = 540.0f;
     float Height = 50.0f;
-
-    Vector2 GetPosition() const
-    {
-        POMDOG_ASSERT(transform);
-        return transform->GetPosition2D();
-    }
-
-    void SetPosition(const Vector2& positionIn)
-    {
-        POMDOG_ASSERT(transform);
-        return transform->SetPosition2D(positionIn);
-    }
 
     BoundingBox2D GetCollider() const
     {
@@ -36,39 +27,27 @@ struct Paddle {
         const auto halfWidth = width / 2;
         const auto halfHeight = Height / 2;
         BoundingBox2D box;
-        box.Min = GetPosition() - Vector2{halfWidth, halfHeight};
-        box.Max = GetPosition() + Vector2{halfWidth, halfHeight};
+        box.Min = Position - Vector2{halfWidth, halfHeight};
+        box.Max = Position + Vector2{halfWidth, halfHeight};
         return box;
     }
 };
 
-struct Ball {
-    std::shared_ptr<Transform> transform;
+struct Ball final {
+    Vector2 Position = Vector2::Zero;
     Vector2 PositionOld = Vector2::Zero;
     Vector2 Velocity = Vector2::Zero;
-
-    Vector2 GetPosition() const
-    {
-        POMDOG_ASSERT(transform);
-        return transform->GetPosition2D();
-    }
-
-    void SetPosition(const Vector2& positionIn)
-    {
-        POMDOG_ASSERT(transform);
-        return transform->SetPosition2D(positionIn);
-    }
 
     BoundingCircle GetCollider() const
     {
         BoundingCircle circle;
         circle.Radius = 3;
-        circle.Center = GetPosition();
+        circle.Center = this->Position;
         return circle;
     }
 };
 
-class Player {
+class Player final {
 private:
     int score;
 
@@ -92,7 +71,7 @@ public:
     Signal<void(int score)> ScoreChanged;
 };
 
-class Input {
+class Input final {
 private:
     ConnectionList connections;
     ButtonState up = ButtonState::Released;
@@ -110,7 +89,7 @@ public:
         keyDown = keyDownIn;
 
         connections.Disconnect();
-        auto & connect = connections;
+        auto& connect = connections;
 
         connect(keyboard->KeyUp, [this](Keys key) {
             POMDOG_ASSERT(keyUp != keyDown);
@@ -145,10 +124,19 @@ public:
 
         if (y > 0) {
             Up();
-        } else if (y < 0) {
+        }
+        else if (y < 0) {
             Down();
         }
     }
+};
+
+enum class PongScenes {
+    StartWaiting,
+    Waiting,
+    Prepare,
+    Playing,
+    GameOver,
 };
 
 class PongGame final : public Game {
@@ -162,29 +150,26 @@ public:
     void Draw() override;
 
 private:
-    std::shared_ptr<GameScene> CreateNewGameScene();
-
-    std::shared_ptr<GameScene> CreatePlayScene();
-
-private:
     std::shared_ptr<GameHost> gameHost;
     std::shared_ptr<GameWindow> window;
     std::shared_ptr<GraphicsDevice> graphicsDevice;
     std::shared_ptr<GraphicsCommandQueue> commandQueue;
+    std::shared_ptr<GraphicsCommandList> commandList;
     std::shared_ptr<AssetManager> assets;
     std::shared_ptr<GameClock> clock;
     std::shared_ptr<AudioEngine> audioEngine;
 
-    Simple2DGameEngine gameEngine;
+    std::shared_ptr<SpriteBatch> spriteBatch;
+    std::shared_ptr<SpriteFont> spriteFont;
+    std::shared_ptr<PrimitiveBatch> primitiveBatch;
+    std::shared_ptr<RenderTarget2D> renderTarget;
+    PostProcessCompositor postProcessCompositor;
 
     std::shared_ptr<SoundEffect> soundEffect1;
     std::shared_ptr<SoundEffect> soundEffect2;
     std::shared_ptr<SoundEffect> soundEffect3;
 
-    std::shared_ptr<SpriteFont> spriteFont;
-    Timer textTimer;
-
-    SceneDirector sceneDirector;
+    PongScenes pongScene;
     Input input1;
     Input input2;
     Player player1;
@@ -193,8 +178,11 @@ private:
     Paddle paddle1;
     Paddle paddle2;
     Rectangle gameFieldSize;
+    ScopedConnection startButtonConn;
+    bool scoreTextVisible = false;
+    std::string headerText;
+    Timer textTimer;
     ConnectionList connect;
-    std::vector<Entity> scoreTextLabels;
 };
 
 } // namespace Pong
