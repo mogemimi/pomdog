@@ -370,7 +370,7 @@ Builder<Shader>& Builder<Shader>::SetMetalFromFile(
         if (impl->shaderBlob.empty()) {
             POMDOG_THROW_EXCEPTION(std::runtime_error, "The file is too small");
         }
-        
+
         // NOTE: Insert null at the end of a charater array
         impl->shaderBlob.push_back(0);
 

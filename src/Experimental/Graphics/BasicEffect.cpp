@@ -73,7 +73,7 @@ CreateBasicEffect(AssetManager& assets, const BasicEffectDescription& desc)
         .SetHLSL(sourceHLSL.data(), sourceHLSL.size(), "BasicEffectVS")
         .SetMetal(sourceMetal.data(), sourceMetal.size(), "BasicEffectVS")
         .Build();
-    
+
     auto pixelShaderBuilder = assets.CreateBuilder<Shader>(ShaderPipelineStage::PixelShader);
 
     auto pixelShader = pixelShaderBuilder
