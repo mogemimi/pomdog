@@ -148,13 +148,6 @@ void ApplyTexture2D(int index, const Texture2DObjectGL4& textureObject)
     POMDOG_CHECK_ERROR_GL4("glBindTexture");
 }
 
-void ApplyConstantBuffer(int slotIndex, const ConstantBufferGL4& buffer)
-{
-    POMDOG_ASSERT(slotIndex >= 0);
-    glBindBufferBase(GL_UNIFORM_BUFFER, slotIndex, buffer.GetBuffer());
-    POMDOG_CHECK_ERROR_GL4("glBindBufferBase");
-}
-
 void SetViewport(
     const Viewport& viewport,
     const std::weak_ptr<GameWindow>& gameWindow,
@@ -671,9 +664,10 @@ void GraphicsContextGL4::SetConstantBuffer(int index, const std::shared_ptr<Nati
 #endif
 
     auto constantBuffer = std::dynamic_pointer_cast<ConstantBufferGL4>(constantBufferIn);
-
     POMDOG_ASSERT(constantBuffer);
-    ApplyConstantBuffer(index, *constantBuffer);
+
+    glBindBufferBase(GL_UNIFORM_BUFFER, index, constantBuffer->GetBuffer());
+    POMDOG_CHECK_ERROR_GL4("glBindBufferBase");
 }
 
 void GraphicsContextGL4::SetSampler(int index, const std::shared_ptr<NativeSamplerState>& sampler)
