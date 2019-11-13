@@ -172,7 +172,7 @@ GLXFBConfig ChooseFramebufferConfig(
 
 // MARK: - GameHostX11
 
-class GameHostX11::Impl {
+class GameHostX11::Impl final {
 public:
     explicit Impl(const PresentationParameters& presentationParameters);
 

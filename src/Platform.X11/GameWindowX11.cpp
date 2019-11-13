@@ -161,6 +161,7 @@ GameWindowX11::GameWindowX11(
         POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to create window");
     }
 
+    // NOTE: Put the window on screen
     ::XMapWindow(display, window);
     //::XMapRaised(display, window);
 

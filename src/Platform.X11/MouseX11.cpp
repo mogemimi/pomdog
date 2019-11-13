@@ -11,11 +11,11 @@ namespace {
 ButtonState* GetButtonByIndex(MouseState& mouseState, unsigned int buttonIndex)
 {
     switch (buttonIndex) {
-    case 1:
+    case Button1:
         return &mouseState.LeftButton;
-    case 2:
+    case Button2:
         return &mouseState.MiddleButton;
-    case 3:
+    case Button3:
         return &mouseState.RightButton;
     default:
         break;
@@ -26,11 +26,11 @@ ButtonState* GetButtonByIndex(MouseState& mouseState, unsigned int buttonIndex)
 std::optional<MouseButtons> ToMouseButtons(unsigned int buttonIndex)
 {
     switch (buttonIndex) {
-    case 1:
+    case Button1:
         return MouseButtons::Left;
-    case 2:
+    case Button2:
         return MouseButtons::Middle;
-    case 3:
+    case Button3:
         return MouseButtons::Right;
     default:
         break;
@@ -38,7 +38,7 @@ std::optional<MouseButtons> ToMouseButtons(unsigned int buttonIndex)
     return std::nullopt;
 }
 
-} // unnamed namespace
+} // namespace
 
 MouseState MouseX11::GetState() const
 {
@@ -49,7 +49,7 @@ void MouseX11::HandleEvent(XEvent& event)
 {
     switch (event.type) {
     case ButtonPress: {
-        if (auto button = GetButtonByIndex(mouseState, event.xbutton.button)) {
+        if (auto button = GetButtonByIndex(mouseState, event.xbutton.button); button != nullptr) {
             *button = ButtonState::Pressed;
 
             auto mouseButton = ToMouseButtons(event.xbutton.button);
@@ -65,7 +65,7 @@ void MouseX11::HandleEvent(XEvent& event)
         break;
     }
     case ButtonRelease: {
-        if (auto button = GetButtonByIndex(mouseState, event.xbutton.button)) {
+        if (auto button = GetButtonByIndex(mouseState, event.xbutton.button); button != nullptr) {
             *button = ButtonState::Released;
 
             auto mouseButton = ToMouseButtons(event.xbutton.button);
