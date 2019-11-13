@@ -191,6 +191,8 @@ public:
         const Vector2& originPivot,
         const Vector2& scale);
 
+    void Flush();
+
     void End();
 
     int GetDrawCallCount() const noexcept;

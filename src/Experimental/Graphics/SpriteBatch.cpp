@@ -170,11 +170,11 @@ public:
         const Vector2& scale,
         float layerDepth);
 
+    void FlushBatch();
+
     void End();
 
 private:
-    void FlushBatch();
-
     void RenderBatch(
         const Texture2DView& texture,
         const std::vector<SpriteInfo>& sprites);
@@ -587,6 +587,12 @@ void SpriteBatch::Begin(
 {
     POMDOG_ASSERT(impl);
     impl->Begin(commandList, transformMatrixIn, distanceFieldParameters);
+}
+
+void SpriteBatch::Flush()
+{
+    POMDOG_ASSERT(impl);
+    impl->FlushBatch();
 }
 
 void SpriteBatch::End()
