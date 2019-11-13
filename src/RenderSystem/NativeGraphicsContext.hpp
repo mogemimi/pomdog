@@ -53,6 +53,8 @@ public:
 
     virtual void SetPrimitiveTopology(PrimitiveTopology primitiveTopology) = 0;
 
+    virtual void SetScissorRect(const Rectangle& scissorRect) = 0;
+
     virtual void SetBlendFactor(const Vector4& blendFactor) = 0;
 
     virtual void SetVertexBuffers(const std::vector<VertexBufferBinding>& vertexBuffers) = 0;

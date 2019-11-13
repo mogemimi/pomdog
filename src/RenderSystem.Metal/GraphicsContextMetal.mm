@@ -310,6 +310,12 @@ void GraphicsContextMetal::SetPrimitiveTopology(PrimitiveTopology primitiveTopol
     this->primitiveType = ToPrimitiveType(primitiveTopology);
 }
 
+void GraphicsContextMetal::SetScissorRect(const Rectangle& scissorRect)
+{
+    POMDOG_ASSERT(commandEncoder != nil);
+    SetScissorRectangle(commandEncoder, scissorRect);
+}
+
 void GraphicsContextMetal::SetBlendFactor(const Vector4& blendFactor)
 {
     POMDOG_ASSERT(commandEncoder != nil);

@@ -347,6 +347,18 @@ void GraphicsContextDirect3D11::SetPrimitiveTopology(PrimitiveTopology primitive
         ToD3D11PrimitiveTopology(primitiveTopology));
 }
 
+void GraphicsContextDirect3D11::SetScissorRect(const Rectangle& scissorRect)
+{
+    D3D11_RECT rect;
+    rect.left = scissorRect.GetLeft();
+    rect.top = scissorRect.GetTop();
+    rect.right = scissorRect.GetRight();
+    rect.bottom = scissorRect.GetBottom();
+
+    POMDOG_ASSERT(deviceContext != nullptr);
+    deviceContext->RSSetScissorRects(1, &rect);
+}
+
 void GraphicsContextDirect3D11::SetBlendFactor(const Vector4& blendFactorIn)
 {
     blendFactor[0] = blendFactorIn.X;

@@ -134,6 +134,12 @@ void GraphicsCommandList::SetPrimitiveTopology(PrimitiveTopology primitiveTopolo
     nativeCommandList->SetPrimitiveTopology(primitiveTopology);
 }
 
+void GraphicsCommandList::SetScissorRect(const Rectangle& scissorRect)
+{
+    POMDOG_ASSERT(nativeCommandList);
+    nativeCommandList->SetScissorRect(scissorRect);
+}
+
 void GraphicsCommandList::SetBlendFactor(const Vector4& blendFactor)
 {
     POMDOG_ASSERT(nativeCommandList);

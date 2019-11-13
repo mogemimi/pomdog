@@ -76,6 +76,15 @@ struct SetPrimitiveTopologyCommand final : public GraphicsCommand {
     }
 };
 
+struct SetScissorRectCommand final : public GraphicsCommand {
+    Rectangle scissorRect;
+
+    void Execute(NativeGraphicsContext& graphicsContext) override
+    {
+        graphicsContext.SetScissorRect(scissorRect);
+    }
+};
+
 struct SetBlendFactorCommand final : public GraphicsCommand {
     Vector4 blendFactor;
 
@@ -282,6 +291,14 @@ void GraphicsCommandListImmediate::SetPrimitiveTopology(PrimitiveTopology primit
     commands.push_back(std::move(command));
 }
 
+void GraphicsCommandListImmediate::SetScissorRect(const Rectangle& scissorRect)
+{
+    auto command = std::make_unique<SetScissorRectCommand>();
+    command->commandType = GraphicsCommandType::SetScissorRectCommand;
+    command->scissorRect = scissorRect;
+    commands.push_back(std::move(command));
+}
+
 void GraphicsCommandListImmediate::SetBlendFactor(const Vector4& blendFactor)
 {
     auto command = std::make_unique<SetBlendFactorCommand>();
@@ -390,30 +407,32 @@ void GraphicsCommandListImmediate::ExecuteImmediate(NativeGraphicsContext& graph
 
 void GraphicsCommandListImmediate::SortCommandsForMetal()
 {
-    static_assert(static_cast<int>(GraphicsCommandType::DrawCommand) == 0, "");
-    static_assert(static_cast<int>(GraphicsCommandType::DrawIndexedCommand) == 1, "");
-    static_assert(static_cast<int>(GraphicsCommandType::DrawInstancedCommand) == 2, "");
-    static_assert(static_cast<int>(GraphicsCommandType::DrawIndexedInstancedCommand) == 3, "");
-    static_assert(static_cast<int>(GraphicsCommandType::SetPrimitiveTopologyCommand) == 4, "");
-    static_assert(static_cast<int>(GraphicsCommandType::SetBlendFactorCommand) == 5, "");
-    static_assert(static_cast<int>(GraphicsCommandType::SetVertexBuffersCommand) == 6, "");
-    static_assert(static_cast<int>(GraphicsCommandType::SetIndexBufferCommand) == 7, "");
-    static_assert(static_cast<int>(GraphicsCommandType::SetPipelineStateCommand) == 8, "");
-    static_assert(static_cast<int>(GraphicsCommandType::SetConstantBufferCommand) == 9, "");
-    static_assert(static_cast<int>(GraphicsCommandType::SetSamplerStateCommand) == 10, "");
-    static_assert(static_cast<int>(GraphicsCommandType::SetTextureCommand) == 11, "");
-    static_assert(static_cast<int>(GraphicsCommandType::SetTextureRenderTarget2DCommand) == 12, "");
-    static_assert(static_cast<int>(GraphicsCommandType::SetRenderPassCommand) == 13, "");
+    static_assert(static_cast<int>(GraphicsCommandType::DrawCommand) == 0);
+    static_assert(static_cast<int>(GraphicsCommandType::DrawIndexedCommand) == 1);
+    static_assert(static_cast<int>(GraphicsCommandType::DrawInstancedCommand) == 2);
+    static_assert(static_cast<int>(GraphicsCommandType::DrawIndexedInstancedCommand) == 3);
+    static_assert(static_cast<int>(GraphicsCommandType::SetPrimitiveTopologyCommand) == 4);
+    static_assert(static_cast<int>(GraphicsCommandType::SetScissorRectCommand) == 5);
+    static_assert(static_cast<int>(GraphicsCommandType::SetBlendFactorCommand) == 6);
+    static_assert(static_cast<int>(GraphicsCommandType::SetVertexBuffersCommand) == 7);
+    static_assert(static_cast<int>(GraphicsCommandType::SetIndexBufferCommand) == 8);
+    static_assert(static_cast<int>(GraphicsCommandType::SetPipelineStateCommand) == 9);
+    static_assert(static_cast<int>(GraphicsCommandType::SetConstantBufferCommand) == 10);
+    static_assert(static_cast<int>(GraphicsCommandType::SetSamplerStateCommand) == 11);
+    static_assert(static_cast<int>(GraphicsCommandType::SetTextureCommand) == 12);
+    static_assert(static_cast<int>(GraphicsCommandType::SetTextureRenderTarget2DCommand) == 13);
+    static_assert(static_cast<int>(GraphicsCommandType::SetRenderPassCommand) == 14);
 
     constexpr std::int8_t priorityDrawCommand = 31;
     constexpr std::int8_t priorityDefault = 30;
 
-    const std::array<std::int8_t, 14> priorities = {{
+    const std::array<std::int8_t, 15> priorities = {{
         priorityDrawCommand, // DrawCommand
         priorityDrawCommand, // DrawIndexedCommand
         priorityDrawCommand, // DrawInstancedCommand
         priorityDrawCommand, // DrawIndexedInstancedCommand
         priorityDefault, // SetPrimitiveTopologyCommand
+        priorityDefault, // SetScissorRectCommand
         priorityDefault, // SetBlendFactorCommand
         priorityDefault, // SetVertexBuffersCommand
         priorityDefault, // SetIndexBufferCommand
@@ -468,6 +487,7 @@ void GraphicsCommandListImmediate::SortCommandsForMetal()
     std::size_t renderPassCommandIndex = 0;
     std::optional<std::size_t> setPipelineStateCommand;
     std::optional<std::size_t> setPrimitiveTopologyCommand;
+    std::optional<std::size_t> setScissorRectCommand;
     std::optional<std::size_t> setBlendFactorCommand;
     std::optional<std::size_t> setVertexBuffersCommand;
     std::optional<std::size_t> setIndexBufferCommand;
@@ -499,6 +519,9 @@ void GraphicsCommandListImmediate::SortCommandsForMetal()
             break;
         case GraphicsCommandType::SetPrimitiveTopologyCommand:
             setPrimitiveTopologyCommand = commands.size();
+            break;
+        case GraphicsCommandType::SetScissorRectCommand:
+            setScissorRectCommand = commands.size();
             break;
         case GraphicsCommandType::SetBlendFactorCommand:
             setBlendFactorCommand = commands.size();
@@ -548,6 +571,9 @@ void GraphicsCommandListImmediate::SortCommandsForMetal()
             }
             if (setPrimitiveTopologyCommand && (*setPrimitiveTopologyCommand < renderPassCommandIndex)) {
                 commands.push_back(commands[*setPrimitiveTopologyCommand]);
+            }
+            if (setScissorRectCommand && (*setScissorRectCommand < renderPassCommandIndex)) {
+                commands.push_back(commands[*setScissorRectCommand]);
             }
             if (setBlendFactorCommand && (*setBlendFactorCommand < renderPassCommandIndex)) {
                 commands.push_back(commands[*setBlendFactorCommand]);

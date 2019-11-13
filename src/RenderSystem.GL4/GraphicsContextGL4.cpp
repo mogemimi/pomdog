@@ -196,6 +196,7 @@ void SetScissorRectangle(
     GLint lowerLeftCornerY = rectangle.Y;
 
     if (useBackBuffer) {
+        // FIXME: Use glClipControl(GL_UPPER_LEFT) instead when OpenGL version is >= 4.5
         if (auto window = gameWindow.lock()) {
             lowerLeftCornerY = window->GetClientBounds().Height - (rectangle.Y + rectangle.Height);
         }
@@ -620,6 +621,12 @@ GraphicsCapabilities GraphicsContextGL4::GetCapabilities() const
 void GraphicsContextGL4::SetPrimitiveTopology(PrimitiveTopology primitiveTopologyIn)
 {
     primitiveTopology = ToPrimitiveTopology(primitiveTopologyIn);
+}
+
+void GraphicsContextGL4::SetScissorRect(const Rectangle& scissorRect)
+{
+    const bool useBackBuffer = renderTargets.empty();
+    SetScissorRectangle(scissorRect, gameWindow, useBackBuffer);
 }
 
 void GraphicsContextGL4::SetBlendFactor(const Vector4& blendFactor)

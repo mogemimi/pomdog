@@ -66,6 +66,9 @@ public:
     /// Specifies the geometric primitive type for the input assembler stage.
     void SetPrimitiveTopology(PrimitiveTopology primitiveTopology);
 
+    /// Sets the scissor rectangle dynamically for a scissor test.
+    void SetScissorRect(const Rectangle& scissorRect);
+
     /// Sets the constant blend color and alpha values.
     void SetBlendFactor(const Vector4& blendFactor);
 
