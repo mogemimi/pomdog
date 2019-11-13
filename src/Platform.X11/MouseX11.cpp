@@ -56,12 +56,16 @@ void MouseX11::HandleEvent(XEvent& event)
             POMDOG_ASSERT(mouseButton);
             Mouse::ButtonDown(*mouseButton);
         }
-//        else if (event.xbutton.button == 4) {
-//            mouseState.ScrollWheel += 1;
-//        }
-//        else if (event.xbutton.button == 5) {
-//            mouseState.ScrollWheel -= 1;
-//        }
+        else if (event.xbutton.button == Button4) {
+            const auto previousScrollWheel = mouseState.ScrollWheel;
+            mouseState.ScrollWheel += 1;
+            Mouse::ScrollWheel(mouseState.ScrollWheel - previousScrollWheel);
+        }
+        else if (event.xbutton.button == Button5) {
+            const auto previousScrollWheel = mouseState.ScrollWheel;
+            mouseState.ScrollWheel -= 1;
+            Mouse::ScrollWheel(mouseState.ScrollWheel - previousScrollWheel);
+        }
         break;
     }
     case ButtonRelease: {
@@ -72,12 +76,6 @@ void MouseX11::HandleEvent(XEvent& event)
             POMDOG_ASSERT(mouseButton);
             Mouse::ButtonUp(*mouseButton);
         }
-//        else if (event.xbutton.button == 4) {
-//            mouseState.ScrollWheel += 1;
-//        }
-//        else if (event.xbutton.button == 5) {
-//            mouseState.ScrollWheel -= 1;
-//        }
         break;
     }
     case EnterNotify: {
