@@ -169,9 +169,7 @@ void SpriteFont::Impl::ForEach(const std::string& text, Func func)
             const auto& glyph = iter->second;
             position.X += static_cast<float>(glyph.XOffset);
 
-            if (!isSpace(character)) {
-                func(glyph, position);
-            }
+            func(glyph, position);
 
             const auto advance = glyph.XAdvance - glyph.XOffset;
             position.X += (static_cast<float>(advance) - static_cast<float>(spacing));
@@ -302,6 +300,10 @@ void SpriteFont::Impl::Draw(
     const auto baseOffset = labelSize * originPivot - Vector2{0.0f, labelSize.Y - lineSpacing};
 
     ForEach(text, [&](const FontGlyph& glyph, const Vector2& pos) {
+        if (isSpace(glyph.Character)) {
+            // NOTE: Skip rendering
+            return;
+        }
         if ((glyph.Subrect.Width <= 0) || (glyph.Subrect.Height <= 0)) {
             // NOTE: Skip rendering
             return;
