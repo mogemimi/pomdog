@@ -63,8 +63,7 @@ public:
         const void* source,
         std::size_t elementCount);
 
-public:
-    Detail::NativeBuffer* NativeIndexBuffer();
+    Detail::NativeBuffer* GetNativeIndexBuffer();
 
 private:
     std::unique_ptr<Detail::NativeBuffer> nativeIndexBuffer;

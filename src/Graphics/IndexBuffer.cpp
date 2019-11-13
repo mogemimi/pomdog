@@ -127,7 +127,7 @@ void IndexBuffer::SetData(
         Detail::BufferHelper::ToIndexElementOffsetBytes(elementSize) * elementCountIn);
 }
 
-Detail::NativeBuffer* IndexBuffer::NativeIndexBuffer()
+Detail::NativeBuffer* IndexBuffer::GetNativeIndexBuffer()
 {
     POMDOG_ASSERT(nativeIndexBuffer);
     return nativeIndexBuffer.get();

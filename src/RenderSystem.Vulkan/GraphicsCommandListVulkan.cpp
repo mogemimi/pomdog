@@ -207,10 +207,10 @@ void GraphicsCommandListVulkan::SetIndexBuffer(const std::shared_ptr<IndexBuffer
     POMDOG_ASSERT(commandBuffer != nullptr);
     POMDOG_ASSERT(indexBufferIn != nullptr);
 
-    const auto nativeIndexBuffer = static_cast<BufferVulkan*>(indexBufferIn->NativeIndexBuffer());
+    const auto nativeIndexBuffer = static_cast<BufferVulkan*>(indexBufferIn->GetNativeIndexBuffer());
 
     POMDOG_ASSERT(nativeIndexBuffer != nullptr);
-    POMDOG_ASSERT(nativeIndexBuffer == dynamic_cast<BufferVulkan*>(indexBufferIn->NativeIndexBuffer()));
+    POMDOG_ASSERT(nativeIndexBuffer == dynamic_cast<BufferVulkan*>(indexBufferIn->GetNativeIndexBuffer()));
 
     constexpr VkDeviceSize offset = 0;
     const auto indexBuffer = nativeIndexBuffer->GetBuffer();

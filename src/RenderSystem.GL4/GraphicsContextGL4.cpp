@@ -487,7 +487,7 @@ void GraphicsContextGL4::DrawIndexed(
 
     // Bind index buffer
     POMDOG_ASSERT(indexBuffer);
-    auto indexBufferGL = dynamic_cast<IndexBufferGL4*>(indexBuffer->NativeIndexBuffer());
+    auto indexBufferGL = dynamic_cast<IndexBufferGL4*>(indexBuffer->GetNativeIndexBuffer());
     POMDOG_ASSERT(indexBufferGL != nullptr);
     indexBufferGL->BindBuffer();
 
@@ -562,7 +562,7 @@ void GraphicsContextGL4::DrawIndexedInstanced(
 
     // Bind index buffer
     POMDOG_ASSERT(indexBuffer);
-    auto indexBufferGL = dynamic_cast<IndexBufferGL4*>(indexBuffer->NativeIndexBuffer());
+    auto indexBufferGL = dynamic_cast<IndexBufferGL4*>(indexBuffer->GetNativeIndexBuffer());
     POMDOG_ASSERT(indexBufferGL != nullptr);
     indexBufferGL->BindBuffer();
 

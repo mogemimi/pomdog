@@ -356,11 +356,11 @@ void GraphicsContextMetal::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& in
     POMDOG_ASSERT(indexBufferIn != nullptr);
 
     auto nativeIndexBuffer = static_cast<BufferMetal*>(
-        indexBufferIn->NativeIndexBuffer());
+        indexBufferIn->GetNativeIndexBuffer());
 
     POMDOG_ASSERT(nativeIndexBuffer != nullptr);
     POMDOG_ASSERT(nativeIndexBuffer == dynamic_cast<BufferMetal*>(
-        indexBufferIn->NativeIndexBuffer()));
+        indexBufferIn->GetNativeIndexBuffer()));
 
     this->indexType = ToIndexType(indexBufferIn->GetElementSize());
     this->indexBuffer = nativeIndexBuffer->GetBuffer();

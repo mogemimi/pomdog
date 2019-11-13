@@ -323,11 +323,11 @@ void GraphicsContextDirect3D11::SetIndexBuffer(const std::shared_ptr<IndexBuffer
     POMDOG_ASSERT(indexBuffer);
 
     auto nativeIndexBuffer = static_cast<BufferDirect3D11*>(
-        indexBuffer->NativeIndexBuffer());
+        indexBuffer->GetNativeIndexBuffer());
 
     POMDOG_ASSERT(nativeIndexBuffer != nullptr);
     POMDOG_ASSERT(nativeIndexBuffer == dynamic_cast<BufferDirect3D11*>(
-        indexBuffer->NativeIndexBuffer()));
+        indexBuffer->GetNativeIndexBuffer()));
 
     deviceContext->IASetIndexBuffer(nativeIndexBuffer->GetBuffer(),
         DXGIFormatHelper::ToDXGIFormat(indexBuffer->GetElementSize()), 0);
