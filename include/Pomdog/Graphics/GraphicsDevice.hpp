@@ -18,10 +18,13 @@ public:
 
     ~GraphicsDevice();
 
+    /// Gets the currently supported shader language.
     ShaderLanguage GetSupportedLanguage() const noexcept;
 
+    /// Gets the presentation parameters.
     PresentationParameters GetPresentationParameters() const noexcept;
 
+    /// Gets the pointer of the native graphics device.
     Detail::NativeGraphicsDevice* GetNativeGraphicsDevice();
 
 private:

@@ -21,6 +21,7 @@ public:
 
     ~SamplerState();
 
+    /// Gets the pointer of the native sampler state object.
     Detail::NativeSamplerState* GetNativeSamplerState();
 
 private:

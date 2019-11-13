@@ -6,8 +6,12 @@
 
 namespace Pomdog {
 
+/// Determines the fill mode to use when rendering primitives.
 enum class FillMode : std::uint8_t {
+    /// Draws polygon edges as line segments.
     WireFrame,
+
+    /// Rasterizes triangle primitives as filled triangles.
     Solid,
 };
 

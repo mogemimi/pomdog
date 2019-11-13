@@ -47,22 +47,29 @@ public:
     VertexBuffer& operator=(const VertexBuffer&) = delete;
     VertexBuffer& operator=(VertexBuffer&&) = default;
 
+    /// Gets the number of vertices.
     std::size_t GetVertexCount() const noexcept;
 
+    /// Gets the size in bytes of per-vertex data.
     std::size_t GetStrideBytes() const noexcept;
 
+    /// Gets the size in bytes of this vertex buffer.
     std::size_t GetSizeInBytes() const noexcept;
 
+    /// Gets the expected usage hint of this vertex buffer.
     BufferUsage GetBufferUsage() const noexcept;
 
+    /// Sets vertex buffer data.
     void SetData(const void* source, std::size_t elementCount);
 
+    /// Sets vertex buffer data.
     void SetData(
         std::size_t offsetInBytes,
         const void* source,
         std::size_t elementCount,
         std::size_t strideInBytes);
 
+    /// Gets the pointer of the native vertex buffer resource.
     Detail::NativeBuffer* GetNativeVertexBuffer();
 
 private:

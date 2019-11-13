@@ -7,10 +7,10 @@
 namespace Pomdog {
 
 enum class IndexElementSize : std::uint8_t {
-    ///@brief 16 bit.
+    /// A 16-bit unsigned integer used as a the size of a primitive index.
     SixteenBits,
 
-    ///@brief 32 bit.
+    /// A 32-bit unsigned nteger used as a the size of a primitive index.
     ThirtyTwoBits,
 };
 

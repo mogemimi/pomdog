@@ -55,6 +55,7 @@ public:
 
     void GetValue(std::size_t sizeInBytes, void* result) const;
 
+    /// Sets constant buffer data.
     template <typename T>
     void SetValue(const T& value)
     {
@@ -62,6 +63,7 @@ public:
         Detail::EffectBinaryParameter::Set(*this, value);
     }
 
+    /// Sets constant buffer data.
     template <typename T>
     void SetValue(const T* data, std::size_t count)
     {
@@ -69,12 +71,16 @@ public:
         Detail::EffectBinaryParameter::Set(*this, data, count);
     }
 
+    /// Sets constant buffer data.
     void SetValue(const void* data, std::size_t sizeInBytes);
 
+    /// Gets the size in bytes of this constant buffer.
     std::size_t GetSizeInBytes() const noexcept;
 
+    /// Gets the expected usage hint of this constant buffer.
     BufferUsage GetBufferUsage() const noexcept;
 
+    /// Gets the pointer of the native constant buffer resource.
     Detail::NativeBuffer* GetNativeConstantBuffer();
 
 private:
