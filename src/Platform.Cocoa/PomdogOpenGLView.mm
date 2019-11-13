@@ -541,10 +541,6 @@ Keys TranslateKey(std::uint16_t keyCode)
     if (key != Pomdog::Keys::None) {
         eventQueue->Enqueue<InputKeyEvent>(KeyState::Up, key);
     }
-
-    using Pomdog::Detail::InputTextEvent;
-    std::string text = [[theEvent characters] UTF8String];
-    eventQueue->Enqueue<InputTextEvent>(text);
 }
 
 @end
