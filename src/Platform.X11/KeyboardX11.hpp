@@ -15,7 +15,7 @@ public:
 
     KeyboardState GetState() const override;
 
-    void HandleEvent(XEvent& event);
+    void HandleEvent(XEvent& event, ::XIC inputContext);
 
 private:
     std::array<Keys, 256> mappedKeys;

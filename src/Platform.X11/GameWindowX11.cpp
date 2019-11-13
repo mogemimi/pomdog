@@ -111,6 +111,8 @@ GameWindowX11::GameWindowX11(
     , framebufferConfigID(0)
     , colormap(0)
     , window(0)
+    , inputMethod(nullptr)
+    , inputContext(nullptr)
     , mouseCursor(MouseCursor::Arrow)
     , allowUserResizing(true)
     , isMinimized(false)
@@ -175,6 +177,46 @@ GameWindowX11::GameWindowX11(
     XUnlockDisplay(x11Context->Display);
 
     clientBounds = GetWindowClientBounds(x11Context->Display, window);
+
+    inputMethod = ::XOpenIM(display, nullptr, nullptr, nullptr);
+    if (inputMethod == nullptr) {
+        POMDOG_THROW_EXCEPTION(std::runtime_error, "Could not open input method");
+    }
+
+    const auto hasInputMethodStyle = [&]() -> bool {
+        ::XIMStyles* styles = nullptr;
+        if (::XGetIMValues(inputMethod, XNQueryInputStyle, &styles, nullptr) != nullptr) {
+            // NOTE: XIM can't get styles.
+            return false;
+        }
+
+        for (int i = 0; i < styles->count_styles; i++) {
+            if (styles->supported_styles[i] == (XIMPreeditNothing | XIMStatusNothing)) {
+                return true;
+            }
+        }
+
+        ::XFree(styles);
+        return false;
+    }();
+
+    if (!hasInputMethodStyle) {
+        POMDOG_THROW_EXCEPTION(std::runtime_error, "XIM can't get styles");
+    }
+
+    inputContext = ::XCreateIC(
+        inputMethod,
+        XNInputStyle,
+        XIMPreeditNothing | XIMStatusNothing,
+        XNClientWindow,
+        window,
+        nullptr);
+
+    if (inputContext == nullptr) {
+        POMDOG_THROW_EXCEPTION(std::runtime_error, "Could not open input context");
+    }
+
+    ::XSetICFocus(inputContext);
 }
 
 GameWindowX11::~GameWindowX11()
@@ -183,6 +225,16 @@ GameWindowX11::~GameWindowX11()
     auto display = x11Context->Display;
 
     POMDOG_ASSERT(display != nullptr);
+
+    if (inputContext != nullptr) {
+        ::XDestroyIC(inputContext);
+        inputContext = nullptr;
+    }
+
+    if (inputMethod != nullptr) {
+        ::XCloseIM(inputMethod);
+        inputMethod = nullptr;
+    }
 
     if (window != 0) {
         ::XUnmapWindow(display, window);
@@ -315,6 +367,11 @@ void GameWindowX11::SetMouseCursor(MouseCursor mouseCursorIn)
 ::Window GameWindowX11::NativeWindow() const
 {
     return window;
+}
+
+::XIC GameWindowX11::GetInputContext() const
+{
+    return inputContext;
 }
 
 GLXFBConfig GameWindowX11::GetFramebufferConfig() const

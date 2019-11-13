@@ -282,7 +282,7 @@ KeyboardState KeyboardX11::GetState() const
     return keyboardState;
 }
 
-void KeyboardX11::HandleEvent(XEvent& event)
+void KeyboardX11::HandleEvent(XEvent& event, ::XIC inputContext)
 {
     if (event.type != KeyPress && event.type != KeyRelease) {
         return;
@@ -309,6 +309,40 @@ void KeyboardX11::HandleEvent(XEvent& event)
             Keyboard::KeyUp(key);
         }
         break;
+    }
+
+    {
+        KeySym keysym = 0;
+        std::array<char, 64> buffer;
+        std::vector<char> dynamicBuffer;
+        Status status = 0;
+
+        int count = Xutf8LookupString(
+            inputContext,
+            &event.xkey,
+            buffer.data(),
+            buffer.size() - 1,
+            &keysym,
+            &status);
+        char* str = buffer.data();
+
+        if (status == XBufferOverflow) {
+            dynamicBuffer.resize(count + 1);
+            count = Xutf8LookupString(
+                inputContext,
+                &event.xkey,
+                dynamicBuffer.data(),
+                dynamicBuffer.size() - 1,
+                &keysym,
+                &status);
+            str = dynamicBuffer.data();
+        }
+
+        if ((status == XLookupKeySym) || (status == XLookupBoth)) {
+            str[count] = '\0';
+            const char* s = str;
+            TextInput(s);
+        }
     }
 
 #if defined(DEBUG) && !defined(NDEBUG)

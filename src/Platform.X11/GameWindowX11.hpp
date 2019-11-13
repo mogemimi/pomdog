@@ -46,6 +46,8 @@ public:
 
     ::Window NativeWindow() const;
 
+    ::XIC GetInputContext() const;
+
     GLXFBConfig GetFramebufferConfig() const;
 
     bool IsMinimized() const;
@@ -57,6 +59,8 @@ private:
     int framebufferConfigID;
     ::Colormap colormap;
     ::Window window;
+    ::XIM inputMethod;
+    ::XIC inputContext;
     std::string title;
     Rectangle clientBounds;
     MouseCursor mouseCursor;

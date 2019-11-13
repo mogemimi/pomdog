@@ -328,7 +328,7 @@ void GameHostX11::Impl::ProcessEvent(::XEvent& event)
     }
     case KeyPress:
     case KeyRelease: {
-        keyboard->HandleEvent(event);
+        keyboard->HandleEvent(event, window->GetInputContext());
         break;
     }
     case ButtonPress:
