@@ -15,7 +15,6 @@ struct POMDOG_EXPORT RasterizerDescription final {
     Pomdog::CullMode CullMode;
     Pomdog::FillMode FillMode;
     bool MultisampleEnable;
-    bool ScissorTestEnable;
 
     static RasterizerDescription CreateDefault()
     {
@@ -30,7 +29,6 @@ struct POMDOG_EXPORT RasterizerDescription final {
         desc.DepthBias = 0;
         desc.SlopeScaledDepthBias = 0;
         desc.MultisampleEnable = false;
-        desc.ScissorTestEnable = false;
         return desc;
     }
 
@@ -42,7 +40,6 @@ struct POMDOG_EXPORT RasterizerDescription final {
         desc.DepthBias = 0;
         desc.SlopeScaledDepthBias = 0;
         desc.MultisampleEnable = false;
-        desc.ScissorTestEnable = false;
         return desc;
     }
 
@@ -54,7 +51,6 @@ struct POMDOG_EXPORT RasterizerDescription final {
         desc.DepthBias = 0;
         desc.SlopeScaledDepthBias = 0;
         desc.MultisampleEnable = false;
-        desc.ScissorTestEnable = false;
         return desc;
     }
 };

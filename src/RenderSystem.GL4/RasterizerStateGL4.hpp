@@ -24,7 +24,6 @@ private:
     GLfloat depthBias;
     GLfloat slopeScaledDepthBias;
     bool multisampleAntiAliasEnable;
-    bool scissorTestEnable;
 };
 
 } // namespace Pomdog::Detail::GL4

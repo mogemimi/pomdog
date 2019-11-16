@@ -265,7 +265,11 @@ ComPtr<ID3D11RasterizerState> CreateRasterizerState(
     rasterizerDesc.SlopeScaledDepthBias = description.SlopeScaledDepthBias;
     rasterizerDesc.AntialiasedLineEnable = FALSE;
     rasterizerDesc.MultisampleEnable = ToD3D11Boolean(description.MultisampleEnable);
-    rasterizerDesc.ScissorEnable = ToD3D11Boolean(description.ScissorTestEnable);
+
+    // NOTE: Modern graphics APIs (Direct3D 12, Metal and Vulkan) don't include
+    // a parameter like ScissorEnable to enable/disable scissor test. So we
+    // always set ScissorEnable to true in Direct3D 11.
+    rasterizerDesc.ScissorEnable = TRUE;
 
     POMDOG_ASSERT(!rasterizerDesc.AntialiasedLineEnable
         || (rasterizerDesc.AntialiasedLineEnable && !rasterizerDesc.MultisampleEnable));

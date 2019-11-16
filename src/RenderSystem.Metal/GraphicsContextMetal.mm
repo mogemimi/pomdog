@@ -86,8 +86,8 @@ void SetViewport(
 void SetScissorRectangle(
     id<MTLRenderCommandEncoder> commandEncoder, const Rectangle& rectangle)
 {
-    POMDOG_ASSERT(rectangle.Width > 0);
-    POMDOG_ASSERT(rectangle.Height > 0);
+    POMDOG_ASSERT(rectangle.Width >= 0);
+    POMDOG_ASSERT(rectangle.Height >= 0);
     POMDOG_ASSERT(commandEncoder != nil);
 
     MTLScissorRect rect;

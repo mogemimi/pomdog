@@ -28,7 +28,6 @@ RasterizerStateGL4::RasterizerStateGL4(const RasterizerDescription& description)
     , depthBias(static_cast<decltype(depthBias)>(description.DepthBias))
     , slopeScaledDepthBias(description.SlopeScaledDepthBias)
     , multisampleAntiAliasEnable(description.MultisampleEnable)
-    , scissorTestEnable(description.ScissorTestEnable)
 {
 }
 
@@ -61,8 +60,13 @@ void RasterizerStateGL4::Apply()
     glPolygonMode(GL_FRONT_AND_BACK, fillMode.value);
     POMDOG_CHECK_ERROR_GL4("glPolygonMode");
 
+    // NOTE: Modern graphics APIs (Direct3D 12, Metal and Vulkan) don't include
+    // a parameter like ScissorEnable to enable/disable scissor test. So we
+    // always set scissorTestEnable to true in OpenGL 4.
+    constexpr bool scissorTestEnable = true;
+
     // Scissor Test:
-    if (scissorTestEnable) {
+    if constexpr (scissorTestEnable) {
         glEnable(GL_SCISSOR_TEST);
     }
     else {

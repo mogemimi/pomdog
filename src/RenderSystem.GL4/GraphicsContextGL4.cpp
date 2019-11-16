@@ -190,8 +190,8 @@ void SetScissorRectangle(
     const std::weak_ptr<GameWindow>& gameWindow,
     bool useBackBuffer)
 {
-    POMDOG_ASSERT(rectangle.Width > 0);
-    POMDOG_ASSERT(rectangle.Height > 0);
+    POMDOG_ASSERT(rectangle.Width >= 0);
+    POMDOG_ASSERT(rectangle.Height >= 0);
 
     GLint lowerLeftCornerY = rectangle.Y;
 
@@ -202,6 +202,7 @@ void SetScissorRectangle(
         }
     }
 
+    // NOTE: To enable the scissor test, set `RasterizerStateGL4::scissorTestEnable` to true.
     glScissor(rectangle.X, lowerLeftCornerY, rectangle.Width, rectangle.Height);
     POMDOG_CHECK_ERROR_GL4("glScissor");
 }
