@@ -38,9 +38,9 @@ public:
         const Vector3& source,
         const Matrix4x4& worldViewProjection) const;
 
-    Rectangle GetBounds() const noexcept;
+    [[nodiscard]] Rectangle GetBounds() const noexcept;
 
-    float GetAspectRatio() const;
+    [[nodiscard]] float GetAspectRatio() const noexcept;
 };
 
 } // namespace Pomdog

@@ -92,7 +92,7 @@ Rectangle Viewport::GetBounds() const noexcept
     return Rectangle{TopLeftX, TopLeftY, Width, Height};
 }
 
-float Viewport::GetAspectRatio() const
+float Viewport::GetAspectRatio() const noexcept
 {
     POMDOG_ASSERT(this->Height != 0);
     if (this->Height != 0) {
