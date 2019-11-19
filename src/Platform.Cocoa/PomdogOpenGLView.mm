@@ -172,6 +172,29 @@ Keys TranslateKey(std::uint16_t keyCode)
     return Keys::None;
 }
 
+NSUInteger TranslateKeyToModifierFlag(Keys key)
+{
+    switch (key) {
+    case Keys::CapsLock:
+        return NSEventModifierFlagCapsLock;
+    case Keys::LeftShift:
+    case Keys::RightShift:
+        return NSEventModifierFlagShift;
+    case Keys::LeftControl:
+    case Keys::RightControl:
+        return NSEventModifierFlagControl;
+    case Keys::LeftAlt:
+    case Keys::RightAlt:
+        return NSEventModifierFlagOption;
+    case Keys::LeftApple:
+    case Keys::RightApple:
+        return NSEventModifierFlagCommand;
+    default:
+        break;
+    }
+    return 0;
+}
+
 } // unnamed namespace
 
 @implementation PomdogOpenGLView {
@@ -539,6 +562,23 @@ Keys TranslateKey(std::uint16_t keyCode)
 {
     auto key = TranslateKey([theEvent keyCode]);
     if (key != Pomdog::Keys::None) {
+        eventQueue->Enqueue<InputKeyEvent>(KeyState::Up, key);
+    }
+}
+
+- (void)flagsChanged:(NSEvent *)event
+{
+    const auto key = TranslateKey([event keyCode]);
+    if (key == Pomdog::Keys::None) {
+        return;
+    }
+
+    const auto modifierFlags = [event modifierFlags] & NSEventModifierFlagDeviceIndependentFlagsMask;
+    const auto flag = TranslateKeyToModifierFlag(key);
+    if ((flag & modifierFlags) != 0) {
+        eventQueue->Enqueue<InputKeyEvent>(KeyState::Down, key);
+    }
+    else {
         eventQueue->Enqueue<InputKeyEvent>(KeyState::Up, key);
     }
 }
