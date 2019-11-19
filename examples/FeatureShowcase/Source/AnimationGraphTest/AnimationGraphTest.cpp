@@ -29,6 +29,7 @@ void AnimationGraphTest::Initialize()
     spriteBatch = std::make_shared<SpriteBatch>(
         graphicsDevice,
         BlendDescription::CreateNonPremultiplied(),
+        std::nullopt,
         SamplerDescription::CreatePointWrap(),
         std::nullopt,
         std::nullopt,
@@ -264,7 +265,7 @@ void AnimationGraphTest::Draw()
 
     Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
     RenderPass pass;
-    pass.RenderTargets.emplace_back(nullptr, Color::CornflowerBlue.ToVector4());
+    pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue.ToVector4()};
     pass.ClearDepth = 1.0f;
     pass.ClearStencil = 0;
     pass.Viewport = viewport;
@@ -295,7 +296,7 @@ void AnimationGraphTest::Draw()
     commandList->SetConstantBuffer(1, worldConstantBuffer);
     commandList->SetSamplerState(0, sampler);
     commandList->SetTexture(0, texture);
-    commandList->SetVertexBuffer(vertexBuffer);
+    commandList->SetVertexBuffer(0, vertexBuffer);
     commandList->SetPipelineState(pipelineState);
     commandList->SetPrimitiveTopology(PrimitiveTopology::TriangleList);
     commandList->DrawIndexed(indexBuffer, indexBuffer->GetIndexCount(), 0);

@@ -250,7 +250,7 @@ void FeatureShowcaseGame::DrawMenu()
 
     Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
     RenderPass pass;
-    pass.RenderTargets.emplace_back(nullptr, clearColor);
+    pass.RenderTargets[0] = {nullptr, clearColor};
     pass.ClearDepth = 1.0f;
     pass.ClearStencil = 0;
     pass.Viewport = viewport;

@@ -14,7 +14,11 @@ void VoxelModelTest::Initialize()
     auto assets = gameHost->GetAssetManager();
     auto clock = gameHost->GetClock();
     commandList = std::make_shared<GraphicsCommandList>(*graphicsDevice);
-    primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, DepthStencilDescription::CreateDefault(), *assets);
+    primitiveBatch = std::make_shared<PrimitiveBatch>(
+        graphicsDevice,
+        DepthStencilDescription::CreateDefault(),
+        std::nullopt,
+        *assets);
 
     if (auto[res, err] = assets->Load<MagicaVoxel::VoxModel>("VoxelModels/MaidChan.vox"); err != nullptr) {
         Log::Verbose("failed to load texture: " + err->ToString());
@@ -34,7 +38,7 @@ void VoxelModelTest::Draw()
 
     Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
     RenderPass pass;
-    pass.RenderTargets.emplace_back(nullptr, Color::CornflowerBlue.ToVector4());
+    pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue.ToVector4()};
     pass.ClearDepth = 1.0f;
     pass.ClearStencil = 0;
     pass.Viewport = viewport;

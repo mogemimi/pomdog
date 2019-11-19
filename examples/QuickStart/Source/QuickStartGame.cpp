@@ -121,7 +121,7 @@ void QuickStartGame::Initialize()
         auto createGraphicsCommands = [this](int width, int height) {
             Viewport viewport = {0, 0, width, height};
             RenderPass pass;
-            pass.RenderTargets.emplace_back(nullptr, Color::CornflowerBlue.ToVector4());
+            pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue.ToVector4()};
             pass.ClearDepth = 1.0f;
             pass.ClearStencil = 0;
             pass.Viewport = viewport;
@@ -132,7 +132,7 @@ void QuickStartGame::Initialize()
             commandList->SetConstantBuffer(0, constantBuffer);
             commandList->SetSamplerState(0, sampler);
             commandList->SetTexture(0, texture);
-            commandList->SetVertexBuffer(vertexBuffer);
+            commandList->SetVertexBuffer(0, vertexBuffer);
             commandList->SetPipelineState(pipelineState);
             commandList->SetPrimitiveTopology(PrimitiveTopology::TriangleList);
             commandList->DrawIndexed(indexBuffer, indexBuffer->GetIndexCount(), 0);
