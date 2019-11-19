@@ -17,6 +17,7 @@ source_group(Source\\AudioClipTest          REGULAR_EXPRESSION "Source/AudioClip
 source_group(Source\\BasicEffectTest        REGULAR_EXPRESSION "Source/BasicEffectTest/*")
 source_group(Source\\Beam2DTest             REGULAR_EXPRESSION "Source/Beam2DTest/*")
 source_group(Source\\DistanceFieldFontTest  REGULAR_EXPRESSION "Source/DistanceFieldFontTest/*")
+source_group(Source\\EditorGUITest          REGULAR_EXPRESSION "Source/EditorGUITest/*")
 source_group(Source\\GamepadTest            REGULAR_EXPRESSION "Source/GamepadTest/*")
 source_group(Source\\HTTPClientTest         REGULAR_EXPRESSION "Source/HTTPClientTest/*")
 source_group(Source\\ImageEffectsTest       REGULAR_EXPRESSION "Source/ImageEffectsTest/*")
@@ -57,6 +58,8 @@ add_executable(${PRODUCT_NAME} WIN32
   Source/Beam2DTest/Beam2DTest.hpp
   Source/DistanceFieldFontTest/DistanceFieldFontTest.cpp
   Source/DistanceFieldFontTest/DistanceFieldFontTest.hpp
+  Source/EditorGUITest/EditorGUITest.cpp
+  Source/EditorGUITest/EditorGUITest.hpp
   Source/GamepadTest/GamepadTest.cpp
   Source/GamepadTest/GamepadTest.hpp
   Source/HTTPClientTest/HTTPClientTest.cpp

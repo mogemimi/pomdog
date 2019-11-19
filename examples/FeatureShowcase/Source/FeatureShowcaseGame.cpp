@@ -4,6 +4,7 @@
 #include "BasicEffectTest/BasicEffectTest.hpp"
 #include "Beam2DTest/Beam2DTest.hpp"
 #include "DistanceFieldFontTest/DistanceFieldFontTest.hpp"
+#include "EditorGUITest/EditorGUITest.hpp"
 #include "GamepadTest/GamepadTest.hpp"
 #include "HTTPClientTest/HTTPClientTest.hpp"
 #include "ImageEffectsTest/ImageEffectsTest.hpp"
@@ -51,6 +52,10 @@ void FeatureShowcaseGame::Initialize()
     timer->SetInterval(std::chrono::seconds(1));
     timer->SetScale(1.0);
 
+    buttons.emplace_back("EditorGUI Test", [this] {
+        window->SetTitle("Feature Showcase > EditorGUI Test");
+        subGame = std::make_shared<FeatureShowcase::EditorGUITest>(gameHost);
+    });
     buttons.emplace_back("LineBatch Test", [this] {
         window->SetTitle("Feature Showcase > LineBatch Test");
         subGame = std::make_shared<FeatureShowcase::LineBatchTest>(gameHost);
