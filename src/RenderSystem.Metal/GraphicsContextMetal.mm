@@ -488,12 +488,18 @@ void GraphicsContextMetal::SetRenderPass(const RenderPass& renderPass)
     MTLRenderPassDescriptor* renderPassDescriptor = [[MTLRenderPassDescriptor alloc] init];
     POMDOG_ASSERT(renderPassDescriptor != nil);
 
+    bool useBackBuffer = false;
+
     int renderTargetIndex = 0;
     for (const auto& renderTargetView: renderPass.RenderTargets) {
         auto& renderTarget = std::get<0>(renderTargetView);
         auto& clearColor = std::get<1>(renderTargetView);
 
-        if (!renderTarget) {
+        if (renderTarget == nullptr) {
+            if (useBackBuffer) {
+                break;
+            }
+            useBackBuffer = true;
             renderPassDescriptor.colorAttachments[renderTargetIndex].texture = targetView.currentDrawable.texture;
         }
         else {

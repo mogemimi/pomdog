@@ -7,6 +7,7 @@
 #include "Pomdog/Graphics/Viewport.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Math/Vector4.hpp"
+#include <array>
 #include <cstdint>
 #include <memory>
 #include <optional>
@@ -18,7 +19,7 @@ using RenderTargetAndClearColor = std::tuple<std::shared_ptr<RenderTarget2D>, st
 
 struct POMDOG_EXPORT RenderPass final {
     /// An array of render targets.
-    std::vector<RenderTargetAndClearColor> RenderTargets;
+    std::array<RenderTargetAndClearColor, 8> RenderTargets;
 
     /// A viewport for projection transformations and clipping.
     std::optional<Pomdog::Viewport> Viewport;

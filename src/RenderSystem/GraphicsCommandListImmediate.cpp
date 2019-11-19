@@ -279,7 +279,7 @@ void GraphicsCommandListImmediate::SetRenderPass(RenderPass&& renderPass)
     command->renderPass = std::move(renderPass);
 
     if (command->renderPass.RenderTargets.empty()) {
-        command->renderPass.RenderTargets.emplace_back(nullptr, std::nullopt);
+        command->renderPass.RenderTargets[0] = {nullptr, std::nullopt};
     }
     commands.push_back(std::move(command));
 }

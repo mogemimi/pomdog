@@ -514,9 +514,9 @@ void GraphicsContextDirect3D11::SetTexture(int index, const std::shared_ptr<Rend
 void GraphicsContextDirect3D11::SetRenderPass(const RenderPass& renderPass)
 {
     POMDOG_ASSERT(!renderPass.RenderTargets.empty());
-    POMDOG_ASSERT(renderPass.RenderTargets.size() <= 16);
+    POMDOG_ASSERT(renderPass.RenderTargets.size() == 8);
 
-    const bool useBackBuffer = !std::get<0>(renderPass.RenderTargets.front());
+    const bool useBackBuffer = (std::get<0>(renderPass.RenderTargets.front()) == nullptr);
 
     if (useBackBuffer) {
         UseBackBufferAsRenderTarget(deviceContext, renderTargets, backBuffer);
@@ -535,8 +535,9 @@ void GraphicsContextDirect3D11::SetRenderPass(const RenderPass& renderPass)
 
         for (std::size_t i = 0; i < renderTargetsIn.size(); ++i) {
             auto& renderTarget = std::get<0>(renderTargetsIn[i]);
-            POMDOG_ASSERT(renderTarget);
-
+            if (renderTarget == nullptr) {
+                break;
+            }
             auto nativeRenderTarget = renderTarget->GetNativeRenderTarget2D();
             auto direct3d11RenderTarget = static_cast<RenderTarget2DDirect3D11*>(nativeRenderTarget);
             POMDOG_ASSERT(direct3d11RenderTarget != nullptr);
@@ -545,10 +546,11 @@ void GraphicsContextDirect3D11::SetRenderPass(const RenderPass& renderPass)
             renderTargets.emplace_back(renderTarget, direct3d11RenderTarget);
             renderTargetViews[i] = direct3d11RenderTarget->GetRenderTargetView();
             POMDOG_ASSERT(renderTargetViews[i] != nullptr);
+            POMDOG_ASSERT(i <= renderTargets.size());
         }
 
         deviceContext->OMSetRenderTargets(
-            static_cast<UINT>(renderTargetsIn.size()),
+            static_cast<UINT>(renderTargets.size()),
             renderTargetViews.data(),
             renderTargets.front()->GetDepthStencilView());
     }
@@ -616,7 +618,7 @@ void GraphicsContextDirect3D11::SetRenderPass(const RenderPass& renderPass)
         deviceContext->RSSetScissorRects(1, &rect);
     }
 
-    POMDOG_ASSERT(renderTargets.size() == renderPass.RenderTargets.size());
+    POMDOG_ASSERT(renderTargets.size() <= renderPass.RenderTargets.size());
     for (std::size_t i = 0; i < renderTargets.size(); ++i) {
         auto& clearColor = std::get<1>(renderPass.RenderTargets[i]);
         if (clearColor) {
@@ -646,7 +648,7 @@ void GraphicsContextDirect3D11::SetRenderPass(const RenderPass& renderPass)
 
         if (mask != 0) {
             POMDOG_ASSERT(!renderTargets.empty());
-            POMDOG_ASSERT(renderTargets.size() == renderPass.RenderTargets.size());
+            POMDOG_ASSERT(renderTargets.size() <= renderPass.RenderTargets.size());
             POMDOG_ASSERT(renderTargets.front());
 
             auto depthStencilView = renderTargets.front()->GetDepthStencilView();

@@ -111,7 +111,7 @@ private:
     std::weak_ptr<GameWindow> gameWindow;
     std::vector<std::optional<GLenum>> textures;
     std::optional<FrameBufferGL4> frameBuffer;
-    std::vector<std::shared_ptr<RenderTarget2DGL4>> renderTargets;
+    std::array<std::shared_ptr<RenderTarget2DGL4>, 8> renderTargets;
     PrimitiveTopologyGL4 primitiveTopology;
     bool needToApplyInputLayout;
     bool needToApplyPipelineState;
