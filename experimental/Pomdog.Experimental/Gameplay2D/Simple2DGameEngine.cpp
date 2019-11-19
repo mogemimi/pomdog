@@ -159,10 +159,10 @@ void Simple2DGameEngine::Draw()
         // Set the render pass
         RenderPass renderPass;
         if (canSkipPostProcess) {
-            renderPass.RenderTargets.emplace_back(nullptr, backgroundColor.ToVector4());
+            renderPass.RenderTargets[0] = {nullptr, backgroundColor.ToVector4()};
         }
         else {
-            renderPass.RenderTargets.emplace_back(renderTarget, backgroundColor.ToVector4());
+            renderPass.RenderTargets[0] = {renderTarget, backgroundColor.ToVector4()};
         }
         renderPass.Viewport = viewport;
         renderPass.ScissorRect = viewport.GetBounds();

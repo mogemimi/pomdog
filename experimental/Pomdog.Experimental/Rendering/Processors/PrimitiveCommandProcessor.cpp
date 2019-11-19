@@ -79,7 +79,7 @@ void PrimitiveCommandProcessor::Draw(
 
     commandList->SetPipelineState(pipelineState);
     commandList->SetPrimitiveTopology(PrimitiveTopology::TriangleList);
-    commandList->SetVertexBuffer(primitiveCommand.vertexBuffer);
+    commandList->SetVertexBuffer(0, primitiveCommand.vertexBuffer);
     commandList->SetConstantBuffer(0, primitiveCommand.constantBuffer);
     commandList->Draw(primitiveCommand.vertexCount, 0);
 
