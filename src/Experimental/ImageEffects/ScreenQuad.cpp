@@ -47,7 +47,7 @@ ScreenQuad::ScreenQuad(const std::shared_ptr<GraphicsDevice>& graphicsDevice)
 
 void ScreenQuad::DrawQuad(GraphicsCommandList& commandList)
 {
-    commandList.SetVertexBuffer(vertexBuffer);
+    commandList.SetVertexBuffer(0, vertexBuffer);
     commandList.SetPrimitiveTopology(PrimitiveTopology::TriangleList);
     commandList.Draw(vertexBuffer->GetVertexCount(), 0);
 }

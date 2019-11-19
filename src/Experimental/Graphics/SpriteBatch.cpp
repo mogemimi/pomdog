@@ -396,11 +396,8 @@ void SpriteBatch::Impl::RenderBatch(
     commandList->SetPipelineState(pipelineState);
     commandList->SetConstantBuffer(0, constantBuffer);
     commandList->SetPrimitiveTopology(PrimitiveTopology::TriangleList);
-
-    commandList->SetVertexBuffers({
-        VertexBufferBinding{planeVertices},
-        VertexBufferBinding{instanceVertices}
-    });
+    commandList->SetVertexBuffer(0, planeVertices);
+    commandList->SetVertexBuffer(1, instanceVertices);
 
     commandList->DrawIndexedInstanced(
         planeIndices,

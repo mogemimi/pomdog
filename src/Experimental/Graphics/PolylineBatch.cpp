@@ -233,7 +233,7 @@ void PolylineBatch::Impl::Flush()
     debugVertexBuffer->SetData(vert.data(), vert.size());
 #endif
 
-    commandList->SetVertexBuffer(vertexBuffer);
+    commandList->SetVertexBuffer(0, vertexBuffer);
     commandList->SetPipelineState(pipelineState);
     commandList->SetConstantBuffer(0, constantBuffer);
     commandList->SetPrimitiveTopology(PrimitiveTopology::TriangleList);

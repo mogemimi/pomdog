@@ -159,7 +159,7 @@ void LineBatch::Impl::Flush()
     POMDOG_ASSERT(vertices.size() <= MaxVertexCount);
     vertexBuffer->SetData(vertices.data(), vertices.size());
 
-    commandList->SetVertexBuffer(vertexBuffer);
+    commandList->SetVertexBuffer(0, vertexBuffer);
     commandList->SetPipelineState(pipelineState);
     commandList->SetConstantBuffer(0, constantBuffer);
     commandList->SetPrimitiveTopology(PrimitiveTopology::LineList);

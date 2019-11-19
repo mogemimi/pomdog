@@ -173,7 +173,7 @@ void PrimitiveBatch::Impl::Flush()
         polygonShapes.GetVertexCount(),
         sizeof(Vertex));
 
-    commandList->SetVertexBuffer(vertexBuffer);
+    commandList->SetVertexBuffer(0, vertexBuffer);
     commandList->SetPipelineState(pipelineState);
     commandList->SetConstantBuffer(0, constantBuffer);
     commandList->SetPrimitiveTopology(PrimitiveTopology::TriangleList);

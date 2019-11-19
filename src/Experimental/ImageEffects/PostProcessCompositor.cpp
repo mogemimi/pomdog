@@ -185,7 +185,7 @@ void PostProcessCompositor::Draw(
         bool isLast = (index + 1) >= imageEffects.size();
         if (isLast) {
             RenderPass renderPass;
-            renderPass.RenderTargets.emplace_back(nullptr, std::nullopt);
+            renderPass.RenderTargets[0] = {nullptr, std::nullopt};
             renderPass.Viewport = Viewport{viewport};
             renderPass.ScissorRect = viewport;
             commandList.SetRenderPass(std::move(renderPass));
@@ -193,7 +193,7 @@ void PostProcessCompositor::Draw(
         else {
             POMDOG_ASSERT(currentSource != writeTarget);
             RenderPass renderPass;
-            renderPass.RenderTargets.emplace_back(writeTarget, std::nullopt);
+            renderPass.RenderTargets[0] = {writeTarget, std::nullopt};
             renderPass.Viewport = Viewport{viewport};
             renderPass.ScissorRect = viewport;
             commandList.SetRenderPass(std::move(renderPass));
