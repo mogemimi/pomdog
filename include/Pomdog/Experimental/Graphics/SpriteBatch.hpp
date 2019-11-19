@@ -3,8 +3,6 @@
 #pragma once
 
 #include "Pomdog/Basic/Export.hpp"
-#include "Pomdog/Graphics/BlendDescription.hpp"
-#include "Pomdog/Graphics/SamplerDescription.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Math/detail/ForwardDeclarations.hpp"
 #include <memory>
@@ -63,6 +61,7 @@ public:
     SpriteBatch(
         const std::shared_ptr<GraphicsDevice>& graphicsDevice,
         std::optional<BlendDescription>&& blendDesc,
+        std::optional<RasterizerDescription>&& rasterizerDesc,
         std::optional<SamplerDescription>&& samplerDesc,
         std::optional<SurfaceFormat>&& renderTargetViewFormat,
         std::optional<DepthFormat>&& depthStencilViewFormat,

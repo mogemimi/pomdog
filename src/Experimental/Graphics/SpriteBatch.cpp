@@ -8,6 +8,9 @@
 #include "Pomdog/Experimental/Graphics/Texture2DView.hpp"
 #include "Pomdog/Experimental/TexturePacker/TextureRegion.hpp"
 #include "Pomdog/Graphics/BlendDescription.hpp"
+#include "Pomdog/Graphics/RasterizerDescription.hpp"
+#include "Pomdog/Graphics/SamplerDescription.hpp"
+#include "Pomdog/Graphics/BlendDescription.hpp"
 #include "Pomdog/Graphics/BufferUsage.hpp"
 #include "Pomdog/Graphics/ConstantBuffer.hpp"
 #include "Pomdog/Graphics/DepthStencilDescription.hpp"
@@ -27,7 +30,6 @@
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
 #include "Pomdog/Graphics/Texture2D.hpp"
 #include "Pomdog/Graphics/VertexBuffer.hpp"
-#include "Pomdog/Graphics/VertexBufferBinding.hpp"
 #include "Pomdog/Graphics/Viewport.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Matrix4x4.hpp"
@@ -149,6 +151,7 @@ public:
     Impl(
         const std::shared_ptr<GraphicsDevice>& graphicsDevice,
         std::optional<BlendDescription>&& blendState,
+        std::optional<RasterizerDescription>&& rasterizerDesc,
         std::optional<SamplerDescription>&& samplerState,
         std::optional<SurfaceFormat>&& renderTargetViewFormat,
         std::optional<DepthFormat>&& depthStencilViewFormat,
@@ -185,6 +188,7 @@ private:
 SpriteBatch::Impl::Impl(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
     std::optional<BlendDescription>&& blendDesc,
+    std::optional<RasterizerDescription>&& rasterizerDesc,
     std::optional<SamplerDescription>&& samplerDesc,
     std::optional<SurfaceFormat>&& renderTargetViewFormat,
     std::optional<DepthFormat>&& depthStencilViewFormat,
@@ -198,6 +202,9 @@ SpriteBatch::Impl::Impl(
     if (!blendDesc) {
         blendDesc = BlendDescription::CreateNonPremultiplied();
     }
+    if (!rasterizerDesc) {
+        rasterizerDesc = RasterizerDescription::CreateCullNone();
+    }
     if (!samplerDesc) {
         samplerDesc = SamplerDescription::CreateLinearWrap();
     }
@@ -209,6 +216,7 @@ SpriteBatch::Impl::Impl(
     }
 
     POMDOG_ASSERT(blendDesc);
+    POMDOG_ASSERT(rasterizerDesc);
     POMDOG_ASSERT(samplerDesc);
     POMDOG_ASSERT(renderTargetViewFormat);
     POMDOG_ASSERT(depthStencilViewFormat);
@@ -296,7 +304,7 @@ SpriteBatch::Impl::Impl(
             .SetInputLayout(inputLayout.CreateInputLayout())
             .SetBlendState(*blendDesc)
             .SetDepthStencilState(DepthStencilDescription::CreateNone())
-            .SetRasterizerState(RasterizerDescription::CreateCullNone())
+            .SetRasterizerState(*rasterizerDesc)
             .SetConstantBufferBindSlot("SpriteBatchConstants", 0)
             .Build();
     }
@@ -546,6 +554,7 @@ SpriteBatch::SpriteBatch(
         std::nullopt,
         std::nullopt,
         std::nullopt,
+        std::nullopt,
         SpriteBatchPixelShaderMode::Default,
         assets)
 {
@@ -554,6 +563,7 @@ SpriteBatch::SpriteBatch(
 SpriteBatch::SpriteBatch(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
     std::optional<BlendDescription>&& blendDesc,
+    std::optional<RasterizerDescription>&& rasterizerDesc,
     std::optional<SamplerDescription>&& samplerDesc,
     std::optional<SurfaceFormat>&& renderTargetViewFormat,
     std::optional<DepthFormat>&& depthStencilViewFormat,
@@ -562,6 +572,7 @@ SpriteBatch::SpriteBatch(
     : impl(std::make_unique<Impl>(
         graphicsDevice,
         std::move(blendDesc),
+        std::move(rasterizerDesc),
         std::move(samplerDesc),
         std::move(renderTargetViewFormat),
         std::move(depthStencilViewFormat),

@@ -62,7 +62,8 @@ public:
 public:
     Impl(
         const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-        const DepthStencilDescription& depthStencilDesc,
+        std::optional<DepthStencilDescription>&& depthStencilDesc,
+        std::optional<RasterizerDescription>&& rasterizerDesc,
         AssetManager& assets);
 
     void Begin(
@@ -80,11 +81,22 @@ public:
 
 PrimitiveBatch::Impl::Impl(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-    const DepthStencilDescription& depthStencilDesc,
+    std::optional<DepthStencilDescription>&& depthStencilDesc,
+    std::optional<RasterizerDescription>&& rasterizerDesc,
     AssetManager& assets)
     : startVertexLocation(0)
     , drawCallCount(0)
 {
+    if (!depthStencilDesc) {
+        depthStencilDesc = DepthStencilDescription::CreateNone();
+    }
+    if (!rasterizerDesc) {
+        rasterizerDesc = RasterizerDescription::CreateCullCounterClockwise();
+    }
+
+    POMDOG_ASSERT(depthStencilDesc);
+    POMDOG_ASSERT(rasterizerDesc);
+
     {
         auto maxVertexCount = polygonShapes.GetMaxVertexCount();
         vertexBuffer = std::make_shared<VertexBuffer>(graphicsDevice,
@@ -114,8 +126,8 @@ PrimitiveBatch::Impl::Impl(
             .SetPixelShader(pixelShader.Build())
             .SetInputLayout(inputLayout.CreateInputLayout())
             .SetBlendState(BlendDescription::CreateNonPremultiplied())
-            .SetDepthStencilState(depthStencilDesc)
-            .SetRasterizerState(RasterizerDescription::CreateCullCounterClockwise())
+            .SetDepthStencilState(*depthStencilDesc)
+            .SetRasterizerState(*rasterizerDesc)
             .SetConstantBufferBindSlot("TransformMatrix", 0)
             .Build();
     }
@@ -178,15 +190,20 @@ void PrimitiveBatch::Impl::Flush()
 PrimitiveBatch::PrimitiveBatch(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
     AssetManager& assets)
-    : PrimitiveBatch(graphicsDevice, DepthStencilDescription::CreateNone(), assets)
+    : PrimitiveBatch(graphicsDevice, std::nullopt, std::nullopt, assets)
 {
 }
 
 PrimitiveBatch::PrimitiveBatch(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-    const DepthStencilDescription& depthStencilDesc,
+    std::optional<DepthStencilDescription>&& depthStencilDesc,
+    std::optional<RasterizerDescription>&& rasterizerDesc,
     AssetManager& assets)
-    : impl(std::make_unique<Impl>(graphicsDevice, depthStencilDesc, assets))
+    : impl(std::make_unique<Impl>(
+        graphicsDevice,
+        std::move(depthStencilDesc),
+        std::move(rasterizerDesc),
+        assets))
 {
 }
 

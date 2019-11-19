@@ -7,6 +7,7 @@
 #include "Pomdog/Math/detail/ForwardDeclarations.hpp"
 #include <cstdint>
 #include <memory>
+#include <optional>
 #include <vector>
 
 namespace Pomdog {
@@ -21,7 +22,8 @@ public:
 
     PrimitiveBatch(
         const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-        const DepthStencilDescription& depthStencilDesc,
+        std::optional<DepthStencilDescription>&& depthStencilDesc,
+        std::optional<RasterizerDescription>&& rasterizerDesc,
         AssetManager& assets);
 
     ~PrimitiveBatch();
