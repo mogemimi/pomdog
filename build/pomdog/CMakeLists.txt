@@ -500,6 +500,7 @@ set(POMDOG_SOURCES_EXPERIMENTAL
   ${POMDOG_DIR}/include/Pomdog/Experimental/UI/Slider.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/UI/StackPanel.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/UI/TextBlock.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/TextField.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/UI/Thickness.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/UI/ToggleSwitch.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/UI/TreeView.hpp
@@ -573,6 +574,7 @@ set(POMDOG_SOURCES_EXPERIMENTAL
   ${POMDOG_DIR}/src/Experimental/UI/Slider.cpp
   ${POMDOG_DIR}/src/Experimental/UI/StackPanel.cpp
   ${POMDOG_DIR}/src/Experimental/UI/TextBlock.cpp
+  ${POMDOG_DIR}/src/Experimental/UI/TextField.cpp
   ${POMDOG_DIR}/src/Experimental/UI/ToggleSwitch.cpp
   ${POMDOG_DIR}/src/Experimental/UI/TreeView.cpp
   ${POMDOG_DIR}/src/Experimental/UI/UIElement.cpp
