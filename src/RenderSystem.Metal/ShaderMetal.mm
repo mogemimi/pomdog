@@ -22,7 +22,7 @@ ShaderMetal::ShaderMetal(
     NSError* compileError = nil;
 
     id<MTLLibrary> library = nil;
-    
+
     if (compileOptions.Precompiled) {
         dispatch_data_t libraryData = dispatch_data_create(
             shaderBytecode.Code,

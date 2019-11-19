@@ -24,7 +24,7 @@ FileSystem::GetFileSize(const std::string& path)
 {
     struct ::stat st;
     int rc = ::stat(path.data(), &st);
-    
+
     if (rc != 0) {
         auto errorCode = Detail::ToErrc(errno);
         return std::make_tuple(0, Errors::New(errorCode, "::stat() failed"));

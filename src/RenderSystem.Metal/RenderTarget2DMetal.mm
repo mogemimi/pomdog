@@ -86,14 +86,14 @@ void RenderTarget2DMetal::GetData(
 {
     POMDOG_ASSERT(texture != nil);
     POMDOG_ASSERT(result != nullptr);
-    
+
     auto const bytesPerPixel = SurfaceFormatHelper::ToBytesPerBlock(format);
 
     // FIXME: Not implemented yet.
     POMDOG_ASSERT(offsetInBytes == 0);
     POMDOG_ASSERT(sizeInBytes == static_cast<std::size_t>(bytesPerPixel * pixelWidth * pixelHeight));
     MTLRegion region = MTLRegionMake2D(0, 0, pixelWidth, pixelHeight);
-    
+
     // NOTE: Don't use getBytes() for textures with MTLResourceStorageModePrivate.
     [texture getBytes:result bytesPerRow:(bytesPerPixel * pixelWidth) fromRegion:region mipmapLevel:0];
 }
