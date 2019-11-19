@@ -373,7 +373,9 @@ GraphicsContextGL4::GraphicsContextGL4(
 GraphicsContextGL4::~GraphicsContextGL4()
 {
     pipelineState.reset();
-    vertexBuffers.clear();
+    for (auto& v : vertexBuffers) {
+        v.VertexBuffer.reset();
+    }
     indexBuffer.reset();
     textures.clear();
     renderTargets.clear();
@@ -411,8 +413,7 @@ void GraphicsContextGL4::ApplyPipelineState()
         // Bind input-layout to the input-assembler stage:
         auto inputLayout = pipelineState->GetInputLayout();
 
-        POMDOG_ASSERT(inputLayout);
-        POMDOG_ASSERT(!vertexBuffers.empty());
+        POMDOG_ASSERT(inputLayout != nullptr);
         inputLayout->Apply(vertexBuffers);
 
         needToApplyInputLayout = false;
@@ -435,16 +436,19 @@ void GraphicsContextGL4::EmulateStartInstanceLocation(std::size_t startInstanceL
     }
 
     auto newVertexBuffers = vertexBuffers;
-    for (size_t i = 1; i < newVertexBuffers.size(); i++) {
+    for (std::size_t i = 1; i < newVertexBuffers.size(); i++) {
         // NOTE: `i >= 1` is equality to instanced vertex buffer.
         auto& binding = newVertexBuffers[i];
+        if (binding.VertexBuffer == nullptr) {
+            continue;
+        }
         const auto strideBytes = binding.VertexBuffer->GetStrideBytes();
         POMDOG_ASSERT(strideBytes > 0);
         binding.VertexOffset += (strideBytes * startInstanceLocation);
     }
 
     auto inputLayout = pipelineState->GetInputLayout();
-    POMDOG_ASSERT(inputLayout);
+    POMDOG_ASSERT(inputLayout != nullptr);
     POMDOG_ASSERT(!newVertexBuffers.empty());
 
     // NOTE: The following code is a hack.
@@ -636,10 +640,16 @@ void GraphicsContextGL4::SetBlendFactor(const Vector4& blendFactor)
     POMDOG_CHECK_ERROR_GL4("glBlendColor");
 }
 
-void GraphicsContextGL4::SetVertexBuffers(const std::vector<VertexBufferBinding>& vertexBuffersIn)
+void GraphicsContextGL4::SetVertexBuffer(
+    int index,
+    const std::shared_ptr<VertexBuffer>& vertexBuffer,
+    std::size_t offset)
 {
-    POMDOG_ASSERT(!vertexBuffersIn.empty());
-    this->vertexBuffers = vertexBuffersIn;
+    POMDOG_ASSERT(index >= 0);
+    POMDOG_ASSERT(index < static_cast<int>(vertexBuffers.size()));
+    POMDOG_ASSERT(vertexBuffer != nullptr);
+    vertexBuffers[index].VertexBuffer = vertexBuffer;
+    vertexBuffers[index].VertexOffset = offset;
     needToApplyInputLayout = true;
 }
 

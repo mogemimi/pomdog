@@ -8,7 +8,6 @@
 #include "Pomdog/Graphics/PipelineState.hpp"
 #include "Pomdog/Graphics/RenderPass.hpp"
 #include "Pomdog/Graphics/SamplerState.hpp"
-#include "Pomdog/Graphics/VertexBufferBinding.hpp"
 #include "Pomdog/Graphics/Viewport.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
@@ -146,35 +145,23 @@ void GraphicsCommandList::SetBlendFactor(const Vector4& blendFactor)
     nativeCommandList->SetBlendFactor(blendFactor);
 }
 
-void GraphicsCommandList::SetVertexBuffer(const std::shared_ptr<VertexBuffer>& vertexBuffer)
+void GraphicsCommandList::SetVertexBuffer(int index, const std::shared_ptr<VertexBuffer>& vertexBuffer)
 {
     POMDOG_ASSERT(vertexBuffer);
     POMDOG_ASSERT(nativeCommandList);
-
-    nativeCommandList->SetVertexBuffers({
-        VertexBufferBinding{vertexBuffer, 0}});
+    nativeCommandList->SetVertexBuffer(index, vertexBuffer, 0);
 }
 
-void GraphicsCommandList::SetVertexBuffer(const std::shared_ptr<VertexBuffer>& vertexBuffer, std::size_t offset)
+void GraphicsCommandList::SetVertexBuffer(
+    int index,
+    const std::shared_ptr<VertexBuffer>& vertexBuffer,
+    std::size_t offset)
 {
-    POMDOG_ASSERT(vertexBuffer);
+    POMDOG_ASSERT(index >= 0);
+    POMDOG_ASSERT(vertexBuffer != nullptr);
+    POMDOG_ASSERT(offset >= 0);
     POMDOG_ASSERT(nativeCommandList);
-    nativeCommandList->SetVertexBuffers({
-        VertexBufferBinding{vertexBuffer, offset}});
-}
-
-void GraphicsCommandList::SetVertexBuffers(const std::vector<VertexBufferBinding>& vertexBuffers)
-{
-    POMDOG_ASSERT(!vertexBuffers.empty());
-    POMDOG_ASSERT(nativeCommandList);
-    nativeCommandList->SetVertexBuffers(vertexBuffers);
-}
-
-void GraphicsCommandList::SetVertexBuffers(std::vector<VertexBufferBinding>&& vertexBuffers)
-{
-    POMDOG_ASSERT(!vertexBuffers.empty());
-    POMDOG_ASSERT(nativeCommandList);
-    nativeCommandList->SetVertexBuffers(std::move(vertexBuffers));
+    nativeCommandList->SetVertexBuffer(index, vertexBuffer, offset);
 }
 
 void GraphicsCommandList::SetPipelineState(const std::shared_ptr<PipelineState>& pipelineState)

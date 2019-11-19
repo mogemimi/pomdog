@@ -50,7 +50,6 @@ struct RasterizerDescription;
 struct RenderPass;
 struct RenderTargetBlendDescription;
 struct SamplerDescription;
-struct VertexBufferBinding;
 
 // Enumerations
 enum class Blend : std::uint8_t;

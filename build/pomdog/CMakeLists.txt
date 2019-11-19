@@ -149,7 +149,6 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/include/Pomdog/Graphics/TextureAddressMode.hpp
   ${POMDOG_DIR}/include/Pomdog/Graphics/TextureFilter.hpp
   ${POMDOG_DIR}/include/Pomdog/Graphics/VertexBuffer.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/VertexBufferBinding.hpp
   ${POMDOG_DIR}/include/Pomdog/Graphics/Viewport.hpp
   ${POMDOG_DIR}/include/Pomdog/Graphics/detail/ForwardDeclarations.hpp
   ${POMDOG_DIR}/include/Pomdog/Graphics/detail/EffectBinaryParameter.hpp
@@ -574,6 +573,7 @@ set(POMDOG_SOURCES_GL4
   ${POMDOG_DIR}/src/RenderSystem.GL4/Texture2DGL4.hpp
   ${POMDOG_DIR}/src/RenderSystem.GL4/TypesafeGL4.hpp
   ${POMDOG_DIR}/src/RenderSystem.GL4/TypesafeHelperGL4.hpp
+  ${POMDOG_DIR}/src/RenderSystem.GL4/VertexBufferBindingGL4.hpp
 )
 
 set(POMDOG_SOURCES_OPENAL

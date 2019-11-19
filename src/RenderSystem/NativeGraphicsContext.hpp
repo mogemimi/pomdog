@@ -57,7 +57,10 @@ public:
 
     virtual void SetBlendFactor(const Vector4& blendFactor) = 0;
 
-    virtual void SetVertexBuffers(const std::vector<VertexBufferBinding>& vertexBuffers) = 0;
+    virtual void SetVertexBuffer(
+        int index,
+        const std::shared_ptr<VertexBuffer>& vertexBuffer,
+        std::size_t offset) = 0;
 
     virtual void SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer) = 0;
 

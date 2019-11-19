@@ -17,7 +17,6 @@
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
 #include "Pomdog/Graphics/Texture2D.hpp"
 #include "Pomdog/Graphics/VertexBuffer.hpp"
-#include "Pomdog/Graphics/VertexBufferBinding.hpp"
 #include "Pomdog/Graphics/Viewport.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Math/Vector4.hpp"
@@ -322,33 +321,29 @@ void GraphicsContextMetal::SetBlendFactor(const Vector4& blendFactor)
     [commandEncoder setBlendColorRed:blendFactor.X green:blendFactor.Y blue:blendFactor.Z alpha:blendFactor.W];
 }
 
-void GraphicsContextMetal::SetVertexBuffers(const std::vector<VertexBufferBinding>& vertexBuffers)
+void GraphicsContextMetal::SetVertexBuffer(
+    int index,
+    const std::shared_ptr<VertexBuffer>& vertexBuffer,
+    std::size_t offset)
 {
-    POMDOG_ASSERT(!vertexBuffers.empty());
+    POMDOG_ASSERT(index >= 0);
+    POMDOG_ASSERT(vertexBuffer != nullptr);
+    POMDOG_ASSERT(vertexBuffer->GetNativeVertexBuffer() != nullptr);
+    POMDOG_ASSERT((offset % 256) == 0);
 
-    NSUInteger atIndex = 0;
-    for (auto& binding : vertexBuffers) {
-        auto& vertexBuffer = binding.VertexBuffer;
+    auto nativeVertexBuffer = static_cast<BufferMetal*>(
+        vertexBuffer->GetNativeVertexBuffer());
 
-        POMDOG_ASSERT(vertexBuffer);
-        POMDOG_ASSERT(vertexBuffer->GetNativeVertexBuffer());
+    POMDOG_ASSERT(nativeVertexBuffer != nullptr);
+    POMDOG_ASSERT(nativeVertexBuffer == dynamic_cast<BufferMetal*>(vertexBuffer->GetNativeVertexBuffer()));
+    POMDOG_ASSERT(nativeVertexBuffer->GetBuffer() != nil);
 
-        auto nativeVertexBuffer = static_cast<BufferMetal*>(
-            vertexBuffer->GetNativeVertexBuffer());
+    const auto slotIndex = index + VertexBufferSlotOffset;
+    POMDOG_ASSERT(slotIndex < MaxVertexBufferSlotCount);
 
-        POMDOG_ASSERT(nativeVertexBuffer != nullptr);
-        POMDOG_ASSERT(nativeVertexBuffer == dynamic_cast<BufferMetal*>(
-            vertexBuffer->GetNativeVertexBuffer()));
-
-        POMDOG_ASSERT(atIndex + VertexBufferSlotOffset < MaxVertexBufferSlotCount);
-        POMDOG_ASSERT(nativeVertexBuffer->GetBuffer() != nil);
-        POMDOG_ASSERT((binding.VertexOffset % 256) == 0);
-        [commandEncoder setVertexBuffer:nativeVertexBuffer->GetBuffer()
-            offset:binding.VertexOffset
-            atIndex:atIndex + VertexBufferSlotOffset];
-
-        ++atIndex;
-    }
+    [commandEncoder setVertexBuffer:nativeVertexBuffer->GetBuffer()
+        offset:offset
+        atIndex:slotIndex];
 }
 
 void GraphicsContextMetal::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBufferIn)

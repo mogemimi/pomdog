@@ -4,7 +4,6 @@
 #include "NativeGraphicsContext.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/RenderPass.hpp"
-#include "Pomdog/Graphics/VertexBufferBinding.hpp"
 #include "Pomdog/Graphics/Viewport.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -94,12 +93,14 @@ struct SetBlendFactorCommand final : public GraphicsCommand {
     }
 };
 
-struct SetVertexBuffersCommand final : public GraphicsCommand {
-    std::vector<VertexBufferBinding> vertexBuffers;
+struct SetVertexBufferCommand final : public GraphicsCommand {
+    std::shared_ptr<VertexBuffer> vertexBuffer;
+    int slotIndex;
+    std::size_t offset;
 
     void Execute(NativeGraphicsContext& graphicsContext) override
     {
-        graphicsContext.SetVertexBuffers(vertexBuffers);
+        graphicsContext.SetVertexBuffer(slotIndex, vertexBuffer, offset);
     }
 };
 
@@ -307,21 +308,19 @@ void GraphicsCommandListImmediate::SetBlendFactor(const Vector4& blendFactor)
     commands.push_back(std::move(command));
 }
 
-void GraphicsCommandListImmediate::SetVertexBuffers(const std::vector<VertexBufferBinding>& vertexBuffers)
+void GraphicsCommandListImmediate::SetVertexBuffer(
+    int index,
+    const std::shared_ptr<VertexBuffer>& vertexBuffer,
+    std::size_t offset)
 {
-    POMDOG_ASSERT(!vertexBuffers.empty());
-    auto command = std::make_unique<SetVertexBuffersCommand>();
-    command->commandType = GraphicsCommandType::SetVertexBuffersCommand;
-    command->vertexBuffers = vertexBuffers;
-    commands.push_back(std::move(command));
-}
-
-void GraphicsCommandListImmediate::SetVertexBuffers(std::vector<VertexBufferBinding>&& vertexBuffers)
-{
-    POMDOG_ASSERT(!vertexBuffers.empty());
-    auto command = std::make_unique<SetVertexBuffersCommand>();
-    command->commandType = GraphicsCommandType::SetVertexBuffersCommand;
-    command->vertexBuffers = std::move(vertexBuffers);
+    POMDOG_ASSERT(index >= 0);
+    POMDOG_ASSERT(vertexBuffer != nullptr);
+    POMDOG_ASSERT(offset >= 0);
+    auto command = std::make_unique<SetVertexBufferCommand>();
+    command->commandType = GraphicsCommandType::SetVertexBufferCommand;
+    command->slotIndex = index;
+    command->vertexBuffer = vertexBuffer;
+    command->offset = offset;
     commands.push_back(std::move(command));
 }
 
@@ -414,7 +413,7 @@ void GraphicsCommandListImmediate::SortCommandsForMetal()
     static_assert(static_cast<int>(GraphicsCommandType::SetPrimitiveTopologyCommand) == 4);
     static_assert(static_cast<int>(GraphicsCommandType::SetScissorRectCommand) == 5);
     static_assert(static_cast<int>(GraphicsCommandType::SetBlendFactorCommand) == 6);
-    static_assert(static_cast<int>(GraphicsCommandType::SetVertexBuffersCommand) == 7);
+    static_assert(static_cast<int>(GraphicsCommandType::SetVertexBufferCommand) == 7);
     static_assert(static_cast<int>(GraphicsCommandType::SetIndexBufferCommand) == 8);
     static_assert(static_cast<int>(GraphicsCommandType::SetPipelineStateCommand) == 9);
     static_assert(static_cast<int>(GraphicsCommandType::SetConstantBufferCommand) == 10);
@@ -489,15 +488,11 @@ void GraphicsCommandListImmediate::SortCommandsForMetal()
     std::optional<std::size_t> setPrimitiveTopologyCommand;
     std::optional<std::size_t> setScissorRectCommand;
     std::optional<std::size_t> setBlendFactorCommand;
-    std::optional<std::size_t> setVertexBuffersCommand;
     std::optional<std::size_t> setIndexBufferCommand;
-    std::vector<std::optional<std::size_t>> setConstantBufferCommands;
-    std::vector<std::optional<std::size_t>> setSamplerCommands;
-    std::vector<std::optional<std::size_t>> setTextureCommands;
-
-    setConstantBufferCommands.resize(8, std::nullopt);
-    setSamplerCommands.resize(8, std::nullopt);
-    setTextureCommands.resize(8, std::nullopt);
+    std::array<std::optional<std::size_t>, 8> setVertexBufferCommands;
+    std::array<std::optional<std::size_t>, 8> setConstantBufferCommands;
+    std::array<std::optional<std::size_t>, 8> setSamplerCommands;
+    std::array<std::optional<std::size_t>, 8> setTextureCommands;
 
     std::vector<std::shared_ptr<GraphicsCommand>> oldCommands;
     bool needToFlushCommands = true;
@@ -526,12 +521,15 @@ void GraphicsCommandListImmediate::SortCommandsForMetal()
         case GraphicsCommandType::SetBlendFactorCommand:
             setBlendFactorCommand = commands.size();
             break;
-        case GraphicsCommandType::SetVertexBuffersCommand:
-            setVertexBuffersCommand = commands.size();
-            break;
         case GraphicsCommandType::SetIndexBufferCommand:
             setIndexBufferCommand = commands.size();
             break;
+        case GraphicsCommandType::SetVertexBufferCommand: {
+            auto c = std::static_pointer_cast<SetVertexBufferCommand>(command);
+            POMDOG_ASSERT(c->slotIndex < static_cast<int>(setVertexBufferCommands.size()));
+            setVertexBufferCommands[c->slotIndex] = commands.size();
+            break;
+        }
         case GraphicsCommandType::SetConstantBufferCommand: {
             auto c = std::static_pointer_cast<SetConstantBufferCommand>(command);
             POMDOG_ASSERT(c->slotIndex < static_cast<int>(setConstantBufferCommands.size()));
@@ -578,11 +576,13 @@ void GraphicsCommandListImmediate::SortCommandsForMetal()
             if (setBlendFactorCommand && (*setBlendFactorCommand < renderPassCommandIndex)) {
                 commands.push_back(commands[*setBlendFactorCommand]);
             }
-            if (setVertexBuffersCommand && (*setVertexBuffersCommand < renderPassCommandIndex)) {
-                commands.push_back(commands[*setVertexBuffersCommand]);
-            }
             if (setIndexBufferCommand && (*setIndexBufferCommand < renderPassCommandIndex)) {
                 commands.push_back(commands[*setIndexBufferCommand]);
+            }
+            for (auto& commandIndex : setVertexBufferCommands) {
+                if (commandIndex && (*commandIndex < renderPassCommandIndex)) {
+                    commands.push_back(commands[*commandIndex]);
+                }
             }
             for (auto& commandIndex : setConstantBufferCommands) {
                 if (commandIndex && (*commandIndex < renderPassCommandIndex)) {

@@ -3,9 +3,10 @@
 #pragma once
 
 #include "OpenGLPrerequisites.hpp"
+#include "VertexBufferBindingGL4.hpp"
 #include "../RenderSystem/NativeGraphicsContext.hpp"
 #include "../Utility/Tagged.hpp"
-#include "Pomdog/Graphics/VertexBufferBinding.hpp"
+#include <array>
 #include <memory>
 #include <optional>
 #include <vector>
@@ -74,7 +75,10 @@ public:
 
     void SetBlendFactor(const Vector4& blendFactor) override;
 
-    void SetVertexBuffers(const std::vector<VertexBufferBinding>& vertexBuffers) override;
+    void SetVertexBuffer(
+        int index,
+        const std::shared_ptr<VertexBuffer>& vertexBuffer,
+        std::size_t offset) override;
 
     void SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer) override;
 
@@ -96,7 +100,7 @@ private:
     void EmulateStartInstanceLocation(std::size_t startInstanceLocation);
 
 private:
-    std::vector<VertexBufferBinding> vertexBuffers;
+    std::array<VertexBufferBindingGL4, 8> vertexBuffers;
 #if defined(DEBUG) && !defined(NDEBUG)
     std::vector<std::weak_ptr<Texture>> weakTextures;
     std::vector<std::weak_ptr<RenderTarget2D>> weakRenderTargets;

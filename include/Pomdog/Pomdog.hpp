@@ -119,7 +119,6 @@ namespace Pomdog {
 #include "Graphics/TextureAddressMode.hpp"
 #include "Graphics/TextureFilter.hpp"
 #include "Graphics/VertexBuffer.hpp"
-#include "Graphics/VertexBufferBinding.hpp"
 #include "Graphics/Viewport.hpp"
 
 #include "Input/ButtonState.hpp"

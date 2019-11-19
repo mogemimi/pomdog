@@ -673,7 +673,6 @@
 		88814AFAF19BC361229938AB /* DepthStencilDescription.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = DepthStencilDescription.hpp; sourceTree = "<group>"; };
 		8A8619258242CAE058476558 /* PipelineStateBuilder.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = PipelineStateBuilder.cpp; sourceTree = "<group>"; };
 		8C4D55AF0FA9C943AFEB7E91 /* Color.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Color.cpp; sourceTree = "<group>"; };
-		8C5F4E800752B4F9ABFAF3DA /* VertexBufferBinding.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = VertexBufferBinding.hpp; sourceTree = "<group>"; };
 		8DAFC75DE55FD2BB8F10DEFC /* Blend.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = Blend.hpp; sourceTree = "<group>"; };
 		8E53A6628F00F2AA00C3BE67 /* NativeGraphicsCommandList.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = NativeGraphicsCommandList.hpp; sourceTree = "<group>"; };
 		8E64B8426534A3361C6E3CAE /* BoundingCircle.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = BoundingCircle.hpp; sourceTree = "<group>"; };
@@ -1041,6 +1040,7 @@
 		D7703DFA22FCB1E800442403 /* Delegate.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Delegate.hpp; sourceTree = "<group>"; };
 		D7703E0C22FCB26800442403 /* Errors.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Errors.cpp; sourceTree = "<group>"; };
 		D7703E0F22FCB28800442403 /* Errors.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Errors.hpp; sourceTree = "<group>"; };
+		D79110B22382E1AA00C268C3 /* VertexBufferBindingGL4.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = VertexBufferBindingGL4.hpp; sourceTree = "<group>"; };
 		D7D5A98E477FB0CDE2089FBD /* KeyboardState.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KeyboardState.cpp; sourceTree = "<group>"; };
 		D9C3D114115E6C3A619E8CF9 /* GameHostCocoa.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = GameHostCocoa.mm; sourceTree = "<group>"; };
 		DA8DDAEB3A97076C2FCB19F3 /* IndexElementSize.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = IndexElementSize.hpp; sourceTree = "<group>"; };
@@ -2331,7 +2331,6 @@
 				3FC378D5176FB6E9A8D19927 /* TextureAddressMode.hpp */,
 				825E8378D539D54970B546B8 /* TextureFilter.hpp */,
 				402A421FDDA31B246E6A1892 /* VertexBuffer.hpp */,
-				8C5F4E800752B4F9ABFAF3DA /* VertexBufferBinding.hpp */,
 				1F6DF3E41718D2DFE5ED03C2 /* Viewport.hpp */,
 			);
 			path = Graphics;
@@ -2381,6 +2380,7 @@
 				58C01CA2BC12335C6CC85121 /* Texture2DGL4.hpp */,
 				2B7FC36B7F41B9D961BE4A39 /* TypesafeGL4.hpp */,
 				75C24C7B061BE820623F0633 /* TypesafeHelperGL4.hpp */,
+				D79110B22382E1AA00C268C3 /* VertexBufferBindingGL4.hpp */,
 			);
 			path = RenderSystem.GL4;
 			sourceTree = "<group>";

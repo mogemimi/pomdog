@@ -5,8 +5,8 @@
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Math/detail/ForwardDeclarations.hpp"
+#include <cstdlib>
 #include <memory>
-#include <vector>
 
 namespace Pomdog {
 
@@ -73,18 +73,13 @@ public:
     void SetBlendFactor(const Vector4& blendFactor);
 
     /// Sets a vertex buffer.
-    void SetVertexBuffer(const std::shared_ptr<VertexBuffer>& vertexBuffer);
+    void SetVertexBuffer(int index, const std::shared_ptr<VertexBuffer>& vertexBuffer);
 
     /// Sets a vertex buffer.
     void SetVertexBuffer(
+        int index,
         const std::shared_ptr<VertexBuffer>& vertexBuffer,
         std::size_t offset);
-
-    /// Sets vertex buffers.
-    void SetVertexBuffers(const std::vector<VertexBufferBinding>& vertexBuffers);
-
-    /// Sets vertex buffers.
-    void SetVertexBuffers(std::vector<VertexBufferBinding>&& vertexBuffers);
 
     /// Sets a pipeline state.
     void SetPipelineState(const std::shared_ptr<PipelineState>& pipelineState);

@@ -8,7 +8,6 @@
 #include "../Utility/ScopeGuard.hpp"
 #include "Pomdog/Graphics/InputLayoutDescription.hpp"
 #include "Pomdog/Graphics/VertexBuffer.hpp"
-#include "Pomdog/Graphics/VertexBufferBinding.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Logging/LogLevel.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -511,12 +510,12 @@ const GLvoid* ComputeBufferOffset(T const offsetBytes)
 void ApplyInputElements(
     const std::vector<InputElementGL4>& inputElements,
     const std::vector<VertexDeclarationGL4>& vertexDeclarations,
-    const std::vector<VertexBufferBinding>& vertexBuffers)
+    const std::array<VertexBufferBindingGL4, 8>& vertexBuffers)
 {
     POMDOG_ASSERT(!inputElements.empty());
     POMDOG_ASSERT(!vertexDeclarations.empty());
     POMDOG_ASSERT(!vertexBuffers.empty());
-    POMDOG_ASSERT(vertexDeclarations.size() == vertexBuffers.size());
+    POMDOG_ASSERT(vertexDeclarations.size() <= vertexBuffers.size());
 
     auto vertexBufferIter = std::begin(vertexBuffers);
     auto inputElement = std::begin(inputElements);
@@ -577,7 +576,6 @@ void ApplyInputElements(
     }
 
     POMDOG_ASSERT(inputElement == std::end(inputElements));
-    POMDOG_ASSERT(vertexBufferIter == std::end(vertexBuffers));
 }
 
 } // unnamed namespace
@@ -633,7 +631,7 @@ InputLayoutGL4::~InputLayoutGL4()
     }
 }
 
-void InputLayoutGL4::Apply(const std::vector<VertexBufferBinding>& vertexBuffers)
+void InputLayoutGL4::Apply(const std::array<VertexBufferBindingGL4, 8>& vertexBuffers)
 {
     POMDOG_ASSERT(inputLayout);
     glBindVertexArray(inputLayout->value);

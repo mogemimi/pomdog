@@ -16,7 +16,6 @@
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
 #include "Pomdog/Graphics/Texture2D.hpp"
 #include "Pomdog/Graphics/VertexBuffer.hpp"
-#include "Pomdog/Graphics/VertexBufferBinding.hpp"
 #include "Pomdog/Graphics/Viewport.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
@@ -368,45 +367,32 @@ void GraphicsContextDirect3D11::SetBlendFactor(const Vector4& blendFactorIn)
     needToApplyPipelineState = true;
 }
 
-void GraphicsContextDirect3D11::SetVertexBuffers(
-    const std::vector<VertexBufferBinding>& vertexBuffersIn)
+void GraphicsContextDirect3D11::SetVertexBuffer(
+    int index,
+    const std::shared_ptr<VertexBuffer>& vertexBuffer,
+    std::size_t offset)
 {
-    POMDOG_ASSERT(!vertexBuffersIn.empty());
+    POMDOG_ASSERT(vertexBuffer != nullptr);
+    POMDOG_ASSERT(vertexBuffer->GetNativeVertexBuffer() != nullptr);
 
-    std::vector<UINT> strides;
-    strides.reserve(vertexBuffersIn.size());
+    auto nativeVertexBuffer = static_cast<BufferDirect3D11*>(
+        vertexBuffer->GetNativeVertexBuffer());
 
-    std::vector<UINT> offsets;
-    offsets.reserve(vertexBuffersIn.size());
+    POMDOG_ASSERT(nativeVertexBuffer != nullptr);
+    POMDOG_ASSERT(nativeVertexBuffer == dynamic_cast<BufferDirect3D11*>(
+        vertexBuffer->GetNativeVertexBuffer()));
 
-    std::vector<ID3D11Buffer*> vertexBuffers;
-    vertexBuffers.reserve(vertexBuffersIn.size());
+    const auto buffer = nativeVertexBuffer->GetBuffer();
+    const auto stride = static_cast<UINT>(vertexBuffer->GetStrideBytes());
+    const auto vertexOffset = static_cast<UINT>(offset);
 
-    for (auto& binding : vertexBuffersIn) {
-        auto& vertexBuffer = binding.VertexBuffer;
-
-        POMDOG_ASSERT(vertexBuffer);
-        POMDOG_ASSERT(vertexBuffer->GetNativeVertexBuffer());
-
-        auto nativeVertexBuffer = static_cast<BufferDirect3D11*>(
-            vertexBuffer->GetNativeVertexBuffer());
-
-        POMDOG_ASSERT(nativeVertexBuffer != nullptr);
-        POMDOG_ASSERT(nativeVertexBuffer == dynamic_cast<BufferDirect3D11*>(
-            vertexBuffer->GetNativeVertexBuffer()));
-
-        vertexBuffers.push_back(nativeVertexBuffer->GetBuffer());
-        strides.push_back(static_cast<UINT>(vertexBuffer->GetStrideBytes()));
-        offsets.push_back(static_cast<UINT>(binding.VertexOffset));
-    }
-
-    POMDOG_ASSERT(deviceContext);
+    POMDOG_ASSERT(deviceContext != nullptr);
     deviceContext->IASetVertexBuffers(
-        0,
-        static_cast<UINT>(vertexBuffers.size()),
-        vertexBuffers.data(),
-        strides.data(),
-        offsets.data());
+        static_cast<UINT>(index),
+        1,
+        &buffer,
+        &stride,
+        &vertexOffset);
 }
 
 void GraphicsContextDirect3D11::SetPipelineState(const std::shared_ptr<NativePipelineState>& pipelineStateIn)

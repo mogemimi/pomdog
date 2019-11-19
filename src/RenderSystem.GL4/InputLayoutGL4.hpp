@@ -4,8 +4,10 @@
 
 #include "OpenGLPrerequisites.hpp"
 #include "TypesafeGL4.hpp"
+#include "VertexBufferBindingGL4.hpp"
 #include "../Utility/Tagged.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include <array>
 #include <memory>
 #include <optional>
 #include <vector>
@@ -55,7 +57,7 @@ public:
 
     ~InputLayoutGL4();
 
-    void Apply(const std::vector<VertexBufferBinding>& vertexBuffers);
+    void Apply(const std::array<VertexBufferBindingGL4, 8>& vertexBuffers);
 
 private:
     std::vector<InputElementGL4> inputElements;

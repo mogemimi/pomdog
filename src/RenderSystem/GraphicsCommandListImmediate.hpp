@@ -5,6 +5,7 @@
 #include "NativeGraphicsCommandList.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Math/detail/ForwardDeclarations.hpp"
+#include <cstdlib>
 #include <memory>
 #include <vector>
 
@@ -20,7 +21,7 @@ enum class GraphicsCommandType : std::int8_t {
     SetPrimitiveTopologyCommand,
     SetScissorRectCommand,
     SetBlendFactorCommand,
-    SetVertexBuffersCommand,
+    SetVertexBufferCommand,
     SetIndexBufferCommand,
     SetPipelineStateCommand,
     SetConstantBufferCommand,
@@ -81,11 +82,10 @@ public:
 
     void SetBlendFactor(const Vector4& blendFactor) override;
 
-    void SetVertexBuffers(
-        const std::vector<VertexBufferBinding>& vertexBuffers) override;
-
-    void SetVertexBuffers(
-        std::vector<VertexBufferBinding>&& vertexBuffers) override;
+    void SetVertexBuffer(
+        int index,
+        const std::shared_ptr<VertexBuffer>& vertexBuffer,
+        std::size_t offset) override;
 
     void SetIndexBuffer(
         const std::shared_ptr<IndexBuffer>& indexBuffer) override;

@@ -11,7 +11,6 @@
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
 #include "Pomdog/Graphics/Texture2D.hpp"
 #include "Pomdog/Graphics/VertexBuffer.hpp"
-#include "Pomdog/Graphics/VertexBufferBinding.hpp"
 #include "Pomdog/Graphics/Viewport.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
@@ -192,12 +191,10 @@ void GraphicsCommandListVulkan::SetBlendFactor(const Color& blendFactor)
     vkCmdSetBlendConstants(commandBuffer, colorVector.Data());
 }
 
-void GraphicsCommandListVulkan::SetVertexBuffers(const std::vector<VertexBufferBinding>& vertexBuffers)
-{
-    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
-}
-
-void GraphicsCommandListVulkan::SetVertexBuffers(std::vector<VertexBufferBinding>&& vertexBuffers)
+void GraphicsCommandListVulkan::SetVertexBuffer(
+    int index,
+    const std::shared_ptr<VertexBuffer>& vertexBuffer,
+    std::size_t offset)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
