@@ -29,8 +29,6 @@ public:
     Signal<void(MouseButtons mouseButton)> ButtonUp;
 
     Signal<void(std::int32_t delta)> ScrollWheel;
-
-    //Signal<void(MouseButtons mouseButton)> Click;
 };
 
 } // namespace Pomdog
