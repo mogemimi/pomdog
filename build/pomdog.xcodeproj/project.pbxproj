@@ -377,6 +377,38 @@
 		D7703DF822FCB1BB00442403 /* SpinLock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7703DF622FCB1BB00442403 /* SpinLock.cpp */; };
 		D7703E0D22FCB26800442403 /* Errors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7703E0C22FCB26800442403 /* Errors.cpp */; };
 		D7703E0E22FCB26800442403 /* Errors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7703E0C22FCB26800442403 /* Errors.cpp */; };
+		D78E309C23842C4D00413664 /* DebugNavigator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D78E308B23842C4D00413664 /* DebugNavigator.cpp */; };
+		D78E309D23842C4D00413664 /* DebugNavigator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D78E308B23842C4D00413664 /* DebugNavigator.cpp */; };
+		D78E309E23842C4D00413664 /* UIElementHierarchy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D78E308C23842C4D00413664 /* UIElementHierarchy.cpp */; };
+		D78E309F23842C4D00413664 /* UIElementHierarchy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D78E308C23842C4D00413664 /* UIElementHierarchy.cpp */; };
+		D78E30A023842C4D00413664 /* TextBlock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D78E308D23842C4D00413664 /* TextBlock.cpp */; };
+		D78E30A123842C4D00413664 /* TextBlock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D78E308D23842C4D00413664 /* TextBlock.cpp */; };
+		D78E30A223842C4D00413664 /* ToggleSwitch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D78E308E23842C4D00413664 /* ToggleSwitch.cpp */; };
+		D78E30A323842C4D00413664 /* ToggleSwitch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D78E308E23842C4D00413664 /* ToggleSwitch.cpp */; };
+		D78E30A423842C4D00413664 /* HorizontalLayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D78E308F23842C4D00413664 /* HorizontalLayout.cpp */; };
+		D78E30A523842C4D00413664 /* HorizontalLayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D78E308F23842C4D00413664 /* HorizontalLayout.cpp */; };
+		D78E30A623842C4D00413664 /* DrawingContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D78E309023842C4D00413664 /* DrawingContext.cpp */; };
+		D78E30A723842C4D00413664 /* DrawingContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D78E309023842C4D00413664 /* DrawingContext.cpp */; };
+		D78E30A823842C4D00413664 /* UIEventDispatcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D78E309123842C4D00413664 /* UIEventDispatcher.cpp */; };
+		D78E30A923842C4D00413664 /* UIEventDispatcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D78E309123842C4D00413664 /* UIEventDispatcher.cpp */; };
+		D78E30AA23842C4D00413664 /* VerticalLayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D78E309223842C4D00413664 /* VerticalLayout.cpp */; };
+		D78E30AB23842C4D00413664 /* VerticalLayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D78E309223842C4D00413664 /* VerticalLayout.cpp */; };
+		D78E30AC23842C4D00413664 /* HorizontalLine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D78E309323842C4D00413664 /* HorizontalLine.cpp */; };
+		D78E30AD23842C4D00413664 /* HorizontalLine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D78E309323842C4D00413664 /* HorizontalLine.cpp */; };
+		D78E30AE23842C4D00413664 /* StackPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D78E309423842C4D00413664 /* StackPanel.cpp */; };
+		D78E30AF23842C4D00413664 /* StackPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D78E309423842C4D00413664 /* StackPanel.cpp */; };
+		D78E30B023842C4D00413664 /* Slider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D78E309523842C4D00413664 /* Slider.cpp */; };
+		D78E30B123842C4D00413664 /* Slider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D78E309523842C4D00413664 /* Slider.cpp */; };
+		D78E30B223842C4D00413664 /* ScenePanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D78E309623842C4D00413664 /* ScenePanel.cpp */; };
+		D78E30B323842C4D00413664 /* ScenePanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D78E309623842C4D00413664 /* ScenePanel.cpp */; };
+		D78E30B423842C4D00413664 /* DisclosureTriangleButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D78E309723842C4D00413664 /* DisclosureTriangleButton.cpp */; };
+		D78E30B523842C4D00413664 /* DisclosureTriangleButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D78E309723842C4D00413664 /* DisclosureTriangleButton.cpp */; };
+		D78E30B623842C4D00413664 /* TreeView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D78E309823842C4D00413664 /* TreeView.cpp */; };
+		D78E30B723842C4D00413664 /* TreeView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D78E309823842C4D00413664 /* TreeView.cpp */; };
+		D78E30B823842C4D00413664 /* UIElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D78E309923842C4D00413664 /* UIElement.cpp */; };
+		D78E30B923842C4D00413664 /* UIElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D78E309923842C4D00413664 /* UIElement.cpp */; };
+		D78E30BA23842C4D00413664 /* PushButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D78E309A23842C4D00413664 /* PushButton.cpp */; };
+		D78E30BB23842C4D00413664 /* PushButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D78E309A23842C4D00413664 /* PushButton.cpp */; };
 		D8E9871132965BADBA4BE734 /* FloatingPointMatrix3x3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 029A2B232511421D3FDB9FAC /* FloatingPointMatrix3x3.cpp */; };
 		DA4579E5970831E615EA005D /* Ray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EB2111ED9B45715040451A9 /* Ray.cpp */; };
 		DC83323F55585B855108ED51 /* AudioClipLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9524A580BCEF4C5E9F56EB43 /* AudioClipLoader.cpp */; };
@@ -1040,6 +1072,47 @@
 		D7703DFA22FCB1E800442403 /* Delegate.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Delegate.hpp; sourceTree = "<group>"; };
 		D7703E0C22FCB26800442403 /* Errors.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Errors.cpp; sourceTree = "<group>"; };
 		D7703E0F22FCB28800442403 /* Errors.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Errors.hpp; sourceTree = "<group>"; };
+		D78E306F23842C0900413664 /* UIElementHierarchy.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = UIElementHierarchy.hpp; sourceTree = "<group>"; };
+		D78E307023842C0900413664 /* ScenePanel.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ScenePanel.hpp; sourceTree = "<group>"; };
+		D78E307123842C0900413664 /* VerticalLayout.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = VerticalLayout.hpp; sourceTree = "<group>"; };
+		D78E307223842C0900413664 /* UIEventListener.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = UIEventListener.hpp; sourceTree = "<group>"; };
+		D78E307323842C0900413664 /* DebugNavigator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = DebugNavigator.hpp; sourceTree = "<group>"; };
+		D78E307423842C0A00413664 /* TextBlock.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TextBlock.hpp; sourceTree = "<group>"; };
+		D78E307623842C0A00413664 /* FontWeight.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = FontWeight.hpp; sourceTree = "<group>"; };
+		D78E307723842C0A00413664 /* ToggleSwitch.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ToggleSwitch.hpp; sourceTree = "<group>"; };
+		D78E307823842C0A00413664 /* HorizontalAlignment.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = HorizontalAlignment.hpp; sourceTree = "<group>"; };
+		D78E307923842C0A00413664 /* PointerEventType.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PointerEventType.hpp; sourceTree = "<group>"; };
+		D78E307A23842C0A00413664 /* DrawingContext.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = DrawingContext.hpp; sourceTree = "<group>"; };
+		D78E307B23842C0A00413664 /* FontSize.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = FontSize.hpp; sourceTree = "<group>"; };
+		D78E307C23842C0A00413664 /* PushButton.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PushButton.hpp; sourceTree = "<group>"; };
+		D78E307D23842C0A00413664 /* UIElement.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = UIElement.hpp; sourceTree = "<group>"; };
+		D78E307E23842C0A00413664 /* Slider.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Slider.hpp; sourceTree = "<group>"; };
+		D78E307F23842C0A00413664 /* Thickness.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Thickness.hpp; sourceTree = "<group>"; };
+		D78E308023842C0A00413664 /* DisclosureTriangleButton.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = DisclosureTriangleButton.hpp; sourceTree = "<group>"; };
+		D78E308123842C0A00413664 /* StackPanel.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = StackPanel.hpp; sourceTree = "<group>"; };
+		D78E308223842C0A00413664 /* VerticalAlignment.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = VerticalAlignment.hpp; sourceTree = "<group>"; };
+		D78E308323842C0A00413664 /* PointerPoint.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PointerPoint.hpp; sourceTree = "<group>"; };
+		D78E308423842C0A00413664 /* HorizontalLayout.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = HorizontalLayout.hpp; sourceTree = "<group>"; };
+		D78E308523842C0A00413664 /* UIHelper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = UIHelper.hpp; sourceTree = "<group>"; };
+		D78E308623842C0A00413664 /* HorizontalLine.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = HorizontalLine.hpp; sourceTree = "<group>"; };
+		D78E308723842C0A00413664 /* TreeView.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TreeView.hpp; sourceTree = "<group>"; };
+		D78E308823842C0A00413664 /* UIEventDispatcher.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = UIEventDispatcher.hpp; sourceTree = "<group>"; };
+		D78E308B23842C4D00413664 /* DebugNavigator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DebugNavigator.cpp; sourceTree = "<group>"; };
+		D78E308C23842C4D00413664 /* UIElementHierarchy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UIElementHierarchy.cpp; sourceTree = "<group>"; };
+		D78E308D23842C4D00413664 /* TextBlock.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextBlock.cpp; sourceTree = "<group>"; };
+		D78E308E23842C4D00413664 /* ToggleSwitch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ToggleSwitch.cpp; sourceTree = "<group>"; };
+		D78E308F23842C4D00413664 /* HorizontalLayout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HorizontalLayout.cpp; sourceTree = "<group>"; };
+		D78E309023842C4D00413664 /* DrawingContext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DrawingContext.cpp; sourceTree = "<group>"; };
+		D78E309123842C4D00413664 /* UIEventDispatcher.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UIEventDispatcher.cpp; sourceTree = "<group>"; };
+		D78E309223842C4D00413664 /* VerticalLayout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VerticalLayout.cpp; sourceTree = "<group>"; };
+		D78E309323842C4D00413664 /* HorizontalLine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HorizontalLine.cpp; sourceTree = "<group>"; };
+		D78E309423842C4D00413664 /* StackPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StackPanel.cpp; sourceTree = "<group>"; };
+		D78E309523842C4D00413664 /* Slider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Slider.cpp; sourceTree = "<group>"; };
+		D78E309623842C4D00413664 /* ScenePanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScenePanel.cpp; sourceTree = "<group>"; };
+		D78E309723842C4D00413664 /* DisclosureTriangleButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DisclosureTriangleButton.cpp; sourceTree = "<group>"; };
+		D78E309823842C4D00413664 /* TreeView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TreeView.cpp; sourceTree = "<group>"; };
+		D78E309923842C4D00413664 /* UIElement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UIElement.cpp; sourceTree = "<group>"; };
+		D78E309A23842C4D00413664 /* PushButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PushButton.cpp; sourceTree = "<group>"; };
 		D79110B22382E1AA00C268C3 /* VertexBufferBindingGL4.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = VertexBufferBindingGL4.hpp; sourceTree = "<group>"; };
 		D7D5A98E477FB0CDE2089FBD /* KeyboardState.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KeyboardState.cpp; sourceTree = "<group>"; };
 		D9C3D114115E6C3A619E8CF9 /* GameHostCocoa.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = GameHostCocoa.mm; sourceTree = "<group>"; };
@@ -1774,6 +1847,7 @@
 				D7408CD623717F03007E101E /* Spine */,
 				A9A822801DAB7F510091497F /* TexturePacker */,
 				A94F2DC52131FEAD00718DB0 /* Tween */,
+				D78E306E23842BDE00413664 /* UI */,
 			);
 			path = Experimental;
 			sourceTree = "<group>";
@@ -1811,6 +1885,7 @@
 				D7408CD523717ECF007E101E /* Spine */,
 				A9A822831DAB7F6F0091497F /* TexturePacker */,
 				A94F2DCF2131FEFB00718DB0 /* Tween */,
+				D78E308A23842C2400413664 /* UI */,
 			);
 			path = Experimental;
 			sourceTree = "<group>";
@@ -2279,6 +2354,61 @@
 			path = Tracks;
 			sourceTree = "<group>";
 		};
+		D78E306E23842BDE00413664 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				D78E307323842C0900413664 /* DebugNavigator.hpp */,
+				D78E308023842C0A00413664 /* DisclosureTriangleButton.hpp */,
+				D78E307A23842C0A00413664 /* DrawingContext.hpp */,
+				D78E307B23842C0A00413664 /* FontSize.hpp */,
+				D78E307623842C0A00413664 /* FontWeight.hpp */,
+				D78E307823842C0A00413664 /* HorizontalAlignment.hpp */,
+				D78E308423842C0A00413664 /* HorizontalLayout.hpp */,
+				D78E308623842C0A00413664 /* HorizontalLine.hpp */,
+				D78E307923842C0A00413664 /* PointerEventType.hpp */,
+				D78E308323842C0A00413664 /* PointerPoint.hpp */,
+				D78E307C23842C0A00413664 /* PushButton.hpp */,
+				D78E307023842C0900413664 /* ScenePanel.hpp */,
+				D78E307E23842C0A00413664 /* Slider.hpp */,
+				D78E308123842C0A00413664 /* StackPanel.hpp */,
+				D78E307423842C0A00413664 /* TextBlock.hpp */,
+				D78E307F23842C0A00413664 /* Thickness.hpp */,
+				D78E307723842C0A00413664 /* ToggleSwitch.hpp */,
+				D78E308723842C0A00413664 /* TreeView.hpp */,
+				D78E307D23842C0A00413664 /* UIElement.hpp */,
+				D78E306F23842C0900413664 /* UIElementHierarchy.hpp */,
+				D78E308823842C0A00413664 /* UIEventDispatcher.hpp */,
+				D78E307223842C0900413664 /* UIEventListener.hpp */,
+				D78E308523842C0A00413664 /* UIHelper.hpp */,
+				D78E308223842C0A00413664 /* VerticalAlignment.hpp */,
+				D78E307123842C0900413664 /* VerticalLayout.hpp */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		D78E308A23842C2400413664 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				D78E308B23842C4D00413664 /* DebugNavigator.cpp */,
+				D78E309723842C4D00413664 /* DisclosureTriangleButton.cpp */,
+				D78E309023842C4D00413664 /* DrawingContext.cpp */,
+				D78E308F23842C4D00413664 /* HorizontalLayout.cpp */,
+				D78E309323842C4D00413664 /* HorizontalLine.cpp */,
+				D78E309A23842C4D00413664 /* PushButton.cpp */,
+				D78E309623842C4D00413664 /* ScenePanel.cpp */,
+				D78E309523842C4D00413664 /* Slider.cpp */,
+				D78E309423842C4D00413664 /* StackPanel.cpp */,
+				D78E308D23842C4D00413664 /* TextBlock.cpp */,
+				D78E308E23842C4D00413664 /* ToggleSwitch.cpp */,
+				D78E309823842C4D00413664 /* TreeView.cpp */,
+				D78E309923842C4D00413664 /* UIElement.cpp */,
+				D78E308C23842C4D00413664 /* UIElementHierarchy.cpp */,
+				D78E309123842C4D00413664 /* UIEventDispatcher.cpp */,
+				D78E309223842C4D00413664 /* VerticalLayout.cpp */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
 		D90112D019DEC9CB7B5D46EC /* Graphics */ = {
 			isa = PBXGroup;
 			children = (
@@ -2605,6 +2735,7 @@
 				A997F6FC1CAEFC4800926392 /* GraphicsDeviceMetal.mm in Sources */,
 				D702F05F22FD8B1300886A78 /* Certificates.cpp in Sources */,
 				A9A8228D1DAB7FB70091497F /* GifImageLoader.cpp in Sources */,
+				D78E30AA23842C4D00413664 /* VerticalLayout.cpp in Sources */,
 				4EE6EBE03E9AD9C3BEF652F2 /* AudioClip.cpp in Sources */,
 				D7408CEB23727466007E101E /* Skeleton.cpp in Sources */,
 				A997F7041CAEFC4900926392 /* SamplerStateMetal.mm in Sources */,
@@ -2622,19 +2753,25 @@
 				A9A822951DAB7FBE0091497F /* TextureAtlasLoader.cpp in Sources */,
 				E8D6D7F610B157019B03A800 /* AssetManager.cpp in Sources */,
 				AD987379388ED5E890CB221A /* PipelineStateBuilder.cpp in Sources */,
+				D78E30BA23842C4D00413664 /* PushButton.cpp in Sources */,
 				D7408D2A237274C4007E101E /* SkeletonDescLoader.cpp in Sources */,
 				07B330A5B3BE47D6311109E8 /* ShaderBuilder.cpp in Sources */,
+				D78E30AC23842C4D00413664 /* HorizontalLine.cpp in Sources */,
 				EE3B49ABE19A8826A0299A21 /* AudioClipLoader.cpp in Sources */,
 				EC2E27BB5CDE6B796CFD767F /* Texture2DLoader.cpp in Sources */,
 				D7334E23228AEC1300232225 /* RetroCrtEffect.cpp in Sources */,
 				D7408D2E237274C4007E101E /* SkinLoader.cpp in Sources */,
+				D78E309C23842C4D00413664 /* DebugNavigator.cpp in Sources */,
 				56943E805DA5A66B2B412B6E /* ConstantBuffer.cpp in Sources */,
 				30E3441F3697C393B219D621 /* EffectBinaryParameter.cpp in Sources */,
 				B6BD5FE552C47288CCEB50D4 /* EffectReflection.cpp in Sources */,
 				A93CA6501D92F34E00B65171 /* ImmediateScheduler.cpp in Sources */,
 				A997F6F81CAEFC4800926392 /* EffectReflectionMetal.mm in Sources */,
+				D78E30A423842C4D00413664 /* HorizontalLayout.cpp in Sources */,
 				3AE1B512284C5D5D5C729F68 /* GraphicsCommandList.cpp in Sources */,
+				D78E30A023842C4D00413664 /* TextBlock.cpp in Sources */,
 				510B6B7437308E914269F263 /* GraphicsCommandQueue.cpp in Sources */,
+				D78E30B623842C4D00413664 /* TreeView.cpp in Sources */,
 				D7408D05237274A7007E101E /* SpriteAnimationTrack.cpp in Sources */,
 				6CAD968D14E4A83B87CE38BD /* GraphicsDevice.cpp in Sources */,
 				D7408D28237274C4007E101E /* AnimationLoader.cpp in Sources */,
@@ -2671,6 +2808,7 @@
 				D7703E0D22FCB26800442403 /* Errors.cpp in Sources */,
 				D7408D10237274B4007E101E /* AnimationClipNode.cpp in Sources */,
 				5B1D2792F76709A593451042 /* MathHelper.cpp in Sources */,
+				D78E30A223842C4D00413664 /* ToggleSwitch.cpp in Sources */,
 				D7408CFD2372746D007E101E /* AnimationClip.cpp in Sources */,
 				9402075D41A1A97AE8090BF9 /* Ray.cpp in Sources */,
 				D7408CF92372746D007E101E /* AnimationSystem.cpp in Sources */,
@@ -2679,6 +2817,7 @@
 				A94F2DD12131FEFB00718DB0 /* EasingHelper.cpp in Sources */,
 				D7408CED23727466007E101E /* SkeletonHelper.cpp in Sources */,
 				0D2BB710020E127DFCD9A463 /* Rectangle.cpp in Sources */,
+				D78E30AE23842C4D00413664 /* StackPanel.cpp in Sources */,
 				D7334E19228AEC1300232225 /* FXAA.cpp in Sources */,
 				A958BDF81CC3E65A00E15834 /* PomdogMetalViewController.mm in Sources */,
 				C3A63B50AA37BB77F4224857 /* FloatingPointMatrix2x2.cpp in Sources */,
@@ -2704,6 +2843,7 @@
 				A943BA1C210E86B900DA852D /* GamepadUUID.cpp in Sources */,
 				D7408D14237274B4007E101E /* WeightBlendingHelper.cpp in Sources */,
 				D7703DF722FCB1BB00442403 /* SpinLock.cpp in Sources */,
+				D78E30B223842C4D00413664 /* ScenePanel.cpp in Sources */,
 				1C60BD023919A0C8916DB3E2 /* SurfaceFormatHelper.cpp in Sources */,
 				E7645392D6AC421C2703DF5E /* TextureHelper.cpp in Sources */,
 				C0B84A37FCB13D340E04120C /* Connection.cpp in Sources */,
@@ -2712,8 +2852,10 @@
 				162657EF7F7D8D1E34C76882 /* EventQueue.cpp in Sources */,
 				D7408CFB2372746D007E101E /* Animator.cpp in Sources */,
 				A98F591C211B2B89002960C1 /* PolygonShapeBuilder.cpp in Sources */,
+				D78E30A623842C4D00413664 /* DrawingContext.cpp in Sources */,
 				D7334E1F228AEC1300232225 /* SepiaToneEffect.cpp in Sources */,
 				A9E4B86A210CD9C1003F87DC /* GamepadMappings.cpp in Sources */,
+				D78E30A823842C4D00413664 /* UIEventDispatcher.cpp in Sources */,
 				A9A822931DAB7FBE0091497F /* TextureAtlasGenerator.cpp in Sources */,
 				D7408CF123727466007E101E /* Skin.cpp in Sources */,
 				D719A53C23497EB600C1868B /* PNG.cpp in Sources */,
@@ -2723,9 +2865,11 @@
 				D740A54F231010A00077D040 /* ErrorHelper.cpp in Sources */,
 				9439AAF08FDF6A7046F2F994 /* ScopedConnection.cpp in Sources */,
 				A9E4B879210CDEA2003F87DC /* GamepadFactory.cpp in Sources */,
+				D78E30B423842C4D00413664 /* DisclosureTriangleButton.cpp in Sources */,
 				D7408D1C237274B4007E101E /* AnimationGraphWeightCollection.cpp in Sources */,
 				8650CF18F26DB3A0F89ABAE3 /* CRC32.cpp in Sources */,
 				D7334DCA228AC80200232225 /* PrimitiveBatch.cpp in Sources */,
+				D78E30B823842C4D00413664 /* UIElement.cpp in Sources */,
 				A997F7081CAEFC4900926392 /* Texture2DMetal.mm in Sources */,
 				D7334E34228C689C00232225 /* ParticleSystem.cpp in Sources */,
 				566D366B6621FECC73232526 /* PathHelper.cpp in Sources */,
@@ -2753,6 +2897,7 @@
 				D719A53E23497EB600C1868B /* PNM.cpp in Sources */,
 				74D477E9B36CBB96B59576DA /* GraphicsDeviceGL4.cpp in Sources */,
 				D7408CF72372746D007E101E /* AnimationState.cpp in Sources */,
+				D78E309E23842C4D00413664 /* UIElementHierarchy.cpp in Sources */,
 				BD5C4B6ACB960141061065E7 /* InputLayoutGL4.cpp in Sources */,
 				616958519334C7EF67A9B08E /* PipelineStateGL4.cpp in Sources */,
 				D702F04822FD8AC700886A78 /* HTTPClient.cpp in Sources */,
@@ -2771,6 +2916,7 @@
 				7A500C8DE0D6DC20D936D25D /* ErrorCheckerAL.cpp in Sources */,
 				A98F591A211B2B89002960C1 /* LineBatch.cpp in Sources */,
 				D702F06122FD8B1300886A78 /* TLSStreamMbedTLS.cpp in Sources */,
+				D78E30B023842C4D00413664 /* Slider.cpp in Sources */,
 				63571970C7BE520D7EE1BB02 /* SoundEffectAL.cpp in Sources */,
 				3EC9EB32476FB3E3C3713D72 /* Bootstrap.mm in Sources */,
 				D7334E1B228AEC1300232225 /* FishEyeEffect.cpp in Sources */,
@@ -2798,6 +2944,7 @@
 				A997F6FD1CAEFC4800926392 /* GraphicsDeviceMetal.mm in Sources */,
 				D702F06022FD8B1300886A78 /* Certificates.cpp in Sources */,
 				A9A8228E1DAB7FB70091497F /* GifImageLoader.cpp in Sources */,
+				D78E30AB23842C4D00413664 /* VerticalLayout.cpp in Sources */,
 				8F708C4B18D750ED37EFCF6B /* AudioClip.cpp in Sources */,
 				D7408CEC23727466007E101E /* Skeleton.cpp in Sources */,
 				A997F7051CAEFC4900926392 /* SamplerStateMetal.mm in Sources */,
@@ -2815,19 +2962,25 @@
 				A9A822961DAB7FBE0091497F /* TextureAtlasLoader.cpp in Sources */,
 				07AC7D00AF95EB8A551A0CC7 /* AssetManager.cpp in Sources */,
 				0B0F472CF35B5E06E17342B1 /* PipelineStateBuilder.cpp in Sources */,
+				D78E30BB23842C4D00413664 /* PushButton.cpp in Sources */,
 				D7408D2B237274C4007E101E /* SkeletonDescLoader.cpp in Sources */,
 				F8CEA52C304DD8A4BBEAA042 /* ShaderBuilder.cpp in Sources */,
+				D78E30AD23842C4D00413664 /* HorizontalLine.cpp in Sources */,
 				DC83323F55585B855108ED51 /* AudioClipLoader.cpp in Sources */,
 				BD62DB67E515FA42A9D8F788 /* Texture2DLoader.cpp in Sources */,
 				D7334E24228AEC1300232225 /* RetroCrtEffect.cpp in Sources */,
 				D7408D2F237274C4007E101E /* SkinLoader.cpp in Sources */,
+				D78E309D23842C4D00413664 /* DebugNavigator.cpp in Sources */,
 				712667FE9F33A8F7581022FC /* ConstantBuffer.cpp in Sources */,
 				FB449C29F6AE9D0C12E0B224 /* EffectBinaryParameter.cpp in Sources */,
 				054132B7E4436F540059F098 /* EffectReflection.cpp in Sources */,
 				A93CA6511D92F34E00B65171 /* ImmediateScheduler.cpp in Sources */,
 				A997F6F91CAEFC4800926392 /* EffectReflectionMetal.mm in Sources */,
+				D78E30A523842C4D00413664 /* HorizontalLayout.cpp in Sources */,
 				A41DDB028BF6E19DB3902864 /* GraphicsCommandList.cpp in Sources */,
+				D78E30A123842C4D00413664 /* TextBlock.cpp in Sources */,
 				05E4A1180E076CEA6706E5EC /* GraphicsCommandQueue.cpp in Sources */,
+				D78E30B723842C4D00413664 /* TreeView.cpp in Sources */,
 				D7408D06237274A7007E101E /* SpriteAnimationTrack.cpp in Sources */,
 				D6B00FCEBABBF1A29ADD25A1 /* GraphicsDevice.cpp in Sources */,
 				D7408D29237274C4007E101E /* AnimationLoader.cpp in Sources */,
@@ -2864,6 +3017,7 @@
 				D7703E0E22FCB26800442403 /* Errors.cpp in Sources */,
 				D7408D11237274B4007E101E /* AnimationClipNode.cpp in Sources */,
 				E58ECD9915BC55D5134950F9 /* MathHelper.cpp in Sources */,
+				D78E30A323842C4D00413664 /* ToggleSwitch.cpp in Sources */,
 				D7408CFE2372746D007E101E /* AnimationClip.cpp in Sources */,
 				DA4579E5970831E615EA005D /* Ray.cpp in Sources */,
 				D7408CFA2372746D007E101E /* AnimationSystem.cpp in Sources */,
@@ -2872,6 +3026,7 @@
 				A94F2DD22131FEFB00718DB0 /* EasingHelper.cpp in Sources */,
 				D7408CEE23727466007E101E /* SkeletonHelper.cpp in Sources */,
 				E4C4ADB64ED81496C05CB580 /* Rectangle.cpp in Sources */,
+				D78E30AF23842C4D00413664 /* StackPanel.cpp in Sources */,
 				D7334E1A228AEC1300232225 /* FXAA.cpp in Sources */,
 				A958BDF91CC3E65A00E15834 /* PomdogMetalViewController.mm in Sources */,
 				E971CF40D05A93F09E489D10 /* FloatingPointMatrix2x2.cpp in Sources */,
@@ -2897,6 +3052,7 @@
 				A943BA1D210E86B900DA852D /* GamepadUUID.cpp in Sources */,
 				D7408D15237274B4007E101E /* WeightBlendingHelper.cpp in Sources */,
 				D7703DF822FCB1BB00442403 /* SpinLock.cpp in Sources */,
+				D78E30B323842C4D00413664 /* ScenePanel.cpp in Sources */,
 				A5F5B45161ACFD33A1652F9C /* SurfaceFormatHelper.cpp in Sources */,
 				55635C9F9A88D4C77235D6EB /* TextureHelper.cpp in Sources */,
 				B8B5DF3E58503D84B8D7E2D9 /* Connection.cpp in Sources */,
@@ -2905,8 +3061,10 @@
 				5D895FC546DFD02F64646AF7 /* EventQueue.cpp in Sources */,
 				D7408CFC2372746D007E101E /* Animator.cpp in Sources */,
 				A98F591D211B2B89002960C1 /* PolygonShapeBuilder.cpp in Sources */,
+				D78E30A723842C4D00413664 /* DrawingContext.cpp in Sources */,
 				D7334E20228AEC1300232225 /* SepiaToneEffect.cpp in Sources */,
 				A9E4B86B210CD9C1003F87DC /* GamepadMappings.cpp in Sources */,
+				D78E30A923842C4D00413664 /* UIEventDispatcher.cpp in Sources */,
 				A9A822941DAB7FBE0091497F /* TextureAtlasGenerator.cpp in Sources */,
 				D7408CF223727466007E101E /* Skin.cpp in Sources */,
 				D719A53D23497EB600C1868B /* PNG.cpp in Sources */,
@@ -2916,9 +3074,11 @@
 				D740A550231010A00077D040 /* ErrorHelper.cpp in Sources */,
 				023F583DEDA9BCB1C9E19C1C /* ScopedConnection.cpp in Sources */,
 				A9E4B87A210CDEA2003F87DC /* GamepadFactory.cpp in Sources */,
+				D78E30B523842C4D00413664 /* DisclosureTriangleButton.cpp in Sources */,
 				D7408D1D237274B4007E101E /* AnimationGraphWeightCollection.cpp in Sources */,
 				65B8BEF3D1E04BF859631ADE /* CRC32.cpp in Sources */,
 				D7334DCB228AC80200232225 /* PrimitiveBatch.cpp in Sources */,
+				D78E30B923842C4D00413664 /* UIElement.cpp in Sources */,
 				A997F7091CAEFC4900926392 /* Texture2DMetal.mm in Sources */,
 				D7334E35228C689C00232225 /* ParticleSystem.cpp in Sources */,
 				8B19A1DD45CD8F8791C5B725 /* PathHelper.cpp in Sources */,
@@ -2946,6 +3106,7 @@
 				D719A53F23497EB600C1868B /* PNM.cpp in Sources */,
 				FD3FD836F0346B587EDB61DE /* GraphicsDeviceGL4.cpp in Sources */,
 				D7408CF82372746D007E101E /* AnimationState.cpp in Sources */,
+				D78E309F23842C4D00413664 /* UIElementHierarchy.cpp in Sources */,
 				B3BF71F0DA976F207A41EC64 /* InputLayoutGL4.cpp in Sources */,
 				FC16EE3B4D5C9E58010BCD0A /* PipelineStateGL4.cpp in Sources */,
 				D702F04922FD8AC700886A78 /* HTTPClient.cpp in Sources */,
@@ -2964,6 +3125,7 @@
 				4B6482395A34745225470B08 /* ErrorCheckerAL.cpp in Sources */,
 				A98F591B211B2B89002960C1 /* LineBatch.cpp in Sources */,
 				D702F06222FD8B1300886A78 /* TLSStreamMbedTLS.cpp in Sources */,
+				D78E30B123842C4D00413664 /* Slider.cpp in Sources */,
 				526DFCDBB8C6C2F2C6EC26D2 /* SoundEffectAL.cpp in Sources */,
 				99DE12DBE8D4B0D14FDACD5F /* Bootstrap.mm in Sources */,
 				D7334E1C228AEC1300232225 /* FishEyeEffect.cpp in Sources */,

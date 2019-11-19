@@ -43,6 +43,7 @@ source_group(Experimental\\Skeletal2D\\Tracks       REGULAR_EXPRESSION "(include
 source_group(Experimental\\Spine                    REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Spine/*")
 source_group(Experimental\\TexturePacker            REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/TexturePacker/*")
 source_group(Experimental\\Tween                    REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Tween/*")
+source_group(Experimental\\UI                       REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/UI/*")
 source_group(InputSystem                            REGULAR_EXPRESSION src/InputSystem/*)
 source_group(InputSystem.DirectInput                REGULAR_EXPRESSION src/InputSystem.DirectInput/*)
 source_group(InputSystem.IOKit                      REGULAR_EXPRESSION src/InputSystem.IOKit/*)
@@ -484,6 +485,30 @@ set(POMDOG_SOURCES_EXPERIMENTAL
   ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureAtlasLoader.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureRegion.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Tween/EasingHelper.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/DebugNavigator.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/DisclosureTriangleButton.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/DrawingContext.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/FontSize.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/FontWeight.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/HorizontalAlignment.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/HorizontalLayout.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/HorizontalLine.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/PointerEventType.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/PointerPoint.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/PushButton.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/ScenePanel.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/Slider.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/StackPanel.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/TextBlock.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/Thickness.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/ToggleSwitch.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/TreeView.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/UIElement.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/UIElementHierarchy.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/UIEventDispatcher.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/UIHelper.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/VerticalAlignment.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/VerticalLayout.hpp
   ${POMDOG_DIR}/src/Experimental/Graphics/BasicEffect.cpp
   ${POMDOG_DIR}/src/Experimental/Graphics/LineBatch.cpp
   ${POMDOG_DIR}/src/Experimental/Graphics/PolylineBatch.cpp
@@ -538,6 +563,22 @@ set(POMDOG_SOURCES_EXPERIMENTAL
   ${POMDOG_DIR}/src/Experimental/TexturePacker/TextureAtlasGenerator.cpp
   ${POMDOG_DIR}/src/Experimental/TexturePacker/TextureAtlasLoader.cpp
   ${POMDOG_DIR}/src/Experimental/Tween/EasingHelper.cpp
+  ${POMDOG_DIR}/src/Experimental/UI/DebugNavigator.cpp
+  ${POMDOG_DIR}/src/Experimental/UI/DisclosureTriangleButton.cpp
+  ${POMDOG_DIR}/src/Experimental/UI/DrawingContext.cpp
+  ${POMDOG_DIR}/src/Experimental/UI/HorizontalLayout.cpp
+  ${POMDOG_DIR}/src/Experimental/UI/HorizontalLine.cpp
+  ${POMDOG_DIR}/src/Experimental/UI/PushButton.cpp
+  ${POMDOG_DIR}/src/Experimental/UI/ScenePanel.cpp
+  ${POMDOG_DIR}/src/Experimental/UI/Slider.cpp
+  ${POMDOG_DIR}/src/Experimental/UI/StackPanel.cpp
+  ${POMDOG_DIR}/src/Experimental/UI/TextBlock.cpp
+  ${POMDOG_DIR}/src/Experimental/UI/ToggleSwitch.cpp
+  ${POMDOG_DIR}/src/Experimental/UI/TreeView.cpp
+  ${POMDOG_DIR}/src/Experimental/UI/UIElement.cpp
+  ${POMDOG_DIR}/src/Experimental/UI/UIElementHierarchy.cpp
+  ${POMDOG_DIR}/src/Experimental/UI/UIEventDispatcher.cpp
+  ${POMDOG_DIR}/src/Experimental/UI/VerticalLayout.cpp
 )
 
 set(POMDOG_SOURCES_GL4

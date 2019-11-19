@@ -22,8 +22,6 @@ source_group(Particle2D\\detail       REGULAR_EXPRESSION Pomdog.Experimental/Par
 source_group(Rendering                REGULAR_EXPRESSION Pomdog.Experimental/Rendering/*)
 source_group(Rendering\\Commands      REGULAR_EXPRESSION Pomdog.Experimental/Rendering/Commands/*)
 source_group(Rendering\\Processors    REGULAR_EXPRESSION Pomdog.Experimental/Rendering/Processors/*)
-source_group(UI                       REGULAR_EXPRESSION Pomdog.Experimental/UI/*)
-source_group(UI\\detail               REGULAR_EXPRESSION Pomdog.Experimental/UI/detail/*)
 source_group(Utility                  REGULAR_EXPRESSION Pomdog.Experimental/Utility/*)
 
 add_library(pomdog_experimental STATIC
@@ -125,47 +123,6 @@ add_library(pomdog_experimental STATIC
   # ${POMDOG_EXPERIMENTAL_DIR}/Rendering/Processors/SkinnedMeshCommandProcessor.hpp
   ${POMDOG_EXPERIMENTAL_DIR}/Rendering/Processors/SpriteBatchCommandProcessor.cpp
   ${POMDOG_EXPERIMENTAL_DIR}/Rendering/Processors/SpriteBatchCommandProcessor.hpp
-
-  ${POMDOG_EXPERIMENTAL_DIR}/UI/DebugNavigator.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/UI/DebugNavigator.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/UI/DisclosureTriangleButton.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/UI/DisclosureTriangleButton.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/UI/DrawingContext.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/UI/DrawingContext.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/UI/FontSize.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/UI/FontWeight.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/UI/HorizontalAlignment.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/UI/HorizontalLayout.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/UI/HorizontalLayout.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/UI/HorizontalLine.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/UI/HorizontalLine.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/UI/PointerEventType.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/UI/PointerPoint.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/UI/ScenePanel.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/UI/ScenePanel.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/UI/Slider.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/UI/Slider.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/UI/StackPanel.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/UI/StackPanel.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/UI/TextBlock.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/UI/TextBlock.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/UI/Thickness.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/UI/ToggleSwitch.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/UI/ToggleSwitch.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/UI/TreeView.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/UI/TreeView.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/UI/UIElement.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/UI/UIElement.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/UI/UIElementHierarchy.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/UI/UIElementHierarchy.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/UI/UIEventDispatcher.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/UI/UIEventDispatcher.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/UI/UIHelper.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/UI/VerticalAlignment.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/UI/VerticalLayout.cpp
-  ${POMDOG_EXPERIMENTAL_DIR}/UI/VerticalLayout.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/UI/detail/SubscribeRequestDispatcher.hpp
-  ${POMDOG_EXPERIMENTAL_DIR}/UI/detail/UIEventConnection.hpp
 
   ${POMDOG_EXPERIMENTAL_DIR}/Utility/UserPreferences.cpp
   ${POMDOG_EXPERIMENTAL_DIR}/Utility/UserPreferences.hpp
