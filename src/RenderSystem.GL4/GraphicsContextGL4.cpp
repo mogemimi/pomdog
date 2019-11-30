@@ -873,7 +873,7 @@ void GraphicsContextGL4::SetRenderPass(const RenderPass& renderPass)
         SetRenderTargets(frameBuffer, renderTargets, temporary);
         POMDOG_ASSERT(!renderTargets.empty());
         POMDOG_ASSERT(renderTargets.size() == 8);
-        POMDOG_ASSERT(renderTargets.front() == nullptr);
+        POMDOG_ASSERT(renderTargets.front() != nullptr);
     }
 }
 
