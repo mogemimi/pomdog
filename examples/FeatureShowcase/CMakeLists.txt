@@ -31,6 +31,7 @@ source_group(Source\\Skinning2DTest         REGULAR_EXPRESSION "Source/Skinning2
 source_group(Source\\SpriteBatchTest        REGULAR_EXPRESSION "Source/SpriteBatchTest/*")
 source_group(Source\\SpriteFontTest         REGULAR_EXPRESSION "Source/SpriteFontTest/*")
 source_group(Source\\SpriteLineTest         REGULAR_EXPRESSION "Source/SpriteLineTest/*")
+source_group(Source\\SVGDecodeTest          REGULAR_EXPRESSION "Source/SVGDecodeTest/*")
 source_group(Source\\Texture2DLoaderTest    REGULAR_EXPRESSION "Source/Texture2DLoaderTest/*")
 source_group(Source\\VoxelModelTest         REGULAR_EXPRESSION "Source/VoxelModelTest/*")
 source_group(Platform                       REGULAR_EXPRESSION "Platform.*/*")
@@ -87,6 +88,8 @@ add_executable(${PRODUCT_NAME} WIN32
   Source/SpriteFontTest/SpriteFontTest.hpp
   Source/SpriteLineTest/SpriteLineTest.cpp
   Source/SpriteLineTest/SpriteLineTest.hpp
+  Source/SVGDecodeTest/SVGDecodeTest.cpp
+  Source/SVGDecodeTest/SVGDecodeTest.hpp
   Source/Texture2DLoaderTest/Texture2DLoaderTest.cpp
   Source/Texture2DLoaderTest/Texture2DLoaderTest.hpp
   Source/VoxelModelTest/VoxelModelTest.cpp

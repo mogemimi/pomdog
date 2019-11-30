@@ -13,6 +13,7 @@
 #include "Particle2DTest/Particle2DTest.hpp"
 #include "PolylineDrawingTest/PolylineDrawingTest.hpp"
 #include "PrimitiveBatchTest/PrimitiveBatchTest.hpp"
+#include "SVGDecodeTest/SVGDecodeTest.hpp"
 #include "Skeletal2DTest/Skeletal2DTest.hpp"
 #include "Skinning2DTest/Skinning2DTest.hpp"
 #include "SpriteBatchTest/SpriteBatchTest.hpp"
@@ -116,6 +117,10 @@ void FeatureShowcaseGame::Initialize()
     buttons.emplace_back("GIFDecode Test", [this] {
         window->SetTitle("Feature Showcase > GIFDecode Test");
         subGame = std::make_shared<FeatureShowcase::GIFDecodeTest>(gameHost);
+    });
+    buttons.emplace_back("SVGDecode Test", [this] {
+        window->SetTitle("Feature Showcase > SVGDecode Test");
+        subGame = std::make_shared<FeatureShowcase::SVGDecodeTest>(gameHost);
     });
     buttons.emplace_back("VoxelModel Test", [this] {
         window->SetTitle("Feature Showcase > VoxelModel Test");
