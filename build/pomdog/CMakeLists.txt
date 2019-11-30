@@ -32,6 +32,7 @@ source_group(Platform.X11                           REGULAR_EXPRESSION "(include
 source_group(Signals                                REGULAR_EXPRESSION "(include/Pomdog|src)/Signals/*")
 source_group(Utility                                REGULAR_EXPRESSION "(include/Pomdog|src)/Utility/*")
 source_group(Experimental\\Graphics                 REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Graphics/*")
+source_group(Experimental\\GUI                      REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/GUI/*")
 source_group(Experimental\\ImageEffects             REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/ImageEffects/*")
 source_group(Experimental\\Image                    REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Image/*")
 source_group(Experimental\\MagicaVoxel              REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/MagicaVoxel/*")
@@ -43,7 +44,6 @@ source_group(Experimental\\Skeletal2D\\Tracks       REGULAR_EXPRESSION "(include
 source_group(Experimental\\Spine                    REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Spine/*")
 source_group(Experimental\\TexturePacker            REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/TexturePacker/*")
 source_group(Experimental\\Tween                    REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Tween/*")
-source_group(Experimental\\UI                       REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/UI/*")
 source_group(InputSystem                            REGULAR_EXPRESSION src/InputSystem/*)
 source_group(InputSystem.DirectInput                REGULAR_EXPRESSION src/InputSystem.DirectInput/*)
 source_group(InputSystem.IOKit                      REGULAR_EXPRESSION src/InputSystem.IOKit/*)
@@ -385,6 +385,39 @@ set(POMDOG_SOURCES_EXPERIMENTAL
   ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/Texture2DView.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/TrueTypeFont.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/TrueTypeFontLoader.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/CheckBox.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/DebugNavigator.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/DisclosureTriangleButton.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/DrawingContext.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/FloatField.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/FontSize.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/FontWeight.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/HorizontalAlignment.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/HorizontalLayout.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/HorizontalLine.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/IntField.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/NumberField.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/PointerEventType.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/PointerPoint.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/PushButton.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/ScenePanel.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/ScrollView.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/Slider.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/StackPanel.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/TextBlock.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/TextEdit.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/TextField.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/Thickness.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/ToggleSwitch.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/TreeView.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/UIEventDispatcher.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/UIHelper.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/Vector3Field.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/VerticalAlignment.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/VerticalLayout.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/VerticalScrollBar.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/Widget.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/WidgetHierarchy.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Image/GIFImage.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Image/GIFLoader.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Image/Image.hpp
@@ -486,31 +519,6 @@ set(POMDOG_SOURCES_EXPERIMENTAL
   ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureAtlasLoader.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureRegion.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Tween/EasingHelper.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/DebugNavigator.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/DisclosureTriangleButton.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/DrawingContext.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/FontSize.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/FontWeight.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/HorizontalAlignment.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/HorizontalLayout.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/HorizontalLine.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/PointerEventType.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/PointerPoint.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/PushButton.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/ScenePanel.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/Slider.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/StackPanel.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/TextBlock.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/TextField.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/Thickness.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/ToggleSwitch.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/TreeView.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/UIElement.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/UIElementHierarchy.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/UIEventDispatcher.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/UIHelper.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/VerticalAlignment.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/UI/VerticalLayout.hpp
   ${POMDOG_DIR}/src/Experimental/Graphics/BasicEffect.cpp
   ${POMDOG_DIR}/src/Experimental/Graphics/LineBatch.cpp
   ${POMDOG_DIR}/src/Experimental/Graphics/PolylineBatch.cpp
@@ -523,6 +531,32 @@ set(POMDOG_SOURCES_EXPERIMENTAL
   ${POMDOG_DIR}/src/Experimental/Graphics/Texture2DView.cpp
   ${POMDOG_DIR}/src/Experimental/Graphics/TrueTypeFont.cpp
   ${POMDOG_DIR}/src/Experimental/Graphics/TrueTypeFontLoader.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/CheckBox.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/DebugNavigator.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/DisclosureTriangleButton.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/DrawingContext.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/FloatField.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/HorizontalLayout.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/HorizontalLine.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/IntField.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/NumberField.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/PushButton.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/ScenePanel.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/ScrollView.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/Slider.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/StackPanel.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/TextBlock.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/TextEdit.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/TextField.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/ToggleSwitch.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/TreeView.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/UIEventDispatcher.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/UIHelper.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/Vector3Field.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/VerticalLayout.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/VerticalScrollBar.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/Widget.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/WidgetHierarchy.cpp
   ${POMDOG_DIR}/src/Experimental/Image/GIFLoader.cpp
   ${POMDOG_DIR}/src/Experimental/Image/Image.cpp
   ${POMDOG_DIR}/src/Experimental/Image/SVGLoader.cpp
@@ -566,23 +600,6 @@ set(POMDOG_SOURCES_EXPERIMENTAL
   ${POMDOG_DIR}/src/Experimental/TexturePacker/TextureAtlasGenerator.cpp
   ${POMDOG_DIR}/src/Experimental/TexturePacker/TextureAtlasLoader.cpp
   ${POMDOG_DIR}/src/Experimental/Tween/EasingHelper.cpp
-  ${POMDOG_DIR}/src/Experimental/UI/DebugNavigator.cpp
-  ${POMDOG_DIR}/src/Experimental/UI/DisclosureTriangleButton.cpp
-  ${POMDOG_DIR}/src/Experimental/UI/DrawingContext.cpp
-  ${POMDOG_DIR}/src/Experimental/UI/HorizontalLayout.cpp
-  ${POMDOG_DIR}/src/Experimental/UI/HorizontalLine.cpp
-  ${POMDOG_DIR}/src/Experimental/UI/PushButton.cpp
-  ${POMDOG_DIR}/src/Experimental/UI/ScenePanel.cpp
-  ${POMDOG_DIR}/src/Experimental/UI/Slider.cpp
-  ${POMDOG_DIR}/src/Experimental/UI/StackPanel.cpp
-  ${POMDOG_DIR}/src/Experimental/UI/TextBlock.cpp
-  ${POMDOG_DIR}/src/Experimental/UI/TextField.cpp
-  ${POMDOG_DIR}/src/Experimental/UI/ToggleSwitch.cpp
-  ${POMDOG_DIR}/src/Experimental/UI/TreeView.cpp
-  ${POMDOG_DIR}/src/Experimental/UI/UIElement.cpp
-  ${POMDOG_DIR}/src/Experimental/UI/UIElementHierarchy.cpp
-  ${POMDOG_DIR}/src/Experimental/UI/UIEventDispatcher.cpp
-  ${POMDOG_DIR}/src/Experimental/UI/VerticalLayout.cpp
 )
 
 set(POMDOG_SOURCES_GL4

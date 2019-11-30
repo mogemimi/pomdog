@@ -1,0 +1,119 @@
+// Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
+
+#pragma once
+
+#include "Pomdog/Experimental/GUI/FontSize.hpp"
+#include "Pomdog/Experimental/GUI/FontWeight.hpp"
+#include "Pomdog/Experimental/Graphics/PrimitiveBatch.hpp"
+#include "Pomdog/Experimental/Graphics/SpriteBatch.hpp"
+#include "Pomdog/Experimental/Graphics/SpriteFont.hpp"
+#include "Pomdog/Experimental/Graphics/TrueTypeFont.hpp"
+#include "Pomdog/Experimental/TexturePacker/TextureAtlas.hpp"
+#include "Pomdog/Math/Color.hpp"
+#include "Pomdog/Math/Matrix3x2.hpp"
+#include "Pomdog/Math/Matrix4x4.hpp"
+#include "Pomdog/Math/Rectangle.hpp"
+#include "Pomdog/Math/Vector2.hpp"
+#include <cstdint>
+#include <memory>
+#include <string>
+#include <unordered_map>
+#include <vector>
+
+namespace Pomdog {
+class RenderCommand;
+class SpriteFont;
+} // namespace Pomdog
+
+namespace Pomdog::GUI {
+
+struct ColorScheme final {
+    Color SliderTextColor = Color::White;
+    Color SliderFillColorBase = {27, 141, 206, 255};
+    Color SliderFillColorHovered = {56, 150, 225, 255};
+    Color SliderFillColorDisabled = {150, 161, 167, 255};
+    Color SliderTrackColorBase = {110, 108, 109, 255};
+    Color SliderTrackColorHovered = {121, 120, 120, 255};
+    Color SliderThumbColorBase = Color::Black;
+    Color SliderThumbColorFocused = {229, 20, 0, 255};
+
+    Color TextFieldTextColor = Color::White;
+    Color TextFieldRectColorBase = Color{92, 90, 91, 255};
+    Color TextFieldBorderColorBase = Color{104, 100, 101, 255};
+    Color TextFieldBorderColorFocus = Color{31, 115, 172, 255};
+    Color TextFieldBorderColorError = Color{160, 24, 0, 255};
+
+    Color ScrollBarSliderColorBase = Color{108, 106, 107, 180};
+    Color ScrollBarSliderColorHovered = Color{131, 129, 128, 200};
+    Color ScrollBarTrackColor = Color{62, 60, 61, 255};
+    Color ScrollBarBorderColor = Color{95, 92, 91, 255};
+
+    Color CheckBoxCheckMarkColorBase = Color::White;
+    Color CheckBoxCheckMarkColorDisabled = Color{137, 137, 137, 255};
+    Color CheckBoxRectColorOn = Color{27, 141, 206, 255};
+    Color CheckBoxRectColorOff = Color{160, 160, 160, 255};
+    Color CheckBoxRectColorDisabled = Color{81, 81, 81, 255};
+
+    // Color ButtonPrimaryColor;
+    // Color ButtonSecondaryColor;
+    // Color ButtonErrorColor;
+};
+
+class DrawingContext final {
+public:
+    DrawingContext(
+        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+        AssetManager& assets);
+
+    Point2D GetCurrentTransform() const;
+
+    void PushTransform(const Point2D& position);
+
+    void PopTransform();
+
+    void Reset(int viewportWidth, int viewportHeight);
+
+    void PushScissorRect(const Rectangle& scissorRect);
+
+    void PopScissorRect();
+
+    void BeginDraw(
+        const std::shared_ptr<GraphicsCommandList>& commandList,
+        const Matrix4x4& transformMatrix);
+
+    void EndDraw();
+
+    std::shared_ptr<SpriteFont>
+    GetFont(FontWeight fontWeight, FontSize fontSize) const;
+
+    PrimitiveBatch* GetPrimitiveBatch();
+    SpriteBatch* GetSpriteBatch();
+
+    const ColorScheme* GetColorScheme() const;
+
+    void DrawIcon(
+        const std::string& name,
+        const Vector2& position,
+        const Color& color,
+        const Radian<float>& rotation,
+        const Vector2& originPivot,
+        float scale);
+
+private:
+    std::unordered_map<std::uint32_t, std::shared_ptr<SpriteFont>> spriteFonts;
+
+    TexturePacker::TextureAtlas iconTextureAtlas;
+    std::shared_ptr<Texture2D> iconTexture;
+
+    ColorScheme colorScheme;
+
+    std::shared_ptr<GraphicsCommandList> commandList;
+    std::shared_ptr<SpriteBatch> spriteBatch;
+    std::shared_ptr<PrimitiveBatch> primitiveBatch;
+    std::vector<Point2D> matrixStack;
+    std::vector<Rectangle> scissorRects;
+    int viewportWidth;
+    int viewportHeight;
+};
+
+} // namespace Pomdog::GUI
