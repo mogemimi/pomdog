@@ -10,17 +10,17 @@
 
 namespace Pomdog {
 
-using GifDuration = std::chrono::duration<long long, std::ratio<1LL, 100LL>>;
+using GIFDuration = std::chrono::duration<long long, std::ratio<1LL, 100LL>>;
 
-class POMDOG_EXPORT GifImageFrame final {
+class POMDOG_EXPORT GIFImageFrame final {
 public:
     std::shared_ptr<Pomdog::Image> Image;
-    GifDuration Delay;
+    GIFDuration Delay;
 };
 
-class POMDOG_EXPORT GifImage final {
+class POMDOG_EXPORT GIFImage final {
 public:
-    std::vector<GifImageFrame> Frames;
+    std::vector<GIFImageFrame> Frames;
     int LoopCount;
 };
 

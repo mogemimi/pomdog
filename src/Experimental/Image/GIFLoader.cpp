@@ -1,12 +1,12 @@
 // Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Experimental/Image/GifImageLoader.hpp"
+#include "Pomdog/Experimental/Image/GIFLoader.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <gif_lib.h>
 #include <cstring>
 #include <functional>
 
-namespace Pomdog {
+namespace Pomdog::GIF {
 namespace {
 
 void DumpExtensions(
@@ -31,13 +31,17 @@ void DumpExtensions(
     }
 }
 
-} // unnamed namespace
+} // namespace
 
-std::optional<GifImage> GifLoader::Open(const std::string& filePath)
+std::tuple<GIFImage, std::shared_ptr<Error>>
+DecodeFile(const std::string& filePath)
 {
+    GIFImage result;
+    result.LoopCount = 0;
+
     if (filePath.empty()) {
-        // error
-        return std::nullopt;
+        auto err = Errors::New("file path is empty");
+        return std::make_tuple(std::move(result), std::move(err));
     }
 
     int gifError = 0;
@@ -50,17 +54,14 @@ std::optional<GifImage> GifLoader::Open(const std::string& filePath)
         });
 
     if (gifError != 0) {
-        //throw CannotOpenGifFileException{};
-        return std::nullopt;
+        auto err = Errors::New("cannot read the gif file, " + filePath);
+        return std::make_tuple(std::move(result), std::move(err));
     }
 
     if (DGifSlurp(gifFileIn.get()) == GIF_ERROR) {
-        //throw CannotOpenGifFileException{};
-        return std::nullopt;
+        auto err = Errors::New("invalid gif format, " + filePath);
+        return std::make_tuple(std::move(result), std::move(err));
     }
-
-    GifImage result;
-    result.LoopCount = 0;
 
     DumpExtensions(
         gifFileIn->ExtensionBlockCount,
@@ -152,9 +153,9 @@ std::optional<GifImage> GifLoader::Open(const std::string& filePath)
                 result.LoopCount = loopCountIn;
             });
 
-        const GifDuration sourceDelay{hasGCB ? gcb.DelayTime : 0};
+        const GIFDuration sourceDelay{hasGCB ? gcb.DelayTime : 0};
 
-        GifImageFrame frame;
+        GIFImageFrame frame;
         frame.Image = img;
         frame.Delay = sourceDelay;
         result.Frames.push_back(std::move(frame));
@@ -162,7 +163,7 @@ std::optional<GifImage> GifLoader::Open(const std::string& filePath)
         prevImage = img;
     }
 
-    return result;
+    return std::make_tuple(std::move(result), nullptr);
 }
 
-} // namespace Pomdog
+} // namespace Pomdog::GIF
