@@ -31,3 +31,6 @@
 [submodule "dependencies/mbedtls"]
 	path = dependencies/mbedtls
 	url = https://github.com/ARMmbed/mbedtls.git
+[submodule "dependencies/nanosvg"]
+	path = dependencies/nanosvg
+	url = https://github.com/memononen/nanosvg.git

@@ -48,6 +48,13 @@ All of the dependencies that [Pomdog](https://github.com/mogemimi/pomdog) needs 
   * Apache License 2.0
   * Please see: [mbedtls/LICENSE](mbedtls/LICENSE)
 
+### Nano SVG
+
+* [Nano SVG - GitHub](https://github.com/memononen/nanosvg)
+* License
+  * zlib License
+  * Please see: [nanosvg/LICENSE.txt](nanosvg/LICENSE.txt)
+
 ### RapidJSON
 
 * [RapidJSON - GitHub](https://github.com/miloyip/rapidjson)
