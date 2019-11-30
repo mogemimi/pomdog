@@ -1,21 +1,26 @@
 #pragma once
 
+#include <Pomdog/Experimental/GUI/CheckBox.hpp>
+#include <Pomdog/Experimental/GUI/DebugNavigator.hpp>
+#include <Pomdog/Experimental/GUI/DrawingContext.hpp>
+#include <Pomdog/Experimental/GUI/FloatField.hpp>
+#include <Pomdog/Experimental/GUI/HorizontalLayout.hpp>
+#include <Pomdog/Experimental/GUI/IntField.hpp>
+#include <Pomdog/Experimental/GUI/PushButton.hpp>
+#include <Pomdog/Experimental/GUI/ScrollView.hpp>
+#include <Pomdog/Experimental/GUI/Slider.hpp>
+#include <Pomdog/Experimental/GUI/StackPanel.hpp>
+#include <Pomdog/Experimental/GUI/TextBlock.hpp>
+#include <Pomdog/Experimental/GUI/TextField.hpp>
+#include <Pomdog/Experimental/GUI/ToggleSwitch.hpp>
+#include <Pomdog/Experimental/GUI/TreeView.hpp>
+#include <Pomdog/Experimental/GUI/Vector3Field.hpp>
+#include <Pomdog/Experimental/GUI/WidgetHierarchy.hpp>
 #include <Pomdog/Experimental/Graphics/PrimitiveBatch.hpp>
 #include <Pomdog/Experimental/Graphics/SpriteBatch.hpp>
 #include <Pomdog/Experimental/Graphics/SpriteFont.hpp>
 #include <Pomdog/Experimental/Graphics/TrueTypeFont.hpp>
 #include <Pomdog/Experimental/Graphics/TrueTypeFontLoader.hpp>
-#include <Pomdog/Experimental/UI/DrawingContext.hpp>
-#include <Pomdog/Experimental/UI/UIElementHierarchy.hpp>
-#include <Pomdog/Experimental/UI/StackPanel.hpp>
-#include <Pomdog/Experimental/UI/Slider.hpp>
-#include <Pomdog/Experimental/UI/TextBlock.hpp>
-#include <Pomdog/Experimental/UI/TreeView.hpp>
-#include <Pomdog/Experimental/UI/ToggleSwitch.hpp>
-#include <Pomdog/Experimental/UI/DebugNavigator.hpp>
-#include <Pomdog/Experimental/UI/HorizontalLayout.hpp>
-#include <Pomdog/Experimental/UI/PushButton.hpp>
-#include <Pomdog/Experimental/UI/TextField.hpp>
 #include <Pomdog/Pomdog.hpp>
 
 namespace FeatureShowcase {
@@ -41,10 +46,10 @@ private:
     std::shared_ptr<SpriteBatch> spriteBatch;
     std::shared_ptr<SpriteFont> spriteFont;
     std::shared_ptr<PrimitiveBatch> primitiveBatch;
-    
-    std::unique_ptr<UI::DrawingContext> drawingContext;
-    std::unique_ptr<UI::UIElementHierarchy> hierarchy;
-    std::shared_ptr<UI::TextField> textField;
+
+    std::unique_ptr<GUI::DrawingContext> drawingContext;
+    std::unique_ptr<GUI::WidgetHierarchy> hierarchy;
+    std::shared_ptr<GUI::TextField> textField;
 
     std::string propertyText1;
     std::string propertyText2;
