@@ -260,10 +260,15 @@ Vector2 SpriteFont::Impl::MeasureString(const std::string& text)
             result = Vector2::Max(result, postion + Vector2{0.0f, lineSpacing});
             return;
         }
-
         float w = static_cast<float>(glyph.Subrect.Width);
         float h = static_cast<float>(glyph.Subrect.Height);
         h = std::max(h, lineSpacing);
+
+        if (glyph.Character == U' ') {
+            const auto advance = glyph.XAdvance - glyph.XOffset;
+            w += (static_cast<float>(advance) - static_cast<float>(spacing));
+        }
+
         result = Vector2::Max(result, postion + Vector2{w, h});
     });
 
