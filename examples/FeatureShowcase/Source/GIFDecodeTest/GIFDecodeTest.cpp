@@ -1,25 +1,27 @@
-#include "SpriteBatchTest.hpp"
+#include "GIFDecodeTest.hpp"
+#include <Pomdog/Experimental/Image/GIFImage.hpp>
+#include <Pomdog/Experimental/Image/GIFLoader.hpp>
+#include <Pomdog/Experimental/TexturePacker/TextureAtlasGenerator.hpp>
 #include <Pomdog/Experimental/Tween/EasingHelper.hpp>
 #include <random>
 
 namespace FeatureShowcase {
 
-SpriteBatchTest::SpriteBatchTest(const std::shared_ptr<GameHost>& gameHostIn)
+GIFDecodeTest::GIFDecodeTest(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
     , graphicsDevice(gameHostIn->GetGraphicsDevice())
     , commandQueue(gameHostIn->GetGraphicsCommandQueue())
 {
 }
 
-void SpriteBatchTest::Initialize()
+void GIFDecodeTest::Initialize()
 {
     auto assets = gameHost->GetAssetManager();
     auto clock = gameHost->GetClock();
     commandList = std::make_shared<GraphicsCommandList>(*graphicsDevice);
-    primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
     spriteBatch = std::make_shared<SpriteBatch>(
         graphicsDevice,
-        BlendDescription::CreateNonPremultiplied(),
+        BlendDescription::CreateAlphaBlend(),
         std::nullopt,
         SamplerDescription::CreatePointWrap(),
         std::nullopt,
@@ -27,16 +29,50 @@ void SpriteBatchTest::Initialize()
         SpriteBatchPixelShaderMode::Default,
         *assets);
 
-    if (auto [res, err] = assets->Load<Texture2D>("Textures/pomdog.png"); err != nullptr) {
-        Log::Verbose("failed to load texture: " + err->ToString());
+    // Loading GIF image
+    auto [gif, gifErr] = GIF::DecodeFile(PathHelper::Join(assets->GetContentDirectory(), "Textures/punch.gif"));
+    if (gifErr != nullptr) {
+        Log::Critical("Error", "failed to load a gif file: " + gifErr->ToString());
     }
-    else {
-        texture = std::move(res);
+
+    // Generating texture atlas from GIF image
+    std::vector<TexturePacker::TextureAtlasGeneratorSource> sources;
+    for (auto& frame : gif.Frames) {
+        TexturePacker::TextureAtlasGeneratorSource src;
+        src.Image = frame.Image;
+        src.Name = std::to_string(sources.size());
+        sources.push_back(std::move(src));
     }
+    auto result = TexturePacker::TextureAtlasGenerator::Generate(sources, 512, 512);
+    POMDOG_ASSERT(result.Image);
+
+    // Convert image to pre-multiplied alpha format
+    result.Image->PremultiplyAlpha();
+
+    // Creating texture from packed image
+    texture = std::make_shared<Texture2D>(
+        graphicsDevice,
+        result.Image->GetWidth(),
+        result.Image->GetHeight(),
+        false,
+        SurfaceFormat::R8G8B8A8_UNorm);
+    texture->SetData(result.Image->GetData());
+
+    textureAtlas = std::move(result.Atlas);
 
     timer = std::make_shared<Timer>(clock);
     timer->SetInterval(std::chrono::seconds(1));
     timer->SetScale(0.2);
+
+    animationTimer = std::make_shared<Timer>(clock);
+    animationTimer->SetInterval(std::chrono::milliseconds(100));
+    currentFrameIndex = 0;
+    connect(animationTimer->Elapsed, [this] {
+        currentFrameIndex++;
+        if (currentFrameIndex >= static_cast<int>(textureAtlas.regions.size())) {
+            currentFrameIndex = 0;
+        }
+    });
 
     auto mouse = gameHost->GetMouse();
     connect(mouse->ButtonDown, [this](MouseButtons mouseButton) {
@@ -53,14 +89,17 @@ void SpriteBatchTest::Initialize()
 
         std::mt19937 random(std::random_device{}());
         std::uniform_real_distribution<float> scaleDist(1.0f, 2.0f);
-        std::uniform_int_distribution<uint8_t> colorDist(160, 255);
+        std::uniform_int_distribution<int> intDist(0, static_cast<int>(textureAtlas.regions.size()) - 1);
+        std::uniform_int_distribution<uint8_t> colorDist(200, 255);
 
         const auto scale = scaleDist(random);
+        const auto reverse = ((intDist(random) % 2 == 0) ? -1.0f : 1.0f);
 
         SpriteInstance sprite;
         sprite.Position = MathHelper::ToVector2(pos);
-        sprite.Scale.X = scale;
+        sprite.Scale.X = scale * reverse;
         sprite.Scale.Y = scale;
+        sprite.StartFrameIndex = intDist(random);
         sprite.Color.R = colorDist(random);
         sprite.Color.G = colorDist(random);
         sprite.Color.B = colorDist(random);
@@ -69,11 +108,11 @@ void SpriteBatchTest::Initialize()
     });
 }
 
-void SpriteBatchTest::Update()
+void GIFDecodeTest::Update()
 {
 }
 
-void SpriteBatchTest::Draw()
+void GIFDecodeTest::Draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
@@ -96,37 +135,33 @@ void SpriteBatchTest::Draw()
 
     const auto t = static_cast<float>(timer->GetTotalTime().count());
 
-    // Drawing line
-    const auto w = static_cast<float>(presentationParameters.BackBufferWidth);
-    const auto h = static_cast<float>(presentationParameters.BackBufferHeight);
-    primitiveBatch->Begin(commandList, projectionMatrix);
-    primitiveBatch->DrawLine(Vector2{-w * 0.5f, 0.0f}, Vector2{w * 0.5f, 0.0f}, Color{221, 220, 218, 160}, 1.0f);
-    primitiveBatch->DrawLine(Vector2{0.0f, -h * 0.5f}, Vector2{0.0f, h * 0.5f}, Color{221, 220, 218, 160}, 1.0f);
-    primitiveBatch->DrawLine(Vector2{-w * 0.5f, h * 0.25f}, Vector2{w * 0.5f, h * 0.25f}, Color{221, 220, 218, 60}, 1.0f);
-    primitiveBatch->DrawLine(Vector2{-w * 0.5f, -h * 0.25f}, Vector2{w * 0.5f, -h * 0.25f}, Color{221, 220, 218, 60}, 1.0f);
-    primitiveBatch->DrawLine(Vector2{-w * 0.25f, -h * 0.5f}, Vector2{-w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
-    primitiveBatch->DrawLine(Vector2{w * 0.25f, -h * 0.5f}, Vector2{w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
-    primitiveBatch->End();
-
     spriteBatch->Begin(commandList, projectionMatrix);
 
     for (const auto& sprite : sprites) {
+        auto frameIndex = currentFrameIndex + sprite.StartFrameIndex;
+        while (frameIndex >= static_cast<int>(textureAtlas.regions.size())) {
+            frameIndex -= static_cast<int>(textureAtlas.regions.size());
+        }
+
+        const auto& frame = textureAtlas.regions[frameIndex];
+
         spriteBatch->Draw(
             texture,
             sprite.Position,
-            Rectangle{0, 0, texture->GetWidth(), texture->GetHeight()},
+            frame.Region,
             sprite.Color,
             Math::TwoPi<float> * Easings::EaseSine::InOut(t),
             Vector2{0.5f, 0.5f},
             sprite.Scale);
     }
 
+    const auto& frame = textureAtlas.regions[currentFrameIndex];
     spriteBatch->Draw(
         texture,
         Vector2{64.0f, 64.0f},
-        Rectangle{0, 0, texture->GetWidth(), texture->GetHeight()},
+        frame.Region,
         Color::White,
-        Math::TwoPi<float> * Easings::EaseSine::InOut(t),
+        0.0f,
         Vector2{1.0f, 1.0f},
         2.0f);
 

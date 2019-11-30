@@ -5,6 +5,7 @@
 #include "Beam2DTest/Beam2DTest.hpp"
 #include "DistanceFieldFontTest/DistanceFieldFontTest.hpp"
 #include "EditorGUITest/EditorGUITest.hpp"
+#include "GIFDecodeTest/GIFDecodeTest.hpp"
 #include "GamepadTest/GamepadTest.hpp"
 #include "HTTPClientTest/HTTPClientTest.hpp"
 #include "ImageEffectsTest/ImageEffectsTest.hpp"
@@ -112,6 +113,10 @@ void FeatureShowcaseGame::Initialize()
         window->SetTitle("Feature Showcase > Texture2DLoader Test");
         subGame = std::make_shared<FeatureShowcase::Texture2DLoaderTest>(gameHost);
     });
+    buttons.emplace_back("GIFDecode Test", [this] {
+        window->SetTitle("Feature Showcase > GIFDecode Test");
+        subGame = std::make_shared<FeatureShowcase::GIFDecodeTest>(gameHost);
+    });
     buttons.emplace_back("VoxelModel Test", [this] {
         window->SetTitle("Feature Showcase > VoxelModel Test");
         subGame = std::make_shared<FeatureShowcase::VoxelModelTest>(gameHost);
@@ -195,7 +200,7 @@ void FeatureShowcaseGame::Update()
     }
 
     connect(mouse->ScrollWheel, [this](std::int32_t delta) {
-        scrollY = std::clamp(scrollY + static_cast<double>(delta) * 0.02, -200.0, 0.0);
+        scrollY = std::clamp(scrollY + static_cast<double>(delta) * 0.02, -280.0, 0.0);
     });
 }
 
