@@ -488,38 +488,46 @@ void GraphicsContextMetal::SetRenderPass(const RenderPass& renderPass)
     MTLRenderPassDescriptor* renderPassDescriptor = [[MTLRenderPassDescriptor alloc] init];
     POMDOG_ASSERT(renderPassDescriptor != nil);
 
-    bool useBackBuffer = false;
+    const bool useBackBuffer = (std::get<0>(renderPass.RenderTargets.front()) == nullptr);
 
-    int renderTargetIndex = 0;
-    for (const auto& renderTargetView: renderPass.RenderTargets) {
-        auto& renderTarget = std::get<0>(renderTargetView);
-        auto& clearColor = std::get<1>(renderTargetView);
-
-        if (renderTarget == nullptr) {
-            if (useBackBuffer) {
-                break;
-            }
-            useBackBuffer = true;
-            renderPassDescriptor.colorAttachments[renderTargetIndex].texture = targetView.currentDrawable.texture;
+    const auto setClearColor = [&](int index, const std::optional<Vector4>& clearColor) {
+        if (clearColor) {
+            renderPassDescriptor.colorAttachments[index].loadAction = MTLLoadActionClear;
+            renderPassDescriptor.colorAttachments[index].clearColor = ToClearColor(*clearColor);
         }
         else {
+            renderPassDescriptor.colorAttachments[index].loadAction = MTLLoadActionDontCare;
+        }
+        renderPassDescriptor.colorAttachments[index].storeAction = MTLStoreActionStore;
+    };
+
+    if (useBackBuffer) {
+        auto& renderTargetView = renderPass.RenderTargets.front();
+        auto& clearColor = std::get<1>(renderTargetView);
+        POMDOG_ASSERT(std::get<0>(renderTargetView) == nullptr);
+
+        constexpr int renderTargetIndex = 0;
+        renderPassDescriptor.colorAttachments[renderTargetIndex].texture = targetView.currentDrawable.texture;
+        setClearColor(renderTargetIndex, clearColor);
+    }
+    else {
+        int renderTargetIndex = 0;
+        for (const auto& renderTargetView: renderPass.RenderTargets) {
+            auto& renderTarget = std::get<0>(renderTargetView);
+            auto& clearColor = std::get<1>(renderTargetView);
+
+            if (renderTarget == nullptr) {
+                break;
+            }
             auto nativeRenderTarget = static_cast<RenderTarget2DMetal*>(renderTarget->GetNativeRenderTarget2D());
             POMDOG_ASSERT(nativeRenderTarget == dynamic_cast<RenderTarget2DMetal*>(renderTarget->GetNativeRenderTarget2D()));
             POMDOG_ASSERT(nativeRenderTarget != nullptr);
 
             renderPassDescriptor.colorAttachments[renderTargetIndex].texture = nativeRenderTarget->GetTexture();
-        }
 
-        if (clearColor) {
-            renderPassDescriptor.colorAttachments[renderTargetIndex].loadAction = MTLLoadActionClear;
-            renderPassDescriptor.colorAttachments[renderTargetIndex].clearColor = ToClearColor(*clearColor);
+            setClearColor(renderTargetIndex, clearColor);
+            ++renderTargetIndex;
         }
-        else {
-            renderPassDescriptor.colorAttachments[renderTargetIndex].loadAction = MTLLoadActionDontCare;
-        }
-
-        renderPassDescriptor.colorAttachments[renderTargetIndex].storeAction = MTLStoreActionStore;
-        ++renderTargetIndex;
     }
 
     {
