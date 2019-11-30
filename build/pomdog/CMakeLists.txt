@@ -388,6 +388,7 @@ set(POMDOG_SOURCES_EXPERIMENTAL
   ${POMDOG_DIR}/include/Pomdog/Experimental/Image/GIFImage.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Image/GIFLoader.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Image/Image.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Image/SVGLoader.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/ImageEffects/ChromaticAberration.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/ImageEffects/FishEyeEffect.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/ImageEffects/FXAA.hpp
@@ -524,6 +525,7 @@ set(POMDOG_SOURCES_EXPERIMENTAL
   ${POMDOG_DIR}/src/Experimental/Graphics/TrueTypeFontLoader.cpp
   ${POMDOG_DIR}/src/Experimental/Image/GIFLoader.cpp
   ${POMDOG_DIR}/src/Experimental/Image/Image.cpp
+  ${POMDOG_DIR}/src/Experimental/Image/SVGLoader.cpp
   ${POMDOG_DIR}/src/Experimental/ImageEffects/ChromaticAberration.cpp
   ${POMDOG_DIR}/src/Experimental/ImageEffects/FishEyeEffect.cpp
   ${POMDOG_DIR}/src/Experimental/ImageEffects/FXAA.cpp
