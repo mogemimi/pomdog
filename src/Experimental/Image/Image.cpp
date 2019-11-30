@@ -52,7 +52,7 @@ const Color* Image::GetData() const noexcept
 void Image::SetData(const Color* pixelData)
 {
     POMDOG_ASSERT(pixelData != nullptr);
-    std::memcpy(data.data(), pixelData, data.size());
+    std::memcpy(data.data(), pixelData, data.size() * sizeof(Color));
 }
 
 void Image::SetData(std::vector<Color>&& pixelData)
