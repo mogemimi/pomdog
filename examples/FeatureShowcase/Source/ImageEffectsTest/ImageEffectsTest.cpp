@@ -82,8 +82,7 @@ void ImageEffectsTest::Draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
-    Viewport viewport = {0, 0, presentationParameters.BackBufferWidth,
-                         presentationParameters.BackBufferHeight};
+    Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
     RenderPass pass;
     pass.RenderTargets[0] = {renderTarget, Color::CornflowerBlue.ToVector4()};
     pass.ClearDepth = 1.0f;

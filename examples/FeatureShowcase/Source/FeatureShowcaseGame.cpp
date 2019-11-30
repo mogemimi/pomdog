@@ -12,11 +12,11 @@
 #include "Particle2DTest/Particle2DTest.hpp"
 #include "PolylineDrawingTest/PolylineDrawingTest.hpp"
 #include "PrimitiveBatchTest/PrimitiveBatchTest.hpp"
+#include "Skeletal2DTest/Skeletal2DTest.hpp"
+#include "Skinning2DTest/Skinning2DTest.hpp"
 #include "SpriteBatchTest/SpriteBatchTest.hpp"
 #include "SpriteFontTest/SpriteFontTest.hpp"
 #include "SpriteLineTest/SpriteLineTest.hpp"
-#include "Skeletal2DTest/Skeletal2DTest.hpp"
-#include "Skinning2DTest/Skinning2DTest.hpp"
 #include "Texture2DLoaderTest/Texture2DLoaderTest.hpp"
 #include "VoxelModelTest/VoxelModelTest.hpp"
 #include <cmath>
@@ -39,7 +39,7 @@ void FeatureShowcaseGame::Initialize()
     window->SetTitle("Feature Showcase");
     commandList = std::make_shared<GraphicsCommandList>(*graphicsDevice);
 
-    auto[font, fontErr] = assets->Load<TrueTypeFont>("Fonts/NotoSans/NotoSans-Regular.ttf");
+    auto [font, fontErr] = assets->Load<TrueTypeFont>("Fonts/NotoSans/NotoSans-Regular.ttf");
     if (fontErr != nullptr) {
         Log::Critical("Error", "failed to load a font file: " + fontErr->ToString());
     }

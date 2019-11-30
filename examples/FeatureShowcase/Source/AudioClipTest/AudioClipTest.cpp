@@ -16,7 +16,7 @@ void AudioClipTest::Initialize()
     commandList = std::make_shared<GraphicsCommandList>(*graphicsDevice);
     spriteBatch = std::make_shared<SpriteBatch>(graphicsDevice, *assets);
 
-    auto[font, fontErr] = assets->Load<TrueTypeFont>("Fonts/NotoSans/NotoSans-Regular.ttf");
+    auto [font, fontErr] = assets->Load<TrueTypeFont>("Fonts/NotoSans/NotoSans-Regular.ttf");
     if (fontErr != nullptr) {
         Log::Critical("Error", "failed to load a font file: " + fontErr->ToString());
     }
@@ -27,7 +27,7 @@ void AudioClipTest::Initialize()
     auto audioEngine = gameHost->GetAudioEngine();
 
     // NOTE: Load .wav audio file.
-    if (auto[audioClip, err] = assets->Load<AudioClip>("Sounds/pong1.wav"); err != nullptr) {
+    if (auto [audioClip, err] = assets->Load<AudioClip>("Sounds/pong1.wav"); err != nullptr) {
         Log::Verbose("failed to load audio: " + err->ToString());
     }
     else {
@@ -37,7 +37,7 @@ void AudioClipTest::Initialize()
     }
 
     // NOTE: Load .ogg audio file.
-    if (auto[audioClip, err] = assets->Load<AudioClip>("Sounds/synth.ogg"); err != nullptr) {
+    if (auto [audioClip, err] = assets->Load<AudioClip>("Sounds/synth.ogg"); err != nullptr) {
         Log::Verbose("failed to load audio: " + err->ToString());
     }
     else {

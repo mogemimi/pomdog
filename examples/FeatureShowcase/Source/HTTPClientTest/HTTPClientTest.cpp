@@ -16,7 +16,7 @@ void HTTPClientTest::Initialize()
     commandList = std::make_shared<GraphicsCommandList>(*graphicsDevice);
     spriteBatch = std::make_shared<SpriteBatch>(graphicsDevice, *assets);
 
-    auto[font, fontErr] = assets->Load<TrueTypeFont>("Fonts/NotoSans/NotoSans-Regular.ttf");
+    auto [font, fontErr] = assets->Load<TrueTypeFont>("Fonts/NotoSans/NotoSans-Regular.ttf");
     if (fontErr != nullptr) {
         Log::Critical("Error", "failed to load a font file: " + fontErr->ToString());
     }
@@ -30,7 +30,7 @@ void HTTPClientTest::Initialize()
             webText = err->ToString();
             return;
         }
-        webText = std::string{resp->Body.data() , resp->Body.size()};
+        webText = std::string{resp->Body.data(), resp->Body.size()};
         requestURL = resp->Request->URL;
 
         size_t i = 0;
@@ -47,7 +47,7 @@ void HTTPClientTest::Initialize()
             }
         }
     };
-    auto[conn, err] = http->Get("https://www.google.com/humans.txt", std::move(callback));
+    auto [conn, err] = http->Get("https://www.google.com/humans.txt", std::move(callback));
     if (err != nullptr) {
         webText = err->ToString();
     }
@@ -80,7 +80,7 @@ void HTTPClientTest::Draw()
     commandList->SetRenderPass(std::move(pass));
 
     spriteBatch->Begin(commandList, projectionMatrix);
-    spriteFont->Draw(*spriteBatch, requestURL, Vector2{-200, 120}, Color::Black, 0.0f, Vector2{ 0.0f, 0.5f }, 1.0f);
+    spriteFont->Draw(*spriteBatch, requestURL, Vector2{-200, 120}, Color::Black, 0.0f, Vector2{0.0f, 0.5f}, 1.0f);
     spriteFont->Draw(*spriteBatch, webText, Vector2::Zero, Color::White, 0.0f, Vector2{0.5f, 0.5f}, 1.0f);
 
     spriteBatch->End();

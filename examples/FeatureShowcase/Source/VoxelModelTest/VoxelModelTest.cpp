@@ -20,7 +20,7 @@ void VoxelModelTest::Initialize()
         std::nullopt,
         *assets);
 
-    if (auto[res, err] = assets->Load<MagicaVoxel::VoxModel>("VoxelModels/MaidChan.vox"); err != nullptr) {
+    if (auto [res, err] = assets->Load<MagicaVoxel::VoxModel>("VoxelModels/MaidChan.vox"); err != nullptr) {
         Log::Verbose("failed to load texture: " + err->ToString());
     }
     else {

@@ -18,7 +18,7 @@ void BasicEffectTest::Initialize()
     commandList = std::make_shared<GraphicsCommandList>(*graphicsDevice);
 
     // NOTE: Load texture from image file
-    if (auto[res, err] = assets->Load<Texture2D>("Textures/pomdog.png"); err != nullptr) {
+    if (auto [res, err] = assets->Load<Texture2D>("Textures/pomdog.png"); err != nullptr) {
         Log::Verbose("failed to load texture: " + err->ToString());
     }
     else {

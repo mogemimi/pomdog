@@ -1,6 +1,5 @@
 #include "Skinning2DTest.hpp"
 #include <Pomdog/Experimental/Graphics/BasicEffect.hpp>
-#include <Pomdog/Experimental/TexturePacker/TextureAtlasLoader.hpp>
 #include <Pomdog/Experimental/Skeletal2D/AnimationClip.hpp>
 #include <Pomdog/Experimental/Skeletal2D/SkeletonHelper.hpp>
 #include <Pomdog/Experimental/Spine/AnimationLoader.hpp>
@@ -8,6 +7,7 @@
 #include <Pomdog/Experimental/Spine/SkeletonLoader.hpp>
 #include <Pomdog/Experimental/Spine/SkinLoader.hpp>
 #include <Pomdog/Experimental/Spine/SkinnedMeshLoader.hpp>
+#include <Pomdog/Experimental/TexturePacker/TextureAtlasLoader.hpp>
 #include <random>
 
 namespace FeatureShowcase {
@@ -40,7 +40,7 @@ void Skinning2DTest::Initialize()
     auto skeletonJSONPath = PathHelper::Join(assets->GetContentDirectory(), "Skeletal2D/MaidGun/MaidGun.json");
 
     // NOTE: Load texture file for skeletal animation model
-    if (auto[res, err] = assets->Load<Texture2D>(texturePath); err != nullptr) {
+    if (auto [res, err] = assets->Load<Texture2D>(texturePath); err != nullptr) {
         Log::Verbose("failed to load texture: " + err->ToString());
     }
     else {
@@ -49,7 +49,7 @@ void Skinning2DTest::Initialize()
 
     // NOTE: Load texture atlas file for skeletal animation model
     TexturePacker::TextureAtlas textureAtlas;
-    if (auto[atlas, err] = TexturePacker::TextureAtlasLoader::Load(textureAtlasPath); err != nullptr) {
+    if (auto [atlas, err] = TexturePacker::TextureAtlasLoader::Load(textureAtlasPath); err != nullptr) {
         Log::Verbose("failed to load texture atlas: " + err->ToString());
     }
     else {
@@ -57,7 +57,7 @@ void Skinning2DTest::Initialize()
     }
 
     // NOTE: Load skeletal animation data
-    if (auto[desc, descErr] = Spine::SkeletonDescLoader::Load(skeletonJSONPath); descErr != nullptr) {
+    if (auto [desc, descErr] = Spine::SkeletonDescLoader::Load(skeletonJSONPath); descErr != nullptr) {
         Log::Verbose("failed to load skeleton JSON file: " + descErr->ToString());
     }
     else {
@@ -67,7 +67,7 @@ void Skinning2DTest::Initialize()
         skeletonPose = std::make_shared<Skeletal2D::SkeletonPose>(Skeletal2D::SkeletonPose::CreateBindPose(*skeleton));
 
         // NOTE: Create animation clip and animation state
-        auto[animationClip, clipErr] = Spine::CreateAnimationClip(desc, textureAtlas, "Run");
+        auto [animationClip, clipErr] = Spine::CreateAnimationClip(desc, textureAtlas, "Run");
         if (clipErr != nullptr) {
             Log::Verbose("failed to create animation clip: " + clipErr->ToString());
         }
@@ -85,7 +85,7 @@ void Skinning2DTest::Initialize()
 
         // NOTE: Create skinned mesh
         auto textureSize = Vector2{static_cast<float>(texture->GetWidth()), static_cast<float>(texture->GetHeight())};
-        auto[skinnedMeshData, skinnedMeshErr] = Spine::CreateSkinnedMesh(
+        auto [skinnedMeshData, skinnedMeshErr] = Spine::CreateSkinnedMesh(
             globalPose,
             desc,
             textureAtlas,

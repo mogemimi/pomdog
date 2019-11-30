@@ -81,7 +81,7 @@ void LineBatchTest::Draw()
 
     auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
         static_cast<float>(presentationParameters.BackBufferWidth),
-            static_cast<float>(presentationParameters.BackBufferHeight),
+        static_cast<float>(presentationParameters.BackBufferHeight),
         0.0f,
         100.0f);
 

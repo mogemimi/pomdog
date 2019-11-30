@@ -2,12 +2,12 @@
 
 #include <Pomdog/Experimental/Graphics/PrimitiveBatch.hpp>
 #include <Pomdog/Experimental/Graphics/SpriteBatch.hpp>
-#include <Pomdog/Experimental/TexturePacker/TextureAtlas.hpp>
 #include <Pomdog/Experimental/Skeletal2D/AnimationState.hpp>
 #include <Pomdog/Experimental/Skeletal2D/AnimationSystem.hpp>
 #include <Pomdog/Experimental/Skeletal2D/Skeleton.hpp>
 #include <Pomdog/Experimental/Skeletal2D/SkeletonPose.hpp>
 #include <Pomdog/Experimental/Skeletal2D/Skin.hpp>
+#include <Pomdog/Experimental/TexturePacker/TextureAtlas.hpp>
 #include <Pomdog/Pomdog.hpp>
 
 namespace FeatureShowcase {

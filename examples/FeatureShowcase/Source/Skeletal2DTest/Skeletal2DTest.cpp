@@ -1,12 +1,12 @@
 #include "Skeletal2DTest.hpp"
 #include <Pomdog/Experimental/Graphics/BasicEffect.hpp>
-#include <Pomdog/Experimental/TexturePacker/TextureAtlasLoader.hpp>
 #include <Pomdog/Experimental/Skeletal2D/AnimationClip.hpp>
 #include <Pomdog/Experimental/Skeletal2D/SkeletonHelper.hpp>
 #include <Pomdog/Experimental/Spine/AnimationLoader.hpp>
 #include <Pomdog/Experimental/Spine/SkeletonDescLoader.hpp>
 #include <Pomdog/Experimental/Spine/SkeletonLoader.hpp>
 #include <Pomdog/Experimental/Spine/SkinLoader.hpp>
+#include <Pomdog/Experimental/TexturePacker/TextureAtlasLoader.hpp>
 #include <random>
 
 namespace FeatureShowcase {
@@ -39,7 +39,7 @@ void Skeletal2DTest::Initialize()
     auto skeletonJSONPath = PathHelper::Join(assets->GetContentDirectory(), "Skeletal2D/MaidChan/skeleton.json");
 
     // NOTE: Load texture file for skeletal animation model
-    if (auto[res, err] = assets->Load<Texture2D>(texturePath); err != nullptr) {
+    if (auto [res, err] = assets->Load<Texture2D>(texturePath); err != nullptr) {
         Log::Verbose("failed to load texture: " + err->ToString());
     }
     else {
@@ -48,7 +48,7 @@ void Skeletal2DTest::Initialize()
 
     // NOTE: Load texture atlas file for skeletal animation model
     TexturePacker::TextureAtlas textureAtlas;
-    if (auto[atlas, err] = TexturePacker::TextureAtlasLoader::Load(textureAtlasPath); err != nullptr) {
+    if (auto [atlas, err] = TexturePacker::TextureAtlasLoader::Load(textureAtlasPath); err != nullptr) {
         Log::Verbose("failed to load texture atlas: " + err->ToString());
     }
     else {
@@ -56,7 +56,7 @@ void Skeletal2DTest::Initialize()
     }
 
     // NOTE: Load skeletal animation data
-    if (auto[desc, descErr] = Spine::SkeletonDescLoader::Load(skeletonJSONPath); descErr != nullptr) {
+    if (auto [desc, descErr] = Spine::SkeletonDescLoader::Load(skeletonJSONPath); descErr != nullptr) {
         Log::Verbose("failed to load skeleton JSON file: " + descErr->ToString());
     }
     else {
@@ -66,7 +66,7 @@ void Skeletal2DTest::Initialize()
         skeletonPose = std::make_shared<Skeletal2D::SkeletonPose>(Skeletal2D::SkeletonPose::CreateBindPose(*skeleton));
 
         // NOTE: Create animation clip and animation state
-        auto[animationClip, clipErr] = Spine::CreateAnimationClip(desc, textureAtlas, "Walk");
+        auto [animationClip, clipErr] = Spine::CreateAnimationClip(desc, textureAtlas, "Walk");
         if (clipErr != nullptr) {
             Log::Verbose("failed to create animation clip: " + clipErr->ToString());
         }

@@ -26,7 +26,7 @@ void DistanceFieldFontTest::Initialize()
         SpriteBatchPixelShaderMode::DistanceField,
         *assets);
 
-    auto[font, fontErr] = assets->Load<SpriteFont>("BitmapFonts/Ubuntu-Regular.fnt");
+    auto [font, fontErr] = assets->Load<SpriteFont>("BitmapFonts/Ubuntu-Regular.fnt");
     if (fontErr != nullptr) {
         Log::Critical("Error", "failed to load a font file: " + fontErr->ToString());
     }

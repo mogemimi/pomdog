@@ -16,7 +16,7 @@ void Texture2DLoaderTest::Initialize()
     commandList = std::make_shared<GraphicsCommandList>(*graphicsDevice);
     spriteBatch = std::make_shared<SpriteBatch>(graphicsDevice, *assets);
 
-    auto[font, fontErr] = assets->Load<TrueTypeFont>("Fonts/NotoSans/NotoSans-Regular.ttf");
+    auto [font, fontErr] = assets->Load<TrueTypeFont>("Fonts/NotoSans/NotoSans-Regular.ttf");
     if (fontErr != nullptr) {
         Log::Critical("Error", "failed to load a font file: " + fontErr->ToString());
     }
@@ -25,7 +25,7 @@ void Texture2DLoaderTest::Initialize()
     spriteFont->PrepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
 
     // NOTE: Load PNG texture.
-    if (auto[res, err] = assets->Load<Texture2D>("Textures/pomdog.png"); err != nullptr) {
+    if (auto [res, err] = assets->Load<Texture2D>("Textures/pomdog.png"); err != nullptr) {
         Log::Verbose("failed to load texture: " + err->ToString());
     }
     else {
@@ -33,7 +33,7 @@ void Texture2DLoaderTest::Initialize()
     }
 
     // NOTE: Load DDS texture (DXT1 compression).
-    if (auto[res, err] = assets->Load<Texture2D>("Textures/pomdog-dxt1.dds"); err != nullptr) {
+    if (auto [res, err] = assets->Load<Texture2D>("Textures/pomdog-dxt1.dds"); err != nullptr) {
         Log::Verbose("failed to load texture: " + err->ToString());
     }
     else {
@@ -41,7 +41,7 @@ void Texture2DLoaderTest::Initialize()
     }
 
     // NOTE: Load DDS texture (DXT5 compression).
-    if (auto[res, err] = assets->Load<Texture2D>("Textures/pomdog-dxt5.dds"); err != nullptr) {
+    if (auto [res, err] = assets->Load<Texture2D>("Textures/pomdog-dxt5.dds"); err != nullptr) {
         Log::Verbose("failed to load texture: " + err->ToString());
     }
     else {
@@ -49,7 +49,7 @@ void Texture2DLoaderTest::Initialize()
     }
 
     // NOTE: Load PNM/Netpbm bitmap ascii texture (P1).
-    if (auto[res, err] = assets->Load<Texture2D>("Textures/pomdog-p1.pbm"); err != nullptr) {
+    if (auto [res, err] = assets->Load<Texture2D>("Textures/pomdog-p1.pbm"); err != nullptr) {
         Log::Verbose("failed to load texture: " + err->ToString());
     }
     else {
@@ -57,7 +57,7 @@ void Texture2DLoaderTest::Initialize()
     }
 
     // NOTE: Load PNM/Netpbm graymap ascii texture (P2).
-    if (auto[res, err] = assets->Load<Texture2D>("Textures/pomdog-p2.pgm"); err != nullptr) {
+    if (auto [res, err] = assets->Load<Texture2D>("Textures/pomdog-p2.pgm"); err != nullptr) {
         Log::Verbose("failed to load texture: " + err->ToString());
     }
     else {
@@ -65,7 +65,7 @@ void Texture2DLoaderTest::Initialize()
     }
 
     // NOTE: Load PNM/Netpbm pixmap ascii texture (P3).
-    if (auto[res, err] = assets->Load<Texture2D>("Textures/pomdog-p3.ppm"); err != nullptr) {
+    if (auto [res, err] = assets->Load<Texture2D>("Textures/pomdog-p3.ppm"); err != nullptr) {
         Log::Verbose("failed to load texture: " + err->ToString());
     }
     else {
@@ -73,7 +73,7 @@ void Texture2DLoaderTest::Initialize()
     }
 
     // NOTE: Load PNM/Netpbm bitmap binary texture (P4).
-    if (auto[res, err] = assets->Load<Texture2D>("Textures/pomdog-p4.pbm"); err != nullptr) {
+    if (auto [res, err] = assets->Load<Texture2D>("Textures/pomdog-p4.pbm"); err != nullptr) {
         Log::Verbose("failed to load texture: " + err->ToString());
     }
     else {
@@ -81,7 +81,7 @@ void Texture2DLoaderTest::Initialize()
     }
 
     // NOTE: Load PNM/Netpbm graymap binary texture (P5).
-    if (auto[res, err] = assets->Load<Texture2D>("Textures/pomdog-p5.pgm"); err != nullptr) {
+    if (auto [res, err] = assets->Load<Texture2D>("Textures/pomdog-p5.pgm"); err != nullptr) {
         Log::Verbose("failed to load texture: " + err->ToString());
     }
     else {
@@ -89,7 +89,7 @@ void Texture2DLoaderTest::Initialize()
     }
 
     // NOTE: Load PNM/Netpbm pixmap binary texture (P6).
-    if (auto[res, err] = assets->Load<Texture2D>("Textures/pomdog-p6.ppm"); err != nullptr) {
+    if (auto [res, err] = assets->Load<Texture2D>("Textures/pomdog-p6.ppm"); err != nullptr) {
         Log::Verbose("failed to load texture: " + err->ToString());
     }
     else {

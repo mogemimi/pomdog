@@ -16,7 +16,7 @@ void GamepadTest::Initialize()
     commandList = std::make_shared<GraphicsCommandList>(*graphicsDevice);
     spriteBatch = std::make_shared<SpriteBatch>(graphicsDevice, *assets);
 
-    auto[font, fontErr] = assets->Load<TrueTypeFont>("Fonts/NotoSans/NotoSans-Regular.ttf");
+    auto [font, fontErr] = assets->Load<TrueTypeFont>("Fonts/NotoSans/NotoSans-Regular.ttf");
     if (fontErr != nullptr) {
         Log::Critical("Error", "failed to load a font file: " + fontErr->ToString());
     }

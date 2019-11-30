@@ -86,15 +86,16 @@ void SpriteLineTest::Draw()
     spriteBatch->Begin(commandList, projectionMatrix);
 
     SpriteLine spriteLine;
-    spriteLine.Draw(*spriteBatch,
-                    texture,
-                    Rectangle{0, 0, 10, 32},
-                    Rectangle{10, 0, 12, 32},
-                    Rectangle{22, 0, 10, 32},
-                    Vector2{0.0f, 0.0f},
-                    mousePosition,
-                    1.0f,
-                    Color::White);
+    spriteLine.Draw(
+        *spriteBatch,
+        texture,
+        Rectangle{0, 0, 10, 32},
+        Rectangle{10, 0, 12, 32},
+        Rectangle{22, 0, 10, 32},
+        Vector2{0.0f, 0.0f},
+        mousePosition,
+        1.0f,
+        Color::White);
 
     spriteBatch->End();
 
