@@ -371,7 +371,7 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/src/Utility/Tagged.hpp
 )
 
-set(POMDOG_SOURCES_EXPERIMENTAL
+set(POMDOG_SOURCES_EXPERIMENTAL_GRAPHICS
   ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/BasicEffect.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/FontGlyph.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/LineBatch.hpp
@@ -385,6 +385,21 @@ set(POMDOG_SOURCES_EXPERIMENTAL
   ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/Texture2DView.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/TrueTypeFont.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/TrueTypeFontLoader.hpp
+  ${POMDOG_DIR}/src/Experimental/Graphics/BasicEffect.cpp
+  ${POMDOG_DIR}/src/Experimental/Graphics/LineBatch.cpp
+  ${POMDOG_DIR}/src/Experimental/Graphics/PolylineBatch.cpp
+  ${POMDOG_DIR}/src/Experimental/Graphics/PolygonShapeBuilder.cpp
+  ${POMDOG_DIR}/src/Experimental/Graphics/PrimitiveBatch.cpp
+  ${POMDOG_DIR}/src/Experimental/Graphics/SpriteBatch.cpp
+  ${POMDOG_DIR}/src/Experimental/Graphics/SpriteFont.cpp
+  ${POMDOG_DIR}/src/Experimental/Graphics/SpriteFontLoader.cpp
+  ${POMDOG_DIR}/src/Experimental/Graphics/SpriteLine.cpp
+  ${POMDOG_DIR}/src/Experimental/Graphics/Texture2DView.cpp
+  ${POMDOG_DIR}/src/Experimental/Graphics/TrueTypeFont.cpp
+  ${POMDOG_DIR}/src/Experimental/Graphics/TrueTypeFontLoader.cpp
+)
+
+set(POMDOG_SOURCES_EXPERIMENTAL_GUI
   ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/CheckBox.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/DebugNavigator.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/DisclosureTriangleButton.hpp
@@ -418,10 +433,45 @@ set(POMDOG_SOURCES_EXPERIMENTAL
   ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/VerticalScrollBar.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/Widget.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/WidgetHierarchy.hpp
+  ${POMDOG_DIR}/src/Experimental/GUI/CheckBox.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/DebugNavigator.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/DisclosureTriangleButton.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/DrawingContext.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/FloatField.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/HorizontalLayout.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/HorizontalLine.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/IntField.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/NumberField.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/PushButton.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/ScenePanel.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/ScrollView.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/Slider.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/StackPanel.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/TextBlock.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/TextEdit.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/TextField.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/ToggleSwitch.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/TreeView.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/UIEventDispatcher.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/UIHelper.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/Vector3Field.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/VerticalLayout.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/VerticalScrollBar.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/Widget.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/WidgetHierarchy.cpp
+)
+
+set(POMDOG_SOURCES_EXPERIMENTAL_IMAGE
   ${POMDOG_DIR}/include/Pomdog/Experimental/Image/GIFImage.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Image/GIFLoader.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Image/Image.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Image/SVGLoader.hpp
+  ${POMDOG_DIR}/src/Experimental/Image/GIFLoader.cpp
+  ${POMDOG_DIR}/src/Experimental/Image/Image.cpp
+  ${POMDOG_DIR}/src/Experimental/Image/SVGLoader.cpp
+)
+
+set(POMDOG_SOURCES_EXPERIMENTAL_IMAGEEFFECTS
   ${POMDOG_DIR}/include/Pomdog/Experimental/ImageEffects/ChromaticAberration.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/ImageEffects/FishEyeEffect.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/ImageEffects/FXAA.hpp
@@ -432,9 +482,27 @@ set(POMDOG_SOURCES_EXPERIMENTAL
   ${POMDOG_DIR}/include/Pomdog/Experimental/ImageEffects/ScreenQuad.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/ImageEffects/SepiaToneEffect.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/ImageEffects/VignetteEffect.hpp
+  ${POMDOG_DIR}/src/Experimental/ImageEffects/ChromaticAberration.cpp
+  ${POMDOG_DIR}/src/Experimental/ImageEffects/FishEyeEffect.cpp
+  ${POMDOG_DIR}/src/Experimental/ImageEffects/FXAA.cpp
+  ${POMDOG_DIR}/src/Experimental/ImageEffects/GrayscaleEffect.cpp
+  ${POMDOG_DIR}/src/Experimental/ImageEffects/PostProcessCompositor.cpp
+  ${POMDOG_DIR}/src/Experimental/ImageEffects/RetroCrtEffect.cpp
+  ${POMDOG_DIR}/src/Experimental/ImageEffects/ScreenQuad.cpp
+  ${POMDOG_DIR}/src/Experimental/ImageEffects/SepiaToneEffect.cpp
+  ${POMDOG_DIR}/src/Experimental/ImageEffects/VignetteEffect.cpp
+)
+
+set(POMDOG_SOURCES_EXPERIMENTAL_MAGICAVOXEL
   ${POMDOG_DIR}/include/Pomdog/Experimental/MagicaVoxel/VoxModel.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/MagicaVoxel/VoxModelExporter.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/MagicaVoxel/VoxModelLoader.hpp
+  ${POMDOG_DIR}/src/Experimental/MagicaVoxel/VoxChunkHeader.hpp
+  ${POMDOG_DIR}/src/Experimental/MagicaVoxel/VoxModelLoader.cpp
+  ${POMDOG_DIR}/src/Experimental/MagicaVoxel/VoxModelExporter.cpp
+)
+
+set(POMDOG_SOURCES_EXPERIMENTAL_PARTICLE2D
   ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/Beam.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/BeamBranching.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/BeamEmitter.hpp
@@ -453,6 +521,11 @@ set(POMDOG_SOURCES_EXPERIMENTAL
   ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/detail/ParticleParameterCurve.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/detail/ParticleParameterRandom.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/detail/ParticleParameterRandomCurves.hpp
+  ${POMDOG_DIR}/src/Experimental/Particle2D/BeamSystem.cpp
+  ${POMDOG_DIR}/src/Experimental/Particle2D/ParticleSystem.cpp
+)
+
+set(POMDOG_SOURCES_EXPERIMENTAL_REACTIVE
   ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Observable.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/ObservableBase.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/ObservableBuilder.hpp
@@ -475,6 +548,9 @@ set(POMDOG_SOURCES_EXPERIMENTAL
   ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Operators/TimeoutOperator.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Operators/ZipOperator.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Subjects/KeyDownSubject.hpp
+)
+
+set(POMDOG_SOURCES_EXPERIMENTAL_SKELETAL2D
   ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/AnimationClip.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/AnimationState.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/AnimationSystem.hpp
@@ -507,73 +583,6 @@ set(POMDOG_SOURCES_EXPERIMENTAL
   ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/Tracks/ScaleTrack.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/Tracks/SpriteAnimationTrack.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/Tracks/TranslationTrack.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Spine/AnimationGraphBuilder.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Spine/AnimationLoader.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Spine/SkeletonDesc.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Spine/SkeletonDescLoader.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Spine/SkeletonLoader.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Spine/SkinLoader.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Spine/SkinnedMeshLoader.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureAtlas.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureAtlasGenerator.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureAtlasLoader.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureRegion.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Tween/EasingHelper.hpp
-  ${POMDOG_DIR}/src/Experimental/Graphics/BasicEffect.cpp
-  ${POMDOG_DIR}/src/Experimental/Graphics/LineBatch.cpp
-  ${POMDOG_DIR}/src/Experimental/Graphics/PolylineBatch.cpp
-  ${POMDOG_DIR}/src/Experimental/Graphics/PolygonShapeBuilder.cpp
-  ${POMDOG_DIR}/src/Experimental/Graphics/PrimitiveBatch.cpp
-  ${POMDOG_DIR}/src/Experimental/Graphics/SpriteBatch.cpp
-  ${POMDOG_DIR}/src/Experimental/Graphics/SpriteFont.cpp
-  ${POMDOG_DIR}/src/Experimental/Graphics/SpriteFontLoader.cpp
-  ${POMDOG_DIR}/src/Experimental/Graphics/SpriteLine.cpp
-  ${POMDOG_DIR}/src/Experimental/Graphics/Texture2DView.cpp
-  ${POMDOG_DIR}/src/Experimental/Graphics/TrueTypeFont.cpp
-  ${POMDOG_DIR}/src/Experimental/Graphics/TrueTypeFontLoader.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/CheckBox.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/DebugNavigator.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/DisclosureTriangleButton.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/DrawingContext.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/FloatField.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/HorizontalLayout.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/HorizontalLine.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/IntField.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/NumberField.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/PushButton.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/ScenePanel.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/ScrollView.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/Slider.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/StackPanel.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/TextBlock.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/TextEdit.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/TextField.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/ToggleSwitch.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/TreeView.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/UIEventDispatcher.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/UIHelper.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/Vector3Field.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/VerticalLayout.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/VerticalScrollBar.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/Widget.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/WidgetHierarchy.cpp
-  ${POMDOG_DIR}/src/Experimental/Image/GIFLoader.cpp
-  ${POMDOG_DIR}/src/Experimental/Image/Image.cpp
-  ${POMDOG_DIR}/src/Experimental/Image/SVGLoader.cpp
-  ${POMDOG_DIR}/src/Experimental/ImageEffects/ChromaticAberration.cpp
-  ${POMDOG_DIR}/src/Experimental/ImageEffects/FishEyeEffect.cpp
-  ${POMDOG_DIR}/src/Experimental/ImageEffects/FXAA.cpp
-  ${POMDOG_DIR}/src/Experimental/ImageEffects/GrayscaleEffect.cpp
-  ${POMDOG_DIR}/src/Experimental/ImageEffects/PostProcessCompositor.cpp
-  ${POMDOG_DIR}/src/Experimental/ImageEffects/RetroCrtEffect.cpp
-  ${POMDOG_DIR}/src/Experimental/ImageEffects/ScreenQuad.cpp
-  ${POMDOG_DIR}/src/Experimental/ImageEffects/SepiaToneEffect.cpp
-  ${POMDOG_DIR}/src/Experimental/ImageEffects/VignetteEffect.cpp
-  ${POMDOG_DIR}/src/Experimental/MagicaVoxel/VoxChunkHeader.hpp
-  ${POMDOG_DIR}/src/Experimental/MagicaVoxel/VoxModelLoader.cpp
-  ${POMDOG_DIR}/src/Experimental/MagicaVoxel/VoxModelExporter.cpp
-  ${POMDOG_DIR}/src/Experimental/Particle2D/BeamSystem.cpp
-  ${POMDOG_DIR}/src/Experimental/Particle2D/ParticleSystem.cpp
   ${POMDOG_DIR}/src/Experimental/Skeletal2D/AnimationClip.cpp
   ${POMDOG_DIR}/src/Experimental/Skeletal2D/AnimationState.cpp
   ${POMDOG_DIR}/src/Experimental/Skeletal2D/AnimationSystem.cpp
@@ -591,14 +600,35 @@ set(POMDOG_SOURCES_EXPERIMENTAL
   ${POMDOG_DIR}/src/Experimental/Skeletal2D/Tracks/AnimationKeyHelper.hpp
   ${POMDOG_DIR}/src/Experimental/Skeletal2D/Tracks/AnimationTrack.cpp
   ${POMDOG_DIR}/src/Experimental/Skeletal2D/Tracks/SpriteAnimationTrack.cpp
+)
+
+set(POMDOG_SOURCES_EXPERIMENTAL_SPINE
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Spine/AnimationGraphBuilder.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Spine/AnimationLoader.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Spine/SkeletonDesc.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Spine/SkeletonDescLoader.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Spine/SkeletonLoader.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Spine/SkinLoader.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Spine/SkinnedMeshLoader.hpp
   ${POMDOG_DIR}/src/Experimental/Spine/AnimationGraphBuilder.cpp
   ${POMDOG_DIR}/src/Experimental/Spine/AnimationLoader.cpp
   ${POMDOG_DIR}/src/Experimental/Spine/SkeletonDescLoader.cpp
   ${POMDOG_DIR}/src/Experimental/Spine/SkeletonLoader.cpp
   ${POMDOG_DIR}/src/Experimental/Spine/SkinLoader.cpp
   ${POMDOG_DIR}/src/Experimental/Spine/SkinnedMeshLoader.cpp
+)
+
+set(POMDOG_SOURCES_EXPERIMENTAL_TEXTUREPACKER
+  ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureAtlas.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureAtlasGenerator.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureAtlasLoader.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureRegion.hpp
   ${POMDOG_DIR}/src/Experimental/TexturePacker/TextureAtlasGenerator.cpp
   ${POMDOG_DIR}/src/Experimental/TexturePacker/TextureAtlasLoader.cpp
+)
+
+set(POMDOG_SOURCES_EXPERIMENTAL_TWEEN
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Tween/EasingHelper.hpp
   ${POMDOG_DIR}/src/Experimental/Tween/EasingHelper.cpp
 )
 
@@ -859,7 +889,7 @@ set(POMDOG_SOURCES_NETWORK_WIN32
   ${POMDOG_DIR}/src/Network.Win32/UDPStreamWin32.hpp
 )
 
-set(SOURCE_FILES ${POMDOG_SOURCES_CORE} ${POMDOG_SOURCES_EXPERIMENTAL})
+set(SOURCE_FILES ${POMDOG_SOURCES_CORE})
 
 if(APPLE)
   set(POMDOG_TARGET_PLATFORM "Mac"   CACHE STRING "Choose platform")
@@ -977,6 +1007,22 @@ if(POMDOG_TARGET_PLATFORM MATCHES "Mac")
   # list(APPEND LINK_FRAMEWORKS "$(SDKROOT)/System/Library/Frameworks/QuartzCore.framework")
   set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework Cocoa")
   set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework QuartzCore")
+endif()
+
+set(POMDOG_USE_EXPERIMENTAL true CACHE BOOL "Use Experimental")
+if(POMDOG_USE_EXPERIMENTAL)
+  # NOTE: Add experimental modules
+  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_GRAPHICS})
+  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_GUI})
+  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_IMAGE})
+  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_IMAGEEFFECTS})
+  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_MAGICAVOXEL})
+  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_PARTICLE2D})
+  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_REACTIVE})
+  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_SKELETAL2D})
+  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_SPINE})
+  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_TEXTUREPACKER})
+  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_TWEEN})
 endif()
 
 list(SORT SOURCE_FILES)
