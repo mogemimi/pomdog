@@ -7,7 +7,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(POMDOG_BUILD_TARGET_ALL ON)
 add_subdirectory(build/pomdog)
-add_subdirectory(build/pomdog_experimental)
 add_subdirectory(examples/FeatureShowcase)
 add_subdirectory(examples/Pong)
 add_subdirectory(examples/QuickStart)

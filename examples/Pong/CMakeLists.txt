@@ -52,7 +52,6 @@ add_executable(${PRODUCT_NAME} WIN32
 
 target_include_directories(${PRODUCT_NAME} PRIVATE
   ${POMDOG_DIR}/include
-  ${POMDOG_DIR}/experimental
 )
 
 target_compile_definitions(${PRODUCT_NAME} PRIVATE
@@ -206,6 +205,6 @@ set_target_properties(${PRODUCT_NAME} PROPERTIES
 )
 
 if(NOT POMDOG_BUILD_TARGET_ALL)
-  add_subdirectory(${POMDOG_DIR}/build/pomdog_experimental ${CMAKE_CURRENT_BINARY_DIR}/pomdog_experimental_build)
+  add_subdirectory(${POMDOG_DIR}/build/pomdog ${CMAKE_CURRENT_BINARY_DIR}/pomdog_build)
 endif()
-target_link_libraries(${PRODUCT_NAME} pomdog_experimental)
+target_link_libraries(${PRODUCT_NAME} pomdog_static)

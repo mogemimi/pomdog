@@ -118,7 +118,6 @@ add_executable(${PRODUCT_NAME} WIN32
 
 target_include_directories(${PRODUCT_NAME} PRIVATE
   ${POMDOG_DIR}/include
-  ${POMDOG_DIR}/experimental
 )
 
 target_compile_definitions(${PRODUCT_NAME} PRIVATE

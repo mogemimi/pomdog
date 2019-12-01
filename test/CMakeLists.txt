@@ -83,7 +83,6 @@ add_executable(PomdogTest
 
 target_include_directories(PomdogTest PRIVATE
   ${POMDOG_DIR}/include
-  ${POMDOG_DIR}/experimental
   ${POMDOG_DIR}/dependencies/Catch2/single_include/catch2
 )
 
@@ -222,6 +221,6 @@ set_target_properties(
 )
 
 if(NOT POMDOG_BUILD_TARGET_ALL)
-  add_subdirectory("${POMDOG_DIR}/build/pomdog_experimental" "${CMAKE_CURRENT_BINARY_DIR}/pomdog_experimental_build")
+  add_subdirectory(${POMDOG_DIR}/build/pomdog ${CMAKE_CURRENT_BINARY_DIR}/pomdog_build)
 endif()
-target_link_libraries(PomdogTest pomdog_experimental)
+target_link_libraries(PomdogTest pomdog_static)
