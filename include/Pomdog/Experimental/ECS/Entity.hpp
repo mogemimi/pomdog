@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "Pomdog.Experimental/Gameplay/EntityContext.hpp"
-#include "Pomdog.Experimental/Gameplay/EntityID.hpp"
+#include "Pomdog/Experimental/ECS/EntityContext.hpp"
+#include "Pomdog/Experimental/ECS/EntityID.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <algorithm>
 #include <cstdint>

@@ -1,6 +1,6 @@
 // Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
-#include "EntityContext.hpp"
+#include "Pomdog/Experimental/ECS/EntityContext.hpp"
 
 namespace Pomdog {
 namespace Detail {

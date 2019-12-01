@@ -1,32 +1,100 @@
 // Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog.Experimental/Gameplay/Entity.hpp"
-#include "Pomdog.Experimental/Gameplay2D/ActorComponent.hpp"
-#include "Pomdog.Experimental/Gameplay2D/TextRenderable.hpp"
-#include "Pomdog.Experimental/Gameplay2D/Transform.hpp"
+#include "Pomdog/Experimental/ECS/Entity.hpp"
+#include "Pomdog/Experimental/ECS/ComponentTypeIndex.hpp"
+#include "Pomdog/Math/Vector3.hpp"
 #include "catch.hpp"
 #include <cstdint>
 #include <memory>
 
 using namespace Pomdog;
 
+namespace {
+class Transform final : public Component {
+public:
+    Vector3 Position;
+};
+class GraphicsComponent : public Component {
+public:
+    int DrawOrder;
+};
+class Renderable final : public GraphicsComponent {
+};
+} // namespace
+
+namespace Pomdog {
+
+template <>
+struct ComponentTypeDeclaration<Transform> final {
+    static std::uint8_t GetTypeIndex()
+    {
+        return Detail::Gameplay::ComponentTypeIndex::Index<Transform>();
+    }
+};
+
+template <>
+class ComponentCreator<Transform> final : public ComponentCreatorBase {
+public:
+    std::shared_ptr<Component> CreateComponent() override
+    {
+        return std::make_shared<Transform>();
+    }
+
+    std::uint8_t GetComponentType() override
+    {
+        return ComponentTypeDeclaration<Transform>::GetTypeIndex();
+    }
+};
+
+template <>
+struct ComponentTypeDeclaration<GraphicsComponent> final {
+    static std::uint8_t GetTypeIndex()
+    {
+        return Detail::Gameplay::ComponentTypeIndex::Index<GraphicsComponent>();
+    }
+};
+
+template <>
+struct ComponentTypeDeclaration<Renderable> final {
+    static std::uint8_t GetTypeIndex()
+    {
+        return Detail::Gameplay::ComponentTypeIndex::Index<GraphicsComponent>();
+    }
+};
+
+template <>
+class ComponentCreator<Renderable> final : public ComponentCreatorBase {
+public:
+    std::shared_ptr<Component> CreateComponent() override
+    {
+        return std::make_shared<Renderable>();
+    }
+
+    std::uint8_t GetComponentType() override
+    {
+        return ComponentTypeDeclaration<Renderable>::GetTypeIndex();
+    }
+};
+
+} // namespace Pomdog
+
 TEST_CASE("Entity AddComponent", "[Entity]")
 {
     EntityContext context;
     Entity entity{&context, context.Create({
         AddComponent<Transform>(),
-        AddComponent<ActorComponent>()
+        AddComponent<Renderable>()
     })};
 
     REQUIRE(entity.HasComponent<Transform>());
     REQUIRE(entity.GetComponent<Transform>());
 
-    REQUIRE(entity.HasComponent<ActorComponent>());
-    REQUIRE(entity.GetComponent<ActorComponent>());
+    REQUIRE(entity.HasComponent<Renderable>());
+    REQUIRE(entity.GetComponent<Renderable>());
 
-    entity.GetComponent<Transform>()->SetPosition({3.0f, 4.0f, 5.0f});
+    entity.GetComponent<Transform>()->Position = Vector3{3.0f, 4.0f, 5.0f};
 
-    REQUIRE(entity.GetComponent<Transform>()->GetPosition() == Vector3{3.0f, 4.0f, 5.0f});
+    REQUIRE(entity.GetComponent<Transform>()->Position == Vector3{3.0f, 4.0f, 5.0f});
 }
 
 TEST_CASE("Entity AddComponent_WithInheritance", "[Entity]")
@@ -34,28 +102,28 @@ TEST_CASE("Entity AddComponent_WithInheritance", "[Entity]")
     EntityContext context;
     Entity entity{&context, context.Create({
         AddComponent<Transform>(),
-        AddComponent<TextRenderable>()
+        AddComponent<Renderable>()
     })};
 
-    REQUIRE(entity.HasComponent<TextRenderable>());
+    REQUIRE(entity.HasComponent<Renderable>());
     REQUIRE(entity.HasComponent<GraphicsComponent>());
 
-    REQUIRE(entity.GetComponent<TextRenderable>());
+    REQUIRE(entity.GetComponent<Renderable>());
     REQUIRE(entity.GetComponent<GraphicsComponent>());
 
-    auto text = entity.GetComponent<TextRenderable>();
-    text->SetDrawOrder(42);
-    REQUIRE(entity.GetComponent<TextRenderable>()->GetDrawOrder() == 42);
-    REQUIRE(entity.GetComponent<GraphicsComponent>()->GetDrawOrder() == 42);
+    auto text = entity.GetComponent<Renderable>();
+    text->DrawOrder = 42;
+    REQUIRE(entity.GetComponent<Renderable>()->DrawOrder == 42);
+    REQUIRE(entity.GetComponent<GraphicsComponent>()->DrawOrder == 42);
 
     auto graphicsComponent = entity.GetComponent<GraphicsComponent>();
-    graphicsComponent->SetDrawOrder(73);
-    REQUIRE(entity.GetComponent<TextRenderable>()->GetDrawOrder() == 73);
-    REQUIRE(entity.GetComponent<GraphicsComponent>()->GetDrawOrder() == 73);
+    graphicsComponent->DrawOrder = 73;
+    REQUIRE(entity.GetComponent<Renderable>()->DrawOrder == 73);
+    REQUIRE(entity.GetComponent<GraphicsComponent>()->DrawOrder == 73);
 
-    REQUIRE(std::dynamic_pointer_cast<TextRenderable>(graphicsComponent));
-    REQUIRE(std::dynamic_pointer_cast<TextRenderable>(graphicsComponent) == text);
-    REQUIRE(std::dynamic_pointer_cast<TextRenderable>(graphicsComponent)->GetDrawOrder() == 73);
+    REQUIRE(std::dynamic_pointer_cast<Renderable>(graphicsComponent));
+    REQUIRE(std::dynamic_pointer_cast<Renderable>(graphicsComponent) == text);
+    REQUIRE(std::dynamic_pointer_cast<Renderable>(graphicsComponent)->DrawOrder == 73);
 }
 
 TEST_CASE("Entity Component_Const", "[Entity]")
@@ -68,14 +136,14 @@ TEST_CASE("Entity Component_Const", "[Entity]")
     REQUIRE(entity->HasComponent<Transform>());
     REQUIRE(entity->GetComponent<Transform>() != nullptr);
 
-    entity->GetComponent<Transform>()->SetPositionX(42.0f);
-    REQUIRE(entity->GetComponent<Transform>()->GetPosition().X == 42.0f);
+    entity->GetComponent<Transform>()->Position.X = 42.0f;
+    REQUIRE(entity->GetComponent<Transform>()->Position.X == 42.0f);
 
     {
         std::shared_ptr<Entity const> entityConstRef = entity;
         REQUIRE(entityConstRef->HasComponent<Transform>());
         REQUIRE(entityConstRef->GetComponent<Transform>() != nullptr);
-        REQUIRE(entityConstRef->GetComponent<Transform>()->GetPosition().X == 42.0f);
+        REQUIRE(entityConstRef->GetComponent<Transform>()->Position.X == 42.0f);
     }
 }
 
@@ -312,13 +380,13 @@ TEST_CASE("Clear", "[Entity]")
         EntityContext context;
         Entity entity1{&context, context.Create({
             AddComponent<Transform>(),
-            AddComponent<ActorComponent>()
+            AddComponent<Renderable>()
         })};
         Entity entity2{&context, context.Create({
             AddComponent<Transform>()
         })};
         Entity entity3{&context, context.Create({
-            AddComponent<ActorComponent>()
+            AddComponent<Renderable>()
         })};
 
         REQUIRE(entity1);

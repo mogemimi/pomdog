@@ -1,6 +1,6 @@
 // Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog.Experimental/Gameplay/EntityID.hpp"
+#include "Pomdog/Experimental/ECS/EntityID.hpp"
 #include "catch.hpp"
 #include <algorithm>
 #include <cstdint>

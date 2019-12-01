@@ -31,6 +31,7 @@ source_group(Platform.Win32                         REGULAR_EXPRESSION "(include
 source_group(Platform.X11                           REGULAR_EXPRESSION "(include/Pomdog/Platform/X11|src/Platform.X11)/*")
 source_group(Signals                                REGULAR_EXPRESSION "(include/Pomdog|src)/Signals/*")
 source_group(Utility                                REGULAR_EXPRESSION "(include/Pomdog|src)/Utility/*")
+source_group(Experimental\\ECS                      REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/ECS/*")
 source_group(Experimental\\Graphics                 REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Graphics/*")
 source_group(Experimental\\GUI                      REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/GUI/*")
 source_group(Experimental\\ImageEffects             REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/ImageEffects/*")
@@ -369,6 +370,19 @@ set(POMDOG_SOURCES_CORE
   ${POMDOG_DIR}/src/Utility/SpinLock.cpp
   ${POMDOG_DIR}/src/Utility/StringHelper.cpp
   ${POMDOG_DIR}/src/Utility/Tagged.hpp
+)
+
+set(POMDOG_SOURCES_EXPERIMENTAL_ECS
+  ${POMDOG_DIR}/include/Pomdog/Experimental/ECS/Component.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/ECS/Entity.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/ECS/EntityContext.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/ECS/EntityID.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/ECS/EntityManager.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/ECS/ComponentTypeIndex.hpp
+  ${POMDOG_DIR}/src/Experimental/ECS/Entity.cpp
+  ${POMDOG_DIR}/src/Experimental/ECS/EntityContext.cpp
+  ${POMDOG_DIR}/src/Experimental/ECS/EntityManager.cpp
+  ${POMDOG_DIR}/src/Experimental/ECS/ComponentTypeIndex.cpp
 )
 
 set(POMDOG_SOURCES_EXPERIMENTAL_GRAPHICS
@@ -1012,6 +1026,7 @@ endif()
 set(POMDOG_USE_EXPERIMENTAL true CACHE BOOL "Use Experimental")
 if(POMDOG_USE_EXPERIMENTAL)
   # NOTE: Add experimental modules
+  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_ECS})
   list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_GRAPHICS})
   list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_GUI})
   list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_IMAGE})

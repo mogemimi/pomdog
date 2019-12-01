@@ -1,6 +1,6 @@
 // Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog.Experimental/Gameplay/detail/ComponentTypeIndex.hpp"
+#include "Pomdog/Experimental/ECS/ComponentTypeIndex.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog {

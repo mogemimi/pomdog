@@ -1,6 +1,6 @@
 // Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog.Experimental/Gameplay/Entity.hpp"
+#include "Pomdog/Experimental/ECS/Entity.hpp"
 
 namespace Pomdog {
 

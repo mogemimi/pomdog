@@ -1,13 +1,67 @@
 // Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog.Experimental/Gameplay/EntityManager.hpp"
-#include "Pomdog.Experimental/Gameplay/Entity.hpp"
-#include "Pomdog.Experimental/Gameplay2D/ActorComponent.hpp"
-#include "Pomdog.Experimental/Gameplay2D/Transform.hpp"
+#include "Pomdog/Experimental/ECS/EntityManager.hpp"
+#include "Pomdog/Experimental/ECS/Entity.hpp"
+#include "Pomdog/Experimental/ECS/ComponentTypeIndex.hpp"
 #include "catch.hpp"
 #include <cstdint>
 
 using namespace Pomdog;
+
+namespace {
+class Transform final : public Component {
+};
+class ActorComponent final : public Component {
+};
+} // namespace
+
+namespace Pomdog {
+
+template <>
+struct ComponentTypeDeclaration<Transform> final {
+    static std::uint8_t GetTypeIndex()
+    {
+        return Detail::Gameplay::ComponentTypeIndex::Index<Transform>();
+    }
+};
+
+template <>
+class ComponentCreator<Transform> final : public ComponentCreatorBase {
+public:
+    std::shared_ptr<Component> CreateComponent() override
+    {
+        return std::make_shared<Transform>();
+    }
+
+    std::uint8_t GetComponentType() override
+    {
+        return ComponentTypeDeclaration<Transform>::GetTypeIndex();
+    }
+};
+
+template <>
+struct ComponentTypeDeclaration<ActorComponent> final {
+    static std::uint8_t GetTypeIndex()
+    {
+        return Detail::Gameplay::ComponentTypeIndex::Index<ActorComponent>();
+    }
+};
+
+template <>
+class ComponentCreator<ActorComponent> final : public ComponentCreatorBase {
+public:
+    std::shared_ptr<Component> CreateComponent() override
+    {
+        return std::make_shared<ActorComponent>();
+    }
+
+    std::uint8_t GetComponentType() override
+    {
+        return ComponentTypeDeclaration<ActorComponent>::GetTypeIndex();
+    }
+};
+
+} // namespace Pomdog
 
 TEST_CASE("EntityManager::CreateEntity", "[EntityManager]")
 {

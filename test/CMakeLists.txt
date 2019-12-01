@@ -14,7 +14,7 @@ set(CMAKE_CONFIGURATION_TYPES Debug Release)
 source_group(Application            REGULAR_EXPRESSION test/Application/*)
 source_group(Async                  REGULAR_EXPRESSION test/Async/*)
 source_group(Content                REGULAR_EXPRESSION test/Content/*)
-source_group(Experimental/Gameplay  REGULAR_EXPRESSION test/Experimental/Gameplay/*)
+source_group(Experimental/ECS       REGULAR_EXPRESSION test/Experimental/ECS/*)
 source_group(Graphics               REGULAR_EXPRESSION test/Graphics/*)
 source_group(Input                  REGULAR_EXPRESSION test/Input/*)
 source_group(Logging                REGULAR_EXPRESSION test/Logging/*)
@@ -29,11 +29,9 @@ add_executable(PomdogTest
   ${POMDOG_TEST_DIR}/Application/TimerTest.cpp
   ${POMDOG_TEST_DIR}/Async/SchedulerTest.cpp
   ${POMDOG_TEST_DIR}/Async/TaskTest.cpp
-
-  ${POMDOG_TEST_DIR}/Experimental/Gameplay/EntityIDTest.cpp
-  ${POMDOG_TEST_DIR}/Experimental/Gameplay/EntityTest.cpp
-  ${POMDOG_TEST_DIR}/Experimental/Gameplay/EntityManagerTest.cpp
-
+  ${POMDOG_TEST_DIR}/Experimental/ECS/EntityIDTest.cpp
+  ${POMDOG_TEST_DIR}/Experimental/ECS/EntityTest.cpp
+  ${POMDOG_TEST_DIR}/Experimental/ECS/EntityManagerTest.cpp
   ${POMDOG_TEST_DIR}/Graphics/InputLayoutHelperTest.cpp
   ${POMDOG_TEST_DIR}/Input/GamepadUUIDTest.cpp
   ${POMDOG_TEST_DIR}/Input/KeyboardStateTest.cpp

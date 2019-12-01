@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Pomdog.Experimental/Gameplay/Entity.hpp"
+#include "Pomdog/Experimental/ECS/Entity.hpp"
 #include <cstdint>
 #include <memory>
 #include <vector>
