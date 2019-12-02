@@ -1,48 +1,158 @@
 // Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Experimental/ECS/EntityManager.hpp"
-#include "Pomdog/Experimental/ECS/Entity.hpp"
 
-namespace Pomdog {
+namespace Pomdog::ECS::Detail {
+namespace {
 
-Entity EntityManager::CreateEntity(
-    std::vector<std::shared_ptr<ComponentCreatorBase>>&& componentCreators)
+void ResetComponents(
+    std::vector<std::unique_ptr<ComponentBufferBase>>& components,
+    std::uint32_t index)
 {
-    Entity entity(&context, context.Create(std::move(componentCreators)));
-    entities.push_back(entity.GetID());
-    return entity;
-}
-
-bool EntityManager::Valid(const EntityID& objectID) const noexcept
-{
-    return context.Valid(objectID);
-}
-
-void EntityManager::Refresh()
-{
-    const auto entityCount = context.GetCount();
-    context.Refresh();
-
-    if (entityCount != context.GetCount()) {
-        entities.erase(std::remove_if(std::begin(entities), std::end(entities),
-            [this](const EntityID& id){ return !context.Valid(id); }),
-            std::end(entities));
+    for (auto& entities : components) {
+        if ((entities != nullptr) && (index < entities->GetSize())) {
+            entities->Reset(index);
+        }
     }
 }
 
-std::size_t EntityManager::GetCount() const noexcept
+} // namespace
+
+template <std::uint8_t MaxComponentCapacity>
+EntityManager<MaxComponentCapacity>::EntityManager()
+    : entityCount(0)
 {
-    return context.GetCount();
+    static_assert(MaxComponentCapacity > 0, "");
+    components.reserve(MaxComponentCapacity);
 }
 
-std::size_t EntityManager::GetCapacity() const noexcept
+template <std::uint8_t MaxComponentCapacity>
+Entity EntityManager<MaxComponentCapacity>::CreateEntity(
+    std::vector<std::shared_ptr<ComponentTypeBase>>&& componentTypes)
 {
-    return context.GetCapacity();
+    std::uint32_t index = 0;
+    if (deletedIndices.empty()) {
+        POMDOG_ASSERT(std::numeric_limits<decltype(index)>::max() > descriptions.size());
+        index = static_cast<std::uint32_t>(descriptions.size());
+        descriptions.resize(descriptions.size() + 1);
+    }
+    else {
+        index = deletedIndices.front();
+        deletedIndices.pop_front();
+    }
+
+    auto& desc = descriptions[index];
+    POMDOG_ASSERT(desc.ComponentBitMask.none());
+    POMDOG_ASSERT(desc.IncremantalVersion > 0);
+
+    ++entityCount;
+    Entity entity{desc.IncremantalVersion, index};
+    desc.IsEnabled = true;
+
+    for (auto& componentType : componentTypes) {
+        POMDOG_ASSERT(componentType != nullptr);
+        AddComponent(entity, *componentType);
+    }
+
+    return entity;
 }
 
-void EntityManager::Clear()
+template <std::uint8_t MaxComponentCapacity>
+void EntityManager<MaxComponentCapacity>::AddComponent(
+    const Entity& entity, ComponentTypeBase& componentType)
 {
-    context.Clear();
+    const auto typeIndex = componentType.GetTypeIndex();
+    POMDOG_ASSERT(typeIndex < MaxComponentCapacity);
+    if (typeIndex >= components.size()) {
+        components.resize(typeIndex + 1U);
+
+        POMDOG_ASSERT(components.size() <= MaxComponentCapacity);
+        if (components.capacity() > MaxComponentCapacity) {
+            components.shrink_to_fit();
+            POMDOG_ASSERT(components.capacity() == MaxComponentCapacity);
+        }
+    }
+
+    POMDOG_ASSERT(typeIndex < components.size());
+    auto& entities = components[typeIndex];
+    if (entities == nullptr) {
+        entities = componentType.CreateComponentBuffer();
+    }
+
+    if (entity.GetIndex() >= entities->GetSize()) {
+        static_assert(std::is_unsigned<decltype(entity.GetIndex())>::value, "");
+        entities->Resize(entity.GetIndex() + 1U);
+    }
+
+    POMDOG_ASSERT(entity.GetIndex() < entities->GetSize());
+    POMDOG_ASSERT(entity.GetIndex() < descriptions.size());
+    auto& desc = descriptions[entity.GetIndex()];
+
+    POMDOG_ASSERT(desc.IncremantalVersion > 0);
+    POMDOG_ASSERT(typeIndex < desc.ComponentBitMask.size());
+    POMDOG_ASSERT(typeIndex < MaxComponentCapacity);
+    desc.ComponentBitMask[typeIndex] = 1;
 }
 
-} // namespace Pomdog
+template <std::uint8_t MaxComponentCapacity>
+void EntityManager<MaxComponentCapacity>::DestroyEntity(const Entity& entity)
+{
+    POMDOG_ASSERT(Exists(entity));
+
+    const auto index = entity.GetIndex();
+
+    POMDOG_ASSERT(index < descriptions.size());
+    POMDOG_ASSERT(descriptions[index].IncremantalVersion == entity.GetVersion());
+
+    auto& desc = descriptions[index];
+    desc.IsEnabled = false;
+    desc.ComponentBitMask.reset();
+    ++desc.IncremantalVersion;
+
+    ResetComponents(components, index);
+    deletedIndices.push_back(index);
+
+    POMDOG_ASSERT(entityCount > 0);
+    --entityCount;
+}
+
+template <std::uint8_t MaxComponentCapacity>
+void EntityManager<MaxComponentCapacity>::DestroyAllEntities()
+{
+    for (std::uint32_t index = 0; index < descriptions.size(); ++index) {
+        auto& desc = descriptions[index];
+
+        if (desc.ComponentBitMask.any()) {
+            ResetComponents(components, index);
+        }
+        deletedIndices.push_back(index);
+
+        desc.ComponentBitMask.reset();
+        ++desc.IncremantalVersion;
+    }
+    entityCount = 0;
+}
+
+template <std::uint8_t MaxComponentCapacity>
+bool EntityManager<MaxComponentCapacity>::Exists(const Entity& entity) const noexcept
+{
+    return (entity.GetIndex() < descriptions.size())
+        && (descriptions[entity.GetIndex()].IncremantalVersion == entity.GetVersion());
+}
+
+template <std::uint8_t MaxComponentCapacity>
+std::size_t EntityManager<MaxComponentCapacity>::GetCount() const noexcept
+{
+    return entityCount;
+}
+
+template <std::uint8_t MaxComponentCapacity>
+std::size_t EntityManager<MaxComponentCapacity>::GetCapacity() const noexcept
+{
+    return descriptions.capacity();
+}
+
+// explicit instantiations
+template class EntityManager<64>;
+
+} // namespace Pomdog::ECS::Detail

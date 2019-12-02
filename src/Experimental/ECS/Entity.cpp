@@ -2,51 +2,17 @@
 
 #include "Pomdog/Experimental/ECS/Entity.hpp"
 
-namespace Pomdog {
+namespace Pomdog::ECS {
 
-Entity::Entity(EntityContext* contextIn, const EntityID& idIn) noexcept
-    : context(contextIn)
-    , id(idIn)
+const Entity Entity::Null = Entity{};
+
+} // namespace Pomdog::ECS
+
+namespace std {
+
+std::size_t hash<Pomdog::ECS::Entity>::operator()(const Pomdog::ECS::Entity& key) const noexcept
 {
+    return std::hash<std::uint64_t>()(key.GetUInt64Value());
 }
 
-Entity::operator bool() const noexcept
-{
-    return (context != nullptr) && context->Valid(id);
-}
-
-bool Entity::operator==(const Entity& other) const noexcept
-{
-    return (context == other.context) && (id == other.id);
-}
-
-bool Entity::operator!=(const Entity& other) const noexcept
-{
-    return (context != other.context) || (id != other.id);
-}
-
-void Entity::Destroy()
-{
-    if ((context != nullptr) && context->Valid(id)) {
-        context->Destroy(id);
-    }
-    context = nullptr;
-    id = EntityID{0, 0};
-}
-
-void Entity::DestroyImmediate()
-{
-    if ((context != nullptr) && context->Valid(id)) {
-        context->DestroyImmediate(id);
-    }
-    context = nullptr;
-    id = EntityID{0, 0};
-}
-
-EntityID Entity::GetID() const noexcept
-{
-    POMDOG_ASSERT((context != nullptr) && context->Valid(id));
-    return id;
-}
-
-} // namespace Pomdog
+} // namespace std

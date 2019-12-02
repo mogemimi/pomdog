@@ -6,13 +6,11 @@
 #include <limits>
 #include <type_traits>
 
-namespace Pomdog {
-namespace Detail {
-namespace Gameplay {
+namespace Pomdog::ECS::Detail {
 
 class ComponentTypeIndex {
 public:
-    typedef std::uint8_t IndexType;
+    using IndexType = std::uint8_t;
 
     template <class TComponent>
     static IndexType Index()
@@ -31,6 +29,4 @@ private:
     static IndexType count;
 };
 
-} // namespace Gameplay
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::ECS::Detail

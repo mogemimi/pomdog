@@ -373,14 +373,12 @@ set(POMDOG_SOURCES_CORE
 )
 
 set(POMDOG_SOURCES_EXPERIMENTAL_ECS
-  ${POMDOG_DIR}/include/Pomdog/Experimental/ECS/Component.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/ECS/ComponentBuffer.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/ECS/ComponentType.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/ECS/Entity.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/ECS/EntityContext.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/ECS/EntityID.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/ECS/EntityManager.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/ECS/ComponentTypeIndex.hpp
   ${POMDOG_DIR}/src/Experimental/ECS/Entity.cpp
-  ${POMDOG_DIR}/src/Experimental/ECS/EntityContext.cpp
   ${POMDOG_DIR}/src/Experimental/ECS/EntityManager.cpp
   ${POMDOG_DIR}/src/Experimental/ECS/ComponentTypeIndex.cpp
 )

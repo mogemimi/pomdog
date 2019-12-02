@@ -29,7 +29,6 @@ add_executable(PomdogTest
   ${POMDOG_TEST_DIR}/Application/TimerTest.cpp
   ${POMDOG_TEST_DIR}/Async/SchedulerTest.cpp
   ${POMDOG_TEST_DIR}/Async/TaskTest.cpp
-  ${POMDOG_TEST_DIR}/Experimental/ECS/EntityIDTest.cpp
   ${POMDOG_TEST_DIR}/Experimental/ECS/EntityTest.cpp
   ${POMDOG_TEST_DIR}/Experimental/ECS/EntityManagerTest.cpp
   ${POMDOG_TEST_DIR}/Graphics/InputLayoutHelperTest.cpp

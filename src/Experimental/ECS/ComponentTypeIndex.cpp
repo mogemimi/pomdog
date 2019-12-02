@@ -3,9 +3,7 @@
 #include "Pomdog/Experimental/ECS/ComponentTypeIndex.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
-namespace Pomdog {
-namespace Detail {
-namespace Gameplay {
+namespace Pomdog::ECS::Detail {
 
 ComponentTypeIndex::IndexType ComponentTypeIndex::count = 0;
 
@@ -17,6 +15,4 @@ ComponentTypeIndex::IndexType ComponentTypeIndex::IncrementIndex()
     return count;
 }
 
-} // namespace Gameplay
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::ECS::Detail

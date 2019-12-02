@@ -2,74 +2,66 @@
 
 #pragma once
 
-#include "Pomdog/Experimental/ECS/EntityContext.hpp"
-#include "Pomdog/Experimental/ECS/EntityID.hpp"
-#include "Pomdog/Utility/Assert.hpp"
-#include <algorithm>
 #include <cstdint>
-#include <memory>
-#include <type_traits>
-#include <utility>
+#include <functional>
 
-namespace Pomdog {
+namespace Pomdog::ECS {
 
 class Entity final {
 public:
-    Entity() = default;
+    constexpr Entity() noexcept
+        : id(0)
+    {
+    }
 
-    Entity(EntityContext* context, const EntityID& id) noexcept;
+    constexpr Entity(std::uint32_t sequenceNumber, std::uint32_t index) noexcept
+        : id((static_cast<std::uint64_t>(sequenceNumber) << 32) | (index & 0xffffffffUL))
+    {
+    }
 
-    explicit operator bool() const noexcept;
+    [[nodiscard]] std::uint32_t GetVersion() const noexcept
+    {
+        return id >> 32;
+    }
 
-    bool operator==(const Entity& entity) const noexcept;
-    bool operator!=(const Entity& entity) const noexcept;
+    [[nodiscard]] std::uint32_t GetIndex() const noexcept
+    {
+        return id & 0xffffffffUL;
+    }
 
-    EntityID GetID() const noexcept;
+    [[nodiscard]] std::uint64_t GetUInt64Value() const noexcept
+    {
+        return id;
+    }
 
-    template <typename T>
-    std::shared_ptr<T> GetComponent() const;
+    [[nodiscard]] bool operator==(const Entity& other) const noexcept
+    {
+        return id == other.id;
+    }
 
-    template <typename T>
-    std::shared_ptr<T> GetComponent();
+    [[nodiscard]] bool operator!=(const Entity& other) const noexcept
+    {
+        return id != other.id;
+    }
 
-    template <typename T>
-    bool HasComponent() const;
+    [[nodiscard]] bool operator<(const Entity& other) const noexcept
+    {
+        return id < other.id;
+    }
 
-    void Destroy();
-
-    void DestroyImmediate();
+    static const Entity Null;
 
 private:
-    // NOTE: This pointer should be weak or raw pointer instead of shared_ptr.
-    EntityContext* context = nullptr;
-    EntityID id;
+    std::uint64_t id;
 };
 
-template <typename T>
-std::shared_ptr<T> Entity::GetComponent() const
-{
-    static_assert(std::is_base_of<Component, T>::value, "");
-    POMDOG_ASSERT(context != nullptr);
-    POMDOG_ASSERT(context->Valid(id));
-    return context->GetComponent<T>(id);
-}
+} // namespace Pomdog::ECS
 
-template <typename T>
-std::shared_ptr<T> Entity::GetComponent()
-{
-    static_assert(std::is_base_of<Component, T>::value, "");
-    POMDOG_ASSERT(context != nullptr);
-    POMDOG_ASSERT(context->Valid(id));
-    return context->GetComponent<T>(id);
-}
+namespace std {
 
-template <typename T>
-bool Entity::HasComponent() const
-{
-    static_assert(std::is_base_of<Component, T>::value, "");
-    POMDOG_ASSERT(context != nullptr);
-    POMDOG_ASSERT(context->Valid(id));
-    return context->HasComponent<T>(id);
-}
+template <>
+struct hash<Pomdog::ECS::Entity> {
+    std::size_t operator()(const Pomdog::ECS::Entity& key) const noexcept;
+};
 
-} // namespace Pomdog
+} // namespace std
