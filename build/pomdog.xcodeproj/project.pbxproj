@@ -431,6 +431,12 @@
 		D7703DF822FCB1BB00442403 /* SpinLock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7703DF622FCB1BB00442403 /* SpinLock.cpp */; };
 		D7703E0D22FCB26800442403 /* Errors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7703E0C22FCB26800442403 /* Errors.cpp */; };
 		D7703E0E22FCB26800442403 /* Errors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7703E0C22FCB26800442403 /* Errors.cpp */; };
+		D7C188D72395DFBB00C3E381 /* EntityManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7C188D42395DFBB00C3E381 /* EntityManager.cpp */; };
+		D7C188D82395DFBB00C3E381 /* EntityManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7C188D42395DFBB00C3E381 /* EntityManager.cpp */; };
+		D7C188D92395DFBB00C3E381 /* ComponentTypeIndex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7C188D52395DFBB00C3E381 /* ComponentTypeIndex.cpp */; };
+		D7C188DA2395DFBB00C3E381 /* ComponentTypeIndex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7C188D52395DFBB00C3E381 /* ComponentTypeIndex.cpp */; };
+		D7C188DB2395DFBB00C3E381 /* Entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7C188D62395DFBB00C3E381 /* Entity.cpp */; };
+		D7C188DC2395DFBB00C3E381 /* Entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7C188D62395DFBB00C3E381 /* Entity.cpp */; };
 		D8E9871132965BADBA4BE734 /* FloatingPointMatrix3x3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 029A2B232511421D3FDB9FAC /* FloatingPointMatrix3x3.cpp */; };
 		DA4579E5970831E615EA005D /* Ray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EB2111ED9B45715040451A9 /* Ray.cpp */; };
 		DC83323F55585B855108ED51 /* AudioClipLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9524A580BCEF4C5E9F56EB43 /* AudioClipLoader.cpp */; };
@@ -1157,6 +1163,14 @@
 		D7703E0C22FCB26800442403 /* Errors.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Errors.cpp; sourceTree = "<group>"; };
 		D7703E0F22FCB28800442403 /* Errors.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Errors.hpp; sourceTree = "<group>"; };
 		D79110B22382E1AA00C268C3 /* VertexBufferBindingGL4.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = VertexBufferBindingGL4.hpp; sourceTree = "<group>"; };
+		D7C188D42395DFBB00C3E381 /* EntityManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EntityManager.cpp; sourceTree = "<group>"; };
+		D7C188D52395DFBB00C3E381 /* ComponentTypeIndex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ComponentTypeIndex.cpp; sourceTree = "<group>"; };
+		D7C188D62395DFBB00C3E381 /* Entity.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Entity.cpp; sourceTree = "<group>"; };
+		D7C188DD2395DFD000C3E381 /* Entity.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Entity.hpp; sourceTree = "<group>"; };
+		D7C188DE2395DFD000C3E381 /* ComponentType.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ComponentType.hpp; sourceTree = "<group>"; };
+		D7C188DF2395DFD000C3E381 /* ComponentTypeIndex.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ComponentTypeIndex.hpp; sourceTree = "<group>"; };
+		D7C188E02395DFD000C3E381 /* ComponentBuffer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ComponentBuffer.hpp; sourceTree = "<group>"; };
+		D7C188E12395DFD000C3E381 /* EntityManager.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = EntityManager.hpp; sourceTree = "<group>"; };
 		D7D5A98E477FB0CDE2089FBD /* KeyboardState.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KeyboardState.cpp; sourceTree = "<group>"; };
 		D9C3D114115E6C3A619E8CF9 /* GameHostCocoa.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = GameHostCocoa.mm; sourceTree = "<group>"; };
 		DA8DDAEB3A97076C2FCB19F3 /* IndexElementSize.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = IndexElementSize.hpp; sourceTree = "<group>"; };
@@ -1880,6 +1894,7 @@
 		A9A8227E1DAB7EFF0091497F /* Experimental */ = {
 			isa = PBXGroup;
 			children = (
+				D7C188D22395DF9A00C3E381 /* ECS */,
 				A9FC99081DC3D8E100C78D63 /* Graphics */,
 				D78E306E23842BDE00413664 /* GUI */,
 				A9A8227F1DAB7F2B0091497F /* Image */,
@@ -1920,6 +1935,7 @@
 		A9A822811DAB7F650091497F /* Experimental */ = {
 			isa = PBXGroup;
 			children = (
+				D7C188D32395DFA900C3E381 /* ECS */,
 				A9FC99031DC3D86C00C78D63 /* Graphics */,
 				D78E308A23842C2400413664 /* GUI */,
 				A9A822821DAB7F6B0091497F /* Image */,
@@ -2473,6 +2489,28 @@
 			path = GUI;
 			sourceTree = "<group>";
 		};
+		D7C188D22395DF9A00C3E381 /* ECS */ = {
+			isa = PBXGroup;
+			children = (
+				D7C188E02395DFD000C3E381 /* ComponentBuffer.hpp */,
+				D7C188DE2395DFD000C3E381 /* ComponentType.hpp */,
+				D7C188DF2395DFD000C3E381 /* ComponentTypeIndex.hpp */,
+				D7C188DD2395DFD000C3E381 /* Entity.hpp */,
+				D7C188E12395DFD000C3E381 /* EntityManager.hpp */,
+			);
+			path = ECS;
+			sourceTree = "<group>";
+		};
+		D7C188D32395DFA900C3E381 /* ECS */ = {
+			isa = PBXGroup;
+			children = (
+				D7C188D52395DFBB00C3E381 /* ComponentTypeIndex.cpp */,
+				D7C188D62395DFBB00C3E381 /* Entity.cpp */,
+				D7C188D42395DFBB00C3E381 /* EntityManager.cpp */,
+			);
+			path = ECS;
+			sourceTree = "<group>";
+		};
 		D90112D019DEC9CB7B5D46EC /* Graphics */ = {
 			isa = PBXGroup;
 			children = (
@@ -2823,6 +2861,7 @@
 				EE3B49ABE19A8826A0299A21 /* AudioClipLoader.cpp in Sources */,
 				D75E071E2392E42C00F98C10 /* HorizontalLine.cpp in Sources */,
 				EC2E27BB5CDE6B796CFD767F /* Texture2DLoader.cpp in Sources */,
+				D7C188D92395DFBB00C3E381 /* ComponentTypeIndex.cpp in Sources */,
 				D7334E23228AEC1300232225 /* RetroCrtEffect.cpp in Sources */,
 				D7408D2E237274C4007E101E /* SkinLoader.cpp in Sources */,
 				56943E805DA5A66B2B412B6E /* ConstantBuffer.cpp in Sources */,
@@ -2844,6 +2883,7 @@
 				BD548D0C612A8F01446C119D /* SamplerState.cpp in Sources */,
 				D7408D18237274B4007E101E /* AnimationCrossFadeNode.cpp in Sources */,
 				627D0583CB97FD0F3B9A55BE /* Texture2D.cpp in Sources */,
+				D7C188D72395DFBB00C3E381 /* EntityManager.cpp in Sources */,
 				D702F04C22FD8AC700886A78 /* IOService.cpp in Sources */,
 				1AB4307E702C25A5D75EEEA9 /* Viewport.cpp in Sources */,
 				D7408D16237274B4007E101E /* AnimationLerpNode.cpp in Sources */,
@@ -2880,6 +2920,7 @@
 				A94F2DD12131FEFB00718DB0 /* EasingHelper.cpp in Sources */,
 				D7408CED23727466007E101E /* SkeletonHelper.cpp in Sources */,
 				0D2BB710020E127DFCD9A463 /* Rectangle.cpp in Sources */,
+				D7C188DB2395DFBB00C3E381 /* Entity.cpp in Sources */,
 				D7334E19228AEC1300232225 /* FXAA.cpp in Sources */,
 				A958BDF81CC3E65A00E15834 /* PomdogMetalViewController.mm in Sources */,
 				C3A63B50AA37BB77F4224857 /* FloatingPointMatrix2x2.cpp in Sources */,
@@ -3043,6 +3084,7 @@
 				DC83323F55585B855108ED51 /* AudioClipLoader.cpp in Sources */,
 				D75E071F2392E42C00F98C10 /* HorizontalLine.cpp in Sources */,
 				BD62DB67E515FA42A9D8F788 /* Texture2DLoader.cpp in Sources */,
+				D7C188DA2395DFBB00C3E381 /* ComponentTypeIndex.cpp in Sources */,
 				D7334E24228AEC1300232225 /* RetroCrtEffect.cpp in Sources */,
 				D7408D2F237274C4007E101E /* SkinLoader.cpp in Sources */,
 				712667FE9F33A8F7581022FC /* ConstantBuffer.cpp in Sources */,
@@ -3064,6 +3106,7 @@
 				A26E66F1AC2BB1AB2F03033F /* SamplerState.cpp in Sources */,
 				D7408D19237274B4007E101E /* AnimationCrossFadeNode.cpp in Sources */,
 				544D8ABEA35E9232F743511A /* Texture2D.cpp in Sources */,
+				D7C188D82395DFBB00C3E381 /* EntityManager.cpp in Sources */,
 				D702F04D22FD8AC700886A78 /* IOService.cpp in Sources */,
 				D36D164E7998A51B8BC0C0DB /* Viewport.cpp in Sources */,
 				D7408D17237274B4007E101E /* AnimationLerpNode.cpp in Sources */,
@@ -3100,6 +3143,7 @@
 				A94F2DD22131FEFB00718DB0 /* EasingHelper.cpp in Sources */,
 				D7408CEE23727466007E101E /* SkeletonHelper.cpp in Sources */,
 				E4C4ADB64ED81496C05CB580 /* Rectangle.cpp in Sources */,
+				D7C188DC2395DFBB00C3E381 /* Entity.cpp in Sources */,
 				D7334E1A228AEC1300232225 /* FXAA.cpp in Sources */,
 				A958BDF91CC3E65A00E15834 /* PomdogMetalViewController.mm in Sources */,
 				E971CF40D05A93F09E489D10 /* FloatingPointMatrix2x2.cpp in Sources */,
