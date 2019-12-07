@@ -11,6 +11,8 @@ namespace Pomdog::GUI {
 
 PushButton::PushButton(const std::shared_ptr<UIEventDispatcher>& dispatcher)
     : Widget(dispatcher)
+    , horizontalAlignment(HorizontalAlignment::Left)
+    , verticalAlignment(VerticalAlignment::Top)
     , isEnabled(true)
     , isHovered(false)
     , isPressed(false)
@@ -51,14 +53,24 @@ void PushButton::SetText(const std::string& textIn)
     this->text = textIn;
 }
 
+void PushButton::SetHorizontalAlignment(HorizontalAlignment horizontalAlignmentIn) noexcept
+{
+    this->horizontalAlignment = horizontalAlignmentIn;
+}
+
+void PushButton::SetVerticalAlignment(VerticalAlignment verticalAlignmentIn) noexcept
+{
+    this->verticalAlignment = verticalAlignmentIn;
+}
+
 HorizontalAlignment PushButton::GetHorizontalAlignment() const noexcept
 {
-    return HorizontalAlignment::Right;
+    return horizontalAlignment;
 }
 
 VerticalAlignment PushButton::GetVerticalAlignment() const noexcept
 {
-    return VerticalAlignment::Top;
+    return verticalAlignment;
 }
 
 void PushButton::OnEnter()

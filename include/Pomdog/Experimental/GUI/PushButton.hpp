@@ -23,6 +23,10 @@ public:
 
     void SetText(const std::string& text);
 
+    void SetHorizontalAlignment(HorizontalAlignment horizontalAlignment) noexcept;
+
+    void SetVerticalAlignment(VerticalAlignment verticalAlignment) noexcept;
+
     HorizontalAlignment GetHorizontalAlignment() const noexcept override;
     VerticalAlignment GetVerticalAlignment() const noexcept override;
 
@@ -49,6 +53,8 @@ public:
 private:
     ScopedConnection connection;
     std::string text;
+    HorizontalAlignment horizontalAlignment;
+    VerticalAlignment verticalAlignment;
     bool isEnabled;
     bool isHovered;
     bool isPressed;
