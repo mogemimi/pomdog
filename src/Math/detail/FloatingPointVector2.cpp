@@ -224,6 +224,17 @@ FloatingPointVector2<T>::Normalize(const FloatingPointVector2& source, FloatingP
 
 template <typename T>
 FloatingPointVector2<T>
+FloatingPointVector2<T>::Rotate(const FloatingPointVector2<T>& vector, const Radian<T>& radian) noexcept
+{
+    const auto sin = std::sin(radian.value);
+    const auto cos = std::cos(radian.value);
+    return FloatingPointVector2{
+        (cos * vector.X) - (sin * vector.Y),
+        (sin * vector.X) + (cos * vector.Y)};
+}
+
+template <typename T>
+FloatingPointVector2<T>
 FloatingPointVector2<T>::Transform(const FloatingPointVector2& position, const FloatingPointMatrix3x2<T>& matrix) noexcept
 {
     return FloatingPointVector2(

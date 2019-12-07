@@ -1,6 +1,7 @@
 // Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Math/Vector2.hpp"
+#include "Pomdog/Math/MathHelper.hpp"
 #include "catch.hpp"
 
 using Pomdog::Vector2;
@@ -60,5 +61,36 @@ TEST_CASE("Vector2", "[Vector2]")
         REQUIRE(Vector2::Normalize(Vector2{0.0f, 0.0f}) == Vector2{0.0f, 0.0f});
         REQUIRE(Vector2::Normalize(Vector2{1.0f, 0.0f}) == Vector2{1.0f, 0.0f});
         REQUIRE(Vector2::Normalize(Vector2{0.0f, 1.0f}) == Vector2{0.0f, 1.0f});
+    }
+    SECTION("Rotate")
+    {
+        REQUIRE(Vector2::Rotate(Vector2{0.0f, 0.0f}, 0.0f) == Vector2{0.0f, 0.0f});
+
+        const auto approx = [](float x) -> auto { return Approx(x).margin(0.000001f); };
+        {
+            auto vec = Vector2::Rotate(Vector2{1.0f, 0.0f}, 0.0f);
+            REQUIRE(vec.X == approx(1.0f));
+            REQUIRE(vec.Y == approx(0.0f));
+        }
+        {
+            auto vec = Vector2::Rotate(Vector2{1.0f, 0.0f}, Pomdog::Math::PiOver2<float>);
+            REQUIRE(vec.X == approx(0.0f));
+            REQUIRE(vec.Y == approx(1.0f));
+        }
+        {
+            auto vec = Vector2::Rotate(Vector2{1.0f, 0.0f}, Pomdog::Math::Pi<float>);
+            REQUIRE(vec.X == approx(-1.0f));
+            REQUIRE(vec.Y == approx(0.0f));
+        }
+        {
+            auto vec = Vector2::Rotate(Vector2{1.0f, 0.0f}, -Pomdog::Math::PiOver2<float>);
+            REQUIRE(vec.X == approx(0.0f));
+            REQUIRE(vec.Y == approx(-1.0f));
+        }
+        {
+            auto vec = Vector2::Rotate(Vector2{1.0f, 0.0f}, Pomdog::Math::TwoPi<float>);
+            REQUIRE(vec.X == approx(1.0f));
+            REQUIRE(vec.Y == approx(0.0f));
+        }
     }
 }

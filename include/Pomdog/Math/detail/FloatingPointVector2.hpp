@@ -84,6 +84,10 @@ public:
     static void
     Normalize(const FloatingPointVector2& source, FloatingPointVector2& result) noexcept;
 
+    /// Rotates a vector by a given angle in radians.
+    [[nodiscard]] static FloatingPointVector2
+    Rotate(const FloatingPointVector2<T>& vector, const Radian<T>& radian) noexcept;
+
     [[nodiscard]] static FloatingPointVector2
     Transform(
         const FloatingPointVector2& position,
