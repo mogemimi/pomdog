@@ -13,6 +13,7 @@
 
 namespace Pomdog {
 
+/// An HTTPClient represents an HTTP Client for sending HTTP requests and receiving HTTP responses.
 class POMDOG_EXPORT HTTPClient final {
 public:
     explicit HTTPClient(IOService* service);

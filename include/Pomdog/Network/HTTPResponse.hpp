@@ -12,6 +12,7 @@
 
 namespace Pomdog {
 
+/// An HTTPResponse represents an HTTP response from the server to the client.
 class POMDOG_EXPORT HTTPResponse final {
 public:
     /// e.g. "200 OK"

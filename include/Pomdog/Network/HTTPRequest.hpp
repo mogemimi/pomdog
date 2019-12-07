@@ -14,6 +14,7 @@
 
 namespace Pomdog {
 
+/// An HTTPRequest represents an HTTP request for a client connection.
 class POMDOG_EXPORT HTTPRequest final {
 public:
     static std::shared_ptr<HTTPRequest>

@@ -97,12 +97,16 @@ public:
     [[nodiscard]] static FloatingPointQuaternion
     CreateFromRotationMatrix(const FloatingPointMatrix3x3<T>& rotation);
 
+    /// Creates a quaternion from the specified yaw, pitch, and roll.
+    ///
     ///@param yaw The rotation around the y-axis in radians.
     ///@param pitch The rotation around the x-axis in radians.
     ///@param roll The rotation around the z-axis in radians.
     static void
     CreateFromYawPitchRoll(const Radian<T>& yaw, const Radian<T>& pitch, const Radian<T>& roll, FloatingPointQuaternion& result);
 
+    /// Creates a quaternion from the specified yaw, pitch, and roll.
+    ///
     ///@param yaw The rotation around the y-axis in radians.
     ///@param pitch The rotation around the x-axis in radians.
     ///@param roll The rotation around the z-axis in radians.
