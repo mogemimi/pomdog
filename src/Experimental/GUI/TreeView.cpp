@@ -158,6 +158,8 @@ void TreeView::UpdateLayout()
         return;
     }
 
+    disclosureTriangleButton->SetOn(expanded);
+
     const auto verticalLayoutHeight = verticalLayout->GetHeight();
     const auto horizontalLayoutHeight = horizontalLayout->GetHeight();
 

@@ -25,8 +25,6 @@ public:
 
     bool IsFocused() const;
 
-    double GetScrollWheel() const;
-
     bool GetSizeToFitContent() const noexcept override;
 
     void OnEnter() override;
@@ -47,8 +45,9 @@ public:
 
     void UpdateAnimation(const Duration& frameDuration) override;
 
-    // Events:
     Signal<void(const Vector2& point)> SceneTouch;
+
+    Signal<void(double)> ScrollWheelChanged;
 
 private:
     void OnMouseLeftButtonPressed(const PointerPoint& pointerPoint);

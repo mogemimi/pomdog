@@ -69,6 +69,10 @@ void StackPanel::OnEnter()
 
 void StackPanel::OnPointerPressed(const PointerPoint& pointerPoint)
 {
+    if (pointerPoint.MouseEvent && (*pointerPoint.MouseEvent != PointerMouseEvent::LeftButtonPressed)) {
+        return;
+    }
+
     auto pointInView = UIHelper::ProjectToChildSpace(pointerPoint.Position, GetGlobalPosition());
 
     const auto collisionHeight = barHeight + padding.Top;

@@ -77,8 +77,6 @@ ScenePanel::ScenePanel(
     SetHierarchySortOrder(HierarchySortOrder::Back);
 }
 
-// MARK: - Properties
-
 bool ScenePanel::IsEnabled() const
 {
     return isEnabled;
@@ -286,11 +284,6 @@ void ScenePanel::UpdateAnimation(const Duration& frameDuration)
 
     POMDOG_ASSERT(cameraZoom > 0);
     cameraZoom = MathHelper::Saturate(cameraZoom + (cameraZoom * scroll * 1000));
-}
-
-double ScenePanel::GetScrollWheel() const
-{
-    return cameraZoom;
 }
 
 void ScenePanel::Draw(DrawingContext&)
