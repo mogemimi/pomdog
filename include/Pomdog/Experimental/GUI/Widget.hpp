@@ -4,6 +4,7 @@
 
 #include "Pomdog/Application/Duration.hpp"
 #include "Pomdog/Application/MouseCursor.hpp"
+#include "Pomdog/Experimental/GUI/HierarchySortOrder.hpp"
 #include "Pomdog/Experimental/GUI/HorizontalAlignment.hpp"
 #include "Pomdog/Experimental/GUI/VerticalAlignment.hpp"
 #include "Pomdog/Math/Point2D.hpp"
@@ -53,6 +54,9 @@ public:
 
     bool IsWheelFocusEnabled() const noexcept;
     void SetWheelFocusEnabled(bool wheelFocusEnabled) noexcept;
+
+    HierarchySortOrder GetHierarchySortOrder() const noexcept;
+    void SetHierarchySortOrder(HierarchySortOrder sortOrder) noexcept;
 
     Point2D GetPosition() const noexcept;
     virtual void SetPosition(const Point2D& position);
@@ -117,6 +121,7 @@ private:
     int height;
     int width;
     std::optional<MouseCursor> cursor;
+    HierarchySortOrder hierarchySortOrder;
     bool isParentTransformDirty;
     bool isVisible;
     bool isInteractable;

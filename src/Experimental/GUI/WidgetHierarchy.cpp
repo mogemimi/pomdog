@@ -2,6 +2,7 @@
 
 #include "Pomdog/Experimental/GUI/WidgetHierarchy.hpp"
 #include "Pomdog/Experimental/GUI/DrawingContext.hpp"
+#include "Pomdog/Experimental/GUI/HierarchySortOrder.hpp"
 #include "Pomdog/Experimental/GUI/UIHelper.hpp"
 
 namespace Pomdog::GUI {
@@ -103,8 +104,13 @@ void WidgetHierarchy::Update()
 
         if (parent != nullptr) {
             std::stable_sort(std::begin(children), std::end(children),
-                [&](const std::shared_ptr<Widget>& a, const std::shared_ptr<Widget>&) -> bool {
-                    return (parent == a);
+                [&](const std::shared_ptr<Widget>& a, const std::shared_ptr<Widget>& b) -> bool {
+                    const auto x = a->GetHierarchySortOrder();
+                    const auto y = b->GetHierarchySortOrder();
+                    if ((x == y) && (x == HierarchySortOrder::Sortable)) {
+                        return (parent == a);
+                    }
+                    return x < y;
                 });
         }
     }

@@ -12,6 +12,7 @@ Widget::Widget(const std::shared_ptr<UIEventDispatcher>& dispatcherIn)
     , weakDispatcher(dispatcherIn)
     , height(1)
     , width(1)
+    , hierarchySortOrder(HierarchySortOrder::Sortable)
     , isParentTransformDirty(true)
     , isVisible(true)
     , isInteractable(true)
@@ -68,7 +69,7 @@ void Widget::SetSize(int widthIn, int heightIn)
 
 Rectangle Widget::GetBounds() const noexcept
 {
-    return Rectangle{ localPosition.X, localPosition.Y, width, height};
+    return Rectangle{localPosition.X, localPosition.Y, width, height};
 }
 
 void Widget::MarkParentTransformDirty()
@@ -120,6 +121,16 @@ bool Widget::IsWheelFocusEnabled() const noexcept
 void Widget::SetWheelFocusEnabled(bool wheelFocusEnabled) noexcept
 {
     this->isWheelFocusEnabled = wheelFocusEnabled;
+}
+
+HierarchySortOrder Widget::GetHierarchySortOrder() const noexcept
+{
+    return hierarchySortOrder;
+}
+
+void Widget::SetHierarchySortOrder(HierarchySortOrder sortOrder) noexcept
+{
+    this->hierarchySortOrder = sortOrder;
 }
 
 Point2D Widget::GetPosition() const noexcept

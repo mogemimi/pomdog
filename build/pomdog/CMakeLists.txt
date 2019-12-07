@@ -419,6 +419,7 @@ set(POMDOG_SOURCES_EXPERIMENTAL_GUI
   ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/FloatField.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/FontSize.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/FontWeight.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/HierarchySortOrder.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/HorizontalAlignment.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/HorizontalLayout.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/HorizontalLine.hpp

@@ -1171,6 +1171,7 @@
 		D7C188DF2395DFD000C3E381 /* ComponentTypeIndex.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ComponentTypeIndex.hpp; sourceTree = "<group>"; };
 		D7C188E02395DFD000C3E381 /* ComponentBuffer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ComponentBuffer.hpp; sourceTree = "<group>"; };
 		D7C188E12395DFD000C3E381 /* EntityManager.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = EntityManager.hpp; sourceTree = "<group>"; };
+		D7C18903239BA3C500C3E381 /* HierarchySortOrder.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = HierarchySortOrder.hpp; sourceTree = "<group>"; };
 		D7D5A98E477FB0CDE2089FBD /* KeyboardState.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KeyboardState.cpp; sourceTree = "<group>"; };
 		D9C3D114115E6C3A619E8CF9 /* GameHostCocoa.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = GameHostCocoa.mm; sourceTree = "<group>"; };
 		DA8DDAEB3A97076C2FCB19F3 /* IndexElementSize.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = IndexElementSize.hpp; sourceTree = "<group>"; };
@@ -2425,6 +2426,7 @@
 				D75E073B2392E49200F98C10 /* FloatField.hpp */,
 				D75E07432392E49200F98C10 /* FontSize.hpp */,
 				D75E074C2392E49300F98C10 /* FontWeight.hpp */,
+				D7C18903239BA3C500C3E381 /* HierarchySortOrder.hpp */,
 				D75E07512392E49300F98C10 /* HorizontalAlignment.hpp */,
 				D75E07522392E49300F98C10 /* HorizontalLayout.hpp */,
 				D75E07412392E49200F98C10 /* HorizontalLine.hpp */,

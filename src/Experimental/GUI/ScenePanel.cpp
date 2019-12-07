@@ -74,6 +74,7 @@ ScenePanel::ScenePanel(
     , isEnabled(true)
 {
     SetSize(widthIn, heightIn);
+    SetHierarchySortOrder(HierarchySortOrder::Back);
 }
 
 // MARK: - Properties
