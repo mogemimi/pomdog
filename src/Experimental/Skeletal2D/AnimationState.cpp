@@ -31,7 +31,7 @@ void AnimationState::Update(const AnimationTimeInterval& frameDuration)
     }
 }
 
-const std::shared_ptr<AnimationClip>& AnimationState::Clip() const
+const std::shared_ptr<AnimationClip>& AnimationState::GetClip() const
 {
     return clip;
 }

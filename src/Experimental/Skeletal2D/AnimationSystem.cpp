@@ -67,7 +67,7 @@ void AnimationSystem::Impl::Update(const GameClock& clock)
         state.Update(clock.GetFrameDuration());
 
         // (2) Pose extraction:
-        auto& clip = state.Clip();
+        auto& clip = state.GetClip();
         auto& skeleton = *animationContext.Skeleton;
         auto& skeletonPose = *animationContext.SkeletonPose;
         auto& skin = animationContext.Skin;

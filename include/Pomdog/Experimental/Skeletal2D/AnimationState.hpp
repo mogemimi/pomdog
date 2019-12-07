@@ -16,7 +16,7 @@ public:
 
     void Update(const AnimationTimeInterval& frameDuration);
 
-    const std::shared_ptr<AnimationClip>& Clip() const;
+    const std::shared_ptr<AnimationClip>& GetClip() const;
 
     AnimationTimeInterval GetTime() const noexcept;
     void SetTime(const AnimationTimeInterval& time) noexcept;
