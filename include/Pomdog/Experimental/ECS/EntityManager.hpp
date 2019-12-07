@@ -51,6 +51,18 @@ public:
     template <typename T>
     void SetComponentData(const Entity& entity, T&& data);
 
+    template <typename T>
+    void ForEach(std::function<void(Entity, T&)>&& func);
+
+    template <typename T>
+    void ForEach(std::function<void(T&)>&& func);
+
+    template <typename T, typename... Components>
+    void ForEach(std::function<void(Entity, T&, Components&...)>&& func);
+
+    template <typename T, typename... Components>
+    void ForEach(std::function<void(T&, Components&...)>&& func);
+
     template <typename T, typename... Components>
     std::vector<Entity> QueryComponents();
 
@@ -181,6 +193,78 @@ void EntityManager<MaxComponentCapacity>::SetComponentData(const Entity& entity,
     POMDOG_ASSERT(HasComponent<T>(entity));
     auto component = nativeEntities->GetComponent(entity.GetIndex());
     *component = std::move(data);
+}
+
+template <std::uint8_t MaxComponentCapacity>
+template <typename T>
+void EntityManager<MaxComponentCapacity>::ForEach(std::function<void(T&)>&& func)
+{
+    const auto mask = Helper::ComponentMask<MaxComponentCapacity, T>();
+
+    std::uint32_t index = 0;
+    for (const auto& desc : descriptions) {
+        if (desc.IsEnabled) {
+            if ((desc.ComponentBitMask & mask) == mask) {
+                Entity entity{desc.IncremantalVersion, index};
+                func(*GetComponent<T>(entity));
+            }
+        }
+        ++index;
+    }
+}
+
+template <std::uint8_t MaxComponentCapacity>
+template <typename T>
+void EntityManager<MaxComponentCapacity>::ForEach(std::function<void(Entity, T&)>&& func)
+{
+    const auto mask = Helper::ComponentMask<MaxComponentCapacity, T>();
+
+    std::uint32_t index = 0;
+    for (const auto& desc : descriptions) {
+        if (desc.IsEnabled) {
+            if ((desc.ComponentBitMask & mask) == mask) {
+                Entity entity{desc.IncremantalVersion, index};
+                func(entity, *GetComponent<T>(entity));
+            }
+        }
+        ++index;
+    }
+}
+
+template <std::uint8_t MaxComponentCapacity>
+template <typename T, typename... Components>
+void EntityManager<MaxComponentCapacity>::ForEach(std::function<void(T&, Components&...)>&& func)
+{
+    const auto mask = Helper::ComponentMask<MaxComponentCapacity, T, Components...>();
+
+    std::uint32_t index = 0;
+    for (const auto& desc : descriptions) {
+        if (desc.IsEnabled) {
+            if ((desc.ComponentBitMask & mask) == mask) {
+                Entity entity{desc.IncremantalVersion, index};
+                func(*GetComponent<T>(entity), *GetComponent<Components>(entity)...);
+            }
+        }
+        ++index;
+    }
+}
+
+template <std::uint8_t MaxComponentCapacity>
+template <typename T, typename... Components>
+void EntityManager<MaxComponentCapacity>::ForEach(std::function<void(Entity, T&, Components&...)>&& func)
+{
+    const auto mask = Helper::ComponentMask<MaxComponentCapacity, T, Components...>();
+
+    std::uint32_t index = 0;
+    for (const auto& desc : descriptions) {
+        if (desc.IsEnabled) {
+            if ((desc.ComponentBitMask & mask) == mask) {
+                Entity entity{desc.IncremantalVersion, index};
+                func(entity, *GetComponent<T>(entity), *GetComponent<Components>(entity)...);
+            }
+        }
+        ++index;
+    }
 }
 
 template <std::uint8_t MaxComponentCapacity>
