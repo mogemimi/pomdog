@@ -27,7 +27,7 @@ public:
 
     double GetScrollWheel() const;
 
-    bool SizeToFitContent() const override { return true; }
+    bool GetSizeToFitContent() const noexcept override;
 
     void OnEnter() override;
 

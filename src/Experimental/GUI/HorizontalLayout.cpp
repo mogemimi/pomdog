@@ -68,7 +68,7 @@ void HorizontalLayout::MarkContentLayoutDirty()
     needToUpdateLayout = true;
 }
 
-bool HorizontalLayout::SizeToFitContent() const
+bool HorizontalLayout::GetSizeToFitContent() const noexcept
 {
     return false;
 }

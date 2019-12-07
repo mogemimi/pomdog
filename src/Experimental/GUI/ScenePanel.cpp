@@ -93,7 +93,10 @@ bool ScenePanel::IsFocused() const
     return this->isFocused;
 }
 
-// MARK: - Member Functions
+bool ScenePanel::GetSizeToFitContent() const noexcept
+{
+    return true;
+}
 
 Vector2 ScenePanel::ConvertToPanelSpace(const Point2D& point) const
 {

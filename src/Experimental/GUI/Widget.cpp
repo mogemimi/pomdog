@@ -145,7 +145,7 @@ std::shared_ptr<Widget> Widget::GetChildAt([[maybe_unused]] const Point2D& posit
     return nullptr;
 }
 
-bool Widget::SizeToFitContent() const
+bool Widget::GetSizeToFitContent() const noexcept
 {
     return false;
 }

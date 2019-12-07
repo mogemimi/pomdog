@@ -81,7 +81,7 @@ VerticalAlignment Slider::GetVerticalAlignment() const noexcept
     return VerticalAlignment::Top;
 }
 
-bool Slider::SizeToFitContent() const
+bool Slider::GetSizeToFitContent() const noexcept
 {
     return false;
 }

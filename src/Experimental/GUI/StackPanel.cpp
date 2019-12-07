@@ -52,7 +52,7 @@ void StackPanel::MarkContentLayoutDirty()
     needToUpdateLayout = true;
 }
 
-bool StackPanel::SizeToFitContent() const
+bool StackPanel::GetSizeToFitContent() const noexcept
 {
     return false;
 }

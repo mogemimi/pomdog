@@ -133,7 +133,7 @@ HorizontalAlignment VerticalScrollBar::GetHorizontalAlignment() const noexcept
     return HorizontalAlignment::Right;
 }
 
-bool VerticalScrollBar::SizeToFitContent() const
+bool VerticalScrollBar::GetSizeToFitContent() const noexcept
 {
     return false;
 }

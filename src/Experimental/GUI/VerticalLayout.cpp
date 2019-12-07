@@ -67,7 +67,7 @@ void VerticalLayout::MarkContentLayoutDirty()
     needToUpdateLayout = true;
 }
 
-bool VerticalLayout::SizeToFitContent() const
+bool VerticalLayout::GetSizeToFitContent() const noexcept
 {
     return false;
 }

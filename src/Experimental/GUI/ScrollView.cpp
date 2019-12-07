@@ -63,7 +63,7 @@ void ScrollView::MarkContentLayoutDirty()
     needToUpdateLayout = true;
 }
 
-bool ScrollView::SizeToFitContent() const
+bool ScrollView::GetSizeToFitContent() const noexcept
 {
     return false;
 }

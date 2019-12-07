@@ -67,7 +67,7 @@ public:
 
     virtual void DoLayout();
 
-    virtual bool SizeToFitContent() const;
+    virtual bool GetSizeToFitContent() const noexcept;
     virtual HorizontalAlignment GetHorizontalAlignment() const noexcept;
     virtual VerticalAlignment GetVerticalAlignment() const noexcept;
 

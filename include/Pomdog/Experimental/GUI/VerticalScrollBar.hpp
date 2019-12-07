@@ -37,7 +37,7 @@ public:
 
     HorizontalAlignment GetHorizontalAlignment() const noexcept override;
 
-    bool SizeToFitContent() const override;
+    bool GetSizeToFitContent() const noexcept override;
 
     void OnEnter() override;
 

@@ -29,7 +29,7 @@ public:
 
     void MarkContentLayoutDirty() override;
 
-    bool SizeToFitContent() const override;
+    bool GetSizeToFitContent() const noexcept override;
 
     void ScrollToTop();
 

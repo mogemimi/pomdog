@@ -146,7 +146,7 @@ void WidgetHierarchy::RenderSizeChanged(int width, int height)
         auto position = child->GetPosition();
         child->SetPosition(position + translationOffset);
 
-        if (child->SizeToFitContent()) {
+        if (child->GetSizeToFitContent()) {
             child->SetSize(width, height);
             child->MarkContentLayoutDirty();
         }
