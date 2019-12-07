@@ -253,7 +253,16 @@ FloatingPointQuaternion<T>::Inverse(const FloatingPointQuaternion& source)
 {
     FloatingPointQuaternion result;
     Inverse(source, result);
-    return std::move(result);
+    return result;
+}
+
+template <typename T>
+FloatingPointVector3<T>
+FloatingPointQuaternion<T>::Rotate(const FloatingPointQuaternion& quaternion, const FloatingPointVector3<T>& vector)
+{
+    auto xyz = FloatingPointVector3<T>{quaternion.X, quaternion.Y, quaternion.Z};
+    auto t = static_cast<T>(2) * FloatingPointVector3<T>::Cross(xyz, vector);
+    return vector + quaternion.W * t + FloatingPointVector3<T>::Cross(xyz, t);
 }
 
 template <typename T>
@@ -277,7 +286,7 @@ FloatingPointQuaternion<T>::CreateFromAxisAngle(const FloatingPointVector3<T>& a
 {
     FloatingPointQuaternion result;
     CreateFromAxisAngle(axis, angle, result);
-    return std::move(result);
+    return result;
 }
 
 template <class MatrixClass, typename T> static
@@ -392,7 +401,14 @@ FloatingPointQuaternion<T>::CreateFromYawPitchRoll(
 {
     FloatingPointQuaternion result;
     CreateFromYawPitchRoll(yaw, pitch, roll, result);
-    return std::move(result);
+    return result;
+}
+
+template <typename T>
+FloatingPointQuaternion<T>
+FloatingPointQuaternion<T>::Euler(const FloatingPointVector3<T>& rotation)
+{
+    return CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z);
 }
 
 template <typename T>

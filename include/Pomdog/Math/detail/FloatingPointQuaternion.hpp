@@ -73,6 +73,10 @@ public:
     [[nodiscard]] static FloatingPointQuaternion
     Inverse(const FloatingPointQuaternion& source);
 
+    /// Rotates a vector by a quaternion.
+    [[nodiscard]] static FloatingPointVector3<T>
+    Rotate(const FloatingPointQuaternion& quaternion, const FloatingPointVector3<T>& vector);
+
     ///@param axis The normalized axis of the rotation.
     static void
     CreateFromAxisAngle(const FloatingPointVector3<T>& axis, const Radian<T>& angle, FloatingPointQuaternion& result);
@@ -112,6 +116,10 @@ public:
     ///@param roll The rotation around the z-axis in radians.
     [[nodiscard]] static FloatingPointQuaternion
     CreateFromYawPitchRoll(const Radian<T>& yaw, const Radian<T>& pitch, const Radian<T>& roll);
+
+    /// Returns a quaternion constructed from euler angles in radians.
+    [[nodiscard]] static FloatingPointQuaternion
+    Euler(const FloatingPointVector3<T>& rotation);
 
     /// Returns pointer to the first element.
     [[nodiscard]] const T* Data() const noexcept;
