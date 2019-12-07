@@ -16,6 +16,7 @@ ScrollView::ScrollView(
     int heightIn)
     : Widget(dispatcher)
     , margin{0, 0, 0, 0}
+    , horizontalAlignment(HorizontalAlignment::Stretch)
     , needToUpdateLayout(true)
 {
     SetSize(widthIn, heightIn);
@@ -94,6 +95,16 @@ void ScrollView::ScrollToEnd()
         scrollBar->SetValue(scrollBar->GetMinimum());
         needToUpdateLayout = true;
     }
+}
+
+void ScrollView::SetHorizontalAlignment(HorizontalAlignment horizontalAlignmentIn) noexcept
+{
+    this->horizontalAlignment = horizontalAlignmentIn;
+}
+
+HorizontalAlignment ScrollView::GetHorizontalAlignment() const noexcept
+{
+    return horizontalAlignment;
 }
 
 void ScrollView::OnEnter()

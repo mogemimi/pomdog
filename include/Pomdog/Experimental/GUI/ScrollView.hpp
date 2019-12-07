@@ -35,6 +35,10 @@ public:
 
     void ScrollToEnd();
 
+    void SetHorizontalAlignment(HorizontalAlignment horizontalAlignment) noexcept;
+
+    HorizontalAlignment GetHorizontalAlignment() const noexcept override;
+
     void OnEnter() override;
 
     void OnPointerWheelChanged(const PointerPoint& pointerPoint) override;
@@ -57,6 +61,7 @@ private:
     std::shared_ptr<VerticalScrollBar> scrollBar;
     ScopedConnection connection;
     Thickness margin;
+    HorizontalAlignment horizontalAlignment;
     bool needToUpdateLayout;
 };
 
