@@ -149,6 +149,7 @@ void EditorGUITest::Initialize()
         horizontalLayout->AddChild(textBlock);
 
         auto button = std::make_shared<GUI::PushButton>(dispatcher);
+        button->SetHorizontalAlignment(GUI::HorizontalAlignment::Stretch);
         button->SetText("Submit");
         connect(button->Click, [this]() {
             if (textField->GetText().empty()) {
