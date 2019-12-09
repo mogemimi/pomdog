@@ -1,6 +1,7 @@
 // Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Math/detail/FloatingPointQuaternion.hpp"
+#include "Pomdog/Math/MathHelper.hpp"
 #include "Pomdog/Math/Radian.hpp"
 #include "Pomdog/Math/detail/FloatingPointMatrix3x3.hpp"
 #include "Pomdog/Math/detail/FloatingPointMatrix4x4.hpp"
@@ -409,6 +410,46 @@ FloatingPointQuaternion<T>
 FloatingPointQuaternion<T>::Euler(const FloatingPointVector3<T>& rotation)
 {
     return CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z);
+}
+
+template <typename T>
+FloatingPointVector3<T>
+FloatingPointQuaternion<T>::ToEulerAngles(const FloatingPointQuaternion& q) noexcept
+{
+    const auto ww = q.W * q.W;
+    const auto xx = q.X * q.X;
+    const auto yy = q.Y * q.Y;
+    const auto zz = q.Z * q.Z;
+
+    constexpr auto epsilon = std::numeric_limits<T>::epsilon();
+    constexpr auto zero = static_cast<T>(0);
+    constexpr auto one = static_cast<T>(1);
+    constexpr auto two = static_cast<T>(2);
+    constexpr auto half = (static_cast<T>(0.5L) - epsilon);
+
+    const auto lengthSquared = xx + yy + zz + ww;
+    const auto singularityTest = q.X * q.Z + q.Y * q.W;
+    const auto singularityValue = half * lengthSquared;
+
+    // NOTE: {x, y, z} == {pitch, yaw, roll}
+    FloatingPointVector3<T> pitchYawRoll;
+
+    if (singularityTest > singularityValue) {
+        pitchYawRoll.X = zero;
+        pitchYawRoll.Y = Math::PiOver2<T>;
+        pitchYawRoll.Z = two * std::atan2(q.X, q.W);
+    }
+    else if (singularityTest < -singularityValue) {
+        pitchYawRoll.X = zero;
+        pitchYawRoll.Y = -Math::PiOver2<T>;
+        pitchYawRoll.Z = -two * std::atan2(q.X, q.W);
+    }
+    else {
+        pitchYawRoll.X = std::atan2(two * (-q.Y * q.Z + q.X * q.W), one - two * (xx + yy));
+        pitchYawRoll.Y = std::asin(two * (q.X * q.Z + q.Y * q.W));
+        pitchYawRoll.Z = std::atan2(two * (-q.X * q.Y + q.Z * q.W), one - two * (yy + zz));
+    }
+    return pitchYawRoll;
 }
 
 template <typename T>

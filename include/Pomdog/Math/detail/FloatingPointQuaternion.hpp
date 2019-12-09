@@ -121,6 +121,12 @@ public:
     [[nodiscard]] static FloatingPointQuaternion
     Euler(const FloatingPointVector3<T>& rotation);
 
+    /// Returns an euler angles of the given quaternion in radians.
+    ///
+    /// @return Euler angles in pitch-yaw-roll order, in radians.
+    [[nodiscard]] static FloatingPointVector3<T>
+    ToEulerAngles(const FloatingPointQuaternion& quaternion) noexcept;
+
     /// Returns pointer to the first element.
     [[nodiscard]] const T* Data() const noexcept;
 
