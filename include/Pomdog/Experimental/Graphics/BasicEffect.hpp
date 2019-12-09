@@ -74,6 +74,11 @@ struct alignas(16) ModelConstantBuffer final {
 
     // {xyzw} = color.rgba
     Vector4 Color;
+
+    void SetMetalness(float metalness) noexcept
+    {
+        Material.X = metalness;
+    }
 };
 
 struct alignas(16) WorldConstantBuffer final {
@@ -84,6 +89,13 @@ struct alignas(16) WorldConstantBuffer final {
     // {xyz_} = LightDirection.xyz
     // {___w} = unused
     Vector4 LightDirection;
+
+    void SetLightDirection(const Vector3& lightDirection) noexcept
+    {
+        LightDirection.X = lightDirection.X;
+        LightDirection.Y = lightDirection.Y;
+        LightDirection.Z = lightDirection.Z;
+    }
 };
 
 struct POMDOG_EXPORT BasicEffectDescription final {
