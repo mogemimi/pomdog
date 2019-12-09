@@ -389,9 +389,11 @@ LRESULT CALLBACK GameWindowWin32::Impl::WindowProcedure(
             return TRUE;
         }
 
-        std::string text;
-        text += static_cast<char>(wParam);
-        window->eventQueue->Enqueue<InputTextEvent>(text);
+        if (window) {
+            std::string text;
+            text += static_cast<char>(wParam);
+            window->eventQueue->Enqueue<InputTextEvent>(text);
+        }
         return 0;
     }
     case WM_ENTERSIZEMOVE: {
@@ -438,10 +440,12 @@ LRESULT CALLBACK GameWindowWin32::Impl::WindowProcedure(
         return 0;
     }
     case WM_SETCURSOR: {
-        auto hitTest = lParam & 0xffff;
-        if (hitTest == HTCLIENT && window->gameCursor) {
-            SetCursor(*window->gameCursor);
-            return FALSE;
+        if (window) {
+            const auto hitTest = lParam & 0xffff;
+            if (hitTest == HTCLIENT && window->gameCursor) {
+                SetCursor(*window->gameCursor);
+                return FALSE;
+            }
         }
         break;
     }
