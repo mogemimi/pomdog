@@ -1,6 +1,8 @@
 // Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Experimental/ECS/EntityManager.hpp"
+#include "Pomdog/Experimental/ECS/ComponentType.hpp"
+#include "Pomdog/Experimental/ECS/EntityArchtype.hpp"
 
 namespace Pomdog::ECS::Detail {
 namespace {
@@ -28,7 +30,7 @@ EntityManager<MaxComponentCapacity>::EntityManager()
 
 template <std::uint8_t MaxComponentCapacity>
 Entity EntityManager<MaxComponentCapacity>::CreateEntity(
-    std::vector<std::shared_ptr<ComponentTypeBase>>&& componentTypes)
+    const EntityArchtype<MaxComponentCapacity>& archtype)
 {
     std::uint32_t index = 0;
     if (deletedIndices.empty()) {
@@ -49,7 +51,7 @@ Entity EntityManager<MaxComponentCapacity>::CreateEntity(
     Entity entity{desc.IncremantalVersion, index};
     desc.IsEnabled = true;
 
-    for (auto& componentType : componentTypes) {
+    for (auto& componentType : archtype.GetComponentTypes()) {
         POMDOG_ASSERT(componentType != nullptr);
         AddComponent(entity, *componentType);
     }
@@ -91,7 +93,7 @@ void EntityManager<MaxComponentCapacity>::AddComponent(
     POMDOG_ASSERT(desc.IncremantalVersion > 0);
     POMDOG_ASSERT(typeIndex < desc.ComponentBitMask.size());
     POMDOG_ASSERT(typeIndex < MaxComponentCapacity);
-    desc.ComponentBitMask[typeIndex] = 1;
+    desc.ComponentBitMask[typeIndex] = true;
 }
 
 template <std::uint8_t MaxComponentCapacity>

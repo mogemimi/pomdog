@@ -376,7 +376,10 @@ set(POMDOG_SOURCES_EXPERIMENTAL_ECS
   ${POMDOG_DIR}/include/Pomdog/Experimental/ECS/ComponentBuffer.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/ECS/ComponentType.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/ECS/Entity.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/ECS/EntityArchtype.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/ECS/EntityDesc.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/ECS/EntityManager.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/ECS/EntityQuery.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/ECS/ComponentTypeIndex.hpp
   ${POMDOG_DIR}/src/Experimental/ECS/Entity.cpp
   ${POMDOG_DIR}/src/Experimental/ECS/EntityManager.cpp

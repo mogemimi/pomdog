@@ -2,6 +2,7 @@
 
 #include "Pomdog/Experimental/ECS/ComponentTypeIndex.hpp"
 #include "Pomdog/Experimental/ECS/Entity.hpp"
+#include "Pomdog/Experimental/ECS/EntityArchtype.hpp"
 #include "Pomdog/Experimental/ECS/EntityManager.hpp"
 #include "Pomdog/Math/Vector3.hpp"
 #include "catch.hpp"
@@ -11,6 +12,7 @@
 using Pomdog::Vector3;
 using Pomdog::ECS::AddComponent;
 using Pomdog::ECS::Entity;
+using Pomdog::ECS::EntityArchtype;
 using Pomdog::ECS::EntityManager;
 
 namespace {
@@ -37,86 +39,85 @@ struct Behavior final {
     std::shared_ptr<int> ptr = std::make_shared<int>(42);
 };
 
+template <typename T, typename ...Args>
+int ComputeCount(EntityManager& entities)
+{
+    int count = 0;
+    entities.WithAll<T, Args...>().ForEach([&](auto&, auto&...) {
+        count++;
+    });
+    return count;
+}
+
 } // namespace
 
 TEST_CASE("EntityManager::CreateEntity", "[EntityManager]")
 {
     EntityManager manager;
     {
-        auto entity = manager.CreateEntity({});
+        auto archtype = EntityArchtype{};
+        auto entity = manager.CreateEntity(archtype);
         REQUIRE(manager.Exists(entity));
         REQUIRE_FALSE(manager.HasComponent<Transform>(entity));
         REQUIRE_FALSE(manager.HasComponent<Renderable>(entity));
     }
     {
-        auto entity = manager.CreateEntity({
+        auto archtype = EntityArchtype{{
             AddComponent<Transform>()
-        });
+        }};
+        auto entity = manager.CreateEntity(archtype);
         REQUIRE(manager.Exists(entity));
         REQUIRE(manager.HasComponent<Transform>(entity));
         REQUIRE_FALSE(manager.HasComponent<Renderable>(entity));
     }
     {
-        auto entity = manager.CreateEntity({
+        auto archtype = EntityArchtype{{
             AddComponent<Renderable>()
-        });
+        }};
+        auto entity = manager.CreateEntity(archtype);
         REQUIRE(manager.Exists(entity));
         REQUIRE_FALSE(manager.HasComponent<Transform>(entity));
         REQUIRE(manager.HasComponent<Renderable>(entity));
     }
     {
-        auto entity = manager.CreateEntity({
+        auto archtype = EntityArchtype{{
             AddComponent<Transform>(),
             AddComponent<Renderable>()
-        });
+        }};
+        auto entity = manager.CreateEntity(archtype);
         REQUIRE(manager.Exists(entity));
         REQUIRE(manager.HasComponent<Transform>(entity));
         REQUIRE(manager.HasComponent<Renderable>(entity));
     }
     {
-        auto entities = manager.QueryComponents<Transform, Renderable>();
-        REQUIRE(entities.size() == 1);
+        REQUIRE(ComputeCount<Transform, Renderable>(manager) == 1);
+        REQUIRE(ComputeCount<Renderable, Transform>(manager) == 1);
+        REQUIRE(ComputeCount<Transform>(manager) == 2);
+        REQUIRE(ComputeCount<Renderable>(manager) == 2);
     }
     {
-        auto entities = manager.QueryComponents<Transform>();
-        REQUIRE(entities.size() == 2);
-    }
-    {
-        auto entities = manager.QueryComponents<Renderable>();
-        REQUIRE(entities.size() == 2);
-    }
-    {
-        auto entities = manager.QueryComponents<Transform>();
-        REQUIRE(entities.size() == 2);
+        REQUIRE(ComputeCount<Transform>(manager) == 2);
 
-        for (auto & entity : entities) {
+        manager.WithAll<Entity, Transform>().ForEach([&](const Entity& entity, auto&) {
             manager.DestroyEntity(entity);
-        }
+        });
 
-        entities = manager.QueryComponents<Transform>();
-        REQUIRE(entities.empty());
-    }
-    {
-        auto entities = manager.QueryComponents<Transform, Renderable>();
-        REQUIRE(entities.empty());
-    }
-    {
-        auto entities = manager.QueryComponents<Renderable, Transform>();
-        REQUIRE(entities.empty());
-    }
-    {
-        auto entities = manager.QueryComponents<Renderable>();
-        REQUIRE(entities.size() == 1);
+        REQUIRE(ComputeCount<Transform>(manager) == 0);
+        REQUIRE(ComputeCount<Transform, Renderable>(manager) == 0);
+        REQUIRE(ComputeCount<Renderable, Transform>(manager) == 0);
+        REQUIRE(ComputeCount<Renderable>(manager) == 1);
     }
 }
 
 TEST_CASE("Entity AddComponent", "[EntityManager]")
 {
     EntityManager manager;
-    auto entity = manager.CreateEntity({
+
+    auto archtype = EntityArchtype{{
         AddComponent<Transform>(),
         AddComponent<Renderable>()
-    });
+    }};
+    auto entity = manager.CreateEntity(archtype);
 
     REQUIRE(manager.HasComponent<Transform>(entity));
     REQUIRE(manager.GetComponent<Transform>(entity) != nullptr);
@@ -136,8 +137,12 @@ TEST_CASE("Destroy", "[EntityManager]")
 {
     EntityManager manager;
 
+    auto archtype = EntityArchtype{{
+        AddComponent<Behavior>()
+    }};
+
     SECTION("") {
-        auto entity = manager.CreateEntity({});
+        auto entity = manager.CreateEntity(archtype);
 
         REQUIRE(manager.Exists(entity));
         REQUIRE(manager.GetCount() == 1);
@@ -146,7 +151,7 @@ TEST_CASE("Destroy", "[EntityManager]")
         REQUIRE(manager.GetCount() == 0);
     }
     SECTION("") {
-        auto entity = manager.CreateEntity({});
+        auto entity = manager.CreateEntity(archtype);
 
         REQUIRE(manager.Exists(entity));
         REQUIRE(manager.GetCount() == 1);
@@ -155,9 +160,9 @@ TEST_CASE("Destroy", "[EntityManager]")
         REQUIRE(manager.GetCount() == 0);
     }
     SECTION("") {
-        auto entity1 = manager.CreateEntity({});
-        auto entity2 = manager.CreateEntity({});
-        auto entity3 = manager.CreateEntity({});
+        auto entity1 = manager.CreateEntity(archtype);
+        auto entity2 = manager.CreateEntity(archtype);
+        auto entity3 = manager.CreateEntity(archtype);
 
         REQUIRE(manager.Exists(entity1));
         REQUIRE(manager.Exists(entity2));
@@ -179,10 +184,18 @@ TEST_CASE("Destroy", "[EntityManager]")
         REQUIRE_FALSE(manager.Exists(entity3));
         REQUIRE(manager.GetCount() == 0);
     }
+}
+
+TEST_CASE("Destroy_Behavior", "[EntityManager]")
+{
+    EntityManager manager;
+
+    auto archtype = EntityArchtype{{
+        AddComponent<Behavior>()
+    }};
+
     SECTION("") {
-        auto entity = manager.CreateEntity({
-            AddComponent<Behavior>()
-        });
+        auto entity = manager.CreateEntity(archtype);
 
         auto behavior = manager.GetComponent<Behavior>(entity);
         REQUIRE(behavior != nullptr);
@@ -222,16 +235,19 @@ TEST_CASE("DestroyAllEntities", "[EntityManager]")
         REQUIRE(manager.GetCount() == 0);
     }
     SECTION("") {
-        auto entity1 = manager.CreateEntity({
+        auto archtype1 = EntityArchtype{{
             AddComponent<Transform>(),
             AddComponent<Renderable>()
-        });
-        auto entity2 = manager.CreateEntity({
+        }};
+        auto archtype2 = EntityArchtype{{
             AddComponent<Transform>()
-        });
-        auto entity3 = manager.CreateEntity({
+        }};
+        auto archtype3 = EntityArchtype{{
             AddComponent<Renderable>()
-        });
+        }};
+        auto entity1 = manager.CreateEntity(archtype1);
+        auto entity2 = manager.CreateEntity(archtype2);
+        auto entity3 = manager.CreateEntity(archtype3);
 
         REQUIRE(manager.Exists(entity1));
         REQUIRE(manager.Exists(entity2));
@@ -262,9 +278,10 @@ TEST_CASE("DestroyAllEntities", "[EntityManager]")
         REQUIRE(oldId.GetIndex() == newId.GetIndex());
     }
     SECTION("") {
-        auto entity = manager.CreateEntity({
+        auto archtype = EntityArchtype{{
             AddComponent<Behavior>()
-        });
+        }};
+        auto entity = manager.CreateEntity(archtype);
 
         auto behavior = manager.GetComponent<Behavior>(entity);
         REQUIRE(behavior != nullptr);
@@ -281,11 +298,13 @@ TEST_CASE("DestroyAllEntities", "[EntityManager]")
         REQUIRE(manager.GetCount() == 0);
     }
     SECTION("") {
-        auto entity1 = manager.CreateEntity({
+        auto archtype1 = EntityArchtype{{
             AddComponent<Behavior>()
-        });
-
-        auto entity2 = manager.CreateEntity({});
+        }};
+        auto archtype2 = EntityArchtype{{
+        }};
+        auto entity1 = manager.CreateEntity(archtype1);
+        auto entity2 = manager.CreateEntity(archtype2);
 
         auto behavior = manager.GetComponent<Behavior>(entity1);
         REQUIRE(behavior != nullptr);
@@ -514,10 +533,66 @@ TEST_CASE("Entity EntityID Unique", "[EntityManager]")
 TEST_CASE("EntityManager::SetComponentData", "[EntityManager]")
 {
     EntityManager manager;
-    auto entity = manager.CreateEntity({
+    auto archtype = EntityArchtype{{
         AddComponent<Renderable>()
-    });
+    }};
+    auto entity = manager.CreateEntity(archtype);
 
     manager.SetComponentData<Renderable>(entity, Renderable{42});
     REQUIRE(manager.GetComponent<Renderable>(entity)->DrawOrder == 42);
+}
+
+TEST_CASE("EntityManager::WithAll", "[EntityManager]")
+{
+    EntityManager manager;
+
+    auto archtype1 = EntityArchtype{{
+        AddComponent<Transform>(),
+        AddComponent<Renderable>()
+    }};
+    auto archtype2 = EntityArchtype{{
+        AddComponent<Transform>()
+    }};
+    auto archtype3 = EntityArchtype{{
+        AddComponent<Renderable>()
+    }};
+
+    for (int i = 0; i < 42; i++) {
+        auto entity = manager.CreateEntity(archtype1);
+        REQUIRE(manager.Exists(entity));
+        REQUIRE(manager.HasComponent<Transform>(entity));
+        REQUIRE(manager.HasComponent<Renderable>(entity));
+    }
+    for (int i = 0; i < 10; i++) {
+        auto entity = manager.CreateEntity(archtype2);
+        REQUIRE(manager.Exists(entity));
+        REQUIRE(manager.HasComponent<Transform>(entity));
+    }
+    for (int i = 0; i < 3; i++) {
+        auto entity = manager.CreateEntity(archtype3);
+        REQUIRE(manager.Exists(entity));
+        REQUIRE(manager.HasComponent<Renderable>(entity));
+    }
+
+    {
+        int count = 0;
+        manager.WithAll<Transform>().ForEach([&](auto&) {
+            count++;
+        });
+        REQUIRE(count == (42 + 10));
+    }
+    {
+        int count = 0;
+        manager.WithAll<Renderable>().ForEach([&](auto&) {
+            count++;
+        });
+        REQUIRE(count == (42 + 3));
+    }
+    {
+        int count = 0;
+        manager.WithAll<Transform, Renderable>().ForEach([&](auto&, auto&) {
+            count++;
+        });
+        REQUIRE(count == 42);
+    }
 }

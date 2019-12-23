@@ -3,8 +3,9 @@
 #pragma once
 
 #include "Pomdog/Experimental/ECS/ComponentBuffer.hpp"
-#include "Pomdog/Experimental/ECS/ComponentType.hpp"
 #include "Pomdog/Experimental/ECS/Entity.hpp"
+#include "Pomdog/Experimental/ECS/EntityDesc.hpp"
+#include "Pomdog/Experimental/ECS/EntityQuery.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <array>
 #include <bitset>
@@ -18,12 +19,7 @@
 namespace Pomdog::ECS::Detail {
 
 template <std::uint8_t MaxComponentCapacity>
-class EntityDescription final {
-public:
-    std::bitset<MaxComponentCapacity> ComponentBitMask;
-    std::uint32_t IncremantalVersion = 1;
-    bool IsEnabled = false;
-};
+class EntityArchtype;
 
 template <std::uint8_t MaxComponentCapacity>
 class EntityManager final {
@@ -31,7 +27,7 @@ public:
     EntityManager();
 
     [[nodiscard]] Entity
-    CreateEntity(std::vector<std::shared_ptr<ComponentTypeBase>>&& componentTypes);
+    CreateEntity(const EntityArchtype<MaxComponentCapacity>& archtype);
 
     void DestroyEntity(const Entity& entity);
 
@@ -51,20 +47,10 @@ public:
     template <typename T>
     void SetComponentData(const Entity& entity, T&& data);
 
-    template <typename T>
-    void ForEach(std::function<void(Entity, T&)>&& func);
-
-    template <typename T>
-    void ForEach(std::function<void(T&)>&& func);
+    void ForEach(std::function<void(Entity)>&& func);
 
     template <typename T, typename... Components>
-    void ForEach(std::function<void(Entity, T&, Components&...)>&& func);
-
-    template <typename T, typename... Components>
-    void ForEach(std::function<void(T&, Components&...)>&& func);
-
-    template <typename T, typename... Components>
-    std::vector<Entity> QueryComponents();
+    EntityQuery<MaxComponentCapacity, T, Components...> WithAll() noexcept;
 
     std::size_t GetCount() const noexcept;
 
@@ -75,7 +61,7 @@ private:
 
 private:
     std::vector<std::unique_ptr<ComponentBufferBase>> components;
-    std::vector<EntityDescription<MaxComponentCapacity>> descriptions;
+    std::vector<EntityDesc<MaxComponentCapacity>> descriptions;
     std::deque<std::uint32_t> deletedIndices;
     std::size_t entityCount;
 };
@@ -90,27 +76,6 @@ bool EntityManager<MaxComponentCapacity>::HasComponent(const Entity& entity) con
     return descriptions[entity.GetIndex()].ComponentBitMask[typeIndex];
 }
 
-namespace Helper {
-
-template <std::uint8_t MaxComponentCapacity>
-std::bitset<MaxComponentCapacity> ComponentMask()
-{
-    return std::bitset<MaxComponentCapacity>{};
-}
-
-template <std::uint8_t MaxComponentCapacity, typename Type, typename... Components>
-std::bitset<MaxComponentCapacity> ComponentMask()
-{
-    const auto typeIndex = ComponentTypeDeclaration<Type>::GetTypeIndex();
-    POMDOG_ASSERT(typeIndex < MaxComponentCapacity);
-
-    auto mask = ComponentMask<MaxComponentCapacity, Components...>();
-    mask[typeIndex] = true;
-    return mask;
-}
-
-} // namespace Helper
-
 template <std::uint8_t MaxComponentCapacity>
 template <typename Type, typename... Components>
 bool EntityManager<MaxComponentCapacity>::HasComponents(const Entity& entity) const
@@ -124,37 +89,7 @@ template <std::uint8_t MaxComponentCapacity>
 template <typename T>
 T* EntityManager<MaxComponentCapacity>::GetComponent(const Entity& entity)
 {
-    const auto typeIndex = ComponentTypeDeclaration<T>::GetTypeIndex();
-    POMDOG_ASSERT(typeIndex < MaxComponentCapacity);
-
-    if (typeIndex >= components.size()) {
-        return nullptr;
-    }
-
-    auto& entities = components[typeIndex];
-    if (entities == nullptr) {
-        return nullptr;
-    }
-
-    POMDOG_ASSERT(entity.GetIndex() < descriptions.size());
-    auto& desc = descriptions[entity.GetIndex()];
-    if (desc.IncremantalVersion != entity.GetVersion()) {
-        return nullptr;
-    }
-
-    POMDOG_ASSERT(entities != nullptr);
-    if (entity.GetIndex() >= entities->GetSize()) {
-        return nullptr;
-    }
-
-    POMDOG_ASSERT(entity.GetIndex() < entities->GetSize());
-
-    auto nativeEntities = static_cast<Detail::ComponentBuffer<T>*>(entities.get());
-    POMDOG_ASSERT(nativeEntities != nullptr);
-    POMDOG_ASSERT(nativeEntities == dynamic_cast<Detail::ComponentBuffer<T>*>(entities.get()));
-    POMDOG_ASSERT(desc.ComponentBitMask[typeIndex]);
-    POMDOG_ASSERT(HasComponent<T>(entity));
-    return nativeEntities->GetComponent(entity.GetIndex());
+    return Helper::GetComponent<MaxComponentCapacity, T>(entity, components, descriptions);
 }
 
 template <std::uint8_t MaxComponentCapacity>
@@ -196,36 +131,13 @@ void EntityManager<MaxComponentCapacity>::SetComponentData(const Entity& entity,
 }
 
 template <std::uint8_t MaxComponentCapacity>
-template <typename T>
-void EntityManager<MaxComponentCapacity>::ForEach(std::function<void(T&)>&& func)
+void EntityManager<MaxComponentCapacity>::ForEach(std::function<void(Entity)>&& func)
 {
-    const auto mask = Helper::ComponentMask<MaxComponentCapacity, T>();
-
     std::uint32_t index = 0;
     for (const auto& desc : descriptions) {
         if (desc.IsEnabled) {
-            if ((desc.ComponentBitMask & mask) == mask) {
-                Entity entity{desc.IncremantalVersion, index};
-                func(*GetComponent<T>(entity));
-            }
-        }
-        ++index;
-    }
-}
-
-template <std::uint8_t MaxComponentCapacity>
-template <typename T>
-void EntityManager<MaxComponentCapacity>::ForEach(std::function<void(Entity, T&)>&& func)
-{
-    const auto mask = Helper::ComponentMask<MaxComponentCapacity, T>();
-
-    std::uint32_t index = 0;
-    for (const auto& desc : descriptions) {
-        if (desc.IsEnabled) {
-            if ((desc.ComponentBitMask & mask) == mask) {
-                Entity entity{desc.IncremantalVersion, index};
-                func(entity, *GetComponent<T>(entity));
-            }
+            Entity entity{desc.IncremantalVersion, index};
+            func(std::move(entity));
         }
         ++index;
     }
@@ -233,62 +145,10 @@ void EntityManager<MaxComponentCapacity>::ForEach(std::function<void(Entity, T&)
 
 template <std::uint8_t MaxComponentCapacity>
 template <typename T, typename... Components>
-void EntityManager<MaxComponentCapacity>::ForEach(std::function<void(T&, Components&...)>&& func)
+EntityQuery<MaxComponentCapacity, T, Components...> EntityManager<MaxComponentCapacity>::WithAll() noexcept
 {
-    const auto mask = Helper::ComponentMask<MaxComponentCapacity, T, Components...>();
-
-    std::uint32_t index = 0;
-    for (const auto& desc : descriptions) {
-        if (desc.IsEnabled) {
-            if ((desc.ComponentBitMask & mask) == mask) {
-                Entity entity{desc.IncremantalVersion, index};
-                func(*GetComponent<T>(entity), *GetComponent<Components>(entity)...);
-            }
-        }
-        ++index;
-    }
-}
-
-template <std::uint8_t MaxComponentCapacity>
-template <typename T, typename... Components>
-void EntityManager<MaxComponentCapacity>::ForEach(std::function<void(Entity, T&, Components&...)>&& func)
-{
-    const auto mask = Helper::ComponentMask<MaxComponentCapacity, T, Components...>();
-
-    std::uint32_t index = 0;
-    for (const auto& desc : descriptions) {
-        if (desc.IsEnabled) {
-            if ((desc.ComponentBitMask & mask) == mask) {
-                Entity entity{desc.IncremantalVersion, index};
-                func(entity, *GetComponent<T>(entity), *GetComponent<Components>(entity)...);
-            }
-        }
-        ++index;
-    }
-}
-
-template <std::uint8_t MaxComponentCapacity>
-template <typename T, typename... Components>
-std::vector<Entity> EntityManager<MaxComponentCapacity>::QueryComponents()
-{
-    const auto mask = Helper::ComponentMask<MaxComponentCapacity, T, Components...>();
-
-    std::vector<Entity> result;
-    std::uint32_t index = 0;
-    for (const auto& desc : descriptions) {
-        if (desc.IsEnabled) {
-            if ((desc.ComponentBitMask & mask) == mask) {
-                Entity entity{desc.IncremantalVersion, index};
-                result.push_back(entity);
-
-                if (result.size() >= entityCount) {
-                    break;
-                }
-            }
-        }
-        ++index;
-    }
-    return result;
+    EntityQuery<MaxComponentCapacity, T, Components...> query{components, descriptions};
+    return query;
 }
 
 } // namespace Pomdog::ECS::Detail

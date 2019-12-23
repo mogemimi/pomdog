@@ -49,6 +49,11 @@ public:
         return id < other.id;
     }
 
+    [[nodiscard]] operator bool() const noexcept
+    {
+        return id != 0;
+    }
+
     static const Entity Null;
 
 private:
