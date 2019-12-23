@@ -22,6 +22,12 @@ public:
 
     BoundingBox(const Vector3& min, const Vector3& max);
 
+    BoundingBox(const BoundingBox&) noexcept = default;
+    BoundingBox(BoundingBox&&) noexcept = default;
+
+    BoundingBox& operator=(const BoundingBox&) noexcept = default;
+    BoundingBox& operator=(BoundingBox&&) noexcept = default;
+
     [[nodiscard]] bool operator==(const BoundingBox&) const noexcept;
     [[nodiscard]] bool operator!=(const BoundingBox&) const noexcept;
 
