@@ -29,6 +29,7 @@ namespace Pomdog::Detail::Direct3D11 {
 namespace {
 
 using DXGI::DXGIFormatHelper;
+using Microsoft::WRL::ComPtr;
 
 D3D11_PRIMITIVE_TOPOLOGY ToD3D11PrimitiveTopology(
     PrimitiveTopology primitiveTopology) noexcept
@@ -75,20 +76,20 @@ void ChooseMultiSampleSetting(
 }
 
 void UseBackBufferAsRenderTarget(
-    Microsoft::WRL::ComPtr<ID3D11DeviceContext>& deviceContext,
+    Microsoft::WRL::ComPtr<ID3D11DeviceContext3>& deferredContext,
     std::vector<std::shared_ptr<RenderTarget2DDirect3D11>>& renderTargets,
     std::shared_ptr<RenderTarget2DDirect3D11>& backBuffer)
 {
-    POMDOG_ASSERT(deviceContext);
+    POMDOG_ASSERT(deferredContext);
     POMDOG_ASSERT(backBuffer);
 
     renderTargets.clear();
     renderTargets.push_back(backBuffer);
 
     std::array<ID3D11RenderTargetView*, 1> renderTargetViews = {
-        backBuffer->GetRenderTargetView() };
+        backBuffer->GetRenderTargetView()};
 
-    deviceContext->OMSetRenderTargets(
+    deferredContext->OMSetRenderTargets(
         static_cast<UINT>(renderTargetViews.size()),
         renderTargetViews.data(),
         renderTargets.front()->GetDepthStencilView());
@@ -114,11 +115,9 @@ void CheckUnbindingRenderTargetsError(
 GraphicsContextDirect3D11::GraphicsContextDirect3D11(
     HWND windowHandle,
     const Microsoft::WRL::ComPtr<IDXGIFactory1>& dxgiFactory,
-    const Microsoft::WRL::ComPtr<ID3D11Device>& device,
-    const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& deviceContextIn,
+    const Microsoft::WRL::ComPtr<ID3D11Device3>& device,
     const PresentationParameters& presentationParameters)
-    : deviceContext(deviceContextIn)
-    , blendFactor({1.0f, 1.0f, 1.0f, 1.0f})
+    : blendFactor({1.0f, 1.0f, 1.0f, 1.0f})
     , preferredBackBufferWidth(1)
     , preferredBackBufferHeight(1)
     , backBufferCount(2)
@@ -126,10 +125,7 @@ GraphicsContextDirect3D11::GraphicsContextDirect3D11(
     , backBufferDepthFormat(presentationParameters.DepthStencilFormat)
     , needToApplyPipelineState(true)
 {
-    using Microsoft::WRL::ComPtr;
-
     POMDOG_ASSERT(device);
-    POMDOG_ASSERT(deviceContext);
 
     DXGI_SAMPLE_DESC sampleDesc;
     sampleDesc.Count = 1;
@@ -151,6 +147,18 @@ GraphicsContextDirect3D11::GraphicsContextDirect3D11(
         sampleDesc.Quality));
 #endif
 
+    {
+        device->GetImmediateContext3(&immediateContext);
+        POMDOG_ASSERT(immediateContext);
+
+        auto hr = device->CreateDeferredContext3(0, &deferredContext);
+        if (FAILED(hr)) {
+            // FUS RO DAH!
+            POMDOG_THROW_EXCEPTION(std::runtime_error,
+                "Failed to create deferred context");
+        }
+        POMDOG_ASSERT(deferredContext);
+    }
     {
         RECT rect;
         ::GetClientRect(windowHandle, &rect);
@@ -220,7 +228,8 @@ GraphicsContextDirect3D11::~GraphicsContextDirect3D11()
     renderTargets.clear();
     backBuffer.reset();
     swapChain.Reset();
-    deviceContext.Reset();
+    deferredContext.Reset();
+    immediateContext.Reset();
 }
 
 void GraphicsContextDirect3D11::ExecuteCommandLists(
@@ -230,6 +239,10 @@ void GraphicsContextDirect3D11::ExecuteCommandLists(
         POMDOG_ASSERT(commandList);
         commandList->ExecuteImmediate(*this);
     }
+
+    ComPtr<ID3D11CommandList> nativeCommandList;
+    deferredContext->FinishCommandList(false, &nativeCommandList);
+    immediateContext->ExecuteCommandList(nativeCommandList.Get(), false);
 }
 
 void GraphicsContextDirect3D11::Present()
@@ -243,7 +256,7 @@ void GraphicsContextDirect3D11::ApplyPipelineState()
     POMDOG_ASSERT(pipelineState);
 
     if (needToApplyPipelineState) {
-        pipelineState->Apply(deviceContext.Get(), blendFactor.data());
+        pipelineState->Apply(deferredContext.Get(), blendFactor.data());
         needToApplyPipelineState = false;
     }
 }
@@ -252,28 +265,28 @@ void GraphicsContextDirect3D11::Draw(
     std::size_t vertexCount,
     std::size_t startVertexLocation)
 {
-    POMDOG_ASSERT(deviceContext);
+    POMDOG_ASSERT(deferredContext);
 #if defined(DEBUG) && !defined(NDEBUG)
     CheckUnbindingRenderTargetsError(weakRenderTargets, weakTextures);
 #endif
 
     ApplyPipelineState();
 
-    deviceContext->Draw(static_cast<UINT>(vertexCount), static_cast<UINT>(startVertexLocation));
+    deferredContext->Draw(static_cast<UINT>(vertexCount), static_cast<UINT>(startVertexLocation));
 }
 
 void GraphicsContextDirect3D11::DrawIndexed(
     std::size_t indexCount,
     std::size_t startIndexLocation)
 {
-    POMDOG_ASSERT(deviceContext);
+    POMDOG_ASSERT(deferredContext);
 #if defined(DEBUG) && !defined(NDEBUG)
     CheckUnbindingRenderTargetsError(weakRenderTargets, weakTextures);
 #endif
 
     ApplyPipelineState();
 
-    deviceContext->DrawIndexed(static_cast<UINT>(indexCount), static_cast<UINT>(startIndexLocation), 0);
+    deferredContext->DrawIndexed(static_cast<UINT>(indexCount), static_cast<UINT>(startIndexLocation), 0);
 }
 
 void GraphicsContextDirect3D11::DrawInstanced(
@@ -282,14 +295,14 @@ void GraphicsContextDirect3D11::DrawInstanced(
     std::size_t startVertexLocation,
     std::size_t startInstanceLocation)
 {
-    POMDOG_ASSERT(deviceContext);
+    POMDOG_ASSERT(deferredContext);
 #if defined(DEBUG) && !defined(NDEBUG)
     CheckUnbindingRenderTargetsError(weakRenderTargets, weakTextures);
 #endif
 
     ApplyPipelineState();
 
-    deviceContext->DrawInstanced(
+    deferredContext->DrawInstanced(
         static_cast<UINT>(vertexCountPerInstance),
         static_cast<UINT>(instanceCount),
         static_cast<UINT>(startVertexLocation),
@@ -302,14 +315,14 @@ void GraphicsContextDirect3D11::DrawIndexedInstanced(
     std::size_t startIndexLocation,
     std::size_t startInstanceLocation)
 {
-    POMDOG_ASSERT(deviceContext);
+    POMDOG_ASSERT(deferredContext);
 #if defined(DEBUG) && !defined(NDEBUG)
     CheckUnbindingRenderTargetsError(weakRenderTargets, weakTextures);
 #endif
 
     ApplyPipelineState();
 
-    deviceContext->DrawIndexedInstanced(
+    deferredContext->DrawIndexedInstanced(
         static_cast<UINT>(indexCountPerInstance),
         static_cast<UINT>(instanceCount),
         static_cast<UINT>(startIndexLocation),
@@ -319,6 +332,7 @@ void GraphicsContextDirect3D11::DrawIndexedInstanced(
 
 void GraphicsContextDirect3D11::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer)
 {
+    POMDOG_ASSERT(deferredContext);
     POMDOG_ASSERT(indexBuffer);
 
     auto nativeIndexBuffer = static_cast<BufferDirect3D11*>(
@@ -328,7 +342,7 @@ void GraphicsContextDirect3D11::SetIndexBuffer(const std::shared_ptr<IndexBuffer
     POMDOG_ASSERT(nativeIndexBuffer == dynamic_cast<BufferDirect3D11*>(
         indexBuffer->GetNativeIndexBuffer()));
 
-    deviceContext->IASetIndexBuffer(nativeIndexBuffer->GetBuffer(),
+    deferredContext->IASetIndexBuffer(nativeIndexBuffer->GetBuffer(),
         DXGIFormatHelper::ToDXGIFormat(indexBuffer->GetElementSize()), 0);
 }
 
@@ -342,7 +356,8 @@ GraphicsCapabilities GraphicsContextDirect3D11::GetCapabilities() const
 
 void GraphicsContextDirect3D11::SetPrimitiveTopology(PrimitiveTopology primitiveTopology)
 {
-    deviceContext->IASetPrimitiveTopology(
+    POMDOG_ASSERT(deferredContext);
+    deferredContext->IASetPrimitiveTopology(
         ToD3D11PrimitiveTopology(primitiveTopology));
 }
 
@@ -354,8 +369,8 @@ void GraphicsContextDirect3D11::SetScissorRect(const Rectangle& scissorRect)
     rect.right = scissorRect.GetRight();
     rect.bottom = scissorRect.GetBottom();
 
-    POMDOG_ASSERT(deviceContext != nullptr);
-    deviceContext->RSSetScissorRects(1, &rect);
+    POMDOG_ASSERT(deferredContext != nullptr);
+    deferredContext->RSSetScissorRects(1, &rect);
 }
 
 void GraphicsContextDirect3D11::SetBlendFactor(const Vector4& blendFactorIn)
@@ -386,8 +401,8 @@ void GraphicsContextDirect3D11::SetVertexBuffer(
     const auto stride = static_cast<UINT>(vertexBuffer->GetStrideBytes());
     const auto vertexOffset = static_cast<UINT>(offset);
 
-    POMDOG_ASSERT(deviceContext != nullptr);
-    deviceContext->IASetVertexBuffers(
+    POMDOG_ASSERT(deferredContext != nullptr);
+    deferredContext->IASetVertexBuffers(
         static_cast<UINT>(index),
         1,
         &buffer,
@@ -397,7 +412,6 @@ void GraphicsContextDirect3D11::SetVertexBuffer(
 
 void GraphicsContextDirect3D11::SetPipelineState(const std::shared_ptr<NativePipelineState>& pipelineStateIn)
 {
-    POMDOG_ASSERT(deviceContext);
     POMDOG_ASSERT(pipelineStateIn);
 
     if (pipelineState != pipelineStateIn) {
@@ -419,9 +433,9 @@ void GraphicsContextDirect3D11::SetConstantBuffer(
     auto buffer = constantBuffer.GetBuffer();
     POMDOG_ASSERT(buffer != nullptr);
 
-    POMDOG_ASSERT(deviceContext);
-    deviceContext->VSSetConstantBuffers(index, 1, &buffer);
-    deviceContext->PSSetConstantBuffers(index, 1, &buffer);
+    POMDOG_ASSERT(deferredContext);
+    deferredContext->VSSetConstantBuffers(index, 1, &buffer);
+    deferredContext->PSSetConstantBuffers(index, 1, &buffer);
 }
 
 void GraphicsContextDirect3D11::SetSampler(int index, const std::shared_ptr<NativeSamplerState>& samplerIn)
@@ -437,10 +451,10 @@ void GraphicsContextDirect3D11::SetSampler(int index, const std::shared_ptr<Nati
     POMDOG_ASSERT(sampler->GetSamplerState() != nullptr);
 
     std::array<ID3D11SamplerState*, 1> const states = {
-        sampler->GetSamplerState() };
+        sampler->GetSamplerState()};
 
-    POMDOG_ASSERT(deviceContext);
-    deviceContext->PSSetSamplers(index, static_cast<UINT>(states.size()), states.data());
+    POMDOG_ASSERT(deferredContext);
+    deferredContext->PSSetSamplers(index, static_cast<UINT>(states.size()), states.data());
 }
 
 void GraphicsContextDirect3D11::SetTexture(int index)
@@ -457,8 +471,8 @@ void GraphicsContextDirect3D11::SetTexture(int index)
 
     textureResourceViews[index] = nullptr;
 
-    POMDOG_ASSERT(deviceContext);
-    deviceContext->PSSetShaderResources(index, 1, &textureResourceViews[index]);
+    POMDOG_ASSERT(deferredContext);
+    deferredContext->PSSetShaderResources(index, 1, &textureResourceViews[index]);
 }
 
 void GraphicsContextDirect3D11::SetTexture(int index, const std::shared_ptr<Texture2D>& textureIn)
@@ -482,8 +496,8 @@ void GraphicsContextDirect3D11::SetTexture(int index, const std::shared_ptr<Text
 
     textureResourceViews[index] = texture->GetShaderResourceView();
 
-    POMDOG_ASSERT(deviceContext);
-    deviceContext->PSSetShaderResources(0, 1, &textureResourceViews[index]);
+    POMDOG_ASSERT(deferredContext);
+    deferredContext->PSSetShaderResources(0, 1, &textureResourceViews[index]);
 }
 
 void GraphicsContextDirect3D11::SetTexture(int index, const std::shared_ptr<RenderTarget2D>& textureIn)
@@ -507,19 +521,20 @@ void GraphicsContextDirect3D11::SetTexture(int index, const std::shared_ptr<Rend
 
     textureResourceViews[index] = texture->GetShaderResourceView();
 
-    POMDOG_ASSERT(deviceContext);
-    deviceContext->PSSetShaderResources(0, 1, &textureResourceViews[index]);
+    POMDOG_ASSERT(deferredContext);
+    deferredContext->PSSetShaderResources(0, 1, &textureResourceViews[index]);
 }
 
 void GraphicsContextDirect3D11::SetRenderPass(const RenderPass& renderPass)
 {
+    POMDOG_ASSERT(deferredContext);
     POMDOG_ASSERT(!renderPass.RenderTargets.empty());
     POMDOG_ASSERT(renderPass.RenderTargets.size() == 8);
 
     const bool useBackBuffer = (std::get<0>(renderPass.RenderTargets.front()) == nullptr);
 
     if (useBackBuffer) {
-        UseBackBufferAsRenderTarget(deviceContext, renderTargets, backBuffer);
+        UseBackBufferAsRenderTarget(deferredContext, renderTargets, backBuffer);
     }
     else {
         auto& renderTargetsIn = renderPass.RenderTargets;
@@ -549,7 +564,7 @@ void GraphicsContextDirect3D11::SetRenderPass(const RenderPass& renderPass)
             POMDOG_ASSERT(i <= renderTargets.size());
         }
 
-        deviceContext->OMSetRenderTargets(
+        deferredContext->OMSetRenderTargets(
             static_cast<UINT>(renderTargets.size()),
             renderTargetViews.data(),
             renderTargets.front()->GetDepthStencilView());
@@ -575,8 +590,8 @@ void GraphicsContextDirect3D11::SetRenderPass(const RenderPass& renderPass)
         viewport.TopLeftX = static_cast<FLOAT>(viewportIn.TopLeftX);
         viewport.TopLeftY = static_cast<FLOAT>(viewportIn.TopLeftY);
 
-        POMDOG_ASSERT(deviceContext);
-        deviceContext->RSSetViewports(1, &viewport);
+        POMDOG_ASSERT(deferredContext);
+        deferredContext->RSSetViewports(1, &viewport);
     }
     else if (useBackBuffer) {
         POMDOG_ASSERT(!renderPass.Viewport);
@@ -589,8 +604,8 @@ void GraphicsContextDirect3D11::SetRenderPass(const RenderPass& renderPass)
         viewport.TopLeftX = 0.0f;
         viewport.TopLeftY = 0.0f;
 
-        POMDOG_ASSERT(deviceContext);
-        deviceContext->RSSetViewports(1, &viewport);
+        POMDOG_ASSERT(deferredContext);
+        deferredContext->RSSetViewports(1, &viewport);
     }
 
     if (renderPass.ScissorRect) {
@@ -602,8 +617,8 @@ void GraphicsContextDirect3D11::SetRenderPass(const RenderPass& renderPass)
         rect.right = scissorRectIn.GetRight();
         rect.bottom = scissorRectIn.GetBottom();
 
-        POMDOG_ASSERT(deviceContext);
-        deviceContext->RSSetScissorRects(1, &rect);
+        POMDOG_ASSERT(deferredContext);
+        deferredContext->RSSetScissorRects(1, &rect);
     }
     else if (useBackBuffer) {
         POMDOG_ASSERT(!renderPass.ScissorRect);
@@ -614,8 +629,8 @@ void GraphicsContextDirect3D11::SetRenderPass(const RenderPass& renderPass)
         rect.right = preferredBackBufferWidth;
         rect.bottom = preferredBackBufferHeight;
 
-        POMDOG_ASSERT(deviceContext);
-        deviceContext->RSSetScissorRects(1, &rect);
+        POMDOG_ASSERT(deferredContext);
+        deferredContext->RSSetScissorRects(1, &rect);
     }
 
     POMDOG_ASSERT(renderTargets.size() <= renderPass.RenderTargets.size());
@@ -625,7 +640,7 @@ void GraphicsContextDirect3D11::SetRenderPass(const RenderPass& renderPass)
             auto& renderTarget = renderTargets[i];
             POMDOG_ASSERT(renderTarget);
 
-            deviceContext->ClearRenderTargetView(
+            deferredContext->ClearRenderTargetView(
                 renderTarget->GetRenderTargetView(), clearColor->Data());
         }
     }
@@ -653,7 +668,7 @@ void GraphicsContextDirect3D11::SetRenderPass(const RenderPass& renderPass)
 
             auto depthStencilView = renderTargets.front()->GetDepthStencilView();
             if (depthStencilView != nullptr) {
-                deviceContext->ClearDepthStencilView(
+                deferredContext->ClearDepthStencilView(
                     depthStencilView, mask, depth, stencil);
             }
         }
@@ -669,12 +684,6 @@ void GraphicsContextDirect3D11::ResizeBackBuffers(
 
     preferredBackBufferWidth = backBufferWidthIn;
     preferredBackBufferHeight = backBufferHeightIn;
-
-    bool isBackBufferActive = false;
-
-    if (!renderTargets.empty()) {
-        isBackBufferActive = (backBuffer == renderTargets.front());
-    }
 
     POMDOG_ASSERT(backBuffer);
     backBuffer->ResetBackBuffer();
@@ -698,16 +707,18 @@ void GraphicsContextDirect3D11::ResizeBackBuffers(
         preferredBackBufferWidth,
         preferredBackBufferHeight,
         backBufferDepthFormat);
-
-    if (isBackBufferActive) {
-        UseBackBufferAsRenderTarget(deviceContext, renderTargets, backBuffer);
-    }
 }
 
-ID3D11DeviceContext* GraphicsContextDirect3D11::GetDeviceContext()
+ID3D11DeviceContext3* GraphicsContextDirect3D11::GetImmediateContext() noexcept
 {
-    POMDOG_ASSERT(deviceContext);
-    return deviceContext.Get();
+    POMDOG_ASSERT(immediateContext);
+    return immediateContext.Get();
+}
+
+ID3D11DeviceContext3* GraphicsContextDirect3D11::GetDeferredContext() noexcept
+{
+    POMDOG_ASSERT(deferredContext);
+    return deferredContext.Get();
 }
 
 } // namespace Pomdog::Detail::Direct3D11

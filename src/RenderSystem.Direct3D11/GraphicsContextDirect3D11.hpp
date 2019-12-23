@@ -21,8 +21,7 @@ public:
     GraphicsContextDirect3D11(
         HWND windowHandle,
         const Microsoft::WRL::ComPtr<IDXGIFactory1>& dxgiFactory,
-        const Microsoft::WRL::ComPtr<ID3D11Device>& nativeDevice,
-        const Microsoft::WRL::ComPtr<ID3D11DeviceContext>& deviceContext,
+        const Microsoft::WRL::ComPtr<ID3D11Device3>& nativeDevice,
         const PresentationParameters& presentationParameters);
 
     ~GraphicsContextDirect3D11();
@@ -83,13 +82,16 @@ public:
 
     void ResizeBackBuffers(ID3D11Device* device, int backBufferWidth, int backBufferHeight);
 
-    ID3D11DeviceContext* GetDeviceContext();
+    ID3D11DeviceContext3* GetImmediateContext() noexcept;
+
+    ID3D11DeviceContext3* GetDeferredContext() noexcept;
 
 private:
     void ApplyPipelineState();
 
 private:
-    Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext;
+    Microsoft::WRL::ComPtr<ID3D11DeviceContext3> immediateContext;
+    Microsoft::WRL::ComPtr<ID3D11DeviceContext3> deferredContext;
     Microsoft::WRL::ComPtr<IDXGISwapChain> swapChain;
     std::vector<std::shared_ptr<RenderTarget2DDirect3D11>> renderTargets;
 #if defined(DEBUG) && !defined(NDEBUG)

@@ -163,7 +163,6 @@ CreateGraphicsDeviceResult CreateGraphicsDeviceDirect3D11(
 {
     auto nativeGraphicsDevice = std::make_unique<GraphicsDeviceDirect3D11>(presentationParameters);
     auto device = nativeGraphicsDevice->GetDevice();
-    auto deviceContext = nativeGraphicsDevice->GetDeviceContext();
     auto dxgiFactory = nativeGraphicsDevice->GetDXGIFactory();
 
     auto graphicsDevice = std::make_shared<GraphicsDevice>(
@@ -173,7 +172,6 @@ CreateGraphicsDeviceResult CreateGraphicsDeviceDirect3D11(
         window->NativeWindowHandle(),
         dxgiFactory,
         device,
-        deviceContext,
         presentationParameters);
 
     auto graphicsCommandQueue = std::make_shared<GraphicsCommandQueue>(

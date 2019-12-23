@@ -193,8 +193,7 @@ D3D11_BIND_FLAG ToBindFlag(BufferBindMode bindMode) noexcept
 class GraphicsDeviceDirect3D11::Impl final {
 public:
     AdapterManager adapters;
-    ComPtr<ID3D11Device> device;
-    ComPtr<ID3D11DeviceContext> deviceContext;
+    ComPtr<ID3D11Device3> device;
     ComPtr<ID3D11InfoQueue> infoQueue;
     D3D_DRIVER_TYPE driverType;
     D3D_FEATURE_LEVEL featureLevel;
@@ -221,7 +220,6 @@ GraphicsDeviceDirect3D11::Impl::Impl(const PresentationParameters& presentationP
 void GraphicsDeviceDirect3D11::Impl::BuildDevice()
 {
     POMDOG_ASSERT(!device);
-    POMDOG_ASSERT(!deviceContext);
 
     UINT createDeviceFlags = 0;
 #if defined(DEBUG) && !defined(NDEBUG)
@@ -248,6 +246,8 @@ void GraphicsDeviceDirect3D11::Impl::BuildDevice()
 
     HRESULT hr = S_OK;
 
+    ComPtr<ID3D11Device> d3d11Device;
+
     auto adapter = adapters.ActiveAdapter();
     for (auto& type : driverTypes) {
         driverType = type;
@@ -259,9 +259,9 @@ void GraphicsDeviceDirect3D11::Impl::BuildDevice()
             featureLevels.data(),
             static_cast<UINT>(featureLevels.size()),
             D3D11_SDK_VERSION,
-            &device,
+            &d3d11Device,
             &featureLevel,
-            &deviceContext);
+            nullptr);
 
         if (SUCCEEDED(hr)) {
             break;
@@ -273,6 +273,14 @@ void GraphicsDeviceDirect3D11::Impl::BuildDevice()
         POMDOG_THROW_EXCEPTION(std::runtime_error,
             "Failed to create ID3D11Device");
     }
+
+    // NOTE: Create ID3D11Device3 from ID3D11Device.
+    if (hr = d3d11Device->QueryInterface(__uuidof(ID3D11Device3), &device); FAILED(hr)) {
+        // FUS RO DAH!
+        POMDOG_THROW_EXCEPTION(std::runtime_error,
+            "Failed to create ID3D11Device3");
+    }
+    d3d11Device.Reset();
 
 #if defined(DEBUG) && !defined(NDEBUG)
     {
@@ -358,7 +366,6 @@ GraphicsDeviceDirect3D11::CreateBuffer(std::size_t sizeInBytes,
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->device);
-    POMDOG_ASSERT(impl->deviceContext);
 
     try {
         return std::make_unique<BufferDirect3D11>(
@@ -382,7 +389,6 @@ GraphicsDeviceDirect3D11::CreateBuffer(
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->device);
-    POMDOG_ASSERT(impl->deviceContext);
 
     try {
         return std::make_unique<BufferDirect3D11>(
@@ -452,7 +458,6 @@ GraphicsDeviceDirect3D11::CreateTexture2D(std::int32_t width, std::int32_t heigh
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->device);
-    POMDOG_ASSERT(impl->deviceContext);
 
     return std::make_unique<Texture2DDirect3D11>(
         impl->device.Get(),
@@ -483,16 +488,10 @@ GraphicsDeviceDirect3D11::CreateRenderTarget2D(
         multiSampleCount);
 }
 
-Microsoft::WRL::ComPtr<ID3D11Device> GraphicsDeviceDirect3D11::GetDevice() const
+Microsoft::WRL::ComPtr<ID3D11Device3> GraphicsDeviceDirect3D11::GetDevice() const
 {
     POMDOG_ASSERT(impl);
     return impl->device;
-}
-
-Microsoft::WRL::ComPtr<ID3D11DeviceContext> GraphicsDeviceDirect3D11::GetDeviceContext() const
-{
-    POMDOG_ASSERT(impl);
-    return impl->deviceContext;
 }
 
 Microsoft::WRL::ComPtr<IDXGIFactory1> GraphicsDeviceDirect3D11::GetDXGIFactory() const
