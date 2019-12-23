@@ -172,7 +172,7 @@ std::vector<AudioDeviceDetails> EnumerateAudioDevices()
 }
 #endif
 
-} // unnamed namespace
+} // namespace
 
 AudioEngineXAudio2::AudioEngineXAudio2()
     : masteringVoice(nullptr)
@@ -183,7 +183,7 @@ AudioEngineXAudio2::AudioEngineXAudio2()
     }
 
     UINT32 flags = 0;
-#if (_WIN32_WINNT < 0x0602 /*_WIN32_WINNT_WIN8*/) && !defined(NDEBUG)
+#if defined(DEBUG) && !defined(NDEBUG)
     flags |= XAUDIO2_DEBUG_ENGINE;
 #endif
 
@@ -193,7 +193,7 @@ AudioEngineXAudio2::AudioEngineXAudio2()
         POMDOG_THROW_EXCEPTION(std::runtime_error, GetErrorDesc(hr, "XAudio2Create"));
     }
 
-#if (_WIN32_WINNT < 0x0602 /*_WIN32_WINNT_WIN8*/) && !defined(NDEBUG)
+#if defined(DEBUG) && !defined(NDEBUG)
     {
         XAUDIO2_DEBUG_CONFIGURATION debugConfig;
         debugConfig.TraceMask = XAUDIO2_LOG_ERRORS | XAUDIO2_LOG_WARNINGS;
@@ -208,7 +208,6 @@ AudioEngineXAudio2::AudioEngineXAudio2()
     }
 #endif
 
-#if (_WIN32_WINNT >= 0x0602 /*_WIN32_WINNT_WIN8*/)
     std::vector<AudioDeviceDetails> audioDevices;
 
     try {
@@ -220,6 +219,9 @@ AudioEngineXAudio2::AudioEngineXAudio2()
         throw e;
     }
 
+    wchar_t* deviceID = nullptr;
+
+#if 0
     if (audioDevices.empty()) {
         xAudio2.Reset();
         ::CoUninitialize();
@@ -227,41 +229,11 @@ AudioEngineXAudio2::AudioEngineXAudio2()
     }
     POMDOG_ASSERT(!audioDevices.empty());
 
-#else
-    UINT32 deviceCount = 0;
-    hr = xAudio2->GetDeviceCount(&deviceCount);
-    if (FAILED(hr)) {
-        xAudio2.Reset();
-        ::CoUninitialize();
-        POMDOG_THROW_EXCEPTION(std::runtime_error, GetErrorDesc(hr, "GetDeviceCount"));
-    }
-
-    UINT32 preferredDevice = 0;
-    for (UINT32 index = 0; index < deviceCount; ++index) {
-        XAUDIO2_DEVICE_DETAILS deviceDetails;
-        hr = xAudio2->GetDeviceDetails(index, &deviceDetails);
-
-        if (FAILED(hr)) {
-            // Error: FUS RO DAH!
-            ///@todo Not implemented
-            break;
-        }
-
-        constexpr WORD stereoChannels = 2;
-        if (stereoChannels < deviceDetails.OutputFormat.Format.nChannels) {
-            preferredDevice = index;
-            break;
-        }
-    }
+    deviceID = audioDevices.front().DeviceID.data();
 #endif
 
-#if (_WIN32_WINNT >= 0x0602 /*_WIN32_WINNT_WIN8*/)
     hr = xAudio2->CreateMasteringVoice(&masteringVoice, XAUDIO2_DEFAULT_CHANNELS,
-        XAUDIO2_DEFAULT_SAMPLERATE, 0, audioDevices.front().DeviceID.data(), nullptr, AudioCategory_GameEffects);
-#else
-    hr = xAudio2->CreateMasteringVoice(&masteringVoice, XAUDIO2_DEFAULT_CHANNELS,
-        XAUDIO2_DEFAULT_SAMPLERATE, 0, preferredDevice, nullptr);
-#endif
+        XAUDIO2_DEFAULT_SAMPLERATE, 0, deviceID, nullptr, AudioCategory_GameEffects);
 
     if (FAILED(hr)) {
         xAudio2.Reset();
