@@ -129,7 +129,7 @@ void PongGame::Initialize()
         connect(input1.Up, [this] {
             paddle1.PositionOld = paddle1.Position;
             auto position = paddle1.Position;
-            position.Y += paddle1.Speed * clock->GetFrameDuration().count();
+            position.Y += paddle1.Speed * static_cast<float>(clock->GetFrameDuration().count());
 
             if (position.Y > (gameFieldSize.Height / 2 - paddle1.Height / 2)) {
                 position.Y = (gameFieldSize.Height / 2 - paddle1.Height / 2);

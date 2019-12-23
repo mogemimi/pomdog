@@ -114,7 +114,11 @@ void QuickStartGame::Initialize()
 
         auto updateShaderConstants = [this](int width, int height) {
             auto view = Matrix4x4::Identity;
-            auto projection = Matrix4x4::CreateOrthographicLH(width, height, 0, 100);
+            auto projection = Matrix4x4::CreateOrthographicLH(
+                static_cast<float>(width),
+                static_cast<float>(height),
+                0.0f,
+                100.0f);
             myShaderConstants.ViewProjection = view * projection;
         };
 
