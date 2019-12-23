@@ -162,8 +162,8 @@ std::vector<AudioDeviceDetails> EnumerateAudioDevices()
     }
 
     std::sort(std::begin(result), std::end(result), [](const auto& a, const auto& b) {
-        int priorityA = (a.IsEnabled ? 0b01 : 0) + (a.IsDefault ? 0b10 : 0);
-        int priorityB = (b.IsEnabled ? 0b01 : 0) + (b.IsDefault ? 0b10 : 0);
+        int priorityA = (a.IsEnabled ? 0b01 : 0) & (a.IsDefault ? 0b10 : 0);
+        int priorityB = (b.IsEnabled ? 0b01 : 0) & (b.IsDefault ? 0b10 : 0);
         return priorityA > priorityB;
     });
 
