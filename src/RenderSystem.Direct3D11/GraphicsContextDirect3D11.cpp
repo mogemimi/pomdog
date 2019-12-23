@@ -423,7 +423,10 @@ void GraphicsContextDirect3D11::SetPipelineState(const std::shared_ptr<NativePip
 }
 
 void GraphicsContextDirect3D11::SetConstantBuffer(
-    int index, const std::shared_ptr<NativeBuffer>& constantBufferIn)
+    int index,
+    const std::shared_ptr<NativeBuffer>& constantBufferIn,
+    std::size_t offset,
+    std::size_t sizeInBytes)
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(index < D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT);
@@ -433,9 +436,12 @@ void GraphicsContextDirect3D11::SetConstantBuffer(
     auto buffer = constantBuffer.GetBuffer();
     POMDOG_ASSERT(buffer != nullptr);
 
+    const auto startOffset = static_cast<UINT>(offset);
+    const auto constantSize = static_cast<UINT>(sizeInBytes);
+
     POMDOG_ASSERT(deferredContext);
-    deferredContext->VSSetConstantBuffers(index, 1, &buffer);
-    deferredContext->PSSetConstantBuffers(index, 1, &buffer);
+    deferredContext->VSSetConstantBuffers1(index, 1, &buffer, &startOffset, &constantSize);
+    deferredContext->PSSetConstantBuffers1(index, 1, &buffer, &startOffset, &constantSize);
 }
 
 void GraphicsContextDirect3D11::SetSampler(int index, const std::shared_ptr<NativeSamplerState>& samplerIn)

@@ -185,7 +185,24 @@ void GraphicsCommandList::SetConstantBuffer(int index, const std::shared_ptr<Con
     std::shared_ptr<Detail::NativeBuffer> nativeConstantBuffer(
         constantBuffer, constantBuffer->GetNativeConstantBuffer());
 
-    nativeCommandList->SetConstantBuffer(index, nativeConstantBuffer);
+    nativeCommandList->SetConstantBuffer(index, nativeConstantBuffer, 0, constantBuffer->GetSizeInBytes());
+}
+
+void GraphicsCommandList::SetConstantBuffer(
+    int index,
+    const std::shared_ptr<ConstantBuffer>& constantBuffer,
+    std::size_t offset)
+{
+    POMDOG_ASSERT(index >= 0);
+    POMDOG_ASSERT(constantBuffer);
+    POMDOG_ASSERT(offset >= 0);
+    POMDOG_ASSERT(offset < constantBuffer->GetSizeInBytes());
+    POMDOG_ASSERT(nativeCommandList);
+
+    std::shared_ptr<Detail::NativeBuffer> nativeConstantBuffer(
+        constantBuffer, constantBuffer->GetNativeConstantBuffer());
+
+    nativeCommandList->SetConstantBuffer(index, nativeConstantBuffer, offset, constantBuffer->GetSizeInBytes() - offset);
 }
 
 void GraphicsCommandList::SetTexture(int index)

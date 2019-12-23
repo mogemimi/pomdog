@@ -60,7 +60,11 @@ public:
 
     virtual void SetPipelineState(const std::shared_ptr<NativePipelineState>& pipelineState) = 0;
 
-    virtual void SetConstantBuffer(int index, const std::shared_ptr<NativeBuffer>& constantBuffer) = 0;
+    virtual void SetConstantBuffer(
+        int index,
+        const std::shared_ptr<NativeBuffer>& constantBuffer,
+        std::size_t offset,
+        std::size_t sizeInBytes) = 0;
 
     virtual void SetSampler(int index, std::shared_ptr<NativeSamplerState>&& sampler) = 0;
 

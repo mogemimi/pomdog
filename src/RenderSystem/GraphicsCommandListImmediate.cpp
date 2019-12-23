@@ -126,12 +126,14 @@ struct SetPipelineStateCommand final : public GraphicsCommand {
 struct SetConstantBufferCommand final : public GraphicsCommand {
     std::shared_ptr<NativeBuffer> constantBuffer;
     int slotIndex;
+    std::size_t offset;
+    std::size_t sizeInBytes;
 
     void Execute(NativeGraphicsContext& graphicsContext) override
     {
         POMDOG_ASSERT(constantBuffer);
         POMDOG_ASSERT(slotIndex >= 0);
-        graphicsContext.SetConstantBuffer(slotIndex, constantBuffer);
+        graphicsContext.SetConstantBuffer(slotIndex, constantBuffer, offset, sizeInBytes);
     }
 };
 
@@ -342,14 +344,21 @@ void GraphicsCommandListImmediate::SetPipelineState(const std::shared_ptr<Native
     commands.push_back(std::move(command));
 }
 
-void GraphicsCommandListImmediate::SetConstantBuffer(int index, const std::shared_ptr<NativeBuffer>& constantBuffer)
+void GraphicsCommandListImmediate::SetConstantBuffer(
+    int index,
+    const std::shared_ptr<NativeBuffer>& constantBuffer,
+    std::size_t offset,
+    std::size_t sizeInBytes)
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(constantBuffer);
+    POMDOG_ASSERT(offset >= 0);
     auto command = std::make_unique<SetConstantBufferCommand>();
     command->commandType = GraphicsCommandType::SetConstantBufferCommand;
     command->constantBuffer = constantBuffer;
     command->slotIndex = index;
+    command->offset = offset;
+    command->sizeInBytes = sizeInBytes;
     commands.push_back(std::move(command));
 }
 

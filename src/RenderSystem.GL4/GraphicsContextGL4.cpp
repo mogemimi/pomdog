@@ -678,10 +678,16 @@ void GraphicsContextGL4::SetPipelineState(const std::shared_ptr<NativePipelineSt
     }
 }
 
-void GraphicsContextGL4::SetConstantBuffer(int index, const std::shared_ptr<NativeBuffer>& constantBufferIn)
+void GraphicsContextGL4::SetConstantBuffer(
+    int index,
+    const std::shared_ptr<NativeBuffer>& constantBufferIn,
+    std::size_t offset,
+    std::size_t sizeInBytes)
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(constantBufferIn);
+    POMDOG_ASSERT(offset >= 0);
+    POMDOG_ASSERT(sizeInBytes > 0);
 
 #if defined(DEBUG) && !defined(NDEBUG)
     static const auto capabilities = GetCapabilities();
@@ -691,8 +697,13 @@ void GraphicsContextGL4::SetConstantBuffer(int index, const std::shared_ptr<Nati
     auto constantBuffer = std::dynamic_pointer_cast<ConstantBufferGL4>(constantBufferIn);
     POMDOG_ASSERT(constantBuffer);
 
-    glBindBufferBase(GL_UNIFORM_BUFFER, index, constantBuffer->GetBuffer());
-    POMDOG_CHECK_ERROR_GL4("glBindBufferBase");
+    glBindBufferRange(
+        GL_UNIFORM_BUFFER,
+        index,
+        constantBuffer->GetBuffer(),
+        static_cast<GLintptr>(offset),
+        static_cast<GLsizeiptr>(sizeInBytes));
+    POMDOG_CHECK_ERROR_GL4("glBindBufferRange");
 }
 
 void GraphicsContextGL4::SetSampler(int index, const std::shared_ptr<NativeSamplerState>& sampler)

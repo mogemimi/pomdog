@@ -94,7 +94,10 @@ public:
         const std::shared_ptr<NativePipelineState>& pipelineState) override;
 
     void SetConstantBuffer(
-        int index, const std::shared_ptr<NativeBuffer>& constantBuffer) override;
+        int index,
+        const std::shared_ptr<NativeBuffer>& constantBuffer,
+        std::size_t offset,
+        std::size_t sizeInBytes) override;
 
     void SetSampler(
         int index, std::shared_ptr<NativeSamplerState>&& sampler) override;

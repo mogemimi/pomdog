@@ -374,10 +374,16 @@ void GraphicsContextMetal::SetPipelineState(const std::shared_ptr<NativePipeline
     nativePipelineState->Apply(commandEncoder);
 }
 
-void GraphicsContextMetal::SetConstantBuffer(int index, const std::shared_ptr<NativeBuffer>& constantBufferIn)
+void GraphicsContextMetal::SetConstantBuffer(
+    int index,
+    const std::shared_ptr<NativeBuffer>& constantBufferIn,
+    std::size_t offset,
+    [[maybe_unused]] std::size_t sizeInBytes)
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(constantBufferIn);
+    POMDOG_ASSERT(offset >= 0);
+    POMDOG_ASSERT(sizeInBytes > 0);
 
 #if defined(DEBUG) && !defined(NDEBUG)
     static const auto capabilities = GetCapabilities();
@@ -391,10 +397,10 @@ void GraphicsContextMetal::SetConstantBuffer(int index, const std::shared_ptr<Na
 
     POMDOG_ASSERT(constantBuffer->GetBuffer() != nil);
     [commandEncoder setVertexBuffer:constantBuffer->GetBuffer()
-        offset:0
+        offset:offset
         atIndex:index];
     [commandEncoder setFragmentBuffer:constantBuffer->GetBuffer()
-        offset:0
+        offset:offset
         atIndex:index];
 }
 

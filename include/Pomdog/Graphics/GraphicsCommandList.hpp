@@ -87,6 +87,12 @@ public:
     /// Sets a constant buffer.
     void SetConstantBuffer(int index, const std::shared_ptr<ConstantBuffer>& constantBuffer);
 
+    /// Sets a constant buffer.
+    void SetConstantBuffer(
+        int index,
+        const std::shared_ptr<ConstantBuffer>& constantBuffer,
+        std::size_t offset);
+
     /// Sets an empty texture to the specified slot.
     void SetTexture(int index);
 
