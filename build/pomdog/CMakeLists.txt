@@ -38,6 +38,7 @@ source_group(Experimental\\ImageEffects             REGULAR_EXPRESSION "(include
 source_group(Experimental\\Image                    REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Image/*")
 source_group(Experimental\\MagicaVoxel              REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/MagicaVoxel/*")
 source_group(Experimental\\Particle2D               REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Particle2D/*")
+source_group(Experimental\\Random                   REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Random/*")
 source_group(Experimental\\Reactive                 REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Reactive/*")
 source_group(Experimental\\Skeletal2D               REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Skeletal2D/*")
 source_group(Experimental\\Skeletal2D\\BlendTrees   REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Skeletal2D/BlendTrees/*")
@@ -541,6 +542,11 @@ set(POMDOG_SOURCES_EXPERIMENTAL_PARTICLE2D
   ${POMDOG_DIR}/src/Experimental/Particle2D/ParticleSystem.cpp
 )
 
+set(POMDOG_SOURCES_EXPERIMENTAL_RANDOM
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Random/Xoroshiro128StarStar.hpp
+  ${POMDOG_DIR}/src/Experimental/Random/Xoroshiro128StarStar.cpp
+)
+
 set(POMDOG_SOURCES_EXPERIMENTAL_REACTIVE
   ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Observable.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/ObservableBase.hpp
@@ -1035,6 +1041,7 @@ if(POMDOG_USE_EXPERIMENTAL)
   list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_IMAGEEFFECTS})
   list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_MAGICAVOXEL})
   list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_PARTICLE2D})
+  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_RANDOM})
   list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_REACTIVE})
   list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_SKELETAL2D})
   list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_SPINE})

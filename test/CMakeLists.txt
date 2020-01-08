@@ -15,6 +15,7 @@ source_group(Application            REGULAR_EXPRESSION test/Application/*)
 source_group(Async                  REGULAR_EXPRESSION test/Async/*)
 source_group(Content                REGULAR_EXPRESSION test/Content/*)
 source_group(Experimental\\ECS      REGULAR_EXPRESSION test/Experimental/ECS/*)
+source_group(Experimental\\Random   REGULAR_EXPRESSION test/Experimental/Random/*)
 source_group(Graphics               REGULAR_EXPRESSION test/Graphics/*)
 source_group(Input                  REGULAR_EXPRESSION test/Input/*)
 source_group(Logging                REGULAR_EXPRESSION test/Logging/*)
@@ -31,6 +32,7 @@ add_executable(PomdogTest
   ${POMDOG_TEST_DIR}/Async/TaskTest.cpp
   ${POMDOG_TEST_DIR}/Experimental/ECS/EntityTest.cpp
   ${POMDOG_TEST_DIR}/Experimental/ECS/EntityManagerTest.cpp
+  ${POMDOG_TEST_DIR}/Experimental/Random/Xoroshiro128StarStarTest.cpp
   ${POMDOG_TEST_DIR}/Graphics/InputLayoutHelperTest.cpp
   ${POMDOG_TEST_DIR}/Input/GamepadUUIDTest.cpp
   ${POMDOG_TEST_DIR}/Input/KeyboardStateTest.cpp
@@ -127,16 +129,15 @@ target_compile_options(PomdogTest PRIVATE
 )
 
 if(APPLE)
-  # TODO: Replace with the following, CMake >= 3.12
-  # `target_link_options(PomdogTest PUBLIC "${LINK_FRAMEWORKS}")`
-  # https://cmake.org/cmake/help/git-stage/command/target_link_options.html
-  set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework Metal")
-  set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework AudioToolBox")
-  set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework OpenAL")
-  set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework Cocoa")
-  set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework OpenGL")
-  set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework QuartzCore")
-  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${LINK_FRAMEWORKS}")
+  target_link_libraries(PomdogTest
+    "-framework AudioToolBox"
+    "-framework Cocoa"
+    "-framework IOKit"
+    "-framework Metal"
+    "-framework OpenAL"
+    "-framework OpenGL"
+    "-framework QuartzCore"
+  )
 endif()
 
 if(WIN32)
