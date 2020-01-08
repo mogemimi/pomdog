@@ -2,9 +2,12 @@
 
 #pragma once
 
-#include "Pomdog/Math/Radian.hpp"
 #include "Pomdog/Math/Vector3.hpp"
-#include <random>
+#include <tuple>
+
+namespace Pomdog::Random {
+class Xoroshiro128StarStar;
+} // namespace Pomdog::Random
 
 namespace Pomdog::Detail::Particles {
 
@@ -12,7 +15,8 @@ class ParticleEmitterShape {
 public:
     virtual ~ParticleEmitterShape() = default;
 
-    virtual void Compute(std::mt19937& random, Vector3& emitPosition, Radian<float>& emitAngle) const = 0;
+    virtual std::tuple<Vector3, Vector3>
+    Compute(Random::Xoroshiro128StarStar& random) const = 0;
 };
 
 } // namespace Pomdog::Detail::Particles

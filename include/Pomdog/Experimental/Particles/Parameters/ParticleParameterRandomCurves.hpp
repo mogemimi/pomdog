@@ -2,9 +2,10 @@
 
 #pragma once
 
-#include "ParticleCurveLerp.hpp"
-#include "ParticleParameter.hpp"
-#include "ParticleParameterCurve.hpp"
+#include "Pomdog/Experimental/Particles/Parameters/ParticleCurveLerp.hpp"
+#include "Pomdog/Experimental/Particles/Parameters/ParticleParameter.hpp"
+#include "Pomdog/Experimental/Particles/Parameters/ParticleParameterCurve.hpp"
+#include "Pomdog/Experimental/Random/Xoroshiro128StarStar.hpp"
 #include <limits>
 #include <random>
 
@@ -26,7 +27,7 @@ public:
         static_assert(std::is_constructible<decltype(curve2), Type2>::value, "");
     }
 
-    T Compute(float normalizedTime, std::mt19937& random) const override
+    T Compute(float normalizedTime, Random::Xoroshiro128StarStar& random) const override
     {
         return Compute(normalizedTime,
             std::generate_canonical<float, std::numeric_limits<float>::digits>(random));
@@ -38,7 +39,7 @@ public:
             curve1.Compute(normalizedTime), curve2.Compute(normalizedTime), amount);
     }
 
-    float GenerateVariance(std::mt19937& random) const override
+    float GenerateVariance(Random::Xoroshiro128StarStar& random) const override
     {
         return std::generate_canonical<float, std::numeric_limits<float>::digits>(random);
     }

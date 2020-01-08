@@ -3,9 +3,10 @@
 #pragma once
 
 #include "Pomdog/Application/Duration.hpp"
-#include "Pomdog/Experimental/Particle2D/Beam.hpp"
-#include "Pomdog/Experimental/Particle2D/BeamBranching.hpp"
-#include "Pomdog/Experimental/Particle2D/BeamEmitter.hpp"
+#include "Pomdog/Experimental/Particles/Beam.hpp"
+#include "Pomdog/Experimental/Particles/BeamBranching.hpp"
+#include "Pomdog/Experimental/Particles/BeamEmitter.hpp"
+#include "Pomdog/Experimental/Random/Xoroshiro128StarStar.hpp"
 #include "Pomdog/Math/Vector2.hpp"
 #include <cstdint>
 #include <random>
@@ -33,7 +34,7 @@ public:
 private:
     Duration erapsedTime;
     Duration emissionTimer;
-    std::mt19937 random;
+    Random::Xoroshiro128StarStar random;
 };
 
 } // namespace Pomdog

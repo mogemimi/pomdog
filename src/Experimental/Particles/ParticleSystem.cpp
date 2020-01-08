@@ -1,12 +1,17 @@
 // Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Experimental/Particle2D/ParticleSystem.hpp"
-#include "Pomdog/Experimental/Particle2D/ParticleClip.hpp"
+#include "Pomdog/Experimental/Particles/ParticleSystem.hpp"
+#include "Pomdog/Experimental/Particles/ParticleClip.hpp"
 #include "Pomdog/Math/MathHelper.hpp"
 #include "Pomdog/Math/Matrix4x4.hpp"
+#include "Pomdog/Math/Quaternion.hpp"
+#include "Pomdog/Math/Radian.hpp"
+#include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Math/Vector3.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <algorithm>
+#include <cmath>
+#include <random>
 
 namespace Pomdog {
 namespace {
@@ -15,34 +20,27 @@ template <typename RandomGenerator>
 Particle CreateParticle(
     RandomGenerator& random,
     const ParticleClip& clip,
-    const ParticleEmitter& emitter,
     float normalizedTime,
-    const Vector2& emitterPosition,
-    const Radian<float>& emitterRotation)
+    const Vector3& emitterPosition,
+    const Quaternion& emitterRotation)
 {
     Particle particle;
-    {
-        particle.TimeToLive = emitter.StartLifetime;
-    }
-    {
-        // emitter shape
-        auto emitPosition = Vector3::Zero;
-        Radian<float> emitAngle = 0.0f;
+    particle.TimeToLive = clip.StartLifetime;
 
+    {
+        // Emitter shape
         POMDOG_ASSERT(clip.Shape);
-        clip.Shape->Compute(random, emitPosition, emitAngle);
+        const auto [emitPosition, emitDirection] = clip.Shape->Compute(random);
 
         // Position
-        const auto worldMatrix = Matrix4x4::CreateRotationZ(emitterRotation) * Matrix4x4::CreateTranslation({emitterPosition, 0});
+        const auto rotation = Matrix4x4::CreateFromQuaternion(emitterRotation);
+        const auto worldMatrix = rotation * Matrix4x4::CreateTranslation(emitterPosition);
         particle.Position = Vector3::Transform(emitPosition, worldMatrix);
 
         // Velocity
         POMDOG_ASSERT(clip.StartSpeed);
-        const auto radius = clip.StartSpeed->Compute(normalizedTime, random);
-        const auto angle = (emitAngle + emitterRotation).value;
-
-        particle.Velocity.X = std::cos(angle) * radius;
-        particle.Velocity.Y = std::sin(angle) * radius;
+        const auto startSpeed = clip.StartSpeed->Compute(normalizedTime, random);
+        particle.Velocity = Vector3::Transform(emitDirection * startSpeed, rotation);
     }
     {
         // Rotation
@@ -73,7 +71,7 @@ Particle CreateParticle(
     return particle;
 }
 
-} // unnamed namespace
+} // namespace
 
 ParticleSystem::ParticleSystem(const std::shared_ptr<ParticleClip const>& clipIn)
     : clip(clipIn)
@@ -83,8 +81,11 @@ ParticleSystem::ParticleSystem(const std::shared_ptr<ParticleClip const>& clipIn
     , state(ParticleSystemState::Playing)
 {
     POMDOG_ASSERT(clip);
-    emitter = clip->Emitter;
-    particles.reserve(emitter.MaxParticles);
+    POMDOG_ASSERT(clip->MaxParticles > 0);
+
+    if (clip->MaxParticles > 0) {
+        particles.reserve(clip->MaxParticles);
+    }
 }
 
 void ParticleSystem::Simulate(
@@ -92,38 +93,63 @@ void ParticleSystem::Simulate(
     const Radian<float>& emitterRotation,
     const Duration& duration)
 {
+    Simulate(
+        Vector3{emitterPosition.X, emitterPosition.Y, 0.0f},
+        Quaternion::CreateFromAxisAngle(Vector3::UnitZ, emitterRotation.value),
+        duration);
+}
+
+void ParticleSystem::Simulate(
+    const Vector3& emitterPosition,
+    const Quaternion& emitterRotation,
+    const Duration& duration)
+{
+    POMDOG_ASSERT(clip);
+
     if (state != ParticleSystemState::Playing) {
         return;
     }
 
     erapsedTime += duration;
 
-    if (emitter.Looping && erapsedTime > clip->Duration) {
+    if (clip->Looping && erapsedTime > clip->Duration) {
         erapsedTime = Duration::zero();
     }
 
-    if (emitter.Looping || erapsedTime <= clip->Duration) {
+    if (clip->Looping || erapsedTime <= clip->Duration) {
         emissionTimer += duration;
 
-        POMDOG_ASSERT(emitter.EmissionRate > 0);
-        auto emissionInterval = std::max(std::numeric_limits<Duration>::epsilon(),
-            Duration(1) / emitter.EmissionRate);
+        POMDOG_ASSERT(clip->EmissionRate > 0);
+        POMDOG_ASSERT(clip->EmissionRateOverTime > 0);
+        POMDOG_ASSERT(clip->Duration > Duration::zero());
+        const auto x0 = 1.0 / clip->EmissionRate;
+        const auto x1 = 1.0 / clip->EmissionRateOverTime;
+        const auto normalizedTime = erapsedTime.count() / clip->Duration.count();
+        const auto lerpInterval = MathHelper::Lerp(x0, x1, normalizedTime);
+        const auto emissionInterval = std::max(std::numeric_limits<Duration>::epsilon(), Duration{lerpInterval});
 
         POMDOG_ASSERT(emissionInterval.count() > 0);
-
         POMDOG_ASSERT(clip->Duration.count() > 0);
-        const auto normalizedTime = static_cast<float>(erapsedTime / clip->Duration);
+        const auto normalizedTimeAsFloat = static_cast<float>(normalizedTime);
 
-        while ((particles.size() < emitter.MaxParticles) && (emissionTimer >= emissionInterval)) {
+        const auto maxParticles = static_cast<std::size_t>(clip->MaxParticles);
+        while ((particles.size() < maxParticles) && (emissionTimer >= emissionInterval)) {
             emissionTimer -= emissionInterval;
 
             auto particle = CreateParticle(
-                random, *clip, emitter, normalizedTime, emitterPosition, emitterRotation);
+                random,
+                *clip,
+                normalizedTimeAsFloat,
+                emitterPosition,
+                emitterRotation);
 
             particles.push_back(std::move(particle));
         }
     }
     {
+        POMDOG_ASSERT(clip->StartLifetime > 0.0f);
+        const auto invertedLifetime = 1.0f / clip->StartLifetime;
+
         for (auto& particle : particles) {
             auto oldTimeToLive = particle.TimeToLive;
             particle.TimeToLive -= static_cast<float>(duration.count());
@@ -133,12 +159,12 @@ void ParticleSystem::Simulate(
 
             const auto deltaTime = oldTimeToLive - particle.TimeToLive;
             const auto particleAcceleration = Vector3{1.0f, 1.0f, 0.0f};
-            const auto gravityAcceleration = Vector3{0.0f, -emitter.GravityModifier, 0.0f};
+            const auto gravityAcceleration = Vector3{0.0f, -clip->GravityModifier, 0.0f};
 
             particle.Velocity += (particleAcceleration * gravityAcceleration * deltaTime);
             particle.Position += (particle.Velocity * deltaTime);
 
-            float normalizedTime = 1.0f - particle.TimeToLive / emitter.StartLifetime;
+            const auto normalizedTime = 1.0f - particle.TimeToLive * invertedLifetime;
 
             POMDOG_ASSERT(clip->ColorOverLifetime);
             particle.Color = Color::Multiply(particle.StartColor,
@@ -178,9 +204,16 @@ void ParticleSystem::Stop()
 
 bool ParticleSystem::IsAlive() const
 {
-    return emitter.Looping
+    POMDOG_ASSERT(clip);
+    return clip->Looping
         || (erapsedTime < clip->Duration)
         || !particles.empty();
+}
+
+bool ParticleSystem::IsLoop() const noexcept
+{
+    POMDOG_ASSERT(clip);
+    return clip->Looping;
 }
 
 } // namespace Pomdog

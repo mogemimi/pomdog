@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "ParticleParameter.hpp"
+#include "Pomdog/Experimental/Particles/Parameters/ParticleParameter.hpp"
 #include <utility>
 
 namespace Pomdog::Detail::Particles {
@@ -20,7 +20,7 @@ public:
         static_assert(std::is_convertible<InType, T>::value, "");
     }
 
-    T Compute(float, std::mt19937&) const override
+    T Compute(float, Random::Xoroshiro128StarStar&) const override
     {
         return value;
     }
@@ -30,7 +30,7 @@ public:
         return value;
     }
 
-    float GenerateVariance(std::mt19937&) const override
+    float GenerateVariance(Random::Xoroshiro128StarStar&) const override
     {
         return 1.0f;
     }

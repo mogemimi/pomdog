@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "ParticleCurveKey.hpp"
-#include "ParticleCurveLerp.hpp"
-#include "ParticleParameter.hpp"
+#include "Pomdog/Experimental/Particles/Parameters/ParticleCurveKey.hpp"
+#include "Pomdog/Experimental/Particles/Parameters/ParticleCurveLerp.hpp"
+#include "Pomdog/Experimental/Particles/Parameters/ParticleParameter.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <algorithm>
 #include <utility>
@@ -13,7 +13,8 @@
 namespace Pomdog::Detail::Particles {
 
 template <typename ForwardIterator, typename KeyType>
-std::pair<ForwardIterator, ForwardIterator> BinarySearchNearestPoints(ForwardIterator first, ForwardIterator last, const KeyType& value)
+std::pair<ForwardIterator, ForwardIterator>
+BinarySearchNearestPoints(ForwardIterator first, ForwardIterator last, const KeyType& value)
 {
     //static_assert(std::is_same<typename std::remove_reference<decltype(*first)>::type, T>::value, "");
     POMDOG_ASSERT(first != last);
@@ -80,7 +81,7 @@ public:
         return ParticleCurveLerp<T>()(pair.first->Value, pair.second->Value, amount);
     }
 
-    T Compute(float normalizedScale, std::mt19937&) const override
+    T Compute(float normalizedScale, Random::Xoroshiro128StarStar&) const override
     {
         return Compute(normalizedScale);
     }
@@ -90,7 +91,7 @@ public:
         return Compute(normalizedScale);
     }
 
-    float GenerateVariance(std::mt19937&) const override
+    float GenerateVariance(Random::Xoroshiro128StarStar&) const override
     {
         return 1.0f;
     }

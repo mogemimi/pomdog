@@ -2,8 +2,9 @@
 
 #pragma once
 
-#include "ParticleCurveLerp.hpp"
-#include "ParticleParameter.hpp"
+#include "Pomdog/Experimental/Particles/Parameters/ParticleCurveLerp.hpp"
+#include "Pomdog/Experimental/Particles/Parameters/ParticleParameter.hpp"
+#include "Pomdog/Experimental/Random/Xoroshiro128StarStar.hpp"
 #include <limits>
 #include <random>
 
@@ -25,13 +26,13 @@ public:
         static_assert(std::is_convertible<Type2, T>::value, "");
     }
 
-    T Compute(std::mt19937& random) const
+    T Compute(Random::Xoroshiro128StarStar& random) const
     {
         return Detail::Particles::ParticleCurveLerp<T>()(min, max,
             std::generate_canonical<float, std::numeric_limits<float>::digits>(random));
     }
 
-    T Compute(float, std::mt19937& random) const override
+    T Compute(float, Random::Xoroshiro128StarStar& random) const override
     {
         return Compute(random);
     }
@@ -41,7 +42,7 @@ public:
         return Detail::Particles::ParticleCurveLerp<T>()(min, max, amount);
     }
 
-    float GenerateVariance(std::mt19937& random) const override
+    float GenerateVariance(Random::Xoroshiro128StarStar& random) const override
     {
         return std::generate_canonical<float, std::numeric_limits<float>::digits>(random);
     }

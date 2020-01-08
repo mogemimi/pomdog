@@ -37,7 +37,9 @@ source_group(Experimental\\GUI                      REGULAR_EXPRESSION "(include
 source_group(Experimental\\ImageEffects             REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/ImageEffects/*")
 source_group(Experimental\\Image                    REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Image/*")
 source_group(Experimental\\MagicaVoxel              REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/MagicaVoxel/*")
-source_group(Experimental\\Particle2D               REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Particle2D/*")
+source_group(Experimental\\Particles                REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Particles/*")
+source_group(Experimental\\Particles\\EmitterShapes REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Particles/EmitterShapes/*")
+source_group(Experimental\\Particles\\Parameters    REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Particles/Parameters/*")
 source_group(Experimental\\Random                   REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Random/*")
 source_group(Experimental\\Reactive                 REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Reactive/*")
 source_group(Experimental\\Skeletal2D               REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Skeletal2D/*")
@@ -519,27 +521,31 @@ set(POMDOG_SOURCES_EXPERIMENTAL_MAGICAVOXEL
   ${POMDOG_DIR}/src/Experimental/MagicaVoxel/VoxModelExporter.cpp
 )
 
-set(POMDOG_SOURCES_EXPERIMENTAL_PARTICLE2D
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/Beam.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/BeamBranching.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/BeamEmitter.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/BeamSystem.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/Particle.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/ParticleClip.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/ParticleEmitter.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/ParticleSystem.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/detail/ParticleCurveKey.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/detail/ParticleCurveLerp.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/detail/ParticleEmitterShape.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/detail/ParticleEmitterShapeBox.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/detail/ParticleEmitterShapeSector.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/detail/ParticleParameter.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/detail/ParticleParameterConstant.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/detail/ParticleParameterCurve.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/detail/ParticleParameterRandom.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Particle2D/detail/ParticleParameterRandomCurves.hpp
-  ${POMDOG_DIR}/src/Experimental/Particle2D/BeamSystem.cpp
-  ${POMDOG_DIR}/src/Experimental/Particle2D/ParticleSystem.cpp
+set(POMDOG_SOURCES_EXPERIMENTAL_PARTICLES
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/Beam.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/BeamBranching.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/BeamEmitter.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/BeamSystem.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/Particle.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/ParticleClip.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/ParticleClipLoader.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/ParticleSystem.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/EmitterShapes/ParticleEmitterShape.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/EmitterShapes/ParticleEmitterShapeBox.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/EmitterShapes/ParticleEmitterShapeCone.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/EmitterShapes/ParticleEmitterShapeHemisphere.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/EmitterShapes/ParticleEmitterShapeSector.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/EmitterShapes/ParticleEmitterShapeSphere.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/Parameters/ParticleCurveKey.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/Parameters/ParticleCurveLerp.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/Parameters/ParticleParameter.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/Parameters/ParticleParameterConstant.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/Parameters/ParticleParameterCurve.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/Parameters/ParticleParameterRandom.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/Parameters/ParticleParameterRandomCurves.hpp
+  ${POMDOG_DIR}/src/Experimental/Particles/BeamSystem.cpp
+  ${POMDOG_DIR}/src/Experimental/Particles/ParticleClipLoader.cpp
+  ${POMDOG_DIR}/src/Experimental/Particles/ParticleSystem.cpp
 )
 
 set(POMDOG_SOURCES_EXPERIMENTAL_RANDOM
@@ -1040,7 +1046,7 @@ if(POMDOG_USE_EXPERIMENTAL)
   list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_IMAGE})
   list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_IMAGEEFFECTS})
   list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_MAGICAVOXEL})
-  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_PARTICLE2D})
+  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_PARTICLES})
   list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_RANDOM})
   list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_REACTIVE})
   list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_SKELETAL2D})

@@ -3,11 +3,10 @@
 #pragma once
 
 #include "Pomdog/Application/Duration.hpp"
-#include "Pomdog/Experimental/Particle2D/Particle.hpp"
-#include "Pomdog/Experimental/Particle2D/ParticleEmitter.hpp"
+#include "Pomdog/Experimental/Particles/Particle.hpp"
+#include "Pomdog/Experimental/Random/Xoroshiro128StarStar.hpp"
 #include <cstdint>
 #include <memory>
-#include <random>
 #include <vector>
 
 namespace Pomdog {
@@ -27,14 +26,18 @@ public:
         const Radian<float>& emitterRotation,
         const Duration& duration);
 
+    void Simulate(
+        const Vector3& emitterPosition,
+        const Quaternion& emitterRotation,
+        const Duration& duration);
+
     bool IsAlive() const;
 
     const std::vector<Particle>& GetParticles() const { return particles; }
 
     std::size_t GetParticleCount() const { return particles.size(); }
 
-    bool IsLoop() const noexcept { return emitter.Looping; }
-    void SetLoop(bool loop) noexcept { emitter.Looping = loop; }
+    bool IsLoop() const noexcept;
 
 private:
     enum class ParticleSystemState : std::uint8_t {
@@ -43,12 +46,11 @@ private:
         Stopped
     };
 
-    ParticleEmitter emitter;
     std::vector<Particle> particles;
     std::shared_ptr<ParticleClip const> clip;
     Duration erapsedTime;
     Duration emissionTimer;
-    std::mt19937 random;
+    Random::Xoroshiro128StarStar random;
     ParticleSystemState state;
 };
 

@@ -1,16 +1,19 @@
 // Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Experimental/Particle2D/BeamSystem.hpp"
+#include "Pomdog/Experimental/Particles/BeamSystem.hpp"
 #include "Pomdog/Math/MathHelper.hpp"
 #include <algorithm>
 
 namespace Pomdog {
 namespace {
 
-std::vector<Vector2> CreateJaggedLine(
+std::vector<Vector2>
+CreateJaggedLine(
     const BeamEmitter& emitter,
     std::uint32_t interpolationPoints,
-    const Vector2& start, const Vector2& end, std::mt19937& random)
+    const Vector2& start,
+    const Vector2& end,
+    Random::Xoroshiro128StarStar& random)
 {
     if (Vector2::DistanceSquared(start, end) <= std::numeric_limits<float>::epsilon()) {
         return {};
@@ -76,10 +79,14 @@ std::vector<Vector2> CreateJaggedLine(
     return points;
 }
 
-std::vector<Vector2> CreateBranch(
+std::vector<Vector2>
+CreateBranch(
     const BeamEmitter& emitter,
     const BeamBranching& branching,
-    const Vector2& sourceStart, const Vector2& sourceEnd, const Beam& parentBeam, std::mt19937& random)
+    const Vector2& sourceStart,
+    const Vector2& sourceEnd,
+    const Beam& parentBeam,
+    Random::Xoroshiro128StarStar& random)
 {
     POMDOG_ASSERT(!parentBeam.Points.empty());
     POMDOG_ASSERT(parentBeam.Points.size() >= 2);
@@ -103,7 +110,7 @@ std::vector<Vector2> CreateBranch(
     Vector2 start = Vector2::Lerp(parentBeam.Points[index1], parentBeam.Points[index2], middlePoint);
 
     Vector2 tangent = sourceEnd - start;
-    Vector2 normal {-tangent.Y, tangent.X};
+    Vector2 normal{-tangent.Y, tangent.X};
 
     auto distribution = branching.SpreadRange;
     auto lengthSq1 = (sourceEnd - start).LengthSquared();

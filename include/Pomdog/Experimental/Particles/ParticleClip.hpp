@@ -3,9 +3,8 @@
 #pragma once
 
 #include "Pomdog/Application/Duration.hpp"
-#include "Pomdog/Experimental/Particle2D/ParticleEmitter.hpp"
-#include "Pomdog/Experimental/Particle2D/detail/ParticleEmitterShape.hpp"
-#include "Pomdog/Experimental/Particle2D/detail/ParticleParameter.hpp"
+#include "Pomdog/Experimental/Particles/EmitterShapes/ParticleEmitterShape.hpp"
+#include "Pomdog/Experimental/Particles/Parameters/ParticleParameter.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Radian.hpp"
 #include <cstdint>
@@ -15,7 +14,16 @@ namespace Pomdog {
 
 class ParticleClip final {
 public:
-    ParticleEmitter Emitter;
+    Pomdog::Duration Duration = std::chrono::seconds{5};
+
+    int EmissionRate = 16;
+
+    int EmissionRateOverTime = 16;
+
+    int MaxParticles = 128;
+
+    /// The initial life time in seconds for particles.
+    float StartLifetime = 1.0f;
 
     ///@note StartSpeed (pixel/second)
     std::unique_ptr<Detail::Particles::ParticleParameter<float>> StartSpeed;
@@ -34,7 +42,13 @@ public:
 
     std::unique_ptr<Detail::Particles::ParticleParameter<float>> SizeOverLifetime;
 
-    Pomdog::Duration Duration = std::chrono::seconds{5};
+    float StartDelay = 0.0f;
+
+    float GravityModifier = 0.0f;
+
+    bool Looping = true;
+
+    // bool Prewarm = false;
 };
 
 } // namespace Pomdog
