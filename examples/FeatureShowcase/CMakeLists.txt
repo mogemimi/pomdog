@@ -16,6 +16,7 @@ source_group(Source\\AnimationGraphTest     REGULAR_EXPRESSION "Source/Animation
 source_group(Source\\AudioClipTest          REGULAR_EXPRESSION "Source/AudioClipTest/*")
 source_group(Source\\BasicEffectTest        REGULAR_EXPRESSION "Source/BasicEffectTest/*")
 source_group(Source\\Beam2DTest             REGULAR_EXPRESSION "Source/Beam2DTest/*")
+source_group(Source\\BillboardBatchTest     REGULAR_EXPRESSION "Source/BillboardBatchTest/*")
 source_group(Source\\DistanceFieldFontTest  REGULAR_EXPRESSION "Source/DistanceFieldFontTest/*")
 source_group(Source\\EditorGUITest          REGULAR_EXPRESSION "Source/EditorGUITest/*")
 source_group(Source\\GamepadTest            REGULAR_EXPRESSION "Source/GamepadTest/*")
@@ -25,6 +26,8 @@ source_group(Source\\HTTPClientTest         REGULAR_EXPRESSION "Source/HTTPClien
 source_group(Source\\ImageEffectsTest       REGULAR_EXPRESSION "Source/ImageEffectsTest/*")
 source_group(Source\\LineBatchTest          REGULAR_EXPRESSION "Source/LineBatchTest/*")
 source_group(Source\\Particle2DTest         REGULAR_EXPRESSION "Source/Particle2DTest/*")
+source_group(Source\\Particle3DTest         REGULAR_EXPRESSION "Source/Particle3DTest/*")
+source_group(Source\\ParticleClipLoaderTest REGULAR_EXPRESSION "Source/ParticleClipLoaderTest/*")
 source_group(Source\\PolylineDrawingTest    REGULAR_EXPRESSION "Source/PolylineDrawingTest/*")
 source_group(Source\\PrimitiveBatchTest     REGULAR_EXPRESSION "Source/PrimitiveBatchTest/*")
 source_group(Source\\Skeletal2DTest         REGULAR_EXPRESSION "Source/Skeletal2DTest/*")
@@ -59,6 +62,8 @@ add_executable(${PRODUCT_NAME} WIN32
   Source/BasicEffectTest/BasicEffectTest.hpp
   Source/Beam2DTest/Beam2DTest.cpp
   Source/Beam2DTest/Beam2DTest.hpp
+  Source/BillboardBatchTest/BillboardBatchTest.cpp
+  Source/BillboardBatchTest/BillboardBatchTest.hpp
   Source/DistanceFieldFontTest/DistanceFieldFontTest.cpp
   Source/DistanceFieldFontTest/DistanceFieldFontTest.hpp
   Source/EditorGUITest/EditorGUITest.cpp
@@ -77,6 +82,10 @@ add_executable(${PRODUCT_NAME} WIN32
   Source/LineBatchTest/LineBatchTest.hpp
   Source/Particle2DTest/Particle2DTest.cpp
   Source/Particle2DTest/Particle2DTest.hpp
+  Source/Particle3DTest/Particle3DTest.cpp
+  Source/Particle3DTest/Particle3DTest.hpp
+  Source/ParticleClipLoaderTest/ParticleClipLoaderTest.cpp
+  Source/ParticleClipLoaderTest/ParticleClipLoaderTest.hpp
   Source/PolylineDrawingTest/PolylineDrawingTest.cpp
   Source/PolylineDrawingTest/PolylineDrawingTest.hpp
   Source/PrimitiveBatchTest/PrimitiveBatchTest.cpp

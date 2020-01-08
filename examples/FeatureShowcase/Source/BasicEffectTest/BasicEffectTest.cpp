@@ -212,6 +212,8 @@ void BasicEffectTest::Update()
     // NOTE: Update constant buffer for world
     BasicEffect::WorldConstantBuffer worldConstants;
     worldConstants.ViewProjection = viewMatrix * projectionMatrix;
+    worldConstants.View = viewMatrix;
+    worldConstants.Projection = projectionMatrix;
     worldConstants.InverseView = Matrix4x4::Invert(viewMatrix);
     worldConstants.LightDirection = Vector4{lightDirection, 0.0f};
     worldConstantBuffer->SetValue(worldConstants);

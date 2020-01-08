@@ -3,15 +3,18 @@
 #include "AudioClipTest/AudioClipTest.hpp"
 #include "BasicEffectTest/BasicEffectTest.hpp"
 #include "Beam2DTest/Beam2DTest.hpp"
+#include "BillboardBatchTest/BillboardBatchTest.hpp"
 #include "DistanceFieldFontTest/DistanceFieldFontTest.hpp"
 #include "EditorGUITest/EditorGUITest.hpp"
 #include "GIFDecodeTest/GIFDecodeTest.hpp"
-#include "HardwareInstancingTest/HardwareInstancingTest.hpp"
 #include "GamepadTest/GamepadTest.hpp"
 #include "HTTPClientTest/HTTPClientTest.hpp"
+#include "HardwareInstancingTest/HardwareInstancingTest.hpp"
 #include "ImageEffectsTest/ImageEffectsTest.hpp"
 #include "LineBatchTest/LineBatchTest.hpp"
 #include "Particle2DTest/Particle2DTest.hpp"
+#include "Particle3DTest/Particle3DTest.hpp"
+#include "ParticleClipLoaderTest/ParticleClipLoaderTest.hpp"
 #include "PolylineDrawingTest/PolylineDrawingTest.hpp"
 #include "PrimitiveBatchTest/PrimitiveBatchTest.hpp"
 #include "SVGDecodeTest/SVGDecodeTest.hpp"
@@ -95,6 +98,10 @@ void FeatureShowcaseGame::Initialize()
         window->SetTitle("Feature Showcase > SpriteLine Test");
         subGame = std::make_shared<FeatureShowcase::SpriteLineTest>(gameHost);
     });
+    buttons.emplace_back("BillboardBatch Test", [this] {
+        window->SetTitle("Feature Showcase > BillboardBatch Test");
+        subGame = std::make_shared<FeatureShowcase::BillboardBatchTest>(gameHost);
+    });
     buttons.emplace_back("ImageEffects Test", [this] {
         window->SetTitle("Feature Showcase > ImageEffects Test");
         subGame = std::make_shared<FeatureShowcase::ImageEffectsTest>(gameHost);
@@ -102,6 +109,14 @@ void FeatureShowcaseGame::Initialize()
     buttons.emplace_back("Particle2D Test", [this] {
         window->SetTitle("Feature Showcase > Particle2D Test");
         subGame = std::make_shared<FeatureShowcase::Particle2DTest>(gameHost);
+    });
+    buttons.emplace_back("ParticleClipLoader Test", [this] {
+        window->SetTitle("Feature Showcase > ParticleClipLoader Test");
+        subGame = std::make_shared<FeatureShowcase::ParticleClipLoaderTest>(gameHost);
+    });
+    buttons.emplace_back("Particle3D Test", [this] {
+        window->SetTitle("Feature Showcase > Particle3D Test");
+        subGame = std::make_shared<FeatureShowcase::Particle3DTest>(gameHost);
     });
     buttons.emplace_back("Beam2D Test", [this] {
         window->SetTitle("Feature Showcase > Beam2D Test");
@@ -210,7 +225,7 @@ void FeatureShowcaseGame::Update()
     }
 
     connect(mouse->ScrollWheel, [this](std::int32_t delta) {
-        scrollY = std::clamp(scrollY + static_cast<double>(delta) * 0.02, -280.0, 0.0);
+        scrollY = std::clamp(scrollY + static_cast<double>(delta) * 0.02, -480.0, 0.0);
     });
 }
 

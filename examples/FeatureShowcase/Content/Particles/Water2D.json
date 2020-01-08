@@ -1,0 +1,60 @@
+{
+	"duration": 0.5,
+	"emission_rate": 450,
+	"emission_rate_over_time": 100,
+	"start_lifetime": 1.0,
+	"start_delay": 0.0,
+	"gravity_modifier": 980.0,
+	"max_particles": 1024,
+	"looping": true,
+	"shape": {
+		"type": "sector",
+		"angle": 60.0
+	},
+	"start_speed": {
+		"type": "random",
+		"min": 100.0,
+		"max": 500.0
+	},
+	"start_color": {
+		"type": "constant",
+		"value": [10, 120, 190, 0]
+	},
+	"color_over_lifetime": {
+		"type": "curve",
+		"points": [
+			{"t": 0.00, "v": [130, 220, 190, 0]},
+			{"t": 0.02, "v": [155, 255, 180, 10]},
+			{"t": 0.09, "v": [155, 250, 170, 100]},
+			{"t": 0.15, "v": [155, 200, 160, 130]},
+			{"t": 0.19, "v": [200, 130, 60, 255]},
+			{"t": 0.24, "v": [190, 50, 10, 80]},
+			{"t": 0.82, "v": [80, 24, 2, 10]},
+			{"t": 1.00, "v": [0, 0, 0, 0]}
+		]
+	},
+	"start_rotation": {
+		"type": "random",
+		"min": 0.0,
+		"max": 360.0
+	},
+	"rotation_over_lifetime": {
+		"type": "random",
+		"min": -45.0,
+		"max": 45.0
+	},
+	"start_size": {
+		"type": "random",
+		"min": 0.1,
+		"max": 0.3
+	},
+	"size_over_lifetime": {
+		"type": "curve",
+		"points": [
+			{"t": 0.00, "v": 0.0},
+			{"t": 0.15, "v": 1.0},
+			{"t": 0.60, "v": 0.8},
+			{"t": 1.00, "v": 0.0}
+		]
+	}
+}
