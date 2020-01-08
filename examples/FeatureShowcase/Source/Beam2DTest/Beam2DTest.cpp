@@ -1,6 +1,6 @@
 #include "Beam2DTest.hpp"
 #include <Pomdog/Experimental/Graphics/SpriteLine.hpp>
-#include <Pomdog/Experimental/Particle2D/BeamSystem.hpp>
+#include <Pomdog/Experimental/Particles/BeamSystem.hpp>
 #include <random>
 
 namespace FeatureShowcase {

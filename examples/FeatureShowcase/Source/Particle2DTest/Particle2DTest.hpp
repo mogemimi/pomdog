@@ -2,8 +2,8 @@
 
 #include <Pomdog/Experimental/Graphics/PrimitiveBatch.hpp>
 #include <Pomdog/Experimental/Graphics/SpriteBatch.hpp>
-#include <Pomdog/Experimental/Particle2D/ParticleClip.hpp>
-#include <Pomdog/Experimental/Particle2D/ParticleSystem.hpp>
+#include <Pomdog/Experimental/Particles/ParticleClip.hpp>
+#include <Pomdog/Experimental/Particles/ParticleSystem.hpp>
 #include <Pomdog/Pomdog.hpp>
 
 namespace FeatureShowcase {

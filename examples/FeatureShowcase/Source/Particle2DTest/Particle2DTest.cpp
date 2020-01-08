@@ -1,10 +1,10 @@
 #include "Particle2DTest.hpp"
-#include <Pomdog/Experimental/Particle2D/detail/ParticleEmitterShapeBox.hpp>
-#include <Pomdog/Experimental/Particle2D/detail/ParticleEmitterShapeSector.hpp>
-#include <Pomdog/Experimental/Particle2D/detail/ParticleParameterConstant.hpp>
-#include <Pomdog/Experimental/Particle2D/detail/ParticleParameterCurve.hpp>
-#include <Pomdog/Experimental/Particle2D/detail/ParticleParameterRandom.hpp>
-#include <Pomdog/Experimental/Particle2D/detail/ParticleParameterRandomCurves.hpp>
+#include <Pomdog/Experimental/Particles/EmitterShapes/ParticleEmitterShapeBox.hpp>
+#include <Pomdog/Experimental/Particles/EmitterShapes/ParticleEmitterShapeSector.hpp>
+#include <Pomdog/Experimental/Particles/Parameters/ParticleParameterConstant.hpp>
+#include <Pomdog/Experimental/Particles/Parameters/ParticleParameterCurve.hpp>
+#include <Pomdog/Experimental/Particles/Parameters/ParticleParameterRandom.hpp>
+#include <Pomdog/Experimental/Particles/Parameters/ParticleParameterRandomCurves.hpp>
 #include <random>
 
 namespace FeatureShowcase {
@@ -20,18 +20,19 @@ std::shared_ptr<ParticleClip> CreateEmitterFireBlock()
 
     auto clip = std::make_shared<ParticleClip>();
 
-    clip->Emitter.MaxParticles = 1024;
-    clip->Emitter.EmissionRate = 128 * 2;
-    // clip->Emitter.Looping = false;
-    clip->Emitter.StartLifetime = 1.8f;
-    // clip->Emitter.GravityModifier = 100.0f;
+    clip->MaxParticles = 1024;
+    clip->EmissionRate = 128 * 2;
+    clip->EmissionRateOverTime = 128 * 2;
+    clip->Looping = true;
+    clip->StartLifetime = 1.8f;
+    clip->GravityModifier = 0.0f;
 
     clip->Duration = std::chrono::milliseconds(10);
 
 #if 0
     clip->Shape = std::make_unique<ParticleEmitterShapeSector>(Math::PiOver4<float>);
 #else
-    clip->Shape = std::make_unique<ParticleEmitterShapeBox>(20.0f, 50.0f);
+    clip->Shape = std::make_unique<ParticleEmitterShapeBox>(Vector3{20.0f, 50.0f, 0.0f});
 #endif
 
 #if 1
@@ -133,7 +134,7 @@ void Particle2DTest::Initialize()
         graphicsDevice,
         BlendDescription::CreateAlphaBlend(),
         std::nullopt,
-        SamplerDescription::CreatePointWrap(),
+        SamplerDescription::CreateLinearWrap(),
         std::nullopt,
         std::nullopt,
         SpriteBatchPixelShaderMode::Default,
