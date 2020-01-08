@@ -185,17 +185,15 @@ if(APPLE)
     RESOURCE "${RESOURCE_FILES}"
   )
 
-  # TODO: Replace with the following, CMake >= 3.12
-  # `target_link_options(${PRODUCT_NAME} PUBLIC "${LINK_FRAMEWORKS}")`
-  # https://cmake.org/cmake/help/git-stage/command/target_link_options.html
-  set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework Metal")
-  set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework AudioToolBox")
-  set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework OpenAL")
-  set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework Cocoa")
-  set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework OpenGL")
-  set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework QuartzCore")
-  set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework IOKit")
-  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${LINK_FRAMEWORKS}")
+  target_link_libraries(${PRODUCT_NAME}
+    "-framework AudioToolBox"
+    "-framework Cocoa"
+    "-framework IOKit"
+    "-framework Metal"
+    "-framework OpenAL"
+    "-framework OpenGL"
+    "-framework QuartzCore"
+  )
 endif()
 
 set_target_properties(${PRODUCT_NAME} PROPERTIES
