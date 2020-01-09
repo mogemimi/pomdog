@@ -315,10 +315,6 @@
 		D7334E26228AEC1300232225 /* ChromaticAberration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E15228AEC1200232225 /* ChromaticAberration.cpp */; };
 		D7334E27228AEC1300232225 /* GrayscaleEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E16228AEC1200232225 /* GrayscaleEffect.cpp */; };
 		D7334E28228AEC1300232225 /* GrayscaleEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E16228AEC1200232225 /* GrayscaleEffect.cpp */; };
-		D7334E34228C689C00232225 /* ParticleSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E32228C689C00232225 /* ParticleSystem.cpp */; };
-		D7334E35228C689C00232225 /* ParticleSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E32228C689C00232225 /* ParticleSystem.cpp */; };
-		D7334E36228C689C00232225 /* BeamSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E33228C689C00232225 /* BeamSystem.cpp */; };
-		D7334E37228C689C00232225 /* BeamSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E33228C689C00232225 /* BeamSystem.cpp */; };
 		D7408CEB23727466007E101E /* Skeleton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408CE723727466007E101E /* Skeleton.cpp */; };
 		D7408CEC23727466007E101E /* Skeleton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408CE723727466007E101E /* Skeleton.cpp */; };
 		D7408CED23727466007E101E /* SkeletonHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408CE823727466007E101E /* SkeletonHelper.cpp */; };
@@ -437,6 +433,14 @@
 		D7C188DA2395DFBB00C3E381 /* ComponentTypeIndex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7C188D52395DFBB00C3E381 /* ComponentTypeIndex.cpp */; };
 		D7C188DB2395DFBB00C3E381 /* Entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7C188D62395DFBB00C3E381 /* Entity.cpp */; };
 		D7C188DC2395DFBB00C3E381 /* Entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7C188D62395DFBB00C3E381 /* Entity.cpp */; };
+		D7E7C3E423C670CC00C1B4FC /* BeamSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7E7C3E123C670CC00C1B4FC /* BeamSystem.cpp */; };
+		D7E7C3E523C670CC00C1B4FC /* BeamSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7E7C3E123C670CC00C1B4FC /* BeamSystem.cpp */; };
+		D7E7C3E623C670CC00C1B4FC /* ParticleClipLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7E7C3E223C670CC00C1B4FC /* ParticleClipLoader.cpp */; };
+		D7E7C3E723C670CC00C1B4FC /* ParticleClipLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7E7C3E223C670CC00C1B4FC /* ParticleClipLoader.cpp */; };
+		D7E7C3E823C670CC00C1B4FC /* ParticleSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7E7C3E323C670CC00C1B4FC /* ParticleSystem.cpp */; };
+		D7E7C3E923C670CC00C1B4FC /* ParticleSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7E7C3E323C670CC00C1B4FC /* ParticleSystem.cpp */; };
+		D7E7C3FB23C671A600C1B4FC /* Xoroshiro128StarStar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7E7C3FA23C671A600C1B4FC /* Xoroshiro128StarStar.cpp */; };
+		D7E7C3FC23C671A600C1B4FC /* Xoroshiro128StarStar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7E7C3FA23C671A600C1B4FC /* Xoroshiro128StarStar.cpp */; };
 		D8E9871132965BADBA4BE734 /* FloatingPointMatrix3x3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 029A2B232511421D3FDB9FAC /* FloatingPointMatrix3x3.cpp */; };
 		DA4579E5970831E615EA005D /* Ray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EB2111ED9B45715040451A9 /* Ray.cpp */; };
 		DC83323F55585B855108ED51 /* AudioClipLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9524A580BCEF4C5E9F56EB43 /* AudioClipLoader.cpp */; };
@@ -1007,26 +1011,6 @@
 		D7334E14228AEC1200232225 /* RetroCrtEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RetroCrtEffect.cpp; sourceTree = "<group>"; };
 		D7334E15228AEC1200232225 /* ChromaticAberration.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ChromaticAberration.cpp; sourceTree = "<group>"; };
 		D7334E16228AEC1200232225 /* GrayscaleEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GrayscaleEffect.cpp; sourceTree = "<group>"; };
-		D7334E32228C689C00232225 /* ParticleSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ParticleSystem.cpp; sourceTree = "<group>"; };
-		D7334E33228C689C00232225 /* BeamSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BeamSystem.cpp; sourceTree = "<group>"; };
-		D7334E39228C68E500232225 /* BeamBranching.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BeamBranching.hpp; sourceTree = "<group>"; };
-		D7334E3A228C68E500232225 /* ParticleSystem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleSystem.hpp; sourceTree = "<group>"; };
-		D7334E3B228C68E500232225 /* Particle.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Particle.hpp; sourceTree = "<group>"; };
-		D7334E3C228C68E500232225 /* BeamSystem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BeamSystem.hpp; sourceTree = "<group>"; };
-		D7334E3D228C68E500232225 /* ParticleEmitter.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleEmitter.hpp; sourceTree = "<group>"; };
-		D7334E3E228C68E500232225 /* BeamEmitter.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BeamEmitter.hpp; sourceTree = "<group>"; };
-		D7334E3F228C68E500232225 /* Beam.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Beam.hpp; sourceTree = "<group>"; };
-		D7334E40228C68E500232225 /* ParticleClip.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleClip.hpp; sourceTree = "<group>"; };
-		D7334E43228C691500232225 /* ParticleParameterRandom.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleParameterRandom.hpp; sourceTree = "<group>"; };
-		D7334E44228C691500232225 /* ParticleParameterRandomCurves.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleParameterRandomCurves.hpp; sourceTree = "<group>"; };
-		D7334E45228C691500232225 /* ParticleCurveKey.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleCurveKey.hpp; sourceTree = "<group>"; };
-		D7334E46228C691500232225 /* ParticleParameterCurve.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleParameterCurve.hpp; sourceTree = "<group>"; };
-		D7334E47228C691500232225 /* ParticleEmitterShapeSector.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleEmitterShapeSector.hpp; sourceTree = "<group>"; };
-		D7334E48228C691500232225 /* ParticleParameter.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleParameter.hpp; sourceTree = "<group>"; };
-		D7334E49228C691500232225 /* ParticleParameterConstant.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleParameterConstant.hpp; sourceTree = "<group>"; };
-		D7334E4A228C691500232225 /* ParticleEmitterShapeBox.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleEmitterShapeBox.hpp; sourceTree = "<group>"; };
-		D7334E4B228C691500232225 /* ParticleEmitterShape.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleEmitterShape.hpp; sourceTree = "<group>"; };
-		D7334E4C228C691500232225 /* ParticleCurveLerp.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleCurveLerp.hpp; sourceTree = "<group>"; };
 		D7408CE723727466007E101E /* Skeleton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Skeleton.cpp; sourceTree = "<group>"; };
 		D7408CE823727466007E101E /* SkeletonHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkeletonHelper.cpp; sourceTree = "<group>"; };
 		D7408CE923727466007E101E /* SkeletonPose.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkeletonPose.cpp; sourceTree = "<group>"; };
@@ -1173,6 +1157,32 @@
 		D7C188E12395DFD000C3E381 /* EntityManager.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = EntityManager.hpp; sourceTree = "<group>"; };
 		D7C18903239BA3C500C3E381 /* HierarchySortOrder.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = HierarchySortOrder.hpp; sourceTree = "<group>"; };
 		D7D5A98E477FB0CDE2089FBD /* KeyboardState.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KeyboardState.cpp; sourceTree = "<group>"; };
+		D7E7C3C923C6706700C1B4FC /* Particle.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Particle.hpp; sourceTree = "<group>"; };
+		D7E7C3CA23C6706700C1B4FC /* ParticleClipLoader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleClipLoader.hpp; sourceTree = "<group>"; };
+		D7E7C3CB23C6706700C1B4FC /* ParticleClip.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleClip.hpp; sourceTree = "<group>"; };
+		D7E7C3CC23C6706700C1B4FC /* ParticleSystem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleSystem.hpp; sourceTree = "<group>"; };
+		D7E7C3CD23C6706D00C1B4FC /* Beam.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Beam.hpp; sourceTree = "<group>"; };
+		D7E7C3CE23C6706D00C1B4FC /* BeamSystem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BeamSystem.hpp; sourceTree = "<group>"; };
+		D7E7C3CF23C6706D00C1B4FC /* BeamEmitter.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BeamEmitter.hpp; sourceTree = "<group>"; };
+		D7E7C3D023C6706D00C1B4FC /* BeamBranching.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BeamBranching.hpp; sourceTree = "<group>"; };
+		D7E7C3E123C670CC00C1B4FC /* BeamSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BeamSystem.cpp; sourceTree = "<group>"; };
+		D7E7C3E223C670CC00C1B4FC /* ParticleClipLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ParticleClipLoader.cpp; sourceTree = "<group>"; };
+		D7E7C3E323C670CC00C1B4FC /* ParticleSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ParticleSystem.cpp; sourceTree = "<group>"; };
+		D7E7C3EA23C6710200C1B4FC /* ParticleParameterRandom.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleParameterRandom.hpp; sourceTree = "<group>"; };
+		D7E7C3EB23C6710200C1B4FC /* ParticleParameterCurve.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleParameterCurve.hpp; sourceTree = "<group>"; };
+		D7E7C3EC23C6710200C1B4FC /* ParticleParameter.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleParameter.hpp; sourceTree = "<group>"; };
+		D7E7C3ED23C6710200C1B4FC /* ParticleParameterRandomCurves.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleParameterRandomCurves.hpp; sourceTree = "<group>"; };
+		D7E7C3EE23C6710200C1B4FC /* ParticleParameterConstant.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleParameterConstant.hpp; sourceTree = "<group>"; };
+		D7E7C3EF23C6710200C1B4FC /* ParticleCurveLerp.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleCurveLerp.hpp; sourceTree = "<group>"; };
+		D7E7C3F023C6710200C1B4FC /* ParticleCurveKey.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleCurveKey.hpp; sourceTree = "<group>"; };
+		D7E7C3F123C6710900C1B4FC /* ParticleEmitterShapeSector.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleEmitterShapeSector.hpp; sourceTree = "<group>"; };
+		D7E7C3F223C6710900C1B4FC /* ParticleEmitterShape.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleEmitterShape.hpp; sourceTree = "<group>"; };
+		D7E7C3F323C6710900C1B4FC /* ParticleEmitterShapeBox.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleEmitterShapeBox.hpp; sourceTree = "<group>"; };
+		D7E7C3F423C6710900C1B4FC /* ParticleEmitterShapeSphere.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleEmitterShapeSphere.hpp; sourceTree = "<group>"; };
+		D7E7C3F523C6710900C1B4FC /* ParticleEmitterShapeCone.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleEmitterShapeCone.hpp; sourceTree = "<group>"; };
+		D7E7C3F623C6710900C1B4FC /* ParticleEmitterShapeHemisphere.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ParticleEmitterShapeHemisphere.hpp; sourceTree = "<group>"; };
+		D7E7C3F823C6718200C1B4FC /* Xoroshiro128StarStar.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Xoroshiro128StarStar.hpp; sourceTree = "<group>"; };
+		D7E7C3FA23C671A600C1B4FC /* Xoroshiro128StarStar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Xoroshiro128StarStar.cpp; sourceTree = "<group>"; };
 		D9C3D114115E6C3A619E8CF9 /* GameHostCocoa.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = GameHostCocoa.mm; sourceTree = "<group>"; };
 		DA8DDAEB3A97076C2FCB19F3 /* IndexElementSize.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = IndexElementSize.hpp; sourceTree = "<group>"; };
 		DB4F85AB0B59334913B62A4B /* GraphicsCommandList.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GraphicsCommandList.cpp; sourceTree = "<group>"; };
@@ -1901,7 +1911,8 @@
 				A9A8227F1DAB7F2B0091497F /* Image */,
 				D7334E02228AEB6A00232225 /* ImageEffects */,
 				A94F2DC12131FE9E00718DB0 /* MagicaVoxel */,
-				D7334E38228C68AA00232225 /* Particle2D */,
+				D7334E38228C68AA00232225 /* Particles */,
+				D7E7C3F723C6716400C1B4FC /* Random */,
 				A93CA62D1D92F2C600B65171 /* Reactive */,
 				D7408CD723717F08007E101E /* Skeletal2D */,
 				D7408CD623717F03007E101E /* Spine */,
@@ -1942,7 +1953,8 @@
 				A9A822821DAB7F6B0091497F /* Image */,
 				D7334E0D228AEBEE00232225 /* ImageEffects */,
 				A94F2DC72131FED600718DB0 /* MagicaVoxel */,
-				D7334E31228C685100232225 /* Particle2D */,
+				D7334E31228C685100232225 /* Particles */,
+				D7E7C3F923C6718700C1B4FC /* Random */,
 				D7408CD423717E9F007E101E /* Skeletal2D */,
 				D7408CD523717ECF007E101E /* Spine */,
 				A9A822831DAB7F6F0091497F /* TexturePacker */,
@@ -2259,46 +2271,31 @@
 			path = ImageEffects;
 			sourceTree = "<group>";
 		};
-		D7334E31228C685100232225 /* Particle2D */ = {
+		D7334E31228C685100232225 /* Particles */ = {
 			isa = PBXGroup;
 			children = (
-				D7334E33228C689C00232225 /* BeamSystem.cpp */,
-				D7334E32228C689C00232225 /* ParticleSystem.cpp */,
+				D7E7C3E123C670CC00C1B4FC /* BeamSystem.cpp */,
+				D7E7C3E223C670CC00C1B4FC /* ParticleClipLoader.cpp */,
+				D7E7C3E323C670CC00C1B4FC /* ParticleSystem.cpp */,
 			);
-			path = Particle2D;
+			path = Particles;
 			sourceTree = "<group>";
 		};
-		D7334E38228C68AA00232225 /* Particle2D */ = {
+		D7334E38228C68AA00232225 /* Particles */ = {
 			isa = PBXGroup;
 			children = (
-				D7334E42228C68FA00232225 /* detail */,
-				D7334E3F228C68E500232225 /* Beam.hpp */,
-				D7334E39228C68E500232225 /* BeamBranching.hpp */,
-				D7334E3E228C68E500232225 /* BeamEmitter.hpp */,
-				D7334E3C228C68E500232225 /* BeamSystem.hpp */,
-				D7334E3B228C68E500232225 /* Particle.hpp */,
-				D7334E40228C68E500232225 /* ParticleClip.hpp */,
-				D7334E3D228C68E500232225 /* ParticleEmitter.hpp */,
-				D7334E3A228C68E500232225 /* ParticleSystem.hpp */,
+				D7E7C3D123C6707100C1B4FC /* EmitterShapes */,
+				D7E7C3D323C6708800C1B4FC /* Parameters */,
+				D7E7C3CD23C6706D00C1B4FC /* Beam.hpp */,
+				D7E7C3D023C6706D00C1B4FC /* BeamBranching.hpp */,
+				D7E7C3CF23C6706D00C1B4FC /* BeamEmitter.hpp */,
+				D7E7C3CE23C6706D00C1B4FC /* BeamSystem.hpp */,
+				D7E7C3C923C6706700C1B4FC /* Particle.hpp */,
+				D7E7C3CB23C6706700C1B4FC /* ParticleClip.hpp */,
+				D7E7C3CA23C6706700C1B4FC /* ParticleClipLoader.hpp */,
+				D7E7C3CC23C6706700C1B4FC /* ParticleSystem.hpp */,
 			);
-			path = Particle2D;
-			sourceTree = "<group>";
-		};
-		D7334E42228C68FA00232225 /* detail */ = {
-			isa = PBXGroup;
-			children = (
-				D7334E45228C691500232225 /* ParticleCurveKey.hpp */,
-				D7334E4C228C691500232225 /* ParticleCurveLerp.hpp */,
-				D7334E4B228C691500232225 /* ParticleEmitterShape.hpp */,
-				D7334E4A228C691500232225 /* ParticleEmitterShapeBox.hpp */,
-				D7334E47228C691500232225 /* ParticleEmitterShapeSector.hpp */,
-				D7334E48228C691500232225 /* ParticleParameter.hpp */,
-				D7334E49228C691500232225 /* ParticleParameterConstant.hpp */,
-				D7334E46228C691500232225 /* ParticleParameterCurve.hpp */,
-				D7334E43228C691500232225 /* ParticleParameterRandom.hpp */,
-				D7334E44228C691500232225 /* ParticleParameterRandomCurves.hpp */,
-			);
-			path = detail;
+			path = Particles;
 			sourceTree = "<group>";
 		};
 		D7408CD423717E9F007E101E /* Skeletal2D */ = {
@@ -2511,6 +2508,49 @@
 				D7C188D42395DFBB00C3E381 /* EntityManager.cpp */,
 			);
 			path = ECS;
+			sourceTree = "<group>";
+		};
+		D7E7C3D123C6707100C1B4FC /* EmitterShapes */ = {
+			isa = PBXGroup;
+			children = (
+				D7E7C3F223C6710900C1B4FC /* ParticleEmitterShape.hpp */,
+				D7E7C3F323C6710900C1B4FC /* ParticleEmitterShapeBox.hpp */,
+				D7E7C3F523C6710900C1B4FC /* ParticleEmitterShapeCone.hpp */,
+				D7E7C3F623C6710900C1B4FC /* ParticleEmitterShapeHemisphere.hpp */,
+				D7E7C3F123C6710900C1B4FC /* ParticleEmitterShapeSector.hpp */,
+				D7E7C3F423C6710900C1B4FC /* ParticleEmitterShapeSphere.hpp */,
+			);
+			path = EmitterShapes;
+			sourceTree = "<group>";
+		};
+		D7E7C3D323C6708800C1B4FC /* Parameters */ = {
+			isa = PBXGroup;
+			children = (
+				D7E7C3F023C6710200C1B4FC /* ParticleCurveKey.hpp */,
+				D7E7C3EF23C6710200C1B4FC /* ParticleCurveLerp.hpp */,
+				D7E7C3EC23C6710200C1B4FC /* ParticleParameter.hpp */,
+				D7E7C3EE23C6710200C1B4FC /* ParticleParameterConstant.hpp */,
+				D7E7C3EB23C6710200C1B4FC /* ParticleParameterCurve.hpp */,
+				D7E7C3EA23C6710200C1B4FC /* ParticleParameterRandom.hpp */,
+				D7E7C3ED23C6710200C1B4FC /* ParticleParameterRandomCurves.hpp */,
+			);
+			path = Parameters;
+			sourceTree = "<group>";
+		};
+		D7E7C3F723C6716400C1B4FC /* Random */ = {
+			isa = PBXGroup;
+			children = (
+				D7E7C3F823C6718200C1B4FC /* Xoroshiro128StarStar.hpp */,
+			);
+			path = Random;
+			sourceTree = "<group>";
+		};
+		D7E7C3F923C6718700C1B4FC /* Random */ = {
+			isa = PBXGroup;
+			children = (
+				D7E7C3FA23C671A600C1B4FC /* Xoroshiro128StarStar.cpp */,
+			);
+			path = Random;
 			sourceTree = "<group>";
 		};
 		D90112D019DEC9CB7B5D46EC /* Graphics */ = {
@@ -2884,6 +2924,7 @@
 				267998B10C4AC2842177CC79 /* RenderTarget2D.cpp in Sources */,
 				BD548D0C612A8F01446C119D /* SamplerState.cpp in Sources */,
 				D7408D18237274B4007E101E /* AnimationCrossFadeNode.cpp in Sources */,
+				D7E7C3E623C670CC00C1B4FC /* ParticleClipLoader.cpp in Sources */,
 				627D0583CB97FD0F3B9A55BE /* Texture2D.cpp in Sources */,
 				D7C188D72395DFBB00C3E381 /* EntityManager.cpp in Sources */,
 				D702F04C22FD8AC700886A78 /* IOService.cpp in Sources */,
@@ -2900,6 +2941,7 @@
 				D5CAE3F16D482B36E58155CA /* LogChannel.cpp in Sources */,
 				D702F04622FD8AC700886A78 /* HTTPRequest.cpp in Sources */,
 				5FC19F99728314D0AB72DDB8 /* BoundingBox.cpp in Sources */,
+				D7E7C3E423C670CC00C1B4FC /* BeamSystem.cpp in Sources */,
 				A94F2DCC2131FEEA00718DB0 /* VoxModelExporter.cpp in Sources */,
 				C256D286DB58A59C3115A07E /* BoundingBox2D.cpp in Sources */,
 				460526B2F0D0E531DBE74416 /* BoundingCircle.cpp in Sources */,
@@ -2937,6 +2979,7 @@
 				A9D18E8D1CA427270011A6CE /* MetalCompiler.cpp in Sources */,
 				7BFC36E8777C887934E3F02B /* FloatingPointMatrix4x4.cpp in Sources */,
 				1A671762A001893355AC4247 /* FloatingPointQuaternion.cpp in Sources */,
+				D7E7C3FB23C671A600C1B4FC /* Xoroshiro128StarStar.cpp in Sources */,
 				D719A55F2349868200C1868B /* TrueTypeFontLoader.cpp in Sources */,
 				D75E07002392E42C00F98C10 /* ScenePanel.cpp in Sources */,
 				722648A22471D9FC50128061 /* FloatingPointVector2.cpp in Sources */,
@@ -2981,15 +3024,14 @@
 				8650CF18F26DB3A0F89ABAE3 /* CRC32.cpp in Sources */,
 				D7334DCA228AC80200232225 /* PrimitiveBatch.cpp in Sources */,
 				A997F7081CAEFC4900926392 /* Texture2DMetal.mm in Sources */,
-				D7334E34228C689C00232225 /* ParticleSystem.cpp in Sources */,
 				566D366B6621FECC73232526 /* PathHelper.cpp in Sources */,
 				D702F05022FD8AC700886A78 /* TCPStream.cpp in Sources */,
 				3F941E8F3AB564A6641C4B0E /* StringHelper.cpp in Sources */,
-				D7334E36228C689C00232225 /* BeamSystem.cpp in Sources */,
 				D7334E21228AEC1300232225 /* ScreenQuad.cpp in Sources */,
 				C2373F7B8F6A07427D757B02 /* BlendStateGL4.cpp in Sources */,
 				D7334DCD228AC81F00232225 /* SpriteLine.cpp in Sources */,
 				A98F592A211B2B9A002960C1 /* TrueTypeFont.cpp in Sources */,
+				D7E7C3E823C670CC00C1B4FC /* ParticleSystem.cpp in Sources */,
 				7A376FB1B427C73FA45B705F /* BufferGL4.cpp in Sources */,
 				D7334E27228AEC1300232225 /* GrayscaleEffect.cpp in Sources */,
 				2939F626E9115C7EE5EA0E3A /* DepthStencilStateGL4.cpp in Sources */,
@@ -3107,6 +3149,7 @@
 				D226E17E0F7EBA8B51D1AA0A /* RenderTarget2D.cpp in Sources */,
 				A26E66F1AC2BB1AB2F03033F /* SamplerState.cpp in Sources */,
 				D7408D19237274B4007E101E /* AnimationCrossFadeNode.cpp in Sources */,
+				D7E7C3E723C670CC00C1B4FC /* ParticleClipLoader.cpp in Sources */,
 				544D8ABEA35E9232F743511A /* Texture2D.cpp in Sources */,
 				D7C188D82395DFBB00C3E381 /* EntityManager.cpp in Sources */,
 				D702F04D22FD8AC700886A78 /* IOService.cpp in Sources */,
@@ -3123,6 +3166,7 @@
 				2253F43FA13A0B293FE79749 /* LogChannel.cpp in Sources */,
 				D702F04722FD8AC700886A78 /* HTTPRequest.cpp in Sources */,
 				15C4EF0C411554073735CCF7 /* BoundingBox.cpp in Sources */,
+				D7E7C3E523C670CC00C1B4FC /* BeamSystem.cpp in Sources */,
 				A94F2DCB2131FEE900718DB0 /* VoxModelExporter.cpp in Sources */,
 				77E3632C4F2E245C2F8B6927 /* BoundingBox2D.cpp in Sources */,
 				A6F13789F98E66A501FCF50A /* BoundingCircle.cpp in Sources */,
@@ -3160,6 +3204,7 @@
 				A9D18E8E1CA427270011A6CE /* MetalCompiler.cpp in Sources */,
 				B64D84284045847B155F4CD3 /* FloatingPointMatrix4x4.cpp in Sources */,
 				043C1238BFC3C906AEAEEA09 /* FloatingPointQuaternion.cpp in Sources */,
+				D7E7C3FC23C671A600C1B4FC /* Xoroshiro128StarStar.cpp in Sources */,
 				D719A5602349868200C1868B /* TrueTypeFontLoader.cpp in Sources */,
 				D75E07012392E42C00F98C10 /* ScenePanel.cpp in Sources */,
 				D147245447821976039CCCC2 /* FloatingPointVector2.cpp in Sources */,
@@ -3204,15 +3249,14 @@
 				65B8BEF3D1E04BF859631ADE /* CRC32.cpp in Sources */,
 				D7334DCB228AC80200232225 /* PrimitiveBatch.cpp in Sources */,
 				A997F7091CAEFC4900926392 /* Texture2DMetal.mm in Sources */,
-				D7334E35228C689C00232225 /* ParticleSystem.cpp in Sources */,
 				8B19A1DD45CD8F8791C5B725 /* PathHelper.cpp in Sources */,
 				D702F05122FD8AC700886A78 /* TCPStream.cpp in Sources */,
 				854A4F7DC911E624593C541D /* StringHelper.cpp in Sources */,
-				D7334E37228C689C00232225 /* BeamSystem.cpp in Sources */,
 				D7334E22228AEC1300232225 /* ScreenQuad.cpp in Sources */,
 				056E111E471F4C597FE6CE2D /* BlendStateGL4.cpp in Sources */,
 				D7334DCE228AC81F00232225 /* SpriteLine.cpp in Sources */,
 				A98F592B211B2B9A002960C1 /* TrueTypeFont.cpp in Sources */,
+				D7E7C3E923C670CC00C1B4FC /* ParticleSystem.cpp in Sources */,
 				ECAB34E1967EA1239EBCAD19 /* BufferGL4.cpp in Sources */,
 				D7334E28228AEC1300232225 /* GrayscaleEffect.cpp in Sources */,
 				70602D1132700C62F76B98C7 /* DepthStencilStateGL4.cpp in Sources */,
