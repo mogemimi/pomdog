@@ -23,6 +23,8 @@ vec4 Material;
 vec4 DiffuseColor;};
 uniform WorldConstantBuffer{
 mat4x4 ViewProjection;
+mat4x4 View;
+mat4x4 Projection;
 mat4x4 InverseView;
 vec4 LightDirection;};
 out VertexData{

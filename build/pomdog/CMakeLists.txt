@@ -391,6 +391,7 @@ set(POMDOG_SOURCES_EXPERIMENTAL_ECS
 
 set(POMDOG_SOURCES_EXPERIMENTAL_GRAPHICS
   ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/BasicEffect.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/BillboardEffect.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/FontGlyph.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/LineBatch.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/PolylineBatch.hpp
@@ -404,6 +405,7 @@ set(POMDOG_SOURCES_EXPERIMENTAL_GRAPHICS
   ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/TrueTypeFont.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/TrueTypeFontLoader.hpp
   ${POMDOG_DIR}/src/Experimental/Graphics/BasicEffect.cpp
+  ${POMDOG_DIR}/src/Experimental/Graphics/BillboardEffect.cpp
   ${POMDOG_DIR}/src/Experimental/Graphics/LineBatch.cpp
   ${POMDOG_DIR}/src/Experimental/Graphics/PolylineBatch.cpp
   ${POMDOG_DIR}/src/Experimental/Graphics/PolygonShapeBuilder.cpp

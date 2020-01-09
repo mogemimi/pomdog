@@ -10,6 +10,8 @@ float4 Material;
 float4 Color;};
 struct __attribute__((__aligned__(256)))WorldConstantBuffer{
 matrix_float4x4 ViewProjection;
+matrix_float4x4 View;
+matrix_float4x4 Projection;
 matrix_float4x4 InverseView;
 float4 LightDirection;};
 struct VertexPositionColor{

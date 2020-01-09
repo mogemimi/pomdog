@@ -11,6 +11,8 @@ cbuffer ModelConstantBuffer : register(b0) {
 
 cbuffer WorldConstantBuffer : register(b1) {
     matrix<float, 4, 4> ViewProjection;
+    matrix<float, 4, 4> View;
+    matrix<float, 4, 4> Projection;
     matrix<float, 4, 4> InverseView;
 
     // {xyz_} = LightDirection.xyz

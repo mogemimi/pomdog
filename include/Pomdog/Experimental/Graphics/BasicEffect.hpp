@@ -84,6 +84,10 @@ struct alignas(16) ModelConstantBuffer final {
 struct alignas(16) WorldConstantBuffer final {
     Matrix4x4 ViewProjection;
 
+    Matrix4x4 View;
+
+    Matrix4x4 Projection;
+
     Matrix4x4 InverseView;
 
     // {xyz_} = LightDirection.xyz

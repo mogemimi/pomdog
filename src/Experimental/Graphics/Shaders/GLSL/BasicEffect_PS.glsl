@@ -13,6 +13,8 @@ uniform ModelConstantBuffer {
 
 uniform WorldConstantBuffer {
     mat4x4 ViewProjection;
+    mat4x4 View;
+    mat4x4 Projection;
     mat4x4 InverseView;
 
     // {xyz_} = LightDirection.xyz
