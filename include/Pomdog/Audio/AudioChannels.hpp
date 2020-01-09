@@ -6,8 +6,12 @@
 
 namespace Pomdog {
 
+/// Represents the number of channels in the audio clip.
 enum class AudioChannels : std::uint8_t {
+    /// Indicates audio clip contains single channel.
     Mono = 1,
+
+    /// Indicates audio clip contains two channels.
     Stereo = 2,
 };
 

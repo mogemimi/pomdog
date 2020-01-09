@@ -24,14 +24,19 @@ public:
 
     ~AudioClip();
 
+    /// Gets the length of the audio clip in seconds.
     Duration GetLength() const;
 
+    /// Gets the number of samples per second.
     int GetSampleRate() const;
 
+    /// Gets the number of bits per sample.
     int GetBitsPerSample() const;
 
+    /// Gets the number of channels in the audip clip.
     AudioChannels GetChannels() const;
 
+    /// Gets the pointer of the native audio clip.
     Detail::SoundSystem::NativeAudioClip* GetNativeAudioClip();
 
 private:

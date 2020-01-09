@@ -24,30 +24,43 @@ public:
     SoundEffect& operator=(const SoundEffect&) = delete;
     SoundEffect& operator=(SoundEffect&&) = default;
 
+    /// Pauses the sound.
     void Pause();
 
+    /// Plays or resumes playing the sound.
     void Play();
 
+    /// Stops playing the sound immediately.
     void Stop();
 
+    /// Applies 3D positioning to the sound.
     void Apply3D(const AudioListener& listener, const AudioEmitter& emitter);
 
+    /// Returns true if the audio clip is looping, false otherwise.
     bool IsLooped() const;
 
+    /// Stops looping the sound when it reaches the end of the sound.
     void ExitLoop();
 
+    /// Gets the current state of the audio source.
     SoundState GetState() const;
 
+    /// Gets the panning of the audio source.
     float GetPan() const;
 
+    /// Sets the panning of the audio source (-1.0 to 1.0).
     void SetPan(float panpot);
 
+    /// Gets the pitch of the audio source.
     float GetPitch() const;
 
+    /// Sets the pitch of the audio source (-1.0 to 1.0).
     void SetPitch(float pitch);
 
+    /// Gets the volume of the audio source.
     float GetVolume() const;
 
+    /// Sets the volume of the audio source (0.0 to 1.0).
     void SetVolume(float volume);
 
 private:

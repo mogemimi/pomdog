@@ -18,10 +18,13 @@ public:
     AudioEngine(AudioEngine&&) = default;
     AudioEngine& operator=(AudioEngine&&) = default;
 
+    /// Gets the master volume that affects all sound effects.
     float GetMasterVolume() const;
 
+    /// Sets the master volume that affects all sound effects.
     void SetMasterVolume(float volume);
 
+    /// Gets the pointer of the native audio engine.
     Detail::SoundSystem::NativeAudioEngine* GetNativeAudioEngine();
 
 private:
