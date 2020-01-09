@@ -822,12 +822,18 @@ void GraphicsContextGL4::SetRenderPass(const RenderPass& renderPass)
     const auto clearDepthStencilMask = [&]() -> GLbitfield {
         GLbitfield mask = 0;
         if (renderPass.ClearDepth) {
+            // NOTE: glDepthMask() must be enabled to clear the depth buffer.
+            glDepthMask(GL_TRUE);
+
             mask |= GL_DEPTH_BUFFER_BIT;
             auto clamped = std::min(std::max(*renderPass.ClearDepth, 0.0f), 1.0f);
             glClearDepthf(clamped);
             POMDOG_CHECK_ERROR_GL4("glClearDepthf");
         }
         if (renderPass.ClearStencil) {
+            // NOTE: glStencilMask() must be enabled to clear the stencil buffer.
+            glStencilMask(GL_TRUE);
+
             mask |= GL_STENCIL_BUFFER_BIT;
             glClearStencil(*renderPass.ClearStencil);
             POMDOG_CHECK_ERROR_GL4("glClearStencil");
