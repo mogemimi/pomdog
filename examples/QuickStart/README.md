@@ -1,21 +1,5 @@
 # QuickStart
 
-## Prerequisites
-
-#### Runtime requirements
-
-* macOS 10.12 and later
-* Windows 10 and later
-* Ubuntu 19.04 and later
-* DirectX 11, OpenGL4 or Metal
-
-#### Build requirements
-
-* CMake 3.11 and later
-* Clang 8.0 (for Linux)
-* Xcode 10.2 and later
-* Visual Studio 2019 and later
-
 ## How to build
 
 ### Building under Linux
@@ -23,17 +7,19 @@
 ```sh
 cd path/to/QuickStart
 
-# Creating a build directory
-mkdir -p build && cd build
-
-# Generating Makefile
-cmake -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=Debug ..
+# Generate Ninja file to the 'build' directory
+cmake -Bbuild -H. -G Ninja \
+    -DCMAKE_C_COMPILER=clang \
+    -DCMAKE_CXX_COMPILER=clang++ \
+    -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
+    -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++ -lc++abi" \
+    -DCMAKE_BUILD_TYPE=Debug
 
 # Building application
-make -j4
+ninja -C build
 
 # To run your application, you can use the following
-./QuickStart
+./build/QuickStart
 ```
 
 To build in release mode, use `-DCMAKE_BUILD_TYPE` option:
@@ -47,23 +33,20 @@ cmake -DCMAKE_BUILD_TYPE=Release ..
 ```sh
 cd path/to/QuickStart
 
-# Creating a build directory
-mkdir -p build && cd build
+# Generate Xcode project files to the 'build' directory
+cmake -Bbuild -H. -G Xcode
 
-# Generating Xcode project files
-cmake -G Xcode ..
-
-# Building your project
-xcodebuild -project QuickStart.xcodeproj -configuration Debug
+# Compiling source code
+xcodebuild -project build/QuickStart.xcodeproj -configuration Debug
 
 # To run your application, you can use the following
-open Debug/QuickStart.app
+open build/Debug/QuickStart.app
 ```
 
 To build in release mode, use `-configuration` option:
 
 ```sh
-xcodebuild -project QuickStart.xcodeproj -configuration Release
+xcodebuild -project build/QuickStart.xcodeproj -configuration Release
 ```
 
 To develop your application on Xcode, please open `QuickStart.xcodeproj` in Xcode.
@@ -74,23 +57,20 @@ To develop your application on Xcode, please open `QuickStart.xcodeproj` in Xcod
 # Git Bash (MinGW)
 cd path/to/QuickStart
 
-# Creating a build directory
-mkdir -p build && cd build
-
-# Generating projects for Visual Studio 2019
-cmake -G "Visual Studio 16" ..
+# Generate projects for Visual Studio 2019 to the 'build' directory
+cmake -Bbuild -H. -G "Visual Studio 16"
 
 # Building projects using CMake and MSBuild
-cmake --build . --config Debug
+cmake --build build --config Debug
 
 # To run your application, you can use the following
-./Debug/QuickStart
+./build/Debug/QuickStart
 ```
 
 To build in release mode, use `--config` option:
 
 ```sh
-cmake --build . --config Release
+cmake --build build --config Release
 ```
 
 To develop your application on Visual Studio, please open `QuickStart.sln` in Visual Studio.
