@@ -1009,36 +1009,6 @@ if(POMDOG_USE_IOKIT)
   list(APPEND SOURCE_FILES ${POMDOG_SOURCES_IOKIT})
 endif()
 
-# NOTE: Linking libraries for Mac and Xcode
-if(POMDOG_USE_METAL)
-  # list(APPEND LINK_FRAMEWORKS "$(SDKROOT)/System/Library/Frameworks/Metal.framework")
-  set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework Metal")
-endif()
-
-if(POMDOG_USE_OPENAL AND (POMDOG_TARGET_PLATFORM MATCHES "Mac"))
-  # list(APPEND LINK_FRAMEWORKS "$(SDKROOT)/System/Library/Frameworks/AudioToolBox.framework")
-  # list(APPEND LINK_FRAMEWORKS "$(SDKROOT)/System/Library/Frameworks/OpenAL.framework")
-  set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework AudioToolBox")
-  set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework OpenAL")
-endif()
-
-if(POMDOG_USE_IOKIT AND (POMDOG_TARGET_PLATFORM MATCHES "Mac"))
-  # list(APPEND LINK_FRAMEWORKS "$(SDKROOT)/System/Library/Frameworks/IOKit.framework")
-  set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework IOKit")
-endif()
-
-if(POMDOG_USE_GL4 AND (POMDOG_TARGET_PLATFORM MATCHES "Mac"))
-  # list(APPEND LINK_FRAMEWORKS "$(SDKROOT)/System/Library/Frameworks/OpenGL.framework")
-  set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework OpenGL")
-endif()
-
-if(POMDOG_TARGET_PLATFORM MATCHES "Mac")
-  # list(APPEND LINK_FRAMEWORKS "$(SDKROOT)/System/Library/Frameworks/Cocoa.framework")
-  # list(APPEND LINK_FRAMEWORKS "$(SDKROOT)/System/Library/Frameworks/QuartzCore.framework")
-  set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework Cocoa")
-  set(LINK_FRAMEWORKS "${LINK_FRAMEWORKS} -framework QuartzCore")
-endif()
-
 set(POMDOG_USE_EXPERIMENTAL true CACHE BOOL "Use Experimental")
 if(POMDOG_USE_EXPERIMENTAL)
   # NOTE: Add experimental modules
@@ -1106,6 +1076,28 @@ if(POMDOG_USE_X11 AND (POMDOG_TARGET_PLATFORM MATCHES "Linux"))
 
   add_subdirectory(${POMDOG_DIR}/build/dependencies/glew "${CMAKE_CURRENT_BINARY_DIR}/glew_build")
   target_link_libraries(pomdog_static INTERFACE X11 GL glew_static)
+endif()
+
+if(POMDOG_USE_METAL AND (POMDOG_TARGET_PLATFORM MATCHES "Mac"))
+  target_link_libraries(pomdog_static INTERFACE "-framework Metal")
+endif()
+
+if(POMDOG_USE_OPENAL AND (POMDOG_TARGET_PLATFORM MATCHES "Mac"))
+  target_link_libraries(pomdog_static INTERFACE "-framework AudioToolBox")
+  target_link_libraries(pomdog_static INTERFACE "-framework OpenAL")
+endif()
+
+if(POMDOG_USE_IOKIT AND (POMDOG_TARGET_PLATFORM MATCHES "Mac"))
+  target_link_libraries(pomdog_static INTERFACE "-framework IOKit")
+endif()
+
+if(POMDOG_USE_GL4 AND (POMDOG_TARGET_PLATFORM MATCHES "Mac"))
+  target_link_libraries(pomdog_static INTERFACE "-framework OpenGL")
+endif()
+
+if(POMDOG_TARGET_PLATFORM MATCHES "Mac")
+  target_link_libraries(pomdog_static INTERFACE "-framework Cocoa")
+  target_link_libraries(pomdog_static INTERFACE "-framework QuartzCore")
 endif()
 
 if(POMDOG_USE_GL4 AND (POMDOG_TARGET_PLATFORM MATCHES "Win32"))
@@ -1236,13 +1228,6 @@ target_compile_options(pomdog_static PRIVATE
     $<$<CONFIG:RELEASE>:/O2;/Ob2;/MT>
   >
 )
-
-if (POMDOG_TARGET_PLATFORM MATCHES "Mac")
-  # TODO: Replace with the following, CMake >= 3.12
-  # `target_link_options(pomdog_static PUBLIC "${LINK_FRAMEWORKS}")`
-  # https://cmake.org/cmake/help/git-stage/command/target_link_options.html
-  set(CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS} ${LINK_FRAMEWORKS}")
-endif()
 
 # NOTE: For dynamic library
 # NOTE: see https://cmake.org/cmake/help/v3.9/prop_tgt/FRAMEWORK.html
