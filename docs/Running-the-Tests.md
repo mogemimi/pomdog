@@ -1,5 +1,9 @@
 # Running the Tests
 
+## Requirements
+
+Please see this page [Developing Pomdog Game Engine](Developing-Pomdog-Game-Engine.md).
+
 ## Build and run the unit tests on Linux
 
 To build with CMake and Ninja, run the following commands:
@@ -28,6 +32,8 @@ To run the 'FeatureShowcase' application, use the following:
 ./build.cmake/examples/FeatureShowcase/FeatureShowcase
 ```
 
+After a complete build, you will find the `libpomdog.a` file in `build.cmake/build/pomdog` directory.
+
 ### Building with a custom toolchain
 
 To compile with GCC, run the following command:
@@ -50,9 +56,9 @@ export LDFLAGS="-stdlib=libc++"
 cmake -Bbuild.cmake -H. -G Ninja -DCMAKE_BUILD_TYPE=Release
 ```
 
-## Build and run the unit tests on Mac OS X
+## Build and run the unit tests on macOS
 
-To run all unit tests, use:
+First, you need to generate the Xcode project file (.xcodeproj) using CMake. Afterwards you can build the whole project.
 
 ```sh
 cd path/to/pomdog
@@ -61,8 +67,20 @@ cd path/to/pomdog
 cmake -Bbuild.cmake -H. -G Xcode
 
 # Compiling source code
-xcodebuild -project Pomdog.xcodeproj -configuration Release
+xcodebuild -project build.cmake/Pomdog.xcodeproj -configuration Release
+```
 
+To build in debug mode, use `-configuration` option:
+
+```sh
+xcodebuild -project Pomdog.xcodeproj -configuration Debug
+```
+
+After a complete build, you will find the `libpomdog.a` file in `build.cmake/build/pomdog/Release` (also `build.cmake/build/pomdog/Debug`) directory.
+
+To run all unit tests, use:
+
+```sh
 # Run the unit tests
 ./build.cmake/test/Release/PomdogTest
 ```
@@ -75,6 +93,8 @@ open ./build.cmake/examples/FeatureShowcase/Release/FeatureShowcase.app
 
 ## Build and run the unit tests on Windows
 
+First, you need to generate the Visual Studio project files (.sln and .vcxproj) using CMake. Afterwards you can build the whole project.
+
 ```sh
 cd path/to/pomdog
 
@@ -83,10 +103,24 @@ cmake -Bbuild.cmake -H. -G "Visual Studio 16"
 
 # Building projects using CMake and MSBuild
 cmake --build build.cmake --config Release
+```
 
+To switch between Debug/Release modes, use the `--config` option:
+
+```sh
+cmake --build build.cmake --config Debug
+```
+
+After a complete build, you will find the `libpomdog.lib` file in `build.cmake/build/Release` (also `build.cmake/build/Debug`) directory.
+
+To run all unit tests, use:
+
+```sh
 # To run all unit tests, use the following:
 ./build.cmake/test/Release/PomdogTest
 ```
+
+To run the 'FeatureShowcase' application, use the following:
 
 ```sh
 cd path/to/pomdog
