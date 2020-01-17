@@ -8,6 +8,7 @@
 #include "../RenderSystem/ShaderBytecode.hpp"
 #include "Pomdog/Graphics/InputLayoutDescription.hpp"
 #include "Pomdog/Graphics/PipelineStateDescription.hpp"
+#include "Pomdog/Graphics/PrimitiveTopology.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include <algorithm>
@@ -17,6 +18,22 @@ namespace Pomdog::Detail::Direct3D11 {
 namespace {
 
 using Microsoft::WRL::ComPtr;
+
+D3D11_PRIMITIVE_TOPOLOGY
+ToPrimitiveTopology(PrimitiveTopology primitiveTopology) noexcept
+{
+    switch (primitiveTopology) {
+    case PrimitiveTopology::TriangleStrip:
+        return D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
+    case PrimitiveTopology::TriangleList:
+        return D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+    case PrimitiveTopology::LineList:
+        return D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
+    case PrimitiveTopology::LineStrip:
+        return D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP;
+    }
+    return D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED;
+}
 
 D3D11_BLEND_OP ToBlendOperation(BlendOperation blendOperation) noexcept
 {
@@ -527,6 +544,8 @@ PipelineStateDirect3D11::PipelineStateDirect3D11(
 
     inputLayout = CreateInputLayout(device,
         vertexShaderD3D->GetShaderBytecode(), description.InputLayout);
+
+    primitiveTopology = ToPrimitiveTopology(description.PrimitiveTopology);
 }
 
 void PipelineStateDirect3D11::Apply(
@@ -542,6 +561,7 @@ void PipelineStateDirect3D11::Apply(
     POMDOG_ASSERT(depthStencilState);
 
     deviceContext->IASetInputLayout(inputLayout.Get());
+    deviceContext->IASetPrimitiveTopology(primitiveTopology);
     deviceContext->VSSetShader(vertexShader.Get(), nullptr, 0);
     deviceContext->PSSetShader(pixelShader.Get(), nullptr, 0);
     deviceContext->OMSetBlendState(blendState.Get(), blendFactor, sampleMask);

@@ -11,7 +11,6 @@
 #include "../RenderSystem/GraphicsCommandListImmediate.hpp"
 #include "Pomdog/Graphics/IndexBuffer.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
-#include "Pomdog/Graphics/PrimitiveTopology.hpp"
 #include "Pomdog/Graphics/RenderPass.hpp"
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
 #include "Pomdog/Graphics/Texture2D.hpp"
@@ -30,22 +29,6 @@ namespace {
 
 using DXGI::DXGIFormatHelper;
 using Microsoft::WRL::ComPtr;
-
-D3D11_PRIMITIVE_TOPOLOGY ToD3D11PrimitiveTopology(
-    PrimitiveTopology primitiveTopology) noexcept
-{
-    switch (primitiveTopology) {
-    case PrimitiveTopology::TriangleStrip:
-        return D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
-    case PrimitiveTopology::TriangleList:
-        return D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-    case PrimitiveTopology::LineList:
-        return D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
-    case PrimitiveTopology::LineStrip:
-        return D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP;
-    }
-    return D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED;
-}
 
 void ChooseMultiSampleSetting(
     ID3D11Device* device,
@@ -254,6 +237,7 @@ void GraphicsContextDirect3D11::Present()
 void GraphicsContextDirect3D11::ApplyPipelineState()
 {
     POMDOG_ASSERT(pipelineState);
+    POMDOG_ASSERT(deferredContext);
 
     if (needToApplyPipelineState) {
         pipelineState->Apply(deferredContext.Get(), blendFactor.data());
@@ -352,13 +336,6 @@ GraphicsCapabilities GraphicsContextDirect3D11::GetCapabilities() const
     caps.SamplerSlotCount = D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT;
     caps.ConstantBufferSlotCount = D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT;
     return std::move(caps);
-}
-
-void GraphicsContextDirect3D11::SetPrimitiveTopology(PrimitiveTopology primitiveTopology)
-{
-    POMDOG_ASSERT(deferredContext);
-    deferredContext->IASetPrimitiveTopology(
-        ToD3D11PrimitiveTopology(primitiveTopology));
 }
 
 void GraphicsContextDirect3D11::SetScissorRect(const Rectangle& scissorRect)

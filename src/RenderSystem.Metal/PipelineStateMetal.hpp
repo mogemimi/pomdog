@@ -25,11 +25,14 @@ public:
 
     void Apply(id<MTLRenderCommandEncoder> commandEncoder);
 
+    MTLPrimitiveType GetPrimitiveType() const noexcept;
+
 private:
     id<MTLRenderPipelineState> pipelineState;
     id<MTLDepthStencilState> depthStencilState;
     __strong MTLRenderPipelineReflection* reflection;
     RasterizerStateMetal rasterizerState;
+    MTLPrimitiveType primitiveType;
 };
 
 } // namespace Pomdog::Detail::Metal

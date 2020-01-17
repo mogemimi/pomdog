@@ -38,6 +38,9 @@ public:
 
     Builder& SetInputLayout(InputLayoutDescription&& inputLayout);
 
+    /// Specifies the geometric primitive type for the input assembler stage.
+    Builder& SetPrimitiveTopology(PrimitiveTopology primitiveTopology);
+
     Builder& SetBlendState(const BlendDescription& blendState);
 
     Builder& SetRasterizerState(const RasterizerDescription& rasterizerState);

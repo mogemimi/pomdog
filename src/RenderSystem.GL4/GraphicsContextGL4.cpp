@@ -19,7 +19,6 @@
 #include "Pomdog/Application/GameWindow.hpp"
 #include "Pomdog/Basic/Platform.hpp"
 #include "Pomdog/Graphics/IndexBuffer.hpp"
-#include "Pomdog/Graphics/PrimitiveTopology.hpp"
 #include "Pomdog/Graphics/RenderPass.hpp"
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
 #include "Pomdog/Graphics/Texture2D.hpp"
@@ -38,21 +37,6 @@
 
 namespace Pomdog::Detail::GL4 {
 namespace {
-
-GLenum ToPrimitiveTopology(PrimitiveTopology primitiveTopology) noexcept
-{
-    switch (primitiveTopology) {
-    case PrimitiveTopology::TriangleList:
-        return GL_TRIANGLES;
-    case PrimitiveTopology::TriangleStrip:
-        return GL_TRIANGLE_STRIP;
-    case PrimitiveTopology::LineList:
-        return GL_LINES;
-    case PrimitiveTopology::LineStrip:
-        return GL_LINE_STRIP;
-    }
-    POMDOG_UNREACHABLE("Unsupported primitive topology");
-}
 
 GLenum ToIndexElementType(IndexElementSize indexElementSize) noexcept
 {
@@ -359,7 +343,7 @@ GraphicsContextGL4::GraphicsContextGL4(
     POMDOG_CHECK_ERROR_GL4("glFrontFace");
 
     frameBuffer = CreateFrameBuffer();
-    primitiveTopology = ToPrimitiveTopology(PrimitiveTopology::TriangleList);
+    primitiveTopology = GL_TRIANGLES;
 
     // NOTE: Set default values for graphics context
     this->SetBlendFactor(Vector4{1.0f, 1.0f, 1.0f, 1.0f});
@@ -627,11 +611,6 @@ GraphicsCapabilities GraphicsContextGL4::GetCapabilities() const
     return capabilities;
 }
 
-void GraphicsContextGL4::SetPrimitiveTopology(PrimitiveTopology primitiveTopologyIn)
-{
-    primitiveTopology = ToPrimitiveTopology(primitiveTopologyIn);
-}
-
 void GraphicsContextGL4::SetScissorRect(const Rectangle& scissorRect)
 {
     POMDOG_ASSERT(!renderTargets.empty());
@@ -673,6 +652,7 @@ void GraphicsContextGL4::SetPipelineState(const std::shared_ptr<NativePipelineSt
         this->pipelineState = std::dynamic_pointer_cast<PipelineStateGL4>(pipelineStateIn);
         POMDOG_ASSERT(pipelineState);
 
+        primitiveTopology = pipelineState->GetPrimitiveTopology();
         needToApplyPipelineState = true;
         needToApplyInputLayout = true;
     }

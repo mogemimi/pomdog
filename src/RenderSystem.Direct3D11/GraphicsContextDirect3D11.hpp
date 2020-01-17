@@ -55,8 +55,6 @@ public:
 
     void SetRenderPass(const RenderPass& renderPass) override;
 
-    void SetPrimitiveTopology(PrimitiveTopology primitiveTopology) override;
-
     void SetScissorRect(const Rectangle& scissorRect) override;
 
     void SetBlendFactor(const Vector4& blendFactor) override;

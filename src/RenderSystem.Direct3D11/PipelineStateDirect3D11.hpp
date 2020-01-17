@@ -25,6 +25,7 @@ private:
     Microsoft::WRL::ComPtr<ID3D11RasterizerState> rasterizerState;
     Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilState;
     UINT sampleMask;
+    D3D11_PRIMITIVE_TOPOLOGY primitiveTopology;
 };
 
 } // namespace Pomdog::Detail::Direct3D11

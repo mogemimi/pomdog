@@ -12,7 +12,6 @@
 #include "../RenderSystem/GraphicsCommandListImmediate.hpp"
 #include "Pomdog/Graphics/IndexBuffer.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
-#include "Pomdog/Graphics/PrimitiveTopology.hpp"
 #include "Pomdog/Graphics/RenderPass.hpp"
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
 #include "Pomdog/Graphics/Texture2D.hpp"
@@ -25,17 +24,6 @@
 
 namespace Pomdog::Detail::Metal {
 namespace {
-
-MTLPrimitiveType ToPrimitiveType(PrimitiveTopology primitiveTopology) noexcept
-{
-    switch (primitiveTopology) {
-    case PrimitiveTopology::TriangleStrip: return MTLPrimitiveTypeTriangleStrip;
-    case PrimitiveTopology::TriangleList: return MTLPrimitiveTypeTriangle;
-    case PrimitiveTopology::LineList: return MTLPrimitiveTypeLine;
-    case PrimitiveTopology::LineStrip: return MTLPrimitiveTypeLineStrip;
-    }
-    POMDOG_UNREACHABLE("Unsupported primitive topology");
-}
 
 MTLIndexType ToIndexType(IndexElementSize elementSize) noexcept
 {
@@ -304,11 +292,6 @@ void GraphicsContextMetal::DrawIndexedInstanced(
         baseInstance:startInstanceLocation];
 }
 
-void GraphicsContextMetal::SetPrimitiveTopology(PrimitiveTopology primitiveTopology)
-{
-    this->primitiveType = ToPrimitiveType(primitiveTopology);
-}
-
 void GraphicsContextMetal::SetScissorRect(const Rectangle& scissorRect)
 {
     POMDOG_ASSERT(commandEncoder != nil);
@@ -369,6 +352,8 @@ void GraphicsContextMetal::SetPipelineState(const std::shared_ptr<NativePipeline
 
     POMDOG_ASSERT(nativePipelineState != nullptr);
     POMDOG_ASSERT(nativePipelineState == dynamic_cast<PipelineStateMetal*>(pipelineState.get()));
+
+    this->primitiveType = nativePipelineState->GetPrimitiveType();
 
     POMDOG_ASSERT(commandEncoder != nil);
     nativePipelineState->Apply(commandEncoder);

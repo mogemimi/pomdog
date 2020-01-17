@@ -18,6 +18,7 @@
 namespace Pomdog::Detail::GL4 {
 
 class InputLayoutGL4;
+using PrimitiveTopologyGL4 = Tagged<GLenum, PrimitiveTopology>;
 
 struct TextureBindingGL4 final {
     GLint UniformLocation;
@@ -32,9 +33,11 @@ public:
 
     void ApplyShaders();
 
-    ShaderProgramGL4 GetShaderProgram() const;
+    ShaderProgramGL4 GetShaderProgram() const noexcept;
 
-    InputLayoutGL4* GetInputLayout() const;
+    InputLayoutGL4* GetInputLayout() const noexcept;
+
+    PrimitiveTopologyGL4 GetPrimitiveTopology() const noexcept;
 
 private:
     std::vector<TextureBindingGL4> textureBindings;
@@ -43,6 +46,7 @@ private:
     DepthStencilStateGL4 depthStencilState;
     std::optional<ShaderProgramGL4> shaderProgram;
     std::unique_ptr<InputLayoutGL4> inputLayout;
+    PrimitiveTopologyGL4 primitiveTopology;
 };
 
 } // namespace Pomdog::Detail::GL4

@@ -63,9 +63,6 @@ public:
     /// Sets a group of render targets.
     void SetRenderPass(RenderPass&& renderPass);
 
-    /// Specifies the geometric primitive type for the input assembler stage.
-    void SetPrimitiveTopology(PrimitiveTopology primitiveTopology);
-
     /// Sets the scissor rectangle dynamically for a scissor test.
     void SetScissorRect(const Rectangle& scissorRect);
 

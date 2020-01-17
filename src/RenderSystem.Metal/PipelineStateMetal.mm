@@ -8,6 +8,7 @@
 #include "../RenderSystem/BufferHelper.hpp"
 #include "Pomdog/Graphics/DepthFormat.hpp"
 #include "Pomdog/Graphics/PipelineStateDescription.hpp"
+#include "Pomdog/Graphics/PrimitiveTopology.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include "Pomdog/Utility/StringHelper.hpp"
@@ -15,6 +16,17 @@
 
 namespace Pomdog::Detail::Metal {
 namespace {
+
+MTLPrimitiveType ToPrimitiveType(PrimitiveTopology primitiveTopology) noexcept
+{
+    switch (primitiveTopology) {
+    case PrimitiveTopology::TriangleStrip: return MTLPrimitiveTypeTriangleStrip;
+    case PrimitiveTopology::TriangleList: return MTLPrimitiveTypeTriangle;
+    case PrimitiveTopology::LineList: return MTLPrimitiveTypeLine;
+    case PrimitiveTopology::LineStrip: return MTLPrimitiveTypeLineStrip;
+    }
+    POMDOG_UNREACHABLE("Unsupported primitive topology");
+}
 
 MTLVertexStepFunction ToVertexStepFunction(InputClassification classification) noexcept
 {
@@ -171,7 +183,7 @@ MTLTriangleFillMode ToFillMode(FillMode fillMode) noexcept
     POMDOG_UNREACHABLE("Unsupported fill mode");
 }
 
-} // unnamed namespace
+} // namespace
 
 PipelineStateMetal::PipelineStateMetal(
     id<MTLDevice> device,
@@ -181,6 +193,8 @@ PipelineStateMetal::PipelineStateMetal(
     , reflection(nil)
 {
     POMDOG_ASSERT(device != nil);
+
+    primitiveType = ToPrimitiveType(description.PrimitiveTopology);
 
     rasterizerState.depthBias = description.RasterizerState.DepthBias;
     rasterizerState.slopeScaledDepthBias = description.RasterizerState.SlopeScaledDepthBias;
@@ -314,6 +328,11 @@ void PipelineStateMetal::Apply(id<MTLRenderCommandEncoder> commandEncoder)
     [commandEncoder setDepthBias:rasterizerState.depthBias
         slopeScale:rasterizerState.slopeScaledDepthBias
         clamp:0.0f];
+}
+
+MTLPrimitiveType PipelineStateMetal::GetPrimitiveType() const noexcept
+{
+    return primitiveType;
 }
 
 } // namespace Pomdog::Detail::Metal

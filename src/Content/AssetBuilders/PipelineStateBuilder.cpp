@@ -19,11 +19,12 @@ public:
     PipelineStateDescription description;
     std::reference_wrapper<AssetManager const> assets;
     std::shared_ptr<GraphicsDevice> graphicsDevice;
-    bool hasBlendState;
-    bool hasRasterizerState;
-    bool hasDepthStencilState;
-    bool hasRenderTargetViewFormats;
-    bool hasDepthStencilViewFormat;
+    bool hasPrimitiveTopology = false;
+    bool hasBlendState = false;
+    bool hasRasterizerState = false;
+    bool hasDepthStencilState = false;
+    bool hasRenderTargetViewFormats = false;
+    bool hasDepthStencilViewFormat = false;
 
 public:
     explicit Impl(AssetManager& assets);
@@ -36,16 +37,20 @@ Builder<PipelineState>::Impl::Impl(AssetManager& assetsIn)
 {
     graphicsDevice = assetsIn.GetGraphicsDevice();
     description.MultiSampleMask = std::numeric_limits<std::uint32_t>::max();
-    hasBlendState = false;
-    hasRasterizerState = false;
-    hasDepthStencilState = false;
-    hasRenderTargetViewFormats = false;
-    hasDepthStencilViewFormat = false;
+    description.PrimitiveTopology = PrimitiveTopology::TriangleList;
 }
 
 std::shared_ptr<PipelineState> Builder<PipelineState>::Impl::Load()
 {
     POMDOG_ASSERT(!description.InputLayout.InputElements.empty());
+
+#if defined(DEBUG) && !defined(NDEBUG)
+    if (!hasPrimitiveTopology) {
+        Log::Warning(
+            "Pomdog",
+            "[Warning] Please call Builder<PipelineState>::SetPrimitiveTopology() in your code.");
+    }
+#endif
 
     if (!hasBlendState) {
         description.BlendState = BlendDescription::CreateDefault();
@@ -149,6 +154,15 @@ Builder<PipelineState>& Builder<PipelineState>::SetInputLayout(
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(!inputLayout.InputElements.empty());
     impl->description.InputLayout = std::move(inputLayout);
+    return *this;
+}
+
+Builder<PipelineState>&
+Builder<PipelineState>::SetPrimitiveTopology(PrimitiveTopology primitiveTopology)
+{
+    POMDOG_ASSERT(impl);
+    impl->description.PrimitiveTopology = primitiveTopology;
+    impl->hasPrimitiveTopology = true;
     return *this;
 }
 

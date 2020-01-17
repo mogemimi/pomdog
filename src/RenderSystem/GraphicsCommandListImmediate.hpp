@@ -18,7 +18,7 @@ enum class GraphicsCommandType : std::int8_t {
     DrawIndexedCommand,
     DrawInstancedCommand,
     DrawIndexedInstancedCommand,
-    SetPrimitiveTopologyCommand,
+    SetRenderPassCommand,
     SetScissorRectCommand,
     SetBlendFactorCommand,
     SetVertexBufferCommand,
@@ -28,7 +28,6 @@ enum class GraphicsCommandType : std::int8_t {
     SetSamplerStateCommand,
     SetTextureCommand,
     SetTextureRenderTarget2DCommand,
-    SetRenderPassCommand,
 };
 
 class GraphicsCommand {
@@ -75,8 +74,6 @@ public:
         std::size_t startInstanceLocation) override;
 
     void SetRenderPass(RenderPass&& renderPass) override;
-
-    void SetPrimitiveTopology(PrimitiveTopology primitiveTopology) override;
 
     void SetScissorRect(const Rectangle& scissorRect) override;
 

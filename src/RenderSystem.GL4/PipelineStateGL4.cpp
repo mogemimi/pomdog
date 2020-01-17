@@ -5,8 +5,10 @@
 #include "ErrorChecker.hpp"
 #include "InputLayoutGL4.hpp"
 #include "ShaderGL4.hpp"
+#include "../Basic/Unreachable.hpp"
 #include "../Utility/ScopeGuard.hpp"
 #include "Pomdog/Graphics/PipelineStateDescription.hpp"
+#include "Pomdog/Graphics/PrimitiveTopology.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Logging/LogLevel.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -21,6 +23,21 @@ namespace {
 
 // NOTE: Please refer to D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT.
 static constexpr std::size_t ConstantBufferSlotCount = 14;
+
+GLenum ToPrimitiveTopology(PrimitiveTopology primitiveTopology) noexcept
+{
+    switch (primitiveTopology) {
+    case PrimitiveTopology::TriangleList:
+        return GL_TRIANGLES;
+    case PrimitiveTopology::TriangleStrip:
+        return GL_TRIANGLE_STRIP;
+    case PrimitiveTopology::LineList:
+        return GL_LINES;
+    case PrimitiveTopology::LineStrip:
+        return GL_LINE_STRIP;
+    }
+    POMDOG_UNREACHABLE("Unsupported primitive topology");
+}
 
 std::optional<ShaderProgramGL4> LinkShaders(
     const VertexShaderGL4& vertexShader, const PixelShaderGL4& pixelShader)
@@ -56,13 +73,15 @@ std::optional<ShaderProgramGL4> LinkShaders(
     return program;
 }
 
-} // unnamed namespace
+} // namespace
 
 PipelineStateGL4::PipelineStateGL4(const PipelineStateDescription& description)
     : blendState(description.BlendState)
     , rasterizerState(description.RasterizerState)
     , depthStencilState(description.DepthStencilState)
 {
+    primitiveTopology = ToPrimitiveTopology(description.PrimitiveTopology);
+
     auto vertexShader = std::dynamic_pointer_cast<VertexShaderGL4>(description.VertexShader);
     if (!vertexShader) {
         POMDOG_THROW_EXCEPTION(std::runtime_error, "Invalid vertex shader.");
@@ -179,16 +198,21 @@ void PipelineStateGL4::ApplyShaders()
     }
 }
 
-ShaderProgramGL4 PipelineStateGL4::GetShaderProgram() const
+ShaderProgramGL4 PipelineStateGL4::GetShaderProgram() const noexcept
 {
     POMDOG_ASSERT(shaderProgram);
     return *shaderProgram;
 }
 
-InputLayoutGL4* PipelineStateGL4::GetInputLayout() const
+InputLayoutGL4* PipelineStateGL4::GetInputLayout() const noexcept
 {
     POMDOG_ASSERT(inputLayout);
     return inputLayout.get();
+}
+
+PrimitiveTopologyGL4 PipelineStateGL4::GetPrimitiveTopology() const noexcept
+{
+    return primitiveTopology;
 }
 
 } // namespace Pomdog::Detail::GL4

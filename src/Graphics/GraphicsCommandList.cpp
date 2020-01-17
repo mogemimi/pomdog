@@ -127,12 +127,6 @@ void GraphicsCommandList::SetRenderPass(RenderPass&& renderPass)
     nativeCommandList->SetRenderPass(std::move(renderPass));
 }
 
-void GraphicsCommandList::SetPrimitiveTopology(PrimitiveTopology primitiveTopology)
-{
-    POMDOG_ASSERT(nativeCommandList);
-    nativeCommandList->SetPrimitiveTopology(primitiveTopology);
-}
-
 void GraphicsCommandList::SetScissorRect(const Rectangle& scissorRect)
 {
     POMDOG_ASSERT(nativeCommandList);

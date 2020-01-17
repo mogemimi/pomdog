@@ -45,8 +45,6 @@ public:
 
     virtual void SetRenderPass(RenderPass&& renderPass) = 0;
 
-    virtual void SetPrimitiveTopology(PrimitiveTopology primitiveTopology) = 0;
-
     virtual void SetScissorRect(const Rectangle& scissorRect) = 0;
 
     virtual void SetBlendFactor(const Vector4& blendFactor) = 0;
