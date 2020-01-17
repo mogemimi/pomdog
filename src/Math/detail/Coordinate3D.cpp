@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
+// Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Math/detail/Coordinate3D.hpp"
 #include "Pomdog/Utility/Assert.hpp"

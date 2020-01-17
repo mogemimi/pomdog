@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
+// Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Async/ImmediateScheduler.hpp"
 #include "Pomdog/Async/QueuedScheduler.hpp"

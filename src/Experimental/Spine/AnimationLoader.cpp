@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2019 mogemimi. Distributed under the MIT license.
+// Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Experimental/Spine/AnimationLoader.hpp"
 #include "../Skeletal2D/Tracks/AnimationKeyHelper.hpp"
