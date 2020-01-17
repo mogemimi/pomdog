@@ -310,6 +310,7 @@ BillboardBatchEffect::BillboardBatchEffect(
             .SetVertexShader(vertexShader.Build())
             .SetPixelShader(pixelShader.Build())
             .SetInputLayout(inputLayout.CreateInputLayout())
+            .SetPrimitiveTopology(PrimitiveTopology::TriangleList)
             .SetBlendState(*blendDesc)
             .SetDepthStencilState(*depthStencilDesc)
             .SetRasterizerState(*rasterizerDesc)
@@ -345,7 +346,6 @@ void BillboardBatchEffect::Draw(
 
     commandList->SetPipelineState(impl->pipelineState);
     commandList->SetConstantBuffer(0, constantBuffer);
-    commandList->SetPrimitiveTopology(PrimitiveTopology::TriangleList);
     commandList->SetVertexBuffer(0, impl->vertexBuffer);
     commandList->SetVertexBuffer(1, billboardInstances.GetVertexBuffer());
 

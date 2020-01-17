@@ -144,6 +144,7 @@ void Skeletal2DTest::Initialize()
         pipelineState = BasicEffect::CreateBasicEffect(*assets, effectDesc)
             .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
             .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
+            .SetPrimitiveTopology(PrimitiveTopology::TriangleList)
             .SetDepthStencilState(DepthStencilDescription::CreateDefault())
             .SetBlendState(BlendDescription::CreateNonPremultiplied())
             .SetRasterizerState(RasterizerDescription::CreateDefault())
@@ -157,6 +158,7 @@ void Skeletal2DTest::Initialize()
         pipelineStateWireframe = BasicEffect::CreateBasicEffect(*assets, effectDesc)
             .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
             .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
+            .SetPrimitiveTopology(PrimitiveTopology::TriangleList)
             .SetDepthStencilState(DepthStencilDescription::CreateDefault())
             .SetBlendState(BlendDescription::CreateOpaque())
             .SetRasterizerState(rasterizerDesc)
@@ -294,7 +296,6 @@ void Skeletal2DTest::Draw()
     commandList->SetTexture(0, texture);
     commandList->SetVertexBuffer(0, vertexBuffer);
     commandList->SetPipelineState(pipelineState);
-    commandList->SetPrimitiveTopology(PrimitiveTopology::TriangleList);
     commandList->DrawIndexed(indexBuffer, indexBuffer->GetIndexCount(), 0);
 
     auto mouse = gameHost->GetMouse()->GetState();

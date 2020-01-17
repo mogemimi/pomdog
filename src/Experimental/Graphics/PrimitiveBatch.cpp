@@ -125,6 +125,7 @@ PrimitiveBatch::Impl::Impl(
             .SetVertexShader(vertexShader.Build())
             .SetPixelShader(pixelShader.Build())
             .SetInputLayout(inputLayout.CreateInputLayout())
+            .SetPrimitiveTopology(PrimitiveTopology::TriangleList)
             .SetBlendState(BlendDescription::CreateNonPremultiplied())
             .SetDepthStencilState(*depthStencilDesc)
             .SetRasterizerState(*rasterizerDesc)
@@ -176,7 +177,6 @@ void PrimitiveBatch::Impl::Flush()
     commandList->SetVertexBuffer(0, vertexBuffer);
     commandList->SetPipelineState(pipelineState);
     commandList->SetConstantBuffer(0, constantBuffer);
-    commandList->SetPrimitiveTopology(PrimitiveTopology::TriangleList);
     commandList->Draw(polygonShapes.GetVertexCount(), startVertexLocation);
 
     startVertexLocation += polygonShapes.GetVertexCount();

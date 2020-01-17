@@ -122,6 +122,7 @@ LineBatch::Impl::Impl(
             .SetVertexShader(vertexShader.Build())
             .SetPixelShader(pixelShader.Build())
             .SetInputLayout(inputLayout.CreateInputLayout())
+            .SetPrimitiveTopology(PrimitiveTopology::LineList)
             .SetBlendState(BlendDescription::CreateNonPremultiplied())
             .SetDepthStencilState(DepthStencilDescription::CreateDefault())
             .SetConstantBufferBindSlot("TransformMatrix", 0)
@@ -162,7 +163,6 @@ void LineBatch::Impl::Flush()
     commandList->SetVertexBuffer(0, vertexBuffer);
     commandList->SetPipelineState(pipelineState);
     commandList->SetConstantBuffer(0, constantBuffer);
-    commandList->SetPrimitiveTopology(PrimitiveTopology::LineList);
     commandList->Draw(vertices.size(), 0);
 
     vertices.clear();

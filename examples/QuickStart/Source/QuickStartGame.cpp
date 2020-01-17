@@ -103,6 +103,7 @@ void QuickStartGame::Initialize()
             .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
             .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
             .SetInputLayout(inputLayout)
+            .SetPrimitiveTopology(PrimitiveTopology::TriangleList)
             .SetVertexShader(std::move(vertexShader))
             .SetPixelShader(std::move(pixelShader))
             .SetConstantBufferBindSlot("MyShaderConstants", 0)
@@ -138,7 +139,6 @@ void QuickStartGame::Initialize()
             commandList->SetTexture(0, texture);
             commandList->SetVertexBuffer(0, vertexBuffer);
             commandList->SetPipelineState(pipelineState);
-            commandList->SetPrimitiveTopology(PrimitiveTopology::TriangleList);
             commandList->DrawIndexed(indexBuffer, indexBuffer->GetIndexCount(), 0);
             commandList->Close();
         };

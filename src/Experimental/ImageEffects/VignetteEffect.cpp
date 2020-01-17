@@ -12,6 +12,7 @@
 #include "Pomdog/Graphics/InputLayoutHelper.hpp"
 #include "Pomdog/Graphics/PipelineState.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
+#include "Pomdog/Graphics/PrimitiveTopology.hpp"
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
 #include "Pomdog/Graphics/SamplerState.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
@@ -63,6 +64,7 @@ VignetteEffect::VignetteEffect(
         .SetVertexShader(vertexShader.Build())
         .SetPixelShader(pixelShader.Build())
         .SetInputLayout(inputLayout.CreateInputLayout())
+        .SetPrimitiveTopology(PrimitiveTopology::TriangleList)
         .SetBlendState(BlendDescription::CreateOpaque())
         .SetDepthStencilState(DepthStencilDescription::CreateNone())
         .SetConstantBufferBindSlot("ImageEffectConstants", 0)

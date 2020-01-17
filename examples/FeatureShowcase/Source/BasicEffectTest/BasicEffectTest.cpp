@@ -167,6 +167,7 @@ void BasicEffectTest::Initialize()
         pipelineState1 = BasicEffect::CreateBasicEffect(*assets, effectDesc)
             .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
             .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
+            .SetPrimitiveTopology(PrimitiveTopology::TriangleList)
             .SetDepthStencilState(DepthStencilDescription::CreateDefault())
             .SetBlendState(BlendDescription::CreateNonPremultiplied())
             .SetRasterizerState(RasterizerDescription::CreateDefault())
@@ -184,6 +185,7 @@ void BasicEffectTest::Initialize()
         pipelineState2 = BasicEffect::CreateBasicEffect(*assets, effectDesc)
             .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
             .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
+            .SetPrimitiveTopology(PrimitiveTopology::TriangleList)
             .SetDepthStencilState(DepthStencilDescription::CreateDefault())
             .SetBlendState(BlendDescription::CreateNonPremultiplied())
             .SetRasterizerState(RasterizerDescription::CreateDefault())
@@ -269,7 +271,6 @@ void BasicEffectTest::Draw()
         commandList->SetVertexBuffer(0, vertexBuffer1);
         commandList->SetPipelineState(pipelineState1);
     }
-    commandList->SetPrimitiveTopology(PrimitiveTopology::TriangleList);
     commandList->DrawIndexed(indexBuffer, indexBuffer->GetIndexCount(), 0);
     commandList->Close();
 

@@ -3,7 +3,6 @@
 #include "Pomdog/Experimental/ImageEffects/ScreenQuad.hpp"
 #include "Pomdog/Graphics/GraphicsCommandList.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
-#include "Pomdog/Graphics/PrimitiveTopology.hpp"
 #include "Pomdog/Graphics/ShaderLanguage.hpp"
 #include "Pomdog/Graphics/VertexBuffer.hpp"
 #include "Pomdog/Math/Vector2.hpp"
@@ -48,7 +47,6 @@ ScreenQuad::ScreenQuad(const std::shared_ptr<GraphicsDevice>& graphicsDevice)
 void ScreenQuad::DrawQuad(GraphicsCommandList& commandList)
 {
     commandList.SetVertexBuffer(0, vertexBuffer);
-    commandList.SetPrimitiveTopology(PrimitiveTopology::TriangleList);
     commandList.Draw(vertexBuffer->GetVertexCount(), 0);
 }
 

@@ -108,6 +108,7 @@ void HardwareInstancingTest::Initialize()
             .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
             .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
             .SetInputLayout(inputLayout)
+            .SetPrimitiveTopology(PrimitiveTopology::TriangleList)
             .SetVertexShader(std::move(vertexShader))
             .SetPixelShader(std::move(pixelShader))
             .SetConstantBufferBindSlot("MyShaderConstants", 0)
@@ -198,7 +199,6 @@ void HardwareInstancingTest::Draw()
     commandList->SetVertexBuffer(0, vertexBuffer);
     commandList->SetVertexBuffer(1, instanceBuffer);
     commandList->SetPipelineState(pipelineState);
-    commandList->SetPrimitiveTopology(PrimitiveTopology::TriangleList);
     commandList->DrawIndexedInstanced(indexBuffer, indexBuffer->GetIndexCount(), sprites.size(), 0, 0);
     commandList->Close();
 

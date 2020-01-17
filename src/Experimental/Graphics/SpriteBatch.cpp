@@ -300,6 +300,7 @@ SpriteBatch::Impl::Impl(
             .SetVertexShader(vertexShader.Build())
             .SetPixelShader(pixelShader.Build())
             .SetInputLayout(inputLayout.CreateInputLayout())
+            .SetPrimitiveTopology(PrimitiveTopology::TriangleList)
             .SetBlendState(*blendDesc)
             .SetDepthStencilState(DepthStencilDescription::CreateNone())
             .SetRasterizerState(*rasterizerDesc)
@@ -393,7 +394,6 @@ void SpriteBatch::Impl::RenderBatch(
 
     commandList->SetPipelineState(pipelineState);
     commandList->SetConstantBuffer(0, constantBuffer);
-    commandList->SetPrimitiveTopology(PrimitiveTopology::TriangleList);
     commandList->SetVertexBuffer(0, planeVertices);
     commandList->SetVertexBuffer(1, instanceVertices);
 

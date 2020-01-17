@@ -173,6 +173,7 @@ PolylineBatch::Impl::Impl(
             .SetVertexShader(vertexShader.Build())
             .SetPixelShader(pixelShader.Build())
             .SetInputLayout(inputLayout.CreateInputLayout())
+            .SetPrimitiveTopology(PrimitiveTopology::TriangleList)
             .SetBlendState(BlendDescription::CreateNonPremultiplied())
             .SetDepthStencilState(DepthStencilDescription::CreateDefault())
             .SetRasterizerState(RasterizerDescription::CreateCullNone())
@@ -236,7 +237,6 @@ void PolylineBatch::Impl::Flush()
     commandList->SetVertexBuffer(0, vertexBuffer);
     commandList->SetPipelineState(pipelineState);
     commandList->SetConstantBuffer(0, constantBuffer);
-    commandList->SetPrimitiveTopology(PrimitiveTopology::TriangleList);
     commandList->DrawIndexed(indexBuffer, indices.size(), startIndexLocation);
 
 #ifdef POMDOG_POLYLINE_DEBUG
