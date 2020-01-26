@@ -72,18 +72,19 @@ TEST_CASE("HTTPClient Get", "[Network]")
         REQUIRE(response->Status == "200 OK");
         REQUIRE(response->StatusCode == 200);
 
-        REQUIRE(response->Header.size() >= 11);
-        REQUIRE(response->Header[0].first == "Access-Control-Allow-Credentials");
-        REQUIRE(response->Header[0].second == "true");
-        REQUIRE(response->Header[1].first == "Access-Control-Allow-Origin");
-        REQUIRE(response->Header[1].second == "*");
-        REQUIRE(response->Header[2].first == "Content-Type");
-        REQUIRE(response->Header[2].second == "application/json");
-        REQUIRE(response->Header[3].first == "Date");
-        REQUIRE(response->Header[9].first == "Content-Length");
-        REQUIRE(response->Header[9].second == std::to_string(response->ContentLength));
-        REQUIRE(response->Header[10].first == "Connection");
-        REQUIRE(response->Header[10].second == "keep-alive");
+        REQUIRE(response->Header.size() >= 7);
+        REQUIRE(response->Header[0].first == "Date");
+        REQUIRE(response->Header[1].first == "Content-Type");
+        REQUIRE(response->Header[1].second == "application/json");
+        REQUIRE(response->Header[2].first == "Content-Length");
+        REQUIRE(response->Header[2].second == std::to_string(response->ContentLength));
+        REQUIRE(response->Header[3].first == "Connection");
+        REQUIRE(response->Header[3].second == "keep-alive");
+        REQUIRE(response->Header[4].first == "Server");
+        REQUIRE(response->Header[5].first == "Access-Control-Allow-Origin");
+        REQUIRE(response->Header[5].second == "*");
+        REQUIRE(response->Header[6].first == "Access-Control-Allow-Credentials");
+        REQUIRE(response->Header[6].second == "true");
 
         REQUIRE(response->ContentLength == response->Body.size());
         REQUIRE(!response->Body.empty());
@@ -93,10 +94,9 @@ TEST_CASE("HTTPClient Get", "[Network]")
             "{\n"
             "  \"args\": {}, \n"
             "  \"headers\": {\n"
-            "    \"Host\": \"httpbin.org\"\n"
-            "  }, \n"));
+            "    \"Host\": \"httpbin.org\", \n"));
         REQUIRE(StringHelper::HasSuffix(text,
-            "  \"url\": \"https://httpbin.org/get\"\n"
+            "  \"url\": \"http://httpbin.org/get\"\n"
             "}\n"));
 
         executor.ExitLoop();
@@ -128,18 +128,19 @@ TEST_CASE("HTTPClient Post", "[Network]")
         REQUIRE(response->Status == "200 OK");
         REQUIRE(response->StatusCode == 200);
 
-        REQUIRE(response->Header.size() >= 11);
-        REQUIRE(response->Header[0].first == "Access-Control-Allow-Credentials");
-        REQUIRE(response->Header[0].second == "true");
-        REQUIRE(response->Header[1].first == "Access-Control-Allow-Origin");
-        REQUIRE(response->Header[1].second == "*");
-        REQUIRE(response->Header[2].first == "Content-Type");
-        REQUIRE(response->Header[2].second == "application/json");
-        REQUIRE(response->Header[3].first == "Date");
-        REQUIRE(response->Header[9].first == "Content-Length");
-        REQUIRE(response->Header[9].second == std::to_string(response->ContentLength));
-        REQUIRE(response->Header[10].first == "Connection");
-        REQUIRE(response->Header[10].second == "keep-alive");
+        REQUIRE(response->Header.size() >= 7);
+        REQUIRE(response->Header[0].first == "Date");
+        REQUIRE(response->Header[1].first == "Content-Type");
+        REQUIRE(response->Header[1].second == "application/json");
+        REQUIRE(response->Header[2].first == "Content-Length");
+        REQUIRE(response->Header[2].second == std::to_string(response->ContentLength));
+        REQUIRE(response->Header[3].first == "Connection");
+        REQUIRE(response->Header[3].second == "keep-alive");
+        REQUIRE(response->Header[4].first == "Server");
+        REQUIRE(response->Header[5].first == "Access-Control-Allow-Origin");
+        REQUIRE(response->Header[5].second == "*");
+        REQUIRE(response->Header[6].first == "Access-Control-Allow-Credentials");
+        REQUIRE(response->Header[6].second == "true");
 
         REQUIRE(response->ContentLength == response->Body.size());
         REQUIRE(!response->Body.empty());
@@ -153,11 +154,12 @@ TEST_CASE("HTTPClient Post", "[Network]")
             "  \"form\": {}, \n"
             "  \"headers\": {\n"
             "    \"Content-Length\": \"9\", \n"
-            "    \"Host\": \"httpbin.org\"\n"
+            "    \"Host\": \"httpbin.org\", \n"));
+        REQUIRE(std::string_view::npos != text.find(
             "  }, \n"
             "  \"json\": null, \n"));
         REQUIRE(StringHelper::HasSuffix(text,
-            "  \"url\": \"https://httpbin.org/post\"\n"
+            "  \"url\": \"http://httpbin.org/post\"\n"
             "}\n"));
 
         executor.ExitLoop();
@@ -193,18 +195,19 @@ TEST_CASE("HTTPClient Get Secure", "[Network]")
         REQUIRE(response->Status == "200 OK");
         REQUIRE(response->StatusCode == 200);
 
-        REQUIRE(response->Header.size() >= 11);
-        REQUIRE(response->Header[0].first == "Access-Control-Allow-Credentials");
-        REQUIRE(response->Header[0].second == "true");
-        REQUIRE(response->Header[1].first == "Access-Control-Allow-Origin");
-        REQUIRE(response->Header[1].second == "*");
-        REQUIRE(response->Header[2].first == "Content-Type");
-        REQUIRE(response->Header[2].second == "application/json");
-        REQUIRE(response->Header[3].first == "Date");
-        REQUIRE(response->Header[9].first == "Content-Length");
-        REQUIRE(response->Header[9].second == std::to_string(response->ContentLength));
-        REQUIRE(response->Header[10].first == "Connection");
-        REQUIRE(response->Header[10].second == "keep-alive");
+        REQUIRE(response->Header.size() >= 7);
+        REQUIRE(response->Header[0].first == "Date");
+        REQUIRE(response->Header[1].first == "Content-Type");
+        REQUIRE(response->Header[1].second == "application/json");
+        REQUIRE(response->Header[2].first == "Content-Length");
+        REQUIRE(response->Header[2].second == std::to_string(response->ContentLength));
+        REQUIRE(response->Header[3].first == "Connection");
+        REQUIRE(response->Header[3].second == "keep-alive");
+        REQUIRE(response->Header[4].first == "Server");
+        REQUIRE(response->Header[5].first == "Access-Control-Allow-Origin");
+        REQUIRE(response->Header[5].second == "*");
+        REQUIRE(response->Header[6].first == "Access-Control-Allow-Credentials");
+        REQUIRE(response->Header[6].second == "true");
 
         REQUIRE(response->ContentLength == response->Body.size());
         REQUIRE(!response->Body.empty());
@@ -214,8 +217,7 @@ TEST_CASE("HTTPClient Get Secure", "[Network]")
             "{\n"
             "  \"args\": {}, \n"
             "  \"headers\": {\n"
-            "    \"Host\": \"httpbin.org\"\n"
-            "  }, \n"));
+            "    \"Host\": \"httpbin.org\", \n"));
         REQUIRE(StringHelper::HasSuffix(text,
             "  \"url\": \"https://httpbin.org/get\"\n"
             "}\n"));
@@ -254,18 +256,19 @@ TEST_CASE("HTTPClient Post Secure", "[Network]")
         REQUIRE(response->Status == "200 OK");
         REQUIRE(response->StatusCode == 200);
 
-        REQUIRE(response->Header.size() >= 11);
-        REQUIRE(response->Header[0].first == "Access-Control-Allow-Credentials");
-        REQUIRE(response->Header[0].second == "true");
-        REQUIRE(response->Header[1].first == "Access-Control-Allow-Origin");
-        REQUIRE(response->Header[1].second == "*");
-        REQUIRE(response->Header[2].first == "Content-Type");
-        REQUIRE(response->Header[2].second == "application/json");
-        REQUIRE(response->Header[3].first == "Date");
-        REQUIRE(response->Header[9].first == "Content-Length");
-        REQUIRE(response->Header[9].second == std::to_string(response->ContentLength));
-        REQUIRE(response->Header[10].first == "Connection");
-        REQUIRE(response->Header[10].second == "keep-alive");
+        REQUIRE(response->Header.size() >= 7);
+        REQUIRE(response->Header[0].first == "Date");
+        REQUIRE(response->Header[1].first == "Content-Type");
+        REQUIRE(response->Header[1].second == "application/json");
+        REQUIRE(response->Header[2].first == "Content-Length");
+        REQUIRE(response->Header[2].second == std::to_string(response->ContentLength));
+        REQUIRE(response->Header[3].first == "Connection");
+        REQUIRE(response->Header[3].second == "keep-alive");
+        REQUIRE(response->Header[4].first == "Server");
+        REQUIRE(response->Header[5].first == "Access-Control-Allow-Origin");
+        REQUIRE(response->Header[5].second == "*");
+        REQUIRE(response->Header[6].first == "Access-Control-Allow-Credentials");
+        REQUIRE(response->Header[6].second == "true");
 
         REQUIRE(response->ContentLength == response->Body.size());
         REQUIRE(!response->Body.empty());
@@ -279,7 +282,8 @@ TEST_CASE("HTTPClient Post Secure", "[Network]")
             "  \"form\": {}, \n"
             "  \"headers\": {\n"
             "    \"Content-Length\": \"9\", \n"
-            "    \"Host\": \"httpbin.org\"\n"
+            "    \"Host\": \"httpbin.org\", \n"));
+        REQUIRE(std::string_view::npos != text.find(
             "  }, \n"
             "  \"json\": null, \n"));
         REQUIRE(StringHelper::HasSuffix(text,
@@ -314,18 +318,19 @@ TEST_CASE("HTTPClient::Get", "[Network]")
         REQUIRE(response->Status == "200 OK");
         REQUIRE(response->StatusCode == 200);
 
-        REQUIRE(response->Header.size() >= 11);
-        REQUIRE(response->Header[0].first == "Access-Control-Allow-Credentials");
-        REQUIRE(response->Header[0].second == "true");
-        REQUIRE(response->Header[1].first == "Access-Control-Allow-Origin");
-        REQUIRE(response->Header[1].second == "*");
-        REQUIRE(response->Header[2].first == "Content-Type");
-        REQUIRE(response->Header[2].second == "application/json");
-        REQUIRE(response->Header[3].first == "Date");
-        REQUIRE(response->Header[9].first == "Content-Length");
-        REQUIRE(response->Header[9].second == std::to_string(response->ContentLength));
-        REQUIRE(response->Header[10].first == "Connection");
-        REQUIRE(response->Header[10].second == "keep-alive");
+        REQUIRE(response->Header.size() >= 7);
+        REQUIRE(response->Header[0].first == "Date");
+        REQUIRE(response->Header[1].first == "Content-Type");
+        REQUIRE(response->Header[1].second == "application/json");
+        REQUIRE(response->Header[2].first == "Content-Length");
+        REQUIRE(response->Header[2].second == std::to_string(response->ContentLength));
+        REQUIRE(response->Header[3].first == "Connection");
+        REQUIRE(response->Header[3].second == "keep-alive");
+        REQUIRE(response->Header[4].first == "Server");
+        REQUIRE(response->Header[5].first == "Access-Control-Allow-Origin");
+        REQUIRE(response->Header[5].second == "*");
+        REQUIRE(response->Header[6].first == "Access-Control-Allow-Credentials");
+        REQUIRE(response->Header[6].second == "true");
 
         REQUIRE(response->ContentLength == response->Body.size());
         REQUIRE(!response->Body.empty());
@@ -335,8 +340,7 @@ TEST_CASE("HTTPClient::Get", "[Network]")
             "{\n"
             "  \"args\": {}, \n"
             "  \"headers\": {\n"
-            "    \"Host\": \"httpbin.org\"\n"
-            "  }, \n"));
+            "    \"Host\": \"httpbin.org\", \n"));
         REQUIRE(StringHelper::HasSuffix(text,
             "  \"url\": \"https://httpbin.org/get\"\n"
             "}\n"));
@@ -367,18 +371,19 @@ TEST_CASE("HTTPClient::Post", "[Network]")
         REQUIRE(response->Status == "200 OK");
         REQUIRE(response->StatusCode == 200);
 
-        REQUIRE(response->Header.size() >= 11);
-        REQUIRE(response->Header[0].first == "Access-Control-Allow-Credentials");
-        REQUIRE(response->Header[0].second == "true");
-        REQUIRE(response->Header[1].first == "Access-Control-Allow-Origin");
-        REQUIRE(response->Header[1].second == "*");
-        REQUIRE(response->Header[2].first == "Content-Type");
-        REQUIRE(response->Header[2].second == "application/json");
-        REQUIRE(response->Header[3].first == "Date");
-        REQUIRE(response->Header[9].first == "Content-Length");
-        REQUIRE(response->Header[9].second == std::to_string(response->ContentLength));
-        REQUIRE(response->Header[10].first == "Connection");
-        REQUIRE(response->Header[10].second == "keep-alive");
+        REQUIRE(response->Header.size() >= 7);
+        REQUIRE(response->Header[0].first == "Date");
+        REQUIRE(response->Header[1].first == "Content-Type");
+        REQUIRE(response->Header[1].second == "application/json");
+        REQUIRE(response->Header[2].first == "Content-Length");
+        REQUIRE(response->Header[2].second == std::to_string(response->ContentLength));
+        REQUIRE(response->Header[3].first == "Connection");
+        REQUIRE(response->Header[3].second == "keep-alive");
+        REQUIRE(response->Header[4].first == "Server");
+        REQUIRE(response->Header[5].first == "Access-Control-Allow-Origin");
+        REQUIRE(response->Header[5].second == "*");
+        REQUIRE(response->Header[6].first == "Access-Control-Allow-Credentials");
+        REQUIRE(response->Header[6].second == "true");
 
         REQUIRE(response->ContentLength == response->Body.size());
         REQUIRE(!response->Body.empty());
@@ -393,7 +398,8 @@ TEST_CASE("HTTPClient::Post", "[Network]")
             "  \"headers\": {\n"
             "    \"Content-Length\": \"30\", \n"
             "    \"Content-Type\": \"application/json\", \n"
-            "    \"Host\": \"httpbin.org\"\n"
+            "    \"Host\": \"httpbin.org\", \n"));
+        REQUIRE(std::string_view::npos != text.find(
             "  }, \n"
             "  \"json\": {\n"
             "    \"answer\": 42, \n"
