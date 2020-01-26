@@ -122,6 +122,7 @@ void StackPanel::AddChild(const std::shared_ptr<Widget>& widget)
 {
     POMDOG_ASSERT(verticalLayout);
     verticalLayout->AddChild(widget);
+    needToUpdateLayout = true;
 }
 
 std::shared_ptr<Widget> StackPanel::GetChildAt(const Point2D& position)
@@ -195,36 +196,28 @@ void StackPanel::Draw(DrawingContext& drawingContext)
     UpdateLayout();
     POMDOG_ASSERT(!needToUpdateLayout);
 
+    const auto* colorScheme = drawingContext.GetColorScheme();
+    POMDOG_ASSERT(colorScheme != nullptr);
+
     auto globalPos = UIHelper::ProjectToWorldSpace(GetPosition(), drawingContext.GetCurrentTransform());
-
     auto primitiveBatch = drawingContext.GetPrimitiveBatch();
-
-    const Color backgroundColor = {45, 45, 48, 225};
-    const Color borderColor = {40, 40, 40, 255};
-    const Color highlightColor = {106, 106, 106, 255};
 
     const auto w = static_cast<float>(GetWidth());
     const auto h = static_cast<float>(GetHeight());
 
     primitiveBatch->DrawRectangle(
-        Matrix3x2::Identity,
-        MathHelper::ToVector2(globalPos),
-        w,
-        h,
-        backgroundColor);
+        Rectangle{globalPos.X, globalPos.Y, GetWidth(), GetHeight()},
+        colorScheme->PanelBackgroundColor);
 
     primitiveBatch->DrawRectangle(
-        Matrix3x2::Identity,
-        Vector2{0, h - barHeight} + MathHelper::ToVector2(globalPos),
-        w,
-        static_cast<float>(barHeight),
-        highlightColor);
+        Rectangle{globalPos.X, globalPos.Y + (GetHeight() - barHeight), GetWidth(), barHeight},
+        colorScheme->PanelTitleBarColor);
 
     const auto pos = MathHelper::ToVector2(globalPos);
-    primitiveBatch->DrawLine(pos + Vector2{0.0f, 0.0f}, pos + Vector2{w, 0.0f}, borderColor, 1.0f);
-    primitiveBatch->DrawLine(pos + Vector2{0.0f, 0.0f}, pos + Vector2{0.0f, h}, borderColor, 1.0f);
-    primitiveBatch->DrawLine(pos + Vector2{0.0f, h}, pos + Vector2{w, h}, borderColor, 1.0f);
-    primitiveBatch->DrawLine(pos + Vector2{w, 0.0f}, pos + Vector2{w, h}, borderColor, 1.0f);
+    primitiveBatch->DrawLine(pos + Vector2{0.0f, 0.0f}, pos + Vector2{w, 0.0f}, colorScheme->PanelOutlineBorderColor, 1.0f);
+    primitiveBatch->DrawLine(pos + Vector2{0.0f, 0.0f}, pos + Vector2{0.0f, h}, colorScheme->PanelOutlineBorderColor, 1.0f);
+    primitiveBatch->DrawLine(pos + Vector2{0.0f, h}, pos + Vector2{w, h}, colorScheme->PanelOutlineBorderColor, 1.0f);
+    primitiveBatch->DrawLine(pos + Vector2{w, 0.0f}, pos + Vector2{w, h}, colorScheme->PanelOutlineBorderColor, 1.0f);
     primitiveBatch->Flush();
 
     drawingContext.PushTransform(globalPos);

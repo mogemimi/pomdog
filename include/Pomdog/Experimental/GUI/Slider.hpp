@@ -20,14 +20,17 @@ public:
         double minimum,
         double maximum);
 
-    void SetValue(double valueIn);
-    double GetValue() const;
+    double GetValue() const noexcept;
+    void SetValue(double value);
 
-    double GetMinimum() const;
-    double GetMaximum() const;
+    double GetMinimum() const noexcept;
+    void SetMinimum(double minimum);
 
-    bool IsEnabled() const;
-    void SetEnabled(bool isEnabled);
+    double GetMaximum() const noexcept;
+    void SetMaximum(double maximum);
+
+    bool IsEnabled() const noexcept;
+    void SetEnabled(bool enabled) noexcept;
 
     void SetTextVisible(bool isTextVisible);
 

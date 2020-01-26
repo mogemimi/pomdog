@@ -41,29 +41,53 @@ void Slider::SetValue(double valueIn)
     ValueChanged(this->value);
 }
 
-double Slider::GetValue() const
+double Slider::GetValue() const noexcept
 {
     return value;
 }
 
-double Slider::GetMinimum() const
+double Slider::GetMinimum() const noexcept
 {
     return minimum;
 }
 
-double Slider::GetMaximum() const
+void Slider::SetMinimum(double minimumIn)
+{
+    if (minimum == minimumIn) {
+        return;
+    }
+    minimum = minimumIn;
+    if (minimum > value) {
+        value = minimum;
+        ValueChanged(value);
+    }
+}
+
+void Slider::SetMaximum(double maximumIn)
+{
+    if (maximum == maximumIn) {
+        return;
+    }
+    maximum = maximumIn;
+    if (maximum < value) {
+        value = maximum;
+        ValueChanged(value);
+    }
+}
+
+double Slider::GetMaximum() const noexcept
 {
     return maximum;
 }
 
-bool Slider::IsEnabled() const
+bool Slider::IsEnabled() const noexcept
 {
     return isEnabled;
 }
 
-void Slider::SetEnabled(bool isEnabledIn)
+void Slider::SetEnabled(bool enabledIn) noexcept
 {
-    this->isEnabled = isEnabledIn;
+    this->isEnabled = enabledIn;
 }
 
 void Slider::SetTextVisible(bool isTextVisibleIn)

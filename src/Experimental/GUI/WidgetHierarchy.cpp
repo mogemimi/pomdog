@@ -14,6 +14,14 @@ WidgetHierarchy::WidgetHierarchy(
 {
     dispatcher = std::make_shared<UIEventDispatcher>(window, keyboard);
 
+    dispatcher->AddContextMenu = [this](const std::shared_ptr<Widget>& widget) {
+        this->AddChild(widget);
+    };
+
+    dispatcher->RemoveContextMenu = [this](const std::shared_ptr<Widget>& widget) {
+        this->RemoveChild(widget);
+    };
+
     connection = window->ClientSizeChanged.Connect([this](int width, int height) {
         this->RenderSizeChanged(width, height);
     });
@@ -124,8 +132,10 @@ void WidgetHierarchy::UpdateAnimation(const Duration& frameDuration)
     POMDOG_ASSERT(dispatcher);
     dispatcher->UpdateAnimation(frameDuration);
 
-    for (auto& child : children) {
-        child->UpdateAnimation(frameDuration);
+    for (const auto& child : children) {
+        if (child != nullptr) {
+            child->UpdateAnimation(frameDuration);
+        }
     }
 }
 
@@ -149,12 +159,14 @@ void WidgetHierarchy::RenderSizeChanged(int width, int height)
 
     for (const auto& child : children) {
         POMDOG_ASSERT(child != nullptr);
-        auto position = child->GetPosition();
-        child->SetPosition(position + translationOffset);
 
         if (child->GetSizeToFitContent()) {
             child->SetSize(width, height);
             child->MarkContentLayoutDirty();
+        }
+        else {
+            const auto position = child->GetPosition();
+            child->SetPosition(position + translationOffset);
         }
     }
 }

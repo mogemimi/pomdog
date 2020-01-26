@@ -4,18 +4,22 @@
 
 #include "Pomdog/Experimental/GUI/FontWeight.hpp"
 #include "Pomdog/Experimental/GUI/TextAlignment.hpp"
+#include "Pomdog/Experimental/GUI/Thickness.hpp"
+#include "Pomdog/Experimental/GUI/VerticalLayout.hpp"
 #include "Pomdog/Experimental/GUI/Widget.hpp"
+#include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Signals/ScopedConnection.hpp"
 #include "Pomdog/Signals/Signal.hpp"
 #include <memory>
+#include <optional>
 
 namespace Pomdog::GUI {
 
-class PushButton final
+class ContextMenuButton final
     : public Widget
-    , public std::enable_shared_from_this<PushButton> {
+    , public std::enable_shared_from_this<ContextMenuButton> {
 public:
-    explicit PushButton(const std::shared_ptr<UIEventDispatcher>& dispatcher);
+    explicit ContextMenuButton(const std::shared_ptr<UIEventDispatcher>& dispatcher);
 
     bool IsEnabled() const;
     void SetEnabled(bool isEnabled);
@@ -29,6 +33,8 @@ public:
     void SetText(const std::string& text);
 
     void SetTextAlignment(TextAlignment textAlign);
+
+    void SetMargin(const Thickness& margin);
 
     void SetHorizontalAlignment(HorizontalAlignment horizontalAlignment) noexcept;
 
@@ -51,13 +57,20 @@ public:
 
     void OnPointerReleased(const PointerPoint& pointerPoint) override;
 
+    void UpdateAnimation(const Duration& frameDuration) override;
+
     void Draw(DrawingContext& drawingContext) override;
 
     Signal<void()> Click;
 
+    Signal<void()> FocusOut;
+
 private:
     ScopedConnection connection;
     std::string text;
+    std::int16_t marginLeft;
+    std::int16_t marginRight;
+    std::int8_t clickInterval;
     FontWeight fontWeight;
     TextAlignment textAlignment;
     HorizontalAlignment horizontalAlignment;

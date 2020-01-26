@@ -421,6 +421,8 @@ set(POMDOG_SOURCES_EXPERIMENTAL_GRAPHICS
 
 set(POMDOG_SOURCES_EXPERIMENTAL_GUI
   ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/CheckBox.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/ContextMenu.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/ContextMenuItem.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/DebugNavigator.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/DisclosureTriangleButton.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/DrawingContext.hpp
@@ -431,15 +433,18 @@ set(POMDOG_SOURCES_EXPERIMENTAL_GUI
   ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/HorizontalAlignment.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/HorizontalLayout.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/HorizontalLine.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/HorizontalSplitter.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/IntField.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/NumberField.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/PointerEventType.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/PointerPoint.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/PopupMenu.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/PushButton.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/ScenePanel.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/ScrollView.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/Slider.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/StackPanel.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/TextAlignment.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/TextBlock.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/TextEdit.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/TextField.hpp
@@ -455,14 +460,18 @@ set(POMDOG_SOURCES_EXPERIMENTAL_GUI
   ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/Widget.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/WidgetHierarchy.hpp
   ${POMDOG_DIR}/src/Experimental/GUI/CheckBox.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/ContextMenu.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/ContextMenuItem.cpp
   ${POMDOG_DIR}/src/Experimental/GUI/DebugNavigator.cpp
   ${POMDOG_DIR}/src/Experimental/GUI/DisclosureTriangleButton.cpp
   ${POMDOG_DIR}/src/Experimental/GUI/DrawingContext.cpp
   ${POMDOG_DIR}/src/Experimental/GUI/FloatField.cpp
   ${POMDOG_DIR}/src/Experimental/GUI/HorizontalLayout.cpp
   ${POMDOG_DIR}/src/Experimental/GUI/HorizontalLine.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/HorizontalSplitter.cpp
   ${POMDOG_DIR}/src/Experimental/GUI/IntField.cpp
   ${POMDOG_DIR}/src/Experimental/GUI/NumberField.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/PopupMenu.cpp
   ${POMDOG_DIR}/src/Experimental/GUI/PushButton.cpp
   ${POMDOG_DIR}/src/Experimental/GUI/ScenePanel.cpp
   ${POMDOG_DIR}/src/Experimental/GUI/ScrollView.cpp

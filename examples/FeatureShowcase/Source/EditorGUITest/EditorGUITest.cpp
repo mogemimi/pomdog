@@ -92,8 +92,30 @@ void EditorGUITest::Initialize()
         scrollView->ScrollToTop();
     }
 
-    auto stackPanel = std::make_shared<GUI::StackPanel>(dispatcher, 150, 170);
-    stackPanel->SetPosition(Point2D{5, 250});
+//    {
+//        auto contextMenu = std::make_shared<GUI::ContextMenu>(dispatcher, 150, 170);
+//        contextMenu->SetPosition(Point2D{450, 250});
+//        hierarchy->AddChild(contextMenu);
+//
+//        {
+//            auto button = std::make_shared<GUI::ContextMenuButton>(dispatcher);
+//            button->SetText("Copy");
+//            contextMenu->AddChild(button);
+//        }
+//        {
+//            auto button = std::make_shared<GUI::ContextMenuButton>(dispatcher);
+//            button->SetText("Cut");
+//            contextMenu->AddChild(button);
+//        }
+//        {
+//            auto button = std::make_shared<GUI::ContextMenuButton>(dispatcher);
+//            button->SetText("Paste");
+//            contextMenu->AddChild(button);
+//        }
+//    }
+
+    auto stackPanel = std::make_shared<GUI::StackPanel>(dispatcher, 170, 170);
+    stackPanel->SetPosition(Point2D{5, 260});
     hierarchy->AddChild(stackPanel);
 
     {
@@ -138,6 +160,25 @@ void EditorGUITest::Initialize()
 
         auto checkBox = std::make_shared<GUI::CheckBox>(dispatcher);
         horizontalLayout->AddChild(checkBox);
+    }
+    {
+        auto horizontalLayout = std::make_shared<GUI::HorizontalLayout>(dispatcher, 140, 10);
+        stackPanel->AddChild(horizontalLayout);
+
+        auto textBlock = std::make_shared<GUI::TextBlock>(dispatcher);
+        textBlock->SetColor(Color::White);
+        textBlock->SetText("PopupMenu");
+        horizontalLayout->AddChild(textBlock);
+
+        auto popupMenu = std::make_shared<GUI::PopupMenu>(dispatcher);
+        popupMenu->AddItem("Blue");
+        popupMenu->AddItem("Yellow");
+        popupMenu->AddItem("Red");
+        connect(popupMenu->CurrentIndexChanged, [this, p = popupMenu.get()](int index) {
+            propertyText2 += "\n";
+            propertyText2 += p->GetText();
+        });
+        horizontalLayout->AddChild(popupMenu);
     }
     {
         auto horizontalLayout = std::make_shared<GUI::HorizontalLayout>(dispatcher, 140, 10);

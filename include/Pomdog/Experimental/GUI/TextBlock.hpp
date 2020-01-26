@@ -4,6 +4,7 @@
 
 #include "Pomdog/Experimental/GUI/FontSize.hpp"
 #include "Pomdog/Experimental/GUI/FontWeight.hpp"
+#include "Pomdog/Experimental/GUI/TextAlignment.hpp"
 #include "Pomdog/Experimental/GUI/Widget.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Signals/ScopedConnection.hpp"
@@ -11,12 +12,6 @@
 #include <string>
 
 namespace Pomdog::GUI {
-
-enum class TextAlignment : std::uint8_t {
-    Center,
-    Left,
-    Right,
-};
 
 class TextBlock final
     : public Widget

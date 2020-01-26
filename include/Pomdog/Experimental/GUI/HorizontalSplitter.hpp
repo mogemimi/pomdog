@@ -6,25 +6,30 @@
 #include "Pomdog/Experimental/GUI/Widget.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Signals/ScopedConnection.hpp"
-#include <list>
+#include "Pomdog/Signals/Signal.hpp"
+#include <array>
 #include <memory>
 
 namespace Pomdog::GUI {
 
-class VerticalScrollBar;
+class HorizontalSplitterHandle;
 
-class ScrollView final
+class HorizontalSplitter final
     : public Widget
-    , public std::enable_shared_from_this<ScrollView> {
+    , public std::enable_shared_from_this<HorizontalSplitter> {
 public:
-    ScrollView(
+    HorizontalSplitter(
         const std::shared_ptr<UIEventDispatcher>& dispatcher,
         int widthIn,
         int heightIn);
 
     void SetMargin(const Thickness& margin);
 
-    void SetBackgroundColor(const Color& color) noexcept;
+    void SetLayoutSpacing(int spacing);
+
+    void SetBackgroundColor(const Color& color);
+
+    void SetHandleColor(const Color& color);
 
     void SetPosition(const Point2D& position) override;
 
@@ -34,25 +39,19 @@ public:
 
     bool GetSizeToFitContent() const noexcept override;
 
-    void ScrollToTop();
-
-    void ScrollToEnd();
-
-    void SetHorizontalAlignment(HorizontalAlignment horizontalAlignment) noexcept;
-
-    HorizontalAlignment GetHorizontalAlignment() const noexcept override;
-
     void OnEnter() override;
-
-    void OnPointerWheelChanged(const PointerPoint& pointerPoint) override;
 
     void Draw(DrawingContext& drawingContext) override;
 
-    void SetWidget(const std::shared_ptr<Widget>& widget);
+    void AddChild(const std::shared_ptr<Widget>& widget);
 
     std::shared_ptr<Widget> GetChildAt(const Point2D& position) override;
 
     void UpdateAnimation(const Duration& frameDuration) override;
+
+    void SetMinimumWidth(int index, int minimumWidth);
+
+    void SetMinimumWidth(const std::shared_ptr<Widget>& widget, int minimumWidth);
 
     void DoLayout() override;
 
@@ -60,12 +59,17 @@ private:
     void UpdateLayout();
 
 private:
-    std::shared_ptr<Widget> child;
-    std::shared_ptr<VerticalScrollBar> scrollBar;
-    ScopedConnection connection;
+    struct Item final {
+        std::shared_ptr<Widget> widget;
+        int minimumWidth = 0;
+    };
+
+    std::shared_ptr<HorizontalSplitterHandle> splitterHandle;
+    std::shared_ptr<HorizontalSplitter> childSplitter;
+    Connection resizingConn;
+    std::array<Item, 2> children;
     Thickness margin;
     Color backgroundColor;
-    HorizontalAlignment horizontalAlignment;
     bool needToUpdateLayout;
 };
 

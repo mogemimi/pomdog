@@ -2,20 +2,22 @@
 
 #pragma once
 
+#include "Pomdog/Experimental/GUI/ContextMenu.hpp"
 #include "Pomdog/Experimental/GUI/FontWeight.hpp"
 #include "Pomdog/Experimental/GUI/TextAlignment.hpp"
 #include "Pomdog/Experimental/GUI/Widget.hpp"
+#include "Pomdog/Signals/ConnectionList.hpp"
 #include "Pomdog/Signals/ScopedConnection.hpp"
 #include "Pomdog/Signals/Signal.hpp"
 #include <memory>
 
 namespace Pomdog::GUI {
 
-class PushButton final
+class PopupMenu final
     : public Widget
-    , public std::enable_shared_from_this<PushButton> {
+    , public std::enable_shared_from_this<PopupMenu> {
 public:
-    explicit PushButton(const std::shared_ptr<UIEventDispatcher>& dispatcher);
+    explicit PopupMenu(const std::shared_ptr<UIEventDispatcher>& dispatcher);
 
     bool IsEnabled() const;
     void SetEnabled(bool isEnabled);
@@ -23,10 +25,21 @@ public:
     bool IsHovered() const;
     bool IsFocused() const;
 
+    void AddItem(const std::string& text);
+
+    void ClearItems();
+
+    std::string GetItem(int index) const;
+
+    int GetItemCount() const noexcept;
+
+    int GetCurrentIndex() const noexcept;
+
+    void SetCurrentIndex(int index);
+
     void SetFontWeight(FontWeight fontWeight);
 
     std::string GetText() const;
-    void SetText(const std::string& text);
 
     void SetTextAlignment(TextAlignment textAlign);
 
@@ -53,11 +66,18 @@ public:
 
     void Draw(DrawingContext& drawingContext) override;
 
-    Signal<void()> Click;
+    Signal<void(int index)> CurrentIndexChanged;
 
 private:
-    ScopedConnection connection;
-    std::string text;
+    struct PopupMenuItem final {
+        std::string text;
+    };
+    std::vector<PopupMenuItem> items;
+    int currentIndex = 0;
+
+    ConnectionList connections;
+    ScopedConnection focusConn;
+    std::shared_ptr<ContextMenu> contextMenu;
     FontWeight fontWeight;
     TextAlignment textAlignment;
     HorizontalAlignment horizontalAlignment;

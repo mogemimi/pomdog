@@ -11,6 +11,8 @@ namespace Pomdog::GUI {
 
 PushButton::PushButton(const std::shared_ptr<UIEventDispatcher>& dispatcher)
     : Widget(dispatcher)
+    , fontWeight(FontWeight::Bold)
+    , textAlignment(TextAlignment::Center)
     , horizontalAlignment(HorizontalAlignment::Stretch)
     , verticalAlignment(VerticalAlignment::Top)
     , isEnabled(true)
@@ -48,9 +50,24 @@ bool PushButton::IsFocused() const
     return isFocused;
 }
 
+void PushButton::SetFontWeight(FontWeight fontWeightIn)
+{
+    this->fontWeight = fontWeightIn;
+}
+
+std::string PushButton::GetText() const
+{
+    return text;
+}
+
 void PushButton::SetText(const std::string& textIn)
 {
     this->text = textIn;
+}
+
+void PushButton::SetTextAlignment(TextAlignment textAlign)
+{
+    this->textAlignment = textAlign;
 }
 
 void PushButton::SetHorizontalAlignment(HorizontalAlignment horizontalAlignmentIn) noexcept
@@ -116,30 +133,26 @@ void PushButton::OnPointerReleased([[maybe_unused]] const PointerPoint& pointerP
 
 void PushButton::Draw(DrawingContext& drawingContext)
 {
-    const Color textNormalColor = {251, 250, 248, 255};
-    const Color textDisabledColor = {191, 190, 189, 255};
-    const Color rectNormalColor = {0, 132, 190, 255};
-    const Color rectHoveredColor = {0, 123, 182, 255};
-    const Color rectClickColor = {0, 107, 162, 255};
-    const Color rectDisabledColor = {110, 108, 107, 255};
+    const auto* colorScheme = drawingContext.GetColorScheme();
+    POMDOG_ASSERT(colorScheme != nullptr);
 
     auto globalPos = UIHelper::ProjectToWorldSpace(GetPosition(), drawingContext.GetCurrentTransform());
     auto primitiveBatch = drawingContext.GetPrimitiveBatch();
 
-    auto textColor = textNormalColor;
-    auto rectColor = rectNormalColor;
+    auto textColor = colorScheme->PushButtonTextColorBase;
+    auto rectColor = colorScheme->PushButtonRectColorBase;
 
     if (!isEnabled) {
-        textColor = textDisabledColor;
-        rectColor = rectDisabledColor;
+        textColor = colorScheme->PushButtonTextColorDisabled;
+        rectColor = colorScheme->PushButtonRectColorDisabled;
     }
     else if (isPressed) {
-        textColor = textNormalColor;
-        rectColor = rectClickColor;
+        textColor = colorScheme->PushButtonTextColorBase;
+        rectColor = colorScheme->PushButtonRectColorClick;
     }
     else if (isHovered) {
-        textColor = textNormalColor;
-        rectColor = rectHoveredColor;
+        textColor = colorScheme->PushButtonTextColorBase;
+        rectColor = colorScheme->PushButtonRectColorHovered;
     }
 
     primitiveBatch->DrawRectangle(
@@ -153,18 +166,39 @@ void PushButton::Draw(DrawingContext& drawingContext)
 
     if (!text.empty()) {
         auto spriteBatch = drawingContext.GetSpriteBatch();
-        auto spriteFont = drawingContext.GetFont(FontWeight::Bold, FontSize::Medium);
+        auto spriteFont = drawingContext.GetFont(fontWeight, FontSize::Medium);
 
-        auto buttonPos = MathHelper::ToVector2(globalPos);
-        auto buttonSize = Vector2{static_cast<float>(GetWidth()), static_cast<float>(GetHeight())};
-        auto textPosition = buttonPos + buttonSize * 0.5f + Vector2{0.0f, 3.0f};
+        const auto buttonPos = MathHelper::ToVector2(globalPos);
+        const auto buttonSize = Vector2{static_cast<float>(GetWidth()), static_cast<float>(GetHeight())};
+
+        const auto baselineHeight = 3.0f;
+        const auto horizontalPadding = 6.0f;
+
+        Vector2 originPivot = Vector2::Zero;
+        Vector2 padding = Vector2{0.0f, baselineHeight};
+        switch (textAlignment) {
+        case TextAlignment::Left:
+            originPivot = Vector2{0.0f, 0.5f};
+            padding.X = horizontalPadding;
+            break;
+        case TextAlignment::Center:
+            originPivot = Vector2{0.5f, 0.5f};
+            break;
+        case TextAlignment::Right:
+            originPivot = Vector2{1.0f, 0.5f};
+            padding.X = -horizontalPadding;
+            break;
+        }
+
+        const auto textPosition = buttonPos + buttonSize * originPivot + padding;
+
         spriteFont->Draw(
             *spriteBatch,
             text,
             textPosition,
             textColor,
             0.0f,
-            Vector2{0.5f, 0.5f},
+            originPivot,
             1.0f);
 
         spriteBatch->Flush();

@@ -124,6 +124,8 @@ void UIEventDispatcher::SetFocusWidget(const std::shared_ptr<Widget>& widget)
 
     focusedWidget = widget;
     widget->OnFocusIn();
+
+    FocusChanged(widget);
 }
 
 void UIEventDispatcher::ClearFocus(const std::shared_ptr<Widget>& widget)
@@ -322,6 +324,7 @@ void UIEventDispatcher::PointerPressed(const Point2D& position)
         focusedWidget = widget;
         widget->OnFocusIn();
     }
+    FocusChanged(widget);
 }
 
 void UIEventDispatcher::PointerMoved(const Point2D& position)

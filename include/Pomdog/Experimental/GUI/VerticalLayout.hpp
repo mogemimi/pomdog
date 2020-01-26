@@ -5,8 +5,8 @@
 #include "Pomdog/Experimental/GUI/Thickness.hpp"
 #include "Pomdog/Experimental/GUI/Widget.hpp"
 #include "Pomdog/Signals/ScopedConnection.hpp"
-#include <list>
 #include <memory>
+#include <vector>
 
 namespace Pomdog::GUI {
 
@@ -41,6 +41,10 @@ public:
 
     std::shared_ptr<Widget> GetChildAt(const Point2D& position) override;
 
+    std::shared_ptr<Widget> GetChildAt(int index);
+
+    int GetItemCount() const noexcept;
+
     void UpdateAnimation(const Duration& frameDuration) override;
 
     void DoLayout() override;
@@ -49,8 +53,7 @@ private:
     void UpdateLayout();
 
 private:
-    using WidgetCollection = std::list<std::shared_ptr<Widget>>;
-    WidgetCollection children;
+    std::vector<std::shared_ptr<Widget>> children;
     Thickness margin;
     int layoutSpacing;
     bool needToUpdateLayout;

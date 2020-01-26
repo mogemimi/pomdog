@@ -73,7 +73,7 @@ private:
     bool isFocused;
     bool isEnabled;
 
-    class ScrollWheelSampler {
+    class ScrollWheelSampler final {
     private:
         ///@todo replace with std::deque<float>
         std::optional<float> average;

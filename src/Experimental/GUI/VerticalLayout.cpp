@@ -103,6 +103,17 @@ std::shared_ptr<Widget> VerticalLayout::GetChildAt(const Point2D& position)
     return nullptr;
 }
 
+std::shared_ptr<Widget> VerticalLayout::GetChildAt(int index)
+{
+    POMDOG_ASSERT(index < static_cast<int>(children.size()));
+    return children.at(static_cast<std::size_t>(index));
+}
+
+int VerticalLayout::GetItemCount() const noexcept
+{
+    return static_cast<int>(children.size());
+}
+
 void VerticalLayout::UpdateAnimation(const Duration& frameDuration)
 {
     for (auto& child : children) {

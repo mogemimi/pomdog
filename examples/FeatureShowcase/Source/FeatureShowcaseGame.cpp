@@ -7,6 +7,7 @@
 #include "DistanceFieldFontTest/DistanceFieldFontTest.hpp"
 #include "EditorGUITest/EditorGUITest.hpp"
 #include "GIFDecodeTest/GIFDecodeTest.hpp"
+#include "GUISplitterTest/GUISplitterTest.hpp"
 #include "GamepadTest/GamepadTest.hpp"
 #include "HTTPClientTest/HTTPClientTest.hpp"
 #include "HardwareInstancingTest/HardwareInstancingTest.hpp"
@@ -61,6 +62,10 @@ void FeatureShowcaseGame::Initialize()
     buttons.emplace_back("EditorGUI Test", [this] {
         window->SetTitle("Feature Showcase > EditorGUI Test");
         subGame = std::make_shared<FeatureShowcase::EditorGUITest>(gameHost);
+    });
+    buttons.emplace_back("GUISplitter Test", [this] {
+        window->SetTitle("Feature Showcase > GUISplitter Test");
+        subGame = std::make_shared<FeatureShowcase::GUISplitterTest>(gameHost);
     });
     buttons.emplace_back("LineBatch Test", [this] {
         window->SetTitle("Feature Showcase > LineBatch Test");

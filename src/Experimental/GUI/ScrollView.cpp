@@ -16,6 +16,7 @@ ScrollView::ScrollView(
     int heightIn)
     : Widget(dispatcher)
     , margin{0, 0, 0, 0}
+    , backgroundColor(Color::TransparentBlack)
     , horizontalAlignment(HorizontalAlignment::Stretch)
     , needToUpdateLayout(true)
 {
@@ -45,6 +46,11 @@ void ScrollView::SetPosition(const Point2D& positionIn)
     if (child != nullptr) {
         child->MarkParentTransformDirty();
     }
+}
+
+void ScrollView::SetBackgroundColor(const Color &color) noexcept
+{
+    backgroundColor = color;
 }
 
 void ScrollView::MarkParentTransformDirty()
@@ -234,18 +240,22 @@ void ScrollView::UpdateLayout()
     // NOTE: Update layout for child
     if (child != nullptr) {
         POMDOG_ASSERT(scrollBar != nullptr);
-        child->SetSize(GetWidth() - scrollBar->GetWidth(), child->GetHeight());
-        if (child->GetHeight() > GetHeight()) {
+
+        const auto scrollBarVisible = child->GetHeight() > GetHeight();
+
+        if (scrollBarVisible) {
+            child->SetSize(GetWidth() - scrollBar->GetWidth(), child->GetHeight());
             child->SetPosition(Point2D{0, static_cast<int>(-scrollBar->GetValue())});
         }
         else {
+            child->SetSize(GetWidth(), child->GetHeight());
             child->SetPosition(Point2D{0, GetHeight() - child->GetHeight()});
         }
 
         child->MarkContentLayoutDirty();
         child->DoLayout();
 
-        if (child->GetHeight() <= GetHeight()) {
+        if (!scrollBarVisible) {
             scrollBar->SetEnabled(false);
             scrollBar->SetVisible(false);
             SetWheelFocusEnabled(false);
@@ -286,6 +296,16 @@ void ScrollView::Draw(DrawingContext& drawingContext)
     POMDOG_ASSERT(!needToUpdateLayout);
 
     auto globalPos = UIHelper::ProjectToWorldSpace(GetPosition(), drawingContext.GetCurrentTransform());
+
+    if (backgroundColor.A > 0) {
+        auto primitiveBatch = drawingContext.GetPrimitiveBatch();
+
+        primitiveBatch->DrawRectangle(
+            Rectangle{globalPos.X, globalPos.Y, GetWidth(), GetHeight()},
+            backgroundColor);
+
+        primitiveBatch->Flush();
+    }
 
     auto innerBoundPos = MathHelper::ToVector2(globalPos);
 

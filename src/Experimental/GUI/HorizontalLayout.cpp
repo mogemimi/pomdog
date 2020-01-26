@@ -186,6 +186,11 @@ void HorizontalLayout::UpdateLayout()
         }
     }
 
+    if (children.empty()) {
+        needToUpdateLayout = false;
+        return;
+    }
+
     POMDOG_ASSERT(!children.empty());
     const auto lineSpacingAll = (layoutSpacing * std::max(0, static_cast<int>(children.size()) - 1));
     const auto horizontalSpacing = (margin.Left + margin.Right + lineSpacingAll);

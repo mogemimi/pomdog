@@ -4,27 +4,25 @@
 
 #include "Pomdog/Experimental/GUI/Thickness.hpp"
 #include "Pomdog/Experimental/GUI/Widget.hpp"
-#include "Pomdog/Math/Color.hpp"
+#include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Signals/ScopedConnection.hpp"
-#include <list>
+#include "Pomdog/Signals/Signal.hpp"
 #include <memory>
+#include <optional>
 
 namespace Pomdog::GUI {
 
-class VerticalScrollBar;
+class ScrollView;
+class VerticalLayout;
 
-class ScrollView final
+class ContextMenu final
     : public Widget
-    , public std::enable_shared_from_this<ScrollView> {
+    , public std::enable_shared_from_this<ContextMenu> {
 public:
-    ScrollView(
+    ContextMenu(
         const std::shared_ptr<UIEventDispatcher>& dispatcher,
         int widthIn,
         int heightIn);
-
-    void SetMargin(const Thickness& margin);
-
-    void SetBackgroundColor(const Color& color) noexcept;
 
     void SetPosition(const Point2D& position) override;
 
@@ -34,21 +32,11 @@ public:
 
     bool GetSizeToFitContent() const noexcept override;
 
-    void ScrollToTop();
-
-    void ScrollToEnd();
-
-    void SetHorizontalAlignment(HorizontalAlignment horizontalAlignment) noexcept;
-
-    HorizontalAlignment GetHorizontalAlignment() const noexcept override;
-
     void OnEnter() override;
-
-    void OnPointerWheelChanged(const PointerPoint& pointerPoint) override;
 
     void Draw(DrawingContext& drawingContext) override;
 
-    void SetWidget(const std::shared_ptr<Widget>& widget);
+    void AddChild(const std::shared_ptr<Widget>& widget);
 
     std::shared_ptr<Widget> GetChildAt(const Point2D& position) override;
 
@@ -56,16 +44,16 @@ public:
 
     void DoLayout() override;
 
+    void SetPadding(const Thickness& padding);
+
 private:
     void UpdateLayout();
 
 private:
-    std::shared_ptr<Widget> child;
-    std::shared_ptr<VerticalScrollBar> scrollBar;
+    std::shared_ptr<VerticalLayout> verticalLayout;
+    std::shared_ptr<ScrollView> scrollView;
     ScopedConnection connection;
-    Thickness margin;
-    Color backgroundColor;
-    HorizontalAlignment horizontalAlignment;
+    Thickness padding;
     bool needToUpdateLayout;
 };
 

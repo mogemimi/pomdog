@@ -54,6 +54,22 @@ struct ColorScheme final {
     Color CheckBoxRectColorOff = Color{160, 160, 160, 255};
     Color CheckBoxRectColorDisabled = Color{81, 81, 81, 255};
 
+    Color ContextMenuBackgroundColor = Color{45, 45, 48, 255};
+    Color ContextMenuShadowColor = Color{15, 15, 16, 20};
+    Color ContextMenuBorderColor = Color{104, 100, 101, 255};
+    Color ContextMenuOutlineColor = Color{31, 31, 30, 255};
+
+    Color PushButtonTextColorBase = Color{251, 250, 248, 255};
+    Color PushButtonTextColorDisabled = Color{191, 190, 189, 255};
+    Color PushButtonRectColorBase = Color{0, 132, 190, 255};
+    Color PushButtonRectColorHovered = Color{0, 123, 182, 255};
+    Color PushButtonRectColorClick = Color{0, 107, 162, 255};
+    Color PushButtonRectColorDisabled = Color{110, 108, 107, 255};
+
+    Color PanelBackgroundColor = Color{45, 45, 48, 225};
+    Color PanelOutlineBorderColor = Color{40, 40, 40, 255};
+    Color PanelTitleBarColor = Color{106, 106, 106, 255};
+
     // Color ButtonPrimaryColor;
     // Color ButtonSecondaryColor;
     // Color ButtonErrorColor;

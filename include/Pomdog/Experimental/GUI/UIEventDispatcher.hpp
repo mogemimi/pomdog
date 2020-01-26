@@ -35,9 +35,13 @@ public:
 
     void ClearFocus(const std::shared_ptr<Widget>& widget);
 
-private:
-    void AddChild(std::weak_ptr<Widget>&& child);
+    std::function<void(const std::shared_ptr<Widget>& widget)> AddContextMenu;
 
+    std::function<void(const std::shared_ptr<Widget>& widget)> RemoveContextMenu;
+
+    Signal<void(const std::shared_ptr<Widget>& widget)> FocusChanged;
+
+private:
     void PointerEntered(
         const Point2D& position,
         const MouseState& mouseState,
