@@ -117,6 +117,29 @@ public:
         }
     }
 
+    template <typename Func>
+    void Find(Func func)
+    {
+        const auto mask = Helper::ComponentMask<MaxComponentCapacity, T, Components...>();
+
+        std::uint32_t index = 0;
+        for (const auto& desc : descriptions) {
+            if (desc.IsEnabled) {
+                if ((desc.ComponentBitMask & mask) == mask) {
+                    const Entity entity{desc.IncremantalVersion, index};
+                    bool found = func(
+                        entity,
+                        *Helper::GetComponent<MaxComponentCapacity, T>(entity, components, descriptions),
+                        *Helper::GetComponent<MaxComponentCapacity, Components>(entity, components, descriptions)...);
+                    if (found) {
+                        break;
+                    }
+                }
+            }
+            ++index;
+        }
+    }
+
 private:
     std::vector<std::unique_ptr<ComponentBufferBase>>& components;
     std::vector<EntityDesc<MaxComponentCapacity>>& descriptions;
@@ -153,6 +176,28 @@ public:
                     func(
                         *Helper::GetComponent<MaxComponentCapacity, T>(entity, components, descriptions),
                         *Helper::GetComponent<MaxComponentCapacity, Components>(entity, components, descriptions)...);
+                }
+            }
+            ++index;
+        }
+    }
+
+    template <typename Func>
+    void Find(Func func)
+    {
+        const auto mask = Helper::ComponentMask<MaxComponentCapacity, T, Components...>();
+
+        std::uint32_t index = 0;
+        for (const auto& desc : descriptions) {
+            if (desc.IsEnabled) {
+                if ((desc.ComponentBitMask & mask) == mask) {
+                    const Entity entity{desc.IncremantalVersion, index};
+                    bool found = func(
+                        *Helper::GetComponent<MaxComponentCapacity, T>(entity, components, descriptions),
+                        *Helper::GetComponent<MaxComponentCapacity, Components>(entity, components, descriptions)...);
+                    if (found) {
+                        break;
+                    }
                 }
             }
             ++index;
