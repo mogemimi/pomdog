@@ -29,6 +29,9 @@ public:
     EntityArchtype(const EntityArchtype&) = delete;
     EntityArchtype& operator=(const EntityArchtype&) = delete;
 
+    EntityArchtype(EntityArchtype&&) = default;
+    EntityArchtype& operator=(EntityArchtype&&) = default;
+
     const std::vector<std::shared_ptr<ComponentTypeBase>>& GetComponentTypes() const noexcept
     {
         return componentTypes;
