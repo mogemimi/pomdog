@@ -292,6 +292,12 @@ void GraphicsContextMetal::DrawIndexedInstanced(
         baseInstance:startInstanceLocation];
 }
 
+void GraphicsContextMetal::SetViewport(const Viewport& viewport)
+{
+    POMDOG_ASSERT(commandEncoder != nil);
+    Metal::SetViewport(commandEncoder, viewport);
+}
+
 void GraphicsContextMetal::SetScissorRect(const Rectangle& scissorRect)
 {
     POMDOG_ASSERT(commandEncoder != nil);
@@ -594,7 +600,7 @@ void GraphicsContextMetal::SetRenderPass(const RenderPass& renderPass)
     [commandEncoder setFrontFacingWinding:MTLWindingClockwise];
 
     if (renderPass.Viewport) {
-        SetViewport(commandEncoder, *renderPass.Viewport);
+        Metal::SetViewport(commandEncoder, *renderPass.Viewport);
     }
     if (renderPass.ScissorRect) {
         SetScissorRectangle(commandEncoder, *renderPass.ScissorRect);

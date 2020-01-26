@@ -611,6 +611,15 @@ GraphicsCapabilities GraphicsContextGL4::GetCapabilities() const
     return capabilities;
 }
 
+void GraphicsContextGL4::SetViewport(const Viewport& viewport)
+{
+    POMDOG_ASSERT(!renderTargets.empty());
+    POMDOG_ASSERT(renderTargets.size() == 8);
+
+    const bool useBackBuffer = (renderTargets.front() == nullptr);
+    GL4::SetViewport(viewport, gameWindow, useBackBuffer);
+}
+
 void GraphicsContextGL4::SetScissorRect(const Rectangle& scissorRect)
 {
     POMDOG_ASSERT(!renderTargets.empty());
@@ -793,7 +802,7 @@ void GraphicsContextGL4::SetRenderPass(const RenderPass& renderPass)
     const bool useBackBuffer = (std::get<0>(renderPass.RenderTargets.front()) == nullptr);
 
     if (renderPass.Viewport) {
-        SetViewport(*renderPass.Viewport, gameWindow, useBackBuffer);
+        GL4::SetViewport(*renderPass.Viewport, gameWindow, useBackBuffer);
     }
     if (renderPass.ScissorRect) {
         SetScissorRectangle(*renderPass.ScissorRect, gameWindow, useBackBuffer);

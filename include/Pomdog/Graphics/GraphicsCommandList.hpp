@@ -63,6 +63,9 @@ public:
     /// Sets a group of render targets.
     void SetRenderPass(RenderPass&& renderPass);
 
+    /// Sets the viewport dynamically to the rasterizer stage.
+    void SetViewport(const Viewport& viewport);
+
     /// Sets the scissor rectangle dynamically for a scissor test.
     void SetScissorRect(const Rectangle& scissorRect);
 

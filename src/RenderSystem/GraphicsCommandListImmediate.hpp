@@ -19,6 +19,7 @@ enum class GraphicsCommandType : std::int8_t {
     DrawInstancedCommand,
     DrawIndexedInstancedCommand,
     SetRenderPassCommand,
+    SetViewportCommand,
     SetScissorRectCommand,
     SetBlendFactorCommand,
     SetVertexBufferCommand,
@@ -74,6 +75,8 @@ public:
         std::size_t startInstanceLocation) override;
 
     void SetRenderPass(RenderPass&& renderPass) override;
+
+    void SetViewport(const Viewport& viewport) override;
 
     void SetScissorRect(const Rectangle& scissorRect) override;
 

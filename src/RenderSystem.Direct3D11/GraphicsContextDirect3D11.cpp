@@ -338,6 +338,30 @@ GraphicsCapabilities GraphicsContextDirect3D11::GetCapabilities() const
     return std::move(caps);
 }
 
+void GraphicsContextDirect3D11::SetViewport(const Viewport& viewportIn)
+{
+    POMDOG_ASSERT(0 < viewportIn.Width);
+    POMDOG_ASSERT(0 < viewportIn.Height);
+    POMDOG_ASSERT(D3D11_VIEWPORT_BOUNDS_MAX >= viewportIn.TopLeftX + viewportIn.Width);
+    POMDOG_ASSERT(D3D11_VIEWPORT_BOUNDS_MAX >= viewportIn.TopLeftY + viewportIn.Height);
+
+    // NOTE: The MinDepth and MaxDepth must be between 0 and 1, respectively.
+    // Please see https://msdn.microsoft.com/en-us/library/windows/desktop/ff476260(v=vs.85).aspx
+    POMDOG_ASSERT((0.0f <= viewportIn.MinDepth) && (viewportIn.MinDepth <= 1.0f));
+    POMDOG_ASSERT((0.0f <= viewportIn.MaxDepth) && (viewportIn.MaxDepth <= 1.0f));
+
+    D3D11_VIEWPORT viewport;
+    viewport.Width = static_cast<FLOAT>(viewportIn.Width);
+    viewport.Height = static_cast<FLOAT>(viewportIn.Height);
+    viewport.MinDepth = viewportIn.MinDepth;
+    viewport.MaxDepth = viewportIn.MaxDepth;
+    viewport.TopLeftX = static_cast<FLOAT>(viewportIn.TopLeftX);
+    viewport.TopLeftY = static_cast<FLOAT>(viewportIn.TopLeftY);
+
+    POMDOG_ASSERT(deferredContext);
+    deferredContext->RSSetViewports(1, &viewport);
+}
+
 void GraphicsContextDirect3D11::SetScissorRect(const Rectangle& scissorRect)
 {
     D3D11_RECT rect;

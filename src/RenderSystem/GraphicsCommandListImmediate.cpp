@@ -66,6 +66,15 @@ struct DrawIndexedInstancedCommand final : public GraphicsCommand {
     }
 };
 
+struct SetViewportCommand final : public GraphicsCommand {
+    Viewport viewport;
+
+    void Execute(NativeGraphicsContext& graphicsContext) override
+    {
+        graphicsContext.SetViewport(viewport);
+    }
+};
+
 struct SetScissorRectCommand final : public GraphicsCommand {
     Rectangle scissorRect;
 
@@ -277,6 +286,14 @@ void GraphicsCommandListImmediate::SetRenderPass(RenderPass&& renderPass)
     commands.push_back(std::move(command));
 }
 
+void GraphicsCommandListImmediate::SetViewport(const Viewport& viewport)
+{
+    auto command = std::make_unique<SetViewportCommand>();
+    command->commandType = GraphicsCommandType::SetViewportCommand;
+    command->viewport = viewport;
+    commands.push_back(std::move(command));
+}
+
 void GraphicsCommandListImmediate::SetScissorRect(const Rectangle& scissorRect)
 {
     auto command = std::make_unique<SetScissorRectCommand>();
@@ -403,25 +420,27 @@ void GraphicsCommandListImmediate::SortCommandsForMetal()
     static_assert(static_cast<int>(GraphicsCommandType::DrawInstancedCommand) == 2);
     static_assert(static_cast<int>(GraphicsCommandType::DrawIndexedInstancedCommand) == 3);
     static_assert(static_cast<int>(GraphicsCommandType::SetRenderPassCommand) == 4);
-    static_assert(static_cast<int>(GraphicsCommandType::SetScissorRectCommand) == 5);
-    static_assert(static_cast<int>(GraphicsCommandType::SetBlendFactorCommand) == 6);
-    static_assert(static_cast<int>(GraphicsCommandType::SetVertexBufferCommand) == 7);
-    static_assert(static_cast<int>(GraphicsCommandType::SetIndexBufferCommand) == 8);
-    static_assert(static_cast<int>(GraphicsCommandType::SetPipelineStateCommand) == 9);
-    static_assert(static_cast<int>(GraphicsCommandType::SetConstantBufferCommand) == 10);
-    static_assert(static_cast<int>(GraphicsCommandType::SetSamplerStateCommand) == 11);
-    static_assert(static_cast<int>(GraphicsCommandType::SetTextureCommand) == 12);
-    static_assert(static_cast<int>(GraphicsCommandType::SetTextureRenderTarget2DCommand) == 13);
+    static_assert(static_cast<int>(GraphicsCommandType::SetViewportCommand) == 5);
+    static_assert(static_cast<int>(GraphicsCommandType::SetScissorRectCommand) == 6);
+    static_assert(static_cast<int>(GraphicsCommandType::SetBlendFactorCommand) == 7);
+    static_assert(static_cast<int>(GraphicsCommandType::SetVertexBufferCommand) == 8);
+    static_assert(static_cast<int>(GraphicsCommandType::SetIndexBufferCommand) == 9);
+    static_assert(static_cast<int>(GraphicsCommandType::SetPipelineStateCommand) == 10);
+    static_assert(static_cast<int>(GraphicsCommandType::SetConstantBufferCommand) == 11);
+    static_assert(static_cast<int>(GraphicsCommandType::SetSamplerStateCommand) == 12);
+    static_assert(static_cast<int>(GraphicsCommandType::SetTextureCommand) == 13);
+    static_assert(static_cast<int>(GraphicsCommandType::SetTextureRenderTarget2DCommand) == 14);
 
     constexpr std::int8_t priorityDrawCommand = 31;
     constexpr std::int8_t priorityDefault = 30;
 
-    const std::array<std::int8_t, 14> priorities = {{
+    const std::array<std::int8_t, 15> priorities = {{
         priorityDrawCommand, // DrawCommand
         priorityDrawCommand, // DrawIndexedCommand
         priorityDrawCommand, // DrawInstancedCommand
         priorityDrawCommand, // DrawIndexedInstancedCommand
         0, // SetRenderPassCommand
+        priorityDefault, // SetViewportCommand
         priorityDefault, // SetScissorRectCommand
         priorityDefault, // SetBlendFactorCommand
         priorityDefault, // SetVertexBuffersCommand
@@ -476,6 +495,7 @@ void GraphicsCommandListImmediate::SortCommandsForMetal()
     std::size_t renderPassCommandIndex = 0;
     std::optional<std::size_t> setPipelineStateCommand;
     std::optional<std::size_t> setPrimitiveTopologyCommand;
+    std::optional<std::size_t> setViewportCommand;
     std::optional<std::size_t> setScissorRectCommand;
     std::optional<std::size_t> setBlendFactorCommand;
     std::optional<std::size_t> setIndexBufferCommand;
@@ -501,6 +521,9 @@ void GraphicsCommandListImmediate::SortCommandsForMetal()
             break;
         case GraphicsCommandType::SetPipelineStateCommand:
             setPipelineStateCommand = commands.size();
+            break;
+        case GraphicsCommandType::SetViewportCommand:
+            setViewportCommand = commands.size();
             break;
         case GraphicsCommandType::SetScissorRectCommand:
             setScissorRectCommand = commands.size();

@@ -127,6 +127,12 @@ void GraphicsCommandList::SetRenderPass(RenderPass&& renderPass)
     nativeCommandList->SetRenderPass(std::move(renderPass));
 }
 
+void GraphicsCommandList::SetViewport(const Viewport& viewport)
+{
+    POMDOG_ASSERT(nativeCommandList);
+    nativeCommandList->SetViewport(viewport);
+}
+
 void GraphicsCommandList::SetScissorRect(const Rectangle& scissorRect)
 {
     POMDOG_ASSERT(nativeCommandList);

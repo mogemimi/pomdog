@@ -51,6 +51,8 @@ public:
 
     virtual void SetRenderPass(const RenderPass& renderPass) = 0;
 
+    virtual void SetViewport(const Viewport& viewport) = 0;
+
     virtual void SetScissorRect(const Rectangle& scissorRect) = 0;
 
     virtual void SetBlendFactor(const Vector4& blendFactor) = 0;

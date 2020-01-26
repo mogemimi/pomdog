@@ -48,6 +48,8 @@ public:
 
     void SetRenderPass(const RenderPass& renderPass) override;
 
+    void SetViewport(const Viewport& viewport) override;
+
     void SetScissorRect(const Rectangle& scissorRect) override;
 
     void SetBlendFactor(const Vector4& blendFactor) override;
