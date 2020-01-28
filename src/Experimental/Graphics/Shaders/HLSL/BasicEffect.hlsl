@@ -132,6 +132,7 @@ float4 BasicEffectPS(VertexShaderOutput input) : SV_Target
 #else
     float4 albedoColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
 #endif
+    albedoColor = albedoColor * DiffuseColor;
 
 #if LIGHTING_ENABLED
     float3 worldSpaceCameraPosition = (mul(InverseView, float4(0.0f, 0.0f, 0.0f, 1.0f))).xyz;

@@ -121,6 +121,7 @@ float4 albedoColor=in.Color.rgba;
 #else
 float4 albedoColor=float4(1.0,1.0,1.0,1.0);
 #endif
+albedoColor=albedoColor*modelConstants.Color;
 #if LIGHTING_ENABLED
 float3 worldSpaceCameraPosition=(worldConstants.InverseView*float4(0.0,0.0,0.0,1.0)).xyz;
 float3 viewDirection=normalize(worldSpaceCameraPosition-in.WorldSpacePosition);

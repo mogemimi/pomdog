@@ -61,6 +61,7 @@ vec4 albedoColor=In.Color.rgba;
 #else
 vec4 albedoColor=vec4(1.0,1.0,1.0,1.0);
 #endif
+albedoColor=albedoColor*DiffuseColor;
 #if LIGHTING_ENABLED
 vec3 worldSpaceCameraPosition=(InverseView*vec4(0.0,0.0,0.0,1.0)).xyz;
 vec3 viewDirection=normalize(worldSpaceCameraPosition-In.WorldSpacePosition);

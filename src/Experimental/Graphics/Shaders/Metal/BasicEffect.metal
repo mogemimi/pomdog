@@ -165,6 +165,7 @@ fragment half4 BasicEffectPS(
 #else
     float4 albedoColor = float4(1.0, 1.0, 1.0, 1.0);
 #endif
+    albedoColor = albedoColor * modelConstants.Color;
 
 #if LIGHTING_ENABLED
     float3 worldSpaceCameraPosition = (worldConstants.InverseView * float4(0.0, 0.0, 0.0, 1.0)).xyz;

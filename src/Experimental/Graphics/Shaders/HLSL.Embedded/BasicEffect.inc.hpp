@@ -4,13 +4,13 @@ constexpr auto BuiltinHLSL_BasicEffect = R"(
 cbuffer ModelConstantBuffer : register(b0){
 matrix<float,4,4>Model;
 float4 Material;
-float4 DiffuseColor;
-};
+float4 DiffuseColor;};
 cbuffer WorldConstantBuffer : register(b1){
 matrix<float,4,4>ViewProjection;
+matrix<float,4,4>View;
+matrix<float,4,4>Projection;
 matrix<float,4,4>InverseView;
-float4 LightDirection;
-};
+float4 LightDirection;};
 struct VertexShaderInput{
 float3 Position : SV_Position;
 #if LIGHTING_ENABLED
@@ -37,27 +37,22 @@ float4 Color : COLOR0;
 #endif
 };
 #if LIGHTING_ENABLED
-float LambertianDiffuse(float3 lightDirection,float3 surfaceNormal)
-{
-return max(dot(lightDirection,surfaceNormal),0.0f);
-}
+float LambertianDiffuse(float3 lightDirection,float3 surfaceNormal){
+return max(dot(lightDirection,surfaceNormal),0.0f);}
 float ComputePhongSpecular(
 float3 viewDirection,
 float3 lightDirection,
 float3 worldSpaceNormal,
-float specular)
-{
+float specular){
 float3 halfVector=normalize(lightDirection.xyz+viewDirection);
 float specularAngle=max(0.0f,dot(halfVector,worldSpaceNormal));
 float density=50.0f;
-return pow(specularAngle,density)*specular;
-}
+return pow(specularAngle,density)*specular;}
 float ComputeLight(
 float3 viewDirection,
 float3 inverseLightDirection,
 float3 surfaceNormal,
-float specular)
-{
+float specular){
 float kd=LambertianDiffuse(inverseLightDirection,surfaceNormal);
 kd=kd*0.5f+0.5f;
 kd=kd*kd;
@@ -66,11 +61,9 @@ viewDirection,
 inverseLightDirection,
 surfaceNormal,
 1.0);
-return kd+ks;
-}
+return kd+ks;}
 #endif
-VertexShaderOutput BasicEffectVS(VertexShaderInput input)
-{
+VertexShaderOutput BasicEffectVS(VertexShaderInput input){
 VertexShaderOutput output=(VertexShaderOutput)0;
 float4 worldSpacePosition=mul(Model,float4(input.Position,1.0f));
 #if LIGHTING_ENABLED
@@ -90,14 +83,12 @@ output.TextureCoord=input.TextureCoord.xy;
 #if VERTEX_COLOR_ENABLED
 output.Color=input.Color.rgba;
 #endif
-return output;
-}
+return output;}
 #if TEXTURE_ENABLED
 Texture2D<float4>diffuseTexture : register(t0);
 SamplerState textureSampler : register(s0);
 #endif
-float4 BasicEffectPS(VertexShaderOutput input): SV_Target
-{
+float4 BasicEffectPS(VertexShaderOutput input): SV_Target{
 #if TEXTURE_ENABLED
 float4 albedoColor=diffuseTexture.Sample(textureSampler,input.TextureCoord.xy);
 #elif VERTEX_COLOR_ENABLED
@@ -105,6 +96,7 @@ float4 albedoColor=input.Color.rgba;
 #else
 float4 albedoColor=float4(1.0f,1.0f,1.0f,1.0f);
 #endif
+albedoColor=albedoColor*DiffuseColor;
 #if LIGHTING_ENABLED
 float3 worldSpaceCameraPosition=(mul(InverseView,float4(0.0f,0.0f,0.0f,1.0f))).xyz;
 float3 viewDirection=normalize(worldSpaceCameraPosition-input.WorldSpacePosition);
