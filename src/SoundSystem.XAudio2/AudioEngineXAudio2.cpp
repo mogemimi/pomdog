@@ -182,9 +182,11 @@ AudioEngineXAudio2::AudioEngineXAudio2()
         POMDOG_THROW_EXCEPTION(std::runtime_error, GetErrorDesc(hr, "CoInitializeEx"));
     }
 
-    UINT32 flags = 0;
-#if defined(DEBUG) && !defined(NDEBUG)
-    flags |= XAUDIO2_DEBUG_ENGINE;
+#if (_WIN32_WINNT < 0x0602 /*_WIN32_WINNT_WIN8*/) && defined(DEBUG) && !defined(NDEBUG)
+    constexpr UINT32 flags = XAUDIO2_DEBUG_ENGINE;
+#else
+    // NOTE: The debugging facilities are always available for XAudio2 in Windows 8 and newer.
+    constexpr UINT32 flags = 0;
 #endif
 
     hr = ::XAudio2Create(&xAudio2, flags, XAUDIO2_DEFAULT_PROCESSOR);
