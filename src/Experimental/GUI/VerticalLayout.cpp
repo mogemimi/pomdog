@@ -91,6 +91,33 @@ void VerticalLayout::AddChild(const std::shared_ptr<Widget>& widget)
     needToUpdateLayout = true;
 }
 
+void VerticalLayout::RemoveChild(const std::shared_ptr<Widget>& widget)
+{
+    POMDOG_ASSERT(!widget->GetParent());
+
+    auto iter = std::find(std::begin(children), std::end(children), widget);
+    if (iter == std::end(children)) {
+        return;
+    }
+    children.erase(iter);
+
+    needToUpdateLayout = true;
+}
+
+void VerticalLayout::RemoveChild(int index)
+{
+    if (index >= static_cast<int>(children.size())) {
+        return;
+    }
+    auto iter = std::next(std::begin(children), index);
+    if (iter == std::end(children)) {
+        return;
+    }
+    children.erase(iter);
+
+    needToUpdateLayout = true;
+}
+
 std::shared_ptr<Widget> VerticalLayout::GetChildAt(const Point2D& position)
 {
     for (auto& child : children) {

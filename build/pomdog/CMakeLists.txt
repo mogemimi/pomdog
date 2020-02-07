@@ -435,6 +435,8 @@ set(POMDOG_SOURCES_EXPERIMENTAL_GUI
   ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/HorizontalLine.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/HorizontalSplitter.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/IntField.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/ListView.hpp
+  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/ListViewItem.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/NumberField.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/PointerEventType.hpp
   ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/PointerPoint.hpp
@@ -470,6 +472,8 @@ set(POMDOG_SOURCES_EXPERIMENTAL_GUI
   ${POMDOG_DIR}/src/Experimental/GUI/HorizontalLine.cpp
   ${POMDOG_DIR}/src/Experimental/GUI/HorizontalSplitter.cpp
   ${POMDOG_DIR}/src/Experimental/GUI/IntField.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/ListView.cpp
+  ${POMDOG_DIR}/src/Experimental/GUI/ListViewItem.cpp
   ${POMDOG_DIR}/src/Experimental/GUI/NumberField.cpp
   ${POMDOG_DIR}/src/Experimental/GUI/PopupMenu.cpp
   ${POMDOG_DIR}/src/Experimental/GUI/PushButton.cpp

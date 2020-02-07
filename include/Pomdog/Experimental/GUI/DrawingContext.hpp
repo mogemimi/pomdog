@@ -70,6 +70,12 @@ struct ColorScheme final {
     Color PanelOutlineBorderColor = Color{40, 40, 40, 255};
     Color PanelTitleBarColor = Color{106, 106, 106, 255};
 
+    Color ListViewBackgroundColorOdd = Color{40, 40, 40, 255};
+    Color ListViewBackgroundColorEven = Color{45, 45, 48, 255};
+    Color ListViewItemColorHovered = Color{68, 67, 65, 255};
+    Color ListViewItemColorSelected = Color{110, 108, 109, 255};
+    Color ListViewItemColorActive = Color{0, 123, 182, 255};
+
     // Color ButtonPrimaryColor;
     // Color ButtonSecondaryColor;
     // Color ButtonErrorColor;

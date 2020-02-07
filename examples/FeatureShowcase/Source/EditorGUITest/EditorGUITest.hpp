@@ -7,6 +7,7 @@
 #include <Pomdog/Experimental/GUI/FloatField.hpp>
 #include <Pomdog/Experimental/GUI/HorizontalLayout.hpp>
 #include <Pomdog/Experimental/GUI/IntField.hpp>
+#include <Pomdog/Experimental/GUI/ListView.hpp>
 #include <Pomdog/Experimental/GUI/PopupMenu.hpp>
 #include <Pomdog/Experimental/GUI/PushButton.hpp>
 #include <Pomdog/Experimental/GUI/ScrollView.hpp>

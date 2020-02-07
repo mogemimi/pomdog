@@ -4,26 +4,25 @@
 
 #include "Pomdog/Experimental/GUI/Thickness.hpp"
 #include "Pomdog/Experimental/GUI/Widget.hpp"
+#include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Signals/ScopedConnection.hpp"
+#include "Pomdog/Signals/Signal.hpp"
 #include <memory>
-#include <vector>
+#include <optional>
 
 namespace Pomdog::GUI {
 
-class VerticalLayout final
+class ScrollView;
+class VerticalLayout;
+
+class ListView final
     : public Widget
-    , public std::enable_shared_from_this<VerticalLayout> {
+    , public std::enable_shared_from_this<ListView> {
 public:
-    VerticalLayout(
+    ListView(
         const std::shared_ptr<UIEventDispatcher>& dispatcher,
         int widthIn,
         int heightIn);
-
-    void SetMargin(const Thickness& margin);
-
-    void SetLayoutSpacing(int spacing);
-
-    void SetStackedLayout(bool isStackedLayout);
 
     void SetPosition(const Point2D& position) override;
 
@@ -43,25 +42,30 @@ public:
 
     void RemoveChild(int index);
 
-    std::shared_ptr<Widget> GetChildAt(const Point2D& position) override;
-
-    std::shared_ptr<Widget> GetChildAt(int index);
-
     int GetItemCount() const noexcept;
+
+    std::optional<int> GetCurrentIndex() const noexcept;
+
+    void SetCurrentIndex(int index);
+
+    std::shared_ptr<Widget> GetChildAt(const Point2D& position) override;
 
     void UpdateAnimation(const Duration& frameDuration) override;
 
     void DoLayout() override;
 
+    void SetPadding(const Thickness& padding);
+
+    Signal<void(std::optional<int> index)> CurrentIndexChanged;
+
 private:
     void UpdateLayout();
 
 private:
-    std::vector<std::shared_ptr<Widget>> children;
-    Thickness margin;
-    int layoutSpacing;
+    std::shared_ptr<VerticalLayout> verticalLayout;
+    Thickness padding;
+    std::optional<int> currentIndex;
     bool needToUpdateLayout;
-    bool isStackedLayout;
 };
 
 } // namespace Pomdog::GUI

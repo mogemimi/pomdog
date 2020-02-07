@@ -92,6 +92,29 @@ void EditorGUITest::Initialize()
         scrollView->ScrollToTop();
     }
 
+    {
+        auto stackPanel = std::make_shared<GUI::StackPanel>(dispatcher, 150, 170);
+        stackPanel->SetPosition(Point2D{400, 250});
+        stackPanel->SetPadding(GUI::Thickness{2, 0, 2, 0});
+        hierarchy->AddChild(stackPanel);
+
+        auto scrollView = std::make_shared<GUI::ScrollView>(dispatcher, 150, 170);
+        stackPanel->AddChild(scrollView);
+
+        auto listView = std::make_shared<GUI::ListView>(dispatcher, 150, 170);
+        //listView->SetLayoutSpacing(10);
+        scrollView->SetWidget(listView);
+        
+        for (int i = 0; i < 40; ++i) {
+            auto textBlock = std::make_shared<GUI::TextBlock>(dispatcher);
+            textBlock->SetColor(Color::White);
+            textBlock->SetText("Text " + std::to_string(i));
+            listView->AddChild(textBlock);
+        }
+
+        scrollView->ScrollToTop();
+    }
+
 //    {
 //        auto contextMenu = std::make_shared<GUI::ContextMenu>(dispatcher, 150, 170);
 //        contextMenu->SetPosition(Point2D{450, 250});
