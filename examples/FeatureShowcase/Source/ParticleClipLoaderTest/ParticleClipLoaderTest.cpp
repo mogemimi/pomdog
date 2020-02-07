@@ -37,14 +37,16 @@ void ParticleClipLoaderTest::Initialize()
     timer->SetInterval(std::chrono::seconds(1));
     timer->SetScale(0.2);
 
-    // NOTE: Load particle clip from .json file
-    auto [particleClip, clipErr] = assets->Load<ParticleClip>("Particles/Fire2D.json");
-    if (clipErr != nullptr) {
-        Log::Verbose("failed to load particle json: " + clipErr->ToString());
-    }
+    {
+        // NOTE: Load particle clip from .json file
+        auto[particleClip, clipErr] = assets->Load<ParticleClip>("Particles/Fire2D.json");
+        if (clipErr != nullptr) {
+            Log::Verbose("failed to load particle json: " + clipErr->ToString());
+        }
 
-    particleSystem = std::make_unique<ParticleSystem>(particleClip);
-    particleSystem->Play();
+        particleSystem = std::make_unique<ParticleSystem>(particleClip);
+        particleSystem->Play();
+    }
 
     emitterPosition = Vector2::Zero;
 

@@ -78,14 +78,16 @@ void Particle3DTest::Initialize()
     timer->SetInterval(std::chrono::seconds(1));
     timer->SetScale(0.1);
 
-    // NOTE: Load particle clip from .json file
-    auto [particleClip, clipErr] = assets->Load<ParticleClip>("Particles/Fire3D_Box.json");
-    if (clipErr != nullptr) {
-        Log::Verbose("failed to load particle json: " + clipErr->ToString());
-    }
+    {
+        // NOTE: Load particle clip from .json file
+        auto [particleClip, clipErr] = assets->Load<ParticleClip>("Particles/Fire3D_Box.json");
+        if (clipErr != nullptr) {
+            Log::Verbose("failed to load particle json: " + clipErr->ToString());
+        }
 
-    particleSystem = std::make_unique<ParticleSystem>(particleClip);
-    particleSystem->Play();
+        particleSystem = std::make_unique<ParticleSystem>(particleClip);
+        particleSystem->Play();
+    }
 
     emitterPosition = Vector3::Zero;
 
