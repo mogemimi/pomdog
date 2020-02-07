@@ -1,6 +1,7 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "Texture2DVulkan.hpp"
+#include "BufferVulkan.hpp"
 #include "VulkanFormatHelper.hpp"
 #include "../RenderSystem/TextureHelper.hpp"
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
@@ -23,13 +24,7 @@ Texture2DVulkan::Texture2DVulkan(
 {
     POMDOG_ASSERT(device != nullptr);
 
-    const auto pixelFormat = VulkanFormatHelper::ToVkFormat(format);
-
-    if (!pixelFormat) {
-        // FUS RO DAH!
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "This platform does not support this pixel format.");
-    }
+    const auto pixelFormat = ToSurfaceFormat(format);
 
     VkFormatProperties formatProps;
     vkGetPhysicalDeviceFormatProperties(
@@ -47,7 +42,7 @@ Texture2DVulkan::Texture2DVulkan(
     imageCreateInfo.pNext = nullptr;
     imageCreateInfo.flags = 0;
     imageCreateInfo.imageType = VK_IMAGE_TYPE_2D;
-    imageCreateInfo.format = *pixelFormat;
+    imageCreateInfo.format = pixelFormat;
     imageCreateInfo.extent.width = pixelWidth;
     imageCreateInfo.extent.height = pixelHeight;
     imageCreateInfo.extent.depth = 1;
@@ -60,6 +55,39 @@ Texture2DVulkan::Texture2DVulkan(
     imageCreateInfo.queueFamilyIndexCount = 0;
     imageCreateInfo.pQueueFamilyIndices = nullptr;
     imageCreateInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+
+    VkImage mappableImage = nullptr;
+    VkDeviceMemory mappableMemory = nullptr;
+    VkMemoryRequirements memoryRequirements;
+
+    VkResult result = vkCreateImage(device, &imageCreateInfo, nullptr, &mappableImage);
+    if (result != VK_SUCCESS) {
+        // FUS RO DAH!
+        POMDOG_THROW_EXCEPTION(std::runtime_error,
+            "Failed to create VkImage");
+    }
+
+    vkGetImageMemoryRequirements(device, mappableImage, &memoryRequirements);
+
+    VkMemoryAllocateInfo allocInfo;
+    allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+    allocInfo.pNext = nullptr;
+    allocInfo.allocationSize = memoryRequirements.size;
+    allocInfo.memoryTypeIndex = 0;
+
+    result = vkAllocateMemory(device, &allocInfo, nullptr, &mappableMemory);
+    if (result != VK_SUCCESS) {
+        // FUS RO DAH!
+        POMDOG_THROW_EXCEPTION(std::runtime_error,
+            "Failed to call vkAllocateMemory()");
+    }
+
+    result = vkBindImageMemory(device, mappableImage, mappableMemory, 0);
+    if (result != VK_SUCCESS) {
+        // FUS RO DAH!
+        POMDOG_THROW_EXCEPTION(std::runtime_error,
+            "Failed to call vkBindImageMemory()");
+    }
 
     // FUS RO DAH!
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");

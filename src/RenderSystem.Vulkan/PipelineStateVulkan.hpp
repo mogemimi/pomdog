@@ -14,8 +14,13 @@ public:
         VkDevice device,
         const PipelineStateDescription& description);
 
+    ~PipelineStateVulkan();
+
 private:
+    VkDevice device;
     VkPipeline pipeline;
+    VkRenderPass renderPass;
+    VkDescriptorSetLayout descriptorSetLayout;
 };
 
 } // namespace Pomdog::Detail::Vulkan

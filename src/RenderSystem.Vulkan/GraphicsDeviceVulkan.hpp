@@ -13,7 +13,9 @@ public:
 
     ~GraphicsDeviceVulkan();
 
-    ShaderLanguage GetSupportedLanguage() const override;
+    ShaderLanguage GetSupportedLanguage() const noexcept override;
+
+    PresentationParameters GetPresentationParameters() const noexcept override;
 
     std::unique_ptr<NativeGraphicsCommandList>
     CreateGraphicsCommandList() override;

@@ -3,10 +3,10 @@
 #include "GraphicsCommandListVulkan.hpp"
 #include "../RenderSystem.Vulkan/BufferVulkan.hpp"
 #include "../RenderSystem.Vulkan/PipelineStateVulkan.hpp"
+#include "../RenderSystem.Vulkan/RenderTarget2DVulkan.hpp"
 #include "../RenderSystem/GraphicsCapabilities.hpp"
 #include "Pomdog/Graphics/IndexBuffer.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
-#include "Pomdog/Graphics/PrimitiveTopology.hpp"
 #include "Pomdog/Graphics/RenderPass.hpp"
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
 #include "Pomdog/Graphics/Texture2D.hpp"
@@ -21,22 +21,6 @@
 namespace Pomdog::Detail::Vulkan {
 namespace {
 
-VkPrimitiveTopology ToVkPrimitiveTopology(
-    PrimitiveTopology primitiveTopology) noexcept
-{
-    switch (primitiveTopology) {
-    case PrimitiveTopology::TriangleStrip:
-        return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
-    case PrimitiveTopology::TriangleList:
-        return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-    case PrimitiveTopology::LineList:
-        return VK_PRIMITIVE_TOPOLOGY_LINE_LIST;
-    case PrimitiveTopology::LineStrip:
-        return VK_PRIMITIVE_TOPOLOGY_LINE_STRIP;
-    }
-    return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-}
-
 VkIndexType ToVkIndexType(IndexElementSize elementSize) noexcept
 {
     switch (elementSize) {
@@ -48,7 +32,7 @@ VkIndexType ToVkIndexType(IndexElementSize elementSize) noexcept
     return VK_INDEX_TYPE_UINT16;
 }
 
-} // unnamed namespace
+} // namespace
 
 GraphicsCommandListVulkan::GraphicsCommandListVulkan()
 {
@@ -162,33 +146,191 @@ void GraphicsCommandListVulkan::SetRenderPass(RenderPass&& renderPass)
     }
 
     if (renderPass.ScissorRect) {
-        const auto& rectangle = *renderPass.ScissorRect;
+        const auto& rect = *renderPass.ScissorRect;
 
-        POMDOG_ASSERT(rectangle.Width > 0);
-        POMDOG_ASSERT(rectangle.Height > 0);
+        POMDOG_ASSERT(rect.Width > 0);
+        POMDOG_ASSERT(rect.Height > 0);
 
         VkRect2D scissorRect;
-        scissorRect.offset.x = rectangle.X;
-        scissorRect.offset.y = rectangle.Y;
-        scissorRect.extent.width = rectangle.Width;
-        scissorRect.extent.height = rectangle.Height;
+        scissorRect.offset.x = rect.X;
+        scissorRect.offset.y = rect.Y;
+        scissorRect.extent.width = rect.Width;
+        scissorRect.extent.height = rect.Height;
 
         vkCmdSetScissor(commandBuffer, 0, 1, &scissorRect);
     }
 
-    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
+    std::array<VkClearAttachment, 9> clearAttachments;
+    std::array<VkClearRect, 9> clearRects;
+
+    const bool useBackBuffer = (std::get<0>(renderPass.RenderTargets.front()) == nullptr);
+
+    const auto setClearColor = [](VkClearAttachment& attachment, std::uint32_t index, const Vector4& clearColor) {
+        attachment.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        attachment.colorAttachment = index;
+        attachment.clearValue.color.float32[0] = clearColor.X;
+        attachment.clearValue.color.float32[1] = clearColor.Y;
+        attachment.clearValue.color.float32[2] = clearColor.Z;
+        attachment.clearValue.color.float32[3] = clearColor.W;
+    };
+
+    // FIXME: Not implemented yet.
+    POMDOG_ASSERT(false);
+    const std::uint32_t renderTargetWidth = 1;
+    const std::uint32_t renderTargetHeight = 1;
+
+    std::uint32_t attachmentCount = 0;
+
+    if (useBackBuffer) {
+        auto& renderTargetView = renderPass.RenderTargets.front();
+        auto& clearColor = std::get<1>(renderTargetView);
+        POMDOG_ASSERT(std::get<0>(renderTargetView) == nullptr);
+
+        constexpr std::uint32_t renderTargetIndex = 0;
+        if (clearColor) {
+            auto& clearAttachment = clearAttachments[renderTargetIndex];
+            setClearColor(clearAttachment, renderTargetIndex, *clearColor);
+
+            auto& rect = clearRects[renderTargetIndex];
+            rect.rect.offset.x = 0;
+            rect.rect.offset.y = 0;
+            rect.rect.extent.width = renderTargetWidth;
+            rect.rect.extent.height = renderTargetHeight;
+            rect.baseArrayLayer = 0;
+            rect.layerCount = 1;
+        }
+
+        attachmentCount = 1;
+    }
+    else {
+        std::uint32_t renderTargetIndex = 0;
+        for (const auto& renderTargetView: renderPass.RenderTargets) {
+            auto& renderTarget = std::get<0>(renderTargetView);
+            auto& clearColor = std::get<1>(renderTargetView);
+
+            if (renderTarget == nullptr) {
+                break;
+            }
+            auto nativeRenderTarget = static_cast<RenderTarget2DVulkan*>(renderTarget->GetNativeRenderTarget2D());
+            POMDOG_ASSERT(nativeRenderTarget == dynamic_cast<RenderTarget2DVulkan*>(renderTarget->GetNativeRenderTarget2D()));
+            POMDOG_ASSERT(nativeRenderTarget != nullptr);
+
+            if (clearColor) {
+                auto& clearAttachment = clearAttachments[renderTargetIndex];
+                setClearColor(clearAttachment, renderTargetIndex, *clearColor);
+
+                auto& rect = clearRects[renderTargetIndex];
+                rect.rect.offset.x = 0;
+                rect.rect.offset.y = 0;
+                rect.rect.extent.width = renderTargetWidth;
+                rect.rect.extent.height = renderTargetHeight;
+                rect.baseArrayLayer = 0;
+                rect.layerCount = 1;
+            }
+
+            ++renderTargetIndex;
+        }
+
+        attachmentCount = renderTargetIndex;
+    }
+
+    {
+        auto& renderTargetView = renderPass.RenderTargets.front();
+        auto& renderTarget = std::get<0>(renderTargetView);
+
+        const auto depthStencilBufferIndex = attachmentCount;
+        POMDOG_ASSERT(depthStencilBufferIndex < clearAttachments.size());
+        POMDOG_ASSERT(depthStencilBufferIndex < clearRects.size());
+
+        // FIXME: Not implemented yet.
+        POMDOG_ASSERT(false);
+        const bool useDepthStencilView = true;
+
+        if (useDepthStencilView) {
+            if (!renderTarget) {
+                // NOTE: Use back buffer
+                auto& rect = clearRects[depthStencilBufferIndex];
+                rect.rect.offset.x = 0;
+                rect.rect.offset.y = 0;
+                rect.rect.extent.width = renderTargetWidth;
+                rect.rect.extent.height = renderTargetHeight;
+                rect.baseArrayLayer = 0;
+                rect.layerCount = 1;
+            }
+            else {
+                // NOTE: Use render target texture
+                auto& rect = clearRects[depthStencilBufferIndex];
+                rect.rect.offset.x = 0;
+                rect.rect.offset.y = 0;
+                rect.rect.extent.width = renderTargetWidth;
+                rect.rect.extent.height = renderTargetHeight;
+                rect.baseArrayLayer = 0;
+                rect.layerCount = 1;
+            }
+
+            auto& attachment = clearAttachments[depthStencilBufferIndex];
+            attachment.aspectMask = 0;
+            attachment.colorAttachment = depthStencilBufferIndex;
+
+            if (renderPass.ClearDepth) {
+                attachment.aspectMask |= VK_IMAGE_ASPECT_DEPTH_BIT;
+                attachment.clearValue.depthStencil.depth = *renderPass.ClearDepth;
+            }
+            if (renderPass.ClearStencil) {
+                attachment.aspectMask |= VK_IMAGE_ASPECT_STENCIL_BIT;
+                attachment.clearValue.depthStencil.stencil = *renderPass.ClearStencil;
+            }
+
+            attachmentCount += 1;
+        }
+    }
+
+    vkCmdClearAttachments(
+        commandBuffer,
+        attachmentCount,
+        clearAttachments.data(),
+        attachmentCount,
+        clearRects.data());
 }
 
-void GraphicsCommandListVulkan::SetPrimitiveTopology(PrimitiveTopology primitiveTopology)
-{
-    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
-}
-
-void GraphicsCommandListVulkan::SetBlendFactor(const Color& blendFactor)
+void GraphicsCommandListVulkan::SetViewport(const Viewport& viewportIn)
 {
     POMDOG_ASSERT(commandBuffer != nullptr);
-    const auto colorVector = blendFactor.ToVector4();
-    vkCmdSetBlendConstants(commandBuffer, colorVector.Data());
+
+    POMDOG_ASSERT(viewportIn.Width > 0);
+    POMDOG_ASSERT(viewportIn.Height > 0);
+
+    VkViewport viewport;
+    viewport.x = viewportIn.TopLeftX;
+    viewport.y = viewportIn.TopLeftY;
+    viewport.width = viewportIn.Width;
+    viewport.height = viewportIn.Height;
+    viewport.minDepth = viewportIn.MinDepth;
+    viewport.maxDepth = viewportIn.MaxDepth;
+
+    vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
+}
+
+void GraphicsCommandListVulkan::SetScissorRect(const Rectangle& rect)
+{
+    POMDOG_ASSERT(commandBuffer != nullptr);
+
+    POMDOG_ASSERT(rect.Width > 0);
+    POMDOG_ASSERT(rect.Height > 0);
+
+    VkRect2D scissorRect;
+    scissorRect.offset.x = rect.X;
+    scissorRect.offset.y = rect.Y;
+    scissorRect.extent.width = rect.Width;
+    scissorRect.extent.height = rect.Height;
+
+    vkCmdSetScissor(commandBuffer, 0, 1, &scissorRect);
+}
+
+void GraphicsCommandListVulkan::SetBlendFactor(const Vector4& blendFactor)
+{
+    POMDOG_ASSERT(commandBuffer != nullptr);
+    vkCmdSetBlendConstants(commandBuffer, blendFactor.Data());
 }
 
 void GraphicsCommandListVulkan::SetVertexBuffer(
@@ -196,7 +338,24 @@ void GraphicsCommandListVulkan::SetVertexBuffer(
     const std::shared_ptr<VertexBuffer>& vertexBuffer,
     std::size_t offset)
 {
-    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
+    POMDOG_ASSERT(commandBuffer != nullptr);
+    POMDOG_ASSERT(index >= 0);
+    POMDOG_ASSERT(vertexBuffer != nullptr);
+    POMDOG_ASSERT(vertexBuffer->GetNativeVertexBuffer() != nullptr);
+    POMDOG_ASSERT((offset % 256) == 0);
+
+    auto nativeVertexBuffer = static_cast<BufferVulkan*>(
+        vertexBuffer->GetNativeVertexBuffer());
+
+    POMDOG_ASSERT(nativeVertexBuffer != nullptr);
+    POMDOG_ASSERT(nativeVertexBuffer == dynamic_cast<BufferVulkan*>(vertexBuffer->GetNativeVertexBuffer()));
+    POMDOG_ASSERT(nativeVertexBuffer->GetBuffer() != nullptr);
+
+    const auto slotIndex = static_cast<std::uint32_t>(index);
+    std::array<VkBuffer, 1> vertexBuffers = {nativeVertexBuffer->GetBuffer()};
+    std::array<VkDeviceSize, 1> offsets = {offset};
+
+    vkCmdBindVertexBuffers(commandBuffer, slotIndex, 1, vertexBuffers.data(), offsets.data());
 }
 
 void GraphicsCommandListVulkan::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBufferIn)
@@ -214,8 +373,6 @@ void GraphicsCommandListVulkan::SetIndexBuffer(const std::shared_ptr<IndexBuffer
     const auto indexType = ToVkIndexType(indexBufferIn->GetElementSize());
 
     vkCmdBindIndexBuffer(commandBuffer, indexBuffer, offset, indexType);
-
-    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 
 void GraphicsCommandListVulkan::SetPipelineState(const std::shared_ptr<NativePipelineState>& pipelineState)
@@ -223,7 +380,11 @@ void GraphicsCommandListVulkan::SetPipelineState(const std::shared_ptr<NativePip
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 
-void GraphicsCommandListVulkan::SetConstantBuffer(int index, const std::shared_ptr<NativeBuffer>& constantBuffer)
+void GraphicsCommandListVulkan::SetConstantBuffer(
+    int index,
+    const std::shared_ptr<NativeBuffer>& constantBuffer,
+    std::size_t offset,
+    std::size_t sizeInBytes)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }

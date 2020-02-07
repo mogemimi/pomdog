@@ -40,9 +40,11 @@ public:
 
     void SetRenderPass(RenderPass&& renderPass) override;
 
-    void SetPrimitiveTopology(PrimitiveTopology primitiveTopology) override;
+    void SetViewport(const Viewport& viewport) override;
 
-    void SetBlendFactor(const Color& blendFactor) override;
+    void SetScissorRect(const Rectangle& scissorRect) override;
+
+    void SetBlendFactor(const Vector4& blendFactor) override;
 
     void SetVertexBuffer(
         int index,
@@ -53,7 +55,11 @@ public:
 
     void SetPipelineState(const std::shared_ptr<NativePipelineState>& pipelineState) override;
 
-    void SetConstantBuffer(int index, const std::shared_ptr<NativeBuffer>& constantBuffer) override;
+    void SetConstantBuffer(
+        int index,
+        const std::shared_ptr<NativeBuffer>& constantBuffer,
+        std::size_t offset,
+        std::size_t sizeInBytes) override;
 
     void SetSampler(int index, std::shared_ptr<NativeSamplerState>&& sampler) override;
 

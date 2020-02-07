@@ -8,11 +8,10 @@
 
 namespace Pomdog::Detail {
 class ShaderBytecode;
+struct ShaderCompileOptions;
 } // namespace Pomdog::Detail
 
 namespace Pomdog::Detail::Vulkan {
-
-struct ShaderCompileOptions;
 
 class ShaderVulkan final : public Shader {
 public:
@@ -23,8 +22,9 @@ public:
 
     ~ShaderVulkan();
 
+    ::VkShaderModule GetShaderModule() const noexcept;
+
 private:
-//    VkPipelineShaderStageCreateInfo shaderStage;
     ::VkDevice device;
     ::VkShaderModule shaderModule;
 };

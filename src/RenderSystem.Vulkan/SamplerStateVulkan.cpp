@@ -18,6 +18,8 @@ VkSamplerAddressMode ToSamplerAddressMode(TextureAddressMode addressMode) noexce
         return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
     case TextureAddressMode::Mirror:
         return VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT;
+    case TextureAddressMode::Border:
+        return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
     }
     return VK_SAMPLER_ADDRESS_MODE_REPEAT;
 }
@@ -88,38 +90,33 @@ SamplerStateVulkan::SamplerStateVulkan(
 {
     POMDOG_ASSERT(device != nullptr);
 
-    VkSamplerCreateInfo samplerCreateInfo;
-    samplerCreateInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-    samplerCreateInfo.pNext = nullptr;
-    samplerCreateInfo.flags = 0;
+    VkSamplerCreateInfo createInfo;
+    createInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+    createInfo.pNext = nullptr;
+    createInfo.flags = 0;
     std::tie(
-        samplerCreateInfo.minFilter,
-        samplerCreateInfo.magFilter,
-        samplerCreateInfo.mipmapMode) = ToTextureFilter(description.Filter);
-    samplerCreateInfo.addressModeU = ToSamplerAddressMode(description.AddressU);
-    samplerCreateInfo.addressModeV = ToSamplerAddressMode(description.AddressV);
-    samplerCreateInfo.addressModeW = ToSamplerAddressMode(description.AddressW);
-    samplerCreateInfo.mipLodBias = 0.0f;
-    samplerCreateInfo.anisotropyEnable = VK_FALSE;
-    samplerCreateInfo.compareEnable = VK_FALSE;
-    samplerCreateInfo.compareOp = VK_COMPARE_OP_NEVER;
-    samplerCreateInfo.minLod = description.MinMipLevel;
-    samplerCreateInfo.maxLod = description.MaxMipLevel;
-    samplerCreateInfo.maxAnisotropy = description.MaxAnisotropy;
-    samplerCreateInfo.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
-    samplerCreateInfo.unnormalizedCoordinates = VK_FALSE;
+        createInfo.minFilter,
+        createInfo.magFilter,
+        createInfo.mipmapMode) = ToTextureFilter(description.Filter);
+    createInfo.addressModeU = ToSamplerAddressMode(description.AddressU);
+    createInfo.addressModeV = ToSamplerAddressMode(description.AddressV);
+    createInfo.addressModeW = ToSamplerAddressMode(description.AddressW);
+    createInfo.mipLodBias = 0.0f;
+    createInfo.anisotropyEnable = VK_FALSE;
+    createInfo.compareEnable = VK_FALSE;
+    createInfo.compareOp = VK_COMPARE_OP_NEVER;
+    createInfo.minLod = description.MinMipLevel;
+    createInfo.maxLod = description.MaxMipLevel;
+    createInfo.maxAnisotropy = description.MaxAnisotropy;
+    createInfo.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
+    createInfo.unnormalizedCoordinates = VK_FALSE;
 
-    auto result = vkCreateSampler(device, &samplerCreateInfo, nullptr, &sampler);
+    auto result = vkCreateSampler(device, &createInfo, nullptr, &sampler);
     if (result != VK_SUCCESS) {
         // FUS RO DAH!
         POMDOG_THROW_EXCEPTION(std::runtime_error,
             "Failed to create VkSampler");
     }
-
-    ///@todo Not implemented
-
-    // FUS RO DAH!
-    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 
 SamplerStateVulkan::~SamplerStateVulkan()

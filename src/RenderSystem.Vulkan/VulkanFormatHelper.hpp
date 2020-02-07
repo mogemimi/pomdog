@@ -4,12 +4,11 @@
 
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <vulkan/vulkan.h>
-#include <optional>
 
 namespace Pomdog::Detail::Vulkan {
 
-struct VulkanFormatHelper final {
-    static std::optional<VkFormat> ToVkFormat(SurfaceFormat format) noexcept;
-};
+VkFormat ToSurfaceFormat(SurfaceFormat format) noexcept;
+
+VkFormat ToDepthFormat(DepthFormat depthFormat) noexcept;
 
 } // namespace Pomdog::Detail::Vulkan
