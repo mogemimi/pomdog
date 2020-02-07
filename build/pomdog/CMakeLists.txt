@@ -824,8 +824,8 @@ set(POMDOG_SOURCES_VULKAN
   ${POMDOG_DIR}/src/RenderSystem.Vulkan/GraphicsDeviceVulkan.hpp
   ${POMDOG_DIR}/src/RenderSystem.Vulkan/PipelineStateVulkan.cpp
   ${POMDOG_DIR}/src/RenderSystem.Vulkan/PipelineStateVulkan.hpp
-  ${POMDOG_DIR}/src/RenderSystem.Vulkan/RenderTexture2DVulkan.cpp
-  ${POMDOG_DIR}/src/RenderSystem.Vulkan/RenderTexture2DVulkan.hpp
+  ${POMDOG_DIR}/src/RenderSystem.Vulkan/RenderTarget2DVulkan.cpp
+  ${POMDOG_DIR}/src/RenderSystem.Vulkan/RenderTarget2DVulkan.hpp
   ${POMDOG_DIR}/src/RenderSystem.Vulkan/SamplerStateVulkan.cpp
   ${POMDOG_DIR}/src/RenderSystem.Vulkan/SamplerStateVulkan.hpp
   ${POMDOG_DIR}/src/RenderSystem.Vulkan/ShaderVulkan.cpp
