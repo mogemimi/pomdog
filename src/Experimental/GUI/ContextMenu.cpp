@@ -156,9 +156,6 @@ void ContextMenu::DoLayout()
 
 void ContextMenu::Draw(DrawingContext& drawingContext)
 {
-    UpdateLayout();
-    POMDOG_ASSERT(!needToUpdateLayout);
-
     const auto* colorScheme = drawingContext.GetColorScheme();
     POMDOG_ASSERT(colorScheme != nullptr);
 

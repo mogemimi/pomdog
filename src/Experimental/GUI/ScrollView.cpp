@@ -48,7 +48,7 @@ void ScrollView::SetPosition(const Point2D& positionIn)
     }
 }
 
-void ScrollView::SetBackgroundColor(const Color &color) noexcept
+void ScrollView::SetBackgroundColor(const Color& color) noexcept
 {
     backgroundColor = color;
 }
