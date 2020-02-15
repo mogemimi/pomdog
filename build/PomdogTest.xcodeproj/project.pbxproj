@@ -113,6 +113,12 @@
 		D7703E0822FCB23400442403 /* ErrorsTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7703E0622FCB23400442403 /* ErrorsTest.cpp */; };
 		D7703E0A22FCB24700442403 /* DelegateTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7703E0922FCB24700442403 /* DelegateTest.cpp */; };
 		D7703E0B22FCB24700442403 /* DelegateTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7703E0922FCB24700442403 /* DelegateTest.cpp */; };
+		D7AD4A5D23F7D6B300E4A556 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7AD4A5A23F7D6B300E4A556 /* MetalKit.framework */; };
+		D7AD4A5F23F7D6BA00E4A556 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7AD4A5E23F7D6BA00E4A556 /* Metal.framework */; };
+		D7AD4A6123F7D6C100E4A556 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7AD4A6023F7D6C100E4A556 /* IOKit.framework */; };
+		D7AD4A6223F7D6D400E4A556 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7AD4A6023F7D6C100E4A556 /* IOKit.framework */; };
+		D7AD4A6323F7D6DB00E4A556 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7AD4A5E23F7D6BA00E4A556 /* Metal.framework */; };
+		D7AD4A6423F7D6E100E4A556 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7AD4A5A23F7D6B300E4A556 /* MetalKit.framework */; };
 		D9A0B1F8D2EEDA3FAEB1189C /* BoundingSphereTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9B0A27C53B61D53FB2C8FCF9 /* BoundingSphereTest.cpp */; };
 		DE960EA2AD22C5A8FA2877FC /* QuaternionTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4BCA9759FC4E3E6735E7531D /* QuaternionTest.cpp */; };
 		DE967E47909AFDBEEFB99607 /* GameClockTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DFD17C83A321AA8BC76DFA4E /* GameClockTest.cpp */; };
@@ -220,6 +226,9 @@
 		D7703E0122FCB22900442403 /* SpinLockTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SpinLockTest.cpp; sourceTree = "<group>"; };
 		D7703E0622FCB23400442403 /* ErrorsTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ErrorsTest.cpp; sourceTree = "<group>"; };
 		D7703E0922FCB24700442403 /* DelegateTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DelegateTest.cpp; sourceTree = "<group>"; };
+		D7AD4A5A23F7D6B300E4A556 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
+		D7AD4A5E23F7D6BA00E4A556 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
+		D7AD4A6023F7D6C100E4A556 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		D8F1F6F7CC0ACB1CF8F7DD09 /* KeyboardStateTest.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = KeyboardStateTest.cpp; sourceTree = "<group>"; };
 		DF87E2EA6D1C796C51A886A7 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		DFD17C83A321AA8BC76DFA4E /* GameClockTest.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GameClockTest.cpp; sourceTree = "<group>"; };
@@ -241,6 +250,9 @@
 				A9D641961C343074006E14E0 /* libpomdog.a in Frameworks */,
 				3F233726FFBFFEBE36E2983D /* AudioToolBox.framework in Frameworks */,
 				5F7DB68F373F844793FC4D9D /* Cocoa.framework in Frameworks */,
+				D7AD4A6123F7D6C100E4A556 /* IOKit.framework in Frameworks */,
+				D7AD4A5F23F7D6BA00E4A556 /* Metal.framework in Frameworks */,
+				D7AD4A5D23F7D6B300E4A556 /* MetalKit.framework in Frameworks */,
 				7E14449EE47BF435E52F1C65 /* OpenAL.framework in Frameworks */,
 				CE0FB9D9F7E58DC14950C6D3 /* OpenGL.framework in Frameworks */,
 				C70AF5750080F8927CA84E9F /* QuartzCore.framework in Frameworks */,
@@ -251,11 +263,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A9D641971C343079006E14E0 /* Pomdog.framework in Frameworks */,
 				A90B09AA1C25A774006E749D /* AudioToolBox.framework in Frameworks */,
 				A90B09AC1C25A774006E749D /* Cocoa.framework in Frameworks */,
+				D7AD4A6223F7D6D400E4A556 /* IOKit.framework in Frameworks */,
+				D7AD4A6323F7D6DB00E4A556 /* Metal.framework in Frameworks */,
+				D7AD4A6423F7D6E100E4A556 /* MetalKit.framework in Frameworks */,
 				A90B09AB1C25A774006E749D /* OpenAL.framework in Frameworks */,
 				A90B09AD1C25A774006E749D /* OpenGL.framework in Frameworks */,
+				A9D641971C343079006E14E0 /* Pomdog.framework in Frameworks */,
 				A90B09AE1C25A774006E749D /* QuartzCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -328,6 +343,9 @@
 			children = (
 				FF2591B788324D90FD154981 /* AudioToolBox.framework */,
 				DF87E2EA6D1C796C51A886A7 /* Cocoa.framework */,
+				D7AD4A6023F7D6C100E4A556 /* IOKit.framework */,
+				D7AD4A5E23F7D6BA00E4A556 /* Metal.framework */,
+				D7AD4A5A23F7D6B300E4A556 /* MetalKit.framework */,
 				1C8B6E715F53F2A76D934FF5 /* OpenAL.framework */,
 				8740D20FB4E0A88300F8C2A5 /* OpenGL.framework */,
 				8821B1A3B9B0B5552E6FBFB6 /* QuartzCore.framework */,
