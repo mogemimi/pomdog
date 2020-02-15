@@ -301,13 +301,16 @@ void GameHostCocoa::Impl::Exit()
 
     if (displayLinkEnabled) {
         if (displayLink != nullptr) {
-            CVDisplayLinkStop(displayLink);
+            dispatch_async(dispatch_get_main_queue(), [this] {
+                CVDisplayLinkStop(displayLink);
+            });
         }
         GameWillExit();
     }
 }
 
-CVReturn GameHostCocoa::Impl::DisplayLinkCallback(
+CVReturn
+GameHostCocoa::Impl::DisplayLinkCallback(
     [[maybe_unused]] CVDisplayLinkRef displayLink,
     [[maybe_unused]] const CVTimeStamp* now,
     [[maybe_unused]] const CVTimeStamp* outputTime,
@@ -315,9 +318,11 @@ CVReturn GameHostCocoa::Impl::DisplayLinkCallback(
     [[maybe_unused]] CVOptionFlags* flagsOut,
     void* displayLinkContext)
 {
-    auto gameHost = reinterpret_cast<GameHostCocoa::Impl*>(displayLinkContext);
-    POMDOG_ASSERT(gameHost != nullptr);
-    gameHost->GameLoop();
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        auto gameHost = reinterpret_cast<GameHostCocoa::Impl*>(displayLinkContext);
+        POMDOG_ASSERT(gameHost != nullptr);
+        gameHost->GameLoop();
+    });
     return kCVReturnSuccess;
 }
 
