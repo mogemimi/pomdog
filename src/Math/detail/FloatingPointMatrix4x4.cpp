@@ -701,7 +701,8 @@ template <typename T>
 FloatingPointMatrix4x4<T>
 FloatingPointMatrix4x4<T>::CreateLookAtLH(const FloatingPointVector3<T>& eye, const FloatingPointVector3<T>& at,
     const FloatingPointVector3<T>& up)
-{// Left-handed Cartesian Coordinates
+{
+    // NOTE: Left-handed Cartesian Coordinates
     FloatingPointMatrix4x4 result;
     CreateLookAtLH(eye, at, up, result);
     return result;
@@ -750,7 +751,8 @@ template <typename T>
 FloatingPointMatrix4x4<T>
 FloatingPointMatrix4x4<T>::CreateLookAtRH(const FloatingPointVector3<T>& eye, const FloatingPointVector3<T>& at,
     const FloatingPointVector3<T>& up)
-{// Right-handed Cartesian Coordinates
+{
+    // NOTE: Right-handed Cartesian Coordinates
     FloatingPointMatrix4x4 result;
     FloatingPointMatrix4x4::CreateLookAtRH(eye, at, up, result);
     return result;
@@ -1015,7 +1017,8 @@ FloatingPointMatrix4x4<T>::CreatePerspectiveOffCenterLH(T left, T right, T botto
 template <typename T>
 FloatingPointMatrix4x4<T>
 FloatingPointMatrix4x4<T>::CreatePerspectiveOffCenterLH(T left, T right, T bottom, T top, T zNear, T zFar)
-{// Left-handed Cartesian Coordinates
+{
+    // NOTE: Left-handed Cartesian Coordinates
     FloatingPointMatrix4x4 result;
     CreatePerspectiveOffCenterLH(left, right, bottom, top, zNear, zFar, result);
     return result;
@@ -1066,7 +1069,8 @@ FloatingPointMatrix4x4<T>::CreatePerspectiveOffCenterRH(T left, T right, T botto
 template <typename T>
 FloatingPointMatrix4x4<T>
 FloatingPointMatrix4x4<T>::CreatePerspectiveOffCenterRH(T left, T right, T bottom, T top, T zNear, T zFar)
-{// Right-handed Cartesian Coordinates
+{
+    // NOTE: Right-handed Cartesian Coordinates
     FloatingPointMatrix4x4 result;
     CreatePerspectiveOffCenterRH(left, right, bottom, top, zNear, zFar, result);
     return result;
@@ -1115,7 +1119,8 @@ FloatingPointMatrix4x4<T>::CreateOrthographicOffCenterLH(T left, T right, T bott
 template <typename T>
 FloatingPointMatrix4x4<T>
 FloatingPointMatrix4x4<T>::CreateOrthographicOffCenterLH(T left, T right, T bottom, T top, T zNearPlane, T zFarPlane)
-{// Left-handed Cartesian Coordinates
+{
+    // NOTE: Left-handed Cartesian Coordinates
     FloatingPointMatrix4x4 result;
     CreateOrthographicOffCenterLH(left, right, bottom, top, zNearPlane, zFarPlane, result);
     return result;
@@ -1164,7 +1169,8 @@ FloatingPointMatrix4x4<T>::CreateOrthographicOffCenterRH(T left, T right, T bott
 template <typename T>
 FloatingPointMatrix4x4<T>
 FloatingPointMatrix4x4<T>::CreateOrthographicOffCenterRH(T left, T right, T bottom, T top, T zNearPlane, T zFarPlane)
-{// Right-handed Cartesian Coordinates
+{
+    // NOTE: Right-handed Cartesian Coordinates
     FloatingPointMatrix4x4 result;
     CreateOrthographicOffCenterRH(left, right, bottom, top, zNearPlane, zFarPlane, result);
     return result;
@@ -1181,7 +1187,8 @@ FloatingPointMatrix4x4<T>::CreateOrthographicLH(T width, T height, T zNearPlane,
 template <typename T>
 FloatingPointMatrix4x4<T>
 FloatingPointMatrix4x4<T>::CreateOrthographicLH(T width, T height, T zNearPlane, T zFarPlane)
-{// Left-handed Cartesian Coordinates
+{
+    // NOTE: Left-handed Cartesian Coordinates
     FloatingPointMatrix4x4 result;
     CreateOrthographicLH(width, height, zNearPlane, zFarPlane, result);
     return result;
@@ -1198,7 +1205,8 @@ FloatingPointMatrix4x4<T>::CreateOrthographicRH(T width, T height, T zNearPlane,
 template <typename T>
 FloatingPointMatrix4x4<T>
 FloatingPointMatrix4x4<T>::CreateOrthographicRH(T width, T height, T zNearPlane, T zFarPlane)
-{// Right-handed Cartesian Coordinates
+{
+    // NOTE: Right-handed Cartesian Coordinates
     FloatingPointMatrix4x4 result;
     CreateOrthographicRH(width, height, zNearPlane, zFarPlane, result);
     return result;
