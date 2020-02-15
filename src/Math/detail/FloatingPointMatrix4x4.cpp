@@ -370,7 +370,12 @@ FloatingPointMatrix3x3<T> FloatingPointMatrix4x4<T>::Minor3x3(std::size_t row, s
     // r2 |31, 32, 33, 34| --------------------> |41, 42, 43, x|
     // r3 |41, 42, 43, 44|                       | x,  x,  x, x|
 
+#if defined(_MSC_VER) && !defined(NDEBUG)
+    // NOTE: Avoid MSVC warning C4701: potentially uninitialized local variable 'minorMatrix' used
+    auto minorMatrix = FloatingPointMatrix3x3<T>::Identity;
+#else
     FloatingPointMatrix3x3<T> minorMatrix;
+#endif
     for (std::size_t i = 0, s = 0; i < 4; ++i) {
         if (row == i) {
             continue;
@@ -386,14 +391,7 @@ FloatingPointMatrix3x3<T> FloatingPointMatrix4x4<T>::Minor3x3(std::size_t row, s
         }
         ++s;
     }
-#if defined(_MSC_VER) && !defined(NDEBUG)
-#pragma warning(push)
-#pragma warning(disable : 4701)
-#endif
     return minorMatrix;
-#if defined(_MSC_VER) && !defined(NDEBUG)
-#pragma warning(pop)
-#endif
 }
 
 template <typename T>

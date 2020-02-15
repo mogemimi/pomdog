@@ -308,7 +308,12 @@ FloatingPointMatrix2x2<T> FloatingPointMatrix3x3<T>::Minor2x2(std::size_t row, s
     // r1 |21, 22, 23| Minor2x2(mat, r2, c1) |21, 23. x|
     // r2 |31, 32, 33| --------------------> | x,  x, x|
 
+#if defined(_MSC_VER) && !defined(NDEBUG)
+    // NOTE: Avoid MSVC warning C4701: potentially uninitialized local variable 'minorMatrix' used
+    auto minorMatrix = FloatingPointMatrix2x2<T>::Identity;
+#else
     FloatingPointMatrix2x2<T> minorMatrix;
+#endif
     for (std::size_t i = 0, s = 0; i < RowSize; ++i) {
         if (row == i) {
             continue;
@@ -326,14 +331,7 @@ FloatingPointMatrix2x2<T> FloatingPointMatrix3x3<T>::Minor2x2(std::size_t row, s
         }
         ++s;
     }
-#if defined(_MSC_VER) && !defined(NDEBUG)
-#pragma warning(push)
-#pragma warning(disable : 4701)
-#endif
     return minorMatrix;
-#if defined(_MSC_VER) && !defined(NDEBUG)
-#pragma warning(pop)
-#endif
 }
 
 template <typename T>
