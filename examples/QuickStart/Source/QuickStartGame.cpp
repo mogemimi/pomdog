@@ -123,34 +123,12 @@ void QuickStartGame::Initialize()
             myShaderConstants.ViewProjection = view * projection;
         };
 
-        auto createGraphicsCommands = [this](int width, int height) {
-            Viewport viewport = {0, 0, width, height};
-            RenderPass pass;
-            pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue.ToVector4()};
-            pass.ClearDepth = 1.0f;
-            pass.ClearStencil = 0;
-            pass.Viewport = viewport;
-            pass.ScissorRect = viewport.GetBounds();
-
-            commandList->Reset();
-            commandList->SetRenderPass(std::move(pass));
-            commandList->SetConstantBuffer(0, constantBuffer);
-            commandList->SetSamplerState(0, sampler);
-            commandList->SetTexture(0, texture);
-            commandList->SetVertexBuffer(0, vertexBuffer);
-            commandList->SetPipelineState(pipelineState);
-            commandList->DrawIndexed(indexBuffer, indexBuffer->GetIndexCount(), 0);
-            commandList->Close();
-        };
-
         // Initialize shader resources
         auto bounds = window->GetClientBounds();
         updateShaderConstants(bounds.Width, bounds.Height);
-        createGraphicsCommands(bounds.Width, bounds.Height);
 
         // Connect to window resize event notification
         connect(window->ClientSizeChanged, updateShaderConstants);
-        connect(window->ClientSizeChanged, createGraphicsCommands);
     }
     {
         // Create timer
@@ -179,11 +157,37 @@ void QuickStartGame::Update()
     auto scale = Matrix4x4::CreateScale(Vector3(texture->GetWidth(), texture->GetHeight(), 1.0f));
 
     myShaderConstants.Model = scale * rotate;
-    constantBuffer->SetValue(myShaderConstants);
 }
 
 void QuickStartGame::Draw()
 {
+    const auto presentationParameters = graphicsDevice->GetPresentationParameters();
+
+    Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
+    RenderPass pass;
+    pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue.ToVector4()};
+    pass.ClearDepth = 1.0f;
+    pass.ClearStencil = 0;
+    pass.Viewport = viewport;
+    pass.ScissorRect = viewport.GetBounds();
+
+    // Reset graphics command list
+    commandList->Reset();
+
+    // Update constant buffer
+    constantBuffer->SetValue(myShaderConstants);
+
+    // Create graphics commands
+    commandList->SetRenderPass(std::move(pass));
+    commandList->SetConstantBuffer(0, constantBuffer);
+    commandList->SetSamplerState(0, sampler);
+    commandList->SetTexture(0, texture);
+    commandList->SetVertexBuffer(0, vertexBuffer);
+    commandList->SetPipelineState(pipelineState);
+    commandList->DrawIndexed(indexBuffer, indexBuffer->GetIndexCount(), 0);
+    commandList->Close();
+
+    // Submit graphics command list for execution
     commandQueue->Reset();
     commandQueue->PushbackCommandList(commandList);
     commandQueue->ExecuteCommandLists();

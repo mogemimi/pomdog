@@ -6,7 +6,7 @@ namespace QuickStart {
 
 using namespace Pomdog;
 
-struct alignas(16) MyShaderConstants {
+struct alignas(16) MyShaderConstants final {
     Matrix4x4 Model;
     Matrix4x4 ViewProjection;
 };
