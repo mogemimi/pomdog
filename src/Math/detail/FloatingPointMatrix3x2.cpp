@@ -256,7 +256,7 @@ FloatingPointMatrix3x2<T>::CreateTranslation(const FloatingPointVector2<T>& posi
 {
     FloatingPointMatrix3x2 result;
     CreateTranslation(position, result);
-    return std::move(result);
+    return result;
 }
 
 template <typename T>
@@ -277,7 +277,7 @@ FloatingPointMatrix3x2<T>::CreateScale(T scale) noexcept
 {
     FloatingPointMatrix3x2 result;
     CreateScale(scale, result);
-    return std::move(result);
+    return result;
 }
 
 template <typename T>
@@ -301,7 +301,7 @@ FloatingPointMatrix3x2<T>::CreateScale(const FloatingPointVector2<T>& scale) noe
 {
     FloatingPointMatrix3x2 result;
     CreateScale(scale, result);
-    return std::move(result);
+    return result;
 }
 
 template <typename T>
@@ -326,7 +326,7 @@ FloatingPointMatrix3x2<T>::CreateRotation(const Radian<T>& angle)
 {
     FloatingPointMatrix3x2 result;
     CreateRotation(angle, result);
-    return std::move(result);
+    return result;
 }
 
 template <typename T>
@@ -350,7 +350,7 @@ FloatingPointMatrix3x2<T>::CreateSkew(const FloatingPointVector2<T>& skew)
 {
     FloatingPointMatrix3x2 result;
     CreateSkew(skew, result);
-    return std::move(result);
+    return result;
 }
 
 template <typename T>
@@ -373,7 +373,7 @@ FloatingPointMatrix3x2<T>::Lerp(const FloatingPointMatrix3x2& source1,
 {
     FloatingPointMatrix3x2 result;
     Lerp(source1, source2, amount, result);
-    return std::move(result);
+    return result;
 }
 
 template <typename T>

@@ -26,7 +26,7 @@ struct POMDOG_EXPORT BinaryReader final {
         result.reserve(elementCount + 1);
         result.resize(elementCount);
         stream.read(reinterpret_cast<char*>(result.data()), sizeof(T) * result.size());
-        return std::move(result);
+        return result;
     }
 
     template <typename T, std::size_t ElementCount, class Stream>
@@ -37,7 +37,7 @@ struct POMDOG_EXPORT BinaryReader final {
 
         std::array<T, ElementCount> result;
         stream.read(reinterpret_cast<char*>(result.data()), sizeof(T) * result.size());
-        return std::move(result);
+        return result;
     }
 
     template <typename T, class Stream>
@@ -61,7 +61,7 @@ struct POMDOG_EXPORT BinaryReader final {
         static_assert(std::is_pod<T>::value, "You can only use POD types.");
         T value;
         std::memcpy(&value, data, sizeof(value));
-        return std::move(value);
+        return value;
     }
 };
 

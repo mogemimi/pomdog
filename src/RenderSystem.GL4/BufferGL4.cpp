@@ -75,7 +75,7 @@ BufferGL4<Tag>::BufferGL4(
     bufferObject = ([] {
         BufferObject buffer;
         glGenBuffers(1, buffer.Data());
-        return std::move(buffer);
+        return buffer;
     })();
     POMDOG_CHECK_ERROR_GL4("glGenBuffers");
 

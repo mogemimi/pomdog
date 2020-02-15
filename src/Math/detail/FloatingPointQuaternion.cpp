@@ -201,7 +201,7 @@ FloatingPointQuaternion<T>::Normalize(const FloatingPointQuaternion& source) noe
 {
     FloatingPointQuaternion result;
     Normalize(source, result);
-    return std::move(result);
+    return result;
 }
 
 template <typename T>
@@ -229,7 +229,7 @@ FloatingPointQuaternion<T>::Slerp(const FloatingPointQuaternion& begin, const Fl
 {
     FloatingPointQuaternion result;
     Slerp(begin, end, amount, result);
-    return std::move(result);
+    return result;
 }
 
 template <typename T>
@@ -348,7 +348,7 @@ FloatingPointQuaternion<T>::CreateFromRotationMatrix(const FloatingPointMatrix4x
 {
     FloatingPointQuaternion result;
     CreateFromRotationMatrix(rotation, result);
-    return std::move(result);
+    return result;
 }
 
 template <typename T>

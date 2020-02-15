@@ -77,7 +77,7 @@ public:
     {
         AssetBuilders::Builder<T> builder(*this,
             std::forward<Arguments>(arguments)...);
-        return std::move(builder);
+        return builder;
     }
 
     /// Disposes all loaded assets in this manager.

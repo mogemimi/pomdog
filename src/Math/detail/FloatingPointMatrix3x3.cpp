@@ -326,7 +326,7 @@ FloatingPointMatrix2x2<T> FloatingPointMatrix3x3<T>::Minor2x2(std::size_t row, s
         }
         ++s;
     }
-    return std::move(minorMatrix);
+    return minorMatrix;
 }
 
 template <typename T>
@@ -382,7 +382,7 @@ FloatingPointMatrix3x3<T>::CreateTranslation(const FloatingPointVector2<T>& posi
 {
     FloatingPointMatrix3x3 result;
     CreateTranslation(position, result);
-    return std::move(result);
+    return result;
 }
 
 template <typename T>
@@ -406,7 +406,7 @@ FloatingPointMatrix3x3<T>::CreateScale(T scale) noexcept
 {
     FloatingPointMatrix3x3 result;
     CreateScale(scale, result);
-    return std::move(result);
+    return result;
 }
 
 template <typename T>
@@ -434,7 +434,7 @@ FloatingPointMatrix3x3<T>::CreateScale(const FloatingPointVector3<T>& scale) noe
 {
     FloatingPointMatrix3x3 result;
     CreateScale(scale, result);
-    return std::move(result);
+    return result;
 }
 
 template <typename T>
@@ -462,7 +462,7 @@ FloatingPointMatrix3x3<T>::CreateRotationX(const Radian<T>& angle)
 {
     FloatingPointMatrix3x3 result;
     CreateRotationX(angle, result);
-    return std::move(result);
+    return result;
 }
 
 template <typename T>
@@ -490,7 +490,7 @@ FloatingPointMatrix3x3<T>::CreateRotationY(const Radian<T>& angle)
 {
     FloatingPointMatrix3x3 result;
     CreateRotationY(angle, result);
-    return std::move(result);
+    return result;
 }
 
 template <typename T>
@@ -518,7 +518,7 @@ FloatingPointMatrix3x3<T>::CreateRotationZ(const Radian<T>& angle)
 {
     FloatingPointMatrix3x3 result;
     CreateRotationZ(angle, result);
-    return std::move(result);
+    return result;
 }
 
 template <typename T>
@@ -552,7 +552,7 @@ FloatingPointMatrix3x3<T>::CreateFromQuaternion(const FloatingPointQuaternion<T>
 {
     FloatingPointMatrix3x3 result;
     CreateFromQuaternion(quaternion, result);
-    return std::move(result);
+    return result;
 }
 
 template <typename T>
@@ -578,7 +578,7 @@ FloatingPointMatrix3x3<T>::Lerp(const FloatingPointMatrix3x3& source1,
 {
     FloatingPointMatrix3x3 result;
     Lerp(source1, source2, amount, result);
-    return std::move(result);
+    return result;
 }
 
 template <typename T>
@@ -616,7 +616,7 @@ FloatingPointMatrix3x3<T>::CreateFromAxisAngle(const FloatingPointVector3<T>& ax
 {
     FloatingPointMatrix3x3 result;
     CreateFromAxisAngle(axis, angle, result);
-    return std::move(result);
+    return result;
 }
 
 template <typename T>
