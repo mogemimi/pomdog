@@ -326,7 +326,14 @@ FloatingPointMatrix2x2<T> FloatingPointMatrix3x3<T>::Minor2x2(std::size_t row, s
         }
         ++s;
     }
+#if defined(_MSC_VER) && !defined(NDEBUG)
+#pragma warning(push)
+#pragma warning(disable : 4701)
+#endif
     return minorMatrix;
+#if defined(_MSC_VER) && !defined(NDEBUG)
+#pragma warning(pop)
+#endif
 }
 
 template <typename T>

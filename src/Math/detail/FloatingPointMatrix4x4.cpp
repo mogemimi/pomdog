@@ -386,7 +386,14 @@ FloatingPointMatrix3x3<T> FloatingPointMatrix4x4<T>::Minor3x3(std::size_t row, s
         }
         ++s;
     }
+#if defined(_MSC_VER) && !defined(NDEBUG)
+#pragma warning(push)
+#pragma warning(disable : 4701)
+#endif
     return minorMatrix;
+#if defined(_MSC_VER) && !defined(NDEBUG)
+#pragma warning(pop)
+#endif
 }
 
 template <typename T>
