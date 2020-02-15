@@ -66,7 +66,7 @@ void LineBatchTest::Draw()
         auto world = Matrix4x4::CreateScale(0.1f) *
             Matrix4x4::CreateRotationX(Math::PiOver4<float>) *
             Matrix4x4::CreateRotationY(std::sin( Math::TwoPi<float> * static_cast<float>(timer->GetTotalTime().count())));
-        auto view =  Matrix4x4::CreateTranslation(Vector3{0.0f, 0.0f, 50.0f});
+        auto view = Matrix4x4::CreateTranslation(Vector3{0.0f, 0.0f, 50.0f});
 
         auto projectionMatrix = Matrix4x4::CreatePerspectiveFieldOfViewLH(
             Math::PiOver4<float>,

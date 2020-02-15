@@ -39,7 +39,7 @@ void ParticleClipLoaderTest::Initialize()
 
     {
         // NOTE: Load particle clip from .json file
-        auto[particleClip, clipErr] = assets->Load<ParticleClip>("Particles/Fire2D.json");
+        auto [particleClip, clipErr] = assets->Load<ParticleClip>("Particles/Fire2D.json");
         if (clipErr != nullptr) {
             Log::Verbose("failed to load particle json: " + clipErr->ToString());
         }

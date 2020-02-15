@@ -104,7 +104,7 @@ void EditorGUITest::Initialize()
         auto listView = std::make_shared<GUI::ListView>(dispatcher, 150, 170);
         //listView->SetLayoutSpacing(10);
         scrollView->SetWidget(listView);
-        
+
         for (int i = 0; i < 40; ++i) {
             auto textBlock = std::make_shared<GUI::TextBlock>(dispatcher);
             textBlock->SetColor(Color::White);

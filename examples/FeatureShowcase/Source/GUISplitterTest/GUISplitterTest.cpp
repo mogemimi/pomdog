@@ -27,7 +27,7 @@ void GUISplitterTest::Initialize()
     splitter->SetPosition(Point2D{0, 0});
     splitter->SetLayoutSpacing(2);
     hierarchy->AddChild(splitter);
-    
+
     {
         auto button = std::make_shared<GUI::PushButton>(dispatcher);
         button->SetSize(button->GetWidth(), 70);

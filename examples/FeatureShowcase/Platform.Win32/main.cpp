@@ -9,15 +9,15 @@
 
 #if defined(POMDOG_CRTDEBUG)
 #define _CRTDBG_MAP_ALLOC
-#include <cstdlib>
 #include <crtdbg.h>
+#include <cstdlib>
 #endif
 
 int APIENTRY _tWinMain(
     HINSTANCE hInstance,
     HINSTANCE hPrevInstance,
-    LPTSTR    lpCmdLine,
-    int       nCmdShow)
+    LPTSTR lpCmdLine,
+    int nCmdShow)
 {
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);

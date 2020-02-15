@@ -1,6 +1,6 @@
 #include "QuickStartGame.hpp"
-#include <utility>
 #include <cmath>
+#include <utility>
 
 namespace QuickStart {
 
@@ -23,7 +23,7 @@ void QuickStartGame::Initialize()
     window->SetTitle("QuickStart");
 
     // Load a PNG as texture
-    if (auto[res, err] = assets->Load<Texture2D>("pomdog.png"); err != nullptr) {
+    if (auto [res, err] = assets->Load<Texture2D>("pomdog.png"); err != nullptr) {
         // Error handling
         Log::Critical("Game", err->ToString());
         gameHost->Exit();
