@@ -121,6 +121,7 @@ if(APPLE)
     "-framework Cocoa"
     "-framework IOKit"
     "-framework Metal"
+    "-framework MetalKit"
     "-framework OpenAL"
     "-framework OpenGL"
     "-framework QuartzCore"

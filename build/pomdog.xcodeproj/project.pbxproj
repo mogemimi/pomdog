@@ -427,6 +427,8 @@
 		D7703DF822FCB1BB00442403 /* SpinLock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7703DF622FCB1BB00442403 /* SpinLock.cpp */; };
 		D7703E0D22FCB26800442403 /* Errors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7703E0C22FCB26800442403 /* Errors.cpp */; };
 		D7703E0E22FCB26800442403 /* Errors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7703E0C22FCB26800442403 /* Errors.cpp */; };
+		D7AD4A3A23F7D45400E4A556 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7AD4A3923F7D45400E4A556 /* MetalKit.framework */; };
+		D7AD4A3B23F7D47D00E4A556 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7AD4A3923F7D45400E4A556 /* MetalKit.framework */; };
 		D7C188D72395DFBB00C3E381 /* EntityManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7C188D42395DFBB00C3E381 /* EntityManager.cpp */; };
 		D7C188D82395DFBB00C3E381 /* EntityManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7C188D42395DFBB00C3E381 /* EntityManager.cpp */; };
 		D7C188D92395DFBB00C3E381 /* ComponentTypeIndex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7C188D52395DFBB00C3E381 /* ComponentTypeIndex.cpp */; };
@@ -1147,6 +1149,7 @@
 		D7703E0C22FCB26800442403 /* Errors.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Errors.cpp; sourceTree = "<group>"; };
 		D7703E0F22FCB28800442403 /* Errors.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Errors.hpp; sourceTree = "<group>"; };
 		D79110B22382E1AA00C268C3 /* VertexBufferBindingGL4.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = VertexBufferBindingGL4.hpp; sourceTree = "<group>"; };
+		D7AD4A3923F7D45400E4A556 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
 		D7C188D42395DFBB00C3E381 /* EntityManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EntityManager.cpp; sourceTree = "<group>"; };
 		D7C188D52395DFBB00C3E381 /* ComponentTypeIndex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ComponentTypeIndex.cpp; sourceTree = "<group>"; };
 		D7C188D62395DFBB00C3E381 /* Entity.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Entity.cpp; sourceTree = "<group>"; };
@@ -1251,6 +1254,7 @@
 				A9D641941C34302C006E14E0 /* Cocoa.framework in Frameworks */,
 				A9E4B875210CDE03003F87DC /* IOKit.framework in Frameworks */,
 				A997F6DC1CAEFB0800926392 /* Metal.framework in Frameworks */,
+				D7AD4A3B23F7D47D00E4A556 /* MetalKit.framework in Frameworks */,
 				A9D641921C34301C006E14E0 /* OpenAL.framework in Frameworks */,
 				A9D641931C343023006E14E0 /* OpenGL.framework in Frameworks */,
 				A9D641951C343034006E14E0 /* QuartzCore.framework in Frameworks */,
@@ -1270,6 +1274,7 @@
 				667D66568DF02EFA74F073DE /* Cocoa.framework in Frameworks */,
 				A9E4B876210CDE12003F87DC /* IOKit.framework in Frameworks */,
 				A997F6DD1CAEFB1800926392 /* Metal.framework in Frameworks */,
+				D7AD4A3A23F7D45400E4A556 /* MetalKit.framework in Frameworks */,
 				BECB75C4B0471C4F7255D067 /* OpenAL.framework in Frameworks */,
 				3731B1EE2512BA451CA8E5D7 /* OpenGL.framework in Frameworks */,
 				727F4C3A231FF04CBE2A4B90 /* QuartzCore.framework in Frameworks */,
@@ -2685,10 +2690,11 @@
 		E5BCF0B13AAAF8E1F45AEBD5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				A9E4B874210CDE03003F87DC /* IOKit.framework */,
 				A997F6DE1CAEFB3E00926392 /* AudioToolbox.framework */,
 				F247CD851F16A8BCEC2E5BA1 /* Cocoa.framework */,
+				A9E4B874210CDE03003F87DC /* IOKit.framework */,
 				A997F6DB1CAEFB0800926392 /* Metal.framework */,
+				D7AD4A3923F7D45400E4A556 /* MetalKit.framework */,
 				E67C9ABE05AB8179C6615644 /* OpenAL.framework */,
 				EB039FAE65C607A60DDBB49C /* OpenGL.framework */,
 				A0AE4521498F69CE846F2EFB /* QuartzCore.framework */,

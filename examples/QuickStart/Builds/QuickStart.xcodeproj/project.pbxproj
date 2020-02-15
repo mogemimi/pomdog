@@ -16,9 +16,12 @@
 		A98BE0BE1CC22736008696A8 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A98BE0BD1CC22736008696A8 /* Cocoa.framework */; };
 		A98BE0C01CC2273C008696A8 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A98BE0BF1CC2273C008696A8 /* Metal.framework */; };
 		A98BE0C21CC22744008696A8 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A98BE0C11CC22744008696A8 /* MetalKit.framework */; };
-		A98BE0C41CC22754008696A8 /* ModelIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A98BE0C31CC22754008696A8 /* ModelIO.framework */; };
 		A98BE0D11CC22850008696A8 /* Pomdog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A98BE0D01CC2282B008696A8 /* Pomdog.framework */; };
 		A9C8A5191E04092B0068F062 /* Pomdog.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = A98BE0D01CC2282B008696A8 /* Pomdog.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D7AD4A4423F7D4E600E4A556 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7AD4A4223F7D4E600E4A556 /* OpenGL.framework */; };
+		D7AD4A4623F7D4FC00E4A556 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7AD4A4523F7D4FB00E4A556 /* OpenAL.framework */; };
+		D7AD4A4823F7D50E00E4A556 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7AD4A4723F7D50E00E4A556 /* IOKit.framework */; };
+		D7AD4A5123F7D66800E4A556 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7AD4A5023F7D66800E4A556 /* QuartzCore.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,6 +77,10 @@
 		A98BE0C11CC22744008696A8 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
 		A98BE0C31CC22754008696A8 /* ModelIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ModelIO.framework; path = System/Library/Frameworks/ModelIO.framework; sourceTree = SDKROOT; };
 		A98BE0C61CC2282A008696A8 /* pomdog.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = pomdog.xcodeproj; path = ../../../build/pomdog.xcodeproj; sourceTree = "<group>"; };
+		D7AD4A4223F7D4E600E4A556 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		D7AD4A4523F7D4FB00E4A556 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
+		D7AD4A4723F7D50E00E4A556 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		D7AD4A5023F7D66800E4A556 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,10 +89,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				A98BE0BE1CC22736008696A8 /* Cocoa.framework in Frameworks */,
+				D7AD4A4823F7D50E00E4A556 /* IOKit.framework in Frameworks */,
 				A98BE0C01CC2273C008696A8 /* Metal.framework in Frameworks */,
 				A98BE0C21CC22744008696A8 /* MetalKit.framework in Frameworks */,
-				A98BE0C41CC22754008696A8 /* ModelIO.framework in Frameworks */,
+				D7AD4A4623F7D4FC00E4A556 /* OpenAL.framework in Frameworks */,
+				D7AD4A4423F7D4E600E4A556 /* OpenGL.framework in Frameworks */,
 				A98BE0D11CC22850008696A8 /* Pomdog.framework in Frameworks */,
+				D7AD4A5123F7D66800E4A556 /* QuartzCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -146,6 +156,10 @@
 		A98BE0C51CC2275E008696A8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D7AD4A5023F7D66800E4A556 /* QuartzCore.framework */,
+				D7AD4A4723F7D50E00E4A556 /* IOKit.framework */,
+				D7AD4A4523F7D4FB00E4A556 /* OpenAL.framework */,
+				D7AD4A4223F7D4E600E4A556 /* OpenGL.framework */,
 				A98BE0BD1CC22736008696A8 /* Cocoa.framework */,
 				A98BE0BF1CC2273C008696A8 /* Metal.framework */,
 				A98BE0C11CC22744008696A8 /* MetalKit.framework */,

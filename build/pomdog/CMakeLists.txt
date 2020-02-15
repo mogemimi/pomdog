@@ -1093,6 +1093,7 @@ endif()
 
 if(POMDOG_USE_METAL AND (POMDOG_TARGET_PLATFORM MATCHES "Mac"))
   target_link_libraries(pomdog_static INTERFACE "-framework Metal")
+  target_link_libraries(pomdog_static INTERFACE "-framework MetalKit")
 endif()
 
 if(POMDOG_USE_OPENAL AND (POMDOG_TARGET_PLATFORM MATCHES "Mac"))
