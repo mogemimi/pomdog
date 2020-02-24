@@ -203,7 +203,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     return 0;
 }
 
-} // unnamed namespace
+} // namespace
 
 @implementation PomdogMetalViewController {
     std::function<std::shared_ptr<Pomdog::Game>(const std::shared_ptr<Pomdog::GameHost>&)> createGame;

@@ -258,7 +258,7 @@ void GameHostCocoa::Impl::Run(
 
     POMDOG_ASSERT(openGLView != nil);
 
-    NSOpenGLContext* nsOpenGLContext = openGLContext->NativeOpenGLContext();
+    auto nsOpenGLContext = openGLContext->GetNativeOpenGLContext();
     NSOpenGLPixelFormat* nsPixelFormat = [nsOpenGLContext pixelFormat];
     CGLContextObj cglContext = [nsOpenGLContext CGLContextObj];
     CGLPixelFormatObj cglPixelFormat = [nsPixelFormat CGLPixelFormatObj];
@@ -432,8 +432,9 @@ void GameHostCocoa::Impl::ClientSizeChanged()
     openGLContext->Lock();
     openGLContext->MakeCurrent();
 
-    POMDOG_ASSERT(openGLContext->NativeOpenGLContext() != nil);
-    [openGLContext->NativeOpenGLContext() update];
+    auto nativeContext = openGLContext->GetNativeOpenGLContext();
+    POMDOG_ASSERT(nativeContext != nil);
+    [nativeContext update];
 
     POMDOG_ASSERT(graphicsDevice);
     POMDOG_ASSERT(graphicsDevice->GetNativeGraphicsDevice());

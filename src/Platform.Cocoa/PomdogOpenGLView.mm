@@ -242,8 +242,9 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     }
 
     openGLContext->Lock();
-    if ([openGLContext->NativeOpenGLContext() view] != self) {
-        [openGLContext->NativeOpenGLContext() setView:self];
+    const auto nativeContext = openGLContext->GetNativeOpenGLContext();
+    if ([nativeContext view] != self) {
+        [nativeContext setView:self];
     }
     openGLContext->MakeCurrent();
     openGLContext->Unlock();
@@ -280,7 +281,8 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     [super viewDidMoveToWindow];
 
     if ([self window] == nil) {
-        [openGLContext->NativeOpenGLContext() clearDrawable];
+        auto nativeContext = openGLContext->GetNativeOpenGLContext();
+        [nativeContext clearDrawable];
     }
 
     trackingRect = [self addTrackingRect:[self bounds] owner:self userData:NULL assumeInside:NO];

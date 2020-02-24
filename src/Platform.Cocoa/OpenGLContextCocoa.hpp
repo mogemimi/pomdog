@@ -39,7 +39,7 @@ public:
 
     void SetView();
 
-    NSOpenGLContext* NativeOpenGLContext();
+    NSOpenGLContext* GetNativeOpenGLContext();
 
 private:
     __strong NSOpenGLContext* openGLContext;

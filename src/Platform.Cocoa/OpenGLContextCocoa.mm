@@ -144,7 +144,7 @@ void OpenGLContextCocoa::SetView()
     [openGLContext setView:nil];
 }
 
-NSOpenGLContext* OpenGLContextCocoa::NativeOpenGLContext()
+NSOpenGLContext* OpenGLContextCocoa::GetNativeOpenGLContext()
 {
     return openGLContext;
 }
