@@ -12,7 +12,7 @@ class POMDOG_EXPORT Coordinate3D final {
 public:
     static_assert(std::is_arithmetic<T>::value,
         "You can only use arithmetic types.");
-    typedef T value_type;
+    using value_type = T;
 
     T X, Y, Z;
 

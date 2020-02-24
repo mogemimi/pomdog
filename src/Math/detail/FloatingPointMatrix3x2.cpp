@@ -214,7 +214,7 @@ FloatingPointMatrix3x2<T> FloatingPointMatrix3x2<T>::Multiply(
 
 template <typename T>
 void
-FloatingPointMatrix3x2<T>::Invert(const FloatingPointMatrix3x2& matrix, FloatingPointMatrix3x2 & result)
+FloatingPointMatrix3x2<T>::Invert(const FloatingPointMatrix3x2& matrix, FloatingPointMatrix3x2& result)
 {
     result = Invert(matrix);
 }
@@ -243,7 +243,7 @@ FloatingPointMatrix3x2<T>::Invert(const FloatingPointMatrix3x2& matrix)
 
 template <typename T>
 void
-FloatingPointMatrix3x2<T>::CreateTranslation(const FloatingPointVector2<T>& position, FloatingPointMatrix3x2 & result) noexcept
+FloatingPointMatrix3x2<T>::CreateTranslation(const FloatingPointVector2<T>& position, FloatingPointMatrix3x2& result) noexcept
 {
     result = Identity;
     result(2, 0) = position.X;
@@ -261,7 +261,7 @@ FloatingPointMatrix3x2<T>::CreateTranslation(const FloatingPointVector2<T>& posi
 
 template <typename T>
 void
-FloatingPointMatrix3x2<T>::CreateScale(T scale, FloatingPointMatrix3x2 & result) noexcept
+FloatingPointMatrix3x2<T>::CreateScale(T scale, FloatingPointMatrix3x2& result) noexcept
 {
     result.m[0][0] = scale;
     result.m[0][1] = 0;
@@ -282,7 +282,7 @@ FloatingPointMatrix3x2<T>::CreateScale(T scale) noexcept
 
 template <typename T>
 void
-FloatingPointMatrix3x2<T>::CreateScale(const FloatingPointVector2<T>& scale, FloatingPointMatrix3x2 & result) noexcept
+FloatingPointMatrix3x2<T>::CreateScale(const FloatingPointVector2<T>& scale, FloatingPointMatrix3x2& result) noexcept
 {
     static_assert(std::is_same<T, decltype(scale.X)>::value, "scale is T");
     static_assert(std::is_same<T, decltype(scale.Y)>::value, "scale is T");
@@ -306,7 +306,7 @@ FloatingPointMatrix3x2<T>::CreateScale(const FloatingPointVector2<T>& scale) noe
 
 template <typename T>
 void
-FloatingPointMatrix3x2<T>::CreateRotation(const Radian<T>& angle, FloatingPointMatrix3x2 & result)
+FloatingPointMatrix3x2<T>::CreateRotation(const Radian<T>& angle, FloatingPointMatrix3x2& result)
 {
     static_assert(std::is_same<T, decltype(angle.value)>::value, "angle is T");
     auto const sinAngle = std::sin(angle.value);
@@ -331,7 +331,7 @@ FloatingPointMatrix3x2<T>::CreateRotation(const Radian<T>& angle)
 
 template <typename T>
 void
-FloatingPointMatrix3x2<T>::CreateSkew(const FloatingPointVector2<T>& skew, FloatingPointMatrix3x2 & result)
+FloatingPointMatrix3x2<T>::CreateSkew(const FloatingPointVector2<T>& skew, FloatingPointMatrix3x2& result)
 {
     static_assert(std::is_same<T, decltype(skew.X)>::value, "scale is T");
     static_assert(std::is_same<T, decltype(skew.Y)>::value, "scale is T");
@@ -356,7 +356,7 @@ FloatingPointMatrix3x2<T>::CreateSkew(const FloatingPointVector2<T>& skew)
 template <typename T>
 void
 FloatingPointMatrix3x2<T>::Lerp(const FloatingPointMatrix3x2& source1,
-    const FloatingPointMatrix3x2& source2, T amount, FloatingPointMatrix3x2 & result) noexcept
+    const FloatingPointMatrix3x2& source2, T amount, FloatingPointMatrix3x2& result) noexcept
 {
     result.m[0][0] = MathHelper::Lerp(source1.m[0][0], source2.m[0][0], amount);
     result.m[0][1] = MathHelper::Lerp(source1.m[0][1], source2.m[0][1], amount);
