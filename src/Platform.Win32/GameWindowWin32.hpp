@@ -49,7 +49,7 @@ public:
 
     void Close();
 
-    HWND NativeWindowHandle() const;
+    HWND GetNativeWindowHandle() const;
 
 private:
     class Impl;

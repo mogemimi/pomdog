@@ -96,7 +96,7 @@ CreateGraphicsDeviceResult CreateGraphicsDeviceGL4(
     const PresentationParameters& presentationParameters)
 {
     auto openGLContext = std::make_shared<Win32::OpenGLContextWin32>(
-        window->NativeWindowHandle(), presentationParameters);
+        window->GetNativeWindowHandle(), presentationParameters);
 
     if (glewInit() != GLEW_OK) {
         POMDOG_THROW_EXCEPTION(std::runtime_error,
@@ -169,7 +169,7 @@ CreateGraphicsDeviceResult CreateGraphicsDeviceDirect3D11(
         std::move(nativeGraphicsDevice));
 
     auto graphicsContext = std::make_shared<GraphicsContextDirect3D11>(
-        window->NativeWindowHandle(),
+        window->GetNativeWindowHandle(),
         dxgiFactory,
         device,
         presentationParameters);
@@ -314,7 +314,7 @@ GameHostWin32::Impl::Impl(
     audioEngine = std::make_shared<Pomdog::AudioEngine>();
 
     keyboard = std::make_shared<KeyboardWin32>();
-    mouse = std::make_shared<MouseWin32>(window->NativeWindowHandle());
+    mouse = std::make_shared<MouseWin32>(window->GetNativeWindowHandle());
     gamepad = gamepadIn;
 
     auto contentDirectory = PathHelper::Join(FileSystem::GetResourceDirectoryPath(), "Content");

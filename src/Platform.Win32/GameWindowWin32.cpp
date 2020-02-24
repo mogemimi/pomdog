@@ -560,7 +560,7 @@ void GameWindowWin32::Close()
     CloseWindow(impl->windowHandle);
 }
 
-HWND GameWindowWin32::NativeWindowHandle() const
+HWND GameWindowWin32::GetNativeWindowHandle() const
 {
     POMDOG_ASSERT(impl);
     return impl->windowHandle;

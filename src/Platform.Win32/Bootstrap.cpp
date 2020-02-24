@@ -95,7 +95,7 @@ void Bootstrap::Run(
         useOpenGL, eventQueue, presentationParameters);
 
     auto gamepad = std::make_shared<GamepadDirectInput>(
-        hInstance, gameWindow->NativeWindowHandle());
+        hInstance, gameWindow->GetNativeWindowHandle());
 
     auto gameHost = std::make_shared<GameHostWin32>(
         gameWindow, eventQueue, gamepad, presentationParameters, useOpenGL);
