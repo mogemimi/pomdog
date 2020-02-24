@@ -16,9 +16,10 @@
 #include "../RenderSystem/NativeRenderTarget2D.hpp"
 #include "../RenderSystem/NativeTexture2D.hpp"
 #include "../Utility/ScopeGuard.hpp"
-#include "Pomdog/Application/GameWindow.hpp"
 #include "Pomdog/Basic/Platform.hpp"
+#include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/IndexBuffer.hpp"
+#include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Graphics/RenderPass.hpp"
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
 #include "Pomdog/Graphics/Texture2D.hpp"
@@ -134,7 +135,7 @@ void ApplyTexture2D(int index, const Texture2DObjectGL4& textureObject)
 
 void SetViewport(
     const Viewport& viewport,
-    const std::weak_ptr<GameWindow>& gameWindow,
+    const std::weak_ptr<GraphicsDevice>& graphicsDevice,
     bool useBackBuffer)
 {
     POMDOG_ASSERT(viewport.Width > 0);
@@ -143,8 +144,9 @@ void SetViewport(
     GLint viewportY = viewport.TopLeftY;
 
     if (useBackBuffer) {
-        if (auto window = gameWindow.lock()) {
-            viewportY = window->GetClientBounds().Height - (viewport.TopLeftY + viewport.Height);
+        if (auto device = graphicsDevice.lock(); device != nullptr) {
+            auto presentationParameters = device->GetPresentationParameters();
+            viewportY = presentationParameters.BackBufferHeight - (viewport.TopLeftY + viewport.Height);
         }
     }
 
@@ -171,7 +173,7 @@ void SetViewport(
 
 void SetScissorRectangle(
     const Rectangle& rectangle,
-    const std::weak_ptr<GameWindow>& gameWindow,
+    const std::weak_ptr<GraphicsDevice>& graphicsDevice,
     bool useBackBuffer)
 {
     POMDOG_ASSERT(rectangle.Width >= 0);
@@ -181,8 +183,9 @@ void SetScissorRectangle(
 
     if (useBackBuffer) {
         // FIXME: Use glClipControl(GL_UPPER_LEFT) instead when OpenGL version is >= 4.5
-        if (auto window = gameWindow.lock()) {
-            lowerLeftCornerY = window->GetClientBounds().Height - (rectangle.Y + rectangle.Height);
+        if (auto device = graphicsDevice.lock(); device != nullptr) {
+            auto presentationParameters = device->GetPresentationParameters();
+            lowerLeftCornerY = presentationParameters.BackBufferHeight - (rectangle.Y + rectangle.Height);
         }
     }
 
@@ -315,7 +318,7 @@ const GLvoid* ComputeStartIndexLocationPointer(
     return reinterpret_cast<const GLvoid*>(offsetBytes);
 }
 
-} // unnamed namespace
+} // namespace
 
 template<> struct TypesafeHelperGL4::Traits<FrameBufferGL4> {
     constexpr static GLenum BufferBinding = GL_FRAMEBUFFER_BINDING;
@@ -325,9 +328,9 @@ template<> struct TypesafeHelperGL4::Traits<FrameBufferGL4> {
 
 GraphicsContextGL4::GraphicsContextGL4(
     const std::shared_ptr<OpenGLContext>& openGLContextIn,
-    std::weak_ptr<GameWindow> windowIn)
+    std::weak_ptr<GraphicsDevice>&& graphicsDeviceIn)
     : nativeContext(openGLContextIn)
-    , gameWindow(std::move(windowIn))
+    , graphicsDevice(std::move(graphicsDeviceIn))
     , needToApplyInputLayout(true)
     , needToApplyPipelineState(true)
 {
@@ -375,7 +378,7 @@ GraphicsContextGL4::~GraphicsContextGL4()
     }
 
     nativeContext.reset();
-    gameWindow.reset();
+    graphicsDevice.reset();
 }
 
 void GraphicsContextGL4::ExecuteCommandLists(
@@ -617,7 +620,7 @@ void GraphicsContextGL4::SetViewport(const Viewport& viewport)
     POMDOG_ASSERT(renderTargets.size() == 8);
 
     const bool useBackBuffer = (renderTargets.front() == nullptr);
-    GL4::SetViewport(viewport, gameWindow, useBackBuffer);
+    GL4::SetViewport(viewport, graphicsDevice, useBackBuffer);
 }
 
 void GraphicsContextGL4::SetScissorRect(const Rectangle& scissorRect)
@@ -626,7 +629,7 @@ void GraphicsContextGL4::SetScissorRect(const Rectangle& scissorRect)
     POMDOG_ASSERT(renderTargets.size() == 8);
 
     const bool useBackBuffer = (renderTargets.front() == nullptr);
-    SetScissorRectangle(scissorRect, gameWindow, useBackBuffer);
+    SetScissorRectangle(scissorRect, graphicsDevice, useBackBuffer);
 }
 
 void GraphicsContextGL4::SetBlendFactor(const Vector4& blendFactor)
@@ -802,10 +805,10 @@ void GraphicsContextGL4::SetRenderPass(const RenderPass& renderPass)
     const bool useBackBuffer = (std::get<0>(renderPass.RenderTargets.front()) == nullptr);
 
     if (renderPass.Viewport) {
-        GL4::SetViewport(*renderPass.Viewport, gameWindow, useBackBuffer);
+        GL4::SetViewport(*renderPass.Viewport, graphicsDevice, useBackBuffer);
     }
     if (renderPass.ScissorRect) {
-        SetScissorRectangle(*renderPass.ScissorRect, gameWindow, useBackBuffer);
+        SetScissorRectangle(*renderPass.ScissorRect, graphicsDevice, useBackBuffer);
     }
 
     const auto clearDepthStencilMask = [&]() -> GLbitfield {

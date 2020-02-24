@@ -108,7 +108,7 @@ CreateGraphicsDeviceResult CreateGraphicsDeviceGL4(
     auto graphicsDevice = std::make_shared<GraphicsDevice>(
         std::make_unique<GraphicsDeviceGL4>(presentationParameters));
 
-    auto graphicsContext = std::make_shared<GraphicsContextGL4>(openGLContext, window);
+    auto graphicsContext = std::make_shared<GraphicsContextGL4>(openGLContext, graphicsDevice);
 
     auto graphicsCommandQueue = std::make_shared<GraphicsCommandQueue>(
         std::make_unique<GraphicsCommandQueueImmediate>(graphicsContext));

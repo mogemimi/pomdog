@@ -246,7 +246,7 @@ GameHostX11::Impl::Impl(const PresentationParameters& presentationParameters)
     graphicsDevice = std::make_shared<GraphicsDevice>(
         std::make_unique<GraphicsDeviceGL4>(presentationParameters));
 
-    graphicsContext = std::make_shared<GraphicsContextGL4>(openGLContext, window);
+    graphicsContext = std::make_shared<GraphicsContextGL4>(openGLContext, graphicsDevice);
 
     graphicsCommandQueue = std::make_shared<GraphicsCommandQueue>(
         std::make_unique<GraphicsCommandQueueImmediate>(graphicsContext));

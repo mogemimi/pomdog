@@ -12,7 +12,7 @@
 #include <vector>
 
 namespace Pomdog {
-class GameWindow;
+class GraphicsDevice;
 } // namespace Pomdog
 
 namespace Pomdog::Detail::GL4 {
@@ -36,7 +36,7 @@ public:
 
     GraphicsContextGL4(
         const std::shared_ptr<OpenGLContext>& openGLContext,
-        std::weak_ptr<GameWindow> window);
+        std::weak_ptr<GraphicsDevice>&& graphicsDevice);
 
     ~GraphicsContextGL4();
 
@@ -112,7 +112,7 @@ private:
     std::shared_ptr<OpenGLContext> nativeContext;
     std::shared_ptr<PipelineStateGL4> pipelineState;
     std::shared_ptr<IndexBuffer> indexBuffer;
-    std::weak_ptr<GameWindow> gameWindow;
+    std::weak_ptr<GraphicsDevice> graphicsDevice;
     std::vector<std::optional<GLenum>> textures;
     std::optional<FrameBufferGL4> frameBuffer;
     std::array<std::shared_ptr<RenderTarget2DGL4>, 8> renderTargets;
