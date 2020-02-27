@@ -10,38 +10,49 @@
 #include <memory>
 
 namespace Pomdog {
-
 class Game;
 class GameHost;
+} // namespace Pomdog
 
-namespace Win32 {
+namespace Pomdog::Win32 {
 
-class POMDOG_EXPORT Bootstrap {
+class POMDOG_EXPORT Bootstrap final {
 public:
+    /// Sets the instance handle.
     void SetInstance(HINSTANCE hInstance) noexcept;
 
+    /// Sets the WinMain function's `nCmdShow` parameter.
     void SetCommandShow(int cmdShow) noexcept;
 
+    /// Sets a window's icon.
     void SetIcon(HICON icon) noexcept;
 
+    /// Sets a window's small icon.
     void SetIconSmall(HICON iconSmall) noexcept;
 
+    /// Sets the format of the back buffer.
     void SetSurfaceFormat(SurfaceFormat surfaceFormat) noexcept;
 
+    /// Sets the format of the depth stencil buffer.
     void SetDepthFormat(DepthFormat depthFormat) noexcept;
 
+    /// Sets the maximum rate at which the back buffers can be presented. 60 by default.
     void SetPresentationInterval(int presentationInterval) noexcept;
 
+    /// Sets the size of the swap chain, in pixels.
     void SetBackBufferSize(int width, int height) noexcept;
 
+    /// Sets to true if the window is in full screen mode, false if it is window mode. false by default.
     void SetFullScreen(bool isFullScreen) noexcept;
 
-    void SetOpenGLEnabled(bool openGLEnabled) noexcept;
+    /// Sets to true if OpenGL is enabled, false if Direct3D is enabled. false by default.
+    void SetOpenGLEnabled(bool enabled) noexcept;
 
+    /// Sets an error event handler to a log stream.
     void OnError(std::function<void(const std::exception&)> onError);
 
-    void Run(
-        const std::function<std::unique_ptr<Game>(const std::shared_ptr<GameHost>&)>& createApp);
+    /// Begins running a game loop.
+    void Run(const std::function<std::unique_ptr<Game>(const std::shared_ptr<GameHost>&)>& createGame);
 
 private:
     std::function<void(const std::exception&)> onError;
@@ -58,5 +69,4 @@ private:
     bool openGLEnabled = false;
 };
 
-} // namespace Win32
-} // namespace Pomdog
+} // namespace Pomdog::Win32

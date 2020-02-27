@@ -27,18 +27,25 @@ namespace Pomdog::Cocoa {
 
 class POMDOG_EXPORT Bootstrap final {
 public:
+    /// Sets the window where the video is drawn.
     void SetWindow(NSWindow* window);
 
+    /// Sets to true if OpenGL is enabled, false if Metal is enabled. false by default.
     void SetOpenGLEnabled(bool enabled);
 
+    /// Sets the format of the back buffer when using the OpenGL renderer.
     void SetOpenGLSurfaceFormat(SurfaceFormat surfaceFormat);
 
+    /// Sets the format of the depth stencil buffer when using the OpenGL renderer.
     void SetOpenGLDepthFormat(DepthFormat depthFormat);
 
+    /// Sets an error event handler to a log stream.
     void OnError(std::function<void(const std::exception&)>&& onError);
 
+    /// Sets an completion event handler to a log stream.
     void OnCompleted(std::function<void()>&& onCompleted);
 
+    /// Begins running a game loop.
     void Run(std::function<std::shared_ptr<Game>(const std::shared_ptr<GameHost>&)>&& createGame);
 
 private:
