@@ -137,9 +137,9 @@ void GamepadTest::Draw()
         printThumbstick("ThumbSticks.Right.Y", state.ThumbSticks.Right.Y, caps.HasRightYThumbStick);
 
         printButton("DPad.Up", state.DPad.Up, true);
-        printButton("DPad.Up", state.DPad.Down, true);
-        printButton("DPad.Up", state.DPad.Right, true);
-        printButton("DPad.Up", state.DPad.Left, true);
+        printButton("DPad.Down", state.DPad.Down, true);
+        printButton("DPad.Right", state.DPad.Right, true);
+        printButton("DPad.Left", state.DPad.Left, true);
     };
 
     printGamepad(PlayerIndex::One);
