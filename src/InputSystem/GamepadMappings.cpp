@@ -16,28 +16,7 @@
 namespace Pomdog::Detail::InputSystem {
 namespace {
 
-#ifdef POMDOG_PLATFORM_MACOSX
-#ifndef __MACOSX__
-#define __MACOSX__ 1
-#endif
-#endif
-
-#ifdef POMDOG_PLATFORM_LINUX
-#ifndef __LINUX__
-#define __LINUX__ 1
-#endif
-#endif
-
-#ifdef POMDOG_PLATFORM_WIN32
-#ifndef SDL_JOYSTICK_XINPUT
-#define SDL_JOYSTICK_XINPUT 1
-#endif
-#ifndef SDL_JOYSTICK_DINPUT
-#define SDL_JOYSTICK_DINPUT 1
-#endif
-#endif
-
-#include "SDL_gamecontrollerdb2.0.9.h"
+#include "SDL_GameControllerDB.h"
 
 std::tuple<std::string, const char*> Parse(const char* source, char delimiter)
 {

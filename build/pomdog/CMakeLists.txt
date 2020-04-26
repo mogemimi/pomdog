@@ -1058,10 +1058,9 @@ target_include_directories(pomdog_static PRIVATE
   ${POMDOG_DIR}/dependencies/libpng
   ${POMDOG_DIR}/dependencies/mbedtls/include
   ${POMDOG_DIR}/dependencies/rapidjson/include
-  ${POMDOG_DIR}/dependencies/SDL_GameControllerDB/data
   ${POMDOG_DIR}/dependencies/stb
   ${POMDOG_DIR}/dependencies/vendor/libpng
-  ${POMDOG_DIR}/dependencies/vendor/SDL_GameControllerDB/include
+  ${POMDOG_DIR}/dependencies/vendor/SDL_GameControllerDB
 )
 
 add_subdirectory(${POMDOG_DIR}/build/dependencies/libpng "${CMAKE_CURRENT_BINARY_DIR}/libpng_build")

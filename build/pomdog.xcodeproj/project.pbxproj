@@ -3492,10 +3492,9 @@
 					../dependencies/libpng,
 					../dependencies/mbedtls/include,
 					../dependencies/rapidjson/include,
-					../dependencies/SDL_GameControllerDB/data,
 					../dependencies/stb,
 					../dependencies/vendor/libpng,
-					../dependencies/vendor/SDL_GameControllerDB/include,
+					../dependencies/vendor/SDL_GameControllerDB,
 				);
 			};
 			name = Release;
@@ -3580,10 +3579,9 @@
 					../dependencies/libpng,
 					../dependencies/mbedtls/include,
 					../dependencies/rapidjson/include,
-					../dependencies/SDL_GameControllerDB/data,
 					../dependencies/stb,
 					../dependencies/vendor/libpng,
-					../dependencies/vendor/SDL_GameControllerDB/include,
+					../dependencies/vendor/SDL_GameControllerDB,
 				);
 				ONLY_ACTIVE_ARCH = YES;
 			};
