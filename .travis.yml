@@ -5,6 +5,12 @@ language: cpp
 compiler:
   - clang
 
+addons:
+  homebrew:
+    packages:
+      - cmake
+    update: true
+
 install:
   - git submodule update --init
   - git submodule update --init --recursive dependencies/mbedtls
