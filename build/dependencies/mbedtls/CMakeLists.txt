@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.11)
+cmake_minimum_required(VERSION 3.16)
 project(mbedtls C)
 
 # NOTE: Remove /RTC1 option from default compiler options for Visual Studio

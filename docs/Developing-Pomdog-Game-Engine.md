@@ -17,7 +17,7 @@ The following software is required in order to create and build the Pomdog game 
 
 ## Build requirements
 
-- CMake 3.11 and later
+- CMake 3.16 and later
 - Linux
   - Clang >= 8.0
   - GCC >= 8.3
