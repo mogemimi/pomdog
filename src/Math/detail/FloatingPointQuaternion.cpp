@@ -269,7 +269,7 @@ FloatingPointQuaternion<T>::Rotate(const FloatingPointQuaternion& quaternion, co
 template <typename T>
 void
 FloatingPointQuaternion<T>::CreateFromAxisAngle(const FloatingPointVector3<T>& axis, const Radian<T>& angle,
-    FloatingPointQuaternion & result)
+    FloatingPointQuaternion& result)
 {
     auto const halfAngle(angle.value / 2);
     auto const sinAngle(std::sin(halfAngle));

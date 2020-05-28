@@ -105,5 +105,5 @@ void main()
     FragColor = vec4(albedoColor.rgb * directionalLightReflectance, albedoColor.a);
 #else
     FragColor = albedoColor;
-#endif    
+#endif
 }

@@ -204,7 +204,7 @@ void GraphicsCommandListVulkan::SetRenderPass(RenderPass&& renderPass)
     }
     else {
         std::uint32_t renderTargetIndex = 0;
-        for (const auto& renderTargetView: renderPass.RenderTargets) {
+        for (const auto& renderTargetView : renderPass.RenderTargets) {
             auto& renderTarget = std::get<0>(renderTargetView);
             auto& clearColor = std::get<1>(renderTargetView);
 
