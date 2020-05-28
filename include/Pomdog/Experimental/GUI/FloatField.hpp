@@ -43,6 +43,15 @@ public:
     double GetValue() const;
     void SetValue(double value);
 
+    double GetMinimum() const noexcept;
+    void SetMinimum(double minimum);
+
+    double GetMaximum() const noexcept;
+    void SetMaximum(double maximum);
+
+    int GetDecimals() const;
+    void SetDecimals(int precision);
+
     std::string GetPlaceholderText() const;
     void SetPlaceholderText(const std::string& text);
 

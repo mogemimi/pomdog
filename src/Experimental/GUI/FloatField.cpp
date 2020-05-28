@@ -19,7 +19,21 @@ class FloatFieldDataContext final : public NumberFieldDataContext {
 public:
     std::string ToString() const override
     {
-        return StringHelper::Format("%.3lf", value);
+        switch (precision) {
+        case 0:
+            return StringHelper::Format("%.1lf", value);
+        case 1:
+            return StringHelper::Format("%.1lf", value);
+        case 2:
+            return StringHelper::Format("%.2lf", value);
+        case 3:
+            return StringHelper::Format("%.3lf", value);
+        case 4:
+            return StringHelper::Format("%.4lf", value);
+        default:
+            break;
+        }
+        return StringHelper::Format("%lf", value);
     }
 
     std::string ToEditableString(const std::string& text) const override
@@ -42,16 +56,66 @@ public:
         value = valueIn;
     }
 
+    double GetMinimum() const noexcept
+    {
+        return minimum;
+    }
+
+    void SetMinimum(double minimumIn)
+    {
+        minimum = minimumIn;
+    }
+
+    double GetMaximum() const noexcept
+    {
+        return maximum;
+    }
+
+    void SetMaximum(double maximumIn)
+    {
+        maximum = maximumIn;
+    }
+
+    int GetDecimals() const noexcept
+    {
+        return precision;
+    }
+
+    void SetDecimals(int precisionIn)
+    {
+        precision = precisionIn;
+    }
+
+    double GetUnit() const noexcept
+    {
+        if ((0 <= precision) && (precision <= 9)) {
+            const std::array<double, 10> units = {{
+                1.0,
+                0.1,
+                0.01,
+                0.001,
+                0.0001,
+                0.00001,
+                0.000001,
+                0.0000001,
+                0.00000001,
+                0.000000001,
+            }};
+            return units[precision];
+        }
+        return 0.01;
+    }
+
     void IncrementValue() override
     {
-        constexpr double unit = 0.01;
-        value = value + unit;
+        const double unit = GetUnit();
+        value = std::clamp(value + unit, minimum, maximum);
     }
 
     void DecrementValue() override
     {
-        constexpr double unit = 0.01;
-        value = value - unit;
+        const double unit = GetUnit();
+        value = std::clamp(value - unit, minimum, maximum);
     }
 
     void BeginDragging() override
@@ -61,8 +125,8 @@ public:
 
     void UpdateDragging(int amount) override
     {
-        constexpr double unit = 0.01;
-        value = startDragValue + amount * unit;
+        const double unit = GetUnit();
+        value = std::clamp(startDragValue + amount * unit, minimum, maximum);
     }
 
     bool TextSubmitted(const std::string& text) override
@@ -82,13 +146,16 @@ public:
             return false;
         }
 
-        value = *newValue;
+        value = std::clamp(*newValue, minimum, maximum);
         return true;
     }
 
 private:
     double value = 0.0;
     double startDragValue = 0.0;
+    double minimum = std::numeric_limits<double>::lowest();
+    double maximum = std::numeric_limits<double>::max();
+    int precision = 3;
 };
 
 } // namespace Detail
@@ -154,6 +221,42 @@ void FloatField::SetValue(double valueIn)
 
     POMDOG_ASSERT(numberField != nullptr);
     numberField->SetText(dataContext->ToString());
+}
+
+double FloatField::GetMinimum() const noexcept
+{
+    POMDOG_ASSERT(dataContext != nullptr);
+    return dataContext->GetMinimum();
+}
+
+void FloatField::SetMinimum(double minimum)
+{
+    POMDOG_ASSERT(dataContext != nullptr);
+    dataContext->SetMinimum(minimum);
+}
+
+double FloatField::GetMaximum() const noexcept
+{
+    POMDOG_ASSERT(dataContext != nullptr);
+    return dataContext->GetMaximum();
+}
+
+void FloatField::SetMaximum(double maximum)
+{
+    POMDOG_ASSERT(dataContext != nullptr);
+    dataContext->SetMaximum(maximum);
+}
+
+int FloatField::GetDecimals() const
+{
+    POMDOG_ASSERT(dataContext != nullptr);
+    return dataContext->GetDecimals();
+}
+
+void FloatField::SetDecimals(int precision)
+{
+    POMDOG_ASSERT(dataContext != nullptr);
+    dataContext->SetDecimals(precision);
 }
 
 std::string FloatField::GetPlaceholderText() const

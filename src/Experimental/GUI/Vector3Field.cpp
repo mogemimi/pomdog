@@ -94,6 +94,50 @@ void Vector3Field::SetValue(const Vector3& value)
     zField->SetValue(value.Z);
 }
 
+Vector3 Vector3Field::GetMinimum() const noexcept
+{
+    Vector3 value;
+    value.X = static_cast<float>(xField->GetMinimum());
+    value.Y = static_cast<float>(yField->GetMinimum());
+    value.Z = static_cast<float>(zField->GetMinimum());
+    return value;
+}
+
+void Vector3Field::SetMinimum(const Vector3& minimum)
+{
+    xField->SetMinimum(minimum.X);
+    yField->SetMinimum(minimum.Y);
+    zField->SetMinimum(minimum.Z);
+}
+
+Vector3 Vector3Field::GetMaximum() const noexcept
+{
+    Vector3 value;
+    value.X = static_cast<float>(xField->GetMaximum());
+    value.Y = static_cast<float>(yField->GetMaximum());
+    value.Z = static_cast<float>(zField->GetMaximum());
+    return value;
+}
+
+void Vector3Field::SetMaximum(const Vector3& maximum)
+{
+    xField->SetMaximum(maximum.X);
+    yField->SetMaximum(maximum.Y);
+    zField->SetMaximum(maximum.Z);
+}
+
+int Vector3Field::GetDecimals() const
+{
+    return xField->GetDecimals();
+}
+
+void Vector3Field::SetDecimals(int precision)
+{
+    xField->SetDecimals(precision);
+    yField->SetDecimals(precision);
+    zField->SetDecimals(precision);
+}
+
 void Vector3Field::SetHorizontalAlignment(HorizontalAlignment horizontalAlignmentIn) noexcept
 {
     xField->SetHorizontalAlignment(horizontalAlignmentIn);

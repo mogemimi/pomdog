@@ -37,6 +37,15 @@ public:
     Vector3 GetValue() const;
     void SetValue(const Vector3& value);
 
+    Vector3 GetMinimum() const noexcept;
+    void SetMinimum(const Vector3& minimum);
+
+    Vector3 GetMaximum() const noexcept;
+    void SetMaximum(const Vector3& maximum);
+
+    int GetDecimals() const;
+    void SetDecimals(int precision);
+
     void SetHorizontalAlignment(HorizontalAlignment horizontalAlignment) noexcept;
 
     HorizontalAlignment GetHorizontalAlignment() const noexcept override;
