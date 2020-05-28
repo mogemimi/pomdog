@@ -315,6 +315,8 @@
 		D7334E26228AEC1300232225 /* ChromaticAberration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E15228AEC1200232225 /* ChromaticAberration.cpp */; };
 		D7334E27228AEC1300232225 /* GrayscaleEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E16228AEC1200232225 /* GrayscaleEffect.cpp */; };
 		D7334E28228AEC1300232225 /* GrayscaleEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7334E16228AEC1200232225 /* GrayscaleEffect.cpp */; };
+		D73A504D24805F820050EC49 /* FormatHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D73A504C24805F820050EC49 /* FormatHelper.cpp */; };
+		D73A504E24805F820050EC49 /* FormatHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D73A504C24805F820050EC49 /* FormatHelper.cpp */; };
 		D7408CEB23727466007E101E /* Skeleton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408CE723727466007E101E /* Skeleton.cpp */; };
 		D7408CEC23727466007E101E /* Skeleton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408CE723727466007E101E /* Skeleton.cpp */; };
 		D7408CED23727466007E101E /* SkeletonHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7408CE823727466007E101E /* SkeletonHelper.cpp */; };
@@ -1013,6 +1015,8 @@
 		D7334E14228AEC1200232225 /* RetroCrtEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RetroCrtEffect.cpp; sourceTree = "<group>"; };
 		D7334E15228AEC1200232225 /* ChromaticAberration.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ChromaticAberration.cpp; sourceTree = "<group>"; };
 		D7334E16228AEC1200232225 /* GrayscaleEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GrayscaleEffect.cpp; sourceTree = "<group>"; };
+		D73A504B24805F820050EC49 /* FormatHelper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FormatHelper.hpp; sourceTree = "<group>"; };
+		D73A504C24805F820050EC49 /* FormatHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FormatHelper.cpp; sourceTree = "<group>"; };
 		D7408CE723727466007E101E /* Skeleton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Skeleton.cpp; sourceTree = "<group>"; };
 		D7408CE823727466007E101E /* SkeletonHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkeletonHelper.cpp; sourceTree = "<group>"; };
 		D7408CE923727466007E101E /* SkeletonPose.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkeletonPose.cpp; sourceTree = "<group>"; };
@@ -2637,6 +2641,8 @@
 				6E17FE9C0283543D400814CE /* EffectReflectionGL4.hpp */,
 				74C791C392D2DF46A553FC0F /* ErrorChecker.cpp */,
 				582304B2F09B38708AF61AFC /* ErrorChecker.hpp */,
+				D73A504C24805F820050EC49 /* FormatHelper.cpp */,
+				D73A504B24805F820050EC49 /* FormatHelper.hpp */,
 				6020C9B2088C636A0CFB1082 /* GraphicsContextGL4.cpp */,
 				85CF88EC5ACA6C3AA968459B /* GraphicsContextGL4.hpp */,
 				4753F82F9416C7DE5A5F2655 /* GraphicsDeviceGL4.cpp */,
@@ -3089,6 +3095,7 @@
 				D7334E17228AEC1300232225 /* PostProcessCompositor.cpp in Sources */,
 				03F46EF697B70E1EE9B2533B /* CocoaWindowDelegate.mm in Sources */,
 				D7255BA6236D59AB00B8E4A0 /* BasicEffect.cpp in Sources */,
+				D73A504D24805F820050EC49 /* FormatHelper.cpp in Sources */,
 				2A5B52A528596019ABF40617 /* GameHostCocoa.mm in Sources */,
 				D75E071C2392E42C00F98C10 /* CheckBox.cpp in Sources */,
 				E6DAE91B1C77C1736DB66CD7 /* GameWindowCocoa.mm in Sources */,
@@ -3314,6 +3321,7 @@
 				D7334E18228AEC1300232225 /* PostProcessCompositor.cpp in Sources */,
 				E8ACB94BC7A78F57A854EC2C /* CocoaWindowDelegate.mm in Sources */,
 				D7255BA7236D59AB00B8E4A0 /* BasicEffect.cpp in Sources */,
+				D73A504E24805F820050EC49 /* FormatHelper.cpp in Sources */,
 				0AECD9F61617195B0205EFEF /* GameHostCocoa.mm in Sources */,
 				D75E071D2392E42C00F98C10 /* CheckBox.cpp in Sources */,
 				71E352760BC127DCF199C59B /* GameWindowCocoa.mm in Sources */,

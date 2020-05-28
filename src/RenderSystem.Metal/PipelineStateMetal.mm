@@ -135,21 +135,6 @@ MTLStencilOperation ToStencilOperation(StencilOperation operation) noexcept
     POMDOG_UNREACHABLE("Unsupported stencil operation");
 }
 
-MTLCompareFunction ToComparisonFunction(ComparisonFunction compareFunction) noexcept
-{
-    switch (compareFunction) {
-    case ComparisonFunction::Never: return MTLCompareFunctionNever;
-    case ComparisonFunction::Less:  return MTLCompareFunctionLess;
-    case ComparisonFunction::Equal: return MTLCompareFunctionEqual;
-    case ComparisonFunction::LessEqual: return MTLCompareFunctionLessEqual;
-    case ComparisonFunction::Greater:   return MTLCompareFunctionGreater;
-    case ComparisonFunction::NotEqual:  return MTLCompareFunctionNotEqual;
-    case ComparisonFunction::GreaterEqual: return MTLCompareFunctionGreaterEqual;
-    case ComparisonFunction::Always: return MTLCompareFunctionAlways;
-    }
-    POMDOG_UNREACHABLE("Unsupported comparison function");
-}
-
 void ToDepthStencilOperation(
     MTLStencilDescriptor* desc,
     const DepthStencilOperation& operation,

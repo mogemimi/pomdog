@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Pomdog/Basic/Export.hpp"
+#include "Pomdog/Graphics/ComparisonFunction.hpp"
 #include "Pomdog/Graphics/TextureAddressMode.hpp"
 #include "Pomdog/Graphics/TextureFilter.hpp"
 #include <cstdint>
@@ -20,6 +21,7 @@ struct POMDOG_EXPORT SamplerDescription final {
     TextureAddressMode AddressU;
     TextureAddressMode AddressV;
     TextureAddressMode AddressW;
+    Pomdog::ComparisonFunction ComparisonFunction;
     //std::array<float, 4> BorderColor;
 
     static SamplerDescription CreateDefault()
@@ -38,6 +40,7 @@ struct POMDOG_EXPORT SamplerDescription final {
         desc.MaxAnisotropy = 0;
         desc.MinMipLevel = 0;
         desc.MaxMipLevel = 1000;
+        desc.ComparisonFunction = ComparisonFunction::Never;
         return desc;
     }
 
@@ -52,6 +55,7 @@ struct POMDOG_EXPORT SamplerDescription final {
         desc.MaxAnisotropy = 0;
         desc.MinMipLevel = 0;
         desc.MaxMipLevel = 1000;
+        desc.ComparisonFunction = ComparisonFunction::Never;
         return desc;
     }
 
@@ -66,6 +70,7 @@ struct POMDOG_EXPORT SamplerDescription final {
         desc.MaxAnisotropy = 0;
         desc.MinMipLevel = 0;
         desc.MaxMipLevel = std::numeric_limits<float>::max();
+        desc.ComparisonFunction = ComparisonFunction::Never;
         return desc;
     }
 
@@ -80,6 +85,7 @@ struct POMDOG_EXPORT SamplerDescription final {
         desc.MaxAnisotropy = 0;
         desc.MinMipLevel = 0;
         desc.MaxMipLevel = std::numeric_limits<float>::max();
+        desc.ComparisonFunction = ComparisonFunction::Never;
         return desc;
     }
 
@@ -94,6 +100,7 @@ struct POMDOG_EXPORT SamplerDescription final {
         desc.MaxAnisotropy = 0;
         desc.MinMipLevel = 0;
         desc.MaxMipLevel = std::numeric_limits<float>::max();
+        desc.ComparisonFunction = ComparisonFunction::Never;
         return desc;
     }
 
@@ -108,6 +115,7 @@ struct POMDOG_EXPORT SamplerDescription final {
         desc.MaxAnisotropy = 0;
         desc.MinMipLevel = 0;
         desc.MaxMipLevel = std::numeric_limits<float>::max();
+        desc.ComparisonFunction = ComparisonFunction::Never;
         return desc;
     }
 };

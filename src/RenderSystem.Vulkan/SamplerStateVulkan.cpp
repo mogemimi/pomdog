@@ -1,6 +1,7 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "SamplerStateVulkan.hpp"
+#include "FormatHelper.hpp"
 #include "Pomdog/Graphics/SamplerDescription.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
@@ -103,8 +104,16 @@ SamplerStateVulkan::SamplerStateVulkan(
     createInfo.addressModeW = ToSamplerAddressMode(description.AddressW);
     createInfo.mipLodBias = 0.0f;
     createInfo.anisotropyEnable = VK_FALSE;
-    createInfo.compareEnable = VK_FALSE;
-    createInfo.compareOp = VK_COMPARE_OP_NEVER;
+
+    if (description.ComparisonFunction == ComparisonFunction::Never) {
+        createInfo.compareEnable = VK_FALSE;
+        createInfo.compareOp = VK_COMPARE_OP_NEVER;
+    }
+    else {
+        createInfo.compareEnable = VK_TRUE;
+        createInfo.compareOp = ToComparisonFunction(description.ComparisonFunction);
+    }
+
     createInfo.minLod = description.MinMipLevel;
     createInfo.maxLod = description.MaxMipLevel;
     createInfo.maxAnisotropy = description.MaxAnisotropy;

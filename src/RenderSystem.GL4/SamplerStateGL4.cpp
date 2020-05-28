@@ -2,6 +2,7 @@
 
 #include "SamplerStateGL4.hpp"
 #include "ErrorChecker.hpp"
+#include "FormatHelper.hpp"
 #include "../Basic/Unreachable.hpp"
 #include "Pomdog/Graphics/SamplerDescription.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -26,7 +27,7 @@ GLenum ToTextureAddressMode(TextureAddressMode address) noexcept
     POMDOG_UNREACHABLE("Unsupported texture address mode");
 }
 
-} // unnamed namespace
+} // namespace
 
 SamplerStateGL4::SamplerStateGL4(const SamplerDescription& description)
 {
@@ -105,6 +106,17 @@ SamplerStateGL4::SamplerStateGL4(const SamplerDescription& description)
         glSamplerParameterf(samplerObject->value, GL_TEXTURE_MAX_LOD, description.MaxMipLevel);
         glSamplerParameterf(samplerObject->value, GL_TEXTURE_LOD_BIAS, description.MipMapLevelOfDetailBias);
         POMDOG_CHECK_ERROR_GL4("glSamplerParameterf");
+    }
+
+    if (description.ComparisonFunction == ComparisonFunction::Never) {
+        glSamplerParameteri(samplerObject->value, GL_TEXTURE_COMPARE_MODE, GL_NONE);
+    }
+    else {
+        glSamplerParameteri(samplerObject->value, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
+        glSamplerParameteri(
+            samplerObject->value,
+            GL_TEXTURE_COMPARE_FUNC,
+            ToComparisonFunctionGL4NonTypesafe(description.ComparisonFunction));
     }
 }
 

@@ -1,6 +1,7 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "SamplerStateDirect3D11.hpp"
+#include "FormatHelper.hpp"
 #include "Pomdog/Graphics/SamplerDescription.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
@@ -65,9 +66,9 @@ SamplerStateDirect3D11::SamplerStateDirect3D11(
     samplerDesc.MaxLOD = description.MaxMipLevel;
     samplerDesc.MipLODBias = description.MipMapLevelOfDetailBias;
     samplerDesc.MaxAnisotropy = description.MaxAnisotropy;
+    samplerDesc.ComparisonFunc = ToComparisonFunction(description.ComparisonFunction);
 
     ///@todo Add support for the following options in SamplerDescription
-    samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
     samplerDesc.BorderColor[0] = 0.0f;
     samplerDesc.BorderColor[1] = 0.0f;
     samplerDesc.BorderColor[2] = 0.0f;

@@ -2,6 +2,7 @@
 
 #include "MetalFormatHelper.hpp"
 #include "../Basic/Unreachable.hpp"
+#include "Pomdog/Graphics/ComparisonFunction.hpp"
 #include "Pomdog/Graphics/DepthFormat.hpp"
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
 
@@ -38,6 +39,21 @@ MTLPixelFormat ToPixelFormat(DepthFormat depthFormat) noexcept
     case DepthFormat::None: return MTLPixelFormatInvalid;
     }
     POMDOG_UNREACHABLE("Unsupported depth format");
+}
+
+MTLCompareFunction ToComparisonFunction(ComparisonFunction compareFunction) noexcept
+{
+    switch (compareFunction) {
+    case ComparisonFunction::Never: return MTLCompareFunctionNever;
+    case ComparisonFunction::Less:  return MTLCompareFunctionLess;
+    case ComparisonFunction::Equal: return MTLCompareFunctionEqual;
+    case ComparisonFunction::LessEqual: return MTLCompareFunctionLessEqual;
+    case ComparisonFunction::Greater:   return MTLCompareFunctionGreater;
+    case ComparisonFunction::NotEqual:  return MTLCompareFunctionNotEqual;
+    case ComparisonFunction::GreaterEqual: return MTLCompareFunctionGreaterEqual;
+    case ComparisonFunction::Always: return MTLCompareFunctionAlways;
+    }
+    POMDOG_UNREACHABLE("Unsupported comparison function");
 }
 
 } // namespace Pomdog::Detail::Metal

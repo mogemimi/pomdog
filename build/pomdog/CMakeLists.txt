@@ -686,6 +686,8 @@ set(POMDOG_SOURCES_GL4
   ${POMDOG_DIR}/src/RenderSystem.GL4/EffectReflectionGL4.hpp
   ${POMDOG_DIR}/src/RenderSystem.GL4/ErrorChecker.cpp
   ${POMDOG_DIR}/src/RenderSystem.GL4/ErrorChecker.hpp
+  ${POMDOG_DIR}/src/RenderSystem.GL4/FormatHelper.cpp
+  ${POMDOG_DIR}/src/RenderSystem.GL4/FormatHelper.hpp
   ${POMDOG_DIR}/src/RenderSystem.GL4/GraphicsContextGL4.cpp
   ${POMDOG_DIR}/src/RenderSystem.GL4/GraphicsContextGL4.hpp
   ${POMDOG_DIR}/src/RenderSystem.GL4/GraphicsDeviceGL4.cpp
@@ -770,6 +772,8 @@ set(POMDOG_SOURCES_DIRECT3D11
   ${POMDOG_DIR}/src/RenderSystem.Direct3D11/BufferDirect3D11.hpp
   ${POMDOG_DIR}/src/RenderSystem.Direct3D11/EffectReflectionDirect3D11.cpp
   ${POMDOG_DIR}/src/RenderSystem.Direct3D11/EffectReflectionDirect3D11.hpp
+  ${POMDOG_DIR}/src/RenderSystem.Direct3D11/FormatHelper.cpp
+  ${POMDOG_DIR}/src/RenderSystem.Direct3D11/FormatHelper.hpp
   ${POMDOG_DIR}/src/RenderSystem.Direct3D11/GraphicsContextDirect3D11.cpp
   ${POMDOG_DIR}/src/RenderSystem.Direct3D11/GraphicsContextDirect3D11.hpp
   ${POMDOG_DIR}/src/RenderSystem.Direct3D11/GraphicsDeviceDirect3D11.cpp
@@ -820,6 +824,8 @@ set(POMDOG_SOURCES_VULKAN
   ${POMDOG_DIR}/src/RenderSystem.Vulkan/BufferVulkan.hpp
   ${POMDOG_DIR}/src/RenderSystem.Vulkan/EffectReflectionVulkan.cpp
   ${POMDOG_DIR}/src/RenderSystem.Vulkan/EffectReflectionVulkan.hpp
+  ${POMDOG_DIR}/src/RenderSystem.Vulkan/FormatHelper.cpp
+  ${POMDOG_DIR}/src/RenderSystem.Vulkan/FormatHelper.hpp
   ${POMDOG_DIR}/src/RenderSystem.Vulkan/GraphicsCommandListVulkan.cpp
   ${POMDOG_DIR}/src/RenderSystem.Vulkan/GraphicsCommandListVulkan.hpp
   ${POMDOG_DIR}/src/RenderSystem.Vulkan/GraphicsCommandQueueVulkan.cpp

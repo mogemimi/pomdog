@@ -1,6 +1,7 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "SamplerStateMetal.hpp"
+#include "MetalFormatHelper.hpp"
 #include "../Basic/Unreachable.hpp"
 #include "Pomdog/Graphics/SamplerDescription.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -82,6 +83,8 @@ SamplerStateMetal::SamplerStateMetal(id<MTLDevice> device, const SamplerDescript
 
     descriptor.lodMaxClamp = description.MaxMipLevel;
     descriptor.lodMinClamp = description.MinMipLevel;
+
+    descriptor.compareFunction = ToComparisonFunction(description.ComparisonFunction);
 
     // NOTE: `MTLSamplerDescriptor's max anisotropy value must be >= one.
     descriptor.maxAnisotropy = std::max<std::uint32_t>(description.MaxAnisotropy, 1);
