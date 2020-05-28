@@ -270,7 +270,13 @@ void GameHostCocoa::Impl::Run(
     [openGLView setRenderCallback: [this] {
         std::lock_guard<std::mutex> lock(renderMutex);
         ClientSizeChanged();
-        RenderFrame();
+
+        // NOTE: In order to prevent the RenderFrame() function from being
+        // executed before the Game::Update() function is called, if the frame
+        // number is <= 0, do not render.
+        if (clock.GetFrameNumber() > 0) {
+            RenderFrame();
+        }
     }];
 
     CVDisplayLinkSetCurrentCGDisplayFromOpenGLContext(
