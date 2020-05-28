@@ -346,18 +346,16 @@ void EnableAttributes(const std::vector<InputElementGL4>& inputElements)
     }
 }
 
-std::uint32_t CalculateByteOffset(const InputElementGL4& inputElement)
+std::uint32_t CalculateByteOffset(const ScalarTypeGL4& scalarType, std::int8_t components)
 {
-    POMDOG_ASSERT(inputElement.Components >= 1);
-    POMDOG_ASSERT(inputElement.Components <= 4);
+    POMDOG_ASSERT(components >= 1);
+    POMDOG_ASSERT(components <= 4);
 
-    return ToByteWithFromScalarTypeGL4(inputElement.ScalarType) *
-        inputElement.Components;
+    return ToByteWithFromScalarTypeGL4(scalarType) * static_cast<std::uint32_t>(components);
 }
 
-std::vector<InputElementGL4> BuildInputElements(
-    std::vector<InputElementGL4>&& inputElements,
-    std::vector<VertexDeclarationGL4>& vertexDeclarations)
+std::vector<InputElementGL4>
+BuildInputElements(std::vector<InputElementGL4>&& inputElements)
 {
     POMDOG_ASSERT(!inputElements.empty());
 
@@ -366,16 +364,9 @@ std::vector<InputElementGL4> BuildInputElements(
         inputElement.ByteOffset = offsetBytes;
         inputElement.InstanceStepRate = 0;
         inputElement.InputSlot = 0;
-        offsetBytes += CalculateByteOffset(inputElement);
+        offsetBytes += CalculateByteOffset(inputElement.ScalarType, inputElement.Components);
         POMDOG_ASSERT(offsetBytes > 0);
     }
-
-    VertexDeclarationGL4 declaration;
-    declaration.StrideBytes = offsetBytes;
-
-    POMDOG_ASSERT(vertexDeclarations.empty());
-    vertexDeclarations.reserve(1);
-    vertexDeclarations.push_back(std::move(declaration));
 
     return std::move(inputElements);
 }
@@ -432,12 +423,10 @@ GLuint GetMaxAttributeCount()
 
 std::vector<InputElementGL4> BuildInputElements(
     const InputLayoutDescription& description,
-    std::vector<InputElementGL4>&& attributes,
-    std::vector<VertexDeclarationGL4>& vertexDeclarations)
+    std::vector<InputElementGL4>&& attributes)
 {
     POMDOG_ASSERT(!description.InputElements.empty());
     POMDOG_ASSERT(!attributes.empty());
-    POMDOG_ASSERT(vertexDeclarations.empty());
 
     auto sortedElements = description.InputElements;
     std::sort(std::begin(sortedElements), std::end(sortedElements),
@@ -453,22 +442,18 @@ std::vector<InputElementGL4> BuildInputElements(
     std::vector<InputElementGL4> inputElements;
     inputElements.reserve(sortedElements.size());
 
-    auto currentInputSlot = sortedElements.front().InputSlot;
-    std::uint32_t offsetBytes = 0;
-
     auto vertexAttribute = std::begin(attributes);
+    for (std::size_t locationIndex = 0; locationIndex < sortedElements.size(); ++locationIndex) {
+        if (vertexAttribute == std::end(attributes)) {
+            break;
+        }
 
-    for (auto& sourceElement : sortedElements) {
+        auto& sourceElement = sortedElements[locationIndex];
+
         POMDOG_ASSERT(sourceElement.InputSlot >= 0);
-        POMDOG_ASSERT(currentInputSlot <= sourceElement.InputSlot);
 
-        if (currentInputSlot != sourceElement.InputSlot) {
-            VertexDeclarationGL4 declaration;
-            declaration.StrideBytes = offsetBytes;
-            vertexDeclarations.push_back(std::move(declaration));
-
-            currentInputSlot = sourceElement.InputSlot;
-            offsetBytes = 0;
+        if (locationIndex != vertexAttribute->AttributeLocation) {
+            continue;
         }
 
         InputElementGL4 inputElement;
@@ -486,16 +471,9 @@ std::vector<InputElementGL4> BuildInputElements(
         POMDOG_ASSERT(inputElement.AttributeLocation < GetMaxAttributeCount());
 #endif // defined(DEBUG) && !defined(NDEBUG)
 
-        offsetBytes += CalculateByteOffset(inputElement);
-        POMDOG_ASSERT(offsetBytes > 0);
-
         inputElements.push_back(std::move(inputElement));
         ++vertexAttribute;
     }
-
-    VertexDeclarationGL4 declaration;
-    declaration.StrideBytes = offsetBytes;
-    vertexDeclarations.push_back(std::move(declaration));
 
     return inputElements;
 }
@@ -509,23 +487,23 @@ const GLvoid* ComputeBufferOffset(T const offsetBytes)
 
 void ApplyInputElements(
     const std::vector<InputElementGL4>& inputElements,
-    const std::vector<VertexDeclarationGL4>& vertexDeclarations,
     const std::array<VertexBufferBindingGL4, 8>& vertexBuffers)
 {
     POMDOG_ASSERT(!inputElements.empty());
-    POMDOG_ASSERT(!vertexDeclarations.empty());
     POMDOG_ASSERT(!vertexBuffers.empty());
-    POMDOG_ASSERT(vertexDeclarations.size() <= vertexBuffers.size());
 
-    auto vertexBufferIter = std::begin(vertexBuffers);
     auto inputElement = std::begin(inputElements);
 
-    for (auto& vertexDeclaration : vertexDeclarations) {
-        POMDOG_ASSERT(inputElement != std::end(inputElements));
-        POMDOG_ASSERT(vertexBufferIter != std::end(vertexBuffers));
+    for (auto& pair : vertexBuffers) {
+        if (pair.VertexBuffer == nullptr) {
+            break;
+        }
+        if (inputElement == std::end(inputElements)) {
+            break;
+        }
 
-        auto& vertexBuffer = vertexBufferIter->VertexBuffer;
-        const auto vertexOffset = vertexBufferIter->VertexOffset;
+        auto& vertexBuffer = pair.VertexBuffer;
+        const auto vertexOffset = pair.VertexOffset;
 
         POMDOG_ASSERT(vertexBuffer);
 
@@ -553,7 +531,7 @@ void ApplyInputElements(
                     inputElement->AttributeLocation,
                     inputElement->Components,
                     inputElement->ScalarType.value,
-                    vertexDeclaration.StrideBytes,
+                    static_cast<GLsizei>(vertexBuffer->GetStrideBytes()),
                     ComputeBufferOffset(inputElement->ByteOffset + vertexOffset));
                 POMDOG_CHECK_ERROR_GL4("glVertexAttribIPointer");
             }
@@ -563,7 +541,7 @@ void ApplyInputElements(
                     inputElement->Components,
                     inputElement->ScalarType.value,
                     GL_FALSE,
-                    vertexDeclaration.StrideBytes,
+                    static_cast<GLsizei>(vertexBuffer->GetStrideBytes()),
                     ComputeBufferOffset(inputElement->ByteOffset + vertexOffset));
                 POMDOG_CHECK_ERROR_GL4("glVertexAttribPointer");
             }
@@ -571,8 +549,6 @@ void ApplyInputElements(
             glVertexAttribDivisor(inputElement->AttributeLocation, inputElement->InstanceStepRate);
             POMDOG_CHECK_ERROR_GL4("glVertexAttribDivisor");
         }
-
-        ++vertexBufferIter;
     }
 
     POMDOG_ASSERT(inputElement == std::end(inputElements));
@@ -609,16 +585,13 @@ InputLayoutGL4::InputLayoutGL4(
     inputElements = BuildAttributes(shaderProgram);
 
     if (description.InputElements.empty()) {
-        inputElements = BuildInputElements(
-            std::move(inputElements), vertexDeclarations);
+        inputElements = BuildInputElements(std::move(inputElements));
     }
     else {
-        inputElements = BuildInputElements(description,
-            std::move(inputElements), vertexDeclarations);
+        inputElements = BuildInputElements(description, std::move(inputElements));
     }
 
     inputElements.shrink_to_fit();
-    vertexDeclarations.shrink_to_fit();
 
     EnableAttributes(inputElements);
 }
@@ -637,7 +610,7 @@ void InputLayoutGL4::Apply(const std::array<VertexBufferBindingGL4, 8>& vertexBu
     glBindVertexArray(inputLayout->value);
     POMDOG_CHECK_ERROR_GL4("glBindVertexArray");
 
-    ApplyInputElements(inputElements, vertexDeclarations, vertexBuffers);
+    ApplyInputElements(inputElements, vertexBuffers);
 }
 
 } // namespace Pomdog::Detail::GL4

@@ -43,10 +43,6 @@ struct InputElementGL4 final {
     bool IsInteger = false;
 };
 
-struct VertexDeclarationGL4 final {
-    GLsizei StrideBytes;
-};
-
 class InputLayoutGL4 final {
 public:
     explicit InputLayoutGL4(const ShaderProgramGL4& shaderProgram);
@@ -61,7 +57,6 @@ public:
 
 private:
     std::vector<InputElementGL4> inputElements;
-    std::vector<VertexDeclarationGL4> vertexDeclarations;
     std::optional<VertexArrayGL4> inputLayout;
 };
 
