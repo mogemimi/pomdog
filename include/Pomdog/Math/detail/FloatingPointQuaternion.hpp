@@ -62,6 +62,12 @@ public:
     Normalize(const FloatingPointQuaternion& quaternion, FloatingPointQuaternion& result) noexcept;
 
     static void
+    Lerp(const FloatingPointQuaternion& source1, const FloatingPointQuaternion& source2, T amount, FloatingPointQuaternion& result);
+
+    [[nodiscard]] static FloatingPointQuaternion
+    Lerp(const FloatingPointQuaternion& source1, const FloatingPointQuaternion& source2, T amount);
+
+    static void
     Slerp(const FloatingPointQuaternion& begin, const FloatingPointQuaternion& end, T amount, FloatingPointQuaternion& result);
 
     [[nodiscard]] static FloatingPointQuaternion

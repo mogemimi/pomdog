@@ -206,6 +206,30 @@ FloatingPointQuaternion<T>::Normalize(const FloatingPointQuaternion& source) noe
 
 template <typename T>
 void
+FloatingPointQuaternion<T>::Lerp(
+    const FloatingPointQuaternion& source1,
+    const FloatingPointQuaternion& source2,
+    T amount,
+    FloatingPointQuaternion& result)
+{
+    result.X = MathHelper::Lerp(source1.X, source2.X, amount);
+    result.Y = MathHelper::Lerp(source1.Y, source2.Y, amount);
+    result.Z = MathHelper::Lerp(source1.Z, source2.Z, amount);
+    result.W = MathHelper::Lerp(source1.W, source2.W, amount);
+    result.Normalize();
+}
+
+template <typename T>
+FloatingPointQuaternion<T>
+FloatingPointQuaternion<T>::Lerp(const FloatingPointQuaternion& source1, const FloatingPointQuaternion& source2, T amount)
+{
+    FloatingPointQuaternion result;
+    Lerp(source1, source2, amount, result);
+    return result;
+}
+
+template <typename T>
+void
 FloatingPointQuaternion<T>::Slerp(const FloatingPointQuaternion& begin, const FloatingPointQuaternion& end, T amount,
     FloatingPointQuaternion & result)
 {
