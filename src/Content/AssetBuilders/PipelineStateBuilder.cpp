@@ -201,12 +201,29 @@ Builder<PipelineState>& Builder<PipelineState>::SetConstantBufferBindSlot(
     POMDOG_ASSERT(slotIndex >= 0);
 
 #if defined(DEBUG) && !defined(NDEBUG)
-    for (auto& pair : impl->description.ConstantBufferBindSlots) {
+    for (auto& pair : impl->description.ConstantBufferBindHints) {
         POMDOG_ASSERT(slotIndex != pair.second);
     }
 #endif
 
-    impl->description.ConstantBufferBindSlots.emplace(name, slotIndex);
+    impl->description.ConstantBufferBindHints.emplace(name, slotIndex);
+    return *this;
+}
+
+Builder<PipelineState>& Builder<PipelineState>::SetSamplerBindSlot(
+    const std::string& name, int slotIndex)
+{
+    POMDOG_ASSERT(impl);
+    POMDOG_ASSERT(!name.empty());
+    POMDOG_ASSERT(slotIndex >= 0);
+
+#if defined(DEBUG) && !defined(NDEBUG)
+    for (auto& pair : impl->description.SamplerBindHints) {
+        POMDOG_ASSERT(slotIndex != pair.second);
+    }
+#endif
+
+    impl->description.SamplerBindHints.emplace(name, slotIndex);
     return *this;
 }
 

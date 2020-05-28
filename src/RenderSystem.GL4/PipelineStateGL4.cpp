@@ -110,7 +110,7 @@ PipelineStateGL4::PipelineStateGL4(const PipelineStateDescription& description)
         std::unordered_set<int> reservedSlots;
         std::unordered_set<int> reservedBlocks;
 
-        auto& bindSlots = description.ConstantBufferBindSlots;
+        auto& bindSlots = description.ConstantBufferBindHints;
 
         for (auto& uniformBlock : uniformBlocks) {
             auto binding = bindSlots.find(uniformBlock.Name);
@@ -140,6 +140,8 @@ PipelineStateGL4::PipelineStateGL4(const PipelineStateDescription& description)
     {
         auto uniforms = shaderReflection.GetNativeUniforms();
 
+        auto& hints = description.SamplerBindHints;
+
         std::uint16_t slotIndex = 0;
         for (auto& uniform : uniforms) {
             switch (uniform.Type) {
@@ -165,10 +167,30 @@ PipelineStateGL4::PipelineStateGL4(const PipelineStateDescription& description)
                 break;
             }
 
-            TextureBindingGL4 binding;
-            binding.UniformLocation = uniform.Location;
-            binding.SlotIndex = slotIndex;
-            textureBindings.push_back(binding);
+            if (auto hint = hints.find(uniform.Name); hint != std::end(hints)) {
+                TextureBindingGL4 binding;
+                binding.UniformLocation = uniform.Location;
+                binding.SlotIndex = static_cast<std::uint16_t>(hint->second);
+                static_assert(std::is_same_v<decltype(binding.SlotIndex), std::uint16_t>);
+
+                auto iter = std::find_if(
+                    std::begin(textureBindings),
+                    std::end(textureBindings),
+                    [&](auto& t) { return t.SlotIndex == binding.SlotIndex; });
+
+                if (iter != std::end(textureBindings)) {
+                    iter->SlotIndex = slotIndex;
+                }
+
+                textureBindings.push_back(binding);
+            }
+            else {
+                TextureBindingGL4 binding;
+                binding.UniformLocation = uniform.Location;
+                binding.SlotIndex = slotIndex;
+                textureBindings.push_back(binding);
+            }
+
             ++slotIndex;
         }
     }

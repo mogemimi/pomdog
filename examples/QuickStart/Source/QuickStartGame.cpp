@@ -107,6 +107,7 @@ void QuickStartGame::Initialize()
             .SetVertexShader(std::move(vertexShader))
             .SetPixelShader(std::move(pixelShader))
             .SetConstantBufferBindSlot("MyShaderConstants", 0)
+            .SetSamplerBindSlot("DiffuseTexture", 0)
             .Build();
     }
     {

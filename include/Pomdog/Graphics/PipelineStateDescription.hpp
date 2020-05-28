@@ -17,10 +17,12 @@
 
 namespace Pomdog {
 
-using ConstantBufferBindSlotCollection = std::unordered_map<std::string, int>;
-
 struct PipelineStateDescription final {
-    ConstantBufferBindSlotCollection ConstantBufferBindSlots;
+    // NOTE: Since OpenGL 4.1 and earlier, location attribute cannot be used,
+    // so you can give hint by name.
+    std::unordered_map<std::string, int> ConstantBufferBindHints;
+    std::unordered_map<std::string, int> SamplerBindHints;
+
     std::shared_ptr<Shader> VertexShader;
     std::shared_ptr<Shader> PixelShader;
     InputLayoutDescription InputLayout;
