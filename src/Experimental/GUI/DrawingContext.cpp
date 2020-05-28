@@ -361,6 +361,8 @@ void DrawingContext::DrawIcon(
         frame = &(*iter);
     }
 
+    POMDOG_ASSERT(frame != nullptr);
+
     spriteBatch->Draw(
         iconTexture,
         position,

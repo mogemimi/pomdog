@@ -293,7 +293,6 @@ void ScrollView::DoLayout()
 void ScrollView::Draw(DrawingContext& drawingContext)
 {
     UpdateLayout();
-    POMDOG_ASSERT(!needToUpdateLayout);
 
     auto globalPos = UIHelper::ProjectToWorldSpace(GetPosition(), drawingContext.GetCurrentTransform());
 
