@@ -22,6 +22,9 @@ void QuickStartGame::Initialize()
     // Set window name
     window->SetTitle("QuickStart");
 
+    // Create graphics command list
+    commandList = std::make_shared<GraphicsCommandList>(*graphicsDevice);
+
     // Load a PNG as texture
     if (auto [res, err] = assets->Load<Texture2D>("pomdog.png"); err != nullptr) {
         // Error handling
@@ -33,11 +36,12 @@ void QuickStartGame::Initialize()
         texture = std::move(res);
     }
 
-    // Create sampler state
-    sampler = std::make_shared<SamplerState>(
-        graphicsDevice,
-        SamplerDescription::CreatePointClamp());
-
+    {
+        // Create sampler state
+        sampler = std::make_shared<SamplerState>(
+            graphicsDevice,
+            SamplerDescription::CreatePointClamp());
+    }
     {
         // Create vertex buffer
         struct VertexCombined {
@@ -111,17 +115,16 @@ void QuickStartGame::Initialize()
             .Build();
     }
     {
-        // Create graphics command list
-        commandList = std::make_shared<GraphicsCommandList>(*graphicsDevice);
+        auto updateShaderConstants = [this]([[maybe_unused]] int width, [[maybe_unused]] int height) {
+            const auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
-        auto updateShaderConstants = [this](int width, int height) {
-            auto view = Matrix4x4::Identity;
-            auto projection = Matrix4x4::CreateOrthographicLH(
-                static_cast<float>(width),
-                static_cast<float>(height),
+            const auto viewMatrix = Matrix4x4::Identity;
+            const auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
+                static_cast<float>(presentationParameters.BackBufferWidth),
+                static_cast<float>(presentationParameters.BackBufferHeight),
                 0.0f,
                 100.0f);
-            myShaderConstants.ViewProjection = view * projection;
+            myShaderConstants.ViewProjection = viewMatrix * projectionMatrix;
         };
 
         // Initialize shader resources
@@ -136,7 +139,7 @@ void QuickStartGame::Initialize()
         timer = std::make_unique<Timer>(clock);
         timer->SetInterval(std::chrono::milliseconds(500));
 
-        // Timer event
+        // Connect to timer event notification
         connect(timer->Elapsed, [this] {
             // String formatting using Pomdog::StringFormat
             auto title = StringHelper::Format(
