@@ -556,7 +556,8 @@ void ApplyInputElements(
 
 } // unnamed namespace
 
-template<> struct TypesafeHelperGL4::Traits<VertexArrayGL4> {
+template <>
+struct TypesafeHelperGL4::Traits<VertexArrayGL4> {
     constexpr static GLenum BufferBinding = GL_VERTEX_ARRAY_BINDING;
 };
 

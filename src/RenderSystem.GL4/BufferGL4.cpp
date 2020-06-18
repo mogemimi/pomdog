@@ -26,31 +26,37 @@ GLenum ToBufferUsage(BufferUsage bufferUsage) noexcept
 template <class Tag>
 struct BufferTraits;
 
-template <> struct BufferTraits<ConstantBuffer> {
+template <>
+struct BufferTraits<ConstantBuffer> {
     constexpr static GLenum Buffer = GL_UNIFORM_BUFFER;
 };
 
-template <> struct BufferTraits<IndexBuffer> {
+template <>
+struct BufferTraits<IndexBuffer> {
     constexpr static GLenum Buffer = GL_ELEMENT_ARRAY_BUFFER;
 };
 
-template <> struct BufferTraits<VertexBuffer> {
+template <>
+struct BufferTraits<VertexBuffer> {
     constexpr static GLenum Buffer = GL_ARRAY_BUFFER;
 };
 
 } // unnamed namespace
 
-template<> struct TypesafeHelperGL4::Traits<BufferObjectGL4<ConstantBuffer>> {
+template <>
+struct TypesafeHelperGL4::Traits<BufferObjectGL4<ConstantBuffer>> {
     constexpr static GLenum BufferBinding = GL_UNIFORM_BUFFER_BINDING;
     constexpr static GLenum BufferTarget = BufferTraits<ConstantBuffer>::Buffer;
 };
 
-template<> struct TypesafeHelperGL4::Traits<BufferObjectGL4<IndexBuffer>> {
+template <>
+struct TypesafeHelperGL4::Traits<BufferObjectGL4<IndexBuffer>> {
     constexpr static GLenum BufferBinding = GL_ELEMENT_ARRAY_BUFFER_BINDING;
     constexpr static GLenum BufferTarget = BufferTraits<IndexBuffer>::Buffer;
 };
 
-template<> struct TypesafeHelperGL4::Traits<BufferObjectGL4<VertexBuffer>> {
+template <>
+struct TypesafeHelperGL4::Traits<BufferObjectGL4<VertexBuffer>> {
     constexpr static GLenum BufferBinding = GL_ARRAY_BUFFER_BINDING;
     constexpr static GLenum BufferTarget = BufferTraits<VertexBuffer>::Buffer;
 };
@@ -124,8 +130,7 @@ void BufferGL4<Tag>::GetData(
         GLint bufferSize = 0;
         glGetBufferParameteriv(BufferTraits<Tag>::Buffer,
             GL_BUFFER_SIZE, &bufferSize);
-        POMDOG_ASSERT((offsetInBytes + sizeInBytes)
-            <= static_cast<std::size_t>(bufferSize));
+        POMDOG_ASSERT((offsetInBytes + sizeInBytes) <= static_cast<std::size_t>(bufferSize));
     }
 #endif
 

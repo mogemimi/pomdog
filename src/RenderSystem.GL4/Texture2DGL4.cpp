@@ -218,7 +218,8 @@ void SetPixelDataTexture2DGL4(
 
 } // unnamed namespace
 
-template<> struct TypesafeHelperGL4::Traits<Texture2DObjectGL4> {
+template <>
+struct TypesafeHelperGL4::Traits<Texture2DObjectGL4> {
     constexpr static GLenum BufferBinding = GL_TEXTURE_BINDING_2D;
     constexpr static GLenum TextureTarget = GL_TEXTURE_2D;
 };

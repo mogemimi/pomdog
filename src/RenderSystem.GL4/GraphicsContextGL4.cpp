@@ -320,7 +320,8 @@ const GLvoid* ComputeStartIndexLocationPointer(
 
 } // namespace
 
-template<> struct TypesafeHelperGL4::Traits<FrameBufferGL4> {
+template <>
+struct TypesafeHelperGL4::Traits<FrameBufferGL4> {
     constexpr static GLenum BufferBinding = GL_FRAMEBUFFER_BINDING;
 };
 

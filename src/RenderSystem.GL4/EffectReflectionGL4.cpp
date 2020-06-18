@@ -596,22 +596,22 @@ void DebugLogUniformBlocks(const std::vector<UniformBlockGL4>& uniformBlocks)
 
     for (const auto& uniformBlock : uniformBlocks) {
         stream
-        << "-[UniformBlock]-------------------\n"
-        << "         Name: " << uniformBlock.Name << "\n"
-        << "   BlockIndex: " << uniformBlock.BlockIndex << "\n"
-        << "     ByteSize: " << uniformBlock.ByteSize << "\n"
-        << "Uniforms.size: " << uniformBlock.Uniforms.size() << "\n";
+            << "-[UniformBlock]-------------------\n"
+            << "         Name: " << uniformBlock.Name << "\n"
+            << "   BlockIndex: " << uniformBlock.BlockIndex << "\n"
+            << "     ByteSize: " << uniformBlock.ByteSize << "\n"
+            << "Uniforms.size: " << uniformBlock.Uniforms.size() << "\n";
 
         for (const auto& uniform : uniformBlock.Uniforms) {
             stream
-            << ":- - - - - - - - - - - - - -\n"
-            << "         Name: " << uniform.Name << "\n"
-            << "  StartOffset: " << uniform.StartOffset << "\n"
-            << "     Elements: " << uniform.Elements << "\n"
-            << "         Type: " << uniform.Type << "\n"
-            << "  ArrayStride: " << uniform.ArrayStride << "\n"
-            << " MatrixStride: " << uniform.MatrixStride << "\n"
-            << "   IsRowMajor: " << (uniform.IsRowMajor? "true": "false") << "\n";
+                << ":- - - - - - - - - - - - - -\n"
+                << "         Name: " << uniform.Name << "\n"
+                << "  StartOffset: " << uniform.StartOffset << "\n"
+                << "     Elements: " << uniform.Elements << "\n"
+                << "         Type: " << uniform.Type << "\n"
+                << "  ArrayStride: " << uniform.ArrayStride << "\n"
+                << " MatrixStride: " << uniform.MatrixStride << "\n"
+                << "   IsRowMajor: " << (uniform.IsRowMajor ? "true" : "false") << "\n";
         }
     }
 
@@ -624,11 +624,11 @@ void DebugLogUniforms(const std::vector<UniformGL4>& uniforms)
     std::stringstream stream;
     for (const auto& uniform : uniforms) {
         stream
-        << "-[Uniform]-------------------\n"
-        << "      Name: " << uniform.Name << "\n"
-        << "  Location: " << uniform.Location << "\n"
-        << "      Type: " << uniform.Type << "\n"
-        << "ArrayCount: " << uniform.ArrayCount << "\n";
+            << "-[Uniform]-------------------\n"
+            << "      Name: " << uniform.Name << "\n"
+            << "  Location: " << uniform.Location << "\n"
+            << "      Type: " << uniform.Type << "\n"
+            << "ArrayCount: " << uniform.ArrayCount << "\n";
     }
 
     stream << "--------------------\n";
