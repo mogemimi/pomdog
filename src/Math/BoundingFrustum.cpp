@@ -32,8 +32,8 @@ constexpr int FarRightBottom = 6;
 constexpr int FarLeftBottom = 7;
 } // namespace CornerIndex
 
-#define POMDOG_CREATE_PLANES_BEFORE_CORNERS 0
-//#define POMDOG_CREATE_PLANES_BEFORE_CORNERS 1
+//#define POMDOG_CREATE_PLANES_BEFORE_CORNERS 0
+#define POMDOG_CREATE_PLANES_BEFORE_CORNERS 1
 
 } // unnamed namespace
 
@@ -120,9 +120,16 @@ void MakePlane(Plane& plane, float x, float y, float z, float d)
     plane.Distance = d;
 }
 
-Vector3 IntersectionPoint(const Plane& a, const Plane& b, const Plane& c)
+Vector3 ComputeIntersectionPoint(const Plane& a, const Plane& b, const Plane& c)
 {
-    // TODO: Not implemented
+    const auto cross = Vector3::Cross(b.Normal, c.Normal);
+    const auto denom = -1.0f * Vector3::Dot(a.Normal, cross);
+    const auto v1 = a.Distance * Vector3::Cross(b.Normal, c.Normal);
+    const auto v2 = b.Distance * Vector3::Cross(c.Normal, a.Normal);
+    const auto v3 = c.Distance * Vector3::Cross(a.Normal, b.Normal);
+
+    Vector3 result = (v1 + v2 + v3) / denom;
+    return result;
 }
 
 #endif
@@ -218,14 +225,14 @@ void BoundingFrustum::CreateCorners()
     constexpr auto T = PlaneIndex::Top;
     constexpr auto B = PlaneIndex::Bottom;
 
-    corners[NLT] = IntersectionPoint(planes[N], planes[L], planes[T]);
-    corners[NRT] = IntersectionPoint(planes[N], planes[R], planes[T]);
-    corners[NRB] = IntersectionPoint(planes[N], planes[R], planes[B]);
-    corners[NLB] = IntersectionPoint(planes[N], planes[L], planes[B]);
-    corners[FLT] = IntersectionPoint(planes[F], planes[L], planes[T]);
-    corners[FRT] = IntersectionPoint(planes[F], planes[R], planes[T]);
-    corners[FRB] = IntersectionPoint(planes[F], planes[R], planes[B]);
-    corners[FLB] = IntersectionPoint(planes[F], planes[L], planes[B]);
+    corners[NLT] = ComputeIntersectionPoint(planes[N], planes[L], planes[T]);
+    corners[NRT] = ComputeIntersectionPoint(planes[N], planes[R], planes[T]);
+    corners[NRB] = ComputeIntersectionPoint(planes[N], planes[R], planes[B]);
+    corners[NLB] = ComputeIntersectionPoint(planes[N], planes[L], planes[B]);
+    corners[FLT] = ComputeIntersectionPoint(planes[F], planes[L], planes[T]);
+    corners[FRT] = ComputeIntersectionPoint(planes[F], planes[R], planes[T]);
+    corners[FRB] = ComputeIntersectionPoint(planes[F], planes[R], planes[B]);
+    corners[FLB] = ComputeIntersectionPoint(planes[F], planes[L], planes[B]);
 #else
     constexpr auto xMin = -1.0f;
     constexpr auto xMax = +1.0f;
