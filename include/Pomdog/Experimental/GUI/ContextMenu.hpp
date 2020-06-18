@@ -32,6 +32,12 @@ public:
 
     bool GetSizeToFitContent() const noexcept override;
 
+    void ScrollToTop();
+
+    void ScrollToEnd();
+
+    void ScrollTo(const std::shared_ptr<Widget>& widget);
+
     void OnEnter() override;
 
     void Draw(DrawingContext& drawingContext) override;

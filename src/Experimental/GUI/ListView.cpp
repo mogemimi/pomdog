@@ -73,7 +73,7 @@ void ListView::OnEnter()
 
 void ListView::AddChild(const std::shared_ptr<Widget>& widget)
 {
-    POMDOG_ASSERT(verticalLayout);
+    POMDOG_ASSERT(verticalLayout != nullptr);
 
     auto itemCount = verticalLayout->GetItemCount();
 
@@ -88,7 +88,7 @@ void ListView::AddChild(const std::shared_ptr<Widget>& widget)
 
 void ListView::RemoveChild(const std::shared_ptr<Widget>& widget)
 {
-    POMDOG_ASSERT(verticalLayout);
+    POMDOG_ASSERT(verticalLayout != nullptr);
     verticalLayout->RemoveChild(widget);
 
     // NOTE: Reindexing
@@ -103,7 +103,7 @@ void ListView::RemoveChild(const std::shared_ptr<Widget>& widget)
 
 void ListView::RemoveChild(int index)
 {
-    POMDOG_ASSERT(verticalLayout);
+    POMDOG_ASSERT(verticalLayout != nullptr);
     verticalLayout->RemoveChild(index);
 
     // NOTE: Reindexing
@@ -118,7 +118,7 @@ void ListView::RemoveChild(int index)
 
 int ListView::GetItemCount() const noexcept
 {
-    POMDOG_ASSERT(verticalLayout);
+    POMDOG_ASSERT(verticalLayout != nullptr);
     return verticalLayout->GetItemCount();
 }
 
@@ -129,7 +129,7 @@ std::optional<int> ListView::GetCurrentIndex() const noexcept
 
 void ListView::SetCurrentIndex(int index)
 {
-    POMDOG_ASSERT(verticalLayout);
+    POMDOG_ASSERT(verticalLayout != nullptr);
 
     if ((currentIndex != std::nullopt) &&
         (index != *currentIndex) &&
@@ -166,6 +166,13 @@ std::shared_ptr<Widget> ListView::GetChildAt(const Point2D& position)
     return nullptr;
 }
 
+std::shared_ptr<Widget> ListView::GetChildAt(int index)
+{
+    POMDOG_ASSERT(verticalLayout != nullptr);
+    auto item = std::static_pointer_cast<ListViewItem>(verticalLayout->GetChildAt(index));
+    return item->GetChild();
+}
+
 void ListView::UpdateAnimation(const Duration& frameDuration)
 {
     POMDOG_ASSERT(verticalLayout != nullptr);
@@ -174,7 +181,7 @@ void ListView::UpdateAnimation(const Duration& frameDuration)
 
 void ListView::UpdateLayout()
 {
-    POMDOG_ASSERT(verticalLayout);
+    POMDOG_ASSERT(verticalLayout != nullptr);
     verticalLayout->DoLayout();
 
     if (!needToUpdateLayout) {

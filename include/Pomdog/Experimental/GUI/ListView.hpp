@@ -50,6 +50,8 @@ public:
 
     std::shared_ptr<Widget> GetChildAt(const Point2D& position) override;
 
+    std::shared_ptr<Widget> GetChildAt(int index);
+
     void UpdateAnimation(const Duration& frameDuration) override;
 
     void DoLayout() override;

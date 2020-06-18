@@ -205,6 +205,10 @@ void PopupMenu::OnPointerReleased([[maybe_unused]] const PointerPoint& pointerPo
         contextMenu->DoLayout();
         contextMenu->SetPosition(GetGlobalPosition() - Point2D{0, contextMenu->GetHeight()});
 
+        if (focusedItem != nullptr) {
+            contextMenu->ScrollTo(focusedItem);
+        }
+
         focusConn = dispatcher->FocusChanged.Connect([this](const std::shared_ptr<Widget>& focusedWidget) {
             auto widget = focusedWidget;
 

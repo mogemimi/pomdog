@@ -170,6 +170,11 @@ std::shared_ptr<Widget> ListViewItem::GetChildAt(const Point2D& position)
     return nullptr;
 }
 
+std::shared_ptr<Widget> ListViewItem::GetChild()
+{
+    return child;
+}
+
 void ListViewItem::UpdateAnimation(const Duration& frameDuration)
 {
     if (child != nullptr) {

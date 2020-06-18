@@ -38,6 +38,8 @@ public:
 
     void ScrollToEnd();
 
+    void ScrollTo(const std::shared_ptr<Widget>& widget);
+
     void SetHorizontalAlignment(HorizontalAlignment horizontalAlignment) noexcept;
 
     HorizontalAlignment GetHorizontalAlignment() const noexcept override;

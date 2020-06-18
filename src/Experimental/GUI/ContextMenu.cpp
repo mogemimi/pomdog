@@ -64,6 +64,24 @@ bool ContextMenu::GetSizeToFitContent() const noexcept
     return false;
 }
 
+void ContextMenu::ScrollToTop()
+{
+    POMDOG_ASSERT(scrollView);
+    scrollView->ScrollToTop();
+}
+
+void ContextMenu::ScrollToEnd()
+{
+    POMDOG_ASSERT(scrollView);
+    scrollView->ScrollToEnd();
+}
+
+void ContextMenu::ScrollTo(const std::shared_ptr<Widget>& widget)
+{
+    POMDOG_ASSERT(scrollView);
+    scrollView->ScrollTo(widget);
+}
+
 void ContextMenu::OnEnter()
 {
     POMDOG_ASSERT(scrollView != nullptr);

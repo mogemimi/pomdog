@@ -103,6 +103,27 @@ void ScrollView::ScrollToEnd()
     }
 }
 
+void ScrollView::ScrollTo(const std::shared_ptr<Widget>& widget)
+{
+    if (child == nullptr) {
+        return;
+    }
+    if (widget == nullptr) {
+        return;
+    }
+
+    child->DoLayout();
+
+    if (child->GetHeight() > GetHeight()) {
+        const auto w = widget->GetGlobalPosition();
+        const auto s = scrollBar->GetGlobalPosition();
+        const auto h = scrollBar->GetHeight();
+        const auto v = w.Y - (s.Y + h);
+        scrollBar->SetValue(std::clamp(static_cast<double>(v), scrollBar->GetMinimum(), scrollBar->GetMaximum()));
+        needToUpdateLayout = true;
+    }
+}
+
 void ScrollView::SetHorizontalAlignment(HorizontalAlignment horizontalAlignmentIn) noexcept
 {
     this->horizontalAlignment = horizontalAlignmentIn;
