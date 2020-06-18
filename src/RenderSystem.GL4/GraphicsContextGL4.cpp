@@ -384,6 +384,10 @@ GraphicsContextGL4::~GraphicsContextGL4()
 void GraphicsContextGL4::ExecuteCommandLists(
     const std::vector<std::shared_ptr<GraphicsCommandListImmediate>>& commandLists)
 {
+    pipelineState = nullptr;
+    needToApplyInputLayout = true;
+    needToApplyPipelineState = true;
+
     for (auto& commandList : commandLists) {
         POMDOG_ASSERT(commandList);
         commandList->ExecuteImmediate(*this);

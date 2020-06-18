@@ -218,6 +218,9 @@ GraphicsContextDirect3D11::~GraphicsContextDirect3D11()
 void GraphicsContextDirect3D11::ExecuteCommandLists(
     const std::vector<std::shared_ptr<GraphicsCommandListImmediate>>& commandLists)
 {
+    pipelineState = nullptr;
+    needToApplyPipelineState = true;
+
     for (auto& commandList : commandLists) {
         POMDOG_ASSERT(commandList);
         commandList->ExecuteImmediate(*this);
