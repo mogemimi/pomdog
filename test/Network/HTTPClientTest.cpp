@@ -11,12 +11,32 @@
 #include "Pomdog/Utility/Errors.hpp"
 #include "Pomdog/Utility/StringHelper.hpp"
 #include "catch.hpp"
+#include <algorithm>
 #include <cstring>
 #include <sstream>
 #include <unordered_map>
 #include <thread>
 
 using namespace Pomdog;
+
+namespace {
+
+std::string
+toLower(const std::string& in)
+{
+    const auto asciiToLower = [](char c) -> char {
+        if (c <= 'Z' && c >= 'A') {
+            return c - ('Z' - 'z');
+        }
+        return c;
+    };
+
+    std::string s = in;
+    std::transform(std::begin(s), std::end(s), std::begin(s), asciiToLower);
+    return s;
+}
+
+} // namespace
 
 TEST_CASE("Transfer-Encoding has a 'chunked' operation.", "[Network]")
 {
@@ -80,10 +100,10 @@ TEST_CASE("HTTPClient Get", "[Network]")
         REQUIRE(response->Header[2].second == std::to_string(response->ContentLength));
         REQUIRE(response->Header[3].first == "Connection");
         REQUIRE(response->Header[3].second == "keep-alive");
-        REQUIRE(response->Header[4].first == "Server");
-        REQUIRE(response->Header[5].first == "Access-Control-Allow-Origin");
+        REQUIRE(toLower(response->Header[4].first) == "server");
+        REQUIRE(toLower(response->Header[5].first) == "access-control-allow-origin");
         REQUIRE(response->Header[5].second == "*");
-        REQUIRE(response->Header[6].first == "Access-Control-Allow-Credentials");
+        REQUIRE(toLower(response->Header[6].first) == "access-control-allow-credentials");
         REQUIRE(response->Header[6].second == "true");
 
         REQUIRE(response->ContentLength == response->Body.size());
@@ -93,8 +113,7 @@ TEST_CASE("HTTPClient Get", "[Network]")
         REQUIRE(StringHelper::HasPrefix(text,
             "{\n"
             "  \"args\": {}, \n"
-            "  \"headers\": {\n"
-            "    \"Host\": \"httpbin.org\", \n"));
+            "  \"headers\": {\n"));
         REQUIRE(StringHelper::HasSuffix(text,
             "  \"url\": \"http://httpbin.org/get\"\n"
             "}\n"));
@@ -136,10 +155,10 @@ TEST_CASE("HTTPClient Post", "[Network]")
         REQUIRE(response->Header[2].second == std::to_string(response->ContentLength));
         REQUIRE(response->Header[3].first == "Connection");
         REQUIRE(response->Header[3].second == "keep-alive");
-        REQUIRE(response->Header[4].first == "Server");
-        REQUIRE(response->Header[5].first == "Access-Control-Allow-Origin");
+        REQUIRE(toLower(response->Header[4].first) == "server");
+        REQUIRE(toLower(response->Header[5].first) == "access-control-allow-origin");
         REQUIRE(response->Header[5].second == "*");
-        REQUIRE(response->Header[6].first == "Access-Control-Allow-Credentials");
+        REQUIRE(toLower(response->Header[6].first) == "access-control-allow-credentials");
         REQUIRE(response->Header[6].second == "true");
 
         REQUIRE(response->ContentLength == response->Body.size());
@@ -203,10 +222,10 @@ TEST_CASE("HTTPClient Get Secure", "[Network]")
         REQUIRE(response->Header[2].second == std::to_string(response->ContentLength));
         REQUIRE(response->Header[3].first == "Connection");
         REQUIRE(response->Header[3].second == "keep-alive");
-        REQUIRE(response->Header[4].first == "Server");
-        REQUIRE(response->Header[5].first == "Access-Control-Allow-Origin");
+        REQUIRE(toLower(response->Header[4].first) == "server");
+        REQUIRE(toLower(response->Header[5].first) == "access-control-allow-origin");
         REQUIRE(response->Header[5].second == "*");
-        REQUIRE(response->Header[6].first == "Access-Control-Allow-Credentials");
+        REQUIRE(toLower(response->Header[6].first) == "access-control-allow-credentials");
         REQUIRE(response->Header[6].second == "true");
 
         REQUIRE(response->ContentLength == response->Body.size());
@@ -216,8 +235,7 @@ TEST_CASE("HTTPClient Get Secure", "[Network]")
         REQUIRE(StringHelper::HasPrefix(text,
             "{\n"
             "  \"args\": {}, \n"
-            "  \"headers\": {\n"
-            "    \"Host\": \"httpbin.org\", \n"));
+            "  \"headers\": {\n"));
         REQUIRE(StringHelper::HasSuffix(text,
             "  \"url\": \"https://httpbin.org/get\"\n"
             "}\n"));
@@ -264,10 +282,10 @@ TEST_CASE("HTTPClient Post Secure", "[Network]")
         REQUIRE(response->Header[2].second == std::to_string(response->ContentLength));
         REQUIRE(response->Header[3].first == "Connection");
         REQUIRE(response->Header[3].second == "keep-alive");
-        REQUIRE(response->Header[4].first == "Server");
-        REQUIRE(response->Header[5].first == "Access-Control-Allow-Origin");
+        REQUIRE(toLower(response->Header[4].first) == "server");
+        REQUIRE(toLower(response->Header[5].first) == "access-control-allow-origin");
         REQUIRE(response->Header[5].second == "*");
-        REQUIRE(response->Header[6].first == "Access-Control-Allow-Credentials");
+        REQUIRE(toLower(response->Header[6].first) == "access-control-allow-credentials");
         REQUIRE(response->Header[6].second == "true");
 
         REQUIRE(response->ContentLength == response->Body.size());
@@ -326,10 +344,10 @@ TEST_CASE("HTTPClient::Get", "[Network]")
         REQUIRE(response->Header[2].second == std::to_string(response->ContentLength));
         REQUIRE(response->Header[3].first == "Connection");
         REQUIRE(response->Header[3].second == "keep-alive");
-        REQUIRE(response->Header[4].first == "Server");
-        REQUIRE(response->Header[5].first == "Access-Control-Allow-Origin");
+        REQUIRE(toLower(response->Header[4].first) == "server");
+        REQUIRE(toLower(response->Header[5].first) == "access-control-allow-origin");
         REQUIRE(response->Header[5].second == "*");
-        REQUIRE(response->Header[6].first == "Access-Control-Allow-Credentials");
+        REQUIRE(toLower(response->Header[6].first) == "access-control-allow-credentials");
         REQUIRE(response->Header[6].second == "true");
 
         REQUIRE(response->ContentLength == response->Body.size());
@@ -339,8 +357,7 @@ TEST_CASE("HTTPClient::Get", "[Network]")
         REQUIRE(StringHelper::HasPrefix(text,
             "{\n"
             "  \"args\": {}, \n"
-            "  \"headers\": {\n"
-            "    \"Host\": \"httpbin.org\", \n"));
+            "  \"headers\": {\n"));
         REQUIRE(StringHelper::HasSuffix(text,
             "  \"url\": \"https://httpbin.org/get\"\n"
             "}\n"));
@@ -379,10 +396,10 @@ TEST_CASE("HTTPClient::Post", "[Network]")
         REQUIRE(response->Header[2].second == std::to_string(response->ContentLength));
         REQUIRE(response->Header[3].first == "Connection");
         REQUIRE(response->Header[3].second == "keep-alive");
-        REQUIRE(response->Header[4].first == "Server");
-        REQUIRE(response->Header[5].first == "Access-Control-Allow-Origin");
+        REQUIRE(toLower(response->Header[4].first) == "server");
+        REQUIRE(toLower(response->Header[5].first) == "access-control-allow-origin");
         REQUIRE(response->Header[5].second == "*");
-        REQUIRE(response->Header[6].first == "Access-Control-Allow-Credentials");
+        REQUIRE(toLower(response->Header[6].first) == "access-control-allow-credentials");
         REQUIRE(response->Header[6].second == "true");
 
         REQUIRE(response->ContentLength == response->Body.size());
