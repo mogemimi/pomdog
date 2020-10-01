@@ -144,7 +144,7 @@ void PostProcessCompositor::Composite(
             preRenderables.push_back(std::move(effect));
         }
     }
-    std::sort(std::begin(preRenderables), std::end(preRenderables));
+    std::stable_sort(std::begin(preRenderables), std::end(preRenderables));
     preRenderables.erase(
         std::unique(std::begin(preRenderables), std::end(preRenderables)),
         std::end(preRenderables));
