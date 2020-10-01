@@ -72,7 +72,8 @@ public:
     template <typename T>
     void GetData(T* result, std::size_t startIndex, std::size_t elementCount) const
     {
-        static_assert(std::is_pod_v<T>, "You can only use plain-old-data types.");
+        static_assert(std::is_trivially_copyable_v<T>, "You can only use plain-old-data types.");
+        static_assert(std::is_standard_layout_v<T>, "You can only use plain-old-data types.");
         static_assert(!std::is_void_v<T>);
         this->GetData(static_cast<void*>(result), sizeof(T) * startIndex, sizeof(T) * elementCount);
     }

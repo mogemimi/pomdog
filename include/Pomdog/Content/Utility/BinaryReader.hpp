@@ -17,7 +17,8 @@ struct POMDOG_EXPORT BinaryReader final {
     template <typename T, class Stream>
     static std::vector<T> ReadArray(Stream& stream, std::size_t elementCount)
     {
-        static_assert(std::is_pod<T>::value, "You can only use POD types.");
+        static_assert(std::is_trivially_copyable_v<T>, "You can only use POD types.");
+        static_assert(std::is_standard_layout_v<T>, "You can only use POD types.");
 
         POMDOG_ASSERT(stream);
         POMDOG_ASSERT(elementCount > 0);
@@ -32,7 +33,8 @@ struct POMDOG_EXPORT BinaryReader final {
     template <typename T, std::size_t ElementCount, class Stream>
     static std::array<T, ElementCount> ReadArray(Stream& stream)
     {
-        static_assert(std::is_pod<T>::value, "You can only use POD types.");
+        static_assert(std::is_trivially_copyable_v<T>, "You can only use POD types.");
+        static_assert(std::is_standard_layout_v<T>, "You can only use POD types.");
         POMDOG_ASSERT(stream);
 
         std::array<T, ElementCount> result;
@@ -44,7 +46,8 @@ struct POMDOG_EXPORT BinaryReader final {
     static T Read(Stream& stream)
     {
         POMDOG_ASSERT(stream);
-        static_assert(std::is_pod<T>::value, "You can only use POD types.");
+        static_assert(std::is_trivially_copyable_v<T>, "You can only use POD types.");
+        static_assert(std::is_standard_layout_v<T>, "You can only use POD types.");
         return std::move(ReadArray<T, 1>(stream)[0]);
     }
 
@@ -58,7 +61,8 @@ struct POMDOG_EXPORT BinaryReader final {
     static T Read(const std::uint8_t* data)
     {
         POMDOG_ASSERT(data);
-        static_assert(std::is_pod<T>::value, "You can only use POD types.");
+        static_assert(std::is_trivially_copyable_v<T>, "You can only use POD types.");
+        static_assert(std::is_standard_layout_v<T>, "You can only use POD types.");
         T value;
         std::memcpy(&value, data, sizeof(value));
         return value;

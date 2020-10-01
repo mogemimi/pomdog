@@ -21,7 +21,8 @@ void POMDOG_EXPORT Get(const ConstantBuffer& constantBuffer, double& result);
 template <class T, class ConstantBuffer>
 void Get(const ConstantBuffer& constantBuffer, T& result)
 {
-    static_assert(std::is_pod<T>::value, "You can only use POD value.");
+    static_assert(std::is_trivially_copyable_v<T>, "You can only use POD value.");
+    static_assert(std::is_standard_layout_v<T>, "You can only use POD value.");
     constantBuffer.GetValue(sizeof(result), static_cast<void*>(&result));
 }
 
@@ -48,7 +49,8 @@ template <typename T> void POMDOG_EXPORT Set(ConstantBuffer & constantBuffer, co
 template <class T, class ConstantBuffer>
 void Set(ConstantBuffer& constantBuffer, const T& value)
 {
-    static_assert(std::is_pod<T>::value, "You can only use POD value.");
+    static_assert(std::is_trivially_copyable_v<T>, "You can only use POD value.");
+    static_assert(std::is_standard_layout_v<T>, "You can only use POD value.");
     constantBuffer.SetValue(static_cast<const void*>(&value), sizeof(value));
 }
 

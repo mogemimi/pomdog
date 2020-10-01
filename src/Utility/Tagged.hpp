@@ -12,7 +12,8 @@ namespace Pomdog::Detail {
 template <typename T, class Tag>
 class POMDOG_EXPORT Tagged final {
 public:
-    static_assert(std::is_pod<T>::value, "You can only use plain-old-data types");
+    static_assert(std::is_trivially_copyable_v<T>, "You can only use plain-old-data types.");
+    static_assert(std::is_standard_layout_v<T>, "You can only use plain-old-data types.");
 
     typedef T value_type;
     typedef Tag tag_type;
@@ -61,7 +62,8 @@ public:
 template <typename T, class Tag, class... Arguments>
 Tagged<T, Tag> MakeTagged(Arguments&&... arguments)
 {
-    static_assert(std::is_pod<T>::value, "You can only use plain-old-data types");
+    static_assert(std::is_trivially_copyable_v<T>, "You can only use plain-old-data types.");
+    static_assert(std::is_standard_layout_v<T>, "You can only use plain-old-data types.");
     return Tagged<T, Tag>(std::forward<T>(arguments)...);
 }
 

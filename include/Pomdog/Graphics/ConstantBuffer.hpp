@@ -47,7 +47,8 @@ public:
     template <typename T>
     T GetValue() const
     {
-        static_assert(std::is_pod<T>::value, "You can only use plain-old-data types.");
+        static_assert(std::is_trivially_copyable_v<T>, "You can only use plain-old-data types.");
+        static_assert(std::is_standard_layout_v<T>, "You can only use plain-old-data types.");
         T result;
         Detail::EffectBinaryParameter::Get<T>(*this, result);
         return std::move(result);
@@ -59,7 +60,8 @@ public:
     template <typename T>
     void SetValue(const T& value)
     {
-        static_assert(std::is_pod<T>::value, "You can only use plain-old-data types.");
+        static_assert(std::is_trivially_copyable_v<T>, "You can only use plain-old-data types.");
+        static_assert(std::is_standard_layout_v<T>, "You can only use plain-old-data types.");
         Detail::EffectBinaryParameter::Set(*this, value);
     }
 
@@ -67,7 +69,8 @@ public:
     template <typename T>
     void SetValue(const T* data, std::size_t count)
     {
-        static_assert(std::is_pod<T>::value, "You can only use plain-old-data types.");
+        static_assert(std::is_trivially_copyable_v<T>, "You can only use plain-old-data types.");
+        static_assert(std::is_standard_layout_v<T>, "You can only use plain-old-data types.");
         Detail::EffectBinaryParameter::Set(*this, data, count);
     }
 

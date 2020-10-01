@@ -21,7 +21,8 @@ template <typename T, class PhantomType>
 class POMDOG_EXPORT TaggedArithmetic final {
 public:
     static_assert(std::is_arithmetic<T>::value, "T is arithmetic type.");
-    static_assert(std::is_pod<T>::value, "T is pod type.");
+    static_assert(std::is_trivially_copyable_v<T>, "You can only use POD type.");
+    static_assert(std::is_standard_layout_v<T>, "You can only use POD type.");
 
     T value;
 
