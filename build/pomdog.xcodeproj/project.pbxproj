@@ -274,9 +274,7 @@
 		D702F06D22FD8B1B00886A78 /* TCPStreamPOSIX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F06722FD8B1B00886A78 /* TCPStreamPOSIX.cpp */; };
 		D702F06E22FD8B1B00886A78 /* TCPStreamPOSIX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D702F06722FD8B1B00886A78 /* TCPStreamPOSIX.cpp */; };
 		D702F1F622FD914000886A78 /* libmbedtls.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D702F1E022FD8F2800886A78 /* libmbedtls.a */; };
-		D702F1F722FD914000886A78 /* libmbedtls-crypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D702F1E622FD8F2C00886A78 /* libmbedtls-crypto.a */; };
 		D702F1F822FD914900886A78 /* libmbedtls.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D702F1E022FD8F2800886A78 /* libmbedtls.a */; };
-		D702F1F922FD914900886A78 /* libmbedtls-crypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D702F1E622FD8F2C00886A78 /* libmbedtls-crypto.a */; };
 		D719A53323497EA600C1868B /* WAV.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D719A53123497EA600C1868B /* WAV.cpp */; };
 		D719A53423497EA600C1868B /* WAV.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D719A53123497EA600C1868B /* WAV.cpp */; };
 		D719A53523497EA600C1868B /* Vorbis.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D719A53223497EA600C1868B /* Vorbis.cpp */; };
@@ -544,13 +542,6 @@
 			remoteGlobalIDString = D702F09322FD8CAE00886A78;
 			remoteInfo = mbedtls;
 		};
-		D702F1E522FD8F2C00886A78 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D702F1E122FD8F2C00886A78 /* mbedtls-crypto.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D702F0AA22FD8CDA00886A78;
-			remoteInfo = "mbedtls-crypto";
-		};
 		D702F1EC22FD90C900886A78 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D702F1DB22FD8F2800886A78 /* mbedtls.xcodeproj */;
@@ -558,26 +549,12 @@
 			remoteGlobalIDString = D702F09222FD8CAE00886A78;
 			remoteInfo = mbedtls_static;
 		};
-		D702F1F022FD90CD00886A78 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D702F1E122FD8F2C00886A78 /* mbedtls-crypto.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = D702F0A922FD8CDA00886A78;
-			remoteInfo = "mbedtls-crypto_static";
-		};
 		D702F1F222FD90E300886A78 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D702F1DB22FD8F2800886A78 /* mbedtls.xcodeproj */;
 			proxyType = 1;
 			remoteGlobalIDString = D702F09222FD8CAE00886A78;
 			remoteInfo = mbedtls_static;
-		};
-		D702F1F422FD90E700886A78 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D702F1E122FD8F2C00886A78 /* mbedtls-crypto.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = D702F0A922FD8CDA00886A78;
-			remoteInfo = "mbedtls-crypto_static";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -963,7 +940,6 @@
 		D702F06722FD8B1B00886A78 /* TCPStreamPOSIX.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TCPStreamPOSIX.cpp; sourceTree = "<group>"; };
 		D702F06822FD8B1B00886A78 /* SocketHelperPOSIX.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SocketHelperPOSIX.hpp; sourceTree = "<group>"; };
 		D702F1DB22FD8F2800886A78 /* mbedtls.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = mbedtls.xcodeproj; path = dependencies/mbedtls.xcodeproj; sourceTree = "<group>"; };
-		D702F1E122FD8F2C00886A78 /* mbedtls-crypto.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "mbedtls-crypto.xcodeproj"; path = "dependencies/mbedtls-crypto.xcodeproj"; sourceTree = "<group>"; };
 		D719A52623497E4200C1868B /* PNG.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PNG.hpp; sourceTree = "<group>"; };
 		D719A52723497E4200C1868B /* DDS.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = DDS.hpp; sourceTree = "<group>"; };
 		D719A52823497E4200C1868B /* PNM.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PNM.hpp; sourceTree = "<group>"; };
@@ -1251,7 +1227,6 @@
 			files = (
 				A9A822731DAB7BF60091497F /* libgiflib.a in Frameworks */,
 				D702F1F622FD914000886A78 /* libmbedtls.a in Frameworks */,
-				D702F1F722FD914000886A78 /* libmbedtls-crypto.a in Frameworks */,
 				A9D641861C342F59006E14E0 /* libpng.a in Frameworks */,
 				A9D641871C342F5F006E14E0 /* libzlib.a in Frameworks */,
 				A997F6DF1CAEFB3E00926392 /* AudioToolbox.framework in Frameworks */,
@@ -1271,7 +1246,6 @@
 			files = (
 				A9A822761DAB7C060091497F /* libgiflib.a in Frameworks */,
 				D702F1F822FD914900886A78 /* libmbedtls.a in Frameworks */,
-				D702F1F922FD914900886A78 /* libmbedtls-crypto.a in Frameworks */,
 				77A462A40D237A6A1041B607 /* libpng.a in Frameworks */,
 				4D3F6C1E105B1A1149475635 /* libzlib.a in Frameworks */,
 				A997F6E01CAEFB4900926392 /* AudioToolbox.framework in Frameworks */,
@@ -1359,7 +1333,6 @@
 				A9A8226B1DAB7B310091497F /* giflib.xcodeproj */,
 				31E97AB9CDD9BFFD39388913 /* libpng.xcodeproj */,
 				D702F1DB22FD8F2800886A78 /* mbedtls.xcodeproj */,
-				D702F1E122FD8F2C00886A78 /* mbedtls-crypto.xcodeproj */,
 				0EEE1584DE8DFC5F422E85CC /* zlib.xcodeproj */,
 			);
 			name = Projects;
@@ -2190,14 +2163,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		D702F1E222FD8F2C00886A78 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				D702F1E622FD8F2C00886A78 /* libmbedtls-crypto.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		D719A52323497DD100C1868B /* AssetLoaders */ = {
 			isa = PBXGroup;
 			children = (
@@ -2765,7 +2730,6 @@
 				A9A822751DAB7C010091497F /* PBXTargetDependency */,
 				12C6FD6DDFE9A44EBCBDF554 /* PBXTargetDependency */,
 				D702F1F322FD90E300886A78 /* PBXTargetDependency */,
-				D702F1F522FD90E700886A78 /* PBXTargetDependency */,
 				47F28AE6D095659B888571B6 /* PBXTargetDependency */,
 			);
 			name = "Pomdog Mac (Pomdog.framework)";
@@ -2786,7 +2750,6 @@
 				A9A822721DAB7BF00091497F /* PBXTargetDependency */,
 				A9D641891C342FBF006E14E0 /* PBXTargetDependency */,
 				D702F1ED22FD90C900886A78 /* PBXTargetDependency */,
-				D702F1F122FD90CD00886A78 /* PBXTargetDependency */,
 				A9D6418B1C342FC2006E14E0 /* PBXTargetDependency */,
 			);
 			name = "Pomdog Mac (libpomdog.a)";
@@ -2821,10 +2784,6 @@
 				{
 					ProductGroup = D324FA616DB54DD0143F2C11 /* Products */;
 					ProjectRef = 31E97AB9CDD9BFFD39388913 /* libpng.xcodeproj */;
-				},
-				{
-					ProductGroup = D702F1E222FD8F2C00886A78 /* Products */;
-					ProjectRef = D702F1E122FD8F2C00886A78 /* mbedtls-crypto.xcodeproj */;
 				},
 				{
 					ProductGroup = D702F1DC22FD8F2800886A78 /* Products */;
@@ -2870,13 +2829,6 @@
 			fileType = archive.ar;
 			path = libmbedtls.a;
 			remoteRef = D702F1DF22FD8F2800886A78 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D702F1E622FD8F2C00886A78 /* libmbedtls-crypto.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libmbedtls-crypto.a";
-			remoteRef = D702F1E522FD8F2C00886A78 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -3372,20 +3324,10 @@
 			name = mbedtls_static;
 			targetProxy = D702F1EC22FD90C900886A78 /* PBXContainerItemProxy */;
 		};
-		D702F1F122FD90CD00886A78 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "mbedtls-crypto_static";
-			targetProxy = D702F1F022FD90CD00886A78 /* PBXContainerItemProxy */;
-		};
 		D702F1F322FD90E300886A78 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = mbedtls_static;
 			targetProxy = D702F1F222FD90E300886A78 /* PBXContainerItemProxy */;
-		};
-		D702F1F522FD90E700886A78 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "mbedtls-crypto_static";
-			targetProxy = D702F1F422FD90E700886A78 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

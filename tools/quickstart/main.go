@@ -133,7 +133,6 @@ func createProject(config projectConfig) error {
 		"ThirdParty/pomdog/build/dependencies/glew/CMakeLists.txt",
 		"ThirdParty/pomdog/build/dependencies/libpng/CMakeLists.txt",
 		"ThirdParty/pomdog/build/dependencies/mbedtls/CMakeLists.txt",
-		"ThirdParty/pomdog/build/dependencies/mbedtls-crypto/CMakeLists.txt",
 		"ThirdParty/pomdog/build/dependencies/zlib/CMakeLists.txt",
 	}
 	for _, f := range thirdPartyCMakeFiles {
