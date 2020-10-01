@@ -5,9 +5,8 @@ project(Pomdog CXX)
 STRING(REGEX REPLACE "/RTC(su|[1su])" "" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
 
 set(POMDOG_DIR "../..")
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED on)
-set(CMAKE_CXX_EXTENSIONS off)
+set(POMDOG_INC_DIR "${POMDOG_DIR}/include/Pomdog")
+set(POMDOG_SRC_DIR "${POMDOG_DIR}/src")
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
 
 source_group(Application                            REGULAR_EXPRESSION "(include/Pomdog|src)/Application/*")
@@ -67,1124 +66,192 @@ source_group(RenderSystem.Vulkan                    REGULAR_EXPRESSION src/Rende
 source_group(SoundSystem.OpenAL                     REGULAR_EXPRESSION src/SoundSystem.OpenAL/*)
 source_group(SoundSystem.XAudio2                    REGULAR_EXPRESSION src/SoundSystem.XAudio2/*)
 
-set(POMDOG_SOURCES_CORE
-  ${POMDOG_DIR}/include/Pomdog/Application/Duration.hpp
-  ${POMDOG_DIR}/include/Pomdog/Application/Game.hpp
-  ${POMDOG_DIR}/include/Pomdog/Application/GameClock.hpp
-  ${POMDOG_DIR}/include/Pomdog/Application/GameHost.hpp
-  ${POMDOG_DIR}/include/Pomdog/Application/GameWindow.hpp
-  ${POMDOG_DIR}/include/Pomdog/Application/MouseCursor.hpp
-  ${POMDOG_DIR}/include/Pomdog/Application/Timer.hpp
-  ${POMDOG_DIR}/include/Pomdog/Application/TimePoint.hpp
-  ${POMDOG_DIR}/include/Pomdog/Async/Helpers.hpp
-  ${POMDOG_DIR}/include/Pomdog/Async/ImmediateScheduler.hpp
-  ${POMDOG_DIR}/include/Pomdog/Async/QueuedScheduler.hpp
-  ${POMDOG_DIR}/include/Pomdog/Async/Scheduler.hpp
-  ${POMDOG_DIR}/include/Pomdog/Async/Task.hpp
-  ${POMDOG_DIR}/include/Pomdog/Audio/AudioClip.hpp
-  ${POMDOG_DIR}/include/Pomdog/Audio/AudioChannels.hpp
-  ${POMDOG_DIR}/include/Pomdog/Audio/AudioEmitter.hpp
-  ${POMDOG_DIR}/include/Pomdog/Audio/AudioEngine.hpp
-  ${POMDOG_DIR}/include/Pomdog/Audio/AudioListener.hpp
-  ${POMDOG_DIR}/include/Pomdog/Audio/SoundEffect.hpp
-  ${POMDOG_DIR}/include/Pomdog/Audio/SoundState.hpp
-  ${POMDOG_DIR}/include/Pomdog/Audio/detail/ForwardDeclarations.hpp
-  ${POMDOG_DIR}/include/Pomdog/Basic/Export.hpp
-  ${POMDOG_DIR}/include/Pomdog/Basic/Platform.hpp
-  ${POMDOG_DIR}/include/Pomdog/Basic/Version.hpp
-  ${POMDOG_DIR}/include/Pomdog/Content/AssetManager.hpp
-  ${POMDOG_DIR}/include/Pomdog/Content/AssetBuilders/Builder.hpp
-  ${POMDOG_DIR}/include/Pomdog/Content/AssetBuilders/PipelineStateBuilder.hpp
-  ${POMDOG_DIR}/include/Pomdog/Content/AssetBuilders/ShaderBuilder.hpp
-  ${POMDOG_DIR}/include/Pomdog/Content/Audio/Vorbis.hpp
-  ${POMDOG_DIR}/include/Pomdog/Content/Audio/WAV.hpp
-  ${POMDOG_DIR}/include/Pomdog/Content/Image/ImageBuffer.hpp
-  ${POMDOG_DIR}/include/Pomdog/Content/Image/DDS.hpp
-  ${POMDOG_DIR}/include/Pomdog/Content/Image/PNG.hpp
-  ${POMDOG_DIR}/include/Pomdog/Content/Image/PNM.hpp
-  ${POMDOG_DIR}/include/Pomdog/Content/Utility/BinaryReader.hpp
-  ${POMDOG_DIR}/include/Pomdog/Content/Utility/MakeFourCC.hpp
-  ${POMDOG_DIR}/include/Pomdog/Content/AssetLoaders/AssetLoader.hpp
-  ${POMDOG_DIR}/include/Pomdog/Content/AssetLoaders/AudioClipLoader.hpp
-  ${POMDOG_DIR}/include/Pomdog/Content/AssetLoaders/Texture2DLoader.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/Blend.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/BlendDescription.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/BlendOperation.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/BufferUsage.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/ComparisonFunction.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/ConstantBuffer.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/CullMode.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/DepthFormat.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/DepthStencilDescription.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/DepthStencilOperation.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/EffectAnnotation.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/EffectConstantDescription.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/EffectReflection.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/EffectVariableClass.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/EffectVariableType.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/EffectVariable.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/FillMode.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/GraphicsCommandList.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/GraphicsCommandQueue.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/GraphicsDevice.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/IndexBuffer.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/IndexElementSize.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/InputClassification.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/InputElement.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/InputElementFormat.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/InputLayoutDescription.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/InputLayoutHelper.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/PipelineState.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/PipelineStateDescription.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/PresentationParameters.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/PrimitiveTopology.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/RasterizerDescription.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/RenderPass.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/RenderTarget2D.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/RenderTargetBlendDescription.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/SamplerDescription.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/SamplerState.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/Shader.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/ShaderLanguage.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/ShaderPipelineStage.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/SurfaceFormat.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/StencilOperation.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/Texture.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/Texture2D.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/TextureAddressMode.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/TextureFilter.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/VertexBuffer.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/Viewport.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/detail/ForwardDeclarations.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/detail/EffectBinaryParameter.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/ShaderCompilers/GLSLCompiler.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/ShaderCompilers/HLSLCompiler.hpp
-  ${POMDOG_DIR}/include/Pomdog/Graphics/ShaderCompilers/MetalCompiler.hpp
-  ${POMDOG_DIR}/include/Pomdog/Input/ButtonState.hpp
-  ${POMDOG_DIR}/include/Pomdog/Input/Gamepad.hpp
-  ${POMDOG_DIR}/include/Pomdog/Input/GamepadButtons.hpp
-  ${POMDOG_DIR}/include/Pomdog/Input/GamepadCapabilities.hpp
-  ${POMDOG_DIR}/include/Pomdog/Input/GamepadDPad.hpp
-  ${POMDOG_DIR}/include/Pomdog/Input/GamepadState.hpp
-  ${POMDOG_DIR}/include/Pomdog/Input/GamepadThumbSticks.hpp
-  ${POMDOG_DIR}/include/Pomdog/Input/GamepadUUID.hpp
-  ${POMDOG_DIR}/include/Pomdog/Input/Keyboard.hpp
-  ${POMDOG_DIR}/include/Pomdog/Input/KeyboardState.hpp
-  ${POMDOG_DIR}/include/Pomdog/Input/KeyState.hpp
-  ${POMDOG_DIR}/include/Pomdog/Input/Keys.hpp
-  ${POMDOG_DIR}/include/Pomdog/Input/Mouse.hpp
-  ${POMDOG_DIR}/include/Pomdog/Input/MouseState.hpp
-  ${POMDOG_DIR}/include/Pomdog/Input/PlayerIndex.hpp
-  ${POMDOG_DIR}/include/Pomdog/Input/TouchLocation.hpp
-  ${POMDOG_DIR}/include/Pomdog/Input/TouchLocationState.hpp
-  ${POMDOG_DIR}/include/Pomdog/Logging/Log.hpp
-  ${POMDOG_DIR}/include/Pomdog/Logging/LogChannel.hpp
-  ${POMDOG_DIR}/include/Pomdog/Logging/LogEntry.hpp
-  ${POMDOG_DIR}/include/Pomdog/Logging/LogLevel.hpp
-  ${POMDOG_DIR}/include/Pomdog/Math/BoundingBox.hpp
-  ${POMDOG_DIR}/include/Pomdog/Math/BoundingBox.hpp
-  ${POMDOG_DIR}/include/Pomdog/Math/BoundingBox2D.hpp
-  ${POMDOG_DIR}/include/Pomdog/Math/BoundingCircle.hpp
-  ${POMDOG_DIR}/include/Pomdog/Math/BoundingFrustum.hpp
-  ${POMDOG_DIR}/include/Pomdog/Math/BoundingSphere.hpp
-  ${POMDOG_DIR}/include/Pomdog/Math/Color.hpp
-  ${POMDOG_DIR}/include/Pomdog/Math/ContainmentType.hpp
-  ${POMDOG_DIR}/include/Pomdog/Math/Degree.hpp
-  ${POMDOG_DIR}/include/Pomdog/Math/MathHelper.hpp
-  ${POMDOG_DIR}/include/Pomdog/Math/Matrix2x2.hpp
-  ${POMDOG_DIR}/include/Pomdog/Math/Matrix3x2.hpp
-  ${POMDOG_DIR}/include/Pomdog/Math/Matrix3x3.hpp
-  ${POMDOG_DIR}/include/Pomdog/Math/Matrix4x4.hpp
-  ${POMDOG_DIR}/include/Pomdog/Math/Plane.hpp
-  ${POMDOG_DIR}/include/Pomdog/Math/PlaneIntersectionType.hpp
-  ${POMDOG_DIR}/include/Pomdog/Math/Point2D.hpp
-  ${POMDOG_DIR}/include/Pomdog/Math/Point3D.hpp
-  ${POMDOG_DIR}/include/Pomdog/Math/Quaternion.hpp
-  ${POMDOG_DIR}/include/Pomdog/Math/Radian.hpp
-  ${POMDOG_DIR}/include/Pomdog/Math/Ray.hpp
-  ${POMDOG_DIR}/include/Pomdog/Math/Rectangle.hpp
-  ${POMDOG_DIR}/include/Pomdog/Math/Vector2.hpp
-  ${POMDOG_DIR}/include/Pomdog/Math/Vector3.hpp
-  ${POMDOG_DIR}/include/Pomdog/Math/Vector4.hpp
-  ${POMDOG_DIR}/include/Pomdog/Math/detail/Coordinate2D.hpp
-  ${POMDOG_DIR}/include/Pomdog/Math/detail/Coordinate3D.hpp
-  ${POMDOG_DIR}/include/Pomdog/Math/detail/FloatingPointMatrix2x2.hpp
-  ${POMDOG_DIR}/include/Pomdog/Math/detail/FloatingPointMatrix3x2.hpp
-  ${POMDOG_DIR}/include/Pomdog/Math/detail/FloatingPointMatrix3x3.hpp
-  ${POMDOG_DIR}/include/Pomdog/Math/detail/FloatingPointMatrix4x4.hpp
-  ${POMDOG_DIR}/include/Pomdog/Math/detail/FloatingPointQuaternion.hpp
-  ${POMDOG_DIR}/include/Pomdog/Math/detail/FloatingPointVector2.hpp
-  ${POMDOG_DIR}/include/Pomdog/Math/detail/FloatingPointVector3.hpp
-  ${POMDOG_DIR}/include/Pomdog/Math/detail/FloatingPointVector4.hpp
-  ${POMDOG_DIR}/include/Pomdog/Math/detail/ForwardDeclarations.hpp
-  ${POMDOG_DIR}/include/Pomdog/Math/detail/TaggedArithmetic.hpp
-  ${POMDOG_DIR}/include/Pomdog/Network/ArrayView.hpp
-  ${POMDOG_DIR}/include/Pomdog/Network/HTTPClient.hpp
-  ${POMDOG_DIR}/include/Pomdog/Network/HTTPMethod.hpp
-  ${POMDOG_DIR}/include/Pomdog/Network/HTTPRequest.hpp
-  ${POMDOG_DIR}/include/Pomdog/Network/HTTPResponse.hpp
-  ${POMDOG_DIR}/include/Pomdog/Network/IOService.hpp
-  ${POMDOG_DIR}/include/Pomdog/Network/TCPStream.hpp
-  ${POMDOG_DIR}/include/Pomdog/Network/TLSStream.hpp
-  ${POMDOG_DIR}/include/Pomdog/Network/UDPStream.hpp
-  ${POMDOG_DIR}/include/Pomdog/Network/detail/ForwardDeclarations.hpp
-  ${POMDOG_DIR}/include/Pomdog/Signals/Connection.hpp
-  ${POMDOG_DIR}/include/Pomdog/Signals/ConnectionList.hpp
-  ${POMDOG_DIR}/include/Pomdog/Signals/Delegate.hpp
-  ${POMDOG_DIR}/include/Pomdog/Signals/Event.hpp
-  ${POMDOG_DIR}/include/Pomdog/Signals/EventQueue.hpp
-  ${POMDOG_DIR}/include/Pomdog/Signals/Helpers.hpp
-  ${POMDOG_DIR}/include/Pomdog/Signals/ScopedConnection.hpp
-  ${POMDOG_DIR}/include/Pomdog/Signals/Signal.hpp
-  ${POMDOG_DIR}/include/Pomdog/Signals/detail/DelegateBody.hpp
-  ${POMDOG_DIR}/include/Pomdog/Signals/detail/EventBody.hpp
-  ${POMDOG_DIR}/include/Pomdog/Signals/detail/ForwardDeclarations.hpp
-  ${POMDOG_DIR}/include/Pomdog/Signals/detail/SignalBody.hpp
-  ${POMDOG_DIR}/include/Pomdog/Utility/Any.hpp
-  ${POMDOG_DIR}/include/Pomdog/Utility/Assert.hpp
-  ${POMDOG_DIR}/include/Pomdog/Utility/Errors.hpp
-  ${POMDOG_DIR}/include/Pomdog/Utility/Exception.hpp
-  ${POMDOG_DIR}/include/Pomdog/Utility/FileSystem.hpp
-  ${POMDOG_DIR}/include/Pomdog/Utility/PathHelper.hpp
-  ${POMDOG_DIR}/include/Pomdog/Utility/StringHelper.hpp
-  ${POMDOG_DIR}/include/Pomdog/Utility/detail/CRC32.hpp
-  ${POMDOG_DIR}/include/Pomdog/Utility/detail/SpinLock.hpp
-  ${POMDOG_DIR}/src/Application/GameClock.cpp
-  ${POMDOG_DIR}/src/Application/SubsystemScheduler.hpp
-  ${POMDOG_DIR}/src/Application/SystemEvents.hpp
-  ${POMDOG_DIR}/src/Application/Timer.cpp
-  ${POMDOG_DIR}/src/Application/TimeSource.hpp
-  ${POMDOG_DIR}/src/Async/ImmediateScheduler.cpp
-  ${POMDOG_DIR}/src/Async/QueuedScheduler.cpp
-  ${POMDOG_DIR}/src/Async/Task.cpp
-  ${POMDOG_DIR}/src/Audio/AudioClip.cpp
-  ${POMDOG_DIR}/src/Audio/AudioEngine.cpp
-  ${POMDOG_DIR}/src/Audio/SoundEffect.cpp
-  ${POMDOG_DIR}/src/Basic/ConditionalCompilation.hpp
-  ${POMDOG_DIR}/src/Basic/Unreachable.hpp
-  ${POMDOG_DIR}/src/Content/AssetManager.cpp
-  ${POMDOG_DIR}/src/Content/AssetBuilders/PipelineStateBuilder.cpp
-  ${POMDOG_DIR}/src/Content/AssetBuilders/ShaderBuilder.cpp
-  ${POMDOG_DIR}/src/Content/AssetLoaders/AudioClipLoader.cpp
-  ${POMDOG_DIR}/src/Content/AssetLoaders/Texture2DLoader.cpp
-  ${POMDOG_DIR}/src/Content/Audio/Vorbis.cpp
-  ${POMDOG_DIR}/src/Content/Audio/WAV.cpp
-  ${POMDOG_DIR}/src/Content/Image/DDS.cpp
-  ${POMDOG_DIR}/src/Content/Image/PNG.cpp
-  ${POMDOG_DIR}/src/Content/Image/PNM.cpp
-  ${POMDOG_DIR}/src/Graphics/ConstantBuffer.cpp
-  ${POMDOG_DIR}/src/Graphics/EffectBinaryParameter.cpp
-  ${POMDOG_DIR}/src/Graphics/EffectReflection.cpp
-  ${POMDOG_DIR}/src/Graphics/GraphicsCommandList.cpp
-  ${POMDOG_DIR}/src/Graphics/GraphicsCommandQueue.cpp
-  ${POMDOG_DIR}/src/Graphics/GraphicsDevice.cpp
-  ${POMDOG_DIR}/src/Graphics/IndexBuffer.cpp
-  ${POMDOG_DIR}/src/Graphics/InputLayoutHelper.cpp
-  ${POMDOG_DIR}/src/Graphics/PipelineState.cpp
-  ${POMDOG_DIR}/src/Graphics/RenderTarget2D.cpp
-  ${POMDOG_DIR}/src/Graphics/SamplerState.cpp
-  ${POMDOG_DIR}/src/Graphics/Texture2D.cpp
-  ${POMDOG_DIR}/src/Graphics/Viewport.cpp
-  ${POMDOG_DIR}/src/Graphics/VertexBuffer.cpp
-  ${POMDOG_DIR}/src/Graphics/ShaderCompilers/GLSLCompiler.cpp
-  ${POMDOG_DIR}/src/Graphics/ShaderCompilers/HLSLCompiler.cpp
-  ${POMDOG_DIR}/src/Graphics/ShaderCompilers/MetalCompiler.cpp
-  ${POMDOG_DIR}/src/Input/GamepadUUID.cpp
-  ${POMDOG_DIR}/src/Input/KeyboardState.cpp
-  ${POMDOG_DIR}/src/InputSystem/GamepadFactory.cpp
-  ${POMDOG_DIR}/src/InputSystem/GamepadFactory.hpp
-  ${POMDOG_DIR}/src/InputSystem/GamepadHelper.cpp
-  ${POMDOG_DIR}/src/InputSystem/GamepadHelper.hpp
-  ${POMDOG_DIR}/src/InputSystem/GamepadMappings.cpp
-  ${POMDOG_DIR}/src/InputSystem/GamepadMappings.hpp
-  ${POMDOG_DIR}/src/InputSystem/NativeGamepad.hpp
-  ${POMDOG_DIR}/src/Logging/Log.cpp
-  ${POMDOG_DIR}/src/Logging/LogChannel.cpp
-  ${POMDOG_DIR}/src/Math/BoundingBox.cpp
-  ${POMDOG_DIR}/src/Math/BoundingBox2D.cpp
-  ${POMDOG_DIR}/src/Math/BoundingCircle.cpp
-  ${POMDOG_DIR}/src/Math/BoundingFrustum.cpp
-  ${POMDOG_DIR}/src/Math/BoundingSphere.cpp
-  ${POMDOG_DIR}/src/Math/Color.cpp
-  ${POMDOG_DIR}/src/Math/MathHelper.cpp
-  ${POMDOG_DIR}/src/Math/Plane.cpp
-  ${POMDOG_DIR}/src/Math/Ray.cpp
-  ${POMDOG_DIR}/src/Math/Rectangle.cpp
-  ${POMDOG_DIR}/src/Math/detail/Coordinate2D.cpp
-  ${POMDOG_DIR}/src/Math/detail/Coordinate3D.cpp
-  ${POMDOG_DIR}/src/Math/detail/FloatingPointMatrix2x2.cpp
-  ${POMDOG_DIR}/src/Math/detail/FloatingPointMatrix3x2.cpp
-  ${POMDOG_DIR}/src/Math/detail/FloatingPointMatrix3x3.cpp
-  ${POMDOG_DIR}/src/Math/detail/FloatingPointMatrix4x4.cpp
-  ${POMDOG_DIR}/src/Math/detail/FloatingPointQuaternion.cpp
-  ${POMDOG_DIR}/src/Math/detail/FloatingPointVector2.cpp
-  ${POMDOG_DIR}/src/Math/detail/FloatingPointVector3.cpp
-  ${POMDOG_DIR}/src/Math/detail/FloatingPointVector4.cpp
-  ${POMDOG_DIR}/src/Network/AddressFamily.hpp
-  ${POMDOG_DIR}/src/Network/AddressParser.cpp
-  ${POMDOG_DIR}/src/Network/AddressParser.hpp
-  ${POMDOG_DIR}/src/Network/EndPoint.cpp
-  ${POMDOG_DIR}/src/Network/EndPoint.hpp
-  ${POMDOG_DIR}/src/Network/HTTPClient.cpp
-  ${POMDOG_DIR}/src/Network/HTTPParser.cpp
-  ${POMDOG_DIR}/src/Network/HTTPParser.hpp
-  ${POMDOG_DIR}/src/Network/HTTPRequest.cpp
-  ${POMDOG_DIR}/src/Network/HTTPResponse.cpp
-  ${POMDOG_DIR}/src/Network/IOService.cpp
-  ${POMDOG_DIR}/src/Network/SocketProtocol.hpp
-  ${POMDOG_DIR}/src/Network/TCPStream.cpp
-  ${POMDOG_DIR}/src/Network/TLSStream.cpp
-  ${POMDOG_DIR}/src/Network/UDPStream.cpp
-  ${POMDOG_DIR}/src/RenderSystem/BufferBindMode.hpp
-  ${POMDOG_DIR}/src/RenderSystem/BufferHelper.cpp
-  ${POMDOG_DIR}/src/RenderSystem/BufferHelper.hpp
-  ${POMDOG_DIR}/src/RenderSystem/GraphicsCapabilities.hpp
-  ${POMDOG_DIR}/src/RenderSystem/GraphicsCommandListImmediate.cpp
-  ${POMDOG_DIR}/src/RenderSystem/GraphicsCommandListImmediate.hpp
-  ${POMDOG_DIR}/src/RenderSystem/GraphicsCommandQueueImmediate.cpp
-  ${POMDOG_DIR}/src/RenderSystem/GraphicsCommandQueueImmediate.hpp
-  ${POMDOG_DIR}/src/RenderSystem/NativeBuffer.hpp
-  ${POMDOG_DIR}/src/RenderSystem/NativeEffectReflection.hpp
-  ${POMDOG_DIR}/src/RenderSystem/NativeGraphicsCommandList.hpp
-  ${POMDOG_DIR}/src/RenderSystem/NativeGraphicsCommandQueue.hpp
-  ${POMDOG_DIR}/src/RenderSystem/NativeGraphicsContext.hpp
-  ${POMDOG_DIR}/src/RenderSystem/NativeGraphicsDevice.hpp
-  ${POMDOG_DIR}/src/RenderSystem/NativePipelineState.hpp
-  ${POMDOG_DIR}/src/RenderSystem/NativeRenderTarget2D.hpp
-  ${POMDOG_DIR}/src/RenderSystem/NativeSamplerState.hpp
-  ${POMDOG_DIR}/src/RenderSystem/NativeTexture2D.hpp
-  ${POMDOG_DIR}/src/RenderSystem/ShaderBytecode.hpp
-  ${POMDOG_DIR}/src/RenderSystem/ShaderCompileOptions.hpp
-  ${POMDOG_DIR}/src/RenderSystem/SurfaceFormatHelper.cpp
-  ${POMDOG_DIR}/src/RenderSystem/SurfaceFormatHelper.hpp
-  ${POMDOG_DIR}/src/RenderSystem/TextureHelper.cpp
-  ${POMDOG_DIR}/src/RenderSystem/TextureHelper.hpp
-  ${POMDOG_DIR}/src/Signals/Connection.cpp
-  ${POMDOG_DIR}/src/Signals/ConnectionList.cpp
-  ${POMDOG_DIR}/src/Signals/EventQueue.cpp
-  ${POMDOG_DIR}/src/Signals/ScopedConnection.cpp
-  ${POMDOG_DIR}/src/Utility/AlignedNew.hpp
-  ${POMDOG_DIR}/src/Utility/CRC32.cpp
-  ${POMDOG_DIR}/src/Utility/ErrorHelper.cpp
-  ${POMDOG_DIR}/src/Utility/ErrorHelper.hpp
-  ${POMDOG_DIR}/src/Utility/Errors.cpp
-  ${POMDOG_DIR}/src/Utility/PathHelper.cpp
-  ${POMDOG_DIR}/src/Utility/ScopeGuard.hpp
-  ${POMDOG_DIR}/src/Utility/SpinLock.cpp
-  ${POMDOG_DIR}/src/Utility/StringHelper.cpp
-  ${POMDOG_DIR}/src/Utility/Tagged.hpp
-)
-
-set(POMDOG_SOURCES_EXPERIMENTAL_ECS
-  ${POMDOG_DIR}/include/Pomdog/Experimental/ECS/ComponentBuffer.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/ECS/ComponentType.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/ECS/Entity.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/ECS/EntityArchtype.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/ECS/EntityDesc.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/ECS/EntityManager.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/ECS/EntityQuery.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/ECS/ComponentTypeIndex.hpp
-  ${POMDOG_DIR}/src/Experimental/ECS/Entity.cpp
-  ${POMDOG_DIR}/src/Experimental/ECS/EntityManager.cpp
-  ${POMDOG_DIR}/src/Experimental/ECS/ComponentTypeIndex.cpp
-)
-
-set(POMDOG_SOURCES_EXPERIMENTAL_GRAPHICS
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/BasicEffect.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/BillboardEffect.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/FontGlyph.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/LineBatch.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/PolylineBatch.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/PolygonShapeBuilder.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/PrimitiveBatch.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/SpriteBatch.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/SpriteFont.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/SpriteFontLoader.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/SpriteLine.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/Texture2DView.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/TrueTypeFont.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Graphics/TrueTypeFontLoader.hpp
-  ${POMDOG_DIR}/src/Experimental/Graphics/BasicEffect.cpp
-  ${POMDOG_DIR}/src/Experimental/Graphics/BillboardEffect.cpp
-  ${POMDOG_DIR}/src/Experimental/Graphics/LineBatch.cpp
-  ${POMDOG_DIR}/src/Experimental/Graphics/PolylineBatch.cpp
-  ${POMDOG_DIR}/src/Experimental/Graphics/PolygonShapeBuilder.cpp
-  ${POMDOG_DIR}/src/Experimental/Graphics/PrimitiveBatch.cpp
-  ${POMDOG_DIR}/src/Experimental/Graphics/SpriteBatch.cpp
-  ${POMDOG_DIR}/src/Experimental/Graphics/SpriteFont.cpp
-  ${POMDOG_DIR}/src/Experimental/Graphics/SpriteFontLoader.cpp
-  ${POMDOG_DIR}/src/Experimental/Graphics/SpriteLine.cpp
-  ${POMDOG_DIR}/src/Experimental/Graphics/Texture2DView.cpp
-  ${POMDOG_DIR}/src/Experimental/Graphics/TrueTypeFont.cpp
-  ${POMDOG_DIR}/src/Experimental/Graphics/TrueTypeFontLoader.cpp
-)
-
-set(POMDOG_SOURCES_EXPERIMENTAL_GUI
-  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/CheckBox.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/ContextMenu.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/ContextMenuItem.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/DebugNavigator.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/DisclosureTriangleButton.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/DrawingContext.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/FloatField.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/FontSize.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/FontWeight.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/HierarchySortOrder.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/HorizontalAlignment.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/HorizontalLayout.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/HorizontalLine.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/HorizontalSplitter.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/IntField.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/ListView.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/ListViewItem.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/NumberField.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/PointerEventType.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/PointerPoint.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/PopupMenu.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/PushButton.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/ScenePanel.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/ScrollView.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/Slider.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/StackPanel.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/TextAlignment.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/TextBlock.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/TextEdit.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/TextField.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/Thickness.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/ToggleSwitch.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/TreeView.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/UIEventDispatcher.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/UIHelper.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/Vector3Field.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/VerticalAlignment.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/VerticalLayout.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/VerticalScrollBar.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/Widget.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/GUI/WidgetHierarchy.hpp
-  ${POMDOG_DIR}/src/Experimental/GUI/CheckBox.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/ContextMenu.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/ContextMenuItem.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/DebugNavigator.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/DisclosureTriangleButton.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/DrawingContext.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/FloatField.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/HorizontalLayout.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/HorizontalLine.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/HorizontalSplitter.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/IntField.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/ListView.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/ListViewItem.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/NumberField.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/PopupMenu.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/PushButton.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/ScenePanel.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/ScrollView.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/Slider.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/StackPanel.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/TextBlock.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/TextEdit.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/TextField.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/ToggleSwitch.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/TreeView.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/UIEventDispatcher.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/UIHelper.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/Vector3Field.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/VerticalLayout.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/VerticalScrollBar.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/Widget.cpp
-  ${POMDOG_DIR}/src/Experimental/GUI/WidgetHierarchy.cpp
-)
-
-set(POMDOG_SOURCES_EXPERIMENTAL_IMAGE
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Image/GIFImage.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Image/GIFLoader.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Image/Image.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Image/SVGLoader.hpp
-  ${POMDOG_DIR}/src/Experimental/Image/GIFLoader.cpp
-  ${POMDOG_DIR}/src/Experimental/Image/Image.cpp
-  ${POMDOG_DIR}/src/Experimental/Image/SVGLoader.cpp
-)
-
-set(POMDOG_SOURCES_EXPERIMENTAL_IMAGEEFFECTS
-  ${POMDOG_DIR}/include/Pomdog/Experimental/ImageEffects/ChromaticAberration.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/ImageEffects/FishEyeEffect.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/ImageEffects/FXAA.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/ImageEffects/GrayscaleEffect.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/ImageEffects/ImageEffectBase.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/ImageEffects/PostProcessCompositor.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/ImageEffects/RetroCrtEffect.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/ImageEffects/ScreenQuad.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/ImageEffects/SepiaToneEffect.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/ImageEffects/VignetteEffect.hpp
-  ${POMDOG_DIR}/src/Experimental/ImageEffects/ChromaticAberration.cpp
-  ${POMDOG_DIR}/src/Experimental/ImageEffects/FishEyeEffect.cpp
-  ${POMDOG_DIR}/src/Experimental/ImageEffects/FXAA.cpp
-  ${POMDOG_DIR}/src/Experimental/ImageEffects/GrayscaleEffect.cpp
-  ${POMDOG_DIR}/src/Experimental/ImageEffects/PostProcessCompositor.cpp
-  ${POMDOG_DIR}/src/Experimental/ImageEffects/RetroCrtEffect.cpp
-  ${POMDOG_DIR}/src/Experimental/ImageEffects/ScreenQuad.cpp
-  ${POMDOG_DIR}/src/Experimental/ImageEffects/SepiaToneEffect.cpp
-  ${POMDOG_DIR}/src/Experimental/ImageEffects/VignetteEffect.cpp
-)
-
-set(POMDOG_SOURCES_EXPERIMENTAL_MAGICAVOXEL
-  ${POMDOG_DIR}/include/Pomdog/Experimental/MagicaVoxel/VoxModel.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/MagicaVoxel/VoxModelExporter.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/MagicaVoxel/VoxModelLoader.hpp
-  ${POMDOG_DIR}/src/Experimental/MagicaVoxel/VoxChunkHeader.hpp
-  ${POMDOG_DIR}/src/Experimental/MagicaVoxel/VoxModelLoader.cpp
-  ${POMDOG_DIR}/src/Experimental/MagicaVoxel/VoxModelExporter.cpp
-)
-
-set(POMDOG_SOURCES_EXPERIMENTAL_PARTICLES
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/Beam.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/BeamBranching.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/BeamEmitter.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/BeamSystem.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/Particle.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/ParticleClip.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/ParticleClipLoader.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/ParticleSystem.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/EmitterShapes/ParticleEmitterShape.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/EmitterShapes/ParticleEmitterShapeBox.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/EmitterShapes/ParticleEmitterShapeCone.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/EmitterShapes/ParticleEmitterShapeHemisphere.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/EmitterShapes/ParticleEmitterShapeSector.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/EmitterShapes/ParticleEmitterShapeSphere.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/Parameters/ParticleCurveKey.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/Parameters/ParticleCurveLerp.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/Parameters/ParticleParameter.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/Parameters/ParticleParameterConstant.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/Parameters/ParticleParameterCurve.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/Parameters/ParticleParameterRandom.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Particles/Parameters/ParticleParameterRandomCurves.hpp
-  ${POMDOG_DIR}/src/Experimental/Particles/BeamSystem.cpp
-  ${POMDOG_DIR}/src/Experimental/Particles/ParticleClipLoader.cpp
-  ${POMDOG_DIR}/src/Experimental/Particles/ParticleSystem.cpp
-)
-
-set(POMDOG_SOURCES_EXPERIMENTAL_RANDOM
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Random/Xoroshiro128StarStar.hpp
-  ${POMDOG_DIR}/src/Experimental/Random/Xoroshiro128StarStar.cpp
-)
-
-set(POMDOG_SOURCES_EXPERIMENTAL_REACTIVE
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Observable.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/ObservableBase.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/ObservableBuilder.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Observer.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Subscriber.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Operators/BufferOperator.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Operators/DebounceOperator.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Operators/DelayOperator.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Operators/DistinctOperator.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Operators/DoOperator.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Operators/FilterOperator.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Operators/FirstOperator.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Operators/LastOperator.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Operators/MapOperator.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Operators/MergeOperator.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Operators/ScanOperator.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Operators/SkipLastOperator.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Operators/SkipOperator.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Operators/TakeOperator.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Operators/TimeoutOperator.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Operators/ZipOperator.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Reactive/Subjects/KeyDownSubject.hpp
-)
-
-set(POMDOG_SOURCES_EXPERIMENTAL_SKELETAL2D
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/AnimationClip.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/AnimationState.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/AnimationSystem.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/AnimationTimeInterval.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/Animator.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/CompressedFloat.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/Joint.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/JointIndex.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/JointPose.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/RigidSlot.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/Skeleton.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/SkeletonHelper.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/SkeletonPose.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/Skin.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/SkinnedMesh.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/SkinnedMeshPart.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/SkinnedVertex.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/BlendTrees/AnimationAdditiveNode.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/BlendTrees/AnimationBlendInput.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/BlendTrees/AnimationBlendInputType.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/BlendTrees/AnimationClipNode.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/BlendTrees/AnimationCrossFadeNode.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/BlendTrees/AnimationGraph.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/BlendTrees/AnimationGraphWeightCollection.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/BlendTrees/AnimationLerpNode.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/BlendTrees/AnimationNode.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/BlendTrees/WeightBlendingHelper.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/Tracks/AnimationTrack.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/Tracks/RotationTrack.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/Tracks/ScaleTrack.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/Tracks/SpriteAnimationTrack.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Skeletal2D/Tracks/TranslationTrack.hpp
-  ${POMDOG_DIR}/src/Experimental/Skeletal2D/AnimationClip.cpp
-  ${POMDOG_DIR}/src/Experimental/Skeletal2D/AnimationState.cpp
-  ${POMDOG_DIR}/src/Experimental/Skeletal2D/AnimationSystem.cpp
-  ${POMDOG_DIR}/src/Experimental/Skeletal2D/Animator.cpp
-  ${POMDOG_DIR}/src/Experimental/Skeletal2D/Skeleton.cpp
-  ${POMDOG_DIR}/src/Experimental/Skeletal2D/SkeletonHelper.cpp
-  ${POMDOG_DIR}/src/Experimental/Skeletal2D/SkeletonPose.cpp
-  ${POMDOG_DIR}/src/Experimental/Skeletal2D/Skin.cpp
-  ${POMDOG_DIR}/src/Experimental/Skeletal2D/BlendTrees/AnimationAdditiveNode.cpp
-  ${POMDOG_DIR}/src/Experimental/Skeletal2D/BlendTrees/AnimationClipNode.cpp
-  ${POMDOG_DIR}/src/Experimental/Skeletal2D/BlendTrees/AnimationCrossFadeNode.cpp
-  ${POMDOG_DIR}/src/Experimental/Skeletal2D/BlendTrees/AnimationGraphWeightCollection.cpp
-  ${POMDOG_DIR}/src/Experimental/Skeletal2D/BlendTrees/AnimationLerpNode.cpp
-  ${POMDOG_DIR}/src/Experimental/Skeletal2D/BlendTrees/WeightBlendingHelper.cpp
-  ${POMDOG_DIR}/src/Experimental/Skeletal2D/Tracks/AnimationKeyHelper.hpp
-  ${POMDOG_DIR}/src/Experimental/Skeletal2D/Tracks/AnimationTrack.cpp
-  ${POMDOG_DIR}/src/Experimental/Skeletal2D/Tracks/SpriteAnimationTrack.cpp
-)
-
-set(POMDOG_SOURCES_EXPERIMENTAL_SPINE
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Spine/AnimationGraphBuilder.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Spine/AnimationLoader.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Spine/SkeletonDesc.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Spine/SkeletonDescLoader.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Spine/SkeletonLoader.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Spine/SkinLoader.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Spine/SkinnedMeshLoader.hpp
-  ${POMDOG_DIR}/src/Experimental/Spine/AnimationGraphBuilder.cpp
-  ${POMDOG_DIR}/src/Experimental/Spine/AnimationLoader.cpp
-  ${POMDOG_DIR}/src/Experimental/Spine/SkeletonDescLoader.cpp
-  ${POMDOG_DIR}/src/Experimental/Spine/SkeletonLoader.cpp
-  ${POMDOG_DIR}/src/Experimental/Spine/SkinLoader.cpp
-  ${POMDOG_DIR}/src/Experimental/Spine/SkinnedMeshLoader.cpp
-)
-
-set(POMDOG_SOURCES_EXPERIMENTAL_TEXTUREPACKER
-  ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureAtlas.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureAtlasGenerator.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureAtlasLoader.hpp
-  ${POMDOG_DIR}/include/Pomdog/Experimental/TexturePacker/TextureRegion.hpp
-  ${POMDOG_DIR}/src/Experimental/TexturePacker/TextureAtlasGenerator.cpp
-  ${POMDOG_DIR}/src/Experimental/TexturePacker/TextureAtlasLoader.cpp
-)
-
-set(POMDOG_SOURCES_EXPERIMENTAL_TWEEN
-  ${POMDOG_DIR}/include/Pomdog/Experimental/Tween/EasingHelper.hpp
-  ${POMDOG_DIR}/src/Experimental/Tween/EasingHelper.cpp
-)
-
-set(POMDOG_SOURCES_GL4
-  ${POMDOG_DIR}/src/RenderSystem.GL4/BlendStateGL4.cpp
-  ${POMDOG_DIR}/src/RenderSystem.GL4/BlendStateGL4.hpp
-  ${POMDOG_DIR}/src/RenderSystem.GL4/BufferGL4.cpp
-  ${POMDOG_DIR}/src/RenderSystem.GL4/BufferGL4.hpp
-  ${POMDOG_DIR}/src/RenderSystem.GL4/DepthStencilStateGL4.cpp
-  ${POMDOG_DIR}/src/RenderSystem.GL4/DepthStencilStateGL4.hpp
-  ${POMDOG_DIR}/src/RenderSystem.GL4/EffectReflectionGL4.cpp
-  ${POMDOG_DIR}/src/RenderSystem.GL4/EffectReflectionGL4.hpp
-  ${POMDOG_DIR}/src/RenderSystem.GL4/ErrorChecker.cpp
-  ${POMDOG_DIR}/src/RenderSystem.GL4/ErrorChecker.hpp
-  ${POMDOG_DIR}/src/RenderSystem.GL4/FormatHelper.cpp
-  ${POMDOG_DIR}/src/RenderSystem.GL4/FormatHelper.hpp
-  ${POMDOG_DIR}/src/RenderSystem.GL4/GraphicsContextGL4.cpp
-  ${POMDOG_DIR}/src/RenderSystem.GL4/GraphicsContextGL4.hpp
-  ${POMDOG_DIR}/src/RenderSystem.GL4/GraphicsDeviceGL4.cpp
-  ${POMDOG_DIR}/src/RenderSystem.GL4/GraphicsDeviceGL4.hpp
-  ${POMDOG_DIR}/src/RenderSystem.GL4/InputLayoutGL4.cpp
-  ${POMDOG_DIR}/src/RenderSystem.GL4/InputLayoutGL4.hpp
-  ${POMDOG_DIR}/src/RenderSystem.GL4/OpenGLContext.hpp
-  ${POMDOG_DIR}/src/RenderSystem.GL4/OpenGLPrerequisites.hpp
-  ${POMDOG_DIR}/src/RenderSystem.GL4/PipelineStateGL4.cpp
-  ${POMDOG_DIR}/src/RenderSystem.GL4/PipelineStateGL4.hpp
-  ${POMDOG_DIR}/src/RenderSystem.GL4/RasterizerStateGL4.cpp
-  ${POMDOG_DIR}/src/RenderSystem.GL4/RasterizerStateGL4.hpp
-  ${POMDOG_DIR}/src/RenderSystem.GL4/RenderTarget2DGL4.cpp
-  ${POMDOG_DIR}/src/RenderSystem.GL4/RenderTarget2DGL4.hpp
-  ${POMDOG_DIR}/src/RenderSystem.GL4/SamplerStateGL4.cpp
-  ${POMDOG_DIR}/src/RenderSystem.GL4/SamplerStateGL4.hpp
-  ${POMDOG_DIR}/src/RenderSystem.GL4/ShaderGL4.cpp
-  ${POMDOG_DIR}/src/RenderSystem.GL4/ShaderGL4.hpp
-  ${POMDOG_DIR}/src/RenderSystem.GL4/Texture2DGL4.cpp
-  ${POMDOG_DIR}/src/RenderSystem.GL4/Texture2DGL4.hpp
-  ${POMDOG_DIR}/src/RenderSystem.GL4/TypesafeGL4.hpp
-  ${POMDOG_DIR}/src/RenderSystem.GL4/TypesafeHelperGL4.hpp
-  ${POMDOG_DIR}/src/RenderSystem.GL4/VertexBufferBindingGL4.hpp
-)
-
-set(POMDOG_SOURCES_OPENAL
-  ${POMDOG_DIR}/src/SoundSystem.OpenAL/AudioClipAL.cpp
-  ${POMDOG_DIR}/src/SoundSystem.OpenAL/AudioClipAL.hpp
-  ${POMDOG_DIR}/src/SoundSystem.OpenAL/AudioEngineAL.cpp
-  ${POMDOG_DIR}/src/SoundSystem.OpenAL/AudioEngineAL.hpp
-  ${POMDOG_DIR}/src/SoundSystem.OpenAL/ContextOpenAL.cpp
-  ${POMDOG_DIR}/src/SoundSystem.OpenAL/ContextOpenAL.hpp
-  ${POMDOG_DIR}/src/SoundSystem.OpenAL/ErrorCheckerAL.cpp
-  ${POMDOG_DIR}/src/SoundSystem.OpenAL/ErrorCheckerAL.hpp
-  ${POMDOG_DIR}/src/SoundSystem.OpenAL/PrerequisitesOpenAL.hpp
-  ${POMDOG_DIR}/src/SoundSystem.OpenAL/SoundEffectAL.cpp
-  ${POMDOG_DIR}/src/SoundSystem.OpenAL/SoundEffectAL.hpp
-)
-
-set(POMDOG_SOURCES_APPLE
-  ${POMDOG_DIR}/src/Platform.Apple/FileSystemApple.mm
-  ${POMDOG_DIR}/src/Platform.Apple/TimeSourceApple.cpp
-  ${POMDOG_DIR}/src/Platform.Apple/TimeSourceApple.hpp
-)
-
-set(POMDOG_SOURCES_COCOA
-  ${POMDOG_DIR}/include/Pomdog/Platform/Cocoa/Bootstrap.hpp
-  ${POMDOG_DIR}/src/Platform.Cocoa/Bootstrap.mm
-  ${POMDOG_DIR}/src/Platform.Cocoa/CocoaWindowDelegate.hpp
-  ${POMDOG_DIR}/src/Platform.Cocoa/CocoaWindowDelegate.mm
-  ${POMDOG_DIR}/src/Platform.Cocoa/GameHostCocoa.hpp
-  ${POMDOG_DIR}/src/Platform.Cocoa/GameHostCocoa.mm
-  ${POMDOG_DIR}/src/Platform.Cocoa/GameWindowCocoa.hpp
-  ${POMDOG_DIR}/src/Platform.Cocoa/GameWindowCocoa.mm
-  ${POMDOG_DIR}/src/Platform.Cocoa/KeyboardCocoa.hpp
-  ${POMDOG_DIR}/src/Platform.Cocoa/KeyboardCocoa.cpp
-  ${POMDOG_DIR}/src/Platform.Cocoa/MouseCocoa.hpp
-  ${POMDOG_DIR}/src/Platform.Cocoa/MouseCocoa.cpp
-  ${POMDOG_DIR}/src/Platform.Cocoa/OpenGLContextCocoa.hpp
-  ${POMDOG_DIR}/src/Platform.Cocoa/OpenGLContextCocoa.mm
-  ${POMDOG_DIR}/src/Platform.Cocoa/PomdogOpenGLView.hpp
-  ${POMDOG_DIR}/src/Platform.Cocoa/PomdogOpenGLView.mm
-)
-
-set(POMDOG_SOURCES_IOKIT
-  ${POMDOG_DIR}/src/InputSystem.IOKit/GamepadIOKit.cpp
-  ${POMDOG_DIR}/src/InputSystem.IOKit/GamepadIOKit.hpp
-)
-
-set(POMDOG_SOURCES_DIRECT3D
-  ${POMDOG_DIR}/src/RenderSystem.DXGI/DXGIFormatHelper.cpp
-  ${POMDOG_DIR}/src/RenderSystem.DXGI/DXGIFormatHelper.hpp
-  ${POMDOG_DIR}/src/RenderSystem.Direct3D/HLSLCompiling.cpp
-  ${POMDOG_DIR}/src/RenderSystem.Direct3D/HLSLCompiling.hpp
-  ${POMDOG_DIR}/src/RenderSystem.Direct3D/HLSLReflectionHelper.cpp
-  ${POMDOG_DIR}/src/RenderSystem.Direct3D/HLSLReflectionHelper.hpp
-  ${POMDOG_DIR}/src/RenderSystem.Direct3D/PrerequisitesDirect3D.hpp
-)
-
-set(POMDOG_SOURCES_DIRECT3D11
-  ${POMDOG_DIR}/src/RenderSystem.Direct3D11/BufferDirect3D11.cpp
-  ${POMDOG_DIR}/src/RenderSystem.Direct3D11/BufferDirect3D11.hpp
-  ${POMDOG_DIR}/src/RenderSystem.Direct3D11/EffectReflectionDirect3D11.cpp
-  ${POMDOG_DIR}/src/RenderSystem.Direct3D11/EffectReflectionDirect3D11.hpp
-  ${POMDOG_DIR}/src/RenderSystem.Direct3D11/FormatHelper.cpp
-  ${POMDOG_DIR}/src/RenderSystem.Direct3D11/FormatHelper.hpp
-  ${POMDOG_DIR}/src/RenderSystem.Direct3D11/GraphicsContextDirect3D11.cpp
-  ${POMDOG_DIR}/src/RenderSystem.Direct3D11/GraphicsContextDirect3D11.hpp
-  ${POMDOG_DIR}/src/RenderSystem.Direct3D11/GraphicsDeviceDirect3D11.cpp
-  ${POMDOG_DIR}/src/RenderSystem.Direct3D11/GraphicsDeviceDirect3D11.hpp
-  ${POMDOG_DIR}/src/RenderSystem.Direct3D11/PipelineStateDirect3D11.cpp
-  ${POMDOG_DIR}/src/RenderSystem.Direct3D11/PipelineStateDirect3D11.hpp
-  ${POMDOG_DIR}/src/RenderSystem.Direct3D11/PrerequisitesDirect3D11.hpp
-  ${POMDOG_DIR}/src/RenderSystem.Direct3D11/RenderTarget2DDirect3D11.cpp
-  ${POMDOG_DIR}/src/RenderSystem.Direct3D11/RenderTarget2DDirect3D11.hpp
-  ${POMDOG_DIR}/src/RenderSystem.Direct3D11/SamplerStateDirect3D11.cpp
-  ${POMDOG_DIR}/src/RenderSystem.Direct3D11/SamplerStateDirect3D11.hpp
-  ${POMDOG_DIR}/src/RenderSystem.Direct3D11/ShaderDirect3D11.cpp
-  ${POMDOG_DIR}/src/RenderSystem.Direct3D11/ShaderDirect3D11.hpp
-  ${POMDOG_DIR}/src/RenderSystem.Direct3D11/Texture2DDirect3D11.cpp
-  ${POMDOG_DIR}/src/RenderSystem.Direct3D11/Texture2DDirect3D11.hpp
-)
-
-set(POMDOG_SOURCES_METAL
-  ${POMDOG_DIR}/src/RenderSystem.Metal/BufferMetal.hpp
-  ${POMDOG_DIR}/src/RenderSystem.Metal/BufferMetal.mm
-  ${POMDOG_DIR}/src/RenderSystem.Metal/ConstantsMetal.hpp
-  ${POMDOG_DIR}/src/RenderSystem.Metal/EffectReflectionMetal.hpp
-  ${POMDOG_DIR}/src/RenderSystem.Metal/EffectReflectionMetal.mm
-  ${POMDOG_DIR}/src/RenderSystem.Metal/GraphicsContextMetal.hpp
-  ${POMDOG_DIR}/src/RenderSystem.Metal/GraphicsContextMetal.mm
-  ${POMDOG_DIR}/src/RenderSystem.Metal/GraphicsDeviceMetal.hpp
-  ${POMDOG_DIR}/src/RenderSystem.Metal/GraphicsDeviceMetal.mm
-  ${POMDOG_DIR}/src/RenderSystem.Metal/MetalFormatHelper.hpp
-  ${POMDOG_DIR}/src/RenderSystem.Metal/MetalFormatHelper.mm
-  ${POMDOG_DIR}/src/RenderSystem.Metal/PipelineStateMetal.hpp
-  ${POMDOG_DIR}/src/RenderSystem.Metal/PipelineStateMetal.mm
-  ${POMDOG_DIR}/src/RenderSystem.Metal/RenderTarget2DMetal.hpp
-  ${POMDOG_DIR}/src/RenderSystem.Metal/RenderTarget2DMetal.mm
-  ${POMDOG_DIR}/src/RenderSystem.Metal/SamplerStateMetal.hpp
-  ${POMDOG_DIR}/src/RenderSystem.Metal/SamplerStateMetal.mm
-  ${POMDOG_DIR}/src/RenderSystem.Metal/ShaderMetal.hpp
-  ${POMDOG_DIR}/src/RenderSystem.Metal/ShaderMetal.mm
-  ${POMDOG_DIR}/src/RenderSystem.Metal/Texture2DMetal.hpp
-  ${POMDOG_DIR}/src/RenderSystem.Metal/Texture2DMetal.mm
-  ${POMDOG_DIR}/src/Platform.Cocoa/GameHostMetal.hpp
-  ${POMDOG_DIR}/src/Platform.Cocoa/GameHostMetal.mm
-  ${POMDOG_DIR}/src/Platform.Cocoa/PomdogMetalViewController.hpp
-  ${POMDOG_DIR}/src/Platform.Cocoa/PomdogMetalViewController.mm
-)
-
-set(POMDOG_SOURCES_VULKAN
-  ${POMDOG_DIR}/src/RenderSystem.Vulkan/BufferVulkan.cpp
-  ${POMDOG_DIR}/src/RenderSystem.Vulkan/BufferVulkan.hpp
-  ${POMDOG_DIR}/src/RenderSystem.Vulkan/EffectReflectionVulkan.cpp
-  ${POMDOG_DIR}/src/RenderSystem.Vulkan/EffectReflectionVulkan.hpp
-  ${POMDOG_DIR}/src/RenderSystem.Vulkan/FormatHelper.cpp
-  ${POMDOG_DIR}/src/RenderSystem.Vulkan/FormatHelper.hpp
-  ${POMDOG_DIR}/src/RenderSystem.Vulkan/GraphicsCommandListVulkan.cpp
-  ${POMDOG_DIR}/src/RenderSystem.Vulkan/GraphicsCommandListVulkan.hpp
-  ${POMDOG_DIR}/src/RenderSystem.Vulkan/GraphicsCommandQueueVulkan.cpp
-  ${POMDOG_DIR}/src/RenderSystem.Vulkan/GraphicsCommandQueueVulkan.hpp
-  ${POMDOG_DIR}/src/RenderSystem.Vulkan/GraphicsDeviceVulkan.cpp
-  ${POMDOG_DIR}/src/RenderSystem.Vulkan/GraphicsDeviceVulkan.hpp
-  ${POMDOG_DIR}/src/RenderSystem.Vulkan/PipelineStateVulkan.cpp
-  ${POMDOG_DIR}/src/RenderSystem.Vulkan/PipelineStateVulkan.hpp
-  ${POMDOG_DIR}/src/RenderSystem.Vulkan/RenderTarget2DVulkan.cpp
-  ${POMDOG_DIR}/src/RenderSystem.Vulkan/RenderTarget2DVulkan.hpp
-  ${POMDOG_DIR}/src/RenderSystem.Vulkan/SamplerStateVulkan.cpp
-  ${POMDOG_DIR}/src/RenderSystem.Vulkan/SamplerStateVulkan.hpp
-  ${POMDOG_DIR}/src/RenderSystem.Vulkan/ShaderVulkan.cpp
-  ${POMDOG_DIR}/src/RenderSystem.Vulkan/ShaderVulkan.hpp
-  ${POMDOG_DIR}/src/RenderSystem.Vulkan/Texture2DVulkan.cpp
-  ${POMDOG_DIR}/src/RenderSystem.Vulkan/Texture2DVulkan.hpp
-  ${POMDOG_DIR}/src/RenderSystem.Vulkan/VulkanFormatHelper.cpp
-  ${POMDOG_DIR}/src/RenderSystem.Vulkan/VulkanFormatHelper.hpp
-)
-
-set(POMDOG_SOURCES_XAUDIO2
-  ${POMDOG_DIR}/src/SoundSystem.XAudio2/AudioClipXAudio2.cpp
-  ${POMDOG_DIR}/src/SoundSystem.XAudio2/AudioClipXAudio2.hpp
-  ${POMDOG_DIR}/src/SoundSystem.XAudio2/AudioEngineXAudio2.cpp
-  ${POMDOG_DIR}/src/SoundSystem.XAudio2/AudioEngineXAudio2.hpp
-  ${POMDOG_DIR}/src/SoundSystem.XAudio2/PrerequisitesXAudio2.hpp
-  ${POMDOG_DIR}/src/SoundSystem.XAudio2/SoundEffectXAudio2.cpp
-  ${POMDOG_DIR}/src/SoundSystem.XAudio2/SoundEffectXAudio2.hpp
-)
-
-set(POMDOG_SOURCES_DIRECTINPUT
-  ${POMDOG_DIR}/src/InputSystem.DirectInput/GamepadDirectInput.cpp
-  ${POMDOG_DIR}/src/InputSystem.DirectInput/GamepadDirectInput.hpp
-  ${POMDOG_DIR}/src/InputSystem.DirectInput/PrerequisitesDirectInput.hpp
-)
-
-set(POMDOG_SOURCES_WIN32
-  ${POMDOG_DIR}/include/Pomdog/Platform/Win32/Bootstrap.hpp
-  ${POMDOG_DIR}/include/Pomdog/Platform/Win32/BootstrapSettingsWin32.hpp
-  ${POMDOG_DIR}/include/Pomdog/Platform/Win32/PrerequisitesWin32.hpp
-  ${POMDOG_DIR}/src/Platform.Win32/Bootstrap.cpp
-  ${POMDOG_DIR}/src/Platform.Win32/GameHostWin32.cpp
-  ${POMDOG_DIR}/src/Platform.Win32/GameHostWin32.hpp
-  ${POMDOG_DIR}/src/Platform.Win32/GameWindowWin32.cpp
-  ${POMDOG_DIR}/src/Platform.Win32/GameWindowWin32.hpp
-  ${POMDOG_DIR}/src/Platform.Win32/FileSystemWin32.cpp
-  ${POMDOG_DIR}/src/Platform.Win32/KeyboardWin32.cpp
-  ${POMDOG_DIR}/src/Platform.Win32/KeyboardWin32.hpp
-  ${POMDOG_DIR}/src/Platform.Win32/MouseWin32.cpp
-  ${POMDOG_DIR}/src/Platform.Win32/MouseWin32.hpp
-  ${POMDOG_DIR}/src/Platform.Win32/TimeSourceWin32.cpp
-  ${POMDOG_DIR}/src/Platform.Win32/TimeSourceWin32.hpp
-)
-
-set(POMDOG_SOURCES_WIN32_OPENGL
-  ${POMDOG_DIR}/src/Platform.Win32/OpenGLContextWin32.cpp
-  ${POMDOG_DIR}/src/Platform.Win32/OpenGLContextWin32.hpp
-)
-
-set(POMDOG_SOURCES_X11
-  ${POMDOG_DIR}/include/Pomdog/Platform/X11/Bootstrap.hpp
-  ${POMDOG_DIR}/src/Platform.X11/Bootstrap.cpp
-  ${POMDOG_DIR}/src/Platform.X11/GameHostX11.cpp
-  ${POMDOG_DIR}/src/Platform.X11/GameHostX11.hpp
-  ${POMDOG_DIR}/src/Platform.X11/GameWindowX11.cpp
-  ${POMDOG_DIR}/src/Platform.X11/GameWindowX11.hpp
-  ${POMDOG_DIR}/src/Platform.X11/KeyboardX11.cpp
-  ${POMDOG_DIR}/src/Platform.X11/KeyboardX11.hpp
-  ${POMDOG_DIR}/src/Platform.X11/MouseX11.cpp
-  ${POMDOG_DIR}/src/Platform.X11/MouseX11.hpp
-  ${POMDOG_DIR}/src/Platform.X11/OpenGLContextX11.cpp
-  ${POMDOG_DIR}/src/Platform.X11/OpenGLContextX11.hpp
-  ${POMDOG_DIR}/src/Platform.X11/X11AtomCache.hpp
-  ${POMDOG_DIR}/src/Platform.X11/X11Context.cpp
-  ${POMDOG_DIR}/src/Platform.X11/X11Context.hpp
-)
-
-set(POMDOG_SOURCES_LINUX
-  ${POMDOG_DIR}/src/InputSystem.Linux/GamepadLinux.cpp
-  ${POMDOG_DIR}/src/InputSystem.Linux/GamepadLinux.hpp
-  ${POMDOG_DIR}/src/Platform.Linux/FileSystemLinux.cpp
-  ${POMDOG_DIR}/src/Platform.Linux/TimeSourceLinux.cpp
-  ${POMDOG_DIR}/src/Platform.Linux/TimeSourceLinux.hpp
-)
-
-set(POMDOG_SOURCES_NETWORK_MBEDTLS
-  ${POMDOG_DIR}/src/Network.MbedTLS/Certificates.cpp
-  ${POMDOG_DIR}/src/Network.MbedTLS/Certificates.hpp
-  ${POMDOG_DIR}/src/Network.MbedTLS/TLSStreamMbedTLS.cpp
-  ${POMDOG_DIR}/src/Network.MbedTLS/TLSStreamMbedTLS.hpp
-)
-
-set(POMDOG_SOURCES_NETWORK_POSIX
-  ${POMDOG_DIR}/src/Network.POSIX/SocketHelperPOSIX.cpp
-  ${POMDOG_DIR}/src/Network.POSIX/SocketHelperPOSIX.hpp
-  ${POMDOG_DIR}/src/Network.POSIX/TCPStreamPOSIX.cpp
-  ${POMDOG_DIR}/src/Network.POSIX/TCPStreamPOSIX.hpp
-  ${POMDOG_DIR}/src/Network.POSIX/UDPStreamPOSIX.cpp
-  ${POMDOG_DIR}/src/Network.POSIX/UDPStreamPOSIX.hpp
-)
-
-set(POMDOG_SOURCES_NETWORK_WIN32
-  ${POMDOG_DIR}/src/Network.Win32/IOServiceWin32.cpp
-  ${POMDOG_DIR}/src/Network.Win32/IOServiceWin32.hpp
-  ${POMDOG_DIR}/src/Network.Win32/SocketHelperWin32.cpp
-  ${POMDOG_DIR}/src/Network.Win32/SocketHelperWin32.hpp
-  ${POMDOG_DIR}/src/Network.Win32/TCPStreamWin32.cpp
-  ${POMDOG_DIR}/src/Network.Win32/TCPStreamWin32.hpp
-  ${POMDOG_DIR}/src/Network.Win32/UDPStreamWin32.cpp
-  ${POMDOG_DIR}/src/Network.Win32/UDPStreamWin32.hpp
-)
-
-set(SOURCE_FILES ${POMDOG_SOURCES_CORE})
-
 if(APPLE)
-  set(POMDOG_TARGET_PLATFORM "Mac"   CACHE STRING "Choose platform")
-  set(POMDOG_USE_DIRECT3D11  false   CACHE BOOL   "Use Direct3D11")
-  set(POMDOG_USE_GL4         true    CACHE BOOL   "Use OpenGL4")
-  set(POMDOG_USE_METAL       true    CACHE BOOL   "Use Metal")
-  set(POMDOG_USE_VULKAN      false   CACHE BOOL   "Use Vulkan")
-  set(POMDOG_USE_OPENAL      true    CACHE BOOL   "Use OpenAL")
-  set(POMDOG_USE_XAUDIO2     false   CACHE BOOL   "Use XAudio2")
-  set(POMDOG_USE_DIRECTINPUT false   CACHE BOOL   "Use DirectInput")
-  set(POMDOG_USE_IOKIT       true    CACHE BOOL   "Use IOKit")
-  set(POMDOG_USE_X11         false   CACHE BOOL   "Use X11")
+    set(POMDOG_TARGET_PLATFORM "Mac"   CACHE STRING "Choose platform")
+    set(POMDOG_USE_DIRECT3D11  false   CACHE BOOL   "Use Direct3D11")
+    set(POMDOG_USE_GL4         true    CACHE BOOL   "Use OpenGL4")
+    set(POMDOG_USE_METAL       true    CACHE BOOL   "Use Metal")
+    set(POMDOG_USE_VULKAN      false   CACHE BOOL   "Use Vulkan")
+    set(POMDOG_USE_OPENAL      true    CACHE BOOL   "Use OpenAL")
+    set(POMDOG_USE_XAUDIO2     false   CACHE BOOL   "Use XAudio2")
+    set(POMDOG_USE_DIRECTINPUT false   CACHE BOOL   "Use DirectInput")
+    set(POMDOG_USE_IOKIT       true    CACHE BOOL   "Use IOKit")
+    set(POMDOG_USE_X11         false   CACHE BOOL   "Use X11")
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-  set(POMDOG_TARGET_PLATFORM "Linux" CACHE STRING "Choose platform")
-  set(POMDOG_USE_DIRECT3D11  false   CACHE BOOL   "Use Direct3D11")
-  set(POMDOG_USE_GL4         true    CACHE BOOL   "Use OpenGL4")
-  set(POMDOG_USE_METAL       false   CACHE BOOL   "Use Metal")
-  set(POMDOG_USE_VULKAN      false   CACHE BOOL   "Use Vulkan")
-  set(POMDOG_USE_OPENAL      true    CACHE BOOL   "Use OpenAL")
-  set(POMDOG_USE_XAUDIO2     false   CACHE BOOL   "Use XAudio2")
-  set(POMDOG_USE_DIRECTINPUT false   CACHE BOOL   "Use DirectInput")
-  set(POMDOG_USE_IOKIT       false   CACHE BOOL   "Use IOKit")
-  set(POMDOG_USE_X11         true    CACHE BOOL   "Use X11")
+    set(POMDOG_TARGET_PLATFORM "Linux" CACHE STRING "Choose platform")
+    set(POMDOG_USE_DIRECT3D11  false   CACHE BOOL   "Use Direct3D11")
+    set(POMDOG_USE_GL4         true    CACHE BOOL   "Use OpenGL4")
+    set(POMDOG_USE_METAL       false   CACHE BOOL   "Use Metal")
+    set(POMDOG_USE_VULKAN      false   CACHE BOOL   "Use Vulkan")
+    set(POMDOG_USE_OPENAL      true    CACHE BOOL   "Use OpenAL")
+    set(POMDOG_USE_XAUDIO2     false   CACHE BOOL   "Use XAudio2")
+    set(POMDOG_USE_DIRECTINPUT false   CACHE BOOL   "Use DirectInput")
+    set(POMDOG_USE_IOKIT       false   CACHE BOOL   "Use IOKit")
+    set(POMDOG_USE_X11         true    CACHE BOOL   "Use X11")
 elseif(WIN32)
-  set(POMDOG_TARGET_PLATFORM "Win32" CACHE STRING "Choose platform")
-  set(POMDOG_USE_DIRECT3D11  true    CACHE BOOL   "Use Direct3D11")
-  set(POMDOG_USE_GL4         true    CACHE BOOL   "Use OpenGL4")
-  set(POMDOG_USE_METAL       false   CACHE BOOL   "Use Metal")
-  set(POMDOG_USE_VULKAN      false   CACHE BOOL   "Use Vulkan")
-  set(POMDOG_USE_OPENAL      false   CACHE BOOL   "Use OpenAL")
-  set(POMDOG_USE_XAUDIO2     true    CACHE BOOL   "Use XAudio2")
-  set(POMDOG_USE_DIRECTINPUT true    CACHE BOOL   "Use DirectInput")
-  set(POMDOG_USE_IOKIT       false   CACHE BOOL   "Use IOKit")
-  set(POMDOG_USE_X11         false   CACHE BOOL   "Use X11")
+    set(POMDOG_TARGET_PLATFORM "Win32" CACHE STRING "Choose platform")
+    set(POMDOG_USE_DIRECT3D11  true    CACHE BOOL   "Use Direct3D11")
+    set(POMDOG_USE_GL4         true    CACHE BOOL   "Use OpenGL4")
+    set(POMDOG_USE_METAL       false   CACHE BOOL   "Use Metal")
+    set(POMDOG_USE_VULKAN      false   CACHE BOOL   "Use Vulkan")
+    set(POMDOG_USE_OPENAL      false   CACHE BOOL   "Use OpenAL")
+    set(POMDOG_USE_XAUDIO2     true    CACHE BOOL   "Use XAudio2")
+    set(POMDOG_USE_DIRECTINPUT true    CACHE BOOL   "Use DirectInput")
+    set(POMDOG_USE_IOKIT       false   CACHE BOOL   "Use IOKit")
+    set(POMDOG_USE_X11         false   CACHE BOOL   "Use X11")
 endif()
-
-if(POMDOG_TARGET_PLATFORM MATCHES "Linux")
-  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_LINUX})
-  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_NETWORK_MBEDTLS})
-  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_NETWORK_POSIX})
-elseif(POMDOG_TARGET_PLATFORM MATCHES "Mac")
-  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_APPLE})
-  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_COCOA})
-  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_NETWORK_MBEDTLS})
-  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_NETWORK_POSIX})
-elseif(POMDOG_TARGET_PLATFORM MATCHES "Win32")
-  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_WIN32})
-  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_DIRECTINPUT})
-  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_NETWORK_MBEDTLS})
-  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_NETWORK_WIN32})
-endif()
-
-if(POMDOG_USE_DIRECT3D11)
-  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_DIRECT3D})
-  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_DIRECT3D11})
-endif()
-
-if(POMDOG_USE_GL4)
-  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_GL4})
-endif()
-
-if(POMDOG_USE_GL4 AND (POMDOG_TARGET_PLATFORM MATCHES "Win32"))
-  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_WIN32_OPENGL})
-endif()
-
-if(POMDOG_USE_METAL)
-  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_METAL})
-endif()
-
-if(POMDOG_USE_VULKAN)
-  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_VULKAN})
-endif()
-
-if(POMDOG_USE_XAUDIO2)
-  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_XAUDIO2})
-endif()
-
-if(POMDOG_USE_OPENAL)
-  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_OPENAL})
-endif()
-
-if(POMDOG_USE_X11)
-  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_X11})
-endif()
-
-if(POMDOG_USE_IOKIT)
-  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_IOKIT})
-endif()
-
 set(POMDOG_USE_EXPERIMENTAL true CACHE BOOL "Use Experimental")
-if(POMDOG_USE_EXPERIMENTAL)
-  # NOTE: Add experimental modules
-  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_ECS})
-  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_GRAPHICS})
-  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_GUI})
-  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_IMAGE})
-  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_IMAGEEFFECTS})
-  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_MAGICAVOXEL})
-  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_PARTICLES})
-  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_RANDOM})
-  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_REACTIVE})
-  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_SKELETAL2D})
-  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_SPINE})
-  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_TEXTUREPACKER})
-  list(APPEND SOURCE_FILES ${POMDOG_SOURCES_EXPERIMENTAL_TWEEN})
-endif()
-
-list(SORT SOURCE_FILES)
 
 # NOTE: static library
-add_library(pomdog_static STATIC ${SOURCE_FILES})
-#install(TARGETS pomdog_static DESTINATION lib)
+add_library(pomdog_static STATIC)
+include(PomdogApplication.cmake)
+include(PomdogAsync.cmake)
+include(PomdogAudio.cmake)
+include(PomdogBasic.cmake)
+include(PomdogContent.cmake)
+include(PomdogExperimental.cmake)
+include(PomdogGraphics.cmake)
+include(PomdogInput.cmake)
+include(PomdogInputSystem.cmake)
+include(PomdogLogging.cmake)
+include(PomdogMath.cmake)
+include(PomdogNetwork.cmake)
+include(PomdogPlatform.cmake)
+include(PomdogRenderSystem.cmake)
+include(PomdogSignals.cmake)
+include(PomdogSoundSystem.cmake)
+include(PomdogUtility.cmake)
 
-if(UNIX)
-  # On Unix platforms, the library is called `libpomdog.a`.
-  set_target_properties(pomdog_static PROPERTIES OUTPUT_NAME pomdog)
-endif()
+set_target_properties(pomdog_static PROPERTIES
+    CXX_STANDARD 20
+    CXX_STANDARD_REQUIRED ON
+    CXX_EXTENSIONS OFF
 
-target_include_directories(pomdog_static PRIVATE
-  ${POMDOG_DIR}/include
-  ${POMDOG_DIR}/dependencies
-  ${POMDOG_DIR}/dependencies/giflib
-  ${POMDOG_DIR}/dependencies/libpng
-  ${POMDOG_DIR}/dependencies/mbedtls/include
-  ${POMDOG_DIR}/dependencies/rapidjson/include
-  ${POMDOG_DIR}/dependencies/stb
-  ${POMDOG_DIR}/dependencies/vendor/libpng
-  ${POMDOG_DIR}/dependencies/vendor/SDL_GameControllerDB
+    $<$<BOOL:${UNIX}>:
+        # On Unix platforms, the library is called `libpomdog.a`.
+        OUTPUT_NAME pomdog
+    >
 )
 
 add_subdirectory(${POMDOG_DIR}/build/dependencies/libpng "${CMAKE_CURRENT_BINARY_DIR}/libpng_build")
-target_link_libraries(pomdog_static INTERFACE png)
-
 add_subdirectory(${POMDOG_DIR}/build/dependencies/giflib "${CMAKE_CURRENT_BINARY_DIR}/giflib_build")
-target_link_libraries(pomdog_static INTERFACE giflib)
-
 add_subdirectory(${POMDOG_DIR}/build/dependencies/mbedtls "${CMAKE_CURRENT_BINARY_DIR}/mbedtls_build")
-target_link_libraries(pomdog_static INTERFACE mbedtls)
 
-if(POMDOG_USE_OPENAL AND (POMDOG_TARGET_PLATFORM MATCHES "Linux"))
-  target_link_libraries(pomdog_static INTERFACE openal)
+if(POMDOG_USE_GL4 AND (POMDOG_TARGET_PLATFORM MATCHES "Linux"))
+    add_subdirectory(${POMDOG_DIR}/build/dependencies/glew "${CMAKE_CURRENT_BINARY_DIR}/glew_build")
 endif()
-
-if(POMDOG_USE_X11 AND (POMDOG_TARGET_PLATFORM MATCHES "Linux"))
-  target_include_directories(pomdog_static PRIVATE
-    /usr/X11R6/include
-    ${POMDOG_DIR}/dependencies/vendor/glew/include
-  )
-  link_directories(
-    /usr/X11R6/lib
-  )
-  target_compile_definitions(pomdog_static PRIVATE GLEW_STATIC)
-
-  add_subdirectory(${POMDOG_DIR}/build/dependencies/glew "${CMAKE_CURRENT_BINARY_DIR}/glew_build")
-  target_link_libraries(pomdog_static INTERFACE X11 GL glew_static)
-endif()
-
-if(POMDOG_USE_METAL AND (POMDOG_TARGET_PLATFORM MATCHES "Mac"))
-  target_link_libraries(pomdog_static INTERFACE "-framework Metal")
-  target_link_libraries(pomdog_static INTERFACE "-framework MetalKit")
-endif()
-
-if(POMDOG_USE_OPENAL AND (POMDOG_TARGET_PLATFORM MATCHES "Mac"))
-  target_link_libraries(pomdog_static INTERFACE "-framework AudioToolBox")
-  target_link_libraries(pomdog_static INTERFACE "-framework OpenAL")
-endif()
-
-if(POMDOG_USE_IOKIT AND (POMDOG_TARGET_PLATFORM MATCHES "Mac"))
-  target_link_libraries(pomdog_static INTERFACE "-framework IOKit")
-endif()
-
-if(POMDOG_USE_GL4 AND (POMDOG_TARGET_PLATFORM MATCHES "Mac"))
-  target_link_libraries(pomdog_static INTERFACE "-framework OpenGL")
-endif()
-
-if(POMDOG_TARGET_PLATFORM MATCHES "Mac")
-  target_link_libraries(pomdog_static INTERFACE "-framework Cocoa")
-  target_link_libraries(pomdog_static INTERFACE "-framework QuartzCore")
-endif()
-
 if(POMDOG_USE_GL4 AND (POMDOG_TARGET_PLATFORM MATCHES "Win32"))
-  target_include_directories(pomdog_static PRIVATE
-    ${POMDOG_DIR}/dependencies/vendor/glew/include
-  )
-  target_compile_definitions(pomdog_static PRIVATE GLEW_STATIC)
-
-  add_subdirectory(${POMDOG_DIR}/build/dependencies/glew "${CMAKE_CURRENT_BINARY_DIR}/glew_build")
-  target_link_libraries(pomdog_static INTERFACE opengl32.lib glew_static)
+    add_subdirectory(${POMDOG_DIR}/build/dependencies/glew "${CMAKE_CURRENT_BINARY_DIR}/glew_build")
 endif()
 
-if(POMDOG_USE_DIRECT3D11 AND (POMDOG_TARGET_PLATFORM MATCHES "Win32"))
-  target_link_libraries(pomdog_static INTERFACE
-    dxgi.lib
-    d3d11.lib
-    d3dcompiler.lib
-    dxguid.lib # for _IID_ID3D11ShaderReflection
-  )
-endif()
+target_include_directories(pomdog_static PRIVATE
+    ${POMDOG_DIR}/include
+    ${POMDOG_DIR}/dependencies
+    ${POMDOG_DIR}/dependencies/giflib
+    ${POMDOG_DIR}/dependencies/libpng
+    ${POMDOG_DIR}/dependencies/mbedtls/include
+    ${POMDOG_DIR}/dependencies/rapidjson/include
+    ${POMDOG_DIR}/dependencies/stb
+    ${POMDOG_DIR}/dependencies/vendor/libpng
+    ${POMDOG_DIR}/dependencies/vendor/SDL_GameControllerDB
 
-if(POMDOG_USE_XAUDIO2 AND (POMDOG_TARGET_PLATFORM MATCHES "Win32"))
-  target_link_libraries(pomdog_static INTERFACE xaudio2.lib)
-endif()
-
-if(POMDOG_USE_DIRECTINPUT AND (POMDOG_TARGET_PLATFORM MATCHES "Win32"))
-  target_link_libraries(pomdog_static INTERFACE
-    dinput8.lib
-    dxguid.lib
-    oleaut32.lib # for SysAllocString
-  )
-endif()
-
-target_compile_definitions(pomdog_static PRIVATE
-  $<$<CONFIG:DEBUG>:_DEBUG;DEBUG=1>
-  $<$<CONFIG:RELEASE>:NDEBUG>
+    $<$<AND:$<PLATFORM_ID:Linux>,$<BOOL:${POMDOG_USE_X11}>>:
+        /usr/X11R6/include
+    >
+    $<$<AND:$<PLATFORM_ID:Windows,Linux>,$<BOOL:${POMDOG_USE_GL4}>>:
+        ${POMDOG_DIR}/dependencies/vendor/glew/include
+    >
 )
 
-if(POMDOG_TARGET_PLATFORM MATCHES "Win32")
-  target_compile_definitions(pomdog_static PRIVATE
-    _WIN32_WINNT=0x0602 # Windows 8 or later
-    WIN32_LEAN_AND_MEAN
-    NOMINMAX
-  )
+target_link_libraries(pomdog_static INTERFACE
+    png
+    giflib
+    mbedtls
 
-  target_link_libraries(pomdog_static INTERFACE
-    kernel32.lib
-    user32.lib
-    gdi32.lib
-    ole32.lib
-    winmm.lib
-    shell32.lib
-    ws2_32.lib
-    # winspool.lib
-    # comdlg32.lib
-    # advapi32.lib
-    # oleaut32.lib
-    # uuid.lib
-    # odbc32.lib
-    # odbccp32.lib
-  )
-endif()
+    $<$<PLATFORM_ID:Linux>:
+        # NOTE: Linux
+        pthread
+        $<$<BOOL:${POMDOG_USE_OPENAL}>: openal>
+        $<$<BOOL:${POMDOG_USE_X11}>: X11>
+        $<$<BOOL:${POMDOG_USE_GL4}>: GL>
+    >
+    $<$<PLATFORM_ID:Windows>:
+        # NOTE: Windows
+        kernel32.lib
+        user32.lib
+        gdi32.lib
+        ole32.lib
+        winmm.lib
+        shell32.lib
+        ws2_32.lib
+        # winspool.lib
+        # comdlg32.lib
+        # advapi32.lib
+        # oleaut32.lib
+        # uuid.lib
+        # odbc32.lib
+        # odbccp32.lib
+        $<$<BOOL:${POMDOG_USE_GL4}>: opengl32.lib>
+        $<$<BOOL:${POMDOG_USE_XAUDIO2}>: xaudio2.lib>
+        $<$<BOOL:${POMDOG_USE_DIRECT3D11}>:
+            dxgi.lib
+            d3d11.lib
+            d3dcompiler.lib
+            dxguid.lib # for _IID_ID3D11ShaderReflection
+        >
+        $<$<BOOL:${POMDOG_USE_DIRECTINPUT}>:
+            dinput8.lib
+            dxguid.lib
+            oleaut32.lib # for SysAllocString
+        >
+    >
+    $<$<AND:$<PLATFORM_ID:Windows,Linux>,$<BOOL:${POMDOG_USE_GL4}>>:
+        # NOTE: GLEW for Windows and Linux
+        glew_static
+    >
+)
 
-if(POMDOG_TARGET_PLATFORM MATCHES "Linux")
-  target_link_libraries(pomdog_static INTERFACE
-    pthread
-  )
-endif()
+target_link_directories(pomdog_static INTERFACE
+    # X11 on Linux
+    $<$<AND:$<PLATFORM_ID:Linux>,$<BOOL:${POMDOG_USE_X11}>>:
+        /usr/X11R6/lib
+    >
+)
+
+target_link_options(pomdog_static PRIVATE
+    $<$<PLATFORM_ID:Darwin>:
+        # NOTE: Apple macOS
+        "SHELL: -framework Cocoa"
+        "SHELL: -framework QuartzCore"
+        $<$<BOOL:${POMDOG_USE_METAL}>:
+            "SHELL: -framework Metal"
+            "SHELL: -framework MetalKit"
+        >
+        $<$<BOOL:${POMDOG_USE_OPENAL}>:
+            "SHELL: -framework AudioToolBox"
+            "SHELL: -framework OpenAL"
+        >
+        $<$<BOOL:${POMDOG_USE_IOKIT}>:
+            "SHELL: -framework IOKit"
+        >
+        $<$<BOOL:${POMDOG_USE_GL4}>:
+            "SHELL: -framework OpenGL"
+        >
+    >
+)
+
+target_compile_definitions(pomdog_static PRIVATE
+    $<$<CONFIG:DEBUG>:_DEBUG;DEBUG=1>
+    $<$<CONFIG:RELEASE>:NDEBUG>
+    $<$<PLATFORM_ID:Windows>:
+        _WIN32_WINNT=0x0602 # Windows 8 or later
+        WIN32_LEAN_AND_MEAN
+        NOMINMAX
+    >
+    $<$<AND:$<PLATFORM_ID:Windows,Linux>,$<BOOL:${POMDOG_USE_GL4}>>:
+        GLEW_STATIC
+    >
+)
 
 target_compile_options(pomdog_static PRIVATE
   # Clang
@@ -1260,81 +327,81 @@ target_compile_options(pomdog_static PRIVATE
 # )
 
 set_target_properties(pomdog_static PROPERTIES
-  XCODE_ATTRIBUTE_GCC_OPTIMIZATION_LEVEL[variant=Debug] "0" # -O0
-  XCODE_ATTRIBUTE_GCC_OPTIMIZATION_LEVEL[variant=Release] "3" # -O3
-  XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH[variant=Debug] "YES"
-  XCODE_ATTRIBUTE_COMBINE_HIDPI_IMAGES "YES"
+    XCODE_ATTRIBUTE_GCC_OPTIMIZATION_LEVEL[variant=Debug] "0" # -O0
+    XCODE_ATTRIBUTE_GCC_OPTIMIZATION_LEVEL[variant=Release] "3" # -O3
+    XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH[variant=Debug] "YES"
+    XCODE_ATTRIBUTE_COMBINE_HIDPI_IMAGES "YES"
 
-  XCODE_ATTRIBUTE_GCC_VERSION "com.apple.compilers.llvm.clang.1_0"
-  XCODE_ATTRIBUTE_GCC_C_LANGUAGE_STANDARD "c11"
-  XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++17"
-  XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++"
-  XCODE_ATTRIBUTE_MACOSX_DEPLOYMENT_TARGET "10.12"
+    XCODE_ATTRIBUTE_GCC_VERSION "com.apple.compilers.llvm.clang.1_0"
+    XCODE_ATTRIBUTE_GCC_C_LANGUAGE_STANDARD "c11"
+    XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++2a"
+    XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++"
+    XCODE_ATTRIBUTE_MACOSX_DEPLOYMENT_TARGET "10.12"
 
-  XCODE_ATTRIBUTE_SKIP_INSTALL "YES"
+    XCODE_ATTRIBUTE_SKIP_INSTALL "YES"
 
-  # Warnings (Clang)
-  XCODE_ATTRIBUTE_CLANG_WARN_ASSIGN_ENUM "YES"
-  XCODE_ATTRIBUTE_CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING "YES"
-  XCODE_ATTRIBUTE_CLANG_WARN_BOOL_CONVERSION "YES"
-  XCODE_ATTRIBUTE_CLANG_WARN_COMMA "YES"
-  XCODE_ATTRIBUTE_CLANG_WARN_CONSTANT_CONVERSION "YES"
-  XCODE_ATTRIBUTE_CLANG_WARN_DOCUMENTATION_COMMENTS "YES"
-  XCODE_ATTRIBUTE_CLANG_WARN_EMPTY_BODY "YES"
-  XCODE_ATTRIBUTE_CLANG_WARN_ENUM_CONVERSION "YES"
-  XCODE_ATTRIBUTE_CLANG_WARN_INFINITE_RECURSION "YES"
-  XCODE_ATTRIBUTE_CLANG_WARN_INT_CONVERSION "YES"
-  XCODE_ATTRIBUTE_CLANG_WARN_NON_LITERAL_NULL_CONVERSION "YES"
-  XCODE_ATTRIBUTE_CLANG_WARN_RANGE_LOOP_ANALYSIS "YES"
-  XCODE_ATTRIBUTE_CLANG_WARN_STRICT_PROTOTYPES "YES"
-  XCODE_ATTRIBUTE_CLANG_WARN_SUSPICIOUS_MOVE "YES"
-  XCODE_ATTRIBUTE_CLANG_WARN_UNREACHABLE_CODE "YES"
+    # Warnings (Clang)
+    XCODE_ATTRIBUTE_CLANG_WARN_ASSIGN_ENUM "YES"
+    XCODE_ATTRIBUTE_CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING "YES"
+    XCODE_ATTRIBUTE_CLANG_WARN_BOOL_CONVERSION "YES"
+    XCODE_ATTRIBUTE_CLANG_WARN_COMMA "YES"
+    XCODE_ATTRIBUTE_CLANG_WARN_CONSTANT_CONVERSION "YES"
+    XCODE_ATTRIBUTE_CLANG_WARN_DOCUMENTATION_COMMENTS "YES"
+    XCODE_ATTRIBUTE_CLANG_WARN_EMPTY_BODY "YES"
+    XCODE_ATTRIBUTE_CLANG_WARN_ENUM_CONVERSION "YES"
+    XCODE_ATTRIBUTE_CLANG_WARN_INFINITE_RECURSION "YES"
+    XCODE_ATTRIBUTE_CLANG_WARN_INT_CONVERSION "YES"
+    XCODE_ATTRIBUTE_CLANG_WARN_NON_LITERAL_NULL_CONVERSION "YES"
+    XCODE_ATTRIBUTE_CLANG_WARN_RANGE_LOOP_ANALYSIS "YES"
+    XCODE_ATTRIBUTE_CLANG_WARN_STRICT_PROTOTYPES "YES"
+    XCODE_ATTRIBUTE_CLANG_WARN_SUSPICIOUS_MOVE "YES"
+    XCODE_ATTRIBUTE_CLANG_WARN_UNREACHABLE_CODE "YES"
 
-  # Warnings (GCC and Clang)
-  XCODE_ATTRIBUTE_GCC_TREAT_INCOMPATIBLE_POINTER_TYPE_WARNINGS_AS_ERRORS "YES"
-  XCODE_ATTRIBUTE_GCC_WARN_64_TO_32_BIT_CONVERSION "YES"
-  XCODE_ATTRIBUTE_GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS "YES"
-  XCODE_ATTRIBUTE_GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS "YES"
-  XCODE_ATTRIBUTE_GCC_WARN_ABOUT_MISSING_NEWLINE "YES"
-  XCODE_ATTRIBUTE_GCC_WARN_ABOUT_RETURN_TYPE "YES_ERROR"
-  XCODE_ATTRIBUTE_GCC_WARN_CHECK_SWITCH_STATEMENTS "YES"
-  XCODE_ATTRIBUTE_GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS "YES"
-  XCODE_ATTRIBUTE_GCC_WARN_MISSING_PARENTHESES "YES"
-  XCODE_ATTRIBUTE_GCC_WARN_NON_VIRTUAL_DESTRUCTOR "YES"
-  XCODE_ATTRIBUTE_GCC_WARN_SHADOW "YES"
-  XCODE_ATTRIBUTE_GCC_WARN_SIGN_COMPARE "YES"
-  XCODE_ATTRIBUTE_GCC_WARN_TYPECHECK_CALLS_TO_PRINTF "YES"
-  XCODE_ATTRIBUTE_GCC_WARN_UNINITIALIZED_AUTOS "YES_AGGRESSIVE"
-  XCODE_ATTRIBUTE_GCC_WARN_UNKNOWN_PRAGMAS "YES"
-  XCODE_ATTRIBUTE_GCC_WARN_UNUSED_FUNCTION "YES"
-  XCODE_ATTRIBUTE_GCC_WARN_UNUSED_LABEL "YES"
-  XCODE_ATTRIBUTE_GCC_WARN_UNUSED_VALUE "YES"
-  XCODE_ATTRIBUTE_GCC_WARN_UNUSED_VARIABLE "YES"
+    # Warnings (GCC and Clang)
+    XCODE_ATTRIBUTE_GCC_TREAT_INCOMPATIBLE_POINTER_TYPE_WARNINGS_AS_ERRORS "YES"
+    XCODE_ATTRIBUTE_GCC_WARN_64_TO_32_BIT_CONVERSION "YES"
+    XCODE_ATTRIBUTE_GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS "YES"
+    XCODE_ATTRIBUTE_GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS "YES"
+    XCODE_ATTRIBUTE_GCC_WARN_ABOUT_MISSING_NEWLINE "YES"
+    XCODE_ATTRIBUTE_GCC_WARN_ABOUT_RETURN_TYPE "YES_ERROR"
+    XCODE_ATTRIBUTE_GCC_WARN_CHECK_SWITCH_STATEMENTS "YES"
+    XCODE_ATTRIBUTE_GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS "YES"
+    XCODE_ATTRIBUTE_GCC_WARN_MISSING_PARENTHESES "YES"
+    XCODE_ATTRIBUTE_GCC_WARN_NON_VIRTUAL_DESTRUCTOR "YES"
+    XCODE_ATTRIBUTE_GCC_WARN_SHADOW "YES"
+    XCODE_ATTRIBUTE_GCC_WARN_SIGN_COMPARE "YES"
+    XCODE_ATTRIBUTE_GCC_WARN_TYPECHECK_CALLS_TO_PRINTF "YES"
+    XCODE_ATTRIBUTE_GCC_WARN_UNINITIALIZED_AUTOS "YES_AGGRESSIVE"
+    XCODE_ATTRIBUTE_GCC_WARN_UNKNOWN_PRAGMAS "YES"
+    XCODE_ATTRIBUTE_GCC_WARN_UNUSED_FUNCTION "YES"
+    XCODE_ATTRIBUTE_GCC_WARN_UNUSED_LABEL "YES"
+    XCODE_ATTRIBUTE_GCC_WARN_UNUSED_VALUE "YES"
+    XCODE_ATTRIBUTE_GCC_WARN_UNUSED_VARIABLE "YES"
 
-  # Warnings - Objective-C
-  XCODE_ATTRIBUTE_CLANG_WARN_DIRECT_OBJC_ISA_USAGE "YES_ERROR"
-  XCODE_ATTRIBUTE_CLANG_WARN__DUPLICATE_METHOD_MATCH "YES"
-  XCODE_ATTRIBUTE_GCC_WARN_ALLOW_INCOMPLETE_PROTOCOL "YES"
-  XCODE_ATTRIBUTE_GCC_WARN_UNDECLARED_SELECTOR "YES"
-  XCODE_ATTRIBUTE_CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS "YES"
-  XCODE_ATTRIBUTE_CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF "YES"
-  XCODE_ATTRIBUTE_CLANG_WARN_OBJC_LITERAL_CONVERSION "YES"
-  XCODE_ATTRIBUTE_CLANG_WARN_OBJC_ROOT_CLASS "YES_ERROR"
+    # Warnings - Objective-C
+    XCODE_ATTRIBUTE_CLANG_WARN_DIRECT_OBJC_ISA_USAGE "YES_ERROR"
+    XCODE_ATTRIBUTE_CLANG_WARN__DUPLICATE_METHOD_MATCH "YES"
+    XCODE_ATTRIBUTE_GCC_WARN_ALLOW_INCOMPLETE_PROTOCOL "YES"
+    XCODE_ATTRIBUTE_GCC_WARN_UNDECLARED_SELECTOR "YES"
+    XCODE_ATTRIBUTE_CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS "YES"
+    XCODE_ATTRIBUTE_CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF "YES"
+    XCODE_ATTRIBUTE_CLANG_WARN_OBJC_LITERAL_CONVERSION "YES"
+    XCODE_ATTRIBUTE_CLANG_WARN_OBJC_ROOT_CLASS "YES_ERROR"
 
-  # Warning Policies
-  XCODE_ATTRIBUTE_GCC_TREAT_WARNINGS_AS_ERRORS "YES"
-  XCODE_ATTRIBUTE_WARNING_CFLAGS "-Wall"
+    # Warning Policies
+    XCODE_ATTRIBUTE_GCC_TREAT_WARNINGS_AS_ERRORS "YES"
+    XCODE_ATTRIBUTE_WARNING_CFLAGS "-Wall"
 
-  # Metal Compiler
-  XCODE_ATTRIBUTE_MTL_ENABLE_DEBUG_INFO[variant=Debug] "INCLUDE_SOURCE"
-  XCODE_ATTRIBUTE_MTL_ENABLE_DEBUG_INFO[variant=Release] "NO"
-  XCODE_ATTRIBUTE_MTL_FAST_MATH "YES"
+    # Metal Compiler
+    XCODE_ATTRIBUTE_MTL_ENABLE_DEBUG_INFO[variant=Debug] "INCLUDE_SOURCE"
+    XCODE_ATTRIBUTE_MTL_ENABLE_DEBUG_INFO[variant=Release] "NO"
+    XCODE_ATTRIBUTE_MTL_FAST_MATH "YES"
 
-  # Static Analyzer
-  XCODE_ATTRIBUTE_CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED "YES"
+    # Static Analyzer
+    XCODE_ATTRIBUTE_CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED "YES"
 
-  # Symbols
-  XCODE_ATTRIBUTE_CLANG_ENABLE_OBJC_ARC "YES"
-  XCODE_ATTRIBUTE_GCC_INLINES_ARE_PRIVATE_EXTERN "YES" # -fvisibility-inlines-hidden
-  XCODE_ATTRIBUTE_GCC_SYMBOLS_PRIVATE_EXTERN "YES" # -fvisibility=hidden
+    # Symbols
+    XCODE_ATTRIBUTE_CLANG_ENABLE_OBJC_ARC "YES"
+    XCODE_ATTRIBUTE_GCC_INLINES_ARE_PRIVATE_EXTERN "YES" # -fvisibility-inlines-hidden
+    XCODE_ATTRIBUTE_GCC_SYMBOLS_PRIVATE_EXTERN "YES" # -fvisibility=hidden
 )
