@@ -102,7 +102,7 @@ SamplerStateGL4::SamplerStateGL4(const SamplerDescription& description)
         POMDOG_ASSERT(description.MinMipLevel <= description.MaxMipLevel);
         POMDOG_ASSERT(description.MaxMipLevel <= std::numeric_limits<GLfloat>::max());
 
-        glSamplerParameterf(samplerObject->value, GL_TEXTURE_MIN_LOD, description.MaxMipLevel);
+        glSamplerParameterf(samplerObject->value, GL_TEXTURE_MIN_LOD, description.MinMipLevel);
         glSamplerParameterf(samplerObject->value, GL_TEXTURE_MAX_LOD, description.MaxMipLevel);
         glSamplerParameterf(samplerObject->value, GL_TEXTURE_LOD_BIAS, description.MipMapLevelOfDetailBias);
         POMDOG_CHECK_ERROR_GL4("glSamplerParameterf");
