@@ -11,6 +11,7 @@
 #include "Pomdog/Graphics/Viewport.hpp"
 #include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include <algorithm>
 #include <cstring>
 
 namespace Pomdog {
