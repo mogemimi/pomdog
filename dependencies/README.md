@@ -32,14 +32,6 @@ All of the dependencies that [Pomdog](https://github.com/mogemimi/pomdog) needs 
   * libpng License
   * Please see: [libpng/LICENSE](libpng/LICENSE)
 
-### Mbed Crypto
-
-* [Mbed Crypto - GitHub](https://github.com/ARMmbed/mbed-crypto)
-* [Mbed Crypto Home Page](https://tls.mbed.org/)
-* License
-  * Apache License 2.0
-  * Please see: [mbedtls/crypto/LICENSE](mbedtls/crypto/LICENSE)
-
 ### Mbed TLS
 
 * [Mbed TLS - GitHub](https://github.com/ARMmbed/mbedtls)
@@ -54,6 +46,14 @@ All of the dependencies that [Pomdog](https://github.com/mogemimi/pomdog) needs 
 * License
   * zlib License
   * Please see: [nanosvg/LICENSE.txt](nanosvg/LICENSE.txt)
+
+### Project Everest
+
+* [Project Everest - GitHub](https://github.com/project-everest/everest)
+* [Website](https://project-everest.github.io/)
+* License
+  * Apache License 2.0
+  * Please see: [mbedtls/3rdparty/everest/README.md](mbedtls/3rdparty/everest/README.md)
 
 ### RapidJSON
 
