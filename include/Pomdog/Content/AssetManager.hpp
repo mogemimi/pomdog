@@ -7,10 +7,10 @@
 #include "Pomdog/Content/AssetLoaders/AssetLoader.hpp"
 #include "Pomdog/Content/AssetLoaders/AudioClipLoader.hpp"
 #include "Pomdog/Content/AssetLoaders/Texture2DLoader.hpp"
-#include "Pomdog/Utility/Any.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Errors.hpp"
 #include "Pomdog/Utility/PathHelper.hpp"
+#include <any>
 #include <memory>
 #include <string>
 #include <tuple>
@@ -47,8 +47,8 @@ public:
         if (auto iter = assets.find(key); iter != std::end(assets)) {
             auto& assetHolder = iter->second;
 
-            if (assetHolder.Type() == typeIndex) {
-                auto asset = assetHolder.As<std::shared_ptr<T>>();
+            if (std::type_index(assetHolder.type()) == typeIndex) {
+                auto asset = std::any_cast<std::shared_ptr<T>>(assetHolder);
                 return std::make_tuple(std::move(asset), nullptr);
             }
 
@@ -63,8 +63,8 @@ public:
 
         static_assert(std::is_same<decltype(asset), std::shared_ptr<T>>::value);
 
-        Any assetHolder = asset;
-        POMDOG_ASSERT(assetHolder.Type() == typeIndex);
+        auto assetHolder = std::make_any<std::shared_ptr<T>>(asset);
+        POMDOG_ASSERT(std::type_index(assetHolder.type()) == typeIndex);
 
         assets.emplace(std::move(key), std::move(assetHolder));
 
@@ -98,7 +98,7 @@ public:
 private:
     std::string contentDirectory;
     std::weak_ptr<GraphicsDevice> graphicsDevice;
-    std::unordered_map<std::string, Any> assets;
+    std::unordered_map<std::string, std::any> assets;
 };
 
 } // namespace Pomdog
