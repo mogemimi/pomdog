@@ -4,7 +4,6 @@
 
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Graphics/BufferUsage.hpp"
-#include "Pomdog/Graphics/detail/EffectBinaryParameter.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <cstddef>
 #include <memory>
@@ -49,9 +48,11 @@ public:
     {
         static_assert(std::is_trivially_copyable_v<T>, "You can only use plain-old-data types.");
         static_assert(std::is_standard_layout_v<T>, "You can only use plain-old-data types.");
+        static_assert(!std::is_pointer<T>::value, "T is not pointer.");
+        static_assert(!std::is_fundamental_v<T>);
         T result;
-        Detail::EffectBinaryParameter::Get<T>(*this, result);
-        return std::move(result);
+        this->GetValue(sizeof(result), static_cast<void*>(&result));
+        return result;
     }
 
     void GetValue(std::size_t sizeInBytes, void* result) const;
@@ -62,7 +63,9 @@ public:
     {
         static_assert(std::is_trivially_copyable_v<T>, "You can only use plain-old-data types.");
         static_assert(std::is_standard_layout_v<T>, "You can only use plain-old-data types.");
-        Detail::EffectBinaryParameter::Set(*this, value);
+        static_assert(!std::is_pointer<T>::value, "T is not pointer.");
+        static_assert(!std::is_fundamental_v<T>);
+        this->SetValue(static_cast<const void*>(&value), sizeof(value));
     }
 
     /// Sets constant buffer data.
@@ -71,7 +74,9 @@ public:
     {
         static_assert(std::is_trivially_copyable_v<T>, "You can only use plain-old-data types.");
         static_assert(std::is_standard_layout_v<T>, "You can only use plain-old-data types.");
-        Detail::EffectBinaryParameter::Set(*this, data, count);
+        static_assert(!std::is_pointer<T>::value, "T is not pointer.");
+        static_assert(!std::is_same_v<T, bool>);
+        this->SetValue(static_cast<const void*>(data), sizeof(T) * count);
     }
 
     /// Sets constant buffer data.
