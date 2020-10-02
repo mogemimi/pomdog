@@ -61,7 +61,7 @@ void TCPStreamPOSIX::Close()
 }
 
 std::shared_ptr<Error>
-TCPStreamPOSIX::Connect(const std::string_view& host, const std::string_view& port, const Duration& connectTimeout)
+TCPStreamPOSIX::Connect(std::string_view host, std::string_view port, const Duration& connectTimeout)
 {
     POMDOG_ASSERT(service != nullptr);
 

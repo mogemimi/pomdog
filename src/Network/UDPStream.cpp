@@ -29,7 +29,7 @@ UDPStream::UDPStream(UDPStream&& other) = default;
 UDPStream& UDPStream::operator=(UDPStream&& other) = default;
 
 std::tuple<UDPStream, std::shared_ptr<Error>>
-UDPStream::Connect(IOService* service, const std::string_view& address)
+UDPStream::Connect(IOService* service, std::string_view address)
 {
     POMDOG_ASSERT(service != nullptr);
 
@@ -45,7 +45,7 @@ UDPStream::Connect(IOService* service, const std::string_view& address)
 }
 
 std::tuple<UDPStream, std::shared_ptr<Error>>
-UDPStream::Listen(IOService* service, const std::string_view& address)
+UDPStream::Listen(IOService* service, std::string_view address)
 {
     POMDOG_ASSERT(service != nullptr);
 
@@ -74,7 +74,7 @@ UDPStream::Write(const ArrayView<std::uint8_t const>& data)
 }
 
 std::shared_ptr<Error>
-UDPStream::WriteTo(const ArrayView<std::uint8_t const>& data, const std::string_view& address)
+UDPStream::WriteTo(const ArrayView<std::uint8_t const>& data, std::string_view address)
 {
     POMDOG_ASSERT(nativeStream != nullptr);
     return nativeStream->WriteTo(data, address);
@@ -92,7 +92,7 @@ Connection UDPStream::OnRead(std::function<void(const ArrayView<std::uint8_t>&, 
     return nativeStream->OnRead.Connect(std::move(callback));
 }
 
-Connection UDPStream::OnReadFrom(std::function<void(const ArrayView<std::uint8_t>&, const std::string_view& address, const std::shared_ptr<Error>&)>&& callback)
+Connection UDPStream::OnReadFrom(std::function<void(const ArrayView<std::uint8_t>&, std::string_view address, const std::shared_ptr<Error>&)>&& callback)
 {
     POMDOG_ASSERT(nativeStream != nullptr);
     return nativeStream->OnReadFrom.Connect(std::move(callback));

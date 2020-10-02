@@ -80,8 +80,8 @@ TLSStreamMbedTLS::~TLSStreamMbedTLS()
 
 std::shared_ptr<Error>
 TLSStreamMbedTLS::Connect(
-    const std::string_view& host,
-    const std::string_view& port,
+    std::string_view host,
+    std::string_view port,
     const Duration& connectTimeoutIn,
     const ArrayView<std::uint8_t const>& certPEM)
 {

@@ -6,7 +6,7 @@ namespace Pomdog::Detail::AddressParser {
 namespace {
 
 std::tuple<std::string_view, std::string_view>
-SeparateString(const std::string_view& source, const std::string_view& separator)
+SeparateString(std::string_view source, std::string_view separator)
 {
     std::string_view first;
     std::string_view second;
@@ -25,7 +25,7 @@ SeparateString(const std::string_view& source, const std::string_view& separator
 } // namespace
 
 std::tuple<AddressFamily, std::string_view, std::string_view>
-TransformAddress(const std::string_view& address)
+TransformAddress(std::string_view address)
 {
     if (!address.empty() && (address.front() == '[')) {
         // NOTE: IPv6 (e.g. [host]:port)

@@ -7,7 +7,7 @@
 
 namespace Pomdog {
 
-bool StringHelper::HasPrefix(const std::string_view& s, const std::string_view& prefix)
+bool StringHelper::HasPrefix(std::string_view s, std::string_view prefix)
 {
     if (s.size() < prefix.size()) {
         return false;
@@ -15,7 +15,7 @@ bool StringHelper::HasPrefix(const std::string_view& s, const std::string_view& 
     return (s.compare(0, prefix.size(), prefix) == 0);
 }
 
-bool StringHelper::HasSuffix(const std::string_view& s, const std::string_view& suffix)
+bool StringHelper::HasSuffix(std::string_view s, std::string_view suffix)
 {
     if (suffix.empty()) {
         return true;
@@ -27,7 +27,7 @@ bool StringHelper::HasSuffix(const std::string_view& s, const std::string_view& 
 }
 
 std::string_view
-StringHelper::TrimRight(const std::string_view& source, char separator)
+StringHelper::TrimRight(std::string_view source, char separator)
 {
     auto v = source;
     auto pos = v.find_last_not_of(separator);
@@ -42,7 +42,7 @@ StringHelper::TrimRight(const std::string_view& source, char separator)
 }
 
 std::string_view
-StringHelper::TrimLeft(const std::string_view& source, char separator)
+StringHelper::TrimLeft(std::string_view source, char separator)
 {
     auto v = source;
     v.remove_prefix(std::min(v.find_first_not_of(separator), v.size()));
@@ -50,7 +50,7 @@ StringHelper::TrimLeft(const std::string_view& source, char separator)
 }
 
 std::string_view
-StringHelper::TrimRight(const std::string_view& source, std::function<bool(char)> isSeparator)
+StringHelper::TrimRight(std::string_view source, std::function<bool(char)> isSeparator)
 {
     auto func = std::not_fn(std::move(isSeparator));
     auto v = source;
@@ -66,7 +66,7 @@ StringHelper::TrimRight(const std::string_view& source, std::function<bool(char)
 }
 
 std::string_view
-StringHelper::TrimLeft(const std::string_view& source, std::function<bool(char)> isSeparator)
+StringHelper::TrimLeft(std::string_view source, std::function<bool(char)> isSeparator)
 {
     auto func = std::not_fn(std::move(isSeparator));
     auto v = source;
@@ -82,7 +82,7 @@ StringHelper::TrimLeft(const std::string_view& source, std::function<bool(char)>
 }
 
 std::vector<std::string_view>
-StringHelper::Split(const std::string_view& source, char separator)
+StringHelper::Split(std::string_view source, char separator)
 {
     std::vector<std::string_view> tokens;
     std::string::size_type start = 0;
@@ -96,7 +96,7 @@ StringHelper::Split(const std::string_view& source, char separator)
 }
 
 std::vector<std::string_view>
-StringHelper::Split(const std::string_view& source, const std::string_view& separator)
+StringHelper::Split(std::string_view source, std::string_view separator)
 {
     std::vector<std::string_view> tokens;
     std::string::size_type start = 0;
@@ -110,7 +110,7 @@ StringHelper::Split(const std::string_view& source, const std::string_view& sepa
 }
 
 std::string
-StringHelper::ReplaceAll(const std::string_view& s, const std::string_view& from, const std::string_view& to)
+StringHelper::ReplaceAll(std::string_view s, std::string_view from, std::string_view to)
 {
     std::string result = std::string{s};
     if (from.empty()) {

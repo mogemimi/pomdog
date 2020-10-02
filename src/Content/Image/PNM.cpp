@@ -343,7 +343,7 @@ Encode(const Color* data, std::size_t size, int width, int height, const PNMEnco
     std::size_t reserveSize = 3 + 6 + 6 + (bytesPerComponent * channelCount * width * height);
     buffer.reserve(reserveSize);
 
-    const auto writeString = [&buffer](const std::string_view& view) {
+    const auto writeString = [&buffer](std::string_view view) {
         if (view.empty()) {
             return;
         }

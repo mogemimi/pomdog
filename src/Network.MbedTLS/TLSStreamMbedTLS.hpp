@@ -39,7 +39,7 @@ public:
 
     /// Opens a TCP connection over TCP to a remote host.
     [[nodiscard]] std::shared_ptr<Error>
-    Connect(const std::string_view& host, const std::string_view& port, const Duration& timeout, const ArrayView<std::uint8_t const>& certPEM);
+    Connect(std::string_view host, std::string_view port, const Duration& timeout, const ArrayView<std::uint8_t const>& certPEM);
 
     /// Closes the connection.
     void Close();

@@ -29,7 +29,7 @@ struct URLParseResult final {
 };
 
 std::tuple<URLParseResult, std::shared_ptr<Error>>
-ParseURL(const std::string_view& url)
+ParseURL(std::string_view url)
 {
     std::string_view source = url;
     URLParseResult result;

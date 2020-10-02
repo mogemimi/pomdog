@@ -22,7 +22,7 @@ TLSStream::TLSStream(TLSStream&& other) = default;
 TLSStream& TLSStream::operator=(TLSStream&& other) = default;
 
 std::tuple<TLSStream, std::shared_ptr<Error>>
-TLSStream::Connect(IOService* service, const std::string_view& address)
+TLSStream::Connect(IOService* service, std::string_view address)
 {
     POMDOG_ASSERT(service != nullptr);
 
@@ -40,7 +40,7 @@ TLSStream::Connect(IOService* service, const std::string_view& address)
 }
 
 std::tuple<TLSStream, std::shared_ptr<Error>>
-TLSStream::Connect(IOService* service, const std::string_view& address, const Duration& timeout, const ArrayView<std::uint8_t const>& certPEM)
+TLSStream::Connect(IOService* service, std::string_view address, const Duration& timeout, const ArrayView<std::uint8_t const>& certPEM)
 {
     POMDOG_ASSERT(service != nullptr);
 

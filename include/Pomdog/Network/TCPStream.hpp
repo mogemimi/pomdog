@@ -29,11 +29,11 @@ public:
 
     /// Opens a TCP connection to a remote host.
     [[nodiscard]] static std::tuple<TCPStream, std::shared_ptr<Error>>
-    Connect(IOService* service, const std::string_view& address);
+    Connect(IOService* service, std::string_view address);
 
     /// Opens a TCP connection to a remote host.
     [[nodiscard]] static std::tuple<TCPStream, std::shared_ptr<Error>>
-    Connect(IOService* service, const std::string_view& address, const Duration& timeout);
+    Connect(IOService* service, std::string_view address, const Duration& timeout);
 
     /// Closes the connection.
     void Disconnect();

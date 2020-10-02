@@ -42,7 +42,7 @@ UDPStreamWin32::~UDPStreamWin32()
 }
 
 std::shared_ptr<Error>
-UDPStreamWin32::Connect(const std::string_view& host, const std::string_view& port, const Duration& connectTimeout)
+UDPStreamWin32::Connect(std::string_view host, std::string_view port, const Duration& connectTimeout)
 {
     POMDOG_ASSERT(service != nullptr);
 
@@ -76,7 +76,7 @@ UDPStreamWin32::Connect(const std::string_view& host, const std::string_view& po
 }
 
 std::shared_ptr<Error>
-UDPStreamWin32::Listen(const std::string_view& host, const std::string_view& port)
+UDPStreamWin32::Listen(std::string_view host, std::string_view port)
 {
     POMDOG_ASSERT(service != nullptr);
 
@@ -133,7 +133,7 @@ UDPStreamWin32::Write(const ArrayView<std::uint8_t const>& data)
 }
 
 std::shared_ptr<Error>
-UDPStreamWin32::WriteTo(const ArrayView<std::uint8_t const>& data, const std::string_view& address)
+UDPStreamWin32::WriteTo(const ArrayView<std::uint8_t const>& data, std::string_view address)
 {
     POMDOG_ASSERT(isSocketValid(this->descriptor));
     POMDOG_ASSERT(data.GetData() != nullptr);

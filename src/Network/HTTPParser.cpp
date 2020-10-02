@@ -68,7 +68,7 @@ bool IsDigit(char c) noexcept
     return (c >= '0') && (c <= '9');
 }
 
-bool CompareCaseInsensitive(const std::string_view& a, const std::string_view& b) noexcept
+bool CompareCaseInsensitive(std::string_view a, std::string_view b) noexcept
 {
     if (a.size() != b.size()) {
         return false;
@@ -138,7 +138,7 @@ ParseFields(std::vector<char>::const_iterator& iter, std::vector<char>::const_it
 }
 
 template <typename T>
-std::optional<std::string_view> FindField(T& fields, const std::string_view& key)
+std::optional<std::string_view> FindField(T& fields, std::string_view key)
 {
     auto iter = std::find_if(std::begin(fields), std::end(fields),
         [&](const std::pair<std::string, std::string>& field) -> bool {

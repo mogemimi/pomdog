@@ -29,7 +29,7 @@ TCPStream::TCPStream(TCPStream&& other) = default;
 TCPStream& TCPStream::operator=(TCPStream&& other) = default;
 
 std::tuple<TCPStream, std::shared_ptr<Error>>
-TCPStream::Connect(IOService* service, const std::string_view& address)
+TCPStream::Connect(IOService* service, std::string_view address)
 {
     POMDOG_ASSERT(service != nullptr);
 
@@ -45,7 +45,7 @@ TCPStream::Connect(IOService* service, const std::string_view& address)
 }
 
 std::tuple<TCPStream, std::shared_ptr<Error>>
-TCPStream::Connect(IOService* service, const std::string_view& address, const Duration& timeout)
+TCPStream::Connect(IOService* service, std::string_view address, const Duration& timeout)
 {
     POMDOG_ASSERT(service != nullptr);
 

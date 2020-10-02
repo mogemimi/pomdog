@@ -29,11 +29,11 @@ public:
 
     /// Opens a UDP connection to a remote host.
     static std::tuple<UDPStream, std::shared_ptr<Error>>
-    Connect(IOService* service, const std::string_view& address);
+    Connect(IOService* service, std::string_view address);
 
     /// Starts listening for incoming datagrams.
     static std::tuple<UDPStream, std::shared_ptr<Error>>
-    Listen(IOService* service, const std::string_view& address);
+    Listen(IOService* service, std::string_view address);
 
     /// Closes the connection.
     void Disconnect();
@@ -43,7 +43,7 @@ public:
 
     /// Writes data to address.
     std::shared_ptr<Error>
-    WriteTo(const ArrayView<std::uint8_t const>& data, const std::string_view& address);
+    WriteTo(const ArrayView<std::uint8_t const>& data, std::string_view address);
 
     /// Sets a callback function that is called when a connection is successfully established.
     [[nodiscard]] Connection
@@ -55,7 +55,7 @@ public:
 
     /// Sets a callback function that is called when a data packet is received from the connection.
     [[nodiscard]] Connection
-    OnReadFrom(std::function<void(const ArrayView<std::uint8_t>&, const std::string_view& address, const std::shared_ptr<Error>&)>&& callback);
+    OnReadFrom(std::function<void(const ArrayView<std::uint8_t>&, std::string_view address, const std::shared_ptr<Error>&)>&& callback);
 
 private:
     std::unique_ptr<Detail::NativeUDPStream> nativeStream;

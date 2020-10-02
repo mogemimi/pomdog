@@ -48,7 +48,7 @@ void TCPStreamWin32::Close()
 }
 
 std::shared_ptr<Error>
-TCPStreamWin32::Connect(const std::string_view& host, const std::string_view& port, const Duration& connectTimeout)
+TCPStreamWin32::Connect(std::string_view host, std::string_view port, const Duration& connectTimeout)
 {
     POMDOG_ASSERT(service != nullptr);
 

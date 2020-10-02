@@ -9,6 +9,6 @@
 namespace Pomdog::Detail::AddressParser {
 
 std::tuple<AddressFamily, std::string_view, std::string_view>
-TransformAddress(const std::string_view& address);
+TransformAddress(std::string_view address);
 
 } // namespace Pomdog::Detail::AddressParser

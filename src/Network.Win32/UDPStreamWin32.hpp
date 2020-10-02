@@ -32,11 +32,11 @@ public:
 
     /// Opens a UDP connection over UDP to a remote host.
     [[nodiscard]] std::shared_ptr<Error>
-    Connect(const std::string_view& host, const std::string_view& port, const Duration& timeout);
+    Connect(std::string_view host, std::string_view port, const Duration& timeout);
 
     /// Starts listening for incoming datagrams.
     [[nodiscard]] std::shared_ptr<Error>
-    Listen(const std::string_view& host, const std::string_view& port);
+    Listen(std::string_view host, std::string_view port);
 
     /// Closes the connection.
     void Close();
@@ -47,7 +47,7 @@ public:
 
     /// Writes data to address.
     [[nodiscard]] std::shared_ptr<Error>
-    WriteTo(const ArrayView<std::uint8_t const>& data, const std::string_view& address);
+    WriteTo(const ArrayView<std::uint8_t const>& data, std::string_view address);
 
     /// Returns the native socket handle.
     [[nodiscard]] ::SOCKET GetHandle() const noexcept;
@@ -59,7 +59,7 @@ public:
     Delegate<void(const ArrayView<std::uint8_t>&, const std::shared_ptr<Error>&)> OnRead;
 
     /// Delegate that fires when a data packet is received from the connection.
-    Delegate<void(const ArrayView<std::uint8_t>& view, const std::string_view& address, const std::shared_ptr<Error>&)> OnReadFrom;
+    Delegate<void(const ArrayView<std::uint8_t>& view, std::string_view address, const std::shared_ptr<Error>&)> OnReadFrom;
 
 private:
     void ReadEventLoop();

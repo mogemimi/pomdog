@@ -53,7 +53,7 @@ UDPStreamPOSIX::~UDPStreamPOSIX()
 }
 
 std::shared_ptr<Error>
-UDPStreamPOSIX::Connect(const std::string_view& host, const std::string_view& port, const Duration& connectTimeout)
+UDPStreamPOSIX::Connect(std::string_view host, std::string_view port, const Duration& connectTimeout)
 {
     POMDOG_ASSERT(service != nullptr);
 
@@ -87,7 +87,7 @@ UDPStreamPOSIX::Connect(const std::string_view& host, const std::string_view& po
 }
 
 std::shared_ptr<Error>
-UDPStreamPOSIX::Listen(const std::string_view& host, const std::string_view& port)
+UDPStreamPOSIX::Listen(std::string_view host, std::string_view port)
 {
     POMDOG_ASSERT(service != nullptr);
 
@@ -144,7 +144,7 @@ UDPStreamPOSIX::Write(const ArrayView<std::uint8_t const>& data)
 }
 
 std::shared_ptr<Error>
-UDPStreamPOSIX::WriteTo(const ArrayView<std::uint8_t const>& data, const std::string_view& address)
+UDPStreamPOSIX::WriteTo(const ArrayView<std::uint8_t const>& data, std::string_view address)
 {
     POMDOG_ASSERT(isSocketValid(this->descriptor));
     POMDOG_ASSERT(data.GetData() != nullptr);

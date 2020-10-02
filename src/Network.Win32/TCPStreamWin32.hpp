@@ -40,7 +40,7 @@ public:
 
     /// Opens a TCP connection over TCP to a remote host.
     [[nodiscard]] std::shared_ptr<Error>
-    Connect(const std::string_view& host, const std::string_view& port, const Duration& timeout);
+    Connect(std::string_view host, std::string_view port, const Duration& timeout);
 
     /// Closes the connection.
     void Close();

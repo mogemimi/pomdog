@@ -29,11 +29,11 @@ public:
 
     /// Opens a TLS connection over TCP to a remote host.
     [[nodiscard]] static std::tuple<TLSStream, std::shared_ptr<Error>>
-    Connect(IOService* service, const std::string_view& address);
+    Connect(IOService* service, std::string_view address);
 
     /// Opens a TLS connection over TCP to a remote host.
     [[nodiscard]] static std::tuple<TLSStream, std::shared_ptr<Error>>
-    Connect(IOService* service, const std::string_view& address, const Duration& timeout, const ArrayView<std::uint8_t const>& certPEM);
+    Connect(IOService* service, std::string_view address, const Duration& timeout, const ArrayView<std::uint8_t const>& certPEM);
 
     /// Closes the connection.
     void Disconnect();
