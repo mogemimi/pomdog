@@ -15,7 +15,14 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/FileSystem.hpp"
 #include "Pomdog/Utility/StringHelper.hpp"
+#if defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable : 5054)
+#endif
 #include <rapidjson/document.h>
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif
 #include <fstream>
 #include <utility>
 #include <vector>
