@@ -135,13 +135,31 @@ void OpenGLContextCocoa::SetView(NSView* view)
 {
     POMDOG_ASSERT(openGLContext != nil);
     POMDOG_ASSERT(view != nil);
+    
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+#endif
+    // FIXME
     [openGLContext setView:view];
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif
 }
 
 void OpenGLContextCocoa::SetView()
 {
     POMDOG_ASSERT(openGLContext != nil);
+    
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+#endif
+    // FIXME
     [openGLContext setView:nil];
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif
 }
 
 NSOpenGLContext* OpenGLContextCocoa::GetNativeOpenGLContext()
