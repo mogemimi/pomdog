@@ -93,7 +93,7 @@ OpenGLContextCocoa::OpenGLContextCocoa(NSOpenGLPixelFormat* pixelFormat)
     [openGLContext makeCurrentContext];
 
     constexpr GLint swapInterval = 1;
-    [openGLContext setValues:&swapInterval forParameter:NSOpenGLCPSwapInterval];
+    [openGLContext setValues:&swapInterval forParameter:NSOpenGLContextParameterSwapInterval];
 }
 
 OpenGLContextCocoa::~OpenGLContextCocoa()
