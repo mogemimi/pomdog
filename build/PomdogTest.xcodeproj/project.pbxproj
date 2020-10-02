@@ -747,7 +747,7 @@
 					../dependencies/Catch2/single_include/catch2,
 				);
 				LIBRARY_SEARCH_PATHS = "$(SDKROOT)/System/Library/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "-g";
 				PRODUCT_NAME = PomdogUnitTest;
@@ -769,7 +769,7 @@
 					../dependencies/Catch2/single_include/catch2,
 				);
 				LIBRARY_SEARCH_PATHS = "$(SDKROOT)/System/Library/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				PRODUCT_NAME = PomdogUnitTest;
 			};
 			name = Release;
@@ -892,7 +892,7 @@
 					../dependencies/Catch2/single_include/catch2,
 				);
 				LIBRARY_SEARCH_PATHS = "$(SDKROOT)/System/Library/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -915,7 +915,7 @@
 					../dependencies/Catch2/single_include/catch2,
 				);
 				LIBRARY_SEARCH_PATHS = "$(SDKROOT)/System/Library/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "-g";
 				PRODUCT_NAME = "$(TARGET_NAME)";

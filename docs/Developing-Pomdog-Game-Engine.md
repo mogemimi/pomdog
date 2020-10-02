@@ -37,7 +37,7 @@ The following software is required in order to create and build the Pomdog game 
   - DirectX 11.3+
   - OpenGL 4.1+
 - macOS
-  - Mac OS X 10.12 and later
+  - Mac OS X 10.14 and later
   - Metal
   - OpenGL 4.1+
 

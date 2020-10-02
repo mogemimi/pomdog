@@ -593,7 +593,7 @@
 					../../dependencies/mbedtls/include,
 					../../dependencies/mbedtls/crypto/include,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				PRODUCT_NAME = mbedtls;
 				SKIP_INSTALL = YES;
 			};
@@ -613,7 +613,7 @@
 					../../dependencies/mbedtls/include,
 					../../dependencies/mbedtls/crypto/include,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				PRODUCT_NAME = mbedtls;
 				SKIP_INSTALL = YES;
 			};

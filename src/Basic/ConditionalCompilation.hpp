@@ -114,8 +114,8 @@
 
 // Specify the minimum supported OS X version
 #if defined(__APPLE_CC__) && defined(TARGET_OS_MAC) && TARGET_OS_MAC
-    #if (MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_12)
-        #error "Minimum required OS X version: macOS 10.12 or later"
+    #if (MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_14)
+        #error "Minimum required OS X version: macOS 10.14 or later"
     #endif
 #endif
 

@@ -241,7 +241,7 @@
 					../../dependencies/vendor/libpng,
 					../../dependencies/zlib,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				PRODUCT_NAME = png;
 				SKIP_INSTALL = YES;
 			};
@@ -259,7 +259,7 @@
 					../../dependencies/vendor/libpng,
 					../../dependencies/zlib,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				PRODUCT_NAME = png;
 				SKIP_INSTALL = YES;
 			};
