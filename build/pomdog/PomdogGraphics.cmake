@@ -62,8 +62,6 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_INC_DIR}/Graphics/Viewport.hpp
     ${POMDOG_SRC_DIR}/Graphics/Viewport.cpp
     ${POMDOG_INC_DIR}/Graphics/detail/ForwardDeclarations.hpp
-    ${POMDOG_INC_DIR}/Graphics/detail/EffectBinaryParameter.hpp
-    ${POMDOG_SRC_DIR}/Graphics/EffectBinaryParameter.cpp
     ${POMDOG_INC_DIR}/Graphics/ShaderCompilers/GLSLCompiler.hpp
     ${POMDOG_SRC_DIR}/Graphics/ShaderCompilers/GLSLCompiler.cpp
     ${POMDOG_INC_DIR}/Graphics/ShaderCompilers/HLSLCompiler.hpp

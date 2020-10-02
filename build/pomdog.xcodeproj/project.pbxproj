@@ -45,7 +45,6 @@
 		2A5B52A528596019ABF40617 /* GameHostCocoa.mm in Sources */ = {isa = PBXBuildFile; fileRef = D9C3D114115E6C3A619E8CF9 /* GameHostCocoa.mm */; };
 		2A792456A91A1FCD600F40C7 /* FloatingPointMatrix3x2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54A52D4906919EB149099EE8 /* FloatingPointMatrix3x2.cpp */; };
 		2C6A8330B306F09980C8EFE0 /* KeyboardState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7D5A98E477FB0CDE2089FBD /* KeyboardState.cpp */; };
-		30E3441F3697C393B219D621 /* EffectBinaryParameter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8EB459D4407794972524D9B2 /* EffectBinaryParameter.cpp */; };
 		3731B1EE2512BA451CA8E5D7 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB039FAE65C607A60DDBB49C /* OpenGL.framework */; };
 		373CF27D2193F65F489FA975 /* RasterizerStateGL4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6AB8FF0EE7B469693B84F20E /* RasterizerStateGL4.cpp */; };
 		378F438407DEF79BEA69E81C /* GraphicsCommandListImmediate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 13DFD59376FA25B8994E3399 /* GraphicsCommandListImmediate.cpp */; };
@@ -464,7 +463,6 @@
 		F29D13A39818F150CD4219B3 /* GraphicsCommandQueueImmediate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CA6CF7478713A3FBFCCEA57D /* GraphicsCommandQueueImmediate.cpp */; };
 		F5A8EACCAE89C0C9FC90E66C /* OpenGLContextCocoa.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6795D43CC878CEB35FA67CB3 /* OpenGLContextCocoa.mm */; };
 		F8CEA52C304DD8A4BBEAA042 /* ShaderBuilder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F597E6DCF0608CD6B745C3E /* ShaderBuilder.cpp */; };
-		FB449C29F6AE9D0C12E0B224 /* EffectBinaryParameter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8EB459D4407794972524D9B2 /* EffectBinaryParameter.cpp */; };
 		FC16EE3B4D5C9E58010BCD0A /* PipelineStateGL4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 860807EA5D77E832BD5DBCB4 /* PipelineStateGL4.cpp */; };
 		FD3FD836F0346B587EDB61DE /* GraphicsDeviceGL4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4753F82F9416C7DE5A5F2655 /* GraphicsDeviceGL4.cpp */; };
 		FFDFEBC545EB6A4B2D810F99 /* FloatingPointMatrix3x2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 54A52D4906919EB149099EE8 /* FloatingPointMatrix3x2.cpp */; };
@@ -634,7 +632,6 @@
 		44E7157E0EF45CD55CA45495 /* TimeSourceApple.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = TimeSourceApple.hpp; sourceTree = "<group>"; };
 		4668E6261D48ECD0F6DDBA02 /* NativeGraphicsContext.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = NativeGraphicsContext.hpp; sourceTree = "<group>"; };
 		46AC9E4A07CEF05AAD31AF13 /* ShaderGL4.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ShaderGL4.cpp; sourceTree = "<group>"; };
-		472B71A18B11B96B7616D6F4 /* EffectBinaryParameter.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = EffectBinaryParameter.hpp; sourceTree = "<group>"; };
 		4753F82F9416C7DE5A5F2655 /* GraphicsDeviceGL4.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GraphicsDeviceGL4.cpp; sourceTree = "<group>"; };
 		48BCAC6E648E7B5E3B773BA6 /* BoundingBox.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BoundingBox.cpp; sourceTree = "<group>"; };
 		4A0896AC410562918FA3EE18 /* ButtonState.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = ButtonState.hpp; sourceTree = "<group>"; };
@@ -721,7 +718,6 @@
 		8DAFC75DE55FD2BB8F10DEFC /* Blend.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = Blend.hpp; sourceTree = "<group>"; };
 		8E53A6628F00F2AA00C3BE67 /* NativeGraphicsCommandList.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = NativeGraphicsCommandList.hpp; sourceTree = "<group>"; };
 		8E64B8426534A3361C6E3CAE /* BoundingCircle.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = BoundingCircle.hpp; sourceTree = "<group>"; };
-		8EB459D4407794972524D9B2 /* EffectBinaryParameter.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = EffectBinaryParameter.cpp; sourceTree = "<group>"; };
 		8FA22D54D9116136E69EF2E3 /* SoundEffectAL.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SoundEffectAL.cpp; sourceTree = "<group>"; };
 		9261A5C8CC110C7A0805C129 /* BoundingBox.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = BoundingBox.hpp; sourceTree = "<group>"; };
 		92BBCCA3FF745A4ED038A309 /* IndexBuffer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = IndexBuffer.cpp; sourceTree = "<group>"; };
@@ -1643,7 +1639,6 @@
 		7F797CB4F7636F0DCAA0A0D4 /* detail */ = {
 			isa = PBXGroup;
 			children = (
-				472B71A18B11B96B7616D6F4 /* EffectBinaryParameter.hpp */,
 				4F8CDB08B6D6AB8EFFC8CF43 /* ForwardDeclarations.hpp */,
 			);
 			path = detail;
@@ -2049,7 +2044,6 @@
 			children = (
 				1DB41113717C230101DB829E /* ShaderCompilers */,
 				C7B6B9ADFEE35269D5B261C8 /* ConstantBuffer.cpp */,
-				8EB459D4407794972524D9B2 /* EffectBinaryParameter.cpp */,
 				5AEBA2A679E40483918C924A /* EffectReflection.cpp */,
 				DB4F85AB0B59334913B62A4B /* GraphicsCommandList.cpp */,
 				37D0464D1E5DE9AC99F9A5E4 /* GraphicsCommandQueue.cpp */,
@@ -2871,7 +2865,6 @@
 				D7334E23228AEC1300232225 /* RetroCrtEffect.cpp in Sources */,
 				D7408D2E237274C4007E101E /* SkinLoader.cpp in Sources */,
 				56943E805DA5A66B2B412B6E /* ConstantBuffer.cpp in Sources */,
-				30E3441F3697C393B219D621 /* EffectBinaryParameter.cpp in Sources */,
 				B6BD5FE552C47288CCEB50D4 /* EffectReflection.cpp in Sources */,
 				A93CA6501D92F34E00B65171 /* ImmediateScheduler.cpp in Sources */,
 				A997F6F81CAEFC4800926392 /* EffectReflectionMetal.mm in Sources */,
@@ -3097,7 +3090,6 @@
 				D7334E24228AEC1300232225 /* RetroCrtEffect.cpp in Sources */,
 				D7408D2F237274C4007E101E /* SkinLoader.cpp in Sources */,
 				712667FE9F33A8F7581022FC /* ConstantBuffer.cpp in Sources */,
-				FB449C29F6AE9D0C12E0B224 /* EffectBinaryParameter.cpp in Sources */,
 				054132B7E4436F540059F098 /* EffectReflection.cpp in Sources */,
 				A93CA6511D92F34E00B65171 /* ImmediateScheduler.cpp in Sources */,
 				A997F6F91CAEFC4800926392 /* EffectReflectionMetal.mm in Sources */,
