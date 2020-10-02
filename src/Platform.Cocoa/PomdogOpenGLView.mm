@@ -233,23 +233,6 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     }
 }
 
-- (void)lockFocus
-{
-    [super lockFocus];
-
-    if (!openGLContext) {
-        return;
-    }
-
-    openGLContext->Lock();
-    const auto nativeContext = openGLContext->GetNativeOpenGLContext();
-    if ([nativeContext view] != self) {
-        [nativeContext setView:self];
-    }
-    openGLContext->MakeCurrent();
-    openGLContext->Unlock();
-}
-
 // MARK: - View Event Handling
 
 - (void)viewWillStartLiveResize
