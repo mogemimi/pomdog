@@ -1,7 +1,6 @@
 target_sources(pomdog_static PRIVATE
     # NOTE: Utility
     ${POMDOG_SRC_DIR}/Utility/AlignedNew.hpp
-    ${POMDOG_INC_DIR}/Utility/Any.hpp
     ${POMDOG_INC_DIR}/Utility/Assert.hpp
     ${POMDOG_INC_DIR}/Utility/detail/CRC32.hpp
     ${POMDOG_SRC_DIR}/Utility/CRC32.cpp

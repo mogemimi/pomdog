@@ -725,7 +725,6 @@
 		94B88FDB085BF0802CB94273 /* FloatingPointVector2.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = FloatingPointVector2.hpp; sourceTree = "<group>"; };
 		9524A580BCEF4C5E9F56EB43 /* AudioClipLoader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AudioClipLoader.cpp; sourceTree = "<group>"; };
 		95A9AA9F5E520A294039FF38 /* PomdogOpenGLView.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = PomdogOpenGLView.mm; sourceTree = "<group>"; };
-		97BB80D15705D98F76D28396 /* Any.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = Any.hpp; sourceTree = "<group>"; };
 		996E32EF3AA885F9BB9412A2 /* GraphicsDeviceGL4.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = GraphicsDeviceGL4.hpp; sourceTree = "<group>"; };
 		9AB649441250ACD876E6EFA4 /* ConstantBuffer.hpp */ = {isa = PBXFileReference; lastKnownFileType = text; path = ConstantBuffer.hpp; sourceTree = "<group>"; };
 		9C362E5974D2BDFA88D4823E /* libpomdog.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpomdog.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1312,7 +1311,6 @@
 			isa = PBXGroup;
 			children = (
 				DB8672007B126823189581CA /* detail */,
-				97BB80D15705D98F76D28396 /* Any.hpp */,
 				AC349E78729FC3024C1BC5D9 /* Assert.hpp */,
 				D7703E0F22FCB28800442403 /* Errors.hpp */,
 				31FBEAA10D334ADAB5DBA52F /* Exception.hpp */,

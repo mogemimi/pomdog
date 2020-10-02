@@ -68,7 +68,6 @@
 		A90B099F1C25A774006E749D /* HelpersTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63C0EEE2389B31A820E16FC6 /* HelpersTest.cpp */; };
 		A90B09A01C25A774006E749D /* ScopedConnectionTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0CE270B535A446A0D84F83E4 /* ScopedConnectionTest.cpp */; };
 		A90B09A11C25A774006E749D /* SignalTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7CE69F5DD42360EB98DFF3D /* SignalTest.cpp */; };
-		A90B09A21C25A774006E749D /* AnyTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 77663FF3E685ADC8A75D0FD7 /* AnyTest.cpp */; };
 		A90B09A31C25A774006E749D /* CRC32Test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 88F7365A44BD5B233D38B9E8 /* CRC32Test.cpp */; };
 		A90B09A51C25A774006E749D /* StringHelperTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 688D76EAF77908A3BB3B8E58 /* StringHelperTest.cpp */; };
 		A90B09AA1C25A774006E749D /* AudioToolBox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF2591B788324D90FD154981 /* AudioToolBox.framework */; };
@@ -122,7 +121,6 @@
 		D9A0B1F8D2EEDA3FAEB1189C /* BoundingSphereTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9B0A27C53B61D53FB2C8FCF9 /* BoundingSphereTest.cpp */; };
 		DE960EA2AD22C5A8FA2877FC /* QuaternionTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4BCA9759FC4E3E6735E7531D /* QuaternionTest.cpp */; };
 		DE967E47909AFDBEEFB99607 /* GameClockTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DFD17C83A321AA8BC76DFA4E /* GameClockTest.cpp */; };
-		DFE8014D0200C170A0A7C358 /* AnyTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 77663FF3E685ADC8A75D0FD7 /* AnyTest.cpp */; };
 		E10BE80AEEB8E18B2538BE38 /* EventTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3E74D586978261F7016582C0 /* EventTest.cpp */; };
 		E1E487ED4722D7527BC63C12 /* KeysTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA8FF4E1E145E644B6DCBF5B /* KeysTest.cpp */; };
 		F98236F7B7C5D000B590C534 /* BoundingBoxTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E103ADD5CEE2DD6ED7F47820 /* BoundingBoxTest.cpp */; };
@@ -195,7 +193,6 @@
 		70DCE2E0050E8DDDF4055A97 /* Point3DTest.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Point3DTest.cpp; sourceTree = "<group>"; };
 		71B8B282D41A48D9B91FA98A /* LogChannelTest.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LogChannelTest.cpp; sourceTree = "<group>"; };
 		74463074A00D21F96D1233ED /* LogTest.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LogTest.cpp; sourceTree = "<group>"; };
-		77663FF3E685ADC8A75D0FD7 /* AnyTest.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AnyTest.cpp; sourceTree = "<group>"; };
 		793253BD07364C31B209B99C /* Matrix3x2Test.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Matrix3x2Test.cpp; sourceTree = "<group>"; };
 		7BE654D231E2A773E422E584 /* ColorTest.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ColorTest.cpp; sourceTree = "<group>"; };
 		8740D20FB4E0A88300F8C2A5 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
@@ -460,7 +457,6 @@
 		E25FC77762012E4D42007B49 /* Utility */ = {
 			isa = PBXGroup;
 			children = (
-				77663FF3E685ADC8A75D0FD7 /* AnyTest.cpp */,
 				88F7365A44BD5B233D38B9E8 /* CRC32Test.cpp */,
 				D7703E0622FCB23400442403 /* ErrorsTest.cpp */,
 				D719A51B2348134900C1868B /* PathHelperTest.cpp */,
@@ -650,7 +646,6 @@
 				6C7A6F69812868116B079288 /* HelpersTest.cpp in Sources */,
 				BAF063DC0F2785FEA8874D59 /* ScopedConnectionTest.cpp in Sources */,
 				AC82087613EF8055F7E48199 /* SignalTest.cpp in Sources */,
-				DFE8014D0200C170A0A7C358 /* AnyTest.cpp in Sources */,
 				0CF0D48D88520AB807097760 /* CRC32Test.cpp in Sources */,
 				4C0C4CC3655F3CFB6B5028DD /* StringHelperTest.cpp in Sources */,
 				D702F08822FD8C1B00886A78 /* ArrayViewTest.cpp in Sources */,
@@ -708,7 +703,6 @@
 				A90B099F1C25A774006E749D /* HelpersTest.cpp in Sources */,
 				A90B09A01C25A774006E749D /* ScopedConnectionTest.cpp in Sources */,
 				A90B09A11C25A774006E749D /* SignalTest.cpp in Sources */,
-				A90B09A21C25A774006E749D /* AnyTest.cpp in Sources */,
 				A90B09A31C25A774006E749D /* CRC32Test.cpp in Sources */,
 				A90B09A51C25A774006E749D /* StringHelperTest.cpp in Sources */,
 				D702F08922FD8C1B00886A78 /* ArrayViewTest.cpp in Sources */,
