@@ -10,6 +10,7 @@ The following software is required in order to create and build the Pomdog game 
   - [Ninja](https://ninja-build.org/)
   - Clang or GCC
   - For more details about installation of build requirements, please see [Setting Up Development Environment on Ubuntu](Setting-Up-Development-Environment-on-Ubuntu.md).
+  - Docker Images: [Ubuntu](https://hub.docker.com/r/mogemimi/gamedev-ubuntu) and [Archlinux](https://hub.docker.com/r/mogemimi/gamedev-archlinux/)
 - For Windows:
   - Visual Studio
 - For macOS:
@@ -19,17 +20,17 @@ The following software is required in order to create and build the Pomdog game 
 
 - CMake 3.16 and later
 - Linux
-  - Clang >= 8.0
+  - Clang >= 11.0
   - GCC >= 8.3
 - Windows
   - Visual Studio 2019 or newer
 - macOS
-  - Xcode 9.2 or newer
+  - Xcode 11.3 or newer
 
 ## Runtime requirements
 
 - Linux
-  - Ubuntu 19.04 or Archlinux
+  - Ubuntu 20.04 or Archlinux
   - OpenGL 4.1+
   - OpenAL
 - Windows
