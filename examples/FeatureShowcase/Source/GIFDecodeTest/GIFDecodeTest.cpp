@@ -3,6 +3,7 @@
 #include <Pomdog/Experimental/Image/GIFLoader.hpp>
 #include <Pomdog/Experimental/TexturePacker/TextureAtlasGenerator.hpp>
 #include <Pomdog/Experimental/Tween/EasingHelper.hpp>
+#include <cstdint>
 #include <random>
 
 namespace FeatureShowcase {
@@ -90,7 +91,7 @@ void GIFDecodeTest::Initialize()
         std::mt19937 random(std::random_device{}());
         std::uniform_real_distribution<float> scaleDist(1.0f, 2.0f);
         std::uniform_int_distribution<int> intDist(0, static_cast<int>(textureAtlas.regions.size()) - 1);
-        std::uniform_int_distribution<uint8_t> colorDist(200, 255);
+        std::uniform_int_distribution<int> colorDist(200, 255);
 
         const auto scale = scaleDist(random);
         const auto reverse = ((intDist(random) % 2 == 0) ? -1.0f : 1.0f);
@@ -100,9 +101,9 @@ void GIFDecodeTest::Initialize()
         sprite.Scale.X = scale * reverse;
         sprite.Scale.Y = scale;
         sprite.StartFrameIndex = intDist(random);
-        sprite.Color.R = colorDist(random);
-        sprite.Color.G = colorDist(random);
-        sprite.Color.B = colorDist(random);
+        sprite.Color.R = static_cast<std::uint8_t>(colorDist(random));
+        sprite.Color.G = static_cast<std::uint8_t>(colorDist(random));
+        sprite.Color.B = static_cast<std::uint8_t>(colorDist(random));
         sprite.Color.A = 255;
         sprites.push_back(std::move(sprite));
     });
@@ -120,7 +121,7 @@ void GIFDecodeTest::Draw()
     RenderPass pass;
     pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue.ToVector4()};
     pass.ClearDepth = 1.0f;
-    pass.ClearStencil = 0;
+    pass.ClearStencil = static_cast<std::uint8_t>(0);
     pass.Viewport = viewport;
     pass.ScissorRect = viewport.GetBounds();
 
@@ -128,8 +129,8 @@ void GIFDecodeTest::Draw()
     commandList->SetRenderPass(std::move(pass));
 
     auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
-        presentationParameters.BackBufferWidth,
-        presentationParameters.BackBufferHeight,
+        static_cast<float>(presentationParameters.BackBufferWidth),
+        static_cast<float>(presentationParameters.BackBufferHeight),
         0.0f,
         100.0f);
 

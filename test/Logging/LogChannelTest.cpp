@@ -130,11 +130,11 @@ TEST_CASE("LogChannel", "[LogChannel]")
             message = entry.Message;
         });
 
-        constexpr auto facts = "Chuck Norris's keyboard has an F13 key";
+        constexpr std::string_view facts = "Chuck Norris's keyboard has an F13 key";
 
         auto ResetMessageAndSendLog = [&](LogLevel verbosity) {
             message.clear();
-            channel.Log(facts, verbosity);
+            channel.Log(std::string(facts), verbosity);
         };
 
         channel.SetLevel(LogLevel::Critical);

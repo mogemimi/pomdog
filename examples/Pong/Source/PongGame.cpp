@@ -325,10 +325,10 @@ void PongGame::Draw()
         // NOTE: Draw background
         {
             // Rectangle outline
-            auto p1 = Vector2(gameFieldSize.GetLeft(), gameFieldSize.GetBottom());
-            auto p2 = Vector2(gameFieldSize.GetLeft(), gameFieldSize.GetTop());
-            auto p3 = Vector2(gameFieldSize.GetRight(), gameFieldSize.GetTop());
-            auto p4 = Vector2(gameFieldSize.GetRight(), gameFieldSize.GetBottom());
+            auto p1 = Vector2(static_cast<float>(gameFieldSize.GetLeft()), static_cast<float>(gameFieldSize.GetBottom()));
+            auto p2 = Vector2(static_cast<float>(gameFieldSize.GetLeft()), static_cast<float>(gameFieldSize.GetTop()));
+            auto p3 = Vector2(static_cast<float>(gameFieldSize.GetRight()), static_cast<float>(gameFieldSize.GetTop()));
+            auto p4 = Vector2(static_cast<float>(gameFieldSize.GetRight()), static_cast<float>(gameFieldSize.GetBottom()));
             primitiveBatch->DrawLine(p1, p2, Color::White, 2.0f);
             primitiveBatch->DrawLine(p2, p3, Color::White, 2.0f);
             primitiveBatch->DrawLine(p3, p4, Color::White, 2.0f);

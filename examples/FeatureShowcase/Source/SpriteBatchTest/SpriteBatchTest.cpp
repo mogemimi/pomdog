@@ -1,5 +1,6 @@
 #include "SpriteBatchTest.hpp"
 #include <Pomdog/Experimental/Tween/EasingHelper.hpp>
+#include <cstdint>
 #include <random>
 
 namespace FeatureShowcase {
@@ -53,7 +54,7 @@ void SpriteBatchTest::Initialize()
 
         std::mt19937 random(std::random_device{}());
         std::uniform_real_distribution<float> scaleDist(1.0f, 2.0f);
-        std::uniform_int_distribution<uint8_t> colorDist(160, 255);
+        std::uniform_int_distribution<int> colorDist(160, 255);
 
         const auto scale = scaleDist(random);
 
@@ -61,9 +62,9 @@ void SpriteBatchTest::Initialize()
         sprite.Position = MathHelper::ToVector2(pos);
         sprite.Scale.X = scale;
         sprite.Scale.Y = scale;
-        sprite.Color.R = colorDist(random);
-        sprite.Color.G = colorDist(random);
-        sprite.Color.B = colorDist(random);
+        sprite.Color.R = static_cast<std::uint8_t>(colorDist(random));
+        sprite.Color.G = static_cast<std::uint8_t>(colorDist(random));
+        sprite.Color.B = static_cast<std::uint8_t>(colorDist(random));
         sprite.Color.A = 255;
         sprites.push_back(std::move(sprite));
     });
