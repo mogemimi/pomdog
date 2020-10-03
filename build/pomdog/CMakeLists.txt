@@ -262,65 +262,78 @@ target_compile_definitions(pomdog_static PRIVATE
 )
 
 target_compile_options(pomdog_static PRIVATE
-  # Clang
-  $<$<OR:$<CXX_COMPILER_ID:Clang>,$<STREQUAL:${CMAKE_GENERATOR},Xcode>>:
-    -Wcomma
-    -Wextra-semi
-    -Wimplicit-fallthrough
-    -Wmost
-    -Wmove
-    -Wnewline-eof
+    # Clang and GCC
+    $<$<CXX_COMPILER_ID:Clang,AppleClang,GNU>:
+        -Wall
+        -Werror
+        -Wnon-virtual-dtor
+        $<$<CONFIG:Debug>:-g;-O0>
+        $<$<CONFIG:Release>:-O3>
 
-    # FIXME: Use -Wextra instead of the following options.
-    -Wignored-qualifiers
-    -Winitializer-overrides
-    -Wmissing-field-initializers
-    -Wmissing-method-return-type
-    -Wsemicolon-before-method-body
-    -Wsign-compare
-    # -Wunused-parameter
-  >
-  # GCC
-  $<$<CXX_COMPILER_ID:GNU>:
-    -pedantic
+        # excluding clang-cl
+        $<$<NOT:$<BOOL:MSVC>>:
+            -pedantic
+            -pedantic-errors
+            -fvisibility=hidden
+        >
+    >
+    # Clang
+    $<$<CXX_COMPILER_ID:Clang,AppleClang>:
+        -Wcomma
+        -Wextra-semi
+        -Wimplicit-fallthrough
+        -Wmost
+        -Wmove
+        -Wnewline-eof
 
-    # FIXME: Use -Wextra instead of the following options.
-    -Wclobbered
-    -Wcast-function-type
-    -Wempty-body
-    -Wignored-qualifiers
-    -Wimplicit-fallthrough=3
-    -Wmissing-field-initializers
-    # -Wtype-limits
-    -Wuninitialized
-    -Wshift-negative-value
-  >
-  # Clang and GCC
-  $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>,$<STREQUAL:${CMAKE_GENERATOR},Xcode>>:
-    -Wall
-    -Werror
-    -Wnon-virtual-dtor
-    $<$<CONFIG:Debug>:-g;-O0>
-    $<$<CONFIG:Release>:-O3>
-  >
-  # MSVC
-  $<$<CXX_COMPILER_ID:MSVC>:
-    # NOTE: See https://docs.microsoft.com/en-us/cpp/preprocessor/compiler-warnings-that-are-off-by-default
-    /W4
-    /WX
-    /we4263
-    /we4264
-    /we4266
-    /we4287
-    /we4289
-    /we4412
-    /we4431
-    /we4686
-    /we4928
-    /we4987
-    $<$<CONFIG:Debug>:/Od;/MTd>
-    $<$<CONFIG:Release>:/O2;/Ob2;/MT>
-  >
+        # FIXME: Use -Wextra instead of the following options.
+        -Wignored-qualifiers
+        -Winitializer-overrides
+        -Wmissing-field-initializers
+        -Wmissing-method-return-type
+        -Wsemicolon-before-method-body
+        -Wsign-compare
+        # -Wunused-parameter
+
+        -Wno-c++98-compat
+        -Wno-c++98-compat-pedantic
+        -Wno-c++98-compat-bind-to-temporary-copy
+        -Wno-c++98-compat-local-type-template-args
+        -Wno-padded
+    >
+    # GCC
+    $<$<CXX_COMPILER_ID:GNU>:
+        # FIXME: Use -Wextra instead of the following options.
+        -Wclobbered
+        -Wcast-function-type
+        -Wempty-body
+        -Wignored-qualifiers
+        -Wimplicit-fallthrough=3
+        -Wmissing-field-initializers
+        # -Wtype-limits
+        -Wuninitialized
+        -Wshift-negative-value
+    >
+    # MSVC
+    $<$<CXX_COMPILER_ID:MSVC>:
+        # NOTE: See https://docs.microsoft.com/en-us/cpp/preprocessor/compiler-warnings-that-are-off-by-default
+        /W4
+        /WX
+        /we4263
+        /we4264
+        /we4266
+        /we4287
+        /we4289
+        /we4412
+        /we4431
+        /we4686
+        /we4928
+        /we4987
+        /std:c++latest
+        /permissive-
+        $<$<CONFIG:Debug>:/Od;/MTd>
+        $<$<CONFIG:Release>:/O2;/Ob2;/MT>
+    >
 )
 
 # NOTE: For dynamic library

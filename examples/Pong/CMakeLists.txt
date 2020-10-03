@@ -71,8 +71,14 @@ target_compile_definitions(${PRODUCT_NAME} PRIVATE
 )
 
 target_compile_options(${PRODUCT_NAME} PRIVATE
+    # Clang and GCC
+    $<$<CXX_COMPILER_ID:Clang,AppleClang,GNU>:
+        -Werror
+        $<$<CONFIG:Debug>:-g;-O0>
+        $<$<CONFIG:Release>:-O3>
+    >
     # Clang
-    $<$<OR:$<CXX_COMPILER_ID:Clang>,$<STREQUAL:${CMAKE_GENERATOR},Xcode>>:
+    $<$<CXX_COMPILER_ID:Clang,AppleClang>:
         -Wcomma
         -Wextra-semi
         -Wimplicit-fallthrough
@@ -85,15 +91,10 @@ target_compile_options(${PRODUCT_NAME} PRIVATE
         -pedantic
         -Wimplicit-fallthrough=3
     >
-    # Clang and GCC
-    $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>,$<STREQUAL:${CMAKE_GENERATOR},Xcode>>:
-        -Werror
-        $<$<CONFIG:Debug>:-g;-O0>
-        $<$<CONFIG:Release>:-O3>
-    >
     # MSVC
     $<$<CXX_COMPILER_ID:MSVC>:
         /W4
+        /std:c++latest
         $<$<CONFIG:Debug>:/Od;/MTd>
         $<$<CONFIG:Release>:/O2;/Ob2;/MT>
         $<$<CONFIG:Release>:/GL> # NOTE: For LTO build
