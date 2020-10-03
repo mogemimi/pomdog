@@ -103,8 +103,8 @@ target_include_directories(mbedtls PRIVATE
 )
 
 target_compile_definitions(mbedtls PRIVATE
-    $<$<CONFIG:DEBUG>:_DEBUG>
-    $<$<CONFIG:RELEASE>:NDEBUG>
+    $<$<CONFIG:Debug>:_DEBUG>
+    $<$<CONFIG:Release>:NDEBUG>
     $<$<PLATFORM_ID:Windows>:
         WIN32
         _WINDOWS
@@ -117,8 +117,8 @@ target_compile_definitions(mbedtls PRIVATE
 target_compile_options(mbedtls PRIVATE
     $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>,$<STREQUAL:${CMAKE_GENERATOR},Xcode>>:
         -Wno-implicit-function-declaration
-        $<$<CONFIG:DEBUG>:-g;-O0>
-        $<$<CONFIG:RELEASE>:-O3>
+        $<$<CONFIG:Debug>:-g;-O0>
+        $<$<CONFIG:Release>:-O3>
     >
     $<$<CXX_COMPILER_ID:MSVC>:
         /nologo
@@ -128,8 +128,8 @@ target_compile_options(mbedtls PRIVATE
         /GF
         /Gy
         /GS-
-        $<$<CONFIG:DEBUG>:/MTd>
-        $<$<CONFIG:RELEASE>:/MT>
+        $<$<CONFIG:Debug>:/MTd>
+        $<$<CONFIG:Release>:/MT>
     >
 )
 

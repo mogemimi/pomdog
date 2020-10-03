@@ -54,10 +54,9 @@ target_sources(pomdog_static PRIVATE
 
     $<$<PLATFORM_ID:Windows>:
         # NOTE: Platform.Win32
+        ${POMDOG_SRC_DIR}/Platform.Win32/Bootstrap.cpp
         ${POMDOG_INC_DIR}/Platform/Win32/Bootstrap.hpp
         ${POMDOG_INC_DIR}/Platform/Win32/BootstrapSettingsWin32.hpp
-        ${POMDOG_INC_DIR}/Platform/Win32/PrerequisitesWin32.hpp
-        ${POMDOG_SRC_DIR}/Platform.Win32/Bootstrap.cpp
         ${POMDOG_SRC_DIR}/Platform.Win32/GameHostWin32.cpp
         ${POMDOG_SRC_DIR}/Platform.Win32/GameHostWin32.hpp
         ${POMDOG_SRC_DIR}/Platform.Win32/GameWindowWin32.cpp
@@ -67,6 +66,7 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/Platform.Win32/KeyboardWin32.hpp
         ${POMDOG_SRC_DIR}/Platform.Win32/MouseWin32.cpp
         ${POMDOG_SRC_DIR}/Platform.Win32/MouseWin32.hpp
+        ${POMDOG_INC_DIR}/Platform/Win32/PrerequisitesWin32.hpp
         ${POMDOG_SRC_DIR}/Platform.Win32/TimeSourceWin32.cpp
         ${POMDOG_SRC_DIR}/Platform.Win32/TimeSourceWin32.hpp
     >

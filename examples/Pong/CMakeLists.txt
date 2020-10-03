@@ -31,9 +31,9 @@ target_sources(${PRODUCT_NAME} PRIVATE
 
     # On Mac
     $<$<PLATFORM_ID:Darwin>:
-        Platform.Cocoa/main.mm
         Platform.Cocoa/AppDelegate.h
         Platform.Cocoa/AppDelegate.mm
+        Platform.Cocoa/main.mm
     >
 
     # On Linux
@@ -43,9 +43,9 @@ target_sources(${PRODUCT_NAME} PRIVATE
 
     # On Windows
     $<$<PLATFORM_ID:Windows>:
+        Platform.Win32/game.rc
         Platform.Win32/main.cpp
         Platform.Win32/Resource.hpp
-        Platform.Win32/game.rc
     >
 )
 
@@ -60,8 +60,8 @@ target_include_directories(${PRODUCT_NAME} PRIVATE
 )
 
 target_compile_definitions(${PRODUCT_NAME} PRIVATE
-    $<$<CONFIG:DEBUG>:DEBUG>
-    $<$<CONFIG:RELEASE>:NDEBUG>
+    $<$<CONFIG:Debug>:DEBUG>
+    $<$<CONFIG:Release>:NDEBUG>
 
     # On Windows
     $<$<PLATFORM_ID:Windows>:
@@ -88,14 +88,15 @@ target_compile_options(${PRODUCT_NAME} PRIVATE
     # Clang and GCC
     $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>,$<STREQUAL:${CMAKE_GENERATOR},Xcode>>:
         -Werror
-        $<$<CONFIG:DEBUG>:-g;-O0>
-        $<$<CONFIG:RELEASE>:-O3>
+        $<$<CONFIG:Debug>:-g;-O0>
+        $<$<CONFIG:Release>:-O3>
     >
     # MSVC
     $<$<CXX_COMPILER_ID:MSVC>:
         /W4
-        $<$<CONFIG:DEBUG>:/Od;/MTd>
-        $<$<CONFIG:RELEASE>:/O2;/Ob2;/MT>
+        $<$<CONFIG:Debug>:/Od;/MTd>
+        $<$<CONFIG:Release>:/O2;/Ob2;/MT>
+        $<$<CONFIG:Release>:/GL> # NOTE: For LTO build
     >
 )
 

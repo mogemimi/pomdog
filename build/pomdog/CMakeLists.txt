@@ -184,15 +184,12 @@ target_link_libraries(pomdog_static INTERFACE
         winmm.lib
         shell32.lib
         ws2_32.lib
-        # winspool.lib
-        # comdlg32.lib
-        # advapi32.lib
-        # oleaut32.lib
-        # uuid.lib
-        # odbc32.lib
-        # odbccp32.lib
-        $<$<BOOL:${POMDOG_USE_GL4}>: opengl32.lib>
-        $<$<BOOL:${POMDOG_USE_XAUDIO2}>: xaudio2.lib>
+        $<$<BOOL:${POMDOG_USE_GL4}>:
+            opengl32.lib # for OpenGL on Windows
+        >
+        $<$<BOOL:${POMDOG_USE_XAUDIO2}>:
+            xaudio2.lib # for XAudio2
+        >
         $<$<BOOL:${POMDOG_USE_DIRECT3D11}>:
             dxgi.lib
             d3d11.lib
@@ -241,8 +238,8 @@ target_link_options(pomdog_static PRIVATE
 )
 
 target_compile_definitions(pomdog_static PRIVATE
-    $<$<CONFIG:DEBUG>:_DEBUG;DEBUG=1>
-    $<$<CONFIG:RELEASE>:NDEBUG>
+    $<$<CONFIG:Debug>:_DEBUG;DEBUG=1>
+    $<$<CONFIG:Release>:NDEBUG>
     $<$<PLATFORM_ID:Windows>:
         _WIN32_WINNT=0x0602 # Windows 8 or later
         WIN32_LEAN_AND_MEAN
@@ -295,8 +292,8 @@ target_compile_options(pomdog_static PRIVATE
     -Wall
     -Werror
     -Wnon-virtual-dtor
-    $<$<CONFIG:DEBUG>:-g;-O0>
-    $<$<CONFIG:RELEASE>:-O3>
+    $<$<CONFIG:Debug>:-g;-O0>
+    $<$<CONFIG:Release>:-O3>
   >
   # MSVC
   $<$<CXX_COMPILER_ID:MSVC>:
@@ -313,8 +310,8 @@ target_compile_options(pomdog_static PRIVATE
     /we4686
     /we4928
     /we4987
-    $<$<CONFIG:DEBUG>:/Od;/MTd>
-    $<$<CONFIG:RELEASE>:/O2;/Ob2;/MT>
+    $<$<CONFIG:Debug>:/Od;/MTd>
+    $<$<CONFIG:Release>:/O2;/Ob2;/MT>
   >
 )
 

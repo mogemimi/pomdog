@@ -40,8 +40,8 @@ target_include_directories(png PRIVATE
 )
 
 target_compile_definitions(png PRIVATE
-  $<$<CONFIG:DEBUG>:_DEBUG>
-  $<$<CONFIG:RELEASE>:NDEBUG>
+  $<$<CONFIG:Debug>:_DEBUG>
+  $<$<CONFIG:Release>:NDEBUG>
   $<$<PLATFORM_ID:Windows>:
     WIN32
     _WINDOWS
@@ -50,8 +50,8 @@ target_compile_definitions(png PRIVATE
 
 target_compile_options(png PRIVATE
   $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>,$<STREQUAL:${CMAKE_GENERATOR},Xcode>>:
-    $<$<CONFIG:DEBUG>:-g;-O0>
-    $<$<CONFIG:RELEASE>:-O3>
+    $<$<CONFIG:Debug>:-g;-O0>
+    $<$<CONFIG:Release>:-O3>
   >
   $<$<CXX_COMPILER_ID:MSVC>:
     /nologo
@@ -66,8 +66,8 @@ target_compile_options(png PRIVATE
     /wd"4996"
     /wd"4127"
     /Zc:wchar_t-
-    $<$<CONFIG:DEBUG>:/MTd>
-    $<$<CONFIG:RELEASE>:/MT>
+    $<$<CONFIG:Debug>:/MTd>
+    $<$<CONFIG:Release>:/MT>
   >
 )
 

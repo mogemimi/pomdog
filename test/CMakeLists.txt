@@ -92,8 +92,8 @@ target_include_directories(PomdogTest PRIVATE
 )
 
 target_compile_definitions(PomdogTest PRIVATE
-    $<$<CONFIG:DEBUG>:_DEBUG;DEBUG=1>
-    $<$<CONFIG:RELEASE>:NDEBUG>
+    $<$<CONFIG:Debug>:_DEBUG;DEBUG=1>
+    $<$<CONFIG:Release>:NDEBUG>
 
     # On Windows
     $<$<PLATFORM_ID:Windows>:
@@ -120,15 +120,16 @@ target_compile_options(PomdogTest PRIVATE
     $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>,$<STREQUAL:${CMAKE_GENERATOR},Xcode>>:
         -Wall
         -Werror
-        $<$<CONFIG:DEBUG>:-g;-O0>
-        $<$<CONFIG:RELEASE>:-O3>
+        $<$<CONFIG:Debug>:-g;-O0>
+        $<$<CONFIG:Release>:-O3>
     >
     # MSVC
     $<$<CXX_COMPILER_ID:MSVC>:
         /W4
         /WX
-        $<$<CONFIG:DEBUG>:/Od;/MTd>
-        $<$<CONFIG:RELEASE>:/O2;/Ob2;/MT>
+        $<$<CONFIG:Debug>:/Od;/MTd>
+        $<$<CONFIG:Release>:/O2;/Ob2;/MT>
+        $<$<CONFIG:Release>:/GL> # NOTE: For LTO build
     >
 )
 

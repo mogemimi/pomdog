@@ -19,8 +19,8 @@ target_include_directories(glew_static PRIVATE
 
 target_compile_definitions(glew_static PRIVATE
   GLEW_STATIC
-  $<$<CONFIG:DEBUG>:_DEBUG>
-  $<$<CONFIG:RELEASE>:NDEBUG>
+  $<$<CONFIG:Debug>:_DEBUG>
+  $<$<CONFIG:Release>:NDEBUG>
   $<$<PLATFORM_ID:Windows>:
     WIN32
     _LIB
@@ -30,8 +30,8 @@ target_compile_definitions(glew_static PRIVATE
 
 target_compile_options(glew_static PRIVATE
   $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>,$<STREQUAL:${CMAKE_GENERATOR},Xcode>>:
-    $<$<CONFIG:DEBUG>:-g;-O0>
-    $<$<CONFIG:RELEASE>:-O3>
+    $<$<CONFIG:Debug>:-g;-O0>
+    $<$<CONFIG:Release>:-O3>
   >
   $<$<CXX_COMPILER_ID:MSVC>:
     /nologo
@@ -40,7 +40,7 @@ target_compile_options(glew_static PRIVATE
     /Ob1
     /GF
     /Gy
-    $<$<CONFIG:DEBUG>:/MTd>
-    $<$<CONFIG:RELEASE>:/MT>
+    $<$<CONFIG:Debug>:/MTd>
+    $<$<CONFIG:Release>:/MT>
   >
 )
