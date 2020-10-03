@@ -2,7 +2,7 @@
 
 [![Join the chat at https://gitter.im/mogemimi/pomdog](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/mogemimi/pomdog?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-Pomdog is an experimental game engine, written in C++17 or later, developed as a hobby.
+Pomdog is an experimental game engine, written in C++20 or later, developed as a hobby.
 It is open source and distributed under the [MIT License](http://opensource.org/licenses/MIT).
 
 * [Homepage](http://enginetrouble.net/pomdog)
@@ -22,7 +22,7 @@ Pomdog is available and supported on the following platforms:
 
 * macOS 10.14 and later [![Build Status](https://travis-ci.org/mogemimi/pomdog.svg?branch=master)](https://travis-ci.org/mogemimi/pomdog)
 * Windows 10 and later [![Build Status](https://ci.appveyor.com/api/projects/status/hywx5fmkrk7gpdpl/branch/master?svg=true)](https://ci.appveyor.com/project/mogemimi/pomdog/branch/master)
-* Linux (Ubuntu 19.04 and Arch Linux) [![wercker status](https://app.wercker.com/status/e7bab185762fa586284d832580e89561/s/master "wercker status")](https://app.wercker.com/project/bykey/e7bab185762fa586284d832580e89561)
+* Linux (Ubuntu 20.04 and Arch Linux) [![wercker status](https://app.wercker.com/status/e7bab185762fa586284d832580e89561/s/master "wercker status")](https://app.wercker.com/project/bykey/e7bab185762fa586284d832580e89561)
 
 Please refer to [Architecture](docs/Architecture.md) in the wiki for more details about the supported platforms and backends such as OpenGL, Metal, Vulkan, DirectX 11 and 12.
 
