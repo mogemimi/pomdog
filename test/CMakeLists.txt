@@ -231,6 +231,6 @@ set_target_properties(PomdogTest PROPERTIES
 )
 
 if(NOT POMDOG_BUILD_TARGET_ALL)
-    add_subdirectory(${POMDOG_DIR}/build/pomdog ${CMAKE_CURRENT_BINARY_DIR}/pomdog_build)
+    add_subdirectory(${POMDOG_DIR}/cmake/pomdog ${CMAKE_CURRENT_BINARY_DIR}/pomdog_build)
 endif()
 target_link_libraries(PomdogTest pomdog_static)

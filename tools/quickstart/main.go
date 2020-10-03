@@ -124,16 +124,16 @@ func createProject(config projectConfig) error {
 	if err := renameCMakefile(rootDir, config.Name, "CMakeLists.txt"); err != nil {
 		return errors.Wrapf(err, "failed to replace cmake path")
 	}
-	if err := renamePomdogCMakefile(rootDir, config.Name, "ThirdParty/pomdog/build/pomdog/CMakeLists.txt"); err != nil {
+	if err := renamePomdogCMakefile(rootDir, config.Name, "ThirdParty/pomdog/cmake/pomdog/CMakeLists.txt"); err != nil {
 		return errors.Wrapf(err, "failed to replace cmake path")
 	}
 
 	thirdPartyCMakeFiles := []string{
-		"ThirdParty/pomdog/build/dependencies/giflib/CMakeLists.txt",
-		"ThirdParty/pomdog/build/dependencies/glew/CMakeLists.txt",
-		"ThirdParty/pomdog/build/dependencies/libpng/CMakeLists.txt",
-		"ThirdParty/pomdog/build/dependencies/mbedtls/CMakeLists.txt",
-		"ThirdParty/pomdog/build/dependencies/zlib/CMakeLists.txt",
+		"ThirdParty/pomdog/cmake/dependencies/giflib/CMakeLists.txt",
+		"ThirdParty/pomdog/cmake/dependencies/glew/CMakeLists.txt",
+		"ThirdParty/pomdog/cmake/dependencies/libpng/CMakeLists.txt",
+		"ThirdParty/pomdog/cmake/dependencies/mbedtls/CMakeLists.txt",
+		"ThirdParty/pomdog/cmake/dependencies/zlib/CMakeLists.txt",
 	}
 	for _, f := range thirdPartyCMakeFiles {
 		if err := renameThirdPartyCMakefile(rootDir, config.Name, f); err != nil {
@@ -181,8 +181,8 @@ func copyTemplateFiles(sourceRoot, destRoot string) error {
 
 func copyFrameworkFiles(sourceRoot, destRoot string) error {
 	files := []string{
-		"build/dependencies",
-		"build/pomdog",
+		"cmake/dependencies",
+		"cmake/pomdog",
 		"include",
 		"src",
 		"LICENSE.md",

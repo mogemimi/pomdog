@@ -85,5 +85,5 @@ set_target_properties(png PROPERTIES
     XCODE_ATTRIBUTE_SKIP_INSTALL "YES"
 )
 
-add_subdirectory("${POMDOG_DIR}/build/dependencies/zlib" "${CMAKE_CURRENT_BINARY_DIR}/zlib_build")
+add_subdirectory("${POMDOG_DIR}/cmake/dependencies/zlib" "${CMAKE_CURRENT_BINARY_DIR}/zlib_build")
 target_link_libraries(png INTERFACE zlib)

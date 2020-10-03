@@ -133,15 +133,15 @@ set_target_properties(pomdog_static PROPERTIES
     >
 )
 
-add_subdirectory(${POMDOG_DIR}/build/dependencies/libpng "${CMAKE_CURRENT_BINARY_DIR}/libpng_build")
-add_subdirectory(${POMDOG_DIR}/build/dependencies/giflib "${CMAKE_CURRENT_BINARY_DIR}/giflib_build")
-add_subdirectory(${POMDOG_DIR}/build/dependencies/mbedtls "${CMAKE_CURRENT_BINARY_DIR}/mbedtls_build")
+add_subdirectory(${POMDOG_DIR}/cmake/dependencies/libpng "${CMAKE_CURRENT_BINARY_DIR}/libpng_build")
+add_subdirectory(${POMDOG_DIR}/cmake/dependencies/giflib "${CMAKE_CURRENT_BINARY_DIR}/giflib_build")
+add_subdirectory(${POMDOG_DIR}/cmake/dependencies/mbedtls "${CMAKE_CURRENT_BINARY_DIR}/mbedtls_build")
 
 if(POMDOG_USE_GL4 AND (POMDOG_TARGET_PLATFORM MATCHES "Linux"))
-    add_subdirectory(${POMDOG_DIR}/build/dependencies/glew "${CMAKE_CURRENT_BINARY_DIR}/glew_build")
+    add_subdirectory(${POMDOG_DIR}/cmake/dependencies/glew "${CMAKE_CURRENT_BINARY_DIR}/glew_build")
 endif()
 if(POMDOG_USE_GL4 AND (POMDOG_TARGET_PLATFORM MATCHES "Win32"))
-    add_subdirectory(${POMDOG_DIR}/build/dependencies/glew "${CMAKE_CURRENT_BINARY_DIR}/glew_build")
+    add_subdirectory(${POMDOG_DIR}/cmake/dependencies/glew "${CMAKE_CURRENT_BINARY_DIR}/glew_build")
 endif()
 
 target_include_directories(pomdog_static PRIVATE

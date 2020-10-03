@@ -32,7 +32,7 @@ To run the 'FeatureShowcase' application, use the following:
 ./build.cmake/examples/FeatureShowcase/FeatureShowcase
 ```
 
-After a complete build, you will find the `libpomdog.a` file in `build.cmake/build/pomdog` directory.
+After a complete build, you will find the `libpomdog.a` file in `build.cmake/cmake/pomdog` directory.
 
 ### Building with a custom toolchain
 
@@ -76,7 +76,7 @@ To build in debug mode, use `-configuration` option:
 xcodebuild -project Pomdog.xcodeproj -configuration Debug
 ```
 
-After a complete build, you will find the `libpomdog.a` file in `build.cmake/build/pomdog/Release` (also `build.cmake/build/pomdog/Debug`) directory.
+After a complete build, you will find the `libpomdog.a` file in `build.cmake/cmake/pomdog/Release` (also `build.cmake/cmake/pomdog/Debug`) directory.
 
 To run all unit tests, use:
 
