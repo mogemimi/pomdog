@@ -17,12 +17,8 @@ install:
 
 env:
   matrix:
-    - XCODE_PROJECT=build/PomdogTest.xcodeproj                      BUILD_CONFIG=Debug    TEST_APP=build/build/Debug/PomdogUnitTest
-    - XCODE_PROJECT=build/PomdogTest.xcodeproj                      BUILD_CONFIG=Release  TEST_APP=build/build/Release/PomdogUnitTest
-    - XCODE_PROJECT=examples/QuickStart/Builds/QuickStart.xcodeproj BUILD_CONFIG=Debug    TEST_APP=true
-    - XCODE_PROJECT=examples/QuickStart/Builds/QuickStart.xcodeproj BUILD_CONFIG=Release  TEST_APP=true
-    - XCODE_PROJECT=build.cmake/Pomdog.xcodeproj                    BUILD_CONFIG=Debug    TEST_APP=build.cmake/test/Debug/PomdogTest
-    - XCODE_PROJECT=build.cmake/Pomdog.xcodeproj                    BUILD_CONFIG=Release  TEST_APP=build.cmake/test/Release/PomdogTest
+    - XCODE_PROJECT=build.cmake/Pomdog.xcodeproj BUILD_CONFIG=Debug   TEST_APP=build.cmake/test/Debug/PomdogTest
+    - XCODE_PROJECT=build.cmake/Pomdog.xcodeproj BUILD_CONFIG=Release TEST_APP=build.cmake/test/Release/PomdogTest
 
 script:
   - mkdir build.cmake && cd build.cmake

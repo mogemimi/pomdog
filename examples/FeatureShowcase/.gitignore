@@ -16,9 +16,6 @@
 /build
 /ThirdParty/pomdog
 
-# Build output for Xcode
-/Builds/build
-
 # Xcode
 *.pbxuser
 !default.pbxuser

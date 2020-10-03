@@ -8,14 +8,6 @@
 /build.makefiles
 /docs/html
 
-# Build output for Xcode
-/build/build
-/build/dependencies/build
-/dependencies/build
-/examples/QuickStart/build
-/test/FrameworkTest/build
-/test/TestApp/build
-
 # CMake
 /build.cmake
 
