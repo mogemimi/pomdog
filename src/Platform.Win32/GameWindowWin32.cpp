@@ -1,6 +1,7 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "GameWindowWin32.hpp"
+#include "DarkMode.hpp"
 #include "../Application/SystemEvents.hpp"
 #include "Pomdog/Application/MouseCursor.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
@@ -76,7 +77,7 @@ void RegisterInputDevices(HWND windowHandle)
     }
 }
 
-} // unnamed namespace
+} // namespace
 
 class GameWindowWin32::Impl final {
 public:
@@ -208,6 +209,15 @@ GameWindowWin32::Impl::Impl(
         //POMDOG_THROW_EXCEPTION(ExceptionCode::RuntimeAssertionFailed,
         //    "Call to CreateWindow failed!",
         //    "Win32GameWindow::Impl::Initialize");
+    }
+
+    if (IsDarkMode()) {
+        if (auto err = UseImmersiveDarkMode(windowHandle, true); err != nullptr) {
+            ///@todo Not implemented
+            //POMDOG_THROW_EXCEPTION(ExceptionCode::RuntimeAssertionFailed,
+            //    "failed to use dark mode.",
+            //    "Win32GameWindow::Impl::Initialize");
+        }
     }
 
     ///@note See http://msdn.microsoft.com/ja-jp/library/ff485844(v=vs.85).aspx

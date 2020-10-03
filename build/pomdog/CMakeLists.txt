@@ -184,6 +184,14 @@ target_link_libraries(pomdog_static INTERFACE
         winmm.lib
         shell32.lib
         ws2_32.lib
+
+        # NOTE: Dark mode theme
+        UxTheme.lib
+        Dwmapi.lib
+
+        # NOTE: Windows version
+        Version.lib # NOTE: for GetFileVersionInfoSizeW()
+
         $<$<BOOL:${POMDOG_USE_GL4}>:
             opengl32.lib # for OpenGL on Windows
         >

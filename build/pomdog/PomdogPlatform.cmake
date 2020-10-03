@@ -57,6 +57,8 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/Platform.Win32/Bootstrap.cpp
         ${POMDOG_INC_DIR}/Platform/Win32/Bootstrap.hpp
         ${POMDOG_INC_DIR}/Platform/Win32/BootstrapSettingsWin32.hpp
+        ${POMDOG_SRC_DIR}/Platform.Win32/DarkMode.cpp
+        ${POMDOG_SRC_DIR}/Platform.Win32/DarkMode.hpp
         ${POMDOG_SRC_DIR}/Platform.Win32/GameHostWin32.cpp
         ${POMDOG_SRC_DIR}/Platform.Win32/GameHostWin32.hpp
         ${POMDOG_SRC_DIR}/Platform.Win32/GameWindowWin32.cpp
