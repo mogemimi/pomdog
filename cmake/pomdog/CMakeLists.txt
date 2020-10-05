@@ -136,6 +136,7 @@ set_target_properties(pomdog_static PROPERTIES
 add_subdirectory(${POMDOG_DIR}/cmake/dependencies/libpng "${CMAKE_CURRENT_BINARY_DIR}/libpng_build")
 add_subdirectory(${POMDOG_DIR}/cmake/dependencies/giflib "${CMAKE_CURRENT_BINARY_DIR}/giflib_build")
 add_subdirectory(${POMDOG_DIR}/cmake/dependencies/mbedtls "${CMAKE_CURRENT_BINARY_DIR}/mbedtls_build")
+add_subdirectory(${POMDOG_DIR}/cmake/dependencies/stb "${CMAKE_CURRENT_BINARY_DIR}/stb_build")
 
 if(POMDOG_USE_GL4 AND (POMDOG_TARGET_PLATFORM MATCHES "Linux"))
     add_subdirectory(${POMDOG_DIR}/cmake/dependencies/glew "${CMAKE_CURRENT_BINARY_DIR}/glew_build")
@@ -154,6 +155,7 @@ target_include_directories(pomdog_static PRIVATE
     ${POMDOG_DIR}/dependencies/stb
     ${POMDOG_DIR}/dependencies/vendor/libpng
     ${POMDOG_DIR}/dependencies/vendor/SDL_GameControllerDB
+    ${POMDOG_DIR}/dependencies/vendor/stb
 
     $<$<AND:$<PLATFORM_ID:Linux>,$<BOOL:${POMDOG_USE_X11}>>:
         /usr/X11R6/include
@@ -167,6 +169,7 @@ target_link_libraries(pomdog_static INTERFACE
     png
     giflib
     mbedtls
+    stb_static
 
     $<$<PLATFORM_ID:Linux>:
         # NOTE: Linux

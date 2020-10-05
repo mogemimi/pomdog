@@ -17,7 +17,6 @@
 #pragma clang diagnostic ignored "-Wcomma"
 #pragma clang diagnostic ignored "-Wimplicit-fallthrough"
 #endif
-#define STB_TRUETYPE_IMPLEMENTATION
 #include <stb_truetype.h>
 #if defined(__clang__)
 #pragma clang diagnostic pop
