@@ -8,6 +8,8 @@
 #include "../SoundSystem.OpenAL/SoundEffectAL.hpp"
 #elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
 #include "../SoundSystem.XAudio2/SoundEffectXAudio2.hpp"
+#else
+#error "Platform undefined or not supported."
 #endif
 
 #include "Pomdog/Audio/AudioClip.hpp"

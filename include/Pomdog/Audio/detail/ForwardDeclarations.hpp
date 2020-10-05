@@ -38,6 +38,8 @@ using NativeAudioClip = XAudio2::AudioClipXAudio2;
 using NativeAudioEngine = XAudio2::AudioEngineXAudio2;
 using NativeSoundEffect = XAudio2::SoundEffectXAudio2;
 
+#else
+#error "Platform undefined or not supported."
 #endif
 
 } // namespace Detail::SoundSystem

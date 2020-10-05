@@ -10,6 +10,8 @@
 // NOTE: nothing to do
 #elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
 #include "../Network.Win32/IOServiceWin32.hpp"
+#else
+#error "Platform undefined or not supported."
 #endif
 
 #include <utility>
@@ -31,6 +33,8 @@ std::shared_ptr<Error> IOService::Initialize()
     if (auto err = Detail::Win32::PrepareNetworkService(); err != nullptr) {
         return err;
     }
+#else
+#error "Platform undefined or not supported."
 #endif
     return nullptr;
 }
@@ -45,6 +49,8 @@ std::shared_ptr<Error> IOService::Shutdown()
     if (auto err = Detail::Win32::ShutdownNetworkService(); err != nullptr) {
         return err;
     }
+#else
+#error "Platform undefined or not supported."
 #endif
     return nullptr;
 }

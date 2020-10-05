@@ -29,6 +29,8 @@ using NativeTCPListener = TCPListenerWin32;
 using NativeTCPStream = TCPStreamWin32;
 using NativeUDPStream = UDPStreamWin32;
 
+#else
+#error "Platform undefined or not supported."
 #endif
 
 class TLSStreamMbedTLS;

@@ -10,6 +10,8 @@
 #elif defined(POMDOG_PLATFORM_WIN32) \
     || defined(POMDOG_PLATFORM_XBOX_ONE)
 #include "../../SoundSystem.XAudio2/AudioClipXAudio2.hpp"
+#else
+#error "Platform undefined or not supported."
 #endif
 
 #include "../../Basic/ConditionalCompilation.hpp"
@@ -261,6 +263,8 @@ Load(std::ifstream&& stream, std::size_t byteLength)
     auto nativeAudioClip = std::make_unique<AudioClipXAudio2>(
         std::move(audioData),
         std::move(waveFormatData));
+#else
+#error "Platform undefined or not supported."
 #endif
 
     auto audioClip = std::make_shared<AudioClip>(

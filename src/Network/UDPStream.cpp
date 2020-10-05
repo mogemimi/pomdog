@@ -7,6 +7,8 @@
 #include "../Network.POSIX/UDPStreamPOSIX.hpp"
 #elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
 #include "../Network.Win32/UDPStreamWin32.hpp"
+#else
+#error "Platform undefined or not supported."
 #endif
 #include "AddressParser.hpp"
 #include "Pomdog/Utility/Assert.hpp"
