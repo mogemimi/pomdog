@@ -175,7 +175,7 @@ std::vector<AudioDeviceDetails> EnumerateAudioDevices()
 } // namespace
 
 AudioEngineXAudio2::AudioEngineXAudio2()
-    : masteringVoice(nullptr)
+    : mainVoice(nullptr)
 {
     HRESULT hr = ::CoInitializeEx(nullptr, COINIT_MULTITHREADED);
     if (FAILED(hr)) {
@@ -234,7 +234,7 @@ AudioEngineXAudio2::AudioEngineXAudio2()
     deviceID = audioDevices.front().DeviceID.data();
 #endif
 
-    hr = xAudio2->CreateMasteringVoice(&masteringVoice, XAUDIO2_DEFAULT_CHANNELS,
+    hr = xAudio2->CreateMasteringVoice(&mainVoice, XAUDIO2_DEFAULT_CHANNELS,
         XAUDIO2_DEFAULT_SAMPLERATE, 0, deviceID, nullptr, AudioCategory_GameEffects);
 
     if (FAILED(hr)) {
@@ -246,9 +246,9 @@ AudioEngineXAudio2::AudioEngineXAudio2()
 
 AudioEngineXAudio2::~AudioEngineXAudio2()
 {
-    if (masteringVoice) {
-        masteringVoice->DestroyVoice();
-        masteringVoice = nullptr;
+    if (mainVoice) {
+        mainVoice->DestroyVoice();
+        mainVoice = nullptr;
     }
 
     if (xAudio2) {
@@ -257,19 +257,19 @@ AudioEngineXAudio2::~AudioEngineXAudio2()
     }
 }
 
-float AudioEngineXAudio2::GetMasterVolume() const
+float AudioEngineXAudio2::GetMainVolume() const
 {
     float volume = 0;
-    if (xAudio2 && masteringVoice != nullptr) {
-        masteringVoice->GetVolume(&volume);
+    if (xAudio2 && mainVoice != nullptr) {
+        mainVoice->GetVolume(&volume);
     }
     return volume;
 }
 
-void AudioEngineXAudio2::SetMasterVolume(float volumeIn)
+void AudioEngineXAudio2::SetMainVolume(float volumeIn)
 {
-    if (xAudio2 && masteringVoice != nullptr) {
-        masteringVoice->SetVolume(MathHelper::Saturate(volumeIn), XAUDIO2_COMMIT_NOW);
+    if (xAudio2 && mainVoice != nullptr) {
+        mainVoice->SetVolume(MathHelper::Saturate(volumeIn), XAUDIO2_COMMIT_NOW);
     }
 }
 

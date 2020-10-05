@@ -46,8 +46,8 @@ void AudioClipTest::Initialize()
         soundEffect2->SetVolume(1.0f);
     }
 
-    // NOTE: Set master audio volume.
-    audioEngine->SetMasterVolume(0.3f);
+    // NOTE: Set main audio volume.
+    audioEngine->SetMainVolume(0.3f);
 
     auto mouse = gameHost->GetMouse();
     connect(mouse->ButtonDown, [this](MouseButtons mouseButton) {

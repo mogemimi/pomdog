@@ -14,9 +14,9 @@ public:
     AudioEngineAL& operator=(const AudioEngineAL&) = delete;
     ~AudioEngineAL();
 
-    float GetMasterVolume() const;
+    float GetMainVolume() const;
 
-    void SetMasterVolume(float volume);
+    void SetMainVolume(float volume);
 
 private:
     ContextOpenAL context;

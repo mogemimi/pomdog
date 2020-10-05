@@ -30,8 +30,8 @@ void PongGame::Initialize()
     // NOTE: Set window name
     window->SetTitle("Pomdog Pong");
 
-    // NOTE: Set master volume
-    audioEngine->SetMasterVolume(0.4f);
+    // NOTE: Set main volume
+    audioEngine->SetMainVolume(0.4f);
 
     // NOTE: Create graphics command list
     commandList = std::make_shared<GraphicsCommandList>(*graphicsDevice);

@@ -15,13 +15,13 @@ public:
 
     IXAudio2* XAudio2Engine() const;
 
-    float GetMasterVolume() const;
+    float GetMainVolume() const;
 
-    void SetMasterVolume(float volume);
+    void SetMainVolume(float volume);
 
 private:
     Microsoft::WRL::ComPtr<IXAudio2> xAudio2;
-    IXAudio2MasteringVoice* masteringVoice;
+    IXAudio2MasteringVoice* mainVoice;
 };
 
 } // namespace Pomdog::Detail::SoundSystem::XAudio2
