@@ -3,13 +3,13 @@
 *.so
 .DS_Store
 /out/
-/build/Debug
-/build/Release
-/build.makefiles
 /docs/html
 
 # CMake
-/build.cmake
+/build/
+/build.cmake/
+/build.emscripten/
+/build.makefiles/
 
 # Visual Studio
 *.opendb
