@@ -25,6 +25,9 @@
 #elif defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
     // Windows
     #define POMDOG_PLATFORM_WIN32
+#elif defined(__EMSCRIPTEN__)
+    // Emscripten
+    #define POMDOG_PLATFORM_EMSCRIPTEN
 #elif defined(ANDROID) || defined(__ANDROID__)
     // Android OS
     #define POMDOG_PLATFORM_ANDROID

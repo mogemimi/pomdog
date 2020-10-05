@@ -56,6 +56,8 @@
 #   define POMDOG_ARCHITECTURE_MIPS
 #elif defined(__alpha__) || defined(__alpha)
 #   define POMDOG_ARCHITECTURE_ALPHA
+#elif defined(__EMSCRIPTEN__)
+#   define POMDOG_ARCHITECTURE_EMSCRIPTEN
 #else
 #   error "Cannot detect CPU architecture."
 #endif
