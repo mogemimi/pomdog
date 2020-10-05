@@ -48,6 +48,8 @@ namespace Pomdog::Detail {
 #        define POMDOG_DEBUGBREAK() raise(SIGTRAP)
 #    elif defined(__ppc__) || defined(__powerpc__)
 #        define POMDOG_DEBUGBREAK() asm {trap}
+#    elif defined(__EMSCRIPTEN__)
+#        define POMDOG_DEBUGBREAK()
 #    else
 #        define POMDOG_DEBUGBREAK() asm("int $3")
 #    endif
