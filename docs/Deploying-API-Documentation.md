@@ -4,5 +4,5 @@ Documentation can be generated using following command:
 
 ```sh
 cd path/to/pomdog
-doxygen
+doxygen docs/doxygen/Doxyfile
 ```
