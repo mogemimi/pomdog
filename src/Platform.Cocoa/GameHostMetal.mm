@@ -10,9 +10,9 @@
 #include "../RenderSystem.Metal/GraphicsDeviceMetal.hpp"
 #include "../RenderSystem.Metal/MetalFormatHelper.hpp"
 #include "../RenderSystem/GraphicsCommandQueueImmediate.hpp"
+#include "../SoundSystem.OpenAL/AudioEngineAL.hpp"
 #include "Pomdog/Application/Game.hpp"
 #include "Pomdog/Application/GameClock.hpp"
-#include "Pomdog/Audio/AudioEngine.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Graphics/GraphicsCommandQueue.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
@@ -41,6 +41,7 @@ using Pomdog::Detail::Metal::GraphicsContextMetal;
 using Pomdog::Detail::Metal::GraphicsDeviceMetal;
 using Pomdog::Detail::Metal::ToPixelFormat;
 using Pomdog::Detail::InputSystem::Apple::GamepadIOKit;
+using Pomdog::Detail::OpenAL::AudioEngineAL;
 
 namespace Pomdog::Detail::Cocoa {
 namespace {
@@ -127,7 +128,7 @@ private:
     std::shared_ptr<GraphicsDevice> graphicsDevice;
     std::shared_ptr<GraphicsContextMetal> graphicsContext;
     std::shared_ptr<GraphicsCommandQueue> graphicsCommandQueue;
-    std::shared_ptr<AudioEngine> audioEngine;
+    std::shared_ptr<AudioEngineAL> audioEngine;
     std::unique_ptr<AssetManager> assetManager;
     std::shared_ptr<KeyboardCocoa> keyboard;
     std::shared_ptr<MouseCocoa> mouse;
@@ -188,8 +189,13 @@ GameHostMetal::Impl::Impl(
     graphicsCommandQueue = std::make_shared<GraphicsCommandQueue>(
         std::make_unique<GraphicsCommandQueueImmediate>(graphicsContext));
 
+    // NOTE: Create audio engine.
+    audioEngine = std::make_shared<AudioEngineAL>();
+    if (auto err = audioEngine->Initialize(); err != nullptr) {
+        Log::Warning("Pomdog", err->ToString());
+    }
+
     // Create subsystems
-    audioEngine = std::make_shared<AudioEngine>();
     keyboard = std::make_shared<KeyboardCocoa>();
     mouse = std::make_shared<MouseCocoa>();
     gamepad = std::make_shared<GamepadIOKit>(eventQueue);
@@ -200,7 +206,10 @@ GameHostMetal::Impl::Impl(
         [this](const Event& event) { ProcessSystemEvents(event); });
 
     auto contentDirectory = PathHelper::Join(FileSystem::GetResourceDirectoryPath(), "Content");
-    assetManager = std::make_unique<AssetManager>(std::move(contentDirectory), graphicsDevice);
+    assetManager = std::make_unique<AssetManager>(
+        std::move(contentDirectory),
+        audioEngine,
+        graphicsDevice);
 
     ioService = std::make_unique<IOService>(&clock);
     if (auto err = ioService->Initialize(); err != nullptr) {

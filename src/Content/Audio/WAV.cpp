@@ -1,21 +1,9 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Content/Audio/WAV.hpp"
-
-#include "Pomdog/Basic/Platform.hpp"
-#if defined(POMDOG_PLATFORM_MACOSX) \
-    || defined(POMDOG_PLATFORM_APPLE_IOS) \
-    || defined(POMDOG_PLATFORM_LINUX)
-#include "../../SoundSystem.OpenAL/AudioClipAL.hpp"
-#elif defined(POMDOG_PLATFORM_WIN32) \
-    || defined(POMDOG_PLATFORM_XBOX_ONE)
-#include "../../SoundSystem.XAudio2/AudioClipXAudio2.hpp"
-#else
-#error "Platform undefined or not supported."
-#endif
-
 #include "../../Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Audio/AudioClip.hpp"
+#include "Pomdog/Audio/AudioChannels.hpp"
+#include "Pomdog/Audio/AudioEngine.hpp"
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
 #include "Pomdog/Content/Utility/MakeFourCC.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -205,7 +193,7 @@ ReadWaveAudioData(std::ifstream& stream)
 } // namespace
 
 [[nodiscard]] std::tuple<std::shared_ptr<AudioClip>, std::shared_ptr<Error>>
-Load(std::ifstream&& stream, std::size_t byteLength)
+Load(const std::shared_ptr<AudioEngine>& audioEngine, std::ifstream&& stream, std::size_t byteLength) noexcept
 {
     constexpr auto MinimumWaveFormatSizeInBytes = 4 * 11;
     if (byteLength < MinimumWaveFormatSizeInBytes) {
@@ -235,43 +223,24 @@ Load(std::ifstream&& stream, std::size_t byteLength)
 
     auto channels = ToAudioChannels(waveFormat.PCMFormat.Channels);
 
-#if defined(POMDOG_PLATFORM_MACOSX) \
-    || defined(POMDOG_PLATFORM_APPLE_IOS) \
-    || defined(POMDOG_PLATFORM_LINUX)
-    // NOTE: OpenAL
-    using Detail::SoundSystem::OpenAL::AudioClipAL;
-    auto nativeAudioClip = std::make_unique<AudioClipAL>(
+    if (audioEngine == nullptr) {
+        auto err = Errors::New("audioEngine is null.");
+        return std::make_tuple(nullptr, std::move(err));
+    }
+    POMDOG_ASSERT(audioEngine != nullptr);
+
+    // NOTE: Create audio clip.
+    auto [audioClip, audioClipErr] = audioEngine->CreateAudioClip(
         audioData.data(),
         audioData.size(),
         static_cast<int>(waveFormat.PCMFormat.SamplesPerSec),
         static_cast<int>(waveFormat.PCMFormat.BitsPerSample),
         channels);
 
-#elif defined(POMDOG_PLATFORM_WIN32) \
-    || defined(POMDOG_PLATFORM_XBOX_ONE)
-    // NOTE: XAudio2
-    std::vector<std::uint8_t> waveFormatData;
-    waveFormatData.resize(sizeof(waveFormat.PCMFormat)
-        + sizeof(waveFormat.ExtraBytes)
-        + waveFormat.ExtraBytes);
-
-    auto offset = sizeof(waveFormat.PCMFormat) + sizeof(waveFormat.ExtraBytes);
-    std::memcpy(waveFormatData.data(), &waveFormat, offset);
-    std::memcpy(waveFormatData.data() + offset, waveFormat.ExtraData.data(), waveFormat.ExtraBytes);
-
-    using Detail::SoundSystem::XAudio2::AudioClipXAudio2;
-    auto nativeAudioClip = std::make_unique<AudioClipXAudio2>(
-        std::move(audioData),
-        std::move(waveFormatData));
-#else
-#error "Platform undefined or not supported."
-#endif
-
-    auto audioClip = std::make_shared<AudioClip>(
-        std::move(nativeAudioClip),
-        static_cast<int>(waveFormat.PCMFormat.SamplesPerSec),
-        static_cast<int>(waveFormat.PCMFormat.BitsPerSample),
-        channels);
+    if (audioClipErr != nullptr) {
+        auto err = Errors::Wrap(std::move(audioClipErr), "CreateAudioClip() failed.");
+        return std::make_tuple(nullptr, std::move(err));
+    }
 
     return std::make_tuple(std::move(audioClip), nullptr);
 }

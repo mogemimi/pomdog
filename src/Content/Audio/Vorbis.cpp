@@ -1,60 +1,14 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Content/Audio/Vorbis.hpp"
-
-#include "Pomdog/Basic/Platform.hpp"
-#if defined(POMDOG_PLATFORM_MACOSX) \
-    || defined(POMDOG_PLATFORM_APPLE_IOS) \
-    || defined(POMDOG_PLATFORM_LINUX)
-#include "../../SoundSystem.OpenAL/AudioClipAL.hpp"
-#elif defined(POMDOG_PLATFORM_WIN32) \
-    || defined(POMDOG_PLATFORM_XBOX_ONE)
-#include "../../SoundSystem.XAudio2/AudioClipXAudio2.hpp"
-#else
-#error "Platform undefined or not supported."
-#endif
-
-#include "../../Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Audio/AudioClip.hpp"
+#include "Pomdog/Audio/AudioChannels.hpp"
+#include "Pomdog/Audio/AudioEngine.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <stb_vorbis.h>
 #include <utility>
 
 namespace Pomdog::Vorbis {
 namespace {
-
-#if defined(POMDOG_COMPILER_MSVC)
-#pragma pack(push, 1)
-#endif
-
-#if defined(POMDOG_DETAIL_PACKED)
-#    error "'POMDOG_DETAIL_PACKED' already defined."
-#endif
-
-#if defined(POMDOG_COMPILER_CLANG) || defined(POMDOG_COMPILER_GNUC)
-#   define POMDOG_DETAIL_PACKED __attribute__((packed))
-#elif defined(POMDOG_COMPILER_MSVC)
-#    define POMDOG_DETAIL_PACKED
-#else
-#    error "'POMDOG_DETAIL_PACKED' is not supported in this compiler."
-#endif
-
-struct PCMWaveFormat final {
-    std::uint16_t FormatTag;
-    std::uint16_t Channels;
-    std::uint32_t SamplesPerSec;
-    std::uint32_t AvgBytesPerSec;
-    std::uint16_t BlockAlign;
-    std::uint16_t BitsPerSample;
-} POMDOG_DETAIL_PACKED;
-
-#if defined(POMDOG_DETAIL_PACKED)
-#    undef POMDOG_DETAIL_PACKED
-#endif
-
-#if defined(POMDOG_COMPILER_MSVC)
-#pragma pack(pop)
-#endif
 
 [[nodiscard]] AudioChannels ToAudioChannels(int channels) noexcept
 {
@@ -75,7 +29,7 @@ struct PCMWaveFormat final {
 } // namespace
 
 std::tuple<std::shared_ptr<AudioClip>, std::shared_ptr<Error>>
-Load(const std::string& filename)
+Load(const std::shared_ptr<AudioEngine>& audioEngine, const std::string& filename) noexcept
 {
     int error = 0;
     auto vorbis = stb_vorbis_open_filename(filename.data(), &error, nullptr);
@@ -109,53 +63,24 @@ Load(const std::string& filename)
     // NOTE: Clean up vorbis file
     stb_vorbis_close(vorbis);
 
-#if defined(POMDOG_PLATFORM_MACOSX) \
-    || defined(POMDOG_PLATFORM_APPLE_IOS) \
-    || defined(POMDOG_PLATFORM_LINUX)
-    using Detail::SoundSystem::OpenAL::AudioClipAL;
-    auto nativeAudioClip = std::make_unique<AudioClipAL>(
+    if (audioEngine == nullptr) {
+        auto err = Errors::New("audioEngine is null.");
+        return std::make_tuple(nullptr, std::move(err));
+    }
+    POMDOG_ASSERT(audioEngine != nullptr);
+
+    // NOTE: Create audio clip.
+    auto [audioClip, audioClipErr] = audioEngine->CreateAudioClip(
         audioData.data(),
         audioData.size(),
         samplesPerSec,
         bitsPerSample,
         channels);
 
-#elif defined(POMDOG_PLATFORM_WIN32) \
-    || defined(POMDOG_PLATFORM_XBOX_ONE)
-    // NOTE: WAVE_FORMAT_PCM
-    constexpr std::uint16_t WaveFormatTagPCM = 0x0001;
-
-    const auto blockAlign = (info.channels * bitsPerSample) / 8;
-
-    PCMWaveFormat waveFormat;
-    waveFormat.FormatTag = WaveFormatTagPCM;
-    waveFormat.Channels = static_cast<std::uint16_t>(info.channels);
-    waveFormat.AvgBytesPerSec = blockAlign * samplesPerSec;
-    waveFormat.SamplesPerSec = samplesPerSec;
-    waveFormat.BlockAlign = static_cast<std::uint16_t>(blockAlign);
-    waveFormat.BitsPerSample = bitsPerSample;
-
-    std::uint16_t extraBytes = 0;
-
-    std::vector<std::uint8_t> waveFormatData;
-    waveFormatData.resize(sizeof(waveFormat) + sizeof(extraBytes));
-
-    std::memcpy(waveFormatData.data(), &waveFormat, sizeof(waveFormat));
-    std::memcpy(waveFormatData.data() + sizeof(waveFormat), &extraBytes, sizeof(extraBytes));
-
-    using Detail::SoundSystem::XAudio2::AudioClipXAudio2;
-    auto nativeAudioClip = std::make_unique<AudioClipXAudio2>(
-        std::move(audioData),
-        std::move(waveFormatData));
-#else
-#error "Platform undefined or not supported."
-#endif
-
-    auto audioClip = std::make_shared<AudioClip>(
-        std::move(nativeAudioClip),
-        samplesPerSec,
-        bitsPerSample,
-        channels);
+    if (audioClipErr != nullptr) {
+        auto err = Errors::Wrap(std::move(audioClipErr), "CreateAudioClip() failed.");
+        return std::make_tuple(nullptr, std::move(err));
+    }
 
     return std::make_tuple(std::move(audioClip), nullptr);
 }

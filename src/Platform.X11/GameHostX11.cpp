@@ -6,8 +6,8 @@
 #include "../RenderSystem.GL4/GraphicsContextGL4.hpp"
 #include "../RenderSystem.GL4/GraphicsDeviceGL4.hpp"
 #include "../RenderSystem/GraphicsCommandQueueImmediate.hpp"
+#include "../SoundSystem.OpenAL/AudioEngineAL.hpp"
 #include "Pomdog/Application/Game.hpp"
-#include "Pomdog/Audio/AudioEngine.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Graphics/GraphicsCommandQueue.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
@@ -27,6 +27,7 @@
 using Pomdog::Detail::GL4::GraphicsContextGL4;
 using Pomdog::Detail::GL4::GraphicsDeviceGL4;
 using Pomdog::Detail::InputSystem::NativeGamepad;
+using Pomdog::Detail::OpenAL::AudioEngineAL;
 
 namespace Pomdog::Detail::X11 {
 namespace {
@@ -168,7 +169,7 @@ GLXFBConfig ChooseFramebufferConfig(
     return *bestConfig;
 }
 
-} // unnamed namespace
+} // namespace
 
 // MARK: - GameHostX11
 
@@ -196,7 +197,7 @@ public:
     std::shared_ptr<GraphicsDevice> graphicsDevice;
     std::shared_ptr<GraphicsContextGL4> graphicsContext;
     std::shared_ptr<GraphicsCommandQueue> graphicsCommandQueue;
-    std::shared_ptr<AudioEngine> audioEngine;
+    std::shared_ptr<AudioEngineAL> audioEngine;
     std::unique_ptr<AssetManager> assetManager;
     std::unique_ptr<KeyboardX11> keyboard;
     MouseX11 mouse;
@@ -251,13 +252,20 @@ GameHostX11::Impl::Impl(const PresentationParameters& presentationParameters)
     graphicsCommandQueue = std::make_shared<GraphicsCommandQueue>(
         std::make_unique<GraphicsCommandQueueImmediate>(graphicsContext));
 
-    audioEngine = std::make_shared<AudioEngine>();
+    // NOTE: Create audio engine.
+    audioEngine = std::make_shared<AudioEngineAL>();
+    if (auto err = audioEngine->Initialize(); err != nullptr) {
+        Log::Warning("Pomdog", err->ToString());
+    }
 
     keyboard = std::make_unique<KeyboardX11>(x11Context->Display);
     gamepad = Detail::InputSystem::CreateGamepad();
 
     auto contentDirectory = PathHelper::Join(FileSystem::GetResourceDirectoryPath(), "Content");
-    assetManager = std::make_unique<AssetManager>(std::move(contentDirectory), graphicsDevice);
+    assetManager = std::make_unique<AssetManager>(
+        std::move(contentDirectory),
+        audioEngine,
+        graphicsDevice);
 
     ioService = std::make_unique<IOService>(&clock);
     if (auto err = ioService->Initialize(); err != nullptr) {

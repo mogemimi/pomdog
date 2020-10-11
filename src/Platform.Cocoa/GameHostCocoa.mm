@@ -11,9 +11,9 @@
 #include "../RenderSystem.GL4/GraphicsContextGL4.hpp"
 #include "../RenderSystem.GL4/GraphicsDeviceGL4.hpp"
 #include "../RenderSystem/GraphicsCommandQueueImmediate.hpp"
+#include "../SoundSystem.OpenAL/AudioEngineAL.hpp"
 #include "Pomdog/Application/Game.hpp"
 #include "Pomdog/Application/GameClock.hpp"
-#include "Pomdog/Audio/AudioEngine.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Graphics/GraphicsCommandQueue.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
@@ -36,6 +36,7 @@
 using Pomdog::Detail::GL4::GraphicsDeviceGL4;
 using Pomdog::Detail::GL4::GraphicsContextGL4;
 using Pomdog::Detail::InputSystem::Apple::GamepadIOKit;
+using Pomdog::Detail::OpenAL::AudioEngineAL;
 
 namespace Pomdog::Detail::Cocoa {
 namespace {
@@ -47,7 +48,7 @@ std::shared_ptr<OpenGLContextCocoa> CreateOpenGLContext(
     return std::make_shared<OpenGLContextCocoa>(pixelFormat);
 }
 
-} // unnamed namespace
+} // namespace
 
 // MARK: - GameHostCocoa::Impl
 
@@ -123,7 +124,7 @@ private:
     std::shared_ptr<GraphicsDevice> graphicsDevice;
     std::shared_ptr<GraphicsContextGL4> graphicsContext;
     std::shared_ptr<GraphicsCommandQueue> graphicsCommandQueue;
-    std::shared_ptr<AudioEngine> audioEngine;
+    std::shared_ptr<AudioEngineAL> audioEngine;
     std::unique_ptr<AssetManager> assetManager;
     std::shared_ptr<KeyboardCocoa> keyboard;
     std::shared_ptr<MouseCocoa> mouse;
@@ -175,8 +176,13 @@ GameHostCocoa::Impl::Impl(
         std::make_unique<GraphicsCommandQueueImmediate>(graphicsContext));
     openGLContext->Unlock();
 
+    // NOTE: Create audio engine.
+    audioEngine = std::make_shared<AudioEngineAL>();
+    if (auto err = audioEngine->Initialize(); err != nullptr) {
+        Log::Warning("Pomdog", err->ToString());
+    }
+
     // Create subsystems
-    audioEngine = std::make_shared<Pomdog::AudioEngine>();
     keyboard = std::make_shared<KeyboardCocoa>();
     mouse = std::make_shared<MouseCocoa>();
     gamepad = std::make_shared<GamepadIOKit>(eventQueue);
@@ -187,7 +193,10 @@ GameHostCocoa::Impl::Impl(
         [this](const Event& event) { ProcessSystemEvents(event); });
 
     auto contentDirectory = PathHelper::Join(FileSystem::GetResourceDirectoryPath(), "Content");
-    assetManager = std::make_unique<AssetManager>(std::move(contentDirectory), graphicsDevice);
+    assetManager = std::make_unique<AssetManager>(
+        std::move(contentDirectory),
+        audioEngine,
+        graphicsDevice);
 
     ioService = std::make_unique<IOService>(&clock);
     if (auto err = ioService->Initialize(); err != nullptr) {

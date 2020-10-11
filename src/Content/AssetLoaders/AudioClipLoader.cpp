@@ -18,7 +18,7 @@
 namespace Pomdog::Detail {
 
 std::tuple<std::shared_ptr<AudioClip>, std::shared_ptr<Error>>
-AssetLoader<AudioClip>::operator()([[maybe_unused]] AssetManager& assets, const std::string& filePath)
+AssetLoader<AudioClip>::operator()(AssetManager& assets, const std::string& filePath)
 {
     std::ifstream stream{filePath, std::ifstream::binary};
 
@@ -55,7 +55,7 @@ AssetLoader<AudioClip>::operator()([[maybe_unused]] AssetManager& assets, const 
         const auto fccType = MakeFourCC(signature[8], signature[9], signature[10], signature[11]);
         if (fccType == MakeFourCC('W', 'A', 'V', 'E')) {
             // NOTE: This file format is RIFF waveform audio.
-            auto [audioClip, loadErr] = WAV::Load(std::move(stream), byteLength);
+            auto [audioClip, loadErr] = WAV::Load(assets.GetAudioEngine(), std::move(stream), byteLength);
 
             if (loadErr != nullptr) {
                 auto err = Errors::Wrap(std::move(loadErr), "Cannot load the wave file " + filePath);
@@ -68,7 +68,7 @@ AssetLoader<AudioClip>::operator()([[maybe_unused]] AssetManager& assets, const 
         // NOTE: The file format is Ogg Vorbis.
         stream.close();
 
-        auto [audioClip, loadErr] = Vorbis::Load(filePath);
+        auto [audioClip, loadErr] = Vorbis::Load(assets.GetAudioEngine(), filePath);
         if (loadErr != nullptr) {
             auto err = Errors::Wrap(std::move(loadErr), "Cannot load the ogg/vorbis file " + filePath);
             return std::make_tuple(nullptr, std::move(err));

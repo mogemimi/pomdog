@@ -21,7 +21,6 @@
 #include "../SoundSystem.XAudio2/AudioEngineXAudio2.hpp"
 #include "Pomdog/Application/Game.hpp"
 #include "Pomdog/Application/GameClock.hpp"
-#include "Pomdog/Audio/AudioEngine.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Graphics/GraphicsCommandQueue.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
@@ -41,6 +40,7 @@
 
 using Pomdog::Detail::InputSystem::NativeGamepad;
 using Pomdog::Detail::Win32::GameWindowWin32;
+using Pomdog::Detail::XAudio2::AudioEngineXAudio2;
 #if !defined(POMDOG_DISABLE_GL4)
 using Pomdog::Detail::GL4::GraphicsContextGL4;
 using Pomdog::Detail::GL4::GraphicsDeviceGL4;
@@ -257,7 +257,7 @@ private:
     std::shared_ptr<GraphicsDevice> graphicsDevice;
     std::shared_ptr<GraphicsCommandQueue> graphicsCommandQueue;
     std::unique_ptr<AssetManager> assetManager;
-    std::shared_ptr<AudioEngine> audioEngine;
+    std::shared_ptr<AudioEngineXAudio2> audioEngine;
 
     std::shared_ptr<KeyboardWin32> keyboard;
     std::shared_ptr<MouseWin32> mouse;
@@ -311,14 +311,21 @@ GameHostWin32::Impl::Impl(
         ProcessSystemEvents(event);
     });
 
-    audioEngine = std::make_shared<Pomdog::AudioEngine>();
+    // NOTE: Create audio engine.
+    audioEngine = std::make_shared<AudioEngineXAudio2>();
+    if (auto err = audioEngine->Initialize(); err != nullptr) {
+        Log::Warning("Pomdog", err->ToString());
+    }
 
     keyboard = std::make_shared<KeyboardWin32>();
     mouse = std::make_shared<MouseWin32>(window->GetNativeWindowHandle());
     gamepad = gamepadIn;
 
     auto contentDirectory = PathHelper::Join(FileSystem::GetResourceDirectoryPath(), "Content");
-    assetManager = std::make_unique<AssetManager>(std::move(contentDirectory), graphicsDevice);
+    assetManager = std::make_unique<AssetManager>(
+        std::move(contentDirectory),
+        audioEngine,
+        graphicsDevice);
 
     ioService = std::make_unique<IOService>(&clock);
     if (auto err = ioService->Initialize(); err != nullptr) {

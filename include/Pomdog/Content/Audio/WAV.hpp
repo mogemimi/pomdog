@@ -16,6 +16,6 @@ namespace Pomdog::WAV {
 /// Reads an audio data from Waveform Audio File (.wav) format data.
 [[nodiscard]] POMDOG_EXPORT
 std::tuple<std::shared_ptr<AudioClip>, std::shared_ptr<Error>>
-Load(std::ifstream&& stream, std::size_t byteLength);
+Load(const std::shared_ptr<AudioEngine>& audioEngine, std::ifstream&& stream, std::size_t byteLength) noexcept;
 
 } // namespace Pomdog::WAV

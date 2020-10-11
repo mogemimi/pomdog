@@ -21,12 +21,14 @@
 
 namespace Pomdog {
 
+class AudioEngine;
 class GraphicsDevice;
 
 class POMDOG_EXPORT AssetManager final {
 public:
     AssetManager(
         const std::string& contentDirectory,
+        const std::shared_ptr<AudioEngine>& audioEngine,
         const std::shared_ptr<GraphicsDevice>& graphicsDevice);
 
     AssetManager(const AssetManager&) = delete;
@@ -84,19 +86,27 @@ public:
     void Unload();
 
     /// Gets the path to the asset directory.
-    std::string GetContentDirectory() const;
+    [[nodiscard]] std::string
+    GetContentDirectory() const noexcept;
 
     /// Sets the path to the asset directory.
-    void SetContentDirectory(const std::string& dir);
+    void SetContentDirectory(const std::string& dir) noexcept;
+
+    /// Gets the audio engine for creating audio resources.
+    [[nodiscard]] std::shared_ptr<AudioEngine>
+    GetAudioEngine() const noexcept;
 
     /// Gets the graphics device for creating graphics resources.
-    std::shared_ptr<GraphicsDevice> GetGraphicsDevice() const;
+    [[nodiscard]] std::shared_ptr<GraphicsDevice>
+    GetGraphicsDevice() const noexcept;
 
     /// Gets the full path to the asset.
-    std::string GetAssetPath(const std::string& assetName) const;
+    [[nodiscard]] std::string
+    GetAssetPath(const std::string& assetName) const noexcept;
 
 private:
     std::string contentDirectory;
+    std::weak_ptr<AudioEngine> audioEngine;
     std::weak_ptr<GraphicsDevice> graphicsDevice;
     std::unordered_map<std::string, std::any> assets;
 };

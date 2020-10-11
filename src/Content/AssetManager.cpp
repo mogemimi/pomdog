@@ -8,8 +8,10 @@ namespace Pomdog {
 
 AssetManager::AssetManager(
     const std::string& contentDirectoryIn,
+    const std::shared_ptr<AudioEngine>& audioEngineIn,
     const std::shared_ptr<GraphicsDevice>& graphicsDeviceIn)
     : contentDirectory(contentDirectoryIn)
+    , audioEngine(audioEngineIn)
     , graphicsDevice(graphicsDeviceIn)
 {
 }
@@ -19,22 +21,27 @@ void AssetManager::Unload()
     assets.clear();
 }
 
-std::string AssetManager::GetContentDirectory() const
+std::string AssetManager::GetContentDirectory() const noexcept
 {
     return contentDirectory;
 }
 
-void AssetManager::SetContentDirectory(const std::string& dir)
+void AssetManager::SetContentDirectory(const std::string& dir) noexcept
 {
     contentDirectory = dir;
 }
 
-std::shared_ptr<GraphicsDevice> AssetManager::GetGraphicsDevice() const
+std::shared_ptr<AudioEngine> AssetManager::GetAudioEngine() const noexcept
+{
+    return audioEngine.lock();
+}
+
+std::shared_ptr<GraphicsDevice> AssetManager::GetGraphicsDevice() const noexcept
 {
     return graphicsDevice.lock();
 }
 
-std::string AssetManager::GetAssetPath(const std::string& assetName) const
+std::string AssetManager::GetAssetPath(const std::string& assetName) const noexcept
 {
     if (PathHelper::IsAbsolute(assetName)) {
         return assetName;
