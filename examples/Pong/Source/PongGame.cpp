@@ -54,21 +54,30 @@ void PongGame::Initialize()
         Log::Critical("Pomdog", "error: " + err->ToString());
     }
     else {
-        soundEffect1 = std::make_shared<SoundEffect>(*audioEngine, audioClip, false);
+        std::tie(soundEffect1, err) = audioEngine->CreateSoundEffect(audioClip, false);
+        if (err != nullptr) {
+            Log::Critical("Pomdog", "error: " + err->ToString());
+        }
     }
 
     if (auto [audioClip, err] = assets->Load<AudioClip>("sounds/pong2.wav"); err != nullptr) {
         Log::Critical("Pomdog", "error: " + err->ToString());
     }
     else {
-        soundEffect2 = std::make_shared<SoundEffect>(*audioEngine, audioClip, false);
+        std::tie(soundEffect2, err) = audioEngine->CreateSoundEffect(audioClip, false);
+        if (err != nullptr) {
+            Log::Critical("Pomdog", "error: " + err->ToString());
+        }
     }
 
     if (auto [audioClip, err] = assets->Load<AudioClip>("sounds/pong3.wav"); err != nullptr) {
         Log::Critical("Pomdog", "error: " + err->ToString());
     }
     else {
-        soundEffect3 = std::make_shared<SoundEffect>(*audioEngine, audioClip, false);
+        std::tie(soundEffect3, err) = audioEngine->CreateSoundEffect(audioClip, false);
+        if (err != nullptr) {
+            Log::Critical("Pomdog", "error: " + err->ToString());
+        }
     }
 
     {

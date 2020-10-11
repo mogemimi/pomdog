@@ -32,7 +32,10 @@ void AudioClipTest::Initialize()
     }
     else {
         constexpr bool isLooped = false;
-        soundEffect1 = std::make_shared<SoundEffect>(*audioEngine, audioClip, isLooped);
+        std::tie(soundEffect1, err) = audioEngine->CreateSoundEffect(audioClip, isLooped);
+        if (err != nullptr) {
+            Log::Verbose("failed to create sound effect: " + err->ToString());
+        }
         soundEffect1->SetVolume(1.0f);
     }
 
@@ -42,7 +45,10 @@ void AudioClipTest::Initialize()
     }
     else {
         constexpr bool isLooped = true;
-        soundEffect2 = std::make_shared<SoundEffect>(*audioEngine, audioClip, isLooped);
+        std::tie(soundEffect2, err) = audioEngine->CreateSoundEffect(audioClip, isLooped);
+        if (err != nullptr) {
+            Log::Verbose("failed to create sound effect: " + err->ToString());
+        }
         soundEffect2->SetVolume(1.0f);
     }
 
