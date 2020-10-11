@@ -416,13 +416,13 @@ void GameHostX11::Exit()
     impl->Exit();
 }
 
-std::shared_ptr<GameWindow> GameHostX11::GetWindow()
+std::shared_ptr<GameWindow> GameHostX11::GetWindow() noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->window;
 }
 
-std::shared_ptr<GameClock> GameHostX11::GetClock()
+std::shared_ptr<GameClock> GameHostX11::GetClock() noexcept
 {
     POMDOG_ASSERT(impl);
     auto gameHost = shared_from_this();
@@ -430,26 +430,26 @@ std::shared_ptr<GameClock> GameHostX11::GetClock()
     return sharedClock;
 }
 
-std::shared_ptr<GraphicsDevice> GameHostX11::GetGraphicsDevice()
+std::shared_ptr<GraphicsDevice> GameHostX11::GetGraphicsDevice() noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->graphicsDevice;
 }
 
-std::shared_ptr<GraphicsCommandQueue> GameHostX11::GetGraphicsCommandQueue()
+std::shared_ptr<GraphicsCommandQueue> GameHostX11::GetGraphicsCommandQueue() noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->graphicsCommandQueue;
 }
 
-std::shared_ptr<AudioEngine> GameHostX11::GetAudioEngine()
+std::shared_ptr<AudioEngine> GameHostX11::GetAudioEngine() noexcept
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->audioEngine);
     return impl->audioEngine;
 }
 
-std::shared_ptr<AssetManager> GameHostX11::GetAssetManager()
+std::shared_ptr<AssetManager> GameHostX11::GetAssetManager() noexcept
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->assetManager);
@@ -458,7 +458,7 @@ std::shared_ptr<AssetManager> GameHostX11::GetAssetManager()
     return shared;
 }
 
-std::shared_ptr<Keyboard> GameHostX11::GetKeyboard()
+std::shared_ptr<Keyboard> GameHostX11::GetKeyboard() noexcept
 {
     POMDOG_ASSERT(impl);
     auto gameHost = shared_from_this();
@@ -466,7 +466,7 @@ std::shared_ptr<Keyboard> GameHostX11::GetKeyboard()
     return shared;
 }
 
-std::shared_ptr<Mouse> GameHostX11::GetMouse()
+std::shared_ptr<Mouse> GameHostX11::GetMouse() noexcept
 {
     POMDOG_ASSERT(impl);
     auto gameHost = shared_from_this();
@@ -474,7 +474,7 @@ std::shared_ptr<Mouse> GameHostX11::GetMouse()
     return shared;
 }
 
-std::shared_ptr<Gamepad> GameHostX11::GetGamepad()
+std::shared_ptr<Gamepad> GameHostX11::GetGamepad() noexcept
 {
     POMDOG_ASSERT(impl);
     auto gameHost = shared_from_this();
@@ -482,7 +482,7 @@ std::shared_ptr<Gamepad> GameHostX11::GetGamepad()
     return shared;
 }
 
-std::shared_ptr<IOService> GameHostX11::GetIOService()
+std::shared_ptr<IOService> GameHostX11::GetIOService() noexcept
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->ioService);
@@ -491,7 +491,7 @@ std::shared_ptr<IOService> GameHostX11::GetIOService()
     return shared;
 }
 
-std::shared_ptr<HTTPClient> GameHostX11::GetHTTPClient()
+std::shared_ptr<HTTPClient> GameHostX11::GetHTTPClient() noexcept
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->httpClient);

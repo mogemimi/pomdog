@@ -35,37 +35,48 @@ public:
     virtual void Exit() = 0;
 
     /// @return Associated to this host platform-specific GameWindow.
-    virtual std::shared_ptr<GameWindow> GetWindow() = 0;
+    [[nodiscard]] virtual std::shared_ptr<GameWindow>
+    GetWindow() noexcept = 0;
 
     /// @return Associated to this host GameClock.
-    virtual std::shared_ptr<GameClock> GetClock() = 0;
+    [[nodiscard]] virtual std::shared_ptr<GameClock>
+    GetClock() noexcept = 0;
 
     /// @return Associated to this host GraphicsDevice with selected video backend.
-    virtual std::shared_ptr<GraphicsDevice> GetGraphicsDevice() = 0;
+    [[nodiscard]] virtual std::shared_ptr<GraphicsDevice>
+    GetGraphicsDevice() noexcept = 0;
 
     /// @return Associated to this host GraphicsCommandQueue.
-    virtual std::shared_ptr<GraphicsCommandQueue> GetGraphicsCommandQueue() = 0;
+    [[nodiscard]] virtual std::shared_ptr<GraphicsCommandQueue>
+    GetGraphicsCommandQueue() noexcept = 0;
 
     /// @return Associated to this host AudioEngine with selected audio backend.
-    virtual std::shared_ptr<AudioEngine> GetAudioEngine() = 0;
+    [[nodiscard]] virtual std::shared_ptr<AudioEngine>
+    GetAudioEngine() noexcept = 0;
 
     /// @return Associated to this host AssetManager.
-    virtual std::shared_ptr<AssetManager> GetAssetManager() = 0;
+    [[nodiscard]] virtual std::shared_ptr<AssetManager>
+    GetAssetManager() noexcept = 0;
 
     /// @return Associated to this host Keyboard.
-    virtual std::shared_ptr<Keyboard> GetKeyboard() = 0;
+    [[nodiscard]] virtual std::shared_ptr<Keyboard>
+    GetKeyboard() noexcept = 0;
 
     /// @return Associated to this host Mouse.
-    virtual std::shared_ptr<Mouse> GetMouse() = 0;
+    [[nodiscard]] virtual std::shared_ptr<Mouse>
+    GetMouse() noexcept = 0;
 
     /// @return Associated to this host Gamepad.
-    virtual std::shared_ptr<Gamepad> GetGamepad() = 0;
+    [[nodiscard]] virtual std::shared_ptr<Gamepad>
+    GetGamepad() noexcept = 0;
 
     /// @return Associated to this host IOService.
-    virtual std::shared_ptr<IOService> GetIOService() = 0;
+    [[nodiscard]] virtual std::shared_ptr<IOService>
+    GetIOService() noexcept = 0;
 
     /// @return Associated to this host HTTPClient.
-    virtual std::shared_ptr<HTTPClient> GetHTTPClient() = 0;
+    [[nodiscard]] virtual std::shared_ptr<HTTPClient>
+    GetHTTPClient() noexcept = 0;
 };
 
 } // namespace Pomdog

@@ -33,31 +33,42 @@ public:
 
     void GameLoop();
 
-    bool IsMetalSupported() const;
+    [[nodiscard]] bool IsMetalSupported() const noexcept;
 
     void Exit() override;
 
-    std::shared_ptr<GameWindow> GetWindow() override;
+    [[nodiscard]] std::shared_ptr<GameWindow>
+    GetWindow() noexcept override;
 
-    std::shared_ptr<GameClock> GetClock() override;
+    [[nodiscard]] std::shared_ptr<GameClock>
+    GetClock() noexcept override;
 
-    std::shared_ptr<GraphicsDevice> GetGraphicsDevice() override;
+    [[nodiscard]] std::shared_ptr<GraphicsDevice>
+    GetGraphicsDevice() noexcept override;
 
-    std::shared_ptr<GraphicsCommandQueue> GetGraphicsCommandQueue() override;
+    [[nodiscard]] std::shared_ptr<GraphicsCommandQueue>
+    GetGraphicsCommandQueue() noexcept override;
 
-    std::shared_ptr<AudioEngine> GetAudioEngine() override;
+    [[nodiscard]] std::shared_ptr<AudioEngine>
+    GetAudioEngine() noexcept override;
 
-    std::shared_ptr<AssetManager> GetAssetManager() override;
+    [[nodiscard]] std::shared_ptr<AssetManager>
+    GetAssetManager() noexcept override;
 
-    std::shared_ptr<Keyboard> GetKeyboard() override;
+    [[nodiscard]] std::shared_ptr<Keyboard>
+    GetKeyboard() noexcept override;
 
-    std::shared_ptr<Mouse> GetMouse() override;
+    [[nodiscard]] std::shared_ptr<Mouse>
+    GetMouse() noexcept override;
 
-    std::shared_ptr<Gamepad> GetGamepad() override;
+    [[nodiscard]] std::shared_ptr<Gamepad>
+    GetGamepad() noexcept override;
 
-    std::shared_ptr<IOService> GetIOService() override;
+    [[nodiscard]] std::shared_ptr<IOService>
+    GetIOService() noexcept override;
 
-    std::shared_ptr<HTTPClient> GetHTTPClient() override;
+    [[nodiscard]] std::shared_ptr<HTTPClient>
+    GetHTTPClient() noexcept override;
 
 private:
     class Impl;

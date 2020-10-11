@@ -83,27 +83,38 @@ public:
 
     void Exit();
 
-    std::shared_ptr<GameWindow> GetWindow();
+    [[nodiscard]] std::shared_ptr<GameWindow>
+    GetWindow() noexcept;
 
-    std::shared_ptr<GameClock> GetClock(std::shared_ptr<GameHost>&& gameHost);
+    [[nodiscard]] std::shared_ptr<GameClock>
+    GetClock(std::shared_ptr<GameHost>&& gameHost) noexcept;
 
-    std::shared_ptr<GraphicsDevice> GetGraphicsDevice();
+    [[nodiscard]] std::shared_ptr<GraphicsDevice>
+    GetGraphicsDevice() noexcept;
 
-    std::shared_ptr<GraphicsCommandQueue> GetGraphicsCommandQueue();
+    [[nodiscard]] std::shared_ptr<GraphicsCommandQueue>
+    GetGraphicsCommandQueue() noexcept;
 
-    std::shared_ptr<AssetManager> GetAssetManager(std::shared_ptr<GameHost>&& gameHost);
+    [[nodiscard]] std::shared_ptr<AssetManager>
+    GetAssetManager(std::shared_ptr<GameHost>&& gameHost) noexcept;
 
-    std::shared_ptr<AudioEngine> GetAudioEngine();
+    [[nodiscard]] std::shared_ptr<AudioEngine>
+    GetAudioEngine() noexcept;
 
-    std::shared_ptr<Keyboard> GetKeyboard();
+    [[nodiscard]] std::shared_ptr<Keyboard>
+    GetKeyboard() noexcept;
 
-    std::shared_ptr<Mouse> GetMouse();
+    [[nodiscard]] std::shared_ptr<Mouse>
+    GetMouse() noexcept;
 
-    std::shared_ptr<Gamepad> GetGamepad();
+    [[nodiscard]] std::shared_ptr<Gamepad>
+    GetGamepad() noexcept;
 
-    std::shared_ptr<IOService> GetIOService(std::shared_ptr<GameHost>&& gameHost);
+    [[nodiscard]] std::shared_ptr<IOService>
+    GetIOService(std::shared_ptr<GameHost>&& gameHost) noexcept;
 
-    std::shared_ptr<HTTPClient> GetHTTPClient(std::shared_ptr<GameHost>&& gameHost);
+    [[nodiscard]] std::shared_ptr<HTTPClient>
+    GetHTTPClient(std::shared_ptr<GameHost>&& gameHost) noexcept;
 
 private:
     void RenderFrame();
@@ -397,61 +408,72 @@ void GameHostMetal::Impl::ClientSizeChanged()
     window->ClientSizeChanged(bounds.Width, bounds.Height);
 }
 
-std::shared_ptr<GameWindow> GameHostMetal::Impl::GetWindow()
+std::shared_ptr<GameWindow>
+GameHostMetal::Impl::GetWindow() noexcept
 {
     return window;
 }
 
-std::shared_ptr<GameClock> GameHostMetal::Impl::GetClock(std::shared_ptr<GameHost>&& gameHost)
+std::shared_ptr<GameClock>
+GameHostMetal::Impl::GetClock(std::shared_ptr<GameHost>&& gameHost) noexcept
 {
     std::shared_ptr<GameClock> shared{gameHost, &clock};
     return shared;
 }
 
-std::shared_ptr<GraphicsDevice> GameHostMetal::Impl::GetGraphicsDevice()
+std::shared_ptr<GraphicsDevice>
+GameHostMetal::Impl::GetGraphicsDevice() noexcept
 {
     return graphicsDevice;
 }
 
-std::shared_ptr<GraphicsCommandQueue> GameHostMetal::Impl::GetGraphicsCommandQueue()
+std::shared_ptr<GraphicsCommandQueue>
+GameHostMetal::Impl::GetGraphicsCommandQueue() noexcept
 {
     return graphicsCommandQueue;
 }
 
-std::shared_ptr<AudioEngine> GameHostMetal::Impl::GetAudioEngine()
+std::shared_ptr<AudioEngine>
+GameHostMetal::Impl::GetAudioEngine() noexcept
 {
     return audioEngine;
 }
 
-std::shared_ptr<AssetManager> GameHostMetal::Impl::GetAssetManager(std::shared_ptr<GameHost>&& gameHost)
+std::shared_ptr<AssetManager>
+GameHostMetal::Impl::GetAssetManager(std::shared_ptr<GameHost>&& gameHost) noexcept
 {
     std::shared_ptr<AssetManager> shared{gameHost, assetManager.get()};
     return shared;
 }
 
-std::shared_ptr<Keyboard> GameHostMetal::Impl::GetKeyboard()
+std::shared_ptr<Keyboard>
+GameHostMetal::Impl::GetKeyboard() noexcept
 {
     return keyboard;
 }
 
-std::shared_ptr<Mouse> GameHostMetal::Impl::GetMouse()
+std::shared_ptr<Mouse>
+GameHostMetal::Impl::GetMouse() noexcept
 {
     return mouse;
 }
 
-std::shared_ptr<Gamepad> GameHostMetal::Impl::GetGamepad()
+std::shared_ptr<Gamepad>
+GameHostMetal::Impl::GetGamepad() noexcept
 {
     return gamepad;
 }
 
-std::shared_ptr<IOService> GameHostMetal::Impl::GetIOService(std::shared_ptr<GameHost>&& gameHost)
+std::shared_ptr<IOService>
+GameHostMetal::Impl::GetIOService(std::shared_ptr<GameHost>&& gameHost) noexcept
 {
     POMDOG_ASSERT(ioService != nullptr);
     std::shared_ptr<IOService> shared{std::move(gameHost), ioService.get()};
     return shared;
 }
 
-std::shared_ptr<HTTPClient> GameHostMetal::Impl::GetHTTPClient(std::shared_ptr<GameHost>&& gameHost)
+std::shared_ptr<HTTPClient>
+GameHostMetal::Impl::GetHTTPClient(std::shared_ptr<GameHost>&& gameHost) noexcept
 {
     POMDOG_ASSERT(httpClient != nullptr);
     std::shared_ptr<HTTPClient> shared(std::move(gameHost), httpClient.get());
@@ -485,7 +507,7 @@ void GameHostMetal::GameLoop()
     impl->GameLoop();
 }
 
-bool GameHostMetal::IsMetalSupported() const
+bool GameHostMetal::IsMetalSupported() const noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->IsMetalSupported();
@@ -497,67 +519,67 @@ void GameHostMetal::Exit()
     impl->Exit();
 }
 
-std::shared_ptr<GameWindow> GameHostMetal::GetWindow()
+std::shared_ptr<GameWindow> GameHostMetal::GetWindow() noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->GetWindow();
 }
 
-std::shared_ptr<GameClock> GameHostMetal::GetClock()
+std::shared_ptr<GameClock> GameHostMetal::GetClock() noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->GetClock(shared_from_this());
 }
 
-std::shared_ptr<GraphicsDevice> GameHostMetal::GetGraphicsDevice()
+std::shared_ptr<GraphicsDevice> GameHostMetal::GetGraphicsDevice() noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->GetGraphicsDevice();
 }
 
-std::shared_ptr<GraphicsCommandQueue> GameHostMetal::GetGraphicsCommandQueue()
+std::shared_ptr<GraphicsCommandQueue> GameHostMetal::GetGraphicsCommandQueue() noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->GetGraphicsCommandQueue();
 }
 
-std::shared_ptr<AudioEngine> GameHostMetal::GetAudioEngine()
+std::shared_ptr<AudioEngine> GameHostMetal::GetAudioEngine() noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->GetAudioEngine();
 }
 
-std::shared_ptr<AssetManager> GameHostMetal::GetAssetManager()
+std::shared_ptr<AssetManager> GameHostMetal::GetAssetManager() noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->GetAssetManager(shared_from_this());
 }
 
-std::shared_ptr<Keyboard> GameHostMetal::GetKeyboard()
+std::shared_ptr<Keyboard> GameHostMetal::GetKeyboard() noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->GetKeyboard();
 }
 
-std::shared_ptr<Mouse> GameHostMetal::GetMouse()
+std::shared_ptr<Mouse> GameHostMetal::GetMouse() noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->GetMouse();
 }
 
-std::shared_ptr<Gamepad> GameHostMetal::GetGamepad()
+std::shared_ptr<Gamepad> GameHostMetal::GetGamepad() noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->GetGamepad();
 }
 
-std::shared_ptr<IOService> GameHostMetal::GetIOService()
+std::shared_ptr<IOService> GameHostMetal::GetIOService() noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->GetIOService(shared_from_this());
 }
 
-std::shared_ptr<HTTPClient> GameHostMetal::GetHTTPClient()
+std::shared_ptr<HTTPClient> GameHostMetal::GetHTTPClient() noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->GetHTTPClient(shared_from_this());
