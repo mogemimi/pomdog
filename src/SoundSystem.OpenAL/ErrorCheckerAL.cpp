@@ -1,21 +1,17 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "ErrorCheckerAL.hpp"
-#include "PrerequisitesOpenAL.hpp"
-#include "../Utility/Tagged.hpp"
 #include "Pomdog/Logging/Log.hpp"
-#include <cstddef>
+#include "Pomdog/Utility/Errors.hpp"
 #include <sstream>
 
-namespace Pomdog::Detail::SoundSystem::OpenAL {
+namespace Pomdog::Detail::OpenAL {
 namespace {
 
-struct ErrorCodeTag;
-using ErrorCodeAL = Tagged<ALenum, ErrorCodeTag>;
-
-std::string ToString(const ErrorCodeAL& errorCode)
+[[nodiscard]] std::string
+ToErrorCodeString(ALenum errorCode) noexcept
 {
-    switch (errorCode.value) {
+    switch (errorCode) {
     case AL_NO_ERROR:
         return "AL_NO_ERROR";
     case AL_INVALID_ENUM:
@@ -27,38 +23,46 @@ std::string ToString(const ErrorCodeAL& errorCode)
     case AL_OUT_OF_MEMORY:
         return "AL_OUT_OF_MEMORY";
     }
-    std::stringstream ss;
-    ss << "ErrorCode '" << reinterpret_cast<const void*>(errorCode.value) << "'";
-    return ss.str();
+    return std::to_string(errorCode);
 }
 
-} // unnamed namespace
+} // namespace
 
-void ErrorCheckerAL::CheckError(const char* command, const char* filename, int line)
+[[nodiscard]] std::shared_ptr<Error>
+MakeOpenALError(ALenum err, std::string&& message) noexcept
 {
-    ErrorCodeAL const errorCode{alGetError()};
+    message += ": ";
+    message += ToErrorCodeString(err);
+    return Errors::New(std::move(message));
+}
 
-    if (AL_NO_ERROR == errorCode.value) {
+#if defined(DEBUG) && !defined(NDEBUG)
+void CheckError(const char* command, const char* filename, int line) noexcept
+{
+    const ALenum errorCode = alGetError();
+
+    if (errorCode == AL_NO_ERROR) {
         return;
     }
 
-    constexpr std::size_t maxLine = 30;
+    constexpr int maxLine = 30;
 
-    static std::size_t lines = 0;
+    static int lines = 0;
     if (lines < maxLine) {
         std::stringstream stream;
         stream << ">>> File " << filename
-            << ", line " << line
-            << ", in " << command << "\n"
-            << "OpenAL Error: " << ToString(errorCode);
+               << ", line " << line
+               << ", in " << command << "\n"
+               << "OpenAL Error: " << ToErrorCodeString(errorCode);
 
         Log::Warning("Pomdog.SoundSystem", stream.str());
 
-        if (lines == (maxLine - 1U)) {
+        if (lines == (maxLine - 1)) {
             Log::Warning("Pomdog.SoundSystem", "OpenAL Error: More...");
         }
         ++lines;
     }
 }
+#endif
 
-} // namespace Pomdog::Detail::SoundSystem::OpenAL
+} // namespace Pomdog::Detail::OpenAL

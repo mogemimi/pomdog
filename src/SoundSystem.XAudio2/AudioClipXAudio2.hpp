@@ -3,34 +3,68 @@
 #pragma once
 
 #include "PrerequisitesXAudio2.hpp"
+#include "Pomdog/Audio/AudioChannels.hpp"
+#include "Pomdog/Audio/AudioClip.hpp"
 #include <cstddef>
 #include <cstdint>
 #include <vector>
 
 namespace Pomdog {
+class Error;
 enum class AudioChannels : std::uint8_t;
 } // namespace Pomdog
 
-namespace Pomdog::Detail::SoundSystem::XAudio2 {
+namespace Pomdog::Detail::XAudio2 {
 
-class AudioClipXAudio2 final {
+class AudioClipXAudio2 final : public AudioClip {
+private:
+    std::vector<std::uint8_t> audioData;
+    ::WAVEFORMATEX waveFormat;
+    Duration sampleDuration = Duration::zero();
+    AudioChannels channels = AudioChannels::Mono;
+
 public:
-    AudioClipXAudio2(
-        std::vector<std::uint8_t>&& audioData,
-        std::vector<std::uint8_t>&& waveFormat);
+    AudioClipXAudio2() noexcept;
 
     AudioClipXAudio2(const AudioClipXAudio2&) = delete;
     AudioClipXAudio2& operator=(const AudioClipXAudio2&) = delete;
 
-    const WAVEFORMATEX* WaveFormat() const;
+    /// Initializes the audio clip.
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(
+        const void* audioData,
+        std::size_t sizeInBytes,
+        int sampleRate,
+        int bitsPerSample,
+        AudioChannels channels) noexcept;
 
-    const std::uint8_t* Data() const;
+    /// Gets the length of the audio clip in seconds.
+    [[nodiscard]] Duration
+    GetLength() const noexcept override;
 
-    std::size_t SizeInBytes() const;
+    /// Gets the number of samples per second.
+    [[nodiscard]] int
+    GetSampleRate() const noexcept override;
 
-private:
-    std::vector<std::uint8_t> audioData;
-    std::vector<std::uint8_t> waveFormat;
+    /// Gets the number of bits per sample.
+    [[nodiscard]] int
+    GetBitsPerSample() const noexcept override;
+
+    /// Gets the number of channels in the audip clip.
+    [[nodiscard]] AudioChannels
+    GetChannels() const noexcept override;
+
+    /// Gets the pointer of the WAVEFORMATEX.
+    [[nodiscard]] const WAVEFORMATEX*
+    GetWaveFormat() const noexcept;
+
+    /// Gets the pointer of the audio data.
+    [[nodiscard]] const std::uint8_t*
+    GetData() const noexcept;
+
+    /// Gets the size of the audio data in bytes.
+    [[nodiscard]] std::size_t
+    GetSizeInBytes() const noexcept;
 };
 
-} // namespace Pomdog::Detail::SoundSystem::XAudio2
+} // namespace Pomdog::Detail::XAudio2

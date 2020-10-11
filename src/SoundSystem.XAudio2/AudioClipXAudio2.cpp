@@ -1,38 +1,96 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "AudioClipXAudio2.hpp"
+#include "../Audio/AudioHelper.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Utility/Errors.hpp"
+#include <cstring>
 #include <utility>
 
-namespace Pomdog::Detail::SoundSystem::XAudio2 {
+namespace Pomdog::Detail::XAudio2 {
+namespace {
 
-AudioClipXAudio2::AudioClipXAudio2(
-    std::vector<std::uint8_t>&& audioDataIn,
-    std::vector<std::uint8_t>&& waveFormatIn)
-    : audioData(std::move(audioDataIn))
-    , waveFormat(std::move(waveFormatIn))
+[[nodiscard]] int GetChannelCount(AudioChannels channels) noexcept
 {
-    POMDOG_ASSERT(!audioData.empty());
-    POMDOG_ASSERT(!waveFormat.empty());
+    static_assert(static_cast<int>(AudioChannels::Mono) == 1);
+    static_assert(static_cast<int>(AudioChannels::Stereo) == 2);
+    return static_cast<int>(channels);
 }
 
-const WAVEFORMATEX* AudioClipXAudio2::WaveFormat() const
+} // namespace
+
+AudioClipXAudio2::AudioClipXAudio2() noexcept = default;
+
+std::shared_ptr<Error>
+AudioClipXAudio2::Initialize(
+    const void* audioDataIn,
+    std::size_t sizeInBytes,
+    int sampleRate,
+    int bitsPerSample,
+    AudioChannels channelsIn) noexcept
 {
-    POMDOG_ASSERT(!waveFormat.empty());
-    POMDOG_ASSERT(waveFormat.size() >= sizeof(WAVEFORMATEX));
-    return reinterpret_cast<const WAVEFORMATEX*>(waveFormat.data());
+    POMDOG_ASSERT(audioDataIn != nullptr);
+    POMDOG_ASSERT(sizeInBytes > 0);
+
+    this->channels = channelsIn;
+
+    this->audioData.resize(sizeInBytes);
+    std::memcpy(audioData.data(), audioDataIn, sizeInBytes);
+
+    const auto channelCount = GetChannelCount(this->channels);
+    const auto blockAlign = channelCount * (bitsPerSample / 8);
+
+    this->waveFormat.wFormatTag = WAVE_FORMAT_PCM;
+    this->waveFormat.nChannels = static_cast<WORD>(channelCount);
+    this->waveFormat.nSamplesPerSec = sampleRate;
+    this->waveFormat.nAvgBytesPerSec = sampleRate * blockAlign;
+    this->waveFormat.nBlockAlign = static_cast<WORD>(blockAlign);
+    this->waveFormat.wBitsPerSample = static_cast<WORD>(bitsPerSample);
+    this->waveFormat.cbSize = 0;
+
+    const auto samples = Detail::AudioHelper::GetSamples(sizeInBytes, bitsPerSample, channels);
+    this->sampleDuration = Detail::AudioHelper::GetSampleDuration(samples, sampleRate);
+
+    return nullptr;
 }
 
-const std::uint8_t* AudioClipXAudio2::Data() const
+Duration
+AudioClipXAudio2::GetLength() const noexcept
+{
+    return sampleDuration;
+}
+
+int AudioClipXAudio2::GetSampleRate() const noexcept
+{
+    return waveFormat.nSamplesPerSec;
+}
+
+int AudioClipXAudio2::GetBitsPerSample() const noexcept
+{
+    return waveFormat.wBitsPerSample;
+}
+
+AudioChannels
+AudioClipXAudio2::GetChannels() const noexcept
+{
+    return channels;
+}
+
+const WAVEFORMATEX* AudioClipXAudio2::GetWaveFormat() const noexcept
+{
+    return &waveFormat;
+}
+
+const std::uint8_t* AudioClipXAudio2::GetData() const noexcept
 {
     POMDOG_ASSERT(!audioData.empty());
     return audioData.data();
 }
 
-std::size_t AudioClipXAudio2::SizeInBytes() const
+std::size_t AudioClipXAudio2::GetSizeInBytes() const noexcept
 {
     POMDOG_ASSERT(!audioData.empty());
     return sizeof(std::uint8_t) * audioData.size();
 }
 
-} // namespace Pomdog::Detail::SoundSystem::XAudio2
+} // namespace Pomdog::Detail::XAudio2

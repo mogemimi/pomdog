@@ -5,30 +5,38 @@
 #include "Pomdog/Audio/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include <memory>
+#include <tuple>
 
 namespace Pomdog {
 
-class POMDOG_EXPORT AudioEngine final {
-public:
-    AudioEngine();
-    ~AudioEngine();
+class Error;
 
-    AudioEngine(const AudioEngine&) = delete;
-    AudioEngine& operator=(const AudioEngine&) = delete;
-    AudioEngine(AudioEngine&&) = default;
-    AudioEngine& operator=(AudioEngine&&) = default;
+class POMDOG_EXPORT AudioEngine {
+public:
+    virtual ~AudioEngine() noexcept;
+
+    /// Creates an audio clip.
+    [[nodiscard]] virtual std::tuple<std::shared_ptr<AudioClip>, std::shared_ptr<Error>>
+    CreateAudioClip(
+        const void* audioData,
+        std::size_t sizeInBytes,
+        int sampleRate,
+        int bitsPerSample,
+        AudioChannels channels) noexcept = 0;
+
+    /// Creates a sound effect.
+    [[nodiscard]] virtual std::tuple<std::shared_ptr<SoundEffect>, std::shared_ptr<Error>>
+    CreateSoundEffect(
+        const std::shared_ptr<AudioClip>& audioClip,
+        bool isLooped) noexcept = 0;
 
     /// Gets the main volume that affects all sound effects.
-    float GetMainVolume() const;
+    [[nodiscard]] virtual float
+    GetMainVolume() const noexcept = 0;
 
     /// Sets the main volume that affects all sound effects.
-    void SetMainVolume(float volume);
-
-    /// Gets the pointer of the native audio engine.
-    Detail::SoundSystem::NativeAudioEngine* GetNativeAudioEngine();
-
-private:
-    std::unique_ptr<Detail::SoundSystem::NativeAudioEngine> nativeAudioEngine;
+    virtual void
+    SetMainVolume(float volume) noexcept = 0;
 };
 
 } // namespace Pomdog

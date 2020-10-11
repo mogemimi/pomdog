@@ -5,156 +5,191 @@
 #include "ErrorCheckerAL.hpp"
 #include "Pomdog/Audio/AudioEmitter.hpp"
 #include "Pomdog/Audio/AudioListener.hpp"
+#include "Pomdog/Math/MathHelper.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <array>
+#include <cmath>
 
-namespace Pomdog::Detail::SoundSystem::OpenAL {
+namespace Pomdog::Detail::OpenAL {
 
-SoundEffectAL::SoundEffectAL(
-    AudioEngineAL&,
-    const std::shared_ptr<AudioClipAL>& audioClipIn,
-    bool isLooped)
-    : audioClip(audioClipIn)
+SoundEffectAL::SoundEffectAL() noexcept = default;
+
+SoundEffectAL::~SoundEffectAL() noexcept
 {
-    source = ([] {
+    if (source != std::nullopt) {
+        alDeleteSources(1, &*source);
+        source = std::nullopt;
+    }
+}
+
+std::shared_ptr<Error>
+SoundEffectAL::Initialize(
+    const std::shared_ptr<AudioClipAL>& audioClipIn,
+    bool isLoopedIn) noexcept
+{
+    this->audioClip = audioClipIn;
+    this->isLooped = isLoopedIn;
+
+    source = [] {
         ALuint nativeSource;
         alGenSources(1, &nativeSource);
         return std::make_optional(nativeSource);
-    })();
-
-#ifdef DEBUG
-    ErrorCheckerAL::CheckError("alGenSources", __FILE__, __LINE__);
-#endif
-
-    POMDOG_ASSERT(source);
-    alSourcei(source->value, AL_BUFFER, audioClip->NativeBuffer());
-
-#ifdef DEBUG
-    ErrorCheckerAL::CheckError("alSourcei", __FILE__, __LINE__);
-#endif
-
-    POMDOG_ASSERT(source);
-    alSourcei(source->value, AL_LOOPING, (isLooped ? AL_TRUE : AL_FALSE));
-
-#ifdef DEBUG
-    ErrorCheckerAL::CheckError("alSourcei", __FILE__, __LINE__);
-#endif
-}
-
-SoundEffectAL::~SoundEffectAL()
-{
-    if (source) {
-        alDeleteSources(1, source->Data());
+    }();
+    if (auto err = alGetError(); err != AL_NO_ERROR) {
+        return MakeOpenALError(std::move(err), "alGenSources() failed.");
     }
+
+    POMDOG_ASSERT(source != std::nullopt);
+    alSourcei(source.value(), AL_BUFFER, audioClip->GetNativeBuffer());
+    if (auto err = alGetError(); err != AL_NO_ERROR) {
+        return MakeOpenALError(std::move(err), "alSourcei(AL_BUFFER) failed.");
+    }
+
+    POMDOG_ASSERT(source != std::nullopt);
+    alSourcei(source.value(), AL_LOOPING, (isLooped ? AL_TRUE : AL_FALSE));
+    if (auto err = alGetError(); err != AL_NO_ERROR) {
+        return MakeOpenALError(std::move(err), "alSourcei(AL_LOOPING) failed.");
+    }
+
+    return nullptr;
 }
 
-void SoundEffectAL::Pause()
+void SoundEffectAL::Pause() noexcept
 {
-    POMDOG_ASSERT(source);
-    alSourcePause(source->value);
+    if (this->state == SoundState::Paused) {
+        return;
+    }
 
-#ifdef DEBUG
-    ErrorCheckerAL::CheckError("alSourcePause", __FILE__, __LINE__);
-#endif
+    POMDOG_ASSERT(source != std::nullopt);
+    alSourcePause(source.value());
+    POMDOG_CHECK_ERROR_OPENAL("alSourcePause()");
+    this->state = SoundState::Paused;
 }
 
-void SoundEffectAL::Play()
+void SoundEffectAL::Play() noexcept
 {
-    POMDOG_ASSERT(source);
-    alSourcePlay(source->value);
+    if (this->state == SoundState::Playing) {
+        return;
+    }
 
-#ifdef DEBUG
-    ErrorCheckerAL::CheckError("alSourcePlay", __FILE__, __LINE__);
-#endif
+    POMDOG_ASSERT(source != std::nullopt);
+    alSourcePlay(source.value());
+    POMDOG_CHECK_ERROR_OPENAL("alSourcePlay()");
+    this->state = SoundState::Playing;
 }
 
-void SoundEffectAL::Stop()
+void SoundEffectAL::Stop() noexcept
 {
-    POMDOG_ASSERT(source);
-    alSourceStop(source->value);
+    if (this->state == SoundState::Stopped) {
+        return;
+    }
 
-#ifdef DEBUG
-    ErrorCheckerAL::CheckError("alSourceStop", __FILE__, __LINE__);
-#endif
+    POMDOG_ASSERT(source != std::nullopt);
+    alSourceStop(source.value());
+    POMDOG_CHECK_ERROR_OPENAL("alSourceStop()");
 
-    POMDOG_ASSERT(source);
-    alSourceRewind(source->value);
-
-#ifdef DEBUG
-    ErrorCheckerAL::CheckError("alSourceRewind", __FILE__, __LINE__);
-#endif
+    POMDOG_ASSERT(source != std::nullopt);
+    alSourceRewind(source.value());
+    POMDOG_CHECK_ERROR_OPENAL("alSourceRewind()");
+    this->state = SoundState::Stopped;
 }
 
-void SoundEffectAL::Apply3D(const AudioListener& listener, const AudioEmitter& emitter)
+void SoundEffectAL::Apply3D(const AudioListener& listener, const AudioEmitter& emitter) noexcept
 {
     {
-        POMDOG_ASSERT(source);
-        alSourcefv(source->value, AL_POSITION, emitter.Position.Data());
-        alSourcefv(source->value, AL_VELOCITY, emitter.Velocity.Data());
-        alSourcefv(source->value, AL_DIRECTION, emitter.Forward.Data());
+        POMDOG_ASSERT(source != std::nullopt);
+        alSourcefv(source.value(), AL_POSITION, emitter.Position.Data());
+        POMDOG_CHECK_ERROR_OPENAL("alSourcefv(AL_POSITION)");
 
-#ifdef DEBUG
-        ErrorCheckerAL::CheckError("alSourcei", __FILE__, __LINE__);
-#endif
+        alSourcefv(source.value(), AL_VELOCITY, emitter.Velocity.Data());
+        POMDOG_CHECK_ERROR_OPENAL("alSourcefv(AL_VELOCITY)");
+
+        alSourcefv(source.value(), AL_DIRECTION, emitter.Forward.Data());
+        POMDOG_CHECK_ERROR_OPENAL("alSourcefv(AL_DIRECTION)");
 
         POMDOG_ASSERT(emitter.DopplerScale >= 0.0f);
         alDopplerFactor(emitter.DopplerScale);
-
-#ifdef DEBUG
-        ErrorCheckerAL::CheckError("alDopplerFactor", __FILE__, __LINE__);
-#endif
+        POMDOG_CHECK_ERROR_OPENAL("alDopplerFactor()");
     }
     {
-        std::array<ALfloat, 6> orientation {{
-            listener.Forward.X, listener.Forward.Y, listener.Forward.Z,
-            listener.Up.X, listener.Up.Y, listener.Up.Z}};
+        std::array<ALfloat, 6> orientation{{listener.Forward.X,
+            listener.Forward.Y,
+            listener.Forward.Z,
+            listener.Up.X,
+            listener.Up.Y,
+            listener.Up.Z}};
 
         alListenerfv(AL_POSITION, listener.Position.Data());
-        alListenerfv(AL_VELOCITY, listener.Velocity.Data());
-        alListenerfv(AL_ORIENTATION, orientation.data());
+        POMDOG_CHECK_ERROR_OPENAL("alListenerfv(AL_POSITION)");
 
-#ifdef DEBUG
-        ErrorCheckerAL::CheckError("alListenerfv", __FILE__, __LINE__);
-#endif
+        alListenerfv(AL_VELOCITY, listener.Velocity.Data());
+        POMDOG_CHECK_ERROR_OPENAL("alListenerfv(AL_VELOCITY)");
+
+        alListenerfv(AL_ORIENTATION, orientation.data());
+        POMDOG_CHECK_ERROR_OPENAL("alListenerfv(AL_ORIENTATION)");
     }
 }
 
-void SoundEffectAL::ExitLoop()
+bool SoundEffectAL::IsLooped() const noexcept
 {
-    POMDOG_ASSERT(source);
-    alSourcei(source->value, AL_LOOPING, AL_FALSE);
-
-#ifdef DEBUG
-    ErrorCheckerAL::CheckError("alSourcei", __FILE__, __LINE__);
-#endif
+    return this->isLooped;
 }
 
-void SoundEffectAL::SetPitch(float pitch)
+void SoundEffectAL::ExitLoop() noexcept
 {
-    // pitch --> nativePitch
-    //  0.0f --> 1.0f
-    // -1.0f --> 0.5f
-    // +1.0f --> 1.5f
-    auto nativePitch = 1.0f + (0.5f * pitch);
+    if (!this->isLooped) {
+        return;
+    }
 
-    POMDOG_ASSERT(source);
+    POMDOG_ASSERT(source != std::nullopt);
+    alSourcei(source.value(), AL_LOOPING, AL_FALSE);
+    POMDOG_CHECK_ERROR_OPENAL("alSourcei()");
+    this->isLooped = false;
+}
+
+SoundState SoundEffectAL::GetState() const noexcept
+{
+    return state;
+}
+
+float SoundEffectAL::GetPitch() const noexcept
+{
+    return pitch;
+}
+
+void SoundEffectAL::SetPitch(float pitchIn) noexcept
+{
+    POMDOG_ASSERT(pitchIn >= -1.0f);
+    POMDOG_ASSERT(pitchIn <= 1.0f);
+    this->pitch = pitchIn;
+
+    // NOTE: Convert from pitch to nativePitch:
+    //  0.0f => 1.0f
+    // -1.0f => 0.5f
+    // +1.0f => 1.5f
+    const auto nativePitch = 1.0f + (0.5f * pitch);
+
+    POMDOG_ASSERT(source != std::nullopt);
     POMDOG_ASSERT(nativePitch > 0.0f);
-    alSourcef(source->value, AL_PITCH, nativePitch);
-
-#ifdef DEBUG
-    ErrorCheckerAL::CheckError("alSourcei", __FILE__, __LINE__);
-#endif
+    alSourcef(source.value(), AL_PITCH, nativePitch);
+    POMDOG_CHECK_ERROR_OPENAL("alSourcef()");
 }
 
-void SoundEffectAL::SetVolume(float volume)
+float SoundEffectAL::GetVolume() const noexcept
 {
-    POMDOG_ASSERT(source);
-    POMDOG_ASSERT(volume >= 0.0f);
-    alSourcef(source->value, AL_GAIN, volume);
-
-#ifdef DEBUG
-    ErrorCheckerAL::CheckError("alSourcei", __FILE__, __LINE__);
-#endif
+    return volume;
 }
 
-} // namespace Pomdog::Detail::SoundSystem::OpenAL
+void SoundEffectAL::SetVolume(float volumeIn) noexcept
+{
+    POMDOG_ASSERT(volumeIn >= 0.0f);
+    POMDOG_ASSERT(volumeIn <= 1.0f);
+    this->volume = volumeIn;
+
+    POMDOG_ASSERT(source != std::nullopt);
+    POMDOG_ASSERT(volume >= 0.0f);
+    alSourcef(source.value(), AL_GAIN, volume);
+    POMDOG_CHECK_ERROR_OPENAL("alSourcef()");
+}
+
+} // namespace Pomdog::Detail::OpenAL

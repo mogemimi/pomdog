@@ -6,6 +6,8 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_INC_DIR}/Audio/AudioEmitter.hpp
     ${POMDOG_INC_DIR}/Audio/AudioEngine.hpp
     ${POMDOG_SRC_DIR}/Audio/AudioEngine.cpp
+    ${POMDOG_SRC_DIR}/Audio/AudioHelper.hpp
+    ${POMDOG_SRC_DIR}/Audio/AudioHelper.cpp
     ${POMDOG_INC_DIR}/Audio/AudioListener.hpp
     ${POMDOG_INC_DIR}/Audio/SoundEffect.hpp
     ${POMDOG_SRC_DIR}/Audio/SoundEffect.cpp

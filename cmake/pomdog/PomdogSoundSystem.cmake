@@ -5,8 +5,6 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/SoundSystem.OpenAL/AudioClipAL.hpp
         ${POMDOG_SRC_DIR}/SoundSystem.OpenAL/AudioEngineAL.cpp
         ${POMDOG_SRC_DIR}/SoundSystem.OpenAL/AudioEngineAL.hpp
-        ${POMDOG_SRC_DIR}/SoundSystem.OpenAL/ContextOpenAL.cpp
-        ${POMDOG_SRC_DIR}/SoundSystem.OpenAL/ContextOpenAL.hpp
         ${POMDOG_SRC_DIR}/SoundSystem.OpenAL/ErrorCheckerAL.cpp
         ${POMDOG_SRC_DIR}/SoundSystem.OpenAL/ErrorCheckerAL.hpp
         ${POMDOG_SRC_DIR}/SoundSystem.OpenAL/PrerequisitesOpenAL.hpp

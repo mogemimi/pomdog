@@ -3,47 +3,33 @@
 #pragma once
 
 #include "Pomdog/Application/Duration.hpp"
-#include "Pomdog/Audio/AudioChannels.hpp"
 #include "Pomdog/Audio/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Basic/Export.hpp"
-#include <cstdint>
 #include <memory>
+#include <optional>
+#include <vector>
 
 namespace Pomdog {
 
-class POMDOG_EXPORT AudioClip final {
+class POMDOG_EXPORT AudioClip {
 public:
-    AudioClip(
-        std::unique_ptr<Detail::SoundSystem::NativeAudioClip>&& nativeAudioClip,
-        int sampleRate,
-        int bitsPerSample,
-        AudioChannels channels);
-
-    AudioClip(const AudioClip&) = delete;
-    AudioClip& operator=(const AudioClip&) = delete;
-
-    ~AudioClip();
+    virtual ~AudioClip() noexcept;
 
     /// Gets the length of the audio clip in seconds.
-    Duration GetLength() const;
+    [[nodiscard]] virtual Duration
+    GetLength() const noexcept = 0;
 
     /// Gets the number of samples per second.
-    int GetSampleRate() const;
+    [[nodiscard]] virtual int
+    GetSampleRate() const noexcept = 0;
 
     /// Gets the number of bits per sample.
-    int GetBitsPerSample() const;
+    [[nodiscard]] virtual int
+    GetBitsPerSample() const noexcept = 0;
 
     /// Gets the number of channels in the audip clip.
-    AudioChannels GetChannels() const;
-
-    /// Gets the pointer of the native audio clip.
-    Detail::SoundSystem::NativeAudioClip* GetNativeAudioClip();
-
-private:
-    std::unique_ptr<Detail::SoundSystem::NativeAudioClip> nativeAudioClip;
-    std::int32_t sampleRate;
-    std::int32_t bitsPerSample;
-    AudioChannels channels;
+    [[nodiscard]] virtual AudioChannels
+    GetChannels() const noexcept = 0;
 };
 
 } // namespace Pomdog

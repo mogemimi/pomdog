@@ -2,24 +2,55 @@
 
 #pragma once
 
-#include "ContextOpenAL.hpp"
 #include "PrerequisitesOpenAL.hpp"
+#include "Pomdog/Audio/AudioEngine.hpp"
+#include <memory>
 
-namespace Pomdog::Detail::SoundSystem::OpenAL {
+namespace Pomdog {
+class Error;
+} // namespace Pomdog
 
-class AudioEngineAL final {
+namespace Pomdog::Detail::OpenAL {
+
+class AudioEngineAL final : public AudioEngine {
+private:
+    ALCdevice* device = nullptr;
+    ALCcontext* context = nullptr;
+
 public:
-    AudioEngineAL();
+    AudioEngineAL() noexcept;
+
     AudioEngineAL(const AudioEngineAL&) = delete;
     AudioEngineAL& operator=(const AudioEngineAL&) = delete;
-    ~AudioEngineAL();
 
-    float GetMainVolume() const;
+    ~AudioEngineAL() noexcept;
 
-    void SetMainVolume(float volume);
+    /// Initializes the audio engine.
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize() noexcept;
 
-private:
-    ContextOpenAL context;
+    /// Creates an audio clip.
+    [[nodiscard]] std::tuple<std::shared_ptr<AudioClip>, std::shared_ptr<Error>>
+    CreateAudioClip(
+        const void* audioData,
+        std::size_t sizeInBytes,
+        int sampleRate,
+        int bitsPerSample,
+        AudioChannels channels) noexcept override;
+
+    /// Creates a sound effect.
+    [[nodiscard]] std::tuple<std::shared_ptr<SoundEffect>, std::shared_ptr<Error>>
+    CreateSoundEffect(
+        const std::shared_ptr<AudioClip>& audioClip,
+        bool isLooped) noexcept override;
+
+    /// Gets the main volume that affects all sound effects.
+    [[nodiscard]] float
+    GetMainVolume() const noexcept override;
+
+    /// Sets the main volume that affects all sound effects.
+    void
+    SetMainVolume(float volume) noexcept override;
 };
 
-} // namespace Pomdog::Detail::SoundSystem::OpenAL
+} // namespace Pomdog::Detail::OpenAL

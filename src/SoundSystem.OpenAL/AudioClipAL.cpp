@@ -2,88 +2,124 @@
 
 #include "AudioClipAL.hpp"
 #include "ErrorCheckerAL.hpp"
+#include "../Audio/AudioHelper.hpp"
 #include "Pomdog/Audio/AudioClip.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Utility/Errors.hpp"
+#include <tuple>
+#include <utility>
 
-namespace Pomdog::Detail::SoundSystem::OpenAL {
+namespace Pomdog::Detail::OpenAL {
 namespace {
 
-ALenum ToFormat(AudioChannels channel, std::uint16_t bitPerSample)
+[[nodiscard]] std::tuple<ALenum, std::shared_ptr<Error>>
+ToFormat(AudioChannels channel, std::uint16_t bitPerSample) noexcept
 {
     switch (channel) {
     case AudioChannels::Mono:
         if (bitPerSample == 8) {
-            return AL_FORMAT_MONO8;
+            return std::make_tuple(AL_FORMAT_MONO8, nullptr);
         }
         if (bitPerSample == 16) {
-            return AL_FORMAT_MONO16;
+            return std::make_tuple(AL_FORMAT_MONO16, nullptr);
         }
         break;
     case AudioChannels::Stereo:
         if (bitPerSample == 8) {
-            return AL_FORMAT_STEREO8;
+            return std::make_tuple(AL_FORMAT_STEREO8, nullptr);
         }
         if (bitPerSample == 16) {
-            return AL_FORMAT_STEREO16;
+            return std::make_tuple(AL_FORMAT_STEREO16, nullptr);
         }
         break;
     }
-
-    POMDOG_ASSERT(false);
-    return AL_FORMAT_MONO8;
+    return std::make_tuple(AL_FORMAT_STEREO8, Errors::New("Unsupported audio format"));
 }
 
-} // unnamed namespace
+} // namespace
 
-AudioClipAL::AudioClipAL(
-    const void* data,
-    std::size_t size,
-    int sampleRate,
-    int bitsPerSample,
-    AudioChannels channel)
-    : sizeInBytes(size)
-{
-    POMDOG_ASSERT(bitsPerSample == 8 || bitsPerSample == 16);
+AudioClipAL::AudioClipAL() noexcept = default;
 
-    buffer = ([] {
-        ALuint nativeBuffer;
-        alGenBuffers(1, &nativeBuffer);
-        return std::move(nativeBuffer);
-    })();
-
-#ifdef DEBUG
-    ErrorCheckerAL::CheckError("alGenBuffers", __FILE__, __LINE__);
-#endif
-
-    POMDOG_ASSERT(buffer);
-
-    POMDOG_ASSERT(data);
-    POMDOG_ASSERT(size > 0);
-
-    ALenum format = ToFormat(channel, bitsPerSample);
-    alBufferData(*buffer, format, data, static_cast<ALsizei>(size), sampleRate);
-
-#ifdef DEBUG
-    ErrorCheckerAL::CheckError("alBufferData", __FILE__, __LINE__);
-#endif
-}
-
-AudioClipAL::~AudioClipAL()
+AudioClipAL::~AudioClipAL() noexcept
 {
     if (buffer) {
         alDeleteBuffers(1, &(*buffer));
+        POMDOG_CHECK_ERROR_OPENAL("alDeleteBuffers");
     }
 }
 
-std::size_t AudioClipAL::SizeInBytes() const
+std::shared_ptr<Error>
+AudioClipAL::Initialize(
+    const void* data,
+    std::size_t sizeInBytesIn,
+    int sampleRateIn,
+    int bitsPerSampleIn,
+    AudioChannels channelsIn) noexcept
+{
+    this->sizeInBytes = sizeInBytesIn;
+    this->sampleRate = sampleRateIn;
+    this->bitsPerSample = bitsPerSampleIn;
+    this->channels = channelsIn;
+
+    POMDOG_ASSERT(bitsPerSample == 8 || bitsPerSample == 16);
+
+    buffer = [] {
+        ALuint nativeBuffer;
+        alGenBuffers(1, &nativeBuffer);
+        return std::move(nativeBuffer);
+    }();
+    if (auto err = alGetError(); err != AL_NO_ERROR) {
+        return MakeOpenALError(std::move(err), "alGenBuffers() failed.");
+    }
+
+    POMDOG_ASSERT(buffer != std::nullopt);
+    POMDOG_ASSERT(data != nullptr);
+    POMDOG_ASSERT(sizeInBytes > 0);
+
+    const auto [format, formatErr] = ToFormat(channels, bitsPerSample);
+    if (formatErr != nullptr) {
+        return Errors::Wrap(std::move(formatErr), "ToFormat() failed.");
+    }
+
+    alBufferData(*buffer, format, data, static_cast<ALsizei>(sizeInBytes), sampleRate);
+    if (auto err = alGetError(); err != AL_NO_ERROR) {
+        return MakeOpenALError(std::move(err), "alBufferData() failed.");
+    }
+
+    return nullptr;
+}
+
+Duration AudioClipAL::GetLength() const noexcept
+{
+    auto samples = Detail::AudioHelper::GetSamples(sizeInBytes, bitsPerSample, channels);
+    auto sampleDuration = Detail::AudioHelper::GetSampleDuration(samples, sampleRate);
+    return sampleDuration;
+}
+
+int AudioClipAL::GetSampleRate() const noexcept
+{
+    return sampleRate;
+}
+
+int AudioClipAL::GetBitsPerSample() const noexcept
+{
+    return bitsPerSample;
+}
+
+AudioChannels AudioClipAL::GetChannels() const noexcept
+{
+    return channels;
+}
+
+std::size_t AudioClipAL::GetSizeInBytes() const noexcept
 {
     return sizeInBytes;
 }
 
-ALuint AudioClipAL::NativeBuffer() const
+ALuint AudioClipAL::GetNativeBuffer() const noexcept
 {
-    POMDOG_ASSERT(buffer);
+    POMDOG_ASSERT(buffer != std::nullopt);
     return *buffer;
 }
 
-} // namespace Pomdog::Detail::SoundSystem::OpenAL
+} // namespace Pomdog::Detail::OpenAL

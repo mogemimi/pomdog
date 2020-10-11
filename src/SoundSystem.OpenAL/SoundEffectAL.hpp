@@ -3,52 +3,89 @@
 #pragma once
 
 #include "PrerequisitesOpenAL.hpp"
-#include "../Utility/Tagged.hpp"
+#include "Pomdog/Audio/SoundEffect.hpp"
+#include "Pomdog/Audio/SoundState.hpp"
 #include <memory>
 #include <optional>
 
 namespace Pomdog {
 class AudioEmitter;
 class AudioListener;
+class Error;
 } // namespace Pomdog
 
-namespace Pomdog::Detail::SoundSystem::OpenAL {
-
-struct AudioSourceALTag {};
-using AudioSourceAL = Tagged<ALuint, AudioSourceALTag>;
+namespace Pomdog::Detail::OpenAL {
 
 class AudioClipAL;
 class AudioEngineAL;
 
-class SoundEffectAL final {
+class SoundEffectAL final : public SoundEffect {
 private:
     std::shared_ptr<AudioClipAL> audioClip;
-    std::optional<AudioSourceAL> source;
+    std::optional<ALuint> source;
+
+    float pitch = 0.0f;
+    float volume = 1.0f;
+    SoundState state = SoundState::Stopped;
+    bool isLooped = false;
 
 public:
-    SoundEffectAL(
-        AudioEngineAL& audioEngine,
-        const std::shared_ptr<AudioClipAL>& audioClip,
-        bool isLooped);
+    SoundEffectAL() noexcept;
 
     SoundEffectAL(const SoundEffectAL&) = delete;
     SoundEffectAL& operator=(const SoundEffectAL&) = delete;
 
-    ~SoundEffectAL();
+    ~SoundEffectAL() noexcept;
 
-    void Pause();
+    /// Initializes the audio engine.
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(
+        const std::shared_ptr<AudioClipAL>& audioClip,
+        bool isLooped) noexcept;
 
-    void Play();
+    /// Pauses the sound.
+    void
+    Pause() noexcept override;
 
-    void Stop();
+    /// Plays or resumes playing the sound.
+    void
+    Play() noexcept override;
 
-    void Apply3D(const AudioListener& listener, const AudioEmitter& emitter);
+    /// Stops playing the sound immediately.
+    void
+    Stop() noexcept override;
 
-    void ExitLoop();
+    /// Applies 3D positioning to the sound.
+    void
+    Apply3D(const AudioListener& listener, const AudioEmitter& emitter) noexcept override;
 
-    void SetPitch(float pitch);
+    /// Returns true if the audio clip is looping, false otherwise.
+    [[nodiscard]] bool
+    IsLooped() const noexcept override;
 
-    void SetVolume(float volume);
+    /// Stops looping the sound when it reaches the end of the sound.
+    void
+    ExitLoop() noexcept override;
+
+    /// Gets the current state of the audio source.
+    [[nodiscard]] SoundState
+    GetState() const noexcept override;
+
+    /// Gets the pitch of the audio source.
+    [[nodiscard]] float
+    GetPitch() const noexcept override;
+
+    /// Sets the pitch of the audio source (-1.0 to 1.0).
+    void
+    SetPitch(float pitch) noexcept override;
+
+    /// Gets the volume of the audio source.
+    [[nodiscard]] float
+    GetVolume() const noexcept override;
+
+    /// Sets the volume of the audio source (0.0 to 1.0).
+    void
+    SetVolume(float volume) noexcept override;
 };
 
-} // namespace Pomdog::Detail::SoundSystem::OpenAL
+} // namespace Pomdog::Detail::OpenAL
