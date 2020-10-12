@@ -55,10 +55,10 @@ void CheckError(const char* command, const char* filename, int line) noexcept
                << ", in " << command << "\n"
                << "OpenAL Error: " << ToErrorCodeString(errorCode);
 
-        Log::Warning("Pomdog.SoundSystem", stream.str());
+        Log::Warning("Pomdog.Audio", stream.str());
 
         if (lines == (maxLine - 1)) {
-            Log::Warning("Pomdog.SoundSystem", "OpenAL Error: More...");
+            Log::Warning("Pomdog.Audio", "OpenAL Error: More...");
         }
         ++lines;
     }

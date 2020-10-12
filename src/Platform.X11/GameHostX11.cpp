@@ -1,12 +1,12 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "GameHostX11.hpp"
+#include "../Audio.OpenAL/AudioEngineAL.hpp"
 #include "../InputSystem/GamepadFactory.hpp"
 #include "../InputSystem/NativeGamepad.hpp"
 #include "../RenderSystem.GL4/GraphicsContextGL4.hpp"
 #include "../RenderSystem.GL4/GraphicsDeviceGL4.hpp"
 #include "../RenderSystem/GraphicsCommandQueueImmediate.hpp"
-#include "../SoundSystem.OpenAL/AudioEngineAL.hpp"
 #include "Pomdog/Application/Game.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Graphics/GraphicsCommandQueue.hpp"

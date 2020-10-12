@@ -13,4 +13,28 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/Audio/SoundEffect.cpp
     ${POMDOG_INC_DIR}/Audio/SoundState.hpp
     ${POMDOG_INC_DIR}/Audio/detail/ForwardDeclarations.hpp
+
+    $<$<PLATFORM_ID:Linux,Darwin>:
+        # NOTE: Audio.OpenAL
+        ${POMDOG_SRC_DIR}/Audio.OpenAL/AudioClipAL.cpp
+        ${POMDOG_SRC_DIR}/Audio.OpenAL/AudioClipAL.hpp
+        ${POMDOG_SRC_DIR}/Audio.OpenAL/AudioEngineAL.cpp
+        ${POMDOG_SRC_DIR}/Audio.OpenAL/AudioEngineAL.hpp
+        ${POMDOG_SRC_DIR}/Audio.OpenAL/ErrorCheckerAL.cpp
+        ${POMDOG_SRC_DIR}/Audio.OpenAL/ErrorCheckerAL.hpp
+        ${POMDOG_SRC_DIR}/Audio.OpenAL/PrerequisitesOpenAL.hpp
+        ${POMDOG_SRC_DIR}/Audio.OpenAL/SoundEffectAL.cpp
+        ${POMDOG_SRC_DIR}/Audio.OpenAL/SoundEffectAL.hpp
+    >
+
+    $<$<PLATFORM_ID:Windows>:
+        # NOTE: Audio.XAudio2
+        ${POMDOG_SRC_DIR}/Audio.XAudio2/AudioClipXAudio2.cpp
+        ${POMDOG_SRC_DIR}/Audio.XAudio2/AudioClipXAudio2.hpp
+        ${POMDOG_SRC_DIR}/Audio.XAudio2/AudioEngineXAudio2.cpp
+        ${POMDOG_SRC_DIR}/Audio.XAudio2/AudioEngineXAudio2.hpp
+        ${POMDOG_SRC_DIR}/Audio.XAudio2/PrerequisitesXAudio2.hpp
+        ${POMDOG_SRC_DIR}/Audio.XAudio2/SoundEffectXAudio2.cpp
+        ${POMDOG_SRC_DIR}/Audio.XAudio2/SoundEffectXAudio2.hpp
+    >
 )

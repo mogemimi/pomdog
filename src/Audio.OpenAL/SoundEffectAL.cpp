@@ -112,7 +112,8 @@ void SoundEffectAL::Apply3D(const AudioListener& listener, const AudioEmitter& e
         POMDOG_CHECK_ERROR_OPENAL("alDopplerFactor()");
     }
     {
-        std::array<ALfloat, 6> orientation{{listener.Forward.X,
+        std::array<ALfloat, 6> orientation{{
+            listener.Forward.X,
             listener.Forward.Y,
             listener.Forward.Z,
             listener.Up.X,

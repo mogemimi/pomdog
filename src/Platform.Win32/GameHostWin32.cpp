@@ -18,7 +18,7 @@
 #endif
 #include "../Application/SubsystemScheduler.hpp"
 #include "../Application/SystemEvents.hpp"
-#include "../SoundSystem.XAudio2/AudioEngineXAudio2.hpp"
+#include "../Audio.XAudio2/AudioEngineXAudio2.hpp"
 #include "Pomdog/Application/Game.hpp"
 #include "Pomdog/Application/GameClock.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
