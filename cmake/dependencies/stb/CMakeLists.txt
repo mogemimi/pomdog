@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(stb)
+project(stb C)
 
 # NOTE: Remove /RTC1 option from default compiler options for Visual Studio
 STRING(REGEX REPLACE "/RTC(su|[1su])" "" CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG}")
@@ -11,7 +11,7 @@ add_library(stb_static STATIC
     ${THIRDPARTY_DIR}/stb/stb_vorbis.c
     ${THIRDPARTY_DIR}/vendor/stb/stb_vorbis.h
     ${THIRDPARTY_DIR}/stb/stb_truetype.h
-    ${THIRDPARTY_DIR}/vendor/stb/stb_truetype.cpp
+    ${THIRDPARTY_DIR}/vendor/stb/stb_truetype.c
 )
 
 set_target_properties(stb_static PROPERTIES
