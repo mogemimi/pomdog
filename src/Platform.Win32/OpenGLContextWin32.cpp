@@ -15,8 +15,7 @@ namespace {
 PIXELFORMATDESCRIPTOR ToPixelFormatDescriptor(
     const PresentationParameters& presentationParameters)
 {
-    PIXELFORMATDESCRIPTOR descriptor =
-    {
+    PIXELFORMATDESCRIPTOR descriptor = {
         sizeof(PIXELFORMATDESCRIPTOR), 1,
         PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,
         PFD_TYPE_RGBA,
@@ -100,8 +99,8 @@ OpenGLContextWin32::OpenGLContextWin32(
 
         std::stringstream ss;
         ss << "Failed to call ChoosePixelFormat function."
-            << "The calling thread's last-error code is "
-            << std::hex << errorCode;
+           << "The calling thread's last-error code is "
+           << std::hex << errorCode;
 
         POMDOG_THROW_EXCEPTION(std::runtime_error, ss.str());
     }
@@ -111,8 +110,8 @@ OpenGLContextWin32::OpenGLContextWin32(
 
         std::stringstream ss;
         ss << "Failed to call SetPixelFormat function."
-            << "The calling thread's last-error code is "
-            << std::hex << errorCode;
+           << "The calling thread's last-error code is "
+           << std::hex << errorCode;
 
         POMDOG_THROW_EXCEPTION(std::runtime_error, ss.str());
     }
@@ -125,8 +124,8 @@ OpenGLContextWin32::OpenGLContextWin32(
 
         std::stringstream ss;
         ss << "Failed to call wglMakeCurrent function."
-            << "The calling thread's last-error code is "
-            << std::hex << errorCode;
+           << "The calling thread's last-error code is "
+           << std::hex << errorCode;
 
         POMDOG_THROW_EXCEPTION(std::runtime_error, ss.str());
     }

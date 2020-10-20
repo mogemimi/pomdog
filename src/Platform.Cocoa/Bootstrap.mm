@@ -106,9 +106,9 @@ void Bootstrap::Run(std::function<std::shared_ptr<Game>(const std::shared_ptr<Ga
                 onError(e);
             }
             else {
-    #if defined(DEBUG) && !defined(NDEBUG)
+#if defined(DEBUG) && !defined(NDEBUG)
                 Log::Critical("Pomdog", e.what());
-    #endif
+#endif
                 throw e;
             }
         }

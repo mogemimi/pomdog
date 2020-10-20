@@ -240,7 +240,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     [self _setupMetal:presentationParameters];
 
     if (gameHost->IsMetalSupported()) {
-        MTKView* metalView = static_cast<MTKView *>(self.view);
+        MTKView* metalView = static_cast<MTKView*>(self.view);
         metalView.delegate = self;
         [self runGame];
     }
@@ -265,15 +265,15 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 
     trackingArea = [[NSTrackingArea alloc]
         initWithRect:bounds
-        options:NSTrackingMouseMoved | NSTrackingMouseEnteredAndExited | NSTrackingActiveInKeyWindow | NSTrackingActiveAlways
-        owner:self
-        userInfo:nil];
+             options:NSTrackingMouseMoved | NSTrackingMouseEnteredAndExited | NSTrackingActiveInKeyWindow | NSTrackingActiveAlways
+               owner:self
+            userInfo:nil];
     [view addTrackingArea:trackingArea];
 }
 
 - (void)_setupMetal:(const PresentationParameters&)presentationParameters
 {
-    MTKView* metalView = static_cast<MTKView *>(self.view);
+    MTKView* metalView = static_cast<MTKView*>(self.view);
     NSWindow* nativeWindow = [metalView window];
     POMDOG_ASSERT(nativeWindow != nil);
 
@@ -296,7 +296,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 }
 
 - (void)startGame:(std::function<std::shared_ptr<Pomdog::Game>(const std::shared_ptr<Pomdog::GameHost>&)>&&)createGameIn
-    completed:(std::function<void()>&&) onCompletedIn
+        completed:(std::function<void()>&&)onCompletedIn
 {
     createGame = std::move(createGameIn);
     onCompleted = std::move(onCompletedIn);
@@ -308,7 +308,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     gameHost->GameLoop();
 }
 
-- (void)mtkView:(nonnull MTKView *)view drawableSizeWillChange:(CGSize)size
+- (void)mtkView:(nonnull MTKView*)view drawableSizeWillChange:(CGSize)size
 {
 //    using Pomdog::Detail::ViewWillStartLiveResizeEvent;
     using Pomdog::Detail::ViewDidEndLiveResizeEvent;
@@ -324,7 +324,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     }
 }
 
-- (void)drawInMTKView:(nonnull MTKView *)view
+- (void)drawInMTKView:(nonnull MTKView*)view
 {
     @autoreleasepool {
         [self _render];
@@ -333,7 +333,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 
 // MARK: - Mouse Event Handling
 
-- (void)mouseEntered:(NSEvent *)theEvent
+- (void)mouseEntered:(NSEvent*)theEvent
 {
     if (!eventQueue) {
         return;
@@ -348,7 +348,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
         MouseEventType::Entered);
 }
 
--(void)mouseMoved:(NSEvent *)theEvent
+- (void)mouseMoved:(NSEvent*)theEvent
 {
     if (eventQueue) {
         NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
@@ -358,7 +358,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     }
 }
 
-- (void)mouseExited:(NSEvent *)theEvent
+- (void)mouseExited:(NSEvent*)theEvent
 {
     [[[self view] window] setAcceptsMouseMovedEvents:wasAcceptingMouseEvents];
 
@@ -370,7 +370,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     }
 }
 
-- (void)mouseDown:(NSEvent *)theEvent
+- (void)mouseDown:(NSEvent*)theEvent
 {
     if (eventQueue) {
         NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
@@ -381,7 +381,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     }
 }
 
-- (void)mouseDragged:(NSEvent *)theEvent
+- (void)mouseDragged:(NSEvent*)theEvent
 {
     if (eventQueue) {
         NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
@@ -392,7 +392,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     }
 }
 
-- (void)mouseUp:(NSEvent *)theEvent
+- (void)mouseUp:(NSEvent*)theEvent
 {
     if (eventQueue) {
         NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
@@ -403,7 +403,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     }
 }
 
-- (void)rightMouseDown:(NSEvent *)theEvent
+- (void)rightMouseDown:(NSEvent*)theEvent
 {
     if (eventQueue) {
         NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
@@ -414,7 +414,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     }
 }
 
-- (void)rightMouseDragged:(NSEvent *)theEvent
+- (void)rightMouseDragged:(NSEvent*)theEvent
 {
     if (eventQueue) {
         NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
@@ -425,7 +425,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     }
 }
 
-- (void)rightMouseUp:(NSEvent *)theEvent
+- (void)rightMouseUp:(NSEvent*)theEvent
 {
     if (eventQueue) {
         NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
@@ -436,7 +436,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     }
 }
 
-- (void)otherMouseDown:(NSEvent *)theEvent
+- (void)otherMouseDown:(NSEvent*)theEvent
 {
     if (!eventQueue) {
         return;
@@ -462,7 +462,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     eventQueue->Enqueue(Event{std::move(event)});
 }
 
-- (void)otherMouseDragged:(NSEvent *)theEvent
+- (void)otherMouseDragged:(NSEvent*)theEvent
 {
     if (!eventQueue) {
         return;
@@ -488,7 +488,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     eventQueue->Enqueue(Event{std::move(event)});
 }
 
-- (void)otherMouseUp:(NSEvent *)theEvent
+- (void)otherMouseUp:(NSEvent*)theEvent
 {
     if (!eventQueue) {
         return;
@@ -514,7 +514,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     eventQueue->Enqueue(Event{std::move(event)});
 }
 
-- (void)scrollWheel:(NSEvent *)theEvent
+- (void)scrollWheel:(NSEvent*)theEvent
 {
     if (!eventQueue) {
         return;
@@ -535,7 +535,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 
 // MARK: - Keyboard Event Handling
 
-- (void)keyDown:(NSEvent *)theEvent
+- (void)keyDown:(NSEvent*)theEvent
 {
     auto key = TranslateKey([theEvent keyCode]);
     if (key != Keys::None) {
@@ -547,7 +547,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     eventQueue->Enqueue<InputTextEvent>(text);
 }
 
-- (void)keyUp:(NSEvent *)theEvent
+- (void)keyUp:(NSEvent*)theEvent
 {
     auto key = TranslateKey([theEvent keyCode]);
     if (key != Pomdog::Keys::None) {
@@ -555,7 +555,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     }
 }
 
-- (void)flagsChanged:(NSEvent *)event
+- (void)flagsChanged:(NSEvent*)event
 {
     const auto key = TranslateKey([event keyCode]);
     if (key == Pomdog::Keys::None) {

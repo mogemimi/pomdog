@@ -91,7 +91,7 @@ OpenGLContextCocoa::OpenGLContextCocoa(NSOpenGLPixelFormat* pixelFormat)
 {
     POMDOG_ASSERT(pixelFormat != nil);
 
-    openGLContext = [[NSOpenGLContext alloc] initWithFormat:pixelFormat shareContext: nil];
+    openGLContext = [[NSOpenGLContext alloc] initWithFormat:pixelFormat shareContext:nil];
     [openGLContext makeCurrentContext];
 
     constexpr GLint swapInterval = 1;
@@ -137,7 +137,7 @@ void OpenGLContextCocoa::SetView(NSView* view)
 {
     POMDOG_ASSERT(openGLContext != nil);
     POMDOG_ASSERT(view != nil);
-    
+
 #if defined(__clang__)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
@@ -152,7 +152,7 @@ void OpenGLContextCocoa::SetView(NSView* view)
 void OpenGLContextCocoa::SetView()
 {
     POMDOG_ASSERT(openGLContext != nil);
-    
+
 #if defined(__clang__)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"

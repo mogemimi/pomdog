@@ -3,9 +3,9 @@
 #pragma once
 
 #include "Pomdog/Signals/detail/ForwardDeclarations.hpp"
+#import <Cocoa/Cocoa.h>
 #include <functional>
 #include <memory>
-#import <Cocoa/Cocoa.h>
 
 namespace Pomdog::Detail::Cocoa {
 
@@ -19,8 +19,7 @@ class OpenGLContextCocoa;
 
 - (void)setEventQueue:(std::shared_ptr<Pomdog::EventQueue>)eventQueue;
 
-- (void)setOpenGLContext:(
-    std::shared_ptr<Pomdog::Detail::Cocoa::OpenGLContextCocoa>)openGLContext;
+- (void)setOpenGLContext:(std::shared_ptr<Pomdog::Detail::Cocoa::OpenGLContextCocoa>)openGLContext;
 
 - (void)setRenderCallback:(std::function<void()>)callback;
 

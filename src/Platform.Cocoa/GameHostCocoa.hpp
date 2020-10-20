@@ -9,10 +9,8 @@
 @class PomdogOpenGLView;
 
 namespace Pomdog {
-
 class Game;
 struct PresentationParameters;
-
 } // namespace Pomdog
 
 namespace Pomdog::Detail::Cocoa {

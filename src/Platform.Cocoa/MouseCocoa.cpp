@@ -21,7 +21,7 @@ ButtonState ToButtonState(MouseButtonState mouseButtonState)
     }
 }
 
-} // unnamed namespace
+} // namespace
 
 MouseCocoa::MouseCocoa()
     : scrollWheel(0)

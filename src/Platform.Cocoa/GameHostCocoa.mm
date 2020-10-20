@@ -41,8 +41,8 @@ using Pomdog::Detail::OpenAL::AudioEngineAL;
 namespace Pomdog::Detail::Cocoa {
 namespace {
 
-std::shared_ptr<OpenGLContextCocoa> CreateOpenGLContext(
-    const PresentationParameters& presentationParameters)
+std::shared_ptr<OpenGLContextCocoa>
+CreateOpenGLContext(const PresentationParameters& presentationParameters)
 {
     auto pixelFormat = CocoaOpenGLHelper::CreatePixelFormat(presentationParameters);
     return std::make_shared<OpenGLContextCocoa>(pixelFormat);
@@ -171,7 +171,7 @@ GameHostCocoa::Impl::Impl(
     openGLContext = CreateOpenGLContext(presentationParameters);
 
     POMDOG_ASSERT(openGLView != nil);
-    [openGLView setEventQueue: eventQueue];
+    [openGLView setEventQueue:eventQueue];
     [openGLView setOpenGLContext:openGLContext];
 
     // Create graphics device and device resources
@@ -283,11 +283,11 @@ void GameHostCocoa::Impl::Run(
     CGLContextObj cglContext = [nsOpenGLContext CGLContextObj];
     CGLPixelFormatObj cglPixelFormat = [nsPixelFormat CGLPixelFormatObj];
 
-    [openGLView setResizingCallback: [this](bool resizing) {
+    [openGLView setResizingCallback:[this](bool resizing) {
         viewLiveResizing = resizing;
     }];
 
-    [openGLView setRenderCallback: [this] {
+    [openGLView setRenderCallback:[this] {
         std::lock_guard<std::mutex> lock(renderMutex);
         ClientSizeChanged();
 
@@ -307,7 +307,7 @@ void GameHostCocoa::Impl::Run(
 void GameHostCocoa::Impl::GameWillExit()
 {
     if (openGLView != nil) {
-        [openGLView setRenderCallback: []{}];
+        [openGLView setRenderCallback:[] {}];
     }
 
     if (window) {
@@ -396,8 +396,7 @@ void GameHostCocoa::Impl::RenderFrame()
     POMDOG_ASSERT(window);
     POMDOG_ASSERT(!weakGame.expired());
 
-    bool skipRender = (!window || window->IsMinimized()
-        || [NSApp isHidden] == YES);
+    bool skipRender = (!window || window->IsMinimized() || [NSApp isHidden] == YES);
 
     if (skipRender) {
         return;

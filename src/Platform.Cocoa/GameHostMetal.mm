@@ -48,7 +48,7 @@ namespace {
 
 void SetupMetalView(
     MTKView* view,
-    id <MTLDevice> device,
+    id<MTLDevice> device,
     const PresentationParameters& presentationParameters)
 {
     // Set the view to use the default device
@@ -180,7 +180,7 @@ GameHostMetal::Impl::Impl(
         graphicsDevice->GetNativeGraphicsDevice());
 
     POMDOG_ASSERT(graphicsDeviceMetal);
-    id <MTLDevice> metalDevice = graphicsDeviceMetal->GetMTLDevice();
+    id<MTLDevice> metalDevice = graphicsDeviceMetal->GetMTLDevice();
 
     if (metalDevice == nil) {
         POMDOG_THROW_EXCEPTION(std::runtime_error,
@@ -284,7 +284,7 @@ bool GameHostMetal::Impl::IsMetalSupported() const
         graphicsDevice->GetNativeGraphicsDevice());
 
     POMDOG_ASSERT(graphicsDeviceMetal);
-    id <MTLDevice> metalDevice = graphicsDeviceMetal->GetMTLDevice();
+    id<MTLDevice> metalDevice = graphicsDeviceMetal->GetMTLDevice();
 
     return metalDevice != nil;
 }
@@ -344,8 +344,7 @@ void GameHostMetal::Impl::RenderFrame()
     POMDOG_ASSERT(window);
     POMDOG_ASSERT(!weakGame.expired());
 
-    bool skipRender = (!window || window->IsMinimized()
-        || [NSApp isHidden] == YES);
+    bool skipRender = (!window || window->IsMinimized() || [NSApp isHidden] == YES);
 
     if (skipRender) {
         return;
