@@ -1,12 +1,11 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Signals/Connection.hpp"
-#include "Pomdog/Signals/Event.hpp"
 #include "Pomdog/Signals/EventQueue.hpp"
 #include "catch.hpp"
+#include <any>
 #include <utility>
 
-using Pomdog::Event;
 using Pomdog::EventQueue;
 using Pomdog::Connection;
 
@@ -14,24 +13,23 @@ TEST_CASE("EventQueue", "[EventQueue]")
 {
     std::vector<int> integers;
     std::vector<std::string> names;
-    std::function<void(Event const&)> slot;
+    std::function<void(int)> slot;
 
     integers.clear();
     names.clear();
 
-    slot = [&](Event const& event) {
-        REQUIRE(event.Is<int>());
-        integers.push_back(*event.As<int>());
+    slot = [&](int event) {
+        integers.push_back(event);
     };
 
     SECTION("Invoke with int")
     {
-        EventQueue eventQueue;
+        EventQueue<int> eventQueue;
         auto connection = eventQueue.Connect(slot);
 
-        eventQueue.Enqueue<int>(42);
-        eventQueue.Enqueue<int>(43);
-        eventQueue.Enqueue<int>(44);
+        eventQueue.Enqueue(42);
+        eventQueue.Enqueue(43);
+        eventQueue.Enqueue(44);
         REQUIRE(integers.empty());
 
         eventQueue.Emit();
@@ -48,17 +46,17 @@ TEST_CASE("EventQueue", "[EventQueue]")
             int id;
         };
 
-        EventQueue eventQueue;
-        auto conn = eventQueue.Connect([&](Event const& event){
-            REQUIRE(event.Is<User>());
-            auto user = event.As<User>();
+        EventQueue<std::any> eventQueue;
+        auto conn = eventQueue.Connect([&](const std::any& event){
+            REQUIRE(std::any_cast<User>(&event) != nullptr);
+            auto user = std::any_cast<User>(&event);
             names.push_back(user->name);
             integers.push_back(user->id);
         });
         REQUIRE(conn.IsConnected());
 
-        eventQueue.Enqueue<User>("Donald", 42);
-        eventQueue.Enqueue<User>("Goofy", 43);
+        eventQueue.Enqueue(std::make_any<User>(User{.name = "Donald", .id = 42}));
+        eventQueue.Enqueue(std::make_any<User>(User{.name = "Goofy", .id = 43}));
         REQUIRE(names.empty());
         REQUIRE(integers.empty());
 
@@ -72,10 +70,10 @@ TEST_CASE("EventQueue", "[EventQueue]")
     }
     SECTION("Disconnect")
     {
-        EventQueue eventQueue;
+        EventQueue<int> eventQueue;
         auto connection = eventQueue.Connect(slot);
 
-        eventQueue.Enqueue<int>(42);
+        eventQueue.Enqueue(42);
         REQUIRE(integers.empty());
 
         connection.Disconnect();
@@ -84,7 +82,7 @@ TEST_CASE("EventQueue", "[EventQueue]")
     }
     SECTION("Conenct")
     {
-        EventQueue eventQueue;
+        EventQueue<int> eventQueue;
         auto conn1 = eventQueue.Connect(slot);
         auto conn2 = eventQueue.Connect(slot);
         auto conn3 = eventQueue.Connect(slot);
@@ -93,7 +91,7 @@ TEST_CASE("EventQueue", "[EventQueue]")
         REQUIRE(conn2.IsConnected());
         REQUIRE(conn3.IsConnected());
 
-        eventQueue.Enqueue<int>(42);
+        eventQueue.Enqueue(42);
         REQUIRE(integers.empty());
 
         eventQueue.Emit();
@@ -104,19 +102,19 @@ TEST_CASE("EventQueue", "[EventQueue]")
     }
     SECTION("RecursiveConnection")
     {
-        EventQueue eventQueue;
-        auto conn = eventQueue.Connect([&](Event const&) {
+        EventQueue<int> eventQueue;
+        auto conn = eventQueue.Connect([&](int) {
             auto conn2 = eventQueue.Connect(slot);
             REQUIRE(conn2.IsConnected());
         });
         REQUIRE(conn.IsConnected());
 
-        eventQueue.Enqueue<int>(42);
+        eventQueue.Enqueue(42);
         REQUIRE(integers.empty());
         eventQueue.Emit();
         REQUIRE(integers.empty());
 
-        eventQueue.Enqueue<int>(43);
+        eventQueue.Enqueue(43);
         REQUIRE(integers.empty());
 
         eventQueue.Emit();
@@ -125,10 +123,10 @@ TEST_CASE("EventQueue", "[EventQueue]")
     }
     SECTION("CallingDisconnect")
     {
-        EventQueue eventQueue;
+        EventQueue<int> eventQueue;
         Connection conn;
         REQUIRE(!conn.IsConnected());
-        conn = eventQueue.Connect([&](Event const& event){
+        conn = eventQueue.Connect([&](int event) {
             slot(event);
             REQUIRE(conn.IsConnected());
             conn.Disconnect();
@@ -136,7 +134,7 @@ TEST_CASE("EventQueue", "[EventQueue]")
         });
         REQUIRE(conn.IsConnected());
 
-        eventQueue.Enqueue<int>(42);
+        eventQueue.Enqueue(42);
         REQUIRE(conn.IsConnected());
         REQUIRE(integers.empty());
         eventQueue.Emit();
@@ -145,36 +143,30 @@ TEST_CASE("EventQueue", "[EventQueue]")
         REQUIRE(integers[0] == 42);
 
         integers.clear();
-        eventQueue.Enqueue<int>(43);
+        eventQueue.Enqueue(43);
         REQUIRE(integers.empty());
         eventQueue.Emit();
         REQUIRE(integers.empty());
     }
     SECTION("ArgumentPerfectForwarding")
     {
-        EventQueue eventQueue;
-        auto conn = eventQueue.Connect([&](Event const& event){
-            REQUIRE(event.Is<std::shared_ptr<int>>());
+        EventQueue<std::shared_ptr<int>> eventQueue;
+        auto conn = eventQueue.Connect([&](std::shared_ptr<int> event) {
+            REQUIRE(event != nullptr);
         });
         REQUIRE(conn.IsConnected());
 
         {
             auto pointer = std::make_shared<int>(42);
             REQUIRE(pointer);
-            eventQueue.Enqueue<std::shared_ptr<int>>(pointer);
+            eventQueue.Enqueue(pointer);
             REQUIRE(pointer);
         }
         {
             auto pointer = std::make_shared<int>(42);
             REQUIRE(pointer);
-            eventQueue.Enqueue<std::shared_ptr<int>>(std::move(pointer));
+            eventQueue.Enqueue(std::move(pointer));
             REQUIRE_FALSE(pointer);
-        }
-        {
-            auto const pointer = std::make_shared<int>(42);
-            REQUIRE(pointer);
-            eventQueue.Enqueue<std::shared_ptr<int>>(pointer);
-            REQUIRE(pointer);
         }
     }
 }

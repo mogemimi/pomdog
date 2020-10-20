@@ -69,7 +69,6 @@ target_sources(PomdogTest PRIVATE
     ${POMDOG_TEST_DIR}/Signals/ConnectionListTest.cpp
     ${POMDOG_TEST_DIR}/Signals/DelegateTest.cpp
     ${POMDOG_TEST_DIR}/Signals/EventQueueTest.cpp
-    ${POMDOG_TEST_DIR}/Signals/EventTest.cpp
     ${POMDOG_TEST_DIR}/Signals/HelpersTest.cpp
     ${POMDOG_TEST_DIR}/Signals/ScopedConnectionTest.cpp
     ${POMDOG_TEST_DIR}/Signals/SignalTest.cpp

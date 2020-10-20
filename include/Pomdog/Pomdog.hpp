@@ -143,7 +143,6 @@ namespace Pomdog {
 #include "Signals/Connection.hpp"
 #include "Signals/ConnectionList.hpp"
 #include "Signals/Delegate.hpp"
-#include "Signals/Event.hpp"
 #include "Signals/EventQueue.hpp"
 #include "Signals/Helpers.hpp"
 #include "Signals/ScopedConnection.hpp"

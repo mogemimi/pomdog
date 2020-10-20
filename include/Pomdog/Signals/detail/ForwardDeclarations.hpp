@@ -18,7 +18,7 @@ class DelegateBody;
 
 } // namespace Detail::Signals
 
-class Event;
+template <typename Event>
 class EventQueue;
 
 class Connection;

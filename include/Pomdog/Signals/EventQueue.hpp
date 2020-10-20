@@ -3,16 +3,21 @@
 #pragma once
 
 #include "Pomdog/Basic/Export.hpp"
-#include "Pomdog/Signals/Event.hpp"
+#include "Pomdog/Signals/Connection.hpp"
 #include "Pomdog/Signals/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Signals/detail/SignalBody.hpp"
+#include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/detail/SpinLock.hpp"
+#include <algorithm>
 #include <functional>
 #include <memory>
+#include <mutex>
 #include <utility>
 #include <vector>
 
 namespace Pomdog {
 
+template <typename T>
 class POMDOG_EXPORT EventQueue final {
 public:
     EventQueue();
@@ -21,25 +26,75 @@ public:
     EventQueue& operator=(const EventQueue&) = delete;
     EventQueue& operator=(EventQueue&&) = delete;
 
-    [[nodiscard]] Connection Connect(const std::function<void(const Event&)>& slot);
+    [[nodiscard]] Connection Connect(const std::function<void(const T&)>& slot);
 
-    [[nodiscard]] Connection Connect(std::function<void(const Event&)>&& slot);
+    [[nodiscard]] Connection Connect(std::function<void(const T&)>&& slot);
 
-    void Enqueue(Event&& event);
+    void Enqueue(const T& event);
 
-    template <typename T, typename... Arguments>
-    void Enqueue(Arguments&&... arguments)
-    {
-        Enqueue(Event{T{std::forward<Arguments>(arguments)...}});
-    }
+    void Enqueue(T&& event);
 
     void Emit();
 
 private:
-    using SignalBody = Detail::Signals::SignalBody<void(const Event&)>;
-    std::vector<Event> events;
+    using SignalBody = Detail::Signals::SignalBody<void(const T&)>;
+    std::vector<T> events;
     std::shared_ptr<SignalBody> signalBody;
     Detail::SpinLock notificationProtection;
 };
+
+template <typename T>
+EventQueue<T>::EventQueue()
+    : signalBody(std::make_shared<SignalBody>())
+{
+}
+
+template <typename T>
+Connection
+EventQueue<T>::Connect(const std::function<void(const T&)>& slot)
+{
+    POMDOG_ASSERT(slot);
+    POMDOG_ASSERT(this->signalBody);
+    return Connection{signalBody->Connect(slot)};
+}
+
+template <typename T>
+Connection
+EventQueue<T>::Connect(std::function<void(const T&)>&& slot)
+{
+    POMDOG_ASSERT(slot);
+    POMDOG_ASSERT(this->signalBody);
+    return Connection{signalBody->Connect(slot)};
+}
+
+template <typename T>
+void EventQueue<T>::Enqueue(const T& event)
+{
+    std::lock_guard<Detail::SpinLock> lock{notificationProtection};
+    events.push_back(event);
+}
+
+template <typename T>
+void EventQueue<T>::Enqueue(T&& event)
+{
+    std::lock_guard<Detail::SpinLock> lock{notificationProtection};
+    events.push_back(std::move(event));
+}
+
+template <typename T>
+void EventQueue<T>::Emit()
+{
+    POMDOG_ASSERT(this->signalBody);
+
+    std::vector<T> notifications;
+    {
+        std::lock_guard<Detail::SpinLock> lock{notificationProtection};
+        std::swap(notifications, events);
+    }
+
+    for (auto& event : notifications) {
+        signalBody->Emit(event);
+    }
+}
 
 } // namespace Pomdog

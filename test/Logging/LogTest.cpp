@@ -3,7 +3,6 @@
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Logging/LogChannel.hpp"
 #include "Pomdog/Logging/LogEntry.hpp"
-#include "Pomdog/Signals/Event.hpp"
 #include "Pomdog/Signals/ScopedConnection.hpp"
 #include "catch.hpp"
 #include <vector>
