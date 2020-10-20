@@ -9,6 +9,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/detail/SpinLock.hpp"
 #include <algorithm>
+#include <cstddef>
 #include <functional>
 #include <memory>
 #include <mutex>
@@ -36,9 +37,12 @@ public:
 
     void Emit();
 
+    void Reserve(std::size_t capacity);
+
 private:
     using SignalBody = Detail::Signals::SignalBody<void(const T&)>;
     std::vector<T> events;
+    std::vector<T> notifications;
     std::shared_ptr<SignalBody> signalBody;
     Detail::SpinLock notificationProtection;
 };
@@ -85,16 +89,28 @@ template <typename T>
 void EventQueue<T>::Emit()
 {
     POMDOG_ASSERT(this->signalBody);
+    POMDOG_ASSERT(notifications.empty());
 
-    std::vector<T> notifications;
     {
         std::lock_guard<Detail::SpinLock> lock{notificationProtection};
         std::swap(notifications, events);
+        POMDOG_ASSERT(events.empty());
     }
 
     for (auto& event : notifications) {
         signalBody->Emit(event);
     }
+    notifications.clear();
+}
+
+template <typename T>
+void EventQueue<T>::Reserve(std::size_t capacity)
+{
+    {
+        std::lock_guard<Detail::SpinLock> lock{notificationProtection};
+        events.reserve(capacity);
+    }
+    notifications.reserve(capacity);
 }
 
 } // namespace Pomdog
