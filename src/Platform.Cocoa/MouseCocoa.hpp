@@ -5,11 +5,9 @@
 #include "Pomdog/Input/Mouse.hpp"
 #include "Pomdog/Input/MouseState.hpp"
 
-namespace Pomdog {
-
-class Event;
-
-} // namespace Pomdog
+namespace Pomdog::Detail {
+class SystemEvent;
+} // namespace Pomdog::Detail
 
 namespace Pomdog::Detail::Cocoa {
 
@@ -19,7 +17,7 @@ public:
 
     MouseState GetState() const override;
 
-    void HandleEvent(const Event& event);
+    void HandleEvent(const SystemEvent& event);
 
 private:
     MouseState state;

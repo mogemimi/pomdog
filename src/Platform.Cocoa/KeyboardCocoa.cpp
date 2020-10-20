@@ -3,7 +3,6 @@
 #include "KeyboardCocoa.hpp"
 #include "../Application/SystemEvents.hpp"
 #include "Pomdog/Input/KeyState.hpp"
-#include "Pomdog/Signals/Event.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog::Detail::Cocoa {
@@ -15,31 +14,37 @@ KeyboardState KeyboardCocoa::GetState() const
     return state;
 }
 
-void KeyboardCocoa::HandleEvent(const Event& event)
+void KeyboardCocoa::HandleEvent(const SystemEvent& event)
 {
-    if (auto keyEvent = event.As<InputKeyEvent>()) {
-        const auto key = keyEvent->Key;
-        const auto keyState = keyEvent->State;
+    switch (event.Kind) {
+    case SystemEventKind::InputKeyEvent: {
+        const auto ev = std::get<InputKeyEvent>(event.Data);
+        static_assert(sizeof(ev) <= 24);
+        bool isKeyDown = state.IsKeyDown(ev.Key);
 
-        bool isKeyDown = state.IsKeyDown(key);
+        state.SetKey(ev.Key, ev.State);
 
-        state.SetKey(key, keyState);
-
-        switch (keyState) {
+        switch (ev.State) {
         case KeyState::Down:
             if (!isKeyDown) {
-                Keyboard::KeyDown(key);
+                Keyboard::KeyDown(ev.Key);
             }
             break;
         case KeyState::Up:
             if (isKeyDown) {
-                Keyboard::KeyUp(key);
+                Keyboard::KeyUp(ev.Key);
             }
             break;
         }
+        break;
     }
-    else if (auto inputTextEvent = event.As<InputTextEvent>()) {
-        Keyboard::TextInput(inputTextEvent->text);
+    case SystemEventKind::InputTextEvent: {
+        const auto& ev = std::get<InputTextEvent>(event.Data);
+        Keyboard::TextInput(ev.Text);
+        break;
+    }
+    default:
+        break;
     }
 }
 

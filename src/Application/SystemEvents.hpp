@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "Pomdog/Basic/Platform.hpp"
 #include "Pomdog/Input/ButtonState.hpp"
 #include "Pomdog/Input/GamepadCapabilities.hpp"
 #include "Pomdog/Input/KeyState.hpp"
@@ -10,60 +11,92 @@
 #include "Pomdog/Input/PlayerIndex.hpp"
 #include "Pomdog/Math/Point2D.hpp"
 #include <string>
+#include <variant>
 
 namespace Pomdog::Detail {
 
-struct WindowWillCloseEvent {};
-struct WindowShouldCloseEvent {};
-
-struct ViewNeedsUpdateSurfaceEvent {};
-struct ViewWillStartLiveResizeEvent {};
-struct ViewDidEndLiveResizeEvent {};
-
-struct InputTextEvent {
-    std::string text;
+enum class SystemEventKind : std::uint8_t {
+    WindowWillCloseEvent,
+    WindowShouldCloseEvent,
+    ViewNeedsUpdateSurfaceEvent,
+    ViewWillStartLiveResizeEvent,
+    ViewDidEndLiveResizeEvent,
+    InputTextEvent,
+    InputKeyEvent,
+    MouseEnteredEvent,
+    MouseMovedEvent,
+    MouseExitedEvent,
+    MouseButtonEvent,
+    ScrollWheelEvent,
+    GamepadConnectedEvent,
+    GamepadDisconnectedEvent,
 };
 
-struct InputKeyEvent {
+struct InputTextEvent final {
+    std::string Text;
+};
+
+struct InputKeyEvent final {
     KeyState State;
     Keys Key;
 };
 
-enum class MouseEventType {
-    Entered,
-    Moved,
-    Exited,
-};
-
-struct MousePositionEvent {
+struct MousePositionEvent final {
     Point2D Position;
-    MouseEventType Type;
 };
 
-enum class MouseButtonState {
+enum class MouseButtonState : std::uint8_t {
     Down,
     Dragged,
     Up,
 };
 
-struct MouseButtonEvent {
+#if defined(POMDOG_PLATFORM_WIN32)
+struct MouseButtonWin32Event final {
+    MouseButtons Button;
+    ButtonState State;
+};
+
+struct ScrollWheelWin32Event final {
+    std::int32_t ScrollingDeltaY;
+};
+#endif
+#if defined(POMDOG_PLATFORM_MACOSX)
+struct MouseButtonCocoaEvent final {
     Point2D Position;
     MouseButtons Button;
     MouseButtonState State;
 };
 
-struct ScrollWheelEvent {
+struct ScrollWheelCocoaEvent final {
     double ScrollingDeltaY;
 };
+#endif
 
-struct GamepadConnectedEvent {
+struct GamepadEvent final {
     PlayerIndex PlayerIndex;
     GamepadCapabilities Capabilities;
 };
 
-struct GamepadDisconnectedEvent {
-    PlayerIndex PlayerIndex;
-    GamepadCapabilities Capabilities;
+class SystemEvent final {
+public:
+    using EventBody = std::variant<
+        InputTextEvent,
+        InputKeyEvent,
+        MousePositionEvent,
+        MouseButtonState,
+#if defined(POMDOG_PLATFORM_WIN32)
+        MouseButtonWin32Event,
+        ScrollWheelWin32Event,
+#endif
+#if defined(POMDOG_PLATFORM_MACOSX)
+        MouseButtonCocoaEvent,
+        ScrollWheelCocoaEvent,
+#endif
+        GamepadEvent>;
+
+    SystemEventKind Kind;
+    EventBody Data;
 };
 
 } // namespace Pomdog::Detail

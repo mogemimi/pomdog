@@ -3,6 +3,7 @@
 #include "KeyboardWin32.hpp"
 #include "Pomdog/Input/KeyState.hpp"
 #include "Pomdog/Input/Keys.hpp"
+#include "Pomdog/Signals/EventQueue.hpp"
 #include <optional>
 
 namespace Pomdog::Detail::Win32 {
@@ -266,28 +267,35 @@ std::optional<Keys> ToKeys(USHORT keyCode) noexcept
 
 } // namespace
 
-void KeyboardWin32::HandleMessage(const RAWKEYBOARD& keyboard)
+void KeyboardWin32::HandleMessage(const SystemEvent& event)
 {
-    const auto key = ToKeys(keyboard.VKey);
-    const auto keyState = (keyboard.Flags & RI_KEY_BREAK ? KeyState::Up : KeyState::Down);
+    switch (event.Kind) {
+    case SystemEventKind::InputKeyEvent: {
+        const auto ev = std::get<InputKeyEvent>(event.Data);
 
-    if (!key) {
-        return;
-    }
+        const bool isKeyDown = keyboardState.IsKeyDown(ev.Key);
+        keyboardState.SetKey(ev.Key, ev.State);
 
-    bool isKeyDown = keyboardState.IsKeyDown(*key);
-    keyboardState.SetKey(*key, keyState);
-
-    switch (keyState) {
-    case KeyState::Down:
-        if (!isKeyDown) {
-            Keyboard::KeyDown(*key);
+        switch (ev.State) {
+        case KeyState::Down:
+            if (!isKeyDown) {
+                Keyboard::KeyDown(ev.Key);
+            }
+            break;
+        case KeyState::Up:
+            if (isKeyDown) {
+                Keyboard::KeyUp(ev.Key);
+            }
+            break;
         }
         break;
-    case KeyState::Up:
-        if (isKeyDown) {
-            Keyboard::KeyUp(*key);
-        }
+    }
+    case SystemEventKind::InputTextEvent: {
+        const auto& ev = std::get<InputTextEvent>(event.Data);
+        Keyboard::TextInput(ev.Text);
+        break;
+    }
+    default:
         break;
     }
 }
@@ -295,6 +303,23 @@ void KeyboardWin32::HandleMessage(const RAWKEYBOARD& keyboard)
 KeyboardState KeyboardWin32::GetState() const
 {
     return keyboardState;
+}
+
+void TranslateKeyboardEvent(const RAWKEYBOARD& keyboard, const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue) noexcept
+{
+    const auto key = ToKeys(keyboard.VKey);
+    if (!key) {
+        return;
+    }
+
+    const auto keyState = (keyboard.Flags & RI_KEY_BREAK ? KeyState::Up : KeyState::Down);
+    eventQueue->Enqueue(SystemEvent{
+        .Kind = SystemEventKind::InputKeyEvent,
+        .Data = InputKeyEvent{
+            .State = keyState,
+            .Key = *key,
+        },
+    });
 }
 
 } // namespace Pomdog::Detail::Win32

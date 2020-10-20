@@ -2,10 +2,12 @@
 
 #pragma once
 
+#include "../Application/SystemEvents.hpp"
 #include "../InputSystem/GamepadMappings.hpp"
 #include "Pomdog/Input/Gamepad.hpp"
 #include "Pomdog/Input/GamepadCapabilities.hpp"
 #include "Pomdog/Input/GamepadState.hpp"
+#include "Pomdog/Signals/detail/ForwardDeclarations.hpp"
 #include <IOKit/hid/IOHIDManager.h>
 #include <array>
 #include <cstdint>
@@ -13,7 +15,7 @@
 
 namespace Pomdog {
 
-class Event;
+template <typename Event>
 class EventQueue;
 
 } // namespace Pomdog
@@ -45,7 +47,7 @@ public:
 
 class GamepadIOKit final : public Gamepad {
 public:
-    explicit GamepadIOKit(const std::shared_ptr<EventQueue>& eventQueue);
+    explicit GamepadIOKit(const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue);
 
     ~GamepadIOKit();
 
@@ -53,10 +55,10 @@ public:
 
     GamepadState GetState(PlayerIndex index) const override;
 
-    void HandleEvent(const Event& event);
+    void HandleEvent(const SystemEvent& event);
 
 private:
-    std::shared_ptr<EventQueue> eventQueue;
+    std::shared_ptr<EventQueue<SystemEvent>> eventQueue;
     std::array<GamepadDevice, 4> gamepads;
     IOHIDManagerRef hidManager;
 

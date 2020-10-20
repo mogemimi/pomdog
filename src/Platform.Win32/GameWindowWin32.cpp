@@ -2,6 +2,8 @@
 
 #include "GameWindowWin32.hpp"
 #include "DarkMode.hpp"
+#include "KeyboardWin32.hpp"
+#include "MouseWin32.hpp"
 #include "../Application/SystemEvents.hpp"
 #include "Pomdog/Application/MouseCursor.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
@@ -87,7 +89,7 @@ public:
         HICON icon,
         HICON iconSmall,
         bool useOpenGL,
-        const std::shared_ptr<EventQueue>& eventQueue,
+        const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
         const PresentationParameters& presentationParameters);
 
     ~Impl();
@@ -106,7 +108,7 @@ private:
     static LRESULT CALLBACK WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 public:
-    std::shared_ptr<EventQueue> eventQueue;
+    std::shared_ptr<EventQueue<SystemEvent>> eventQueue;
     std::string title;
     Rectangle clientBounds;
     std::optional<HCURSOR> gameCursor;
@@ -123,7 +125,7 @@ GameWindowWin32::Impl::Impl(
     HICON icon,
     HICON iconSmall,
     bool useOpenGL,
-    const std::shared_ptr<EventQueue>& eventQueueIn,
+    const std::shared_ptr<EventQueue<SystemEvent>>& eventQueueIn,
     const PresentationParameters& presentationParameters)
     : eventQueue(eventQueueIn)
     , title("Game")
@@ -334,8 +336,12 @@ void GameWindowWin32::Impl::SetClientBounds(const Rectangle& clientBoundsIn)
     clientBounds.Width = clientBoundsIn.Width;
     clientBounds.Height = clientBoundsIn.Height;
 
-    eventQueue->Enqueue<ViewWillStartLiveResizeEvent>();
-    eventQueue->Enqueue<ViewDidEndLiveResizeEvent>();
+    eventQueue->Enqueue(SystemEvent{
+        .Kind = SystemEventKind::ViewWillStartLiveResizeEvent,
+    });
+    eventQueue->Enqueue(SystemEvent{
+        .Kind = SystemEventKind::ViewDidEndLiveResizeEvent,
+    });
 }
 
 void GameWindowWin32::Impl::SetMouseCursorVisible(bool visibleIn)
@@ -375,7 +381,9 @@ LRESULT CALLBACK GameWindowWin32::Impl::WindowProcedure(
     switch (msg) {
     case WM_CLOSE: {
         if (window) {
-            window->eventQueue->Enqueue<WindowShouldCloseEvent>();
+            window->eventQueue->Enqueue(SystemEvent{
+                .Kind = SystemEventKind::WindowShouldCloseEvent,
+            });
         }
         return 0;
     }
@@ -402,25 +410,36 @@ LRESULT CALLBACK GameWindowWin32::Impl::WindowProcedure(
         if (window) {
             std::string text;
             text += static_cast<char>(wParam);
-            window->eventQueue->Enqueue<InputTextEvent>(text);
+            window->eventQueue->Enqueue(SystemEvent{
+                .Kind = SystemEventKind::InputTextEvent,
+                .Data = InputTextEvent{
+                    .Text = std::move(text),
+                },
+            });
         }
         return 0;
     }
     case WM_ENTERSIZEMOVE: {
         if (window) {
-            window->eventQueue->Enqueue<ViewWillStartLiveResizeEvent>();
+            window->eventQueue->Enqueue(SystemEvent{
+                .Kind = SystemEventKind::ViewWillStartLiveResizeEvent,
+            });
         }
         return 0;
     }
     case WM_EXITSIZEMOVE: {
         if (window) {
-            window->eventQueue->Enqueue<ViewDidEndLiveResizeEvent>();
+            window->eventQueue->Enqueue(SystemEvent{
+                .Kind = SystemEventKind::ViewDidEndLiveResizeEvent,
+            });
         }
         return 0;
     }
     case WM_SIZING: {
         if (window) {
-            window->eventQueue->Enqueue<ViewNeedsUpdateSurfaceEvent>();
+            window->eventQueue->Enqueue(SystemEvent{
+                .Kind = SystemEventKind::ViewNeedsUpdateSurfaceEvent,
+            });
         }
         return TRUE;
     }
@@ -445,7 +464,9 @@ LRESULT CALLBACK GameWindowWin32::Impl::WindowProcedure(
         const int exitCode = 0;
         ::PostQuitMessage(exitCode);
         if (window) {
-            window->eventQueue->Enqueue<WindowWillCloseEvent>();
+            window->eventQueue->Enqueue(SystemEvent{
+                .Kind = SystemEventKind::WindowWillCloseEvent,
+            });
         }
         return 0;
     }
@@ -468,10 +489,10 @@ LRESULT CALLBACK GameWindowWin32::Impl::WindowProcedure(
                 &raw, &size, sizeof(RAWINPUTHEADER));
 
             if (raw.header.dwType == RIM_TYPEMOUSE) {
-                window->eventQueue->Enqueue<RAWMOUSE>(raw.data.mouse);
+                TranslateMouseEvent(window->windowHandle, raw.data.mouse, window->eventQueue);
             }
             else if (raw.header.dwType == RIM_TYPEKEYBOARD) {
-                window->eventQueue->Enqueue<RAWKEYBOARD>(raw.data.keyboard);
+                TranslateKeyboardEvent(raw.data.keyboard, window->eventQueue);
             }
         }
         break;
@@ -489,7 +510,7 @@ GameWindowWin32::GameWindowWin32(
     HICON icon,
     HICON iconSmall,
     bool useOpenGL,
-    const std::shared_ptr<EventQueue>& eventQueue,
+    const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
     const PresentationParameters& presentationParameters)
     : impl(std::make_unique<Impl>(
         hInstance,

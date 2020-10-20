@@ -203,7 +203,7 @@ class GameHostWin32::Impl final {
 public:
     Impl(
         const std::shared_ptr<GameWindowWin32>& window,
-        const std::shared_ptr<EventQueue>& eventQueue,
+        const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
         const std::shared_ptr<InputSystem::NativeGamepad>& gamepad,
         const PresentationParameters& presentationParameters,
         bool useOpenGL);
@@ -252,7 +252,7 @@ private:
 
     void DoEvents();
 
-    void ProcessSystemEvents(const Event& event);
+    void ProcessSystemEvents(const SystemEvent& event);
 
     void ClientSizeChanged();
 
@@ -261,7 +261,7 @@ private:
     Detail::SubsystemScheduler subsystemScheduler;
     ScopedConnection systemEventConnection;
 
-    std::shared_ptr<EventQueue> eventQueue;
+    std::shared_ptr<EventQueue<SystemEvent>> eventQueue;
     std::shared_ptr<GameWindowWin32> window;
 
     std::unique_ptr<GraphicsBridgeWin32> graphicsBridge;
@@ -286,7 +286,7 @@ private:
 
 GameHostWin32::Impl::Impl(
     const std::shared_ptr<GameWindowWin32>& windowIn,
-    const std::shared_ptr<EventQueue>& eventQueueIn,
+    const std::shared_ptr<EventQueue<SystemEvent>>& eventQueueIn,
     const std::shared_ptr<InputSystem::NativeGamepad>& gamepadIn,
     const PresentationParameters& presentationParameters,
     bool useOpenGL)
@@ -318,7 +318,7 @@ GameHostWin32::Impl::Impl(
 #endif
 
     POMDOG_ASSERT(eventQueue);
-    systemEventConnection = eventQueue->Connect([this](const Event& event) {
+    systemEventConnection = eventQueue->Connect([this](const SystemEvent& event) {
         ProcessSystemEvents(event);
     });
 
@@ -423,23 +423,22 @@ void GameHostWin32::Impl::DoEvents()
     }
 }
 
-void GameHostWin32::Impl::ProcessSystemEvents(const Event& event)
+void GameHostWin32::Impl::ProcessSystemEvents(const SystemEvent& event)
 {
-    if (event.Is<WindowShouldCloseEvent>()) {
+    switch (event.Kind) {
+    case SystemEventKind::WindowShouldCloseEvent: {
         Log::Internal("WindowShouldCloseEvent");
         this->Exit();
+        break;
     }
-    else if (event.Is<ViewDidEndLiveResizeEvent>()) {
+    case SystemEventKind::ViewDidEndLiveResizeEvent: {
         surfaceResizeRequest = true;
+        break;
     }
-    else if (auto keyboardEvent = event.As<RAWKEYBOARD>()) {
-        keyboard->HandleMessage(*keyboardEvent);
-    }
-    else if (auto mouseEvent = event.As<RAWMOUSE>()) {
-        mouse->HandleMessage(*mouseEvent);
-    }
-    else if (auto textEvent = event.As<InputTextEvent>()) {
-        keyboard->TextInput(textEvent->text);
+    default:
+        mouse->HandleMessage(event);
+        keyboard->HandleMessage(event);
+        break;
     }
 }
 
@@ -534,16 +533,16 @@ GameHostWin32::Impl::GetHTTPClient(std::shared_ptr<GameHost>&& gameHost) noexcep
 
 GameHostWin32::GameHostWin32(
     const std::shared_ptr<GameWindowWin32>& window,
-    const std::shared_ptr<EventQueue>& eventQueue,
+    const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
     const std::shared_ptr<InputSystem::NativeGamepad>& gamepad,
     const PresentationParameters& presentationParameters,
     bool useOpenGL)
     : impl(std::make_unique<Impl>(
-        window,
-        eventQueue,
-        gamepad,
-        presentationParameters,
-        useOpenGL))
+          window,
+          eventQueue,
+          gamepad,
+          presentationParameters,
+          useOpenGL))
 {
 }
 

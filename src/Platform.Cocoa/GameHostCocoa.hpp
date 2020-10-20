@@ -13,6 +13,10 @@ class Game;
 struct PresentationParameters;
 } // namespace Pomdog
 
+namespace Pomdog::Detail {
+class SystemEvent;
+} // namespace Pomdog::Detail
+
 namespace Pomdog::Detail::Cocoa {
 
 class GameWindowCocoa;
@@ -22,7 +26,7 @@ public:
     GameHostCocoa(
         PomdogOpenGLView* openGLView,
         const std::shared_ptr<GameWindowCocoa>& window,
-        const std::shared_ptr<EventQueue>& eventQueue,
+        const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
         const PresentationParameters& presentationParameters);
 
     ~GameHostCocoa();

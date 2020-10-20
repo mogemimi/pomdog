@@ -1,10 +1,8 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "GamepadIOKit.hpp"
-#include "../Application/SystemEvents.hpp"
 #include "../InputSystem/GamepadHelper.hpp"
 #include "Pomdog/Logging/Log.hpp"
-#include "Pomdog/Signals/Event.hpp"
 #include "Pomdog/Signals/EventQueue.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
@@ -67,8 +65,8 @@ void GamepadDevice::OnDeviceInput(IOReturn result, void* sender, IOHIDValueRef v
         const auto buttonIndex = static_cast<int>(usage) - 1;
         if (auto button = GetButton(state, mappings.buttons, buttonIndex); button != nullptr) {
             (*button) = (IOHIDValueGetIntegerValue(valueRef) != 0)
-                ? ButtonState::Pressed
-                : ButtonState::Released;
+                            ? ButtonState::Pressed
+                            : ButtonState::Released;
         }
         break;
     }
@@ -178,7 +176,7 @@ void GamepadDevice::OnDeviceInput(IOReturn result, void* sender, IOHIDValueRef v
     }
 }
 
-GamepadIOKit::GamepadIOKit(const std::shared_ptr<EventQueue>& eventQueueIn)
+GamepadIOKit::GamepadIOKit(const std::shared_ptr<EventQueue<SystemEvent>>& eventQueueIn)
     : eventQueue(eventQueueIn)
     , hidManager(nullptr)
 {
@@ -391,7 +389,14 @@ void GamepadIOKit::OnDeviceAttached(IOReturn result, void* sender, IOHIDDeviceRe
     }
 
     Log::Internal("Attached device: " + gamepad->caps.Name);
-    eventQueue->Enqueue<GamepadConnectedEvent>(gamepad->playerIndex, gamepad->caps);
+
+    SystemEvent event;
+    event.Kind = SystemEventKind::GamepadDisconnectedEvent;
+    event.Data = GamepadEvent{
+        .PlayerIndex = gamepad->playerIndex,
+        .Capabilities = gamepad->caps,
+    };
+    eventQueue->Enqueue(std::move(event));
 
     IOHIDDeviceOpen(device, kIOHIDOptionsTypeNone);
     IOHIDDeviceScheduleWithRunLoop(device, CFRunLoopGetCurrent(), kCFRunLoopCommonModes);
@@ -419,16 +424,31 @@ void GamepadIOKit::OnDeviceDetached(IOReturn result, void* sender, IOHIDDeviceRe
 
     auto caps = gamepad->caps;
     gamepad->Close();
-    eventQueue->Enqueue<GamepadDisconnectedEvent>(gamepad->playerIndex, caps);
+
+    SystemEvent event;
+    event.Kind = SystemEventKind::GamepadDisconnectedEvent;
+    event.Data = GamepadEvent{
+        .PlayerIndex = gamepad->playerIndex,
+        .Capabilities = std::move(caps),
+    };
+    eventQueue->Enqueue(std::move(event));
 }
 
-void GamepadIOKit::HandleEvent(const Event& event)
+void GamepadIOKit::HandleEvent(const SystemEvent& event)
 {
-    if (auto connected = event.As<GamepadConnectedEvent>()) {
-        Connected(connected->PlayerIndex, connected->Capabilities);
+    switch (event.Kind) {
+    case SystemEventKind::GamepadConnectedEvent: {
+        const auto& e = std::get<GamepadEvent>(event.Data);
+        Connected(e.PlayerIndex, e.Capabilities);
+        break;
     }
-    else if (auto disconnected = event.As<GamepadDisconnectedEvent>()) {
-        Disconnected(disconnected->PlayerIndex, disconnected->Capabilities);
+    case SystemEventKind::GamepadDisconnectedEvent: {
+        const auto& e = std::get<GamepadEvent>(event.Data);
+        Disconnected(e.PlayerIndex, e.Capabilities);
+        break;
+    }
+    default:
+        break;
     }
 }
 

@@ -10,7 +10,7 @@ namespace Pomdog::Detail::Cocoa {
 
 GameWindowCocoa::GameWindowCocoa(
     NSWindow* nativeWindowIn,
-    const std::shared_ptr<EventQueue>& eventQueueIn)
+    const std::shared_ptr<EventQueue<SystemEvent>>& eventQueueIn)
     : eventQueue(eventQueueIn)
     , nativeWindow(nativeWindowIn)
     , gameView(nil)

@@ -11,13 +11,17 @@
 @class NSView;
 @class CocoaWindowDelegate;
 
+namespace Pomdog::Detail {
+class SystemEvent;
+} // namespace Pomdog::Detail
+
 namespace Pomdog::Detail::Cocoa {
 
 class GameWindowCocoa final : public GameWindow {
 public:
     GameWindowCocoa(
         NSWindow* nativeWindow,
-        const std::shared_ptr<EventQueue>& eventQueue);
+        const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue);
 
     ~GameWindowCocoa();
 
@@ -45,7 +49,7 @@ public:
     void SetView(NSView* gameView) noexcept;
 
 private:
-    std::shared_ptr<EventQueue> eventQueue;
+    std::shared_ptr<EventQueue<SystemEvent>> eventQueue;
     __weak NSWindow* nativeWindow;
     __weak NSView* gameView;
     __strong CocoaWindowDelegate* windowDelegate;

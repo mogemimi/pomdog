@@ -2,9 +2,11 @@
 
 #pragma once
 
+#include "../Application/SystemEvents.hpp"
 #include "Pomdog/Input/Mouse.hpp"
 #include "Pomdog/Input/MouseState.hpp"
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
+#include "Pomdog/Signals/detail/ForwardDeclarations.hpp"
 
 namespace Pomdog::Detail::Win32 {
 
@@ -14,12 +16,14 @@ public:
 
     MouseState GetState() const override;
 
-    void HandleMessage(const RAWMOUSE& mouse);
+    void HandleMessage(const SystemEvent& event);
 
 private:
     HWND windowHandle;
     MouseState previousState;
     MouseState state;
 };
+
+void TranslateMouseEvent(HWND windowHandle, const RAWMOUSE& mouse, const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue) noexcept;
 
 } // namespace Pomdog::Detail::Win32

@@ -3,8 +3,9 @@
 #include "Pomdog/Platform/Cocoa/Bootstrap.hpp"
 #include "GameHostCocoa.hpp"
 #include "GameWindowCocoa.hpp"
-#include "PomdogOpenGLView.hpp"
 #include "PomdogMetalViewController.hpp"
+#include "PomdogOpenGLView.hpp"
+#include "../Application/SystemEvents.hpp"
 #include "Pomdog/Application/Game.hpp"
 #include "Pomdog/Application/GameHost.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
@@ -12,6 +13,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 #import <MetalKit/MTKView.h>
 
+using Pomdog::Detail::SystemEvent;
 using Pomdog::Detail::Cocoa::GameHostCocoa;
 using Pomdog::Detail::Cocoa::GameWindowCocoa;
 
@@ -92,7 +94,7 @@ void Bootstrap::Run(std::function<std::shared_ptr<Game>(const std::shared_ptr<Ga
             POMDOG_ASSERT(onCompleted);
             POMDOG_ASSERT(createGame);
 
-            auto eventQueue = std::make_shared<EventQueue>();
+            auto eventQueue = std::make_shared<EventQueue<SystemEvent>>();
             auto gameWindow = std::make_shared<GameWindowCocoa>(nativeWindow, eventQueue);
 
             gameHostCocoa = std::make_shared<GameHostCocoa>(

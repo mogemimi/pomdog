@@ -3,12 +3,14 @@
 #include "Pomdog/Platform/Win32/Bootstrap.hpp"
 #include "GameHostWin32.hpp"
 #include "GameWindowWin32.hpp"
+#include "../Application/SystemEvents.hpp"
 #include "../InputSystem.DirectInput/GamepadDirectInput.hpp"
 #include "Pomdog/Application/Game.hpp"
 #include "Pomdog/Application/GameHost.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Logging/Log.hpp"
 
+using Pomdog::Detail::SystemEvent;
 using Pomdog::Detail::InputSystem::DirectInput::GamepadDirectInput;
 
 namespace Pomdog::Win32 {
@@ -86,7 +88,7 @@ void Bootstrap::Run(
     presentationParameters.MultiSampleCount = 1;
     presentationParameters.IsFullScreen = isFullScreen;
 
-    auto eventQueue = std::make_shared<EventQueue>();
+    auto eventQueue = std::make_shared<EventQueue<SystemEvent>>();
 
     const bool useOpenGL = openGLEnabled;
 

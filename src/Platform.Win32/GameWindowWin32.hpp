@@ -11,6 +11,10 @@ namespace Pomdog {
 struct PresentationParameters;
 } // namespace Pomdog
 
+namespace Pomdog::Detail {
+class SystemEvent;
+} // namespace Pomdog::Detail
+
 namespace Pomdog::Detail::Win32 {
 
 class GameWindowWin32 final : public GameWindow {
@@ -21,7 +25,7 @@ public:
         HICON icon,
         HICON iconSmall,
         bool useOpenGL,
-        const std::shared_ptr<EventQueue>& eventQueue,
+        const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
         const PresentationParameters& presentationParameters);
 
     ~GameWindowWin32();

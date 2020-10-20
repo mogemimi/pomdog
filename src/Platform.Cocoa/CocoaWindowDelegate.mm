@@ -2,35 +2,40 @@
 
 #import "CocoaWindowDelegate.hpp"
 #include "../Application/SystemEvents.hpp"
-#include "Pomdog/Signals/Event.hpp"
+#include "Pomdog/Signals/EventQueue.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
-@implementation CocoaWindowDelegate
-{
-    std::shared_ptr<Pomdog::EventQueue> eventQueue;
+using Pomdog::Detail::SystemEvent;
+using Pomdog::Detail::SystemEventKind;
+using Pomdog::EventQueue;
+
+@implementation CocoaWindowDelegate {
+    std::shared_ptr<EventQueue<SystemEvent>> eventQueue;
 }
 
-- (instancetype)initWithEventQueue:(std::shared_ptr<Pomdog::EventQueue>)eventQueueIn
+- (instancetype)initWithEventQueue:(std::shared_ptr<EventQueue<SystemEvent>>)eventQueueIn
 {
     self = [super init];
     if (self) {
         POMDOG_ASSERT(eventQueueIn);
-        eventQueue = eventQueueIn;
+        eventQueue = std::move(eventQueueIn);
     }
     return self;
 }
 
 - (BOOL)windowShouldClose:(id)sender
 {
-    using Pomdog::Detail::WindowShouldCloseEvent;
-    eventQueue->Enqueue<WindowShouldCloseEvent>();
+    eventQueue->Enqueue(SystemEvent{
+        .Kind = SystemEventKind::WindowShouldCloseEvent,
+    });
     return NO;
 }
 
 - (void)windowWillClose:(NSNotification *)notification
 {
-    using Pomdog::Detail::WindowWillCloseEvent;
-    eventQueue->Enqueue<WindowWillCloseEvent>();
+    eventQueue->Enqueue(SystemEvent{
+        .Kind = SystemEventKind::WindowWillCloseEvent,
+    });
 }
 
 @end

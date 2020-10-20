@@ -22,7 +22,6 @@
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Network/HTTPClient.hpp"
 #include "Pomdog/Network/IOService.hpp"
-#include "Pomdog/Signals/Event.hpp"
 #include "Pomdog/Signals/ScopedConnection.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/FileSystem.hpp"
@@ -56,7 +55,7 @@ class GameHostCocoa::Impl final {
 public:
     Impl(PomdogOpenGLView* openGLView,
         const std::shared_ptr<GameWindowCocoa>& window,
-        const std::shared_ptr<EventQueue>& eventQueue,
+        const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
         const PresentationParameters& presentationParameters);
 
     ~Impl();
@@ -106,7 +105,7 @@ private:
 
     void DoEvents();
 
-    void ProcessSystemEvents(const Event& event);
+    void ProcessSystemEvents(const SystemEvent& event);
 
     void ClientSizeChanged();
 
@@ -129,7 +128,7 @@ private:
     std::function<void()> onCompleted;
 
     std::weak_ptr<Game> weakGame;
-    std::shared_ptr<EventQueue> eventQueue;
+    std::shared_ptr<EventQueue<SystemEvent>> eventQueue;
     std::shared_ptr<GameWindowCocoa> window;
     std::shared_ptr<OpenGLContextCocoa> openGLContext;
     std::shared_ptr<GraphicsDevice> graphicsDevice;
@@ -153,7 +152,7 @@ private:
 GameHostCocoa::Impl::Impl(
     PomdogOpenGLView* openGLViewIn,
     const std::shared_ptr<GameWindowCocoa>& windowIn,
-    const std::shared_ptr<EventQueue>& eventQueueIn,
+    const std::shared_ptr<EventQueue<SystemEvent>>& eventQueueIn,
     const PresentationParameters& presentationParameters)
     : viewLiveResizing(false)
     , displayLink(nullptr)
@@ -201,7 +200,7 @@ GameHostCocoa::Impl::Impl(
     // Connect to system event signal
     POMDOG_ASSERT(eventQueue);
     systemEventConnection = eventQueue->Connect(
-        [this](const Event& event) { ProcessSystemEvents(event); });
+        [this](const SystemEvent& event) { ProcessSystemEvents(event); });
 
     auto contentDirectory = PathHelper::Join(FileSystem::GetResourceDirectoryPath(), "Content");
     assetManager = std::make_unique<AssetManager>(
@@ -421,34 +420,38 @@ void GameHostCocoa::Impl::DoEvents()
     eventQueue->Emit();
 }
 
-void GameHostCocoa::Impl::ProcessSystemEvents(const Event& event)
+void GameHostCocoa::Impl::ProcessSystemEvents(const SystemEvent& event)
 {
-    if (event.Is<WindowShouldCloseEvent>()) {
+    switch (event.Kind) {
+    case SystemEventKind::WindowShouldCloseEvent:
         Log::Internal("WindowShouldCloseEvent");
         this->Exit();
-    }
-    else if (event.Is<WindowWillCloseEvent>()) {
+        break;
+    case SystemEventKind::WindowWillCloseEvent:
         Log::Internal("WindowWillCloseEvent");
-    }
-    else if (event.Is<ViewWillStartLiveResizeEvent>()) {
+        break;
+    case SystemEventKind::ViewWillStartLiveResizeEvent: {
         auto rect = window->GetClientBounds();
         Log::Internal(StringHelper::Format(
             "ViewWillStartLiveResizeEvent: {w: %d, h: %d}",
             rect.Width, rect.Height));
+        break;
     }
-    else if (event.Is<ViewDidEndLiveResizeEvent>()) {
+    case SystemEventKind::ViewDidEndLiveResizeEvent: {
         auto rect = window->GetClientBounds();
         Log::Internal(StringHelper::Format(
             "ViewDidEndLiveResizeEvent: {w: %d, h: %d}",
             rect.Width, rect.Height));
+        break;
     }
-    else {
+    default:
         POMDOG_ASSERT(keyboard);
         POMDOG_ASSERT(mouse);
         POMDOG_ASSERT(gamepad);
         keyboard->HandleEvent(event);
         mouse->HandleEvent(event);
         gamepad->HandleEvent(event);
+        break;
     }
 }
 
@@ -550,7 +553,7 @@ GameHostCocoa::Impl::GetHTTPClient(std::shared_ptr<GameHost>&& gameHost) noexcep
 GameHostCocoa::GameHostCocoa(
     PomdogOpenGLView* openGLView,
     const std::shared_ptr<GameWindowCocoa>& window,
-    const std::shared_ptr<EventQueue>& eventQueue,
+    const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
     const PresentationParameters& presentationParameters)
     : impl(std::make_unique<Impl>(openGLView, window, eventQueue, presentationParameters))
 {

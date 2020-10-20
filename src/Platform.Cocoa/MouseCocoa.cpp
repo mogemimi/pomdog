@@ -2,7 +2,6 @@
 
 #include "MouseCocoa.hpp"
 #include "../Application/SystemEvents.hpp"
-#include "Pomdog/Signals/Event.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <type_traits>
 
@@ -33,16 +32,26 @@ MouseState MouseCocoa::GetState() const
     return state;
 }
 
-void MouseCocoa::HandleEvent(const Event& event)
+void MouseCocoa::HandleEvent(const SystemEvent& event)
 {
-    if (auto mousePositionEvent = event.As<MousePositionEvent>()) {
-        state.Position = mousePositionEvent->Position;
+    switch (event.Kind) {
+    case SystemEventKind::MouseEnteredEvent:
+        [[fallthrough]];
+    case SystemEventKind::MouseMovedEvent:
+        [[fallthrough]];
+    case SystemEventKind::MouseExitedEvent: {
+        const auto ev = std::get<MousePositionEvent>(event.Data);
+        static_assert(sizeof(ev) <= 24);
+        state.Position = ev.Position;
         Mouse::Moved(state.Position);
+        break;
     }
-    else if (auto mouseButtonEvent = event.As<MouseButtonEvent>()) {
-        const auto buttonState = ToButtonState(mouseButtonEvent->State);
+    case SystemEventKind::MouseButtonEvent: {
+        const auto ev = std::get<MouseButtonCocoaEvent>(event.Data);
+        static_assert(sizeof(ev) <= 24);
+        const auto buttonState = ToButtonState(ev.State);
 
-        switch (mouseButtonEvent->Button) {
+        switch (ev.Button) {
         case MouseButtons::Left:
             state.LeftButton = buttonState;
             break;
@@ -60,24 +69,27 @@ void MouseCocoa::HandleEvent(const Event& event)
             break;
         }
 
-        if (state.Position != mouseButtonEvent->Position) {
-            state.Position = mouseButtonEvent->Position;
+        if (state.Position != ev.Position) {
+            state.Position = ev.Position;
             Mouse::Moved(state.Position);
         }
 
-        switch (mouseButtonEvent->State) {
+        switch (ev.State) {
         case MouseButtonState::Up:
-            Mouse::ButtonUp(mouseButtonEvent->Button);
+            Mouse::ButtonUp(ev.Button);
             break;
         case MouseButtonState::Down:
-            Mouse::ButtonDown(mouseButtonEvent->Button);
+            Mouse::ButtonDown(ev.Button);
             break;
         case MouseButtonState::Dragged:
             break;
         }
+        break;
     }
-    else if (auto scrollWheelEvent = event.As<ScrollWheelEvent>()) {
-        auto wheelDelta = scrollWheelEvent->ScrollingDeltaY;
+    case SystemEventKind::ScrollWheelEvent: {
+        const auto ev = std::get<ScrollWheelCocoaEvent>(event.Data);
+        static_assert(sizeof(ev) <= 24);
+        auto wheelDelta = ev.ScrollingDeltaY;
         scrollWheel += wheelDelta;
         static_assert(std::is_same<double, decltype(scrollWheel)>::value, "");
         static_assert(std::is_same<std::int32_t, decltype(state.ScrollWheel)>::value, "");
@@ -85,6 +97,10 @@ void MouseCocoa::HandleEvent(const Event& event)
         auto oldScrollWheel = state.ScrollWheel;
         state.ScrollWheel = static_cast<std::int32_t>(this->scrollWheel);
         Mouse::ScrollWheel(state.ScrollWheel - oldScrollWheel);
+        break;
+    }
+    default:
+        break;
     }
 }
 
