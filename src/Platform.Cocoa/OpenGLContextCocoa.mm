@@ -11,9 +11,11 @@ namespace Pomdog::Detail::Cocoa {
 NSOpenGLPixelFormat* CocoaOpenGLHelper::CreatePixelFormat(
     const PresentationParameters& presentationParameters)
 {
-    std::vector<NSOpenGLPixelFormatAttribute> attributes =
-    {
-        NSOpenGLPFAOpenGLProfile, NSOpenGLProfileVersion3_2Core,
+    std::vector<NSOpenGLPixelFormatAttribute> attributes = {
+        // NOTE: OpenGL >= 4.1
+        NSOpenGLPFAOpenGLProfile,
+        NSOpenGLProfileVersion4_1Core,
+
         NSOpenGLPFADoubleBuffer,
         NSOpenGLPFAAccelerated,
         NSOpenGLPFANoRecovery,
