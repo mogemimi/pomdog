@@ -24,6 +24,7 @@
 #include "Pomdog/Network/IOService.hpp"
 #include "Pomdog/Signals/ScopedConnection.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #include "Pomdog/Utility/FileSystem.hpp"
 #include "Pomdog/Utility/PathHelper.hpp"
 #include "Pomdog/Utility/StringHelper.hpp"
@@ -53,12 +54,14 @@ CreateOpenGLContext(const PresentationParameters& presentationParameters)
 
 class GameHostCocoa::Impl final {
 public:
-    Impl(PomdogOpenGLView* openGLView,
+    ~Impl();
+
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(
+        PomdogOpenGLView* openGLView,
         const std::shared_ptr<GameWindowCocoa>& window,
         const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
         const PresentationParameters& presentationParameters);
-
-    ~Impl();
 
     void Run(const std::weak_ptr<Game>& game,
         std::function<void()>&& onCompleted);
@@ -123,8 +126,8 @@ private:
     GameClock clock;
     ScopedConnection systemEventConnection;
     std::mutex renderMutex;
-    std::atomic_bool viewLiveResizing;
-    CVDisplayLinkRef displayLink;
+    std::atomic_bool viewLiveResizing = false;
+    CVDisplayLinkRef displayLink = nullptr;
     std::function<void()> onCompleted;
 
     std::weak_ptr<Game> weakGame;
@@ -143,26 +146,33 @@ private:
     std::unique_ptr<IOService> ioService;
     std::unique_ptr<HTTPClient> httpClient;
 
-    __weak PomdogOpenGLView* openGLView;
-    Duration presentationInterval;
-    bool exitRequest;
-    bool displayLinkEnabled;
+    __weak PomdogOpenGLView* openGLView = nil;
+    Duration presentationInterval = Duration::zero();
+    bool exitRequest = false;
+    bool displayLinkEnabled = true;
 };
 
-GameHostCocoa::Impl::Impl(
+std::shared_ptr<Error>
+GameHostCocoa::Impl::Initialize(
     PomdogOpenGLView* openGLViewIn,
     const std::shared_ptr<GameWindowCocoa>& windowIn,
     const std::shared_ptr<EventQueue<SystemEvent>>& eventQueueIn,
     const PresentationParameters& presentationParameters)
-    : viewLiveResizing(false)
-    , displayLink(nullptr)
-    , eventQueue(eventQueueIn)
-    , window(windowIn)
-    , openGLView(openGLViewIn)
-    , presentationInterval(Duration(1) / 60)
-    , exitRequest(false)
-    , displayLinkEnabled(true)
 {
+    this->viewLiveResizing = false;
+    this->displayLink = nullptr;
+    this->eventQueue = eventQueueIn;
+    this->window = windowIn;
+    this->openGLView = openGLViewIn;
+    this->exitRequest = false;
+    this->displayLinkEnabled = true;
+
+    if (presentationParameters.PresentationInterval <= 0) {
+        return Errors::New("PresentationInterval must be > 0.");
+    }
+    POMDOG_ASSERT(presentationParameters.PresentationInterval > 0);
+    presentationInterval = Duration(1) / presentationParameters.PresentationInterval;
+
     POMDOG_ASSERT(window);
     window->SetView(openGLView);
 
@@ -189,7 +199,7 @@ GameHostCocoa::Impl::Impl(
     // NOTE: Create audio engine.
     audioEngine = std::make_shared<AudioEngineAL>();
     if (auto err = audioEngine->Initialize(); err != nullptr) {
-        Log::Warning("Pomdog", err->ToString());
+        return Errors::Wrap(std::move(err), "AudioEngineAL::Initialize() failed.");
     }
 
     // Create subsystems
@@ -210,15 +220,14 @@ GameHostCocoa::Impl::Impl(
 
     ioService = std::make_unique<IOService>(&clock);
     if (auto err = ioService->Initialize(); err != nullptr) {
-        Log::Warning("Pomdog", err->ToString());
+        return Errors::Wrap(std::move(err), "IOService::Initialize() failed.");
     }
     httpClient = std::make_unique<HTTPClient>(ioService.get());
 
-    POMDOG_ASSERT(presentationParameters.PresentationInterval > 0);
-    presentationInterval = Duration(1) / presentationParameters.PresentationInterval;
-
     CVDisplayLinkCreateWithActiveCGDisplays(&displayLink);
     CVDisplayLinkSetOutputCallback(displayLink, &DisplayLinkCallback, this);
+
+    return nullptr;
 }
 
 GameHostCocoa::Impl::~Impl()
@@ -550,16 +559,23 @@ GameHostCocoa::Impl::GetHTTPClient(std::shared_ptr<GameHost>&& gameHost) noexcep
 
 // MARK: - GameHostCocoa
 
-GameHostCocoa::GameHostCocoa(
-    PomdogOpenGLView* openGLView,
-    const std::shared_ptr<GameWindowCocoa>& window,
-    const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
-    const PresentationParameters& presentationParameters)
-    : impl(std::make_unique<Impl>(openGLView, window, eventQueue, presentationParameters))
+GameHostCocoa::GameHostCocoa()
+    : impl(std::make_unique<Impl>())
 {
 }
 
 GameHostCocoa::~GameHostCocoa() = default;
+
+std::shared_ptr<Error>
+GameHostCocoa::Initialize(
+    PomdogOpenGLView* openGLView,
+    const std::shared_ptr<GameWindowCocoa>& window,
+    const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
+    const PresentationParameters& presentationParameters)
+{
+    POMDOG_ASSERT(impl);
+    return impl->Initialize(openGLView, window, eventQueue, presentationParameters);
+}
 
 void GameHostCocoa::Run(
     const std::weak_ptr<Game>& game,

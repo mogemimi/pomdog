@@ -10,6 +10,8 @@
 #include "Pomdog/Input/Keys.hpp"
 #include "Pomdog/Math/Point2D.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Utility/Errors.hpp"
+#include "Pomdog/Utility/Exception.hpp"
 
 #import <Metal/Metal.h>
 #import <MetalKit/MetalKit.h>
@@ -279,8 +281,10 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     eventQueue = std::make_shared<EventQueue<SystemEvent>>();
     auto gameWindow = std::make_shared<GameWindowCocoa>(nativeWindow, eventQueue);
 
-    gameHost = std::make_shared<GameHostMetal>(
-        metalView, gameWindow, eventQueue, presentationParameters);
+    gameHost = std::make_shared<GameHostMetal>();
+    if (auto err = gameHost->Initialize(metalView, gameWindow, eventQueue, presentationParameters); err != nullptr) {
+        POMDOG_THROW_EXCEPTION(std::runtime_error, "GameHostMetal::Initialize() failed: " + err->ToString());
+    }
 }
 
 - (void)runGame

@@ -9,6 +9,7 @@
 #import <MetalKit/MTKView.h>
 
 namespace Pomdog {
+class Error;
 class Game;
 struct PresentationParameters;
 } // namespace Pomdog
@@ -18,18 +19,23 @@ class SystemEvent;
 } // namespace Pomdog::Detail
 
 namespace Pomdog::Detail::Cocoa {
-
 class GameWindowCocoa;
+} // namespace Pomdog::Detail::Cocoa
+
+namespace Pomdog::Detail::Cocoa {
 
 class GameHostMetal final : public GameHost {
 public:
-    GameHostMetal(
+    GameHostMetal();
+
+    ~GameHostMetal();
+
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(
         MTKView* metalView,
         const std::shared_ptr<GameWindowCocoa>& window,
         const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
         const PresentationParameters& presentationParameters);
-
-    ~GameHostMetal();
 
     void InitializeGame(
         const std::weak_ptr<Game>& game,

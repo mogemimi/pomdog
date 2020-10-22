@@ -14,6 +14,7 @@
 @class PomdogMetalViewController;
 
 namespace Pomdog {
+class Error;
 class Game;
 class GameHost;
 } // namespace Pomdog
@@ -40,17 +41,18 @@ public:
     void SetOpenGLDepthFormat(DepthFormat depthFormat);
 
     /// Sets an error event handler to a log stream.
-    void OnError(std::function<void(const std::exception&)>&& onError);
+    void OnError(std::function<void(std::shared_ptr<Error>)>&& onError);
 
     /// Sets an completion event handler to a log stream.
     void OnCompleted(std::function<void()>&& onCompleted);
 
     /// Begins running a game loop.
-    void Run(std::function<std::shared_ptr<Game>(const std::shared_ptr<GameHost>&)>&& createGame);
+    [[nodiscard]] std::shared_ptr<Error>
+    Run(std::function<std::shared_ptr<Game>(const std::shared_ptr<GameHost>&)>&& createGame);
 
 private:
     std::function<void()> onCompleted;
-    std::function<void(const std::exception&)> onError;
+    std::function<void(std::shared_ptr<Error>)> onError;
     std::shared_ptr<Pomdog::Detail::Cocoa::GameHostCocoa> gameHostCocoa;
     std::shared_ptr<Pomdog::Detail::Cocoa::GameHostMetal> gameHostMetal;
     std::shared_ptr<Game> game;

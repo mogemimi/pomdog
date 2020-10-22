@@ -50,10 +50,10 @@ public:
 
 private:
     std::shared_ptr<EventQueue<SystemEvent>> eventQueue;
-    __weak NSWindow* nativeWindow;
-    __weak NSView* gameView;
-    __strong CocoaWindowDelegate* windowDelegate;
-    bool isMouseCursorVisible;
+    __weak NSWindow* nativeWindow = nil;
+    __weak NSView* gameView = nil;
+    __strong CocoaWindowDelegate* windowDelegate = nil;
+    bool isMouseCursorVisible = true;
 };
 
 } // namespace Pomdog::Detail::Cocoa

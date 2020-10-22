@@ -9,6 +9,7 @@
 @class PomdogOpenGLView;
 
 namespace Pomdog {
+class Error;
 class Game;
 struct PresentationParameters;
 } // namespace Pomdog
@@ -18,18 +19,23 @@ class SystemEvent;
 } // namespace Pomdog::Detail
 
 namespace Pomdog::Detail::Cocoa {
-
 class GameWindowCocoa;
+} // namespace Pomdog::Detail::Cocoa
+
+namespace Pomdog::Detail::Cocoa {
 
 class GameHostCocoa final : public GameHost {
 public:
-    GameHostCocoa(
+    GameHostCocoa();
+
+    ~GameHostCocoa();
+
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(
         PomdogOpenGLView* openGLView,
         const std::shared_ptr<GameWindowCocoa>& window,
         const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
         const PresentationParameters& presentationParameters);
-
-    ~GameHostCocoa();
 
     void Run(
         const std::weak_ptr<Game>& game,

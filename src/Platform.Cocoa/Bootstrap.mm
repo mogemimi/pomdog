@@ -9,8 +9,8 @@
 #include "Pomdog/Application/Game.hpp"
 #include "Pomdog/Application/GameHost.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
-#include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #import <MetalKit/MTKView.h>
 
 using Pomdog::Detail::SystemEvent;
@@ -40,7 +40,7 @@ void Bootstrap::SetOpenGLDepthFormat(DepthFormat depthFormatIn)
     depthFormat = depthFormatIn;
 }
 
-void Bootstrap::OnError(std::function<void(const std::exception&)>&& onErrorIn)
+void Bootstrap::OnError(std::function<void(std::shared_ptr<Error>)>&& onErrorIn)
 {
     POMDOG_ASSERT(onErrorIn);
     onError = std::move(onErrorIn);
@@ -57,7 +57,8 @@ void Bootstrap::OnCompleted(std::function<void()>&& onCompletedIn)
     };
 }
 
-void Bootstrap::Run(std::function<std::shared_ptr<Game>(const std::shared_ptr<GameHost>&)>&& createGame)
+std::shared_ptr<Error>
+Bootstrap::Run(std::function<std::shared_ptr<Game>(const std::shared_ptr<GameHost>&)>&& createGame)
 {
     POMDOG_ASSERT(nativeWindow != nil);
     POMDOG_ASSERT(createGame);
@@ -97,22 +98,17 @@ void Bootstrap::Run(std::function<std::shared_ptr<Game>(const std::shared_ptr<Ga
             auto eventQueue = std::make_shared<EventQueue<SystemEvent>>();
             auto gameWindow = std::make_shared<GameWindowCocoa>(nativeWindow, eventQueue);
 
-            gameHostCocoa = std::make_shared<GameHostCocoa>(
-                view, gameWindow, eventQueue, presentationParameters);
+            // NOTE: Create a game host for Cocoa.
+            gameHostCocoa = std::make_shared<GameHostCocoa>();
+            if (auto err = gameHostCocoa->Initialize(view, gameWindow, eventQueue, presentationParameters); err != nil) {
+                return Errors::Wrap(std::move(err), "GameHostCocoa::Initialize() failed.");
+            }
 
             game = createGame(gameHostCocoa);
             gameHostCocoa->Run(game, std::move(onCompleted));
         }
         catch (const std::exception& e) {
-            if (onError) {
-                onError(e);
-            }
-            else {
-#if defined(DEBUG) && !defined(NDEBUG)
-                Log::Critical("Pomdog", e.what());
-#endif
-                throw e;
-            }
+            return Errors::New(std::string{"exception occurred: "} + e.what());
         }
     }
     else {
@@ -136,6 +132,8 @@ void Bootstrap::Run(std::function<std::shared_ptr<Game>(const std::shared_ptr<Ga
         [viewController setView:view];
         [viewController viewDidLoad];
     }
+
+    return nullptr;
 }
 
 } // namespace Pomdog::Cocoa

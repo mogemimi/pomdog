@@ -48,9 +48,17 @@ using Pomdog::ScopedConnection;
         [NSApp terminate:nil];
     });
 
-    bootstrap.Run([](const std::shared_ptr<GameHost>& gameHost) {
+    auto createGame = [](const std::shared_ptr<GameHost>& gameHost) {
         return std::make_unique<FeatureShowcase::FeatureShowcaseGame>(gameHost);
-    });
+    };
+
+    if (auto err = bootstrap.Run(std::move(createGame)); err != nullptr) {
+#ifdef DEBUG
+        std::cerr << err->ToString() << std::endl;
+#endif
+        // Shutdown your application
+        [NSApp terminate:nil];
+    }
 }
 
 - (void)applicationWillTerminate:(NSNotification*)aNotification

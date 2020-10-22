@@ -24,7 +24,7 @@
 #include "Pomdog/Network/IOService.hpp"
 #include "Pomdog/Signals/ScopedConnection.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #include "Pomdog/Utility/FileSystem.hpp"
 #include "Pomdog/Utility/PathHelper.hpp"
 #include "Pomdog/Utility/StringHelper.hpp"
@@ -64,13 +64,14 @@ void SetupMetalView(
 
 class GameHostMetal::Impl final {
 public:
-    Impl(
+    ~Impl();
+
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(
         MTKView* metalView,
         const std::shared_ptr<GameWindowCocoa>& window,
         const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
         const PresentationParameters& presentationParameters);
-
-    ~Impl();
 
     void InitializeGame(
         const std::weak_ptr<Game>& game,
@@ -129,7 +130,7 @@ private:
 private:
     GameClock clock;
     ScopedConnection systemEventConnection;
-    std::atomic_bool viewLiveResizing;
+    std::atomic_bool viewLiveResizing = false;
     std::function<void()> onCompleted;
 
     std::weak_ptr<Game> weakGame;
@@ -147,23 +148,25 @@ private:
     std::unique_ptr<IOService> ioService;
     std::unique_ptr<HTTPClient> httpClient;
 
-    __weak MTKView* metalView;
-    Duration presentationInterval;
-    bool exitRequest;
+    __weak MTKView* metalView = nil;
+    Duration presentationInterval = Duration::zero();
+    bool exitRequest = false;
 };
 
-GameHostMetal::Impl::Impl(
+std::shared_ptr<Error>
+GameHostMetal::Impl::Initialize(
     MTKView* metalViewIn,
     const std::shared_ptr<GameWindowCocoa>& windowIn,
     const std::shared_ptr<EventQueue<SystemEvent>>& eventQueueIn,
     const PresentationParameters& presentationParameters)
-    : viewLiveResizing(false)
-    , eventQueue(eventQueueIn)
-    , window(windowIn)
-    , metalView(metalViewIn)
-    , presentationInterval(Duration(1) / 60)
-    , exitRequest(false)
 {
+    this->viewLiveResizing = false;
+    this->eventQueue = eventQueueIn;
+    this->window = windowIn;
+    this->metalView = metalViewIn;
+    this->presentationInterval = Duration(1) / 60;
+    this->exitRequest = false;
+
     POMDOG_ASSERT(window);
     POMDOG_ASSERT(metalView != nil);
 
@@ -182,8 +185,7 @@ GameHostMetal::Impl::Impl(
     id<MTLDevice> metalDevice = graphicsDeviceMetal->GetMTLDevice();
 
     if (metalDevice == nil) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "Error: Metal is not supported on this device");
+        return Errors::New("Metal is not supported on this device.");
     }
 
     // Setup metal view
@@ -202,7 +204,7 @@ GameHostMetal::Impl::Impl(
     // NOTE: Create audio engine.
     audioEngine = std::make_shared<AudioEngineAL>();
     if (auto err = audioEngine->Initialize(); err != nullptr) {
-        Log::Warning("Pomdog", err->ToString());
+        return Errors::Wrap(std::move(err), "AudioEngineAL::Initialize() failed.");
     }
 
     // Create subsystems
@@ -223,12 +225,14 @@ GameHostMetal::Impl::Impl(
 
     ioService = std::make_unique<IOService>(&clock);
     if (auto err = ioService->Initialize(); err != nullptr) {
-        Log::Warning("Pomdog", err->ToString());
+        return Errors::Wrap(std::move(err), "IOService::Initialize() failed.");
     }
     httpClient = std::make_unique<HTTPClient>(ioService.get());
 
     POMDOG_ASSERT(presentationParameters.PresentationInterval > 0);
     presentationInterval = Duration(1) / presentationParameters.PresentationInterval;
+
+    return nullptr;
 }
 
 GameHostMetal::Impl::~Impl()
@@ -484,16 +488,23 @@ GameHostMetal::Impl::GetHTTPClient(std::shared_ptr<GameHost>&& gameHost) noexcep
 
 // MARK: GameHostMetal
 
-GameHostMetal::GameHostMetal(
-    MTKView* metalView,
-    const std::shared_ptr<GameWindowCocoa>& window,
-    const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
-    const PresentationParameters& presentationParameters)
-    : impl(std::make_unique<Impl>(metalView, window, eventQueue, presentationParameters))
+GameHostMetal::GameHostMetal()
+    : impl(std::make_unique<Impl>())
 {
 }
 
 GameHostMetal::~GameHostMetal() = default;
+
+std::shared_ptr<Error>
+GameHostMetal::Initialize(
+    MTKView* metalView,
+    const std::shared_ptr<GameWindowCocoa>& window,
+    const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
+    const PresentationParameters& presentationParameters)
+{
+    POMDOG_ASSERT(impl);
+    return impl->Initialize(metalView, window, eventQueue, presentationParameters);
+}
 
 void GameHostMetal::InitializeGame(
     const std::weak_ptr<Game>& game,
