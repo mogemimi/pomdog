@@ -20,10 +20,22 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/Platform.Cocoa/KeyboardCocoa.cpp
         ${POMDOG_SRC_DIR}/Platform.Cocoa/MouseCocoa.hpp
         ${POMDOG_SRC_DIR}/Platform.Cocoa/MouseCocoa.cpp
+    >
+
+    $<$<AND:$<PLATFORM_ID:Darwin>,$<BOOL:${POMDOG_USE_GL4}>>:
+        # NOTE: Platform.Cocoa
         ${POMDOG_SRC_DIR}/Platform.Cocoa/OpenGLContextCocoa.hpp
         ${POMDOG_SRC_DIR}/Platform.Cocoa/OpenGLContextCocoa.mm
         ${POMDOG_SRC_DIR}/Platform.Cocoa/PomdogOpenGLView.hpp
         ${POMDOG_SRC_DIR}/Platform.Cocoa/PomdogOpenGLView.mm
+    >
+
+    $<$<AND:$<PLATFORM_ID:Darwin>,$<BOOL:${POMDOG_USE_METAL}>>:
+        # NOTE: Platform.Cocoa
+        ${POMDOG_SRC_DIR}/Platform.Cocoa/GameHostMetal.hpp
+        ${POMDOG_SRC_DIR}/Platform.Cocoa/GameHostMetal.mm
+        ${POMDOG_SRC_DIR}/Platform.Cocoa/PomdogMetalViewController.hpp
+        ${POMDOG_SRC_DIR}/Platform.Cocoa/PomdogMetalViewController.mm
     >
 
     $<$<PLATFORM_ID:Linux>:

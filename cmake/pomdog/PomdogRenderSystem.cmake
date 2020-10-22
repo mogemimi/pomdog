@@ -127,10 +127,6 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/RenderSystem.Metal/ShaderMetal.mm
         ${POMDOG_SRC_DIR}/RenderSystem.Metal/Texture2DMetal.hpp
         ${POMDOG_SRC_DIR}/RenderSystem.Metal/Texture2DMetal.mm
-        ${POMDOG_SRC_DIR}/Platform.Cocoa/GameHostMetal.hpp
-        ${POMDOG_SRC_DIR}/Platform.Cocoa/GameHostMetal.mm
-        ${POMDOG_SRC_DIR}/Platform.Cocoa/PomdogMetalViewController.hpp
-        ${POMDOG_SRC_DIR}/Platform.Cocoa/PomdogMetalViewController.mm
     >
 
     $<$<BOOL:${POMDOG_USE_VULKAN}>:
