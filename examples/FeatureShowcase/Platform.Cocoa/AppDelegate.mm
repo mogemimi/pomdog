@@ -1,7 +1,7 @@
 #import "AppDelegate.h"
-#include <Pomdog/Pomdog.hpp>
-#include <Pomdog/Platform/Cocoa/Bootstrap.hpp>
 #include "../Source/FeatureShowcaseGame.hpp"
+#include <Pomdog/Platform/Cocoa/Bootstrap.hpp>
+#include <Pomdog/Pomdog.hpp>
 #include <memory>
 #ifdef DEBUG
 #include <iostream>
@@ -16,19 +16,18 @@ using Pomdog::ScopedConnection;
 
 @interface AppDelegate ()
 
-@property (weak) IBOutlet NSWindow *window;
+@property (weak) IBOutlet NSWindow* window;
 
 @end
 
-@implementation AppDelegate
-{
+@implementation AppDelegate {
     Pomdog::Cocoa::Bootstrap bootstrap;
 #ifdef DEBUG
     ScopedConnection connection;
 #endif
 }
 
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
+- (void)applicationDidFinishLaunching:(NSNotification*)aNotification
 {
 #ifdef DEBUG
     connection = Log::Connect([](const LogEntry& entry) {
@@ -54,11 +53,11 @@ using Pomdog::ScopedConnection;
     });
 }
 
-- (void)applicationWillTerminate:(NSNotification *)aNotification
+- (void)applicationWillTerminate:(NSNotification*)aNotification
 {
 }
 
-- (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender
+- (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication*)sender
 {
     return YES;
 }

@@ -3,10 +3,10 @@
 #pragma once
 
 #include "Pomdog/Signals/detail/ForwardDeclarations.hpp"
-#include <functional>
-#include <memory>
 #import <Cocoa/Cocoa.h>
 #import <MetalKit/MTKView.h>
+#include <functional>
+#include <memory>
 
 namespace Pomdog {
 
@@ -17,9 +17,9 @@ class GraphicsCommandQueue;
 
 } // namespace Pomdog
 
-@interface PomdogMetalViewController : NSViewController<MTKViewDelegate>
+@interface PomdogMetalViewController : NSViewController <MTKViewDelegate>
 
 - (void)startGame:(std::function<std::shared_ptr<Pomdog::Game>(const std::shared_ptr<Pomdog::GameHost>&)>&&)createGame
-    completed:(std::function<void()>&&) onCompleted;
+        completed:(std::function<void()>&&)onCompleted;
 
 @end
