@@ -4,8 +4,8 @@ project(mbedtls C)
 # NOTE: Remove /RTC1 option from default compiler options for Visual Studio
 STRING(REGEX REPLACE "/RTC(su|[1su])" "" CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG}")
 
-set(POMDOG_DIR "../../..")
-set(MBEDTLS_DIR "../../../dependencies/mbedtls")
+set(THIRDPARTY_DIR "../../../dependencies")
+set(MBEDTLS_DIR "${THIRDPARTY_DIR}/mbedtls")
 
 add_library(mbedtls STATIC
     ${MBEDTLS_DIR}/library/aes.c

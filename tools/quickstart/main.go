@@ -133,6 +133,7 @@ func createProject(config projectConfig) error {
 		"ThirdParty/pomdog/cmake/dependencies/glew/CMakeLists.txt",
 		"ThirdParty/pomdog/cmake/dependencies/libpng/CMakeLists.txt",
 		"ThirdParty/pomdog/cmake/dependencies/mbedtls/CMakeLists.txt",
+		"ThirdParty/pomdog/cmake/dependencies/stb/CMakeLists.txt",
 		"ThirdParty/pomdog/cmake/dependencies/zlib/CMakeLists.txt",
 	}
 	for _, f := range thirdPartyCMakeFiles {
@@ -208,6 +209,7 @@ func copyThirdPartyFiles(sourceRoot, destRoot string) error {
 		"glew",
 		"libpng",
 		"mbedtls",
+		"nanosvg",
 		"rapidjson",
 		"SDL_GameControllerDB",
 		"stb",
@@ -253,7 +255,8 @@ func renameCMakefile(rootDir, ident, source string) error {
 			content,
 			`set(POMDOG_DIR "../..")`,
 			`set(POMDOG_DIR "ThirdParty/pomdog")`,
-			-1)
+			1)
+
 		return content
 	})
 	return errors.Wrapf(err, "failed to rename identifier in \"%s\"", file)
@@ -279,7 +282,7 @@ func renameThirdPartyCMakefile(rootDir, ident, source string) error {
 			content,
 			`set(THIRDPARTY_DIR "../../../dependencies")`,
 			`set(THIRDPARTY_DIR "../../../..")`,
-			-1)
+			1)
 		return content
 	})
 	return errors.Wrapf(err, "failed to rename identifier in \"%s\"", file)

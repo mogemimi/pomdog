@@ -4,7 +4,6 @@ project(stb C)
 # NOTE: Remove /RTC1 option from default compiler options for Visual Studio
 STRING(REGEX REPLACE "/RTC(su|[1su])" "" CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG}")
 
-set(POMDOG_DIR "../../..")
 set(THIRDPARTY_DIR "../../../dependencies")
 
 add_library(stb_static STATIC
