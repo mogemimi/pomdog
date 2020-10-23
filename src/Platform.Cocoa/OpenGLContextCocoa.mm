@@ -4,12 +4,14 @@
 #include "../RenderSystem.GL4/OpenGLPrerequisites.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #include <vector>
 
 namespace Pomdog::Detail::Cocoa {
+namespace {
 
-NSOpenGLPixelFormat* CocoaOpenGLHelper::CreatePixelFormat(
-    const PresentationParameters& presentationParameters)
+[[nodiscard]] NSOpenGLPixelFormat*
+CreatePixelFormat(const PresentationParameters& presentationParameters) noexcept
 {
     std::vector<NSOpenGLPixelFormatAttribute> attributes = {
         // NOTE: OpenGL >= 4.1
@@ -32,6 +34,7 @@ NSOpenGLPixelFormat* CocoaOpenGLHelper::CreatePixelFormat(
 
     switch (presentationParameters.BackBufferFormat) {
     case SurfaceFormat::R8G8B8A8_UNorm:
+    case SurfaceFormat::B8G8R8A8_UNorm:
         attributes.push_back(NSOpenGLPFAColorSize);
         attributes.push_back(24);
         attributes.push_back(NSOpenGLPFAAlphaSize);
@@ -48,6 +51,18 @@ NSOpenGLPixelFormat* CocoaOpenGLHelper::CreatePixelFormat(
         attributes.push_back(96);
         attributes.push_back(NSOpenGLPFAAlphaSize);
         attributes.push_back(32);
+        break;
+    case SurfaceFormat::A8_UNorm:
+        attributes.push_back(NSOpenGLPFAAlphaSize);
+        attributes.push_back(8);
+        break;
+    case SurfaceFormat::R8_UNorm:
+        attributes.push_back(NSOpenGLPFAColorSize);
+        attributes.push_back(8);
+        break;
+    case SurfaceFormat::R8G8_UNorm:
+        attributes.push_back(NSOpenGLPFAColorSize);
+        attributes.push_back(16);
         break;
     default:
         attributes.push_back(NSOpenGLPFAColorSize);
@@ -86,19 +101,35 @@ NSOpenGLPixelFormat* CocoaOpenGLHelper::CreatePixelFormat(
     return [[NSOpenGLPixelFormat alloc] initWithAttributes:attributes.data()];
 }
 
-OpenGLContextCocoa::OpenGLContextCocoa(NSOpenGLPixelFormat* pixelFormat)
-    : openGLContext(nil)
-{
-    POMDOG_ASSERT(pixelFormat != nil);
+} // namespace
 
+OpenGLContextCocoa::OpenGLContextCocoa() noexcept = default;
+
+std::shared_ptr<Error>
+OpenGLContextCocoa::Initialize(const PresentationParameters& presentationParameters) noexcept
+{
+    // NOTE: Create a pixel format for OpenGL context.
+    auto pixelFormat = Detail::Cocoa::CreatePixelFormat(presentationParameters);
+    if (pixelFormat == nil) {
+        return Errors::New("failed to create NSOpenGLPixelFormat.");
+    }
+
+    // NOTE: Create a OpenGL context with the pixel format.
     openGLContext = [[NSOpenGLContext alloc] initWithFormat:pixelFormat shareContext:nil];
+    if (openGLContext == nil) {
+        return Errors::New("failed to create NSOpenGLContext.");
+    }
+
+    // NOTE: Make the context current.
     [openGLContext makeCurrentContext];
 
     constexpr GLint swapInterval = 1;
     [openGLContext setValues:&swapInterval forParameter:NSOpenGLContextParameterSwapInterval];
+
+    return nullptr;
 }
 
-OpenGLContextCocoa::~OpenGLContextCocoa()
+OpenGLContextCocoa::~OpenGLContextCocoa() noexcept
 {
     openGLContext = nil;
 }
@@ -121,19 +152,19 @@ void OpenGLContextCocoa::SwapBuffers()
     [openGLContext flushBuffer];
 }
 
-void OpenGLContextCocoa::Lock()
+void OpenGLContextCocoa::Lock() noexcept
 {
     POMDOG_ASSERT(openGLContext != nil);
     CGLLockContext([openGLContext CGLContextObj]);
 }
 
-void OpenGLContextCocoa::Unlock()
+void OpenGLContextCocoa::Unlock() noexcept
 {
     POMDOG_ASSERT(openGLContext != nil);
     CGLUnlockContext([openGLContext CGLContextObj]);
 }
 
-void OpenGLContextCocoa::SetView(NSView* view)
+void OpenGLContextCocoa::SetView(NSView* view) noexcept
 {
     POMDOG_ASSERT(openGLContext != nil);
     POMDOG_ASSERT(view != nil);
@@ -149,7 +180,7 @@ void OpenGLContextCocoa::SetView(NSView* view)
 #endif
 }
 
-void OpenGLContextCocoa::SetView()
+void OpenGLContextCocoa::SetView() noexcept
 {
     POMDOG_ASSERT(openGLContext != nil);
 
@@ -164,7 +195,7 @@ void OpenGLContextCocoa::SetView()
 #endif
 }
 
-NSOpenGLContext* OpenGLContextCocoa::GetNativeOpenGLContext()
+NSOpenGLContext* OpenGLContextCocoa::GetNativeOpenGLContext() noexcept
 {
     return openGLContext;
 }

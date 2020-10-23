@@ -39,16 +39,6 @@ using Pomdog::Detail::InputSystem::Apple::GamepadIOKit;
 using Pomdog::Detail::OpenAL::AudioEngineAL;
 
 namespace Pomdog::Detail::Cocoa {
-namespace {
-
-std::shared_ptr<OpenGLContextCocoa>
-CreateOpenGLContext(const PresentationParameters& presentationParameters)
-{
-    auto pixelFormat = CocoaOpenGLHelper::CreatePixelFormat(presentationParameters);
-    return std::make_shared<OpenGLContextCocoa>(pixelFormat);
-}
-
-} // namespace
 
 // MARK: - GameHostCocoa::Impl
 
@@ -176,8 +166,11 @@ GameHostCocoa::Impl::Initialize(
     POMDOG_ASSERT(window);
     window->SetView(openGLView);
 
-    // Create OpenGL context
-    openGLContext = CreateOpenGLContext(presentationParameters);
+    // NOTE: Create OpenGL context.
+    openGLContext = std::make_shared<OpenGLContextCocoa>();
+    if (auto err = openGLContext->Initialize(presentationParameters); err != nullptr) {
+        return Errors::Wrap(std::move(err), "OpenGLContextCocoa::Initialize() failed.");
+    }
 
     POMDOG_ASSERT(openGLView != nil);
     [openGLView setEventQueue:eventQueue];

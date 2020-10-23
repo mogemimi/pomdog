@@ -5,25 +5,26 @@
 #include "../RenderSystem.GL4/OpenGLContext.hpp"
 #include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #import <Cocoa/Cocoa.h>
+#include <memory>
 
-@class NSOpenGLContext, NSOpenGLPixelFormat;
+@class NSOpenGLContext;
+
+namespace Pomdog {
+class Error;
+} // namespace Pomdog
 
 namespace Pomdog::Detail::Cocoa {
 
-struct CocoaOpenGLHelper {
-    static NSOpenGLPixelFormat* CreatePixelFormat(
-        const PresentationParameters& presentationParameters);
-};
-
 class OpenGLContextCocoa final : public GL4::OpenGLContext {
 public:
-    OpenGLContextCocoa() = delete;
+    OpenGLContextCocoa() noexcept;
     OpenGLContextCocoa(const OpenGLContextCocoa&) = delete;
     OpenGLContextCocoa& operator=(const OpenGLContextCocoa&) = delete;
 
-    explicit OpenGLContextCocoa(NSOpenGLPixelFormat* pixelFormat);
+    ~OpenGLContextCocoa() noexcept;
 
-    ~OpenGLContextCocoa();
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(const PresentationParameters& presentationParameters) noexcept;
 
     void MakeCurrent() override;
 
@@ -31,18 +32,19 @@ public:
 
     void SwapBuffers() override;
 
-    void Lock();
+    void Lock() noexcept;
 
-    void Unlock();
+    void Unlock() noexcept;
 
-    void SetView(NSView* view);
+    void SetView(NSView* view) noexcept;
 
-    void SetView();
+    void SetView() noexcept;
 
-    NSOpenGLContext* GetNativeOpenGLContext();
+    [[nodiscard]] NSOpenGLContext*
+    GetNativeOpenGLContext() noexcept;
 
 private:
-    __strong NSOpenGLContext* openGLContext;
+    __strong NSOpenGLContext* openGLContext = nil;
 };
 
 } // namespace Pomdog::Detail::Cocoa
