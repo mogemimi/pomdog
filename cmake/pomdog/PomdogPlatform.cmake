@@ -10,8 +10,6 @@ target_sources(pomdog_static PRIVATE
         # NOTE: Platform.Cocoa
         ${POMDOG_INC_DIR}/Platform/Cocoa/Bootstrap.hpp
         ${POMDOG_SRC_DIR}/Platform.Cocoa/Bootstrap.mm
-        ${POMDOG_SRC_DIR}/Platform.Cocoa/CocoaWindowDelegate.hpp
-        ${POMDOG_SRC_DIR}/Platform.Cocoa/CocoaWindowDelegate.mm
         ${POMDOG_SRC_DIR}/Platform.Cocoa/GameHostCocoa.hpp
         ${POMDOG_SRC_DIR}/Platform.Cocoa/GameHostCocoa.mm
         ${POMDOG_SRC_DIR}/Platform.Cocoa/GameWindowCocoa.hpp

@@ -4,12 +4,17 @@
 
 #include "Pomdog/Application/GameWindow.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
-#include "Pomdog/Signals/EventQueue.hpp"
+#include "Pomdog/Signals/detail/ForwardDeclarations.hpp"
 #import <Cocoa/Cocoa.h>
+#include <memory>
 
 @class NSWindow;
 @class NSView;
-@class CocoaWindowDelegate;
+@class PomdogNSWindowDelegate;
+
+namespace Pomdog {
+class Error;
+} // namespace Pomdog
 
 namespace Pomdog::Detail {
 class SystemEvent;
@@ -19,11 +24,14 @@ namespace Pomdog::Detail::Cocoa {
 
 class GameWindowCocoa final : public GameWindow {
 public:
-    GameWindowCocoa(
-        NSWindow* nativeWindow,
-        const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue);
+    GameWindowCocoa() noexcept;
 
-    ~GameWindowCocoa();
+    ~GameWindowCocoa() noexcept;
+
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(
+        NSWindow* nativeWindow,
+        const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue) noexcept;
 
     bool GetAllowUserResizing() const override;
 
@@ -52,7 +60,7 @@ private:
     std::shared_ptr<EventQueue<SystemEvent>> eventQueue;
     __weak NSWindow* nativeWindow = nil;
     __weak NSView* gameView = nil;
-    __strong CocoaWindowDelegate* windowDelegate = nil;
+    __strong PomdogNSWindowDelegate* windowDelegate = nil;
     bool isMouseCursorVisible = true;
 };
 

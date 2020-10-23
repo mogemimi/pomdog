@@ -279,8 +279,14 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     POMDOG_ASSERT(nativeWindow != nil);
 
     eventQueue = std::make_shared<EventQueue<SystemEvent>>();
-    auto gameWindow = std::make_shared<GameWindowCocoa>(nativeWindow, eventQueue);
 
+    // NOTE: Create a window.
+    auto gameWindow = std::make_shared<GameWindowCocoa>();
+    if (auto err = gameWindow->Initialize(nativeWindow, eventQueue); err != nullptr) {
+        POMDOG_THROW_EXCEPTION(std::runtime_error, "GameWindowCocoa::Initialize() failed: " + err->ToString());
+    }
+
+    // NOTE: Create a game host for Metal.
     gameHost = std::make_shared<GameHostMetal>();
     if (auto err = gameHost->Initialize(metalView, gameWindow, eventQueue, presentationParameters); err != nullptr) {
         POMDOG_THROW_EXCEPTION(std::runtime_error, "GameHostMetal::Initialize() failed: " + err->ToString());

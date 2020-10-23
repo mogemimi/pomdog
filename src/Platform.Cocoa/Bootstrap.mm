@@ -96,7 +96,12 @@ Bootstrap::Run(std::function<std::shared_ptr<Game>(const std::shared_ptr<GameHos
             POMDOG_ASSERT(createGame);
 
             auto eventQueue = std::make_shared<EventQueue<SystemEvent>>();
-            auto gameWindow = std::make_shared<GameWindowCocoa>(nativeWindow, eventQueue);
+
+            // NOTE: Create a window.
+            auto gameWindow = std::make_shared<GameWindowCocoa>();
+            if (auto err = gameWindow->Initialize(nativeWindow, eventQueue); err != nullptr) {
+                return Errors::Wrap(std::move(err), "GameWindowCocoa::Initialize() failed.");
+            }
 
             // NOTE: Create a game host for Cocoa.
             gameHostCocoa = std::make_shared<GameHostCocoa>();

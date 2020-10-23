@@ -1,36 +1,97 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "GameWindowCocoa.hpp"
-#include "CocoaWindowDelegate.hpp"
+#include "../Application/SystemEvents.hpp"
 #include "Pomdog/Application/MouseCursor.hpp"
+#include "Pomdog/Signals/EventQueue.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <utility>
 
-namespace Pomdog::Detail::Cocoa {
+using Pomdog::Detail::SystemEvent;
+using Pomdog::Detail::SystemEventKind;
+using Pomdog::EventQueue;
 
-GameWindowCocoa::GameWindowCocoa(
-    NSWindow* nativeWindowIn,
-    const std::shared_ptr<EventQueue<SystemEvent>>& eventQueueIn)
-    : eventQueue(eventQueueIn)
-    , nativeWindow(nativeWindowIn)
-    , gameView(nil)
-    , windowDelegate(nil)
-    , isMouseCursorVisible(true)
-{
-    POMDOG_ASSERT(nativeWindow != nil);
+@interface PomdogNSWindowDelegate : NSObject <NSWindowDelegate>
 
-    // Create WindowDelegate
-    windowDelegate = [[CocoaWindowDelegate alloc] initWithEventQueue:eventQueue];
-    [nativeWindow setDelegate:windowDelegate];
+- (instancetype)initWithEventQueue:(std::shared_ptr<Pomdog::EventQueue<Pomdog::Detail::SystemEvent>>)eventQueue;
+
+@end
+
+@implementation PomdogNSWindowDelegate {
+    std::shared_ptr<EventQueue<SystemEvent>> eventQueue;
 }
 
-GameWindowCocoa::~GameWindowCocoa()
+- (instancetype)initWithEventQueue:(std::shared_ptr<EventQueue<SystemEvent>>)eventQueueIn
 {
-    // Remove delegate from window
-    [nativeWindow setDelegate:nil];
+    self = [super init];
+    if (self) {
+        POMDOG_ASSERT(eventQueueIn);
+        eventQueue = std::move(eventQueueIn);
+    }
+    return self;
+}
 
-    windowDelegate = nil;
-    nativeWindow = nil;
+- (BOOL)windowShouldClose:(id)sender
+{
+    eventQueue->Enqueue(SystemEvent{
+        .Kind = SystemEventKind::WindowShouldCloseEvent,
+    });
+    return NO;
+}
+
+- (void)windowWillClose:(NSNotification*)notification
+{
+    eventQueue->Enqueue(SystemEvent{
+        .Kind = SystemEventKind::WindowWillCloseEvent,
+    });
+}
+
+@end
+
+namespace Pomdog::Detail::Cocoa {
+
+GameWindowCocoa::GameWindowCocoa() noexcept
+{
+}
+
+GameWindowCocoa::~GameWindowCocoa() noexcept
+{
+    dispatch_async(dispatch_get_main_queue(), ^(void) {
+        // NOTE: Remove delegate from window.
+        [nativeWindow setDelegate:nil];
+
+#if !__has_feature(objc_arc)
+        if (windowDelegate != nil) {
+            [windowDelegate release];
+        }
+#endif
+        windowDelegate = nil;
+
+        if (nativeWindow != nil) {
+            [nativeWindow close];
+#if !__has_feature(objc_arc)
+            [nativeWindow release];
+#endif
+        }
+        nativeWindow = nil;
+    });
+}
+
+std::shared_ptr<Error>
+GameWindowCocoa::Initialize(
+    NSWindow* nativeWindowIn,
+    const std::shared_ptr<EventQueue<SystemEvent>>& eventQueueIn) noexcept
+{
+    this->nativeWindow = nativeWindowIn;
+    this->eventQueue = eventQueueIn;
+
+    POMDOG_ASSERT(nativeWindow != nil);
+
+    // NOTE: Create a window delegate for handling window events.
+    windowDelegate = [[PomdogNSWindowDelegate alloc] initWithEventQueue:eventQueue];
+    [nativeWindow setDelegate:windowDelegate];
+
+    return nullptr;
 }
 
 bool GameWindowCocoa::GetAllowUserResizing() const
