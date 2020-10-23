@@ -8,8 +8,8 @@
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
-#include <X11/cursorfont.h>
 #include <X11/Xutil.h>
+#include <X11/cursorfont.h>
 #include <optional>
 
 namespace Pomdog::Detail::X11 {
@@ -429,21 +429,21 @@ void GameWindowX11::ProcessEvent(::XEvent& event)
         Log::Internal("GameWindow.IsMinimized = true");
         break;
     }
-//    case Expose: {
-//        break;
-//    }
-//    case FocusIn: {
-//        if (event.xfocus.mode == NotifyNormal) {
-//            ///@todo
-//        }
-//        break;
-//    }
-//    case FocusOut: {
-//        if (event.xfocus.mode == NotifyNormal) {
-//            ///@todo
-//        }
-//        break;
-//    }
+    // case Expose: {
+    //     break;
+    // }
+    // case FocusIn: {
+    //     if (event.xfocus.mode == NotifyNormal) {
+    //         ///@todo
+    //     }
+    //     break;
+    // }
+    // case FocusOut: {
+    //     if (event.xfocus.mode == NotifyNormal) {
+    //         ///@todo
+    //     }
+    //     break;
+    // }
     default:
         break;
     }

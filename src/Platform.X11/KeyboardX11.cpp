@@ -26,20 +26,34 @@ Keys TranslateKey(Display* display, unsigned int keyCode)
     auto keySym = XkbKeycodeToKeysym(display, keyCode, 0, 1);
 
     switch (keySym) {
-    case XK_KP_0: return Keys::Keypad0;
-    case XK_KP_1: return Keys::Keypad1;
-    case XK_KP_2: return Keys::Keypad2;
-    case XK_KP_3: return Keys::Keypad3;
-    case XK_KP_4: return Keys::Keypad4;
-    case XK_KP_5: return Keys::Keypad5;
-    case XK_KP_6: return Keys::Keypad6;
-    case XK_KP_7: return Keys::Keypad7;
-    case XK_KP_8: return Keys::Keypad8;
-    case XK_KP_9: return Keys::Keypad9;
-    case XK_KP_Enter: return Keys::Enter;
-    case XK_KP_Equal: return Keys::Equals;
-    case XK_KP_Separator: return Keys::KeypadDecimal;
-    case XK_KP_Decimal: return Keys::KeypadDecimal;
+    case XK_KP_0:
+        return Keys::Keypad0;
+    case XK_KP_1:
+        return Keys::Keypad1;
+    case XK_KP_2:
+        return Keys::Keypad2;
+    case XK_KP_3:
+        return Keys::Keypad3;
+    case XK_KP_4:
+        return Keys::Keypad4;
+    case XK_KP_5:
+        return Keys::Keypad5;
+    case XK_KP_6:
+        return Keys::Keypad6;
+    case XK_KP_7:
+        return Keys::Keypad7;
+    case XK_KP_8:
+        return Keys::Keypad8;
+    case XK_KP_9:
+        return Keys::Keypad9;
+    case XK_KP_Enter:
+        return Keys::Enter;
+    case XK_KP_Equal:
+        return Keys::Equals;
+    case XK_KP_Separator:
+        return Keys::KeypadDecimal;
+    case XK_KP_Decimal:
+        return Keys::KeypadDecimal;
     default:
         break;
     }
@@ -69,97 +83,180 @@ Keys TranslateKey(Display* display, unsigned int keyCode)
     }
 
     switch (keySym) {
-    case XK_BackSpace: return Keys::BackSpace;
-    case XK_Tab: return Keys::Tab;
-    case XK_Return: return Keys::Enter;
-    case XK_Escape: return Keys::Escape;
-    case XK_Delete: return Keys::Delete;
-    case XK_Pause: return Keys::Pause;
-    case XK_Num_Lock: return Keys::NumLock;
-    case XK_Caps_Lock: return Keys::CapsLock;
-    case XK_Scroll_Lock: return Keys::ScrollLock;
-    case XK_Print: return Keys::Print;
-    case XK_Menu: return Keys::Help;
-    case XK_Home: return Keys::Home;
-    case XK_End: return Keys::Enter;
-    case XK_Page_Up: return Keys::PageUp;
-    case XK_Page_Down: return Keys::PageDown;
-    case XK_Insert: return Keys::Insert;
-    case XK_Left: return Keys::LeftArrow;
-    case XK_Right: return Keys::RightArrow;
-    case XK_Down: return Keys::DownArrow;
-    case XK_Up: return Keys::UpArrow;
-    case XK_Shift_L: return Keys::LeftShift;
-    case XK_Shift_R: return Keys::RightShift;
-    case XK_Control_L: return Keys::LeftControl;
-    case XK_Control_R: return Keys::RightControl;
-    case XK_Alt_L: return Keys::LeftAlt;
-    case XK_Alt_R: return Keys::RightAlt;
-    case XK_Super_L: return Keys::LeftWindows;
-    case XK_Super_R: return Keys::RightWindows;
+    case XK_BackSpace:
+        return Keys::BackSpace;
+    case XK_Tab:
+        return Keys::Tab;
+    case XK_Return:
+        return Keys::Enter;
+    case XK_Escape:
+        return Keys::Escape;
+    case XK_Delete:
+        return Keys::Delete;
+    case XK_Pause:
+        return Keys::Pause;
+    case XK_Num_Lock:
+        return Keys::NumLock;
+    case XK_Caps_Lock:
+        return Keys::CapsLock;
+    case XK_Scroll_Lock:
+        return Keys::ScrollLock;
+    case XK_Print:
+        return Keys::Print;
+    case XK_Menu:
+        return Keys::Help;
+    case XK_Home:
+        return Keys::Home;
+    case XK_End:
+        return Keys::Enter;
+    case XK_Page_Up:
+        return Keys::PageUp;
+    case XK_Page_Down:
+        return Keys::PageDown;
+    case XK_Insert:
+        return Keys::Insert;
+    case XK_Left:
+        return Keys::LeftArrow;
+    case XK_Right:
+        return Keys::RightArrow;
+    case XK_Down:
+        return Keys::DownArrow;
+    case XK_Up:
+        return Keys::UpArrow;
+    case XK_Shift_L:
+        return Keys::LeftShift;
+    case XK_Shift_R:
+        return Keys::RightShift;
+    case XK_Control_L:
+        return Keys::LeftControl;
+    case XK_Control_R:
+        return Keys::RightControl;
+    case XK_Alt_L:
+        return Keys::LeftAlt;
+    case XK_Alt_R:
+        return Keys::RightAlt;
+    case XK_Super_L:
+        return Keys::LeftWindows;
+    case XK_Super_R:
+        return Keys::RightWindows;
 #if defined(POMDOG_PLATFORM_MACOSX)
-    case XK_Meta_L: return Keys::LeftApple;
-    case XK_Meta_R: return Keys::RightApple;
+    case XK_Meta_L:
+        return Keys::LeftApple;
+    case XK_Meta_R:
+        return Keys::RightApple;
 #endif
 
-    case XK_F1: return Keys::F1;
-    case XK_F2: return Keys::F2;
-    case XK_F3: return Keys::F3;
-    case XK_F4: return Keys::F4;
-    case XK_F5: return Keys::F5;
-    case XK_F6: return Keys::F6;
-    case XK_F7: return Keys::F7;
-    case XK_F8: return Keys::F8;
-    case XK_F9: return Keys::F9;
-    case XK_F10: return Keys::F10;
-    case XK_F11: return Keys::F11;
-    case XK_F12: return Keys::F12;
-    case XK_F13: return Keys::F13;
-    case XK_F14: return Keys::F14;
-    case XK_F15: return Keys::F15;
+    case XK_F1:
+        return Keys::F1;
+    case XK_F2:
+        return Keys::F2;
+    case XK_F3:
+        return Keys::F3;
+    case XK_F4:
+        return Keys::F4;
+    case XK_F5:
+        return Keys::F5;
+    case XK_F6:
+        return Keys::F6;
+    case XK_F7:
+        return Keys::F7;
+    case XK_F8:
+        return Keys::F8;
+    case XK_F9:
+        return Keys::F9;
+    case XK_F10:
+        return Keys::F10;
+    case XK_F11:
+        return Keys::F11;
+    case XK_F12:
+        return Keys::F12;
+    case XK_F13:
+        return Keys::F13;
+    case XK_F14:
+        return Keys::F14;
+    case XK_F15:
+        return Keys::F15;
 
-    case XK_KP_Add: return Keys::KeypadAdd;
-    case XK_KP_Divide: return Keys::KeypadDivide;
-    case XK_KP_Multiply: return Keys::KeypadMultiply;
-    case XK_KP_Subtract: return Keys::KeypadSubtract;
-    case XK_KP_Insert: return Keys::Keypad0;
-    case XK_KP_End: return Keys::Keypad1;
-    case XK_KP_Down: return Keys::Keypad2;
-    case XK_KP_Page_Down: return Keys::Keypad3;
-    case XK_KP_Left: return Keys::Keypad4;
-    case XK_KP_Right: return Keys::Keypad6;
-    case XK_KP_Home: return Keys::Keypad7;
-    case XK_KP_Up: return Keys::Keypad8;
-    case XK_KP_Page_Up: return Keys::Keypad9;
-    case XK_KP_Delete: return Keys::KeypadDecimal;
-    case XK_KP_F1: return Keys::F1;
-    case XK_KP_F2: return Keys::F2;
-    case XK_KP_F3: return Keys::F3;
-    case XK_KP_F4: return Keys::F4;
-    case XK_KP_Equal: return Keys::Equals;
-    case XK_KP_Enter: return Keys::Enter;
+    case XK_KP_Add:
+        return Keys::KeypadAdd;
+    case XK_KP_Divide:
+        return Keys::KeypadDivide;
+    case XK_KP_Multiply:
+        return Keys::KeypadMultiply;
+    case XK_KP_Subtract:
+        return Keys::KeypadSubtract;
+    case XK_KP_Insert:
+        return Keys::Keypad0;
+    case XK_KP_End:
+        return Keys::Keypad1;
+    case XK_KP_Down:
+        return Keys::Keypad2;
+    case XK_KP_Page_Down:
+        return Keys::Keypad3;
+    case XK_KP_Left:
+        return Keys::Keypad4;
+    case XK_KP_Right:
+        return Keys::Keypad6;
+    case XK_KP_Home:
+        return Keys::Keypad7;
+    case XK_KP_Up:
+        return Keys::Keypad8;
+    case XK_KP_Page_Up:
+        return Keys::Keypad9;
+    case XK_KP_Delete:
+        return Keys::KeypadDecimal;
+    case XK_KP_F1:
+        return Keys::F1;
+    case XK_KP_F2:
+        return Keys::F2;
+    case XK_KP_F3:
+        return Keys::F3;
+    case XK_KP_F4:
+        return Keys::F4;
+    case XK_KP_Equal:
+        return Keys::Equals;
+    case XK_KP_Enter:
+        return Keys::Enter;
 
-    case XK_space: return Keys::Space;
-    case XK_braceleft: return Keys::OpenBracket;
-    case XK_braceright: return Keys::CloseBracket;
-    case XK_semicolon: return Keys::Semicolon;
-    //case XK_colon: return Keys::Colon;
-    case XK_question: return Keys::Question;
-    case XK_backslash: return Keys::Backslash;
-    case XK_equal: return Keys::Equals;
-    case XK_apostrophe: return Keys::Quote;
-    case XK_grave: return Keys::AccentGrave;
-    case XK_comma: return Keys::Comma;
-    case XK_period: return Keys::Period;
-    case XK_slash: return Keys::Slash;
-    case XK_plus: return Keys::Plus;
-    case XK_minus: return Keys::Minus;
+    case XK_space:
+        return Keys::Space;
+    case XK_braceleft:
+        return Keys::OpenBracket;
+    case XK_braceright:
+        return Keys::CloseBracket;
+    case XK_semicolon:
+        return Keys::Semicolon;
+    // case XK_colon:
+    //     return Keys::Colon;
+    case XK_question:
+        return Keys::Question;
+    case XK_backslash:
+        return Keys::Backslash;
+    case XK_equal:
+        return Keys::Equals;
+    case XK_apostrophe:
+        return Keys::Quote;
+    case XK_grave:
+        return Keys::AccentGrave;
+    case XK_comma:
+        return Keys::Comma;
+    case XK_period:
+        return Keys::Period;
+    case XK_slash:
+        return Keys::Slash;
+    case XK_plus:
+        return Keys::Plus;
+    case XK_minus:
+        return Keys::Minus;
 
-    case XK_Mode_switch: return Keys::RightAlt;
-    //case XK_ISO_Level3_Shift: return Keys::RightAlt;
-    //case XK_Kanji: return Keys::KanjiMode;
-    //case XK_kana_switch: return Keys::KanaMode;
-
+    case XK_Mode_switch:
+        return Keys::RightAlt;
+    // case XK_ISO_Level3_Shift:
+    //     return Keys::RightAlt;
+    // case XK_Kanji:
+    //     return Keys::KanjiMode;
+    // case XK_kana_switch:
+    //     return Keys::KanaMode;
     default:
         break;
     }
@@ -245,10 +342,10 @@ void BuildKeyMap(Display* display, std::array<Keys, 256>& keys)
             if (keyCode >= 0 && keyCode < static_cast<int>(keys.size())) {
                 keys[keyCode] = iter->second;
             }
-//            static_assert(std::numeric_limits<decltype(keyCode)>::min() >= 0, "");
-//            if (keyCode < keys.size()) {
-//                keys[keyCode] = iter->second;
-//            }
+            // static_assert(std::numeric_limits<decltype(keyCode)>::min() >= 0, "");
+            // if (keyCode < keys.size()) {
+            //     keys[keyCode] = iter->second;
+            // }
         }
     }
 
