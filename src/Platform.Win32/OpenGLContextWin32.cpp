@@ -72,7 +72,7 @@ PIXELFORMATDESCRIPTOR ToPixelFormatDescriptor(
     return std::move(descriptor);
 }
 
-} // unnamed namespace
+} // namespace
 
 OpenGLContextWin32::OpenGLContextWin32(
     HWND windowHandleIn,

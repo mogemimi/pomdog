@@ -21,7 +21,7 @@ MTLSamplerAddressMode ToSamplerAddressMode(TextureAddressMode addressMode) noexc
     POMDOG_UNREACHABLE("Unsupported texture address mode");
 }
 
-} // unnamed namespace
+} // namespace
 
 SamplerStateMetal::SamplerStateMetal(id<MTLDevice> device, const SamplerDescription& description)
     : samplerState(nil)

@@ -39,7 +39,7 @@ namespace {
 #include "Shaders/HLSL.Embedded/LineBatch_VS.inc.hpp"
 #include "Shaders/Metal.Embedded/LineBatch.inc.hpp"
 
-} // unnamed namespace
+} // namespace
 
 // MARK: - LineBatch::Impl
 

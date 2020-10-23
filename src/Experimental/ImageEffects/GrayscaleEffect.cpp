@@ -29,7 +29,7 @@ namespace {
 #include "Shaders/Metal.Embedded/Grayscale_PS.inc.hpp"
 #include "Shaders/Metal.Embedded/ScreenQuad_VS.inc.hpp"
 
-} // unnamed namespace
+} // namespace
 
 GrayscaleEffect::GrayscaleEffect(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,

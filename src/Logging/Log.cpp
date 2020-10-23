@@ -170,7 +170,7 @@ Logger& GetLoggerInstance()
     return logger;
 }
 
-} // unnamed namespace
+} // namespace
 
 // MARK: - Log class
 

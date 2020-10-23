@@ -19,7 +19,7 @@ std::string Error(const std::string& assetName, const std::string& description)
     return description + (": " + assetName);
 }
 
-} // unnamed namespace
+} // namespace
 
 void VoxModelExporter::Export(const MagicaVoxel::VoxModel& model, const std::string& filePath)
 {

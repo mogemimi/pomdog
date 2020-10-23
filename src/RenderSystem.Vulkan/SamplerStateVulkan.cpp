@@ -81,7 +81,7 @@ ToTextureFilter(TextureFilter filter)
         VK_SAMPLER_MIPMAP_MODE_NEAREST);
 }
 
-} // unnamed namespace
+} // namespace
 
 SamplerStateVulkan::SamplerStateVulkan(
     ::VkDevice deviceIn,

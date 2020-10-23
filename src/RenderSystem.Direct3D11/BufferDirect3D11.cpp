@@ -106,7 +106,7 @@ D3D11_MAP GetMapTypeForWriting(D3D11_BIND_FLAG bindFlag) noexcept
     return D3D11_MAP_WRITE_NO_OVERWRITE;
 }
 
-} // unnamed namespace
+} // namespace
 
 BufferDirect3D11::BufferDirect3D11(
     ID3D11Device* device,

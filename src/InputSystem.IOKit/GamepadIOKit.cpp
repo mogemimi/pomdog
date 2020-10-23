@@ -38,7 +38,7 @@ float NormalizeAxisValue(IOHIDValueRef valueRef, const ThumbStickInfo& info)
     return static_cast<float>(info.InvertDirection * ((value - info.Minimum) * 2 - info.Range)) / info.Range;
 }
 
-} // unnamed namespace
+} // namespace
 
 void GamepadDevice::Close()
 {

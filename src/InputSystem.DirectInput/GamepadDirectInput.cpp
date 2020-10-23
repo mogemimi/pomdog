@@ -357,7 +357,7 @@ float NormalizeAxisValue(LONG value, const ThumbStickInfo& info)
     return static_cast<float>(info.InvertDirection * ((value - ThumbStickMinValue) * 2 - range)) / range;
 }
 
-} // unnamed namespace
+} // namespace
 
 bool GamepadDevice::Open(IDirectInput8* directInput, HWND windowHandle, const ::GUID& guidInstance)
 {

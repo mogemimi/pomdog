@@ -267,7 +267,7 @@ TEST(PathIterator, Case_08)
 }
 #endif
 
-} // unnamed namespace
+} // namespace
 
 std::string
 PathHelper::Join(const std::string& path1, const std::string& path2)

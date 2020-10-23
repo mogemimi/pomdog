@@ -197,7 +197,7 @@ CreateGraphicsDeviceResult CreateGraphicsDeviceDirect3D11(
 }
 #endif
 
-} // unnamed namespace
+} // namespace
 
 class GameHostWin32::Impl final {
 public:

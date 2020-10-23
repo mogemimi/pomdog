@@ -142,7 +142,7 @@ std::uint32_t BlockChecksum(const void* data, std::size_t length, std::uint32_t 
     return crc;
 }
 
-} // unnamed namespace
+} // namespace
 
 std::uint32_t CRC32::ComputeCRC32(const void* data, std::size_t length) noexcept
 {

@@ -11,7 +11,7 @@ using namespace Pomdog;
 
 namespace {
 static constexpr auto Epsilon = std::numeric_limits<float>::epsilon();
-} // unnamed namespace
+} // namespace
 
 TEST_CASE("Ray", "[Ray]")
 {

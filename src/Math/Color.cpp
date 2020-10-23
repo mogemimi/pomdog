@@ -38,7 +38,7 @@ std::uint32_t ColorPackUint(
     return (((red | (green << 8)) | (blue << 16)) | (alpha << 24));
 }
 
-} // unnamed namespace
+} // namespace
 
 const Color Color::White{255, 255, 255, 255};
 const Color Color::Black{0, 0, 0, 255};

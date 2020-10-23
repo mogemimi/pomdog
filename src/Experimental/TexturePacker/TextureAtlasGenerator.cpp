@@ -147,7 +147,7 @@ Rectangle Clip(const std::shared_ptr<Image>& image)
     return bounds;
 }
 
-} // unnamed namespace
+} // namespace
 
 TextureAtlasGeneratorResult TextureAtlasGenerator::Generate(
     const std::vector<TextureAtlasGeneratorSource>& sources,

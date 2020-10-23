@@ -165,7 +165,7 @@ void CompileFromShaderFile(
     }
 }
 
-} // unnamed namespace
+} // namespace
 
 Microsoft::WRL::ComPtr<ID3DBlob> HLSLCompiling::CompileShader(
     const ShaderBytecode& shaderBytecode,

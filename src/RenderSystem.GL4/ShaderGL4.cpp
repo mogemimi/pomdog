@@ -79,7 +79,7 @@ std::optional<GLuint> CompileShader(const ShaderBytecode& source, GLenum pipelin
     return result;
 }
 
-} // unnamed namespace
+} // namespace
 
 template <GLenum PipelineStage>
 constexpr GLenum ShaderGL4<PipelineStage>::pipelineStage;

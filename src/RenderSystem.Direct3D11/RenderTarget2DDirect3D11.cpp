@@ -169,7 +169,7 @@ void BuildBackBufferBySwapChain(
     }
 }
 
-} // unnamed namespace
+} // namespace
 
 RenderTarget2DDirect3D11::RenderTarget2DDirect3D11(
     ID3D11Device* device,

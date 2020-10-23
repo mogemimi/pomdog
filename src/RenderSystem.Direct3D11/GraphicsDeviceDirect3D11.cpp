@@ -188,7 +188,7 @@ D3D11_BIND_FLAG ToBindFlag(BufferBindMode bindMode) noexcept
     return D3D11_BIND_VERTEX_BUFFER;
 }
 
-} // unnamed namespace
+} // namespace
 
 class GraphicsDeviceDirect3D11::Impl final {
 public:

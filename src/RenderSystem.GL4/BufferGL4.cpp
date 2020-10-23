@@ -41,7 +41,7 @@ struct BufferTraits<VertexBuffer> {
     constexpr static GLenum Buffer = GL_ARRAY_BUFFER;
 };
 
-} // unnamed namespace
+} // namespace
 
 template <>
 struct TypesafeHelperGL4::Traits<BufferObjectGL4<ConstantBuffer>> {

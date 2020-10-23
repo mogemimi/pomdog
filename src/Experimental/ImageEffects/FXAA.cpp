@@ -28,7 +28,7 @@ namespace {
 #include "Shaders/HLSL.Embedded/FXAA_VS.inc.hpp"
 #include "Shaders/Metal.Embedded/FXAA.inc.hpp"
 
-} // unnamed namespace
+} // namespace
 
 FXAA::FXAA(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,

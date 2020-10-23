@@ -89,7 +89,7 @@ struct alignas(16) SpriteBatchConstantBuffer final {
     Vector4 DistanceFieldParameters;
 };
 
-} // unnamed namespace
+} // namespace
 
 // MARK: - SpriteBatch::Impl
 

@@ -298,7 +298,7 @@ FontGlyph ParseGlyph(std::istream& stream)
     return result;
 }
 
-} // unnamed namespace
+} // namespace
 
 std::tuple<std::shared_ptr<SpriteFont>, std::shared_ptr<Error>>
 AssetLoader<SpriteFont>::operator()(AssetManager& assets, const std::string& filePath)

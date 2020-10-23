@@ -11,7 +11,7 @@ namespace {
 constexpr std::size_t DefaultMaxVertexCount = 4096 * 8;
 constexpr std::size_t DefaultMinVertexCount = 256;
 
-} // unnamed namespace
+} // namespace
 
 PolygonShapeBuilder::PolygonShapeBuilder()
     : maxVertexCount(DefaultMaxVertexCount)

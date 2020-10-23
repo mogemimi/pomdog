@@ -35,7 +35,7 @@ constexpr int FarLeftBottom = 7;
 //#define POMDOG_CREATE_PLANES_BEFORE_CORNERS 0
 #define POMDOG_CREATE_PLANES_BEFORE_CORNERS 1
 
-} // unnamed namespace
+} // namespace
 
 constexpr int BoundingFrustum::CornerCount;
 constexpr int BoundingFrustum::PlaneCount;
@@ -143,7 +143,7 @@ constexpr auto FRT = CornerIndex::FarRightTop;
 constexpr auto FRB = CornerIndex::FarRightBottom;
 constexpr auto FLB = CornerIndex::FarLeftBottom;
 
-} // unnamed namespace
+} // namespace
 
 void BoundingFrustum::CreatePlanes()
 {

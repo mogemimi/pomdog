@@ -165,7 +165,7 @@ std::string UnsafeToFormatString(const char* format, std::va_list arg)
     return result;
 }
 
-} // unnamed namespace
+} // namespace
 
 std::string StringHelper::Format(const char* format, ...)
 {

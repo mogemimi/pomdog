@@ -49,7 +49,7 @@ std::size_t ComputeAlignedSize(std::size_t sizeInBytes, BufferBindMode bindMode)
     return sizeInBytes;
 }
 
-} // unnamed namespace
+} // namespace
 
 BufferMetal::BufferMetal(
     id<MTLDevice> device,

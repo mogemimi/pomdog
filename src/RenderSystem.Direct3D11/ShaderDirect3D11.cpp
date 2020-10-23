@@ -29,7 +29,7 @@ HRESULT CreateShader(
     return device->CreatePixelShader(shaderByteCode, bytecodeLength, nullptr, pixelShader);
 }
 
-} // unnamed namespace
+} // namespace
 
 template <class NativeShaderType>
 ShaderDirect3D11<NativeShaderType>::ShaderDirect3D11(

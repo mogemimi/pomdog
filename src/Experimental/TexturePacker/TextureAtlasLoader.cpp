@@ -36,7 +36,7 @@ TextureAtlasRegion CreateAtlasRegion(const std::string& line, std::int16_t pageI
     return region;
 }
 
-} // unnamed namespace
+} // namespace
 
 std::tuple<TextureAtlas, std::shared_ptr<Error>>
 TextureAtlasLoader::Load(const std::string& filePath)

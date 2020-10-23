@@ -29,7 +29,7 @@ namespace {
 #include "Shaders/Metal.Embedded/ScreenQuad_VS.inc.hpp"
 #include "Shaders/Metal.Embedded/SepiaTone_PS.inc.hpp"
 
-} // unnamed namespace
+} // namespace
 
 SepiaToneEffect::SepiaToneEffect(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,

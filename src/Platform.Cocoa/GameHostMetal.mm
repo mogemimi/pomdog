@@ -58,7 +58,7 @@ void SetupMetalView(
     view.depthStencilPixelFormat = ToPixelFormat(presentationParameters.DepthStencilFormat);
 }
 
-} // unnamed namespace
+} // namespace
 
 // MARK: GameHostMetal::Impl
 

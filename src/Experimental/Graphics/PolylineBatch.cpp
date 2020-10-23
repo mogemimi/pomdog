@@ -87,7 +87,7 @@ PolylineVertex MakeVertex(
 #define POMDOG_POLYLINE_DEBUG 1
 #endif
 
-} // unnamed namespace
+} // namespace
 
 // MARK: - PolylineBatch::Impl
 

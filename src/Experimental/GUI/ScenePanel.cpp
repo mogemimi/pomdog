@@ -59,7 +59,7 @@ namespace {
 
 static const auto ZoomAnimationInterval = std::chrono::milliseconds(400);
 
-} // unnamed namespace
+} // namespace
 
 ScenePanel::ScenePanel(
     const std::shared_ptr<UIEventDispatcher>& dispatcher,

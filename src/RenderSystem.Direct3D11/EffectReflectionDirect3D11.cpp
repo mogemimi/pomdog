@@ -125,7 +125,7 @@ void EnumerateConstantBuffer(
     }
 }
 
-} // unnamed namespace
+} // namespace
 
 EffectReflectionDirect3D11::EffectReflectionDirect3D11(
     const ShaderBytecode& vertexShaderBytecode,

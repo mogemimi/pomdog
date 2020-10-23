@@ -62,7 +62,7 @@ static bool IsExtensionSupported(const char* extensionList, const char* extensio
     return false;
 }
 
-} // unnamed namespace
+} // namespace
 
 OpenGLContextX11::OpenGLContextX11(
     const std::shared_ptr<GameWindowX11>& windowIn,

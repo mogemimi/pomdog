@@ -269,7 +269,7 @@ Keys ToKeys(const std::array<Keys, 256>& keys, unsigned int keyCode)
     return keys[keyCode];
 }
 
-} // unnamed namespace
+} // namespace
 
 KeyboardX11::KeyboardX11(::Display* display)
 {

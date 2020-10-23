@@ -50,7 +50,7 @@ D3D11_TEXTURE_ADDRESS_MODE ToTextureAddressMode(TextureAddressMode addressMode) 
     return D3D11_TEXTURE_ADDRESS_WRAP;
 }
 
-} // unnamed namespace
+} // namespace
 
 SamplerStateDirect3D11::SamplerStateDirect3D11(
     ID3D11Device* device,

@@ -13,7 +13,7 @@ bool Compare(const TDeferredTask& a, const TDeferredTask& b) noexcept
     return a.StartTime < b.StartTime;
 }
 
-} // unnamed namespace
+} // namespace
 
 void QueuedScheduler::Schedule(
     std::function<void()>&& task,

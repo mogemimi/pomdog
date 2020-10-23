@@ -486,7 +486,7 @@ Microsoft::WRL::ComPtr<ID3D11InputLayout> CreateInputLayout(
     return std::move(nativeInputLayout);
 }
 
-} // unnamed namespace
+} // namespace
 
 PipelineStateDirect3D11::PipelineStateDirect3D11(
     ID3D11Device* device,

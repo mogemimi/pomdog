@@ -26,7 +26,7 @@ GLenum ToDepthStencilFormat(DepthFormat depthFormat) noexcept
     return GL_DEPTH24_STENCIL8;
 }
 
-} // unnamed namespace
+} // namespace
 
 RenderTarget2DGL4::RenderTarget2DGL4(
     std::int32_t pixelWidth,

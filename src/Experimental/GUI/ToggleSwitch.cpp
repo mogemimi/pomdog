@@ -21,7 +21,7 @@ constexpr float thumbRadius = 7.0f;
 constexpr float thumbPadding = 2.0f;
 constexpr int segments = 12;
 
-} // unnamed namespace
+} // namespace
 
 ToggleSwitch::ToggleSwitch(const std::shared_ptr<UIEventDispatcher>& dispatcher)
     : Widget(dispatcher)

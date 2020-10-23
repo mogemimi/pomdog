@@ -28,7 +28,7 @@ public:
     }
 };
 
-} // unnamed namespace
+} // namespace
 
 // MARK: - GameClock::Impl
 

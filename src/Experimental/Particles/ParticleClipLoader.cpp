@@ -392,7 +392,7 @@ ReadParticleClip(const rapidjson::Value& object)
     return std::make_tuple(std::move(particleClip), nullptr);
 }
 
-} // unnamed namespace
+} // namespace
 
 std::tuple<std::shared_ptr<ParticleClip>, std::shared_ptr<Error>>
 AssetLoader<ParticleClip>::operator()(

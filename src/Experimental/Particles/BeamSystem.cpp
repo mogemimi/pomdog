@@ -128,7 +128,7 @@ CreateBranch(
     return CreateJaggedLine(emitter, scaledPoints, start, end, random);
 }
 
-} // unnamed namespace
+} // namespace
 
 BeamSystem::BeamSystem()
     : erapsedTime(0)

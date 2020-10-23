@@ -100,7 +100,7 @@ void UpdateMouseCursor(::Display* display, ::Window window, std::optional<MouseC
     }
 }
 
-} // unnamed namespace
+} // namespace
 
 GameWindowX11::GameWindowX11(
     const std::shared_ptr<X11Context const>& x11ContextIn,

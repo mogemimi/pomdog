@@ -83,7 +83,7 @@ std::optional<std::string> IncludeGLSLFilesRecursive(
     return text;
 }
 
-} // unnamed namespace
+} // namespace
 
 class Builder<Shader>::Impl {
 public:

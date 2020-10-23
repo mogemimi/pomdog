@@ -554,7 +554,7 @@ void ApplyInputElements(
     POMDOG_ASSERT(inputElement == std::end(inputElements));
 }
 
-} // unnamed namespace
+} // namespace
 
 template <>
 struct TypesafeHelperGL4::Traits<VertexArrayGL4> {

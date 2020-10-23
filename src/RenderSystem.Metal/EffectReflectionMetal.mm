@@ -114,7 +114,7 @@ EffectVariableClass ToEffectVariableClass(MTLDataType variableClass) noexcept
     return EffectVariableClass::Scalar;
 }
 
-} // unnamed namespace
+} // namespace
 
 EffectReflectionMetal::EffectReflectionMetal(MTLRenderPipelineReflection* reflectionIn)
     : reflection(reflectionIn)

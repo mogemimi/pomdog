@@ -20,7 +20,7 @@ FillModeGL4 ToFillModeGL4(const FillMode& fillMode) noexcept
     POMDOG_UNREACHABLE("Unsupported fill mode");
 }
 
-} // unnamed namespace
+} // namespace
 
 RasterizerStateGL4::RasterizerStateGL4(const RasterizerDescription& description)
     : fillMode(ToFillModeGL4(description.FillMode))

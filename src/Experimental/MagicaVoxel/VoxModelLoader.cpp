@@ -28,7 +28,7 @@ std::ifstream::pos_type ChunkSize(std::ifstream& stream, const VoxChunkHeader& c
     return stream.tellg() + static_cast<std::ifstream::pos_type>(chunk.ContentSize + chunk.ChildrenSize);
 }
 
-} // unnamed namespace
+} // namespace
 
 std::tuple<std::shared_ptr<MagicaVoxel::VoxModel>, std::shared_ptr<Error>>
 AssetLoader<MagicaVoxel::VoxModel>::operator()([[maybe_unused]] AssetManager& assets, const std::string& filePath)

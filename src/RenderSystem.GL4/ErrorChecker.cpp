@@ -40,7 +40,7 @@ std::string ToString(const ErrorCodeGL4& errorCode)
     return ss.str();
 }
 
-} // unnamed namespace
+} // namespace
 
 void ErrorChecker::CheckError(const char* command, const char* filename, int line)
 {

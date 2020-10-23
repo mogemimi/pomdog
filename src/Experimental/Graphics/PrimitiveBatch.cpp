@@ -40,7 +40,7 @@ namespace {
 #include "Shaders/HLSL.Embedded/PrimitiveBatch_VS.inc.hpp"
 #include "Shaders/Metal.Embedded/PrimitiveBatch.inc.hpp"
 
-} // unnamed namespace
+} // namespace
 
 // MARK: - PrimitiveBatch::Impl
 

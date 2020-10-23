@@ -30,7 +30,7 @@ void InitializeAtoms(::Display* display, X11AtomCache& atoms)
     })();
 }
 
-} // unnamed namespace
+} // namespace
 
 X11Context::X11Context()
     : Display(nullptr)

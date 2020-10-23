@@ -100,7 +100,7 @@ void CheckUnbindingRenderTargetsError(
 }
 #endif
 
-} // unnamed namespace
+} // namespace
 
 GraphicsContextMetal::GraphicsContextMetal(
     id<MTLDevice> nativeDevice)

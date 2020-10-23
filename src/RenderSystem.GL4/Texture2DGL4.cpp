@@ -216,7 +216,7 @@ void SetPixelDataTexture2DGL4(
     }
 }
 
-} // unnamed namespace
+} // namespace
 
 template <>
 struct TypesafeHelperGL4::Traits<Texture2DObjectGL4> {

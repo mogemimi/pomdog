@@ -636,7 +636,7 @@ void DebugLogUniforms(const std::vector<UniformGL4>& uniforms)
 }
 #endif
 
-} // unnamed namespace
+} // namespace
 
 EffectReflectionGL4::EffectReflectionGL4(const ShaderProgramGL4& shaderProgramIn)
     : shaderProgram(shaderProgramIn)

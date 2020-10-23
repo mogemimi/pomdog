@@ -25,7 +25,7 @@ bool isSpace(char32_t c) noexcept
     return (c == U' ') || (c == U'\t');
 }
 
-} // unnamed namespace
+} // namespace
 
 // MARK: - SpriteFont::Impl
 

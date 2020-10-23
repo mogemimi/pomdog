@@ -17,7 +17,7 @@ NSString* ToNSString(const std::string& s)
     return [NSString stringWithUTF8String:s.c_str()];
 }
 
-} // unnamed namespace
+} // namespace
 
 std::tuple<std::size_t, std::shared_ptr<Error>>
 FileSystem::GetFileSize(const std::string& path)

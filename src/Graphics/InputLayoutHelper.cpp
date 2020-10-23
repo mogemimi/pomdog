@@ -12,7 +12,7 @@ namespace {
 static constexpr std::uint16_t MaxInputSlotCount = 16;
 #endif
 
-} // unnamed namespace
+} // namespace
 
 InputLayoutHelper& InputLayoutHelper::PushBack(InputElementFormat format)
 {

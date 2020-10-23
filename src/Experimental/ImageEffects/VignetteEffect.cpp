@@ -34,7 +34,7 @@ struct VignetteBlock {
     float Intensity;
 };
 
-} // unnamed namespace
+} // namespace
 
 VignetteEffect::VignetteEffect(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,

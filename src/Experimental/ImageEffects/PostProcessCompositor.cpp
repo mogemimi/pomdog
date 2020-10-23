@@ -25,7 +25,7 @@ struct PostProcessInfo {
     Vector2 RcpFrame;
 };
 
-} // unnamed namespace
+} // namespace
 
 PostProcessCompositor::PostProcessCompositor(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice)

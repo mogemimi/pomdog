@@ -93,7 +93,7 @@ void CheckUnbindingRenderTargetsError(
 }
 #endif
 
-} // unnamed namespace
+} // namespace
 
 GraphicsContextDirect3D11::GraphicsContextDirect3D11(
     HWND windowHandle,

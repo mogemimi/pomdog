@@ -7,7 +7,7 @@
 namespace Pomdog::Detail::Vulkan {
 namespace {
 
-} // unnamed namespace
+} // namespace
 
 EffectReflectionVulkan::EffectReflectionVulkan()
 {

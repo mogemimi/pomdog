@@ -35,7 +35,7 @@ struct FishEyeBlock {
     float Strength;
 };
 
-} // unnamed namespace
+} // namespace
 
 FishEyeEffect::FishEyeEffect(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,

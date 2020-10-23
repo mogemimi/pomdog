@@ -191,7 +191,7 @@ struct SetRenderPassCommand final : public GraphicsCommand {
     }
 };
 
-} // unnamed namespace
+} // namespace
 
 GraphicsCommandListImmediate::~GraphicsCommandListImmediate() = default;
 

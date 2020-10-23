@@ -29,7 +29,7 @@ namespace {
 #include "Shaders/Metal.Embedded/ChromaticAberration_PS.inc.hpp"
 #include "Shaders/Metal.Embedded/ScreenQuad_VS.inc.hpp"
 
-} // unnamed namespace
+} // namespace
 
 ChromaticAberration::ChromaticAberration(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
