@@ -100,7 +100,7 @@ Bootstrap::Run(std::function<std::shared_ptr<Game>(const std::shared_ptr<GameHos
 
             // NOTE: Create a game host for Cocoa.
             gameHostCocoa = std::make_shared<GameHostCocoa>();
-            if (auto err = gameHostCocoa->Initialize(view, gameWindow, eventQueue, presentationParameters); err != nil) {
+            if (auto err = gameHostCocoa->Initialize(view, gameWindow, eventQueue, presentationParameters); err != nullptr) {
                 return Errors::Wrap(std::move(err), "GameHostCocoa::Initialize() failed.");
             }
 
