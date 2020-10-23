@@ -6,7 +6,7 @@
 #include "MouseCocoa.hpp"
 #include "../Application/SystemEvents.hpp"
 #include "../Audio.OpenAL/AudioEngineAL.hpp"
-#include "../InputSystem.IOKit/GamepadIOKit.hpp"
+#include "../Input.IOKit/GamepadIOKit.hpp"
 #include "../RenderSystem.Metal/GraphicsContextMetal.hpp"
 #include "../RenderSystem.Metal/GraphicsDeviceMetal.hpp"
 #include "../RenderSystem.Metal/MetalFormatHelper.hpp"
@@ -39,7 +39,7 @@
 using Pomdog::Detail::Metal::GraphicsContextMetal;
 using Pomdog::Detail::Metal::GraphicsDeviceMetal;
 using Pomdog::Detail::Metal::ToPixelFormat;
-using Pomdog::Detail::InputSystem::Apple::GamepadIOKit;
+using Pomdog::Detail::IOKit::GamepadIOKit;
 using Pomdog::Detail::OpenAL::AudioEngineAL;
 
 namespace Pomdog::Detail::Cocoa {

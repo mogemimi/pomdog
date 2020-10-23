@@ -13,7 +13,7 @@
 #include <unordered_map>
 #include <utility>
 
-namespace Pomdog::Detail::InputSystem {
+namespace Pomdog::Detail {
 namespace {
 
 #include "SDL_GameControllerDB.h"
@@ -139,13 +139,15 @@ ButtonKind ToButtonIndex(int physicalIndex, GamepadButtonMappings mappings)
 
 } // namespace
 
-ButtonState* GetButton(GamepadState& state, const GamepadButtonMappings& mappings, int physicalIndex)
+[[nodiscard]] ButtonState*
+GetButton(GamepadState& state, const GamepadButtonMappings& mappings, int physicalIndex) noexcept
 {
     const auto kind = ToButtonIndex(physicalIndex, mappings);
     return GetButton(state, kind);
 }
 
-ButtonState* GetButton(GamepadState& state, ButtonKind kind)
+[[nodiscard]] ButtonState*
+GetButton(GamepadState& state, ButtonKind kind) noexcept
 {
     if (kind == ButtonKind::None) {
         return nullptr;
@@ -178,7 +180,8 @@ ButtonState* GetButton(GamepadState& state, ButtonKind kind)
     return buttons[index];
 }
 
-float* GetThumbStick(GamepadState& state, ThumbStickKind kind)
+[[nodiscard]] float*
+GetThumbStick(GamepadState& state, ThumbStickKind kind) noexcept
 {
     if (kind == ThumbStickKind::None) {
         return nullptr;
@@ -196,13 +199,15 @@ float* GetThumbStick(GamepadState& state, ThumbStickKind kind)
     return axes[index];
 }
 
-bool* HasButton(GamepadCapabilities& caps, const GamepadButtonMappings& mappings, int physicalIndex)
+[[nodiscard]] bool*
+HasButton(GamepadCapabilities& caps, const GamepadButtonMappings& mappings, int physicalIndex) noexcept
 {
     const auto kind = ToButtonIndex(physicalIndex, mappings);
     return HasButton(caps, kind);
 }
 
-bool* HasButton(GamepadCapabilities& caps, ButtonKind kind)
+[[nodiscard]] bool*
+HasButton(GamepadCapabilities& caps, ButtonKind kind) noexcept
 {
     if (kind == ButtonKind::None) {
         return nullptr;
@@ -235,7 +240,8 @@ bool* HasButton(GamepadCapabilities& caps, ButtonKind kind)
     return buttons[index];
 }
 
-bool* HasThumbStick(GamepadCapabilities& caps, ThumbStickKind kind)
+[[nodiscard]] bool*
+HasThumbStick(GamepadCapabilities& caps, ThumbStickKind kind) noexcept
 {
     if (kind == ThumbStickKind::None) {
         return nullptr;
@@ -253,12 +259,14 @@ bool* HasThumbStick(GamepadCapabilities& caps, ThumbStickKind kind)
     return axes[index];
 }
 
-std::tuple<GamepadMappings, std::string> GetMappings(const GamepadUUID& uuid)
+[[nodiscard]] std::tuple<GamepadMappings, std::string>
+GetMappings(const GamepadUUID& uuid) noexcept
 {
     return GetMappings(uuid.ToString());
 }
 
-std::tuple<GamepadMappings, std::string> GetMappings(const std::string& uuidString)
+[[nodiscard]] std::tuple<GamepadMappings, std::string>
+GetMappings(const std::string& uuidString) noexcept
 {
     GamepadMappings mappings;
 #if defined(POMDOG_PLATFORM_LINUX)
@@ -352,4 +360,4 @@ std::tuple<GamepadMappings, std::string> GetMappings(const std::string& uuidStri
     return std::make_tuple(mappings, deviceName);
 }
 
-} // namespace Pomdog::Detail::InputSystem
+} // namespace Pomdog::Detail

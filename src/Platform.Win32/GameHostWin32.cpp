@@ -4,7 +4,7 @@
 #include "GameWindowWin32.hpp"
 #include "KeyboardWin32.hpp"
 #include "MouseWin32.hpp"
-#include "../InputSystem/NativeGamepad.hpp"
+#include "../Input.Backends/NativeGamepad.hpp"
 #if !defined(POMDOG_DISABLE_GL4)
 #include "../Platform.Win32/OpenGLContextWin32.hpp"
 #include "../RenderSystem.GL4/GraphicsContextGL4.hpp"
@@ -38,7 +38,7 @@
 #include <chrono>
 #include <thread>
 
-using Pomdog::Detail::InputSystem::NativeGamepad;
+using Pomdog::Detail::NativeGamepad;
 using Pomdog::Detail::Win32::GameWindowWin32;
 using Pomdog::Detail::XAudio2::AudioEngineXAudio2;
 #if !defined(POMDOG_DISABLE_GL4)
@@ -204,7 +204,7 @@ public:
     Impl(
         const std::shared_ptr<GameWindowWin32>& window,
         const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
-        const std::shared_ptr<InputSystem::NativeGamepad>& gamepad,
+        const std::shared_ptr<NativeGamepad>& gamepad,
         const PresentationParameters& presentationParameters,
         bool useOpenGL);
 
@@ -287,7 +287,7 @@ private:
 GameHostWin32::Impl::Impl(
     const std::shared_ptr<GameWindowWin32>& windowIn,
     const std::shared_ptr<EventQueue<SystemEvent>>& eventQueueIn,
-    const std::shared_ptr<InputSystem::NativeGamepad>& gamepadIn,
+    const std::shared_ptr<NativeGamepad>& gamepadIn,
     const PresentationParameters& presentationParameters,
     bool useOpenGL)
     : eventQueue(eventQueueIn)
@@ -534,7 +534,7 @@ GameHostWin32::Impl::GetHTTPClient(std::shared_ptr<GameHost>&& gameHost) noexcep
 GameHostWin32::GameHostWin32(
     const std::shared_ptr<GameWindowWin32>& window,
     const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
-    const std::shared_ptr<InputSystem::NativeGamepad>& gamepad,
+    const std::shared_ptr<NativeGamepad>& gamepad,
     const PresentationParameters& presentationParameters,
     bool useOpenGL)
     : impl(std::make_unique<Impl>(

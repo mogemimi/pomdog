@@ -19,4 +19,30 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_INC_DIR}/Input/PlayerIndex.hpp
     ${POMDOG_INC_DIR}/Input/TouchLocation.hpp
     ${POMDOG_INC_DIR}/Input/TouchLocationState.hpp
+
+    # NOTE: Input.Backends
+    ${POMDOG_SRC_DIR}/Input.Backends/GamepadHelper.cpp
+    ${POMDOG_SRC_DIR}/Input.Backends/GamepadHelper.hpp
+    ${POMDOG_SRC_DIR}/Input.Backends/GamepadMappings.cpp
+    ${POMDOG_SRC_DIR}/Input.Backends/GamepadMappings.hpp
+    ${POMDOG_SRC_DIR}/Input.Backends/NativeGamepad.hpp
+
+    $<$<PLATFORM_ID:Windows>:
+        # NOTE: Input.DirectInput
+        ${POMDOG_SRC_DIR}/Input.DirectInput/GamepadDirectInput.cpp
+        ${POMDOG_SRC_DIR}/Input.DirectInput/GamepadDirectInput.hpp
+        ${POMDOG_SRC_DIR}/Input.DirectInput/PrerequisitesDirectInput.hpp
+    >
+
+    $<$<PLATFORM_ID:Darwin>:
+        # NOTE: Input.IOKit
+        ${POMDOG_SRC_DIR}/Input.IOKit/GamepadIOKit.cpp
+        ${POMDOG_SRC_DIR}/Input.IOKit/GamepadIOKit.hpp
+    >
+
+    $<$<PLATFORM_ID:Linux>:
+        # NOTE: Input.Linux
+        ${POMDOG_SRC_DIR}/Input.Linux/GamepadLinux.cpp
+        ${POMDOG_SRC_DIR}/Input.Linux/GamepadLinux.hpp
+    >
 )

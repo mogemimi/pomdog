@@ -3,8 +3,8 @@
 #pragma once
 
 #include "PrerequisitesDirectInput.hpp"
-#include "../InputSystem/GamepadMappings.hpp"
-#include "../InputSystem/NativeGamepad.hpp"
+#include "../Input.Backends/GamepadMappings.hpp"
+#include "../Input.Backends/NativeGamepad.hpp"
 #include "Pomdog/Input/Gamepad.hpp"
 #include "Pomdog/Input/GamepadCapabilities.hpp"
 #include "Pomdog/Input/GamepadState.hpp"
@@ -13,7 +13,7 @@
 #include <cstdint>
 #include <memory>
 
-namespace Pomdog::Detail::InputSystem::DirectInput {
+namespace Pomdog::Detail::DirectInput {
 
 enum class GamepadStateDirectInput : std::uint8_t {
     NotInitialized,
@@ -67,4 +67,4 @@ private:
     Microsoft::WRL::ComPtr<IDirectInput8> directInput;
 };
 
-} // namespace Pomdog::Detail::InputSystem::DirectInput
+} // namespace Pomdog::Detail::DirectInput

@@ -15,9 +15,9 @@ namespace Pomdog::Detail {
 class SystemEvent;
 } // namespace Pomdog::Detail
 
-namespace Pomdog::Detail::InputSystem {
+namespace Pomdog::Detail {
 class NativeGamepad;
-} // namespace Pomdog::Detail::InputSystem
+} // namespace Pomdog::Detail
 
 namespace Pomdog::Detail::Win32 {
 
@@ -28,7 +28,7 @@ public:
     GameHostWin32(
         const std::shared_ptr<GameWindowWin32>& window,
         const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
-        const std::shared_ptr<InputSystem::NativeGamepad>& gamepad,
+        const std::shared_ptr<NativeGamepad>& gamepad,
         const PresentationParameters& presentationParameters,
         bool useOpenGL);
 

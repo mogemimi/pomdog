@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "GamepadDirectInput.hpp"
-#include "../InputSystem/GamepadHelper.hpp"
+#include "../Input.Backends/GamepadHelper.hpp"
 #include "../Utility/ScopeGuard.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -12,7 +12,7 @@
 #include <array>
 #include <tuple>
 
-namespace Pomdog::Detail::InputSystem::DirectInput {
+namespace Pomdog::Detail::DirectInput {
 namespace {
 
 constexpr LONG ThumbStickMinValue = -32768;
@@ -62,7 +62,7 @@ BOOL CALLBACK EnumAxesCallback(const DIDEVICEOBJECTINSTANCE* deviceObject, VOID*
         // NOTE: Set the range for the axis
         HRESULT hr = inputDevice->SetProperty(DIPROP_RANGE, &rangeProps.diph);
         if (FAILED(hr)) {
-            Log::Warning("Pomdog.InputSystem", "Failed to call IDirectInputDevice8::SetProperty");
+            Log::Warning("Pomdog.Input", "Failed to call IDirectInputDevice8::SetProperty");
             return DIENUM_STOP;
         }
 
@@ -245,7 +245,7 @@ bool GetCaps(GamepadDevice& gamepad)
     deviceCaps.dwSize = sizeof(deviceCaps);
     auto hr = inputDevice->GetCapabilities(&deviceCaps);
     if (FAILED(hr)) {
-        Log::Warning("Pomdog.InputSystem", "Failed to call IDirectInputDevice8::GetCapabilities");
+        Log::Warning("Pomdog.Input", "Failed to call IDirectInputDevice8::GetCapabilities");
         return false;
     }
 
@@ -258,7 +258,7 @@ bool GetCaps(GamepadDevice& gamepad)
     deviceInfo.dwSize = sizeof(deviceInfo);
     hr = inputDevice->GetDeviceInfo(&deviceInfo);
     if (FAILED(hr)) {
-        Log::Warning("Pomdog.InputSystem", "Failed to call IDirectInputDevice8::GetDeviceInfo");
+        Log::Warning("Pomdog.Input", "Failed to call IDirectInputDevice8::GetDeviceInfo");
         return false;
     }
 
@@ -276,7 +276,7 @@ bool GetCaps(GamepadDevice& gamepad)
         caps.DeviceUUID.VendorID = 0;
         caps.DeviceUUID.VersionNumber = 0;
         Log::Warning(
-            "Pomdog.InputSystem",
+            "Pomdog.Input",
             "Pomdog does not support bluetooth gamepads yet,"
             "please report a issue to GitHub: https://github.com/mogemimi/pomdog .");
     }
@@ -315,7 +315,7 @@ bool GetCaps(GamepadDevice& gamepad)
         DIDFT_BUTTON | DIDFT_AXIS);
 
     if (FAILED(hr)) {
-        Log::Warning("Pomdog.InputSystem", "Failed to call IDirectInputDevice8::EnumObjects");
+        Log::Warning("Pomdog.Input", "Failed to call IDirectInputDevice8::EnumObjects");
         return false;
     }
 
@@ -327,7 +327,7 @@ bool GetCaps(GamepadDevice& gamepad)
     props.dwData = DIPROPAXISMODE_ABS;
     hr = inputDevice->SetProperty(DIPROP_AXISMODE, &props.diph);
     if (FAILED(hr)) {
-        Log::Warning("Pomdog.InputSystem", "Failed to call IDirectInputDevice8::SetProperty");
+        Log::Warning("Pomdog.Input", "Failed to call IDirectInputDevice8::SetProperty");
         return false;
     }
 
@@ -340,7 +340,7 @@ void OnNotAcquired(GamepadDevice& gamepad)
     HRESULT hr = gamepad.inputDevice->Acquire();
     if (FAILED(hr)) {
         if (DIERR_OTHERAPPHASPRIO != hr) {
-            Log::Warning("Pomdog.InputSystem", "Failed to call IDirectInputDevice8::Acquire");
+            Log::Warning("Pomdog.Input", "Failed to call IDirectInputDevice8::Acquire");
             gamepad.state.IsConnected = false;
             return;
         }
@@ -366,7 +366,7 @@ bool GamepadDevice::Open(IDirectInput8* directInput, HWND windowHandle, const ::
 
     auto hr = directInput->CreateDevice(guidInstance, &inputDevice, nullptr);
     if (FAILED(hr)) {
-        Log::Warning("Pomdog.InputSystem", "Failed to call IDirectInput8::CreateDevice");
+        Log::Warning("Pomdog.Input", "Failed to call IDirectInput8::CreateDevice");
         return false;
     }
 
@@ -375,20 +375,20 @@ bool GamepadDevice::Open(IDirectInput8* directInput, HWND windowHandle, const ::
     // TODO: Replace c_dfDIJoystick with c_dfDIJoystick2
     hr = inputDevice->SetDataFormat(&c_dfDIJoystick);
     if (FAILED(hr)) {
-        Log::Warning("Pomdog.InputSystem", "Failed to call IDirectInputDevice8::SetDataFormat");
+        Log::Warning("Pomdog.Input", "Failed to call IDirectInputDevice8::SetDataFormat");
         Close();
         return false;
     }
 
     hr = inputDevice->SetCooperativeLevel(windowHandle, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
     if (FAILED(hr)) {
-        Log::Warning("Pomdog.InputSystem", "Failed to call IDirectInputDevice8::SetCooperativeLevel");
+        Log::Warning("Pomdog.Input", "Failed to call IDirectInputDevice8::SetCooperativeLevel");
         Close();
         return false;
     }
 
     if (!GetCaps(*this)) {
-        Log::Warning("Pomdog.InputSystem", "Failed to get capabilities");
+        Log::Warning("Pomdog.Input", "Failed to get capabilities");
         Close();
         return false;
     }
@@ -398,7 +398,7 @@ bool GamepadDevice::Open(IDirectInput8* directInput, HWND windowHandle, const ::
     hr = inputDevice->Acquire();
     if (FAILED(hr)) {
         if (DIERR_OTHERAPPHASPRIO != hr) {
-            Log::Warning("Pomdog.InputSystem", "Failed to call IDirectInputDevice8::Acquire");
+            Log::Warning("Pomdog.Input", "Failed to call IDirectInputDevice8::Acquire");
             Close();
             return false;
         }
@@ -622,7 +622,7 @@ BOOL GamepadDirectInput::OnDeviceAttached(LPCDIDEVICEINSTANCE deviceInstance)
                 gamepad.isXInputDevice = true;
             }
             if (!gamepad.Open(directInput.Get(), windowHandle, deviceInstance->guidInstance)) {
-                Log::Warning("Pomdog.InputSystem", "Failed to initialize gamepad");
+                Log::Warning("Pomdog.Input", "Failed to initialize gamepad");
                 return DIENUM_CONTINUE;
             }
             std::memcpy(&gamepad.deviceGuid, &deviceInstance->guidInstance, sizeof(gamepad.deviceGuid));
@@ -666,4 +666,4 @@ void GamepadDirectInput::PollEvents()
     }
 }
 
-} // namespace Pomdog::Detail::InputSystem::DirectInput
+} // namespace Pomdog::Detail::DirectInput

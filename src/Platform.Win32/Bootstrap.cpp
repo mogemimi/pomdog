@@ -4,14 +4,14 @@
 #include "GameHostWin32.hpp"
 #include "GameWindowWin32.hpp"
 #include "../Application/SystemEvents.hpp"
-#include "../InputSystem.DirectInput/GamepadDirectInput.hpp"
+#include "../Input.DirectInput/GamepadDirectInput.hpp"
 #include "Pomdog/Application/Game.hpp"
 #include "Pomdog/Application/GameHost.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Logging/Log.hpp"
 
 using Pomdog::Detail::SystemEvent;
-using Pomdog::Detail::InputSystem::DirectInput::GamepadDirectInput;
+using Pomdog::Detail::DirectInput::GamepadDirectInput;
 
 namespace Pomdog::Win32 {
 

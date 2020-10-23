@@ -1,9 +1,9 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "GameHostX11.hpp"
+#include "GamepadFactory.hpp"
 #include "../Audio.OpenAL/AudioEngineAL.hpp"
-#include "../InputSystem/GamepadFactory.hpp"
-#include "../InputSystem/NativeGamepad.hpp"
+#include "../Input.Backends/NativeGamepad.hpp"
 #include "../RenderSystem.GL4/GraphicsContextGL4.hpp"
 #include "../RenderSystem.GL4/GraphicsDeviceGL4.hpp"
 #include "../RenderSystem/GraphicsCommandQueueImmediate.hpp"
@@ -24,9 +24,9 @@
 #include <thread>
 #include <vector>
 
+using Pomdog::Detail::NativeGamepad;
 using Pomdog::Detail::GL4::GraphicsContextGL4;
 using Pomdog::Detail::GL4::GraphicsDeviceGL4;
-using Pomdog::Detail::InputSystem::NativeGamepad;
 using Pomdog::Detail::OpenAL::AudioEngineAL;
 
 namespace Pomdog::Detail::X11 {
@@ -259,7 +259,7 @@ GameHostX11::Impl::Impl(const PresentationParameters& presentationParameters)
     }
 
     keyboard = std::make_unique<KeyboardX11>(x11Context->Display);
-    gamepad = Detail::InputSystem::CreateGamepad();
+    gamepad = Detail::X11::CreateGamepad();
 
     auto contentDirectory = PathHelper::Join(FileSystem::GetResourceDirectoryPath(), "Content");
     assetManager = std::make_unique<AssetManager>(

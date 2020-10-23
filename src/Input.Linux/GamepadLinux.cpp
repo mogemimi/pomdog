@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "GamepadLinux.hpp"
-#include "../InputSystem/GamepadHelper.hpp"
+#include "../Input.Backends/GamepadHelper.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <errno.h>
@@ -12,7 +12,7 @@
 #include <cstring>
 #include <tuple>
 
-namespace Pomdog::Detail::InputSystem::Linux {
+namespace Pomdog::Detail::Linux {
 namespace {
 
 constexpr size_t BitCount(size_t n)
@@ -383,4 +383,4 @@ void GamepadLinux::PollEvents()
     }
 }
 
-} // namespace Pomdog::Detail::InputSystem::Linux
+} // namespace Pomdog::Detail::Linux

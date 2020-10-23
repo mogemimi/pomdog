@@ -49,6 +49,8 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/Platform.X11/Bootstrap.cpp
         ${POMDOG_SRC_DIR}/Platform.X11/GameHostX11.cpp
         ${POMDOG_SRC_DIR}/Platform.X11/GameHostX11.hpp
+        ${POMDOG_SRC_DIR}/Platform.X11/GamepadFactory.hpp
+        ${POMDOG_SRC_DIR}/Platform.X11/GamepadFactory.cpp
         ${POMDOG_SRC_DIR}/Platform.X11/GameWindowX11.cpp
         ${POMDOG_SRC_DIR}/Platform.X11/GameWindowX11.hpp
         ${POMDOG_SRC_DIR}/Platform.X11/KeyboardX11.cpp

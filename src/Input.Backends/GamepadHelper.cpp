@@ -3,20 +3,16 @@
 #include "GamepadHelper.hpp"
 #include "Pomdog/Input/GamepadState.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/StringHelper.hpp"
-#include <algorithm>
-#include <array>
-#include <utility>
 
-namespace Pomdog::Detail::InputSystem {
+namespace Pomdog::Detail::GamepadHelper {
 
-int GamepadHelper::ToInt(PlayerIndex index)
+[[nodiscard]] int ToInt(PlayerIndex index) noexcept
 {
     POMDOG_ASSERT(static_cast<int>(index) >= 1);
     return static_cast<int>(index) - 1;
 }
 
-void GamepadHelper::ClearState(GamepadState& state)
+void ClearState(GamepadState& state) noexcept
 {
     state.Buttons.A = ButtonState::Released;
     state.Buttons.B = ButtonState::Released;
@@ -42,4 +38,4 @@ void GamepadHelper::ClearState(GamepadState& state)
     state.IsConnected = false;
 }
 
-} // namespace Pomdog::Detail::InputSystem
+} // namespace Pomdog::Detail::GamepadHelper

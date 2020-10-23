@@ -8,7 +8,7 @@
 #include "PomdogOpenGLView.hpp"
 #include "../Application/SystemEvents.hpp"
 #include "../Audio.OpenAL/AudioEngineAL.hpp"
-#include "../InputSystem.IOKit/GamepadIOKit.hpp"
+#include "../Input.IOKit/GamepadIOKit.hpp"
 #include "../RenderSystem.GL4/GraphicsContextGL4.hpp"
 #include "../RenderSystem.GL4/GraphicsDeviceGL4.hpp"
 #include "../RenderSystem/GraphicsCommandQueueImmediate.hpp"
@@ -35,7 +35,7 @@
 
 using Pomdog::Detail::GL4::GraphicsDeviceGL4;
 using Pomdog::Detail::GL4::GraphicsContextGL4;
-using Pomdog::Detail::InputSystem::Apple::GamepadIOKit;
+using Pomdog::Detail::IOKit::GamepadIOKit;
 using Pomdog::Detail::OpenAL::AudioEngineAL;
 
 namespace Pomdog::Detail::Cocoa {

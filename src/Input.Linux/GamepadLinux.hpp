@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "../InputSystem/GamepadMappings.hpp"
-#include "../InputSystem/NativeGamepad.hpp"
+#include "../Input.Backends/GamepadMappings.hpp"
+#include "../Input.Backends/NativeGamepad.hpp"
 #include "Pomdog/Input/Gamepad.hpp"
 #include "Pomdog/Input/GamepadCapabilities.hpp"
 #include "Pomdog/Input/GamepadState.hpp"
@@ -11,7 +11,7 @@
 #include <cstdint>
 #include <memory>
 
-namespace Pomdog::Detail::InputSystem::Linux {
+namespace Pomdog::Detail::Linux {
 
 struct ThumbStickInfo final {
     std::int32_t Minimum = 0;
@@ -58,4 +58,4 @@ private:
     std::array<GamepadDevice, 4> gamepads;
 };
 
-} // namespace Pomdog::Detail::InputSystem::Linux
+} // namespace Pomdog::Detail::Linux

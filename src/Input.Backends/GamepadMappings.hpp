@@ -12,7 +12,7 @@
 #include <string>
 #include <tuple>
 
-namespace Pomdog::Detail::InputSystem {
+namespace Pomdog::Detail {
 
 enum class ButtonKind : std::int8_t {
     None = -1,
@@ -58,18 +58,28 @@ struct GamepadMappings final {
     std::array<AxisMapper, 6> axes;
 };
 
-ButtonState* GetButton(GamepadState& state, const GamepadButtonMappings& mappings, int index);
-ButtonState* GetButton(GamepadState& state, ButtonKind kind);
+[[nodiscard]] ButtonState*
+GetButton(GamepadState& state, const GamepadButtonMappings& mappings, int index) noexcept;
 
-float* GetThumbStick(GamepadState& state, ThumbStickKind kind);
+[[nodiscard]] ButtonState*
+GetButton(GamepadState& state, ButtonKind kind) noexcept;
 
-bool* HasButton(GamepadCapabilities& caps, const GamepadButtonMappings& mappings, int index);
-bool* HasButton(GamepadCapabilities& caps, ButtonKind kind);
+[[nodiscard]] float*
+GetThumbStick(GamepadState& state, ThumbStickKind kind) noexcept;
 
-bool* HasThumbStick(GamepadCapabilities& caps, ThumbStickKind kind);
+[[nodiscard]] bool*
+HasButton(GamepadCapabilities& caps, const GamepadButtonMappings& mappings, int index) noexcept;
 
-std::tuple<GamepadMappings, std::string> GetMappings(const GamepadUUID& uuid);
+[[nodiscard]] bool*
+HasButton(GamepadCapabilities& caps, ButtonKind kind) noexcept;
 
-std::tuple<GamepadMappings, std::string> GetMappings(const std::string& uuid);
+[[nodiscard]] bool*
+HasThumbStick(GamepadCapabilities& caps, ThumbStickKind kind) noexcept;
 
-} // namespace Pomdog::Detail::InputSystem
+[[nodiscard]] std::tuple<GamepadMappings, std::string>
+GetMappings(const GamepadUUID& uuid) noexcept;
+
+[[nodiscard]] std::tuple<GamepadMappings, std::string>
+GetMappings(const std::string& uuid) noexcept;
+
+} // namespace Pomdog::Detail

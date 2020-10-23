@@ -1,14 +1,14 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "GamepadIOKit.hpp"
-#include "../InputSystem/GamepadHelper.hpp"
+#include "../Input.Backends/GamepadHelper.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Signals/EventQueue.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include <algorithm>
 
-namespace Pomdog::Detail::InputSystem::Apple {
+namespace Pomdog::Detail::IOKit {
 namespace {
 
 void AppendDeviceMatching(CFMutableArrayRef matcher, uint32_t page, uint32_t usage)
@@ -452,4 +452,4 @@ void GamepadIOKit::HandleEvent(const SystemEvent& event)
     }
 }
 
-} // namespace Pomdog::Detail::InputSystem::Apple
+} // namespace Pomdog::Detail::IOKit

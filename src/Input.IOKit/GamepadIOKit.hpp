@@ -3,7 +3,7 @@
 #pragma once
 
 #include "../Application/SystemEvents.hpp"
-#include "../InputSystem/GamepadMappings.hpp"
+#include "../Input.Backends/GamepadMappings.hpp"
 #include "Pomdog/Input/Gamepad.hpp"
 #include "Pomdog/Input/GamepadCapabilities.hpp"
 #include "Pomdog/Input/GamepadState.hpp"
@@ -20,7 +20,7 @@ class EventQueue;
 
 } // namespace Pomdog
 
-namespace Pomdog::Detail::InputSystem::Apple {
+namespace Pomdog::Detail::IOKit {
 
 struct ThumbStickInfo final {
     std::int32_t Minimum = 0;
@@ -66,4 +66,4 @@ private:
     void OnDeviceDetached(IOReturn result, void* sender, IOHIDDeviceRef device);
 };
 
-} // namespace Pomdog::Detail::InputSystem::Apple
+} // namespace Pomdog::Detail::IOKit
