@@ -25,6 +25,7 @@ add_executable(PomdogTest)
 
 target_sources(PomdogTest PRIVATE
     ${POMDOG_TEST_DIR}/main.cpp
+    ${POMDOG_TEST_DIR}/PomdogTest.cpp
     ${POMDOG_TEST_DIR}/Application/GameClockTest.cpp
     ${POMDOG_TEST_DIR}/Application/TimerTest.cpp
     ${POMDOG_TEST_DIR}/Async/SchedulerTest.cpp
