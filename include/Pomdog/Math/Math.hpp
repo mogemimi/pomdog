@@ -114,4 +114,10 @@ ToPoint3D(const Vector3& vec) noexcept;
 [[nodiscard]] POMDOG_EXPORT Vector3
 ToVector3(const Point3D& point) noexcept;
 
+[[nodiscard]] POMDOG_EXPORT Point2D
+Abs(const Point2D& point) noexcept;
+
+[[nodiscard]] POMDOG_EXPORT Point3D
+Abs(const Point3D& point) noexcept;
+
 } // namespace Pomdog::Math

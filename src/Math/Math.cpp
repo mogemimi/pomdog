@@ -43,4 +43,21 @@ Vector3 ToVector3(const Point3D& point) noexcept
     };
 }
 
+Point2D Abs(const Point2D& point) noexcept
+{
+    return Point2D{
+        std::abs(point.X),
+        std::abs(point.Y),
+    };
+}
+
+Point3D Abs(const Point3D& point) noexcept
+{
+    return Point3D{
+         std::abs(point.X),
+         std::abs(point.Y),
+         std::abs(point.Z),
+     };
+}
+
 } // namespace Pomdog::Math
