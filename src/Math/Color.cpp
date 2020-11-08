@@ -2,7 +2,7 @@
 
 #include "Pomdog/Math/Color.hpp"
 #include "../Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Math/MathHelper.hpp"
+#include "Pomdog/Math/Math.hpp"
 #include "Pomdog/Math/Vector3.hpp"
 #include "Pomdog/Math/Vector4.hpp"
 #include "Pomdog/Utility/Assert.hpp"

@@ -1,6 +1,6 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Math/MathHelper.hpp"
+#include "Pomdog/Math/Math.hpp"
 #include "Pomdog/Math/Point2D.hpp"
 #include "Pomdog/Math/Point3D.hpp"
 #include "Pomdog/Math/Vector2.hpp"

@@ -41,7 +41,7 @@ namespace Pomdog {
 #include "Math/Color.hpp"
 #include "Math/ContainmentType.hpp"
 #include "Math/Degree.hpp"
-#include "Math/MathHelper.hpp"
+#include "Math/Math.hpp"
 #include "Math/Matrix2x2.hpp"
 #include "Math/Matrix3x2.hpp"
 #include "Math/Matrix3x3.hpp"

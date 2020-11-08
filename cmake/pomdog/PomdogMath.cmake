@@ -14,8 +14,8 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/Math/Color.cpp
     ${POMDOG_INC_DIR}/Math/ContainmentType.hpp
     ${POMDOG_INC_DIR}/Math/Degree.hpp
-    ${POMDOG_INC_DIR}/Math/MathHelper.hpp
-    ${POMDOG_SRC_DIR}/Math/MathHelper.cpp
+    ${POMDOG_INC_DIR}/Math/Math.hpp
+    ${POMDOG_SRC_DIR}/Math/Math.cpp
     ${POMDOG_INC_DIR}/Math/Matrix2x2.hpp
     ${POMDOG_INC_DIR}/Math/Matrix3x2.hpp
     ${POMDOG_INC_DIR}/Math/Matrix3x3.hpp
