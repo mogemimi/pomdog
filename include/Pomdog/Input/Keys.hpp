@@ -9,7 +9,7 @@ namespace Pomdog {
 ///@brief Specifies keyboard keys and key codes.
 enum class Keys : std::uint8_t {
     ///@brief Reserved (never is pressed)
-    None = 0,
+    Unknown = 0,
 
     ///@brief BackSpace key
     BackSpace = 1,

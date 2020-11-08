@@ -46,7 +46,7 @@ Keys TranslateKey(std::uint16_t keyCode)
         /* 0x07 */ Keys::X, // kVK_ANSI_X
         /* 0x08 */ Keys::C, // kVK_ANSI_C
         /* 0x09 */ Keys::V, // kVK_ANSI_V
-        /* 0x0A */ Keys::None, // kVK_ISO_Section
+        /* 0x0A */ Keys::Unknown, // kVK_ISO_Section
         /* 0x0B */ Keys::B, // kVK_ANSI_B
         /* 0x0C */ Keys::Q, // kVK_ANSI_Q
         /* 0x0D */ Keys::W, // kVK_ANSI_W
@@ -88,7 +88,7 @@ Keys TranslateKey(std::uint16_t keyCode)
         /* 0x31 */ Keys::Space, // kVK_Space
         /* 0x32 */ Keys::AccentGrave, // kVK_ANSI_Grave
         /* 0x33 */ Keys::Delete, // kVK_Delete
-        /* 0x34 */ Keys::None,
+        /* 0x34 */ Keys::Unknown,
         /* 0x35 */ Keys::Escape, // kVK_Escape
         /* 0x36 */ Keys::RightApple, // NOTE: maybe
         /* 0x37 */ Keys::LeftApple, // kVK_Command
@@ -99,24 +99,24 @@ Keys TranslateKey(std::uint16_t keyCode)
         /* 0x3C */ Keys::RightShift, // kVK_RightShift
         /* 0x3D */ Keys::RightAlt, // kVK_RightOption
         /* 0x3E */ Keys::RightControl, // kVK_RightControl
-        /* 0x3F */ Keys::None, // kVK_Function
-        /* 0x40 */ Keys::None, // kVK_F17
+        /* 0x3F */ Keys::Unknown, // kVK_Function
+        /* 0x40 */ Keys::Unknown, // kVK_F17
         /* 0x41 */ Keys::KeypadDecimal, // kVK_ANSI_KeypadDecimal
-        /* 0x42 */ Keys::None,
+        /* 0x42 */ Keys::Unknown,
         /* 0x43 */ Keys::KeypadMultiply, // kVK_ANSI_KeypadMultiply
-        /* 0x44 */ Keys::None,
+        /* 0x44 */ Keys::Unknown,
         /* 0x45 */ Keys::KeypadAdd, // kVK_ANSI_KeypadPlus
-        /* 0x46 */ Keys::None,
+        /* 0x46 */ Keys::Unknown,
         /* 0x47 */ Keys::Clear, // kVK_ANSI_KeypadClear
-        /* 0x48 */ Keys::None, // kVK_VolumeUp
-        /* 0x49 */ Keys::None, // kVK_VolumeDown
-        /* 0x4A */ Keys::None, // kVK_Mute
+        /* 0x48 */ Keys::Unknown, // kVK_VolumeUp
+        /* 0x49 */ Keys::Unknown, // kVK_VolumeDown
+        /* 0x4A */ Keys::Unknown, // kVK_Mute
         /* 0x4B */ Keys::KeypadDivide, // kVK_ANSI_KeypadDivide
         /* 0x4C */ Keys::Enter, // kVK_ANSI_KeypadEnter
-        /* 0x4D */ Keys::None,
+        /* 0x4D */ Keys::Unknown,
         /* 0x4E */ Keys::KeypadSubtract, // kVK_ANSI_KeypadMinus
-        /* 0x4F */ Keys::None, // kVK_F18
-        /* 0x50 */ Keys::None, // kVK_F19
+        /* 0x4F */ Keys::Unknown, // kVK_F18
+        /* 0x50 */ Keys::Unknown, // kVK_F19
         /* 0x51 */ Keys::Equals, // kVK_ANSI_KeypadEquals
         /* 0x52 */ Keys::Keypad0, // kVK_ANSI_Keypad0
         /* 0x53 */ Keys::Keypad1, // kVK_ANSI_Keypad1
@@ -126,11 +126,11 @@ Keys TranslateKey(std::uint16_t keyCode)
         /* 0x57 */ Keys::Keypad5, // kVK_ANSI_Keypad5
         /* 0x58 */ Keys::Keypad6, // kVK_ANSI_Keypad6
         /* 0x59 */ Keys::Keypad7, // kVK_ANSI_Keypad7
-        /* 0x5A */ Keys::None, // kVK_F20
+        /* 0x5A */ Keys::Unknown, // kVK_F20
         /* 0x5B */ Keys::Keypad8, // kVK_ANSI_Keypad8
         /* 0x5C */ Keys::Keypad9, // kVK_ANSI_Keypad9
         /* 0x5D */ Keys::Backslash, // kVK_JIS_Yen
-        /* 0x5E */ Keys::None, // kVK_JIS_Underscore
+        /* 0x5E */ Keys::Unknown, // kVK_JIS_Underscore
         /* 0x5F */ Keys::Comma, // kVK_JIS_KeypadComma
         /* 0x60 */ Keys::F5, // kVK_F5
         /* 0x61 */ Keys::F6, // kVK_F6
@@ -138,17 +138,17 @@ Keys TranslateKey(std::uint16_t keyCode)
         /* 0x63 */ Keys::F3, // kVK_F3
         /* 0x64 */ Keys::F8, // kVK_F8
         /* 0x65 */ Keys::F9, // kVK_F9
-        /* 0x66 */ Keys::None, // kVK_JIS_Eisu
+        /* 0x66 */ Keys::Unknown, // kVK_JIS_Eisu
         /* 0x67 */ Keys::F11, // kVK_F11
         /* 0x68 */ Keys::KanaMode, // kVK_JIS_Kana
         /* 0x69 */ Keys::F13, // kVK_F13
-        /* 0x6A */ Keys::None, // kVK_F16
+        /* 0x6A */ Keys::Unknown, // kVK_F16
         /* 0x6B */ Keys::F14, // kVK_F14
-        /* 0x6C */ Keys::None,
+        /* 0x6C */ Keys::Unknown,
         /* 0x6D */ Keys::F10, // kVK_F10
-        /* 0x6E */ Keys::None,
+        /* 0x6E */ Keys::Unknown,
         /* 0x6F */ Keys::F12, // kVK_F12
-        /* 0x70 */ Keys::None,
+        /* 0x70 */ Keys::Unknown,
         /* 0x71 */ Keys::F15, // kVK_F15
         /* 0x72 */ Keys::Help, // kVK_Help
         /* 0x73 */ Keys::Home, // kVK_Home
@@ -168,7 +168,7 @@ Keys TranslateKey(std::uint16_t keyCode)
     if (keyCode < sizeof(keyTable)) {
         return keyTable[keyCode];
     }
-    return Keys::None;
+    return Keys::Unknown;
 }
 
 NSUInteger TranslateKeyToModifierFlag(Keys key)
@@ -580,7 +580,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 - (void)keyDown:(NSEvent*)theEvent
 {
     auto key = TranslateKey([theEvent keyCode]);
-    if (key != Pomdog::Keys::None) {
+    if (key != Pomdog::Keys::Unknown) {
         eventQueue->Enqueue(SystemEvent{
             .Kind = SystemEventKind::InputKeyEvent,
             .Data = InputKeyEvent{
@@ -604,7 +604,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 - (void)keyUp:(NSEvent*)theEvent
 {
     auto key = TranslateKey([theEvent keyCode]);
-    if (key != Pomdog::Keys::None) {
+    if (key != Pomdog::Keys::Unknown) {
         eventQueue->Enqueue(SystemEvent{
             .Kind = SystemEventKind::InputKeyEvent,
             .Data = InputKeyEvent{
@@ -618,7 +618,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 - (void)flagsChanged:(NSEvent*)event
 {
     const auto key = TranslateKey([event keyCode]);
-    if (key == Pomdog::Keys::None) {
+    if (key == Pomdog::Keys::Unknown) {
         return;
     }
 

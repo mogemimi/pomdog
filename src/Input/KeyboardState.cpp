@@ -11,8 +11,8 @@
 
 namespace Pomdog {
 
-static_assert(static_cast<std::underlying_type<Keys>::type>(Keys::None) == 0, "");
-static_assert(std::is_same<std::underlying_type<Keys>::type, std::uint8_t>::value, "");
+static_assert(static_cast<std::underlying_type<Keys>::type>(Keys::Unknown) == 0);
+static_assert(std::is_same<std::underlying_type<Keys>::type, std::uint8_t>::value);
 static_assert(std::is_unsigned<std::underlying_type<Keys>::type>::value,
     "Keys is unsinged integer type.");
 

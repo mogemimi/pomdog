@@ -11,7 +11,7 @@ using Pomdog::KeyState;
 TEST_CASE("KeysToInteger", "[KeyboardState]")
 {
     using std::uint32_t;
-    REQUIRE(static_cast<uint32_t>(Keys::None) < 128U);
+    REQUIRE(static_cast<uint32_t>(Keys::Unknown) < 128U);
     REQUIRE(static_cast<uint32_t>(Keys::BackSpace) < 128U);
     REQUIRE(static_cast<uint32_t>(Keys::A) < 128U);
     REQUIRE(static_cast<uint32_t>(Keys::Z) < 128U);
