@@ -216,9 +216,9 @@ FloatingPointVector3<T>
 FloatingPointVector3<T>::Clamp(const FloatingPointVector3& source, const FloatingPointVector3& min, const FloatingPointVector3& max) noexcept
 {
     return FloatingPointVector3(
-        MathHelper::Clamp(source.X, min.X, max.X),
-        MathHelper::Clamp(source.Y, min.Y, max.Y),
-        MathHelper::Clamp(source.Z, min.Z, max.Z));
+        Math::Clamp(source.X, min.X, max.X),
+        Math::Clamp(source.Y, min.Y, max.Y),
+        Math::Clamp(source.Z, min.Z, max.Z));
 }
 
 template <typename T>
@@ -226,9 +226,9 @@ FloatingPointVector3<T>
 FloatingPointVector3<T>::Lerp(const FloatingPointVector3& source1, const FloatingPointVector3& source2, T amount)
 {
     return FloatingPointVector3(
-        MathHelper::Lerp(source1.X, source2.X, amount),
-        MathHelper::Lerp(source1.Y, source2.Y, amount),
-        MathHelper::Lerp(source1.Z, source2.Z, amount));
+        Math::Lerp(source1.X, source2.X, amount),
+        Math::Lerp(source1.Y, source2.Y, amount),
+        Math::Lerp(source1.Z, source2.Z, amount));
 }
 
 template <typename T>
@@ -236,9 +236,9 @@ FloatingPointVector3<T>
 FloatingPointVector3<T>::SmoothStep(const FloatingPointVector3& source1, const FloatingPointVector3& source2, T amount)
 {
     return FloatingPointVector3(
-        MathHelper::SmoothStep(source1.X, source2.X, amount),
-        MathHelper::SmoothStep(source1.Y, source2.Y, amount),
-        MathHelper::SmoothStep(source1.Z, source2.Z, amount));
+        Math::SmoothStep(source1.X, source2.X, amount),
+        Math::SmoothStep(source1.Y, source2.Y, amount),
+        Math::SmoothStep(source1.Z, source2.Z, amount));
 }
 
 template <typename T>

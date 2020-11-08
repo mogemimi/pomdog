@@ -30,7 +30,7 @@ void HorizontalLine::Draw(DrawingContext& drawingContext)
     auto globalPos = UIHelper::ProjectToWorldSpace(GetPosition(), drawingContext.GetCurrentTransform());
     auto primitiveBatch = drawingContext.GetPrimitiveBatch();
 
-    auto offset = MathHelper::ToVector2(globalPos);
+    auto offset = Math::ToVector2(globalPos);
     auto start = offset + Vector2{0.0f, 0.0f};
     auto end = offset + Vector2{static_cast<float>(GetWidth()), 0.0f};
     primitiveBatch->DrawLine(start, end, Color{92, 91, 90, 255}, 1.0f);

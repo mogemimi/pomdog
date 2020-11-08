@@ -83,7 +83,7 @@ void StackPanel::OnPointerPressed(const PointerPoint& pointerPoint)
         collisionHeight};
 
     if (captionBar.Contains(pointInView)) {
-        startTouchPoint = MathHelper::ToVector2(pointInView);
+        startTouchPoint = Math::ToVector2(pointInView);
     }
 }
 
@@ -94,17 +94,17 @@ void StackPanel::OnPointerMoved(const PointerPoint& pointerPoint)
     }
 
     auto pointInView = UIHelper::ProjectToChildSpace(pointerPoint.Position, GetGlobalPosition());
-    auto position = MathHelper::ToVector2(pointInView);
+    auto position = Math::ToVector2(pointInView);
 
     auto tangent = position - *startTouchPoint;
     auto distanceSquared = tangent.LengthSquared();
 
     if (distanceSquared >= 1.4143f) {
-        SetPosition(GetPosition() + MathHelper::ToPoint2D(tangent));
+        SetPosition(GetPosition() + Math::ToPoint2D(tangent));
 
         // NOTE: recalculate position in current coordinate system
         pointInView = UIHelper::ProjectToChildSpace(pointerPoint.Position, GetGlobalPosition());
-        position = MathHelper::ToVector2(pointInView);
+        position = Math::ToVector2(pointInView);
         startTouchPoint = position;
     }
 }
@@ -213,7 +213,7 @@ void StackPanel::Draw(DrawingContext& drawingContext)
         Rectangle{globalPos.X, globalPos.Y + (GetHeight() - barHeight), GetWidth(), barHeight},
         colorScheme->PanelTitleBarColor);
 
-    const auto pos = MathHelper::ToVector2(globalPos);
+    const auto pos = Math::ToVector2(globalPos);
     primitiveBatch->DrawLine(pos + Vector2{0.0f, 0.0f}, pos + Vector2{w, 0.0f}, colorScheme->PanelOutlineBorderColor, 1.0f);
     primitiveBatch->DrawLine(pos + Vector2{0.0f, 0.0f}, pos + Vector2{0.0f, h}, colorScheme->PanelOutlineBorderColor, 1.0f);
     primitiveBatch->DrawLine(pos + Vector2{0.0f, h}, pos + Vector2{w, h}, colorScheme->PanelOutlineBorderColor, 1.0f);

@@ -84,7 +84,7 @@ void TextBlock::Draw(DrawingContext& drawingContext)
     auto spriteFont = drawingContext.GetFont(fontWeight, fontSize);
     auto globalPos = UIHelper::ProjectToWorldSpace(GetPosition(), drawingContext.GetCurrentTransform());
 
-    auto position = MathHelper::ToVector2(globalPos) + Vector2{0.0f, baselineHeight};
+    auto position = Math::ToVector2(globalPos) + Vector2{0.0f, baselineHeight};
     auto originPivot = Vector2::Zero;
 
     switch (textAlignment) {

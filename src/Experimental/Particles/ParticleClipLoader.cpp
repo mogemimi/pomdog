@@ -250,7 +250,7 @@ ReadParticleClip(const rapidjson::Value& object)
         }
         else if (shapeType.GetString() == std::string_view{"sector"}) {
             const auto centralAngle = shape["angle"].GetFloat();
-            auto radian = MathHelper::ToRadians(centralAngle);
+            auto radian = Math::ToRadians(centralAngle);
             clip.Shape = std::make_unique<ParticleEmitterShapeSector>(std::move(radian));
         }
         else if (shapeType.GetString() == std::string_view{"sphere"}) {
@@ -301,12 +301,12 @@ ReadParticleClip(const rapidjson::Value& object)
         auto& shape = object[name];
 
         if (shape["type"].GetString() == std::string_view{"constant"}) {
-            const auto value = MathHelper::ToRadians(shape["value"].GetFloat());
+            const auto value = Math::ToRadians(shape["value"].GetFloat());
             result = std::make_unique<ParticleParameterConstant<Radian<float>>>(value);
         }
         else if (shape["type"].GetString() == std::string_view{"random"}) {
-            const auto min = MathHelper::ToRadians(shape["min"].GetFloat());
-            const auto max = MathHelper::ToRadians(shape["max"].GetFloat());
+            const auto min = Math::ToRadians(shape["min"].GetFloat());
+            const auto max = Math::ToRadians(shape["max"].GetFloat());
             result = std::make_unique<ParticleParameterRandom<Radian<float>>>(min, max);
         }
         else if (shape["type"].GetString() == std::string_view{"curve"}) {
@@ -317,7 +317,7 @@ ReadParticleClip(const rapidjson::Value& object)
             for (const auto& p : pointsArray) {
                 ParticleCurveKey<Radian<float>> point;
                 point.TimeSeconds = p["t"].GetFloat();
-                point.Value = MathHelper::ToRadians((p["v"].GetFloat()));
+                point.Value = Math::ToRadians((p["v"].GetFloat()));
                 points.push_back(std::move(point));
             }
 

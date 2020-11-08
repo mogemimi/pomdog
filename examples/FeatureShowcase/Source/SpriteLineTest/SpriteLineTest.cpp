@@ -46,7 +46,7 @@ void SpriteLineTest::Update()
         pos.X = pos.X - (window->GetClientBounds().Width / 2);
         pos.Y = -pos.Y + (window->GetClientBounds().Height / 2);
 
-        mousePosition = MathHelper::ToVector2(pos);
+        mousePosition = Math::ToVector2(pos);
     }
 }
 

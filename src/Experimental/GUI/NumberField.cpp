@@ -415,7 +415,7 @@ void NumberField::Draw(DrawingContext& drawingContext)
         spriteFont->Draw(
             *spriteBatch,
             prependAreaText,
-            MathHelper::ToVector2(globalPos + Point2D{prependAreaWidth / 2, GetHeight() / 2}) + Vector2{1.0f, 2.5f},
+            Math::ToVector2(globalPos + Point2D{prependAreaWidth / 2, GetHeight() / 2}) + Vector2{1.0f, 2.5f},
             Color{231, 229, 230, 255},
             0.0f,
             Vector2{0.5f, 0.5f},

@@ -186,14 +186,14 @@ void ContextMenu::Draw(DrawingContext& drawingContext)
 
     primitiveBatch->DrawRectangle(
         Matrix3x2::Identity,
-        MathHelper::ToVector2(globalPos) + Vector2{-4.0f, -4.0f},
+        Math::ToVector2(globalPos) + Vector2{-4.0f, -4.0f},
         w + 8.0f,
         h + 7.0f,
         colorScheme->ContextMenuShadowColor);
 
     primitiveBatch->DrawRectangle(
         Matrix3x2::Identity,
-        MathHelper::ToVector2(globalPos) + Vector2{-1.5f, -1.5f},
+        Math::ToVector2(globalPos) + Vector2{-1.5f, -1.5f},
         w + 3.0f,
         h + 3.0f,
         colorScheme->ContextMenuShadowColor);

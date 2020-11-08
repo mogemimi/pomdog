@@ -212,10 +212,10 @@ FloatingPointQuaternion<T>::Lerp(
     T amount,
     FloatingPointQuaternion& result)
 {
-    result.X = MathHelper::Lerp(source1.X, source2.X, amount);
-    result.Y = MathHelper::Lerp(source1.Y, source2.Y, amount);
-    result.Z = MathHelper::Lerp(source1.Z, source2.Z, amount);
-    result.W = MathHelper::Lerp(source1.W, source2.W, amount);
+    result.X = Math::Lerp(source1.X, source2.X, amount);
+    result.Y = Math::Lerp(source1.Y, source2.Y, amount);
+    result.Z = Math::Lerp(source1.Z, source2.Z, amount);
+    result.W = Math::Lerp(source1.W, source2.W, amount);
     result.Normalize();
 }
 

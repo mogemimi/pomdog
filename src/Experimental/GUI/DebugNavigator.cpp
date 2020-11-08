@@ -33,7 +33,7 @@ void DebugNavigator::Draw(DrawingContext& drawingContext)
         if (clock->GetTotalGameTime() - duration > Duration(0.2)) {
             auto frameRate = clock->GetFrameRate();
             frameRateString = StringHelper::Format("%4.2f fps", frameRate);
-            frameRates.push_back(std::round(MathHelper::Clamp(frameRate, minFramerate, maxFramerate)));
+            frameRates.push_back(std::round(Math::Clamp(frameRate, minFramerate, maxFramerate)));
 
             if (frameRates.size() > maxHistories) {
                 frameRates.pop_front();
@@ -63,11 +63,11 @@ void DebugNavigator::Draw(DrawingContext& drawingContext)
     auto graphX = startPosition;
     for (auto& frameRate : frameRates) {
         auto amount = ((frameRate - minFramerate) / (maxFramerate - minFramerate));
-        auto barHeight = MathHelper::Clamp((maxGraphHeight - (graphMargin * 2)) * amount, 1.0f, maxGraphHeight);
+        auto barHeight = Math::Clamp((maxGraphHeight - (graphMargin * 2)) * amount, 1.0f, maxGraphHeight);
 
         primitiveBatch->DrawRectangle(
             Matrix3x2::Identity,
-            Vector2{graphX, graphMargin} + MathHelper::ToVector2(globalPos),
+            Vector2{graphX, graphMargin} + Math::ToVector2(globalPos),
             barWidth,
             barHeight,
             chartBarColor);
@@ -75,7 +75,7 @@ void DebugNavigator::Draw(DrawingContext& drawingContext)
     }
     primitiveBatch->Flush();
 
-    auto textPosition = MathHelper::ToVector2(globalPos) + Vector2{0.0f, maxGraphHeight + 5.0f};
+    auto textPosition = Math::ToVector2(globalPos) + Vector2{0.0f, maxGraphHeight + 5.0f};
 
     auto spriteBatch = drawingContext.GetSpriteBatch();
     auto spriteFont = drawingContext.GetFont(FontWeight::Bold, FontSize::Medium);

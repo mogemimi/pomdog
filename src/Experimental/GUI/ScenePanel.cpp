@@ -29,7 +29,7 @@ namespace {
 //        if (std::abs(cross) > 1.0f)
 //        {
 //            auto const cosAngle = Vector2::Dot(vecInScreen1, vecInScreen2)/(vecInScreen1.Length() * vecInScreen2.Length());
-//            delta = std::acos(MathHelper::Clamp(cosAngle, -1.0f, 1.0f)) * (cross > 0.0f ? 1.0f: -1.0f);
+//            delta = std::acos(Math::Clamp(cosAngle, -1.0f, 1.0f)) * (cross > 0.0f ? 1.0f: -1.0f);
 //            POMDOG_ASSERT(delta != std::numeric_limits<float>::signaling_NaN());
 //
 //            if ((vecInScreen1.Length() < 24.0f || vecInScreen2.Length() < 24.0f)) {
@@ -283,7 +283,7 @@ void ScenePanel::UpdateAnimation(const Duration& frameDuration)
     const auto scroll = duration * normalizedScrollDirection * scrollAcceleration * (timer.count() / ZoomAnimationInterval.count());
 
     POMDOG_ASSERT(cameraZoom > 0);
-    cameraZoom = MathHelper::Saturate(cameraZoom + (cameraZoom * scroll * 1000));
+    cameraZoom = Math::Saturate(cameraZoom + (cameraZoom * scroll * 1000));
 }
 
 void ScenePanel::Draw(DrawingContext&)

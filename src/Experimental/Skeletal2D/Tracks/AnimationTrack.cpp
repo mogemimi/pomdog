@@ -87,7 +87,7 @@ void RotationTrack::Apply(
     POMDOG_ASSERT(rotation2 <= Math::Pi<float>);
     POMDOG_ASSERT(rotation2 >= -Math::Pi<float>);
 
-    pose.Rotation = bindPose.Rotation + MathHelper::Lerp(rotation1, rotation2, amount);
+    pose.Rotation = bindPose.Rotation + Math::Lerp(rotation1, rotation2, amount);
 }
 
 AnimationTimeInterval RotationTrack::GetLength() const
@@ -144,7 +144,7 @@ void ScaleTrack::Apply(
     float amount = diffTime / frameTime;
     float scale1 = pointPair.first->Scale.ToFloat();
     float scale2 = pointPair.second->Scale.ToFloat();
-    pose.Scale = bindPose.Scale * MathHelper::Lerp(scale1, scale2, amount);
+    pose.Scale = bindPose.Scale * Math::Lerp(scale1, scale2, amount);
 }
 
 AnimationTimeInterval ScaleTrack::GetLength() const

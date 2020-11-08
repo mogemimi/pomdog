@@ -157,7 +157,7 @@ void PushButton::Draw(DrawingContext& drawingContext)
 
     primitiveBatch->DrawRectangle(
         Matrix3x2::Identity,
-        MathHelper::ToVector2(globalPos),
+        Math::ToVector2(globalPos),
         static_cast<float>(GetWidth()),
         static_cast<float>(GetHeight()),
         rectColor);
@@ -168,7 +168,7 @@ void PushButton::Draw(DrawingContext& drawingContext)
         auto spriteBatch = drawingContext.GetSpriteBatch();
         auto spriteFont = drawingContext.GetFont(fontWeight, FontSize::Medium);
 
-        const auto buttonPos = MathHelper::ToVector2(globalPos);
+        const auto buttonPos = Math::ToVector2(globalPos);
         const auto buttonSize = Vector2{static_cast<float>(GetWidth()), static_cast<float>(GetHeight())};
 
         const auto baselineHeight = 3.0f;

@@ -56,4 +56,5 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_INC_DIR}/Math/Detail/FloatingPointVector4.hpp
     ${POMDOG_SRC_DIR}/Math/Detail/FloatingPointVector4.cpp
     ${POMDOG_INC_DIR}/Math/Detail/TaggedArithmetic.hpp
+    ${POMDOG_INC_DIR}/Math/Detail/TypeTraits.hpp
 )

@@ -60,7 +60,7 @@ CreateJaggedLine(
         constexpr float envelopeScale = (1.0f / (1.0f - threshold));
         float envelope = (position > threshold) ? envelopeScale * (1.0f - position) : 1.0f;
 
-        float displacement = MathHelper::SmoothStep(prevDisplacement, distribution(random), scale);
+        float displacement = Math::SmoothStep(prevDisplacement, distribution(random), scale);
         displacement *= envelope;
 
         Vector2 point = start + tangent * position + normal * displacement;

@@ -5,24 +5,10 @@
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Math/Degree.hpp"
 #include "Pomdog/Math/Radian.hpp"
+#include "Pomdog/Math/Detail/TypeTraits.hpp"
 #include <type_traits>
 
-namespace Pomdog {
-namespace Detail {
-
-template <class Tp>
-struct IsTaggedFloatingPoint
-    : public std::integral_constant<bool, false> {
-};
-
-template <class T, class Tag>
-struct IsTaggedFloatingPoint<TaggedArithmetic<T, Tag>>
-    : public std::integral_constant<bool, std::is_floating_point<T>::value> {
-};
-
-} // namespace Detail
-
-namespace Math {
+namespace Pomdog::Math {
 
 template <typename T> inline constexpr T Pi         = T(3.14159265358979323846L);
 template <typename T> inline constexpr T TwoPi      = T(6.28318530717958647692L);
@@ -37,10 +23,6 @@ template <> constexpr inline float OneOverPi<float>  = 0.3183098861f;
 template <> constexpr inline float OneOver2Pi<float> = 0.1591549430f;
 template <> constexpr inline float PiOver2<float>    = 1.5707963267f;
 template <> constexpr inline float PiOver4<float>    = 0.7853981633f;
-
-} // namespace Math
-
-namespace MathHelper {
 
 template <typename T>
 T Clamp(const T& x, const T& min, const T& max)
@@ -120,13 +102,16 @@ Degree<T> ToDegrees(const T& radians) noexcept
     return Degree<T>(radians * scaleFactor);
 }
 
-POMDOG_EXPORT Point2D ToPoint2D(const Vector2& vec) noexcept;
+[[nodiscard]] POMDOG_EXPORT Point2D
+ToPoint2D(const Vector2& vec) noexcept;
 
-POMDOG_EXPORT Vector2 ToVector2(const Point2D& point) noexcept;
+[[nodiscard]] POMDOG_EXPORT Vector2
+ToVector2(const Point2D& point) noexcept;
 
-POMDOG_EXPORT Point3D ToPoint3D(const Vector3& vec) noexcept;
+[[nodiscard]] POMDOG_EXPORT Point3D
+ToPoint3D(const Vector3& vec) noexcept;
 
-POMDOG_EXPORT Vector3 ToVector3(const Point3D& point) noexcept;
+[[nodiscard]] POMDOG_EXPORT Vector3
+ToVector3(const Point3D& point) noexcept;
 
-} // namespace MathHelper
-} // namespace Pomdog
+} // namespace Pomdog::Math

@@ -125,7 +125,7 @@ void ParticleSystem::Simulate(
         const auto x0 = 1.0 / clip->EmissionRate;
         const auto x1 = 1.0 / clip->EmissionRateOverTime;
         const auto normalizedTime = erapsedTime.count() / clip->Duration.count();
-        const auto lerpInterval = MathHelper::Lerp(x0, x1, normalizedTime);
+        const auto lerpInterval = Math::Lerp(x0, x1, normalizedTime);
         const auto emissionInterval = std::max(std::numeric_limits<Duration>::epsilon(), Duration{lerpInterval});
 
         POMDOG_ASSERT(emissionInterval.count() > 0);

@@ -3,7 +3,7 @@
 #include "AudioEngineXAudio2.hpp"
 #include "AudioClipXAudio2.hpp"
 #include "SoundEffectXAudio2.hpp"
-#include "Pomdog/Math/MathHelper.hpp"
+#include "Pomdog/Math/Math.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Errors.hpp"
 
@@ -306,7 +306,7 @@ float AudioEngineXAudio2::GetMainVolume() const noexcept
 void AudioEngineXAudio2::SetMainVolume(float volumeIn) noexcept
 {
     if (xAudio2 && mainVoice != nullptr) {
-        mainVoice->SetVolume(MathHelper::Saturate(volumeIn), XAUDIO2_COMMIT_NOW);
+        mainVoice->SetVolume(Math::Saturate(volumeIn), XAUDIO2_COMMIT_NOW);
     }
 }
 

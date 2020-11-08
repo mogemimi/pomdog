@@ -29,7 +29,7 @@ void LineBatchTest::Initialize()
         auto width = gameHost->GetWindow()->GetClientBounds().Width;
         auto height = gameHost->GetWindow()->GetClientBounds().Height;
         if (button == MouseButtons::Left) {
-            path.back() = MathHelper::ToVector2(Point2D{state.Position.X - (width / 2), (height / 2) - state.Position.Y});
+            path.back() = Math::ToVector2(Point2D{state.Position.X - (width / 2), (height / 2) - state.Position.Y});
             path.push_back(path.back());
         }
         if (button == MouseButtons::Right) {
@@ -44,7 +44,7 @@ void LineBatchTest::Update()
     auto state = gameHost->GetMouse()->GetState();
     auto width = gameHost->GetWindow()->GetClientBounds().Width;
     auto height = gameHost->GetWindow()->GetClientBounds().Height;
-    path.back() = MathHelper::ToVector2(Point2D{state.Position.X - (width / 2), (height / 2) - state.Position.Y});
+    path.back() = Math::ToVector2(Point2D{state.Position.X - (width / 2), (height / 2) - state.Position.Y});
 }
 
 void LineBatchTest::Draw()

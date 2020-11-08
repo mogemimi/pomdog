@@ -97,7 +97,7 @@ void GIFDecodeTest::Initialize()
         const auto reverse = ((intDist(random) % 2 == 0) ? -1.0f : 1.0f);
 
         SpriteInstance sprite;
-        sprite.Position = MathHelper::ToVector2(pos);
+        sprite.Position = Math::ToVector2(pos);
         sprite.Scale.X = scale * reverse;
         sprite.Scale.Y = scale;
         sprite.StartFrameIndex = intDist(random);

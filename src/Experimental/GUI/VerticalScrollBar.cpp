@@ -202,7 +202,7 @@ void VerticalScrollBar::OnPointerPressed(const PointerPoint& pointerPoint)
         POMDOG_ASSERT((GetHeight() - sliderHeight) > 0);
         const auto documentLength = (GetHeight() - sliderHeight);
         const auto amount = static_cast<double>(pointInView.Y - *sliderGrabPosition) / documentLength;
-        SetValue(MathHelper::Clamp(amount * (maximum - minimum) + minimum, minimum, maximum));
+        SetValue(Math::Clamp(amount * (maximum - minimum) + minimum, minimum, maximum));
     }
 }
 
@@ -227,7 +227,7 @@ void VerticalScrollBar::OnPointerMoved(const PointerPoint& pointerPoint)
 
     const auto documentLength = GetHeight() - sliderHeight;
     const auto amount = static_cast<double>(pointInView.Y - *sliderGrabPosition) / documentLength;
-    SetValue(MathHelper::Clamp(amount * (maximum - minimum) + minimum, minimum, maximum));
+    SetValue(Math::Clamp(amount * (maximum - minimum) + minimum, minimum, maximum));
 }
 
 void VerticalScrollBar::OnPointerReleased([[maybe_unused]] const PointerPoint& pointerPoint)

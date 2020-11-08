@@ -85,9 +85,9 @@ void DistanceFieldFontTest::Draw()
 
     spriteBatch->Begin(commandList, projectionMatrix);
     spriteFont->Draw(*spriteBatch, text, Vector2::Zero, Color::White, 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
-    spriteFont->Draw(*spriteBatch, text, Vector2::Zero, Color::Green, MathHelper::ToRadians(-90.0f), Vector2{0.0f, 0.0f}, 1.0f);
-    spriteFont->Draw(*spriteBatch, text, Vector2::Zero, Color::Red, MathHelper::ToRadians(90.0f), Vector2{0.5f, 0.0f}, Vector2{-1.0f, 0.5f});
-    spriteFont->Draw(*spriteBatch, text, Vector2{-100.0f, 100.0f}, Color::Blue, MathHelper::ToRadians(-45.0f), Vector2{0.5f, 0.5f}, 0.7f);
+    spriteFont->Draw(*spriteBatch, text, Vector2::Zero, Color::Green, Math::ToRadians(-90.0f), Vector2{0.0f, 0.0f}, 1.0f);
+    spriteFont->Draw(*spriteBatch, text, Vector2::Zero, Color::Red, Math::ToRadians(90.0f), Vector2{0.5f, 0.0f}, Vector2{-1.0f, 0.5f});
+    spriteFont->Draw(*spriteBatch, text, Vector2{-100.0f, 100.0f}, Color::Blue, Math::ToRadians(-45.0f), Vector2{0.5f, 0.5f}, 0.7f);
     spriteBatch->End();
 
     commandList->Close();

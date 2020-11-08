@@ -61,7 +61,7 @@ void ParticleClipLoaderTest::Initialize()
         auto pos = mousePos;
         pos.X = pos.X - (window->GetClientBounds().Width / 2);
         pos.Y = -pos.Y + (window->GetClientBounds().Height / 2);
-        emitterPosition = MathHelper::ToVector2(pos);
+        emitterPosition = Math::ToVector2(pos);
     };
     auto onClipChanged = [this] {
         std::array<std::string, 2> filenames = {
@@ -101,7 +101,7 @@ void ParticleClipLoaderTest::Update()
 {
     auto clock = gameHost->GetClock();
     auto frameDuration = clock->GetFrameDuration();
-    particleSystem->Simulate(emitterPosition, MathHelper::ToRadians(90.0f), frameDuration);
+    particleSystem->Simulate(emitterPosition, Math::ToRadians(90.0f), frameDuration);
 }
 
 void ParticleClipLoaderTest::Draw()

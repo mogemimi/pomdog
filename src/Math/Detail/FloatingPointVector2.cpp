@@ -170,8 +170,8 @@ FloatingPointVector2<T>
 FloatingPointVector2<T>::Clamp(const FloatingPointVector2& source, const FloatingPointVector2& min, const FloatingPointVector2& max) noexcept
 {
     return FloatingPointVector2{
-        MathHelper::Clamp(source.X, min.X, max.X),
-        MathHelper::Clamp(source.Y, min.Y, max.Y)};
+        Math::Clamp(source.X, min.X, max.X),
+        Math::Clamp(source.Y, min.Y, max.Y)};
 }
 
 template <typename T>
@@ -179,8 +179,8 @@ FloatingPointVector2<T>
 FloatingPointVector2<T>::Lerp(const FloatingPointVector2& source1, const FloatingPointVector2& source2, T amount)
 {
     return FloatingPointVector2(
-        MathHelper::Lerp(source1.X, source2.X, amount),
-        MathHelper::Lerp(source1.Y, source2.Y, amount));
+        Math::Lerp(source1.X, source2.X, amount),
+        Math::Lerp(source1.Y, source2.Y, amount));
 }
 
 template <typename T>
@@ -188,8 +188,8 @@ FloatingPointVector2<T>
 FloatingPointVector2<T>::SmoothStep(const FloatingPointVector2& source1, const FloatingPointVector2& source2, T amount)
 {
     return FloatingPointVector2(
-        MathHelper::SmoothStep(source1.X, source2.X, amount),
-        MathHelper::SmoothStep(source1.Y, source2.Y, amount));
+        Math::SmoothStep(source1.X, source2.X, amount),
+        Math::SmoothStep(source1.Y, source2.Y, amount));
 }
 
 template <typename T>

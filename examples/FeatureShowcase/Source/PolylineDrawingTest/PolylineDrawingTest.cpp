@@ -42,7 +42,7 @@ void PolylineDrawingTest::Update()
 
     const auto width = gameHost->GetWindow()->GetClientBounds().Width;
     const auto height = gameHost->GetWindow()->GetClientBounds().Height;
-    const auto pos = MathHelper::ToVector2(Point2D{mouseState.Position.X - (width / 2), (height / 2) - mouseState.Position.Y});
+    const auto pos = Math::ToVector2(Point2D{mouseState.Position.X - (width / 2), (height / 2) - mouseState.Position.Y});
 
     if (mouseState.LeftButton == ButtonState::Pressed) {
         if (path.empty()) {

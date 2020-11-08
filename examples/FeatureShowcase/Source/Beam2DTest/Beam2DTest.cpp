@@ -61,7 +61,7 @@ void Beam2DTest::Initialize()
         auto pos = mousePos;
         pos.X = pos.X - (window->GetClientBounds().Width / 2);
         pos.Y = -pos.Y + (window->GetClientBounds().Height / 2);
-        emitterTarget = MathHelper::ToVector2(pos);
+        emitterTarget = Math::ToVector2(pos);
     });
 }
 

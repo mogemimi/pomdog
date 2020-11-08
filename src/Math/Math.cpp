@@ -5,9 +5,9 @@
 #include "Pomdog/Math/Point3D.hpp"
 #include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Math/Vector3.hpp"
+#include <cmath>
 
-namespace Pomdog {
-namespace MathHelper {
+namespace Pomdog::Math {
 
 Point2D ToPoint2D(const Vector2& vec) noexcept
 {
@@ -43,5 +43,4 @@ Vector3 ToVector3(const Point3D& point) noexcept
     };
 }
 
-} // namespace MathHelper
-} // namespace Pomdog
+} // namespace Pomdog::Math

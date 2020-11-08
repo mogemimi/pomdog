@@ -81,7 +81,7 @@ FishEyeEffect::FishEyeEffect(
 void FishEyeEffect::SetStrength(float strength)
 {
     FishEyeBlock block;
-    block.Strength = MathHelper::Clamp(strength, -0.5f, 0.5f);
+    block.Strength = Math::Clamp(strength, -0.5f, 0.5f);
 
     POMDOG_ASSERT(constantBufferFishEye);
     constantBufferFishEye->SetValue(std::move(block));

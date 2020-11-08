@@ -13,7 +13,7 @@ template <typename T>
 struct ParticleCurveLerp {
     T operator()(const T& a, const T& b, float amount)
     {
-        return MathHelper::Lerp(a, b, amount);
+        return Math::Lerp(a, b, amount);
     }
 };
 
@@ -21,7 +21,7 @@ template <>
 struct ParticleCurveLerp<Radian<float>> {
     Radian<float> operator()(const Radian<float>& a, const Radian<float>& b, float amount)
     {
-        return MathHelper::Lerp(a.value, b.value, amount);
+        return Math::Lerp(a.value, b.value, amount);
     }
 };
 

@@ -67,7 +67,7 @@ void PrimitiveBatchTest::Draw()
     // Drawing arc
     primitiveBatch->DrawArc(
         Vector2{0.0f, 100.0f}, 40.0f,
-        MathHelper::ToRadians(0.0f), MathHelper::ToRadians(270.0f * Easings::EaseSine::InOut(t)),
+        Math::ToRadians(0.0f), Math::ToRadians(270.0f * Easings::EaseSine::InOut(t)),
         80, Color::Yellow);
 
     // Drawing triangle

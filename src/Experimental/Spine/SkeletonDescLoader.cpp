@@ -99,7 +99,7 @@ void ReadJsonMember(const rapidjson::Value& object, const char* memberName, Radi
         while (degreeAngle < -180.0f) {
             degreeAngle += 360.0f;
         }
-        output = MathHelper::ToRadians(degreeAngle);
+        output = Math::ToRadians(degreeAngle);
     }
 }
 
@@ -620,7 +620,7 @@ std::vector<AnimationSamplePointRotate> ReadAnimationRotateSamples(const rapidjs
         while (degreeAngle < -180.0f) {
             degreeAngle += 360.0f;
         }
-        samplePoint.Rotation = MathHelper::ToRadians(degreeAngle).value;
+        samplePoint.Rotation = Math::ToRadians(degreeAngle).value;
 
         samplePoints.push_back(std::move(samplePoint));
     }

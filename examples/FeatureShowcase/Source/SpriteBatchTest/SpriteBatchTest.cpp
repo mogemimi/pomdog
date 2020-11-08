@@ -59,7 +59,7 @@ void SpriteBatchTest::Initialize()
         const auto scale = scaleDist(random);
 
         SpriteInstance sprite;
-        sprite.Position = MathHelper::ToVector2(pos);
+        sprite.Position = Math::ToVector2(pos);
         sprite.Scale.X = scale;
         sprite.Scale.Y = scale;
         sprite.Color.R = static_cast<std::uint8_t>(colorDist(random));

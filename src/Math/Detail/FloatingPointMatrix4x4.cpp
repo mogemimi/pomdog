@@ -463,22 +463,22 @@ void
 FloatingPointMatrix4x4<T>::Lerp(const FloatingPointMatrix4x4& source1, const FloatingPointMatrix4x4& source2,
     T amount, FloatingPointMatrix4x4& result) noexcept
 {
-    result.m[0][0] = MathHelper::Lerp(source1.m[0][0], source2.m[0][0], amount);
-    result.m[0][1] = MathHelper::Lerp(source1.m[0][1], source2.m[0][1], amount);
-    result.m[0][2] = MathHelper::Lerp(source1.m[0][2], source2.m[0][2], amount);
-    result.m[0][3] = MathHelper::Lerp(source1.m[0][3], source2.m[0][3], amount);
-    result.m[1][0] = MathHelper::Lerp(source1.m[1][0], source2.m[1][0], amount);
-    result.m[1][1] = MathHelper::Lerp(source1.m[1][1], source2.m[1][1], amount);
-    result.m[1][2] = MathHelper::Lerp(source1.m[1][2], source2.m[1][2], amount);
-    result.m[1][3] = MathHelper::Lerp(source1.m[1][3], source2.m[1][3], amount);
-    result.m[2][0] = MathHelper::Lerp(source1.m[2][0], source2.m[2][0], amount);
-    result.m[2][1] = MathHelper::Lerp(source1.m[2][1], source2.m[2][1], amount);
-    result.m[2][2] = MathHelper::Lerp(source1.m[2][2], source2.m[2][2], amount);
-    result.m[2][3] = MathHelper::Lerp(source1.m[2][3], source2.m[2][3], amount);
-    result.m[3][0] = MathHelper::Lerp(source1.m[3][0], source2.m[3][0], amount);
-    result.m[3][1] = MathHelper::Lerp(source1.m[3][1], source2.m[3][1], amount);
-    result.m[3][2] = MathHelper::Lerp(source1.m[3][2], source2.m[3][2], amount);
-    result.m[3][3] = MathHelper::Lerp(source1.m[3][3], source2.m[3][3], amount);
+    result.m[0][0] = Math::Lerp(source1.m[0][0], source2.m[0][0], amount);
+    result.m[0][1] = Math::Lerp(source1.m[0][1], source2.m[0][1], amount);
+    result.m[0][2] = Math::Lerp(source1.m[0][2], source2.m[0][2], amount);
+    result.m[0][3] = Math::Lerp(source1.m[0][3], source2.m[0][3], amount);
+    result.m[1][0] = Math::Lerp(source1.m[1][0], source2.m[1][0], amount);
+    result.m[1][1] = Math::Lerp(source1.m[1][1], source2.m[1][1], amount);
+    result.m[1][2] = Math::Lerp(source1.m[1][2], source2.m[1][2], amount);
+    result.m[1][3] = Math::Lerp(source1.m[1][3], source2.m[1][3], amount);
+    result.m[2][0] = Math::Lerp(source1.m[2][0], source2.m[2][0], amount);
+    result.m[2][1] = Math::Lerp(source1.m[2][1], source2.m[2][1], amount);
+    result.m[2][2] = Math::Lerp(source1.m[2][2], source2.m[2][2], amount);
+    result.m[2][3] = Math::Lerp(source1.m[2][3], source2.m[2][3], amount);
+    result.m[3][0] = Math::Lerp(source1.m[3][0], source2.m[3][0], amount);
+    result.m[3][1] = Math::Lerp(source1.m[3][1], source2.m[3][1], amount);
+    result.m[3][2] = Math::Lerp(source1.m[3][2], source2.m[3][2], amount);
+    result.m[3][3] = Math::Lerp(source1.m[3][3], source2.m[3][3], amount);
 }
 
 template <typename T>

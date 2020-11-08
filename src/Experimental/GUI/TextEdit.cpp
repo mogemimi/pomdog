@@ -574,7 +574,7 @@ void TextEdit::Draw(DrawingContext& drawingContext)
     }
 
     const auto marginLeftBottom = Vector2{static_cast<float>(textMargin.Left), static_cast<float>(textMargin.Bottom)};
-    const auto textEditPos = MathHelper::ToVector2(globalPos);
+    const auto textEditPos = Math::ToVector2(globalPos);
     const auto textPosition = textEditPos + marginLeftBottom + Vector2{0.0f, baselineHeight};
     const auto innerBoundPos = textEditPos + marginLeftBottom;
     const auto innerBoundSize = Vector2{
@@ -636,7 +636,7 @@ void TextEdit::Draw(DrawingContext& drawingContext)
 
         primitiveBatch->DrawRectangle(
             Matrix3x2::Identity,
-            startPos + Vector2{0.0f, cursorHeightMargin} + MathHelper::ToVector2(globalPos),
+            startPos + Vector2{0.0f, cursorHeightMargin} + Math::ToVector2(globalPos),
             selectionWidth,
             GetHeight() - cursorHeightMargin * 2.0f - 0.5f,
             selectionBoundsColor);
@@ -650,7 +650,7 @@ void TextEdit::Draw(DrawingContext& drawingContext)
 
         primitiveBatch->DrawRectangle(
             Matrix3x2::Identity,
-            cursorDrawPosition + Vector2{0.0f, cursorHeightMargin} + MathHelper::ToVector2(globalPos),
+            cursorDrawPosition + Vector2{0.0f, cursorHeightMargin} + Math::ToVector2(globalPos),
             cursorThickness,
             GetHeight() - cursorHeightMargin * 2.0f - 0.5f,
             cursorColor);

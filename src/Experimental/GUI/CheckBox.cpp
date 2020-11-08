@@ -99,7 +99,7 @@ void CheckBox::Draw(DrawingContext& drawingContext)
 
     constexpr int iconPixelSize = 32;
     constexpr int checkIconPixelSize = 14;
-    const auto transformOffset = MathHelper::ToVector2(globalPos);
+    const auto transformOffset = Math::ToVector2(globalPos);
 
     drawingContext.DrawIcon(
         "ionicons/ios-square.svg",

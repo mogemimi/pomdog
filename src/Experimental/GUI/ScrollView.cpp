@@ -327,7 +327,7 @@ void ScrollView::Draw(DrawingContext& drawingContext)
         primitiveBatch->Flush();
     }
 
-    auto innerBoundPos = MathHelper::ToVector2(globalPos);
+    auto innerBoundPos = Math::ToVector2(globalPos);
 
     // NOTE: Mask scissor
     drawingContext.PushScissorRect(Rectangle{

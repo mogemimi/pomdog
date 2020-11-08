@@ -148,7 +148,7 @@ void Particle3DTest::Draw()
     commandList->SetRenderPass(std::move(pass));
 
     const auto projectionMatrix = Matrix4x4::CreatePerspectiveFieldOfViewLH(
-        MathHelper::ToRadians(45.0f),
+        Math::ToRadians(45.0f),
         static_cast<float>(presentationParameters.BackBufferWidth) / presentationParameters.BackBufferHeight,
         0.01f,
         500.0f);
