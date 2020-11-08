@@ -17,7 +17,6 @@
 namespace Pomdog::Spine {
 namespace {
 
-using Detail::CRC32;
 using Skeletal2D::AnimationClip;
 using Skeletal2D::AnimationTrack;
 using Skeletal2D::JointIndex;
@@ -44,7 +43,7 @@ BuildSpriteAnimationTracks(
     std::vector<std::unique_ptr<AnimationTrack>>& tracks)
 {
     for (auto& animationTrack : animationClip.SlotTracks) {
-        auto slotIndex = CRC32::ComputeCRC32(animationTrack.SlotName);
+        auto slotIndex = Detail::CRC32::ComputeCRC32(animationTrack.SlotName);
 
         if (animationTrack.AttachmentSamples.empty()) {
             continue;

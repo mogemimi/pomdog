@@ -9,7 +9,6 @@
 namespace Pomdog::Spine {
 namespace {
 
-using Detail::CRC32;
 using Skeletal2D::RigidSlot;
 using TexturePacker::TextureAtlas;
 using TexturePacker::TextureAtlasRegion;
@@ -95,7 +94,7 @@ CreateSlots(
 
         POMDOG_ASSERT(slotDesc.Joint);
         slot.JointIndex = slotDesc.Joint;
-        slot.HashID = CRC32::ComputeCRC32(slotDesc.Name);
+        slot.HashID = Detail::CRC32::ComputeCRC32(slotDesc.Name);
 
         slot.Color = Color::White;
         slot.DrawOrder = drawOrder;

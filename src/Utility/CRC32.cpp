@@ -4,7 +4,7 @@
 #include <array>
 #include <utility>
 
-namespace Pomdog::Detail {
+namespace Pomdog::Detail::CRC32 {
 namespace {
 
 //
@@ -144,9 +144,10 @@ std::uint32_t BlockChecksum(const void* data, std::size_t length, std::uint32_t 
 
 } // namespace
 
-std::uint32_t CRC32::ComputeCRC32(const void* data, std::size_t length) noexcept
+[[nodiscard]] std::uint32_t
+ComputeCRC32(const void* data, std::size_t length) noexcept
 {
     return BlockChecksum(data, length, InitValueCRC32);
 }
 
-} // namespace Pomdog::Detail
+} // namespace Pomdog::Detail::CRC32
