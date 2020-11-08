@@ -6,7 +6,7 @@
 #include "Texture2DGL4.hpp"
 #include "../RenderSystem/NativeRenderTarget2D.hpp"
 #include "../Utility/Tagged.hpp"
-#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include <optional>
 
 namespace Pomdog::Detail::GL4 {

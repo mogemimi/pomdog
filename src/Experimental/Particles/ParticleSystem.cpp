@@ -2,7 +2,7 @@
 
 #include "Pomdog/Experimental/Particles/ParticleSystem.hpp"
 #include "Pomdog/Experimental/Particles/ParticleClip.hpp"
-#include "Pomdog/Math/MathHelper.hpp"
+#include "Pomdog/Math/Math.hpp"
 #include "Pomdog/Math/Matrix4x4.hpp"
 #include "Pomdog/Math/Quaternion.hpp"
 #include "Pomdog/Math/Radian.hpp"

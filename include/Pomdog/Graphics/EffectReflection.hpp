@@ -4,7 +4,7 @@
 
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Graphics/EffectConstantDescription.hpp"
-#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include <memory>
 #include <vector>
 

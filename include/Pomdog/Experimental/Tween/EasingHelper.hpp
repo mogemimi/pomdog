@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Pomdog/Basic/Export.hpp"
-#include "Pomdog/Math/MathHelper.hpp"
+#include "Pomdog/Math/Math.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <cmath>
 #include <type_traits>

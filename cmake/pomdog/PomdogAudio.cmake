@@ -9,10 +9,10 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/Audio/AudioHelper.hpp
     ${POMDOG_SRC_DIR}/Audio/AudioHelper.cpp
     ${POMDOG_INC_DIR}/Audio/AudioListener.hpp
+    ${POMDOG_INC_DIR}/Audio/ForwardDeclarations.hpp
     ${POMDOG_INC_DIR}/Audio/SoundEffect.hpp
     ${POMDOG_SRC_DIR}/Audio/SoundEffect.cpp
     ${POMDOG_INC_DIR}/Audio/SoundState.hpp
-    ${POMDOG_INC_DIR}/Audio/detail/ForwardDeclarations.hpp
 
     $<$<PLATFORM_ID:Linux,Darwin>:
         # NOTE: Audio.OpenAL

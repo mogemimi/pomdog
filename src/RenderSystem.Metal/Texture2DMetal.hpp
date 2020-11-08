@@ -3,7 +3,7 @@
 #pragma once
 
 #include "../RenderSystem/NativeTexture2D.hpp"
-#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #import <Metal/MTLTexture.h>
 
 namespace Pomdog::Detail::Metal {

@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Math/detail/FloatingPointVector4.hpp"
-#include "Pomdog/Math/detail/FloatingPointMatrix4x4.hpp"
-#include "Pomdog/Math/detail/FloatingPointVector3.hpp"
+#include "Pomdog/Math/Detail/FloatingPointVector4.hpp"
+#include "Pomdog/Math/Detail/FloatingPointMatrix4x4.hpp"
+#include "Pomdog/Math/Detail/FloatingPointVector3.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <algorithm>
 #include <cfloat>

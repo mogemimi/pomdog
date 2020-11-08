@@ -30,6 +30,7 @@ source_group(Input.IOKit                            REGULAR_EXPRESSION "(include
 source_group(Input.Linux                            REGULAR_EXPRESSION "(include/Pomdog|src)/Input.Linux/*")
 source_group(Logging                                REGULAR_EXPRESSION "(include/Pomdog|src)/Logging/*")
 source_group(Math                                   REGULAR_EXPRESSION "(include/Pomdog|src)/Math/*")
+source_group(Math\\Detail                           REGULAR_EXPRESSION "(include/Pomdog|src)/Math/Detail/*")
 source_group(Network                                REGULAR_EXPRESSION "(include/Pomdog|src)/Network/*")
 source_group(Network.MbedTLS                        REGULAR_EXPRESSION "(include/Pomdog|src)/Network.MbedTLS/*")
 source_group(Network.POSIX                          REGULAR_EXPRESSION "(include/Pomdog|src)/Network.POSIX/*")

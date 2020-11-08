@@ -3,7 +3,7 @@
 #pragma once
 
 #include "PrerequisitesDirect3D11.hpp"
-#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Graphics/ForwardDeclarations.hpp"
 
 namespace Pomdog::Detail::Direct3D11 {
 

@@ -4,7 +4,7 @@
 
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Content/Image/ImageBuffer.hpp"
-#include "Pomdog/Math/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Math/ForwardDeclarations.hpp"
 #include "Pomdog/Utility/Errors.hpp"
 #include <cstddef>
 #include <cstdint>

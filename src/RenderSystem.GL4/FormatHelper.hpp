@@ -3,7 +3,7 @@
 #pragma once
 
 #include "OpenGLPrerequisites.hpp"
-#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Graphics/ForwardDeclarations.hpp"
 
 namespace Pomdog::Detail::GL4 {
 

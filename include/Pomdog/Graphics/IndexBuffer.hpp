@@ -4,8 +4,8 @@
 
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Graphics/BufferUsage.hpp"
+#include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include "Pomdog/Graphics/IndexElementSize.hpp"
-#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <cstddef>
 #include <memory>
 

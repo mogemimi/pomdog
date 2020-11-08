@@ -4,7 +4,7 @@
 
 #include "OpenGLPrerequisites.hpp"
 #include "../Utility/Tagged.hpp"
-#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include <array>
 

@@ -4,7 +4,7 @@
 #include "Pomdog/Experimental/Skeletal2D/Skeleton.hpp"
 #include "Pomdog/Experimental/Skeletal2D/SkeletonHelper.hpp"
 #include "Pomdog/Experimental/Skeletal2D/SkeletonPose.hpp"
-#include "Pomdog/Math/MathHelper.hpp"
+#include "Pomdog/Math/Math.hpp"
 #include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <algorithm>

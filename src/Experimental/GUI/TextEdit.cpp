@@ -7,7 +7,7 @@
 #include "Pomdog/Experimental/GUI/UIHelper.hpp"
 #include "Pomdog/Input/KeyboardState.hpp"
 #include "Pomdog/Input/Keys.hpp"
-#include "Pomdog/Math/MathHelper.hpp"
+#include "Pomdog/Math/Math.hpp"
 #include <utfcpp/source/utf8.h>
 #include <utfcpp/source/utf8/cpp11.h>
 

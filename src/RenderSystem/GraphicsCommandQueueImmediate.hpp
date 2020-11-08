@@ -3,7 +3,7 @@
 #pragma once
 
 #include "NativeGraphicsCommandQueue.hpp"
-#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include <memory>
 #include <vector>
 

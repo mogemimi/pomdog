@@ -14,6 +14,7 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/Math/Color.cpp
     ${POMDOG_INC_DIR}/Math/ContainmentType.hpp
     ${POMDOG_INC_DIR}/Math/Degree.hpp
+    ${POMDOG_INC_DIR}/Math/ForwardDeclarations.hpp
     ${POMDOG_INC_DIR}/Math/Math.hpp
     ${POMDOG_SRC_DIR}/Math/Math.cpp
     ${POMDOG_INC_DIR}/Math/Matrix2x2.hpp
@@ -34,26 +35,25 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_INC_DIR}/Math/Vector2.hpp
     ${POMDOG_INC_DIR}/Math/Vector3.hpp
     ${POMDOG_INC_DIR}/Math/Vector4.hpp
-    ${POMDOG_INC_DIR}/Math/detail/Coordinate2D.hpp
-    ${POMDOG_SRC_DIR}/Math/detail/Coordinate2D.cpp
-    ${POMDOG_INC_DIR}/Math/detail/Coordinate3D.hpp
-    ${POMDOG_SRC_DIR}/Math/detail/Coordinate3D.cpp
-    ${POMDOG_INC_DIR}/Math/detail/FloatingPointMatrix2x2.hpp
-    ${POMDOG_SRC_DIR}/Math/detail/FloatingPointMatrix2x2.cpp
-    ${POMDOG_INC_DIR}/Math/detail/FloatingPointMatrix3x2.hpp
-    ${POMDOG_SRC_DIR}/Math/detail/FloatingPointMatrix3x2.cpp
-    ${POMDOG_INC_DIR}/Math/detail/FloatingPointMatrix3x3.hpp
-    ${POMDOG_SRC_DIR}/Math/detail/FloatingPointMatrix3x3.cpp
-    ${POMDOG_INC_DIR}/Math/detail/FloatingPointMatrix4x4.hpp
-    ${POMDOG_SRC_DIR}/Math/detail/FloatingPointMatrix4x4.cpp
-    ${POMDOG_INC_DIR}/Math/detail/FloatingPointQuaternion.hpp
-    ${POMDOG_SRC_DIR}/Math/detail/FloatingPointQuaternion.cpp
-    ${POMDOG_INC_DIR}/Math/detail/FloatingPointVector2.hpp
-    ${POMDOG_SRC_DIR}/Math/detail/FloatingPointVector2.cpp
-    ${POMDOG_INC_DIR}/Math/detail/FloatingPointVector3.hpp
-    ${POMDOG_SRC_DIR}/Math/detail/FloatingPointVector3.cpp
-    ${POMDOG_INC_DIR}/Math/detail/FloatingPointVector4.hpp
-    ${POMDOG_SRC_DIR}/Math/detail/FloatingPointVector4.cpp
-    ${POMDOG_INC_DIR}/Math/detail/ForwardDeclarations.hpp
-    ${POMDOG_INC_DIR}/Math/detail/TaggedArithmetic.hpp
+    ${POMDOG_INC_DIR}/Math/Detail/Coordinate2D.hpp
+    ${POMDOG_SRC_DIR}/Math/Detail/Coordinate2D.cpp
+    ${POMDOG_INC_DIR}/Math/Detail/Coordinate3D.hpp
+    ${POMDOG_SRC_DIR}/Math/Detail/Coordinate3D.cpp
+    ${POMDOG_INC_DIR}/Math/Detail/FloatingPointMatrix2x2.hpp
+    ${POMDOG_SRC_DIR}/Math/Detail/FloatingPointMatrix2x2.cpp
+    ${POMDOG_INC_DIR}/Math/Detail/FloatingPointMatrix3x2.hpp
+    ${POMDOG_SRC_DIR}/Math/Detail/FloatingPointMatrix3x2.cpp
+    ${POMDOG_INC_DIR}/Math/Detail/FloatingPointMatrix3x3.hpp
+    ${POMDOG_SRC_DIR}/Math/Detail/FloatingPointMatrix3x3.cpp
+    ${POMDOG_INC_DIR}/Math/Detail/FloatingPointMatrix4x4.hpp
+    ${POMDOG_SRC_DIR}/Math/Detail/FloatingPointMatrix4x4.cpp
+    ${POMDOG_INC_DIR}/Math/Detail/FloatingPointQuaternion.hpp
+    ${POMDOG_SRC_DIR}/Math/Detail/FloatingPointQuaternion.cpp
+    ${POMDOG_INC_DIR}/Math/Detail/FloatingPointVector2.hpp
+    ${POMDOG_SRC_DIR}/Math/Detail/FloatingPointVector2.cpp
+    ${POMDOG_INC_DIR}/Math/Detail/FloatingPointVector3.hpp
+    ${POMDOG_SRC_DIR}/Math/Detail/FloatingPointVector3.cpp
+    ${POMDOG_INC_DIR}/Math/Detail/FloatingPointVector4.hpp
+    ${POMDOG_SRC_DIR}/Math/Detail/FloatingPointVector4.cpp
+    ${POMDOG_INC_DIR}/Math/Detail/TaggedArithmetic.hpp
 )

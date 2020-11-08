@@ -10,7 +10,7 @@
 #include "Pomdog/Experimental/Skeletal2D/Tracks/SpriteAnimationTrack.hpp"
 #include "Pomdog/Experimental/Skeletal2D/Tracks/TranslationTrack.hpp"
 #include "Pomdog/Experimental/Spine/SkeletonDesc.hpp"
-#include "Pomdog/Utility/detail/CRC32.hpp"
+#include "Pomdog/Utility/Detail/CRC32.hpp"
 #include <algorithm>
 #include <utility>
 

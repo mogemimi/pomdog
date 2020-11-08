@@ -6,7 +6,7 @@
 #include "TypesafeGL4.hpp"
 #include "VertexBufferBindingGL4.hpp"
 #include "../Utility/Tagged.hpp"
-#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include <array>
 #include <memory>
 #include <optional>

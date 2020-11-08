@@ -8,7 +8,7 @@
 #include "Pomdog/Experimental/GUI/TextEdit.hpp"
 #include "Pomdog/Experimental/GUI/UIEventDispatcher.hpp"
 #include "Pomdog/Experimental/GUI/UIHelper.hpp"
-#include "Pomdog/Math/MathHelper.hpp"
+#include "Pomdog/Math/Math.hpp"
 #include <array>
 
 namespace Pomdog::GUI {

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "../RenderSystem/NativePipelineState.hpp"
-#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #import <Metal/MTLDepthStencil.h>
 #import <Metal/MTLRenderCommandEncoder.h>
 #import <Metal/MTLRenderPipeline.h>

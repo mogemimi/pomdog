@@ -7,7 +7,7 @@
 #include "Pomdog/Experimental/Skeletal2D/Tracks/RotationTrack.hpp"
 #include "Pomdog/Experimental/Skeletal2D/Tracks/ScaleTrack.hpp"
 #include "Pomdog/Experimental/Skeletal2D/Tracks/TranslationTrack.hpp"
-#include "Pomdog/Math/MathHelper.hpp"
+#include "Pomdog/Math/Math.hpp"
 #include <algorithm>
 
 namespace Pomdog::Skeletal2D::Detail {

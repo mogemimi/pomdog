@@ -7,7 +7,7 @@
 #include "Pomdog/Input/Gamepad.hpp"
 #include "Pomdog/Input/GamepadCapabilities.hpp"
 #include "Pomdog/Input/GamepadState.hpp"
-#include "Pomdog/Signals/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Signals/ForwardDeclarations.hpp"
 #include <IOKit/hid/IOHIDManager.h>
 #include <array>
 #include <cstdint>

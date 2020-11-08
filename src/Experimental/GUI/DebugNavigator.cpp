@@ -3,7 +3,7 @@
 #include "Pomdog/Experimental/GUI/DebugNavigator.hpp"
 #include "Pomdog/Experimental/GUI/DrawingContext.hpp"
 #include "Pomdog/Experimental/GUI/UIHelper.hpp"
-#include "Pomdog/Math/MathHelper.hpp"
+#include "Pomdog/Math/Math.hpp"
 #include "Pomdog/Utility/StringHelper.hpp"
 #include <cmath>
 

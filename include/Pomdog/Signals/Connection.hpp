@@ -3,8 +3,8 @@
 #pragma once
 
 #include "Pomdog/Basic/Export.hpp"
-#include "Pomdog/Signals/detail/ForwardDeclarations.hpp"
-#include "Pomdog/Signals/detail/SignalBody.hpp"
+#include "Pomdog/Signals/Detail/SignalBody.hpp"
+#include "Pomdog/Signals/ForwardDeclarations.hpp"
 #include <memory>
 
 namespace Pomdog {

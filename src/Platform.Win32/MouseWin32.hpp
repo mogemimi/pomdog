@@ -6,7 +6,7 @@
 #include "Pomdog/Input/Mouse.hpp"
 #include "Pomdog/Input/MouseState.hpp"
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
-#include "Pomdog/Signals/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Signals/ForwardDeclarations.hpp"
 
 namespace Pomdog::Detail::Win32 {
 

@@ -2,13 +2,14 @@
 
 #pragma once
 
-#include "Pomdog/Math/detail/ForwardDeclarations.hpp"
-#include "Pomdog/Math/detail/TaggedArithmetic.hpp"
+#include "Pomdog/Math/Detail/TaggedArithmetic.hpp"
+#include "Pomdog/Math/ForwardDeclarations.hpp"
 
 namespace Pomdog::Detail {
 namespace Tags {
 
-struct DegreeTag {};
+struct DegreeTag {
+};
 
 } // namespace Tags
 } // namespace Pomdog::Detail

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Pomdog/Graphics/Shader.hpp"
-#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #import <Metal/MTLLibrary.h>
 
 namespace Pomdog::Detail {

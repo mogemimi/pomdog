@@ -4,7 +4,7 @@
 
 #include "Pomdog/Application/Duration.hpp"
 #include "Pomdog/Application/TimePoint.hpp"
-#include "Pomdog/Network/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Network/ForwardDeclarations.hpp"
 #include "Pomdog/Signals/Delegate.hpp"
 #include "Pomdog/Signals/ScopedConnection.hpp"
 #include "Pomdog/Utility/Errors.hpp"

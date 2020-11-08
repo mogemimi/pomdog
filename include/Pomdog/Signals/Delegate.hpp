@@ -4,7 +4,7 @@
 
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Signals/Connection.hpp"
-#include "Pomdog/Signals/detail/DelegateBody.hpp"
+#include "Pomdog/Signals/Detail/DelegateBody.hpp"
 #include <functional>
 #include <memory>
 #include <utility>

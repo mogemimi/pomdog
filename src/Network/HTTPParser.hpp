@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Pomdog/Network/ArrayView.hpp"
-#include "Pomdog/Network/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Network/ForwardDeclarations.hpp"
 #include "Pomdog/Utility/Errors.hpp"
 #include <cstdint>
 #include <memory>

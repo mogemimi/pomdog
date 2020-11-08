@@ -5,7 +5,7 @@
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Experimental/ImageEffects/ImageEffectBase.hpp"
 #include "Pomdog/Experimental/ImageEffects/ScreenQuad.hpp"
-#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
 #include <array>
 #include <memory>

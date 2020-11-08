@@ -5,7 +5,7 @@
 #include "ErrorCheckerAL.hpp"
 #include "Pomdog/Audio/AudioEmitter.hpp"
 #include "Pomdog/Audio/AudioListener.hpp"
-#include "Pomdog/Math/MathHelper.hpp"
+#include "Pomdog/Math/Math.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <array>
 #include <cmath>

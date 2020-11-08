@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Pomdog/Signals/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Signals/ForwardDeclarations.hpp"
 #import <Cocoa/Cocoa.h>
 #import <MetalKit/MTKView.h>
 #include <functional>

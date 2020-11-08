@@ -16,7 +16,7 @@
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
 #include "Pomdog/Graphics/SamplerState.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
-#include "Pomdog/Math/MathHelper.hpp"
+#include "Pomdog/Math/Math.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <cstring>
 

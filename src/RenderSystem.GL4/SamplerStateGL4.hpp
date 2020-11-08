@@ -5,7 +5,7 @@
 #include "OpenGLPrerequisites.hpp"
 #include "../RenderSystem/NativeSamplerState.hpp"
 #include "../Utility/Tagged.hpp"
-#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include <optional>
 
 namespace Pomdog::Detail::GL4 {

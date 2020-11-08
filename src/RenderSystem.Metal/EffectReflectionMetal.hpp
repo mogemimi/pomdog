@@ -3,7 +3,7 @@
 #pragma once
 
 #include "../RenderSystem/NativeEffectReflection.hpp"
-#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #import <Metal/Metal.h>
 
 namespace Pomdog::Detail::Metal {

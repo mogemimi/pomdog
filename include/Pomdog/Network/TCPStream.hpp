@@ -4,8 +4,8 @@
 
 #include "Pomdog/Application/Duration.hpp"
 #include "Pomdog/Basic/Export.hpp"
-#include "Pomdog/Network/detail/ForwardDeclarations.hpp"
-#include "Pomdog/Signals/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Network/ForwardDeclarations.hpp"
+#include "Pomdog/Signals/ForwardDeclarations.hpp"
 #include "Pomdog/Utility/Errors.hpp"
 #include <functional>
 #include <memory>

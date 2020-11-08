@@ -5,11 +5,11 @@
 #include "Pomdog/Graphics/BlendDescription.hpp"
 #include "Pomdog/Graphics/DepthFormat.hpp"
 #include "Pomdog/Graphics/DepthStencilDescription.hpp"
+#include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include "Pomdog/Graphics/InputLayoutDescription.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
 #include "Pomdog/Graphics/RasterizerDescription.hpp"
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
-#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
 #include <memory>
 #include <string>
 #include <unordered_map>

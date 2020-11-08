@@ -4,7 +4,7 @@
 
 #include "Pomdog/Application/GameWindow.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
-#include "Pomdog/Signals/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Signals/ForwardDeclarations.hpp"
 #import <Cocoa/Cocoa.h>
 #include <memory>
 

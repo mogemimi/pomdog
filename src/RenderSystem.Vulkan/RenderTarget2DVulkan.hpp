@@ -4,7 +4,7 @@
 
 #include "Texture2DVulkan.hpp"
 #include "../RenderSystem/NativeRenderTarget2D.hpp"
-#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include <vulkan/vulkan.h>
 
 namespace Pomdog::Detail::Vulkan {

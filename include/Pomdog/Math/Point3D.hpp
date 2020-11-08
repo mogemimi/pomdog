@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Pomdog/Math/detail/Coordinate3D.hpp"
+#include "Pomdog/Math/Detail/Coordinate3D.hpp"
 #include <cstdint>
 
 namespace Pomdog {

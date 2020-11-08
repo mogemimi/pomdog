@@ -4,8 +4,8 @@
 
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Content/AssetBuilders/Builder.hpp"
-#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
-#include "Pomdog/Math/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Graphics/ForwardDeclarations.hpp"
+#include "Pomdog/Math/ForwardDeclarations.hpp"
 #include <memory>
 #include <optional>
 

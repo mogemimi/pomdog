@@ -8,7 +8,7 @@
 #include "RasterizerStateGL4.hpp"
 #include "TypesafeGL4.hpp"
 #include "../RenderSystem/NativePipelineState.hpp"
-#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include <cstdint>
 #include <memory>
 #include <optional>

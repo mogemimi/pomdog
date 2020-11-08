@@ -5,7 +5,7 @@
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Experimental/ImageEffects/ImageEffectBase.hpp"
-#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include <memory>
 
 namespace Pomdog {

@@ -19,6 +19,7 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_INC_DIR}/Graphics/EffectVariableType.hpp
     ${POMDOG_INC_DIR}/Graphics/EffectVariable.hpp
     ${POMDOG_INC_DIR}/Graphics/FillMode.hpp
+    ${POMDOG_INC_DIR}/Graphics/ForwardDeclarations.hpp
     ${POMDOG_INC_DIR}/Graphics/GraphicsCommandList.hpp
     ${POMDOG_SRC_DIR}/Graphics/GraphicsCommandList.cpp
     ${POMDOG_INC_DIR}/Graphics/GraphicsCommandQueue.hpp
@@ -61,7 +62,6 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/Graphics/VertexBuffer.cpp
     ${POMDOG_INC_DIR}/Graphics/Viewport.hpp
     ${POMDOG_SRC_DIR}/Graphics/Viewport.cpp
-    ${POMDOG_INC_DIR}/Graphics/detail/ForwardDeclarations.hpp
     ${POMDOG_INC_DIR}/Graphics/ShaderCompilers/GLSLCompiler.hpp
     ${POMDOG_SRC_DIR}/Graphics/ShaderCompilers/GLSLCompiler.cpp
     ${POMDOG_INC_DIR}/Graphics/ShaderCompilers/HLSLCompiler.hpp

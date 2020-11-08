@@ -3,7 +3,7 @@
 #pragma once
 
 #include "../RenderSystem/NativeGraphicsContext.hpp"
-#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #import <Metal/Metal.h>
 #import <MetalKit/MetalKit.h>
 #include <memory>

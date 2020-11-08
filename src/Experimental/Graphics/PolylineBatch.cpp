@@ -20,7 +20,7 @@
 #include "Pomdog/Graphics/VertexBuffer.hpp"
 #include "Pomdog/Math/BoundingBox.hpp"
 #include "Pomdog/Math/Color.hpp"
-#include "Pomdog/Math/MathHelper.hpp"
+#include "Pomdog/Math/Math.hpp"
 #include "Pomdog/Math/Matrix3x2.hpp"
 #include "Pomdog/Math/Matrix4x4.hpp"
 #include "Pomdog/Math/Rectangle.hpp"

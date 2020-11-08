@@ -3,9 +3,9 @@
 #pragma once
 
 #include "Pomdog/Basic/Export.hpp"
-#include "Pomdog/Signals/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Signals/ForwardDeclarations.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/detail/SpinLock.hpp"
+#include "Pomdog/Utility/Detail/SpinLock.hpp"
 #include <algorithm>
 #include <cstdint>
 #include <functional>

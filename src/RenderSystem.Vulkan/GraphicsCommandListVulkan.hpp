@@ -3,7 +3,7 @@
 #pragma once
 
 #include "../RenderSystem/NativeGraphicsCommandList.hpp"
-#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include <vulkan/vulkan.h>
 
 namespace Pomdog::Detail::Vulkan {

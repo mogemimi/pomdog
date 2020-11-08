@@ -6,6 +6,7 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_INC_DIR}/Network/ArrayView.hpp
     ${POMDOG_SRC_DIR}/Network/EndPoint.cpp
     ${POMDOG_SRC_DIR}/Network/EndPoint.hpp
+    ${POMDOG_INC_DIR}/Network/ForwardDeclarations.hpp
     ${POMDOG_INC_DIR}/Network/HTTPClient.hpp
     ${POMDOG_SRC_DIR}/Network/HTTPClient.cpp
     ${POMDOG_INC_DIR}/Network/HTTPMethod.hpp
@@ -24,7 +25,6 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/Network/TLSStream.cpp
     ${POMDOG_INC_DIR}/Network/UDPStream.hpp
     ${POMDOG_SRC_DIR}/Network/UDPStream.cpp
-    ${POMDOG_INC_DIR}/Network/detail/ForwardDeclarations.hpp
 
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:
         # NOTE: Network.MbedTLS

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Pomdog/Application/GameHost.hpp"
-#include "Pomdog/Signals/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Signals/ForwardDeclarations.hpp"
 #include <memory>
 
 namespace Pomdog {

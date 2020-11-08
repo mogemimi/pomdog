@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Pomdog/Application/Duration.hpp"
-#include "Pomdog/Audio/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Audio/ForwardDeclarations.hpp"
 #include <cstddef>
 
 namespace Pomdog::Detail::AudioHelper {

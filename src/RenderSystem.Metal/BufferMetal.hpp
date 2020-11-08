@@ -4,7 +4,7 @@
 
 #include "../RenderSystem/BufferBindMode.hpp"
 #include "../RenderSystem/NativeBuffer.hpp"
-#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #import <Metal/MTLBuffer.h>
 
 namespace Pomdog::Detail::Metal {

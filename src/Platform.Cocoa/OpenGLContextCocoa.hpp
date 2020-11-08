@@ -3,7 +3,7 @@
 #pragma once
 
 #include "../RenderSystem.GL4/OpenGLContext.hpp"
-#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #import <Cocoa/Cocoa.h>
 #include <memory>
 

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "../RenderSystem/NativeSamplerState.hpp"
-#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #import <Metal/MTLSampler.h>
 
 namespace Pomdog::Detail::Metal {

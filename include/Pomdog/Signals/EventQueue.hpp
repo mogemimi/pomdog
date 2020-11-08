@@ -4,10 +4,10 @@
 
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Signals/Connection.hpp"
-#include "Pomdog/Signals/detail/ForwardDeclarations.hpp"
-#include "Pomdog/Signals/detail/SignalBody.hpp"
+#include "Pomdog/Signals/Detail/SignalBody.hpp"
+#include "Pomdog/Signals/ForwardDeclarations.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/detail/SpinLock.hpp"
+#include "Pomdog/Utility/Detail/SpinLock.hpp"
 #include <algorithm>
 #include <cstddef>
 #include <functional>

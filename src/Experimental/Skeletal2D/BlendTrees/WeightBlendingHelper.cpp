@@ -2,7 +2,7 @@
 
 #include "Pomdog/Experimental/Skeletal2D/BlendTrees/WeightBlendingHelper.hpp"
 #include "Pomdog/Experimental/Skeletal2D/JointPose.hpp"
-#include "Pomdog/Math/MathHelper.hpp"
+#include "Pomdog/Math/Math.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog::Skeletal2D::Detail::WeightBlendingHelper {

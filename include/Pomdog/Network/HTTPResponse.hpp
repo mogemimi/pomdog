@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Pomdog/Basic/Export.hpp"
-#include "Pomdog/Network/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Network/ForwardDeclarations.hpp"
 #include <cstddef>
 #include <functional>
 #include <memory>

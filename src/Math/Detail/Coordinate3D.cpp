@@ -1,6 +1,6 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Math/detail/Coordinate3D.hpp"
+#include "Pomdog/Math/Detail/Coordinate3D.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <cstdint>
 

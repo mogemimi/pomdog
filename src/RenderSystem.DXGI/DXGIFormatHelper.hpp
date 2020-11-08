@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include <dxgi.h>
 
 namespace Pomdog::Detail::DXGI {

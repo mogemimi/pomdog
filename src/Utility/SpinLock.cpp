@@ -1,6 +1,6 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Utility/detail/SpinLock.hpp"
+#include "Pomdog/Utility/Detail/SpinLock.hpp"
 #include "Pomdog/Basic/Platform.hpp"
 
 #if defined(POMDOG_PLATFORM_LINUX) && (defined(__x86_64__) || defined(_M_X64) || defined(_M_AMD64))

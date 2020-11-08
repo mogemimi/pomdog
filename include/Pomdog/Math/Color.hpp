@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Pomdog/Basic/Export.hpp"
-#include "Pomdog/Math/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Math/ForwardDeclarations.hpp"
 #include <cstdint>
 
 namespace Pomdog {

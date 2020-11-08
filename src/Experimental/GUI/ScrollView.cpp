@@ -6,7 +6,7 @@
 #include "Pomdog/Experimental/GUI/UIEventDispatcher.hpp"
 #include "Pomdog/Experimental/GUI/UIHelper.hpp"
 #include "Pomdog/Experimental/GUI/VerticalScrollBar.hpp"
-#include "Pomdog/Math/MathHelper.hpp"
+#include "Pomdog/Math/Math.hpp"
 
 namespace Pomdog::GUI {
 

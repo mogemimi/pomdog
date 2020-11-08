@@ -4,7 +4,7 @@
 
 #include "Texture2DMetal.hpp"
 #include "../RenderSystem/NativeRenderTarget2D.hpp"
-#include "Pomdog/Graphics/detail/ForwardDeclarations.hpp"
+#include "Pomdog/Graphics/ForwardDeclarations.hpp"
 
 namespace Pomdog::Detail::Metal {
 

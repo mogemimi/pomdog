@@ -3,7 +3,7 @@
 #include "Pomdog/Experimental/GUI/UIEventDispatcher.hpp"
 #include "Pomdog/Experimental/GUI/UIHelper.hpp"
 #include "Pomdog/Input/KeyboardState.hpp"
-#include "Pomdog/Signals/detail/SignalBody.hpp"
+#include "Pomdog/Signals/Detail/SignalBody.hpp"
 #include <algorithm>
 
 #include "Pomdog/Input/Keys.hpp"

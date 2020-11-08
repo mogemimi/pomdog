@@ -3,8 +3,8 @@
 #pragma once
 
 #include "Pomdog/Basic/Export.hpp"
+#include "Pomdog/Network/ForwardDeclarations.hpp"
 #include "Pomdog/Network/HTTPMethod.hpp"
-#include "Pomdog/Network/detail/ForwardDeclarations.hpp"
 #include "Pomdog/Signals/Delegate.hpp"
 #include "Pomdog/Utility/Errors.hpp"
 #include <functional>

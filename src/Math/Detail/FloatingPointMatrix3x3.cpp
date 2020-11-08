@@ -1,12 +1,12 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Math/detail/FloatingPointMatrix3x3.hpp"
-#include "Pomdog/Math/MathHelper.hpp"
+#include "Pomdog/Math/Detail/FloatingPointMatrix3x3.hpp"
+#include "Pomdog/Math/Math.hpp"
 #include "Pomdog/Math/Radian.hpp"
-#include "Pomdog/Math/detail/FloatingPointMatrix2x2.hpp"
-#include "Pomdog/Math/detail/FloatingPointQuaternion.hpp"
-#include "Pomdog/Math/detail/FloatingPointVector2.hpp"
-#include "Pomdog/Math/detail/FloatingPointVector3.hpp"
+#include "Pomdog/Math/Detail/FloatingPointMatrix2x2.hpp"
+#include "Pomdog/Math/Detail/FloatingPointQuaternion.hpp"
+#include "Pomdog/Math/Detail/FloatingPointVector2.hpp"
+#include "Pomdog/Math/Detail/FloatingPointVector3.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <cfloat>
 #include <cmath>

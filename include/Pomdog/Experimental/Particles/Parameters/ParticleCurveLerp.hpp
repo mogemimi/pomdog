@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Pomdog/Math/Color.hpp"
-#include "Pomdog/Math/MathHelper.hpp"
+#include "Pomdog/Math/Math.hpp"
 #include "Pomdog/Math/Radian.hpp"
 #include "Pomdog/Math/Vector3.hpp"
 

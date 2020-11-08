@@ -3,7 +3,7 @@
 #include "Pomdog/Experimental/GUI/ScenePanel.hpp"
 #include "Pomdog/Experimental/GUI/PointerPoint.hpp"
 #include "Pomdog/Experimental/GUI/UIEventDispatcher.hpp"
-#include "Pomdog/Math/MathHelper.hpp"
+#include "Pomdog/Math/Math.hpp"
 #include <cmath>
 
 namespace Pomdog::GUI {
