@@ -2,7 +2,14 @@
 
 #include "Pomdog/Experimental/Image/GIFLoader.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wreserved-id-macro"
+#endif
 #include <gif_lib.h>
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif
 #include <cstring>
 #include <functional>
 
