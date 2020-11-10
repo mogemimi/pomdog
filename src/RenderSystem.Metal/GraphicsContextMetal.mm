@@ -45,7 +45,11 @@ std::size_t ToIndexByteSize(MTLIndexType elementSize) noexcept
 
 MTLClearColor ToClearColor(const Vector4& color) noexcept
 {
-    return MTLClearColorMake(color.X, color.Y, color.Z, color.W);
+    return MTLClearColorMake(
+        static_cast<double>(color.X),
+        static_cast<double>(color.Y),
+        static_cast<double>(color.Z),
+        static_cast<double>(color.W));
 }
 
 void SetViewport(
@@ -65,8 +69,8 @@ void SetViewport(
     viewport.originY = viewportIn.TopLeftY;
     viewport.width = viewportIn.Width;
     viewport.height = viewportIn.Height;
-    viewport.znear = viewportIn.MinDepth;
-    viewport.zfar = viewportIn.MaxDepth;
+    viewport.znear = static_cast<double>(viewportIn.MinDepth);
+    viewport.zfar = static_cast<double>(viewportIn.MaxDepth);
     [commandEncoder setViewport:viewport];
 }
 
@@ -576,7 +580,7 @@ void GraphicsContextMetal::SetRenderPass(const RenderPass& renderPass)
 
     if (renderPass.ClearDepth) {
         renderPassDescriptor.depthAttachment.loadAction = MTLLoadActionClear;
-        renderPassDescriptor.depthAttachment.clearDepth = *renderPass.ClearDepth;
+        renderPassDescriptor.depthAttachment.clearDepth = static_cast<double>(*renderPass.ClearDepth);
     }
     if (renderPass.ClearStencil) {
         renderPassDescriptor.stencilAttachment.loadAction = MTLLoadActionClear;
