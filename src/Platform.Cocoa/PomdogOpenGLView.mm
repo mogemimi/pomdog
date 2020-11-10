@@ -267,7 +267,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
         [nativeContext clearDrawable];
     }
 
-    trackingRect = [self addTrackingRect:[self bounds] owner:self userData:NULL assumeInside:NO];
+    trackingRect = [self addTrackingRect:[self bounds] owner:self userData:nullptr assumeInside:NO];
 }
 
 - (void)viewWillMoveToWindow:(NSWindow*)newWindow
@@ -285,14 +285,14 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 {
     [super setFrame:frame];
     [self removeTrackingRect:trackingRect];
-    trackingRect = [self addTrackingRect:[self bounds] owner:self userData:NULL assumeInside:NO];
+    trackingRect = [self addTrackingRect:[self bounds] owner:self userData:nullptr assumeInside:NO];
 }
 
 - (void)setBounds:(NSRect)bounds
 {
     [super setBounds:bounds];
     [self removeTrackingRect:trackingRect];
-    trackingRect = [self addTrackingRect:[self bounds] owner:self userData:NULL assumeInside:NO];
+    trackingRect = [self addTrackingRect:[self bounds] owner:self userData:nullptr assumeInside:NO];
 }
 
 // MARK: - Getter/Setter

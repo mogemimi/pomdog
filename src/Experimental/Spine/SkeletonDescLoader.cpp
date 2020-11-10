@@ -178,7 +178,7 @@ void ReadJsonMember(const rapidjson::Value& object, const char* memberName, Colo
     auto& memberObject = object[memberName];
     if (memberObject.IsString()) {
         auto hexColor = static_cast<std::uint32_t>(
-            std::stoul(memberObject.GetString(), 0, 16));
+            std::stoul(memberObject.GetString(), nullptr, 16));
         output = Color::FromPackedValue(hexColor);
     }
 }
