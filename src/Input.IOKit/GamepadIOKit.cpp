@@ -306,7 +306,7 @@ void GamepadIOKit::OnDeviceAttached(IOReturn result, void* sender, IOHIDDeviceRe
     auto elements = IOHIDDeviceCopyMatchingElements(device, nullptr, kIOHIDOptionsTypeNone);
     if (elements != nullptr) {
         for (int i = 0; i < CFArrayGetCount(elements); ++i) {
-            auto element = (IOHIDElementRef)(CFArrayGetValueAtIndex(elements, i));
+            auto element = reinterpret_cast<IOHIDElementRef>(const_cast<void*>(CFArrayGetValueAtIndex(elements, i)));
             if (CFGetTypeID(element) != IOHIDElementGetTypeID()) {
                 continue;
             }
@@ -402,10 +402,10 @@ void GamepadIOKit::OnDeviceAttached(IOReturn result, void* sender, IOHIDDeviceRe
     IOHIDDeviceScheduleWithRunLoop(device, CFRunLoopGetCurrent(), kCFRunLoopCommonModes);
     IOHIDDeviceRegisterInputValueCallback(
         device,
-        [](void* context, IOReturn result, void* sender, IOHIDValueRef value) {
+        [](void* context, IOReturn resultIn, void* senderIn, IOHIDValueRef value) {
             auto c = reinterpret_cast<GamepadDevice*>(context);
             POMDOG_ASSERT(c != nullptr);
-            c->OnDeviceInput(result, sender, value);
+            c->OnDeviceInput(resultIn, senderIn, value);
         },
         &(*gamepad));
 }

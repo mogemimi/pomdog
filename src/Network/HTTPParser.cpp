@@ -282,7 +282,7 @@ HTTPParser::Parse(const ArrayView<std::uint8_t>& view)
         return std::make_tuple(HTTPParseResult::WouldBlock, nullptr);
     }
 
-    auto err = [&]() -> std::shared_ptr<Error> {
+    auto readResponse = [&]() -> std::shared_ptr<Error> {
         if (!response->ChunkedTransferEncoding) {
             return nullptr;
         }
@@ -350,9 +350,9 @@ HTTPParser::Parse(const ArrayView<std::uint8_t>& view)
             rawData.erase(bufferBegin, iter);
         }
         return nullptr;
-    }();
+    };
 
-    if (err != nullptr) {
+    if (auto err = readResponse(); err != nullptr) {
         return std::make_tuple(HTTPParseResult::Error, std::move(err));
     }
 

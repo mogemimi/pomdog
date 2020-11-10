@@ -180,9 +180,9 @@ void PopupMenu::OnPointerReleased([[maybe_unused]] const PointerPoint& pointerPo
                 const bool changed = (this->currentIndex != index);
                 this->currentIndex = index;
 
-                auto dispatcher = GetDispatcher();
-                dispatcher->SetFocusWidget(shared_from_this());
-                dispatcher->RemoveContextMenu(contextMenu);
+                auto dispatcherLocal = GetDispatcher();
+                dispatcherLocal->SetFocusWidget(shared_from_this());
+                dispatcherLocal->RemoveContextMenu(contextMenu);
                 contextMenu = nullptr;
 
                 if (changed) {
@@ -227,8 +227,8 @@ void PopupMenu::OnPointerReleased([[maybe_unused]] const PointerPoint& pointerPo
 
             if (!hasFocus) {
                 if (contextMenu != nullptr) {
-                    auto dispatcher = GetDispatcher();
-                    dispatcher->RemoveContextMenu(contextMenu);
+                    auto dispatcherLocal = GetDispatcher();
+                    dispatcherLocal->RemoveContextMenu(contextMenu);
                     contextMenu = nullptr;
                 }
                 focusConn.Disconnect();

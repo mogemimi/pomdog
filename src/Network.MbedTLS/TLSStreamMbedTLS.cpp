@@ -93,14 +93,12 @@ TLSStreamMbedTLS::Connect(
     // NOTE: Seeding the random number generator
     const char* pers = "ssl_client1";
 
-    auto ret = mbedtls_ctr_drbg_seed(
-        &ctrDrbg,
-        mbedtls_entropy_func,
-        &entropy,
-        reinterpret_cast<const unsigned char*>(pers),
-        std::strlen(pers));
-
-    if (ret != 0) {
+    if (auto ret = mbedtls_ctr_drbg_seed(
+            &ctrDrbg,
+            mbedtls_entropy_func,
+            &entropy,
+            reinterpret_cast<const unsigned char*>(pers),
+            std::strlen(pers)); ret != 0) {
         auto err = Errors::New("mbedtls_ctr_drbg_seed failed, " + MbedTLSErrorToString(ret));
         errorConn = service->ScheduleTask([this, err] {
             this->OnConnected(std::move(err));
@@ -119,12 +117,10 @@ TLSStreamMbedTLS::Connect(
     }
 
     // NOTE: Initialize certificates
-    ret = mbedtls_x509_crt_parse(
-        &cacert,
-        reinterpret_cast<const unsigned char*>(certPEM.GetData()),
-        certPEM.GetSize());
-
-    if (ret < 0) {
+    if (auto ret = mbedtls_x509_crt_parse(
+            &cacert,
+            reinterpret_cast<const unsigned char*>(certPEM.GetData()),
+            certPEM.GetSize()); ret < 0) {
         auto err = Errors::New("mbedtls_x509_crt_parse failed, " + MbedTLSErrorToString(ret));
         errorConn = service->ScheduleTask([this, err] {
             this->OnConnected(std::move(err));
