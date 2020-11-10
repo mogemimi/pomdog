@@ -16,6 +16,7 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wcomma"
 #pragma clang diagnostic ignored "-Wimplicit-fallthrough"
+#pragma clang diagnostic ignored "-Wreserved-id-macro"
 #endif
 #include <stb_truetype.h>
 #if defined(__clang__)
