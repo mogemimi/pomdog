@@ -160,8 +160,8 @@ void Slider::OnPointerPressed([[maybe_unused]] const PointerPoint& pointerPoint)
 
     POMDOG_ASSERT(GetWidth() > 0);
 
-    // NOTE: float thumbOffset = thumbWidth / 2
-    constexpr float thumbOffset = 5;
+    // NOTE: double thumbOffset = thumbWidth / 2
+    constexpr double thumbOffset = 5.0;
 
     auto pointInView = UIHelper::ProjectToChildSpace(pointerPoint.Position, GetGlobalPosition());
     auto amount = (pointInView.X - thumbOffset / 2) / (GetWidth() - 2 * thumbOffset);
@@ -181,8 +181,8 @@ void Slider::OnPointerMoved(const PointerPoint& pointerPoint)
 
     POMDOG_ASSERT(GetWidth() > 0);
 
-    // NOTE: float thumbOffset = thumbWidth / 2
-    constexpr float thumbOffset = 5;
+    // NOTE: double thumbOffset = thumbWidth / 2
+    constexpr double thumbOffset = 5.0;
 
     auto pointInView = UIHelper::ProjectToChildSpace(pointerPoint.Position, GetGlobalPosition());
     auto amount = (pointInView.X - thumbOffset / 2) / (GetWidth() - 2 * thumbOffset);

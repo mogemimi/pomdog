@@ -66,8 +66,8 @@ private:
     std::optional<Vector2> trackStartPosition;
 
     Duration timer;
-    float normalizedScrollDirection;
-    float scrollAcceleration;
+    double normalizedScrollDirection;
+    double scrollAcceleration;
     double cameraZoom;
 
     bool isFocused;
@@ -75,8 +75,8 @@ private:
 
     class ScrollWheelSampler final {
     private:
-        ///@todo replace with std::deque<float>
-        std::optional<float> average;
+        ///@todo replace with std::deque<double>
+        std::optional<double> average;
 
     public:
         void AddWheelDelta(int wheelDelta)
@@ -86,19 +86,19 @@ private:
             }
 
             if (!average) {
-                average = static_cast<float>(std::abs(wheelDelta));
+                average = static_cast<double>(std::abs(wheelDelta));
             }
             else {
-                average = std::max((*average + static_cast<float>(std::abs(wheelDelta))) / 2, 1.0f);
+                average = std::max((*average + static_cast<double>(std::abs(wheelDelta))) / 2, 1.0);
             }
         }
 
-        float GetScrollWheelDeltaAverage() const
+        double GetScrollWheelDeltaAverage() const
         {
             if (average) {
                 return *average;
             }
-            return 1.0f;
+            return 1.0;
         }
     };
 

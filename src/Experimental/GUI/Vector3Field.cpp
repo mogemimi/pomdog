@@ -89,9 +89,9 @@ Vector3 Vector3Field::GetValue() const
 
 void Vector3Field::SetValue(const Vector3& value)
 {
-    xField->SetValue(value.X);
-    yField->SetValue(value.Y);
-    zField->SetValue(value.Z);
+    xField->SetValue(static_cast<double>(value.X));
+    yField->SetValue(static_cast<double>(value.Y));
+    zField->SetValue(static_cast<double>(value.Z));
 }
 
 Vector3 Vector3Field::GetMinimum() const noexcept
@@ -105,9 +105,9 @@ Vector3 Vector3Field::GetMinimum() const noexcept
 
 void Vector3Field::SetMinimum(const Vector3& minimum)
 {
-    xField->SetMinimum(minimum.X);
-    yField->SetMinimum(minimum.Y);
-    zField->SetMinimum(minimum.Z);
+    xField->SetMinimum(static_cast<double>(minimum.X));
+    yField->SetMinimum(static_cast<double>(minimum.Y));
+    zField->SetMinimum(static_cast<double>(minimum.Z));
 }
 
 Vector3 Vector3Field::GetMaximum() const noexcept
@@ -121,9 +121,9 @@ Vector3 Vector3Field::GetMaximum() const noexcept
 
 void Vector3Field::SetMaximum(const Vector3& maximum)
 {
-    xField->SetMaximum(maximum.X);
-    yField->SetMaximum(maximum.Y);
-    zField->SetMaximum(maximum.Z);
+    xField->SetMaximum(static_cast<double>(maximum.X));
+    yField->SetMaximum(static_cast<double>(maximum.Y));
+    zField->SetMaximum(static_cast<double>(maximum.Z));
 }
 
 int Vector3Field::GetDecimals() const

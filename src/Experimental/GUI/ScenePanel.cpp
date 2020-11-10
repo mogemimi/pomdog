@@ -67,8 +67,8 @@ ScenePanel::ScenePanel(
     int heightIn)
     : Widget(dispatcher)
     , timer(Duration::zero())
-    , normalizedScrollDirection(0.0f)
-    , scrollAcceleration(0.0f)
+    , normalizedScrollDirection(0.0)
+    , scrollAcceleration(0.0)
     , cameraZoom(1.0)
     , isFocused(false)
     , isEnabled(true)
@@ -109,20 +109,21 @@ void ScenePanel::OnEnter()
 void ScenePanel::OnPointerWheelChanged(const PointerPoint& pointerPoint)
 {
     scrollWheelSampler.AddWheelDelta(pointerPoint.MouseWheelDelta);
-    auto wheelDeltaUnit = scrollWheelSampler.GetScrollWheelDeltaAverage();
+    const auto wheelDeltaUnit = scrollWheelSampler.GetScrollWheelDeltaAverage();
 
-    constexpr float accel = 1.2f;
+    constexpr double accel = 1.2;
 
     if (timer <= Duration::zero()) {
         timer = ZoomAnimationInterval;
         scrollAcceleration = accel;
     }
     else {
+        POMDOG_ASSERT(wheelDeltaUnit != 0.0);
         scrollAcceleration += std::abs(pointerPoint.MouseWheelDelta / wheelDeltaUnit);
     }
 
     if (pointerPoint.MouseWheelDelta != 0) {
-        auto direction = (pointerPoint.MouseWheelDelta >= 0 ? 1.0f : -1.0f);
+        auto direction = (pointerPoint.MouseWheelDelta >= 0 ? 1.0 : -1.0);
 
         if (direction != normalizedScrollDirection) {
             normalizedScrollDirection = direction;
@@ -275,12 +276,13 @@ void ScenePanel::UpdateAnimation(const Duration& frameDuration)
     timer = std::max(timer - frameDuration, Duration::zero());
 
     if (timer <= Duration::zero()) {
-        scrollAcceleration = 1.0f;
+        scrollAcceleration = 1.0;
         return;
     }
 
-    const auto duration = std::min<double>(frameDuration.count(), 1.0);
-    const auto scroll = duration * normalizedScrollDirection * scrollAcceleration * (timer.count() / ZoomAnimationInterval.count());
+    const auto duration = std::min(frameDuration.count(), 1.0);
+    const auto t = timer.count() / ZoomAnimationInterval.count();
+    const auto scroll = duration * normalizedScrollDirection * scrollAcceleration * t;
 
     POMDOG_ASSERT(cameraZoom > 0);
     cameraZoom = Math::Saturate(cameraZoom + (cameraZoom * scroll * 1000));
