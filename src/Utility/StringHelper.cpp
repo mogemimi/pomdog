@@ -148,7 +148,14 @@ std::string UnsafeToFormatString(const char* format, std::va_list arg)
 #if __cplusplus >= 201103L
     using std::vsnprintf;
 #endif
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat-nonliteral"
+#endif
     const auto length = vsnprintf(nullptr, 0, format, copiedArguments);
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif
     static_assert(std::is_signed<decltype(length)>::value, "");
 
     va_end(copiedArguments);
@@ -156,7 +163,14 @@ std::string UnsafeToFormatString(const char* format, std::va_list arg)
     POMDOG_ASSERT(length > 0);
 
     std::string result(length + 1, '\0');
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat-nonliteral"
+#endif
     vsnprintf(&result.front(), result.size(), format, arg);
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif
 
     POMDOG_ASSERT(result.back() == '\0');
     result.resize(length);
