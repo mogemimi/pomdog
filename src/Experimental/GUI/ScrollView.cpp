@@ -6,6 +6,7 @@
 #include "Pomdog/Experimental/GUI/UIEventDispatcher.hpp"
 #include "Pomdog/Experimental/GUI/UIHelper.hpp"
 #include "Pomdog/Experimental/GUI/VerticalScrollBar.hpp"
+#include "Pomdog/Basic/Platform.hpp"
 #include "Pomdog/Math/Math.hpp"
 
 namespace Pomdog::GUI {
@@ -145,7 +146,7 @@ void ScrollView::OnEnter()
 
 void ScrollView::OnPointerWheelChanged(const PointerPoint& pointerPoint)
 {
-#if WIN32
+#if defined(POMDOG_PLATFORM_WIN32)
     // FIXME: Set to appropriate wheel scroll speed for each platform.
     constexpr int divisor = 400;
 #else
