@@ -7,11 +7,18 @@
 #include "Pomdog/Math/Math.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/FileSystem.hpp"
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wzero-as-null-pointer-constant"
+#endif
 #if defined(_MSC_VER)
 #pragma warning(push)
 #pragma warning(disable : 5054)
 #endif
 #include <rapidjson/document.h>
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif
 #if defined(_MSC_VER)
 #pragma warning(pop)
 #endif
