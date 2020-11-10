@@ -169,8 +169,6 @@ std::vector<EffectConstantDescription> EffectReflectionMetal::GetConstantBuffers
     //reflection.fragmentArguments;
     POMDOG_ASSERT(false);
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
-
-    return constants;
 }
 
 } // namespace Pomdog::Detail::Metal
