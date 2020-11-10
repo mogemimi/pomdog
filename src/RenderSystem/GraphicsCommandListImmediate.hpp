@@ -46,7 +46,7 @@ public:
     GraphicsCommandListImmediate(const GraphicsCommandListImmediate&) = delete;
     GraphicsCommandListImmediate& operator=(const GraphicsCommandListImmediate&) = delete;
 
-    ~GraphicsCommandListImmediate();
+    ~GraphicsCommandListImmediate() override;
 
     void Close() override;
 

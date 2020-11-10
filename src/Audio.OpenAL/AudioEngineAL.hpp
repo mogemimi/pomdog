@@ -23,7 +23,7 @@ public:
     AudioEngineAL(const AudioEngineAL&) = delete;
     AudioEngineAL& operator=(const AudioEngineAL&) = delete;
 
-    ~AudioEngineAL() noexcept;
+    ~AudioEngineAL() noexcept override;
 
     /// Initializes the audio engine.
     [[nodiscard]] std::shared_ptr<Error>

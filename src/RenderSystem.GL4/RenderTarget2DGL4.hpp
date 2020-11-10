@@ -23,7 +23,7 @@ public:
         DepthFormat depthStencilFormat,
         std::int32_t multiSampleCount);
 
-    ~RenderTarget2DGL4();
+    ~RenderTarget2DGL4() override;
 
     void GetData(
         void* result,

@@ -28,7 +28,7 @@ class GameHostMetal final : public GameHost {
 public:
     GameHostMetal();
 
-    ~GameHostMetal();
+    ~GameHostMetal() override;
 
     [[nodiscard]] std::shared_ptr<Error>
     Initialize(

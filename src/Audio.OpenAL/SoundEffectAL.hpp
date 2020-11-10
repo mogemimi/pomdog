@@ -35,7 +35,7 @@ public:
     SoundEffectAL(const SoundEffectAL&) = delete;
     SoundEffectAL& operator=(const SoundEffectAL&) = delete;
 
-    ~SoundEffectAL() noexcept;
+    ~SoundEffectAL() noexcept override;
 
     /// Initializes the audio engine.
     [[nodiscard]] std::shared_ptr<Error>

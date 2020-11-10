@@ -25,7 +25,7 @@ public:
         std::size_t sizeInBytes,
         BufferUsage bufferUsage);
 
-    ~BufferGL4();
+    ~BufferGL4() override;
 
     void GetData(
         std::size_t offsetInBytes,

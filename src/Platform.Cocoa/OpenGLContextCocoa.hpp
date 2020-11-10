@@ -21,7 +21,7 @@ public:
     OpenGLContextCocoa(const OpenGLContextCocoa&) = delete;
     OpenGLContextCocoa& operator=(const OpenGLContextCocoa&) = delete;
 
-    ~OpenGLContextCocoa() noexcept;
+    ~OpenGLContextCocoa() noexcept override;
 
     [[nodiscard]] std::shared_ptr<Error>
     Initialize(const PresentationParameters& presentationParameters) noexcept;

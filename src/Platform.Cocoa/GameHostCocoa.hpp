@@ -28,7 +28,7 @@ class GameHostCocoa final : public GameHost {
 public:
     GameHostCocoa();
 
-    ~GameHostCocoa();
+    ~GameHostCocoa() override;
 
     [[nodiscard]] std::shared_ptr<Error>
     Initialize(

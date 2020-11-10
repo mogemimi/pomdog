@@ -17,7 +17,7 @@ public:
 
     explicit GraphicsContextMetal(id<MTLDevice> nativeDevice);
 
-    ~GraphicsContextMetal();
+    ~GraphicsContextMetal() override;
 
     GraphicsCapabilities GetCapabilities() const override;
 

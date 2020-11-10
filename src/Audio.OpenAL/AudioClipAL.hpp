@@ -30,7 +30,7 @@ public:
     AudioClipAL(const AudioClipAL&) = delete;
     AudioClipAL& operator=(const AudioClipAL&) = delete;
 
-    ~AudioClipAL() noexcept;
+    ~AudioClipAL() noexcept override;
 
     /// Initializes the audio clip.
     [[nodiscard]] std::shared_ptr<Error>

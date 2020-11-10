@@ -38,7 +38,7 @@ public:
         const std::shared_ptr<OpenGLContext>& openGLContext,
         std::weak_ptr<GraphicsDevice>&& graphicsDevice);
 
-    ~GraphicsContextGL4();
+    ~GraphicsContextGL4() override;
 
     GraphicsCapabilities GetCapabilities() const override;
 

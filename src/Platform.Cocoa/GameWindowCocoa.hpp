@@ -26,7 +26,7 @@ class GameWindowCocoa final : public GameWindow {
 public:
     GameWindowCocoa() noexcept;
 
-    ~GameWindowCocoa() noexcept;
+    ~GameWindowCocoa() noexcept override;
 
     [[nodiscard]] std::shared_ptr<Error>
     Initialize(

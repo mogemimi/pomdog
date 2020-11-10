@@ -49,7 +49,7 @@ class GamepadIOKit final : public Gamepad {
 public:
     explicit GamepadIOKit(const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue);
 
-    ~GamepadIOKit();
+    ~GamepadIOKit() override;
 
     GamepadCapabilities GetCapabilities(PlayerIndex index) const override;
 

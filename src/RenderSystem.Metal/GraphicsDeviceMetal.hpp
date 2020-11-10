@@ -13,7 +13,7 @@ class GraphicsDeviceMetal final : public NativeGraphicsDevice {
 public:
     explicit GraphicsDeviceMetal(const PresentationParameters& presentationParameters);
 
-    ~GraphicsDeviceMetal();
+    ~GraphicsDeviceMetal() override;
 
     ShaderLanguage GetSupportedLanguage() const noexcept override;
 
