@@ -202,8 +202,10 @@ void GraphicsContextMetal::ExecuteCommandLists(
 
     POMDOG_ASSERT(commandBuffer != nil);
 
-    // Schedule a present once the framebuffer is complete using the current drawable
-    [commandBuffer presentDrawable:targetView.currentDrawable];
+    if (auto drawable = targetView.currentDrawable; drawable != nil) {
+        // Schedule a present once the framebuffer is complete using the current drawable
+        [commandBuffer presentDrawable:drawable];
+    }
 
     // Finalize rendering here & push the command buffer to the GPU
     [commandBuffer commit];

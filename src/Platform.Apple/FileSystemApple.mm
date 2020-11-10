@@ -90,7 +90,11 @@ std::string FileSystem::GetAppDataDirectoryPath()
     NSURL* appDirectory = [[urlPaths objectAtIndex:0]
         URLByAppendingPathComponent:bundleId isDirectory:YES];
 
-    BOOL exists = [fileManager fileExistsAtPath:[appDirectory path]];
+    NSString* path = [appDirectory path];
+    if (path == nil) {
+        POMDOG_THROW_EXCEPTION(std::runtime_error, "[appDirectory path] is nil");
+    }
+    BOOL exists = [fileManager fileExistsAtPath:path];
 
     if (!exists) {
         // Create app directory

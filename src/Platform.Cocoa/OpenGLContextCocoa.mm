@@ -155,13 +155,17 @@ void OpenGLContextCocoa::SwapBuffers()
 void OpenGLContextCocoa::Lock() noexcept
 {
     POMDOG_ASSERT(openGLContext != nil);
-    CGLLockContext([openGLContext CGLContextObj]);
+    if (auto p = [openGLContext CGLContextObj]; p != nullptr) {
+        CGLLockContext(p);
+    }
 }
 
 void OpenGLContextCocoa::Unlock() noexcept
 {
     POMDOG_ASSERT(openGLContext != nil);
-    CGLUnlockContext([openGLContext CGLContextObj]);
+    if (auto p = [openGLContext CGLContextObj]; p != nullptr) {
+        CGLUnlockContext(p);
+    }
 }
 
 void OpenGLContextCocoa::SetView(NSView* view) noexcept

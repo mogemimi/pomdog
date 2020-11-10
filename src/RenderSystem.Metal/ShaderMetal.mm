@@ -51,8 +51,11 @@ ShaderMetal::ShaderMetal(
 
     POMDOG_ASSERT(!compileOptions.EntryPoint.empty());
 
-    this->shader = [library newFunctionWithName:
-        [NSString stringWithUTF8String:compileOptions.EntryPoint.c_str()]];
+    auto funcName = [NSString stringWithUTF8String:compileOptions.EntryPoint.data()];
+    if (funcName == nil) {
+        POMDOG_THROW_EXCEPTION(std::runtime_error, "funcName is nil");
+    }
+    this->shader = [library newFunctionWithName:funcName];
 
     if (shader == nil) {
         POMDOG_THROW_EXCEPTION(std::runtime_error, "MTLFunction is nil");
