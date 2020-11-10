@@ -62,10 +62,8 @@ GraphicsDeviceGL4::CreateBuffer(
     switch (bindMode) {
     case BufferBindMode::ConstantBuffer:
         return std::make_unique<ConstantBufferGL4>(sizeInBytes, bufferUsage);
-        break;
     case BufferBindMode::IndexBuffer:
         return std::make_unique<IndexBufferGL4>(sizeInBytes, bufferUsage);
-        break;
     case BufferBindMode::VertexBuffer:
         break;
     }
@@ -83,11 +81,9 @@ GraphicsDeviceGL4::CreateBuffer(
     case BufferBindMode::ConstantBuffer:
         return std::make_unique<ConstantBufferGL4>(
             sourceData, sizeInBytes, bufferUsage);
-        break;
     case BufferBindMode::IndexBuffer:
         return std::make_unique<IndexBufferGL4>(
             sourceData, sizeInBytes, bufferUsage);
-        break;
     case BufferBindMode::VertexBuffer:
         break;
     }

@@ -94,8 +94,6 @@ std::string CreateHeaderString(
             return "CONNECT";
         case HTTPMethod::Trace:
             return "TRACE";
-        default:
-            break;
         }
         return "UNKNOWN";
     }();

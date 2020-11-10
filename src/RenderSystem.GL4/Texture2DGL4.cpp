@@ -90,10 +90,8 @@ GLenum ToPixelFundamentalType(SurfaceFormat format) noexcept
     case SurfaceFormat::R16G16B16A16_Float:
     case SurfaceFormat::R32_Float:
         return GL_FLOAT;
-        break;
     case SurfaceFormat::R10G10B10A2_UNorm:
         return GL_UNSIGNED_INT_10_10_10_2;
-        break;
     case SurfaceFormat::BlockComp1_UNorm:
     case SurfaceFormat::BlockComp2_UNorm:
     case SurfaceFormat::BlockComp3_UNorm:

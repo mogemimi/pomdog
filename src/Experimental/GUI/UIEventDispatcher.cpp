@@ -404,7 +404,6 @@ UIEventDispatcher::CheckMouseButton(
         return mouseState.XButton1;
     case PointerMouseEvent::XButton2Pressed:
         return mouseState.XButton2;
-        break;
     case PointerMouseEvent::ScrollWheel:
         break;
     }

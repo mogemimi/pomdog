@@ -74,7 +74,6 @@ CreateAnimationNode(
         }
         auto node = std::make_unique<AnimationClipNode>(animationClip);
         return std::make_tuple(std::move(node), nullptr);
-        break;
     }
     case AnimationNodeType::Lerp: {
         POMDOG_ASSERT(desc.Inputs[0]);
@@ -113,7 +112,6 @@ CreateAnimationNode(
 
         auto node = std::make_unique<AnimationLerpNode>(std::move(node1), std::move(node2), parameterIndex);
         return std::make_tuple(std::move(node), nullptr);
-        break;
     }
     }
 

@@ -164,7 +164,6 @@ PipelineStateGL4::PipelineStateGL4(const PipelineStateDescription& description)
                 break;
             default:
                 continue;
-                break;
             }
 
             if (auto hint = hints.find(uniform.Name); hint != std::end(hints)) {
