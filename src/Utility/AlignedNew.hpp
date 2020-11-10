@@ -2,6 +2,10 @@
 
 #pragma once
 
+#if defined(__APPLE_CC__)
+#include <AvailabilityMacros.h>
+#include <TargetConditionals.h>
+#endif
 #if defined(_MSC_VER)
 #include <malloc.h>
 #else
@@ -26,7 +30,8 @@ public:
 
 #if defined(_MSC_VER)
         auto ptr = ::_aligned_malloc(size, alignment);
-#elif (__STDC_VERSION__ > 201112L)
+#elif (defined(__STDC_VERSION__) && (__STDC_VERSION__ > 201112L)) || \
+    (defined(__APPLE_CC__) && (__APPLE_CC__ >= 6000) && defined(TARGET_OS_MAC) && TARGET_OS_MAC && (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_15))
         auto ptr = std::aligned_alloc(alignment, size);
 #else
         void* ptr = nullptr;
