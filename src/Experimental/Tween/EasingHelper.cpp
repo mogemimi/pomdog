@@ -2,9 +2,7 @@
 
 #include "Pomdog/Experimental/Tween/EasingHelper.hpp"
 
-namespace Pomdog {
-namespace Detail {
-namespace Easings {
+namespace Pomdog::Detail::Easings {
 
 template <typename T>
 T Quadratic(T time) noexcept
@@ -100,14 +98,14 @@ T Bounce(T time) noexcept
     // Bounce easing
     time = 1 - time;
 
-    if (time < 1 / 2.75) {
+    if (time < T(1 / 2.75)) {
         return 1 - (T(7.5625) * time * time);
     }
-    else if (time < 2 / 2.75) {
+    else if (time < T(2 / 2.75)) {
         auto t = time - T(1.5 / 2.75);
         return 1 - (T(7.5625) * t * t + T(0.75));
     }
-    else if (time < 2.5 / 2.75) {
+    else if (time < T(2.5 / 2.75)) {
         auto t = time - T(2.25 / 2.75);
         return 1 - (T(7.5625) * t * t + T(0.9375));
     }
@@ -140,6 +138,4 @@ template float Elastic(float time) noexcept;
 template float Bounce(float time) noexcept;
 template float Back(float time) noexcept;
 
-} // namespace Easings
-} // namespace Detail
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Easings
