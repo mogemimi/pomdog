@@ -65,7 +65,7 @@ public:
         auto conn = std::make_unique<DelegateConnectionBody>();
         conn->weakSignal = weakSignal;
         conn->slotID = slotID;
-        return conn;
+        return std::move(conn);
     }
 };
 

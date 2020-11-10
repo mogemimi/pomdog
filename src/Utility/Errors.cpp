@@ -48,7 +48,7 @@ std::shared_ptr<Error> New(std::string&& message)
 {
     auto err = std::make_shared<StringError>();
     err->Message = std::move(message);
-    return err;
+    return std::move(err);
 }
 
 std::shared_ptr<Error> Wrap(const std::shared_ptr<Error>& err, std::string&& message)
@@ -56,7 +56,7 @@ std::shared_ptr<Error> Wrap(const std::shared_ptr<Error>& err, std::string&& mes
     auto wrapped = std::make_shared<WrappedError>();
     wrapped->Err = err;
     wrapped->Message = std::move(message);
-    return wrapped;
+    return std::move(wrapped);
 }
 
 std::shared_ptr<Error> Wrap(std::shared_ptr<Error>&& err, std::string&& message)
@@ -64,7 +64,7 @@ std::shared_ptr<Error> Wrap(std::shared_ptr<Error>&& err, std::string&& message)
     auto wrapped = std::make_shared<WrappedError>();
     wrapped->Err = std::move(err);
     wrapped->Message = std::move(message);
-    return wrapped;
+    return std::move(wrapped);
 }
 
 } // namespace Pomdog::Errors

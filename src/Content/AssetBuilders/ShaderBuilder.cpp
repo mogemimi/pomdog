@@ -80,7 +80,7 @@ std::optional<std::string> IncludeGLSLFilesRecursive(
         text += '\n';
     }
 
-    return text;
+    return std::move(text);
 }
 
 } // namespace

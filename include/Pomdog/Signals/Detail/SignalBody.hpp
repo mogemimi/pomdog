@@ -76,7 +76,7 @@ public:
         auto conn = std::make_unique<ConnectionBodyOverride>();
         conn->weakSignal = weakSignal;
         conn->slotIndex = slotIndex;
-        return conn;
+        return std::move(conn);
     }
 };
 
