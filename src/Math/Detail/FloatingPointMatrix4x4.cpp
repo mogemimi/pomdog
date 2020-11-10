@@ -830,8 +830,8 @@ FloatingPointMatrix4x4<T>::CreatePerspectiveRH(T width, T height, T zNear, T zFa
     // 0       0       zf/(zn-zf)    -1
     // 0       0       zn*zf/(zn-zf)  0
 
-    T const a = 2.0f * zNear / width;
-    T const b = 2.0f * zNear / height;
+    T const a = T(2.0) * zNear / width;
+    T const b = T(2.0) * zNear / height;
     T const c = zFar / (zNear - zFar); //LH: c = zFar / (zFar - zNear);
     T const d = zNear * zFar / (zNear - zFar);
 
