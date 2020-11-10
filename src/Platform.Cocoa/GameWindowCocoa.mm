@@ -115,7 +115,7 @@ void GameWindowCocoa::SetAllowUserResizing(bool allowResizing)
         POMDOG_ASSERT((styleMask & NSWindowStyleMaskResizable) != NSWindowStyleMaskResizable);
     }
 
-    dispatch_async(dispatch_get_main_queue(), [=] {
+    dispatch_async(dispatch_get_main_queue(), [this, styleMask] {
         [nativeWindow setStyleMask:styleMask];
     });
 }
@@ -128,7 +128,7 @@ std::string GameWindowCocoa::GetTitle() const
 
 void GameWindowCocoa::SetTitle(const std::string& title)
 {
-    dispatch_async(dispatch_get_main_queue(), [=] {
+    dispatch_async(dispatch_get_main_queue(), [this, title=title] {
         [nativeWindow setTitle:[NSString stringWithUTF8String:title.c_str()]];
     });
 }
@@ -159,7 +159,7 @@ void GameWindowCocoa::SetClientBounds(const Rectangle& clientBounds)
         clientBounds.Width,
         clientBounds.Height);
 
-    dispatch_async(dispatch_get_main_queue(), [=] {
+    dispatch_async(dispatch_get_main_queue(), [this, bounds] {
         [nativeWindow setFrame:bounds display:YES animate:NO];
     });
 }
