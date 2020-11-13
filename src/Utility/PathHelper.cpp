@@ -10,12 +10,13 @@
 #include <utility>
 #include <vector>
 
-namespace Pomdog {
+namespace Pomdog::PathHelper {
 namespace {
 
-std::string::size_type findFirstOfSlash(
-    const std::string& path,
-    std::string::size_type first = 0)
+[[nodiscard]] std::string_view::size_type
+findFirstOfSlash(
+    std::string_view path,
+    std::string_view::size_type first = 0) noexcept
 {
     POMDOG_ASSERT(first != std::string::npos);
     auto index = path.find_first_of('/', first);
@@ -37,7 +38,8 @@ std::string::size_type findFirstOfSlash(
     return index;
 }
 
-bool isRootDirectoryName(const std::string& name)
+[[nodiscard]] bool
+isRootDirectoryName(std::string_view name) noexcept
 {
     if (name == "/") {
         return true;
@@ -45,7 +47,7 @@ bool isRootDirectoryName(const std::string& name)
 #if defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
     // NOTE: Windows's drive (ex. 'C:' drive)
     std::regex windowsDriveRegex(R"(^[A-Za-z]:)");
-    if (std::regex_match(name, windowsDriveRegex)) {
+    if (std::regex_match(name.cbegin(), name.cend(), windowsDriveRegex)) {
         return true;
     }
     // TODO: Add windows's '\\[server name]' support.
@@ -54,17 +56,12 @@ bool isRootDirectoryName(const std::string& name)
 }
 
 class PathIterator final {
-    const std::string* source;
-    std::string::size_type startPos;
-    std::string::size_type endPos;
+    const std::string* source = nullptr;
+    std::string::size_type startPos = std::string::npos;
+    std::string::size_type endPos = std::string::npos;
 
 public:
-    PathIterator()
-        : source(nullptr)
-        , startPos(std::string::npos)
-        , endPos(std::string::npos)
-    {
-    }
+    [[maybe_unused]] PathIterator() = default;
 
     PathIterator(const std::string& path_, std::string::size_type start_, std::string::size_type end_)
         : source(&path_)
@@ -87,7 +84,7 @@ public:
         return source->substr(startPos, endPos - startPos);
     }
 
-    bool operator==(const PathIterator& iter) const
+    [[maybe_unused]] bool operator==(const PathIterator& iter) const noexcept
     {
         return (source == iter.source)
             && (startPos == iter.startPos)
@@ -269,10 +266,10 @@ TEST(PathIterator, Case_08)
 
 } // namespace
 
-std::string
-PathHelper::Join(const std::string& path1, const std::string& path2)
+[[nodiscard]] std::string
+Join(std::string_view path1, std::string_view path2) noexcept
 {
-    std::string result = path1;
+    std::string result = std::string(path1);
 #if defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
     if (!result.empty() && '\\' == result.back()) {
         result.erase(std::prev(std::end(result)));
@@ -292,18 +289,18 @@ PathHelper::Join(const std::string& path1, const std::string& path2)
     return result;
 }
 
-std::string
-PathHelper::GetBaseName(const std::string& path)
+[[nodiscard]] std::string_view
+GetBaseName(std::string_view path) noexcept
 {
     const auto lastIndex = path.find_last_of('/');
-    if (std::string::npos != lastIndex) {
+    if (std::string_view::npos != lastIndex) {
         return path.substr(lastIndex + 1);
     }
     return path;
 }
 
-std::string
-PathHelper::GetDirectoryName(const std::string& path)
+[[nodiscard]] std::string_view
+GetDirectoryName(std::string_view path) noexcept
 {
     if (!path.empty() && path.back() == '/') {
         return path;
@@ -315,12 +312,12 @@ PathHelper::GetDirectoryName(const std::string& path)
     return {};
 }
 
-std::tuple<std::string, std::string>
-PathHelper::Split(const std::string& path)
+[[nodiscard]] std::tuple<std::string_view, std::string_view>
+Split(std::string_view path) noexcept
 {
-    std::tuple<std::string, std::string> result;
+    std::tuple<std::string_view, std::string_view> result;
     auto lastIndex = path.find_last_of('/');
-    if (std::string::npos != lastIndex) {
+    if (std::string_view::npos != lastIndex) {
         std::get<0>(result) = path.substr(0, lastIndex);
         std::get<1>(result) = path.substr(lastIndex + 1);
     }
@@ -330,12 +327,12 @@ PathHelper::Split(const std::string& path)
     return result;
 }
 
-std::tuple<std::string, std::string>
-PathHelper::SplitExtension(const std::string& path)
+[[nodiscard]] std::tuple<std::string_view, std::string_view>
+SplitExtension(std::string_view path) noexcept
 {
-    std::tuple<std::string, std::string> result;
+    std::tuple<std::string_view, std::string_view> result;
     auto lastIndex = path.find_last_of('.');
-    if (std::string::npos != lastIndex) {
+    if (std::string_view::npos != lastIndex) {
         std::get<0>(result) = path.substr(0, lastIndex);
         std::get<1>(result) = path.substr(lastIndex + 1);
     }
@@ -345,14 +342,13 @@ PathHelper::SplitExtension(const std::string& path)
     return result;
 }
 
-std::string
-PathHelper::Normalize(const std::string& path)
+[[nodiscard]] std::string
+Normalize(std::string_view path) noexcept
 {
-    auto fullPath = path;
+    std::string fullPath = std::string(path);
     if (!IsAbsolute(path)) {
         // NOTE: 'path' is not full path.
-        fullPath = PathHelper::Join(
-            FileSystem::GetCurrentWorkingDirectory(), fullPath);
+        fullPath = PathHelper::Join(FileSystem::GetCurrentWorkingDirectory(), path);
     }
 
     std::vector<std::string> paths;
@@ -386,14 +382,14 @@ PathHelper::Normalize(const std::string& path)
     return fullPath;
 }
 
-std::string
-PathHelper::ToSlash(const std::string& path)
+[[nodiscard]] std::string
+ToSlash(std::string_view path) noexcept
 {
     return StringHelper::ReplaceAll(path, "\\", "/");
 }
 
-std::string
-PathHelper::Relative(const std::string& path, const std::string& start)
+[[nodiscard]] std::string
+Relative(std::string_view path, std::string_view start) noexcept
 {
     const auto fullPath = PathHelper::Normalize(path);
     const auto fullPathStart = PathHelper::Normalize(start);
@@ -424,8 +420,8 @@ PathHelper::Relative(const std::string& path, const std::string& start)
     return result;
 }
 
-bool
-PathHelper::IsAbsolute(const std::string& path)
+[[nodiscard]] bool
+IsAbsolute(std::string_view path) noexcept
 {
     // NOTE: See https://msdn.microsoft.com/en-us/library/bb773660.aspx
     if (path.empty()) {
@@ -439,12 +435,12 @@ PathHelper::IsAbsolute(const std::string& path)
         // NOTE: UNC paths
         return true;
     }
-    auto iter = PathIterator::begin(path);
-    if (iter != PathIterator::end(path)) {
+    auto pathStr = std::string{path};
+    if (auto iter = PathIterator::begin(pathStr); iter != PathIterator::end(pathStr)) {
         return isRootDirectoryName(*iter);
     }
 #endif
     return false;
 }
 
-} // namespace Pomdog
+} // namespace Pomdog::PathHelper

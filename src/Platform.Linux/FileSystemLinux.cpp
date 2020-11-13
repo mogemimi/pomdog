@@ -105,8 +105,8 @@ std::string FileSystem::GetResourceDirectoryPath()
         return "";
     }
 
-    std::string executablePath{buf.data(), static_cast<std::size_t>(size)};
-    return PathHelper::GetDirectoryName(executablePath);
+    std::string_view executablePath{buf.data(), static_cast<std::size_t>(size)};
+    return std::string{PathHelper::GetDirectoryName(executablePath)};
 }
 
 std::string FileSystem::GetTempDirectoryPath()

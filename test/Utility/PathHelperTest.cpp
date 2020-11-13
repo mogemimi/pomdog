@@ -5,7 +5,7 @@
 #include "Pomdog/Basic/Platform.hpp"
 #include "catch.hpp"
 
-using Pomdog::PathHelper;
+namespace PathHelper = Pomdog::PathHelper;
 using Pomdog::FileSystem;
 
 TEST_CASE("PathHelper", "[PathHelper]")
