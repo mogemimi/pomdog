@@ -4,31 +4,43 @@
 
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Math/Degree.hpp"
-#include "Pomdog/Math/Radian.hpp"
 #include "Pomdog/Math/Detail/TypeTraits.hpp"
+#include "Pomdog/Math/Radian.hpp"
 #include <type_traits>
 
 namespace Pomdog::Math {
 
-template <typename T> inline constexpr T Pi         = T(3.14159265358979323846L);
-template <typename T> inline constexpr T TwoPi      = T(6.28318530717958647692L);
-template <typename T> inline constexpr T OneOverPi  = T(0.31830988618379067154L);
-template <typename T> inline constexpr T OneOver2Pi = T(0.15915494309189533576L);
-template <typename T> inline constexpr T PiOver2    = T(1.57079632679489661923L);
-template <typename T> inline constexpr T PiOver4    = T(0.78539816339744830962L);
+template <typename T>
+inline constexpr T Pi = T(3.14159265358979323846L);
+template <typename T>
+inline constexpr T TwoPi = T(6.28318530717958647692L);
+template <typename T>
+inline constexpr T OneOverPi = T(0.31830988618379067154L);
+template <typename T>
+inline constexpr T OneOver2Pi = T(0.15915494309189533576L);
+template <typename T>
+inline constexpr T PiOver2 = T(1.57079632679489661923L);
+template <typename T>
+inline constexpr T PiOver4 = T(0.78539816339744830962L);
 
-template <> constexpr inline float Pi<float>         = 3.1415926535f;
-template <> constexpr inline float TwoPi<float>      = 6.2831853071f;
-template <> constexpr inline float OneOverPi<float>  = 0.3183098861f;
-template <> constexpr inline float OneOver2Pi<float> = 0.1591549430f;
-template <> constexpr inline float PiOver2<float>    = 1.5707963267f;
-template <> constexpr inline float PiOver4<float>    = 0.7853981633f;
+template <>
+constexpr inline float Pi<float> = 3.1415926535f;
+template <>
+constexpr inline float TwoPi<float> = 6.2831853071f;
+template <>
+constexpr inline float OneOverPi<float> = 0.3183098861f;
+template <>
+constexpr inline float OneOver2Pi<float> = 0.1591549430f;
+template <>
+constexpr inline float PiOver2<float> = 1.5707963267f;
+template <>
+constexpr inline float PiOver4<float> = 0.7853981633f;
 
 template <typename T>
-T Clamp(const T& x, const T& min, const T& max)
+[[nodiscard]] T
+Clamp(T x, T min, T max) noexcept
 {
-    static_assert(std::is_arithmetic<T>::value
-        || Detail::IsTaggedFloatingPoint<T>::value, "");
+    static_assert(std::is_arithmetic<T>::value || Detail::IsTaggedFloatingPoint<T>::value, "");
     POMDOG_ASSERT_MESSAGE(min < max, "In Clamp, maxval is out of range");
     if (x < min) {
         return min;
@@ -40,38 +52,40 @@ T Clamp(const T& x, const T& min, const T& max)
 }
 
 template <typename T>
-T Saturate(const T& x)
+[[nodiscard]] T
+Saturate(T x) noexcept
 {
     static_assert(std::is_floating_point<T>::value ||
-        Detail::IsTaggedFloatingPoint<T>::value,
+                      Detail::IsTaggedFloatingPoint<T>::value,
         "T is floaing point number");
     return Clamp(x, T{0}, T{1});
 }
 
 template <typename T>
-T Lerp(const T& source1, const T& source2, const T& amount) noexcept
+[[nodiscard]] T
+Lerp(T source1, T source2, T amount) noexcept
 {
     static_assert(std::is_floating_point<T>::value ||
-        Detail::IsTaggedFloatingPoint<T>::value,
+                      Detail::IsTaggedFloatingPoint<T>::value,
         "T is floaing point number");
     return source1 + amount * (source2 - source1);
 }
 
 template <typename T>
-T SmoothStep(const T& min, const T& max, const T& amount)
+[[nodiscard]] T
+SmoothStep(T min, T max, T amount) noexcept
 {
     static_assert(std::is_floating_point<T>::value ||
-        Detail::IsTaggedFloatingPoint<T>::value,
+                      Detail::IsTaggedFloatingPoint<T>::value,
         "T is floaing point number");
-    //POMDOG_ASSERT(amount >= 0);
-    //POMDOG_ASSERT(amount <= 1);
-    auto x = Saturate(amount);
-    auto scale = x * x * (T{3} - T{2} * x);
+    const auto x = Saturate(amount);
+    const auto scale = x * x * (T{3} - T{2} * x);
     return min + scale * (max - min);
 }
 
 template <typename T>
-Radian<T> ToRadians(const Degree<T>& degrees) noexcept
+[[nodiscard]] Radian<T>
+ToRadians(const Degree<T>& degrees) noexcept
 {
     static_assert(std::is_floating_point<T>::value, "");
     constexpr auto scaleFactor = Math::Pi<T> * (T{1} / T{180});
@@ -79,7 +93,8 @@ Radian<T> ToRadians(const Degree<T>& degrees) noexcept
 }
 
 template <typename T>
-Radian<T> ToRadians(const T& degrees) noexcept
+[[nodiscard]] Radian<T>
+ToRadians(const T& degrees) noexcept
 {
     static_assert(std::is_floating_point<T>::value, "");
     constexpr auto scaleFactor = Math::Pi<T> * (T{1} / T{180});
@@ -87,7 +102,8 @@ Radian<T> ToRadians(const T& degrees) noexcept
 }
 
 template <typename T>
-Degree<T> ToDegrees(const Radian<T>& radians) noexcept
+[[nodiscard]] Degree<T>
+ToDegrees(const Radian<T>& radians) noexcept
 {
     static_assert(std::is_floating_point<T>::value, "");
     constexpr auto scaleFactor = T{180} * (T{1} / Math::Pi<T>);
@@ -95,7 +111,8 @@ Degree<T> ToDegrees(const Radian<T>& radians) noexcept
 }
 
 template <typename T>
-Degree<T> ToDegrees(const T& radians) noexcept
+[[nodiscard]] Degree<T>
+ToDegrees(const T& radians) noexcept
 {
     static_assert(std::is_floating_point<T>::value, "");
     constexpr auto scaleFactor = T{180} * (T{1} / Math::Pi<T>);
