@@ -29,7 +29,7 @@ Texture2DMetal::Texture2DMetal(
         mipmapped:(levelCount > 1 ? YES: NO)];
 
     texture = [device newTextureWithDescriptor:descriptor];
-    if (texture == nil) {
+    if (texture == nullptr) {
         // FUS RO DAH!
         POMDOG_THROW_EXCEPTION(std::runtime_error,
             "Failed to create MTLTexture");
@@ -43,7 +43,7 @@ void Texture2DMetal::SetData(
     SurfaceFormat format,
     const void* pixelData)
 {
-    POMDOG_ASSERT(texture != nil);
+    POMDOG_ASSERT(texture != nullptr);
     POMDOG_ASSERT(pixelWidth > 0);
     POMDOG_ASSERT(pixelHeight > 0);
     POMDOG_ASSERT(levelCount >= 1);

@@ -27,7 +27,7 @@ public:
     id<MTLTexture> GetTexture() const noexcept;
 
 private:
-    id<MTLTexture> texture;
+    id<MTLTexture> texture = nullptr;
 };
 
 } // namespace Pomdog::Detail::Metal

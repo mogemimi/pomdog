@@ -39,7 +39,7 @@ RenderTarget2DMetal::RenderTarget2DMetal(
 //        [descriptor setMipmapLevelCount:];
 
         texture = [device newTextureWithDescriptor:descriptor];
-        if (texture == nil) {
+        if (texture == nullptr) {
             // FUS RO DAH!
             POMDOG_THROW_EXCEPTION(std::runtime_error,
                 "Failed to create MTLTexture");
@@ -67,7 +67,7 @@ RenderTarget2DMetal::RenderTarget2DMetal(
         [descriptor setResourceOptions:resourceOptions];
 
         depthStencilTexture = [device newTextureWithDescriptor:descriptor];
-        if (depthStencilTexture == nil) {
+        if (depthStencilTexture == nullptr) {
             // FUS RO DAH!
             POMDOG_THROW_EXCEPTION(std::runtime_error,
                 "Failed to create MTLTexture");
@@ -84,7 +84,7 @@ void RenderTarget2DMetal::GetData(
     [[maybe_unused]] std::int32_t levelCount,
     SurfaceFormat format) const
 {
-    POMDOG_ASSERT(texture != nil);
+    POMDOG_ASSERT(texture != nullptr);
     POMDOG_ASSERT(result != nullptr);
 
     auto const bytesPerPixel = SurfaceFormatHelper::ToBytesPerBlock(format);

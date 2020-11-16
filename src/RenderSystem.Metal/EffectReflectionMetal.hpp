@@ -15,7 +15,7 @@ public:
     std::vector<EffectConstantDescription> GetConstantBuffers() const override;
 
 private:
-    __strong MTLRenderPipelineReflection* reflection;
+    __strong MTLRenderPipelineReflection* reflection = nullptr;
 };
 
 } // namespace Pomdog::Detail::Metal

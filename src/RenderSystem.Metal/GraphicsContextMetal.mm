@@ -420,7 +420,7 @@ void GraphicsContextMetal::SetSampler(int index, const std::shared_ptr<NativeSam
 void GraphicsContextMetal::SetTexture(int index)
 {
     POMDOG_ASSERT(index >= 0);
-    POMDOG_ASSERT(commandEncoder != nil);
+    POMDOG_ASSERT(commandEncoder != nullptr);
 
 #if defined(DEBUG) && !defined(NDEBUG)
     POMDOG_ASSERT(!weakTextures.empty());
@@ -449,7 +449,7 @@ void GraphicsContextMetal::SetTexture(int index, const std::shared_ptr<Texture2D
     POMDOG_ASSERT(textureMetal == dynamic_cast<Texture2DMetal*>(textureIn->GetNativeTexture2D()));
     POMDOG_ASSERT(textureMetal->GetTexture() != nil);
 
-    POMDOG_ASSERT(commandEncoder != nil);
+    POMDOG_ASSERT(commandEncoder != nullptr);
     [commandEncoder setVertexTexture:textureMetal->GetTexture() atIndex:index];
     [commandEncoder setFragmentTexture:textureMetal->GetTexture() atIndex:index];
 }
@@ -471,7 +471,7 @@ void GraphicsContextMetal::SetTexture(int index, const std::shared_ptr<RenderTar
     POMDOG_ASSERT(renderTargetMetal == dynamic_cast<RenderTarget2DMetal*>(textureIn->GetNativeRenderTarget2D()));
     POMDOG_ASSERT(renderTargetMetal->GetTexture() != nil);
 
-    POMDOG_ASSERT(commandEncoder != nil);
+    POMDOG_ASSERT(commandEncoder != nullptr);
     [commandEncoder setVertexTexture:renderTargetMetal->GetTexture() atIndex:index];
     [commandEncoder setFragmentTexture:renderTargetMetal->GetTexture() atIndex:index];
 }

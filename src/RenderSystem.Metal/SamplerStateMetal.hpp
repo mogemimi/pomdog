@@ -17,7 +17,7 @@ public:
     id<MTLSamplerState> GetSamplerState() const noexcept;
 
 private:
-    id<MTLSamplerState> samplerState;
+    id<MTLSamplerState> samplerState = nullptr;
 };
 
 } // namespace Pomdog::Detail::Metal

@@ -86,14 +86,14 @@ private:
     std::vector<std::weak_ptr<Texture>> weakTextures;
     std::vector<std::weak_ptr<RenderTarget2D>> weakRenderTargets;
 #endif
-    dispatch_semaphore_t inflightSemaphore;
-    id<MTLCommandQueue> commandQueue;
-    id<MTLCommandBuffer> commandBuffer;
-    id<MTLRenderCommandEncoder> commandEncoder;
+    dispatch_semaphore_t inflightSemaphore = nullptr;
+    id<MTLCommandQueue> commandQueue = nullptr;
+    id<MTLCommandBuffer> commandBuffer = nullptr;
+    id<MTLRenderCommandEncoder> commandEncoder = nullptr;
     MTLPrimitiveType primitiveType;
-    id<MTLBuffer> indexBuffer;
+    id<MTLBuffer> indexBuffer = nullptr;
     MTLIndexType indexType;
-    MTKView* targetView;
+    MTKView* targetView = nullptr;
     bool isDrawing = false;
 };
 

@@ -28,9 +28,9 @@ public:
     MTLPrimitiveType GetPrimitiveType() const noexcept;
 
 private:
-    id<MTLRenderPipelineState> pipelineState;
-    id<MTLDepthStencilState> depthStencilState;
-    __strong MTLRenderPipelineReflection* reflection;
+    id<MTLRenderPipelineState> pipelineState = nullptr;
+    id<MTLDepthStencilState> depthStencilState = nullptr;
+    __strong MTLRenderPipelineReflection* reflection = nullptr;
     RasterizerStateMetal rasterizerState;
     MTLPrimitiveType primitiveType;
 };
