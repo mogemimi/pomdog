@@ -15,12 +15,12 @@ import (
 	"github.com/pkg/errors"
 )
 
-var options struct {
-	inplaceEdit bool
-}
-
 func main() {
-	flag.BoolVar(&options.inplaceEdit, "i", false, "Inplace edit files, if specified")
+	var options struct {
+		all bool
+	}
+
+	flag.BoolVar(&options.all, "all", false, "all file")
 	flag.Parse()
 
 	files, err := getFiles(flag.Args())
@@ -28,8 +28,53 @@ func main() {
 		log.Fatalln(err)
 	}
 
+	if options.all {
+		if s, err := os.Stat("./include/Pomdog"); err != nil {
+			log.Fatalln(err)
+		} else if !s.IsDir() {
+			log.Fatalln("include/Pomdog is not directory")
+		}
+
+		dirs := []string{
+			"examples/*/*/*.hpp",
+			"examples/*/*/*.cpp",
+			"examples/*/*/*.mm",
+			"examples/*/*/*/*.hpp",
+			"examples/*/*/*/*.cpp",
+			"include/Pomdog/*.hpp",
+			"include/Pomdog/*/*.hpp",
+			"include/Pomdog/*/*/*.hpp",
+			"include/Pomdog/*/*/*/*.hpp",
+			"src/*/*.hpp",
+			"src/*/*.cpp",
+			"src/*/*.mm",
+			"src/*/*/*.hpp",
+			"src/*/*/*.cpp",
+			"src/*/*/*.mm",
+			"src/*/*/*/*.hpp",
+			"src/*/*/*/*.cpp",
+			"src/*/*/*/*.mm",
+			"src/*/*/*/*/*.hpp",
+			"src/*/*/*/*/*.cpp",
+			"src/*/*/*/*/*.glsl",
+			"src/*/*/*/*/*.hlsl",
+			"src/*/*/*/*/*.metal",
+			"test/*.cpp",
+			"test/*/*.hpp",
+			"test/*/*.cpp",
+		}
+
+		for _, dir := range dirs {
+			f, err := filepath.Glob(dir)
+			if err != nil {
+				log.Fatalln(err)
+			}
+			files = append(files, f...)
+		}
+	}
+
 	for _, src := range files {
-		err := refactor(src, options.inplaceEdit)
+		err := refactor(src, true)
 		if err != nil {
 			log.Fatalln(err)
 		}
