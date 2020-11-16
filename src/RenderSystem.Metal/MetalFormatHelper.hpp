@@ -3,8 +3,8 @@
 #pragma once
 
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
-#import <Metal/MTLTexture.h>
 #import <Metal/MTLDepthStencil.h>
+#import <Metal/MTLTexture.h>
 
 namespace Pomdog::Detail::Metal {
 

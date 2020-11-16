@@ -28,8 +28,10 @@ namespace {
 MTLIndexType ToIndexType(IndexElementSize elementSize) noexcept
 {
     switch (elementSize) {
-    case IndexElementSize::SixteenBits: return MTLIndexTypeUInt16;
-    case IndexElementSize::ThirtyTwoBits: return MTLIndexTypeUInt32;
+    case IndexElementSize::SixteenBits:
+        return MTLIndexTypeUInt16;
+    case IndexElementSize::ThirtyTwoBits:
+        return MTLIndexTypeUInt32;
     }
     POMDOG_UNREACHABLE("Unsupported index element size");
 }
@@ -37,8 +39,10 @@ MTLIndexType ToIndexType(IndexElementSize elementSize) noexcept
 std::size_t ToIndexByteSize(MTLIndexType elementSize) noexcept
 {
     switch (elementSize) {
-    case MTLIndexTypeUInt16: return 2;
-    case MTLIndexTypeUInt32: return 4;
+    case MTLIndexTypeUInt16:
+        return 2;
+    case MTLIndexTypeUInt32:
+        return 4;
     }
     POMDOG_UNREACHABLE("Unsupported index element size");
 }
@@ -94,8 +98,8 @@ void CheckUnbindingRenderTargetsError(
     const std::vector<std::weak_ptr<RenderTarget2D>>& renderTargets,
     const std::vector<std::weak_ptr<Texture>>& textures)
 {
-    for (auto& renderTarget: renderTargets) {
-        for (auto& texture: textures) {
+    for (auto& renderTarget : renderTargets) {
+        for (auto& texture : textures) {
             if (!renderTarget.expired() && !texture.expired()) {
                 POMDOG_ASSERT(renderTarget.lock() != texture.lock());
             }
@@ -515,7 +519,7 @@ void GraphicsContextMetal::SetRenderPass(const RenderPass& renderPass)
     }
     else {
         int renderTargetIndex = 0;
-        for (const auto& renderTargetView: renderPass.RenderTargets) {
+        for (const auto& renderTargetView : renderPass.RenderTargets) {
             auto& renderTarget = std::get<0>(renderTargetView);
             auto& clearColor = std::get<1>(renderTargetView);
 

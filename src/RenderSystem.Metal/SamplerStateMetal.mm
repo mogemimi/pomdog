@@ -13,10 +13,14 @@ namespace {
 MTLSamplerAddressMode ToSamplerAddressMode(TextureAddressMode addressMode) noexcept
 {
     switch (addressMode) {
-    case TextureAddressMode::Wrap: return MTLSamplerAddressModeRepeat;
-    case TextureAddressMode::Clamp: return MTLSamplerAddressModeClampToEdge;
-    case TextureAddressMode::Mirror: return MTLSamplerAddressModeMirrorRepeat;
-    case TextureAddressMode::Border: return MTLSamplerAddressModeClampToZero;
+    case TextureAddressMode::Wrap:
+        return MTLSamplerAddressModeRepeat;
+    case TextureAddressMode::Clamp:
+        return MTLSamplerAddressModeClampToEdge;
+    case TextureAddressMode::Mirror:
+        return MTLSamplerAddressModeMirrorRepeat;
+    case TextureAddressMode::Border:
+        return MTLSamplerAddressModeClampToZero;
     }
     POMDOG_UNREACHABLE("Unsupported texture address mode");
 }

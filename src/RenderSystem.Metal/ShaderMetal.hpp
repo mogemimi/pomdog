@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "Pomdog/Graphics/Shader.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
+#include "Pomdog/Graphics/Shader.hpp"
 #import <Metal/MTLLibrary.h>
 
 namespace Pomdog::Detail {

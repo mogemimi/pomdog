@@ -20,10 +20,14 @@ namespace {
 MTLPrimitiveType ToPrimitiveType(PrimitiveTopology primitiveTopology) noexcept
 {
     switch (primitiveTopology) {
-    case PrimitiveTopology::TriangleStrip: return MTLPrimitiveTypeTriangleStrip;
-    case PrimitiveTopology::TriangleList: return MTLPrimitiveTypeTriangle;
-    case PrimitiveTopology::LineList: return MTLPrimitiveTypeLine;
-    case PrimitiveTopology::LineStrip: return MTLPrimitiveTypeLineStrip;
+    case PrimitiveTopology::TriangleStrip:
+        return MTLPrimitiveTypeTriangleStrip;
+    case PrimitiveTopology::TriangleList:
+        return MTLPrimitiveTypeTriangle;
+    case PrimitiveTopology::LineList:
+        return MTLPrimitiveTypeLine;
+    case PrimitiveTopology::LineStrip:
+        return MTLPrimitiveTypeLineStrip;
     }
     POMDOG_UNREACHABLE("Unsupported primitive topology");
 }
@@ -42,14 +46,22 @@ MTLVertexStepFunction ToVertexStepFunction(InputClassification classification) n
 MTLVertexFormat ToVertexFormat(InputElementFormat format) noexcept
 {
     switch (format) {
-    case InputElementFormat::Float: return MTLVertexFormatFloat;
-    case InputElementFormat::Float2: return MTLVertexFormatFloat2;
-    case InputElementFormat::Float3: return MTLVertexFormatFloat3;
-    case InputElementFormat::Float4: return MTLVertexFormatFloat4;
-    case InputElementFormat::Int4: return MTLVertexFormatInt4;
-    case InputElementFormat::Byte4: return MTLVertexFormatUChar4;
-    case InputElementFormat::HalfFloat2: return MTLVertexFormatHalf2;
-    case InputElementFormat::HalfFloat4: return MTLVertexFormatHalf4;
+    case InputElementFormat::Float:
+        return MTLVertexFormatFloat;
+    case InputElementFormat::Float2:
+        return MTLVertexFormatFloat2;
+    case InputElementFormat::Float3:
+        return MTLVertexFormatFloat3;
+    case InputElementFormat::Float4:
+        return MTLVertexFormatFloat4;
+    case InputElementFormat::Int4:
+        return MTLVertexFormatInt4;
+    case InputElementFormat::Byte4:
+        return MTLVertexFormatUChar4;
+    case InputElementFormat::HalfFloat2:
+        return MTLVertexFormatHalf2;
+    case InputElementFormat::HalfFloat4:
+        return MTLVertexFormatHalf4;
     }
     POMDOG_UNREACHABLE("Unsupported input element format");
 }
@@ -59,7 +71,7 @@ MTLVertexDescriptor* ToVertexDescriptor(const InputLayoutDescription& inputLayou
     MTLVertexDescriptor* vertexDescriptor = [MTLVertexDescriptor new];
 
     int attributeIndex = 0;
-    for (auto & element : inputLayout.InputElements) {
+    for (auto& element : inputLayout.InputElements) {
         const auto slotIndex = element.InputSlot + VertexBufferSlotOffset;
         POMDOG_ASSERT(slotIndex < MaxVertexBufferSlotCount);
 
@@ -85,11 +97,16 @@ MTLVertexDescriptor* ToVertexDescriptor(const InputLayoutDescription& inputLayou
 MTLBlendOperation ToBlendOperation(BlendOperation blendOperation) noexcept
 {
     switch (blendOperation) {
-    case BlendOperation::Add: return MTLBlendOperationAdd;
-    case BlendOperation::Subtract: return MTLBlendOperationSubtract;
-    case BlendOperation::ReverseSubtract: return MTLBlendOperationReverseSubtract;
-    case BlendOperation::Min: return MTLBlendOperationMin;
-    case BlendOperation::Max: return MTLBlendOperationMax;
+    case BlendOperation::Add:
+        return MTLBlendOperationAdd;
+    case BlendOperation::Subtract:
+        return MTLBlendOperationSubtract;
+    case BlendOperation::ReverseSubtract:
+        return MTLBlendOperationReverseSubtract;
+    case BlendOperation::Min:
+        return MTLBlendOperationMin;
+    case BlendOperation::Max:
+        return MTLBlendOperationMax;
     }
     POMDOG_UNREACHABLE("Unsupported blend operation");
 }
@@ -97,25 +114,42 @@ MTLBlendOperation ToBlendOperation(BlendOperation blendOperation) noexcept
 MTLBlendFactor ToBlendFactor(Blend blend) noexcept
 {
     switch (blend) {
-    case Blend::Zero: return MTLBlendFactorZero;
-    case Blend::One: return MTLBlendFactorOne;
-    case Blend::SourceColor: return MTLBlendFactorSourceColor;
-    case Blend::InverseSourceColor: return MTLBlendFactorOneMinusSourceColor;
-    case Blend::SourceAlpha: return MTLBlendFactorSourceAlpha;
-    case Blend::InverseSourceAlpha: return MTLBlendFactorOneMinusSourceAlpha;
-    case Blend::DestinationAlpha: return MTLBlendFactorDestinationAlpha;
-    case Blend::InverseDestinationAlpha: return MTLBlendFactorOneMinusDestinationAlpha;
-    case Blend::DestinationColor: return MTLBlendFactorDestinationColor;
-    case Blend::InverseDestinationColor: return MTLBlendFactorOneMinusDestinationColor;
-    case Blend::SourceAlphaSaturation: return MTLBlendFactorSourceAlphaSaturated;
-    case Blend::BlendFactor: return MTLBlendFactorBlendColor;
-    case Blend::InvereseBlendFactor: return MTLBlendFactorOneMinusBlendColor;
+    case Blend::Zero:
+        return MTLBlendFactorZero;
+    case Blend::One:
+        return MTLBlendFactorOne;
+    case Blend::SourceColor:
+        return MTLBlendFactorSourceColor;
+    case Blend::InverseSourceColor:
+        return MTLBlendFactorOneMinusSourceColor;
+    case Blend::SourceAlpha:
+        return MTLBlendFactorSourceAlpha;
+    case Blend::InverseSourceAlpha:
+        return MTLBlendFactorOneMinusSourceAlpha;
+    case Blend::DestinationAlpha:
+        return MTLBlendFactorDestinationAlpha;
+    case Blend::InverseDestinationAlpha:
+        return MTLBlendFactorOneMinusDestinationAlpha;
+    case Blend::DestinationColor:
+        return MTLBlendFactorDestinationColor;
+    case Blend::InverseDestinationColor:
+        return MTLBlendFactorOneMinusDestinationColor;
+    case Blend::SourceAlphaSaturation:
+        return MTLBlendFactorSourceAlphaSaturated;
+    case Blend::BlendFactor:
+        return MTLBlendFactorBlendColor;
+    case Blend::InvereseBlendFactor:
+        return MTLBlendFactorOneMinusBlendColor;
     // case Blend::BlendFactorAlpha: return MTLBlendFactorBlendAlpha;
     // case Blend::InvereseBlendFactorAlpha: return MTLBlendFactorOneMinusBlendAlpha;
-    case Blend::Source1Color: return MTLBlendFactorSource1Color;
-    case Blend::InverseSource1Color: return MTLBlendFactorOneMinusSource1Color;
-    case Blend::Source1Alpha: return MTLBlendFactorSource1Alpha;
-    case Blend::InverseSource1Alpha: return MTLBlendFactorOneMinusSource1Alpha;
+    case Blend::Source1Color:
+        return MTLBlendFactorSource1Color;
+    case Blend::InverseSource1Color:
+        return MTLBlendFactorOneMinusSource1Color;
+    case Blend::Source1Alpha:
+        return MTLBlendFactorSource1Alpha;
+    case Blend::InverseSource1Alpha:
+        return MTLBlendFactorOneMinusSource1Alpha;
     }
     POMDOG_UNREACHABLE("Unsupported blend factor");
 }
@@ -123,14 +157,22 @@ MTLBlendFactor ToBlendFactor(Blend blend) noexcept
 MTLStencilOperation ToStencilOperation(StencilOperation operation) noexcept
 {
     switch (operation) {
-    case StencilOperation::Keep: return MTLStencilOperationKeep;
-    case StencilOperation::Zero: return MTLStencilOperationZero;
-    case StencilOperation::Replace: return MTLStencilOperationReplace;
-    case StencilOperation::IncrementSaturation: return MTLStencilOperationIncrementClamp;
-    case StencilOperation::DecrementSaturation: return MTLStencilOperationDecrementClamp;
-    case StencilOperation::Invert: return MTLStencilOperationInvert;
-    case StencilOperation::Increment: return MTLStencilOperationIncrementWrap;
-    case StencilOperation::Decrement: return MTLStencilOperationDecrementWrap;
+    case StencilOperation::Keep:
+        return MTLStencilOperationKeep;
+    case StencilOperation::Zero:
+        return MTLStencilOperationZero;
+    case StencilOperation::Replace:
+        return MTLStencilOperationReplace;
+    case StencilOperation::IncrementSaturation:
+        return MTLStencilOperationIncrementClamp;
+    case StencilOperation::DecrementSaturation:
+        return MTLStencilOperationDecrementClamp;
+    case StencilOperation::Invert:
+        return MTLStencilOperationInvert;
+    case StencilOperation::Increment:
+        return MTLStencilOperationIncrementWrap;
+    case StencilOperation::Decrement:
+        return MTLStencilOperationDecrementWrap;
     }
     POMDOG_UNREACHABLE("Unsupported stencil operation");
 }
@@ -152,9 +194,12 @@ void ToDepthStencilOperation(
 MTLCullMode ToCullMode(CullMode cullMode) noexcept
 {
     switch (cullMode) {
-    case CullMode::ClockwiseFace: return MTLCullModeFront;
-    case CullMode::CounterClockwiseFace: return MTLCullModeBack;
-    case CullMode::None: return MTLCullModeNone;
+    case CullMode::ClockwiseFace:
+        return MTLCullModeFront;
+    case CullMode::CounterClockwiseFace:
+        return MTLCullModeBack;
+    case CullMode::None:
+        return MTLCullModeNone;
     }
     POMDOG_UNREACHABLE("Unsupported cull mode");
 }
@@ -162,8 +207,10 @@ MTLCullMode ToCullMode(CullMode cullMode) noexcept
 MTLTriangleFillMode ToFillMode(FillMode fillMode) noexcept
 {
     switch (fillMode) {
-    case FillMode::WireFrame: return MTLTriangleFillModeLines;
-    case FillMode::Solid: return MTLTriangleFillModeFill;
+    case FillMode::WireFrame:
+        return MTLTriangleFillModeLines;
+    case FillMode::Solid:
+        return MTLTriangleFillModeFill;
     }
     POMDOG_UNREACHABLE("Unsupported fill mode");
 }
@@ -237,7 +284,7 @@ PipelineStateMetal::PipelineStateMetal(
     }
 
     std::size_t index = 0;
-    for (auto & renderTarget : description.BlendState.RenderTargets) {
+    for (auto& renderTarget : description.BlendState.RenderTargets) {
         if (index >= description.RenderTargetViewFormats.size()) {
             break;
         }

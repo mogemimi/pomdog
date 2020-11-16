@@ -7,8 +7,8 @@
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
-#include <algorithm>
 #import <Metal/MTLDevice.h>
+#include <algorithm>
 
 namespace Pomdog::Detail::Metal {
 
