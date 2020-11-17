@@ -30,7 +30,7 @@ namespace {
 #include "Shaders/Metal.Embedded/ScreenQuad_VS.inc.hpp"
 #include "Shaders/Metal.Embedded/Vignette_PS.inc.hpp"
 
-struct VignetteBlock {
+struct VignetteBlock final {
     float Intensity;
 };
 

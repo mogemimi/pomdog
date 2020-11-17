@@ -31,7 +31,7 @@ namespace {
 #include "Shaders/Metal.Embedded/FishEye_PS.inc.hpp"
 #include "Shaders/Metal.Embedded/ScreenQuad_VS.inc.hpp"
 
-struct FishEyeBlock {
+struct FishEyeBlock final {
     float Strength;
 };
 
