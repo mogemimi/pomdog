@@ -85,9 +85,10 @@ void VignetteEffect::SetIntensity(float intensity)
     constantBufferVignette->SetValue(std::move(block));
 }
 
-void VignetteEffect::Apply(GraphicsCommandList& commandList,
-    std::shared_ptr<RenderTarget2D> const& source,
-    std::shared_ptr<ConstantBuffer> const& constantBuffer)
+void VignetteEffect::Apply(
+    GraphicsCommandList& commandList,
+    const std::shared_ptr<RenderTarget2D>& source,
+    const std::shared_ptr<ConstantBuffer>& constantBuffer)
 {
     POMDOG_ASSERT(source);
     POMDOG_ASSERT(constantBuffer);

@@ -66,9 +66,10 @@ GrayscaleEffect::GrayscaleEffect(
         .Build();
 }
 
-void GrayscaleEffect::Apply(GraphicsCommandList& commandList,
-    std::shared_ptr<RenderTarget2D> const& source,
-    std::shared_ptr<ConstantBuffer> const& constantBuffer)
+void GrayscaleEffect::Apply(
+    GraphicsCommandList& commandList,
+    const std::shared_ptr<RenderTarget2D>& source,
+    const std::shared_ptr<ConstantBuffer>& constantBuffer)
 {
     POMDOG_ASSERT(source);
     POMDOG_ASSERT(constantBuffer);

@@ -87,9 +87,10 @@ void FishEyeEffect::SetStrength(float strength)
     constantBufferFishEye->SetValue(std::move(block));
 }
 
-void FishEyeEffect::Apply(GraphicsCommandList& commandList,
-    std::shared_ptr<RenderTarget2D> const& source,
-    std::shared_ptr<ConstantBuffer> const& constantBuffer)
+void FishEyeEffect::Apply(
+    GraphicsCommandList& commandList,
+    const std::shared_ptr<RenderTarget2D>& source,
+    const std::shared_ptr<ConstantBuffer>& constantBuffer)
 {
     POMDOG_ASSERT(source);
     POMDOG_ASSERT(constantBuffer);
