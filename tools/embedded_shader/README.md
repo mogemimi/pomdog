@@ -31,7 +31,7 @@ cd path/to/pomdog
 # Convert a pixel shader from HLSL to embedded C++ code
 ./tools/embedded_shader/embedded_shader \
     -fxc "C:\Program Files (x86)\Windows Kits\10\bin\10.0.17763.0\x64\fxc.exe" \
-    -entrypoint SpriteBatchPS \
+    -entrypoint LineBatchPS \
     -profile ps_4_0 \
     src/Experimental/Graphics/Shaders/HLSL/LineBatch_PS.hlsl
 
