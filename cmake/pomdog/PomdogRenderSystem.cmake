@@ -9,15 +9,7 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/RenderSystem/GraphicsCommandQueueImmediate.cpp
     ${POMDOG_SRC_DIR}/RenderSystem/GraphicsCommandQueueImmediate.hpp
     ${POMDOG_SRC_DIR}/RenderSystem/NativeBuffer.hpp
-    ${POMDOG_SRC_DIR}/RenderSystem/NativeEffectReflection.hpp
-    ${POMDOG_SRC_DIR}/RenderSystem/NativeGraphicsCommandList.hpp
-    ${POMDOG_SRC_DIR}/RenderSystem/NativeGraphicsCommandQueue.hpp
     ${POMDOG_SRC_DIR}/RenderSystem/NativeGraphicsContext.hpp
-    ${POMDOG_SRC_DIR}/RenderSystem/NativeGraphicsDevice.hpp
-    ${POMDOG_SRC_DIR}/RenderSystem/NativePipelineState.hpp
-    ${POMDOG_SRC_DIR}/RenderSystem/NativeRenderTarget2D.hpp
-    ${POMDOG_SRC_DIR}/RenderSystem/NativeSamplerState.hpp
-    ${POMDOG_SRC_DIR}/RenderSystem/NativeTexture2D.hpp
     ${POMDOG_SRC_DIR}/RenderSystem/ShaderBytecode.hpp
     ${POMDOG_SRC_DIR}/RenderSystem/ShaderCompileOptions.hpp
     ${POMDOG_SRC_DIR}/RenderSystem/SurfaceFormatHelper.cpp

@@ -13,8 +13,6 @@
 #include "../RenderSystem/BufferHelper.hpp"
 #include "../RenderSystem/GraphicsCapabilities.hpp"
 #include "../RenderSystem/GraphicsCommandListImmediate.hpp"
-#include "../RenderSystem/NativeRenderTarget2D.hpp"
-#include "../RenderSystem/NativeTexture2D.hpp"
 #include "../Utility/ScopeGuard.hpp"
 #include "Pomdog/Basic/Platform.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
@@ -153,8 +151,7 @@ void SetViewport(
     glViewport(viewport.TopLeftX, viewportY, viewport.Width, viewport.Height);
     POMDOG_CHECK_ERROR_GL4("glViewport");
 
-    static_assert(std::is_same<GLfloat, decltype(viewport.MinDepth)>::value
-        && std::is_same<GLfloat, decltype(viewport.MaxDepth)>::value,
+    static_assert(std::is_same<GLfloat, decltype(viewport.MinDepth)>::value && std::is_same<GLfloat, decltype(viewport.MaxDepth)>::value,
         "NOTE: You can use glDepthRange instead of glDepthRangef");
 
     POMDOG_ASSERT(!std::isinf(viewport.MinDepth));
@@ -261,14 +258,13 @@ void SetRenderTargets(
         if (renderTarget == nullptr) {
             break;
         }
-        auto const nativeRenderTarget = static_cast<RenderTarget2DGL4*>(renderTarget->GetNativeRenderTarget2D());
-        POMDOG_ASSERT(nativeRenderTarget != nullptr);
-        POMDOG_ASSERT(nativeRenderTarget == dynamic_cast<RenderTarget2DGL4*>(renderTarget->GetNativeRenderTarget2D()));
+        const auto renderTargetGL4 = std::static_pointer_cast<RenderTarget2DGL4>(renderTarget);
+        POMDOG_ASSERT(renderTargetGL4 != nullptr);
+        POMDOG_ASSERT(renderTargetGL4 == std::dynamic_pointer_cast<RenderTarget2DGL4>(renderTarget));
 
-        nativeRenderTarget->BindToFramebuffer(ToColorAttachment(index));
+        renderTargetGL4->BindToFramebuffer(ToColorAttachment(index));
 
-        std::shared_ptr<RenderTarget2DGL4> shared(renderTarget, nativeRenderTarget);
-        renderTargets[index] = std::move(shared);
+        renderTargets[index] = std::move(renderTargetGL4);
         attachments[index] = ToColorAttachment(index);
         ++index;
     }
@@ -487,7 +483,7 @@ void GraphicsContextGL4::DrawIndexed(
 
     // Bind index buffer
     POMDOG_ASSERT(indexBuffer);
-    auto indexBufferGL = dynamic_cast<IndexBufferGL4*>(indexBuffer->GetNativeIndexBuffer());
+    auto indexBufferGL = dynamic_cast<IndexBufferGL4*>(indexBuffer->GetNativeBuffer());
     POMDOG_ASSERT(indexBufferGL != nullptr);
     indexBufferGL->BindBuffer();
 
@@ -562,7 +558,7 @@ void GraphicsContextGL4::DrawIndexedInstanced(
 
     // Bind index buffer
     POMDOG_ASSERT(indexBuffer);
-    auto indexBufferGL = dynamic_cast<IndexBufferGL4*>(indexBuffer->GetNativeIndexBuffer());
+    auto indexBufferGL = dynamic_cast<IndexBufferGL4*>(indexBuffer->GetNativeBuffer());
     POMDOG_ASSERT(indexBufferGL != nullptr);
     indexBufferGL->BindBuffer();
 
@@ -662,12 +658,13 @@ void GraphicsContextGL4::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& inde
     indexBuffer = indexBufferIn;
 }
 
-void GraphicsContextGL4::SetPipelineState(const std::shared_ptr<NativePipelineState>& pipelineStateIn)
+void GraphicsContextGL4::SetPipelineState(const std::shared_ptr<PipelineState>& pipelineStateIn)
 {
     POMDOG_ASSERT(pipelineStateIn);
     if (pipelineState != pipelineStateIn) {
-        this->pipelineState = std::dynamic_pointer_cast<PipelineStateGL4>(pipelineStateIn);
-        POMDOG_ASSERT(pipelineState);
+        pipelineState = std::static_pointer_cast<PipelineStateGL4>(pipelineStateIn);
+        POMDOG_ASSERT(pipelineState != nullptr);
+        POMDOG_ASSERT(pipelineState == std::dynamic_pointer_cast<PipelineStateGL4>(pipelineStateIn));
 
         primitiveTopology = pipelineState->GetPrimitiveTopology();
         needToApplyPipelineState = true;
@@ -703,7 +700,7 @@ void GraphicsContextGL4::SetConstantBuffer(
     POMDOG_CHECK_ERROR_GL4("glBindBufferRange");
 }
 
-void GraphicsContextGL4::SetSampler(int index, const std::shared_ptr<NativeSamplerState>& sampler)
+void GraphicsContextGL4::SetSampler(int index, const std::shared_ptr<SamplerState>& sampler)
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(sampler != nullptr);
@@ -765,10 +762,10 @@ void GraphicsContextGL4::SetTexture(int index, const std::shared_ptr<Texture2D>&
 
     textures[index] = textureType;
 
-    auto textureGL4 = static_cast<Texture2DGL4*>(textureIn->GetNativeTexture2D());
+    auto textureGL4 = std::static_pointer_cast<Texture2DGL4>(textureIn);
 
     POMDOG_ASSERT(textureGL4 != nullptr);
-    POMDOG_ASSERT(textureGL4 == dynamic_cast<Texture2DGL4*>(textureIn->GetNativeTexture2D()));
+    POMDOG_ASSERT(textureGL4 == std::dynamic_pointer_cast<Texture2DGL4>(textureIn));
 
     ApplyTexture2D(index, textureGL4->GetTextureHandle());
 }
@@ -794,10 +791,10 @@ void GraphicsContextGL4::SetTexture(int index, const std::shared_ptr<RenderTarge
 
     textures[index] = textureType;
 
-    auto renderTargetGL4 = static_cast<RenderTarget2DGL4*>(textureIn->GetNativeRenderTarget2D());
+    auto renderTargetGL4 = std::static_pointer_cast<RenderTarget2DGL4>(textureIn);
 
     POMDOG_ASSERT(renderTargetGL4 != nullptr);
-    POMDOG_ASSERT(renderTargetGL4 == dynamic_cast<RenderTarget2DGL4*>(textureIn->GetNativeRenderTarget2D()));
+    POMDOG_ASSERT(renderTargetGL4 == std::dynamic_pointer_cast<RenderTarget2DGL4>(textureIn));
 
     ApplyTexture2D(index, renderTargetGL4->GetTextureHandle());
 }

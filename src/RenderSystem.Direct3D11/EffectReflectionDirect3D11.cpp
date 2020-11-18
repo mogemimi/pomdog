@@ -150,7 +150,8 @@ EffectReflectionDirect3D11::EffectReflectionDirect3D11(
     }
 }
 
-std::vector<EffectConstantDescription> EffectReflectionDirect3D11::GetConstantBuffers() const
+std::vector<EffectConstantDescription>
+EffectReflectionDirect3D11::GetConstantBuffers() const noexcept
 {
     std::vector<EffectConstantDescription> result;
 

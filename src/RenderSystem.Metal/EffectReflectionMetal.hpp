@@ -2,17 +2,18 @@
 
 #pragma once
 
-#include "../RenderSystem/NativeEffectReflection.hpp"
+#include "Pomdog/Graphics/EffectReflection.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #import <Metal/Metal.h>
 
 namespace Pomdog::Detail::Metal {
 
-class EffectReflectionMetal final : public NativeEffectReflection {
+class EffectReflectionMetal final : public EffectReflection {
 public:
     explicit EffectReflectionMetal(MTLRenderPipelineReflection* reflectionIn);
 
-    std::vector<EffectConstantDescription> GetConstantBuffers() const override;
+    std::vector<EffectConstantDescription>
+    GetConstantBuffers() const noexcept override;
 
 private:
     __strong MTLRenderPipelineReflection* reflection = nullptr;

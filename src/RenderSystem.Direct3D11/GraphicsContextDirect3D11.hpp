@@ -68,7 +68,7 @@ public:
 
     void SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer) override;
 
-    void SetPipelineState(const std::shared_ptr<NativePipelineState>& pipelineState) override;
+    void SetPipelineState(const std::shared_ptr<PipelineState>& pipelineState) override;
 
     void SetConstantBuffer(
         int index,
@@ -76,7 +76,7 @@ public:
         std::size_t offset,
         std::size_t sizeInBytes) override;
 
-    void SetSampler(int index, const std::shared_ptr<NativeSamplerState>& sampler) override;
+    void SetSampler(int index, const std::shared_ptr<SamplerState>& sampler) override;
 
     void SetTexture(int index) override;
 

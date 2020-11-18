@@ -3,13 +3,13 @@
 #pragma once
 
 #include "PrerequisitesDirect3D11.hpp"
-#include "../RenderSystem/NativePipelineState.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
+#include "Pomdog/Graphics/PipelineState.hpp"
 #include <wrl/client.h>
 
 namespace Pomdog::Detail::Direct3D11 {
 
-class PipelineStateDirect3D11 final : public NativePipelineState {
+class PipelineStateDirect3D11 final : public PipelineState {
 public:
     PipelineStateDirect3D11(
         ID3D11Device* device,

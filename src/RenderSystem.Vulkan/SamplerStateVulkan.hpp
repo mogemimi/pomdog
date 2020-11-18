@@ -2,13 +2,13 @@
 
 #pragma once
 
-#include "../RenderSystem/NativeSamplerState.hpp"
+#include "Pomdog/Graphics/SamplerState.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include <vulkan/vulkan.h>
 
 namespace Pomdog::Detail::Vulkan {
 
-class SamplerStateVulkan final : public NativeSamplerState {
+class SamplerStateVulkan final : public SamplerState {
 public:
     SamplerStateVulkan(
         ::VkDevice device,

@@ -2,6 +2,7 @@
 
 #include "GraphicsCommandListImmediate.hpp"
 #include "NativeGraphicsContext.hpp"
+#include "Pomdog/Graphics/ConstantBuffer.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/RenderPass.hpp"
 #include "Pomdog/Graphics/Viewport.hpp"
@@ -114,7 +115,7 @@ struct SetIndexBufferCommand final : public GraphicsCommand {
 };
 
 struct SetPipelineStateCommand final : public GraphicsCommand {
-    std::shared_ptr<NativePipelineState> pipelineState;
+    std::shared_ptr<PipelineState> pipelineState;
 
     void Execute(NativeGraphicsContext& graphicsContext) override
     {
@@ -138,7 +139,7 @@ struct SetConstantBufferCommand final : public GraphicsCommand {
 };
 
 struct SetSamplerStateCommand final : public GraphicsCommand {
-    std::shared_ptr<NativeSamplerState> sampler;
+    std::shared_ptr<SamplerState> sampler;
     int slotIndex;
 
     void Execute(NativeGraphicsContext& graphicsContext) override
@@ -231,9 +232,18 @@ void GraphicsCommandListImmediate::Draw(
 }
 
 void GraphicsCommandListImmediate::DrawIndexed(
+    const std::shared_ptr<IndexBuffer>& indexBuffer,
     std::size_t indexCount,
     std::size_t startIndexLocation)
 {
+    {
+        POMDOG_ASSERT(indexBuffer);
+        auto command = std::make_unique<SetIndexBufferCommand>();
+        command->commandType = GraphicsCommandType::SetIndexBufferCommand;
+        command->indexBuffer = indexBuffer;
+        commands.push_back(std::move(command));
+    }
+
     POMDOG_ASSERT(indexCount >= 1);
     auto command = std::make_unique<DrawIndexedCommand>();
     command->commandType = GraphicsCommandType::DrawIndexedCommand;
@@ -259,11 +269,20 @@ void GraphicsCommandListImmediate::DrawInstanced(
 }
 
 void GraphicsCommandListImmediate::DrawIndexedInstanced(
+    const std::shared_ptr<IndexBuffer>& indexBuffer,
     std::size_t indexCountPerInstance,
     std::size_t instanceCount,
     std::size_t startIndexLocation,
     std::size_t startInstanceLocation)
 {
+    {
+        POMDOG_ASSERT(indexBuffer);
+        auto command = std::make_unique<SetIndexBufferCommand>();
+        command->commandType = GraphicsCommandType::SetIndexBufferCommand;
+        command->indexBuffer = indexBuffer;
+        commands.push_back(std::move(command));
+    }
+
     POMDOG_ASSERT(indexCountPerInstance >= 1);
     auto command = std::make_unique<DrawIndexedInstancedCommand>();
     command->commandType = GraphicsCommandType::DrawIndexedInstancedCommand;
@@ -312,6 +331,13 @@ void GraphicsCommandListImmediate::SetBlendFactor(const Vector4& blendFactor)
 
 void GraphicsCommandListImmediate::SetVertexBuffer(
     int index,
+    const std::shared_ptr<VertexBuffer>& vertexBuffer)
+{
+    SetVertexBuffer(index, vertexBuffer, 0);
+}
+
+void GraphicsCommandListImmediate::SetVertexBuffer(
+    int index,
     const std::shared_ptr<VertexBuffer>& vertexBuffer,
     std::size_t offset)
 {
@@ -326,16 +352,7 @@ void GraphicsCommandListImmediate::SetVertexBuffer(
     commands.push_back(std::move(command));
 }
 
-void GraphicsCommandListImmediate::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer)
-{
-    POMDOG_ASSERT(indexBuffer);
-    auto command = std::make_unique<SetIndexBufferCommand>();
-    command->commandType = GraphicsCommandType::SetIndexBufferCommand;
-    command->indexBuffer = indexBuffer;
-    commands.push_back(std::move(command));
-}
-
-void GraphicsCommandListImmediate::SetPipelineState(const std::shared_ptr<NativePipelineState>& pipelineState)
+void GraphicsCommandListImmediate::SetPipelineState(const std::shared_ptr<PipelineState>& pipelineState)
 {
     POMDOG_ASSERT(pipelineState);
     auto command = std::make_unique<SetPipelineStateCommand>();
@@ -346,30 +363,50 @@ void GraphicsCommandListImmediate::SetPipelineState(const std::shared_ptr<Native
 
 void GraphicsCommandListImmediate::SetConstantBuffer(
     int index,
-    const std::shared_ptr<NativeBuffer>& constantBuffer,
-    std::size_t offset,
-    std::size_t sizeInBytes)
+    const std::shared_ptr<ConstantBuffer>& constantBuffer)
+{
+    POMDOG_ASSERT(index >= 0);
+    POMDOG_ASSERT(constantBuffer);
+
+    std::shared_ptr<NativeBuffer> nativeBuffer(constantBuffer, constantBuffer->GetNativeBuffer());
+
+    auto command = std::make_unique<SetConstantBufferCommand>();
+    command->commandType = GraphicsCommandType::SetConstantBufferCommand;
+    command->constantBuffer = nativeBuffer;
+    command->slotIndex = index;
+    command->offset = 0;
+    command->sizeInBytes = constantBuffer->GetSizeInBytes();
+    commands.push_back(std::move(command));
+}
+
+void GraphicsCommandListImmediate::SetConstantBuffer(
+    int index,
+    const std::shared_ptr<ConstantBuffer>& constantBuffer,
+    std::size_t offset)
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(constantBuffer);
     POMDOG_ASSERT(offset >= 0);
+
+    std::shared_ptr<NativeBuffer> nativeBuffer(constantBuffer, constantBuffer->GetNativeBuffer());
+
     auto command = std::make_unique<SetConstantBufferCommand>();
     command->commandType = GraphicsCommandType::SetConstantBufferCommand;
-    command->constantBuffer = constantBuffer;
+    command->constantBuffer = nativeBuffer;
     command->slotIndex = index;
     command->offset = offset;
-    command->sizeInBytes = sizeInBytes;
+    command->sizeInBytes = constantBuffer->GetSizeInBytes() - offset;
     commands.push_back(std::move(command));
 }
 
-void GraphicsCommandListImmediate::SetSampler(int index, std::shared_ptr<NativeSamplerState>&& sampler)
+void GraphicsCommandListImmediate::SetSamplerState(int index, const std::shared_ptr<SamplerState>& samplerState)
 {
     POMDOG_ASSERT(index >= 0);
-    POMDOG_ASSERT(sampler);
+    POMDOG_ASSERT(samplerState != nullptr);
     auto command = std::make_unique<SetSamplerStateCommand>();
     command->commandType = GraphicsCommandType::SetSamplerStateCommand;
     command->slotIndex = index;
-    command->sampler = std::move(sampler);
+    command->sampler = samplerState;
     commands.push_back(std::move(command));
 }
 

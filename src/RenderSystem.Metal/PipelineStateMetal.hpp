@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "../RenderSystem/NativePipelineState.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
+#include "Pomdog/Graphics/PipelineState.hpp"
 #import <Metal/MTLDepthStencil.h>
 #import <Metal/MTLRenderCommandEncoder.h>
 #import <Metal/MTLRenderPipeline.h>
@@ -17,7 +17,7 @@ struct RasterizerStateMetal final {
     MTLTriangleFillMode fillMode = MTLTriangleFillModeFill;
 };
 
-class PipelineStateMetal final : public NativePipelineState {
+class PipelineStateMetal final : public PipelineState {
 public:
     PipelineStateMetal(
         id<MTLDevice> device,

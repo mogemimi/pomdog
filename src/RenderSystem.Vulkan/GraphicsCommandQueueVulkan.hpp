@@ -2,13 +2,13 @@
 
 #pragma once
 
-#include "../RenderSystem/NativeGraphicsCommandQueue.hpp"
+#include "Pomdog/Graphics/GraphicsCommandQueue.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include <vulkan/vulkan.h>
 
 namespace Pomdog::Detail::Vulkan {
 
-class GraphicsCommandQueueVulkan final : public NativeGraphicsCommandQueue {
+class GraphicsCommandQueueVulkan final : public GraphicsCommandQueue {
 public:
     void Reset();
 

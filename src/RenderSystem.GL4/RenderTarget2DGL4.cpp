@@ -3,6 +3,7 @@
 #include "RenderTarget2DGL4.hpp"
 #include "ErrorChecker.hpp"
 #include "Pomdog/Graphics/DepthFormat.hpp"
+#include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog::Detail::GL4 {
@@ -29,16 +30,22 @@ GLenum ToDepthStencilFormat(DepthFormat depthFormat) noexcept
 } // namespace
 
 RenderTarget2DGL4::RenderTarget2DGL4(
-    std::int32_t pixelWidth,
-    std::int32_t pixelHeight,
-    std::int32_t levelCount,
-    SurfaceFormat format,
-    DepthFormat depthStencilFormat,
+    std::int32_t pixelWidthIn,
+    std::int32_t pixelHeightIn,
+    std::int32_t levelCountIn,
+    SurfaceFormat formatIn,
+    DepthFormat depthStencilFormatIn,
     std::int32_t multiSampleCount)
-    : texture(pixelWidth, pixelHeight, levelCount, format)
-    , generateMipmap(levelCount > 1)
-    , multiSampleEnabled(multiSampleCount > 1)
+    : texture(pixelWidthIn, pixelHeightIn, levelCountIn, formatIn)
 {
+    pixelWidth = pixelWidthIn;
+    pixelHeight = pixelHeightIn;
+    levelCount = levelCountIn;
+    format = formatIn;
+    depthStencilFormat = depthStencilFormatIn;
+    generateMipmap = (levelCountIn > 1);
+    multiSampleEnabled = (multiSampleCount > 1);
+
     if (DepthFormat::None != depthStencilFormat) {
         renderBuffer = ([] {
             RenderBuffer2DGL4 nativeBuffer;
@@ -72,30 +79,46 @@ RenderTarget2DGL4::~RenderTarget2DGL4()
     }
 }
 
-void RenderTarget2DGL4::GetData(
-    void* result,
-    std::size_t offsetInBytes,
-    std::size_t sizeInBytes,
-    std::int32_t pixelWidth,
-    std::int32_t pixelHeight,
-    std::int32_t levelCount,
-    SurfaceFormat format) const
+std::int32_t RenderTarget2DGL4::GetWidth() const noexcept
 {
-    texture.GetData(
-        result,
-        offsetInBytes,
-        sizeInBytes,
-        pixelWidth,
-        pixelHeight,
-        levelCount,
-        format);
+    return pixelWidth;
+}
+
+std::int32_t RenderTarget2DGL4::GetHeight() const noexcept
+{
+    return pixelHeight;
+}
+
+std::int32_t RenderTarget2DGL4::GetLevelCount() const noexcept
+{
+    return levelCount;
+}
+
+SurfaceFormat RenderTarget2DGL4::GetFormat() const noexcept
+{
+    return format;
+}
+
+DepthFormat RenderTarget2DGL4::GetDepthStencilFormat() const noexcept
+{
+    return depthStencilFormat;
+}
+
+Rectangle RenderTarget2DGL4::GetBounds() const noexcept
+{
+    return Rectangle{0, 0, pixelWidth, pixelHeight};
+}
+
+void RenderTarget2DGL4::GetData(void* result, std::size_t offsetInBytes, std::size_t sizeInBytes) const
+{
+    texture.GetData(result, offsetInBytes, sizeInBytes);
 }
 
 void RenderTarget2DGL4::BindToFramebuffer(GLenum attachmentPoint)
 {
     GLenum textureTarget = (multiSampleEnabled
-        ? GL_TEXTURE_2D_MULTISAMPLE
-        : GL_TEXTURE_2D);
+                                ? GL_TEXTURE_2D_MULTISAMPLE
+                                : GL_TEXTURE_2D);
 
     glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentPoint, textureTarget,
         texture.GetTextureHandle().value, 0);
@@ -105,8 +128,8 @@ void RenderTarget2DGL4::BindToFramebuffer(GLenum attachmentPoint)
 void RenderTarget2DGL4::UnbindFromFramebuffer(GLenum attachmentPoint)
 {
     GLenum textureTarget = (multiSampleEnabled
-        ? GL_TEXTURE_2D_MULTISAMPLE
-        : GL_TEXTURE_2D);
+                                ? GL_TEXTURE_2D_MULTISAMPLE
+                                : GL_TEXTURE_2D);
 
     glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentPoint, textureTarget,
         0, 0);
@@ -129,7 +152,7 @@ void RenderTarget2DGL4::BindDepthStencilBuffer()
     }
 }
 
-const Texture2DObjectGL4& RenderTarget2DGL4::GetTextureHandle() const
+Texture2DObjectGL4 RenderTarget2DGL4::GetTextureHandle() const noexcept
 {
     return texture.GetTextureHandle();
 }

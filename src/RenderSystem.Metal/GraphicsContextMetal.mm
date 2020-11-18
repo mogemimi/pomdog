@@ -327,15 +327,13 @@ void GraphicsContextMetal::SetVertexBuffer(
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(vertexBuffer != nullptr);
-    POMDOG_ASSERT(vertexBuffer->GetNativeVertexBuffer() != nullptr);
+    POMDOG_ASSERT(vertexBuffer->GetNativeBuffer() != nullptr);
     POMDOG_ASSERT((offset % 256) == 0);
 
-    auto nativeVertexBuffer = static_cast<BufferMetal*>(
-        vertexBuffer->GetNativeVertexBuffer());
-
+    auto nativeVertexBuffer = static_cast<BufferMetal*>(vertexBuffer->GetNativeBuffer());
     POMDOG_ASSERT(nativeVertexBuffer != nullptr);
-    POMDOG_ASSERT(nativeVertexBuffer == dynamic_cast<BufferMetal*>(vertexBuffer->GetNativeVertexBuffer()));
-    POMDOG_ASSERT(nativeVertexBuffer->GetBuffer() != nil);
+    POMDOG_ASSERT(nativeVertexBuffer == dynamic_cast<BufferMetal*>(vertexBuffer->GetNativeBuffer()));
+    POMDOG_ASSERT(nativeVertexBuffer->GetBuffer() != nullptr);
 
     const auto slotIndex = index + VertexBufferSlotOffset;
     POMDOG_ASSERT(slotIndex < MaxVertexBufferSlotCount);
@@ -349,18 +347,15 @@ void GraphicsContextMetal::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& in
 {
     POMDOG_ASSERT(indexBufferIn != nullptr);
 
-    auto nativeIndexBuffer = static_cast<BufferMetal*>(
-        indexBufferIn->GetNativeIndexBuffer());
-
+    auto nativeIndexBuffer = static_cast<BufferMetal*>(indexBufferIn->GetNativeBuffer());
     POMDOG_ASSERT(nativeIndexBuffer != nullptr);
-    POMDOG_ASSERT(nativeIndexBuffer == dynamic_cast<BufferMetal*>(
-        indexBufferIn->GetNativeIndexBuffer()));
+    POMDOG_ASSERT(nativeIndexBuffer == dynamic_cast<BufferMetal*>(indexBufferIn->GetNativeBuffer()));
 
     this->indexType = ToIndexType(indexBufferIn->GetElementSize());
     this->indexBuffer = nativeIndexBuffer->GetBuffer();
 }
 
-void GraphicsContextMetal::SetPipelineState(const std::shared_ptr<NativePipelineState>& pipelineState)
+void GraphicsContextMetal::SetPipelineState(const std::shared_ptr<PipelineState>& pipelineState)
 {
     POMDOG_ASSERT(pipelineState != nullptr);
 
@@ -405,7 +400,7 @@ void GraphicsContextMetal::SetConstantBuffer(
         atIndex:index];
 }
 
-void GraphicsContextMetal::SetSampler(int index, const std::shared_ptr<NativeSamplerState>& sampler)
+void GraphicsContextMetal::SetSampler(int index, const std::shared_ptr<SamplerState>& sampler)
 {
     POMDOG_ASSERT(sampler != nullptr);
     POMDOG_ASSERT(index >= 0);
@@ -432,8 +427,8 @@ void GraphicsContextMetal::SetTexture(int index)
     weakTextures[index].reset();
 #endif
 
-    [commandEncoder setVertexTexture:nil atIndex:index];
-    [commandEncoder setFragmentTexture:nil atIndex:index];
+    [commandEncoder setVertexTexture:nullptr atIndex:index];
+    [commandEncoder setFragmentTexture:nullptr atIndex:index];
 }
 
 void GraphicsContextMetal::SetTexture(int index, const std::shared_ptr<Texture2D>& textureIn)
@@ -447,11 +442,11 @@ void GraphicsContextMetal::SetTexture(int index, const std::shared_ptr<Texture2D
     weakTextures[index] = textureIn;
 #endif
 
-    auto textureMetal = static_cast<Texture2DMetal*>(textureIn->GetNativeTexture2D());
+    auto textureMetal = static_cast<Texture2DMetal*>(textureIn.get());
 
     POMDOG_ASSERT(textureMetal != nullptr);
-    POMDOG_ASSERT(textureMetal == dynamic_cast<Texture2DMetal*>(textureIn->GetNativeTexture2D()));
-    POMDOG_ASSERT(textureMetal->GetTexture() != nil);
+    POMDOG_ASSERT(textureMetal == dynamic_cast<Texture2DMetal*>(textureIn.get()));
+    POMDOG_ASSERT(textureMetal->GetTexture() != nullptr);
 
     POMDOG_ASSERT(commandEncoder != nullptr);
     [commandEncoder setVertexTexture:textureMetal->GetTexture() atIndex:index];
@@ -469,11 +464,11 @@ void GraphicsContextMetal::SetTexture(int index, const std::shared_ptr<RenderTar
     weakTextures[index] = textureIn;
 #endif
 
-    auto renderTargetMetal = static_cast<RenderTarget2DMetal*>(textureIn->GetNativeRenderTarget2D());
+    auto renderTargetMetal = static_cast<RenderTarget2DMetal*>(textureIn.get());
 
     POMDOG_ASSERT(renderTargetMetal != nullptr);
-    POMDOG_ASSERT(renderTargetMetal == dynamic_cast<RenderTarget2DMetal*>(textureIn->GetNativeRenderTarget2D()));
-    POMDOG_ASSERT(renderTargetMetal->GetTexture() != nil);
+    POMDOG_ASSERT(renderTargetMetal == dynamic_cast<RenderTarget2DMetal*>(textureIn.get()));
+    POMDOG_ASSERT(renderTargetMetal->GetTexture() != nullptr);
 
     POMDOG_ASSERT(commandEncoder != nullptr);
     [commandEncoder setVertexTexture:renderTargetMetal->GetTexture() atIndex:index];
@@ -526,11 +521,11 @@ void GraphicsContextMetal::SetRenderPass(const RenderPass& renderPass)
             if (renderTarget == nullptr) {
                 break;
             }
-            auto nativeRenderTarget = static_cast<RenderTarget2DMetal*>(renderTarget->GetNativeRenderTarget2D());
-            POMDOG_ASSERT(nativeRenderTarget == dynamic_cast<RenderTarget2DMetal*>(renderTarget->GetNativeRenderTarget2D()));
-            POMDOG_ASSERT(nativeRenderTarget != nullptr);
+            auto renderTargetMetal = static_cast<RenderTarget2DMetal*>(renderTarget.get());
+            POMDOG_ASSERT(renderTargetMetal == dynamic_cast<RenderTarget2DMetal*>(renderTarget.get()));
+            POMDOG_ASSERT(renderTargetMetal != nullptr);
 
-            renderPassDescriptor.colorAttachments[renderTargetIndex].texture = nativeRenderTarget->GetTexture();
+            renderPassDescriptor.colorAttachments[renderTargetIndex].texture = renderTargetMetal->GetTexture();
 
             setClearColor(renderTargetIndex, clearColor);
             ++renderTargetIndex;
@@ -546,14 +541,14 @@ void GraphicsContextMetal::SetRenderPass(const RenderPass& renderPass)
             renderPassDescriptor.stencilAttachment.texture = targetView.currentRenderPassDescriptor.stencilAttachment.texture;
         }
         else {
-            auto nativeRenderTarget = static_cast<RenderTarget2DMetal*>(renderTarget->GetNativeRenderTarget2D());
-            POMDOG_ASSERT(nativeRenderTarget == dynamic_cast<RenderTarget2DMetal*>(renderTarget->GetNativeRenderTarget2D()));
-            POMDOG_ASSERT(nativeRenderTarget != nullptr);
+            auto renderTargetMetal = static_cast<RenderTarget2DMetal*>(renderTarget.get());
+            POMDOG_ASSERT(renderTargetMetal == dynamic_cast<RenderTarget2DMetal*>(renderTarget.get()));
+            POMDOG_ASSERT(renderTargetMetal != nullptr);
 
-            renderPassDescriptor.depthAttachment.texture = nativeRenderTarget->GetDepthStencilTexture();
+            renderPassDescriptor.depthAttachment.texture = renderTargetMetal->GetDepthStencilTexture();
 
             bool isStencilRenderable = [&]() -> bool {
-                switch ([nativeRenderTarget->GetDepthStencilTexture() pixelFormat]) {
+                switch ([renderTargetMetal->GetDepthStencilTexture() pixelFormat]) {
                 case MTLPixelFormatStencil8:
                 case MTLPixelFormatX24_Stencil8:
                 case MTLPixelFormatX32_Stencil8:
@@ -567,7 +562,7 @@ void GraphicsContextMetal::SetRenderPass(const RenderPass& renderPass)
             }();
 
             if (isStencilRenderable) {
-                renderPassDescriptor.stencilAttachment.texture = nativeRenderTarget->GetDepthStencilTexture();
+                renderPassDescriptor.stencilAttachment.texture = renderTargetMetal->GetDepthStencilTexture();
             }
             else {
                 renderPassDescriptor.stencilAttachment.texture = nil;

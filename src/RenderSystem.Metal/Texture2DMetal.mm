@@ -14,13 +14,22 @@ namespace Pomdog::Detail::Metal {
 
 Texture2DMetal::Texture2DMetal(
     id<MTLDevice> device,
-    std::int32_t pixelWidth,
-    std::int32_t pixelHeight,
-    std::int32_t levelCount,
-    SurfaceFormat format)
-    : texture(nil)
+    std::int32_t pixelWidthIn,
+    std::int32_t pixelHeightIn,
+    std::int32_t levelCountIn,
+    SurfaceFormat formatIn)
 {
-    POMDOG_ASSERT(device != nil);
+    POMDOG_ASSERT(device != nullptr);
+
+    texture = nullptr;
+    pixelWidth = pixelWidthIn;
+    pixelHeight = pixelHeightIn;
+    levelCount = levelCountIn;
+    format = formatIn;
+
+    POMDOG_ASSERT(pixelWidth > 0);
+    POMDOG_ASSERT(pixelHeight > 0);
+    POMDOG_ASSERT(levelCount >= 1);
 
     MTLTextureDescriptor* descriptor = [MTLTextureDescriptor
         texture2DDescriptorWithPixelFormat:ToPixelFormat(format)
@@ -36,12 +45,27 @@ Texture2DMetal::Texture2DMetal(
     }
 }
 
-void Texture2DMetal::SetData(
-    std::int32_t pixelWidth,
-    std::int32_t pixelHeight,
-    std::int32_t levelCount,
-    SurfaceFormat format,
-    const void* pixelData)
+std::int32_t Texture2DMetal::GetWidth() const noexcept
+{
+    return pixelWidth;
+}
+
+std::int32_t Texture2DMetal::GetHeight() const noexcept
+{
+    return pixelHeight;
+}
+
+std::int32_t Texture2DMetal::GetLevelCount() const noexcept
+{
+    return levelCount;
+}
+
+SurfaceFormat Texture2DMetal::GetFormat() const noexcept
+{
+    return format;
+}
+
+void Texture2DMetal::SetData(const void* pixelData)
 {
     POMDOG_ASSERT(texture != nullptr);
     POMDOG_ASSERT(pixelWidth > 0);

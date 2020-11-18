@@ -2,13 +2,13 @@
 
 #pragma once
 
-#include "../RenderSystem/NativeSamplerState.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
+#include "Pomdog/Graphics/SamplerState.hpp"
 #import <Metal/MTLSampler.h>
 
 namespace Pomdog::Detail::Metal {
 
-class SamplerStateMetal final : public NativeSamplerState {
+class SamplerStateMetal final : public SamplerState {
 public:
     SamplerStateMetal(
         id<MTLDevice> device,

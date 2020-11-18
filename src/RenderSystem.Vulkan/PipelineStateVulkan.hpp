@@ -2,13 +2,13 @@
 
 #pragma once
 
-#include "../RenderSystem/NativePipelineState.hpp"
+#include "Pomdog/Graphics/PipelineState.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include <vulkan/vulkan.h>
 
 namespace Pomdog::Detail::Vulkan {
 
-class PipelineStateVulkan final : public NativePipelineState {
+class PipelineStateVulkan final : public PipelineState {
 public:
     PipelineStateVulkan(
         VkDevice device,

@@ -2,17 +2,18 @@
 
 #pragma once
 
-#include "../RenderSystem/NativeEffectReflection.hpp"
+#include "Pomdog/Graphics/EffectReflection.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include <vulkan/vulkan.h>
 
 namespace Pomdog::Detail::Vulkan {
 
-class EffectReflectionVulkan final : public NativeEffectReflection {
+class EffectReflectionVulkan final : public EffectReflection {
 public:
     EffectReflectionVulkan();
 
-    std::vector<EffectConstantDescription> GetConstantBuffers() const override;
+    std::vector<EffectConstantDescription>
+    GetConstantBuffers() const noexcept override;
 };
 
 } // namespace Pomdog::Detail::Vulkan

@@ -222,9 +222,21 @@ struct TypesafeHelperGL4::Traits<Texture2DObjectGL4> {
     constexpr static GLenum TextureTarget = GL_TEXTURE_2D;
 };
 
-Texture2DGL4::Texture2DGL4(std::int32_t pixelWidth, std::int32_t pixelHeight,
-    std::int32_t levelCount, SurfaceFormat format)
+Texture2DGL4::Texture2DGL4(
+    std::int32_t pixelWidthIn,
+    std::int32_t pixelHeightIn,
+    std::int32_t levelCountIn,
+    SurfaceFormat formatIn)
 {
+    pixelWidth = pixelWidthIn;
+    pixelHeight = pixelHeightIn;
+    levelCount = levelCountIn;
+    format = formatIn;
+
+    POMDOG_ASSERT(pixelWidth > 0);
+    POMDOG_ASSERT(pixelHeight > 0);
+    POMDOG_ASSERT(levelCount >= 1);
+
     // Create Texture2D
     textureObject = ([] {
         Texture2DObjectGL4 nativeTexture;
@@ -270,14 +282,27 @@ Texture2DGL4::~Texture2DGL4()
     }
 }
 
-void Texture2DGL4::GetData(
-    void* result,
-    [[maybe_unused]] std::size_t offsetInBytes,
-    std::size_t sizeInBytes,
-    std::int32_t pixelWidth,
-    std::int32_t pixelHeight,
-    [[maybe_unused]] std::int32_t levelCount,
-    SurfaceFormat format) const
+std::int32_t Texture2DGL4::GetWidth() const noexcept
+{
+    return pixelWidth;
+}
+
+std::int32_t Texture2DGL4::GetHeight() const noexcept
+{
+    return pixelHeight;
+}
+
+std::int32_t Texture2DGL4::GetLevelCount() const noexcept
+{
+    return levelCount;
+}
+
+SurfaceFormat Texture2DGL4::GetFormat() const noexcept
+{
+    return format;
+}
+
+void Texture2DGL4::GetData(void* result, [[maybe_unused]] std::size_t offsetInBytes, std::size_t sizeInBytes) const
 {
     const auto oldTexture = TypesafeHelperGL4::Get<Texture2DObjectGL4>();
     ScopeGuard scope([&] { TypesafeHelperGL4::BindTexture(oldTexture); });
@@ -304,8 +329,7 @@ void Texture2DGL4::GetData(
         result);
 }
 
-void Texture2DGL4::SetData(std::int32_t pixelWidth, std::int32_t pixelHeight,
-    std::int32_t levelCount, SurfaceFormat format, const void* pixelData)
+void Texture2DGL4::SetData(const void* pixelData)
 {
     POMDOG_ASSERT(pixelWidth > 0);
     POMDOG_ASSERT(pixelHeight > 0);
@@ -346,7 +370,7 @@ void Texture2DGL4::GenerateMipmap()
     POMDOG_CHECK_ERROR_GL4("glGenerateMipmap");
 }
 
-const Texture2DObjectGL4& Texture2DGL4::GetTextureHandle() const
+Texture2DObjectGL4 Texture2DGL4::GetTextureHandle() const noexcept
 {
     POMDOG_ASSERT(textureObject);
     return *textureObject;

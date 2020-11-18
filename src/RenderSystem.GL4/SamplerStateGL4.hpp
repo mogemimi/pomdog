@@ -3,16 +3,16 @@
 #pragma once
 
 #include "OpenGLPrerequisites.hpp"
-#include "../RenderSystem/NativeSamplerState.hpp"
 #include "../Utility/Tagged.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
+#include "Pomdog/Graphics/SamplerState.hpp"
 #include <optional>
 
 namespace Pomdog::Detail::GL4 {
 
 using SamplerObjectGL4 = Tagged<GLuint, SamplerState>;
 
-class SamplerStateGL4 final : public NativeSamplerState {
+class SamplerStateGL4 final : public SamplerState {
 public:
     explicit SamplerStateGL4(const SamplerDescription& description);
 

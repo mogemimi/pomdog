@@ -9,15 +9,20 @@
 #include "ShaderDirect3D11.hpp"
 #include "Texture2DDirect3D11.hpp"
 #include "../RenderSystem/BufferBindMode.hpp"
+#include "../RenderSystem/BufferHelper.hpp"
 #include "../RenderSystem/GraphicsCommandListImmediate.hpp"
 #include "../RenderSystem/ShaderBytecode.hpp"
 #include "../RenderSystem/ShaderCompileOptions.hpp"
+#include "../RenderSystem/TextureHelper.hpp"
 #include "Pomdog/Graphics/BufferUsage.hpp"
+#include "Pomdog/Graphics/ConstantBuffer.hpp"
+#include "Pomdog/Graphics/IndexBuffer.hpp"
 #include "Pomdog/Graphics/PipelineStateDescription.hpp"
-#include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Graphics/ShaderLanguage.hpp"
+#include "Pomdog/Graphics/VertexBuffer.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include "Pomdog/Utility/StringHelper.hpp"
 #include <array>
@@ -26,82 +31,6 @@ namespace Pomdog::Detail::Direct3D11 {
 namespace {
 
 using Microsoft::WRL::ComPtr;
-
-class AdapterManager final {
-private:
-    std::vector<ComPtr<IDXGIAdapter1>> adapters;
-    ComPtr<IDXGIAdapter1> activeAdapter;
-
-public:
-    void EnumAdapters();
-    void Clear();
-
-    IDXGIAdapter1* ActiveAdapter() const
-    {
-        POMDOG_ASSERT(activeAdapter);
-        return activeAdapter.Get();
-    }
-
-    ComPtr<IDXGIFactory1> GetFactory()
-    {
-        ComPtr<IDXGIFactory1> dxgiFactory;
-
-        POMDOG_ASSERT(activeAdapter);
-        HRESULT hr = activeAdapter->GetParent(IID_PPV_ARGS(&dxgiFactory));
-        if (FAILED(hr)) {
-            // FUS RO DAH!
-            POMDOG_THROW_EXCEPTION(std::runtime_error,
-                "Failed to get DXGIFactory1");
-        }
-
-        return std::move(dxgiFactory);
-    }
-};
-
-void AdapterManager::EnumAdapters()
-{
-    Microsoft::WRL::ComPtr<IDXGIFactory1> dxgiFactory;
-    HRESULT hr = CreateDXGIFactory1(IID_PPV_ARGS(&dxgiFactory));
-
-    if (FAILED(hr)) {
-        // FUS RO DAH!
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "Failed to create DXGIFactory1");
-    }
-
-    UINT i = 0;
-    Microsoft::WRL::ComPtr<IDXGIAdapter1> newAdapter;
-    while ((hr = dxgiFactory->EnumAdapters1(i, &newAdapter)) != DXGI_ERROR_NOT_FOUND) {
-        if (FAILED(hr)) {
-            // FUS RO DAH!
-            POMDOG_THROW_EXCEPTION(std::runtime_error,
-                "Failed to enumerate adapters");
-        }
-
-        adapters.push_back(newAdapter);
-        newAdapter.Reset();
-        ++i;
-    }
-
-    if (adapters.empty()) {
-        // FUS RO DAH!
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "List of DXGI adapters is empty");
-    }
-
-    POMDOG_ASSERT(!adapters.empty());
-    activeAdapter = adapters.front();
-}
-
-void AdapterManager::Clear()
-{
-    activeAdapter.Reset();
-
-    for (auto& adapter : adapters) {
-        adapter.Reset();
-    }
-    adapters.clear();
-}
 
 ID3D11InfoQueue* BuildInfoQueue(ID3D11Device* nativeDevice)
 {
@@ -183,41 +112,16 @@ D3D11_BIND_FLAG ToBindFlag(BufferBindMode bindMode) noexcept
     case BufferBindMode::IndexBuffer:
         return D3D11_BIND_INDEX_BUFFER;
     case BufferBindMode::VertexBuffer:
-        break;
+        return D3D11_BIND_VERTEX_BUFFER;
     }
     return D3D11_BIND_VERTEX_BUFFER;
 }
 
-} // namespace
-
-class GraphicsDeviceDirect3D11::Impl final {
-public:
-    AdapterManager adapters;
-    ComPtr<ID3D11Device3> device;
-    ComPtr<ID3D11InfoQueue> infoQueue;
-    D3D_DRIVER_TYPE driverType;
-    D3D_FEATURE_LEVEL featureLevel;
-    PresentationParameters presentationParameters;
-
-public:
-    explicit Impl(const PresentationParameters& presentationParameters);
-
-private:
-    void BuildDevice();
-};
-
-GraphicsDeviceDirect3D11::Impl::Impl(const PresentationParameters& presentationParametersIn)
-    : driverType(D3D_DRIVER_TYPE_NULL)
-    , featureLevel(D3D_FEATURE_LEVEL_11_1)
-    , presentationParameters(presentationParametersIn)
-{
-    adapters.EnumAdapters();
-    BuildDevice();
-
-    infoQueue = BuildInfoQueue(device.Get());
-}
-
-void GraphicsDeviceDirect3D11::Impl::BuildDevice()
+void BuildDevice(
+    AdapterManager& adapters,
+    Microsoft::WRL::ComPtr<ID3D11Device3>& device,
+    D3D_DRIVER_TYPE& driverType,
+    D3D_FEATURE_LEVEL& featureLevel)
 {
     POMDOG_ASSERT(!device);
 
@@ -317,9 +221,82 @@ void GraphicsDeviceDirect3D11::Impl::BuildDevice()
 #endif
 }
 
-GraphicsDeviceDirect3D11::GraphicsDeviceDirect3D11(const PresentationParameters& presentationParameters)
-    : impl(std::make_unique<Impl>(presentationParameters))
+} // namespace
+
+void AdapterManager::EnumAdapters()
 {
+    Microsoft::WRL::ComPtr<IDXGIFactory1> dxgiFactory;
+    HRESULT hr = CreateDXGIFactory1(IID_PPV_ARGS(&dxgiFactory));
+
+    if (FAILED(hr)) {
+        // FUS RO DAH!
+        POMDOG_THROW_EXCEPTION(std::runtime_error,
+            "Failed to create DXGIFactory1");
+    }
+
+    UINT i = 0;
+    Microsoft::WRL::ComPtr<IDXGIAdapter1> newAdapter;
+    while ((hr = dxgiFactory->EnumAdapters1(i, &newAdapter)) != DXGI_ERROR_NOT_FOUND) {
+        if (FAILED(hr)) {
+            // FUS RO DAH!
+            POMDOG_THROW_EXCEPTION(std::runtime_error,
+                "Failed to enumerate adapters");
+        }
+
+        adapters.push_back(newAdapter);
+        newAdapter.Reset();
+        ++i;
+    }
+
+    if (adapters.empty()) {
+        // FUS RO DAH!
+        POMDOG_THROW_EXCEPTION(std::runtime_error,
+            "List of DXGI adapters is empty");
+    }
+
+    POMDOG_ASSERT(!adapters.empty());
+    activeAdapter = adapters.front();
+}
+
+void AdapterManager::Clear()
+{
+    activeAdapter.Reset();
+
+    for (auto& adapter : adapters) {
+        adapter.Reset();
+    }
+    adapters.clear();
+}
+
+IDXGIAdapter1* AdapterManager::ActiveAdapter() const
+{
+    POMDOG_ASSERT(activeAdapter);
+    return activeAdapter.Get();
+}
+
+std::tuple<Microsoft::WRL::ComPtr<IDXGIFactory1>, std::shared_ptr<Error>>
+AdapterManager::GetFactory() noexcept
+{
+    ComPtr<IDXGIFactory1> dxgiFactory;
+
+    POMDOG_ASSERT(activeAdapter);
+    HRESULT hr = activeAdapter->GetParent(IID_PPV_ARGS(&dxgiFactory));
+    if (FAILED(hr)) {
+        return std::make_tuple(nullptr, Errors::New("failed to get DXGIFactory1"));
+    }
+
+    return std::make_tuple(std::move(dxgiFactory), nullptr);
+}
+
+GraphicsDeviceDirect3D11::GraphicsDeviceDirect3D11(const PresentationParameters& presentationParametersIn)
+    : driverType(D3D_DRIVER_TYPE_NULL)
+    , featureLevel(D3D_FEATURE_LEVEL_11_1)
+    , presentationParameters(presentationParametersIn)
+{
+    adapters.EnumAdapters();
+    BuildDevice(adapters, device, driverType, featureLevel);
+
+    infoQueue = BuildInfoQueue(device.Get());
 }
 
 GraphicsDeviceDirect3D11::~GraphicsDeviceDirect3D11() = default;
@@ -331,180 +308,354 @@ ShaderLanguage GraphicsDeviceDirect3D11::GetSupportedLanguage() const noexcept
 
 PresentationParameters GraphicsDeviceDirect3D11::GetPresentationParameters() const noexcept
 {
-    POMDOG_ASSERT(impl);
-    return impl->presentationParameters;
+    return presentationParameters;
 }
 
-std::unique_ptr<NativeGraphicsCommandList>
-GraphicsDeviceDirect3D11::CreateGraphicsCommandList()
+std::tuple<std::shared_ptr<GraphicsCommandList>, std::shared_ptr<Error>>
+GraphicsDeviceDirect3D11::CreateGraphicsCommandList() noexcept
 {
-    return std::make_unique<GraphicsCommandListImmediate>();
+    auto commandList = std::make_shared<GraphicsCommandListImmediate>();
+    return std::make_tuple(std::move(commandList), nullptr);
 }
 
-std::unique_ptr<Shader>
-GraphicsDeviceDirect3D11::CreateShader(
-    const ShaderBytecode& shaderBytecode,
-    const ShaderCompileOptions& compileOptions)
+std::tuple<std::shared_ptr<VertexBuffer>, std::shared_ptr<Error>>
+GraphicsDeviceDirect3D11::CreateVertexBuffer(
+    const void* vertices,
+    std::size_t vertexCount,
+    std::size_t strideBytes,
+    BufferUsage bufferUsage) noexcept
 {
-    switch (compileOptions.Profile.PipelineStage) {
-    case ShaderPipelineStage::VertexShader: {
-        return std::make_unique<VertexShaderDirect3D11>(
-            impl->device.Get(), shaderBytecode, compileOptions);
-    }
-    case ShaderPipelineStage::PixelShader: {
-        return std::make_unique<PixelShaderDirect3D11>(
-            impl->device.Get(), shaderBytecode, compileOptions);
-    }
-    }
+    POMDOG_ASSERT(device != nullptr);
+    POMDOG_ASSERT(vertices != nullptr);
+    POMDOG_ASSERT(vertexCount > 0);
+    POMDOG_ASSERT(strideBytes > 0);
 
-    POMDOG_THROW_EXCEPTION(std::domain_error, "Failed to create shader");
-}
+    const auto sizeInBytes = vertexCount * strideBytes;
 
-std::unique_ptr<NativeBuffer>
-GraphicsDeviceDirect3D11::CreateBuffer(std::size_t sizeInBytes,
-    BufferUsage bufferUsage, BufferBindMode bindMode)
-{
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->device);
+    auto nativeBuffer = std::make_unique<BufferDirect3D11>(
+        device.Get(),
+        vertices,
+        sizeInBytes,
+        bufferUsage,
+        ToBindFlag(BufferBindMode::VertexBuffer));
+    POMDOG_ASSERT(nativeBuffer != nullptr);
 
-    try {
-        return std::make_unique<BufferDirect3D11>(
-            impl->device.Get(),
-            sizeInBytes,
-            bufferUsage,
-            ToBindFlag(bindMode));
-    }
-    catch (const std::exception& e) {
 #if defined(DEBUG) && !defined(NDEBUG)
-        CheckError(impl->infoQueue.Get());
+    CheckError(infoQueue.Get());
 #endif
-        throw e;
-    }
+
+    auto vertexBuffer = std::make_shared<VertexBuffer>(
+        std::move(nativeBuffer),
+        vertexCount,
+        strideBytes,
+        bufferUsage);
+    return std::make_tuple(std::move(vertexBuffer), nullptr);
 }
 
-std::unique_ptr<NativeBuffer>
-GraphicsDeviceDirect3D11::CreateBuffer(
-    const void* sourceData, std::size_t sizeInBytes,
-    BufferUsage bufferUsage, BufferBindMode bindMode)
+std::tuple<std::shared_ptr<VertexBuffer>, std::shared_ptr<Error>>
+GraphicsDeviceDirect3D11::CreateVertexBuffer(
+    std::size_t vertexCount,
+    std::size_t strideBytes,
+    BufferUsage bufferUsage) noexcept
 {
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->device);
+    POMDOG_ASSERT(device != nullptr);
+    POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
+    POMDOG_ASSERT(vertexCount > 0);
+    POMDOG_ASSERT(strideBytes > 0);
 
-    try {
-        return std::make_unique<BufferDirect3D11>(
-            impl->device.Get(),
-            sourceData,
-            sizeInBytes,
-            bufferUsage,
-            ToBindFlag(bindMode));
-    }
-    catch (const std::exception& e) {
+    const auto sizeInBytes = vertexCount * strideBytes;
+
+    auto nativeBuffer = std::make_unique<BufferDirect3D11>(
+        device.Get(),
+        sizeInBytes,
+        bufferUsage,
+        ToBindFlag(BufferBindMode::VertexBuffer));
+    POMDOG_ASSERT(nativeBuffer != nullptr);
+
 #if defined(DEBUG) && !defined(NDEBUG)
-        CheckError(impl->infoQueue.Get());
+    CheckError(infoQueue.Get());
 #endif
-        throw e;
-    }
+
+    auto vertexBuffer = std::make_shared<VertexBuffer>(
+        std::move(nativeBuffer),
+        vertexCount,
+        strideBytes,
+        bufferUsage);
+    return std::make_tuple(std::move(vertexBuffer), nullptr);
 }
 
-std::unique_ptr<NativeSamplerState>
-GraphicsDeviceDirect3D11::CreateSamplerState(const SamplerDescription& description)
+std::tuple<std::shared_ptr<IndexBuffer>, std::shared_ptr<Error>>
+GraphicsDeviceDirect3D11::CreateIndexBuffer(
+    IndexElementSize elementSize,
+    const void* indices,
+    std::size_t indexCount,
+    BufferUsage bufferUsage) noexcept
 {
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->device);
+    POMDOG_ASSERT(device != nullptr);
+    POMDOG_ASSERT(indexCount > 0);
 
-    return std::make_unique<SamplerStateDirect3D11>(impl->device.Get(), description);
+    const auto sizeInBytes = indexCount * Detail::BufferHelper::ToIndexElementOffsetBytes(elementSize);
+
+    auto nativeBuffer = std::make_unique<BufferDirect3D11>(
+        device.Get(),
+        indices,
+        sizeInBytes,
+        bufferUsage,
+        ToBindFlag(BufferBindMode::IndexBuffer));
+    POMDOG_ASSERT(nativeBuffer != nullptr);
+
+#if defined(DEBUG) && !defined(NDEBUG)
+    CheckError(infoQueue.Get());
+#endif
+
+    auto indexBuffer = std::make_shared<IndexBuffer>(
+        std::move(nativeBuffer),
+        elementSize,
+        indexCount,
+        bufferUsage);
+    return std::make_tuple(std::move(indexBuffer), nullptr);
 }
 
-std::unique_ptr<NativePipelineState>
-GraphicsDeviceDirect3D11::CreatePipelineState(const PipelineStateDescription& description)
+std::tuple<std::shared_ptr<IndexBuffer>, std::shared_ptr<Error>>
+GraphicsDeviceDirect3D11::CreateIndexBuffer(
+    IndexElementSize elementSize,
+    std::size_t indexCount,
+    BufferUsage bufferUsage) noexcept
 {
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->device);
+    POMDOG_ASSERT(device != nullptr);
+    POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
+    POMDOG_ASSERT(indexCount > 0);
 
-    return std::make_unique<PipelineStateDirect3D11>(impl->device.Get(), description);
+    const auto sizeInBytes = indexCount * Detail::BufferHelper::ToIndexElementOffsetBytes(elementSize);
+
+    auto nativeBuffer = std::make_unique<BufferDirect3D11>(
+        device.Get(),
+        sizeInBytes,
+        bufferUsage,
+        ToBindFlag(BufferBindMode::IndexBuffer));
+    POMDOG_ASSERT(nativeBuffer != nullptr);
+
+#if defined(DEBUG) && !defined(NDEBUG)
+    CheckError(infoQueue.Get());
+#endif
+
+    auto indexBuffer = std::make_shared<IndexBuffer>(
+        std::move(nativeBuffer),
+        elementSize,
+        indexCount,
+        bufferUsage);
+    return std::make_tuple(std::move(indexBuffer), nullptr);
 }
 
-std::unique_ptr<NativeEffectReflection>
+std::tuple<std::shared_ptr<ConstantBuffer>, std::shared_ptr<Error>>
+GraphicsDeviceDirect3D11::CreateConstantBuffer(
+    const void* sourceData,
+    std::size_t sizeInBytes,
+    BufferUsage bufferUsage) noexcept
+{
+    POMDOG_ASSERT(device != nullptr);
+    POMDOG_ASSERT(sizeInBytes > 0);
+
+    auto nativeBuffer = std::make_unique<BufferDirect3D11>(
+        device.Get(),
+        sourceData,
+        sizeInBytes,
+        bufferUsage,
+        ToBindFlag(BufferBindMode::ConstantBuffer));
+    POMDOG_ASSERT(nativeBuffer != nullptr);
+
+#if defined(DEBUG) && !defined(NDEBUG)
+    CheckError(infoQueue.Get());
+#endif
+
+    auto constantBuffer = std::make_shared<ConstantBuffer>(
+        std::move(nativeBuffer),
+        sizeInBytes,
+        bufferUsage);
+    return std::make_tuple(std::move(constantBuffer), nullptr);
+}
+
+std::tuple<std::shared_ptr<ConstantBuffer>, std::shared_ptr<Error>>
+GraphicsDeviceDirect3D11::CreateConstantBuffer(
+    std::size_t sizeInBytes,
+    BufferUsage bufferUsage) noexcept
+{
+    POMDOG_ASSERT(device != nullptr);
+    POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
+    POMDOG_ASSERT(sizeInBytes > 0);
+
+    auto nativeBuffer = std::make_unique<BufferDirect3D11>(
+        device.Get(),
+        sizeInBytes,
+        bufferUsage,
+        ToBindFlag(BufferBindMode::ConstantBuffer));
+    POMDOG_ASSERT(nativeBuffer != nullptr);
+
+#if defined(DEBUG) && !defined(NDEBUG)
+    CheckError(infoQueue.Get());
+#endif
+
+    auto constantBuffer = std::make_shared<ConstantBuffer>(
+        std::move(nativeBuffer),
+        sizeInBytes,
+        bufferUsage);
+    return std::make_tuple(std::move(constantBuffer), nullptr);
+}
+
+std::tuple<std::shared_ptr<PipelineState>, std::shared_ptr<Error>>
+GraphicsDeviceDirect3D11::CreatePipelineState(const PipelineStateDescription& description) noexcept
+{
+    POMDOG_ASSERT(device != nullptr);
+    auto pipelineState = std::make_shared<PipelineStateDirect3D11>(device.Get(), description);
+    return std::make_tuple(std::move(pipelineState), nullptr);
+}
+
+std::tuple<std::shared_ptr<EffectReflection>, std::shared_ptr<Error>>
 GraphicsDeviceDirect3D11::CreateEffectReflection(
     const PipelineStateDescription& description,
-    NativePipelineState&)
+    [[maybe_unused]] const std::shared_ptr<PipelineState>& pipelineState) noexcept
 {
-    auto vertexShader = std::dynamic_pointer_cast<VertexShaderDirect3D11>(
-        description.VertexShader);
-
-    if (!vertexShader) {
-        // FUS RO DAH!
-        POMDOG_THROW_EXCEPTION(std::domain_error,
-            "Failed to cast to vertex shader");
+    auto vertexShader = std::dynamic_pointer_cast<VertexShaderDirect3D11>(description.VertexShader);
+    if (vertexShader == nullptr) {
+        return std::make_tuple(nullptr, Errors::New("failed to cast VertexShader to VertexShaderDirect3D11"));
     }
 
-    auto pixelShader = std::dynamic_pointer_cast<PixelShaderDirect3D11>(
-        description.PixelShader);
-
-    if (!pixelShader) {
-        // FUS RO DAH!
-        POMDOG_THROW_EXCEPTION(std::domain_error,
-            "Failed to cast to pixel shader");
+    auto pixelShader = std::dynamic_pointer_cast<PixelShaderDirect3D11>(description.PixelShader);
+    if (pixelShader == nullptr) {
+        return std::make_tuple(nullptr, Errors::New("failed to cast PixelShader to PixelShaderDirect3D11"));
     }
 
-    return std::make_unique<EffectReflectionDirect3D11>(
+    auto effectReflection = std::make_shared<EffectReflectionDirect3D11>(
         vertexShader->GetShaderBytecode(),
         pixelShader->GetShaderBytecode());
+    return std::make_tuple(std::move(effectReflection), nullptr);
 }
 
-std::unique_ptr<NativeTexture2D>
-GraphicsDeviceDirect3D11::CreateTexture2D(std::int32_t width, std::int32_t height,
-    std::int32_t mipmapLevels, SurfaceFormat format)
+std::tuple<std::unique_ptr<Shader>, std::shared_ptr<Error>>
+GraphicsDeviceDirect3D11::CreateShader(
+    const Detail::ShaderBytecode& shaderBytecode,
+    const Detail::ShaderCompileOptions& compileOptions) noexcept
 {
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->device);
+    POMDOG_ASSERT(device != nullptr);
 
-    return std::make_unique<Texture2DDirect3D11>(
-        impl->device.Get(),
+    switch (compileOptions.Profile.PipelineStage) {
+    case ShaderPipelineStage::VertexShader: {
+        auto shader = std::make_unique<VertexShaderDirect3D11>(device.Get(), shaderBytecode, compileOptions);
+        return std::make_tuple(std::move(shader), nullptr);
+    }
+    case ShaderPipelineStage::PixelShader: {
+        auto shader = std::make_unique<PixelShaderDirect3D11>(device.Get(), shaderBytecode, compileOptions);
+        return std::make_tuple(std::move(shader), nullptr);
+    }
+    }
+    return std::make_tuple(nullptr, Errors::New("unsupported shader stage"));
+}
+
+std::tuple<std::shared_ptr<RenderTarget2D>, std::shared_ptr<Error>>
+GraphicsDeviceDirect3D11::CreateRenderTarget2D(
+    std::int32_t width,
+    std::int32_t height) noexcept
+{
+    return CreateRenderTarget2D(
         width,
         height,
-        mipmapLevels,
-        format);
+        false,
+        SurfaceFormat::R8G8B8A8_UNorm,
+        DepthFormat::None);
 }
 
-std::unique_ptr<NativeRenderTarget2D>
+std::tuple<std::shared_ptr<RenderTarget2D>, std::shared_ptr<Error>>
 GraphicsDeviceDirect3D11::CreateRenderTarget2D(
     std::int32_t width,
     std::int32_t height,
-    std::int32_t mipmapLevels,
+    bool generateMipmap,
     SurfaceFormat format,
-    DepthFormat depthStencilFormat,
-    std::int32_t multiSampleCount)
+    DepthFormat depthStencilFormat) noexcept
 {
-    POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->device);
-    return std::make_unique<RenderTarget2DDirect3D11>(
-        impl->device.Get(),
+    POMDOG_ASSERT(device != nullptr);
+    POMDOG_ASSERT(width > 0);
+    POMDOG_ASSERT(height > 0);
+
+    const auto levelCount = generateMipmap
+        ? Detail::TextureHelper::ComputeMipmapLevelCount(width, height)
+        : 1;
+
+    // TODO: MSAA is not implemented yet.
+    constexpr int multiSampleCount = 1;
+
+    auto renderTarget = std::make_shared<RenderTarget2DDirect3D11>(
+        device.Get(),
         width,
         height,
-        mipmapLevels,
+        levelCount,
         format,
         depthStencilFormat,
         multiSampleCount);
+
+    return std::make_tuple(std::move(renderTarget), nullptr);
 }
 
-Microsoft::WRL::ComPtr<ID3D11Device3> GraphicsDeviceDirect3D11::GetDevice() const
+std::tuple<std::shared_ptr<SamplerState>, std::shared_ptr<Error>>
+GraphicsDeviceDirect3D11::CreateSamplerState(const SamplerDescription& description) noexcept
 {
-    POMDOG_ASSERT(impl);
-    return impl->device;
+    POMDOG_ASSERT(device != nullptr);
+    auto samplerState = std::make_shared<SamplerStateDirect3D11>(device.Get(), description);
+    return std::make_tuple(std::move(samplerState), nullptr);
 }
 
-Microsoft::WRL::ComPtr<IDXGIFactory1> GraphicsDeviceDirect3D11::GetDXGIFactory() const
+std::tuple<std::shared_ptr<Texture2D>, std::shared_ptr<Error>>
+GraphicsDeviceDirect3D11::CreateTexture2D(
+    std::int32_t width,
+    std::int32_t height) noexcept
 {
-    POMDOG_ASSERT(impl);
-    return impl->adapters.GetFactory();
+    return CreateTexture2D(
+        width,
+        height,
+        false,
+        SurfaceFormat::R8G8B8A8_UNorm);
+}
+
+std::tuple<std::shared_ptr<Texture2D>, std::shared_ptr<Error>>
+GraphicsDeviceDirect3D11::CreateTexture2D(
+    std::int32_t width,
+    std::int32_t height,
+    bool mipMap,
+    SurfaceFormat format) noexcept
+{
+    POMDOG_ASSERT(device != nullptr);
+    POMDOG_ASSERT(width > 0);
+    POMDOG_ASSERT(height > 0);
+
+    const auto levelCount = mipMap
+        ? Detail::TextureHelper::ComputeMipmapLevelCount(width, height)
+        : 1;
+
+    auto texture = std::make_shared<Texture2DDirect3D11>(
+        device.Get(),
+        width,
+        height,
+        levelCount,
+        format);
+
+    return std::make_tuple(std::move(texture), nullptr);
+}
+
+Microsoft::WRL::ComPtr<ID3D11Device3>
+GraphicsDeviceDirect3D11::GetDevice() const noexcept
+{
+    return device;
+}
+
+std::tuple<Microsoft::WRL::ComPtr<IDXGIFactory1>, std::shared_ptr<Error>>
+GraphicsDeviceDirect3D11::GetDXGIFactory() noexcept
+{
+    return adapters.GetFactory();
 }
 
 void GraphicsDeviceDirect3D11::ClientSizeChanged(int width, int height)
 {
-    POMDOG_ASSERT(impl);
-    impl->presentationParameters.BackBufferWidth = width;
-    impl->presentationParameters.BackBufferHeight = height;
+    presentationParameters.BackBufferWidth = width;
+    presentationParameters.BackBufferHeight = height;
 }
 
 } // namespace Pomdog::Detail::Direct3D11

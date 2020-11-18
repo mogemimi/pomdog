@@ -180,11 +180,15 @@ GraphicsContextDirect3D11::GraphicsContextDirect3D11(
         ///@todo MSAA is not implemented yet
         constexpr int multiSampleCount = 1;
 
+        constexpr std::int32_t backBufferMipLevels = 1;
+
         backBuffer = std::make_shared<RenderTarget2DDirect3D11>(
             device.Get(),
             swapChain.Get(),
             preferredBackBufferWidth,
             preferredBackBufferHeight,
+            backBufferMipLevels,
+            presentationParameters.BackBufferFormat,
             backBufferDepthFormat,
             multiSampleCount);
 
@@ -319,18 +323,17 @@ void GraphicsContextDirect3D11::DrawIndexedInstanced(
 
 void GraphicsContextDirect3D11::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer)
 {
-    POMDOG_ASSERT(deferredContext);
-    POMDOG_ASSERT(indexBuffer);
+    POMDOG_ASSERT(deferredContext != nullptr);
+    POMDOG_ASSERT(indexBuffer != nullptr);
 
-    auto nativeIndexBuffer = static_cast<BufferDirect3D11*>(
-        indexBuffer->GetNativeIndexBuffer());
+    auto nativeBuffer = static_cast<BufferDirect3D11*>(indexBuffer->GetNativeBuffer());
+    POMDOG_ASSERT(nativeBuffer != nullptr);
+    POMDOG_ASSERT(nativeBuffer == dynamic_cast<BufferDirect3D11*>(indexBuffer->GetNativeBuffer()));
 
-    POMDOG_ASSERT(nativeIndexBuffer != nullptr);
-    POMDOG_ASSERT(nativeIndexBuffer == dynamic_cast<BufferDirect3D11*>(
-        indexBuffer->GetNativeIndexBuffer()));
-
-    deferredContext->IASetIndexBuffer(nativeIndexBuffer->GetBuffer(),
-        DXGIFormatHelper::ToDXGIFormat(indexBuffer->GetElementSize()), 0);
+    deferredContext->IASetIndexBuffer(
+        nativeBuffer->GetBuffer(),
+        DXGIFormatHelper::ToDXGIFormat(indexBuffer->GetElementSize()),
+        0);
 }
 
 GraphicsCapabilities GraphicsContextDirect3D11::GetCapabilities() const
@@ -392,16 +395,13 @@ void GraphicsContextDirect3D11::SetVertexBuffer(
     std::size_t offset)
 {
     POMDOG_ASSERT(vertexBuffer != nullptr);
-    POMDOG_ASSERT(vertexBuffer->GetNativeVertexBuffer() != nullptr);
+    POMDOG_ASSERT(vertexBuffer->GetNativeBuffer() != nullptr);
 
-    auto nativeVertexBuffer = static_cast<BufferDirect3D11*>(
-        vertexBuffer->GetNativeVertexBuffer());
+    auto nativeBuffer = static_cast<BufferDirect3D11*>(vertexBuffer->GetNativeBuffer());
+    POMDOG_ASSERT(nativeBuffer != nullptr);
+    POMDOG_ASSERT(nativeBuffer == dynamic_cast<BufferDirect3D11*>(vertexBuffer->GetNativeBuffer()));
 
-    POMDOG_ASSERT(nativeVertexBuffer != nullptr);
-    POMDOG_ASSERT(nativeVertexBuffer == dynamic_cast<BufferDirect3D11*>(
-        vertexBuffer->GetNativeVertexBuffer()));
-
-    const auto buffer = nativeVertexBuffer->GetBuffer();
+    const auto buffer = nativeBuffer->GetBuffer();
     const auto stride = static_cast<UINT>(vertexBuffer->GetStrideBytes());
     const auto vertexOffset = static_cast<UINT>(offset);
 
@@ -414,7 +414,7 @@ void GraphicsContextDirect3D11::SetVertexBuffer(
         &vertexOffset);
 }
 
-void GraphicsContextDirect3D11::SetPipelineState(const std::shared_ptr<NativePipelineState>& pipelineStateIn)
+void GraphicsContextDirect3D11::SetPipelineState(const std::shared_ptr<PipelineState>& pipelineStateIn)
 {
     POMDOG_ASSERT(pipelineStateIn);
 
@@ -434,10 +434,12 @@ void GraphicsContextDirect3D11::SetConstantBuffer(
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(index < D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT);
-    POMDOG_ASSERT(dynamic_cast<BufferDirect3D11*>(constantBufferIn.get()));
 
-    auto& constantBuffer = static_cast<BufferDirect3D11&>(*constantBufferIn);
-    auto buffer = constantBuffer.GetBuffer();
+    auto constantBuffer = static_cast<BufferDirect3D11*>(constantBufferIn.get());
+    POMDOG_ASSERT(constantBuffer != nullptr);
+    POMDOG_ASSERT(constantBuffer == dynamic_cast<BufferDirect3D11*>(constantBufferIn.get()));
+
+    auto buffer = constantBuffer->GetBuffer();
     POMDOG_ASSERT(buffer != nullptr);
 
     const auto startOffset = static_cast<UINT>(offset);
@@ -448,7 +450,7 @@ void GraphicsContextDirect3D11::SetConstantBuffer(
     deferredContext->PSSetConstantBuffers1(index, 1, &buffer, &startOffset, &constantSize);
 }
 
-void GraphicsContextDirect3D11::SetSampler(int index, const std::shared_ptr<NativeSamplerState>& samplerIn)
+void GraphicsContextDirect3D11::SetSampler(int index, const std::shared_ptr<SamplerState>& samplerIn)
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(index < D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT);
@@ -490,8 +492,7 @@ void GraphicsContextDirect3D11::SetTexture(int index, const std::shared_ptr<Text
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(index < D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT);
     POMDOG_ASSERT(index < static_cast<int>(textureResourceViews.size()));
-    POMDOG_ASSERT(textureIn);
-    POMDOG_ASSERT(textureIn->GetNativeTexture2D() != nullptr);
+    POMDOG_ASSERT(textureIn != nullptr);
 
 #if defined(DEBUG) && !defined(NDEBUG)
     POMDOG_ASSERT(!weakTextures.empty());
@@ -499,10 +500,10 @@ void GraphicsContextDirect3D11::SetTexture(int index, const std::shared_ptr<Text
     weakTextures[index] = textureIn;
 #endif
 
-    auto texture = static_cast<Texture2DDirect3D11*>(textureIn->GetNativeTexture2D());
+    auto texture = static_cast<Texture2DDirect3D11*>(textureIn.get());
 
     POMDOG_ASSERT(texture != nullptr);
-    POMDOG_ASSERT(texture == dynamic_cast<Texture2DDirect3D11*>(textureIn->GetNativeTexture2D()));
+    POMDOG_ASSERT(texture == dynamic_cast<Texture2DDirect3D11*>(textureIn.get()));
 
     textureResourceViews[index] = texture->GetShaderResourceView();
 
@@ -515,8 +516,7 @@ void GraphicsContextDirect3D11::SetTexture(int index, const std::shared_ptr<Rend
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(index < D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT);
     POMDOG_ASSERT(index < static_cast<int>(textureResourceViews.size()));
-    POMDOG_ASSERT(textureIn);
-    POMDOG_ASSERT(textureIn->GetNativeRenderTarget2D() != nullptr);
+    POMDOG_ASSERT(textureIn != nullptr);
 
 #if defined(DEBUG) && !defined(NDEBUG)
     POMDOG_ASSERT(!weakTextures.empty());
@@ -524,10 +524,10 @@ void GraphicsContextDirect3D11::SetTexture(int index, const std::shared_ptr<Rend
     weakTextures[index] = textureIn;
 #endif
 
-    auto texture = static_cast<RenderTarget2DDirect3D11*>(textureIn->GetNativeRenderTarget2D());
+    auto texture = static_cast<RenderTarget2DDirect3D11*>(textureIn.get());
 
     POMDOG_ASSERT(texture != nullptr);
-    POMDOG_ASSERT(texture == dynamic_cast<RenderTarget2DDirect3D11*>(textureIn->GetNativeRenderTarget2D()));
+    POMDOG_ASSERT(texture == dynamic_cast<RenderTarget2DDirect3D11*>(textureIn.get()));
 
     textureResourceViews[index] = texture->GetShaderResourceView();
 
@@ -563,13 +563,12 @@ void GraphicsContextDirect3D11::SetRenderPass(const RenderPass& renderPass)
             if (renderTarget == nullptr) {
                 break;
             }
-            auto nativeRenderTarget = renderTarget->GetNativeRenderTarget2D();
-            auto direct3d11RenderTarget = static_cast<RenderTarget2DDirect3D11*>(nativeRenderTarget);
+            auto direct3d11RenderTarget = std::static_pointer_cast<RenderTarget2DDirect3D11>(renderTarget);
             POMDOG_ASSERT(direct3d11RenderTarget != nullptr);
-            POMDOG_ASSERT(direct3d11RenderTarget == dynamic_cast<RenderTarget2DDirect3D11*>(nativeRenderTarget));
+            POMDOG_ASSERT(direct3d11RenderTarget == std::dynamic_pointer_cast<RenderTarget2DDirect3D11>(renderTarget));
 
-            renderTargets.emplace_back(renderTarget, direct3d11RenderTarget);
             renderTargetViews[i] = direct3d11RenderTarget->GetRenderTargetView();
+            renderTargets.emplace_back(std::move(direct3d11RenderTarget));
             POMDOG_ASSERT(renderTargetViews[i] != nullptr);
             POMDOG_ASSERT(i <= renderTargets.size());
         }

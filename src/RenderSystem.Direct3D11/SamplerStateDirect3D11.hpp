@@ -3,13 +3,13 @@
 #pragma once
 
 #include "PrerequisitesDirect3D11.hpp"
-#include "../RenderSystem/NativeSamplerState.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
+#include "Pomdog/Graphics/SamplerState.hpp"
 #include <wrl/client.h>
 
 namespace Pomdog::Detail::Direct3D11 {
 
-class SamplerStateDirect3D11 final : public NativeSamplerState {
+class SamplerStateDirect3D11 final : public SamplerState {
 public:
     SamplerStateDirect3D11(
         ID3D11Device* device,

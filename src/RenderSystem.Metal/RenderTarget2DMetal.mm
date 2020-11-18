@@ -5,6 +5,7 @@
 #include "../RenderSystem/SurfaceFormatHelper.hpp"
 #include "Pomdog/Graphics/DepthFormat.hpp"
 #include "Pomdog/Logging/Log.hpp"
+#include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #import <Metal/MTLDevice.h>
@@ -14,16 +15,22 @@ namespace Pomdog::Detail::Metal {
 
 RenderTarget2DMetal::RenderTarget2DMetal(
     id<MTLDevice> device,
-    std::int32_t pixelWidth,
-    std::int32_t pixelHeight,
-    std::int32_t levelCount,
-    SurfaceFormat format,
-    DepthFormat depthStencilFormat,
+    std::int32_t pixelWidthIn,
+    std::int32_t pixelHeightIn,
+    std::int32_t levelCountIn,
+    SurfaceFormat formatIn,
+    DepthFormat depthStencilFormatIn,
     std::int32_t multiSampleCount)
-    : texture(nil)
-    , depthStencilTexture(nil)
-    //, multiSampleEnabled(multiSampleCount > 1)
+    : texture(nullptr)
+    , depthStencilTexture(nullptr)
 {
+    pixelWidth = pixelWidthIn;
+    pixelHeight = pixelHeightIn;
+    levelCount = levelCountIn;
+    format = formatIn;
+    depthStencilFormat = depthStencilFormatIn;
+    multiSampleEnabled = (multiSampleCount > 1);
+
     POMDOG_ASSERT(device != nil);
     {
         MTLTextureDescriptor* descriptor = [MTLTextureDescriptor
@@ -75,14 +82,40 @@ RenderTarget2DMetal::RenderTarget2DMetal(
     }
 }
 
+std::int32_t RenderTarget2DMetal::GetWidth() const noexcept
+{
+    return pixelWidth;
+}
+
+std::int32_t RenderTarget2DMetal::GetHeight() const noexcept
+{
+    return pixelHeight;
+}
+
+std::int32_t RenderTarget2DMetal::GetLevelCount() const noexcept
+{
+    return levelCount;
+}
+
+SurfaceFormat RenderTarget2DMetal::GetFormat() const noexcept
+{
+    return format;
+}
+
+DepthFormat RenderTarget2DMetal::GetDepthStencilFormat() const noexcept
+{
+    return depthStencilFormat;
+}
+
+Rectangle RenderTarget2DMetal::GetBounds() const noexcept
+{
+    return Rectangle{0, 0, pixelWidth, pixelHeight};
+}
+
 void RenderTarget2DMetal::GetData(
     void* result,
     std::size_t offsetInBytes,
-    std::size_t sizeInBytes,
-    std::int32_t pixelWidth,
-    std::int32_t pixelHeight,
-    [[maybe_unused]] std::int32_t levelCount,
-    SurfaceFormat format) const
+    std::size_t sizeInBytes) const
 {
     POMDOG_ASSERT(texture != nullptr);
     POMDOG_ASSERT(result != nullptr);

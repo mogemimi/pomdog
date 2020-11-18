@@ -16,8 +16,10 @@ namespace Pomdog::Detail::GL4 {
 
 namespace Tags {
 
-struct ScalarDataTypeTag {};
-struct VertexArrayTag {};
+struct ScalarDataTypeTag {
+};
+struct VertexArrayTag {
+};
 
 } // namespace Tags
 

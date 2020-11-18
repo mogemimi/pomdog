@@ -2,13 +2,13 @@
 
 #pragma once
 
-#include "../RenderSystem/NativeTexture2D.hpp"
+#include "Pomdog/Graphics/Texture2D.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include <vulkan/vulkan.h>
 
 namespace Pomdog::Detail::Vulkan {
 
-class Texture2DVulkan final : public NativeTexture2D {
+class Texture2DVulkan final : public Texture2D {
 public:
     Texture2DVulkan(
         ::VkDevice device,
@@ -18,14 +18,22 @@ public:
         std::int32_t levelCount,
         SurfaceFormat format);
 
-    ~Texture2DVulkan();
+    ~Texture2DVulkan() override;
 
-    void SetData(
-        std::int32_t pixelWidth,
-        std::int32_t pixelHeight,
-        std::int32_t levelCount,
-        SurfaceFormat format,
-        const void* pixelData) override;
+    /// Gets the width of the texture data, in pixels.
+    std::int32_t GetWidth() const noexcept override;
+
+    /// Gets the height of the texture data, in pixels.
+    std::int32_t GetHeight() const noexcept override;
+
+    /// Gets the mipmap level.
+    std::int32_t GetLevelCount() const noexcept override;
+
+    /// Gets the format of the pixel data in the texture.
+    SurfaceFormat GetFormat() const noexcept override;
+
+    /// Sets texture data.
+    void SetData(const void* pixelData) override;
 
 private:
     ::VkDevice device;

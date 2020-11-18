@@ -665,7 +665,8 @@ std::vector<UniformGL4> EffectReflectionGL4::GetNativeUniforms()
     return uniforms;
 }
 
-std::vector<EffectConstantDescription> EffectReflectionGL4::GetConstantBuffers() const
+std::vector<EffectConstantDescription>
+EffectReflectionGL4::GetConstantBuffers() const noexcept
 {
     auto uniformBlocks = EnumerateUniformBlocks(shaderProgram);
 

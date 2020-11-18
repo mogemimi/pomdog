@@ -3,16 +3,16 @@
 #pragma once
 
 #include "OpenGLPrerequisites.hpp"
-#include "../RenderSystem/NativeTexture2D.hpp"
 #include "../Utility/Tagged.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
+#include "Pomdog/Graphics/Texture2D.hpp"
 #include <optional>
 
 namespace Pomdog::Detail::GL4 {
 
 using Texture2DObjectGL4 = Tagged<GLuint, Texture2D>;
 
-class Texture2DGL4 final : public NativeTexture2D {
+class Texture2DGL4 final : public Texture2D {
 public:
     Texture2DGL4(
         std::int32_t pixelWidth,
@@ -22,28 +22,36 @@ public:
 
     ~Texture2DGL4() override;
 
-    void GetData(
-        void* result,
-        std::size_t offsetInBytes,
-        std::size_t sizeInBytes,
-        std::int32_t pixelWidth,
-        std::int32_t pixelHeight,
-        std::int32_t levelCount,
-        SurfaceFormat format) const;
+    /// Gets the width of the texture data, in pixels.
+    std::int32_t GetWidth() const noexcept override;
 
-    void SetData(
-        std::int32_t pixelWidth,
-        std::int32_t pixelHeight,
-        std::int32_t levelCount,
-        SurfaceFormat format,
-        const void* pixelData) override;
+    /// Gets the height of the texture data, in pixels.
+    std::int32_t GetHeight() const noexcept override;
 
+    /// Gets the mipmap level.
+    std::int32_t GetLevelCount() const noexcept override;
+
+    /// Gets the format of the pixel data in the texture.
+    SurfaceFormat GetFormat() const noexcept override;
+
+    /// Sets texture data.
+    void SetData(const void* pixelData) override;
+
+    /// Copies the pixel data from texture to memory.
+    void GetData(void* result, std::size_t offsetInBytes, std::size_t sizeInBytes) const;
+
+    /// Generates a set of mipmaps.
     void GenerateMipmap();
 
-    const Texture2DObjectGL4& GetTextureHandle() const;
+    /// Gets the handle of the native texture resource.
+    Texture2DObjectGL4 GetTextureHandle() const noexcept;
 
 private:
     std::optional<Texture2DObjectGL4> textureObject;
+    std::int32_t pixelWidth = 0;
+    std::int32_t pixelHeight = 0;
+    std::int32_t levelCount = 0;
+    SurfaceFormat format = SurfaceFormat::A8_UNorm;
 };
 
 } // namespace Pomdog::Detail::GL4

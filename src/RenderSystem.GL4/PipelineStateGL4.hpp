@@ -7,8 +7,8 @@
 #include "OpenGLPrerequisites.hpp"
 #include "RasterizerStateGL4.hpp"
 #include "TypesafeGL4.hpp"
-#include "../RenderSystem/NativePipelineState.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
+#include "Pomdog/Graphics/PipelineState.hpp"
 #include <cstdint>
 #include <memory>
 #include <optional>
@@ -25,7 +25,7 @@ struct TextureBindingGL4 final {
     std::uint16_t SlotIndex;
 };
 
-class PipelineStateGL4 final : public NativePipelineState {
+class PipelineStateGL4 final : public PipelineState {
 public:
     explicit PipelineStateGL4(const PipelineStateDescription& description);
 

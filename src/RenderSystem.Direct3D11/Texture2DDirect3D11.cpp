@@ -68,11 +68,16 @@ using Microsoft::WRL::ComPtr;
 
 Texture2DDirect3D11::Texture2DDirect3D11(
     ID3D11Device* device,
-    std::int32_t pixelWidth,
-    std::int32_t pixelHeight,
-    std::int32_t levelCount,
-    SurfaceFormat format)
+    std::int32_t pixelWidthIn,
+    std::int32_t pixelHeightIn,
+    std::int32_t levelCountIn,
+    SurfaceFormat formatIn)
 {
+    pixelWidth = pixelWidthIn;
+    pixelHeight = pixelHeightIn;
+    levelCount = levelCountIn;
+    format = formatIn;
+
     POMDOG_ASSERT(device != nullptr);
     POMDOG_ASSERT(pixelWidth > 0);
     POMDOG_ASSERT(pixelHeight > 0);
@@ -117,17 +122,33 @@ Texture2DDirect3D11::Texture2DDirect3D11(
     }
 }
 
-void Texture2DDirect3D11::SetData(
-    std::int32_t pixelWidth,
-    std::int32_t pixelHeight,
-    std::int32_t levelCount,
-    SurfaceFormat format,
-    const void* pixelData)
+std::int32_t Texture2DDirect3D11::GetWidth() const noexcept
+{
+    return pixelWidth;
+}
+
+std::int32_t Texture2DDirect3D11::GetHeight() const noexcept
+{
+    return pixelHeight;
+}
+
+std::int32_t Texture2DDirect3D11::GetLevelCount() const noexcept
+{
+    return levelCount;
+}
+
+SurfaceFormat Texture2DDirect3D11::GetFormat() const noexcept
+{
+    return format;
+}
+
+void Texture2DDirect3D11::SetData(const void* pixelData)
 {
     POMDOG_ASSERT(texture2D);
     POMDOG_ASSERT(pixelWidth > 0);
     POMDOG_ASSERT(pixelHeight > 0);
     POMDOG_ASSERT(levelCount >= 1);
+    POMDOG_ASSERT(pixelData != nullptr);
 
     // NOTE: Get the device context
     ComPtr<ID3D11Device> device;
@@ -179,7 +200,8 @@ void Texture2DDirect3D11::SetData(
     deviceContext->Unmap(texture2D.Get(), 0);
 }
 
-ID3D11ShaderResourceView* Texture2DDirect3D11::GetShaderResourceView() const
+ID3D11ShaderResourceView*
+Texture2DDirect3D11::GetShaderResourceView() const noexcept
 {
     POMDOG_ASSERT(shaderResourceView);
     return shaderResourceView.Get();

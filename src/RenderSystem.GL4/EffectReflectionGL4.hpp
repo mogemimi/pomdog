@@ -4,14 +4,14 @@
 
 #include "OpenGLPrerequisites.hpp"
 #include "TypesafeGL4.hpp"
-#include "../RenderSystem/NativeEffectReflection.hpp"
+#include "Pomdog/Graphics/EffectReflection.hpp"
 #include <cstdint>
 #include <string>
 #include <vector>
 
 namespace Pomdog::Detail::GL4 {
 
-struct UniformVariableGL4 {
+struct UniformVariableGL4 final {
     std::string Name;
     GLuint StartOffset;
     GLenum Elements;
@@ -21,27 +21,26 @@ struct UniformVariableGL4 {
     bool IsRowMajor;
 };
 
-struct UniformBlockGL4 {
+struct UniformBlockGL4 final {
     std::vector<UniformVariableGL4> Uniforms;
     std::string Name;
     std::uint32_t ByteSize;
     std::uint32_t BlockIndex;
 };
 
-struct UniformGL4 {
+struct UniformGL4 final {
     std::string Name;
     GLint Location;
     GLenum Type;
     GLuint ArrayCount;
 };
 
-class EffectReflectionGL4 final : public NativeEffectReflection {
+class EffectReflectionGL4 final : public EffectReflection {
 public:
-    EffectReflectionGL4() = delete;
-
     explicit EffectReflectionGL4(const ShaderProgramGL4& shaderProgram);
 
-    std::vector<EffectConstantDescription> GetConstantBuffers() const override;
+    std::vector<EffectConstantDescription>
+    GetConstantBuffers() const noexcept override;
 
     std::vector<UniformBlockGL4> GetNativeUniformBlocks();
 

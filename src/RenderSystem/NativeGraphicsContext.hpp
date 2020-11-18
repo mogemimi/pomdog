@@ -64,7 +64,7 @@ public:
 
     virtual void SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer) = 0;
 
-    virtual void SetPipelineState(const std::shared_ptr<NativePipelineState>& pipelineState) = 0;
+    virtual void SetPipelineState(const std::shared_ptr<PipelineState>& pipelineState) = 0;
 
     virtual void SetConstantBuffer(
         int index,
@@ -72,7 +72,7 @@ public:
         std::size_t offset,
         std::size_t sizeInBytes) = 0;
 
-    virtual void SetSampler(int index, const std::shared_ptr<NativeSamplerState>& sampler) = 0;
+    virtual void SetSampler(int index, const std::shared_ptr<SamplerState>& sampler) = 0;
 
     virtual void SetTexture(int index) = 0;
 

@@ -122,7 +122,8 @@ EffectReflectionMetal::EffectReflectionMetal(MTLRenderPipelineReflection* reflec
     POMDOG_ASSERT(reflection != nil);
 }
 
-std::vector<EffectConstantDescription> EffectReflectionMetal::GetConstantBuffers() const
+std::vector<EffectConstantDescription>
+EffectReflectionMetal::GetConstantBuffers() const noexcept
 {
     NSArray<MTLArgument*>* arguments = reflection.vertexArguments;
 
@@ -165,10 +166,14 @@ std::vector<EffectConstantDescription> EffectReflectionMetal::GetConstantBuffers
         POMDOG_ASSERT(false);
     }
 
+#if defined(DEBUG) && !defined(NDEBUG)
     ///@todo Not implemented
     //reflection.fragmentArguments;
     POMDOG_ASSERT(false);
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
+#else
+    return constants;
+#endif
 }
 
 } // namespace Pomdog::Detail::Metal
