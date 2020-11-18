@@ -15,7 +15,7 @@ void BasicEffectTest::Initialize()
 {
     auto assets = gameHost->GetAssetManager();
     auto clock = gameHost->GetClock();
-    commandList = std::make_shared<GraphicsCommandList>(*graphicsDevice);
+    commandList = std::get<0>(graphicsDevice->CreateGraphicsCommandList());
 
     // NOTE: Load texture from image file
     if (auto [res, err] = assets->Load<Texture2D>("Textures/pomdog.png"); err != nullptr) {
@@ -61,12 +61,11 @@ void BasicEffectTest::Initialize()
             {Vector3{0.0f, 1.0f, 1.0f}, Vector3{0.0f, 0.0f, 1.0f}, Vector2{0.0f, 1.0f}},
         }};
 
-        vertexBuffer1 = std::make_shared<VertexBuffer>(
-            graphicsDevice,
+        vertexBuffer1 = std::get<0>(graphicsDevice->CreateVertexBuffer(
             verticesCombo.data(),
             verticesCombo.size(),
             sizeof(VertexCombined),
-            BufferUsage::Immutable);
+            BufferUsage::Immutable));
     }
     {
         using VertexCombined = BasicEffect::VertexPositionColor;
@@ -104,12 +103,11 @@ void BasicEffectTest::Initialize()
             {Vector3{0.0f, 1.0f, 1.0f}, Color::White.ToVector4()},
         }};
 
-        vertexBuffer2 = std::make_shared<VertexBuffer>(
-            graphicsDevice,
+        vertexBuffer2 = std::get<0>(graphicsDevice->CreateVertexBuffer(
             verticesCombo.data(),
             verticesCombo.size(),
             sizeof(VertexCombined),
-            BufferUsage::Immutable);
+            BufferUsage::Immutable));
     }
     {
         // NOTE: Create index buffer
@@ -130,30 +128,26 @@ void BasicEffectTest::Initialize()
             19, 16, 18,
         }};
 
-        indexBuffer = std::make_shared<IndexBuffer>(
-            graphicsDevice,
+        indexBuffer = std::get<0>(graphicsDevice->CreateIndexBuffer(
             IndexElementSize::SixteenBits,
             indices.data(),
             indices.size(),
-            BufferUsage::Immutable);
+            BufferUsage::Immutable));
     }
     {
         // NOTE: Create constant buffer
-        modelConstantBuffer = std::make_shared<ConstantBuffer>(
-            graphicsDevice,
+        modelConstantBuffer = std::get<0>(graphicsDevice->CreateConstantBuffer(
             sizeof(BasicEffect::ModelConstantBuffer),
-            BufferUsage::Dynamic);
+            BufferUsage::Dynamic));
 
-        worldConstantBuffer = std::make_shared<ConstantBuffer>(
-            graphicsDevice,
+        worldConstantBuffer = std::get<0>(graphicsDevice->CreateConstantBuffer(
             sizeof(BasicEffect::WorldConstantBuffer),
-            BufferUsage::Dynamic);
+            BufferUsage::Dynamic));
     }
     {
         // NOTE: Create sampler state
-        sampler = std::make_shared<SamplerState>(
-            graphicsDevice,
-            SamplerDescription::CreateLinearClamp());
+        sampler = std::get<0>(graphicsDevice->CreateSamplerState(
+            SamplerDescription::CreateLinearClamp()));
     }
     {
         auto presentationParameters = graphicsDevice->GetPresentationParameters();

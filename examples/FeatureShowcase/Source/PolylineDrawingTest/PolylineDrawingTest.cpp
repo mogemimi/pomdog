@@ -14,7 +14,7 @@ void PolylineDrawingTest::Initialize()
 {
     auto assets = gameHost->GetAssetManager();
     auto clock = gameHost->GetClock();
-    commandList = std::make_shared<GraphicsCommandList>(*graphicsDevice);
+    commandList = std::get<0>(graphicsDevice->CreateGraphicsCommandList());
     lineBatch = std::make_shared<PolylineBatch>(graphicsDevice, *assets);
 
     auto mouse = gameHost->GetMouse();

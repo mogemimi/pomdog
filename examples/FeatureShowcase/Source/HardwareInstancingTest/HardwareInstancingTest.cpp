@@ -15,7 +15,7 @@ void HardwareInstancingTest::Initialize()
 {
     auto assets = gameHost->GetAssetManager();
     auto clock = gameHost->GetClock();
-    commandList = std::make_shared<GraphicsCommandList>(*graphicsDevice);
+    commandList = std::get<0>(graphicsDevice->CreateGraphicsCommandList());
 
     // NOTE: Load texture from image file
     if (auto [res, err] = assets->Load<Texture2D>("Textures/pomdog.png"); err != nullptr) {
@@ -41,43 +41,38 @@ void HardwareInstancingTest::Initialize()
             VertexCombined{Vector3{ 1.0f, -1.0f, 0.0f}, Vector2{1.0f, 1.0f}},
         }};
 
-        vertexBuffer = std::make_shared<VertexBuffer>(
-            graphicsDevice,
+        vertexBuffer = std::get<0>(graphicsDevice->CreateVertexBuffer(
             verticesCombo.data(),
             verticesCombo.size(),
             sizeof(VertexCombined),
-            BufferUsage::Immutable);
+            BufferUsage::Immutable));
     }
     {
         // NOTE: Create index buffer
         std::array<std::uint16_t, 6> indices = {{0, 1, 2, 2, 3, 0}};
 
-        indexBuffer = std::make_shared<IndexBuffer>(
-            graphicsDevice,
+        indexBuffer = std::get<0>(graphicsDevice->CreateIndexBuffer(
             IndexElementSize::SixteenBits,
             indices.data(),
             indices.size(),
-            BufferUsage::Immutable);
+            BufferUsage::Immutable));
     }
     {
-        instanceBuffer = std::make_shared<VertexBuffer>(
-            graphicsDevice,
+        instanceBuffer = std::get<0>(graphicsDevice->CreateVertexBuffer(
             maxSpriteCount,
             sizeof(SpriteInfo),
-            BufferUsage::Dynamic);
+            BufferUsage::Dynamic));
     }
     {
         // NOTE: Create constant buffer
-        constantBuffer = std::make_shared<ConstantBuffer>(
-            graphicsDevice,
+        constantBuffer = std::get<0>(graphicsDevice->CreateConstantBuffer(
             sizeof(Matrix4x4),
-            BufferUsage::Dynamic);
+            BufferUsage::Dynamic));
     }
     {
         // NOTE: Create sampler state
-        sampler = std::make_shared<SamplerState>(
-            graphicsDevice,
-            SamplerDescription::CreateLinearClamp());
+        sampler = std::get<0>(graphicsDevice->CreateSamplerState(
+            SamplerDescription::CreateLinearClamp()));
     }
     {
         // For details, see 'struct VertexCombined' members

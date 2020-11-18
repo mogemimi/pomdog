@@ -13,7 +13,7 @@ void GUISplitterTest::Initialize()
 {
     auto assets = gameHost->GetAssetManager();
     auto clock = gameHost->GetClock();
-    commandList = std::make_shared<GraphicsCommandList>(*graphicsDevice);
+    commandList = std::get<0>(graphicsDevice->CreateGraphicsCommandList());
 
     drawingContext = std::make_unique<GUI::DrawingContext>(graphicsDevice, *assets);
 

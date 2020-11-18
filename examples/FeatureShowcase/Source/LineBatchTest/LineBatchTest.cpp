@@ -14,7 +14,7 @@ void LineBatchTest::Initialize()
 {
     auto assets = gameHost->GetAssetManager();
     auto clock = gameHost->GetClock();
-    commandList = std::make_shared<GraphicsCommandList>(*graphicsDevice);
+    commandList = std::get<0>(graphicsDevice->CreateGraphicsCommandList());
     lineBatch = std::make_shared<LineBatch>(graphicsDevice, *assets);
     lineBatch2 = std::make_shared<LineBatch>(graphicsDevice, *assets);
     timer = std::make_shared<Timer>(clock);

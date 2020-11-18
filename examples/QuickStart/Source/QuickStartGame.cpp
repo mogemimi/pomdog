@@ -23,7 +23,7 @@ void QuickStartGame::Initialize()
     window->SetTitle("QuickStart");
 
     // Create graphics command list
-    commandList = std::make_shared<GraphicsCommandList>(*graphicsDevice);
+    commandList = std::get<0>(graphicsDevice->CreateGraphicsCommandList());
 
     // Load a PNG as texture
     if (auto [res, err] = assets->Load<Texture2D>("pomdog.png"); err != nullptr) {
@@ -38,9 +38,7 @@ void QuickStartGame::Initialize()
 
     {
         // Create sampler state
-        sampler = std::make_shared<SamplerState>(
-            graphicsDevice,
-            SamplerDescription::CreatePointClamp());
+        sampler = std::get<0>(graphicsDevice->CreateSamplerState(SamplerDescription::CreatePointClamp()));
     }
     {
         // Create vertex buffer
@@ -56,30 +54,27 @@ void QuickStartGame::Initialize()
             VertexCombined{Vector3{ 1.0f, -1.0f, 0.0f}, Vector2{1.0f, 1.0f}},
         }};
 
-        vertexBuffer = std::make_shared<VertexBuffer>(
-            graphicsDevice,
+        vertexBuffer = std::get<0>(graphicsDevice->CreateVertexBuffer(
             verticesCombo.data(),
             verticesCombo.size(),
             sizeof(VertexCombined),
-            BufferUsage::Immutable);
+            BufferUsage::Immutable));
     }
     {
         // Create index buffer
         std::array<std::uint16_t, 6> indices = {{0, 1, 2, 2, 3, 0}};
 
-        indexBuffer = std::make_shared<IndexBuffer>(
-            graphicsDevice,
+        indexBuffer = std::get<0>(graphicsDevice->CreateIndexBuffer(
             IndexElementSize::SixteenBits,
             indices.data(),
             indices.size(),
-            BufferUsage::Immutable);
+            BufferUsage::Immutable));
     }
     {
         // Create constant buffer
-        constantBuffer = std::make_shared<ConstantBuffer>(
-            graphicsDevice,
+        constantBuffer = std::get<0>(graphicsDevice->CreateConstantBuffer(
             sizeof(MyShaderConstants),
-            BufferUsage::Dynamic);
+            BufferUsage::Dynamic));
     }
     {
         // For details, see 'struct VertexCombined' members

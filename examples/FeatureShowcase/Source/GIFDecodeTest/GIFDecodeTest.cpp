@@ -19,7 +19,7 @@ void GIFDecodeTest::Initialize()
 {
     auto assets = gameHost->GetAssetManager();
     auto clock = gameHost->GetClock();
-    commandList = std::make_shared<GraphicsCommandList>(*graphicsDevice);
+    commandList = std::get<0>(graphicsDevice->CreateGraphicsCommandList());
     spriteBatch = std::make_shared<SpriteBatch>(
         graphicsDevice,
         BlendDescription::CreateAlphaBlend(),
@@ -51,12 +51,11 @@ void GIFDecodeTest::Initialize()
     result.Image->PremultiplyAlpha();
 
     // Creating texture from packed image
-    texture = std::make_shared<Texture2D>(
-        graphicsDevice,
+    texture = std::get<0>(graphicsDevice->CreateTexture2D(
         result.Image->GetWidth(),
         result.Image->GetHeight(),
         false,
-        SurfaceFormat::R8G8B8A8_UNorm);
+        SurfaceFormat::R8G8B8A8_UNorm));
     texture->SetData(result.Image->GetData());
 
     textureAtlas = std::move(result.Atlas);

@@ -34,7 +34,7 @@ void PongGame::Initialize()
     audioEngine->SetMainVolume(0.4f);
 
     // NOTE: Create graphics command list
-    commandList = std::make_shared<GraphicsCommandList>(*graphicsDevice);
+    commandList = std::get<0>(graphicsDevice->CreateGraphicsCommandList());
 
     // NOTE: Create batch renderers
     primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
@@ -91,11 +91,11 @@ void PongGame::Initialize()
         fishEyeEffect->SetStrength(0.2f);
 
         auto presentationParameters = graphicsDevice->GetPresentationParameters();
-        renderTarget = std::make_shared<RenderTarget2D>(
-            graphicsDevice, presentationParameters.BackBufferWidth,
+        renderTarget = std::get<0>(graphicsDevice->CreateRenderTarget2D(
+            presentationParameters.BackBufferWidth,
             presentationParameters.BackBufferHeight, false,
             presentationParameters.BackBufferFormat,
-            presentationParameters.DepthStencilFormat);
+            presentationParameters.DepthStencilFormat));
 
         postProcessCompositor.SetViewportSize(
             *graphicsDevice, presentationParameters.BackBufferWidth,
@@ -113,10 +113,10 @@ void PongGame::Initialize()
 
         connect(window->ClientSizeChanged, [this](int width, int height) {
             auto presentationParameters = graphicsDevice->GetPresentationParameters();
-            renderTarget = std::make_shared<RenderTarget2D>(
-                graphicsDevice, width, height, false,
+            renderTarget = std::get<0>(graphicsDevice->CreateRenderTarget2D(
+                width, height, false,
                 presentationParameters.BackBufferFormat,
-                presentationParameters.DepthStencilFormat);
+                presentationParameters.DepthStencilFormat));
 
             postProcessCompositor.SetViewportSize(
                 *graphicsDevice, width, height,

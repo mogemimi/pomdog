@@ -23,7 +23,7 @@ void Skinning2DTest::Initialize()
 {
     auto assets = gameHost->GetAssetManager();
     auto clock = gameHost->GetClock();
-    commandList = std::make_shared<GraphicsCommandList>(*graphicsDevice);
+    commandList = std::get<0>(graphicsDevice->CreateGraphicsCommandList());
     primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
     spriteBatch = std::make_shared<SpriteBatch>(
         graphicsDevice,
@@ -111,33 +111,29 @@ void Skinning2DTest::Initialize()
             {Vector3{1.0f, 0.0f, 0.0f}, Vector2{1.0f, 1.0f}},
         }};
 
-        vertexBuffer = std::make_shared<VertexBuffer>(
-            graphicsDevice,
+        vertexBuffer = std::get<0>(graphicsDevice->CreateVertexBuffer(
             verticesCombo.data(),
             skinnedMesh.Vertices.size(),
             sizeof(VertexCombined),
-            BufferUsage::Dynamic);
+            BufferUsage::Dynamic));
     }
     {
         // NOTE: Create index buffer
-        indexBuffer = std::make_shared<IndexBuffer>(
-            graphicsDevice,
+        indexBuffer = std::get<0>(graphicsDevice->CreateIndexBuffer(
             IndexElementSize::SixteenBits,
             skinnedMesh.Indices.data(),
             skinnedMesh.Indices.size(),
-            BufferUsage::Immutable);
+            BufferUsage::Immutable));
     }
     {
         // NOTE: Create constant buffer
-        modelConstantBuffer = std::make_shared<ConstantBuffer>(
-            graphicsDevice,
+        modelConstantBuffer = std::get<0>(graphicsDevice->CreateConstantBuffer(
             sizeof(BasicEffect::ModelConstantBuffer),
-            BufferUsage::Dynamic);
+            BufferUsage::Dynamic));
 
-        worldConstantBuffer = std::make_shared<ConstantBuffer>(
-            graphicsDevice,
+        worldConstantBuffer = std::get<0>(graphicsDevice->CreateConstantBuffer(
             sizeof(BasicEffect::WorldConstantBuffer),
-            BufferUsage::Dynamic);
+            BufferUsage::Dynamic));
     }
     {
         auto presentationParameters = graphicsDevice->GetPresentationParameters();
@@ -172,7 +168,8 @@ void Skinning2DTest::Initialize()
             .Build();
     }
     {
-        sampler = std::make_shared<SamplerState>(graphicsDevice, SamplerDescription::CreateLinearWrap());
+        sampler = std::get<0>(graphicsDevice->CreateSamplerState(
+            SamplerDescription::CreateLinearWrap()));
     }
 }
 

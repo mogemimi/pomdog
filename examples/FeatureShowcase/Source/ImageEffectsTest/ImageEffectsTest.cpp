@@ -21,7 +21,7 @@ void ImageEffectsTest::Initialize()
 {
     auto assets = gameHost->GetAssetManager();
     auto clock = gameHost->GetClock();
-    commandList = std::make_shared<GraphicsCommandList>(*graphicsDevice);
+    commandList = std::get<0>(graphicsDevice->CreateGraphicsCommandList());
     primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
 
     auto fxaa = std::make_shared<FXAA>(graphicsDevice, *assets);
@@ -40,11 +40,12 @@ void ImageEffectsTest::Initialize()
     fishEyeEffect->SetStrength(0.3f);
 
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
-    renderTarget = std::make_shared<RenderTarget2D>(
-        graphicsDevice, presentationParameters.BackBufferWidth,
-        presentationParameters.BackBufferHeight, false,
+    renderTarget = std::get<0>(graphicsDevice->CreateRenderTarget2D(
+        presentationParameters.BackBufferWidth,
+        presentationParameters.BackBufferHeight,
+        false,
         presentationParameters.BackBufferFormat,
-        presentationParameters.DepthStencilFormat);
+        presentationParameters.DepthStencilFormat));
 
     postProcessCompositor.SetViewportSize(
         *graphicsDevice, presentationParameters.BackBufferWidth,
@@ -63,12 +64,13 @@ void ImageEffectsTest::Initialize()
     auto window = gameHost->GetWindow();
 
     connect(window->ClientSizeChanged, [this](int width, int height) {
-        auto presentationParameters =
-            graphicsDevice->GetPresentationParameters();
-        renderTarget = std::make_shared<RenderTarget2D>(
-            graphicsDevice, width, height, false,
+        auto presentationParameters = graphicsDevice->GetPresentationParameters();
+        renderTarget = std::get<0>(graphicsDevice->CreateRenderTarget2D(
+            width,
+            height,
+            false,
             presentationParameters.BackBufferFormat,
-            presentationParameters.DepthStencilFormat);
+            presentationParameters.DepthStencilFormat));
 
         postProcessCompositor.SetViewportSize(
             *graphicsDevice, width, height,

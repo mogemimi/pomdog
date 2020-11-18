@@ -44,7 +44,7 @@ FeatureShowcaseGame::FeatureShowcaseGame(const std::shared_ptr<GameHost>& gameHo
 void FeatureShowcaseGame::Initialize()
 {
     window->SetTitle("Feature Showcase");
-    commandList = std::make_shared<GraphicsCommandList>(*graphicsDevice);
+    commandList = std::get<0>(graphicsDevice->CreateGraphicsCommandList());
 
     auto [font, fontErr] = assets->Load<TrueTypeFont>("Fonts/NotoSans/NotoSans-Regular.ttf");
     if (fontErr != nullptr) {

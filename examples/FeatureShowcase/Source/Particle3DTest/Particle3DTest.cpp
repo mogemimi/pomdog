@@ -40,7 +40,7 @@ void Particle3DTest::Initialize()
 {
     auto assets = gameHost->GetAssetManager();
     auto clock = gameHost->GetClock();
-    commandList = std::make_shared<GraphicsCommandList>(*graphicsDevice);
+    commandList = std::get<0>(graphicsDevice->CreateGraphicsCommandList());
 
     lineBatch = std::make_shared<LineBatch>(graphicsDevice, *assets);
 
@@ -58,15 +58,13 @@ void Particle3DTest::Initialize()
     billboardBuffer = std::make_shared<BillboardBatchBuffer>(graphicsDevice, 4096);
 
     // NOTE: Create sampler state
-    sampler = std::make_shared<SamplerState>(
-        graphicsDevice,
-        SamplerDescription::CreateLinearClamp());
+    sampler = std::get<0>(graphicsDevice->CreateSamplerState(
+        SamplerDescription::CreateLinearClamp()));
 
     // NOTE: Create constant buffer
-    constantBuffer = std::make_shared<ConstantBuffer>(
-        graphicsDevice,
+    constantBuffer = std::get<0>(graphicsDevice->CreateConstantBuffer(
         sizeof(BasicEffect::WorldConstantBuffer),
-        BufferUsage::Dynamic);
+        BufferUsage::Dynamic));
 
     std::shared_ptr<Error> err;
     std::tie(texture, err) = assets->Load<Texture2D>("Textures/particle_smoke.png");
