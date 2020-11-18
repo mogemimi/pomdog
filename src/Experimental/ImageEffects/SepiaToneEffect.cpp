@@ -1,6 +1,7 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Experimental/ImageEffects/SepiaToneEffect.hpp"
+#include "Pomdog/Basic/Platform.hpp"
 #include "Pomdog/Content/AssetBuilders/PipelineStateBuilder.hpp"
 #include "Pomdog/Content/AssetBuilders/ShaderBuilder.hpp"
 #include "Pomdog/Graphics/BlendDescription.hpp"
@@ -22,12 +23,21 @@ namespace Pomdog {
 namespace {
 
 // Built-in shaders
+#if defined(POMDOG_PLATFORM_WIN32) || \
+    defined(POMDOG_PLATFORM_LINUX) || \
+    defined(POMDOG_PLATFORM_MACOSX) || \
+    defined(POMDOG_PLATFORM_EMSCRIPTEN)
 #include "Shaders/GLSL.Embedded/ScreenQuad_VS.inc.hpp"
 #include "Shaders/GLSL.Embedded/SepiaTone_PS.inc.hpp"
+#endif
+#if defined(POMDOG_PLATFORM_WIN32)
 #include "Shaders/HLSL.Embedded/ScreenQuad_VS.inc.hpp"
 #include "Shaders/HLSL.Embedded/SepiaTone_PS.inc.hpp"
+#endif
+#if defined(POMDOG_PLATFORM_MACOSX)
 #include "Shaders/Metal.Embedded/ScreenQuad_VS.inc.hpp"
 #include "Shaders/Metal.Embedded/SepiaTone_PS.inc.hpp"
+#endif
 
 } // namespace
 
@@ -41,15 +51,24 @@ SepiaToneEffect::SepiaToneEffect(
     auto inputLayout = InputLayoutHelper{}
         .Float3().Float2();
 
-    auto vertexShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
-        .SetGLSL(Builtin_GLSL_ScreenQuad_VS, std::strlen(Builtin_GLSL_ScreenQuad_VS))
-        .SetHLSLPrecompiled(BuiltinHLSL_ScreenQuad_VS, sizeof(BuiltinHLSL_ScreenQuad_VS))
-        .SetMetal(Builtin_Metal_ScreenQuad_VS, std::strlen(Builtin_Metal_ScreenQuad_VS), "ScreenQuadVS");
+    auto vertexShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::VertexShader);
+    auto pixelShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::PixelShader);
 
-    auto pixelShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
-        .SetGLSL(Builtin_GLSL_SepiaTone_PS, std::strlen(Builtin_GLSL_SepiaTone_PS))
-        .SetHLSLPrecompiled(BuiltinHLSL_SepiaTone_PS, sizeof(BuiltinHLSL_SepiaTone_PS))
-        .SetMetal(Builtin_Metal_SepiaTone_PS, std::strlen(Builtin_Metal_SepiaTone_PS), "SepiaTonePS");
+#if defined(POMDOG_PLATFORM_WIN32) || \
+    defined(POMDOG_PLATFORM_LINUX) || \
+    defined(POMDOG_PLATFORM_MACOSX) || \
+    defined(POMDOG_PLATFORM_EMSCRIPTEN)
+    vertexShader.SetGLSL(Builtin_GLSL_ScreenQuad_VS, std::strlen(Builtin_GLSL_ScreenQuad_VS));
+    pixelShader.SetGLSL(Builtin_GLSL_SepiaTone_PS, std::strlen(Builtin_GLSL_SepiaTone_PS));
+#endif
+#if defined(POMDOG_PLATFORM_WIN32)
+    vertexShader.SetHLSLPrecompiled(BuiltinHLSL_ScreenQuad_VS, sizeof(BuiltinHLSL_ScreenQuad_VS));
+    pixelShader.SetHLSLPrecompiled(BuiltinHLSL_SepiaTone_PS, sizeof(BuiltinHLSL_SepiaTone_PS));
+#endif
+#if defined(POMDOG_PLATFORM_MACOSX)
+    vertexShader.SetMetal(Builtin_Metal_ScreenQuad_VS, std::strlen(Builtin_Metal_ScreenQuad_VS), "ScreenQuadVS");
+    pixelShader.SetMetal(Builtin_Metal_SepiaTone_PS, std::strlen(Builtin_Metal_SepiaTone_PS), "SepiaTonePS");
+#endif
 
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 

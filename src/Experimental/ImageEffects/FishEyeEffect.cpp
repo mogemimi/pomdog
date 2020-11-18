@@ -1,6 +1,7 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Experimental/ImageEffects/FishEyeEffect.hpp"
+#include "Pomdog/Basic/Platform.hpp"
 #include "Pomdog/Content/AssetBuilders/PipelineStateBuilder.hpp"
 #include "Pomdog/Content/AssetBuilders/ShaderBuilder.hpp"
 #include "Pomdog/Graphics/BlendDescription.hpp"
@@ -24,15 +25,25 @@ namespace Pomdog {
 namespace {
 
 // Built-in shaders
+#if defined(POMDOG_PLATFORM_WIN32) || \
+    defined(POMDOG_PLATFORM_LINUX) || \
+    defined(POMDOG_PLATFORM_MACOSX) || \
+    defined(POMDOG_PLATFORM_EMSCRIPTEN)
 #include "Shaders/GLSL.Embedded/FishEye_PS.inc.hpp"
 #include "Shaders/GLSL.Embedded/ScreenQuad_VS.inc.hpp"
+#endif
+#if defined(POMDOG_PLATFORM_WIN32)
 #include "Shaders/HLSL.Embedded/FishEye_PS.inc.hpp"
 #include "Shaders/HLSL.Embedded/ScreenQuad_VS.inc.hpp"
+#endif
+#if defined(POMDOG_PLATFORM_MACOSX)
 #include "Shaders/Metal.Embedded/FishEye_PS.inc.hpp"
 #include "Shaders/Metal.Embedded/ScreenQuad_VS.inc.hpp"
+#endif
 
 struct FishEyeBlock final {
     float Strength;
+    float x[15];
 };
 
 } // namespace
@@ -47,15 +58,24 @@ FishEyeEffect::FishEyeEffect(
     auto inputLayout = InputLayoutHelper{}
         .Float3().Float2();
 
-    auto vertexShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
-        .SetGLSL(Builtin_GLSL_ScreenQuad_VS, std::strlen(Builtin_GLSL_ScreenQuad_VS))
-        .SetHLSLPrecompiled(BuiltinHLSL_ScreenQuad_VS, sizeof(BuiltinHLSL_ScreenQuad_VS))
-        .SetMetal(Builtin_Metal_ScreenQuad_VS, std::strlen(Builtin_Metal_ScreenQuad_VS), "ScreenQuadVS");
+    auto vertexShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::VertexShader);
+    auto pixelShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::PixelShader);
 
-    auto pixelShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
-        .SetGLSL(Builtin_GLSL_FishEye_PS, std::strlen(Builtin_GLSL_FishEye_PS))
-        .SetHLSLPrecompiled(BuiltinHLSL_FishEye_PS, sizeof(BuiltinHLSL_FishEye_PS))
-        .SetMetal(Builtin_Metal_FishEye_PS, std::strlen(Builtin_Metal_FishEye_PS), "FishEyePS");
+#if defined(POMDOG_PLATFORM_WIN32) || \
+    defined(POMDOG_PLATFORM_LINUX) || \
+    defined(POMDOG_PLATFORM_MACOSX) || \
+    defined(POMDOG_PLATFORM_EMSCRIPTEN)
+    vertexShader.SetGLSL(Builtin_GLSL_ScreenQuad_VS, std::strlen(Builtin_GLSL_ScreenQuad_VS));
+    pixelShader.SetGLSL(Builtin_GLSL_FishEye_PS, std::strlen(Builtin_GLSL_FishEye_PS));
+#endif
+#if defined(POMDOG_PLATFORM_WIN32)
+    vertexShader.SetHLSLPrecompiled(BuiltinHLSL_ScreenQuad_VS, sizeof(BuiltinHLSL_ScreenQuad_VS));
+    pixelShader.SetHLSLPrecompiled(BuiltinHLSL_FishEye_PS, sizeof(BuiltinHLSL_FishEye_PS));
+#endif
+#if defined(POMDOG_PLATFORM_MACOSX)
+    vertexShader.SetMetal(Builtin_Metal_ScreenQuad_VS, std::strlen(Builtin_Metal_ScreenQuad_VS), "ScreenQuadVS");
+    pixelShader.SetMetal(Builtin_Metal_FishEye_PS, std::strlen(Builtin_Metal_FishEye_PS), "FishEyePS");
+#endif
 
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 

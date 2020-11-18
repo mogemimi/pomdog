@@ -1,6 +1,7 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Experimental/ImageEffects/FXAA.hpp"
+#include "Pomdog/Basic/Platform.hpp"
 #include "Pomdog/Content/AssetBuilders/PipelineStateBuilder.hpp"
 #include "Pomdog/Content/AssetBuilders/ShaderBuilder.hpp"
 #include "Pomdog/Graphics/BlendDescription.hpp"
@@ -22,11 +23,20 @@ namespace Pomdog {
 namespace {
 
 // Built-in shaders
+#if defined(POMDOG_PLATFORM_WIN32) || \
+    defined(POMDOG_PLATFORM_LINUX) || \
+    defined(POMDOG_PLATFORM_MACOSX) || \
+    defined(POMDOG_PLATFORM_EMSCRIPTEN)
 #include "Shaders/GLSL.Embedded/FXAA_PS.inc.hpp"
 #include "Shaders/GLSL.Embedded/FXAA_VS.inc.hpp"
+#endif
+#if defined(POMDOG_PLATFORM_WIN32)
 #include "Shaders/HLSL.Embedded/FXAA_PS.inc.hpp"
 #include "Shaders/HLSL.Embedded/FXAA_VS.inc.hpp"
+#endif
+#if defined(POMDOG_PLATFORM_MACOSX)
 #include "Shaders/Metal.Embedded/FXAA.inc.hpp"
+#endif
 
 } // namespace
 
@@ -40,15 +50,24 @@ FXAA::FXAA(
     auto inputLayout = InputLayoutHelper{}
         .Float3().Float2();
 
-    auto vertexShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
-        .SetGLSL(Builtin_GLSL_FXAA_VS, std::strlen(Builtin_GLSL_FXAA_VS))
-        .SetHLSLPrecompiled(BuiltinHLSL_FXAA_VS, sizeof(BuiltinHLSL_FXAA_VS))
-        .SetMetal(Builtin_Metal_FXAA, std::strlen(Builtin_Metal_FXAA), "FxaaVS");
+    auto vertexShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::VertexShader);
+    auto pixelShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::PixelShader);
 
-    auto pixelShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
-        .SetGLSL(Builtin_GLSL_FXAA_PS, std::strlen(Builtin_GLSL_FXAA_PS))
-        .SetHLSLPrecompiled(BuiltinHLSL_FXAA_PS, sizeof(BuiltinHLSL_FXAA_PS))
-        .SetMetal(Builtin_Metal_FXAA, std::strlen(Builtin_Metal_FXAA), "FxaaPS");
+#if defined(POMDOG_PLATFORM_WIN32) || \
+    defined(POMDOG_PLATFORM_LINUX) || \
+    defined(POMDOG_PLATFORM_MACOSX) || \
+    defined(POMDOG_PLATFORM_EMSCRIPTEN)
+    vertexShader.SetGLSL(Builtin_GLSL_FXAA_VS, std::strlen(Builtin_GLSL_FXAA_VS));
+    pixelShader.SetGLSL(Builtin_GLSL_FXAA_PS, std::strlen(Builtin_GLSL_FXAA_PS));
+#endif
+#if defined(POMDOG_PLATFORM_WIN32)
+    vertexShader.SetHLSLPrecompiled(BuiltinHLSL_FXAA_VS, sizeof(BuiltinHLSL_FXAA_VS));
+    pixelShader.SetHLSLPrecompiled(BuiltinHLSL_FXAA_PS, sizeof(BuiltinHLSL_FXAA_PS));
+#endif
+#if defined(POMDOG_PLATFORM_MACOSX)
+    vertexShader.SetMetal(Builtin_Metal_FXAA, std::strlen(Builtin_Metal_FXAA), "FxaaVS");
+    pixelShader.SetMetal(Builtin_Metal_FXAA, std::strlen(Builtin_Metal_FXAA), "FxaaPS");
+#endif
 
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
