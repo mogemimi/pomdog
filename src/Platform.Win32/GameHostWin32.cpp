@@ -91,7 +91,8 @@ public:
     }
 };
 
-CreateGraphicsDeviceResult CreateGraphicsDeviceGL4(
+[[nodiscard]] CreateGraphicsDeviceResult
+CreateGraphicsDeviceGL4(
     const std::shared_ptr<GameWindowWin32>& window,
     const PresentationParameters& presentationParameters)
 {
@@ -105,28 +106,22 @@ CreateGraphicsDeviceResult CreateGraphicsDeviceGL4(
 
     openGLContext->MakeCurrent();
 
-    auto graphicsDevice = std::make_shared<GraphicsDevice>(
-        std::make_unique<GraphicsDeviceGL4>(presentationParameters));
+    auto graphicsDevice = std::make_shared<GraphicsDeviceGL4>(presentationParameters);
 
     auto graphicsContext = std::make_shared<GraphicsContextGL4>(openGLContext, graphicsDevice);
 
-    auto graphicsCommandQueue = std::make_shared<GraphicsCommandQueue>(
-        std::make_unique<GraphicsCommandQueueImmediate>(graphicsContext));
+    auto graphicsCommandQueue = std::make_shared<GraphicsCommandQueueImmediate>(graphicsContext);
 
     POMDOG_ASSERT(graphicsDevice);
     POMDOG_ASSERT(graphicsContext);
     POMDOG_ASSERT(graphicsCommandQueue);
 
-    auto sharedNativeDevice = std::shared_ptr<GraphicsDeviceGL4>(
-        graphicsDevice,
-        static_cast<GraphicsDeviceGL4*>(graphicsDevice->GetNativeGraphicsDevice()));
-
-    POMDOG_ASSERT(sharedNativeDevice);
+    auto bridge = std::make_unique<GraphicsBridgeWin32GL4>(graphicsDevice);
 
     return CreateGraphicsDeviceResult{
         std::move(graphicsDevice),
         std::move(graphicsCommandQueue),
-        std::make_unique<GraphicsBridgeWin32GL4>(std::move(sharedNativeDevice)),
+        std::move(bridge),
     };
 }
 #endif
@@ -157,16 +152,14 @@ public:
     }
 };
 
-CreateGraphicsDeviceResult CreateGraphicsDeviceDirect3D11(
+[[nodiscard]] CreateGraphicsDeviceResult
+CreateGraphicsDeviceDirect3D11(
     const std::shared_ptr<GameWindowWin32>& window,
     const PresentationParameters& presentationParameters)
 {
-    auto nativeGraphicsDevice = std::make_unique<GraphicsDeviceDirect3D11>(presentationParameters);
-    auto device = nativeGraphicsDevice->GetDevice();
-    auto dxgiFactory = nativeGraphicsDevice->GetDXGIFactory();
-
-    auto graphicsDevice = std::make_shared<GraphicsDevice>(
-        std::move(nativeGraphicsDevice));
+    auto graphicsDevice = std::make_shared<GraphicsDeviceDirect3D11>(presentationParameters);
+    auto device = graphicsDevice->GetDevice();
+    auto dxgiFactory = std::get<0>(graphicsDevice->GetDXGIFactory());
 
     auto graphicsContext = std::make_shared<GraphicsContextDirect3D11>(
         window->GetNativeWindowHandle(),
@@ -174,25 +167,18 @@ CreateGraphicsDeviceResult CreateGraphicsDeviceDirect3D11(
         device,
         presentationParameters);
 
-    auto graphicsCommandQueue = std::make_shared<GraphicsCommandQueue>(
-        std::make_unique<GraphicsCommandQueueImmediate>(graphicsContext));
+    auto graphicsCommandQueue = std::make_shared<GraphicsCommandQueueImmediate>(graphicsContext);
 
     POMDOG_ASSERT(graphicsDevice);
     POMDOG_ASSERT(graphicsContext);
     POMDOG_ASSERT(graphicsCommandQueue);
 
-    auto sharedNativeDevice = std::shared_ptr<GraphicsDeviceDirect3D11>(
-        graphicsDevice,
-        static_cast<GraphicsDeviceDirect3D11*>(graphicsDevice->GetNativeGraphicsDevice()));
-
-    POMDOG_ASSERT(sharedNativeDevice);
+    auto bridge = std::make_unique<GraphicsBridgeWin32Direct3D11>(graphicsDevice, std::move(graphicsContext));
 
     return CreateGraphicsDeviceResult{
         std::move(graphicsDevice),
         std::move(graphicsCommandQueue),
-        std::make_unique<GraphicsBridgeWin32Direct3D11>(
-            std::move(sharedNativeDevice),
-            std::move(graphicsContext)),
+        std::move(bridge),
     };
 }
 #endif

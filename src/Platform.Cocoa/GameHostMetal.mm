@@ -136,7 +136,7 @@ private:
     std::weak_ptr<Game> weakGame;
     std::shared_ptr<EventQueue<SystemEvent>> eventQueue;
     std::shared_ptr<GameWindowCocoa> window;
-    std::shared_ptr<GraphicsDevice> graphicsDevice;
+    std::shared_ptr<GraphicsDeviceMetal> graphicsDevice;
     std::shared_ptr<GraphicsContextMetal> graphicsContext;
     std::shared_ptr<GraphicsCommandQueue> graphicsCommandQueue;
     std::shared_ptr<AudioEngineAL> audioEngine;
@@ -172,34 +172,28 @@ GameHostMetal::Impl::Initialize(
 
     window->SetView(metalView);
 
-    // Create graphics device
-    graphicsDevice = std::make_shared<GraphicsDevice>(
-        std::make_unique<GraphicsDeviceMetal>(presentationParameters));
+    // NOTE: Create graphics device
+    graphicsDevice = std::make_shared<GraphicsDeviceMetal>(presentationParameters);
 
-    // Get MTLDevice object
-    POMDOG_ASSERT(graphicsDevice);
-    auto graphicsDeviceMetal = dynamic_cast<GraphicsDeviceMetal*>(
-        graphicsDevice->GetNativeGraphicsDevice());
-
-    POMDOG_ASSERT(graphicsDeviceMetal);
-    id<MTLDevice> metalDevice = graphicsDeviceMetal->GetMTLDevice();
+    // NOTE: Get MTLDevice object.
+    POMDOG_ASSERT(graphicsDevice != nullptr);
+    id<MTLDevice> metalDevice = graphicsDevice->GetMTLDevice();
 
     if (metalDevice == nil) {
         return Errors::New("Metal is not supported on this device.");
     }
 
-    // Setup metal view
+    // NOTE: Setup metal view
     SetupMetalView(metalView, metalDevice, presentationParameters);
 
     POMDOG_ASSERT(metalDevice != nil);
 
-    // Create graphics context
+    // NOTE: Create graphics context
     graphicsContext = std::make_shared<GraphicsContextMetal>(metalDevice);
     graphicsContext->SetMTKView(metalView);
 
-    // Create graphics command queue
-    graphicsCommandQueue = std::make_shared<GraphicsCommandQueue>(
-        std::make_unique<GraphicsCommandQueueImmediate>(graphicsContext));
+    // NOTE: Create graphics command queue
+    graphicsCommandQueue = std::make_shared<GraphicsCommandQueueImmediate>(graphicsContext);
 
     // NOTE: Create audio engine.
     audioEngine = std::make_shared<AudioEngineAL>();
@@ -207,12 +201,12 @@ GameHostMetal::Impl::Initialize(
         return Errors::Wrap(std::move(err), "AudioEngineAL::Initialize() failed.");
     }
 
-    // Create subsystems
+    // NOTE: Create subsystems
     keyboard = std::make_shared<KeyboardCocoa>();
     mouse = std::make_shared<MouseCocoa>();
     gamepad = std::make_shared<GamepadIOKit>(eventQueue);
 
-    // Connect to system event signal
+    // NOTE: Connect to system event signal
     POMDOG_ASSERT(eventQueue);
     systemEventConnection = eventQueue->Connect(
         [this](const SystemEvent& event) { ProcessSystemEvents(event); });
@@ -281,13 +275,9 @@ bool GameHostMetal::Impl::IsMetalSupported() const
         return false;
     }
 
-    // Get MTLDevice object
-    POMDOG_ASSERT(graphicsDevice);
-    auto graphicsDeviceMetal = dynamic_cast<GraphicsDeviceMetal*>(
-        graphicsDevice->GetNativeGraphicsDevice());
-
-    POMDOG_ASSERT(graphicsDeviceMetal);
-    id<MTLDevice> metalDevice = graphicsDeviceMetal->GetMTLDevice();
+    // NOTE: Get MTLDevice object.
+    POMDOG_ASSERT(graphicsDevice != nullptr);
+    id<MTLDevice> metalDevice = graphicsDevice->GetMTLDevice();
 
     return metalDevice != nil;
 }
@@ -404,13 +394,10 @@ void GameHostMetal::Impl::ProcessSystemEvents(const SystemEvent& event)
 
 void GameHostMetal::Impl::ClientSizeChanged()
 {
-    POMDOG_ASSERT(graphicsDevice);
-    POMDOG_ASSERT(graphicsDevice->GetNativeGraphicsDevice());
-
-    auto nativeDevice = static_cast<GraphicsDeviceMetal*>(graphicsDevice->GetNativeGraphicsDevice());
+    POMDOG_ASSERT(graphicsDevice != nullptr);
     auto bounds = window->GetClientBounds();
 
-    nativeDevice->ClientSizeChanged(bounds.Width, bounds.Height);
+    graphicsDevice->ClientSizeChanged(bounds.Width, bounds.Height);
     window->ClientSizeChanged(bounds.Width, bounds.Height);
 }
 

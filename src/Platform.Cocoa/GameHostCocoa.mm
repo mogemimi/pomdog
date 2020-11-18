@@ -124,7 +124,7 @@ private:
     std::shared_ptr<EventQueue<SystemEvent>> eventQueue;
     std::shared_ptr<GameWindowCocoa> window;
     std::shared_ptr<OpenGLContextCocoa> openGLContext;
-    std::shared_ptr<GraphicsDevice> graphicsDevice;
+    std::shared_ptr<GraphicsDeviceGL4> graphicsDevice;
     std::shared_ptr<GraphicsContextGL4> graphicsContext;
     std::shared_ptr<GraphicsCommandQueue> graphicsCommandQueue;
     std::shared_ptr<AudioEngineAL> audioEngine;
@@ -181,12 +181,10 @@ GameHostCocoa::Impl::Initialize(
     openGLContext->SetView(openGLView);
     openGLContext->MakeCurrent();
 
-    graphicsDevice = std::make_shared<GraphicsDevice>(
-        std::make_unique<GraphicsDeviceGL4>(presentationParameters));
+    graphicsDevice = std::make_shared<GraphicsDeviceGL4>(presentationParameters);
 
     graphicsContext = std::make_shared<GraphicsContextGL4>(openGLContext, graphicsDevice);
-    graphicsCommandQueue = std::make_shared<GraphicsCommandQueue>(
-        std::make_unique<GraphicsCommandQueueImmediate>(graphicsContext));
+    graphicsCommandQueue = std::make_shared<GraphicsCommandQueueImmediate>(graphicsContext);
     openGLContext->Unlock();
 
     // NOTE: Create audio engine.
@@ -463,16 +461,14 @@ void GameHostCocoa::Impl::ClientSizeChanged()
     openGLContext->MakeCurrent();
 
     auto nativeContext = openGLContext->GetNativeOpenGLContext();
-    POMDOG_ASSERT(nativeContext != nil);
+    POMDOG_ASSERT(nativeContext != nullptr);
     [nativeContext update];
 
-    POMDOG_ASSERT(graphicsDevice);
-    POMDOG_ASSERT(graphicsDevice->GetNativeGraphicsDevice());
+    POMDOG_ASSERT(graphicsDevice != nullptr);
 
-    auto nativeDevice = static_cast<GraphicsDeviceGL4*>(graphicsDevice->GetNativeGraphicsDevice());
     auto bounds = window->GetClientBounds();
 
-    nativeDevice->ClientSizeChanged(bounds.Width, bounds.Height);
+    graphicsDevice->ClientSizeChanged(bounds.Width, bounds.Height);
     window->ClientSizeChanged(bounds.Width, bounds.Height);
 
     openGLContext->Unlock();

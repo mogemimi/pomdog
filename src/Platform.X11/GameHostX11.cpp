@@ -194,7 +194,7 @@ public:
     std::shared_ptr<X11Context> x11Context;
     std::shared_ptr<GameWindowX11> window;
     std::shared_ptr<OpenGLContextX11> openGLContext;
-    std::shared_ptr<GraphicsDevice> graphicsDevice;
+    std::shared_ptr<GraphicsDeviceGL4> graphicsDevice;
     std::shared_ptr<GraphicsContextGL4> graphicsContext;
     std::shared_ptr<GraphicsCommandQueue> graphicsCommandQueue;
     std::shared_ptr<AudioEngineAL> audioEngine;
@@ -244,13 +244,11 @@ GameHostX11::Impl::Impl(const PresentationParameters& presentationParameters)
         POMDOG_THROW_EXCEPTION(std::runtime_error, description);
     }
 
-    graphicsDevice = std::make_shared<GraphicsDevice>(
-        std::make_unique<GraphicsDeviceGL4>(presentationParameters));
+    graphicsDevice = std::make_shared<GraphicsDeviceGL4>(presentationParameters);
 
     graphicsContext = std::make_shared<GraphicsContextGL4>(openGLContext, graphicsDevice);
 
-    graphicsCommandQueue = std::make_shared<GraphicsCommandQueue>(
-        std::make_unique<GraphicsCommandQueueImmediate>(graphicsContext));
+    graphicsCommandQueue = std::make_shared<GraphicsCommandQueueImmediate>(graphicsContext);
 
     // NOTE: Create audio engine.
     audioEngine = std::make_shared<AudioEngineAL>();
@@ -324,13 +322,11 @@ void GameHostX11::Impl::ProcessEvent(::XEvent& event)
         break;
     }
     case ConfigureNotify: {
-        POMDOG_ASSERT(graphicsDevice);
-        POMDOG_ASSERT(graphicsDevice->GetNativeGraphicsDevice());
-        auto nativeDevice = static_cast<GraphicsDeviceGL4*>(graphicsDevice->GetNativeGraphicsDevice());
-        auto presentationParameters = nativeDevice->GetPresentationParameters();
+        POMDOG_ASSERT(graphicsDevice != nullptr);
+        auto presentationParameters = graphicsDevice->GetPresentationParameters();
         if ((presentationParameters.BackBufferWidth != event.xconfigure.width) ||
             (presentationParameters.BackBufferHeight != event.xconfigure.height)) {
-            nativeDevice->ClientSizeChanged(event.xconfigure.width, event.xconfigure.height);
+            graphicsDevice->ClientSizeChanged(event.xconfigure.width, event.xconfigure.height);
         }
         break;
     }
