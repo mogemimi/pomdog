@@ -4,79 +4,23 @@
 #include "../RenderSystem/BufferBindMode.hpp"
 #include "../RenderSystem/BufferHelper.hpp"
 #include "../RenderSystem/NativeBuffer.hpp"
-#include "../RenderSystem/NativeGraphicsDevice.hpp"
-#include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include <utility>
 
 namespace Pomdog {
 
 IndexBuffer::IndexBuffer(
-    GraphicsDevice& graphicsDevice,
+    std::unique_ptr<Detail::NativeBuffer>&& nativeBufferIn,
     IndexElementSize elementSizeIn,
-    const void* indices,
     std::size_t indexCountIn,
     BufferUsage bufferUsageIn)
-    : indexCount(static_cast<decltype(indexCount)>(indexCountIn))
+    : nativeBuffer(std::move(nativeBufferIn))
+    , indexCount(static_cast<decltype(indexCount)>(indexCountIn))
     , elementSize(elementSizeIn)
     , bufferUsage(bufferUsageIn)
 {
     POMDOG_ASSERT(indexCount > 0);
-
-    auto sizeInBytes = indexCount * Detail::BufferHelper::ToIndexElementOffsetBytes(elementSize);
-    auto nativeDevice = graphicsDevice.GetNativeGraphicsDevice();
-
-    POMDOG_ASSERT(nativeDevice != nullptr);
-    using Detail::BufferBindMode;
-
-    nativeIndexBuffer = nativeDevice->CreateBuffer(
-        indices, sizeInBytes, bufferUsage, BufferBindMode::IndexBuffer);
-
-    POMDOG_ASSERT(nativeIndexBuffer);
-}
-
-IndexBuffer::IndexBuffer(
-    GraphicsDevice& graphicsDevice,
-    IndexElementSize elementSizeIn,
-    std::size_t indexCountIn,
-    BufferUsage bufferUsageIn)
-    : indexCount(static_cast<decltype(indexCount)>(indexCountIn))
-    , elementSize(elementSizeIn)
-    , bufferUsage(bufferUsageIn)
-{
-    POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
-    POMDOG_ASSERT(indexCount > 0);
-
-    auto sizeInBytes = indexCount * Detail::BufferHelper::ToIndexElementOffsetBytes(elementSize);
-    auto nativeDevice = graphicsDevice.GetNativeGraphicsDevice();
-
-    POMDOG_ASSERT(nativeDevice != nullptr);
-    using Detail::BufferBindMode;
-
-    nativeIndexBuffer = nativeDevice->CreateBuffer(
-        sizeInBytes, bufferUsage, BufferBindMode::IndexBuffer);
-
-    POMDOG_ASSERT(nativeIndexBuffer);
-}
-
-IndexBuffer::IndexBuffer(
-    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-    IndexElementSize elementSizeIn,
-    const void* indices,
-    std::size_t indexCountIn,
-    BufferUsage bufferUsageIn)
-    : IndexBuffer(*graphicsDevice, elementSizeIn, indices, indexCountIn, bufferUsageIn)
-{
-    POMDOG_ASSERT(nativeIndexBuffer);
-}
-
-IndexBuffer::IndexBuffer(
-    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-    IndexElementSize elementSizeIn,
-    std::size_t indexCountIn,
-    BufferUsage bufferUsageIn)
-    : IndexBuffer(*graphicsDevice, elementSizeIn, indexCountIn, bufferUsageIn)
-{
-    POMDOG_ASSERT(nativeIndexBuffer);
+    POMDOG_ASSERT(nativeBuffer != nullptr);
 }
 
 IndexBuffer::~IndexBuffer() = default;
@@ -107,9 +51,9 @@ void IndexBuffer::SetData(const void* source, std::size_t elementCountIn)
     POMDOG_ASSERT(source != nullptr);
     POMDOG_ASSERT(elementCountIn > 0);
     POMDOG_ASSERT(elementCountIn <= indexCount);
-    POMDOG_ASSERT(nativeIndexBuffer);
+    POMDOG_ASSERT(nativeBuffer != nullptr);
     POMDOG_ASSERT(bufferUsage != Pomdog::BufferUsage::Immutable);
-    nativeIndexBuffer->SetData(0, source,
+    nativeBuffer->SetData(0, source,
         Detail::BufferHelper::ToIndexElementOffsetBytes(elementSize) * elementCountIn);
 }
 
@@ -121,16 +65,16 @@ void IndexBuffer::SetData(
     POMDOG_ASSERT(source != nullptr);
     POMDOG_ASSERT(elementCountIn > 0);
     POMDOG_ASSERT(elementCountIn <= indexCount);
-    POMDOG_ASSERT(nativeIndexBuffer);
+    POMDOG_ASSERT(nativeBuffer != nullptr);
     POMDOG_ASSERT(bufferUsage != Pomdog::BufferUsage::Immutable);
-    nativeIndexBuffer->SetData(offsetInBytes, source,
+    nativeBuffer->SetData(offsetInBytes, source,
         Detail::BufferHelper::ToIndexElementOffsetBytes(elementSize) * elementCountIn);
 }
 
-Detail::NativeBuffer* IndexBuffer::GetNativeIndexBuffer()
+Detail::NativeBuffer* IndexBuffer::GetNativeBuffer()
 {
-    POMDOG_ASSERT(nativeIndexBuffer);
-    return nativeIndexBuffer.get();
+    POMDOG_ASSERT(nativeBuffer != nullptr);
+    return nativeBuffer.get();
 }
 
 } // namespace Pomdog

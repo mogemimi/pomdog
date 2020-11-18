@@ -18,27 +18,7 @@ public:
     IndexBuffer(IndexBuffer&&) = default;
 
     IndexBuffer(
-        GraphicsDevice& graphicsDevice,
-        IndexElementSize elementSize,
-        const void* indices,
-        std::size_t indexCount,
-        BufferUsage bufferUsage);
-
-    IndexBuffer(
-        GraphicsDevice& graphicsDevice,
-        IndexElementSize elementSize,
-        std::size_t indexCount,
-        BufferUsage bufferUsage);
-
-    IndexBuffer(
-        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-        IndexElementSize elementSize,
-        const void* indices,
-        std::size_t indexCount,
-        BufferUsage bufferUsage);
-
-    IndexBuffer(
-        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+        std::unique_ptr<Detail::NativeBuffer>&& nativeBuffer,
         IndexElementSize elementSize,
         std::size_t indexCount,
         BufferUsage bufferUsage);
@@ -70,10 +50,10 @@ public:
         std::size_t elementCount);
 
     /// Gets the pointer of the native index buffer resource.
-    Detail::NativeBuffer* GetNativeIndexBuffer();
+    Detail::NativeBuffer* GetNativeBuffer();
 
 private:
-    std::unique_ptr<Detail::NativeBuffer> nativeIndexBuffer;
+    std::unique_ptr<Detail::NativeBuffer> nativeBuffer;
     std::uint32_t indexCount;
     IndexElementSize elementSize;
     BufferUsage bufferUsage;

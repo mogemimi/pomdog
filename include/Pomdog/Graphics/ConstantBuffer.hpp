@@ -20,24 +20,7 @@ public:
     ConstantBuffer& operator=(const ConstantBuffer&) = delete;
 
     ConstantBuffer(
-        GraphicsDevice& graphicsDevice,
-        std::size_t sizeInBytes,
-        BufferUsage bufferUsage);
-
-    ConstantBuffer(
-        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-        std::size_t sizeInBytes,
-        BufferUsage bufferUsage);
-
-    ConstantBuffer(
-        GraphicsDevice& graphicsDevice,
-        const void* sourceData,
-        std::size_t sizeInBytes,
-        BufferUsage bufferUsage);
-
-    ConstantBuffer(
-        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-        const void* sourceData,
+        std::unique_ptr<Detail::NativeBuffer>&& nativeBuffer,
         std::size_t sizeInBytes,
         BufferUsage bufferUsage);
 
@@ -89,10 +72,10 @@ public:
     BufferUsage GetBufferUsage() const noexcept;
 
     /// Gets the pointer of the native constant buffer resource.
-    Detail::NativeBuffer* GetNativeConstantBuffer();
+    Detail::NativeBuffer* GetNativeBuffer();
 
 private:
-    std::unique_ptr<Detail::NativeBuffer> nativeConstantBuffer;
+    std::unique_ptr<Detail::NativeBuffer> nativeBuffer;
     std::uint32_t sizeInBytes;
     BufferUsage bufferUsage;
 };

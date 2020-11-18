@@ -10,30 +10,16 @@
 
 namespace Pomdog {
 
-class POMDOG_EXPORT EffectReflection final {
+class POMDOG_EXPORT EffectReflection {
 public:
-    EffectReflection() = delete;
+    EffectReflection() noexcept;
     EffectReflection(const EffectReflection&) = delete;
     EffectReflection(EffectReflection&&) = default;
 
-    EffectReflection(
-        GraphicsDevice& graphicsDevice,
-        const PipelineStateDescription& pipelineStateDescription,
-        const std::shared_ptr<PipelineState>& pipelineState);
+    virtual ~EffectReflection();
 
-    EffectReflection(
-        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-        const PipelineStateDescription& pipelineStateDescription,
-        const std::shared_ptr<PipelineState>& pipelineState);
-
-    ~EffectReflection();
-
-    std::vector<EffectConstantDescription> GetConstantBuffers() const;
-
-    Detail::NativeEffectReflection* GetNativeEffectReflection();
-
-private:
-    std::unique_ptr<Detail::NativeEffectReflection> nativeEffectReflection;
+    [[nodiscard]] virtual std::vector<EffectConstantDescription>
+    GetConstantBuffers() const noexcept = 0;
 };
 
 } // namespace Pomdog

@@ -11,27 +11,23 @@ namespace Pomdog {
 
 class GraphicsCommandList;
 
-class POMDOG_EXPORT GraphicsCommandQueue final {
+class POMDOG_EXPORT GraphicsCommandQueue {
 public:
-    GraphicsCommandQueue() = delete;
+    GraphicsCommandQueue() noexcept;
     GraphicsCommandQueue(const GraphicsCommandQueue&) = delete;
     GraphicsCommandQueue& operator=(const GraphicsCommandQueue&) = delete;
 
-    explicit GraphicsCommandQueue(
-        std::unique_ptr<Detail::NativeGraphicsCommandQueue>&& nativeCommandQueue);
+    virtual ~GraphicsCommandQueue();
 
-    std::size_t GetCommandCount() const noexcept;
+    virtual std::size_t GetCommandCount() const noexcept = 0;
 
-    void Reset();
+    virtual void Reset() = 0;
 
-    void PushbackCommandList(const std::shared_ptr<GraphicsCommandList>& commandList);
+    virtual void PushbackCommandList(const std::shared_ptr<GraphicsCommandList>& commandList) = 0;
 
-    void ExecuteCommandLists();
+    virtual void ExecuteCommandLists() = 0;
 
-    void Present();
-
-private:
-    std::unique_ptr<Detail::NativeGraphicsCommandQueue> nativeCommandQueue;
+    virtual void Present() = 0;
 };
 
 } // namespace Pomdog

@@ -17,29 +17,9 @@ public:
     VertexBuffer(VertexBuffer&&) = default;
 
     VertexBuffer(
-        GraphicsDevice& graphicsDevice,
-        const void* vertices,
+        std::unique_ptr<Detail::NativeBuffer>&& nativeBuffer,
         std::size_t vertexCount,
         std::size_t strideInBytes,
-        BufferUsage bufferUsage);
-
-    VertexBuffer(
-        GraphicsDevice& graphicsDevice,
-        std::size_t vertexCount,
-        std::size_t strideInBytes,
-        BufferUsage bufferUsage);
-
-    VertexBuffer(
-        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-        const void* vertices,
-        std::size_t vertexCount,
-        std::size_t strideBytes,
-        BufferUsage bufferUsage);
-
-    VertexBuffer(
-        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-        std::size_t vertexCount,
-        std::size_t strideBytes,
         BufferUsage bufferUsage);
 
     ~VertexBuffer();
@@ -70,10 +50,10 @@ public:
         std::size_t strideInBytes);
 
     /// Gets the pointer of the native vertex buffer resource.
-    Detail::NativeBuffer* GetNativeVertexBuffer();
+    Detail::NativeBuffer* GetNativeBuffer();
 
 private:
-    std::unique_ptr<Detail::NativeBuffer> nativeVertexBuffer;
+    std::unique_ptr<Detail::NativeBuffer> nativeBuffer;
     std::uint32_t vertexCount;
     std::uint32_t strideInBytes;
     BufferUsage bufferUsage;

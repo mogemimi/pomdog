@@ -10,106 +10,96 @@
 
 namespace Pomdog {
 
-class POMDOG_EXPORT GraphicsCommandList final {
+class POMDOG_EXPORT GraphicsCommandList {
 public:
-    GraphicsCommandList() = delete;
+    GraphicsCommandList() noexcept;
     GraphicsCommandList(const GraphicsCommandList&) = delete;
     GraphicsCommandList& operator=(const GraphicsCommandList&) = delete;
 
-    explicit GraphicsCommandList(GraphicsDevice& graphicsDevice);
-
-    explicit GraphicsCommandList(const std::shared_ptr<GraphicsDevice>& graphicsDevice);
-
-    ~GraphicsCommandList();
+    virtual ~GraphicsCommandList();
 
     /// Declares that recording to the command list is completed.
-    void Close();
+    virtual void Close() = 0;
 
     /// Clears the graphics commands.
-    void Reset();
+    virtual void Reset() = 0;
 
     /// Gets the count of graphics commands.
-    std::size_t GetCount() const noexcept;
+    virtual std::size_t GetCount() const noexcept = 0;
 
     /// Draws the specified non-indexed primitives.
     ///
     /// @param vertexCount Number of vertices to draw.
     /// @param startVertexLocation Index of the first vertex to draw.
-    void Draw(
+    virtual void Draw(
         std::size_t vertexCount,
-        std::size_t startVertexLocation);
+        std::size_t startVertexLocation) = 0;
 
     /// Draws the specified indexed primitives.
-    void DrawIndexed(
+    virtual void DrawIndexed(
         const std::shared_ptr<IndexBuffer>& indexBuffer,
         std::size_t indexCount,
-        std::size_t startIndexLocation);
+        std::size_t startIndexLocation) = 0;
 
     /// Draws the specified instanced primitives.
-    void DrawInstanced(
+    virtual void DrawInstanced(
         std::size_t vertexCountPerInstance,
         std::size_t instanceCount,
         std::size_t startVertexLocation,
-        std::size_t startInstanceLocation);
+        std::size_t startInstanceLocation) = 0;
 
     /// Draws the specified indexed, instanced primitives.
-    void DrawIndexedInstanced(
+    virtual void DrawIndexedInstanced(
         const std::shared_ptr<IndexBuffer>& indexBuffer,
         std::size_t indexCountPerInstance,
         std::size_t instanceCount,
         std::size_t startIndexLocation,
-        std::size_t startInstanceLocation);
+        std::size_t startInstanceLocation) = 0;
 
     /// Sets a group of render targets.
-    void SetRenderPass(RenderPass&& renderPass);
+    virtual void SetRenderPass(RenderPass&& renderPass) = 0;
 
     /// Sets the viewport dynamically to the rasterizer stage.
-    void SetViewport(const Viewport& viewport);
+    virtual void SetViewport(const Viewport& viewport) = 0;
 
     /// Sets the scissor rectangle dynamically for a scissor test.
-    void SetScissorRect(const Rectangle& scissorRect);
+    virtual void SetScissorRect(const Rectangle& scissorRect) = 0;
 
     /// Sets the constant blend color and alpha values.
-    void SetBlendFactor(const Vector4& blendFactor);
+    virtual void SetBlendFactor(const Vector4& blendFactor) = 0;
 
     /// Sets a vertex buffer.
-    void SetVertexBuffer(int index, const std::shared_ptr<VertexBuffer>& vertexBuffer);
+    virtual void SetVertexBuffer(int index, const std::shared_ptr<VertexBuffer>& vertexBuffer) = 0;
 
     /// Sets a vertex buffer.
-    void SetVertexBuffer(
+    virtual void SetVertexBuffer(
         int index,
         const std::shared_ptr<VertexBuffer>& vertexBuffer,
-        std::size_t offset);
+        std::size_t offset) = 0;
 
     /// Sets a pipeline state.
-    void SetPipelineState(const std::shared_ptr<PipelineState>& pipelineState);
+    virtual void SetPipelineState(const std::shared_ptr<PipelineState>& pipelineState) = 0;
 
     /// Sets a constant buffer.
-    void SetConstantBuffer(int index, const std::shared_ptr<ConstantBuffer>& constantBuffer);
+    virtual void SetConstantBuffer(int index, const std::shared_ptr<ConstantBuffer>& constantBuffer) = 0;
 
     /// Sets a constant buffer.
-    void SetConstantBuffer(
+    virtual void SetConstantBuffer(
         int index,
         const std::shared_ptr<ConstantBuffer>& constantBuffer,
-        std::size_t offset);
+        std::size_t offset) = 0;
 
     /// Sets an empty texture to the specified slot.
-    void SetTexture(int index);
+    virtual void SetTexture(int index) = 0;
 
     /// Sets a texture to the specified slot.
-    void SetTexture(int index, const std::shared_ptr<Texture2D>& texture);
+    virtual void SetTexture(int index, const std::shared_ptr<Texture2D>& texture) = 0;
 
     /// Sets a texture to the specified slot.
-    void SetTexture(int index, const std::shared_ptr<RenderTarget2D>& texture);
+    virtual void SetTexture(int index, const std::shared_ptr<RenderTarget2D>& texture) = 0;
 
     /// Sets a sampler state to the specified slot.
-    void SetSamplerState(int index, const std::shared_ptr<SamplerState>& samplerState);
-
-    /// Gets the pointer of the native graphics command list.
-    Detail::NativeGraphicsCommandList* GetNativeGraphicsCommandList();
-
-private:
-    std::unique_ptr<Detail::NativeGraphicsCommandList> nativeCommandList;
+    virtual void SetSamplerState(int index, const std::shared_ptr<SamplerState>& samplerState) = 0;
 };
 
 } // namespace Pomdog

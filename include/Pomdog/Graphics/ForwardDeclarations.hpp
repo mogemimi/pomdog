@@ -4,20 +4,16 @@
 
 #include <cstdint>
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 class NativeBuffer;
-class NativeEffectReflection;
-class NativeGraphicsCommandList;
-class NativeGraphicsCommandQueue;
-class NativeGraphicsDevice;
-class NativePipelineState;
-class NativeRenderTarget2D;
-class NativeSamplerState;
-class NativeTexture2D;
 
-} // namespace Detail
+class ShaderBytecode;
+struct ShaderCompileOptions;
+
+} // namespace Pomdog::Detail
+
+namespace Pomdog {
 
 // Classes
 class ConstantBuffer;

@@ -11,53 +11,28 @@
 
 namespace Pomdog {
 
-class POMDOG_EXPORT Texture2D final : public Texture {
+class POMDOG_EXPORT Texture2D : public Texture {
 public:
-    Texture2D() = delete;
+    Texture2D() noexcept;
     Texture2D(const Texture2D&) = delete;
-    Texture2D(Texture2D&&) = default;
-
-    Texture2D(
-        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-        std::int32_t width,
-        std::int32_t height);
-
-    Texture2D(
-        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-        std::int32_t width,
-        std::int32_t height,
-        bool mipMap,
-        SurfaceFormat format);
-
-    ~Texture2D();
-
     Texture2D& operator=(const Texture2D&) = delete;
-    Texture2D& operator=(Texture2D&&) = default;
+
+    virtual ~Texture2D();
 
     /// Gets the width of the texture data, in pixels.
-    std::int32_t GetWidth() const;
+    virtual std::int32_t GetWidth() const noexcept = 0;
 
     /// Gets the height of the texture data, in pixels.
-    std::int32_t GetHeight() const;
+    virtual std::int32_t GetHeight() const noexcept = 0;
 
     /// Gets the mipmap level.
-    std::int32_t GetLevelCount() const;
+    virtual std::int32_t GetLevelCount() const noexcept = 0;
 
     /// Gets the format of the pixel data in the texture.
-    SurfaceFormat GetFormat() const;
+    virtual SurfaceFormat GetFormat() const noexcept = 0;
 
     /// Sets texture data.
-    void SetData(const void* pixelData);
-
-    /// Gets the pointer of the native texture resource.
-    Detail::NativeTexture2D* GetNativeTexture2D();
-
-private:
-    std::unique_ptr<Detail::NativeTexture2D> nativeTexture2D;
-    std::int32_t pixelWidth;
-    std::int32_t pixelHeight;
-    std::int32_t levelCount;
-    SurfaceFormat format;
+    virtual void SetData(const void* pixelData) = 0;
 };
 
 } // namespace Pomdog

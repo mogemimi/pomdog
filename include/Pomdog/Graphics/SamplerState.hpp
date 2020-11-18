@@ -9,23 +9,13 @@
 
 namespace Pomdog {
 
-class POMDOG_EXPORT SamplerState final {
+class POMDOG_EXPORT SamplerState {
 public:
-    SamplerState() = delete;
+    SamplerState() noexcept;
     SamplerState(const SamplerState&) = delete;
     SamplerState& operator=(const SamplerState&) = delete;
 
-    SamplerState(
-        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-        const SamplerDescription& description);
-
-    ~SamplerState();
-
-    /// Gets the pointer of the native sampler state object.
-    Detail::NativeSamplerState* GetNativeSamplerState();
-
-private:
-    std::unique_ptr<Detail::NativeSamplerState> nativeSamplerState;
+    virtual ~SamplerState();
 };
 
 } // namespace Pomdog

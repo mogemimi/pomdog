@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Graphics/ShaderCompilers/HLSLCompiler.hpp"
-#include "../../RenderSystem/NativeGraphicsDevice.hpp"
 #include "../../RenderSystem/ShaderBytecode.hpp"
 #include "../../RenderSystem/ShaderCompileOptions.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
@@ -24,8 +23,6 @@ std::unique_ptr<Shader> HLSLCompiler::CreateShaderFromBinary(
     POMDOG_ASSERT(byteLength > 0);
     POMDOG_ASSERT(graphicsDevice.GetSupportedLanguage() == ShaderLanguage::HLSL);
 
-    auto nativeGraphicsDevice = graphicsDevice.GetNativeGraphicsDevice();
-
     ShaderBytecode shaderBytecode;
     shaderBytecode.Code = shaderSource;
     shaderBytecode.ByteLength = byteLength;
@@ -34,7 +31,7 @@ std::unique_ptr<Shader> HLSLCompiler::CreateShaderFromBinary(
     compileOptions.Profile.PipelineStage = pipelineStage;
     compileOptions.Precompiled = true;
 
-    return nativeGraphicsDevice->CreateShader(std::move(shaderBytecode), std::move(compileOptions));
+    return std::get<0>(graphicsDevice.CreateShader(std::move(shaderBytecode), std::move(compileOptions)));
 }
 
 std::unique_ptr<Shader> HLSLCompiler::CreateShaderFromSource(
@@ -48,8 +45,6 @@ std::unique_ptr<Shader> HLSLCompiler::CreateShaderFromSource(
     POMDOG_ASSERT(shaderSource != nullptr);
     POMDOG_ASSERT(byteLength > 0);
     POMDOG_ASSERT(graphicsDevice.GetSupportedLanguage() == ShaderLanguage::HLSL);
-
-    auto nativeGraphicsDevice = graphicsDevice.GetNativeGraphicsDevice();
 
     ShaderBytecode shaderBytecode;
     shaderBytecode.Code = shaderSource;
@@ -66,7 +61,7 @@ std::unique_ptr<Shader> HLSLCompiler::CreateShaderFromSource(
         compileOptions.CurrentDirectory = std::move(*currentDirectory);
     }
 
-    return nativeGraphicsDevice->CreateShader(std::move(shaderBytecode), std::move(compileOptions));
+    return std::get<0>(graphicsDevice.CreateShader(std::move(shaderBytecode), std::move(compileOptions)));
 }
 
 } // namespace Pomdog::ShaderCompilers

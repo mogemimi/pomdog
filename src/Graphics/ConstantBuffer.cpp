@@ -3,69 +3,21 @@
 #include "Pomdog/Graphics/ConstantBuffer.hpp"
 #include "../RenderSystem/BufferBindMode.hpp"
 #include "../RenderSystem/NativeBuffer.hpp"
-#include "../RenderSystem/NativeGraphicsDevice.hpp"
-#include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <utility>
 
 namespace Pomdog {
 
 ConstantBuffer::ConstantBuffer(
-    GraphicsDevice& graphicsDevice,
+    std::unique_ptr<Detail::NativeBuffer>&& nativeBufferIn,
     std::size_t sizeInBytesIn,
     BufferUsage bufferUsageIn)
-    : sizeInBytes(static_cast<decltype(sizeInBytes)>(sizeInBytesIn))
+    : nativeBuffer(std::move(nativeBufferIn))
+    , sizeInBytes(static_cast<decltype(sizeInBytes)>(sizeInBytesIn))
     , bufferUsage(bufferUsageIn)
 {
     POMDOG_ASSERT(sizeInBytes > 0);
-
-    auto nativeDevice = graphicsDevice.GetNativeGraphicsDevice();
-
-    POMDOG_ASSERT(nativeDevice != nullptr);
-    using Detail::BufferBindMode;
-
-    nativeConstantBuffer = nativeDevice->CreateBuffer(
-        sizeInBytes, bufferUsage, BufferBindMode::ConstantBuffer);
-
-    POMDOG_ASSERT(nativeConstantBuffer);
-}
-
-ConstantBuffer::ConstantBuffer(
-    GraphicsDevice& graphicsDevice,
-    const void* sourceData,
-    std::size_t sizeInBytesIn,
-    BufferUsage bufferUsageIn)
-    : sizeInBytes(static_cast<decltype(sizeInBytes)>(sizeInBytesIn))
-    , bufferUsage(bufferUsageIn)
-{
-    POMDOG_ASSERT(sizeInBytes > 0);
-
-    auto nativeDevice = graphicsDevice.GetNativeGraphicsDevice();
-
-    POMDOG_ASSERT(nativeDevice != nullptr);
-    using Detail::BufferBindMode;
-
-    nativeConstantBuffer = nativeDevice->CreateBuffer(
-        sourceData, sizeInBytes, bufferUsage, BufferBindMode::ConstantBuffer);
-
-    POMDOG_ASSERT(nativeConstantBuffer);
-}
-
-ConstantBuffer::ConstantBuffer(
-    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-    std::size_t sizeInBytesIn,
-    BufferUsage bufferUsageIn)
-    : ConstantBuffer(*graphicsDevice, sizeInBytesIn, bufferUsageIn)
-{
-}
-
-ConstantBuffer::ConstantBuffer(
-    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-    const void* sourceData,
-    std::size_t sizeInBytesIn,
-    BufferUsage bufferUsageIn)
-    : ConstantBuffer(*graphicsDevice, sourceData, sizeInBytesIn, bufferUsageIn)
-{
+    POMDOG_ASSERT(nativeBuffer != nullptr);
 }
 
 ConstantBuffer::~ConstantBuffer() = default;
@@ -75,8 +27,8 @@ void ConstantBuffer::GetValue(std::size_t sizeInBytesIn, void* result) const
     POMDOG_ASSERT(sizeInBytesIn > 0);
     POMDOG_ASSERT(sizeInBytesIn <= sizeInBytes);
     POMDOG_ASSERT(result != nullptr);
-    POMDOG_ASSERT(nativeConstantBuffer);
-    nativeConstantBuffer->GetData(0, result, sizeInBytesIn);
+    POMDOG_ASSERT(nativeBuffer != nullptr);
+    nativeBuffer->GetData(0, result, sizeInBytesIn);
 }
 
 void ConstantBuffer::SetValue(const void* data, std::size_t sizeInBytesIn)
@@ -84,8 +36,8 @@ void ConstantBuffer::SetValue(const void* data, std::size_t sizeInBytesIn)
     POMDOG_ASSERT(data != nullptr);
     POMDOG_ASSERT(sizeInBytesIn > 0);
     POMDOG_ASSERT(sizeInBytesIn <= sizeInBytes);
-    POMDOG_ASSERT(nativeConstantBuffer);
-    return nativeConstantBuffer->SetData(0, data, sizeInBytesIn);
+    POMDOG_ASSERT(nativeBuffer != nullptr);
+    return nativeBuffer->SetData(0, data, sizeInBytesIn);
 }
 
 std::size_t ConstantBuffer::GetSizeInBytes() const noexcept
@@ -98,10 +50,10 @@ BufferUsage ConstantBuffer::GetBufferUsage() const noexcept
     return bufferUsage;
 }
 
-Detail::NativeBuffer* ConstantBuffer::GetNativeConstantBuffer()
+Detail::NativeBuffer* ConstantBuffer::GetNativeBuffer()
 {
-    POMDOG_ASSERT(nativeConstantBuffer);
-    return nativeConstantBuffer.get();
+    POMDOG_ASSERT(nativeBuffer != nullptr);
+    return nativeBuffer.get();
 }
 
 } // namespace Pomdog
