@@ -4,6 +4,7 @@
 #include "Pomdog/Experimental/Graphics/FontGlyph.hpp"
 #include "Pomdog/Experimental/Graphics/SpriteBatch.hpp"
 #include "Pomdog/Experimental/Graphics/TrueTypeFont.hpp"
+#include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/Texture2D.hpp"
 #include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Math/Matrix3x2.hpp"
@@ -115,8 +116,8 @@ SpriteFont::Impl::Impl(
     currentPoint = {1, 1};
     bottomY = 1;
 
-    auto texture = std::make_shared<Texture2D>(graphicsDevice,
-        TextureWidth, TextureHeight, false, SurfaceFormat::A8_UNorm);
+    auto texture = std::get<0>(graphicsDevice->CreateTexture2D(
+        TextureWidth, TextureHeight, false, SurfaceFormat::A8_UNorm));
     textures.push_back(texture);
 }
 
@@ -218,8 +219,8 @@ void SpriteFont::Impl::PrepareFonts(const std::string& text)
                     fetchTextureData();
                     std::fill(std::begin(pixelData), std::end(pixelData), static_cast<std::uint8_t>(0));
 
-                    auto textureNew = std::make_shared<Texture2D>(graphicsDevice,
-                        TextureWidth, TextureHeight, false, SurfaceFormat::A8_UNorm);
+                    auto textureNew = std::get<0>(graphicsDevice->CreateTexture2D(
+                        TextureWidth, TextureHeight, false, SurfaceFormat::A8_UNorm));
                     textures.push_back(textureNew);
                     currentPoint = {1, 1};
                     bottomY = 1;

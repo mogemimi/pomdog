@@ -35,8 +35,8 @@ GrayscaleEffect::GrayscaleEffect(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
     AssetManager& assets)
 {
-    samplerLinear = std::make_shared<SamplerState>(
-        graphicsDevice, SamplerDescription::CreateLinearWrap());
+    samplerLinear = std::get<0>(graphicsDevice->CreateSamplerState(
+        SamplerDescription::CreateLinearWrap()));
 
     auto inputLayout = InputLayoutHelper{}
         .Float3().Float2();

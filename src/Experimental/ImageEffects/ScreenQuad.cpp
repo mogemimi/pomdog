@@ -39,9 +39,11 @@ ScreenQuad::ScreenQuad(const std::shared_ptr<GraphicsDevice>& graphicsDevice)
         verticesCombo[2], verticesCombo[3], verticesCombo[0],
     }};
 
-    vertexBuffer = std::make_shared<VertexBuffer>(
-        graphicsDevice, vertices.data(), vertices.size(),
-        sizeof(ScreenQuadVertex), BufferUsage::Immutable);
+    vertexBuffer = std::get<0>(graphicsDevice->CreateVertexBuffer(
+        vertices.data(),
+        vertices.size(),
+        sizeof(ScreenQuadVertex),
+        BufferUsage::Immutable));
 }
 
 void ScreenQuad::DrawQuad(GraphicsCommandList& commandList)

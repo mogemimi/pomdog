@@ -41,10 +41,9 @@ PostProcessCompositor::PostProcessCompositor(
     viewport.Width = presentationParameters.BackBufferWidth;
     viewport.Height = presentationParameters.BackBufferHeight;
 
-    constantBuffer = std::make_shared<ConstantBuffer>(
-        *graphicsDevice,
+    constantBuffer = std::get<0>(graphicsDevice->CreateConstantBuffer(
         sizeof(PostProcessInfo),
-        BufferUsage::Dynamic);
+        BufferUsage::Dynamic));
 
     BuildRenderTargets(
         *graphicsDevice,
@@ -92,13 +91,12 @@ void PostProcessCompositor::BuildRenderTargets(
     POMDOG_ASSERT(height > 0);
 
     for (auto& renderTarget : renderTargets) {
-        renderTarget = std::make_shared<RenderTarget2D>(
-            graphicsDevice,
+        renderTarget = std::get<0>(graphicsDevice.CreateRenderTarget2D(
             width,
             height,
             false,
             surfaceFormat,
-            depthFormat);
+            depthFormat));
     }
 }
 
@@ -152,7 +150,7 @@ void PostProcessCompositor::Composite(
 
 void PostProcessCompositor::Draw(
     GraphicsCommandList& commandList,
-    std::shared_ptr<RenderTarget2D> const& source)
+    const std::shared_ptr<RenderTarget2D>& source)
 {
     if (imageEffects.empty()) {
         return;

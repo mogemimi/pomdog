@@ -228,12 +228,11 @@ SpriteBatch::Impl::Impl(
             Vector4{1.0f, 1.0f, 1.0f, 0.0f},
             Vector4{1.0f, 0.0f, 1.0f, 1.0f},
         }};
-        planeVertices = std::make_shared<VertexBuffer>(
-            graphicsDevice,
+        planeVertices = std::get<0>(graphicsDevice->CreateVertexBuffer(
             verticesCombo.data(),
             verticesCombo.size(),
             sizeof(PositionTextureCoord),
-            BufferUsage::Immutable);
+            BufferUsage::Immutable));
     }
     {
         std::array<std::uint16_t, 6> const indices = {{
@@ -242,30 +241,26 @@ SpriteBatch::Impl::Impl(
         }};
 
         // Create index buffer
-        planeIndices = std::make_shared<IndexBuffer>(
-            graphicsDevice,
+        planeIndices = std::get<0>(graphicsDevice->CreateIndexBuffer(
             IndexElementSize::SixteenBits,
             indices.data(),
             indices.size(),
-            BufferUsage::Immutable);
+            BufferUsage::Immutable));
     }
     {
         const auto maxBatchSize = MaxBatchSize;
-        instanceVertices = std::make_shared<VertexBuffer>(
-            graphicsDevice,
+        instanceVertices = std::get<0>(graphicsDevice->CreateVertexBuffer(
             maxBatchSize,
             sizeof(SpriteInfo),
-            BufferUsage::Dynamic);
+            BufferUsage::Dynamic));
     }
     {
-        constantBuffer = std::make_shared<ConstantBuffer>(
-            graphicsDevice,
+        constantBuffer = std::get<0>(graphicsDevice->CreateConstantBuffer(
             sizeof(SpriteBatchConstantBuffer),
-            BufferUsage::Dynamic);
+            BufferUsage::Dynamic));
 
-        sampler = std::make_shared<SamplerState>(
-            graphicsDevice,
-            *samplerDesc);
+        sampler = std::get<0>(graphicsDevice->CreateSamplerState(
+            *samplerDesc));
     }
     {
         auto inputLayout = InputLayoutHelper{}

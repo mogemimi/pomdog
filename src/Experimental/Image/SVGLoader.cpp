@@ -2,6 +2,7 @@
 
 #include "Pomdog/Experimental/Image/SVGLoader.hpp"
 #include "../../Utility/ScopeGuard.hpp"
+#include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/Texture2D.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/FileSystem.hpp"
@@ -176,12 +177,11 @@ LoadTexture(
     // FIXME: Add support multi-level texture (mipmap)
     constexpr bool generateMipmap = false;
 
-    auto texture = std::make_shared<Texture2D>(
-        graphicsDevice,
+    auto texture = std::get<0>(graphicsDevice->CreateTexture2D(
         image.Width,
         image.Height,
         generateMipmap,
-        image.Format);
+        image.Format));
 
     POMDOG_ASSERT(image.PixelData != nullptr);
     POMDOG_ASSERT(image.ByteLength > 0);

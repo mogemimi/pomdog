@@ -9,6 +9,7 @@
 #include "Pomdog/Graphics/BlendDescription.hpp"
 #include "Pomdog/Graphics/DepthStencilDescription.hpp"
 #include "Pomdog/Graphics/GraphicsCommandList.hpp"
+#include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/RasterizerDescription.hpp"
 #include "Pomdog/Graphics/SamplerDescription.hpp"
 #include "Pomdog/Graphics/Texture2D.hpp"
@@ -191,13 +192,12 @@ DrawingContext::DrawingContext(
     POMDOG_ASSERT(result.Image);
     POMDOG_ASSERT(!result.HasError);
 
-    // Creating texture from packed image
-    iconTexture = std::make_shared<Texture2D>(
-        graphicsDevice,
+    // NOTE: Creating texture from packed image
+    iconTexture = std::get<0>(graphicsDevice->CreateTexture2D(
         result.Image->GetWidth(),
         result.Image->GetHeight(),
         false,
-        SurfaceFormat::R8G8B8A8_UNorm);
+        SurfaceFormat::R8G8B8A8_UNorm));
     iconTexture->SetData(result.Image->GetData());
 
     iconTextureAtlas = std::move(result.Atlas);

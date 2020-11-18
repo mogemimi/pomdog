@@ -40,8 +40,8 @@ VignetteEffect::VignetteEffect(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
     AssetManager& assets)
 {
-    samplerLinear = std::make_shared<SamplerState>(
-        graphicsDevice, SamplerDescription::CreateLinearWrap());
+    samplerLinear = std::get<0>(graphicsDevice->CreateSamplerState(
+        SamplerDescription::CreateLinearWrap()));
 
     auto inputLayout = InputLayoutHelper{}
         .Float3().Float2();
@@ -71,8 +71,9 @@ VignetteEffect::VignetteEffect(
         .SetConstantBufferBindSlot("VignetteBlock", 1)
         .Build();
 
-    constantBufferVignette = std::make_shared<ConstantBuffer>(
-        graphicsDevice, sizeof(VignetteBlock), BufferUsage::Dynamic);
+    constantBufferVignette = std::get<0>(graphicsDevice->CreateConstantBuffer(
+        sizeof(VignetteBlock),
+        BufferUsage::Dynamic));
 
     SetIntensity(0.5f);
 }

@@ -7,6 +7,7 @@
 #include "Pomdog/Content/Image/PNM.hpp"
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
 #include "Pomdog/Content/Utility/MakeFourCC.hpp"
+#include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
 #include "Pomdog/Graphics/Texture2D.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -109,12 +110,11 @@ AssetLoader<Texture2D>::operator()(AssetManager& assets, const std::string& file
 
         constexpr bool generateMipmap = false;
 
-        auto texture = std::make_shared<Texture2D>(
-            graphicsDevice,
+        auto texture = std::get<0>(graphicsDevice->CreateTexture2D(
             image.Width,
             image.Height,
             generateMipmap,
-            image.Format);
+            image.Format));
 
         POMDOG_ASSERT(!image.RawData.empty());
         POMDOG_ASSERT(image.PixelData != nullptr);
@@ -142,12 +142,11 @@ AssetLoader<Texture2D>::operator()(AssetManager& assets, const std::string& file
         // FIXME: Add support multi-level texture (mipmap)
         constexpr bool generateMipmap = false;
 
-        auto texture = std::make_shared<Texture2D>(
-            graphicsDevice,
+        auto texture = std::get<0>(graphicsDevice->CreateTexture2D(
             image.Width,
             image.Height,
             generateMipmap,
-            image.Format);
+            image.Format));
 
         POMDOG_ASSERT(image.PixelData != nullptr);
         POMDOG_ASSERT(image.ByteLength > 0);
@@ -173,12 +172,11 @@ AssetLoader<Texture2D>::operator()(AssetManager& assets, const std::string& file
 
         constexpr bool generateMipmap = false;
 
-        auto texture = std::make_shared<Texture2D>(
-            graphicsDevice,
+        auto texture = std::get<0>(graphicsDevice->CreateTexture2D(
             image.Width,
             image.Height,
             generateMipmap,
-            image.Format);
+            image.Format));
 
         POMDOG_ASSERT(image.PixelData != nullptr);
         POMDOG_ASSERT(image.ByteLength > 0);

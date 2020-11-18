@@ -136,8 +136,10 @@ PolylineBatch::Impl::Impl(
         vertices.reserve(MinVertexCount);
 
         constexpr auto maxVertexCount = MaxVertexCount;
-        vertexBuffer = std::make_shared<VertexBuffer>(graphicsDevice,
-            maxVertexCount, sizeof(PolylineVertex), BufferUsage::Dynamic);
+        vertexBuffer = std::get<0>(graphicsDevice->CreateVertexBuffer(
+            maxVertexCount,
+            sizeof(PolylineVertex),
+            BufferUsage::Dynamic));
 
 #ifdef POMDOG_POLYLINE_DEBUG
         debugVertexBuffer = std::make_shared<VertexBuffer>(graphicsDevice,
@@ -148,8 +150,10 @@ PolylineBatch::Impl::Impl(
         indices.reserve(MinIndexCount);
 
         constexpr auto maxIndexCount = MaxIndexCount;
-        indexBuffer = std::make_shared<IndexBuffer>(graphicsDevice,
-            IndexElementSize::SixteenBits, maxIndexCount, BufferUsage::Dynamic);
+        indexBuffer = std::get<0>(graphicsDevice->CreateIndexBuffer(
+            IndexElementSize::SixteenBits,
+            maxIndexCount,
+            BufferUsage::Dynamic));
     }
     {
         auto inputLayout = InputLayoutHelper{}
@@ -181,8 +185,9 @@ PolylineBatch::Impl::Impl(
             .Build();
     }
 
-    constantBuffer = std::make_shared<ConstantBuffer>(
-        graphicsDevice, sizeof(Matrix4x4), BufferUsage::Dynamic);
+    constantBuffer = std::get<0>(graphicsDevice->CreateConstantBuffer(
+        sizeof(Matrix4x4),
+        BufferUsage::Dynamic));
 }
 
 void PolylineBatch::Impl::Begin(

@@ -35,8 +35,8 @@ ChromaticAberration::ChromaticAberration(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
     AssetManager& assets)
 {
-    samplerState = std::make_shared<SamplerState>(
-        graphicsDevice, SamplerDescription::CreateLinearClamp());
+    samplerState = std::get<0>(graphicsDevice->CreateSamplerState(
+        SamplerDescription::CreateLinearClamp()));
 
     auto inputLayout = InputLayoutHelper{}
         .Float3().Float2();

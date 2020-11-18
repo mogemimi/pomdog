@@ -34,8 +34,8 @@ FXAA::FXAA(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
     AssetManager& assets)
 {
-    samplerLinear = std::make_shared<SamplerState>(
-        graphicsDevice, SamplerDescription::CreateLinearClamp());
+    samplerLinear = std::get<0>(graphicsDevice->CreateSamplerState(
+        SamplerDescription::CreateLinearClamp()));
 
     auto inputLayout = InputLayoutHelper{}
         .Float3().Float2();

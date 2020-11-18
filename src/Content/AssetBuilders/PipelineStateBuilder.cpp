@@ -90,7 +90,7 @@ std::shared_ptr<PipelineState> Builder<PipelineState>::Impl::Load()
         hasDepthStencilViewFormat = true;
     }
 
-    auto pipelineState = std::make_shared<PipelineState>(graphicsDevice, description);
+    auto pipelineState = std::get<0>(graphicsDevice->CreatePipelineState(description));
     return pipelineState;
 }
 
@@ -277,10 +277,9 @@ std::shared_ptr<EffectReflection> Builder<PipelineState>::CreateEffectReflection
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(pipelineState);
 
-    auto effectReflection = std::make_shared<EffectReflection>(
-        impl->graphicsDevice,
+    auto effectReflection = std::get<0>(impl->graphicsDevice->CreateEffectReflection(
         impl->description,
-        pipelineState);
+        pipelineState));
     return effectReflection;
 }
 

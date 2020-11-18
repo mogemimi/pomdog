@@ -41,8 +41,8 @@ FishEyeEffect::FishEyeEffect(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
     AssetManager& assets)
 {
-    samplerLinear = std::make_shared<SamplerState>(
-        graphicsDevice, SamplerDescription::CreateLinearWrap());
+    samplerLinear = std::get<0>(graphicsDevice->CreateSamplerState(
+        SamplerDescription::CreateLinearWrap()));
 
     auto inputLayout = InputLayoutHelper{}
         .Float3().Float2();
@@ -72,8 +72,9 @@ FishEyeEffect::FishEyeEffect(
         .SetConstantBufferBindSlot("FishEyeBlock", 1)
         .Build();
 
-    constantBufferFishEye = std::make_shared<ConstantBuffer>(
-        graphicsDevice, sizeof(FishEyeBlock), BufferUsage::Dynamic);
+    constantBufferFishEye = std::get<0>(graphicsDevice->CreateConstantBuffer(
+        sizeof(FishEyeBlock),
+        BufferUsage::Dynamic));
 
     SetStrength(0.04f);
 }

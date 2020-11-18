@@ -97,8 +97,11 @@ LineBatch::Impl::Impl(
     vertices.reserve(MinVertexCount);
     {
         auto maxVertexCount = MaxVertexCount;
-        vertexBuffer = std::make_shared<VertexBuffer>(graphicsDevice,
-            maxVertexCount, sizeof(Vertex), BufferUsage::Dynamic);
+
+        vertexBuffer = std::get<0>(graphicsDevice->CreateVertexBuffer(
+            maxVertexCount,
+            sizeof(Vertex),
+            BufferUsage::Dynamic));
     }
     {
         auto inputLayout = InputLayoutHelper{}
@@ -129,8 +132,9 @@ LineBatch::Impl::Impl(
             .Build();
     }
 
-    constantBuffer = std::make_shared<ConstantBuffer>(
-        graphicsDevice, sizeof(Matrix4x4), BufferUsage::Dynamic);
+    constantBuffer = std::get<0>(graphicsDevice->CreateConstantBuffer(
+        sizeof(Matrix4x4),
+        BufferUsage::Dynamic));
 }
 
 void LineBatch::Impl::Begin(

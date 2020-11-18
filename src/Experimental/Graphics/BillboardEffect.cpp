@@ -73,11 +73,10 @@ BillboardBatchBuffer::BillboardBatchBuffer(
     POMDOG_ASSERT(graphicsDevice);
     const auto maxBatchSize = static_cast<std::size_t>(capacity);
     impl->instances.reserve(maxBatchSize);
-    impl->vertexBuffer = std::make_shared<VertexBuffer>(
-        graphicsDevice,
+    impl->vertexBuffer = std::get<0>(graphicsDevice->CreateVertexBuffer(
         maxBatchSize,
         sizeof(BillboardInfo),
-        BufferUsage::Dynamic);
+        BufferUsage::Dynamic));
 }
 
 BillboardBatchBuffer::~BillboardBatchBuffer() = default;
@@ -263,12 +262,11 @@ BillboardBatchEffect::BillboardBatchEffect(
         }};
 
         // NOTE: Create vertex buffer
-        impl->vertexBuffer = std::make_shared<VertexBuffer>(
-            graphicsDevice,
+        impl->vertexBuffer = std::get<0>(graphicsDevice->CreateVertexBuffer(
             vertices.data(),
             vertices.size(),
             sizeof(PositionTextureCoord),
-            BufferUsage::Immutable);
+            BufferUsage::Immutable));
     }
     {
         std::array<std::uint16_t, 6> const indices = {{
@@ -277,12 +275,11 @@ BillboardBatchEffect::BillboardBatchEffect(
         }};
 
         // NOTE: Create index buffer
-        impl->indexBuffer = std::make_shared<IndexBuffer>(
-            graphicsDevice,
+        impl->indexBuffer = std::get<0>(graphicsDevice->CreateIndexBuffer(
             IndexElementSize::SixteenBits,
             indices.data(),
             indices.size(),
-            BufferUsage::Immutable);
+            BufferUsage::Immutable));
     }
     {
         auto inputLayout = InputLayoutHelper{}
