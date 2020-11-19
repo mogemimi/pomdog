@@ -80,7 +80,7 @@ ShaderMetal::ShaderMetal(
     this->shader = [library newFunctionWithName:entryPoint];
 }
 
-id<MTLFunction> ShaderMetal::GetShader() const
+id<MTLFunction> ShaderMetal::GetShader() const noexcept
 {
     return shader;
 }

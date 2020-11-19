@@ -25,7 +25,8 @@ public:
         id<MTLLibrary> library,
         const ShaderCompileOptions& compileOptions);
 
-    id<MTLFunction> GetShader() const;
+    /// Gets the pointer of the native shader resource.
+    id<MTLFunction> GetShader() const noexcept;
 
 private:
     id<MTLFunction> shader = nullptr;

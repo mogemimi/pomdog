@@ -115,7 +115,7 @@ void BufferMetal::SetData(
     std::memcpy(destination + offsetInBytes, source, sizeInBytes);
 }
 
-id<MTLBuffer> BufferMetal::GetBuffer() const
+id<MTLBuffer> BufferMetal::GetBuffer() const noexcept
 {
     return nativeBuffer;
 }
