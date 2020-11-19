@@ -307,7 +307,7 @@ PipelineStateMetal::PipelineStateMetal(
 
     NSError* error = nullptr;
 
-    MTLRenderPipelineReflection* autoReleasingReflection = nil;
+    MTLRenderPipelineReflection* autoReleasingReflection = nullptr;
 
     this->pipelineState = [device
         newRenderPipelineStateWithDescriptor:descriptor
