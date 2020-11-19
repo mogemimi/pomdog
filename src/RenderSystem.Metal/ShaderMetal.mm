@@ -15,13 +15,13 @@ ShaderMetal::ShaderMetal(
     const ShaderBytecode& shaderBytecode,
     const ShaderCompileOptions& compileOptions)
 {
-    POMDOG_ASSERT(device != nil);
+    POMDOG_ASSERT(device != nullptr);
     POMDOG_ASSERT(shaderBytecode.Code != nullptr);
     POMDOG_ASSERT(shaderBytecode.ByteLength > 0);
 
-    NSError* compileError = nil;
+    NSError* compileError = nullptr;
 
-    id<MTLLibrary> library = nil;
+    id<MTLLibrary> library = nullptr;
 
     if (compileOptions.Precompiled) {
         dispatch_data_t libraryData = dispatch_data_create(
@@ -35,7 +35,7 @@ ShaderMetal::ShaderMetal(
     else {
         // NOTE: `shaderBytecode.Code` must be null-terminated string.
         NSString* sourceString = [NSString stringWithUTF8String:reinterpret_cast<const char*>(shaderBytecode.Code)];
-        library = [device newLibraryWithSource:sourceString options:nil error:&compileError];
+        library = [device newLibraryWithSource:sourceString options:nullptr error:&compileError];
     }
 
     if (compileError != nil) {
@@ -67,8 +67,8 @@ ShaderMetal::ShaderMetal(
     id<MTLLibrary> library,
     const ShaderCompileOptions& compileOptions)
 {
-    POMDOG_ASSERT(device != nil);
-    POMDOG_ASSERT(library != nil);
+    POMDOG_ASSERT(device != nullptr);
+    POMDOG_ASSERT(library != nullptr);
 
     if (library == nil) {
         POMDOG_THROW_EXCEPTION(std::runtime_error, "MTLLibrary is nil");

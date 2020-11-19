@@ -99,7 +99,7 @@ void BufferMetal::GetData(
     void* destination,
     std::size_t sizeInBytes) const
 {
-    POMDOG_ASSERT(nativeBuffer != nil);
+    POMDOG_ASSERT(nativeBuffer != nullptr);
     auto source = reinterpret_cast<const uint8_t*>([nativeBuffer contents]);
     std::memcpy(destination, source + offsetInBytes, sizeInBytes);
 }
@@ -109,7 +109,7 @@ void BufferMetal::SetData(
     const void* source,
     std::size_t sizeInBytes)
 {
-    POMDOG_ASSERT(nativeBuffer != nil);
+    POMDOG_ASSERT(nativeBuffer != nullptr);
     POMDOG_ASSERT([nativeBuffer length] >= (sizeInBytes + offsetInBytes));
     auto destination = reinterpret_cast<std::uint8_t*>([nativeBuffer contents]);
     std::memcpy(destination + offsetInBytes, source, sizeInBytes);

@@ -30,7 +30,7 @@ MTLSamplerAddressMode ToSamplerAddressMode(TextureAddressMode addressMode) noexc
 SamplerStateMetal::SamplerStateMetal(id<MTLDevice> device, const SamplerDescription& description)
     : samplerState(nil)
 {
-    POMDOG_ASSERT(device != nil);
+    POMDOG_ASSERT(device != nullptr);
 
     MTLSamplerDescriptor* descriptor = [[MTLSamplerDescriptor alloc] init];
     descriptor.sAddressMode = ToSamplerAddressMode(description.AddressU);

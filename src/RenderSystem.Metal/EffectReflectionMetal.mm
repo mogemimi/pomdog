@@ -119,7 +119,7 @@ EffectVariableClass ToEffectVariableClass(MTLDataType variableClass) noexcept
 EffectReflectionMetal::EffectReflectionMetal(MTLRenderPipelineReflection* reflectionIn)
     : reflection(reflectionIn)
 {
-    POMDOG_ASSERT(reflection != nil);
+    POMDOG_ASSERT(reflection != nullptr);
 }
 
 std::vector<EffectConstantDescription>

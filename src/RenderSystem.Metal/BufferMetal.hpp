@@ -37,7 +37,7 @@ public:
     id<MTLBuffer> GetBuffer() const;
 
 private:
-    id<MTLBuffer> nativeBuffer;
+    id<MTLBuffer> nativeBuffer = nullptr;
 };
 
 } // namespace Pomdog::Detail::Metal

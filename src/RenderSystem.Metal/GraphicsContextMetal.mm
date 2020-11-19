@@ -61,7 +61,7 @@ void SetViewport(
 {
     POMDOG_ASSERT(viewportIn.Width > 0);
     POMDOG_ASSERT(viewportIn.Height > 0);
-    POMDOG_ASSERT(commandEncoder != nil);
+    POMDOG_ASSERT(commandEncoder != nullptr);
 
     // NOTE: The MinDepth and MaxDepth must be between 0.0 and 1.0, respectively.
     // Please see https://developer.apple.com/documentation/metal/mtlrendercommandencoder/1515527-setviewport
@@ -83,7 +83,7 @@ void SetScissorRectangle(
 {
     POMDOG_ASSERT(rectangle.Width >= 0);
     POMDOG_ASSERT(rectangle.Height >= 0);
-    POMDOG_ASSERT(commandEncoder != nil);
+    POMDOG_ASSERT(commandEncoder != nullptr);
 
     MTLScissorRect rect;
     rect.x = rectangle.X;
@@ -117,7 +117,7 @@ GraphicsContextMetal::GraphicsContextMetal(
     , commandEncoder(nil)
     , indexBuffer(nil)
 {
-    POMDOG_ASSERT(nativeDevice != nil);
+    POMDOG_ASSERT(nativeDevice != nullptr);
 
     // The max number of command buffers in flight
     constexpr NSUInteger kMaxInflightBuffers = 1;
@@ -161,17 +161,17 @@ void GraphicsContextMetal::DispatchSemaphoreWait()
 
 void GraphicsContextMetal::SetMTKView(MTKView* view)
 {
-    POMDOG_ASSERT(view != nil);
+    POMDOG_ASSERT(view != nullptr);
     targetView = view;
 }
 
 void GraphicsContextMetal::ExecuteCommandLists(
     const std::vector<std::shared_ptr<GraphicsCommandListImmediate>>& commandLists)
 {
-    POMDOG_ASSERT(commandQueue != nil);
-    POMDOG_ASSERT(targetView != nil);
-    POMDOG_ASSERT(commandBuffer == nil);
-    POMDOG_ASSERT(commandEncoder == nil);
+    POMDOG_ASSERT(commandQueue != nullptr);
+    POMDOG_ASSERT(targetView != nullptr);
+    POMDOG_ASSERT(commandBuffer == nullptr);
+    POMDOG_ASSERT(commandEncoder == nullptr);
 
     // Create a new command buffer for each renderpass to the current drawable
     commandBuffer = [commandQueue commandBuffer];
@@ -185,7 +185,7 @@ void GraphicsContextMetal::ExecuteCommandLists(
     }];
     isDrawing = true;
 
-    POMDOG_ASSERT(commandBuffer != nil);
+    POMDOG_ASSERT(commandBuffer != nullptr);
 
     // NOTE: Skip rendering when the graphics device is lost.
     const bool skipRender = (targetView.currentDrawable.texture.pixelFormat == MTLPixelFormatInvalid);
@@ -197,23 +197,23 @@ void GraphicsContextMetal::ExecuteCommandLists(
         }
     }
 
-    if (commandEncoder != nil) {
+    if (commandEncoder != nullptr) {
         // We're done encoding commands
         [commandEncoder popDebugGroup];
         [commandEncoder endEncoding];
-        commandEncoder = nil;
+        commandEncoder = nullptr;
     }
 
-    POMDOG_ASSERT(commandBuffer != nil);
+    POMDOG_ASSERT(commandBuffer != nullptr);
 
-    if (auto drawable = targetView.currentDrawable; drawable != nil) {
+    if (auto drawable = targetView.currentDrawable; drawable != nullptr) {
         // Schedule a present once the framebuffer is complete using the current drawable
         [commandBuffer presentDrawable:drawable];
     }
 
     // Finalize rendering here & push the command buffer to the GPU
     [commandBuffer commit];
-    commandBuffer = nil;
+    commandBuffer = nullptr;
 }
 
 void GraphicsContextMetal::Present()
@@ -225,7 +225,7 @@ void GraphicsContextMetal::Draw(
     std::size_t vertexCount,
     std::size_t startVertexLocation)
 {
-    POMDOG_ASSERT(commandEncoder != nil);
+    POMDOG_ASSERT(commandEncoder != nullptr);
     POMDOG_ASSERT(vertexCount > 0);
 
 #if defined(DEBUG) && !defined(NDEBUG)
@@ -241,7 +241,7 @@ void GraphicsContextMetal::DrawIndexed(
     std::size_t indexCount,
     std::size_t startIndexLocation)
 {
-    POMDOG_ASSERT(commandEncoder != nil);
+    POMDOG_ASSERT(commandEncoder != nullptr);
     POMDOG_ASSERT(indexCount > 0);
 
 #if defined(DEBUG) && !defined(NDEBUG)
@@ -262,7 +262,7 @@ void GraphicsContextMetal::DrawInstanced(
     std::size_t startVertexLocation,
     std::size_t startInstanceLocation)
 {
-    POMDOG_ASSERT(commandEncoder != nil);
+    POMDOG_ASSERT(commandEncoder != nullptr);
     POMDOG_ASSERT(vertexCountPerInstance > 0);
     POMDOG_ASSERT(instanceCount > 0);
 
@@ -283,7 +283,7 @@ void GraphicsContextMetal::DrawIndexedInstanced(
     std::size_t startIndexLocation,
     std::size_t startInstanceLocation)
 {
-    POMDOG_ASSERT(commandEncoder != nil);
+    POMDOG_ASSERT(commandEncoder != nullptr);
     POMDOG_ASSERT(indexCountPerInstance > 0);
     POMDOG_ASSERT(instanceCount > 0);
 
@@ -304,19 +304,19 @@ void GraphicsContextMetal::DrawIndexedInstanced(
 
 void GraphicsContextMetal::SetViewport(const Viewport& viewport)
 {
-    POMDOG_ASSERT(commandEncoder != nil);
+    POMDOG_ASSERT(commandEncoder != nullptr);
     Metal::SetViewport(commandEncoder, viewport);
 }
 
 void GraphicsContextMetal::SetScissorRect(const Rectangle& scissorRect)
 {
-    POMDOG_ASSERT(commandEncoder != nil);
+    POMDOG_ASSERT(commandEncoder != nullptr);
     SetScissorRectangle(commandEncoder, scissorRect);
 }
 
 void GraphicsContextMetal::SetBlendFactor(const Vector4& blendFactor)
 {
-    POMDOG_ASSERT(commandEncoder != nil);
+    POMDOG_ASSERT(commandEncoder != nullptr);
     [commandEncoder setBlendColorRed:blendFactor.X green:blendFactor.Y blue:blendFactor.Z alpha:blendFactor.W];
 }
 
@@ -366,7 +366,7 @@ void GraphicsContextMetal::SetPipelineState(const std::shared_ptr<PipelineState>
 
     this->primitiveType = nativePipelineState->GetPrimitiveType();
 
-    POMDOG_ASSERT(commandEncoder != nil);
+    POMDOG_ASSERT(commandEncoder != nullptr);
     nativePipelineState->Apply(commandEncoder);
 }
 
@@ -391,7 +391,7 @@ void GraphicsContextMetal::SetConstantBuffer(
     POMDOG_ASSERT(constantBuffer);
     POMDOG_ASSERT(constantBuffer == std::dynamic_pointer_cast<BufferMetal>(constantBufferIn));
 
-    POMDOG_ASSERT(constantBuffer->GetBuffer() != nil);
+    POMDOG_ASSERT(constantBuffer->GetBuffer() != nullptr);
     [commandEncoder setVertexBuffer:constantBuffer->GetBuffer()
         offset:offset
         atIndex:index];
@@ -409,9 +409,9 @@ void GraphicsContextMetal::SetSampler(int index, const std::shared_ptr<SamplerSt
 
     POMDOG_ASSERT(samplerStateMetal != nullptr);
     POMDOG_ASSERT(samplerStateMetal == std::dynamic_pointer_cast<SamplerStateMetal>(sampler));
-    POMDOG_ASSERT(samplerStateMetal->GetSamplerState() != nil);
+    POMDOG_ASSERT(samplerStateMetal->GetSamplerState() != nullptr);
 
-    POMDOG_ASSERT(commandEncoder != nil);
+    POMDOG_ASSERT(commandEncoder != nullptr);
     [commandEncoder setVertexSamplerState:samplerStateMetal->GetSamplerState() atIndex:index];
     [commandEncoder setFragmentSamplerState:samplerStateMetal->GetSamplerState() atIndex:index];
 }
@@ -488,7 +488,7 @@ void GraphicsContextMetal::SetRenderPass(const RenderPass& renderPass)
 #endif
 
     MTLRenderPassDescriptor* renderPassDescriptor = [[MTLRenderPassDescriptor alloc] init];
-    POMDOG_ASSERT(renderPassDescriptor != nil);
+    POMDOG_ASSERT(renderPassDescriptor != nullptr);
 
     const bool useBackBuffer = (std::get<0>(renderPass.RenderTargets.front()) == nullptr);
 
@@ -565,16 +565,16 @@ void GraphicsContextMetal::SetRenderPass(const RenderPass& renderPass)
                 renderPassDescriptor.stencilAttachment.texture = renderTargetMetal->GetDepthStencilTexture();
             }
             else {
-                renderPassDescriptor.stencilAttachment.texture = nil;
+                renderPassDescriptor.stencilAttachment.texture = nullptr;
             }
         }
     }
 
-    if (renderPassDescriptor.depthAttachment.texture != nil) {
+    if (renderPassDescriptor.depthAttachment.texture != nullptr) {
         renderPassDescriptor.depthAttachment.loadAction = MTLLoadActionLoad;
         renderPassDescriptor.depthAttachment.storeAction = MTLStoreActionStore;
     }
-    if (renderPassDescriptor.stencilAttachment.texture != nil) {
+    if (renderPassDescriptor.stencilAttachment.texture != nullptr) {
         renderPassDescriptor.stencilAttachment.loadAction = MTLLoadActionLoad;
         renderPassDescriptor.stencilAttachment.storeAction = MTLStoreActionStore;
     }
@@ -588,13 +588,13 @@ void GraphicsContextMetal::SetRenderPass(const RenderPass& renderPass)
         renderPassDescriptor.stencilAttachment.clearStencil = *renderPass.ClearStencil;
     }
 
-    POMDOG_ASSERT(commandBuffer != nil);
+    POMDOG_ASSERT(commandBuffer != nullptr);
 
-    if (commandEncoder != nil) {
+    if (commandEncoder != nullptr) {
         // We're done encoding commands
         [commandEncoder popDebugGroup];
         [commandEncoder endEncoding];
-        commandEncoder = nil;
+        commandEncoder = nullptr;
     }
 
     // Create a render command encoder so we can render into something

@@ -28,7 +28,7 @@ public:
     id<MTLFunction> GetShader() const;
 
 private:
-    id<MTLFunction> shader;
+    id<MTLFunction> shader = nullptr;
 };
 
 } // namespace Pomdog::Detail::Metal

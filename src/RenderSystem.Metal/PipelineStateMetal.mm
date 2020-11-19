@@ -224,7 +224,7 @@ PipelineStateMetal::PipelineStateMetal(
     , depthStencilState(nil)
     , reflection(nil)
 {
-    POMDOG_ASSERT(device != nil);
+    POMDOG_ASSERT(device != nullptr);
 
     primitiveType = ToPrimitiveType(description.PrimitiveTopology);
 
@@ -305,7 +305,7 @@ PipelineStateMetal::PipelineStateMetal(
         ++index;
     }
 
-    NSError* error = nil;
+    NSError* error = nullptr;
 
     MTLRenderPipelineReflection* autoReleasingReflection = nil;
 
@@ -351,7 +351,7 @@ PipelineStateMetal::PipelineStateMetal(
 
 void PipelineStateMetal::Apply(id<MTLRenderCommandEncoder> commandEncoder)
 {
-    POMDOG_ASSERT(commandEncoder != nil);
+    POMDOG_ASSERT(commandEncoder != nullptr);
 
     [commandEncoder setRenderPipelineState:pipelineState];
     [commandEncoder setDepthStencilState:depthStencilState];
