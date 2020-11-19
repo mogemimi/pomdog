@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "../RenderSystem.GL4/OpenGLContext.hpp"
+#include "../Graphics.GL4/OpenGLContext.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 #include <functional>

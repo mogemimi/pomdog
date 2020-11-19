@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Graphics/ShaderCompilers/HLSLCompiler.hpp"
-#include "../../RenderSystem/ShaderBytecode.hpp"
-#include "../../RenderSystem/ShaderCompileOptions.hpp"
+#include "../../Graphics.Backends/ShaderBytecode.hpp"
+#include "../../Graphics.Backends/ShaderCompileOptions.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
 #include "Pomdog/Graphics/ShaderLanguage.hpp"

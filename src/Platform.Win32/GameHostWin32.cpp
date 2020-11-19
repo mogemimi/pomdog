@@ -7,14 +7,14 @@
 #include "../Input.Backends/NativeGamepad.hpp"
 #if !defined(POMDOG_DISABLE_GL4)
 #include "../Platform.Win32/OpenGLContextWin32.hpp"
-#include "../RenderSystem.GL4/GraphicsContextGL4.hpp"
-#include "../RenderSystem.GL4/GraphicsDeviceGL4.hpp"
-#include "../RenderSystem/GraphicsCommandQueueImmediate.hpp"
+#include "../Graphics.GL4/GraphicsContextGL4.hpp"
+#include "../Graphics.GL4/GraphicsDeviceGL4.hpp"
+#include "../Graphics.Backends/GraphicsCommandQueueImmediate.hpp"
 #endif
 #if !defined(POMDOG_DISABLE_DIRECT3D11)
-#include "../RenderSystem.Direct3D11/GraphicsContextDirect3D11.hpp"
-#include "../RenderSystem.Direct3D11/GraphicsDeviceDirect3D11.hpp"
-#include "../RenderSystem/GraphicsCommandQueueImmediate.hpp"
+#include "../Graphics.Direct3D11/GraphicsContextDirect3D11.hpp"
+#include "../Graphics.Direct3D11/GraphicsDeviceDirect3D11.hpp"
+#include "../Graphics.Backends/GraphicsCommandQueueImmediate.hpp"
 #endif
 #include "../Application/SubsystemScheduler.hpp"
 #include "../Application/SystemEvents.hpp"

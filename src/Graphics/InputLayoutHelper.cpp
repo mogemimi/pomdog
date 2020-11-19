@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Graphics/InputLayoutHelper.hpp"
-#include "../RenderSystem/BufferHelper.hpp"
+#include "../Graphics.Backends/BufferHelper.hpp"
 #include "Pomdog/Graphics/InputElementFormat.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 

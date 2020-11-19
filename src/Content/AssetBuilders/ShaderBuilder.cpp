@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Content/AssetBuilders/ShaderBuilder.hpp"
-#include "../../RenderSystem/ShaderBytecode.hpp"
+#include "../../Graphics.Backends/ShaderBytecode.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"

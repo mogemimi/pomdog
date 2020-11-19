@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "OpenGLContextCocoa.hpp"
-#include "../RenderSystem.GL4/OpenGLPrerequisites.hpp"
+#include "../Graphics.GL4/OpenGLPrerequisites.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Errors.hpp"

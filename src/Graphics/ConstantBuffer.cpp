@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Graphics/ConstantBuffer.hpp"
-#include "../RenderSystem/BufferBindMode.hpp"
-#include "../RenderSystem/NativeBuffer.hpp"
+#include "../Graphics.Backends/BufferBindMode.hpp"
+#include "../Graphics.Backends/NativeBuffer.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <utility>
 

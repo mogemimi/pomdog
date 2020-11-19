@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "../RenderSystem.GL4/OpenGLContext.hpp"
-#include "../RenderSystem.GL4/OpenGLPrerequisites.hpp"
+#include "../Graphics.GL4/OpenGLContext.hpp"
+#include "../Graphics.GL4/OpenGLPrerequisites.hpp"
 #include <GL/glx.h>
 #include <memory>
 

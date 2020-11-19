@@ -4,7 +4,7 @@
 #include "GameHostMetal.hpp"
 #include "GameWindowCocoa.hpp"
 #include "../Application/SystemEvents.hpp"
-#include "../RenderSystem.Metal/GraphicsContextMetal.hpp"
+#include "../Graphics.Metal/GraphicsContextMetal.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Input/ButtonState.hpp"
 #include "Pomdog/Input/Keys.hpp"
