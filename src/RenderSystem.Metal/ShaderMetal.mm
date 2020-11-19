@@ -4,16 +4,16 @@
 #include "../RenderSystem/ShaderBytecode.hpp"
 #include "../RenderSystem/ShaderCompileOptions.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
 #include "Pomdog/Utility/StringHelper.hpp"
 #import <Metal/Metal.h>
 
 namespace Pomdog::Detail::Metal {
 
-ShaderMetal::ShaderMetal(
+std::shared_ptr<Error>
+ShaderMetal::Initialize(
     id<MTLDevice> device,
     const ShaderBytecode& shaderBytecode,
-    const ShaderCompileOptions& compileOptions)
+    const ShaderCompileOptions& compileOptions) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
     POMDOG_ASSERT(shaderBytecode.Code != nullptr);
@@ -39,46 +39,51 @@ ShaderMetal::ShaderMetal(
         library = [device newLibraryWithSource:sourceString options:nullptr error:&compileError];
     }
 
-    if (compileError != nil) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, StringHelper::Format(
-                "Failed to compile shader.\n"
-                "error: %s",
-                [[compileError localizedDescription] UTF8String]));
+    if (compileError != nullptr) {
+        return Errors::New(StringHelper::Format(
+            "Failed to compile shader.\n"
+            "error: %s",
+            [[compileError localizedDescription] UTF8String]));
     }
 
-    if (library == nil) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "MTLLibrary is nil");
+    if (library == nullptr) {
+        return Errors::New("MTLLibrary must be != nullptr");
     }
 
     POMDOG_ASSERT(!compileOptions.EntryPoint.empty());
 
     auto funcName = [NSString stringWithUTF8String:compileOptions.EntryPoint.data()];
-    if (funcName == nil) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "funcName is nil");
+    if (funcName == nullptr) {
+        return Errors::New("funcName must be != nullptr");
     }
     this->shader = [library newFunctionWithName:funcName];
 
-    if (shader == nil) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "MTLFunction is nil");
+    if (shader == nullptr) {
+        return Errors::New("MTLFunction must be != nullptr");
     }
+
+    return nullptr;
 }
 
-ShaderMetal::ShaderMetal(
+std::shared_ptr<Error>
+ShaderMetal::Initialize(
     id<MTLDevice> device,
     id<MTLLibrary> library,
-    const ShaderCompileOptions& compileOptions)
+    const ShaderCompileOptions& compileOptions) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
     POMDOG_ASSERT(library != nullptr);
 
-    if (library == nil) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "MTLLibrary is nil");
+    if (library == nullptr) {
+        return Errors::New("MTLLibrary must be != nullptr");
     }
 
     POMDOG_ASSERT(!compileOptions.EntryPoint.empty());
 
     NSString* entryPoint = [NSString stringWithUTF8String:compileOptions.EntryPoint.c_str()];
     this->shader = [library newFunctionWithName:entryPoint];
+
+    return nullptr;
 }
 
 id<MTLFunction> ShaderMetal::GetShader() const noexcept

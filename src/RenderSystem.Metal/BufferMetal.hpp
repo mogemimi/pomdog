@@ -5,24 +5,27 @@
 #include "../RenderSystem/BufferBindMode.hpp"
 #include "../RenderSystem/NativeBuffer.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #import <Metal/MTLBuffer.h>
 
 namespace Pomdog::Detail::Metal {
 
 class BufferMetal final : public NativeBuffer {
 public:
-    BufferMetal(
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(
         id<MTLDevice> device,
         std::size_t sizeInBytes,
         BufferUsage bufferUsage,
-        BufferBindMode bindMode);
+        BufferBindMode bindMode) noexcept;
 
-    BufferMetal(
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(
         id<MTLDevice> device,
         const void* vertices,
         std::size_t sizeInBytes,
         BufferUsage bufferUsage,
-        BufferBindMode bindMode);
+        BufferBindMode bindMode) noexcept;
 
     void GetData(
         std::size_t offsetInBytes,

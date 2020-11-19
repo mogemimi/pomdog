@@ -173,7 +173,10 @@ GameHostMetal::Impl::Initialize(
     window->SetView(metalView);
 
     // NOTE: Create graphics device
-    graphicsDevice = std::make_shared<GraphicsDeviceMetal>(presentationParameters);
+    graphicsDevice = std::make_shared<GraphicsDeviceMetal>();
+    if (auto err = graphicsDevice->Initialize(presentationParameters); err != nullptr) {
+        return Errors::New("failed to initialize GraphicsDeviceMetal");
+    }
 
     // NOTE: Get MTLDevice object.
     POMDOG_ASSERT(graphicsDevice != nullptr);

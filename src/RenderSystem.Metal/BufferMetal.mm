@@ -5,7 +5,6 @@
 #include "Pomdog/Graphics/BufferUsage.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
 #import <Metal/Metal.h>
 #include <cstring>
 
@@ -51,47 +50,41 @@ std::size_t ComputeAlignedSize(std::size_t sizeInBytes, BufferBindMode bindMode)
 
 } // namespace
 
-BufferMetal::BufferMetal(
+std::shared_ptr<Error>
+BufferMetal::Initialize(
     id<MTLDevice> device,
     std::size_t sizeInBytes,
     BufferUsage bufferUsage,
-    BufferBindMode bindMode)
-    : nativeBuffer(nil)
+    BufferBindMode bindMode) noexcept
 {
     const auto alignedSize = ComputeAlignedSize(sizeInBytes, bindMode);
-    nativeBuffer = [device newBufferWithLength:alignedSize
-        options:ToResourceOptions(bufferUsage)];
-
-    if (nativeBuffer == nil) {
-        // FUS RO DAH!
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "Failed to create MTLBuffer");
+    nativeBuffer = [device newBufferWithLength:alignedSize options:ToResourceOptions(bufferUsage)];
+    if (nativeBuffer == nullptr) {
+        return Errors::New("failed to create MTLBuffer");
     }
 
     nativeBuffer.label = @"Pomdog.BufferMetal";
+    return nullptr;
 }
 
-BufferMetal::BufferMetal(
+std::shared_ptr<Error>
+BufferMetal::Initialize(
     id<MTLDevice> device,
     const void* vertices,
     std::size_t sizeInBytes,
     BufferUsage bufferUsage,
-    BufferBindMode bindMode)
-    : nativeBuffer(nil)
+    BufferBindMode bindMode) noexcept
 {
     const auto alignedSize = ComputeAlignedSize(sizeInBytes, bindMode);
-    nativeBuffer = [device newBufferWithLength:alignedSize
-        options:ToResourceOptions(bufferUsage)];
-
-    if (nativeBuffer == nil) {
-        // FUS RO DAH!
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "Failed to create MTLBuffer");
+    nativeBuffer = [device newBufferWithLength:alignedSize options:ToResourceOptions(bufferUsage)];
+    if (nativeBuffer == nullptr) {
+        return Errors::New("failed to create MTLBuffer");
     }
 
     nativeBuffer.label = @"Pomdog.BufferMetal";
 
     SetData(0, vertices, sizeInBytes);
+    return nullptr;
 }
 
 void BufferMetal::GetData(

@@ -5,7 +5,6 @@
 #include "../Basic/Unreachable.hpp"
 #include "Pomdog/Graphics/SamplerDescription.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
 
 namespace Pomdog::Detail::Metal {
 namespace {
@@ -27,8 +26,8 @@ MTLSamplerAddressMode ToSamplerAddressMode(TextureAddressMode addressMode) noexc
 
 } // namespace
 
-SamplerStateMetal::SamplerStateMetal(id<MTLDevice> device, const SamplerDescription& description)
-    : samplerState(nil)
+std::shared_ptr<Error>
+SamplerStateMetal::Initialize(id<MTLDevice> device, const SamplerDescription& description) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
 
@@ -94,11 +93,10 @@ SamplerStateMetal::SamplerStateMetal(id<MTLDevice> device, const SamplerDescript
     descriptor.maxAnisotropy = std::max<std::uint32_t>(description.MaxAnisotropy, 1);
 
     samplerState = [device newSamplerStateWithDescriptor:descriptor];
-    if (samplerState == nil) {
-        // FUS RO DAH!
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "Failed to create MTLSamplerState.");
+    if (samplerState == nullptr) {
+        return Errors::New("failed to create MTLSamplerState");
     }
+    return nullptr;
 }
 
 id<MTLSamplerState> SamplerStateMetal::GetSamplerState() const noexcept

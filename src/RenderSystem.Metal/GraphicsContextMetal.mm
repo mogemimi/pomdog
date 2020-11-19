@@ -20,7 +20,6 @@
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Math/Vector4.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
 
 namespace Pomdog::Detail::Metal {
 namespace {
@@ -112,10 +111,10 @@ void CheckUnbindingRenderTargetsError(
 
 GraphicsContextMetal::GraphicsContextMetal(
     id<MTLDevice> nativeDevice)
-    : commandQueue(nil)
-    , commandBuffer(nil)
-    , commandEncoder(nil)
-    , indexBuffer(nil)
+    : commandQueue(nullptr)
+    , commandBuffer(nullptr)
+    , commandEncoder(nullptr)
+    , indexBuffer(nullptr)
 {
     POMDOG_ASSERT(nativeDevice != nullptr);
 

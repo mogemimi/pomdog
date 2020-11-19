@@ -4,6 +4,7 @@
 
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #include <memory>
 
 #import <Metal/Metal.h>
@@ -12,9 +13,10 @@ namespace Pomdog::Detail::Metal {
 
 class GraphicsDeviceMetal final : public GraphicsDevice {
 public:
-    explicit GraphicsDeviceMetal(const PresentationParameters& presentationParameters);
-
     ~GraphicsDeviceMetal() override;
+
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(const PresentationParameters& presentationParameters) noexcept;
 
     /// Gets the currently supported shader language.
     ShaderLanguage GetSupportedLanguage() const noexcept override;

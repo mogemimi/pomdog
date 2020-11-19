@@ -4,6 +4,7 @@
 
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #import <Metal/MTLLibrary.h>
 
 namespace Pomdog::Detail {
@@ -15,15 +16,17 @@ namespace Pomdog::Detail::Metal {
 
 class ShaderMetal final : public Shader {
 public:
-    ShaderMetal(
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(
         id<MTLDevice> device,
         const ShaderBytecode& shaderBytecode,
-        const ShaderCompileOptions& compileOptions);
+        const ShaderCompileOptions& compileOptions) noexcept;
 
-    ShaderMetal(
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(
         id<MTLDevice> device,
         id<MTLLibrary> library,
-        const ShaderCompileOptions& compileOptions);
+        const ShaderCompileOptions& compileOptions) noexcept;
 
     /// Gets the pointer of the native shader resource.
     id<MTLFunction> GetShader() const noexcept;

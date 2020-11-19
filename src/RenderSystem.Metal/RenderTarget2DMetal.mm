@@ -4,25 +4,22 @@
 #include "MetalFormatHelper.hpp"
 #include "../RenderSystem/SurfaceFormatHelper.hpp"
 #include "Pomdog/Graphics/DepthFormat.hpp"
-#include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
 #import <Metal/MTLDevice.h>
 #import <Metal/MTLTexture.h>
 
 namespace Pomdog::Detail::Metal {
 
-RenderTarget2DMetal::RenderTarget2DMetal(
+std::shared_ptr<Error>
+RenderTarget2DMetal::Initialize(
     id<MTLDevice> device,
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn,
     std::int32_t levelCountIn,
     SurfaceFormat formatIn,
     DepthFormat depthStencilFormatIn,
-    std::int32_t multiSampleCount)
-    : texture(nullptr)
-    , depthStencilTexture(nullptr)
+    std::int32_t multiSampleCount) noexcept
 {
     pixelWidth = pixelWidthIn;
     pixelHeight = pixelHeightIn;
@@ -47,18 +44,14 @@ RenderTarget2DMetal::RenderTarget2DMetal(
 
         texture = [device newTextureWithDescriptor:descriptor];
         if (texture == nullptr) {
-            // FUS RO DAH!
-            POMDOG_THROW_EXCEPTION(std::runtime_error,
-                "Failed to create MTLTexture");
+            return Errors::New("failed to create MTLTexture");
         }
     }
 
-#if defined(DEBUG) && !defined(NDEBUG)
     if ((depthStencilFormat == DepthFormat::Depth24Stencil8) && !device.isDepth24Stencil8PixelFormatSupported) {
         // NOTE: MTLPixelFormatDepth24Unorm_Stencil8 is only supported in certain devices.
-        Log::Warning("Pomdog", "This device does not support MTLPixelFormatDepth24Unorm_Stencil8.");
+        return Errors::New("This device does not support MTLPixelFormatDepth24Unorm_Stencil8.");
     }
-#endif
 
     if (depthStencilFormat != DepthFormat::None) {
         MTLTextureDescriptor* descriptor = [MTLTextureDescriptor
@@ -75,11 +68,10 @@ RenderTarget2DMetal::RenderTarget2DMetal(
 
         depthStencilTexture = [device newTextureWithDescriptor:descriptor];
         if (depthStencilTexture == nullptr) {
-            // FUS RO DAH!
-            POMDOG_THROW_EXCEPTION(std::runtime_error,
-                "Failed to create MTLTexture");
+            return Errors::New("failed to create MTLTexture");
         }
     }
+    return nullptr;
 }
 
 std::int32_t RenderTarget2DMetal::GetWidth() const noexcept

@@ -6,18 +6,18 @@
 #include "../RenderSystem/TextureHelper.hpp"
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
 #import <Metal/MTLDevice.h>
 #include <algorithm>
 
 namespace Pomdog::Detail::Metal {
 
-Texture2DMetal::Texture2DMetal(
+std::shared_ptr<Error>
+Texture2DMetal::Initialize(
     id<MTLDevice> device,
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn,
     std::int32_t levelCountIn,
-    SurfaceFormat formatIn)
+    SurfaceFormat formatIn) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
 
@@ -39,10 +39,9 @@ Texture2DMetal::Texture2DMetal(
 
     texture = [device newTextureWithDescriptor:descriptor];
     if (texture == nullptr) {
-        // FUS RO DAH!
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "Failed to create MTLTexture");
+        return Errors::New("failed to create MTLTexture");
     }
+    return nullptr;
 }
 
 std::int32_t Texture2DMetal::GetWidth() const noexcept

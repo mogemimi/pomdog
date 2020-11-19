@@ -4,20 +4,22 @@
 
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #import <Metal/MTLTexture.h>
 
 namespace Pomdog::Detail::Metal {
 
 class RenderTarget2DMetal final : public RenderTarget2D {
 public:
-    RenderTarget2DMetal(
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(
         id<MTLDevice> device,
         std::int32_t pixelWidth,
         std::int32_t pixelHeight,
         std::int32_t levelCount,
         SurfaceFormat format,
         DepthFormat depthStencilFormat,
-        std::int32_t multiSampleCount);
+        std::int32_t multiSampleCount) noexcept;
 
     /// Gets the width of the texture data, in pixels.
     std::int32_t GetWidth() const noexcept override;

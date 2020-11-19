@@ -4,16 +4,19 @@
 
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include "Pomdog/Graphics/SamplerState.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #import <Metal/MTLSampler.h>
 
 namespace Pomdog::Detail::Metal {
 
 class SamplerStateMetal final : public SamplerState {
 public:
-    SamplerStateMetal(
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(
         id<MTLDevice> device,
-        const SamplerDescription& description);
+        const SamplerDescription& description) noexcept;
 
+    /// Gets the pointer of the native sampler object.
     id<MTLSamplerState> GetSamplerState() const noexcept;
 
 private:

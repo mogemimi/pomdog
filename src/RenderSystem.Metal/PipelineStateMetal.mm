@@ -10,8 +10,6 @@
 #include "Pomdog/Graphics/PipelineStateDescription.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
-#include "Pomdog/Utility/StringHelper.hpp"
 #import <Metal/MTLVertexDescriptor.h>
 
 namespace Pomdog::Detail::Metal {
@@ -217,12 +215,10 @@ MTLTriangleFillMode ToFillMode(FillMode fillMode) noexcept
 
 } // namespace
 
-PipelineStateMetal::PipelineStateMetal(
+std::shared_ptr<Error>
+PipelineStateMetal::Initialize(
     id<MTLDevice> device,
-    const PipelineStateDescription& description)
-    : pipelineState(nil)
-    , depthStencilState(nil)
-    , reflection(nil)
+    const PipelineStateDescription& description) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
 
@@ -234,23 +230,23 @@ PipelineStateMetal::PipelineStateMetal(
     rasterizerState.fillMode = ToFillMode(description.RasterizerState.FillMode);
 
     auto vertexShaderMetal = std::dynamic_pointer_cast<ShaderMetal>(description.VertexShader);
-    if (!vertexShaderMetal) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Invalid vertex shader.");
+    if (vertexShaderMetal == nullptr) {
+        return Errors::New("invalid vertex shader");
     }
 
     auto vertexShader = vertexShaderMetal->GetShader();
-    if (!vertexShader) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "The vertex shader is null");
+    if (vertexShader == nullptr) {
+        return Errors::New("vertexShader must be != nullptr");
     }
 
     auto pixelShaderMetal = std::dynamic_pointer_cast<ShaderMetal>(description.PixelShader);
-    if (!pixelShaderMetal) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Invalid pixel shader.");
+    if (pixelShaderMetal == nullptr) {
+        return Errors::New("invalid pixel shader");
     }
 
     auto pixelShader = pixelShaderMetal->GetShader();
-    if (!pixelShader) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "The pixel shader is null");
+    if (pixelShader == nullptr) {
+        return Errors::New("pixelShader must be != nullptr");
     }
 
     ///@todo MSAA is not implemented yet
@@ -317,19 +313,16 @@ PipelineStateMetal::PipelineStateMetal(
 
     reflection = autoReleasingReflection;
 
-    if (!this->pipelineState) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            StringHelper::Format(
-                "Failed to create pipeline state, error %s",
-                [[error domain] UTF8String]));
+    if (this->pipelineState == nullptr) {
+        return Errors::New(std::string{"newRenderPipelineStateWithDescriptor() failed: "} + [[error domain] UTF8String]);
     }
 
     MTLDepthStencilDescriptor* depthStencilDesc = [[MTLDepthStencilDescriptor alloc] init];
     depthStencilDesc.label = @"Pomdog.DepthStencilState";
     depthStencilDesc.depthCompareFunction = ToComparisonFunction(
         description.DepthStencilState.DepthBufferEnable
-        ? description.DepthStencilState.DepthBufferFunction
-        : ComparisonFunction::Always);
+            ? description.DepthStencilState.DepthBufferFunction
+            : ComparisonFunction::Always);
     depthStencilDesc.depthWriteEnabled = description.DepthStencilState.DepthBufferWriteEnable ? YES : NO;
 
     ToDepthStencilOperation(
@@ -343,10 +336,10 @@ PipelineStateMetal::PipelineStateMetal(
         description.DepthStencilState);
 
     depthStencilState = [device newDepthStencilStateWithDescriptor:depthStencilDesc];
-    if (!this->depthStencilState) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "Failed to create depth stencil state for Metal");
+    if (this->depthStencilState == nullptr) {
+        return Errors::New("newDepthStencilStateWithDescriptor() failed");
     }
+    return nullptr;
 }
 
 void PipelineStateMetal::Apply(id<MTLRenderCommandEncoder> commandEncoder)
@@ -358,8 +351,8 @@ void PipelineStateMetal::Apply(id<MTLRenderCommandEncoder> commandEncoder)
     [commandEncoder setCullMode:rasterizerState.cullMode];
     [commandEncoder setTriangleFillMode:rasterizerState.fillMode];
     [commandEncoder setDepthBias:rasterizerState.depthBias
-        slopeScale:rasterizerState.slopeScaledDepthBias
-        clamp:0.0f];
+                      slopeScale:rasterizerState.slopeScaledDepthBias
+                           clamp:0.0f];
 }
 
 MTLPrimitiveType PipelineStateMetal::GetPrimitiveType() const noexcept

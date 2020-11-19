@@ -4,18 +4,20 @@
 
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include "Pomdog/Graphics/Texture2D.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #import <Metal/MTLTexture.h>
 
 namespace Pomdog::Detail::Metal {
 
 class Texture2DMetal final : public Texture2D {
 public:
-    Texture2DMetal(
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(
         id<MTLDevice> device,
         std::int32_t pixelWidth,
         std::int32_t pixelHeight,
         std::int32_t levelCount,
-        SurfaceFormat format);
+        SurfaceFormat format) noexcept;
 
     /// Gets the width of the texture data, in pixels.
     std::int32_t GetWidth() const noexcept override;

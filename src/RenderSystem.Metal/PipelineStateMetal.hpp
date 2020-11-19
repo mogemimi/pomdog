@@ -4,6 +4,7 @@
 
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include "Pomdog/Graphics/PipelineState.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #import <Metal/MTLDepthStencil.h>
 #import <Metal/MTLRenderCommandEncoder.h>
 #import <Metal/MTLRenderPipeline.h>
@@ -19,9 +20,10 @@ struct RasterizerStateMetal final {
 
 class PipelineStateMetal final : public PipelineState {
 public:
-    PipelineStateMetal(
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(
         id<MTLDevice> device,
-        const PipelineStateDescription& description);
+        const PipelineStateDescription& description) noexcept;
 
     void Apply(id<MTLRenderCommandEncoder> commandEncoder);
 
