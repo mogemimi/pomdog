@@ -6,6 +6,7 @@
 #include "../Utility/Tagged.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include "Pomdog/Math/Color.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #include <array>
 
 namespace Pomdog::Detail::GL4 {
@@ -20,21 +21,20 @@ struct RenderTargetBlendDescGL4 final {
     BlendGL4 AlphaSource;
     BlendGL4 AlphaDestination;
     BlendOperationGL4 AlphaOperation;
-    bool BlendEnable;
+    bool BlendEnable = false;
 };
 
 class BlendStateGL4 final {
 public:
-    BlendStateGL4() = delete;
-
-    explicit BlendStateGL4(const BlendDescription& description);
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(const BlendDescription& description) noexcept;
 
     void Apply();
 
 private:
     std::array<RenderTargetBlendDescGL4, 8> renderTargets;
-    bool independentBlendEnable;
-    bool alphaToCoverageEnable;
+    bool independentBlendEnable = false;
+    bool alphaToCoverageEnable = false;
 };
 
 } // namespace Pomdog::Detail::GL4

@@ -6,6 +6,7 @@
 #include "VertexBufferBindingGL4.hpp"
 #include "../Graphics.Backends/NativeGraphicsContext.hpp"
 #include "../Utility/Tagged.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #include <array>
 #include <memory>
 #include <optional>
@@ -30,11 +31,10 @@ class RenderTarget2DGL4;
 
 class GraphicsContextGL4 final : public NativeGraphicsContext {
 public:
-    GraphicsContextGL4() = delete;
-
-    GraphicsContextGL4(
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(
         const std::shared_ptr<OpenGLContext>& openGLContext,
-        std::weak_ptr<GraphicsDevice>&& graphicsDevice);
+        std::weak_ptr<GraphicsDevice>&& graphicsDevice) noexcept;
 
     ~GraphicsContextGL4() override;
 
@@ -115,8 +115,8 @@ private:
     std::optional<FrameBufferGL4> frameBuffer;
     std::array<std::shared_ptr<RenderTarget2DGL4>, 8> renderTargets;
     PrimitiveTopologyGL4 primitiveTopology;
-    bool needToApplyInputLayout;
-    bool needToApplyPipelineState;
+    bool needToApplyInputLayout = true;
+    bool needToApplyPipelineState = true;
 };
 
 } // namespace Pomdog::Detail::GL4

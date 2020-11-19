@@ -5,6 +5,7 @@
 #include "OpenGLPrerequisites.hpp"
 #include "TypesafeGL4.hpp"
 #include "Pomdog/Graphics/EffectReflection.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #include <cstdint>
 #include <string>
 #include <vector>
@@ -37,7 +38,8 @@ struct UniformGL4 final {
 
 class EffectReflectionGL4 final : public EffectReflection {
 public:
-    explicit EffectReflectionGL4(const ShaderProgramGL4& shaderProgram);
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(const ShaderProgramGL4& shaderProgram) noexcept;
 
     std::vector<EffectConstantDescription>
     GetConstantBuffers() const noexcept override;

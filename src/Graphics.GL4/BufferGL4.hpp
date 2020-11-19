@@ -6,6 +6,7 @@
 #include "../Graphics.Backends/NativeBuffer.hpp"
 #include "../Utility/Tagged.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #include <optional>
 
 namespace Pomdog::Detail::GL4 {
@@ -16,16 +17,18 @@ using BufferObjectGL4 = Tagged<GLuint, Tag>;
 template <class Tag>
 class BufferGL4 final : public NativeBuffer {
 public:
-    BufferGL4(
-        std::size_t sizeInBytes,
-        BufferUsage bufferUsage);
+    ~BufferGL4() override;
 
-    BufferGL4(
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(
+        std::size_t sizeInBytes,
+        BufferUsage bufferUsage) noexcept;
+
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(
         const void* sourceData,
         std::size_t sizeInBytes,
-        BufferUsage bufferUsage);
-
-    ~BufferGL4() override;
+        BufferUsage bufferUsage) noexcept;
 
     void GetData(
         std::size_t offsetInBytes,

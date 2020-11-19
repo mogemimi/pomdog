@@ -9,6 +9,7 @@
 #include "TypesafeGL4.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include "Pomdog/Graphics/PipelineState.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #include <cstdint>
 #include <memory>
 #include <optional>
@@ -27,9 +28,12 @@ struct TextureBindingGL4 final {
 
 class PipelineStateGL4 final : public PipelineState {
 public:
-    explicit PipelineStateGL4(const PipelineStateDescription& description);
+    PipelineStateGL4();
 
     ~PipelineStateGL4();
+
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(const PipelineStateDescription& description) noexcept;
 
     void ApplyShaders();
 

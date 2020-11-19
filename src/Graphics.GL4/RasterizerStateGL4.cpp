@@ -22,13 +22,15 @@ FillModeGL4 ToFillModeGL4(const FillMode& fillMode) noexcept
 
 } // namespace
 
-RasterizerStateGL4::RasterizerStateGL4(const RasterizerDescription& description)
-    : fillMode(ToFillModeGL4(description.FillMode))
-    , cullMode(description.CullMode)
-    , depthBias(static_cast<decltype(depthBias)>(description.DepthBias))
-    , slopeScaledDepthBias(description.SlopeScaledDepthBias)
-    , multisampleAntiAliasEnable(description.MultisampleEnable)
+std::shared_ptr<Error>
+RasterizerStateGL4::Initialize(const RasterizerDescription& description) noexcept
 {
+    fillMode = ToFillModeGL4(description.FillMode);
+    cullMode = description.CullMode;
+    depthBias = static_cast<decltype(depthBias)>(description.DepthBias);
+    slopeScaledDepthBias = description.SlopeScaledDepthBias;
+    multisampleAntiAliasEnable = description.MultisampleEnable;
+    return nullptr;
 }
 
 void RasterizerStateGL4::Apply()

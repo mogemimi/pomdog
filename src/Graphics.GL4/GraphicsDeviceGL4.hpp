@@ -4,13 +4,15 @@
 
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #include <memory>
 
 namespace Pomdog::Detail::GL4 {
 
 class GraphicsDeviceGL4 final : public GraphicsDevice {
 public:
-    explicit GraphicsDeviceGL4(const PresentationParameters& presentationParameters);
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(const PresentationParameters& presentationParameters) noexcept;
 
     /// Gets the currently supported shader language.
     ShaderLanguage GetSupportedLanguage() const noexcept override;

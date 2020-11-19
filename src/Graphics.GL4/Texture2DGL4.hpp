@@ -6,6 +6,7 @@
 #include "../Utility/Tagged.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include "Pomdog/Graphics/Texture2D.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #include <optional>
 
 namespace Pomdog::Detail::GL4 {
@@ -14,13 +15,14 @@ using Texture2DObjectGL4 = Tagged<GLuint, Texture2D>;
 
 class Texture2DGL4 final : public Texture2D {
 public:
-    Texture2DGL4(
+    ~Texture2DGL4() override;
+
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(
         std::int32_t pixelWidth,
         std::int32_t pixelHeight,
         std::int32_t levelCount,
-        SurfaceFormat format);
-
-    ~Texture2DGL4() override;
+        SurfaceFormat format) noexcept;
 
     /// Gets the width of the texture data, in pixels.
     std::int32_t GetWidth() const noexcept override;

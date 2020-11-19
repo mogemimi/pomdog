@@ -244,15 +244,26 @@ GameHostX11::Impl::Impl(const PresentationParameters& presentationParameters)
         POMDOG_THROW_EXCEPTION(std::runtime_error, description);
     }
 
+    // NOTE: Create a graphics device.
     graphicsDevice = std::make_shared<GraphicsDeviceGL4>(presentationParameters);
+    if (auto err = graphicsDevice->Initialize(presentationParameters); err != nullptr) {
+        // FIXME: error handling
+        Log::Warning("Pomdog", err->ToString());
+    }
 
-    graphicsContext = std::make_shared<GraphicsContextGL4>(openGLContext, graphicsDevice);
+    // NOTE: Create a graphics context.
+    graphicsContext = std::make_shared<GraphicsContextGL4>();
+    if (auto err = graphicsContext->Initialize(openGLContext, graphicsDevice); err != nullptr) {
+        // FIXME: error handling
+        Log::Warning("Pomdog", err->ToString());
+    }
 
     graphicsCommandQueue = std::make_shared<GraphicsCommandQueueImmediate>(graphicsContext);
 
     // NOTE: Create audio engine.
     audioEngine = std::make_shared<AudioEngineAL>();
     if (auto err = audioEngine->Initialize(); err != nullptr) {
+        // FIXME: error handling
         Log::Warning("Pomdog", err->ToString());
     }
 

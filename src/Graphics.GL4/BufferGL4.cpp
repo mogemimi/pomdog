@@ -62,20 +62,23 @@ struct TypesafeHelperGL4::Traits<BufferObjectGL4<VertexBuffer>> {
 };
 
 template <class Tag>
-BufferGL4<Tag>::BufferGL4(std::size_t sizeInBytes, BufferUsage bufferUsage)
-    : BufferGL4(nullptr, sizeInBytes, bufferUsage)
+std::shared_ptr<Error>
+BufferGL4<Tag>::Initialize(std::size_t sizeInBytes, BufferUsage bufferUsage) noexcept
 {
     POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
+    return Initialize(nullptr, sizeInBytes, bufferUsage);
 }
 
 template <class Tag>
-BufferGL4<Tag>::BufferGL4(
+std::shared_ptr<Error>
+BufferGL4<Tag>::Initialize(
     const void* sourceData,
     std::size_t sizeInBytes,
-    BufferUsage bufferUsage)
+    BufferUsage bufferUsage) noexcept
 {
     POMDOG_ASSERT(bufferUsage == BufferUsage::Immutable
-        ? sourceData != nullptr : true);
+                      ? sourceData != nullptr
+                      : true);
 
     // Generate new buffer
     bufferObject = ([] {
@@ -98,6 +101,8 @@ BufferGL4<Tag>::BufferGL4(
         sourceData,
         ToBufferUsage(bufferUsage));
     POMDOG_CHECK_ERROR_GL4("glBufferData");
+
+    return nullptr;
 }
 
 template <class Tag>

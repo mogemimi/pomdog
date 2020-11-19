@@ -29,15 +29,19 @@ GLenum ToDepthStencilFormat(DepthFormat depthFormat) noexcept
 
 } // namespace
 
-RenderTarget2DGL4::RenderTarget2DGL4(
+std::shared_ptr<Error>
+RenderTarget2DGL4::Initialize(
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn,
     std::int32_t levelCountIn,
     SurfaceFormat formatIn,
     DepthFormat depthStencilFormatIn,
-    std::int32_t multiSampleCount)
-    : texture(pixelWidthIn, pixelHeightIn, levelCountIn, formatIn)
+    std::int32_t multiSampleCount) noexcept
 {
+    if (auto err = texture.Initialize(pixelWidthIn, pixelHeightIn, levelCountIn, formatIn); err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to initialize texture");
+    }
+
     pixelWidth = pixelWidthIn;
     pixelHeight = pixelHeightIn;
     levelCount = levelCountIn;
@@ -69,6 +73,8 @@ RenderTarget2DGL4::RenderTarget2DGL4(
 
         glBindRenderbuffer(GL_RENDERBUFFER, 0);
     }
+
+    return nullptr;
 }
 
 RenderTarget2DGL4::~RenderTarget2DGL4()

@@ -4,6 +4,7 @@
 
 #include "OpenGLPrerequisites.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #include <optional>
 
 namespace Pomdog::Detail {
@@ -15,7 +16,8 @@ namespace Pomdog::Detail::GL4 {
 template <GLenum PipelineStage>
 class ShaderGL4 final : public Shader {
 public:
-    explicit ShaderGL4(const ShaderBytecode& source);
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(const ShaderBytecode& source) noexcept;
 
     ~ShaderGL4();
 

@@ -70,7 +70,8 @@ struct GraphicsBridgeWin32 {
 using CreateGraphicsDeviceResult = std::tuple<
     std::shared_ptr<GraphicsDevice>,
     std::shared_ptr<GraphicsCommandQueue>,
-    std::unique_ptr<GraphicsBridgeWin32>>;
+    std::unique_ptr<GraphicsBridgeWin32>,
+    std::shared_ptr<Error>>;
 
 #if !defined(POMDOG_DISABLE_GL4)
 
@@ -106,9 +107,25 @@ CreateGraphicsDeviceGL4(
 
     openGLContext->MakeCurrent();
 
-    auto graphicsDevice = std::make_shared<GraphicsDeviceGL4>(presentationParameters);
+    // NOTE: Create a graphics device.
+    auto graphicsDevice = std::make_shared<GraphicsDeviceGL4>();
+    if (auto err = graphicsDevice->Initialize(presentationParameters); err != nullptr) {
+        return std::make_tuple(
+            nullptr,
+            nullptr,
+            nullptr,
+            Errors::Wrap(std::move(err), "GraphicsDeviceGL4::Initialize() failed."));
+    }
 
-    auto graphicsContext = std::make_shared<GraphicsContextGL4>(openGLContext, graphicsDevice);
+    // NOTE: Create a graphics context.
+    auto graphicsContext = std::make_shared<GraphicsContextGL4>();
+    if (auto err = graphicsContext->Initialize(openGLContext, graphicsDevice); err != nullptr) {
+        return std::make_tuple(
+            nullptr,
+            nullptr,
+            nullptr,
+            Errors::Wrap(std::move(err), "GraphicsContextGL4::Initialize() failed."));
+    }
 
     auto graphicsCommandQueue = std::make_shared<GraphicsCommandQueueImmediate>(graphicsContext);
 
@@ -118,11 +135,11 @@ CreateGraphicsDeviceGL4(
 
     auto bridge = std::make_unique<GraphicsBridgeWin32GL4>(graphicsDevice);
 
-    return CreateGraphicsDeviceResult{
+    return std::make_tuple(
         std::move(graphicsDevice),
         std::move(graphicsCommandQueue),
         std::move(bridge),
-    };
+        nullptr);
 }
 #endif
 
@@ -175,11 +192,11 @@ CreateGraphicsDeviceDirect3D11(
 
     auto bridge = std::make_unique<GraphicsBridgeWin32Direct3D11>(graphicsDevice, std::move(graphicsContext));
 
-    return CreateGraphicsDeviceResult{
+    return std::make_tuple(
         std::move(graphicsDevice),
         std::move(graphicsCommandQueue),
         std::move(bridge),
-    };
+        nullptr);
 }
 #endif
 
@@ -292,6 +309,9 @@ GameHostWin32::Impl::Impl(
         graphicsDevice = std::move(std::get<0>(result));
         graphicsCommandQueue = std::move(std::get<1>(result));
         graphicsBridge = std::move(std::get<2>(result));
+
+        // FIXME: error handling
+        [[maybe_unused]] auto deviceErr = std::move(std::get<3>(result));
     }
 #endif
 #if !defined(POMDOG_DISABLE_DIRECT3D11)
@@ -300,6 +320,9 @@ GameHostWin32::Impl::Impl(
         graphicsDevice = std::move(std::get<0>(result));
         graphicsCommandQueue = std::move(std::get<1>(result));
         graphicsBridge = std::move(std::get<2>(result));
+
+        // FIXME: error handling
+        [[maybe_unused]] auto deviceErr = std::move(std::get<3>(result));
     }
 #endif
 

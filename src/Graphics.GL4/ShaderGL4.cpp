@@ -3,17 +3,15 @@
 #include "ShaderGL4.hpp"
 #include "ErrorChecker.hpp"
 #include "../Graphics.Backends/ShaderBytecode.hpp"
-#include "Pomdog/Logging/Log.hpp"
-#include "Pomdog/Logging/LogLevel.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
-#include "Pomdog/Utility/StringHelper.hpp"
 #include <array>
+#include <tuple>
 
 namespace Pomdog::Detail::GL4 {
 namespace {
 
-std::optional<GLuint> CompileShader(const ShaderBytecode& source, GLenum pipelineStage)
+[[nodiscard]] std::tuple<std::optional<GLuint>, std::shared_ptr<Error>>
+CompileShader(const ShaderBytecode& source, GLenum pipelineStage) noexcept
 {
 #if defined(DEBUG)
     {
@@ -40,10 +38,8 @@ std::optional<GLuint> CompileShader(const ShaderBytecode& source, GLenum pipelin
     POMDOG_ASSERT(source.ByteLength > 0);
 
     auto result = std::make_optional(glCreateShader(pipelineStage));
-
     if (*result == 0) {
-        // error
-        return std::nullopt;
+        return std::make_tuple(std::nullopt, Errors::New("glCreateShader() failed"));
     }
 
     std::array<const GLchar*, 1> shaderSource = {{
@@ -62,21 +58,17 @@ std::optional<GLuint> CompileShader(const ShaderBytecode& source, GLenum pipelin
     glGetShaderiv(*result, GL_COMPILE_STATUS, &compileSuccess);
 
     if (compileSuccess == GL_FALSE) {
-#ifdef DEBUG
         std::array<GLchar, 256> messageBuffer;
 
         glGetShaderInfoLog(*result, static_cast<GLsizei>(messageBuffer.size()), nullptr, messageBuffer.data());
-        std::string const message = messageBuffer.data();
-
-        Log::Critical("Pomdog.Graphics", StringHelper::Format(
-            "Failed to compile shader.\nerror: %s", message.c_str()));
-#endif // defined(DEBUG)
+        messageBuffer.back() = '\0';
+        const std::string message = messageBuffer.data();
 
         glDeleteShader(*result);
-        return std::nullopt;
+        return std::make_tuple(std::nullopt, Errors::New("glCompileShader() failed: " + message));
     }
 
-    return result;
+    return std::make_tuple(std::move(result), nullptr);
 }
 
 } // namespace
@@ -85,18 +77,23 @@ template <GLenum PipelineStage>
 constexpr GLenum ShaderGL4<PipelineStage>::pipelineStage;
 
 template <GLenum PipelineStage>
-ShaderGL4<PipelineStage>::ShaderGL4(const ShaderBytecode& source)
+std::shared_ptr<Error>
+ShaderGL4<PipelineStage>::Initialize(const ShaderBytecode& source) noexcept
 {
-    shader = CompileShader(source, pipelineStage);
-    if (!shader) {
-        POMDOG_THROW_EXCEPTION(std::domain_error, "Failed to compile shader");
+    auto [result, compileErr] = CompileShader(source, pipelineStage);
+    if (compileErr != nullptr) {
+        return Errors::Wrap(std::move(compileErr), "failed to compile shader");
     }
+    POMDOG_ASSERT(result != std::nullopt);
+    shader = std::move(result);
+
+    return nullptr;
 }
 
 template <GLenum PipelineStage>
 ShaderGL4<PipelineStage>::~ShaderGL4()
 {
-    if (shader) {
+    if (shader != std::nullopt) {
         glDeleteShader(*shader);
         shader = std::nullopt;
     }
@@ -105,7 +102,7 @@ ShaderGL4<PipelineStage>::~ShaderGL4()
 template <GLenum PipelineStage>
 GLuint ShaderGL4<PipelineStage>::GetShader() const
 {
-    POMDOG_ASSERT(shader);
+    POMDOG_ASSERT(shader != std::nullopt);
     return *shader;
 }
 

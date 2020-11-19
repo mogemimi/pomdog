@@ -5,6 +5,7 @@
 #include "OpenGLPrerequisites.hpp"
 #include "../Utility/Tagged.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 
 namespace Pomdog::Detail::GL4 {
 
@@ -20,9 +21,8 @@ struct DepthStencilFaceOperationGL4 final {
 
 class DepthStencilStateGL4 final {
 public:
-    DepthStencilStateGL4() = delete;
-
-    explicit DepthStencilStateGL4(const DepthStencilDescription& description);
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(const DepthStencilDescription& description) noexcept;
 
     void Apply();
 
@@ -35,12 +35,12 @@ private:
     DepthStencilFaceOperationGL4 counterClockwiseFace;
     ComparisonFunctionGL4 depthFunction;
 
-    GLint referenceStencil;
-    GLuint stencilMask;
-    GLuint stencilWriteMask;
-    GLboolean depthBufferWriteEnable;
-    bool stencilEnable;
-    bool depthBufferEnable;
+    GLint referenceStencil = 0;
+    GLuint stencilMask = 0;
+    GLuint stencilWriteMask = 0;
+    GLboolean depthBufferWriteEnable = GL_FALSE;
+    bool stencilEnable = false;
+    bool depthBufferEnable = false;
 };
 
 } // namespace Pomdog::Detail::GL4

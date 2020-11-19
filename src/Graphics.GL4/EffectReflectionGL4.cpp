@@ -638,9 +638,11 @@ void DebugLogUniforms(const std::vector<UniformGL4>& uniforms)
 
 } // namespace
 
-EffectReflectionGL4::EffectReflectionGL4(const ShaderProgramGL4& shaderProgramIn)
-    : shaderProgram(shaderProgramIn)
+std::shared_ptr<Error>
+EffectReflectionGL4::Initialize(const ShaderProgramGL4& shaderProgramIn) noexcept
 {
+    shaderProgram = shaderProgramIn;
+    return nullptr;
 }
 
 std::vector<UniformBlockGL4> EffectReflectionGL4::GetNativeUniformBlocks()

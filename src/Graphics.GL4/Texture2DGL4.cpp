@@ -222,11 +222,12 @@ struct TypesafeHelperGL4::Traits<Texture2DObjectGL4> {
     constexpr static GLenum TextureTarget = GL_TEXTURE_2D;
 };
 
-Texture2DGL4::Texture2DGL4(
+std::shared_ptr<Error>
+Texture2DGL4::Initialize(
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn,
     std::int32_t levelCountIn,
-    SurfaceFormat formatIn)
+    SurfaceFormat formatIn) noexcept
 {
     pixelWidth = pixelWidthIn;
     pixelHeight = pixelHeightIn;
@@ -272,6 +273,8 @@ Texture2DGL4::Texture2DGL4(
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, GL_GREEN);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_A, GL_RED);
     }
+
+    return nullptr;
 }
 
 Texture2DGL4::~Texture2DGL4()

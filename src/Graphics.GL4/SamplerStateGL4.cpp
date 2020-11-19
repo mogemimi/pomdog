@@ -29,7 +29,8 @@ GLenum ToTextureAddressMode(TextureAddressMode address) noexcept
 
 } // namespace
 
-SamplerStateGL4::SamplerStateGL4(const SamplerDescription& description)
+std::shared_ptr<Error>
+SamplerStateGL4::Initialize(const SamplerDescription& description) noexcept
 {
     samplerObject = ([] {
         SamplerObjectGL4 sampler;
@@ -118,6 +119,8 @@ SamplerStateGL4::SamplerStateGL4(const SamplerDescription& description)
             GL_TEXTURE_COMPARE_FUNC,
             ToComparisonFunctionGL4NonTypesafe(description.ComparisonFunction));
     }
+
+    return nullptr;
 }
 
 SamplerStateGL4::~SamplerStateGL4()

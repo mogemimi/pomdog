@@ -95,14 +95,17 @@ void ToRenderTargetBlendGL4(
 
 } // namespace
 
-BlendStateGL4::BlendStateGL4(const BlendDescription& description)
-    : independentBlendEnable(description.IndependentBlendEnable)
-    , alphaToCoverageEnable(description.AlphaToCoverageEnable)
+std::shared_ptr<Error>
+BlendStateGL4::Initialize(const BlendDescription& description) noexcept
 {
+    independentBlendEnable = description.IndependentBlendEnable;
+    alphaToCoverageEnable = description.AlphaToCoverageEnable;
+
     for (std::size_t i = 0; i < description.RenderTargets.size(); ++i) {
         POMDOG_ASSERT(i < renderTargets.size());
         ToRenderTargetBlendGL4(description.RenderTargets[i], renderTargets[i]);
     }
+    return nullptr;
 }
 
 void BlendStateGL4::Apply()

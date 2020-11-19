@@ -63,20 +63,24 @@ void ToDepthStencilFaceOperationGL4(
 
 } // namespace
 
-DepthStencilStateGL4::DepthStencilStateGL4(const DepthStencilDescription& description)
-    : depthFunction(ToComparisonFunctionGL4(description.DepthBufferFunction))
-    , referenceStencil(description.ReferenceStencil)
-    , stencilMask(description.StencilMask)
-    , stencilWriteMask(description.StencilWriteMask)
-    , depthBufferWriteEnable(description.DepthBufferWriteEnable ? GL_TRUE : GL_FALSE)
-    , stencilEnable(description.StencilEnable)
-    , depthBufferEnable(description.DepthBufferEnable)
+std::shared_ptr<Error>
+DepthStencilStateGL4::Initialize(const DepthStencilDescription& description) noexcept
 {
     static_assert(std::is_same<GLuint, std::uint32_t>::value, "");
     static_assert(std::is_same<GLint, std::int32_t>::value, "");
 
+    depthFunction = ToComparisonFunctionGL4(description.DepthBufferFunction);
+    referenceStencil = description.ReferenceStencil;
+    stencilMask = description.StencilMask;
+    stencilWriteMask = description.StencilWriteMask;
+    depthBufferWriteEnable = description.DepthBufferWriteEnable ? GL_TRUE : GL_FALSE;
+    stencilEnable = description.StencilEnable;
+    depthBufferEnable = description.DepthBufferEnable;
+
     ToDepthStencilFaceOperationGL4(description.ClockwiseFace, clockwiseFace);
     ToDepthStencilFaceOperationGL4(description.CounterClockwiseFace, counterClockwiseFace);
+
+    return nullptr;
 }
 
 void DepthStencilStateGL4::ApplyDepthTest()

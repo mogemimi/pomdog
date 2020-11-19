@@ -7,6 +7,7 @@
 #include "../Utility/Tagged.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #include <optional>
 
 namespace Pomdog::Detail::GL4 {
@@ -15,15 +16,16 @@ using RenderBuffer2DGL4 = Tagged<GLuint, RenderTarget2D>;
 
 class RenderTarget2DGL4 final : public RenderTarget2D {
 public:
-    RenderTarget2DGL4(
+    ~RenderTarget2DGL4() override;
+
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(
         std::int32_t pixelWidth,
         std::int32_t pixelHeight,
         std::int32_t levelCount,
         SurfaceFormat format,
         DepthFormat depthStencilFormat,
-        std::int32_t multiSampleCount);
-
-    ~RenderTarget2DGL4() override;
+        std::int32_t multiSampleCount) noexcept;
 
     /// Gets the width of the texture data, in pixels.
     std::int32_t GetWidth() const noexcept override;

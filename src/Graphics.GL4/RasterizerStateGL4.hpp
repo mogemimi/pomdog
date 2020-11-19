@@ -4,7 +4,9 @@
 
 #include "OpenGLPrerequisites.hpp"
 #include "../Utility/Tagged.hpp"
+#include "Pomdog/Graphics/CullMode.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 
 namespace Pomdog::Detail::GL4 {
 
@@ -12,18 +14,17 @@ using FillModeGL4 = Tagged<GLenum, FillMode>;
 
 class RasterizerStateGL4 final {
 public:
-    RasterizerStateGL4() = delete;
-
-    explicit RasterizerStateGL4(const RasterizerDescription& description);
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(const RasterizerDescription& description) noexcept;
 
     void Apply();
 
 private:
-    FillModeGL4 fillMode;
-    CullMode cullMode;
-    GLfloat depthBias;
-    GLfloat slopeScaledDepthBias;
-    bool multisampleAntiAliasEnable;
+    FillModeGL4 fillMode = GL_FILL;
+    GLfloat depthBias = 0.0f;
+    GLfloat slopeScaledDepthBias = 0.0f;
+    CullMode cullMode = CullMode::CounterClockwiseFace;
+    bool multisampleAntiAliasEnable = false;
 };
 
 } // namespace Pomdog::Detail::GL4

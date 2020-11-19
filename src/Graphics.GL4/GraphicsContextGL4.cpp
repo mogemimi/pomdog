@@ -23,12 +23,9 @@
 #include "Pomdog/Graphics/Texture2D.hpp"
 #include "Pomdog/Graphics/VertexBuffer.hpp"
 #include "Pomdog/Graphics/Viewport.hpp"
-#include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Math/Vector4.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
-#include "Pomdog/Utility/StringHelper.hpp"
 #include <array>
 #include <cmath>
 #include <limits>
@@ -276,12 +273,8 @@ void SetRenderTargets(
         renderTarget->BindDepthStencilBuffer();
     }
 
-    // Check framebuffer status
-    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-        // FUS RO DAH!
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "Failed to make complete framebuffer.");
-    }
+    // NOTE: Check framebuffer status
+    POMDOG_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
 
     POMDOG_ASSERT(!attachments.empty());
     POMDOG_ASSERT(renderTargetCount > 0);
@@ -321,18 +314,15 @@ struct TypesafeHelperGL4::Traits<FrameBufferGL4> {
     constexpr static GLenum BufferBinding = GL_FRAMEBUFFER_BINDING;
 };
 
-// MARK: - GraphicsContextGL4
-
-GraphicsContextGL4::GraphicsContextGL4(
+std::shared_ptr<Error>
+GraphicsContextGL4::Initialize(
     const std::shared_ptr<OpenGLContext>& openGLContextIn,
-    std::weak_ptr<GraphicsDevice>&& graphicsDeviceIn)
-    : nativeContext(openGLContextIn)
-    , graphicsDevice(std::move(graphicsDeviceIn))
-    , needToApplyInputLayout(true)
-    , needToApplyPipelineState(true)
+    std::weak_ptr<GraphicsDevice>&& graphicsDeviceIn) noexcept
 {
-    auto version = reinterpret_cast<const char*>(glGetString(GL_VERSION));
-    Log::Internal(StringHelper::Format("OpenGL Version: %s", version));
+    nativeContext = openGLContextIn;
+    graphicsDevice = std::move(graphicsDeviceIn);
+    needToApplyInputLayout = true;
+    needToApplyPipelineState = true;
 
     auto capabilities = GetCapabilities();
     if (capabilities.SamplerSlotCount > 0) {
@@ -354,6 +344,8 @@ GraphicsContextGL4::GraphicsContextGL4(
     POMDOG_ASSERT(graphicsCapbilities.SamplerSlotCount > 0);
     weakTextures.resize(graphicsCapbilities.SamplerSlotCount);
 #endif
+
+    return nullptr;
 }
 
 GraphicsContextGL4::~GraphicsContextGL4()
