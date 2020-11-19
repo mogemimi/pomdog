@@ -311,9 +311,9 @@ PipelineStateMetal::PipelineStateMetal(
 
     this->pipelineState = [device
         newRenderPipelineStateWithDescriptor:descriptor
-        options:MTLPipelineOptionArgumentInfo
-        reflection:&autoReleasingReflection
-        error:&error];
+                                     options:MTLPipelineOptionArgumentInfo
+                                  reflection:&autoReleasingReflection
+                                       error:&error];
 
     reflection = autoReleasingReflection;
 

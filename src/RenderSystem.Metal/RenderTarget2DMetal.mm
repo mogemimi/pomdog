@@ -35,15 +35,15 @@ RenderTarget2DMetal::RenderTarget2DMetal(
     {
         MTLTextureDescriptor* descriptor = [MTLTextureDescriptor
             texture2DDescriptorWithPixelFormat:ToPixelFormat(format)
-            width:pixelWidth
-            height:pixelHeight
-            mipmapped:(levelCount > 1 ? YES: NO)];
+                                         width:pixelWidth
+                                        height:pixelHeight
+                                     mipmapped:(levelCount > 1 ? YES : NO)];
 
-        [descriptor setUsage:MTLTextureUsageRenderTarget|MTLTextureUsageShaderRead];
-//        [descriptor setStorageMode:];
-//        [descriptor setResourceOptions:];
-//        [descriptor setSampleCount:];
-//        [descriptor setMipmapLevelCount:];
+        [descriptor setUsage:MTLTextureUsageRenderTarget | MTLTextureUsageShaderRead];
+        // [descriptor setStorageMode:];
+        // [descriptor setResourceOptions:];
+        // [descriptor setSampleCount:];
+        // [descriptor setMipmapLevelCount:];
 
         texture = [device newTextureWithDescriptor:descriptor];
         if (texture == nullptr) {
@@ -63,9 +63,9 @@ RenderTarget2DMetal::RenderTarget2DMetal(
     if (depthStencilFormat != DepthFormat::None) {
         MTLTextureDescriptor* descriptor = [MTLTextureDescriptor
             texture2DDescriptorWithPixelFormat:ToPixelFormat(depthStencilFormat)
-            width:pixelWidth
-            height:pixelHeight
-            mipmapped:(levelCount > 1 ? YES: NO)];
+                                         width:pixelWidth
+                                        height:pixelHeight
+                                     mipmapped:(levelCount > 1 ? YES : NO)];
 
         MTLResourceOptions resourceOptions = 0;
         resourceOptions |= MTLResourceStorageModePrivate;

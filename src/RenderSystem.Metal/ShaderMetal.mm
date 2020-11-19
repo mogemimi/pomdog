@@ -28,7 +28,8 @@ ShaderMetal::ShaderMetal(
             shaderBytecode.Code,
             shaderBytecode.ByteLength,
             dispatch_get_main_queue(),
-            ^{});
+            ^{
+            });
 
         library = [device newLibraryWithData:libraryData error:&compileError];
     }

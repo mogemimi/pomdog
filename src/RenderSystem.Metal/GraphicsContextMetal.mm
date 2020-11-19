@@ -233,8 +233,8 @@ void GraphicsContextMetal::Draw(
 #endif
 
     [commandEncoder drawPrimitives:primitiveType
-        vertexStart:startVertexLocation
-        vertexCount:vertexCount];
+                       vertexStart:startVertexLocation
+                       vertexCount:vertexCount];
 }
 
 void GraphicsContextMetal::DrawIndexed(
@@ -250,10 +250,10 @@ void GraphicsContextMetal::DrawIndexed(
     const auto indexBufferOffset = startIndexLocation * ToIndexByteSize(indexType);
 
     [commandEncoder drawIndexedPrimitives:primitiveType
-        indexCount:indexCount
-        indexType:indexType
-        indexBuffer:indexBuffer
-        indexBufferOffset:indexBufferOffset];
+                               indexCount:indexCount
+                                indexType:indexType
+                              indexBuffer:indexBuffer
+                        indexBufferOffset:indexBufferOffset];
 }
 
 void GraphicsContextMetal::DrawInstanced(
@@ -271,10 +271,10 @@ void GraphicsContextMetal::DrawInstanced(
 #endif
 
     [commandEncoder drawPrimitives:primitiveType
-        vertexStart:startVertexLocation
-        vertexCount:vertexCountPerInstance
-        instanceCount:instanceCount
-        baseInstance:startInstanceLocation];
+                       vertexStart:startVertexLocation
+                       vertexCount:vertexCountPerInstance
+                     instanceCount:instanceCount
+                      baseInstance:startInstanceLocation];
 }
 
 void GraphicsContextMetal::DrawIndexedInstanced(
@@ -293,13 +293,13 @@ void GraphicsContextMetal::DrawIndexedInstanced(
     const auto indexBufferOffset = startIndexLocation * ToIndexByteSize(indexType);
 
     [commandEncoder drawIndexedPrimitives:primitiveType
-        indexCount:indexCountPerInstance
-        indexType:indexType
-        indexBuffer:indexBuffer
-        indexBufferOffset:indexBufferOffset
-        instanceCount:instanceCount
-        baseVertex:0
-        baseInstance:startInstanceLocation];
+                               indexCount:indexCountPerInstance
+                                indexType:indexType
+                              indexBuffer:indexBuffer
+                        indexBufferOffset:indexBufferOffset
+                            instanceCount:instanceCount
+                               baseVertex:0
+                             baseInstance:startInstanceLocation];
 }
 
 void GraphicsContextMetal::SetViewport(const Viewport& viewport)
@@ -339,8 +339,8 @@ void GraphicsContextMetal::SetVertexBuffer(
     POMDOG_ASSERT(slotIndex < MaxVertexBufferSlotCount);
 
     [commandEncoder setVertexBuffer:nativeVertexBuffer->GetBuffer()
-        offset:offset
-        atIndex:slotIndex];
+                             offset:offset
+                            atIndex:slotIndex];
 }
 
 void GraphicsContextMetal::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBufferIn)
@@ -393,11 +393,11 @@ void GraphicsContextMetal::SetConstantBuffer(
 
     POMDOG_ASSERT(constantBuffer->GetBuffer() != nullptr);
     [commandEncoder setVertexBuffer:constantBuffer->GetBuffer()
-        offset:offset
-        atIndex:index];
+                             offset:offset
+                            atIndex:index];
     [commandEncoder setFragmentBuffer:constantBuffer->GetBuffer()
-        offset:offset
-        atIndex:index];
+                               offset:offset
+                              atIndex:index];
 }
 
 void GraphicsContextMetal::SetSampler(int index, const std::shared_ptr<SamplerState>& sampler)
@@ -427,7 +427,8 @@ void GraphicsContextMetal::SetTexture(int index)
     weakTextures[index].reset();
 #endif
 
-    [commandEncoder setVertexTexture:nullptr atIndex:index];
+    [commandEncoder setVertexTexture:nullptr
+                             atIndex:index];
     [commandEncoder setFragmentTexture:nullptr atIndex:index];
 }
 

@@ -33,9 +33,9 @@ Texture2DMetal::Texture2DMetal(
 
     MTLTextureDescriptor* descriptor = [MTLTextureDescriptor
         texture2DDescriptorWithPixelFormat:ToPixelFormat(format)
-        width:pixelWidth
-        height:pixelHeight
-        mipmapped:(levelCount > 1 ? YES: NO)];
+                                     width:pixelWidth
+                                    height:pixelHeight
+                                 mipmapped:(levelCount > 1 ? YES : NO)];
 
     texture = [device newTextureWithDescriptor:descriptor];
     if (texture == nullptr) {
@@ -96,9 +96,9 @@ void Texture2DMetal::SetData(const void* pixelData)
         }
 
         [texture replaceRegion:region
-            mipmapLevel:mipmapLevel
-            withBytes:reinterpret_cast<const std::uint8_t*>(pixelData) + startOffset
-            bytesPerRow:bytesPerRow];
+                   mipmapLevel:mipmapLevel
+                     withBytes:reinterpret_cast<const std::uint8_t*>(pixelData) + startOffset
+                   bytesPerRow:bytesPerRow];
 
         auto strideBytesPerMipmap = mipmapWidth * mipmapHeight * bytesPerPixel;
         switch (format) {

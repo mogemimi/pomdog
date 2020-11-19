@@ -231,8 +231,8 @@ GraphicsDeviceMetal::CreateRenderTarget2D(
     POMDOG_ASSERT(device != nullptr);
 
     const auto levelCount = generateMipmap
-        ? Detail::TextureHelper::ComputeMipmapLevelCount(width, height)
-        : 1;
+                                ? Detail::TextureHelper::ComputeMipmapLevelCount(width, height)
+                                : 1;
 
     // TODO: MSAA is not implemented yet.
     constexpr int multiSampleCount = 1;
@@ -281,8 +281,8 @@ GraphicsDeviceMetal::CreateTexture2D(
     POMDOG_ASSERT(device != nullptr);
 
     const auto levelCount = mipMap
-        ? Detail::TextureHelper::ComputeMipmapLevelCount(width, height)
-        : 1;
+                                ? Detail::TextureHelper::ComputeMipmapLevelCount(width, height)
+                                : 1;
 
     auto texture = std::make_shared<Texture2DMetal>(
         device,
