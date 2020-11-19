@@ -56,9 +56,9 @@ void ErrorChecker::CheckError(const char* command, const char* filename, int lin
     if (lines < maxLine) {
         std::stringstream stream;
         stream << ">>> File " << filename
-            << ", line " << line
-            << ", in " << command << "\n"
-            << "OpenGL Error: " << ToString(errorCode);
+               << ", line " << line
+               << ", in " << command << "\n"
+               << "OpenGL Error: " << ToString(errorCode);
 
         Log::Warning("Pomdog.Graphics", stream.str());
 
