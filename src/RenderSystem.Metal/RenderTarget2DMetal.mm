@@ -31,7 +31,7 @@ RenderTarget2DMetal::RenderTarget2DMetal(
     depthStencilFormat = depthStencilFormatIn;
     multiSampleEnabled = (multiSampleCount > 1);
 
-    POMDOG_ASSERT(device != nil);
+    POMDOG_ASSERT(device != nullptr);
     {
         MTLTextureDescriptor* descriptor = [MTLTextureDescriptor
             texture2DDescriptorWithPixelFormat:ToPixelFormat(format)
