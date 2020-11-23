@@ -1,7 +1,13 @@
-box: mogemimi/gamedev-ubuntu
+box:
+  id: mogemimi/gamedev-ubuntu
+  username: $DOCKERHUB_USERNAME
+  password: $DOCKERHUB_ACCESS_TOKEN
 
 build:
-  box: mogemimi/gamedev-ubuntu
+  box:
+    id: mogemimi/gamedev-ubuntu
+    username: $DOCKERHUB_USERNAME
+    password: $DOCKERHUB_ACCESS_TOKEN
   steps:
     - script:
       name: clone third party libraries
@@ -10,7 +16,10 @@ build:
         git submodule update --init --recursive dependencies/mbedtls
 
 build-clang-debug:
-  box: mogemimi/gamedev-ubuntu
+  box:
+    id: mogemimi/gamedev-ubuntu
+    username: $DOCKERHUB_USERNAME
+    password: $DOCKERHUB_ACCESS_TOKEN
   steps:
     - script:
       name: build with clang in debug mode
@@ -30,7 +39,10 @@ build-clang-debug:
       code: ./build.cmake/test/PomdogTest
 
 build-clang-release:
-  box: mogemimi/gamedev-ubuntu
+  box:
+    id: mogemimi/gamedev-ubuntu
+    username: $DOCKERHUB_USERNAME
+    password: $DOCKERHUB_ACCESS_TOKEN
   steps:
     - script:
       name: build with clang in release mode
@@ -50,7 +62,10 @@ build-clang-release:
       code: ./build.cmake/test/PomdogTest
 
 build-clang-libstdcxx-debug:
-  box: mogemimi/gamedev-ubuntu
+  box:
+    id: mogemimi/gamedev-ubuntu
+    username: $DOCKERHUB_USERNAME
+    password: $DOCKERHUB_ACCESS_TOKEN
   steps:
     - script:
       name: build with clang in debug mode
@@ -70,7 +85,10 @@ build-clang-libstdcxx-debug:
       code: ./build.cmake/test/PomdogTest
 
 build-clang-libstdcxx-release:
-  box: mogemimi/gamedev-ubuntu
+  box:
+    id: mogemimi/gamedev-ubuntu
+    username: $DOCKERHUB_USERNAME
+    password: $DOCKERHUB_ACCESS_TOKEN
   steps:
     - script:
       name: build with clang in release mode
@@ -90,7 +108,10 @@ build-clang-libstdcxx-release:
       code: ./build.cmake/test/PomdogTest
 
 build-gcc-debug:
-  box: mogemimi/gamedev-archlinux
+  box:
+    id: mogemimi/gamedev-archlinux
+    username: $DOCKERHUB_USERNAME
+    password: $DOCKERHUB_ACCESS_TOKEN
   steps:
     - script:
       name: build with gcc in debug mode
@@ -108,7 +129,10 @@ build-gcc-debug:
       code: ./build.cmake/test/PomdogTest
 
 build-gcc-release:
-  box: mogemimi/gamedev-archlinux
+  box:
+    id: mogemimi/gamedev-archlinux
+    username: $DOCKERHUB_USERNAME
+    password: $DOCKERHUB_ACCESS_TOKEN
   steps:
     - script:
       name: build with gcc in release mode
