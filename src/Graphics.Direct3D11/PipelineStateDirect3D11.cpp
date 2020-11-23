@@ -189,7 +189,7 @@ ComPtr<ID3D11BlendState> CreateBlendState(
         ToD3D11Desc(description.RenderTargets[i], blendDesc.RenderTarget[i]);
     }
 
-    POMDOG_ASSERT(nativeDevice);
+    POMDOG_ASSERT(nativeDevice != nullptr);
 
     ComPtr<ID3D11BlendState> blendState;
     HRESULT hr = nativeDevice->CreateBlendState(&blendDesc, &blendState);
@@ -230,7 +230,7 @@ ComPtr<ID3D11DepthStencilState> CreateDepthStencilState(
     depthStencilDesc.FrontFace.StencilPassOp = ToStencilOperation(description.ClockwiseFace.StencilPass);
     depthStencilDesc.FrontFace.StencilFunc = ToComparisonFunction(description.ClockwiseFace.StencilFunction);
 
-    POMDOG_ASSERT(nativeDevice);
+    POMDOG_ASSERT(nativeDevice != nullptr);
 
     ComPtr<ID3D11DepthStencilState> depthStencilState;
     HRESULT hr = nativeDevice->CreateDepthStencilState(&depthStencilDesc, &depthStencilState);
@@ -269,7 +269,7 @@ ComPtr<ID3D11RasterizerState> CreateRasterizerState(
     POMDOG_ASSERT(!rasterizerDesc.AntialiasedLineEnable
         || (rasterizerDesc.AntialiasedLineEnable && !rasterizerDesc.MultisampleEnable));
 
-    POMDOG_ASSERT(nativeDevice);
+    POMDOG_ASSERT(nativeDevice != nullptr);
 
     ComPtr<ID3D11RasterizerState> rasterizerState;
     HRESULT hr = nativeDevice->CreateRasterizerState(&rasterizerDesc, &rasterizerState);

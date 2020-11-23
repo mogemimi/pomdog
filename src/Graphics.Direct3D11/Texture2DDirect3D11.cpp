@@ -203,7 +203,7 @@ void Texture2DDirect3D11::SetData(const void* pixelData)
 ID3D11ShaderResourceView*
 Texture2DDirect3D11::GetShaderResourceView() const noexcept
 {
-    POMDOG_ASSERT(shaderResourceView);
+    POMDOG_ASSERT(shaderResourceView != nullptr);
     return shaderResourceView.Get();
 }
 

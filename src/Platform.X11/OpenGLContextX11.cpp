@@ -72,7 +72,7 @@ OpenGLContextX11::OpenGLContextX11(
     , isOpenGL3Supported(false)
 {
     POMDOG_ASSERT(framebufferConfig != nullptr);
-    POMDOG_ASSERT(window);
+    POMDOG_ASSERT(window != nullptr);
 
     auto display = window->NativeDisplay();
 
@@ -142,7 +142,7 @@ OpenGLContextX11::OpenGLContextX11(
 OpenGLContextX11::~OpenGLContextX11()
 {
     if (glxContext != nullptr) {
-        POMDOG_ASSERT(window);
+        POMDOG_ASSERT(window != nullptr);
         auto display = window->NativeDisplay();
 
         if (glXGetCurrentContext() == glxContext) {
@@ -158,19 +158,19 @@ void OpenGLContextX11::MakeCurrent()
         return;
     }
 
-    POMDOG_ASSERT(window);
+    POMDOG_ASSERT(window != nullptr);
     glXMakeCurrent(window->NativeDisplay(), window->NativeWindow(), glxContext);
 }
 
 void OpenGLContextX11::ClearCurrent()
 {
-    POMDOG_ASSERT(window);
+    POMDOG_ASSERT(window != nullptr);
     glXMakeCurrent(window->NativeDisplay(), None, nullptr);
 }
 
 void OpenGLContextX11::SwapBuffers()
 {
-    POMDOG_ASSERT(window);
+    POMDOG_ASSERT(window != nullptr);
     glXSwapBuffers(window->NativeDisplay(), window->NativeWindow());
 }
 

@@ -53,7 +53,7 @@ ShaderDirect3D11<NativeShaderType>::ShaderDirect3D11(
         std::memcpy(codeBlob.data(), compiledShaderBlob->GetBufferPointer(), codeBlob.size());
     }
 
-    POMDOG_ASSERT(device);
+    POMDOG_ASSERT(device != nullptr);
     POMDOG_ASSERT(!codeBlob.empty());
 
     HRESULT hr = CreateShader(device, codeBlob.data(), codeBlob.size(), &shader);
