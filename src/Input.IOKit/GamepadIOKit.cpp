@@ -5,7 +5,6 @@
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Signals/EventQueue.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
 #include <algorithm>
 
 namespace Pomdog::Detail::IOKit {
@@ -176,10 +175,13 @@ void GamepadDevice::OnDeviceInput(IOReturn result, void* sender, IOHIDValueRef v
     }
 }
 
-GamepadIOKit::GamepadIOKit(const std::shared_ptr<EventQueue<SystemEvent>>& eventQueueIn)
-    : eventQueue(eventQueueIn)
-    , hidManager(nullptr)
+GamepadIOKit::GamepadIOKit() = default;
+
+std::shared_ptr<Error>
+GamepadIOKit::Initialize(const std::shared_ptr<EventQueue<SystemEvent>>& eventQueueIn)
 {
+    eventQueue = eventQueueIn;
+
     gamepads[0].playerIndex = PlayerIndex::One;
     gamepads[1].playerIndex = PlayerIndex::Two;
     gamepads[2].playerIndex = PlayerIndex::Three;
@@ -187,12 +189,12 @@ GamepadIOKit::GamepadIOKit(const std::shared_ptr<EventQueue<SystemEvent>>& event
 
     hidManager = IOHIDManagerCreate(kCFAllocatorDefault, kIOHIDOptionsTypeNone);
     if (hidManager == nullptr) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Error: Failed to call IOHIDManagerCreate");
+        return Errors::New("IOHIDManagerCreate() failed");
     }
 
     auto deviceMatcher = CFArrayCreateMutable(kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks);
     if (deviceMatcher == nullptr) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Error: Failed to call CFArrayCreateMutable");
+        return Errors::New("CFArrayCreateMutable() failed");
     }
 
     AppendDeviceMatching(deviceMatcher, kHIDPage_GenericDesktop, kHIDUsage_GD_Joystick);
@@ -220,6 +222,8 @@ GamepadIOKit::GamepadIOKit(const std::shared_ptr<EventQueue<SystemEvent>>& event
 
     IOHIDManagerScheduleWithRunLoop(hidManager, CFRunLoopGetMain(), kCFRunLoopCommonModes);
     IOHIDManagerOpen(hidManager, kIOHIDOptionsTypeNone);
+
+    return nullptr;
 }
 
 GamepadIOKit::~GamepadIOKit()

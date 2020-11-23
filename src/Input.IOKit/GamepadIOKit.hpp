@@ -8,6 +8,7 @@
 #include "Pomdog/Input/GamepadCapabilities.hpp"
 #include "Pomdog/Input/GamepadState.hpp"
 #include "Pomdog/Signals/ForwardDeclarations.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #include <IOKit/hid/IOHIDManager.h>
 #include <array>
 #include <cstdint>
@@ -38,8 +39,6 @@ public:
     PlayerIndex playerIndex;
 
 public:
-    bool Open();
-
     void Close();
 
     void OnDeviceInput(IOReturn result, void* sender, IOHIDValueRef value);
@@ -47,9 +46,12 @@ public:
 
 class GamepadIOKit final : public Gamepad {
 public:
-    explicit GamepadIOKit(const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue);
+    GamepadIOKit();
 
     ~GamepadIOKit() override;
+
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue);
 
     GamepadCapabilities GetCapabilities(PlayerIndex index) const override;
 
@@ -60,7 +62,7 @@ public:
 private:
     std::shared_ptr<EventQueue<SystemEvent>> eventQueue;
     std::array<GamepadDevice, 4> gamepads;
-    IOHIDManagerRef hidManager;
+    IOHIDManagerRef hidManager = nullptr;
 
     void OnDeviceAttached(IOReturn result, void* sender, IOHIDDeviceRef device);
     void OnDeviceDetached(IOReturn result, void* sender, IOHIDDeviceRef device);

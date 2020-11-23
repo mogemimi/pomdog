@@ -205,7 +205,12 @@ GameHostCocoa::Impl::Initialize(
     // Create subsystems
     keyboard = std::make_shared<KeyboardCocoa>();
     mouse = std::make_shared<MouseCocoa>();
-    gamepad = std::make_shared<GamepadIOKit>(eventQueue);
+
+    // NOTE: Create gamepad
+    gamepad = std::make_shared<GamepadIOKit>();
+    if (auto err = gamepad->Initialize(eventQueue); err != nullptr) {
+        return Errors::Wrap(std::move(err), "GamepadIOKit::Initialize() failed.");
+    }
 
     // Connect to system event signal
     POMDOG_ASSERT(eventQueue);
