@@ -4,6 +4,7 @@
 
 #include "PrerequisitesOpenAL.hpp"
 #include "Pomdog/Audio/AudioEngine.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #include <memory>
 
 namespace Pomdog {

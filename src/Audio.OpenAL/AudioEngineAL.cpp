@@ -5,7 +5,6 @@
 #include "ErrorCheckerAL.hpp"
 #include "SoundEffectAL.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Errors.hpp"
 #include <utility>
 
 namespace Pomdog::Detail::OpenAL {
@@ -33,16 +32,18 @@ AudioEngineAL::~AudioEngineAL() noexcept
 std::shared_ptr<Error>
 AudioEngineAL::Initialize() noexcept
 {
+    // NOTE: Select the preferred device.
     this->device = alcOpenDevice(nullptr);
 
-    if (auto err = alGetError(); err != AL_NO_ERROR) {
-        return MakeOpenALError(std::move(err), "alcOpenDevice() failed.");
+    if (this->device == nullptr) {
+        // NOTE: Do not use alGetError() before initializing the OpenAL context.
+        return Errors::New("alcOpenDevice() failed");
     }
 
     POMDOG_ASSERT(device != nullptr);
     this->context = alcCreateContext(this->device, nullptr);
-    if (auto err = alGetError(); err != AL_NO_ERROR) {
-        return MakeOpenALError(std::move(err), "alcCreateContext() failed.");
+    if (this->context == nullptr) {
+        return Errors::New("alcCreateContext() failed");
     }
 
     alcMakeContextCurrent(this->context);
