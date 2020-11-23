@@ -6,9 +6,9 @@
 #include "RenderTarget2DDirect3D11.hpp"
 #include "SamplerStateDirect3D11.hpp"
 #include "Texture2DDirect3D11.hpp"
-#include "../Graphics.DXGI/DXGIFormatHelper.hpp"
 #include "../Graphics.Backends/GraphicsCapabilities.hpp"
 #include "../Graphics.Backends/GraphicsCommandListImmediate.hpp"
+#include "../Graphics.DXGI/DXGIFormatHelper.hpp"
 #include "Pomdog/Graphics/IndexBuffer.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Graphics/RenderPass.hpp"
@@ -95,20 +95,22 @@ void CheckUnbindingRenderTargetsError(
 
 } // namespace
 
-GraphicsContextDirect3D11::GraphicsContextDirect3D11(
+std::shared_ptr<Error>
+GraphicsContextDirect3D11::Initialize(
     HWND windowHandle,
     const Microsoft::WRL::ComPtr<IDXGIFactory1>& dxgiFactory,
     const Microsoft::WRL::ComPtr<ID3D11Device3>& device,
-    const PresentationParameters& presentationParameters)
-    : blendFactor({1.0f, 1.0f, 1.0f, 1.0f})
-    , preferredBackBufferWidth(1)
-    , preferredBackBufferHeight(1)
-    , backBufferCount(2)
-    , backBufferFormat(DXGIFormatHelper::ToDXGIFormat(presentationParameters.BackBufferFormat))
-    , backBufferDepthFormat(presentationParameters.DepthStencilFormat)
-    , needToApplyPipelineState(true)
+    const PresentationParameters& presentationParameters) noexcept
 {
-    POMDOG_ASSERT(device);
+    POMDOG_ASSERT(device != nullptr);
+
+    blendFactor = {1.0f, 1.0f, 1.0f, 1.0f};
+    preferredBackBufferWidth = 1;
+    preferredBackBufferHeight = 1;
+    backBufferCount = 2;
+    backBufferFormat = DXGIFormatHelper::ToDXGIFormat(presentationParameters.BackBufferFormat);
+    backBufferDepthFormat = presentationParameters.DepthStencilFormat;
+    needToApplyPipelineState = true;
 
     DXGI_SAMPLE_DESC sampleDesc;
     sampleDesc.Count = 1;
@@ -136,9 +138,7 @@ GraphicsContextDirect3D11::GraphicsContextDirect3D11(
 
         auto hr = device->CreateDeferredContext3(0, &deferredContext);
         if (FAILED(hr)) {
-            // FUS RO DAH!
-            POMDOG_THROW_EXCEPTION(std::runtime_error,
-                "Failed to create deferred context");
+            return Errors::New("CreateDeferredContext3() failed");
         }
         POMDOG_ASSERT(deferredContext);
     }
@@ -172,8 +172,7 @@ GraphicsContextDirect3D11::GraphicsContextDirect3D11(
         HRESULT hr = dxgiFactory->CreateSwapChain(device.Get(), &swapChainDesc, &swapChain);
 
         if (FAILED(hr)) {
-            // FUS RO DAH!
-            POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to create SwapChain");
+            return Errors::New("CreateSwapChain() failed");
         }
     }
     {
@@ -182,15 +181,18 @@ GraphicsContextDirect3D11::GraphicsContextDirect3D11(
 
         constexpr std::int32_t backBufferMipLevels = 1;
 
-        backBuffer = std::make_shared<RenderTarget2DDirect3D11>(
-            device.Get(),
-            swapChain.Get(),
-            preferredBackBufferWidth,
-            preferredBackBufferHeight,
-            backBufferMipLevels,
-            presentationParameters.BackBufferFormat,
-            backBufferDepthFormat,
-            multiSampleCount);
+        backBuffer = std::make_shared<RenderTarget2DDirect3D11>();
+        if (auto err = backBuffer->Initialize(device.Get(),
+                swapChain.Get(),
+                preferredBackBufferWidth,
+                preferredBackBufferHeight,
+                backBufferMipLevels,
+                presentationParameters.BackBufferFormat,
+                backBufferDepthFormat,
+                multiSampleCount);
+            err != nullptr) {
+            return Errors::Wrap(std::move(err), "failed to initialize back buffer");
+        }
 
         renderTargets.reserve(D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT);
         renderTargets.push_back(backBuffer);
@@ -207,6 +209,7 @@ GraphicsContextDirect3D11::GraphicsContextDirect3D11(
     POMDOG_ASSERT(graphicsCapbilities.SamplerSlotCount > 0);
     weakTextures.resize(graphicsCapbilities.SamplerSlotCount);
 #endif
+    return nullptr;
 }
 
 GraphicsContextDirect3D11::~GraphicsContextDirect3D11()
@@ -684,8 +687,9 @@ void GraphicsContextDirect3D11::SetRenderPass(const RenderPass& renderPass)
     }
 }
 
-void GraphicsContextDirect3D11::ResizeBackBuffers(
-    ID3D11Device* device, int backBufferWidthIn, int backBufferHeightIn)
+std::shared_ptr<Error>
+GraphicsContextDirect3D11::ResizeBackBuffers(
+    ID3D11Device* device, int backBufferWidthIn, int backBufferHeightIn) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
     POMDOG_ASSERT(backBufferWidthIn > 0);
@@ -697,25 +701,28 @@ void GraphicsContextDirect3D11::ResizeBackBuffers(
     POMDOG_ASSERT(backBuffer);
     backBuffer->ResetBackBuffer();
 
-    POMDOG_ASSERT(swapChain);
-    auto hr = swapChain->ResizeBuffers(
-        backBufferCount,
-        preferredBackBufferWidth,
-        preferredBackBufferHeight,
-        backBufferFormat,
-        0);
-
-    if (FAILED(hr)) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "Failed to resize back buffer");
+    POMDOG_ASSERT(swapChain != nullptr);
+    if (auto hr = swapChain->ResizeBuffers(
+            backBufferCount,
+            preferredBackBufferWidth,
+            preferredBackBufferHeight,
+            backBufferFormat,
+            0);
+        FAILED(hr)) {
+        return Errors::New("failed to resize back buffer");
     }
 
-    backBuffer->ResetBackBuffer(
-        device,
-        swapChain.Get(),
-        preferredBackBufferWidth,
-        preferredBackBufferHeight,
-        backBufferDepthFormat);
+    if (auto err = backBuffer->ResetBackBuffer(
+            device,
+            swapChain.Get(),
+            preferredBackBufferWidth,
+            preferredBackBufferHeight,
+            backBufferDepthFormat);
+        err != nullptr) {
+        return Errors::Wrap(std::move(err), "ResetBackBuffer() failed");
+    }
+
+    return nullptr;
 }
 
 ID3D11DeviceContext3* GraphicsContextDirect3D11::GetImmediateContext() noexcept

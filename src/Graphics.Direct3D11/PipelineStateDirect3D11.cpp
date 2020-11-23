@@ -4,14 +4,13 @@
 #include "FormatHelper.hpp"
 #include "GraphicsDeviceDirect3D11.hpp"
 #include "ShaderDirect3D11.hpp"
+#include "../Graphics.Backends/ShaderBytecode.hpp"
 #include "../Graphics.DXGI/DXGIFormatHelper.hpp"
 #include "../Graphics.Direct3D/PrerequisitesDirect3D.hpp"
-#include "../Graphics.Backends/ShaderBytecode.hpp"
 #include "Pomdog/Graphics/InputLayoutDescription.hpp"
 #include "Pomdog/Graphics/PipelineStateDescription.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
 #include <algorithm>
 #include <utility>
 
@@ -172,9 +171,10 @@ void ToD3D11Desc(
     result.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 }
 
-ComPtr<ID3D11BlendState> CreateBlendState(
+[[nodiscard]] std::tuple<ComPtr<ID3D11BlendState>, std::shared_ptr<Error>>
+CreateBlendState(
     ID3D11Device* nativeDevice,
-    const BlendDescription& description)
+    const BlendDescription& description) noexcept
 {
     D3D11_BLEND_DESC blendDesc;
     ::ZeroMemory(&blendDesc, sizeof(blendDesc));
@@ -195,17 +195,16 @@ ComPtr<ID3D11BlendState> CreateBlendState(
     HRESULT hr = nativeDevice->CreateBlendState(&blendDesc, &blendState);
 
     if (FAILED(hr)) {
-        // FUS RO DAH!
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "Failed to create ID3D11BlendState");
+        return std::make_tuple(nullptr, Errors::New("failed to create ID3D11BlendState"));
     }
 
-    return std::move(blendState);
+    return std::make_tuple(std::move(blendState), nullptr);
 }
 
-ComPtr<ID3D11DepthStencilState> CreateDepthStencilState(
+[[nodiscard]] std::tuple<ComPtr<ID3D11DepthStencilState>, std::shared_ptr<Error>>
+CreateDepthStencilState(
     ID3D11Device* nativeDevice,
-    const DepthStencilDescription& description)
+    const DepthStencilDescription& description) noexcept
 {
     D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
     ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
@@ -236,17 +235,16 @@ ComPtr<ID3D11DepthStencilState> CreateDepthStencilState(
     HRESULT hr = nativeDevice->CreateDepthStencilState(&depthStencilDesc, &depthStencilState);
 
     if (FAILED(hr)) {
-        // FUS RO DAH!
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "Failed to create ID3D11DepthStencilState");
+        return std::make_tuple(nullptr, Errors::New("failed to create ID3D11DepthStencilState"));
     }
 
-    return std::move(depthStencilState);
+    return std::make_tuple(std::move(depthStencilState), nullptr);
 }
 
-ComPtr<ID3D11RasterizerState> CreateRasterizerState(
+[[nodiscard]] std::tuple<ComPtr<ID3D11RasterizerState>, std::shared_ptr<Error>>
+CreateRasterizerState(
     ID3D11Device* nativeDevice,
-    const RasterizerDescription& description)
+    const RasterizerDescription& description) noexcept
 {
     D3D11_RASTERIZER_DESC rasterizerDesc;
     ZeroMemory(&rasterizerDesc, sizeof(rasterizerDesc));
@@ -275,115 +273,39 @@ ComPtr<ID3D11RasterizerState> CreateRasterizerState(
     HRESULT hr = nativeDevice->CreateRasterizerState(&rasterizerDesc, &rasterizerState);
 
     if (FAILED(hr)) {
-        // FUS RO DAH!
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "Failed to create ID3D11RasterizerState");
+        return std::make_tuple(nullptr, Errors::New("failed to create ID3D11RasterizerState"));
     }
 
-    return std::move(rasterizerState);
+    return std::make_tuple(std::move(rasterizerState), nullptr);
 }
 
-void ReflectShaderBytecode(
+[[nodiscard]] std::shared_ptr<Error>
+ReflectShaderBytecode(
     const ShaderBytecode& shaderBytecode,
     Microsoft::WRL::ComPtr<ID3D11ShaderReflection>& shaderReflector,
-    D3D11_SHADER_DESC& shaderDesc)
+    D3D11_SHADER_DESC& shaderDesc) noexcept
 {
-    HRESULT hr = D3DReflect(
-        shaderBytecode.Code,
-        shaderBytecode.ByteLength,
-        IID_PPV_ARGS(&shaderReflector));
-
-    if (FAILED(hr)) {
-        // FUS RO DAH!
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "Failed to D3DReflect");
+    if (auto hr = D3DReflect(
+            shaderBytecode.Code,
+            shaderBytecode.ByteLength,
+            IID_PPV_ARGS(&shaderReflector));
+        FAILED(hr)) {
+        return Errors::New("D3DReflect() failed");
     }
 
-    POMDOG_ASSERT(shaderReflector);
-    hr = shaderReflector->GetDesc(&shaderDesc);
+    POMDOG_ASSERT(shaderReflector != nullptr);
 
-    if (FAILED(hr)) {
-        // FUS RO DAH!
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "Failed to get shader description");
+    if (auto hr = shaderReflector->GetDesc(&shaderDesc); FAILED(hr)) {
+        return Errors::New("failed to get shader description");
     }
+
+    return nullptr;
 }
 
-//struct ConstantBufferBindDesc {
-//    std::string Name;
-//    UINT BindPoint;
-//};
-//
-//void EnumerateConstantBuffers(
-//    const ShaderBytecode& shaderBytecode,
-//    std::vector<ConstantBufferBindDesc> & output)
-//{
-//    POMDOG_ASSERT(shaderBytecode.Code);
-//
-//    ComPtr<ID3D11ShaderReflection> shaderReflector;
-//    D3D11_SHADER_DESC shaderDesc;
-//
-//    ReflectShaderBytecode(shaderBytecode, shaderReflector, shaderDesc);
-//
-//    for (UINT i = 0; i < shaderDesc.ConstantBuffers; ++i)
-//    {
-//        POMDOG_ASSERT(shaderReflector);
-//        auto constantBufferReflector = shaderReflector->GetConstantBufferByIndex(i);
-//
-//        D3D11_SHADER_BUFFER_DESC bufferDesc;
-//        HRESULT hr = constantBufferReflector->GetDesc(&bufferDesc);
-//
-//        if (FAILED(hr))
-//        {
-//            // FUS RO DAH!!
-//            ///@todo throw exception
-//            continue;
-//        }
-//
-//        //if (D3D_CT_CBUFFER != bufferDesc.Type)
-//        //{
-//        //    ///@todo Not implemented
-//        //    //tbuffer
-//        //    //continue;
-//        //}
-//
-//        D3D11_SHADER_INPUT_BIND_DESC shaderInputBindDesc;
-//        shaderReflector->GetResourceBindingDescByName(bufferDesc.Name, &shaderInputBindDesc);
-//
-//        ConstantBufferBindDesc desc;
-//        desc.Name = bufferDesc.Name;
-//        desc.BindPoint = shaderInputBindDesc.BindPoint;
-//
-//        POMDOG_ASSERT(shaderInputBindDesc.BindPoint
-//            <= D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT);
-//        output.push_back(std::move(desc));
-//    }
-//}
-
-//std::vector<ConstantBufferBindDesc> CreateConstantBufferBindDescs(
-//    const ShaderBytecode& vertexShaderBytecode,
-//    const ShaderBytecode& pixelShaderBytecode)
-//{
-//    using Desc = ConstantBufferBindDesc;
-//
-//    std::vector<Desc> bindings;
-//    EnumerateConstantBuffers(vertexShaderBytecode, bindings);
-//    EnumerateConstantBuffers(pixelShaderBytecode, bindings);
-//
-//    std::sort(std::begin(bindings), std::end(bindings),
-//        [](const Desc& a, const Desc& b) { return a.Name < b.Name; });
-//
-//    bindings.erase(std::unique(std::begin(bindings), std::end(bindings),
-//        [](const Desc& a, const Desc& b) { return a.Name == b.Name; }), std::end(bindings));
-//
-//    bindings.shrink_to_fit();
-//
-//    return std::move(bindings);
-//}
-
-std::vector<D3D11_INPUT_ELEMENT_DESC> BuildInputElements(
+[[nodiscard]] std::tuple<std::vector<D3D11_INPUT_ELEMENT_DESC>, std::shared_ptr<Error>>
+BuildInputElements(
     const std::vector<D3D11_SIGNATURE_PARAMETER_DESC>& signatureParameters,
-    const InputLayoutDescription& description)
+    const InputLayoutDescription& description) noexcept
 {
     POMDOG_ASSERT(!signatureParameters.empty());
     POMDOG_ASSERT(!description.InputElements.empty());
@@ -398,9 +320,7 @@ std::vector<D3D11_INPUT_ELEMENT_DESC> BuildInputElements(
         POMDOG_ASSERT(signature != std::end(signatureParameters));
 
         if (signature == std::end(signatureParameters)) {
-            ///@todo throw exception
-            // error: FUS RO DAH!
-            break;
+            return std::make_tuple(std::move(inputElements), Errors::New("invalid input elements"));
         }
 
         POMDOG_ASSERT(sourceElement.InstanceStepRate == 0 ||
@@ -425,13 +345,13 @@ std::vector<D3D11_INPUT_ELEMENT_DESC> BuildInputElements(
         ++signature;
     }
 
-    return std::move(inputElements);
+    return std::make_tuple(std::move(inputElements), nullptr);
 }
 
-std::vector<D3D11_SIGNATURE_PARAMETER_DESC>
+[[nodiscard]] std::vector<D3D11_SIGNATURE_PARAMETER_DESC>
 EnumerateSignatureParameters(
     ID3D11ShaderReflection* shaderReflector,
-    const D3D11_SHADER_DESC& shaderDesc)
+    const D3D11_SHADER_DESC& shaderDesc) noexcept
 {
     POMDOG_ASSERT(shaderReflector);
 
@@ -452,10 +372,11 @@ EnumerateSignatureParameters(
     return std::move(signatureParameters);
 }
 
-Microsoft::WRL::ComPtr<ID3D11InputLayout> CreateInputLayout(
+[[nodiscard]] std::tuple<ComPtr<ID3D11InputLayout>, std::shared_ptr<Error>>
+CreateInputLayout(
     ID3D11Device* device,
     const ShaderBytecode& vertexShaderBytecode,
-    const InputLayoutDescription& description)
+    const InputLayoutDescription& description) noexcept
 {
     POMDOG_ASSERT(device);
     POMDOG_ASSERT(vertexShaderBytecode.Code);
@@ -463,13 +384,21 @@ Microsoft::WRL::ComPtr<ID3D11InputLayout> CreateInputLayout(
     D3D11_SHADER_DESC shaderDesc;
     Microsoft::WRL::ComPtr<ID3D11ShaderReflection> shaderReflector;
 
-    ReflectShaderBytecode(vertexShaderBytecode, shaderReflector, shaderDesc);
+    if (auto err = ReflectShaderBytecode(
+            vertexShaderBytecode,
+            shaderReflector,
+            shaderDesc);
+        err != nullptr) {
+        return std::make_tuple(nullptr, Errors::Wrap(std::move(err), "ReflectShaderBytecode() failed"));
+    }
 
     auto signatureParameters = EnumerateSignatureParameters(
         shaderReflector.Get(), shaderDesc);
 
-    auto inputElements = BuildInputElements(
-        signatureParameters, description);
+    auto [inputElements, buildErr] = BuildInputElements(signatureParameters, description);
+    if (buildErr != nullptr) {
+        return std::make_tuple(nullptr, Errors::Wrap(std::move(buildErr), "BuildInputElements() failed"));
+    }
 
     Microsoft::WRL::ComPtr<ID3D11InputLayout> nativeInputLayout;
     HRESULT hr = device->CreateInputLayout(
@@ -480,50 +409,78 @@ Microsoft::WRL::ComPtr<ID3D11InputLayout> CreateInputLayout(
         &nativeInputLayout);
 
     if (FAILED(hr)) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "Failed to create input layout");
+        return std::make_tuple(nullptr, Errors::New("failed to create ID3D11InputLayout"));
     }
-    return std::move(nativeInputLayout);
+
+    return std::make_tuple(std::move(nativeInputLayout), nullptr);
 }
 
 } // namespace
 
-PipelineStateDirect3D11::PipelineStateDirect3D11(
+std::shared_ptr<Error>
+PipelineStateDirect3D11::Initialize(
     ID3D11Device* device,
-    const PipelineStateDescription& description)
+    const PipelineStateDescription& description) noexcept
 {
     POMDOG_ASSERT(device);
 
     sampleMask = description.MultiSampleMask;
 
-    blendState = CreateBlendState(device, description.BlendState);
-    depthStencilState = CreateDepthStencilState(device, description.DepthStencilState);
-    rasterizerState = CreateRasterizerState(device, description.RasterizerState);
+    if (auto [result, err] = CreateBlendState(device, description.BlendState); err != nullptr) {
+        return Errors::Wrap(std::move(err), "CreateBlendState() failed");
+    }
+    else {
+        blendState = std::move(result);
+    }
+
+    if (auto [result, err] = CreateDepthStencilState(device, description.DepthStencilState); err != nullptr) {
+        return Errors::Wrap(std::move(err), "CreateDepthStencilState() failed");
+    }
+    else {
+        depthStencilState = std::move(result);
+    }
+
+    if (auto [result, err] = CreateRasterizerState(device, description.RasterizerState); err != nullptr) {
+        return Errors::Wrap(std::move(err), "CreateRasterizerState() failed");
+    }
+    else {
+        rasterizerState = std::move(result);
+    }
 
     auto vertexShaderD3D = std::dynamic_pointer_cast<VertexShaderDirect3D11>(description.VertexShader);
-    if (!vertexShaderD3D) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Invalid vertex shader.");
+    if (vertexShaderD3D == nullptr) {
+        return Errors::New("invalid vertex shader");
     }
 
     vertexShader = vertexShaderD3D->GetShader();
-    if (!vertexShader) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "The vertex shader is null");
+    if (vertexShader == nullptr) {
+        return Errors::New("vertexShader must be != nullptr");
     }
 
     auto pixelShaderD3D = std::dynamic_pointer_cast<PixelShaderDirect3D11>(description.PixelShader);
-    if (!pixelShaderD3D) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Invalid pixel shader.");
+    if (pixelShaderD3D == nullptr) {
+        return Errors::New("invalid pixel shader");
     }
 
     pixelShader = pixelShaderD3D->GetShader();
-    if (!pixelShader) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "The pixel shader is null");
+    if (pixelShader == nullptr) {
+        return Errors::New("pixelShader must be != nullptr");
     }
 
-    inputLayout = CreateInputLayout(device,
-        vertexShaderD3D->GetShaderBytecode(), description.InputLayout);
+    if (auto [result, err] = CreateInputLayout(
+            device,
+            vertexShaderD3D->GetShaderBytecode(),
+            description.InputLayout);
+        err != nullptr) {
+        return Errors::Wrap(std::move(err), "CreateBlendState() failed");
+    }
+    else {
+        inputLayout = std::move(result);
+    }
 
     primitiveTopology = ToPrimitiveTopology(description.PrimitiveTopology);
+
+    return nullptr;
 }
 
 void PipelineStateDirect3D11::Apply(

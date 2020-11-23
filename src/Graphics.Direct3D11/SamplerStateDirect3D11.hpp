@@ -5,17 +5,20 @@
 #include "PrerequisitesDirect3D11.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include "Pomdog/Graphics/SamplerState.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #include <wrl/client.h>
 
 namespace Pomdog::Detail::Direct3D11 {
 
 class SamplerStateDirect3D11 final : public SamplerState {
 public:
-    SamplerStateDirect3D11(
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(
         ID3D11Device* device,
-        const SamplerDescription& description);
+        const SamplerDescription& description) noexcept;
 
-    ID3D11SamplerState* GetSamplerState() const;
+    /// Gets the pointer of the native sampler state.
+    [[nodiscard]] ID3D11SamplerState* GetSamplerState() const noexcept;
 
 private:
     Microsoft::WRL::ComPtr<ID3D11SamplerState> samplerState;

@@ -108,27 +108,35 @@ D3D11_MAP GetMapTypeForWriting(D3D11_BIND_FLAG bindFlag) noexcept
 
 } // namespace
 
-BufferDirect3D11::BufferDirect3D11(
+std::shared_ptr<Error>
+BufferDirect3D11::Initialize(
     ID3D11Device* device,
     std::size_t sizeInBytes,
     BufferUsage bufferUsage,
-    D3D11_BIND_FLAG bindFlag)
-    : mapTypeForWriting(GetMapTypeForWriting(bindFlag))
+    D3D11_BIND_FLAG bindFlag) noexcept
 {
+    mapTypeForWriting = GetMapTypeForWriting(bindFlag);
+
     buffer = CreateNativeBuffer(device, sizeInBytes,
         nullptr, bufferUsage, bindFlag);
+
+    return nullptr;
 }
 
-BufferDirect3D11::BufferDirect3D11(
+std::shared_ptr<Error>
+BufferDirect3D11::Initialize(
     ID3D11Device* device,
     const void* sourceData,
     std::size_t sizeInBytes,
     BufferUsage bufferUsage,
-    D3D11_BIND_FLAG bindFlag)
-    : mapTypeForWriting(GetMapTypeForWriting(bindFlag))
+    D3D11_BIND_FLAG bindFlag) noexcept
 {
+    mapTypeForWriting = GetMapTypeForWriting(bindFlag);
+
     buffer = CreateNativeBuffer(device, sizeInBytes,
         sourceData, bufferUsage, bindFlag);
+
+    return nullptr;
 }
 
 void BufferDirect3D11::GetData(
@@ -197,7 +205,7 @@ void BufferDirect3D11::SetData(
     deviceContext->Unmap(buffer.Get(), 0);
 }
 
-ID3D11Buffer* BufferDirect3D11::GetBuffer() const
+ID3D11Buffer* BufferDirect3D11::GetBuffer() const noexcept
 {
     POMDOG_ASSERT(buffer);
     return buffer.Get();

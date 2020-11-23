@@ -1,9 +1,9 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "Texture2DDirect3D11.hpp"
-#include "../Graphics.DXGI/DXGIFormatHelper.hpp"
 #include "../Graphics.Backends/SurfaceFormatHelper.hpp"
 #include "../Graphics.Backends/TextureHelper.hpp"
+#include "../Graphics.DXGI/DXGIFormatHelper.hpp"
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
@@ -66,12 +66,13 @@ void LoadPixelDataBlockComp1(
 using DXGI::DXGIFormatHelper;
 using Microsoft::WRL::ComPtr;
 
-Texture2DDirect3D11::Texture2DDirect3D11(
+std::shared_ptr<Error>
+Texture2DDirect3D11::Initialize(
     ID3D11Device* device,
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn,
     std::int32_t levelCountIn,
-    SurfaceFormat formatIn)
+    SurfaceFormat formatIn) noexcept
 {
     pixelWidth = pixelWidthIn;
     pixelHeight = pixelHeightIn;
@@ -96,15 +97,11 @@ Texture2DDirect3D11::Texture2DDirect3D11(
     textureDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
     textureDesc.MiscFlags = 0;
 
-    auto hr = device->CreateTexture2D(&textureDesc, nullptr, &texture2D);
-
-    if (FAILED(hr)) {
-        // FUS RO DAH!
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "Failed to create D3D11Texture2D");
+    if (auto hr = device->CreateTexture2D(&textureDesc, nullptr, &texture2D); FAILED(hr)) {
+        return Errors::New("CreateTexture2D() failed: hr = " + std::to_string(hr));
     }
 
-    // Create the shader resource view (SRV)
+    // NOTE: Create the shader resource view (SRV)
     D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
     ZeroMemory(&srvDesc, sizeof(srvDesc));
     srvDesc.Format = textureDesc.Format;
@@ -112,14 +109,11 @@ Texture2DDirect3D11::Texture2DDirect3D11(
     srvDesc.Texture2D.MostDetailedMip = 0;
     srvDesc.Texture2D.MipLevels = textureDesc.MipLevels;
 
-    hr = device->CreateShaderResourceView(
-        texture2D.Get(), &srvDesc, &shaderResourceView);
-
-    if (FAILED(hr)) {
-        // FUS RO DAH!
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "Failed to create the shader resource view");
+    if (auto hr = device->CreateShaderResourceView(texture2D.Get(), &srvDesc, &shaderResourceView); FAILED(hr)) {
+        return Errors::New("CreateShaderResourceView() failed: hr = " + std::to_string(hr));
     }
+
+    return nullptr;
 }
 
 std::int32_t Texture2DDirect3D11::GetWidth() const noexcept

@@ -4,7 +4,6 @@
 #include "FormatHelper.hpp"
 #include "Pomdog/Graphics/SamplerDescription.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
 #include <array>
 
 namespace Pomdog::Detail::Direct3D11 {
@@ -52,9 +51,10 @@ D3D11_TEXTURE_ADDRESS_MODE ToTextureAddressMode(TextureAddressMode addressMode) 
 
 } // namespace
 
-SamplerStateDirect3D11::SamplerStateDirect3D11(
+std::shared_ptr<Error>
+SamplerStateDirect3D11::Initialize(
     ID3D11Device* device,
-    const SamplerDescription& description)
+    const SamplerDescription& description) noexcept
 {
     D3D11_SAMPLER_DESC samplerDesc;
     ZeroMemory(&samplerDesc, sizeof(samplerDesc));
@@ -68,7 +68,7 @@ SamplerStateDirect3D11::SamplerStateDirect3D11(
     samplerDesc.MaxAnisotropy = description.MaxAnisotropy;
     samplerDesc.ComparisonFunc = ToComparisonFunction(description.ComparisonFunction);
 
-    ///@todo Add support for the following options in SamplerDescription
+    // TODO: Add support for the following options in SamplerDescription
     samplerDesc.BorderColor[0] = 0.0f;
     samplerDesc.BorderColor[1] = 0.0f;
     samplerDesc.BorderColor[2] = 0.0f;
@@ -78,16 +78,14 @@ SamplerStateDirect3D11::SamplerStateDirect3D11(
     POMDOG_ASSERT(samplerDesc.MaxLOD <= D3D11_FLOAT32_MAX);
 
     POMDOG_ASSERT(device != nullptr);
-    HRESULT hr = device->CreateSamplerState(&samplerDesc, &samplerState);
-
-    if (FAILED(hr)) {
-        // FUS RO DAH!
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "Failed to create ID3D11SamplerState.");
+    if (auto hr = device->CreateSamplerState(&samplerDesc, &samplerState); FAILED(hr)) {
+        return Errors::New("CreateSamplerState() failed");
     }
+
+    return nullptr;
 }
 
-ID3D11SamplerState* SamplerStateDirect3D11::GetSamplerState() const
+ID3D11SamplerState* SamplerStateDirect3D11::GetSamplerState() const noexcept
 {
     POMDOG_ASSERT(samplerState);
     return samplerState.Get();

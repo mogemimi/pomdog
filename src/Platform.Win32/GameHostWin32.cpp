@@ -6,15 +6,15 @@
 #include "MouseWin32.hpp"
 #include "../Input.Backends/NativeGamepad.hpp"
 #if !defined(POMDOG_DISABLE_GL4)
-#include "../Platform.Win32/OpenGLContextWin32.hpp"
+#include "../Graphics.Backends/GraphicsCommandQueueImmediate.hpp"
 #include "../Graphics.GL4/GraphicsContextGL4.hpp"
 #include "../Graphics.GL4/GraphicsDeviceGL4.hpp"
-#include "../Graphics.Backends/GraphicsCommandQueueImmediate.hpp"
+#include "../Platform.Win32/OpenGLContextWin32.hpp"
 #endif
 #if !defined(POMDOG_DISABLE_DIRECT3D11)
+#include "../Graphics.Backends/GraphicsCommandQueueImmediate.hpp"
 #include "../Graphics.Direct3D11/GraphicsContextDirect3D11.hpp"
 #include "../Graphics.Direct3D11/GraphicsDeviceDirect3D11.hpp"
-#include "../Graphics.Backends/GraphicsCommandQueueImmediate.hpp"
 #endif
 #include "../Application/SubsystemScheduler.hpp"
 #include "../Application/SystemEvents.hpp"
@@ -164,7 +164,10 @@ public:
         POMDOG_ASSERT(graphicsDevice);
         POMDOG_ASSERT(graphicsContext);
         auto device = graphicsDevice->GetDevice();
-        graphicsContext->ResizeBackBuffers(device.Get(), width, height);
+        if (auto err = graphicsContext->ResizeBackBuffers(device.Get(), width, height); err != nullptr) {
+            // FIXME: Add error handling
+            Log::Critical("Pomdog", "error: ResizeBackBuffers() failed: " + err->ToString());
+        }
         graphicsDevice->ClientSizeChanged(width, height);
     }
 };
@@ -174,15 +177,30 @@ CreateGraphicsDeviceDirect3D11(
     const std::shared_ptr<GameWindowWin32>& window,
     const PresentationParameters& presentationParameters)
 {
-    auto graphicsDevice = std::make_shared<GraphicsDeviceDirect3D11>(presentationParameters);
+    auto graphicsDevice = std::make_shared<GraphicsDeviceDirect3D11>();
+    if (auto err = graphicsDevice->Initialize(presentationParameters); err != nullptr) {
+        return std::make_tuple(
+            nullptr,
+            nullptr,
+            nullptr,
+            Errors::Wrap(std::move(err), "failed to initialize GraphicsDeviceDirect3D11"));
+    }
+
     auto device = graphicsDevice->GetDevice();
     auto dxgiFactory = std::get<0>(graphicsDevice->GetDXGIFactory());
 
-    auto graphicsContext = std::make_shared<GraphicsContextDirect3D11>(
-        window->GetNativeWindowHandle(),
-        dxgiFactory,
-        device,
-        presentationParameters);
+    auto graphicsContext = std::make_shared<GraphicsContextDirect3D11>();
+    if (auto err = graphicsContext->Initialize(window->GetNativeWindowHandle(),
+            dxgiFactory,
+            device,
+            presentationParameters);
+        err != nullptr) {
+        return std::make_tuple(
+            nullptr,
+            nullptr,
+            nullptr,
+            Errors::Wrap(std::move(err), "failed to initialize GraphicsContextDirect3D11"));
+    }
 
     auto graphicsCommandQueue = std::make_shared<GraphicsCommandQueueImmediate>(graphicsContext);
 

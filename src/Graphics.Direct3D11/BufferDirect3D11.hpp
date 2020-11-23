@@ -5,24 +5,27 @@
 #include "PrerequisitesDirect3D11.hpp"
 #include "../Graphics.Backends/NativeBuffer.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #include <wrl/client.h>
 
 namespace Pomdog::Detail::Direct3D11 {
 
 class BufferDirect3D11 final : public NativeBuffer {
 public:
-    BufferDirect3D11(
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(
         ID3D11Device* device,
         std::size_t sizeInBytes,
         BufferUsage bufferUsage,
-        D3D11_BIND_FLAG bindFlag);
+        D3D11_BIND_FLAG bindFlag) noexcept;
 
-    BufferDirect3D11(
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(
         ID3D11Device* devuce,
         const void* sourceData,
         std::size_t sizeInBytes,
         BufferUsage bufferUsage,
-        D3D11_BIND_FLAG bindFlag);
+        D3D11_BIND_FLAG bindFlag) noexcept;
 
     void GetData(
         std::size_t offsetInBytes,
@@ -34,7 +37,8 @@ public:
         const void* sourceData,
         std::size_t sizeInBytes) override;
 
-    ID3D11Buffer* GetBuffer() const;
+    /// Gets the pointer of the native buffer.
+    [[nodiscard]] ID3D11Buffer* GetBuffer() const noexcept;
 
 private:
     Microsoft::WRL::ComPtr<ID3D11Buffer> buffer;

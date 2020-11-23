@@ -1,11 +1,10 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "EffectReflectionDirect3D11.hpp"
+#include "../Graphics.Backends/ShaderBytecode.hpp"
 #include "../Graphics.Direct3D/HLSLReflectionHelper.hpp"
 #include "../Graphics.Direct3D/PrerequisitesDirect3D.hpp"
-#include "../Graphics.Backends/ShaderBytecode.hpp"
 #include "Pomdog/Graphics/EffectConstantDescription.hpp"
-#include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
 #include <algorithm>
@@ -127,9 +126,10 @@ void EnumerateConstantBuffer(
 
 } // namespace
 
-EffectReflectionDirect3D11::EffectReflectionDirect3D11(
+std::shared_ptr<Error>
+EffectReflectionDirect3D11::Initialize(
     const ShaderBytecode& vertexShaderBytecode,
-    const ShaderBytecode& pixelShaderBytecode)
+    const ShaderBytecode& pixelShaderBytecode) noexcept
 {
     HRESULT hr = D3DReflect(
         vertexShaderBytecode.Code,
@@ -137,7 +137,7 @@ EffectReflectionDirect3D11::EffectReflectionDirect3D11(
         IID_PPV_ARGS(&vertexShaderReflector));
 
     if (FAILED(hr)) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to D3DReflect");
+        return Errors::New("D3DReflect() failed with a vertex shader");
     }
 
     hr = D3DReflect(
@@ -146,8 +146,10 @@ EffectReflectionDirect3D11::EffectReflectionDirect3D11(
         IID_PPV_ARGS(&pixelShaderReflector));
 
     if (FAILED(hr)) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to D3DReflect");
+        return Errors::New("D3DReflect() failed with a pixel shader");
     }
+
+    return nullptr;
 }
 
 std::vector<EffectConstantDescription>

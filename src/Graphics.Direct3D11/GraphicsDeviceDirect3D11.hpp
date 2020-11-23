@@ -6,6 +6,7 @@
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #include <wrl/client.h>
 #include <memory>
 #include <vector>
@@ -18,7 +19,8 @@ private:
     Microsoft::WRL::ComPtr<IDXGIAdapter1> activeAdapter;
 
 public:
-    void EnumAdapters();
+    [[nodiscard]] std::shared_ptr<Error>
+    EnumAdapters() noexcept;
 
     void Clear();
 
@@ -30,7 +32,8 @@ public:
 
 class GraphicsDeviceDirect3D11 final : public GraphicsDevice {
 public:
-    explicit GraphicsDeviceDirect3D11(const PresentationParameters& presentationParameters);
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(const PresentationParameters& presentationParameters) noexcept;
 
     ~GraphicsDeviceDirect3D11();
 
@@ -140,6 +143,7 @@ public:
     [[nodiscard]] Microsoft::WRL::ComPtr<ID3D11Device3>
     GetDevice() const noexcept;
 
+    /// Gets the pointer of the IDXGIFactory1 object.
     [[nodiscard]] std::tuple<Microsoft::WRL::ComPtr<IDXGIFactory1>, std::shared_ptr<Error>>
     GetDXGIFactory() noexcept;
 
@@ -149,8 +153,8 @@ private:
     AdapterManager adapters;
     Microsoft::WRL::ComPtr<ID3D11Device3> device;
     Microsoft::WRL::ComPtr<ID3D11InfoQueue> infoQueue;
-    D3D_DRIVER_TYPE driverType;
-    D3D_FEATURE_LEVEL featureLevel;
+    D3D_DRIVER_TYPE driverType = D3D_DRIVER_TYPE_NULL;
+    D3D_FEATURE_LEVEL featureLevel = D3D_FEATURE_LEVEL_11_1;
     PresentationParameters presentationParameters;
 };
 

@@ -5,22 +5,25 @@
 #include "PrerequisitesDirect3D11.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #include <wrl/client.h>
 
 namespace Pomdog::Detail::Direct3D11 {
 
 class RenderTarget2DDirect3D11 final : public RenderTarget2D {
 public:
-    RenderTarget2DDirect3D11(
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(
         ID3D11Device* device,
         std::int32_t pixelWidth,
         std::int32_t pixelHeight,
         std::int32_t levelCount,
         SurfaceFormat format,
         DepthFormat depthStencilFormat,
-        std::int32_t multiSampleCount);
+        std::int32_t multiSampleCount) noexcept;
 
-    RenderTarget2DDirect3D11(
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(
         ID3D11Device* device,
         IDXGISwapChain* swapChain,
         std::int32_t pixelWidth,
@@ -28,7 +31,7 @@ public:
         std::int32_t levelCount,
         SurfaceFormat format,
         DepthFormat depthStencilFormat,
-        std::int32_t multiSampleCount);
+        std::int32_t multiSampleCount) noexcept;
 
     /// Gets the width of the texture data, in pixels.
     std::int32_t GetWidth() const noexcept override;
@@ -63,14 +66,15 @@ public:
     [[nodiscard]] ID3D11ShaderResourceView*
     GetShaderResourceView() const noexcept;
 
-    void ResetBackBuffer(
+    [[nodiscard]] std::shared_ptr<Error>
+    ResetBackBuffer(
         ID3D11Device* device,
         IDXGISwapChain* swapChain,
         std::int32_t pixelWidth,
         std::int32_t pixelHeight,
-        DepthFormat depthStencilFormat);
+        DepthFormat depthStencilFormat) noexcept;
 
-    void ResetBackBuffer();
+    void ResetBackBuffer() noexcept;
 
 private:
     Microsoft::WRL::ComPtr<ID3D11Texture2D> texture2D;

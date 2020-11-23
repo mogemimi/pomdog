@@ -5,6 +5,7 @@
 #include "PrerequisitesDirect3D11.hpp"
 #include "Pomdog/Graphics/EffectReflection.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #include <wrl/client.h>
 
 namespace Pomdog::Detail {
@@ -15,9 +16,10 @@ namespace Pomdog::Detail::Direct3D11 {
 
 class EffectReflectionDirect3D11 final : public EffectReflection {
 public:
-    EffectReflectionDirect3D11(
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(
         const ShaderBytecode& vertexShaderBytecode,
-        const ShaderBytecode& pixelShaderBytecode);
+        const ShaderBytecode& pixelShaderBytecode) noexcept;
 
     std::vector<EffectConstantDescription>
     GetConstantBuffers() const noexcept override;

@@ -1,11 +1,10 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "ShaderDirect3D11.hpp"
-#include "../Graphics.Direct3D/HLSLCompiling.hpp"
 #include "../Graphics.Backends/ShaderBytecode.hpp"
 #include "../Graphics.Backends/ShaderCompileOptions.hpp"
+#include "../Graphics.Direct3D/HLSLCompiling.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
 #include <memory>
 
 namespace Pomdog::Detail::Direct3D11 {
@@ -32,10 +31,11 @@ HRESULT CreateShader(
 } // namespace
 
 template <class NativeShaderType>
-ShaderDirect3D11<NativeShaderType>::ShaderDirect3D11(
+std::shared_ptr<Error>
+ShaderDirect3D11<NativeShaderType>::Initialize(
     ID3D11Device* device,
     const ShaderBytecode& shaderBytecode,
-    const ShaderCompileOptions& compileOptions)
+    const ShaderCompileOptions& compileOptions) noexcept
 {
     POMDOG_ASSERT(shaderBytecode.Code != nullptr);
     POMDOG_ASSERT(shaderBytecode.ByteLength > 0);
@@ -56,22 +56,22 @@ ShaderDirect3D11<NativeShaderType>::ShaderDirect3D11(
     POMDOG_ASSERT(device != nullptr);
     POMDOG_ASSERT(!codeBlob.empty());
 
-    HRESULT hr = CreateShader(device, codeBlob.data(), codeBlob.size(), &shader);
-    if (FAILED(hr)) {
-        // error: FUS RO DAH!!
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to create shader");
+    if (auto hr = CreateShader(device, codeBlob.data(), codeBlob.size(), &shader); FAILED(hr)) {
+        return Errors::New("CreateShader() failed: hr = " + std::to_string(hr));
     }
+
+    return nullptr;
 }
 
 template <class NativeShaderType>
-Microsoft::WRL::ComPtr<NativeShaderType> ShaderDirect3D11<NativeShaderType>::GetShader() const
+Microsoft::WRL::ComPtr<NativeShaderType> ShaderDirect3D11<NativeShaderType>::GetShader() const noexcept
 {
     POMDOG_ASSERT(shader);
     return shader;
 }
 
 template <class NativeShaderType>
-ShaderBytecode ShaderDirect3D11<NativeShaderType>::GetShaderBytecode() const
+ShaderBytecode ShaderDirect3D11<NativeShaderType>::GetShaderBytecode() const noexcept
 {
     POMDOG_ASSERT(!codeBlob.empty());
     ShaderBytecode shaderBytecode;
@@ -80,12 +80,12 @@ ShaderBytecode ShaderDirect3D11<NativeShaderType>::GetShaderBytecode() const
     return std::move(shaderBytecode);
 }
 
-// explicit instantiations
+// NOTE: explicit instantiations
 template class ShaderDirect3D11<ID3D11VertexShader>;
 template class ShaderDirect3D11<ID3D11PixelShader>;
-//template class ShaderDirect3D11<ID3D11GeometryShader>;
-//template class ShaderDirect3D11<ID3D11DomainShader>;
-//template class ShaderDirect3D11<ID3D11HullShader>;
-//template class ShaderDirect3D11<ID3D11ComputeShader>;
+// template class ShaderDirect3D11<ID3D11GeometryShader>;
+// template class ShaderDirect3D11<ID3D11DomainShader>;
+// template class ShaderDirect3D11<ID3D11HullShader>;
+// template class ShaderDirect3D11<ID3D11ComputeShader>;
 
 } // namespace Pomdog::Detail::Direct3D11

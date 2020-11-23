@@ -4,6 +4,8 @@
 
 #include "PrerequisitesDirect3D11.hpp"
 #include "../Graphics.Backends/NativeGraphicsContext.hpp"
+#include "Pomdog/Graphics/DepthFormat.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #include <wrl/client.h>
 #include <array>
 #include <memory>
@@ -16,13 +18,12 @@ class RenderTarget2DDirect3D11;
 
 class GraphicsContextDirect3D11 final : public NativeGraphicsContext {
 public:
-    GraphicsContextDirect3D11() = delete;
-
-    GraphicsContextDirect3D11(
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(
         HWND windowHandle,
         const Microsoft::WRL::ComPtr<IDXGIFactory1>& dxgiFactory,
         const Microsoft::WRL::ComPtr<ID3D11Device3>& nativeDevice,
-        const PresentationParameters& presentationParameters);
+        const PresentationParameters& presentationParameters) noexcept;
 
     ~GraphicsContextDirect3D11();
 
@@ -84,11 +85,14 @@ public:
 
     void SetTexture(int index, const std::shared_ptr<RenderTarget2D>& texture) override;
 
-    void ResizeBackBuffers(ID3D11Device* device, int backBufferWidth, int backBufferHeight);
+    [[nodiscard]] std::shared_ptr<Error>
+    ResizeBackBuffers(ID3D11Device* device, int backBufferWidth, int backBufferHeight) noexcept;
 
-    ID3D11DeviceContext3* GetImmediateContext() noexcept;
+    /// Gets the pointer of the immediate graphics context.
+    [[nodiscard]] ID3D11DeviceContext3* GetImmediateContext() noexcept;
 
-    ID3D11DeviceContext3* GetDeferredContext() noexcept;
+    /// Gets the pointer of the deferred graphics context.
+    [[nodiscard]] ID3D11DeviceContext3* GetDeferredContext() noexcept;
 
 private:
     void ApplyPipelineState();
@@ -106,13 +110,13 @@ private:
     std::array<ID3D11ShaderResourceView*, MaxTextureCount> textureResourceViews;
     std::shared_ptr<RenderTarget2DDirect3D11> backBuffer;
     std::shared_ptr<PipelineStateDirect3D11> pipelineState;
-    std::array<FLOAT, 4> blendFactor;
-    int preferredBackBufferWidth;
-    int preferredBackBufferHeight;
-    UINT backBufferCount;
-    DXGI_FORMAT backBufferFormat;
-    DepthFormat backBufferDepthFormat;
-    bool needToApplyPipelineState;
+    std::array<FLOAT, 4> blendFactor = {1.0f, 1.0f, 1.0f, 1.0f};
+    int preferredBackBufferWidth = 1;
+    int preferredBackBufferHeight = 1;
+    UINT backBufferCount = 2;
+    DXGI_FORMAT backBufferFormat = DXGI_FORMAT_UNKNOWN;
+    DepthFormat backBufferDepthFormat = DepthFormat::None;
+    bool needToApplyPipelineState = true;
 };
 
 } // namespace Pomdog::Detail::Direct3D11

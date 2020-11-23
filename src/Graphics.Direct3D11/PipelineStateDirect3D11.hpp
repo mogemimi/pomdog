@@ -5,15 +5,17 @@
 #include "PrerequisitesDirect3D11.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include "Pomdog/Graphics/PipelineState.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #include <wrl/client.h>
 
 namespace Pomdog::Detail::Direct3D11 {
 
 class PipelineStateDirect3D11 final : public PipelineState {
 public:
-    PipelineStateDirect3D11(
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(
         ID3D11Device* device,
-        const PipelineStateDescription& description);
+        const PipelineStateDescription& description) noexcept;
 
     void Apply(ID3D11DeviceContext* deviceContext, FLOAT const blendFactor[4]);
 
