@@ -12,7 +12,7 @@
 #include "Pomdog/Application/GameClock.hpp"
 #include "Pomdog/Application/GameHost.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <memory>
@@ -25,11 +25,12 @@ namespace Pomdog::Detail::X11 {
 
 class GameHostX11 final : public GameHost {
 public:
-    GameHostX11() = delete;
-
-    explicit GameHostX11(const PresentationParameters& presentationParameters);
+    GameHostX11() noexcept;
 
     ~GameHostX11();
+
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(const PresentationParameters& presentationParameters);
 
     void Run(Game& game);
 

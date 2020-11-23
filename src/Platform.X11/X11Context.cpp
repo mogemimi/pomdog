@@ -1,54 +1,48 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "X11Context.hpp"
-#include "Pomdog/Utility/Exception.hpp"
 
 namespace Pomdog::Detail::X11 {
-namespace {
 
-void InitializeAtoms(::Display* display, X11AtomCache& atoms)
+X11Context::X11Context() noexcept = default;
+
+std::shared_ptr<Error>
+X11Context::Initialize() noexcept
 {
+    ::XInitThreads();
+
+    auto& atoms = this->Atoms;
+    auto& display = this->Display;
+
+    // NOTE: Connect to the X server.
+    display = ::XOpenDisplay(nullptr);
+    if (display == nullptr) {
+        return Errors::New("XOpenDisplay() failed");
+    }
+
+    // NOTE: Initialize Atoms.
     atoms.WmDeleteWindow = XInternAtom(display, "WM_DELETE_WINDOW", False);
     atoms.Utf8String = XInternAtom(display, "UTF8_STRING", False);
 
-    ([&] {
+    [&] {
         auto netSupported = XInternAtom(display, "_NET_SUPPORTED", True);
-
         if (netSupported == None) {
             return;
         }
 
-        auto netSupportingWmCheck =
-            XInternAtom(display, "_NET_SUPPORTING_WM_CHECK", True);
-
+        auto netSupportingWmCheck = XInternAtom(display, "_NET_SUPPORTING_WM_CHECK", True);
         if (netSupportingWmCheck == None) {
             return;
         }
 
         atoms.NetWmName = XInternAtom(display, "_NET_WM_NAME", True);
         atoms.NetWmIconName = XInternAtom(display, "_NET_WM_ICON_NAME", True);
-    })();
+    }();
+
+    return nullptr;
 }
 
-} // namespace
-
-X11Context::X11Context()
-    : Display(nullptr)
-{
-    ::XInitThreads();
-
-    Display = ::XOpenDisplay(nullptr);
-    if (Display == nullptr) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Error: XOpenDisplay");
-    }
-
-    //int screen = DefaultScreen(display);
-    //::Window rootWindow = RootWindow(display, screen);
-
-    InitializeAtoms(Display, Atoms);
-}
-
-X11Context::~X11Context()
+X11Context::~X11Context() noexcept
 {
     if (Display != nullptr) {
         ::XCloseDisplay(Display);

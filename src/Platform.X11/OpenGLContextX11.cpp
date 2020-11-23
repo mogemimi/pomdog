@@ -3,38 +3,38 @@
 #include "OpenGLContextX11.hpp"
 #include "GameWindowX11.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
 #include <X11/Xlib.h>
 #include <cstring>
+#include <utility>
 
 namespace Pomdog::Detail::X11 {
 namespace {
 
-class GLContextErrorHelper final {
-private:
-    static bool contextErrorOccurred;
+int trappedErrorCode = 0;
 
-public:
-    static int ContextErrorHandler(Display*, XErrorEvent*) noexcept
-    {
-        contextErrorOccurred = true;
-        return 0;
-    }
+[[nodiscard]] int
+GLContextErrorHandler([[maybe_unused]] Display* display, XErrorEvent* error) noexcept
+{
+    trappedErrorCode = error->error_code;
+    return 0;
+}
 
-    static void Reset() noexcept
-    {
-        contextErrorOccurred = false;
-    }
+[[nodiscard]] XErrorHandler
+TrapErrors(XErrorHandler errorHandler) noexcept
+{
+    trappedErrorCode = 0;
+    return XSetErrorHandler(errorHandler);
+}
 
-    static bool HasError() noexcept
-    {
-        return contextErrorOccurred;
-    }
-};
+[[nodiscard]] int
+UntrapErrors(XErrorHandler oldErrorHandler) noexcept
+{
+    XSetErrorHandler(oldErrorHandler);
+    return trappedErrorCode;
+}
 
-bool GLContextErrorHelper::contextErrorOccurred = false;
-
-static bool IsExtensionSupported(const char* extensionList, const char* extension)
+[[nodiscard]] bool
+IsExtensionSupported(const char* extensionList, const char* extension) noexcept
 {
     POMDOG_ASSERT(extensionList != nullptr);
     POMDOG_ASSERT(extension != nullptr);
@@ -64,13 +64,17 @@ static bool IsExtensionSupported(const char* extensionList, const char* extensio
 
 } // namespace
 
-OpenGLContextX11::OpenGLContextX11(
+OpenGLContextX11::OpenGLContextX11() noexcept = default;
+
+std::shared_ptr<Error>
+OpenGLContextX11::Initialize(
     const std::shared_ptr<GameWindowX11>& windowIn,
-    const GLXFBConfig& framebufferConfig)
-    : window(windowIn)
-    , glxContext(0)
-    , isOpenGL3Supported(false)
+    const GLXFBConfig& framebufferConfig) noexcept
 {
+    window = windowIn;
+    glxContext = nullptr;
+    isOpenGL3Supported = false;
+
     POMDOG_ASSERT(framebufferConfig != nullptr);
     POMDOG_ASSERT(window != nullptr);
 
@@ -81,17 +85,23 @@ OpenGLContextX11::OpenGLContextX11(
     auto glXCreateContextAttribsARB = reinterpret_cast<PFNGLXCREATECONTEXTATTRIBSARBPROC>(
         glXGetProcAddressARB(reinterpret_cast<const GLubyte*>("glXCreateContextAttribsARB")));
 
-    GLContextErrorHelper::Reset();
-    XErrorHandler oldHandler = XSetErrorHandler(GLContextErrorHelper::ContextErrorHandler);
-
     if (!IsExtensionSupported(glxExtensionsString, "GLX_ARB_create_context")
         || glXCreateContextAttribsARB == nullptr) {
-        ///@note
-        /// glXCreateContextAttribsARB() not found
-        /// ... This platform is not supported OpenGL 3.0 or later.
-        /// ... using old-style GLX context
+        // NOTE:
+        // glXCreateContextAttribsARB() not found
+        // ... This platform is not supported OpenGL 3.0 or later.
+        // ... using old-style GLX context
+        auto oldHandler = TrapErrors(GLContextErrorHandler);
         glxContext = glXCreateNewContext(
-            display, framebufferConfig, GLX_RGBA_TYPE, 0, True);
+            display,
+            framebufferConfig,
+            GLX_RGBA_TYPE,
+            0,
+            True);
+        XSync(display, False);
+        if (auto errorCode = UntrapErrors(oldHandler); errorCode != 0) {
+            return Errors::New("glXCreateNewContext() failed: error code = " + std::to_string(errorCode));
+        }
     }
     else {
         int contextAttributes[] = {
@@ -103,43 +113,49 @@ OpenGLContextX11::OpenGLContextX11(
             None,
         };
 
+        auto oldHandler = TrapErrors(GLContextErrorHandler);
         glxContext = glXCreateContextAttribsARB(
-            display, framebufferConfig, 0, True, contextAttributes);
-
+            display,
+            framebufferConfig,
+            0,
+            True,
+            contextAttributes);
         XSync(display, False);
-
-        if (!GLContextErrorHelper::HasError() && glxContext != 0) {
-            // OK
+        if (auto errorCode = UntrapErrors(oldHandler); (errorCode == 0) && (glxContext != 0)) {
+            // NOTE: OK
             isOpenGL3Supported = true;
         }
-        else {
-            //GLX_CONTEXT_MAJOR_VERSION_ARB = 2
+
+        if (!isOpenGL3Supported) {
+            // NOTE: fallback
+
+            // GLX_CONTEXT_MAJOR_VERSION_ARB = 2
             contextAttributes[1] = 2;
-            //GLX_CONTEXT_MINOR_VERSION_ARB = 0;
+            // GLX_CONTEXT_MINOR_VERSION_ARB = 0;
             contextAttributes[3] = 0;
 
-            GLContextErrorHelper::Reset();
+            oldHandler = TrapErrors(GLContextErrorHandler);
             glxContext = glXCreateContextAttribsARB(
-                display, framebufferConfig, 0, True, contextAttributes);
+                display,
+                framebufferConfig,
+                0,
+                True,
+                contextAttributes);
+            XSync(display, False);
+            if (auto errorCode = UntrapErrors(oldHandler); errorCode != 0) {
+                return Errors::New("glXCreateContextAttribsARB() failed: error code = " + std::to_string(errorCode));
+            }
         }
-    }
-
-    XSync(display, False);
-
-    XSetErrorHandler(oldHandler);
-
-    if (GLContextErrorHelper::HasError() || (glxContext == 0)) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "Failed to create an OpenGL context");
     }
 
     if (glxContext == nullptr) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "Error: glXCreateContext");
+        return Errors::New("glxContext is nullptr");
     }
+
+    return nullptr;
 }
 
-OpenGLContextX11::~OpenGLContextX11()
+OpenGLContextX11::~OpenGLContextX11() noexcept
 {
     if (glxContext != nullptr) {
         POMDOG_ASSERT(window != nullptr);

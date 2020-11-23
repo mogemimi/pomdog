@@ -4,6 +4,7 @@
 
 #include "../Graphics.GL4/OpenGLContext.hpp"
 #include "../Graphics.GL4/OpenGLPrerequisites.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #include <GL/glx.h>
 #include <memory>
 
@@ -13,15 +14,14 @@ class GameWindowX11;
 
 class OpenGLContextX11 final : public GL4::OpenGLContext {
 public:
-    OpenGLContextX11() = delete;
-    OpenGLContextX11(const OpenGLContextX11&) = delete;
-    OpenGLContextX11& operator=(const OpenGLContextX11&) = delete;
+    OpenGLContextX11() noexcept;
 
-    OpenGLContextX11(
+    ~OpenGLContextX11() noexcept;
+
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(
         const std::shared_ptr<GameWindowX11>& window,
-        const GLXFBConfig& framebufferConfig);
-
-    ~OpenGLContextX11();
+        const GLXFBConfig& framebufferConfig) noexcept;
 
     void MakeCurrent() override;
 
@@ -29,12 +29,12 @@ public:
 
     void SwapBuffers() override;
 
-    bool IsOpenGL3Supported() const noexcept;
+    [[nodiscard]] bool IsOpenGL3Supported() const noexcept;
 
 private:
     std::shared_ptr<GameWindowX11> window;
-    ::GLXContext glxContext;
-    bool isOpenGL3Supported;
+    ::GLXContext glxContext = nullptr;
+    bool isOpenGL3Supported = false;
 };
 
 } // namespace Pomdog::Detail::X11

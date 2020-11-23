@@ -4,6 +4,7 @@
 #include "GameHostX11.hpp"
 #include "Pomdog/Application/Game.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
+#include "Pomdog/Utility/Exception.hpp"
 #include <utility>
 
 namespace Pomdog::X11 {
@@ -59,7 +60,11 @@ void Bootstrap::Run(
     std::unique_ptr<Game> game;
 
     try {
-        gameHost = std::make_shared<GameHostX11>(presentationParameters);
+        gameHost = std::make_shared<GameHostX11>();
+        if (auto err = gameHost->Initialize(presentationParameters); err != nullptr) {
+            // FIXME: error handling without using exceptions
+            POMDOG_THROW_EXCEPTION(std::runtime_error, "failed to initialize GameHostX11: " + err->ToString());
+        }
 
         POMDOG_ASSERT(createApp);
         game = createApp(gameHost);

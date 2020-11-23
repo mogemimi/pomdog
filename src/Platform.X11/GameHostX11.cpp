@@ -3,10 +3,10 @@
 #include "GameHostX11.hpp"
 #include "GamepadFactory.hpp"
 #include "../Audio.OpenAL/AudioEngineAL.hpp"
-#include "../Input.Backends/NativeGamepad.hpp"
+#include "../Graphics.Backends/GraphicsCommandQueueImmediate.hpp"
 #include "../Graphics.GL4/GraphicsContextGL4.hpp"
 #include "../Graphics.GL4/GraphicsDeviceGL4.hpp"
-#include "../Graphics.Backends/GraphicsCommandQueueImmediate.hpp"
+#include "../Input.Backends/NativeGamepad.hpp"
 #include "Pomdog/Application/Game.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Graphics/GraphicsCommandQueue.hpp"
@@ -16,12 +16,12 @@
 #include "Pomdog/Network/HTTPClient.hpp"
 #include "Pomdog/Network/IOService.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
 #include "Pomdog/Utility/FileSystem.hpp"
 #include "Pomdog/Utility/PathHelper.hpp"
 #include <chrono>
 #include <string>
 #include <thread>
+#include <tuple>
 #include <vector>
 
 using Pomdog::Detail::NativeGamepad;
@@ -32,7 +32,8 @@ using Pomdog::Detail::OpenAL::AudioEngineAL;
 namespace Pomdog::Detail::X11 {
 namespace {
 
-bool CheckFrameBufferConfigSupport(::Display* display)
+[[nodiscard]] bool
+CheckFrameBufferConfigSupport(::Display* display) noexcept
 {
     int majorVer = 0;
     int minorVer = 0;
@@ -44,13 +45,13 @@ bool CheckFrameBufferConfigSupport(::Display* display)
     return (((majorVer == 1) && (minorVer >= 3)) || (majorVer >= 2));
 }
 
-GLXFBConfig ChooseFramebufferConfig(
+[[nodiscard]] std::tuple<GLXFBConfig, std::shared_ptr<Error>>
+ChooseFramebufferConfig(
     Display* display,
     const PresentationParameters& presentationParameters)
 {
     if (!CheckFrameBufferConfigSupport(display)) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "GLX of version lower than 1.3.2 is not supported.");
+        return std::make_tuple(nullptr, Errors::New("GLX of version lower than 1.3.2 is not supported."));
     }
 
     std::vector<int> visualAttributes = {
@@ -133,11 +134,10 @@ GLXFBConfig ChooseFramebufferConfig(
         visualAttributes.data(), &framebufferConfigCount);
 
     if ((framebufferConfigs == nullptr) || (framebufferConfigCount <= 0)) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "Failed to retrieve FBConfig");
+        return std::make_tuple(nullptr, Errors::New("failed to retrieve FBConfig"));
     }
 
-    std::optional<GLXFBConfig> bestConfig;
+    GLXFBConfig bestConfig = nullptr;
     int bestSampleCount = 0;
 
     for (int index = 0; index < framebufferConfigCount; ++index) {
@@ -150,7 +150,7 @@ GLXFBConfig ChooseFramebufferConfig(
             glXGetFBConfigAttrib(display, framebufferConfig, GLX_SAMPLE_BUFFERS, &sampleBuffers);
             glXGetFBConfigAttrib(display, framebufferConfig, GLX_SAMPLES, &sampleCount);
 
-            if (!bestConfig || ((sampleBuffers != 0) && (sampleCount > bestSampleCount))) {
+            if ((bestConfig == nullptr) || ((sampleBuffers != 0) && (sampleCount > bestSampleCount))) {
                 bestConfig = framebufferConfig;
                 bestSampleCount = sampleCount;
             }
@@ -161,12 +161,11 @@ GLXFBConfig ChooseFramebufferConfig(
 
     XFree(framebufferConfigs);
 
-    if (!bestConfig) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "Cannot find any matching FBConfig");
+    if (bestConfig == nullptr) {
+        return std::make_tuple(nullptr, Errors::New("cannot find any matching FBConfig"));
     }
 
-    return *bestConfig;
+    return std::make_tuple(bestConfig, nullptr);
 }
 
 } // namespace
@@ -175,9 +174,10 @@ GLXFBConfig ChooseFramebufferConfig(
 
 class GameHostX11::Impl final {
 public:
-    explicit Impl(const PresentationParameters& presentationParameters);
-
     ~Impl();
+
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(const PresentationParameters& presentationParameters);
 
     void Run(Game& game);
 
@@ -207,55 +207,69 @@ public:
     Duration presentationInterval;
     SurfaceFormat backBufferSurfaceFormat;
     DepthFormat backBufferDepthStencilFormat;
-    bool exitRequest;
+    bool exitRequest = false;
 };
 
-GameHostX11::Impl::Impl(const PresentationParameters& presentationParameters)
-    : backBufferSurfaceFormat(presentationParameters.BackBufferFormat)
-    , backBufferDepthStencilFormat(presentationParameters.DepthStencilFormat)
-    , exitRequest(false)
+std::shared_ptr<Error>
+GameHostX11::Impl::Initialize(const PresentationParameters& presentationParameters)
 {
+    backBufferSurfaceFormat = presentationParameters.BackBufferFormat;
+    backBufferDepthStencilFormat = presentationParameters.DepthStencilFormat;
+    exitRequest = false;
+
     POMDOG_ASSERT(presentationParameters.PresentationInterval > 0);
     presentationInterval = Duration(1.0) / presentationParameters.PresentationInterval;
 
+    // NOTE: Create X11 context.
     x11Context = std::make_shared<X11Context>();
+    if (auto err = x11Context->Initialize(); err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to initialize X11Context");
+    }
 
-    auto framebufferConfig = ChooseFramebufferConfig(
-        x11Context->Display, presentationParameters);
+    auto [framebufferConfig, framebufferConfigErr] =
+        ChooseFramebufferConfig(x11Context->Display, presentationParameters);
+    if (framebufferConfigErr != nullptr) {
+        return Errors::Wrap(std::move(framebufferConfigErr), "ChooseFramebufferConfig() failed");
+    }
 
-    window = std::make_shared<GameWindowX11>(
-        x11Context,
-        framebufferConfig,
-        presentationParameters.BackBufferWidth,
-        presentationParameters.BackBufferHeight);
+    // NOTE: Create a game window.
+    window = std::make_shared<GameWindowX11>();
+    if (auto err = window->Initialize(
+            x11Context,
+            framebufferConfig,
+            presentationParameters.BackBufferWidth,
+            presentationParameters.BackBufferHeight);
+        err != nullptr) {
+        return Errors::Wrap(std::move(framebufferConfigErr), "failed to initialize GameWindowX11");
+    }
 
-    openGLContext = std::make_shared<OpenGLContextX11>(window, framebufferConfig);
-
+    // NOTE: Create an OpenGL context.
+    openGLContext = std::make_shared<OpenGLContextX11>();
+    if (auto err = openGLContext->Initialize(window, framebufferConfig); err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to initialize OpenGLContextX11");
+    }
     if (!openGLContext->IsOpenGL3Supported()) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "Pomdog doesn't support versions of OpenGL lower than 3.3/4.0.");
+        return Errors::New("Pomdog doesn't support versions of OpenGL lower than 3.3/4.0.");
     }
 
     openGLContext->MakeCurrent();
 
     auto const errorCode = glewInit();
     if (GLEW_OK != errorCode) {
-        auto description = reinterpret_cast<const char*>(glewGetErrorString(errorCode));
-        POMDOG_THROW_EXCEPTION(std::runtime_error, description);
+        std::string description = reinterpret_cast<const char*>(glewGetErrorString(errorCode));
+        return Errors::New("glewInit() failed: " + description);
     }
 
     // NOTE: Create a graphics device.
-    graphicsDevice = std::make_shared<GraphicsDeviceGL4>(presentationParameters);
+    graphicsDevice = std::make_shared<GraphicsDeviceGL4>();
     if (auto err = graphicsDevice->Initialize(presentationParameters); err != nullptr) {
-        // FIXME: error handling
-        Log::Warning("Pomdog", err->ToString());
+        return Errors::Wrap(std::move(err), "failed to initialize GraphicsDeviceGL4");
     }
 
     // NOTE: Create a graphics context.
     graphicsContext = std::make_shared<GraphicsContextGL4>();
     if (auto err = graphicsContext->Initialize(openGLContext, graphicsDevice); err != nullptr) {
-        // FIXME: error handling
-        Log::Warning("Pomdog", err->ToString());
+        return Errors::Wrap(std::move(err), "failed to initialize GraphicsContextGL4");
     }
 
     graphicsCommandQueue = std::make_shared<GraphicsCommandQueueImmediate>(graphicsContext);
@@ -263,8 +277,7 @@ GameHostX11::Impl::Impl(const PresentationParameters& presentationParameters)
     // NOTE: Create audio engine.
     audioEngine = std::make_shared<AudioEngineAL>();
     if (auto err = audioEngine->Initialize(); err != nullptr) {
-        // FIXME: error handling
-        Log::Warning("Pomdog", err->ToString());
+        return Errors::Wrap(std::move(err), "failed to initialize AudioEngineAL");
     }
 
     keyboard = std::make_unique<KeyboardX11>(x11Context->Display);
@@ -278,9 +291,11 @@ GameHostX11::Impl::Impl(const PresentationParameters& presentationParameters)
 
     ioService = std::make_unique<IOService>(&clock);
     if (auto err = ioService->Initialize(); err != nullptr) {
-        Log::Warning("Pomdog", err->ToString());
+        return Errors::Wrap(std::move(err), "failed to initialize IOService");
     }
     httpClient = std::make_unique<HTTPClient>(ioService.get());
+
+    return nullptr;
 }
 
 GameHostX11::Impl::~Impl()
@@ -404,12 +419,19 @@ void GameHostX11::Impl::RenderFrame(Game& game)
 
 // MARK: - GameHostX11
 
-GameHostX11::GameHostX11(const PresentationParameters& presentationParameters)
-    : impl(std::make_unique<Impl>(presentationParameters))
+GameHostX11::GameHostX11() noexcept
+    : impl(std::make_unique<Impl>())
 {
 }
 
 GameHostX11::~GameHostX11() = default;
+
+std::shared_ptr<Error>
+GameHostX11::Initialize(const PresentationParameters& presentationParameters)
+{
+    POMDOG_ASSERT(impl != nullptr);
+    return impl->Initialize(presentationParameters);
+}
 
 void GameHostX11::Run(Game& game)
 {

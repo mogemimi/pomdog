@@ -7,10 +7,10 @@
 #include "Pomdog/Basic/Platform.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
 #include <X11/Xutil.h>
 #include <X11/cursorfont.h>
 #include <optional>
+#include <utility>
 
 namespace Pomdog::Detail::X11 {
 namespace {
@@ -102,22 +102,26 @@ void UpdateMouseCursor(::Display* display, ::Window window, std::optional<MouseC
 
 } // namespace
 
-GameWindowX11::GameWindowX11(
+GameWindowX11::GameWindowX11() = default;
+
+std::shared_ptr<Error>
+GameWindowX11::Initialize(
     const std::shared_ptr<X11Context const>& x11ContextIn,
     GLXFBConfig framebufferConfig,
     int width,
-    int height)
-    : x11Context(x11ContextIn)
-    , framebufferConfigID(0)
-    , colormap(0)
-    , window(0)
-    , inputMethod(nullptr)
-    , inputContext(nullptr)
-    , mouseCursor(MouseCursor::Arrow)
-    , allowUserResizing(true)
-    , isMinimized(false)
-    , isMouseCursorVisible(true)
+    int height) noexcept
 {
+    x11Context = x11ContextIn;
+    framebufferConfigID = 0;
+    colormap = 0;
+    window = 0;
+    inputMethod = nullptr;
+    inputContext = nullptr;
+    mouseCursor = MouseCursor::Arrow;
+    allowUserResizing = true;
+    isMinimized = false;
+    isMouseCursorVisible = true;
+
     POMDOG_ASSERT(x11Context);
 
     auto display = x11Context->Display;
@@ -125,9 +129,8 @@ GameWindowX11::GameWindowX11(
     glXGetFBConfigAttrib(display, framebufferConfig, GLX_FBCONFIG_ID, &framebufferConfigID);
 
     auto visualInfo = glXGetVisualFromFBConfig(display, framebufferConfig);
-
     if (visualInfo == nullptr) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Error: glXGetVisualFromFBConfig");
+        return Errors::New("glXGetVisualFromFBConfig() failed");
     }
 
     XLockDisplay(display);
@@ -152,15 +155,24 @@ GameWindowX11::GameWindowX11(
     constexpr unsigned long windowAttributeMask = CWBorderPixel | CWColormap | CWEventMask;
     constexpr unsigned int borderWidth = 0;
 
-    window = ::XCreateWindow(display, rootWindow,
-        0, 0, width, height, borderWidth,
-        visualInfo->depth, InputOutput, visualInfo->visual,
-        windowAttributeMask, &windowAttributes);
+    window = ::XCreateWindow(
+        display,
+        rootWindow,
+        0,
+        0,
+        width,
+        height,
+        borderWidth,
+        visualInfo->depth,
+        InputOutput,
+        visualInfo->visual,
+        windowAttributeMask,
+        &windowAttributes);
 
     ::XFree(visualInfo);
 
     if (window == 0) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to create window");
+        return Errors::New("XCreateWindow() failed");
     }
 
     // NOTE: Put the window on screen
@@ -180,7 +192,7 @@ GameWindowX11::GameWindowX11(
 
     inputMethod = ::XOpenIM(display, nullptr, nullptr, nullptr);
     if (inputMethod == nullptr) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Could not open input method");
+        return Errors::New("could not open input method");
     }
 
     const auto hasInputMethodStyle = [&]() -> bool {
@@ -201,7 +213,7 @@ GameWindowX11::GameWindowX11(
     }();
 
     if (!hasInputMethodStyle) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "XIM can't get styles");
+        return Errors::New("XIM can't get styles");
     }
 
     inputContext = ::XCreateIC(
@@ -213,10 +225,12 @@ GameWindowX11::GameWindowX11(
         nullptr);
 
     if (inputContext == nullptr) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Could not open input context");
+        return Errors::New("could not open input context");
     }
 
     ::XSetICFocus(inputContext);
+
+    return nullptr;
 }
 
 GameWindowX11::~GameWindowX11()
