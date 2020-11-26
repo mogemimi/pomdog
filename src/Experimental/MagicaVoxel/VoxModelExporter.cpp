@@ -5,23 +5,14 @@
 #include "Pomdog/Content/Utility/MakeFourCC.hpp"
 #include "Pomdog/Experimental/MagicaVoxel/VoxModel.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
 #include <algorithm>
 #include <fstream>
 #include <utility>
 
-namespace Pomdog {
-namespace MagicaVoxel {
-namespace {
+namespace Pomdog::MagicaVoxel::VoxModelExporter {
 
-std::string Error(const std::string& assetName, const std::string& description)
-{
-    return description + (": " + assetName);
-}
-
-} // namespace
-
-void VoxModelExporter::Export(const MagicaVoxel::VoxModel& model, const std::string& filePath)
+[[nodiscard]] std::shared_ptr<Error>
+Export(const VoxModel& model, const std::string& filePath) noexcept
 {
     using Detail::MakeFourCC;
 
@@ -32,7 +23,7 @@ void VoxModelExporter::Export(const MagicaVoxel::VoxModel& model, const std::str
     constexpr auto IdXYZI = MakeFourCC('X', 'Y', 'Z', 'I');
     constexpr auto IdRGBA = MakeFourCC('R', 'G', 'B', 'A');
 
-    struct Size {
+    struct Size final {
         std::int32_t X;
         std::int32_t Y;
         std::int32_t Z;
@@ -89,7 +80,7 @@ void VoxModelExporter::Export(const MagicaVoxel::VoxModel& model, const std::str
     std::ofstream stream(filePath, std::ios::binary);
 
     if (stream.fail()) {
-        POMDOG_THROW_EXCEPTION(std::invalid_argument, Error(filePath, "cannot open file"));
+        return Errors::New("cannot open file: " + filePath);
     }
 
     stream.write(reinterpret_cast<const char*>(&fourCC), sizeof(fourCC));
@@ -102,7 +93,8 @@ void VoxModelExporter::Export(const MagicaVoxel::VoxModel& model, const std::str
     stream.write(reinterpret_cast<const char*>(voxels.data()), sizeof(voxels.front()) * voxels.size());
     stream.write(reinterpret_cast<const char*>(&rgbaChunk), sizeof(rgbaChunk));
     stream.write(reinterpret_cast<const char*>(colors.data()), sizeof(colors.front()) * colors.size());
+
+    return nullptr;
 }
 
-} // namespace MagicaVoxel
-} // namespace Pomdog
+} // namespace Pomdog::MagicaVoxel::VoxModelExporter

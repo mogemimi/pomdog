@@ -4,8 +4,7 @@
 
 #include <cstdint>
 
-namespace Pomdog {
-namespace MagicaVoxel {
+namespace Pomdog::MagicaVoxel {
 
 struct VoxChunkHeader final {
     std::int32_t ID;
@@ -13,5 +12,4 @@ struct VoxChunkHeader final {
     std::int32_t ChildrenSize;
 };
 
-} // namespace MagicaVoxel
-} // namespace Pomdog
+} // namespace Pomdog::MagicaVoxel

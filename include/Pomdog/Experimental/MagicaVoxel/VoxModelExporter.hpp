@@ -3,18 +3,17 @@
 #pragma once
 
 #include "Pomdog/Basic/Export.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #include <string>
 
-namespace Pomdog {
-namespace MagicaVoxel {
-
+namespace Pomdog::MagicaVoxel {
 class VoxModel;
+} // namespace Pomdog::MagicaVoxel
 
-struct POMDOG_EXPORT VoxModelExporter final {
-    static void Export(
-        const MagicaVoxel::VoxModel& model,
-        const std::string& filePath);
-};
+namespace Pomdog::MagicaVoxel::VoxModelExporter {
 
-} // namespace MagicaVoxel
-} // namespace Pomdog
+[[nodiscard]] POMDOG_EXPORT
+std::shared_ptr<Error>
+Export(const VoxModel& model, const std::string& filePath) noexcept;
+
+} // namespace Pomdog::MagicaVoxel::VoxModelExporter

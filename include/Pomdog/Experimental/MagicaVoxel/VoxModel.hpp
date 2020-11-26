@@ -7,8 +7,7 @@
 #include <cstdint>
 #include <vector>
 
-namespace Pomdog {
-namespace MagicaVoxel {
+namespace Pomdog::MagicaVoxel {
 
 struct Voxel final {
     std::uint8_t X;
@@ -26,5 +25,4 @@ public:
     std::int32_t Z;
 };
 
-} // namespace MagicaVoxel
-} // namespace Pomdog
+} // namespace Pomdog::MagicaVoxel
