@@ -3,7 +3,6 @@
 #include "Pomdog/Experimental/TexturePacker/TextureAtlasLoader.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
 #include <algorithm>
 #include <fstream>
 #include <sstream>
@@ -57,6 +56,10 @@ TextureAtlasLoader::Load(const std::string& filePath)
 
     std::string line;
     while (std::getline(stream, line)) {
+        while (!line.empty() && (line.back() == '\r')) {
+            line.pop_back();
+        }
+
         switch (state) {
         case ParserState::ParsingError: {
             break;
