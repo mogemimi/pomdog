@@ -269,31 +269,42 @@ SpriteBatch::Impl::Impl(
             .AddInputSlot(InputClassification::InputPerInstance, 1)
             .Float4().Float4().Float4().Float4().Float4();
 
-        auto vertexShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
+        auto vertexShaderBuilder = assets.CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
             .SetGLSL(Builtin_GLSL_SpriteBatch_VS, std::strlen(Builtin_GLSL_SpriteBatch_VS))
             .SetHLSLPrecompiled(BuiltinHLSL_SpriteBatch_VS, sizeof(BuiltinHLSL_SpriteBatch_VS))
             .SetMetal(Builtin_Metal_SpriteBatch, sizeof(Builtin_Metal_SpriteBatch), "SpriteBatchVS");
 
-        auto pixelShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::PixelShader);
+        auto [vertexShader, vertexShaderErr] = vertexShaderBuilder.Build();
+        if (vertexShaderErr != nullptr) {
+            // FIXME: error handling
+        }
+
+        auto pixelShaderBuilder = assets.CreateBuilder<Shader>(ShaderPipelineStage::PixelShader);
 
         switch (pixelShaderMode) {
         case SpriteBatchPixelShaderMode::Default:
-            pixelShader.SetGLSL(Builtin_GLSL_SpriteBatch_PS, std::strlen(Builtin_GLSL_SpriteBatch_PS));
-            pixelShader.SetHLSLPrecompiled(BuiltinHLSL_SpriteBatch_PS, sizeof(BuiltinHLSL_SpriteBatch_PS));
-            pixelShader.SetMetal(Builtin_Metal_SpriteBatch, sizeof(Builtin_Metal_SpriteBatch), "SpriteBatchPS");
+            pixelShaderBuilder.SetGLSL(Builtin_GLSL_SpriteBatch_PS, std::strlen(Builtin_GLSL_SpriteBatch_PS));
+            pixelShaderBuilder.SetHLSLPrecompiled(BuiltinHLSL_SpriteBatch_PS, sizeof(BuiltinHLSL_SpriteBatch_PS));
+            pixelShaderBuilder.SetMetal(Builtin_Metal_SpriteBatch, sizeof(Builtin_Metal_SpriteBatch), "SpriteBatchPS");
             break;
         case SpriteBatchPixelShaderMode::DistanceField:
-            pixelShader.SetGLSL(Builtin_GLSL_SpriteBatchDistanceField_PS, std::strlen(Builtin_GLSL_SpriteBatchDistanceField_PS));
-            pixelShader.SetHLSLPrecompiled(BuiltinHLSL_SpriteBatchDistanceField_PS, sizeof(BuiltinHLSL_SpriteBatchDistanceField_PS));
-            pixelShader.SetMetal(Builtin_Metal_SpriteBatch, sizeof(Builtin_Metal_SpriteBatch), "SpriteBatchDistanceFieldPS");
+            pixelShaderBuilder.SetGLSL(Builtin_GLSL_SpriteBatchDistanceField_PS, std::strlen(Builtin_GLSL_SpriteBatchDistanceField_PS));
+            pixelShaderBuilder.SetHLSLPrecompiled(BuiltinHLSL_SpriteBatchDistanceField_PS, sizeof(BuiltinHLSL_SpriteBatchDistanceField_PS));
+            pixelShaderBuilder.SetMetal(Builtin_Metal_SpriteBatch, sizeof(Builtin_Metal_SpriteBatch), "SpriteBatchDistanceFieldPS");
             break;
         }
 
-        pipelineState = assets.CreateBuilder<PipelineState>()
+        auto [pixelShader, pixelShaderErr] = pixelShaderBuilder.Build();
+        if (pixelShaderErr != nullptr) {
+            // FIXME: error handling
+        }
+
+        std::shared_ptr<Error> pipelineStateErr;
+        std::tie(pipelineState, pipelineStateErr) = assets.CreateBuilder<PipelineState>()
             .SetRenderTargetViewFormat(*renderTargetViewFormat)
             .SetDepthStencilViewFormat(*depthStencilViewFormat)
-            .SetVertexShader(vertexShader.Build())
-            .SetPixelShader(pixelShader.Build())
+            .SetVertexShader(std::move(vertexShader))
+            .SetPixelShader(std::move(pixelShader))
             .SetInputLayout(inputLayout.CreateInputLayout())
             .SetPrimitiveTopology(PrimitiveTopology::TriangleList)
             .SetBlendState(*blendDesc)
@@ -301,6 +312,10 @@ SpriteBatch::Impl::Impl(
             .SetRasterizerState(*rasterizerDesc)
             .SetConstantBufferBindSlot("SpriteBatchConstants", 0)
             .Build();
+
+        if (pipelineStateErr != nullptr) {
+            // FIXME: error handling
+        }
     }
 
     spriteQueue.reserve(MinBatchSize);

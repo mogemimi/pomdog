@@ -107,29 +107,43 @@ LineBatch::Impl::Impl(
         auto inputLayout = InputLayoutHelper{}
             .Float3().Float4();
 
-        auto vertexShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
+        auto vertexShaderBuilder = assets.CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
             .SetGLSL(Builtin_GLSL_LineBatch_VS, std::strlen(Builtin_GLSL_LineBatch_VS))
             .SetHLSLPrecompiled(BuiltinHLSL_LineBatch_VS, sizeof(BuiltinHLSL_LineBatch_VS))
             .SetMetal(Builtin_Metal_LineBatch, std::strlen(Builtin_Metal_LineBatch), "LineBatchVS");
 
-        auto pixelShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
+        auto pixelShaderBuilder = assets.CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
             .SetGLSL(Builtin_GLSL_LineBatch_PS, std::strlen(Builtin_GLSL_LineBatch_PS))
             .SetHLSLPrecompiled(BuiltinHLSL_LineBatch_PS, sizeof(BuiltinHLSL_LineBatch_PS))
             .SetMetal(Builtin_Metal_LineBatch, std::strlen(Builtin_Metal_LineBatch), "LineBatchPS");
 
+        auto [vertexShader, vertexShaderErr] = vertexShaderBuilder.Build();
+        if (vertexShaderErr != nullptr) {
+            // FIXME: error handling
+        }
+
+        auto [pixelShader, pixelShaderErr] = pixelShaderBuilder.Build();
+        if (pixelShaderErr != nullptr) {
+            // FIXME: error handling
+        }
+
         auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
-        pipelineState = assets.CreateBuilder<PipelineState>()
+        std::shared_ptr<Error> pipelineStateErr;
+        std::tie(pipelineState, pipelineStateErr) = assets.CreateBuilder<PipelineState>()
             .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
             .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
-            .SetVertexShader(vertexShader.Build())
-            .SetPixelShader(pixelShader.Build())
+            .SetVertexShader(std::move(vertexShader))
+            .SetPixelShader(std::move(pixelShader))
             .SetInputLayout(inputLayout.CreateInputLayout())
             .SetPrimitiveTopology(PrimitiveTopology::LineList)
             .SetBlendState(BlendDescription::CreateNonPremultiplied())
             .SetDepthStencilState(DepthStencilDescription::CreateDefault())
             .SetConstantBufferBindSlot("TransformMatrix", 0)
             .Build();
+        if (pipelineStateErr != nullptr) {
+            // FIXME: error handling
+        }
     }
 
     constantBuffer = std::get<0>(graphicsDevice->CreateConstantBuffer(

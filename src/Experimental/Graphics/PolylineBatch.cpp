@@ -159,23 +159,34 @@ PolylineBatch::Impl::Impl(
         auto inputLayout = InputLayoutHelper{}
             .Float4().Float4().Float4().Float4();
 
-        auto vertexShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
+        auto vertexShaderBuilder = assets.CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
             .SetGLSL(Builtin_GLSL_PolylineBatch_VS, std::strlen(Builtin_GLSL_PolylineBatch_VS))
             .SetHLSLPrecompiled(BuiltinHLSL_PolylineBatch_VS, sizeof(BuiltinHLSL_PolylineBatch_VS))
             .SetMetal(Builtin_Metal_PolylineBatch, std::strlen(Builtin_Metal_PolylineBatch), "PolylineBatchVS");
 
-        auto pixelShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
+        auto pixelShaderBuilder = assets.CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
             .SetGLSL(Builtin_GLSL_PolylineBatch_PS, std::strlen(Builtin_GLSL_PolylineBatch_PS))
             .SetHLSLPrecompiled(BuiltinHLSL_PolylineBatch_PS, sizeof(BuiltinHLSL_PolylineBatch_PS))
             .SetMetal(Builtin_Metal_PolylineBatch, std::strlen(Builtin_Metal_PolylineBatch), "PolylineBatchPS");
 
+        auto [vertexShader, vertexShaderErr] = vertexShaderBuilder.Build();
+        if (vertexShaderErr != nullptr) {
+            // FIXME: error handling
+        }
+
+        auto [pixelShader, pixelShaderErr] = pixelShaderBuilder.Build();
+        if (pixelShaderErr != nullptr) {
+            // FIXME: error handling
+        }
+
         auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
-        pipelineState = assets.CreateBuilder<PipelineState>()
+        std::shared_ptr<Error> pipelineStateErr;
+        std::tie(pipelineState, pipelineStateErr) = assets.CreateBuilder<PipelineState>()
             .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
             .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
-            .SetVertexShader(vertexShader.Build())
-            .SetPixelShader(pixelShader.Build())
+            .SetVertexShader(std::move(vertexShader))
+            .SetPixelShader(std::move(pixelShader))
             .SetInputLayout(inputLayout.CreateInputLayout())
             .SetPrimitiveTopology(PrimitiveTopology::TriangleList)
             .SetBlendState(BlendDescription::CreateNonPremultiplied())
@@ -183,6 +194,9 @@ PolylineBatch::Impl::Impl(
             .SetRasterizerState(RasterizerDescription::CreateCullNone())
             .SetConstantBufferBindSlot("TransformMatrix", 0)
             .Build();
+        if (pipelineStateErr != nullptr) {
+            // FIXME: error handling
+        }
     }
 
     constantBuffer = std::get<0>(graphicsDevice->CreateConstantBuffer(

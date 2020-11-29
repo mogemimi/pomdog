@@ -66,17 +66,13 @@ CreateBasicEffect(AssetManager& assets, const BasicEffectDescription& desc)
 
     auto inputLayout = inputLayoutBuilder.CreateInputLayout();
 
-    auto vertexShaderBuilder = assets.CreateBuilder<Shader>(ShaderPipelineStage::VertexShader);
-
-    auto vertexShader = vertexShaderBuilder
+    auto [vertexShader, vertexShaderErr] = assets.CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
         .SetGLSL(sourceGLSLVS.data(), sourceGLSLVS.size())
         .SetHLSL(sourceHLSL.data(), sourceHLSL.size(), "BasicEffectVS")
         .SetMetal(sourceMetal.data(), sourceMetal.size(), "BasicEffectVS")
         .Build();
 
-    auto pixelShaderBuilder = assets.CreateBuilder<Shader>(ShaderPipelineStage::PixelShader);
-
-    auto pixelShader = pixelShaderBuilder
+    auto [pixelShader, pixelShaderErr] = assets.CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
         .SetGLSL(sourceGLSLPS.data(), sourceGLSLPS.size())
         .SetHLSL(sourceHLSL.data(), sourceHLSL.size(), "BasicEffectPS")
         .SetMetal(sourceMetal.data(), sourceMetal.size(), "BasicEffectPS")
@@ -85,6 +81,16 @@ CreateBasicEffect(AssetManager& assets, const BasicEffectDescription& desc)
     auto graphicsDevice = assets.GetGraphicsDevice();
 
     auto builder = assets.CreateBuilder<PipelineState>();
+    if (vertexShaderErr != nullptr) {
+        builder.SetError(std::move(vertexShaderErr));
+        return builder;
+    }
+
+    if (pixelShaderErr != nullptr) {
+        builder.SetError(std::move(pixelShaderErr));
+        return builder;
+    }
+
     builder.SetInputLayout(inputLayout);
     builder.SetVertexShader(std::move(vertexShader));
     builder.SetPixelShader(std::move(pixelShader));

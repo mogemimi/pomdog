@@ -69,6 +69,8 @@ public:
 
     const PipelineStateDescription& GetDescription() const;
 
+    void SetError(std::shared_ptr<Error>&& err);
+
 private:
     class Impl;
     std::unique_ptr<Impl> impl;

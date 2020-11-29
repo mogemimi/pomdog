@@ -291,21 +291,32 @@ BillboardBatchEffect::BillboardBatchEffect(
             .Float4()
             .Float4();
 
-        auto vertexShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
+        auto vertexShaderBuilder = assets.CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
             .SetGLSL(Builtin_GLSL_BillboardBatch_VS, std::strlen(Builtin_GLSL_BillboardBatch_VS))
             .SetHLSLPrecompiled(BuiltinHLSL_BillboardBatch_VS, sizeof(BuiltinHLSL_BillboardBatch_VS))
             .SetMetal(Builtin_Metal_BillboardBatch, sizeof(Builtin_Metal_BillboardBatch), "BillboardBatchVS");
 
-        auto pixelShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
+        auto pixelShaderBuilder = assets.CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
             .SetGLSL(Builtin_GLSL_BillboardBatch_PS, std::strlen(Builtin_GLSL_BillboardBatch_PS))
             .SetHLSLPrecompiled(BuiltinHLSL_BillboardBatch_PS, sizeof(BuiltinHLSL_BillboardBatch_PS))
             .SetMetal(Builtin_Metal_BillboardBatch, sizeof(Builtin_Metal_BillboardBatch), "BillboardBatchPS");
 
-        impl->pipelineState = assets.CreateBuilder<PipelineState>()
+        auto [vertexShader, vertexShaderErr] = vertexShaderBuilder.Build();
+        if (vertexShaderErr != nullptr) {
+            // FIXME: error handling
+        }
+
+        auto [pixelShader, pixelShaderErr] = pixelShaderBuilder.Build();
+        if (pixelShaderErr != nullptr) {
+            // FIXME: error handling
+        }
+
+        std::shared_ptr<Error> pipelineStateErr;
+        std::tie(impl->pipelineState, pipelineStateErr) = assets.CreateBuilder<PipelineState>()
             .SetRenderTargetViewFormat(*renderTargetViewFormat)
             .SetDepthStencilViewFormat(*depthStencilViewFormat)
-            .SetVertexShader(vertexShader.Build())
-            .SetPixelShader(pixelShader.Build())
+            .SetVertexShader(std::move(vertexShader))
+            .SetPixelShader(std::move(pixelShader))
             .SetInputLayout(inputLayout.CreateInputLayout())
             .SetPrimitiveTopology(PrimitiveTopology::TriangleList)
             .SetBlendState(*blendDesc)
@@ -313,6 +324,9 @@ BillboardBatchEffect::BillboardBatchEffect(
             .SetRasterizerState(*rasterizerDesc)
             .SetConstantBufferBindSlot("WorldConstants", 0)
             .Build();
+        if (pipelineStateErr != nullptr) {
+            // FIXME: error handling
+        }
     }
 }
 

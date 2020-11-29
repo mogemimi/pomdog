@@ -108,24 +108,34 @@ PrimitiveBatch::Impl::Impl(
         auto inputLayout = InputLayoutHelper{}
             .Float3().Float4();
 
-        auto vertexShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
+        auto [vertexShader, vertexShaderErr] = assets.CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
             .SetGLSL(Builtin_GLSL_PrimitiveBatch_VS, std::strlen(Builtin_GLSL_PrimitiveBatch_VS))
             .SetHLSLPrecompiled(BuiltinHLSL_PrimitiveBatch_VS, sizeof(BuiltinHLSL_PrimitiveBatch_VS))
-            .SetMetal(Builtin_Metal_PrimitiveBatch, std::strlen(Builtin_Metal_PrimitiveBatch), "PrimitiveBatchVS");
+            .SetMetal(Builtin_Metal_PrimitiveBatch, std::strlen(Builtin_Metal_PrimitiveBatch), "PrimitiveBatchVS")
+            .Build();
 
-        auto pixelShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
+        if (vertexShaderErr != nullptr) {
+            // FIXME: error handling
+        }
+
+        auto [pixelShader, pixelShaderErr] = assets.CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
             .SetGLSL(Builtin_GLSL_PrimitiveBatch_PS, std::strlen(Builtin_GLSL_PrimitiveBatch_PS))
             .SetHLSLPrecompiled(BuiltinHLSL_PrimitiveBatch_PS, sizeof(BuiltinHLSL_PrimitiveBatch_PS))
-            .SetMetal(Builtin_Metal_PrimitiveBatch, std::strlen(Builtin_Metal_PrimitiveBatch), "PrimitiveBatchPS");
+            .SetMetal(Builtin_Metal_PrimitiveBatch, std::strlen(Builtin_Metal_PrimitiveBatch), "PrimitiveBatchPS")
+            .Build();
+
+        if (pixelShaderErr != nullptr) {
+            // FIXME: error handling
+        }
 
         auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
-        auto builder = assets.CreateBuilder<PipelineState>();
-        pipelineState = builder
+        std::shared_ptr<Error> pipelineStateErr;
+        std::tie(pipelineState, pipelineStateErr) = assets.CreateBuilder<PipelineState>()
             .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
             .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
-            .SetVertexShader(vertexShader.Build())
-            .SetPixelShader(pixelShader.Build())
+            .SetVertexShader(std::move(vertexShader))
+            .SetPixelShader(std::move(pixelShader))
             .SetInputLayout(inputLayout.CreateInputLayout())
             .SetPrimitiveTopology(PrimitiveTopology::TriangleList)
             .SetBlendState(BlendDescription::CreateNonPremultiplied())
@@ -133,6 +143,10 @@ PrimitiveBatch::Impl::Impl(
             .SetRasterizerState(*rasterizerDesc)
             .SetConstantBufferBindSlot("TransformMatrix", 0)
             .Build();
+
+        if (pipelineStateErr != nullptr) {
+            // FIXME: error handling
+        }
     }
 
     constantBuffer = std::get<0>(graphicsDevice->CreateConstantBuffer(

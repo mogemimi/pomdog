@@ -283,4 +283,11 @@ const PipelineStateDescription& Builder<PipelineState>::GetDescription() const
     return impl->description;
 }
 
+void Builder<PipelineState>::SetError(std::shared_ptr<Error>&& err)
+{
+    POMDOG_ASSERT(impl != nullptr);
+    POMDOG_ASSERT(impl->lastError != nullptr);
+    impl->lastError = std::move(err);
+}
+
 } // namespace Pomdog::AssetBuilders

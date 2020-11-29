@@ -57,32 +57,43 @@ VignetteEffect::VignetteEffect(
     auto inputLayout = InputLayoutHelper{}
         .Float3().Float2();
 
-    auto vertexShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::VertexShader);
-    auto pixelShader = assets.CreateBuilder<Shader>(ShaderPipelineStage::PixelShader);
+    auto vertexShaderBuilder = assets.CreateBuilder<Shader>(ShaderPipelineStage::VertexShader);
+    auto pixelShaderBuilder = assets.CreateBuilder<Shader>(ShaderPipelineStage::PixelShader);
 
 #if defined(POMDOG_PLATFORM_WIN32) || \
     defined(POMDOG_PLATFORM_LINUX) || \
     defined(POMDOG_PLATFORM_MACOSX) || \
     defined(POMDOG_PLATFORM_EMSCRIPTEN)
-    vertexShader.SetGLSL(Builtin_GLSL_ScreenQuad_VS, std::strlen(Builtin_GLSL_ScreenQuad_VS));
-    pixelShader.SetGLSL(Builtin_GLSL_Vignette_PS, std::strlen(Builtin_GLSL_Vignette_PS));
+    vertexShaderBuilder.SetGLSL(Builtin_GLSL_ScreenQuad_VS, std::strlen(Builtin_GLSL_ScreenQuad_VS));
+    pixelShaderBuilder.SetGLSL(Builtin_GLSL_Vignette_PS, std::strlen(Builtin_GLSL_Vignette_PS));
 #endif
 #if defined(POMDOG_PLATFORM_WIN32)
-    vertexShader.SetHLSLPrecompiled(BuiltinHLSL_ScreenQuad_VS, sizeof(BuiltinHLSL_ScreenQuad_VS));
-    pixelShader.SetHLSLPrecompiled(BuiltinHLSL_Vignette_PS, sizeof(BuiltinHLSL_Vignette_PS));
+    vertexShaderBuilder.SetHLSLPrecompiled(BuiltinHLSL_ScreenQuad_VS, sizeof(BuiltinHLSL_ScreenQuad_VS));
+    pixelShaderBuilder.SetHLSLPrecompiled(BuiltinHLSL_Vignette_PS, sizeof(BuiltinHLSL_Vignette_PS));
 #endif
 #if defined(POMDOG_PLATFORM_MACOSX)
-    vertexShader.SetMetal(Builtin_Metal_ScreenQuad_VS, std::strlen(Builtin_Metal_ScreenQuad_VS), "ScreenQuadVS");
-    pixelShader.SetMetal(Builtin_Metal_Vignette_PS, std::strlen(Builtin_Metal_Vignette_PS), "VignettePS");
+    vertexShaderBuilder.SetMetal(Builtin_Metal_ScreenQuad_VS, std::strlen(Builtin_Metal_ScreenQuad_VS), "ScreenQuadVS");
+    pixelShaderBuilder.SetMetal(Builtin_Metal_Vignette_PS, std::strlen(Builtin_Metal_Vignette_PS), "VignettePS");
 #endif
+
+    auto [vertexShader, vertexShaderErr] = vertexShaderBuilder.Build();
+    if (vertexShaderErr != nullptr) {
+        // FIXME: error handling
+    }
+
+    auto [pixelShader, pixelShaderErr] = pixelShaderBuilder.Build();
+    if (pixelShaderErr != nullptr) {
+        // FIXME: error handling
+    }
 
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
-    pipelineState = assets.CreateBuilder<PipelineState>()
+    std::shared_ptr<Error> pipelineStateErr;
+    std::tie(pipelineState, pipelineStateErr) = assets.CreateBuilder<PipelineState>()
         .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
         .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
-        .SetVertexShader(vertexShader.Build())
-        .SetPixelShader(pixelShader.Build())
+        .SetVertexShader(std::move(vertexShader))
+        .SetPixelShader(std::move(pixelShader))
         .SetInputLayout(inputLayout.CreateInputLayout())
         .SetPrimitiveTopology(PrimitiveTopology::TriangleList)
         .SetBlendState(BlendDescription::CreateOpaque())
@@ -90,6 +101,9 @@ VignetteEffect::VignetteEffect(
         .SetConstantBufferBindSlot("ImageEffectConstants", 0)
         .SetConstantBufferBindSlot("VignetteBlock", 1)
         .Build();
+    if (pipelineStateErr != nullptr) {
+        // FIXME: error handling
+    }
 
     constantBufferVignette = std::get<0>(graphicsDevice->CreateConstantBuffer(
         sizeof(VignetteBlock),
