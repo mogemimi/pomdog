@@ -3,6 +3,11 @@
 #pragma once
 
 #include "Pomdog/Basic/Export.hpp"
+#include <memory>
+
+namespace Pomdog {
+class Error;
+} // namespace Pomdog
 
 namespace Pomdog {
 
@@ -21,7 +26,7 @@ public:
     /// Initialization phase of the game.
     ///
     /// Called by GameHost once before any Update() or Draw().
-    virtual void Initialize() = 0;
+    [[nodiscard]] virtual std::shared_ptr<Error> Initialize() = 0;
 
     /// Logic update phase of the game.
     ///
