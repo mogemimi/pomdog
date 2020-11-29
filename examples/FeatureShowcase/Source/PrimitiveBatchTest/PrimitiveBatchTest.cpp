@@ -10,14 +10,24 @@ PrimitiveBatchTest::PrimitiveBatchTest(const std::shared_ptr<GameHost>& gameHost
 {
 }
 
-void PrimitiveBatchTest::Initialize()
+std::shared_ptr<Error> PrimitiveBatchTest::Initialize()
 {
     auto assets = gameHost->GetAssetManager();
     auto clock = gameHost->GetClock();
-    commandList = std::get<0>(graphicsDevice->CreateGraphicsCommandList());
+
+    std::shared_ptr<Error> err;
+
+    // NOTE: Create graphics command list
+    std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to create graphics command list");
+    }
+
     primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
     timer = std::make_shared<Timer>(clock);
     timer->SetInterval(std::chrono::seconds(1));
+
+    return nullptr;
 }
 
 void PrimitiveBatchTest::Update()

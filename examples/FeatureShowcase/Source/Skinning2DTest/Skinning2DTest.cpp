@@ -19,11 +19,19 @@ Skinning2DTest::Skinning2DTest(const std::shared_ptr<GameHost>& gameHostIn)
 {
 }
 
-void Skinning2DTest::Initialize()
+std::shared_ptr<Error> Skinning2DTest::Initialize()
 {
     auto assets = gameHost->GetAssetManager();
     auto clock = gameHost->GetClock();
-    commandList = std::get<0>(graphicsDevice->CreateGraphicsCommandList());
+
+    std::shared_ptr<Error> err;
+
+    // NOTE: Create graphics command list
+    std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to create graphics command list");
+    }
+
     primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
     spriteBatch = std::make_shared<SpriteBatch>(
         graphicsDevice,
@@ -40,25 +48,21 @@ void Skinning2DTest::Initialize()
     auto skeletonJSONPath = PathHelper::Join(assets->GetContentDirectory(), "Skeletal2D/MaidGun/MaidGun.json");
 
     // NOTE: Load texture file for skeletal animation model
-    if (auto [res, err] = assets->Load<Texture2D>(texturePath); err != nullptr) {
-        Log::Verbose("failed to load texture: " + err->ToString());
-    }
-    else {
-        texture = std::move(res);
+    std::tie(texture, err) = assets->Load<Texture2D>(texturePath);
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to load texture");
     }
 
     // NOTE: Load texture atlas file for skeletal animation model
     TexturePacker::TextureAtlas textureAtlas;
-    if (auto [atlas, err] = TexturePacker::TextureAtlasLoader::Load(textureAtlasPath); err != nullptr) {
-        Log::Verbose("failed to load texture atlas: " + err->ToString());
-    }
-    else {
-        textureAtlas = std::move(atlas);
+    std::tie(textureAtlas, err) = TexturePacker::TextureAtlasLoader::Load(textureAtlasPath);
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to load texture atlas");
     }
 
     // NOTE: Load skeletal animation data
     if (auto [desc, descErr] = Spine::SkeletonDescLoader::Load(skeletonJSONPath); descErr != nullptr) {
-        Log::Verbose("failed to load skeleton JSON file: " + descErr->ToString());
+        return Errors::Wrap(std::move(descErr), "failed to load skeleton JSON file");
     }
     else {
         skeleton = std::make_shared<Skeletal2D::Skeleton>(Spine::CreateSkeleton(desc.Bones));
@@ -69,7 +73,7 @@ void Skinning2DTest::Initialize()
         // NOTE: Create animation clip and animation state
         auto [animationClip, clipErr] = Spine::CreateAnimationClip(desc, textureAtlas, "Run");
         if (clipErr != nullptr) {
-            Log::Verbose("failed to create animation clip: " + clipErr->ToString());
+            return Errors::Wrap(std::move(clipErr), "failed to create animation clip");
         }
         animationState = std::make_shared<Skeletal2D::AnimationState>(animationClip, 1.0f, true);
 
@@ -92,7 +96,7 @@ void Skinning2DTest::Initialize()
             textureSize,
             "default");
         if (skinnedMeshErr != nullptr) {
-            Log::Verbose("failed to create skinned mesh data: " + skinnedMeshErr->ToString());
+            return Errors::Wrap(std::move(skinnedMeshErr), "failed to create skinned mesh data");
         }
         skinnedMesh = std::move(skinnedMeshData);
 
@@ -111,29 +115,45 @@ void Skinning2DTest::Initialize()
             {Vector3{1.0f, 0.0f, 0.0f}, Vector2{1.0f, 1.0f}},
         }};
 
-        vertexBuffer = std::get<0>(graphicsDevice->CreateVertexBuffer(
+        std::tie(vertexBuffer, err) = graphicsDevice->CreateVertexBuffer(
             verticesCombo.data(),
             skinnedMesh.Vertices.size(),
             sizeof(VertexCombined),
-            BufferUsage::Dynamic));
+            BufferUsage::Dynamic);
+
+        if (err != nullptr) {
+            return Errors::Wrap(std::move(err), "failed to create vertex buffer");
+        }
     }
     {
         // NOTE: Create index buffer
-        indexBuffer = std::get<0>(graphicsDevice->CreateIndexBuffer(
+        std::tie(indexBuffer, err) = graphicsDevice->CreateIndexBuffer(
             IndexElementSize::SixteenBits,
             skinnedMesh.Indices.data(),
             skinnedMesh.Indices.size(),
-            BufferUsage::Immutable));
+            BufferUsage::Immutable);
+
+        if (err != nullptr) {
+            return Errors::Wrap(std::move(err), "failed to create index buffer");
+        }
     }
     {
         // NOTE: Create constant buffer
-        modelConstantBuffer = std::get<0>(graphicsDevice->CreateConstantBuffer(
+        std::tie(modelConstantBuffer, err) = graphicsDevice->CreateConstantBuffer(
             sizeof(BasicEffect::ModelConstantBuffer),
-            BufferUsage::Dynamic));
+            BufferUsage::Dynamic);
 
-        worldConstantBuffer = std::get<0>(graphicsDevice->CreateConstantBuffer(
+        if (err != nullptr) {
+            return Errors::Wrap(std::move(err), "failed to create constant buffer");
+        }
+
+        std::tie(worldConstantBuffer, err) = graphicsDevice->CreateConstantBuffer(
             sizeof(BasicEffect::WorldConstantBuffer),
-            BufferUsage::Dynamic));
+            BufferUsage::Dynamic);
+
+        if (err != nullptr) {
+            return Errors::Wrap(std::move(err), "failed to create constant buffer");
+        }
     }
     {
         auto presentationParameters = graphicsDevice->GetPresentationParameters();
@@ -144,7 +164,6 @@ void Skinning2DTest::Initialize()
         effectDesc.VertexColorEnabled = false;
 
         // NOTE: Create pipeline state
-        std::shared_ptr<Error> err;
         std::tie(pipelineState, err) = BasicEffect::CreateBasicEffect(*assets, effectDesc)
             .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
             .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
@@ -155,7 +174,7 @@ void Skinning2DTest::Initialize()
             .Build();
 
         if (err != nullptr) {
-            // FIXME: error handling
+            return Errors::Wrap(std::move(err), "failed to create pipeline state");
         }
 
         // NOTE: Create pipeline state for wireframe debug rendering
@@ -173,13 +192,19 @@ void Skinning2DTest::Initialize()
             .Build();
 
         if (err != nullptr) {
-            // FIXME: error handling
+            return Errors::Wrap(std::move(err), "failed to create pipeline state");
         }
     }
     {
-        sampler = std::get<0>(graphicsDevice->CreateSamplerState(
-            SamplerDescription::CreateLinearWrap()));
+        std::tie(sampler, err) = graphicsDevice->CreateSamplerState(
+            SamplerDescription::CreateLinearWrap());
+
+        if (err != nullptr) {
+            return Errors::Wrap(std::move(err), "failed to create sampler state");
+        }
     }
+
+    return nullptr;
 }
 
 void Skinning2DTest::Update()

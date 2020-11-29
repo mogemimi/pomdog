@@ -17,11 +17,19 @@ ImageEffectsTest::ImageEffectsTest(const std::shared_ptr<GameHost>& gameHostIn)
 {
 }
 
-void ImageEffectsTest::Initialize()
+std::shared_ptr<Error> ImageEffectsTest::Initialize()
 {
     auto assets = gameHost->GetAssetManager();
     auto clock = gameHost->GetClock();
-    commandList = std::get<0>(graphicsDevice->CreateGraphicsCommandList());
+
+    std::shared_ptr<Error> err;
+
+    // NOTE: Create graphics command list
+    std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to create graphics command list");
+    }
+
     primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
 
     auto fxaa = std::make_shared<FXAA>(graphicsDevice, *assets);
@@ -40,12 +48,17 @@ void ImageEffectsTest::Initialize()
     fishEyeEffect->SetStrength(0.3f);
 
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
-    renderTarget = std::get<0>(graphicsDevice->CreateRenderTarget2D(
+
+    // NOTE: Create render target
+    std::tie(renderTarget, err) = graphicsDevice->CreateRenderTarget2D(
         presentationParameters.BackBufferWidth,
         presentationParameters.BackBufferHeight,
         false,
         presentationParameters.BackBufferFormat,
-        presentationParameters.DepthStencilFormat));
+        presentationParameters.DepthStencilFormat);
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to create render target");
+    }
 
     postProcessCompositor.SetViewportSize(
         *graphicsDevice, presentationParameters.BackBufferWidth,
@@ -76,6 +89,8 @@ void ImageEffectsTest::Initialize()
             *graphicsDevice, width, height,
             presentationParameters.DepthStencilFormat);
     });
+
+    return nullptr;
 }
 
 void ImageEffectsTest::Update() {}

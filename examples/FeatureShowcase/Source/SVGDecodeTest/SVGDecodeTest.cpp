@@ -10,16 +10,24 @@ SVGDecodeTest::SVGDecodeTest(const std::shared_ptr<GameHost>& gameHostIn)
 {
 }
 
-void SVGDecodeTest::Initialize()
+std::shared_ptr<Error> SVGDecodeTest::Initialize()
 {
     auto assets = gameHost->GetAssetManager();
     auto clock = gameHost->GetClock();
-    commandList = std::get<0>(graphicsDevice->CreateGraphicsCommandList());
+
+    std::shared_ptr<Error> err;
+
+    // NOTE: Create graphics command list
+    std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to create graphics command list");
+    }
+
     spriteBatch = std::make_shared<SpriteBatch>(graphicsDevice, *assets);
 
     auto [font, fontErr] = assets->Load<TrueTypeFont>("Fonts/NotoSans/NotoSans-Regular.ttf");
     if (fontErr != nullptr) {
-        Log::Critical("Error", "failed to load a font file: " + fontErr->ToString());
+        return Errors::Wrap(std::move(fontErr), "failed to load a font file");
     }
 
     spriteFont = std::make_shared<SpriteFont>(graphicsDevice, font, 24.0f, 24.0f);
@@ -48,13 +56,14 @@ void SVGDecodeTest::Initialize()
         constexpr int canvasWidth = 24;
         constexpr int canvasHeight = 24;
 
-        if (auto [res, err] = SVG::LoadTexture(graphicsDevice, filePath, canvasWidth, canvasHeight); err != nullptr) {
-            Log::Verbose("failed to load texture: " + err->ToString());
+        auto [res, err] = SVG::LoadTexture(graphicsDevice, filePath, canvasWidth, canvasHeight);
+        if (err != nullptr) {
+            return Errors::Wrap(std::move(err), "failed to load texture");
         }
-        else {
-            textures.push_back(std::move(res));
-        }
+        textures.push_back(std::move(res));
     }
+
+    return nullptr;
 }
 
 void SVGDecodeTest::Update()

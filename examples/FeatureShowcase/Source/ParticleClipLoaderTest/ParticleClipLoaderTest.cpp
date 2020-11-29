@@ -11,11 +11,19 @@ ParticleClipLoaderTest::ParticleClipLoaderTest(const std::shared_ptr<GameHost>& 
 {
 }
 
-void ParticleClipLoaderTest::Initialize()
+std::shared_ptr<Error> ParticleClipLoaderTest::Initialize()
 {
     auto assets = gameHost->GetAssetManager();
     auto clock = gameHost->GetClock();
-    commandList = std::get<0>(graphicsDevice->CreateGraphicsCommandList());
+
+    std::shared_ptr<Error> err;
+
+    // NOTE: Create graphics command list
+    std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to create graphics command list");
+    }
+
     primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
     spriteBatch = std::make_shared<SpriteBatch>(
         graphicsDevice,
@@ -27,10 +35,10 @@ void ParticleClipLoaderTest::Initialize()
         SpriteBatchPixelShaderMode::Default,
         *assets);
 
-    std::shared_ptr<Error> err;
+    // NOTE: Load particle texture.
     std::tie(texture, err) = assets->Load<Texture2D>("Textures/particle_smoke.png");
     if (err != nullptr) {
-        Log::Verbose("failed to load texture: " + err->ToString());
+        return Errors::Wrap(std::move(err), "failed to load texture");
     }
 
     timer = std::make_shared<Timer>(clock);
@@ -41,7 +49,7 @@ void ParticleClipLoaderTest::Initialize()
         // NOTE: Load particle clip from .json file
         auto [particleClip, clipErr] = assets->Load<ParticleClip>("Particles/Fire2D.json");
         if (clipErr != nullptr) {
-            Log::Verbose("failed to load particle json: " + clipErr->ToString());
+            return Errors::Wrap(std::move(err), "failed to load particle json");
         }
 
         particleSystem = std::make_unique<ParticleSystem>(particleClip);
@@ -95,6 +103,8 @@ void ParticleClipLoaderTest::Initialize()
         }
     });
     connect(mouse->Moved, onMoved);
+
+    return nullptr;
 }
 
 void ParticleClipLoaderTest::Update()

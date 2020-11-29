@@ -11,18 +11,23 @@ HardwareInstancingTest::HardwareInstancingTest(const std::shared_ptr<GameHost>& 
 {
 }
 
-void HardwareInstancingTest::Initialize()
+std::shared_ptr<Error> HardwareInstancingTest::Initialize()
 {
     auto assets = gameHost->GetAssetManager();
     auto clock = gameHost->GetClock();
-    commandList = std::get<0>(graphicsDevice->CreateGraphicsCommandList());
 
-    // NOTE: Load texture from image file
-    if (auto [res, err] = assets->Load<Texture2D>("Textures/pomdog.png"); err != nullptr) {
-        Log::Verbose("failed to load texture: " + err->ToString());
+    std::shared_ptr<Error> err;
+
+    // NOTE: Create graphics command list
+    std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to create graphics command list");
     }
-    else {
-        texture = std::move(res);
+
+    // NOTE: Load texture from PNG image file.
+    std::tie(texture, err) = assets->Load<Texture2D>("Textures/pomdog.png");
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to load texture");
     }
 
     constexpr auto maxSpriteCount = 256;
@@ -41,38 +46,59 @@ void HardwareInstancingTest::Initialize()
             VertexCombined{Vector3{ 1.0f, -1.0f, 0.0f}, Vector2{1.0f, 1.0f}},
         }};
 
-        vertexBuffer = std::get<0>(graphicsDevice->CreateVertexBuffer(
+        std::tie(vertexBuffer, err) = graphicsDevice->CreateVertexBuffer(
             verticesCombo.data(),
             verticesCombo.size(),
             sizeof(VertexCombined),
-            BufferUsage::Immutable));
+            BufferUsage::Immutable);
+
+        if (err != nullptr) {
+            return Errors::Wrap(std::move(err), "failed to create vertex buffer");
+        }
     }
     {
         // NOTE: Create index buffer
         std::array<std::uint16_t, 6> indices = {{0, 1, 2, 2, 3, 0}};
 
-        indexBuffer = std::get<0>(graphicsDevice->CreateIndexBuffer(
+        std::tie(indexBuffer, err) = graphicsDevice->CreateIndexBuffer(
             IndexElementSize::SixteenBits,
             indices.data(),
             indices.size(),
-            BufferUsage::Immutable));
+            BufferUsage::Immutable);
+
+        if (err != nullptr) {
+            return Errors::Wrap(std::move(err), "failed to create index buffer");
+        }
     }
     {
-        instanceBuffer = std::get<0>(graphicsDevice->CreateVertexBuffer(
+        // NOTE: Create instance buffer
+        std::tie(instanceBuffer, err) = graphicsDevice->CreateVertexBuffer(
             maxSpriteCount,
             sizeof(SpriteInfo),
-            BufferUsage::Dynamic));
+            BufferUsage::Dynamic);
+
+        if (err != nullptr) {
+            return Errors::Wrap(std::move(err), "failed to create instance buffer");
+        }
     }
     {
         // NOTE: Create constant buffer
-        constantBuffer = std::get<0>(graphicsDevice->CreateConstantBuffer(
+        std::tie(constantBuffer, err) = graphicsDevice->CreateConstantBuffer(
             sizeof(Matrix4x4),
-            BufferUsage::Dynamic));
+            BufferUsage::Dynamic);
+
+        if (err != nullptr) {
+            return Errors::Wrap(std::move(err), "failed to create constant buffer");
+        }
     }
     {
         // NOTE: Create sampler state
-        sampler = std::get<0>(graphicsDevice->CreateSamplerState(
-            SamplerDescription::CreateLinearClamp()));
+        std::tie(sampler, err) = graphicsDevice->CreateSamplerState(
+            SamplerDescription::CreateLinearClamp());
+
+        if (err != nullptr) {
+            return Errors::Wrap(std::move(err), "failed to create sampler state");
+        }
     }
     {
         // For details, see 'struct VertexCombined' members
@@ -84,6 +110,7 @@ void HardwareInstancingTest::Initialize()
             .Float4() // NOTE: SpriteInfo::Color
             .CreateInputLayout();
 
+        // NOTE: Create vertex shader
         auto [vertexShader, vertexShaderErr] = assets->CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
             .SetGLSLFromFile("Shaders/HardwareInstancingVS.glsl")
             .SetHLSLFromFile("Shaders/HardwareInstancing.hlsl", "HardwareInstancingVS")
@@ -91,9 +118,10 @@ void HardwareInstancingTest::Initialize()
             .Build();
 
         if (vertexShaderErr != nullptr) {
-            // FIXME: error handling
+            return Errors::Wrap(std::move(vertexShaderErr), "failed to create vertex shader");
         }
 
+        // NOTE: Create pixel shader
         auto [pixelShader, pixelShaderErr] = assets->CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
             .SetGLSLFromFile("Shaders/HardwareInstancingPS.glsl")
             .SetHLSLFromFile("Shaders/HardwareInstancing.hlsl", "HardwareInstancingPS")
@@ -101,13 +129,12 @@ void HardwareInstancingTest::Initialize()
             .Build();
 
         if (pixelShaderErr != nullptr) {
-            // FIXME: error handling
+            return Errors::Wrap(std::move(pixelShaderErr), "failed to create pixel shader");
         }
 
         auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
         // NOTE: Create pipeline state
-        std::shared_ptr<Error> err;
         std::tie(pipelineState, err) = assets->CreateBuilder<PipelineState>()
             .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
             .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
@@ -119,7 +146,7 @@ void HardwareInstancingTest::Initialize()
             .Build();
 
         if (err != nullptr) {
-            // FIXME: error handling
+            return Errors::Wrap(std::move(err), "failed to create pipeline state");
         }
     }
     {
@@ -167,6 +194,8 @@ void HardwareInstancingTest::Initialize()
         // NOTE: Add new sprite
         sprites.push_back(std::move(sprite));
     });
+
+    return nullptr;
 }
 
 void HardwareInstancingTest::Update()

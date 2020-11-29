@@ -19,7 +19,8 @@ class Skinning2DTest final : public Game {
 public:
     explicit Skinning2DTest(const std::shared_ptr<GameHost>& gameHost);
 
-    void Initialize() override;
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize() override;
 
     void Update() override;
 

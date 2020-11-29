@@ -25,7 +25,7 @@ PongGame::PongGame(const std::shared_ptr<GameHost>& gameHostIn)
     window->SetAllowUserResizing(true);
 }
 
-void PongGame::Initialize()
+std::shared_ptr<Error> PongGame::Initialize()
 {
     // NOTE: Set window name
     window->SetTitle("Pomdog Pong");
@@ -33,8 +33,13 @@ void PongGame::Initialize()
     // NOTE: Set main volume
     audioEngine->SetMainVolume(0.4f);
 
+    std::shared_ptr<Error> err;
+
     // NOTE: Create graphics command list
-    commandList = std::get<0>(graphicsDevice->CreateGraphicsCommandList());
+    std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to create graphics command list");
+    }
 
     // NOTE: Create batch renderers
     primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
@@ -43,7 +48,7 @@ void PongGame::Initialize()
     // NOTE: Prepare sprite font
     auto [font, fontErr] = assets->Load<TrueTypeFont>("fonts/NotoSans/NotoSans-BoldItalic.ttf");
     if (fontErr != nullptr) {
-        Log::Critical("Error", "failed to load a font file: " + fontErr->ToString());
+        return Errors::Wrap(std::move(fontErr), "failed to load a font file");
     }
     spriteFont = std::make_shared<SpriteFont>(graphicsDevice, font, 26.0f, 26.0f);
     spriteFont->PrepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
@@ -51,32 +56,32 @@ void PongGame::Initialize()
 
     // NOTE: Load sound effects
     if (auto [audioClip, err] = assets->Load<AudioClip>("sounds/pong1.wav"); err != nullptr) {
-        Log::Critical("Pomdog", "error: " + err->ToString());
+        return Errors::Wrap(std::move(err), "failed to load audio clip");
     }
     else {
         std::tie(soundEffect1, err) = audioEngine->CreateSoundEffect(audioClip, false);
         if (err != nullptr) {
-            Log::Critical("Pomdog", "error: " + err->ToString());
+            return Errors::Wrap(std::move(err), "failed to create sound effect");
         }
     }
 
     if (auto [audioClip, err] = assets->Load<AudioClip>("sounds/pong2.wav"); err != nullptr) {
-        Log::Critical("Pomdog", "error: " + err->ToString());
+        return Errors::Wrap(std::move(err), "failed to load audio clip");
     }
     else {
         std::tie(soundEffect2, err) = audioEngine->CreateSoundEffect(audioClip, false);
         if (err != nullptr) {
-            Log::Critical("Pomdog", "error: " + err->ToString());
+            return Errors::Wrap(std::move(err), "failed to create sound effect");
         }
     }
 
     if (auto [audioClip, err] = assets->Load<AudioClip>("sounds/pong3.wav"); err != nullptr) {
-        Log::Critical("Pomdog", "error: " + err->ToString());
+        return Errors::Wrap(std::move(err), "failed to load audio clip");
     }
     else {
         std::tie(soundEffect3, err) = audioEngine->CreateSoundEffect(audioClip, false);
         if (err != nullptr) {
-            Log::Critical("Pomdog", "error: " + err->ToString());
+            return Errors::Wrap(std::move(err), "failed to create sound effect");
         }
     }
 
@@ -91,11 +96,18 @@ void PongGame::Initialize()
         fishEyeEffect->SetStrength(0.2f);
 
         auto presentationParameters = graphicsDevice->GetPresentationParameters();
-        renderTarget = std::get<0>(graphicsDevice->CreateRenderTarget2D(
+
+        // NOTE: Create render target
+        std::tie(renderTarget, err) = graphicsDevice->CreateRenderTarget2D(
             presentationParameters.BackBufferWidth,
-            presentationParameters.BackBufferHeight, false,
+            presentationParameters.BackBufferHeight,
+            false,
             presentationParameters.BackBufferFormat,
-            presentationParameters.DepthStencilFormat));
+            presentationParameters.DepthStencilFormat);
+
+        if (err != nullptr) {
+            return Errors::Wrap(std::move(err), "failed to create render target");
+        }
 
         postProcessCompositor.SetViewportSize(
             *graphicsDevice, presentationParameters.BackBufferWidth,
@@ -196,6 +208,8 @@ void PongGame::Initialize()
 
         pongScene = PongScenes::StartWaiting;
     }
+
+    return nullptr;
 }
 
 void PongGame::Update()

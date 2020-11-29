@@ -15,11 +15,19 @@ GIFDecodeTest::GIFDecodeTest(const std::shared_ptr<GameHost>& gameHostIn)
 {
 }
 
-void GIFDecodeTest::Initialize()
+std::shared_ptr<Error> GIFDecodeTest::Initialize()
 {
     auto assets = gameHost->GetAssetManager();
     auto clock = gameHost->GetClock();
-    commandList = std::get<0>(graphicsDevice->CreateGraphicsCommandList());
+
+    std::shared_ptr<Error> err;
+
+    // NOTE: Create graphics command list
+    std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to create graphics command list");
+    }
+
     spriteBatch = std::make_shared<SpriteBatch>(
         graphicsDevice,
         BlendDescription::CreateAlphaBlend(),
@@ -30,13 +38,13 @@ void GIFDecodeTest::Initialize()
         SpriteBatchPixelShaderMode::Default,
         *assets);
 
-    // Loading GIF image
+    // NOTE: Loading GIF image
     auto [gif, gifErr] = GIF::DecodeFile(PathHelper::Join(assets->GetContentDirectory(), "Textures/punch.gif"));
     if (gifErr != nullptr) {
-        Log::Critical("Error", "failed to load a gif file: " + gifErr->ToString());
+        return Errors::Wrap(std::move(gifErr), "failed to load a gif file");
     }
 
-    // Generating texture atlas from GIF image
+    // NOTE: Generating texture atlas from GIF image
     std::vector<TexturePacker::TextureAtlasGeneratorSource> sources;
     for (auto& frame : gif.Frames) {
         TexturePacker::TextureAtlasGeneratorSource src;
@@ -45,17 +53,20 @@ void GIFDecodeTest::Initialize()
         sources.push_back(std::move(src));
     }
     auto result = TexturePacker::TextureAtlasGenerator::Generate(sources, 512, 512);
-    POMDOG_ASSERT(result.Image);
+    POMDOG_ASSERT(result.Image != nullptr);
 
-    // Convert image to pre-multiplied alpha format
+    // NOTE: Convert image to pre-multiplied alpha format
     result.Image->PremultiplyAlpha();
 
-    // Creating texture from packed image
-    texture = std::get<0>(graphicsDevice->CreateTexture2D(
+    // NOTE: Creating texture from packed image
+    std::tie(texture, err) = graphicsDevice->CreateTexture2D(
         result.Image->GetWidth(),
         result.Image->GetHeight(),
         false,
-        SurfaceFormat::R8G8B8A8_UNorm));
+        SurfaceFormat::R8G8B8A8_UNorm);
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to create texture from packed image");
+    }
     texture->SetData(result.Image->GetData());
 
     textureAtlas = std::move(result.Atlas);
@@ -106,6 +117,8 @@ void GIFDecodeTest::Initialize()
         sprite.Color.A = 255;
         sprites.push_back(std::move(sprite));
     });
+
+    return nullptr;
 }
 
 void GIFDecodeTest::Update()

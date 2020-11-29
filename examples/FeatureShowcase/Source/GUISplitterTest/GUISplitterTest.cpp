@@ -9,11 +9,18 @@ GUISplitterTest::GUISplitterTest(const std::shared_ptr<GameHost>& gameHostIn)
 {
 }
 
-void GUISplitterTest::Initialize()
+std::shared_ptr<Error> GUISplitterTest::Initialize()
 {
     auto assets = gameHost->GetAssetManager();
     auto clock = gameHost->GetClock();
-    commandList = std::get<0>(graphicsDevice->CreateGraphicsCommandList());
+
+    std::shared_ptr<Error> err;
+
+    // NOTE: Create graphics command list
+    std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to create graphics command list");
+    }
 
     drawingContext = std::make_unique<GUI::DrawingContext>(graphicsDevice, *assets);
 
@@ -61,6 +68,8 @@ void GUISplitterTest::Initialize()
         splitter->AddChild(button);
         splitter->SetMinimumWidth(button, 20);
     }
+
+    return nullptr;
 }
 
 void GUISplitterTest::Update()

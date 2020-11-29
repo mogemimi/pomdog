@@ -9,16 +9,24 @@ GamepadTest::GamepadTest(const std::shared_ptr<GameHost>& gameHostIn)
 {
 }
 
-void GamepadTest::Initialize()
+std::shared_ptr<Error> GamepadTest::Initialize()
 {
     auto assets = gameHost->GetAssetManager();
     auto clock = gameHost->GetClock();
-    commandList = std::get<0>(graphicsDevice->CreateGraphicsCommandList());
+
+    std::shared_ptr<Error> err;
+
+    // NOTE: Create graphics command list
+    std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to create graphics command list");
+    }
+
     spriteBatch = std::make_shared<SpriteBatch>(graphicsDevice, *assets);
 
     auto [font, fontErr] = assets->Load<TrueTypeFont>("Fonts/NotoSans/NotoSans-Regular.ttf");
     if (fontErr != nullptr) {
-        Log::Critical("Error", "failed to load a font file: " + fontErr->ToString());
+        return Errors::Wrap(std::move(fontErr), "failed to load a font file");
     }
 
     spriteFont = std::make_shared<SpriteFont>(graphicsDevice, font, 24.0f, 24.0f);
@@ -31,6 +39,8 @@ void GamepadTest::Initialize()
     connect(gameHost->GetGamepad()->Disconnected, [](PlayerIndex playerIndex, const GamepadCapabilities& caps) {
         Log::Verbose("Disconnected: " + caps.Name + " at " + std::to_string(static_cast<int>(playerIndex)));
     });
+
+    return nullptr;
 }
 
 void GamepadTest::Update()

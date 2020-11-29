@@ -36,11 +36,18 @@ Particle3DTest::Particle3DTest(const std::shared_ptr<GameHost>& gameHostIn)
 {
 }
 
-void Particle3DTest::Initialize()
+std::shared_ptr<Error> Particle3DTest::Initialize()
 {
     auto assets = gameHost->GetAssetManager();
     auto clock = gameHost->GetClock();
-    commandList = std::get<0>(graphicsDevice->CreateGraphicsCommandList());
+
+    std::shared_ptr<Error> err;
+
+    // NOTE: Create graphics command list
+    std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to create graphics command list");
+    }
 
     lineBatch = std::make_shared<LineBatch>(graphicsDevice, *assets);
 
@@ -58,18 +65,23 @@ void Particle3DTest::Initialize()
     billboardBuffer = std::make_shared<BillboardBatchBuffer>(graphicsDevice, 4096);
 
     // NOTE: Create sampler state
-    sampler = std::get<0>(graphicsDevice->CreateSamplerState(
-        SamplerDescription::CreateLinearClamp()));
+    std::tie(sampler, err) = graphicsDevice->CreateSamplerState(SamplerDescription::CreateLinearClamp());
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to create sampler state");
+    }
 
     // NOTE: Create constant buffer
-    constantBuffer = std::get<0>(graphicsDevice->CreateConstantBuffer(
+    std::tie(constantBuffer, err) = graphicsDevice->CreateConstantBuffer(
         sizeof(BasicEffect::WorldConstantBuffer),
-        BufferUsage::Dynamic));
+        BufferUsage::Dynamic);
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to create constant buffer");
+    }
 
-    std::shared_ptr<Error> err;
+    // NOTE: Load particle texture.
     std::tie(texture, err) = assets->Load<Texture2D>("Textures/particle_smoke.png");
     if (err != nullptr) {
-        Log::Verbose("failed to load texture: " + err->ToString());
+        return Errors::Wrap(std::move(err), "failed to load texture");
     }
 
     timer = std::make_shared<Timer>(clock);
@@ -80,7 +92,7 @@ void Particle3DTest::Initialize()
         // NOTE: Load particle clip from .json file
         auto [particleClip, clipErr] = assets->Load<ParticleClip>("Particles/Fire3D_Box.json");
         if (clipErr != nullptr) {
-            Log::Verbose("failed to load particle json: " + clipErr->ToString());
+            return Errors::Wrap(std::move(err), "failed to load particle json");
         }
 
         particleSystem = std::make_unique<ParticleSystem>(particleClip);
@@ -121,6 +133,8 @@ void Particle3DTest::Initialize()
             onClipChanged();
         }
     });
+
+    return nullptr;
 }
 
 void Particle3DTest::Update()

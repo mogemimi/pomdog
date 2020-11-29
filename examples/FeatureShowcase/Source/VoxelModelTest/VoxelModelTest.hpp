@@ -13,7 +13,8 @@ class VoxelModelTest final : public Game {
 public:
     explicit VoxelModelTest(const std::shared_ptr<GameHost>& gameHost);
 
-    void Initialize() override;
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize() override;
 
     void Update() override;
 

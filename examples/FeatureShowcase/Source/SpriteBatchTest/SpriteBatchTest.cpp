@@ -12,11 +12,19 @@ SpriteBatchTest::SpriteBatchTest(const std::shared_ptr<GameHost>& gameHostIn)
 {
 }
 
-void SpriteBatchTest::Initialize()
+std::shared_ptr<Error> SpriteBatchTest::Initialize()
 {
     auto assets = gameHost->GetAssetManager();
     auto clock = gameHost->GetClock();
-    commandList = std::get<0>(graphicsDevice->CreateGraphicsCommandList());
+
+    std::shared_ptr<Error> err;
+
+    // NOTE: Create graphics command list
+    std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to create graphics command list");
+    }
+
     primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
     spriteBatch = std::make_shared<SpriteBatch>(
         graphicsDevice,
@@ -28,11 +36,10 @@ void SpriteBatchTest::Initialize()
         SpriteBatchPixelShaderMode::Default,
         *assets);
 
-    if (auto [res, err] = assets->Load<Texture2D>("Textures/pomdog.png"); err != nullptr) {
-        Log::Verbose("failed to load texture: " + err->ToString());
-    }
-    else {
-        texture = std::move(res);
+    // NOTE: Load PNG texture.
+    std::tie(texture, err) = assets->Load<Texture2D>("Textures/pomdog.png");
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to load texture");
     }
 
     timer = std::make_shared<Timer>(clock);
@@ -68,6 +75,8 @@ void SpriteBatchTest::Initialize()
         sprite.Color.A = 255;
         sprites.push_back(std::move(sprite));
     });
+
+    return nullptr;
 }
 
 void SpriteBatchTest::Update()

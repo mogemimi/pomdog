@@ -41,7 +41,8 @@ FeatureShowcaseGame::FeatureShowcaseGame(const std::shared_ptr<GameHost>& gameHo
 {
 }
 
-void FeatureShowcaseGame::Initialize()
+std::shared_ptr<Error>
+FeatureShowcaseGame::Initialize()
 {
     window->SetTitle("Feature Showcase");
     commandList = std::get<0>(graphicsDevice->CreateGraphicsCommandList());
@@ -191,7 +192,10 @@ void FeatureShowcaseGame::Initialize()
                 if (button.Selected) {
                     button.OnClicked();
                     if (subGame) {
-                        subGame->Initialize();
+                        if (auto err = subGame->Initialize(); err != nullptr) {
+                            Log::Critical("Error", "failed to initialize game: " + err->ToString());
+                            subGame.reset();
+                        }
                     }
                 }
             }
@@ -203,6 +207,8 @@ void FeatureShowcaseGame::Initialize()
     connect(fpsTimer->Elapsed, [this] {
         footerString = StringHelper::Format("%.2f fps", clock->GetFrameRate());
     });
+
+    return nullptr;
 }
 
 void FeatureShowcaseGame::Update()

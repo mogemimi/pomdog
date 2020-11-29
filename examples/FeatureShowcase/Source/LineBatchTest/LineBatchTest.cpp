@@ -10,11 +10,19 @@ LineBatchTest::LineBatchTest(const std::shared_ptr<GameHost>& gameHostIn)
 {
 }
 
-void LineBatchTest::Initialize()
+std::shared_ptr<Error> LineBatchTest::Initialize()
 {
     auto assets = gameHost->GetAssetManager();
     auto clock = gameHost->GetClock();
-    commandList = std::get<0>(graphicsDevice->CreateGraphicsCommandList());
+
+    std::shared_ptr<Error> err;
+
+    // NOTE: Create graphics command list
+    std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to create graphics command list");
+    }
+
     lineBatch = std::make_shared<LineBatch>(graphicsDevice, *assets);
     lineBatch2 = std::make_shared<LineBatch>(graphicsDevice, *assets);
     timer = std::make_shared<Timer>(clock);
@@ -37,6 +45,8 @@ void LineBatchTest::Initialize()
             path.push_back(Vector2::Zero);
         }
     });
+
+    return nullptr;
 }
 
 void LineBatchTest::Update()

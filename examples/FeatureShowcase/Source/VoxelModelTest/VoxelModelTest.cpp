@@ -9,23 +9,33 @@ VoxelModelTest::VoxelModelTest(const std::shared_ptr<GameHost>& gameHostIn)
 {
 }
 
-void VoxelModelTest::Initialize()
+std::shared_ptr<Error> VoxelModelTest::Initialize()
 {
     auto assets = gameHost->GetAssetManager();
     auto clock = gameHost->GetClock();
-    commandList = std::get<0>(graphicsDevice->CreateGraphicsCommandList());
+
+    std::shared_ptr<Error> err;
+
+    // NOTE: Create graphics command list
+    std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to create graphics command list");
+    }
+
+    // NOTE: Create PrimitiveBatch effect
     primitiveBatch = std::make_shared<PrimitiveBatch>(
         graphicsDevice,
         DepthStencilDescription::CreateDefault(),
         std::nullopt,
         *assets);
 
-    if (auto [res, err] = assets->Load<MagicaVoxel::VoxModel>("VoxelModels/MaidChan.vox"); err != nullptr) {
-        Log::Verbose("failed to load texture: " + err->ToString());
+    // NOTE: Load MagicaVoxel model
+    std::tie(voxelModel, err) = assets->Load<MagicaVoxel::VoxModel>("VoxelModels/MaidChan.vox");
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to load texture");
     }
-    else {
-        voxelModel = std::move(res);
-    }
+
+    return nullptr;
 }
 
 void VoxelModelTest::Update()

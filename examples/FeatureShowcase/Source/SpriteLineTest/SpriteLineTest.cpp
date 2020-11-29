@@ -11,11 +11,19 @@ SpriteLineTest::SpriteLineTest(const std::shared_ptr<GameHost>& gameHostIn)
 {
 }
 
-void SpriteLineTest::Initialize()
+std::shared_ptr<Error> SpriteLineTest::Initialize()
 {
     auto assets = gameHost->GetAssetManager();
     auto clock = gameHost->GetClock();
-    commandList = std::get<0>(graphicsDevice->CreateGraphicsCommandList());
+
+    std::shared_ptr<Error> err;
+
+    // NOTE: Create graphics command list
+    std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to create graphics command list");
+    }
+
     primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
     spriteBatch = std::make_shared<SpriteBatch>(
         graphicsDevice,
@@ -27,13 +35,15 @@ void SpriteLineTest::Initialize()
         SpriteBatchPixelShaderMode::Default,
         *assets);
 
-    std::shared_ptr<Error> err;
+    // NOTE: Load texture from PNG image file.
     std::tie(texture, err) = assets->Load<Texture2D>("Textures/pomdog.png");
     if (err != nullptr) {
-        Log::Verbose("failed to load texture: " + err->ToString());
+        return Errors::Wrap(std::move(err), "failed to load texture");
     }
 
     mousePosition = Vector2{100.0f, 100.0f};
+
+    return nullptr;
 }
 
 void SpriteLineTest::Update()

@@ -11,11 +11,19 @@ BillboardBatchTest::BillboardBatchTest(const std::shared_ptr<GameHost>& gameHost
 {
 }
 
-void BillboardBatchTest::Initialize()
+std::shared_ptr<Error> BillboardBatchTest::Initialize()
 {
     auto assets = gameHost->GetAssetManager();
     auto clock = gameHost->GetClock();
-    commandList = std::get<0>(graphicsDevice->CreateGraphicsCommandList());
+
+    std::shared_ptr<Error> err;
+
+    // NOTE: Create graphics command list
+    std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to create graphics command list");
+    }
+
     lineBatch = std::make_shared<LineBatch>(graphicsDevice, *assets);
 
     // NOTE: Create billboard batch effect
@@ -32,24 +40,31 @@ void BillboardBatchTest::Initialize()
     billboardBuffer = std::make_shared<BillboardBatchBuffer>(graphicsDevice, 256);
 
     // NOTE: Create sampler state
-    sampler = std::get<0>(graphicsDevice->CreateSamplerState(
-        SamplerDescription::CreateLinearClamp()));
+    std::tie(sampler, err) = graphicsDevice->CreateSamplerState(
+        SamplerDescription::CreateLinearClamp());
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to create sampler state");
+    }
 
     // NOTE: Create constant buffer
-    constantBuffer = std::get<0>(graphicsDevice->CreateConstantBuffer(
+    std::tie(constantBuffer, err) = graphicsDevice->CreateConstantBuffer(
         sizeof(BasicEffect::WorldConstantBuffer),
-        BufferUsage::Dynamic));
-
-    if (auto [res, err] = assets->Load<Texture2D>("Textures/pomdog.png"); err != nullptr) {
-        Log::Verbose("failed to load texture: " + err->ToString());
+        BufferUsage::Dynamic);
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to create constant buffer");
     }
-    else {
-        texture = std::move(res);
+
+    // NOTE: Load texture from PNG image file.
+    std::tie(texture, err) = assets->Load<Texture2D>("Textures/pomdog.png");
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to load texture");
     }
 
     timer = std::make_shared<Timer>(clock);
     timer->SetInterval(std::chrono::seconds(1));
     timer->SetScale(0.1);
+
+    return nullptr;
 }
 
 void BillboardBatchTest::Update()

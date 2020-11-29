@@ -10,11 +10,19 @@ PolylineDrawingTest::PolylineDrawingTest(const std::shared_ptr<GameHost>& gameHo
 {
 }
 
-void PolylineDrawingTest::Initialize()
+std::shared_ptr<Error> PolylineDrawingTest::Initialize()
 {
     auto assets = gameHost->GetAssetManager();
     auto clock = gameHost->GetClock();
-    commandList = std::get<0>(graphicsDevice->CreateGraphicsCommandList());
+
+    std::shared_ptr<Error> err;
+
+    // NOTE: Create graphics command list
+    std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to create graphics command list");
+    }
+
     lineBatch = std::make_shared<PolylineBatch>(graphicsDevice, *assets);
 
     auto mouse = gameHost->GetMouse();
@@ -34,6 +42,8 @@ void PolylineDrawingTest::Initialize()
     connect(mouse->ScrollWheel, [this](int32_t delta) {
         lineWidth = std::clamp(lineWidth + static_cast<float>(delta) * 0.1f, 0.5f, 40.0f);
     });
+
+    return nullptr;
 }
 
 void PolylineDrawingTest::Update()

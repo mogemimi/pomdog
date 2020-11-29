@@ -11,18 +11,23 @@ BasicEffectTest::BasicEffectTest(const std::shared_ptr<GameHost>& gameHostIn)
 {
 }
 
-void BasicEffectTest::Initialize()
+std::shared_ptr<Error> BasicEffectTest::Initialize()
 {
     auto assets = gameHost->GetAssetManager();
     auto clock = gameHost->GetClock();
-    commandList = std::get<0>(graphicsDevice->CreateGraphicsCommandList());
+
+    std::shared_ptr<Error> err;
+
+    // NOTE: Create graphics command list
+    std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to create graphics command list");
+    }
 
     // NOTE: Load texture from image file
-    if (auto [res, err] = assets->Load<Texture2D>("Textures/pomdog.png"); err != nullptr) {
-        Log::Verbose("failed to load texture: " + err->ToString());
-    }
-    else {
-        texture = std::move(res);
+    std::tie(texture, err) = assets->Load<Texture2D>("Textures/pomdog.png");
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to load texture");
     }
 
     {
@@ -61,11 +66,15 @@ void BasicEffectTest::Initialize()
             {Vector3{0.0f, 1.0f, 1.0f}, Vector3{0.0f, 0.0f, 1.0f}, Vector2{0.0f, 1.0f}},
         }};
 
-        vertexBuffer1 = std::get<0>(graphicsDevice->CreateVertexBuffer(
+        std::tie(vertexBuffer1, err) = graphicsDevice->CreateVertexBuffer(
             verticesCombo.data(),
             verticesCombo.size(),
             sizeof(VertexCombined),
-            BufferUsage::Immutable));
+            BufferUsage::Immutable);
+
+        if (err != nullptr) {
+            return Errors::Wrap(std::move(err), "failed to create vertex buffer");
+        }
     }
     {
         using VertexCombined = BasicEffect::VertexPositionColor;
@@ -103,11 +112,15 @@ void BasicEffectTest::Initialize()
             {Vector3{0.0f, 1.0f, 1.0f}, Color::White.ToVector4()},
         }};
 
-        vertexBuffer2 = std::get<0>(graphicsDevice->CreateVertexBuffer(
+        std::tie(vertexBuffer2, err) = graphicsDevice->CreateVertexBuffer(
             verticesCombo.data(),
             verticesCombo.size(),
             sizeof(VertexCombined),
-            BufferUsage::Immutable));
+            BufferUsage::Immutable);
+
+        if (err != nullptr) {
+            return Errors::Wrap(std::move(err), "failed to create vertex buffer");
+        }
     }
     {
         // NOTE: Create index buffer
@@ -128,26 +141,42 @@ void BasicEffectTest::Initialize()
             19, 16, 18,
         }};
 
-        indexBuffer = std::get<0>(graphicsDevice->CreateIndexBuffer(
+        std::tie(indexBuffer, err) = graphicsDevice->CreateIndexBuffer(
             IndexElementSize::SixteenBits,
             indices.data(),
             indices.size(),
-            BufferUsage::Immutable));
+            BufferUsage::Immutable);
+
+        if (err != nullptr) {
+            return Errors::Wrap(std::move(err), "failed to create index buffer");
+        }
     }
     {
         // NOTE: Create constant buffer
-        modelConstantBuffer = std::get<0>(graphicsDevice->CreateConstantBuffer(
+        std::tie(modelConstantBuffer, err) = graphicsDevice->CreateConstantBuffer(
             sizeof(BasicEffect::ModelConstantBuffer),
-            BufferUsage::Dynamic));
+            BufferUsage::Dynamic);
 
-        worldConstantBuffer = std::get<0>(graphicsDevice->CreateConstantBuffer(
+        if (err != nullptr) {
+            return Errors::Wrap(std::move(err), "failed to create constant buffer");
+        }
+
+        std::tie(worldConstantBuffer, err) = graphicsDevice->CreateConstantBuffer(
             sizeof(BasicEffect::WorldConstantBuffer),
-            BufferUsage::Dynamic));
+            BufferUsage::Dynamic);
+
+        if (err != nullptr) {
+            return Errors::Wrap(std::move(err), "failed to create constant buffer");
+        }
     }
     {
         // NOTE: Create sampler state
-        sampler = std::get<0>(graphicsDevice->CreateSamplerState(
-            SamplerDescription::CreateLinearClamp()));
+        std::tie(sampler, err) = graphicsDevice->CreateSamplerState(
+            SamplerDescription::CreateLinearClamp());
+
+        if (err != nullptr) {
+            return Errors::Wrap(std::move(err), "failed to create sampler state");
+        }
     }
     {
         auto presentationParameters = graphicsDevice->GetPresentationParameters();
@@ -158,7 +187,6 @@ void BasicEffectTest::Initialize()
         effectDesc.VertexColorEnabled = false;
 
         // NOTE: Create pipeline state
-        std::shared_ptr<Error> err;
         std::tie(pipelineState1, err) = BasicEffect::CreateBasicEffect(*assets, effectDesc)
             .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
             .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
@@ -168,7 +196,7 @@ void BasicEffectTest::Initialize()
             .SetRasterizerState(RasterizerDescription::CreateDefault())
             .Build();
         if (err != nullptr) {
-            // FIXME: error handling
+            return Errors::Wrap(std::move(err), "failed to create pipeline state");
         }
     }
     {
@@ -180,7 +208,6 @@ void BasicEffectTest::Initialize()
         effectDesc.VertexColorEnabled = true;
 
         // NOTE: Create pipeline state
-        std::shared_ptr<Error> err;
         std::tie(pipelineState2, err) = BasicEffect::CreateBasicEffect(*assets, effectDesc)
             .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
             .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
@@ -190,9 +217,11 @@ void BasicEffectTest::Initialize()
             .SetRasterizerState(RasterizerDescription::CreateDefault())
             .Build();
         if (err != nullptr) {
-            // FIXME: error handling
+            return Errors::Wrap(std::move(err), "failed to create pipeline state");
         }
     }
+
+    return nullptr;
 }
 
 void BasicEffectTest::Update()

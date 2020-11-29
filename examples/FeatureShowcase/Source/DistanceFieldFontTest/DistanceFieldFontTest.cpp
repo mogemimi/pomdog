@@ -10,11 +10,19 @@ DistanceFieldFontTest::DistanceFieldFontTest(const std::shared_ptr<GameHost>& ga
 {
 }
 
-void DistanceFieldFontTest::Initialize()
+std::shared_ptr<Error> DistanceFieldFontTest::Initialize()
 {
     auto assets = gameHost->GetAssetManager();
     auto clock = gameHost->GetClock();
-    commandList = std::get<0>(graphicsDevice->CreateGraphicsCommandList());
+
+    std::shared_ptr<Error> err;
+
+    // NOTE: Create graphics command list
+    std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to create graphics command list");
+    }
+
     primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
     spriteBatch = std::make_shared<SpriteBatch>(
         graphicsDevice,
@@ -26,15 +34,14 @@ void DistanceFieldFontTest::Initialize()
         SpriteBatchPixelShaderMode::DistanceField,
         *assets);
 
-    auto [font, fontErr] = assets->Load<SpriteFont>("BitmapFonts/Ubuntu-Regular.fnt");
-    if (fontErr != nullptr) {
-        Log::Critical("Error", "failed to load a font file: " + fontErr->ToString());
-    }
-    else {
-        spriteFont = std::move(font);
+    std::tie(spriteFont, err) = assets->Load<SpriteFont>("BitmapFonts/Ubuntu-Regular.fnt");
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to load a font file");
     }
 
     spriteFont->PrepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
+
+    return nullptr;
 }
 
 void DistanceFieldFontTest::Update()

@@ -9,17 +9,25 @@ EditorGUITest::EditorGUITest(const std::shared_ptr<GameHost>& gameHostIn)
 {
 }
 
-void EditorGUITest::Initialize()
+std::shared_ptr<Error> EditorGUITest::Initialize()
 {
     auto assets = gameHost->GetAssetManager();
     auto clock = gameHost->GetClock();
-    commandList = std::get<0>(graphicsDevice->CreateGraphicsCommandList());
+
+    std::shared_ptr<Error> err;
+
+    // NOTE: Create graphics command list
+    std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to create graphics command list");
+    }
+
     primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
     spriteBatch = std::make_shared<SpriteBatch>(graphicsDevice, *assets);
 
     auto [font, fontErr] = assets->Load<TrueTypeFont>("Fonts/NotoSans/NotoSans-Regular.ttf");
     if (fontErr != nullptr) {
-        Log::Critical("Error", "failed to load a font file: " + fontErr->ToString());
+        return Errors::Wrap(std::move(fontErr), "failed to load a font file");
     }
 
     spriteFont = std::make_shared<SpriteFont>(graphicsDevice, font, 32.0f, 32.0f);
@@ -301,6 +309,8 @@ void EditorGUITest::Initialize()
         auto toggleSwitch = std::make_shared<GUI::ToggleSwitch>(dispatcher);
         treeView->AddChild(toggleSwitch);
     }
+
+    return nullptr;
 }
 
 void EditorGUITest::Update()

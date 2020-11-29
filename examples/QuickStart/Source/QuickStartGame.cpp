@@ -14,34 +14,36 @@ QuickStartGame::QuickStartGame(const std::shared_ptr<GameHost>& gameHostIn)
 {
 }
 
-void QuickStartGame::Initialize()
+std::shared_ptr<Error> QuickStartGame::Initialize()
 {
-    // Display message in log console
+    // NOTE: Display message in log console
     Log::Verbose("Hello, QuickStart.");
 
-    // Set window name
+    // NOTE: Set window name
     window->SetTitle("QuickStart");
 
-    // Create graphics command list
-    commandList = std::get<0>(graphicsDevice->CreateGraphicsCommandList());
+    std::shared_ptr<Error> err;
 
-    // Load a PNG as texture
-    if (auto [res, err] = assets->Load<Texture2D>("pomdog.png"); err != nullptr) {
-        // Error handling
-        Log::Critical("Game", err->ToString());
-        gameHost->Exit();
-        return;
+    // NOTE: Create graphics command list
+    std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to create graphics command list");
     }
-    else {
-        texture = std::move(res);
+
+    // NOTE: Load a PNG image as texture
+    std::tie(texture, err) = assets->Load<Texture2D>("pomdog.png");
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to load texture");
+    }
+
+    // NOTE: Create sampler state
+    std::tie(sampler, err) = graphicsDevice->CreateSamplerState(SamplerDescription::CreatePointClamp());
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to create sampler state");
     }
 
     {
-        // Create sampler state
-        sampler = std::get<0>(graphicsDevice->CreateSamplerState(SamplerDescription::CreatePointClamp()));
-    }
-    {
-        // Create vertex buffer
+        // NOTE: Create vertex buffer
         struct VertexCombined {
             Vector3 Position;
             Vector2 TextureCoord;
@@ -54,30 +56,42 @@ void QuickStartGame::Initialize()
             VertexCombined{Vector3{ 1.0f, -1.0f, 0.0f}, Vector2{1.0f, 1.0f}},
         }};
 
-        vertexBuffer = std::get<0>(graphicsDevice->CreateVertexBuffer(
+        std::tie(vertexBuffer, err) = graphicsDevice->CreateVertexBuffer(
             verticesCombo.data(),
             verticesCombo.size(),
             sizeof(VertexCombined),
-            BufferUsage::Immutable));
+            BufferUsage::Immutable);
+
+        if (err != nullptr) {
+            return Errors::Wrap(std::move(err), "failed to create vertex buffer");
+        }
     }
     {
-        // Create index buffer
+        // NOTE: Create index buffer
         std::array<std::uint16_t, 6> indices = {{0, 1, 2, 2, 3, 0}};
 
-        indexBuffer = std::get<0>(graphicsDevice->CreateIndexBuffer(
+        std::tie(indexBuffer, err) = graphicsDevice->CreateIndexBuffer(
             IndexElementSize::SixteenBits,
             indices.data(),
             indices.size(),
-            BufferUsage::Immutable));
+            BufferUsage::Immutable);
+
+        if (err != nullptr) {
+            return Errors::Wrap(std::move(err), "failed to create index buffer");
+        }
     }
     {
-        // Create constant buffer
-        constantBuffer = std::get<0>(graphicsDevice->CreateConstantBuffer(
+        // NOTE: Create constant buffer
+        std::tie(constantBuffer, err) = graphicsDevice->CreateConstantBuffer(
             sizeof(MyShaderConstants),
-            BufferUsage::Dynamic));
+            BufferUsage::Dynamic);
+
+        if (err != nullptr) {
+            return Errors::Wrap(std::move(err), "failed to create constant buffer");
+        }
     }
     {
-        // For details, see 'struct VertexCombined' members
+        // NOTE: For details, see 'struct VertexCombined' members
         auto inputLayout = InputLayoutHelper{}
             .Float3()
             .Float2()
@@ -90,7 +104,7 @@ void QuickStartGame::Initialize()
             .Build();
 
         if (vertexShaderErr != nullptr) {
-            // FIXME: error handling
+            return Errors::Wrap(std::move(vertexShaderErr), "failed to create vertex shader");
         }
 
         auto [pixelShader, pixelShaderErr] = assets->CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
@@ -100,13 +114,12 @@ void QuickStartGame::Initialize()
             .Build();
 
         if (pixelShaderErr != nullptr) {
-            // FIXME: error handling
+            return Errors::Wrap(std::move(pixelShaderErr), "failed to create pixel shader");
         }
 
         auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
         // NOTE: Create pipeline state
-        std::shared_ptr<Error> err;
         std::tie(pipelineState, err) = assets->CreateBuilder<PipelineState>()
             .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
             .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
@@ -119,7 +132,7 @@ void QuickStartGame::Initialize()
             .Build();
 
         if (err != nullptr) {
-            // FIXME: error handling
+            return Errors::Wrap(std::move(err), "failed to create pipeline state");
         }
     }
     {
@@ -135,19 +148,19 @@ void QuickStartGame::Initialize()
             myShaderConstants.ViewProjection = viewMatrix * projectionMatrix;
         };
 
-        // Initialize shader resources
+        // NOTE: Initialize shader resources
         auto bounds = window->GetClientBounds();
         updateShaderConstants(bounds.Width, bounds.Height);
 
-        // Connect to window resize event notification
+        // NOTE: Connect to window resize event notification
         connect(window->ClientSizeChanged, updateShaderConstants);
     }
     {
-        // Create timer
+        // NOTE: Create timer
         timer = std::make_unique<Timer>(clock);
         timer->SetInterval(std::chrono::milliseconds(500));
 
-        // Connect to timer event notification
+        // NOTE: Connect to timer event notification
         connect(timer->Elapsed, [this] {
             // String formatting using Pomdog::StringFormat
             auto title = StringHelper::Format(
@@ -155,10 +168,12 @@ void QuickStartGame::Initialize()
                 std::round(clock->GetFrameRate()),
                 std::to_string(clock->GetFrameNumber()).c_str());
 
-            // Set window title
+            // NOTE: Set window title
             window->SetTitle(title);
         });
     }
+
+    return nullptr;
 }
 
 void QuickStartGame::Update()

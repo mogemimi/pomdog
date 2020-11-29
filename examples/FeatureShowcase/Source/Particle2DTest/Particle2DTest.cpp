@@ -124,11 +124,19 @@ Particle2DTest::Particle2DTest(const std::shared_ptr<GameHost>& gameHostIn)
 {
 }
 
-void Particle2DTest::Initialize()
+std::shared_ptr<Error> Particle2DTest::Initialize()
 {
     auto assets = gameHost->GetAssetManager();
     auto clock = gameHost->GetClock();
-    commandList = std::get<0>(graphicsDevice->CreateGraphicsCommandList());
+
+    std::shared_ptr<Error> err;
+
+    // NOTE: Create graphics command list
+    std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to create graphics command list");
+    }
+
     primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
     spriteBatch = std::make_shared<SpriteBatch>(
         graphicsDevice,
@@ -140,10 +148,10 @@ void Particle2DTest::Initialize()
         SpriteBatchPixelShaderMode::Default,
         *assets);
 
-    std::shared_ptr<Error> err;
+    // NOTE: Load particle texture
     std::tie(texture, err) = assets->Load<Texture2D>("Textures/particle_smoke.png");
     if (err != nullptr) {
-        Log::Verbose("failed to load texture: " + err->ToString());
+        return Errors::Wrap(std::move(err), "failed to load texture");
     }
 
     timer = std::make_shared<Timer>(clock);
@@ -169,6 +177,8 @@ void Particle2DTest::Initialize()
         pos.Y = -pos.Y + (window->GetClientBounds().Height / 2);
         emitterPosition = Math::ToVector2(pos);
     });
+
+    return nullptr;
 }
 
 void Particle2DTest::Update()
