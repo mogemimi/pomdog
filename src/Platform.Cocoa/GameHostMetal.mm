@@ -73,7 +73,8 @@ public:
         const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
         const PresentationParameters& presentationParameters);
 
-    void InitializeGame(
+    [[nodiscard]] std::shared_ptr<Error>
+    InitializeGame(
         const std::weak_ptr<Game>& game,
         const std::function<void()>& onCompleted);
 
@@ -255,10 +256,11 @@ GameHostMetal::Impl::~Impl()
     graphicsDevice.reset();
     window.reset();
     eventQueue.reset();
-    metalView = nil;
+    metalView = nullptr;
 }
 
-void GameHostMetal::Impl::InitializeGame(
+std::shared_ptr<Error>
+GameHostMetal::Impl::InitializeGame(
     const std::weak_ptr<Game>& weakGameIn,
     const std::function<void()>& onCompletedIn)
 {
@@ -270,11 +272,16 @@ void GameHostMetal::Impl::InitializeGame(
     POMDOG_ASSERT(!weakGame.expired());
     auto game = weakGame.lock();
 
-    game->Initialize();
+    if (auto err = game->Initialize(); err != nullptr) {
+        GameWillExit();
+        return Errors::Wrap(std::move(err), "failed to initialize game");
+    }
 
     if (exitRequest) {
         GameWillExit();
     }
+
+    return nullptr;
 }
 
 bool GameHostMetal::Impl::IsMetalSupported() const
@@ -287,13 +294,13 @@ bool GameHostMetal::Impl::IsMetalSupported() const
     POMDOG_ASSERT(graphicsDevice != nullptr);
     id<MTLDevice> metalDevice = graphicsDevice->GetMTLDevice();
 
-    return metalDevice != nil;
+    return metalDevice != nullptr;
 }
 
 void GameHostMetal::Impl::GameWillExit()
 {
     if (window) {
-        window->SetView(nil);
+        window->SetView(nullptr);
     }
 
     if (onCompleted) {
@@ -501,12 +508,13 @@ GameHostMetal::Initialize(
     return impl->Initialize(metalView, window, eventQueue, presentationParameters);
 }
 
-void GameHostMetal::InitializeGame(
+std::shared_ptr<Error>
+GameHostMetal::InitializeGame(
     const std::weak_ptr<Game>& game,
     const std::function<void()>& onCompleted)
 {
-    POMDOG_ASSERT(impl);
-    impl->InitializeGame(game, onCompleted);
+    POMDOG_ASSERT(impl != nullptr);
+    return impl->InitializeGame(game, onCompleted);
 }
 
 void GameHostMetal::GameLoop()

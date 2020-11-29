@@ -41,7 +41,7 @@ public:
     void SetOpenGLDepthFormat(DepthFormat depthFormat);
 
     /// Sets an error event handler to a log stream.
-    void OnError(std::function<void(std::shared_ptr<Error>)>&& onError);
+    void OnError(std::function<void(std::shared_ptr<Error>&& err)>&& onError);
 
     /// Sets an completion event handler to a log stream.
     void OnCompleted(std::function<void()>&& onCompleted);
@@ -52,7 +52,7 @@ public:
 
 private:
     std::function<void()> onCompleted;
-    std::function<void(std::shared_ptr<Error>)> onError;
+    std::function<void(std::shared_ptr<Error>&& err)> onError;
     std::shared_ptr<Pomdog::Detail::Cocoa::GameHostCocoa> gameHostCocoa;
     std::shared_ptr<Pomdog::Detail::Cocoa::GameHostMetal> gameHostMetal;
     std::shared_ptr<Game> game;

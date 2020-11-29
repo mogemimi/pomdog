@@ -12,6 +12,7 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Errors.hpp"
 #import <MetalKit/MTKView.h>
+#include <utility>
 
 using Pomdog::Detail::SystemEvent;
 using Pomdog::Detail::Cocoa::GameHostCocoa;
@@ -40,7 +41,7 @@ void Bootstrap::SetOpenGLDepthFormat(DepthFormat depthFormatIn)
     depthFormat = depthFormatIn;
 }
 
-void Bootstrap::OnError(std::function<void(std::shared_ptr<Error>)>&& onErrorIn)
+void Bootstrap::OnError(std::function<void(std::shared_ptr<Error>&& err)>&& onErrorIn)
 {
     POMDOG_ASSERT(onErrorIn);
     onError = std::move(onErrorIn);
@@ -91,29 +92,30 @@ Bootstrap::Run(std::function<std::shared_ptr<Game>(const std::shared_ptr<GameHos
         presentationParameters.BackBufferHeight = bounds.size.height;
         presentationParameters.IsFullScreen = false;
 
-        try {
-            POMDOG_ASSERT(onCompleted);
-            POMDOG_ASSERT(createGame);
+        POMDOG_ASSERT(onCompleted);
+        POMDOG_ASSERT(createGame);
 
-            auto eventQueue = std::make_shared<EventQueue<SystemEvent>>();
+        auto eventQueue = std::make_shared<EventQueue<SystemEvent>>();
 
-            // NOTE: Create a window.
-            auto gameWindow = std::make_shared<GameWindowCocoa>();
-            if (auto err = gameWindow->Initialize(nativeWindow, eventQueue); err != nullptr) {
-                return Errors::Wrap(std::move(err), "GameWindowCocoa::Initialize() failed.");
-            }
-
-            // NOTE: Create a game host for Cocoa.
-            gameHostCocoa = std::make_shared<GameHostCocoa>();
-            if (auto err = gameHostCocoa->Initialize(view, gameWindow, eventQueue, presentationParameters); err != nullptr) {
-                return Errors::Wrap(std::move(err), "GameHostCocoa::Initialize() failed.");
-            }
-
-            game = createGame(gameHostCocoa);
-            gameHostCocoa->Run(game, std::move(onCompleted));
+        // NOTE: Create a window.
+        auto gameWindow = std::make_shared<GameWindowCocoa>();
+        if (auto err = gameWindow->Initialize(nativeWindow, eventQueue); err != nullptr) {
+            return Errors::Wrap(std::move(err), "GameWindowCocoa::Initialize() failed.");
         }
-        catch (const std::exception& e) {
-            return Errors::New(std::string{"exception occurred: "} + e.what());
+
+        // NOTE: Create a game host for Cocoa.
+        gameHostCocoa = std::make_shared<GameHostCocoa>();
+        if (auto err = gameHostCocoa->Initialize(view, gameWindow, eventQueue, presentationParameters); err != nullptr) {
+            return Errors::Wrap(std::move(err), "GameHostCocoa::Initialize() failed.");
+        }
+
+        game = createGame(gameHostCocoa);
+        if (game == nullptr) {
+            return Errors::New("game must be != nullptr");
+        }
+
+        if (auto err = gameHostCocoa->Run(game, std::move(onCompleted)); err != nullptr) {
+            return Errors::Wrap(std::move(err), "GameHostCocoa::Run() failed.");
         }
     }
     else {

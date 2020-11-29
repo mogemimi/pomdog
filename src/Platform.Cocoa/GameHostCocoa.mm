@@ -53,7 +53,9 @@ public:
         const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
         const PresentationParameters& presentationParameters);
 
-    void Run(const std::weak_ptr<Game>& game,
+    [[nodiscard]] std::shared_ptr<Error>
+    Run(
+        const std::weak_ptr<Game>& game,
         std::function<void()>&& onCompleted);
 
     void Exit();
@@ -266,7 +268,8 @@ GameHostCocoa::Impl::~Impl()
     openGLView = nil;
 }
 
-void GameHostCocoa::Impl::Run(
+std::shared_ptr<Error>
+GameHostCocoa::Impl::Run(
     const std::weak_ptr<Game>& weakGameIn,
     std::function<void()>&& onCompletedIn)
 {
@@ -281,12 +284,18 @@ void GameHostCocoa::Impl::Run(
     openGLContext->Lock();
     openGLContext->SetView(openGLView);
     openGLContext->MakeCurrent();
-    game->Initialize();
+
+    if (auto err = game->Initialize(); err != nullptr) {
+        openGLContext->Unlock();
+        GameWillExit();
+        return Errors::Wrap(std::move(err), "failed to initialzie game");
+    }
+
     openGLContext->Unlock();
 
     if (exitRequest) {
         GameWillExit();
-        return;
+        return nullptr;
     }
 
     POMDOG_ASSERT(openGLView != nil);
@@ -315,6 +324,8 @@ void GameHostCocoa::Impl::Run(
     CVDisplayLinkSetCurrentCGDisplayFromOpenGLContext(
         displayLink, cglContext, cglPixelFormat);
     CVDisplayLinkStart(displayLink);
+
+    return nullptr;
 }
 
 void GameHostCocoa::Impl::GameWillExit()
@@ -580,12 +591,13 @@ GameHostCocoa::Initialize(
     return impl->Initialize(openGLView, window, eventQueue, presentationParameters);
 }
 
-void GameHostCocoa::Run(
+std::shared_ptr<Error>
+GameHostCocoa::Run(
     const std::weak_ptr<Game>& game,
     std::function<void()>&& onCompleted)
 {
-    POMDOG_ASSERT(impl);
-    impl->Run(game, std::move(onCompleted));
+    POMDOG_ASSERT(impl != nullptr);
+    return impl->Run(game, std::move(onCompleted));
 }
 
 void GameHostCocoa::Exit()

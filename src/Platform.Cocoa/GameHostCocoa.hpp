@@ -37,7 +37,8 @@ public:
         const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
         const PresentationParameters& presentationParameters);
 
-    void Run(
+    [[nodiscard]] std::shared_ptr<Error>
+    Run(
         const std::weak_ptr<Game>& game,
         std::function<void()>&& onCompleted);
 

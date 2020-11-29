@@ -301,7 +301,9 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     game = createGame(gameHost);
     POMDOG_ASSERT(game);
 
-    gameHost->InitializeGame(game, std::move(onCompleted));
+    if (auto err = gameHost->InitializeGame(game, std::move(onCompleted)); err != nullptr) {
+        POMDOG_THROW_EXCEPTION(std::runtime_error, "GameHostMetal::InitializeGame() failed: " + err->ToString());
+    }
 }
 
 - (void)startGame:(std::function<std::shared_ptr<Pomdog::Game>(const std::shared_ptr<Pomdog::GameHost>&)>&&)createGameIn
