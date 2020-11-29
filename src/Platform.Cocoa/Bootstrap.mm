@@ -21,7 +21,7 @@ namespace Pomdog::Cocoa {
 
 void Bootstrap::SetWindow(NSWindow* window)
 {
-    POMDOG_ASSERT(window != nil);
+    POMDOG_ASSERT(window != nullptr);
     nativeWindow = window;
 }
 
@@ -60,13 +60,13 @@ void Bootstrap::OnCompleted(std::function<void()>&& onCompletedIn)
 std::shared_ptr<Error>
 Bootstrap::Run(std::function<std::shared_ptr<Game>(const std::shared_ptr<GameHost>&)>&& createGame)
 {
-    POMDOG_ASSERT(nativeWindow != nil);
+    POMDOG_ASSERT(nativeWindow != nullptr);
     POMDOG_ASSERT(createGame);
 
     if (!onCompleted) {
         onCompleted = [window = nativeWindow] {
             [window close];
-            [NSApp terminate:nil];
+            [NSApp terminate:nullptr];
         };
     }
 
@@ -79,7 +79,7 @@ Bootstrap::Run(std::function<std::shared_ptr<Game>(const std::shared_ptr<GameHos
         view.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
 
         [nativeWindow setContentView:view];
-        [nativeWindow makeKeyAndOrderFront:nil];
+        [nativeWindow makeKeyAndOrderFront:nullptr];
         [nativeWindow orderFrontRegardless];
 
         PresentationParameters presentationParameters;
@@ -117,7 +117,7 @@ Bootstrap::Run(std::function<std::shared_ptr<Game>(const std::shared_ptr<GameHos
         }
     }
     else {
-        viewController = [[PomdogMetalViewController alloc] initWithNibName:nil bundle:nil];
+        viewController = [[PomdogMetalViewController alloc] initWithNibName:nullptr bundle:nullptr];
         [viewController startGame:std::move(createGame) completed:std::move(onCompleted)];
 
         NSRect bounds = nativeWindow.frame;
@@ -131,7 +131,7 @@ Bootstrap::Run(std::function<std::shared_ptr<Game>(const std::shared_ptr<GameHos
         view.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
 
         [nativeWindow setContentView:view];
-        [nativeWindow makeKeyAndOrderFront:nil];
+        [nativeWindow makeKeyAndOrderFront:nullptr];
         [nativeWindow orderFrontRegardless];
 
         [viewController setView:view];
