@@ -11,9 +11,10 @@
 using Pomdog::Detail::ShaderBytecode;
 using Pomdog::Detail::ShaderCompileOptions;
 
-namespace Pomdog::ShaderCompilers {
+namespace Pomdog::ShaderCompilers::MetalCompiler {
 
-std::unique_ptr<Shader> MetalCompiler::CreateShaderFromSource(
+[[nodiscard]] std::tuple<std::unique_ptr<Shader>, std::shared_ptr<Error>>
+CreateShaderFromSource(
     GraphicsDevice& graphicsDevice,
     const void* shaderSource,
     std::size_t byteLength,
@@ -33,10 +34,11 @@ std::unique_ptr<Shader> MetalCompiler::CreateShaderFromSource(
     compileOptions.Profile.PipelineStage = pipelineStage;
     compileOptions.Precompiled = false;
 
-    return std::get<0>(graphicsDevice.CreateShader(std::move(shaderBytecode), std::move(compileOptions)));
+    return graphicsDevice.CreateShader(std::move(shaderBytecode), std::move(compileOptions));
 }
 
-std::unique_ptr<Shader> MetalCompiler::CreateShaderFromDefaultLibrary(
+[[nodiscard]] std::tuple<std::unique_ptr<Shader>, std::shared_ptr<Error>>
+CreateShaderFromDefaultLibrary(
     GraphicsDevice& graphicsDevice,
     const std::string& entryPoint,
     ShaderPipelineStage pipelineStage)
@@ -53,10 +55,11 @@ std::unique_ptr<Shader> MetalCompiler::CreateShaderFromDefaultLibrary(
     compileOptions.Profile.PipelineStage = pipelineStage;
     compileOptions.Precompiled = false;
 
-    return std::get<0>(graphicsDevice.CreateShader(std::move(shaderBytecode), std::move(compileOptions)));
+    return graphicsDevice.CreateShader(std::move(shaderBytecode), std::move(compileOptions));
 }
 
-std::unique_ptr<Shader> MetalCompiler::CreateShaderFromBinary(
+[[nodiscard]] std::tuple<std::unique_ptr<Shader>, std::shared_ptr<Error>>
+CreateShaderFromBinary(
     GraphicsDevice& graphicsDevice,
     const void* shaderSource,
     std::size_t byteLength,
@@ -75,7 +78,7 @@ std::unique_ptr<Shader> MetalCompiler::CreateShaderFromBinary(
     compileOptions.Profile.PipelineStage = pipelineStage;
     compileOptions.Precompiled = true;
 
-    return std::get<0>(graphicsDevice.CreateShader(std::move(shaderBytecode), std::move(compileOptions)));
+    return graphicsDevice.CreateShader(std::move(shaderBytecode), std::move(compileOptions));
 }
 
-} // namespace Pomdog::ShaderCompilers
+} // namespace Pomdog::ShaderCompilers::MetalCompiler

@@ -7,39 +7,39 @@
 #include <cstddef>
 #include <memory>
 #include <string>
+#include <tuple>
 
 namespace Pomdog {
+class Error;
 class GraphicsDevice;
 class Shader;
 } // namespace Pomdog
 
-namespace Pomdog::ShaderCompilers {
+namespace Pomdog::ShaderCompilers::MetalCompiler {
 
-struct POMDOG_EXPORT MetalCompiler final {
-    /// Creates a shader from a string of source code.
-    [[nodiscard]] static std::unique_ptr<Shader>
-    CreateShaderFromSource(
-        GraphicsDevice& graphicsDevice,
-        const void* shaderSource,
-        std::size_t byteLength,
-        const std::string& entryPoint,
-        ShaderPipelineStage pipelineStage);
+/// Creates a shader from a string of source code.
+[[nodiscard]] POMDOG_EXPORT std::tuple<std::unique_ptr<Shader>, std::shared_ptr<Error>>
+CreateShaderFromSource(
+    GraphicsDevice& graphicsDevice,
+    const void* shaderSource,
+    std::size_t byteLength,
+    const std::string& entryPoint,
+    ShaderPipelineStage pipelineStage);
 
-    /// Creates a shader from a default library.
-    [[nodiscard]] static std::unique_ptr<Shader>
-    CreateShaderFromDefaultLibrary(
-        GraphicsDevice& graphicsDevice,
-        const std::string& entryPoint,
-        ShaderPipelineStage pipelineStage);
+/// Creates a shader from a default library.
+[[nodiscard]] POMDOG_EXPORT std::tuple<std::unique_ptr<Shader>, std::shared_ptr<Error>>
+CreateShaderFromDefaultLibrary(
+    GraphicsDevice& graphicsDevice,
+    const std::string& entryPoint,
+    ShaderPipelineStage pipelineStage);
 
-    /// Creates a shader from precompiled '*.metallib' library data.
-    [[nodiscard]] static std::unique_ptr<Shader>
-    CreateShaderFromBinary(
-        GraphicsDevice& graphicsDevice,
-        const void* shaderSource,
-        std::size_t byteLength,
-        const std::string& entryPoint,
-        ShaderPipelineStage pipelineStage);
-};
+/// Creates a shader from precompiled '*.metallib' library data.
+[[nodiscard]] POMDOG_EXPORT std::tuple<std::unique_ptr<Shader>, std::shared_ptr<Error>>
+CreateShaderFromBinary(
+    GraphicsDevice& graphicsDevice,
+    const void* shaderSource,
+    std::size_t byteLength,
+    const std::string& entryPoint,
+    ShaderPipelineStage pipelineStage);
 
-} // namespace Pomdog::ShaderCompilers
+} // namespace Pomdog::ShaderCompilers::MetalCompiler

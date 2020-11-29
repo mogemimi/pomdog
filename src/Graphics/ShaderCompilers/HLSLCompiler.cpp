@@ -11,9 +11,10 @@
 using Pomdog::Detail::ShaderBytecode;
 using Pomdog::Detail::ShaderCompileOptions;
 
-namespace Pomdog::ShaderCompilers {
+namespace Pomdog::ShaderCompilers::HLSLCompiler {
 
-std::unique_ptr<Shader> HLSLCompiler::CreateShaderFromBinary(
+[[nodiscard]] std::tuple<std::unique_ptr<Shader>, std::shared_ptr<Error>>
+CreateShaderFromBinary(
     GraphicsDevice& graphicsDevice,
     const void* shaderSource,
     std::size_t byteLength,
@@ -31,10 +32,11 @@ std::unique_ptr<Shader> HLSLCompiler::CreateShaderFromBinary(
     compileOptions.Profile.PipelineStage = pipelineStage;
     compileOptions.Precompiled = true;
 
-    return std::get<0>(graphicsDevice.CreateShader(std::move(shaderBytecode), std::move(compileOptions)));
+    return graphicsDevice.CreateShader(std::move(shaderBytecode), std::move(compileOptions));
 }
 
-std::unique_ptr<Shader> HLSLCompiler::CreateShaderFromSource(
+[[nodiscard]] std::tuple<std::unique_ptr<Shader>, std::shared_ptr<Error>>
+CreateShaderFromSource(
     GraphicsDevice& graphicsDevice,
     const void* shaderSource,
     std::size_t byteLength,
@@ -61,7 +63,7 @@ std::unique_ptr<Shader> HLSLCompiler::CreateShaderFromSource(
         compileOptions.CurrentDirectory = std::move(*currentDirectory);
     }
 
-    return std::get<0>(graphicsDevice.CreateShader(std::move(shaderBytecode), std::move(compileOptions)));
+    return graphicsDevice.CreateShader(std::move(shaderBytecode), std::move(compileOptions));
 }
 
-} // namespace Pomdog::ShaderCompilers
+} // namespace Pomdog::ShaderCompilers::HLSLCompiler

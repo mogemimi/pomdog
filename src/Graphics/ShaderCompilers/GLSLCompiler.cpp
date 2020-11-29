@@ -11,9 +11,10 @@
 using Pomdog::Detail::ShaderBytecode;
 using Pomdog::Detail::ShaderCompileOptions;
 
-namespace Pomdog::ShaderCompilers {
+namespace Pomdog::ShaderCompilers::GLSLCompiler {
 
-std::unique_ptr<Shader> GLSLCompiler::CreateShader(
+[[nodiscard]] std::tuple<std::unique_ptr<Shader>, std::shared_ptr<Error>>
+CreateShader(
     GraphicsDevice& graphicsDevice,
     const void* shaderSource,
     std::size_t byteLength,
@@ -37,7 +38,7 @@ std::unique_ptr<Shader> GLSLCompiler::CreateShader(
         compileOptions.CurrentDirectory = std::move(*currentDirectory);
     }
 
-    return std::get<0>(graphicsDevice.CreateShader(std::move(shaderBytecode), std::move(compileOptions)));
+    return graphicsDevice.CreateShader(std::move(shaderBytecode), std::move(compileOptions));
 }
 
-} // namespace Pomdog::ShaderCompilers
+} // namespace Pomdog::ShaderCompilers::GLSLCompiler

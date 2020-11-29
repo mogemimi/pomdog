@@ -8,32 +8,32 @@
 #include <memory>
 #include <optional>
 #include <string>
+#include <tuple>
 
 namespace Pomdog {
+class Error;
 class GraphicsDevice;
 class Shader;
 } // namespace Pomdog
 
-namespace Pomdog::ShaderCompilers {
+namespace Pomdog::ShaderCompilers::HLSLCompiler {
 
-struct POMDOG_EXPORT HLSLCompiler final {
-    /// Creates a shader from a string of source code.
-    [[nodiscard]] static std::unique_ptr<Shader>
-    CreateShaderFromBinary(
-        GraphicsDevice& graphicsDevice,
-        const void* shaderSource,
-        std::size_t byteLength,
-        ShaderPipelineStage pipelineStage);
+/// Creates a shader from a string of source code.
+[[nodiscard]] POMDOG_EXPORT std::tuple<std::unique_ptr<Shader>, std::shared_ptr<Error>>
+CreateShaderFromBinary(
+    GraphicsDevice& graphicsDevice,
+    const void* shaderSource,
+    std::size_t byteLength,
+    ShaderPipelineStage pipelineStage);
 
-    /// Creates a shader from precompiled shader binary data.
-    [[nodiscard]] static std::unique_ptr<Shader>
-    CreateShaderFromSource(
-        GraphicsDevice& graphicsDevice,
-        const void* shaderSource,
-        std::size_t byteLength,
-        const std::string& entryPoint,
-        ShaderPipelineStage pipelineStage,
-        std::optional<std::string>&& currentDirectory);
-};
+/// Creates a shader from precompiled shader binary data.
+[[nodiscard]] POMDOG_EXPORT std::tuple<std::unique_ptr<Shader>, std::shared_ptr<Error>>
+CreateShaderFromSource(
+    GraphicsDevice& graphicsDevice,
+    const void* shaderSource,
+    std::size_t byteLength,
+    const std::string& entryPoint,
+    ShaderPipelineStage pipelineStage,
+    std::optional<std::string>&& currentDirectory);
 
-} // namespace Pomdog::ShaderCompilers
+} // namespace Pomdog::ShaderCompilers::HLSLCompiler

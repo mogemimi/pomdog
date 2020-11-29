@@ -8,23 +8,23 @@
 #include <memory>
 #include <optional>
 #include <string>
+#include <tuple>
 
 namespace Pomdog {
+class Error;
 class GraphicsDevice;
 class Shader;
 } // namespace Pomdog
 
-namespace Pomdog::ShaderCompilers {
+namespace Pomdog::ShaderCompilers::GLSLCompiler {
 
-struct POMDOG_EXPORT GLSLCompiler final {
-    /// Creates a shader from a string of source code.
-    [[nodiscard]] static std::unique_ptr<Shader>
-    CreateShader(
-        GraphicsDevice& graphicsDevice,
-        const void* shaderSource,
-        std::size_t byteLength,
-        ShaderPipelineStage pipelineStage,
-        std::optional<std::string>&& currentDirectory);
-};
+/// Creates a shader from a string of source code.
+[[nodiscard]] POMDOG_EXPORT std::tuple<std::unique_ptr<Shader>, std::shared_ptr<Error>>
+CreateShader(
+    GraphicsDevice& graphicsDevice,
+    const void* shaderSource,
+    std::size_t byteLength,
+    ShaderPipelineStage pipelineStage,
+    std::optional<std::string>&& currentDirectory);
 
-} // namespace Pomdog::ShaderCompilers
+} // namespace Pomdog::ShaderCompilers::GLSLCompiler
