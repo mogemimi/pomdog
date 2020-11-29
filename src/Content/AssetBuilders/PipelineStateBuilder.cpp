@@ -7,9 +7,8 @@
 #include "Pomdog/Graphics/PipelineState.hpp"
 #include "Pomdog/Graphics/PipelineStateDescription.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
-#include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #include <utility>
 
 namespace Pomdog::AssetBuilders {
@@ -19,6 +18,7 @@ public:
     PipelineStateDescription description;
     std::reference_wrapper<AssetManager const> assets;
     std::shared_ptr<GraphicsDevice> graphicsDevice;
+    std::shared_ptr<Error> lastError;
     bool hasPrimitiveTopology = false;
     bool hasBlendState = false;
     bool hasRasterizerState = false;
@@ -29,7 +29,8 @@ public:
 public:
     explicit Impl(AssetManager& assets);
 
-    std::shared_ptr<PipelineState> Load();
+    std::tuple<std::shared_ptr<PipelineState>, std::shared_ptr<Error>>
+    Load();
 };
 
 Builder<PipelineState>::Impl::Impl(AssetManager& assetsIn)
@@ -40,17 +41,18 @@ Builder<PipelineState>::Impl::Impl(AssetManager& assetsIn)
     description.PrimitiveTopology = PrimitiveTopology::TriangleList;
 }
 
-std::shared_ptr<PipelineState> Builder<PipelineState>::Impl::Load()
+std::tuple<std::shared_ptr<PipelineState>, std::shared_ptr<Error>>
+Builder<PipelineState>::Impl::Load()
 {
+    if (lastError != nullptr) {
+        return std::make_tuple(nullptr, std::move(lastError));
+    }
+
     POMDOG_ASSERT(!description.InputLayout.InputElements.empty());
 
-#if defined(DEBUG) && !defined(NDEBUG)
     if (!hasPrimitiveTopology) {
-        Log::Warning(
-            "Pomdog",
-            "[Warning] Please call Builder<PipelineState>::SetPrimitiveTopology() in your code.");
+        return std::make_tuple(nullptr, Errors::New("PrimitiveTopology must be specified"));
     }
-#endif
 
     if (!hasBlendState) {
         description.BlendState = BlendDescription::CreateDefault();
@@ -71,27 +73,18 @@ std::shared_ptr<PipelineState> Builder<PipelineState>::Impl::Load()
     POMDOG_ASSERT(hasDepthStencilViewFormat);
 
     if (!hasRenderTargetViewFormats) {
-#if defined(DEBUG) && !defined(NDEBUG)
-        Log::Warning(
-            "Pomdog",
-            "[Warning] Please call Builder<PipelineState>::SetRenderTargetViewFormats() in your code.");
-#endif
-        description.RenderTargetViewFormats = {SurfaceFormat::R8G8B8A8_UNorm};
-        hasRenderTargetViewFormats = true;
+        return std::make_tuple(nullptr, Errors::New("RenderTargetViewFormats must be specified"));
     }
 
     if (!hasDepthStencilViewFormat) {
-#if defined(DEBUG) && !defined(NDEBUG)
-        Log::Warning(
-            "Pomdog",
-            "[Warning] Please call Builder<PipelineState>::SetDepthStencilViewFormat() in your code.");
-#endif
-        description.DepthStencilViewFormat = DepthFormat::None;
-        hasDepthStencilViewFormat = true;
+        return std::make_tuple(nullptr, Errors::New("DepthStencilViewFormat must be specified"));
     }
 
-    auto pipelineState = std::get<0>(graphicsDevice->CreatePipelineState(description));
-    return pipelineState;
+    auto [pipelineState, err] = graphicsDevice->CreatePipelineState(description);
+    if (err != nullptr) {
+        return std::make_tuple(nullptr, Errors::Wrap(std::move(err), "CreatePipelineState() failed"));
+    }
+    return std::make_tuple(std::move(pipelineState), nullptr);
 }
 
 Builder<PipelineState>::Builder(AssetManager& assetsIn)
@@ -265,7 +258,8 @@ Builder<PipelineState>& Builder<PipelineState>::SetDepthStencilViewFormat(
     return *this;
 }
 
-std::shared_ptr<PipelineState> Builder<PipelineState>::Build()
+std::tuple<std::shared_ptr<PipelineState>, std::shared_ptr<Error>>
+Builder<PipelineState>::Build()
 {
     POMDOG_ASSERT(impl);
     return impl->Load();

@@ -13,7 +13,7 @@
 #include "Pomdog/Graphics/ShaderPipelineStage.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #include "Pomdog/Utility/FileSystem.hpp"
 #include "Pomdog/Utility/PathHelper.hpp"
 #include "Pomdog/Utility/StringHelper.hpp"
@@ -26,15 +26,14 @@
 
 using Pomdog::Detail::BinaryReader;
 using Pomdog::Detail::ShaderBytecode;
-using Pomdog::ShaderCompilers::GLSLCompiler;
-using Pomdog::ShaderCompilers::HLSLCompiler;
-using Pomdog::ShaderCompilers::MetalCompiler;
 
 namespace Pomdog::AssetBuilders {
 namespace {
 
-std::optional<std::string> IncludeGLSLFilesRecursive(
-    const std::string& path, std::set<std::string>& includes)
+using namespace Pomdog::ShaderCompilers;
+
+[[nodiscard]] std::optional<std::string>
+IncludeGLSLFilesRecursive(const std::string& path, std::set<std::string>& includes)
 {
     if (FileSystem::IsDirectory(path)) {
         Log::Warning("Pomdog", "error: " + path + "is directory, not text file.");
@@ -93,6 +92,7 @@ public:
     ShaderBytecode shaderBytecode;
     std::string entryPoint;
     std::optional<std::string> shaderFilePath;
+    std::shared_ptr<Error> lastError;
     bool precompiled;
     bool fromDefaultLibrary;
 
@@ -177,19 +177,22 @@ Builder<Shader>& Builder<Shader>::SetGLSLFromFile(const std::string& assetName)
         auto [stream, byteLength, err] = impl->OpenStream(filePath);
 
         if (err != nullptr) {
-            POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to open file. " + err->ToString());
+            impl->lastError = Errors::Wrap(std::move(err), "failed to open file: " + filePath);
+            return *this;
         }
 
         POMDOG_ASSERT(stream);
 
         if (byteLength <= 0) {
-            POMDOG_THROW_EXCEPTION(std::runtime_error, "The file is too small");
+            impl->lastError = Errors::Wrap(std::move(err), "the file is too small: " + filePath);
+            return *this;
         }
 
         impl->shaderBlob = BinaryReader::ReadArray<std::uint8_t>(stream, byteLength);
 
         if (impl->shaderBlob.empty()) {
-            POMDOG_THROW_EXCEPTION(std::runtime_error, "The file is too small");
+            impl->lastError = Errors::Wrap(std::move(err), "the file is too small: " + filePath);
+            return *this;
         }
 
         // NOTE: Using the #include in GLSL support
@@ -268,19 +271,22 @@ Builder<Shader>& Builder<Shader>::SetHLSLFromFile(
         auto [stream, byteLength, err] = impl->OpenStream(filePath);
 
         if (err != nullptr) {
-            POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to open file. " + err->ToString());
+            impl->lastError = Errors::Wrap(std::move(err), "failed to open file: " + filePath);
+            return *this;
         }
 
         POMDOG_ASSERT(stream);
 
         if (byteLength <= 0) {
-            POMDOG_THROW_EXCEPTION(std::runtime_error, "The file is too small");
+            impl->lastError = Errors::Wrap(std::move(err), "the file is too small: " + filePath);
+            return *this;
         }
 
         impl->shaderBlob = BinaryReader::ReadArray<std::uint8_t>(stream, byteLength);
 
         if (impl->shaderBlob.empty()) {
-            POMDOG_THROW_EXCEPTION(std::runtime_error, "The file is too small");
+            impl->lastError = Errors::Wrap(std::move(err), "the file is too small: " + filePath);
+            return *this;
         }
 
         // NOTE: Insert null at the end of a charater array
@@ -356,19 +362,22 @@ Builder<Shader>& Builder<Shader>::SetMetalFromFile(
         auto [stream, byteLength, err] = impl->OpenStream(filePath);
 
         if (err != nullptr) {
-            POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to open file. " + err->ToString());
+            impl->lastError = Errors::Wrap(std::move(err), "failed to open file: " + filePath);
+            return *this;
         }
 
         POMDOG_ASSERT(stream);
 
         if (byteLength <= 0) {
-            POMDOG_THROW_EXCEPTION(std::runtime_error, "The file is too small");
+            impl->lastError = Errors::Wrap(std::move(err), "the file is too small: " + filePath);
+            return *this;
         }
 
         impl->shaderBlob = BinaryReader::ReadArray<std::uint8_t>(stream, byteLength);
 
         if (impl->shaderBlob.empty()) {
-            POMDOG_THROW_EXCEPTION(std::runtime_error, "The file is too small");
+            impl->lastError = Errors::Wrap(std::move(err), "the file is too small: " + filePath);
+            return *this;
         }
 
         // NOTE: Insert null at the end of a charater array
@@ -399,19 +408,22 @@ Builder<Shader>& Builder<Shader>::SetMetalFromPrecompiledFile(
         auto [stream, byteLength, err] = impl->OpenStream(filePath);
 
         if (err != nullptr) {
-            POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to open file. " + err->ToString());
+            impl->lastError = Errors::Wrap(std::move(err), "failed to open file: " + filePath);
+            return *this;
         }
 
         POMDOG_ASSERT(stream);
 
         if (byteLength <= 0) {
-            POMDOG_THROW_EXCEPTION(std::runtime_error, "The file is too small");
+            impl->lastError = Errors::Wrap(std::move(err), "the file is too small: " + filePath);
+            return *this;
         }
 
         impl->shaderBlob = BinaryReader::ReadArray<std::uint8_t>(stream, byteLength);
 
         if (impl->shaderBlob.empty()) {
-            POMDOG_THROW_EXCEPTION(std::runtime_error, "The file is too small");
+            impl->lastError = Errors::Wrap(std::move(err), "the file is too small: " + filePath);
+            return *this;
         }
 
         impl->shaderBytecode.Code = impl->shaderBlob.data();
@@ -442,8 +454,13 @@ Builder<Shader>& Builder<Shader>::SetMetalFromLibrary(
     return *this;
 }
 
-std::shared_ptr<Shader> Builder<Shader>::Build()
+std::tuple<std::shared_ptr<Shader>, std::shared_ptr<Error>>
+Builder<Shader>::Build()
 {
+    if (impl->lastError != nullptr) {
+        return std::make_tuple(nullptr, std::move(impl->lastError));
+    }
+
     auto graphicsDevice = impl->GetDevice();
     POMDOG_ASSERT(graphicsDevice);
 
@@ -511,9 +528,7 @@ std::shared_ptr<Shader> Builder<Shader>::Build()
     }
     }
 
-    // error: FUS RO DAH!
-    POMDOG_THROW_EXCEPTION(std::domain_error,
-        "This shading language is not supported");
+    return std::make_tuple(nullptr, Errors::New("this shading language is not supported"));
 }
 
 } // namespace Pomdog::AssetBuilders

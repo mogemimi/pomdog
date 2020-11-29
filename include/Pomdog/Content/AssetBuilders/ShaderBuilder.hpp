@@ -10,9 +10,11 @@
 #include <cstdint>
 #include <memory>
 #include <string>
+#include <tuple>
 
 namespace Pomdog {
 class AssetManager;
+class Error;
 } // namespace Pomdog
 
 namespace Pomdog::AssetBuilders {
@@ -77,7 +79,8 @@ public:
     Builder& SetMetalFromLibrary(const std::string& entryPoint);
 
     /// Returns an object representing shader function.
-    [[nodiscard]] std::shared_ptr<Shader> Build();
+    [[nodiscard]] std::tuple<std::shared_ptr<Shader>, std::shared_ptr<Error>>
+    Build();
 
 private:
     class Impl;

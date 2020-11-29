@@ -11,6 +11,7 @@
 
 namespace Pomdog {
 class AssetManager;
+class Error;
 } // namespace Pomdog
 
 namespace Pomdog::AssetBuilders {
@@ -59,10 +60,12 @@ public:
 
     Builder& SetDepthStencilViewFormat(DepthFormat depthStencilViewFormat);
 
-    std::shared_ptr<PipelineState> Build();
+    /// Returns a pipeline state object.
+    [[nodiscard]] std::tuple<std::shared_ptr<PipelineState>, std::shared_ptr<Error>>
+    Build();
 
-    std::shared_ptr<EffectReflection> CreateEffectReflection(
-        const std::shared_ptr<PipelineState>& pipelineState);
+    [[nodiscard]] std::shared_ptr<EffectReflection>
+    CreateEffectReflection(const std::shared_ptr<PipelineState>& pipelineState);
 
     const PipelineStateDescription& GetDescription() const;
 
