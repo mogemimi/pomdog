@@ -158,7 +158,8 @@ void BasicEffectTest::Initialize()
         effectDesc.VertexColorEnabled = false;
 
         // NOTE: Create pipeline state
-        pipelineState1 = BasicEffect::CreateBasicEffect(*assets, effectDesc)
+        std::shared_ptr<Error> err;
+        std::tie(pipelineState1, err) = BasicEffect::CreateBasicEffect(*assets, effectDesc)
             .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
             .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
             .SetPrimitiveTopology(PrimitiveTopology::TriangleList)
@@ -166,6 +167,9 @@ void BasicEffectTest::Initialize()
             .SetBlendState(BlendDescription::CreateNonPremultiplied())
             .SetRasterizerState(RasterizerDescription::CreateDefault())
             .Build();
+        if (err != nullptr) {
+            // FIXME: error handling
+        }
     }
     {
         auto presentationParameters = graphicsDevice->GetPresentationParameters();
@@ -176,7 +180,8 @@ void BasicEffectTest::Initialize()
         effectDesc.VertexColorEnabled = true;
 
         // NOTE: Create pipeline state
-        pipelineState2 = BasicEffect::CreateBasicEffect(*assets, effectDesc)
+        std::shared_ptr<Error> err;
+        std::tie(pipelineState2, err) = BasicEffect::CreateBasicEffect(*assets, effectDesc)
             .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
             .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
             .SetPrimitiveTopology(PrimitiveTopology::TriangleList)
@@ -184,6 +189,9 @@ void BasicEffectTest::Initialize()
             .SetBlendState(BlendDescription::CreateNonPremultiplied())
             .SetRasterizerState(RasterizerDescription::CreateDefault())
             .Build();
+        if (err != nullptr) {
+            // FIXME: error handling
+        }
     }
 }
 

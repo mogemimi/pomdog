@@ -146,7 +146,8 @@ void AnimationGraphTest::Initialize()
         effectDesc.VertexColorEnabled = false;
 
         // NOTE: Create pipeline state
-        pipelineState = BasicEffect::CreateBasicEffect(*assets, effectDesc)
+        std::shared_ptr<Error> err;
+        std::tie(pipelineState, err) = BasicEffect::CreateBasicEffect(*assets, effectDesc)
             .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
             .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
             .SetPrimitiveTopology(PrimitiveTopology::TriangleList)
@@ -154,13 +155,16 @@ void AnimationGraphTest::Initialize()
             .SetBlendState(BlendDescription::CreateNonPremultiplied())
             .SetRasterizerState(RasterizerDescription::CreateDefault())
             .Build();
+        if (err != nullptr) {
+            // FIXME: error handling
+        }
 
         // NOTE: Create pipeline state for wireframe debug rendering
         auto rasterizerDesc = RasterizerDescription::CreateCullNone();
         rasterizerDesc.FillMode = FillMode::WireFrame;
 
         // NOTE: Create pipeline state
-        pipelineStateWireframe = BasicEffect::CreateBasicEffect(*assets, effectDesc)
+        std::tie(pipelineStateWireframe, err) = BasicEffect::CreateBasicEffect(*assets, effectDesc)
             .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
             .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
             .SetPrimitiveTopology(PrimitiveTopology::TriangleList)
@@ -168,6 +172,9 @@ void AnimationGraphTest::Initialize()
             .SetBlendState(BlendDescription::CreateOpaque())
             .SetRasterizerState(rasterizerDesc)
             .Build();
+        if (err != nullptr) {
+            // FIXME: error handling
+        }
     }
     {
         sampler = std::get<0>(graphicsDevice->CreateSamplerState(

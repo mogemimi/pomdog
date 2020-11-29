@@ -83,22 +83,31 @@ void QuickStartGame::Initialize()
             .Float2()
             .CreateInputLayout();
 
-        auto vertexShader = assets->CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
+        auto [vertexShader, vertexShaderErr] = assets->CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
             .SetGLSLFromFile("SimpleEffect_VS.glsl")
             .SetHLSLFromFile("SimpleEffect_VS.hlsl", "SimpleEffectVS")
             .SetMetalFromFile("SimpleEffect.metal", "SimpleEffectVS")
             .Build();
 
-        auto pixelShader = assets->CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
+        if (vertexShaderErr != nullptr) {
+            // FIXME: error handling
+        }
+
+        auto [pixelShader, pixelShaderErr] = assets->CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
             .SetGLSLFromFile("SimpleEffect_PS.glsl")
             .SetHLSLFromFile("SimpleEffect_PS.hlsl", "SimpleEffectPS")
             .SetMetalFromFile("SimpleEffect.metal", "SimpleEffectPS")
             .Build();
 
+        if (pixelShaderErr != nullptr) {
+            // FIXME: error handling
+        }
+
         auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
-        // Create pipeline state
-        pipelineState = assets->CreateBuilder<PipelineState>()
+        // NOTE: Create pipeline state
+        std::shared_ptr<Error> err;
+        std::tie(pipelineState, err) = assets->CreateBuilder<PipelineState>()
             .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
             .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
             .SetInputLayout(inputLayout)
@@ -108,6 +117,10 @@ void QuickStartGame::Initialize()
             .SetConstantBufferBindSlot("MyShaderConstants", 0)
             .SetSamplerBindSlot("DiffuseTexture", 0)
             .Build();
+
+        if (err != nullptr) {
+            // FIXME: error handling
+        }
     }
     {
         auto updateShaderConstants = [this]([[maybe_unused]] int width, [[maybe_unused]] int height) {

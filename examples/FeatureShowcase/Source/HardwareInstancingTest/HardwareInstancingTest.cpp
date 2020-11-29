@@ -84,22 +84,31 @@ void HardwareInstancingTest::Initialize()
             .Float4() // NOTE: SpriteInfo::Color
             .CreateInputLayout();
 
-        auto vertexShader = assets->CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
+        auto [vertexShader, vertexShaderErr] = assets->CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
             .SetGLSLFromFile("Shaders/HardwareInstancingVS.glsl")
             .SetHLSLFromFile("Shaders/HardwareInstancing.hlsl", "HardwareInstancingVS")
             .SetMetalFromFile("Shaders/HardwareInstancing.metal", "HardwareInstancingVS")
             .Build();
 
-        auto pixelShader = assets->CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
+        if (vertexShaderErr != nullptr) {
+            // FIXME: error handling
+        }
+
+        auto [pixelShader, pixelShaderErr] = assets->CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
             .SetGLSLFromFile("Shaders/HardwareInstancingPS.glsl")
             .SetHLSLFromFile("Shaders/HardwareInstancing.hlsl", "HardwareInstancingPS")
             .SetMetalFromFile("Shaders/HardwareInstancing.metal", "HardwareInstancingPS")
             .Build();
 
+        if (pixelShaderErr != nullptr) {
+            // FIXME: error handling
+        }
+
         auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
         // NOTE: Create pipeline state
-        pipelineState = assets->CreateBuilder<PipelineState>()
+        std::shared_ptr<Error> err;
+        std::tie(pipelineState, err) = assets->CreateBuilder<PipelineState>()
             .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
             .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
             .SetInputLayout(inputLayout)
@@ -108,6 +117,10 @@ void HardwareInstancingTest::Initialize()
             .SetPixelShader(std::move(pixelShader))
             .SetConstantBufferBindSlot("MyShaderConstants", 0)
             .Build();
+
+        if (err != nullptr) {
+            // FIXME: error handling
+        }
     }
     {
         SpriteInfo sprite;
