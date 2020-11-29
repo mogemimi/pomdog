@@ -7,6 +7,7 @@
 #include <iostream>
 #endif
 
+using Pomdog::Error;
 using Pomdog::Game;
 using Pomdog::GameHost;
 using Pomdog::Log;
@@ -40,6 +41,10 @@ using Pomdog::ScopedConnection;
 
     bootstrap.SetWindow(self.window);
     bootstrap.SetOpenGLEnabled(false);
+
+    bootstrap.OnError([](std::shared_ptr<Error>&& err) {
+        Log::Critical("Pomdog", err->ToString());
+    });
 
     bootstrap.OnCompleted([=] {
         [self.window close];
