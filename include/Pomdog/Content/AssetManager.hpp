@@ -75,10 +75,10 @@ public:
 
     /// Creates an asset builder.
     template <typename T, typename... Arguments>
-    AssetBuilders::Builder<T> CreateBuilder(Arguments&&... arguments)
+    [[nodiscard]] AssetBuilders::Builder<T>
+    CreateBuilder(Arguments&&... arguments)
     {
-        AssetBuilders::Builder<T> builder(*this,
-            std::forward<Arguments>(arguments)...);
+        AssetBuilders::Builder<T> builder(*this, std::forward<Arguments>(arguments)...);
         return builder;
     }
 
