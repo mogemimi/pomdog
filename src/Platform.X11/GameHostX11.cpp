@@ -378,8 +378,6 @@ void GameHostX11::Impl::ProcessEvent(::XEvent& event)
 
 void GameHostX11::Impl::Run(Game& game)
 {
-    game.Initialize();
-
     while (!exitRequest) {
         clock.Tick();
         MessagePump();

@@ -4,7 +4,7 @@
 #include "GameHostX11.hpp"
 #include "Pomdog/Application/Game.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
-#include "Pomdog/Utility/Exception.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #include <utility>
 
 namespace Pomdog::X11 {
@@ -37,9 +37,9 @@ void Bootstrap::SetFullScreen(bool isFullScreenIn) noexcept
     isFullScreen = isFullScreenIn;
 }
 
-void Bootstrap::OnError(std::function<void(const std::exception&)> onErrorIn)
+void Bootstrap::OnError(std::function<void(std::shared_ptr<Error>&& err)> onErrorIn)
 {
-    onError = onErrorIn;
+    onError = std::move(onErrorIn);
 }
 
 void Bootstrap::Run(
@@ -59,27 +59,32 @@ void Bootstrap::Run(
     std::shared_ptr<GameHostX11> gameHost;
     std::unique_ptr<Game> game;
 
-    try {
-        gameHost = std::make_shared<GameHostX11>();
-        if (auto err = gameHost->Initialize(presentationParameters); err != nullptr) {
-            // FIXME: error handling without using exceptions
-            POMDOG_THROW_EXCEPTION(std::runtime_error, "failed to initialize GameHostX11: " + err->ToString());
-        }
-
-        POMDOG_ASSERT(createApp);
-        game = createApp(gameHost);
-    }
-    catch (const std::exception& e) {
-        if (onError) {
-            onError(e);
+    gameHost = std::make_shared<GameHostX11>();
+    if (auto err = gameHost->Initialize(presentationParameters); err != nullptr) {
+        if (onError != nullptr) {
+            onError(Errors::Wrap(std::move(err), "failed to initialize GameHostX11"));
         }
         return;
     }
 
-    POMDOG_ASSERT(game);
-    if (game) {
-        gameHost->Run(*game);
+    POMDOG_ASSERT(createApp);
+    game = createApp(gameHost);
+    if (game == nullptr) {
+        if (onError != nullptr) {
+            onError(Errors::New("game must be != nullptr"));
+        }
+        return;
     }
+
+    POMDOG_ASSERT(game != nullptr);
+    if (auto err = game->Initialize(); err != nullptr) {
+        if (onError != nullptr) {
+            onError(Errors::Wrap(std::move(err), "failed to initialize game"));
+        }
+        return;
+    }
+
+    gameHost->Run(*game);
 
     game.reset();
     gameHost.reset();

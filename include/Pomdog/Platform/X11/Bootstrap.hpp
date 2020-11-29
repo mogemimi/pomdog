@@ -9,6 +9,7 @@
 #include <memory>
 
 namespace Pomdog {
+class Error;
 class Game;
 class GameHost;
 } // namespace Pomdog
@@ -36,13 +37,13 @@ public:
     void SetOpenGLEnabled(bool enabled) noexcept;
 
     /// Sets an error event handler to a log stream.
-    void OnError(std::function<void(const std::exception&)> onError);
+    void OnError(std::function<void(std::shared_ptr<Error>&& err)> onError);
 
     /// Begins running a game loop.
     void Run(const std::function<std::unique_ptr<Game>(const std::shared_ptr<GameHost>&)>& createGame);
 
 private:
-    std::function<void(const std::exception&)> onError;
+    std::function<void(std::shared_ptr<Error>&& err)> onError;
     int presentationInterval = 60;
     int backBufferWidth = 800;
     int backBufferHeight = 480;
