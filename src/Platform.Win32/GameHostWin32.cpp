@@ -393,8 +393,6 @@ GameHostWin32::Impl::~Impl()
 
 void GameHostWin32::Impl::Run(Game& game)
 {
-    game.Initialize();
-
     while (!exitRequest) {
         clock.Tick();
         MessagePump();

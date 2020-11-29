@@ -9,6 +9,8 @@
 #include "Pomdog/Application/GameHost.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Logging/Log.hpp"
+#include "Pomdog/Utility/Errors.hpp"
+#include <utility>
 
 using Pomdog::Detail::SystemEvent;
 using Pomdog::Detail::DirectInput::GamepadDirectInput;
@@ -68,9 +70,9 @@ void Bootstrap::SetOpenGLEnabled(bool openGLEnabledIn) noexcept
     openGLEnabled = openGLEnabledIn;
 }
 
-void Bootstrap::OnError(std::function<void(const std::exception&)> onErrorIn)
+void Bootstrap::OnError(std::function<void(std::shared_ptr<Error>&& err)> onErrorIn)
 {
-    onError = onErrorIn;
+    onError = std::move(onErrorIn);
 }
 
 void Bootstrap::Run(
@@ -104,11 +106,22 @@ void Bootstrap::Run(
 
     POMDOG_ASSERT(createApp);
     auto game = createApp(gameHost);
-
-    POMDOG_ASSERT(game);
-    if (game) {
-        gameHost->Run(*game);
+    if (game == nullptr) {
+        if (onError != nullptr) {
+            onError(Errors::New("game must be != nullptr"));
+        }
+        return;
     }
+
+    POMDOG_ASSERT(game != nullptr);
+    if (auto err = game->Initialize(); err != nullptr) {
+        if (onError != nullptr) {
+            onError(Errors::Wrap(std::move(err), "failed to initialize game"));
+        }
+        return;
+    }
+
+    gameHost->Run(*game);
 
     gameHost.reset();
     gameWindow.reset();
