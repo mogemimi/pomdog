@@ -22,4 +22,6 @@ class GraphicsCommandQueue;
 - (void)startGame:(std::function<std::shared_ptr<Pomdog::Game>(const std::shared_ptr<Pomdog::GameHost>&)>&&)createGame
         completed:(std::function<void()>&&)onCompleted;
 
+- (void)setMouseCursor:(NSCursor*)cursor;
+
 @end

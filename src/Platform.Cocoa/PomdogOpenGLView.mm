@@ -203,6 +203,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     std::shared_ptr<EventQueue<SystemEvent>> eventQueue;
     std::shared_ptr<OpenGLContextCocoa> openGLContext;
     NSTrackingRectTag trackingRect;
+    NSCursor* cursor;
     BOOL wasAcceptingMouseEvents;
 }
 
@@ -211,6 +212,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     self = [super initWithFrame:frameRect];
     if (self) {
         wasAcceptingMouseEvents = NO;
+        cursor = nullptr;
     }
     return self;
 }
@@ -325,6 +327,18 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 }
 
 // MARK: - Mouse Event Handling
+
+- (void)setMouseCursor:(NSCursor*)cursorIn
+{
+    cursor = cursorIn;
+}
+
+- (void)cursorUpdate:(NSEvent *)event
+{
+    if (cursor != nullptr) {
+        [cursor set];
+    }
+}
 
 - (void)mouseEntered:(NSEvent*)theEvent
 {

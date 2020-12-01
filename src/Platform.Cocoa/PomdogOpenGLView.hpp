@@ -27,4 +27,6 @@ class OpenGLContextCocoa;
 
 - (void)setResizingCallback:(std::function<void(bool)>)callback;
 
+- (void)setMouseCursor:(NSCursor*)cursor;
+
 @end

@@ -213,6 +213,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     std::shared_ptr<EventQueue<SystemEvent>> eventQueue;
     std::shared_ptr<Game> game;
     NSTrackingArea* trackingArea;
+    NSCursor* cursor;
     BOOL wasAcceptingMouseEvents;
 }
 
@@ -224,6 +225,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     POMDOG_ASSERT(!game);
 
     wasAcceptingMouseEvents = NO;
+    cursor = nullptr;
 
     ///@todo MSAA is not implemented yet
     constexpr int multiSampleCount = 1;
@@ -343,6 +345,18 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 }
 
 // MARK: - Mouse Event Handling
+
+- (void)setMouseCursor:(NSCursor*)cursorIn
+{
+    cursor = cursorIn;
+}
+
+- (void)cursorUpdate:(NSEvent *)event
+{
+    if (cursor != nullptr) {
+        [cursor set];
+    }
+}
 
 - (void)mouseEntered:(NSEvent*)theEvent
 {
