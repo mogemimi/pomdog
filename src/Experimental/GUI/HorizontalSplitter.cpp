@@ -23,6 +23,14 @@ public:
 
     void SetColor(const Color&) noexcept;
 
+    void SetBorderWidth(int width) noexcept;
+
+    int GetBorderWidth() const noexcept;
+
+    int GetBorderWidthOffset() const noexcept;
+
+    Point2D GetBorderPosition() const noexcept;
+
     HorizontalAlignment GetHorizontalAlignment() const noexcept override;
     VerticalAlignment GetVerticalAlignment() const noexcept override;
 
@@ -39,6 +47,7 @@ public:
 private:
     std::optional<Point2D> grabStartPosition;
     Color color;
+    int borderWidth = 1;
     bool isEnabled;
     bool isVisible;
 };
@@ -56,7 +65,8 @@ HorizontalSplitter::HorizontalSplitter(
     SetInteractable(false);
 
     splitterHandle = std::make_shared<HorizontalSplitterHandle>(dispatcher);
-    splitterHandle->SetSize(1, GetHeight());
+    splitterHandle->SetBorderWidth(1);
+    splitterHandle->SetSize(5, GetHeight());
     splitterHandle->SetPosition(Point2D{GetWidth() / 2, 0});
 }
 
@@ -69,8 +79,14 @@ void HorizontalSplitter::SetMargin(const Thickness& marginIn)
 void HorizontalSplitter::SetLayoutSpacing(int spacing)
 {
     POMDOG_ASSERT(splitterHandle);
-    POMDOG_ASSERT(spacing >= 1);
-    splitterHandle->SetSize(spacing, GetHeight());
+    POMDOG_ASSERT(spacing >= 0);
+    spacing = std::max(spacing, 0);
+
+    constexpr int handleCollisionOffset = 4;
+    const auto minimumCollisionWidth = handleCollisionOffset + (spacing % 2);
+
+    splitterHandle->SetBorderWidth(spacing);
+    splitterHandle->SetSize(std::max(spacing, minimumCollisionWidth), GetHeight());
     if (childSplitter) {
         childSplitter->SetLayoutSpacing(spacing);
     }
@@ -144,7 +160,7 @@ void HorizontalSplitter::OnEnter()
             auto& right = children[1];
             pos.X = std::min(
                 pos.X + offset,
-                GetWidth() - (right.minimumWidth + splitterHandle->GetWidth()));
+                GetWidth() - (right.minimumWidth + splitterHandle->GetBorderWidth()));
         }
 
         splitterHandle->SetPosition(pos);
@@ -163,7 +179,9 @@ void HorizontalSplitter::AddChild(const std::shared_ptr<Widget>& widget)
 
     if (children[0].widget == nullptr) {
         children[0] = std::move(item);
-        splitterHandle->SetPosition(Point2D{widget->GetWidth(), 0});
+
+        const auto offset = splitterHandle->GetBorderWidthOffset();
+        splitterHandle->SetPosition(Point2D{widget->GetWidth() - offset, 0});
     }
     else if (children[1].widget == nullptr) {
         children[1] = std::move(item);
@@ -273,7 +291,7 @@ void HorizontalSplitter::SetMinimumWidth(const std::shared_ptr<Widget>& widget, 
         if (childSplitter != nullptr) {
             childSplitter->SetMinimumWidth(widget, minimumWidth);
             auto& right = children[1];
-            right.minimumWidth = splitterHandle->GetWidth();
+            right.minimumWidth = splitterHandle->GetBorderWidth();
             for (auto& child : childSplitter->children) {
                 right.minimumWidth += child.minimumWidth;
             }
@@ -341,7 +359,7 @@ void HorizontalSplitter::UpdateLayout()
         position.X = std::clamp(
             position.X,
             0,
-            GetWidth() - (children[1].minimumWidth + splitterHandle->GetWidth()));
+            GetWidth() - (children[1].minimumWidth + splitterHandle->GetBorderWidth()));
         splitterHandle->SetPosition(position);
         splitterHandle->SetSize(splitterHandle->GetWidth(), GetHeight());
     }
@@ -367,7 +385,7 @@ void HorizontalSplitter::UpdateLayout()
             if (handle == nullptr) {
                 return GetWidth() - offsetX;
             }
-            auto handlePosition = handle->GetPosition();
+            auto handlePosition = handle->GetBorderPosition();
             return std::max(child.minimumWidth, handlePosition.X - position.X);
         }();
 
@@ -405,7 +423,7 @@ void HorizontalSplitter::UpdateLayout()
 
         if (handle != nullptr) {
             auto handlePosition = handle->GetPosition();
-            offsetX = handlePosition.X + handle->GetWidth();
+            offsetX = handlePosition.X + handle->GetBorderWidth();
         }
     }
 
@@ -452,6 +470,7 @@ void HorizontalSplitter::Draw(DrawingContext& drawingContext)
 HorizontalSplitterHandle::HorizontalSplitterHandle(const std::shared_ptr<UIEventDispatcher>& dispatcher)
     : Widget(dispatcher)
     , color(Color{45, 45, 48, 255})
+    , borderWidth(1)
     , isEnabled(true)
     , isVisible(true)
 {
@@ -482,6 +501,33 @@ void HorizontalSplitterHandle::SetVisible(bool visibleIn) noexcept
 void HorizontalSplitterHandle::SetColor(const Color& colorIn) noexcept
 {
     color = colorIn;
+}
+
+void HorizontalSplitterHandle::SetBorderWidth(int widthIn) noexcept
+{
+    POMDOG_ASSERT(widthIn >= 0);
+    borderWidth = widthIn;
+
+    if (borderWidth > GetWidth()) {
+        SetSize(borderWidth, GetHeight());
+    }
+}
+
+int HorizontalSplitterHandle::GetBorderWidth() const noexcept
+{
+    return borderWidth;
+}
+
+int HorizontalSplitterHandle::GetBorderWidthOffset() const noexcept
+{
+    return std::max((GetWidth() - borderWidth) / 2, 0);
+}
+
+Point2D HorizontalSplitterHandle::GetBorderPosition() const noexcept
+{
+    auto pos = GetPosition();
+    pos.X = pos.X + GetBorderWidthOffset();
+    return pos;
 }
 
 HorizontalAlignment HorizontalSplitterHandle::GetHorizontalAlignment() const noexcept
@@ -533,11 +579,11 @@ void HorizontalSplitterHandle::Draw(DrawingContext& drawingContext)
         return;
     }
 
-    auto globalPos = UIHelper::ProjectToWorldSpace(GetPosition(), drawingContext.GetCurrentTransform());
+    auto globalPos = UIHelper::ProjectToWorldSpace(GetBorderPosition(), drawingContext.GetCurrentTransform());
     auto primitiveBatch = drawingContext.GetPrimitiveBatch();
 
     primitiveBatch->DrawRectangle(
-        Rectangle{globalPos.X, globalPos.Y, GetWidth(), GetHeight()},
+        Rectangle{globalPos.X, globalPos.Y, borderWidth, GetHeight()},
         color);
 
     primitiveBatch->Flush();
