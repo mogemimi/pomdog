@@ -3,73 +3,17 @@
 #include "Pomdog/Experimental/GUI/ScenePanel.hpp"
 #include "Pomdog/Experimental/GUI/PointerPoint.hpp"
 #include "Pomdog/Experimental/GUI/UIEventDispatcher.hpp"
-#include "Pomdog/Math/Math.hpp"
 #include <cmath>
 
 namespace Pomdog::GUI {
-namespace {
-//
-//Radian<float> SampleTumbleGesture(const Vector2& position, Vector2 & startPosition, const Rectangle& viewportSize)
-//{
-//    constexpr float threshold = 1.0f;
-//
-//    Radian<float> delta = 0.0f;
-//
-//    auto const distance = Vector2::Distance(startPosition, position);
-//
-//    if (threshold < distance)
-//    {
-//        auto const centerPoint = viewportSize.GetCenter();
-//        Vector2 const screenOffset(centerPoint.X, centerPoint.Y);
-//
-//        auto vecInScreen1 = (startPosition - screenOffset);
-//        auto vecInScreen2 = (position - screenOffset);
-//        auto const cross = Vector2::Cross(vecInScreen2, vecInScreen1);
-//
-//        if (std::abs(cross) > 1.0f)
-//        {
-//            auto const cosAngle = Vector2::Dot(vecInScreen1, vecInScreen2)/(vecInScreen1.Length() * vecInScreen2.Length());
-//            delta = std::acos(Math::Clamp(cosAngle, -1.0f, 1.0f)) * (cross > 0.0f ? 1.0f: -1.0f);
-//            POMDOG_ASSERT(delta != std::numeric_limits<float>::signaling_NaN());
-//
-//            if ((vecInScreen1.Length() < 24.0f || vecInScreen2.Length() < 24.0f)) {
-//                delta *= std::min(std::abs(cross/vecInScreen2.Length())*0.01f, 1.0f);
-//            }
-//
-//            startPosition = std::move(position);
-//        }
-//    }
-//
-//    return delta;
-//}
-//
-//Vector2 SampleTrackGesture(const Vector2& position, Vector2 & startPosition)
-//{
-//    constexpr float threshold = 2.0f;
-//
-//    Vector2 delta = Vector2::Zero;
-//
-//    if (threshold < Vector2::Distance(startPosition, position)) {
-//        delta = position - startPosition;
-//        startPosition = position;
-//    }
-//
-//    return delta;
-//}
 
-static const auto ZoomAnimationInterval = std::chrono::milliseconds(400);
-
-} // namespace
+ScenePanelController::~ScenePanelController() = default;
 
 ScenePanel::ScenePanel(
     const std::shared_ptr<UIEventDispatcher>& dispatcher,
     int widthIn,
     int heightIn)
     : Widget(dispatcher)
-    , timer(Duration::zero())
-    , normalizedScrollDirection(0.0)
-    , scrollAcceleration(0.0)
-    , cameraZoom(1.0)
     , isFocused(false)
     , isEnabled(true)
 {
@@ -77,17 +21,17 @@ ScenePanel::ScenePanel(
     SetHierarchySortOrder(HierarchySortOrder::Back);
 }
 
-bool ScenePanel::IsEnabled() const
+bool ScenePanel::IsEnabled() const noexcept
 {
     return isEnabled;
 }
 
-void ScenePanel::SetEnabled(bool isEnabledIn)
+void ScenePanel::SetEnabled(bool isEnabledIn) noexcept
 {
     this->isEnabled = isEnabledIn;
 }
 
-bool ScenePanel::IsFocused() const
+bool ScenePanel::IsFocused() const noexcept
 {
     return this->isFocused;
 }
@@ -97,199 +41,108 @@ bool ScenePanel::GetSizeToFitContent() const noexcept
     return true;
 }
 
-Vector2 ScenePanel::ConvertToPanelSpace(const Point2D& point) const
+Point2D ScenePanel::ConvertToPanelSpace(const Point2D& point) const noexcept
 {
-    return Vector2(static_cast<float>(point.X), static_cast<float>(GetHeight() - point.Y));
+    return Point2D(point.X - GetX(), point.Y - GetY());
 }
 
 void ScenePanel::OnEnter()
 {
+    isFocused = false;
+}
+
+void ScenePanel::SetController(std::unique_ptr<ScenePanelController>&& controllerIn) noexcept
+{
+    controller = std::move(controllerIn);
+}
+
+ScenePanelController* ScenePanel::GetController() const noexcept
+{
+    return controller.get();
+}
+
+void ScenePanel::OnKeyDown(const KeyboardState& keyboardState, Keys key)
+{
+    if (!isEnabled) {
+        return;
+    }
+    if (controller != nullptr) {
+        controller->OnKeyDown(this, keyboardState, key);
+    }
+}
+
+void ScenePanel::OnKeyUp(const KeyboardState& keyboardState, Keys key)
+{
+    if (!isEnabled) {
+        return;
+    }
+    if (controller != nullptr) {
+        controller->OnKeyUp(this, keyboardState, key);
+    }
 }
 
 void ScenePanel::OnPointerWheelChanged(const PointerPoint& pointerPoint)
 {
-    scrollWheelSampler.AddWheelDelta(pointerPoint.MouseWheelDelta);
-    const auto wheelDeltaUnit = scrollWheelSampler.GetScrollWheelDeltaAverage();
-
-    constexpr double accel = 1.2;
-
-    if (timer <= Duration::zero()) {
-        timer = ZoomAnimationInterval;
-        scrollAcceleration = accel;
+    if (!isEnabled) {
+        return;
     }
-    else {
-        POMDOG_ASSERT(wheelDeltaUnit != 0.0);
-        scrollAcceleration += std::abs(pointerPoint.MouseWheelDelta / wheelDeltaUnit);
-    }
-
-    if (pointerPoint.MouseWheelDelta != 0) {
-        auto direction = (pointerPoint.MouseWheelDelta >= 0 ? 1.0 : -1.0);
-
-        if (direction != normalizedScrollDirection) {
-            normalizedScrollDirection = direction;
-            timer = ZoomAnimationInterval;
-            scrollAcceleration = accel;
-        }
+    if (controller != nullptr) {
+        controller->OnPointerWheelChanged(this, pointerPoint);
     }
 }
 
-void ScenePanel::OnPointerEntered([[maybe_unused]] const PointerPoint& pointerPoint)
+void ScenePanel::OnPointerEntered(const PointerPoint& pointerPoint)
 {
     isFocused = true;
+
+    if (!isEnabled) {
+        return;
+    }
+    if (controller != nullptr) {
+        controller->OnPointerEntered(this, pointerPoint);
+    }
 }
 
-void ScenePanel::OnPointerExited([[maybe_unused]] const PointerPoint& pointerPoint)
+void ScenePanel::OnPointerExited(const PointerPoint& pointerPoint)
 {
     isFocused = false;
+
+    if (!isEnabled) {
+        return;
+    }
+    if (controller != nullptr) {
+        controller->OnPointerExited(this, pointerPoint);
+    }
 }
 
 void ScenePanel::OnPointerPressed(const PointerPoint& pointerPoint)
 {
-    POMDOG_ASSERT(pointerPoint.MouseEvent);
-
-    switch (*pointerPoint.MouseEvent) {
-    case PointerMouseEvent::LeftButtonPressed:
-        OnMouseLeftButtonPressed(pointerPoint);
-        break;
-    case PointerMouseEvent::MiddleButtonPressed:
-        OnMouseMiddleButtonPressed(pointerPoint);
-        break;
-    case PointerMouseEvent::RightButtonPressed:
-        OnMouseRightButtonPressed(pointerPoint);
-        break;
-    default:
-        break;
+    if (!isEnabled) {
+        return;
+    }
+    if (controller != nullptr) {
+        controller->OnPointerPressed(this, pointerPoint);
     }
 }
 
 void ScenePanel::OnPointerMoved(const PointerPoint& pointerPoint)
 {
-    POMDOG_ASSERT(pointerPoint.MouseEvent);
-
-    switch (*pointerPoint.MouseEvent) {
-    case PointerMouseEvent::LeftButtonPressed:
-        OnMouseLeftButtonMoved(pointerPoint);
-        break;
-    case PointerMouseEvent::MiddleButtonPressed:
-        OnMouseMiddleButtonMoved(pointerPoint);
-        break;
-    case PointerMouseEvent::RightButtonPressed:
-        OnMouseRightButtonMoved(pointerPoint);
-        break;
-    default:
-        break;
+    if (!isEnabled) {
+        return;
+    }
+    if (controller != nullptr) {
+        controller->OnPointerMoved(this, pointerPoint);
     }
 }
 
 void ScenePanel::OnPointerReleased([[maybe_unused]] const PointerPoint& pointerPoint)
 {
-    tumbleStartPosition = std::nullopt;
-    trackStartPosition = std::nullopt;
-}
-
-void ScenePanel::OnMouseLeftButtonPressed(const PointerPoint& pointerPoint)
-{
-    if (!tumbleStartPosition) {
-        tumbleStartPosition = ConvertToPanelSpace(pointerPoint.Position);
-    }
-}
-
-void ScenePanel::OnMouseLeftButtonMoved([[maybe_unused]] const PointerPoint& pointerPoint)
-{
     if (!isEnabled) {
         return;
     }
-
-    if (!tumbleStartPosition) {
-        return;
+    if (controller != nullptr) {
+        controller->OnPointerReleased(this, pointerPoint);
     }
-
-    //    POMDOG_ASSERT(cameraObject);
-    //    auto transform = cameraObject.Component<Transform2D>();
-    //    auto camera = cameraObject.Component<Camera2D>();
-    //
-    //    if (!transform || !camera) {
-    //        return;
-    //    }
-    //
-    //    {
-    //        // Tumble Gesture
-    //        transform->Rotation += SampleTumbleGesture(ConvertToPanelSpace(pointerPoint.Position), *tumbleStartPosition,
-    //            Rectangle{0, 0, Width(), Height()});
-    //        if (transform->Rotation > Math::TwoPi<float>) {
-    //            transform->Rotation -= Math::TwoPi<float>;
-    //        }
-    //        else if (transform->Rotation < -Math::TwoPi<float>) {
-    //            transform->Rotation += Math::TwoPi<float>;
-    //        }
-    //        POMDOG_ASSERT(transform->Rotation != std::numeric_limits<float>::quiet_NaN());
-    //        POMDOG_ASSERT(transform->Rotation != std::numeric_limits<float>::infinity());
-    //    }
-}
-
-void ScenePanel::OnMouseMiddleButtonPressed(const PointerPoint& pointerPoint)
-{
-    trackStartPosition = ConvertToPanelSpace(pointerPoint.Position);
-}
-
-void ScenePanel::OnMouseMiddleButtonMoved([[maybe_unused]] const PointerPoint& pointerPoint)
-{
-    if (!isEnabled) {
-        return;
-    }
-
-    if (!trackStartPosition) {
-        return;
-    }
-
-    //    POMDOG_ASSERT(cameraObject);
-    //    auto transform = cameraObject.Component<Transform2D>();
-    //    auto camera = cameraObject.Component<Camera2D>();
-    //
-    //    if (!transform || !camera) {
-    //        return;
-    //    }
-    //
-    //    // Track Gesture
-    //    auto delta = SampleTrackGesture(ConvertToPanelSpace(pointerPoint.Position), *trackStartPosition);
-    //
-    //    POMDOG_ASSERT(camera->Zoom > 0);
-    //    auto matrix = (Matrix3x3::CreateTranslation(delta)
-    //        * Matrix3x3::CreateScale(1.0f / camera->Zoom)
-    //        * Matrix3x3::CreateRotationZ(transform->Rotation));
-    //
-    //    transform->Position -= {matrix(2, 0), matrix(2, 1)};
-}
-
-void ScenePanel::OnMouseRightButtonPressed(const PointerPoint& pointerPoint)
-{
-    SceneTouch(ConvertToPanelSpace(pointerPoint.Position));
-}
-
-void ScenePanel::OnMouseRightButtonMoved(const PointerPoint& pointerPoint)
-{
-    SceneTouch(ConvertToPanelSpace(pointerPoint.Position));
-}
-
-void ScenePanel::UpdateAnimation(const Duration& frameDuration)
-{
-    timer = std::max(timer - frameDuration, Duration::zero());
-
-    if (timer <= Duration::zero()) {
-        scrollAcceleration = 1.0;
-        return;
-    }
-
-    const auto duration = std::min(frameDuration.count(), 1.0);
-    const auto t = timer.count() / ZoomAnimationInterval.count();
-    const auto scroll = duration * normalizedScrollDirection * scrollAcceleration * t;
-
-    POMDOG_ASSERT(cameraZoom > 0);
-    cameraZoom = Math::Saturate(cameraZoom + (cameraZoom * scroll * 1000));
-}
-
-void ScenePanel::Draw(DrawingContext&)
-{
 }
 
 } // namespace Pomdog::GUI

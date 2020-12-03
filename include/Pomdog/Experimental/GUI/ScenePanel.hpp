@@ -3,13 +3,33 @@
 #pragma once
 
 #include "Pomdog/Experimental/GUI/Widget.hpp"
-#include "Pomdog/Math/Vector2.hpp"
-#include "Pomdog/Signals/ScopedConnection.hpp"
-#include "Pomdog/Signals/Signal.hpp"
+#include "Pomdog/Math/Point2D.hpp"
 #include <memory>
-#include <optional>
 
 namespace Pomdog::GUI {
+
+class ScenePanel;
+
+class ScenePanelController {
+public:
+    virtual ~ScenePanelController();
+
+    virtual void OnKeyDown(ScenePanel* scenePanel, const KeyboardState& keyboardState, Keys key) = 0;
+
+    virtual void OnKeyUp(ScenePanel* scenePanel, const KeyboardState& keyboardState, Keys key) = 0;
+
+    virtual void OnPointerWheelChanged(ScenePanel* scenePanel, const PointerPoint& pointerPoint) = 0;
+
+    virtual void OnPointerEntered(ScenePanel* scenePanel, const PointerPoint& pointerPoint) = 0;
+
+    virtual void OnPointerExited(ScenePanel* scenePanel, const PointerPoint& pointerPoint) = 0;
+
+    virtual void OnPointerPressed(ScenePanel* scenePanel, const PointerPoint& pointerPoint) = 0;
+
+    virtual void OnPointerMoved(ScenePanel* scenePanel, const PointerPoint& pointerPoint) = 0;
+
+    virtual void OnPointerReleased(ScenePanel* scenePanel, const PointerPoint& pointerPoint) = 0;
+};
 
 class ScenePanel final
     : public Widget
@@ -20,14 +40,22 @@ public:
         int width,
         int height);
 
-    bool IsEnabled() const;
-    void SetEnabled(bool isEnabled);
+    bool IsEnabled() const noexcept;
+    void SetEnabled(bool isEnabled) noexcept;
 
-    bool IsFocused() const;
+    bool IsFocused() const noexcept;
 
     bool GetSizeToFitContent() const noexcept override;
 
     void OnEnter() override;
+
+    void SetController(std::unique_ptr<ScenePanelController>&& controller) noexcept;
+
+    [[nodiscard]] ScenePanelController* GetController() const noexcept;
+
+    void OnKeyDown(const KeyboardState& keyboardState, Keys key) override;
+
+    void OnKeyUp(const KeyboardState& keyboardState, Keys key) override;
 
     void OnPointerWheelChanged(const PointerPoint& pointerPoint) override;
 
@@ -41,68 +69,12 @@ public:
 
     void OnPointerReleased(const PointerPoint& pointerPoint) override;
 
-    void Draw(DrawingContext& drawingContext) override;
-
-    void UpdateAnimation(const Duration& frameDuration) override;
-
-    Signal<void(const Vector2& point)> SceneTouch;
-
-    Signal<void(double)> ScrollWheelChanged;
+    Point2D ConvertToPanelSpace(const Point2D& point) const noexcept;
 
 private:
-    void OnMouseLeftButtonPressed(const PointerPoint& pointerPoint);
-    void OnMouseLeftButtonMoved(const PointerPoint& pointerPoint);
-    void OnMouseMiddleButtonPressed(const PointerPoint& pointerPoint);
-    void OnMouseMiddleButtonMoved(const PointerPoint& pointerPoint);
-    void OnMouseRightButtonPressed(const PointerPoint& pointerPoint);
-    void OnMouseRightButtonMoved(const PointerPoint& pointerPoint);
-
-    Vector2 ConvertToPanelSpace(const Point2D& point) const;
-
-private:
-    ScopedConnection connection;
-
-    std::optional<Vector2> tumbleStartPosition;
-    std::optional<Vector2> trackStartPosition;
-
-    Duration timer;
-    double normalizedScrollDirection;
-    double scrollAcceleration;
-    double cameraZoom;
-
-    bool isFocused;
-    bool isEnabled;
-
-    class ScrollWheelSampler final {
-    private:
-        ///@todo replace with std::deque<double>
-        std::optional<double> average;
-
-    public:
-        void AddWheelDelta(int wheelDelta)
-        {
-            if (wheelDelta == 0) {
-                return;
-            }
-
-            if (!average) {
-                average = static_cast<double>(std::abs(wheelDelta));
-            }
-            else {
-                average = std::max((*average + static_cast<double>(std::abs(wheelDelta))) / 2, 1.0);
-            }
-        }
-
-        double GetScrollWheelDeltaAverage() const
-        {
-            if (average) {
-                return *average;
-            }
-            return 1.0;
-        }
-    };
-
-    ScrollWheelSampler scrollWheelSampler;
+    std::unique_ptr<ScenePanelController> controller;
+    bool isFocused = false;
+    bool isEnabled = true;
 };
 
 } // namespace Pomdog::GUI
