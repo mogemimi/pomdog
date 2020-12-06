@@ -1,4 +1,5 @@
 source_group(Experimental\\ECS                      REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/ECS/*")
+source_group(Experimental\\GLTF                     REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/GLTF/*")
 source_group(Experimental\\Graphics                 REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Graphics/*")
 source_group(Experimental\\GUI                      REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/GUI/*")
 source_group(Experimental\\ImageEffects             REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/ImageEffects/*")
@@ -30,6 +31,14 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_INC_DIR}/Experimental/ECS/EntityManager.hpp
         ${POMDOG_SRC_DIR}/Experimental/ECS/EntityManager.cpp
         ${POMDOG_INC_DIR}/Experimental/ECS/EntityQuery.hpp
+    >
+
+    $<$<BOOL:${POMDOG_USE_EXPERIMENTAL}>:
+        # NOTE: Experimental/GLTF
+        ${POMDOG_INC_DIR}/Experimental/GLTF/GLTF.hpp
+        ${POMDOG_SRC_DIR}/Experimental/GLTF/GLTF.cpp
+        ${POMDOG_INC_DIR}/Experimental/GLTF/GLTFLoader.hpp
+        ${POMDOG_SRC_DIR}/Experimental/GLTF/GLTFLoader.cpp
     >
 
     $<$<BOOL:${POMDOG_USE_EXPERIMENTAL}>:
