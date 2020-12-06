@@ -18,6 +18,7 @@ source_group(Source\\DistanceFieldFontTest  REGULAR_EXPRESSION "Source/DistanceF
 source_group(Source\\EditorGUITest          REGULAR_EXPRESSION "Source/EditorGUITest/*")
 source_group(Source\\GamepadTest            REGULAR_EXPRESSION "Source/GamepadTest/*")
 source_group(Source\\GIFDecodeTest          REGULAR_EXPRESSION "Source/GIFDecodeTest/*")
+source_group(Source\\GLTFModelTest          REGULAR_EXPRESSION "Source/GLTFModelTest/*")
 source_group(Source\\GUISplitterTest        REGULAR_EXPRESSION "Source/GUISplitterTest/*")
 source_group(Source\\HardwareInstancingTest REGULAR_EXPRESSION "Source/HardwareInstancingTest/*")
 source_group(Source\\HTTPClientTest         REGULAR_EXPRESSION "Source/HTTPClientTest/*")
@@ -72,6 +73,8 @@ target_sources(${PRODUCT_NAME} PRIVATE
     Source/GamepadTest/GamepadTest.hpp
     Source/GIFDecodeTest/GIFDecodeTest.cpp
     Source/GIFDecodeTest/GIFDecodeTest.hpp
+    Source/GLTFModelTest/GLTFModelTest.cpp
+    Source/GLTFModelTest/GLTFModelTest.hpp
     Source/GUISplitterTest/GUISplitterTest.cpp
     Source/GUISplitterTest/GUISplitterTest.hpp
     Source/HardwareInstancingTest/HardwareInstancingTest.cpp

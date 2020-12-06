@@ -7,6 +7,7 @@
 #include "DistanceFieldFontTest/DistanceFieldFontTest.hpp"
 #include "EditorGUITest/EditorGUITest.hpp"
 #include "GIFDecodeTest/GIFDecodeTest.hpp"
+#include "GLTFModelTest/GLTFModelTest.hpp"
 #include "GUISplitterTest/GUISplitterTest.hpp"
 #include "GamepadTest/GamepadTest.hpp"
 #include "HTTPClientTest/HTTPClientTest.hpp"
@@ -83,6 +84,10 @@ FeatureShowcaseGame::Initialize()
     buttons.emplace_back("BasicEffect Test", [this] {
         window->SetTitle("Feature Showcase > BasicEffect Test");
         subGame = std::make_shared<FeatureShowcase::BasicEffectTest>(gameHost);
+    });
+    buttons.emplace_back("GLTFModel Test", [this] {
+        window->SetTitle("Feature Showcase > GLTFModel Test");
+        subGame = std::make_shared<FeatureShowcase::GLTFModelTest>(gameHost);
     });
     buttons.emplace_back("HardwareInstancing Test", [this] {
         window->SetTitle("Feature Showcase > HardwareInstancing Test");
