@@ -1,3 +1,5 @@
+source_group(Utility REGULAR_EXPRESSION "(include/Pomdog|src)/Utility/*")
+
 target_sources(pomdog_static PRIVATE
     # NOTE: Utility
     ${POMDOG_SRC_DIR}/Utility/AlignedNew.hpp

@@ -1,3 +1,6 @@
+source_group(Math           REGULAR_EXPRESSION "(include/Pomdog|src)/Math/*")
+source_group(Math\\Detail   REGULAR_EXPRESSION "(include/Pomdog|src)/Math/Detail/*")
+
 target_sources(pomdog_static PRIVATE
     # NOTE: Math
     ${POMDOG_INC_DIR}/Math/BoundingBox.hpp

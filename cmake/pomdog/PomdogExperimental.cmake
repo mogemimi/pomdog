@@ -1,3 +1,21 @@
+source_group(Experimental\\ECS                      REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/ECS/*")
+source_group(Experimental\\Graphics                 REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Graphics/*")
+source_group(Experimental\\GUI                      REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/GUI/*")
+source_group(Experimental\\ImageEffects             REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/ImageEffects/*")
+source_group(Experimental\\Image                    REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Image/*")
+source_group(Experimental\\MagicaVoxel              REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/MagicaVoxel/*")
+source_group(Experimental\\Particles                REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Particles/*")
+source_group(Experimental\\Particles\\EmitterShapes REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Particles/EmitterShapes/*")
+source_group(Experimental\\Particles\\Parameters    REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Particles/Parameters/*")
+source_group(Experimental\\Random                   REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Random/*")
+source_group(Experimental\\Reactive                 REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Reactive/*")
+source_group(Experimental\\Skeletal2D               REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Skeletal2D/*")
+source_group(Experimental\\Skeletal2D\\BlendTrees   REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Skeletal2D/BlendTrees/*")
+source_group(Experimental\\Skeletal2D\\Tracks       REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Skeletal2D/Tracks/*")
+source_group(Experimental\\Spine                    REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Spine/*")
+source_group(Experimental\\TexturePacker            REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/TexturePacker/*")
+source_group(Experimental\\Tween                    REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Tween/*")
+
 target_sources(pomdog_static PRIVATE
     $<$<BOOL:${POMDOG_USE_EXPERIMENTAL}>:
         # NOTE: Experimental/ECS

@@ -1,3 +1,5 @@
+source_group(Signals REGULAR_EXPRESSION "(include/Pomdog|src)/Signals/*")
+
 target_sources(pomdog_static PRIVATE
     # NOTE: Signals
     ${POMDOG_INC_DIR}/Signals/Connection.hpp

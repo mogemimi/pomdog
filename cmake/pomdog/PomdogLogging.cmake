@@ -1,3 +1,5 @@
+source_group(Logging REGULAR_EXPRESSION "(include/Pomdog|src)/Logging/*")
+
 target_sources(pomdog_static PRIVATE
     # NOTE: Logging
     ${POMDOG_INC_DIR}/Logging/Log.hpp

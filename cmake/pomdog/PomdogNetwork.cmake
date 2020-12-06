@@ -1,3 +1,8 @@
+source_group(Network            REGULAR_EXPRESSION "(include/Pomdog|src)/Network/*")
+source_group(Network.MbedTLS    REGULAR_EXPRESSION "(include/Pomdog|src)/Network.MbedTLS/*")
+source_group(Network.POSIX      REGULAR_EXPRESSION "(include/Pomdog|src)/Network.POSIX/*")
+source_group(Network.Win32      REGULAR_EXPRESSION "(include/Pomdog|src)/Network.Win32/*")
+
 target_sources(pomdog_static PRIVATE
     # NOTE: Network
     ${POMDOG_SRC_DIR}/Network/AddressFamily.hpp

@@ -1,3 +1,9 @@
+source_group(Input              REGULAR_EXPRESSION "(include/Pomdog|src)/Input/*")
+source_group(Input.Backends     REGULAR_EXPRESSION "(include/Pomdog|src)/Input.Backends/*")
+source_group(Input.DirectInput  REGULAR_EXPRESSION "(include/Pomdog|src)/Input.DirectInput/*")
+source_group(Input.IOKit        REGULAR_EXPRESSION "(include/Pomdog|src)/Input.IOKit/*")
+source_group(Input.Linux        REGULAR_EXPRESSION "(include/Pomdog|src)/Input.Linux/*")
+
 target_sources(pomdog_static PRIVATE
     # NOTE: Input
     ${POMDOG_INC_DIR}/Input/ButtonState.hpp

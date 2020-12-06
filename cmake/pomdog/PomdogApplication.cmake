@@ -1,3 +1,5 @@
+source_group(Application REGULAR_EXPRESSION "(include/Pomdog|src)/Application/*")
+
 target_sources(pomdog_static PRIVATE
     # NOTE: Application
     ${POMDOG_INC_DIR}/Application/Duration.hpp

@@ -1,3 +1,7 @@
+source_group(Audio          REGULAR_EXPRESSION "(include/Pomdog|src)/Audio/*")
+source_group(Audio.OpenAL   REGULAR_EXPRESSION "(include/Pomdog|src)/Audio.OpenAL/*")
+source_group(Audio.XAudio2  REGULAR_EXPRESSION "(include/Pomdog|src)/Audio.XAudio2/*")
+
 target_sources(pomdog_static PRIVATE
     # NOTE: Audio
     ${POMDOG_INC_DIR}/Audio/AudioChannels.hpp

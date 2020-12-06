@@ -1,3 +1,5 @@
+source_group(Async REGULAR_EXPRESSION "(include/Pomdog|src)/Async/*")
+
 target_sources(pomdog_static PRIVATE
     # NOTE: Async
     ${POMDOG_INC_DIR}/Async/Helpers.hpp

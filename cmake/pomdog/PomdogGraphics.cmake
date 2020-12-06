@@ -1,3 +1,13 @@
+source_group(Graphics                   REGULAR_EXPRESSION "(include/Pomdog|src)/Graphics/*")
+source_group(Graphics\\ShaderCompilers  REGULAR_EXPRESSION "(include/Pomdog|src)/Graphics/ShaderCompilers/*")
+source_group(Graphics.Backends          REGULAR_EXPRESSION "(include/Pomdog|src)/Graphics.Backends/*")
+source_group(Graphics.DXGI              REGULAR_EXPRESSION "(include/Pomdog|src)/Graphics.DXGI/*")
+source_group(Graphics.Direct3D          REGULAR_EXPRESSION "(include/Pomdog|src)/Graphics.Direct3D/*")
+source_group(Graphics.Direct3D11        REGULAR_EXPRESSION "(include/Pomdog|src)/Graphics.Direct3D11/*")
+source_group(Graphics.GL4               REGULAR_EXPRESSION "(include/Pomdog|src)/Graphics.GL4/*")
+source_group(Graphics.Metal             REGULAR_EXPRESSION "(include/Pomdog|src)/Graphics.Metal/*")
+source_group(Graphics.Vulkan            REGULAR_EXPRESSION "(include/Pomdog|src)/Graphics.Vulkan/*")
+
 target_sources(pomdog_static PRIVATE
     # NOTE: Graphics
     ${POMDOG_INC_DIR}/Graphics/Blend.hpp

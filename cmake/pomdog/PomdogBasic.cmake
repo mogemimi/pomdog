@@ -1,3 +1,5 @@
+source_group(Basic REGULAR_EXPRESSION "(include/Pomdog|src)/Basic/*")
+
 target_sources(pomdog_static PRIVATE
     # NOTE: Basic
     ${POMDOG_SRC_DIR}/Basic/ConditionalCompilation.hpp

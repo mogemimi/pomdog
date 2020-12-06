@@ -1,3 +1,10 @@
+source_group(Content                REGULAR_EXPRESSION "(include/Pomdog|src)/Content/*")
+source_group(Content\\AssetBuilders REGULAR_EXPRESSION "(include/Pomdog|src)/Content/AssetBuilders/*")
+source_group(Content\\AssetLoaders  REGULAR_EXPRESSION "(include/Pomdog|src)/Content/AssetLoaders/*")
+source_group(Content\\Audio         REGULAR_EXPRESSION "(include/Pomdog|src)/Content/Audio/*")
+source_group(Content\\Image         REGULAR_EXPRESSION "(include/Pomdog|src)/Content/Image/*")
+source_group(Content\\Utility       REGULAR_EXPRESSION "(include/Pomdog|src)/Content/Utility/*")
+
 target_sources(pomdog_static PRIVATE
     # NOTE: Content
     ${POMDOG_INC_DIR}/Content/AssetManager.hpp
