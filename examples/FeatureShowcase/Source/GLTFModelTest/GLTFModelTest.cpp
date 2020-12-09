@@ -38,30 +38,38 @@ std::shared_ptr<Error> GLTFModelTest::Initialize()
         return Errors::Wrap(std::move(glbErr), "failed to load glTF binary");
     }
 
+    POMDOG_ASSERT(!glb->Meshes.empty());
+    POMDOG_ASSERT(!glb->Meshes[0].Primitives.empty());
+    POMDOG_ASSERT(glb->Meshes[0].Primitives[0].Indices != std::nullopt);
+    const auto positionAccessor = glb->Meshes[0].Primitives[0].Attributes["POSITION"];
+    const auto normalAccessor = glb->Meshes[0].Primitives[0].Attributes["NORMAL"];
+    const auto texcoordAccessor = glb->Meshes[0].Primitives[0].Attributes["TEXCOORD_0"];
+    const auto indexAccessor = *glb->Meshes[0].Primitives[0].Indices;
+
+    POMDOG_ASSERT(glb->Accessors.size() == 4);
+    POMDOG_ASSERT(glb->Accessors[0].BufferView != std::nullopt);
+    POMDOG_ASSERT(glb->Accessors[0].Type == GLTF::AccessorType::Vec3);
+    POMDOG_ASSERT(glb->Accessors[0].ComponentType == GLTF::ComponentType::Float);
+    POMDOG_ASSERT(glb->Accessors[1].BufferView != std::nullopt);
+    POMDOG_ASSERT(glb->Accessors[1].Type == GLTF::AccessorType::Vec3);
+    POMDOG_ASSERT(glb->Accessors[1].ComponentType == GLTF::ComponentType::Float);
+    POMDOG_ASSERT(glb->Accessors[2].BufferView != std::nullopt);
+    POMDOG_ASSERT(glb->Accessors[2].Type == GLTF::AccessorType::Vec2);
+    POMDOG_ASSERT(glb->Accessors[2].ComponentType == GLTF::ComponentType::Float);
+    POMDOG_ASSERT(glb->Accessors[3].BufferView != std::nullopt);
+    POMDOG_ASSERT(glb->Accessors[3].Type == GLTF::AccessorType::Scalar);
+    POMDOG_ASSERT(glb->Accessors[3].ComponentType == GLTF::ComponentType::Ushort);
+
     {
         using VertexCombined = BasicEffect::VertexPositionNormalTexture;
 
         // NOTE: Create vertex buffer
         std::vector<VertexCombined> verticesCombo;
 
-        POMDOG_ASSERT(glb->Accessors.size() == 4);
-        POMDOG_ASSERT(glb->Accessors[0].BufferView != std::nullopt);
-        POMDOG_ASSERT(glb->Accessors[0].Type == GLTF::AccessorType::Vec3);
-        POMDOG_ASSERT(glb->Accessors[0].ComponentType == GLTF::ComponentType::Float);
-        POMDOG_ASSERT(glb->Accessors[1].BufferView != std::nullopt);
-        POMDOG_ASSERT(glb->Accessors[1].Type == GLTF::AccessorType::Vec3);
-        POMDOG_ASSERT(glb->Accessors[1].ComponentType == GLTF::ComponentType::Float);
-        POMDOG_ASSERT(glb->Accessors[2].BufferView != std::nullopt);
-        POMDOG_ASSERT(glb->Accessors[2].Type == GLTF::AccessorType::Vec2);
-        POMDOG_ASSERT(glb->Accessors[2].ComponentType == GLTF::ComponentType::Float);
-        POMDOG_ASSERT(glb->Accessors[3].BufferView != std::nullopt);
-        POMDOG_ASSERT(glb->Accessors[3].Type == GLTF::AccessorType::Scalar);
-        POMDOG_ASSERT(glb->Accessors[3].ComponentType == GLTF::ComponentType::Ushort);
-
-        verticesCombo.resize(glb->Accessors[0].Count);
+        verticesCombo.resize(glb->Accessors[positionAccessor].Count);
 
         {
-            auto& accessor = glb->Accessors[0];
+            auto& accessor = glb->Accessors[positionAccessor];
             auto& bufferView = glb->BufferViews[*accessor.BufferView];
             auto& buffer = glb->Buffers[bufferView.Buffer];
             auto vertexData = reinterpret_cast<const Vector3*>(buffer.Data.data() + bufferView.ByteOffset);
@@ -71,7 +79,7 @@ std::shared_ptr<Error> GLTFModelTest::Initialize()
             }
         }
         {
-            auto& accessor = glb->Accessors[1];
+            auto& accessor = glb->Accessors[normalAccessor];
             auto& bufferView = glb->BufferViews[*accessor.BufferView];
             auto& buffer = glb->Buffers[bufferView.Buffer];
             auto vertexData = reinterpret_cast<const Vector3*>(buffer.Data.data() + bufferView.ByteOffset);
@@ -81,7 +89,7 @@ std::shared_ptr<Error> GLTFModelTest::Initialize()
             }
         }
         {
-            auto& accessor = glb->Accessors[2];
+            auto& accessor = glb->Accessors[texcoordAccessor];
             auto& bufferView = glb->BufferViews[*accessor.BufferView];
             auto& buffer = glb->Buffers[bufferView.Buffer];
             auto vertexData = reinterpret_cast<const Vector2*>(buffer.Data.data() + bufferView.ByteOffset);
@@ -107,24 +115,10 @@ std::shared_ptr<Error> GLTFModelTest::Initialize()
         // NOTE: Create vertex buffer
         std::vector<VertexCombined> verticesCombo;
 
-        POMDOG_ASSERT(glb->Accessors.size() == 4);
-        POMDOG_ASSERT(glb->Accessors[0].BufferView != std::nullopt);
-        POMDOG_ASSERT(glb->Accessors[0].Type == GLTF::AccessorType::Vec3);
-        POMDOG_ASSERT(glb->Accessors[0].ComponentType == GLTF::ComponentType::Float);
-        POMDOG_ASSERT(glb->Accessors[1].BufferView != std::nullopt);
-        POMDOG_ASSERT(glb->Accessors[1].Type == GLTF::AccessorType::Vec3);
-        POMDOG_ASSERT(glb->Accessors[1].ComponentType == GLTF::ComponentType::Float);
-        POMDOG_ASSERT(glb->Accessors[2].BufferView != std::nullopt);
-        POMDOG_ASSERT(glb->Accessors[2].Type == GLTF::AccessorType::Vec2);
-        POMDOG_ASSERT(glb->Accessors[2].ComponentType == GLTF::ComponentType::Float);
-        POMDOG_ASSERT(glb->Accessors[3].BufferView != std::nullopt);
-        POMDOG_ASSERT(glb->Accessors[3].Type == GLTF::AccessorType::Scalar);
-        POMDOG_ASSERT(glb->Accessors[3].ComponentType == GLTF::ComponentType::Ushort);
-
-        verticesCombo.resize(glb->Accessors[0].Count);
+        verticesCombo.resize(glb->Accessors[positionAccessor].Count);
 
         {
-            auto& accessor = glb->Accessors[0];
+            auto& accessor = glb->Accessors[positionAccessor];
             auto& bufferView = glb->BufferViews[*accessor.BufferView];
             auto& buffer = glb->Buffers[bufferView.Buffer];
             auto vertexData = reinterpret_cast<const Vector3*>(buffer.Data.data() + bufferView.ByteOffset);
@@ -134,7 +128,7 @@ std::shared_ptr<Error> GLTFModelTest::Initialize()
             }
         }
         {
-            auto& accessor = glb->Accessors[1];
+            auto& accessor = glb->Accessors[normalAccessor];
             auto& bufferView = glb->BufferViews[*accessor.BufferView];
             auto& buffer = glb->Buffers[bufferView.Buffer];
             auto vertexData = reinterpret_cast<const Vector3*>(buffer.Data.data() + bufferView.ByteOffset);
@@ -158,24 +152,10 @@ std::shared_ptr<Error> GLTFModelTest::Initialize()
         // NOTE: Create index buffer
         std::vector<std::uint16_t> indices;
 
-        POMDOG_ASSERT(glb->Accessors.size() == 4);
-        POMDOG_ASSERT(glb->Accessors[0].BufferView != std::nullopt);
-        POMDOG_ASSERT(glb->Accessors[0].Type == GLTF::AccessorType::Vec3);
-        POMDOG_ASSERT(glb->Accessors[0].ComponentType == GLTF::ComponentType::Float);
-        POMDOG_ASSERT(glb->Accessors[1].BufferView != std::nullopt);
-        POMDOG_ASSERT(glb->Accessors[1].Type == GLTF::AccessorType::Vec3);
-        POMDOG_ASSERT(glb->Accessors[1].ComponentType == GLTF::ComponentType::Float);
-        POMDOG_ASSERT(glb->Accessors[2].BufferView != std::nullopt);
-        POMDOG_ASSERT(glb->Accessors[2].Type == GLTF::AccessorType::Vec2);
-        POMDOG_ASSERT(glb->Accessors[2].ComponentType == GLTF::ComponentType::Float);
-        POMDOG_ASSERT(glb->Accessors[3].BufferView != std::nullopt);
-        POMDOG_ASSERT(glb->Accessors[3].Type == GLTF::AccessorType::Scalar);
-        POMDOG_ASSERT(glb->Accessors[3].ComponentType == GLTF::ComponentType::Ushort);
-
-        indices.resize(glb->Accessors[3].Count);
+        indices.resize(glb->Accessors[indexAccessor].Count);
 
         {
-            auto& accessor = glb->Accessors[3];
+            auto& accessor = glb->Accessors[indexAccessor];
             auto& bufferView = glb->BufferViews[*accessor.BufferView];
             auto& buffer = glb->Buffers[bufferView.Buffer];
             auto indexData = reinterpret_cast<const std::uint16_t*>(buffer.Data.data() + bufferView.ByteOffset);
