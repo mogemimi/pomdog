@@ -25,14 +25,18 @@ Rectangle::Rectangle(const Point2D& position,
 
 bool Rectangle::operator==(const Rectangle& other) const noexcept
 {
-    return (X == other.X && Y == other.Y
-        && Width == other.Width && Height == other.Height);
+    return X == other.X &&
+           Y == other.Y &&
+           Width == other.Width &&
+           Height == other.Height;
 }
 
 bool Rectangle::operator!=(const Rectangle& other) const noexcept
 {
-    return (X != other.X || Y != other.Y
-        || Width != other.Width || Height != other.Height);
+    return X != other.X ||
+           Y != other.Y ||
+           Width != other.Width ||
+           Height != other.Height;
 }
 
 std::int32_t Rectangle::GetBottom() const noexcept
@@ -93,8 +97,10 @@ void Rectangle::Offset(const Point2D& offset)
 
 bool Rectangle::Contains(int pointX, int pointY) const noexcept
 {
-    return pointX >= X && pointX <= (X + Width)
-        && pointY >= Y && pointY <= (Y + Height);
+    return pointX >= X &&
+           pointX <= (X + Width) &&
+           pointY >= Y &&
+           pointY <= (Y + Height);
 }
 
 bool Rectangle::Contains(const Point2D& point) const noexcept
@@ -104,10 +110,10 @@ bool Rectangle::Contains(const Point2D& point) const noexcept
 
 bool Rectangle::Contains(const Rectangle& rect) const
 {
-    return (rect.GetLeft() >= GetLeft()
-        && rect.GetRight() <= GetRight()
-        && rect.GetTop() >= GetTop()
-        && rect.GetBottom() <= GetBottom());
+    return rect.GetLeft() >= GetLeft() &&
+           rect.GetRight() <= GetRight() &&
+           rect.GetTop() >= GetTop() &&
+           rect.GetBottom() <= GetBottom();
 }
 
 bool Rectangle::Intersects(const Rectangle& rect) const
@@ -116,10 +122,10 @@ bool Rectangle::Intersects(const Rectangle& rect) const
     POMDOG_ASSERT(GetTop() <= GetBottom());
     POMDOG_ASSERT(rect.GetLeft() <= rect.GetRight());
 
-    return (GetLeft() < rect.GetRight()
-        && GetRight() > rect.GetLeft()
-        && GetTop() < rect.GetBottom()
-        && GetBottom() > rect.GetTop());
+    return GetLeft() < rect.GetRight() &&
+           GetRight() > rect.GetLeft() &&
+           GetTop() < rect.GetBottom() &&
+           GetBottom() > rect.GetTop();
 }
 
 } // namespace Pomdog

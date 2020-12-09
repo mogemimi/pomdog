@@ -47,6 +47,7 @@ private:
 
 public:
     BoundingFrustum();
+
     explicit BoundingFrustum(const Matrix4x4& matrix);
 
     [[nodiscard]] const Matrix4x4& GetMatrix() const noexcept;

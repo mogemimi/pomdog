@@ -74,9 +74,9 @@ ContainmentType BoundingBox::Contains(const BoundingSphere& sphere) const
 
 bool BoundingBox::Intersects(const BoundingBox& box) const
 {
-    return (this->Max.X >= box.Min.X && this->Min.X <= box.Max.X)
-        && (this->Max.Y >= box.Min.Y && this->Min.Y <= box.Max.Y)
-        && (this->Max.Z >= box.Min.Z && this->Min.Z <= box.Max.Z);
+    return (this->Max.X >= box.Min.X && this->Min.X <= box.Max.X) &&
+           (this->Max.Y >= box.Min.Y && this->Min.Y <= box.Max.Y) &&
+           (this->Max.Z >= box.Min.Z && this->Min.Z <= box.Max.Z);
 }
 
 bool BoundingBox::Intersects(const BoundingSphere& sphere) const

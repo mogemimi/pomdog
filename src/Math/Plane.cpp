@@ -52,10 +52,10 @@ Plane Plane::Normalize(const Plane& plane) noexcept
 
 float Plane::Dot(const Vector4& vec) const noexcept
 {
-    return this->Normal.X * vec.X
-        + this->Normal.Y * vec.Y
-        + this->Normal.Z * vec.Z
-        + this->Distance * vec.W;
+    return this->Normal.X * vec.X +
+           this->Normal.Y * vec.Y +
+           this->Normal.Z * vec.Z +
+           this->Distance * vec.W;
 }
 
 float Plane::DotCoordinate(const Vector3& vec) const noexcept

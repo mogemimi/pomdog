@@ -64,8 +64,8 @@ ContainmentType BoundingBox2D::Contains(const BoundingCircle& circle) const
 
 bool BoundingBox2D::Intersects(const BoundingBox2D& box) const
 {
-    return (this->Max.X >= box.Min.X && this->Min.X <= box.Max.X)
-        && (this->Max.Y >= box.Min.Y && this->Min.Y <= box.Max.Y);
+    return (this->Max.X >= box.Min.X && this->Min.X <= box.Max.X) &&
+           (this->Max.Y >= box.Min.Y && this->Min.Y <= box.Max.Y);
 }
 
 bool BoundingBox2D::Intersects(const BoundingCircle& circle) const
@@ -77,7 +77,7 @@ bool BoundingBox2D::Intersects(const BoundingCircle& circle) const
 
 std::array<Vector2, BoundingBox2D::CornerCount> BoundingBox2D::GetCorners() const noexcept
 {
-    return std::array<Vector2, BoundingBox2D::CornerCount> {{
+    return std::array<Vector2, BoundingBox2D::CornerCount>{{
         Vector2{this->Min.X, this->Max.Y},
         Vector2{this->Max.X, this->Max.Y},
         Vector2{this->Max.X, this->Min.Y},
