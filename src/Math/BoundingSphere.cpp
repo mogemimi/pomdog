@@ -6,6 +6,7 @@
 #include "Pomdog/Math/Plane.hpp"
 #include "Pomdog/Math/Ray.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include <cmath>
 
 namespace Pomdog {
 
@@ -78,6 +79,91 @@ PlaneIntersectionType BoundingSphere::Intersects(const Plane& plane) const
 std::optional<float> BoundingSphere::Intersects(const Ray& ray) const
 {
     return ray.Intersects(*this);
+}
+
+BoundingSphere
+BoundingSphere::CreateFromPoints(const Vector3* points, std::size_t pointCount) noexcept
+{
+    POMDOG_ASSERT(points != nullptr);
+    POMDOG_ASSERT(pointCount > 0);
+    auto accessor = [&](std::size_t i) -> Vector3 { return points[i]; };
+    return CreateFromPoints(std::move(accessor), pointCount);
+}
+
+BoundingSphere
+BoundingSphere::CreateFromPoints(std::function<Vector3(std::size_t)> points, std::size_t pointCount) noexcept
+{
+    POMDOG_ASSERT(points != nullptr);
+    POMDOG_ASSERT(pointCount > 0);
+
+    // NOTE: Compute bounding sphere using Jack Ritter's algorithm.
+    std::size_t maxX = 0;
+    std::size_t maxY = 0;
+    std::size_t maxZ = 0;
+    std::size_t minX = 0;
+    std::size_t minY = 0;
+    std::size_t minZ = 0;
+
+    for (std::size_t i = 0; i < pointCount; i++) {
+        const auto& p = points(i);
+        if (p.X < points(minX).X) {
+            minX = i;
+        }
+        if (p.X > points(maxX).X) {
+            maxX = i;
+        }
+        if (p.Y < points(minY).Y) {
+            minY = i;
+        }
+        if (p.Y > points(maxY).Y) {
+            maxY = i;
+        }
+        if (p.Z < points(minZ).Z) {
+            minZ = i;
+        }
+        if (p.Z > points(maxZ).Z) {
+            maxZ = i;
+        }
+    }
+
+    const auto distX = Vector3::DistanceSquared(points(maxX), points(minX));
+    const auto distY = Vector3::DistanceSquared(points(maxY), points(minY));
+    const auto distZ = Vector3::DistanceSquared(points(maxZ), points(minZ));
+
+    std::size_t max = maxX;
+    std::size_t min = minX;
+    if (distY > distX && distY > distZ) {
+        max = maxY;
+        min = minY;
+    }
+    else if (distZ > distX && distZ > distY) {
+        max = maxZ;
+        min = minZ;
+    }
+
+    auto center = (points(max) + points(min)) * 0.5f;
+    auto radius = Vector3::Distance(points(max), center);
+    auto radiusSq = radius * radius;
+
+    // NOTE: Compute strict bounding sphere.
+    for (std::size_t i = 0; i < pointCount; i++) {
+        const auto p = points(i);
+        const auto diff = p - center;
+        const auto distanceSq = diff.LengthSquared();
+        if (distanceSq > radiusSq) {
+            const auto distance = std::sqrt(distanceSq);
+            const auto direction = diff / distance;
+            const auto g = center - radius * direction;
+            center = (g + p) * 0.5f;
+            radius = Vector3::Distance(p, center);
+            radiusSq = radius * radius;
+        }
+    }
+
+    BoundingSphere sphere;
+    sphere.Center = center;
+    sphere.Radius = radius;
+    return sphere;
 }
 
 } // namespace Pomdog

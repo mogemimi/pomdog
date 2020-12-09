@@ -5,6 +5,7 @@
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Math/ForwardDeclarations.hpp"
 #include "Pomdog/Math/Vector3.hpp"
+#include <functional>
 #include <optional>
 
 namespace Pomdog {
@@ -39,6 +40,12 @@ public:
 
     [[nodiscard]] std::optional<float>
     Intersects(const Ray& ray) const;
+
+    [[nodiscard]] static BoundingSphere
+    CreateFromPoints(const Vector3* points, std::size_t pointCount) noexcept;
+
+    [[nodiscard]] static BoundingSphere
+    CreateFromPoints(std::function<Vector3(std::size_t)> points, std::size_t pointCount) noexcept;
 };
 
 } // namespace Pomdog
