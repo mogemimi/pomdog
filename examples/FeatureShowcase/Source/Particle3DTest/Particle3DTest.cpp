@@ -236,7 +236,7 @@ void Particle3DTest::Draw()
     }
 
     billboardBuffer->FetchBuffer();
-    billboardEffect->Draw(commandList, texture, sampler, constantBuffer, *billboardBuffer);
+    billboardEffect->Draw(commandList, texture, sampler, constantBuffer, 0, *billboardBuffer);
 
     commandList->Close();
 

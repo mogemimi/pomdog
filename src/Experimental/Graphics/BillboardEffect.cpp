@@ -337,6 +337,7 @@ void BillboardBatchEffect::Draw(
     const std::shared_ptr<Texture2D>& texture,
     const std::shared_ptr<SamplerState>& sampler,
     const std::shared_ptr<ConstantBuffer>& constantBuffer,
+    std::size_t constantBufferOffset,
     const BillboardBatchBuffer& billboardInstances)
 {
     POMDOG_ASSERT(impl);
@@ -347,6 +348,7 @@ void BillboardBatchEffect::Draw(
     POMDOG_ASSERT(texture);
     POMDOG_ASSERT(sampler);
     POMDOG_ASSERT(constantBuffer);
+    POMDOG_ASSERT(constantBufferOffset >= 0);
 
     if (billboardInstances.GetSize() <= 0) {
         return;
@@ -356,7 +358,7 @@ void BillboardBatchEffect::Draw(
     commandList->SetSamplerState(0, sampler);
 
     commandList->SetPipelineState(impl->pipelineState);
-    commandList->SetConstantBuffer(0, constantBuffer);
+    commandList->SetConstantBuffer(0, constantBuffer, constantBufferOffset);
     commandList->SetVertexBuffer(0, impl->vertexBuffer);
     commandList->SetVertexBuffer(1, billboardInstances.GetVertexBuffer());
 

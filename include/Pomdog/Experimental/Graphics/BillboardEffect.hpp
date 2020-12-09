@@ -101,6 +101,7 @@ public:
         const std::shared_ptr<Texture2D>& texture,
         const std::shared_ptr<SamplerState>& sampler,
         const std::shared_ptr<ConstantBuffer>& constantBuffer,
+        std::size_t constantBufferOffset,
         const BillboardBatchBuffer& billboardInstances);
 
 private:

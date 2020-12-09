@@ -172,7 +172,7 @@ void BillboardBatchTest::Draw()
         Vector2{2.0f, 1.0f});
 
     billboardBuffer->FetchBuffer();
-    billboardEffect->Draw(commandList, texture, sampler, constantBuffer, *billboardBuffer);
+    billboardEffect->Draw(commandList, texture, sampler, constantBuffer, 0, *billboardBuffer);
 
     commandList->Close();
 
