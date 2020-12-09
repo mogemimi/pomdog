@@ -22,22 +22,25 @@ ConstantBuffer::ConstantBuffer(
 
 ConstantBuffer::~ConstantBuffer() = default;
 
-void ConstantBuffer::GetValue(std::size_t sizeInBytesIn, void* result) const
+void ConstantBuffer::SetData(const void* source, std::size_t sizeInBytesIn)
 {
+    POMDOG_ASSERT(source != nullptr);
     POMDOG_ASSERT(sizeInBytesIn > 0);
     POMDOG_ASSERT(sizeInBytesIn <= sizeInBytes);
-    POMDOG_ASSERT(result != nullptr);
     POMDOG_ASSERT(nativeBuffer != nullptr);
-    nativeBuffer->GetData(0, result, sizeInBytesIn);
+    return nativeBuffer->SetData(0, source, sizeInBytesIn);
 }
 
-void ConstantBuffer::SetValue(const void* data, std::size_t sizeInBytesIn)
+void ConstantBuffer::SetData(
+    std::size_t offsetInBytes,
+    const void* source,
+    std::size_t sizeInBytesIn)
 {
-    POMDOG_ASSERT(data != nullptr);
+    POMDOG_ASSERT(source != nullptr);
     POMDOG_ASSERT(sizeInBytesIn > 0);
-    POMDOG_ASSERT(sizeInBytesIn <= sizeInBytes);
+    POMDOG_ASSERT(offsetInBytes + sizeInBytesIn <= sizeInBytes);
     POMDOG_ASSERT(nativeBuffer != nullptr);
-    return nativeBuffer->SetData(0, data, sizeInBytesIn);
+    return nativeBuffer->SetData(offsetInBytes, source, sizeInBytesIn);
 }
 
 std::size_t ConstantBuffer::GetSizeInBytes() const noexcept
