@@ -17,18 +17,6 @@ Ray::Ray(const Vector3& positionIn, const Vector3& directionIn)
 {
 }
 
-bool Ray::operator==(const Ray& ray) const noexcept
-{
-    return this->Position == ray.Position
-        && this->Direction == ray.Direction;
-}
-
-bool Ray::operator!=(const Ray& ray) const noexcept
-{
-    return this->Position != ray.Position
-        || this->Direction != ray.Direction;
-}
-
 std::optional<float> Ray::Intersects(const BoundingBox& box) const
 {
     typedef float T;

@@ -19,15 +19,6 @@ public:
 
     BoundingSphere(const Vector3& center, float radius);
 
-    BoundingSphere(const BoundingSphere&) noexcept = default;
-    BoundingSphere(BoundingSphere&&) noexcept = default;
-
-    BoundingSphere& operator=(const BoundingSphere&) noexcept = default;
-    BoundingSphere& operator=(BoundingSphere&&) noexcept = default;
-
-    [[nodiscard]] bool operator==(const BoundingSphere&) const noexcept;
-    [[nodiscard]] bool operator!=(const BoundingSphere&) const noexcept;
-
     [[nodiscard]] ContainmentType
     Contains(const Vector3& point) const;
 

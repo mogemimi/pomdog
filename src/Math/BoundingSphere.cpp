@@ -16,18 +16,6 @@ BoundingSphere::BoundingSphere(const Vector3& center, float radius)
     POMDOG_ASSERT(radius >= 0);
 }
 
-bool BoundingSphere::operator==(const BoundingSphere& sphere) const noexcept
-{
-    return this->Radius == sphere.Radius
-        && this->Center == sphere.Center;
-}
-
-bool BoundingSphere::operator!=(const BoundingSphere& sphere) const noexcept
-{
-    return this->Radius != sphere.Radius
-        || this->Center != sphere.Center;
-}
-
 ContainmentType BoundingSphere::Contains(const Vector3& point) const
 {
     auto distanceSquared = Vector3::DistanceSquared(point, Center);

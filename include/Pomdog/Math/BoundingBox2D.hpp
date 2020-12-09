@@ -21,15 +21,6 @@ public:
 
     BoundingBox2D(const Vector2& min, const Vector2& max);
 
-    BoundingBox2D(const BoundingBox2D&) noexcept = default;
-    BoundingBox2D(BoundingBox2D&&) noexcept = default;
-
-    BoundingBox2D& operator=(const BoundingBox2D&) noexcept = default;
-    BoundingBox2D& operator=(BoundingBox2D&&) noexcept = default;
-
-    [[nodiscard]] bool operator==(const BoundingBox2D&) const noexcept;
-    [[nodiscard]] bool operator!=(const BoundingBox2D&) const noexcept;
-
     [[nodiscard]] ContainmentType
     Contains(const Vector2& point) const;
 

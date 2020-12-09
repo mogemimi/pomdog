@@ -18,15 +18,6 @@ public:
 
     BoundingCircle(const Vector2& center, float radius);
 
-    BoundingCircle(const BoundingCircle&) noexcept = default;
-    BoundingCircle(BoundingCircle&&) noexcept = default;
-
-    BoundingCircle& operator=(const BoundingCircle&) noexcept = default;
-    BoundingCircle& operator=(BoundingCircle&&) noexcept = default;
-
-    [[nodiscard]] bool operator==(const BoundingCircle&) const noexcept;
-    [[nodiscard]] bool operator!=(const BoundingCircle&) const noexcept;
-
     [[nodiscard]] ContainmentType
     Contains(const Vector2& box) const;
 

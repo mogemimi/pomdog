@@ -22,9 +22,6 @@ public:
     // NOTE: You should only use the vectors of a triangle in a left-handed coordinate system.
     Plane(const Vector3& point0, const Vector3& point1, const Vector3& point2) noexcept;
 
-    bool operator==(const Plane&) const noexcept;
-    bool operator!=(const Plane&) const noexcept;
-
     void Normalize() noexcept;
 
     static Plane Normalize(const Plane& plane) noexcept;

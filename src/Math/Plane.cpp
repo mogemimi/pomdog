@@ -32,16 +32,6 @@ Plane::Plane(const Vector3& point0, const Vector3& point1, const Vector3& point2
     Distance = -Vector3::Dot(Normal, point0);
 }
 
-bool Plane::operator==(const Plane& plane) const noexcept
-{
-    return (this->Distance == plane.Distance) && (this->Normal == plane.Normal);
-}
-
-bool Plane::operator!=(const Plane& plane) const noexcept
-{
-    return (this->Distance != plane.Distance) || (this->Normal != plane.Normal);
-}
-
 void Plane::Normalize() noexcept
 {
     const auto length = this->Normal.Length();

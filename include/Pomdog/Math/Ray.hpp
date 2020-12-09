@@ -19,9 +19,6 @@ public:
 
     Ray(const Vector3& position, const Vector3& direction);
 
-    [[nodiscard]] bool operator==(const Ray&) const noexcept;
-    [[nodiscard]] bool operator!=(const Ray&) const noexcept;
-
     [[nodiscard]] std::optional<float>
     Intersects(const BoundingBox& box) const;
 

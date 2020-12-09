@@ -17,18 +17,6 @@ BoundingBox::BoundingBox(const Vector3& minIn, const Vector3& maxIn)
 {
 }
 
-bool BoundingBox::operator==(const BoundingBox& box) const noexcept
-{
-    return this->Max == box.Max
-        && this->Min == box.Min;
-}
-
-bool BoundingBox::operator!=(const BoundingBox& box) const noexcept
-{
-    return this->Max != box.Max
-        || this->Min != box.Min;
-}
-
 ContainmentType BoundingBox::Contains(const Vector3& point) const
 {
     if (point.X < this->Min.X ||

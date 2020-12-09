@@ -14,18 +14,6 @@ BoundingCircle::BoundingCircle(const Vector2& center, float radius)
     POMDOG_ASSERT(radius >= 0);
 }
 
-bool BoundingCircle::operator==(const BoundingCircle& circle) const noexcept
-{
-    return this->Radius == circle.Radius
-        && this->Center == circle.Center;
-}
-
-bool BoundingCircle::operator!=(const BoundingCircle& circle) const noexcept
-{
-    return this->Radius != circle.Radius
-        || this->Center != circle.Center;
-}
-
 ContainmentType BoundingCircle::Contains(const Vector2& point) const
 {
     auto distanceSquared = Vector2::DistanceSquared(point, Center);
