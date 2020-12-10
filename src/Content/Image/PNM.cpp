@@ -20,6 +20,13 @@ GetWord(StringIterator& it, StringIterator end)
     auto begin = it;
     for (; it != end; ++it) {
         const auto c = *it;
+        if (c == '\r') {
+            auto next = std::next(it);
+            if ((next != end) && (*next == '\n')) {
+                it = next;
+            }
+            break;
+        }
         if ((c == ' ') || (c == '\n')) {
             break;
         }
@@ -213,7 +220,7 @@ Decode(const char* data, std::size_t size)
 
             // NOTE: Skip whitespaces
             const auto iterEnd = std::end(view);
-            while ((iter != iterEnd) && ((*iter == ' ') || (*iter == '\n'))) {
+            while ((iter != iterEnd) && ((*iter == ' ') || (*iter == '\r') || (*iter == '\n'))) {
                 ++iter;
             }
 
@@ -242,7 +249,7 @@ Decode(const char* data, std::size_t size)
                     SkipCommentLine(iter, std::end(view));
                     ++iter;
                 }
-                else if (*iter == ' ') {
+                else if ((*iter == ' ') || (*iter == '\r')) {
                     ++iter;
                 }
             }
