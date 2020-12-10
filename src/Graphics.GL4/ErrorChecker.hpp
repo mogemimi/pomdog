@@ -2,15 +2,24 @@
 
 #pragma once
 
+#include <memory>
+
+namespace Pomdog {
+class Error;
+} // namespace Pomdog
+
 namespace Pomdog::Detail::GL4 {
 
-namespace ErrorChecker {
+[[nodiscard]] std::shared_ptr<Error>
+GetLastError() noexcept;
+
+#if defined(DEBUG) && !defined(NDEBUG)
 void CheckError(const char* command, const char* filename, int line);
-}
+#endif
 
 #if defined(DEBUG) && !defined(NDEBUG)
 #define POMDOG_CHECK_ERROR_GL4(name) \
-    Pomdog::Detail::GL4::ErrorChecker::CheckError(name, __FILE__, __LINE__)
+    Pomdog::Detail::GL4::CheckError(name, __FILE__, __LINE__)
 #else
 #define POMDOG_CHECK_ERROR_GL4(name)
 #endif

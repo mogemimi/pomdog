@@ -2,20 +2,18 @@
 
 #include "ErrorChecker.hpp"
 #include "OpenGLPrerequisites.hpp"
-#include "../Utility/Tagged.hpp"
 #include "Pomdog/Logging/Log.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #include <ios>
 #include <sstream>
 
 namespace Pomdog::Detail::GL4 {
 namespace {
 
-struct ErrorCodeTag;
-using ErrorCodeGL4 = Tagged<GLenum, ErrorCodeTag>;
-
-std::string ToString(const ErrorCodeGL4& errorCode)
+[[nodiscard]] std::string
+ToString(GLenum errorCode) noexcept
 {
-    switch (errorCode.value) {
+    switch (errorCode) {
     case GL_NO_ERROR:
         return "GL_NO_ERROR";
     case GL_INVALID_ENUM:
@@ -36,17 +34,27 @@ std::string ToString(const ErrorCodeGL4& errorCode)
 #endif
     }
     std::stringstream ss;
-    ss << "ErrorCode '" << std::hex << errorCode.value << "'";
+    ss << "ErrorCode '" << std::hex << errorCode << "'";
     return ss.str();
 }
 
 } // namespace
 
-void ErrorChecker::CheckError(const char* command, const char* filename, int line)
+std::shared_ptr<Error>
+GetLastError() noexcept
 {
-    ErrorCodeGL4 const errorCode{glGetError()};
+    const auto errorCode = glGetError();
+    if (errorCode == GL_NO_ERROR) {
+        return nullptr;
+    }
+    return Errors::New(ToString(errorCode));
+}
 
-    if (GL_NO_ERROR == errorCode.value) {
+#if defined(DEBUG) && !defined(NDEBUG)
+void CheckError(const char* command, const char* filename, int line)
+{
+    const auto errorCode = glGetError();
+    if (errorCode == GL_NO_ERROR) {
         return;
     }
 
@@ -68,5 +76,6 @@ void ErrorChecker::CheckError(const char* command, const char* filename, int lin
         ++lines;
     }
 }
+#endif
 
 } // namespace Pomdog::Detail::GL4
