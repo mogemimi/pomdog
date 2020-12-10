@@ -29,8 +29,7 @@ GetWord(StringIterator& it, StringIterator end)
 }
 
 template <class StringIterator>
-void
-SkipCommentLine(StringIterator& it, StringIterator end)
+void SkipCommentLine(StringIterator& it, StringIterator end)
 {
     if ((it == end) || (*it != '#')) {
         return;

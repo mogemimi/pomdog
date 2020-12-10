@@ -26,8 +26,7 @@ namespace {
 
 bool IsPNGFormat(const std::array<std::uint8_t, 8>& signature) noexcept
 {
-    std::array<std::uint8_t, 8> const pngSignature {{
-        0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A}};
+    std::array<std::uint8_t, 8> const pngSignature{{0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A}};
 
     return std::equal(std::begin(signature), std::end(signature), std::begin(pngSignature));
 }
