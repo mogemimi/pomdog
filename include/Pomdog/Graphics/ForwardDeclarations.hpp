@@ -17,6 +17,7 @@ namespace Pomdog {
 
 // Classes
 class ConstantBuffer;
+class DepthStencilBuffer;
 class EffectReflection;
 class GraphicsCommandList;
 class GraphicsCommandQueue;

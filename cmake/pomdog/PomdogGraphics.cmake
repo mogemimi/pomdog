@@ -19,6 +19,8 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/Graphics/ConstantBuffer.cpp
     ${POMDOG_INC_DIR}/Graphics/CullMode.hpp
     ${POMDOG_INC_DIR}/Graphics/DepthFormat.hpp
+    ${POMDOG_INC_DIR}/Graphics/DepthStencilBuffer.hpp
+    ${POMDOG_SRC_DIR}/Graphics/DepthStencilBuffer.cpp
     ${POMDOG_INC_DIR}/Graphics/DepthStencilDescription.hpp
     ${POMDOG_INC_DIR}/Graphics/DepthStencilOperation.hpp
     ${POMDOG_INC_DIR}/Graphics/EffectAnnotation.hpp
@@ -103,6 +105,8 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/Graphics.GL4/BlendStateGL4.hpp
         ${POMDOG_SRC_DIR}/Graphics.GL4/BufferGL4.cpp
         ${POMDOG_SRC_DIR}/Graphics.GL4/BufferGL4.hpp
+        ${POMDOG_SRC_DIR}/Graphics.GL4/DepthStencilBufferGL4.cpp
+        ${POMDOG_SRC_DIR}/Graphics.GL4/DepthStencilBufferGL4.hpp
         ${POMDOG_SRC_DIR}/Graphics.GL4/DepthStencilStateGL4.cpp
         ${POMDOG_SRC_DIR}/Graphics.GL4/DepthStencilStateGL4.hpp
         ${POMDOG_SRC_DIR}/Graphics.GL4/EffectReflectionGL4.cpp
@@ -155,6 +159,8 @@ target_sources(pomdog_static PRIVATE
         # NOTE: Graphics.Direct3D11
         ${POMDOG_SRC_DIR}/Graphics.Direct3D11/BufferDirect3D11.cpp
         ${POMDOG_SRC_DIR}/Graphics.Direct3D11/BufferDirect3D11.hpp
+        ${POMDOG_SRC_DIR}/Graphics.Direct3D11/DepthStencilBufferDirect3D11.cpp
+        ${POMDOG_SRC_DIR}/Graphics.Direct3D11/DepthStencilBufferDirect3D11.hpp
         ${POMDOG_SRC_DIR}/Graphics.Direct3D11/EffectReflectionDirect3D11.cpp
         ${POMDOG_SRC_DIR}/Graphics.Direct3D11/EffectReflectionDirect3D11.hpp
         ${POMDOG_SRC_DIR}/Graphics.Direct3D11/FormatHelper.cpp
@@ -181,6 +187,8 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/Graphics.Metal/BufferMetal.hpp
         ${POMDOG_SRC_DIR}/Graphics.Metal/BufferMetal.mm
         ${POMDOG_SRC_DIR}/Graphics.Metal/ConstantsMetal.hpp
+        ${POMDOG_SRC_DIR}/Graphics.Metal/DepthStencilBufferMetal.hpp
+        ${POMDOG_SRC_DIR}/Graphics.Metal/DepthStencilBufferMetal.mm
         ${POMDOG_SRC_DIR}/Graphics.Metal/EffectReflectionMetal.hpp
         ${POMDOG_SRC_DIR}/Graphics.Metal/EffectReflectionMetal.mm
         ${POMDOG_SRC_DIR}/Graphics.Metal/GraphicsContextMetal.hpp
