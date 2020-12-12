@@ -18,14 +18,13 @@ RenderTarget2DMetal::Initialize(
     std::int32_t pixelHeightIn,
     std::int32_t levelCountIn,
     SurfaceFormat formatIn,
-    DepthFormat depthStencilFormatIn,
+    DepthFormat depthStencilFormat,
     std::int32_t multiSampleCount) noexcept
 {
     pixelWidth = pixelWidthIn;
     pixelHeight = pixelHeightIn;
     levelCount = levelCountIn;
     format = formatIn;
-    depthStencilFormat = depthStencilFormatIn;
     multiSampleEnabled = (multiSampleCount > 1);
 
     POMDOG_ASSERT(device != nullptr);
@@ -48,27 +47,14 @@ RenderTarget2DMetal::Initialize(
         }
     }
 
-    if ((depthStencilFormat == DepthFormat::Depth24Stencil8) && !device.isDepth24Stencil8PixelFormatSupported) {
-        // NOTE: MTLPixelFormatDepth24Unorm_Stencil8 is only supported in certain devices.
-        return Errors::New("This device does not support MTLPixelFormatDepth24Unorm_Stencil8.");
-    }
-
     if (depthStencilFormat != DepthFormat::None) {
-        MTLTextureDescriptor* descriptor = [MTLTextureDescriptor
-            texture2DDescriptorWithPixelFormat:ToPixelFormat(depthStencilFormat)
-                                         width:pixelWidth
-                                        height:pixelHeight
-                                     mipmapped:(levelCount > 1 ? YES : NO)];
-
-        MTLResourceOptions resourceOptions = 0;
-        resourceOptions |= MTLResourceStorageModePrivate;
-
-        [descriptor setUsage:MTLTextureUsageRenderTarget];
-        [descriptor setResourceOptions:resourceOptions];
-
-        depthStencilTexture = [device newTextureWithDescriptor:descriptor];
-        if (depthStencilTexture == nullptr) {
-            return Errors::New("failed to create MTLTexture");
+        if (auto err = depthStencilBuffer.Initialize(
+            device,
+            pixelWidth,
+            pixelHeight,
+            depthStencilFormat,
+            multiSampleCount); err != nullptr) {
+            return Errors::Wrap(std::move(err), "depthStencilBuffer.Initialize() failed");
         }
     }
     return nullptr;
@@ -96,7 +82,7 @@ SurfaceFormat RenderTarget2DMetal::GetFormat() const noexcept
 
 DepthFormat RenderTarget2DMetal::GetDepthStencilFormat() const noexcept
 {
-    return depthStencilFormat;
+    return depthStencilBuffer.GetFormat();
 }
 
 Rectangle RenderTarget2DMetal::GetBounds() const noexcept
@@ -130,7 +116,7 @@ id<MTLTexture> RenderTarget2DMetal::GetTexture() const noexcept
 
 id<MTLTexture> RenderTarget2DMetal::GetDepthStencilTexture() const noexcept
 {
-    return depthStencilTexture;
+    return depthStencilBuffer.GetDepthStencilTexture();
 }
 
 } // namespace Pomdog::Detail::Metal

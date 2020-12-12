@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "DepthStencilBufferMetal.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
 #include "Pomdog/Utility/Errors.hpp"
@@ -49,13 +50,12 @@ public:
     id<MTLTexture> GetDepthStencilTexture() const noexcept;
 
 private:
+    DepthStencilBufferMetal depthStencilBuffer;
     id<MTLTexture> texture = nullptr;
-    id<MTLTexture> depthStencilTexture = nullptr;
     std::int32_t pixelWidth = 0;
     std::int32_t pixelHeight = 0;
     std::int32_t levelCount = 0;
     SurfaceFormat format = SurfaceFormat::A8_UNorm;
-    DepthFormat depthStencilFormat = DepthFormat::None;
     bool multiSampleEnabled = false;
 };
 

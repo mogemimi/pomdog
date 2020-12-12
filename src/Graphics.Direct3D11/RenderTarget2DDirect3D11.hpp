@@ -3,6 +3,7 @@
 #pragma once
 
 #include "PrerequisitesDirect3D11.hpp"
+#include "DepthStencilBufferDirect3D11.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
 #include "Pomdog/Utility/Errors.hpp"
@@ -77,16 +78,14 @@ public:
     void ResetBackBuffer() noexcept;
 
 private:
+    DepthStencilBufferDirect3D11 depthStencilBuffer;
     Microsoft::WRL::ComPtr<ID3D11Texture2D> texture2D;
-    Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencil;
     Microsoft::WRL::ComPtr<ID3D11RenderTargetView> renderTargetView;
-    Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView;
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> textureResourceView;
     std::int32_t pixelWidth = 0;
     std::int32_t pixelHeight = 0;
     std::int32_t levelCount = 0;
     SurfaceFormat format = SurfaceFormat::A8_UNorm;
-    DepthFormat depthStencilFormat = DepthFormat::None;
     bool generateMipmap = false;
     bool multiSampleEnabled = false;
 };

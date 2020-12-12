@@ -75,59 +75,6 @@ BuildRenderTarget(
 }
 
 [[nodiscard]] std::shared_ptr<Error>
-BuildDepthBuffer(
-    ID3D11Device* device,
-    DepthFormat depthStencilFormat,
-    std::int32_t pixelWidth,
-    std::int32_t pixelHeight,
-    std::int32_t levelCount,
-    ComPtr<ID3D11Texture2D>& depthStencil,
-    ComPtr<ID3D11DepthStencilView>& depthStencilView) noexcept
-{
-    if (DepthFormat::None == depthStencilFormat) {
-        return nullptr;
-    }
-
-    POMDOG_ASSERT(device != nullptr);
-    POMDOG_ASSERT(pixelWidth > 0);
-    POMDOG_ASSERT(pixelHeight > 0);
-    POMDOG_ASSERT(levelCount > 0);
-
-    // NOTE: Create depth stencil texture
-    D3D11_TEXTURE2D_DESC textureDesc;
-    textureDesc.Format = DXGIFormatHelper::ToDXGIFormat(depthStencilFormat);
-    textureDesc.Width = pixelWidth;
-    textureDesc.Height = pixelHeight;
-    textureDesc.ArraySize = 1;
-    textureDesc.MipLevels = levelCount;
-    textureDesc.SampleDesc.Count = 1;
-    textureDesc.SampleDesc.Quality = 0;
-    textureDesc.Usage = D3D11_USAGE_DEFAULT;
-    textureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-    textureDesc.CPUAccessFlags = 0;
-    textureDesc.MiscFlags = 0;
-
-    if (auto hr = device->CreateTexture2D(&textureDesc, nullptr, &depthStencil); FAILED(hr)) {
-        return Errors::New("CreateTexture2D() failed");
-    }
-
-    // NOTE: Create the depth stencil view (DSV)
-    D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
-    ZeroMemory(&dsvDesc, sizeof(dsvDesc));
-    dsvDesc.Format = textureDesc.Format;
-    dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-    dsvDesc.Texture2D.MipSlice = 0;
-
-    POMDOG_ASSERT(depthStencil != nullptr);
-
-    if (auto hr = device->CreateDepthStencilView(depthStencil.Get(), &dsvDesc, &depthStencilView); FAILED(hr)) {
-        return Errors::New("CreateDepthStencilView() failed");
-    }
-
-    return nullptr;
-}
-
-[[nodiscard]] std::shared_ptr<Error>
 BuildBackBufferBySwapChain(
     ID3D11Device* device,
     IDXGISwapChain* swapChain,
@@ -160,14 +107,13 @@ RenderTarget2DDirect3D11::Initialize(
     std::int32_t pixelHeightIn,
     std::int32_t levelCountIn,
     SurfaceFormat formatIn,
-    DepthFormat depthStencilFormatIn,
+    DepthFormat depthStencilFormat,
     std::int32_t multiSampleCount) noexcept
 {
     pixelWidth = pixelWidthIn;
     pixelHeight = pixelHeightIn;
     levelCount = levelCountIn;
     format = formatIn;
-    depthStencilFormat = depthStencilFormatIn;
     generateMipmap = (levelCountIn > 1);
     multiSampleEnabled = (multiSampleCount > 1);
 
@@ -186,16 +132,16 @@ RenderTarget2DDirect3D11::Initialize(
         return Errors::Wrap(std::move(err), "BuildRenderTarget() failed");
     }
 
-    if (auto err = BuildDepthBuffer(
+    if (depthStencilFormat != DepthFormat::None) {
+        if (auto err = depthStencilBuffer.Initialize(
             device,
-            depthStencilFormat,
             pixelWidth,
             pixelHeight,
-            levelCount,
-            depthStencil,
-            depthStencilView);
-        err != nullptr) {
-        return Errors::Wrap(std::move(err), "BuildDepthBuffer() failed");
+            depthStencilFormat,
+            multiSampleCount);
+            err != nullptr) {
+            return Errors::Wrap(std::move(err), "depthStencilBuffer.Initialize() failed");
+        }
     }
 
     return nullptr;
@@ -209,14 +155,13 @@ RenderTarget2DDirect3D11::Initialize(
     std::int32_t pixelHeightIn,
     std::int32_t levelCountIn,
     SurfaceFormat formatIn,
-    DepthFormat depthStencilFormatIn,
+    DepthFormat depthStencilFormat,
     std::int32_t multiSampleCount) noexcept
 {
     pixelWidth = pixelWidthIn;
     pixelHeight = pixelHeightIn;
     levelCount = levelCountIn;
     format = formatIn;
-    depthStencilFormat = depthStencilFormatIn;
     generateMipmap = (levelCountIn > 1);
     multiSampleEnabled = (multiSampleCount > 1);
 
@@ -229,16 +174,16 @@ RenderTarget2DDirect3D11::Initialize(
         return Errors::Wrap(std::move(err), "BuildBackBufferBySwapChain() failed");
     }
 
-    if (auto err = BuildDepthBuffer(
+    if (depthStencilFormat != DepthFormat::None) {
+        if (auto err = depthStencilBuffer.Initialize(
             device,
-            depthStencilFormat,
             pixelWidth,
             pixelHeight,
-            levelCount,
-            depthStencil,
-            depthStencilView);
-        err != nullptr) {
-        return Errors::Wrap(std::move(err), "BuildDepthBuffer() failed");
+            depthStencilFormat,
+            multiSampleCount);
+            err != nullptr) {
+            return Errors::Wrap(std::move(err), "depthStencilBuffer.Initialize() failed");
+        }
     }
 
     return nullptr;
@@ -266,7 +211,7 @@ SurfaceFormat RenderTarget2DDirect3D11::GetFormat() const noexcept
 
 DepthFormat RenderTarget2DDirect3D11::GetDepthStencilFormat() const noexcept
 {
-    return depthStencilFormat;
+    return depthStencilBuffer.GetFormat();
 }
 
 Rectangle RenderTarget2DDirect3D11::GetBounds() const noexcept
@@ -358,7 +303,7 @@ RenderTarget2DDirect3D11::GetRenderTargetView() const noexcept
 ID3D11DepthStencilView*
 RenderTarget2DDirect3D11::GetDepthStencilView() const noexcept
 {
-    return depthStencilView.Get();
+    return depthStencilBuffer.GetDepthStencilView();
 }
 
 ID3D11ShaderResourceView*
@@ -374,19 +319,17 @@ RenderTarget2DDirect3D11::ResetBackBuffer(
     IDXGISwapChain* swapChain,
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn,
-    DepthFormat depthStencilFormatIn) noexcept
+    DepthFormat depthStencilFormat) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
     POMDOG_ASSERT(swapChain != nullptr);
 
     pixelWidth = pixelWidthIn;
     pixelHeight = pixelHeightIn;
-    depthStencilFormat = depthStencilFormatIn;
 
     renderTargetView.Reset();
     texture2D.Reset();
-    depthStencilView.Reset();
-    depthStencil.Reset();
+    depthStencilBuffer.ResetBackBuffer();
 
     if (auto err = BuildBackBufferBySwapChain(
             device,
@@ -397,16 +340,18 @@ RenderTarget2DDirect3D11::ResetBackBuffer(
         return Errors::Wrap(std::move(err), "BuildBackBufferBySwapChain() failed");
     }
 
-    if (auto err = BuildDepthBuffer(
+    constexpr std::int32_t multiSampleCount = 1;
+
+    if (depthStencilFormat != DepthFormat::None) {
+        if (auto err = depthStencilBuffer.ResetBackBuffer(
             device,
-            depthStencilFormat,
             pixelWidth,
             pixelHeight,
-            levelCount,
-            depthStencil,
-            depthStencilView);
-        err != nullptr) {
-        return Errors::Wrap(std::move(err), "BuildDepthBuffer() failed");
+            depthStencilFormat,
+            multiSampleCount);
+            err != nullptr) {
+            return Errors::Wrap(std::move(err), "depthStencilBuffer.ResetBackBuffer() failed");
+        }
     }
 
     return nullptr;
@@ -416,6 +361,7 @@ void RenderTarget2DDirect3D11::ResetBackBuffer() noexcept
 {
     renderTargetView.Reset();
     texture2D.Reset();
+    depthStencilBuffer.ResetBackBuffer();
 }
 
 } // namespace Pomdog::Detail::Direct3D11

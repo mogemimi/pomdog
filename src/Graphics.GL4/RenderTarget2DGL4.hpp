@@ -3,6 +3,7 @@
 #pragma once
 
 #include "OpenGLPrerequisites.hpp"
+#include "DepthStencilBufferGL4.hpp"
 #include "Texture2DGL4.hpp"
 #include "../Utility/Tagged.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
@@ -48,22 +49,21 @@ public:
     /// Copies the pixel data from texture to memory.
     void GetData(void* result, std::size_t offsetInBytes, std::size_t sizeInBytes) const override;
 
-    void BindToFramebuffer(GLenum attachmentPoint);
-    void UnbindFromFramebuffer(GLenum attachmentPoint);
+    void BindToFramebuffer(GLuint frameBuffer, GLenum attachmentPoint);
+    void UnbindFromFramebuffer(GLuint frameBuffer, GLenum attachmentPoint);
 
-    void BindDepthStencilBuffer();
+    void BindDepthStencilBuffer(GLuint frameBuffer);
 
     /// Gets the handle of the native texture resource.
     Texture2DObjectGL4 GetTextureHandle() const noexcept;
 
 private:
+    DepthStencilBufferGL4 depthStencilBuffer;
     Texture2DGL4 texture;
-    std::optional<RenderBuffer2DGL4> renderBuffer;
     std::int32_t pixelWidth = 0;
     std::int32_t pixelHeight = 0;
     std::int32_t levelCount = 0;
     SurfaceFormat format = SurfaceFormat::A8_UNorm;
-    DepthFormat depthStencilFormat = DepthFormat::None;
     bool generateMipmap = false;
     bool multiSampleEnabled = false;
 };
