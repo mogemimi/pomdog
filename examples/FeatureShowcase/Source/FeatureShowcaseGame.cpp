@@ -46,6 +46,7 @@ std::shared_ptr<Error>
 FeatureShowcaseGame::Initialize()
 {
     window->SetTitle("Feature Showcase");
+    window->SetAllowUserResizing(true);
     commandList = std::get<0>(graphicsDevice->CreateGraphicsCommandList());
 
     auto [font, fontErr] = assets->Load<TrueTypeFont>("Fonts/NotoSans/NotoSans-Regular.ttf");
@@ -241,7 +242,14 @@ void FeatureShowcaseGame::Update()
     }
 
     connect(mouse->ScrollWheel, [this](std::int32_t delta) {
-        scrollY = std::clamp(scrollY + static_cast<double>(delta) * 0.02, -480.0, 0.0);
+#if defined(POMDOG_PLATFORM_WIN32)
+        // FIXME: Set to appropriate wheel scroll speed for each platform.
+        constexpr double divisor = 0.002;
+#else
+        // NOTE: The answer to life, universe and everything.
+        constexpr double divisor = 0.02;
+#endif
+        scrollY = std::clamp(scrollY + static_cast<double>(delta) * divisor, -480.0, 0.0);
     });
 }
 
