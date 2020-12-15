@@ -28,7 +28,8 @@ void GraphicsCommandQueueVulkan::Present()
 
 std::size_t GraphicsCommandQueueVulkan::GetCommandCount() const noexcept
 {
-    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
+    // FIXME: Not implemented yet.
+    return 0;
 }
 
 } // namespace Pomdog::Detail::Vulkan

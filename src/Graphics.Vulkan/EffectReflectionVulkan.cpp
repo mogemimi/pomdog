@@ -14,9 +14,11 @@ EffectReflectionVulkan::EffectReflectionVulkan()
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 
-std::vector<EffectConstantDescription> EffectReflectionVulkan::GetConstantBuffers() const
+std::vector<EffectConstantDescription>
+EffectReflectionVulkan::GetConstantBuffers() const noexcept
 {
-    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
+    // FIXME: Not implemented yet.
+    return {};
 }
 
 } // namespace Pomdog::Detail::Vulkan

@@ -111,16 +111,8 @@ Texture2DVulkan::~Texture2DVulkan()
     }
 }
 
-void Texture2DVulkan::SetData(
-    std::int32_t pixelWidth,
-    std::int32_t pixelHeight,
-    std::int32_t levelCount,
-    SurfaceFormat format,
-    const void* pixelData)
+void Texture2DVulkan::SetData(const void* pixelData)
 {
-    POMDOG_ASSERT(pixelWidth > 0);
-    POMDOG_ASSERT(pixelHeight > 0);
-    POMDOG_ASSERT(levelCount >= 1);
     POMDOG_ASSERT(pixelData != nullptr);
 }
 

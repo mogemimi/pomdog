@@ -54,7 +54,8 @@ void GraphicsCommandListVulkan::Reset()
 
 std::size_t GraphicsCommandListVulkan::GetCount() const noexcept
 {
-    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
+    // FIXME: Not implemented yet.
+    return 0;
 }
 
 void GraphicsCommandListVulkan::Draw(
