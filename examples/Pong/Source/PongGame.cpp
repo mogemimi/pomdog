@@ -25,7 +25,7 @@ PongGame::PongGame(const std::shared_ptr<GameHost>& gameHostIn)
     window->SetAllowUserResizing(true);
 }
 
-std::shared_ptr<Error> PongGame::Initialize()
+std::unique_ptr<Error> PongGame::Initialize()
 {
     // NOTE: Set window name
     window->SetTitle("Pomdog Pong");
@@ -33,7 +33,7 @@ std::shared_ptr<Error> PongGame::Initialize()
     // NOTE: Set main volume
     audioEngine->SetMainVolume(0.4f);
 
-    std::shared_ptr<Error> err;
+    std::unique_ptr<Error> err;
 
     // NOTE: Create graphics command list
     std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();

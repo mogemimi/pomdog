@@ -15,7 +15,7 @@ class HTTPClientTest final : public Game {
 public:
     explicit HTTPClientTest(const std::shared_ptr<GameHost>& gameHost);
 
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize() override;
 
     void Update() override;

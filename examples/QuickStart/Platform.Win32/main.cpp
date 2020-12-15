@@ -44,7 +44,7 @@ int APIENTRY _tWinMain(
     bootstrap.SetBackBufferSize(800, 480);
     bootstrap.SetOpenGLEnabled(false);
 
-    bootstrap.OnError([](std::shared_ptr<Error>&& err) {
+    bootstrap.OnError([](std::unique_ptr<Error>&& err) {
         Log::Critical("Pomdog", err->ToString());
 #if defined(POMDOG_CRTDEBUG)
         _CrtDbgBreak();

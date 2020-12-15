@@ -12,12 +12,12 @@ Beam2DTest::Beam2DTest(const std::shared_ptr<GameHost>& gameHostIn)
 {
 }
 
-std::shared_ptr<Error> Beam2DTest::Initialize()
+std::unique_ptr<Error> Beam2DTest::Initialize()
 {
     auto assets = gameHost->GetAssetManager();
     auto clock = gameHost->GetClock();
 
-    std::shared_ptr<Error> err;
+    std::unique_ptr<Error> err;
 
     // NOTE: Create graphics command list
     std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();

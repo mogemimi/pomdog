@@ -14,7 +14,7 @@ QuickStartGame::QuickStartGame(const std::shared_ptr<GameHost>& gameHostIn)
 {
 }
 
-std::shared_ptr<Error> QuickStartGame::Initialize()
+std::unique_ptr<Error> QuickStartGame::Initialize()
 {
     // NOTE: Display message in log console
     Log::Verbose("Hello, QuickStart.");
@@ -22,7 +22,7 @@ std::shared_ptr<Error> QuickStartGame::Initialize()
     // NOTE: Set window name
     window->SetTitle("QuickStart");
 
-    std::shared_ptr<Error> err;
+    std::unique_ptr<Error> err;
 
     // NOTE: Create graphics command list
     std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();

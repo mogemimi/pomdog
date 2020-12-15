@@ -13,7 +13,7 @@ class ImageEffectsTest final : public Game {
 public:
     explicit ImageEffectsTest(const std::shared_ptr<GameHost>& gameHost);
 
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize() override;
 
     void Update() override;

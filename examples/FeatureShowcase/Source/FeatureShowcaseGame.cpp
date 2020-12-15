@@ -42,7 +42,7 @@ FeatureShowcaseGame::FeatureShowcaseGame(const std::shared_ptr<GameHost>& gameHo
 {
 }
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 FeatureShowcaseGame::Initialize()
 {
     window->SetTitle("Feature Showcase");

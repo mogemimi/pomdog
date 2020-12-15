@@ -16,7 +16,7 @@ int main(int argc, char** argv)
     Pomdog::X11::Bootstrap bootstrap;
     bootstrap.SetBackBufferSize(800, 480);
 
-    bootstrap.OnError([](std::shared_ptr<Error>&& err) {
+    bootstrap.OnError([](std::unique_ptr<Error>&& err) {
         Log::Critical("Pomdog", err->ToString());
     });
 

@@ -15,7 +15,7 @@ class Texture2DLoaderTest final : public Game {
 public:
     explicit Texture2DLoaderTest(const std::shared_ptr<GameHost>& gameHost);
 
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize() override;
 
     void Update() override;

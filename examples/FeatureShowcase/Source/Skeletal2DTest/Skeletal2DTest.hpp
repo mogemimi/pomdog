@@ -18,7 +18,7 @@ class Skeletal2DTest final : public Game {
 public:
     explicit Skeletal2DTest(const std::shared_ptr<GameHost>& gameHost);
 
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize() override;
 
     void Update() override;

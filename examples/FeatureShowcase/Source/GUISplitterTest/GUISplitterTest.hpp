@@ -14,7 +14,7 @@ class GUISplitterTest final : public Game {
 public:
     explicit GUISplitterTest(const std::shared_ptr<GameHost>& gameHost);
 
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize() override;
 
     void Update() override;

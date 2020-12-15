@@ -16,7 +16,7 @@ class GamepadTest final : public Game {
 public:
     explicit GamepadTest(const std::shared_ptr<GameHost>& gameHost);
 
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize() override;
 
     void Update() override;

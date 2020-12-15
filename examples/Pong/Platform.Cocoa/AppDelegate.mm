@@ -42,7 +42,7 @@ using Pomdog::ScopedConnection;
     bootstrap.SetWindow(self.window);
     bootstrap.SetOpenGLEnabled(false);
 
-    bootstrap.OnError([](std::shared_ptr<Error>&& err) {
+    bootstrap.OnError([](std::unique_ptr<Error>&& err) {
         Log::Critical("Pomdog", err->ToString());
     });
 

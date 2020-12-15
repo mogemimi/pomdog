@@ -10,12 +10,12 @@ PolylineDrawingTest::PolylineDrawingTest(const std::shared_ptr<GameHost>& gameHo
 {
 }
 
-std::shared_ptr<Error> PolylineDrawingTest::Initialize()
+std::unique_ptr<Error> PolylineDrawingTest::Initialize()
 {
     auto assets = gameHost->GetAssetManager();
     auto clock = gameHost->GetClock();
 
-    std::shared_ptr<Error> err;
+    std::unique_ptr<Error> err;
 
     // NOTE: Create graphics command list
     std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();

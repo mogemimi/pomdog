@@ -36,12 +36,12 @@ Particle3DTest::Particle3DTest(const std::shared_ptr<GameHost>& gameHostIn)
 {
 }
 
-std::shared_ptr<Error> Particle3DTest::Initialize()
+std::unique_ptr<Error> Particle3DTest::Initialize()
 {
     auto assets = gameHost->GetAssetManager();
     auto clock = gameHost->GetClock();
 
-    std::shared_ptr<Error> err;
+    std::unique_ptr<Error> err;
 
     // NOTE: Create graphics command list
     std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();

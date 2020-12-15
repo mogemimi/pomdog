@@ -9,12 +9,12 @@ HTTPClientTest::HTTPClientTest(const std::shared_ptr<GameHost>& gameHostIn)
 {
 }
 
-std::shared_ptr<Error> HTTPClientTest::Initialize()
+std::unique_ptr<Error> HTTPClientTest::Initialize()
 {
     auto assets = gameHost->GetAssetManager();
     auto clock = gameHost->GetClock();
 
-    std::shared_ptr<Error> err;
+    std::unique_ptr<Error> err;
 
     // NOTE: Create graphics command list
     std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
@@ -33,7 +33,7 @@ std::shared_ptr<Error> HTTPClientTest::Initialize()
     spriteFont->PrepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
 
     auto http = gameHost->GetHTTPClient();
-    auto callback = [this](const std::shared_ptr<HTTPResponse>& resp, const std::shared_ptr<Error>& err) {
+    auto callback = [this](const std::shared_ptr<HTTPResponse>& resp, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
             webText = err->ToString();
             return;
