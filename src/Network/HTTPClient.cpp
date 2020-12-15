@@ -28,7 +28,7 @@ struct URLParseResult final {
     std::string_view path;
 };
 
-std::tuple<URLParseResult, std::shared_ptr<Error>>
+std::tuple<URLParseResult, std::unique_ptr<Error>>
 ParseURL(std::string_view url)
 {
     std::string_view source = url;
@@ -196,7 +196,7 @@ public:
 
     virtual bool IsCompleted() const noexcept = 0;
 
-    virtual std::shared_ptr<Error> Abort() = 0;
+    virtual std::unique_ptr<Error> Abort() = 0;
 
     virtual const std::shared_ptr<HTTPRequest>& GetRequest() const = 0;
 };
@@ -226,14 +226,14 @@ public:
         return isCompleted;
     }
 
-    std::shared_ptr<Error> Abort() override;
+    std::unique_ptr<Error> Abort() override;
 
     const std::shared_ptr<HTTPRequest>& GetRequest() const override
     {
         return request;
     }
 
-    void Complete(std::unique_ptr<HTTPResponse>&& response, std::shared_ptr<Error>&& err);
+    void Complete(std::unique_ptr<HTTPResponse>&& response, std::unique_ptr<Error>&& err);
 };
 
 template <class SocketStream>
@@ -252,10 +252,10 @@ void HTTPSession<SocketStream>::CreateSession(
 
     stream.SetTimeout(std::chrono::seconds{5});
 
-    auto sendRequest = [this](const std::shared_ptr<Error>& connErr) {
+    auto sendRequest = [this](const std::unique_ptr<Error>& connErr) {
         if (connErr != nullptr) {
             POMDOG_ASSERT(request != nullptr);
-            this->Complete(nullptr, Errors::Wrap(connErr, "HTTP request error"));
+            this->Complete(nullptr, Errors::Wrap(connErr->Clone(), "HTTP request error"));
             return;
         }
 
@@ -309,10 +309,10 @@ void HTTPSession<SocketStream>::CreateSession(
         connectedConn = stream.OnConnected(std::move(sendRequest));
     }
 
-    readConn = stream.OnRead([this](const ArrayView<std::uint8_t>& view, const std::shared_ptr<Error>& readErr) {
+    readConn = stream.OnRead([this](const ArrayView<std::uint8_t>& view, const std::unique_ptr<Error>& readErr) {
         if (readErr != nullptr) {
             POMDOG_ASSERT(request != nullptr);
-            this->Complete(nullptr, Errors::Wrap(readErr, "HTTP request error"));
+            this->Complete(nullptr, Errors::Wrap(readErr->Clone(), "HTTP request error"));
             stream.Disconnect();
             return;
         }
@@ -348,7 +348,7 @@ void HTTPSession<SocketStream>::CreateSession(
 }
 
 template <class SocketStream>
-void HTTPSession<SocketStream>::Complete(std::unique_ptr<HTTPResponse>&& response, std::shared_ptr<Error>&& err)
+void HTTPSession<SocketStream>::Complete(std::unique_ptr<HTTPResponse>&& response, std::unique_ptr<Error>&& err)
 {
     connectedConn.Disconnect();
     disconnectConn.Disconnect();
@@ -372,7 +372,7 @@ void HTTPSession<SocketStream>::Complete(std::unique_ptr<HTTPResponse>&& respons
 }
 
 template <class SocketStream>
-std::shared_ptr<Error> HTTPSession<SocketStream>::Abort()
+std::unique_ptr<Error> HTTPSession<SocketStream>::Abort()
 {
     if (isCompleted) {
         return nullptr;
@@ -387,10 +387,10 @@ std::shared_ptr<Error> HTTPSession<SocketStream>::Abort()
         return nullptr;
     }
 
-    connectedConn = stream.OnConnected([this](const std::shared_ptr<Error>& err) {
+    connectedConn = stream.OnConnected([this](const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
             POMDOG_ASSERT(request != nullptr);
-            this->Complete(nullptr, Errors::Wrap(err, "HTTP request error"));
+            this->Complete(nullptr, Errors::Wrap(err->Clone(), "HTTP request error"));
             return;
         }
 
@@ -426,20 +426,20 @@ struct HTTPClient::Impl final {
 
     ~Impl();
 
-    std::shared_ptr<Error>
+    std::unique_ptr<Error>
     Do(const std::shared_ptr<HTTPRequest>& req);
 
-    std::tuple<Connection, std::shared_ptr<Error>>
+    std::tuple<Connection, std::unique_ptr<Error>>
     Get(const std::string& url,
-        std::function<void(std::unique_ptr<HTTPResponse>&&, const std::shared_ptr<Error>&)>&& callback);
+        std::function<void(std::unique_ptr<HTTPResponse>&&, const std::unique_ptr<Error>&)>&& callback);
 
-    std::tuple<Connection, std::shared_ptr<Error>>
+    std::tuple<Connection, std::unique_ptr<Error>>
     Post(const std::string& url,
         const std::string& contentType,
         std::vector<char>&& body,
-        std::function<void(std::unique_ptr<HTTPResponse>&&, const std::shared_ptr<Error>&)>&& callback);
+        std::function<void(std::unique_ptr<HTTPResponse>&&, const std::unique_ptr<Error>&)>&& callback);
 
-    std::shared_ptr<Error>
+    std::unique_ptr<Error>
     CancelRequest(const std::shared_ptr<HTTPRequest>& req);
 };
 
@@ -477,7 +477,7 @@ HTTPClient::Impl::~Impl()
     sessionKeeper->KeepAliveTCP = [](std::string&&, TCPStream&&) {};
 }
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 HTTPClient::Impl::Do(const std::shared_ptr<HTTPRequest>& req)
 {
     POMDOG_ASSERT(service != nullptr);
@@ -540,10 +540,10 @@ HTTPClient::Impl::Do(const std::shared_ptr<HTTPRequest>& req)
     return nullptr;
 }
 
-std::tuple<Connection, std::shared_ptr<Error>>
+std::tuple<Connection, std::unique_ptr<Error>>
 HTTPClient::Impl::Get(
     const std::string& url,
-    std::function<void(std::unique_ptr<HTTPResponse>&&, const std::shared_ptr<Error>&)>&& callback)
+    std::function<void(std::unique_ptr<HTTPResponse>&&, const std::unique_ptr<Error>&)>&& callback)
 {
     POMDOG_ASSERT(service != nullptr);
 
@@ -553,12 +553,12 @@ HTTPClient::Impl::Get(
     return std::make_tuple(std::move(conn), this->Do(request));
 }
 
-std::tuple<Connection, std::shared_ptr<Error>>
+std::tuple<Connection, std::unique_ptr<Error>>
 HTTPClient::Impl::Post(
     const std::string& url,
     const std::string& contentType,
     std::vector<char>&& body,
-    std::function<void(std::unique_ptr<HTTPResponse>&&, const std::shared_ptr<Error>&)>&& callback)
+    std::function<void(std::unique_ptr<HTTPResponse>&&, const std::unique_ptr<Error>&)>&& callback)
 {
     POMDOG_ASSERT(service != nullptr);
 
@@ -569,7 +569,7 @@ HTTPClient::Impl::Post(
     return std::make_tuple(std::move(conn), this->Do(request));
 }
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 HTTPClient::Impl::CancelRequest(const std::shared_ptr<HTTPRequest>& req)
 {
     POMDOG_ASSERT(service != nullptr);
@@ -596,34 +596,34 @@ HTTPClient::~HTTPClient()
 {
 }
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 HTTPClient::Do(const std::shared_ptr<HTTPRequest>& req)
 {
     POMDOG_ASSERT(impl != nullptr);
     return impl->Do(req);
 }
 
-std::tuple<Connection, std::shared_ptr<Error>>
+std::tuple<Connection, std::unique_ptr<Error>>
 HTTPClient::Get(
     const std::string& url,
-    std::function<void(std::unique_ptr<HTTPResponse>&&, const std::shared_ptr<Error>&)>&& callback)
+    std::function<void(std::unique_ptr<HTTPResponse>&&, const std::unique_ptr<Error>&)>&& callback)
 {
     POMDOG_ASSERT(impl != nullptr);
     return impl->Get(url, std::move(callback));
 }
 
-std::tuple<Connection, std::shared_ptr<Error>>
+std::tuple<Connection, std::unique_ptr<Error>>
 HTTPClient::Post(
     const std::string& url,
     const std::string& contentType,
     std::vector<char>&& body,
-    std::function<void(std::unique_ptr<HTTPResponse>&&, const std::shared_ptr<Error>&)>&& callback)
+    std::function<void(std::unique_ptr<HTTPResponse>&&, const std::unique_ptr<Error>&)>&& callback)
 {
     POMDOG_ASSERT(impl != nullptr);
     return impl->Post(url, contentType, std::move(body), std::move(callback));
 }
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 HTTPClient::CancelRequest(const std::shared_ptr<HTTPRequest>& req)
 {
     POMDOG_ASSERT(impl != nullptr);

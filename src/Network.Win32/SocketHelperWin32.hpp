@@ -13,10 +13,10 @@
 
 namespace Pomdog::Detail {
 
-[[nodiscard]] std::tuple<::SOCKET, std::shared_ptr<Error>>
+[[nodiscard]] std::tuple<::SOCKET, std::unique_ptr<Error>>
 ConnectSocketWin32(const std::string& host, const std::string& port, SocketProtocol protocol, const Duration& timeout);
 
-[[nodiscard]] std::tuple<::SOCKET, std::shared_ptr<Error>>
+[[nodiscard]] std::tuple<::SOCKET, std::unique_ptr<Error>>
 BindSocketWin32(const std::string& host, const std::string& port, SocketProtocol protocol);
 
 } // namespace Pomdog::Detail

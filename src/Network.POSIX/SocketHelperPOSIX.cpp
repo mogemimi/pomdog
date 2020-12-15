@@ -27,7 +27,7 @@ struct timeval ToTimeval(const Duration& d)
 
 } // namespace
 
-std::tuple<int, std::shared_ptr<Error>>
+std::tuple<int, std::unique_ptr<Error>>
 ConnectSocketPOSIX(
     const std::string& host,
     const std::string& port,
@@ -121,7 +121,7 @@ ConnectSocketPOSIX(
     return std::make_tuple(descriptor, nullptr);
 }
 
-std::tuple<int, std::shared_ptr<Error>>
+std::tuple<int, std::unique_ptr<Error>>
 BindSocketPOSIX(
     const std::string& host,
     const std::string& port,

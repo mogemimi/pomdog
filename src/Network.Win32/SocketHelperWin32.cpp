@@ -20,7 +20,7 @@ struct timeval ToTimeval(const Duration& d)
 
 } // namespace
 
-std::tuple<::SOCKET, std::shared_ptr<Error>>
+std::tuple<::SOCKET, std::unique_ptr<Error>>
 ConnectSocketWin32(
     const std::string& host,
     const std::string& port,
@@ -116,7 +116,7 @@ ConnectSocketWin32(
     return std::make_tuple(descriptor, nullptr);
 }
 
-std::tuple<::SOCKET, std::shared_ptr<Error>>
+std::tuple<::SOCKET, std::unique_ptr<Error>>
 BindSocketWin32(
     const std::string& host,
     const std::string& port,

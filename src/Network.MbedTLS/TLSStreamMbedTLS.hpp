@@ -41,14 +41,14 @@ public:
     ~TLSStreamMbedTLS();
 
     /// Opens a TCP connection over TCP to a remote host.
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Connect(std::string_view host, std::string_view port, const Duration& timeout, const ArrayView<std::uint8_t const>& certPEM);
 
     /// Closes the connection.
     void Close();
 
     /// Writes data to the connection.
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Write(const ArrayView<std::uint8_t const>& data);
 
     /// @return True if the socket is connected to a remote host, false otherwise.
@@ -58,13 +58,13 @@ public:
     void SetTimeout(const Duration& timeout);
 
     /// Delegate that fires when a connection is successfully established.
-    Delegate<void(const std::shared_ptr<Error>&)> OnConnected;
+    Delegate<void(const std::unique_ptr<Error>&)> OnConnected;
 
     /// Delegate that fires when a connection is disconnected.
     Delegate<void()> OnDisconnect;
 
     /// Delegate that fires when a data packet is received.
-    Delegate<void(const ArrayView<std::uint8_t>&, const std::shared_ptr<Error>&)> OnRead;
+    Delegate<void(const ArrayView<std::uint8_t>&, const std::unique_ptr<Error>&)> OnRead;
 
 private:
     void ReadEventLoop();

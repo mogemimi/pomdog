@@ -28,18 +28,18 @@ public:
     ~TCPStream();
 
     /// Opens a TCP connection to a remote host.
-    [[nodiscard]] static std::tuple<TCPStream, std::shared_ptr<Error>>
+    [[nodiscard]] static std::tuple<TCPStream, std::unique_ptr<Error>>
     Connect(IOService* service, std::string_view address);
 
     /// Opens a TCP connection to a remote host.
-    [[nodiscard]] static std::tuple<TCPStream, std::shared_ptr<Error>>
+    [[nodiscard]] static std::tuple<TCPStream, std::unique_ptr<Error>>
     Connect(IOService* service, std::string_view address, const Duration& timeout);
 
     /// Closes the connection.
     void Disconnect();
 
     /// Writes data to the connection.
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Write(const ArrayView<std::uint8_t const>& data);
 
     /// @return True if the socket is connected to a remote host, false otherwise.
@@ -50,7 +50,7 @@ public:
 
     /// Sets a callback function that is called when a connection is successfully established.
     [[nodiscard]] Connection
-    OnConnected(std::function<void(const std::shared_ptr<Error>&)>&& callback);
+    OnConnected(std::function<void(const std::unique_ptr<Error>&)>&& callback);
 
     /// Sets a callback function that is called when a connection is disconnected.
     [[nodiscard]] Connection
@@ -58,7 +58,7 @@ public:
 
     /// Sets a callback function that is called when a data packet is received.
     [[nodiscard]] Connection
-    OnRead(std::function<void(const ArrayView<std::uint8_t>&, const std::shared_ptr<Error>&)>&& callback);
+    OnRead(std::function<void(const ArrayView<std::uint8_t>&, const std::unique_ptr<Error>&)>&& callback);
 
 private:
     std::unique_ptr<Detail::NativeTCPStream> nativeStream;

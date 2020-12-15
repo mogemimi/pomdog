@@ -6,7 +6,7 @@
 
 namespace Pomdog::Detail::Win32 {
 
-std::shared_ptr<Error> PrepareNetworkService()
+std::unique_ptr<Error> PrepareNetworkService()
 {
     WSADATA wsaData;
 
@@ -18,7 +18,7 @@ std::shared_ptr<Error> PrepareNetworkService()
     return nullptr;
 }
 
-std::shared_ptr<Error> ShutdownNetworkService()
+std::unique_ptr<Error> ShutdownNetworkService()
 {
     const auto result = ::WSACleanup();
     if (result != 0) {

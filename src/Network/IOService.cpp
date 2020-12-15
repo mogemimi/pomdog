@@ -23,7 +23,7 @@ IOService::IOService(const GameClock* clockIn)
 {
 }
 
-std::shared_ptr<Error> IOService::Initialize()
+std::unique_ptr<Error> IOService::Initialize()
 {
 #if defined(POMDOG_PLATFORM_MACOSX) \
     || defined(POMDOG_PLATFORM_APPLE_IOS) \
@@ -39,7 +39,7 @@ std::shared_ptr<Error> IOService::Initialize()
     return nullptr;
 }
 
-std::shared_ptr<Error> IOService::Shutdown()
+std::unique_ptr<Error> IOService::Shutdown()
 {
 #if defined(POMDOG_PLATFORM_MACOSX) \
     || defined(POMDOG_PLATFORM_APPLE_IOS) \

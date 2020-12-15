@@ -12,10 +12,10 @@
 
 namespace Pomdog::Detail {
 
-[[nodiscard]] std::tuple<int, std::shared_ptr<Error>>
+[[nodiscard]] std::tuple<int, std::unique_ptr<Error>>
 ConnectSocketPOSIX(const std::string& host, const std::string& port, SocketProtocol protocol, const Duration& timeout);
 
-[[nodiscard]] std::tuple<int, std::shared_ptr<Error>>
+[[nodiscard]] std::tuple<int, std::unique_ptr<Error>>
 BindSocketPOSIX(const std::string& host, const std::string& port, SocketProtocol protocol);
 
 } // namespace Pomdog::Detail

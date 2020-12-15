@@ -19,9 +19,9 @@ public:
     IOService(const IOService&) = delete;
     IOService& operator=(const IOService&) = delete;
 
-    [[nodiscard]] std::shared_ptr<Error> Initialize();
+    [[nodiscard]] std::unique_ptr<Error> Initialize();
 
-    [[nodiscard]] std::shared_ptr<Error> Shutdown();
+    [[nodiscard]] std::unique_ptr<Error> Shutdown();
 
     void Step();
 

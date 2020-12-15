@@ -28,34 +28,34 @@ public:
     ~UDPStream();
 
     /// Opens a UDP connection to a remote host.
-    static std::tuple<UDPStream, std::shared_ptr<Error>>
+    static std::tuple<UDPStream, std::unique_ptr<Error>>
     Connect(IOService* service, std::string_view address);
 
     /// Starts listening for incoming datagrams.
-    static std::tuple<UDPStream, std::shared_ptr<Error>>
+    static std::tuple<UDPStream, std::unique_ptr<Error>>
     Listen(IOService* service, std::string_view address);
 
     /// Closes the connection.
     void Disconnect();
 
     /// Writes data to the connection.
-    std::shared_ptr<Error> Write(const ArrayView<std::uint8_t const>& data);
+    std::unique_ptr<Error> Write(const ArrayView<std::uint8_t const>& data);
 
     /// Writes data to address.
-    std::shared_ptr<Error>
+    std::unique_ptr<Error>
     WriteTo(const ArrayView<std::uint8_t const>& data, std::string_view address);
 
     /// Sets a callback function that is called when a connection is successfully established.
     [[nodiscard]] Connection
-    OnConnected(std::function<void(const std::shared_ptr<Error>&)>&& callback);
+    OnConnected(std::function<void(const std::unique_ptr<Error>&)>&& callback);
 
     /// Sets a callback function that is called when a data packet is received.
     [[nodiscard]] Connection
-    OnRead(std::function<void(const ArrayView<std::uint8_t>&, const std::shared_ptr<Error>&)>&& callback);
+    OnRead(std::function<void(const ArrayView<std::uint8_t>&, const std::unique_ptr<Error>&)>&& callback);
 
     /// Sets a callback function that is called when a data packet is received from the connection.
     [[nodiscard]] Connection
-    OnReadFrom(std::function<void(const ArrayView<std::uint8_t>&, std::string_view address, const std::shared_ptr<Error>&)>&& callback);
+    OnReadFrom(std::function<void(const ArrayView<std::uint8_t>&, std::string_view address, const std::unique_ptr<Error>&)>&& callback);
 
 private:
     std::unique_ptr<Detail::NativeUDPStream> nativeStream;

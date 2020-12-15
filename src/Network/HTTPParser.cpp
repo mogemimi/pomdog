@@ -14,7 +14,7 @@ namespace Pomdog::Detail {
 namespace {
 
 template <class StringIterator>
-std::tuple<std::string_view, StringIterator, std::shared_ptr<Error>>
+std::tuple<std::string_view, StringIterator, std::unique_ptr<Error>>
 GetWord(StringIterator begin, StringIterator end, std::function<bool(char)> isSeparator)
 {
     std::string_view word;
@@ -99,18 +99,18 @@ bool isLinebreak(char c) noexcept
     return (c == '\n') || (c == '\r');
 }
 
-std::tuple<std::vector<std::pair<std::string, std::string>>, std::shared_ptr<Error>>
+std::tuple<std::vector<std::pair<std::string, std::string>>, std::unique_ptr<Error>>
 ParseFields(std::vector<char>::const_iterator& iter, std::vector<char>::const_iterator end)
 {
     std::vector<std::pair<std::string, std::string>> fields;
 
     std::string_view line;
-    std::shared_ptr<Error> err;
+    std::unique_ptr<Error> err;
 
     while (iter != end) {
         std::tie(line, iter, err) = GetWord<std::vector<char>::const_iterator>(iter, end, isLinebreak);
         if (err != nullptr) {
-            return std::make_tuple(std::move(fields), err);
+            return std::make_tuple(std::move(fields), std::move(err));
         }
 
         auto pos = line.find(": ");
@@ -151,12 +151,12 @@ std::optional<std::string_view> FindField(T& fields, std::string_view key)
     return std::nullopt;
 }
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 ParseResponse(HTTPResponse& response, std::vector<char>& rawData)
 {
     auto [word, iter, err] = GetWord<std::vector<char>::const_iterator>(std::begin(rawData), std::end(rawData), isSpace);
     if (err != nullptr) {
-        return err;
+        return std::move(err);
     }
 
     if ((word.size() >= 8) &&
@@ -175,7 +175,7 @@ ParseResponse(HTTPResponse& response, std::vector<char>& rawData)
     iter = Skip<std::vector<char>::const_iterator>(iter, std::end(rawData), ' ');
     std::tie(status, iter, err) = GetWord<std::vector<char>::const_iterator>(iter, std::end(rawData), isLinebreak);
     if (err != nullptr) {
-        return err;
+        return std::move(err);
     }
 
     if ((status.size() >= 4) && (status[3] == ' ')) {
@@ -197,7 +197,7 @@ ParseResponse(HTTPResponse& response, std::vector<char>& rawData)
 
     std::tie(response.Header, err) = ParseFields(iter, std::end(rawData));
     if (err != nullptr) {
-        return err;
+        return std::move(err);
     }
 
     iter = Skip<std::vector<char>::const_iterator>(iter, std::end(rawData), '\r');
@@ -243,7 +243,7 @@ IsResponseHeaderReadable(const std::vector<char>& rawData)
 
 } // namespace
 
-std::tuple<HTTPParseResult, std::shared_ptr<Error>>
+std::tuple<HTTPParseResult, std::unique_ptr<Error>>
 HTTPParser::Parse(const ArrayView<std::uint8_t>& view)
 {
     bool hasEOFChunk = false;
@@ -282,7 +282,7 @@ HTTPParser::Parse(const ArrayView<std::uint8_t>& view)
         return std::make_tuple(HTTPParseResult::WouldBlock, nullptr);
     }
 
-    auto readResponse = [&]() -> std::shared_ptr<Error> {
+    auto readResponse = [&]() -> std::unique_ptr<Error> {
         if (!response->ChunkedTransferEncoding) {
             return nullptr;
         }
@@ -311,7 +311,7 @@ HTTPParser::Parse(const ArrayView<std::uint8_t>& view)
             }
 
             std::string_view word;
-            std::shared_ptr<Error> err;
+            std::unique_ptr<Error> err;
 
             std::tie(word, iter, err) = GetWord<std::vector<char>::const_iterator>(iter, bufferEnd, isLinebreak);
 

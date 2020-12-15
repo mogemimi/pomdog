@@ -21,7 +21,7 @@ TLSStream::~TLSStream()
 TLSStream::TLSStream(TLSStream&& other) = default;
 TLSStream& TLSStream::operator=(TLSStream&& other) = default;
 
-std::tuple<TLSStream, std::shared_ptr<Error>>
+std::tuple<TLSStream, std::unique_ptr<Error>>
 TLSStream::Connect(IOService* service, std::string_view address)
 {
     POMDOG_ASSERT(service != nullptr);
@@ -39,7 +39,7 @@ TLSStream::Connect(IOService* service, std::string_view address)
     return std::make_tuple(std::move(stream), nullptr);
 }
 
-std::tuple<TLSStream, std::shared_ptr<Error>>
+std::tuple<TLSStream, std::unique_ptr<Error>>
 TLSStream::Connect(IOService* service, std::string_view address, const Duration& timeout, const ArrayView<std::uint8_t const>& certPEM)
 {
     POMDOG_ASSERT(service != nullptr);
@@ -61,13 +61,13 @@ void TLSStream::Disconnect()
     nativeStream->Close();
 }
 
-std::shared_ptr<Error> TLSStream::Write(const ArrayView<std::uint8_t const>& data)
+std::unique_ptr<Error> TLSStream::Write(const ArrayView<std::uint8_t const>& data)
 {
     POMDOG_ASSERT(nativeStream != nullptr);
     return nativeStream->Write(data);
 }
 
-Connection TLSStream::OnConnected(std::function<void(const std::shared_ptr<Error>&)>&& callback)
+Connection TLSStream::OnConnected(std::function<void(const std::unique_ptr<Error>&)>&& callback)
 {
     POMDOG_ASSERT(nativeStream != nullptr);
     return nativeStream->OnConnected.Connect(std::move(callback));
@@ -79,7 +79,7 @@ Connection TLSStream::OnDisconnect(std::function<void()>&& callback)
     return nativeStream->OnDisconnect.Connect(std::move(callback));
 }
 
-Connection TLSStream::OnRead(std::function<void(const ArrayView<std::uint8_t>&, const std::shared_ptr<Error>&)>&& callback)
+Connection TLSStream::OnRead(std::function<void(const ArrayView<std::uint8_t>&, const std::unique_ptr<Error>&)>&& callback)
 {
     POMDOG_ASSERT(nativeStream != nullptr);
     return nativeStream->OnRead.Connect(std::move(callback));

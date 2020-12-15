@@ -81,7 +81,7 @@ TLSStreamMbedTLS::~TLSStreamMbedTLS()
     mbedtls_entropy_free(&entropy);
 }
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 TLSStreamMbedTLS::Connect(
     std::string_view host,
     std::string_view port,
@@ -100,8 +100,9 @@ TLSStreamMbedTLS::Connect(
             reinterpret_cast<const unsigned char*>(pers),
             std::strlen(pers)); ret != 0) {
         auto err = Errors::New("mbedtls_ctr_drbg_seed failed, " + MbedTLSErrorToString(ret));
-        errorConn = service->ScheduleTask([this, err] {
-            this->OnConnected(std::move(err));
+        std::shared_ptr<Error> shared = err->Clone();
+        errorConn = service->ScheduleTask([this, err = std::move(shared)] {
+            this->OnConnected(err->Clone());
             this->errorConn.Disconnect();
         });
         return err;
@@ -109,8 +110,9 @@ TLSStreamMbedTLS::Connect(
 
     if (!certPEM.IsEmpty() && (certPEM.GetBack() != 0)) {
         auto err = Errors::New("Certificates (PEM) must be null-terminated string");
-        errorConn = service->ScheduleTask([this, err] {
-            this->OnConnected(std::move(err));
+        std::shared_ptr<Error> shared = err->Clone();
+        errorConn = service->ScheduleTask([this, err = std::move(shared)] {
+            this->OnConnected(err->Clone());
             this->errorConn.Disconnect();
         });
         return err;
@@ -122,8 +124,9 @@ TLSStreamMbedTLS::Connect(
             reinterpret_cast<const unsigned char*>(certPEM.GetData()),
             certPEM.GetSize()); ret < 0) {
         auto err = Errors::New("mbedtls_x509_crt_parse failed, " + MbedTLSErrorToString(ret));
-        errorConn = service->ScheduleTask([this, err] {
-            this->OnConnected(std::move(err));
+        std::shared_ptr<Error> shared = err->Clone();
+        errorConn = service->ScheduleTask([this, err = std::move(shared)] {
+            this->OnConnected(err->Clone());
             this->errorConn.Disconnect();
         });
         return err;
@@ -159,8 +162,9 @@ TLSStreamMbedTLS::Connect(
         auto [fd, err] = ConnectSocketFunc(hostBuf, portBuf, SocketProtocol::TCP, connectTimeoutIn);
 
         if (err != nullptr) {
-            errorConn = service->ScheduleTask([this, err = std::move(err)] {
-                this->OnConnected(std::move(err));
+            std::shared_ptr<Error> shared = std::move(err);
+            errorConn = service->ScheduleTask([this, err = std::move(shared)] {
+                this->OnConnected(err->Clone());
                 this->errorConn.Disconnect();
             });
             return;
@@ -250,8 +254,9 @@ TLSStreamMbedTLS::Connect(
             buf.back() = 0;
 #if defined(DEBUG) && !defined(NDEBUG)
             auto e = Errors::New(std::string{"mbedtls_ssl_get_verify_result failed, "} + buf.data());
-            errorConn = service->ScheduleTask([this, err = std::move(e)] {
-                this->OnConnected(std::move(err));
+            std::shared_ptr<Error> shared = std::move(e);
+            errorConn = service->ScheduleTask([this, err = std::move(shared)] {
+                this->OnConnected(err->Clone());
                 this->errorConn.Disconnect();
             });
 #endif
@@ -283,7 +288,7 @@ void TLSStreamMbedTLS::Close()
     mbedtls_ssl_close_notify(&ssl);
 }
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 TLSStreamMbedTLS::Write(const ArrayView<std::uint8_t const>& data)
 {
     for (;;) {

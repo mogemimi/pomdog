@@ -8,8 +8,8 @@
 
 namespace Pomdog::Detail::Win32 {
 
-[[nodiscard]] std::shared_ptr<Error> PrepareNetworkService();
+[[nodiscard]] std::unique_ptr<Error> PrepareNetworkService();
 
-[[nodiscard]] std::shared_ptr<Error> ShutdownNetworkService();
+[[nodiscard]] std::unique_ptr<Error> ShutdownNetworkService();
 
 } // namespace Pomdog::Detail::Win32

@@ -30,7 +30,7 @@ TCPStream::~TCPStream()
 TCPStream::TCPStream(TCPStream&& other) = default;
 TCPStream& TCPStream::operator=(TCPStream&& other) = default;
 
-std::tuple<TCPStream, std::shared_ptr<Error>>
+std::tuple<TCPStream, std::unique_ptr<Error>>
 TCPStream::Connect(IOService* service, std::string_view address)
 {
     POMDOG_ASSERT(service != nullptr);
@@ -46,7 +46,7 @@ TCPStream::Connect(IOService* service, std::string_view address)
     return std::make_tuple(std::move(stream), nullptr);
 }
 
-std::tuple<TCPStream, std::shared_ptr<Error>>
+std::tuple<TCPStream, std::unique_ptr<Error>>
 TCPStream::Connect(IOService* service, std::string_view address, const Duration& timeout)
 {
     POMDOG_ASSERT(service != nullptr);
@@ -68,7 +68,7 @@ void TCPStream::Disconnect()
     nativeStream->Close();
 }
 
-Connection TCPStream::OnConnected(std::function<void(const std::shared_ptr<Error>&)>&& callback)
+Connection TCPStream::OnConnected(std::function<void(const std::unique_ptr<Error>&)>&& callback)
 {
     POMDOG_ASSERT(nativeStream != nullptr);
     return nativeStream->OnConnected.Connect(std::move(callback));
@@ -80,13 +80,13 @@ Connection TCPStream::OnDisconnect(std::function<void()>&& callback)
     return nativeStream->OnDisconnect.Connect(std::move(callback));
 }
 
-Connection TCPStream::OnRead(std::function<void(const ArrayView<std::uint8_t>&, const std::shared_ptr<Error>&)>&& callback)
+Connection TCPStream::OnRead(std::function<void(const ArrayView<std::uint8_t>&, const std::unique_ptr<Error>&)>&& callback)
 {
     POMDOG_ASSERT(nativeStream != nullptr);
     return nativeStream->OnRead.Connect(std::move(callback));
 }
 
-std::shared_ptr<Error> TCPStream::Write(const ArrayView<std::uint8_t const>& data)
+std::unique_ptr<Error> TCPStream::Write(const ArrayView<std::uint8_t const>& data)
 {
     POMDOG_ASSERT(nativeStream != nullptr);
     return nativeStream->Write(data);

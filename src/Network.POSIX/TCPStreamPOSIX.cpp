@@ -60,7 +60,7 @@ void TCPStreamPOSIX::Close()
     }
 }
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 TCPStreamPOSIX::Connect(std::string_view host, std::string_view port, const Duration& connectTimeout)
 {
     POMDOG_ASSERT(service != nullptr);
@@ -74,8 +74,9 @@ TCPStreamPOSIX::Connect(std::string_view host, std::string_view port, const Dura
 
         if (err != nullptr) {
             auto wrapped = Errors::Wrap(std::move(err), "couldn't connect to TCP socket on " + hostBuf + ":" + portBuf);
-            errorConn = service->ScheduleTask([this, err = std::move(wrapped)] {
-                this->OnConnected(std::move(err));
+            std::shared_ptr<Error> shared = std::move(wrapped);
+            errorConn = service->ScheduleTask([this, err = std::move(shared)] {
+                this->OnConnected(err->Clone());
                 this->errorConn.Disconnect();
             });
             return;
@@ -99,7 +100,7 @@ TCPStreamPOSIX::Connect(std::string_view host, std::string_view port, const Dura
     return nullptr;
 }
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 TCPStreamPOSIX::Write(const ArrayView<std::uint8_t const>& data)
 {
     POMDOG_ASSERT(isSocketValid(descriptor));

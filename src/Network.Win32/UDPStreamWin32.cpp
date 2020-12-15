@@ -41,7 +41,7 @@ UDPStreamWin32::~UDPStreamWin32()
     }
 }
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 UDPStreamWin32::Connect(std::string_view host, std::string_view port, const Duration& connectTimeout)
 {
     POMDOG_ASSERT(service != nullptr);
@@ -55,8 +55,9 @@ UDPStreamWin32::Connect(std::string_view host, std::string_view port, const Dura
 
         if (err != nullptr) {
             auto wrapped = Errors::Wrap(std::move(err), "couldn't connect to UDP socket on " + hostBuf + ":" + portBuf);
-            errorConn = service->ScheduleTask([this, err = std::move(wrapped)] {
-                this->OnConnected(std::move(err));
+            std::shared_ptr<Error> shared = std::move(wrapped);
+            errorConn = service->ScheduleTask([this, err = std::move(shared)] {
+                this->OnConnected(err->Clone());
                 this->errorConn.Disconnect();
             });
             return;
@@ -75,7 +76,7 @@ UDPStreamWin32::Connect(std::string_view host, std::string_view port, const Dura
     return nullptr;
 }
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 UDPStreamWin32::Listen(std::string_view host, std::string_view port)
 {
     POMDOG_ASSERT(service != nullptr);
@@ -88,11 +89,12 @@ UDPStreamWin32::Listen(std::string_view host, std::string_view port)
 
     if (err != nullptr) {
         auto wrapped = Errors::Wrap(std::move(err), "couldn't listen to UDP socket on " + hostBuf + ":" + portBuf);
-        errorConn = service->ScheduleTask([this, err = std::move(wrapped)] {
-            this->OnConnected(std::move(err));
+        std::shared_ptr<Error> shared = wrapped->Clone();
+        errorConn = service->ScheduleTask([this, err = std::move(shared)] {
+            this->OnConnected(err->Clone());
             this->errorConn.Disconnect();
         });
-        return err;
+        return wrapped;
     }
     this->descriptor = fd;
 
@@ -116,7 +118,7 @@ void UDPStreamWin32::Close()
     }
 }
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 UDPStreamWin32::Write(const ArrayView<std::uint8_t const>& data)
 {
     POMDOG_ASSERT(isSocketValid(descriptor));
@@ -132,7 +134,7 @@ UDPStreamWin32::Write(const ArrayView<std::uint8_t const>& data)
     return nullptr;
 }
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 UDPStreamWin32::WriteTo(const ArrayView<std::uint8_t const>& data, std::string_view address)
 {
     POMDOG_ASSERT(isSocketValid(this->descriptor));

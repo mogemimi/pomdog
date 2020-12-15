@@ -31,35 +31,35 @@ public:
     UDPStreamWin32& operator=(UDPStreamWin32&&) = delete;
 
     /// Opens a UDP connection over UDP to a remote host.
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Connect(std::string_view host, std::string_view port, const Duration& timeout);
 
     /// Starts listening for incoming datagrams.
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Listen(std::string_view host, std::string_view port);
 
     /// Closes the connection.
     void Close();
 
     /// Writes data to the connection.
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Write(const ArrayView<std::uint8_t const>& data);
 
     /// Writes data to address.
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     WriteTo(const ArrayView<std::uint8_t const>& data, std::string_view address);
 
     /// Returns the native socket handle.
     [[nodiscard]] ::SOCKET GetHandle() const noexcept;
 
     /// Delegate that fires when a connection is successfully established.
-    Delegate<void(const std::shared_ptr<Error>&)> OnConnected;
+    Delegate<void(const std::unique_ptr<Error>&)> OnConnected;
 
     /// Delegate that fires when a data packet is received.
-    Delegate<void(const ArrayView<std::uint8_t>&, const std::shared_ptr<Error>&)> OnRead;
+    Delegate<void(const ArrayView<std::uint8_t>&, const std::unique_ptr<Error>&)> OnRead;
 
     /// Delegate that fires when a data packet is received from the connection.
-    Delegate<void(const ArrayView<std::uint8_t>& view, std::string_view address, const std::shared_ptr<Error>&)> OnReadFrom;
+    Delegate<void(const ArrayView<std::uint8_t>& view, std::string_view address, const std::unique_ptr<Error>&)> OnReadFrom;
 
 private:
     void ReadEventLoop();

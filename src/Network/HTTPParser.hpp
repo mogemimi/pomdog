@@ -20,7 +20,7 @@ enum class HTTPParseResult {
 
 class HTTPParser final {
 public:
-    std::tuple<HTTPParseResult, std::shared_ptr<Error>>
+    std::tuple<HTTPParseResult, std::unique_ptr<Error>>
     Parse(const ArrayView<std::uint8_t>& view);
 
     std::unique_ptr<HTTPResponse> GetResponse();

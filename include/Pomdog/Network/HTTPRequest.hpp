@@ -33,7 +33,7 @@ public:
     std::vector<char> Body;
 
     /// Callback function that will be called on request completion or error caused
-    Delegate<void(std::unique_ptr<HTTPResponse>&&, const std::shared_ptr<Error>&)> OnCompleted;
+    Delegate<void(std::unique_ptr<HTTPResponse>&&, const std::unique_ptr<Error>&)> OnCompleted;
 
     /// The method for the request
     HTTPMethod Method;

@@ -28,7 +28,7 @@ TEST_CASE("Ping Pong Server using UDP Connection", "[Network]")
     REQUIRE(serverErr == nullptr);
     auto server = std::move(serverStream);
 
-    conn += server.OnConnected([&](const std::shared_ptr<Error>& err) {
+    conn += server.OnConnected([&](const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
             WARN("Unable to listen client");
             serverLogs.push_back(err->ToString());
@@ -38,7 +38,7 @@ TEST_CASE("Ping Pong Server using UDP Connection", "[Network]")
 
         serverLogs.push_back("server connected");
     });
-    conn += server.OnReadFrom([&](const ArrayView<uint8_t>& view, const std::string_view& address, const std::shared_ptr<Error>& err) {
+    conn += server.OnReadFrom([&](const ArrayView<uint8_t>& view, const std::string_view& address, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
             WARN("Unable to read message");
             serverLogs.push_back(err->ToString());
@@ -67,7 +67,7 @@ TEST_CASE("Ping Pong Server using UDP Connection", "[Network]")
     REQUIRE(clientErr == nullptr);
     auto client = std::move(clientStream);
 
-    conn += client.OnConnected([&](const std::shared_ptr<Error>& err) {
+    conn += client.OnConnected([&](const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
             WARN("Unable to connect server");
             clientLogs.push_back(err->ToString());
@@ -79,7 +79,7 @@ TEST_CASE("Ping Pong Server using UDP Connection", "[Network]")
         std::string_view s = "ping";
         client.Write(ArrayView<char const>{s.data(), s.size()}.ViewAs<std::uint8_t const>());
     });
-    conn += client.OnRead([&](const ArrayView<uint8_t>& view, const std::shared_ptr<Error>& err) {
+    conn += client.OnRead([&](const ArrayView<uint8_t>& view, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
             WARN("Unable to read message");
             clientLogs.push_back(err->ToString());

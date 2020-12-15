@@ -42,7 +42,7 @@ TEST_CASE("TCP connection for HTTP client", "[Network]")
 
     stream.SetTimeout(std::chrono::seconds{5});
 
-    conn += stream.OnConnected([&](const std::shared_ptr<Error>& err) {
+    conn += stream.OnConnected([&](const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
             WARN("Unable to connect server");
             executor.ExitLoop();
@@ -68,7 +68,7 @@ TEST_CASE("TCP connection for HTTP client", "[Network]")
     conn += stream.OnDisconnect([&] {
         REQUIRE_FALSE(stream.IsConnected());
     });
-    conn += stream.OnRead([&](const ArrayView<std::uint8_t>& view, const std::shared_ptr<Error>& err) {
+    conn += stream.OnRead([&](const ArrayView<std::uint8_t>& view, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
             WARN("Unable to connect server");
             stream.Disconnect();
