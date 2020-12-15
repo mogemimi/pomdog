@@ -244,7 +244,7 @@ void FeatureShowcaseGame::Update()
     connect(mouse->ScrollWheel, [this](std::int32_t delta) {
 #if defined(POMDOG_PLATFORM_WIN32)
         // FIXME: Set to appropriate wheel scroll speed for each platform.
-        constexpr double divisor = 0.002;
+        constexpr double divisor = 0.001;
 #else
         // NOTE: The answer to life, universe and everything.
         constexpr double divisor = 0.02;
