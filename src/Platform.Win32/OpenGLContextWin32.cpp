@@ -5,17 +5,17 @@
 #include "../Graphics.GL4/OpenGLPrerequisites.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
-#include <sstream>
 #include <utility>
 
 namespace Pomdog::Detail::Win32 {
 namespace {
 
-PIXELFORMATDESCRIPTOR ToPixelFormatDescriptor(
-    const PresentationParameters& presentationParameters)
+[[nodiscard]] std::shared_ptr<Error>
+ToPixelFormatDescriptor(
+    const PresentationParameters& presentationParameters,
+    PIXELFORMATDESCRIPTOR& descriptor) noexcept
 {
-    PIXELFORMATDESCRIPTOR descriptor = {
+    descriptor = PIXELFORMATDESCRIPTOR{
         sizeof(PIXELFORMATDESCRIPTOR), 1,
         PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,
         PFD_TYPE_RGBA,
@@ -35,6 +35,9 @@ PIXELFORMATDESCRIPTOR ToPixelFormatDescriptor(
     case SurfaceFormat::R8G8B8A8_UNorm:
         descriptor.cColorBits = 32;
         break;
+    case SurfaceFormat::B8G8R8A8_UNorm:
+        descriptor.cColorBits = 32;
+        break;
     case SurfaceFormat::R16G16B16A16_Float:
         descriptor.cColorBits = 64;
         break;
@@ -42,8 +45,7 @@ PIXELFORMATDESCRIPTOR ToPixelFormatDescriptor(
         descriptor.cColorBits = 128;
         break;
     default:
-        descriptor.cColorBits = 32;
-        break;
+        return Errors::New("invalid back buffer format");
     }
 
     switch (presentationParameters.DepthStencilFormat) {
@@ -67,71 +69,71 @@ PIXELFORMATDESCRIPTOR ToPixelFormatDescriptor(
         descriptor.cDepthBits = 0;
         descriptor.cStencilBits = 0;
         break;
+    default:
+        return Errors::New("invalid depth stencil format");
     }
 
-    return std::move(descriptor);
+    return nullptr;
 }
 
 } // namespace
 
-OpenGLContextWin32::OpenGLContextWin32(
+OpenGLContextWin32::OpenGLContextWin32() noexcept = default;
+
+std::shared_ptr<Error>
+OpenGLContextWin32::Initialize(
     HWND windowHandleIn,
-    const PresentationParameters& presentationParameters)
-    : windowHandle(windowHandleIn)
-    , hdc(nullptr, [this](HDC hdcIn) {
-        ReleaseDC(windowHandle, hdcIn);
-    })
-    , glrc(nullptr, [](HGLRC glrcIn) {
-        if (wglGetCurrentContext() == glrcIn) {
-            wglMakeCurrent(nullptr, nullptr);
-        }
-        wglDeleteContext(glrcIn);
-    })
+    const PresentationParameters& presentationParameters) noexcept
 {
-    hdc.reset(GetDC(windowHandle));
+    windowHandle = windowHandleIn;
+    if (windowHandle == nullptr) {
+        return Errors::New("windowHandle must be != nullptr");
+    }
 
-    auto formatDescriptor = ToPixelFormatDescriptor(presentationParameters);
+    using hdcType = decltype(hdc);
+    hdc = hdcType(nullptr, [this](HDC hdcIn) {
+        ::ReleaseDC(windowHandle, hdcIn);
+    });
 
-    auto const pixelFormat = ChoosePixelFormat(hdc.get(), &formatDescriptor);
+    using glrcType = decltype(glrc);
+    glrc = glrcType(nullptr, [](HGLRC glrcIn) {
+        if (::wglGetCurrentContext() == glrcIn) {
+            ::wglMakeCurrent(nullptr, nullptr);
+        }
+        ::wglDeleteContext(glrcIn);
+    });
 
-    if (0 == pixelFormat) {
-        auto const errorCode = ::GetLastError();
+    hdc.reset(::GetDC(windowHandle));
 
-        std::stringstream ss;
-        ss << "Failed to call ChoosePixelFormat function."
-           << "The calling thread's last-error code is "
-           << std::hex << errorCode;
+    PIXELFORMATDESCRIPTOR formatDescriptor;
+    if (auto err = ToPixelFormatDescriptor(presentationParameters, formatDescriptor); err != nullptr) {
+        return Errors::Wrap(std::move(err), "ToPixelFormatDescriptor() failed");
+    }
 
-        POMDOG_THROW_EXCEPTION(std::runtime_error, ss.str());
+    const auto pixelFormat = ::ChoosePixelFormat(hdc.get(), &formatDescriptor);
+
+    if (pixelFormat == 0) {
+        const auto errorCode = ::GetLastError();
+        return Errors::New("ChoosePixelFormat() failed. error code = " + std::to_string(errorCode));
     }
 
     if (!SetPixelFormat(hdc.get(), pixelFormat, &formatDescriptor)) {
-        auto const errorCode = ::GetLastError();
-
-        std::stringstream ss;
-        ss << "Failed to call SetPixelFormat function."
-           << "The calling thread's last-error code is "
-           << std::hex << errorCode;
-
-        POMDOG_THROW_EXCEPTION(std::runtime_error, ss.str());
+        const auto errorCode = ::GetLastError();
+        return Errors::New("SetPixelFormat() failed. error code = " + std::to_string(errorCode));
     }
 
-    // Create gl context
-    glrc.reset(wglCreateContext(hdc.get()));
+    // NOTE: Create OpenGL context.
+    glrc.reset(::wglCreateContext(hdc.get()));
 
-    if (!wglMakeCurrent(hdc.get(), glrc.get())) {
-        auto const errorCode = ::GetLastError();
-
-        std::stringstream ss;
-        ss << "Failed to call wglMakeCurrent function."
-           << "The calling thread's last-error code is "
-           << std::hex << errorCode;
-
-        POMDOG_THROW_EXCEPTION(std::runtime_error, ss.str());
+    if (!::wglMakeCurrent(hdc.get(), glrc.get())) {
+        const auto errorCode = ::GetLastError();
+        return Errors::New("wglMakeCurrent() failed. error code = " + std::to_string(errorCode));
     }
+
+    return nullptr;
 }
 
-OpenGLContextWin32::~OpenGLContextWin32()
+OpenGLContextWin32::~OpenGLContextWin32() noexcept
 {
     glrc.reset();
     hdc.reset();
@@ -141,17 +143,17 @@ void OpenGLContextWin32::MakeCurrent()
 {
     POMDOG_ASSERT(hdc);
     POMDOG_ASSERT(glrc);
-    wglMakeCurrent(hdc.get(), glrc.get());
+    ::wglMakeCurrent(hdc.get(), glrc.get());
 }
 
 void OpenGLContextWin32::ClearCurrent()
 {
-    wglMakeCurrent(nullptr, nullptr);
+    ::wglMakeCurrent(nullptr, nullptr);
 }
 
 void OpenGLContextWin32::SwapBuffers()
 {
-    glFlush();
+    ::glFlush();
     POMDOG_CHECK_ERROR_GL4("glFlush");
 
     POMDOG_ASSERT(hdc);

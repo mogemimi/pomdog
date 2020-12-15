@@ -5,6 +5,7 @@
 #include "../Graphics.GL4/OpenGLContext.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #include <functional>
 #include <memory>
 #include <type_traits>
@@ -13,15 +14,14 @@ namespace Pomdog::Detail::Win32 {
 
 class OpenGLContextWin32 final : public GL4::OpenGLContext {
 public:
-    OpenGLContextWin32() = delete;
-    OpenGLContextWin32(const OpenGLContextWin32&) = delete;
-    OpenGLContextWin32& operator=(const OpenGLContextWin32&) = delete;
+    OpenGLContextWin32() noexcept;
 
-    OpenGLContextWin32(
+    ~OpenGLContextWin32() noexcept;
+
+    [[nodiscard]] std::shared_ptr<Error>
+    Initialize(
         HWND windowHandle,
-        const PresentationParameters& presentationParameters);
-
-    ~OpenGLContextWin32();
+        const PresentationParameters& presentationParameters) noexcept;
 
     void MakeCurrent() override;
 
@@ -30,7 +30,7 @@ public:
     void SwapBuffers() override;
 
 private:
-    HWND windowHandle;
+    HWND windowHandle = nullptr;
 
     std::unique_ptr<
         std::remove_pointer<HDC>::type,

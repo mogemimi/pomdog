@@ -32,7 +32,6 @@
 #include "Pomdog/Signals/EventQueue.hpp"
 #include "Pomdog/Signals/ScopedConnection.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
 #include "Pomdog/Utility/FileSystem.hpp"
 #include "Pomdog/Utility/PathHelper.hpp"
 #include <chrono>
@@ -97,12 +96,24 @@ CreateGraphicsDeviceGL4(
     const std::shared_ptr<GameWindowWin32>& window,
     const PresentationParameters& presentationParameters)
 {
-    auto openGLContext = std::make_shared<Win32::OpenGLContextWin32>(
-        window->GetNativeWindowHandle(), presentationParameters);
+    // NOTE: Create an OpenGL context.
+    auto openGLContext = std::make_shared<Win32::OpenGLContextWin32>();
+    if (auto err = openGLContext->Initialize(
+        window->GetNativeWindowHandle(),
+        presentationParameters); err != nullptr) {
+        return std::make_tuple(
+            nullptr,
+            nullptr,
+            nullptr,
+            Errors::Wrap(std::move(err), "OpenGLContextWin32::Initialize() failed."));
+    }
 
-    if (glewInit() != GLEW_OK) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "Failed to initialize glew.");
+    if (::glewInit() != GLEW_OK) {
+        return std::make_tuple(
+            nullptr,
+            nullptr,
+            nullptr,
+            Errors::New("glewInit() failed."));
     }
 
     openGLContext->MakeCurrent();
