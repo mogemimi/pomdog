@@ -132,11 +132,11 @@ RenderTarget2DDirect3D11::Initialize(
 
     if (depthStencilFormat != SurfaceFormat::Invalid) {
         if (auto err = depthStencilBuffer.Initialize(
-            device,
-            pixelWidth,
-            pixelHeight,
-            depthStencilFormat,
-            multiSampleCount);
+                device,
+                pixelWidth,
+                pixelHeight,
+                depthStencilFormat,
+                multiSampleCount);
             err != nullptr) {
             return Errors::Wrap(std::move(err), "depthStencilBuffer.Initialize() failed");
         }
@@ -174,11 +174,11 @@ RenderTarget2DDirect3D11::Initialize(
 
     if (depthStencilFormat != SurfaceFormat::Invalid) {
         if (auto err = depthStencilBuffer.Initialize(
-            device,
-            pixelWidth,
-            pixelHeight,
-            depthStencilFormat,
-            multiSampleCount);
+                device,
+                pixelWidth,
+                pixelHeight,
+                depthStencilFormat,
+                multiSampleCount);
             err != nullptr) {
             return Errors::Wrap(std::move(err), "depthStencilBuffer.Initialize() failed");
         }
@@ -342,11 +342,11 @@ RenderTarget2DDirect3D11::ResetBackBuffer(
 
     if (depthStencilFormat != SurfaceFormat::Invalid) {
         if (auto err = depthStencilBuffer.ResetBackBuffer(
-            device,
-            pixelWidth,
-            pixelHeight,
-            depthStencilFormat,
-            multiSampleCount);
+                device,
+                pixelWidth,
+                pixelHeight,
+                depthStencilFormat,
+                multiSampleCount);
             err != nullptr) {
             return Errors::Wrap(std::move(err), "depthStencilBuffer.ResetBackBuffer() failed");
         }

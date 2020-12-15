@@ -29,10 +29,10 @@ RenderTarget2DGL4::Initialize(
 
     if (depthStencilFormat != SurfaceFormat::Invalid) {
         if (auto err = depthStencilBuffer.Initialize(
-            pixelWidth,
-            pixelHeight,
-            depthStencilFormat,
-            multiSampleCount);
+                pixelWidth,
+                pixelHeight,
+                depthStencilFormat,
+                multiSampleCount);
             err != nullptr) {
             return Errors::Wrap(std::move(err), "depthStencilBuffer.Initialize() failed");
         }

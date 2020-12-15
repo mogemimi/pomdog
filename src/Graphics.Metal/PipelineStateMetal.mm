@@ -6,9 +6,9 @@
 #include "ShaderMetal.hpp"
 #include "../Basic/Unreachable.hpp"
 #include "../Graphics.Backends/BufferHelper.hpp"
-#include "Pomdog/Graphics/SurfaceFormat.hpp"
 #include "Pomdog/Graphics/PipelineStateDescription.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
+#include "Pomdog/Graphics/SurfaceFormat.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #import <Metal/MTLVertexDescriptor.h>
 

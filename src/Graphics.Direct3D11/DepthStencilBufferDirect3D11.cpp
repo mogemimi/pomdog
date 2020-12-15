@@ -99,8 +99,8 @@ DepthStencilBufferDirect3D11::Initialize(
             depthStencilFormat,
             pixelWidth,
             pixelHeight,
-        levelCount,
-        multiSampleCount,
+            levelCount,
+            multiSampleCount,
             depthStencil,
             depthStencilView);
         err != nullptr) {
@@ -162,7 +162,7 @@ DepthStencilBufferDirect3D11::ResetBackBuffer(
             pixelWidth,
             pixelHeight,
             levelCount,
-        multiSampleCount,
+            multiSampleCount,
             depthStencil,
             depthStencilView);
         err != nullptr) {

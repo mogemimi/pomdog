@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "OpenGLPrerequisites.hpp"
 #include "DepthStencilBufferGL4.hpp"
+#include "OpenGLPrerequisites.hpp"
 #include "Texture2DGL4.hpp"
 #include "../Utility/Tagged.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"

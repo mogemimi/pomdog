@@ -48,11 +48,12 @@ RenderTarget2DMetal::Initialize(
 
     if (depthStencilFormat != SurfaceFormat::Invalid) {
         if (auto err = depthStencilBuffer.Initialize(
-            device,
-            pixelWidth,
-            pixelHeight,
-            depthStencilFormat,
-            multiSampleCount); err != nullptr) {
+                device,
+                pixelWidth,
+                pixelHeight,
+                depthStencilFormat,
+                multiSampleCount);
+            err != nullptr) {
             return Errors::Wrap(std::move(err), "depthStencilBuffer.Initialize() failed");
         }
     }

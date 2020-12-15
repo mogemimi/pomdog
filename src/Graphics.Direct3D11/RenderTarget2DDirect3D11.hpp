@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "PrerequisitesDirect3D11.hpp"
 #include "DepthStencilBufferDirect3D11.hpp"
+#include "PrerequisitesDirect3D11.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
 #include "Pomdog/Graphics/SurfaceFormat.hpp"

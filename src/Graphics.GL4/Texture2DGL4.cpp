@@ -230,11 +230,16 @@ void SetPixelDataTexture2DGL4(
     std::size_t startOffset = 0;
 
     for (GLint mipmapLevel = 0; mipmapLevel < levelCount; ++mipmapLevel) {
-        GLsizei const strideBytesPerMipmap = MipmapImageDataBytes(
-            mipMapPixelWidth, mipMapPixelHeight, bytesPerBlock);
+        const GLsizei strideBytesPerMipmap = MipmapImageDataBytes(
+            mipMapPixelWidth,
+            mipMapPixelHeight,
+            bytesPerBlock);
 
-        glTexSubImage2D(GL_TEXTURE_2D,
-            mipmapLevel, 0, 0,
+        glTexSubImage2D(
+            GL_TEXTURE_2D,
+            mipmapLevel,
+            0,
+            0,
             mipMapPixelWidth,
             mipMapPixelHeight,
             formatComponents,
