@@ -18,7 +18,6 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_INC_DIR}/Graphics/ConstantBuffer.hpp
     ${POMDOG_SRC_DIR}/Graphics/ConstantBuffer.cpp
     ${POMDOG_INC_DIR}/Graphics/CullMode.hpp
-    ${POMDOG_INC_DIR}/Graphics/DepthFormat.hpp
     ${POMDOG_INC_DIR}/Graphics/DepthStencilBuffer.hpp
     ${POMDOG_SRC_DIR}/Graphics/DepthStencilBuffer.cpp
     ${POMDOG_INC_DIR}/Graphics/DepthStencilDescription.hpp
