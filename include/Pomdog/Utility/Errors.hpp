@@ -12,7 +12,7 @@ namespace Pomdog {
 
 class POMDOG_EXPORT Error {
 public:
-    virtual ~Error() noexcept = default;
+    virtual ~Error() noexcept;
 
     /// Returns a string representation of the error.
     [[nodiscard]] virtual std::string ToString() const noexcept = 0;
@@ -31,10 +31,10 @@ public:
     std::string Reason;
 
     /// Returns a string representation of the error.
-    [[nodiscard]] std::string ToString() const noexcept;
+    [[nodiscard]] std::string ToString() const noexcept override;
 
     /// Creates a new object that is a copy of the error.
-    [[nodiscard]] std::unique_ptr<Error> Clone() const noexcept;
+    [[nodiscard]] std::unique_ptr<Error> Clone() const noexcept override;
 };
 
 [[nodiscard]] POMDOG_EXPORT

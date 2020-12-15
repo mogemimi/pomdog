@@ -5,18 +5,22 @@
 #include <string>
 #include <utility>
 
+namespace Pomdog {
+Error::~Error() noexcept = default;
+} // namespace Pomdog
+
 namespace Pomdog::Errors {
 
 class StringError final : public Error {
 public:
     std::string Message;
 
-    [[nodiscard]] std::string ToString() const noexcept
+    [[nodiscard]] std::string ToString() const noexcept override
     {
         return this->Message;
     }
 
-    [[nodiscard]] std::unique_ptr<Error> Clone() const noexcept
+    [[nodiscard]] std::unique_ptr<Error> Clone() const noexcept override
     {
         auto err = std::make_unique<StringError>();
         err->Message = this->Message;
@@ -29,7 +33,7 @@ public:
     std::shared_ptr<Error> Err;
     std::string Message;
 
-    [[nodiscard]] std::string ToString() const noexcept
+    [[nodiscard]] std::string ToString() const noexcept override
     {
         if (this->Err != nullptr) {
             return this->Message + ": " + this->Err->ToString();
@@ -37,7 +41,7 @@ public:
         return this->Message;
     }
 
-    [[nodiscard]] std::unique_ptr<Error> Clone() const noexcept
+    [[nodiscard]] std::unique_ptr<Error> Clone() const noexcept override
     {
         auto err = std::make_unique<WrappedError>();
         err->Err = this->Err->Clone();
