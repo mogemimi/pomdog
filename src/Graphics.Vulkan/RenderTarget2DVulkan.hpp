@@ -17,7 +17,7 @@ public:
         std::int32_t pixelHeight,
         std::int32_t levelCount,
         SurfaceFormat format,
-        DepthFormat depthStencilFormat,
+        SurfaceFormat depthStencilFormat,
         std::int32_t multiSampleCount);
 
     /// Gets the width of the texture data, in pixels.
@@ -33,7 +33,7 @@ public:
     SurfaceFormat GetFormat() const noexcept override;
 
     /// Gets the format of the pixel data in the depth-stencil buffer.
-    DepthFormat GetDepthStencilFormat() const noexcept override;
+    SurfaceFormat GetDepthStencilFormat() const noexcept override;
 
     /// Gets the size of the texture resource.
     Rectangle GetBounds() const noexcept override;

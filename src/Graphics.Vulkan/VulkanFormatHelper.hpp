@@ -7,8 +7,7 @@
 
 namespace Pomdog::Detail::Vulkan {
 
-VkFormat ToSurfaceFormat(SurfaceFormat format) noexcept;
-
-VkFormat ToDepthFormat(DepthFormat depthFormat) noexcept;
+[[nodiscard]] VkFormat
+ToSurfaceFormat(SurfaceFormat format) noexcept;
 
 } // namespace Pomdog::Detail::Vulkan

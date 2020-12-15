@@ -1,15 +1,17 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "VulkanFormatHelper.hpp"
-#include "Pomdog/Graphics/DepthFormat.hpp"
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog::Detail::Vulkan {
 
-VkFormat ToSurfaceFormat(SurfaceFormat format) noexcept
+VkFormat
+ToSurfaceFormat(SurfaceFormat format) noexcept
 {
     switch (format) {
+    case SurfaceFormat::Invalid:
+        return VK_FORMAT_UNDEFINED;
     case SurfaceFormat::A8_UNorm:
         return VK_FORMAT_R8_UNORM;
     case SurfaceFormat::B8G8R8A8_UNorm:
@@ -38,26 +40,16 @@ VkFormat ToSurfaceFormat(SurfaceFormat format) noexcept
         return VK_FORMAT_R8G8_UNORM;
     case SurfaceFormat::R8_UNorm:
         return VK_FORMAT_R8_UNORM;
-    }
-    return VK_FORMAT_R8_UNORM;
-}
-
-VkFormat ToDepthFormat(DepthFormat depthFormat) noexcept
-{
-    POMDOG_ASSERT(depthFormat != DepthFormat::None);
-    switch (depthFormat) {
-    case DepthFormat::Depth16:
+    case SurfaceFormat::Depth16:
         return VK_FORMAT_D16_UNORM;
-    case DepthFormat::Depth24Stencil8:
+    case SurfaceFormat::Depth24Stencil8:
         return VK_FORMAT_D24_UNORM_S8_UINT;
-    case DepthFormat::Depth32:
+    case SurfaceFormat::Depth32:
         return VK_FORMAT_D32_SFLOAT;
-    case DepthFormat::Depth32_Float_Stencil8_Uint:
+    case SurfaceFormat::Depth32_Float_Stencil8_Uint:
         return VK_FORMAT_D32_SFLOAT_S8_UINT;
-    case DepthFormat::None:
-        break;
     }
-    return VK_FORMAT_D24_UNORM_S8_UINT;
+    return VK_FORMAT_UNDEFINED;
 }
 
 } // namespace Pomdog::Detail::Vulkan

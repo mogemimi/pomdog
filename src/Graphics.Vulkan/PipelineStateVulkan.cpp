@@ -395,13 +395,13 @@ void CreateRenderPass(
     }
     const auto colorAttachemntCount = attachmentIndex;
 
-    if (description.DepthStencilViewFormat != DepthFormat::None) {
+    if (description.DepthStencilViewFormat != SurfaceFormat::Invalid) {
         POMDOG_ASSERT(attachmentIndex < colorAttachments.size());
         POMDOG_ASSERT(attachmentIndex < colorAttachmentRefs.size());
 
         auto& depthAttachment = colorAttachments[attachmentIndex];
         depthAttachment.flags = 0;
-        depthAttachment.format = ToDepthFormat(description.DepthStencilViewFormat);
+        depthAttachment.format = ToSurfaceFormat(description.DepthStencilViewFormat);
         depthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
         depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
         depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;

@@ -418,7 +418,7 @@ GraphicsDeviceVulkan::CreateRenderTarget2D(
     std::int32_t height,
     std::int32_t mipmapLevels,
     SurfaceFormat format,
-    DepthFormat depthStencilFormat,
+    SurfaceFormat depthStencilFormat,
     std::int32_t multiSampleCount)
 {
     POMDOG_ASSERT(impl);
