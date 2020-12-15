@@ -6,7 +6,7 @@
 
 namespace Pomdog::Detail {
 
-int SurfaceFormatHelper::ToBytesPerBlock(SurfaceFormat format)
+int SurfaceFormatHelper::ToBytesPerBlock(SurfaceFormat format) noexcept
 {
     switch (format) {
     case SurfaceFormat::Invalid:

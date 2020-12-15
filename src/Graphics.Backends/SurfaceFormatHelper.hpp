@@ -7,7 +7,7 @@
 namespace Pomdog::Detail {
 
 struct SurfaceFormatHelper final {
-    static int ToBytesPerBlock(SurfaceFormat format);
+    static int ToBytesPerBlock(SurfaceFormat format) noexcept;
 };
 
 } // namespace Pomdog::Detail
