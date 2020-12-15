@@ -13,7 +13,8 @@
 namespace Pomdog::Detail::GL4 {
 namespace {
 
-GLenum ToInternalFormatGL4(SurfaceFormat format) noexcept
+[[nodiscard]] GLenum
+ToInternalFormatGL4(SurfaceFormat format) noexcept
 {
     switch (format) {
     case SurfaceFormat::Invalid:
@@ -58,7 +59,8 @@ GLenum ToInternalFormatGL4(SurfaceFormat format) noexcept
     POMDOG_UNREACHABLE("Unsupported surface format");
 }
 
-GLenum ToFormatComponents(SurfaceFormat format) noexcept
+[[nodiscard]] GLenum
+ToFormatComponents(SurfaceFormat format) noexcept
 {
     switch (format) {
     case SurfaceFormat::Invalid:
@@ -97,7 +99,8 @@ GLenum ToFormatComponents(SurfaceFormat format) noexcept
     POMDOG_UNREACHABLE("Unsupported surface format");
 }
 
-GLenum ToPixelFundamentalType(SurfaceFormat format) noexcept
+[[nodiscard]] GLenum
+ToPixelFundamentalType(SurfaceFormat format) noexcept
 {
     switch (format) {
     case SurfaceFormat::Invalid:
