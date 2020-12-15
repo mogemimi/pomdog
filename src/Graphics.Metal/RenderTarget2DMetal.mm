@@ -3,7 +3,6 @@
 #include "RenderTarget2DMetal.hpp"
 #include "MetalFormatHelper.hpp"
 #include "../Graphics.Backends/SurfaceFormatHelper.hpp"
-#include "Pomdog/Graphics/DepthFormat.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #import <Metal/MTLDevice.h>
@@ -18,7 +17,7 @@ RenderTarget2DMetal::Initialize(
     std::int32_t pixelHeightIn,
     std::int32_t levelCountIn,
     SurfaceFormat formatIn,
-    DepthFormat depthStencilFormat,
+    SurfaceFormat depthStencilFormat,
     std::int32_t multiSampleCount) noexcept
 {
     pixelWidth = pixelWidthIn;
@@ -47,7 +46,7 @@ RenderTarget2DMetal::Initialize(
         }
     }
 
-    if (depthStencilFormat != DepthFormat::None) {
+    if (depthStencilFormat != SurfaceFormat::Invalid) {
         if (auto err = depthStencilBuffer.Initialize(
             device,
             pixelWidth,
@@ -80,7 +79,7 @@ SurfaceFormat RenderTarget2DMetal::GetFormat() const noexcept
     return format;
 }
 
-DepthFormat RenderTarget2DMetal::GetDepthStencilFormat() const noexcept
+SurfaceFormat RenderTarget2DMetal::GetDepthStencilFormat() const noexcept
 {
     return depthStencilBuffer.GetFormat();
 }

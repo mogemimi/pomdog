@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "Pomdog/Graphics/DepthFormat.hpp"
 #include "GameWindowX11.hpp"
 #include "KeyboardX11.hpp"
 #include "MouseX11.hpp"

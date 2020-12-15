@@ -3,9 +3,7 @@
 #pragma once
 
 #include "Pomdog/Basic/Export.hpp"
-#include "Pomdog/Graphics/DepthFormat.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
-#include "Pomdog/Graphics/SurfaceFormat.hpp"
 #include "Pomdog/Graphics/Texture.hpp"
 #include "Pomdog/Math/ForwardDeclarations.hpp"
 #include <cstdint>
@@ -34,7 +32,7 @@ public:
     virtual SurfaceFormat GetFormat() const noexcept = 0;
 
     /// Gets the format of the pixel data in the depth-stencil buffer.
-    virtual DepthFormat GetDepthStencilFormat() const noexcept = 0;
+    virtual SurfaceFormat GetDepthStencilFormat() const noexcept = 0;
 
     /// Gets the size of the texture resource.
     virtual Rectangle GetBounds() const noexcept = 0;

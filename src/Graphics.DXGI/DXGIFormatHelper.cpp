@@ -1,35 +1,18 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "DXGIFormatHelper.hpp"
-#include "Pomdog/Graphics/DepthFormat.hpp"
+#include "../Basic/Unreachable.hpp"
 #include "Pomdog/Graphics/IndexElementSize.hpp"
 #include "Pomdog/Graphics/InputElementFormat.hpp"
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
-#include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog::Detail::DXGI {
 
-DXGI_FORMAT DXGIFormatHelper::ToDXGIFormat(DepthFormat format) noexcept
-{
-    POMDOG_ASSERT(format != DepthFormat::None);
-    switch (format) {
-    case DepthFormat::Depth16:
-        return DXGI_FORMAT_D16_UNORM;
-    case DepthFormat::Depth32:
-        return DXGI_FORMAT_D32_FLOAT;
-    case DepthFormat::Depth24Stencil8:
-        return DXGI_FORMAT_D24_UNORM_S8_UINT;
-    case DepthFormat::Depth32_Float_Stencil8_Uint:
-        return DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
-    case DepthFormat::None:
-        break;
-    }
-    return DXGI_FORMAT_UNKNOWN;
-}
-
-DXGI_FORMAT DXGIFormatHelper::ToDXGIFormat(SurfaceFormat format) noexcept
+DXGI_FORMAT ToDXGIFormat(SurfaceFormat format) noexcept
 {
     switch (format) {
+    case SurfaceFormat::Invalid:
+        return DXGI_FORMAT_UNKNOWN;
     case SurfaceFormat::A8_UNorm:
         return DXGI_FORMAT_A8_UNORM;
     case SurfaceFormat::B8G8R8A8_UNorm:
@@ -58,11 +41,19 @@ DXGI_FORMAT DXGIFormatHelper::ToDXGIFormat(SurfaceFormat format) noexcept
         return DXGI_FORMAT_R8G8_UNORM;
     case SurfaceFormat::R8_UNorm:
         return DXGI_FORMAT_R8_UNORM;
+    case SurfaceFormat::Depth16:
+        return DXGI_FORMAT_D16_UNORM;
+    case SurfaceFormat::Depth32:
+        return DXGI_FORMAT_D32_FLOAT;
+    case SurfaceFormat::Depth24Stencil8:
+        return DXGI_FORMAT_D24_UNORM_S8_UINT;
+    case SurfaceFormat::Depth32_Float_Stencil8_Uint:
+        return DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
     }
-    return DXGI_FORMAT_UNKNOWN;
+    POMDOG_UNREACHABLE("Unsupported surface format");
 }
 
-DXGI_FORMAT DXGIFormatHelper::ToDXGIFormat(IndexElementSize elementSize) noexcept
+DXGI_FORMAT ToDXGIFormat(IndexElementSize elementSize) noexcept
 {
     switch (elementSize) {
     case IndexElementSize::SixteenBits:
@@ -70,10 +61,10 @@ DXGI_FORMAT DXGIFormatHelper::ToDXGIFormat(IndexElementSize elementSize) noexcep
     case IndexElementSize::ThirtyTwoBits:
         return DXGI_FORMAT_R32_UINT;
     }
-    return DXGI_FORMAT_UNKNOWN;
+    POMDOG_UNREACHABLE("Unsupported index element size");
 }
 
-DXGI_FORMAT DXGIFormatHelper::ToDXGIFormat(InputElementFormat format) noexcept
+DXGI_FORMAT ToDXGIFormat(InputElementFormat format) noexcept
 {
     switch (format) {
     case InputElementFormat::Byte4:
@@ -93,7 +84,7 @@ DXGI_FORMAT DXGIFormatHelper::ToDXGIFormat(InputElementFormat format) noexcept
     case InputElementFormat::Int4:
         return DXGI_FORMAT_R32G32B32A32_SINT;
     }
-    return DXGI_FORMAT_R32_FLOAT;
+    POMDOG_UNREACHABLE("Unsupported input element format");
 }
 
 } // namespace Pomdog::Detail::DXGI

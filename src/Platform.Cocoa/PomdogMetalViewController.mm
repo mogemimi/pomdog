@@ -16,7 +16,6 @@
 #import <Metal/Metal.h>
 #import <MetalKit/MetalKit.h>
 
-using Pomdog::DepthFormat;
 using Pomdog::Detail::Cocoa::GameHostMetal;
 using Pomdog::Detail::Cocoa::GameWindowCocoa;
 using Pomdog::Detail::InputKeyEvent;
@@ -237,7 +236,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     presentationParameters.PresentationInterval = 60;
     presentationParameters.MultiSampleCount = multiSampleCount;
     presentationParameters.BackBufferFormat = SurfaceFormat::B8G8R8A8_UNorm;
-    presentationParameters.DepthStencilFormat = DepthFormat::Depth32_Float_Stencil8_Uint;
+    presentationParameters.DepthStencilFormat = SurfaceFormat::Depth32_Float_Stencil8_Uint;
     presentationParameters.IsFullScreen = false;
 
     [self _setupMetal:presentationParameters];

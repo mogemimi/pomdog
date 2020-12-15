@@ -54,7 +54,6 @@ enum class BlendOperation : std::uint8_t;
 enum class BufferUsage : std::uint8_t;
 enum class ComparisonFunction : std::uint8_t;
 enum class CullMode : std::uint8_t;
-enum class DepthFormat : std::uint8_t;
 enum class EffectVariableClass : std::uint8_t;
 enum class EffectVariableType : std::uint8_t;
 enum class FillMode : std::uint8_t;

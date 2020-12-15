@@ -47,23 +47,23 @@ PIXELFORMATDESCRIPTOR ToPixelFormatDescriptor(
     }
 
     switch (presentationParameters.DepthStencilFormat) {
-    case DepthFormat::Depth16:
+    case SurfaceFormat::Depth16:
         descriptor.cDepthBits = 16;
         descriptor.cStencilBits = 0;
         break;
-    case DepthFormat::Depth24Stencil8:
+    case SurfaceFormat::Depth24Stencil8:
         descriptor.cDepthBits = 24;
         descriptor.cStencilBits = 8;
         break;
-    case DepthFormat::Depth32:
+    case SurfaceFormat::Depth32:
         descriptor.cDepthBits = 32;
         descriptor.cStencilBits = 0;
         break;
-    case DepthFormat::Depth32_Float_Stencil8_Uint:
+    case SurfaceFormat::Depth32_Float_Stencil8_Uint:
         descriptor.cDepthBits = 32;
         descriptor.cStencilBits = 8;
         break;
-    case DepthFormat::None:
+    case SurfaceFormat::Invalid:
         descriptor.cDepthBits = 0;
         descriptor.cStencilBits = 0;
         break;

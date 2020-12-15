@@ -64,7 +64,7 @@ public:
         std::optional<RasterizerDescription>&& rasterizerDesc,
         std::optional<SamplerDescription>&& samplerDesc,
         std::optional<SurfaceFormat>&& renderTargetViewFormat,
-        std::optional<DepthFormat>&& depthStencilViewFormat,
+        std::optional<SurfaceFormat>&& depthStencilViewFormat,
         SpriteBatchPixelShaderMode pixelShaderMode,
         AssetManager& assets);
 

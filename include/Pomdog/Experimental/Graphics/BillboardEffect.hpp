@@ -85,7 +85,7 @@ public:
         std::optional<DepthStencilDescription>&& depthStencilDesc,
         std::optional<RasterizerDescription>&& rasterizerDesc,
         std::optional<SurfaceFormat>&& renderTargetViewFormat,
-        std::optional<DepthFormat>&& depthStencilViewFormat,
+        std::optional<SurfaceFormat>&& depthStencilViewFormat,
         AssetManager& assets);
 
     ~BillboardBatchEffect();

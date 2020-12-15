@@ -103,28 +103,30 @@ ChooseFramebufferConfig(
     }
 
     switch (presentationParameters.DepthStencilFormat) {
-    case DepthFormat::Depth16:
+    case SurfaceFormat::Depth16:
         visualAttributes.push_back(GLX_DEPTH_SIZE);
         visualAttributes.push_back(16);
         break;
-    case DepthFormat::Depth24Stencil8:
+    case SurfaceFormat::Depth24Stencil8:
         visualAttributes.push_back(GLX_DEPTH_SIZE);
         visualAttributes.push_back(24);
         visualAttributes.push_back(GLX_STENCIL_SIZE);
         visualAttributes.push_back(8);
         break;
-    case DepthFormat::Depth32:
+    case SurfaceFormat::Depth32:
         visualAttributes.push_back(GLX_DEPTH_SIZE);
         visualAttributes.push_back(32);
         break;
-    case DepthFormat::Depth32_Float_Stencil8_Uint:
+    case SurfaceFormat::Depth32_Float_Stencil8_Uint:
         visualAttributes.push_back(GLX_DEPTH_SIZE);
         visualAttributes.push_back(32);
         visualAttributes.push_back(GLX_STENCIL_SIZE);
         visualAttributes.push_back(8);
         break;
-    default:
+    case SurfaceFormat::Invalid:
         break;
+    default:
+        return std::make_tuple(nullptr, Errors::New("invalid depth stencil format"));
     }
 
     visualAttributes.push_back(None);
@@ -206,7 +208,7 @@ public:
     std::unique_ptr<HTTPClient> httpClient;
     Duration presentationInterval;
     SurfaceFormat backBufferSurfaceFormat;
-    DepthFormat backBufferDepthStencilFormat;
+    SurfaceFormat backBufferDepthStencilFormat;
     bool exitRequest = false;
 };
 

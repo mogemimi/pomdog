@@ -6,6 +6,7 @@
 #include "DepthStencilBufferDirect3D11.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
+#include "Pomdog/Graphics/SurfaceFormat.hpp"
 #include "Pomdog/Utility/Errors.hpp"
 #include <wrl/client.h>
 
@@ -20,7 +21,7 @@ public:
         std::int32_t pixelHeight,
         std::int32_t levelCount,
         SurfaceFormat format,
-        DepthFormat depthStencilFormat,
+        SurfaceFormat depthStencilFormat,
         std::int32_t multiSampleCount) noexcept;
 
     [[nodiscard]] std::shared_ptr<Error>
@@ -31,7 +32,7 @@ public:
         std::int32_t pixelHeight,
         std::int32_t levelCount,
         SurfaceFormat format,
-        DepthFormat depthStencilFormat,
+        SurfaceFormat depthStencilFormat,
         std::int32_t multiSampleCount) noexcept;
 
     /// Gets the width of the texture data, in pixels.
@@ -47,7 +48,7 @@ public:
     SurfaceFormat GetFormat() const noexcept override;
 
     /// Gets the format of the pixel data in the depth-stencil buffer.
-    DepthFormat GetDepthStencilFormat() const noexcept override;
+    SurfaceFormat GetDepthStencilFormat() const noexcept override;
 
     /// Gets the size of the texture resource.
     Rectangle GetBounds() const noexcept override;
@@ -73,7 +74,7 @@ public:
         IDXGISwapChain* swapChain,
         std::int32_t pixelWidth,
         std::int32_t pixelHeight,
-        DepthFormat depthStencilFormat) noexcept;
+        SurfaceFormat depthStencilFormat) noexcept;
 
     void ResetBackBuffer() noexcept;
 

@@ -13,7 +13,7 @@ RenderTarget2DGL4::Initialize(
     std::int32_t pixelHeightIn,
     std::int32_t levelCountIn,
     SurfaceFormat formatIn,
-    DepthFormat depthStencilFormat,
+    SurfaceFormat depthStencilFormat,
     std::int32_t multiSampleCount) noexcept
 {
     if (auto err = texture.Initialize(pixelWidthIn, pixelHeightIn, levelCountIn, formatIn); err != nullptr) {
@@ -27,7 +27,7 @@ RenderTarget2DGL4::Initialize(
     generateMipmap = (levelCountIn > 1);
     multiSampleEnabled = (multiSampleCount > 1);
 
-    if (depthStencilFormat != DepthFormat::None) {
+    if (depthStencilFormat != SurfaceFormat::Invalid) {
         if (auto err = depthStencilBuffer.Initialize(
             pixelWidth,
             pixelHeight,
@@ -63,7 +63,7 @@ SurfaceFormat RenderTarget2DGL4::GetFormat() const noexcept
     return format;
 }
 
-DepthFormat RenderTarget2DGL4::GetDepthStencilFormat() const noexcept
+SurfaceFormat RenderTarget2DGL4::GetDepthStencilFormat() const noexcept
 {
     return depthStencilBuffer.GetFormat();
 }
@@ -157,7 +157,7 @@ void RenderTarget2DGL4::UnbindFromFramebuffer(GLuint frameBuffer, GLenum attachm
 
 void RenderTarget2DGL4::BindDepthStencilBuffer(GLuint frameBuffer)
 {
-    if (depthStencilBuffer.GetFormat() != DepthFormat::None) {
+    if (depthStencilBuffer.GetFormat() != SurfaceFormat::Invalid) {
         depthStencilBuffer.BindToFramebuffer(frameBuffer);
     }
 }

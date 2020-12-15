@@ -37,7 +37,7 @@ public:
         GraphicsDevice& graphicsDevice,
         int width,
         int height,
-        DepthFormat depthFormat);
+        SurfaceFormat depthFormat);
 
     void Draw(
         GraphicsCommandList& commandList,
@@ -56,7 +56,7 @@ private:
         int width,
         int height,
         SurfaceFormat surfaceFormat,
-        DepthFormat depthFormat);
+        SurfaceFormat depthFormat);
 
     void UpdateConstantBuffer();
 };

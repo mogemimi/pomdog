@@ -152,7 +152,7 @@ public:
         std::optional<RasterizerDescription>&& rasterizerDesc,
         std::optional<SamplerDescription>&& samplerState,
         std::optional<SurfaceFormat>&& renderTargetViewFormat,
-        std::optional<DepthFormat>&& depthStencilViewFormat,
+        std::optional<SurfaceFormat>&& depthStencilViewFormat,
         SpriteBatchPixelShaderMode pixelShaderMode,
         AssetManager& assets);
 
@@ -189,7 +189,7 @@ SpriteBatch::Impl::Impl(
     std::optional<RasterizerDescription>&& rasterizerDesc,
     std::optional<SamplerDescription>&& samplerDesc,
     std::optional<SurfaceFormat>&& renderTargetViewFormat,
-    std::optional<DepthFormat>&& depthStencilViewFormat,
+    std::optional<SurfaceFormat>&& depthStencilViewFormat,
     SpriteBatchPixelShaderMode pixelShaderMode,
     AssetManager& assets)
     : startInstanceLocation(0)
@@ -495,6 +495,7 @@ void SpriteBatch::Impl::Draw(
         sourceRGBEnabled = false;
         compensationRGB = true;
         break;
+    case SurfaceFormat::Invalid:
     case SurfaceFormat::R8G8B8A8_UNorm:
     case SurfaceFormat::R10G10B10A2_UNorm:
     case SurfaceFormat::B8G8R8A8_UNorm:
@@ -503,6 +504,10 @@ void SpriteBatch::Impl::Draw(
     case SurfaceFormat::BlockComp1_UNorm:
     case SurfaceFormat::BlockComp2_UNorm:
     case SurfaceFormat::BlockComp3_UNorm:
+    case SurfaceFormat::Depth16:
+    case SurfaceFormat::Depth32:
+    case SurfaceFormat::Depth24Stencil8:
+    case SurfaceFormat::Depth32_Float_Stencil8_Uint:
         break;
     }
 
@@ -571,7 +576,7 @@ SpriteBatch::SpriteBatch(
     std::optional<RasterizerDescription>&& rasterizerDesc,
     std::optional<SamplerDescription>&& samplerDesc,
     std::optional<SurfaceFormat>&& renderTargetViewFormat,
-    std::optional<DepthFormat>&& depthStencilViewFormat,
+    std::optional<SurfaceFormat>&& depthStencilViewFormat,
     SpriteBatchPixelShaderMode pixelShaderMode,
     AssetManager& assets)
     : impl(std::make_unique<Impl>(

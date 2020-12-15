@@ -2,20 +2,18 @@
 
 #include "DepthStencilBufferDirect3D11.hpp"
 #include "../Graphics.DXGI/DXGIFormatHelper.hpp"
-#include "Pomdog/Graphics/DepthFormat.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog::Detail::Direct3D11 {
 namespace {
 
-using DXGI::DXGIFormatHelper;
 using Microsoft::WRL::ComPtr;
 
 [[nodiscard]] std::shared_ptr<Error>
 BuildDepthBuffer(
     ID3D11Device* device,
-    DepthFormat depthStencilFormat,
+    SurfaceFormat depthStencilFormat,
     std::int32_t pixelWidth,
     std::int32_t pixelHeight,
     std::int32_t levelCount,
@@ -23,8 +21,8 @@ BuildDepthBuffer(
     ComPtr<ID3D11Texture2D>& depthStencil,
     ComPtr<ID3D11DepthStencilView>& depthStencilView) noexcept
 {
-    if (depthStencilFormat == DepthFormat::None) {
-        return Errors::New("depthStencilFormat must be != DepthFormat::None");
+    if (depthStencilFormat == SurfaceFormat::Invalid) {
+        return Errors::New("depthStencilFormat must be != SurfaceFormat::Invalid");
     }
     if (pixelWidth <= 0) {
         return Errors::New("pixelWidth must be > 0");
@@ -47,7 +45,7 @@ BuildDepthBuffer(
 
     // NOTE: Create depth stencil texture
     D3D11_TEXTURE2D_DESC textureDesc;
-    textureDesc.Format = DXGIFormatHelper::ToDXGIFormat(depthStencilFormat);
+    textureDesc.Format = DXGI::ToDXGIFormat(depthStencilFormat);
     textureDesc.Width = pixelWidth;
     textureDesc.Height = pixelHeight;
     textureDesc.ArraySize = 1;
@@ -86,7 +84,7 @@ DepthStencilBufferDirect3D11::Initialize(
     ID3D11Device* device,
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn,
-    DepthFormat depthStencilFormatIn,
+    SurfaceFormat depthStencilFormatIn,
     std::int32_t multiSampleCount) noexcept
 {
     pixelWidth = pixelWidthIn;
@@ -122,7 +120,7 @@ std::int32_t DepthStencilBufferDirect3D11::GetHeight() const noexcept
     return pixelHeight;
 }
 
-DepthFormat DepthStencilBufferDirect3D11::GetFormat() const noexcept
+SurfaceFormat DepthStencilBufferDirect3D11::GetFormat() const noexcept
 {
     return depthStencilFormat;
 }
@@ -143,7 +141,7 @@ DepthStencilBufferDirect3D11::ResetBackBuffer(
     ID3D11Device* device,
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn,
-    DepthFormat depthStencilFormatIn,
+    SurfaceFormat depthStencilFormatIn,
     std::int32_t multiSampleCount) noexcept
 {
     POMDOG_ASSERT(device != nullptr);

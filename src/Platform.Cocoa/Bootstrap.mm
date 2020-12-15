@@ -36,7 +36,7 @@ void Bootstrap::SetOpenGLSurfaceFormat(SurfaceFormat surfaceFormatIn)
     surfaceFormat = surfaceFormatIn;
 }
 
-void Bootstrap::SetOpenGLDepthFormat(DepthFormat depthFormatIn)
+void Bootstrap::SetOpenGLDepthFormat(SurfaceFormat depthFormatIn)
 {
     depthFormat = depthFormatIn;
 }

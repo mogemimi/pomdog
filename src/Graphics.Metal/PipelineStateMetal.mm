@@ -6,7 +6,7 @@
 #include "ShaderMetal.hpp"
 #include "../Basic/Unreachable.hpp"
 #include "../Graphics.Backends/BufferHelper.hpp"
-#include "Pomdog/Graphics/DepthFormat.hpp"
+#include "Pomdog/Graphics/SurfaceFormat.hpp"
 #include "Pomdog/Graphics/PipelineStateDescription.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
 #include "Pomdog/Utility/Assert.hpp"
@@ -261,19 +261,21 @@ PipelineStateMetal::Initialize(
     descriptor.vertexDescriptor = ToVertexDescriptor(description.InputLayout);
     descriptor.sampleCount = multiSampleCount;
     switch (description.DepthStencilViewFormat) {
-    case DepthFormat::Depth16:
+    case SurfaceFormat::Depth16:
         [[fallthrough]];
-    case DepthFormat::Depth32:
+    case SurfaceFormat::Depth32:
         descriptor.depthAttachmentPixelFormat = depthStencilFormat;
         descriptor.stencilAttachmentPixelFormat = MTLPixelFormatInvalid;
         break;
-    case DepthFormat::Depth24Stencil8:
+    case SurfaceFormat::Depth24Stencil8:
         [[fallthrough]];
-    case DepthFormat::Depth32_Float_Stencil8_Uint:
+    case SurfaceFormat::Depth32_Float_Stencil8_Uint:
         descriptor.depthAttachmentPixelFormat = depthStencilFormat;
         descriptor.stencilAttachmentPixelFormat = depthStencilFormat;
         break;
-    case DepthFormat::None:
+    case SurfaceFormat::Invalid:
+        [[fallthrough]];
+    default:
         descriptor.depthAttachmentPixelFormat = MTLPixelFormatInvalid;
         descriptor.stencilAttachmentPixelFormat = MTLPixelFormatInvalid;
         break;

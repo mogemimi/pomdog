@@ -73,27 +73,29 @@ CreatePixelFormat(const PresentationParameters& presentationParameters) noexcept
     }
 
     switch (presentationParameters.DepthStencilFormat) {
-    case DepthFormat::Depth16:
+    case SurfaceFormat::Depth16:
         attributes.push_back(NSOpenGLPFADepthSize);
         attributes.push_back(16);
         break;
-    case DepthFormat::Depth24Stencil8:
+    case SurfaceFormat::Depth24Stencil8:
         attributes.push_back(NSOpenGLPFADepthSize);
         attributes.push_back(24);
         attributes.push_back(NSOpenGLPFAStencilSize);
         attributes.push_back(8);
         break;
-    case DepthFormat::Depth32:
+    case SurfaceFormat::Depth32:
         attributes.push_back(NSOpenGLPFADepthSize);
         attributes.push_back(32);
         break;
-    case DepthFormat::Depth32_Float_Stencil8_Uint:
+    case SurfaceFormat::Depth32_Float_Stencil8_Uint:
         attributes.push_back(NSOpenGLPFADepthSize);
         attributes.push_back(32);
         attributes.push_back(NSOpenGLPFAStencilSize);
         attributes.push_back(8);
         break;
-    case DepthFormat::None:
+    case SurfaceFormat::Invalid:
+        [[fallthrough]];
+    default:
         break;
     }
 

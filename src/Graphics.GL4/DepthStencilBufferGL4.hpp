@@ -7,6 +7,7 @@
 #include "../Utility/Tagged.hpp"
 #include "Pomdog/Graphics/DepthStencilBuffer.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
+#include "Pomdog/Graphics/SurfaceFormat.hpp"
 #include "Pomdog/Utility/Errors.hpp"
 #include <optional>
 
@@ -20,7 +21,7 @@ public:
     Initialize(
         std::int32_t pixelWidth,
         std::int32_t pixelHeight,
-        DepthFormat depthStencilFormat,
+        SurfaceFormat depthStencilFormat,
         std::int32_t multiSampleCount) noexcept;
 
     /// Gets the width of the texture data, in pixels.
@@ -30,7 +31,7 @@ public:
     std::int32_t GetHeight() const noexcept override;
 
     /// Gets the format of the pixel data in the depth-stencil buffer.
-    DepthFormat GetFormat() const noexcept override;
+    SurfaceFormat GetFormat() const noexcept override;
 
     /// Gets the size of the texture resource.
     Rectangle GetBounds() const noexcept override;
@@ -41,7 +42,7 @@ private:
     GLuint renderBuffer = 0;
     std::int32_t pixelWidth = 0;
     std::int32_t pixelHeight = 0;
-    DepthFormat depthStencilFormat = DepthFormat::None;
+    SurfaceFormat depthStencilFormat = SurfaceFormat::Invalid;
     bool multiSampleEnabled = false;
     bool hasStencil = false;
 };

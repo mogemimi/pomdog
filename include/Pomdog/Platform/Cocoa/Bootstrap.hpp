@@ -3,7 +3,6 @@
 #pragma once
 
 #include "Pomdog/Basic/Export.hpp"
-#include "Pomdog/Graphics/DepthFormat.hpp"
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
 #include <functional>
 #include <memory>
@@ -38,7 +37,7 @@ public:
     void SetOpenGLSurfaceFormat(SurfaceFormat surfaceFormat);
 
     /// Sets the format of the depth stencil buffer when using the OpenGL renderer.
-    void SetOpenGLDepthFormat(DepthFormat depthFormat);
+    void SetOpenGLDepthFormat(SurfaceFormat depthFormat);
 
     /// Sets an error event handler to a log stream.
     void OnError(std::function<void(std::shared_ptr<Error>&& err)>&& onError);
@@ -59,7 +58,7 @@ private:
     __weak NSWindow* nativeWindow = nil;
     PomdogMetalViewController* viewController = nil;
     SurfaceFormat surfaceFormat = SurfaceFormat::R8G8B8A8_UNorm;
-    DepthFormat depthFormat = DepthFormat::Depth24Stencil8;
+    SurfaceFormat depthFormat = SurfaceFormat::Depth24Stencil8;
     bool openGLEnabled = false;
 };
 

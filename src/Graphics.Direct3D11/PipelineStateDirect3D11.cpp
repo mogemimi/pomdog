@@ -326,12 +326,10 @@ BuildInputElements(
         POMDOG_ASSERT(sourceElement.InstanceStepRate == 0 ||
             sourceElement.InputSlotClass == InputClassification::InputPerInstance);
 
-        using DXGI::DXGIFormatHelper;
-
         D3D11_INPUT_ELEMENT_DESC elementDesc;
         elementDesc.SemanticName = signature->SemanticName;
         elementDesc.SemanticIndex = signature->SemanticIndex;
-        elementDesc.Format = DXGIFormatHelper::ToDXGIFormat(sourceElement.Format);
+        elementDesc.Format = DXGI::ToDXGIFormat(sourceElement.Format);
         elementDesc.InputSlot = sourceElement.InputSlot;
         elementDesc.AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
         elementDesc.InputSlotClass = ToD3D11InputClassification(sourceElement.InputSlotClass);

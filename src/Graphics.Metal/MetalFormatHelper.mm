@@ -3,7 +3,6 @@
 #include "MetalFormatHelper.hpp"
 #include "../Basic/Unreachable.hpp"
 #include "Pomdog/Graphics/ComparisonFunction.hpp"
-#include "Pomdog/Graphics/DepthFormat.hpp"
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
 
 namespace Pomdog::Detail::Metal {
@@ -39,25 +38,18 @@ MTLPixelFormat ToPixelFormat(SurfaceFormat format) noexcept
         return MTLPixelFormatBC2_RGBA;
     case SurfaceFormat::BlockComp3_UNorm:
         return MTLPixelFormatBC3_RGBA;
-    }
-    POMDOG_UNREACHABLE("Unsupported surface format");
-}
-
-MTLPixelFormat ToPixelFormat(DepthFormat depthFormat) noexcept
-{
-    switch (depthFormat) {
-    case DepthFormat::Depth16:
+    case SurfaceFormat::Depth16:
         return MTLPixelFormatDepth16Unorm;
-    case DepthFormat::Depth32:
+    case SurfaceFormat::Depth32:
         return MTLPixelFormatDepth32Float;
-    case DepthFormat::Depth24Stencil8:
+    case SurfaceFormat::Depth24Stencil8:
         return MTLPixelFormatDepth24Unorm_Stencil8;
-    case DepthFormat::Depth32_Float_Stencil8_Uint:
+    case SurfaceFormat::Depth32_Float_Stencil8_Uint:
         return MTLPixelFormatDepth32Float_Stencil8;
-    case DepthFormat::None:
+    case SurfaceFormat::Invalid:
         return MTLPixelFormatInvalid;
     }
-    POMDOG_UNREACHABLE("Unsupported depth format");
+    POMDOG_UNREACHABLE("Unsupported surface format");
 }
 
 MTLCompareFunction ToComparisonFunction(ComparisonFunction compareFunction) noexcept

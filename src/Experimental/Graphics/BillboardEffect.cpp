@@ -5,7 +5,6 @@
 #include "Pomdog/Content/AssetBuilders/ShaderBuilder.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Graphics/BlendDescription.hpp"
-#include "Pomdog/Graphics/DepthFormat.hpp"
 #include "Pomdog/Graphics/DepthStencilDescription.hpp"
 #include "Pomdog/Graphics/GraphicsCommandList.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
@@ -220,7 +219,7 @@ BillboardBatchEffect::BillboardBatchEffect(
     std::optional<DepthStencilDescription>&& depthStencilDesc,
     std::optional<RasterizerDescription>&& rasterizerDesc,
     std::optional<SurfaceFormat>&& renderTargetViewFormat,
-    std::optional<DepthFormat>&& depthStencilViewFormat,
+    std::optional<SurfaceFormat>&& depthStencilViewFormat,
     AssetManager& assets)
     : impl(std::make_unique<Impl>())
 {

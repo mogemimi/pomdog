@@ -250,7 +250,7 @@ Builder<PipelineState>& Builder<PipelineState>::SetRenderTargetViewFormats(
 }
 
 Builder<PipelineState>& Builder<PipelineState>::SetDepthStencilViewFormat(
-    DepthFormat depthStencilViewFormat)
+    SurfaceFormat depthStencilViewFormat)
 {
     POMDOG_ASSERT(impl);
     impl->description.DepthStencilViewFormat = depthStencilViewFormat;

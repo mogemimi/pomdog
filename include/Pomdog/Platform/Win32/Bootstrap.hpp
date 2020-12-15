@@ -3,7 +3,6 @@
 #pragma once
 
 #include "Pomdog/Basic/Export.hpp"
-#include "Pomdog/Graphics/DepthFormat.hpp"
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 #include <functional>
@@ -35,7 +34,7 @@ public:
     void SetSurfaceFormat(SurfaceFormat surfaceFormat) noexcept;
 
     /// Sets the format of the depth stencil buffer.
-    void SetDepthFormat(DepthFormat depthFormat) noexcept;
+    void SetDepthFormat(SurfaceFormat depthFormat) noexcept;
 
     /// Sets the maximum rate at which the back buffers can be presented. 60 by default.
     void SetPresentationInterval(int presentationInterval) noexcept;
@@ -65,7 +64,7 @@ private:
     int backBufferWidth = 800;
     int backBufferHeight = 480;
     SurfaceFormat surfaceFormat = SurfaceFormat::R8G8B8A8_UNorm;
-    DepthFormat depthFormat = DepthFormat::Depth24Stencil8;
+    SurfaceFormat depthFormat = SurfaceFormat::Depth24Stencil8;
     bool isFullScreen = false;
     bool openGLEnabled = false;
 };

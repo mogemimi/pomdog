@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "Pomdog/Graphics/DepthFormat.hpp"
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
 #include <cstdint>
 
@@ -26,7 +25,7 @@ struct PresentationParameters final {
     SurfaceFormat BackBufferFormat;
 
     /// The depth stencil format for the back buffer.
-    DepthFormat DepthStencilFormat;
+    SurfaceFormat DepthStencilFormat = SurfaceFormat::Invalid;
 
     /// The value indicating the window is in full screen mode.
     bool IsFullScreen;

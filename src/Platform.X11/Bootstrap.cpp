@@ -14,7 +14,7 @@ void Bootstrap::SetSurfaceFormat(SurfaceFormat surfaceFormatIn) noexcept
     surfaceFormat = surfaceFormatIn;
 }
 
-void Bootstrap::SetDepthFormat(DepthFormat depthFormatIn) noexcept
+void Bootstrap::SetDepthFormat(SurfaceFormat depthFormatIn) noexcept
 {
     depthFormat = depthFormatIn;
 }

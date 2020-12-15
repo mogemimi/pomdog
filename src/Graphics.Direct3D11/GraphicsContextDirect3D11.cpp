@@ -27,7 +27,6 @@
 namespace Pomdog::Detail::Direct3D11 {
 namespace {
 
-using DXGI::DXGIFormatHelper;
 using Microsoft::WRL::ComPtr;
 
 void ChooseMultiSampleSetting(
@@ -108,7 +107,7 @@ GraphicsContextDirect3D11::Initialize(
     preferredBackBufferWidth = 1;
     preferredBackBufferHeight = 1;
     backBufferCount = 2;
-    backBufferFormat = DXGIFormatHelper::ToDXGIFormat(presentationParameters.BackBufferFormat);
+    backBufferFormat = DXGI::ToDXGIFormat(presentationParameters.BackBufferFormat);
     backBufferDepthFormat = presentationParameters.DepthStencilFormat;
     needToApplyPipelineState = true;
 
@@ -335,7 +334,7 @@ void GraphicsContextDirect3D11::SetIndexBuffer(const std::shared_ptr<IndexBuffer
 
     deferredContext->IASetIndexBuffer(
         nativeBuffer->GetBuffer(),
-        DXGIFormatHelper::ToDXGIFormat(indexBuffer->GetElementSize()),
+        DXGI::ToDXGIFormat(indexBuffer->GetElementSize()),
         0);
 }
 

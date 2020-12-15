@@ -300,7 +300,7 @@ private:
 
     Duration presentationInterval;
     SurfaceFormat backBufferSurfaceFormat;
-    DepthFormat backBufferDepthStencilFormat;
+    SurfaceFormat backBufferDepthStencilFormat;
     bool exitRequest;
     bool surfaceResizeRequest;
 };

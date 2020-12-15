@@ -58,7 +58,7 @@ void PostProcessCompositor::SetViewportSize(
     GraphicsDevice& graphicsDevice,
     int width,
     int height,
-    DepthFormat depthFormat)
+    SurfaceFormat depthFormat)
 {
     POMDOG_ASSERT(!renderTargets.empty());
     POMDOG_ASSERT(width > 0);
@@ -85,7 +85,7 @@ void PostProcessCompositor::BuildRenderTargets(
     int width,
     int height,
     SurfaceFormat surfaceFormat,
-    DepthFormat depthFormat)
+    SurfaceFormat depthFormat)
 {
     POMDOG_ASSERT(width > 0);
     POMDOG_ASSERT(height > 0);

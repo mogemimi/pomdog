@@ -16,6 +16,9 @@ namespace {
 GLenum ToInternalFormatGL4(SurfaceFormat format) noexcept
 {
     switch (format) {
+    case SurfaceFormat::Invalid:
+        // NOTE: unknown format
+        return GL_R8;
     case SurfaceFormat::BlockComp1_UNorm:
         return GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
     case SurfaceFormat::BlockComp2_UNorm:
@@ -43,6 +46,14 @@ GLenum ToInternalFormatGL4(SurfaceFormat format) noexcept
         return GL_R32F;
     case SurfaceFormat::A8_UNorm:
         return GL_R8;
+    case SurfaceFormat::Depth16:
+        return GL_DEPTH_COMPONENT16;
+    case SurfaceFormat::Depth24Stencil8:
+        return GL_DEPTH24_STENCIL8;
+    case SurfaceFormat::Depth32:
+        return GL_DEPTH_COMPONENT32;
+    case SurfaceFormat::Depth32_Float_Stencil8_Uint:
+        return GL_DEPTH32F_STENCIL8;
     }
     POMDOG_UNREACHABLE("Unsupported surface format");
 }
@@ -50,6 +61,9 @@ GLenum ToInternalFormatGL4(SurfaceFormat format) noexcept
 GLenum ToFormatComponents(SurfaceFormat format) noexcept
 {
     switch (format) {
+    case SurfaceFormat::Invalid:
+        // NOTE: unknown format
+        return GL_RED;
     case SurfaceFormat::R8G8B8A8_UNorm:
     case SurfaceFormat::R16G16B16A16_Float:
     case SurfaceFormat::R32G32B32A32_Float:
@@ -66,6 +80,14 @@ GLenum ToFormatComponents(SurfaceFormat format) noexcept
         return GL_RED;
     case SurfaceFormat::B8G8R8A8_UNorm:
         return GL_BGRA;
+    case SurfaceFormat::Depth16:
+        return GL_DEPTH_COMPONENT;
+    case SurfaceFormat::Depth24Stencil8:
+        return GL_DEPTH_COMPONENT;
+    case SurfaceFormat::Depth32:
+        return GL_DEPTH_COMPONENT;
+    case SurfaceFormat::Depth32_Float_Stencil8_Uint:
+        return GL_DEPTH_COMPONENT;
     case SurfaceFormat::BlockComp1_UNorm:
     case SurfaceFormat::BlockComp2_UNorm:
     case SurfaceFormat::BlockComp3_UNorm:
@@ -78,6 +100,8 @@ GLenum ToFormatComponents(SurfaceFormat format) noexcept
 GLenum ToPixelFundamentalType(SurfaceFormat format) noexcept
 {
     switch (format) {
+    case SurfaceFormat::Invalid:
+        return GL_UNSIGNED_BYTE;
     case SurfaceFormat::A8_UNorm:
     case SurfaceFormat::R8_UNorm:
     case SurfaceFormat::R8G8_UNorm:
@@ -92,6 +116,14 @@ GLenum ToPixelFundamentalType(SurfaceFormat format) noexcept
         return GL_FLOAT;
     case SurfaceFormat::R10G10B10A2_UNorm:
         return GL_UNSIGNED_INT_10_10_10_2;
+    case SurfaceFormat::Depth16:
+        return GL_UNSIGNED_SHORT;
+    case SurfaceFormat::Depth24Stencil8:
+        return GL_UNSIGNED_INT;
+    case SurfaceFormat::Depth32:
+        return GL_FLOAT;
+    case SurfaceFormat::Depth32_Float_Stencil8_Uint:
+        return GL_FLOAT;
     case SurfaceFormat::BlockComp1_UNorm:
     case SurfaceFormat::BlockComp2_UNorm:
     case SurfaceFormat::BlockComp3_UNorm:

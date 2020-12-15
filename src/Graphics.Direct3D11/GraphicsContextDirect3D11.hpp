@@ -4,7 +4,7 @@
 
 #include "PrerequisitesDirect3D11.hpp"
 #include "../Graphics.Backends/NativeGraphicsContext.hpp"
-#include "Pomdog/Graphics/DepthFormat.hpp"
+#include "Pomdog/Graphics/SurfaceFormat.hpp"
 #include "Pomdog/Utility/Errors.hpp"
 #include <wrl/client.h>
 #include <array>
@@ -115,7 +115,7 @@ private:
     int preferredBackBufferHeight = 1;
     UINT backBufferCount = 2;
     DXGI_FORMAT backBufferFormat = DXGI_FORMAT_UNKNOWN;
-    DepthFormat backBufferDepthFormat = DepthFormat::None;
+    SurfaceFormat backBufferDepthFormat = SurfaceFormat::Invalid;
     bool needToApplyPipelineState = true;
 };
 

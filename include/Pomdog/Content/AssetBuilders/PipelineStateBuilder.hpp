@@ -58,7 +58,7 @@ public:
 
     Builder& SetRenderTargetViewFormats(std::vector<SurfaceFormat>&& renderTargetViewFormats);
 
-    Builder& SetDepthStencilViewFormat(DepthFormat depthStencilViewFormat);
+    Builder& SetDepthStencilViewFormat(SurfaceFormat depthStencilViewFormat);
 
     /// Returns a pipeline state object.
     [[nodiscard]] std::tuple<std::shared_ptr<PipelineState>, std::shared_ptr<Error>>

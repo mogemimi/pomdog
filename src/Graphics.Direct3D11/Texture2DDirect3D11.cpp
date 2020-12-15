@@ -63,7 +63,6 @@ void LoadPixelDataBlockComp1(
 
 } // namespace
 
-using DXGI::DXGIFormatHelper;
 using Microsoft::WRL::ComPtr;
 
 std::shared_ptr<Error>
@@ -85,7 +84,7 @@ Texture2DDirect3D11::Initialize(
     POMDOG_ASSERT(levelCount >= 1);
 
     D3D11_TEXTURE2D_DESC textureDesc;
-    textureDesc.Format = DXGIFormatHelper::ToDXGIFormat(format);
+    textureDesc.Format = DXGI::ToDXGIFormat(format);
     textureDesc.Width = pixelWidth;
     textureDesc.Height = pixelHeight;
     textureDesc.ArraySize = 1;

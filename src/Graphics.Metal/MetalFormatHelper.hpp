@@ -9,7 +9,6 @@
 namespace Pomdog::Detail::Metal {
 
 [[nodiscard]] MTLPixelFormat ToPixelFormat(SurfaceFormat format) noexcept;
-[[nodiscard]] MTLPixelFormat ToPixelFormat(DepthFormat format) noexcept;
 
 [[nodiscard]] MTLCompareFunction ToComparisonFunction(ComparisonFunction compareFunction) noexcept;
 

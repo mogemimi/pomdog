@@ -3,7 +3,6 @@
 #pragma once
 
 #include "Pomdog/Basic/Export.hpp"
-#include "Pomdog/Graphics/DepthFormat.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include "Pomdog/Graphics/Texture.hpp"
 #include "Pomdog/Math/ForwardDeclarations.hpp"
@@ -27,7 +26,7 @@ public:
     virtual std::int32_t GetHeight() const noexcept = 0;
 
     /// Gets the format of the pixel data in the depth-stencil buffer.
-    virtual DepthFormat GetFormat() const noexcept = 0;
+    virtual SurfaceFormat GetFormat() const noexcept = 0;
 
     /// Gets the size of the texture resource.
     virtual Rectangle GetBounds() const noexcept = 0;

@@ -9,11 +9,14 @@ namespace Pomdog::Detail {
 int SurfaceFormatHelper::ToBytesPerBlock(SurfaceFormat format)
 {
     switch (format) {
+    case SurfaceFormat::Invalid:
+        return 0;
     case SurfaceFormat::A8_UNorm:
     case SurfaceFormat::R8_UNorm:
         return 1;
     case SurfaceFormat::R8G8_UNorm:
     case SurfaceFormat::BlockComp1_UNorm:
+    case SurfaceFormat::Depth16:
         return 2;
     case SurfaceFormat::R8G8B8A8_UNorm:
     case SurfaceFormat::B8G8R8A8_UNorm:
@@ -23,7 +26,11 @@ int SurfaceFormatHelper::ToBytesPerBlock(SurfaceFormat format)
     case SurfaceFormat::R32_Float:
     case SurfaceFormat::BlockComp2_UNorm:
     case SurfaceFormat::BlockComp3_UNorm:
+    case SurfaceFormat::Depth24Stencil8:
+    case SurfaceFormat::Depth32:
         return 4;
+    case SurfaceFormat::Depth32_Float_Stencil8_Uint:
+        return 5;
     case SurfaceFormat::R16G16B16A16_Float:
         return 8;
     case SurfaceFormat::R32G32B32A32_Float:

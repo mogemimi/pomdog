@@ -2,7 +2,6 @@
 
 #include "RenderTarget2DDirect3D11.hpp"
 #include "../Graphics.DXGI/DXGIFormatHelper.hpp"
-#include "Pomdog/Graphics/DepthFormat.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Exception.hpp"
@@ -10,7 +9,6 @@
 namespace Pomdog::Detail::Direct3D11 {
 namespace {
 
-using DXGI::DXGIFormatHelper;
 using Microsoft::WRL::ComPtr;
 
 [[nodiscard]] std::shared_ptr<Error>
@@ -31,7 +29,7 @@ BuildRenderTarget(
 
     // NOTE: Create a render texture
     D3D11_TEXTURE2D_DESC textureDesc;
-    textureDesc.Format = DXGIFormatHelper::ToDXGIFormat(format);
+    textureDesc.Format = DXGI::ToDXGIFormat(format);
     textureDesc.Width = pixelWidth;
     textureDesc.Height = pixelHeight;
     textureDesc.ArraySize = 1;
@@ -107,7 +105,7 @@ RenderTarget2DDirect3D11::Initialize(
     std::int32_t pixelHeightIn,
     std::int32_t levelCountIn,
     SurfaceFormat formatIn,
-    DepthFormat depthStencilFormat,
+    SurfaceFormat depthStencilFormat,
     std::int32_t multiSampleCount) noexcept
 {
     pixelWidth = pixelWidthIn;
@@ -132,7 +130,7 @@ RenderTarget2DDirect3D11::Initialize(
         return Errors::Wrap(std::move(err), "BuildRenderTarget() failed");
     }
 
-    if (depthStencilFormat != DepthFormat::None) {
+    if (depthStencilFormat != SurfaceFormat::Invalid) {
         if (auto err = depthStencilBuffer.Initialize(
             device,
             pixelWidth,
@@ -155,7 +153,7 @@ RenderTarget2DDirect3D11::Initialize(
     std::int32_t pixelHeightIn,
     std::int32_t levelCountIn,
     SurfaceFormat formatIn,
-    DepthFormat depthStencilFormat,
+    SurfaceFormat depthStencilFormat,
     std::int32_t multiSampleCount) noexcept
 {
     pixelWidth = pixelWidthIn;
@@ -174,7 +172,7 @@ RenderTarget2DDirect3D11::Initialize(
         return Errors::Wrap(std::move(err), "BuildBackBufferBySwapChain() failed");
     }
 
-    if (depthStencilFormat != DepthFormat::None) {
+    if (depthStencilFormat != SurfaceFormat::Invalid) {
         if (auto err = depthStencilBuffer.Initialize(
             device,
             pixelWidth,
@@ -209,7 +207,7 @@ SurfaceFormat RenderTarget2DDirect3D11::GetFormat() const noexcept
     return format;
 }
 
-DepthFormat RenderTarget2DDirect3D11::GetDepthStencilFormat() const noexcept
+SurfaceFormat RenderTarget2DDirect3D11::GetDepthStencilFormat() const noexcept
 {
     return depthStencilBuffer.GetFormat();
 }
@@ -319,7 +317,7 @@ RenderTarget2DDirect3D11::ResetBackBuffer(
     IDXGISwapChain* swapChain,
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn,
-    DepthFormat depthStencilFormat) noexcept
+    SurfaceFormat depthStencilFormat) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
     POMDOG_ASSERT(swapChain != nullptr);
@@ -342,7 +340,7 @@ RenderTarget2DDirect3D11::ResetBackBuffer(
 
     constexpr std::int32_t multiSampleCount = 1;
 
-    if (depthStencilFormat != DepthFormat::None) {
+    if (depthStencilFormat != SurfaceFormat::Invalid) {
         if (auto err = depthStencilBuffer.ResetBackBuffer(
             device,
             pixelWidth,

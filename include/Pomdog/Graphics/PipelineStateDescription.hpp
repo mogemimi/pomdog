@@ -3,7 +3,6 @@
 #pragma once
 
 #include "Pomdog/Graphics/BlendDescription.hpp"
-#include "Pomdog/Graphics/DepthFormat.hpp"
 #include "Pomdog/Graphics/DepthStencilDescription.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include "Pomdog/Graphics/InputLayoutDescription.hpp"
@@ -34,7 +33,7 @@ struct PipelineStateDescription final {
     RasterizerDescription RasterizerState;
     DepthStencilDescription DepthStencilState;
     std::vector<SurfaceFormat> RenderTargetViewFormats;
-    DepthFormat DepthStencilViewFormat;
+    SurfaceFormat DepthStencilViewFormat;
     std::uint32_t MultiSampleMask;
 };
 

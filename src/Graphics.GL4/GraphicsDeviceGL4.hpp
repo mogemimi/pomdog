@@ -96,7 +96,7 @@ public:
         std::int32_t height,
         bool generateMipmap,
         SurfaceFormat format,
-        DepthFormat depthStencilFormat) noexcept override;
+        SurfaceFormat depthStencilFormat) noexcept override;
 
     /// Creates a sampler state object.
     std::tuple<std::shared_ptr<SamplerState>, std::shared_ptr<Error>>

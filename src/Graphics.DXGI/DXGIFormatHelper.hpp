@@ -7,11 +7,13 @@
 
 namespace Pomdog::Detail::DXGI {
 
-struct DXGIFormatHelper final {
-    static DXGI_FORMAT ToDXGIFormat(DepthFormat format) noexcept;
-    static DXGI_FORMAT ToDXGIFormat(SurfaceFormat format) noexcept;
-    static DXGI_FORMAT ToDXGIFormat(IndexElementSize elementSize) noexcept;
-    static DXGI_FORMAT ToDXGIFormat(InputElementFormat format) noexcept;
-};
+[[nodiscard]] DXGI_FORMAT
+ToDXGIFormat(SurfaceFormat format) noexcept;
+
+[[nodiscard]] DXGI_FORMAT
+ToDXGIFormat(IndexElementSize elementSize) noexcept;
+
+[[nodiscard]] DXGI_FORMAT
+ToDXGIFormat(InputElementFormat format) noexcept;
 
 } // namespace Pomdog::Detail::DXGI

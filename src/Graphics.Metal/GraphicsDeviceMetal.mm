@@ -277,7 +277,7 @@ GraphicsDeviceMetal::CreateRenderTarget2D(
         height,
         false,
         SurfaceFormat::R8G8B8A8_UNorm,
-        DepthFormat::None);
+        SurfaceFormat::Invalid);
 }
 
 std::tuple<std::shared_ptr<RenderTarget2D>, std::shared_ptr<Error>>
@@ -286,7 +286,7 @@ GraphicsDeviceMetal::CreateRenderTarget2D(
     std::int32_t height,
     bool generateMipmap,
     SurfaceFormat format,
-    DepthFormat depthStencilFormat) noexcept
+    SurfaceFormat depthStencilFormat) noexcept
 {
     POMDOG_ASSERT(width > 0);
     POMDOG_ASSERT(height > 0);
