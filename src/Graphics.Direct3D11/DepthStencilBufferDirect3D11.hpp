@@ -13,7 +13,7 @@ namespace Pomdog::Detail::Direct3D11 {
 
 class DepthStencilBufferDirect3D11 final : public DepthStencilBuffer {
 public:
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(
         ID3D11Device* device,
         std::int32_t pixelWidth,
@@ -37,7 +37,7 @@ public:
     [[nodiscard]] ID3D11DepthStencilView*
     GetDepthStencilView() const noexcept;
 
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     ResetBackBuffer(
         ID3D11Device* device,
         std::int32_t pixelWidth,

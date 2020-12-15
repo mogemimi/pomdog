@@ -18,7 +18,7 @@ class RenderTarget2DDirect3D11;
 
 class GraphicsContextDirect3D11 final : public NativeGraphicsContext {
 public:
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(
         HWND windowHandle,
         const Microsoft::WRL::ComPtr<IDXGIFactory1>& dxgiFactory,
@@ -85,7 +85,7 @@ public:
 
     void SetTexture(int index, const std::shared_ptr<RenderTarget2D>& texture) override;
 
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     ResizeBackBuffers(ID3D11Device* device, int backBufferWidth, int backBufferHeight) noexcept;
 
     /// Gets the pointer of the immediate graphics context.

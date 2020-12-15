@@ -18,7 +18,7 @@ namespace Pomdog::Detail {
 
 template <>
 struct POMDOG_EXPORT AssetLoader<TrueTypeFont> final {
-    [[nodiscard]] std::tuple<std::shared_ptr<TrueTypeFont>, std::shared_ptr<Error>>
+    [[nodiscard]] std::tuple<std::shared_ptr<TrueTypeFont>, std::unique_ptr<Error>>
     operator()(AssetManager& assets, const std::string& filePath);
 };
 

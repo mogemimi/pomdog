@@ -36,7 +36,7 @@ public:
 
     /// Loads an asset stored at the specified path in a content directory.
     template <typename T>
-    [[nodiscard]] std::tuple<std::shared_ptr<T>, std::shared_ptr<Error>>
+    [[nodiscard]] std::tuple<std::shared_ptr<T>, std::unique_ptr<Error>>
     Load(const std::string& assetName)
     {
         static_assert(std::is_object<T>::value, "");

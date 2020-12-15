@@ -17,7 +17,7 @@ namespace Pomdog::GLTF {
 class Document;
 
 [[nodiscard]] POMDOG_EXPORT
-std::tuple<std::shared_ptr<Document>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<Document>, std::unique_ptr<Error>>
 Open(const std::string& filePath) noexcept;
 
 } // namespace Pomdog::GLTF

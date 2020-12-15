@@ -20,7 +20,7 @@ class RenderTarget2DGL4 final : public RenderTarget2D {
 public:
     ~RenderTarget2DGL4() override;
 
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(
         std::int32_t pixelWidth,
         std::int32_t pixelHeight,

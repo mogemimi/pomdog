@@ -16,7 +16,7 @@ namespace Pomdog::Detail::GL4 {
 template <GLenum PipelineStage>
 class ShaderGL4 final : public Shader {
 public:
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(const ShaderBytecode& source) noexcept;
 
     ~ShaderGL4();

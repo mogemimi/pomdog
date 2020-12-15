@@ -19,7 +19,7 @@ class Shader;
 namespace Pomdog::ShaderCompilers::HLSLCompiler {
 
 /// Creates a shader from a string of source code.
-[[nodiscard]] POMDOG_EXPORT std::tuple<std::unique_ptr<Shader>, std::shared_ptr<Error>>
+[[nodiscard]] POMDOG_EXPORT std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
 CreateShaderFromBinary(
     GraphicsDevice& graphicsDevice,
     const void* shaderSource,
@@ -27,7 +27,7 @@ CreateShaderFromBinary(
     ShaderPipelineStage pipelineStage);
 
 /// Creates a shader from precompiled shader binary data.
-[[nodiscard]] POMDOG_EXPORT std::tuple<std::unique_ptr<Shader>, std::shared_ptr<Error>>
+[[nodiscard]] POMDOG_EXPORT std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
 CreateShaderFromSource(
     GraphicsDevice& graphicsDevice,
     const void* shaderSource,

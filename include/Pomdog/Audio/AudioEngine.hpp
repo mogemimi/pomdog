@@ -16,7 +16,7 @@ public:
     virtual ~AudioEngine() noexcept;
 
     /// Creates an audio clip.
-    [[nodiscard]] virtual std::tuple<std::shared_ptr<AudioClip>, std::shared_ptr<Error>>
+    [[nodiscard]] virtual std::tuple<std::shared_ptr<AudioClip>, std::unique_ptr<Error>>
     CreateAudioClip(
         const void* audioData,
         std::size_t sizeInBytes,
@@ -25,7 +25,7 @@ public:
         AudioChannels channels) noexcept = 0;
 
     /// Creates a sound effect.
-    [[nodiscard]] virtual std::tuple<std::shared_ptr<SoundEffect>, std::shared_ptr<Error>>
+    [[nodiscard]] virtual std::tuple<std::shared_ptr<SoundEffect>, std::unique_ptr<Error>>
     CreateSoundEffect(
         const std::shared_ptr<AudioClip>& audioClip,
         bool isLooped) noexcept = 0;

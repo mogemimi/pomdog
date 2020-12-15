@@ -14,7 +14,7 @@ using FillModeGL4 = Tagged<GLenum, FillMode>;
 
 class RasterizerStateGL4 final {
 public:
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(const RasterizerDescription& description) noexcept;
 
     void Apply();

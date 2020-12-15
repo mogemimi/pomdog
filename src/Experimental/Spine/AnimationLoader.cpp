@@ -96,7 +96,7 @@ BuildSpriteAnimationTracks(
 
 } // namespace
 
-std::tuple<std::shared_ptr<Skeletal2D::AnimationClip>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<Skeletal2D::AnimationClip>, std::unique_ptr<Error>>
 CreateAnimationClip(
     const SkeletonDesc& desc,
     const std::optional<TexturePacker::TextureAtlas>& textureAtlas,

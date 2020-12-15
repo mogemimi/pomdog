@@ -67,7 +67,7 @@ struct WaveFormat final {
     std::vector<std::uint8_t> ExtraData;
 };
 
-[[nodiscard]] std::shared_ptr<Error>
+[[nodiscard]] std::unique_ptr<Error>
 ReadRIFFChunk(std::ifstream& stream)
 {
     const auto riffChunk = BinaryReader::Read<RIFFChunk>(stream);
@@ -86,7 +86,7 @@ ReadRIFFChunk(std::ifstream& stream)
     return nullptr;
 }
 
-[[nodiscard]] std::tuple<WaveFormat, std::shared_ptr<Error>>
+[[nodiscard]] std::tuple<WaveFormat, std::unique_ptr<Error>>
 ReadWaveFormat(std::ifstream& stream)
 {
     const auto fmtChunkHeader = BinaryReader::Read<SubChunkHeader>(stream);
@@ -140,7 +140,7 @@ ReadWaveFormat(std::ifstream& stream)
     return std::make_tuple(std::move(waveFormat), nullptr);
 }
 
-[[nodiscard]] std::tuple<std::vector<std::uint8_t>, std::shared_ptr<Error>>
+[[nodiscard]] std::tuple<std::vector<std::uint8_t>, std::unique_ptr<Error>>
 ReadWaveAudioData(std::ifstream& stream)
 {
     POMDOG_ASSERT(stream);
@@ -192,7 +192,7 @@ ReadWaveAudioData(std::ifstream& stream)
 
 } // namespace
 
-[[nodiscard]] std::tuple<std::shared_ptr<AudioClip>, std::shared_ptr<Error>>
+[[nodiscard]] std::tuple<std::shared_ptr<AudioClip>, std::unique_ptr<Error>>
 Load(const std::shared_ptr<AudioEngine>& audioEngine, std::ifstream&& stream, std::size_t byteLength) noexcept
 {
     constexpr auto MinimumWaveFormatSizeInBytes = 4 * 11;

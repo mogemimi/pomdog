@@ -18,7 +18,7 @@ class Shader;
 namespace Pomdog::ShaderCompilers::MetalCompiler {
 
 /// Creates a shader from a string of source code.
-[[nodiscard]] POMDOG_EXPORT std::tuple<std::unique_ptr<Shader>, std::shared_ptr<Error>>
+[[nodiscard]] POMDOG_EXPORT std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
 CreateShaderFromSource(
     GraphicsDevice& graphicsDevice,
     const void* shaderSource,
@@ -27,14 +27,14 @@ CreateShaderFromSource(
     ShaderPipelineStage pipelineStage);
 
 /// Creates a shader from a default library.
-[[nodiscard]] POMDOG_EXPORT std::tuple<std::unique_ptr<Shader>, std::shared_ptr<Error>>
+[[nodiscard]] POMDOG_EXPORT std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
 CreateShaderFromDefaultLibrary(
     GraphicsDevice& graphicsDevice,
     const std::string& entryPoint,
     ShaderPipelineStage pipelineStage);
 
 /// Creates a shader from precompiled '*.metallib' library data.
-[[nodiscard]] POMDOG_EXPORT std::tuple<std::unique_ptr<Shader>, std::shared_ptr<Error>>
+[[nodiscard]] POMDOG_EXPORT std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
 CreateShaderFromBinary(
     GraphicsDevice& graphicsDevice,
     const void* shaderSource,

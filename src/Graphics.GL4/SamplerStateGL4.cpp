@@ -29,7 +29,7 @@ GLenum ToTextureAddressMode(TextureAddressMode address) noexcept
 
 } // namespace
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 SamplerStateGL4::Initialize(const SamplerDescription& description) noexcept
 {
     samplerObject = ([] {

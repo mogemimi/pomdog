@@ -299,7 +299,7 @@ SpriteBatch::Impl::Impl(
             // FIXME: error handling
         }
 
-        std::shared_ptr<Error> pipelineStateErr;
+        std::unique_ptr<Error> pipelineStateErr;
         std::tie(pipelineState, pipelineStateErr) = assets.CreateBuilder<PipelineState>()
             .SetRenderTargetViewFormat(*renderTargetViewFormat)
             .SetDepthStencilViewFormat(*depthStencilViewFormat)

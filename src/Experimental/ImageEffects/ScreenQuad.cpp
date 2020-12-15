@@ -8,7 +8,9 @@
 #include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Math/Vector3.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #include <array>
+#include <tuple>
 
 namespace Pomdog {
 

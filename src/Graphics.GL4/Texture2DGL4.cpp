@@ -262,7 +262,7 @@ struct TypesafeHelperGL4::Traits<Texture2DObjectGL4> {
     constexpr static GLenum TextureTarget = GL_TEXTURE_2D;
 };
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 Texture2DGL4::Initialize(
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn,

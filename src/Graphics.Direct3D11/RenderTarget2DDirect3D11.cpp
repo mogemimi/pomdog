@@ -11,7 +11,7 @@ namespace {
 
 using Microsoft::WRL::ComPtr;
 
-[[nodiscard]] std::shared_ptr<Error>
+[[nodiscard]] std::unique_ptr<Error>
 BuildRenderTarget(
     ID3D11Device* device,
     SurfaceFormat format,
@@ -72,7 +72,7 @@ BuildRenderTarget(
     return nullptr;
 }
 
-[[nodiscard]] std::shared_ptr<Error>
+[[nodiscard]] std::unique_ptr<Error>
 BuildBackBufferBySwapChain(
     ID3D11Device* device,
     IDXGISwapChain* swapChain,
@@ -98,7 +98,7 @@ BuildBackBufferBySwapChain(
 
 } // namespace
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 RenderTarget2DDirect3D11::Initialize(
     ID3D11Device* device,
     std::int32_t pixelWidthIn,
@@ -145,7 +145,7 @@ RenderTarget2DDirect3D11::Initialize(
     return nullptr;
 }
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 RenderTarget2DDirect3D11::Initialize(
     ID3D11Device* device,
     IDXGISwapChain* swapChain,
@@ -311,7 +311,7 @@ RenderTarget2DDirect3D11::GetShaderResourceView() const noexcept
     return textureResourceView.Get();
 }
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 RenderTarget2DDirect3D11::ResetBackBuffer(
     ID3D11Device* device,
     IDXGISwapChain* swapChain,

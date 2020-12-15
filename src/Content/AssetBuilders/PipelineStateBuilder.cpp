@@ -18,7 +18,7 @@ public:
     PipelineStateDescription description;
     std::reference_wrapper<AssetManager const> assets;
     std::shared_ptr<GraphicsDevice> graphicsDevice;
-    std::shared_ptr<Error> lastError;
+    std::unique_ptr<Error> lastError;
     bool hasPrimitiveTopology = false;
     bool hasBlendState = false;
     bool hasRasterizerState = false;
@@ -29,7 +29,7 @@ public:
 public:
     explicit Impl(AssetManager& assets);
 
-    std::tuple<std::shared_ptr<PipelineState>, std::shared_ptr<Error>>
+    std::tuple<std::shared_ptr<PipelineState>, std::unique_ptr<Error>>
     Load();
 };
 
@@ -41,7 +41,7 @@ Builder<PipelineState>::Impl::Impl(AssetManager& assetsIn)
     description.PrimitiveTopology = PrimitiveTopology::TriangleList;
 }
 
-std::tuple<std::shared_ptr<PipelineState>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<PipelineState>, std::unique_ptr<Error>>
 Builder<PipelineState>::Impl::Load()
 {
     if (lastError != nullptr) {
@@ -258,7 +258,7 @@ Builder<PipelineState>& Builder<PipelineState>::SetDepthStencilViewFormat(
     return *this;
 }
 
-std::tuple<std::shared_ptr<PipelineState>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<PipelineState>, std::unique_ptr<Error>>
 Builder<PipelineState>::Build()
 {
     POMDOG_ASSERT(impl);
@@ -283,7 +283,7 @@ const PipelineStateDescription& Builder<PipelineState>::GetDescription() const
     return impl->description;
 }
 
-void Builder<PipelineState>::SetError(std::shared_ptr<Error>&& err)
+void Builder<PipelineState>::SetError(std::unique_ptr<Error>&& err)
 {
     POMDOG_ASSERT(impl != nullptr);
     POMDOG_ASSERT(impl->lastError != nullptr);

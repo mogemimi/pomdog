@@ -18,7 +18,7 @@ namespace Pomdog::Detail {
 
 template <>
 struct POMDOG_EXPORT AssetLoader<SpriteFont> final {
-    [[nodiscard]] std::tuple<std::shared_ptr<SpriteFont>, std::shared_ptr<Error>>
+    [[nodiscard]] std::tuple<std::shared_ptr<SpriteFont>, std::unique_ptr<Error>>
     operator()(AssetManager& assets, const std::string& filePath);
 };
 

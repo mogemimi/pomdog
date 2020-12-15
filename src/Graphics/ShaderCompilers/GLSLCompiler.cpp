@@ -7,13 +7,15 @@
 #include "Pomdog/Graphics/Shader.hpp"
 #include "Pomdog/Graphics/ShaderLanguage.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Utility/Errors.hpp"
+#include <utility>
 
 using Pomdog::Detail::ShaderBytecode;
 using Pomdog::Detail::ShaderCompileOptions;
 
 namespace Pomdog::ShaderCompilers::GLSLCompiler {
 
-[[nodiscard]] std::tuple<std::unique_ptr<Shader>, std::shared_ptr<Error>>
+[[nodiscard]] std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
 CreateShader(
     GraphicsDevice& graphicsDevice,
     const void* shaderSource,

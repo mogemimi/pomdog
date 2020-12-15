@@ -79,7 +79,7 @@ public:
     Builder& SetMetalFromLibrary(const std::string& entryPoint);
 
     /// Returns an object representing shader function.
-    [[nodiscard]] std::tuple<std::shared_ptr<Shader>, std::shared_ptr<Error>>
+    [[nodiscard]] std::tuple<std::shared_ptr<Shader>, std::unique_ptr<Error>>
     Build();
 
 private:

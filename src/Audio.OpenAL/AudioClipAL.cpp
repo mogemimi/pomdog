@@ -12,7 +12,7 @@
 namespace Pomdog::Detail::OpenAL {
 namespace {
 
-[[nodiscard]] std::tuple<ALenum, std::shared_ptr<Error>>
+[[nodiscard]] std::tuple<ALenum, std::unique_ptr<Error>>
 ToFormat(AudioChannels channel, std::uint16_t bitPerSample) noexcept
 {
     switch (channel) {
@@ -48,7 +48,7 @@ AudioClipAL::~AudioClipAL() noexcept
     }
 }
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 AudioClipAL::Initialize(
     const void* data,
     std::size_t sizeInBytesIn,
@@ -76,7 +76,7 @@ AudioClipAL::Initialize(
     POMDOG_ASSERT(data != nullptr);
     POMDOG_ASSERT(sizeInBytes > 0);
 
-    const auto [format, formatErr] = ToFormat(channels, bitsPerSample);
+    auto [format, formatErr] = ToFormat(channels, bitsPerSample);
     if (formatErr != nullptr) {
         return Errors::Wrap(std::move(formatErr), "ToFormat() failed.");
     }

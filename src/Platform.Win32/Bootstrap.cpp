@@ -70,7 +70,7 @@ void Bootstrap::SetOpenGLEnabled(bool openGLEnabledIn) noexcept
     openGLEnabled = openGLEnabledIn;
 }
 
-void Bootstrap::OnError(std::function<void(std::shared_ptr<Error>&& err)> onErrorIn)
+void Bootstrap::OnError(std::function<void(std::unique_ptr<Error>&& err)> onErrorIn)
 {
     onError = std::move(onErrorIn);
 }

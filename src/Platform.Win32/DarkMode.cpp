@@ -114,7 +114,7 @@ bool IsDarkMode() noexcept
     return ShouldAppsUseDarkMode() && !IsHighContrast();
 }
 
-std::shared_ptr<Error> UseImmersiveDarkMode(HWND windowHandle, bool enabled) noexcept
+std::unique_ptr<Error> UseImmersiveDarkMode(HWND windowHandle, bool enabled) noexcept
 {
     if (!IsWindowsVersionOrGreaterForWindows10(10, 0, 17763)) {
         // NOTE: not support for dark mode

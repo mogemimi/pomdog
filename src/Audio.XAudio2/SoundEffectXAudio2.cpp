@@ -47,7 +47,7 @@ SoundEffectXAudio2::~SoundEffectXAudio2()
     audioClip.reset();
 }
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 SoundEffectXAudio2::Initialize(
     IXAudio2* xAudio2,
     const std::shared_ptr<AudioClipXAudio2>& audioClipIn,

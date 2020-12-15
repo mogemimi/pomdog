@@ -63,7 +63,7 @@ void ToDepthStencilFaceOperationGL4(
 
 } // namespace
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 DepthStencilStateGL4::Initialize(const DepthStencilDescription& description) noexcept
 {
     static_assert(std::is_same<GLuint, std::uint32_t>::value, "");

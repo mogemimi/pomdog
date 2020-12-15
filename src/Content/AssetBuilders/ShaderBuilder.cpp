@@ -92,7 +92,7 @@ public:
     ShaderBytecode shaderBytecode;
     std::string entryPoint;
     std::optional<std::string> shaderFilePath;
-    std::shared_ptr<Error> lastError;
+    std::unique_ptr<Error> lastError;
     bool precompiled;
     bool fromDefaultLibrary;
 
@@ -105,7 +105,7 @@ public:
     }
 
     /// Opens a stream for reading a file from the asset path.
-    [[nodiscard]] std::tuple<std::ifstream, std::size_t, std::shared_ptr<Error>>
+    [[nodiscard]] std::tuple<std::ifstream, std::size_t, std::unique_ptr<Error>>
     OpenStream(const std::string& filePath) const;
 };
 
@@ -117,7 +117,7 @@ Builder<Shader>::Impl::Impl(AssetManager& assetsIn)
 {
 }
 
-std::tuple<std::ifstream, std::size_t, std::shared_ptr<Error>>
+std::tuple<std::ifstream, std::size_t, std::unique_ptr<Error>>
 Builder<Shader>::Impl::OpenStream(const std::string& filePath) const
 {
     std::ifstream stream{filePath, std::ifstream::binary};
@@ -454,7 +454,7 @@ Builder<Shader>& Builder<Shader>::SetMetalFromLibrary(
     return *this;
 }
 
-std::tuple<std::shared_ptr<Shader>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<Shader>, std::unique_ptr<Error>>
 Builder<Shader>::Build()
 {
     if (impl->lastError != nullptr) {

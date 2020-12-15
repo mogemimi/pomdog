@@ -215,7 +215,7 @@ MTLTriangleFillMode ToFillMode(FillMode fillMode) noexcept
 
 } // namespace
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 PipelineStateMetal::Initialize(
     id<MTLDevice> device,
     const PipelineStateDescription& description) noexcept

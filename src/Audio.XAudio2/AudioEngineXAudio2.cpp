@@ -33,7 +33,7 @@ struct AudioDeviceDetails final {
     bool IsEnabled = false;
 };
 
-[[nodiscard]] std::tuple<std::vector<AudioDeviceDetails>, std::shared_ptr<Error>>
+[[nodiscard]] std::tuple<std::vector<AudioDeviceDetails>, std::unique_ptr<Error>>
 EnumerateAudioDevices() noexcept
 {
     std::vector<AudioDeviceDetails> result;
@@ -174,7 +174,7 @@ EnumerateAudioDevices() noexcept
 
 AudioEngineXAudio2::AudioEngineXAudio2() noexcept = default;
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 AudioEngineXAudio2::Initialize() noexcept
 {
     if (auto hr = ::CoInitializeEx(nullptr, COINIT_MULTITHREADED); FAILED(hr)) {
@@ -259,7 +259,7 @@ AudioEngineXAudio2::~AudioEngineXAudio2() noexcept
     }
 }
 
-std::tuple<std::shared_ptr<AudioClip>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<AudioClip>, std::unique_ptr<Error>>
 AudioEngineXAudio2::CreateAudioClip(
     const void* audioData,
     std::size_t sizeInBytes,
@@ -276,7 +276,7 @@ AudioEngineXAudio2::CreateAudioClip(
     return std::make_tuple(std::move(audioClip), nullptr);
 }
 
-std::tuple<std::shared_ptr<SoundEffect>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<SoundEffect>, std::unique_ptr<Error>>
 AudioEngineXAudio2::CreateSoundEffect(
     const std::shared_ptr<AudioClip>& audioClip,
     bool isLooped) noexcept

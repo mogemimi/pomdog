@@ -10,7 +10,7 @@
 namespace Pomdog::Detail::Win32 {
 namespace {
 
-[[nodiscard]] std::shared_ptr<Error>
+[[nodiscard]] std::unique_ptr<Error>
 ToPixelFormatDescriptor(
     const PresentationParameters& presentationParameters,
     PIXELFORMATDESCRIPTOR& descriptor) noexcept
@@ -80,7 +80,7 @@ ToPixelFormatDescriptor(
 
 OpenGLContextWin32::OpenGLContextWin32() noexcept = default;
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 OpenGLContextWin32::Initialize(
     HWND windowHandleIn,
     const PresentationParameters& presentationParameters) noexcept

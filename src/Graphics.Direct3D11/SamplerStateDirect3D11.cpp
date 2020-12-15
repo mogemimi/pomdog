@@ -51,7 +51,7 @@ D3D11_TEXTURE_ADDRESS_MODE ToTextureAddressMode(TextureAddressMode addressMode) 
 
 } // namespace
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 SamplerStateDirect3D11::Initialize(
     ID3D11Device* device,
     const SamplerDescription& description) noexcept

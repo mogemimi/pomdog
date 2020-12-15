@@ -19,7 +19,7 @@ struct ShaderCompileOptions;
 
 namespace Pomdog::Detail::Direct3D {
 
-[[nodiscard]] std::tuple<Microsoft::WRL::ComPtr<ID3DBlob>, std::shared_ptr<Error>>
+[[nodiscard]] std::tuple<Microsoft::WRL::ComPtr<ID3DBlob>, std::unique_ptr<Error>>
 CompileHLSL(
     const ShaderBytecode& shaderBytecode,
     const ShaderCompileOptions& compileOptions) noexcept;

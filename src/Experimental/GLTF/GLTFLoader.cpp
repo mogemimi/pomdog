@@ -81,7 +81,7 @@ ToAccessorType(std::string_view s) noexcept
     return std::nullopt;
 }
 
-[[nodiscard]] std::shared_ptr<Error>
+[[nodiscard]] std::unique_ptr<Error>
 ParseAsset(const rapidjson::Value& asset, GLTF::Asset& result) noexcept
 {
     if (auto iter = asset.FindMember("version"); iter == asset.MemberEnd()) {
@@ -107,7 +107,7 @@ ParseAsset(const rapidjson::Value& asset, GLTF::Asset& result) noexcept
     return nullptr;
 }
 
-[[nodiscard]] std::shared_ptr<Error>
+[[nodiscard]] std::unique_ptr<Error>
 ParseUintArray(const rapidjson::Value& array, std::vector<std::uint32_t>& result) noexcept
 {
     if (!array.IsArray()) {
@@ -126,7 +126,7 @@ ParseUintArray(const rapidjson::Value& array, std::vector<std::uint32_t>& result
     return nullptr;
 }
 
-[[nodiscard]] std::shared_ptr<Error>
+[[nodiscard]] std::unique_ptr<Error>
 ParseQuaternion(const rapidjson::Value& array, Quaternion& result) noexcept
 {
     if (!array.IsArray()) {
@@ -150,7 +150,7 @@ ParseQuaternion(const rapidjson::Value& array, Quaternion& result) noexcept
     return nullptr;
 }
 
-[[nodiscard]] std::shared_ptr<Error>
+[[nodiscard]] std::unique_ptr<Error>
 ParseVector3(const rapidjson::Value& array, Vector3& result) noexcept
 {
     if (!array.IsArray()) {
@@ -173,7 +173,7 @@ ParseVector3(const rapidjson::Value& array, Vector3& result) noexcept
     return nullptr;
 }
 
-[[nodiscard]] std::shared_ptr<Error>
+[[nodiscard]] std::unique_ptr<Error>
 ParseScene(const rapidjson::Value& scene, GLTF::Scene& result) noexcept
 {
     if (!scene.IsObject()) {
@@ -202,7 +202,7 @@ ParseScene(const rapidjson::Value& scene, GLTF::Scene& result) noexcept
     return nullptr;
 }
 
-[[nodiscard]] std::shared_ptr<Error>
+[[nodiscard]] std::unique_ptr<Error>
 ParseNode(const rapidjson::Value& node, GLTF::Node& result) noexcept
 {
     if (!node.IsObject()) {
@@ -267,7 +267,7 @@ ParseNode(const rapidjson::Value& node, GLTF::Node& result) noexcept
     return nullptr;
 }
 
-[[nodiscard]] std::shared_ptr<Error>
+[[nodiscard]] std::unique_ptr<Error>
 ParseMaterial(const rapidjson::Value& material, GLTF::Material& result) noexcept
 {
     if (!material.IsObject()) {
@@ -301,7 +301,7 @@ ParseMaterial(const rapidjson::Value& material, GLTF::Material& result) noexcept
     return nullptr;
 }
 
-[[nodiscard]] std::shared_ptr<Error>
+[[nodiscard]] std::unique_ptr<Error>
 ParseAttributeList(const rapidjson::Value& attributes, GLTF::AttributeList& result) noexcept
 {
     if (!attributes.IsObject()) {
@@ -323,7 +323,7 @@ ParseAttributeList(const rapidjson::Value& attributes, GLTF::AttributeList& resu
     return nullptr;
 }
 
-[[nodiscard]] std::shared_ptr<Error>
+[[nodiscard]] std::unique_ptr<Error>
 ParsePrimitive(const rapidjson::Value& primitive, GLTF::Primitive& result) noexcept
 {
     if (!primitive.IsObject()) {
@@ -362,7 +362,7 @@ ParsePrimitive(const rapidjson::Value& primitive, GLTF::Primitive& result) noexc
     return nullptr;
 }
 
-[[nodiscard]] std::shared_ptr<Error>
+[[nodiscard]] std::unique_ptr<Error>
 ParseMesh(const rapidjson::Value& mesh, GLTF::Mesh& result) noexcept
 {
     if (!mesh.IsObject()) {
@@ -400,7 +400,7 @@ ParseMesh(const rapidjson::Value& mesh, GLTF::Mesh& result) noexcept
     return nullptr;
 }
 
-[[nodiscard]] std::shared_ptr<Error>
+[[nodiscard]] std::unique_ptr<Error>
 ParseAccessor(const rapidjson::Value& accessor, GLTF::Accessor& result) noexcept
 {
     if (!accessor.IsObject()) {
@@ -461,7 +461,7 @@ ParseAccessor(const rapidjson::Value& accessor, GLTF::Accessor& result) noexcept
     return nullptr;
 }
 
-[[nodiscard]] std::shared_ptr<Error>
+[[nodiscard]] std::unique_ptr<Error>
 ParseBufferView(const rapidjson::Value& bufferView, GLTF::BufferView& result) noexcept
 {
     if (!bufferView.IsObject()) {
@@ -519,7 +519,7 @@ ParseBufferView(const rapidjson::Value& bufferView, GLTF::BufferView& result) no
     return nullptr;
 }
 
-[[nodiscard]] std::shared_ptr<Error>
+[[nodiscard]] std::unique_ptr<Error>
 ParseBuffer(const rapidjson::Value& buffer, GLTF::Buffer& result) noexcept
 {
     if (!buffer.IsObject()) {
@@ -562,7 +562,7 @@ ParseBuffer(const rapidjson::Value& buffer, GLTF::Buffer& result) noexcept
     return nullptr;
 }
 
-[[nodiscard]] std::shared_ptr<Error>
+[[nodiscard]] std::unique_ptr<Error>
 ParseJSON(const char* json, std::size_t jsonLength, GLTF::Document& result) noexcept
 {
     rapidjson::Document doc;
@@ -714,10 +714,10 @@ ParseJSON(const char* json, std::size_t jsonLength, GLTF::Document& result) noex
 
 } // namespace
 
-[[nodiscard]] std::tuple<std::shared_ptr<Document>, std::shared_ptr<Error>>
+[[nodiscard]] std::tuple<std::shared_ptr<Document>, std::unique_ptr<Error>>
 Open(const std::string& filePath) noexcept
 {
-    const auto [fileSize, sizeErr] = FileSystem::GetFileSize(filePath);
+    auto [fileSize, sizeErr] = FileSystem::GetFileSize(filePath);
     if (sizeErr != nullptr) {
         auto err = Errors::Wrap(std::move(sizeErr), "failed to get file size, " + filePath);
         return std::make_tuple(nullptr, std::move(err));

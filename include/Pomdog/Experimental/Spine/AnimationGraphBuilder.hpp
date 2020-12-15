@@ -12,7 +12,7 @@ namespace Pomdog::Spine {
 
 class SkeletonDesc;
 
-[[nodiscard]] std::tuple<std::shared_ptr<Skeletal2D::AnimationGraph>, std::shared_ptr<Error>>
+[[nodiscard]] std::tuple<std::shared_ptr<Skeletal2D::AnimationGraph>, std::unique_ptr<Error>>
 LoadAnimationGraph(const SkeletonDesc& skeletonDesc, const std::string& assetName);
 
 } // namespace Pomdog::Spine

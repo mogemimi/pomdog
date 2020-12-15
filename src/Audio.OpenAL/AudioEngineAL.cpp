@@ -29,7 +29,7 @@ AudioEngineAL::~AudioEngineAL() noexcept
     }
 }
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 AudioEngineAL::Initialize() noexcept
 {
     // NOTE: Select the preferred device.
@@ -54,7 +54,7 @@ AudioEngineAL::Initialize() noexcept
     return nullptr;
 }
 
-std::tuple<std::shared_ptr<AudioClip>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<AudioClip>, std::unique_ptr<Error>>
 AudioEngineAL::CreateAudioClip(
     const void* audioData,
     std::size_t sizeInBytes,
@@ -71,7 +71,7 @@ AudioEngineAL::CreateAudioClip(
     return std::make_tuple(std::move(audioClip), nullptr);
 }
 
-std::tuple<std::shared_ptr<SoundEffect>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<SoundEffect>, std::unique_ptr<Error>>
 AudioEngineAL::CreateSoundEffect(
     const std::shared_ptr<AudioClip>& audioClip,
     bool isLooped) noexcept

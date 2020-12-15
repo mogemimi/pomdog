@@ -41,7 +41,7 @@ void Bootstrap::SetOpenGLDepthFormat(SurfaceFormat depthFormatIn)
     depthFormat = depthFormatIn;
 }
 
-void Bootstrap::OnError(std::function<void(std::shared_ptr<Error>&& err)>&& onErrorIn)
+void Bootstrap::OnError(std::function<void(std::unique_ptr<Error>&& err)>&& onErrorIn)
 {
     POMDOG_ASSERT(onErrorIn);
     onError = std::move(onErrorIn);
@@ -58,7 +58,7 @@ void Bootstrap::OnCompleted(std::function<void()>&& onCompletedIn)
     };
 }
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 Bootstrap::Run(std::function<std::shared_ptr<Game>(const std::shared_ptr<GameHost>&)>&& createGame)
 {
     POMDOG_ASSERT(nativeWindow != nullptr);

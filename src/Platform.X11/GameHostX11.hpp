@@ -28,7 +28,7 @@ public:
 
     ~GameHostX11();
 
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(const PresentationParameters& presentationParameters);
 
     void Run(Game& game);

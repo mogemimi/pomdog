@@ -21,7 +21,7 @@ struct DepthStencilFaceOperationGL4 final {
 
 class DepthStencilStateGL4 final {
 public:
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(const DepthStencilDescription& description) noexcept;
 
     void Apply();

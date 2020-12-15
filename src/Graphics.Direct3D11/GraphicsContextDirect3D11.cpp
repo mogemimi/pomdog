@@ -94,7 +94,7 @@ void CheckUnbindingRenderTargetsError(
 
 } // namespace
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 GraphicsContextDirect3D11::Initialize(
     HWND windowHandle,
     const Microsoft::WRL::ComPtr<IDXGIFactory1>& dxgiFactory,
@@ -686,7 +686,7 @@ void GraphicsContextDirect3D11::SetRenderPass(const RenderPass& renderPass)
     }
 }
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 GraphicsContextDirect3D11::ResizeBackBuffers(
     ID3D11Device* device, int backBufferWidthIn, int backBufferHeightIn) noexcept
 {

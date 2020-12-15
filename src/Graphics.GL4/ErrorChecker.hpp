@@ -10,7 +10,7 @@ class Error;
 
 namespace Pomdog::Detail::GL4 {
 
-[[nodiscard]] std::shared_ptr<Error>
+[[nodiscard]] std::unique_ptr<Error>
 GetLastError() noexcept;
 
 #if defined(DEBUG) && !defined(NDEBUG)

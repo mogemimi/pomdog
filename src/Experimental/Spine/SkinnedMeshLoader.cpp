@@ -288,7 +288,7 @@ CreateVertices(
 
 } // namespace
 
-std::tuple<Skeletal2D::SkinnedMesh, std::shared_ptr<Error>>
+std::tuple<Skeletal2D::SkinnedMesh, std::unique_ptr<Error>>
 CreateSkinnedMesh(
     const std::vector<Matrix3x2>& bindPosesInGlobal,
     const SkeletonDesc& skeletonDesc,
@@ -304,7 +304,7 @@ CreateSkinnedMesh(
 
     if (iter == std::end(skeletonDesc.Skins)) {
         auto err = Errors::New("Skin not found '" + skinName + "'");
-        return std::make_tuple(Skeletal2D::SkinnedMesh{}, err);
+        return std::make_tuple(Skeletal2D::SkinnedMesh{}, std::move(err));
     }
 
     POMDOG_ASSERT(iter != std::end(skeletonDesc.Skins));

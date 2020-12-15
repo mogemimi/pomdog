@@ -12,7 +12,7 @@ namespace Pomdog::Spine {
 
 class SkeletonDescLoader final {
 public:
-    [[nodiscard]] static std::tuple<SkeletonDesc, std::shared_ptr<Error>>
+    [[nodiscard]] static std::tuple<SkeletonDesc, std::unique_ptr<Error>>
     Load(const std::string& filePath);
 };
 

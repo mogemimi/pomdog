@@ -26,7 +26,7 @@ struct RenderTargetBlendDescGL4 final {
 
 class BlendStateGL4 final {
 public:
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(const BlendDescription& description) noexcept;
 
     void Apply();

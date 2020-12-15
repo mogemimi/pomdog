@@ -9,7 +9,7 @@
 
 namespace Pomdog::Detail::Metal {
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 ShaderMetal::Initialize(
     id<MTLDevice> device,
     const ShaderBytecode& shaderBytecode,
@@ -65,7 +65,7 @@ ShaderMetal::Initialize(
     return nullptr;
 }
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 ShaderMetal::Initialize(
     id<MTLDevice> device,
     id<MTLLibrary> library,

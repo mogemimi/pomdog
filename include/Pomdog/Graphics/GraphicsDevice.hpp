@@ -28,11 +28,11 @@ public:
     virtual PresentationParameters GetPresentationParameters() const noexcept = 0;
 
     /// Creates a graphics command list.
-    [[nodiscard]] virtual std::tuple<std::shared_ptr<GraphicsCommandList>, std::shared_ptr<Error>>
+    [[nodiscard]] virtual std::tuple<std::shared_ptr<GraphicsCommandList>, std::unique_ptr<Error>>
     CreateGraphicsCommandList() noexcept = 0;
 
     /// Creates a vertex buffer.
-    [[nodiscard]] virtual std::tuple<std::shared_ptr<VertexBuffer>, std::shared_ptr<Error>>
+    [[nodiscard]] virtual std::tuple<std::shared_ptr<VertexBuffer>, std::unique_ptr<Error>>
     CreateVertexBuffer(
         const void* vertices,
         std::size_t vertexCount,
@@ -40,14 +40,14 @@ public:
         BufferUsage bufferUsage) noexcept = 0;
 
     /// Creates a vertex buffer.
-    [[nodiscard]] virtual std::tuple<std::shared_ptr<VertexBuffer>, std::shared_ptr<Error>>
+    [[nodiscard]] virtual std::tuple<std::shared_ptr<VertexBuffer>, std::unique_ptr<Error>>
     CreateVertexBuffer(
         std::size_t vertexCount,
         std::size_t strideBytes,
         BufferUsage bufferUsage) noexcept = 0;
 
     /// Creates an index buffer.
-    [[nodiscard]] virtual std::tuple<std::shared_ptr<IndexBuffer>, std::shared_ptr<Error>>
+    [[nodiscard]] virtual std::tuple<std::shared_ptr<IndexBuffer>, std::unique_ptr<Error>>
     CreateIndexBuffer(
         IndexElementSize elementSize,
         const void* indices,
@@ -55,49 +55,49 @@ public:
         BufferUsage bufferUsage) noexcept = 0;
 
     /// Creates an index buffer.
-    [[nodiscard]] virtual std::tuple<std::shared_ptr<IndexBuffer>, std::shared_ptr<Error>>
+    [[nodiscard]] virtual std::tuple<std::shared_ptr<IndexBuffer>, std::unique_ptr<Error>>
     CreateIndexBuffer(
         IndexElementSize elementSize,
         std::size_t indexCount,
         BufferUsage bufferUsage) noexcept = 0;
 
     /// Creates a constant buffer.
-    [[nodiscard]] virtual std::tuple<std::shared_ptr<ConstantBuffer>, std::shared_ptr<Error>>
+    [[nodiscard]] virtual std::tuple<std::shared_ptr<ConstantBuffer>, std::unique_ptr<Error>>
     CreateConstantBuffer(
         const void* sourceData,
         std::size_t sizeInBytes,
         BufferUsage bufferUsage) noexcept = 0;
 
     /// Creates a constant buffer.
-    [[nodiscard]] virtual std::tuple<std::shared_ptr<ConstantBuffer>, std::shared_ptr<Error>>
+    [[nodiscard]] virtual std::tuple<std::shared_ptr<ConstantBuffer>, std::unique_ptr<Error>>
     CreateConstantBuffer(
         std::size_t sizeInBytes,
         BufferUsage bufferUsage) noexcept = 0;
 
     /// Creates a pipeline state object.
-    [[nodiscard]] virtual std::tuple<std::shared_ptr<PipelineState>, std::shared_ptr<Error>>
+    [[nodiscard]] virtual std::tuple<std::shared_ptr<PipelineState>, std::unique_ptr<Error>>
     CreatePipelineState(const PipelineStateDescription& description) noexcept = 0;
 
     /// Creates an effect reflection.
-    [[nodiscard]] virtual std::tuple<std::shared_ptr<EffectReflection>, std::shared_ptr<Error>>
+    [[nodiscard]] virtual std::tuple<std::shared_ptr<EffectReflection>, std::unique_ptr<Error>>
     CreateEffectReflection(
         const PipelineStateDescription& description,
         const std::shared_ptr<PipelineState>& pipelineState) noexcept = 0;
 
     /// Creates a shader object.
-    [[nodiscard]] virtual std::tuple<std::unique_ptr<Shader>, std::shared_ptr<Error>>
+    [[nodiscard]] virtual std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
     CreateShader(
         const Detail::ShaderBytecode& shaderBytecode,
         const Detail::ShaderCompileOptions& compileOptions) noexcept = 0;
 
     /// Creates a 2D render target.
-    [[nodiscard]] virtual std::tuple<std::shared_ptr<RenderTarget2D>, std::shared_ptr<Error>>
+    [[nodiscard]] virtual std::tuple<std::shared_ptr<RenderTarget2D>, std::unique_ptr<Error>>
     CreateRenderTarget2D(
         std::int32_t width,
         std::int32_t height) noexcept = 0;
 
     /// Creates a 2D render target.
-    [[nodiscard]] virtual std::tuple<std::shared_ptr<RenderTarget2D>, std::shared_ptr<Error>>
+    [[nodiscard]] virtual std::tuple<std::shared_ptr<RenderTarget2D>, std::unique_ptr<Error>>
     CreateRenderTarget2D(
         std::int32_t width,
         std::int32_t height,
@@ -106,17 +106,17 @@ public:
         SurfaceFormat depthStencilFormat) noexcept = 0;
 
     /// Creates a sampler state object.
-    [[nodiscard]] virtual std::tuple<std::shared_ptr<SamplerState>, std::shared_ptr<Error>>
+    [[nodiscard]] virtual std::tuple<std::shared_ptr<SamplerState>, std::unique_ptr<Error>>
     CreateSamplerState(const SamplerDescription& description) noexcept = 0;
 
     /// Creates a 2D texture.
-    [[nodiscard]] virtual std::tuple<std::shared_ptr<Texture2D>, std::shared_ptr<Error>>
+    [[nodiscard]] virtual std::tuple<std::shared_ptr<Texture2D>, std::unique_ptr<Error>>
     CreateTexture2D(
         std::int32_t width,
         std::int32_t height) noexcept = 0;
 
     /// Creates a 2D texture.
-    [[nodiscard]] virtual std::tuple<std::shared_ptr<Texture2D>, std::shared_ptr<Error>>
+    [[nodiscard]] virtual std::tuple<std::shared_ptr<Texture2D>, std::unique_ptr<Error>>
     CreateTexture2D(
         std::int32_t width,
         std::int32_t height,

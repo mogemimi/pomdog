@@ -23,7 +23,7 @@
 
 namespace Pomdog::Detail::Metal {
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 GraphicsDeviceMetal::Initialize(const PresentationParameters& presentationParametersIn) noexcept
 {
     presentationParameters = presentationParametersIn;
@@ -51,14 +51,14 @@ PresentationParameters GraphicsDeviceMetal::GetPresentationParameters() const no
     return presentationParameters;
 }
 
-std::tuple<std::shared_ptr<GraphicsCommandList>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<GraphicsCommandList>, std::unique_ptr<Error>>
 GraphicsDeviceMetal::CreateGraphicsCommandList() noexcept
 {
     auto commandList = std::make_shared<GraphicsCommandListImmediate>();
     return std::make_tuple(std::move(commandList), nullptr);
 }
 
-std::tuple<std::shared_ptr<VertexBuffer>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<VertexBuffer>, std::unique_ptr<Error>>
 GraphicsDeviceMetal::CreateVertexBuffer(
     const void* vertices,
     std::size_t vertexCount,
@@ -89,7 +89,7 @@ GraphicsDeviceMetal::CreateVertexBuffer(
     return std::make_tuple(std::move(vertexBuffer), nullptr);
 }
 
-std::tuple<std::shared_ptr<VertexBuffer>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<VertexBuffer>, std::unique_ptr<Error>>
 GraphicsDeviceMetal::CreateVertexBuffer(
     std::size_t vertexCount,
     std::size_t strideBytes,
@@ -117,7 +117,7 @@ GraphicsDeviceMetal::CreateVertexBuffer(
     return std::make_tuple(std::move(vertexBuffer), nullptr);
 }
 
-std::tuple<std::shared_ptr<IndexBuffer>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<IndexBuffer>, std::unique_ptr<Error>>
 GraphicsDeviceMetal::CreateIndexBuffer(
     IndexElementSize elementSize,
     const void* indices,
@@ -145,7 +145,7 @@ GraphicsDeviceMetal::CreateIndexBuffer(
     return std::make_tuple(std::move(indexBuffer), nullptr);
 }
 
-std::tuple<std::shared_ptr<IndexBuffer>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<IndexBuffer>, std::unique_ptr<Error>>
 GraphicsDeviceMetal::CreateIndexBuffer(
     IndexElementSize elementSize,
     std::size_t indexCount,
@@ -172,7 +172,7 @@ GraphicsDeviceMetal::CreateIndexBuffer(
     return std::make_tuple(std::move(indexBuffer), nullptr);
 }
 
-std::tuple<std::shared_ptr<ConstantBuffer>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<ConstantBuffer>, std::unique_ptr<Error>>
 GraphicsDeviceMetal::CreateConstantBuffer(
     const void* sourceData,
     std::size_t sizeInBytes,
@@ -197,7 +197,7 @@ GraphicsDeviceMetal::CreateConstantBuffer(
     return std::make_tuple(std::move(constantBuffer), nullptr);
 }
 
-std::tuple<std::shared_ptr<ConstantBuffer>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<ConstantBuffer>, std::unique_ptr<Error>>
 GraphicsDeviceMetal::CreateConstantBuffer(
     std::size_t sizeInBytes,
     BufferUsage bufferUsage) noexcept
@@ -221,7 +221,7 @@ GraphicsDeviceMetal::CreateConstantBuffer(
     return std::make_tuple(std::move(constantBuffer), nullptr);
 }
 
-std::tuple<std::shared_ptr<PipelineState>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<PipelineState>, std::unique_ptr<Error>>
 GraphicsDeviceMetal::CreatePipelineState(const PipelineStateDescription& description) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
@@ -232,7 +232,7 @@ GraphicsDeviceMetal::CreatePipelineState(const PipelineStateDescription& descrip
     return std::make_tuple(std::move(pipelineState), nullptr);
 }
 
-std::tuple<std::shared_ptr<EffectReflection>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<EffectReflection>, std::unique_ptr<Error>>
 GraphicsDeviceMetal::CreateEffectReflection(
     const PipelineStateDescription& description,
     const std::shared_ptr<PipelineState>& pipelineState) noexcept
@@ -240,7 +240,7 @@ GraphicsDeviceMetal::CreateEffectReflection(
     return std::make_tuple(nullptr, Errors::New("not implemented yet"));
 }
 
-std::tuple<std::unique_ptr<Shader>, std::shared_ptr<Error>>
+std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
 GraphicsDeviceMetal::CreateShader(
     const Detail::ShaderBytecode& shaderBytecode,
     const Detail::ShaderCompileOptions& compileOptions) noexcept
@@ -267,7 +267,7 @@ GraphicsDeviceMetal::CreateShader(
     return std::make_tuple(std::move(shader), nullptr);
 }
 
-std::tuple<std::shared_ptr<RenderTarget2D>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<RenderTarget2D>, std::unique_ptr<Error>>
 GraphicsDeviceMetal::CreateRenderTarget2D(
     std::int32_t width,
     std::int32_t height) noexcept
@@ -280,7 +280,7 @@ GraphicsDeviceMetal::CreateRenderTarget2D(
         SurfaceFormat::Invalid);
 }
 
-std::tuple<std::shared_ptr<RenderTarget2D>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<RenderTarget2D>, std::unique_ptr<Error>>
 GraphicsDeviceMetal::CreateRenderTarget2D(
     std::int32_t width,
     std::int32_t height,
@@ -315,7 +315,7 @@ GraphicsDeviceMetal::CreateRenderTarget2D(
     return std::make_tuple(std::move(renderTarget), nullptr);
 }
 
-std::tuple<std::shared_ptr<SamplerState>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<SamplerState>, std::unique_ptr<Error>>
 GraphicsDeviceMetal::CreateSamplerState(const SamplerDescription& description) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
@@ -326,7 +326,7 @@ GraphicsDeviceMetal::CreateSamplerState(const SamplerDescription& description) n
     return std::make_tuple(std::move(samplerState), nullptr);
 }
 
-std::tuple<std::shared_ptr<Texture2D>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<Texture2D>, std::unique_ptr<Error>>
 GraphicsDeviceMetal::CreateTexture2D(
     std::int32_t width,
     std::int32_t height) noexcept
@@ -338,7 +338,7 @@ GraphicsDeviceMetal::CreateTexture2D(
         SurfaceFormat::R8G8B8A8_UNorm);
 }
 
-std::tuple<std::shared_ptr<Texture2D>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<Texture2D>, std::unique_ptr<Error>>
 GraphicsDeviceMetal::CreateTexture2D(
     std::int32_t width,
     std::int32_t height,

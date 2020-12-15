@@ -26,7 +26,7 @@ public:
     /// Initialization phase of the game.
     ///
     /// Called by GameHost once before any Update() or Draw().
-    [[nodiscard]] virtual std::shared_ptr<Error> Initialize() = 0;
+    [[nodiscard]] virtual std::unique_ptr<Error> Initialize() = 0;
 
     /// Logic update phase of the game.
     ///

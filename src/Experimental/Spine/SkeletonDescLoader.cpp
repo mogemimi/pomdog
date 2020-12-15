@@ -441,7 +441,7 @@ AttachmentDesc ReadAttachment(const rapidjson::Value::ConstMemberIterator& iter)
     return attachmentDesc;
 }
 
-std::tuple<SkinnedMeshAttachmentDesc, std::shared_ptr<Error>>
+std::tuple<SkinnedMeshAttachmentDesc, std::unique_ptr<Error>>
 ReadSkinnedMeshAttachment(const rapidjson::Value::ConstMemberIterator& iter)
 {
     POMDOG_ASSERT(iter->name.IsString());
@@ -797,7 +797,7 @@ std::vector<AnimationClipDesc> ReadAnimationClips(const rapidjson::Value& docume
 
 } // namespace
 
-std::tuple<SkeletonDesc, std::shared_ptr<Error>>
+std::tuple<SkeletonDesc, std::unique_ptr<Error>>
 SkeletonDescLoader::Load(const std::string& filePath)
 {
     using Detail::BinaryReader;

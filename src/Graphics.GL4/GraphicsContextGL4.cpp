@@ -381,7 +381,7 @@ struct TypesafeHelperGL4::Traits<FrameBufferGL4> {
     constexpr static GLenum BufferBinding = GL_FRAMEBUFFER_BINDING;
 };
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 GraphicsContextGL4::Initialize(
     const std::shared_ptr<OpenGLContext>& openGLContextIn,
     std::weak_ptr<GraphicsDevice>&& graphicsDeviceIn) noexcept

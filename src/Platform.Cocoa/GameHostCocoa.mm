@@ -46,14 +46,14 @@ class GameHostCocoa::Impl final {
 public:
     ~Impl();
 
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(
         PomdogOpenGLView* openGLView,
         const std::shared_ptr<GameWindowCocoa>& window,
         const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
         const PresentationParameters& presentationParameters);
 
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Run(
         const std::weak_ptr<Game>& game,
         std::function<void()>&& onCompleted);
@@ -144,7 +144,7 @@ private:
     bool displayLinkEnabled = true;
 };
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 GameHostCocoa::Impl::Initialize(
     PomdogOpenGLView* openGLViewIn,
     const std::shared_ptr<GameWindowCocoa>& windowIn,
@@ -268,7 +268,7 @@ GameHostCocoa::Impl::~Impl()
     openGLView = nil;
 }
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 GameHostCocoa::Impl::Run(
     const std::weak_ptr<Game>& weakGameIn,
     std::function<void()>&& onCompletedIn)
@@ -580,7 +580,7 @@ GameHostCocoa::GameHostCocoa()
 
 GameHostCocoa::~GameHostCocoa() = default;
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 GameHostCocoa::Initialize(
     PomdogOpenGLView* openGLView,
     const std::shared_ptr<GameWindowCocoa>& window,
@@ -591,7 +591,7 @@ GameHostCocoa::Initialize(
     return impl->Initialize(openGLView, window, eventQueue, presentationParameters);
 }
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 GameHostCocoa::Run(
     const std::weak_ptr<Game>& game,
     std::function<void()>&& onCompleted)

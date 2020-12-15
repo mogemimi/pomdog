@@ -10,7 +10,7 @@ namespace {
 
 using Microsoft::WRL::ComPtr;
 
-[[nodiscard]] std::shared_ptr<Error>
+[[nodiscard]] std::unique_ptr<Error>
 BuildDepthBuffer(
     ID3D11Device* device,
     SurfaceFormat depthStencilFormat,
@@ -79,7 +79,7 @@ BuildDepthBuffer(
 
 } // namespace
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 DepthStencilBufferDirect3D11::Initialize(
     ID3D11Device* device,
     std::int32_t pixelWidthIn,
@@ -136,7 +136,7 @@ DepthStencilBufferDirect3D11::GetDepthStencilView() const noexcept
     return depthStencilView.Get();
 }
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 DepthStencilBufferDirect3D11::ResetBackBuffer(
     ID3D11Device* device,
     std::int32_t pixelWidthIn,

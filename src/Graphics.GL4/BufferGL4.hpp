@@ -19,12 +19,12 @@ class BufferGL4 final : public NativeBuffer {
 public:
     ~BufferGL4() override;
 
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(
         std::size_t sizeInBytes,
         BufferUsage bufferUsage) noexcept;
 
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(
         const void* sourceData,
         std::size_t sizeInBytes,

@@ -18,7 +18,7 @@ public:
     X11Context() noexcept;
     ~X11Context() noexcept;
 
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize() noexcept;
 };
 

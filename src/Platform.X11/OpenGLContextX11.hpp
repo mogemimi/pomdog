@@ -18,7 +18,7 @@ public:
 
     ~OpenGLContextX11() noexcept;
 
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(
         const std::shared_ptr<GameWindowX11>& window,
         const GLXFBConfig& framebufferConfig) noexcept;

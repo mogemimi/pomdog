@@ -7,8 +7,10 @@
 #include "Pomdog/Audio/AudioListener.hpp"
 #include "Pomdog/Math/Math.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #include <array>
 #include <cmath>
+#include <utility>
 
 namespace Pomdog::Detail::OpenAL {
 
@@ -22,7 +24,7 @@ SoundEffectAL::~SoundEffectAL() noexcept
     }
 }
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 SoundEffectAL::Initialize(
     const std::shared_ptr<AudioClipAL>& audioClipIn,
     bool isLoopedIn) noexcept

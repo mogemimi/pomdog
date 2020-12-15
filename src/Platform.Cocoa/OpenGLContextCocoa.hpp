@@ -23,7 +23,7 @@ public:
 
     ~OpenGLContextCocoa() noexcept override;
 
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(const PresentationParameters& presentationParameters) noexcept;
 
     void MakeCurrent() override;

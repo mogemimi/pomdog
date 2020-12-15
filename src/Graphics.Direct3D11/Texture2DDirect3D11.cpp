@@ -65,7 +65,7 @@ void LoadPixelDataBlockComp1(
 
 using Microsoft::WRL::ComPtr;
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 Texture2DDirect3D11::Initialize(
     ID3D11Device* device,
     std::int32_t pixelWidthIn,

@@ -126,7 +126,7 @@ void EnumerateConstantBuffer(
 
 } // namespace
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 EffectReflectionDirect3D11::Initialize(
     const ShaderBytecode& vertexShaderBytecode,
     const ShaderBytecode& pixelShaderBytecode) noexcept

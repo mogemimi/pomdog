@@ -54,7 +54,7 @@ void SkipCommentLine(StringIterator& it, StringIterator end)
 
 } // namespace
 
-[[nodiscard]] std::tuple<ImageBuffer, std::shared_ptr<Error>>
+[[nodiscard]] std::tuple<ImageBuffer, std::unique_ptr<Error>>
 Decode(const char* data, std::size_t size)
 {
     ImageBuffer image;
@@ -323,7 +323,7 @@ Decode(const char* data, std::size_t size)
     return std::make_tuple(std::move(image), nullptr);
 }
 
-std::tuple<std::vector<std::uint8_t>, std::shared_ptr<Error>>
+std::tuple<std::vector<std::uint8_t>, std::unique_ptr<Error>>
 Encode(const Color* data, std::size_t size, int width, int height)
 {
     PNMEncodeOptions options;
@@ -333,7 +333,7 @@ Encode(const Color* data, std::size_t size, int width, int height)
     return Encode(data, size, width, height, std::move(options));
 }
 
-std::tuple<std::vector<std::uint8_t>, std::shared_ptr<Error>>
+std::tuple<std::vector<std::uint8_t>, std::unique_ptr<Error>>
 Encode(const Color* data, std::size_t size, int width, int height, const PNMEncodeOptions& options)
 {
     std::vector<std::uint8_t> buffer;

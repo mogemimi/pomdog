@@ -171,7 +171,7 @@ void ToD3D11Desc(
     result.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 }
 
-[[nodiscard]] std::tuple<ComPtr<ID3D11BlendState>, std::shared_ptr<Error>>
+[[nodiscard]] std::tuple<ComPtr<ID3D11BlendState>, std::unique_ptr<Error>>
 CreateBlendState(
     ID3D11Device* nativeDevice,
     const BlendDescription& description) noexcept
@@ -201,7 +201,7 @@ CreateBlendState(
     return std::make_tuple(std::move(blendState), nullptr);
 }
 
-[[nodiscard]] std::tuple<ComPtr<ID3D11DepthStencilState>, std::shared_ptr<Error>>
+[[nodiscard]] std::tuple<ComPtr<ID3D11DepthStencilState>, std::unique_ptr<Error>>
 CreateDepthStencilState(
     ID3D11Device* nativeDevice,
     const DepthStencilDescription& description) noexcept
@@ -241,7 +241,7 @@ CreateDepthStencilState(
     return std::make_tuple(std::move(depthStencilState), nullptr);
 }
 
-[[nodiscard]] std::tuple<ComPtr<ID3D11RasterizerState>, std::shared_ptr<Error>>
+[[nodiscard]] std::tuple<ComPtr<ID3D11RasterizerState>, std::unique_ptr<Error>>
 CreateRasterizerState(
     ID3D11Device* nativeDevice,
     const RasterizerDescription& description) noexcept
@@ -279,7 +279,7 @@ CreateRasterizerState(
     return std::make_tuple(std::move(rasterizerState), nullptr);
 }
 
-[[nodiscard]] std::shared_ptr<Error>
+[[nodiscard]] std::unique_ptr<Error>
 ReflectShaderBytecode(
     const ShaderBytecode& shaderBytecode,
     Microsoft::WRL::ComPtr<ID3D11ShaderReflection>& shaderReflector,
@@ -302,7 +302,7 @@ ReflectShaderBytecode(
     return nullptr;
 }
 
-[[nodiscard]] std::tuple<std::vector<D3D11_INPUT_ELEMENT_DESC>, std::shared_ptr<Error>>
+[[nodiscard]] std::tuple<std::vector<D3D11_INPUT_ELEMENT_DESC>, std::unique_ptr<Error>>
 BuildInputElements(
     const std::vector<D3D11_SIGNATURE_PARAMETER_DESC>& signatureParameters,
     const InputLayoutDescription& description) noexcept
@@ -370,7 +370,7 @@ EnumerateSignatureParameters(
     return std::move(signatureParameters);
 }
 
-[[nodiscard]] std::tuple<ComPtr<ID3D11InputLayout>, std::shared_ptr<Error>>
+[[nodiscard]] std::tuple<ComPtr<ID3D11InputLayout>, std::unique_ptr<Error>>
 CreateInputLayout(
     ID3D11Device* device,
     const ShaderBytecode& vertexShaderBytecode,
@@ -415,7 +415,7 @@ CreateInputLayout(
 
 } // namespace
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 PipelineStateDirect3D11::Initialize(
     ID3D11Device* device,
     const PipelineStateDescription& description) noexcept

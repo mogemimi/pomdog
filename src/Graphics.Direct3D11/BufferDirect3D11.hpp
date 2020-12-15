@@ -12,14 +12,14 @@ namespace Pomdog::Detail::Direct3D11 {
 
 class BufferDirect3D11 final : public NativeBuffer {
 public:
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(
         ID3D11Device* device,
         std::size_t sizeInBytes,
         BufferUsage bufferUsage,
         D3D11_BIND_FLAG bindFlag) noexcept;
 
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(
         ID3D11Device* devuce,
         const void* sourceData,

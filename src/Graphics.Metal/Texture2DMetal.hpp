@@ -11,7 +11,7 @@ namespace Pomdog::Detail::Metal {
 
 class Texture2DMetal final : public Texture2D {
 public:
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(
         id<MTLDevice> device,
         std::int32_t pixelWidth,

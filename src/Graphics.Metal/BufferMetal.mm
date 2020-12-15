@@ -50,7 +50,7 @@ std::size_t ComputeAlignedSize(std::size_t sizeInBytes, BufferBindMode bindMode)
 
 } // namespace
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 BufferMetal::Initialize(
     id<MTLDevice> device,
     std::size_t sizeInBytes,
@@ -67,7 +67,7 @@ BufferMetal::Initialize(
     return nullptr;
 }
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 BufferMetal::Initialize(
     id<MTLDevice> device,
     const void* vertices,

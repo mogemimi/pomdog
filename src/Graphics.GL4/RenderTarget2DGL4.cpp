@@ -7,7 +7,7 @@
 
 namespace Pomdog::Detail::GL4 {
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 RenderTarget2DGL4::Initialize(
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn,

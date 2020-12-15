@@ -12,14 +12,14 @@ namespace Pomdog::Detail::Metal {
 
 class BufferMetal final : public NativeBuffer {
 public:
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(
         id<MTLDevice> device,
         std::size_t sizeInBytes,
         BufferUsage bufferUsage,
         BufferBindMode bindMode) noexcept;
 
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(
         id<MTLDevice> device,
         const void* vertices,

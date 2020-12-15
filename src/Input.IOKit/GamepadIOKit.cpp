@@ -177,7 +177,7 @@ void GamepadDevice::OnDeviceInput(IOReturn result, void* sender, IOHIDValueRef v
 
 GamepadIOKit::GamepadIOKit() = default;
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 GamepadIOKit::Initialize(const std::shared_ptr<EventQueue<SystemEvent>>& eventQueueIn)
 {
     eventQueue = eventQueueIn;

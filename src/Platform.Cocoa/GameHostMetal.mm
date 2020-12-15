@@ -66,14 +66,14 @@ class GameHostMetal::Impl final {
 public:
     ~Impl();
 
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(
         MTKView* metalView,
         const std::shared_ptr<GameWindowCocoa>& window,
         const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
         const PresentationParameters& presentationParameters);
 
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     InitializeGame(
         const std::weak_ptr<Game>& game,
         const std::function<void()>& onCompleted);
@@ -154,7 +154,7 @@ private:
     bool exitRequest = false;
 };
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 GameHostMetal::Impl::Initialize(
     MTKView* metalViewIn,
     const std::shared_ptr<GameWindowCocoa>& windowIn,
@@ -259,7 +259,7 @@ GameHostMetal::Impl::~Impl()
     metalView = nullptr;
 }
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 GameHostMetal::Impl::InitializeGame(
     const std::weak_ptr<Game>& weakGameIn,
     const std::function<void()>& onCompletedIn)
@@ -497,7 +497,7 @@ GameHostMetal::GameHostMetal()
 
 GameHostMetal::~GameHostMetal() = default;
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 GameHostMetal::Initialize(
     MTKView* metalView,
     const std::shared_ptr<GameWindowCocoa>& window,
@@ -508,7 +508,7 @@ GameHostMetal::Initialize(
     return impl->Initialize(metalView, window, eventQueue, presentationParameters);
 }
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 GameHostMetal::InitializeGame(
     const std::weak_ptr<Game>& game,
     const std::function<void()>& onCompleted)

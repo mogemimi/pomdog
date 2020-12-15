@@ -18,7 +18,7 @@ namespace Pomdog::Detail {
 
 template <>
 struct POMDOG_EXPORT AssetLoader<Texture2D> final {
-    [[nodiscard]] std::tuple<std::shared_ptr<Texture2D>, std::shared_ptr<Error>>
+    [[nodiscard]] std::tuple<std::shared_ptr<Texture2D>, std::unique_ptr<Error>>
     operator()(AssetManager& assets, const std::string& filePath);
 };
 

@@ -12,7 +12,7 @@ namespace Pomdog::Detail::Direct3D11 {
 
 class SamplerStateDirect3D11 final : public SamplerState {
 public:
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(
         ID3D11Device* device,
         const SamplerDescription& description) noexcept;

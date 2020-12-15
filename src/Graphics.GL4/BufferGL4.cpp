@@ -62,7 +62,7 @@ struct TypesafeHelperGL4::Traits<BufferObjectGL4<VertexBuffer>> {
 };
 
 template <class Tag>
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 BufferGL4<Tag>::Initialize(std::size_t sizeInBytes, BufferUsage bufferUsage) noexcept
 {
     POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
@@ -70,7 +70,7 @@ BufferGL4<Tag>::Initialize(std::size_t sizeInBytes, BufferUsage bufferUsage) noe
 }
 
 template <class Tag>
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 BufferGL4<Tag>::Initialize(
     const void* sourceData,
     std::size_t sizeInBytes,

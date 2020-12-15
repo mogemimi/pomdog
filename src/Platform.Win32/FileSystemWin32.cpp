@@ -41,7 +41,7 @@ bool FileSystem::IsDirectory(const std::string& path)
     return std::filesystem::is_directory(path);
 }
 
-std::tuple<std::size_t, std::shared_ptr<Error>>
+std::tuple<std::size_t, std::unique_ptr<Error>>
 FileSystem::GetFileSize(const std::string& path)
 {
     struct ::stat st;

@@ -20,7 +20,7 @@ struct RasterizerStateMetal final {
 
 class PipelineStateMetal final : public PipelineState {
 public:
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(
         id<MTLDevice> device,
         const PipelineStateDescription& description) noexcept;

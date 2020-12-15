@@ -53,7 +53,7 @@ class HLSLCodeInclude final : public ID3DInclude {
 private:
     std::string currentDirectory;
     std::vector<std::uint8_t> outputSource;
-    std::shared_ptr<Error> lastError;
+    std::unique_ptr<Error> lastError;
 
 public:
     explicit HLSLCodeInclude(const std::string& curentDirectoryIn)
@@ -126,14 +126,14 @@ public:
         return S_OK;
     }
 
-    std::shared_ptr<Error>
+    std::unique_ptr<Error>
     MoveLastError() noexcept
     {
         return std::move(lastError);
     }
 };
 
-[[nodiscard]] std::shared_ptr<Error>
+[[nodiscard]] std::unique_ptr<Error>
 CompileFromShaderFile(
     const ShaderBytecode& shaderBytecode,
     const std::string& entrypoint,
@@ -188,7 +188,7 @@ CompileFromShaderFile(
 
 } // namespace
 
-std::tuple<Microsoft::WRL::ComPtr<ID3DBlob>, std::shared_ptr<Error>>
+std::tuple<Microsoft::WRL::ComPtr<ID3DBlob>, std::unique_ptr<Error>>
 CompileHLSL(
     const ShaderBytecode& shaderBytecode,
     const ShaderCompileOptions& compileOptions) noexcept

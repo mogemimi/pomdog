@@ -26,7 +26,7 @@ struct POMDOG_EXPORT FileSystem final {
     IsDirectory(const std::string& path);
 
     /// Gets the size of the specified file.
-    [[nodiscard]] static std::tuple<std::size_t, std::shared_ptr<Error>>
+    [[nodiscard]] static std::tuple<std::size_t, std::unique_ptr<Error>>
     GetFileSize(const std::string& path);
 
     // Windows:

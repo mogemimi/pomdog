@@ -17,7 +17,7 @@ namespace Pomdog::Spine {
 
 class SkeletonDesc;
 
-[[nodiscard]] std::tuple<std::shared_ptr<Skeletal2D::AnimationClip>, std::shared_ptr<Error>>
+[[nodiscard]] std::tuple<std::shared_ptr<Skeletal2D::AnimationClip>, std::unique_ptr<Error>>
 CreateAnimationClip(
     const SkeletonDesc& desc,
     const std::optional<TexturePacker::TextureAtlas>& textureAtlas,

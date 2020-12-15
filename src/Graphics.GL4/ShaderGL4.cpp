@@ -10,7 +10,7 @@
 namespace Pomdog::Detail::GL4 {
 namespace {
 
-[[nodiscard]] std::tuple<std::optional<GLuint>, std::shared_ptr<Error>>
+[[nodiscard]] std::tuple<std::optional<GLuint>, std::unique_ptr<Error>>
 CompileShader(const ShaderBytecode& source, GLenum pipelineStage) noexcept
 {
 #if defined(DEBUG)
@@ -77,7 +77,7 @@ template <GLenum PipelineStage>
 constexpr GLenum ShaderGL4<PipelineStage>::pipelineStage;
 
 template <GLenum PipelineStage>
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 ShaderGL4<PipelineStage>::Initialize(const ShaderBytecode& source) noexcept
 {
     auto [result, compileErr] = CompileShader(source, pipelineStage);

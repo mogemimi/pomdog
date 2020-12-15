@@ -31,7 +31,7 @@ HRESULT CreateShader(
 } // namespace
 
 template <class NativeShaderType>
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 ShaderDirect3D11<NativeShaderType>::Initialize(
     ID3D11Device* device,
     const ShaderBytecode& shaderBytecode,

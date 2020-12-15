@@ -29,7 +29,7 @@ ToDepthStencilFormat(SurfaceFormat depthFormat) noexcept
 
 } // namespace
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 DepthStencilBufferGL4::Initialize(
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn,

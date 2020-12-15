@@ -300,7 +300,7 @@ FontGlyph ParseGlyph(std::istream& stream)
 
 } // namespace
 
-std::tuple<std::shared_ptr<SpriteFont>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<SpriteFont>, std::unique_ptr<Error>>
 AssetLoader<SpriteFont>::operator()(AssetManager& assets, const std::string& filePath)
 {
     std::ifstream stream{filePath, std::ifstream::binary};

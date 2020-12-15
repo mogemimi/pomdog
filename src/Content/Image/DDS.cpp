@@ -217,7 +217,7 @@ ComputePixelDataByteLength(const DDSHeader& ddsHeader, SurfaceFormat format)
 
 } // namespace
 
-std::tuple<ImageBuffer, std::shared_ptr<Error>>
+std::tuple<ImageBuffer, std::unique_ptr<Error>>
 Decode(const std::uint8_t* data, std::size_t size)
 {
     POMDOG_ASSERT(data != nullptr);

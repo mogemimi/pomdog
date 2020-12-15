@@ -19,7 +19,7 @@ namespace Pomdog::Spine {
 
 class SkeletonDesc;
 
-[[nodiscard]] std::tuple<Skeletal2D::SkinnedMesh, std::shared_ptr<Error>>
+[[nodiscard]] std::tuple<Skeletal2D::SkinnedMesh, std::unique_ptr<Error>>
 CreateSkinnedMesh(
     const std::vector<Matrix3x2>& bindPosesInGlobal,
     const SkeletonDesc& skeletonDesc,

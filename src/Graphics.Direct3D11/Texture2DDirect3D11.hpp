@@ -12,7 +12,7 @@ namespace Pomdog::Detail::Direct3D11 {
 
 class Texture2DDirect3D11 final : public Texture2D {
 public:
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(
         ID3D11Device* nativeDevice,
         std::int32_t pixelWidth,

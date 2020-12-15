@@ -21,7 +21,7 @@ public:
 
     ~GameWindowX11();
 
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(
         const std::shared_ptr<X11Context const>& x11Context,
         GLXFBConfig framebufferConfig,

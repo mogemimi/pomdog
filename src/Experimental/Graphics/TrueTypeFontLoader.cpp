@@ -6,7 +6,7 @@
 
 namespace Pomdog::Detail {
 
-std::tuple<std::shared_ptr<TrueTypeFont>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<TrueTypeFont>, std::unique_ptr<Error>>
 AssetLoader<TrueTypeFont>::operator()([[maybe_unused]] AssetManager& assets, const std::string& filePath)
 {
     auto font = std::make_shared<TrueTypeFont>();

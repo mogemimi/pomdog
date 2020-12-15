@@ -11,7 +11,7 @@
 
 namespace Pomdog::MagicaVoxel::VoxModelExporter {
 
-[[nodiscard]] std::shared_ptr<Error>
+[[nodiscard]] std::unique_ptr<Error>
 Export(const VoxModel& model, const std::string& filePath) noexcept
 {
     using Detail::MakeFourCC;

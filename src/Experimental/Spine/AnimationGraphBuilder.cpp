@@ -54,7 +54,7 @@ struct AnimationNodeDesc final {
     AnimationNodeType Type;
 };
 
-std::tuple<std::unique_ptr<AnimationNode>, std::shared_ptr<Error>>
+std::tuple<std::unique_ptr<AnimationNode>, std::unique_ptr<Error>>
 CreateAnimationNode(
     const AnimationNodeDesc& desc,
     std::vector<AnimationBlendInput>& inputs,
@@ -121,7 +121,7 @@ CreateAnimationNode(
 
 } // namespace
 
-std::tuple<std::shared_ptr<Skeletal2D::AnimationGraph>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<Skeletal2D::AnimationGraph>, std::unique_ptr<Error>>
 LoadAnimationGraph(const SkeletonDesc& skeletonDesc, const std::string& filePath)
 {
     std::ifstream stream{filePath, std::ifstream::binary};

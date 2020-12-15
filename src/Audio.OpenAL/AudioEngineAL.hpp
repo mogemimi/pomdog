@@ -27,11 +27,11 @@ public:
     ~AudioEngineAL() noexcept override;
 
     /// Initializes the audio engine.
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize() noexcept;
 
     /// Creates an audio clip.
-    [[nodiscard]] std::tuple<std::shared_ptr<AudioClip>, std::shared_ptr<Error>>
+    [[nodiscard]] std::tuple<std::shared_ptr<AudioClip>, std::unique_ptr<Error>>
     CreateAudioClip(
         const void* audioData,
         std::size_t sizeInBytes,
@@ -40,7 +40,7 @@ public:
         AudioChannels channels) noexcept override;
 
     /// Creates a sound effect.
-    [[nodiscard]] std::tuple<std::shared_ptr<SoundEffect>, std::shared_ptr<Error>>
+    [[nodiscard]] std::tuple<std::shared_ptr<SoundEffect>, std::unique_ptr<Error>>
     CreateSoundEffect(
         const std::shared_ptr<AudioClip>& audioClip,
         bool isLooped) noexcept override;

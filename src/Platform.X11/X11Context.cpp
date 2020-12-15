@@ -6,7 +6,7 @@ namespace Pomdog::Detail::X11 {
 
 X11Context::X11Context() noexcept = default;
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 X11Context::Initialize() noexcept
 {
     ::XInitThreads();

@@ -108,7 +108,7 @@ D3D11_MAP GetMapTypeForWriting(D3D11_BIND_FLAG bindFlag) noexcept
 
 } // namespace
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 BufferDirect3D11::Initialize(
     ID3D11Device* device,
     std::size_t sizeInBytes,
@@ -123,7 +123,7 @@ BufferDirect3D11::Initialize(
     return nullptr;
 }
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 BufferDirect3D11::Initialize(
     ID3D11Device* device,
     const void* sourceData,

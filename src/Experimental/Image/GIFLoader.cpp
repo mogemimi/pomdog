@@ -40,7 +40,7 @@ void DumpExtensions(
 
 } // namespace
 
-std::tuple<GIFImage, std::shared_ptr<Error>>
+std::tuple<GIFImage, std::unique_ptr<Error>>
 DecodeFile(const std::string& filePath)
 {
     GIFImage result;

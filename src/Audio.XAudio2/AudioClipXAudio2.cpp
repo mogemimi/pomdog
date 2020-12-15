@@ -21,7 +21,7 @@ namespace {
 
 AudioClipXAudio2::AudioClipXAudio2() noexcept = default;
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 AudioClipXAudio2::Initialize(
     const void* audioDataIn,
     std::size_t sizeInBytes,

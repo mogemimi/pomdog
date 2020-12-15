@@ -45,7 +45,7 @@ CheckFrameBufferConfigSupport(::Display* display) noexcept
     return (((majorVer == 1) && (minorVer >= 3)) || (majorVer >= 2));
 }
 
-[[nodiscard]] std::tuple<GLXFBConfig, std::shared_ptr<Error>>
+[[nodiscard]] std::tuple<GLXFBConfig, std::unique_ptr<Error>>
 ChooseFramebufferConfig(
     Display* display,
     const PresentationParameters& presentationParameters)
@@ -178,7 +178,7 @@ class GameHostX11::Impl final {
 public:
     ~Impl();
 
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(const PresentationParameters& presentationParameters);
 
     void Run(Game& game);
@@ -212,7 +212,7 @@ public:
     bool exitRequest = false;
 };
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 GameHostX11::Impl::Initialize(const PresentationParameters& presentationParameters)
 {
     backBufferSurfaceFormat = presentationParameters.BackBufferFormat;
@@ -426,7 +426,7 @@ GameHostX11::GameHostX11() noexcept
 
 GameHostX11::~GameHostX11() = default;
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 GameHostX11::Initialize(const PresentationParameters& presentationParameters)
 {
     POMDOG_ASSERT(impl != nullptr);

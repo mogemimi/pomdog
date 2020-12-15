@@ -17,7 +17,7 @@
 
 namespace Pomdog::Detail {
 
-std::tuple<std::shared_ptr<AudioClip>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<AudioClip>, std::unique_ptr<Error>>
 AssetLoader<AudioClip>::operator()(AssetManager& assets, const std::string& filePath)
 {
     std::ifstream stream{filePath, std::ifstream::binary};

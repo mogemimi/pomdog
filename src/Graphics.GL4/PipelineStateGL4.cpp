@@ -36,7 +36,7 @@ GLenum ToPrimitiveTopology(PrimitiveTopology primitiveTopology) noexcept
     POMDOG_UNREACHABLE("Unsupported primitive topology");
 }
 
-[[nodiscard]] std::tuple<std::optional<ShaderProgramGL4>, std::shared_ptr<Error>>
+[[nodiscard]] std::tuple<std::optional<ShaderProgramGL4>, std::unique_ptr<Error>>
 LinkShaders(const VertexShaderGL4& vertexShader, const PixelShaderGL4& pixelShader) noexcept
 {
     ShaderProgramGL4 const program {
@@ -70,7 +70,7 @@ LinkShaders(const VertexShaderGL4& vertexShader, const PixelShaderGL4& pixelShad
 
 PipelineStateGL4::PipelineStateGL4() = default;
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 PipelineStateGL4::Initialize(const PipelineStateDescription& description) noexcept
 {
     if (auto err = blendState.Initialize(description.BlendState); err != nullptr) {

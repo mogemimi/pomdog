@@ -70,7 +70,7 @@ using CreateGraphicsDeviceResult = std::tuple<
     std::shared_ptr<GraphicsDevice>,
     std::shared_ptr<GraphicsCommandQueue>,
     std::unique_ptr<GraphicsBridgeWin32>,
-    std::shared_ptr<Error>>;
+    std::unique_ptr<Error>>;
 
 #if !defined(POMDOG_DISABLE_GL4)
 

@@ -30,7 +30,7 @@ std::ifstream::pos_type ChunkSize(std::ifstream& stream, const VoxChunkHeader& c
 
 } // namespace
 
-std::tuple<std::shared_ptr<MagicaVoxel::VoxModel>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<MagicaVoxel::VoxModel>, std::unique_ptr<Error>>
 AssetLoader<MagicaVoxel::VoxModel>::operator()([[maybe_unused]] AssetManager& assets, const std::string& filePath)
 {
     constexpr std::int32_t MagicaVoxelVersion = 150;

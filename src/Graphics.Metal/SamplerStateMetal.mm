@@ -26,7 +26,7 @@ MTLSamplerAddressMode ToSamplerAddressMode(TextureAddressMode addressMode) noexc
 
 } // namespace
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 SamplerStateMetal::Initialize(id<MTLDevice> device, const SamplerDescription& description) noexcept
 {
     POMDOG_ASSERT(device != nullptr);

@@ -37,7 +37,7 @@ TextureAtlasRegion CreateAtlasRegion(const std::string& line, std::int16_t pageI
 
 } // namespace
 
-std::tuple<TextureAtlas, std::shared_ptr<Error>>
+std::tuple<TextureAtlas, std::unique_ptr<Error>>
 TextureAtlasLoader::Load(const std::string& filePath)
 {
     std::ifstream stream{filePath, std::ifstream::binary};

@@ -32,7 +32,7 @@ public:
 
     void Reset();
 
-    [[nodiscard]] std::shared_ptr<Error> LoadFont(const std::string& filePath);
+    [[nodiscard]] std::unique_ptr<Error> LoadFont(const std::string& filePath);
 };
 
 void TrueTypeFont::Impl::Reset()
@@ -42,7 +42,7 @@ void TrueTypeFont::Impl::Reset()
     }
 }
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 TrueTypeFont::Impl::LoadFont(const std::string& filePath)
 {
     std::ifstream stream{filePath, std::ifstream::binary};
@@ -88,7 +88,7 @@ TrueTypeFont::~TrueTypeFont()
     impl->Reset();
 }
 
-std::shared_ptr<Error> TrueTypeFont::Load(const std::string& filePath)
+std::unique_ptr<Error> TrueTypeFont::Load(const std::string& filePath)
 {
     POMDOG_ASSERT(impl);
     return impl->LoadFont(filePath);

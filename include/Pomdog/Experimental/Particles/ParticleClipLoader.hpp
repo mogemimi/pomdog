@@ -18,7 +18,7 @@ namespace Pomdog::Detail {
 
 template <>
 struct POMDOG_EXPORT AssetLoader<ParticleClip> final {
-    [[nodiscard]] std::tuple<std::shared_ptr<ParticleClip>, std::shared_ptr<Error>>
+    [[nodiscard]] std::tuple<std::shared_ptr<ParticleClip>, std::unique_ptr<Error>>
     operator()(AssetManager& assets, const std::string& filePath);
 };
 

@@ -107,7 +107,7 @@ CreatePixelFormat(const PresentationParameters& presentationParameters) noexcept
 
 OpenGLContextCocoa::OpenGLContextCocoa() noexcept = default;
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 OpenGLContextCocoa::Initialize(const PresentationParameters& presentationParameters) noexcept
 {
     // NOTE: Create a pixel format for OpenGL context.

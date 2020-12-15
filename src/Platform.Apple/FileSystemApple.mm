@@ -19,7 +19,7 @@ NSString* ToNSString(const std::string& s)
 
 } // namespace
 
-std::tuple<std::size_t, std::shared_ptr<Error>>
+std::tuple<std::size_t, std::unique_ptr<Error>>
 FileSystem::GetFileSize(const std::string& path)
 {
     struct ::stat st;

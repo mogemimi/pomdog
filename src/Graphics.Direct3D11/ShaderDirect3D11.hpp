@@ -19,7 +19,7 @@ namespace Pomdog::Detail::Direct3D11 {
 template <class NativeShaderType>
 class ShaderDirect3D11 final : public Shader {
 public:
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(
         ID3D11Device* device,
         const ShaderBytecode& shaderBytecode,

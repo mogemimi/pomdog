@@ -50,7 +50,7 @@ public:
 
     ~GamepadIOKit() override;
 
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue);
 
     GamepadCapabilities GetCapabilities(PlayerIndex index) const override;

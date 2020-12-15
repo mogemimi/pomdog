@@ -38,7 +38,7 @@ struct UniformGL4 final {
 
 class EffectReflectionGL4 final : public EffectReflection {
 public:
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(const ShaderProgramGL4& shaderProgram) noexcept;
 
     std::vector<EffectConstantDescription>

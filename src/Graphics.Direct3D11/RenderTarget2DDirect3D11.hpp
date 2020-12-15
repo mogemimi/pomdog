@@ -14,7 +14,7 @@ namespace Pomdog::Detail::Direct3D11 {
 
 class RenderTarget2DDirect3D11 final : public RenderTarget2D {
 public:
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(
         ID3D11Device* device,
         std::int32_t pixelWidth,
@@ -24,7 +24,7 @@ public:
         SurfaceFormat depthStencilFormat,
         std::int32_t multiSampleCount) noexcept;
 
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(
         ID3D11Device* device,
         IDXGISwapChain* swapChain,
@@ -68,7 +68,7 @@ public:
     [[nodiscard]] ID3D11ShaderResourceView*
     GetShaderResourceView() const noexcept;
 
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     ResetBackBuffer(
         ID3D11Device* device,
         IDXGISwapChain* swapChain,

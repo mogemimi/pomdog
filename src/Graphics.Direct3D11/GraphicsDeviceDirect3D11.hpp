@@ -19,20 +19,20 @@ private:
     Microsoft::WRL::ComPtr<IDXGIAdapter1> activeAdapter;
 
 public:
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     EnumAdapters() noexcept;
 
     void Clear();
 
     IDXGIAdapter1* ActiveAdapter() const;
 
-    [[nodiscard]] std::tuple<Microsoft::WRL::ComPtr<IDXGIFactory1>, std::shared_ptr<Error>>
+    [[nodiscard]] std::tuple<Microsoft::WRL::ComPtr<IDXGIFactory1>, std::unique_ptr<Error>>
     GetFactory() noexcept;
 };
 
 class GraphicsDeviceDirect3D11 final : public GraphicsDevice {
 public:
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(const PresentationParameters& presentationParameters) noexcept;
 
     ~GraphicsDeviceDirect3D11();
@@ -44,11 +44,11 @@ public:
     PresentationParameters GetPresentationParameters() const noexcept override;
 
     /// Creates a graphics command list.
-    std::tuple<std::shared_ptr<GraphicsCommandList>, std::shared_ptr<Error>>
+    std::tuple<std::shared_ptr<GraphicsCommandList>, std::unique_ptr<Error>>
     CreateGraphicsCommandList() noexcept override;
 
     /// Creates a vertex buffer.
-    std::tuple<std::shared_ptr<VertexBuffer>, std::shared_ptr<Error>>
+    std::tuple<std::shared_ptr<VertexBuffer>, std::unique_ptr<Error>>
     CreateVertexBuffer(
         const void* vertices,
         std::size_t vertexCount,
@@ -56,14 +56,14 @@ public:
         BufferUsage bufferUsage) noexcept override;
 
     /// Creates a vertex buffer.
-    std::tuple<std::shared_ptr<VertexBuffer>, std::shared_ptr<Error>>
+    std::tuple<std::shared_ptr<VertexBuffer>, std::unique_ptr<Error>>
     CreateVertexBuffer(
         std::size_t vertexCount,
         std::size_t strideBytes,
         BufferUsage bufferUsage) noexcept override;
 
     /// Creates an index buffer.
-    std::tuple<std::shared_ptr<IndexBuffer>, std::shared_ptr<Error>>
+    std::tuple<std::shared_ptr<IndexBuffer>, std::unique_ptr<Error>>
     CreateIndexBuffer(
         IndexElementSize elementSize,
         const void* indices,
@@ -71,49 +71,49 @@ public:
         BufferUsage bufferUsage) noexcept override;
 
     /// Creates an index buffer.
-    std::tuple<std::shared_ptr<IndexBuffer>, std::shared_ptr<Error>>
+    std::tuple<std::shared_ptr<IndexBuffer>, std::unique_ptr<Error>>
     CreateIndexBuffer(
         IndexElementSize elementSize,
         std::size_t indexCount,
         BufferUsage bufferUsage) noexcept override;
 
     /// Creates a constant buffer.
-    std::tuple<std::shared_ptr<ConstantBuffer>, std::shared_ptr<Error>>
+    std::tuple<std::shared_ptr<ConstantBuffer>, std::unique_ptr<Error>>
     CreateConstantBuffer(
         const void* sourceData,
         std::size_t sizeInBytes,
         BufferUsage bufferUsage) noexcept override;
 
     /// Creates a constant buffer.
-    std::tuple<std::shared_ptr<ConstantBuffer>, std::shared_ptr<Error>>
+    std::tuple<std::shared_ptr<ConstantBuffer>, std::unique_ptr<Error>>
     CreateConstantBuffer(
         std::size_t sizeInBytes,
         BufferUsage bufferUsage) noexcept override;
 
     /// Creates a pipeline state object.
-    std::tuple<std::shared_ptr<PipelineState>, std::shared_ptr<Error>>
+    std::tuple<std::shared_ptr<PipelineState>, std::unique_ptr<Error>>
     CreatePipelineState(const PipelineStateDescription& description) noexcept override;
 
     /// Creates an effect reflection.
-    std::tuple<std::shared_ptr<EffectReflection>, std::shared_ptr<Error>>
+    std::tuple<std::shared_ptr<EffectReflection>, std::unique_ptr<Error>>
     CreateEffectReflection(
         const PipelineStateDescription& description,
         const std::shared_ptr<PipelineState>& pipelineState) noexcept override;
 
     /// Creates a shader object.
-    std::tuple<std::unique_ptr<Shader>, std::shared_ptr<Error>>
+    std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
     CreateShader(
         const Detail::ShaderBytecode& shaderBytecode,
         const Detail::ShaderCompileOptions& compileOptions) noexcept override;
 
     /// Creates a 2D render target.
-    std::tuple<std::shared_ptr<RenderTarget2D>, std::shared_ptr<Error>>
+    std::tuple<std::shared_ptr<RenderTarget2D>, std::unique_ptr<Error>>
     CreateRenderTarget2D(
         std::int32_t width,
         std::int32_t height) noexcept override;
 
     /// Creates a 2D render target.
-    std::tuple<std::shared_ptr<RenderTarget2D>, std::shared_ptr<Error>>
+    std::tuple<std::shared_ptr<RenderTarget2D>, std::unique_ptr<Error>>
     CreateRenderTarget2D(
         std::int32_t width,
         std::int32_t height,
@@ -122,17 +122,17 @@ public:
         SurfaceFormat depthStencilFormat) noexcept override;
 
     /// Creates a sampler state object.
-    std::tuple<std::shared_ptr<SamplerState>, std::shared_ptr<Error>>
+    std::tuple<std::shared_ptr<SamplerState>, std::unique_ptr<Error>>
     CreateSamplerState(const SamplerDescription& description) noexcept override;
 
     /// Creates a 2D texture.
-    std::tuple<std::shared_ptr<Texture2D>, std::shared_ptr<Error>>
+    std::tuple<std::shared_ptr<Texture2D>, std::unique_ptr<Error>>
     CreateTexture2D(
         std::int32_t width,
         std::int32_t height) noexcept override;
 
     /// Creates a 2D texture.
-    std::tuple<std::shared_ptr<Texture2D>, std::shared_ptr<Error>>
+    std::tuple<std::shared_ptr<Texture2D>, std::unique_ptr<Error>>
     CreateTexture2D(
         std::int32_t width,
         std::int32_t height,
@@ -144,7 +144,7 @@ public:
     GetDevice() const noexcept;
 
     /// Gets the pointer of the IDXGIFactory1 object.
-    [[nodiscard]] std::tuple<Microsoft::WRL::ComPtr<IDXGIFactory1>, std::shared_ptr<Error>>
+    [[nodiscard]] std::tuple<Microsoft::WRL::ComPtr<IDXGIFactory1>, std::unique_ptr<Error>>
     GetDXGIFactory() noexcept;
 
     void ClientSizeChanged(int width, int height);

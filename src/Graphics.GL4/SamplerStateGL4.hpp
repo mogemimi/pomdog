@@ -17,7 +17,7 @@ class SamplerStateGL4 final : public SamplerState {
 public:
     ~SamplerStateGL4() override;
 
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(const SamplerDescription& description) noexcept;
 
     void Apply(int index);

@@ -42,7 +42,7 @@
 namespace Pomdog::SVG {
 namespace {
 
-std::tuple<ImageBuffer, std::shared_ptr<Error>>
+std::tuple<ImageBuffer, std::unique_ptr<Error>>
 DecodeSVG(std::uint8_t* data, std::size_t size, int canvasWidth, int canvasHeight)
 {
     ImageBuffer imageBuffer;
@@ -105,7 +105,7 @@ DecodeSVG(std::uint8_t* data, std::size_t size, int canvasWidth, int canvasHeigh
 
 } // namespace
 
-std::tuple<ImageBuffer, std::shared_ptr<Error>>
+std::tuple<ImageBuffer, std::unique_ptr<Error>>
 Decode(
     const std::uint8_t* data,
     std::size_t size,
@@ -124,7 +124,7 @@ Decode(
     return DecodeSVG(buffer.data(), buffer.size(), width, height);
 }
 
-std::tuple<ImageBuffer, std::shared_ptr<Error>>
+std::tuple<ImageBuffer, std::unique_ptr<Error>>
 DecodeFile(
     const std::string& filePath,
     int width,
@@ -156,7 +156,7 @@ DecodeFile(
     return DecodeSVG(binary.data(), binary.size(), width, height);
 }
 
-std::tuple<std::shared_ptr<Texture2D>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<Texture2D>, std::unique_ptr<Error>>
 LoadTexture(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
     const std::string& filePath,

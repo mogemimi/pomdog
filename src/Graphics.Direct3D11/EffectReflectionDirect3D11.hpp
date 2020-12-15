@@ -16,7 +16,7 @@ namespace Pomdog::Detail::Direct3D11 {
 
 class EffectReflectionDirect3D11 final : public EffectReflection {
 public:
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(
         const ShaderBytecode& vertexShaderBytecode,
         const ShaderBytecode& pixelShaderBytecode) noexcept;

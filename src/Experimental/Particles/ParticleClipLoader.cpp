@@ -47,7 +47,7 @@ using Particles::ParticleParameterConstant;
 using Particles::ParticleParameterCurve;
 using Particles::ParticleParameterRandom;
 
-std::tuple<Vector3, std::shared_ptr<Error>>
+std::tuple<Vector3, std::unique_ptr<Error>>
 ParseVector3(const rapidjson::Value& value)
 {
     if (value.IsArray() &&
@@ -64,7 +64,7 @@ ParseVector3(const rapidjson::Value& value)
     return std::make_tuple(Vector3{}, Errors::New("member is not Vector3"));
 }
 
-[[maybe_unused]] std::shared_ptr<Error>
+[[maybe_unused]] std::unique_ptr<Error>
 ParseMember(const rapidjson::Value& value, const char* name, Vector3& vec)
 {
     if (!value.HasMember(name)) {
@@ -79,7 +79,7 @@ ParseMember(const rapidjson::Value& value, const char* name, Vector3& vec)
     return nullptr;
 }
 
-std::tuple<Color, std::shared_ptr<Error>>
+std::tuple<Color, std::unique_ptr<Error>>
 ParseColor(const rapidjson::Value& value)
 {
     if (value.IsArray() &&
@@ -98,7 +98,7 @@ ParseColor(const rapidjson::Value& value)
     return std::make_tuple(Color::TransparentBlack, Errors::New("member is not Color"));
 }
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 ParseMember(const rapidjson::Value& value, const char* name, Color& vec)
 {
     if (!value.HasMember(name)) {
@@ -113,7 +113,7 @@ ParseMember(const rapidjson::Value& value, const char* name, Color& vec)
     return nullptr;
 }
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 ParseMember(const rapidjson::Value& value, const char* name, int& result)
 {
     if (!value.HasMember(name)) {
@@ -127,7 +127,7 @@ ParseMember(const rapidjson::Value& value, const char* name, int& result)
     return nullptr;
 }
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 ParseMember(const rapidjson::Value& value, const char* name, double& result)
 {
     if (!value.HasMember(name)) {
@@ -141,7 +141,7 @@ ParseMember(const rapidjson::Value& value, const char* name, double& result)
     return nullptr;
 }
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 ParseMember(const rapidjson::Value& value, const char* name, float& result)
 {
     if (!value.HasMember(name)) {
@@ -155,7 +155,7 @@ ParseMember(const rapidjson::Value& value, const char* name, float& result)
     return nullptr;
 }
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 ParseMember(const rapidjson::Value& value, const char* name, bool& result)
 {
     if (!value.HasMember(name)) {
@@ -169,7 +169,7 @@ ParseMember(const rapidjson::Value& value, const char* name, bool& result)
     return nullptr;
 }
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 ParseMember(const rapidjson::Value& value, const char* name, Duration& result)
 {
     double v = result.count();
@@ -178,7 +178,7 @@ ParseMember(const rapidjson::Value& value, const char* name, Duration& result)
     return err;
 }
 
-std::tuple<std::shared_ptr<ParticleClip>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<ParticleClip>, std::unique_ptr<Error>>
 ReadParticleClip(const rapidjson::Value& object)
 {
     auto particleClip = std::make_shared<ParticleClip>();
@@ -226,7 +226,7 @@ ReadParticleClip(const rapidjson::Value& object)
         return std::make_tuple(nullptr, std::move(err));
     }
 
-    const auto readShape = [&]() -> std::shared_ptr<Error> {
+    const auto readShape = [&]() -> std::unique_ptr<Error> {
         if (!object.HasMember("shape")) {
             return Errors::New("should have a 'shape' member");
         }
@@ -270,7 +270,7 @@ ReadParticleClip(const rapidjson::Value& object)
         return std::make_tuple(nullptr, std::move(err));
     }
 
-    const auto readFloatParameter = [&](const char* name, std::unique_ptr<Detail::Particles::ParticleParameter<float>>& result) -> std::shared_ptr<Error> {
+    const auto readFloatParameter = [&](const char* name, std::unique_ptr<Detail::Particles::ParticleParameter<float>>& result) -> std::unique_ptr<Error> {
         if (!object.HasMember(name)) {
             return Errors::New("should have a 'start_speed' member");
         }
@@ -301,7 +301,7 @@ ReadParticleClip(const rapidjson::Value& object)
         }
         return nullptr;
     };
-    const auto readRadianParameter = [&](const char* name, std::unique_ptr<Detail::Particles::ParticleParameter<Radian<float>>>& result) -> std::shared_ptr<Error> {
+    const auto readRadianParameter = [&](const char* name, std::unique_ptr<Detail::Particles::ParticleParameter<Radian<float>>>& result) -> std::unique_ptr<Error> {
         if (!object.HasMember(name)) {
             return Errors::New("should have a 'start_speed' member");
         }
@@ -332,27 +332,27 @@ ReadParticleClip(const rapidjson::Value& object)
         }
         return nullptr;
     };
-    const auto readColorParameter = [&](const char* name, std::unique_ptr<Detail::Particles::ParticleParameter<Color>>& result) -> std::shared_ptr<Error> {
+    const auto readColorParameter = [&](const char* name, std::unique_ptr<Detail::Particles::ParticleParameter<Color>>& result) -> std::unique_ptr<Error> {
         if (!object.HasMember(name)) {
             return Errors::New("should have a 'start_speed' member");
         }
         auto& shape = object[name];
 
         if (shape["type"].GetString() == std::string_view{"constant"}) {
-            const auto [value, err] = ParseColor(shape["value"]);
+            auto [value, err] = ParseColor(shape["value"]);
             if (err != nullptr) {
-                return err;
+                return std::move(err);
             }
             result = std::make_unique<ParticleParameterConstant<Color>>(value);
         }
         else if (shape["type"].GetString() == std::string_view{"random"}) {
-            const auto [min, minErr] = ParseColor(shape["min"]);
+            auto [min, minErr] = ParseColor(shape["min"]);
             if (minErr != nullptr) {
-                return minErr;
+                return std::move(minErr);
             }
-            const auto [max, maxErr] = ParseColor(shape["max"]);
+            auto [max, maxErr] = ParseColor(shape["max"]);
             if (maxErr != nullptr) {
-                return maxErr;
+                return std::move(maxErr);
             }
             result = std::make_unique<ParticleParameterRandom<Color>>(min, max);
         }
@@ -401,7 +401,7 @@ ReadParticleClip(const rapidjson::Value& object)
 
 } // namespace
 
-std::tuple<std::shared_ptr<ParticleClip>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<ParticleClip>, std::unique_ptr<Error>>
 AssetLoader<ParticleClip>::operator()(
     [[maybe_unused]] AssetManager& assets, const std::string& filePath)
 {

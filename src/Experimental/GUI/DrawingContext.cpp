@@ -51,7 +51,7 @@ DrawingContext::DrawingContext(
 
     std::shared_ptr<TrueTypeFont> fontRegular;
     std::shared_ptr<TrueTypeFont> fontBold;
-    std::shared_ptr<Error> fontErr;
+    std::unique_ptr<Error> fontErr;
 
     std::tie(fontRegular, fontErr) = assets.Load<TrueTypeFont>("Fonts/Roboto/Roboto-Medium.ttf");
     if (fontErr != nullptr) {

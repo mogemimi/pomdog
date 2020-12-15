@@ -49,13 +49,13 @@ public:
     void SetOpenGLEnabled(bool enabled) noexcept;
 
     /// Sets an error event handler to a log stream.
-    void OnError(std::function<void(std::shared_ptr<Error>&& err)> onError);
+    void OnError(std::function<void(std::unique_ptr<Error>&& err)> onError);
 
     /// Begins running a game loop.
     void Run(const std::function<std::unique_ptr<Game>(const std::shared_ptr<GameHost>&)>& createGame);
 
 private:
-    std::function<void(std::shared_ptr<Error>&& err)> onError;
+    std::function<void(std::unique_ptr<Error>&& err)> onError;
     HINSTANCE hInstance = nullptr;
     int cmdShow = SW_SHOWDEFAULT;
     HICON icon = nullptr;

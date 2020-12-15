@@ -95,7 +95,7 @@ void ToRenderTargetBlendGL4(
 
 } // namespace
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 BlendStateGL4::Initialize(const BlendDescription& description) noexcept
 {
     independentBlendEnable = description.IndependentBlendEnable;

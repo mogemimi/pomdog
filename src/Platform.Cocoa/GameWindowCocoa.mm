@@ -77,7 +77,7 @@ GameWindowCocoa::~GameWindowCocoa() noexcept
     });
 }
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 GameWindowCocoa::Initialize(
     NSWindow* nativeWindowIn,
     const std::shared_ptr<EventQueue<SystemEvent>>& eventQueueIn) noexcept

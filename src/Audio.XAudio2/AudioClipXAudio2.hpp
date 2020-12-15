@@ -30,7 +30,7 @@ public:
     AudioClipXAudio2& operator=(const AudioClipXAudio2&) = delete;
 
     /// Initializes the audio clip.
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(
         const void* audioData,
         std::size_t sizeInBytes,

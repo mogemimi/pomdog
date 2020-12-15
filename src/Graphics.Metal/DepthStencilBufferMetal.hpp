@@ -12,7 +12,7 @@ namespace Pomdog::Detail::Metal {
 
 class DepthStencilBufferMetal final : public DepthStencilBuffer {
 public:
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(
         id<MTLDevice> device,
         std::int32_t pixelWidth,

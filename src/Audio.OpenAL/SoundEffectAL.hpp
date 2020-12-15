@@ -38,7 +38,7 @@ public:
     ~SoundEffectAL() noexcept override;
 
     /// Initializes the audio engine.
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(
         const std::shared_ptr<AudioClipAL>& audioClip,
         bool isLooped) noexcept;

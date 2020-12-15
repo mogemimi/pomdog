@@ -12,7 +12,7 @@ class Error;
 
 namespace Pomdog::Detail::OpenAL {
 
-[[nodiscard]] std::shared_ptr<Error>
+[[nodiscard]] std::unique_ptr<Error>
 MakeOpenALError(ALenum err, std::string&& message) noexcept;
 
 #if defined(DEBUG) && !defined(NDEBUG)

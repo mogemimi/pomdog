@@ -16,13 +16,13 @@ namespace Pomdog::Detail::Metal {
 
 class ShaderMetal final : public Shader {
 public:
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(
         id<MTLDevice> device,
         const ShaderBytecode& shaderBytecode,
         const ShaderCompileOptions& compileOptions) noexcept;
 
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(
         id<MTLDevice> device,
         id<MTLLibrary> library,

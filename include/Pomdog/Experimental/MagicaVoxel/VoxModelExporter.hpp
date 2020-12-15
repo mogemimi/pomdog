@@ -13,7 +13,7 @@ class VoxModel;
 namespace Pomdog::MagicaVoxel::VoxModelExporter {
 
 [[nodiscard]] POMDOG_EXPORT
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 Export(const VoxModel& model, const std::string& filePath) noexcept;
 
 } // namespace Pomdog::MagicaVoxel::VoxModelExporter

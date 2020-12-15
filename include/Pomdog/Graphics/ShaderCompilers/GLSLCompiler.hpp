@@ -19,7 +19,7 @@ class Shader;
 namespace Pomdog::ShaderCompilers::GLSLCompiler {
 
 /// Creates a shader from a string of source code.
-[[nodiscard]] POMDOG_EXPORT std::tuple<std::unique_ptr<Shader>, std::shared_ptr<Error>>
+[[nodiscard]] POMDOG_EXPORT std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
 CreateShader(
     GraphicsDevice& graphicsDevice,
     const void* shaderSource,

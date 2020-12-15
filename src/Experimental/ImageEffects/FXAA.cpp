@@ -81,7 +81,7 @@ FXAA::FXAA(
 
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
-    std::shared_ptr<Error> pipelineStateErr;
+    std::unique_ptr<Error> pipelineStateErr;
     std::tie(pipelineState, pipelineStateErr) = assets.CreateBuilder<PipelineState>()
         .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
         .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)

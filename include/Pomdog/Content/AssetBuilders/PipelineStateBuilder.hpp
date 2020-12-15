@@ -61,7 +61,7 @@ public:
     Builder& SetDepthStencilViewFormat(SurfaceFormat depthStencilViewFormat);
 
     /// Returns a pipeline state object.
-    [[nodiscard]] std::tuple<std::shared_ptr<PipelineState>, std::shared_ptr<Error>>
+    [[nodiscard]] std::tuple<std::shared_ptr<PipelineState>, std::unique_ptr<Error>>
     Build();
 
     [[nodiscard]] std::shared_ptr<EffectReflection>
@@ -69,7 +69,7 @@ public:
 
     const PipelineStateDescription& GetDescription() const;
 
-    void SetError(std::shared_ptr<Error>&& err);
+    void SetError(std::unique_ptr<Error>&& err);
 
 private:
     class Impl;

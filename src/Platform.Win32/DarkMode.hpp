@@ -12,6 +12,6 @@ bool IsWindowsVersionOrGreaterForWindows10(WORD majorVersion, WORD minorVersion,
 
 bool IsDarkMode() noexcept;
 
-std::shared_ptr<Error> UseImmersiveDarkMode(HWND windowHandle, bool enabled) noexcept;
+std::unique_ptr<Error> UseImmersiveDarkMode(HWND windowHandle, bool enabled) noexcept;
 
 } // namespace Pomdog::Detail::Win32

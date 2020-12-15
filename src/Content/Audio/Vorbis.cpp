@@ -28,7 +28,7 @@ namespace {
 
 } // namespace
 
-std::tuple<std::shared_ptr<AudioClip>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<AudioClip>, std::unique_ptr<Error>>
 Load(const std::shared_ptr<AudioEngine>& audioEngine, const std::string& filename) noexcept
 {
     int error = 0;

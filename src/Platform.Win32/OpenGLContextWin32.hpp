@@ -18,7 +18,7 @@ public:
 
     ~OpenGLContextWin32() noexcept;
 
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(
         HWND windowHandle,
         const PresentationParameters& presentationParameters) noexcept;

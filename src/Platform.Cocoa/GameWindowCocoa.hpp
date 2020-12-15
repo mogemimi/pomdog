@@ -28,7 +28,7 @@ public:
 
     ~GameWindowCocoa() noexcept override;
 
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(
         NSWindow* nativeWindow,
         const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue) noexcept;

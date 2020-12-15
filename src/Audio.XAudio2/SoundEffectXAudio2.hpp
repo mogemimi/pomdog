@@ -36,7 +36,7 @@ public:
     ~SoundEffectXAudio2() noexcept;
 
     /// Initializes the audio engine.
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(
         IXAudio2* xAudio2,
         const std::shared_ptr<AudioClipXAudio2>& audioClip,

@@ -22,7 +22,7 @@ FillModeGL4 ToFillModeGL4(const FillMode& fillMode) noexcept
 
 } // namespace
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 RasterizerStateGL4::Initialize(const RasterizerDescription& description) noexcept
 {
     fillMode = ToFillModeGL4(description.FillMode);

@@ -33,7 +33,7 @@ public:
     ~AudioClipAL() noexcept override;
 
     /// Initializes the audio clip.
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(
         const void* data,
         std::size_t sizeInBytes,

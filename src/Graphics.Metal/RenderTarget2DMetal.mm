@@ -10,7 +10,7 @@
 
 namespace Pomdog::Detail::Metal {
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 RenderTarget2DMetal::Initialize(
     id<MTLDevice> device,
     std::int32_t pixelWidthIn,

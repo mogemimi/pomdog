@@ -31,7 +31,7 @@ class RenderTarget2DGL4;
 
 class GraphicsContextGL4 final : public NativeGraphicsContext {
 public:
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(
         const std::shared_ptr<OpenGLContext>& openGLContext,
         std::weak_ptr<GraphicsDevice>&& graphicsDevice) noexcept;

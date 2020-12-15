@@ -104,7 +104,7 @@ void UpdateMouseCursor(::Display* display, ::Window window, std::optional<MouseC
 
 GameWindowX11::GameWindowX11() = default;
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 GameWindowX11::Initialize(
     const std::shared_ptr<X11Context const>& x11ContextIn,
     GLXFBConfig framebufferConfig,

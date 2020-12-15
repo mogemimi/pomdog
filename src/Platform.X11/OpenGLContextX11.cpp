@@ -66,7 +66,7 @@ IsExtensionSupported(const char* extensionList, const char* extension) noexcept
 
 OpenGLContextX11::OpenGLContextX11() noexcept = default;
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 OpenGLContextX11::Initialize(
     const std::shared_ptr<GameWindowX11>& windowIn,
     const GLXFBConfig& framebufferConfig) noexcept

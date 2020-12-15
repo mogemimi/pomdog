@@ -13,7 +13,7 @@ namespace Pomdog::GIF {
 
 /// Reads a GIF animation image from file (.gif).
 [[nodiscard]] POMDOG_EXPORT
-std::tuple<GIFImage, std::shared_ptr<Error>>
+std::tuple<GIFImage, std::unique_ptr<Error>>
 DecodeFile(const std::string& filePath);
 
 } // namespace Pomdog::GIF

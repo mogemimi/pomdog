@@ -28,7 +28,7 @@ ToErrorCodeString(ALenum errorCode) noexcept
 
 } // namespace
 
-[[nodiscard]] std::shared_ptr<Error>
+[[nodiscard]] std::unique_ptr<Error>
 MakeOpenALError(ALenum err, std::string&& message) noexcept
 {
     message += ": ";

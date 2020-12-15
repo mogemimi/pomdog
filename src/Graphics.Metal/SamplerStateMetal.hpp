@@ -11,7 +11,7 @@ namespace Pomdog::Detail::Metal {
 
 class SamplerStateMetal final : public SamplerState {
 public:
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(
         id<MTLDevice> device,
         const SamplerDescription& description) noexcept;

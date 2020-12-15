@@ -40,7 +40,7 @@ ToString(GLenum errorCode) noexcept
 
 } // namespace
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 GetLastError() noexcept
 {
     const auto errorCode = glGetError();

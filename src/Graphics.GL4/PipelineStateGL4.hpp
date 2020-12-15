@@ -32,7 +32,7 @@ public:
 
     ~PipelineStateGL4();
 
-    [[nodiscard]] std::shared_ptr<Error>
+    [[nodiscard]] std::unique_ptr<Error>
     Initialize(const PipelineStateDescription& description) noexcept;
 
     void ApplyShaders();

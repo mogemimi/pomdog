@@ -7,13 +7,15 @@
 #include "Pomdog/Graphics/Shader.hpp"
 #include "Pomdog/Graphics/ShaderLanguage.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Utility/Errors.hpp"
+#include <utility>
 
 using Pomdog::Detail::ShaderBytecode;
 using Pomdog::Detail::ShaderCompileOptions;
 
 namespace Pomdog::ShaderCompilers::MetalCompiler {
 
-[[nodiscard]] std::tuple<std::unique_ptr<Shader>, std::shared_ptr<Error>>
+[[nodiscard]] std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
 CreateShaderFromSource(
     GraphicsDevice& graphicsDevice,
     const void* shaderSource,
@@ -37,7 +39,7 @@ CreateShaderFromSource(
     return graphicsDevice.CreateShader(std::move(shaderBytecode), std::move(compileOptions));
 }
 
-[[nodiscard]] std::tuple<std::unique_ptr<Shader>, std::shared_ptr<Error>>
+[[nodiscard]] std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
 CreateShaderFromDefaultLibrary(
     GraphicsDevice& graphicsDevice,
     const std::string& entryPoint,
@@ -58,7 +60,7 @@ CreateShaderFromDefaultLibrary(
     return graphicsDevice.CreateShader(std::move(shaderBytecode), std::move(compileOptions));
 }
 
-[[nodiscard]] std::tuple<std::unique_ptr<Shader>, std::shared_ptr<Error>>
+[[nodiscard]] std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
 CreateShaderFromBinary(
     GraphicsDevice& graphicsDevice,
     const void* shaderSource,

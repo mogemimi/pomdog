@@ -13,7 +13,7 @@ namespace Pomdog::TexturePacker {
 
 class POMDOG_EXPORT TextureAtlasLoader final {
 public:
-    [[nodiscard]] static std::tuple<TextureAtlas, std::shared_ptr<Error>>
+    [[nodiscard]] static std::tuple<TextureAtlas, std::unique_ptr<Error>>
     Load(const std::string& filePath);
 };
 

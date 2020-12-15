@@ -115,7 +115,7 @@ D3D11_BIND_FLAG ToBindFlag(BufferBindMode bindMode) noexcept
     return D3D11_BIND_VERTEX_BUFFER;
 }
 
-[[nodiscard]] std::shared_ptr<Error>
+[[nodiscard]] std::unique_ptr<Error>
 BuildDevice(
     AdapterManager& adapters,
     Microsoft::WRL::ComPtr<ID3D11Device3>& device,
@@ -217,7 +217,7 @@ BuildDevice(
 
 } // namespace
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 AdapterManager::EnumAdapters() noexcept
 {
     Microsoft::WRL::ComPtr<IDXGIFactory1> dxgiFactory;
@@ -264,7 +264,7 @@ IDXGIAdapter1* AdapterManager::ActiveAdapter() const
     return activeAdapter.Get();
 }
 
-std::tuple<Microsoft::WRL::ComPtr<IDXGIFactory1>, std::shared_ptr<Error>>
+std::tuple<Microsoft::WRL::ComPtr<IDXGIFactory1>, std::unique_ptr<Error>>
 AdapterManager::GetFactory() noexcept
 {
     ComPtr<IDXGIFactory1> dxgiFactory;
@@ -278,7 +278,7 @@ AdapterManager::GetFactory() noexcept
     return std::make_tuple(std::move(dxgiFactory), nullptr);
 }
 
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 GraphicsDeviceDirect3D11::Initialize(const PresentationParameters& presentationParametersIn) noexcept
 {
     driverType = D3D_DRIVER_TYPE_NULL;
@@ -310,14 +310,14 @@ PresentationParameters GraphicsDeviceDirect3D11::GetPresentationParameters() con
     return presentationParameters;
 }
 
-std::tuple<std::shared_ptr<GraphicsCommandList>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<GraphicsCommandList>, std::unique_ptr<Error>>
 GraphicsDeviceDirect3D11::CreateGraphicsCommandList() noexcept
 {
     auto commandList = std::make_shared<GraphicsCommandListImmediate>();
     return std::make_tuple(std::move(commandList), nullptr);
 }
 
-std::tuple<std::shared_ptr<VertexBuffer>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<VertexBuffer>, std::unique_ptr<Error>>
 GraphicsDeviceDirect3D11::CreateVertexBuffer(
     const void* vertices,
     std::size_t vertexCount,
@@ -356,7 +356,7 @@ GraphicsDeviceDirect3D11::CreateVertexBuffer(
     return std::make_tuple(std::move(vertexBuffer), nullptr);
 }
 
-std::tuple<std::shared_ptr<VertexBuffer>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<VertexBuffer>, std::unique_ptr<Error>>
 GraphicsDeviceDirect3D11::CreateVertexBuffer(
     std::size_t vertexCount,
     std::size_t strideBytes,
@@ -393,7 +393,7 @@ GraphicsDeviceDirect3D11::CreateVertexBuffer(
     return std::make_tuple(std::move(vertexBuffer), nullptr);
 }
 
-std::tuple<std::shared_ptr<IndexBuffer>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<IndexBuffer>, std::unique_ptr<Error>>
 GraphicsDeviceDirect3D11::CreateIndexBuffer(
     IndexElementSize elementSize,
     const void* indices,
@@ -430,7 +430,7 @@ GraphicsDeviceDirect3D11::CreateIndexBuffer(
     return std::make_tuple(std::move(indexBuffer), nullptr);
 }
 
-std::tuple<std::shared_ptr<IndexBuffer>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<IndexBuffer>, std::unique_ptr<Error>>
 GraphicsDeviceDirect3D11::CreateIndexBuffer(
     IndexElementSize elementSize,
     std::size_t indexCount,
@@ -466,7 +466,7 @@ GraphicsDeviceDirect3D11::CreateIndexBuffer(
     return std::make_tuple(std::move(indexBuffer), nullptr);
 }
 
-std::tuple<std::shared_ptr<ConstantBuffer>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<ConstantBuffer>, std::unique_ptr<Error>>
 GraphicsDeviceDirect3D11::CreateConstantBuffer(
     const void* sourceData,
     std::size_t sizeInBytes,
@@ -499,7 +499,7 @@ GraphicsDeviceDirect3D11::CreateConstantBuffer(
     return std::make_tuple(std::move(constantBuffer), nullptr);
 }
 
-std::tuple<std::shared_ptr<ConstantBuffer>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<ConstantBuffer>, std::unique_ptr<Error>>
 GraphicsDeviceDirect3D11::CreateConstantBuffer(
     std::size_t sizeInBytes,
     BufferUsage bufferUsage) noexcept
@@ -531,7 +531,7 @@ GraphicsDeviceDirect3D11::CreateConstantBuffer(
     return std::make_tuple(std::move(constantBuffer), nullptr);
 }
 
-std::tuple<std::shared_ptr<PipelineState>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<PipelineState>, std::unique_ptr<Error>>
 GraphicsDeviceDirect3D11::CreatePipelineState(const PipelineStateDescription& description) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
@@ -544,7 +544,7 @@ GraphicsDeviceDirect3D11::CreatePipelineState(const PipelineStateDescription& de
     return std::make_tuple(std::move(pipelineState), nullptr);
 }
 
-std::tuple<std::shared_ptr<EffectReflection>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<EffectReflection>, std::unique_ptr<Error>>
 GraphicsDeviceDirect3D11::CreateEffectReflection(
     const PipelineStateDescription& description,
     [[maybe_unused]] const std::shared_ptr<PipelineState>& pipelineState) noexcept
@@ -570,7 +570,7 @@ GraphicsDeviceDirect3D11::CreateEffectReflection(
     return std::make_tuple(std::move(effectReflection), nullptr);
 }
 
-std::tuple<std::unique_ptr<Shader>, std::shared_ptr<Error>>
+std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
 GraphicsDeviceDirect3D11::CreateShader(
     const Detail::ShaderBytecode& shaderBytecode,
     const Detail::ShaderCompileOptions& compileOptions) noexcept
@@ -596,7 +596,7 @@ GraphicsDeviceDirect3D11::CreateShader(
     return std::make_tuple(nullptr, Errors::New("unsupported shader stage"));
 }
 
-std::tuple<std::shared_ptr<RenderTarget2D>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<RenderTarget2D>, std::unique_ptr<Error>>
 GraphicsDeviceDirect3D11::CreateRenderTarget2D(
     std::int32_t width,
     std::int32_t height) noexcept
@@ -609,7 +609,7 @@ GraphicsDeviceDirect3D11::CreateRenderTarget2D(
         SurfaceFormat::Invalid);
 }
 
-std::tuple<std::shared_ptr<RenderTarget2D>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<RenderTarget2D>, std::unique_ptr<Error>>
 GraphicsDeviceDirect3D11::CreateRenderTarget2D(
     std::int32_t width,
     std::int32_t height,
@@ -645,7 +645,7 @@ GraphicsDeviceDirect3D11::CreateRenderTarget2D(
     return std::make_tuple(std::move(renderTarget), nullptr);
 }
 
-std::tuple<std::shared_ptr<SamplerState>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<SamplerState>, std::unique_ptr<Error>>
 GraphicsDeviceDirect3D11::CreateSamplerState(const SamplerDescription& description) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
@@ -658,7 +658,7 @@ GraphicsDeviceDirect3D11::CreateSamplerState(const SamplerDescription& descripti
     return std::make_tuple(std::move(samplerState), nullptr);
 }
 
-std::tuple<std::shared_ptr<Texture2D>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<Texture2D>, std::unique_ptr<Error>>
 GraphicsDeviceDirect3D11::CreateTexture2D(
     std::int32_t width,
     std::int32_t height) noexcept
@@ -670,7 +670,7 @@ GraphicsDeviceDirect3D11::CreateTexture2D(
         SurfaceFormat::R8G8B8A8_UNorm);
 }
 
-std::tuple<std::shared_ptr<Texture2D>, std::shared_ptr<Error>>
+std::tuple<std::shared_ptr<Texture2D>, std::unique_ptr<Error>>
 GraphicsDeviceDirect3D11::CreateTexture2D(
     std::int32_t width,
     std::int32_t height,
@@ -706,7 +706,7 @@ GraphicsDeviceDirect3D11::GetDevice() const noexcept
     return device;
 }
 
-std::tuple<Microsoft::WRL::ComPtr<IDXGIFactory1>, std::shared_ptr<Error>>
+std::tuple<Microsoft::WRL::ComPtr<IDXGIFactory1>, std::unique_ptr<Error>>
 GraphicsDeviceDirect3D11::GetDXGIFactory() noexcept
 {
     return adapters.GetFactory();
