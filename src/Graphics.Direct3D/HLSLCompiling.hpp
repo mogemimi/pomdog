@@ -5,6 +5,12 @@
 #include "PrerequisitesDirect3D.hpp"
 #include <wrl/client.h>
 #include <cstdint>
+#include <memory>
+#include <tuple>
+
+namespace Pomdog {
+class Error;
+} // namespace Pomdog
 
 namespace Pomdog::Detail {
 class ShaderBytecode;
@@ -13,10 +19,9 @@ struct ShaderCompileOptions;
 
 namespace Pomdog::Detail::Direct3D {
 
-struct HLSLCompiling final {
-    static Microsoft::WRL::ComPtr<ID3DBlob> CompileShader(
-        const ShaderBytecode& shaderBytecode,
-        const ShaderCompileOptions& compileOptions);
-};
+[[nodiscard]] std::tuple<Microsoft::WRL::ComPtr<ID3DBlob>, std::shared_ptr<Error>>
+CompileHLSL(
+    const ShaderBytecode& shaderBytecode,
+    const ShaderCompileOptions& compileOptions) noexcept;
 
 } // namespace Pomdog::Detail::Direct3D

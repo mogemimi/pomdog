@@ -45,8 +45,14 @@ ShaderDirect3D11<NativeShaderType>::Initialize(
         std::memcpy(codeBlob.data(), shaderBytecode.Code, codeBlob.size());
     }
     else {
-        auto compiledShaderBlob = Direct3D::HLSLCompiling::CompileShader(
-            shaderBytecode, compileOptions);
+        auto [compiledShaderBlob, compileErr] = Direct3D::CompileHLSL(
+            shaderBytecode,
+            compileOptions);
+
+        if (compileErr != nullptr) {
+            return Errors::Wrap(std::move(compileErr), "CompileHLSL() failed");
+        }
+
         POMDOG_ASSERT(compiledShaderBlob.Get() != nullptr);
 
         codeBlob.resize(compiledShaderBlob->GetBufferSize());

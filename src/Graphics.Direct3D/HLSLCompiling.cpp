@@ -4,13 +4,11 @@
 #include "../Graphics.Backends/ShaderBytecode.hpp"
 #include "../Graphics.Backends/ShaderCompileOptions.hpp"
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
-#include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #include "Pomdog/Utility/FileSystem.hpp"
 #include "Pomdog/Utility/PathHelper.hpp"
-#include "Pomdog/Utility/StringHelper.hpp"
 #include <fstream>
 #include <string>
 #include <utility>
@@ -19,7 +17,8 @@
 namespace Pomdog::Detail::Direct3D {
 namespace {
 
-std::string ToString(const ShaderProfile& profile)
+[[nodiscard]] std::string
+ToString(const ShaderProfile& profile) noexcept
 {
     std::string output;
 
@@ -47,14 +46,14 @@ std::string ToString(const ShaderProfile& profile)
     output += std::to_string(profile.ShaderModel.Major);
     output += '_';
     output += std::to_string(profile.ShaderModel.Minor);
-
-    return std::move(output);
+    return output;
 }
 
 class HLSLCodeInclude final : public ID3DInclude {
 private:
     std::string currentDirectory;
     std::vector<std::uint8_t> outputSource;
+    std::shared_ptr<Error> lastError;
 
 public:
     explicit HLSLCodeInclude(const std::string& curentDirectoryIn)
@@ -82,6 +81,7 @@ public:
             return E_FAIL;
         }
 
+#if 0
 #if defined(DEBUG) && !defined(NDEBUG)
         if (D3D_INCLUDE_LOCAL == includeType) {
             Log::Internal("ShaderInclude: Local");
@@ -91,22 +91,23 @@ public:
         }
         Log::Internal(StringHelper::Format("include shader file : %s", includePath.c_str()));
 #endif
+#endif
 
         std::ifstream stream{includePath, std::ifstream::binary};
 
         if (!stream) {
-            Log::Internal(StringHelper::Format("Could not find a shader source file %s", includePath.c_str()));
+            lastError = Errors::New("Could not find a shader source file: " + includePath);
             return E_FAIL;
         }
 
         auto [size, err] = FileSystem::GetFileSize(includePath);
         if (err != nullptr) {
-            Log::Internal(StringHelper::Format("failed to get file size %s", includePath.c_str()));
+            lastError = Errors::New("failed to get file size: " + includePath);
             return E_FAIL;
         }
 
         if (size <= 0) {
-            Log::Internal(StringHelper::Format("The file is too small %s", includePath.c_str()));
+            lastError = Errors::New("The file is too small: " + includePath);
             return E_FAIL;
         }
 
@@ -124,9 +125,16 @@ public:
         outputSource.clear();
         return S_OK;
     }
+
+    std::shared_ptr<Error>
+    MoveLastError() noexcept
+    {
+        return std::move(lastError);
+    }
 };
 
-void CompileFromShaderFile(
+[[nodiscard]] std::shared_ptr<Error>
+CompileFromShaderFile(
     const ShaderBytecode& shaderBytecode,
     const std::string& entrypoint,
     const std::string& shaderProfile,
@@ -145,31 +153,45 @@ void CompileFromShaderFile(
     HLSLCodeInclude shaderInclude(currentDirectory);
     Microsoft::WRL::ComPtr<ID3DBlob> errorBlob;
 
-    HRESULT hr = ::D3DCompile(shaderBytecode.Code, shaderBytecode.ByteLength,
-        nullptr, preprocessorMacros, &shaderInclude,
-        entrypoint.c_str(), shaderProfile.c_str(), shaderFlags, 0, ppBlobOut, &errorBlob);
+    const auto hr = ::D3DCompile(
+        shaderBytecode.Code,
+        shaderBytecode.ByteLength,
+        nullptr,
+        preprocessorMacros,
+        &shaderInclude,
+        entrypoint.c_str(),
+        shaderProfile.c_str(),
+        shaderFlags,
+        0,
+        ppBlobOut,
+        &errorBlob);
+
+    if (auto err = shaderInclude.MoveLastError(); err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to compile shader");
+    }
 
     if (FAILED(hr)) {
-        if (errorBlob) {
-            POMDOG_THROW_EXCEPTION(std::runtime_error, StringHelper::Format(
-                "Failed to compile shader.\n"
-                "error: %s",
-                reinterpret_cast<LPCSTR>(errorBlob->GetBufferPointer())));
+        if (errorBlob != nullptr) {
+            std::string str(reinterpret_cast<LPCSTR>(errorBlob->GetBufferPointer()), errorBlob->GetBufferSize());
+            return Errors::New("failed to compile shader. error: " + str);
         }
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Failed to compile shader.");
+        return Errors::New("D3DCompile() failed. HRESULT = " + std::to_string(hr));
     }
 
-    if (errorBlob) {
-        Log::Internal(StringHelper::Format("warning (compile shader): %s",
-            reinterpret_cast<LPCSTR>(errorBlob->GetBufferPointer())));
+    if (errorBlob != nullptr) {
+        std::string str(reinterpret_cast<LPCSTR>(errorBlob->GetBufferPointer()), errorBlob->GetBufferSize());
+        return Errors::New("warning: " + str);
     }
+
+    return nullptr;
 }
 
 } // namespace
 
-Microsoft::WRL::ComPtr<ID3DBlob> HLSLCompiling::CompileShader(
+std::tuple<Microsoft::WRL::ComPtr<ID3DBlob>, std::shared_ptr<Error>>
+CompileHLSL(
     const ShaderBytecode& shaderBytecode,
-    const ShaderCompileOptions& compileOptions)
+    const ShaderCompileOptions& compileOptions) noexcept
 {
     const auto target = ToString(compileOptions.Profile);
     POMDOG_ASSERT(!target.empty());
@@ -179,7 +201,7 @@ Microsoft::WRL::ComPtr<ID3DBlob> HLSLCompiling::CompileShader(
 
     for (auto& macro : compileOptions.PreprocessorMacros) {
         if (macro.Name.empty()) {
-            continue;
+            return std::make_tuple(nullptr, Errors::New("macro.Name is empty"));
         }
 
         D3D_SHADER_MACRO shaderMacro;
@@ -196,14 +218,17 @@ Microsoft::WRL::ComPtr<ID3DBlob> HLSLCompiling::CompileShader(
     }
 
     Microsoft::WRL::ComPtr<ID3DBlob> codeBlob;
-    CompileFromShaderFile(shaderBytecode,
-        compileOptions.EntryPoint,
-        target,
-        compileOptions.CurrentDirectory,
-        (defines.empty() ? nullptr : defines.data()),
-        &codeBlob);
+    if (auto err = CompileFromShaderFile(shaderBytecode,
+            compileOptions.EntryPoint,
+            target,
+            compileOptions.CurrentDirectory,
+            (defines.empty() ? nullptr : defines.data()),
+            &codeBlob);
+        err != nullptr) {
+        return std::make_tuple(nullptr, Errors::Wrap(std::move(err), "CompileFromShaderFile() failed"));
+    }
 
-    return std::move(codeBlob);
+    return std::make_tuple(std::move(codeBlob), nullptr);
 }
 
 } // namespace Pomdog::Detail::Direct3D
