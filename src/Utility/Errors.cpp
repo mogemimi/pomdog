@@ -30,7 +30,7 @@ public:
 
 class WrappedError final : public Error {
 public:
-    std::shared_ptr<Error> Err;
+    std::unique_ptr<Error> Err;
     std::string Message;
 
     [[nodiscard]] std::string ToString() const noexcept override
@@ -63,32 +63,24 @@ std::unique_ptr<Error> IOError::Clone() const noexcept
     return err;
 }
 
-std::shared_ptr<IOError> New(std::errc kind, std::string&& reason) noexcept
+std::unique_ptr<IOError> New(std::errc kind, std::string&& reason) noexcept
 {
-    auto err = std::make_shared<IOError>();
+    auto err = std::make_unique<IOError>();
     err->Kind = kind;
     err->Reason = std::move(reason);
     return err;
 }
 
-std::shared_ptr<Error> New(std::string&& message) noexcept
+std::unique_ptr<Error> New(std::string&& message) noexcept
 {
-    auto err = std::make_shared<StringError>();
+    auto err = std::make_unique<StringError>();
     err->Message = std::move(message);
     return std::move(err);
 }
 
-std::shared_ptr<Error> Wrap(const std::shared_ptr<Error>& err, std::string&& message) noexcept
+std::unique_ptr<Error> Wrap(std::unique_ptr<Error>&& err, std::string&& message) noexcept
 {
-    auto wrapped = std::make_shared<WrappedError>();
-    wrapped->Err = err;
-    wrapped->Message = std::move(message);
-    return std::move(wrapped);
-}
-
-std::shared_ptr<Error> Wrap(std::shared_ptr<Error>&& err, std::string&& message) noexcept
-{
-    auto wrapped = std::make_shared<WrappedError>();
+    auto wrapped = std::make_unique<WrappedError>();
     wrapped->Err = std::move(err);
     wrapped->Message = std::move(message);
     return std::move(wrapped);

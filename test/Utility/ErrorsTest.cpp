@@ -10,7 +10,7 @@ namespace Errors = Pomdog::Errors;
 
 namespace {
 
-std::tuple<int, std::shared_ptr<IOError>> Load(const std::string& filename)
+std::tuple<int, std::unique_ptr<IOError>> Load(const std::string& filename)
 {
     if (filename.empty()) {
         return std::make_tuple(0, Errors::New(std::errc::invalid_argument, "empty name"));

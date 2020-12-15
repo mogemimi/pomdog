@@ -38,19 +38,15 @@ public:
 };
 
 [[nodiscard]] POMDOG_EXPORT
-std::shared_ptr<IOError>
+std::unique_ptr<IOError>
 New(std::errc kind, std::string&& reason) noexcept;
 
 [[nodiscard]] POMDOG_EXPORT
-std::shared_ptr<Error>
+std::unique_ptr<Error>
 New(std::string&& message) noexcept;
 
 [[nodiscard]] POMDOG_EXPORT
-std::shared_ptr<Error>
-Wrap(const std::shared_ptr<Error>& err, std::string&& message) noexcept;
-
-[[nodiscard]] POMDOG_EXPORT
-std::shared_ptr<Error>
-Wrap(std::shared_ptr<Error>&& err, std::string&& message) noexcept;
+std::unique_ptr<Error>
+Wrap(std::unique_ptr<Error>&& err, std::string&& message) noexcept;
 
 } // namespace Pomdog::Errors
