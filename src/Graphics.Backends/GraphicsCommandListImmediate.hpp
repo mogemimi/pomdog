@@ -67,7 +67,6 @@ public:
 
     /// Draws the specified indexed primitives.
     void DrawIndexed(
-        const std::shared_ptr<IndexBuffer>& indexBuffer,
         std::size_t indexCount,
         std::size_t startIndexLocation) override;
 
@@ -80,7 +79,6 @@ public:
 
     /// Draws the specified indexed, instanced primitives.
     void DrawIndexedInstanced(
-        const std::shared_ptr<IndexBuffer>& indexBuffer,
         std::size_t indexCountPerInstance,
         std::size_t instanceCount,
         std::size_t startIndexLocation,
@@ -106,6 +104,9 @@ public:
         int index,
         const std::shared_ptr<VertexBuffer>& vertexBuffer,
         std::size_t offset) override;
+
+    /// Sets an index buffer.
+    void SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer) override;
 
     /// Sets a pipeline state.
     void SetPipelineState(const std::shared_ptr<PipelineState>& pipelineState) override;

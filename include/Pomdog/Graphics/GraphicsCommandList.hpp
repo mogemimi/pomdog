@@ -37,7 +37,6 @@ public:
 
     /// Draws the specified indexed primitives.
     virtual void DrawIndexed(
-        const std::shared_ptr<IndexBuffer>& indexBuffer,
         std::size_t indexCount,
         std::size_t startIndexLocation) = 0;
 
@@ -50,7 +49,6 @@ public:
 
     /// Draws the specified indexed, instanced primitives.
     virtual void DrawIndexedInstanced(
-        const std::shared_ptr<IndexBuffer>& indexBuffer,
         std::size_t indexCountPerInstance,
         std::size_t instanceCount,
         std::size_t startIndexLocation,
@@ -76,6 +74,9 @@ public:
         int index,
         const std::shared_ptr<VertexBuffer>& vertexBuffer,
         std::size_t offset) = 0;
+
+    /// Sets an index buffer.
+    virtual void SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer) = 0;
 
     /// Sets a pipeline state.
     virtual void SetPipelineState(const std::shared_ptr<PipelineState>& pipelineState) = 0;

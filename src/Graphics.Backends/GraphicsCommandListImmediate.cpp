@@ -232,18 +232,9 @@ void GraphicsCommandListImmediate::Draw(
 }
 
 void GraphicsCommandListImmediate::DrawIndexed(
-    const std::shared_ptr<IndexBuffer>& indexBuffer,
     std::size_t indexCount,
     std::size_t startIndexLocation)
 {
-    {
-        POMDOG_ASSERT(indexBuffer);
-        auto command = std::make_unique<SetIndexBufferCommand>();
-        command->commandType = GraphicsCommandType::SetIndexBufferCommand;
-        command->indexBuffer = indexBuffer;
-        commands.push_back(std::move(command));
-    }
-
     POMDOG_ASSERT(indexCount >= 1);
     auto command = std::make_unique<DrawIndexedCommand>();
     command->commandType = GraphicsCommandType::DrawIndexedCommand;
@@ -269,20 +260,11 @@ void GraphicsCommandListImmediate::DrawInstanced(
 }
 
 void GraphicsCommandListImmediate::DrawIndexedInstanced(
-    const std::shared_ptr<IndexBuffer>& indexBuffer,
     std::size_t indexCountPerInstance,
     std::size_t instanceCount,
     std::size_t startIndexLocation,
     std::size_t startInstanceLocation)
 {
-    {
-        POMDOG_ASSERT(indexBuffer);
-        auto command = std::make_unique<SetIndexBufferCommand>();
-        command->commandType = GraphicsCommandType::SetIndexBufferCommand;
-        command->indexBuffer = indexBuffer;
-        commands.push_back(std::move(command));
-    }
-
     POMDOG_ASSERT(indexCountPerInstance >= 1);
     auto command = std::make_unique<DrawIndexedInstancedCommand>();
     command->commandType = GraphicsCommandType::DrawIndexedInstancedCommand;
@@ -349,6 +331,15 @@ void GraphicsCommandListImmediate::SetVertexBuffer(
     command->slotIndex = index;
     command->vertexBuffer = vertexBuffer;
     command->offset = offset;
+    commands.push_back(std::move(command));
+}
+
+void GraphicsCommandListImmediate::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer)
+{
+    POMDOG_ASSERT(indexBuffer != nullptr);
+    auto command = std::make_unique<SetIndexBufferCommand>();
+    command->commandType = GraphicsCommandType::SetIndexBufferCommand;
+    command->indexBuffer = indexBuffer;
     commands.push_back(std::move(command));
 }
 
