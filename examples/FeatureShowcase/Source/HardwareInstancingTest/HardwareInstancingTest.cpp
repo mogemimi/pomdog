@@ -224,7 +224,7 @@ void HardwareInstancingTest::Draw()
     RenderPass pass;
     pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue.ToVector4()};
     pass.ClearDepth = 1.0f;
-    pass.ClearStencil = 0;
+    pass.ClearStencil = std::uint8_t(0);
     pass.Viewport = viewport;
     pass.ScissorRect = viewport.GetBounds();
 
