@@ -13,11 +13,11 @@ Ray ScreenPointToRay(
     const Matrix4x4& viewProjection,
     bool isOrthoProjection)
 {
-    const auto screenPointVector = Vector3(screenPoint.X, screenPoint.Y, 1.0f);
+    const auto screenPointVector = Vector3{Math::ToVector2(screenPoint), 1.0f};
     const auto worldPoint = viewport.Unproject(screenPointVector, viewProjection);
 
     if (isOrthoProjection) {
-        const auto cameraPositionInScreen = Vector3(screenPoint.X, screenPoint.Y, -1.0f);
+        const auto cameraPositionInScreen = Vector3{Math::ToVector2(screenPoint), -1.0f};
         const auto cameraPositionInWorld = viewport.Unproject(cameraPositionInScreen, viewProjection);
         Ray ray = {cameraPositionInWorld, Vector3::Normalize(worldPoint - cameraPositionInWorld)};
         return ray;

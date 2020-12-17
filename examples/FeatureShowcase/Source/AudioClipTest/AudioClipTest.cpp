@@ -35,8 +35,8 @@ std::unique_ptr<Error> AudioClipTest::Initialize()
     auto audioEngine = gameHost->GetAudioEngine();
 
     // NOTE: Load .wav audio file.
-    if (auto [audioClip, err] = assets->Load<AudioClip>("Sounds/pong1.wav"); err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to load audio");
+    if (auto [audioClip, clipErr] = assets->Load<AudioClip>("Sounds/pong1.wav"); clipErr != nullptr) {
+        return Errors::Wrap(std::move(clipErr), "failed to load audio");
     }
     else {
         constexpr bool isLooped = false;
@@ -48,8 +48,8 @@ std::unique_ptr<Error> AudioClipTest::Initialize()
     }
 
     // NOTE: Load .ogg audio file.
-    if (auto [audioClip, err] = assets->Load<AudioClip>("Sounds/synth.ogg"); err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to load audio");
+    if (auto [audioClip, clipErr] = assets->Load<AudioClip>("Sounds/synth.ogg"); clipErr != nullptr) {
+        return Errors::Wrap(std::move(clipErr), "failed to load audio");
     }
     else {
         constexpr bool isLooped = true;

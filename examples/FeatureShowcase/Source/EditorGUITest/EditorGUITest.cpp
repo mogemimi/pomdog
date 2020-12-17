@@ -205,7 +205,7 @@ std::unique_ptr<Error> EditorGUITest::Initialize()
         popupMenu->AddItem("Blue");
         popupMenu->AddItem("Yellow");
         popupMenu->AddItem("Red");
-        connect(popupMenu->CurrentIndexChanged, [this, p = popupMenu.get()](int index) {
+        connect(popupMenu->CurrentIndexChanged, [this, p = popupMenu.get()]([[maybe_unused]] int index) {
             propertyText2 += "\n";
             propertyText2 += p->GetText();
         });

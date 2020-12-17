@@ -36,7 +36,6 @@ private:
     std::shared_ptr<Timer> timer;
     std::shared_ptr<LineBatch> lineBatch;
 
-    std::shared_ptr<ParticleClip> particleClip;
     std::unique_ptr<ParticleSystem> particleSystem;
     Vector3 emitterPosition;
     std::size_t currentClipIndex = 0;
