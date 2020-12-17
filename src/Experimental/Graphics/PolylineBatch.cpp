@@ -253,10 +253,11 @@ void PolylineBatch::Impl::Flush()
     debugVertexBuffer->SetData(vert.data(), vert.size());
 #endif
 
-    commandList->SetVertexBuffer(0, vertexBuffer);
     commandList->SetPipelineState(pipelineState);
     commandList->SetConstantBuffer(0, constantBuffer);
-    commandList->DrawIndexed(indexBuffer, indices.size(), startIndexLocation);
+    commandList->SetVertexBuffer(0, vertexBuffer);
+    commandList->SetIndexBuffer(indexBuffer);
+    commandList->DrawIndexed(indices.size(), startIndexLocation);
 
 #ifdef POMDOG_POLYLINE_DEBUG
     commandList->SetVertexBuffer(debugVertexBuffer);

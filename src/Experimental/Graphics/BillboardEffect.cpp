@@ -360,9 +360,9 @@ void BillboardBatchEffect::Draw(
     commandList->SetConstantBuffer(0, constantBuffer, constantBufferOffset);
     commandList->SetVertexBuffer(0, impl->vertexBuffer);
     commandList->SetVertexBuffer(1, billboardInstances.GetVertexBuffer());
+    commandList->SetIndexBuffer(impl->indexBuffer);
 
     commandList->DrawIndexedInstanced(
-        impl->indexBuffer,
         impl->indexBuffer->GetIndexCount(),
         billboardInstances.GetSize(),
         0,

@@ -326,7 +326,8 @@ void GLTFModelTest::Draw()
         commandList->SetVertexBuffer(0, vertexBuffer1);
         commandList->SetPipelineState(pipelineState1);
     }
-    commandList->DrawIndexed(indexBuffer, indexBuffer->GetIndexCount(), 0);
+    commandList->SetIndexBuffer(indexBuffer);
+    commandList->DrawIndexed(indexBuffer->GetIndexCount(), 0);
     commandList->Close();
 
     constexpr bool isStandalone = false;

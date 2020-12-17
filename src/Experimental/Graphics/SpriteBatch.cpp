@@ -406,9 +406,9 @@ void SpriteBatch::Impl::RenderBatch(
     commandList->SetConstantBuffer(0, constantBuffer);
     commandList->SetVertexBuffer(0, planeVertices);
     commandList->SetVertexBuffer(1, instanceVertices);
+    commandList->SetIndexBuffer(planeIndices);
 
     commandList->DrawIndexedInstanced(
-        planeIndices,
         planeIndices->GetIndexCount(),
         sprites.size(),
         0,

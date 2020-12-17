@@ -206,12 +206,13 @@ void QuickStartGame::Draw()
 
     // Create graphics commands
     commandList->SetRenderPass(std::move(pass));
+    commandList->SetPipelineState(pipelineState);
     commandList->SetConstantBuffer(0, constantBuffer);
     commandList->SetSamplerState(0, sampler);
     commandList->SetTexture(0, texture);
     commandList->SetVertexBuffer(0, vertexBuffer);
-    commandList->SetPipelineState(pipelineState);
-    commandList->DrawIndexed(indexBuffer, indexBuffer->GetIndexCount(), 0);
+    commandList->SetIndexBuffer(indexBuffer);
+    commandList->DrawIndexed(indexBuffer->GetIndexCount(), 0);
     commandList->Close();
 
     // Submit graphics command list for execution

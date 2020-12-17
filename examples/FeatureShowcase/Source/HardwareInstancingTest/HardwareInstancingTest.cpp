@@ -230,13 +230,14 @@ void HardwareInstancingTest::Draw()
 
     commandList->Reset();
     commandList->SetRenderPass(std::move(pass));
+    commandList->SetPipelineState(pipelineState);
     commandList->SetConstantBuffer(0, constantBuffer);
     commandList->SetSamplerState(0, sampler);
     commandList->SetTexture(0, texture);
     commandList->SetVertexBuffer(0, vertexBuffer);
     commandList->SetVertexBuffer(1, instanceBuffer);
-    commandList->SetPipelineState(pipelineState);
-    commandList->DrawIndexedInstanced(indexBuffer, indexBuffer->GetIndexCount(), sprites.size(), 0, 0);
+    commandList->SetIndexBuffer(indexBuffer);
+    commandList->DrawIndexedInstanced(indexBuffer->GetIndexCount(), sprites.size(), 0, 0);
     commandList->Close();
 
     constexpr bool isStandalone = false;

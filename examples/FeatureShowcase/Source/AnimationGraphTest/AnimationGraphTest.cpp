@@ -323,18 +323,19 @@ void AnimationGraphTest::Draw()
     primitiveBatch->DrawLine(Vector2{w * 0.25f, -h * 0.5f}, Vector2{w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
     primitiveBatch->End();
 
+    commandList->SetPipelineState(pipelineState);
     commandList->SetConstantBuffer(0, modelConstantBuffer);
     commandList->SetConstantBuffer(1, worldConstantBuffer);
     commandList->SetSamplerState(0, sampler);
     commandList->SetTexture(0, texture);
     commandList->SetVertexBuffer(0, vertexBuffer);
-    commandList->SetPipelineState(pipelineState);
-    commandList->DrawIndexed(indexBuffer, indexBuffer->GetIndexCount(), 0);
+    commandList->SetIndexBuffer(indexBuffer);
+    commandList->DrawIndexed(indexBuffer->GetIndexCount(), 0);
 
     auto mouse = gameHost->GetMouse()->GetState();
     if (mouse.RightButton == ButtonState::Pressed) {
         commandList->SetPipelineState(pipelineStateWireframe);
-        commandList->DrawIndexed(indexBuffer, indexBuffer->GetIndexCount(), 0);
+        commandList->DrawIndexed(indexBuffer->GetIndexCount(), 0);
     }
 
     commandList->Close();
