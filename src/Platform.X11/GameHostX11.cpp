@@ -7,6 +7,7 @@
 #include "../Graphics.GL4/GraphicsContextGL4.hpp"
 #include "../Graphics.GL4/GraphicsDeviceGL4.hpp"
 #include "../Input.Backends/NativeGamepad.hpp"
+#include "Pomdog/Application/FileSystem.hpp"
 #include "Pomdog/Application/Game.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Graphics/GraphicsCommandQueue.hpp"
@@ -16,7 +17,6 @@
 #include "Pomdog/Network/HTTPClient.hpp"
 #include "Pomdog/Network/IOService.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/FileSystem.hpp"
 #include "Pomdog/Utility/PathHelper.hpp"
 #include <chrono>
 #include <string>
@@ -285,7 +285,13 @@ GameHostX11::Impl::Initialize(const PresentationParameters& presentationParamete
     keyboard = std::make_unique<KeyboardX11>(x11Context->Display);
     gamepad = Detail::X11::CreateGamepad();
 
-    auto contentDirectory = PathHelper::Join(FileSystem::GetResourceDirectoryPath(), "Content");
+    auto [resourceDir, resourceDirErr] = FileSystem::GetResourceDirectoryPath();
+    if (resourceDirErr != nullptr) {
+        return Errors::Wrap(std::move(resourceDirErr), "FileSystem::GetResourceDirectoryPath() failed.");
+    }
+    auto contentDirectory = PathHelper::Join(resourceDir, "Content");
+
+    // NOTE: Create asset manager.
     assetManager = std::make_unique<AssetManager>(
         std::move(contentDirectory),
         audioEngine,

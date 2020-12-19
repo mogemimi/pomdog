@@ -1,6 +1,7 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Content/AssetLoaders/Texture2DLoader.hpp"
+#include "Pomdog/Application/FileSystem.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Content/Image/DDS.hpp"
 #include "Pomdog/Content/Image/PNG.hpp"
@@ -11,7 +12,6 @@
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
 #include "Pomdog/Graphics/Texture2D.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/FileSystem.hpp"
 #include <algorithm>
 #include <array>
 #include <fstream>

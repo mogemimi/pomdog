@@ -8,10 +8,11 @@
 #include "PomdogOpenGLView.hpp"
 #include "../Application/SystemEvents.hpp"
 #include "../Audio.OpenAL/AudioEngineAL.hpp"
-#include "../Input.IOKit/GamepadIOKit.hpp"
+#include "../Graphics.Backends/GraphicsCommandQueueImmediate.hpp"
 #include "../Graphics.GL4/GraphicsContextGL4.hpp"
 #include "../Graphics.GL4/GraphicsDeviceGL4.hpp"
-#include "../Graphics.Backends/GraphicsCommandQueueImmediate.hpp"
+#include "../Input.IOKit/GamepadIOKit.hpp"
+#include "Pomdog/Application/FileSystem.hpp"
 #include "Pomdog/Application/Game.hpp"
 #include "Pomdog/Application/GameClock.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
@@ -25,7 +26,6 @@
 #include "Pomdog/Signals/ScopedConnection.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Errors.hpp"
-#include "Pomdog/Utility/FileSystem.hpp"
 #include "Pomdog/Utility/PathHelper.hpp"
 #include "Pomdog/Utility/StringHelper.hpp"
 #include <mutex>
@@ -219,7 +219,13 @@ GameHostCocoa::Impl::Initialize(
     systemEventConnection = eventQueue->Connect(
         [this](const SystemEvent& event) { ProcessSystemEvents(event); });
 
-    auto contentDirectory = PathHelper::Join(FileSystem::GetResourceDirectoryPath(), "Content");
+    auto [resourceDir, resourceDirErr] = FileSystem::GetResourceDirectoryPath();
+    if (resourceDirErr != nullptr) {
+        return Errors::Wrap(std::move(resourceDirErr), "FileSystem::GetResourceDirectoryPath() failed.");
+    }
+    auto contentDirectory = PathHelper::Join(resourceDir, "Content");
+
+    // NOTE: Create asset manager.
     assetManager = std::make_unique<AssetManager>(
         std::move(contentDirectory),
         audioEngine,

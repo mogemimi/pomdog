@@ -2,6 +2,7 @@
 
 #include "Pomdog/Content/AssetBuilders/ShaderBuilder.hpp"
 #include "../../Graphics.Backends/ShaderBytecode.hpp"
+#include "Pomdog/Application/FileSystem.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
@@ -14,7 +15,6 @@
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Errors.hpp"
-#include "Pomdog/Utility/FileSystem.hpp"
 #include "Pomdog/Utility/PathHelper.hpp"
 #include "Pomdog/Utility/StringHelper.hpp"
 #include <fstream>

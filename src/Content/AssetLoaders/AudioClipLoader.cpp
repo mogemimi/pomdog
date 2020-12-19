@@ -1,6 +1,7 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Content/AssetLoaders/AudioClipLoader.hpp"
+#include "Pomdog/Application/FileSystem.hpp"
 #include "Pomdog/Audio/AudioClip.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Content/Audio/Vorbis.hpp"
@@ -8,7 +9,6 @@
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
 #include "Pomdog/Content/Utility/MakeFourCC.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/FileSystem.hpp"
 #include <fstream>
 #include <memory>
 #include <string>

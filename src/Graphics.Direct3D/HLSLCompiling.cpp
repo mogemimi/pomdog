@@ -3,11 +3,11 @@
 #include "HLSLCompiling.hpp"
 #include "../Graphics.Backends/ShaderBytecode.hpp"
 #include "../Graphics.Backends/ShaderCompileOptions.hpp"
+#include "Pomdog/Application/FileSystem.hpp"
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Errors.hpp"
-#include "Pomdog/Utility/FileSystem.hpp"
 #include "Pomdog/Utility/PathHelper.hpp"
 #include <fstream>
 #include <string>

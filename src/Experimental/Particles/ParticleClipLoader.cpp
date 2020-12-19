@@ -1,6 +1,7 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Experimental/Particles/ParticleClipLoader.hpp"
+#include "Pomdog/Application/FileSystem.hpp"
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
 #include "Pomdog/Experimental/Particles/EmitterShapes/ParticleEmitterShapeBox.hpp"
 #include "Pomdog/Experimental/Particles/EmitterShapes/ParticleEmitterShapeCone.hpp"
@@ -13,7 +14,6 @@
 #include "Pomdog/Experimental/Particles/Parameters/ParticleParameterRandomCurves.hpp"
 #include "Pomdog/Experimental/Particles/ParticleClip.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/FileSystem.hpp"
 #include "Pomdog/Utility/StringHelper.hpp"
 #if defined(__clang__)
 #pragma clang diagnostic push

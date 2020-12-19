@@ -1,11 +1,11 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Experimental/GLTF/GLTFLoader.hpp"
+#include "Pomdog/Application/FileSystem.hpp"
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
 #include "Pomdog/Content/Utility/MakeFourCC.hpp"
 #include "Pomdog/Experimental/GLTF/GLTF.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/FileSystem.hpp"
 #if defined(__clang__)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wzero-as-null-pointer-constant"

@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Content/AssetManager.hpp"
-#include "Pomdog/Utility/FileSystem.hpp"
+#include "Pomdog/Application/FileSystem.hpp"
 #include <utility>
 
 namespace Pomdog {

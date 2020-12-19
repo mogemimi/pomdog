@@ -2,12 +2,12 @@
 
 #include "Pomdog/Experimental/MagicaVoxel/VoxModelLoader.hpp"
 #include "VoxChunkHeader.hpp"
+#include "Pomdog/Application/FileSystem.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
 #include "Pomdog/Content/Utility/MakeFourCC.hpp"
 #include "Pomdog/Experimental/MagicaVoxel/VoxModel.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/FileSystem.hpp"
 #include <algorithm>
 #include <fstream>
 #include <utility>

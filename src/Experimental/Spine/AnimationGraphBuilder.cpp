@@ -1,6 +1,7 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Experimental/Spine/AnimationGraphBuilder.hpp"
+#include "Pomdog/Application/FileSystem.hpp"
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
 #include "Pomdog/Experimental/Skeletal2D/AnimationClip.hpp"
 #include "Pomdog/Experimental/Skeletal2D/BlendTrees/AnimationClipNode.hpp"
@@ -8,7 +9,6 @@
 #include "Pomdog/Experimental/Spine/AnimationLoader.hpp"
 #include "Pomdog/Experimental/Spine/SkeletonDesc.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/FileSystem.hpp"
 #if defined(__clang__)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wzero-as-null-pointer-constant"

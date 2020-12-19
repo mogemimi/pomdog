@@ -1,11 +1,11 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Experimental/Graphics/SpriteFontLoader.hpp"
+#include "Pomdog/Application/FileSystem.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Experimental/Graphics/FontGlyph.hpp"
 #include "Pomdog/Experimental/Graphics/SpriteFont.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/FileSystem.hpp"
 #include "Pomdog/Utility/PathHelper.hpp"
 #include <algorithm>
 #include <fstream>

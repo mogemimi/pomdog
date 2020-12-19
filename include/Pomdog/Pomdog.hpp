@@ -7,6 +7,7 @@ namespace Pomdog {
 } // namespace Pomdog
 
 #include "Application/Duration.hpp"
+#include "Application/FileSystem.hpp"
 #include "Application/Game.hpp"
 #include "Application/GameClock.hpp"
 #include "Application/GameHost.hpp"
@@ -150,7 +151,6 @@ namespace Pomdog {
 
 #include "Utility/Assert.hpp"
 #include "Utility/Errors.hpp"
-#include "Utility/FileSystem.hpp"
 #include "Utility/PathHelper.hpp"
 #include "Utility/StringHelper.hpp"
 

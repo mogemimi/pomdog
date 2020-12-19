@@ -2,10 +2,10 @@
 
 #include "Pomdog/Experimental/Image/SVGLoader.hpp"
 #include "../../Utility/ScopeGuard.hpp"
+#include "Pomdog/Application/FileSystem.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/Texture2D.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/FileSystem.hpp"
 #include <algorithm>
 #include <cstring>
 #include <fstream>

@@ -376,7 +376,13 @@ GameHostWin32::Impl::Initialize(
     mouse = std::make_shared<MouseWin32>(window->GetNativeWindowHandle());
     gamepad = gamepadIn;
 
-    auto contentDirectory = PathHelper::Join(FileSystem::GetResourceDirectoryPath(), "Content");
+    auto [resourceDir, resourceDirErr] = FileSystem::GetResourceDirectoryPath();
+    if (resourceDirErr != nullptr) {
+        return Errors::Wrap(std::move(resourceDirErr), "FileSystem::GetResourceDirectoryPath() failed");
+    }
+    auto contentDirectory = PathHelper::Join(resourceDir, "Content");
+
+    // NOTE: Create asset manager.
     assetManager = std::make_unique<AssetManager>(
         std::move(contentDirectory),
         audioEngine,
