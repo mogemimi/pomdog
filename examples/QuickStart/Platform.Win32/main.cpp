@@ -13,7 +13,7 @@
 #include <cstdlib>
 #endif
 
-int APIENTRY _tWinMain(
+int WINAPI WinMain(
     HINSTANCE hInstance,
     HINSTANCE hPrevInstance,
     LPTSTR lpCmdLine,
