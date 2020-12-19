@@ -13,6 +13,10 @@
 #include <cstdint>
 #include <memory>
 
+namespace Pomdog {
+class Error;
+} // namespace Pomdog
+
 namespace Pomdog::Detail::DirectInput {
 
 enum class GamepadStateDirectInput : std::uint8_t {
@@ -47,9 +51,10 @@ struct GamepadDevice final {
 
 class GamepadDirectInput final : public NativeGamepad {
 public:
-    GamepadDirectInput(HINSTANCE hInstance, HWND windowHandle);
-
     ~GamepadDirectInput();
+
+    [[nodiscard]] std::unique_ptr<Error>
+    Initialize(HINSTANCE hInstance, HWND windowHandle) noexcept;
 
     GamepadCapabilities GetCapabilities(PlayerIndex index) const override;
 
@@ -63,7 +68,7 @@ public:
 
 private:
     std::array<GamepadDevice, 4> gamepads;
-    HWND windowHandle;
+    HWND windowHandle = nullptr;
     Microsoft::WRL::ComPtr<IDirectInput8> directInput;
 };
 

@@ -43,7 +43,8 @@ LPCTSTR ToStandardCursorID(MouseCursor cursor) noexcept
     return IDC_ARROW;
 }
 
-void RegisterInputDevices(HWND windowHandle)
+[[nodiscard]] std::unique_ptr<Error>
+RegisterInputDevices(HWND windowHandle) noexcept
 {
 #ifndef HID_USAGE_PAGE_GENERIC
 #define HID_USAGE_PAGE_GENERIC ((USHORT)0x01)
@@ -69,30 +70,33 @@ void RegisterInputDevices(HWND windowHandle)
     keyboard.dwFlags = 0;
     keyboard.hwndTarget = windowHandle;
 
-    BOOL success = RegisterRawInputDevices(
+    BOOL success = ::RegisterRawInputDevices(
         inputDevices.data(),
         static_cast<UINT>(inputDevices.size()),
         static_cast<UINT>(sizeof(inputDevices[0])));
 
     if (success == FALSE) {
-        ///@todo throw exception
+        return Errors::New("RegisterRawInputDevices() failed");
     }
+
+    return nullptr;
 }
 
 } // namespace
 
 class GameWindowWin32::Impl final {
 public:
-    Impl(
+    ~Impl();
+
+    [[nodiscard]] std::unique_ptr<Error>
+    Initialize(
         HINSTANCE hInstance,
         int nCmdShow,
         HICON icon,
         HICON iconSmall,
         bool useOpenGL,
         const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
-        const PresentationParameters& presentationParameters);
-
-    ~Impl();
+        const PresentationParameters& presentationParameters) noexcept;
 
     void SetAllowUserResizing(bool allowResizing);
 
@@ -112,30 +116,32 @@ public:
     std::string title;
     Rectangle clientBounds;
     std::optional<HCURSOR> gameCursor;
-    HINSTANCE instanceHandle;
-    HWND windowHandle;
-    bool allowUserResizing;
-    bool isFullScreen;
-    bool isMouseCursorVisible;
+    HINSTANCE instanceHandle = nullptr;
+    HWND windowHandle = nullptr;
+    bool allowUserResizing = false;
+    bool isFullScreen = false;
+    bool isMouseCursorVisible = true;
 };
 
-GameWindowWin32::Impl::Impl(
+std::unique_ptr<Error>
+GameWindowWin32::Impl::Initialize(
     HINSTANCE hInstance,
     int nCmdShow,
     HICON icon,
     HICON iconSmall,
     bool useOpenGL,
     const std::shared_ptr<EventQueue<SystemEvent>>& eventQueueIn,
-    const PresentationParameters& presentationParameters)
-    : eventQueue(eventQueueIn)
-    , title("Game")
-    , clientBounds(0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight)
-    , instanceHandle(hInstance)
-    , windowHandle(nullptr)
-    , allowUserResizing(false)
-    , isFullScreen(presentationParameters.IsFullScreen)
-    , isMouseCursorVisible(true)
+    const PresentationParameters& presentationParameters) noexcept
 {
+    eventQueue = eventQueueIn;
+    title = "Game";
+    clientBounds = Rectangle{0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
+    instanceHandle = hInstance;
+    windowHandle = nullptr;
+    allowUserResizing = false;
+    isFullScreen = presentationParameters.IsFullScreen;
+    isMouseCursorVisible = true;
+
     POMDOG_ASSERT(clientBounds.Width > 0);
     POMDOG_ASSERT(clientBounds.Height > 0);
 
@@ -186,49 +192,48 @@ GameWindowWin32::Impl::Impl(
         sizeof(WNDCLASSEX),
         windowClassStyle,
         Impl::WindowProcedure,
-        0, 0,
+        0,
+        0,
         instanceHandle,
         icon,
         LoadCursor(nullptr, IDC_ARROW),
         static_cast<HBRUSH>(GetStockObject(BLACK_BRUSH)),
         nullptr,
         windowName,
-        iconSmall
+        iconSmall,
     };
 
-    if (0 == ::RegisterClassEx(&wcex)) {
-        ///@todo Not implemented
-        //POMDOG_THROW_EXCEPTION(ExceptionCode::RuntimeAssertionFailed,
-        //    "Call to RegisterClassEx failed!",
-        //    "Win32GameWindow::Impl::Initialize");
+    if (::RegisterClassEx(&wcex) == 0) {
+        return Errors::New("RegisterClassEx() failed");
     }
 
-    windowHandle = CreateWindowEx(windowStyleEx, wcex.lpszClassName, title.c_str(), windowStyle,
-        CW_USEDEFAULT, CW_USEDEFAULT, adjustedWidth, adjustedHeight, nullptr, nullptr, instanceHandle, nullptr);
+    windowHandle = CreateWindowEx(
+        windowStyleEx,
+        wcex.lpszClassName,
+        title.data(),
+        windowStyle,
+        CW_USEDEFAULT,
+        CW_USEDEFAULT,
+        adjustedWidth,
+        adjustedHeight,
+        nullptr,
+        nullptr,
+        instanceHandle,
+        nullptr);
 
-    if (nullptr == windowHandle) {
-        ///@todo Not implemented
-        //POMDOG_THROW_EXCEPTION(ExceptionCode::RuntimeAssertionFailed,
-        //    "Call to CreateWindow failed!",
-        //    "Win32GameWindow::Impl::Initialize");
+    if (windowHandle == nullptr) {
+        return Errors::New("CreateWindowEx() failed");
     }
 
     if (IsDarkMode()) {
         if (auto err = UseImmersiveDarkMode(windowHandle, true); err != nullptr) {
-            ///@todo Not implemented
-            //POMDOG_THROW_EXCEPTION(ExceptionCode::RuntimeAssertionFailed,
-            //    "failed to use dark mode.",
-            //    "Win32GameWindow::Impl::Initialize");
+            return Errors::Wrap(std::move(err), "UseImmersiveDarkMode() failed");
         }
     }
 
-    ///@note See http://msdn.microsoft.com/ja-jp/library/ff485844(v=vs.85).aspx
-    //if (FAILED(::CoInitialize(0)))
-    if (FAILED(::CoInitializeEx(nullptr, COINIT_MULTITHREADED | COINIT_DISABLE_OLE1DDE))) {
-        ///@todo Not implemented
-        //POMDOG_THROW_EXCEPTION(ExceptionCode::RuntimeAssertionFailed,
-        //    "Failed to CoInitializeEX",
-        //    "Win32GameWindow::Impl::Initialize");
+    // NOTE: See http://msdn.microsoft.com/ja-jp/library/ff485844(v=vs.85).aspx
+    if (auto hr = ::CoInitializeEx(nullptr, COINIT_MULTITHREADED | COINIT_DISABLE_OLE1DDE); FAILED(hr)) {
+        return Errors::New("CoInitializeEx() failed");
     }
 
     if (nCmdShow == SW_MAXIMIZE) {
@@ -248,12 +253,16 @@ GameWindowWin32::Impl::Impl(
 
     ::SetWindowLongPtr(windowHandle, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
 
-    RegisterInputDevices(windowHandle);
+    if (auto err = RegisterInputDevices(windowHandle); err != nullptr) {
+        return Errors::Wrap(std::move(err), "RegisterInputDevices() failed");
+    }
+
+    return nullptr;
 }
 
 GameWindowWin32::Impl::~Impl()
 {
-    if (nullptr != windowHandle) {
+    if (windowHandle != nullptr) {
         ::DestroyWindow(windowHandle);
         ::SetWindowLongPtr(windowHandle, GWLP_USERDATA, 0);
         windowHandle = nullptr;
@@ -289,8 +298,9 @@ void GameWindowWin32::Impl::SetAllowUserResizing(bool allowResizingIn)
         return;
     }
 
-    if (0 == ::SetWindowPos(windowHandle, 0, 0, 0, 0, 0,
-        SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOSIZE | SWP_FRAMECHANGED)) {
+    if (::SetWindowPos(
+            windowHandle, 0, 0, 0, 0, 0,
+            SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOSIZE | SWP_FRAMECHANGED) == 0) {
         ///@todo Not implemented
         return;
     }
@@ -371,8 +381,8 @@ void GameWindowWin32::Impl::SetMouseCursor(MouseCursor cursorIn)
     }
 }
 
-LRESULT CALLBACK GameWindowWin32::Impl::WindowProcedure(
-    HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK
+GameWindowWin32::Impl::WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     auto window = reinterpret_cast<GameWindowWin32::Impl*>(::GetWindowLongPtr(hWnd, GWLP_USERDATA));
 
@@ -503,26 +513,33 @@ LRESULT CALLBACK GameWindowWin32::Impl::WindowProcedure(
     return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 
-GameWindowWin32::GameWindowWin32(
+GameWindowWin32::GameWindowWin32()
+    : impl(std::make_unique<Impl>())
+{
+}
+
+GameWindowWin32::~GameWindowWin32() = default;
+
+std::unique_ptr<Error>
+GameWindowWin32::Initialize(
     HINSTANCE hInstance,
     int nCmdShow,
     HICON icon,
     HICON iconSmall,
     bool useOpenGL,
     const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
-    const PresentationParameters& presentationParameters)
-    : impl(std::make_unique<Impl>(
+    const PresentationParameters& presentationParameters) noexcept
+{
+    POMDOG_ASSERT(impl != nullptr);
+    return impl->Initialize(
         hInstance,
         nCmdShow,
         icon,
         iconSmall,
         useOpenGL,
         eventQueue,
-        presentationParameters))
-{
+        presentationParameters);
 }
-
-GameWindowWin32::~GameWindowWin32() = default;
 
 bool GameWindowWin32::GetAllowUserResizing() const
 {

@@ -8,6 +8,7 @@
 #include <memory>
 
 namespace Pomdog {
+class Error;
 struct PresentationParameters;
 } // namespace Pomdog
 
@@ -19,16 +20,19 @@ namespace Pomdog::Detail::Win32 {
 
 class GameWindowWin32 final : public GameWindow {
 public:
-    GameWindowWin32(
+    GameWindowWin32();
+
+    ~GameWindowWin32();
+
+    [[nodiscard]] std::unique_ptr<Error>
+    Initialize(
         HINSTANCE hInstance,
         int nCmdShow,
         HICON icon,
         HICON iconSmall,
         bool useOpenGL,
         const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
-        const PresentationParameters& presentationParameters);
-
-    ~GameWindowWin32();
+        const PresentationParameters& presentationParameters) noexcept;
 
     bool GetAllowUserResizing() const override;
 

@@ -6,6 +6,7 @@
 #include "../Utility/ScopeGuard.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+#include "Pomdog/Utility/Errors.hpp"
 #include <oleauto.h>
 #include <wbemidl.h>
 #include <algorithm>
@@ -492,8 +493,8 @@ void GamepadDevice::PollEvents()
     for (int i = 0; i < static_cast<int>(mappings.buttons.size()); ++i) {
         if (auto button = GetButton(state, mappings.buttons, i); button != nullptr) {
             (*button) = ((joystate.rgbButtons[i] & 0x80) != 0)
-                ? ButtonState::Pressed
-                : ButtonState::Released;
+                            ? ButtonState::Pressed
+                            : ButtonState::Released;
         }
     }
 
@@ -551,10 +552,12 @@ void GamepadDevice::PollEvents()
     }
 }
 
-GamepadDirectInput::GamepadDirectInput(HINSTANCE hInstance, HWND windowHandleIn)
-    : windowHandle(windowHandleIn)
-    , directInput(nullptr)
+std::unique_ptr<Error>
+GamepadDirectInput::Initialize(HINSTANCE hInstance, HWND windowHandleIn) noexcept
 {
+    windowHandle = windowHandleIn;
+    directInput = nullptr;
+
     POMDOG_ASSERT(hInstance != nullptr);
     POMDOG_ASSERT(windowHandle != nullptr);
 
@@ -563,20 +566,21 @@ GamepadDirectInput::GamepadDirectInput(HINSTANCE hInstance, HWND windowHandleIn)
     gamepads[2].playerIndex = PlayerIndex::Three;
     gamepads[3].playerIndex = PlayerIndex::Four;
 
-    auto hr = DirectInput8Create(
-        hInstance,
-        DIRECTINPUT_VERSION,
-        IID_IDirectInput8,
-        &directInput,
-        nullptr);
-
-    if (FAILED(hr)) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "Error: Failed to create DirectInput8 instance.");
+    if (auto hr = DirectInput8Create(
+            hInstance,
+            DIRECTINPUT_VERSION,
+            IID_IDirectInput8,
+            &directInput,
+            nullptr);
+        FAILED(hr)) {
+        return Errors::New("DirectInput8Create() failed");
     }
 
     for (auto& gamepad : gamepads) {
         gamepad.deviceState = GamepadStateDirectInput::NotInitialized;
     }
+
+    return nullptr;
 }
 
 GamepadDirectInput::~GamepadDirectInput()

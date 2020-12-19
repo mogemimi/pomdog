@@ -94,12 +94,29 @@ void Bootstrap::Run(
 
     const bool useOpenGL = openGLEnabled;
 
-    auto gameWindow = std::make_shared<GameWindowWin32>(
-        hInstance, cmdShow, icon, iconSmall,
-        useOpenGL, eventQueue, presentationParameters);
+    auto gameWindow = std::make_shared<GameWindowWin32>();
+    if (auto err = gameWindow->Initialize(
+            hInstance,
+            cmdShow,
+            icon,
+            iconSmall,
+            useOpenGL,
+            eventQueue,
+            presentationParameters);
+        err != nullptr) {
+        if (onError != nullptr) {
+            onError(Errors::Wrap(std::move(err), "GameWindowWin32::Initialize() failed"));
+        }
+        return;
+    }
 
-    auto gamepad = std::make_shared<GamepadDirectInput>(
-        hInstance, gameWindow->GetNativeWindowHandle());
+    auto gamepad = std::make_shared<GamepadDirectInput>();
+    if (auto err = gamepad->Initialize(hInstance, gameWindow->GetNativeWindowHandle()); err != nullptr) {
+        if (onError != nullptr) {
+            onError(Errors::Wrap(std::move(err), "GamepadDirectInput::Initialize() failed"));
+        }
+        return;
+    }
 
     auto gameHost = std::make_shared<GameHostWin32>();
 

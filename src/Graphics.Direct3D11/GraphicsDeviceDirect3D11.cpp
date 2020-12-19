@@ -24,28 +24,25 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/StringHelper.hpp"
 #include <array>
+#include <tuple>
 
 namespace Pomdog::Detail::Direct3D11 {
 namespace {
 
 using Microsoft::WRL::ComPtr;
 
-ID3D11InfoQueue* BuildInfoQueue(ID3D11Device* nativeDevice)
+std::tuple<ID3D11InfoQueue*, std::unique_ptr<Error>>
+BuildInfoQueue(ID3D11Device* nativeDevice) noexcept
 {
-    POMDOG_ASSERT(nativeDevice);
+    POMDOG_ASSERT(nativeDevice != nullptr);
 
     ID3D11InfoQueue* infoQueue = nullptr;
-    HRESULT hr = nativeDevice->QueryInterface(IID_PPV_ARGS(&infoQueue));
-
-    POMDOG_ASSERT(SUCCEEDED(hr));
-
-    if (FAILED(hr)) {
-        // error
-        ///@todo throw exception
+    if (auto hr = nativeDevice->QueryInterface(IID_PPV_ARGS(&infoQueue)); FAILED(hr)) {
+        return std::make_tuple(nullptr, Errors::New("failed to get ID3D11InfoQueue"));
     }
 
-    if (!infoQueue) {
-        return nullptr;
+    if (infoQueue == nullptr) {
+        return std::make_tuple(nullptr, nullptr);
     }
 
     infoQueue->ClearRetrievalFilter();
@@ -67,17 +64,17 @@ ID3D11InfoQueue* BuildInfoQueue(ID3D11Device* nativeDevice)
     infoQueue->AddStorageFilterEntries(&filter);
     infoQueue->AddRetrievalFilterEntries(&filter);
 
-    return std::move(infoQueue);
+    return std::make_tuple(std::move(infoQueue), nullptr);
 }
 
-void CheckError(ID3D11InfoQueue* infoQueue)
+[[nodiscard]] std::unique_ptr<Error>
+CheckError(ID3D11InfoQueue* infoQueue) noexcept
 {
 #if defined(DEBUG) && !defined(NDEBUG)
-    POMDOG_ASSERT(infoQueue);
+    POMDOG_ASSERT(infoQueue != nullptr);
 #endif
-
-    if (!infoQueue) {
-        return;
+    if (infoQueue == nullptr) {
+        return nullptr;
     }
 
     const auto storedMessageCount = infoQueue->GetNumStoredMessages();
@@ -97,12 +94,15 @@ void CheckError(ID3D11InfoQueue* infoQueue)
         message += "\n";
     }
 
-    if (message.empty()) {
-        Log::Internal(message);
+    if (!message.empty()) {
+        return Errors::New(std::move(message));
     }
+
+    return nullptr;
 }
 
-D3D11_BIND_FLAG ToBindFlag(BufferBindMode bindMode) noexcept
+[[nodiscard]] D3D11_BIND_FLAG
+ToBindFlag(BufferBindMode bindMode) noexcept
 {
     switch (bindMode) {
     case BufferBindMode::ConstantBuffer:
@@ -267,11 +267,10 @@ IDXGIAdapter1* AdapterManager::ActiveAdapter() const
 std::tuple<Microsoft::WRL::ComPtr<IDXGIFactory1>, std::unique_ptr<Error>>
 AdapterManager::GetFactory() noexcept
 {
-    ComPtr<IDXGIFactory1> dxgiFactory;
+    POMDOG_ASSERT(activeAdapter != nullptr);
 
-    POMDOG_ASSERT(activeAdapter);
-    HRESULT hr = activeAdapter->GetParent(IID_PPV_ARGS(&dxgiFactory));
-    if (FAILED(hr)) {
+    ComPtr<IDXGIFactory1> dxgiFactory;
+    if (auto hr = activeAdapter->GetParent(IID_PPV_ARGS(&dxgiFactory)); FAILED(hr)) {
         return std::make_tuple(nullptr, Errors::New("failed to get DXGIFactory1"));
     }
 
@@ -293,7 +292,11 @@ GraphicsDeviceDirect3D11::Initialize(const PresentationParameters& presentationP
         return Errors::Wrap(std::move(err), "BuildDevice() failed");
     }
 
-    infoQueue = BuildInfoQueue(device.Get());
+    std::unique_ptr<Error> err;
+    std::tie(infoQueue, err) = BuildInfoQueue(device.Get());
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "BuildInfoQueue() failed");
+    }
 
     return nullptr;
 }
@@ -345,7 +348,9 @@ GraphicsDeviceDirect3D11::CreateVertexBuffer(
     }
 
 #if defined(DEBUG) && !defined(NDEBUG)
-    CheckError(infoQueue.Get());
+    if (auto err = CheckError(infoQueue.Get()); err != nullptr) {
+        return std::make_tuple(nullptr, Errors::Wrap(std::move(err), "CheckError() failed"));
+    }
 #endif
 
     auto vertexBuffer = std::make_shared<VertexBuffer>(
@@ -382,7 +387,9 @@ GraphicsDeviceDirect3D11::CreateVertexBuffer(
     }
 
 #if defined(DEBUG) && !defined(NDEBUG)
-    CheckError(infoQueue.Get());
+    if (auto err = CheckError(infoQueue.Get()); err != nullptr) {
+        return std::make_tuple(nullptr, Errors::Wrap(std::move(err), "CheckError() failed"));
+    }
 #endif
 
     auto vertexBuffer = std::make_shared<VertexBuffer>(
@@ -419,7 +426,9 @@ GraphicsDeviceDirect3D11::CreateIndexBuffer(
     }
 
 #if defined(DEBUG) && !defined(NDEBUG)
-    CheckError(infoQueue.Get());
+    if (auto err = CheckError(infoQueue.Get()); err != nullptr) {
+        return std::make_tuple(nullptr, Errors::Wrap(std::move(err), "CheckError() failed"));
+    }
 #endif
 
     auto indexBuffer = std::make_shared<IndexBuffer>(
@@ -455,7 +464,9 @@ GraphicsDeviceDirect3D11::CreateIndexBuffer(
     }
 
 #if defined(DEBUG) && !defined(NDEBUG)
-    CheckError(infoQueue.Get());
+    if (auto err = CheckError(infoQueue.Get()); err != nullptr) {
+        return std::make_tuple(nullptr, Errors::Wrap(std::move(err), "CheckError() failed"));
+    }
 #endif
 
     auto indexBuffer = std::make_shared<IndexBuffer>(
@@ -489,7 +500,9 @@ GraphicsDeviceDirect3D11::CreateConstantBuffer(
     }
 
 #if defined(DEBUG) && !defined(NDEBUG)
-    CheckError(infoQueue.Get());
+    if (auto err = CheckError(infoQueue.Get()); err != nullptr) {
+        return std::make_tuple(nullptr, Errors::Wrap(std::move(err), "CheckError() failed"));
+    }
 #endif
 
     auto constantBuffer = std::make_shared<ConstantBuffer>(
@@ -521,7 +534,9 @@ GraphicsDeviceDirect3D11::CreateConstantBuffer(
     }
 
 #if defined(DEBUG) && !defined(NDEBUG)
-    CheckError(infoQueue.Get());
+    if (auto err = CheckError(infoQueue.Get()); err != nullptr) {
+        return std::make_tuple(nullptr, Errors::Wrap(std::move(err), "CheckError() failed"));
+    }
 #endif
 
     auto constantBuffer = std::make_shared<ConstantBuffer>(

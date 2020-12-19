@@ -12,21 +12,26 @@ using Microsoft::WRL::ComPtr;
 namespace Pomdog::Detail::Direct3D11 {
 namespace {
 
-ID3D11Buffer* CreateNativeBuffer(
+[[nodiscard]] std::tuple<ID3D11Buffer*, std::unique_ptr<Error>>
+CreateNativeBuffer(
     ID3D11Device* device,
     std::size_t sizeInBytes,
     const void* data,
     BufferUsage bufferUsage,
-    D3D11_BIND_FLAG bindFlag)
+    D3D11_BIND_FLAG bindFlag) noexcept
 {
-    POMDOG_ASSERT(bindFlag == D3D11_BIND_CONSTANT_BUFFER
-        || bindFlag == D3D11_BIND_INDEX_BUFFER
-        || bindFlag == D3D11_BIND_VERTEX_BUFFER);
+    POMDOG_ASSERT(
+        bindFlag == D3D11_BIND_CONSTANT_BUFFER ||
+        bindFlag == D3D11_BIND_INDEX_BUFFER ||
+        bindFlag == D3D11_BIND_VERTEX_BUFFER);
 
     if (bindFlag == D3D11_BIND_CONSTANT_BUFFER) {
-        POMDOG_ASSERT_MESSAGE(sizeInBytes <= D3D11_REQ_CONSTANT_BUFFER_ELEMENT_COUNT,
-            "You must set the sizeInBytes value less than or"
-            " equal to D3D11_REQ_CONSTANT_BUFFER_ELEMENT_COUNT.");
+        if (sizeInBytes > D3D11_REQ_CONSTANT_BUFFER_ELEMENT_COUNT) {
+            auto err = Errors::New(
+                "You must set the sizeInBytes value less than or"
+                " equal to D3D11_REQ_CONSTANT_BUFFER_ELEMENT_COUNT.");
+            return std::make_tuple(nullptr, std::move(err));
+        }
 
         if (sizeInBytes % 16 != 0) {
 #if defined(DEBUG) && !defined(NDEBUG)
@@ -67,21 +72,19 @@ ID3D11Buffer* CreateNativeBuffer(
     subresourceData.SysMemSlicePitch = 0;
 
     POMDOG_ASSERT(device != nullptr);
-    POMDOG_ASSERT((bufferDesc.Usage != D3D11_USAGE_IMMUTABLE)
-        || ((bufferDesc.Usage == D3D11_USAGE_IMMUTABLE) && (data != nullptr)));
+    POMDOG_ASSERT(
+        (bufferDesc.Usage != D3D11_USAGE_IMMUTABLE) ||
+        ((bufferDesc.Usage == D3D11_USAGE_IMMUTABLE) && (data != nullptr)));
 
     auto initialData = (data != nullptr) ? &subresourceData : nullptr;
 
     ID3D11Buffer* buffer = nullptr;
-    HRESULT hr = device->CreateBuffer(&bufferDesc, initialData, &buffer);
-
-    if (FAILED(hr)) {
-        // FUS RO DAH!
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "Failed to create ID3D11Buffer");
+    if (auto hr = device->CreateBuffer(&bufferDesc, initialData, &buffer); FAILED(hr)) {
+        auto err = Errors::New("failed to create ID3D11Buffer");
+        return std::make_tuple(nullptr, std::move(err));
     }
 
-    return std::move(buffer);
+    return std::make_tuple(std::move(buffer), nullptr);
 }
 
 D3D11_MAP GetMapTypeForWriting(D3D11_BIND_FLAG bindFlag) noexcept
@@ -117,8 +120,16 @@ BufferDirect3D11::Initialize(
 {
     mapTypeForWriting = GetMapTypeForWriting(bindFlag);
 
-    buffer = CreateNativeBuffer(device, sizeInBytes,
-        nullptr, bufferUsage, bindFlag);
+    std::unique_ptr<Error> err;
+    std::tie(buffer, err) = CreateNativeBuffer(
+        device,
+        sizeInBytes,
+        nullptr,
+        bufferUsage,
+        bindFlag);
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "CreateNativeBuffer() failed");
+    }
 
     return nullptr;
 }
@@ -133,8 +144,16 @@ BufferDirect3D11::Initialize(
 {
     mapTypeForWriting = GetMapTypeForWriting(bindFlag);
 
-    buffer = CreateNativeBuffer(device, sizeInBytes,
-        sourceData, bufferUsage, bindFlag);
+    std::unique_ptr<Error> err;
+    std::tie(buffer, err) = CreateNativeBuffer(
+        device,
+        sizeInBytes,
+        sourceData,
+        bufferUsage,
+        bindFlag);
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "CreateNativeBuffer() failed");
+    }
 
     return nullptr;
 }
