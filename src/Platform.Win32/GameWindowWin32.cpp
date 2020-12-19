@@ -389,9 +389,8 @@ LRESULT CALLBACK GameWindowWin32::Impl::WindowProcedure(
     }
     case WM_PAINT: {
         PAINTSTRUCT ps;
-        HDC hdc = ::BeginPaint(hWnd, &ps);
+        [[maybe_unused]] HDC hdc = ::BeginPaint(hWnd, &ps);
         ::EndPaint(hWnd, &ps);
-        UNREFERENCED_PARAMETER(hdc);
         break;
     }
     case WM_KEYDOWN: {

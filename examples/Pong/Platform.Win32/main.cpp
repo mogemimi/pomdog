@@ -15,13 +15,10 @@
 
 int WINAPI WinMain(
     HINSTANCE hInstance,
-    HINSTANCE hPrevInstance,
-    LPTSTR lpCmdLine,
+    [[maybe_unsed]] HINSTANCE hPrevInstance,
+    [[maybe_unsed]] LPSTR lpCmdLine,
     int nCmdShow)
 {
-    UNREFERENCED_PARAMETER(hPrevInstance);
-    UNREFERENCED_PARAMETER(lpCmdLine);
-
 #if defined(POMDOG_CRTDEBUG)
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_EVERY_1024_DF);
 #endif

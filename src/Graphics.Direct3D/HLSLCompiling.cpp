@@ -61,10 +61,8 @@ public:
     {
     }
 
-    HRESULT __stdcall Open(D3D_INCLUDE_TYPE includeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID* ppData, UINT* pBytes)
+    HRESULT __stdcall Open(D3D_INCLUDE_TYPE includeType, LPCSTR pFileName, [[maybe_unused]] LPCVOID pParentData, LPCVOID* ppData, UINT* pBytes)
     {
-        UNREFERENCED_PARAMETER(pParentData);
-
         //if (D3D10_INCLUDE_FORCE_DWORD == includeType) {
         //    return E_FAIL;
         //}
@@ -119,9 +117,8 @@ public:
         return S_OK;
     }
 
-    HRESULT __stdcall Close(LPCVOID pData)
+    HRESULT __stdcall Close([[maybe_unused]] LPCVOID pData)
     {
-        UNREFERENCED_PARAMETER(pData);
         outputSource.clear();
         return S_OK;
     }

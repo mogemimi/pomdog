@@ -115,12 +115,10 @@ void SoundEffectXAudio2::Stop() noexcept
     this->state = SoundState::Stopped;
 }
 
-void SoundEffectXAudio2::Apply3D(const AudioListener& listener, const AudioEmitter& emitter) noexcept
+void SoundEffectXAudio2::Apply3D(
+    [[maybe_unused]] const AudioListener& listener,
+    [[maybe_unused]] const AudioEmitter& emitter) noexcept
 {
-    ///@todo Not implemented
-    UNREFERENCED_PARAMETER(listener);
-    UNREFERENCED_PARAMETER(emitter);
-
     POMDOG_ASSERT(false);
 }
 
