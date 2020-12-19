@@ -3,6 +3,8 @@ source_group(Application REGULAR_EXPRESSION "(include/Pomdog|src)/Application/*"
 target_sources(pomdog_static PRIVATE
     # NOTE: Application
     ${POMDOG_INC_DIR}/Application/Duration.hpp
+    ${POMDOG_INC_DIR}/Application/FileSystem.hpp
+    ${POMDOG_SRC_DIR}/Application/FileSystem.cpp
     ${POMDOG_INC_DIR}/Application/Game.hpp
     ${POMDOG_INC_DIR}/Application/GameClock.hpp
     ${POMDOG_SRC_DIR}/Application/GameClock.cpp

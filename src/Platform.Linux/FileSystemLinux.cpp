@@ -1,8 +1,7 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Utility/FileSystem.hpp"
+#include "FileSystemLinux.hpp"
 #include "../Utility/ErrorHelper.hpp"
-#include "../Utility/Exception.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/PathHelper.hpp"
 #include <sys/stat.h>
@@ -14,113 +13,123 @@
 #include <cstddef>
 #include <cstdio>
 
-namespace Pomdog {
+namespace Pomdog::Detail::Linux {
 
-bool FileSystem::CreateDirectory(const std::string& path)
+std::unique_ptr<Error>
+CreateNewDirectory(const std::string& path) noexcept
 {
-    POMDOG_ASSERT(!path.empty());
-    struct stat st;
-
-    if (::stat(path.c_str(), &st) != -1) {
-        return false;
+    if (path.empty()) {
+        return Errors::New("path is empty");
     }
-    return ::mkdir(path.c_str(), S_IRWXU) == 0;
+    if (::mkdir(path.data(), S_IRWXU) != 0) {
+        auto err = Detail::ToErrc(errno);
+        return Errors::New(err, "::mkdir() failed");
+    }
+    return nullptr;
 }
 
-bool FileSystem::CreateDirectories(const std::string& path)
+std::unique_ptr<Error>
+CreateDirectories(const std::string& path) noexcept
 {
-    POMDOG_ASSERT(!path.empty());
     if (path.empty()) {
-        return false;
+        return Errors::New("path is empty");
     }
 
     auto tmp = path;
     if (tmp.back() == '/') {
         tmp.pop_back();
     }
-
-    POMDOG_ASSERT(!tmp.empty());
     if (tmp.empty()) {
-        return false;
+        return Errors::New("tmp is empty");
     }
 
     for (auto iter = std::next(std::begin(tmp), 1); iter != std::end(tmp); iter++) {
         if (*iter == '/') {
             *iter = 0;
-            ::mkdir(tmp.c_str(), S_IRWXU);
+            if (::mkdir(tmp.data(), S_IRWXU) != 0) {
+                auto err = Detail::ToErrc(errno);
+                return Errors::New(err, "::mkdir() failed");
+            }
             *iter = '/';
         }
     }
-    return ::mkdir(tmp.c_str(), S_IRWXU) == 0;
+
+    if (::mkdir(tmp.data(), S_IRWXU) != 0) {
+        auto err = Detail::ToErrc(errno);
+        return Errors::New(err, "::mkdir() failed");
+    }
+    return nullptr;
 }
 
-bool FileSystem::Exists(const std::string& path)
+bool Exists(const std::string& path) noexcept
 {
     POMDOG_ASSERT(!path.empty());
-    return ::access(path.c_str(), F_OK) != -1;
+    return ::access(path.data(), F_OK) != -1;
 }
 
-bool FileSystem::IsDirectory(const std::string& path)
+bool IsDirectory(const std::string& path) noexcept
 {
     POMDOG_ASSERT(!path.empty());
     struct stat st;
-    if (::stat(path.c_str(), &st) != -1) {
+    if (::stat(path.data(), &st) != 0) {
         return false;
     }
     return S_ISDIR(st.st_mode);
 }
 
 std::tuple<std::size_t, std::unique_ptr<Error>>
-FileSystem::GetFileSize(const std::string& path)
+GetFileSize(const std::string& path) noexcept
 {
     struct ::stat st;
-    int rc = ::stat(path.data(), &st);
-
-    if (rc != 0) {
-        auto errorCode = Detail::ToErrc(errno);
-        return std::make_tuple(0, Errors::New(errorCode, "::stat() failed"));
+    if (::stat(path.data(), &st) != 0) {
+        auto err = Detail::ToErrc(errno);
+        return std::make_tuple(0, Errors::New(err, "::stat() failed"));
     }
     return std::make_tuple(st.st_size, nullptr);
 }
 
-std::string FileSystem::GetLocalAppDataDirectoryPath()
+std::tuple<std::string, std::unique_ptr<Error>>
+GetLocalAppDataDirectoryPath() noexcept
 {
-    ///@todo Not implemented
-    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
+    return std::make_tuple("", Errors::New("not implemented yet"));
 }
 
-std::string FileSystem::GetAppDataDirectoryPath()
+std::tuple<std::string, std::unique_ptr<Error>>
+GetAppDataDirectoryPath() noexcept
 {
-    ///@todo Not implemented
-    POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
+    return std::make_tuple("", Errors::New("not implemented yet"));
 }
 
-std::string FileSystem::GetResourceDirectoryPath()
+std::tuple<std::string, std::unique_ptr<Error>>
+GetResourceDirectoryPath() noexcept
 {
     std::array<char, PATH_MAX + 1> buf;
     std::fill(std::begin(buf), std::end(buf), 0);
     auto size = ::readlink("/proc/self/exe", buf.data(), PATH_MAX);
     if (size < 0) {
-        // TODO: Add error handling
-        return "";
+        return std::make_tuple("", Errors::New("readlink() failed"));
     }
 
     std::string_view executablePath{buf.data(), static_cast<std::size_t>(size)};
-    return std::string{PathHelper::GetDirectoryName(executablePath)};
+    std::string dir{PathHelper::GetDirectoryName(executablePath)};
+    return std::make_tuple(std::move(dir), nullptr);
 }
 
-std::string FileSystem::GetTempDirectoryPath()
+std::tuple<std::string, std::unique_ptr<Error>>
+GetTempDirectoryPath() noexcept
 {
-    return P_tmpdir;
+    return std::make_tuple(P_tmpdir, nullptr);
 }
 
-std::string FileSystem::GetCurrentWorkingDirectory()
+std::tuple<std::string, std::unique_ptr<Error>>
+GetCurrentWorkingDirectory() noexcept
 {
-    char directory[PATH_MAX];
-    if (::getcwd(directory, sizeof(directory)) != nullptr) {
-        return directory;
+    char dir[PATH_MAX];
+    if (::getcwd(dir, sizeof(dir)) == nullptr) {
+        auto err = Detail::ToErrc(errno);
+        return std::make_tuple("", Errors::New(err, "::getcwd() failed"));
     }
-    return {};
+    return std::make_tuple(dir, nullptr);
 }
 
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Linux

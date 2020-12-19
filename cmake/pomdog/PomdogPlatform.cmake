@@ -7,6 +7,7 @@ source_group(Platform.X11   REGULAR_EXPRESSION "(include/Pomdog/Platform/X11|src
 target_sources(pomdog_static PRIVATE
     $<$<PLATFORM_ID:Darwin,iOS>:
         # NOTE: Platform.Apple
+        ${POMDOG_SRC_DIR}/Platform.Apple/FileSystemApple.hpp
         ${POMDOG_SRC_DIR}/Platform.Apple/FileSystemApple.mm
         ${POMDOG_SRC_DIR}/Platform.Apple/TimeSourceApple.cpp
         ${POMDOG_SRC_DIR}/Platform.Apple/TimeSourceApple.hpp
@@ -45,6 +46,7 @@ target_sources(pomdog_static PRIVATE
     $<$<PLATFORM_ID:Linux>:
         # NOTE: Platform.Linux
         ${POMDOG_SRC_DIR}/Platform.Linux/FileSystemLinux.cpp
+        ${POMDOG_SRC_DIR}/Platform.Linux/FileSystemLinux.hpp
         ${POMDOG_SRC_DIR}/Platform.Linux/TimeSourceLinux.cpp
         ${POMDOG_SRC_DIR}/Platform.Linux/TimeSourceLinux.hpp
     >
@@ -82,6 +84,7 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/Platform.Win32/GameWindowWin32.cpp
         ${POMDOG_SRC_DIR}/Platform.Win32/GameWindowWin32.hpp
         ${POMDOG_SRC_DIR}/Platform.Win32/FileSystemWin32.cpp
+        ${POMDOG_SRC_DIR}/Platform.Win32/FileSystemWin32.hpp
         ${POMDOG_SRC_DIR}/Platform.Win32/KeyboardWin32.cpp
         ${POMDOG_SRC_DIR}/Platform.Win32/KeyboardWin32.hpp
         ${POMDOG_SRC_DIR}/Platform.Win32/MouseWin32.cpp

@@ -1,138 +1,172 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Utility/FileSystem.hpp"
+#include "FileSystemApple.hpp"
 #include "../Utility/ErrorHelper.hpp"
-#include "../Utility/Exception.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <Foundation/Foundation.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <utility>
 
-namespace Pomdog {
+namespace Pomdog::Detail::Apple {
 namespace {
 
-NSString* ToNSString(const std::string& s)
+[[nodiscard]] NSString*
+ToNSString(const std::string& s) noexcept
 {
-    return [NSString stringWithUTF8String:s.c_str()];
+    return [NSString stringWithUTF8String:s.data()];
 }
 
 } // namespace
 
-std::tuple<std::size_t, std::unique_ptr<Error>>
-FileSystem::GetFileSize(const std::string& path)
+std::unique_ptr<Error>
+CreateNewDirectory(const std::string& path) noexcept
 {
-    struct ::stat st;
-    int rc = ::stat(path.data(), &st);
+    POMDOG_ASSERT(!path.empty());
+    auto url = [NSURL URLWithString:ToNSString(path)];
 
-    if (rc != 0) {
-        auto errorCode = Detail::ToErrc(errno);
-        return std::make_tuple(0, Errors::New(errorCode, "::stat() failed"));
+    NSError* error = nullptr;
+
+    BOOL result = [[NSFileManager defaultManager] createDirectoryAtURL:url
+                                           withIntermediateDirectories:NO
+                                                            attributes:nullptr
+                                                                 error:&error];
+
+    if (error != nullptr) {
+        return Errors::New([[error domain] UTF8String]);
     }
-    return std::make_tuple(st.st_size, nullptr);
+    if (result != YES) {
+        return Errors::New("createDirectoryAtURL() failed");
+    }
+    return nullptr;
 }
 
-bool FileSystem::CreateDirectory(const std::string& path)
+std::unique_ptr<Error>
+CreateDirectories(const std::string& path) noexcept
 {
     POMDOG_ASSERT(!path.empty());
-    BOOL result = [[NSFileManager defaultManager]
-        createDirectoryAtPath: ToNSString(path)
-        withIntermediateDirectories:YES
-        attributes:nil
-        error:nil];
-    return (result == YES);
+    auto url = [NSURL URLWithString:ToNSString(path)];
+
+    NSError* error = nullptr;
+
+    BOOL result = [[NSFileManager defaultManager] createDirectoryAtURL:url
+                                           withIntermediateDirectories:YES
+                                                            attributes:nullptr
+                                                                 error:&error];
+
+    if (error != nullptr) {
+        return Errors::New([[error domain] UTF8String]);
+    }
+    if (result != YES) {
+        return Errors::New("createDirectoryAtURL() failed");
+    }
+    return nullptr;
 }
 
-bool FileSystem::CreateDirectories(const std::string& path)
-{
-    POMDOG_ASSERT(!path.empty());
-    BOOL result = [[NSFileManager defaultManager]
-        createDirectoryAtPath: ToNSString(path)
-        withIntermediateDirectories:YES
-        attributes:nil
-        error:nil];
-    return (result == YES);
-}
-
-bool FileSystem::Exists(const std::string& path)
+bool Exists(const std::string& path) noexcept
 {
     POMDOG_ASSERT(!path.empty());
     BOOL exists = [[NSFileManager defaultManager]
-        fileExistsAtPath: ToNSString(path)];
+        fileExistsAtPath:ToNSString(path)];
     return (exists == YES);
 }
 
-bool FileSystem::IsDirectory(const std::string& path)
+bool IsDirectory(const std::string& path) noexcept
 {
     POMDOG_ASSERT(!path.empty());
     BOOL isDirectory = NO;
     BOOL exists = [[NSFileManager defaultManager]
-        fileExistsAtPath: ToNSString(path) isDirectory:&isDirectory];
+        fileExistsAtPath:ToNSString(path)
+             isDirectory:&isDirectory];
     return (exists == YES) && (isDirectory == YES);
 }
 
-std::string FileSystem::GetLocalAppDataDirectoryPath()
+std::tuple<std::size_t, std::unique_ptr<Error>>
+GetFileSize(const std::string& path) noexcept
+{
+    struct ::stat st;
+    if (::stat(path.data(), &st) != 0) {
+        auto err = Detail::ToErrc(errno);
+        return std::make_tuple(0, Errors::New(err, "::stat() failed"));
+    }
+    return std::make_tuple(st.st_size, nullptr);
+}
+
+std::tuple<std::string, std::unique_ptr<Error>>
+GetLocalAppDataDirectoryPath() noexcept
 {
     return GetAppDataDirectoryPath();
 }
 
-std::string FileSystem::GetAppDataDirectoryPath()
+std::tuple<std::string, std::unique_ptr<Error>>
+GetAppDataDirectoryPath() noexcept
 {
     NSFileManager* fileManager = [NSFileManager defaultManager];
-    NSString* bundleId = [[NSBundle mainBundle] bundleIdentifier];
+    NSString* bundleID = [[NSBundle mainBundle] bundleIdentifier];
+    if (bundleID == nullptr) {
+        return std::make_tuple("", Errors::New("bundleID is nullptr"));
+    }
+
     NSArray* urlPaths = [fileManager
         URLsForDirectory:NSApplicationSupportDirectory
-        inDomains:NSUserDomainMask];
+               inDomains:NSUserDomainMask];
 
-//    NSArray* paths = NSSearchPathForDirectoriesInDomains(
-//        NSApplicationSupportDirectory, NSUserDomainMask, YES);
+    if ((urlPaths == nullptr) || (urlPaths.count <= 0)) {
+        return std::make_tuple("", Errors::New("urlPaths is empty"));
+    }
+
+    // FIXME:
+    // NSArray* paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
 
     NSURL* appDirectory = [[urlPaths objectAtIndex:0]
-        URLByAppendingPathComponent:bundleId isDirectory:YES];
+        URLByAppendingPathComponent:bundleID
+                        isDirectory:YES];
 
     NSString* path = [appDirectory path];
-    if (path == nil) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "[appDirectory path] is nil");
+    if (path == nullptr) {
+        return std::make_tuple("", Errors::New("[appDirectory path] is nullptr"));
     }
-    BOOL exists = [fileManager fileExistsAtPath:path];
 
+    BOOL exists = [fileManager fileExistsAtPath:path];
     if (!exists) {
-        // Create app directory
+        // NOTE: Create app directory
         exists = [fileManager createDirectoryAtURL:appDirectory
-            withIntermediateDirectories:NO
-            attributes:nil
-            error:nil];
+                       withIntermediateDirectories:NO
+                                        attributes:nullptr
+                                             error:nullptr];
     }
 
     std::string appDataDirecotry = [[appDirectory path] UTF8String];
-
     if (!exists) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error,
-            "App direcotry does not exists: " + appDataDirecotry);
+        return std::make_tuple("", Errors::New("direcotry" + appDataDirecotry + "does not exist"));
     }
 
-    return appDataDirecotry;
+    return std::make_tuple(std::move(appDataDirecotry), nullptr);
 }
 
-std::string FileSystem::GetResourceDirectoryPath()
+std::tuple<std::string, std::unique_ptr<Error>>
+GetResourceDirectoryPath() noexcept
 {
     std::string resourceDirectory = [[[NSBundle mainBundle] resourcePath] UTF8String];
-    return resourceDirectory;
+    return std::make_tuple(std::move(resourceDirectory), nullptr);
 }
 
-std::string FileSystem::GetTempDirectoryPath()
+std::tuple<std::string, std::unique_ptr<Error>>
+GetTempDirectoryPath() noexcept
 {
     std::string tempDirectory = [NSTemporaryDirectory() UTF8String];
-    return tempDirectory;
+    return std::make_tuple(std::move(tempDirectory), nullptr);
 }
 
-std::string FileSystem::GetCurrentWorkingDirectory()
+std::tuple<std::string, std::unique_ptr<Error>>
+GetCurrentWorkingDirectory() noexcept
 {
-    char directory[PATH_MAX];
-    if (::getcwd(directory, sizeof(directory)) != nullptr) {
-        return directory;
+    char dir[PATH_MAX];
+    if (::getcwd(dir, sizeof(dir)) == nullptr) {
+        auto err = Detail::ToErrc(errno);
+        return std::make_tuple("", Errors::New(err, "::getcwd() failed"));
     }
-    return {};
+    return std::make_tuple(dir, nullptr);
 }
 
-} // namespace Pomdog
+} // namespace Pomdog::Detail::Apple

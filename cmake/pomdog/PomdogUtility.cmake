@@ -11,7 +11,6 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_INC_DIR}/Utility/Errors.hpp
     ${POMDOG_SRC_DIR}/Utility/Errors.cpp
     ${POMDOG_SRC_DIR}/Utility/Exception.hpp
-    ${POMDOG_INC_DIR}/Utility/FileSystem.hpp
     ${POMDOG_INC_DIR}/Utility/PathHelper.hpp
     ${POMDOG_SRC_DIR}/Utility/PathHelper.cpp
     ${POMDOG_SRC_DIR}/Utility/ScopeGuard.hpp
