@@ -55,8 +55,8 @@ std::unique_ptr<Error> PongGame::Initialize()
     spriteFont->SetDefaultCharacter(U'?');
 
     // NOTE: Load sound effects
-    if (auto [audioClip, err] = assets->Load<AudioClip>("sounds/pong1.wav"); err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to load audio clip");
+    if (auto [audioClip, loadErr] = assets->Load<AudioClip>("sounds/pong1.wav"); loadErr != nullptr) {
+        return Errors::Wrap(std::move(loadErr), "failed to load audio clip");
     }
     else {
         std::tie(soundEffect1, err) = audioEngine->CreateSoundEffect(audioClip, false);
@@ -65,8 +65,8 @@ std::unique_ptr<Error> PongGame::Initialize()
         }
     }
 
-    if (auto [audioClip, err] = assets->Load<AudioClip>("sounds/pong2.wav"); err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to load audio clip");
+    if (auto [audioClip, loadErr] = assets->Load<AudioClip>("sounds/pong2.wav"); loadErr != nullptr) {
+        return Errors::Wrap(std::move(loadErr), "failed to load audio clip");
     }
     else {
         std::tie(soundEffect2, err) = audioEngine->CreateSoundEffect(audioClip, false);
@@ -75,8 +75,8 @@ std::unique_ptr<Error> PongGame::Initialize()
         }
     }
 
-    if (auto [audioClip, err] = assets->Load<AudioClip>("sounds/pong3.wav"); err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to load audio clip");
+    if (auto [audioClip, loadErr] = assets->Load<AudioClip>("sounds/pong3.wav"); loadErr != nullptr) {
+        return Errors::Wrap(std::move(loadErr), "failed to load audio clip");
     }
     else {
         std::tie(soundEffect3, err) = audioEngine->CreateSoundEffect(audioClip, false);

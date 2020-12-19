@@ -116,7 +116,7 @@ std::unique_ptr<Error> Skeletal2DTest::Initialize()
 
         for (std::size_t k = 0; k < skin->GetSlots().size(); k++) {
             for (auto i : quadIndices) {
-                indices.push_back(i + (k * 4));
+                indices.push_back(i + static_cast<std::uint16_t>(k * 4));
             }
         }
 
@@ -305,8 +305,8 @@ void Skeletal2DTest::Draw()
     commandList->SetRenderPass(std::move(pass));
 
     auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
-        presentationParameters.BackBufferWidth,
-        presentationParameters.BackBufferHeight,
+        static_cast<float>(presentationParameters.BackBufferWidth),
+        static_cast<float>(presentationParameters.BackBufferHeight),
         0.0f,
         100.0f);
 

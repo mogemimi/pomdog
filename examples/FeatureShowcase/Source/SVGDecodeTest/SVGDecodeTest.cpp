@@ -56,8 +56,8 @@ std::unique_ptr<Error> SVGDecodeTest::Initialize()
         constexpr int canvasWidth = 24;
         constexpr int canvasHeight = 24;
 
-        auto [res, err] = SVG::LoadTexture(graphicsDevice, filePath, canvasWidth, canvasHeight);
-        if (err != nullptr) {
+        auto [res, loadErr] = SVG::LoadTexture(graphicsDevice, filePath, canvasWidth, canvasHeight);
+        if (loadErr != nullptr) {
             return Errors::Wrap(std::move(err), "failed to load texture");
         }
         textures.push_back(std::move(res));

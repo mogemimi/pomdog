@@ -99,8 +99,8 @@ void SpriteBatchTest::Draw()
     commandList->SetRenderPass(std::move(pass));
 
     auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
-        presentationParameters.BackBufferWidth,
-        presentationParameters.BackBufferHeight,
+        static_cast<float>(presentationParameters.BackBufferWidth),
+        static_cast<float>(presentationParameters.BackBufferHeight),
         0.0f,
         100.0f);
 
