@@ -1,12 +1,10 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Utility/PathHelper.hpp"
-#include "Pomdog/Utility/FileSystem.hpp"
 #include "Pomdog/Basic/Platform.hpp"
 #include "catch.hpp"
 
 namespace PathHelper = Pomdog::PathHelper;
-using Pomdog::FileSystem;
 
 TEST_CASE("PathHelper", "[PathHelper]")
 {
@@ -94,12 +92,22 @@ TEST_CASE("PathHelper", "[PathHelper]")
     SECTION("Normalize")
     {
         const auto normalize = PathHelper::Normalize;
-        const auto cwd = FileSystem::GetCurrentWorkingDirectory();
-        REQUIRE(cwd == normalize(""));
-        REQUIRE(cwd == normalize("."));
-        REQUIRE(cwd == normalize("./"));
-
 #if defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
+        // NOTE: Windows
+        REQUIRE(normalize("") == "");
+        REQUIRE(normalize(".") == ".");
+        REQUIRE(normalize("./") == ".");
+        REQUIRE(normalize("./.") == ".");
+        REQUIRE(normalize("././") == ".");
+        REQUIRE(normalize("././.") == ".");
+        REQUIRE(normalize("./..") == "..");
+        REQUIRE(normalize("..") == "..");
+        REQUIRE(normalize("../..") == "..\\..");
+        REQUIRE(normalize("../../..") == "..\\..\\..");
+        REQUIRE(normalize("../.") == "..");
+        REQUIRE(normalize(".././..") == "..\\..");
+        REQUIRE(normalize("/.") == "/");
+        REQUIRE(normalize("/..") == "/");
         REQUIRE(normalize("/usr/local/bin") == "/usr\\local\\bin");
         REQUIRE(normalize("/usr/local/bin/") == "/usr\\local\\bin");
         REQUIRE(normalize("/usr/local/bin/.") == "/usr\\local\\bin");
@@ -113,6 +121,21 @@ TEST_CASE("PathHelper", "[PathHelper]")
         REQUIRE(normalize("/usr/local/../local/bin") == "/usr\\local\\bin");
         REQUIRE(normalize("/usr/local/../local/bin/..") == "/usr\\local");
 #else
+        // NOTE: Unix
+        REQUIRE(normalize("") == "");
+        REQUIRE(normalize(".") == ".");
+        REQUIRE(normalize("./") == ".");
+        REQUIRE(normalize("./.") == ".");
+        REQUIRE(normalize("././") == ".");
+        REQUIRE(normalize("././.") == ".");
+        REQUIRE(normalize("./..") == "..");
+        REQUIRE(normalize("..") == "..");
+        REQUIRE(normalize("../..") == "../..");
+        REQUIRE(normalize("../../..") == "../../..");
+        REQUIRE(normalize("../.") == "..");
+        REQUIRE(normalize(".././..") == "../..");
+        REQUIRE(normalize("/.") == "/");
+        REQUIRE(normalize("/..") == "/");
         REQUIRE(normalize("/usr/local/bin") == "/usr/local/bin");
         REQUIRE(normalize("/usr/local/bin/") == "/usr/local/bin");
         REQUIRE(normalize("/usr/local/bin/.") == "/usr/local/bin");

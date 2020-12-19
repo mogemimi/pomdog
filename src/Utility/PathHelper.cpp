@@ -3,7 +3,6 @@
 #include "Pomdog/Utility/PathHelper.hpp"
 #include "Pomdog/Basic/Platform.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/FileSystem.hpp"
 #include "Pomdog/Utility/StringHelper.hpp"
 #include <algorithm>
 #include <regex>
@@ -56,213 +55,88 @@ isRootDirectoryName(std::string_view name) noexcept
 }
 
 class PathIterator final {
-    const std::string* source = nullptr;
-    std::string::size_type startPos = std::string::npos;
-    std::string::size_type endPos = std::string::npos;
+    std::string_view source;
+    std::string_view::size_type startPos = std::string::npos;
+    std::string_view::size_type endPos = std::string::npos;
 
 public:
-    [[maybe_unused]] PathIterator() = default;
+    [[maybe_unused]] PathIterator() noexcept = default;
 
-    PathIterator(const std::string& path_, std::string::size_type start_, std::string::size_type end_)
-        : source(&path_)
-        , startPos(start_)
-        , endPos(end_)
+    PathIterator(std::string_view sourceIn, std::string_view::size_type startIn, std::string_view::size_type endIn) noexcept
+        : source(sourceIn)
+        , startPos(startIn)
+        , endPos(endIn)
     {
     }
 
-    std::string operator*() const
+    std::string_view operator*() const noexcept
     {
-        POMDOG_ASSERT(source != nullptr);
-        if (source->empty()) {
-            return "";
+        if (source.empty()) {
+            return source;
         }
-        POMDOG_ASSERT(startPos != std::string::npos);
-        POMDOG_ASSERT(endPos != std::string::npos);
-        if (endPos == std::string::npos) {
-            return source->substr(startPos);
+        POMDOG_ASSERT(startPos != std::string_view::npos);
+        POMDOG_ASSERT(endPos != std::string_view::npos);
+        if (endPos == std::string_view::npos) {
+            return source.substr(startPos);
         }
-        return source->substr(startPos, endPos - startPos);
+        return source.substr(startPos, endPos - startPos);
     }
 
     [[maybe_unused]] bool operator==(const PathIterator& iter) const noexcept
     {
-        return (source == iter.source)
-            && (startPos == iter.startPos)
-            && (endPos == iter.endPos);
+        return (source.data() == iter.source.data()) &&
+               (startPos == iter.startPos) &&
+               (endPos == iter.endPos);
     }
 
-    bool operator!=(const PathIterator& iter) const
+    bool operator!=(const PathIterator& iter) const noexcept
     {
-        return (source != iter.source)
-            || (startPos != iter.startPos)
-            || (endPos != iter.endPos);
+        return (source.data() != iter.source.data()) ||
+               (startPos != iter.startPos) ||
+               (endPos != iter.endPos);
     }
 
-    static PathIterator begin(const std::string& path)
+    static PathIterator begin(const std::string_view& path) noexcept
     {
         if (path.empty()) {
-            return PathIterator(path, std::string::npos, std::string::npos);
+            return PathIterator(path, std::string_view::npos, std::string_view::npos);
         }
-        auto index = findFirstOfSlash(path);
-        if (std::string::npos == index) {
+        const auto index = findFirstOfSlash(path);
+        if (index == std::string_view::npos) {
             return PathIterator(path, 0, path.size());
         }
         return PathIterator(path, 0, index);
     }
 
-    static PathIterator end(const std::string& path)
+    static PathIterator end(const std::string_view& path) noexcept
     {
-        return PathIterator(path, std::string::npos, std::string::npos);
+        return PathIterator(path, std::string_view::npos, std::string_view::npos);
     }
 
-    static PathIterator next(const PathIterator& iter)
+    static PathIterator next(const PathIterator& iter) noexcept
     {
-        POMDOG_ASSERT(iter.source != nullptr);
-        POMDOG_ASSERT(iter.startPos != std::string::npos);
-        POMDOG_ASSERT(iter.endPos != std::string::npos);
+        POMDOG_ASSERT(iter.startPos != std::string_view::npos);
+        POMDOG_ASSERT(iter.endPos != std::string_view::npos);
         auto endPos = iter.endPos;
-        if (endPos == iter.source->size()) {
-            return PathIterator(*iter.source, std::string::npos, std::string::npos);
+        if (endPos == iter.source.size()) {
+            return PathIterator(iter.source, std::string_view::npos, std::string_view::npos);
         }
 
-        if (iter.source->at(endPos) == '/'
-#if defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
-            || iter.source->at(endPos) == '\\'
-#endif
-        ) {
-            if (endPos < iter.source->size()) {
+        if (iter.source.at(endPos) == '/' || iter.source.at(endPos) == '\\') {
+            if (endPos < iter.source.size()) {
                 endPos++;
             }
         }
-        auto index = findFirstOfSlash(*iter.source, endPos);
-        if (std::string::npos == index) {
-            if (endPos < iter.source->size()) {
-                return PathIterator(*iter.source, endPos, iter.source->size());
+        const auto index = findFirstOfSlash(iter.source, endPos);
+        if (index == std::string_view::npos) {
+            if (endPos < iter.source.size()) {
+                return PathIterator(iter.source, endPos, iter.source.size());
             }
-            return PathIterator(*iter.source, index, index);
+            return PathIterator(iter.source, index, index);
         }
-        return PathIterator(*iter.source, endPos, index);
+        return PathIterator(iter.source, endPos, index);
     }
 };
-
-#if 0
-TEST(PathIterator, Case_01)
-{
-    std::string path = "";
-    auto iter = PathIterator::begin(path);
-    EXPECT_EQ(iter, PathIterator::begin(path));
-    EXPECT_EQ(iter, PathIterator::end(path));
-    EXPECT_EQ("", *iter);
-}
-
-TEST(PathIterator, Case_02)
-{
-    std::string path = "/";
-    auto iter = PathIterator::begin(path);
-    EXPECT_EQ(iter, PathIterator::begin(path));
-    EXPECT_NE(iter, PathIterator::end(path));
-    EXPECT_EQ("/", *iter);
-    iter = PathIterator::next(iter);
-    EXPECT_NE(iter, PathIterator::begin(path));
-    EXPECT_EQ(iter, PathIterator::end(path));
-}
-
-TEST(PathIterator, Case_03)
-{
-    std::string path = ".";
-    auto iter = PathIterator::begin(path);
-    EXPECT_EQ(iter, PathIterator::begin(path));
-    EXPECT_NE(iter, PathIterator::end(path));
-    EXPECT_EQ(".", *iter);
-    iter = PathIterator::next(iter);
-    EXPECT_NE(iter, PathIterator::begin(path));
-    EXPECT_EQ(iter, PathIterator::end(path));
-}
-
-TEST(PathIterator, Case_04)
-{
-    std::string path = "../hoge";
-    auto iter = PathIterator::begin(path);
-    EXPECT_EQ(iter, PathIterator::begin(path));
-    EXPECT_NE(iter, PathIterator::end(path));
-    EXPECT_EQ("..", *iter);
-    iter = PathIterator::next(iter);
-    EXPECT_NE(iter, PathIterator::begin(path));
-    EXPECT_NE(iter, PathIterator::end(path));
-    EXPECT_EQ("hoge", *iter);
-    iter = PathIterator::next(iter);
-    EXPECT_NE(iter, PathIterator::begin(path));
-    EXPECT_EQ(iter, PathIterator::end(path));
-}
-
-TEST(PathIterator, Case_05)
-{
-    std::string path = "../hoge/";
-    auto iter = PathIterator::begin(path);
-    EXPECT_EQ(iter, PathIterator::begin(path));
-    EXPECT_NE(iter, PathIterator::end(path));
-    EXPECT_EQ("..", *iter);
-    iter = PathIterator::next(iter);
-    EXPECT_NE(iter, PathIterator::begin(path));
-    EXPECT_NE(iter, PathIterator::end(path));
-    EXPECT_EQ("hoge", *iter);
-    iter = PathIterator::next(iter);
-    EXPECT_NE(iter, PathIterator::begin(path));
-    EXPECT_EQ(iter, PathIterator::end(path));
-}
-
-TEST(PathIterator, Case_06)
-{
-    std::string path = "../foo\\hoge";
-    auto iter = PathIterator::begin(path);
-    EXPECT_EQ(iter, PathIterator::begin(path));
-    EXPECT_NE(iter, PathIterator::end(path));
-    EXPECT_EQ("..", *iter);
-    iter = PathIterator::next(iter);
-    EXPECT_NE(iter, PathIterator::begin(path));
-    EXPECT_NE(iter, PathIterator::end(path));
-    EXPECT_EQ("foo", *iter);
-    iter = PathIterator::next(iter);
-    EXPECT_NE(iter, PathIterator::begin(path));
-    EXPECT_NE(iter, PathIterator::end(path));
-    EXPECT_EQ("hoge", *iter);
-    iter = PathIterator::next(iter);
-    EXPECT_NE(iter, PathIterator::begin(path));
-    EXPECT_EQ(iter, PathIterator::end(path));
-}
-
-TEST(PathIterator, Case_07)
-{
-    std::string path = "../foo\\hoge\\";
-    auto iter = PathIterator::begin(path);
-    EXPECT_EQ(iter, PathIterator::begin(path));
-    EXPECT_NE(iter, PathIterator::end(path));
-    EXPECT_EQ("..", *iter);
-    iter = PathIterator::next(iter);
-    EXPECT_NE(iter, PathIterator::begin(path));
-    EXPECT_NE(iter, PathIterator::end(path));
-    EXPECT_EQ("foo", *iter);
-    iter = PathIterator::next(iter);
-    EXPECT_NE(iter, PathIterator::begin(path));
-    EXPECT_NE(iter, PathIterator::end(path));
-    EXPECT_EQ("hoge", *iter);
-    iter = PathIterator::next(iter);
-    EXPECT_NE(iter, PathIterator::begin(path));
-    EXPECT_EQ(iter, PathIterator::end(path));
-}
-
-TEST(PathIterator, Case_08)
-{
-    std::string path = ".\\";
-    auto iter = PathIterator::begin(path);
-    EXPECT_EQ(iter, PathIterator::begin(path));
-    EXPECT_NE(iter, PathIterator::end(path));
-    EXPECT_EQ(".", *iter);
-    iter = PathIterator::next(iter);
-    EXPECT_NE(iter, PathIterator::begin(path));
-    EXPECT_EQ(iter, PathIterator::end(path));
-}
-#endif
 
 } // namespace
 
@@ -345,34 +219,32 @@ SplitExtension(std::string_view path) noexcept
 [[nodiscard]] std::string
 Normalize(std::string_view path) noexcept
 {
-    std::string fullPath = std::string(path);
-    if (!IsAbsolute(path)) {
-        // NOTE: 'path' is not full path.
-        fullPath = PathHelper::Join(FileSystem::GetCurrentWorkingDirectory(), path);
-    }
-
-    std::vector<std::string> paths;
-    auto iter = PathIterator::begin(fullPath);
-    while (iter != PathIterator::end(fullPath)) {
+    std::vector<std::string_view> paths;
+    auto iter = PathIterator::begin(path);
+    while (iter != PathIterator::end(path)) {
         auto current = *iter;
         iter = PathIterator::next(iter);
 
-        if (current == ".") {
+        if (!paths.empty() && (current == ".")) {
             continue;
         }
         if (current == "..") {
-            assert(!paths.empty());
-            if (paths.empty()) {
-                return fullPath;
+            if ((paths.size() >= 2) && (paths.back() != "..")) {
+                paths.pop_back();
+                continue;
             }
-            paths.pop_back();
-            continue;
+            if (!paths.empty() && (paths.back() == ".")) {
+                paths.pop_back();
+            }
+            if ((paths.size() == 1) && (paths.back() == "/")) {
+                continue;
+            }
         }
         paths.push_back(current);
     }
 
-    fullPath.clear();
-    for (auto& current : paths) {
+    std::string fullPath;
+    for (const auto& current : paths) {
         if (fullPath.empty() && isRootDirectoryName(current)) {
             fullPath = current;
             continue;
@@ -396,8 +268,8 @@ Relative(std::string_view path, std::string_view start) noexcept
 
     auto iterL = PathIterator::begin(fullPath);
     auto iterR = PathIterator::begin(fullPathStart);
-    while ((iterL != PathIterator::end(fullPath))
-        && (iterR != PathIterator::end(fullPathStart))) {
+    while ((iterL != PathIterator::end(fullPath)) &&
+           (iterR != PathIterator::end(fullPathStart))) {
         if (*iterL != *iterR) {
             break;
         }

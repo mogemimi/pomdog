@@ -29,7 +29,7 @@ Split(std::string_view path) noexcept;
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::string_view, std::string_view>
 SplitExtension(std::string_view path) noexcept;
 
-/// Returns the shortest path.
+/// Returns the shortest path lexically.
 [[nodiscard]] POMDOG_EXPORT std::string
 Normalize(std::string_view path) noexcept;
 
