@@ -2,8 +2,8 @@
 
 #include "ShaderVulkan.hpp"
 #include "../Graphics.Backends/ShaderBytecode.hpp"
+#include "../Utility/Exception.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
 
 namespace Pomdog::Detail::Vulkan {
 

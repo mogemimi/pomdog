@@ -1,10 +1,10 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "BufferDirect3D11.hpp"
+#include "../Utility/Exception.hpp"
 #include "Pomdog/Graphics/BufferUsage.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
 #include <utility>
 
 using Microsoft::WRL::ComPtr;

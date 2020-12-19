@@ -1,9 +1,9 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "RenderTarget2DVulkan.hpp"
+#include "../Utility/Exception.hpp"
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
 
 namespace Pomdog::Detail::Vulkan {
 

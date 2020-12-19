@@ -6,11 +6,11 @@
 #include "VulkanFormatHelper.hpp"
 #include "../Graphics.Backends/BufferHelper.hpp"
 #include "../Graphics.Backends/ShaderBytecode.hpp"
+#include "../Utility/Exception.hpp"
 #include "Pomdog/Graphics/InputLayoutDescription.hpp"
 #include "Pomdog/Graphics/PipelineStateDescription.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
 
 namespace Pomdog::Detail::Vulkan {
 namespace {

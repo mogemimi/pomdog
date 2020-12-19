@@ -1,9 +1,9 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "BufferVulkan.hpp"
+#include "../Utility/Exception.hpp"
 #include "Pomdog/Graphics/BufferUsage.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
 #include <optional>
 #include <utility>
 

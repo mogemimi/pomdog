@@ -2,9 +2,9 @@
 
 #include "RenderTarget2DDirect3D11.hpp"
 #include "../Graphics.DXGI/DXGIFormatHelper.hpp"
+#include "../Utility/Exception.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
 
 namespace Pomdog::Detail::Direct3D11 {
 namespace {

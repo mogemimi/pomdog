@@ -2,8 +2,8 @@
 
 #include "Pomdog/Utility/FileSystem.hpp"
 #include "../Utility/ErrorHelper.hpp"
+#include "../Utility/Exception.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
 #include "Pomdog/Utility/PathHelper.hpp"
 #include <sys/stat.h>
 #include <sys/types.h>

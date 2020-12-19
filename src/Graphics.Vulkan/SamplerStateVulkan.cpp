@@ -2,9 +2,9 @@
 
 #include "SamplerStateVulkan.hpp"
 #include "FormatHelper.hpp"
+#include "../Utility/Exception.hpp"
 #include "Pomdog/Graphics/SamplerDescription.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
 #include <tuple>
 
 namespace Pomdog::Detail::Vulkan {

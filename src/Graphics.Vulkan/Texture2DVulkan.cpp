@@ -4,9 +4,9 @@
 #include "BufferVulkan.hpp"
 #include "VulkanFormatHelper.hpp"
 #include "../Graphics.Backends/TextureHelper.hpp"
+#include "../Utility/Exception.hpp"
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
 
 namespace Pomdog::Detail::Vulkan {
 

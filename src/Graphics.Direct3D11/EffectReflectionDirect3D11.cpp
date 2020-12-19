@@ -4,9 +4,9 @@
 #include "../Graphics.Backends/ShaderBytecode.hpp"
 #include "../Graphics.Direct3D/HLSLReflectionHelper.hpp"
 #include "../Graphics.Direct3D/PrerequisitesDirect3D.hpp"
+#include "../Utility/Exception.hpp"
 #include "Pomdog/Graphics/EffectConstantDescription.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
 #include <algorithm>
 #include <utility>
 

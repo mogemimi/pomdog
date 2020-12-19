@@ -9,6 +9,7 @@
 #include "../Graphics.Backends/GraphicsCapabilities.hpp"
 #include "../Graphics.Backends/GraphicsCommandListImmediate.hpp"
 #include "../Graphics.DXGI/DXGIFormatHelper.hpp"
+#include "../Utility/Exception.hpp"
 #include "Pomdog/Graphics/IndexBuffer.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Graphics/RenderPass.hpp"
@@ -20,7 +21,6 @@
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Math/Vector4.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
 #include "Pomdog/Utility/StringHelper.hpp"
 #include <algorithm>
 

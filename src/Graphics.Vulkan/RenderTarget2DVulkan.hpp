@@ -3,8 +3,8 @@
 #pragma once
 
 #include "Texture2DVulkan.hpp"
-#include "Pomdog/Graphics/RenderTarget2D.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
+#include "Pomdog/Graphics/RenderTarget2D.hpp"
 #include <vulkan/vulkan.h>
 
 namespace Pomdog::Detail::Vulkan {

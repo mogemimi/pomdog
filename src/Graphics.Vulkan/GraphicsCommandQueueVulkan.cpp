@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "GraphicsCommandQueueVulkan.hpp"
+#include "../Utility/Exception.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
 
 namespace Pomdog::Detail::Vulkan {
 

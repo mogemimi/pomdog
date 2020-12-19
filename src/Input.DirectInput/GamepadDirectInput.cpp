@@ -2,10 +2,10 @@
 
 #include "GamepadDirectInput.hpp"
 #include "../Input.Backends/GamepadHelper.hpp"
+#include "../Utility/Exception.hpp"
 #include "../Utility/ScopeGuard.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Exception.hpp"
 #include <oleauto.h>
 #include <wbemidl.h>
 #include <algorithm>

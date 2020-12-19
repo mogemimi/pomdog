@@ -5,13 +5,13 @@
 #include "GameWindowCocoa.hpp"
 #include "../Application/SystemEvents.hpp"
 #include "../Graphics.Metal/GraphicsContextMetal.hpp"
+#include "../Utility/Exception.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Input/ButtonState.hpp"
 #include "Pomdog/Input/Keys.hpp"
 #include "Pomdog/Math/Point2D.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Errors.hpp"
-#include "Pomdog/Utility/Exception.hpp"
 
 #import <Metal/Metal.h>
 #import <MetalKit/MetalKit.h>

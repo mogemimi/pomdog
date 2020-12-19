@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "Pomdog/Graphics/SamplerState.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
+#include "Pomdog/Graphics/SamplerState.hpp"
 #include <vulkan/vulkan.h>
 
 namespace Pomdog::Detail::Vulkan {
