@@ -23,10 +23,12 @@ IncludeCategories:
     Priority:        2
   - Regex:           '^"Pomdog/'
     Priority:        3
-  - Regex:           '<[[:alnum:]_]+>'
-    Priority:        5
-  - Regex:           '^<[[:alnum:]]+'
+  - Regex:           '"catch.hpp"'
     Priority:        4
+  - Regex:           '<[[:alnum:]_]+>'
+    Priority:        6
+  - Regex:           '^<[[:alnum:]]+'
+    Priority:        5
   - Regex:           '.*'
     Priority:        1
 NamespaceIndentation: None
