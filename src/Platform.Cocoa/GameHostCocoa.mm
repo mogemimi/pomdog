@@ -138,7 +138,7 @@ private:
     std::unique_ptr<IOService> ioService;
     std::unique_ptr<HTTPClient> httpClient;
 
-    __weak PomdogOpenGLView* openGLView = nil;
+    __weak PomdogOpenGLView* openGLView = nullptr;
     Duration presentationInterval = Duration::zero();
     bool exitRequest = false;
     bool displayLinkEnabled = true;
@@ -174,7 +174,7 @@ GameHostCocoa::Impl::Initialize(
         return Errors::Wrap(std::move(err), "OpenGLContextCocoa::Initialize() failed.");
     }
 
-    POMDOG_ASSERT(openGLView != nil);
+    POMDOG_ASSERT(openGLView != nullptr);
     [openGLView setEventQueue:eventQueue];
     [openGLView setOpenGLContext:openGLContext];
 
@@ -244,7 +244,7 @@ GameHostCocoa::Impl::~Impl()
         displayLink = nullptr;
     }
 
-    if (openGLView != nil) {
+    if (openGLView != nullptr) {
         [openGLView setEventQueue:{}];
     }
 
@@ -265,7 +265,7 @@ GameHostCocoa::Impl::~Impl()
     openGLContext.reset();
     window.reset();
     eventQueue.reset();
-    openGLView = nil;
+    openGLView = nullptr;
 }
 
 std::unique_ptr<Error>
@@ -298,7 +298,7 @@ GameHostCocoa::Impl::Run(
         return nullptr;
     }
 
-    POMDOG_ASSERT(openGLView != nil);
+    POMDOG_ASSERT(openGLView != nullptr);
 
     auto nsOpenGLContext = openGLContext->GetNativeOpenGLContext();
     NSOpenGLPixelFormat* nsPixelFormat = [nsOpenGLContext pixelFormat];
@@ -330,12 +330,12 @@ GameHostCocoa::Impl::Run(
 
 void GameHostCocoa::Impl::GameWillExit()
 {
-    if (openGLView != nil) {
+    if (openGLView != nullptr) {
         [openGLView setRenderCallback:[] {}];
     }
 
     if (window) {
-        window->SetView(nil);
+        window->SetView(nullptr);
     }
 
     if (onCompleted) {
@@ -429,7 +429,7 @@ void GameHostCocoa::Impl::RenderFrame()
     auto game = weakGame.lock();
 
     POMDOG_ASSERT(game);
-    POMDOG_ASSERT(openGLView != nil);
+    POMDOG_ASSERT(openGLView != nullptr);
 
     openGLContext->Lock();
     openGLContext->SetView(openGLView);

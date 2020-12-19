@@ -149,7 +149,7 @@ private:
     std::unique_ptr<IOService> ioService;
     std::unique_ptr<HTTPClient> httpClient;
 
-    __weak MTKView* metalView = nil;
+    __weak MTKView* metalView = nullptr;
     Duration presentationInterval = Duration::zero();
     bool exitRequest = false;
 };
@@ -169,7 +169,7 @@ GameHostMetal::Impl::Initialize(
     this->exitRequest = false;
 
     POMDOG_ASSERT(window);
-    POMDOG_ASSERT(metalView != nil);
+    POMDOG_ASSERT(metalView != nullptr);
 
     window->SetView(metalView);
 
@@ -183,14 +183,14 @@ GameHostMetal::Impl::Initialize(
     POMDOG_ASSERT(graphicsDevice != nullptr);
     id<MTLDevice> metalDevice = graphicsDevice->GetMTLDevice();
 
-    if (metalDevice == nil) {
+    if (metalDevice == nullptr) {
         return Errors::New("Metal is not supported on this device.");
     }
 
     // NOTE: Setup metal view
     SetupMetalView(metalView, metalDevice, presentationParameters);
 
-    POMDOG_ASSERT(metalDevice != nil);
+    POMDOG_ASSERT(metalDevice != nullptr);
 
     // NOTE: Create graphics context
     graphicsContext = std::make_shared<GraphicsContextMetal>(metalDevice);
