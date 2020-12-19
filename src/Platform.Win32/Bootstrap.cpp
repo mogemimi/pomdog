@@ -101,8 +101,20 @@ void Bootstrap::Run(
     auto gamepad = std::make_shared<GamepadDirectInput>(
         hInstance, gameWindow->GetNativeWindowHandle());
 
-    auto gameHost = std::make_shared<GameHostWin32>(
-        gameWindow, eventQueue, gamepad, presentationParameters, useOpenGL);
+    auto gameHost = std::make_shared<GameHostWin32>();
+
+    if (auto err = gameHost->Initialize(
+            gameWindow,
+            eventQueue,
+            gamepad,
+            presentationParameters,
+            useOpenGL);
+        err != nullptr) {
+        if (onError != nullptr) {
+            onError(Errors::Wrap(std::move(err), "GameHostWin32::Initialize() failed"));
+        }
+        return;
+    }
 
     POMDOG_ASSERT(createApp);
     auto game = createApp(gameHost);

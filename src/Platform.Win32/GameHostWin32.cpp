@@ -19,6 +19,7 @@
 #include "../Application/SubsystemScheduler.hpp"
 #include "../Application/SystemEvents.hpp"
 #include "../Audio.XAudio2/AudioEngineXAudio2.hpp"
+#include "Pomdog/Application/FileSystem.hpp"
 #include "Pomdog/Application/Game.hpp"
 #include "Pomdog/Application/GameClock.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
@@ -32,7 +33,6 @@
 #include "Pomdog/Signals/EventQueue.hpp"
 #include "Pomdog/Signals/ScopedConnection.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/FileSystem.hpp"
 #include "Pomdog/Utility/PathHelper.hpp"
 #include <chrono>
 #include <thread>
@@ -99,8 +99,9 @@ CreateGraphicsDeviceGL4(
     // NOTE: Create an OpenGL context.
     auto openGLContext = std::make_shared<Win32::OpenGLContextWin32>();
     if (auto err = openGLContext->Initialize(
-        window->GetNativeWindowHandle(),
-        presentationParameters); err != nullptr) {
+            window->GetNativeWindowHandle(),
+            presentationParameters);
+        err != nullptr) {
         return std::make_tuple(
             nullptr,
             nullptr,
@@ -233,14 +234,15 @@ CreateGraphicsDeviceDirect3D11(
 
 class GameHostWin32::Impl final {
 public:
-    Impl(
+    ~Impl();
+
+    [[nodiscard]] std::unique_ptr<Error>
+    Initialize(
         const std::shared_ptr<GameWindowWin32>& window,
         const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
         const std::shared_ptr<NativeGamepad>& gamepad,
         const PresentationParameters& presentationParameters,
-        bool useOpenGL);
-
-    ~Impl();
+        bool useOpenGL) noexcept;
 
     void Run(Game& game);
 
@@ -312,23 +314,25 @@ private:
     Duration presentationInterval;
     SurfaceFormat backBufferSurfaceFormat;
     SurfaceFormat backBufferDepthStencilFormat;
-    bool exitRequest;
-    bool surfaceResizeRequest;
+    bool exitRequest = false;
+    bool surfaceResizeRequest = false;
 };
 
-GameHostWin32::Impl::Impl(
+std::unique_ptr<Error>
+GameHostWin32::Impl::Initialize(
     const std::shared_ptr<GameWindowWin32>& windowIn,
     const std::shared_ptr<EventQueue<SystemEvent>>& eventQueueIn,
     const std::shared_ptr<NativeGamepad>& gamepadIn,
     const PresentationParameters& presentationParameters,
-    bool useOpenGL)
-    : eventQueue(eventQueueIn)
-    , window(windowIn)
-    , backBufferSurfaceFormat(presentationParameters.BackBufferFormat)
-    , backBufferDepthStencilFormat(presentationParameters.DepthStencilFormat)
-    , exitRequest(false)
-    , surfaceResizeRequest(false)
+    bool useOpenGL) noexcept
 {
+    eventQueue = eventQueueIn;
+    window = windowIn;
+    backBufferSurfaceFormat = presentationParameters.BackBufferFormat;
+    backBufferDepthStencilFormat = presentationParameters.DepthStencilFormat;
+    exitRequest = false;
+    surfaceResizeRequest = false;
+
     POMDOG_ASSERT(presentationParameters.PresentationInterval > 0);
     presentationInterval = Duration(1.0) / presentationParameters.PresentationInterval;
 
@@ -339,8 +343,9 @@ GameHostWin32::Impl::Impl(
         graphicsCommandQueue = std::move(std::get<1>(result));
         graphicsBridge = std::move(std::get<2>(result));
 
-        // FIXME: error handling
-        [[maybe_unused]] auto deviceErr = std::move(std::get<3>(result));
+        if (auto deviceErr = std::move(std::get<3>(result)); deviceErr != nullptr) {
+            return Errors::Wrap(std::move(deviceErr), "CreateGraphicsDeviceGL4() failed");
+        }
     }
 #endif
 #if !defined(POMDOG_DISABLE_DIRECT3D11)
@@ -350,8 +355,9 @@ GameHostWin32::Impl::Impl(
         graphicsCommandQueue = std::move(std::get<1>(result));
         graphicsBridge = std::move(std::get<2>(result));
 
-        // FIXME: error handling
-        [[maybe_unused]] auto deviceErr = std::move(std::get<3>(result));
+        if (auto deviceErr = std::move(std::get<3>(result)); deviceErr != nullptr) {
+            return Errors::Wrap(std::move(deviceErr), "CreateGraphicsDeviceDirect3D11() failed");
+        }
     }
 #endif
 
@@ -363,7 +369,7 @@ GameHostWin32::Impl::Impl(
     // NOTE: Create audio engine.
     audioEngine = std::make_shared<AudioEngineXAudio2>();
     if (auto err = audioEngine->Initialize(); err != nullptr) {
-        Log::Warning("Pomdog", err->ToString());
+        return Errors::Wrap(std::move(err), "AudioEngineXAudio2::Initialize() failed");
     }
 
     keyboard = std::make_shared<KeyboardWin32>();
@@ -376,11 +382,14 @@ GameHostWin32::Impl::Impl(
         audioEngine,
         graphicsDevice);
 
+    // NOTE: Create IO service.
     ioService = std::make_unique<IOService>(&clock);
     if (auto err = ioService->Initialize(); err != nullptr) {
-        Log::Warning("Pomdog", err->ToString());
+        return Errors::Wrap(std::move(err), "IOService::Initialize() failed");
     }
     httpClient = std::make_unique<HTTPClient>(ioService.get());
+
+    return nullptr;
 }
 
 GameHostWin32::Impl::~Impl()
@@ -567,22 +576,29 @@ GameHostWin32::Impl::GetHTTPClient(std::shared_ptr<GameHost>&& gameHost) noexcep
     return shared;
 }
 
-GameHostWin32::GameHostWin32(
-    const std::shared_ptr<GameWindowWin32>& window,
-    const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
-    const std::shared_ptr<NativeGamepad>& gamepad,
-    const PresentationParameters& presentationParameters,
-    bool useOpenGL)
-    : impl(std::make_unique<Impl>(
-          window,
-          eventQueue,
-          gamepad,
-          presentationParameters,
-          useOpenGL))
+GameHostWin32::GameHostWin32()
+    : impl(std::make_unique<Impl>())
 {
 }
 
 GameHostWin32::~GameHostWin32() = default;
+
+std::unique_ptr<Error>
+GameHostWin32::Initialize(
+    const std::shared_ptr<GameWindowWin32>& window,
+    const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
+    const std::shared_ptr<NativeGamepad>& gamepad,
+    const PresentationParameters& presentationParameters,
+    bool useOpenGL) noexcept
+{
+    POMDOG_ASSERT(impl != nullptr);
+    return impl->Initialize(
+        window,
+        eventQueue,
+        gamepad,
+        presentationParameters,
+        useOpenGL);
+}
 
 void GameHostWin32::Run(Game& game)
 {

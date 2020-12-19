@@ -7,6 +7,7 @@
 #include <memory>
 
 namespace Pomdog {
+class Error;
 class Game;
 struct PresentationParameters;
 } // namespace Pomdog
@@ -25,14 +26,17 @@ class GameWindowWin32;
 
 class GameHostWin32 final : public GameHost {
 public:
-    GameHostWin32(
+    GameHostWin32();
+
+    ~GameHostWin32();
+
+    [[nodiscard]] std::unique_ptr<Error>
+    Initialize(
         const std::shared_ptr<GameWindowWin32>& window,
         const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
         const std::shared_ptr<NativeGamepad>& gamepad,
         const PresentationParameters& presentationParameters,
-        bool useOpenGL);
-
-    ~GameHostWin32();
+        bool useOpenGL) noexcept;
 
     void Run(Game& game);
 
