@@ -71,6 +71,8 @@ DecodeSVG(std::uint8_t* data, std::size_t size, int canvasWidth, int canvasHeigh
         return std::make_tuple(std::move(imageBuffer), std::move(err));
     }
 
+    [[maybe_unused]] Detail::ScopeGuard defer2([&] { nsvgDeleteRasterizer(rasterizer); });
+
     if ((image->width <= 0.0f) || (image->height <= 0.0f)) {
         auto err = Errors::New("invalid svg format");
         return std::make_tuple(std::move(imageBuffer), std::move(err));
@@ -97,8 +99,6 @@ DecodeSVG(std::uint8_t* data, std::size_t size, int canvasWidth, int canvasHeigh
         canvasWidth,
         canvasHeight,
         canvasWidth * 4);
-
-    nsvgDeleteRasterizer(rasterizer);
 
     return std::make_tuple(std::move(imageBuffer), nullptr);
 }
