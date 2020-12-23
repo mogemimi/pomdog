@@ -102,7 +102,16 @@ std::unique_ptr<Error> PongGame::Initialize()
             presentationParameters.BackBufferWidth,
             presentationParameters.BackBufferHeight,
             false,
-            presentationParameters.BackBufferFormat,
+            presentationParameters.BackBufferFormat);
+
+        if (err != nullptr) {
+            return Errors::Wrap(std::move(err), "failed to create render target");
+        }
+
+        // NOTE: Create depth stencil buffer
+        std::tie(depthStencilBuffer, err) = graphicsDevice->CreateDepthStencilBuffer(
+            presentationParameters.BackBufferWidth,
+            presentationParameters.BackBufferHeight,
             presentationParameters.DepthStencilFormat);
 
         if (err != nullptr) {
@@ -125,9 +134,16 @@ std::unique_ptr<Error> PongGame::Initialize()
 
         connect(window->ClientSizeChanged, [this](int width, int height) {
             auto presentationParameters = graphicsDevice->GetPresentationParameters();
+
             renderTarget = std::get<0>(graphicsDevice->CreateRenderTarget2D(
-                width, height, false,
-                presentationParameters.BackBufferFormat,
+                width,
+                height,
+                false,
+                presentationParameters.BackBufferFormat));
+
+            depthStencilBuffer = std::get<0>(graphicsDevice->CreateDepthStencilBuffer(
+                width,
+                height,
                 presentationParameters.DepthStencilFormat));
 
             postProcessCompositor.SetViewportSize(
@@ -323,6 +339,7 @@ void PongGame::Draw()
     Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
     RenderPass pass;
     pass.RenderTargets[0] = {renderTarget, backgroundColor.ToVector4()};
+    pass.DepthStencilBuffer = depthStencilBuffer;
     pass.ClearDepth = 1.0f;
     pass.ClearStencil = std::uint8_t(0);
     pass.Viewport = viewport;

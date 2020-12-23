@@ -93,13 +93,19 @@ void PostProcessCompositor::BuildRenderTargets(
     POMDOG_ASSERT(height > 0);
 
     for (auto& renderTarget : renderTargets) {
+        // FIXME: Add error handling
         renderTarget = std::get<0>(graphicsDevice.CreateRenderTarget2D(
             width,
             height,
             false,
-            surfaceFormat,
-            depthFormat));
+            surfaceFormat));
     }
+
+    // FIXME: Add error handling
+    depthStencilBuffer = std::get<0>(graphicsDevice.CreateDepthStencilBuffer(
+        width,
+        height,
+        depthFormat));
 }
 
 void PostProcessCompositor::UpdateConstantBuffer()
@@ -187,6 +193,7 @@ void PostProcessCompositor::Draw(
         if (isLast) {
             RenderPass renderPass;
             renderPass.RenderTargets[0] = {nullptr, std::nullopt};
+            renderPass.DepthStencilBuffer = nullptr;
             renderPass.Viewport = Viewport{viewport};
             renderPass.ScissorRect = viewport;
             commandList.SetRenderPass(std::move(renderPass));
@@ -195,6 +202,7 @@ void PostProcessCompositor::Draw(
             POMDOG_ASSERT(currentSource != writeTarget);
             RenderPass renderPass;
             renderPass.RenderTargets[0] = {writeTarget, std::nullopt};
+            renderPass.DepthStencilBuffer = depthStencilBuffer;
             renderPass.Viewport = Viewport{viewport};
             renderPass.ScissorRect = viewport;
             commandList.SetRenderPass(std::move(renderPass));

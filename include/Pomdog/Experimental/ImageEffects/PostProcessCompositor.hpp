@@ -18,6 +18,7 @@ private:
     std::vector<std::shared_ptr<ImageEffectPreRenderable>> preRenderables;
     std::vector<std::shared_ptr<ImageEffectBase>> imageEffects;
     std::array<std::shared_ptr<RenderTarget2D>, 2> renderTargets;
+    std::shared_ptr<DepthStencilBuffer> depthStencilBuffer;
     std::shared_ptr<ConstantBuffer> constantBuffer;
     ScreenQuad screenQuad;
     Rectangle viewport;

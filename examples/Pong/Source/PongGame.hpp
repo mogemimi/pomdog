@@ -164,6 +164,7 @@ private:
     std::shared_ptr<SpriteFont> spriteFont;
     std::shared_ptr<PrimitiveBatch> primitiveBatch;
     std::shared_ptr<RenderTarget2D> renderTarget;
+    std::shared_ptr<DepthStencilBuffer> depthStencilBuffer;
     PostProcessCompositor postProcessCompositor;
 
     std::shared_ptr<SoundEffect> soundEffect1;
