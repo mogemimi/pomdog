@@ -4,7 +4,6 @@
 
 #include "Pomdog/Utility/Assert.hpp"
 #include <functional>
-#include <utility>
 
 namespace Pomdog::Detail {
 
@@ -12,26 +11,16 @@ class ScopeGuard final {
 public:
     ScopeGuard() = delete;
     ScopeGuard(const ScopeGuard&) = delete;
-    ScopeGuard(ScopeGuard&&) = default;
-
-    explicit ScopeGuard(const std::function<void()>& f)
-        : func(f)
-    {
-    }
-
-    explicit ScopeGuard(std::function<void()>&& f)
-        : func(std::move(f))
-    {
-    }
-
-    ~ScopeGuard()
-    {
-        POMDOG_ASSERT(func);
-        func();
-    }
-
     ScopeGuard& operator=(const ScopeGuard&) = delete;
+
+    ScopeGuard(ScopeGuard&&) = default;
     ScopeGuard& operator=(ScopeGuard&&) = default;
+
+    explicit ScopeGuard(std::function<void()>&& f) noexcept;
+
+    ~ScopeGuard() noexcept;
+
+    void Dismiss() noexcept;
 
 private:
     std::function<void()> func;

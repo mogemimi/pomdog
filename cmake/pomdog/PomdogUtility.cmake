@@ -14,6 +14,7 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_INC_DIR}/Utility/PathHelper.hpp
     ${POMDOG_SRC_DIR}/Utility/PathHelper.cpp
     ${POMDOG_SRC_DIR}/Utility/ScopeGuard.hpp
+    ${POMDOG_SRC_DIR}/Utility/ScopeGuard.cpp
     ${POMDOG_INC_DIR}/Utility/Detail/SpinLock.hpp
     ${POMDOG_SRC_DIR}/Utility/SpinLock.cpp
     ${POMDOG_INC_DIR}/Utility/StringHelper.hpp
