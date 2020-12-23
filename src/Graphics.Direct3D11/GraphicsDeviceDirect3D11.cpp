@@ -2,6 +2,7 @@
 
 #include "GraphicsDeviceDirect3D11.hpp"
 #include "BufferDirect3D11.hpp"
+#include "DepthStencilBufferDirect3D11.hpp"
 #include "EffectReflectionDirect3D11.hpp"
 #include "PipelineStateDirect3D11.hpp"
 #include "RenderTarget2DDirect3D11.hpp"
@@ -658,6 +659,34 @@ GraphicsDeviceDirect3D11::CreateRenderTarget2D(
     }
 
     return std::make_tuple(std::move(renderTarget), nullptr);
+}
+
+std::tuple<std::shared_ptr<DepthStencilBuffer>, std::unique_ptr<Error>>
+GraphicsDeviceDirect3D11::CreateDepthStencilBuffer(
+    std::int32_t width,
+    std::int32_t height,
+    SurfaceFormat depthStencilFormat) noexcept
+{
+    POMDOG_ASSERT(device != nullptr);
+    POMDOG_ASSERT(width > 0);
+    POMDOG_ASSERT(height > 0);
+
+    // TODO: MSAA is not implemented yet.
+    constexpr int multiSampleCount = 1;
+
+    auto depthStencilBuffer = std::make_shared<DepthStencilBufferDirect3D11>();
+
+    if (auto err = depthStencilBuffer->Initialize(
+            device.Get(),
+            width,
+            height,
+            depthStencilFormat,
+            multiSampleCount);
+        err != nullptr) {
+        return std::make_tuple(nullptr, Errors::Wrap(std::move(err), "failed to initialize DepthStencilBufferDirect3D11"));
+    }
+
+    return std::make_tuple(std::move(depthStencilBuffer), nullptr);
 }
 
 std::tuple<std::shared_ptr<SamplerState>, std::unique_ptr<Error>>

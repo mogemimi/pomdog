@@ -2,6 +2,7 @@
 
 #include "GraphicsDeviceGL4.hpp"
 #include "BufferGL4.hpp"
+#include "DepthStencilBufferGL4.hpp"
 #include "EffectReflectionGL4.hpp"
 #include "PipelineStateGL4.hpp"
 #include "RenderTarget2DGL4.hpp"
@@ -280,6 +281,32 @@ GraphicsDeviceGL4::CreateRenderTarget2D(
         return std::make_tuple(nullptr, Errors::Wrap(std::move(err), "failed to initialize RenderTarget2DGL4"));
     }
     return std::make_tuple(std::move(renderTarget), nullptr);
+}
+
+std::tuple<std::shared_ptr<DepthStencilBuffer>, std::unique_ptr<Error>>
+GraphicsDeviceGL4::CreateDepthStencilBuffer(
+    std::int32_t width,
+    std::int32_t height,
+    SurfaceFormat depthStencilFormat) noexcept
+{
+    POMDOG_ASSERT(width > 0);
+    POMDOG_ASSERT(height > 0);
+
+    // TODO: MSAA is not implemented yet.
+    constexpr int multiSampleCount = 1;
+
+    auto depthStencilBuffer = std::make_shared<DepthStencilBufferGL4>();
+    POMDOG_ASSERT(depthStencilBuffer != nullptr);
+
+    if (auto err = depthStencilBuffer->Initialize(
+            width,
+            height,
+            depthStencilFormat,
+            multiSampleCount);
+        err != nullptr) {
+        return std::make_tuple(nullptr, Errors::Wrap(std::move(err), "failed to initialize DepthStencilBufferGL4"));
+    }
+    return std::make_tuple(std::move(depthStencilBuffer), nullptr);
 }
 
 std::tuple<std::shared_ptr<SamplerState>, std::unique_ptr<Error>>

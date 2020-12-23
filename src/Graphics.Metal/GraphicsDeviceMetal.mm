@@ -2,6 +2,7 @@
 
 #include "GraphicsDeviceMetal.hpp"
 #include "BufferMetal.hpp"
+#include "DepthStencilBufferMetal.hpp"
 #include "PipelineStateMetal.hpp"
 #include "RenderTarget2DMetal.hpp"
 #include "SamplerStateMetal.hpp"
@@ -313,6 +314,32 @@ GraphicsDeviceMetal::CreateRenderTarget2D(
     }
 
     return std::make_tuple(std::move(renderTarget), nullptr);
+}
+
+std::tuple<std::shared_ptr<DepthStencilBuffer>, std::unique_ptr<Error>>
+GraphicsDeviceMetal::CreateDepthStencilBuffer(
+    std::int32_t width,
+    std::int32_t height,
+    SurfaceFormat depthStencilFormat) noexcept
+{
+    POMDOG_ASSERT(width > 0);
+    POMDOG_ASSERT(height > 0);
+    POMDOG_ASSERT(device != nullptr);
+
+    // TODO: MSAA is not implemented yet.
+    constexpr int multiSampleCount = 1;
+
+    auto depthStencilBuffer = std::make_shared<DepthStencilBufferMetal>();
+    if (auto err = depthStencilBuffer->Initialize(
+            device,
+            width,
+            height,
+            depthStencilFormat,
+            multiSampleCount);
+        err != nullptr) {
+        return std::make_tuple(nullptr, Errors::Wrap(std::move(err), "failed to initialize DepthStencilBufferMetal"));
+    }
+    return std::make_tuple(std::move(depthStencilBuffer), nullptr);
 }
 
 std::tuple<std::shared_ptr<SamplerState>, std::unique_ptr<Error>>

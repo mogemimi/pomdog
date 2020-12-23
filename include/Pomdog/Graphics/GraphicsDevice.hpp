@@ -105,6 +105,13 @@ public:
         SurfaceFormat format,
         SurfaceFormat depthStencilFormat) noexcept = 0;
 
+    /// Creates a depth stencil buffer.
+    [[nodiscard]] virtual std::tuple<std::shared_ptr<DepthStencilBuffer>, std::unique_ptr<Error>>
+    CreateDepthStencilBuffer(
+        std::int32_t width,
+        std::int32_t height,
+        SurfaceFormat depthStencilFormat) noexcept = 0;
+
     /// Creates a sampler state object.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<SamplerState>, std::unique_ptr<Error>>
     CreateSamplerState(const SamplerDescription& description) noexcept = 0;

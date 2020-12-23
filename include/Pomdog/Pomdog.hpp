@@ -81,6 +81,7 @@ namespace Pomdog {
 #include "Graphics/ComparisonFunction.hpp"
 #include "Graphics/ConstantBuffer.hpp"
 #include "Graphics/CullMode.hpp"
+#include "Graphics/DepthStencilBuffer.hpp"
 #include "Graphics/DepthStencilDescription.hpp"
 #include "Graphics/DepthStencilOperation.hpp"
 #include "Graphics/EffectAnnotation.hpp"
