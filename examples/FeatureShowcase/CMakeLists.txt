@@ -24,6 +24,7 @@ source_group(Source\\HardwareInstancingTest REGULAR_EXPRESSION "Source/HardwareI
 source_group(Source\\HTTPClientTest         REGULAR_EXPRESSION "Source/HTTPClientTest/*")
 source_group(Source\\ImageEffectsTest       REGULAR_EXPRESSION "Source/ImageEffectsTest/*")
 source_group(Source\\LineBatchTest          REGULAR_EXPRESSION "Source/LineBatchTest/*")
+source_group(Source\\MultiRenderTargetTest  REGULAR_EXPRESSION "Source/MultiRenderTargetTest/*")
 source_group(Source\\Particle2DTest         REGULAR_EXPRESSION "Source/Particle2DTest/*")
 source_group(Source\\Particle3DTest         REGULAR_EXPRESSION "Source/Particle3DTest/*")
 source_group(Source\\ParticleClipLoaderTest REGULAR_EXPRESSION "Source/ParticleClipLoaderTest/*")
@@ -85,6 +86,8 @@ target_sources(${PRODUCT_NAME} PRIVATE
     Source/ImageEffectsTest/ImageEffectsTest.hpp
     Source/LineBatchTest/LineBatchTest.cpp
     Source/LineBatchTest/LineBatchTest.hpp
+    Source/MultiRenderTargetTest/MultiRenderTargetTest.cpp
+    Source/MultiRenderTargetTest/MultiRenderTargetTest.hpp
     Source/Particle2DTest/Particle2DTest.cpp
     Source/Particle2DTest/Particle2DTest.hpp
     Source/Particle3DTest/Particle3DTest.cpp

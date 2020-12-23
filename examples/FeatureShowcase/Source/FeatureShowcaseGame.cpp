@@ -14,6 +14,7 @@
 #include "HardwareInstancingTest/HardwareInstancingTest.hpp"
 #include "ImageEffectsTest/ImageEffectsTest.hpp"
 #include "LineBatchTest/LineBatchTest.hpp"
+#include "MultiRenderTargetTest/MultiRenderTargetTest.hpp"
 #include "Particle2DTest/Particle2DTest.hpp"
 #include "Particle3DTest/Particle3DTest.hpp"
 #include "ParticleClipLoaderTest/ParticleClipLoaderTest.hpp"
@@ -93,6 +94,10 @@ FeatureShowcaseGame::Initialize()
     buttons.emplace_back("HardwareInstancing Test", [this] {
         window->SetTitle("Feature Showcase > HardwareInstancing Test");
         subGame = std::make_shared<FeatureShowcase::HardwareInstancingTest>(gameHost);
+    });
+    buttons.emplace_back("MultiRenderTarget Test", [this] {
+        window->SetTitle("Feature Showcase > MultiRenderTarget Test");
+        subGame = std::make_shared<FeatureShowcase::MultiRenderTargetTest>(gameHost);
     });
     buttons.emplace_back("SpriteBatch Test", [this] {
         window->SetTitle("Feature Showcase > SpriteBatch Test");
