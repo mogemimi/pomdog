@@ -64,6 +64,7 @@ void MessagePump()
 struct GraphicsBridgeWin32 {
     virtual ~GraphicsBridgeWin32() = default;
     virtual void OnClientSizeChanged(int width, int height) = 0;
+    virtual void Shutdown() = 0;
 };
 
 using CreateGraphicsDeviceResult = std::tuple<
@@ -77,17 +78,31 @@ using CreateGraphicsDeviceResult = std::tuple<
 class GraphicsBridgeWin32GL4 final : public GraphicsBridgeWin32 {
 private:
     std::shared_ptr<GraphicsDeviceGL4> graphicsDevice;
+    std::shared_ptr<GraphicsCommandQueueImmediate> commandQueue;
 
 public:
-    explicit GraphicsBridgeWin32GL4(const std::shared_ptr<GraphicsDeviceGL4>& graphicsDeviceIn)
+    GraphicsBridgeWin32GL4(
+        const std::shared_ptr<GraphicsDeviceGL4>& graphicsDeviceIn,
+        const std::shared_ptr<GraphicsCommandQueueImmediate>& commandQueueIn)
         : graphicsDevice(graphicsDeviceIn)
+        , commandQueue(commandQueueIn)
     {
     }
 
-    void OnClientSizeChanged(int width, int height)
+    void OnClientSizeChanged(int width, int height) override
     {
         POMDOG_ASSERT(graphicsDevice);
         graphicsDevice->ClientSizeChanged(width, height);
+    }
+
+    void Shutdown() override
+    {
+        if (commandQueue != nullptr) {
+            commandQueue->Reset();
+        }
+
+        commandQueue.reset();
+        graphicsDevice.reset();
     }
 };
 
@@ -145,7 +160,9 @@ CreateGraphicsDeviceGL4(
     POMDOG_ASSERT(graphicsContext);
     POMDOG_ASSERT(graphicsCommandQueue);
 
-    auto bridge = std::make_unique<GraphicsBridgeWin32GL4>(graphicsDevice);
+    auto bridge = std::make_unique<GraphicsBridgeWin32GL4>(
+        graphicsDevice,
+        graphicsCommandQueue);
 
     return std::make_tuple(
         std::move(graphicsDevice),
@@ -161,17 +178,20 @@ class GraphicsBridgeWin32Direct3D11 final : public GraphicsBridgeWin32 {
 private:
     std::shared_ptr<GraphicsDeviceDirect3D11> graphicsDevice;
     std::shared_ptr<GraphicsContextDirect3D11> graphicsContext;
+    std::shared_ptr<GraphicsCommandQueueImmediate> commandQueue;
 
 public:
     GraphicsBridgeWin32Direct3D11(
         const std::shared_ptr<GraphicsDeviceDirect3D11>& graphicsDeviceIn,
-        const std::shared_ptr<GraphicsContextDirect3D11>& graphicsContextIn)
+        const std::shared_ptr<GraphicsContextDirect3D11>& graphicsContextIn,
+        const std::shared_ptr<GraphicsCommandQueueImmediate>& commandQueueIn)
         : graphicsDevice(graphicsDeviceIn)
         , graphicsContext(graphicsContextIn)
+        , commandQueue(commandQueueIn)
     {
     }
 
-    void OnClientSizeChanged(int width, int height)
+    void OnClientSizeChanged(int width, int height) override
     {
         POMDOG_ASSERT(graphicsDevice);
         POMDOG_ASSERT(graphicsContext);
@@ -181,6 +201,17 @@ public:
             Log::Critical("Pomdog", "error: ResizeBackBuffers() failed: " + err->ToString());
         }
         graphicsDevice->ClientSizeChanged(width, height);
+    }
+
+    void Shutdown() override
+    {
+        if (commandQueue != nullptr) {
+            commandQueue->Reset();
+        }
+
+        commandQueue.reset();
+        graphicsContext.reset();
+        graphicsDevice.reset();
     }
 };
 
@@ -220,7 +251,10 @@ CreateGraphicsDeviceDirect3D11(
     POMDOG_ASSERT(graphicsContext);
     POMDOG_ASSERT(graphicsCommandQueue);
 
-    auto bridge = std::make_unique<GraphicsBridgeWin32Direct3D11>(graphicsDevice, std::move(graphicsContext));
+    auto bridge = std::make_unique<GraphicsBridgeWin32Direct3D11>(
+        graphicsDevice,
+        std::move(graphicsContext),
+        graphicsCommandQueue);
 
     return std::make_tuple(
         std::move(graphicsDevice),
@@ -411,9 +445,14 @@ GameHostWin32::Impl::~Impl()
     keyboard.reset();
     mouse.reset();
     audioEngine.reset();
+
+    if (graphicsBridge != nullptr) {
+        graphicsBridge->Shutdown();
+    }
     graphicsBridge.reset();
     graphicsCommandQueue.reset();
     graphicsDevice.reset();
+
     window.reset();
 }
 
