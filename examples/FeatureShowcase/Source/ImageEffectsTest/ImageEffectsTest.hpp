@@ -28,6 +28,7 @@ private:
     ConnectionList connect;
 
     std::shared_ptr<RenderTarget2D> renderTarget;
+    std::shared_ptr<DepthStencilBuffer> depthStencilBuffer;
     std::shared_ptr<PrimitiveBatch> primitiveBatch;
     PostProcessCompositor postProcessCompositor;
 };

@@ -54,10 +54,18 @@ std::unique_ptr<Error> ImageEffectsTest::Initialize()
         presentationParameters.BackBufferWidth,
         presentationParameters.BackBufferHeight,
         false,
-        presentationParameters.BackBufferFormat,
-        presentationParameters.DepthStencilFormat);
+        presentationParameters.BackBufferFormat);
     if (err != nullptr) {
         return Errors::Wrap(std::move(err), "failed to create render target");
+    }
+
+    // NOTE: Create depth stencil buffer
+    std::tie(depthStencilBuffer, err) = graphicsDevice->CreateDepthStencilBuffer(
+        presentationParameters.BackBufferWidth,
+        presentationParameters.BackBufferHeight,
+        presentationParameters.DepthStencilFormat);
+    if (err != nullptr) {
+        return Errors::Wrap(std::move(err), "failed to create depth stencil buffer");
     }
 
     postProcessCompositor.SetViewportSize(
@@ -82,7 +90,11 @@ std::unique_ptr<Error> ImageEffectsTest::Initialize()
             width,
             height,
             false,
-            presentationParameters.BackBufferFormat,
+            presentationParameters.BackBufferFormat));
+
+        depthStencilBuffer = std::get<0>(graphicsDevice->CreateDepthStencilBuffer(
+            width,
+            height,
             presentationParameters.DepthStencilFormat));
 
         postProcessCompositor.SetViewportSize(
@@ -102,6 +114,7 @@ void ImageEffectsTest::Draw()
     Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
     RenderPass pass;
     pass.RenderTargets[0] = {renderTarget, Color::CornflowerBlue.ToVector4()};
+    pass.DepthStencilBuffer = depthStencilBuffer;
     pass.ClearDepth = 1.0f;
     pass.ClearStencil = std::uint8_t(0);
     pass.Viewport = viewport;

@@ -181,7 +181,10 @@ void QuickStartGame::Update()
     auto totalTime = static_cast<float>(clock->GetTotalGameTime().count());
 
     auto rotate = Matrix4x4::CreateRotationZ(std::cos(totalTime));
-    auto scale = Matrix4x4::CreateScale(Vector3(static_cast<float>(texture->GetWidth()), static_cast<float>(texture->GetHeight()), 1.0f));
+    auto scale = Matrix4x4::CreateScale(Vector3{
+        static_cast<float>(texture->GetWidth()),
+        static_cast<float>(texture->GetHeight()),
+        1.0f});
 
     myShaderConstants.Model = scale * rotate;
 }
