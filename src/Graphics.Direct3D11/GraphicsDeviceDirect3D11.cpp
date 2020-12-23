@@ -621,8 +621,7 @@ GraphicsDeviceDirect3D11::CreateRenderTarget2D(
         width,
         height,
         false,
-        SurfaceFormat::R8G8B8A8_UNorm,
-        SurfaceFormat::Invalid);
+        SurfaceFormat::R8G8B8A8_UNorm);
 }
 
 std::tuple<std::shared_ptr<RenderTarget2D>, std::unique_ptr<Error>>
@@ -630,16 +629,15 @@ GraphicsDeviceDirect3D11::CreateRenderTarget2D(
     std::int32_t width,
     std::int32_t height,
     bool generateMipmap,
-    SurfaceFormat format,
-    SurfaceFormat depthStencilFormat) noexcept
+    SurfaceFormat format) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
     POMDOG_ASSERT(width > 0);
     POMDOG_ASSERT(height > 0);
 
     const auto levelCount = generateMipmap
-        ? Detail::TextureHelper::ComputeMipmapLevelCount(width, height)
-        : 1;
+                                ? Detail::TextureHelper::ComputeMipmapLevelCount(width, height)
+                                : 1;
 
     // TODO: MSAA is not implemented yet.
     constexpr int multiSampleCount = 1;
@@ -652,7 +650,6 @@ GraphicsDeviceDirect3D11::CreateRenderTarget2D(
             height,
             levelCount,
             format,
-            depthStencilFormat,
             multiSampleCount);
         err != nullptr) {
         return std::make_tuple(nullptr, Errors::Wrap(std::move(err), "failed to initialize RenderTarget2DDirect3D11"));

@@ -99,8 +99,7 @@ public:
         std::int32_t width,
         std::int32_t height,
         bool generateMipmap,
-        SurfaceFormat format,
-        SurfaceFormat depthStencilFormat) noexcept override;
+        SurfaceFormat format) noexcept override;
 
     /// Creates a depth stencil buffer.
     std::tuple<std::shared_ptr<DepthStencilBuffer>, std::unique_ptr<Error>>

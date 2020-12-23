@@ -277,8 +277,7 @@ GraphicsDeviceMetal::CreateRenderTarget2D(
         width,
         height,
         false,
-        SurfaceFormat::R8G8B8A8_UNorm,
-        SurfaceFormat::Invalid);
+        SurfaceFormat::R8G8B8A8_UNorm);
 }
 
 std::tuple<std::shared_ptr<RenderTarget2D>, std::unique_ptr<Error>>
@@ -286,8 +285,7 @@ GraphicsDeviceMetal::CreateRenderTarget2D(
     std::int32_t width,
     std::int32_t height,
     bool generateMipmap,
-    SurfaceFormat format,
-    SurfaceFormat depthStencilFormat) noexcept
+    SurfaceFormat format) noexcept
 {
     POMDOG_ASSERT(width > 0);
     POMDOG_ASSERT(height > 0);
@@ -307,12 +305,10 @@ GraphicsDeviceMetal::CreateRenderTarget2D(
             height,
             levelCount,
             format,
-            depthStencilFormat,
             multiSampleCount);
         err != nullptr) {
         return std::make_tuple(nullptr, Errors::Wrap(std::move(err), "failed to initialize RenderTarget2DMetal"));
     }
-
     return std::make_tuple(std::move(renderTarget), nullptr);
 }
 

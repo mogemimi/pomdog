@@ -13,7 +13,6 @@ RenderTarget2DGL4::Initialize(
     std::int32_t pixelHeightIn,
     std::int32_t levelCountIn,
     SurfaceFormat formatIn,
-    SurfaceFormat depthStencilFormat,
     std::int32_t multiSampleCount) noexcept
 {
     if (auto err = texture.Initialize(pixelWidthIn, pixelHeightIn, levelCountIn, formatIn); err != nullptr) {
@@ -26,17 +25,6 @@ RenderTarget2DGL4::Initialize(
     format = formatIn;
     generateMipmap = (levelCountIn > 1);
     multiSampleEnabled = (multiSampleCount > 1);
-
-    if (depthStencilFormat != SurfaceFormat::Invalid) {
-        if (auto err = depthStencilBuffer.Initialize(
-                pixelWidth,
-                pixelHeight,
-                depthStencilFormat,
-                multiSampleCount);
-            err != nullptr) {
-            return Errors::Wrap(std::move(err), "depthStencilBuffer.Initialize() failed");
-        }
-    }
 
     return nullptr;
 }
@@ -63,11 +51,6 @@ SurfaceFormat RenderTarget2DGL4::GetFormat() const noexcept
     return format;
 }
 
-SurfaceFormat RenderTarget2DGL4::GetDepthStencilFormat() const noexcept
-{
-    return depthStencilBuffer.GetFormat();
-}
-
 Rectangle RenderTarget2DGL4::GetBounds() const noexcept
 {
     return Rectangle{0, 0, pixelWidth, pixelHeight};
@@ -92,11 +75,12 @@ void RenderTarget2DGL4::BindToFramebuffer(GLuint frameBuffer, GLenum attachmentP
     POMDOG_CHECK_ERROR_GL4("glNamedFramebufferTexture");
 #else
     const GLenum textureTarget = (multiSampleEnabled
-        ? GL_TEXTURE_2D_MULTISAMPLE
-        : GL_TEXTURE_2D);
+                                      ? GL_TEXTURE_2D_MULTISAMPLE
+                                      : GL_TEXTURE_2D);
 
     GLint oldFrameBuffer = 0;
     glGetIntegerv(GL_FRAMEBUFFER_BINDING, &oldFrameBuffer);
+    POMDOG_CHECK_ERROR_GL4("glGetIntegerv(GL_FRAMEBUFFER_BINDING)");
 
     glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
     POMDOG_CHECK_ERROR_GL4("glBindFramebuffer");
@@ -128,8 +112,8 @@ void RenderTarget2DGL4::UnbindFromFramebuffer(GLuint frameBuffer, GLenum attachm
     POMDOG_CHECK_ERROR_GL4("glNamedFramebufferTexture");
 #else
     const GLenum textureTarget = (multiSampleEnabled
-        ? GL_TEXTURE_2D_MULTISAMPLE
-        : GL_TEXTURE_2D);
+                                      ? GL_TEXTURE_2D_MULTISAMPLE
+                                      : GL_TEXTURE_2D);
 
     GLint oldFrameBuffer = 0;
     glGetIntegerv(GL_FRAMEBUFFER_BINDING, &oldFrameBuffer);
@@ -152,13 +136,6 @@ void RenderTarget2DGL4::UnbindFromFramebuffer(GLuint frameBuffer, GLenum attachm
 
     if (generateMipmap) {
         texture.GenerateMipmap();
-    }
-}
-
-void RenderTarget2DGL4::BindDepthStencilBuffer(GLuint frameBuffer)
-{
-    if (depthStencilBuffer.GetFormat() != SurfaceFormat::Invalid) {
-        depthStencilBuffer.BindToFramebuffer(frameBuffer);
     }
 }
 

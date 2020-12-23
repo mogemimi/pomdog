@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "DepthStencilBufferMetal.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
@@ -20,7 +19,6 @@ public:
         std::int32_t pixelHeight,
         std::int32_t levelCount,
         SurfaceFormat format,
-        SurfaceFormat depthStencilFormat,
         std::int32_t multiSampleCount) noexcept;
 
     /// Gets the width of the texture data, in pixels.
@@ -35,9 +33,6 @@ public:
     /// Gets the format of the pixel data in the render target.
     SurfaceFormat GetFormat() const noexcept override;
 
-    /// Gets the format of the pixel data in the depth-stencil buffer.
-    SurfaceFormat GetDepthStencilFormat() const noexcept override;
-
     /// Gets the size of the texture resource.
     Rectangle GetBounds() const noexcept override;
 
@@ -47,11 +42,7 @@ public:
     /// Gets the pointer of the native texture resource.
     id<MTLTexture> GetTexture() const noexcept;
 
-    /// Gets the pointer of the depth stencil texture.
-    id<MTLTexture> GetDepthStencilTexture() const noexcept;
-
 private:
-    DepthStencilBufferMetal depthStencilBuffer;
     id<MTLTexture> texture = nullptr;
     std::int32_t pixelWidth = 0;
     std::int32_t pixelHeight = 0;

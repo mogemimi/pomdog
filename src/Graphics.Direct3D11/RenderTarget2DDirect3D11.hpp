@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "DepthStencilBufferDirect3D11.hpp"
 #include "PrerequisitesDirect3D11.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include "Pomdog/Graphics/RenderTarget2D.hpp"
@@ -21,7 +20,6 @@ public:
         std::int32_t pixelHeight,
         std::int32_t levelCount,
         SurfaceFormat format,
-        SurfaceFormat depthStencilFormat,
         std::int32_t multiSampleCount) noexcept;
 
     [[nodiscard]] std::unique_ptr<Error>
@@ -32,7 +30,6 @@ public:
         std::int32_t pixelHeight,
         std::int32_t levelCount,
         SurfaceFormat format,
-        SurfaceFormat depthStencilFormat,
         std::int32_t multiSampleCount) noexcept;
 
     /// Gets the width of the texture data, in pixels.
@@ -47,9 +44,6 @@ public:
     /// Gets the format of the pixel data in the render target.
     SurfaceFormat GetFormat() const noexcept override;
 
-    /// Gets the format of the pixel data in the depth-stencil buffer.
-    SurfaceFormat GetDepthStencilFormat() const noexcept override;
-
     /// Gets the size of the texture resource.
     Rectangle GetBounds() const noexcept override;
 
@@ -60,10 +54,6 @@ public:
     [[nodiscard]] ID3D11RenderTargetView*
     GetRenderTargetView() const noexcept;
 
-    /// Gets the pointer of the depth-stencil-view.
-    [[nodiscard]] ID3D11DepthStencilView*
-    GetDepthStencilView() const noexcept;
-
     /// Gets the pointer of the shader-resource-view.
     [[nodiscard]] ID3D11ShaderResourceView*
     GetShaderResourceView() const noexcept;
@@ -73,13 +63,11 @@ public:
         ID3D11Device* device,
         IDXGISwapChain* swapChain,
         std::int32_t pixelWidth,
-        std::int32_t pixelHeight,
-        SurfaceFormat depthStencilFormat) noexcept;
+        std::int32_t pixelHeight) noexcept;
 
     void ResetBackBuffer() noexcept;
 
 private:
-    DepthStencilBufferDirect3D11 depthStencilBuffer;
     Microsoft::WRL::ComPtr<ID3D11Texture2D> texture2D;
     Microsoft::WRL::ComPtr<ID3D11RenderTargetView> renderTargetView;
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> textureResourceView;

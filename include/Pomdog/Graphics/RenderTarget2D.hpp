@@ -31,9 +31,6 @@ public:
     /// Gets the format of the pixel data in the render target.
     virtual SurfaceFormat GetFormat() const noexcept = 0;
 
-    /// Gets the format of the pixel data in the depth-stencil buffer.
-    virtual SurfaceFormat GetDepthStencilFormat() const noexcept = 0;
-
     /// Gets the size of the texture resource.
     virtual Rectangle GetBounds() const noexcept = 0;
 

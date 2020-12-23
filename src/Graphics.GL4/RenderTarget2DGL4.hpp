@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "DepthStencilBufferGL4.hpp"
 #include "OpenGLPrerequisites.hpp"
 #include "Texture2DGL4.hpp"
 #include "../Utility/Tagged.hpp"
@@ -26,7 +25,6 @@ public:
         std::int32_t pixelHeight,
         std::int32_t levelCount,
         SurfaceFormat format,
-        SurfaceFormat depthStencilFormat,
         std::int32_t multiSampleCount) noexcept;
 
     /// Gets the width of the texture data, in pixels.
@@ -41,9 +39,6 @@ public:
     /// Gets the format of the pixel data in the render target.
     SurfaceFormat GetFormat() const noexcept override;
 
-    /// Gets the format of the pixel data in the depth-stencil buffer.
-    SurfaceFormat GetDepthStencilFormat() const noexcept override;
-
     /// Gets the size of the texture resource.
     Rectangle GetBounds() const noexcept override;
 
@@ -51,15 +46,13 @@ public:
     void GetData(void* result, std::size_t offsetInBytes, std::size_t sizeInBytes) const override;
 
     void BindToFramebuffer(GLuint frameBuffer, GLenum attachmentPoint);
-    void UnbindFromFramebuffer(GLuint frameBuffer, GLenum attachmentPoint);
 
-    void BindDepthStencilBuffer(GLuint frameBuffer);
+    void UnbindFromFramebuffer(GLuint frameBuffer, GLenum attachmentPoint);
 
     /// Gets the handle of the native texture resource.
     Texture2DObjectGL4 GetTextureHandle() const noexcept;
 
 private:
-    DepthStencilBufferGL4 depthStencilBuffer;
     Texture2DGL4 texture;
     std::int32_t pixelWidth = 0;
     std::int32_t pixelHeight = 0;

@@ -17,7 +17,6 @@ RenderTarget2DMetal::Initialize(
     std::int32_t pixelHeightIn,
     std::int32_t levelCountIn,
     SurfaceFormat formatIn,
-    SurfaceFormat depthStencilFormat,
     std::int32_t multiSampleCount) noexcept
 {
     pixelWidth = pixelWidthIn;
@@ -27,36 +26,24 @@ RenderTarget2DMetal::Initialize(
     multiSampleEnabled = (multiSampleCount > 1);
 
     POMDOG_ASSERT(device != nullptr);
-    {
-        MTLTextureDescriptor* descriptor = [MTLTextureDescriptor
-            texture2DDescriptorWithPixelFormat:ToPixelFormat(format)
-                                         width:pixelWidth
-                                        height:pixelHeight
-                                     mipmapped:(levelCount > 1 ? YES : NO)];
 
-        [descriptor setUsage:MTLTextureUsageRenderTarget | MTLTextureUsageShaderRead];
-        // [descriptor setStorageMode:];
-        // [descriptor setResourceOptions:];
-        // [descriptor setSampleCount:];
-        // [descriptor setMipmapLevelCount:];
+    MTLTextureDescriptor* descriptor = [MTLTextureDescriptor
+        texture2DDescriptorWithPixelFormat:ToPixelFormat(format)
+                                     width:pixelWidth
+                                    height:pixelHeight
+                                 mipmapped:(levelCount > 1 ? YES : NO)];
 
-        texture = [device newTextureWithDescriptor:descriptor];
-        if (texture == nullptr) {
-            return Errors::New("failed to create MTLTexture");
-        }
+    [descriptor setUsage:MTLTextureUsageRenderTarget | MTLTextureUsageShaderRead];
+    // [descriptor setStorageMode:];
+    // [descriptor setResourceOptions:];
+    // [descriptor setSampleCount:];
+    // [descriptor setMipmapLevelCount:];
+
+    texture = [device newTextureWithDescriptor:descriptor];
+    if (texture == nullptr) {
+        return Errors::New("failed to create MTLTexture");
     }
 
-    if (depthStencilFormat != SurfaceFormat::Invalid) {
-        if (auto err = depthStencilBuffer.Initialize(
-                device,
-                pixelWidth,
-                pixelHeight,
-                depthStencilFormat,
-                multiSampleCount);
-            err != nullptr) {
-            return Errors::Wrap(std::move(err), "depthStencilBuffer.Initialize() failed");
-        }
-    }
     return nullptr;
 }
 
@@ -78,11 +65,6 @@ std::int32_t RenderTarget2DMetal::GetLevelCount() const noexcept
 SurfaceFormat RenderTarget2DMetal::GetFormat() const noexcept
 {
     return format;
-}
-
-SurfaceFormat RenderTarget2DMetal::GetDepthStencilFormat() const noexcept
-{
-    return depthStencilBuffer.GetFormat();
 }
 
 Rectangle RenderTarget2DMetal::GetBounds() const noexcept
@@ -112,11 +94,6 @@ void RenderTarget2DMetal::GetData(
 id<MTLTexture> RenderTarget2DMetal::GetTexture() const noexcept
 {
     return texture;
-}
-
-id<MTLTexture> RenderTarget2DMetal::GetDepthStencilTexture() const noexcept
-{
-    return depthStencilBuffer.GetDepthStencilTexture();
 }
 
 } // namespace Pomdog::Detail::Metal
