@@ -93,8 +93,8 @@ DecodeFile(const std::string& filePath)
         }
 
         const auto colorMap = saveImage.ImageDesc.ColorMap
-            ? saveImage.ImageDesc.ColorMap
-            : gifFileIn->SColorMap;
+                                  ? saveImage.ImageDesc.ColorMap
+                                  : gifFileIn->SColorMap;
 
         auto img = std::make_shared<Pomdog::Image>(gifFileIn->SWidth, gifFileIn->SHeight);
 
@@ -141,7 +141,7 @@ DecodeFile(const std::string& filePath)
                     colorFromMap.Red,
                     colorFromMap.Green,
                     colorFromMap.Blue,
-                    alpha
+                    alpha,
                 };
 
                 if (!isTransparent) {
