@@ -74,7 +74,7 @@ Rectangle DepthStencilBufferMetal::GetBounds() const noexcept
     return Rectangle{0, 0, pixelWidth, pixelHeight};
 }
 
-id<MTLTexture> DepthStencilBufferMetal::GetDepthStencilTexture() const noexcept
+id<MTLTexture> DepthStencilBufferMetal::GetTexture() const noexcept
 {
     return depthStencilTexture;
 }

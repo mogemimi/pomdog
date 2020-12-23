@@ -38,14 +38,12 @@ public:
     GetDepthStencilView() const noexcept;
 
     [[nodiscard]] std::unique_ptr<Error>
-    ResetBackBuffer(
+    ResetBuffer(
         ID3D11Device* device,
         std::int32_t pixelWidth,
         std::int32_t pixelHeight,
         SurfaceFormat depthStencilFormat,
         std::int32_t multiSampleCount) noexcept;
-
-    void ResetBackBuffer() noexcept;
 
 private:
     Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencil;

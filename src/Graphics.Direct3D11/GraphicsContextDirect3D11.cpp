@@ -2,6 +2,7 @@
 
 #include "GraphicsContextDirect3D11.hpp"
 #include "BufferDirect3D11.hpp"
+#include "DepthStencilBufferDirect3D11.hpp"
 #include "PipelineStateDirect3D11.hpp"
 #include "RenderTarget2DDirect3D11.hpp"
 #include "SamplerStateDirect3D11.hpp"
@@ -59,7 +60,8 @@ void ChooseMultiSampleSetting(
 void UseBackBufferAsRenderTarget(
     Microsoft::WRL::ComPtr<ID3D11DeviceContext3>& deferredContext,
     std::vector<std::shared_ptr<RenderTarget2DDirect3D11>>& renderTargets,
-    std::shared_ptr<RenderTarget2DDirect3D11>& backBuffer)
+    const std::shared_ptr<RenderTarget2DDirect3D11>& backBuffer,
+    const std::shared_ptr<DepthStencilBufferDirect3D11>& depthStencilBuffer)
 {
     POMDOG_ASSERT(deferredContext);
     POMDOG_ASSERT(backBuffer);
@@ -70,10 +72,15 @@ void UseBackBufferAsRenderTarget(
     std::array<ID3D11RenderTargetView*, 1> renderTargetViews = {
         backBuffer->GetRenderTargetView()};
 
+    ID3D11DepthStencilView* depthStencilView = nullptr;
+    if (depthStencilBuffer != nullptr) {
+        depthStencilView = depthStencilBuffer->GetDepthStencilView();
+    }
+
     deferredContext->OMSetRenderTargets(
         static_cast<UINT>(renderTargetViews.size()),
         renderTargetViews.data(),
-        renderTargets.front()->GetDepthStencilView());
+        depthStencilView);
 }
 
 #if defined(DEBUG) && !defined(NDEBUG)
@@ -174,19 +181,19 @@ GraphicsContextDirect3D11::Initialize(
         }
     }
     {
-        ///@todo MSAA is not implemented yet
+        // TODO: MSAA is not implemented yet
         constexpr int multiSampleCount = 1;
 
         constexpr std::int32_t backBufferMipLevels = 1;
 
         backBuffer = std::make_shared<RenderTarget2DDirect3D11>();
-        if (auto err = backBuffer->Initialize(device.Get(),
+        if (auto err = backBuffer->Initialize(
+                device.Get(),
                 swapChain.Get(),
                 preferredBackBufferWidth,
                 preferredBackBufferHeight,
                 backBufferMipLevels,
                 presentationParameters.BackBufferFormat,
-                backBufferDepthFormat,
                 multiSampleCount);
             err != nullptr) {
             return Errors::Wrap(std::move(err), "failed to initialize back buffer");
@@ -194,6 +201,22 @@ GraphicsContextDirect3D11::Initialize(
 
         renderTargets.reserve(D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT);
         renderTargets.push_back(backBuffer);
+    }
+
+    if (backBufferDepthFormat != SurfaceFormat::Invalid) {
+        // TODO: MSAA is not implemented yet.
+        constexpr int multiSampleCount = 1;
+
+        backBufferDepthStencil = std::make_shared<DepthStencilBufferDirect3D11>();
+        if (auto err = backBufferDepthStencil->Initialize(
+                device.Get(),
+                preferredBackBufferWidth,
+                preferredBackBufferHeight,
+                backBufferDepthFormat,
+                multiSampleCount);
+            err != nullptr) {
+            return Errors::Wrap(std::move(err), "failed to initialize depth stencil buffer");
+        }
     }
 
     textureResourceViews.fill(nullptr);
@@ -545,7 +568,7 @@ void GraphicsContextDirect3D11::SetRenderPass(const RenderPass& renderPass)
     const bool useBackBuffer = (std::get<0>(renderPass.RenderTargets.front()) == nullptr);
 
     if (useBackBuffer) {
-        UseBackBufferAsRenderTarget(deferredContext, renderTargets, backBuffer);
+        UseBackBufferAsRenderTarget(deferredContext, renderTargets, backBuffer, backBufferDepthStencil);
     }
     else {
         auto& renderTargetsIn = renderPass.RenderTargets;
@@ -574,10 +597,18 @@ void GraphicsContextDirect3D11::SetRenderPass(const RenderPass& renderPass)
             POMDOG_ASSERT(i <= renderTargets.size());
         }
 
+        ID3D11DepthStencilView* depthStencilView = nullptr;
+        if (const auto& p = renderPass.DepthStencilBuffer; p != nullptr) {
+            auto nativeBuffer = std::static_pointer_cast<DepthStencilBufferDirect3D11>(p);
+            POMDOG_ASSERT(nativeBuffer != nullptr);
+            POMDOG_ASSERT(nativeBuffer == std::dynamic_pointer_cast<DepthStencilBufferDirect3D11>(p));
+            depthStencilView = nativeBuffer->GetDepthStencilView();
+        }
+
         deferredContext->OMSetRenderTargets(
             static_cast<UINT>(renderTargets.size()),
             renderTargetViews.data(),
-            renderTargets.front()->GetDepthStencilView());
+            depthStencilView);
     }
 
     if (renderPass.Viewport) {
@@ -672,14 +703,21 @@ void GraphicsContextDirect3D11::SetRenderPass(const RenderPass& renderPass)
         }
 
         if (mask != 0) {
-            POMDOG_ASSERT(!renderTargets.empty());
-            POMDOG_ASSERT(renderTargets.size() <= renderPass.RenderTargets.size());
-            POMDOG_ASSERT(renderTargets.front());
+            ID3D11DepthStencilView* depthStencilView = nullptr;
+            if (useBackBuffer) {
+                if (backBufferDepthStencil != nullptr) {
+                    depthStencilView = backBufferDepthStencil->GetDepthStencilView();
+                }
+            }
+            else if (const auto& p = renderPass.DepthStencilBuffer; p != nullptr) {
+                auto nativeBuffer = std::static_pointer_cast<DepthStencilBufferDirect3D11>(p);
+                POMDOG_ASSERT(nativeBuffer != nullptr);
+                POMDOG_ASSERT(nativeBuffer == std::dynamic_pointer_cast<DepthStencilBufferDirect3D11>(p));
+                depthStencilView = nativeBuffer->GetDepthStencilView();
+            }
 
-            auto depthStencilView = renderTargets.front()->GetDepthStencilView();
             if (depthStencilView != nullptr) {
-                deferredContext->ClearDepthStencilView(
-                    depthStencilView, mask, depth, stencil);
+                deferredContext->ClearDepthStencilView(depthStencilView, mask, depth, stencil);
             }
         }
     }
@@ -696,7 +734,7 @@ GraphicsContextDirect3D11::ResizeBackBuffers(
     preferredBackBufferWidth = backBufferWidthIn;
     preferredBackBufferHeight = backBufferHeightIn;
 
-    POMDOG_ASSERT(backBuffer);
+    POMDOG_ASSERT(backBuffer != nullptr);
     backBuffer->ResetBackBuffer();
 
     POMDOG_ASSERT(swapChain != nullptr);
@@ -714,10 +752,24 @@ GraphicsContextDirect3D11::ResizeBackBuffers(
             device,
             swapChain.Get(),
             preferredBackBufferWidth,
-            preferredBackBufferHeight,
-            backBufferDepthFormat);
+            preferredBackBufferHeight);
         err != nullptr) {
-        return Errors::Wrap(std::move(err), "ResetBackBuffer() failed");
+        return Errors::Wrap(std::move(err), "backBuffer->ResetBackBuffer() failed");
+    }
+
+    if (backBufferDepthStencil != nullptr) {
+        // TODO: MSAA
+        constexpr std::int32_t multiSampleCount = 1;
+
+        if (auto err = backBufferDepthStencil->ResetBuffer(
+                device,
+                preferredBackBufferWidth,
+                preferredBackBufferHeight,
+                backBufferDepthFormat,
+                multiSampleCount);
+            err != nullptr) {
+            return Errors::Wrap(std::move(err), "backBufferDepthStencil->ResetBuffer() failed");
+        }
     }
 
     return nullptr;

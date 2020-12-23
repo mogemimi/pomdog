@@ -6,6 +6,7 @@
 #include "../Graphics.Backends/GraphicsCommandListImmediate.hpp"
 #include "../Graphics.Metal/BufferMetal.hpp"
 #include "../Graphics.Metal/ConstantsMetal.hpp"
+#include "../Graphics.Metal/DepthStencilBufferMetal.hpp"
 #include "../Graphics.Metal/PipelineStateMetal.hpp"
 #include "../Graphics.Metal/RenderTarget2DMetal.hpp"
 #include "../Graphics.Metal/SamplerStateMetal.hpp"
@@ -532,41 +533,36 @@ void GraphicsContextMetal::SetRenderPass(const RenderPass& renderPass)
         }
     }
 
-    {
-        auto renderTargetView = renderPass.RenderTargets[0];
-        auto& renderTarget = std::get<0>(renderTargetView);
+    if (renderPass.DepthStencilBuffer == nullptr) {
+        renderPassDescriptor.depthAttachment.texture = targetView.currentRenderPassDescriptor.depthAttachment.texture;
+        renderPassDescriptor.stencilAttachment.texture = targetView.currentRenderPassDescriptor.stencilAttachment.texture;
+    }
+    else {
+        auto depthStencilBuffer = static_cast<DepthStencilBufferMetal*>(renderPass.DepthStencilBuffer.get());
+        POMDOG_ASSERT(depthStencilBuffer == dynamic_cast<DepthStencilBufferMetal*>(renderPass.DepthStencilBuffer.get()));
+        POMDOG_ASSERT(depthStencilBuffer != nullptr);
 
-        if (!renderTarget) {
-            renderPassDescriptor.depthAttachment.texture = targetView.currentRenderPassDescriptor.depthAttachment.texture;
-            renderPassDescriptor.stencilAttachment.texture = targetView.currentRenderPassDescriptor.stencilAttachment.texture;
+        renderPassDescriptor.depthAttachment.texture = depthStencilBuffer->GetTexture();
+
+        const bool isStencilRenderable = [&]() -> bool {
+            switch ([depthStencilBuffer->GetTexture() pixelFormat]) {
+            case MTLPixelFormatStencil8:
+            case MTLPixelFormatX24_Stencil8:
+            case MTLPixelFormatX32_Stencil8:
+            case MTLPixelFormatDepth24Unorm_Stencil8:
+            case MTLPixelFormatDepth32Float_Stencil8:
+                return true;
+            default:
+                break;
+            }
+            return false;
+        }();
+
+        if (isStencilRenderable) {
+            renderPassDescriptor.stencilAttachment.texture = depthStencilBuffer->GetTexture();
         }
         else {
-            auto renderTargetMetal = static_cast<RenderTarget2DMetal*>(renderTarget.get());
-            POMDOG_ASSERT(renderTargetMetal == dynamic_cast<RenderTarget2DMetal*>(renderTarget.get()));
-            POMDOG_ASSERT(renderTargetMetal != nullptr);
-
-            renderPassDescriptor.depthAttachment.texture = renderTargetMetal->GetDepthStencilTexture();
-
-            bool isStencilRenderable = [&]() -> bool {
-                switch ([renderTargetMetal->GetDepthStencilTexture() pixelFormat]) {
-                case MTLPixelFormatStencil8:
-                case MTLPixelFormatX24_Stencil8:
-                case MTLPixelFormatX32_Stencil8:
-                case MTLPixelFormatDepth24Unorm_Stencil8:
-                case MTLPixelFormatDepth32Float_Stencil8:
-                    return true;
-                default:
-                    break;
-                }
-                return false;
-            }();
-
-            if (isStencilRenderable) {
-                renderPassDescriptor.stencilAttachment.texture = renderTargetMetal->GetDepthStencilTexture();
-            }
-            else {
-                renderPassDescriptor.stencilAttachment.texture = nullptr;
-            }
+            renderPassDescriptor.stencilAttachment.texture = nullptr;
         }
     }
 

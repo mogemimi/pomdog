@@ -137,7 +137,7 @@ DepthStencilBufferDirect3D11::GetDepthStencilView() const noexcept
 }
 
 std::unique_ptr<Error>
-DepthStencilBufferDirect3D11::ResetBackBuffer(
+DepthStencilBufferDirect3D11::ResetBuffer(
     ID3D11Device* device,
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn,
@@ -170,12 +170,6 @@ DepthStencilBufferDirect3D11::ResetBackBuffer(
     }
 
     return nullptr;
-}
-
-void DepthStencilBufferDirect3D11::ResetBackBuffer() noexcept
-{
-    depthStencilView.Reset();
-    depthStencil.Reset();
 }
 
 } // namespace Pomdog::Detail::Direct3D11

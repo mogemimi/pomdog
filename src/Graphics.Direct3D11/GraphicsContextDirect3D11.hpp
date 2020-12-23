@@ -13,6 +13,7 @@
 
 namespace Pomdog::Detail::Direct3D11 {
 
+class DepthStencilBufferDirect3D11;
 class PipelineStateDirect3D11;
 class RenderTarget2DDirect3D11;
 
@@ -109,6 +110,7 @@ private:
     static constexpr std::size_t MaxTextureCount = 8;
     std::array<ID3D11ShaderResourceView*, MaxTextureCount> textureResourceViews;
     std::shared_ptr<RenderTarget2DDirect3D11> backBuffer;
+    std::shared_ptr<DepthStencilBufferDirect3D11> backBufferDepthStencil;
     std::shared_ptr<PipelineStateDirect3D11> pipelineState;
     std::array<FLOAT, 4> blendFactor = {1.0f, 1.0f, 1.0f, 1.0f};
     int preferredBackBufferWidth = 1;

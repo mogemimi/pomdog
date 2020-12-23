@@ -33,7 +33,7 @@ public:
     Rectangle GetBounds() const noexcept override;
 
     /// Gets the pointer of the depth stencil texture.
-    id<MTLTexture> GetDepthStencilTexture() const noexcept;
+    id<MTLTexture> GetTexture() const noexcept;
 
 private:
     id<MTLTexture> depthStencilTexture = nullptr;

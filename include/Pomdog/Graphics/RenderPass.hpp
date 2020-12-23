@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Pomdog/Basic/Export.hpp"
-#include "Pomdog/Graphics/RenderTarget2D.hpp"
+#include "Pomdog/Graphics/ForwardDeclarations.hpp"
 #include "Pomdog/Graphics/Viewport.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Math/Vector4.hpp"
@@ -20,6 +20,9 @@ using RenderTargetAndClearColor = std::tuple<std::shared_ptr<RenderTarget2D>, st
 struct POMDOG_EXPORT RenderPass final {
     /// An array of render targets.
     std::array<RenderTargetAndClearColor, 8> RenderTargets;
+
+    /// A depth stencil buffer.
+    std::shared_ptr<Pomdog::DepthStencilBuffer> DepthStencilBuffer;
 
     /// A viewport for projection transformations and clipping.
     std::optional<Pomdog::Viewport> Viewport;
