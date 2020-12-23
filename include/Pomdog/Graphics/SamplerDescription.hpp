@@ -24,12 +24,12 @@ struct POMDOG_EXPORT SamplerDescription final {
     Pomdog::ComparisonFunction ComparisonFunction;
     //std::array<float, 4> BorderColor;
 
-    static SamplerDescription CreateDefault()
+    static SamplerDescription CreateDefault() noexcept
     {
         return CreateLinearClamp();
     }
 
-    static SamplerDescription CreateAnisotropicClamp()
+    static SamplerDescription CreateAnisotropicClamp() noexcept
     {
         SamplerDescription desc;
         desc.Filter = TextureFilter::Anisotropic;
@@ -44,7 +44,7 @@ struct POMDOG_EXPORT SamplerDescription final {
         return desc;
     }
 
-    static SamplerDescription CreateAnisotropicWrap()
+    static SamplerDescription CreateAnisotropicWrap() noexcept
     {
         SamplerDescription desc;
         desc.Filter = TextureFilter::Anisotropic;
@@ -59,7 +59,7 @@ struct POMDOG_EXPORT SamplerDescription final {
         return desc;
     }
 
-    static SamplerDescription CreateLinearClamp()
+    static SamplerDescription CreateLinearClamp() noexcept
     {
         SamplerDescription desc;
         desc.Filter = TextureFilter::Linear;
@@ -74,7 +74,7 @@ struct POMDOG_EXPORT SamplerDescription final {
         return desc;
     }
 
-    static SamplerDescription CreateLinearWrap()
+    static SamplerDescription CreateLinearWrap() noexcept
     {
         SamplerDescription desc;
         desc.Filter = TextureFilter::Linear;
@@ -89,7 +89,7 @@ struct POMDOG_EXPORT SamplerDescription final {
         return desc;
     }
 
-    static SamplerDescription CreatePointClamp()
+    static SamplerDescription CreatePointClamp() noexcept
     {
         SamplerDescription desc;
         desc.Filter = TextureFilter::Point;
@@ -104,7 +104,7 @@ struct POMDOG_EXPORT SamplerDescription final {
         return desc;
     }
 
-    static SamplerDescription CreatePointWrap()
+    static SamplerDescription CreatePointWrap() noexcept
     {
         SamplerDescription desc;
         desc.Filter = TextureFilter::Point;

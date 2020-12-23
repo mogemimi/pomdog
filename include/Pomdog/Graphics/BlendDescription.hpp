@@ -15,12 +15,12 @@ struct POMDOG_EXPORT BlendDescription final {
     bool AlphaToCoverageEnable;
     bool IndependentBlendEnable;
 
-    static BlendDescription CreateDefault()
+    static BlendDescription CreateDefault() noexcept
     {
         return CreateOpaque();
     }
 
-    static BlendDescription CreateAdditive()
+    static BlendDescription CreateAdditive() noexcept
     {
         BlendDescription desc;
         desc.AlphaToCoverageEnable = false;
@@ -31,7 +31,7 @@ struct POMDOG_EXPORT BlendDescription final {
         return desc;
     }
 
-    static BlendDescription CreateAlphaBlend()
+    static BlendDescription CreateAlphaBlend() noexcept
     {
         BlendDescription desc;
         desc.AlphaToCoverageEnable = false;
@@ -42,7 +42,7 @@ struct POMDOG_EXPORT BlendDescription final {
         return desc;
     }
 
-    static BlendDescription CreateNonPremultiplied()
+    static BlendDescription CreateNonPremultiplied() noexcept
     {
         BlendDescription desc;
         desc.AlphaToCoverageEnable = false;
@@ -53,7 +53,7 @@ struct POMDOG_EXPORT BlendDescription final {
         return desc;
     }
 
-    static BlendDescription CreateOpaque()
+    static BlendDescription CreateOpaque() noexcept
     {
         BlendDescription desc;
         desc.AlphaToCoverageEnable = false;

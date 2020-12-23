@@ -18,7 +18,7 @@ struct POMDOG_EXPORT RenderTargetBlendDescription final {
     BlendOperation AlphaBlendOperation;
     bool BlendEnable;
 
-    static RenderTargetBlendDescription CreateAdditive()
+    static RenderTargetBlendDescription CreateAdditive() noexcept
     {
         RenderTargetBlendDescription desc;
         desc.BlendEnable = true;
@@ -31,7 +31,7 @@ struct POMDOG_EXPORT RenderTargetBlendDescription final {
         return desc;
     }
 
-    static RenderTargetBlendDescription CreateAlphaBlend()
+    static RenderTargetBlendDescription CreateAlphaBlend() noexcept
     {
         RenderTargetBlendDescription desc;
         desc.BlendEnable = true;
@@ -44,7 +44,7 @@ struct POMDOG_EXPORT RenderTargetBlendDescription final {
         return desc;
     }
 
-    static RenderTargetBlendDescription CreateNonPremultiplied()
+    static RenderTargetBlendDescription CreateNonPremultiplied() noexcept
     {
         RenderTargetBlendDescription desc;
         desc.BlendEnable = true;
@@ -57,7 +57,7 @@ struct POMDOG_EXPORT RenderTargetBlendDescription final {
         return desc;
     }
 
-    static RenderTargetBlendDescription CreateOpaque()
+    static RenderTargetBlendDescription CreateOpaque() noexcept
     {
         RenderTargetBlendDescription desc;
         desc.BlendEnable = false;

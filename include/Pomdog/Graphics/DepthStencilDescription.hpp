@@ -21,12 +21,12 @@ struct POMDOG_EXPORT DepthStencilDescription final {
     bool DepthBufferWriteEnable;
     bool StencilEnable;
 
-    static DepthStencilDescription CreateDefault()
+    static DepthStencilDescription CreateDefault() noexcept
     {
         return CreateReadWriteDepth();
     }
 
-    static DepthStencilDescription CreateReadWriteDepth()
+    static DepthStencilDescription CreateReadWriteDepth() noexcept
     {
         DepthStencilDescription desc;
         desc.DepthBufferEnable = true;
@@ -37,15 +37,17 @@ struct POMDOG_EXPORT DepthStencilDescription final {
         desc.StencilMask = std::numeric_limits<std::uint32_t>::max();
         desc.StencilWriteMask = std::numeric_limits<std::uint32_t>::max();
         DepthStencilOperation defaultOperation = {
-            StencilOperation::Keep, StencilOperation::Keep,
-            StencilOperation::Keep, ComparisonFunction::Always
+            StencilOperation::Keep,
+            StencilOperation::Keep,
+            StencilOperation::Keep,
+            ComparisonFunction::Always,
         };
         desc.ClockwiseFace = defaultOperation;
         desc.CounterClockwiseFace = defaultOperation;
         return desc;
     }
 
-    static DepthStencilDescription CreateReadOnlyDepth()
+    static DepthStencilDescription CreateReadOnlyDepth() noexcept
     {
         DepthStencilDescription desc;
         desc.DepthBufferEnable = true;
@@ -56,15 +58,17 @@ struct POMDOG_EXPORT DepthStencilDescription final {
         desc.StencilMask = std::numeric_limits<std::uint32_t>::max();
         desc.StencilWriteMask = std::numeric_limits<std::uint32_t>::max();
         DepthStencilOperation defaultOperation = {
-            StencilOperation::Keep, StencilOperation::Keep,
-            StencilOperation::Keep, ComparisonFunction::Always
+            StencilOperation::Keep,
+            StencilOperation::Keep,
+            StencilOperation::Keep,
+            ComparisonFunction::Always,
         };
         desc.ClockwiseFace = defaultOperation;
         desc.CounterClockwiseFace = defaultOperation;
         return desc;
     }
 
-    static DepthStencilDescription CreateNone()
+    static DepthStencilDescription CreateNone() noexcept
     {
         DepthStencilDescription desc;
         desc.DepthBufferEnable = false;
@@ -75,8 +79,10 @@ struct POMDOG_EXPORT DepthStencilDescription final {
         desc.StencilMask = std::numeric_limits<std::uint32_t>::max();
         desc.StencilWriteMask = std::numeric_limits<std::uint32_t>::max();
         DepthStencilOperation defaultOperation = {
-            StencilOperation::Keep, StencilOperation::Keep,
-            StencilOperation::Keep, ComparisonFunction::Always
+            StencilOperation::Keep,
+            StencilOperation::Keep,
+            StencilOperation::Keep,
+            ComparisonFunction::Always,
         };
         desc.ClockwiseFace = defaultOperation;
         desc.CounterClockwiseFace = defaultOperation;
