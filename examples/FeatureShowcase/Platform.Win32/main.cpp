@@ -15,8 +15,8 @@
 
 int WINAPI WinMain(
     HINSTANCE hInstance,
-    [[maybe_unsed]] HINSTANCE hPrevInstance,
-    [[maybe_unsed]] LPSTR lpCmdLine,
+    [[maybe_unused]] HINSTANCE hPrevInstance,
+    [[maybe_unused]] LPSTR lpCmdLine,
     int nCmdShow)
 {
 #if defined(POMDOG_CRTDEBUG)
