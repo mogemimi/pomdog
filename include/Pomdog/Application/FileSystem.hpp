@@ -38,16 +38,16 @@ GetCanonicalPath(const std::string& path) noexcept;
 /// Gets the location of the "LocalAppData" directory.
 ///
 /// Windows:
-/// - e.g. "<user name>\Local Settings\Applicaiton Data\Pomdog"
-/// - e.g. "C:\Users\<user name>\AppData\Local\Pomdog"
+/// - e.g. "<user name>/Local Settings/Applicaiton Data/Pomdog"
+/// - e.g. "C:/Users/<user name>/AppData/Local/Pomdog"
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::string, std::unique_ptr<Error>>
 GetLocalAppDataDirectoryPath() noexcept;
 
 /// Gets the location of the "AppData" directory.
 ///
 /// Windows:
-/// - e.g. "<user name>\Application Data\Pomdog"
-/// - e.g. "C:\Users\<user name>\AppData\Roaming\Pomdog"
+/// - e.g. "<user name>/Application Data/Pomdog"
+/// - e.g. "C:/Users/<user name>/AppData/Roaming/Pomdog"
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::string, std::unique_ptr<Error>>
 GetAppDataDirectoryPath() noexcept;
 
@@ -61,7 +61,7 @@ GetResourceDirectoryPath() noexcept;
 /// Gets the temporary directory.
 ///
 /// Windows:
-/// - e.g. "C:\Users\<user name>\AppData\Local\Temp"
+/// - e.g. "C:/Users/<user name>/AppData/Local/Temp"
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::string, std::unique_ptr<Error>>
 GetTempDirectoryPath() noexcept;
 
