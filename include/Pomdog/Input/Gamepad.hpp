@@ -13,7 +13,7 @@ struct GamepadCapabilities;
 
 class POMDOG_EXPORT Gamepad {
 public:
-    virtual ~Gamepad() = default;
+    virtual ~Gamepad();
 
     virtual GamepadCapabilities GetCapabilities(PlayerIndex index) const = 0;
 

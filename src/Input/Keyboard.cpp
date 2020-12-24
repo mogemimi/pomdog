@@ -1,14 +1,9 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
-#pragma once
-
-#include "Pomdog/Basic/Export.hpp"
+#include "Pomdog/Input/Keyboard.hpp"
 
 namespace Pomdog {
 
-class POMDOG_EXPORT Shader {
-public:
-    virtual ~Shader();
-};
+Keyboard::~Keyboard() = default;
 
 } // namespace Pomdog

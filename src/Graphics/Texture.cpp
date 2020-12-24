@@ -1,14 +1,9 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
-#pragma once
-
-#include "Pomdog/Basic/Export.hpp"
+#include "Pomdog/Graphics/Texture.hpp"
 
 namespace Pomdog {
 
-class POMDOG_EXPORT Shader {
-public:
-    virtual ~Shader();
-};
+Texture::~Texture() = default;
 
 } // namespace Pomdog

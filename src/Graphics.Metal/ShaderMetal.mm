@@ -9,6 +9,8 @@
 
 namespace Pomdog::Detail::Metal {
 
+ShaderMetal::~ShaderMetal() = default;
+
 std::unique_ptr<Error>
 ShaderMetal::Initialize(
     id<MTLDevice> device,

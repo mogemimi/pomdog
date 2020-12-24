@@ -215,6 +215,8 @@ MTLTriangleFillMode ToFillMode(FillMode fillMode) noexcept
 
 } // namespace
 
+PipelineStateMetal::~PipelineStateMetal() = default;
+
 std::unique_ptr<Error>
 PipelineStateMetal::Initialize(
     id<MTLDevice> device,

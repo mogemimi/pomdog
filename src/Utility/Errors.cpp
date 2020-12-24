@@ -10,6 +10,7 @@ Error::~Error() noexcept = default;
 } // namespace Pomdog
 
 namespace Pomdog::Errors {
+namespace {
 
 class StringError final : public Error {
 public:
@@ -49,6 +50,8 @@ public:
         return std::move(err);
     }
 };
+
+} // namespace
 
 std::string IOError::ToString() const noexcept
 {

@@ -1,14 +1,10 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
-#pragma once
-
-#include "Pomdog/Basic/Export.hpp"
+#include "Pomdog/Application/GameHost.hpp"
 
 namespace Pomdog {
 
-class POMDOG_EXPORT Shader {
-public:
-    virtual ~Shader();
-};
+GameHost::GameHost() = default;
+GameHost::~GameHost() = default;
 
 } // namespace Pomdog

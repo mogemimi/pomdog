@@ -12,7 +12,7 @@ public:
     NativeBuffer(const NativeBuffer&) = delete;
     NativeBuffer& operator=(const NativeBuffer&) = delete;
 
-    virtual ~NativeBuffer() = default;
+    virtual ~NativeBuffer();
 
     virtual void GetData(
         std::size_t offsetInBytes,

@@ -33,7 +33,7 @@ enum class GraphicsCommandType : std::int8_t {
 
 class GraphicsCommand {
 public:
-    virtual ~GraphicsCommand() = default;
+    virtual ~GraphicsCommand();
 
     virtual void Execute(NativeGraphicsContext& graphicsContext) = 0;
 

@@ -19,7 +19,7 @@ public:
     NativeGraphicsContext(const NativeGraphicsContext&) = delete;
     NativeGraphicsContext& operator=(const NativeGraphicsContext&) = delete;
 
-    virtual ~NativeGraphicsContext() = default;
+    virtual ~NativeGraphicsContext();
 
     ///@brief Retrieves the capabilities of a GraphicsContext
     virtual GraphicsCapabilities GetCapabilities() const = 0;

@@ -8,6 +8,7 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_INC_DIR}/Async/QueuedScheduler.hpp
     ${POMDOG_SRC_DIR}/Async/QueuedScheduler.cpp
     ${POMDOG_INC_DIR}/Async/Scheduler.hpp
+    ${POMDOG_SRC_DIR}/Async/Scheduler.cpp
     ${POMDOG_INC_DIR}/Async/Task.hpp
     ${POMDOG_SRC_DIR}/Async/Task.cpp
 )

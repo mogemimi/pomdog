@@ -20,6 +20,8 @@ struct RasterizerStateMetal final {
 
 class PipelineStateMetal final : public PipelineState {
 public:
+    ~PipelineStateMetal() override;
+
     [[nodiscard]] std::unique_ptr<Error>
     Initialize(
         id<MTLDevice> device,

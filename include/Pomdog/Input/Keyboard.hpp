@@ -18,7 +18,7 @@ public:
     Keyboard(const Keyboard&) = delete;
     Keyboard& operator=(const Keyboard&) = delete;
 
-    virtual ~Keyboard() = default;
+    virtual ~Keyboard();
 
     virtual KeyboardState GetState() const = 0;
 

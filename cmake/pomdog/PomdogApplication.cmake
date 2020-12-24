@@ -6,10 +6,13 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_INC_DIR}/Application/FileSystem.hpp
     ${POMDOG_SRC_DIR}/Application/FileSystem.cpp
     ${POMDOG_INC_DIR}/Application/Game.hpp
+    ${POMDOG_SRC_DIR}/Application/Game.cpp
     ${POMDOG_INC_DIR}/Application/GameClock.hpp
     ${POMDOG_SRC_DIR}/Application/GameClock.cpp
     ${POMDOG_INC_DIR}/Application/GameHost.hpp
+    ${POMDOG_SRC_DIR}/Application/GameHost.cpp
     ${POMDOG_INC_DIR}/Application/GameWindow.hpp
+    ${POMDOG_SRC_DIR}/Application/GameWindow.cpp
     ${POMDOG_INC_DIR}/Application/MouseCursor.hpp
     ${POMDOG_SRC_DIR}/Application/SubsystemScheduler.hpp
     ${POMDOG_SRC_DIR}/Application/SystemEvents.hpp

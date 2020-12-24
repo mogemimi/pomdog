@@ -20,11 +20,11 @@ enum class MouseCursor : std::uint8_t;
 class POMDOG_EXPORT GameWindow {
 public:
     /// Constructs plaftorm-default GameWindow.
-    GameWindow() = default;
+    GameWindow();
     GameWindow(const GameWindow&) = delete;
     GameWindow& operator=(const GameWindow&) = delete;
 
-    virtual ~GameWindow() = default;
+    virtual ~GameWindow();
 
     /// @return If window can be resized by user.
     virtual bool GetAllowUserResizing() const = 0;

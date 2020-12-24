@@ -17,11 +17,11 @@ namespace Pomdog {
 class POMDOG_EXPORT Game {
 public:
     /// Constructs empty Game.
-    Game() = default;
-
+    Game();
     Game(const Game&) = delete;
     Game& operator=(const Game&) = delete;
-    virtual ~Game() = default;
+
+    virtual ~Game();
 
     /// Initialization phase of the game.
     ///

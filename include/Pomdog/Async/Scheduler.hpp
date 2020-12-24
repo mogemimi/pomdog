@@ -10,7 +10,7 @@ namespace Pomdog::Concurrency {
 
 class POMDOG_EXPORT Scheduler {
 public:
-    virtual ~Scheduler() = default;
+    virtual ~Scheduler() noexcept;
 
     virtual void Schedule(
         std::function<void()>&& task,

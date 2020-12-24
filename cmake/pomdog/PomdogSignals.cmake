@@ -15,4 +15,5 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_INC_DIR}/Signals/Signal.hpp
     ${POMDOG_INC_DIR}/Signals/Detail/DelegateBody.hpp
     ${POMDOG_INC_DIR}/Signals/Detail/SignalBody.hpp
+    ${POMDOG_SRC_DIR}/Signals/Detail/SignalBody.cpp
 )

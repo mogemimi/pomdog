@@ -6,7 +6,7 @@ namespace Pomdog::Detail::GL4 {
 
 class OpenGLContext {
 public:
-    virtual ~OpenGLContext() = default;
+    virtual ~OpenGLContext();
 
     virtual void MakeCurrent() = 0;
 

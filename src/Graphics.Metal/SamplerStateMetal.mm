@@ -26,6 +26,8 @@ MTLSamplerAddressMode ToSamplerAddressMode(TextureAddressMode addressMode) noexc
 
 } // namespace
 
+SamplerStateMetal::~SamplerStateMetal() = default;
+
 std::unique_ptr<Error>
 SamplerStateMetal::Initialize(id<MTLDevice> device, const SamplerDescription& description) noexcept
 {

@@ -16,6 +16,8 @@ namespace Pomdog::Detail::Metal {
 
 class ShaderMetal final : public Shader {
 public:
+    ~ShaderMetal() override;
+
     [[nodiscard]] std::unique_ptr<Error>
     Initialize(
         id<MTLDevice> device,

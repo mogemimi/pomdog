@@ -18,7 +18,7 @@ public:
     Mouse(const Mouse&) = delete;
     Mouse& operator=(const Mouse&) = delete;
 
-    virtual ~Mouse() = default;
+    virtual ~Mouse();
 
     virtual MouseState GetState() const = 0;
 

@@ -60,11 +60,13 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_INC_DIR}/Graphics/SamplerState.hpp
     ${POMDOG_SRC_DIR}/Graphics/SamplerState.cpp
     ${POMDOG_INC_DIR}/Graphics/Shader.hpp
+    ${POMDOG_SRC_DIR}/Graphics/Shader.cpp
     ${POMDOG_INC_DIR}/Graphics/ShaderLanguage.hpp
     ${POMDOG_INC_DIR}/Graphics/ShaderPipelineStage.hpp
     ${POMDOG_INC_DIR}/Graphics/SurfaceFormat.hpp
     ${POMDOG_INC_DIR}/Graphics/StencilOperation.hpp
     ${POMDOG_INC_DIR}/Graphics/Texture.hpp
+    ${POMDOG_SRC_DIR}/Graphics/Texture.cpp
     ${POMDOG_INC_DIR}/Graphics/Texture2D.hpp
     ${POMDOG_SRC_DIR}/Graphics/Texture2D.cpp
     ${POMDOG_INC_DIR}/Graphics/TextureAddressMode.hpp
@@ -90,6 +92,8 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/Graphics.Backends/GraphicsCommandQueueImmediate.cpp
     ${POMDOG_SRC_DIR}/Graphics.Backends/GraphicsCommandQueueImmediate.hpp
     ${POMDOG_SRC_DIR}/Graphics.Backends/NativeBuffer.hpp
+    ${POMDOG_SRC_DIR}/Graphics.Backends/NativeBuffer.cpp
+    ${POMDOG_SRC_DIR}/Graphics.Backends/NativeGraphicsContext.cpp
     ${POMDOG_SRC_DIR}/Graphics.Backends/NativeGraphicsContext.hpp
     ${POMDOG_SRC_DIR}/Graphics.Backends/ShaderBytecode.hpp
     ${POMDOG_SRC_DIR}/Graphics.Backends/ShaderCompileOptions.hpp
@@ -121,6 +125,7 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/Graphics.GL4/InputLayoutGL4.cpp
         ${POMDOG_SRC_DIR}/Graphics.GL4/InputLayoutGL4.hpp
         ${POMDOG_SRC_DIR}/Graphics.GL4/OpenGLContext.hpp
+        ${POMDOG_SRC_DIR}/Graphics.GL4/OpenGLContext.cpp
         ${POMDOG_SRC_DIR}/Graphics.GL4/OpenGLPrerequisites.hpp
         ${POMDOG_SRC_DIR}/Graphics.GL4/PipelineStateGL4.cpp
         ${POMDOG_SRC_DIR}/Graphics.GL4/PipelineStateGL4.hpp

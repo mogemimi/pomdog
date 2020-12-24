@@ -21,7 +21,7 @@ namespace Pomdog::Detail::Signals {
 
 class POMDOG_EXPORT ConnectionBody {
 public:
-    virtual ~ConnectionBody() = default;
+    virtual ~ConnectionBody();
     virtual void Disconnect() = 0;
     [[nodiscard]] virtual bool Valid() const = 0;
     [[nodiscard]] virtual std::unique_ptr<ConnectionBody> DeepCopy() const = 0;

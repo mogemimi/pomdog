@@ -15,7 +15,7 @@ public:
     Texture& operator=(const Texture&) = delete;
     Texture& operator=(Texture&&) = default;
 
-    virtual ~Texture() = default;
+    virtual ~Texture();
 };
 
 } // namespace Pomdog

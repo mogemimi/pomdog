@@ -11,6 +11,8 @@ namespace Pomdog::Detail::Metal {
 
 class SamplerStateMetal final : public SamplerState {
 public:
+    ~SamplerStateMetal() override;
+
     [[nodiscard]] std::unique_ptr<Error>
     Initialize(
         id<MTLDevice> device,

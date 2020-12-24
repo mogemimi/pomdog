@@ -25,11 +25,11 @@ class Mouse;
 class POMDOG_EXPORT GameHost : public std::enable_shared_from_this<GameHost> {
 public:
     /// Constructs GameHost with platform-default components.
-    GameHost() = default;
+    GameHost();
     GameHost(const GameHost&) = delete;
     GameHost& operator=(const GameHost&) = delete;
 
-    virtual ~GameHost() = default;
+    virtual ~GameHost();
 
     /// Send signal to the GameHost to exit main loop and stop running the game.
     virtual void Exit() = 0;
