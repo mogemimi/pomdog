@@ -85,8 +85,8 @@ InputLayoutHelper& InputLayoutHelper::AddInputSlot(
     InputClassification slotClassIn, std::uint16_t instanceStepRateIn)
 {
     POMDOG_ASSERT(instanceStepRateIn >= 0);
-    POMDOG_ASSERT(instanceStepRateIn == 0 ||
-        slotClassIn == InputClassification::InputPerInstance);
+    POMDOG_ASSERT((instanceStepRateIn == 0) ||
+                  (slotClassIn == InputClassification::InputPerInstance));
 
     if (!elements.empty()) {
         ++inputSlot;

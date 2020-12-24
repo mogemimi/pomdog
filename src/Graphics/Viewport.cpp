@@ -46,10 +46,10 @@ Vector3 Viewport::Project(
     const Matrix4x4& worldViewProjection) const
 {
     auto result = Vector3::Transform(source, worldViewProjection);
-    auto divisor = source.X * worldViewProjection(0, 3)
-        + source.Y * worldViewProjection(1, 3)
-        + source.Z * worldViewProjection(2, 3)
-        + worldViewProjection(3, 3);
+    auto divisor = source.X * worldViewProjection(0, 3) +
+                   source.Y * worldViewProjection(1, 3) +
+                   source.Z * worldViewProjection(2, 3) +
+                   worldViewProjection(3, 3);
 
     if (std::abs(divisor) > std::numeric_limits<float>::epsilon()) {
         result = result / divisor;
@@ -76,10 +76,10 @@ Vector3 Viewport::Unproject(
 
     Matrix4x4 invertWVP = Matrix4x4::Invert(worldViewProjection);
     auto result = Vector3::Transform(vec, invertWVP);
-    auto divisor = vec.X * invertWVP(0, 3)
-        + vec.Y * invertWVP(1, 3)
-        + vec.Z * invertWVP(2, 3)
-        + invertWVP(3, 3);
+    auto divisor = vec.X * invertWVP(0, 3) +
+                   vec.Y * invertWVP(1, 3) +
+                   vec.Z * invertWVP(2, 3) +
+                   invertWVP(3, 3);
 
     if (std::abs(divisor) > std::numeric_limits<float>::epsilon()) {
         result = result / divisor;
