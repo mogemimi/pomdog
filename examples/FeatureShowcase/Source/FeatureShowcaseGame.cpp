@@ -254,7 +254,7 @@ void FeatureShowcaseGame::Update()
         // NOTE: The answer to life, universe and everything.
         constexpr double divisor = 0.02;
 #endif
-        scrollY = std::clamp(scrollY + static_cast<double>(delta) * divisor, -480.0, 0.0);
+        scrollY = std::clamp(scrollY + static_cast<double>(delta) * divisor, -540.0, 0.0);
     });
 }
 
