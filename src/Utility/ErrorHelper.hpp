@@ -6,6 +6,6 @@
 
 namespace Pomdog::Detail {
 
-std::errc ToErrc(int err);
+[[nodiscard]] std::errc ToErrc(int err) noexcept;
 
 } // namespace Pomdog::Detail

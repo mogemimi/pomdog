@@ -1,11 +1,10 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "ErrorHelper.hpp"
-#include "Pomdog/Utility/Assert.hpp"
 
 namespace Pomdog::Detail {
 
-std::errc ToErrc(int err)
+std::errc ToErrc(int err) noexcept
 {
     static_assert(std::errc::bad_address == static_cast<std::errc>(EFAULT));
     static_assert(std::errc::bad_file_descriptor == static_cast<std::errc>(EBADF));
