@@ -3,8 +3,8 @@
 #pragma once
 
 #include "Pomdog/Experimental/Particles/EmitterShapes/ParticleEmitterShape.hpp"
-#include "Pomdog/Experimental/Random/Xoroshiro128StarStar.hpp"
-#include <random>
+#include "Pomdog/Math/Vector3.hpp"
+#include <tuple>
 
 namespace Pomdog::Detail::Particles {
 
@@ -13,26 +13,10 @@ private:
     Vector3 halfSize;
 
 public:
-    explicit ParticleEmitterShapeBox(const Vector3& size)
-        : halfSize(size * 0.5f)
-    {
-    }
+    explicit ParticleEmitterShapeBox(const Vector3& size);
 
     std::tuple<Vector3, Vector3>
-    Compute(Random::Xoroshiro128StarStar& random) const override
-    {
-        POMDOG_ASSERT(halfSize.X >= 0.0f);
-        POMDOG_ASSERT(halfSize.Y >= 0.0f);
-        POMDOG_ASSERT(halfSize.Z >= 0.0f);
-
-        std::uniform_real_distribution<float> distX(-halfSize.X, halfSize.X);
-        std::uniform_real_distribution<float> distY(-halfSize.Y, halfSize.Y);
-        std::uniform_real_distribution<float> distZ(-halfSize.Z, halfSize.Z);
-
-        auto emitPosition = Vector3{distX(random), distY(random), distZ(random)};
-        auto emitDirection = Vector3{1.0f, 0.0f, 0.0f};
-        return std::make_tuple(std::move(emitPosition), std::move(emitDirection));
-    }
+    Compute(Random::Xoroshiro128StarStar& random) const override;
 };
 
 } // namespace Pomdog::Detail::Particles

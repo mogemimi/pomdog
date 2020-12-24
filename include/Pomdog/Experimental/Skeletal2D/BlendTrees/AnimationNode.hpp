@@ -16,7 +16,7 @@ class Skin;
 
 class AnimationNode {
 public:
-    virtual ~AnimationNode() = default;
+    virtual ~AnimationNode();
 
     virtual void Calculate(
         const AnimationTimeInterval& time,

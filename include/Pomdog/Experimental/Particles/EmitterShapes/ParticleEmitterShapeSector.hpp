@@ -3,10 +3,8 @@
 #pragma once
 
 #include "Pomdog/Experimental/Particles/EmitterShapes/ParticleEmitterShape.hpp"
-#include "Pomdog/Experimental/Random/Xoroshiro128StarStar.hpp"
 #include "Pomdog/Math/Radian.hpp"
-#include <cmath>
-#include <random>
+#include <tuple>
 
 namespace Pomdog::Detail::Particles {
 
@@ -16,22 +14,10 @@ private:
     Radian<float> centralAngle;
 
 public:
-    explicit ParticleEmitterShapeSector(Radian<float>&& centralAngleIn)
-        : centralAngle(std::move(centralAngleIn))
-    {
-    }
+    explicit ParticleEmitterShapeSector(Radian<float>&& centralAngleIn);
 
     std::tuple<Vector3, Vector3>
-    Compute(Random::Xoroshiro128StarStar& random) const override
-    {
-        auto emitPosition = Vector3::Zero;
-
-        std::uniform_real_distribution<float> distribution{-0.5f, 0.5f};
-        auto emitAngle = centralAngle * distribution(random);
-
-        auto emitDirection = Vector3{std::cos(emitAngle.value), std::sin(emitAngle.value), 0.0f};
-        return std::make_tuple(std::move(emitPosition), std::move(emitDirection));
-    }
+    Compute(Random::Xoroshiro128StarStar& random) const override;
 };
 
 } // namespace Pomdog::Detail::Particles

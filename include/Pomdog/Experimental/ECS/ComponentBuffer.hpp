@@ -11,7 +11,7 @@ namespace Pomdog::ECS::Detail {
 
 class ComponentBufferBase {
 public:
-    virtual ~ComponentBufferBase() = default;
+    virtual ~ComponentBufferBase();
 
     [[nodiscard]] virtual std::size_t GetSize() const noexcept = 0;
 

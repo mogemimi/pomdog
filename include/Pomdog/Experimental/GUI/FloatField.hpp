@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "Pomdog/Experimental/GUI/NumberField.hpp"
 #include "Pomdog/Experimental/GUI/FontSize.hpp"
 #include "Pomdog/Experimental/GUI/FontWeight.hpp"
 #include "Pomdog/Experimental/GUI/Thickness.hpp"
@@ -14,12 +15,52 @@
 #include <string>
 
 namespace Pomdog::GUI::Detail {
-class FloatFieldDataContext;
+
+class FloatFieldDataContext final : public NumberFieldDataContext {
+public:
+    std::string ToString() const override;
+
+    std::string ToEditableString(const std::string& text) const override;
+
+    double GetValue() const noexcept;
+
+    void SetValue(double valueIn);
+
+    double GetMinimum() const noexcept;
+
+    void SetMinimum(double minimumIn);
+
+    double GetMaximum() const noexcept;
+
+    void SetMaximum(double maximumIn);
+
+    int GetDecimals() const noexcept;
+
+    void SetDecimals(int precisionIn);
+
+    double GetUnit() const noexcept;
+
+    void IncrementValue() override;
+
+    void DecrementValue() override;
+
+    void BeginDragging() override;
+
+    void UpdateDragging(int amount) override;
+
+    bool TextSubmitted(const std::string& text) override;
+
+private:
+    double value = 0.0;
+    double startDragValue = 0.0;
+    double minimum = std::numeric_limits<double>::lowest();
+    double maximum = std::numeric_limits<double>::max();
+    int precision = 3;
+};
+
 } // namespace Pomdog::GUI::Detail
 
 namespace Pomdog::GUI {
-
-class NumberField;
 
 class FloatField final
     : public Widget

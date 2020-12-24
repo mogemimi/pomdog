@@ -3,8 +3,8 @@
 #pragma once
 
 #include "Pomdog/Experimental/Particles/EmitterShapes/ParticleEmitterShape.hpp"
-#include "Pomdog/Experimental/Random/Xoroshiro128StarStar.hpp"
-#include <random>
+#include "Pomdog/Math/Vector3.hpp"
+#include <tuple>
 
 namespace Pomdog::Detail::Particles {
 
@@ -13,21 +13,10 @@ private:
     float radius;
 
 public:
-    explicit ParticleEmitterShapeSphere(float radiusIn)
-        : radius(radiusIn)
-    {
-    }
+    explicit ParticleEmitterShapeSphere(float radiusIn);
 
     std::tuple<Vector3, Vector3>
-    Compute(Random::Xoroshiro128StarStar& random) const override
-    {
-        POMDOG_ASSERT(radius >= 0.0f);
-        std::uniform_real_distribution<float> dist(-radius, radius);
-
-        auto emitPosition = Vector3{dist(random), dist(random), dist(random)};
-        auto emitDirection = Vector3::Normalize(emitPosition);
-        return std::make_tuple(std::move(emitPosition), std::move(emitDirection));
-    }
+    Compute(Random::Xoroshiro128StarStar& random) const override;
 };
 
 } // namespace Pomdog::Detail::Particles

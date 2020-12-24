@@ -11,7 +11,7 @@ namespace Pomdog {
 
 class POMDOG_EXPORT ImageEffectPreRenderable {
 public:
-    virtual ~ImageEffectPreRenderable() = default;
+    virtual ~ImageEffectPreRenderable();
 
     virtual void PreRender(
         GraphicsCommandList& commandList,
@@ -21,7 +21,7 @@ public:
 
 class ImageEffectBase {
 public:
-    virtual ~ImageEffectBase() = default;
+    virtual ~ImageEffectBase();
 
     virtual void Apply(
         GraphicsCommandList& commandList,

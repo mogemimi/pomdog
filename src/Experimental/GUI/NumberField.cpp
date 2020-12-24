@@ -18,6 +18,8 @@ constexpr int prependAreaWidth = 10;
 
 } // namespace
 
+NumberFieldDataContext::~NumberFieldDataContext() = default;
+
 NumberField::NumberField(
     const std::shared_ptr<UIEventDispatcher>& dispatcher,
     const std::shared_ptr<NumberFieldDataContext>& dataContextIn)

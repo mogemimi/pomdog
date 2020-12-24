@@ -215,3 +215,9 @@ AnimationTimeInterval TranslationTrack::GetLength() const
 }
 
 } // namespace Pomdog::Skeletal2D::Detail
+
+namespace Pomdog::Skeletal2D {
+
+AnimationTrack::~AnimationTrack() = default;
+
+} // namespace Pomdog::Skeletal2D

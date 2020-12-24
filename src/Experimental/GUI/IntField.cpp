@@ -2,7 +2,6 @@
 
 #include "Pomdog/Experimental/GUI/IntField.hpp"
 #include "Pomdog/Experimental/GUI/DrawingContext.hpp"
-#include "Pomdog/Experimental/GUI/NumberField.hpp"
 #include "Pomdog/Experimental/GUI/PointerPoint.hpp"
 #include "Pomdog/Experimental/GUI/PushButton.hpp"
 #include "Pomdog/Experimental/GUI/TextBlock.hpp"
@@ -12,81 +11,75 @@
 #include "Pomdog/Utility/StringHelper.hpp"
 #include <array>
 
+namespace Pomdog::GUI::Detail {
+
+std::string IntFieldDataContext::ToString() const
+{
+    return std::to_string(value);
+}
+
+std::string IntFieldDataContext::ToEditableString(const std::string& text) const
+{
+    return text;
+}
+
+int IntFieldDataContext::GetValue() const noexcept
+{
+    return value;
+}
+
+void IntFieldDataContext::SetValue(int valueIn)
+{
+    value = valueIn;
+}
+
+void IntFieldDataContext::IncrementValue()
+{
+    constexpr int unit = 1;
+    value = value + unit;
+}
+
+void IntFieldDataContext::DecrementValue()
+{
+    constexpr int unit = 1;
+    value = value - unit;
+}
+
+void IntFieldDataContext::BeginDragging()
+{
+    startDragValue = value;
+}
+
+void IntFieldDataContext::UpdateDragging(int amount)
+{
+    constexpr int unit = 1;
+    value = startDragValue + amount * unit;
+}
+
+bool IntFieldDataContext::TextSubmitted(const std::string& text)
+{
+    std::optional<int> newValue;
+    try {
+        newValue = std::stoi(text);
+    }
+    catch (const std::invalid_argument&) {
+        newValue = std::nullopt;
+    }
+    catch (const std::out_of_range&) {
+        newValue = std::nullopt;
+    }
+
+    if (!newValue) {
+        return false;
+    }
+
+    value = *newValue;
+    return true;
+}
+
+} // namespace Pomdog::GUI::Detail
+
 namespace Pomdog::GUI {
-namespace Detail {
-
-class IntFieldDataContext final : public NumberFieldDataContext {
-public:
-    std::string ToString() const override
-    {
-        return std::to_string(value);
-    }
-
-    std::string ToEditableString(const std::string& text) const override
-    {
-        return text;
-    }
-
-    int GetValue() const noexcept
-    {
-        return value;
-    }
-
-    void SetValue(int valueIn)
-    {
-        value = valueIn;
-    }
-
-    void IncrementValue() override
-    {
-        constexpr int unit = 1;
-        value = value + unit;
-    }
-
-    void DecrementValue() override
-    {
-        constexpr int unit = 1;
-        value = value - unit;
-    }
-
-    void BeginDragging() override
-    {
-        startDragValue = value;
-    }
-
-    void UpdateDragging(int amount) override
-    {
-        constexpr int unit = 1;
-        value = startDragValue + amount * unit;
-    }
-
-    bool TextSubmitted(const std::string& text) override
-    {
-        std::optional<int> newValue;
-        try {
-            newValue = std::stoi(text);
-        }
-        catch (const std::invalid_argument&) {
-            newValue = std::nullopt;
-        }
-        catch (const std::out_of_range&) {
-            newValue = std::nullopt;
-        }
-
-        if (!newValue) {
-            return false;
-        }
-
-        value = *newValue;
-        return true;
-    }
-
-private:
-    int value = 0;
-    int startDragValue = 0;
-};
-
-} // namespace Detail
 
 IntField::IntField(const std::shared_ptr<UIEventDispatcher>& dispatcher)
     : Widget(dispatcher)

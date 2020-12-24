@@ -21,6 +21,7 @@ target_sources(pomdog_static PRIVATE
     $<$<BOOL:${POMDOG_USE_EXPERIMENTAL}>:
         # NOTE: Experimental/ECS
         ${POMDOG_INC_DIR}/Experimental/ECS/ComponentBuffer.hpp
+        ${POMDOG_SRC_DIR}/Experimental/ECS/ComponentBuffer.cpp
         ${POMDOG_INC_DIR}/Experimental/ECS/ComponentType.hpp
         ${POMDOG_INC_DIR}/Experimental/ECS/ComponentTypeIndex.hpp
         ${POMDOG_SRC_DIR}/Experimental/ECS/ComponentTypeIndex.cpp
@@ -171,6 +172,7 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_INC_DIR}/Experimental/ImageEffects/GrayscaleEffect.hpp
         ${POMDOG_SRC_DIR}/Experimental/ImageEffects/GrayscaleEffect.cpp
         ${POMDOG_INC_DIR}/Experimental/ImageEffects/ImageEffectBase.hpp
+        ${POMDOG_SRC_DIR}/Experimental/ImageEffects/ImageEffectBase.cpp
         ${POMDOG_INC_DIR}/Experimental/ImageEffects/PostProcessCompositor.hpp
         ${POMDOG_SRC_DIR}/Experimental/ImageEffects/PostProcessCompositor.cpp
         ${POMDOG_INC_DIR}/Experimental/ImageEffects/RetroCrtEffect.hpp
@@ -207,11 +209,17 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_INC_DIR}/Experimental/Particles/ParticleSystem.hpp
         ${POMDOG_SRC_DIR}/Experimental/Particles/ParticleSystem.cpp
         ${POMDOG_INC_DIR}/Experimental/Particles/EmitterShapes/ParticleEmitterShape.hpp
+        ${POMDOG_SRC_DIR}/Experimental/Particles/EmitterShapes/ParticleEmitterShape.cpp
         ${POMDOG_INC_DIR}/Experimental/Particles/EmitterShapes/ParticleEmitterShapeBox.hpp
+        ${POMDOG_SRC_DIR}/Experimental/Particles/EmitterShapes/ParticleEmitterShapeBox.cpp
         ${POMDOG_INC_DIR}/Experimental/Particles/EmitterShapes/ParticleEmitterShapeCone.hpp
+        ${POMDOG_SRC_DIR}/Experimental/Particles/EmitterShapes/ParticleEmitterShapeCone.cpp
         ${POMDOG_INC_DIR}/Experimental/Particles/EmitterShapes/ParticleEmitterShapeHemisphere.hpp
+        ${POMDOG_SRC_DIR}/Experimental/Particles/EmitterShapes/ParticleEmitterShapeHemisphere.cpp
         ${POMDOG_INC_DIR}/Experimental/Particles/EmitterShapes/ParticleEmitterShapeSector.hpp
+        ${POMDOG_SRC_DIR}/Experimental/Particles/EmitterShapes/ParticleEmitterShapeSector.cpp
         ${POMDOG_INC_DIR}/Experimental/Particles/EmitterShapes/ParticleEmitterShapeSphere.hpp
+        ${POMDOG_SRC_DIR}/Experimental/Particles/EmitterShapes/ParticleEmitterShapeSphere.cpp
         ${POMDOG_INC_DIR}/Experimental/Particles/Parameters/ParticleCurveKey.hpp
         ${POMDOG_INC_DIR}/Experimental/Particles/Parameters/ParticleCurveLerp.hpp
         ${POMDOG_INC_DIR}/Experimental/Particles/Parameters/ParticleParameter.hpp
@@ -294,6 +302,7 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_INC_DIR}/Experimental/Skeletal2D/BlendTrees/AnimationLerpNode.hpp
         ${POMDOG_SRC_DIR}/Experimental/Skeletal2D/BlendTrees/AnimationLerpNode.cpp
         ${POMDOG_INC_DIR}/Experimental/Skeletal2D/BlendTrees/AnimationNode.hpp
+        ${POMDOG_SRC_DIR}/Experimental/Skeletal2D/BlendTrees/AnimationNode.cpp
         ${POMDOG_INC_DIR}/Experimental/Skeletal2D/BlendTrees/WeightBlendingHelper.hpp
         ${POMDOG_SRC_DIR}/Experimental/Skeletal2D/BlendTrees/WeightBlendingHelper.cpp
         ${POMDOG_SRC_DIR}/Experimental/Skeletal2D/Tracks/AnimationKeyHelper.hpp

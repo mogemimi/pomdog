@@ -2,7 +2,6 @@
 
 #include "Pomdog/Experimental/GUI/FloatField.hpp"
 #include "Pomdog/Experimental/GUI/DrawingContext.hpp"
-#include "Pomdog/Experimental/GUI/NumberField.hpp"
 #include "Pomdog/Experimental/GUI/PointerPoint.hpp"
 #include "Pomdog/Experimental/GUI/PushButton.hpp"
 #include "Pomdog/Experimental/GUI/TextBlock.hpp"
@@ -12,153 +11,144 @@
 #include "Pomdog/Utility/StringHelper.hpp"
 #include <array>
 
+namespace Pomdog::GUI::Detail {
+
+std::string FloatFieldDataContext::ToString() const
+{
+    switch (precision) {
+    case 0:
+        return StringHelper::Format("%.1lf", value);
+    case 1:
+        return StringHelper::Format("%.1lf", value);
+    case 2:
+        return StringHelper::Format("%.2lf", value);
+    case 3:
+        return StringHelper::Format("%.3lf", value);
+    case 4:
+        return StringHelper::Format("%.4lf", value);
+    default:
+        break;
+    }
+    return StringHelper::Format("%lf", value);
+}
+
+std::string FloatFieldDataContext::ToEditableString(const std::string& text) const
+{
+    // NOTE: Remove trailing zeros from string.
+    auto v = StringHelper::TrimRight(text, '0');
+    if (StringHelper::HasSuffix(v, ".")) {
+        v = std::string_view{v.data(), std::min(v.size() + 1, text.size())};
+    }
+    return std::string{v};
+}
+
+double FloatFieldDataContext::GetValue() const noexcept
+{
+    return value;
+}
+
+void FloatFieldDataContext::SetValue(double valueIn)
+{
+    value = valueIn;
+}
+
+double FloatFieldDataContext::GetMinimum() const noexcept
+{
+    return minimum;
+}
+
+void FloatFieldDataContext::SetMinimum(double minimumIn)
+{
+    minimum = minimumIn;
+}
+
+double FloatFieldDataContext::GetMaximum() const noexcept
+{
+    return maximum;
+}
+
+void FloatFieldDataContext::SetMaximum(double maximumIn)
+{
+    maximum = maximumIn;
+}
+
+int FloatFieldDataContext::GetDecimals() const noexcept
+{
+    return precision;
+}
+
+void FloatFieldDataContext::SetDecimals(int precisionIn)
+{
+    precision = precisionIn;
+}
+
+double FloatFieldDataContext::GetUnit() const noexcept
+{
+    if ((0 <= precision) && (precision <= 9)) {
+        const std::array<double, 10> units = {{
+            1.0,
+            0.1,
+            0.01,
+            0.001,
+            0.0001,
+            0.00001,
+            0.000001,
+            0.0000001,
+            0.00000001,
+            0.000000001,
+        }};
+        return units[precision];
+    }
+    return 0.01;
+}
+
+void FloatFieldDataContext::IncrementValue()
+{
+    const double unit = GetUnit();
+    value = std::clamp(value + unit, minimum, maximum);
+}
+
+void FloatFieldDataContext::DecrementValue()
+{
+    const double unit = GetUnit();
+    value = std::clamp(value - unit, minimum, maximum);
+}
+
+void FloatFieldDataContext::BeginDragging()
+{
+    startDragValue = value;
+}
+
+void FloatFieldDataContext::UpdateDragging(int amount)
+{
+    const double unit = GetUnit();
+    value = std::clamp(startDragValue + amount * unit, minimum, maximum);
+}
+
+bool FloatFieldDataContext::TextSubmitted(const std::string& text)
+{
+    std::optional<double> newValue;
+    try {
+        newValue = std::stod(text);
+    }
+    catch (const std::invalid_argument&) {
+        newValue = std::nullopt;
+    }
+    catch (const std::out_of_range&) {
+        newValue = std::nullopt;
+    }
+
+    if (!newValue) {
+        return false;
+    }
+
+    value = std::clamp(*newValue, minimum, maximum);
+    return true;
+}
+
+} // namespace Pomdog::GUI::Detail
+
 namespace Pomdog::GUI {
-namespace Detail {
-
-class FloatFieldDataContext final : public NumberFieldDataContext {
-public:
-    std::string ToString() const override
-    {
-        switch (precision) {
-        case 0:
-            return StringHelper::Format("%.1lf", value);
-        case 1:
-            return StringHelper::Format("%.1lf", value);
-        case 2:
-            return StringHelper::Format("%.2lf", value);
-        case 3:
-            return StringHelper::Format("%.3lf", value);
-        case 4:
-            return StringHelper::Format("%.4lf", value);
-        default:
-            break;
-        }
-        return StringHelper::Format("%lf", value);
-    }
-
-    std::string ToEditableString(const std::string& text) const override
-    {
-        // NOTE: Remove trailing zeros from string.
-        auto v = StringHelper::TrimRight(text, '0');
-        if (StringHelper::HasSuffix(v, ".")) {
-            v = std::string_view{v.data(), std::min(v.size() + 1, text.size())};
-        }
-        return std::string{v};
-    }
-
-    double GetValue() const noexcept
-    {
-        return value;
-    }
-
-    void SetValue(double valueIn)
-    {
-        value = valueIn;
-    }
-
-    double GetMinimum() const noexcept
-    {
-        return minimum;
-    }
-
-    void SetMinimum(double minimumIn)
-    {
-        minimum = minimumIn;
-    }
-
-    double GetMaximum() const noexcept
-    {
-        return maximum;
-    }
-
-    void SetMaximum(double maximumIn)
-    {
-        maximum = maximumIn;
-    }
-
-    int GetDecimals() const noexcept
-    {
-        return precision;
-    }
-
-    void SetDecimals(int precisionIn)
-    {
-        precision = precisionIn;
-    }
-
-    double GetUnit() const noexcept
-    {
-        if ((0 <= precision) && (precision <= 9)) {
-            const std::array<double, 10> units = {{
-                1.0,
-                0.1,
-                0.01,
-                0.001,
-                0.0001,
-                0.00001,
-                0.000001,
-                0.0000001,
-                0.00000001,
-                0.000000001,
-            }};
-            return units[precision];
-        }
-        return 0.01;
-    }
-
-    void IncrementValue() override
-    {
-        const double unit = GetUnit();
-        value = std::clamp(value + unit, minimum, maximum);
-    }
-
-    void DecrementValue() override
-    {
-        const double unit = GetUnit();
-        value = std::clamp(value - unit, minimum, maximum);
-    }
-
-    void BeginDragging() override
-    {
-        startDragValue = value;
-    }
-
-    void UpdateDragging(int amount) override
-    {
-        const double unit = GetUnit();
-        value = std::clamp(startDragValue + amount * unit, minimum, maximum);
-    }
-
-    bool TextSubmitted(const std::string& text) override
-    {
-        std::optional<double> newValue;
-        try {
-            newValue = std::stod(text);
-        }
-        catch (const std::invalid_argument&) {
-            newValue = std::nullopt;
-        }
-        catch (const std::out_of_range&) {
-            newValue = std::nullopt;
-        }
-
-        if (!newValue) {
-            return false;
-        }
-
-        value = std::clamp(*newValue, minimum, maximum);
-        return true;
-    }
-
-private:
-    double value = 0.0;
-    double startDragValue = 0.0;
-    double minimum = std::numeric_limits<double>::lowest();
-    double maximum = std::numeric_limits<double>::max();
-    int precision = 3;
-};
-
-} // namespace Detail
 
 FloatField::FloatField(const std::shared_ptr<UIEventDispatcher>& dispatcher)
     : Widget(dispatcher)

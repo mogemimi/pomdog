@@ -13,7 +13,7 @@ namespace Pomdog::Detail::Particles {
 
 class ParticleEmitterShape {
 public:
-    virtual ~ParticleEmitterShape() = default;
+    virtual ~ParticleEmitterShape();
 
     virtual std::tuple<Vector3, Vector3>
     Compute(Random::Xoroshiro128StarStar& random) const = 0;

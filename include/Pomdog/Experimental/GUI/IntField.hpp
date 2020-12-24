@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "Pomdog/Experimental/GUI/NumberField.hpp"
 #include "Pomdog/Experimental/GUI/FontSize.hpp"
 #include "Pomdog/Experimental/GUI/FontWeight.hpp"
 #include "Pomdog/Experimental/GUI/Thickness.hpp"
@@ -14,12 +15,35 @@
 #include <string>
 
 namespace Pomdog::GUI::Detail {
-class IntFieldDataContext;
+
+class IntFieldDataContext final : public NumberFieldDataContext {
+public:
+    std::string ToString() const override;
+
+    std::string ToEditableString(const std::string& text) const override;
+
+    int GetValue() const noexcept;
+
+    void SetValue(int valueIn);
+
+    void IncrementValue() override;
+
+    void DecrementValue() override;
+
+    void BeginDragging() override;
+
+    void UpdateDragging(int amount) override;
+
+    bool TextSubmitted(const std::string& text) override;
+
+private:
+    int value = 0;
+    int startDragValue = 0;
+};
+
 } // namespace Pomdog::GUI::Detail
 
 namespace Pomdog::GUI {
-
-class NumberField;
 
 class IntField final
     : public Widget

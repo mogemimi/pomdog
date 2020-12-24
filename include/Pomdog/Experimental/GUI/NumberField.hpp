@@ -21,7 +21,7 @@ class TextBlock;
 
 class NumberFieldDataContext {
 public:
-    virtual ~NumberFieldDataContext() = default;
+    virtual ~NumberFieldDataContext();
 
     virtual std::string ToString() const = 0;
 

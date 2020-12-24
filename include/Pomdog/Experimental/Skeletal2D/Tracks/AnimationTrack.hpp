@@ -12,7 +12,7 @@ class Skin;
 
 class AnimationTrack {
 public:
-    virtual ~AnimationTrack() = default;
+    virtual ~AnimationTrack();
 
     virtual void Apply(
         const AnimationTimeInterval& time,
