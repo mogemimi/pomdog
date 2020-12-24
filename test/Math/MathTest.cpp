@@ -2,7 +2,6 @@
 
 #include "Pomdog/Math/Math.hpp"
 #include "catch.hpp"
-#include <cfloat>
 
 namespace Math = Pomdog::Math;
 using Pomdog::Degree;
@@ -12,6 +11,7 @@ TEST_CASE("MathHelper", "[MathHelper]")
 {
     SECTION("Constants")
     {
+        // NOTE: float
         REQUIRE(Math::Pi<float> == 3.1415926535f);
         REQUIRE(Math::TwoPi<float> == 6.2831853071f);
         REQUIRE(Math::OneOverPi<float> == 0.3183098861f);
@@ -19,23 +19,13 @@ TEST_CASE("MathHelper", "[MathHelper]")
         REQUIRE(Math::PiOver2<float> == 1.5707963267f);
         REQUIRE(Math::PiOver4<float> == 0.7853981633f);
 
-    #if defined(DBL_MANT_DIG)
+        // NOTE: double
         REQUIRE(Math::Pi<double> == 3.14159265358979323846);
         REQUIRE(Math::TwoPi<double> == 6.28318530717958647692);
         REQUIRE(Math::OneOverPi<double> == 0.31830988618379067154);
         REQUIRE(Math::OneOver2Pi<double> == 0.15915494309189533576);
         REQUIRE(Math::PiOver2<double> == 1.57079632679489661923);
         REQUIRE(Math::PiOver4<double> == 0.78539816339744830962);
-    #endif
-
-    #if defined(LDBL_MANT_DIG)
-        REQUIRE(Math::Pi<long double> == 3.14159265358979323846L);
-        REQUIRE(Math::TwoPi<long double> == 6.28318530717958647692L);
-        REQUIRE(Math::OneOverPi<long double> == 0.31830988618379067154L);
-        REQUIRE(Math::OneOver2Pi<long double> == 0.15915494309189533576L);
-        REQUIRE(Math::PiOver2<long double> == 1.57079632679489661923L);
-        REQUIRE(Math::PiOver4<long double> == 0.78539816339744830962L);
-    #endif
     }
     SECTION("Clamp")
     {

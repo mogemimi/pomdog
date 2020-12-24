@@ -8,7 +8,6 @@
 #include "Pomdog/Math/Detail/FloatingPointVector3.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <array>
-#include <cfloat>
 #include <cmath>
 #include <limits>
 #include <utility>
@@ -500,24 +499,16 @@ FloatingPointQuaternion<T> operator*(T scaleFactor, const FloatingPointQuaternio
         scaleFactor * quaternion.W);
 }
 
-// explicit instantiations
+// NOTE: explicit instantiations
 template class FloatingPointQuaternion<float>;
+template class FloatingPointQuaternion<double>;
 
+// NOTE: explicit instantiations
 template FloatingPointQuaternion<float>
 operator*<float>(float, const FloatingPointQuaternion<float>&) noexcept;
 
-#if defined(DBL_MANT_DIG)
-template class FloatingPointQuaternion<double>;
-
+// NOTE: explicit instantiations
 template FloatingPointQuaternion<double>
 operator*<double>(double, const FloatingPointQuaternion<double>&) noexcept;
-#endif
-
-#if defined(LDBL_MANT_DIG)
-template class FloatingPointQuaternion<long double>;
-
-template FloatingPointQuaternion<long double>
-operator*<long double>(long double, const FloatingPointQuaternion<long double>&) noexcept;
-#endif
 
 } // namespace Pomdog::Detail

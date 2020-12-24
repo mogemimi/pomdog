@@ -7,7 +7,6 @@
 #include "Pomdog/Math/Detail/FloatingPointQuaternion.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <algorithm>
-#include <cfloat>
 #include <cmath>
 #include <limits>
 
@@ -293,24 +292,16 @@ FloatingPointVector2<T> operator*(T scaleFactor, const FloatingPointVector2<T>& 
     return FloatingPointVector2<T>(scaleFactor * vector.X, scaleFactor * vector.Y);
 }
 
-// explicit instantiations
+// NOTE: explicit instantiations
 template class FloatingPointVector2<float>;
+template class FloatingPointVector2<double>;
 
+// NOTE: explicit instantiations
 template FloatingPointVector2<float>
 operator*<float>(float, const FloatingPointVector2<float>&) noexcept;
 
-#if defined(DBL_MANT_DIG)
-template class FloatingPointVector2<double>;
-
+// NOTE: explicit instantiations
 template FloatingPointVector2<double>
 operator*<double>(double, const FloatingPointVector2<double>&) noexcept;
-#endif
-
-#if defined(LDBL_MANT_DIG)
-template class FloatingPointVector2<long double>;
-
-template FloatingPointVector2<long double>
-operator*<long double>(long double, const FloatingPointVector2<long double>&) noexcept;
-#endif
 
 } // namespace Pomdog::Detail

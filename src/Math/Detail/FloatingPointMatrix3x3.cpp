@@ -8,7 +8,6 @@
 #include "Pomdog/Math/Detail/FloatingPointVector2.hpp"
 #include "Pomdog/Math/Detail/FloatingPointVector3.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include <cfloat>
 #include <cmath>
 #include <limits>
 #include <utility>
@@ -644,24 +643,16 @@ FloatingPointMatrix3x3<T> operator*(T scaleFactor, const FloatingPointMatrix3x3<
     return FloatingPointMatrix3x3<T>::Multiply(matrix, scaleFactor);
 }
 
-// explicit instantiations
+// NOTE: explicit instantiations
 template class FloatingPointMatrix3x3<float>;
+template class FloatingPointMatrix3x3<double>;
 
+// NOTE: explicit instantiations
 template FloatingPointMatrix3x3<float>
 operator*<float>(float, const FloatingPointMatrix3x3<float>&) noexcept;
 
-#if defined(DBL_MANT_DIG)
-template class FloatingPointMatrix3x3<double>;
-
+// NOTE: explicit instantiations
 template FloatingPointMatrix3x3<double>
 operator*<double>(double, const FloatingPointMatrix3x3<double>&) noexcept;
-#endif
-
-#if defined(LDBL_MANT_DIG)
-template class FloatingPointMatrix3x3<long double>;
-
-template FloatingPointMatrix3x3<long double>
-operator*<long double>(long double, const FloatingPointMatrix3x3<long double>&) noexcept;
-#endif
 
 } // namespace Pomdog::Detail

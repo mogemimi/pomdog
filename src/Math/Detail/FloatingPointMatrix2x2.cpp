@@ -2,7 +2,6 @@
 
 #include "Pomdog/Math/Detail/FloatingPointMatrix2x2.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include <cfloat>
 #include <cmath>
 #include <limits>
 
@@ -206,24 +205,16 @@ FloatingPointMatrix2x2<T> operator*(T scaleFactor, const FloatingPointMatrix2x2<
     return FloatingPointMatrix2x2<T>::Multiply(matrix, scaleFactor);
 }
 
-// explicit instantiations
+// NOTE: explicit instantiations
 template class FloatingPointMatrix2x2<float>;
+template class FloatingPointMatrix2x2<double>;
 
+// NOTE: explicit instantiations
 template FloatingPointMatrix2x2<float>
 operator*<float>(float, const FloatingPointMatrix2x2<float>&) noexcept;
 
-#if defined(DBL_MANT_DIG)
-template class FloatingPointMatrix2x2<double>;
-
+// NOTE: explicit instantiations
 template FloatingPointMatrix2x2<double>
 operator*<double>(double, const FloatingPointMatrix2x2<double>&) noexcept;
-#endif
-
-#if defined(LDBL_MANT_DIG)
-template class FloatingPointMatrix2x2<long double>;
-
-template FloatingPointMatrix2x2<long double>
-operator*<long double>(long double, const FloatingPointMatrix2x2<long double>&) noexcept;
-#endif
 
 } // namespace Pomdog::Detail

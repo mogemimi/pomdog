@@ -7,7 +7,6 @@
 #include "Pomdog/Math/Detail/FloatingPointQuaternion.hpp"
 #include "Pomdog/Math/Detail/FloatingPointVector3.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include <cfloat>
 #include <cmath>
 #include <limits>
 #include <utility>
@@ -1280,24 +1279,16 @@ FloatingPointMatrix4x4<T> operator*(T scaleFactor, const FloatingPointMatrix4x4<
     return FloatingPointMatrix4x4<T>::Multiply(matrix, scaleFactor);
 }
 
-// explicit instantiations
+// NOTE: explicit instantiations
 template class FloatingPointMatrix4x4<float>;
+template class FloatingPointMatrix4x4<double>;
 
+// NOTE: explicit instantiations
 template FloatingPointMatrix4x4<float>
 operator*<float>(float, const FloatingPointMatrix4x4<float>&) noexcept;
 
-#if defined(DBL_MANT_DIG)
-template class FloatingPointMatrix4x4<double>;
-
+// NOTE: explicit instantiations
 template FloatingPointMatrix4x4<double>
 operator*<double>(double, const FloatingPointMatrix4x4<double>&) noexcept;
-#endif
-
-#if defined(LDBL_MANT_DIG)
-template class FloatingPointMatrix4x4<long double>;
-
-template FloatingPointMatrix4x4<long double>
-operator*<long double>(long double, const FloatingPointMatrix4x4<long double>&) noexcept;
-#endif
 
 } // namespace Pomdog::Detail

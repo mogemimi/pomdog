@@ -5,7 +5,6 @@
 #include "Pomdog/Math/Detail/FloatingPointVector3.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <algorithm>
-#include <cfloat>
 #include <cmath>
 #include <limits>
 #include <utility>
@@ -254,23 +253,16 @@ FloatingPointVector4<T> operator*(T scaleFactor, const FloatingPointVector4<T>& 
         scaleFactor * vector.W);
 }
 
-// explicit instantiations
+// NOTE: explicit instantiations
 template class FloatingPointVector4<float>;
+template class FloatingPointVector4<double>;
 
+// NOTE: explicit instantiations
 template FloatingPointVector4<float>
 operator*<float>(float, const FloatingPointVector4<float>&) noexcept;
 
-#if defined(DBL_MANT_DIG)
-template class FloatingPointVector4<double>;
-
+// NOTE: explicit instantiations
 template FloatingPointVector4<double>
 operator*<double>(double, const FloatingPointVector4<double>&) noexcept;
-#endif
-
-#if defined(LDBL_MANT_DIG)
-template class FloatingPointVector4<long double>;
-template FloatingPointVector4<long double>
-operator*<long double>(long double, const FloatingPointVector4<long double>&) noexcept;
-#endif
 
 } // namespace Pomdog::Detail
