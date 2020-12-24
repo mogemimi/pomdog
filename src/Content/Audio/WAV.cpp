@@ -1,7 +1,6 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Content/Audio/WAV.hpp"
-#include "../../Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Audio/AudioChannels.hpp"
 #include "Pomdog/Audio/AudioEngine.hpp"
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
@@ -17,20 +16,20 @@ using Pomdog::Detail::MakeFourCC;
 namespace Pomdog::WAV {
 namespace {
 
-#if defined(POMDOG_COMPILER_MSVC)
+#if defined(_MSC_VER)
 #pragma pack(push, 1)
 #endif
 
 #if defined(POMDOG_DETAIL_PACKED)
-#    error "'POMDOG_DETAIL_PACKED' already defined."
+#error "'POMDOG_DETAIL_PACKED' already defined."
 #endif
 
-#if defined(POMDOG_COMPILER_CLANG) || defined(POMDOG_COMPILER_GNUC)
-#   define POMDOG_DETAIL_PACKED __attribute__((packed))
-#elif defined(POMDOG_COMPILER_MSVC)
-#    define POMDOG_DETAIL_PACKED
+#if defined(__clang__) || defined(__GNUC__)
+#define POMDOG_DETAIL_PACKED __attribute__((packed))
+#elif defined(_MSC_VER)
+#define POMDOG_DETAIL_PACKED
 #else
-#    error "'POMDOG_DETAIL_PACKED' is not supported in this compiler."
+#error "'POMDOG_DETAIL_PACKED' is not supported in this compiler."
 #endif
 
 struct RIFFChunk final {
@@ -54,10 +53,10 @@ struct PCMWaveFormat final {
 } POMDOG_DETAIL_PACKED;
 
 #if defined(POMDOG_DETAIL_PACKED)
-#    undef POMDOG_DETAIL_PACKED
+#undef POMDOG_DETAIL_PACKED
 #endif
 
-#if defined(POMDOG_COMPILER_MSVC)
+#if defined(_MSC_VER)
 #pragma pack(pop)
 #endif
 
