@@ -9,8 +9,7 @@
 
 namespace Pomdog::Skeletal2D::SkeletonHelper {
 
-void
-Traverse(
+void Traverse(
     const Skeleton& skeleton,
     const JointIndex& jointIndex,
     const std::function<void(Joint const&)>& traverser)
@@ -27,8 +26,7 @@ Traverse(
     }
 }
 
-void
-Traverse(
+void Traverse(
     const Skeleton& skeleton,
     const std::function<void(Joint const&)>& traverser)
 {
@@ -37,8 +35,7 @@ Traverse(
     Traverse(skeleton, skeleton.Root().Index, traverser);
 }
 
-void
-ToGlobalPose(
+void ToGlobalPose(
     const Skeleton& skeleton,
     const SkeletonPose& skeletonPose,
     std::vector<Matrix3x2>& globalPose)

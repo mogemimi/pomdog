@@ -36,8 +36,7 @@ FindJoint(const std::vector<BoneDesc>& bones, const std::string& name)
     return {};
 }
 
-void
-BuildSpriteAnimationTracks(
+void BuildSpriteAnimationTracks(
     const AnimationClipDesc& animationClip,
     const TexturePacker::TextureAtlas& textureAtlas,
     std::vector<std::unique_ptr<AnimationTrack>>& tracks)
