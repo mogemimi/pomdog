@@ -24,7 +24,7 @@ public:
     {
         auto err = std::make_unique<StringError>();
         err->Message = this->Message;
-        return err;
+        return std::move(err);
     }
 };
 
@@ -46,7 +46,7 @@ public:
         auto err = std::make_unique<WrappedError>();
         err->Err = this->Err->Clone();
         err->Message = this->Message;
-        return err;
+        return std::move(err);
     }
 };
 
@@ -60,7 +60,7 @@ std::unique_ptr<Error> IOError::Clone() const noexcept
     auto err = std::make_unique<IOError>();
     err->Kind = this->Kind;
     err->Reason = this->Reason;
-    return err;
+    return std::move(err);
 }
 
 std::unique_ptr<IOError> New(std::errc kind, std::string&& reason) noexcept
