@@ -7,6 +7,7 @@
 
 namespace Pomdog::Detail {
 
+/// Coordinate3D is a point in 3-dimensional space.
 template <typename T>
 class POMDOG_EXPORT Coordinate3D final {
 public:
@@ -20,7 +21,7 @@ public:
     // Constructors:
     Coordinate3D() noexcept = default;
 
-    /// Construct from T values.
+    /// Constructs from T values.
     Coordinate3D(T x, T y, T z) noexcept;
 
     // Assignment operators:

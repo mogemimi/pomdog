@@ -10,6 +10,7 @@
 
 namespace Pomdog {
 
+/// BoundingSphere is a bounding sphere in 3D space.
 class POMDOG_EXPORT BoundingSphere final {
 public:
     Vector3 Center;

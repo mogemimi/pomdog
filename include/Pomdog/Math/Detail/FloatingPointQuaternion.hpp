@@ -19,10 +19,10 @@ public:
     T X, Y, Z, W;
 
 public:
-    // Constructors:
+    /// Creates a new FloatingPointQuaternion<T> object.
     FloatingPointQuaternion() noexcept = default;
 
-    ///@brief Construct from floating-point values.
+    /// Construct from floating-point values.
     FloatingPointQuaternion(T x, T y, T z, T w) noexcept;
 
     // Assignment operators:

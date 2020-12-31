@@ -7,6 +7,7 @@
 
 namespace Pomdog::Detail {
 
+/// Coordinate2D is a point in 2-dimensional space.
 template <typename T>
 class POMDOG_EXPORT Coordinate2D final {
 public:
@@ -20,7 +21,7 @@ public:
     // Constructors:
     Coordinate2D() noexcept = default;
 
-    /// Construct from T values.
+    /// Constructs from T values.
     Coordinate2D(T x, T y) noexcept;
 
     // Assignment operators:

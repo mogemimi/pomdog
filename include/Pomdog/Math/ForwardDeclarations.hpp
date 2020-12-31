@@ -7,8 +7,7 @@
 
 // Forward declarations of Math
 
-namespace Pomdog {
-namespace Detail {
+namespace Pomdog::Detail {
 
 template <typename T>
 class Coordinate2D;
@@ -49,7 +48,9 @@ struct DegreeTag;
 struct RadianTag;
 
 } // namespace Tags
-} // namespace Detail
+} // namespace Pomdog::Detail
+
+namespace Pomdog {
 
 using Matrix2x2 = Detail::FloatingPointMatrix2x2<float>;
 using Matrix3x2 = Detail::FloatingPointMatrix3x2<float>;

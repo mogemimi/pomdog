@@ -8,6 +8,7 @@
 
 namespace Pomdog {
 
+/// Color describes a 32-bit packed RGBA color.
 class POMDOG_EXPORT Color final {
 public:
     std::uint8_t R, G, B, A;
@@ -15,7 +16,7 @@ public:
 public:
     Color() noexcept = default;
 
-    /// Construct from unsigned integer values.
+    /// Constructs from unsigned integer values.
     Color(std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a) noexcept;
 
     explicit Color(const Vector3& vector);

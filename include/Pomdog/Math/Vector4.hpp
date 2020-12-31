@@ -6,7 +6,7 @@
 
 namespace Pomdog {
 
-///@brief vector in four-dimensional space.
+/// Vector4 is a vector in 4-dimensional space.
 using Vector4 = Detail::FloatingPointVector4<float>;
 
 } // namespace Pomdog

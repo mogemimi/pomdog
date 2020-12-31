@@ -8,9 +8,13 @@
 
 namespace Pomdog {
 
+/// Plane is a hyperplane in 3D space.
 class POMDOG_EXPORT Plane final {
 public:
+    /// The normal vector of the plane.
     Vector3 Normal;
+
+    /// The distance from the origin to the point that the normal of the plane starts on.
     float Distance;
 
 public:

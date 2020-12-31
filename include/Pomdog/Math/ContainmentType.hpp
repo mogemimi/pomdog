@@ -6,6 +6,7 @@
 
 namespace Pomdog {
 
+/// ContainmentType indicates whether a geometry object contains another one.
 enum class ContainmentType : std::uint8_t {
     Contains,
 

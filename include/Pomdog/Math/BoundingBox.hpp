@@ -10,6 +10,7 @@
 
 namespace Pomdog {
 
+/// BoundingBox is an axis-aligned bounding box in 3D space.
 class POMDOG_EXPORT BoundingBox final {
 public:
     Vector3 Min;

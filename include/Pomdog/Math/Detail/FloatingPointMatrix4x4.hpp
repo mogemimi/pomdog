@@ -10,6 +10,7 @@
 
 namespace Pomdog::Detail {
 
+/// FloatingPointMatrix4x4 is a 4x4 matrix in row-major order.
 template <typename T>
 class POMDOG_EXPORT FloatingPointMatrix4x4 final {
 public:
@@ -26,7 +27,7 @@ public:
     // Constructors:
     FloatingPointMatrix4x4() noexcept = default;
 
-    /// Construct from floating-point values.
+    /// Constructs from floating-point values.
     FloatingPointMatrix4x4(
         T m00, T m01, T m02, T m03,
         T m10, T m11, T m12, T m13,

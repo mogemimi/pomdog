@@ -6,6 +6,7 @@
 
 namespace Pomdog {
 
+/// Matrix3x3 is a 3x3 matrix in row-major order.
 using Matrix3x3 = Detail::FloatingPointMatrix3x3<float>;
 
 } // namespace Pomdog

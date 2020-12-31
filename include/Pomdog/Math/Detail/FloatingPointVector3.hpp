@@ -10,7 +10,7 @@
 
 namespace Pomdog::Detail {
 
-///@brief vector in three-dimensional space.
+/// FloatingPointVector3 is a vector in 3-dimensional space.
 template <typename T>
 class POMDOG_EXPORT FloatingPointVector3 final {
 public:
@@ -20,10 +20,10 @@ public:
     T X, Y, Z;
 
 public:
-    // Constructors:
+    /// Creates a new FloatingPointVector3<T> object.
     FloatingPointVector3() noexcept = default;
 
-    ///@brief Construct from floating-point values.
+    /// Constructs from floating-point values.
     FloatingPointVector3(T x, T y, T z) noexcept;
 
     FloatingPointVector3(const FloatingPointVector2<T>& vec, T z) noexcept;

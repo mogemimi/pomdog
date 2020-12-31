@@ -10,6 +10,7 @@
 
 namespace Pomdog::Detail {
 
+/// FloatingPointMatrix3x3 is a 3x3 matrix in row-major order.
 template <typename T>
 class POMDOG_EXPORT FloatingPointMatrix3x3 final {
 public:
@@ -26,7 +27,7 @@ public:
     // Constructors:
     FloatingPointMatrix3x3() noexcept = default;
 
-    /// Construct from floating-point values.
+    /// Constructs from floating-point values.
     FloatingPointMatrix3x3(
         T m00, T m01, T m02,
         T m10, T m11, T m12,

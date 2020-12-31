@@ -7,6 +7,7 @@
 
 namespace Pomdog {
 
+/// Point3D is a point in 3-dimensional space.
 using Point3D = Detail::Coordinate3D<std::int32_t>;
 
 } // namespace Pomdog

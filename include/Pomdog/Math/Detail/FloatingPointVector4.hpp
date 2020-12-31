@@ -10,7 +10,7 @@
 
 namespace Pomdog::Detail {
 
-///@brief vector in four-dimensional space.
+/// FloatingPointVector4 is a vector in 4-dimensional space.
 template <typename T>
 class POMDOG_EXPORT FloatingPointVector4 final {
 public:
@@ -20,10 +20,10 @@ public:
     T X, Y, Z, W;
 
 public:
-    // Constructors:
+    /// Creates a new FloatingPointVector4<T> object.
     FloatingPointVector4() noexcept = default;
 
-    ///@brief Construct from floating-point values.
+    /// Constructs from floating-point values.
     FloatingPointVector4(T x, T y, T z, T w) noexcept;
     FloatingPointVector4(const FloatingPointVector3<T>& xyz, T w) noexcept;
 

@@ -10,6 +10,7 @@
 
 namespace Pomdog::Detail {
 
+/// FloatingPointMatrix2x2 is a 2x2 matrix in row-major order.
 template <typename T>
 class POMDOG_EXPORT FloatingPointMatrix2x2 final {
 public:
@@ -26,7 +27,7 @@ public:
     // Constructors:
     FloatingPointMatrix2x2() noexcept = default;
 
-    /// Construct from floating-point values.
+    /// Constructs from floating-point values.
     FloatingPointMatrix2x2(T m00, T m01, T m10, T m11) noexcept;
 
     // Assignment operators:

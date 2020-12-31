@@ -6,6 +6,7 @@
 
 namespace Pomdog {
 
+/// Matrix4x4 is a 4x4 matrix in row-major order.
 using Matrix4x4 = Detail::FloatingPointMatrix4x4<float>;
 
 } // namespace Pomdog

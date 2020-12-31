@@ -12,6 +12,8 @@
 
 namespace Pomdog {
 
+/// BoundingFrustum is a bounding frustum in 3D space.
+///
 /// @code
 /// Frustum image:
 ///

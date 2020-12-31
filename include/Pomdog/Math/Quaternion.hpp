@@ -6,6 +6,7 @@
 
 namespace Pomdog {
 
+/// Quaternion represents a rotation around an axis in 3D space.
 using Quaternion = Detail::FloatingPointQuaternion<float>;
 
 } // namespace Pomdog

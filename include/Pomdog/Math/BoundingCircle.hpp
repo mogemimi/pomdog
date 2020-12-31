@@ -8,6 +8,7 @@
 
 namespace Pomdog {
 
+/// BoundingCircle is a bounding circle in 2D space.
 class POMDOG_EXPORT BoundingCircle final {
 public:
     Vector2 Center;

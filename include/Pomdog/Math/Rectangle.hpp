@@ -8,6 +8,8 @@
 
 namespace Pomdog {
 
+/// Rectangle is a rectangle in 2D space.
+///
 ///@code
 ///            width
 ///   _______________________

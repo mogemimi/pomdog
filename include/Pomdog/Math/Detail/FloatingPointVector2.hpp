@@ -10,7 +10,7 @@
 
 namespace Pomdog::Detail {
 
-///@brief vector in two-dimensional space.
+/// FloatingPointVector2 is a vector in 2-dimensional space.
 template <typename T>
 class POMDOG_EXPORT FloatingPointVector2 final {
 public:
@@ -20,10 +20,10 @@ public:
     T X, Y;
 
 public:
-    // Constructors:
+    /// Creates a new FloatingPointVector2<T> object.
     FloatingPointVector2() noexcept = default;
 
-    ///@brief Construct from floating-point values.
+    /// Constructs from floating-point values.
     FloatingPointVector2(T x, T y) noexcept;
 
     // Assignment operators:
