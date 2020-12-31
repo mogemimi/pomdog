@@ -1,12 +1,12 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Math/Detail/FloatingPointMatrix3x3.hpp"
-#include "Pomdog/Math/Math.hpp"
-#include "Pomdog/Math/Radian.hpp"
 #include "Pomdog/Math/Detail/FloatingPointMatrix2x2.hpp"
 #include "Pomdog/Math/Detail/FloatingPointQuaternion.hpp"
 #include "Pomdog/Math/Detail/FloatingPointVector2.hpp"
 #include "Pomdog/Math/Detail/FloatingPointVector3.hpp"
+#include "Pomdog/Math/Math.hpp"
+#include "Pomdog/Math/Radian.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <cmath>
 #include <limits>
@@ -174,17 +174,29 @@ FloatingPointMatrix3x3<T> FloatingPointMatrix3x3<T>::operator/(T scaleFactor) co
 template <typename T>
 bool FloatingPointMatrix3x3<T>::operator==(const FloatingPointMatrix3x3& other) const noexcept
 {
-    return m[0][0] == other.m[0][0] && m[0][1] == other.m[0][1] && m[0][2] == other.m[0][2]
-        && m[1][0] == other.m[1][0] && m[1][1] == other.m[1][1] && m[1][2] == other.m[1][2]
-        && m[2][0] == other.m[2][0] && m[2][1] == other.m[2][1] && m[2][2] == other.m[2][2];
+    return m[0][0] == other.m[0][0] &&
+           m[0][1] == other.m[0][1] &&
+           m[0][2] == other.m[0][2] &&
+           m[1][0] == other.m[1][0] &&
+           m[1][1] == other.m[1][1] &&
+           m[1][2] == other.m[1][2] &&
+           m[2][0] == other.m[2][0] &&
+           m[2][1] == other.m[2][1] &&
+           m[2][2] == other.m[2][2];
 }
 
 template <typename T>
 bool FloatingPointMatrix3x3<T>::operator!=(const FloatingPointMatrix3x3& other) const noexcept
 {
-    return m[0][0] != other.m[0][0] || m[0][1] != other.m[0][1] || m[0][2] != other.m[0][2]
-        || m[1][0] != other.m[1][0] || m[1][1] != other.m[1][1] || m[1][2] != other.m[1][2]
-        || m[2][0] != other.m[2][0] || m[2][1] != other.m[2][1] || m[2][2] != other.m[2][2];
+    return m[0][0] != other.m[0][0] ||
+           m[0][1] != other.m[0][1] ||
+           m[0][2] != other.m[0][2] ||
+           m[1][0] != other.m[1][0] ||
+           m[1][1] != other.m[1][1] ||
+           m[1][2] != other.m[1][2] ||
+           m[2][0] != other.m[2][0] ||
+           m[2][1] != other.m[2][1] ||
+           m[2][2] != other.m[2][2];
 }
 
 template <typename T>
@@ -254,15 +266,15 @@ FloatingPointMatrix3x3<T>
 FloatingPointMatrix3x3<T>::Adjoint(const FloatingPointMatrix3x3& matrix)
 {
     return {
-         matrix.Minor2x2(0, 0).Determinant(),
+        matrix.Minor2x2(0, 0).Determinant(),
         -matrix.Minor2x2(1, 0).Determinant(),
-         matrix.Minor2x2(2, 0).Determinant(),
+        matrix.Minor2x2(2, 0).Determinant(),
         -matrix.Minor2x2(0, 1).Determinant(),
-         matrix.Minor2x2(1, 1).Determinant(),
+        matrix.Minor2x2(1, 1).Determinant(),
         -matrix.Minor2x2(2, 1).Determinant(),
-         matrix.Minor2x2(0, 2).Determinant(),
+        matrix.Minor2x2(0, 2).Determinant(),
         -matrix.Minor2x2(1, 2).Determinant(),
-         matrix.Minor2x2(2, 2).Determinant()};
+        matrix.Minor2x2(2, 2).Determinant()};
 }
 
 template <typename T>
@@ -334,8 +346,7 @@ FloatingPointMatrix2x2<T> FloatingPointMatrix3x3<T>::Minor2x2(std::size_t row, s
 }
 
 template <typename T>
-void
-FloatingPointMatrix3x3<T>::Transpose(const FloatingPointMatrix3x3& matrix, FloatingPointMatrix3x3& result) noexcept
+void FloatingPointMatrix3x3<T>::Transpose(const FloatingPointMatrix3x3& matrix, FloatingPointMatrix3x3& result) noexcept
 {
     result = {
         matrix.m[0][0], matrix.m[1][0], matrix.m[2][0],
@@ -354,8 +365,7 @@ FloatingPointMatrix3x3<T>::Transpose(const FloatingPointMatrix3x3& matrix) noexc
 }
 
 template <typename T>
-void
-FloatingPointMatrix3x3<T>::Invert(const FloatingPointMatrix3x3& matrix, FloatingPointMatrix3x3& result)
+void FloatingPointMatrix3x3<T>::Invert(const FloatingPointMatrix3x3& matrix, FloatingPointMatrix3x3& result)
 {
     result = Invert(matrix);
 }
@@ -372,8 +382,7 @@ FloatingPointMatrix3x3<T>::Invert(const FloatingPointMatrix3x3& matrix)
 }
 
 template <typename T>
-void
-FloatingPointMatrix3x3<T>::CreateTranslation(const FloatingPointVector2<T>& position, FloatingPointMatrix3x3& result) noexcept
+void FloatingPointMatrix3x3<T>::CreateTranslation(const FloatingPointVector2<T>& position, FloatingPointMatrix3x3& result) noexcept
 {
     result = Identity;
     result(2, 0) = position.X;
@@ -390,8 +399,7 @@ FloatingPointMatrix3x3<T>::CreateTranslation(const FloatingPointVector2<T>& posi
 }
 
 template <typename T>
-void
-FloatingPointMatrix3x3<T>::CreateScale(T scale, FloatingPointMatrix3x3& result) noexcept
+void FloatingPointMatrix3x3<T>::CreateScale(T scale, FloatingPointMatrix3x3& result) noexcept
 {
     result.m[0][0] = scale;
     result.m[0][1] = 0;
@@ -414,8 +422,7 @@ FloatingPointMatrix3x3<T>::CreateScale(T scale) noexcept
 }
 
 template <typename T>
-void
-FloatingPointMatrix3x3<T>::CreateScale(const FloatingPointVector3<T>& scale, FloatingPointMatrix3x3& result) noexcept
+void FloatingPointMatrix3x3<T>::CreateScale(const FloatingPointVector3<T>& scale, FloatingPointMatrix3x3& result) noexcept
 {
     static_assert(std::is_same<T, decltype(scale.X)>::value, "scale is T");
     static_assert(std::is_same<T, decltype(scale.Y)>::value, "scale is T");
@@ -442,8 +449,7 @@ FloatingPointMatrix3x3<T>::CreateScale(const FloatingPointVector3<T>& scale) noe
 }
 
 template <typename T>
-void
-FloatingPointMatrix3x3<T>::CreateRotationX(const Radian<T>& angle, FloatingPointMatrix3x3& result)
+void FloatingPointMatrix3x3<T>::CreateRotationX(const Radian<T>& angle, FloatingPointMatrix3x3& result)
 {
     static_assert(std::is_same<T, decltype(angle.value)>::value, "The angle value is T");
     auto const sinAngle = std::sin(angle.value);
@@ -470,8 +476,7 @@ FloatingPointMatrix3x3<T>::CreateRotationX(const Radian<T>& angle)
 }
 
 template <typename T>
-void
-FloatingPointMatrix3x3<T>::CreateRotationY(const Radian<T>& angle, FloatingPointMatrix3x3& result)
+void FloatingPointMatrix3x3<T>::CreateRotationY(const Radian<T>& angle, FloatingPointMatrix3x3& result)
 {
     static_assert(std::is_same<T, decltype(angle.value)>::value, "The angle value is T");
     auto const sinAngle = std::sin(angle.value);
@@ -498,8 +503,7 @@ FloatingPointMatrix3x3<T>::CreateRotationY(const Radian<T>& angle)
 }
 
 template <typename T>
-void
-FloatingPointMatrix3x3<T>::CreateRotationZ(const Radian<T>& angle, FloatingPointMatrix3x3& result)
+void FloatingPointMatrix3x3<T>::CreateRotationZ(const Radian<T>& angle, FloatingPointMatrix3x3& result)
 {
     static_assert(std::is_same<T, decltype(angle.value)>::value, "angle is T");
     auto const sinAngle = std::sin(angle.value);
@@ -526,8 +530,7 @@ FloatingPointMatrix3x3<T>::CreateRotationZ(const Radian<T>& angle)
 }
 
 template <typename T>
-void
-FloatingPointMatrix3x3<T>::CreateFromQuaternion(const FloatingPointQuaternion<T>& quaternion, FloatingPointMatrix3x3& result)
+void FloatingPointMatrix3x3<T>::CreateFromQuaternion(const FloatingPointQuaternion<T>& quaternion, FloatingPointMatrix3x3& result)
 {
     auto const xx = quaternion.X * quaternion.X;
     auto const yy = quaternion.Y * quaternion.Y;
@@ -560,8 +563,7 @@ FloatingPointMatrix3x3<T>::CreateFromQuaternion(const FloatingPointQuaternion<T>
 }
 
 template <typename T>
-void
-FloatingPointMatrix3x3<T>::Lerp(const FloatingPointMatrix3x3& source1,
+void FloatingPointMatrix3x3<T>::Lerp(const FloatingPointMatrix3x3& source1,
     const FloatingPointMatrix3x3& source2, T amount, FloatingPointMatrix3x3& result) noexcept
 {
     result.m[0][0] = Math::Lerp(source1.m[0][0], source2.m[0][0], amount);
@@ -586,8 +588,7 @@ FloatingPointMatrix3x3<T>::Lerp(const FloatingPointMatrix3x3& source1,
 }
 
 template <typename T>
-void
-FloatingPointMatrix3x3<T>::CreateFromAxisAngle(const FloatingPointVector3<T>& axis,
+void FloatingPointMatrix3x3<T>::CreateFromAxisAngle(const FloatingPointVector3<T>& axis,
     const Radian<T>& angle, FloatingPointMatrix3x3& result)
 {
     auto const sinAngle = std::sin(angle.value);

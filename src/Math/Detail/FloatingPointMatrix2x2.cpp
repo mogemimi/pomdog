@@ -129,15 +129,19 @@ FloatingPointMatrix2x2<T> FloatingPointMatrix2x2<T>::operator/(T scaleFactor) co
 template <typename T>
 bool FloatingPointMatrix2x2<T>::operator==(const FloatingPointMatrix2x2& other) const noexcept
 {
-    return m[0][0] == other.m[0][0] && m[0][1] == other.m[0][1]
-        && m[1][0] == other.m[1][0] && m[1][1] == other.m[1][1];
+    return m[0][0] == other.m[0][0] &&
+           m[0][1] == other.m[0][1] &&
+           m[1][0] == other.m[1][0] &&
+           m[1][1] == other.m[1][1];
 }
 
 template <typename T>
 bool FloatingPointMatrix2x2<T>::operator!=(const FloatingPointMatrix2x2& other) const noexcept
 {
-    return m[0][0] != other.m[0][0] || m[0][1] != other.m[0][1]
-        || m[1][0] != other.m[1][0] || m[1][1] != other.m[1][1];
+    return m[0][0] != other.m[0][0] ||
+           m[0][1] != other.m[0][1] ||
+           m[1][0] != other.m[1][0] ||
+           m[1][1] != other.m[1][1];
 }
 
 template <typename T>

@@ -1,10 +1,10 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Math/Detail/FloatingPointVector3.hpp"
-#include "Pomdog/Math/Math.hpp"
 #include "Pomdog/Math/Detail/FloatingPointMatrix4x4.hpp"
 #include "Pomdog/Math/Detail/FloatingPointQuaternion.hpp"
 #include "Pomdog/Math/Detail/FloatingPointVector2.hpp"
+#include "Pomdog/Math/Math.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <algorithm>
 #include <cmath>
@@ -241,8 +241,7 @@ FloatingPointVector3<T>::SmoothStep(const FloatingPointVector3& source1, const F
 }
 
 template <typename T>
-void
-FloatingPointVector3<T>::Normalize() noexcept
+void FloatingPointVector3<T>::Normalize() noexcept
 {
     *this = Normalize(*this);
 }
@@ -257,8 +256,7 @@ FloatingPointVector3<T>::Normalize(const FloatingPointVector3& source) noexcept
 }
 
 template <typename T>
-void
-FloatingPointVector3<T>::Normalize(const FloatingPointVector3& source, FloatingPointVector3& result) noexcept
+void FloatingPointVector3<T>::Normalize(const FloatingPointVector3& source, FloatingPointVector3& result) noexcept
 {
     auto const length = source.Length();
 

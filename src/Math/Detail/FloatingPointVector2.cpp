@@ -1,10 +1,10 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Math/Detail/FloatingPointVector2.hpp"
-#include "Pomdog/Math/Math.hpp"
 #include "Pomdog/Math/Detail/FloatingPointMatrix3x2.hpp"
 #include "Pomdog/Math/Detail/FloatingPointMatrix4x4.hpp"
 #include "Pomdog/Math/Detail/FloatingPointQuaternion.hpp"
+#include "Pomdog/Math/Math.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include <algorithm>
 #include <cmath>
@@ -207,8 +207,7 @@ FloatingPointVector2<T>::Normalize(const FloatingPointVector2& source) noexcept
 }
 
 template <typename T>
-void
-FloatingPointVector2<T>::Normalize(const FloatingPointVector2& source, FloatingPointVector2& result) noexcept
+void FloatingPointVector2<T>::Normalize(const FloatingPointVector2& source, FloatingPointVector2& result) noexcept
 {
     auto const length = source.Length();
 
