@@ -21,7 +21,7 @@ public:
 
     virtual ~NativeGraphicsContext();
 
-    ///@brief Retrieves the capabilities of a GraphicsContext
+    /// Retrieves the capabilities of a GraphicsContext.
     virtual GraphicsCapabilities GetCapabilities() const = 0;
 
     virtual void ExecuteCommandLists(
