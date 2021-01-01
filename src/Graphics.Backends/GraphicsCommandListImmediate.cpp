@@ -327,7 +327,7 @@ void GraphicsCommandListImmediate::SetVertexBuffer(
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(vertexBuffer != nullptr);
-    POMDOG_ASSERT(offset >= 0);
+    static_assert(std::is_unsigned_v<decltype(offset)>, "offset >= 0");
     auto command = std::make_unique<SetVertexBufferCommand>();
     command->commandType = GraphicsCommandType::SetVertexBufferCommand;
     command->slotIndex = index;
@@ -379,7 +379,7 @@ void GraphicsCommandListImmediate::SetConstantBuffer(
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(constantBuffer);
-    POMDOG_ASSERT(offset >= 0);
+    static_assert(std::is_unsigned_v<decltype(offset)>, "offset >= 0");
 
     std::shared_ptr<NativeBuffer> nativeBuffer(constantBuffer, constantBuffer->GetNativeBuffer());
 

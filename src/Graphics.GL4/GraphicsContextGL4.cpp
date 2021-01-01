@@ -704,8 +704,8 @@ void GraphicsContextGL4::SetConstantBuffer(
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(constantBufferIn);
-    POMDOG_ASSERT(offset >= 0);
     POMDOG_ASSERT(sizeInBytes > 0);
+    static_assert(std::is_unsigned_v<decltype(offset)>, "offset >= 0");
 
 #if defined(DEBUG) && !defined(NDEBUG)
     static const auto capabilities = GetCapabilities();

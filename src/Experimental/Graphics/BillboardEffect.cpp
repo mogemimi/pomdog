@@ -347,7 +347,7 @@ void BillboardBatchEffect::Draw(
     POMDOG_ASSERT(texture);
     POMDOG_ASSERT(sampler);
     POMDOG_ASSERT(constantBuffer);
-    POMDOG_ASSERT(constantBufferOffset >= 0);
+    static_assert(std::is_unsigned_v<decltype(constantBufferOffset)>, "constantBufferOffset >= 0");
 
     if (billboardInstances.GetSize() <= 0) {
         return;

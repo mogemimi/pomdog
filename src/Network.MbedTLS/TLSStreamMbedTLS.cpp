@@ -353,7 +353,7 @@ void TLSStreamMbedTLS::ReadEventLoop()
     const auto readSize = static_cast<size_t>(ret);
 
     // NOTE: When the readSize is zero, it means EOF.
-    POMDOG_ASSERT(readSize >= 0);
+    static_assert(std::is_unsigned_v<decltype(readSize)>, "readSize >= 0");
 
     auto view = ArrayView<std::uint8_t>{buffer.data(), readSize};
     this->OnRead(std::move(view), nullptr);

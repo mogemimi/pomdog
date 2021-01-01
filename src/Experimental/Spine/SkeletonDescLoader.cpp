@@ -314,7 +314,7 @@ std::vector<SkinnedMeshVertexDesc> ReadSkinnedMeshVertices(
 
         POMDOG_ASSERT(verticesArray[verticesIter].IsUint());
         const auto sourceBoneCount = [](std::uint32_t x) -> std::uint8_t {
-            POMDOG_ASSERT(x >= 0);
+            static_assert(std::is_unsigned_v<decltype(x)>, "x >= 0");
             POMDOG_ASSERT(x <= std::numeric_limits<std::uint8_t>::max());
             return static_cast<std::uint8_t>(x);
         }(verticesArray[verticesIter].GetUint());
