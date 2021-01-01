@@ -39,6 +39,9 @@ BuildInfoQueue(ID3D11Device* nativeDevice) noexcept
 
     ID3D11InfoQueue* infoQueue = nullptr;
     if (auto hr = nativeDevice->QueryInterface(IID_PPV_ARGS(&infoQueue)); FAILED(hr)) {
+        if (hr == E_NOINTERFACE) {
+            return std::make_tuple(nullptr, nullptr);
+        }
         return std::make_tuple(nullptr, Errors::New("failed to get ID3D11InfoQueue"));
     }
 
@@ -62,8 +65,12 @@ BuildInfoQueue(ID3D11Device* nativeDevice) noexcept
     filter.DenyList.pSeverityList = severityList.data();
     filter.DenyList.NumSeverities = static_cast<UINT>(severityList.size());
 
-    infoQueue->AddStorageFilterEntries(&filter);
-    infoQueue->AddRetrievalFilterEntries(&filter);
+    if (auto hr = infoQueue->AddStorageFilterEntries(&filter); FAILED(hr)) {
+        return std::make_tuple(nullptr, Errors::New("AddStorageFilterEntries() failed"));
+    }
+    if (auto hr = infoQueue->AddRetrievalFilterEntries(&filter); FAILED(hr)) {
+        return std::make_tuple(nullptr, Errors::New("AddRetrievalFilterEntries() failed"));
+    }
 
     return std::make_tuple(std::move(infoQueue), nullptr);
 }
