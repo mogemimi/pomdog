@@ -2,11 +2,15 @@
 
 #pragma once
 
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Basic/Export.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <functional>
 #include <string>
 #include <string_view>
 #include <vector>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog {
 namespace StringHelper {
@@ -47,7 +51,7 @@ std::string Format(const char* format, ...)
 #if __has_attribute(format)
     __attribute__((__format__(printf, 1, 2)));
 #endif
-#elif __GNUC__ >= 4
+#elif defined(__GNUC__) && (__GNUC__ >= 4)
     __attribute__((__format__(printf, 1, 2)));
 #else
     ;

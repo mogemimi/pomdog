@@ -3,8 +3,12 @@
 #pragma once
 
 #include "Pomdog/Application/Duration.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Basic/Export.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <functional>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::Concurrency {
 

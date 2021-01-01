@@ -3,9 +3,13 @@
 #include "OpenGLContextWin32.hpp"
 #include "../Graphics.GL4/ErrorChecker.hpp"
 #include "../Graphics.GL4/OpenGLPrerequisites.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::Detail::Win32 {
 namespace {

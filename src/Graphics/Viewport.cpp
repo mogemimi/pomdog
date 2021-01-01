@@ -1,12 +1,16 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Graphics/Viewport.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Math/Matrix4x4.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Math/Vector3.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cmath>
 #include <limits>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog {
 

@@ -3,8 +3,12 @@
 #include "Pomdog/Graphics/ConstantBuffer.hpp"
 #include "../Graphics.Backends/BufferBindMode.hpp"
 #include "../Graphics.Backends/NativeBuffer.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog {
 

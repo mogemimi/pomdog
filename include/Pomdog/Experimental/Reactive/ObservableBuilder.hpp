@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Pomdog/Application/GameHost.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Experimental/Reactive/Observable.hpp"
 #include "Pomdog/Experimental/Reactive/ObservableBase.hpp"
 #include "Pomdog/Experimental/Reactive/Observer.hpp"
@@ -23,8 +24,11 @@
 #include "Pomdog/Experimental/Reactive/Operators/TimeoutOperator.hpp"
 #include "Pomdog/Experimental/Reactive/Operators/ZipOperator.hpp"
 #include "Pomdog/Experimental/Reactive/Subscriber.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <functional>
 #include <memory>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::Reactive {
 

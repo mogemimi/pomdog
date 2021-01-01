@@ -4,15 +4,19 @@
 
 #include "Pomdog/Application/Duration.hpp"
 #include "Pomdog/Application/MouseCursor.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Experimental/GUI/HierarchySortOrder.hpp"
 #include "Pomdog/Experimental/GUI/HorizontalAlignment.hpp"
 #include "Pomdog/Experimental/GUI/VerticalAlignment.hpp"
 #include "Pomdog/Math/Point2D.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 #include <memory>
 #include <optional>
 #include <string>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog {
 enum class Keys : std::uint8_t;

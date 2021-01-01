@@ -1,10 +1,14 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "KeyboardWin32.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Input/KeyState.hpp"
 #include "Pomdog/Input/Keys.hpp"
 #include "Pomdog/Signals/EventQueue.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <optional>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::Detail::Win32 {
 namespace {

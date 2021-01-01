@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Basic/Platform.hpp"
 #include "Pomdog/Input/ButtonState.hpp"
 #include "Pomdog/Input/GamepadCapabilities.hpp"
@@ -10,8 +11,11 @@
 #include "Pomdog/Input/MouseButtons.hpp"
 #include "Pomdog/Input/PlayerIndex.hpp"
 #include "Pomdog/Math/Point2D.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <string>
 #include <variant>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::Detail {
 

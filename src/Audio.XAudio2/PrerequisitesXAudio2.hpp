@@ -2,8 +2,10 @@
 
 #pragma once
 
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #if (_WIN32_WINNT >= 0x0602 /*_WIN32_WINNT_WIN8*/)
 // NOTE: for Windows 8
 #include <xaudio2.h>
@@ -14,3 +16,4 @@
 #endif
 #include <XAudio2.h>
 #endif
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END

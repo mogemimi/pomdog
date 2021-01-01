@@ -2,6 +2,7 @@
 
 #include "Pomdog/Network/HTTPClient.hpp"
 #include "HTTPParser.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Network/ArrayView.hpp"
 #include "Pomdog/Network/HTTPMethod.hpp"
 #include "Pomdog/Network/HTTPRequest.hpp"
@@ -11,12 +12,15 @@
 #include "Pomdog/Network/TLSStream.hpp"
 #include "Pomdog/Signals/ScopedConnection.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
 #include <sstream>
 #include <string_view>
 #include <unordered_map>
 #include <utility>
 #include <vector>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog {
 namespace {

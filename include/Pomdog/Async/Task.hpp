@@ -2,8 +2,11 @@
 
 #pragma once
 
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <atomic>
 #include <cstdint>
 #include <exception>
@@ -13,6 +16,7 @@
 #include <type_traits>
 #include <utility>
 #include <vector>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::Concurrency {
 

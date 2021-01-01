@@ -2,11 +2,14 @@
 
 #include "Pomdog/Experimental/Graphics/TrueTypeFont.hpp"
 #include "Pomdog/Application/FileSystem.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
 #include "Pomdog/Experimental/Graphics/FontGlyph.hpp"
 #include "Pomdog/Experimental/Graphics/SpriteFont.hpp"
 #include "Pomdog/Math/Point2D.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <fstream>
 #include <locale>
 #include <utility>
@@ -22,6 +25,7 @@
 #if defined(__clang__)
 #pragma clang diagnostic pop
 #endif
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog {
 

@@ -2,10 +2,14 @@
 
 #pragma once
 
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Graphics/CullMode.hpp"
 #include "Pomdog/Graphics/FillMode.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog {
 

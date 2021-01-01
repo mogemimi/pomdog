@@ -3,9 +3,13 @@
 #include "BlendStateGL4.hpp"
 #include "ErrorChecker.hpp"
 #include "../Basic/Unreachable.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Graphics/BlendDescription.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::Detail::GL4 {
 namespace {

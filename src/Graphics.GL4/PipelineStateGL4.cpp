@@ -7,13 +7,17 @@
 #include "ShaderGL4.hpp"
 #include "../Basic/Unreachable.hpp"
 #include "../Utility/ScopeGuard.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Graphics/PipelineStateDescription.hpp"
 #include "Pomdog/Graphics/PrimitiveTopology.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>
 #include <tuple>
 #include <type_traits>
 #include <unordered_set>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::Detail::GL4 {
 namespace {

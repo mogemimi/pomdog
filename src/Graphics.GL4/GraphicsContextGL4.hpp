@@ -6,11 +6,15 @@
 #include "VertexBufferBindingGL4.hpp"
 #include "../Graphics.Backends/NativeGraphicsContext.hpp"
 #include "../Utility/Tagged.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Utility/Errors.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>
 #include <memory>
 #include <optional>
 #include <vector>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog {
 class GraphicsDevice;

@@ -4,10 +4,14 @@
 
 #include "Pomdog/Application/Duration.hpp"
 #include "Pomdog/Application/GameClock.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Experimental/GUI/Widget.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <deque>
 #include <memory>
 #include <string>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::GUI {
 

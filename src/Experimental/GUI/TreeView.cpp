@@ -1,13 +1,17 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Experimental/GUI/TreeView.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Experimental/GUI/DrawingContext.hpp"
 #include "Pomdog/Experimental/GUI/FontSize.hpp"
 #include "Pomdog/Experimental/GUI/FontWeight.hpp"
 #include "Pomdog/Experimental/GUI/PointerPoint.hpp"
 #include "Pomdog/Experimental/GUI/UIEventDispatcher.hpp"
 #include "Pomdog/Experimental/GUI/UIHelper.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::GUI {
 

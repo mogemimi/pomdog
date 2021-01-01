@@ -2,11 +2,15 @@
 
 #include "FileSystemWin32.hpp"
 #include "../Utility/ErrorHelper.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/PathHelper.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <Shlobj.h>
 #include <filesystem>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::Detail::Win32 {
 

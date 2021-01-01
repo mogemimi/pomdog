@@ -3,7 +3,11 @@
 #pragma once
 
 #include "OpenGLPrerequisites.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <type_traits>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::Detail::GL4 {
 

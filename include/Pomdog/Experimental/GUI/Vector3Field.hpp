@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Experimental/GUI/FontSize.hpp"
 #include "Pomdog/Experimental/GUI/FontWeight.hpp"
 #include "Pomdog/Experimental/GUI/Thickness.hpp"
@@ -10,9 +11,12 @@
 #include "Pomdog/Math/Vector3.hpp"
 #include "Pomdog/Signals/ScopedConnection.hpp"
 #include "Pomdog/Signals/Signal.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 #include <optional>
 #include <string>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::GUI {
 

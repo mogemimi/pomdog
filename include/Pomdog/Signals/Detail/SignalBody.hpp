@@ -2,10 +2,13 @@
 
 #pragma once
 
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Signals/ForwardDeclarations.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Detail/SpinLock.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
 #include <cstdint>
 #include <functional>
@@ -16,6 +19,7 @@
 #include <type_traits>
 #include <utility>
 #include <vector>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::Detail::Signals {
 

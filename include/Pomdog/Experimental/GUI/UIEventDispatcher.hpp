@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Pomdog/Application/GameWindow.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Experimental/GUI/PointerEventType.hpp"
 #include "Pomdog/Experimental/GUI/PointerPoint.hpp"
 #include "Pomdog/Experimental/GUI/Widget.hpp"
@@ -10,9 +11,12 @@
 #include "Pomdog/Input/MouseState.hpp"
 #include "Pomdog/Signals/Connection.hpp"
 #include "Pomdog/Signals/ScopedConnection.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 #include <memory>
 #include <vector>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::GUI {
 

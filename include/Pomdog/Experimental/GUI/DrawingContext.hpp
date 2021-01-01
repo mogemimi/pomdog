@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Experimental/GUI/FontSize.hpp"
 #include "Pomdog/Experimental/GUI/FontWeight.hpp"
 #include "Pomdog/Experimental/Graphics/PrimitiveBatch.hpp"
@@ -14,11 +15,14 @@
 #include "Pomdog/Math/Matrix4x4.hpp"
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Math/Vector2.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 #include <memory>
 #include <string>
 #include <unordered_map>
 #include <vector>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog {
 class RenderCommand;

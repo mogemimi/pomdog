@@ -3,14 +3,18 @@
 #pragma once
 
 #include "Pomdog/Application/Duration.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Experimental/Particles/Beam.hpp"
 #include "Pomdog/Experimental/Particles/BeamBranching.hpp"
 #include "Pomdog/Experimental/Particles/BeamEmitter.hpp"
 #include "Pomdog/Experimental/Random/Xoroshiro128StarStar.hpp"
 #include "Pomdog/Math/Vector2.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 #include <random>
 #include <vector>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog {
 

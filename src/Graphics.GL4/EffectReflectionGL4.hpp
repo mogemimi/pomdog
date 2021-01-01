@@ -4,11 +4,15 @@
 
 #include "OpenGLPrerequisites.hpp"
 #include "TypesafeGL4.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Graphics/EffectReflection.hpp"
 #include "Pomdog/Utility/Errors.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 #include <string>
 #include <vector>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::Detail::GL4 {
 

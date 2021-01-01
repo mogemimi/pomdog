@@ -2,13 +2,17 @@
 
 #pragma once
 
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Experimental/Particles/Parameters/ParticleCurveKey.hpp"
 #include "Pomdog/Experimental/Particles/Parameters/ParticleCurveLerp.hpp"
 #include "Pomdog/Experimental/Particles/Parameters/ParticleParameter.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
 #include <utility>
 #include <vector>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::Detail::Particles {
 

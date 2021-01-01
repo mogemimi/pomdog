@@ -2,12 +2,16 @@
 
 #include "Pomdog/Content/Image/PNG.hpp"
 #include "../../Utility/ScopeGuard.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 extern "C" {
 #include <png.h>
 }
 #include <cstring>
 #include <vector>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::PNG {
 namespace {

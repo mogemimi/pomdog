@@ -1,16 +1,20 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Math/Detail/FloatingPointQuaternion.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Math/Detail/FloatingPointMatrix3x3.hpp"
 #include "Pomdog/Math/Detail/FloatingPointMatrix4x4.hpp"
 #include "Pomdog/Math/Detail/FloatingPointVector3.hpp"
 #include "Pomdog/Math/Math.hpp"
 #include "Pomdog/Math/Radian.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>
 #include <cmath>
 #include <limits>
 #include <utility>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::Detail {
 

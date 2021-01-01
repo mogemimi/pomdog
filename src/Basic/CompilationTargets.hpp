@@ -6,13 +6,15 @@
 // Compiler detection
 //----------------------------
 #if defined(_MSC_VER)
-#define POMDOG_COMPILER_MSVC
+// NOTE: cl (Visual C++ Compiler)
 #elif defined(__clang__)
-#define POMDOG_COMPILER_CLANG
+// NOTE: clang++ (LLVM Clang)
 #elif defined(__GNUC__)
-#define POMDOG_COMPILER_GNUC
+// NOTE: g++ (GNU Compiler Collection)
+#elif defined(__INTEL_COMPILER)
+// NOTE: icc (Intel C++ Compiler)
 #elif defined(__BORLANDC__) && defined(__BCPLUSPLUS__)
-#define POMDOG_COMPILER_BORLAND
+// NOTE: bcc (Borland C++ Compiler)
 #else
 #error "Compiler undefined or not supported."
 #endif

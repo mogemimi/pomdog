@@ -3,6 +3,7 @@
 #include "Pomdog/Content/AssetBuilders/ShaderBuilder.hpp"
 #include "../../Graphics.Backends/ShaderBytecode.hpp"
 #include "Pomdog/Application/FileSystem.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
@@ -17,12 +18,15 @@
 #include "Pomdog/Utility/Errors.hpp"
 #include "Pomdog/Utility/PathHelper.hpp"
 #include "Pomdog/Utility/StringHelper.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <fstream>
 #include <optional>
 #include <regex>
 #include <set>
 #include <utility>
 #include <vector>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 using Pomdog::Detail::BinaryReader;
 using Pomdog::Detail::ShaderBytecode;

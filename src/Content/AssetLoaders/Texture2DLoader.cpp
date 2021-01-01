@@ -2,6 +2,7 @@
 
 #include "Pomdog/Content/AssetLoaders/Texture2DLoader.hpp"
 #include "Pomdog/Application/FileSystem.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Content/Image/DDS.hpp"
 #include "Pomdog/Content/Image/PNG.hpp"
@@ -12,6 +13,8 @@
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
 #include "Pomdog/Graphics/Texture2D.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
 #include <array>
 #include <fstream>
@@ -20,6 +23,7 @@
 #include <string_view>
 #include <utility>
 #include <vector>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::Detail {
 namespace {

@@ -3,17 +3,21 @@
 #include "Pomdog/Content/AssetLoaders/AudioClipLoader.hpp"
 #include "Pomdog/Application/FileSystem.hpp"
 #include "Pomdog/Audio/AudioClip.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Content/AssetManager.hpp"
 #include "Pomdog/Content/Audio/Vorbis.hpp"
 #include "Pomdog/Content/Audio/WAV.hpp"
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
 #include "Pomdog/Content/Utility/MakeFourCC.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <fstream>
 #include <memory>
 #include <string>
 #include <utility>
 #include <vector>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::Detail {
 

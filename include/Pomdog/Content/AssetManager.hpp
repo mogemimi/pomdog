@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Basic/Export.hpp"
 #include "Pomdog/Content/AssetBuilders/Builder.hpp"
 #include "Pomdog/Content/AssetLoaders/AssetLoader.hpp"
@@ -10,6 +11,8 @@
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Errors.hpp"
 #include "Pomdog/Utility/PathHelper.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <any>
 #include <memory>
 #include <string>
@@ -18,6 +21,7 @@
 #include <typeinfo>
 #include <unordered_map>
 #include <utility>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog {
 

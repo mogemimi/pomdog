@@ -3,9 +3,12 @@
 #include "Pomdog/Experimental/Image/SVGLoader.hpp"
 #include "../../Utility/ScopeGuard.hpp"
 #include "Pomdog/Application/FileSystem.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/Texture2D.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
 #include <cstring>
 #include <fstream>
@@ -38,6 +41,7 @@
 #if defined(_MSC_VER)
 #pragma warning(pop)
 #endif
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::SVG {
 namespace {

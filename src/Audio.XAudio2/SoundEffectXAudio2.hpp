@@ -5,7 +5,11 @@
 #include "PrerequisitesXAudio2.hpp"
 #include "Pomdog/Audio/SoundEffect.hpp"
 #include "Pomdog/Audio/SoundState.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog {
 class AudioEmitter;

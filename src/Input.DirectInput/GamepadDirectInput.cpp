@@ -4,14 +4,18 @@
 #include "../Input.Backends/GamepadHelper.hpp"
 #include "../Utility/Exception.hpp"
 #include "../Utility/ScopeGuard.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Errors.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <oleauto.h>
 #include <wbemidl.h>
 #include <algorithm>
 #include <array>
 #include <tuple>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::Detail::DirectInput {
 namespace {

@@ -5,10 +5,14 @@
 #include "../Graphics.Direct3D/HLSLReflectionHelper.hpp"
 #include "../Graphics.Direct3D/PrerequisitesDirect3D.hpp"
 #include "../Utility/Exception.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Graphics/EffectConstantDescription.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
 #include <utility>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::Detail::Direct3D11 {
 namespace {

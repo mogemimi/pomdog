@@ -1,6 +1,7 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Experimental/GUI/TextEdit.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Experimental/GUI/DrawingContext.hpp"
 #include "Pomdog/Experimental/GUI/PointerPoint.hpp"
 #include "Pomdog/Experimental/GUI/UIEventDispatcher.hpp"
@@ -8,8 +9,11 @@
 #include "Pomdog/Input/KeyboardState.hpp"
 #include "Pomdog/Input/Keys.hpp"
 #include "Pomdog/Math/Math.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utfcpp/source/utf8.h>
 #include <utfcpp/source/utf8/cpp11.h>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::GUI {
 namespace {

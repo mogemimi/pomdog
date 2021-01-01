@@ -13,8 +13,12 @@
 #error "Platform undefined or not supported."
 #endif
 
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Utility/PathHelper.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::FileSystem {
 namespace {

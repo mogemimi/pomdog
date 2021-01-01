@@ -3,7 +3,10 @@
 #pragma once
 
 #include "AddressFamily.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Basic/Platform.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 #include <string>
 
@@ -15,6 +18,7 @@
 #include <WS2tcpip.h>
 #include <WinSock2.h>
 #endif
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::Detail {
 

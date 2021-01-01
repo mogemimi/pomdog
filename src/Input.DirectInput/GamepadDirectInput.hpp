@@ -5,13 +5,17 @@
 #include "PrerequisitesDirectInput.hpp"
 #include "../Input.Backends/GamepadMappings.hpp"
 #include "../Input.Backends/NativeGamepad.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Input/Gamepad.hpp"
 #include "Pomdog/Input/GamepadCapabilities.hpp"
 #include "Pomdog/Input/GamepadState.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <wrl/client.h>
 #include <array>
 #include <cstdint>
 #include <memory>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog {
 class Error;

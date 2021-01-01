@@ -3,9 +3,13 @@
 #include "Pomdog/Content/Audio/Vorbis.hpp"
 #include "Pomdog/Audio/AudioChannels.hpp"
 #include "Pomdog/Audio/AudioEngine.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <stb_vorbis.h>
 #include <utility>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::Vorbis {
 namespace {

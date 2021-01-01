@@ -2,6 +2,9 @@
 
 #pragma once
 
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #if defined(__APPLE_CC__)
 #include <AvailabilityMacros.h>
 #include <TargetConditionals.h>
@@ -11,6 +14,7 @@
 #else
 #include <cstdlib>
 #endif
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::Detail {
 

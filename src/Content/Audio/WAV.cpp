@@ -3,12 +3,16 @@
 #include "Pomdog/Content/Audio/WAV.hpp"
 #include "Pomdog/Audio/AudioChannels.hpp"
 #include "Pomdog/Audio/AudioEngine.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
 #include "Pomdog/Content/Utility/MakeFourCC.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 #include <utility>
 #include <vector>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 using Pomdog::Detail::BinaryReader;
 using Pomdog::Detail::MakeFourCC;

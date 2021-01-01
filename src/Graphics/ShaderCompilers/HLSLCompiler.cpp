@@ -3,12 +3,16 @@
 #include "Pomdog/Graphics/ShaderCompilers/HLSLCompiler.hpp"
 #include "../../Graphics.Backends/ShaderBytecode.hpp"
 #include "../../Graphics.Backends/ShaderCompileOptions.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/Shader.hpp"
 #include "Pomdog/Graphics/ShaderLanguage.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Errors.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 using Pomdog::Detail::ShaderBytecode;
 using Pomdog::Detail::ShaderCompileOptions;

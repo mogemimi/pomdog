@@ -1,11 +1,16 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Experimental/GUI/UIEventDispatcher.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Experimental/GUI/UIHelper.hpp"
 #include "Pomdog/Input/KeyboardState.hpp"
-#include "Pomdog/Signals/Detail/SignalBody.hpp"
 #include "Pomdog/Input/Keys.hpp"
 #include "Pomdog/Logging/Log.hpp"
+#include "Pomdog/Signals/Detail/SignalBody.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
+#include <algorithm>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::GUI {
 namespace {

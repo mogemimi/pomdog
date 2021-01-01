@@ -2,6 +2,7 @@
 
 #include "Pomdog/Experimental/Particles/ParticleClipLoader.hpp"
 #include "Pomdog/Application/FileSystem.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
 #include "Pomdog/Experimental/Particles/EmitterShapes/ParticleEmitterShapeBox.hpp"
 #include "Pomdog/Experimental/Particles/EmitterShapes/ParticleEmitterShapeCone.hpp"
@@ -15,6 +16,8 @@
 #include "Pomdog/Experimental/Particles/ParticleClip.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/StringHelper.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #if defined(__clang__)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wzero-as-null-pointer-constant"
@@ -33,6 +36,7 @@
 #include <fstream>
 #include <utility>
 #include <vector>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::Detail {
 namespace {

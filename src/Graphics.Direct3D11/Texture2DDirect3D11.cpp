@@ -5,9 +5,13 @@
 #include "../Graphics.Backends/TextureHelper.hpp"
 #include "../Graphics.DXGI/DXGIFormatHelper.hpp"
 #include "../Utility/Exception.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Graphics/SurfaceFormat.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::Detail::Direct3D11 {
 namespace {

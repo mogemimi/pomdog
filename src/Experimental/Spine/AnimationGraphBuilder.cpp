@@ -2,6 +2,7 @@
 
 #include "Pomdog/Experimental/Spine/AnimationGraphBuilder.hpp"
 #include "Pomdog/Application/FileSystem.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Content/Utility/BinaryReader.hpp"
 #include "Pomdog/Experimental/Skeletal2D/AnimationClip.hpp"
 #include "Pomdog/Experimental/Skeletal2D/BlendTrees/AnimationClipNode.hpp"
@@ -9,6 +10,8 @@
 #include "Pomdog/Experimental/Spine/AnimationLoader.hpp"
 #include "Pomdog/Experimental/Spine/SkeletonDesc.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #if defined(__clang__)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wzero-as-null-pointer-constant"
@@ -27,6 +30,7 @@
 #include <fstream>
 #include <optional>
 #include <vector>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::Spine {
 namespace {

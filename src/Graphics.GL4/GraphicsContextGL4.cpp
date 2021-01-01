@@ -15,6 +15,7 @@
 #include "../Graphics.Backends/GraphicsCapabilities.hpp"
 #include "../Graphics.Backends/GraphicsCommandListImmediate.hpp"
 #include "../Utility/ScopeGuard.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Basic/Platform.hpp"
 #include "Pomdog/Graphics/GraphicsDevice.hpp"
 #include "Pomdog/Graphics/IndexBuffer.hpp"
@@ -27,10 +28,13 @@
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Math/Vector4.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>
 #include <cmath>
 #include <limits>
 #include <utility>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::Detail::GL4 {
 namespace {

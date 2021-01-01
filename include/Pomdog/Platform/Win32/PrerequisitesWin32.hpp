@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
+
 #ifndef STRICT
 #define STRICT
 #endif
@@ -12,5 +14,7 @@
 #define NOMINMAX
 #endif
 
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <Windows.h>
 #include <tchar.h>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END

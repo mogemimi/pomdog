@@ -2,6 +2,7 @@
 
 #include "Pomdog/Experimental/Spine/AnimationLoader.hpp"
 #include "../Skeletal2D/Tracks/AnimationKeyHelper.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Experimental/Skeletal2D/AnimationClip.hpp"
 #include "Pomdog/Experimental/Skeletal2D/JointIndex.hpp"
 #include "Pomdog/Experimental/Skeletal2D/Tracks/AnimationTrack.hpp"
@@ -11,8 +12,11 @@
 #include "Pomdog/Experimental/Skeletal2D/Tracks/TranslationTrack.hpp"
 #include "Pomdog/Experimental/Spine/SkeletonDesc.hpp"
 #include "Pomdog/Utility/Detail/CRC32.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
 #include <utility>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::Spine {
 namespace {

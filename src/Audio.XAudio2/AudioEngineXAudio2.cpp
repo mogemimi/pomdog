@@ -3,10 +3,12 @@
 #include "AudioEngineXAudio2.hpp"
 #include "AudioClipXAudio2.hpp"
 #include "SoundEffectXAudio2.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Math/Math.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Errors.hpp"
 
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #if (_WIN32_WINNT >= 0x0602 /*_WIN32_WINNT_WIN8*/) && !defined(__cplusplus_winrt)
 #include <Windows.Devices.Enumeration.h>
 #include <Windows.Foundation.Collections.h>
@@ -20,6 +22,7 @@
 #include <string>
 #include <utility>
 #include <vector>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::Detail::XAudio2 {
 namespace {

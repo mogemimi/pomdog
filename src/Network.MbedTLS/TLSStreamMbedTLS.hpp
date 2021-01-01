@@ -4,10 +4,13 @@
 
 #include "Pomdog/Application/Duration.hpp"
 #include "Pomdog/Application/TimePoint.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Network/ForwardDeclarations.hpp"
 #include "Pomdog/Signals/Delegate.hpp"
 #include "Pomdog/Signals/ScopedConnection.hpp"
 #include "Pomdog/Utility/Errors.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>
 #include <atomic>
 #include <functional>
@@ -31,6 +34,7 @@
 #if defined(__clang__)
 #pragma clang diagnostic pop
 #endif
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::Detail {
 

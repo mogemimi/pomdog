@@ -2,13 +2,17 @@
 
 #pragma once
 
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Experimental/GUI/Thickness.hpp"
 #include "Pomdog/Experimental/GUI/Widget.hpp"
 #include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Signals/ScopedConnection.hpp"
 #include "Pomdog/Signals/Signal.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 #include <optional>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::GUI {
 

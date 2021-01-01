@@ -3,10 +3,14 @@
 #pragma once
 
 #include "PrerequisitesDirect3D.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <wrl/client.h>
 #include <cstdint>
 #include <memory>
 #include <tuple>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog {
 class Error;

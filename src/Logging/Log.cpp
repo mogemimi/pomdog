@@ -1,14 +1,18 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Logging/Log.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Logging/LogChannel.hpp"
 #include "Pomdog/Logging/LogEntry.hpp"
 #include "Pomdog/Signals/Connection.hpp"
 #include "Pomdog/Signals/ScopedConnection.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
 #include <memory>
 #include <mutex>
 #include <vector>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog {
 namespace {

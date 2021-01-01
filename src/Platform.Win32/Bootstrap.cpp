@@ -7,10 +7,14 @@
 #include "../Input.DirectInput/GamepadDirectInput.hpp"
 #include "Pomdog/Application/Game.hpp"
 #include "Pomdog/Application/GameHost.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Graphics/PresentationParameters.hpp"
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/Errors.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 using Pomdog::Detail::SystemEvent;
 using Pomdog::Detail::DirectInput::GamepadDirectInput;

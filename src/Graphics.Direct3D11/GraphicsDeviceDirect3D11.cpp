@@ -15,6 +15,7 @@
 #include "../Graphics.Backends/ShaderBytecode.hpp"
 #include "../Graphics.Backends/ShaderCompileOptions.hpp"
 #include "../Graphics.Backends/TextureHelper.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Graphics/BufferUsage.hpp"
 #include "Pomdog/Graphics/ConstantBuffer.hpp"
 #include "Pomdog/Graphics/IndexBuffer.hpp"
@@ -24,8 +25,11 @@
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/StringHelper.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>
 #include <tuple>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::Detail::Direct3D11 {
 namespace {

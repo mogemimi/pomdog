@@ -2,6 +2,9 @@
 
 #pragma once
 
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cassert>
 
 #if defined(_MSC_VER)
@@ -10,6 +13,7 @@
 #if defined(linux) || defined(__linux) || defined(__linux__)
 #include <csignal>
 #endif
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::Detail {
 

@@ -5,9 +5,13 @@
 #include "AudioEngineXAudio2.hpp"
 #include "Pomdog/Audio/AudioEmitter.hpp"
 #include "Pomdog/Audio/AudioListener.hpp"
+#include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 #include "Pomdog/Utility/Errors.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cmath>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::Detail::XAudio2 {
 namespace {
