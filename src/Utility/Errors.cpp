@@ -25,7 +25,11 @@ public:
     {
         auto err = std::make_unique<StringError>();
         err->Message = this->Message;
+#if defined(__GNUC__) && !defined(__clang__)
+        return err;
+#else
         return std::move(err);
+#endif
     }
 };
 
@@ -47,7 +51,11 @@ public:
         auto err = std::make_unique<WrappedError>();
         err->Err = this->Err->Clone();
         err->Message = this->Message;
+#if defined(__GNUC__) && !defined(__clang__)
+        return err;
+#else
         return std::move(err);
+#endif
     }
 };
 
@@ -63,7 +71,11 @@ std::unique_ptr<Error> IOError::Clone() const noexcept
     auto err = std::make_unique<IOError>();
     err->Kind = this->Kind;
     err->Reason = this->Reason;
+#if defined(__GNUC__) && !defined(__clang__)
+    return err;
+#else
     return std::move(err);
+#endif
 }
 
 std::unique_ptr<IOError> New(std::errc kind, std::string&& reason) noexcept
@@ -78,7 +90,11 @@ std::unique_ptr<Error> New(std::string&& message) noexcept
 {
     auto err = std::make_unique<StringError>();
     err->Message = std::move(message);
+#if defined(__GNUC__) && !defined(__clang__)
+    return err;
+#else
     return std::move(err);
+#endif
 }
 
 std::unique_ptr<Error> Wrap(std::unique_ptr<Error>&& err, std::string&& message) noexcept
@@ -86,7 +102,11 @@ std::unique_ptr<Error> Wrap(std::unique_ptr<Error>&& err, std::string&& message)
     auto wrapped = std::make_unique<WrappedError>();
     wrapped->Err = std::move(err);
     wrapped->Message = std::move(message);
+#if defined(__GNUC__) && !defined(__clang__)
+    return wrapped;
+#else
     return std::move(wrapped);
+#endif
 }
 
 } // namespace Pomdog::Errors

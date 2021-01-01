@@ -65,7 +65,11 @@ public:
         auto conn = std::make_unique<DelegateConnectionBody>();
         conn->weakSignal = weakSignal;
         conn->slotID = slotID;
+#if defined(__GNUC__) && !defined(__clang__)
+        return conn;
+#else
         return std::move(conn);
+#endif
     }
 };
 

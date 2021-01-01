@@ -154,7 +154,7 @@ std::optional<FontGlyph> TrueTypeFont::RasterizeGlyph(
     glyph.XOffset = static_cast<std::int16_t>(x0);
     glyph.YOffset = static_cast<std::int16_t>(y0);
     glyph.Character = codePoint;
-    return std::move(glyph);
+    return glyph;
 }
 
 //int TrueTypeFont::GetBaseline(float fontSize) const

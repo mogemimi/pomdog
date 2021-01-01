@@ -79,7 +79,11 @@ IncludeGLSLFilesRecursive(const std::string& path, std::set<std::string>& includ
         text += '\n';
     }
 
+#if defined(__GNUC__) && !defined(__clang__)
+    return text;
+#else
     return std::move(text);
+#endif
 }
 
 } // namespace

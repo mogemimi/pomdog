@@ -76,7 +76,11 @@ public:
         auto conn = std::make_unique<ConnectionBodyOverride>();
         conn->weakSignal = weakSignal;
         conn->slotIndex = slotIndex;
+#if defined(__GNUC__) && !defined(__clang__)
+        return conn;
+#else
         return std::move(conn);
+#endif
     }
 };
 

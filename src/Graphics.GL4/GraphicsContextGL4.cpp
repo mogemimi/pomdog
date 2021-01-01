@@ -106,7 +106,11 @@ std::optional<FrameBufferGL4> CreateFrameBuffer()
         return std::nullopt;
     }
 
+#if defined(__GNUC__) && !defined(__clang__)
+    return frameBuffer;
+#else
     return std::move(frameBuffer);
+#endif
 }
 
 void ApplyTexture2D(int index, const Texture2DObjectGL4& textureObject)
