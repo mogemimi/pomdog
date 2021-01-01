@@ -15,7 +15,7 @@ struct Traits;
 template <class Tagged>
 Tagged Get(Traits<Tagged>* = nullptr)
 {
-    typedef typename Tagged::value_type value_type;
+    using value_type = typename Tagged::value_type;
     static_assert(std::is_fundamental<value_type>::value, "");
     static_assert(std::is_integral<value_type>::value, "");
 

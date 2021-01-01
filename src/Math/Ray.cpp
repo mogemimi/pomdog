@@ -19,7 +19,7 @@ Ray::Ray(const Vector3& positionIn, const Vector3& directionIn)
 
 std::optional<float> Ray::Intersects(const BoundingBox& box) const
 {
-    typedef float T;
+    using T = float;
 
     constexpr auto PositiveInfinity = std::numeric_limits<T>::max();
     constexpr auto NegativeInfinity = std::numeric_limits<T>::lowest();

@@ -181,12 +181,12 @@ using IsSame = typename std::enable_if<
 
 template <typename T>
 struct TaskTypeTraits {
-    typedef T ResultType;
+    using ResultType = T;
 };
 
 template <typename T>
 struct TaskTypeTraits<Task<T>> {
-    typedef T ResultType;
+    using ResultType = T;
 };
 
 template <typename TFunction>

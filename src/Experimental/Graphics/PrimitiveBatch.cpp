@@ -46,7 +46,7 @@ namespace {
 
 class PrimitiveBatch::Impl {
 public:
-    typedef PrimitiveBatchVertex Vertex;
+    using Vertex = PrimitiveBatchVertex;
 
 private:
     std::shared_ptr<GraphicsCommandList> commandList;

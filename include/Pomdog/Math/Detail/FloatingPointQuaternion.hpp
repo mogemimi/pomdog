@@ -14,7 +14,7 @@ template <typename T>
 class POMDOG_EXPORT FloatingPointQuaternion final {
 public:
     static_assert(std::is_floating_point<T>::value, "T is floating point.");
-    typedef T value_type;
+    using value_type = T;
 
     T X, Y, Z, W;
 

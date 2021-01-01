@@ -15,8 +15,8 @@ public:
     static_assert(std::is_trivially_copyable_v<T>, "You can only use plain-old-data types.");
     static_assert(std::is_standard_layout_v<T>, "You can only use plain-old-data types.");
 
-    typedef T value_type;
-    typedef Tag tag_type;
+    using value_type = T;
+    using tag_type = Tag;
 
     T value;
 

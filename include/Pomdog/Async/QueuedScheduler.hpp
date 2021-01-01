@@ -10,8 +10,8 @@ namespace Pomdog::Concurrency {
 
 class POMDOG_EXPORT QueuedScheduler final : public Scheduler {
 private:
-    typedef std::chrono::steady_clock clockType;
-    typedef clockType::time_point TimePoint;
+    using clockType = std::chrono::steady_clock;
+    using TimePoint = clockType::time_point;
 
     struct DeferredTask {
         std::function<void()> Function;

@@ -45,7 +45,7 @@ public:
     GLuint GetBuffer() const;
 
 private:
-    typedef BufferObjectGL4<Tag> BufferObject;
+    using BufferObject = BufferObjectGL4<Tag>;
     std::optional<BufferObjectGL4<Tag>> bufferObject;
 };
 
