@@ -1,6 +1,7 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Network/TCPStream.hpp"
+#include "Pomdog/Basic/Platform.hpp"
 #if defined(POMDOG_PLATFORM_MACOSX) \
     || defined(POMDOG_PLATFORM_APPLE_IOS) \
     || defined(POMDOG_PLATFORM_LINUX)

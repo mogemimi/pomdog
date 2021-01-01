@@ -4,8 +4,6 @@
 #include "Pomdog/Experimental/GUI/UIHelper.hpp"
 #include "Pomdog/Input/KeyboardState.hpp"
 #include "Pomdog/Signals/Detail/SignalBody.hpp"
-#include <algorithm>
-
 #include "Pomdog/Input/Keys.hpp"
 #include "Pomdog/Logging/Log.hpp"
 
