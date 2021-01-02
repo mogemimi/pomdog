@@ -96,7 +96,7 @@ OpenGLContextX11::Initialize(
             display,
             framebufferConfig,
             GLX_RGBA_TYPE,
-            0,
+            nullptr,
             True);
         XSync(display, False);
         if (auto errorCode = UntrapErrors(oldHandler); errorCode != 0) {
@@ -117,11 +117,11 @@ OpenGLContextX11::Initialize(
         glxContext = glXCreateContextAttribsARB(
             display,
             framebufferConfig,
-            0,
+            nullptr,
             True,
             contextAttributes);
         XSync(display, False);
-        if (auto errorCode = UntrapErrors(oldHandler); (errorCode == 0) && (glxContext != 0)) {
+        if (auto errorCode = UntrapErrors(oldHandler); (errorCode == 0) && (glxContext != nullptr)) {
             // NOTE: OK
             isOpenGL3Supported = true;
         }
@@ -138,7 +138,7 @@ OpenGLContextX11::Initialize(
             glxContext = glXCreateContextAttribsARB(
                 display,
                 framebufferConfig,
-                0,
+                nullptr,
                 True,
                 contextAttributes);
             XSync(display, False);
