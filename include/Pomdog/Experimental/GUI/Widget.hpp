@@ -33,7 +33,7 @@ class Widget {
 public:
     explicit Widget(const std::shared_ptr<UIEventDispatcher>& dispatcher);
 
-    virtual ~Widget() = default;
+    virtual ~Widget();
 
     std::shared_ptr<UIEventDispatcher> GetDispatcher() const;
 

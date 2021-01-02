@@ -20,6 +20,8 @@ Widget::Widget(const std::shared_ptr<UIEventDispatcher>& dispatcherIn)
 {
 }
 
+Widget::~Widget() = default;
+
 std::shared_ptr<UIEventDispatcher> Widget::GetDispatcher() const
 {
     return weakDispatcher.lock();
