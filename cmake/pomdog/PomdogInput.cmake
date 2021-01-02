@@ -34,6 +34,7 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/Input.Backends/GamepadHelper.hpp
     ${POMDOG_SRC_DIR}/Input.Backends/GamepadMappings.cpp
     ${POMDOG_SRC_DIR}/Input.Backends/GamepadMappings.hpp
+    ${POMDOG_SRC_DIR}/Input.Backends/NativeGamepad.cpp
     ${POMDOG_SRC_DIR}/Input.Backends/NativeGamepad.hpp
 
     $<$<PLATFORM_ID:Windows>:

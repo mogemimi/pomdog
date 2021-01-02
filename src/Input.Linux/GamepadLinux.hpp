@@ -44,7 +44,7 @@ class GamepadLinux final : public NativeGamepad {
 public:
     GamepadLinux();
 
-    ~GamepadLinux();
+    ~GamepadLinux() override;
 
     GamepadCapabilities GetCapabilities(PlayerIndex index) const override;
 

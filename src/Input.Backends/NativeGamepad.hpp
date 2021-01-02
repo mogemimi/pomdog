@@ -8,7 +8,7 @@ namespace Pomdog::Detail {
 
 class NativeGamepad : public Gamepad {
 public:
-    virtual ~NativeGamepad() = default;
+    virtual ~NativeGamepad() override;
 
     virtual void EnumerateDevices() = 0;
 
