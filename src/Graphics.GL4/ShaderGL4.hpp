@@ -23,7 +23,7 @@ public:
     [[nodiscard]] std::unique_ptr<Error>
     Initialize(const ShaderBytecode& source) noexcept;
 
-    ~ShaderGL4();
+    ~ShaderGL4() override;
 
     GLuint GetShader() const;
 

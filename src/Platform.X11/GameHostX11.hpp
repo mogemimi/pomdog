@@ -26,7 +26,7 @@ class GameHostX11 final : public GameHost {
 public:
     GameHostX11() noexcept;
 
-    ~GameHostX11();
+    ~GameHostX11() override;
 
     [[nodiscard]] std::unique_ptr<Error>
     Initialize(const PresentationParameters& presentationParameters);

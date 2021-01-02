@@ -34,7 +34,7 @@ class PipelineStateGL4 final : public PipelineState {
 public:
     PipelineStateGL4();
 
-    ~PipelineStateGL4();
+    ~PipelineStateGL4() override;
 
     [[nodiscard]] std::unique_ptr<Error>
     Initialize(const PipelineStateDescription& description) noexcept;

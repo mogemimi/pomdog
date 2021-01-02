@@ -19,7 +19,7 @@ class GameWindowX11 final : public GameWindow {
 public:
     GameWindowX11();
 
-    ~GameWindowX11();
+    ~GameWindowX11() override;
 
     [[nodiscard]] std::unique_ptr<Error>
     Initialize(

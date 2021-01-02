@@ -16,7 +16,7 @@ class OpenGLContextX11 final : public GL4::OpenGLContext {
 public:
     OpenGLContextX11() noexcept;
 
-    ~OpenGLContextX11() noexcept;
+    ~OpenGLContextX11() noexcept override;
 
     [[nodiscard]] std::unique_ptr<Error>
     Initialize(

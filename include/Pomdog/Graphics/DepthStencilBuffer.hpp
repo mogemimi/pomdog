@@ -21,7 +21,7 @@ public:
     DepthStencilBuffer(const DepthStencilBuffer&) = delete;
     DepthStencilBuffer& operator=(const DepthStencilBuffer&) = delete;
 
-    virtual ~DepthStencilBuffer();
+    virtual ~DepthStencilBuffer() override;
 
     /// Gets the width of the texture data, in pixels.
     virtual std::int32_t GetWidth() const noexcept = 0;

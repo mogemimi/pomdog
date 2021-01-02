@@ -21,7 +21,7 @@ public:
     Texture2D(const Texture2D&) = delete;
     Texture2D& operator=(const Texture2D&) = delete;
 
-    virtual ~Texture2D();
+    virtual ~Texture2D() override;
 
     /// Gets the width of the texture data, in pixels.
     virtual std::int32_t GetWidth() const noexcept = 0;

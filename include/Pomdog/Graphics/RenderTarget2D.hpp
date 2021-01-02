@@ -21,7 +21,7 @@ public:
     RenderTarget2D(const RenderTarget2D&) = delete;
     RenderTarget2D& operator=(const RenderTarget2D&) = delete;
 
-    virtual ~RenderTarget2D();
+    virtual ~RenderTarget2D() override;
 
     /// Gets the width of the texture data, in pixels.
     virtual std::int32_t GetWidth() const noexcept = 0;
