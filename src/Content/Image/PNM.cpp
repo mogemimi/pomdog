@@ -350,7 +350,7 @@ Encode(const Color* data, std::size_t size, int width, int height, const PNMEnco
     if (options.Subtype == PNMSubtype::Pixmap) {
         channelCount = 3;
     }
-    std::size_t reserveSize = 3 + 6 + 6 + (bytesPerComponent * channelCount * width * height);
+    std::size_t reserveSize = 3 + 6 + 6 + (bytesPerComponent * channelCount * static_cast<std::size_t>(width) * static_cast<std::size_t>(height));
     buffer.reserve(reserveSize);
 
     const auto writeString = [&buffer](std::string_view view) {

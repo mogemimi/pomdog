@@ -44,12 +44,22 @@ Load(const std::shared_ptr<AudioEngine>& audioEngine, const std::string& filenam
     }
 
     auto info = stb_vorbis_get_info(vorbis);
+    if (info.channels <= 0) {
+        return std::make_tuple(nullptr, Errors::New("info.channels must be > 0, " + filename));
+    }
 
     auto channels = ToAudioChannels(info.channels);
     int totalSamples = static_cast<int>(stb_vorbis_stream_length_in_samples(vorbis));
 
+    if (totalSamples <= 0) {
+        return std::make_tuple(nullptr, Errors::New("totalSamples must be > 0, " + filename));
+    }
+
     std::vector<std::uint8_t> audioData;
-    audioData.resize(sizeof(std::uint16_t) * totalSamples * info.channels);
+    audioData.resize(
+        sizeof(std::uint16_t) *
+        static_cast<std::size_t>(totalSamples) *
+        static_cast<std::size_t>(info.channels));
 
     int sampleCount = stb_vorbis_get_samples_short_interleaved(
         vorbis,
@@ -58,10 +68,13 @@ Load(const std::shared_ptr<AudioEngine>& audioEngine, const std::string& filenam
         totalSamples);
 
     if (sampleCount < totalSamples) {
-        audioData.resize(sizeof(std::uint16_t) * sampleCount * info.channels);
+        audioData.resize(
+            sizeof(std::uint16_t) *
+            static_cast<std::size_t>(sampleCount) *
+            static_cast<std::size_t>(info.channels));
     }
 
-    const int samplesPerSec = info.sample_rate;
+    const auto samplesPerSec = static_cast<int>(info.sample_rate);
     constexpr int bitsPerSample = 16;
 
     // NOTE: Clean up vorbis file

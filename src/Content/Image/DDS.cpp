@@ -194,7 +194,10 @@ ComputePixelDataByteLength(const DDSHeader& ddsHeader, SurfaceFormat format)
     std::size_t mipmapPixelHeight = ddsHeader.PixelHeight;
 
     for (std::uint32_t mipmapLevel = 0; mipmapLevel < levelCount; ++mipmapLevel) {
-        std::size_t const strideBytesPerMipMap = ((mipmapPixelWidth + 3) / 4) * ((mipmapPixelHeight + 3) / 4) * bytesPerBlock;
+        std::size_t const strideBytesPerMipMap =
+            ((mipmapPixelWidth + 3) / 4) *
+            ((mipmapPixelHeight + 3) / 4) *
+            static_cast<std::size_t>(bytesPerBlock);
 
         result += strideBytesPerMipMap;
 
@@ -253,9 +256,9 @@ Decode(const std::uint8_t* data, std::size_t size)
         return std::make_tuple(std::move(image), Errors::New("Sorry, DXT10 header is not supported yet."));
     }
 
-    image.Width = ddsHeader.PixelWidth;
-    image.Height = ddsHeader.PixelHeight;
-    image.MipmapCount = ddsHeader.MipMapCount;
+    image.Width = static_cast<std::int32_t>(ddsHeader.PixelWidth);
+    image.Height = static_cast<std::int32_t>(ddsHeader.PixelHeight);
+    image.MipmapCount = static_cast<std::int32_t>(ddsHeader.MipMapCount);
 
     if (auto format = ToSurfaceFormat(ddsHeader.PixelFormat); format != std::nullopt) {
         image.Format = *format;

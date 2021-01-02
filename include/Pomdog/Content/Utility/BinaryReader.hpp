@@ -30,7 +30,7 @@ struct POMDOG_EXPORT BinaryReader final {
         std::vector<T> result;
         result.reserve(elementCount + 1);
         result.resize(elementCount);
-        stream.read(reinterpret_cast<char*>(result.data()), sizeof(T) * result.size());
+        stream.read(reinterpret_cast<char*>(result.data()), static_cast<int>(sizeof(T) * result.size()));
         return result;
     }
 

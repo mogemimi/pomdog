@@ -13,7 +13,7 @@ namespace Pomdog::Detail::OpenAL {
 namespace {
 
 [[nodiscard]] std::tuple<ALenum, std::unique_ptr<Error>>
-ToFormat(AudioChannels channel, std::uint16_t bitPerSample) noexcept
+ToFormat(AudioChannels channel, int bitPerSample) noexcept
 {
     switch (channel) {
     case AudioChannels::Mono:

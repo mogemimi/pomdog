@@ -177,7 +177,7 @@ void SpriteFont::Impl::ForEach(const std::string& text, Func func)
             func(glyph, position);
 
             const auto advance = glyph.XAdvance - glyph.XOffset;
-            position.X += (static_cast<float>(advance) - static_cast<float>(spacing));
+            position.X += (static_cast<float>(advance) - spacing);
             break;
         }
         }
@@ -271,7 +271,7 @@ Vector2 SpriteFont::Impl::MeasureString(const std::string& text)
 
         if (glyph.Character == U' ') {
             const auto advance = glyph.XAdvance - glyph.XOffset;
-            w += (static_cast<float>(advance) - static_cast<float>(spacing));
+            w += (static_cast<float>(advance) - spacing);
         }
 
         result = Vector2::Max(result, postion + Vector2{w, h});

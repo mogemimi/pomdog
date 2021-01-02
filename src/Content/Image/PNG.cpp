@@ -138,8 +138,8 @@ Decode(const std::uint8_t* data, std::size_t byteLength)
     ::png_read_image(pngPtr, bytePointers.data());
     ::png_read_end(pngPtr, nullptr);
 
-    image.Width = pixelWidth;
-    image.Height = pixelHeight;
+    image.Width = static_cast<std::int32_t>(pixelWidth);
+    image.Height = static_cast<std::int32_t>(pixelHeight);
     image.Format = ([](::png_byte colorTypeIn) -> SurfaceFormat {
         POMDOG_ASSERT(colorTypeIn != PNG_COLOR_TYPE_RGB);
         switch (colorTypeIn) {

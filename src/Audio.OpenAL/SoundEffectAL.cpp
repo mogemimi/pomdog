@@ -42,7 +42,7 @@ SoundEffectAL::Initialize(
     }
 
     POMDOG_ASSERT(source != std::nullopt);
-    alSourcei(source.value(), AL_BUFFER, audioClip->GetNativeBuffer());
+    alSourcei(source.value(), AL_BUFFER, static_cast<ALint>(audioClip->GetNativeBuffer()));
     if (auto err = alGetError(); err != AL_NO_ERROR) {
         return MakeOpenALError(std::move(err), "alSourcei(AL_BUFFER) failed.");
     }

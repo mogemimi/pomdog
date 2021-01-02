@@ -447,8 +447,8 @@ void PolygonShapeBuilder::DrawSphere(
         return;
     }
 
-    const auto rings = std::max(static_cast<int>(segments), 4);
-    const auto sectors = std::max(static_cast<int>(segments), 4);
+    const auto rings = std::max(segments, 4);
+    const auto sectors = std::max(segments, 4);
 
     std::vector<Vector3> sphereVertices;
     sphereVertices.reserve(rings * sectors);

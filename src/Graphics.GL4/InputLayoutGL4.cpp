@@ -115,7 +115,7 @@ bool IsIntegerType(const ScalarTypeGL4& scalarType)
     return false;
 }
 
-struct InputElementSize {
+struct InputElementSize final {
     ///@note
     /// float: 1
     /// Vector2: 1
@@ -134,7 +134,7 @@ struct InputElementSize {
     /// Matrix2x2: 2
     /// Matrix3x3: 3
     /// Matrix4x4: 4
-    std::uint8_t ComponentCount;
+    std::int8_t ComponentCount;
 };
 
 InputElementSize ToInputElementSize(GLenum attributeClass)
@@ -284,7 +284,7 @@ std::vector<InputElementGL4> BuildAttributes(const ShaderProgramGL4& shaderProgr
             InputElementGL4 attribute;
             attribute.AttributeLocation = attributeLocation;
             attribute.ScalarType = attributeScalarType;
-            attribute.Components = static_cast<GLint>(attributeSize.ComponentCount);
+            attribute.Components = attributeSize.ComponentCount;
             attribute.IsInteger = IsIntegerType(attribute.ScalarType);
             attribute.ByteOffset = 0; // NOTE: See CalculateByteOffset function.
             attribute.InputSlot = 0;

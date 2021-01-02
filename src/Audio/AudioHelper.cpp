@@ -22,7 +22,7 @@ GetSamples(std::size_t sizeInBytes, int bitsPerSample, AudioChannels channels) n
     auto divisior = (bitsPerSample / 8) * channelCount;
     POMDOG_ASSERT(divisior > 0);
 
-    return sizeInBytes / divisior;
+    return sizeInBytes / static_cast<std::size_t>(divisior);
 }
 
 [[nodiscard]] Duration
@@ -31,7 +31,7 @@ GetSampleDuration(std::size_t samples, int sampleRate) noexcept
     POMDOG_ASSERT(sampleRate > 0);
     POMDOG_ASSERT(sampleRate >= 8000);
     POMDOG_ASSERT(sampleRate <= 48000);
-    return std::chrono::seconds(samples / sampleRate);
+    return std::chrono::seconds(samples / static_cast<std::size_t>(sampleRate));
 }
 
 } // namespace Pomdog::Detail::AudioHelper

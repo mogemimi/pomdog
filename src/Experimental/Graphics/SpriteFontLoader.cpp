@@ -407,7 +407,7 @@ AssetLoader<SpriteFont>::operator()(AssetManager& assets, const std::string& fil
         std::move(textures),
         std::move(glyphs),
         static_cast<std::int16_t>(info.PaddingLeft + info.PaddingRight),
-        static_cast<std::int16_t>(common.LineHeight));
+        common.LineHeight);
     spriteFont->SetDefaultCharacter(defaultCharacter);
 
     return std::make_tuple(std::move(spriteFont), nullptr);

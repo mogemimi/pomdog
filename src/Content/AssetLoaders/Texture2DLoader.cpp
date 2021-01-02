@@ -99,7 +99,7 @@ AssetLoader<Texture2D>::operator()(AssetManager& assets, const std::string& file
     if (IsPNGFormat(signature)) {
         std::vector<std::uint8_t> binary;
         binary.resize(byteLength);
-        stream.read(reinterpret_cast<char*>(binary.data()), binary.size());
+        stream.read(reinterpret_cast<char*>(binary.data()), static_cast<int>(binary.size()));
         if (!stream) {
             auto err = Errors::New("failed to read the file " + filePath);
             return std::make_tuple(nullptr, std::move(err));
@@ -130,7 +130,7 @@ AssetLoader<Texture2D>::operator()(AssetManager& assets, const std::string& file
     else if (IsDDSFormat(signature)) {
         std::vector<std::uint8_t> binary;
         binary.resize(byteLength);
-        stream.read(reinterpret_cast<char*>(binary.data()), binary.size());
+        stream.read(reinterpret_cast<char*>(binary.data()), static_cast<int>(binary.size()));
         if (!stream) {
             auto err = Errors::New("failed to read the file " + filePath);
             return std::make_tuple(nullptr, std::move(err));
@@ -161,7 +161,7 @@ AssetLoader<Texture2D>::operator()(AssetManager& assets, const std::string& file
     else if (IsPNMFormat(signature)) {
         std::vector<std::uint8_t> binary;
         binary.resize(byteLength);
-        stream.read(reinterpret_cast<char*>(binary.data()), binary.size());
+        stream.read(reinterpret_cast<char*>(binary.data()), static_cast<int>(binary.size()));
         if (!stream) {
             auto err = Errors::New("failed to read the file " + filePath);
             return std::make_tuple(nullptr, std::move(err));

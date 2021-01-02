@@ -636,8 +636,8 @@ void PolylineBatch::DrawSphere(
         return;
     }
 
-    const auto rings = std::max(static_cast<int>(segments), 4);
-    const auto sectors = std::max(static_cast<int>(segments), 4);
+    const auto rings = std::max(segments, 4);
+    const auto sectors = std::max(segments, 4);
 
     POMDOG_ASSERT(sectors > 0);
     POMDOG_ASSERT(rings > 0);
