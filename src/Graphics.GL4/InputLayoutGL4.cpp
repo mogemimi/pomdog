@@ -12,7 +12,6 @@
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Logging/LogLevel.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/StringHelper.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
@@ -85,9 +84,8 @@ ScalarTypeGL4 ToScalarType(GLenum attributeClass)
     POMDOG_ASSERT(attributeClass != GL_HALF_FLOAT);
     POMDOG_ASSERT(attributeClass != GL_FIXED);
 
-#ifdef DEBUG
-    Log::Internal(StringHelper::Format(
-        "Failed to find scalar type '%d'.", attributeClass));
+#if defined(DEBUG) && !defined(NDEBUG)
+    Log::Internal("failed to find scalar type " + std::to_string(attributeClass));
 #endif
     return ScalarTypeGL4(GL_FLOAT);
 }
@@ -111,9 +109,8 @@ bool IsIntegerType(const ScalarTypeGL4& scalarType)
     POMDOG_ASSERT(scalarType.value != GL_HALF_FLOAT);
     POMDOG_ASSERT(scalarType.value != GL_FIXED);
 
-#ifdef DEBUG
-    Log::Internal(StringHelper::Format(
-        "Failed to find scalar type '%d'.", scalarType.value));
+#if defined(DEBUG) && !defined(NDEBUG)
+    Log::Internal("failed to find scalar type " + std::to_string(scalarType.value));
 #endif
     return false;
 }
@@ -214,10 +211,9 @@ InputElementSize ToInputElementSize(GLenum attributeClass)
     POMDOG_ASSERT(attributeClass != GL_HALF_FLOAT);
     POMDOG_ASSERT(attributeClass != GL_FIXED);
 
-#ifdef DEBUG
-    Log::Internal(StringHelper::Format(
-        "Failed to find class '%d'.", attributeClass));
-#endif // defined(DEBUG)
+#if defined(DEBUG) && !defined(NDEBUG)
+    Log::Internal("failed to find class " + std::to_string(attributeClass));
+#endif
     return {1, 1};
 }
 
@@ -246,9 +242,8 @@ std::uint8_t ToByteWithFromScalarTypeGL4(ScalarTypeGL4 scalarType)
     POMDOG_ASSERT(scalarType.value != GL_HALF_FLOAT);
     POMDOG_ASSERT(scalarType.value != GL_FIXED);
 
-#ifdef DEBUG
-    Log::Internal(StringHelper::Format(
-        "Failed to find scalar type '%d'.", scalarType.value));
+#if defined(DEBUG) && !defined(NDEBUG)
+    Log::Internal("failed to find scalar type " + std::to_string(scalarType.value));
 #endif
     return sizeof(float);
 }

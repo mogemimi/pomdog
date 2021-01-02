@@ -7,7 +7,6 @@
 #include "Pomdog/Logging/Log.hpp"
 #include "Pomdog/Logging/LogLevel.hpp"
 #include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/StringHelper.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
@@ -345,10 +344,8 @@ EffectVariableType ToEffectVariableType(GLenum uniformType)
         break;
     }
 
-#ifdef DEBUG
-    Log::Internal(StringHelper::Format(
-        "Failed to find effect parameter type '%d'.",
-        uniformType));
+#if defined(DEBUG) && !defined(NDEBUG)
+    Log::Internal("failed to find effect parameter type " + std::to_string(uniformType));
 #endif
     return EffectVariableType::Float;
 }
@@ -439,9 +436,8 @@ EffectVariableClass ToEffectVariableClass(GLenum uniformType)
         return EffectVariableClass::Object;
     }
 
-#ifdef DEBUG
-    Log::Internal(StringHelper::Format(
-        "Failed to find effect parameter class '%d'.", uniformType));
+#if defined(DEBUG) && !defined(NDEBUG)
+    Log::Internal("failed to find effect parameter class " + std::to_string(uniformType));
 #endif
     return EffectVariableClass::Struct;
 }
@@ -558,9 +554,8 @@ std::tuple<int, int> ToComponents(GLenum uniformType)
         break;
     }
 
-#ifdef DEBUG
-    Log::Internal(StringHelper::Format(
-        "Failed to find uniform type '%d'.", uniformType));
+#if defined(DEBUG) && !defined(NDEBUG)
+    Log::Internal("failed to find uniform type " + std::to_string(uniformType));
 #endif
     return std::make_tuple(1, 1);
 }
