@@ -23,7 +23,7 @@ Keys TranslateKey(Display* display, unsigned int keyCode)
         return Keys_None;
     }
 
-    auto keySym = XkbKeycodeToKeysym(display, keyCode, 0, 1);
+    auto keySym = ::XkbKeycodeToKeysym(display, static_cast<::KeyCode>(keyCode), 0, 1);
 
     switch (keySym) {
     case XK_KP_0:
@@ -58,7 +58,7 @@ Keys TranslateKey(Display* display, unsigned int keyCode)
         break;
     }
 
-    keySym = XkbKeycodeToKeysym(display, keyCode, 0, 0);
+    keySym = ::XkbKeycodeToKeysym(display, static_cast<::KeyCode>(keyCode), 0, 0);
 
     static_assert(XK_0 == '0' && XK_9 == '9' && XK_0 < XK_9, "");
     static_assert(XK_A == 'A' && XK_Z == 'Z' && XK_A < XK_Z, "");
@@ -429,7 +429,7 @@ void KeyboardX11::HandleEvent(XEvent& event, ::XIC inputContext)
                 inputContext,
                 &event.xkey,
                 dynamicBuffer.data(),
-                dynamicBuffer.size() - 1,
+                static_cast<int>(dynamicBuffer.size()) - 1,
                 &keysym,
                 &status);
             str = dynamicBuffer.data();
