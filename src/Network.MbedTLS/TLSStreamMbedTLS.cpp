@@ -169,10 +169,10 @@ TLSStreamMbedTLS::Connect(
 #endif
 
         // NOTE: Start the connection
-        auto [fd, err] = ConnectSocketFunc(hostBuf, portBuf, SocketProtocol::TCP, connectTimeoutIn);
+        auto [fd, connectErr] = ConnectSocketFunc(hostBuf, portBuf, SocketProtocol::TCP, connectTimeoutIn);
 
-        if (err != nullptr) {
-            std::shared_ptr<Error> shared = std::move(err);
+        if (connectErr != nullptr) {
+            std::shared_ptr<Error> shared = std::move(connectErr);
             errorConn = service->ScheduleTask([this, err = std::move(shared)] {
                 this->OnConnected(err->Clone());
                 this->errorConn.Disconnect();
