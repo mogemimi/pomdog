@@ -20,49 +20,35 @@ using Pomdog::Detail::MakeFourCC;
 namespace Pomdog::WAV {
 namespace {
 
-#if defined(_MSC_VER)
-#pragma pack(push, 1)
-#endif
-
-#if defined(POMDOG_DETAIL_PACKED)
-#error "'POMDOG_DETAIL_PACKED' already defined."
-#endif
-
-#if defined(__clang__) || defined(__GNUC__)
-#define POMDOG_DETAIL_PACKED __attribute__((packed))
+#if defined(POMDOG_INTERNAL_PACKED)
+#error "'POMDOG_INTERNAL_PACKED' already defined."
 #elif defined(_MSC_VER)
-#define POMDOG_DETAIL_PACKED
+#define POMDOG_INTERNAL_PACKED(type) __pragma(pack(push, 1)) type __pragma(pack(pop))
+#elif defined(__clang__) || defined(__GNUC__)
+#define POMDOG_INTERNAL_PACKED(type) type __attribute__((packed))
 #else
-#error "'POMDOG_DETAIL_PACKED' is not supported in this compiler."
+#error "'POMDOG_INTERNAL_PACKED' is not supported in this compiler."
 #endif
 
-struct RIFFChunk final {
+POMDOG_INTERNAL_PACKED(struct RIFFChunk final {
     std::uint32_t ChunkID;
     std::uint32_t ChunkSize;
     std::uint32_t FourCCType;
-} POMDOG_DETAIL_PACKED;
+});
 
-struct SubChunkHeader final {
+POMDOG_INTERNAL_PACKED(struct SubChunkHeader final {
     std::uint32_t ChunkID;
     std::uint32_t ChunkSize;
-} POMDOG_DETAIL_PACKED;
+});
 
-struct PCMWaveFormat final {
+POMDOG_INTERNAL_PACKED(struct PCMWaveFormat final {
     std::uint16_t FormatTag;
     std::uint16_t Channels;
     std::uint32_t SamplesPerSec;
     std::uint32_t AvgBytesPerSec;
     std::uint16_t BlockAlign;
     std::uint16_t BitsPerSample;
-} POMDOG_DETAIL_PACKED;
-
-#if defined(POMDOG_DETAIL_PACKED)
-#undef POMDOG_DETAIL_PACKED
-#endif
-
-#if defined(_MSC_VER)
-#pragma pack(pop)
-#endif
+});
 
 struct WaveFormat final {
     PCMWaveFormat PCMFormat;

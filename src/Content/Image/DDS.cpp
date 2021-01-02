@@ -17,23 +17,17 @@ using Pomdog::Detail::MakeFourCC;
 namespace Pomdog::DDS {
 namespace {
 
-#if defined(_MSC_VER)
-#pragma pack(push, 1)
-#endif
-
-#if defined(POMDOG_DETAIL_PACKED)
-#error "'POMDOG_DETAIL_PACKED' already defined."
-#endif
-
-#if defined(__clang__) || defined(__GNUC__)
-#define POMDOG_DETAIL_PACKED __attribute__((packed))
+#if defined(POMDOG_INTERNAL_PACKED)
+#error "'POMDOG_INTERNAL_PACKED' already defined."
 #elif defined(_MSC_VER)
-#define POMDOG_DETAIL_PACKED
+#define POMDOG_INTERNAL_PACKED(type) __pragma(pack(push, 1)) type __pragma(pack(pop))
+#elif defined(__clang__) || defined(__GNUC__)
+#define POMDOG_INTERNAL_PACKED(type) type __attribute__((packed))
 #else
-#error "'POMDOG_DETAIL_PACKED' is not supported in this compiler."
+#error "'POMDOG_INTERNAL_PACKED' is not supported in this compiler."
 #endif
 
-struct DDSPixelFormat final {
+POMDOG_INTERNAL_PACKED(struct DDSPixelFormat final {
     std::uint32_t ByteSize;
     std::uint32_t Flags;
     std::uint32_t FourCC;
@@ -42,9 +36,9 @@ struct DDSPixelFormat final {
     std::uint32_t GreenBitMask;
     std::uint32_t BlueBitMask;
     std::uint32_t AlphaBitMask;
-} POMDOG_DETAIL_PACKED;
+});
 
-struct DDSHeader final {
+POMDOG_INTERNAL_PACKED(struct DDSHeader final {
     std::uint32_t ByteSize;
     std::uint32_t Flags;
     std::uint32_t PixelHeight;
@@ -59,23 +53,15 @@ struct DDSHeader final {
     std::uint32_t Caps3;
     std::uint32_t Caps4;
     std::uint32_t Reserved2;
-} POMDOG_DETAIL_PACKED;
+});
 
-struct DDSHeaderDXT10 final {
-    std::uint32_t DxgiFormat;        // Note: enum DXGI_FORMAT
+POMDOG_INTERNAL_PACKED(struct DDSHeaderDXT10 final {
+    std::uint32_t DxgiFormat; // Note: enum DXGI_FORMAT
     std::uint32_t ResourceDimension; // Note: enum D3D10_RESOURCE_DIMENSION
     std::uint32_t MiscFlag;
     std::uint32_t ArraySize;
     std::uint32_t Reserved;
-} POMDOG_DETAIL_PACKED;
-
-#if defined(POMDOG_DETAIL_PACKED)
-#undef POMDOG_DETAIL_PACKED
-#endif
-
-#if defined(_MSC_VER)
-#pragma pack(pop)
-#endif
+});
 
 namespace DirectDrawPixelFormat {
 
