@@ -207,9 +207,7 @@ target_compile_definitions(pomdog_static PRIVATE
 target_compile_options(pomdog_static PRIVATE
     # Clang and GCC
     $<$<CXX_COMPILER_ID:Clang,AppleClang,GNU>:
-        -Wall
         -Werror
-        -Wnon-virtual-dtor
         $<$<CONFIG:Debug>:-g;-O0>
         $<$<CONFIG:Release>:-O3>
 
@@ -222,56 +220,91 @@ target_compile_options(pomdog_static PRIVATE
     >
     # Clang
     $<$<CXX_COMPILER_ID:Clang,AppleClang>:
-        -Wcomma
-        -Wextra-semi
-        -Wimplicit-fallthrough
-        -Wmost
-        -Wmove
-        -Wnewline-eof
-
-        # FIXME: Use -Wextra instead of the following options.
-        -Wignored-qualifiers
-        -Winitializer-overrides
-        -Wmissing-field-initializers
-        -Wmissing-method-return-type
-        -Wsemicolon-before-method-body
-        -Wsign-compare
-        # -Wunused-parameter
-
+        -Weverything
         -Wno-c++98-compat
         -Wno-c++98-compat-pedantic
         -Wno-c++98-compat-bind-to-temporary-copy
         -Wno-c++98-compat-local-type-template-args
         -Wno-padded
+
+        # FIXME: Remove the following `-Wno-...` flags.
+        -Wno-float-equal
+        -Wno-global-constructors
+        -Wno-sign-conversion
+        -Wno-switch-enum
+        -Wno-undefined-func-template
+
+        # FIXME: Conflict between C++20 aggregate initializations and C99 desinated initializers.
+        -Wno-c99-extensions
+
+        # FIXME: https://itanium-cxx-abi.github.io/cxx-abi/abi.html#vague-itemplate
+        # FIXME: https://bugs.llvm.org/show_bug.cgi?id=18733
+        -Wno-weak-template-vtables
+
+        $<$<NOT:$<CXX_COMPILER_ID:AppleClang>>:
+            # NOTE: Clang >= 11.0
+            -Wno-implicit-int-float-conversion
+        >
+
+        $<$<CXX_COMPILER_ID:AppleClang>:
+            # FIXME: Remove the following `-Wno` flags.
+            -Wno-direct-ivar-access
+            -Wno-objc-messaging-id
+        >
     >
     # GCC
     $<$<CXX_COMPILER_ID:GNU>:
-        # FIXME: Use -Wextra instead of the following options.
-        -Wclobbered
-        -Wcast-function-type
-        -Wempty-body
-        -Wignored-qualifiers
-        -Wimplicit-fallthrough=3
-        -Wmissing-field-initializers
-        # -Wtype-limits
-        -Wuninitialized
-        -Wshift-negative-value
+        -Wall
+        -Wextra
+        -Wcast-align
+        -Wcast-qual
+        # -Wconversion
+        -Wctor-dtor-privacy
+        -Wdelete-non-virtual-dtor
+        -Wdisabled-optimization
+        -Wdouble-promotion
+        -Wendif-labels
+        -Wformat-nonliteral
+        -Wformat-security
+        -Wformat-signedness
+        -Winit-self
+        # -Winline
+        -Wlogical-op
+        -Wnon-virtual-dtor
+        -Wold-style-cast
+        -Woverloaded-virtual
+        -Wpointer-arith
+        -Wredundant-decls
+        -Wreorder
+        -Wshadow
+        -Wstrict-null-sentinel
+        # -Wsuggest-final-methods
+        -Wundef
+        -Wunsafe-loop-optimizations
+        # -Wuseless-cast
+        -Wvariadic-macros
+        -Wwrite-strings
+        -Wzero-as-null-pointer-constant
     >
     # MSVC
     $<$<CXX_COMPILER_ID:MSVC>:
         # NOTE: See https://docs.microsoft.com/en-us/cpp/preprocessor/compiler-warnings-that-are-off-by-default
-        /W4
+        /Wall
         /WX
-        /we4263
-        /we4264
-        /we4266
-        /we4287
-        /we4289
-        /we4412
-        /we4431
-        /we4686
-        /we4928
-        /we4987
+        /wd4061 # NOTE: enumerator 'E::X' in switch of enum 'E' is not explicitly handled by a case label
+        /wd4365 # NOTE: signed/unsigned mismatch
+        /wd4464 # NOTE: relative include path contains '..'
+        /wd4514 # NOTE: unreferenced inline function has been removed
+        /wd4625 # NOTE: copy constructor was implicitly defined as deleted
+        /wd4626 # NOTE: assignment operator was implicitly defined as deleted
+        /wd4710 # NOTE: function not inlined
+        /wd4711 # NOTE: function 'F' selected for automatic inline expansion
+        /wd4820 # NOTE: 'N' bytes padding added after data member
+        /wd5026 # NOTE: move constructor was implicitly defined as deleted
+        /wd5027 # NOTE: move assignment operator was implicitly defined as deleted
+        /wd5039 # NOTE: Undefined behavior may occur if this function throws an exception.
+        /wd5045 # NOTE: Compiler will insert Spectre mitigation for memory load if /Qspectre switch specified
+        /wd5219 # NOTE: implicit conversion from 'int' to 'float', possible loss of data
         /std:c++latest
         /permissive-
         $<$<CONFIG:Debug>:/Od;/MTd>
