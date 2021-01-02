@@ -36,7 +36,7 @@ namespace PlatformFS = Detail::Linux;
 } // namespace
 
 std::unique_ptr<Error>
-CreateDirectory(const std::string& path) noexcept
+CreateNewDirectory(const std::string& path) noexcept
 {
     return PlatformFS::CreateNewDirectory(path);
 }
