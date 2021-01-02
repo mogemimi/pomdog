@@ -170,8 +170,15 @@ void Logger::Log(const LogEntry& entry)
 
 Logger& GetLoggerInstance()
 {
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wexit-time-destructors"
+#endif
     static Logger logger;
     return logger;
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif
 }
 
 } // namespace
