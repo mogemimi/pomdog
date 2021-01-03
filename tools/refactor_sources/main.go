@@ -36,6 +36,10 @@ func main() {
 		}
 
 		dirs := []string{
+			"CMakeLists.txt",
+			"cmake/dependencies/*/CMakeLists.txt",
+			"cmake/pomdog/CMakeLists.txt",
+			"cmake/pomdog/*.cmake",
 			"examples/*/*/*.hpp",
 			"examples/*/*/*.cpp",
 			"examples/*/*/*.mm",
@@ -47,6 +51,7 @@ func main() {
 			"examples/QuickStart/Content/*.glsl",
 			"examples/QuickStart/Content/*.hlsl",
 			"examples/QuickStart/Content/*.metal",
+			"examples/*/CMakeLists.txt",
 			"include/Pomdog/*.hpp",
 			"include/Pomdog/*/*.hpp",
 			"include/Pomdog/*/*/*.hpp",
@@ -68,6 +73,7 @@ func main() {
 			"test/*.cpp",
 			"test/*/*.hpp",
 			"test/*/*.cpp",
+			"test/CMakeLists.txt",
 		}
 
 		for _, dir := range dirs {
