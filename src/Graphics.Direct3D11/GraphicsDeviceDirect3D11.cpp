@@ -205,6 +205,8 @@ BuildDevice(
         case D3D_DRIVER_TYPE_REFERENCE:
             Log::Internal("Direct3D11 DriverType: Reference Device.");
             break;
+        default:
+            break;
         }
     }
     {

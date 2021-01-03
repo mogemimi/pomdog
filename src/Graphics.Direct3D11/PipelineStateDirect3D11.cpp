@@ -340,7 +340,7 @@ BuildInputElements(
         elementDesc.InstanceDataStepRate = sourceElement.InstanceStepRate;
 
         POMDOG_ASSERT(elementDesc.InputSlot <= D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT);
-        POMDOG_ASSERT(elementDesc.InstanceDataStepRate >= 0);
+        static_assert(std::is_unsigned_v<decltype(elementDesc.InstanceDataStepRate)>, "elementDesc.InstanceDataStepRate >= 0");
 
         inputElements.push_back(std::move(elementDesc));
 
@@ -368,6 +368,8 @@ EnumerateSignatureParameters(
         case D3D_NAME_VERTEX_ID:
         case D3D_NAME_PRIMITIVE_ID:
             continue;
+        default:
+            break;
         }
         signatureParameters.push_back(signatureDesc);
     }

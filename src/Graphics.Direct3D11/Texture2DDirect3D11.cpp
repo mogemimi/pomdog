@@ -191,6 +191,9 @@ void Texture2DDirect3D11::SetData(const void* pixelData)
         case SurfaceFormat::BlockComp3_UNorm:
             LoadPixelData(mappedResource.pData, pixelData, pixelWidth, pixelHeight, levelCount, format);
             break;
+        default:
+            // FIXME: Not implemented yet.
+            break;
         }
     }
 

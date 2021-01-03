@@ -216,20 +216,20 @@ bool IsXInputDevice(const GUID& guidProduct)
                     continue;
                 }
 
-                DWORD dwVid = 0;
-                const auto strVid = ::wcsstr(var.bstrVal, L"VID_");
-                if ((strVid != nullptr) && (::swscanf_s(strVid, L"VID_%4X", &dwVid) != 1)) {
-                    dwVid = 0;
+                DWORD vid = 0;
+                const auto strVID = ::wcsstr(var.bstrVal, L"VID_");
+                if ((strVID != nullptr) && (::swscanf_s(strVID, L"VID_%4lX", &vid) != 1)) {
+                    vid = 0;
                 }
 
-                DWORD dwPid = 0;
-                const auto strPid = ::wcsstr(var.bstrVal, L"PID_");
-                if ((strPid != nullptr) && (::swscanf_s(strPid, L"PID_%4X", &dwPid) != 1)) {
-                    dwPid = 0;
+                DWORD pid = 0;
+                const auto strPID = ::wcsstr(var.bstrVal, L"PID_");
+                if ((strPID != nullptr) && (::swscanf_s(strPID, L"PID_%4lX", &pid) != 1)) {
+                    pid = 0;
                 }
 
-                const auto vidPid = static_cast<unsigned long>(MAKELONG(dwVid, dwPid));
-                if (vidPid == guidProduct.Data1) {
+                const auto vidPID = static_cast<unsigned long>(MAKELONG(vid, pid));
+                if (vidPID == guidProduct.Data1) {
                     return true;
                 }
             }
@@ -502,13 +502,15 @@ void GamepadDevice::PollEvents()
         }
     }
 
-    const auto& pov = joystate.rgdwPOV[0] / 100;
+    const auto pov = joystate.rgdwPOV[0] / 100;
     state.DPad.Up = ButtonState::Released;
     state.DPad.Down = ButtonState::Released;
     state.DPad.Left = ButtonState::Released;
     state.DPad.Right = ButtonState::Released;
 
-    if (((0 <= pov) && (pov <= 45)) || ((315 <= pov) && (pov <= 360))) {
+    static_assert(std::is_unsigned_v<decltype(pov)>, "0 <= pov");
+
+    if ((pov <= 45) || ((315 <= pov) && (pov <= 360))) {
         state.DPad.Up = ButtonState::Pressed;
     }
     else if ((135 <= pov) && (pov <= 225)) {
