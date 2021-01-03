@@ -10,6 +10,21 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::Concurrency::Detail {
 
+void TaskImpl::InnerSetResult(
+    const TaskCompletionSource<void>& tcs,
+    const TaskResult<void>&)
+{
+    tcs.SetResult();
+}
+
+Task<void> TaskFromDefaultResult<void>::Perform()
+{
+    TaskCompletionSource<void> tcs;
+    tcs.SetResult();
+    Task<void> task(std::move(tcs));
+    return task;
+}
+
 Task<void> WhenAllImpl(const std::vector<Task<void>>& tasks)
 {
     if (tasks.empty()) {

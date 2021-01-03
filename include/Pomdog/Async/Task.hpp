@@ -40,7 +40,8 @@ struct TaskResult final {
 };
 
 template <>
-struct TaskResult<void> final {};
+struct TaskResult<void> final {
+};
 
 struct TaskImpl;
 
@@ -126,7 +127,8 @@ using void_t = typename std::void_t<T...>;
 #endif
 
 template <class F, class = void_t<>>
-struct ResultOf {};
+struct ResultOf {
+};
 
 template <class Functor>
 struct ResultOf<Functor, void_t<decltype(&Functor::operator())>>
@@ -134,22 +136,23 @@ struct ResultOf<Functor, void_t<decltype(&Functor::operator())>>
 };
 
 template <class Result, class T, class... Args>
-struct ResultOf<Result(T::*)(Args...)> {
+struct ResultOf<Result (T::*)(Args...)> {
     using Type = Result;
 };
 
 template <class Result, class T, class... Args>
-struct ResultOf<Result(T::*)(Args...) const> {
+struct ResultOf<Result (T::*)(Args...) const> {
     using Type = Result;
 };
 
 template <class Result, class... Args>
-struct ResultOf<Result(*)(Args...)> {
+struct ResultOf<Result (*)(Args...)> {
     using Type = Result;
 };
 
 template <class F, class = void_t<>>
-struct ArgOf {};
+struct ArgOf {
+};
 
 template <class Functor>
 struct ArgOf<Functor, void_t<decltype(&Functor::operator())>>
@@ -157,17 +160,17 @@ struct ArgOf<Functor, void_t<decltype(&Functor::operator())>>
 };
 
 template <class Result, class T, class Arg>
-struct ArgOf<Result(T::*)(Arg)> {
+struct ArgOf<Result (T::*)(Arg)> {
     using Type = Arg;
 };
 
 template <class Result, class T, class Arg>
-struct ArgOf<Result(T::*)(Arg) const> {
+struct ArgOf<Result (T::*)(Arg) const> {
     using Type = Arg;
 };
 
 template <class Result, class Arg>
-struct ArgOf<Result(*)(Arg)> {
+struct ArgOf<Result (*)(Arg)> {
     using Type = Arg;
 };
 
@@ -201,7 +204,9 @@ using TaskResultOf = typename TaskTypeTraits<ResultOf<TFunction>>::ResultType;
 template <typename TResult>
 class POMDOG_EXPORT TaskCompletionSource final {
 private:
-    template <typename T> friend class Task;
+    template <typename T>
+    friend class Task;
+
     std::shared_ptr<Detail::TaskBody<TResult>> body;
 
 public:
@@ -228,7 +233,9 @@ public:
 template <>
 class POMDOG_EXPORT TaskCompletionSource<void> final {
 private:
-    template <typename T> friend class Task;
+    template <typename T>
+    friend class Task;
+
     std::shared_ptr<Detail::TaskBody<void>> body;
 
 public:
@@ -297,8 +304,8 @@ public:
 namespace Detail {
 
 template <typename TFunction, typename TResult>
-POMDOG_EXPORT
-auto InnerGetTask(
+[[nodiscard]] POMDOG_EXPORT auto
+InnerGetTask(
     const TFunction& continuation,
     const TaskResult<TResult>& result) -> decltype(continuation(result.value))
 {
@@ -306,15 +313,15 @@ auto InnerGetTask(
 }
 
 template <typename TFunction>
-POMDOG_EXPORT
-auto InnerGetTask(
+[[nodiscard]] POMDOG_EXPORT auto
+InnerGetTask(
     const TFunction& continuation,
     const TaskResult<void>&) -> decltype(continuation())
 {
     return continuation();
 }
 
-struct POMDOG_EXPORT TaskImpl {
+struct POMDOG_EXPORT TaskImpl final {
     template <typename T, typename Func>
     static void ScheduleContinuation(const Task<T>& task, Func&& continuation)
     {
@@ -337,10 +344,7 @@ struct POMDOG_EXPORT TaskImpl {
 
     static void InnerSetResult(
         const TaskCompletionSource<void>& tcs,
-        const TaskResult<void>&)
-    {
-        tcs.SetResult();
-    }
+        const TaskResult<void>&);
 
     template <typename TFunction, typename TResult>
     static void InnerInvoke(
@@ -591,8 +595,8 @@ auto Task<TResult>::ContinueWith(const TFunction& continuation) const
 }
 
 template <typename TResult, typename TFunction>
-POMDOG_EXPORT
-auto CreateTask(const TFunction& func) -> Task<TResult>
+[[nodiscard]] POMDOG_EXPORT auto
+CreateTask(const TFunction& func) -> Task<TResult>
 {
     TaskCompletionSource<TResult> tcs;
     func(tcs);
@@ -601,8 +605,8 @@ auto CreateTask(const TFunction& func) -> Task<TResult>
 }
 
 template <typename TResult>
-POMDOG_EXPORT
-Task<TResult> FromResult(TResult && result)
+[[nodiscard]] POMDOG_EXPORT Task<TResult>
+FromResult(TResult&& result)
 {
     static_assert(!std::is_reference<TResult>::value, "");
     TaskCompletionSource<TResult> tcs;
@@ -642,18 +646,12 @@ struct POMDOG_EXPORT TaskFromDefaultResult final {
 
 template <>
 struct POMDOG_EXPORT TaskFromDefaultResult<void> final {
-    static Task<void> Perform()
-    {
-        TaskCompletionSource<void> tcs;
-        tcs.SetResult();
-        Task<void> task(std::move(tcs));
-        return task;
-    }
+    static Task<void> Perform();
 };
 
 template <typename TResult>
-POMDOG_EXPORT
-Task<std::vector<TResult>> WhenAllImpl(const std::vector<Task<TResult>>& tasks)
+[[nodiscard]] POMDOG_EXPORT Task<std::vector<TResult>>
+WhenAllImpl(const std::vector<Task<TResult>>& tasks)
 {
     if (tasks.empty()) {
         return FromResult<std::vector<TResult>>({});
@@ -691,14 +689,14 @@ Task<std::vector<TResult>> WhenAllImpl(const std::vector<Task<TResult>>& tasks)
     return task;
 }
 
-POMDOG_EXPORT
-Task<void> WhenAllImpl(const std::vector<Task<void>>& tasks);
+[[nodiscard]] POMDOG_EXPORT Task<void>
+WhenAllImpl(const std::vector<Task<void>>& tasks);
 
 } // namespace Detail
 
 template <typename TResult>
-POMDOG_EXPORT
-Task<TResult> WhenAny(const std::vector<Task<TResult>>& tasks)
+[[nodiscard]] POMDOG_EXPORT Task<TResult>
+WhenAny(const std::vector<Task<TResult>>& tasks)
 {
     if (tasks.empty()) {
         return Detail::TaskFromDefaultResult<TResult>::Perform();
@@ -728,8 +726,8 @@ Task<TResult> WhenAny(const std::vector<Task<TResult>>& tasks)
 }
 
 template <typename TaskType>
-POMDOG_EXPORT
-auto WhenAll(const std::vector<TaskType>& tasks) -> decltype(Detail::WhenAllImpl(tasks))
+[[nodiscard]] POMDOG_EXPORT auto
+WhenAll(const std::vector<TaskType>& tasks) -> decltype(Detail::WhenAllImpl(tasks))
 {
     return Detail::WhenAllImpl(tasks);
 }

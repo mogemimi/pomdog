@@ -15,8 +15,9 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::Concurrency {
 
-template <typename Argument> POMDOG_EXPORT
-auto FromSingleShotSignal(Signal<void(Argument)> & signal)
+template <typename Argument>
+[[nodiscard]] POMDOG_EXPORT auto
+FromSingleShotSignal(Signal<void(Argument)>& signal)
     -> Task<std::remove_const_t<std::remove_reference_t<Argument>>>
 {
     using TResult = std::remove_const_t<std::remove_reference_t<Argument>>;
