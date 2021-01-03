@@ -16,7 +16,7 @@ namespace Pomdog {
 class POMDOG_EXPORT MouseState final {
 public:
     /// Position of the mouse cursor
-    Point2D Position {0, 0};
+    Point2D Position{0, 0};
 
     std::int32_t ScrollWheel = 0;
 

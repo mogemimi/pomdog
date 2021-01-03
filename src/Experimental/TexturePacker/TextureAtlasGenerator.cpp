@@ -61,13 +61,13 @@ std::shared_ptr<TexturePackNode> Insert(
             node->rect.X,
             node->rect.Y + h,
             w,
-            dh
+            dh,
         });
         node->children[1] = std::make_shared<TexturePackNode>(Rectangle{
             node->rect.X + w,
             node->rect.Y,
             dw,
-            node->rect.Height
+            node->rect.Height,
         });
     }
     else {
@@ -75,13 +75,13 @@ std::shared_ptr<TexturePackNode> Insert(
             node->rect.X + w,
             node->rect.Y,
             dw,
-            h
+            h,
         });
         node->children[1] = std::make_shared<TexturePackNode>(Rectangle{
             node->rect.X,
             node->rect.Y + h,
             node->rect.Width,
-            dh
+            dh,
         });
     }
     return node;

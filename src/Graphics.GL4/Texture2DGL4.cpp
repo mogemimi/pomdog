@@ -159,9 +159,10 @@ void SetPixelDataTexture2DCompressedGL4(
     POMDOG_ASSERT(pixelHeight > 0);
     POMDOG_ASSERT(levelCount >= 1);
     POMDOG_ASSERT(pixelData != nullptr);
-    POMDOG_ASSERT(format == SurfaceFormat::BlockComp1_UNorm
-        || format == SurfaceFormat::BlockComp2_UNorm
-        || format == SurfaceFormat::BlockComp3_UNorm);
+    POMDOG_ASSERT(
+        format == SurfaceFormat::BlockComp1_UNorm ||
+        format == SurfaceFormat::BlockComp2_UNorm ||
+        format == SurfaceFormat::BlockComp3_UNorm);
 
     auto const internalFormat = ToInternalFormatGL4(format);
 
@@ -220,9 +221,10 @@ void SetPixelDataTexture2DGL4(
     POMDOG_ASSERT(pixelHeight > 0);
     POMDOG_ASSERT(levelCount >= 1);
     POMDOG_ASSERT(pixelData != nullptr);
-    POMDOG_ASSERT(format != SurfaceFormat::BlockComp1_UNorm
-        && format != SurfaceFormat::BlockComp2_UNorm
-        && format != SurfaceFormat::BlockComp3_UNorm);
+    POMDOG_ASSERT(
+        format != SurfaceFormat::BlockComp1_UNorm &&
+        format != SurfaceFormat::BlockComp2_UNorm &&
+        format != SurfaceFormat::BlockComp3_UNorm);
 
     auto const formatComponents = ToFormatComponents(format);
     auto const pixelFundamentalType = ToPixelFundamentalType(format);

@@ -48,7 +48,7 @@ public:
 };
 
 template <class TComponent, typename... Args>
-inline std::shared_ptr<ComponentTypeBase> AddComponent(Args &&... args)
+inline std::shared_ptr<ComponentTypeBase> AddComponent(Args &&...args)
 {
     return std::make_shared<ComponentType<TComponent>>(std::forward<Args>(args)...);
 }

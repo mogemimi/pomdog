@@ -444,8 +444,8 @@ void KeyboardX11::HandleEvent(XEvent& event, ::XIC inputContext)
 
 #if defined(DEBUG) && !defined(NDEBUG)
     if (key == Keys_None) {
-        Log::Internal(std::string("IsKeyDown: Unspecified key: ")
-            + std::to_string(static_cast<int>(event.xkey.keycode)));
+        Log::Internal(std::string("IsKeyDown: Unspecified key: ") +
+            std::to_string(static_cast<int>(event.xkey.keycode)));
     }
 #endif
 }

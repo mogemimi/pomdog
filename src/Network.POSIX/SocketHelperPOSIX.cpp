@@ -61,7 +61,7 @@ ConnectSocketPOSIX(
         return std::make_tuple(-1, Errors::New("getaddrinfo failed with error " + std::to_string(res)));
     }
 
-    auto addrList = std::unique_ptr<struct ::addrinfo, void(*)(struct ::addrinfo*)>{addrListRaw, ::freeaddrinfo};
+    auto addrList = std::unique_ptr<struct ::addrinfo, void (*)(struct ::addrinfo*)>{addrListRaw, ::freeaddrinfo};
     addrListRaw = nullptr;
 
     std::optional<std::errc> socketLastError;
@@ -155,7 +155,7 @@ BindSocketPOSIX(
         return std::make_tuple(-1, Errors::New("getaddrinfo failed with error " + std::to_string(res)));
     }
 
-    auto addrList = std::unique_ptr<struct ::addrinfo, void(*)(struct ::addrinfo*)>{addrListRaw, ::freeaddrinfo};
+    auto addrList = std::unique_ptr<struct ::addrinfo, void (*)(struct ::addrinfo*)>{addrListRaw, ::freeaddrinfo};
     addrListRaw = nullptr;
 
     std::optional<std::errc> socketLastError;

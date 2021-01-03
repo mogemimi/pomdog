@@ -59,8 +59,8 @@ template <typename T>
 [[nodiscard]] T
 Saturate(T x) noexcept
 {
-    static_assert(std::is_floating_point<T>::value ||
-                      Detail::IsTaggedFloatingPoint<T>::value,
+    static_assert(
+        std::is_floating_point<T>::value || Detail::IsTaggedFloatingPoint<T>::value,
         "T is floaing point number");
     return Clamp(x, T{0}, T{1});
 }
@@ -69,8 +69,8 @@ template <typename T>
 [[nodiscard]] T
 Lerp(T source1, T source2, T amount) noexcept
 {
-    static_assert(std::is_floating_point<T>::value ||
-                      Detail::IsTaggedFloatingPoint<T>::value,
+    static_assert(
+        std::is_floating_point<T>::value || Detail::IsTaggedFloatingPoint<T>::value,
         "T is floaing point number");
     return source1 + amount * (source2 - source1);
 }
@@ -79,8 +79,8 @@ template <typename T>
 [[nodiscard]] T
 SmoothStep(T min, T max, T amount) noexcept
 {
-    static_assert(std::is_floating_point<T>::value ||
-                      Detail::IsTaggedFloatingPoint<T>::value,
+    static_assert(
+        std::is_floating_point<T>::value || Detail::IsTaggedFloatingPoint<T>::value,
         "T is floaing point number");
     const auto x = Saturate(amount);
     const auto scale = x * x * (T{3} - T{2} * x);

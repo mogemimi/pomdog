@@ -85,8 +85,8 @@ OpenGLContextX11::Initialize(
     auto glXCreateContextAttribsARB = reinterpret_cast<PFNGLXCREATECONTEXTATTRIBSARBPROC>(
         glXGetProcAddressARB(reinterpret_cast<const GLubyte*>("glXCreateContextAttribsARB")));
 
-    if (!IsExtensionSupported(glxExtensionsString, "GLX_ARB_create_context")
-        || glXCreateContextAttribsARB == nullptr) {
+    if (!IsExtensionSupported(glxExtensionsString, "GLX_ARB_create_context") ||
+        glXCreateContextAttribsARB == nullptr) {
         // NOTE:
         // glXCreateContextAttribsARB() not found
         // ... This platform is not supported OpenGL 3.0 or later.
@@ -100,7 +100,8 @@ OpenGLContextX11::Initialize(
             True);
         XSync(display, False);
         if (auto errorCode = UntrapErrors(oldHandler); errorCode != 0) {
-            return Errors::New("glXCreateNewContext() failed: error code = " + std::to_string(errorCode));
+            return Errors::New("glXCreateNewContext() failed: error code = " +
+                std::to_string(errorCode));
         }
     }
     else {

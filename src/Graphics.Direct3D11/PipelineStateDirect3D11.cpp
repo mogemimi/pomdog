@@ -216,8 +216,8 @@ CreateDepthStencilState(
     depthStencilDesc.DepthEnable = ToD3D11Boolean(description.DepthBufferEnable);
     depthStencilDesc.DepthFunc = ToComparisonFunction(description.DepthBufferFunction);
     depthStencilDesc.DepthWriteMask = (description.DepthBufferWriteEnable
-        ? D3D11_DEPTH_WRITE_MASK_ALL
-        : D3D11_DEPTH_WRITE_MASK_ZERO);
+            ? D3D11_DEPTH_WRITE_MASK_ALL
+            : D3D11_DEPTH_WRITE_MASK_ZERO);
 
     depthStencilDesc.StencilEnable = ToD3D11Boolean(description.StencilEnable);
     depthStencilDesc.StencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK;
@@ -268,8 +268,8 @@ CreateRasterizerState(
     // always set ScissorEnable to true in Direct3D 11.
     rasterizerDesc.ScissorEnable = TRUE;
 
-    POMDOG_ASSERT(!rasterizerDesc.AntialiasedLineEnable
-        || (rasterizerDesc.AntialiasedLineEnable && !rasterizerDesc.MultisampleEnable));
+    POMDOG_ASSERT(!rasterizerDesc.AntialiasedLineEnable ||
+        (rasterizerDesc.AntialiasedLineEnable && !rasterizerDesc.MultisampleEnable));
 
     POMDOG_ASSERT(nativeDevice != nullptr);
 

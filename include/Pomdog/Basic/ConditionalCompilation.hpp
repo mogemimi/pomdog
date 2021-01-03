@@ -2,6 +2,7 @@
 
 #pragma once
 
+// clang-format off
 #if defined(_MSC_VER)
 // NOTE: Visual C++
 #define POMDOG_MSVC_SUPPRESS_WARNING(w) __pragma(warning(disable : w))
@@ -46,3 +47,4 @@
 #define POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #define POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 #endif
+// clang-format on

@@ -8,9 +8,9 @@
 #include "Pomdog/Network/IOService.hpp"
 #include "Pomdog/Utility/Assert.hpp"
 
-#if defined(POMDOG_PLATFORM_MACOSX) \
-    || defined(POMDOG_PLATFORM_APPLE_IOS) \
-    || defined(POMDOG_PLATFORM_LINUX)
+#if defined(POMDOG_PLATFORM_MACOSX) || \
+    defined(POMDOG_PLATFORM_APPLE_IOS) || \
+    defined(POMDOG_PLATFORM_LINUX)
 #include "../Network.POSIX/SocketHelperPOSIX.hpp"
 #elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
 #include "../Network.Win32/SocketHelperWin32.hpp"
@@ -108,7 +108,8 @@ TLSStreamMbedTLS::Connect(
             mbedtls_entropy_func,
             &entropy,
             reinterpret_cast<const unsigned char*>(pers),
-            std::strlen(pers)); ret != 0) {
+            std::strlen(pers));
+        ret != 0) {
         auto err = Errors::New("mbedtls_ctr_drbg_seed failed, " + MbedTLSErrorToString(ret));
         std::shared_ptr<Error> shared = err->Clone();
         errorConn = service->ScheduleTask([this, err = std::move(shared)] {
@@ -132,7 +133,8 @@ TLSStreamMbedTLS::Connect(
     if (auto ret = mbedtls_x509_crt_parse(
             &cacert,
             reinterpret_cast<const unsigned char*>(certPEM.GetData()),
-            certPEM.GetSize()); ret < 0) {
+            certPEM.GetSize());
+        ret < 0) {
         auto err = Errors::New("mbedtls_x509_crt_parse failed, " + MbedTLSErrorToString(ret));
         std::shared_ptr<Error> shared = err->Clone();
         errorConn = service->ScheduleTask([this, err = std::move(shared)] {
@@ -160,9 +162,9 @@ TLSStreamMbedTLS::Connect(
         }
 #else
 
-#if defined(POMDOG_PLATFORM_MACOSX) \
-    || defined(POMDOG_PLATFORM_APPLE_IOS) \
-    || defined(POMDOG_PLATFORM_LINUX)
+#if defined(POMDOG_PLATFORM_MACOSX) || \
+    defined(POMDOG_PLATFORM_APPLE_IOS) || \
+    defined(POMDOG_PLATFORM_LINUX)
         const auto ConnectSocketFunc = ConnectSocketPOSIX;
 #elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
         const auto ConnectSocketFunc = ConnectSocketWin32;

@@ -221,10 +221,10 @@ PrimitiveBatch::PrimitiveBatch(
     std::optional<RasterizerDescription>&& rasterizerDesc,
     AssetManager& assets)
     : impl(std::make_unique<Impl>(
-        graphicsDevice,
-        std::move(depthStencilDesc),
-        std::move(rasterizerDesc),
-        assets))
+          graphicsDevice,
+          std::move(depthStencilDesc),
+          std::move(rasterizerDesc),
+          assets))
 {
 }
 

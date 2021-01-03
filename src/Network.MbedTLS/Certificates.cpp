@@ -5,6 +5,8 @@
 namespace Pomdog::Detail {
 namespace {
 
+// clang-format off
+
 // NOTE: See https://letsencrypt.org/certs/trustid-x3-root.pem.txt
 // or https://www.identrust.com/dst-root-ca-x3
 const char CertificatePEMBlock[] = R"(
@@ -1408,6 +1410,8 @@ CMRw3J5QdCHojXohw0+WbhXRIjVhLfoIN+4Zba3bssx9BzT1YBkstTTZbyACMANx
 sbqjYAuG7ZoIapVon+Kz4ZNkfF6Tpt95LY2F45TPI11xzPKwTdb+mciUqXWi4w==
 -----END CERTIFICATE-----
 )";
+
+// clang-format on
 
 } // namespace
 

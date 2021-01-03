@@ -78,9 +78,9 @@ T CreateException(const std::string& description, const std::string& source, con
     // > Runtime error exception: description
     std::stringstream ss;
     ss << "File \"" << filename << "\", line " << line
-        << " in " << (source.empty()? "?": source) << std::endl
-        << ExceptionInternal::ToString<T>()
-        << ": " << description;
+       << " in " << (source.empty() ? "?" : source) << std::endl
+       << ExceptionInternal::ToString<T>()
+       << ": " << description;
 
     return T(ss.str());
 }

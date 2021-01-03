@@ -207,13 +207,13 @@ BillboardBatchEffect::BillboardBatchEffect(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
     AssetManager& assets)
     : BillboardBatchEffect(
-        graphicsDevice,
-        std::nullopt,
-        std::nullopt,
-        std::nullopt,
-        std::nullopt,
-        std::nullopt,
-        assets)
+          graphicsDevice,
+          std::nullopt,
+          std::nullopt,
+          std::nullopt,
+          std::nullopt,
+          std::nullopt,
+          assets)
 {
 }
 
@@ -272,10 +272,7 @@ BillboardBatchEffect::BillboardBatchEffect(
             BufferUsage::Immutable));
     }
     {
-        std::array<std::uint16_t, 6> const indices = {{
-            0, 1, 2,
-            2, 3, 0
-        }};
+        std::array<std::uint16_t, 6> const indices = {{0, 1, 2, 2, 3, 0}};
 
         // NOTE: Create index buffer
         impl->indexBuffer = std::get<0>(graphicsDevice->CreateIndexBuffer(

@@ -259,8 +259,8 @@ GraphicsDeviceGL4::CreateRenderTarget2D(
     POMDOG_ASSERT(height > 0);
 
     const auto levelCount = generateMipmap
-                                ? Detail::TextureHelper::ComputeMipmapLevelCount(width, height)
-                                : 1;
+        ? Detail::TextureHelper::ComputeMipmapLevelCount(width, height)
+        : 1;
 
     // TODO: MSAA is not implemented yet.
     constexpr int multiSampleCount = 1;
@@ -341,8 +341,8 @@ GraphicsDeviceGL4::CreateTexture2D(
     POMDOG_ASSERT(height > 0);
 
     const auto levelCount = mipMap
-                                ? Detail::TextureHelper::ComputeMipmapLevelCount(width, height)
-                                : 1;
+        ? Detail::TextureHelper::ComputeMipmapLevelCount(width, height)
+        : 1;
 
     auto texture = std::make_shared<Texture2DGL4>();
     POMDOG_ASSERT(texture != nullptr);

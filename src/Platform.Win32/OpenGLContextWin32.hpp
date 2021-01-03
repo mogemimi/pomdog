@@ -38,13 +38,13 @@ private:
 
     std::unique_ptr<
         std::remove_pointer<HDC>::type,
-        std::function<void(HDC)>
-    > hdc;
+        std::function<void(HDC)>>
+        hdc;
 
     std::unique_ptr<
         std::remove_pointer<HGLRC>::type,
-        std::function<void(HGLRC)>
-    > glrc;
+        std::function<void(HGLRC)>>
+        glrc;
 };
 
 } // namespace Pomdog::Detail::Win32

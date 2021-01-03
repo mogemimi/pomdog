@@ -10,9 +10,9 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 #include <string>
 
-#if defined(POMDOG_PLATFORM_MACOSX) \
-    || defined(POMDOG_PLATFORM_APPLE_IOS) \
-    || defined(POMDOG_PLATFORM_LINUX)
+#if defined(POMDOG_PLATFORM_MACOSX) || \
+    defined(POMDOG_PLATFORM_APPLE_IOS) || \
+    defined(POMDOG_PLATFORM_LINUX)
 #include <netinet/in.h>
 #elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
 #include <WS2tcpip.h>

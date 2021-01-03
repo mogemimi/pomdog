@@ -138,8 +138,8 @@ void EntityManager<MaxComponentCapacity>::DestroyAllEntities()
 template <std::uint8_t MaxComponentCapacity>
 bool EntityManager<MaxComponentCapacity>::Exists(const Entity& entity) const noexcept
 {
-    return (entity.GetIndex() < descriptions.size())
-        && (descriptions[entity.GetIndex()].IncremantalVersion == entity.GetVersion());
+    return (entity.GetIndex() < descriptions.size()) &&
+        (descriptions[entity.GetIndex()].IncremantalVersion == entity.GetVersion());
 }
 
 template <std::uint8_t MaxComponentCapacity>

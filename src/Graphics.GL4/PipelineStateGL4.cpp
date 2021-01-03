@@ -43,9 +43,7 @@ GLenum ToPrimitiveTopology(PrimitiveTopology primitiveTopology) noexcept
 [[nodiscard]] std::tuple<std::optional<ShaderProgramGL4>, std::unique_ptr<Error>>
 LinkShaders(const VertexShaderGL4& vertexShader, const PixelShaderGL4& pixelShader) noexcept
 {
-    ShaderProgramGL4 const program {
-        glCreateProgram()
-    };
+    ShaderProgramGL4 const program{glCreateProgram()};
 
     glAttachShader(program.value, vertexShader.GetShader());
     glAttachShader(program.value, pixelShader.GetShader());

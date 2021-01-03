@@ -239,10 +239,7 @@ SpriteBatch::Impl::Impl(
             BufferUsage::Immutable));
     }
     {
-        std::array<std::uint16_t, 6> const indices = {{
-            0, 1, 2,
-            2, 3, 0
-        }};
+        std::array<std::uint16_t, 6> const indices = {{0, 1, 2, 2, 3, 0}};
 
         // Create index buffer
         planeIndices = std::get<0>(graphicsDevice->CreateIndexBuffer(
@@ -515,10 +512,11 @@ void SpriteBatch::Impl::Draw(
         break;
     }
 
-    const int colorModeFlags = (sourceRGBEnabled ? 1 : 0)
-        | (sourceAlphaEnabled ? 2 : 0)
-        | (compensationRGB ? 4 : 0)
-        | (compensationAlpha ? 8 : 0);
+    const int colorModeFlags =
+        (sourceRGBEnabled ? 1 : 0) |
+        (sourceAlphaEnabled ? 2 : 0) |
+        (compensationRGB ? 4 : 0) |
+        (compensationAlpha ? 8 : 0);
 
     POMDOG_ASSERT((startInstanceLocation + spriteQueue.size()) < MaxBatchSize);
     POMDOG_ASSERT(sourceRect.Width > 0);
@@ -563,14 +561,14 @@ SpriteBatch::SpriteBatch(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
     AssetManager& assets)
     : SpriteBatch(
-        graphicsDevice,
-        std::nullopt,
-        std::nullopt,
-        std::nullopt,
-        std::nullopt,
-        std::nullopt,
-        SpriteBatchPixelShaderMode::Default,
-        assets)
+          graphicsDevice,
+          std::nullopt,
+          std::nullopt,
+          std::nullopt,
+          std::nullopt,
+          std::nullopt,
+          SpriteBatchPixelShaderMode::Default,
+          assets)
 {
 }
 
@@ -584,14 +582,14 @@ SpriteBatch::SpriteBatch(
     SpriteBatchPixelShaderMode pixelShaderMode,
     AssetManager& assets)
     : impl(std::make_unique<Impl>(
-        graphicsDevice,
-        std::move(blendDesc),
-        std::move(rasterizerDesc),
-        std::move(samplerDesc),
-        std::move(renderTargetViewFormat),
-        std::move(depthStencilViewFormat),
-        pixelShaderMode,
-        assets))
+          graphicsDevice,
+          std::move(blendDesc),
+          std::move(rasterizerDesc),
+          std::move(samplerDesc),
+          std::move(renderTargetViewFormat),
+          std::move(depthStencilViewFormat),
+          pixelShaderMode,
+          assets))
 {
 }
 

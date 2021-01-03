@@ -120,7 +120,8 @@ void SoundEffectAL::Apply3D(const AudioListener& listener, const AudioEmitter& e
             listener.Forward.Z,
             listener.Up.X,
             listener.Up.Y,
-            listener.Up.Z}};
+            listener.Up.Z,
+        }};
 
         alListenerfv(AL_POSITION, listener.Position.Data());
         POMDOG_CHECK_ERROR_OPENAL("alListenerfv(AL_POSITION)");

@@ -52,10 +52,7 @@ CreateSkinnedMeshSlot(
         {Vector4{1.0f, 0.0f, 1.0f, 1.0f}, weights, joints},
     };
 
-    slot.Indices = {
-        0, 1, 2,
-        2, 3, 0
-    };
+    slot.Indices = {0, 1, 2, 2, 3, 0};
 
     Vector2 origin;
     origin.X = static_cast<float>(textureRegion.Width / 2 - textureRegion.XOffset) / textureRegion.Subrect.Width;

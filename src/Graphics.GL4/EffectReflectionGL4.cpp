@@ -194,42 +194,43 @@ std::vector<UniformGL4> EnumerateUniforms(const ShaderProgramGL4& shaderProgram)
             uniform.ArrayCount = arrayCount;
             uniform.Location = location;
 
-            POMDOG_ASSERT(uniform.Type == GL_SAMPLER_1D
-                || uniform.Type == GL_SAMPLER_2D
-                || uniform.Type == GL_SAMPLER_3D
-                || uniform.Type == GL_SAMPLER_CUBE
-                || uniform.Type == GL_SAMPLER_1D_SHADOW
-                || uniform.Type == GL_SAMPLER_2D_SHADOW
-                || uniform.Type == GL_SAMPLER_1D_ARRAY
-                || uniform.Type == GL_SAMPLER_2D_ARRAY
-                || uniform.Type == GL_SAMPLER_1D_ARRAY_SHADOW
-                || uniform.Type == GL_SAMPLER_2D_ARRAY_SHADOW
-                || uniform.Type == GL_SAMPLER_2D_MULTISAMPLE
-                || uniform.Type == GL_SAMPLER_2D_MULTISAMPLE_ARRAY
-                || uniform.Type == GL_SAMPLER_CUBE_SHADOW
-                || uniform.Type == GL_SAMPLER_BUFFER
-                || uniform.Type == GL_SAMPLER_2D_RECT
-                || uniform.Type == GL_SAMPLER_2D_RECT_SHADOW
-                || uniform.Type == GL_INT_SAMPLER_1D
-                || uniform.Type == GL_INT_SAMPLER_2D
-                || uniform.Type == GL_INT_SAMPLER_3D
-                || uniform.Type == GL_INT_SAMPLER_CUBE
-                || uniform.Type == GL_INT_SAMPLER_1D_ARRAY
-                || uniform.Type == GL_INT_SAMPLER_2D_ARRAY
-                || uniform.Type == GL_INT_SAMPLER_2D_MULTISAMPLE
-                || uniform.Type == GL_INT_SAMPLER_2D_MULTISAMPLE_ARRAY
-                || uniform.Type == GL_INT_SAMPLER_BUFFER
-                || uniform.Type == GL_INT_SAMPLER_2D_RECT
-                || uniform.Type == GL_UNSIGNED_INT_SAMPLER_1D
-                || uniform.Type == GL_UNSIGNED_INT_SAMPLER_2D
-                || uniform.Type == GL_UNSIGNED_INT_SAMPLER_3D
-                || uniform.Type == GL_UNSIGNED_INT_SAMPLER_CUBE
-                || uniform.Type == GL_UNSIGNED_INT_SAMPLER_1D_ARRAY
-                || uniform.Type == GL_UNSIGNED_INT_SAMPLER_2D_ARRAY
-                || uniform.Type == GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE
-                || uniform.Type == GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE_ARRAY
-                || uniform.Type == GL_UNSIGNED_INT_SAMPLER_BUFFER
-                || uniform.Type == GL_UNSIGNED_INT_SAMPLER_2D_RECT);
+            POMDOG_ASSERT(
+                uniform.Type == GL_SAMPLER_1D ||
+                uniform.Type == GL_SAMPLER_2D ||
+                uniform.Type == GL_SAMPLER_3D ||
+                uniform.Type == GL_SAMPLER_CUBE ||
+                uniform.Type == GL_SAMPLER_1D_SHADOW ||
+                uniform.Type == GL_SAMPLER_2D_SHADOW ||
+                uniform.Type == GL_SAMPLER_1D_ARRAY ||
+                uniform.Type == GL_SAMPLER_2D_ARRAY ||
+                uniform.Type == GL_SAMPLER_1D_ARRAY_SHADOW ||
+                uniform.Type == GL_SAMPLER_2D_ARRAY_SHADOW ||
+                uniform.Type == GL_SAMPLER_2D_MULTISAMPLE ||
+                uniform.Type == GL_SAMPLER_2D_MULTISAMPLE_ARRAY ||
+                uniform.Type == GL_SAMPLER_CUBE_SHADOW ||
+                uniform.Type == GL_SAMPLER_BUFFER ||
+                uniform.Type == GL_SAMPLER_2D_RECT ||
+                uniform.Type == GL_SAMPLER_2D_RECT_SHADOW ||
+                uniform.Type == GL_INT_SAMPLER_1D ||
+                uniform.Type == GL_INT_SAMPLER_2D ||
+                uniform.Type == GL_INT_SAMPLER_3D ||
+                uniform.Type == GL_INT_SAMPLER_CUBE ||
+                uniform.Type == GL_INT_SAMPLER_1D_ARRAY ||
+                uniform.Type == GL_INT_SAMPLER_2D_ARRAY ||
+                uniform.Type == GL_INT_SAMPLER_2D_MULTISAMPLE ||
+                uniform.Type == GL_INT_SAMPLER_2D_MULTISAMPLE_ARRAY ||
+                uniform.Type == GL_INT_SAMPLER_BUFFER ||
+                uniform.Type == GL_INT_SAMPLER_2D_RECT ||
+                uniform.Type == GL_UNSIGNED_INT_SAMPLER_1D ||
+                uniform.Type == GL_UNSIGNED_INT_SAMPLER_2D ||
+                uniform.Type == GL_UNSIGNED_INT_SAMPLER_3D ||
+                uniform.Type == GL_UNSIGNED_INT_SAMPLER_CUBE ||
+                uniform.Type == GL_UNSIGNED_INT_SAMPLER_1D_ARRAY ||
+                uniform.Type == GL_UNSIGNED_INT_SAMPLER_2D_ARRAY ||
+                uniform.Type == GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE ||
+                uniform.Type == GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE_ARRAY ||
+                uniform.Type == GL_UNSIGNED_INT_SAMPLER_BUFFER ||
+                uniform.Type == GL_UNSIGNED_INT_SAMPLER_2D_RECT);
 
             uniformVariables.push_back(std::move(uniform));
         }

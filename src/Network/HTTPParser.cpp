@@ -235,8 +235,7 @@ ParseResponse(HTTPResponse& response, std::vector<char>& rawData)
     return nullptr;
 }
 
-bool
-IsResponseHeaderReadable(const std::vector<char>& rawData)
+bool IsResponseHeaderReadable(const std::vector<char>& rawData)
 {
     std::string_view s{rawData.data(), rawData.size()};
     if (auto pos = s.find("\r\n\r\n"); pos != std::string_view::npos) {

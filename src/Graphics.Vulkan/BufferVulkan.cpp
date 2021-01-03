@@ -164,12 +164,12 @@ BufferVulkan::BufferVulkan(
     BufferUsage bufferUsage,
     BufferBindMode bindMode)
     : BufferVulkan(
-        deviceIn,
-        physicalDevice,
-        nullptr,
-        sizeInBytes,
-        bufferUsage,
-        bindMode)
+          deviceIn,
+          physicalDevice,
+          nullptr,
+          sizeInBytes,
+          bufferUsage,
+          bindMode)
 {
 }
 

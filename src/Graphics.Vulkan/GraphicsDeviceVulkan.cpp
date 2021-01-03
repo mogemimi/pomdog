@@ -30,9 +30,9 @@ namespace {
 
 constexpr std::uint32_t GetUint32EngineVersion() noexcept
 {
-    return POMDOG_MAJOR_VERSION * 10000
-        + POMDOG_MINOR_VERSION * 100
-        + POMDOG_PATCH_VERSION;
+    return POMDOG_MAJOR_VERSION * 10000 +
+        POMDOG_MINOR_VERSION * 100 +
+        POMDOG_PATCH_VERSION;
 }
 
 std::tuple<VkInstance, VkResult> CreateVulkanInstance() noexcept
@@ -47,7 +47,7 @@ std::tuple<VkInstance, VkResult> CreateVulkanInstance() noexcept
     appInfo.apiVersion = VK_API_VERSION_1_0;
 
     std::array<const char*, 1> const validationLayers = {{
-        "VK_LAYER_KHRONOS_validation"
+        "VK_LAYER_KHRONOS_validation",
     }};
 
 #if defined(DEBUG) && !defined(NDEBUG)

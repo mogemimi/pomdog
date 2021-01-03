@@ -143,14 +143,15 @@ GameWindowX11::Initialize(
     windowAttributes.background_pixmap = None;
     windowAttributes.border_pixel = 0;
     windowAttributes.colormap = colormap;
-    windowAttributes.event_mask = ExposureMask | FocusChangeMask | VisibilityChangeMask
-        | StructureNotifyMask
-        | EnterWindowMask | LeaveWindowMask
-        | PropertyChangeMask
-        | KeyPressMask | KeyReleaseMask
-        | PointerMotionMask
-        | ButtonPressMask | ButtonReleaseMask
-        | ButtonMotionMask | Button1MotionMask;
+    windowAttributes.event_mask =
+        ExposureMask | FocusChangeMask | VisibilityChangeMask |
+        StructureNotifyMask |
+        EnterWindowMask | LeaveWindowMask |
+        PropertyChangeMask |
+        KeyPressMask | KeyReleaseMask |
+        PointerMotionMask |
+        ButtonPressMask | ButtonReleaseMask |
+        ButtonMotionMask | Button1MotionMask;
 
     constexpr unsigned long windowAttributeMask = CWBorderPixel | CWColormap | CWEventMask;
     constexpr unsigned int borderWidth = 0;
@@ -425,8 +426,8 @@ void GameWindowX11::ProcessEvent(::XEvent& event)
         clientBounds.X = event.xconfigure.x;
         clientBounds.Y = event.xconfigure.y;
 
-        if (clientBounds.Width != event.xconfigure.width
-            || clientBounds.Height != event.xconfigure.height) {
+        if (clientBounds.Width != event.xconfigure.width ||
+            clientBounds.Height != event.xconfigure.height) {
             clientBounds.Width = event.xconfigure.width;
             clientBounds.Height = event.xconfigure.height;
             clientSizeChanged = true;

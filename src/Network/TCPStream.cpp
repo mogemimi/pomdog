@@ -2,9 +2,9 @@
 
 #include "Pomdog/Network/TCPStream.hpp"
 #include "Pomdog/Basic/Platform.hpp"
-#if defined(POMDOG_PLATFORM_MACOSX) \
-    || defined(POMDOG_PLATFORM_APPLE_IOS) \
-    || defined(POMDOG_PLATFORM_LINUX)
+#if defined(POMDOG_PLATFORM_MACOSX) || \
+    defined(POMDOG_PLATFORM_APPLE_IOS) || \
+    defined(POMDOG_PLATFORM_LINUX)
 #include "../Network.POSIX/TCPStreamPOSIX.hpp"
 #elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
 #include "../Network.Win32/TCPStreamWin32.hpp"

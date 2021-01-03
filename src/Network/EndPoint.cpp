@@ -10,9 +10,9 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstring>
 #include <sstream>
 
-#if defined(POMDOG_PLATFORM_MACOSX) \
-    || defined(POMDOG_PLATFORM_APPLE_IOS) \
-    || defined(POMDOG_PLATFORM_LINUX)
+#if defined(POMDOG_PLATFORM_MACOSX) || \
+    defined(POMDOG_PLATFORM_APPLE_IOS) || \
+    defined(POMDOG_PLATFORM_LINUX)
 #include <arpa/inet.h>
 #include <netdb.h>
 #endif

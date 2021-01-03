@@ -15,7 +15,7 @@ TimePoint TimeSourceLinux::Now() const
 
     constexpr double nanoScale = (1.0 / 1000000000LL);
 
-    return TimePoint { Duration {
+    return TimePoint{Duration{
         static_cast<double>(now.tv_sec) +
         static_cast<double>(now.tv_nsec) * nanoScale}};
 }

@@ -209,9 +209,7 @@ void ParticleSystem::Stop()
 bool ParticleSystem::IsAlive() const
 {
     POMDOG_ASSERT(clip);
-    return clip->Looping
-        || (erapsedTime < clip->Duration)
-        || !particles.empty();
+    return clip->Looping || (erapsedTime < clip->Duration) || !particles.empty();
 }
 
 bool ParticleSystem::IsLoop() const noexcept

@@ -220,10 +220,10 @@ BuildDevice(
             return Errors::New("CheckFeatureSupport(D3D11_FEATURE_D3D11_OPTIONS) failed");
         }
 
-        Log::Internal("MapNoOverwriteOnDynamicBufferSRV: "
-            + std::to_string(d3d11Options.MapNoOverwriteOnDynamicBufferSRV));
-        Log::Internal("MapNoOverwriteOnDynamicConstantBuffer: "
-            + std::to_string(d3d11Options.MapNoOverwriteOnDynamicConstantBuffer));
+        Log::Internal("MapNoOverwriteOnDynamicBufferSRV: " +
+            std::to_string(d3d11Options.MapNoOverwriteOnDynamicBufferSRV));
+        Log::Internal("MapNoOverwriteOnDynamicConstantBuffer: " +
+            std::to_string(d3d11Options.MapNoOverwriteOnDynamicConstantBuffer));
     }
 #endif
     return nullptr;
@@ -649,8 +649,8 @@ GraphicsDeviceDirect3D11::CreateRenderTarget2D(
     POMDOG_ASSERT(height > 0);
 
     const auto levelCount = generateMipmap
-                                ? Detail::TextureHelper::ComputeMipmapLevelCount(width, height)
-                                : 1;
+        ? Detail::TextureHelper::ComputeMipmapLevelCount(width, height)
+        : 1;
 
     // TODO: MSAA is not implemented yet.
     constexpr int multiSampleCount = 1;

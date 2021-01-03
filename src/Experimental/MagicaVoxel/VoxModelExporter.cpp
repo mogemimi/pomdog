@@ -77,9 +77,9 @@ Export(const VoxModel& model, const std::string& filePath) noexcept
     mainChunk.ID = IdMain;
     mainChunk.ContentSize = 0;
     mainChunk.ChildrenSize =
-        sizeof(sizeChunk) + sizeChunk.ContentSize
-        + sizeof(xyziChunk) + xyziChunk.ContentSize
-        + sizeof(rgbaChunk) + rgbaChunk.ContentSize;
+        sizeof(sizeChunk) + sizeChunk.ContentSize +
+        sizeof(xyziChunk) + xyziChunk.ContentSize +
+        sizeof(rgbaChunk) + rgbaChunk.ContentSize;
 
     std::ofstream stream(filePath, std::ios::binary);
 

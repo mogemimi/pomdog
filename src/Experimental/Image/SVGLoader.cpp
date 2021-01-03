@@ -95,9 +95,11 @@ DecodeSVG(std::uint8_t* data, std::size_t size, int canvasWidth, int canvasHeigh
         return std::make_tuple(std::move(imageBuffer), std::move(err));
     }
 
-    const float scale = std::max(std::min(
-        static_cast<float>(canvasWidth) / image->width,
-        static_cast<float>(canvasHeight) / image->height), 0.000001f);
+    const float scale = std::max(
+        std::min(
+            static_cast<float>(canvasWidth) / image->width,
+            static_cast<float>(canvasHeight) / image->height),
+        0.000001f);
 
     imageBuffer.RawData.resize(canvasWidth * canvasHeight * 4);
     imageBuffer.PixelData = imageBuffer.RawData.data();

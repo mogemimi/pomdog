@@ -20,10 +20,7 @@ POMDOG_EXPORT Connection
 ConnectSingleShot(Signal<void(Arguments...)>& signal, Func&& func)
 {
     auto connection = std::make_shared<Connection>();
-    *connection = signal.Connect([
-        conn = connection,
-        func = std::forward<Func>(func)
-    ](Arguments... args) {
+    *connection = signal.Connect([conn = connection, func = std::forward<Func>(func)](Arguments... args) {
         func(std::forward<Arguments>(args)...);
         POMDOG_ASSERT(conn);
         conn->Disconnect();

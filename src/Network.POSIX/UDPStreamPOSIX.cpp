@@ -169,7 +169,7 @@ UDPStreamPOSIX::WriteTo(const ArrayView<std::uint8_t const>& data, std::string_v
         return Errors::New("getaddrinfo failed with error " + std::to_string(res));
     }
 
-    auto addrList = std::unique_ptr<struct ::addrinfo, void(*)(struct ::addrinfo*)>{addrListRaw, ::freeaddrinfo};
+    auto addrList = std::unique_ptr<struct ::addrinfo, void (*)(struct ::addrinfo*)>{addrListRaw, ::freeaddrinfo};
     addrListRaw = nullptr;
 
     std::optional<std::errc> lastError;

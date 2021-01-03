@@ -120,7 +120,8 @@ std::shared_ptr<Widget> TreeView::GetChildAt(const Point2D& position)
     std::array<std::shared_ptr<Widget>, 3> children = {{
         horizontalLayout,
         disclosureTriangleButton,
-        verticalLayout}};
+        verticalLayout,
+    }};
 
     if (!expanded) {
         children[2] = nullptr;
@@ -143,7 +144,8 @@ void TreeView::UpdateAnimation(const Duration& frameDuration)
     std::array<std::shared_ptr<Widget>, 3> children = {{
         horizontalLayout,
         disclosureTriangleButton,
-        verticalLayout}};
+        verticalLayout,
+    }};
 
     for (auto& child : children) {
         if (child == nullptr) {
