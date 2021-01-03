@@ -1,9 +1,9 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Math/Matrix3x2.hpp"
+#include "Pomdog/Math/Radian.hpp"
 #include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Math/Vector3.hpp"
-#include "Pomdog/Math/Radian.hpp"
 #include "catch.hpp"
 
 using Pomdog::Matrix3x2;
@@ -13,7 +13,7 @@ namespace {
 
 static constexpr auto Epsilon = std::numeric_limits<float>::epsilon();
 
-}// unused namespace
+} // namespace
 
 TEST_CASE("Matrix3x2", "[Matrix3x2]")
 {

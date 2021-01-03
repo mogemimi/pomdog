@@ -69,7 +69,7 @@ TEST_CASE("StringHelper", "[StringHelper]")
     }
     SECTION("TrimLeft with func")
     {
-        auto func = [](char c)-> bool { return c == 'a'; };
+        auto func = [](char c) -> bool { return c == 'a'; };
         REQUIRE(StringHelper::TrimLeft("", func) == "");
         REQUIRE(StringHelper::TrimLeft("a", func) == "");
         REQUIRE(StringHelper::TrimLeft("aa", func) == "");
@@ -80,7 +80,7 @@ TEST_CASE("StringHelper", "[StringHelper]")
         REQUIRE(StringHelper::TrimLeft("aaBaaCaa", func) == "BaaCaa");
         REQUIRE(StringHelper::TrimLeft("aaaaBaaaCaa", func) == "BaaaCaa");
 
-        auto isSpace = [](char c)-> bool { return ::isspace(c); };
+        auto isSpace = [](char c) -> bool { return ::isspace(c); };
         REQUIRE(StringHelper::TrimLeft("  ABC", isSpace) == "ABC");
         REQUIRE(StringHelper::TrimLeft(" \t\n \t \nABC", isSpace) == "ABC");
     }
@@ -97,7 +97,7 @@ TEST_CASE("StringHelper", "[StringHelper]")
     }
     SECTION("TrimRight with func")
     {
-        auto func = [](char c)-> bool { return c == 'a'; };
+        auto func = [](char c) -> bool { return c == 'a'; };
         REQUIRE(StringHelper::TrimRight("", func) == "");
         REQUIRE(StringHelper::TrimRight("a", func) == "");
         REQUIRE(StringHelper::TrimRight("aa", func) == "");
@@ -107,7 +107,7 @@ TEST_CASE("StringHelper", "[StringHelper]")
         REQUIRE(StringHelper::TrimRight("aaBaaCaa", func) == "aaBaaC");
         REQUIRE(StringHelper::TrimRight("aaaaBaaaCaa", func) == "aaaaBaaaC");
 
-        auto isSpace = [](char c)-> bool { return ::isspace(c); };
+        auto isSpace = [](char c) -> bool { return ::isspace(c); };
         REQUIRE(StringHelper::TrimRight("ABC  ", isSpace) == "ABC");
         REQUIRE(StringHelper::TrimRight("ABC \t\n \t \n", isSpace) == "ABC");
     }

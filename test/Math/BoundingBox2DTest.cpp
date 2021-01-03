@@ -25,7 +25,7 @@ TEST_CASE("BoundingBox2D", "[BoundingBox2D]")
         REQUIRE(Vector2::Zero == box.Min);
         REQUIRE(Vector2{42.0f, 3.14f} == box.Max);
 
-        BoundingBox2D box3 {Vector2{-1.0f, 2.718f}, Vector2{17.0f, 8.0f}};
+        BoundingBox2D box3{Vector2{-1.0f, 2.718f}, Vector2{17.0f, 8.0f}};
         box = box3;
         REQUIRE(Vector2{-1.0f, 2.718f} == box.Min);
         REQUIRE(Vector2{-1.0f, 2.718f} == box3.Min);

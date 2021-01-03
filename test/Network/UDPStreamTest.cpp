@@ -1,18 +1,18 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
+#include "Pomdog/Network/UDPStream.hpp"
 #include "Executor.hpp"
 #include "Pomdog/Application/GameClock.hpp"
 #include "Pomdog/Network/ArrayView.hpp"
 #include "Pomdog/Network/IOService.hpp"
-#include "Pomdog/Network/UDPStream.hpp"
 #include "Pomdog/Signals/ConnectionList.hpp"
 #include "Pomdog/Utility/Errors.hpp"
 #include "Pomdog/Utility/StringHelper.hpp"
 #include "catch.hpp"
 #include <cstring>
 #include <sstream>
-#include <unordered_map>
 #include <thread>
+#include <unordered_map>
 
 using namespace Pomdog;
 
@@ -24,7 +24,7 @@ TEST_CASE("Ping Pong Server using UDP Connection", "[Network]")
     std::vector<std::string> serverLogs;
     std::vector<std::string> clientLogs;
 
-    auto[serverStream, serverErr] = UDPStream::Listen(executor.GetService(), "localhost:30088");
+    auto [serverStream, serverErr] = UDPStream::Listen(executor.GetService(), "localhost:30088");
     REQUIRE(serverErr == nullptr);
     auto server = std::move(serverStream);
 
@@ -63,7 +63,7 @@ TEST_CASE("Ping Pong Server using UDP Connection", "[Network]")
         serverLogs.push_back("server disconnected");
     });
 
-    auto[clientStream, clientErr] = UDPStream::Connect(executor.GetService(), "localhost:30088");
+    auto [clientStream, clientErr] = UDPStream::Connect(executor.GetService(), "localhost:30088");
     REQUIRE(clientErr == nullptr);
     auto client = std::move(clientStream);
 

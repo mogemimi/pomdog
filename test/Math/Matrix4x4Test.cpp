@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Math/Matrix4x4.hpp"
-#include "Pomdog/Math/Vector3.hpp"
 #include "Pomdog/Math/Radian.hpp"
+#include "Pomdog/Math/Vector3.hpp"
 #include "catch.hpp"
 
 using Pomdog::Matrix4x4;
@@ -12,13 +12,13 @@ namespace {
 
 static constexpr auto Epsilon = std::numeric_limits<float>::epsilon();
 
-}// unused namespace
+} // namespace
 
 TEST_CASE("Matrix4x4", "[Matrix4x4]")
 {
     SECTION("FirstTestCase")
     {
-        Matrix4x4 matrix {
+        Matrix4x4 matrix{
             1.0f, 1.0f, 1.0f, 1.0f,
             1.0f, 1.0f, 1.0f, 1.0f,
             1.0f, 1.0f, 1.0f, 1.0f,
@@ -41,7 +41,7 @@ TEST_CASE("Matrix4x4", "[Matrix4x4]")
         REQUIRE(1.0f == matrix(3, 2));
         REQUIRE(1.0f == matrix(3, 3));
 
-        matrix = Matrix4x4 {
+        matrix = Matrix4x4{
             0.0f, 1.0f, 2.0f, 3.0f,
             4.0f, 5.0f, 6.0f, 7.0f,
             8.0f, 9.0f, 10.0f, 11.0f,
@@ -266,7 +266,7 @@ TEST_CASE("Matrix4x4", "[Matrix4x4]")
     }
     SECTION("Data")
     {
-        Matrix4x4 matrix {
+        Matrix4x4 matrix{
             0.0f, 1.0f, 2.0f, 3.0f,
             4.0f, 5.0f, 6.0f, 7.0f,
             8.0f, 9.0f, 10.0f, 11.0f,

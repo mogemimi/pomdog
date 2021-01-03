@@ -21,7 +21,7 @@ TEST_CASE("BoundingCircle", "[BoundingCircle]")
         REQUIRE(Vector2::Zero == circle.Center);
         REQUIRE(circle.Radius == 42.0f);
 
-        BoundingCircle circle3 {Vector2{3.14f, 2.718f}, 17.0f};
+        BoundingCircle circle3{Vector2{3.14f, 2.718f}, 17.0f};
         circle = circle3;
         REQUIRE(Vector2{3.14f, 2.718f} == circle.Center);
         REQUIRE(Vector2{3.14f, 2.718f} == circle3.Center);

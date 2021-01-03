@@ -21,13 +21,13 @@ TEST_CASE("InputLayoutHelper", "[InputLayoutHelper]")
             .Float();
         InputLayoutDescription inputLayout = helper.CreateInputLayout();
 
-        auto & elements = inputLayout.InputElements;
+        auto& elements = inputLayout.InputElements;
 
         REQUIRE(elements.size() == 4);
         REQUIRE(elements[0].ByteOffset == 0);
         REQUIRE(elements[1].ByteOffset == 16);
-        REQUIRE(elements[2].ByteOffset == 16+12);
-        REQUIRE(elements[3].ByteOffset == 16+12+8);
+        REQUIRE(elements[2].ByteOffset == 16 + 12);
+        REQUIRE(elements[3].ByteOffset == 16 + 12 + 8);
         REQUIRE(elements[0].Format == InputElementFormat::Float4);
         REQUIRE(elements[1].Format == InputElementFormat::Float3);
         REQUIRE(elements[2].Format == InputElementFormat::Float2);
@@ -60,7 +60,7 @@ TEST_CASE("InputLayoutHelper", "[InputLayoutHelper]")
             .Float2();
         InputLayoutDescription inputLayout = helper.CreateInputLayout();
 
-        auto & elements = inputLayout.InputElements;
+        auto& elements = inputLayout.InputElements;
 
         REQUIRE(elements.size() == 7);
         REQUIRE(elements[0].ByteOffset == 0);
@@ -69,7 +69,7 @@ TEST_CASE("InputLayoutHelper", "[InputLayoutHelper]")
         REQUIRE(elements[3].ByteOffset == 16);
         REQUIRE(elements[4].ByteOffset == 0);
         REQUIRE(elements[5].ByteOffset == 12);
-        REQUIRE(elements[6].ByteOffset == 12+16);
+        REQUIRE(elements[6].ByteOffset == 12 + 16);
         REQUIRE(elements[0].Format == InputElementFormat::Float3);
         REQUIRE(elements[1].Format == InputElementFormat::Float);
         REQUIRE(elements[2].Format == InputElementFormat::Float4);

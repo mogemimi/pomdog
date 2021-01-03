@@ -11,7 +11,7 @@ TEST_CASE("Vector3", "[Vector3]")
 {
     SECTION("Vector3")
     {
-        Vector3 vec {0, 0, 0};
+        Vector3 vec{0, 0, 0};
         REQUIRE(vec.X == 0.0f);
         REQUIRE(vec.Y == 0.0f);
         REQUIRE(vec.Z == 0.0f);
@@ -47,9 +47,9 @@ TEST_CASE("Vector3", "[Vector3]")
     }
     SECTION("Division")
     {
-        REQUIRE(Vector3{4.0f/3.0f, 5.0f/3.0f, 6.0f/3.0f} == Vector3{4.0f, 5.0f, 6.0f} / Vector3{3.0f, 3.0f, 3.0f});
-        REQUIRE(Vector3{4.0f/3.0f, 5.0f/3.0f, 6.0f/3.0f} == Vector3{4.0f, 5.0f, 6.0f} / 3.0f);
-        REQUIRE(Vector3{3.0f/4.0f, 3.0f/5.0f, 3.0f/6.0f} == Vector3{3.0f, 3.0f, 3.0f} / Vector3{4.0f, 5.0f, 6.0f});
+        REQUIRE(Vector3{4.0f / 3.0f, 5.0f / 3.0f, 6.0f / 3.0f} == Vector3{4.0f, 5.0f, 6.0f} / Vector3{3.0f, 3.0f, 3.0f});
+        REQUIRE(Vector3{4.0f / 3.0f, 5.0f / 3.0f, 6.0f / 3.0f} == Vector3{4.0f, 5.0f, 6.0f} / 3.0f);
+        REQUIRE(Vector3{3.0f / 4.0f, 3.0f / 5.0f, 3.0f / 6.0f} == Vector3{3.0f, 3.0f, 3.0f} / Vector3{4.0f, 5.0f, 6.0f});
     }
     SECTION("Lerp")
     {

@@ -1,9 +1,9 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
+#include "Pomdog/Experimental/ECS/EntityManager.hpp"
 #include "Pomdog/Experimental/ECS/ComponentTypeIndex.hpp"
 #include "Pomdog/Experimental/ECS/Entity.hpp"
 #include "Pomdog/Experimental/ECS/EntityArchtype.hpp"
-#include "Pomdog/Experimental/ECS/EntityManager.hpp"
 #include "Pomdog/Math/Vector3.hpp"
 #include "catch.hpp"
 #include <cstdint>
@@ -39,7 +39,7 @@ struct Behavior final {
     std::shared_ptr<int> ptr = std::make_shared<int>(42);
 };
 
-template <typename T, typename ...Args>
+template <typename T, typename... Args>
 int ComputeCount(EntityManager& entities)
 {
     int count = 0;

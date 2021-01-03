@@ -7,8 +7,8 @@
 #include <utility>
 #include <vector>
 
-using Pomdog::Signal;
 using Pomdog::Connection;
+using Pomdog::Signal;
 
 TEST_CASE("Singal", "[Singals]")
 {
@@ -208,7 +208,7 @@ TEST_CASE("Singal and Slot", "[Singals]")
     SECTION("fundamental types - bool") {
         Signal<void(bool)> signal;
         bool result;
-        auto conn = signal.Connect([&](bool in){ result = in; });
+        auto conn = signal.Connect([&](bool in) { result = in; });
         signal(true);
         REQUIRE(true == result);
         signal(false);
@@ -220,7 +220,7 @@ TEST_CASE("Singal and Slot", "[Singals]")
     SECTION("fundamental types - int") {
         Signal<void(int)> signal;
         int result;
-        auto conn = signal.Connect([&](int in){ result = in; });
+        auto conn = signal.Connect([&](int in) { result = in; });
         signal(42);
         REQUIRE(result == 42);
         signal(72);
@@ -232,7 +232,7 @@ TEST_CASE("Singal and Slot", "[Singals]")
     SECTION("fundamental types - float") {
         Signal<void(float)> signal;
         float result;
-        auto conn = signal.Connect([&](float in){ result = in; });
+        auto conn = signal.Connect([&](float in) { result = in; });
         signal(42.0f);
         REQUIRE(result == 42.0f);
         signal(72.0f);
@@ -244,7 +244,7 @@ TEST_CASE("Singal and Slot", "[Singals]")
     SECTION("fundamental types - char") {
         Signal<void(char)> signal;
         char result;
-        auto conn = signal.Connect([&](char in){ result = in; });
+        auto conn = signal.Connect([&](char in) { result = in; });
         signal('a');
         REQUIRE(result == 'a');
         signal('\n');
@@ -304,8 +304,8 @@ TEST_CASE("Singal and Slot", "[Singals]")
     SECTION("string") {
         Signal<void(std::string&)> signal;
         std::string result;
-        auto conn1 = signal.Connect([](std::string& in){ in += "Chuck "; });
-        auto conn2 = signal.Connect([](std::string& in){ in += "Norris"; });
+        auto conn1 = signal.Connect([](std::string& in) { in += "Chuck "; });
+        auto conn2 = signal.Connect([](std::string& in) { in += "Norris"; });
         signal(result);
         REQUIRE(result == "Chuck Norris");
         REQUIRE(conn1.IsConnected());
@@ -315,8 +315,14 @@ TEST_CASE("Singal and Slot", "[Singals]")
         struct Chuck {
             int value;
 
-            Chuck(): value(0) {}
-            Chuck(int v): value(v) {}
+            Chuck()
+                : value(0)
+            {
+            }
+            Chuck(int v)
+                : value(v)
+            {
+            }
             Chuck(const Chuck&) = delete;
             Chuck& operator=(const Chuck&) = delete;
         };
@@ -324,8 +330,8 @@ TEST_CASE("Singal and Slot", "[Singals]")
         SECTION("custom class") {
             Signal<void(Chuck const&)> signal;
             int result = 0;
-            auto conn1 = signal.Connect([&](const Chuck& in){ result += in.value; });
-            auto conn2 = signal.Connect([&](const Chuck& in){ result += in.value; });
+            auto conn1 = signal.Connect([&](const Chuck& in) { result += in.value; });
+            auto conn2 = signal.Connect([&](const Chuck& in) { result += in.value; });
             Chuck const chuck{42};
             signal(chuck);
             REQUIRE(42 + 42 == result);
@@ -335,8 +341,8 @@ TEST_CASE("Singal and Slot", "[Singals]")
         SECTION("custom class") {
             Signal<void(Chuck const&, Chuck const&)> signal;
             int result = 0;
-            auto conn1 = signal.Connect([&](const Chuck& in1, const Chuck& in2){ result += (in1.value + in2.value); });
-            auto conn2 = signal.Connect([&](const Chuck& in1, const Chuck& in2){ result += (in1.value + in2.value); });
+            auto conn1 = signal.Connect([&](const Chuck& in1, const Chuck& in2) { result += (in1.value + in2.value); });
+            auto conn2 = signal.Connect([&](const Chuck& in1, const Chuck& in2) { result += (in1.value + in2.value); });
             Chuck const chuck{3};
             signal(chuck, chuck);
             signal(chuck, chuck);

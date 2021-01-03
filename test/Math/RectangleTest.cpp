@@ -4,8 +4,8 @@
 #include "Pomdog/Math/Point2D.hpp"
 #include "catch.hpp"
 
-using Pomdog::Rectangle;
 using Pomdog::Point2D;
+using Pomdog::Rectangle;
 
 TEST_CASE("Rectangle", "[Rectangle]")
 {

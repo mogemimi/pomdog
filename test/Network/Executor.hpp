@@ -4,9 +4,9 @@
 
 #include "Pomdog/Application/GameClock.hpp"
 #include "Pomdog/Network/IOService.hpp"
+#include "catch.hpp"
 #include <memory>
 #include <thread>
-#include "catch.hpp"
 
 namespace Pomdog {
 

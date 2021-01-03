@@ -10,7 +10,7 @@ TEST_CASE("Vector2", "[Vector2]")
 {
     SECTION("Vector2")
     {
-        Vector2 vec {0, 0};
+        Vector2 vec{0, 0};
         REQUIRE(vec.X == 0.0f);
         REQUIRE(vec.Y == 0.0f);
 
@@ -42,8 +42,8 @@ TEST_CASE("Vector2", "[Vector2]")
     }
     SECTION("Division")
     {
-        REQUIRE(Vector2{10.0f/2, 8.0f/2} == Vector2{10, 8} / 2);
-        REQUIRE(Vector2{10.0f/2, 8.0f/2} == Vector2{10, 8} / Vector2{2, 2});
+        REQUIRE(Vector2{10.0f / 2, 8.0f / 2} == Vector2{10, 8} / 2);
+        REQUIRE(Vector2{10.0f / 2, 8.0f / 2} == Vector2{10, 8} / Vector2{2, 2});
     }
     SECTION("Lerp")
     {

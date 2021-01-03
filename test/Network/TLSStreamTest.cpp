@@ -1,18 +1,18 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
+#include "Pomdog/Network/TLSStream.hpp"
 #include "Executor.hpp"
 #include "Pomdog/Application/GameClock.hpp"
 #include "Pomdog/Network/ArrayView.hpp"
 #include "Pomdog/Network/IOService.hpp"
-#include "Pomdog/Network/TLSStream.hpp"
 #include "Pomdog/Signals/ConnectionList.hpp"
 #include "Pomdog/Utility/Errors.hpp"
 #include "Pomdog/Utility/StringHelper.hpp"
 #include "catch.hpp"
 #include <cstring>
 #include <sstream>
-#include <unordered_map>
 #include <thread>
+#include <unordered_map>
 
 using namespace Pomdog;
 
@@ -29,7 +29,7 @@ TEST_CASE("TLS connection for HTTPS client", "[Network]")
     fields.emplace("Host", hostName);
     fields.emplace("Connection", "close");
 
-    auto[streamResult, err] = TLSStream::Connect(executor.GetService(), std::string{hostName} + ":" + port);
+    auto [streamResult, err] = TLSStream::Connect(executor.GetService(), std::string{hostName} + ":" + port);
     if (err != nullptr) {
         WARN(err->ToString());
         return;
@@ -54,7 +54,8 @@ TEST_CASE("TLS connection for HTTPS client", "[Network]")
         // NOTE: Write the GET request
         std::ostringstream ss;
         ss << "GET " << path;
-        ss << " HTTP/1.1" << "\n";
+        ss << " HTTP/1.1"
+           << "\n";
         for (const auto& field : fields) {
             ss << field.first << ": " << field.second << "\n";
         }

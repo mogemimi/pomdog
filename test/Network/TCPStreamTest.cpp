@@ -1,18 +1,18 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
+#include "Pomdog/Network/TCPStream.hpp"
 #include "Executor.hpp"
 #include "Pomdog/Application/GameClock.hpp"
 #include "Pomdog/Network/ArrayView.hpp"
 #include "Pomdog/Network/IOService.hpp"
-#include "Pomdog/Network/TCPStream.hpp"
 #include "Pomdog/Signals/ConnectionList.hpp"
 #include "Pomdog/Utility/Errors.hpp"
 #include "Pomdog/Utility/StringHelper.hpp"
 #include "catch.hpp"
 #include <cstring>
 #include <sstream>
-#include <unordered_map>
 #include <thread>
+#include <unordered_map>
 
 using namespace Pomdog;
 
@@ -29,7 +29,7 @@ TEST_CASE("TCP connection for HTTP client", "[Network]")
     fields.emplace("Host", hostName);
     fields.emplace("Connection", "close");
 
-    auto[streamResult, err] = TCPStream::Connect(executor.GetService(), std::string{hostName} + ":" + port, std::chrono::seconds(5));
+    auto [streamResult, err] = TCPStream::Connect(executor.GetService(), std::string{hostName} + ":" + port, std::chrono::seconds(5));
     if (err != nullptr) {
         WARN(err->ToString());
         return;

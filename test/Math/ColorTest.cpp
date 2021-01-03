@@ -53,13 +53,13 @@ TEST_CASE("Color", "[Color]")
         REQUIRE(Vector4{0.0f, 0.0f, 0.0f, 0.0f} == color.ToVector4());
 
         color = Color{12, 34, 56, 78};
-        REQUIRE(std::abs(12.0f/255.0f - color.ToVector3().X) < std::numeric_limits<float>::epsilon());
-        REQUIRE(std::abs(34.0f/255.0f - color.ToVector3().Y) < std::numeric_limits<float>::epsilon());
-        REQUIRE(std::abs(56.0f/255.0f - color.ToVector3().Z) < std::numeric_limits<float>::epsilon());
-        REQUIRE(std::abs(12.0f/255.0f - color.ToVector4().X) < std::numeric_limits<float>::epsilon());
-        REQUIRE(std::abs(34.0f/255.0f - color.ToVector4().Y) < std::numeric_limits<float>::epsilon());
-        REQUIRE(std::abs(56.0f/255.0f - color.ToVector4().Z) < std::numeric_limits<float>::epsilon());
-        REQUIRE(std::abs(78.0f/255.0f - color.ToVector4().W) < std::numeric_limits<float>::epsilon());
+        REQUIRE(std::abs(12.0f / 255.0f - color.ToVector3().X) < std::numeric_limits<float>::epsilon());
+        REQUIRE(std::abs(34.0f / 255.0f - color.ToVector3().Y) < std::numeric_limits<float>::epsilon());
+        REQUIRE(std::abs(56.0f / 255.0f - color.ToVector3().Z) < std::numeric_limits<float>::epsilon());
+        REQUIRE(std::abs(12.0f / 255.0f - color.ToVector4().X) < std::numeric_limits<float>::epsilon());
+        REQUIRE(std::abs(34.0f / 255.0f - color.ToVector4().Y) < std::numeric_limits<float>::epsilon());
+        REQUIRE(std::abs(56.0f / 255.0f - color.ToVector4().Z) < std::numeric_limits<float>::epsilon());
+        REQUIRE(std::abs(78.0f / 255.0f - color.ToVector4().W) < std::numeric_limits<float>::epsilon());
     }
     SECTION("FromVector")
     {

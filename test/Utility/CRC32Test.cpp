@@ -23,7 +23,7 @@ TEST_CASE("CRC32", "[CRC32]")
         std::string name = "Chuck Norris";
         REQUIRE(ComputeCRC32(name.data(), name.size() * sizeof(char)) == 617418015U);
 
-        std::vector<std::uint8_t> vec8 = { 0x43, 0x68, 0x75, 0x63, 0x6b, 0x20, 0x4e, 0x6f, 0x72, 0x72, 0x69, 0x73 };
+        std::vector<std::uint8_t> vec8 = {0x43, 0x68, 0x75, 0x63, 0x6b, 0x20, 0x4e, 0x6f, 0x72, 0x72, 0x69, 0x73};
         REQUIRE(ComputeCRC32(vec8.data(), vec8.size() * sizeof(std::uint8_t)) == 617418015U);
     }
     SECTION("Utf8String")

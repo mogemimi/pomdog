@@ -73,7 +73,7 @@ TEST_CASE("Disconnect", "[ConnectionList]")
         std::vector<int> integers;
         {
             ConnectionList connections;
-            auto slot = [&](int n){ integers.push_back(n); };
+            auto slot = [&](int n) { integers.push_back(n); };
             connections += valueChanged.Connect(slot);
 
             valueChanged(42);
@@ -91,7 +91,7 @@ TEST_CASE("Disconnect", "[ConnectionList]")
         std::vector<int> integers;
         {
             ConnectionList connections;
-            auto slot = [&](int n){ integers.push_back(n); };
+            auto slot = [&](int n) { integers.push_back(n); };
             connections += valueChanged.Connect(slot);
             connections += valueChanged.Connect(slot);
             connections += valueChanged.Connect(slot);
@@ -115,7 +115,7 @@ TEST_CASE("Disconnect", "[ConnectionList]")
         std::vector<int> integers;
         {
             ConnectionList connect;
-            auto slot = [&](int n){ integers.push_back(n); };
+            auto slot = [&](int n) { integers.push_back(n); };
             connect(valueChanged, slot);
             connect(valueChanged, slot);
             connect(valueChanged, slot);
@@ -140,7 +140,7 @@ TEST_CASE("Disconnect", "[ConnectionList]")
         Pomdog::Connection connection;
         {
             ConnectionList connect;
-            auto slot = [&](int n){ integers.push_back(n); };
+            auto slot = [&](int n) { integers.push_back(n); };
             connection = connect(valueChanged, slot);
 
             REQUIRE(connection.IsConnected());

@@ -1,13 +1,13 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Signals/Connection.hpp"
 #include "Pomdog/Signals/EventQueue.hpp"
+#include "Pomdog/Signals/Connection.hpp"
 #include "catch.hpp"
 #include <any>
 #include <utility>
 
-using Pomdog::EventQueue;
 using Pomdog::Connection;
+using Pomdog::EventQueue;
 
 TEST_CASE("EventQueue", "[EventQueue]")
 {
@@ -40,14 +40,13 @@ TEST_CASE("EventQueue", "[EventQueue]")
     }
     SECTION("Invoke with POD struct")
     {
-        struct User
-        {
+        struct User {
             std::string name;
             int id;
         };
 
         EventQueue<std::any> eventQueue;
-        auto conn = eventQueue.Connect([&](const std::any& event){
+        auto conn = eventQueue.Connect([&](const std::any& event) {
             REQUIRE(std::any_cast<User>(&event) != nullptr);
             auto user = std::any_cast<User>(&event);
             names.push_back(user->name);

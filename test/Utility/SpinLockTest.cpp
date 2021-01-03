@@ -30,7 +30,7 @@ TEST_CASE("SpinLock", "[SpinLock]")
     Task<SpinLock> task;
 
     for (auto& t : threads) {
-        t = std::thread{[&]{ task.run(); }};
+        t = std::thread{[&] { task.run(); }};
     }
     for (auto& t : threads) {
         t.join();

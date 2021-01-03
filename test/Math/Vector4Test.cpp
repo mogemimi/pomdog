@@ -11,7 +11,7 @@ TEST_CASE("Vector4", "[Vector4]")
 {
     SECTION("Vector4")
     {
-        Vector4 vec {0, 0, 0, 0};
+        Vector4 vec{0, 0, 0, 0};
         REQUIRE(vec.X == 0.0f);
         REQUIRE(vec.Y == 0.0f);
         REQUIRE(vec.Z == 0.0f);

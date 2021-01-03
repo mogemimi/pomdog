@@ -21,7 +21,7 @@ TEST_CASE("BoundingSphere", "[BoundingSphere]")
         REQUIRE(Vector3::Zero == sphere.Center);
         REQUIRE(sphere.Radius == 42.0f);
 
-        BoundingSphere sphere3 {Vector3::UnitX, 17.0f};
+        BoundingSphere sphere3{Vector3::UnitX, 17.0f};
         sphere = sphere3;
         REQUIRE(Vector3::UnitX == sphere.Center);
         REQUIRE(Vector3::UnitX == sphere3.Center);

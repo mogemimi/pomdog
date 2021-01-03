@@ -25,7 +25,7 @@ TEST_CASE("BoundingBox", "[BoundingBox]")
         REQUIRE(Vector3::Zero == box.Min);
         REQUIRE(Vector3::UnitY == box.Max);
 
-        BoundingBox box3 {Vector3::UnitX, Vector3::UnitZ};
+        BoundingBox box3{Vector3::UnitX, Vector3::UnitZ};
         box = box3;
         REQUIRE(Vector3::UnitX == box.Min);
         REQUIRE(Vector3::UnitX == box3.Min);

@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Signals/Signal.hpp"
 #include "Pomdog/Signals/Helpers.hpp"
+#include "Pomdog/Signals/Signal.hpp"
 #include "catch.hpp"
 #include <string>
 #include <utility>

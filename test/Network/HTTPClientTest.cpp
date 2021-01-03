@@ -1,10 +1,10 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
+#include "Pomdog/Network/HTTPClient.hpp"
 #include "Executor.hpp"
 #include "Pomdog/Application/GameClock.hpp"
 #include "Pomdog/Network/ArrayView.hpp"
 #include "Pomdog/Network/HTTPMethod.hpp"
-#include "Pomdog/Network/HTTPClient.hpp"
 #include "Pomdog/Network/HTTPRequest.hpp"
 #include "Pomdog/Network/HTTPResponse.hpp"
 #include "Pomdog/Network/IOService.hpp"
@@ -14,8 +14,8 @@
 #include <algorithm>
 #include <cstring>
 #include <sstream>
-#include <unordered_map>
 #include <thread>
+#include <unordered_map>
 
 using namespace Pomdog;
 
@@ -366,7 +366,7 @@ TEST_CASE("HTTPClient::Get", "[Network]")
     };
 
     auto client = HTTPClient{executor.GetService()};
-    auto[conn, err] = client.Get("https://httpbin.org/get", std::move(callback));
+    auto [conn, err] = client.Get("https://httpbin.org/get", std::move(callback));
     REQUIRE(err == nullptr);
     REQUIRE(conn.IsConnected());
 
@@ -435,7 +435,7 @@ TEST_CASE("HTTPClient::Post", "[Network]")
     std::memcpy(buffer.data(), text.data(), buffer.size());
 
     auto client = HTTPClient{executor.GetService()};
-    auto[conn, err] = client.Post("https://httpbin.org/post", "application/json", std::move(buffer), std::move(callback));
+    auto [conn, err] = client.Post("https://httpbin.org/post", "application/json", std::move(buffer), std::move(callback));
     REQUIRE(err == nullptr);
     REQUIRE(conn.IsConnected());
 
@@ -472,12 +472,12 @@ TEST_CASE("multiple connection", "[Network]")
             executor.ExitLoop();
         };
 
-        auto[conn2, err2] = client.Get("https://httpbin.org/get", std::move(callback2));
+        auto [conn2, err2] = client.Get("https://httpbin.org/get", std::move(callback2));
         REQUIRE(err2 == nullptr);
         REQUIRE(conn2.IsConnected());
     };
 
-    auto[conn, err] = client.Get("https://httpbin.org/get", std::move(callback1));
+    auto [conn, err] = client.Get("https://httpbin.org/get", std::move(callback1));
     REQUIRE(err == nullptr);
     REQUIRE(conn.IsConnected());
 

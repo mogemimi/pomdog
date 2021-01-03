@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Signals/Connection.hpp"
 #include "Pomdog/Signals/ScopedConnection.hpp"
+#include "Pomdog/Signals/Connection.hpp"
 #include "Pomdog/Signals/Signal.hpp"
 #include "catch.hpp"
 #include <utility>
@@ -18,7 +18,7 @@ TEST_CASE("ScopeGuard", "[ScopedConnection]")
         std::vector<int> integers;
         {
             ScopedConnection connection;
-            auto slot = [&](int n){ integers.push_back(n); };
+            auto slot = [&](int n) { integers.push_back(n); };
             connection = valueChanged.Connect(slot);
             REQUIRE(connection.IsConnected());
 
@@ -40,7 +40,7 @@ TEST_CASE("ScopeGuard", "[ScopedConnection]")
         std::vector<int> integers;
         ScopedConnection connection;
 
-        auto slot = [&](int n){ integers.push_back(n); };
+        auto slot = [&](int n) { integers.push_back(n); };
         connection = valueChanged.Connect(slot);
         REQUIRE(connection.IsConnected());
 
@@ -67,7 +67,7 @@ TEST_CASE("ScopeGuard", "[ScopedConnection]")
         REQUIRE_FALSE(connection1.IsConnected());
 
         {
-            auto slot = [&](int n){ integers.push_back(n); };
+            auto slot = [&](int n) { integers.push_back(n); };
             ScopedConnection connection2 = valueChanged.Connect(slot);
             REQUIRE_FALSE(connection1.IsConnected());
             REQUIRE(connection2.IsConnected());
@@ -105,7 +105,7 @@ TEST_CASE("ScopeGuard", "[ScopedConnection]")
 
         ScopedConnection connection1;
         {
-            auto slot = [&](int n){ integers.push_back(n); };
+            auto slot = [&](int n) { integers.push_back(n); };
             Connection connection2 = valueChanged.Connect(slot);
             valueChanged(42);
             connection1 = connection2;
@@ -128,7 +128,7 @@ TEST_CASE("ScopeGuard", "[ScopedConnection]")
 
         ScopedConnection connection1;
         {
-            auto slot = [&](int n){ integers.push_back(n); };
+            auto slot = [&](int n) { integers.push_back(n); };
             Connection connection2 = valueChanged.Connect(slot);
 
             valueChanged(42);
