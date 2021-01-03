@@ -18,7 +18,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::Detail {
 
-constexpr bool IsPowerOfTwo(int x)
+constexpr bool IsPowerOfTwo(int x) noexcept
 {
     return (x != 0) && ((x & (x - 1)) == 0);
 }
