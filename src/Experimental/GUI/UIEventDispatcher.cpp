@@ -369,6 +369,11 @@ void UIEventDispatcher::UpdateAnimation(const Duration& frameDuration)
     }
 }
 
+std::shared_ptr<Widget> UIEventDispatcher::GetFocusWidget() const
+{
+    return focusedWidget.lock();
+}
+
 std::optional<PointerMouseEvent>
 UIEventDispatcher::FindPointerMouseEvent(const MouseState& mouseState) const
 {

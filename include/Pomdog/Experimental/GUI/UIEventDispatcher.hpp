@@ -30,10 +30,7 @@ public:
 
     void UpdateAnimation(const Duration& frameDuration);
 
-    std::shared_ptr<Widget> GetFocusWidget() const
-    {
-        return focusedWidget.lock();
-    }
+    std::shared_ptr<Widget> GetFocusWidget() const;
 
     void SetFocusWidget(const std::shared_ptr<Widget>& widget);
 
