@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2020 mogemimi.
+// Copyright (c) 2013-2021 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
 #include "Pomdog/Experimental/GUI/Widget.hpp"

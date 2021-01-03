@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
+// Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
 constexpr uint8_t BuiltinHLSL_PrimitiveBatch_VS[] = {
     68,  88,  66,  67,  135, 25,  226, 255, 18,  97,  25,  243, 167, 29,  16,

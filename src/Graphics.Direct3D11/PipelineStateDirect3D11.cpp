@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
+// Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
 #include "PipelineStateDirect3D11.hpp"
 #include "FormatHelper.hpp"
