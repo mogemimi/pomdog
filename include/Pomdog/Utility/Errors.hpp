@@ -41,16 +41,13 @@ public:
     [[nodiscard]] std::unique_ptr<Error> Clone() const noexcept override;
 };
 
-[[nodiscard]] POMDOG_EXPORT
-std::unique_ptr<IOError>
+[[nodiscard]] POMDOG_EXPORT std::unique_ptr<IOError>
 New(std::errc kind, std::string&& reason) noexcept;
 
-[[nodiscard]] POMDOG_EXPORT
-std::unique_ptr<Error>
+[[nodiscard]] POMDOG_EXPORT std::unique_ptr<Error>
 New(std::string&& message) noexcept;
 
-[[nodiscard]] POMDOG_EXPORT
-std::unique_ptr<Error>
+[[nodiscard]] POMDOG_EXPORT std::unique_ptr<Error>
 Wrap(std::unique_ptr<Error>&& err, std::string&& message) noexcept;
 
 } // namespace Pomdog::Errors

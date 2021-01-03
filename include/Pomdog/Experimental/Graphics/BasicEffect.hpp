@@ -113,8 +113,7 @@ struct POMDOG_EXPORT BasicEffectDescription final {
     bool VertexColorEnabled = false;
 };
 
-[[nodiscard]] POMDOG_EXPORT
-AssetBuilders::Builder<PipelineState>
+[[nodiscard]] POMDOG_EXPORT AssetBuilders::Builder<PipelineState>
 CreateBasicEffect(AssetManager& assets, const BasicEffectDescription& desc);
 
 } // namespace Pomdog::BasicEffect

@@ -15,8 +15,9 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::Signals {
 
-template <typename...Arguments, typename Func> POMDOG_EXPORT
-Connection ConnectSingleShot(Signal<void(Arguments...)>& signal, Func&& func)
+template <typename... Arguments, typename Func>
+POMDOG_EXPORT Connection
+ConnectSingleShot(Signal<void(Arguments...)>& signal, Func&& func)
 {
     auto connection = std::make_shared<Connection>();
     *connection = signal.Connect([
