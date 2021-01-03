@@ -94,7 +94,14 @@ ConnectSocketWin32(
                 fd_set waitSet;
 
                 FD_ZERO(&waitSet);
+#if defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable : 4548)
+#endif
                 FD_SET(descriptor, &waitSet);
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif
 
                 auto connectTimeout = ToTimeval(connectTimeoutIn);
 
