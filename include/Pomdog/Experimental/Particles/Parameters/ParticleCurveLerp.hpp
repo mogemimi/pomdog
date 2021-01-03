@@ -10,7 +10,7 @@
 namespace Pomdog::Detail::Particles {
 
 template <typename T>
-struct ParticleCurveLerp {
+struct ParticleCurveLerp final {
     T operator()(const T& a, const T& b, float amount)
     {
         return Math::Lerp(a, b, amount);
@@ -18,7 +18,7 @@ struct ParticleCurveLerp {
 };
 
 template <>
-struct ParticleCurveLerp<Radian<float>> {
+struct ParticleCurveLerp<Radian<float>> final {
     Radian<float> operator()(const Radian<float>& a, const Radian<float>& b, float amount)
     {
         return Math::Lerp(a.value, b.value, amount);
@@ -26,7 +26,7 @@ struct ParticleCurveLerp<Radian<float>> {
 };
 
 template <>
-struct ParticleCurveLerp<Color> {
+struct ParticleCurveLerp<Color> final {
     Color operator()(const Color& a, const Color& b, float amount)
     {
         return Color::Lerp(a, b, amount);
@@ -34,7 +34,7 @@ struct ParticleCurveLerp<Color> {
 };
 
 template <>
-struct ParticleCurveLerp<Vector3> {
+struct ParticleCurveLerp<Vector3> final {
     Vector3 operator()(const Vector3& a, const Vector3& b, float amount)
     {
         return Vector3::Lerp(a, b, amount);
