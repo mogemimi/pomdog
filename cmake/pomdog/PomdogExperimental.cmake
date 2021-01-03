@@ -1,3 +1,4 @@
+source_group(Experimental\\Async                    REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Async/*")
 source_group(Experimental\\ECS                      REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/ECS/*")
 source_group(Experimental\\GLTF                     REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/GLTF/*")
 source_group(Experimental\\Graphics                 REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Graphics/*")
@@ -16,6 +17,19 @@ source_group(Experimental\\Skeletal2D\\Tracks       REGULAR_EXPRESSION "(include
 source_group(Experimental\\Spine                    REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Spine/*")
 source_group(Experimental\\TexturePacker            REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/TexturePacker/*")
 source_group(Experimental\\Tween                    REGULAR_EXPRESSION "(include/Pomdog|src)/Experimental/Tween/*")
+
+target_sources(pomdog_static PRIVATE
+    # NOTE: Experimental/Async
+    ${POMDOG_INC_DIR}/Experimental/Async/Helpers.hpp
+    ${POMDOG_INC_DIR}/Experimental/Async/ImmediateScheduler.hpp
+    ${POMDOG_SRC_DIR}/Experimental/Async/ImmediateScheduler.cpp
+    ${POMDOG_INC_DIR}/Experimental/Async/QueuedScheduler.hpp
+    ${POMDOG_SRC_DIR}/Experimental/Async/QueuedScheduler.cpp
+    ${POMDOG_INC_DIR}/Experimental/Async/Scheduler.hpp
+    ${POMDOG_SRC_DIR}/Experimental/Async/Scheduler.cpp
+    ${POMDOG_INC_DIR}/Experimental/Async/Task.hpp
+    ${POMDOG_SRC_DIR}/Experimental/Async/Task.cpp
+)
 
 target_sources(pomdog_static PRIVATE
     $<$<BOOL:${POMDOG_USE_EXPERIMENTAL}>:

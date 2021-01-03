@@ -48,7 +48,6 @@ set(POMDOG_USE_EXPERIMENTAL true CACHE BOOL "Use Experimental")
 # NOTE: static library
 add_library(pomdog_static STATIC)
 include(PomdogApplication.cmake)
-include(PomdogAsync.cmake)
 include(PomdogAudio.cmake)
 include(PomdogBasic.cmake)
 include(PomdogContent.cmake)

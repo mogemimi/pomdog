@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Async/Task.hpp"
-#include "Pomdog/Async/Helpers.hpp"
+#include "Pomdog/Experimental/Async/Task.hpp"
+#include "Pomdog/Experimental/Async/Helpers.hpp"
 #include "catch.hpp"
 #include <thread>
 
@@ -45,7 +45,7 @@ TEST_CASE("Task::CreateTask_Defer", "[Task]")
 {
     std::function<void()> defer;
     auto task = Concurrency::CreateTask<void>([&](auto tcs) {
-        defer = [tcs]{ tcs.SetResult(); };
+        defer = [tcs] { tcs.SetResult(); };
     });
 
     REQUIRE_FALSE(task.IsDone());
@@ -60,7 +60,8 @@ TEST_CASE("Task::CreateTask_ThrowException", "[Task]")
     auto task = Concurrency::CreateTask<void>([](auto tcs) {
         try {
             throw std::domain_error("FUS RO DAH");
-        } catch (...) {
+        }
+        catch (...) {
             tcs.SetException(std::current_exception());
         }
     });
@@ -90,7 +91,8 @@ TEST_CASE("Task::CreateTask_ThrowException_Defer", "[Task]")
         defer = [tcs] {
             try {
                 throw std::domain_error("FUS RO DAH");
-            } catch (...) {
+            }
+            catch (...) {
                 tcs.SetException(std::current_exception());
             }
         };
@@ -122,9 +124,9 @@ TEST_CASE("Task::Then_Deferred", "[Task]")
 {
     std::function<void()> defer;
     auto task = Concurrency::CreateTask<void>([&](auto tcs) {
-        defer = [tcs]{ tcs.SetResult(); };
+        defer = [tcs] { tcs.SetResult(); };
     });
-    auto task2 = task.Then([]{});
+    auto task2 = task.Then([] {});
 
     REQUIRE_FALSE(task.IsDone());
     REQUIRE_FALSE(task.IsRejected());
@@ -146,7 +148,7 @@ TEST_CASE("Task::Then_Immediate", "[Task]")
     REQUIRE(task.IsDone());
     REQUIRE_FALSE(task.IsRejected());
 
-    auto task2 = task.Then([]{});
+    auto task2 = task.Then([] {});
     REQUIRE(task2.IsDone());
     REQUIRE_FALSE(task2.IsRejected());
 }
@@ -161,12 +163,12 @@ TEST_CASE("Task::Then_Results", "[Task]")
             tcs.SetResult("chuck");
         };
     });
-    auto task2 = task.Then([&](const std::string& name)->std::string {
+    auto task2 = task.Then([&](const std::string& name) -> std::string {
         REQUIRE(name == "chuck");
         results.push_back(name + " ");
         return name + " ";
     });
-    auto task3 = task2.Then([&](const std::string& name)->std::string {
+    auto task3 = task2.Then([&](const std::string& name) -> std::string {
         REQUIRE(name == "chuck ");
         results.push_back(name + "norris");
         return name + "norris";
@@ -196,8 +198,8 @@ TEST_CASE("Task::Then_MethodChaining", "[Task]")
 {
     std::string result;
     auto task = Concurrency::FromResult<int>(42)
-        .Then([](int x){ return std::to_string(x); })
-        .Then([&](const std::string& s){ result = s; });
+                    .Then([](int x) { return std::to_string(x); })
+                    .Then([&](const std::string& s) { result = s; });
 
     REQUIRE(task.IsDone());
     REQUIRE_FALSE(task.IsRejected());
@@ -285,11 +287,12 @@ TEST_CASE("Task::Then_ReturnRejectedTask", "[Task]")
         result.push_back("B");
         return Concurrency::CreateTask<void>([&](auto tcs) {
             result.push_back("C");
-            defer2 = [&result, tcs]{
+            defer2 = [&result, tcs] {
                 try {
                     result.push_back("D");
                     throw std::domain_error("FUS RO DAH");
-                } catch (...) {
+                }
+                catch (...) {
                     tcs.SetException(std::current_exception());
                 }
             };
@@ -334,7 +337,8 @@ TEST_CASE("Task::Catch_ExceptionPtr", "[Task]")
     auto task = Concurrency::CreateTask<void>([&](auto tcs) {
         try {
             throw std::domain_error("When Chuck Norris throws exceptions, it's across the room.");
-        } catch (...) {
+        }
+        catch (...) {
             tcs.SetException(std::current_exception());
         }
     });
@@ -359,7 +363,8 @@ TEST_CASE("Task::Catch_ExceptionType", "[Task]")
     auto task = Concurrency::CreateTask<void>([&](auto tcs) {
         try {
             throw std::domain_error("When Chuck Norris throws exceptions, it's across the room.");
-        } catch (...) {
+        }
+        catch (...) {
             tcs.SetException(std::current_exception());
         }
     });
@@ -425,7 +430,8 @@ TEST_CASE("Task::Catch_WhenAll", "[Task]")
         defer1 = [tcs] {
             try {
                 throw std::domain_error("When Chuck Norris throws exceptions, it's across the room.");
-            } catch (...) {
+            }
+            catch (...) {
                 tcs.SetException(std::current_exception());
             }
         };
@@ -434,7 +440,8 @@ TEST_CASE("Task::Catch_WhenAll", "[Task]")
         defer2 = [tcs] {
             try {
                 throw std::domain_error("FUS RO DAH");
-            } catch (...) {
+            }
+            catch (...) {
                 tcs.SetException(std::current_exception());
             }
         };
@@ -477,7 +484,8 @@ TEST_CASE("Task::Catch_WhenAny", "[Task]")
         defer1 = [tcs] {
             try {
                 throw std::domain_error("When Chuck Norris throws exceptions, it's across the room.");
-            } catch (...) {
+            }
+            catch (...) {
                 tcs.SetException(std::current_exception());
             }
         };
@@ -486,7 +494,8 @@ TEST_CASE("Task::Catch_WhenAny", "[Task]")
         defer2 = [tcs] {
             try {
                 throw std::domain_error("FUS RO DAH");
-            } catch (...) {
+            }
+            catch (...) {
                 tcs.SetException(std::current_exception());
             }
         };
@@ -547,7 +556,7 @@ TEST_CASE("Task::ContinueWith_Immediate", "[Task]")
     });
     REQUIRE(task1.IsDone());
     REQUIRE_FALSE(task1.IsRejected());
-    auto task2 = task1.ContinueWith([](const Task<void>&){});
+    auto task2 = task1.ContinueWith([](const Task<void>&) {});
     REQUIRE(task2.IsDone());
     REQUIRE_FALSE(task2.IsRejected());
 }
@@ -646,7 +655,7 @@ TEST_CASE("Task::WhenAny_Result", "[Task]")
     });
 
     std::vector<int> results;
-    std::vector<Task<int>> tasks = { task1, task2 };
+    std::vector<Task<int>> tasks = {task1, task2};
 
     auto whenAny = Concurrency::WhenAny(std::move(tasks));
     whenAny.Then([&](int x) {
@@ -720,7 +729,7 @@ TEST_CASE("Task::WhenAll_Result", "[Task]")
     });
 
     std::vector<int> results;
-    std::vector<Task<int>> tasks = { task1, task2 };
+    std::vector<Task<int>> tasks = {task1, task2};
 
     auto whenAll = Concurrency::WhenAll(std::move(tasks));
     whenAll.Then([&](const std::vector<int>& v) {
@@ -749,7 +758,7 @@ TEST_CASE("Task::FromResult_Int", "[Task]")
 {
     int number = 0;
     auto task1 = Concurrency::FromResult(42);
-    auto task2 = task1.Then([&](int x){ number = x; });
+    auto task2 = task1.Then([&](int x) { number = x; });
 
     REQUIRE(task1.IsDone());
     REQUIRE_FALSE(task1.IsRejected());
@@ -763,7 +772,8 @@ TEST_CASE("Task::Scheduler_ImmediateExecutor", "[Task]")
     auto task = Concurrency::CreateTask<void>([&](auto tcs) {
         try {
             throw std::domain_error("When Chuck Norris throws exceptions, it's across the room.");
-        } catch (...) {
+        }
+        catch (...) {
             tcs.SetException(std::current_exception());
         }
     });
@@ -796,10 +806,10 @@ TEST_CASE("Task::ChainingSuchAsPromise_1", "[Task]")
         result.push_back("start");
         tcs.SetResult();
     });
-    task.Then([&]{ result.push_back("task A"); })
-        .Then([&]{ result.push_back("task B"); })
-        .Catch([&](std::exception_ptr){ result.push_back("onRejected"); })
-        .Then([&]{ result.push_back("task C"); });
+    task.Then([&] { result.push_back("task A"); })
+        .Then([&] { result.push_back("task B"); })
+        .Catch([&](std::exception_ptr) { result.push_back("onRejected"); })
+        .Then([&] { result.push_back("task C"); });
 
     REQUIRE(result.size() == 4);
     REQUIRE(result[0] == "start");
@@ -820,9 +830,9 @@ TEST_CASE("Task::ChainingSuchAsPromise_2", "[Task]")
             result.push_back("task A");
             throw std::domain_error("throw error at Task A");
         })
-        .Then([&]{ result.push_back("task B"); })
-        .Catch([&](const std::domain_error& e){result.push_back(e.what()); })
-        .Then([&]{ result.push_back("task C"); });
+        .Then([&] { result.push_back("task B"); })
+        .Catch([&](const std::domain_error& e) { result.push_back(e.what()); })
+        .Then([&] { result.push_back("task C"); });
 
     REQUIRE(result.size() == 4);
     REQUIRE(result[0] == "start");
@@ -841,18 +851,18 @@ TEST_CASE("Task::ChainingSuchAsPromise_3", "[Task]")
         tcs.SetResult();
     });
     task.Then([&] {
-        result.push_back("Delay");
-        return Concurrency::CreateTask<void>([&](auto tcs) {
-            defer = [tcs] { tcs.SetResult(); };
+            result.push_back("Delay");
+            return Concurrency::CreateTask<void>([&](auto tcs) {
+                defer = [tcs] { tcs.SetResult(); };
+            });
+        })
+        .Then([&] {
+            result.push_back("FromResult");
+            return Concurrency::FromResult(42);
+        })
+        .Then([&](int x) {
+            result.push_back(std::to_string(x));
         });
-    })
-    .Then([&] {
-        result.push_back("FromResult");
-        return Concurrency::FromResult(42);
-    })
-    .Then([&](int x) {
-        result.push_back(std::to_string(x));
-    });
 
     defer();
     REQUIRE(result.size() == 4);

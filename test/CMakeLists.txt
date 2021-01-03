@@ -9,8 +9,8 @@ set(POMDOG_TEST_DIR "${POMDOG_DIR}/test")
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
 
 source_group(Application            REGULAR_EXPRESSION test/Application/*)
-source_group(Async                  REGULAR_EXPRESSION test/Async/*)
 source_group(Content                REGULAR_EXPRESSION test/Content/*)
+source_group(Experimental\\Async    REGULAR_EXPRESSION test/Experimental/Async/*)
 source_group(Experimental\\ECS      REGULAR_EXPRESSION test/Experimental/ECS/*)
 source_group(Experimental\\Random   REGULAR_EXPRESSION test/Experimental/Random/*)
 source_group(Graphics               REGULAR_EXPRESSION test/Graphics/*)
@@ -29,8 +29,8 @@ target_sources(PomdogTest PRIVATE
     ${POMDOG_TEST_DIR}/Application/FileSystemTest.cpp
     ${POMDOG_TEST_DIR}/Application/GameClockTest.cpp
     ${POMDOG_TEST_DIR}/Application/TimerTest.cpp
-    ${POMDOG_TEST_DIR}/Async/SchedulerTest.cpp
-    ${POMDOG_TEST_DIR}/Async/TaskTest.cpp
+    ${POMDOG_TEST_DIR}/Experimental/Async/SchedulerTest.cpp
+    ${POMDOG_TEST_DIR}/Experimental/Async/TaskTest.cpp
     ${POMDOG_TEST_DIR}/Experimental/ECS/EntityTest.cpp
     ${POMDOG_TEST_DIR}/Experimental/ECS/EntityManagerTest.cpp
     ${POMDOG_TEST_DIR}/Experimental/Random/Xoroshiro128StarStarTest.cpp

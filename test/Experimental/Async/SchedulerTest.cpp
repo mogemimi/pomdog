@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2020 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Async/ImmediateScheduler.hpp"
-#include "Pomdog/Async/QueuedScheduler.hpp"
+#include "Pomdog/Experimental/Async/ImmediateScheduler.hpp"
+#include "Pomdog/Experimental/Async/QueuedScheduler.hpp"
 #include "catch.hpp"
 #include <thread>
 
@@ -12,7 +12,7 @@ TEST_CASE("Schedule_Simply", "[Scheduler]")
     std::vector<std::string> output;
 
     auto scheduler = std::make_shared<QueuedScheduler>();
-    auto task = [&]{ output.push_back("hello"); };
+    auto task = [&] { output.push_back("hello"); };
     scheduler->Schedule(std::move(task), std::chrono::milliseconds(60));
 
     auto wait = [&](std::chrono::milliseconds millis) {
@@ -37,7 +37,7 @@ TEST_CASE("Schedule_Nested", "[Scheduler]")
     auto scheduler = std::make_shared<QueuedScheduler>();
     scheduler->Schedule([&] {
         output.push_back("ok");
-        scheduler->Schedule([&]{ output.push_back("hello"); });
+        scheduler->Schedule([&] { output.push_back("hello"); });
     });
 
     auto wait = [&](std::chrono::milliseconds millis) {
@@ -61,8 +61,9 @@ TEST_CASE("Schedule_NestedDelay", "[Scheduler]")
     auto scheduler = std::make_shared<QueuedScheduler>();
     scheduler->Schedule([&] {
         output.push_back("ok");
-        scheduler->Schedule([&]{ output.push_back("hello"); });
-    }, std::chrono::milliseconds(20));
+        scheduler->Schedule([&] { output.push_back("hello"); });
+    },
+        std::chrono::milliseconds(20));
 
     auto wait = [&](std::chrono::milliseconds millis) {
         std::this_thread::sleep_for(millis);
@@ -88,9 +89,10 @@ TEST_CASE("Schedule_NestedDelay2", "[Scheduler]")
     scheduler->Schedule([&] {
         output.push_back("ok");
         scheduler->Schedule(
-            [&]{ output.push_back("hello"); },
+            [&] { output.push_back("hello"); },
             std::chrono::milliseconds(30));
-    }, std::chrono::milliseconds(20));
+    },
+        std::chrono::milliseconds(20));
 
     auto wait = [&](std::chrono::milliseconds millis) {
         std::this_thread::sleep_for(millis);

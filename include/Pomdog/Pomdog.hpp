@@ -16,12 +16,6 @@ namespace Pomdog {
 #include "Application/TimePoint.hpp"
 #include "Application/Timer.hpp"
 
-#include "Async/Helpers.hpp"
-#include "Async/ImmediateScheduler.hpp"
-#include "Async/QueuedScheduler.hpp"
-#include "Async/Scheduler.hpp"
-#include "Async/Task.hpp"
-
 #include "Audio/AudioChannels.hpp"
 #include "Audio/AudioClip.hpp"
 #include "Audio/AudioEmitter.hpp"
