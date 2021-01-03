@@ -20,7 +20,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #endif
 #if defined(_MSC_VER)
 #pragma warning(push)
-#pragma warning(disable : 5054)
+#pragma warning(disable : 4514 5054)
 #endif
 #include <rapidjson/document.h>
 #if defined(__clang__)
