@@ -9,45 +9,49 @@
 #### Updating your system
 
 ```sh
-sudo apt update
-sudo apt upgrade -y
+sudo apt-get update
+sudo apt-get upgrade -y
 ```
 
 #### Installing latest Clang
 
 ```sh
-# Installing Clang 8
-sudo apt install -y wget gnupg
-echo "deb http://apt.llvm.org/disco/ llvm-toolchain-disco-8 main" | tee /etc/apt/sources.list.d/llvm.list
-echo "deb-src http://apt.llvm.org/disco/ llvm-toolchain-disco-8 main" | tee -a /etc/apt/sources.list.d/llvm.list
+# Installing Clang 11 to Ubuntu 20.04 (focal)
+sudo apt-get install -y wget gnupg
 wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-sudo apt update
-sudo apt install -y \
-    clang-8 \
-    libclang-common-8-dev \
-    libclang-8-dev \
-    libclang1-8 \
-    libllvm8 \
-    llvm-8 \
-    llvm-8-dev \
-    llvm-8-runtime \
-    lldb-8 \
-    lld-8 \
-    clang-format-8
+echo "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-11 main" | tee /etc/apt/sources.list.d/llvm.list
+echo "deb-src http://apt.llvm.org/focal/ llvm-toolchain-focal-11 main" | tee -a /etc/apt/sources.list.d/llvm.list
+sudo apt-get update
+sudo apt-get install -y \
+    libllvm11 \
+    llvm-11 \
+    llvm-11-dev \
+    llvm-11-runtime \
+    clang-11 \
+    clang-tools-11 \
+    libclang-11-dev \
+    libclang1-11 \
+    clang-format-11 \
+    clangd-11 \
+    libfuzzer-11-dev \
+    lldb-11 \
+    lld-11 \
+    libc++-11-dev \
+    libc++abi-11-dev
 
 # To use the latest clang as "clang" and "clang++" commands (optional)
-sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-8 10
-sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-8 10
+sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-11 10
+sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-11 10
 
 # Installation clean up
+sudo apt-get clean
 sudo rm -rf /var/lib/apt/lists/*
-sudo apt clean
 ```
 
 #### Installing Git, Build Tools and Libraries
 
 ```sh
-sudo apt install \
+sudo apt-get install \
     git \
     make \
     ninja-build \
@@ -60,16 +64,16 @@ sudo apt install \
 
 ```sh
 # Installing OpenGL utilities
-sudo apt install mesa-common-dev libglu1-mesa-dev freeglut3-dev
+sudo apt-get install mesa-common-dev libglu1-mesa-dev freeglut3-dev
 
 # Installing OpenAL utilities
-sudo apt install libopenal1 libopenal-dev
+sudo apt-get install libopenal1 libopenal-dev
 ```
 
 ## Check your OpenGL version
 
 ```sh
-sudo apt install mesa-utils
+sudo apt-get install mesa-utils
 glxinfo | grep "OpenGL version"
 ```
 
