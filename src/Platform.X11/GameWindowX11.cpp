@@ -340,7 +340,7 @@ void GameWindowX11::SetClientBounds(const Rectangle& clientBoundsIn)
     XFlush(x11Context->Display);
 }
 
-bool GameWindowX11::IsMouseCursorVisible() const
+bool GameWindowX11::IsMouseCursorVisible() const noexcept
 {
     return isMouseCursorVisible;
 }
@@ -372,36 +372,40 @@ void GameWindowX11::SetMouseCursor(MouseCursor mouseCursorIn)
     }
 }
 
-::Display* GameWindowX11::NativeDisplay() const
+::Display* GameWindowX11::GetNativeDisplay() const
 {
     POMDOG_ASSERT(x11Context);
     auto display = x11Context->Display;
     return display;
 }
 
-::Window GameWindowX11::NativeWindow() const
+::Window GameWindowX11::GetNativeWindow() const noexcept
 {
     return window;
 }
 
-::XIC GameWindowX11::GetInputContext() const
+::XIC GameWindowX11::GetInputContext() const noexcept
 {
     return inputContext;
 }
 
 GLXFBConfig GameWindowX11::GetFramebufferConfig() const
 {
-    int framebufferConfigAttributes[] = {
-        GLX_FBCONFIG_ID, framebufferConfigID,
-        None
+    const int framebufferConfigAttributes[] = {
+        GLX_FBCONFIG_ID,
+        framebufferConfigID,
+        None,
     };
 
     POMDOG_ASSERT(x11Context);
     auto display = x11Context->Display;
 
     int framebufferConfigCount = 0;
-    auto framebufferConfigs = glXChooseFBConfig(display, DefaultScreen(display),
-        framebufferConfigAttributes, &framebufferConfigCount);
+    auto framebufferConfigs = glXChooseFBConfig(
+        display,
+        DefaultScreen(display),
+        framebufferConfigAttributes,
+        &framebufferConfigCount);
 
     POMDOG_ASSERT(framebufferConfigs != nullptr);
     POMDOG_ASSERT(framebufferConfigCount == 1);
@@ -412,7 +416,7 @@ GLXFBConfig GameWindowX11::GetFramebufferConfig() const
     return framebufferConfig;
 }
 
-bool GameWindowX11::IsMinimized() const
+bool GameWindowX11::IsMinimized() const noexcept
 {
     return isMinimized;
 }

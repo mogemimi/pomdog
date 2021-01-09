@@ -78,7 +78,7 @@ OpenGLContextX11::Initialize(
     POMDOG_ASSERT(framebufferConfig != nullptr);
     POMDOG_ASSERT(window != nullptr);
 
-    auto display = window->NativeDisplay();
+    auto display = window->GetNativeDisplay();
 
     auto glxExtensionsString = glXQueryExtensionsString(display, DefaultScreen(display));
 
@@ -100,52 +100,69 @@ OpenGLContextX11::Initialize(
             True);
         XSync(display, False);
         if (auto errorCode = UntrapErrors(oldHandler); errorCode != 0) {
-            return Errors::New("glXCreateNewContext() failed: error code = " +
-                std::to_string(errorCode));
+            return Errors::New("glXCreateNewContext() failed: error code = " + std::to_string(errorCode));
         }
     }
     else {
-        int contextAttributes[] = {
-            GLX_CONTEXT_MAJOR_VERSION_ARB, 3,
-            GLX_CONTEXT_MINOR_VERSION_ARB, 3,
-            //GLX_CONTEXT_FLAGS_ARB, 0,
-            //GLX_CONTEXT_FLAGS_ARB, GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
-            //GLX_CONTEXT_PROFILE_MASK_ARB, GLX_CONTEXT_CORE_PROFILE_BIT_ARB,
-            None,
+        const int configs[][8] = {
+            {
+                // NOTE: OpenGL 4.5
+                GLX_CONTEXT_MAJOR_VERSION_ARB,
+                4,
+                GLX_CONTEXT_MINOR_VERSION_ARB,
+                5,
+                // GLX_CONTEXT_PROFILE_MASK_ARB, GLX_CONTEXT_CORE_PROFILE_BIT_ARB,
+                // GLX_CONTEXT_FLAGS_ARB, GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
+                None,
+            },
+            {
+                // NOTE: OpenGL 4.1
+                GLX_CONTEXT_MAJOR_VERSION_ARB,
+                4,
+                GLX_CONTEXT_MINOR_VERSION_ARB,
+                1,
+                None,
+            },
+            {
+                // NOTE: OpenGL 3.3
+                GLX_CONTEXT_MAJOR_VERSION_ARB,
+                3,
+                GLX_CONTEXT_MINOR_VERSION_ARB,
+                3,
+                None,
+            },
+            {
+                // NOTE: OpenGL 2.1
+                GLX_CONTEXT_MAJOR_VERSION_ARB,
+                2,
+                GLX_CONTEXT_MINOR_VERSION_ARB,
+                1,
+                None,
+            },
         };
 
-        auto oldHandler = TrapErrors(GLContextErrorHandler);
-        glxContext = glXCreateContextAttribsARB(
-            display,
-            framebufferConfig,
-            nullptr,
-            True,
-            contextAttributes);
-        XSync(display, False);
-        if (auto errorCode = UntrapErrors(oldHandler); (errorCode == 0) && (glxContext != nullptr)) {
-            // NOTE: OK
-            isOpenGL3Supported = true;
-        }
-
-        if (!isOpenGL3Supported) {
-            // NOTE: fallback
-
-            // GLX_CONTEXT_MAJOR_VERSION_ARB = 2
-            contextAttributes[1] = 2;
-            // GLX_CONTEXT_MINOR_VERSION_ARB = 0;
-            contextAttributes[3] = 0;
-
-            oldHandler = TrapErrors(GLContextErrorHandler);
+        int lastError = 0;
+        for (const auto& attribs : configs) {
+            auto oldHandler = TrapErrors(GLContextErrorHandler);
             glxContext = glXCreateContextAttribsARB(
                 display,
                 framebufferConfig,
                 nullptr,
                 True,
-                contextAttributes);
+                attribs);
             XSync(display, False);
-            if (auto errorCode = UntrapErrors(oldHandler); errorCode != 0) {
-                return Errors::New("glXCreateContextAttribsARB() failed: error code = " + std::to_string(errorCode));
+            if (lastError = UntrapErrors(oldHandler); (lastError == 0) && (glxContext != nullptr)) {
+                assert(attribs[0] == GLX_CONTEXT_MAJOR_VERSION_ARB);
+                assert(attribs[1] >= 2);
+                if (attribs[1] >= 3) {
+                    isOpenGL3Supported = true;
+                }
+                break;
             }
+        }
+
+        if (lastError != 0) {
+            return Errors::New("glXCreateContextAttribsARB() failed: error code = " + std::to_string(lastError));
         }
     }
 
@@ -160,7 +177,7 @@ OpenGLContextX11::~OpenGLContextX11() noexcept
 {
     if (glxContext != nullptr) {
         POMDOG_ASSERT(window != nullptr);
-        auto display = window->NativeDisplay();
+        auto display = window->GetNativeDisplay();
 
         if (glXGetCurrentContext() == glxContext) {
             glXMakeCurrent(display, None, nullptr);
@@ -176,19 +193,19 @@ void OpenGLContextX11::MakeCurrent()
     }
 
     POMDOG_ASSERT(window != nullptr);
-    glXMakeCurrent(window->NativeDisplay(), window->NativeWindow(), glxContext);
+    glXMakeCurrent(window->GetNativeDisplay(), window->GetNativeWindow(), glxContext);
 }
 
 void OpenGLContextX11::ClearCurrent()
 {
     POMDOG_ASSERT(window != nullptr);
-    glXMakeCurrent(window->NativeDisplay(), None, nullptr);
+    glXMakeCurrent(window->GetNativeDisplay(), None, nullptr);
 }
 
 void OpenGLContextX11::SwapBuffers()
 {
     POMDOG_ASSERT(window != nullptr);
-    glXSwapBuffers(window->NativeDisplay(), window->NativeWindow());
+    glXSwapBuffers(window->GetNativeDisplay(), window->GetNativeWindow());
 }
 
 bool OpenGLContextX11::IsOpenGL3Supported() const noexcept

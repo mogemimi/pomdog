@@ -54,74 +54,83 @@ ChooseFramebufferConfig(
         return std::make_tuple(nullptr, Errors::New("GLX of version lower than 1.3.2 is not supported."));
     }
 
-    std::vector<int> visualAttributes = {
-        GLX_X_RENDERABLE, True,
-        GLX_DRAWABLE_TYPE, GLX_WINDOW_BIT,
-        GLX_X_VISUAL_TYPE, GLX_TRUE_COLOR,
-        GLX_DOUBLEBUFFER, True,
-        //GLX_SAMPLE_BUFFERS, 1,
-        //GLX_SAMPLES, 4,
-    };
+    class final {
+        std::array<int, 40> attribs;
+        std::size_t index = 0;
+
+    public:
+        void add(int key, int value) noexcept
+        {
+            assert(index + 1 < attribs.size());
+            attribs[index] = key;
+            attribs[index + 1] = value;
+            index += 2;
+        }
+
+        const int* data() const noexcept
+        {
+            return attribs.data();
+        }
+    } attributes;
+
+    attributes.add(GLX_X_RENDERABLE, True);
+    attributes.add(GLX_DRAWABLE_TYPE, GLX_WINDOW_BIT);
+    attributes.add(GLX_X_VISUAL_TYPE, GLX_TRUE_COLOR);
+    attributes.add(GLX_DOUBLEBUFFER, True);
+
+    if (presentationParameters.MultiSampleCount >= 2) {
+        // NOTE: Enable multi-sampling
+        attributes.add(GLX_SAMPLE_BUFFERS, 1);
+        attributes.add(GLX_SAMPLES, presentationParameters.MultiSampleCount);
+    }
+    else {
+        // NOTE: No multi-sampling
+        attributes.add(GLX_SAMPLE_BUFFERS, 0);
+    }
 
     switch (presentationParameters.BackBufferFormat) {
     case SurfaceFormat::R16G16B16A16_Float:
-        visualAttributes.push_back(GLX_RENDER_TYPE);
-        visualAttributes.push_back(GLX_RGBA_FLOAT_BIT_ARB);
-        visualAttributes.push_back(GLX_RED_SIZE);
-        visualAttributes.push_back(16);
-        visualAttributes.push_back(GLX_GREEN_SIZE);
-        visualAttributes.push_back(16);
-        visualAttributes.push_back(GLX_BLUE_SIZE);
-        visualAttributes.push_back(16);
-        visualAttributes.push_back(GLX_ALPHA_SIZE);
-        visualAttributes.push_back(16);
+        attributes.add(GLX_RENDER_TYPE, GLX_RGBA_FLOAT_BIT_ARB);
+        attributes.add(GLX_RED_SIZE, 16);
+        attributes.add(GLX_GREEN_SIZE, 16);
+        attributes.add(GLX_BLUE_SIZE, 16);
+        attributes.add(GLX_ALPHA_SIZE, 16);
         break;
     case SurfaceFormat::R32G32B32A32_Float:
-        visualAttributes.push_back(GLX_RENDER_TYPE);
-        visualAttributes.push_back(GLX_RGBA_FLOAT_BIT_ARB);
-        visualAttributes.push_back(GLX_RED_SIZE);
-        visualAttributes.push_back(32);
-        visualAttributes.push_back(GLX_GREEN_SIZE);
-        visualAttributes.push_back(32);
-        visualAttributes.push_back(GLX_BLUE_SIZE);
-        visualAttributes.push_back(32);
-        visualAttributes.push_back(GLX_ALPHA_SIZE);
-        visualAttributes.push_back(32);
+        attributes.add(GLX_RENDER_TYPE, GLX_RGBA_FLOAT_BIT_ARB);
+        attributes.add(GLX_RED_SIZE, 32);
+        attributes.add(GLX_GREEN_SIZE, 32);
+        attributes.add(GLX_BLUE_SIZE, 32);
+        attributes.add(GLX_ALPHA_SIZE, 32);
+        break;
+    case SurfaceFormat::R8G8B8A8_UNorm:
+        attributes.add(GLX_RENDER_TYPE, GLX_RGBA_BIT);
+        attributes.add(GLX_RED_SIZE, 8);
+        attributes.add(GLX_GREEN_SIZE, 8);
+        attributes.add(GLX_BLUE_SIZE, 8);
+        attributes.add(GLX_ALPHA_SIZE, 8);
         break;
     default:
-        visualAttributes.push_back(GLX_RENDER_TYPE);
-        visualAttributes.push_back(GLX_RGBA_BIT);
-        visualAttributes.push_back(GLX_RED_SIZE);
-        visualAttributes.push_back(8);
-        visualAttributes.push_back(GLX_GREEN_SIZE);
-        visualAttributes.push_back(8);
-        visualAttributes.push_back(GLX_BLUE_SIZE);
-        visualAttributes.push_back(8);
-        visualAttributes.push_back(GLX_ALPHA_SIZE);
-        visualAttributes.push_back(8);
+        attributes.add(GLX_RED_SIZE, 4);
+        attributes.add(GLX_GREEN_SIZE, 4);
+        attributes.add(GLX_BLUE_SIZE, 4);
         break;
     }
 
     switch (presentationParameters.DepthStencilFormat) {
     case SurfaceFormat::Depth16:
-        visualAttributes.push_back(GLX_DEPTH_SIZE);
-        visualAttributes.push_back(16);
+        attributes.add(GLX_DEPTH_SIZE, 16);
         break;
     case SurfaceFormat::Depth24Stencil8:
-        visualAttributes.push_back(GLX_DEPTH_SIZE);
-        visualAttributes.push_back(24);
-        visualAttributes.push_back(GLX_STENCIL_SIZE);
-        visualAttributes.push_back(8);
+        attributes.add(GLX_DEPTH_SIZE, 24);
+        attributes.add(GLX_STENCIL_SIZE, 8);
         break;
     case SurfaceFormat::Depth32:
-        visualAttributes.push_back(GLX_DEPTH_SIZE);
-        visualAttributes.push_back(32);
+        attributes.add(GLX_DEPTH_SIZE, 32);
         break;
     case SurfaceFormat::Depth32_Float_Stencil8_Uint:
-        visualAttributes.push_back(GLX_DEPTH_SIZE);
-        visualAttributes.push_back(32);
-        visualAttributes.push_back(GLX_STENCIL_SIZE);
-        visualAttributes.push_back(8);
+        attributes.add(GLX_DEPTH_SIZE, 32);
+        attributes.add(GLX_STENCIL_SIZE, 8);
         break;
     case SurfaceFormat::Invalid:
         break;
@@ -129,11 +138,14 @@ ChooseFramebufferConfig(
         return std::make_tuple(nullptr, Errors::New("invalid depth stencil format"));
     }
 
-    visualAttributes.push_back(None);
+    attributes.add(None, None);
 
     int framebufferConfigCount = 0;
-    auto framebufferConfigs = glXChooseFBConfig(display, DefaultScreen(display),
-        visualAttributes.data(), &framebufferConfigCount);
+    auto framebufferConfigs = glXChooseFBConfig(
+        display,
+        DefaultScreen(display),
+        attributes.data(),
+        &framebufferConfigCount);
 
     if ((framebufferConfigs == nullptr) || (framebufferConfigCount <= 0)) {
         return std::make_tuple(nullptr, Errors::New("failed to retrieve FBConfig"));
@@ -333,7 +345,7 @@ void GameHostX11::Impl::MessagePump()
     for (int index = 0; index < eventCount; ++index) {
         ::XEvent event;
         ::XLockDisplay(x11Context->Display);
-        ::XNextEvent(window->NativeDisplay(), &event);
+        ::XNextEvent(window->GetNativeDisplay(), &event);
         ::XUnlockDisplay(x11Context->Display);
 
         ProcessEvent(event);
@@ -342,7 +354,7 @@ void GameHostX11::Impl::MessagePump()
 
 void GameHostX11::Impl::ProcessEvent(::XEvent& event)
 {
-    if (event.xany.window != window->NativeWindow()) {
+    if (event.xany.window != window->GetNativeWindow()) {
         return;
     }
 

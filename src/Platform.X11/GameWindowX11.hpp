@@ -40,21 +40,21 @@ public:
 
     void SetClientBounds(const Rectangle& clientBounds) override;
 
-    bool IsMouseCursorVisible() const override;
+    bool IsMouseCursorVisible() const noexcept override;
 
     void SetMouseCursorVisible(bool visible) override;
 
     void SetMouseCursor(MouseCursor cursor) override;
 
-    ::Display* NativeDisplay() const;
+    ::Display* GetNativeDisplay() const;
 
-    ::Window NativeWindow() const;
+    ::Window GetNativeWindow() const noexcept;
 
-    ::XIC GetInputContext() const;
+    ::XIC GetInputContext() const noexcept;
 
     GLXFBConfig GetFramebufferConfig() const;
 
-    bool IsMinimized() const;
+    bool IsMinimized() const noexcept;
 
     void ProcessEvent(::XEvent& event);
 
