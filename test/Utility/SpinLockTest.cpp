@@ -9,6 +9,8 @@
 
 using Pomdog::Detail::SpinLock;
 
+namespace {
+
 template <class Mutex>
 struct Task final {
     Mutex lock;
@@ -22,6 +24,8 @@ struct Task final {
         }
     }
 };
+
+} // namespace
 
 TEST_CASE("SpinLock", "[SpinLock]")
 {
