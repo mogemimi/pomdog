@@ -104,14 +104,14 @@ target_compile_definitions(PomdogTest PRIVATE
 )
 
 target_compile_options(PomdogTest PRIVATE
-    # Clang and GCC
+    # NOTE: Clang and GCC
     $<$<CXX_COMPILER_ID:Clang,AppleClang,GNU>:
         -Wall
         -Werror
         $<$<CONFIG:Debug>:-g;-O0>
         $<$<CONFIG:Release>:-O3>
     >
-    # Clang
+    # NOTE: Clang
     $<$<CXX_COMPILER_ID:Clang,AppleClang>:
         -Wcomma
         -Wextra-semi
@@ -120,11 +120,11 @@ target_compile_options(PomdogTest PRIVATE
         -Wnon-virtual-dtor
         -Wimplicit-fallthrough
     >
-    # GCC
+    # NOTE: GCC
     $<$<CXX_COMPILER_ID:GNU>:
         -Wimplicit-fallthrough
     >
-    # MSVC
+    # NOTE: MSVC
     $<$<CXX_COMPILER_ID:MSVC>:
         /W4
         /WX
@@ -136,7 +136,7 @@ target_compile_options(PomdogTest PRIVATE
 )
 
 target_link_options(PomdogTest PRIVATE
-    # On Apple macOS
+    # NOTE: Apple macOS
     $<$<PLATFORM_ID:Darwin>:
         "SHELL: -framework AudioToolBox"
         "SHELL: -framework Cocoa"
@@ -147,8 +147,7 @@ target_link_options(PomdogTest PRIVATE
         "SHELL: -framework OpenGL"
         "SHELL: -framework QuartzCore"
     >
-
-    # MSVC
+    # NOTE: MSVC
     $<$<CXX_COMPILER_ID:MSVC>:
         $<$<CONFIG:Debug>:
             /INCREMENTAL

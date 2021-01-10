@@ -71,13 +71,13 @@ target_compile_definitions(${PRODUCT_NAME} PRIVATE
 )
 
 target_compile_options(${PRODUCT_NAME} PRIVATE
-    # Clang and GCC
+    # NOTE: Clang and GCC
     $<$<CXX_COMPILER_ID:Clang,AppleClang,GNU>:
         -Werror
         $<$<CONFIG:Debug>:-g;-O0>
         $<$<CONFIG:Release>:-O3>
     >
-    # Clang
+    # NOTE: Clang
     $<$<CXX_COMPILER_ID:Clang,AppleClang>:
         -Wcomma
         -Wextra-semi
@@ -86,12 +86,12 @@ target_compile_options(${PRODUCT_NAME} PRIVATE
         -Wmove
         -Wnewline-eof
     >
-    # GCC
+    # NOTE: GCC
     $<$<CXX_COMPILER_ID:GNU>:
         -pedantic
         -Wimplicit-fallthrough=3
     >
-    # MSVC
+    # NOTE: MSVC
     $<$<CXX_COMPILER_ID:MSVC>:
         /W4
         /std:c++latest
@@ -102,7 +102,7 @@ target_compile_options(${PRODUCT_NAME} PRIVATE
 )
 
 target_link_options(${PRODUCT_NAME} PRIVATE
-    # On Apple macOS
+    # NOTE: Apple macOS
     $<$<PLATFORM_ID:Darwin>:
         "SHELL: -framework AudioToolBox"
         "SHELL: -framework Cocoa"
@@ -113,8 +113,7 @@ target_link_options(${PRODUCT_NAME} PRIVATE
         "SHELL: -framework OpenGL"
         "SHELL: -framework QuartzCore"
     >
-
-    # MSVC
+    # NOTE: MSVC
     $<$<CXX_COMPILER_ID:MSVC>:
         $<$<CONFIG:Debug>:
             /INCREMENTAL

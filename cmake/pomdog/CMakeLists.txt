@@ -204,20 +204,20 @@ target_compile_definitions(pomdog_static PRIVATE
 )
 
 target_compile_options(pomdog_static PRIVATE
-    # Clang and GCC
+    # NOTE: Clang and GCC
     $<$<CXX_COMPILER_ID:Clang,AppleClang,GNU>:
         -Werror
         $<$<CONFIG:Debug>:-g;-O0>
         $<$<CONFIG:Release>:-O3>
 
-        # excluding clang-cl
+        # NOTE: excluding clang-cl
         $<$<NOT:$<BOOL:MSVC>>:
             -pedantic
             -pedantic-errors
             -fvisibility=hidden
         >
     >
-    # Clang
+    # NOTE: Clang
     $<$<CXX_COMPILER_ID:Clang,AppleClang>:
         -Weverything
         -Wno-c++98-compat
@@ -251,7 +251,7 @@ target_compile_options(pomdog_static PRIVATE
             -Wno-objc-messaging-id
         >
     >
-    # GCC
+    # NOTE: GCC
     $<$<CXX_COMPILER_ID:GNU>:
         -Wall
         -Wextra
@@ -285,7 +285,7 @@ target_compile_options(pomdog_static PRIVATE
         -Wwrite-strings
         -Wzero-as-null-pointer-constant
     >
-    # MSVC
+    # NOTE: MSVC
     $<$<CXX_COMPILER_ID:MSVC>:
         # NOTE: See https://docs.microsoft.com/en-us/cpp/preprocessor/compiler-warnings-that-are-off-by-default
         /Wall
