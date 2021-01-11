@@ -148,3 +148,59 @@ build-gcc-release:
     - script:
       name: run test
       code: ./build.cmake/test/PomdogTest
+
+build-emscripten-debug:
+  box:
+    id: mogemimi/gamedev-emscripten
+    username: $DOCKERHUB_USERNAME
+    password: $DOCKERHUB_ACCESS_TOKEN
+  steps:
+    - script:
+      name: set the environment variables
+      code: source /emsdk/emsdk_env.sh
+    - script:
+      name: build with emscripten in debug mode
+      code: |
+        cmake \
+          -Bbuild/emscripten \
+          -H. \
+          -G Ninja \
+          -DCMAKE_BUILD_TYPE=Debug \
+          -DCMAKE_TOOLCHAIN_FILE=$EMSDK/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake
+        ninja -C build/emscripten
+    - script:
+      name: run test
+      code: |
+        node \
+          --experimental-modules \
+          --experimental-wasm-modules \
+          --experimental-wasm-threads \
+          ./build/emscripten/test/PomdogTest.js
+
+build-emscripten-release:
+  box:
+    id: mogemimi/gamedev-emscripten
+    username: $DOCKERHUB_USERNAME
+    password: $DOCKERHUB_ACCESS_TOKEN
+  steps:
+    - script:
+      name: set the environment variables
+      code: source /emsdk/emsdk_env.sh
+    - script:
+      name: build with emscripten in release mode
+      code: |
+        cmake \
+          -Bbuild/emscripten \
+          -H. \
+          -G Ninja \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_TOOLCHAIN_FILE=$EMSDK/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake
+        ninja -C build/emscripten
+    - script:
+      name: run test
+      code: |
+        node \
+          --experimental-modules \
+          --experimental-wasm-modules \
+          --experimental-wasm-threads \
+          ./build/emscripten/test/PomdogTest.js
