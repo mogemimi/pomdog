@@ -33,12 +33,27 @@ using NativeTCPListener = TCPListenerWin32;
 using NativeTCPStream = TCPStreamWin32;
 using NativeUDPStream = UDPStreamWin32;
 
+#elif defined(POMDOG_PLATFORM_EMSCRIPTEN)
+
+class TCPListenerEmscripten;
+class TCPStreamEmscripten;
+class UDPStreamEmscripten;
+
+using NativeTCPListener = TCPListenerEmscripten;
+using NativeTCPStream = TCPStreamEmscripten;
+using NativeUDPStream = UDPStreamEmscripten;
+
 #else
 #error "Platform undefined or not supported."
 #endif
 
+#if defined(POMDOG_PLATFORM_EMSCRIPTEN)
+class TLSStreamEmscripten;
+using NativeTLSStream = TLSStreamEmscripten;
+#else
 class TLSStreamMbedTLS;
 using NativeTLSStream = TLSStreamMbedTLS;
+#endif
 
 } // namespace Pomdog::Detail
 

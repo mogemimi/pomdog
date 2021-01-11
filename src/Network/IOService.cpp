@@ -7,6 +7,7 @@
 
 #if defined(POMDOG_PLATFORM_MACOSX) || \
     defined(POMDOG_PLATFORM_APPLE_IOS) || \
+    defined(POMDOG_PLATFORM_EMSCRIPTEN) || \
     defined(POMDOG_PLATFORM_LINUX)
 // NOTE: nothing to do
 #elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
@@ -30,6 +31,7 @@ std::unique_ptr<Error> IOService::Initialize()
 {
 #if defined(POMDOG_PLATFORM_MACOSX) || \
     defined(POMDOG_PLATFORM_APPLE_IOS) || \
+    defined(POMDOG_PLATFORM_EMSCRIPTEN) || \
     defined(POMDOG_PLATFORM_LINUX)
     // NOTE: nothing to do
 #elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
@@ -46,6 +48,7 @@ std::unique_ptr<Error> IOService::Shutdown()
 {
 #if defined(POMDOG_PLATFORM_MACOSX) || \
     defined(POMDOG_PLATFORM_APPLE_IOS) || \
+    defined(POMDOG_PLATFORM_EMSCRIPTEN) || \
     defined(POMDOG_PLATFORM_LINUX)
     // NOTE: nothing to do
 #elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)

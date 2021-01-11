@@ -107,7 +107,6 @@ target_include_directories(pomdog_static PRIVATE
 target_link_libraries(pomdog_static INTERFACE
     png
     giflib
-    mbedtls
     stb_static
 
     $<$<PLATFORM_ID:Linux>:
@@ -155,6 +154,10 @@ target_link_libraries(pomdog_static INTERFACE
     $<$<AND:$<PLATFORM_ID:Windows,Linux>,$<BOOL:${POMDOG_USE_GL4}>>:
         # NOTE: GLEW for Windows and Linux
         glew_static
+    >
+    $<$<PLATFORM_ID:Windows,Linux,Darwin>:
+        # NOTE: MbedTLS for Windows, Linux and macOS
+        mbedtls
     >
 )
 
@@ -308,6 +311,10 @@ target_compile_options(pomdog_static PRIVATE
         /permissive-
         $<$<CONFIG:Debug>:/Od;/MTd>
         $<$<CONFIG:Release>:/O2;/Ob2;/MT>
+    >
+    # NOTE: emcc (Emscripten Compiler Frontend)
+    $<$<PLATFORM_ID:Emscripten>:
+        -pthread
     >
 )
 

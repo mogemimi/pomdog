@@ -99,6 +99,10 @@ target_compile_options(${PRODUCT_NAME} PRIVATE
         $<$<CONFIG:Release>:/O2;/Ob2;/MT>
         $<$<CONFIG:Release>:/GL> # NOTE: For LTO build
     >
+    # NOTE: emcc (Emscripten Compiler Frontend)
+    $<$<PLATFORM_ID:Emscripten>:
+        -pthread
+    >
 )
 
 target_link_options(${PRODUCT_NAME} PRIVATE
@@ -124,6 +128,11 @@ target_link_options(${PRODUCT_NAME} PRIVATE
             /OPT:REF
             /LTCG # NOTE: For LTO build
         >
+    >
+    # NOTE: emcc (Emscripten Compiler Frontend)
+    $<$<PLATFORM_ID:Emscripten>:
+        "SHELL:-s WASM=1"
+        "SHELL:-s USE_PTHREADS=1"
     >
 )
 

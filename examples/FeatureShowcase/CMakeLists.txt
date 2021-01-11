@@ -80,8 +80,11 @@ target_sources(${PRODUCT_NAME} PRIVATE
     Source/GUISplitterTest/GUISplitterTest.hpp
     Source/HardwareInstancingTest/HardwareInstancingTest.cpp
     Source/HardwareInstancingTest/HardwareInstancingTest.hpp
-    Source/HTTPClientTest/HTTPClientTest.cpp
-    Source/HTTPClientTest/HTTPClientTest.hpp
+    $<$<PLATFORM_ID:Windows,Linux,Darwin>:
+        # TODO: Add emscripten support
+        Source/HTTPClientTest/HTTPClientTest.cpp
+        Source/HTTPClientTest/HTTPClientTest.hpp
+    >
     Source/ImageEffectsTest/ImageEffectsTest.cpp
     Source/ImageEffectsTest/ImageEffectsTest.hpp
     Source/LineBatchTest/LineBatchTest.cpp
@@ -186,6 +189,10 @@ target_compile_options(${PRODUCT_NAME} PRIVATE
         $<$<CONFIG:Release>:/O2;/Ob2;/MT>
         $<$<CONFIG:Release>:/GL> # NOTE: For LTO build
     >
+    # NOTE: emcc (Emscripten Compiler Frontend)
+    $<$<PLATFORM_ID:Emscripten>:
+        -pthread
+    >
 )
 
 target_link_options(${PRODUCT_NAME} PRIVATE
@@ -211,6 +218,11 @@ target_link_options(${PRODUCT_NAME} PRIVATE
             /OPT:REF
             /LTCG # NOTE: For LTO build
         >
+    >
+    # NOTE: emcc (Emscripten Compiler Frontend)
+    $<$<PLATFORM_ID:Emscripten>:
+        "SHELL:-s WASM=1"
+        "SHELL:-s USE_PTHREADS=1"
     >
 )
 

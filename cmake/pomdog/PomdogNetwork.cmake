@@ -9,8 +9,6 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/Network/AddressParser.cpp
     ${POMDOG_SRC_DIR}/Network/AddressParser.hpp
     ${POMDOG_INC_DIR}/Network/ArrayView.hpp
-    ${POMDOG_SRC_DIR}/Network/EndPoint.cpp
-    ${POMDOG_SRC_DIR}/Network/EndPoint.hpp
     ${POMDOG_INC_DIR}/Network/ForwardDeclarations.hpp
     ${POMDOG_INC_DIR}/Network/HTTPClient.hpp
     ${POMDOG_SRC_DIR}/Network/HTTPClient.cpp
@@ -30,6 +28,21 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/Network/TLSStream.cpp
     ${POMDOG_INC_DIR}/Network/UDPStream.hpp
     ${POMDOG_SRC_DIR}/Network/UDPStream.cpp
+
+    $<$<PLATFORM_ID:Windows,Linux,Darwin>:
+        ${POMDOG_SRC_DIR}/Network/EndPoint.cpp
+        ${POMDOG_SRC_DIR}/Network/EndPoint.hpp
+    >
+
+    $<$<PLATFORM_ID:Emscripten>:
+        # NOTE: Emscripten
+        ${POMDOG_SRC_DIR}/Network.Emscripten/TCPStreamEmscripten.cpp
+        ${POMDOG_SRC_DIR}/Network.Emscripten/TCPStreamEmscripten.hpp
+        ${POMDOG_SRC_DIR}/Network.Emscripten/TLSStreamEmscripten.cpp
+        ${POMDOG_SRC_DIR}/Network.Emscripten/TLSStreamEmscripten.hpp
+        ${POMDOG_SRC_DIR}/Network.Emscripten/UDPStreamEmscripten.cpp
+        ${POMDOG_SRC_DIR}/Network.Emscripten/UDPStreamEmscripten.hpp
+    >
 
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:
         # NOTE: Network.MbedTLS

@@ -10,6 +10,8 @@
 #include "../Platform.Win32/TimeSourceWin32.hpp"
 #elif defined(POMDOG_PLATFORM_LINUX) || defined(POMDOG_PLATFORM_ANDROID)
 #include "../Platform.Linux/TimeSourceLinux.hpp"
+#elif defined(POMDOG_PLATFORM_EMSCRIPTEN)
+#include "../Platform.Emscripten/TimeSourceEmscripten.hpp"
 #else
 #error "Platform undefined or not supported."
 #endif
@@ -22,6 +24,8 @@ using TimeSource = Detail::Apple::TimeSourceApple;
 using TimeSource = Detail::Win32::TimeSourceWin32;
 #elif defined(POMDOG_PLATFORM_LINUX) || defined(POMDOG_PLATFORM_ANDROID)
 using TimeSource = Detail::Linux::TimeSourceLinux;
+#elif defined(POMDOG_PLATFORM_EMSCRIPTEN)
+using TimeSource = Detail::Emscripten::TimeSourceEmscripten;
 #else
 #error "Platform undefined or not supported."
 #endif

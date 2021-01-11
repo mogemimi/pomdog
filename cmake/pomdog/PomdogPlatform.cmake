@@ -1,8 +1,9 @@
-source_group(Platform.Apple REGULAR_EXPRESSION "(include/Pomdog/Platform/Apple|src/Platform.Apple)/*")
-source_group(Platform.Cocoa REGULAR_EXPRESSION "(include/Pomdog/Platform/Cocoa|src/Platform.Cocoa)/*")
-source_group(Platform.Linux REGULAR_EXPRESSION "(include/Pomdog/Platform/Linux|src/Platform.Linux)/*")
-source_group(Platform.Win32 REGULAR_EXPRESSION "(include/Pomdog/Platform/Win32|src/Platform.Win32)/*")
-source_group(Platform.X11   REGULAR_EXPRESSION "(include/Pomdog/Platform/X11|src/Platform.X11)/*")
+source_group(Platform.Apple      REGULAR_EXPRESSION "(include/Pomdog/Platform/Apple|src/Platform.Apple)/*")
+source_group(Platform.Cocoa      REGULAR_EXPRESSION "(include/Pomdog/Platform/Cocoa|src/Platform.Cocoa)/*")
+source_group(Platform.Emscripten REGULAR_EXPRESSION "(include/Pomdog/Platform/Emscripten|src/Platform.Emscripten)/*")
+source_group(Platform.Linux      REGULAR_EXPRESSION "(include/Pomdog/Platform/Linux|src/Platform.Linux)/*")
+source_group(Platform.Win32      REGULAR_EXPRESSION "(include/Pomdog/Platform/Win32|src/Platform.Win32)/*")
+source_group(Platform.X11        REGULAR_EXPRESSION "(include/Pomdog/Platform/X11|src/Platform.X11)/*")
 
 target_sources(pomdog_static PRIVATE
     $<$<PLATFORM_ID:Darwin,iOS>:
@@ -41,6 +42,14 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/Platform.Cocoa/GameHostMetal.mm
         ${POMDOG_SRC_DIR}/Platform.Cocoa/PomdogMetalViewController.hpp
         ${POMDOG_SRC_DIR}/Platform.Cocoa/PomdogMetalViewController.mm
+    >
+
+    $<$<PLATFORM_ID:Emscripten>:
+        # NOTE: Emscripten
+        ${POMDOG_SRC_DIR}/Platform.Emscripten/FileSystemEmscripten.cpp
+        ${POMDOG_SRC_DIR}/Platform.Emscripten/FileSystemEmscripten.hpp
+        ${POMDOG_SRC_DIR}/Platform.Emscripten/TimeSourceEmscripten.cpp
+        ${POMDOG_SRC_DIR}/Platform.Emscripten/TimeSourceEmscripten.hpp
     >
 
     $<$<PLATFORM_ID:Linux>:

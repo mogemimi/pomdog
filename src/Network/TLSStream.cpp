@@ -2,8 +2,13 @@
 
 #include "Pomdog/Network/TLSStream.hpp"
 #include "AddressParser.hpp"
+
+#if defined(POMDOG_PLATFORM_EMSCRIPTEN)
+#include "../Network.Emscripten/TLSStreamEmscripten.hpp"
+#else
 #include "../Network.MbedTLS/Certificates.hpp"
 #include "../Network.MbedTLS/TLSStreamMbedTLS.hpp"
+#endif
 
 namespace Pomdog {
 
@@ -31,16 +36,26 @@ TLSStream::Connect(IOService* service, std::string_view address)
 
     const auto [family, host, port] = Detail::AddressParser::TransformAddress(address);
 
+#if defined(POMDOG_PLATFORM_EMSCRIPTEN)
+    if (auto err = stream.nativeStream->Connect(host, port, std::chrono::seconds{5}); err != nullptr) {
+        return std::make_tuple(std::move(stream), std::move(err));
+    }
+#else
     const auto certPEM = Detail::GetEmbeddedCertificatePEM();
 
     if (auto err = stream.nativeStream->Connect(host, port, std::chrono::seconds{5}, certPEM); err != nullptr) {
         return std::make_tuple(std::move(stream), std::move(err));
     }
+#endif
     return std::make_tuple(std::move(stream), nullptr);
 }
 
 std::tuple<TLSStream, std::unique_ptr<Error>>
-TLSStream::Connect(IOService* service, std::string_view address, const Duration& timeout, const ArrayView<std::uint8_t const>& certPEM)
+TLSStream::Connect(
+    IOService* service,
+    std::string_view address,
+    const Duration& timeout,
+    [[maybe_unused]] const ArrayView<std::uint8_t const>& certPEM)
 {
     POMDOG_ASSERT(service != nullptr);
 
@@ -49,9 +64,15 @@ TLSStream::Connect(IOService* service, std::string_view address, const Duration&
 
     const auto [family, host, port] = Detail::AddressParser::TransformAddress(address);
 
+#if defined(POMDOG_PLATFORM_EMSCRIPTEN)
+    if (auto err = stream.nativeStream->Connect(host, port, timeout); err != nullptr) {
+        return std::make_tuple(std::move(stream), std::move(err));
+    }
+#else
     if (auto err = stream.nativeStream->Connect(host, port, timeout, certPEM); err != nullptr) {
         return std::make_tuple(std::move(stream), std::move(err));
     }
+#endif
     return std::make_tuple(std::move(stream), nullptr);
 }
 

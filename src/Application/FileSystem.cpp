@@ -9,6 +9,8 @@
 #include "../Platform.Win32/FileSystemWin32.hpp"
 #elif defined(POMDOG_PLATFORM_LINUX) || defined(POMDOG_PLATFORM_ANDROID)
 #include "../Platform.Linux/FileSystemLinux.hpp"
+#elif defined(POMDOG_PLATFORM_EMSCRIPTEN)
+#include "../Platform.Emscripten/FileSystemEmscripten.hpp"
 #else
 #error "Platform undefined or not supported."
 #endif
@@ -29,6 +31,8 @@ namespace PlatformFS = Detail::Apple;
 namespace PlatformFS = Detail::Win32;
 #elif defined(POMDOG_PLATFORM_LINUX) || defined(POMDOG_PLATFORM_ANDROID)
 namespace PlatformFS = Detail::Linux;
+#elif defined(POMDOG_PLATFORM_EMSCRIPTEN)
+namespace PlatformFS = Detail::Emscripten;
 #else
 #error "Platform undefined or not supported."
 #endif

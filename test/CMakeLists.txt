@@ -26,11 +26,17 @@ add_executable(PomdogTest)
 target_sources(PomdogTest PRIVATE
     ${POMDOG_TEST_DIR}/main.cpp
     ${POMDOG_TEST_DIR}/PomdogTest.cpp
-    ${POMDOG_TEST_DIR}/Application/FileSystemTest.cpp
+    $<$<PLATFORM_ID:Windows,Linux,Darwin>:
+        # TODO: Need to implement for Emscripten.
+        ${POMDOG_TEST_DIR}/Application/FileSystemTest.cpp
+    >
     ${POMDOG_TEST_DIR}/Application/GameClockTest.cpp
     ${POMDOG_TEST_DIR}/Application/TimerTest.cpp
-    ${POMDOG_TEST_DIR}/Experimental/Async/SchedulerTest.cpp
-    ${POMDOG_TEST_DIR}/Experimental/Async/TaskTest.cpp
+    $<$<PLATFORM_ID:Windows,Linux,Darwin>:
+        # TODO: Need to implement for Emscripten.
+        ${POMDOG_TEST_DIR}/Experimental/Async/SchedulerTest.cpp
+        ${POMDOG_TEST_DIR}/Experimental/Async/TaskTest.cpp
+    >
     ${POMDOG_TEST_DIR}/Experimental/ECS/EntityTest.cpp
     ${POMDOG_TEST_DIR}/Experimental/ECS/EntityManagerTest.cpp
     ${POMDOG_TEST_DIR}/Experimental/Random/Xoroshiro128StarStarTest.cpp
@@ -63,10 +69,13 @@ target_sources(PomdogTest PRIVATE
     ${POMDOG_TEST_DIR}/Math/Vector4Test.cpp
     ${POMDOG_TEST_DIR}/Network/ArrayViewTest.cpp
     ${POMDOG_TEST_DIR}/Network/Executor.hpp
-    ${POMDOG_TEST_DIR}/Network/HTTPClientTest.cpp
-    ${POMDOG_TEST_DIR}/Network/TCPStreamTest.cpp
-    ${POMDOG_TEST_DIR}/Network/TLSStreamTest.cpp
-    ${POMDOG_TEST_DIR}/Network/UDPStreamTest.cpp
+    $<$<PLATFORM_ID:Windows,Linux,Darwin>:
+        # TODO: Need to implement for Emscripten.
+        ${POMDOG_TEST_DIR}/Network/HTTPClientTest.cpp
+        ${POMDOG_TEST_DIR}/Network/TCPStreamTest.cpp
+        ${POMDOG_TEST_DIR}/Network/TLSStreamTest.cpp
+        ${POMDOG_TEST_DIR}/Network/UDPStreamTest.cpp
+    >
     ${POMDOG_TEST_DIR}/Signals/ConnectionTest.cpp
     ${POMDOG_TEST_DIR}/Signals/ConnectionListTest.cpp
     ${POMDOG_TEST_DIR}/Signals/DelegateTest.cpp
@@ -77,7 +86,10 @@ target_sources(PomdogTest PRIVATE
     ${POMDOG_TEST_DIR}/Utility/CRC32Test.cpp
     ${POMDOG_TEST_DIR}/Utility/ErrorsTest.cpp
     ${POMDOG_TEST_DIR}/Utility/PathHelperTest.cpp
-    ${POMDOG_TEST_DIR}/Utility/SpinLockTest.cpp
+    $<$<PLATFORM_ID:Windows,Linux,Darwin>:
+        # TODO: Need to implement for Emscripten.
+        ${POMDOG_TEST_DIR}/Utility/SpinLockTest.cpp
+    >
     ${POMDOG_TEST_DIR}/Utility/StringHelperTest.cpp
 )
 
@@ -133,6 +145,10 @@ target_compile_options(PomdogTest PRIVATE
         $<$<CONFIG:Release>:/O2;/Ob2;/MT>
         $<$<CONFIG:Release>:/GL> # NOTE: For LTO build
     >
+    # NOTE: emcc (Emscripten Compiler Frontend)
+    $<$<PLATFORM_ID:Emscripten>:
+        -pthread
+    >
 )
 
 target_link_options(PomdogTest PRIVATE
@@ -158,6 +174,11 @@ target_link_options(PomdogTest PRIVATE
             /OPT:REF
             /LTCG # NOTE: For LTO build
         >
+    >
+    # NOTE: emcc (Emscripten Compiler Frontend)
+    $<$<PLATFORM_ID:Emscripten>:
+        "SHELL:-s WASM=1"
+        "SHELL:-s USE_PTHREADS=1"
     >
 )
 

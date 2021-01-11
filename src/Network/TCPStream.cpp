@@ -6,6 +6,8 @@
     defined(POMDOG_PLATFORM_APPLE_IOS) || \
     defined(POMDOG_PLATFORM_LINUX)
 #include "../Network.POSIX/TCPStreamPOSIX.hpp"
+#elif defined(POMDOG_PLATFORM_EMSCRIPTEN)
+#include "../Network.Emscripten/TCPStreamEmscripten.hpp"
 #elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
 #include "../Network.Win32/TCPStreamWin32.hpp"
 #else
