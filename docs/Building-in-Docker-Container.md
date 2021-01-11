@@ -6,6 +6,7 @@ Pomdog uses the following docker containers for building and running test in CI.
 - Docker Hub:
   - [mogemimi/gamedev-ubuntu](https://hub.docker.com/r/mogemimi/gamedev-ubuntu) (Docker image based on Ubuntu)
   - [mogemimi/gamedev-archlinux](https://hub.docker.com/r/mogemimi/gamedev-archlinux) (Docker image based on Arch Linux)
+  - [mogemimi/gamedev-emscripten](https://hub.docker.com/r/mogemimi/gamedev-emscripten/) (Docker image for Emscripten)
 
 To build your Linux application with Pomdog inside Docker container, run the following steps.
 
