@@ -3,6 +3,8 @@
 #include "SocketHelperPOSIX.hpp"
 #include "../Utility/ErrorHelper.hpp"
 #include "Pomdog/Utility/Assert.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <fcntl.h>
 #include <netdb.h>
 #include <netinet/in.h>
@@ -11,6 +13,7 @@
 #include <sys/uio.h>
 #include <unistd.h>
 #include <cstring>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::Detail {
 namespace {
