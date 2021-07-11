@@ -83,9 +83,6 @@ private:
     int bottomY;
 };
 
-constexpr int SpriteFont::Impl::TextureWidth;
-constexpr int SpriteFont::Impl::TextureHeight;
-
 SpriteFont::Impl::Impl(
     std::vector<std::shared_ptr<Texture2D>>&& texturesIn,
     const std::vector<FontGlyph>& glyphsIn,

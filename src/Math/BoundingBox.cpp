@@ -9,8 +9,6 @@
 
 namespace Pomdog {
 
-constexpr int BoundingBox::CornerCount;
-
 BoundingBox::BoundingBox(const Vector3& minIn, const Vector3& maxIn)
     : Min(minIn)
     , Max(maxIn)

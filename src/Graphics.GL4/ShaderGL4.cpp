@@ -80,9 +80,6 @@ CompileShader(const ShaderBytecode& source, GLenum pipelineStage) noexcept
 } // namespace
 
 template <GLenum PipelineStage>
-constexpr GLenum ShaderGL4<PipelineStage>::pipelineStage;
-
-template <GLenum PipelineStage>
 std::unique_ptr<Error>
 ShaderGL4<PipelineStage>::Initialize(const ShaderBytecode& source) noexcept
 {

@@ -37,9 +37,6 @@ constexpr int FarLeftBottom = 7;
 
 } // namespace
 
-constexpr int BoundingFrustum::CornerCount;
-constexpr int BoundingFrustum::PlaneCount;
-
 BoundingFrustum::BoundingFrustum() = default;
 
 BoundingFrustum::BoundingFrustum(const Matrix4x4& matrixIn)
