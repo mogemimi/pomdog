@@ -2,10 +2,30 @@
 
 - Docker image: [mogemimi/gamedev-emscripten](https://hub.docker.com/r/mogemimi/gamedev-emscripten/)
 
+## Download and Install emsdk
+
 ```sh
+# Get the emsdk repository
+git clone https://github.com/emscripten-core/emsdk.git
+
+cd emsdk
+./emsdk install latest
+./emsdk activate latest
+source ./emsdk_env.sh
+```
+
+- https://emscripten.org/docs/getting_started/downloads.html
+
+## Build
+
+```sh
+# Enter the emsdk directory
 cd path/to/emsdk
+
+# Activate PATH and other environment variables in the current terminal
 source ./emsdk_env.sh
 
+# Enter your pomdog repository
 cd path/to/pomdog
 
 # Generate Ninja file
