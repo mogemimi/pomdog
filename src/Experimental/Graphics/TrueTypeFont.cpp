@@ -20,6 +20,9 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #pragma clang diagnostic ignored "-Wcomma"
 #pragma clang diagnostic ignored "-Wimplicit-fallthrough"
 #pragma clang diagnostic ignored "-Wreserved-id-macro"
+#if defined(__EMSCRIPTEN__)
+#pragma clang diagnostic ignored "-Wreserved-identifier"
+#endif
 #endif
 #include <stb_truetype.h>
 #if defined(__clang__)

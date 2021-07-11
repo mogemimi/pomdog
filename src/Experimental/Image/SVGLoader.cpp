@@ -30,6 +30,9 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #pragma clang diagnostic ignored "-Wreserved-id-macro"
 #pragma clang diagnostic ignored "-Wshadow"
 #pragma clang diagnostic ignored "-Wzero-as-null-pointer-constant"
+#if defined(__EMSCRIPTEN__)
+#pragma clang diagnostic ignored "-Wreserved-identifier"
+#endif
 #endif
 #if defined(__GNUC__) && !defined(__clang__)
 #pragma GCC diagnostic push
