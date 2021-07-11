@@ -65,11 +65,11 @@ POMDOG_INTERNAL_PACKED(struct DDSHeaderDXT10 final {
 
 namespace DirectDrawPixelFormat {
 
-static constexpr std::uint32_t FourCC      = 0x00000004; // DDPF_FOURCC
-static constexpr std::uint32_t AlphaPixels = 0x00000001; // DDPF_ALPHAPIXELS
-static constexpr std::uint32_t Alpha       = 0x00000002; // DDPF_ALPHA
-static constexpr std::uint32_t RGB         = 0x00000040; // DDPF_RGB
-static constexpr std::uint32_t Luminance   = 0x00020000; // DDPF_LUMINANCE
+constexpr std::uint32_t FourCC      = 0x00000004; // DDPF_FOURCC
+constexpr std::uint32_t AlphaPixels = 0x00000001; // DDPF_ALPHAPIXELS
+constexpr std::uint32_t Alpha       = 0x00000002; // DDPF_ALPHA
+constexpr std::uint32_t RGB         = 0x00000040; // DDPF_RGB
+constexpr std::uint32_t Luminance   = 0x00020000; // DDPF_LUMINANCE
 
 } // namespace DirectDrawPixelFormat
 

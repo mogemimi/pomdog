@@ -23,7 +23,7 @@ namespace Pomdog::Detail::GL4 {
 namespace {
 
 // NOTE: Please refer to D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT.
-static constexpr std::size_t ConstantBufferSlotCount = 14;
+constexpr std::size_t ConstantBufferSlotCount = 14;
 
 GLenum ToPrimitiveTopology(PrimitiveTopology primitiveTopology) noexcept
 {

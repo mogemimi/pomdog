@@ -44,11 +44,11 @@ std::array<std::uint32_t, 256U> MakeCRCTable() noexcept
     return crctable;
 }
 
-static const std::array<std::uint32_t, 256U> crctable = MakeCRCTable();
+const std::array<std::uint32_t, 256U> crctable = MakeCRCTable();
 
 #else // POMDOG_CRC32_CREATE_CRC_TABLE
 
-static constexpr std::array<std::uint32_t, 256U> crctable = {{
+constexpr std::array<std::uint32_t, 256U> crctable = {{
     // clang-format off
     0x00000000, 0x77073096, 0xee0e612c, 0x990951ba,
     0x076dc419, 0x706af48f, 0xe963a535, 0x9e6495a3,
@@ -118,8 +118,8 @@ static constexpr std::array<std::uint32_t, 256U> crctable = {{
 }};
 #endif // POMDOG_CRC32_CREATE_CRC_TABLE
 
-static constexpr std::uint32_t InitValueCRC32 = 0xffffffffUL;
-static constexpr std::uint32_t XorValueCRC32 = 0xffffffffUL;
+constexpr std::uint32_t InitValueCRC32 = 0xffffffffUL;
+constexpr std::uint32_t XorValueCRC32 = 0xffffffffUL;
 
 void UpdateChecksum(std::uint32_t& crcvalue, const std::uint8_t* data, std::size_t length) noexcept
 {

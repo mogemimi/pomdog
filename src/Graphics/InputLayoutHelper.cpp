@@ -9,7 +9,7 @@ namespace Pomdog {
 namespace {
 
 #ifdef DEBUG
-static constexpr std::uint16_t MaxInputSlotCount = 16;
+constexpr std::uint16_t MaxInputSlotCount = 16;
 #endif
 
 } // namespace
