@@ -1,0 +1,31 @@
+name: "Build on macOS"
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    strategy:
+        matrix:
+            build_config: [Debug, Release]
+    steps:
+      - name: Check out repositry
+        uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+      - name: Select Xcode version
+        run: sudo xcode-select -s '/Applications/Xcode_11.3.app/Contents/Developer'
+      - name: Show Xcode version
+        run: xcodebuild -version
+      - name: Generate Xcode projects
+        run: cmake -Bbuild.cmake -H. -G Xcode
+      - name: Clean
+        run: xcodebuild -project build.cmake/Pomdog.xcodeproj clean
+      - name: Build
+        run: xcodebuild -project build.cmake/Pomdog.xcodeproj -configuration ${{ matrix.build_config }}
+      - name: Run test
+        run: ./build.cmake/test/${{ matrix.build_config }}/PomdogTest
