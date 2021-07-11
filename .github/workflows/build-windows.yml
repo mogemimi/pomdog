@@ -1,0 +1,30 @@
+name: "Build on Windows"
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+        matrix:
+            os: [windows-latest] # [windows-latest, windows-2019]
+            build_config: [Debug, Release]
+    defaults:
+        run:
+            shell: bash
+    steps:
+      - name: Check out repositry
+        uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+          fetch-depth: 50 # FIXME: for giflib
+      - name: Generate Visual Studio projects
+        run: cmake -Bbuild.cmake -H. -G "Visual Studio 16"
+      - name: Build
+        run: cmake --build build.cmake --config ${{ matrix.build_config }}
+      - name: Run test
+        run: ./build.cmake/test/${{ matrix.build_config }}/PomdogTest
