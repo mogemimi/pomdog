@@ -20,8 +20,8 @@ Feedback, issues and pull requests are always welcome!
 
 Pomdog is available and supported on the following platforms:
 
-* macOS 10.14 and later [![Build Status](https://travis-ci.org/mogemimi/pomdog.svg?branch=main)](https://travis-ci.org/mogemimi/pomdog)
-* Windows 10 and later [![Build status](https://ci.appveyor.com/api/projects/status/hywx5fmkrk7gpdpl/branch/main?svg=true)](https://ci.appveyor.com/project/mogemimi/pomdog/branch/main)
+* macOS 10.14 and later [![Build on macOS](https://github.com/mogemimi/pomdog/actions/workflows/build-macos.yml/badge.svg)](https://github.com/mogemimi/pomdog/actions/workflows/build-macos.yml)
+* Windows 10 and later [![Build on Windows](https://github.com/mogemimi/pomdog/actions/workflows/build-windows.yml/badge.svg)](https://github.com/mogemimi/pomdog/actions/workflows/build-windows.yml)
 * Linux (Ubuntu 20.04 and Arch Linux) [![wercker status](https://app.wercker.com/status/e7bab185762fa586284d832580e89561/s/main "wercker status")](https://app.wercker.com/project/byKey/e7bab185762fa586284d832580e89561)
 * Emscripten and WebAssembly (Wasm) [![wercker status](https://app.wercker.com/status/e7bab185762fa586284d832580e89561/s/main "wercker status")](https://app.wercker.com/project/byKey/e7bab185762fa586284d832580e89561)
 
