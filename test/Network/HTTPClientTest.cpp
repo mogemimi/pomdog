@@ -61,7 +61,7 @@ TEST_CASE("Transfer-Encoding has a 'chunked' operation.", "[Network]")
         REQUIRE(StringHelper::HasPrefix(text,
             "<!doctype html><html itemscope=\"\" itemtype=\"http://schema.org/WebPage\" lang=\""));
         REQUIRE(text.find("<head><meta charset=\"UTF-8\"><meta content=\"origin\" name=\"referrer\">"));
-        REQUIRE(StringHelper::HasSuffix(text, "</script></body></html>\r\n"));
+        REQUIRE(StringHelper::HasSuffix(text, "</script>        </body></html>\r\n"));
 
         executor.ExitLoop();
     });
