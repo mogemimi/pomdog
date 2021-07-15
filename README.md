@@ -22,8 +22,8 @@ Pomdog is available and supported on the following platforms:
 
 * macOS 10.14 and later [![Build on macOS](https://github.com/mogemimi/pomdog/actions/workflows/build-macos.yml/badge.svg)](https://github.com/mogemimi/pomdog/actions/workflows/build-macos.yml)
 * Windows 10 and later [![Build on Windows](https://github.com/mogemimi/pomdog/actions/workflows/build-windows.yml/badge.svg)](https://github.com/mogemimi/pomdog/actions/workflows/build-windows.yml)
-* Linux (Ubuntu 20.04 and Arch Linux) [![wercker status](https://app.wercker.com/status/e7bab185762fa586284d832580e89561/s/main "wercker status")](https://app.wercker.com/project/byKey/e7bab185762fa586284d832580e89561)
-* Emscripten and WebAssembly (Wasm) [![wercker status](https://app.wercker.com/status/e7bab185762fa586284d832580e89561/s/main "wercker status")](https://app.wercker.com/project/byKey/e7bab185762fa586284d832580e89561)
+* Linux (Ubuntu 20.04 and Arch Linux) [![Build on Linux](https://github.com/mogemimi/pomdog/actions/workflows/build-linux.yml/badge.svg)](https://github.com/mogemimi/pomdog/actions/workflows/build-linux.yml)
+* Emscripten and WebAssembly (Wasm) [![Build on Emscripten](https://github.com/mogemimi/pomdog/actions/workflows/build-emscripten.yml/badge.svg)](https://github.com/mogemimi/pomdog/actions/workflows/build-archlinux.yml)
 
 Please refer to [Architecture](docs/Architecture.md) in the wiki for more details about the supported platforms and backends such as OpenGL, Metal, Vulkan, DirectX 11 and 12.
 
