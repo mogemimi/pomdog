@@ -14,12 +14,15 @@ jobs:
     strategy:
       matrix:
         build_config: [Debug, Release]
+    defaults:
+      run:
+        shell: bash
     steps:
       - name: Check out repositry
         uses: actions/checkout@v2
         with:
           submodules: 'recursive'
-          fetch-depth: 40 # FIXME: for giflib submodule
+          fetch-depth: 50 # FIXME: for giflib submodule
       - name: Set the environment variables
         run: source $EMSDK/emsdk/emsdk_env.sh
       - name: Show Emscripten Compiler version
