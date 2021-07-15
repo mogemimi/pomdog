@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           submodules: 'recursive'
-          fetch-depth: 30 # FIXME: for giflib submodule
+          fetch-depth: 40 # FIXME: for giflib submodule
       - name: Select Xcode version
         run: sudo xcode-select -s '/Applications/Xcode_11.3.app/Contents/Developer'
       - name: Show Xcode version
