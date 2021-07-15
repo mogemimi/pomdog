@@ -17,6 +17,9 @@ jobs:
     defaults:
       run:
         shell: bash
+    env:
+      EMSDK: /emsdk
+      EM_CONFIG: /emsdk/.emscripten
     steps:
       - name: Check out repositry
         uses: actions/checkout@v2
@@ -24,7 +27,7 @@ jobs:
           submodules: 'recursive'
           fetch-depth: 50 # FIXME: for giflib submodule
       - name: Set the environment variables
-        run: source $EMSDK/emsdk/emsdk_env.sh
+        run: source $EMSDK/emsdk_env.sh
       - name: Show Emscripten Compiler version
         run: $EMSDK/upstream/emscripten/em++ --version
       - name: Generate Ninja files

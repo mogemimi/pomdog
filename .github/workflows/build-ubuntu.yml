@@ -15,12 +15,10 @@ jobs:
       matrix:
         build_config: [Debug, Release]
         cmake_flags:
-          - |
-            -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
-            -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++ -lc++abi"
-          - |
-            -DCMAKE_CXX_FLAGS="-stdlib=libstdc++" \
-            -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libstdc++"
+          - cxx_flags: -stdlib=libc++
+            linker_flags: -stdlib=libc++ -lc++abi
+          - cxx_flags: -stdlib=libstdc++
+            linker_flags: -stdlib=libstdc++
     steps:
       - name: Check out repositry
         uses: actions/checkout@v2
@@ -30,10 +28,11 @@ jobs:
       - name: Generate Ninja files
         run: |
           cmake -Bbuild.cmake -H. -G Ninja \
+            -DCMAKE_BUILD_TYPE=${{ matrix.build_config }} \
             -DCMAKE_C_COMPILER=clang \
             -DCMAKE_CXX_COMPILER=clang++ \
-            ${{ matrix.cmake_flags }} \
-            -DCMAKE_BUILD_TYPE=${{ matrix.build_config }}
+            -DCMAKE_CXX_FLAGS="${{ matrix.cmake_flags.cxx_flags }}" \
+            -DCMAKE_EXE_LINKER_FLAGS="${{ matrix.cmake_flags.linker_flags }}"
       - name: Build
         run: ninja -C build.cmake
       - name: Run test
