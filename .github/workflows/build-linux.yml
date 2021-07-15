@@ -1,0 +1,50 @@
+name: "Build on Linux"
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ matrix.build_targets.image }}
+    strategy:
+      matrix:
+        build_config: [Debug, Release]
+        build_targets:
+          - image: mogemimi/gamedev-ubuntu
+            c_compiler: clang
+            cxx_compiler: clang++
+            cxx_flags: -stdlib=libc++
+            linker_flags: -stdlib=libc++ -lc++abi
+          - image: mogemimi/gamedev-ubuntu
+            c_compiler: clang
+            cxx_compiler: clang++
+            cxx_flags: -stdlib=libstdc++
+            linker_flags: -stdlib=libstdc++
+          - image: mogemimi/gamedev-archlinux
+            c_compiler: gcc
+            cxx_compiler: g++
+            cxx_flags: ""
+            linker_flags: ""
+    steps:
+      - name: Check out repositry
+        uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+          fetch-depth: 50 # FIXME: for giflib submodule
+      - name: Generate Ninja files
+        run: |
+          cmake -Bbuild.cmake -H. -G Ninja \
+            -DCMAKE_BUILD_TYPE=${{ matrix.build_config }} \
+            -DCMAKE_C_COMPILER=${{ matrix.build_targets.c_compiler }} \
+            -DCMAKE_CXX_COMPILER=${{ matrix.build_targets.cxx_compiler }} \
+            -DCMAKE_CXX_FLAGS="${{ matrix.build_targets.cxx_flags }}" \
+            -DCMAKE_EXE_LINKER_FLAGS="${{ matrix.build_targets.linker_flags }}"
+      - name: Build
+        run: ninja -C build.cmake
+      - name: Run test
+        run: ./build.cmake/test/PomdogTest

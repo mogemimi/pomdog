@@ -19,19 +19,19 @@ jobs:
         shell: bash
     env:
       EMSDK: /emsdk
-      EM_CONFIG: /emsdk/.emscripten
     steps:
       - name: Check out repositry
         uses: actions/checkout@v2
         with:
           submodules: 'recursive'
           fetch-depth: 50 # FIXME: for giflib submodule
-      - name: Set the environment variables
-        run: source $EMSDK/emsdk_env.sh
       - name: Show Emscripten Compiler version
-        run: $EMSDK/upstream/emscripten/em++ --version
+        run: |
+          source $EMSDK/emsdk_env.sh
+          $EMSDK/upstream/emscripten/em++ --version
       - name: Generate Ninja files
         run: |
+          source $EMSDK/emsdk_env.sh
           cmake -Bbuild.cmake -H. -G Ninja \
             -DCMAKE_BUILD_TYPE=${{ matrix.build_config }} \
             -DCMAKE_TOOLCHAIN_FILE=$EMSDK/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake
@@ -39,6 +39,7 @@ jobs:
         run: ninja -C build.cmake
       - name: Run test
         run: |
+          source $EMSDK/emsdk_env.sh
           node \
             --experimental-modules \
             --experimental-wasm-modules \
