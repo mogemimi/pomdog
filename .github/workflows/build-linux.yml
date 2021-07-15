@@ -13,6 +13,10 @@ jobs:
       image: ${{ matrix.image }}
     strategy:
       matrix:
+        image: []
+        c_compiler: []
+        cxx_compiler: []
+        cmake_flags: []
         build_config: [Debug, Release]
         include:
           - image: mogemimi/gamedev-ubuntu
