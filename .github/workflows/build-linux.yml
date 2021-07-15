@@ -1,0 +1,50 @@
+name: "Build on Linux"
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ matrix.image }}
+    strategy:
+      matrix:
+        build_config: [Debug, Release]
+        include:
+          - image: mogemimi/gamedev-ubuntu
+            c_compiler: clang
+            cxx_compiler: clang++
+            cmake_flags: |
+              -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
+              -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libc++ -lc++abi"
+          - image: mogemimi/gamedev-ubuntu
+            c_compiler: clang
+            cxx_compiler: clang++
+            cmake_flags: |
+              -DCMAKE_CXX_FLAGS="-stdlib=libstdc++" \
+              -DCMAKE_EXE_LINKER_FLAGS="-stdlib=libstdc++"
+          - image: mogemimi/gamedev-archlinux
+            c_compiler: gcc
+            cxx_compiler: g++
+            cmake_flags: ""
+    steps:
+      - name: Check out repositry
+        uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+          fetch-depth: 30 # FIXME: for giflib submodule
+      - name: Generate Ninja files
+        run: |
+          cmake -Bbuild.cmake -H. -G Ninja \
+            -DCMAKE_C_COMPILER=${{ matrix.c_compiler }} \
+            -DCMAKE_CXX_COMPILER=${{ matrix.cxx_compiler }} \
+            ${{ matrix.cmake_flags }} \
+            -DCMAKE_BUILD_TYPE=${{ matrix.build_config }}
+      - name: Build
+        run: ninja -C build.cmake
+      - name: Run test
+        run: ./build.cmake/test/PomdogTest

@@ -10,8 +10,8 @@ jobs:
   build:
     runs-on: macos-latest
     strategy:
-        matrix:
-            build_config: [Debug, Release]
+      matrix:
+        build_config: [Debug, Release]
     steps:
       - name: Check out repositry
         uses: actions/checkout@v2

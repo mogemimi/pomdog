@@ -1,0 +1,40 @@
+name: "Build on Emscripten"
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: mogemimi/gamedev-emscripten
+    strategy:
+      matrix:
+        build_config: [Debug, Release]
+    steps:
+      - name: Check out repositry
+        uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+          fetch-depth: 30 # FIXME: for giflib submodule
+      - name: Set the environment variables
+        run: source /emsdk/emsdk_env.sh
+      - name: Show Emscripten Compiler version
+        run: $EMSDK/upstream/emscripten/em++ --version
+      - name: Generate Ninja files
+        run: |
+          cmake -Bbuild.cmake -H. -G Ninja \
+            -DCMAKE_BUILD_TYPE=${{ matrix.build_config }} \
+            -DCMAKE_TOOLCHAIN_FILE=$EMSDK/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake
+      - name: Build
+        run: ninja -C build.cmake
+      - name: Run test
+        run: |
+          node \
+            --experimental-modules \
+            --experimental-wasm-modules \
+            --experimental-wasm-threads \
+            ./build.cmake/test/PomdogTest.js
