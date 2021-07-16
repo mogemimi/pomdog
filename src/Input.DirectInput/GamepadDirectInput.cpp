@@ -603,6 +603,8 @@ void GamepadDirectInput::EnumerateDevices()
     POMDOG_ASSERT(directInput != nullptr);
     POMDOG_ASSERT(windowHandle != nullptr);
 
+    std::lock_guard<std::mutex> lock(mutex);
+
     auto hr = directInput->EnumDevices(
         DI8DEVCLASS_GAMECTRL,
         EnumGamepadsCallback,
@@ -662,6 +664,8 @@ GamepadState GamepadDirectInput::GetState(PlayerIndex playerIndex) const
 
 void GamepadDirectInput::PollEvents()
 {
+    std::lock_guard<std::mutex> lock(mutex);
+
     for (auto& gamepad : gamepads) {
         if (!gamepad.state.IsConnected) {
             continue;

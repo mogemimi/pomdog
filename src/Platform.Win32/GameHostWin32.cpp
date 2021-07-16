@@ -349,10 +349,12 @@ private:
     std::unique_ptr<IOService> ioService;
     std::unique_ptr<HTTPClient> httpClient;
 
+    std::thread gamepadThread;
+
     Duration presentationInterval;
     SurfaceFormat backBufferSurfaceFormat;
     SurfaceFormat backBufferDepthStencilFormat;
-    bool exitRequest = false;
+    std::atomic<bool> exitRequest = false;
     bool surfaceResizeRequest = false;
 };
 
@@ -433,11 +435,22 @@ GameHostWin32::Impl::Initialize(
     }
     httpClient = std::make_unique<HTTPClient>(ioService.get());
 
+    gamepadThread = std::thread([this] {
+        while (!exitRequest) {
+            gamepad->EnumerateDevices();
+            std::this_thread::sleep_for(std::chrono::milliseconds(800));
+        }
+    });
+
     return nullptr;
 }
 
 GameHostWin32::Impl::~Impl()
 {
+    if (gamepadThread.joinable()) {
+        gamepadThread.join();
+    }
+
     eventQueue.reset();
     httpClient.reset();
     if (auto err = ioService->Shutdown(); err != nullptr) {
@@ -466,10 +479,6 @@ void GameHostWin32::Impl::Run(Game& game)
         clock.Tick();
         MessagePump();
         DoEvents();
-        constexpr int64_t gamepadDetectionInterval = 240;
-        if (((clock.GetFrameNumber() % gamepadDetectionInterval) == 16) && (clock.GetFrameRate() >= 30.0f)) {
-            gamepad->EnumerateDevices();
-        }
         gamepad->PollEvents();
         ioService->Step();
         subsystemScheduler.OnUpdate();
@@ -479,14 +488,11 @@ void GameHostWin32::Impl::Run(Game& game)
         auto elapsedTime = clock.GetElapsedTime();
 
         if (elapsedTime < presentationInterval) {
-            auto sleepTime = presentationInterval - elapsedTime;
-            using namespace std::chrono;
-            std::this_thread::sleep_for(duration_cast<milliseconds>(sleepTime));
+            ::Sleep(1);
         }
     }
 
     window->Close();
-    //DoEvents();
     MessagePump();
 }
 

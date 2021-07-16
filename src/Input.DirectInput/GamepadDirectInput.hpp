@@ -15,6 +15,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>
 #include <cstdint>
 #include <memory>
+#include <mutex>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog {
@@ -74,6 +75,7 @@ private:
     std::array<GamepadDevice, 4> gamepads;
     HWND windowHandle = nullptr;
     Microsoft::WRL::ComPtr<IDirectInput8> directInput;
+    std::mutex mutex;
 };
 
 } // namespace Pomdog::Detail::DirectInput
