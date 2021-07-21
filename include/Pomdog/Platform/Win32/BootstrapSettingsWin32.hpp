@@ -6,7 +6,7 @@
 
 namespace Pomdog::Detail::Win32 {
 
-struct BootstrapSettingsWin32 {
+struct BootstrapSettingsWin32 final {
     HINSTANCE HInstance = nullptr;
     int CmdShow = SW_SHOWDEFAULT;
     HICON Icon = nullptr;
