@@ -12,8 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
-namespace StringHelper {
+namespace Pomdog::StringHelper {
 
 POMDOG_EXPORT
 bool HasPrefix(std::string_view s, std::string_view prefix);
@@ -57,5 +56,4 @@ std::string Format(const char* format, ...)
     ;
 #endif
 
-} // namespace StringHelper
-} // namespace Pomdog
+} // namespace Pomdog::StringHelper
