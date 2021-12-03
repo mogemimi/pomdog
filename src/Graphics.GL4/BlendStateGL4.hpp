@@ -6,7 +6,6 @@
 #include "../Utility/Tagged.hpp"
 #include "Pomdog/Basic/ConditionalCompilation.hpp"
 #include "Pomdog/Graphics/ForwardDeclarations.hpp"
-#include "Pomdog/Math/Color.hpp"
 #include "Pomdog/Utility/Errors.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
