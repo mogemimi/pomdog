@@ -66,7 +66,7 @@ TrueTypeFont::Impl::LoadFont(const std::string& filePath)
     POMDOG_ASSERT(stream);
 
     if (byteLength <= 0) {
-        return Errors::Wrap(std::move(sizeErr), "the font file is too small " + filePath);
+        return Errors::New("the font file is too small " + filePath);
     }
 
     Reset();
@@ -78,7 +78,7 @@ TrueTypeFont::Impl::LoadFont(const std::string& filePath)
     if (!stbtt_InitFont(&fontInfo, ttfBinary.data(), offset)) {
         ttfBinary.clear();
 
-        return Errors::Wrap(std::move(sizeErr), "failed to initialize truetype font " + filePath);
+        return Errors::New("failed to initialize truetype font " + filePath);
     }
 
     return nullptr;
