@@ -45,6 +45,9 @@ target_compile_options(catch2_static PRIVATE
         /Gy
         $<$<CONFIG:Debug>:/MTd>
         $<$<CONFIG:Release>:/MT>
+
+        # NOTE: https://github.com/catchorg/Catch2/issues/2174
+        /Zc:hiddenFriend-
     >
     # NOTE: emcc (Emscripten Compiler Frontend)
     $<$<PLATFORM_ID:Emscripten>:
