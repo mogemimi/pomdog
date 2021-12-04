@@ -37,6 +37,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #pragma GCC diagnostic pop
 #endif
 
+#include <algorithm>
 #include <cstring>
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
@@ -47,6 +48,7 @@ namespace {
 std::string MbedTLSErrorToString(int err)
 {
     std::array<char, 128> buf;
+    std::fill(std::begin(buf), std::end(buf), '\0');
     mbedtls_strerror(err, buf.data(), buf.size());
     buf.back() = 0;
     return buf.data();
