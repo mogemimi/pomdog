@@ -79,6 +79,7 @@ BuildInfoQueue(ID3D11Device* nativeDevice) noexcept
     return std::make_tuple(std::move(infoQueue), nullptr);
 }
 
+#if defined(DEBUG) && !defined(NDEBUG)
 [[nodiscard]] std::unique_ptr<Error>
 CheckError(ID3D11InfoQueue* infoQueue) noexcept
 {
@@ -112,6 +113,7 @@ CheckError(ID3D11InfoQueue* infoQueue) noexcept
 
     return nullptr;
 }
+#endif
 
 [[nodiscard]] D3D11_BIND_FLAG
 ToBindFlag(BufferBindMode bindMode) noexcept
