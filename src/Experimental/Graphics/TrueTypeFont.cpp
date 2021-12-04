@@ -21,7 +21,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #pragma clang diagnostic ignored "-Wcomma"
 #pragma clang diagnostic ignored "-Wimplicit-fallthrough"
 #pragma clang diagnostic ignored "-Wreserved-id-macro"
-#if defined(__clang__) && (__clang_major__ >= 13) && !defined(__APPLE_CC__)
+#if (__clang_major__ >= 13) && !defined(__APPLE_CC__)
 #pragma clang diagnostic ignored "-Wreserved-identifier"
 #endif
 #endif

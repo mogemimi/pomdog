@@ -30,7 +30,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #pragma clang diagnostic ignored "-Wreserved-id-macro"
 #pragma clang diagnostic ignored "-Wshadow"
 #pragma clang diagnostic ignored "-Wzero-as-null-pointer-constant"
-#if defined(__clang__) && (__clang_major__ >= 13) && !defined(__APPLE_CC__)
+#if (__clang_major__ >= 13) && !defined(__APPLE_CC__)
 #pragma clang diagnostic ignored "-Wreserved-identifier"
 #endif
 #endif
