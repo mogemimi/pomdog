@@ -15,7 +15,7 @@ go build
 cd path/to/pomdog
 
 # Generate a header file from game controller DB
-go run tools/generate_gamepad_db/main.go \
+./tools/generate_gamepad_db/generate_gamepad_db \
     -i dependencies/SDL_GameControllerDB/gamecontrollerdb.txt \
     -o dependencies/vendor/SDL_GameControllerDB/SDL_GameControllerDB.h
 ```
