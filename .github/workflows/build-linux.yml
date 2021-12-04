@@ -45,6 +45,6 @@ jobs:
             -DCMAKE_CXX_FLAGS="${{ matrix.build_targets.cxx_flags }}" \
             -DCMAKE_EXE_LINKER_FLAGS="${{ matrix.build_targets.linker_flags }}"
       - name: Build
-        run: ninja -C build.cmake
+        run: ninja -C build.cmake -k 20
       - name: Run test
         run: ./build.cmake/test/PomdogTest
