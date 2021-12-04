@@ -11,6 +11,7 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <fstream>
+#include <limits>
 #include <locale>
 #include <utility>
 #include <vector>
