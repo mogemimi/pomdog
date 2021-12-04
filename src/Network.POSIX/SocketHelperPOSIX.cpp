@@ -97,7 +97,16 @@ ConnectSocketPOSIX(
             if (socketLastError == std::errc::operation_in_progress) {
                 fd_set waitSet;
 
+#if defined(__clang__)
+#pragma clang diagnostic push
+#if (__clang_major__ >= 13) && !defined(__APPLE_CC__)
+#pragma clang diagnostic ignored "-Wreserved-identifier"
+#endif
+#endif
                 FD_ZERO(&waitSet);
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif
                 FD_SET(descriptor, &waitSet);
 
                 auto connectTimeout = ToTimeval(connectTimeoutIn);
