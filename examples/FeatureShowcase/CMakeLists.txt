@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.20)
 project(FeatureShowcase CXX)
 
 # NOTE: Remove /RTC1 option from default compiler options for Visual Studio
