@@ -19,13 +19,13 @@ jobs:
           submodules: 'recursive'
           fetch-depth: 50 # FIXME: for giflib submodule
       - name: Select Xcode version
-        run: sudo xcode-select -s '/Applications/Xcode_11.3.app/Contents/Developer'
+        run: sudo xcode-select -s '/Applications/Xcode_13.1.app/Contents/Developer'
       - name: Show Xcode version
         run: xcodebuild -version
       - name: Generate Xcode projects
         run: cmake -Bbuild.cmake -H. -G Xcode
-      - name: Clean
-        run: xcodebuild -project build.cmake/Pomdog.xcodeproj clean
+      # - name: Clean
+      #   run: xcodebuild -project build.cmake/Pomdog.xcodeproj clean
       - name: Build
         run: xcodebuild -project build.cmake/Pomdog.xcodeproj -configuration ${{ matrix.build_config }}
       - name: Run test
