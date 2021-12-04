@@ -2,7 +2,7 @@
 
 #include "Pomdog/Application/Timer.hpp"
 #include "Pomdog/Application/GameClock.hpp"
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 #include <chrono>
 #include <cmath>
 #include <thread>

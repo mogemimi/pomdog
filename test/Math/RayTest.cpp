@@ -3,7 +3,7 @@
 #include "Pomdog/Math/Ray.hpp"
 #include "Pomdog/Math/BoundingBox.hpp"
 #include "Pomdog/Math/BoundingSphere.hpp"
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 #include <limits>
 
 using Pomdog::Ray;

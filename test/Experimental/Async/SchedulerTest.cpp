@@ -2,7 +2,7 @@
 
 #include "Pomdog/Experimental/Async/ImmediateScheduler.hpp"
 #include "Pomdog/Experimental/Async/QueuedScheduler.hpp"
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 #include <thread>
 
 using Pomdog::Concurrency::QueuedScheduler;

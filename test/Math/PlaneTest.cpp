@@ -6,7 +6,7 @@
 #include "Pomdog/Math/BoundingSphere.hpp"
 #include "Pomdog/Math/PlaneIntersectionType.hpp"
 #include "Pomdog/Math/Ray.hpp"
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 
 using namespace Pomdog;
 

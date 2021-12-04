@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Network/ArrayView.hpp"
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 #include <array>
 #include <cstdint>
 #include <string>

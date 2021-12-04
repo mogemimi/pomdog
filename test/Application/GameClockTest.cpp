@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Application/GameClock.hpp"
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 #include <chrono>
 #include <cmath>
 #include <thread>

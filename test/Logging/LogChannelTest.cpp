@@ -4,7 +4,7 @@
 #include "Pomdog/Logging/LogEntry.hpp"
 #include "Pomdog/Signals/Connection.hpp"
 #include "Pomdog/Signals/ScopedConnection.hpp"
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 
 using Pomdog::LogChannel;
 using Pomdog::LogEntry;

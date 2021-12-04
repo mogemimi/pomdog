@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Utility/Detail/SpinLock.hpp"
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 #include <array>
 #include <memory>
 #include <mutex>

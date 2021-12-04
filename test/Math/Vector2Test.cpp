@@ -2,7 +2,7 @@
 
 #include "Pomdog/Math/Vector2.hpp"
 #include "Pomdog/Math/Math.hpp"
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 
 using Pomdog::Vector2;
 
@@ -66,7 +66,7 @@ TEST_CASE("Vector2", "[Vector2]")
     {
         REQUIRE(Vector2::Rotate(Vector2{0.0f, 0.0f}, 0.0f) == Vector2{0.0f, 0.0f});
 
-        const auto approx = [](float x) -> auto { return Approx(x).margin(0.000001f); };
+        const auto approx = [](float x) -> auto { return Catch::Approx(x).margin(0.000001f); };
         {
             auto vec = Vector2::Rotate(Vector2{1.0f, 0.0f}, 0.0f);
             REQUIRE(vec.X == approx(1.0f));

@@ -3,7 +3,7 @@
 #include "Pomdog/Math/Matrix4x4.hpp"
 #include "Pomdog/Math/Radian.hpp"
 #include "Pomdog/Math/Vector3.hpp"
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 
 using Pomdog::Matrix4x4;
 using Pomdog::Vector3;

@@ -5,7 +5,7 @@
 #include "Pomdog/Experimental/ECS/Entity.hpp"
 #include "Pomdog/Experimental/ECS/EntityArchtype.hpp"
 #include "Pomdog/Math/Vector3.hpp"
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 #include <cstdint>
 #include <memory>
 

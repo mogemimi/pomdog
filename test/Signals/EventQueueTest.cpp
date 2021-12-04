@@ -2,7 +2,7 @@
 
 #include "Pomdog/Signals/EventQueue.hpp"
 #include "Pomdog/Signals/Connection.hpp"
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 #include <any>
 #include <utility>
 

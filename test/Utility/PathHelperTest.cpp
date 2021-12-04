@@ -2,7 +2,7 @@
 
 #include "Pomdog/Utility/PathHelper.hpp"
 #include "Pomdog/Basic/Platform.hpp"
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 
 namespace PathHelper = Pomdog::PathHelper;
 

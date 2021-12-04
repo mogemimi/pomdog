@@ -10,7 +10,7 @@
 #include "Pomdog/Network/IOService.hpp"
 #include "Pomdog/Utility/Errors.hpp"
 #include "Pomdog/Utility/StringHelper.hpp"
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 #include <algorithm>
 #include <cstring>
 #include <sstream>

@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
 #include "Pomdog/Experimental/ECS/Entity.hpp"
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 #include <algorithm>
 #include <cstdint>
 

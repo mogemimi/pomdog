@@ -2,7 +2,7 @@
 
 #include "Pomdog/Experimental/Async/Task.hpp"
 #include "Pomdog/Experimental/Async/Helpers.hpp"
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 #include <thread>
 
 using Pomdog::Concurrency::Task;

@@ -2,7 +2,7 @@
 
 #include "Pomdog/Math/Rectangle.hpp"
 #include "Pomdog/Math/Point2D.hpp"
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 
 using Pomdog::Point2D;
 using Pomdog::Rectangle;

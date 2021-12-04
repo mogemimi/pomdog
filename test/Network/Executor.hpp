@@ -4,7 +4,7 @@
 
 #include "Pomdog/Application/GameClock.hpp"
 #include "Pomdog/Network/IOService.hpp"
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 #include <memory>
 #include <thread>
 

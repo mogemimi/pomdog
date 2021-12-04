@@ -3,7 +3,7 @@
 #include "Pomdog/Application/FileSystem.hpp"
 #include "Pomdog/Basic/Platform.hpp"
 #include "Pomdog/Utility/StringHelper.hpp"
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 
 using namespace Pomdog;
 

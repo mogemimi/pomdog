@@ -8,7 +8,7 @@
 #include "Pomdog/Signals/ConnectionList.hpp"
 #include "Pomdog/Utility/Errors.hpp"
 #include "Pomdog/Utility/StringHelper.hpp"
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 #include <cstring>
 #include <sstream>
 #include <thread>

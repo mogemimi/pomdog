@@ -7,7 +7,7 @@
 #include "Pomdog/Math/Matrix4x4.hpp"
 #include "Pomdog/Math/Plane.hpp"
 #include "Pomdog/Math/Radian.hpp"
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 
 using namespace Pomdog;
 

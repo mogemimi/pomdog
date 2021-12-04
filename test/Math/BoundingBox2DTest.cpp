@@ -3,7 +3,7 @@
 #include "Pomdog/Math/BoundingBox2D.hpp"
 #include "Pomdog/Math/BoundingCircle.hpp"
 #include "Pomdog/Math/ContainmentType.hpp"
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 
 using namespace Pomdog;
 
