@@ -46,6 +46,10 @@ target_compile_options(catch2_static PRIVATE
         $<$<CONFIG:Debug>:/MTd>
         $<$<CONFIG:Release>:/MT>
     >
+    # NOTE: emcc (Emscripten Compiler Frontend)
+    $<$<PLATFORM_ID:Emscripten>:
+        -pthread
+    >
 )
 
 set_target_properties(catch2_static PROPERTIES
