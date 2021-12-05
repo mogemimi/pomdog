@@ -1,23 +1,23 @@
-source_group(Utility REGULAR_EXPRESSION "(include/Pomdog|src)/Utility/*")
+source_group(utility REGULAR_EXPRESSION "pomdog/utility/*")
 
 target_sources(pomdog_static PRIVATE
-    # NOTE: Utility
-    ${POMDOG_SRC_DIR}/Utility/AlignedNew.hpp
-    ${POMDOG_INC_DIR}/Utility/Assert.hpp
-    ${POMDOG_INC_DIR}/Utility/Detail/CRC32.hpp
-    ${POMDOG_SRC_DIR}/Utility/CRC32.cpp
-    ${POMDOG_SRC_DIR}/Utility/ErrorHelper.hpp
-    ${POMDOG_SRC_DIR}/Utility/ErrorHelper.cpp
-    ${POMDOG_INC_DIR}/Utility/Errors.hpp
-    ${POMDOG_SRC_DIR}/Utility/Errors.cpp
-    ${POMDOG_SRC_DIR}/Utility/Exception.hpp
-    ${POMDOG_INC_DIR}/Utility/PathHelper.hpp
-    ${POMDOG_SRC_DIR}/Utility/PathHelper.cpp
-    ${POMDOG_SRC_DIR}/Utility/ScopeGuard.hpp
-    ${POMDOG_SRC_DIR}/Utility/ScopeGuard.cpp
-    ${POMDOG_INC_DIR}/Utility/Detail/SpinLock.hpp
-    ${POMDOG_SRC_DIR}/Utility/SpinLock.cpp
-    ${POMDOG_INC_DIR}/Utility/StringHelper.hpp
-    ${POMDOG_SRC_DIR}/Utility/StringHelper.cpp
-    ${POMDOG_SRC_DIR}/Utility/Tagged.hpp
+    # NOTE: utility
+    ${POMDOG_SRC_DIR}/utility/aligned_new.hpp
+    ${POMDOG_SRC_DIR}/utility/assert.hpp
+    ${POMDOG_SRC_DIR}/utility/crc32.cpp
+    ${POMDOG_SRC_DIR}/utility/crc32.hpp
+    ${POMDOG_SRC_DIR}/utility/error_helper.cpp
+    ${POMDOG_SRC_DIR}/utility/error_helper.hpp
+    ${POMDOG_SRC_DIR}/utility/errors.cpp
+    ${POMDOG_SRC_DIR}/utility/errors.hpp
+    ${POMDOG_SRC_DIR}/utility/exception.hpp
+    ${POMDOG_SRC_DIR}/utility/path_helper.cpp
+    ${POMDOG_SRC_DIR}/utility/path_helper.hpp
+    ${POMDOG_SRC_DIR}/utility/scope_guard.cpp
+    ${POMDOG_SRC_DIR}/utility/scope_guard.hpp
+    ${POMDOG_SRC_DIR}/utility/spin_lock.cpp
+    ${POMDOG_SRC_DIR}/utility/spin_lock.hpp
+    ${POMDOG_SRC_DIR}/utility/string_helper.cpp
+    ${POMDOG_SRC_DIR}/utility/string_helper.hpp
+    ${POMDOG_SRC_DIR}/utility/tagged.hpp
 )

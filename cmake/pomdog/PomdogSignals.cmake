@@ -1,19 +1,19 @@
-source_group(Signals REGULAR_EXPRESSION "(include/Pomdog|src)/Signals/*")
+source_group(signals REGULAR_EXPRESSION "pomdog/signals/*")
 
 target_sources(pomdog_static PRIVATE
-    # NOTE: Signals
-    ${POMDOG_INC_DIR}/Signals/Connection.hpp
-    ${POMDOG_SRC_DIR}/Signals/Connection.cpp
-    ${POMDOG_INC_DIR}/Signals/ConnectionList.hpp
-    ${POMDOG_SRC_DIR}/Signals/ConnectionList.cpp
-    ${POMDOG_INC_DIR}/Signals/Delegate.hpp
-    ${POMDOG_INC_DIR}/Signals/EventQueue.hpp
-    ${POMDOG_INC_DIR}/Signals/ForwardDeclarations.hpp
-    ${POMDOG_INC_DIR}/Signals/Helpers.hpp
-    ${POMDOG_INC_DIR}/Signals/ScopedConnection.hpp
-    ${POMDOG_SRC_DIR}/Signals/ScopedConnection.cpp
-    ${POMDOG_INC_DIR}/Signals/Signal.hpp
-    ${POMDOG_INC_DIR}/Signals/Detail/DelegateBody.hpp
-    ${POMDOG_INC_DIR}/Signals/Detail/SignalBody.hpp
-    ${POMDOG_SRC_DIR}/Signals/Detail/SignalBody.cpp
+    # NOTE: signals
+    ${POMDOG_SRC_DIR}/signals/connection.cpp
+    ${POMDOG_SRC_DIR}/signals/connection.hpp
+    ${POMDOG_SRC_DIR}/signals/connection_list.cpp
+    ${POMDOG_SRC_DIR}/signals/connection_list.hpp
+    ${POMDOG_SRC_DIR}/signals/delegate.hpp
+    ${POMDOG_SRC_DIR}/signals/event_queue.hpp
+    ${POMDOG_SRC_DIR}/signals/forward_declarations.hpp
+    ${POMDOG_SRC_DIR}/signals/scoped_connection.cpp
+    ${POMDOG_SRC_DIR}/signals/scoped_connection.hpp
+    ${POMDOG_SRC_DIR}/signals/signal_helpers.hpp
+    ${POMDOG_SRC_DIR}/signals/signal.hpp
+    ${POMDOG_SRC_DIR}/signals/detail/delegate_body.hpp
+    ${POMDOG_SRC_DIR}/signals/detail/signal_body.cpp
+    ${POMDOG_SRC_DIR}/signals/detail/signal_body.hpp
 )

@@ -1,35 +1,35 @@
-source_group(Content                REGULAR_EXPRESSION "(include/Pomdog|src)/Content/*")
-source_group(Content\\AssetBuilders REGULAR_EXPRESSION "(include/Pomdog|src)/Content/AssetBuilders/*")
-source_group(Content\\AssetLoaders  REGULAR_EXPRESSION "(include/Pomdog|src)/Content/AssetLoaders/*")
-source_group(Content\\Audio         REGULAR_EXPRESSION "(include/Pomdog|src)/Content/Audio/*")
-source_group(Content\\Image         REGULAR_EXPRESSION "(include/Pomdog|src)/Content/Image/*")
-source_group(Content\\Utility       REGULAR_EXPRESSION "(include/Pomdog|src)/Content/Utility/*")
+source_group(content                    REGULAR_EXPRESSION "pomdog/content/*")
+source_group(content\\asset_builders    REGULAR_EXPRESSION "pomdog/content/asset_builders/*")
+source_group(content\\asset_loaders     REGULAR_EXPRESSION "pomdog/content/asset_loaders/*")
+source_group(content\\audio             REGULAR_EXPRESSION "pomdog/content/audio/*")
+source_group(content\\image             REGULAR_EXPRESSION "pomdog/content/image/*")
+source_group(content\\utility           REGULAR_EXPRESSION "pomdog/content/utility/*")
 
 target_sources(pomdog_static PRIVATE
-    # NOTE: Content
-    ${POMDOG_INC_DIR}/Content/AssetManager.hpp
-    ${POMDOG_SRC_DIR}/Content/AssetManager.cpp
-    ${POMDOG_INC_DIR}/Content/AssetBuilders/Builder.hpp
-    ${POMDOG_INC_DIR}/Content/AssetBuilders/PipelineStateBuilder.hpp
-    ${POMDOG_SRC_DIR}/Content/AssetBuilders/PipelineStateBuilder.cpp
-    ${POMDOG_INC_DIR}/Content/AssetBuilders/ShaderBuilder.hpp
-    ${POMDOG_SRC_DIR}/Content/AssetBuilders/ShaderBuilder.cpp
-    ${POMDOG_INC_DIR}/Content/Audio/Vorbis.hpp
-    ${POMDOG_SRC_DIR}/Content/Audio/Vorbis.cpp
-    ${POMDOG_INC_DIR}/Content/Audio/WAV.hpp
-    ${POMDOG_SRC_DIR}/Content/Audio/WAV.cpp
-    ${POMDOG_INC_DIR}/Content/Image/ImageBuffer.hpp
-    ${POMDOG_INC_DIR}/Content/Image/DDS.hpp
-    ${POMDOG_SRC_DIR}/Content/Image/DDS.cpp
-    ${POMDOG_INC_DIR}/Content/Image/PNG.hpp
-    ${POMDOG_SRC_DIR}/Content/Image/PNG.cpp
-    ${POMDOG_INC_DIR}/Content/Image/PNM.hpp
-    ${POMDOG_SRC_DIR}/Content/Image/PNM.cpp
-    ${POMDOG_INC_DIR}/Content/Utility/BinaryReader.hpp
-    ${POMDOG_INC_DIR}/Content/Utility/MakeFourCC.hpp
-    ${POMDOG_INC_DIR}/Content/AssetLoaders/AssetLoader.hpp
-    ${POMDOG_INC_DIR}/Content/AssetLoaders/AudioClipLoader.hpp
-    ${POMDOG_SRC_DIR}/Content/AssetLoaders/AudioClipLoader.cpp
-    ${POMDOG_INC_DIR}/Content/AssetLoaders/Texture2DLoader.hpp
-    ${POMDOG_SRC_DIR}/Content/AssetLoaders/Texture2DLoader.cpp
+    # NOTE: content
+    ${POMDOG_SRC_DIR}/content/asset_manager.hpp
+    ${POMDOG_SRC_DIR}/content/asset_manager.cpp
+    ${POMDOG_SRC_DIR}/content/asset_builders/builder.hpp
+    ${POMDOG_SRC_DIR}/content/asset_builders/pipeline_state_builder.hpp
+    ${POMDOG_SRC_DIR}/content/asset_builders/pipeline_state_builder.cpp
+    ${POMDOG_SRC_DIR}/content/asset_builders/shader_builder.hpp
+    ${POMDOG_SRC_DIR}/content/asset_builders/shader_builder.cpp
+    ${POMDOG_SRC_DIR}/content/asset_loaders/asset_loader.hpp
+    ${POMDOG_SRC_DIR}/content/asset_loaders/audio_clip_loader.hpp
+    ${POMDOG_SRC_DIR}/content/asset_loaders/audio_clip_loader.cpp
+    ${POMDOG_SRC_DIR}/content/asset_loaders/texture2d_loader.hpp
+    ${POMDOG_SRC_DIR}/content/asset_loaders/texture2d_loader.cpp
+    ${POMDOG_SRC_DIR}/content/audio/vorbis.hpp
+    ${POMDOG_SRC_DIR}/content/audio/vorbis.cpp
+    ${POMDOG_SRC_DIR}/content/audio/wav.hpp
+    ${POMDOG_SRC_DIR}/content/audio/wav.cpp
+    ${POMDOG_SRC_DIR}/content/image/image_buffer.hpp
+    ${POMDOG_SRC_DIR}/content/image/dds.hpp
+    ${POMDOG_SRC_DIR}/content/image/dds.cpp
+    ${POMDOG_SRC_DIR}/content/image/png.hpp
+    ${POMDOG_SRC_DIR}/content/image/png.cpp
+    ${POMDOG_SRC_DIR}/content/image/pnm.hpp
+    ${POMDOG_SRC_DIR}/content/image/pnm.cpp
+    ${POMDOG_SRC_DIR}/content/utility/binary_reader.hpp
+    ${POMDOG_SRC_DIR}/content/utility/make_fourcc.hpp
 )

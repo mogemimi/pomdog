@@ -1,58 +1,59 @@
-source_group(Input              REGULAR_EXPRESSION "(include/Pomdog|src)/Input/*")
-source_group(Input.Backends     REGULAR_EXPRESSION "(include/Pomdog|src)/Input.Backends/*")
-source_group(Input.DirectInput  REGULAR_EXPRESSION "(include/Pomdog|src)/Input.DirectInput/*")
-source_group(Input.IOKit        REGULAR_EXPRESSION "(include/Pomdog|src)/Input.IOKit/*")
-source_group(Input.Linux        REGULAR_EXPRESSION "(include/Pomdog|src)/Input.Linux/*")
+source_group(input              REGULAR_EXPRESSION "pomdog/input/*")
+source_group(input/backends     REGULAR_EXPRESSION "pomdog/input/backends/*")
+source_group(input/directinput  REGULAR_EXPRESSION "pomdog/input/directinput/*")
+source_group(input/iokit        REGULAR_EXPRESSION "pomdog/input/iokit/*")
+source_group(input/linux        REGULAR_EXPRESSION "pomdog/input/linux/*")
 
 target_sources(pomdog_static PRIVATE
-    # NOTE: Input
-    ${POMDOG_INC_DIR}/Input/ButtonState.hpp
-    ${POMDOG_INC_DIR}/Input/Gamepad.hpp
-    ${POMDOG_SRC_DIR}/Input/Gamepad.cpp
-    ${POMDOG_INC_DIR}/Input/GamepadButtons.hpp
-    ${POMDOG_INC_DIR}/Input/GamepadCapabilities.hpp
-    ${POMDOG_INC_DIR}/Input/GamepadDPad.hpp
-    ${POMDOG_INC_DIR}/Input/GamepadState.hpp
-    ${POMDOG_INC_DIR}/Input/GamepadThumbSticks.hpp
-    ${POMDOG_INC_DIR}/Input/GamepadUUID.hpp
-    ${POMDOG_SRC_DIR}/Input/GamepadUUID.cpp
-    ${POMDOG_INC_DIR}/Input/Keyboard.hpp
-    ${POMDOG_SRC_DIR}/Input/Keyboard.cpp
-    ${POMDOG_INC_DIR}/Input/KeyboardState.hpp
-    ${POMDOG_SRC_DIR}/Input/KeyboardState.cpp
-    ${POMDOG_INC_DIR}/Input/Keys.hpp
-    ${POMDOG_INC_DIR}/Input/KeyState.hpp
-    ${POMDOG_INC_DIR}/Input/Mouse.hpp
-    ${POMDOG_SRC_DIR}/Input/Mouse.cpp
-    ${POMDOG_INC_DIR}/Input/MouseState.hpp
-    ${POMDOG_INC_DIR}/Input/PlayerIndex.hpp
-    ${POMDOG_INC_DIR}/Input/TouchLocation.hpp
-    ${POMDOG_INC_DIR}/Input/TouchLocationState.hpp
+    # NOTE: input
+    ${POMDOG_SRC_DIR}/input/button_state.hpp
+    ${POMDOG_SRC_DIR}/input/gamepad_buttons.hpp
+    ${POMDOG_SRC_DIR}/input/gamepad_capabilities.hpp
+    ${POMDOG_SRC_DIR}/input/gamepad_dpad.hpp
+    ${POMDOG_SRC_DIR}/input/gamepad_state.hpp
+    ${POMDOG_SRC_DIR}/input/gamepad_thumbsticks.hpp
+    ${POMDOG_SRC_DIR}/input/gamepad_uuid.cpp
+    ${POMDOG_SRC_DIR}/input/gamepad_uuid.hpp
+    ${POMDOG_SRC_DIR}/input/gamepad.cpp
+    ${POMDOG_SRC_DIR}/input/gamepad.hpp
+    ${POMDOG_SRC_DIR}/input/key_state.hpp
+    ${POMDOG_SRC_DIR}/input/keyboard_state.cpp
+    ${POMDOG_SRC_DIR}/input/keyboard_state.hpp
+    ${POMDOG_SRC_DIR}/input/keyboard.cpp
+    ${POMDOG_SRC_DIR}/input/keyboard.hpp
+    ${POMDOG_SRC_DIR}/input/keys.hpp
+    ${POMDOG_SRC_DIR}/input/mouse_buttons.hpp
+    ${POMDOG_SRC_DIR}/input/mouse_state.hpp
+    ${POMDOG_SRC_DIR}/input/mouse.cpp
+    ${POMDOG_SRC_DIR}/input/mouse.hpp
+    ${POMDOG_SRC_DIR}/input/player_index.hpp
+    ${POMDOG_SRC_DIR}/input/touch_location_state.hpp
+    ${POMDOG_SRC_DIR}/input/touch_location.hpp
 
-    # NOTE: Input.Backends
-    ${POMDOG_SRC_DIR}/Input.Backends/GamepadHelper.cpp
-    ${POMDOG_SRC_DIR}/Input.Backends/GamepadHelper.hpp
-    ${POMDOG_SRC_DIR}/Input.Backends/GamepadMappings.cpp
-    ${POMDOG_SRC_DIR}/Input.Backends/GamepadMappings.hpp
-    ${POMDOG_SRC_DIR}/Input.Backends/NativeGamepad.cpp
-    ${POMDOG_SRC_DIR}/Input.Backends/NativeGamepad.hpp
+    # NOTE: input/backends
+    ${POMDOG_SRC_DIR}/input/backends/gamepad_helper.cpp
+    ${POMDOG_SRC_DIR}/input/backends/gamepad_helper.hpp
+    ${POMDOG_SRC_DIR}/input/backends/gamepad_mappings.cpp
+    ${POMDOG_SRC_DIR}/input/backends/gamepad_mappings.hpp
+    ${POMDOG_SRC_DIR}/input/backends/native_gamepad.cpp
+    ${POMDOG_SRC_DIR}/input/backends/native_gamepad.hpp
 
     $<$<PLATFORM_ID:Windows>:
-        # NOTE: Input.DirectInput
-        ${POMDOG_SRC_DIR}/Input.DirectInput/GamepadDirectInput.cpp
-        ${POMDOG_SRC_DIR}/Input.DirectInput/GamepadDirectInput.hpp
-        ${POMDOG_SRC_DIR}/Input.DirectInput/PrerequisitesDirectInput.hpp
+        # NOTE: input/directinput
+        ${POMDOG_SRC_DIR}/input/directinput/gamepad_directinput.cpp
+        ${POMDOG_SRC_DIR}/input/directinput/gamepad_directinput.hpp
+        ${POMDOG_SRC_DIR}/input/directinput/prerequisites_directinput.hpp
     >
 
     $<$<PLATFORM_ID:Darwin>:
-        # NOTE: Input.IOKit
-        ${POMDOG_SRC_DIR}/Input.IOKit/GamepadIOKit.cpp
-        ${POMDOG_SRC_DIR}/Input.IOKit/GamepadIOKit.hpp
+        # NOTE: input/iokit
+        ${POMDOG_SRC_DIR}/input/iokit/gamepad_iokit.cpp
+        ${POMDOG_SRC_DIR}/input/iokit/gamepad_iokit.hpp
     >
 
     $<$<PLATFORM_ID:Linux>:
-        # NOTE: Input.Linux
-        ${POMDOG_SRC_DIR}/Input.Linux/GamepadLinux.cpp
-        ${POMDOG_SRC_DIR}/Input.Linux/GamepadLinux.hpp
+        # NOTE: input/linux
+        ${POMDOG_SRC_DIR}/input/linux/gamepad_linux.cpp
+        ${POMDOG_SRC_DIR}/input/linux/gamepad_linux.hpp
     >
 )

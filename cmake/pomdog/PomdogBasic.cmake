@@ -1,11 +1,11 @@
-source_group(Basic REGULAR_EXPRESSION "(include/Pomdog|src)/Basic/*")
+source_group(basic REGULAR_EXPRESSION "pomdog/basic/*")
 
 target_sources(pomdog_static PRIVATE
-    # NOTE: Basic
-    ${POMDOG_INC_DIR}/Basic/ConditionalCompilation.hpp
-    ${POMDOG_INC_DIR}/Basic/Export.hpp
-    ${POMDOG_INC_DIR}/Basic/Platform.hpp
-    ${POMDOG_SRC_DIR}/Basic/CompilationTargets.hpp
-    ${POMDOG_SRC_DIR}/Basic/Unreachable.hpp
-    ${POMDOG_INC_DIR}/Basic/Version.hpp
+    # NOTE: basic
+    ${POMDOG_SRC_DIR}/basic/conditional_compilation.hpp
+    ${POMDOG_SRC_DIR}/basic/export.hpp
+    ${POMDOG_SRC_DIR}/basic/platform.hpp
+    ${POMDOG_SRC_DIR}/basic/compilation_targets.hpp
+    ${POMDOG_SRC_DIR}/basic/unreachable.hpp
+    ${POMDOG_SRC_DIR}/basic/version.hpp
 )

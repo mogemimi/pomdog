@@ -1,76 +1,76 @@
-source_group(Network            REGULAR_EXPRESSION "(include/Pomdog|src)/Network/*")
-source_group(Network.MbedTLS    REGULAR_EXPRESSION "(include/Pomdog|src)/Network.MbedTLS/*")
-source_group(Network.POSIX      REGULAR_EXPRESSION "(include/Pomdog|src)/Network.POSIX/*")
-source_group(Network.Win32      REGULAR_EXPRESSION "(include/Pomdog|src)/Network.Win32/*")
+source_group(network            REGULAR_EXPRESSION "pomdog/network/*")
+source_group(network/mbedtls    REGULAR_EXPRESSION "pomdog/network/mbedtls/*")
+source_group(network/posix      REGULAR_EXPRESSION "pomdog/network/posix/*")
+source_group(network/win32      REGULAR_EXPRESSION "pomdog/network/win32/*")
 
 target_sources(pomdog_static PRIVATE
-    # NOTE: Network
-    ${POMDOG_SRC_DIR}/Network/AddressFamily.hpp
-    ${POMDOG_SRC_DIR}/Network/AddressParser.cpp
-    ${POMDOG_SRC_DIR}/Network/AddressParser.hpp
-    ${POMDOG_INC_DIR}/Network/ArrayView.hpp
-    ${POMDOG_INC_DIR}/Network/ForwardDeclarations.hpp
-    ${POMDOG_INC_DIR}/Network/HTTPClient.hpp
-    ${POMDOG_SRC_DIR}/Network/HTTPClient.cpp
-    ${POMDOG_INC_DIR}/Network/HTTPMethod.hpp
-    ${POMDOG_SRC_DIR}/Network/HTTPParser.cpp
-    ${POMDOG_SRC_DIR}/Network/HTTPParser.hpp
-    ${POMDOG_INC_DIR}/Network/HTTPRequest.hpp
-    ${POMDOG_SRC_DIR}/Network/HTTPRequest.cpp
-    ${POMDOG_INC_DIR}/Network/HTTPResponse.hpp
-    ${POMDOG_SRC_DIR}/Network/HTTPResponse.cpp
-    ${POMDOG_INC_DIR}/Network/IOService.hpp
-    ${POMDOG_SRC_DIR}/Network/IOService.cpp
-    ${POMDOG_SRC_DIR}/Network/SocketProtocol.hpp
-    ${POMDOG_INC_DIR}/Network/TCPStream.hpp
-    ${POMDOG_SRC_DIR}/Network/TCPStream.cpp
-    ${POMDOG_INC_DIR}/Network/TLSStream.hpp
-    ${POMDOG_SRC_DIR}/Network/TLSStream.cpp
-    ${POMDOG_INC_DIR}/Network/UDPStream.hpp
-    ${POMDOG_SRC_DIR}/Network/UDPStream.cpp
+    # NOTE: network
+    ${POMDOG_SRC_DIR}/network/address_family.hpp
+    ${POMDOG_SRC_DIR}/network/address_parser.cpp
+    ${POMDOG_SRC_DIR}/network/address_parser.hpp
+    ${POMDOG_SRC_DIR}/network/array_view.hpp
+    ${POMDOG_SRC_DIR}/network/forward_declarations.hpp
+    ${POMDOG_SRC_DIR}/network/http_client.cpp
+    ${POMDOG_SRC_DIR}/network/http_client.hpp
+    ${POMDOG_SRC_DIR}/network/http_method.hpp
+    ${POMDOG_SRC_DIR}/network/http_parser.cpp
+    ${POMDOG_SRC_DIR}/network/http_parser.hpp
+    ${POMDOG_SRC_DIR}/network/http_request.cpp
+    ${POMDOG_SRC_DIR}/network/http_request.hpp
+    ${POMDOG_SRC_DIR}/network/http_response.cpp
+    ${POMDOG_SRC_DIR}/network/http_response.hpp
+    ${POMDOG_SRC_DIR}/network/io_service.cpp
+    ${POMDOG_SRC_DIR}/network/io_service.hpp
+    ${POMDOG_SRC_DIR}/network/socket_protocol.hpp
+    ${POMDOG_SRC_DIR}/network/tcp_stream.cpp
+    ${POMDOG_SRC_DIR}/network/tcp_stream.hpp
+    ${POMDOG_SRC_DIR}/network/tls_stream.cpp
+    ${POMDOG_SRC_DIR}/network/tls_stream.hpp
+    ${POMDOG_SRC_DIR}/network/udp_stream.cpp
+    ${POMDOG_SRC_DIR}/network/udp_stream.hpp
 
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:
-        ${POMDOG_SRC_DIR}/Network/EndPoint.cpp
-        ${POMDOG_SRC_DIR}/Network/EndPoint.hpp
+        ${POMDOG_SRC_DIR}/network/end_point.cpp
+        ${POMDOG_SRC_DIR}/network/end_point.hpp
     >
 
     $<$<PLATFORM_ID:Emscripten>:
-        # NOTE: Emscripten
-        ${POMDOG_SRC_DIR}/Network.Emscripten/TCPStreamEmscripten.cpp
-        ${POMDOG_SRC_DIR}/Network.Emscripten/TCPStreamEmscripten.hpp
-        ${POMDOG_SRC_DIR}/Network.Emscripten/TLSStreamEmscripten.cpp
-        ${POMDOG_SRC_DIR}/Network.Emscripten/TLSStreamEmscripten.hpp
-        ${POMDOG_SRC_DIR}/Network.Emscripten/UDPStreamEmscripten.cpp
-        ${POMDOG_SRC_DIR}/Network.Emscripten/UDPStreamEmscripten.hpp
+        # NOTE: network/emscripten
+        ${POMDOG_SRC_DIR}/network/emscripten/tcp_stream_emscripten.cpp
+        ${POMDOG_SRC_DIR}/network/emscripten/tcp_stream_emscripten.hpp
+        ${POMDOG_SRC_DIR}/network/emscripten/tls_stream_emscripten.cpp
+        ${POMDOG_SRC_DIR}/network/emscripten/tls_stream_emscripten.hpp
+        ${POMDOG_SRC_DIR}/network/emscripten/udp_stream_emscripten.cpp
+        ${POMDOG_SRC_DIR}/network/emscripten/udp_stream_emscripten.hpp
     >
 
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:
-        # NOTE: Network.MbedTLS
-        ${POMDOG_SRC_DIR}/Network.MbedTLS/Certificates.cpp
-        ${POMDOG_SRC_DIR}/Network.MbedTLS/Certificates.hpp
-        ${POMDOG_SRC_DIR}/Network.MbedTLS/TLSStreamMbedTLS.cpp
-        ${POMDOG_SRC_DIR}/Network.MbedTLS/TLSStreamMbedTLS.hpp
+        # NOTE: network/mbedtls
+        ${POMDOG_SRC_DIR}/network/mbedtls/certificates.cpp
+        ${POMDOG_SRC_DIR}/network/mbedtls/certificates.hpp
+        ${POMDOG_SRC_DIR}/network/mbedtls/tls_stream_mbedtls.cpp
+        ${POMDOG_SRC_DIR}/network/mbedtls/tls_stream_mbedtls.hpp
     >
 
     $<$<PLATFORM_ID:Linux,Darwin>:
-        # NOTE: Network.POSIX
-        ${POMDOG_SRC_DIR}/Network.POSIX/SocketHelperPOSIX.cpp
-        ${POMDOG_SRC_DIR}/Network.POSIX/SocketHelperPOSIX.hpp
-        ${POMDOG_SRC_DIR}/Network.POSIX/TCPStreamPOSIX.cpp
-        ${POMDOG_SRC_DIR}/Network.POSIX/TCPStreamPOSIX.hpp
-        ${POMDOG_SRC_DIR}/Network.POSIX/UDPStreamPOSIX.cpp
-        ${POMDOG_SRC_DIR}/Network.POSIX/UDPStreamPOSIX.hpp
+        # NOTE: network/posix
+        ${POMDOG_SRC_DIR}/network/posix/socket_helper_posix.cpp
+        ${POMDOG_SRC_DIR}/network/posix/socket_helper_posix.hpp
+        ${POMDOG_SRC_DIR}/network/posix/tcp_stream_posix.cpp
+        ${POMDOG_SRC_DIR}/network/posix/tcp_stream_posix.hpp
+        ${POMDOG_SRC_DIR}/network/posix/udp_stream_posix.cpp
+        ${POMDOG_SRC_DIR}/network/posix/udp_stream_posix.hpp
     >
 
     $<$<PLATFORM_ID:Windows>:
-        # NOTE: Network.Win32
-        ${POMDOG_SRC_DIR}/Network.Win32/IOServiceWin32.cpp
-        ${POMDOG_SRC_DIR}/Network.Win32/IOServiceWin32.hpp
-        ${POMDOG_SRC_DIR}/Network.Win32/SocketHelperWin32.cpp
-        ${POMDOG_SRC_DIR}/Network.Win32/SocketHelperWin32.hpp
-        ${POMDOG_SRC_DIR}/Network.Win32/TCPStreamWin32.cpp
-        ${POMDOG_SRC_DIR}/Network.Win32/TCPStreamWin32.hpp
-        ${POMDOG_SRC_DIR}/Network.Win32/UDPStreamWin32.cpp
-        ${POMDOG_SRC_DIR}/Network.Win32/UDPStreamWin32.hpp
+        # NOTE: network/win32
+        ${POMDOG_SRC_DIR}/network/win32/io_service_win32.cpp
+        ${POMDOG_SRC_DIR}/network/win32/io_service_win32.hpp
+        ${POMDOG_SRC_DIR}/network/win32/socket_helper_win32.cpp
+        ${POMDOG_SRC_DIR}/network/win32/socket_helper_win32.hpp
+        ${POMDOG_SRC_DIR}/network/win32/tcp_stream_win32.cpp
+        ${POMDOG_SRC_DIR}/network/win32/tcp_stream_win32.hpp
+        ${POMDOG_SRC_DIR}/network/win32/udp_stream_win32.cpp
+        ${POMDOG_SRC_DIR}/network/win32/udp_stream_win32.hpp
     >
 )

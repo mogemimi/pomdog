@@ -1,111 +1,111 @@
-source_group(Platform.Apple      REGULAR_EXPRESSION "(include/Pomdog/Platform/Apple|src/Platform.Apple)/*")
-source_group(Platform.Cocoa      REGULAR_EXPRESSION "(include/Pomdog/Platform/Cocoa|src/Platform.Cocoa)/*")
-source_group(Platform.Emscripten REGULAR_EXPRESSION "(include/Pomdog/Platform/Emscripten|src/Platform.Emscripten)/*")
-source_group(Platform.Linux      REGULAR_EXPRESSION "(include/Pomdog/Platform/Linux|src/Platform.Linux)/*")
-source_group(Platform.Win32      REGULAR_EXPRESSION "(include/Pomdog/Platform/Win32|src/Platform.Win32)/*")
-source_group(Platform.X11        REGULAR_EXPRESSION "(include/Pomdog/Platform/X11|src/Platform.X11)/*")
+source_group(platform/apple      REGULAR_EXPRESSION "pomdog/platform/apple/*")
+source_group(platform/cocoa      REGULAR_EXPRESSION "pomdog/platform/cocoa/*")
+source_group(platform/emscripten REGULAR_EXPRESSION "pomdog/platform/emscripten/*")
+source_group(platform/linux      REGULAR_EXPRESSION "pomdog/platform/linux/*")
+source_group(platform/win32      REGULAR_EXPRESSION "pomdog/platform/win32/*")
+source_group(platform/x11        REGULAR_EXPRESSION "pomdog/platform/x11/*")
 
 target_sources(pomdog_static PRIVATE
     $<$<PLATFORM_ID:Darwin,iOS>:
-        # NOTE: Platform.Apple
-        ${POMDOG_SRC_DIR}/Platform.Apple/FileSystemApple.hpp
-        ${POMDOG_SRC_DIR}/Platform.Apple/FileSystemApple.mm
-        ${POMDOG_SRC_DIR}/Platform.Apple/TimeSourceApple.cpp
-        ${POMDOG_SRC_DIR}/Platform.Apple/TimeSourceApple.hpp
+        # NOTE: platform/apple
+        ${POMDOG_SRC_DIR}/platform/apple/file_system_apple.hpp
+        ${POMDOG_SRC_DIR}/platform/apple/file_system_apple.mm
+        ${POMDOG_SRC_DIR}/platform/apple/time_source_apple.cpp
+        ${POMDOG_SRC_DIR}/platform/apple/time_source_apple.hpp
     >
 
     $<$<PLATFORM_ID:Darwin>:
-        # NOTE: Platform.Cocoa
-        ${POMDOG_INC_DIR}/Platform/Cocoa/Bootstrap.hpp
-        ${POMDOG_SRC_DIR}/Platform.Cocoa/Bootstrap.mm
-        ${POMDOG_SRC_DIR}/Platform.Cocoa/GameHostCocoa.hpp
-        ${POMDOG_SRC_DIR}/Platform.Cocoa/GameHostCocoa.mm
-        ${POMDOG_SRC_DIR}/Platform.Cocoa/GameWindowCocoa.hpp
-        ${POMDOG_SRC_DIR}/Platform.Cocoa/GameWindowCocoa.mm
-        ${POMDOG_SRC_DIR}/Platform.Cocoa/KeyboardCocoa.hpp
-        ${POMDOG_SRC_DIR}/Platform.Cocoa/KeyboardCocoa.cpp
-        ${POMDOG_SRC_DIR}/Platform.Cocoa/MouseCocoa.hpp
-        ${POMDOG_SRC_DIR}/Platform.Cocoa/MouseCocoa.cpp
+        # NOTE: platform/cocoa
+        ${POMDOG_SRC_DIR}/platform/cocoa/bootstrap.hpp
+        ${POMDOG_SRC_DIR}/platform/cocoa/bootstrap.mm
+        ${POMDOG_SRC_DIR}/platform/cocoa/game_host_cocoa.hpp
+        ${POMDOG_SRC_DIR}/platform/cocoa/game_host_cocoa.mm
+        ${POMDOG_SRC_DIR}/platform/cocoa/game_window_cocoa.hpp
+        ${POMDOG_SRC_DIR}/platform/cocoa/game_window_cocoa.mm
+        ${POMDOG_SRC_DIR}/platform/cocoa/keyboard_cocoa.hpp
+        ${POMDOG_SRC_DIR}/platform/cocoa/keyboard_cocoa.cpp
+        ${POMDOG_SRC_DIR}/platform/cocoa/mouse_cocoa.hpp
+        ${POMDOG_SRC_DIR}/platform/cocoa/mouse_cocoa.cpp
     >
 
     $<$<AND:$<PLATFORM_ID:Darwin>,$<BOOL:${POMDOG_USE_GL4}>>:
-        # NOTE: Platform.Cocoa
-        ${POMDOG_SRC_DIR}/Platform.Cocoa/OpenGLContextCocoa.hpp
-        ${POMDOG_SRC_DIR}/Platform.Cocoa/OpenGLContextCocoa.mm
-        ${POMDOG_SRC_DIR}/Platform.Cocoa/PomdogOpenGLView.hpp
-        ${POMDOG_SRC_DIR}/Platform.Cocoa/PomdogOpenGLView.mm
+        # NOTE: platform/cocoa
+        ${POMDOG_SRC_DIR}/platform/cocoa/opengl_context_cocoa.hpp
+        ${POMDOG_SRC_DIR}/platform/cocoa/opengl_context_cocoa.mm
+        ${POMDOG_SRC_DIR}/platform/cocoa/pomdog_opengl_view.hpp
+        ${POMDOG_SRC_DIR}/platform/cocoa/pomdog_opengl_view.mm
     >
 
     $<$<AND:$<PLATFORM_ID:Darwin>,$<BOOL:${POMDOG_USE_METAL}>>:
-        # NOTE: Platform.Cocoa
-        ${POMDOG_SRC_DIR}/Platform.Cocoa/GameHostMetal.hpp
-        ${POMDOG_SRC_DIR}/Platform.Cocoa/GameHostMetal.mm
-        ${POMDOG_SRC_DIR}/Platform.Cocoa/PomdogMetalViewController.hpp
-        ${POMDOG_SRC_DIR}/Platform.Cocoa/PomdogMetalViewController.mm
+        # NOTE: platform/cocoa
+        ${POMDOG_SRC_DIR}/platform/cocoa/game_host_metal.hpp
+        ${POMDOG_SRC_DIR}/platform/cocoa/game_host_metal.mm
+        ${POMDOG_SRC_DIR}/platform/cocoa/pomdog_metal_view_controller.hpp
+        ${POMDOG_SRC_DIR}/platform/cocoa/pomdog_metal_view_controller.mm
     >
 
     $<$<PLATFORM_ID:Emscripten>:
-        # NOTE: Emscripten
-        ${POMDOG_SRC_DIR}/Platform.Emscripten/FileSystemEmscripten.cpp
-        ${POMDOG_SRC_DIR}/Platform.Emscripten/FileSystemEmscripten.hpp
-        ${POMDOG_SRC_DIR}/Platform.Emscripten/TimeSourceEmscripten.cpp
-        ${POMDOG_SRC_DIR}/Platform.Emscripten/TimeSourceEmscripten.hpp
+        # NOTE: platform/emscripten
+        ${POMDOG_SRC_DIR}/platform/emscripten/file_system_emscripten.cpp
+        ${POMDOG_SRC_DIR}/platform/emscripten/file_system_emscripten.hpp
+        ${POMDOG_SRC_DIR}/platform/emscripten/time_source_emscripten.cpp
+        ${POMDOG_SRC_DIR}/platform/emscripten/time_source_emscripten.hpp
     >
 
     $<$<PLATFORM_ID:Linux>:
-        # NOTE: Platform.Linux
-        ${POMDOG_SRC_DIR}/Platform.Linux/FileSystemLinux.cpp
-        ${POMDOG_SRC_DIR}/Platform.Linux/FileSystemLinux.hpp
-        ${POMDOG_SRC_DIR}/Platform.Linux/TimeSourceLinux.cpp
-        ${POMDOG_SRC_DIR}/Platform.Linux/TimeSourceLinux.hpp
+        # NOTE: platform/linux
+        ${POMDOG_SRC_DIR}/platform/linux/file_system_linux.cpp
+        ${POMDOG_SRC_DIR}/platform/linux/file_system_linux.hpp
+        ${POMDOG_SRC_DIR}/platform/linux/time_source_linux.cpp
+        ${POMDOG_SRC_DIR}/platform/linux/time_source_linux.hpp
     >
 
     $<$<PLATFORM_ID:Linux>:
-        # NOTE: Platform.X11
-        ${POMDOG_INC_DIR}/Platform/X11/Bootstrap.hpp
-        ${POMDOG_SRC_DIR}/Platform.X11/Bootstrap.cpp
-        ${POMDOG_SRC_DIR}/Platform.X11/GameHostX11.cpp
-        ${POMDOG_SRC_DIR}/Platform.X11/GameHostX11.hpp
-        ${POMDOG_SRC_DIR}/Platform.X11/GamepadFactory.hpp
-        ${POMDOG_SRC_DIR}/Platform.X11/GamepadFactory.cpp
-        ${POMDOG_SRC_DIR}/Platform.X11/GameWindowX11.cpp
-        ${POMDOG_SRC_DIR}/Platform.X11/GameWindowX11.hpp
-        ${POMDOG_SRC_DIR}/Platform.X11/KeyboardX11.cpp
-        ${POMDOG_SRC_DIR}/Platform.X11/KeyboardX11.hpp
-        ${POMDOG_SRC_DIR}/Platform.X11/MouseX11.cpp
-        ${POMDOG_SRC_DIR}/Platform.X11/MouseX11.hpp
-        ${POMDOG_SRC_DIR}/Platform.X11/OpenGLContextX11.cpp
-        ${POMDOG_SRC_DIR}/Platform.X11/OpenGLContextX11.hpp
-        ${POMDOG_SRC_DIR}/Platform.X11/X11AtomCache.hpp
-        ${POMDOG_SRC_DIR}/Platform.X11/X11Context.cpp
-        ${POMDOG_SRC_DIR}/Platform.X11/X11Context.hpp
+        # NOTE: platform/x11
+        ${POMDOG_SRC_DIR}/platform/x11/bootstrap.hpp
+        ${POMDOG_SRC_DIR}/platform/x11/bootstrap.cpp
+        ${POMDOG_SRC_DIR}/platform/x11/game_host_x11.cpp
+        ${POMDOG_SRC_DIR}/platform/x11/game_host_x11.hpp
+        ${POMDOG_SRC_DIR}/platform/x11/gamepad_factory.hpp
+        ${POMDOG_SRC_DIR}/platform/x11/gamepad_factory.cpp
+        ${POMDOG_SRC_DIR}/platform/x11/game_window_x11.cpp
+        ${POMDOG_SRC_DIR}/platform/x11/game_window_x11.hpp
+        ${POMDOG_SRC_DIR}/platform/x11/keyboard_x11.cpp
+        ${POMDOG_SRC_DIR}/platform/x11/keyboard_x11.hpp
+        ${POMDOG_SRC_DIR}/platform/x11/mouse_x11.cpp
+        ${POMDOG_SRC_DIR}/platform/x11/mouse_x11.hpp
+        ${POMDOG_SRC_DIR}/platform/x11/opengl_context_x11.cpp
+        ${POMDOG_SRC_DIR}/platform/x11/opengl_context_x11.hpp
+        ${POMDOG_SRC_DIR}/platform/x11/x11_atom_cache.hpp
+        ${POMDOG_SRC_DIR}/platform/x11/x11_context.cpp
+        ${POMDOG_SRC_DIR}/platform/x11/x11_context.hpp
     >
 
     $<$<PLATFORM_ID:Windows>:
-        # NOTE: Platform.Win32
-        ${POMDOG_SRC_DIR}/Platform.Win32/Bootstrap.cpp
-        ${POMDOG_INC_DIR}/Platform/Win32/Bootstrap.hpp
-        ${POMDOG_INC_DIR}/Platform/Win32/BootstrapSettingsWin32.hpp
-        ${POMDOG_SRC_DIR}/Platform.Win32/DarkMode.cpp
-        ${POMDOG_SRC_DIR}/Platform.Win32/DarkMode.hpp
-        ${POMDOG_SRC_DIR}/Platform.Win32/GameHostWin32.cpp
-        ${POMDOG_SRC_DIR}/Platform.Win32/GameHostWin32.hpp
-        ${POMDOG_SRC_DIR}/Platform.Win32/GameWindowWin32.cpp
-        ${POMDOG_SRC_DIR}/Platform.Win32/GameWindowWin32.hpp
-        ${POMDOG_SRC_DIR}/Platform.Win32/FileSystemWin32.cpp
-        ${POMDOG_SRC_DIR}/Platform.Win32/FileSystemWin32.hpp
-        ${POMDOG_SRC_DIR}/Platform.Win32/KeyboardWin32.cpp
-        ${POMDOG_SRC_DIR}/Platform.Win32/KeyboardWin32.hpp
-        ${POMDOG_SRC_DIR}/Platform.Win32/MouseWin32.cpp
-        ${POMDOG_SRC_DIR}/Platform.Win32/MouseWin32.hpp
-        ${POMDOG_INC_DIR}/Platform/Win32/PrerequisitesWin32.hpp
-        ${POMDOG_SRC_DIR}/Platform.Win32/TimeSourceWin32.cpp
-        ${POMDOG_SRC_DIR}/Platform.Win32/TimeSourceWin32.hpp
+        # NOTE: platform/win32
+        ${POMDOG_SRC_DIR}/platform/win32/bootstrap.cpp
+        ${POMDOG_SRC_DIR}/platform/win32/bootstrap.hpp
+        ${POMDOG_SRC_DIR}/platform/win32/bootstrap_settings_win32.hpp
+        ${POMDOG_SRC_DIR}/platform/win32/dark_mode.cpp
+        ${POMDOG_SRC_DIR}/platform/win32/dark_mode.hpp
+        ${POMDOG_SRC_DIR}/platform/win32/game_host_win32.cpp
+        ${POMDOG_SRC_DIR}/platform/win32/game_host_win32.hpp
+        ${POMDOG_SRC_DIR}/platform/win32/game_window_win32.cpp
+        ${POMDOG_SRC_DIR}/platform/win32/game_window_win32.hpp
+        ${POMDOG_SRC_DIR}/platform/win32/file_system_win32.cpp
+        ${POMDOG_SRC_DIR}/platform/win32/file_system_win32.hpp
+        ${POMDOG_SRC_DIR}/platform/win32/keyboard_win32.cpp
+        ${POMDOG_SRC_DIR}/platform/win32/keyboard_win32.hpp
+        ${POMDOG_SRC_DIR}/platform/win32/mouse_win32.cpp
+        ${POMDOG_SRC_DIR}/platform/win32/mouse_win32.hpp
+        ${POMDOG_SRC_DIR}/platform/win32/prerequisites_win32.hpp
+        ${POMDOG_SRC_DIR}/platform/win32/time_source_win32.cpp
+        ${POMDOG_SRC_DIR}/platform/win32/time_source_win32.hpp
     >
 
     $<$<AND:$<PLATFORM_ID:Windows>,$<BOOL:${POMDOG_USE_GL4}>>:
-        # NOTE: Platform.Win32
-        ${POMDOG_SRC_DIR}/Platform.Win32/OpenGLContextWin32.cpp
-        ${POMDOG_SRC_DIR}/Platform.Win32/OpenGLContextWin32.hpp
+        # NOTE: platform/win32
+        ${POMDOG_SRC_DIR}/platform/win32/opengl_context_win32.cpp
+        ${POMDOG_SRC_DIR}/platform/win32/opengl_context_win32.hpp
     >
 )

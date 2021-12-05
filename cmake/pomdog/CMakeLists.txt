@@ -5,8 +5,7 @@ project(Pomdog CXX)
 STRING(REGEX REPLACE "/RTC(su|[1su])" "" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
 
 set(POMDOG_DIR "../..")
-set(POMDOG_INC_DIR "${POMDOG_DIR}/include/Pomdog")
-set(POMDOG_SRC_DIR "${POMDOG_DIR}/src")
+set(POMDOG_SRC_DIR "${POMDOG_DIR}/pomdog")
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
 
 if(APPLE)
@@ -85,7 +84,7 @@ if(POMDOG_USE_GL4 AND (POMDOG_TARGET_PLATFORM MATCHES "Win32"))
 endif()
 
 target_include_directories(pomdog_static PRIVATE
-    ${POMDOG_DIR}/include
+    ${POMDOG_DIR}
     ${POMDOG_DIR}/dependencies
     ${POMDOG_DIR}/dependencies/giflib
     ${POMDOG_DIR}/dependencies/libpng

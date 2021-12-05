@@ -1,11 +1,11 @@
-source_group(Logging REGULAR_EXPRESSION "(include/Pomdog|src)/Logging/*")
+source_group(logging REGULAR_EXPRESSION "pomdog/logging/*")
 
 target_sources(pomdog_static PRIVATE
-    # NOTE: Logging
-    ${POMDOG_INC_DIR}/Logging/Log.hpp
-    ${POMDOG_SRC_DIR}/Logging/Log.cpp
-    ${POMDOG_INC_DIR}/Logging/LogChannel.hpp
-    ${POMDOG_SRC_DIR}/Logging/LogChannel.cpp
-    ${POMDOG_INC_DIR}/Logging/LogEntry.hpp
-    ${POMDOG_INC_DIR}/Logging/LogLevel.hpp
+    # NOTE: logging
+    ${POMDOG_SRC_DIR}/logging/log.hpp
+    ${POMDOG_SRC_DIR}/logging/log.cpp
+    ${POMDOG_SRC_DIR}/logging/log_channel.hpp
+    ${POMDOG_SRC_DIR}/logging/log_channel.cpp
+    ${POMDOG_SRC_DIR}/logging/log_entry.hpp
+    ${POMDOG_SRC_DIR}/logging/log_level.hpp
 )
