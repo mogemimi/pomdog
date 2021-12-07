@@ -4,7 +4,7 @@
 
 #include "pomdog/basic/conditional_compilation.hpp"
 #include "pomdog/basic/export.hpp"
-#include "pomdog/graphics/blend.hpp"
+#include "pomdog/graphics/blend_factor.hpp"
 #include "pomdog/graphics/blend_operation.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -14,11 +14,11 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace Pomdog {
 
 struct POMDOG_EXPORT RenderTargetBlendDescription final {
-    Blend ColorSourceBlend;
-    Blend ColorDestinationBlend;
+    BlendFactor ColorSourceBlend;
+    BlendFactor ColorDestinationBlend;
     BlendOperation ColorBlendOperation;
-    Blend AlphaSourceBlend;
-    Blend AlphaDestinationBlend;
+    BlendFactor AlphaSourceBlend;
+    BlendFactor AlphaDestinationBlend;
     BlendOperation AlphaBlendOperation;
     bool BlendEnable;
 
@@ -28,10 +28,10 @@ struct POMDOG_EXPORT RenderTargetBlendDescription final {
         desc.BlendEnable = true;
         desc.ColorBlendOperation = BlendOperation::Add;
         desc.AlphaBlendOperation = BlendOperation::Add;
-        desc.ColorSourceBlend = Blend::SourceAlpha;
-        desc.AlphaSourceBlend = Blend::SourceAlpha;
-        desc.ColorDestinationBlend = Blend::One;
-        desc.AlphaDestinationBlend = Blend::One;
+        desc.ColorSourceBlend = BlendFactor::SourceAlpha;
+        desc.AlphaSourceBlend = BlendFactor::SourceAlpha;
+        desc.ColorDestinationBlend = BlendFactor::One;
+        desc.AlphaDestinationBlend = BlendFactor::One;
         return desc;
     }
 
@@ -41,10 +41,10 @@ struct POMDOG_EXPORT RenderTargetBlendDescription final {
         desc.BlendEnable = true;
         desc.ColorBlendOperation = BlendOperation::Add;
         desc.AlphaBlendOperation = BlendOperation::Add;
-        desc.ColorSourceBlend = Blend::One;
-        desc.AlphaSourceBlend = Blend::One;
-        desc.ColorDestinationBlend = Blend::InverseSourceAlpha;
-        desc.AlphaDestinationBlend = Blend::InverseSourceAlpha;
+        desc.ColorSourceBlend = BlendFactor::One;
+        desc.AlphaSourceBlend = BlendFactor::One;
+        desc.ColorDestinationBlend = BlendFactor::InverseSourceAlpha;
+        desc.AlphaDestinationBlend = BlendFactor::InverseSourceAlpha;
         return desc;
     }
 
@@ -54,10 +54,10 @@ struct POMDOG_EXPORT RenderTargetBlendDescription final {
         desc.BlendEnable = true;
         desc.ColorBlendOperation = BlendOperation::Add;
         desc.AlphaBlendOperation = BlendOperation::Add;
-        desc.ColorSourceBlend = Blend::SourceAlpha;
-        desc.AlphaSourceBlend = Blend::SourceAlpha;
-        desc.ColorDestinationBlend = Blend::InverseSourceAlpha;
-        desc.AlphaDestinationBlend = Blend::InverseSourceAlpha;
+        desc.ColorSourceBlend = BlendFactor::SourceAlpha;
+        desc.AlphaSourceBlend = BlendFactor::SourceAlpha;
+        desc.ColorDestinationBlend = BlendFactor::InverseSourceAlpha;
+        desc.AlphaDestinationBlend = BlendFactor::InverseSourceAlpha;
         return desc;
     }
 
@@ -67,10 +67,10 @@ struct POMDOG_EXPORT RenderTargetBlendDescription final {
         desc.BlendEnable = false;
         desc.ColorBlendOperation = BlendOperation::Add;
         desc.AlphaBlendOperation = BlendOperation::Add;
-        desc.ColorSourceBlend = Blend::One;
-        desc.AlphaSourceBlend = Blend::One;
-        desc.ColorDestinationBlend = Blend::Zero;
-        desc.AlphaDestinationBlend = Blend::Zero;
+        desc.ColorSourceBlend = BlendFactor::One;
+        desc.AlphaSourceBlend = BlendFactor::One;
+        desc.ColorDestinationBlend = BlendFactor::Zero;
+        desc.AlphaDestinationBlend = BlendFactor::Zero;
         return desc;
     }
 };

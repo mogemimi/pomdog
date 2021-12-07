@@ -17,41 +17,41 @@ namespace {
 GLenum ToBlendGL4NonTypesafe(Blend blend) noexcept
 {
     switch (blend) {
-    case Blend::Zero:
+    case BlendFactor::Zero:
         return GL_ZERO;
-    case Blend::One:
+    case BlendFactor::One:
         return GL_ONE;
-    case Blend::SourceColor:
+    case BlendFactor::SourceColor:
         return GL_SRC_COLOR;
-    case Blend::InverseSourceColor:
+    case BlendFactor::InverseSourceColor:
         return GL_ONE_MINUS_SRC_COLOR;
-    case Blend::SourceAlpha:
+    case BlendFactor::SourceAlpha:
         return GL_SRC_ALPHA;
-    case Blend::InverseSourceAlpha:
+    case BlendFactor::InverseSourceAlpha:
         return GL_ONE_MINUS_SRC_ALPHA;
-    case Blend::DestinationAlpha:
+    case BlendFactor::DestinationAlpha:
         return GL_DST_ALPHA;
-    case Blend::InverseDestinationAlpha:
+    case BlendFactor::InverseDestinationAlpha:
         return GL_ONE_MINUS_DST_ALPHA;
-    case Blend::DestinationColor:
+    case BlendFactor::DestinationColor:
         return GL_DST_COLOR;
-    case Blend::InverseDestinationColor:
+    case BlendFactor::InverseDestinationColor:
         return GL_ONE_MINUS_DST_COLOR;
-    case Blend::SourceAlphaSaturation:
+    case BlendFactor::SourceAlphaSaturation:
         return GL_SRC_ALPHA_SATURATE;
-    case Blend::BlendFactor:
+    case BlendFactor::BlendFactor:
         return GL_CONSTANT_COLOR;
-    case Blend::InvereseBlendFactor:
+    case BlendFactor::InvereseBlendFactor:
         return GL_ONE_MINUS_CONSTANT_COLOR;
-    // case Blend::BlendFactorAlpha: return GL_CONSTANT_ALPHA;
-    // case Blend::InvereseBlendFactorAlpha: return GL_ONE_MINUS_CONSTANT_ALPHA;
-    case Blend::Source1Color:
+    // case BlendFactor::BlendFactorAlpha: return GL_CONSTANT_ALPHA;
+    // case BlendFactor::InvereseBlendFactorAlpha: return GL_ONE_MINUS_CONSTANT_ALPHA;
+    case BlendFactor::Source1Color:
         return GL_SRC1_COLOR;
-    case Blend::InverseSource1Color:
+    case BlendFactor::InverseSource1Color:
         return GL_ONE_MINUS_SRC1_COLOR;
-    case Blend::Source1Alpha:
+    case BlendFactor::Source1Alpha:
         return GL_SRC1_ALPHA;
-    case Blend::InverseSource1Alpha:
+    case BlendFactor::InverseSource1Alpha:
         return GL_ONE_MINUS_SRC1_ALPHA;
     }
     POMDOG_UNREACHABLE("Unsupported blend factor");

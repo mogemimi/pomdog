@@ -10,7 +10,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog {
 
-enum class Blend : std::uint8_t {
+enum class BlendFactor : std::uint8_t {
     Zero,
     One,
     SourceColor,

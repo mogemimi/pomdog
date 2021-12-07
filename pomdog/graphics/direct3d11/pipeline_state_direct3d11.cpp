@@ -59,39 +59,39 @@ D3D11_BLEND_OP ToBlendOperation(BlendOperation blendOperation) noexcept
 D3D11_BLEND ToBlend(Blend blend) noexcept
 {
     switch (blend) {
-    case Blend::Zero:
+    case BlendFactor::Zero:
         return D3D11_BLEND_ZERO;
-    case Blend::One:
+    case BlendFactor::One:
         return D3D11_BLEND_ONE;
-    case Blend::SourceColor:
+    case BlendFactor::SourceColor:
         return D3D11_BLEND_SRC_COLOR;
-    case Blend::InverseSourceColor:
+    case BlendFactor::InverseSourceColor:
         return D3D11_BLEND_INV_SRC_COLOR;
-    case Blend::SourceAlpha:
+    case BlendFactor::SourceAlpha:
         return D3D11_BLEND_SRC_ALPHA;
-    case Blend::InverseSourceAlpha:
+    case BlendFactor::InverseSourceAlpha:
         return D3D11_BLEND_INV_SRC_ALPHA;
-    case Blend::DestinationAlpha:
+    case BlendFactor::DestinationAlpha:
         return D3D11_BLEND_DEST_ALPHA;
-    case Blend::InverseDestinationAlpha:
+    case BlendFactor::InverseDestinationAlpha:
         return D3D11_BLEND_INV_DEST_ALPHA;
-    case Blend::DestinationColor:
+    case BlendFactor::DestinationColor:
         return D3D11_BLEND_DEST_COLOR;
-    case Blend::InverseDestinationColor:
+    case BlendFactor::InverseDestinationColor:
         return D3D11_BLEND_INV_DEST_COLOR;
-    case Blend::SourceAlphaSaturation:
+    case BlendFactor::SourceAlphaSaturation:
         return D3D11_BLEND_SRC_ALPHA_SAT;
-    case Blend::BlendFactor:
+    case BlendFactor::BlendFactor:
         return D3D11_BLEND_BLEND_FACTOR;
-    case Blend::InvereseBlendFactor:
+    case BlendFactor::InvereseBlendFactor:
         return D3D11_BLEND_INV_BLEND_FACTOR;
-    case Blend::Source1Color:
+    case BlendFactor::Source1Color:
         return D3D11_BLEND_SRC1_COLOR;
-    case Blend::InverseSource1Color:
+    case BlendFactor::InverseSource1Color:
         return D3D11_BLEND_INV_SRC1_COLOR;
-    case Blend::Source1Alpha:
+    case BlendFactor::Source1Alpha:
         return D3D11_BLEND_SRC1_ALPHA;
-    case Blend::InverseSource1Alpha:
+    case BlendFactor::InverseSource1Alpha:
         return D3D11_BLEND_INV_SRC1_ALPHA;
     }
     return D3D11_BLEND_ONE;

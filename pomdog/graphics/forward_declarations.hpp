@@ -53,7 +53,7 @@ struct RenderTargetBlendDescription;
 struct SamplerDescription;
 
 // Enumerations
-enum class Blend : std::uint8_t;
+enum class BlendFactor : std::uint8_t;
 enum class BlendOperation : std::uint8_t;
 enum class BufferUsage : std::uint8_t;
 enum class ComparisonFunction : std::uint8_t;

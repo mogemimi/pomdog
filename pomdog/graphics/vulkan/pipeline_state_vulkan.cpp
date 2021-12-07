@@ -82,39 +82,39 @@ VkBlendOp ToVkBlendOp(BlendOperation blendOperation) noexcept
 VkBlendFactor ToVkBlendFactor(Blend blend) noexcept
 {
     switch (blend) {
-    case Blend::Zero:
+    case BlendFactor::Zero:
         return VK_BLEND_FACTOR_ZERO;
-    case Blend::One:
+    case BlendFactor::One:
         return VK_BLEND_FACTOR_ONE;
-    case Blend::SourceColor:
+    case BlendFactor::SourceColor:
         return VK_BLEND_FACTOR_SRC_COLOR;
-    case Blend::InverseSourceColor:
+    case BlendFactor::InverseSourceColor:
         return VK_BLEND_FACTOR_ONE_MINUS_SRC_COLOR;
-    case Blend::SourceAlpha:
+    case BlendFactor::SourceAlpha:
         return VK_BLEND_FACTOR_SRC_ALPHA;
-    case Blend::InverseSourceAlpha:
+    case BlendFactor::InverseSourceAlpha:
         return VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
-    case Blend::DestinationAlpha:
+    case BlendFactor::DestinationAlpha:
         return VK_BLEND_FACTOR_DST_ALPHA;
-    case Blend::InverseDestinationAlpha:
+    case BlendFactor::InverseDestinationAlpha:
         return VK_BLEND_FACTOR_ONE_MINUS_DST_ALPHA;
-    case Blend::DestinationColor:
+    case BlendFactor::DestinationColor:
         return VK_BLEND_FACTOR_DST_COLOR;
-    case Blend::InverseDestinationColor:
+    case BlendFactor::InverseDestinationColor:
         return VK_BLEND_FACTOR_ONE_MINUS_DST_COLOR;
-    case Blend::SourceAlphaSaturation:
+    case BlendFactor::SourceAlphaSaturation:
         return VK_BLEND_FACTOR_SRC_ALPHA_SATURATE;
-    case Blend::Source1Color:
+    case BlendFactor::Source1Color:
         return VK_BLEND_FACTOR_SRC1_COLOR;
-    case Blend::InverseSource1Color:
+    case BlendFactor::InverseSource1Color:
         return VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA;
-    case Blend::Source1Alpha:
+    case BlendFactor::Source1Alpha:
         return VK_BLEND_FACTOR_SRC1_ALPHA;
-    case Blend::InverseSource1Alpha:
+    case BlendFactor::InverseSource1Alpha:
         return VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR;
-    case Blend::BlendFactor:
+    case BlendFactor::BlendFactor:
         return VK_BLEND_FACTOR_CONSTANT_COLOR;
-    case Blend::InvereseBlendFactor:
+    case BlendFactor::InvereseBlendFactor:
         return VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR;
     }
     return VK_BLEND_FACTOR_ONE;

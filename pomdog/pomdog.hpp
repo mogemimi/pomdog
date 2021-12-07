@@ -68,8 +68,8 @@ namespace Pomdog {
 #include "pomdog/logging/log_entry.hpp"
 #include "pomdog/logging/log_level.hpp"
 
-#include "pomdog/graphics/blend.hpp"
 #include "pomdog/graphics/blend_description.hpp"
+#include "pomdog/graphics/blend_factor.hpp"
 #include "pomdog/graphics/blend_operation.hpp"
 #include "pomdog/graphics/buffer_usage.hpp"
 #include "pomdog/graphics/comparison_function.hpp"
