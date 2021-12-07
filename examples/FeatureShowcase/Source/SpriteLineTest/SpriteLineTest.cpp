@@ -1,5 +1,5 @@
 #include "SpriteLineTest.hpp"
-#include <Pomdog/Experimental/Graphics/SpriteLine.hpp>
+#include <pomdog/experimental/graphics/sprite_line.hpp>
 #include <random>
 
 namespace FeatureShowcase {

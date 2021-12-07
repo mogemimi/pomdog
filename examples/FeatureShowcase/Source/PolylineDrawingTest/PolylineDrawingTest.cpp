@@ -1,5 +1,5 @@
 #include "PolylineDrawingTest.hpp"
-#include <Pomdog/Experimental/Tween/EasingHelper.hpp>
+#include <pomdog/experimental/tween/easing_helper.hpp>
 
 namespace FeatureShowcase {
 

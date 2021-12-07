@@ -1,14 +1,14 @@
 #include "AnimationGraphTest.hpp"
-#include <Pomdog/Experimental/Graphics/BasicEffect.hpp>
-#include <Pomdog/Experimental/Skeletal2D/AnimationClip.hpp>
-#include <Pomdog/Experimental/Skeletal2D/SkeletonHelper.hpp>
-#include <Pomdog/Experimental/Spine/AnimationGraphBuilder.hpp>
-#include <Pomdog/Experimental/Spine/AnimationLoader.hpp>
-#include <Pomdog/Experimental/Spine/SkeletonDescLoader.hpp>
-#include <Pomdog/Experimental/Spine/SkeletonLoader.hpp>
-#include <Pomdog/Experimental/Spine/SkinLoader.hpp>
-#include <Pomdog/Experimental/Spine/SkinnedMeshLoader.hpp>
-#include <Pomdog/Experimental/TexturePacker/TextureAtlasLoader.hpp>
+#include <pomdog/experimental/graphics/basic_effect.hpp>
+#include <pomdog/experimental/skeletal2d/animation_clip.hpp>
+#include <pomdog/experimental/skeletal2d/skeleton_helper.hpp>
+#include <pomdog/experimental/spine/animation_graph_builder.hpp>
+#include <pomdog/experimental/spine/animation_loader.hpp>
+#include <pomdog/experimental/spine/skeleton_desc_loader.hpp>
+#include <pomdog/experimental/spine/skeleton_loader.hpp>
+#include <pomdog/experimental/spine/skin_loader.hpp>
+#include <pomdog/experimental/spine/skinned_mesh_loader.hpp>
+#include <pomdog/experimental/texture_packer/texture_atlas_loader.hpp>
 #include <random>
 
 namespace FeatureShowcase {

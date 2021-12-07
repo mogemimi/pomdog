@@ -1,10 +1,10 @@
 #pragma once
 
-#include <Pomdog/Experimental/GUI/DrawingContext.hpp>
-#include <Pomdog/Experimental/GUI/HorizontalSplitter.hpp>
-#include <Pomdog/Experimental/GUI/PushButton.hpp>
-#include <Pomdog/Experimental/GUI/WidgetHierarchy.hpp>
-#include <Pomdog/Pomdog.hpp>
+#include <pomdog/experimental/gui/drawing_context.hpp>
+#include <pomdog/experimental/gui/horizontal_splitter.hpp>
+#include <pomdog/experimental/gui/push_button.hpp>
+#include <pomdog/experimental/gui/widget_hierarchy.hpp>
+#include <pomdog/pomdog.hpp>
 
 namespace FeatureShowcase {
 

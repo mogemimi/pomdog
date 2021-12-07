@@ -1,5 +1,5 @@
 #include "ParticleClipLoaderTest.hpp"
-#include <Pomdog/Experimental/Particles/ParticleClipLoader.hpp>
+#include <pomdog/experimental/particles/particle_clip_loader.hpp>
 #include <random>
 
 namespace FeatureShowcase {

@@ -1,10 +1,10 @@
 #include "PongGame.hpp"
-#include <Pomdog/Experimental/Graphics/TrueTypeFontLoader.hpp>
-#include <Pomdog/Experimental/ImageEffects/ChromaticAberration.hpp>
-#include <Pomdog/Experimental/ImageEffects/FXAA.hpp>
-#include <Pomdog/Experimental/ImageEffects/FishEyeEffect.hpp>
-#include <Pomdog/Experimental/ImageEffects/RetroCrtEffect.hpp>
-#include <Pomdog/Experimental/ImageEffects/VignetteEffect.hpp>
+#include <pomdog/experimental/graphics/truetype_font_loader.hpp>
+#include <pomdog/experimental/image_effects/chromatic_aberration.hpp>
+#include <pomdog/experimental/image_effects/fxaa.hpp>
+#include <pomdog/experimental/image_effects/fish_eye_effect.hpp>
+#include <pomdog/experimental/image_effects/retro_crt_effect.hpp>
+#include <pomdog/experimental/image_effects/vignette_effect.hpp>
 #include <cmath>
 #include <random>
 #include <utility>

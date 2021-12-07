@@ -1,9 +1,9 @@
 #pragma once
 
-#include <Pomdog/Experimental/Graphics/PrimitiveBatch.hpp>
-#include <Pomdog/Experimental/MagicaVoxel/VoxModel.hpp>
-#include <Pomdog/Experimental/MagicaVoxel/VoxModelLoader.hpp>
-#include <Pomdog/Pomdog.hpp>
+#include <pomdog/experimental/graphics/primitive_batch.hpp>
+#include <pomdog/experimental/magicavoxel/vox_model.hpp>
+#include <pomdog/experimental/magicavoxel/vox_model_loader.hpp>
+#include <pomdog/pomdog.hpp>
 
 namespace FeatureShowcase {
 

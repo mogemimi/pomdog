@@ -146,7 +146,7 @@ set_target_properties(${PRODUCT_NAME} PROPERTIES
 )
 
 target_include_directories(${PRODUCT_NAME} PRIVATE
-    ${POMDOG_DIR}/include
+    ${POMDOG_DIR}
 )
 
 target_compile_definitions(${PRODUCT_NAME} PRIVATE

@@ -1,9 +1,9 @@
 #pragma once
 
-#include <Pomdog/Experimental/Graphics/PrimitiveBatch.hpp>
-#include <Pomdog/Experimental/Graphics/SpriteBatch.hpp>
-#include <Pomdog/Experimental/TexturePacker/TextureAtlas.hpp>
-#include <Pomdog/Pomdog.hpp>
+#include <pomdog/experimental/graphics/primitive_batch.hpp>
+#include <pomdog/experimental/graphics/sprite_batch.hpp>
+#include <pomdog/experimental/texture_packer/texture_atlas.hpp>
+#include <pomdog/pomdog.hpp>
 
 namespace FeatureShowcase {
 

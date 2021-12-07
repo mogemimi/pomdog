@@ -29,10 +29,10 @@ func main() {
 	}
 
 	if options.all {
-		if s, err := os.Stat("./include/Pomdog"); err != nil {
+		if s, err := os.Stat("./pomdog"); err != nil {
 			log.Fatalln(err)
 		} else if !s.IsDir() {
-			log.Fatalln("include/Pomdog is not directory")
+			log.Fatalln("pomdog is not directory")
 		}
 
 		dirs := []string{
@@ -52,24 +52,25 @@ func main() {
 			"examples/QuickStart/Content/*.hlsl",
 			"examples/QuickStart/Content/*.metal",
 			"examples/*/CMakeLists.txt",
-			"include/Pomdog/*.hpp",
-			"include/Pomdog/*/*.hpp",
-			"include/Pomdog/*/*/*.hpp",
-			"include/Pomdog/*/*/*/*.hpp",
-			"src/*/*.hpp",
-			"src/*/*.cpp",
-			"src/*/*.mm",
-			"src/*/*/*.hpp",
-			"src/*/*/*.cpp",
-			"src/*/*/*.mm",
-			"src/*/*/*/*.hpp",
-			"src/*/*/*/*.cpp",
-			"src/*/*/*/*.mm",
-			"src/*/*/*/*/*.hpp",
-			"src/*/*/*/*/*.cpp",
-			"src/*/*/*/*/*.glsl",
-			"src/*/*/*/*/*.hlsl",
-			"src/*/*/*/*/*.metal",
+			"pomdog/*.hpp",
+			"pomdog/*/*.hpp",
+			"pomdog/*/*/*.hpp",
+			"pomdog/*/*/*/*.hpp",
+			"pomdog/*/*.cpp",
+			"pomdog/*/*/*.cpp",
+			"pomdog/*/*/*/*.cpp",
+			"pomdog/*/*.mm",
+			"pomdog/*/*/*.mm",
+			"pomdog/*/*/*/*.mm",
+			"pomdog/*/*.glsl",
+			"pomdog/*/*/*.glsl",
+			"pomdog/*/*/*/*.glsl",
+			"pomdog/*/*.hlsl",
+			"pomdog/*/*/*.hlsl",
+			"pomdog/*/*/*/*.hlsl",
+			"pomdog/*/*.metal",
+			"pomdog/*/*/*.metal",
+			"pomdog/*/*/*/*.metal",
 			"test/*.cpp",
 			"test/*/*.hpp",
 			"test/*/*.cpp",

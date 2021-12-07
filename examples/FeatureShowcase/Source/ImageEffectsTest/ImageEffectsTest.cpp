@@ -1,10 +1,10 @@
 #include "ImageEffectsTest.hpp"
-#include <Pomdog/Experimental/ImageEffects/ChromaticAberration.hpp>
-#include <Pomdog/Experimental/ImageEffects/FXAA.hpp>
-#include <Pomdog/Experimental/ImageEffects/FishEyeEffect.hpp>
-#include <Pomdog/Experimental/ImageEffects/RetroCrtEffect.hpp>
-#include <Pomdog/Experimental/ImageEffects/SepiaToneEffect.hpp>
-#include <Pomdog/Experimental/ImageEffects/VignetteEffect.hpp>
+#include <pomdog/experimental/image_effects/chromatic_aberration.hpp>
+#include <pomdog/experimental/image_effects/fxaa.hpp>
+#include <pomdog/experimental/image_effects/fish_eye_effect.hpp>
+#include <pomdog/experimental/image_effects/retro_crt_effect.hpp>
+#include <pomdog/experimental/image_effects/sepia_tone_effect.hpp>
+#include <pomdog/experimental/image_effects/vignette_effect.hpp>
 #include <random>
 
 namespace FeatureShowcase {

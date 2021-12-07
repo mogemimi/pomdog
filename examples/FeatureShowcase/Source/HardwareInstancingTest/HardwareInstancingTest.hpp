@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Pomdog/Pomdog.hpp>
+#include <pomdog/pomdog.hpp>
 
 namespace FeatureShowcase {
 

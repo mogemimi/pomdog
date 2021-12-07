@@ -1,5 +1,5 @@
 #include "DistanceFieldFontTest.hpp"
-#include <Pomdog/Experimental/Graphics/SpriteFontLoader.hpp>
+#include <pomdog/experimental/graphics/sprite_font_loader.hpp>
 
 namespace FeatureShowcase {
 

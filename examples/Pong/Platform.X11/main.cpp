@@ -1,6 +1,6 @@
 #include "../Source/PongGame.hpp"
-#include <Pomdog/Platform/X11/Bootstrap.hpp>
-#include <Pomdog/Pomdog.hpp>
+#include <pomdog/platform/x11/bootstrap.hpp>
+#include <pomdog/pomdog.hpp>
 
 int main(int argc, char** argv)
 {

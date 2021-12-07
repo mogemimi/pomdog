@@ -1,8 +1,8 @@
 #include "GIFDecodeTest.hpp"
-#include <Pomdog/Experimental/Image/GIFImage.hpp>
-#include <Pomdog/Experimental/Image/GIFLoader.hpp>
-#include <Pomdog/Experimental/TexturePacker/TextureAtlasGenerator.hpp>
-#include <Pomdog/Experimental/Tween/EasingHelper.hpp>
+#include <pomdog/experimental/image/gif_image.hpp>
+#include <pomdog/experimental/image/gif_loader.hpp>
+#include <pomdog/experimental/texture_packer/texture_atlas_generator.hpp>
+#include <pomdog/experimental/tween/easing_helper.hpp>
 #include <cstdint>
 #include <random>
 

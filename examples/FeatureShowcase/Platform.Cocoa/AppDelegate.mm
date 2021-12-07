@@ -1,7 +1,7 @@
 #import "AppDelegate.h"
 #include "../Source/FeatureShowcaseGame.hpp"
-#include <Pomdog/Platform/Cocoa/Bootstrap.hpp>
-#include <Pomdog/Pomdog.hpp>
+#include <pomdog/platform/cocoa/bootstrap.hpp>
+#include <pomdog/pomdog.hpp>
 #include <memory>
 #ifdef DEBUG
 #include <iostream>

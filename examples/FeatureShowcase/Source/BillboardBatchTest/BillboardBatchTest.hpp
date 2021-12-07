@@ -1,8 +1,8 @@
 #pragma once
 
-#include <Pomdog/Experimental/Graphics/BillboardEffect.hpp>
-#include <Pomdog/Experimental/Graphics/LineBatch.hpp>
-#include <Pomdog/Pomdog.hpp>
+#include <pomdog/experimental/graphics/billboard_effect.hpp>
+#include <pomdog/experimental/graphics/line_batch.hpp>
+#include <pomdog/pomdog.hpp>
 
 namespace FeatureShowcase {
 

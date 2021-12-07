@@ -1,5 +1,5 @@
 #include "BasicEffectTest.hpp"
-#include <Pomdog/Experimental/Graphics/BasicEffect.hpp>
+#include <pomdog/experimental/graphics/basic_effect.hpp>
 #include <cmath>
 
 namespace FeatureShowcase {

@@ -1,7 +1,7 @@
 #include "GLTFModelTest.hpp"
-#include <Pomdog/Experimental/GLTF/GLTF.hpp>
-#include <Pomdog/Experimental/GLTF/GLTFLoader.hpp>
-#include <Pomdog/Experimental/Graphics/BasicEffect.hpp>
+#include <pomdog/experimental/gltf/gltf.hpp>
+#include <pomdog/experimental/gltf/gltf_loader.hpp>
+#include <pomdog/experimental/graphics/basic_effect.hpp>
 #include <cmath>
 
 namespace FeatureShowcase {

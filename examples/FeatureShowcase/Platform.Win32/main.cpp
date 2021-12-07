@@ -1,7 +1,7 @@
 #include "Resource.hpp"
 #include "../Source/FeatureShowcaseGame.hpp"
-#include <Pomdog/Platform/Win32/Bootstrap.hpp>
-#include <Pomdog/Pomdog.hpp>
+#include <pomdog/platform/win32/bootstrap.hpp>
+#include <pomdog/pomdog.hpp>
 
 #if defined(DEBUG) && !defined(NDEBUG)
 #define POMDOG_CRTDEBUG

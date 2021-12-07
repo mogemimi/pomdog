@@ -1,16 +1,16 @@
 #pragma once
 
-#include <Pomdog/Experimental/Graphics/PrimitiveBatch.hpp>
-#include <Pomdog/Experimental/Graphics/SpriteBatch.hpp>
-#include <Pomdog/Experimental/Skeletal2D/AnimationState.hpp>
-#include <Pomdog/Experimental/Skeletal2D/AnimationSystem.hpp>
-#include <Pomdog/Experimental/Skeletal2D/Animator.hpp>
-#include <Pomdog/Experimental/Skeletal2D/Skeleton.hpp>
-#include <Pomdog/Experimental/Skeletal2D/SkeletonPose.hpp>
-#include <Pomdog/Experimental/Skeletal2D/Skin.hpp>
-#include <Pomdog/Experimental/Skeletal2D/SkinnedMesh.hpp>
-#include <Pomdog/Experimental/TexturePacker/TextureAtlas.hpp>
-#include <Pomdog/Pomdog.hpp>
+#include <pomdog/experimental/graphics/primitive_batch.hpp>
+#include <pomdog/experimental/graphics/sprite_batch.hpp>
+#include <pomdog/experimental/skeletal2d/animation_state.hpp>
+#include <pomdog/experimental/skeletal2d/animation_system.hpp>
+#include <pomdog/experimental/skeletal2d/animator.hpp>
+#include <pomdog/experimental/skeletal2d/skeleton.hpp>
+#include <pomdog/experimental/skeletal2d/skeleton_pose.hpp>
+#include <pomdog/experimental/skeletal2d/skin.hpp>
+#include <pomdog/experimental/skeletal2d/skinned_mesh.hpp>
+#include <pomdog/experimental/texture_packer/texture_atlas.hpp>
+#include <pomdog/pomdog.hpp>
 
 namespace FeatureShowcase {
 

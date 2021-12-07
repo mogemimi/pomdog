@@ -1,5 +1,5 @@
 #include "BillboardBatchTest.hpp"
-#include <Pomdog/Experimental/Graphics/BasicEffect.hpp>
+#include <pomdog/experimental/graphics/basic_effect.hpp>
 #include <random>
 
 namespace FeatureShowcase {

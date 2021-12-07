@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Pomdog/Experimental/Graphics/PolylineBatch.hpp>
-#include <Pomdog/Pomdog.hpp>
+#include <pomdog/experimental/graphics/polyline_batch.hpp>
+#include <pomdog/pomdog.hpp>
 
 namespace FeatureShowcase {
 
