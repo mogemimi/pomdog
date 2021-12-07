@@ -1,8 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/signals/signal.hpp"
 #include "pomdog/signals/connection.hpp"
-#include "catch_amalgamated.hpp"
+#include "pomdog/signals/signal.hpp"
+#include <catch_amalgamated.hpp>
 #include <string>
 #include <utility>
 #include <vector>

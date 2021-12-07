@@ -1,16 +1,16 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/network/http_client.hpp"
-#include "Executor.hpp"
+#include "executor.hpp"
 #include "pomdog/application/game_clock.hpp"
 #include "pomdog/network/array_view.hpp"
+#include "pomdog/network/http_client.hpp"
 #include "pomdog/network/http_method.hpp"
 #include "pomdog/network/http_request.hpp"
 #include "pomdog/network/http_response.hpp"
 #include "pomdog/network/io_service.hpp"
 #include "pomdog/utility/errors.hpp"
 #include "pomdog/utility/string_helper.hpp"
-#include "catch_amalgamated.hpp"
+#include <catch_amalgamated.hpp>
 #include <algorithm>
 #include <cstring>
 #include <sstream>

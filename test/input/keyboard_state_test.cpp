@@ -2,7 +2,7 @@
 
 #include "pomdog/input/keyboard_state.hpp"
 #include "pomdog/input/keys.hpp"
-#include "catch_amalgamated.hpp"
+#include <catch_amalgamated.hpp>
 
 using Pomdog::KeyboardState;
 using Pomdog::Keys;

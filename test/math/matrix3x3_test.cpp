@@ -4,7 +4,7 @@
 #include "pomdog/math/radian.hpp"
 #include "pomdog/math/vector2.hpp"
 #include "pomdog/math/vector3.hpp"
-#include "catch_amalgamated.hpp"
+#include <catch_amalgamated.hpp>
 
 using Pomdog::Matrix3x3;
 using Pomdog::Vector2;

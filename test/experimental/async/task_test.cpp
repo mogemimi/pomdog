@@ -1,8 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/async/task.hpp"
 #include "pomdog/experimental/async/helpers.hpp"
-#include "catch_amalgamated.hpp"
+#include "pomdog/experimental/async/task.hpp"
+#include <catch_amalgamated.hpp>
 #include <thread>
 
 using Pomdog::Concurrency::Task;

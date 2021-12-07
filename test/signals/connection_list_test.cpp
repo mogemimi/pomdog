@@ -2,7 +2,7 @@
 
 #include "pomdog/signals/connection_list.hpp"
 #include "pomdog/signals/signal.hpp"
-#include "catch_amalgamated.hpp"
+#include <catch_amalgamated.hpp>
 #include <utility>
 
 using Pomdog::ConnectionList;

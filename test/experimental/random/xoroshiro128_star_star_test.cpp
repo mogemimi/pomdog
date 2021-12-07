@@ -1,7 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/experimental/random/xoroshiro128_star_star.hpp"
-#include "catch_amalgamated.hpp"
+#include <catch_amalgamated.hpp>
 #include <algorithm>
 #include <cstdint>
 #include <random>

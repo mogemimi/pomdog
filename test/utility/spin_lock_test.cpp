@@ -1,7 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/utility/spin_lock.hpp"
-#include "catch_amalgamated.hpp"
+#include <catch_amalgamated.hpp>
 #include <array>
 #include <memory>
 #include <mutex>

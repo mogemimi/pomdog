@@ -1,8 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/utility/path_helper.hpp"
 #include "pomdog/basic/platform.hpp"
-#include "catch_amalgamated.hpp"
+#include "pomdog/utility/path_helper.hpp"
+#include <catch_amalgamated.hpp>
 
 namespace PathHelper = Pomdog::PathHelper;
 

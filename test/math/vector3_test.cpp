@@ -1,8 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/math/vector3.hpp"
 #include "pomdog/math/matrix4x4.hpp"
-#include "catch_amalgamated.hpp"
+#include "pomdog/math/vector3.hpp"
+#include <catch_amalgamated.hpp>
 
 using Pomdog::Matrix4x4;
 using Pomdog::Vector3;

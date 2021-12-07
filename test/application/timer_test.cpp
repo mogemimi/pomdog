@@ -1,8 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/application/timer.hpp"
 #include "pomdog/application/game_clock.hpp"
-#include "catch_amalgamated.hpp"
+#include "pomdog/application/timer.hpp"
+#include <catch_amalgamated.hpp>
 #include <chrono>
 #include <cmath>
 #include <thread>

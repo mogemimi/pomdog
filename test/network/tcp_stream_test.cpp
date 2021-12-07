@@ -1,14 +1,14 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/network/tcp_stream.hpp"
-#include "Executor.hpp"
+#include "executor.hpp"
 #include "pomdog/application/game_clock.hpp"
 #include "pomdog/network/array_view.hpp"
 #include "pomdog/network/io_service.hpp"
+#include "pomdog/network/tcp_stream.hpp"
 #include "pomdog/signals/connection_list.hpp"
 #include "pomdog/utility/errors.hpp"
 #include "pomdog/utility/string_helper.hpp"
-#include "catch_amalgamated.hpp"
+#include <catch_amalgamated.hpp>
 #include <cstring>
 #include <sstream>
 #include <thread>

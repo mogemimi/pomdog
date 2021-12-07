@@ -1,9 +1,9 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/signals/scoped_connection.hpp"
 #include "pomdog/signals/connection.hpp"
+#include "pomdog/signals/scoped_connection.hpp"
 #include "pomdog/signals/signal.hpp"
-#include "catch_amalgamated.hpp"
+#include <catch_amalgamated.hpp>
 #include <utility>
 
 using Pomdog::Connection;

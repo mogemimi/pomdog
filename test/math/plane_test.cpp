@@ -1,12 +1,12 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/math/plane.hpp"
 #include "pomdog/math/bounding_box.hpp"
 #include "pomdog/math/bounding_frustum.hpp"
 #include "pomdog/math/bounding_sphere.hpp"
+#include "pomdog/math/plane.hpp"
 #include "pomdog/math/plane_intersection_type.hpp"
 #include "pomdog/math/ray.hpp"
-#include "catch_amalgamated.hpp"
+#include <catch_amalgamated.hpp>
 
 using namespace Pomdog;
 

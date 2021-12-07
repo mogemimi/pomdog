@@ -1,11 +1,11 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/ecs/entity_manager.hpp"
 #include "pomdog/experimental/ecs/component_type_index.hpp"
 #include "pomdog/experimental/ecs/entity.hpp"
 #include "pomdog/experimental/ecs/entity_archtype.hpp"
+#include "pomdog/experimental/ecs/entity_manager.hpp"
 #include "pomdog/math/vector3.hpp"
-#include "catch_amalgamated.hpp"
+#include <catch_amalgamated.hpp>
 #include <cstdint>
 #include <memory>
 

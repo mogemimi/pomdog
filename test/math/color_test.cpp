@@ -3,7 +3,7 @@
 #include "pomdog/math/color.hpp"
 #include "pomdog/math/vector3.hpp"
 #include "pomdog/math/vector4.hpp"
-#include "catch_amalgamated.hpp"
+#include <catch_amalgamated.hpp>
 
 using Pomdog::Color;
 using Pomdog::Vector3;

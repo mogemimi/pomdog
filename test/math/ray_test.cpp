@@ -1,9 +1,9 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/math/ray.hpp"
 #include "pomdog/math/bounding_box.hpp"
 #include "pomdog/math/bounding_sphere.hpp"
-#include "catch_amalgamated.hpp"
+#include "pomdog/math/ray.hpp"
+#include <catch_amalgamated.hpp>
 #include <limits>
 
 using Pomdog::Ray;
