@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
+// Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/graphics/vulkan/shader_vulkan.hpp"
 #include "pomdog/graphics/backends/shader_bytecode.hpp"

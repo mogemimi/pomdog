@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
+// Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/graphics/gl4/depth_stencil_buffer_gl4.hpp"
 #include "pomdog/graphics/gl4/error_checker.hpp"

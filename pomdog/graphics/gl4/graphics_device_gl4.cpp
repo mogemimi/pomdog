@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
+// Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/graphics/gl4/graphics_device_gl4.hpp"
 #include "pomdog/graphics/backends/buffer_helper.hpp"

@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
+// Copyright mogemimi. Distributed under the MIT license.
 
 constexpr uint8_t BuiltinHLSL_BillboardBatch_PS[] = {
     68,  88,  66,  67,  186, 176, 206, 43,  238, 92,  254, 180, 27,  35,  30,

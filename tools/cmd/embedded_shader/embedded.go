@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
+// Copyright mogemimi. Distributed under the MIT license.
 
 package main
 
@@ -13,7 +13,7 @@ func createEmbeddedCode(identifier, prefix, content string) string {
 	name = strings.Replace(identifier, "/", "_", -1)
 	name = prefix + name
 
-	return fmt.Sprintf(`// Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
+	return fmt.Sprintf(`// Copyright mogemimi. Distributed under the MIT license.
 
 constexpr auto %s = R"(
 %s)";
@@ -26,7 +26,7 @@ func createEmbeddedBinary(identifier, prefix, content string) string {
 	name = strings.Replace(identifier, "/", "_", -1)
 	name = prefix + name
 
-	return fmt.Sprintf(`// Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
+	return fmt.Sprintf(`// Copyright mogemimi. Distributed under the MIT license.
 
 constexpr uint8_t %s[] = {
 %s

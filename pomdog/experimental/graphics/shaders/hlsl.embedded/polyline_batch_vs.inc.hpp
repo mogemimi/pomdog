@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
+// Copyright mogemimi. Distributed under the MIT license.
 
 constexpr uint8_t BuiltinHLSL_PolylineBatch_VS[] = {
     68,  88,  66,  67,  203, 100, 117, 52,  84,  174, 122, 231, 68,  157, 90,

@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
+// Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/graphics/backends/graphics_command_list_immediate.hpp"
 #include "pomdog/basic/conditional_compilation.hpp"

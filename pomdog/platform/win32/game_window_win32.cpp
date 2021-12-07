@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
+// Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/platform/win32/game_window_win32.hpp"
 #include "pomdog/application/mouse_cursor.hpp"

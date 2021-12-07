@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
+// Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/audio/openal/audio_engine_al.hpp"
 #include "pomdog/audio/openal/audio_clip_al.hpp"

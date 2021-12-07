@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
+// Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/audio/xaudio2/audio_engine_xaudio2.hpp"
 #include "pomdog/audio/xaudio2/audio_clip_xaudio2.hpp"

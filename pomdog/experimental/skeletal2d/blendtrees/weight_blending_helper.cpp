@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
+// Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/experimental/skeletal2d/blendtrees/weight_blending_helper.hpp"
 #include "pomdog/experimental/skeletal2d/joint_pose.hpp"

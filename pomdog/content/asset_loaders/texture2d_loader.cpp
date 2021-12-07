@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
+// Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/content/asset_loaders/texture2d_loader.hpp"
 #include "pomdog/application/file_system.hpp"

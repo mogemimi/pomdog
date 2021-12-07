@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
+// Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/math/detail/floating_point_matrix2x2.hpp"
 #include "pomdog/basic/conditional_compilation.hpp"

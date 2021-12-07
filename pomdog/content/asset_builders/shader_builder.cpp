@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
+// Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/content/asset_builders/shader_builder.hpp"
 #include "pomdog/application/file_system.hpp"

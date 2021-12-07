@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
+// Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/experimental/texture_packer/texture_atlas_loader.hpp"
 #include "pomdog/basic/conditional_compilation.hpp"

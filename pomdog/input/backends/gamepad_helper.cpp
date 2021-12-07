@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
+// Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/input/backends/gamepad_helper.hpp"
 #include "pomdog/input/gamepad_state.hpp"

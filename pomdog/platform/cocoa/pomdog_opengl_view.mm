@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
+// Copyright mogemimi. Distributed under the MIT license.
 
 #import "pomdog/platform/cocoa/pomdog_opengl_view.hpp"
 #include "pomdog/application/system_events.hpp"

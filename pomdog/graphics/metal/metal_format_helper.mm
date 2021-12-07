@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
+// Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/graphics/metal/metal_format_helper.hpp"
 #include "pomdog/basic/unreachable.hpp"

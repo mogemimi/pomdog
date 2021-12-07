@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
+// Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/platform/linux/time_source_linux.hpp"
 #include "pomdog/utility/exception.hpp"

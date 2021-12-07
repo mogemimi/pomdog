@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
+// Copyright mogemimi. Distributed under the MIT license.
 
 constexpr auto Builtin_Metal_Vignette_PS = R"(
 #include <metal_stdlib>

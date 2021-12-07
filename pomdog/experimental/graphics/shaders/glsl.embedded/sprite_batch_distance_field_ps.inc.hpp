@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
+// Copyright mogemimi. Distributed under the MIT license.
 
 constexpr auto Builtin_GLSL_SpriteBatchDistanceField_PS = R"(
 #version 330

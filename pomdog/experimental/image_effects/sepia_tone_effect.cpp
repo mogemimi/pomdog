@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
+// Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/experimental/image_effects/sepia_tone_effect.hpp"
 #include "pomdog/basic/conditional_compilation.hpp"

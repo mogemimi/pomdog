@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
+// Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/graphics/vulkan/graphics_command_list_vulkan.hpp"
 #include "pomdog/graphics/backends/graphics_capabilities.hpp"

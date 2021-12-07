@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
+// Copyright mogemimi. Distributed under the MIT license.
 
 constexpr uint8_t BuiltinHLSL_SpriteBatchDistanceField_PS[] = {
     68,  88,  66,  67,  225, 136, 60,  99,  73,  61,  203, 234, 57,  252, 163,

@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
+// Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/graphics/vulkan/texture2d_vulkan.hpp"
 #include "pomdog/graphics/backends/texture_helper.hpp"

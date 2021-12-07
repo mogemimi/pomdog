@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
+// Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/graphics/direct3d/hlsl_reflection_helper.hpp"
 #include "pomdog/graphics/effect_variable_class.hpp"

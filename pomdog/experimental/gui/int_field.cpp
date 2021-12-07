@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
+// Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/experimental/gui/int_field.hpp"
 #include "pomdog/basic/conditional_compilation.hpp"

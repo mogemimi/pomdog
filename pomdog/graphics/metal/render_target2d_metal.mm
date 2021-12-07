@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
+// Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/graphics/metal/render_target2d_metal.hpp"
 #include "pomdog/graphics/backends/surface_format_helper.hpp"

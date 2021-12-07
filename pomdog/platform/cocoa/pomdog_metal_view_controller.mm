@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
+// Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/platform/cocoa/pomdog_metal_view_controller.hpp"
 #include "pomdog/application/system_events.hpp"

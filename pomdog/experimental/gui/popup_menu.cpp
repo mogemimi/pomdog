@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
+// Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/experimental/gui/popup_menu.hpp"
 #include "pomdog/experimental/gui/context_menu.hpp"

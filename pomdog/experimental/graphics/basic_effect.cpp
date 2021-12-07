@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
+// Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/experimental/graphics/basic_effect.hpp"
 #include "pomdog/content/asset_builders/pipeline_state_builder.hpp"

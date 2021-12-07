@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
+// Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/graphics/metal/graphics_device_metal.hpp"
 #include "pomdog/graphics/backends/buffer_bind_mode.hpp"

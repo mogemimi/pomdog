@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
+// Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/experimental/skeletal2d/blendtrees/animation_graph_weight_collection.hpp"
 #include "pomdog/basic/conditional_compilation.hpp"
