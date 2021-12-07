@@ -11,8 +11,8 @@ source_group(graphics\\vulkan           REGULAR_EXPRESSION "pomdog/graphics/vulk
 target_sources(pomdog_static PRIVATE
     # NOTE: graphics
     ${POMDOG_SRC_DIR}/graphics/blend_description.hpp
+    ${POMDOG_SRC_DIR}/graphics/blend_factor.hpp
     ${POMDOG_SRC_DIR}/graphics/blend_operation.hpp
-    ${POMDOG_SRC_DIR}/graphics/blend.hpp
     ${POMDOG_SRC_DIR}/graphics/buffer_usage.hpp
     ${POMDOG_SRC_DIR}/graphics/comparison_function.hpp
     ${POMDOG_SRC_DIR}/graphics/constant_buffer.cpp
