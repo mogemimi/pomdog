@@ -8,89 +8,89 @@ set(POMDOG_DIR "..")
 set(POMDOG_TEST_DIR "${POMDOG_DIR}/test")
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
 
-source_group(Application            REGULAR_EXPRESSION test/Application/*)
-source_group(Content                REGULAR_EXPRESSION test/Content/*)
-source_group(Experimental\\Async    REGULAR_EXPRESSION test/Experimental/Async/*)
-source_group(Experimental\\ECS      REGULAR_EXPRESSION test/Experimental/ECS/*)
-source_group(Experimental\\Random   REGULAR_EXPRESSION test/Experimental/Random/*)
-source_group(Graphics               REGULAR_EXPRESSION test/Graphics/*)
-source_group(Input                  REGULAR_EXPRESSION test/Input/*)
-source_group(Logging                REGULAR_EXPRESSION test/Logging/*)
-source_group(Math                   REGULAR_EXPRESSION test/Math/*)
-source_group(Network                REGULAR_EXPRESSION test/Network/*)
-source_group(Signals                REGULAR_EXPRESSION test/Signals/*)
-source_group(Utility                REGULAR_EXPRESSION test/Utility/*)
+source_group(application            REGULAR_EXPRESSION test/application/*)
+source_group(content                REGULAR_EXPRESSION test/content/*)
+source_group(experimental\\async    REGULAR_EXPRESSION test/experimental/async/*)
+source_group(experimental\\ecs      REGULAR_EXPRESSION test/experimental/ecs/*)
+source_group(experimental\\random   REGULAR_EXPRESSION test/experimental/random/*)
+source_group(graphics               REGULAR_EXPRESSION test/graphics/*)
+source_group(input                  REGULAR_EXPRESSION test/input/*)
+source_group(logging                REGULAR_EXPRESSION test/logging/*)
+source_group(math                   REGULAR_EXPRESSION test/math/*)
+source_group(network                REGULAR_EXPRESSION test/network/*)
+source_group(signals                REGULAR_EXPRESSION test/signals/*)
+source_group(utility                REGULAR_EXPRESSION test/utility/*)
 
 add_executable(PomdogTest)
 
 target_sources(PomdogTest PRIVATE
     ${POMDOG_TEST_DIR}/main.cpp
-    ${POMDOG_TEST_DIR}/PomdogTest.cpp
+    ${POMDOG_TEST_DIR}/pomdog_test.cpp
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:
         # TODO: Need to implement for Emscripten.
-        ${POMDOG_TEST_DIR}/Application/FileSystemTest.cpp
+        ${POMDOG_TEST_DIR}/application/file_system_test.cpp
     >
-    ${POMDOG_TEST_DIR}/Application/GameClockTest.cpp
-    ${POMDOG_TEST_DIR}/Application/TimerTest.cpp
+    ${POMDOG_TEST_DIR}/application/game_clock_test.cpp
+    ${POMDOG_TEST_DIR}/application/timer_test.cpp
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:
         # TODO: Need to implement for Emscripten.
-        ${POMDOG_TEST_DIR}/Experimental/Async/SchedulerTest.cpp
-        ${POMDOG_TEST_DIR}/Experimental/Async/TaskTest.cpp
+        ${POMDOG_TEST_DIR}/experimental/async/scheduler_test.cpp
+        ${POMDOG_TEST_DIR}/experimental/async/task_test.cpp
     >
-    ${POMDOG_TEST_DIR}/Experimental/ECS/EntityTest.cpp
-    ${POMDOG_TEST_DIR}/Experimental/ECS/EntityManagerTest.cpp
-    ${POMDOG_TEST_DIR}/Experimental/Random/Xoroshiro128StarStarTest.cpp
-    ${POMDOG_TEST_DIR}/Graphics/InputLayoutHelperTest.cpp
-    ${POMDOG_TEST_DIR}/Input/GamepadUUIDTest.cpp
-    ${POMDOG_TEST_DIR}/Input/KeyboardStateTest.cpp
-    ${POMDOG_TEST_DIR}/Input/KeysTest.cpp
-    ${POMDOG_TEST_DIR}/Input/MouseStateTest.cpp
-    ${POMDOG_TEST_DIR}/Logging/LogChannelTest.cpp
-    ${POMDOG_TEST_DIR}/Logging/LogTest.cpp
-    ${POMDOG_TEST_DIR}/Math/BoundingBoxTest.cpp
-    ${POMDOG_TEST_DIR}/Math/BoundingBox2DTest.cpp
-    ${POMDOG_TEST_DIR}/Math/BoundingCircleTest.cpp
-    ${POMDOG_TEST_DIR}/Math/BoundingFrustumTest.cpp
-    ${POMDOG_TEST_DIR}/Math/BoundingSphereTest.cpp
-    ${POMDOG_TEST_DIR}/Math/ColorTest.cpp
-    ${POMDOG_TEST_DIR}/Math/MathTest.cpp
-    ${POMDOG_TEST_DIR}/Math/Matrix2x2Test.cpp
-    ${POMDOG_TEST_DIR}/Math/Matrix3x2Test.cpp
-    ${POMDOG_TEST_DIR}/Math/Matrix3x3Test.cpp
-    ${POMDOG_TEST_DIR}/Math/Matrix4x4Test.cpp
-    ${POMDOG_TEST_DIR}/Math/PlaneTest.cpp
-    ${POMDOG_TEST_DIR}/Math/Point2DTest.cpp
-    ${POMDOG_TEST_DIR}/Math/Point3DTest.cpp
-    ${POMDOG_TEST_DIR}/Math/QuaternionTest.cpp
-    ${POMDOG_TEST_DIR}/Math/RayTest.cpp
-    ${POMDOG_TEST_DIR}/Math/RectangleTest.cpp
-    ${POMDOG_TEST_DIR}/Math/Vector2Test.cpp
-    ${POMDOG_TEST_DIR}/Math/Vector3Test.cpp
-    ${POMDOG_TEST_DIR}/Math/Vector4Test.cpp
-    ${POMDOG_TEST_DIR}/Network/ArrayViewTest.cpp
-    ${POMDOG_TEST_DIR}/Network/Executor.hpp
+    ${POMDOG_TEST_DIR}/experimental/ecs/entity_test.cpp
+    ${POMDOG_TEST_DIR}/experimental/ecs/entity_manager_test.cpp
+    ${POMDOG_TEST_DIR}/experimental/random/xoroshiro128_star_star_test.cpp
+    ${POMDOG_TEST_DIR}/graphics/input_layout_helper_test.cpp
+    ${POMDOG_TEST_DIR}/input/gamepad_uuid_test.cpp
+    ${POMDOG_TEST_DIR}/input/keyboard_state_test.cpp
+    ${POMDOG_TEST_DIR}/input/keys_test.cpp
+    ${POMDOG_TEST_DIR}/input/mouse_state_test.cpp
+    ${POMDOG_TEST_DIR}/logging/log_channel_test.cpp
+    ${POMDOG_TEST_DIR}/logging/log_test.cpp
+    ${POMDOG_TEST_DIR}/math/bounding_box_test.cpp
+    ${POMDOG_TEST_DIR}/math/bounding_box2d_test.cpp
+    ${POMDOG_TEST_DIR}/math/bounding_circle_test.cpp
+    ${POMDOG_TEST_DIR}/math/bounding_frustum_test.cpp
+    ${POMDOG_TEST_DIR}/math/bounding_sphere_test.cpp
+    ${POMDOG_TEST_DIR}/math/color_test.cpp
+    ${POMDOG_TEST_DIR}/math/math_test.cpp
+    ${POMDOG_TEST_DIR}/math/matrix2x2_test.cpp
+    ${POMDOG_TEST_DIR}/math/matrix3x2_test.cpp
+    ${POMDOG_TEST_DIR}/math/matrix3x3_test.cpp
+    ${POMDOG_TEST_DIR}/math/matrix4x4_test.cpp
+    ${POMDOG_TEST_DIR}/math/plane_test.cpp
+    ${POMDOG_TEST_DIR}/math/point2d_test.cpp
+    ${POMDOG_TEST_DIR}/math/point3d_test.cpp
+    ${POMDOG_TEST_DIR}/math/quaternion_test.cpp
+    ${POMDOG_TEST_DIR}/math/ray_test.cpp
+    ${POMDOG_TEST_DIR}/math/rectangle_test.cpp
+    ${POMDOG_TEST_DIR}/math/vector2_test.cpp
+    ${POMDOG_TEST_DIR}/math/vector3_test.cpp
+    ${POMDOG_TEST_DIR}/math/vector4_test.cpp
+    ${POMDOG_TEST_DIR}/network/array_view_test.cpp
+    ${POMDOG_TEST_DIR}/network/executor.hpp
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:
         # TODO: Need to implement for Emscripten.
-        ${POMDOG_TEST_DIR}/Network/HTTPClientTest.cpp
-        ${POMDOG_TEST_DIR}/Network/TCPStreamTest.cpp
-        ${POMDOG_TEST_DIR}/Network/TLSStreamTest.cpp
-        ${POMDOG_TEST_DIR}/Network/UDPStreamTest.cpp
+        ${POMDOG_TEST_DIR}/network/http_client_test.cpp
+        ${POMDOG_TEST_DIR}/network/tcp_stream_test.cpp
+        ${POMDOG_TEST_DIR}/network/tls_stream_test.cpp
+        ${POMDOG_TEST_DIR}/network/udp_stream_test.cpp
     >
-    ${POMDOG_TEST_DIR}/Signals/ConnectionTest.cpp
-    ${POMDOG_TEST_DIR}/Signals/ConnectionListTest.cpp
-    ${POMDOG_TEST_DIR}/Signals/DelegateTest.cpp
-    ${POMDOG_TEST_DIR}/Signals/EventQueueTest.cpp
-    ${POMDOG_TEST_DIR}/Signals/HelpersTest.cpp
-    ${POMDOG_TEST_DIR}/Signals/ScopedConnectionTest.cpp
-    ${POMDOG_TEST_DIR}/Signals/SignalTest.cpp
-    ${POMDOG_TEST_DIR}/Utility/CRC32Test.cpp
-    ${POMDOG_TEST_DIR}/Utility/ErrorsTest.cpp
-    ${POMDOG_TEST_DIR}/Utility/PathHelperTest.cpp
+    ${POMDOG_TEST_DIR}/signals/connection_test.cpp
+    ${POMDOG_TEST_DIR}/signals/connection_list_test.cpp
+    ${POMDOG_TEST_DIR}/signals/delegate_test.cpp
+    ${POMDOG_TEST_DIR}/signals/event_queue_test.cpp
+    ${POMDOG_TEST_DIR}/signals/scoped_connection_test.cpp
+    ${POMDOG_TEST_DIR}/signals/signal_helpers_test.cpp
+    ${POMDOG_TEST_DIR}/signals/signal_test.cpp
+    ${POMDOG_TEST_DIR}/utility/crc32_test.cpp
+    ${POMDOG_TEST_DIR}/utility/errors_test.cpp
+    ${POMDOG_TEST_DIR}/utility/path_helper_test.cpp
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:
         # TODO: Need to implement for Emscripten.
-        ${POMDOG_TEST_DIR}/Utility/SpinLockTest.cpp
+        ${POMDOG_TEST_DIR}/utility/spin_lock_test.cpp
     >
-    ${POMDOG_TEST_DIR}/Utility/StringHelperTest.cpp
+    ${POMDOG_TEST_DIR}/utility/string_helper_test.cpp
 )
 
 set_target_properties(PomdogTest PROPERTIES
