@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Math/Rectangle.hpp"
-#include "Pomdog/Math/Point2D.hpp"
+#include "pomdog/math/rectangle.hpp"
+#include "pomdog/math/point2d.hpp"
 #include "catch_amalgamated.hpp"
 
 using Pomdog::Point2D;

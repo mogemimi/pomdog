@@ -1,12 +1,12 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Math/BoundingFrustum.hpp"
-#include "Pomdog/Math/BoundingBox.hpp"
-#include "Pomdog/Math/BoundingSphere.hpp"
-#include "Pomdog/Math/ContainmentType.hpp"
-#include "Pomdog/Math/Matrix4x4.hpp"
-#include "Pomdog/Math/Plane.hpp"
-#include "Pomdog/Math/Radian.hpp"
+#include "pomdog/math/bounding_frustum.hpp"
+#include "pomdog/math/bounding_box.hpp"
+#include "pomdog/math/bounding_sphere.hpp"
+#include "pomdog/math/containment_type.hpp"
+#include "pomdog/math/matrix4x4.hpp"
+#include "pomdog/math/plane.hpp"
+#include "pomdog/math/radian.hpp"
 #include "catch_amalgamated.hpp"
 
 using namespace Pomdog;

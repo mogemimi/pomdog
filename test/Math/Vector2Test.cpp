@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Math/Vector2.hpp"
-#include "Pomdog/Math/Math.hpp"
+#include "pomdog/math/vector2.hpp"
+#include "pomdog/math/math.hpp"
 #include "catch_amalgamated.hpp"
 
 using Pomdog::Vector2;

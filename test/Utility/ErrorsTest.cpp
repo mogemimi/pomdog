@@ -1,6 +1,6 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Utility/Errors.hpp"
+#include "pomdog/utility/errors.hpp"
 #include "catch_amalgamated.hpp"
 #include <tuple>
 

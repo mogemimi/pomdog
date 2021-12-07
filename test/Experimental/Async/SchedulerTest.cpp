@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Experimental/Async/ImmediateScheduler.hpp"
-#include "Pomdog/Experimental/Async/QueuedScheduler.hpp"
+#include "pomdog/experimental/async/immediate_scheduler.hpp"
+#include "pomdog/experimental/async/queued_scheduler.hpp"
 #include "catch_amalgamated.hpp"
 #include <thread>
 

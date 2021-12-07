@@ -1,6 +1,6 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Math/Quaternion.hpp"
+#include "pomdog/math/quaternion.hpp"
 #include "catch_amalgamated.hpp"
 
 using Pomdog::Quaternion;

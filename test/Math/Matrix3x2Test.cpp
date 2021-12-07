@@ -1,9 +1,9 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Math/Matrix3x2.hpp"
-#include "Pomdog/Math/Radian.hpp"
-#include "Pomdog/Math/Vector2.hpp"
-#include "Pomdog/Math/Vector3.hpp"
+#include "pomdog/math/matrix3x2.hpp"
+#include "pomdog/math/radian.hpp"
+#include "pomdog/math/vector2.hpp"
+#include "pomdog/math/vector3.hpp"
 #include "catch_amalgamated.hpp"
 
 using Pomdog::Matrix3x2;

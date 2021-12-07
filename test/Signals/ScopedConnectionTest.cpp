@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Signals/ScopedConnection.hpp"
-#include "Pomdog/Signals/Connection.hpp"
-#include "Pomdog/Signals/Signal.hpp"
+#include "pomdog/signals/scoped_connection.hpp"
+#include "pomdog/signals/connection.hpp"
+#include "pomdog/signals/signal.hpp"
 #include "catch_amalgamated.hpp"
 #include <utility>
 

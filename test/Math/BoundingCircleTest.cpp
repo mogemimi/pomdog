@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Math/BoundingCircle.hpp"
-#include "Pomdog/Math/BoundingBox2D.hpp"
-#include "Pomdog/Math/ContainmentType.hpp"
+#include "pomdog/math/bounding_circle.hpp"
+#include "pomdog/math/bounding_box2d.hpp"
+#include "pomdog/math/containment_type.hpp"
 #include "catch_amalgamated.hpp"
 
 using namespace Pomdog;

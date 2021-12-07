@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Math/Ray.hpp"
-#include "Pomdog/Math/BoundingBox.hpp"
-#include "Pomdog/Math/BoundingSphere.hpp"
+#include "pomdog/math/ray.hpp"
+#include "pomdog/math/bounding_box.hpp"
+#include "pomdog/math/bounding_sphere.hpp"
 #include "catch_amalgamated.hpp"
 #include <limits>
 

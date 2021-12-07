@@ -100,7 +100,7 @@ set_target_properties(PomdogTest PROPERTIES
 )
 
 target_include_directories(PomdogTest PRIVATE
-    ${POMDOG_DIR}/include
+    ${POMDOG_DIR}
     ${POMDOG_DIR}/dependencies/Catch2/extras
 )
 

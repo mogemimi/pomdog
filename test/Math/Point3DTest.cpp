@@ -1,6 +1,6 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Math/Point3D.hpp"
+#include "pomdog/math/point3d.hpp"
 #include "catch_amalgamated.hpp"
 
 using Pomdog::Point3D;

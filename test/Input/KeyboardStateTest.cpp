@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Input/KeyboardState.hpp"
-#include "Pomdog/Input/Keys.hpp"
+#include "pomdog/input/keyboard_state.hpp"
+#include "pomdog/input/keys.hpp"
 #include "catch_amalgamated.hpp"
 
 using Pomdog::KeyboardState;

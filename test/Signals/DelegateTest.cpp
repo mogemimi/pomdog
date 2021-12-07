@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Signals/Delegate.hpp"
-#include "Pomdog/Signals/Connection.hpp"
+#include "pomdog/signals/delegate.hpp"
+#include "pomdog/signals/connection.hpp"
 #include "catch_amalgamated.hpp"
 #include <string>
 #include <utility>

@@ -1,6 +1,6 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Input/Keys.hpp"
+#include "pomdog/input/keys.hpp"
 #include "catch_amalgamated.hpp"
 #include <type_traits>
 

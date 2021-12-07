@@ -1,6 +1,6 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Input/GamepadUUID.hpp"
+#include "pomdog/input/gamepad_uuid.hpp"
 #include "catch_amalgamated.hpp"
 
 using Pomdog::GamepadUUID;

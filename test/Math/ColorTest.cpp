@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Math/Color.hpp"
-#include "Pomdog/Math/Vector3.hpp"
-#include "Pomdog/Math/Vector4.hpp"
+#include "pomdog/math/color.hpp"
+#include "pomdog/math/vector3.hpp"
+#include "pomdog/math/vector4.hpp"
 #include "catch_amalgamated.hpp"
 
 using Pomdog::Color;

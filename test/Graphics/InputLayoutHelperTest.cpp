@@ -1,6 +1,6 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Graphics/InputLayoutHelper.hpp"
+#include "pomdog/graphics/input_layout_helper.hpp"
 #include "catch_amalgamated.hpp"
 
 using Pomdog::InputClassification;

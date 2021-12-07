@@ -1,6 +1,6 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Utility/Detail/SpinLock.hpp"
+#include "pomdog/utility/spin_lock.hpp"
 #include "catch_amalgamated.hpp"
 #include <array>
 #include <memory>

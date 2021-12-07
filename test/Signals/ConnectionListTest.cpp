@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Signals/ConnectionList.hpp"
-#include "Pomdog/Signals/Signal.hpp"
+#include "pomdog/signals/connection_list.hpp"
+#include "pomdog/signals/signal.hpp"
 #include "catch_amalgamated.hpp"
 #include <utility>
 

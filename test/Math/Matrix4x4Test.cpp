@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Math/Matrix4x4.hpp"
-#include "Pomdog/Math/Radian.hpp"
-#include "Pomdog/Math/Vector3.hpp"
+#include "pomdog/math/matrix4x4.hpp"
+#include "pomdog/math/radian.hpp"
+#include "pomdog/math/vector3.hpp"
 #include "catch_amalgamated.hpp"
 
 using Pomdog::Matrix4x4;

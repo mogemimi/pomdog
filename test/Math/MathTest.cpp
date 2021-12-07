@@ -1,6 +1,6 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Math/Math.hpp"
+#include "pomdog/math/math.hpp"
 #include "catch_amalgamated.hpp"
 
 namespace Math = Pomdog::Math;

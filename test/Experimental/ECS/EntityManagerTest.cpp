@@ -1,10 +1,10 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Experimental/ECS/EntityManager.hpp"
-#include "Pomdog/Experimental/ECS/ComponentTypeIndex.hpp"
-#include "Pomdog/Experimental/ECS/Entity.hpp"
-#include "Pomdog/Experimental/ECS/EntityArchtype.hpp"
-#include "Pomdog/Math/Vector3.hpp"
+#include "pomdog/experimental/ecs/entity_manager.hpp"
+#include "pomdog/experimental/ecs/component_type_index.hpp"
+#include "pomdog/experimental/ecs/entity.hpp"
+#include "pomdog/experimental/ecs/entity_archtype.hpp"
+#include "pomdog/math/vector3.hpp"
 #include "catch_amalgamated.hpp"
 #include <cstdint>
 #include <memory>

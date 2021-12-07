@@ -1,6 +1,6 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Math/Matrix2x2.hpp"
+#include "pomdog/math/matrix2x2.hpp"
 #include "catch_amalgamated.hpp"
 
 using Pomdog::Matrix2x2;
