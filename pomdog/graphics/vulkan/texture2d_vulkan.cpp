@@ -1,12 +1,12 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Texture2DVulkan.hpp"
-#include "BufferVulkan.hpp"
-#include "VulkanFormatHelper.hpp"
-#include "../Graphics.Backends/TextureHelper.hpp"
-#include "../Utility/Exception.hpp"
-#include "Pomdog/Graphics/SurfaceFormat.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/graphics/vulkan/texture2d_vulkan.hpp"
+#include "pomdog/graphics/backends/texture_helper.hpp"
+#include "pomdog/graphics/surface_format.hpp"
+#include "pomdog/graphics/vulkan/buffer_vulkan.hpp"
+#include "pomdog/graphics/vulkan/vulkan_format_helper.hpp"
+#include "pomdog/utility/assert.hpp"
+#include "pomdog/utility/exception.hpp"
 
 namespace Pomdog::Detail::Vulkan {
 

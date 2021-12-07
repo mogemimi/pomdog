@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "Pomdog/Basic/Export.hpp"
-#include "Pomdog/Graphics/SurfaceFormat.hpp"
+#include "pomdog/basic/export.hpp"
+#include "pomdog/graphics/surface_format.hpp"
 #include <functional>
 #include <memory>
 

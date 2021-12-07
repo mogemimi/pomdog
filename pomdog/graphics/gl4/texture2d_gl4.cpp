@@ -1,14 +1,14 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Texture2DGL4.hpp"
-#include "ErrorChecker.hpp"
-#include "TypesafeHelperGL4.hpp"
-#include "../Basic/Unreachable.hpp"
-#include "../Graphics.Backends/SurfaceFormatHelper.hpp"
-#include "../Utility/ScopeGuard.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Graphics/SurfaceFormat.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/graphics/gl4/texture2d_gl4.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/basic/unreachable.hpp"
+#include "pomdog/graphics/backends/surface_format_helper.hpp"
+#include "pomdog/graphics/gl4/error_checker.hpp"
+#include "pomdog/graphics/gl4/typesafe_helper_gl4.hpp"
+#include "pomdog/graphics/surface_format.hpp"
+#include "pomdog/utility/assert.hpp"
+#include "pomdog/utility/scope_guard.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>

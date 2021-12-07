@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
+#include "pomdog/platform/win32/prerequisites_win32.hpp"
 
 namespace Pomdog::Detail::Win32 {
 

@@ -1,13 +1,13 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Experimental/Spine/SkeletonLoader.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Experimental/Skeletal2D/Joint.hpp"
-#include "Pomdog/Experimental/Skeletal2D/JointIndex.hpp"
-#include "Pomdog/Experimental/Skeletal2D/Skeleton.hpp"
-#include "Pomdog/Experimental/Skeletal2D/SkeletonHelper.hpp"
-#include "Pomdog/Experimental/Skeletal2D/SkeletonPose.hpp"
-#include "Pomdog/Experimental/Spine/SkeletonDesc.hpp"
+#include "pomdog/experimental/spine/skeleton_loader.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/experimental/skeletal2d/joint.hpp"
+#include "pomdog/experimental/skeletal2d/joint_index.hpp"
+#include "pomdog/experimental/skeletal2d/skeleton.hpp"
+#include "pomdog/experimental/skeletal2d/skeleton_helper.hpp"
+#include "pomdog/experimental/skeletal2d/skeleton_pose.hpp"
+#include "pomdog/experimental/spine/skeleton_desc.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <limits>

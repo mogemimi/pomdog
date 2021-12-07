@@ -1,6 +1,6 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Experimental/Skeletal2D/BlendTrees/AnimationNode.hpp"
+#include "pomdog/experimental/skeletal2d/blendtrees/animation_node.hpp"
 
 namespace Pomdog::Skeletal2D {
 

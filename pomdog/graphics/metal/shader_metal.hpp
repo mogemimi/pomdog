@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "Pomdog/Graphics/ForwardDeclarations.hpp"
-#include "Pomdog/Graphics/Shader.hpp"
-#include "Pomdog/Utility/Errors.hpp"
+#include "pomdog/graphics/forward_declarations.hpp"
+#include "pomdog/graphics/shader.hpp"
+#include "pomdog/utility/errors.hpp"
 #import <Metal/MTLLibrary.h>
 
 namespace Pomdog::Detail {

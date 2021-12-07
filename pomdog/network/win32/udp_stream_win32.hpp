@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include "Pomdog/Application/Duration.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Network/ForwardDeclarations.hpp"
-#include "Pomdog/Signals/Delegate.hpp"
-#include "Pomdog/Signals/ScopedConnection.hpp"
-#include "Pomdog/Utility/Errors.hpp"
+#include "pomdog/application/duration.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/network/forward_declarations.hpp"
+#include "pomdog/signals/delegate.hpp"
+#include "pomdog/signals/scoped_connection.hpp"
+#include "pomdog/utility/errors.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <WinSock2.h>

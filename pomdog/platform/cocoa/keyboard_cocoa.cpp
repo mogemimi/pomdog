@@ -1,9 +1,9 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "KeyboardCocoa.hpp"
-#include "../Application/SystemEvents.hpp"
-#include "Pomdog/Input/KeyState.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/platform/cocoa/keyboard_cocoa.hpp"
+#include "pomdog/application/system_events.hpp"
+#include "pomdog/input/key_state.hpp"
+#include "pomdog/utility/assert.hpp"
 
 namespace Pomdog::Detail::Cocoa {
 

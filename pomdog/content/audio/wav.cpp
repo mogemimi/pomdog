@@ -1,12 +1,12 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Content/Audio/WAV.hpp"
-#include "Pomdog/Audio/AudioChannels.hpp"
-#include "Pomdog/Audio/AudioEngine.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Content/Utility/BinaryReader.hpp"
-#include "Pomdog/Content/Utility/MakeFourCC.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/content/audio/wav.hpp"
+#include "pomdog/audio/audio_channels.hpp"
+#include "pomdog/audio/audio_engine.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/content/utility/binary_reader.hpp"
+#include "pomdog/content/utility/make_fourcc.hpp"
+#include "pomdog/utility/assert.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>

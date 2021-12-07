@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Pomdog/Application/TimePoint.hpp"
+#include "pomdog/application/time_point.hpp"
 
 namespace Pomdog::Detail::Linux {
 

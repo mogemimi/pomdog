@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "Pomdog/Application/Duration.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Experimental/Particles/Particle.hpp"
-#include "Pomdog/Experimental/Random/Xoroshiro128StarStar.hpp"
+#include "pomdog/application/duration.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/experimental/particles/particle.hpp"
+#include "pomdog/experimental/random/xoroshiro128_star_star.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>

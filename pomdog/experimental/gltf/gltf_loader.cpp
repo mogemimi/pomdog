@@ -1,12 +1,12 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Experimental/GLTF/GLTFLoader.hpp"
-#include "Pomdog/Application/FileSystem.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Content/Utility/BinaryReader.hpp"
-#include "Pomdog/Content/Utility/MakeFourCC.hpp"
-#include "Pomdog/Experimental/GLTF/GLTF.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/experimental/gltf/gltf_loader.hpp"
+#include "pomdog/application/file_system.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/content/utility/binary_reader.hpp"
+#include "pomdog/content/utility/make_fourcc.hpp"
+#include "pomdog/experimental/gltf/gltf.hpp"
+#include "pomdog/utility/assert.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #if defined(__clang__)

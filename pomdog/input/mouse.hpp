@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Basic/Export.hpp"
-#include "Pomdog/Input/MouseButtons.hpp"
-#include "Pomdog/Math/Point2D.hpp"
-#include "Pomdog/Signals/Signal.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/basic/export.hpp"
+#include "pomdog/input/mouse_buttons.hpp"
+#include "pomdog/math/point2d.hpp"
+#include "pomdog/signals/signal.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>

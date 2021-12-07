@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "FormatHelper.hpp"
-#include "../Basic/Unreachable.hpp"
-#include "Pomdog/Graphics/ComparisonFunction.hpp"
+#include "pomdog/graphics/gl4/format_helper.hpp"
+#include "pomdog/basic/unreachable.hpp"
+#include "pomdog/graphics/comparison_function.hpp"
 
 namespace Pomdog::Detail::GL4 {
 

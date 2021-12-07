@@ -1,12 +1,12 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Math/Color.hpp"
-#include "../Basic/CompilationTargets.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Math/Math.hpp"
-#include "Pomdog/Math/Vector3.hpp"
-#include "Pomdog/Math/Vector4.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/math/color.hpp"
+#include "pomdog/basic/compilation_targets.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/math/math.hpp"
+#include "pomdog/math/vector3.hpp"
+#include "pomdog/math/vector4.hpp"
+#include "pomdog/utility/assert.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cmath>

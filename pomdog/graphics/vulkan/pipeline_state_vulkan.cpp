@@ -1,16 +1,16 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "PipelineStateVulkan.hpp"
-#include "FormatHelper.hpp"
-#include "ShaderVulkan.hpp"
-#include "VulkanFormatHelper.hpp"
-#include "../Graphics.Backends/BufferHelper.hpp"
-#include "../Graphics.Backends/ShaderBytecode.hpp"
-#include "../Utility/Exception.hpp"
-#include "Pomdog/Graphics/InputLayoutDescription.hpp"
-#include "Pomdog/Graphics/PipelineStateDescription.hpp"
-#include "Pomdog/Graphics/PrimitiveTopology.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/graphics/vulkan/pipeline_state_vulkan.hpp"
+#include "pomdog/graphics/backends/buffer_helper.hpp"
+#include "pomdog/graphics/backends/shader_bytecode.hpp"
+#include "pomdog/graphics/input_layout_description.hpp"
+#include "pomdog/graphics/pipeline_state_description.hpp"
+#include "pomdog/graphics/primitive_topology.hpp"
+#include "pomdog/graphics/vulkan/format_helper.hpp"
+#include "pomdog/graphics/vulkan/shader_vulkan.hpp"
+#include "pomdog/graphics/vulkan/vulkan_format_helper.hpp"
+#include "pomdog/utility/assert.hpp"
+#include "pomdog/utility/exception.hpp"
 
 namespace Pomdog::Detail::Vulkan {
 namespace {

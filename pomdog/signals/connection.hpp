@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Basic/Export.hpp"
-#include "Pomdog/Signals/Detail/SignalBody.hpp"
-#include "Pomdog/Signals/ForwardDeclarations.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/basic/export.hpp"
+#include "pomdog/signals/detail/signal_body.hpp"
+#include "pomdog/signals/forward_declarations.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>

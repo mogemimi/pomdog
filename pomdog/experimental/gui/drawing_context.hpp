@@ -2,19 +2,19 @@
 
 #pragma once
 
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Experimental/GUI/FontSize.hpp"
-#include "Pomdog/Experimental/GUI/FontWeight.hpp"
-#include "Pomdog/Experimental/Graphics/PrimitiveBatch.hpp"
-#include "Pomdog/Experimental/Graphics/SpriteBatch.hpp"
-#include "Pomdog/Experimental/Graphics/SpriteFont.hpp"
-#include "Pomdog/Experimental/Graphics/TrueTypeFont.hpp"
-#include "Pomdog/Experimental/TexturePacker/TextureAtlas.hpp"
-#include "Pomdog/Math/Color.hpp"
-#include "Pomdog/Math/Matrix3x2.hpp"
-#include "Pomdog/Math/Matrix4x4.hpp"
-#include "Pomdog/Math/Rectangle.hpp"
-#include "Pomdog/Math/Vector2.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/experimental/graphics/primitive_batch.hpp"
+#include "pomdog/experimental/graphics/sprite_batch.hpp"
+#include "pomdog/experimental/graphics/sprite_font.hpp"
+#include "pomdog/experimental/graphics/truetype_font.hpp"
+#include "pomdog/experimental/gui/font_size.hpp"
+#include "pomdog/experimental/gui/font_weight.hpp"
+#include "pomdog/experimental/texture_packer/texture_atlas.hpp"
+#include "pomdog/math/color.hpp"
+#include "pomdog/math/matrix3x2.hpp"
+#include "pomdog/math/matrix4x4.hpp"
+#include "pomdog/math/rectangle.hpp"
+#include "pomdog/math/vector2.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>

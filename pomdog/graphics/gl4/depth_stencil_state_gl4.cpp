@@ -1,11 +1,11 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "DepthStencilStateGL4.hpp"
-#include "ErrorChecker.hpp"
-#include "FormatHelper.hpp"
-#include "../Basic/Unreachable.hpp"
-#include "Pomdog/Graphics/DepthStencilDescription.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/graphics/gl4/depth_stencil_state_gl4.hpp"
+#include "pomdog/basic/unreachable.hpp"
+#include "pomdog/graphics/depth_stencil_description.hpp"
+#include "pomdog/graphics/gl4/error_checker.hpp"
+#include "pomdog/graphics/gl4/format_helper.hpp"
+#include "pomdog/utility/assert.hpp"
 
 namespace Pomdog::Detail::GL4 {
 namespace {

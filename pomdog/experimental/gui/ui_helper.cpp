@@ -1,6 +1,6 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Experimental/GUI/UIHelper.hpp"
+#include "pomdog/experimental/gui/ui_helper.hpp"
 
 namespace Pomdog::GUI::UIHelper {
 

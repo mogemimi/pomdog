@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Experimental/Skeletal2D/BlendTrees/AnimationBlendInput.hpp"
-#include "Pomdog/Experimental/Skeletal2D/BlendTrees/AnimationNode.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/experimental/skeletal2d/blendtrees/animation_blend_input.hpp"
+#include "pomdog/experimental/skeletal2d/blendtrees/animation_node.hpp"
+#include "pomdog/utility/assert.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>

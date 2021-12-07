@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Pomdog/Experimental/Async/Scheduler.hpp"
+#include "pomdog/experimental/async/scheduler.hpp"
 
 namespace Pomdog::Concurrency {
 

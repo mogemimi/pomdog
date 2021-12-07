@@ -2,15 +2,15 @@
 
 #pragma once
 
-#include "Pomdog/Application/Duration.hpp"
-#include "Pomdog/Application/GameClock.hpp"
-#include "Pomdog/Application/GameHost.hpp"
-#include "Pomdog/Application/Timer.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Experimental/Reactive/Observable.hpp"
-#include "Pomdog/Experimental/Reactive/Observer.hpp"
-#include "Pomdog/Signals/ScopedConnection.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/application/duration.hpp"
+#include "pomdog/application/game_clock.hpp"
+#include "pomdog/application/game_host.hpp"
+#include "pomdog/application/timer.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/experimental/Reactive/Observable.hpp"
+#include "pomdog/experimental/Reactive/Observer.hpp"
+#include "pomdog/signals/scoped_connection.hpp"
+#include "pomdog/utility/assert.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <functional>

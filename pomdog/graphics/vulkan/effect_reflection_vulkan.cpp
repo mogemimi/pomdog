@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "EffectReflectionVulkan.hpp"
-#include "../Utility/Exception.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/graphics/vulkan/effect_reflection_vulkan.hpp"
+#include "pomdog/utility/assert.hpp"
+#include "pomdog/utility/exception.hpp"
 
 namespace Pomdog::Detail::Vulkan {
 namespace {

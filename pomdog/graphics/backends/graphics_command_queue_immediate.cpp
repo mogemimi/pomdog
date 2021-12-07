@@ -1,10 +1,10 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "GraphicsCommandQueueImmediate.hpp"
-#include "GraphicsCommandListImmediate.hpp"
-#include "NativeGraphicsContext.hpp"
-#include "Pomdog/Graphics/GraphicsCommandList.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/graphics/backends/graphics_command_queue_immediate.hpp"
+#include "pomdog/graphics/backends/graphics_command_list_immediate.hpp"
+#include "pomdog/graphics/backends/native_graphics_context.hpp"
+#include "pomdog/graphics/graphics_command_list.hpp"
+#include "pomdog/utility/assert.hpp"
 
 namespace Pomdog::Detail {
 

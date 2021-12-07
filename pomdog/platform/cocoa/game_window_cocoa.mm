@@ -1,10 +1,10 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "GameWindowCocoa.hpp"
-#include "../Application/SystemEvents.hpp"
-#include "Pomdog/Application/MouseCursor.hpp"
-#include "Pomdog/Signals/EventQueue.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/platform/cocoa/game_window_cocoa.hpp"
+#include "pomdog/application/mouse_cursor.hpp"
+#include "pomdog/application/system_events.hpp"
+#include "pomdog/signals/event_queue.hpp"
+#include "pomdog/utility/assert.hpp"
 #include <utility>
 
 using Pomdog::Detail::SystemEvent;

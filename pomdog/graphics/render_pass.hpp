@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Basic/Export.hpp"
-#include "Pomdog/Graphics/ForwardDeclarations.hpp"
-#include "Pomdog/Graphics/Viewport.hpp"
-#include "Pomdog/Math/Rectangle.hpp"
-#include "Pomdog/Math/Vector4.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/basic/export.hpp"
+#include "pomdog/graphics/forward_declarations.hpp"
+#include "pomdog/graphics/viewport.hpp"
+#include "pomdog/math/rectangle.hpp"
+#include "pomdog/math/vector4.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>

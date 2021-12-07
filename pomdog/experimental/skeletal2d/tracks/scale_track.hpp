@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Experimental/Skeletal2D/AnimationTimeInterval.hpp"
-#include "Pomdog/Experimental/Skeletal2D/CompressedFloat.hpp"
-#include "Pomdog/Experimental/Skeletal2D/JointIndex.hpp"
-#include "Pomdog/Experimental/Skeletal2D/Tracks/AnimationTrack.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/experimental/skeletal2d/animation_time_interval.hpp"
+#include "pomdog/experimental/skeletal2d/compressed_float.hpp"
+#include "pomdog/experimental/skeletal2d/joint_index.hpp"
+#include "pomdog/experimental/skeletal2d/tracks/animation_track.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>

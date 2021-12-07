@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "PrerequisitesXAudio2.hpp"
-#include "Pomdog/Audio/AudioChannels.hpp"
-#include "Pomdog/Audio/AudioClip.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
+#include "pomdog/audio/audio_channels.hpp"
+#include "pomdog/audio/audio_clip.hpp"
+#include "pomdog/audio/xaudio2/prerequisites_xaudio2.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstddef>

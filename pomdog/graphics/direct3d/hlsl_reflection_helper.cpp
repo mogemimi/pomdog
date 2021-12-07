@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "HLSLReflectionHelper.hpp"
-#include "Pomdog/Graphics/EffectVariableClass.hpp"
-#include "Pomdog/Graphics/EffectVariableType.hpp"
+#include "pomdog/graphics/direct3d/hlsl_reflection_helper.hpp"
+#include "pomdog/graphics/effect_variable_class.hpp"
+#include "pomdog/graphics/effect_variable_type.hpp"
 
 namespace Pomdog::Detail::Direct3D {
 

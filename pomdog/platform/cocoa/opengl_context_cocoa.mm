@@ -1,10 +1,10 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "OpenGLContextCocoa.hpp"
-#include "../Graphics.GL4/OpenGLPrerequisites.hpp"
-#include "Pomdog/Graphics/PresentationParameters.hpp"
-#include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Errors.hpp"
+#include "pomdog/platform/cocoa/opengl_context_cocoa.hpp"
+#include "pomdog/graphics/gl4/opengl_prerequisites.hpp"
+#include "pomdog/graphics/presentation_parameters.hpp"
+#include "pomdog/utility/assert.hpp"
+#include "pomdog/utility/errors.hpp"
 #include <vector>
 
 namespace Pomdog::Detail::Cocoa {

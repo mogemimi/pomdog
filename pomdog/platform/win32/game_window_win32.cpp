@@ -1,15 +1,15 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "GameWindowWin32.hpp"
-#include "DarkMode.hpp"
-#include "KeyboardWin32.hpp"
-#include "MouseWin32.hpp"
-#include "../Application/SystemEvents.hpp"
-#include "Pomdog/Application/MouseCursor.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Graphics/PresentationParameters.hpp"
-#include "Pomdog/Math/Rectangle.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/platform/win32/game_window_win32.hpp"
+#include "pomdog/application/mouse_cursor.hpp"
+#include "pomdog/application/system_events.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/graphics/presentation_parameters.hpp"
+#include "pomdog/math/rectangle.hpp"
+#include "pomdog/platform/win32/dark_mode.hpp"
+#include "pomdog/platform/win32/keyboard_win32.hpp"
+#include "pomdog/platform/win32/mouse_win32.hpp"
+#include "pomdog/utility/assert.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <objbase.h>

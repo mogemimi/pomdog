@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Pomdog/Experimental/Skeletal2D/AnimationTimeInterval.hpp"
+#include "pomdog/experimental/skeletal2d/animation_time_interval.hpp"
 
 namespace Pomdog::Skeletal2D {
 

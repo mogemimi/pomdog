@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Experimental/Skeletal2D/AnimationState.hpp"
-#include "Pomdog/Experimental/Skeletal2D/AnimationClip.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/experimental/skeletal2d/animation_state.hpp"
+#include "pomdog/experimental/skeletal2d/animation_clip.hpp"
+#include "pomdog/utility/assert.hpp"
 
 namespace Pomdog::Skeletal2D {
 

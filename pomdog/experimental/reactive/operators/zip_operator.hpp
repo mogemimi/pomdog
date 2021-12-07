@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Experimental/Reactive/Observable.hpp"
-#include "Pomdog/Experimental/Reactive/Observer.hpp"
-#include "Pomdog/Experimental/Reactive/Subscriber.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/experimental/Reactive/Observable.hpp"
+#include "pomdog/experimental/Reactive/Observer.hpp"
+#include "pomdog/experimental/Reactive/Subscriber.hpp"
+#include "pomdog/utility/assert.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <deque>

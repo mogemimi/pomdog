@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Network/ArrayView.hpp"
-#include "Pomdog/Network/ForwardDeclarations.hpp"
-#include "Pomdog/Utility/Errors.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/network/array_view.hpp"
+#include "pomdog/network/forward_declarations.hpp"
+#include "pomdog/utility/errors.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>

@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "../Graphics.Backends/BufferBindMode.hpp"
-#include "../Graphics.Backends/NativeBuffer.hpp"
-#include "Pomdog/Graphics/ForwardDeclarations.hpp"
+#include "pomdog/graphics/backends/buffer_bind_mode.hpp"
+#include "pomdog/graphics/backends/native_buffer.hpp"
+#include "pomdog/graphics/forward_declarations.hpp"
 #include <vulkan/vulkan.h>
 #include <cstddef>
 #include <cstdint>

@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Experimental/Skeletal2D/Joint.hpp"
-#include "Pomdog/Experimental/Skeletal2D/JointPose.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/experimental/skeletal2d/joint.hpp"
+#include "pomdog/experimental/skeletal2d/joint_pose.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>

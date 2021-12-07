@@ -1,6 +1,6 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Audio/AudioClip.hpp"
+#include "pomdog/audio/audio_clip.hpp"
 
 namespace Pomdog {
 

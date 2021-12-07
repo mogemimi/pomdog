@@ -1,12 +1,12 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Math/Ray.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Math/BoundingBox.hpp"
-#include "Pomdog/Math/BoundingFrustum.hpp"
-#include "Pomdog/Math/BoundingSphere.hpp"
-#include "Pomdog/Math/Plane.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/math/ray.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/math/bounding_box.hpp"
+#include "pomdog/math/bounding_frustum.hpp"
+#include "pomdog/math/bounding_sphere.hpp"
+#include "pomdog/math/plane.hpp"
+#include "pomdog/utility/assert.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>

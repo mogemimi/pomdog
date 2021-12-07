@@ -2,16 +2,16 @@
 
 #pragma once
 
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Basic/Export.hpp"
-#include "Pomdog/Math/Color.hpp"
-#include "Pomdog/Math/Matrix3x2.hpp"
-#include "Pomdog/Math/Matrix4x4.hpp"
-#include "Pomdog/Math/Radian.hpp"
-#include "Pomdog/Math/Rectangle.hpp"
-#include "Pomdog/Math/Vector2.hpp"
-#include "Pomdog/Math/Vector3.hpp"
-#include "Pomdog/Math/Vector4.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/basic/export.hpp"
+#include "pomdog/math/color.hpp"
+#include "pomdog/math/matrix3x2.hpp"
+#include "pomdog/math/matrix4x4.hpp"
+#include "pomdog/math/radian.hpp"
+#include "pomdog/math/rectangle.hpp"
+#include "pomdog/math/vector2.hpp"
+#include "pomdog/math/vector3.hpp"
+#include "pomdog/math/vector4.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>

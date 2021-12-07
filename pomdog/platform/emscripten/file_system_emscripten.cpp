@@ -1,9 +1,9 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "FileSystemEmscripten.hpp"
-#include "../Utility/ErrorHelper.hpp"
-#include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/PathHelper.hpp"
+#include "pomdog/platform/emscripten/file_system_emscripten.hpp"
+#include "pomdog/utility/assert.hpp"
+#include "pomdog/utility/error_helper.hpp"
+#include "pomdog/utility/path_helper.hpp"
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>

@@ -1,13 +1,13 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "GamepadMappings.hpp"
-#include "../Basic/CompilationTargets.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Basic/Platform.hpp"
-#include "Pomdog/Input/GamepadState.hpp"
-#include "Pomdog/Logging/Log.hpp"
-#include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/StringHelper.hpp"
+#include "pomdog/input/backends/gamepad_mappings.hpp"
+#include "pomdog/basic/compilation_targets.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/basic/platform.hpp"
+#include "pomdog/input/gamepad_state.hpp"
+#include "pomdog/logging/log.hpp"
+#include "pomdog/utility/assert.hpp"
+#include "pomdog/utility/string_helper.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>

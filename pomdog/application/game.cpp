@@ -1,6 +1,6 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Application/Game.hpp"
+#include "pomdog/application/game.hpp"
 
 namespace Pomdog {
 

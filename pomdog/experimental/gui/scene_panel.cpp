@@ -1,9 +1,9 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Experimental/GUI/ScenePanel.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Experimental/GUI/PointerPoint.hpp"
-#include "Pomdog/Experimental/GUI/UIEventDispatcher.hpp"
+#include "pomdog/experimental/gui/scene_panel.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/experimental/gui/pointer_point.hpp"
+#include "pomdog/experimental/gui/ui_event_dispatcher.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cmath>

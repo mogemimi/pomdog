@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Graphics/SurfaceFormat.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/graphics/surface_format.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>

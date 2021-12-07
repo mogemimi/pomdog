@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include "Pomdog/Experimental/GUI/DisclosureTriangleButton.hpp"
-#include "Pomdog/Experimental/GUI/HorizontalLayout.hpp"
-#include "Pomdog/Experimental/GUI/TextBlock.hpp"
-#include "Pomdog/Experimental/GUI/VerticalLayout.hpp"
-#include "Pomdog/Experimental/GUI/Widget.hpp"
-#include "Pomdog/Signals/ScopedConnection.hpp"
+#include "pomdog/experimental/gui/disclosure_triangle_button.hpp"
+#include "pomdog/experimental/gui/horizontal_layout.hpp"
+#include "pomdog/experimental/gui/text_block.hpp"
+#include "pomdog/experimental/gui/vertical_layout.hpp"
+#include "pomdog/experimental/gui/widget.hpp"
+#include "pomdog/signals/scoped_connection.hpp"
 
 namespace Pomdog::GUI {
 

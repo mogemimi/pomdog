@@ -1,10 +1,10 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "ErrorChecker.hpp"
-#include "OpenGLPrerequisites.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Logging/Log.hpp"
-#include "Pomdog/Utility/Errors.hpp"
+#include "pomdog/graphics/gl4/error_checker.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/graphics/gl4/opengl_prerequisites.hpp"
+#include "pomdog/logging/log.hpp"
+#include "pomdog/utility/errors.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <ios>

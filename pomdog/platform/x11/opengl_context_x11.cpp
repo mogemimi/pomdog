@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "OpenGLContextX11.hpp"
-#include "GameWindowX11.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/platform/x11/opengl_context_x11.hpp"
+#include "pomdog/platform/x11/game_window_x11.hpp"
+#include "pomdog/utility/assert.hpp"
 #include <X11/Xlib.h>
 #include <cstring>
 #include <utility>

@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "Pomdog/Basic/Export.hpp"
-#include "Pomdog/Input/PlayerIndex.hpp"
-#include "Pomdog/Signals/Signal.hpp"
+#include "pomdog/basic/export.hpp"
+#include "pomdog/input/player_index.hpp"
+#include "pomdog/signals/signal.hpp"
 
 namespace Pomdog {
 

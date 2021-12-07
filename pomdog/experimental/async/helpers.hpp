@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include "Pomdog/Application/Duration.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Basic/Export.hpp"
-#include "Pomdog/Experimental/Async/Task.hpp"
-#include "Pomdog/Signals/Helpers.hpp"
-#include "Pomdog/Signals/Signal.hpp"
+#include "pomdog/application/duration.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/basic/export.hpp"
+#include "pomdog/experimental/async/task.hpp"
+#include "pomdog/signals/signal.hpp"
+#include "pomdog/signals/signal_helpers.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>

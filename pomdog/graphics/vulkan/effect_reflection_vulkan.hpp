@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "Pomdog/Graphics/EffectReflection.hpp"
-#include "Pomdog/Graphics/ForwardDeclarations.hpp"
+#include "pomdog/graphics/effect_reflection.hpp"
+#include "pomdog/graphics/forward_declarations.hpp"
 #include <vulkan/vulkan.h>
 
 namespace Pomdog::Detail::Vulkan {

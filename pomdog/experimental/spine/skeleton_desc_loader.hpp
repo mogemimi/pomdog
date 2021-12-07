@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Experimental/Spine/SkeletonDesc.hpp"
-#include "Pomdog/Utility/Errors.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/experimental/spine/skeleton_desc.hpp"
+#include "pomdog/utility/errors.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>

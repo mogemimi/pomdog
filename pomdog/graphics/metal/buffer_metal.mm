@@ -1,10 +1,10 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "BufferMetal.hpp"
-#include "../Basic/Unreachable.hpp"
-#include "Pomdog/Graphics/BufferUsage.hpp"
-#include "Pomdog/Logging/Log.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/graphics/metal/buffer_metal.hpp"
+#include "pomdog/basic/unreachable.hpp"
+#include "pomdog/graphics/buffer_usage.hpp"
+#include "pomdog/logging/log.hpp"
+#include "pomdog/utility/assert.hpp"
 #import <Metal/Metal.h>
 #include <cstring>
 

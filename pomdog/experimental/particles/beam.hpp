@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Math/Color.hpp"
-#include "Pomdog/Math/Vector2.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/math/color.hpp"
+#include "pomdog/math/vector2.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>

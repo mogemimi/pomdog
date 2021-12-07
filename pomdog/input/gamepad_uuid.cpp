@@ -1,9 +1,9 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Input/GamepadUUID.hpp"
-#include "../Basic/CompilationTargets.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Utility/StringHelper.hpp"
+#include "pomdog/input/gamepad_uuid.hpp"
+#include "pomdog/basic/compilation_targets.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/utility/string_helper.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>

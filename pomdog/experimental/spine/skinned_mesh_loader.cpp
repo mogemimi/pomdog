@@ -1,12 +1,12 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Experimental/Spine/SkinnedMeshLoader.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Experimental/Skeletal2D/SkeletonPose.hpp"
-#include "Pomdog/Experimental/Skeletal2D/SkinnedMesh.hpp"
-#include "Pomdog/Experimental/Spine/SkeletonDesc.hpp"
-#include "Pomdog/Experimental/TexturePacker/TextureAtlas.hpp"
-#include "Pomdog/Math/Math.hpp"
+#include "pomdog/experimental/spine/skinned_mesh_loader.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/experimental/skeletal2d/skeleton_pose.hpp"
+#include "pomdog/experimental/skeletal2d/skinned_mesh.hpp"
+#include "pomdog/experimental/spine/skeleton_desc.hpp"
+#include "pomdog/experimental/texture_packer/texture_atlas.hpp"
+#include "pomdog/math/math.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>

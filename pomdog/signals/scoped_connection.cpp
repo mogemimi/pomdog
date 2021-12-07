@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Signals/ScopedConnection.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
+#include "pomdog/signals/scoped_connection.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>

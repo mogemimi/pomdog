@@ -1,10 +1,10 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Experimental/Graphics/Texture2DView.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Graphics/RenderTarget2D.hpp"
-#include "Pomdog/Graphics/Texture2D.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/experimental/graphics/texture2d_view.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/graphics/render_target2d.hpp"
+#include "pomdog/graphics/texture2d.hpp"
+#include "pomdog/utility/assert.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>

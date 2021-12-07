@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "Pomdog/Application/Duration.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Math/Color.hpp"
+#include "pomdog/application/duration.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/math/color.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>

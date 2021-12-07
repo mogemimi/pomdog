@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "MouseCocoa.hpp"
-#include "../Application/SystemEvents.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/platform/cocoa/mouse_cocoa.hpp"
+#include "pomdog/application/system_events.hpp"
+#include "pomdog/utility/assert.hpp"
 #include <type_traits>
 
 namespace Pomdog::Detail::Cocoa {

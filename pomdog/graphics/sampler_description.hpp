@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Basic/Export.hpp"
-#include "Pomdog/Graphics/ComparisonFunction.hpp"
-#include "Pomdog/Graphics/TextureAddressMode.hpp"
-#include "Pomdog/Graphics/TextureFilter.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/basic/export.hpp"
+#include "pomdog/graphics/comparison_function.hpp"
+#include "pomdog/graphics/texture_address_mode.hpp"
+#include "pomdog/graphics/texture_filter.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>

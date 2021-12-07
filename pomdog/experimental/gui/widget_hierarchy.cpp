@@ -1,9 +1,9 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Experimental/GUI/WidgetHierarchy.hpp"
-#include "Pomdog/Experimental/GUI/DrawingContext.hpp"
-#include "Pomdog/Experimental/GUI/HierarchySortOrder.hpp"
-#include "Pomdog/Experimental/GUI/UIHelper.hpp"
+#include "pomdog/experimental/gui/widget_hierarchy.hpp"
+#include "pomdog/experimental/gui/drawing_context.hpp"
+#include "pomdog/experimental/gui/hierarchy_sort_order.hpp"
+#include "pomdog/experimental/gui/ui_helper.hpp"
 
 namespace Pomdog::GUI {
 

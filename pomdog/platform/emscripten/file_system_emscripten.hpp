@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Pomdog/Utility/Errors.hpp"
+#include "pomdog/utility/errors.hpp"
 #include <memory>
 #include <string>
 #include <tuple>

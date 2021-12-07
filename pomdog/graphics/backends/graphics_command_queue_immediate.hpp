@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Graphics/ForwardDeclarations.hpp"
-#include "Pomdog/Graphics/GraphicsCommandQueue.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/graphics/forward_declarations.hpp"
+#include "pomdog/graphics/graphics_command_queue.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>

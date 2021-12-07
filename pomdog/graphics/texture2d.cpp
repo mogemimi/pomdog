@@ -1,6 +1,6 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Graphics/Texture2D.hpp"
+#include "pomdog/graphics/texture2d.hpp"
 
 namespace Pomdog {
 

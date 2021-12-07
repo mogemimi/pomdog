@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "X11AtomCache.hpp"
-#include "Pomdog/Utility/Errors.hpp"
+#include "pomdog/platform/x11/x11_atom_cache.hpp"
+#include "pomdog/utility/errors.hpp"
 #include <X11/Xlib.h>
 #include <memory>
 

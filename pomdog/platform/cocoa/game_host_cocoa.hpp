@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "Pomdog/Application/GameHost.hpp"
-#include "Pomdog/Signals/EventQueue.hpp"
+#include "pomdog/application/game_host.hpp"
+#include "pomdog/signals/event_queue.hpp"
 #include <memory>
 
 @class PomdogOpenGLView;

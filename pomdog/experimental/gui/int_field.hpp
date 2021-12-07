@@ -2,15 +2,15 @@
 
 #pragma once
 
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Experimental/GUI/FontSize.hpp"
-#include "Pomdog/Experimental/GUI/FontWeight.hpp"
-#include "Pomdog/Experimental/GUI/NumberField.hpp"
-#include "Pomdog/Experimental/GUI/Thickness.hpp"
-#include "Pomdog/Experimental/GUI/Widget.hpp"
-#include "Pomdog/Math/Color.hpp"
-#include "Pomdog/Signals/ScopedConnection.hpp"
-#include "Pomdog/Signals/Signal.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/experimental/gui/font_size.hpp"
+#include "pomdog/experimental/gui/font_weight.hpp"
+#include "pomdog/experimental/gui/number_field.hpp"
+#include "pomdog/experimental/gui/thickness.hpp"
+#include "pomdog/experimental/gui/widget.hpp"
+#include "pomdog/math/color.hpp"
+#include "pomdog/signals/scoped_connection.hpp"
+#include "pomdog/signals/signal.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>

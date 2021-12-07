@@ -1,6 +1,6 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Graphics/GraphicsDevice.hpp"
+#include "pomdog/graphics/graphics_device.hpp"
 
 namespace Pomdog {
 

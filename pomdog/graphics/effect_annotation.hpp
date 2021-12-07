@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "Pomdog/Graphics/EffectVariableClass.hpp"
-#include "Pomdog/Graphics/EffectVariableType.hpp"
+#include "pomdog/graphics/effect_variable_class.hpp"
+#include "pomdog/graphics/effect_variable_type.hpp"
 
 namespace Pomdog {
 

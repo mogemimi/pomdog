@@ -1,14 +1,14 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Graphics/ShaderCompilers/GLSLCompiler.hpp"
-#include "../../Graphics.Backends/ShaderBytecode.hpp"
-#include "../../Graphics.Backends/ShaderCompileOptions.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Graphics/GraphicsDevice.hpp"
-#include "Pomdog/Graphics/Shader.hpp"
-#include "Pomdog/Graphics/ShaderLanguage.hpp"
-#include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Errors.hpp"
+#include "pomdog/graphics/shader_compilers/glsl_compiler.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/graphics/backends/shader_bytecode.hpp"
+#include "pomdog/graphics/backends/shader_compile_options.hpp"
+#include "pomdog/graphics/graphics_device.hpp"
+#include "pomdog/graphics/shader.hpp"
+#include "pomdog/graphics/shader_language.hpp"
+#include "pomdog/utility/assert.hpp"
+#include "pomdog/utility/errors.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>

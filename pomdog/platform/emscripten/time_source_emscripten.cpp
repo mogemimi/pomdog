@@ -1,6 +1,6 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "TimeSourceEmscripten.hpp"
+#include "pomdog/platform/emscripten/time_source_emscripten.hpp"
 #include <emscripten.h>
 #include <type_traits>
 

@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Experimental/Skeletal2D/SkeletonPose.hpp"
-#include "Pomdog/Experimental/Skeletal2D/Skeleton.hpp"
+#include "pomdog/experimental/skeletal2d/skeleton_pose.hpp"
+#include "pomdog/experimental/skeletal2d/skeleton.hpp"
 
 namespace Pomdog::Skeletal2D {
 

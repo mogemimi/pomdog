@@ -1,10 +1,10 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "AudioEngineAL.hpp"
-#include "AudioClipAL.hpp"
-#include "ErrorCheckerAL.hpp"
-#include "SoundEffectAL.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/audio/openal/audio_engine_al.hpp"
+#include "pomdog/audio/openal/audio_clip_al.hpp"
+#include "pomdog/audio/openal/error_checker_al.hpp"
+#include "pomdog/audio/openal/sound_effect_al.hpp"
+#include "pomdog/utility/assert.hpp"
 #include <utility>
 
 namespace Pomdog::Detail::OpenAL {

@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Experimental/ECS/EntityManager.hpp"
-#include "Pomdog/Experimental/ECS/ComponentType.hpp"
-#include "Pomdog/Experimental/ECS/EntityArchtype.hpp"
+#include "pomdog/experimental/ecs/entity_manager.hpp"
+#include "pomdog/experimental/ecs/component_type.hpp"
+#include "pomdog/experimental/ecs/entity_archtype.hpp"
 
 namespace Pomdog::ECS::Detail {
 namespace {

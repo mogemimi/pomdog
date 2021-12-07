@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Math/Detail/TaggedArithmetic.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/math/detail/tagged_arithmetic.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <type_traits>

@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Experimental/GUI/UIEventDispatcher.hpp"
-#include "Pomdog/Experimental/GUI/Widget.hpp"
-#include "Pomdog/Signals/ScopedConnection.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/experimental/gui/ui_event_dispatcher.hpp"
+#include "pomdog/experimental/gui/widget.hpp"
+#include "pomdog/signals/scoped_connection.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>

@@ -1,12 +1,12 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "SamplerStateGL4.hpp"
-#include "ErrorChecker.hpp"
-#include "FormatHelper.hpp"
-#include "../Basic/Unreachable.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Graphics/SamplerDescription.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/graphics/gl4/sampler_state_gl4.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/basic/unreachable.hpp"
+#include "pomdog/graphics/gl4/error_checker.hpp"
+#include "pomdog/graphics/gl4/format_helper.hpp"
+#include "pomdog/graphics/sampler_description.hpp"
+#include "pomdog/utility/assert.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>

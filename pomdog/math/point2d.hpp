@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Math/Detail/Coordinate2D.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/math/detail/coordinate2d.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>

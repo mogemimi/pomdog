@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Experimental/Particles/BeamSystem.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Math/Math.hpp"
+#include "pomdog/experimental/particles/beam_system.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/math/math.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>

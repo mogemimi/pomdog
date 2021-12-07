@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "OpenGLPrerequisites.hpp"
-#include "../Utility/Tagged.hpp"
+#include "pomdog/graphics/gl4/opengl_prerequisites.hpp"
+#include "pomdog/utility/tagged.hpp"
 
 namespace Pomdog::Detail::GL4 {
 

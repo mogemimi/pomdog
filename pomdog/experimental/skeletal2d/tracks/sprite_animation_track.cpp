@@ -1,10 +1,10 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Experimental/Skeletal2D/Tracks/SpriteAnimationTrack.hpp"
-#include "AnimationKeyHelper.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Experimental/Skeletal2D/Skin.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/experimental/skeletal2d/tracks/sprite_animation_track.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/experimental/skeletal2d/skin.hpp"
+#include "pomdog/experimental/skeletal2d/tracks/animation_key_helper.hpp"
+#include "pomdog/utility/assert.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>

@@ -1,11 +1,11 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "TLSStreamEmscripten.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Basic/Platform.hpp"
-#include "Pomdog/Network/ArrayView.hpp"
-#include "Pomdog/Network/IOService.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/network/emscripten/tls_stream_emscripten.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/basic/platform.hpp"
+#include "pomdog/network/array_view.hpp"
+#include "pomdog/network/io_service.hpp"
+#include "pomdog/utility/assert.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>

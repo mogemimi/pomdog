@@ -1,10 +1,10 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "RasterizerStateGL4.hpp"
-#include "ErrorChecker.hpp"
-#include "../Basic/Unreachable.hpp"
-#include "Pomdog/Graphics/RasterizerDescription.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/graphics/gl4/rasterizer_state_gl4.hpp"
+#include "pomdog/basic/unreachable.hpp"
+#include "pomdog/graphics/gl4/error_checker.hpp"
+#include "pomdog/graphics/rasterizer_description.hpp"
+#include "pomdog/utility/assert.hpp"
 
 namespace Pomdog::Detail::GL4 {
 namespace {

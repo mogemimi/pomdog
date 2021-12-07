@@ -1,10 +1,10 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Utility/PathHelper.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Basic/Platform.hpp"
-#include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/StringHelper.hpp"
+#include "pomdog/utility/path_helper.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/basic/platform.hpp"
+#include "pomdog/utility/assert.hpp"
+#include "pomdog/utility/string_helper.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>

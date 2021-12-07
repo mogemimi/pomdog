@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Graphics/ForwardDeclarations.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/graphics/forward_declarations.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstddef>

@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "PrerequisitesDirect3D11.hpp"
-#include "Pomdog/Graphics/ForwardDeclarations.hpp"
+#include "pomdog/graphics/direct3d11/prerequisites_direct3d11.hpp"
+#include "pomdog/graphics/forward_declarations.hpp"
 
 namespace Pomdog::Detail::Direct3D11 {
 

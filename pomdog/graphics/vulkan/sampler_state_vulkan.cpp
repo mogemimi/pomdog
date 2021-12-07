@@ -1,10 +1,10 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "SamplerStateVulkan.hpp"
-#include "FormatHelper.hpp"
-#include "../Utility/Exception.hpp"
-#include "Pomdog/Graphics/SamplerDescription.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/graphics/vulkan/sampler_state_vulkan.hpp"
+#include "pomdog/graphics/sampler_description.hpp"
+#include "pomdog/graphics/vulkan/format_helper.hpp"
+#include "pomdog/utility/assert.hpp"
+#include "pomdog/utility/exception.hpp"
 #include <tuple>
 
 namespace Pomdog::Detail::Vulkan {

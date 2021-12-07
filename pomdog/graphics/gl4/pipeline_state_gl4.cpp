@@ -1,16 +1,16 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "PipelineStateGL4.hpp"
-#include "EffectReflectionGL4.hpp"
-#include "ErrorChecker.hpp"
-#include "InputLayoutGL4.hpp"
-#include "ShaderGL4.hpp"
-#include "../Basic/Unreachable.hpp"
-#include "../Utility/ScopeGuard.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Graphics/PipelineStateDescription.hpp"
-#include "Pomdog/Graphics/PrimitiveTopology.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/graphics/gl4/pipeline_state_gl4.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/basic/unreachable.hpp"
+#include "pomdog/graphics/gl4/effect_reflection_gl4.hpp"
+#include "pomdog/graphics/gl4/error_checker.hpp"
+#include "pomdog/graphics/gl4/input_layout_gl4.hpp"
+#include "pomdog/graphics/gl4/shader_gl4.hpp"
+#include "pomdog/graphics/pipeline_state_description.hpp"
+#include "pomdog/graphics/primitive_topology.hpp"
+#include "pomdog/utility/assert.hpp"
+#include "pomdog/utility/scope_guard.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>

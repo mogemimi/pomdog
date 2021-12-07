@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Pomdog/Basic/Export.hpp"
+#include "pomdog/basic/export.hpp"
 
 namespace Pomdog {
 

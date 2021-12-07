@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include "../Graphics.GL4/OpenGLContext.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Graphics/ForwardDeclarations.hpp"
-#include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
-#include "Pomdog/Utility/Errors.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/graphics/forward_declarations.hpp"
+#include "pomdog/graphics/gl4/opengl_context.hpp"
+#include "pomdog/platform/win32/prerequisites_win32.hpp"
+#include "pomdog/utility/errors.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <functional>

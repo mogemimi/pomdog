@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "SurfaceFormatHelper.hpp"
-#include "../Basic/Unreachable.hpp"
-#include "Pomdog/Graphics/SurfaceFormat.hpp"
+#include "pomdog/graphics/backends/surface_format_helper.hpp"
+#include "pomdog/basic/unreachable.hpp"
+#include "pomdog/graphics/surface_format.hpp"
 
 namespace Pomdog::Detail {
 

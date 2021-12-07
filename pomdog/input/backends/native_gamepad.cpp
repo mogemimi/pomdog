@@ -1,6 +1,6 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "NativeGamepad.hpp"
+#include "pomdog/input/backends/native_gamepad.hpp"
 
 namespace Pomdog::Detail {
 

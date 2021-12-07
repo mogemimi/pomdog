@@ -1,9 +1,9 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "TCPStreamEmscripten.hpp"
-#include "Pomdog/Network/ArrayView.hpp"
-#include "Pomdog/Network/IOService.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/network/emscripten/tcp_stream_emscripten.hpp"
+#include "pomdog/network/array_view.hpp"
+#include "pomdog/network/io_service.hpp"
+#include "pomdog/utility/assert.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>

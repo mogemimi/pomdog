@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "Pomdog/Math/Detail/TaggedArithmetic.hpp"
-#include "Pomdog/Math/ForwardDeclarations.hpp"
+#include "pomdog/math/detail/tagged_arithmetic.hpp"
+#include "pomdog/math/forward_declarations.hpp"
 
 namespace Pomdog::Detail {
 namespace Tags {

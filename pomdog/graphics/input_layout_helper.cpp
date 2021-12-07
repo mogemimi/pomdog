@@ -1,9 +1,9 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Graphics/InputLayoutHelper.hpp"
-#include "../Graphics.Backends/BufferHelper.hpp"
-#include "Pomdog/Graphics/InputElementFormat.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/graphics/input_layout_helper.hpp"
+#include "pomdog/graphics/backends/buffer_helper.hpp"
+#include "pomdog/graphics/input_element_format.hpp"
+#include "pomdog/utility/assert.hpp"
 
 namespace Pomdog {
 namespace {

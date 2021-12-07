@@ -1,10 +1,10 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Platform/X11/Bootstrap.hpp"
-#include "GameHostX11.hpp"
-#include "Pomdog/Application/Game.hpp"
-#include "Pomdog/Graphics/PresentationParameters.hpp"
-#include "Pomdog/Utility/Errors.hpp"
+#include "pomdog/platform/x11/bootstrap.hpp"
+#include "pomdog/application/game.hpp"
+#include "pomdog/graphics/presentation_parameters.hpp"
+#include "pomdog/platform/x11/game_host_x11.hpp"
+#include "pomdog/utility/errors.hpp"
 #include <utility>
 
 namespace Pomdog::X11 {

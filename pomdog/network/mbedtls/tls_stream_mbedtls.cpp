@@ -1,19 +1,19 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "TLSStreamMbedTLS.hpp"
-#include "../Utility/ErrorHelper.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Basic/Platform.hpp"
-#include "Pomdog/Network/ArrayView.hpp"
-#include "Pomdog/Network/IOService.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/network/mbedtls/tls_stream_mbedtls.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/basic/platform.hpp"
+#include "pomdog/network/array_view.hpp"
+#include "pomdog/network/io_service.hpp"
+#include "pomdog/utility/assert.hpp"
+#include "pomdog/utility/error_helper.hpp"
 
 #if defined(POMDOG_PLATFORM_MACOSX) || \
     defined(POMDOG_PLATFORM_APPLE_IOS) || \
     defined(POMDOG_PLATFORM_LINUX)
-#include "../Network.POSIX/SocketHelperPOSIX.hpp"
+#include "pomdog/network/posix/socket_helper_posix.hpp"
 #elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
-#include "../Network.Win32/SocketHelperWin32.hpp"
+#include "pomdog/network/win32/socket_helper_win32.hpp"
 #endif
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN

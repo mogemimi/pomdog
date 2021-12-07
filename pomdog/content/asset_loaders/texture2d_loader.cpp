@@ -1,18 +1,18 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Content/AssetLoaders/Texture2DLoader.hpp"
-#include "Pomdog/Application/FileSystem.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Content/AssetManager.hpp"
-#include "Pomdog/Content/Image/DDS.hpp"
-#include "Pomdog/Content/Image/PNG.hpp"
-#include "Pomdog/Content/Image/PNM.hpp"
-#include "Pomdog/Content/Utility/BinaryReader.hpp"
-#include "Pomdog/Content/Utility/MakeFourCC.hpp"
-#include "Pomdog/Graphics/GraphicsDevice.hpp"
-#include "Pomdog/Graphics/SurfaceFormat.hpp"
-#include "Pomdog/Graphics/Texture2D.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/content/asset_loaders/texture2d_loader.hpp"
+#include "pomdog/application/file_system.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/content/asset_manager.hpp"
+#include "pomdog/content/image/dds.hpp"
+#include "pomdog/content/image/png.hpp"
+#include "pomdog/content/image/pnm.hpp"
+#include "pomdog/content/utility/binary_reader.hpp"
+#include "pomdog/content/utility/make_fourcc.hpp"
+#include "pomdog/graphics/graphics_device.hpp"
+#include "pomdog/graphics/surface_format.hpp"
+#include "pomdog/graphics/texture2d.hpp"
+#include "pomdog/utility/assert.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>

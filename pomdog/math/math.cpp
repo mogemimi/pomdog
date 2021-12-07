@@ -1,11 +1,11 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Math/Math.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Math/Point2D.hpp"
-#include "Pomdog/Math/Point3D.hpp"
-#include "Pomdog/Math/Vector2.hpp"
-#include "Pomdog/Math/Vector3.hpp"
+#include "pomdog/math/math.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/math/point2d.hpp"
+#include "pomdog/math/point3d.hpp"
+#include "pomdog/math/vector2.hpp"
+#include "pomdog/math/vector3.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cmath>

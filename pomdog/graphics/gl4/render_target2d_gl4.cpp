@@ -1,9 +1,9 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "RenderTarget2DGL4.hpp"
-#include "ErrorChecker.hpp"
-#include "Pomdog/Math/Rectangle.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/graphics/gl4/render_target2d_gl4.hpp"
+#include "pomdog/graphics/gl4/error_checker.hpp"
+#include "pomdog/math/rectangle.hpp"
+#include "pomdog/utility/assert.hpp"
 
 namespace Pomdog::Detail::GL4 {
 

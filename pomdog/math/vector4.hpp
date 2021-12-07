@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Pomdog/Math/Detail/FloatingPointVector4.hpp"
+#include "pomdog/math/detail/floating_point_vector4.hpp"
 
 namespace Pomdog {
 

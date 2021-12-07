@@ -1,13 +1,13 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Math/BoundingFrustum.hpp"
-#include "Pomdog/Math/BoundingBox.hpp"
-#include "Pomdog/Math/BoundingSphere.hpp"
-#include "Pomdog/Math/ContainmentType.hpp"
-#include "Pomdog/Math/Plane.hpp"
-#include "Pomdog/Math/PlaneIntersectionType.hpp"
-#include "Pomdog/Math/Ray.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/math/bounding_frustum.hpp"
+#include "pomdog/math/bounding_box.hpp"
+#include "pomdog/math/bounding_sphere.hpp"
+#include "pomdog/math/containment_type.hpp"
+#include "pomdog/math/plane.hpp"
+#include "pomdog/math/plane_intersection_type.hpp"
+#include "pomdog/math/ray.hpp"
+#include "pomdog/utility/assert.hpp"
 
 namespace Pomdog {
 namespace {

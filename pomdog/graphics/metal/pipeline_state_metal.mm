@@ -1,15 +1,15 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "PipelineStateMetal.hpp"
-#include "ConstantsMetal.hpp"
-#include "MetalFormatHelper.hpp"
-#include "ShaderMetal.hpp"
-#include "../Basic/Unreachable.hpp"
-#include "../Graphics.Backends/BufferHelper.hpp"
-#include "Pomdog/Graphics/PipelineStateDescription.hpp"
-#include "Pomdog/Graphics/PrimitiveTopology.hpp"
-#include "Pomdog/Graphics/SurfaceFormat.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/graphics/metal/pipeline_state_metal.hpp"
+#include "pomdog/basic/unreachable.hpp"
+#include "pomdog/graphics/backends/buffer_helper.hpp"
+#include "pomdog/graphics/metal/constants_metal.hpp"
+#include "pomdog/graphics/metal/metal_format_helper.hpp"
+#include "pomdog/graphics/metal/shader_metal.hpp"
+#include "pomdog/graphics/pipeline_state_description.hpp"
+#include "pomdog/graphics/primitive_topology.hpp"
+#include "pomdog/graphics/surface_format.hpp"
+#include "pomdog/utility/assert.hpp"
 #import <Metal/MTLVertexDescriptor.h>
 
 namespace Pomdog::Detail::Metal {

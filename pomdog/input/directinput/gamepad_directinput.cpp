@@ -1,13 +1,13 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "GamepadDirectInput.hpp"
-#include "../Input.Backends/GamepadHelper.hpp"
-#include "../Utility/Exception.hpp"
-#include "../Utility/ScopeGuard.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Logging/Log.hpp"
-#include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Errors.hpp"
+#include "pomdog/input/directinput/gamepad_directinput.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/input/backends/gamepad_helper.hpp"
+#include "pomdog/logging/log.hpp"
+#include "pomdog/utility/assert.hpp"
+#include "pomdog/utility/errors.hpp"
+#include "pomdog/utility/exception.hpp"
+#include "pomdog/utility/scope_guard.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <oleauto.h>

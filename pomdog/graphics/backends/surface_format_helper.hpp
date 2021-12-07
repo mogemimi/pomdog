@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Pomdog/Graphics/ForwardDeclarations.hpp"
+#include "pomdog/graphics/forward_declarations.hpp"
 
 namespace Pomdog::Detail {
 

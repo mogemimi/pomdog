@@ -1,13 +1,13 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "BufferGL4.hpp"
-#include "ErrorChecker.hpp"
-#include "TypesafeHelperGL4.hpp"
-#include "../Basic/Unreachable.hpp"
-#include "../Utility/ScopeGuard.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Graphics/BufferUsage.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/graphics/gl4/buffer_gl4.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/basic/unreachable.hpp"
+#include "pomdog/graphics/buffer_usage.hpp"
+#include "pomdog/graphics/gl4/error_checker.hpp"
+#include "pomdog/graphics/gl4/typesafe_helper_gl4.hpp"
+#include "pomdog/utility/assert.hpp"
+#include "pomdog/utility/scope_guard.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>

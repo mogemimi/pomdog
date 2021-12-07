@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "Pomdog/Graphics/ComparisonFunction.hpp"
-#include "Pomdog/Graphics/StencilOperation.hpp"
+#include "pomdog/graphics/comparison_function.hpp"
+#include "pomdog/graphics/stencil_operation.hpp"
 
 namespace Pomdog {
 

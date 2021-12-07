@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Pomdog/Basic/Platform.hpp"
+#include "pomdog/basic/platform.hpp"
 
 #if defined(POMDOG_PLATFORM_MACOSX) || defined(POMDOG_PLATFORM_APPLE_IOS)
 #include <OpenAL/al.h>

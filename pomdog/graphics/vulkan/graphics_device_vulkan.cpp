@@ -1,18 +1,18 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "GraphicsDeviceVulkan.hpp"
-#include "BufferVulkan.hpp"
-#include "PipelineStateVulkan.hpp"
-#include "RenderTarget2DVulkan.hpp"
-#include "SamplerStateVulkan.hpp"
-#include "ShaderVulkan.hpp"
-#include "Texture2DVulkan.hpp"
-#include "../Utility/Exception.hpp"
-#include "Pomdog/Basic/Platform.hpp"
-#include "Pomdog/Basic/Version.hpp"
-#include "Pomdog/Graphics/EffectReflection.hpp"
-#include "Pomdog/Graphics/ShaderLanguage.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/graphics/vulkan/graphics_device_vulkan.hpp"
+#include "pomdog/basic/platform.hpp"
+#include "pomdog/basic/version.hpp"
+#include "pomdog/graphics/effect_reflection.hpp"
+#include "pomdog/graphics/shader_language.hpp"
+#include "pomdog/graphics/vulkan/buffer_vulkan.hpp"
+#include "pomdog/graphics/vulkan/pipeline_state_vulkan.hpp"
+#include "pomdog/graphics/vulkan/render_target2d_vulkan.hpp"
+#include "pomdog/graphics/vulkan/sampler_state_vulkan.hpp"
+#include "pomdog/graphics/vulkan/shader_vulkan.hpp"
+#include "pomdog/graphics/vulkan/texture2d_vulkan.hpp"
+#include "pomdog/utility/assert.hpp"
+#include "pomdog/utility/exception.hpp"
 #include <vulkan/vulkan.h>
 #include <array>
 #include <tuple>

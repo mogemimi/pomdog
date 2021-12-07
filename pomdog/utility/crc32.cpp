@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Utility/Detail/CRC32.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
+#include "pomdog/utility/crc32.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>

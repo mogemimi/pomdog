@@ -1,10 +1,10 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "ShaderGL4.hpp"
-#include "ErrorChecker.hpp"
-#include "../Graphics.Backends/ShaderBytecode.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/graphics/gl4/shader_gl4.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/graphics/backends/shader_bytecode.hpp"
+#include "pomdog/graphics/gl4/error_checker.hpp"
+#include "pomdog/utility/assert.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>

@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "Pomdog/Application/GameWindow.hpp"
-#include "Pomdog/Math/Rectangle.hpp"
-#include "Pomdog/Signals/ForwardDeclarations.hpp"
+#include "pomdog/application/game_window.hpp"
+#include "pomdog/math/rectangle.hpp"
+#include "pomdog/signals/forward_declarations.hpp"
 #import <Cocoa/Cocoa.h>
 #include <memory>
 

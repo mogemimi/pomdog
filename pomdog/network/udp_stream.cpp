@@ -1,20 +1,20 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Network/UDPStream.hpp"
+#include "pomdog/network/udp_stream.hpp"
 #if defined(POMDOG_PLATFORM_MACOSX) || \
     defined(POMDOG_PLATFORM_APPLE_IOS) || \
     defined(POMDOG_PLATFORM_LINUX)
-#include "../Network.POSIX/UDPStreamPOSIX.hpp"
+#include "pomdog/network/posix/udp_stream_posix.hpp"
 #elif defined(POMDOG_PLATFORM_EMSCRIPTEN)
-#include "../Network.Emscripten/UDPStreamEmscripten.hpp"
+#include "pomdog/network/emscripten/udp_stream_emscripten.hpp"
 #elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
-#include "../Network.Win32/UDPStreamWin32.hpp"
+#include "pomdog/network/win32/udp_stream_win32.hpp"
 #else
 #error "Platform undefined or not supported."
 #endif
-#include "AddressParser.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/network/address_parser.hpp"
+#include "pomdog/utility/assert.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>

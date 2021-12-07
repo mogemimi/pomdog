@@ -1,10 +1,10 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "BufferHelper.hpp"
-#include "../Basic/Unreachable.hpp"
-#include "Pomdog/Graphics/IndexElementSize.hpp"
-#include "Pomdog/Graphics/InputElementFormat.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/graphics/backends/buffer_helper.hpp"
+#include "pomdog/basic/unreachable.hpp"
+#include "pomdog/graphics/index_element_size.hpp"
+#include "pomdog/graphics/input_element_format.hpp"
+#include "pomdog/utility/assert.hpp"
 
 namespace Pomdog::Detail::BufferHelper {
 

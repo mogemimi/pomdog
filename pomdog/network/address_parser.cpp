@@ -1,6 +1,6 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "AddressParser.hpp"
+#include "pomdog/network/address_parser.hpp"
 
 namespace Pomdog::Detail::AddressParser {
 namespace {

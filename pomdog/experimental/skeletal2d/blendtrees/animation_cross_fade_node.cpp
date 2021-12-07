@@ -1,12 +1,12 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Experimental/Skeletal2D/BlendTrees/AnimationCrossFadeNode.hpp"
-#include "Pomdog/Experimental/Skeletal2D/BlendTrees/AnimationGraphWeightCollection.hpp"
-#include "Pomdog/Experimental/Skeletal2D/BlendTrees/WeightBlendingHelper.hpp"
-#include "Pomdog/Experimental/Skeletal2D/Skeleton.hpp"
-#include "Pomdog/Experimental/Skeletal2D/SkeletonHelper.hpp"
-#include "Pomdog/Experimental/Skeletal2D/SkeletonPose.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/experimental/skeletal2d/blendtrees/animation_cross_fade_node.hpp"
+#include "pomdog/experimental/skeletal2d/blendtrees/animation_graph_weight_collection.hpp"
+#include "pomdog/experimental/skeletal2d/blendtrees/weight_blending_helper.hpp"
+#include "pomdog/experimental/skeletal2d/skeleton.hpp"
+#include "pomdog/experimental/skeletal2d/skeleton_helper.hpp"
+#include "pomdog/experimental/skeletal2d/skeleton_pose.hpp"
+#include "pomdog/utility/assert.hpp"
 
 namespace Pomdog::Skeletal2D::Detail {
 namespace {

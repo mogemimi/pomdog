@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "Pomdog/Experimental/Skeletal2D/JointIndex.hpp"
-#include "Pomdog/Experimental/Skeletal2D/JointPose.hpp"
-#include "Pomdog/Math/Matrix3x2.hpp"
+#include "pomdog/experimental/skeletal2d/joint_index.hpp"
+#include "pomdog/experimental/skeletal2d/joint_pose.hpp"
+#include "pomdog/math/matrix3x2.hpp"
 
 namespace Pomdog::Skeletal2D {
 

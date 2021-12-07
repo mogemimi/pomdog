@@ -1,10 +1,10 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "SamplerStateDirect3D11.hpp"
-#include "FormatHelper.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Graphics/SamplerDescription.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/graphics/direct3d11/sampler_state_direct3d11.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/graphics/direct3d11/format_helper.hpp"
+#include "pomdog/graphics/sampler_description.hpp"
+#include "pomdog/utility/assert.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>

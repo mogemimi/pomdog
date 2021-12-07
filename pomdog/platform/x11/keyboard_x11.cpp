@@ -1,11 +1,11 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "KeyboardX11.hpp"
-#include "../Utility/ScopeGuard.hpp"
-#include "Pomdog/Basic/Platform.hpp"
-#include "Pomdog/Input/KeyState.hpp"
-#include "Pomdog/Input/Keys.hpp"
-#include "Pomdog/Logging/Log.hpp"
+#include "pomdog/platform/x11/keyboard_x11.hpp"
+#include "pomdog/basic/platform.hpp"
+#include "pomdog/input/key_state.hpp"
+#include "pomdog/input/keys.hpp"
+#include "pomdog/logging/log.hpp"
+#include "pomdog/utility/scope_guard.hpp"
 #include <X11/XKBlib.h>
 #include <X11/Xutil.h>
 #include <algorithm>

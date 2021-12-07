@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Experimental/GUI/Thickness.hpp"
-#include "Pomdog/Experimental/GUI/VerticalLayout.hpp"
-#include "Pomdog/Experimental/GUI/Widget.hpp"
-#include "Pomdog/Math/Vector2.hpp"
-#include "Pomdog/Signals/ScopedConnection.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/experimental/gui/thickness.hpp"
+#include "pomdog/experimental/gui/vertical_layout.hpp"
+#include "pomdog/experimental/gui/widget.hpp"
+#include "pomdog/math/vector2.hpp"
+#include "pomdog/signals/scoped_connection.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <list>

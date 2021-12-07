@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include "Pomdog/Basic/Export.hpp"
-#include "Pomdog/Content/AssetBuilders/Builder.hpp"
-#include "Pomdog/Math/Matrix4x4.hpp"
-#include "Pomdog/Math/Vector2.hpp"
-#include "Pomdog/Math/Vector3.hpp"
-#include "Pomdog/Math/Vector4.hpp"
+#include "pomdog/basic/export.hpp"
+#include "pomdog/content/asset_builders/builder.hpp"
+#include "pomdog/math/matrix4x4.hpp"
+#include "pomdog/math/vector2.hpp"
+#include "pomdog/math/vector3.hpp"
+#include "pomdog/math/vector4.hpp"
 
 namespace Pomdog {
 class AssetManager;

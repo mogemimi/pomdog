@@ -1,6 +1,6 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Graphics/RenderTarget2D.hpp"
+#include "pomdog/graphics/render_target2d.hpp"
 
 namespace Pomdog {
 

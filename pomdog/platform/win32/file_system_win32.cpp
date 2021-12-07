@@ -1,11 +1,11 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "FileSystemWin32.hpp"
-#include "../Utility/ErrorHelper.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
-#include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/PathHelper.hpp"
+#include "pomdog/platform/win32/file_system_win32.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/platform/win32/prerequisites_win32.hpp"
+#include "pomdog/utility/assert.hpp"
+#include "pomdog/utility/error_helper.hpp"
+#include "pomdog/utility/path_helper.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <Shlobj.h>

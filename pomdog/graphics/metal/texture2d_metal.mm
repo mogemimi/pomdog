@@ -1,11 +1,11 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Texture2DMetal.hpp"
-#include "MetalFormatHelper.hpp"
-#include "../Graphics.Backends/SurfaceFormatHelper.hpp"
-#include "../Graphics.Backends/TextureHelper.hpp"
-#include "Pomdog/Graphics/SurfaceFormat.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/graphics/metal/texture2d_metal.hpp"
+#include "pomdog/graphics/backends/surface_format_helper.hpp"
+#include "pomdog/graphics/backends/texture_helper.hpp"
+#include "pomdog/graphics/metal/metal_format_helper.hpp"
+#include "pomdog/graphics/surface_format.hpp"
+#include "pomdog/utility/assert.hpp"
 #import <Metal/MTLDevice.h>
 #include <algorithm>
 

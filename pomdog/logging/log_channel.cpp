@@ -1,9 +1,9 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Logging/LogChannel.hpp"
-#include "Pomdog/Logging/LogEntry.hpp"
-#include "Pomdog/Signals/Connection.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/logging/log_channel.hpp"
+#include "pomdog/logging/log_entry.hpp"
+#include "pomdog/signals/connection.hpp"
+#include "pomdog/utility/assert.hpp"
 
 namespace Pomdog {
 

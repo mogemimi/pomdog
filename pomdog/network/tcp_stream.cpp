@@ -1,21 +1,21 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Network/TCPStream.hpp"
-#include "Pomdog/Basic/Platform.hpp"
+#include "pomdog/network/tcp_stream.hpp"
+#include "pomdog/basic/platform.hpp"
 #if defined(POMDOG_PLATFORM_MACOSX) || \
     defined(POMDOG_PLATFORM_APPLE_IOS) || \
     defined(POMDOG_PLATFORM_LINUX)
-#include "../Network.POSIX/TCPStreamPOSIX.hpp"
+#include "pomdog/network/posix/tcp_stream_posix.hpp"
 #elif defined(POMDOG_PLATFORM_EMSCRIPTEN)
-#include "../Network.Emscripten/TCPStreamEmscripten.hpp"
+#include "pomdog/network/emscripten/tcp_stream_emscripten.hpp"
 #elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
-#include "../Network.Win32/TCPStreamWin32.hpp"
+#include "pomdog/network/win32/tcp_stream_win32.hpp"
 #else
 #error "Platform undefined or not supported."
 #endif
-#include "AddressParser.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/network/address_parser.hpp"
+#include "pomdog/utility/assert.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>

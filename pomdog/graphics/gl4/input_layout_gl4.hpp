@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include "OpenGLPrerequisites.hpp"
-#include "TypesafeGL4.hpp"
-#include "VertexBufferBindingGL4.hpp"
-#include "../Utility/Tagged.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Graphics/ForwardDeclarations.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/graphics/forward_declarations.hpp"
+#include "pomdog/graphics/gl4/opengl_prerequisites.hpp"
+#include "pomdog/graphics/gl4/typesafe_gl4.hpp"
+#include "pomdog/graphics/gl4/vertex_buffer_binding_gl4.hpp"
+#include "pomdog/utility/tagged.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>

@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Pomdog/Input/ButtonState.hpp"
+#include "pomdog/input/button_state.hpp"
 
 namespace Pomdog {
 

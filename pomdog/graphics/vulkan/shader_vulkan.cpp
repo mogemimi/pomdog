@@ -1,9 +1,9 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "ShaderVulkan.hpp"
-#include "../Graphics.Backends/ShaderBytecode.hpp"
-#include "../Utility/Exception.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/graphics/vulkan/shader_vulkan.hpp"
+#include "pomdog/graphics/backends/shader_bytecode.hpp"
+#include "pomdog/utility/assert.hpp"
+#include "pomdog/utility/exception.hpp"
 
 namespace Pomdog::Detail::Vulkan {
 

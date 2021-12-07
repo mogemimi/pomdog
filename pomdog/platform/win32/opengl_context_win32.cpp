@@ -1,11 +1,11 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "OpenGLContextWin32.hpp"
-#include "../Graphics.GL4/ErrorChecker.hpp"
-#include "../Graphics.GL4/OpenGLPrerequisites.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Graphics/PresentationParameters.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/platform/win32/opengl_context_win32.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/graphics/gl4/error_checker.hpp"
+#include "pomdog/graphics/gl4/opengl_prerequisites.hpp"
+#include "pomdog/graphics/presentation_parameters.hpp"
+#include "pomdog/utility/assert.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>

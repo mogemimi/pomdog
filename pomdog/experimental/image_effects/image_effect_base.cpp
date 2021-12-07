@@ -1,6 +1,6 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Experimental/ImageEffects/ImageEffectBase.hpp"
+#include "pomdog/experimental/image_effects/image_effect_base.hpp"
 
 namespace Pomdog {
 

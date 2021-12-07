@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Basic/Export.hpp"
-#include "Pomdog/Math/Degree.hpp"
-#include "Pomdog/Math/Detail/TypeTraits.hpp"
-#include "Pomdog/Math/Radian.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/basic/export.hpp"
+#include "pomdog/math/degree.hpp"
+#include "pomdog/math/detail/type_traits.hpp"
+#include "pomdog/math/radian.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <type_traits>

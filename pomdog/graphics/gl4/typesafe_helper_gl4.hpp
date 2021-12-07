@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "OpenGLPrerequisites.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/graphics/gl4/opengl_prerequisites.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <type_traits>

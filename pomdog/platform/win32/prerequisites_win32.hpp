@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
 
 #ifndef STRICT
 #define STRICT

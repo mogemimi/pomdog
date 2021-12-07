@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "TimeSourceApple.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/platform/apple/time_source_apple.hpp"
+#include "pomdog/utility/assert.hpp"
 #include <mach/mach_time.h>
 
 namespace Pomdog::Detail::Apple {

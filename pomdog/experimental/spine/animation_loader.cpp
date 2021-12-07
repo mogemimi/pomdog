@@ -1,17 +1,17 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Experimental/Spine/AnimationLoader.hpp"
-#include "../Skeletal2D/Tracks/AnimationKeyHelper.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Experimental/Skeletal2D/AnimationClip.hpp"
-#include "Pomdog/Experimental/Skeletal2D/JointIndex.hpp"
-#include "Pomdog/Experimental/Skeletal2D/Tracks/AnimationTrack.hpp"
-#include "Pomdog/Experimental/Skeletal2D/Tracks/RotationTrack.hpp"
-#include "Pomdog/Experimental/Skeletal2D/Tracks/ScaleTrack.hpp"
-#include "Pomdog/Experimental/Skeletal2D/Tracks/SpriteAnimationTrack.hpp"
-#include "Pomdog/Experimental/Skeletal2D/Tracks/TranslationTrack.hpp"
-#include "Pomdog/Experimental/Spine/SkeletonDesc.hpp"
-#include "Pomdog/Utility/Detail/CRC32.hpp"
+#include "pomdog/experimental/spine/animation_loader.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/experimental/skeletal2d/animation_clip.hpp"
+#include "pomdog/experimental/skeletal2d/joint_index.hpp"
+#include "pomdog/experimental/skeletal2d/tracks/animation_key_helper.hpp"
+#include "pomdog/experimental/skeletal2d/tracks/animation_track.hpp"
+#include "pomdog/experimental/skeletal2d/tracks/rotation_track.hpp"
+#include "pomdog/experimental/skeletal2d/tracks/scale_track.hpp"
+#include "pomdog/experimental/skeletal2d/tracks/sprite_animation_track.hpp"
+#include "pomdog/experimental/skeletal2d/tracks/translation_track.hpp"
+#include "pomdog/experimental/spine/skeleton_desc.hpp"
+#include "pomdog/utility/crc32.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>

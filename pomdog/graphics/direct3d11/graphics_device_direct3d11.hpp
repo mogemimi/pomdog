@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include "PrerequisitesDirect3D11.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Graphics/GraphicsDevice.hpp"
-#include "Pomdog/Graphics/PresentationParameters.hpp"
-#include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
-#include "Pomdog/Utility/Errors.hpp"
+#include "pomdog/platform/win32/prerequisites_win32.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/graphics/direct3d11/prerequisites_direct3d11.hpp"
+#include "pomdog/graphics/graphics_device.hpp"
+#include "pomdog/graphics/presentation_parameters.hpp"
+#include "pomdog/utility/errors.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <wrl/client.h>

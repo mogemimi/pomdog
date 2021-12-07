@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Basic/Export.hpp"
-#include "Pomdog/Graphics/ForwardDeclarations.hpp"
-#include "Pomdog/Graphics/InputElement.hpp"
-#include "Pomdog/Graphics/InputElementFormat.hpp"
-#include "Pomdog/Graphics/InputLayoutDescription.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/basic/export.hpp"
+#include "pomdog/graphics/forward_declarations.hpp"
+#include "pomdog/graphics/input_element.hpp"
+#include "pomdog/graphics/input_element_format.hpp"
+#include "pomdog/graphics/input_layout_description.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>

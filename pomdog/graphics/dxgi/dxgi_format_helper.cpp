@@ -1,10 +1,10 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "DXGIFormatHelper.hpp"
-#include "../Basic/Unreachable.hpp"
-#include "Pomdog/Graphics/IndexElementSize.hpp"
-#include "Pomdog/Graphics/InputElementFormat.hpp"
-#include "Pomdog/Graphics/SurfaceFormat.hpp"
+#include "pomdog/graphics/dxgi/dxgi_format_helper.hpp"
+#include "pomdog/basic/unreachable.hpp"
+#include "pomdog/graphics/index_element_size.hpp"
+#include "pomdog/graphics/input_element_format.hpp"
+#include "pomdog/graphics/surface_format.hpp"
 
 namespace Pomdog::Detail::DXGI {
 

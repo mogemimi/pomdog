@@ -1,9 +1,9 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "SocketHelperWin32.hpp"
-#include "../Utility/ErrorHelper.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/network/win32/socket_helper_win32.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/utility/assert.hpp"
+#include "pomdog/utility/error_helper.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <WS2tcpip.h>

@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "Pomdog/Graphics/GraphicsDevice.hpp"
-#include "Pomdog/Graphics/PresentationParameters.hpp"
-#include "Pomdog/Utility/Errors.hpp"
+#include "pomdog/graphics/graphics_device.hpp"
+#include "pomdog/graphics/presentation_parameters.hpp"
+#include "pomdog/utility/errors.hpp"
 #include <memory>
 
 #import <Metal/Metal.h>

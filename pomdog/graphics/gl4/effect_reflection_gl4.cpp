@@ -1,12 +1,12 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "EffectReflectionGL4.hpp"
-#include "ErrorChecker.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Graphics/EffectConstantDescription.hpp"
-#include "Pomdog/Logging/Log.hpp"
-#include "Pomdog/Logging/LogLevel.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/graphics/gl4/effect_reflection_gl4.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/graphics/effect_constant_description.hpp"
+#include "pomdog/graphics/gl4/error_checker.hpp"
+#include "pomdog/logging/log.hpp"
+#include "pomdog/logging/log_level.hpp"
+#include "pomdog/utility/assert.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>

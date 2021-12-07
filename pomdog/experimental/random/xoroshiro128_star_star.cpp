@@ -1,6 +1,6 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Experimental/Random/Xoroshiro128StarStar.hpp"
+#include "pomdog/experimental/random/xoroshiro128_star_star.hpp"
 
 namespace Pomdog::Random {
 namespace {

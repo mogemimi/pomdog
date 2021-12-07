@@ -1,11 +1,11 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Graphics/VertexBuffer.hpp"
-#include "../Graphics.Backends/BufferBindMode.hpp"
-#include "../Graphics.Backends/NativeBuffer.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Graphics/BufferUsage.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/graphics/vertex_buffer.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/graphics/backends/buffer_bind_mode.hpp"
+#include "pomdog/graphics/backends/native_buffer.hpp"
+#include "pomdog/graphics/buffer_usage.hpp"
+#include "pomdog/utility/assert.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>

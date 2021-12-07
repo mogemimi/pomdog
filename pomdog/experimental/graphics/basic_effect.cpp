@@ -1,24 +1,24 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Experimental/Graphics/BasicEffect.hpp"
-#include "Pomdog/Content/AssetBuilders/PipelineStateBuilder.hpp"
-#include "Pomdog/Content/AssetBuilders/ShaderBuilder.hpp"
-#include "Pomdog/Content/AssetManager.hpp"
-#include "Pomdog/Graphics/GraphicsDevice.hpp"
-#include "Pomdog/Graphics/InputLayoutHelper.hpp"
-#include "Pomdog/Graphics/PipelineState.hpp"
-#include "Pomdog/Graphics/PresentationParameters.hpp"
-#include "Pomdog/Graphics/Shader.hpp"
-#include "Pomdog/Graphics/ShaderPipelineStage.hpp"
+#include "pomdog/experimental/graphics/basic_effect.hpp"
+#include "pomdog/content/asset_builders/pipeline_state_builder.hpp"
+#include "pomdog/content/asset_builders/shader_builder.hpp"
+#include "pomdog/content/asset_manager.hpp"
+#include "pomdog/graphics/graphics_device.hpp"
+#include "pomdog/graphics/input_layout_helper.hpp"
+#include "pomdog/graphics/pipeline_state.hpp"
+#include "pomdog/graphics/presentation_parameters.hpp"
+#include "pomdog/graphics/shader.hpp"
+#include "pomdog/graphics/shader_pipeline_stage.hpp"
 
 namespace Pomdog::BasicEffect {
 namespace {
 
 // Built-in shaders
-#include "Shaders/GLSL.Embedded/BasicEffect_PS.inc.hpp"
-#include "Shaders/GLSL.Embedded/BasicEffect_VS.inc.hpp"
-#include "Shaders/HLSL.Embedded/BasicEffect.inc.hpp"
-#include "Shaders/Metal.Embedded/BasicEffect.inc.hpp"
+#include "shaders/glsl.embedded/basic_effect_ps.inc.hpp"
+#include "shaders/glsl.embedded/basic_effect_vs.inc.hpp"
+#include "shaders/hlsl.embedded/basic_effect.inc.hpp"
+#include "shaders/metal.embedded/basic_effect.inc.hpp"
 
 } // namespace
 

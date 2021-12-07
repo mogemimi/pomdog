@@ -1,9 +1,9 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Experimental/Skeletal2D/BlendTrees/WeightBlendingHelper.hpp"
-#include "Pomdog/Experimental/Skeletal2D/JointPose.hpp"
-#include "Pomdog/Math/Math.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/experimental/skeletal2d/blendtrees/weight_blending_helper.hpp"
+#include "pomdog/experimental/skeletal2d/joint_pose.hpp"
+#include "pomdog/math/math.hpp"
+#include "pomdog/utility/assert.hpp"
 
 namespace Pomdog::Skeletal2D::Detail::WeightBlendingHelper {
 

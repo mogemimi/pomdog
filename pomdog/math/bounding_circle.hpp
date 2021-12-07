@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "Pomdog/Basic/Export.hpp"
-#include "Pomdog/Math/ForwardDeclarations.hpp"
-#include "Pomdog/Math/Vector2.hpp"
+#include "pomdog/basic/export.hpp"
+#include "pomdog/math/forward_declarations.hpp"
+#include "pomdog/math/vector2.hpp"
 
 namespace Pomdog {
 

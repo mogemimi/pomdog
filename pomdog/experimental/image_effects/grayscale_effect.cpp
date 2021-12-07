@@ -1,23 +1,23 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Experimental/ImageEffects/GrayscaleEffect.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Basic/Platform.hpp"
-#include "Pomdog/Content/AssetBuilders/PipelineStateBuilder.hpp"
-#include "Pomdog/Content/AssetBuilders/ShaderBuilder.hpp"
-#include "Pomdog/Graphics/BlendDescription.hpp"
-#include "Pomdog/Graphics/ConstantBuffer.hpp"
-#include "Pomdog/Graphics/DepthStencilDescription.hpp"
-#include "Pomdog/Graphics/GraphicsCommandList.hpp"
-#include "Pomdog/Graphics/GraphicsDevice.hpp"
-#include "Pomdog/Graphics/InputLayoutHelper.hpp"
-#include "Pomdog/Graphics/PipelineState.hpp"
-#include "Pomdog/Graphics/PresentationParameters.hpp"
-#include "Pomdog/Graphics/PrimitiveTopology.hpp"
-#include "Pomdog/Graphics/RenderTarget2D.hpp"
-#include "Pomdog/Graphics/SamplerState.hpp"
-#include "Pomdog/Graphics/Shader.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/experimental/image_effects/grayscale_effect.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/basic/platform.hpp"
+#include "pomdog/content/asset_builders/pipeline_state_builder.hpp"
+#include "pomdog/content/asset_builders/shader_builder.hpp"
+#include "pomdog/graphics/blend_description.hpp"
+#include "pomdog/graphics/constant_buffer.hpp"
+#include "pomdog/graphics/depth_stencil_description.hpp"
+#include "pomdog/graphics/graphics_command_list.hpp"
+#include "pomdog/graphics/graphics_device.hpp"
+#include "pomdog/graphics/input_layout_helper.hpp"
+#include "pomdog/graphics/pipeline_state.hpp"
+#include "pomdog/graphics/presentation_parameters.hpp"
+#include "pomdog/graphics/primitive_topology.hpp"
+#include "pomdog/graphics/render_target2d.hpp"
+#include "pomdog/graphics/sampler_state.hpp"
+#include "pomdog/graphics/shader.hpp"
+#include "pomdog/utility/assert.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstring>
@@ -31,16 +31,16 @@ namespace {
     defined(POMDOG_PLATFORM_LINUX) || \
     defined(POMDOG_PLATFORM_MACOSX) || \
     defined(POMDOG_PLATFORM_EMSCRIPTEN)
-#include "Shaders/GLSL.Embedded/Grayscale_PS.inc.hpp"
-#include "Shaders/GLSL.Embedded/ScreenQuad_VS.inc.hpp"
+#include "shaders/glsl.embedded/grayscale_ps.inc.hpp"
+#include "shaders/glsl.embedded/screen_quad_vs.inc.hpp"
 #endif
 #if defined(POMDOG_PLATFORM_WIN32)
-#include "Shaders/HLSL.Embedded/Grayscale_PS.inc.hpp"
-#include "Shaders/HLSL.Embedded/ScreenQuad_VS.inc.hpp"
+#include "shaders/hlsl.embedded/grayscale_ps.inc.hpp"
+#include "shaders/hlsl.embedded/screen_quad_vs.inc.hpp"
 #endif
 #if defined(POMDOG_PLATFORM_MACOSX)
-#include "Shaders/Metal.Embedded/Grayscale_PS.inc.hpp"
-#include "Shaders/Metal.Embedded/ScreenQuad_VS.inc.hpp"
+#include "shaders/metal.embedded/grayscale_ps.inc.hpp"
+#include "shaders/metal.embedded/screen_quad_vs.inc.hpp"
 #endif
 
 } // namespace

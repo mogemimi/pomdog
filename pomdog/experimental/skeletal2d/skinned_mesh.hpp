@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Experimental/Skeletal2D/SkinnedMeshPart.hpp"
-#include "Pomdog/Experimental/Skeletal2D/SkinnedVertex.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/experimental/skeletal2d/skinned_mesh_part.hpp"
+#include "pomdog/experimental/skeletal2d/skinned_vertex.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>

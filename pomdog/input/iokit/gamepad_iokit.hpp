@@ -2,13 +2,13 @@
 
 #pragma once
 
-#include "../Application/SystemEvents.hpp"
-#include "../Input.Backends/GamepadMappings.hpp"
-#include "Pomdog/Input/Gamepad.hpp"
-#include "Pomdog/Input/GamepadCapabilities.hpp"
-#include "Pomdog/Input/GamepadState.hpp"
-#include "Pomdog/Signals/ForwardDeclarations.hpp"
-#include "Pomdog/Utility/Errors.hpp"
+#include "pomdog/application/system_events.hpp"
+#include "pomdog/input/backends/gamepad_mappings.hpp"
+#include "pomdog/input/gamepad.hpp"
+#include "pomdog/input/gamepad_capabilities.hpp"
+#include "pomdog/input/gamepad_state.hpp"
+#include "pomdog/signals/forward_declarations.hpp"
+#include "pomdog/utility/errors.hpp"
 #include <IOKit/hid/IOHIDManager.h>
 #include <array>
 #include <cstdint>

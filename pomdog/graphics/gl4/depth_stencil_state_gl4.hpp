@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "OpenGLPrerequisites.hpp"
-#include "../Utility/Tagged.hpp"
-#include "Pomdog/Graphics/ForwardDeclarations.hpp"
-#include "Pomdog/Utility/Errors.hpp"
+#include "pomdog/graphics/forward_declarations.hpp"
+#include "pomdog/graphics/gl4/opengl_prerequisites.hpp"
+#include "pomdog/utility/errors.hpp"
+#include "pomdog/utility/tagged.hpp"
 
 namespace Pomdog::Detail::GL4 {
 

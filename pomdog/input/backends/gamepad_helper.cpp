@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "GamepadHelper.hpp"
-#include "Pomdog/Input/GamepadState.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/input/backends/gamepad_helper.hpp"
+#include "pomdog/input/gamepad_state.hpp"
+#include "pomdog/utility/assert.hpp"
 
 namespace Pomdog::Detail::GamepadHelper {
 

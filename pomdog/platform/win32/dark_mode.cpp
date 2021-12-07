@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "DarkMode.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
+#include "pomdog/platform/win32/dark_mode.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <dwmapi.h>

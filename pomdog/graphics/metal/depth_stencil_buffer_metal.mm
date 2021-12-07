@@ -1,10 +1,10 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "DepthStencilBufferMetal.hpp"
-#include "MetalFormatHelper.hpp"
-#include "../Graphics.Backends/SurfaceFormatHelper.hpp"
-#include "Pomdog/Math/Rectangle.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/graphics/metal/depth_stencil_buffer_metal.hpp"
+#include "pomdog/graphics/backends/surface_format_helper.hpp"
+#include "pomdog/graphics/metal/metal_format_helper.hpp"
+#include "pomdog/math/rectangle.hpp"
+#include "pomdog/utility/assert.hpp"
 #import <Metal/MTLDevice.h>
 #import <Metal/MTLTexture.h>
 

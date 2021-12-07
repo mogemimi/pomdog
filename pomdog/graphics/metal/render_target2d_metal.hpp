@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "Pomdog/Graphics/ForwardDeclarations.hpp"
-#include "Pomdog/Graphics/RenderTarget2D.hpp"
-#include "Pomdog/Graphics/SurfaceFormat.hpp"
-#include "Pomdog/Utility/Errors.hpp"
+#include "pomdog/graphics/forward_declarations.hpp"
+#include "pomdog/graphics/render_target2d.hpp"
+#include "pomdog/graphics/surface_format.hpp"
+#include "pomdog/utility/errors.hpp"
 #import <Metal/MTLTexture.h>
 
 namespace Pomdog::Detail::Metal {

@@ -2,13 +2,13 @@
 
 #pragma once
 
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Basic/Export.hpp"
-#include "Pomdog/Signals/Connection.hpp"
-#include "Pomdog/Signals/Detail/SignalBody.hpp"
-#include "Pomdog/Signals/ForwardDeclarations.hpp"
-#include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Detail/SpinLock.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/basic/export.hpp"
+#include "pomdog/signals/connection.hpp"
+#include "pomdog/signals/detail/signal_body.hpp"
+#include "pomdog/signals/forward_declarations.hpp"
+#include "pomdog/utility/assert.hpp"
+#include "pomdog/utility/spin_lock.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>

@@ -1,15 +1,15 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "HLSLCompiling.hpp"
-#include "../Graphics.Backends/ShaderBytecode.hpp"
-#include "../Graphics.Backends/ShaderCompileOptions.hpp"
-#include "Pomdog/Application/FileSystem.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Content/Utility/BinaryReader.hpp"
-#include "Pomdog/Platform/Win32/PrerequisitesWin32.hpp"
-#include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Errors.hpp"
-#include "Pomdog/Utility/PathHelper.hpp"
+#include "pomdog/graphics/direct3d/hlsl_compiling.hpp"
+#include "pomdog/application/file_system.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/content/utility/binary_reader.hpp"
+#include "pomdog/graphics/backends/shader_bytecode.hpp"
+#include "pomdog/graphics/backends/shader_compile_options.hpp"
+#include "pomdog/platform/win32/prerequisites_win32.hpp"
+#include "pomdog/utility/assert.hpp"
+#include "pomdog/utility/errors.hpp"
+#include "pomdog/utility/path_helper.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <fstream>

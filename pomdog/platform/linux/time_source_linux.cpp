@@ -1,7 +1,7 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "TimeSourceLinux.hpp"
-#include "../Utility/Exception.hpp"
+#include "pomdog/platform/linux/time_source_linux.hpp"
+#include "pomdog/utility/exception.hpp"
 #include <ctime>
 
 namespace Pomdog::Detail::Linux {

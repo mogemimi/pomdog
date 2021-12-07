@@ -1,9 +1,9 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "MetalFormatHelper.hpp"
-#include "../Basic/Unreachable.hpp"
-#include "Pomdog/Graphics/ComparisonFunction.hpp"
-#include "Pomdog/Graphics/SurfaceFormat.hpp"
+#include "pomdog/graphics/metal/metal_format_helper.hpp"
+#include "pomdog/basic/unreachable.hpp"
+#include "pomdog/graphics/comparison_function.hpp"
+#include "pomdog/graphics/surface_format.hpp"
 
 namespace Pomdog::Detail::Metal {
 

@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "PrerequisitesOpenAL.hpp"
-#include "Pomdog/Audio/AudioChannels.hpp"
-#include "Pomdog/Audio/AudioClip.hpp"
+#include "pomdog/audio/audio_channels.hpp"
+#include "pomdog/audio/audio_clip.hpp"
+#include "pomdog/audio/openal/prerequisites_openal.hpp"
 #include <cstddef>
 #include <cstdint>
 #include <optional>

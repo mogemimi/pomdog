@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "Pomdog/Experimental/GUI/Widget.hpp"
-#include "Pomdog/Signals/ScopedConnection.hpp"
-#include "Pomdog/Signals/Signal.hpp"
+#include "pomdog/experimental/gui/widget.hpp"
+#include "pomdog/signals/scoped_connection.hpp"
+#include "pomdog/signals/signal.hpp"
 
 namespace Pomdog::GUI {
 

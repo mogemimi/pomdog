@@ -1,15 +1,15 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Content/AssetLoaders/AudioClipLoader.hpp"
-#include "Pomdog/Application/FileSystem.hpp"
-#include "Pomdog/Audio/AudioClip.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Content/AssetManager.hpp"
-#include "Pomdog/Content/Audio/Vorbis.hpp"
-#include "Pomdog/Content/Audio/WAV.hpp"
-#include "Pomdog/Content/Utility/BinaryReader.hpp"
-#include "Pomdog/Content/Utility/MakeFourCC.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/content/asset_loaders/audio_clip_loader.hpp"
+#include "pomdog/application/file_system.hpp"
+#include "pomdog/audio/audio_clip.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/content/asset_manager.hpp"
+#include "pomdog/content/audio/vorbis.hpp"
+#include "pomdog/content/audio/wav.hpp"
+#include "pomdog/content/utility/binary_reader.hpp"
+#include "pomdog/content/utility/make_fourcc.hpp"
+#include "pomdog/utility/assert.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <fstream>

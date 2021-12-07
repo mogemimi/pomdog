@@ -1,6 +1,6 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "ErrorHelper.hpp"
+#include "pomdog/utility/error_helper.hpp"
 
 namespace Pomdog::Detail {
 

@@ -1,13 +1,13 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "SoundEffectXAudio2.hpp"
-#include "AudioClipXAudio2.hpp"
-#include "AudioEngineXAudio2.hpp"
-#include "Pomdog/Audio/AudioEmitter.hpp"
-#include "Pomdog/Audio/AudioListener.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Utility/Assert.hpp"
-#include "Pomdog/Utility/Errors.hpp"
+#include "pomdog/audio/xaudio2/sound_effect_xaudio2.hpp"
+#include "pomdog/audio/audio_emitter.hpp"
+#include "pomdog/audio/audio_listener.hpp"
+#include "pomdog/audio/xaudio2/audio_clip_xaudio2.hpp"
+#include "pomdog/audio/xaudio2/audio_engine_xaudio2.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/utility/assert.hpp"
+#include "pomdog/utility/errors.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cmath>

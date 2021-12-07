@@ -2,15 +2,15 @@
 
 #pragma once
 
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Basic/Platform.hpp"
-#include "Pomdog/Input/ButtonState.hpp"
-#include "Pomdog/Input/GamepadCapabilities.hpp"
-#include "Pomdog/Input/KeyState.hpp"
-#include "Pomdog/Input/Keys.hpp"
-#include "Pomdog/Input/MouseButtons.hpp"
-#include "Pomdog/Input/PlayerIndex.hpp"
-#include "Pomdog/Math/Point2D.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/basic/platform.hpp"
+#include "pomdog/input/button_state.hpp"
+#include "pomdog/input/gamepad_capabilities.hpp"
+#include "pomdog/input/key_state.hpp"
+#include "pomdog/input/keys.hpp"
+#include "pomdog/input/mouse_buttons.hpp"
+#include "pomdog/input/player_index.hpp"
+#include "pomdog/math/point2d.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <string>

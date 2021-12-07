@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "../Graphics.Backends/BufferBindMode.hpp"
-#include "../Graphics.Backends/NativeBuffer.hpp"
-#include "Pomdog/Graphics/ForwardDeclarations.hpp"
-#include "Pomdog/Utility/Errors.hpp"
+#include "pomdog/graphics/backends/buffer_bind_mode.hpp"
+#include "pomdog/graphics/backends/native_buffer.hpp"
+#include "pomdog/graphics/forward_declarations.hpp"
+#include "pomdog/utility/errors.hpp"
 #import <Metal/MTLBuffer.h>
 
 namespace Pomdog::Detail::Metal {

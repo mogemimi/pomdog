@@ -1,9 +1,9 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "Pomdog/Experimental/Particles/EmitterShapes/ParticleEmitterShapeBox.hpp"
-#include "Pomdog/Basic/ConditionalCompilation.hpp"
-#include "Pomdog/Experimental/Random/Xoroshiro128StarStar.hpp"
-#include "Pomdog/Utility/Assert.hpp"
+#include "pomdog/experimental/particles/emitter_shapes/particle_emitter_shape_box.hpp"
+#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/experimental/random/xoroshiro128_star_star.hpp"
+#include "pomdog/utility/assert.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <random>
