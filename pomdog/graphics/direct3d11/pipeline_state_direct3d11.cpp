@@ -56,7 +56,7 @@ D3D11_BLEND_OP ToBlendOperation(BlendOperation blendOperation) noexcept
     return D3D11_BLEND_OP_ADD;
 }
 
-D3D11_BLEND ToBlend(Blend blend) noexcept
+D3D11_BLEND ToBlend(BlendFactor blend) noexcept
 {
     switch (blend) {
     case BlendFactor::Zero:

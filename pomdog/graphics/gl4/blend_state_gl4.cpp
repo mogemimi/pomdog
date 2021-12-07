@@ -14,7 +14,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace Pomdog::Detail::GL4 {
 namespace {
 
-GLenum ToBlendGL4NonTypesafe(Blend blend) noexcept
+GLenum ToBlendGL4NonTypesafe(BlendFactor blend) noexcept
 {
     switch (blend) {
     case BlendFactor::Zero:
@@ -74,7 +74,7 @@ GLenum ToBlendOperationGL4NonTypesafe(BlendOperation operation) noexcept
     POMDOG_UNREACHABLE("Unsupported blend operation");
 }
 
-BlendGL4 ToBlendGL4(Blend blend) noexcept
+BlendGL4 ToBlendGL4(BlendFactor blend) noexcept
 {
     return BlendGL4{ToBlendGL4NonTypesafe(blend)};
 }

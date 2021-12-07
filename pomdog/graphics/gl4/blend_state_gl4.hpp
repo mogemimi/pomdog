@@ -14,7 +14,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace Pomdog::Detail::GL4 {
 
-using BlendGL4 = Tagged<GLenum, Blend>;
+using BlendGL4 = Tagged<GLenum, BlendFactor>;
 using BlendOperationGL4 = Tagged<GLenum, BlendOperation>;
 
 struct RenderTargetBlendDescGL4 final {

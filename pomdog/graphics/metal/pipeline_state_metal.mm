@@ -109,7 +109,7 @@ MTLBlendOperation ToBlendOperation(BlendOperation blendOperation) noexcept
     POMDOG_UNREACHABLE("Unsupported blend operation");
 }
 
-MTLBlendFactor ToBlendFactor(Blend blend) noexcept
+MTLBlendFactor ToBlendFactor(BlendFactor blend) noexcept
 {
     switch (blend) {
     case BlendFactor::Zero:

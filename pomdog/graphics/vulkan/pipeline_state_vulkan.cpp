@@ -79,7 +79,7 @@ VkBlendOp ToVkBlendOp(BlendOperation blendOperation) noexcept
     }
 }
 
-VkBlendFactor ToVkBlendFactor(Blend blend) noexcept
+VkBlendFactor ToVkBlendFactor(BlendFactor blend) noexcept
 {
     switch (blend) {
     case BlendFactor::Zero:
