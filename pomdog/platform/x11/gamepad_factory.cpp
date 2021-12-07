@@ -3,7 +3,7 @@
 #include "pomdog/platform/x11/gamepad_factory.hpp"
 #include "pomdog/basic/platform.hpp"
 #if defined(POMDOG_PLATFORM_LINUX)
-#include "pomdog/platform/linux/gamepad_linux.hpp"
+#include "pomdog/input/linux/gamepad_linux.hpp"
 #else
 #error "Platform undefined or not supported."
 #endif

@@ -1,5 +1,6 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
+#include "pomdog/graphics/direct3d11/graphics_device_direct3d11.hpp"
 #include "pomdog/basic/conditional_compilation.hpp"
 #include "pomdog/graphics/backends/buffer_bind_mode.hpp"
 #include "pomdog/graphics/backends/buffer_helper.hpp"
@@ -9,7 +10,6 @@
 #include "pomdog/graphics/backends/texture_helper.hpp"
 #include "pomdog/graphics/buffer_usage.hpp"
 #include "pomdog/graphics/constant_buffer.hpp"
-#include "pomdog/graphics/direct3d11/GraphicsDeviceDirect3D11.hpp"
 #include "pomdog/graphics/direct3d11/buffer_direct3d11.hpp"
 #include "pomdog/graphics/direct3d11/depth_stencil_buffer_direct3d11.hpp"
 #include "pomdog/graphics/direct3d11/effect_reflection_direct3d11.hpp"

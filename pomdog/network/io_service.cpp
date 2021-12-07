@@ -11,7 +11,7 @@
     defined(POMDOG_PLATFORM_LINUX)
 // NOTE: nothing to do
 #elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
-#include "pomdog/network/win32/IOService_win32.hpp"
+#include "pomdog/network/win32/io_service_win32.hpp"
 #else
 #error "Platform undefined or not supported."
 #endif

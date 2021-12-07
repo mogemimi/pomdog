@@ -1,6 +1,6 @@
 // Copyright (c) 2013-2021 mogemimi. Distributed under the MIT license.
 
-#include "pomdog/platform/emscripten/file_system_linux.hpp"
+#include "pomdog/platform/linux/file_system_linux.hpp"
 #include "pomdog/utility/assert.hpp"
 #include "pomdog/utility/error_helper.hpp"
 #include "pomdog/utility/path_helper.hpp"
