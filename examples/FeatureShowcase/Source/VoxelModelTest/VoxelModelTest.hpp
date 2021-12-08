@@ -7,7 +7,7 @@
 
 namespace FeatureShowcase {
 
-using namespace Pomdog;
+using namespace pomdog;
 
 class VoxelModelTest final : public Game {
 public:
@@ -28,7 +28,7 @@ private:
     ConnectionList connect;
 
     std::shared_ptr<PrimitiveBatch> primitiveBatch;
-    std::shared_ptr<MagicaVoxel::VoxModel> voxelModel;
+    std::shared_ptr<magicavoxel::VoxModel> voxelModel;
 };
 
 } // namespace FeatureShowcase

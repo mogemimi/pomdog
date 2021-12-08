@@ -21,7 +21,7 @@ std::unique_ptr<Error> BillboardBatchTest::Initialize()
     // NOTE: Create graphics command list
     std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to create graphics command list");
+        return errors::Wrap(std::move(err), "failed to create graphics command list");
     }
 
     lineBatch = std::make_shared<LineBatch>(graphicsDevice, *assets);
@@ -43,7 +43,7 @@ std::unique_ptr<Error> BillboardBatchTest::Initialize()
     std::tie(sampler, err) = graphicsDevice->CreateSamplerState(
         SamplerDescription::CreateLinearClamp());
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to create sampler state");
+        return errors::Wrap(std::move(err), "failed to create sampler state");
     }
 
     // NOTE: Create constant buffer
@@ -51,13 +51,13 @@ std::unique_ptr<Error> BillboardBatchTest::Initialize()
         sizeof(BasicEffect::WorldConstantBuffer),
         BufferUsage::Dynamic);
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to create constant buffer");
+        return errors::Wrap(std::move(err), "failed to create constant buffer");
     }
 
     // NOTE: Load texture from PNG image file.
     std::tie(texture, err) = assets->Load<Texture2D>("Textures/pomdog.png");
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to load texture");
+        return errors::Wrap(std::move(err), "failed to load texture");
     }
 
     timer = std::make_shared<Timer>(clock);
@@ -88,14 +88,14 @@ void BillboardBatchTest::Draw()
     commandList->SetRenderPass(std::move(pass));
 
     const auto projectionMatrix = Matrix4x4::CreatePerspectiveFieldOfViewLH(
-        Math::ToRadians(45.0f),
+        math::ToRadians(45.0f),
         static_cast<float>(presentationParameters.BackBufferWidth) / presentationParameters.BackBufferHeight,
         0.01f,
         500.0f);
 
     const auto totalTime = static_cast<float>(timer->GetTotalTime().count());
     const auto lookAtPosition = Vector3{0.0f, 0.0f, 5.0f};
-    const auto rotation = Matrix4x4::CreateRotationY(Math::TwoPi<float> * totalTime);
+    const auto rotation = Matrix4x4::CreateRotationY(math::TwoPi<float> * totalTime);
     const auto cameraPosition = lookAtPosition + Vector3::Transform(Vector3{0.0f, 6.0f, -8.0f}, rotation);
     const auto viewMatrix = Matrix4x4::CreateLookAtLH(cameraPosition, lookAtPosition, Vector3::UnitY);
     const auto viewProjection = viewMatrix * projectionMatrix;
@@ -150,7 +150,7 @@ void BillboardBatchTest::Draw()
         Vector2{0.0f, 0.0f},
         Vector2{1.0f, 1.0f},
         Color::Red,
-        Math::ToRadians(45.0f),
+        math::ToRadians(45.0f),
         Vector2{0.5f, 0.5f},
         Vector2{1.0f, 1.0f});
 
@@ -159,7 +159,7 @@ void BillboardBatchTest::Draw()
         Vector2{0.0f, 0.0f},
         Vector2{0.5f, 1.0f},
         Color::Green,
-        Math::ToRadians(0.0f),
+        math::ToRadians(0.0f),
         Vector2{0.5f, 0.0f},
         Vector2{1.0f, 2.0f});
 
@@ -168,7 +168,7 @@ void BillboardBatchTest::Draw()
         Vector2{0.0f, 0.0f},
         Vector2{1.0f, 0.5f},
         Color::Blue,
-        Math::ToRadians(0.0f),
+        math::ToRadians(0.0f),
         Vector2{0.0f, 0.0f},
         Vector2{2.0f, 1.0f});
 

@@ -23,19 +23,19 @@ std::unique_ptr<Error> GLTFModelTest::Initialize()
     // NOTE: Create graphics command list
     std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to create graphics command list");
+        return errors::Wrap(std::move(err), "failed to create graphics command list");
     }
 
     // NOTE: Load texture from image file
     std::tie(texture, err) = assets->Load<Texture2D>("Textures/pomdog.png");
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to load texture");
+        return errors::Wrap(std::move(err), "failed to load texture");
     }
 
     // NOTE: Load model from glTF binary file.
     auto [glb, glbErr] = GLTF::Open(assets->GetAssetPath("GLB/F15.glb"));
     if (glbErr != nullptr) {
-        return Errors::Wrap(std::move(glbErr), "failed to load glTF binary");
+        return errors::Wrap(std::move(glbErr), "failed to load glTF binary");
     }
 
     POMDOG_ASSERT(!glb->Meshes.empty());
@@ -106,7 +106,7 @@ std::unique_ptr<Error> GLTFModelTest::Initialize()
             BufferUsage::Immutable);
 
         if (err != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to create vertex buffer");
+            return errors::Wrap(std::move(err), "failed to create vertex buffer");
         }
     }
     {
@@ -145,7 +145,7 @@ std::unique_ptr<Error> GLTFModelTest::Initialize()
             BufferUsage::Immutable);
 
         if (err != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to create vertex buffer");
+            return errors::Wrap(std::move(err), "failed to create vertex buffer");
         }
     }
     {
@@ -172,7 +172,7 @@ std::unique_ptr<Error> GLTFModelTest::Initialize()
             BufferUsage::Immutable);
 
         if (err != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to create index buffer");
+            return errors::Wrap(std::move(err), "failed to create index buffer");
         }
     }
     {
@@ -182,7 +182,7 @@ std::unique_ptr<Error> GLTFModelTest::Initialize()
             BufferUsage::Dynamic);
 
         if (err != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to create constant buffer");
+            return errors::Wrap(std::move(err), "failed to create constant buffer");
         }
 
         std::tie(worldConstantBuffer, err) = graphicsDevice->CreateConstantBuffer(
@@ -190,7 +190,7 @@ std::unique_ptr<Error> GLTFModelTest::Initialize()
             BufferUsage::Dynamic);
 
         if (err != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to create constant buffer");
+            return errors::Wrap(std::move(err), "failed to create constant buffer");
         }
     }
     {
@@ -199,7 +199,7 @@ std::unique_ptr<Error> GLTFModelTest::Initialize()
             SamplerDescription::CreateLinearClamp());
 
         if (err != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to create sampler state");
+            return errors::Wrap(std::move(err), "failed to create sampler state");
         }
     }
     {
@@ -220,7 +220,7 @@ std::unique_ptr<Error> GLTFModelTest::Initialize()
             .SetRasterizerState(RasterizerDescription::CreateDefault())
             .Build();
         if (err != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to create pipeline state");
+            return errors::Wrap(std::move(err), "failed to create pipeline state");
         }
     }
     {
@@ -241,7 +241,7 @@ std::unique_ptr<Error> GLTFModelTest::Initialize()
             .SetRasterizerState(RasterizerDescription::CreateDefault())
             .Build();
         if (err != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to create pipeline state");
+            return errors::Wrap(std::move(err), "failed to create pipeline state");
         }
     }
 
@@ -255,7 +255,7 @@ void GLTFModelTest::Update()
     constexpr float rotateSpeed = 0.5f;
 
     auto projectionMatrix = Matrix4x4::CreatePerspectiveFieldOfViewLH(
-        Math::ToRadians(45.0f),
+        math::ToRadians(45.0f),
         static_cast<float>(presentationParameters.BackBufferWidth) / presentationParameters.BackBufferHeight,
         0.01f,
         1000.0f);
@@ -276,11 +276,11 @@ void GLTFModelTest::Update()
     worldConstantBuffer->SetValue(worldConstants);
 
     auto time = static_cast<float>(gameHost->GetClock()->GetTotalGameTime().count());
-    auto rotateY = Math::TwoPi<float> * rotateSpeed * time;
+    auto rotateY = math::TwoPi<float> * rotateSpeed * time;
 
     auto mouse = gameHost->GetMouse()->GetState();
     if (mouse.LeftButton == ButtonState::Pressed) {
-        rotateY = -Math::TwoPi<float> * (static_cast<float>(mouse.Position.X) / static_cast<float>(presentationParameters.BackBufferWidth));
+        rotateY = -math::TwoPi<float> * (static_cast<float>(mouse.Position.X) / static_cast<float>(presentationParameters.BackBufferWidth));
     }
 
     auto modelMatrix = Matrix4x4::CreateTranslation(Vector3{-0.5f, -0.5f, -0.5f})

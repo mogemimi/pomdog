@@ -6,7 +6,7 @@
 
 namespace FeatureShowcase {
 
-using namespace Pomdog;
+using namespace pomdog;
 
 class BillboardBatchTest final : public Game {
 public:

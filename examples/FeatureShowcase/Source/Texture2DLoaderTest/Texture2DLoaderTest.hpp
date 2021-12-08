@@ -9,7 +9,7 @@
 
 namespace FeatureShowcase {
 
-using namespace Pomdog;
+using namespace pomdog;
 
 class Texture2DLoaderTest final : public Game {
 public:

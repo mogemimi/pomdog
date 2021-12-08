@@ -38,7 +38,7 @@ std::unique_ptr<Error> PongGame::Initialize()
     // NOTE: Create graphics command list
     std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to create graphics command list");
+        return errors::Wrap(std::move(err), "failed to create graphics command list");
     }
 
     // NOTE: Create batch renderers
@@ -48,7 +48,7 @@ std::unique_ptr<Error> PongGame::Initialize()
     // NOTE: Prepare sprite font
     auto [font, fontErr] = assets->Load<TrueTypeFont>("fonts/NotoSans/NotoSans-BoldItalic.ttf");
     if (fontErr != nullptr) {
-        return Errors::Wrap(std::move(fontErr), "failed to load a font file");
+        return errors::Wrap(std::move(fontErr), "failed to load a font file");
     }
     spriteFont = std::make_shared<SpriteFont>(graphicsDevice, font, 26.0f, 26.0f);
     spriteFont->PrepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
@@ -56,32 +56,32 @@ std::unique_ptr<Error> PongGame::Initialize()
 
     // NOTE: Load sound effects
     if (auto [audioClip, loadErr] = assets->Load<AudioClip>("sounds/pong1.wav"); loadErr != nullptr) {
-        return Errors::Wrap(std::move(loadErr), "failed to load audio clip");
+        return errors::Wrap(std::move(loadErr), "failed to load audio clip");
     }
     else {
         std::tie(soundEffect1, err) = audioEngine->CreateSoundEffect(audioClip, false);
         if (err != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to create sound effect");
+            return errors::Wrap(std::move(err), "failed to create sound effect");
         }
     }
 
     if (auto [audioClip, loadErr] = assets->Load<AudioClip>("sounds/pong2.wav"); loadErr != nullptr) {
-        return Errors::Wrap(std::move(loadErr), "failed to load audio clip");
+        return errors::Wrap(std::move(loadErr), "failed to load audio clip");
     }
     else {
         std::tie(soundEffect2, err) = audioEngine->CreateSoundEffect(audioClip, false);
         if (err != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to create sound effect");
+            return errors::Wrap(std::move(err), "failed to create sound effect");
         }
     }
 
     if (auto [audioClip, loadErr] = assets->Load<AudioClip>("sounds/pong3.wav"); loadErr != nullptr) {
-        return Errors::Wrap(std::move(loadErr), "failed to load audio clip");
+        return errors::Wrap(std::move(loadErr), "failed to load audio clip");
     }
     else {
         std::tie(soundEffect3, err) = audioEngine->CreateSoundEffect(audioClip, false);
         if (err != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to create sound effect");
+            return errors::Wrap(std::move(err), "failed to create sound effect");
         }
     }
 
@@ -105,7 +105,7 @@ std::unique_ptr<Error> PongGame::Initialize()
             presentationParameters.BackBufferFormat);
 
         if (err != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to create render target");
+            return errors::Wrap(std::move(err), "failed to create render target");
         }
 
         // NOTE: Create depth stencil buffer
@@ -115,7 +115,7 @@ std::unique_ptr<Error> PongGame::Initialize()
             presentationParameters.DepthStencilFormat);
 
         if (err != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to create render target");
+            return errors::Wrap(std::move(err), "failed to create render target");
         }
 
         postProcessCompositor.SetViewportSize(
@@ -346,13 +346,13 @@ void PongGame::Draw()
     pass.ScissorRect = viewport.GetBounds();
 
     const auto projectionMatrix = Matrix4x4::CreatePerspectiveFieldOfViewLH(
-        Math::ToRadians<float>(45.0f),
+        math::ToRadians<float>(45.0f),
         viewport.GetAspectRatio(),
         0.01f,
         1000.0f);
 
     const auto cameraPosition = Vector3{0, 0, -512.0f};
-    const auto cameraRotation = Math::ToRadians<float>(-15.0f);
+    const auto cameraRotation = math::ToRadians<float>(-15.0f);
     const auto viewMatrix = Matrix4x4::CreateRotationX(-cameraRotation) * Matrix4x4::CreateTranslation(-cameraPosition);
     const auto viewProjection = viewMatrix * projectionMatrix;
 

@@ -14,7 +14,7 @@
 
 namespace FeatureShowcase {
 
-using namespace Pomdog;
+using namespace pomdog;
 
 class AnimationGraphTest final : public Game {
 public:
@@ -38,11 +38,11 @@ private:
     std::shared_ptr<SpriteBatch> spriteBatch;
     std::shared_ptr<PrimitiveBatch> primitiveBatch;
 
-    std::shared_ptr<Skeletal2D::Skeleton> skeleton;
-    std::shared_ptr<Skeletal2D::SkeletonPose> skeletonPose;
+    std::shared_ptr<skeletal2d::Skeleton> skeleton;
+    std::shared_ptr<skeletal2d::SkeletonPose> skeletonPose;
     std::vector<Matrix3x2> globalPose;
-    Skeletal2D::SkinnedMesh skinnedMesh;
-    std::shared_ptr<Skeletal2D::Animator> animator;
+    skeletal2d::SkinnedMesh skinnedMesh;
+    std::shared_ptr<skeletal2d::Animator> animator;
 
     std::shared_ptr<SamplerState> sampler;
     std::shared_ptr<VertexBuffer> vertexBuffer;

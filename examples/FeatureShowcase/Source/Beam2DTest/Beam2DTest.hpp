@@ -7,7 +7,7 @@
 
 namespace FeatureShowcase {
 
-using namespace Pomdog;
+using namespace pomdog;
 
 class Beam2DTest final : public Game {
 public:

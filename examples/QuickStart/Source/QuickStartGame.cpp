@@ -27,19 +27,19 @@ std::unique_ptr<Error> QuickStartGame::Initialize()
     // NOTE: Create graphics command list
     std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to create graphics command list");
+        return errors::Wrap(std::move(err), "failed to create graphics command list");
     }
 
     // NOTE: Load a PNG image as texture
     std::tie(texture, err) = assets->Load<Texture2D>("pomdog.png");
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to load texture");
+        return errors::Wrap(std::move(err), "failed to load texture");
     }
 
     // NOTE: Create sampler state
     std::tie(sampler, err) = graphicsDevice->CreateSamplerState(SamplerDescription::CreatePointClamp());
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to create sampler state");
+        return errors::Wrap(std::move(err), "failed to create sampler state");
     }
 
     {
@@ -63,7 +63,7 @@ std::unique_ptr<Error> QuickStartGame::Initialize()
             BufferUsage::Immutable);
 
         if (err != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to create vertex buffer");
+            return errors::Wrap(std::move(err), "failed to create vertex buffer");
         }
     }
     {
@@ -77,7 +77,7 @@ std::unique_ptr<Error> QuickStartGame::Initialize()
             BufferUsage::Immutable);
 
         if (err != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to create index buffer");
+            return errors::Wrap(std::move(err), "failed to create index buffer");
         }
     }
     {
@@ -87,7 +87,7 @@ std::unique_ptr<Error> QuickStartGame::Initialize()
             BufferUsage::Dynamic);
 
         if (err != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to create constant buffer");
+            return errors::Wrap(std::move(err), "failed to create constant buffer");
         }
     }
     {
@@ -104,7 +104,7 @@ std::unique_ptr<Error> QuickStartGame::Initialize()
             .Build();
 
         if (vertexShaderErr != nullptr) {
-            return Errors::Wrap(std::move(vertexShaderErr), "failed to create vertex shader");
+            return errors::Wrap(std::move(vertexShaderErr), "failed to create vertex shader");
         }
 
         auto [pixelShader, pixelShaderErr] = assets->CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
@@ -114,7 +114,7 @@ std::unique_ptr<Error> QuickStartGame::Initialize()
             .Build();
 
         if (pixelShaderErr != nullptr) {
-            return Errors::Wrap(std::move(pixelShaderErr), "failed to create pixel shader");
+            return errors::Wrap(std::move(pixelShaderErr), "failed to create pixel shader");
         }
 
         auto presentationParameters = graphicsDevice->GetPresentationParameters();
@@ -132,7 +132,7 @@ std::unique_ptr<Error> QuickStartGame::Initialize()
             .Build();
 
         if (err != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to create pipeline state");
+            return errors::Wrap(std::move(err), "failed to create pipeline state");
         }
     }
     {
@@ -162,7 +162,7 @@ std::unique_ptr<Error> QuickStartGame::Initialize()
 
         // NOTE: Connect to timer event notification
         connect(timer->Elapsed, [this] {
-            // String formatting using Pomdog::StringFormat
+            // String formatting using pomdog::StringFormat
             auto title = StringHelper::Format(
                 "QuickStart %3.0f fps, %s frames",
                 std::round(clock->GetFrameRate()),

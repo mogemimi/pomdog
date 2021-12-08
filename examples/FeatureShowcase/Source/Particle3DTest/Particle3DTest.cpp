@@ -13,11 +13,11 @@ Ray ScreenPointToRay(
     const Matrix4x4& viewProjection,
     bool isOrthoProjection)
 {
-    const auto screenPointVector = Vector3{Math::ToVector2(screenPoint), 1.0f};
+    const auto screenPointVector = Vector3{math::ToVector2(screenPoint), 1.0f};
     const auto worldPoint = viewport.Unproject(screenPointVector, viewProjection);
 
     if (isOrthoProjection) {
-        const auto cameraPositionInScreen = Vector3{Math::ToVector2(screenPoint), -1.0f};
+        const auto cameraPositionInScreen = Vector3{math::ToVector2(screenPoint), -1.0f};
         const auto cameraPositionInWorld = viewport.Unproject(cameraPositionInScreen, viewProjection);
         Ray ray = {cameraPositionInWorld, Vector3::Normalize(worldPoint - cameraPositionInWorld)};
         return ray;
@@ -46,7 +46,7 @@ std::unique_ptr<Error> Particle3DTest::Initialize()
     // NOTE: Create graphics command list
     std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to create graphics command list");
+        return errors::Wrap(std::move(err), "failed to create graphics command list");
     }
 
     lineBatch = std::make_shared<LineBatch>(graphicsDevice, *assets);
@@ -67,7 +67,7 @@ std::unique_ptr<Error> Particle3DTest::Initialize()
     // NOTE: Create sampler state
     std::tie(sampler, err) = graphicsDevice->CreateSamplerState(SamplerDescription::CreateLinearClamp());
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to create sampler state");
+        return errors::Wrap(std::move(err), "failed to create sampler state");
     }
 
     // NOTE: Create constant buffer
@@ -75,13 +75,13 @@ std::unique_ptr<Error> Particle3DTest::Initialize()
         sizeof(BasicEffect::WorldConstantBuffer),
         BufferUsage::Dynamic);
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to create constant buffer");
+        return errors::Wrap(std::move(err), "failed to create constant buffer");
     }
 
     // NOTE: Load particle texture.
     std::tie(texture, err) = assets->Load<Texture2D>("Textures/particle_smoke.png");
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to load texture");
+        return errors::Wrap(std::move(err), "failed to load texture");
     }
 
     timer = std::make_shared<Timer>(clock);
@@ -92,7 +92,7 @@ std::unique_ptr<Error> Particle3DTest::Initialize()
         // NOTE: Load particle clip from .json file
         auto [particleClip, clipErr] = assets->Load<ParticleClip>("Particles/Fire3D_Box.json");
         if (clipErr != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to load particle json");
+            return errors::Wrap(std::move(err), "failed to load particle json");
         }
 
         particleSystem = std::make_unique<ParticleSystem>(particleClip);
@@ -161,14 +161,14 @@ void Particle3DTest::Draw()
     commandList->SetRenderPass(std::move(pass));
 
     const auto projectionMatrix = Matrix4x4::CreatePerspectiveFieldOfViewLH(
-        Math::ToRadians(45.0f),
+        math::ToRadians(45.0f),
         static_cast<float>(presentationParameters.BackBufferWidth) / presentationParameters.BackBufferHeight,
         0.01f,
         500.0f);
 
     const auto totalTime = static_cast<float>(timer->GetTotalTime().count());
     const auto lookAtPosition = Vector3{0.0f, 0.0f, 5.0f};
-    const auto rotation = Matrix4x4::CreateRotationY(Math::TwoPi<float> * totalTime);
+    const auto rotation = Matrix4x4::CreateRotationY(math::TwoPi<float> * totalTime);
     const auto cameraPosition = lookAtPosition + Vector3::Transform(Vector3{0.0f, 6.0f, -8.0f}, rotation);
     const auto viewMatrix = Matrix4x4::CreateLookAtLH(cameraPosition, lookAtPosition, Vector3::UnitY);
     const auto viewProjection = viewMatrix * projectionMatrix;

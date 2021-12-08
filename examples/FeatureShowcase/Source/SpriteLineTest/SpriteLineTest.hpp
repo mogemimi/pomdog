@@ -6,7 +6,7 @@
 
 namespace FeatureShowcase {
 
-using namespace Pomdog;
+using namespace pomdog;
 
 class SpriteLineTest final : public Game {
 public:

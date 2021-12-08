@@ -7,13 +7,13 @@
 #include <iostream>
 #endif
 
-using Pomdog::Error;
-using Pomdog::Game;
-using Pomdog::GameHost;
-using Pomdog::Log;
-using Pomdog::LogEntry;
-using Pomdog::LogLevel;
-using Pomdog::ScopedConnection;
+using pomdog::Error;
+using pomdog::Game;
+using pomdog::GameHost;
+using pomdog::Log;
+using pomdog::LogEntry;
+using pomdog::LogLevel;
+using pomdog::ScopedConnection;
 
 @interface AppDelegate ()
 
@@ -22,7 +22,7 @@ using Pomdog::ScopedConnection;
 @end
 
 @implementation AppDelegate {
-    Pomdog::Cocoa::Bootstrap bootstrap;
+    pomdog::cocoa::Bootstrap bootstrap;
 #ifdef DEBUG
     ScopedConnection connection;
 #endif
@@ -43,7 +43,7 @@ using Pomdog::ScopedConnection;
     bootstrap.SetOpenGLEnabled(false);
 
     bootstrap.OnError([](std::unique_ptr<Error>&& err) {
-        Log::Critical("Pomdog", err->ToString());
+        Log::Critical("pomdog", err->ToString());
     });
 
     bootstrap.OnCompleted([=] {

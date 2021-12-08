@@ -341,7 +341,7 @@ void FeatureShowcaseGame::DrawMenu()
                 color = Color::Lerp(
                     Color{160, 160, 160, 255},
                     Color{191, 190, 180, 255},
-                    0.5f + 0.5f * std::cos(Math::TwoPi<float> * static_cast<float>(timer->GetTotalTime().count())));
+                    0.5f + 0.5f * std::cos(math::TwoPi<float> * static_cast<float>(timer->GetTotalTime().count())));
             }
 
             primitiveBatch->DrawRectangle(

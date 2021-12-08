@@ -28,7 +28,7 @@
 
 namespace FeatureShowcase {
 
-using namespace Pomdog;
+using namespace pomdog;
 
 class EditorGUITest final : public Game {
 public:
@@ -51,9 +51,9 @@ private:
     std::shared_ptr<SpriteFont> spriteFont;
     std::shared_ptr<PrimitiveBatch> primitiveBatch;
 
-    std::unique_ptr<GUI::DrawingContext> drawingContext;
-    std::unique_ptr<GUI::WidgetHierarchy> hierarchy;
-    std::shared_ptr<GUI::TextField> textField;
+    std::unique_ptr<gui::DrawingContext> drawingContext;
+    std::unique_ptr<gui::WidgetHierarchy> hierarchy;
+    std::shared_ptr<gui::TextField> textField;
 
     std::string propertyText1;
     std::string propertyText2;

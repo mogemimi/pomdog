@@ -4,7 +4,7 @@
 
 namespace FeatureShowcase {
 
-using namespace Pomdog;
+using namespace pomdog;
 
 class HardwareInstancingTest final : public Game {
 public:

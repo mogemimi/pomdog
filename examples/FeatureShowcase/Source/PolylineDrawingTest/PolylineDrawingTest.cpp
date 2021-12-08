@@ -20,7 +20,7 @@ std::unique_ptr<Error> PolylineDrawingTest::Initialize()
     // NOTE: Create graphics command list
     std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to create graphics command list");
+        return errors::Wrap(std::move(err), "failed to create graphics command list");
     }
 
     lineBatch = std::make_shared<PolylineBatch>(graphicsDevice, *assets);
@@ -52,7 +52,7 @@ void PolylineDrawingTest::Update()
 
     const auto width = gameHost->GetWindow()->GetClientBounds().Width;
     const auto height = gameHost->GetWindow()->GetClientBounds().Height;
-    const auto pos = Math::ToVector2(Point2D{mouseState.Position.X - (width / 2), (height / 2) - mouseState.Position.Y});
+    const auto pos = math::ToVector2(Point2D{mouseState.Position.X - (width / 2), (height / 2) - mouseState.Position.Y});
 
     if (mouseState.LeftButton == ButtonState::Pressed) {
         if (path.empty()) {

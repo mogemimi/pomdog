@@ -5,7 +5,7 @@
 
 namespace FeatureShowcase {
 
-using namespace Pomdog;
+using namespace pomdog;
 
 class LineBatchTest final : public Game {
 public:

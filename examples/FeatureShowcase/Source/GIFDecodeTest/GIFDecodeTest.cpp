@@ -25,7 +25,7 @@ std::unique_ptr<Error> GIFDecodeTest::Initialize()
     // NOTE: Create graphics command list
     std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to create graphics command list");
+        return errors::Wrap(std::move(err), "failed to create graphics command list");
     }
 
     spriteBatch = std::make_shared<SpriteBatch>(
@@ -41,7 +41,7 @@ std::unique_ptr<Error> GIFDecodeTest::Initialize()
     // NOTE: Loading GIF image
     auto [gif, gifErr] = GIF::DecodeFile(PathHelper::Join(assets->GetContentDirectory(), "Textures/punch.gif"));
     if (gifErr != nullptr) {
-        return Errors::Wrap(std::move(gifErr), "failed to load a gif file");
+        return errors::Wrap(std::move(gifErr), "failed to load a gif file");
     }
 
     // NOTE: Generating texture atlas from GIF image
@@ -65,7 +65,7 @@ std::unique_ptr<Error> GIFDecodeTest::Initialize()
         false,
         SurfaceFormat::R8G8B8A8_UNorm);
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to create texture from packed image");
+        return errors::Wrap(std::move(err), "failed to create texture from packed image");
     }
     texture->SetData(result.Image->GetData());
 
@@ -107,7 +107,7 @@ std::unique_ptr<Error> GIFDecodeTest::Initialize()
         const auto reverse = ((intDist(random) % 2 == 0) ? -1.0f : 1.0f);
 
         SpriteInstance sprite;
-        sprite.Position = Math::ToVector2(pos);
+        sprite.Position = math::ToVector2(pos);
         sprite.Scale.X = scale * reverse;
         sprite.Scale.Y = scale;
         sprite.StartFrameIndex = intDist(random);
@@ -164,7 +164,7 @@ void GIFDecodeTest::Draw()
             sprite.Position,
             frame.Region,
             sprite.Color,
-            Math::TwoPi<float> * Easings::EaseSine::InOut(t),
+            math::TwoPi<float> * Easings::EaseSine::InOut(t),
             Vector2{0.5f, 0.5f},
             sprite.Scale);
     }

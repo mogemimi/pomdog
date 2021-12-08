@@ -19,14 +19,14 @@ std::unique_ptr<Error> AudioClipTest::Initialize()
     // NOTE: Create graphics command list
     std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to create graphics command list");
+        return errors::Wrap(std::move(err), "failed to create graphics command list");
     }
 
     spriteBatch = std::make_shared<SpriteBatch>(graphicsDevice, *assets);
 
     auto [font, fontErr] = assets->Load<TrueTypeFont>("Fonts/NotoSans/NotoSans-Regular.ttf");
     if (fontErr != nullptr) {
-        return Errors::Wrap(std::move(fontErr), "failed to load a font file");
+        return errors::Wrap(std::move(fontErr), "failed to load a font file");
     }
 
     spriteFont = std::make_shared<SpriteFont>(graphicsDevice, font, 24.0f, 24.0f);
@@ -36,26 +36,26 @@ std::unique_ptr<Error> AudioClipTest::Initialize()
 
     // NOTE: Load .wav audio file.
     if (auto [audioClip, clipErr] = assets->Load<AudioClip>("Sounds/pong1.wav"); clipErr != nullptr) {
-        return Errors::Wrap(std::move(clipErr), "failed to load audio");
+        return errors::Wrap(std::move(clipErr), "failed to load audio");
     }
     else {
         constexpr bool isLooped = false;
         std::tie(soundEffect1, err) = audioEngine->CreateSoundEffect(audioClip, isLooped);
         if (err != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to create sound effect");
+            return errors::Wrap(std::move(err), "failed to create sound effect");
         }
         soundEffect1->SetVolume(1.0f);
     }
 
     // NOTE: Load .ogg audio file.
     if (auto [audioClip, clipErr] = assets->Load<AudioClip>("Sounds/synth.ogg"); clipErr != nullptr) {
-        return Errors::Wrap(std::move(clipErr), "failed to load audio");
+        return errors::Wrap(std::move(clipErr), "failed to load audio");
     }
     else {
         constexpr bool isLooped = true;
         std::tie(soundEffect2, err) = audioEngine->CreateSoundEffect(audioClip, isLooped);
         if (err != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to create sound effect");
+            return errors::Wrap(std::move(err), "failed to create sound effect");
         }
         soundEffect2->SetVolume(1.0f);
     }

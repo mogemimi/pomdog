@@ -20,7 +20,7 @@ std::unique_ptr<Error> PrimitiveBatchTest::Initialize()
     // NOTE: Create graphics command list
     std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to create graphics command list");
+        return errors::Wrap(std::move(err), "failed to create graphics command list");
     }
 
     primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
@@ -78,7 +78,7 @@ void PrimitiveBatchTest::Draw()
     // Drawing arc
     primitiveBatch->DrawArc(
         Vector2{0.0f, 100.0f}, 40.0f,
-        Math::ToRadians(0.0f), Math::ToRadians(270.0f * Easings::EaseSine::InOut(t)),
+        math::ToRadians(0.0f), math::ToRadians(270.0f * Easings::EaseSine::InOut(t)),
         80, Color::Yellow);
 
     // Drawing triangle

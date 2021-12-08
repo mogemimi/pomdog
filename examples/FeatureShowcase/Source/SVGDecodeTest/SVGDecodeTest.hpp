@@ -9,7 +9,7 @@
 
 namespace FeatureShowcase {
 
-using namespace Pomdog;
+using namespace pomdog;
 
 class SVGDecodeTest final : public Game {
 public:

@@ -21,7 +21,7 @@ std::unique_ptr<Error> ParticleClipLoaderTest::Initialize()
     // NOTE: Create graphics command list
     std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to create graphics command list");
+        return errors::Wrap(std::move(err), "failed to create graphics command list");
     }
 
     primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
@@ -38,7 +38,7 @@ std::unique_ptr<Error> ParticleClipLoaderTest::Initialize()
     // NOTE: Load particle texture.
     std::tie(texture, err) = assets->Load<Texture2D>("Textures/particle_smoke.png");
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to load texture");
+        return errors::Wrap(std::move(err), "failed to load texture");
     }
 
     timer = std::make_shared<Timer>(clock);
@@ -49,7 +49,7 @@ std::unique_ptr<Error> ParticleClipLoaderTest::Initialize()
         // NOTE: Load particle clip from .json file
         auto [particleClip, clipErr] = assets->Load<ParticleClip>("Particles/Fire2D.json");
         if (clipErr != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to load particle json");
+            return errors::Wrap(std::move(err), "failed to load particle json");
         }
 
         particleSystem = std::make_unique<ParticleSystem>(particleClip);
@@ -69,7 +69,7 @@ std::unique_ptr<Error> ParticleClipLoaderTest::Initialize()
         auto pos = mousePos;
         pos.X = pos.X - (window->GetClientBounds().Width / 2);
         pos.Y = -pos.Y + (window->GetClientBounds().Height / 2);
-        emitterPosition = Math::ToVector2(pos);
+        emitterPosition = math::ToVector2(pos);
     };
     auto onClipChanged = [this] {
         std::array<std::string, 2> filenames = {
@@ -111,7 +111,7 @@ void ParticleClipLoaderTest::Update()
 {
     auto clock = gameHost->GetClock();
     auto frameDuration = clock->GetFrameDuration();
-    particleSystem->Simulate(emitterPosition, Math::ToRadians(90.0f), frameDuration);
+    particleSystem->Simulate(emitterPosition, math::ToRadians(90.0f), frameDuration);
 }
 
 void ParticleClipLoaderTest::Draw()

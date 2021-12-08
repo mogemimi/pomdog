@@ -6,7 +6,7 @@
 
 namespace FeatureShowcase {
 
-using namespace Pomdog;
+using namespace pomdog;
 
 class SpriteBatchTest final : public Game {
 public:
@@ -32,7 +32,7 @@ private:
 
     struct SpriteInstance final {
         Vector2 Position;
-        Pomdog::Color Color;
+        pomdog::Color Color;
         Vector2 Scale;
     };
     std::vector<SpriteInstance> sprites;

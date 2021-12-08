@@ -19,7 +19,7 @@ std::unique_ptr<Error> VoxelModelTest::Initialize()
     // NOTE: Create graphics command list
     std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to create graphics command list");
+        return errors::Wrap(std::move(err), "failed to create graphics command list");
     }
 
     // NOTE: Create PrimitiveBatch effect
@@ -30,9 +30,9 @@ std::unique_ptr<Error> VoxelModelTest::Initialize()
         *assets);
 
     // NOTE: Load MagicaVoxel model
-    std::tie(voxelModel, err) = assets->Load<MagicaVoxel::VoxModel>("VoxelModels/MaidChan.vox");
+    std::tie(voxelModel, err) = assets->Load<magicavoxel::VoxModel>("VoxelModels/MaidChan.vox");
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to load texture");
+        return errors::Wrap(std::move(err), "failed to load texture");
     }
 
     return nullptr;
@@ -68,8 +68,8 @@ void VoxelModelTest::Draw()
         100.0f);
 
     auto viewMatrix = Matrix4x4::CreateLookAtLH(Vector3::Zero, Vector3{2.0f, -3.0f, -10.0f}, Vector3::UnitY);
-    auto rotateX = Matrix4x4::CreateRotationX(Math::PiOver2<float> * 3.0f);
-    auto rotateY = Matrix4x4::CreateRotationY(Math::TwoPi<float> * rotateSpeed * static_cast<float>(gameHost->GetClock()->GetTotalGameTime().count()));
+    auto rotateX = Matrix4x4::CreateRotationX(math::PiOver2<float> * 3.0f);
+    auto rotateY = Matrix4x4::CreateRotationY(math::TwoPi<float> * rotateSpeed * static_cast<float>(gameHost->GetClock()->GetTotalGameTime().count()));
 
     primitiveBatch->Begin(commandList, rotateX * rotateY * viewMatrix * projectionMatrix);
 

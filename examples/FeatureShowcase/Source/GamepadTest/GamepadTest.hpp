@@ -10,7 +10,7 @@
 
 namespace FeatureShowcase {
 
-using namespace Pomdog;
+using namespace pomdog;
 
 class GamepadTest final : public Game {
 public:

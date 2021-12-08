@@ -13,7 +13,7 @@
 
 namespace Pong {
 
-using namespace Pomdog;
+using namespace pomdog;
 
 struct Paddle final {
     Vector2 Position = Vector2::Zero;

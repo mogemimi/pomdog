@@ -30,7 +30,7 @@ std::unique_ptr<Error> AnimationGraphTest::Initialize()
     // NOTE: Create graphics command list
     std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to create graphics command list");
+        return errors::Wrap(std::move(err), "failed to create graphics command list");
     }
 
     primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
@@ -52,28 +52,28 @@ std::unique_ptr<Error> AnimationGraphTest::Initialize()
     // NOTE: Load texture file for skeletal animation model
     std::tie(texture, err) = assets->Load<Texture2D>(texturePath);
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to load texture");
+        return errors::Wrap(std::move(err), "failed to load texture");
     }
 
     // NOTE: Load texture atlas file for skeletal animation model
     TexturePacker::TextureAtlas textureAtlas;
     std::tie(textureAtlas, err) = TexturePacker::TextureAtlasLoader::Load(textureAtlasPath);
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to load texture atlas");
+        return errors::Wrap(std::move(err), "failed to load texture atlas");
     }
 
     // NOTE: Load skeletal animation data
-    if (auto [desc, descErr] = Spine::SkeletonDescLoader::Load(skeletonJSONPath); descErr != nullptr) {
-        return Errors::Wrap(std::move(descErr), "failed to load skeleton JSON file");
+    if (auto [desc, descErr] = spine::SkeletonDescLoader::Load(skeletonJSONPath); descErr != nullptr) {
+        return errors::Wrap(std::move(descErr), "failed to load skeleton JSON file");
     }
     else {
-        skeleton = std::make_shared<Skeletal2D::Skeleton>(Spine::CreateSkeleton(desc.Bones));
+        skeleton = std::make_shared<skeletal2d::Skeleton>(spine::CreateSkeleton(desc.Bones));
 
         // NOTE: Create bind pose
-        skeletonPose = std::make_shared<Skeletal2D::SkeletonPose>(Skeletal2D::SkeletonPose::CreateBindPose(*skeleton));
+        skeletonPose = std::make_shared<skeletal2d::SkeletonPose>(skeletal2d::SkeletonPose::CreateBindPose(*skeleton));
 
         // NOTE: Initialize global pose
-        globalPose = Skeletal2D::SkeletonHelper::ToGlobalPose(*skeleton, *skeletonPose);
+        globalPose = skeletal2d::SkeletonHelper::ToGlobalPose(*skeleton, *skeletonPose);
 
 #if 1
         // FIXME: Isn't a bind pose required?
@@ -84,25 +84,25 @@ std::unique_ptr<Error> AnimationGraphTest::Initialize()
 
         // NOTE: Create skinned mesh
         auto textureSize = Vector2{static_cast<float>(texture->GetWidth()), static_cast<float>(texture->GetHeight())};
-        auto [skinnedMeshData, skinnedMeshErr] = Spine::CreateSkinnedMesh(
+        auto [skinnedMeshData, skinnedMeshErr] = spine::CreateSkinnedMesh(
             globalPose,
             desc,
             textureAtlas,
             textureSize,
             "default");
         if (skinnedMeshErr != nullptr) {
-            return Errors::Wrap(std::move(skinnedMeshErr), "failed to create skinned mesh data");
+            return errors::Wrap(std::move(skinnedMeshErr), "failed to create skinned mesh data");
         }
         skinnedMesh = std::move(skinnedMeshData);
 
         // NOTE: Create animation graph
-        auto [animationGraph, graphErr] = Spine::LoadAnimationGraph(desc, animationGraphJSONPath);
+        auto [animationGraph, graphErr] = spine::LoadAnimationGraph(desc, animationGraphJSONPath);
         if (graphErr != nullptr) {
-            return Errors::Wrap(std::move(graphErr), "failed to create animation graph");
+            return errors::Wrap(std::move(graphErr), "failed to create animation graph");
         }
 
         // NOTE: Create new skeleton animator
-        animator = std::make_shared<Skeletal2D::Animator>(skeleton, skeletonPose, animationGraph);
+        animator = std::make_shared<skeletal2d::Animator>(skeleton, skeletonPose, animationGraph);
 
         animator->SetFloat("Run.Weight", 0.0f);
     }
@@ -125,7 +125,7 @@ std::unique_ptr<Error> AnimationGraphTest::Initialize()
             BufferUsage::Dynamic);
 
         if (err != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to create vertex buffer");
+            return errors::Wrap(std::move(err), "failed to create vertex buffer");
         }
     }
     {
@@ -137,7 +137,7 @@ std::unique_ptr<Error> AnimationGraphTest::Initialize()
             BufferUsage::Immutable);
 
         if (err != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to create index buffer");
+            return errors::Wrap(std::move(err), "failed to create index buffer");
         }
     }
     {
@@ -147,7 +147,7 @@ std::unique_ptr<Error> AnimationGraphTest::Initialize()
             BufferUsage::Dynamic);
 
         if (err != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to create constant buffer");
+            return errors::Wrap(std::move(err), "failed to create constant buffer");
         }
 
         std::tie(worldConstantBuffer, err) = graphicsDevice->CreateConstantBuffer(
@@ -155,7 +155,7 @@ std::unique_ptr<Error> AnimationGraphTest::Initialize()
             BufferUsage::Dynamic);
 
         if (err != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to create constant buffer");
+            return errors::Wrap(std::move(err), "failed to create constant buffer");
         }
     }
     {
@@ -176,7 +176,7 @@ std::unique_ptr<Error> AnimationGraphTest::Initialize()
             .SetRasterizerState(RasterizerDescription::CreateDefault())
             .Build();
         if (err != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to create pipeline state");
+            return errors::Wrap(std::move(err), "failed to create pipeline state");
         }
 
         // NOTE: Create pipeline state for wireframe debug rendering
@@ -193,7 +193,7 @@ std::unique_ptr<Error> AnimationGraphTest::Initialize()
             .SetRasterizerState(rasterizerDesc)
             .Build();
         if (err != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to create pipeline state");
+            return errors::Wrap(std::move(err), "failed to create pipeline state");
         }
     }
     {
@@ -201,7 +201,7 @@ std::unique_ptr<Error> AnimationGraphTest::Initialize()
         std::tie(sampler, err) = graphicsDevice->CreateSamplerState(
             SamplerDescription::CreateLinearWrap());
         if (err != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to create sampler state");
+            return errors::Wrap(std::move(err), "failed to create sampler state");
         }
     }
 
@@ -228,7 +228,7 @@ void AnimationGraphTest::Update()
     animator->Update(clock->GetFrameDuration());
 
     // NOTE: (3) Global pose generation
-    Skeletal2D::SkeletonHelper::ToGlobalPose(*skeleton, *skeletonPose, globalPose);
+    skeletal2d::SkeletonHelper::ToGlobalPose(*skeleton, *skeletonPose, globalPose);
 
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 

@@ -12,11 +12,11 @@ namespace {
 
 std::shared_ptr<ParticleClip> CreateEmitterFireBlock()
 {
-    using Detail::Particles::ParticleCurveKey;
-    using Detail::Particles::ParticleEmitterShapeBox;
-    using Detail::Particles::ParticleParameterConstant;
-    using Detail::Particles::ParticleParameterCurve;
-    using Detail::Particles::ParticleParameterRandom;
+    using detail::particles::ParticleCurveKey;
+    using detail::particles::ParticleEmitterShapeBox;
+    using detail::particles::ParticleParameterConstant;
+    using detail::particles::ParticleParameterCurve;
+    using detail::particles::ParticleParameterRandom;
 
     auto clip = std::make_shared<ParticleClip>();
 
@@ -30,7 +30,7 @@ std::shared_ptr<ParticleClip> CreateEmitterFireBlock()
     clip->Duration = std::chrono::milliseconds(10);
 
 #if 0
-    clip->Shape = std::make_unique<ParticleEmitterShapeSector>(Math::PiOver4<float>);
+    clip->Shape = std::make_unique<ParticleEmitterShapeSector>(math::PiOver4<float>);
 #else
     clip->Shape = std::make_unique<ParticleEmitterShapeBox>(Vector3{20.0f, 50.0f, 0.0f});
 #endif
@@ -82,14 +82,14 @@ std::shared_ptr<ParticleClip> CreateEmitterFireBlock()
     clip->StartRotation = std::make_unique<ParticleParameterConstant<Radian<float>>>(0.0f);
 #else
     clip->StartRotation = std::make_unique<ParticleParameterRandom<Radian<float>>>(
-        0.0f, Math::TwoPi<float>);
+        0.0f, math::TwoPi<float>);
 #endif
 
 #if 0
     clip->Emitter.RotationOverLifetime = std::make_unique<ParticleParameterConstant<Radian<float>>>(0);
 #else
     clip->RotationOverLifetime = std::make_unique<ParticleParameterRandom<Radian<float>>>(
-        -Math::PiOver4<float>, Math::PiOver4<float>);
+        -math::PiOver4<float>, math::PiOver4<float>);
 #endif
 
 #if 0
@@ -134,7 +134,7 @@ std::unique_ptr<Error> Particle2DTest::Initialize()
     // NOTE: Create graphics command list
     std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to create graphics command list");
+        return errors::Wrap(std::move(err), "failed to create graphics command list");
     }
 
     primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
@@ -151,7 +151,7 @@ std::unique_ptr<Error> Particle2DTest::Initialize()
     // NOTE: Load particle texture
     std::tie(texture, err) = assets->Load<Texture2D>("Textures/particle_smoke.png");
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to load texture");
+        return errors::Wrap(std::move(err), "failed to load texture");
     }
 
     timer = std::make_shared<Timer>(clock);
@@ -175,7 +175,7 @@ std::unique_ptr<Error> Particle2DTest::Initialize()
         auto pos = mousePos;
         pos.X = pos.X - (window->GetClientBounds().Width / 2);
         pos.Y = -pos.Y + (window->GetClientBounds().Height / 2);
-        emitterPosition = Math::ToVector2(pos);
+        emitterPosition = math::ToVector2(pos);
     });
 
     return nullptr;
@@ -185,7 +185,7 @@ void Particle2DTest::Update()
 {
     auto clock = gameHost->GetClock();
     auto frameDuration = clock->GetFrameDuration();
-    particleSystem->Simulate(emitterPosition, Math::ToRadians(90.0f), frameDuration);
+    particleSystem->Simulate(emitterPosition, math::ToRadians(90.0f), frameDuration);
 }
 
 void Particle2DTest::Draw()

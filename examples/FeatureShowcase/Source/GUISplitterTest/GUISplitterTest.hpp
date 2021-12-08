@@ -8,7 +8,7 @@
 
 namespace FeatureShowcase {
 
-using namespace Pomdog;
+using namespace pomdog;
 
 class GUISplitterTest final : public Game {
 public:
@@ -28,8 +28,8 @@ private:
     std::shared_ptr<GraphicsCommandList> commandList;
     ConnectionList connect;
 
-    std::unique_ptr<GUI::DrawingContext> drawingContext;
-    std::unique_ptr<GUI::WidgetHierarchy> hierarchy;
+    std::unique_ptr<gui::DrawingContext> drawingContext;
+    std::unique_ptr<gui::WidgetHierarchy> hierarchy;
 };
 
 } // namespace FeatureShowcase

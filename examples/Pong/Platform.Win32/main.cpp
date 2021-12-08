@@ -23,17 +23,17 @@ int WINAPI WinMain(
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_EVERY_1024_DF);
 #endif
 
-    using namespace Pomdog;
+    using namespace pomdog;
 
 #if defined(DEBUG) && !defined(NDEBUG)
     ScopedConnection connection = Log::Connect([](LogEntry const& entry) {
         OutputDebugString(entry.Message.c_str());
         OutputDebugString("\n");
     });
-    Log::SetLevel(Pomdog::LogLevel::Verbose);
+    Log::SetLevel(pomdog::LogLevel::Verbose);
 #endif
 
-    Win32::Bootstrap bootstrap;
+    win32::Bootstrap bootstrap;
     bootstrap.SetInstance(hInstance);
     bootstrap.SetCommandShow(nCmdShow);
     bootstrap.SetIcon(LoadIcon(hInstance, MAKEINTRESOURCE(IDI_POMDOG_ICON)));
@@ -42,7 +42,7 @@ int WINAPI WinMain(
     bootstrap.SetOpenGLEnabled(false);
 
     bootstrap.OnError([](std::unique_ptr<Error>&& err) {
-        Log::Critical("Pomdog", err->ToString());
+        Log::Critical("pomdog", err->ToString());
 #if defined(POMDOG_CRTDEBUG)
         _CrtDbgBreak();
 #endif

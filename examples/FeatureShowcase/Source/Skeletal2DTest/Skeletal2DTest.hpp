@@ -12,7 +12,7 @@
 
 namespace FeatureShowcase {
 
-using namespace Pomdog;
+using namespace pomdog;
 
 class Skeletal2DTest final : public Game {
 public:
@@ -36,11 +36,11 @@ private:
     std::shared_ptr<SpriteBatch> spriteBatch;
     std::shared_ptr<PrimitiveBatch> primitiveBatch;
 
-    Skeletal2D::AnimationSystem animationSystem;
-    std::shared_ptr<Skeletal2D::Skeleton> skeleton;
-    std::shared_ptr<Skeletal2D::SkeletonPose> skeletonPose;
-    std::shared_ptr<Skeletal2D::AnimationState> animationState;
-    std::shared_ptr<Skeletal2D::Skin> skin;
+    skeletal2d::AnimationSystem animationSystem;
+    std::shared_ptr<skeletal2d::Skeleton> skeleton;
+    std::shared_ptr<skeletal2d::SkeletonPose> skeletonPose;
+    std::shared_ptr<skeletal2d::AnimationState> animationState;
+    std::shared_ptr<skeletal2d::Skin> skin;
     std::vector<Matrix3x2> globalPose;
 
     std::shared_ptr<SamplerState> sampler;

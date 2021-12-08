@@ -21,7 +21,7 @@ std::unique_ptr<Error> SpriteLineTest::Initialize()
     // NOTE: Create graphics command list
     std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to create graphics command list");
+        return errors::Wrap(std::move(err), "failed to create graphics command list");
     }
 
     primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
@@ -38,7 +38,7 @@ std::unique_ptr<Error> SpriteLineTest::Initialize()
     // NOTE: Load texture from PNG image file.
     std::tie(texture, err) = assets->Load<Texture2D>("Textures/pomdog.png");
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to load texture");
+        return errors::Wrap(std::move(err), "failed to load texture");
     }
 
     mousePosition = Vector2{100.0f, 100.0f};
@@ -56,7 +56,7 @@ void SpriteLineTest::Update()
         pos.X = pos.X - (window->GetClientBounds().Width / 2);
         pos.Y = -pos.Y + (window->GetClientBounds().Height / 2);
 
-        mousePosition = Math::ToVector2(pos);
+        mousePosition = math::ToVector2(pos);
     }
 }
 

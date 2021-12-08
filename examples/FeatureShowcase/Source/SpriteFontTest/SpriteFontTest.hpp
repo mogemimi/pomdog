@@ -9,7 +9,7 @@
 
 namespace FeatureShowcase {
 
-using namespace Pomdog;
+using namespace pomdog;
 
 class SpriteFontTest final : public Game {
 public:

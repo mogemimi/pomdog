@@ -4,7 +4,7 @@
 
 int main(int argc, char** argv)
 {
-    using namespace Pomdog;
+    using namespace pomdog;
 
 #if defined(DEBUG) && !defined(NDEBUG)
     Log::SetLevel(LogLevel::Internal);
@@ -13,11 +13,11 @@ int main(int argc, char** argv)
     });
 #endif
 
-    Pomdog::X11::Bootstrap bootstrap;
+    pomdog::x11::Bootstrap bootstrap;
     bootstrap.SetBackBufferSize(800, 480);
 
     bootstrap.OnError([](std::unique_ptr<Error>&& err) {
-        Log::Critical("Pomdog", err->ToString());
+        Log::Critical("pomdog", err->ToString());
     });
 
     bootstrap.Run([](std::shared_ptr<GameHost> const& gameHost) {

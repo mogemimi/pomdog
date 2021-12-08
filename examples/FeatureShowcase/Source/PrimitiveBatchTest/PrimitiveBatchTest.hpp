@@ -5,7 +5,7 @@
 
 namespace FeatureShowcase {
 
-using namespace Pomdog;
+using namespace pomdog;
 
 class PrimitiveBatchTest final : public Game {
 public:

@@ -4,7 +4,7 @@
 
 namespace FeatureShowcase {
 
-using namespace Pomdog;
+using namespace pomdog;
 
 class BasicEffectTest final : public Game {
 public:

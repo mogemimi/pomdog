@@ -13,7 +13,7 @@
 
 namespace FeatureShowcase {
 
-using namespace Pomdog;
+using namespace pomdog;
 
 class Skinning2DTest final : public Game {
 public:
@@ -37,12 +37,12 @@ private:
     std::shared_ptr<SpriteBatch> spriteBatch;
     std::shared_ptr<PrimitiveBatch> primitiveBatch;
 
-    Skeletal2D::AnimationSystem animationSystem;
-    std::shared_ptr<Skeletal2D::Skeleton> skeleton;
-    std::shared_ptr<Skeletal2D::SkeletonPose> skeletonPose;
-    std::shared_ptr<Skeletal2D::AnimationState> animationState;
+    skeletal2d::AnimationSystem animationSystem;
+    std::shared_ptr<skeletal2d::Skeleton> skeleton;
+    std::shared_ptr<skeletal2d::SkeletonPose> skeletonPose;
+    std::shared_ptr<skeletal2d::AnimationState> animationState;
     std::vector<Matrix3x2> globalPose;
-    Skeletal2D::SkinnedMesh skinnedMesh;
+    skeletal2d::SkinnedMesh skinnedMesh;
 
     std::shared_ptr<SamplerState> sampler;
     std::shared_ptr<VertexBuffer> vertexBuffer;

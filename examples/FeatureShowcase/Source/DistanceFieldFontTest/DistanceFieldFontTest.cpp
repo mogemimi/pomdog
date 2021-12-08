@@ -20,7 +20,7 @@ std::unique_ptr<Error> DistanceFieldFontTest::Initialize()
     // NOTE: Create graphics command list
     std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to create graphics command list");
+        return errors::Wrap(std::move(err), "failed to create graphics command list");
     }
 
     primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
@@ -36,7 +36,7 @@ std::unique_ptr<Error> DistanceFieldFontTest::Initialize()
 
     std::tie(spriteFont, err) = assets->Load<SpriteFont>("BitmapFonts/Ubuntu-Regular.fnt");
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to load a font file");
+        return errors::Wrap(std::move(err), "failed to load a font file");
     }
 
     spriteFont->PrepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
@@ -93,9 +93,9 @@ void DistanceFieldFontTest::Draw()
 
     spriteBatch->Begin(commandList, projectionMatrix);
     spriteFont->Draw(*spriteBatch, text, Vector2::Zero, Color::White, 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
-    spriteFont->Draw(*spriteBatch, text, Vector2::Zero, Color::Green, Math::ToRadians(-90.0f), Vector2{0.0f, 0.0f}, 1.0f);
-    spriteFont->Draw(*spriteBatch, text, Vector2::Zero, Color::Red, Math::ToRadians(90.0f), Vector2{0.5f, 0.0f}, Vector2{-1.0f, 0.5f});
-    spriteFont->Draw(*spriteBatch, text, Vector2{-100.0f, 100.0f}, Color::Blue, Math::ToRadians(-45.0f), Vector2{0.5f, 0.5f}, 0.7f);
+    spriteFont->Draw(*spriteBatch, text, Vector2::Zero, Color::Green, math::ToRadians(-90.0f), Vector2{0.0f, 0.0f}, 1.0f);
+    spriteFont->Draw(*spriteBatch, text, Vector2::Zero, Color::Red, math::ToRadians(90.0f), Vector2{0.5f, 0.0f}, Vector2{-1.0f, 0.5f});
+    spriteFont->Draw(*spriteBatch, text, Vector2{-100.0f, 100.0f}, Color::Blue, math::ToRadians(-45.0f), Vector2{0.5f, 0.5f}, 0.7f);
     spriteBatch->End();
 
     commandList->Close();

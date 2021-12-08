@@ -8,7 +8,7 @@
 
 namespace FeatureShowcase {
 
-using namespace Pomdog;
+using namespace pomdog;
 
 class Particle3DTest final : public Game {
 public:

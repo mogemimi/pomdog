@@ -28,7 +28,7 @@ std::unique_ptr<Error> Skeletal2DTest::Initialize()
     // NOTE: Create graphics command list
     std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to create graphics command list");
+        return errors::Wrap(std::move(err), "failed to create graphics command list");
     }
 
     primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
@@ -49,38 +49,38 @@ std::unique_ptr<Error> Skeletal2DTest::Initialize()
     // NOTE: Load texture file for skeletal animation model
     std::tie(texture, err) = assets->Load<Texture2D>(texturePath);
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to load texture");
+        return errors::Wrap(std::move(err), "failed to load texture");
     }
 
     // NOTE: Load texture atlas file for skeletal animation model
     TexturePacker::TextureAtlas textureAtlas;
     std::tie(textureAtlas, err) = TexturePacker::TextureAtlasLoader::Load(textureAtlasPath);
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to load texture atlas");
+        return errors::Wrap(std::move(err), "failed to load texture atlas");
     }
 
     // NOTE: Load skeletal animation data
-    if (auto [desc, descErr] = Spine::SkeletonDescLoader::Load(skeletonJSONPath); descErr != nullptr) {
-        return Errors::Wrap(std::move(descErr), "failed to load skeleton JSON file");
+    if (auto [desc, descErr] = spine::SkeletonDescLoader::Load(skeletonJSONPath); descErr != nullptr) {
+        return errors::Wrap(std::move(descErr), "failed to load skeleton JSON file");
     }
     else {
-        skeleton = std::make_shared<Skeletal2D::Skeleton>(Spine::CreateSkeleton(desc.Bones));
+        skeleton = std::make_shared<skeletal2d::Skeleton>(spine::CreateSkeleton(desc.Bones));
 
         // NOTE: Create bind pose
-        skeletonPose = std::make_shared<Skeletal2D::SkeletonPose>(Skeletal2D::SkeletonPose::CreateBindPose(*skeleton));
+        skeletonPose = std::make_shared<skeletal2d::SkeletonPose>(skeletal2d::SkeletonPose::CreateBindPose(*skeleton));
 
         // NOTE: Create animation clip and animation state
-        auto [animationClip, clipErr] = Spine::CreateAnimationClip(desc, textureAtlas, "Walk");
+        auto [animationClip, clipErr] = spine::CreateAnimationClip(desc, textureAtlas, "Walk");
         if (clipErr != nullptr) {
-            return Errors::Wrap(std::move(clipErr), "failed to create animation clip");
+            return errors::Wrap(std::move(clipErr), "failed to create animation clip");
         }
-        animationState = std::make_shared<Skeletal2D::AnimationState>(animationClip, 1.0f, true);
+        animationState = std::make_shared<skeletal2d::AnimationState>(animationClip, 1.0f, true);
 
         // NOTE: Initialize global pose
-        globalPose = Skeletal2D::SkeletonHelper::ToGlobalPose(*skeleton, *skeletonPose);
+        globalPose = skeletal2d::SkeletonHelper::ToGlobalPose(*skeleton, *skeletonPose);
 
         // NOTE: Create skin
-        skin = Spine::CreateSkin(desc, textureAtlas, "default");
+        skin = spine::CreateSkin(desc, textureAtlas, "default");
 
         // NOTE: Add new skeleton animation to animation system
         animationSystem.Add(animationState, skeleton, skeletonPose, skin);
@@ -104,7 +104,7 @@ std::unique_ptr<Error> Skeletal2DTest::Initialize()
             BufferUsage::Dynamic);
 
         if (err != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to create vertex buffer");
+            return errors::Wrap(std::move(err), "failed to create vertex buffer");
         }
     }
     {
@@ -127,7 +127,7 @@ std::unique_ptr<Error> Skeletal2DTest::Initialize()
             BufferUsage::Immutable);
 
         if (err != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to create index buffer");
+            return errors::Wrap(std::move(err), "failed to create index buffer");
         }
     }
     {
@@ -137,7 +137,7 @@ std::unique_ptr<Error> Skeletal2DTest::Initialize()
             BufferUsage::Dynamic);
 
         if (err != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to create constant buffer");
+            return errors::Wrap(std::move(err), "failed to create constant buffer");
         }
 
         std::tie(worldConstantBuffer, err) = graphicsDevice->CreateConstantBuffer(
@@ -145,7 +145,7 @@ std::unique_ptr<Error> Skeletal2DTest::Initialize()
             BufferUsage::Dynamic);
 
         if (err != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to create constant buffer");
+            return errors::Wrap(std::move(err), "failed to create constant buffer");
         }
     }
     {
@@ -167,7 +167,7 @@ std::unique_ptr<Error> Skeletal2DTest::Initialize()
             .Build();
 
         if (err != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to create pipeline state");
+            return errors::Wrap(std::move(err), "failed to create pipeline state");
         }
 
         // NOTE: Create pipeline state for wireframe debug rendering
@@ -185,7 +185,7 @@ std::unique_ptr<Error> Skeletal2DTest::Initialize()
             .Build();
 
         if (err != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to create pipeline state");
+            return errors::Wrap(std::move(err), "failed to create pipeline state");
         }
     }
     {
@@ -194,7 +194,7 @@ std::unique_ptr<Error> Skeletal2DTest::Initialize()
             SamplerDescription::CreateLinearWrap());
 
         if (err != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to create pipeline state");
+            return errors::Wrap(std::move(err), "failed to create pipeline state");
         }
     }
 
@@ -207,7 +207,7 @@ void Skeletal2DTest::Update()
     animationSystem.Update(*clock);
 
     // NOTE: Global pose generation
-    Skeletal2D::SkeletonHelper::ToGlobalPose(*skeleton, *skeletonPose, globalPose);
+    skeletal2d::SkeletonHelper::ToGlobalPose(*skeleton, *skeletonPose, globalPose);
 
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
@@ -270,7 +270,7 @@ void Skeletal2DTest::Update()
         auto rotate = Matrix3x2::CreateRotation(slot.Rotation);
 
         if (slot.TextureRotate) {
-            rotate = rotate * Matrix3x2::CreateRotation(-Math::PiOver2<float>);
+            rotate = rotate * Matrix3x2::CreateRotation(-math::PiOver2<float>);
         }
 
         auto transformMatrix = scaling * rotate * translate * poseMatrix;

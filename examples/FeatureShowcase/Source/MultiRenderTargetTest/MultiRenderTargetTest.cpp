@@ -21,13 +21,13 @@ std::unique_ptr<Error> MultiRenderTargetTest::Initialize()
     // NOTE: Create graphics command list
     std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to create graphics command list");
+        return errors::Wrap(std::move(err), "failed to create graphics command list");
     }
 
     // NOTE: Load texture from image file
     std::tie(texture, err) = assets->Load<Texture2D>("Textures/pomdog.png");
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to load texture");
+        return errors::Wrap(std::move(err), "failed to load texture");
     }
 
     spriteBatch = std::make_shared<SpriteBatch>(
@@ -83,7 +83,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::Initialize()
             BufferUsage::Immutable);
 
         if (err != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to create vertex buffer");
+            return errors::Wrap(std::move(err), "failed to create vertex buffer");
         }
     }
     {
@@ -112,7 +112,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::Initialize()
             BufferUsage::Immutable);
 
         if (err != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to create index buffer");
+            return errors::Wrap(std::move(err), "failed to create index buffer");
         }
     }
     {
@@ -122,7 +122,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::Initialize()
             BufferUsage::Dynamic);
 
         if (err != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to create constant buffer");
+            return errors::Wrap(std::move(err), "failed to create constant buffer");
         }
 
         std::tie(worldConstantBuffer, err) = graphicsDevice->CreateConstantBuffer(
@@ -130,7 +130,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::Initialize()
             BufferUsage::Dynamic);
 
         if (err != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to create constant buffer");
+            return errors::Wrap(std::move(err), "failed to create constant buffer");
         }
     }
     {
@@ -139,7 +139,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::Initialize()
             SamplerDescription::CreateLinearClamp());
 
         if (err != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to create sampler state");
+            return errors::Wrap(std::move(err), "failed to create sampler state");
         }
     }
     {
@@ -158,7 +158,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::Initialize()
             .Build();
 
         if (vertexShaderErr != nullptr) {
-            return Errors::Wrap(std::move(vertexShaderErr), "failed to create vertex shader");
+            return errors::Wrap(std::move(vertexShaderErr), "failed to create vertex shader");
         }
 
         // NOTE: Create pixel shader
@@ -169,7 +169,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::Initialize()
             .Build();
 
         if (pixelShaderErr != nullptr) {
-            return Errors::Wrap(std::move(pixelShaderErr), "failed to create pixel shader");
+            return errors::Wrap(std::move(pixelShaderErr), "failed to create pixel shader");
         }
 
         auto presentationParameters = graphicsDevice->GetPresentationParameters();
@@ -194,7 +194,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::Initialize()
             .SetConstantBufferBindSlot("WorldConstantBuffer", 1)
             .Build();
         if (err != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to create pipeline state");
+            return errors::Wrap(std::move(err), "failed to create pipeline state");
         }
     }
 
@@ -207,7 +207,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::Initialize()
         false,
         SurfaceFormat::R8G8B8A8_UNorm);
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to create render target");
+        return errors::Wrap(std::move(err), "failed to create render target");
     }
 
     // NOTE: Create render target
@@ -217,7 +217,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::Initialize()
         false,
         SurfaceFormat::R10G10B10A2_UNorm);
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to create render target");
+        return errors::Wrap(std::move(err), "failed to create render target");
     }
 
     // NOTE: Create render target
@@ -227,7 +227,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::Initialize()
         false,
         SurfaceFormat::R32_Float);
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to create render target");
+        return errors::Wrap(std::move(err), "failed to create render target");
     }
 
     // NOTE: Create render target
@@ -237,7 +237,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::Initialize()
         false,
         SurfaceFormat::R8G8B8A8_UNorm);
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to create render target");
+        return errors::Wrap(std::move(err), "failed to create render target");
     }
 
     // NOTE: Create depth stencil buffer
@@ -246,7 +246,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::Initialize()
         presentationParameters.BackBufferHeight,
         presentationParameters.DepthStencilFormat);
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to create depth stencil buffer");
+        return errors::Wrap(std::move(err), "failed to create depth stencil buffer");
     }
 
     auto window = gameHost->GetWindow();
@@ -292,7 +292,7 @@ void MultiRenderTargetTest::Update()
     constexpr float rotateSpeed = 0.5f;
 
     auto projectionMatrix = Matrix4x4::CreatePerspectiveFieldOfViewLH(
-        Math::ToRadians(45.0f),
+        math::ToRadians(45.0f),
         static_cast<float>(presentationParameters.BackBufferWidth) / presentationParameters.BackBufferHeight,
         0.01f,
         1000.0f);
@@ -313,11 +313,11 @@ void MultiRenderTargetTest::Update()
     worldConstantBuffer->SetValue(worldConstants);
 
     auto time = static_cast<float>(gameHost->GetClock()->GetTotalGameTime().count());
-    auto rotateY = Math::TwoPi<float> * rotateSpeed * time;
+    auto rotateY = math::TwoPi<float> * rotateSpeed * time;
 
     auto mouse = gameHost->GetMouse()->GetState();
     if (mouse.LeftButton == ButtonState::Pressed) {
-        rotateY = -Math::TwoPi<float> * (static_cast<float>(mouse.Position.X) / static_cast<float>(presentationParameters.BackBufferWidth));
+        rotateY = -math::TwoPi<float> * (static_cast<float>(mouse.Position.X) / static_cast<float>(presentationParameters.BackBufferWidth));
     }
 
     auto modelMatrix = Matrix4x4::CreateTranslation(Vector3{-0.5f, -0.5f, -0.5f})

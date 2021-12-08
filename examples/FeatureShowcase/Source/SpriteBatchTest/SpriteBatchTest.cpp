@@ -22,7 +22,7 @@ std::unique_ptr<Error> SpriteBatchTest::Initialize()
     // NOTE: Create graphics command list
     std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to create graphics command list");
+        return errors::Wrap(std::move(err), "failed to create graphics command list");
     }
 
     primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
@@ -39,7 +39,7 @@ std::unique_ptr<Error> SpriteBatchTest::Initialize()
     // NOTE: Load PNG texture.
     std::tie(texture, err) = assets->Load<Texture2D>("Textures/pomdog.png");
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to load texture");
+        return errors::Wrap(std::move(err), "failed to load texture");
     }
 
     timer = std::make_shared<Timer>(clock);
@@ -66,7 +66,7 @@ std::unique_ptr<Error> SpriteBatchTest::Initialize()
         const auto scale = scaleDist(random);
 
         SpriteInstance sprite;
-        sprite.Position = Math::ToVector2(pos);
+        sprite.Position = math::ToVector2(pos);
         sprite.Scale.X = scale;
         sprite.Scale.Y = scale;
         sprite.Color.R = static_cast<std::uint8_t>(colorDist(random));
@@ -127,7 +127,7 @@ void SpriteBatchTest::Draw()
             sprite.Position,
             Rectangle{0, 0, texture->GetWidth(), texture->GetHeight()},
             sprite.Color,
-            Math::TwoPi<float> * Easings::EaseSine::InOut(t),
+            math::TwoPi<float> * Easings::EaseSine::InOut(t),
             Vector2{0.5f, 0.5f},
             sprite.Scale);
     }
@@ -137,7 +137,7 @@ void SpriteBatchTest::Draw()
         Vector2{64.0f, 64.0f},
         Rectangle{0, 0, texture->GetWidth(), texture->GetHeight()},
         Color::White,
-        Math::TwoPi<float> * Easings::EaseSine::InOut(t),
+        math::TwoPi<float> * Easings::EaseSine::InOut(t),
         Vector2{1.0f, 1.0f},
         2.0f);
 
