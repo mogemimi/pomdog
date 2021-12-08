@@ -9,7 +9,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 Timer::Timer(GameClock& clock)
     : totalTime(Duration::zero())
@@ -107,4 +107,4 @@ void Timer::SetInterval()
     this->interval = std::nullopt;
 }
 
-} // namespace Pomdog
+} // namespace pomdog

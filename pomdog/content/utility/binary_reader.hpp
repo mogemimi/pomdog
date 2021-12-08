@@ -15,7 +15,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 struct POMDOG_EXPORT BinaryReader final {
     template <typename T, class Stream>
@@ -73,4 +73,4 @@ struct POMDOG_EXPORT BinaryReader final {
     }
 };
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

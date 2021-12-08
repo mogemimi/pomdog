@@ -19,7 +19,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::Signals {
+namespace pomdog::detail::signals {
 
 template <typename Function>
 class POMDOG_EXPORT DelegateConnectionBody final : public ConnectionBody {
@@ -143,4 +143,4 @@ private:
     std::int32_t slotID = 0;
 };
 
-} // namespace Pomdog::Detail::Signals
+} // namespace pomdog::detail::signals

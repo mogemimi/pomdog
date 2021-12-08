@@ -4,7 +4,7 @@
 #include "pomdog/input/gamepad_state.hpp"
 #include "pomdog/utility/assert.hpp"
 
-namespace Pomdog::Detail::GamepadHelper {
+namespace pomdog::detail::GamepadHelper {
 
 [[nodiscard]] int ToInt(PlayerIndex index) noexcept
 {
@@ -38,4 +38,4 @@ void ClearState(GamepadState& state) noexcept
     state.IsConnected = false;
 }
 
-} // namespace Pomdog::Detail::GamepadHelper
+} // namespace pomdog::detail::GamepadHelper

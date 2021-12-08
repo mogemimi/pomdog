@@ -9,7 +9,7 @@
 
 #import <Metal/Metal.h>
 
-namespace Pomdog::Detail::Metal {
+namespace pomdog::detail::metal {
 
 class GraphicsDeviceMetal final : public GraphicsDevice {
 public:
@@ -84,8 +84,8 @@ public:
     /// Creates a shader object.
     std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
     CreateShader(
-        const Detail::ShaderBytecode& shaderBytecode,
-        const Detail::ShaderCompileOptions& compileOptions) noexcept override;
+        const detail::ShaderBytecode& shaderBytecode,
+        const detail::ShaderCompileOptions& compileOptions) noexcept override;
 
     /// Creates a 2D render target.
     std::tuple<std::shared_ptr<RenderTarget2D>, std::unique_ptr<Error>>
@@ -137,4 +137,4 @@ private:
     PresentationParameters presentationParameters;
 };
 
-} // namespace Pomdog::Detail::Metal
+} // namespace pomdog::detail::metal

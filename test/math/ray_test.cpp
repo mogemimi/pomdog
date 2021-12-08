@@ -6,8 +6,8 @@
 #include <catch_amalgamated.hpp>
 #include <limits>
 
-using Pomdog::Ray;
-using namespace Pomdog;
+using pomdog::Ray;
+using namespace pomdog;
 
 namespace {
 static constexpr auto Epsilon = std::numeric_limits<float>::epsilon();

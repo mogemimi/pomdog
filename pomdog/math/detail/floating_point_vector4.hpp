@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <type_traits>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 /// FloatingPointVector4 is a vector in 4-dimensional space.
 template <typename T>
@@ -88,4 +88,4 @@ template <typename T>
 FloatingPointVector4<T> POMDOG_EXPORT
 operator*(T scaleFactor, const FloatingPointVector4<T>& vector) noexcept;
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

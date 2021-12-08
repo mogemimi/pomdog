@@ -4,13 +4,13 @@
 
 #include <memory>
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 class NativeGamepad;
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail
 
-namespace Pomdog::Detail::X11 {
+namespace pomdog::detail::x11 {
 
 [[nodiscard]] std::unique_ptr<NativeGamepad>
 CreateGamepad() noexcept;
 
-} // namespace Pomdog::Detail::X11
+} // namespace pomdog::detail::x11

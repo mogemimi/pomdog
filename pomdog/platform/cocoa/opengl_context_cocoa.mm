@@ -7,7 +7,7 @@
 #include "pomdog/utility/errors.hpp"
 #include <vector>
 
-namespace Pomdog::Detail::Cocoa {
+namespace pomdog::detail::cocoa {
 namespace {
 
 [[nodiscard]] NSOpenGLPixelFormat*
@@ -111,15 +111,15 @@ std::unique_ptr<Error>
 OpenGLContextCocoa::Initialize(const PresentationParameters& presentationParameters) noexcept
 {
     // NOTE: Create a pixel format for OpenGL context.
-    auto pixelFormat = Detail::Cocoa::CreatePixelFormat(presentationParameters);
+    auto pixelFormat = detail::cocoa::CreatePixelFormat(presentationParameters);
     if (pixelFormat == nil) {
-        return Errors::New("failed to create NSOpenGLPixelFormat.");
+        return errors::New("failed to create NSOpenGLPixelFormat.");
     }
 
     // NOTE: Create a OpenGL context with the pixel format.
     openGLContext = [[NSOpenGLContext alloc] initWithFormat:pixelFormat shareContext:nil];
     if (openGLContext == nil) {
-        return Errors::New("failed to create NSOpenGLContext.");
+        return errors::New("failed to create NSOpenGLContext.");
     }
 
     // NOTE: Make the context current.
@@ -206,4 +206,4 @@ NSOpenGLContext* OpenGLContextCocoa::GetNativeOpenGLContext() noexcept
     return openGLContext;
 }
 
-} // namespace Pomdog::Detail::Cocoa
+} // namespace pomdog::detail::cocoa

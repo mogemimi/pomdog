@@ -8,7 +8,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 enum class EffectVariableClass : std::uint8_t {
     Scalar,
@@ -18,4 +18,4 @@ enum class EffectVariableClass : std::uint8_t {
     Struct,
 };
 
-} // namespace Pomdog
+} // namespace pomdog

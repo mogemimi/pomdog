@@ -4,14 +4,14 @@
 #include "pomdog/math/rectangle.hpp"
 #include <catch_amalgamated.hpp>
 
-using Pomdog::Point2D;
-using Pomdog::Rectangle;
+using pomdog::Point2D;
+using pomdog::Rectangle;
 
 TEST_CASE("Rectangle", "[Rectangle]")
 {
     SECTION("Rectangle")
     {
-        using Pomdog::Rectangle;
+        using pomdog::Rectangle;
         Rectangle rect = {320, 240, 640, 480};
         REQUIRE(rect.X == 320);
         REQUIRE(rect.Y == 240);
@@ -26,7 +26,7 @@ TEST_CASE("Rectangle", "[Rectangle]")
     }
     SECTION("Location")
     {
-        using Pomdog::Rectangle;
+        using pomdog::Rectangle;
         Rectangle rect = {320, 240, 640, 480};
         REQUIRE(rect.X == 320);
         REQUIRE(rect.Y == 240);
@@ -47,7 +47,7 @@ TEST_CASE("Rectangle", "[Rectangle]")
     }
     SECTION("Inflate")
     {
-        using Pomdog::Rectangle;
+        using pomdog::Rectangle;
         Rectangle rect = {320, 240, 640, 480};
         rect.Inflate(96, 42);
         REQUIRE(320 - 96 == rect.X);
@@ -61,7 +61,7 @@ TEST_CASE("Rectangle", "[Rectangle]")
     }
     SECTION("Offset")
     {
-        using Pomdog::Rectangle;
+        using pomdog::Rectangle;
         Rectangle rect = {320, 240, 640, 480};
         rect.Offset(96, 42);
         REQUIRE(320 + 96 == rect.X);
@@ -75,7 +75,7 @@ TEST_CASE("Rectangle", "[Rectangle]")
     }
     SECTION("Contains_Point2D")
     {
-        using Pomdog::Rectangle;
+        using pomdog::Rectangle;
         Rectangle rect = {32, 24, 64, 48};
         const int left = rect.GetLeft();
         const int right = rect.GetRight();
@@ -114,7 +114,7 @@ TEST_CASE("Rectangle", "[Rectangle]")
     }
     SECTION("Intersects_Point2D")
     {
-        using Pomdog::Rectangle;
+        using pomdog::Rectangle;
         Rectangle rect = {32, 24, 64, 48};
         const int left = rect.GetLeft();
         const int right = rect.GetRight();
@@ -149,7 +149,7 @@ TEST_CASE("Rectangle", "[Rectangle]")
     }
     SECTION("Contains_Rectangle")
     {
-        using Pomdog::Rectangle;
+        using pomdog::Rectangle;
         Rectangle rect = {32, 24, 64, 48};
 
         REQUIRE(rect.Contains(rect));
@@ -161,7 +161,7 @@ TEST_CASE("Rectangle", "[Rectangle]")
     }
     SECTION("Intersects_Rectangle")
     {
-        using Pomdog::Rectangle;
+        using pomdog::Rectangle;
         Rectangle rect = {32, 24, 64, 48};
 
         REQUIRE(rect.Intersects({32, 24, 64, 48}));

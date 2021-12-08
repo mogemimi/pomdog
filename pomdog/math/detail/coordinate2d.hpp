@@ -9,7 +9,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <type_traits>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 /// Coordinate2D is a point in 2-dimensional space.
 template <typename T>
@@ -63,4 +63,4 @@ template <typename T>
 Coordinate2D<T> POMDOG_EXPORT
 operator/(T scaleFactor, const Coordinate2D<T>& coordinate);
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

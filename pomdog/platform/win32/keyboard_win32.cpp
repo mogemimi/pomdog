@@ -10,7 +10,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <optional>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::Win32 {
+namespace pomdog::detail::win32 {
 namespace {
 
 std::optional<Keys> ToKeys(USHORT keyCode) noexcept
@@ -326,4 +326,4 @@ void TranslateKeyboardEvent(const RAWKEYBOARD& keyboard, const std::shared_ptr<E
     });
 }
 
-} // namespace Pomdog::Detail::Win32
+} // namespace pomdog::detail::win32

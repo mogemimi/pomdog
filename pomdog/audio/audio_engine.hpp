@@ -11,7 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 class Error;
 
@@ -43,4 +43,4 @@ public:
     SetMainVolume(float volume) noexcept = 0;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

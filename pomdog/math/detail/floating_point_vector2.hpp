@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <type_traits>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 /// FloatingPointVector2 is a vector in 2-dimensional space.
 template <typename T>
@@ -141,4 +141,4 @@ template <typename T>
 FloatingPointVector2<T> POMDOG_EXPORT
 operator*(T scaleFactor, const FloatingPointVector2<T>& vector) noexcept;
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

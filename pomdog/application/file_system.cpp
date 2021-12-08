@@ -22,17 +22,17 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::FileSystem {
+namespace pomdog::FileSystem {
 namespace {
 
 #if defined(POMDOG_PLATFORM_MACOSX) || defined(POMDOG_PLATFORM_APPLE_IOS)
-namespace PlatformFS = Detail::Apple;
+namespace PlatformFS = detail::apple;
 #elif defined(POMDOG_PLATFORM_WIN32)
-namespace PlatformFS = Detail::Win32;
+namespace PlatformFS = detail::win32;
 #elif defined(POMDOG_PLATFORM_LINUX) || defined(POMDOG_PLATFORM_ANDROID)
-namespace PlatformFS = Detail::Linux;
+namespace PlatformFS = detail::linux;
 #elif defined(POMDOG_PLATFORM_EMSCRIPTEN)
-namespace PlatformFS = Detail::Emscripten;
+namespace PlatformFS = detail::emscripten;
 #else
 #error "Platform undefined or not supported."
 #endif
@@ -75,7 +75,7 @@ GetCanonicalPath(const std::string& path) noexcept
     if (!PathHelper::IsAbsolute(result)) {
         auto [cwd, err] = FileSystem::GetCurrentWorkingDirectory();
         if (err != nullptr) {
-            return std::make_tuple("", Errors::Wrap(std::move(err), "GetCurrentWorkingDirectory() failed"));
+            return std::make_tuple("", errors::Wrap(std::move(err), "GetCurrentWorkingDirectory() failed"));
         }
         result = PathHelper::Normalize(PathHelper::Join(cwd, result));
     }
@@ -112,4 +112,4 @@ GetCurrentWorkingDirectory() noexcept
     return PlatformFS::GetCurrentWorkingDirectory();
 }
 
-} // namespace Pomdog::FileSystem
+} // namespace pomdog::FileSystem

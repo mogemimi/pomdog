@@ -14,10 +14,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::PNG {
+namespace pomdog::PNG {
 
 /// Reads a PNG image from data (.png).
 [[nodiscard]] POMDOG_EXPORT std::tuple<ImageBuffer, std::unique_ptr<Error>>
 Decode(const std::uint8_t* data, std::size_t size);
 
-} // namespace Pomdog::PNG
+} // namespace pomdog::PNG

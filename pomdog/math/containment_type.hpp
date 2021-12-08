@@ -8,7 +8,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 /// ContainmentType indicates whether a geometry object contains another one.
 enum class ContainmentType : std::uint8_t {
@@ -19,4 +19,4 @@ enum class ContainmentType : std::uint8_t {
     Intersects
 };
 
-} // namespace Pomdog
+} // namespace pomdog

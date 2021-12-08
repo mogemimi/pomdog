@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 class POMDOG_EXPORT IndexBuffer final {
 public:
@@ -22,7 +22,7 @@ public:
     IndexBuffer(IndexBuffer&&) = default;
 
     IndexBuffer(
-        std::unique_ptr<Detail::NativeBuffer>&& nativeBuffer,
+        std::unique_ptr<detail::NativeBuffer>&& nativeBuffer,
         IndexElementSize elementSize,
         std::size_t indexCount,
         BufferUsage bufferUsage);
@@ -54,13 +54,13 @@ public:
         std::size_t elementCount);
 
     /// Gets the pointer of the native index buffer resource.
-    Detail::NativeBuffer* GetNativeBuffer();
+    detail::NativeBuffer* GetNativeBuffer();
 
 private:
-    std::unique_ptr<Detail::NativeBuffer> nativeBuffer;
+    std::unique_ptr<detail::NativeBuffer> nativeBuffer;
     std::uint32_t indexCount;
     IndexElementSize elementSize;
     BufferUsage bufferUsage;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

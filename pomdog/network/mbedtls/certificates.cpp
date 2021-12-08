@@ -2,7 +2,7 @@
 
 #include "pomdog/network/mbedtls/certificates.hpp"
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 namespace {
 
 // clang-format off
@@ -1421,4 +1421,4 @@ ArrayView<std::uint8_t const> GetEmbeddedCertificatePEM() noexcept
     return certPEM.ViewAs<std::uint8_t const>();
 }
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

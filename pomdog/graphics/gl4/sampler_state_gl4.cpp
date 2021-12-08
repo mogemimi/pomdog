@@ -14,7 +14,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::GL4 {
+namespace pomdog::detail::gl4 {
 namespace {
 
 GLenum ToTextureAddressMode(TextureAddressMode address) noexcept
@@ -147,4 +147,4 @@ void SamplerStateGL4::Apply(int index)
     POMDOG_CHECK_ERROR_GL4("glBindSampler");
 }
 
-} // namespace Pomdog::Detail::GL4
+} // namespace pomdog::detail::gl4

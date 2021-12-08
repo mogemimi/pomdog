@@ -7,7 +7,7 @@
 #include "pomdog/utility/assert.hpp"
 #include <utility>
 
-namespace Pomdog::Detail::OpenAL {
+namespace pomdog::detail::openal {
 
 AudioEngineAL::AudioEngineAL() noexcept = default;
 
@@ -37,13 +37,13 @@ AudioEngineAL::Initialize() noexcept
 
     if (this->device == nullptr) {
         // NOTE: Do not use alGetError() before initializing the OpenAL context.
-        return Errors::New("alcOpenDevice() failed");
+        return errors::New("alcOpenDevice() failed");
     }
 
     POMDOG_ASSERT(device != nullptr);
     this->context = alcCreateContext(this->device, nullptr);
     if (this->context == nullptr) {
-        return Errors::New("alcCreateContext() failed");
+        return errors::New("alcCreateContext() failed");
     }
 
     alcMakeContextCurrent(this->context);
@@ -65,7 +65,7 @@ AudioEngineAL::CreateAudioClip(
     auto audioClip = std::make_shared<AudioClipAL>();
 
     if (auto err = audioClip->Initialize(audioData, sizeInBytes, sampleRate, bitsPerSample, channels); err != nullptr) {
-        return std::make_tuple(nullptr, Errors::Wrap(std::move(err), "failed to initialize AudioClipXAudio2"));
+        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize AudioClipXAudio2"));
     }
 
     return std::make_tuple(std::move(audioClip), nullptr);
@@ -83,7 +83,7 @@ AudioEngineAL::CreateSoundEffect(
     auto soundEffect = std::make_shared<SoundEffectAL>();
 
     if (auto err = soundEffect->Initialize(nativeAudioClip, isLooped); err != nullptr) {
-        return std::make_tuple(nullptr, Errors::Wrap(std::move(err), "failed to initialize SoundEffectXAudio2"));
+        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize SoundEffectXAudio2"));
     }
 
     return std::make_tuple(std::move(soundEffect), nullptr);
@@ -104,4 +104,4 @@ void AudioEngineAL::SetMainVolume(float volume) noexcept
     POMDOG_CHECK_ERROR_OPENAL("alListenerf(AL_GAIN)");
 }
 
-} // namespace Pomdog::Detail::OpenAL
+} // namespace pomdog::detail::openal

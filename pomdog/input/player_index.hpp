@@ -8,7 +8,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 enum class PlayerIndex : std::uint8_t {
     One = 1,
@@ -17,4 +17,4 @@ enum class PlayerIndex : std::uint8_t {
     Four = 4,
 };
 
-} // namespace Pomdog
+} // namespace pomdog

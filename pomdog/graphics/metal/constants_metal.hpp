@@ -2,9 +2,7 @@
 
 #pragma once
 
-namespace Pomdog {
-namespace Detail {
-namespace Metal {
+namespace pomdog::detail::metal {
 
 // NOTE: Pomdog reserves the buffer slots 20 to 30 for Metal. If you
 // specify the slot of a vertex buffer in Metal shader, you can use attribute,
@@ -14,6 +12,4 @@ namespace Metal {
 constexpr int VertexBufferSlotOffset = 20;
 constexpr int MaxVertexBufferSlotCount = 31;
 
-} // namespace Metal
-} // namespace Detail
-} // namespace Pomdog
+} // namespace pomdog::detail::metal

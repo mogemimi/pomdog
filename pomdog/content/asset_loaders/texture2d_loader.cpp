@@ -25,7 +25,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 namespace {
 
 bool IsPNGFormat(const std::array<std::uint8_t, 8>& signature) noexcept
@@ -66,13 +66,13 @@ AssetLoader<Texture2D>::operator()(AssetManager& assets, const std::string& file
     std::ifstream stream{filePath, std::ifstream::binary};
 
     if (!stream) {
-        auto err = Errors::New("cannot open the file, " + filePath);
+        auto err = errors::New("cannot open the file, " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
     auto [byteLength, sizeErr] = FileSystem::GetFileSize(filePath);
     if (sizeErr != nullptr) {
-        auto err = Errors::Wrap(std::move(sizeErr), "failed to get file size, " + filePath);
+        auto err = errors::Wrap(std::move(sizeErr), "failed to get file size, " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
@@ -80,13 +80,13 @@ AssetLoader<Texture2D>::operator()(AssetManager& assets, const std::string& file
 
     constexpr std::size_t signatureArraySize = 8;
     if (byteLength < (sizeof(std::uint8_t) * signatureArraySize)) {
-        auto err = Errors::New("The texture file is too small " + filePath);
+        auto err = errors::New("The texture file is too small " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
     auto signature = BinaryReader::ReadArray<std::uint8_t, signatureArraySize>(stream);
     if (stream.fail()) {
-        auto err = Errors::New("failed to read signature in the file " + filePath);
+        auto err = errors::New("failed to read signature in the file " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
@@ -101,13 +101,13 @@ AssetLoader<Texture2D>::operator()(AssetManager& assets, const std::string& file
         binary.resize(byteLength);
         stream.read(reinterpret_cast<char*>(binary.data()), static_cast<int>(binary.size()));
         if (!stream) {
-            auto err = Errors::New("failed to read the file " + filePath);
+            auto err = errors::New("failed to read the file " + filePath);
             return std::make_tuple(nullptr, std::move(err));
         }
 
         auto [image, decodeErr] = PNG::Decode(binary.data(), binary.size());
         if (decodeErr != nullptr) {
-            auto err = Errors::Wrap(std::move(decodeErr), "cannot load the PNG texture " + filePath);
+            auto err = errors::Wrap(std::move(decodeErr), "cannot load the PNG texture " + filePath);
             return std::make_tuple(nullptr, std::move(err));
         }
 
@@ -132,13 +132,13 @@ AssetLoader<Texture2D>::operator()(AssetManager& assets, const std::string& file
         binary.resize(byteLength);
         stream.read(reinterpret_cast<char*>(binary.data()), static_cast<int>(binary.size()));
         if (!stream) {
-            auto err = Errors::New("failed to read the file " + filePath);
+            auto err = errors::New("failed to read the file " + filePath);
             return std::make_tuple(nullptr, std::move(err));
         }
 
         auto [image, decodeErr] = DDS::Decode(binary.data(), binary.size());
         if (decodeErr != nullptr) {
-            auto err = Errors::Wrap(std::move(decodeErr), "cannot load the DDS texture " + filePath);
+            auto err = errors::Wrap(std::move(decodeErr), "cannot load the DDS texture " + filePath);
             return std::make_tuple(nullptr, std::move(err));
         }
 
@@ -163,13 +163,13 @@ AssetLoader<Texture2D>::operator()(AssetManager& assets, const std::string& file
         binary.resize(byteLength);
         stream.read(reinterpret_cast<char*>(binary.data()), static_cast<int>(binary.size()));
         if (!stream) {
-            auto err = Errors::New("failed to read the file " + filePath);
+            auto err = errors::New("failed to read the file " + filePath);
             return std::make_tuple(nullptr, std::move(err));
         }
 
         auto [image, decodeErr] = PNM::Decode(reinterpret_cast<const char*>(binary.data()), binary.size());
         if (decodeErr != nullptr) {
-            auto err = Errors::Wrap(std::move(decodeErr), "cannot load the PNM texture " + filePath);
+            auto err = errors::Wrap(std::move(decodeErr), "cannot load the PNM texture " + filePath);
             return std::make_tuple(nullptr, std::move(err));
         }
 
@@ -188,8 +188,8 @@ AssetLoader<Texture2D>::operator()(AssetManager& assets, const std::string& file
         return std::make_tuple(std::move(texture), nullptr);
     }
 
-    auto err = Errors::New("This texture file format is not supported " + filePath);
+    auto err = errors::New("This texture file format is not supported " + filePath);
     return std::make_tuple(nullptr, std::move(err));
 }
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

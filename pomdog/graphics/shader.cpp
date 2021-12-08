@@ -2,8 +2,8 @@
 
 #include "pomdog/graphics/shader.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 
 Shader::~Shader() = default;
 
-} // namespace Pomdog
+} // namespace pomdog

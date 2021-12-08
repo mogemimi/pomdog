@@ -11,13 +11,13 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 class AudioEmitter;
 class AudioListener;
 class Error;
-} // namespace Pomdog
+} // namespace pomdog
 
-namespace Pomdog::Detail::XAudio2 {
+namespace pomdog::detail::xaudio2 {
 
 class AudioClipXAudio2;
 
@@ -91,4 +91,4 @@ public:
     SetVolume(float volume) noexcept override;
 };
 
-} // namespace Pomdog::Detail::XAudio2
+} // namespace pomdog::detail::xaudio2

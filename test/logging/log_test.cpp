@@ -7,11 +7,11 @@
 #include <catch_amalgamated.hpp>
 #include <vector>
 
-using Pomdog::Log;
-using Pomdog::LogChannel;
-using Pomdog::LogEntry;
-using Pomdog::LogLevel;
-using Pomdog::ScopedConnection;
+using pomdog::Log;
+using pomdog::LogChannel;
+using pomdog::LogEntry;
+using pomdog::LogLevel;
+using pomdog::ScopedConnection;
 
 TEST_CASE("Log", "[Log]")
 {
@@ -22,7 +22,7 @@ TEST_CASE("Log", "[Log]")
     messages.clear();
     tags.clear();
     levels.clear();
-    Log::SetLevel(Pomdog::LogLevel::Verbose);
+    Log::SetLevel(pomdog::LogLevel::Verbose);
 
     SECTION("FirstCase")
     {

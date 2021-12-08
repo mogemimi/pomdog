@@ -15,7 +15,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <limits>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::GL4 {
+namespace pomdog::detail::gl4 {
 namespace {
 
 [[nodiscard]] GLenum
@@ -426,4 +426,4 @@ Texture2DObjectGL4 Texture2DGL4::GetTextureHandle() const noexcept
     return *textureObject;
 }
 
-} // namespace Pomdog::Detail::GL4
+} // namespace pomdog::detail::gl4

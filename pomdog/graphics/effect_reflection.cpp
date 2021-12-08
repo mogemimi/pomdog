@@ -2,9 +2,9 @@
 
 #include "pomdog/graphics/effect_reflection.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 
 EffectReflection::EffectReflection() noexcept = default;
 EffectReflection::~EffectReflection() = default;
 
-} // namespace Pomdog
+} // namespace pomdog

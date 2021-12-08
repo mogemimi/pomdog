@@ -14,7 +14,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 /// An HTTPResponse represents an HTTP response from the server to the client.
 class POMDOG_EXPORT HTTPResponse final {
@@ -40,4 +40,4 @@ public:
     std::shared_ptr<HTTPRequest> Request;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

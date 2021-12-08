@@ -11,7 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 struct EffectConstantDescription final {
     std::vector<EffectVariable> Variables;
@@ -19,4 +19,4 @@ struct EffectConstantDescription final {
     std::uint32_t ByteSize;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

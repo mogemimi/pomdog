@@ -9,11 +9,11 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 Error::~Error() noexcept = default;
-} // namespace Pomdog
+} // namespace pomdog
 
-namespace Pomdog::Errors {
+namespace pomdog::errors {
 namespace {
 
 class StringError final : public Error {
@@ -113,4 +113,4 @@ std::unique_ptr<Error> Wrap(std::unique_ptr<Error>&& err, std::string&& message)
 #endif
 }
 
-} // namespace Pomdog::Errors
+} // namespace pomdog::errors

@@ -6,7 +6,7 @@
 #include "pomdog/input/gamepad_dpad.hpp"
 #include "pomdog/input/gamepad_thumbsticks.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 
 struct GamepadState final {
     GamepadButtons Buttons;
@@ -15,4 +15,4 @@ struct GamepadState final {
     bool IsConnected = false;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

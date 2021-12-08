@@ -18,11 +18,11 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <mutex>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 class Error;
-} // namespace Pomdog
+} // namespace pomdog
 
-namespace Pomdog::Detail::DirectInput {
+namespace pomdog::detail::DirectInput {
 
 enum class GamepadStateDirectInput : std::uint8_t {
     NotInitialized,
@@ -78,4 +78,4 @@ private:
     std::mutex mutex;
 };
 
-} // namespace Pomdog::Detail::DirectInput
+} // namespace pomdog::detail::DirectInput

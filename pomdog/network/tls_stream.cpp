@@ -10,12 +10,12 @@
 #include "pomdog/network/mbedtls/tls_stream_mbedtls.hpp"
 #endif
 
-namespace Pomdog {
+namespace pomdog {
 
 TLSStream::TLSStream() = default;
 
 TLSStream::TLSStream(IOService* service)
-    : nativeStream(std::make_unique<Detail::NativeTLSStream>(service))
+    : nativeStream(std::make_unique<detail::NativeTLSStream>(service))
 {
 }
 
@@ -34,14 +34,14 @@ TLSStream::Connect(IOService* service, std::string_view address)
     TLSStream stream{service};
     POMDOG_ASSERT(stream.nativeStream != nullptr);
 
-    const auto [family, host, port] = Detail::AddressParser::TransformAddress(address);
+    const auto [family, host, port] = detail::AddressParser::TransformAddress(address);
 
 #if defined(POMDOG_PLATFORM_EMSCRIPTEN)
     if (auto err = stream.nativeStream->Connect(host, port, std::chrono::seconds{5}); err != nullptr) {
         return std::make_tuple(std::move(stream), std::move(err));
     }
 #else
-    const auto certPEM = Detail::GetEmbeddedCertificatePEM();
+    const auto certPEM = detail::GetEmbeddedCertificatePEM();
 
     if (auto err = stream.nativeStream->Connect(host, port, std::chrono::seconds{5}, certPEM); err != nullptr) {
         return std::make_tuple(std::move(stream), std::move(err));
@@ -62,7 +62,7 @@ TLSStream::Connect(
     TLSStream stream{service};
     POMDOG_ASSERT(stream.nativeStream != nullptr);
 
-    const auto [family, host, port] = Detail::AddressParser::TransformAddress(address);
+    const auto [family, host, port] = detail::AddressParser::TransformAddress(address);
 
 #if defined(POMDOG_PLATFORM_EMSCRIPTEN)
     if (auto err = stream.nativeStream->Connect(host, port, timeout); err != nullptr) {
@@ -120,4 +120,4 @@ void TLSStream::SetTimeout(const Duration& timeout)
     return nativeStream->SetTimeout(timeout);
 }
 
-} // namespace Pomdog
+} // namespace pomdog

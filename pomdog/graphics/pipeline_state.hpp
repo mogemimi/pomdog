@@ -10,7 +10,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 class POMDOG_EXPORT PipelineState {
 public:
@@ -21,4 +21,4 @@ public:
     virtual ~PipelineState();
 };
 
-} // namespace Pomdog
+} // namespace pomdog

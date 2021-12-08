@@ -11,7 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::XAudio2 {
+namespace pomdog::detail::xaudio2 {
 namespace {
 
 [[nodiscard]] int GetChannelCount(AudioChannels channels) noexcept
@@ -52,8 +52,8 @@ AudioClipXAudio2::Initialize(
     this->waveFormat.wBitsPerSample = static_cast<WORD>(bitsPerSample);
     this->waveFormat.cbSize = 0;
 
-    const auto samples = Detail::AudioHelper::GetSamples(sizeInBytes, bitsPerSample, channels);
-    this->sampleDuration = Detail::AudioHelper::GetSampleDuration(samples, sampleRate);
+    const auto samples = detail::AudioHelper::GetSamples(sizeInBytes, bitsPerSample, channels);
+    this->sampleDuration = detail::AudioHelper::GetSampleDuration(samples, sampleRate);
 
     return nullptr;
 }
@@ -97,4 +97,4 @@ std::size_t AudioClipXAudio2::GetSizeInBytes() const noexcept
     return sizeof(std::uint8_t) * audioData.size();
 }
 
-} // namespace Pomdog::Detail::XAudio2
+} // namespace pomdog::detail::xaudio2

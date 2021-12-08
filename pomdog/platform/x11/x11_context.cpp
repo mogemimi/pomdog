@@ -2,7 +2,7 @@
 
 #include "pomdog/platform/x11/x11_context.hpp"
 
-namespace Pomdog::Detail::X11 {
+namespace pomdog::detail::x11 {
 
 X11Context::X11Context() noexcept = default;
 
@@ -17,7 +17,7 @@ X11Context::Initialize() noexcept
     // NOTE: Connect to the X server.
     display = ::XOpenDisplay(nullptr);
     if (display == nullptr) {
-        return Errors::New("XOpenDisplay() failed");
+        return errors::New("XOpenDisplay() failed");
     }
 
     // NOTE: Initialize Atoms.
@@ -50,4 +50,4 @@ X11Context::~X11Context() noexcept
     }
 }
 
-} // namespace Pomdog::Detail::X11
+} // namespace pomdog::detail::x11

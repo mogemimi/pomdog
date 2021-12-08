@@ -7,7 +7,7 @@
 #include <mutex>
 #include <thread>
 
-using Pomdog::Detail::SpinLock;
+using pomdog::detail::SpinLock;
 
 namespace {
 

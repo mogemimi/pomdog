@@ -14,7 +14,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 [[nodiscard]] std::tuple<int, std::unique_ptr<Error>>
 ConnectSocketPOSIX(const std::string& host, const std::string& port, SocketProtocol protocol, const Duration& timeout);
@@ -22,4 +22,4 @@ ConnectSocketPOSIX(const std::string& host, const std::string& port, SocketProto
 [[nodiscard]] std::tuple<int, std::unique_ptr<Error>>
 BindSocketPOSIX(const std::string& host, const std::string& port, SocketProtocol protocol);
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

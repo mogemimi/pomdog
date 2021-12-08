@@ -7,7 +7,7 @@
 #include "pomdog/utility/errors.hpp"
 #include "pomdog/utility/tagged.hpp"
 
-namespace Pomdog::Detail::GL4 {
+namespace pomdog::detail::gl4 {
 
 using ComparisonFunctionGL4 = Tagged<GLenum, ComparisonFunction>;
 using StencilOperationGL4 = Tagged<GLenum, StencilOperation>;
@@ -43,4 +43,4 @@ private:
     bool depthBufferEnable = false;
 };
 
-} // namespace Pomdog::Detail::GL4
+} // namespace pomdog::detail::gl4

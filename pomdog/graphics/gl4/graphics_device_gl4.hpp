@@ -11,7 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::GL4 {
+namespace pomdog::detail::gl4 {
 
 class GraphicsDeviceGL4 final : public GraphicsDevice {
 public:
@@ -84,8 +84,8 @@ public:
     /// Creates a shader object.
     std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
     CreateShader(
-        const Detail::ShaderBytecode& shaderBytecode,
-        const Detail::ShaderCompileOptions& compileOptions) noexcept override;
+        const detail::ShaderBytecode& shaderBytecode,
+        const detail::ShaderCompileOptions& compileOptions) noexcept override;
 
     /// Creates a 2D render target.
     std::tuple<std::shared_ptr<RenderTarget2D>, std::unique_ptr<Error>>
@@ -132,4 +132,4 @@ private:
     PresentationParameters presentationParameters;
 };
 
-} // namespace Pomdog::Detail::GL4
+} // namespace pomdog::detail::gl4

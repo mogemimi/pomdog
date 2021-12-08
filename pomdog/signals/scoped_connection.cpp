@@ -7,7 +7,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 ScopedConnection::ScopedConnection(const Connection& c)
     : connection(c)
@@ -48,4 +48,4 @@ bool ScopedConnection::IsConnected() const
     return connection.IsConnected();
 }
 
-} // namespace Pomdog
+} // namespace pomdog

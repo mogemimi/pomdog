@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 namespace {
 
 std::uint8_t PackUint8(float value)
@@ -140,31 +140,31 @@ Color Color::Lerp(const Color& source1, const Color& source2, float amount)
 Color Color::SmoothStep(const Color& source1, const Color& source2, float amount)
 {
     Color color;
-    color.R = PackUint8(Math::SmoothStep<float>(source1.R, source2.R, amount));
-    color.G = PackUint8(Math::SmoothStep<float>(source1.G, source2.G, amount));
-    color.B = PackUint8(Math::SmoothStep<float>(source1.B, source2.B, amount));
-    color.A = PackUint8(Math::SmoothStep<float>(source1.A, source2.A, amount));
+    color.R = PackUint8(math::SmoothStep<float>(source1.R, source2.R, amount));
+    color.G = PackUint8(math::SmoothStep<float>(source1.G, source2.G, amount));
+    color.B = PackUint8(math::SmoothStep<float>(source1.B, source2.B, amount));
+    color.A = PackUint8(math::SmoothStep<float>(source1.A, source2.A, amount));
     return color;
 }
 
 Color Color::Multiply(const Color& color, float scale)
 {
     Color result;
-    result.R = PackUint8(Math::Clamp(color.R * scale, 0.0f, 255.0f));
-    result.G = PackUint8(Math::Clamp(color.G * scale, 0.0f, 255.0f));
-    result.B = PackUint8(Math::Clamp(color.B * scale, 0.0f, 255.0f));
-    result.A = PackUint8(Math::Clamp(color.A * scale, 0.0f, 255.0f));
+    result.R = PackUint8(math::Clamp(color.R * scale, 0.0f, 255.0f));
+    result.G = PackUint8(math::Clamp(color.G * scale, 0.0f, 255.0f));
+    result.B = PackUint8(math::Clamp(color.B * scale, 0.0f, 255.0f));
+    result.A = PackUint8(math::Clamp(color.A * scale, 0.0f, 255.0f));
     return result;
 }
 
 Color Color::Multiply(const Color& color1, const Color& color2)
 {
     Color result;
-    result.R = PackUint8(Math::Clamp((color1.R / 255.0f) * color2.R, 0.0f, 255.0f));
-    result.G = PackUint8(Math::Clamp((color1.G / 255.0f) * color2.G, 0.0f, 255.0f));
-    result.B = PackUint8(Math::Clamp((color1.B / 255.0f) * color2.B, 0.0f, 255.0f));
-    result.A = PackUint8(Math::Clamp((color1.A / 255.0f) * color2.A, 0.0f, 255.0f));
+    result.R = PackUint8(math::Clamp((color1.R / 255.0f) * color2.R, 0.0f, 255.0f));
+    result.G = PackUint8(math::Clamp((color1.G / 255.0f) * color2.G, 0.0f, 255.0f));
+    result.B = PackUint8(math::Clamp((color1.B / 255.0f) * color2.B, 0.0f, 255.0f));
+    result.A = PackUint8(math::Clamp((color1.A / 255.0f) * color2.A, 0.0f, 255.0f));
     return result;
 }
 
-} // namespace Pomdog
+} // namespace pomdog

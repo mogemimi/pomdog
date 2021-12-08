@@ -3,7 +3,7 @@
 #include "pomdog/math/point3d.hpp"
 #include <catch_amalgamated.hpp>
 
-using Pomdog::Point3D;
+using pomdog::Point3D;
 
 TEST_CASE("Point3D", "[Point3D]")
 {

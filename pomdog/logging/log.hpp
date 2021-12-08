@@ -11,7 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <string>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 class Connection;
 class LogEntry;
@@ -55,4 +55,4 @@ public:
     static void Internal(const std::string& channelName, const std::string& message);
 };
 
-} // namespace Pomdog
+} // namespace pomdog

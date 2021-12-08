@@ -11,7 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <optional>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 /// Ray represents a ray with an origin point and a direction vector in 3D space.
 class POMDOG_EXPORT Ray final {
@@ -37,4 +37,4 @@ public:
     Intersects(const Plane& plane) const;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

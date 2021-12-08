@@ -5,7 +5,7 @@
 #include "pomdog/signals/event_queue.hpp"
 #include "pomdog/utility/assert.hpp"
 
-namespace Pomdog::Detail::Win32 {
+namespace pomdog::detail::win32 {
 
 MouseWin32::MouseWin32(HWND windowHandleIn)
     : windowHandle(windowHandleIn)
@@ -215,4 +215,4 @@ void TranslateMouseEvent(HWND windowHandle, const RAWMOUSE& mouse, const std::sh
     }
 }
 
-} // namespace Pomdog::Detail::Win32
+} // namespace pomdog::detail::win32

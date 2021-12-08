@@ -11,11 +11,11 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 class Error;
-} // namespace Pomdog
+} // namespace pomdog
 
-namespace Pomdog {
+namespace pomdog {
 
 class POMDOG_EXPORT GraphicsDevice {
 public:
@@ -91,8 +91,8 @@ public:
     /// Creates a shader object.
     [[nodiscard]] virtual std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
     CreateShader(
-        const Detail::ShaderBytecode& shaderBytecode,
-        const Detail::ShaderCompileOptions& compileOptions) noexcept = 0;
+        const detail::ShaderBytecode& shaderBytecode,
+        const detail::ShaderCompileOptions& compileOptions) noexcept = 0;
 
     /// Creates a 2D render target.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<RenderTarget2D>, std::unique_ptr<Error>>
@@ -134,4 +134,4 @@ public:
         SurfaceFormat format) noexcept = 0;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

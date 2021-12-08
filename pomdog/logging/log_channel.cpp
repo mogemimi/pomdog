@@ -5,7 +5,7 @@
 #include "pomdog/signals/connection.hpp"
 #include "pomdog/utility/assert.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 
 LogChannel::LogChannel(const std::string& channnelName)
     : name(channnelName)
@@ -59,4 +59,4 @@ std::size_t LogChannel::GetConnectionCount() const
     return signal.GetInvocationCount();
 }
 
-} // namespace Pomdog
+} // namespace pomdog

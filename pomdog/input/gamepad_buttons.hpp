@@ -4,7 +4,7 @@
 
 #include "pomdog/input/button_state.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 
 // Gamepad's layout:
 //  ----------------------------------------
@@ -37,4 +37,4 @@ struct GamepadButtons final {
     ButtonState Extra2 = ButtonState::Released;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

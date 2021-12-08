@@ -11,7 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::PathHelper {
+namespace pomdog::PathHelper {
 
 /// Joins two paths into a single path, adding a separator if necessary.
 [[nodiscard]] POMDOG_EXPORT std::string
@@ -49,4 +49,4 @@ Relative(std::string_view path, std::string_view start) noexcept;
 [[nodiscard]] POMDOG_EXPORT bool
 IsAbsolute(std::string_view path) noexcept;
 
-} // namespace Pomdog::PathHelper
+} // namespace pomdog::PathHelper

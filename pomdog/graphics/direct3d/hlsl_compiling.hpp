@@ -12,20 +12,20 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 class Error;
-} // namespace Pomdog
+} // namespace pomdog
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 class ShaderBytecode;
 struct ShaderCompileOptions;
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail
 
-namespace Pomdog::Detail::Direct3D {
+namespace pomdog::detail::direct3d {
 
 [[nodiscard]] std::tuple<Microsoft::WRL::ComPtr<ID3DBlob>, std::unique_ptr<Error>>
 CompileHLSL(
     const ShaderBytecode& shaderBytecode,
     const ShaderCompileOptions& compileOptions) noexcept;
 
-} // namespace Pomdog::Detail::Direct3D
+} // namespace pomdog::detail::direct3d

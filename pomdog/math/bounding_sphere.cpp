@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cmath>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 BoundingSphere::BoundingSphere(const Vector3& center, float radius)
     : Center(center)
@@ -170,4 +170,4 @@ BoundingSphere::CreateFromPoints(std::function<Vector3(std::size_t)> points, std
     return sphere;
 }
 
-} // namespace Pomdog
+} // namespace pomdog

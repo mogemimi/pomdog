@@ -5,7 +5,7 @@
 #include <catch_amalgamated.hpp>
 #include <thread>
 
-using Pomdog::Concurrency::QueuedScheduler;
+using pomdog::concurrency::QueuedScheduler;
 
 TEST_CASE("Schedule_Simply", "[Scheduler]")
 {

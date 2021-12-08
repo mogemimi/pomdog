@@ -9,7 +9,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <string>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 struct GamepadCapabilities final {
     GamepadUUID DeviceUUID;
@@ -38,4 +38,4 @@ struct GamepadCapabilities final {
     bool HasRightYThumbStick = false;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

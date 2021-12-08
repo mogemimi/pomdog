@@ -9,7 +9,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 /// A PresentationParameters describes the presentation parameters.
 struct PresentationParameters final {
@@ -35,4 +35,4 @@ struct PresentationParameters final {
     bool IsFullScreen = false;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

@@ -7,13 +7,13 @@
 #include <functional>
 #include <memory>
 
-namespace Pomdog {
+namespace pomdog {
 class Error;
 class Game;
 class GameHost;
-} // namespace Pomdog
+} // namespace pomdog
 
-namespace Pomdog::X11 {
+namespace pomdog::x11 {
 
 class POMDOG_EXPORT Bootstrap final {
 public:
@@ -51,4 +51,4 @@ private:
     bool isFullScreen = false;
 };
 
-} // namespace Pomdog::X11
+} // namespace pomdog::x11

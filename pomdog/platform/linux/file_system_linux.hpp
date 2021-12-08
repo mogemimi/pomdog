@@ -7,7 +7,7 @@
 #include <string>
 #include <tuple>
 
-namespace Pomdog::Detail::Linux {
+namespace pomdog::detail::linux {
 
 /// Create a new directory with the specified path.
 [[nodiscard]] std::unique_ptr<Error>
@@ -49,4 +49,4 @@ GetTempDirectoryPath() noexcept;
 [[nodiscard]] std::tuple<std::string, std::unique_ptr<Error>>
 GetCurrentWorkingDirectory() noexcept;
 
-} // namespace Pomdog::Detail::Linux
+} // namespace pomdog::detail::linux

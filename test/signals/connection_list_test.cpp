@@ -5,8 +5,8 @@
 #include <catch_amalgamated.hpp>
 #include <utility>
 
-using Pomdog::ConnectionList;
-using Pomdog::Signal;
+using pomdog::ConnectionList;
+using pomdog::Signal;
 
 TEST_CASE("Disconnect", "[ConnectionList]")
 {
@@ -137,7 +137,7 @@ TEST_CASE("Disconnect", "[ConnectionList]")
     {
         Signal<void(int)> valueChanged;
         std::vector<int> integers;
-        Pomdog::Connection connection;
+        pomdog::Connection connection;
         {
             ConnectionList connect;
             auto slot = [&](int n) { integers.push_back(n); };

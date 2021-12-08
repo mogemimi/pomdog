@@ -5,7 +5,7 @@
 #include "pomdog/math/rectangle.hpp"
 #include "pomdog/utility/assert.hpp"
 
-namespace Pomdog::Detail::Direct3D11 {
+namespace pomdog::detail::direct3d11 {
 namespace {
 
 using Microsoft::WRL::ComPtr;
@@ -22,19 +22,19 @@ BuildDepthBuffer(
     ComPtr<ID3D11DepthStencilView>& depthStencilView) noexcept
 {
     if (depthStencilFormat == SurfaceFormat::Invalid) {
-        return Errors::New("depthStencilFormat must be != SurfaceFormat::Invalid");
+        return errors::New("depthStencilFormat must be != SurfaceFormat::Invalid");
     }
     if (pixelWidth <= 0) {
-        return Errors::New("pixelWidth must be > 0");
+        return errors::New("pixelWidth must be > 0");
     }
     if (pixelHeight <= 0) {
-        return Errors::New("pixelHeight must be > 0");
+        return errors::New("pixelHeight must be > 0");
     }
     if (levelCount <= 0) {
-        return Errors::New("levelCount must be > 0");
+        return errors::New("levelCount must be > 0");
     }
     if (multiSampleCount <= 0) {
-        return Errors::New("multiSampleCount must be > 0");
+        return errors::New("multiSampleCount must be > 0");
     }
 
     POMDOG_ASSERT(device != nullptr);
@@ -58,7 +58,7 @@ BuildDepthBuffer(
     textureDesc.MiscFlags = 0;
 
     if (auto hr = device->CreateTexture2D(&textureDesc, nullptr, &depthStencil); FAILED(hr)) {
-        return Errors::New("CreateTexture2D() failed");
+        return errors::New("CreateTexture2D() failed");
     }
 
     // NOTE: Create the depth stencil view (DSV)
@@ -71,7 +71,7 @@ BuildDepthBuffer(
     POMDOG_ASSERT(depthStencil != nullptr);
 
     if (auto hr = device->CreateDepthStencilView(depthStencil.Get(), &dsvDesc, &depthStencilView); FAILED(hr)) {
-        return Errors::New("CreateDepthStencilView() failed");
+        return errors::New("CreateDepthStencilView() failed");
     }
 
     return nullptr;
@@ -104,7 +104,7 @@ DepthStencilBufferDirect3D11::Initialize(
             depthStencil,
             depthStencilView);
         err != nullptr) {
-        return Errors::Wrap(std::move(err), "BuildDepthBuffer() failed");
+        return errors::Wrap(std::move(err), "BuildDepthBuffer() failed");
     }
 
     return nullptr;
@@ -166,10 +166,10 @@ DepthStencilBufferDirect3D11::ResetBuffer(
             depthStencil,
             depthStencilView);
         err != nullptr) {
-        return Errors::Wrap(std::move(err), "BuildDepthBuffer() failed");
+        return errors::Wrap(std::move(err), "BuildDepthBuffer() failed");
     }
 
     return nullptr;
 }
 
-} // namespace Pomdog::Detail::Direct3D11
+} // namespace pomdog::detail::direct3d11

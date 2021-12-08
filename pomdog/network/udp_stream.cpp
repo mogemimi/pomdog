@@ -20,12 +20,12 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 UDPStream::UDPStream() = default;
 
 UDPStream::UDPStream(IOService* service)
-    : nativeStream(std::make_unique<Detail::NativeUDPStream>(service))
+    : nativeStream(std::make_unique<detail::NativeUDPStream>(service))
 {
 }
 
@@ -44,7 +44,7 @@ UDPStream::Connect(IOService* service, std::string_view address)
     UDPStream stream{service};
     POMDOG_ASSERT(stream.nativeStream != nullptr);
 
-    const auto [family, host, port] = Detail::AddressParser::TransformAddress(address);
+    const auto [family, host, port] = detail::AddressParser::TransformAddress(address);
 
     if (auto err = stream.nativeStream->Connect(host, port, std::chrono::seconds{5}); err != nullptr) {
         return std::make_tuple(std::move(stream), std::move(err));
@@ -60,7 +60,7 @@ UDPStream::Listen(IOService* service, std::string_view address)
     UDPStream stream{service};
     POMDOG_ASSERT(stream.nativeStream != nullptr);
 
-    const auto [family, host, port] = Detail::AddressParser::TransformAddress(address);
+    const auto [family, host, port] = detail::AddressParser::TransformAddress(address);
 
     if (auto err = stream.nativeStream->Listen(host, port); err != nullptr) {
         return std::make_tuple(std::move(stream), std::move(err));
@@ -106,4 +106,4 @@ Connection UDPStream::OnReadFrom(std::function<void(const ArrayView<std::uint8_t
     return nativeStream->OnReadFrom.Connect(std::move(callback));
 }
 
-} // namespace Pomdog
+} // namespace pomdog

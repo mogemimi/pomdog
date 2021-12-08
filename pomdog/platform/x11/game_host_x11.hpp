@@ -16,11 +16,11 @@
 #include <X11/Xutil.h>
 #include <memory>
 
-namespace Pomdog {
+namespace pomdog {
 class Game;
-} // namespace Pomdog
+} // namespace pomdog
 
-namespace Pomdog::Detail::X11 {
+namespace pomdog::detail::x11 {
 
 class GameHostX11 final : public GameHost {
 public:
@@ -73,4 +73,4 @@ private:
     std::unique_ptr<Impl> impl;
 };
 
-} // namespace Pomdog::Detail::X11
+} // namespace pomdog::detail::x11

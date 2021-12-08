@@ -12,7 +12,7 @@
 #include <optional>
 #include <utility>
 
-namespace Pomdog::Detail::X11 {
+namespace pomdog::detail::x11 {
 namespace {
 
 Rectangle GetWindowClientBounds(::Display* display, ::Window window)
@@ -130,7 +130,7 @@ GameWindowX11::Initialize(
 
     auto visualInfo = glXGetVisualFromFBConfig(display, framebufferConfig);
     if (visualInfo == nullptr) {
-        return Errors::New("glXGetVisualFromFBConfig() failed");
+        return errors::New("glXGetVisualFromFBConfig() failed");
     }
 
     XLockDisplay(display);
@@ -173,7 +173,7 @@ GameWindowX11::Initialize(
     ::XFree(visualInfo);
 
     if (window == 0) {
-        return Errors::New("XCreateWindow() failed");
+        return errors::New("XCreateWindow() failed");
     }
 
     // NOTE: Put the window on screen
@@ -193,7 +193,7 @@ GameWindowX11::Initialize(
 
     inputMethod = ::XOpenIM(display, nullptr, nullptr, nullptr);
     if (inputMethod == nullptr) {
-        return Errors::New("could not open input method");
+        return errors::New("could not open input method");
     }
 
     const auto hasInputMethodStyle = [&]() -> bool {
@@ -214,7 +214,7 @@ GameWindowX11::Initialize(
     }();
 
     if (!hasInputMethodStyle) {
-        return Errors::New("XIM can't get styles");
+        return errors::New("XIM can't get styles");
     }
 
     inputContext = ::XCreateIC(
@@ -226,7 +226,7 @@ GameWindowX11::Initialize(
         nullptr);
 
     if (inputContext == nullptr) {
-        return Errors::New("could not open input context");
+        return errors::New("could not open input context");
     }
 
     ::XSetICFocus(inputContext);
@@ -472,4 +472,4 @@ void GameWindowX11::ProcessEvent(::XEvent& event)
     }
 }
 
-} // namespace Pomdog::Detail::X11
+} // namespace pomdog::detail::x11

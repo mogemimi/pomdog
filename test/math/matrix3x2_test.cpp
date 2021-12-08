@@ -6,8 +6,8 @@
 #include "pomdog/math/vector3.hpp"
 #include <catch_amalgamated.hpp>
 
-using Pomdog::Matrix3x2;
-using Pomdog::Vector2;
+using pomdog::Matrix3x2;
+using pomdog::Vector2;
 
 namespace {
 

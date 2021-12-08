@@ -14,7 +14,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 namespace {
 
 class Logger final {
@@ -283,4 +283,4 @@ void Log::Internal(const std::string& channelName, const std::string& message)
     logger.Log(LogEntry{message, channelName, LogLevel::Internal});
 }
 
-} // namespace Pomdog
+} // namespace pomdog

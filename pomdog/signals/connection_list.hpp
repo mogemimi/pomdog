@@ -11,7 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 class POMDOG_EXPORT ConnectionList final {
 private:
@@ -39,4 +39,4 @@ public:
     void Disconnect();
 };
 
-} // namespace Pomdog
+} // namespace pomdog

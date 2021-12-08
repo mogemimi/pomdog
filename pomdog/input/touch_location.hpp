@@ -11,7 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 struct TouchLocation final {
     Point2D Position;
@@ -19,4 +19,4 @@ struct TouchLocation final {
     TouchLocationState State = TouchLocationState::Invalid;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

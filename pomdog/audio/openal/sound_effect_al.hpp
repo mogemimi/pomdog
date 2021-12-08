@@ -8,13 +8,13 @@
 #include <memory>
 #include <optional>
 
-namespace Pomdog {
+namespace pomdog {
 class AudioEmitter;
 class AudioListener;
 class Error;
-} // namespace Pomdog
+} // namespace pomdog
 
-namespace Pomdog::Detail::OpenAL {
+namespace pomdog::detail::openal {
 
 class AudioClipAL;
 class AudioEngineAL;
@@ -88,4 +88,4 @@ public:
     SetVolume(float volume) noexcept override;
 };
 
-} // namespace Pomdog::Detail::OpenAL
+} // namespace pomdog::detail::openal

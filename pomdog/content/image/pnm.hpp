@@ -16,7 +16,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::PNM {
+namespace pomdog::PNM {
 
 enum class PNMEncoding : std::int8_t {
     ASCII,
@@ -47,4 +47,4 @@ Encode(const Color* pixelData, std::size_t size, int width, int height);
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::vector<std::uint8_t>, std::unique_ptr<Error>>
 Encode(const Color* pixelData, std::size_t size, int width, int height, const PNMEncodeOptions& options);
 
-} // namespace Pomdog::PNM
+} // namespace pomdog::PNM

@@ -17,7 +17,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 using RenderTargetAndClearColor = std::tuple<std::shared_ptr<RenderTarget2D>, std::optional<Vector4>>;
 
@@ -26,10 +26,10 @@ struct POMDOG_EXPORT RenderPass final {
     std::array<RenderTargetAndClearColor, 8> RenderTargets;
 
     /// A depth stencil buffer.
-    std::shared_ptr<Pomdog::DepthStencilBuffer> DepthStencilBuffer;
+    std::shared_ptr<pomdog::DepthStencilBuffer> DepthStencilBuffer;
 
     /// A viewport for projection transformations and clipping.
-    std::optional<Pomdog::Viewport> Viewport;
+    std::optional<pomdog::Viewport> Viewport;
 
     /// A scissor rectangle for a scissor test.
     std::optional<Rectangle> ScissorRect;
@@ -41,4 +41,4 @@ struct POMDOG_EXPORT RenderPass final {
     std::optional<std::uint8_t> ClearStencil;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

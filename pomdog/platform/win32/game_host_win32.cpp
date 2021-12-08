@@ -41,19 +41,19 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <thread>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-using Pomdog::Detail::NativeGamepad;
-using Pomdog::Detail::Win32::GameWindowWin32;
-using Pomdog::Detail::XAudio2::AudioEngineXAudio2;
+using pomdog::detail::NativeGamepad;
+using pomdog::detail::win32::GameWindowWin32;
+using pomdog::detail::xaudio2::AudioEngineXAudio2;
 #if !defined(POMDOG_DISABLE_GL4)
-using Pomdog::Detail::GL4::GraphicsContextGL4;
-using Pomdog::Detail::GL4::GraphicsDeviceGL4;
+using pomdog::detail::gl4::GraphicsContextGL4;
+using pomdog::detail::gl4::GraphicsDeviceGL4;
 #endif
 #if !defined(POMDOG_DISABLE_DIRECT3D11)
-using Pomdog::Detail::Direct3D11::GraphicsContextDirect3D11;
-using Pomdog::Detail::Direct3D11::GraphicsDeviceDirect3D11;
+using pomdog::detail::direct3d11::GraphicsContextDirect3D11;
+using pomdog::detail::direct3d11::GraphicsDeviceDirect3D11;
 #endif
 
-namespace Pomdog::Detail::Win32 {
+namespace pomdog::detail::win32 {
 namespace {
 
 void MessagePump()
@@ -125,7 +125,7 @@ CreateGraphicsDeviceGL4(
             nullptr,
             nullptr,
             nullptr,
-            Errors::Wrap(std::move(err), "OpenGLContextWin32::Initialize() failed."));
+            errors::Wrap(std::move(err), "OpenGLContextWin32::Initialize() failed."));
     }
 
     if (::glewInit() != GLEW_OK) {
@@ -133,7 +133,7 @@ CreateGraphicsDeviceGL4(
             nullptr,
             nullptr,
             nullptr,
-            Errors::New("glewInit() failed."));
+            errors::New("glewInit() failed."));
     }
 
     openGLContext->MakeCurrent();
@@ -145,7 +145,7 @@ CreateGraphicsDeviceGL4(
             nullptr,
             nullptr,
             nullptr,
-            Errors::Wrap(std::move(err), "GraphicsDeviceGL4::Initialize() failed."));
+            errors::Wrap(std::move(err), "GraphicsDeviceGL4::Initialize() failed."));
     }
 
     // NOTE: Create a graphics context.
@@ -155,7 +155,7 @@ CreateGraphicsDeviceGL4(
             nullptr,
             nullptr,
             nullptr,
-            Errors::Wrap(std::move(err), "GraphicsContextGL4::Initialize() failed."));
+            errors::Wrap(std::move(err), "GraphicsContextGL4::Initialize() failed."));
     }
 
     auto graphicsCommandQueue = std::make_shared<GraphicsCommandQueueImmediate>(graphicsContext);
@@ -202,7 +202,7 @@ public:
         auto device = graphicsDevice->GetDevice();
         if (auto err = graphicsContext->ResizeBackBuffers(device.Get(), width, height); err != nullptr) {
             // FIXME: Add error handling
-            Log::Critical("Pomdog", "error: ResizeBackBuffers() failed: " + err->ToString());
+            Log::Critical("pomdog", "error: ResizeBackBuffers() failed: " + err->ToString());
         }
         graphicsDevice->ClientSizeChanged(width, height);
     }
@@ -230,7 +230,7 @@ CreateGraphicsDeviceDirect3D11(
             nullptr,
             nullptr,
             nullptr,
-            Errors::Wrap(std::move(err), "failed to initialize GraphicsDeviceDirect3D11"));
+            errors::Wrap(std::move(err), "failed to initialize GraphicsDeviceDirect3D11"));
     }
 
     auto device = graphicsDevice->GetDevice();
@@ -246,7 +246,7 @@ CreateGraphicsDeviceDirect3D11(
             nullptr,
             nullptr,
             nullptr,
-            Errors::Wrap(std::move(err), "failed to initialize GraphicsContextDirect3D11"));
+            errors::Wrap(std::move(err), "failed to initialize GraphicsContextDirect3D11"));
     }
 
     auto graphicsCommandQueue = std::make_shared<GraphicsCommandQueueImmediate>(graphicsContext);
@@ -330,7 +330,7 @@ private:
 
 private:
     GameClock clock;
-    Detail::SubsystemScheduler subsystemScheduler;
+    detail::SubsystemScheduler subsystemScheduler;
     ScopedConnection systemEventConnection;
 
     std::shared_ptr<EventQueue<SystemEvent>> eventQueue;
@@ -384,7 +384,7 @@ GameHostWin32::Impl::Initialize(
         graphicsBridge = std::move(std::get<2>(result));
 
         if (auto deviceErr = std::move(std::get<3>(result)); deviceErr != nullptr) {
-            return Errors::Wrap(std::move(deviceErr), "CreateGraphicsDeviceGL4() failed");
+            return errors::Wrap(std::move(deviceErr), "CreateGraphicsDeviceGL4() failed");
         }
     }
 #endif
@@ -396,7 +396,7 @@ GameHostWin32::Impl::Initialize(
         graphicsBridge = std::move(std::get<2>(result));
 
         if (auto deviceErr = std::move(std::get<3>(result)); deviceErr != nullptr) {
-            return Errors::Wrap(std::move(deviceErr), "CreateGraphicsDeviceDirect3D11() failed");
+            return errors::Wrap(std::move(deviceErr), "CreateGraphicsDeviceDirect3D11() failed");
         }
     }
 #endif
@@ -409,7 +409,7 @@ GameHostWin32::Impl::Initialize(
     // NOTE: Create audio engine.
     audioEngine = std::make_shared<AudioEngineXAudio2>();
     if (auto err = audioEngine->Initialize(); err != nullptr) {
-        return Errors::Wrap(std::move(err), "AudioEngineXAudio2::Initialize() failed");
+        return errors::Wrap(std::move(err), "AudioEngineXAudio2::Initialize() failed");
     }
 
     keyboard = std::make_shared<KeyboardWin32>();
@@ -418,7 +418,7 @@ GameHostWin32::Impl::Initialize(
 
     auto [resourceDir, resourceDirErr] = FileSystem::GetResourceDirectoryPath();
     if (resourceDirErr != nullptr) {
-        return Errors::Wrap(std::move(resourceDirErr), "FileSystem::GetResourceDirectoryPath() failed");
+        return errors::Wrap(std::move(resourceDirErr), "FileSystem::GetResourceDirectoryPath() failed");
     }
     auto contentDirectory = PathHelper::Join(resourceDir, "Content");
 
@@ -431,7 +431,7 @@ GameHostWin32::Impl::Initialize(
     // NOTE: Create IO service.
     ioService = std::make_unique<IOService>(&clock);
     if (auto err = ioService->Initialize(); err != nullptr) {
-        return Errors::Wrap(std::move(err), "IOService::Initialize() failed");
+        return errors::Wrap(std::move(err), "IOService::Initialize() failed");
     }
     httpClient = std::make_unique<HTTPClient>(ioService.get());
 
@@ -454,7 +454,7 @@ GameHostWin32::Impl::~Impl()
     eventQueue.reset();
     httpClient.reset();
     if (auto err = ioService->Shutdown(); err != nullptr) {
-        Log::Warning("Pomdog", err->ToString());
+        Log::Warning("pomdog", err->ToString());
     }
     ioService.reset();
     assetManager.reset();
@@ -733,4 +733,4 @@ std::shared_ptr<HTTPClient> GameHostWin32::GetHTTPClient() noexcept
     return impl->GetHTTPClient(shared_from_this());
 }
 
-} // namespace Pomdog::Detail::Win32
+} // namespace pomdog::detail::win32

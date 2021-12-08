@@ -8,7 +8,7 @@
 #include <memory>
 #include <thread>
 
-namespace Pomdog {
+namespace pomdog {
 
 class Executor final {
 private:
@@ -52,4 +52,4 @@ public:
     }
 };
 
-} // namespace Pomdog
+} // namespace pomdog

@@ -2,8 +2,8 @@
 
 #include "pomdog/input/gamepad.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 
 Gamepad::~Gamepad() = default;
 
-} // namespace Pomdog
+} // namespace pomdog

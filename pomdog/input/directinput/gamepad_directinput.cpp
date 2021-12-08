@@ -17,7 +17,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::DirectInput {
+namespace pomdog::detail::DirectInput {
 namespace {
 
 constexpr LONG ThumbStickMinValue = -32768;
@@ -119,7 +119,7 @@ bool IsXInputDevice(const GUID& guidProduct)
     auto hr = ::CoInitialize(nullptr);
 
     const bool cleanupCOM = SUCCEEDED(hr);
-    Detail::ScopeGuard deferCleanupCOM([&] {
+    detail::ScopeGuard deferCleanupCOM([&] {
         if (cleanupCOM) {
             ::CoUninitialize();
         }
@@ -140,19 +140,19 @@ bool IsXInputDevice(const GUID& guidProduct)
     if (bstrNamespace == nullptr) {
         return false;
     }
-    Detail::ScopeGuard defer1([&] { ::SysFreeString(bstrNamespace); });
+    detail::ScopeGuard defer1([&] { ::SysFreeString(bstrNamespace); });
 
     const auto bstrClassName = ::SysAllocString(L"Win32_PNPEntity");
     if (bstrClassName == nullptr) {
         return false;
     }
-    Detail::ScopeGuard defer2([&] { ::SysFreeString(bstrClassName); });
+    detail::ScopeGuard defer2([&] { ::SysFreeString(bstrClassName); });
 
     const auto bstrDeviceID = ::SysAllocString(L"DeviceID");
     if (bstrDeviceID == nullptr) {
         return false;
     }
-    Detail::ScopeGuard defer3([&] { ::SysFreeString(bstrDeviceID); });
+    detail::ScopeGuard defer3([&] { ::SysFreeString(bstrDeviceID); });
 
     Microsoft::WRL::ComPtr<IWbemServices> wbemServices = nullptr;
     hr = wbemLocator->ConnectServer(
@@ -189,7 +189,7 @@ bool IsXInputDevice(const GUID& guidProduct)
 
         std::array<IWbemClassObject*, 20> devices;
         std::fill(std::begin(devices), std::end(devices), nullptr);
-        Detail::ScopeGuard defer4([&] {
+        detail::ScopeGuard defer4([&] {
             for (auto& device : devices) {
                 if (device != nullptr) {
                     device->Release();
@@ -579,7 +579,7 @@ GamepadDirectInput::Initialize(HINSTANCE hInstance, HWND windowHandleIn) noexcep
             &directInput,
             nullptr);
         FAILED(hr)) {
-        return Errors::New("DirectInput8Create() failed");
+        return errors::New("DirectInput8Create() failed");
     }
 
     for (auto& gamepad : gamepads) {
@@ -680,4 +680,4 @@ void GamepadDirectInput::PollEvents()
     }
 }
 
-} // namespace Pomdog::Detail::DirectInput
+} // namespace pomdog::detail::DirectInput

@@ -8,11 +8,11 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 class Error;
-} // namespace Pomdog
+} // namespace pomdog
 
-namespace Pomdog::Detail::GL4 {
+namespace pomdog::detail::gl4 {
 
 [[nodiscard]] std::unique_ptr<Error>
 GetLastError() noexcept;
@@ -23,9 +23,9 @@ void CheckError(const char* command, const char* filename, int line);
 
 #if defined(DEBUG) && !defined(NDEBUG)
 #define POMDOG_CHECK_ERROR_GL4(name) \
-    Pomdog::Detail::GL4::CheckError(name, __FILE__, __LINE__)
+    pomdog::detail::gl4::CheckError(name, __FILE__, __LINE__)
 #else
 #define POMDOG_CHECK_ERROR_GL4(name)
 #endif
 
-} // namespace Pomdog::Detail::GL4
+} // namespace pomdog::detail::gl4

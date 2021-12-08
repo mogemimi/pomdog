@@ -7,7 +7,7 @@
 #include "pomdog/utility/assert.hpp"
 #include <algorithm>
 
-namespace Pomdog::Detail::IOKit {
+namespace pomdog::detail::IOKit {
 namespace {
 
 void AppendDeviceMatching(CFMutableArrayRef matcher, uint32_t page, uint32_t usage)
@@ -189,12 +189,12 @@ GamepadIOKit::Initialize(const std::shared_ptr<EventQueue<SystemEvent>>& eventQu
 
     hidManager = IOHIDManagerCreate(kCFAllocatorDefault, kIOHIDOptionsTypeNone);
     if (hidManager == nullptr) {
-        return Errors::New("IOHIDManagerCreate() failed");
+        return errors::New("IOHIDManagerCreate() failed");
     }
 
     auto deviceMatcher = CFArrayCreateMutable(kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks);
     if (deviceMatcher == nullptr) {
-        return Errors::New("CFArrayCreateMutable() failed");
+        return errors::New("CFArrayCreateMutable() failed");
     }
 
     AppendDeviceMatching(deviceMatcher, kHIDPage_GenericDesktop, kHIDUsage_GD_Joystick);
@@ -456,4 +456,4 @@ void GamepadIOKit::HandleEvent(const SystemEvent& event)
     }
 }
 
-} // namespace Pomdog::Detail::IOKit
+} // namespace pomdog::detail::IOKit

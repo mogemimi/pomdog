@@ -16,11 +16,11 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 class GraphicsDevice;
-} // namespace Pomdog
+} // namespace pomdog
 
-namespace Pomdog::Detail::GL4 {
+namespace pomdog::detail::gl4 {
 
 namespace Tags {
 struct FrameBufferTag;
@@ -123,4 +123,4 @@ private:
     bool needToApplyPipelineState = true;
 };
 
-} // namespace Pomdog::Detail::GL4
+} // namespace pomdog::detail::gl4

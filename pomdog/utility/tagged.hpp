@@ -11,7 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 template <typename T, class Tag>
 class POMDOG_EXPORT Tagged final {
@@ -71,13 +71,13 @@ Tagged<T, Tag> MakeTagged(Arguments&&... arguments)
     return Tagged<T, Tag>(std::forward<T>(arguments)...);
 }
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail
 
 namespace std {
 
 template <typename T, class U>
-struct hash<Pomdog::Detail::Tagged<T, U>> {
-    std::size_t operator()(const Pomdog::Detail::Tagged<T, U>& key) const
+struct hash<pomdog::detail::Tagged<T, U>> {
+    std::size_t operator()(const pomdog::detail::Tagged<T, U>& key) const
     {
         return std::hash<T>()(key.value);
     }

@@ -7,7 +7,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 ConnectionList::~ConnectionList()
 {
@@ -29,4 +29,4 @@ void ConnectionList::operator+=(Connection&& connection)
     connections.push_back(std::move(connection));
 }
 
-} // namespace Pomdog
+} // namespace pomdog

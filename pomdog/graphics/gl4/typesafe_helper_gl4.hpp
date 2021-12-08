@@ -9,7 +9,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <type_traits>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::GL4 {
+namespace pomdog::detail::gl4 {
 
 namespace TypesafeHelperGL4 {
 
@@ -42,4 +42,4 @@ void BindTexture(const Tagged& texture)
 
 } // namespace TypesafeHelperGL4
 
-} // namespace Pomdog::Detail::GL4
+} // namespace pomdog::detail::gl4

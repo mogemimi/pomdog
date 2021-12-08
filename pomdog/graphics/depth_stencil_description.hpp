@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <limits>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 struct POMDOG_EXPORT DepthStencilDescription final {
     DepthStencilOperation ClockwiseFace;
@@ -94,4 +94,4 @@ struct POMDOG_EXPORT DepthStencilDescription final {
     }
 };
 
-} // namespace Pomdog
+} // namespace pomdog

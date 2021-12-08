@@ -18,7 +18,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 struct PipelineStateDescription final {
     // NOTE: Since OpenGL 4.1 and earlier, location attribute cannot be used,
@@ -31,7 +31,7 @@ struct PipelineStateDescription final {
     InputLayoutDescription InputLayout;
 
     /// Specifies the geometric primitive type for the input assembler stage.
-    Pomdog::PrimitiveTopology PrimitiveTopology;
+    pomdog::PrimitiveTopology PrimitiveTopology;
 
     BlendDescription BlendState;
     RasterizerDescription RasterizerState;
@@ -41,4 +41,4 @@ struct PipelineStateDescription final {
     std::uint32_t MultiSampleMask;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

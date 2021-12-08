@@ -9,7 +9,7 @@
 #import <Metal/MTLRenderCommandEncoder.h>
 #import <Metal/MTLRenderPipeline.h>
 
-namespace Pomdog::Detail::Metal {
+namespace pomdog::detail::metal {
 
 struct RasterizerStateMetal final {
     float depthBias = 0;
@@ -39,4 +39,4 @@ private:
     MTLPrimitiveType primitiveType;
 };
 
-} // namespace Pomdog::Detail::Metal
+} // namespace pomdog::detail::metal

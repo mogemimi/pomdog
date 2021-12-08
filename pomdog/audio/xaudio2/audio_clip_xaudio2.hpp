@@ -13,12 +13,12 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 class Error;
 enum class AudioChannels : std::uint8_t;
-} // namespace Pomdog
+} // namespace pomdog
 
-namespace Pomdog::Detail::XAudio2 {
+namespace pomdog::detail::xaudio2 {
 
 class AudioClipXAudio2 final : public AudioClip {
 private:
@@ -71,4 +71,4 @@ public:
     GetSizeInBytes() const noexcept;
 };
 
-} // namespace Pomdog::Detail::XAudio2
+} // namespace pomdog::detail::xaudio2

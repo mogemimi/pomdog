@@ -11,7 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 // Forward declarations of Math
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 template <typename T>
 class Coordinate2D;
@@ -52,26 +52,26 @@ struct DegreeTag;
 struct RadianTag;
 
 } // namespace Tags
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail
 
-namespace Pomdog {
+namespace pomdog {
 
-using Matrix2x2 = Detail::FloatingPointMatrix2x2<float>;
-using Matrix3x2 = Detail::FloatingPointMatrix3x2<float>;
-using Matrix3x3 = Detail::FloatingPointMatrix3x3<float>;
-using Matrix4x4 = Detail::FloatingPointMatrix4x4<float>;
-using Point2D = Detail::Coordinate2D<std::int32_t>;
-using Point3D = Detail::Coordinate3D<std::int32_t>;
-using Quaternion = Detail::FloatingPointQuaternion<float>;
-using Vector2 = Detail::FloatingPointVector2<float>;
-using Vector3 = Detail::FloatingPointVector3<float>;
-using Vector4 = Detail::FloatingPointVector4<float>;
-
-template <typename T>
-using Degree = Detail::TaggedArithmetic<T, Detail::Tags::DegreeTag>;
+using Matrix2x2 = detail::FloatingPointMatrix2x2<float>;
+using Matrix3x2 = detail::FloatingPointMatrix3x2<float>;
+using Matrix3x3 = detail::FloatingPointMatrix3x3<float>;
+using Matrix4x4 = detail::FloatingPointMatrix4x4<float>;
+using Point2D = detail::Coordinate2D<std::int32_t>;
+using Point3D = detail::Coordinate3D<std::int32_t>;
+using Quaternion = detail::FloatingPointQuaternion<float>;
+using Vector2 = detail::FloatingPointVector2<float>;
+using Vector3 = detail::FloatingPointVector3<float>;
+using Vector4 = detail::FloatingPointVector4<float>;
 
 template <typename T>
-using Radian = Detail::TaggedArithmetic<T, Detail::Tags::RadianTag>;
+using Degree = detail::TaggedArithmetic<T, detail::Tags::DegreeTag>;
+
+template <typename T>
+using Radian = detail::TaggedArithmetic<T, detail::Tags::RadianTag>;
 
 class BoundingBox;
 class BoundingBox2D;
@@ -87,4 +87,4 @@ class Rectangle;
 enum class ContainmentType : std::uint8_t;
 enum class PlaneIntersectionType : std::uint8_t;
 
-} // namespace Pomdog
+} // namespace pomdog

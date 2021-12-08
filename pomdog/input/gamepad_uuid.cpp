@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 namespace {
 
 template <typename T>
@@ -58,4 +58,4 @@ std::string GamepadUUID::ToString() const
     return s;
 }
 
-} // namespace Pomdog
+} // namespace pomdog

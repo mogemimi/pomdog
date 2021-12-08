@@ -7,7 +7,7 @@
 #include "pomdog/graphics/gl4/format_helper.hpp"
 #include "pomdog/utility/assert.hpp"
 
-namespace Pomdog::Detail::GL4 {
+namespace pomdog::detail::gl4 {
 namespace {
 
 GLenum ToStencilOperationGL4NonTypesafe(StencilOperation operation) noexcept
@@ -159,4 +159,4 @@ void DepthStencilStateGL4::Apply()
     ApplyStencilTest();
 }
 
-} // namespace Pomdog::Detail::GL4
+} // namespace pomdog::detail::gl4

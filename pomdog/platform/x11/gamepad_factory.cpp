@@ -8,7 +8,7 @@
 #error "Platform undefined or not supported."
 #endif
 
-namespace Pomdog::Detail::X11 {
+namespace pomdog::detail::x11 {
 
 [[nodiscard]] std::unique_ptr<NativeGamepad>
 CreateGamepad() noexcept
@@ -20,4 +20,4 @@ CreateGamepad() noexcept
 #endif
 }
 
-} // namespace Pomdog::Detail::X11
+} // namespace pomdog::detail::x11

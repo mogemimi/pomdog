@@ -11,7 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <sstream>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::GL4 {
+namespace pomdog::detail::gl4 {
 namespace {
 
 [[nodiscard]] std::string
@@ -51,7 +51,7 @@ GetLastError() noexcept
     if (errorCode == GL_NO_ERROR) {
         return nullptr;
     }
-    return Errors::New(ToString(errorCode));
+    return errors::New(ToString(errorCode));
 }
 
 #if defined(DEBUG) && !defined(NDEBUG)
@@ -82,4 +82,4 @@ void CheckError(const char* command, const char* filename, int line)
 }
 #endif
 
-} // namespace Pomdog::Detail::GL4
+} // namespace pomdog::detail::gl4

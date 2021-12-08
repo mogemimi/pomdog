@@ -15,7 +15,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 template <typename T>
 FloatingPointMatrix4x4<T>::FloatingPointMatrix4x4(
@@ -486,22 +486,22 @@ template <typename T>
 void FloatingPointMatrix4x4<T>::Lerp(const FloatingPointMatrix4x4& source1, const FloatingPointMatrix4x4& source2,
     T amount, FloatingPointMatrix4x4& result) noexcept
 {
-    result.m[0][0] = Math::Lerp(source1.m[0][0], source2.m[0][0], amount);
-    result.m[0][1] = Math::Lerp(source1.m[0][1], source2.m[0][1], amount);
-    result.m[0][2] = Math::Lerp(source1.m[0][2], source2.m[0][2], amount);
-    result.m[0][3] = Math::Lerp(source1.m[0][3], source2.m[0][3], amount);
-    result.m[1][0] = Math::Lerp(source1.m[1][0], source2.m[1][0], amount);
-    result.m[1][1] = Math::Lerp(source1.m[1][1], source2.m[1][1], amount);
-    result.m[1][2] = Math::Lerp(source1.m[1][2], source2.m[1][2], amount);
-    result.m[1][3] = Math::Lerp(source1.m[1][3], source2.m[1][3], amount);
-    result.m[2][0] = Math::Lerp(source1.m[2][0], source2.m[2][0], amount);
-    result.m[2][1] = Math::Lerp(source1.m[2][1], source2.m[2][1], amount);
-    result.m[2][2] = Math::Lerp(source1.m[2][2], source2.m[2][2], amount);
-    result.m[2][3] = Math::Lerp(source1.m[2][3], source2.m[2][3], amount);
-    result.m[3][0] = Math::Lerp(source1.m[3][0], source2.m[3][0], amount);
-    result.m[3][1] = Math::Lerp(source1.m[3][1], source2.m[3][1], amount);
-    result.m[3][2] = Math::Lerp(source1.m[3][2], source2.m[3][2], amount);
-    result.m[3][3] = Math::Lerp(source1.m[3][3], source2.m[3][3], amount);
+    result.m[0][0] = math::Lerp(source1.m[0][0], source2.m[0][0], amount);
+    result.m[0][1] = math::Lerp(source1.m[0][1], source2.m[0][1], amount);
+    result.m[0][2] = math::Lerp(source1.m[0][2], source2.m[0][2], amount);
+    result.m[0][3] = math::Lerp(source1.m[0][3], source2.m[0][3], amount);
+    result.m[1][0] = math::Lerp(source1.m[1][0], source2.m[1][0], amount);
+    result.m[1][1] = math::Lerp(source1.m[1][1], source2.m[1][1], amount);
+    result.m[1][2] = math::Lerp(source1.m[1][2], source2.m[1][2], amount);
+    result.m[1][3] = math::Lerp(source1.m[1][3], source2.m[1][3], amount);
+    result.m[2][0] = math::Lerp(source1.m[2][0], source2.m[2][0], amount);
+    result.m[2][1] = math::Lerp(source1.m[2][1], source2.m[2][1], amount);
+    result.m[2][2] = math::Lerp(source1.m[2][2], source2.m[2][2], amount);
+    result.m[2][3] = math::Lerp(source1.m[2][3], source2.m[2][3], amount);
+    result.m[3][0] = math::Lerp(source1.m[3][0], source2.m[3][0], amount);
+    result.m[3][1] = math::Lerp(source1.m[3][1], source2.m[3][1], amount);
+    result.m[3][2] = math::Lerp(source1.m[3][2], source2.m[3][2], amount);
+    result.m[3][3] = math::Lerp(source1.m[3][3], source2.m[3][3], amount);
 }
 
 template <typename T>
@@ -1295,4 +1295,4 @@ operator*<float>(float, const FloatingPointMatrix4x4<float>&) noexcept;
 template FloatingPointMatrix4x4<double>
 operator*<double>(double, const FloatingPointMatrix4x4<double>&) noexcept;
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

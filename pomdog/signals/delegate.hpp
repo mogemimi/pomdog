@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 template <typename... Arguments>
 class POMDOG_EXPORT Delegate<void(Arguments...)> final {
@@ -37,7 +37,7 @@ public:
     [[nodiscard]] bool IsConnected() const noexcept;
 
 private:
-    using Body = Detail::Signals::DelegateBody<void(Arguments...)>;
+    using Body = detail::signals::DelegateBody<void(Arguments...)>;
     std::shared_ptr<Body> body;
 };
 
@@ -89,4 +89,4 @@ bool Delegate<void(Arguments...)>::IsConnected() const noexcept
     return body->IsConnected();
 }
 
-} // namespace Pomdog
+} // namespace pomdog

@@ -7,7 +7,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 Connection::Connection(std::unique_ptr<ConnectionBody>&& bodyIn)
     : body(std::move(bodyIn))
@@ -42,4 +42,4 @@ bool Connection::IsConnected() const
     return (body != nullptr) && body->Valid();
 }
 
-} // namespace Pomdog
+} // namespace pomdog

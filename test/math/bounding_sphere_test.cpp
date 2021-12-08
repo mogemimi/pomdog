@@ -5,7 +5,7 @@
 #include "pomdog/math/containment_type.hpp"
 #include <catch_amalgamated.hpp>
 
-using namespace Pomdog;
+using namespace pomdog;
 
 TEST_CASE("BoundingSphere", "[BoundingSphere]")
 {

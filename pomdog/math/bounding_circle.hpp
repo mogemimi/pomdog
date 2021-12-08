@@ -6,7 +6,7 @@
 #include "pomdog/math/forward_declarations.hpp"
 #include "pomdog/math/vector2.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 
 /// BoundingCircle is a bounding circle in 2D space.
 class POMDOG_EXPORT BoundingCircle final {
@@ -35,4 +35,4 @@ public:
     Intersects(const BoundingCircle& circle) const;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

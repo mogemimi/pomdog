@@ -2,8 +2,8 @@
 
 #include "pomdog/graphics/gl4/opengl_context.hpp"
 
-namespace Pomdog::Detail::GL4 {
+namespace pomdog::detail::gl4 {
 
 OpenGLContext::~OpenGLContext() = default;
 
-} // namespace Pomdog::Detail::GL4
+} // namespace pomdog::detail::gl4

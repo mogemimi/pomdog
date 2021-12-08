@@ -11,7 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 TLSStreamEmscripten::TLSStreamEmscripten([[maybe_unused]] IOService* serviceIn)
 {
@@ -28,7 +28,7 @@ TLSStreamEmscripten::Connect(
     [[maybe_unused]] const Duration& connectTimeoutIn)
 {
     // FIXME: Not implemented yet.
-    return Errors::New("not implemented yet");
+    return errors::New("not implemented yet");
 }
 
 void TLSStreamEmscripten::Close()
@@ -40,7 +40,7 @@ std::unique_ptr<Error>
 TLSStreamEmscripten::Write([[maybe_unused]] const ArrayView<std::uint8_t const>& data)
 {
     // FIXME: Not implemented yet.
-    return Errors::New("not implemented yet");
+    return errors::New("not implemented yet");
 }
 
 bool TLSStreamEmscripten::IsConnected() const noexcept
@@ -54,4 +54,4 @@ void TLSStreamEmscripten::SetTimeout([[maybe_unused]] const Duration& timeoutIn)
     // FIXME: Not implemented yet.
 }
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

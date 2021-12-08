@@ -7,12 +7,12 @@
 #include "pomdog/utility/errors.hpp"
 #import <Metal/MTLLibrary.h>
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 class ShaderBytecode;
 struct ShaderCompileOptions;
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail
 
-namespace Pomdog::Detail::Metal {
+namespace pomdog::detail::metal {
 
 class ShaderMetal final : public Shader {
 public:
@@ -37,4 +37,4 @@ private:
     id<MTLFunction> shader = nullptr;
 };
 
-} // namespace Pomdog::Detail::Metal
+} // namespace pomdog::detail::metal

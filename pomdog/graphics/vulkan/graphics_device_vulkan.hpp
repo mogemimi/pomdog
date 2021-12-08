@@ -5,7 +5,7 @@
 #include "pomdog/graphics/graphics_device.hpp"
 #include <memory>
 
-namespace Pomdog::Detail::Vulkan {
+namespace pomdog::detail::vulkan {
 
 class GraphicsDeviceVulkan final : public GraphicsDevice {
 public:
@@ -79,8 +79,8 @@ public:
     /// Creates a shader object.
     std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
     CreateShader(
-        const Detail::ShaderBytecode& shaderBytecode,
-        const Detail::ShaderCompileOptions& compileOptions) noexcept override;
+        const detail::ShaderBytecode& shaderBytecode,
+        const detail::ShaderCompileOptions& compileOptions) noexcept override;
 
     /// Creates a 2D render target.
     std::tuple<std::shared_ptr<RenderTarget2D>, std::unique_ptr<Error>>
@@ -120,4 +120,4 @@ private:
     std::unique_ptr<Impl> impl;
 };
 
-} // namespace Pomdog::Detail::Vulkan
+} // namespace pomdog::detail::vulkan

@@ -16,7 +16,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 enum class ButtonKind : std::int8_t {
     None = -1,
@@ -86,4 +86,4 @@ GetMappings(const GamepadUUID& uuid) noexcept;
 [[nodiscard]] std::tuple<GamepadMappings, std::string>
 GetMappings(const std::string& uuid) noexcept;
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

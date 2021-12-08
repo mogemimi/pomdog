@@ -5,8 +5,8 @@
 #include <catch_amalgamated.hpp>
 #include <utility>
 
-using Pomdog::Connection;
-using Pomdog::Signal;
+using pomdog::Connection;
+using pomdog::Signal;
 
 TEST_CASE("Connection", "[Connection]")
 {

@@ -6,7 +6,7 @@
 #include "pomdog/input/player_index.hpp"
 #include "pomdog/signals/signal.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 
 struct GamepadState;
 struct GamepadCapabilities;
@@ -24,4 +24,4 @@ public:
     Signal<void(PlayerIndex index, const GamepadCapabilities& caps)> Disconnected;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

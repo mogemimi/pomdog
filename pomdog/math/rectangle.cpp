@@ -3,7 +3,7 @@
 #include "pomdog/math/rectangle.hpp"
 #include "pomdog/utility/assert.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 
 Rectangle::Rectangle(std::int32_t x, std::int32_t y,
     std::int32_t width, std::int32_t height) noexcept
@@ -128,4 +128,4 @@ bool Rectangle::Intersects(const Rectangle& rect) const
            GetBottom() > rect.GetTop();
 }
 
-} // namespace Pomdog
+} // namespace pomdog

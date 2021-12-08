@@ -17,7 +17,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 namespace {
 
 #include "SDL_GameControllerDB.h"
@@ -364,4 +364,4 @@ GetMappings(const std::string& uuidString) noexcept
     return std::make_tuple(mappings, deviceName);
 }
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

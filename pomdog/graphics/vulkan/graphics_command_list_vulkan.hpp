@@ -6,7 +6,7 @@
 #include "pomdog/graphics/graphics_command_list.hpp"
 #include <vulkan/vulkan.h>
 
-namespace Pomdog::Detail::Vulkan {
+namespace pomdog::detail::vulkan {
 
 class GraphicsCommandListVulkan final : public GraphicsCommandList {
 public:
@@ -99,4 +99,4 @@ private:
     VkCommandBuffer commandBuffer;
 };
 
-} // namespace Pomdog::Detail::Vulkan
+} // namespace pomdog::detail::vulkan

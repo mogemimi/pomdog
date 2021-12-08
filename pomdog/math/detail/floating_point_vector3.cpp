@@ -15,7 +15,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 template <typename T>
 FloatingPointVector3<T>::FloatingPointVector3(T x, T y, T z) noexcept
@@ -219,9 +219,9 @@ FloatingPointVector3<T>
 FloatingPointVector3<T>::Clamp(const FloatingPointVector3& source, const FloatingPointVector3& min, const FloatingPointVector3& max) noexcept
 {
     return FloatingPointVector3(
-        Math::Clamp(source.X, min.X, max.X),
-        Math::Clamp(source.Y, min.Y, max.Y),
-        Math::Clamp(source.Z, min.Z, max.Z));
+        math::Clamp(source.X, min.X, max.X),
+        math::Clamp(source.Y, min.Y, max.Y),
+        math::Clamp(source.Z, min.Z, max.Z));
 }
 
 template <typename T>
@@ -229,9 +229,9 @@ FloatingPointVector3<T>
 FloatingPointVector3<T>::Lerp(const FloatingPointVector3& source1, const FloatingPointVector3& source2, T amount)
 {
     return FloatingPointVector3(
-        Math::Lerp(source1.X, source2.X, amount),
-        Math::Lerp(source1.Y, source2.Y, amount),
-        Math::Lerp(source1.Z, source2.Z, amount));
+        math::Lerp(source1.X, source2.X, amount),
+        math::Lerp(source1.Y, source2.Y, amount),
+        math::Lerp(source1.Z, source2.Z, amount));
 }
 
 template <typename T>
@@ -239,9 +239,9 @@ FloatingPointVector3<T>
 FloatingPointVector3<T>::SmoothStep(const FloatingPointVector3& source1, const FloatingPointVector3& source2, T amount)
 {
     return FloatingPointVector3(
-        Math::SmoothStep(source1.X, source2.X, amount),
-        Math::SmoothStep(source1.Y, source2.Y, amount),
-        Math::SmoothStep(source1.Z, source2.Z, amount));
+        math::SmoothStep(source1.X, source2.X, amount),
+        math::SmoothStep(source1.Y, source2.Y, amount),
+        math::SmoothStep(source1.Z, source2.Z, amount));
 }
 
 template <typename T>
@@ -343,4 +343,4 @@ operator*<float>(float, const FloatingPointVector3<float>&) noexcept;
 template FloatingPointVector3<double>
 operator*<double>(double, const FloatingPointVector3<double>&) noexcept;
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

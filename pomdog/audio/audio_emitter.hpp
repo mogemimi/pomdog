@@ -4,7 +4,7 @@
 
 #include "pomdog/math/vector3.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 
 class AudioEmitter final {
 public:
@@ -15,4 +15,4 @@ public:
     float DopplerScale;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

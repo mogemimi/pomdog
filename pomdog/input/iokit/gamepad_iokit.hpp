@@ -14,14 +14,14 @@
 #include <cstdint>
 #include <memory>
 
-namespace Pomdog {
+namespace pomdog {
 
 template <typename Event>
 class EventQueue;
 
-} // namespace Pomdog
+} // namespace pomdog
 
-namespace Pomdog::Detail::IOKit {
+namespace pomdog::detail::IOKit {
 
 struct ThumbStickInfo final {
     std::int32_t Minimum = 0;
@@ -68,4 +68,4 @@ private:
     void OnDeviceDetached(IOReturn result, void* sender, IOHIDDeviceRef device);
 };
 
-} // namespace Pomdog::Detail::IOKit
+} // namespace pomdog::detail::IOKit

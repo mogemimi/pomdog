@@ -6,7 +6,7 @@
 #include "pomdog/graphics/forward_declarations.hpp"
 #include <vulkan/vulkan.h>
 
-namespace Pomdog::Detail::Vulkan {
+namespace pomdog::detail::vulkan {
 
 class EffectReflectionVulkan final : public EffectReflection {
 public:
@@ -16,4 +16,4 @@ public:
     GetConstantBuffers() const noexcept override;
 };
 
-} // namespace Pomdog::Detail::Vulkan
+} // namespace pomdog::detail::vulkan

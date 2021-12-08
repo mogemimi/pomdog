@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <type_traits>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Math {
+namespace pomdog::math {
 
 template <typename T>
 inline constexpr T Pi = T(3.14159265358979323846L);
@@ -44,7 +44,7 @@ template <typename T>
 [[nodiscard]] T
 Clamp(T x, T min, T max) noexcept
 {
-    static_assert(std::is_arithmetic<T>::value || Detail::IsTaggedFloatingPoint<T>::value, "");
+    static_assert(std::is_arithmetic<T>::value || detail::IsTaggedFloatingPoint<T>::value, "");
     POMDOG_ASSERT_MESSAGE(min < max, "In Clamp, maxval is out of range");
     if (x < min) {
         return min;
@@ -60,7 +60,7 @@ template <typename T>
 Saturate(T x) noexcept
 {
     static_assert(
-        std::is_floating_point<T>::value || Detail::IsTaggedFloatingPoint<T>::value,
+        std::is_floating_point<T>::value || detail::IsTaggedFloatingPoint<T>::value,
         "T is floaing point number");
     return Clamp(x, T{0}, T{1});
 }
@@ -70,7 +70,7 @@ template <typename T>
 Lerp(T source1, T source2, T amount) noexcept
 {
     static_assert(
-        std::is_floating_point<T>::value || Detail::IsTaggedFloatingPoint<T>::value,
+        std::is_floating_point<T>::value || detail::IsTaggedFloatingPoint<T>::value,
         "T is floaing point number");
     return source1 + amount * (source2 - source1);
 }
@@ -80,7 +80,7 @@ template <typename T>
 SmoothStep(T min, T max, T amount) noexcept
 {
     static_assert(
-        std::is_floating_point<T>::value || Detail::IsTaggedFloatingPoint<T>::value,
+        std::is_floating_point<T>::value || detail::IsTaggedFloatingPoint<T>::value,
         "T is floaing point number");
     const auto x = Saturate(amount);
     const auto scale = x * x * (T{3} - T{2} * x);
@@ -92,7 +92,7 @@ template <typename T>
 ToRadians(const Degree<T>& degrees) noexcept
 {
     static_assert(std::is_floating_point<T>::value, "");
-    constexpr auto scaleFactor = Math::Pi<T> * (T{1} / T{180});
+    constexpr auto scaleFactor = math::Pi<T> * (T{1} / T{180});
     return Radian<T>(degrees.value * scaleFactor);
 }
 
@@ -101,7 +101,7 @@ template <typename T>
 ToRadians(const T& degrees) noexcept
 {
     static_assert(std::is_floating_point<T>::value, "");
-    constexpr auto scaleFactor = Math::Pi<T> * (T{1} / T{180});
+    constexpr auto scaleFactor = math::Pi<T> * (T{1} / T{180});
     return Radian<T>(degrees * scaleFactor);
 }
 
@@ -110,7 +110,7 @@ template <typename T>
 ToDegrees(const Radian<T>& radians) noexcept
 {
     static_assert(std::is_floating_point<T>::value, "");
-    constexpr auto scaleFactor = T{180} * (T{1} / Math::Pi<T>);
+    constexpr auto scaleFactor = T{180} * (T{1} / math::Pi<T>);
     return Degree<T>(radians.value * scaleFactor);
 }
 
@@ -119,7 +119,7 @@ template <typename T>
 ToDegrees(const T& radians) noexcept
 {
     static_assert(std::is_floating_point<T>::value, "");
-    constexpr auto scaleFactor = T{180} * (T{1} / Math::Pi<T>);
+    constexpr auto scaleFactor = T{180} * (T{1} / math::Pi<T>);
     return Degree<T>(radians * scaleFactor);
 }
 
@@ -141,4 +141,4 @@ Abs(const Point2D& point) noexcept;
 [[nodiscard]] POMDOG_EXPORT Point3D
 Abs(const Point3D& point) noexcept;
 
-} // namespace Pomdog::Math
+} // namespace pomdog::math

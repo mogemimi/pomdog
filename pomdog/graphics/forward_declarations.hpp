@@ -8,16 +8,16 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 class NativeBuffer;
 
 class ShaderBytecode;
 struct ShaderCompileOptions;
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail
 
-namespace Pomdog {
+namespace pomdog {
 
 // Classes
 class ConstantBuffer;
@@ -71,4 +71,4 @@ enum class SurfaceFormat : std::uint8_t;
 enum class TextureAddressMode : std::uint8_t;
 enum class TextureFilter : std::uint8_t;
 
-} // namespace Pomdog
+} // namespace pomdog

@@ -6,7 +6,7 @@
 #include "pomdog/math/rectangle.hpp"
 #include "pomdog/utility/assert.hpp"
 
-namespace Pomdog::Detail::GL4 {
+namespace pomdog::detail::gl4 {
 namespace {
 
 [[nodiscard]] std::optional<GLenum>
@@ -44,22 +44,22 @@ DepthStencilBufferGL4::Initialize(
     const auto nativeFormat = ToDepthStencilFormat(depthStencilFormat);
 
     if (nativeFormat == std::nullopt) {
-        return Errors::New("this format not supported as a depth stencil format");
+        return errors::New("this format not supported as a depth stencil format");
     }
 
     POMDOG_ASSERT(renderBuffer == 0);
 
     glGenRenderbuffers(1, &renderBuffer);
-    if (auto err = GL4::GetLastError(); err != nullptr) {
-        return Errors::Wrap(std::move(err), "glGenRenderbuffers() failed");
+    if (auto err = gl4::GetLastError(); err != nullptr) {
+        return errors::Wrap(std::move(err), "glGenRenderbuffers() failed");
     }
 
     GLint oldRenderBuffer = 0;
     glGetIntegerv(GL_RENDERBUFFER_BINDING, &oldRenderBuffer);
 
     glBindRenderbuffer(GL_RENDERBUFFER, renderBuffer);
-    if (auto err = GL4::GetLastError(); err != nullptr) {
-        return Errors::Wrap(std::move(err), "glBindRenderbuffer() failed");
+    if (auto err = gl4::GetLastError(); err != nullptr) {
+        return errors::Wrap(std::move(err), "glBindRenderbuffer() failed");
     }
 
     POMDOG_ASSERT(pixelWidth > 0);
@@ -70,15 +70,15 @@ DepthStencilBufferGL4::Initialize(
         *nativeFormat,
         pixelWidth,
         pixelHeight);
-    if (auto err = GL4::GetLastError(); err != nullptr) {
+    if (auto err = gl4::GetLastError(); err != nullptr) {
         glBindRenderbuffer(GL_RENDERBUFFER, oldRenderBuffer);
         POMDOG_CHECK_ERROR_GL4("glBindRenderbuffer");
-        return Errors::Wrap(std::move(err), "glRenderbufferStorage() failed");
+        return errors::Wrap(std::move(err), "glRenderbufferStorage() failed");
     }
 
     glBindRenderbuffer(GL_RENDERBUFFER, oldRenderBuffer);
-    if (auto err = GL4::GetLastError(); err != nullptr) {
-        return Errors::Wrap(std::move(err), "glBindRenderbuffer(GL_RENDERBUFFER, 0) failed");
+    if (auto err = gl4::GetLastError(); err != nullptr) {
+        return errors::Wrap(std::move(err), "glBindRenderbuffer(GL_RENDERBUFFER, 0) failed");
     }
 
     return nullptr;
@@ -163,4 +163,4 @@ void DepthStencilBufferGL4::BindToFramebuffer(GLuint frameBuffer) noexcept
 #endif
 }
 
-} // namespace Pomdog::Detail::GL4
+} // namespace pomdog::detail::gl4

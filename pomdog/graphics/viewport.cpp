@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <limits>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 Viewport::Viewport(const Rectangle& bounds) noexcept
     : TopLeftX(bounds.X)
@@ -105,4 +105,4 @@ float Viewport::GetAspectRatio() const noexcept
     return 0.0f;
 }
 
-} // namespace Pomdog
+} // namespace pomdog

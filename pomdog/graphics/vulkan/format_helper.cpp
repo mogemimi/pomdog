@@ -3,7 +3,7 @@
 #include "pomdog/graphics/vulkan/format_helper.hpp"
 #include "pomdog/graphics/comparison_function.hpp"
 
-namespace Pomdog::Detail::Vulkan {
+namespace pomdog::detail::vulkan {
 
 VkCompareOp ToComparisonFunction(ComparisonFunction compareFunction) noexcept
 {
@@ -28,4 +28,4 @@ VkCompareOp ToComparisonFunction(ComparisonFunction compareFunction) noexcept
     return VK_COMPARE_OP_LESS_OR_EQUAL;
 }
 
-} // namespace Pomdog::Detail::Vulkan
+} // namespace pomdog::detail::vulkan

@@ -9,7 +9,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <bitset>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 enum class KeyState : bool;
 enum class Keys : std::uint8_t;
@@ -30,4 +30,4 @@ private:
     std::bitset<128> keyset;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

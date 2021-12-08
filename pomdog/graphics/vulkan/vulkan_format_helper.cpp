@@ -4,7 +4,7 @@
 #include "pomdog/graphics/surface_format.hpp"
 #include "pomdog/utility/assert.hpp"
 
-namespace Pomdog::Detail::Vulkan {
+namespace pomdog::detail::vulkan {
 
 VkFormat
 ToSurfaceFormat(SurfaceFormat format) noexcept
@@ -52,4 +52,4 @@ ToSurfaceFormat(SurfaceFormat format) noexcept
     return VK_FORMAT_UNDEFINED;
 }
 
-} // namespace Pomdog::Detail::Vulkan
+} // namespace pomdog::detail::vulkan

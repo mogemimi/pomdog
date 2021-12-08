@@ -16,22 +16,22 @@
 #import <Metal/Metal.h>
 #import <MetalKit/MetalKit.h>
 
-using Pomdog::Detail::Cocoa::GameHostMetal;
-using Pomdog::Detail::Cocoa::GameWindowCocoa;
-using Pomdog::Detail::InputKeyEvent;
-using Pomdog::Detail::MouseButtonCocoaEvent;
-using Pomdog::Detail::MouseButtonState;
-using Pomdog::Detail::MousePositionEvent;
-using Pomdog::Detail::SystemEvent;
-using Pomdog::Detail::SystemEventKind;
-using Pomdog::EventQueue;
-using Pomdog::Game;
-using Pomdog::Keys;
-using Pomdog::KeyState;
-using Pomdog::MouseButtons;
-using Pomdog::Point2D;
-using Pomdog::PresentationParameters;
-using Pomdog::SurfaceFormat;
+using pomdog::detail::cocoa::GameHostMetal;
+using pomdog::detail::cocoa::GameWindowCocoa;
+using pomdog::detail::InputKeyEvent;
+using pomdog::detail::MouseButtonCocoaEvent;
+using pomdog::detail::MouseButtonState;
+using pomdog::detail::MousePositionEvent;
+using pomdog::detail::SystemEvent;
+using pomdog::detail::SystemEventKind;
+using pomdog::EventQueue;
+using pomdog::Game;
+using pomdog::Keys;
+using pomdog::KeyState;
+using pomdog::MouseButtons;
+using pomdog::Point2D;
+using pomdog::PresentationParameters;
+using pomdog::SurfaceFormat;
 
 namespace {
 
@@ -206,7 +206,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 } // namespace
 
 @implementation PomdogMetalViewController {
-    std::function<std::shared_ptr<Pomdog::Game>(const std::shared_ptr<Pomdog::GameHost>&)> createGame;
+    std::function<std::shared_ptr<pomdog::Game>(const std::shared_ptr<pomdog::GameHost>&)> createGame;
     std::function<void()> onCompleted;
     std::shared_ptr<GameHostMetal> gameHost;
     std::shared_ptr<EventQueue<SystemEvent>> eventQueue;
@@ -307,7 +307,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     }
 }
 
-- (void)startGame:(std::function<std::shared_ptr<Pomdog::Game>(const std::shared_ptr<Pomdog::GameHost>&)>&&)createGameIn
+- (void)startGame:(std::function<std::shared_ptr<pomdog::Game>(const std::shared_ptr<pomdog::GameHost>&)>&&)createGameIn
         completed:(std::function<void()>&&)onCompletedIn
 {
     createGame = std::move(createGameIn);
@@ -589,7 +589,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
         return;
     }
 
-    Pomdog::Detail::ScrollWheelCocoaEvent event;
+    pomdog::detail::ScrollWheelCocoaEvent event;
 
     double scrollingDeltaY = static_cast<double>([theEvent scrollingDeltaY]);
     if ([theEvent hasPreciseScrollingDeltas]) {
@@ -620,7 +620,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
         });
     }
 
-    using Pomdog::Detail::InputTextEvent;
+    using pomdog::detail::InputTextEvent;
     std::string text = [[theEvent characters] UTF8String];
 
     eventQueue->Enqueue(SystemEvent{
@@ -634,7 +634,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 - (void)keyUp:(NSEvent*)theEvent
 {
     auto key = TranslateKey([theEvent keyCode]);
-    if (key != Pomdog::Keys::Unknown) {
+    if (key != pomdog::Keys::Unknown) {
         eventQueue->Enqueue(SystemEvent{
             .Kind = SystemEventKind::InputKeyEvent,
             .Data = InputKeyEvent{
@@ -648,7 +648,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 - (void)flagsChanged:(NSEvent*)event
 {
     const auto key = TranslateKey([event keyCode]);
-    if (key == Pomdog::Keys::Unknown) {
+    if (key == pomdog::Keys::Unknown) {
         return;
     }
 

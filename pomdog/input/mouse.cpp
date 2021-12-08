@@ -2,8 +2,8 @@
 
 #include "pomdog/input/mouse.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 
 Mouse::~Mouse() = default;
 
-} // namespace Pomdog
+} // namespace pomdog

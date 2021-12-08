@@ -9,7 +9,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <functional>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 class ScopeGuard final {
 public:
@@ -30,4 +30,4 @@ private:
     std::function<void()> func;
 };
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

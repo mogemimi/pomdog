@@ -9,9 +9,9 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 template <typename T>
 struct AssetLoader;
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

@@ -2,9 +2,9 @@
 
 #include "pomdog/graphics/render_target2d.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 
 RenderTarget2D::RenderTarget2D() noexcept = default;
 RenderTarget2D::~RenderTarget2D() = default;
 
-} // namespace Pomdog
+} // namespace pomdog

@@ -2,9 +2,9 @@
 
 #include "pomdog/application/game.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 
 Game::Game() = default;
 Game::~Game() = default;
 
-} // namespace Pomdog
+} // namespace pomdog

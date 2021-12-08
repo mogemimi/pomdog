@@ -4,11 +4,11 @@
 
 #include "pomdog/basic/export.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 
 class POMDOG_EXPORT Shader {
 public:
     virtual ~Shader();
 };
 
-} // namespace Pomdog
+} // namespace pomdog

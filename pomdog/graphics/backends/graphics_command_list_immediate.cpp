@@ -14,10 +14,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 namespace {
 
-using Detail::GraphicsCommand;
+using detail::GraphicsCommand;
 
 struct DrawCommand final : public GraphicsCommand {
     std::size_t vertexCount;
@@ -649,4 +649,4 @@ void GraphicsCommandListImmediate::SortCommandsForMetal()
     }
 }
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

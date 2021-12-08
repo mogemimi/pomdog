@@ -9,7 +9,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 #if defined(POMDOG_PLATFORM_MACOSX) || \
     defined(POMDOG_PLATFORM_APPLE_IOS) || \
@@ -55,9 +55,9 @@ class TLSStreamMbedTLS;
 using NativeTLSStream = TLSStreamMbedTLS;
 #endif
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail
 
-namespace Pomdog {
+namespace pomdog {
 
 class HTTPClient;
 class HTTPRequest;
@@ -72,4 +72,4 @@ class ArrayView;
 
 enum class HTTPMethod : std::int8_t;
 
-} // namespace Pomdog
+} // namespace pomdog

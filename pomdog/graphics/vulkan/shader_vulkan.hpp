@@ -6,12 +6,12 @@
 #include "pomdog/graphics/shader.hpp"
 #include <vulkan/vulkan.h>
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 class ShaderBytecode;
 struct ShaderCompileOptions;
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail
 
-namespace Pomdog::Detail::Vulkan {
+namespace pomdog::detail::vulkan {
 
 class ShaderVulkan final : public Shader {
 public:
@@ -29,4 +29,4 @@ private:
     ::VkShaderModule shaderModule;
 };
 
-} // namespace Pomdog::Detail::Vulkan
+} // namespace pomdog::detail::vulkan

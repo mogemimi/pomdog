@@ -8,7 +8,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 /// Identifies the expected usage pattern of graphics buffers during rendering.
 enum class BufferUsage : std::uint8_t {
@@ -23,4 +23,4 @@ enum class BufferUsage : std::uint8_t {
     Dynamic,
 };
 
-} // namespace Pomdog
+} // namespace pomdog

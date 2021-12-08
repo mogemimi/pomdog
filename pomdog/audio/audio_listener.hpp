@@ -4,7 +4,7 @@
 
 #include "pomdog/math/vector3.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 
 class AudioListener final {
 public:
@@ -14,4 +14,4 @@ public:
     Vector3 Velocity;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

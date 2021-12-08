@@ -8,7 +8,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 /// SurfaceFormat specifies the format used by pixels in the texture.
 enum class SurfaceFormat : std::uint8_t {
@@ -75,4 +75,4 @@ enum class SurfaceFormat : std::uint8_t {
     Depth32_Float_Stencil8_Uint,
 };
 
-} // namespace Pomdog
+} // namespace pomdog

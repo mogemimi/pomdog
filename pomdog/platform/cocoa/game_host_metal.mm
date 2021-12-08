@@ -36,13 +36,13 @@
 #import <Metal/Metal.h>
 #import <MetalKit/MetalKit.h>
 
-using Pomdog::Detail::Metal::GraphicsContextMetal;
-using Pomdog::Detail::Metal::GraphicsDeviceMetal;
-using Pomdog::Detail::Metal::ToPixelFormat;
-using Pomdog::Detail::IOKit::GamepadIOKit;
-using Pomdog::Detail::OpenAL::AudioEngineAL;
+using pomdog::detail::metal::GraphicsContextMetal;
+using pomdog::detail::metal::GraphicsDeviceMetal;
+using pomdog::detail::metal::ToPixelFormat;
+using pomdog::detail::IOKit::GamepadIOKit;
+using pomdog::detail::openal::AudioEngineAL;
 
-namespace Pomdog::Detail::Cocoa {
+namespace pomdog::detail::cocoa {
 namespace {
 
 void SetupMetalView(
@@ -176,7 +176,7 @@ GameHostMetal::Impl::Initialize(
     // NOTE: Create graphics device
     graphicsDevice = std::make_shared<GraphicsDeviceMetal>();
     if (auto err = graphicsDevice->Initialize(presentationParameters); err != nullptr) {
-        return Errors::New("failed to initialize GraphicsDeviceMetal");
+        return errors::New("failed to initialize GraphicsDeviceMetal");
     }
 
     // NOTE: Get MTLDevice object.
@@ -184,7 +184,7 @@ GameHostMetal::Impl::Initialize(
     id<MTLDevice> metalDevice = graphicsDevice->GetMTLDevice();
 
     if (metalDevice == nullptr) {
-        return Errors::New("Metal is not supported on this device.");
+        return errors::New("Metal is not supported on this device.");
     }
 
     // NOTE: Setup metal view
@@ -202,7 +202,7 @@ GameHostMetal::Impl::Initialize(
     // NOTE: Create audio engine.
     audioEngine = std::make_shared<AudioEngineAL>();
     if (auto err = audioEngine->Initialize(); err != nullptr) {
-        return Errors::Wrap(std::move(err), "AudioEngineAL::Initialize() failed.");
+        return errors::Wrap(std::move(err), "AudioEngineAL::Initialize() failed.");
     }
 
     // NOTE: Create subsystems
@@ -212,7 +212,7 @@ GameHostMetal::Impl::Initialize(
     // NOTE: Create gamepad
     gamepad = std::make_shared<GamepadIOKit>();
     if (auto err = gamepad->Initialize(eventQueue); err != nullptr) {
-        return Errors::Wrap(std::move(err), "GamepadIOKit::Initialize() failed.");
+        return errors::Wrap(std::move(err), "GamepadIOKit::Initialize() failed.");
     }
 
     // NOTE: Connect to system event signal
@@ -222,7 +222,7 @@ GameHostMetal::Impl::Initialize(
 
     auto [resourceDir, resourceDirErr] = FileSystem::GetResourceDirectoryPath();
     if (resourceDirErr != nullptr) {
-        return Errors::Wrap(std::move(resourceDirErr), "FileSystem::GetResourceDirectoryPath() failed.");
+        return errors::Wrap(std::move(resourceDirErr), "FileSystem::GetResourceDirectoryPath() failed.");
     }
     auto contentDirectory = PathHelper::Join(resourceDir, "Content");
 
@@ -234,7 +234,7 @@ GameHostMetal::Impl::Initialize(
 
     ioService = std::make_unique<IOService>(&clock);
     if (auto err = ioService->Initialize(); err != nullptr) {
-        return Errors::Wrap(std::move(err), "IOService::Initialize() failed.");
+        return errors::Wrap(std::move(err), "IOService::Initialize() failed.");
     }
     httpClient = std::make_unique<HTTPClient>(ioService.get());
 
@@ -249,7 +249,7 @@ GameHostMetal::Impl::~Impl()
     systemEventConnection.Disconnect();
     httpClient.reset();
     if (auto err = ioService->Shutdown(); err != nullptr) {
-        Log::Warning("Pomdog", err->ToString());
+        Log::Warning("pomdog", err->ToString());
     }
     ioService.reset();
     assetManager.reset();
@@ -280,7 +280,7 @@ GameHostMetal::Impl::InitializeGame(
 
     if (auto err = game->Initialize(); err != nullptr) {
         GameWillExit();
-        return Errors::Wrap(std::move(err), "failed to initialize game");
+        return errors::Wrap(std::move(err), "failed to initialize game");
     }
 
     if (exitRequest) {
@@ -607,4 +607,4 @@ std::shared_ptr<HTTPClient> GameHostMetal::GetHTTPClient() noexcept
     return impl->GetHTTPClient(shared_from_this());
 }
 
-} // namespace Pomdog::Detail::Cocoa
+} // namespace pomdog::detail::cocoa

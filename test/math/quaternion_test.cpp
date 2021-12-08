@@ -3,7 +3,7 @@
 #include "pomdog/math/quaternion.hpp"
 #include <catch_amalgamated.hpp>
 
-using Pomdog::Quaternion;
+using pomdog::Quaternion;
 
 TEST_CASE("Quaternion", "[Quaternion]")
 {

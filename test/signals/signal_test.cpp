@@ -7,8 +7,8 @@
 #include <utility>
 #include <vector>
 
-using Pomdog::Connection;
-using Pomdog::Signal;
+using pomdog::Connection;
+using pomdog::Signal;
 
 TEST_CASE("Singal", "[Singals]")
 {

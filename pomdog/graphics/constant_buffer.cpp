@@ -10,10 +10,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 ConstantBuffer::ConstantBuffer(
-    std::unique_ptr<Detail::NativeBuffer>&& nativeBufferIn,
+    std::unique_ptr<detail::NativeBuffer>&& nativeBufferIn,
     std::size_t sizeInBytesIn,
     BufferUsage bufferUsageIn)
     : nativeBuffer(std::move(nativeBufferIn))
@@ -57,10 +57,10 @@ BufferUsage ConstantBuffer::GetBufferUsage() const noexcept
     return bufferUsage;
 }
 
-Detail::NativeBuffer* ConstantBuffer::GetNativeBuffer()
+detail::NativeBuffer* ConstantBuffer::GetNativeBuffer()
 {
     POMDOG_ASSERT(nativeBuffer != nullptr);
     return nativeBuffer.get();
 }
 
-} // namespace Pomdog
+} // namespace pomdog

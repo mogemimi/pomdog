@@ -2,9 +2,9 @@
 
 #include "pomdog/graphics/pipeline_state.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 
 PipelineState::PipelineState() noexcept = default;
 PipelineState::~PipelineState() = default;
 
-} // namespace Pomdog
+} // namespace pomdog

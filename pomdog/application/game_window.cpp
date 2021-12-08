@@ -2,9 +2,9 @@
 
 #include "pomdog/application/game_window.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 
 GameWindow::GameWindow() = default;
 GameWindow::~GameWindow() = default;
 
-} // namespace Pomdog
+} // namespace pomdog

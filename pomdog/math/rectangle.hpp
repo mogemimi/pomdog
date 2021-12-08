@@ -10,7 +10,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 /// Rectangle is a rectangle in 2D space.
 ///
@@ -77,4 +77,4 @@ public:
     [[nodiscard]] bool Intersects(const Rectangle& rectangle) const;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

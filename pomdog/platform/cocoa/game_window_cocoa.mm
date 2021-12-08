@@ -7,13 +7,13 @@
 #include "pomdog/utility/assert.hpp"
 #include <utility>
 
-using Pomdog::Detail::SystemEvent;
-using Pomdog::Detail::SystemEventKind;
-using Pomdog::EventQueue;
+using pomdog::detail::SystemEvent;
+using pomdog::detail::SystemEventKind;
+using pomdog::EventQueue;
 
 @interface PomdogNSWindowDelegate : NSObject <NSWindowDelegate>
 
-- (instancetype)initWithEventQueue:(std::shared_ptr<Pomdog::EventQueue<Pomdog::Detail::SystemEvent>>)eventQueue;
+- (instancetype)initWithEventQueue:(std::shared_ptr<pomdog::EventQueue<pomdog::detail::SystemEvent>>)eventQueue;
 
 @end
 
@@ -48,7 +48,7 @@ using Pomdog::EventQueue;
 
 @end
 
-namespace Pomdog::Detail::Cocoa {
+namespace pomdog::detail::cocoa {
 
 GameWindowCocoa::GameWindowCocoa() noexcept
 {
@@ -216,4 +216,4 @@ void GameWindowCocoa::SetView(NSView* gameViewIn) noexcept
     gameView = gameViewIn;
 }
 
-} // namespace Pomdog::Detail::Cocoa
+} // namespace pomdog::detail::cocoa

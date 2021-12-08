@@ -11,11 +11,11 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <optional>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 class ShaderBytecode;
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail
 
-namespace Pomdog::Detail::GL4 {
+namespace pomdog::detail::gl4 {
 
 template <GLenum PipelineStage>
 class ShaderGL4 final : public Shader {
@@ -53,4 +53,4 @@ private:
 using VertexShaderGL4 = ShaderGL4<GL_VERTEX_SHADER>;
 using PixelShaderGL4 = ShaderGL4<GL_FRAGMENT_SHADER>;
 
-} // namespace Pomdog::Detail::GL4
+} // namespace pomdog::detail::gl4

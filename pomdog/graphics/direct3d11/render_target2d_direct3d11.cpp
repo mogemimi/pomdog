@@ -6,7 +6,7 @@
 #include "pomdog/utility/assert.hpp"
 #include "pomdog/utility/exception.hpp"
 
-namespace Pomdog::Detail::Direct3D11 {
+namespace pomdog::detail::direct3d11 {
 namespace {
 
 using Microsoft::WRL::ComPtr;
@@ -42,7 +42,7 @@ BuildRenderTarget(
     textureDesc.MiscFlags = 0;
 
     if (auto hr = device->CreateTexture2D(&textureDesc, nullptr, &texture2D); FAILED(hr)) {
-        return Errors::New("CreateTexture2D() failed");
+        return errors::New("CreateTexture2D() failed");
     }
 
     // NOTE: Create a render target view (RTV)
@@ -54,7 +54,7 @@ BuildRenderTarget(
 
     POMDOG_ASSERT(texture2D);
     if (auto hr = device->CreateRenderTargetView(texture2D.Get(), &rtvDesc, &renderTargetView); FAILED(hr)) {
-        return Errors::New("CreateRenderTargetView() failed");
+        return errors::New("CreateRenderTargetView() failed");
     }
 
     // NOTE: Create shader resource view (SRV)
@@ -66,7 +66,7 @@ BuildRenderTarget(
     srvDesc.Texture2D.MipLevels = textureDesc.MipLevels;
 
     if (auto hr = device->CreateShaderResourceView(texture2D.Get(), &srvDesc, &textureResourceView); FAILED(hr)) {
-        return Errors::New("CreateShaderResourceView() failed");
+        return errors::New("CreateShaderResourceView() failed");
     }
 
     return nullptr;
@@ -84,13 +84,13 @@ BuildBackBufferBySwapChain(
 
     // NOTE: Get a surface in the swap chain
     if (auto hr = swapChain->GetBuffer(0, IID_PPV_ARGS(&texture2D)); FAILED(hr)) {
-        return Errors::New("IDXGISwapChain::GetBuffer() failed");
+        return errors::New("IDXGISwapChain::GetBuffer() failed");
     }
 
     // NOTE: Create a render target view
     POMDOG_ASSERT(texture2D != nullptr);
     if (auto hr = device->CreateRenderTargetView(texture2D.Get(), nullptr, &renderTargetView); FAILED(hr)) {
-        return Errors::New("CreateRenderTargetView() failed");
+        return errors::New("CreateRenderTargetView() failed");
     }
 
     return nullptr;
@@ -126,7 +126,7 @@ RenderTarget2DDirect3D11::Initialize(
             renderTargetView,
             textureResourceView);
         err != nullptr) {
-        return Errors::Wrap(std::move(err), "BuildRenderTarget() failed");
+        return errors::Wrap(std::move(err), "BuildRenderTarget() failed");
     }
 
     return nullptr;
@@ -155,7 +155,7 @@ RenderTarget2DDirect3D11::Initialize(
             texture2D,
             renderTargetView);
         err != nullptr) {
-        return Errors::Wrap(std::move(err), "BuildBackBufferBySwapChain() failed");
+        return errors::Wrap(std::move(err), "BuildBackBufferBySwapChain() failed");
     }
 
     return nullptr;
@@ -296,7 +296,7 @@ RenderTarget2DDirect3D11::ResetBackBuffer(
             texture2D,
             renderTargetView);
         err != nullptr) {
-        return Errors::Wrap(std::move(err), "BuildBackBufferBySwapChain() failed");
+        return errors::Wrap(std::move(err), "BuildBackBufferBySwapChain() failed");
     }
 
     return nullptr;
@@ -308,4 +308,4 @@ void RenderTarget2DDirect3D11::ResetBackBuffer() noexcept
     texture2D.Reset();
 }
 
-} // namespace Pomdog::Detail::Direct3D11
+} // namespace pomdog::detail::direct3d11

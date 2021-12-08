@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 class POMDOG_EXPORT Texture2D : public Texture {
 public:
@@ -39,4 +39,4 @@ public:
     virtual void SetData(const void* pixelData) = 0;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

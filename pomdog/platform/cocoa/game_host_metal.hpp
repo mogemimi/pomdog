@@ -8,21 +8,21 @@
 
 #import <MetalKit/MTKView.h>
 
-namespace Pomdog {
+namespace pomdog {
 class Error;
 class Game;
 struct PresentationParameters;
-} // namespace Pomdog
+} // namespace pomdog
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 class SystemEvent;
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail
 
-namespace Pomdog::Detail::Cocoa {
+namespace pomdog::detail::cocoa {
 class GameWindowCocoa;
-} // namespace Pomdog::Detail::Cocoa
+} // namespace pomdog::detail::cocoa
 
-namespace Pomdog::Detail::Cocoa {
+namespace pomdog::detail::cocoa {
 
 class GameHostMetal final : public GameHost {
 public:
@@ -86,4 +86,4 @@ private:
     std::unique_ptr<Impl> impl;
 };
 
-} // namespace Pomdog::Detail::Cocoa
+} // namespace pomdog::detail::cocoa

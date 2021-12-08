@@ -14,7 +14,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <limits>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 template <typename T>
 FloatingPointVector2<T>::FloatingPointVector2(T x, T y) noexcept
@@ -173,8 +173,8 @@ FloatingPointVector2<T>
 FloatingPointVector2<T>::Clamp(const FloatingPointVector2& source, const FloatingPointVector2& min, const FloatingPointVector2& max) noexcept
 {
     return FloatingPointVector2{
-        Math::Clamp(source.X, min.X, max.X),
-        Math::Clamp(source.Y, min.Y, max.Y)};
+        math::Clamp(source.X, min.X, max.X),
+        math::Clamp(source.Y, min.Y, max.Y)};
 }
 
 template <typename T>
@@ -182,8 +182,8 @@ FloatingPointVector2<T>
 FloatingPointVector2<T>::Lerp(const FloatingPointVector2& source1, const FloatingPointVector2& source2, T amount)
 {
     return FloatingPointVector2(
-        Math::Lerp(source1.X, source2.X, amount),
-        Math::Lerp(source1.Y, source2.Y, amount));
+        math::Lerp(source1.X, source2.X, amount),
+        math::Lerp(source1.Y, source2.Y, amount));
 }
 
 template <typename T>
@@ -191,8 +191,8 @@ FloatingPointVector2<T>
 FloatingPointVector2<T>::SmoothStep(const FloatingPointVector2& source1, const FloatingPointVector2& source2, T amount)
 {
     return FloatingPointVector2(
-        Math::SmoothStep(source1.X, source2.X, amount),
-        Math::SmoothStep(source1.Y, source2.Y, amount));
+        math::SmoothStep(source1.X, source2.X, amount),
+        math::SmoothStep(source1.Y, source2.Y, amount));
 }
 
 template <typename T>
@@ -307,4 +307,4 @@ operator*<float>(float, const FloatingPointVector2<float>&) noexcept;
 template FloatingPointVector2<double>
 operator*<double>(double, const FloatingPointVector2<double>&) noexcept;
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

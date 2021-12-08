@@ -2,9 +2,9 @@
 
 #include "pomdog/graphics/sampler_state.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 
 SamplerState::SamplerState() noexcept = default;
 SamplerState::~SamplerState() = default;
 
-} // namespace Pomdog
+} // namespace pomdog

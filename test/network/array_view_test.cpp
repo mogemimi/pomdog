@@ -6,7 +6,7 @@
 #include <cstdint>
 #include <string>
 
-using namespace Pomdog;
+using namespace pomdog;
 
 TEST_CASE("ArrayView", "[Network]")
 {

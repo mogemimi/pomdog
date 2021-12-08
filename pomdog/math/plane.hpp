@@ -6,7 +6,7 @@
 #include "pomdog/math/forward_declarations.hpp"
 #include "pomdog/math/vector3.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 
 /// Plane is a hyperplane in 3D space.
 class POMDOG_EXPORT Plane final {
@@ -51,4 +51,4 @@ public:
     static Plane CreateFromPointNormal(const Vector3& point, const Vector3& normal);
 };
 
-} // namespace Pomdog
+} // namespace pomdog

@@ -5,7 +5,7 @@
 #include "pomdog/graphics/input_element_format.hpp"
 #include "pomdog/utility/assert.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 namespace {
 
 #ifdef DEBUG
@@ -23,7 +23,7 @@ InputLayoutHelper& InputLayoutHelper::PushBack(InputElementFormat format)
     element.InstanceStepRate = instanceStepRate;
     element.ByteOffset = byteOffset;
 
-    byteOffset += Detail::BufferHelper::ToByteSize(format);
+    byteOffset += detail::BufferHelper::ToByteSize(format);
     elements.push_back(std::move(element));
     POMDOG_ASSERT_MESSAGE(element.ByteOffset < byteOffset, "Overflowing of unsigned int.");
 
@@ -106,4 +106,4 @@ InputLayoutDescription InputLayoutHelper::CreateInputLayout()
     return InputLayoutDescription{elements};
 }
 
-} // namespace Pomdog
+} // namespace pomdog

@@ -5,8 +5,8 @@
 #include "pomdog/graphics/forward_declarations.hpp"
 #include <vulkan/vulkan.h>
 
-namespace Pomdog::Detail::Vulkan {
+namespace pomdog::detail::vulkan {
 
 VkCompareOp ToComparisonFunction(ComparisonFunction compareFunction) noexcept;
 
-} // namespace Pomdog::Detail::Vulkan
+} // namespace pomdog::detail::vulkan

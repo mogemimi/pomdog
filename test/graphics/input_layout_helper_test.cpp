@@ -3,11 +3,11 @@
 #include "pomdog/graphics/input_layout_helper.hpp"
 #include <catch_amalgamated.hpp>
 
-using Pomdog::InputClassification;
-using Pomdog::InputElement;
-using Pomdog::InputElementFormat;
-using Pomdog::InputLayoutDescription;
-using Pomdog::InputLayoutHelper;
+using pomdog::InputClassification;
+using pomdog::InputElement;
+using pomdog::InputElementFormat;
+using pomdog::InputLayoutDescription;
+using pomdog::InputLayoutHelper;
 
 TEST_CASE("InputLayoutHelper", "[InputLayoutHelper]")
 {

@@ -6,10 +6,10 @@
 #include "pomdog/signals/scoped_connection.hpp"
 #include <catch_amalgamated.hpp>
 
-using Pomdog::LogChannel;
-using Pomdog::LogEntry;
-using Pomdog::LogLevel;
-using Pomdog::ScopedConnection;
+using pomdog::LogChannel;
+using pomdog::LogEntry;
+using pomdog::LogLevel;
+using pomdog::ScopedConnection;
 
 TEST_CASE("LogChannel", "[LogChannel]")
 {

@@ -4,19 +4,19 @@
 #include <catch_amalgamated.hpp>
 #include <tuple>
 
-using Pomdog::Errors::IOError;
+using pomdog::errors::IOError;
 
-namespace Errors = Pomdog::Errors;
+namespace errors = pomdog::errors;
 
 namespace {
 
 std::tuple<int, std::unique_ptr<IOError>> Load(const std::string& filename)
 {
     if (filename.empty()) {
-        return std::make_tuple(0, Errors::New(std::errc::invalid_argument, "empty name"));
+        return std::make_tuple(0, errors::New(std::errc::invalid_argument, "empty name"));
     }
     if (filename != "foo") {
-        return std::make_tuple(0, Errors::New(std::errc::no_such_file_or_directory, "not found"));
+        return std::make_tuple(0, errors::New(std::errc::no_such_file_or_directory, "not found"));
     }
     return std::make_tuple(42, nullptr);
 }
@@ -50,7 +50,7 @@ TEST_CASE("IOError", "[IOError]")
         auto [result, err] = Load("");
         REQUIRE(err != nullptr);
 
-        auto wrapped = Errors::Wrap(std::move(err), "Load() failed");
+        auto wrapped = errors::Wrap(std::move(err), "Load() failed");
 #if defined(_MSC_VER) && (_MSC_VER > 1700)
         REQUIRE(wrapped->ToString() == "Load() failed: empty name: invalid argument");
 #else

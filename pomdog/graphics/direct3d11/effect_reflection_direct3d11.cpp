@@ -14,7 +14,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::Direct3D11 {
+namespace pomdog::detail::direct3d11 {
 namespace {
 
 using Direct3D::HLSLReflectionHelper;
@@ -141,7 +141,7 @@ EffectReflectionDirect3D11::Initialize(
         IID_PPV_ARGS(&vertexShaderReflector));
 
     if (FAILED(hr)) {
-        return Errors::New("D3DReflect() failed with a vertex shader");
+        return errors::New("D3DReflect() failed with a vertex shader");
     }
 
     hr = D3DReflect(
@@ -150,7 +150,7 @@ EffectReflectionDirect3D11::Initialize(
         IID_PPV_ARGS(&pixelShaderReflector));
 
     if (FAILED(hr)) {
-        return Errors::New("D3DReflect() failed with a pixel shader");
+        return errors::New("D3DReflect() failed with a pixel shader");
     }
 
     return nullptr;
@@ -195,4 +195,4 @@ EffectReflectionDirect3D11::GetConstantBuffers() const noexcept
     return std::move(result);
 }
 
-} // namespace Pomdog::Detail::Direct3D11
+} // namespace pomdog::detail::direct3d11

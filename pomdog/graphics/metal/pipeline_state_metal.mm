@@ -12,7 +12,7 @@
 #include "pomdog/utility/assert.hpp"
 #import <Metal/MTLVertexDescriptor.h>
 
-namespace Pomdog::Detail::Metal {
+namespace pomdog::detail::metal {
 namespace {
 
 MTLPrimitiveType ToPrimitiveType(PrimitiveTopology primitiveTopology) noexcept
@@ -233,22 +233,22 @@ PipelineStateMetal::Initialize(
 
     auto vertexShaderMetal = std::dynamic_pointer_cast<ShaderMetal>(description.VertexShader);
     if (vertexShaderMetal == nullptr) {
-        return Errors::New("invalid vertex shader");
+        return errors::New("invalid vertex shader");
     }
 
     auto vertexShader = vertexShaderMetal->GetShader();
     if (vertexShader == nullptr) {
-        return Errors::New("vertexShader must be != nullptr");
+        return errors::New("vertexShader must be != nullptr");
     }
 
     auto pixelShaderMetal = std::dynamic_pointer_cast<ShaderMetal>(description.PixelShader);
     if (pixelShaderMetal == nullptr) {
-        return Errors::New("invalid pixel shader");
+        return errors::New("invalid pixel shader");
     }
 
     auto pixelShader = pixelShaderMetal->GetShader();
     if (pixelShader == nullptr) {
-        return Errors::New("pixelShader must be != nullptr");
+        return errors::New("pixelShader must be != nullptr");
     }
 
     ///@todo MSAA is not implemented yet
@@ -318,7 +318,7 @@ PipelineStateMetal::Initialize(
     reflection = autoReleasingReflection;
 
     if (this->pipelineState == nullptr) {
-        return Errors::New(std::string{"newRenderPipelineStateWithDescriptor() failed: "} + [[error domain] UTF8String]);
+        return errors::New(std::string{"newRenderPipelineStateWithDescriptor() failed: "} + [[error domain] UTF8String]);
     }
 
     MTLDepthStencilDescriptor* depthStencilDesc = [[MTLDepthStencilDescriptor alloc] init];
@@ -341,7 +341,7 @@ PipelineStateMetal::Initialize(
 
     depthStencilState = [device newDepthStencilStateWithDescriptor:depthStencilDesc];
     if (this->depthStencilState == nullptr) {
-        return Errors::New("newDepthStencilStateWithDescriptor() failed");
+        return errors::New("newDepthStencilStateWithDescriptor() failed");
     }
     return nullptr;
 }
@@ -364,4 +364,4 @@ MTLPrimitiveType PipelineStateMetal::GetPrimitiveType() const noexcept
     return primitiveType;
 }
 
-} // namespace Pomdog::Detail::Metal
+} // namespace pomdog::detail::metal

@@ -5,7 +5,7 @@
 #include "pomdog/utility/assert.hpp"
 #include <type_traits>
 
-namespace Pomdog::Detail::Cocoa {
+namespace pomdog::detail::cocoa {
 namespace {
 
 ButtonState ToButtonState(MouseButtonState mouseButtonState)
@@ -104,4 +104,4 @@ void MouseCocoa::HandleEvent(const SystemEvent& event)
     }
 }
 
-} // namespace Pomdog::Detail::Cocoa
+} // namespace pomdog::detail::cocoa

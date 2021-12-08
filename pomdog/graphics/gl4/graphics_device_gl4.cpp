@@ -23,7 +23,7 @@
 #include "pomdog/utility/errors.hpp"
 #include "pomdog/utility/string_helper.hpp"
 
-namespace Pomdog::Detail::GL4 {
+namespace pomdog::detail::gl4 {
 
 std::unique_ptr<Error>
 GraphicsDeviceGL4::Initialize(const PresentationParameters& presentationParametersIn) noexcept
@@ -69,7 +69,7 @@ GraphicsDeviceGL4::CreateVertexBuffer(
     POMDOG_ASSERT(nativeBuffer != nullptr);
 
     if (auto err = nativeBuffer->Initialize(vertices, sizeInBytes, bufferUsage); err != nullptr) {
-        return std::make_tuple(nullptr, Errors::Wrap(std::move(err), "failed to initialize VertexBufferGL4"));
+        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize VertexBufferGL4"));
     }
 
     auto vertexBuffer = std::make_shared<VertexBuffer>(std::move(nativeBuffer), vertexCount, strideBytes, bufferUsage);
@@ -92,7 +92,7 @@ GraphicsDeviceGL4::CreateVertexBuffer(
     POMDOG_ASSERT(nativeBuffer != nullptr);
 
     if (auto err = nativeBuffer->Initialize(sizeInBytes, bufferUsage); err != nullptr) {
-        return std::make_tuple(nullptr, Errors::Wrap(std::move(err), "failed to initialize VertexBufferGL4"));
+        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize VertexBufferGL4"));
     }
 
     auto vertexBuffer = std::make_shared<VertexBuffer>(std::move(nativeBuffer), vertexCount, strideBytes, bufferUsage);
@@ -108,13 +108,13 @@ GraphicsDeviceGL4::CreateIndexBuffer(
 {
     POMDOG_ASSERT(indexCount > 0);
 
-    const auto sizeInBytes = indexCount * Detail::BufferHelper::ToIndexElementOffsetBytes(elementSize);
+    const auto sizeInBytes = indexCount * detail::BufferHelper::ToIndexElementOffsetBytes(elementSize);
 
     auto nativeBuffer = std::make_unique<IndexBufferGL4>();
     POMDOG_ASSERT(nativeBuffer != nullptr);
 
     if (auto err = nativeBuffer->Initialize(indices, sizeInBytes, bufferUsage); err != nullptr) {
-        return std::make_tuple(nullptr, Errors::Wrap(std::move(err), "failed to initialize IndexBufferGL4"));
+        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize IndexBufferGL4"));
     }
 
     auto indexBuffer = std::make_shared<IndexBuffer>(std::move(nativeBuffer), elementSize, indexCount, bufferUsage);
@@ -130,13 +130,13 @@ GraphicsDeviceGL4::CreateIndexBuffer(
     POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
     POMDOG_ASSERT(indexCount > 0);
 
-    const auto sizeInBytes = indexCount * Detail::BufferHelper::ToIndexElementOffsetBytes(elementSize);
+    const auto sizeInBytes = indexCount * detail::BufferHelper::ToIndexElementOffsetBytes(elementSize);
 
     auto nativeBuffer = std::make_unique<IndexBufferGL4>();
     POMDOG_ASSERT(nativeBuffer != nullptr);
 
     if (auto err = nativeBuffer->Initialize(sizeInBytes, bufferUsage); err != nullptr) {
-        return std::make_tuple(nullptr, Errors::Wrap(std::move(err), "failed to initialize IndexBufferGL4"));
+        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize IndexBufferGL4"));
     }
 
     auto indexBuffer = std::make_shared<IndexBuffer>(std::move(nativeBuffer), elementSize, indexCount, bufferUsage);
@@ -155,7 +155,7 @@ GraphicsDeviceGL4::CreateConstantBuffer(
     POMDOG_ASSERT(nativeBuffer != nullptr);
 
     if (auto err = nativeBuffer->Initialize(sourceData, sizeInBytes, bufferUsage); err != nullptr) {
-        return std::make_tuple(nullptr, Errors::Wrap(std::move(err), "failed to initialize ConstantBufferGL4"));
+        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize ConstantBufferGL4"));
     }
 
     auto constantBuffer = std::make_shared<ConstantBuffer>(std::move(nativeBuffer), sizeInBytes, bufferUsage);
@@ -174,7 +174,7 @@ GraphicsDeviceGL4::CreateConstantBuffer(
     POMDOG_ASSERT(nativeBuffer != nullptr);
 
     if (auto err = nativeBuffer->Initialize(sizeInBytes, bufferUsage); err != nullptr) {
-        return std::make_tuple(nullptr, Errors::Wrap(std::move(err), "failed to initialize ConstantBufferGL4"));
+        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize ConstantBufferGL4"));
     }
 
     auto constantBuffer = std::make_shared<ConstantBuffer>(std::move(nativeBuffer), sizeInBytes, bufferUsage);
@@ -188,7 +188,7 @@ GraphicsDeviceGL4::CreatePipelineState(const PipelineStateDescription& descripti
     POMDOG_ASSERT(pipelineState != nullptr);
 
     if (auto err = pipelineState->Initialize(description); err != nullptr) {
-        return std::make_tuple(nullptr, Errors::Wrap(std::move(err), "failed to initialize PipelineStateGL4"));
+        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize PipelineStateGL4"));
     }
     return std::make_tuple(std::move(pipelineState), nullptr);
 }
@@ -205,22 +205,22 @@ GraphicsDeviceGL4::CreateEffectReflection(
     POMDOG_ASSERT(effectReflection != nullptr);
 
     if (auto err = effectReflection->Initialize(pipelineStateGL4->GetShaderProgram()); err != nullptr) {
-        return std::make_tuple(nullptr, Errors::Wrap(std::move(err), "failed to initialize EffectReflectionGL4"));
+        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize EffectReflectionGL4"));
     }
     return std::make_tuple(std::move(effectReflection), nullptr);
 }
 
 std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
 GraphicsDeviceGL4::CreateShader(
-    const Detail::ShaderBytecode& shaderBytecode,
-    const Detail::ShaderCompileOptions& compileOptions) noexcept
+    const detail::ShaderBytecode& shaderBytecode,
+    const detail::ShaderCompileOptions& compileOptions) noexcept
 {
     switch (compileOptions.Profile.PipelineStage) {
     case ShaderPipelineStage::VertexShader: {
         auto shader = std::make_unique<VertexShaderGL4>();
         POMDOG_ASSERT(shader != nullptr);
         if (auto err = shader->Initialize(shaderBytecode); err != nullptr) {
-            return std::make_tuple(nullptr, Errors::Wrap(std::move(err), "failed to create VertexShaderGL4"));
+            return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to create VertexShaderGL4"));
         }
         return std::make_tuple(std::move(shader), nullptr);
     }
@@ -228,12 +228,12 @@ GraphicsDeviceGL4::CreateShader(
         auto shader = std::make_unique<PixelShaderGL4>();
         POMDOG_ASSERT(shader != nullptr);
         if (auto err = shader->Initialize(shaderBytecode); err != nullptr) {
-            return std::make_tuple(nullptr, Errors::Wrap(std::move(err), "failed to create PixelShaderGL4"));
+            return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to create PixelShaderGL4"));
         }
         return std::make_tuple(std::move(shader), nullptr);
     }
     }
-    return std::make_tuple(nullptr, Errors::New("unsupported shader stage"));
+    return std::make_tuple(nullptr, errors::New("unsupported shader stage"));
 }
 
 std::tuple<std::shared_ptr<RenderTarget2D>, std::unique_ptr<Error>>
@@ -259,7 +259,7 @@ GraphicsDeviceGL4::CreateRenderTarget2D(
     POMDOG_ASSERT(height > 0);
 
     const auto levelCount = generateMipmap
-        ? Detail::TextureHelper::ComputeMipmapLevelCount(width, height)
+        ? detail::TextureHelper::ComputeMipmapLevelCount(width, height)
         : 1;
 
     // TODO: MSAA is not implemented yet.
@@ -275,7 +275,7 @@ GraphicsDeviceGL4::CreateRenderTarget2D(
             format,
             multiSampleCount);
         err != nullptr) {
-        return std::make_tuple(nullptr, Errors::Wrap(std::move(err), "failed to initialize RenderTarget2DGL4"));
+        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize RenderTarget2DGL4"));
     }
     return std::make_tuple(std::move(renderTarget), nullptr);
 }
@@ -301,7 +301,7 @@ GraphicsDeviceGL4::CreateDepthStencilBuffer(
             depthStencilFormat,
             multiSampleCount);
         err != nullptr) {
-        return std::make_tuple(nullptr, Errors::Wrap(std::move(err), "failed to initialize DepthStencilBufferGL4"));
+        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize DepthStencilBufferGL4"));
     }
     return std::make_tuple(std::move(depthStencilBuffer), nullptr);
 }
@@ -313,7 +313,7 @@ GraphicsDeviceGL4::CreateSamplerState(const SamplerDescription& description) noe
     POMDOG_ASSERT(samplerState != nullptr);
 
     if (auto err = samplerState->Initialize(description); err != nullptr) {
-        return std::make_tuple(nullptr, Errors::Wrap(std::move(err), "failed to initialize SamplerStateGL4"));
+        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize SamplerStateGL4"));
     }
     return std::make_tuple(std::move(samplerState), nullptr);
 }
@@ -341,7 +341,7 @@ GraphicsDeviceGL4::CreateTexture2D(
     POMDOG_ASSERT(height > 0);
 
     const auto levelCount = mipMap
-        ? Detail::TextureHelper::ComputeMipmapLevelCount(width, height)
+        ? detail::TextureHelper::ComputeMipmapLevelCount(width, height)
         : 1;
 
     auto texture = std::make_shared<Texture2DGL4>();
@@ -353,7 +353,7 @@ GraphicsDeviceGL4::CreateTexture2D(
             levelCount,
             format);
         err != nullptr) {
-        return std::make_tuple(nullptr, Errors::Wrap(std::move(err), "failed to initialize Texture2DGL4"));
+        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize Texture2DGL4"));
     }
     return std::make_tuple(std::move(texture), nullptr);
 }
@@ -364,4 +364,4 @@ void GraphicsDeviceGL4::ClientSizeChanged(int width, int height)
     presentationParameters.BackBufferHeight = height;
 }
 
-} // namespace Pomdog::Detail::GL4
+} // namespace pomdog::detail::gl4

@@ -8,11 +8,11 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 enum class AddressFamily : std::int8_t {
     InterNetworkV4,
     InterNetworkV6,
 };
 
-} // namespace Pomdog
+} // namespace pomdog

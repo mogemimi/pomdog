@@ -8,7 +8,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 enum class LogLevel : std::uint8_t {
     Critical = 0,
@@ -18,4 +18,4 @@ enum class LogLevel : std::uint8_t {
     Internal = 4,
 };
 
-} // namespace Pomdog
+} // namespace pomdog

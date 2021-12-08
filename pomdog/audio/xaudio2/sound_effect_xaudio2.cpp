@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cmath>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::XAudio2 {
+namespace pomdog::detail::xaudio2 {
 namespace {
 
 void BuildXAudio2Buffer(
@@ -65,7 +65,7 @@ SoundEffectXAudio2::Initialize(
     POMDOG_ASSERT(audioClip->GetWaveFormat() != nullptr);
 
     if (auto hr = xAudio2->CreateSourceVoice(&sourceVoice, audioClip->GetWaveFormat()); FAILED(hr)) {
-        return Errors::New("CreateSourceVoice() failed: " + std::to_string(hr));
+        return errors::New("CreateSourceVoice() failed: " + std::to_string(hr));
     }
 
     XAUDIO2_BUFFER bufferDesc;
@@ -74,7 +74,7 @@ SoundEffectXAudio2::Initialize(
     if (auto hr = sourceVoice->SubmitSourceBuffer(&bufferDesc); FAILED(hr)) {
         sourceVoice->DestroyVoice();
         sourceVoice = nullptr;
-        return Errors::New("SubmitSourceBuffer() failed: " + std::to_string(hr));
+        return errors::New("SubmitSourceBuffer() failed: " + std::to_string(hr));
     }
 
     return nullptr;
@@ -189,4 +189,4 @@ void SoundEffectXAudio2::SetVolume(float volumeIn) noexcept
     sourceVoice->SetVolume(volume);
 }
 
-} // namespace Pomdog::Detail::XAudio2
+} // namespace pomdog::detail::xaudio2

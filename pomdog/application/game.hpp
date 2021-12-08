@@ -9,11 +9,11 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 class Error;
-} // namespace Pomdog
+} // namespace pomdog
 
-namespace Pomdog {
+namespace pomdog {
 
 /// Core application class that describes game logic and rendering.
 ///
@@ -38,8 +38,8 @@ public:
     ///
     /// Logic updates are frame-independent. More specifically, they are guarnteed
     /// to be called once in a *presentation interval*, which is set in a Bootstrap.
-    /// @see X11::Bootstrap::SetPresentationInterval,
-    ///      Win32::Bootstrap::SetPresentationInterval
+    /// @see x11::Bootstrap::SetPresentationInterval,
+    ///      win32::Bootstrap::SetPresentationInterval
     /// @note In Cocoa, *presentation interval* is always 60
     virtual void Update() = 0;
 
@@ -51,4 +51,4 @@ public:
     virtual void Draw() = 0;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

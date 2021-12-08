@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 template <typename... Arguments>
 class POMDOG_EXPORT Signal<void(Arguments...)> final {
@@ -33,7 +33,7 @@ public:
     [[nodiscard]] std::size_t GetInvocationCount() const;
 
 private:
-    using SignalBody = Detail::Signals::SignalBody<void(Arguments...)>;
+    using SignalBody = detail::signals::SignalBody<void(Arguments...)>;
     std::shared_ptr<SignalBody> body;
 };
 
@@ -76,4 +76,4 @@ std::size_t Signal<void(Arguments...)>::GetInvocationCount() const
     return body->GetInvocationCount();
 }
 
-} // namespace Pomdog
+} // namespace pomdog

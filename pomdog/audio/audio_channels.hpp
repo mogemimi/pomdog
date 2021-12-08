@@ -8,7 +8,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 /// Represents the number of channels in the audio clip.
 enum class AudioChannels : std::uint8_t {
@@ -19,4 +19,4 @@ enum class AudioChannels : std::uint8_t {
     Stereo = 2,
 };
 
-} // namespace Pomdog
+} // namespace pomdog

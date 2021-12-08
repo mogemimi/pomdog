@@ -11,7 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <string>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 class Rectangle;
 enum class MouseCursor : std::uint8_t;
@@ -68,4 +68,4 @@ public:
     Signal<void(int width, int height)> ClientSizeChanged;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

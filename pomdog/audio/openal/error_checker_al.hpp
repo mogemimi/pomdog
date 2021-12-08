@@ -6,11 +6,11 @@
 #include <memory>
 #include <string>
 
-namespace Pomdog {
+namespace pomdog {
 class Error;
-} // namespace Pomdog
+} // namespace pomdog
 
-namespace Pomdog::Detail::OpenAL {
+namespace pomdog::detail::openal {
 
 [[nodiscard]] std::unique_ptr<Error>
 MakeOpenALError(ALenum err, std::string&& message) noexcept;
@@ -21,9 +21,9 @@ void CheckError(const char* command, const char* filename, int line) noexcept;
 
 #if defined(DEBUG) && !defined(NDEBUG)
 #define POMDOG_CHECK_ERROR_OPENAL(name) \
-    Pomdog::Detail::OpenAL::CheckError(name, __FILE__, __LINE__)
+    pomdog::detail::openal::CheckError(name, __FILE__, __LINE__)
 #else
 #define POMDOG_CHECK_ERROR_OPENAL(name)
 #endif
 
-} // namespace Pomdog::Detail::OpenAL
+} // namespace pomdog::detail::openal

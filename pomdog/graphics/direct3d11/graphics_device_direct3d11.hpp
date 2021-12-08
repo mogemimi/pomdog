@@ -15,7 +15,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::Direct3D11 {
+namespace pomdog::detail::direct3d11 {
 
 class AdapterManager final {
 private:
@@ -107,8 +107,8 @@ public:
     /// Creates a shader object.
     std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
     CreateShader(
-        const Detail::ShaderBytecode& shaderBytecode,
-        const Detail::ShaderCompileOptions& compileOptions) noexcept override;
+        const detail::ShaderBytecode& shaderBytecode,
+        const detail::ShaderCompileOptions& compileOptions) noexcept override;
 
     /// Creates a 2D render target.
     std::tuple<std::shared_ptr<RenderTarget2D>, std::unique_ptr<Error>>
@@ -168,4 +168,4 @@ private:
     PresentationParameters presentationParameters;
 };
 
-} // namespace Pomdog::Detail::Direct3D11
+} // namespace pomdog::detail::direct3d11

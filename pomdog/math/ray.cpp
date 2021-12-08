@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cmath>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 Ray::Ray(const Vector3& positionIn, const Vector3& directionIn)
     : Position(positionIn)
@@ -154,4 +154,4 @@ std::optional<float> Ray::Intersects(const Plane& plane) const
     return distance;
 }
 
-} // namespace Pomdog
+} // namespace pomdog

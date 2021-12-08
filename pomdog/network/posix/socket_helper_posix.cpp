@@ -15,7 +15,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstring>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 namespace {
 
 struct timeval ToTimeval(const Duration& d)
@@ -61,7 +61,7 @@ ConnectSocketPOSIX(
 
     auto res = ::getaddrinfo(hostName, port.data(), &hints, &addrListRaw);
     if (res != 0) {
-        return std::make_tuple(-1, Errors::New("getaddrinfo failed with error " + std::to_string(res)));
+        return std::make_tuple(-1, errors::New("getaddrinfo failed with error " + std::to_string(res)));
     }
 
     auto addrList = std::unique_ptr<struct ::addrinfo, void (*)(struct ::addrinfo*)>{addrListRaw, ::freeaddrinfo};
@@ -74,25 +74,25 @@ ConnectSocketPOSIX(
         // NOTE: Create a SOCKET for connecting to server
         descriptor = ::socket(info->ai_family, info->ai_socktype, info->ai_protocol);
         if (descriptor < 0) {
-            socketLastError = Detail::ToErrc(errno);
+            socketLastError = detail::ToErrc(errno);
             continue;
         }
 
         // NOTE: Set non-blocking mode
         const int socketOpt = ::fcntl(descriptor, F_GETFL, 0);
         if (socketOpt < 0) {
-            socketLastError = Detail::ToErrc(errno);
+            socketLastError = detail::ToErrc(errno);
             continue;
         }
         if (::fcntl(descriptor, F_SETFL, socketOpt | O_NONBLOCK) < 0) {
-            socketLastError = Detail::ToErrc(errno);
+            socketLastError = detail::ToErrc(errno);
             continue;
         }
 
         // NOTE: Connect to server
         int result = ::connect(descriptor, info->ai_addr, static_cast<int>(info->ai_addrlen));
         if (result != 0) {
-            socketLastError = Detail::ToErrc(errno);
+            socketLastError = detail::ToErrc(errno);
 
             if (socketLastError == std::errc::operation_in_progress) {
                 fd_set waitSet;
@@ -127,7 +127,7 @@ ConnectSocketPOSIX(
     }
 
     if (socketLastError) {
-        return std::make_tuple(-1, Errors::New(*socketLastError, "Unable to connect to server"));
+        return std::make_tuple(-1, errors::New(*socketLastError, "Unable to connect to server"));
     }
 
     return std::make_tuple(descriptor, nullptr);
@@ -164,7 +164,7 @@ BindSocketPOSIX(
 
     auto res = ::getaddrinfo(hostName, port.data(), &hints, &addrListRaw);
     if (res != 0) {
-        return std::make_tuple(-1, Errors::New("getaddrinfo failed with error " + std::to_string(res)));
+        return std::make_tuple(-1, errors::New("getaddrinfo failed with error " + std::to_string(res)));
     }
 
     auto addrList = std::unique_ptr<struct ::addrinfo, void (*)(struct ::addrinfo*)>{addrListRaw, ::freeaddrinfo};
@@ -177,25 +177,25 @@ BindSocketPOSIX(
         // NOTE: Create a SOCKET for connecting to server
         descriptor = ::socket(info->ai_family, info->ai_socktype, info->ai_protocol);
         if (descriptor < 0) {
-            socketLastError = Detail::ToErrc(errno);
+            socketLastError = detail::ToErrc(errno);
             continue;
         }
 
         // NOTE: Set non-blocking mode
         const int socketOpt = ::fcntl(descriptor, F_GETFL, 0);
         if (socketOpt < 0) {
-            socketLastError = Detail::ToErrc(errno);
+            socketLastError = detail::ToErrc(errno);
             continue;
         }
         if (::fcntl(descriptor, F_SETFL, socketOpt | O_NONBLOCK) < 0) {
-            socketLastError = Detail::ToErrc(errno);
+            socketLastError = detail::ToErrc(errno);
             continue;
         }
 
         // NOTE: Setup the listening socket
         int result = ::bind(descriptor, info->ai_addr, static_cast<int>(info->ai_addrlen));
         if (result != 0) {
-            socketLastError = Detail::ToErrc(errno);
+            socketLastError = detail::ToErrc(errno);
             ::close(descriptor);
             descriptor = -1;
             continue;
@@ -206,10 +206,10 @@ BindSocketPOSIX(
     }
 
     if (socketLastError) {
-        return std::make_tuple(-1, Errors::New(*socketLastError, "Unable to bind socket"));
+        return std::make_tuple(-1, errors::New(*socketLastError, "Unable to bind socket"));
     }
 
     return std::make_tuple(descriptor, nullptr);
 }
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

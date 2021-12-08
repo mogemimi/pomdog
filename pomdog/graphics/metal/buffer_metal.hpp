@@ -8,7 +8,7 @@
 #include "pomdog/utility/errors.hpp"
 #import <Metal/MTLBuffer.h>
 
-namespace Pomdog::Detail::Metal {
+namespace pomdog::detail::metal {
 
 class BufferMetal final : public NativeBuffer {
 public:
@@ -43,4 +43,4 @@ private:
     id<MTLBuffer> nativeBuffer = nullptr;
 };
 
-} // namespace Pomdog::Detail::Metal
+} // namespace pomdog::detail::metal

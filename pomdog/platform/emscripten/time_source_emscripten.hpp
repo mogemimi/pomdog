@@ -4,11 +4,11 @@
 
 #include "pomdog/application/time_point.hpp"
 
-namespace Pomdog::Detail::Emscripten {
+namespace pomdog::detail::emscripten {
 
 class TimeSourceEmscripten final {
 public:
     TimePoint Now() const;
 };
 
-} // namespace Pomdog::Detail::Emscripten
+} // namespace pomdog::detail::emscripten

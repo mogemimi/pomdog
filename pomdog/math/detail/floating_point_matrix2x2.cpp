@@ -9,7 +9,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <limits>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 template <typename T>
 FloatingPointMatrix2x2<T>::FloatingPointMatrix2x2(T m00, T m01, T m10, T m11) noexcept
@@ -225,4 +225,4 @@ operator*<float>(float, const FloatingPointMatrix2x2<float>&) noexcept;
 template FloatingPointMatrix2x2<double>
 operator*<double>(double, const FloatingPointMatrix2x2<double>&) noexcept;
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

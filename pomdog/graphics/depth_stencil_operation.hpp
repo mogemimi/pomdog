@@ -5,7 +5,7 @@
 #include "pomdog/graphics/comparison_function.hpp"
 #include "pomdog/graphics/stencil_operation.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 
 struct DepthStencilOperation final {
     StencilOperation StencilDepthBufferFail;
@@ -14,4 +14,4 @@ struct DepthStencilOperation final {
     ComparisonFunction StencilFunction;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

@@ -5,7 +5,7 @@
 #include "pomdog/utility/assert.hpp"
 #include <optional>
 
-namespace Pomdog::Detail::X11 {
+namespace pomdog::detail::x11 {
 namespace {
 
 ButtonState* GetButtonByIndex(MouseState& mouseState, unsigned int buttonIndex)
@@ -93,4 +93,4 @@ void MouseX11::HandleEvent(XEvent& event)
     }
 }
 
-} // namespace Pomdog::Detail::X11
+} // namespace pomdog::detail::x11

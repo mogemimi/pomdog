@@ -2,8 +2,8 @@
 
 #include "pomdog/audio/audio_clip.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 
 AudioClip::~AudioClip() noexcept = default;
 
-} // namespace Pomdog
+} // namespace pomdog

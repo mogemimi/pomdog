@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 class NativeGraphicsContext;
 
@@ -142,7 +142,7 @@ private:
     void SortCommandsForMetal();
 
 private:
-    std::vector<std::shared_ptr<Detail::GraphicsCommand>> commands;
+    std::vector<std::shared_ptr<detail::GraphicsCommand>> commands;
 };
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

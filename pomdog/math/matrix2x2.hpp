@@ -4,9 +4,9 @@
 
 #include "pomdog/math/detail/floating_point_matrix2x2.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 
 /// Matrix2x2 is a 2x2 matrix in row-major order.
-using Matrix2x2 = Detail::FloatingPointMatrix2x2<float>;
+using Matrix2x2 = detail::FloatingPointMatrix2x2<float>;
 
-} // namespace Pomdog
+} // namespace pomdog

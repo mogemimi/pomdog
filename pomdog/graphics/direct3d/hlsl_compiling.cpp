@@ -18,7 +18,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::Direct3D {
+namespace pomdog::detail::direct3d {
 namespace {
 
 [[nodiscard]] std::string
@@ -98,18 +98,18 @@ public:
         std::ifstream stream{includePath, std::ifstream::binary};
 
         if (!stream) {
-            lastError = Errors::New("Could not find a shader source file: " + includePath);
+            lastError = errors::New("Could not find a shader source file: " + includePath);
             return E_FAIL;
         }
 
         auto [size, err] = FileSystem::GetFileSize(includePath);
         if (err != nullptr) {
-            lastError = Errors::New("failed to get file size: " + includePath);
+            lastError = errors::New("failed to get file size: " + includePath);
             return E_FAIL;
         }
 
         if (size <= 0) {
-            lastError = Errors::New("The file is too small: " + includePath);
+            lastError = errors::New("The file is too small: " + includePath);
             return E_FAIL;
         }
 
@@ -168,20 +168,20 @@ CompileFromShaderFile(
         &errorBlob);
 
     if (auto err = shaderInclude.MoveLastError(); err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to compile shader");
+        return errors::Wrap(std::move(err), "failed to compile shader");
     }
 
     if (FAILED(hr)) {
         if (errorBlob != nullptr) {
             std::string str(reinterpret_cast<LPCSTR>(errorBlob->GetBufferPointer()), errorBlob->GetBufferSize());
-            return Errors::New("failed to compile shader. error: " + str);
+            return errors::New("failed to compile shader. error: " + str);
         }
-        return Errors::New("D3DCompile() failed. HRESULT = " + std::to_string(hr));
+        return errors::New("D3DCompile() failed. HRESULT = " + std::to_string(hr));
     }
 
     if (errorBlob != nullptr) {
         std::string str(reinterpret_cast<LPCSTR>(errorBlob->GetBufferPointer()), errorBlob->GetBufferSize());
-        return Errors::New("warning: " + str);
+        return errors::New("warning: " + str);
     }
 
     return nullptr;
@@ -202,7 +202,7 @@ CompileHLSL(
 
     for (auto& macro : compileOptions.PreprocessorMacros) {
         if (macro.Name.empty()) {
-            return std::make_tuple(nullptr, Errors::New("macro.Name is empty"));
+            return std::make_tuple(nullptr, errors::New("macro.Name is empty"));
         }
 
         D3D_SHADER_MACRO shaderMacro;
@@ -226,10 +226,10 @@ CompileHLSL(
             (defines.empty() ? nullptr : defines.data()),
             &codeBlob);
         err != nullptr) {
-        return std::make_tuple(nullptr, Errors::Wrap(std::move(err), "CompileFromShaderFile() failed"));
+        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "CompileFromShaderFile() failed"));
     }
 
     return std::make_tuple(std::move(codeBlob), nullptr);
 }
 
-} // namespace Pomdog::Detail::Direct3D
+} // namespace pomdog::detail::direct3d

@@ -8,7 +8,7 @@
 #include <unistd.h>
 #include <utility>
 
-namespace Pomdog::Detail::Apple {
+namespace pomdog::detail::apple {
 namespace {
 
 [[nodiscard]] NSString*
@@ -33,10 +33,10 @@ CreateNewDirectory(const std::string& path) noexcept
                                                                  error:&error];
 
     if (error != nullptr) {
-        return Errors::New([[error domain] UTF8String]);
+        return errors::New([[error domain] UTF8String]);
     }
     if (result != YES) {
-        return Errors::New("createDirectoryAtURL() failed");
+        return errors::New("createDirectoryAtURL() failed");
     }
     return nullptr;
 }
@@ -55,10 +55,10 @@ CreateDirectories(const std::string& path) noexcept
                                                                  error:&error];
 
     if (error != nullptr) {
-        return Errors::New([[error domain] UTF8String]);
+        return errors::New([[error domain] UTF8String]);
     }
     if (result != YES) {
-        return Errors::New("createDirectoryAtURL() failed");
+        return errors::New("createDirectoryAtURL() failed");
     }
     return nullptr;
 }
@@ -86,8 +86,8 @@ GetFileSize(const std::string& path) noexcept
 {
     struct ::stat st;
     if (::stat(path.data(), &st) != 0) {
-        auto err = Detail::ToErrc(errno);
-        return std::make_tuple(0, Errors::New(err, "::stat() failed"));
+        auto err = detail::ToErrc(errno);
+        return std::make_tuple(0, errors::New(err, "::stat() failed"));
     }
     return std::make_tuple(st.st_size, nullptr);
 }
@@ -104,7 +104,7 @@ GetAppDataDirectoryPath() noexcept
     NSFileManager* fileManager = [NSFileManager defaultManager];
     NSString* bundleID = [[NSBundle mainBundle] bundleIdentifier];
     if (bundleID == nullptr) {
-        return std::make_tuple("", Errors::New("bundleID is nullptr"));
+        return std::make_tuple("", errors::New("bundleID is nullptr"));
     }
 
     NSArray* urlPaths = [fileManager
@@ -112,7 +112,7 @@ GetAppDataDirectoryPath() noexcept
                inDomains:NSUserDomainMask];
 
     if ((urlPaths == nullptr) || (urlPaths.count <= 0)) {
-        return std::make_tuple("", Errors::New("urlPaths is empty"));
+        return std::make_tuple("", errors::New("urlPaths is empty"));
     }
 
     // FIXME:
@@ -124,7 +124,7 @@ GetAppDataDirectoryPath() noexcept
 
     NSString* path = [appDirectory path];
     if (path == nullptr) {
-        return std::make_tuple("", Errors::New("[appDirectory path] is nullptr"));
+        return std::make_tuple("", errors::New("[appDirectory path] is nullptr"));
     }
 
     BOOL exists = [fileManager fileExistsAtPath:path];
@@ -138,7 +138,7 @@ GetAppDataDirectoryPath() noexcept
 
     std::string appDataDirecotry = [[appDirectory path] UTF8String];
     if (!exists) {
-        return std::make_tuple("", Errors::New("direcotry" + appDataDirecotry + "does not exist"));
+        return std::make_tuple("", errors::New("direcotry" + appDataDirecotry + "does not exist"));
     }
 
     return std::make_tuple(std::move(appDataDirecotry), nullptr);
@@ -163,10 +163,10 @@ GetCurrentWorkingDirectory() noexcept
 {
     char dir[PATH_MAX];
     if (::getcwd(dir, sizeof(dir)) == nullptr) {
-        auto err = Detail::ToErrc(errno);
-        return std::make_tuple("", Errors::New(err, "::getcwd() failed"));
+        auto err = detail::ToErrc(errno);
+        return std::make_tuple("", errors::New(err, "::getcwd() failed"));
     }
     return std::make_tuple(dir, nullptr);
 }
 
-} // namespace Pomdog::Detail::Apple
+} // namespace pomdog::detail::apple

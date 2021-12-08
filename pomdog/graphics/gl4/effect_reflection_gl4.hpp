@@ -14,7 +14,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::GL4 {
+namespace pomdog::detail::gl4 {
 
 struct UniformVariableGL4 final {
     std::string Name;
@@ -56,4 +56,4 @@ private:
     ShaderProgramGL4 shaderProgram;
 };
 
-} // namespace Pomdog::Detail::GL4
+} // namespace pomdog::detail::gl4

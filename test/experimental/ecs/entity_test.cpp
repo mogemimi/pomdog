@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <cstdint>
 
-using Pomdog::ECS::Entity;
+using pomdog::ecs::Entity;
 
 TEST_CASE("EntityID", "[EntityID]")
 {

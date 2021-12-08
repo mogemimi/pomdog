@@ -9,7 +9,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdarg>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 bool StringHelper::HasPrefix(std::string_view s, std::string_view prefix)
 {
@@ -194,4 +194,4 @@ std::string StringHelper::Format(const char* format, ...)
     return result;
 }
 
-} // namespace Pomdog
+} // namespace pomdog

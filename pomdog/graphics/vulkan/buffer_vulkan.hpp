@@ -10,7 +10,7 @@
 #include <cstdint>
 #include <tuple>
 
-namespace Pomdog::Detail::Vulkan {
+namespace pomdog::detail::vulkan {
 
 class BufferVulkan final : public NativeBuffer {
 public:
@@ -57,4 +57,4 @@ CreateBuffer(
     VkBufferUsageFlags usageFlags,
     VkMemoryPropertyFlags propertyFlags);
 
-} // namespace Pomdog::Detail::Vulkan
+} // namespace pomdog::detail::vulkan

@@ -16,7 +16,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstring>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 namespace {
 
 constexpr int InvalidSocket = -1;
@@ -73,10 +73,10 @@ TCPStreamPOSIX::Connect(std::string_view host, std::string_view port, const Dura
     const auto portBuf = std::string{port};
 
     std::thread connectThread([this, hostBuf = std::move(hostBuf), portBuf = std::move(portBuf), connectTimeout = connectTimeout] {
-        auto [fd, err] = Detail::ConnectSocketPOSIX(hostBuf, portBuf, SocketProtocol::TCP, connectTimeout);
+        auto [fd, err] = detail::ConnectSocketPOSIX(hostBuf, portBuf, SocketProtocol::TCP, connectTimeout);
 
         if (err != nullptr) {
-            auto wrapped = Errors::Wrap(std::move(err), "couldn't connect to TCP socket on " + hostBuf + ":" + portBuf);
+            auto wrapped = errors::Wrap(std::move(err), "couldn't connect to TCP socket on " + hostBuf + ":" + portBuf);
             std::shared_ptr<Error> shared = std::move(wrapped);
             errorConn = service->ScheduleTask([this, err = std::move(shared)] {
                 this->OnConnected(err->Clone());
@@ -113,8 +113,8 @@ TCPStreamPOSIX::Write(const ArrayView<std::uint8_t const>& data)
     auto result = ::send(this->descriptor, data.GetData(), data.GetSize(), flags);
 
     if (result == -1) {
-        auto errorCode = Detail::ToErrc(errno);
-        return Errors::New(errorCode, "write failed with error");
+        auto errorCode = detail::ToErrc(errno);
+        return errors::New(errorCode, "write failed with error");
     }
 
     // NOTE: Update timestamp of last read/write
@@ -145,7 +145,7 @@ void TCPStreamPOSIX::ReadEventLoop()
 
     if (timeoutInterval.has_value()) {
         if ((service->GetNowTime() - lastActiveTime) > *timeoutInterval) {
-            this->OnRead({}, Errors::New("timeout socket connection"));
+            this->OnRead({}, errors::New("timeout socket connection"));
             this->Close();
             this->OnDisconnect();
             return;
@@ -157,13 +157,13 @@ void TCPStreamPOSIX::ReadEventLoop()
 
     ssize_t readSize = ::recv(this->descriptor, buffer.data(), buffer.size(), flags);
     if (readSize < 0) {
-        const auto errorCode = Detail::ToErrc(errno);
+        const auto errorCode = detail::ToErrc(errno);
         if (errorCode == std::errc::resource_unavailable_try_again || errorCode == std::errc::operation_would_block) {
             // NOTE: There is no data to be read yet
             return;
         }
 
-        this->OnRead({}, Errors::New(errorCode, "read failed with error"));
+        this->OnRead({}, errors::New(errorCode, "read failed with error"));
         return;
     }
 
@@ -182,4 +182,4 @@ void TCPStreamPOSIX::ReadEventLoop()
     }
 }
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

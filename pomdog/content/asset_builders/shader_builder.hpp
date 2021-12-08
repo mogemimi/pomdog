@@ -16,12 +16,12 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 class AssetManager;
 class Error;
-} // namespace Pomdog
+} // namespace pomdog
 
-namespace Pomdog::AssetBuilders {
+namespace pomdog::AssetBuilders {
 
 template <>
 class POMDOG_EXPORT Builder<Shader> final {
@@ -91,4 +91,4 @@ private:
     std::shared_ptr<Impl> impl;
 };
 
-} // namespace Pomdog::AssetBuilders
+} // namespace pomdog::AssetBuilders

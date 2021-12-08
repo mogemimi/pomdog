@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::GL4 {
+namespace pomdog::detail::gl4 {
 
 using BlendGL4 = Tagged<GLenum, BlendFactor>;
 using BlendOperationGL4 = Tagged<GLenum, BlendOperation>;
@@ -40,4 +40,4 @@ private:
     bool alphaToCoverageEnable = false;
 };
 
-} // namespace Pomdog::Detail::GL4
+} // namespace pomdog::detail::gl4

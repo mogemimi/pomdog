@@ -2,9 +2,9 @@
 
 #include "pomdog/graphics/texture2d.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 
 Texture2D::Texture2D() noexcept = default;
 Texture2D::~Texture2D() = default;
 
-} // namespace Pomdog
+} // namespace pomdog

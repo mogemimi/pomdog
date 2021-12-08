@@ -2,7 +2,7 @@
 
 #include "pomdog/utility/error_helper.hpp"
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 std::errc ToErrc(int err) noexcept
 {
@@ -20,4 +20,4 @@ std::errc ToErrc(int err) noexcept
     return static_cast<std::errc>(err);
 }
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

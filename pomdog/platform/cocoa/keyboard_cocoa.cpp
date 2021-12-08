@@ -5,7 +5,7 @@
 #include "pomdog/input/key_state.hpp"
 #include "pomdog/utility/assert.hpp"
 
-namespace Pomdog::Detail::Cocoa {
+namespace pomdog::detail::cocoa {
 
 KeyboardCocoa::KeyboardCocoa() = default;
 
@@ -48,4 +48,4 @@ void KeyboardCocoa::HandleEvent(const SystemEvent& event)
     }
 }
 
-} // namespace Pomdog::Detail::Cocoa
+} // namespace pomdog::detail::cocoa

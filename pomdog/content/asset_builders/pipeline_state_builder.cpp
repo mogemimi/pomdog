@@ -15,7 +15,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::AssetBuilders {
+namespace pomdog::AssetBuilders {
 
 class Builder<PipelineState>::Impl final {
 public:
@@ -55,7 +55,7 @@ Builder<PipelineState>::Impl::Load()
     POMDOG_ASSERT(!description.InputLayout.InputElements.empty());
 
     if (!hasPrimitiveTopology) {
-        return std::make_tuple(nullptr, Errors::New("PrimitiveTopology must be specified"));
+        return std::make_tuple(nullptr, errors::New("PrimitiveTopology must be specified"));
     }
 
     if (!hasBlendState) {
@@ -77,16 +77,16 @@ Builder<PipelineState>::Impl::Load()
     POMDOG_ASSERT(hasDepthStencilViewFormat);
 
     if (!hasRenderTargetViewFormats) {
-        return std::make_tuple(nullptr, Errors::New("RenderTargetViewFormats must be specified"));
+        return std::make_tuple(nullptr, errors::New("RenderTargetViewFormats must be specified"));
     }
 
     if (!hasDepthStencilViewFormat) {
-        return std::make_tuple(nullptr, Errors::New("DepthStencilViewFormat must be specified"));
+        return std::make_tuple(nullptr, errors::New("DepthStencilViewFormat must be specified"));
     }
 
     auto [pipelineState, err] = graphicsDevice->CreatePipelineState(description);
     if (err != nullptr) {
-        return std::make_tuple(nullptr, Errors::Wrap(std::move(err), "CreatePipelineState() failed"));
+        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "CreatePipelineState() failed"));
     }
     return std::make_tuple(std::move(pipelineState), nullptr);
 }
@@ -294,4 +294,4 @@ void Builder<PipelineState>::SetError(std::unique_ptr<Error>&& err)
     impl->lastError = std::move(err);
 }
 
-} // namespace Pomdog::AssetBuilders
+} // namespace pomdog::AssetBuilders

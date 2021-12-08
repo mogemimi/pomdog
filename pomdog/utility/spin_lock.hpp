@@ -9,7 +9,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <atomic>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 class POMDOG_EXPORT SpinLock final {
     std::atomic_flag flag = ATOMIC_FLAG_INIT;
@@ -22,4 +22,4 @@ public:
     void unlock() noexcept;
 };
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

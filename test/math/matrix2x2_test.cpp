@@ -3,7 +3,7 @@
 #include "pomdog/math/matrix2x2.hpp"
 #include <catch_amalgamated.hpp>
 
-using Pomdog::Matrix2x2;
+using pomdog::Matrix2x2;
 
 TEST_CASE("Matrix2x2", "[Matrix2x2]")
 {

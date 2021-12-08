@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 namespace {
 
 bool isSocketValid(::SOCKET descriptor) noexcept
@@ -61,10 +61,10 @@ TCPStreamWin32::Connect(std::string_view host, std::string_view port, const Dura
     const auto portBuf = std::string{port};
 
     std::thread connectThread([this, hostBuf = std::move(hostBuf), portBuf = std::move(portBuf), connectTimeout = connectTimeout] {
-        auto [fd, err] = Detail::ConnectSocketWin32(hostBuf, portBuf, SocketProtocol::TCP, connectTimeout);
+        auto [fd, err] = detail::ConnectSocketWin32(hostBuf, portBuf, SocketProtocol::TCP, connectTimeout);
 
         if (err != nullptr) {
-            auto wrapped = Errors::Wrap(std::move(err), "couldn't connect to TCP socket on " + hostBuf + ":" + portBuf);
+            auto wrapped = errors::Wrap(std::move(err), "couldn't connect to TCP socket on " + hostBuf + ":" + portBuf);
             std::shared_ptr<Error> shared = std::move(wrapped);
             errorConn = service->ScheduleTask([this, err = std::move(shared)] {
                 this->OnConnected(err->Clone());
@@ -105,7 +105,7 @@ TCPStreamWin32::Write(const ArrayView<std::uint8_t const>& data)
         0);
 
     if (result == SOCKET_ERROR) {
-        return Errors::New("send failed with error: " + std::to_string(::WSAGetLastError()));
+        return errors::New("send failed with error: " + std::to_string(::WSAGetLastError()));
     }
 
     // NOTE: Update timestamp of last read/write
@@ -136,7 +136,7 @@ void TCPStreamWin32::ReadEventLoop()
 
     if (timeoutInterval.has_value()) {
         if ((service->GetNowTime() - lastActiveTime) > *timeoutInterval) {
-            this->OnRead({}, Errors::New("timeout socket connection"));
+            this->OnRead({}, errors::New("timeout socket connection"));
             this->Close();
             this->OnDisconnect();
             return;
@@ -154,7 +154,7 @@ void TCPStreamWin32::ReadEventLoop()
             return;
         }
 
-        this->OnRead({}, Errors::New("read failed with error: " + std::to_string(errorCode)));
+        this->OnRead({}, errors::New("read failed with error: " + std::to_string(errorCode)));
         return;
     }
 
@@ -173,4 +173,4 @@ void TCPStreamWin32::ReadEventLoop()
     }
 }
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

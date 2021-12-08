@@ -5,7 +5,7 @@
 #include "pomdog/utility/assert.hpp"
 #include "pomdog/utility/exception.hpp"
 
-namespace Pomdog::Detail::Vulkan {
+namespace pomdog::detail::vulkan {
 
 RenderTarget2DVulkan::RenderTarget2DVulkan(
     VkDevice device,
@@ -20,4 +20,4 @@ RenderTarget2DVulkan::RenderTarget2DVulkan(
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 
-} // namespace Pomdog::Detail::Vulkan
+} // namespace pomdog::detail::vulkan

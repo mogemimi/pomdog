@@ -6,8 +6,8 @@
 #include <any>
 #include <utility>
 
-using Pomdog::Connection;
-using Pomdog::EventQueue;
+using pomdog::Connection;
+using pomdog::EventQueue;
 
 TEST_CASE("EventQueue", "[EventQueue]")
 {

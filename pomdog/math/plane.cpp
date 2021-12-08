@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <limits>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 Plane::Plane() noexcept
     : Normal(0.0f, 0.0f, 0.0f)
@@ -157,4 +157,4 @@ Plane Plane::CreateFromPointNormal(const Vector3& point, const Vector3& normal)
     return Plane(normal, -Vector3::Dot(normal, point));
 }
 
-} // namespace Pomdog
+} // namespace pomdog

@@ -10,9 +10,9 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::AddressParser {
+namespace pomdog::detail::AddressParser {
 
 std::tuple<AddressFamily, std::string_view, std::string_view>
 TransformAddress(std::string_view address);
 
-} // namespace Pomdog::Detail::AddressParser
+} // namespace pomdog::detail::AddressParser

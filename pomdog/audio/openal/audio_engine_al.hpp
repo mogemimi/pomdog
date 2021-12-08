@@ -7,11 +7,11 @@
 #include "pomdog/utility/errors.hpp"
 #include <memory>
 
-namespace Pomdog {
+namespace pomdog {
 class Error;
-} // namespace Pomdog
+} // namespace pomdog
 
-namespace Pomdog::Detail::OpenAL {
+namespace pomdog::detail::openal {
 
 class AudioEngineAL final : public AudioEngine {
 private:
@@ -54,4 +54,4 @@ public:
     SetMainVolume(float volume) noexcept override;
 };
 
-} // namespace Pomdog::Detail::OpenAL
+} // namespace pomdog::detail::openal

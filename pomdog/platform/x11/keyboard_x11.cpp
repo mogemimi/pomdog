@@ -12,7 +12,7 @@
 #include <cstring>
 #include <map>
 
-namespace Pomdog::Detail::X11 {
+namespace pomdog::detail::x11 {
 namespace {
 
 constexpr Keys Keys_None = static_cast<Keys>(0);
@@ -274,7 +274,7 @@ void BuildKeyMap(Display* display, std::array<Keys, 256>& keys)
     XkbDescPtr desc = XkbGetKeyboard(
         display, XkbAllComponentsMask, XkbUseCoreKbd);
 
-    Detail::ScopeGuard scoped([&] {
+    detail::ScopeGuard scoped([&] {
         XkbFreeKeyboard(desc, 0, True);
     });
 
@@ -450,4 +450,4 @@ void KeyboardX11::HandleEvent(XEvent& event, ::XIC inputContext)
 #endif
 }
 
-} // namespace Pomdog::Detail::X11
+} // namespace pomdog::detail::x11

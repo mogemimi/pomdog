@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <system_error>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 class POMDOG_EXPORT Error {
 public:
@@ -25,9 +25,9 @@ public:
     [[nodiscard]] virtual std::unique_ptr<Error> Clone() const noexcept = 0;
 };
 
-} // namespace Pomdog
+} // namespace pomdog
 
-namespace Pomdog::Errors {
+namespace pomdog::errors {
 
 class POMDOG_EXPORT IOError final : public Error {
 public:
@@ -50,4 +50,4 @@ New(std::string&& message) noexcept;
 [[nodiscard]] POMDOG_EXPORT std::unique_ptr<Error>
 Wrap(std::unique_ptr<Error>&& err, std::string&& message) noexcept;
 
-} // namespace Pomdog::Errors
+} // namespace pomdog::errors

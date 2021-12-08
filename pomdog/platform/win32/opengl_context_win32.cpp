@@ -11,7 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::Win32 {
+namespace pomdog::detail::win32 {
 namespace {
 
 [[nodiscard]] std::unique_ptr<Error>
@@ -49,7 +49,7 @@ ToPixelFormatDescriptor(
         descriptor.cColorBits = 128;
         break;
     default:
-        return Errors::New("invalid back buffer format");
+        return errors::New("invalid back buffer format");
     }
 
     switch (presentationParameters.DepthStencilFormat) {
@@ -74,7 +74,7 @@ ToPixelFormatDescriptor(
         descriptor.cStencilBits = 0;
         break;
     default:
-        return Errors::New("invalid depth stencil format");
+        return errors::New("invalid depth stencil format");
     }
 
     return nullptr;
@@ -91,7 +91,7 @@ OpenGLContextWin32::Initialize(
 {
     windowHandle = windowHandleIn;
     if (windowHandle == nullptr) {
-        return Errors::New("windowHandle must be != nullptr");
+        return errors::New("windowHandle must be != nullptr");
     }
 
     using hdcType = decltype(hdc);
@@ -111,19 +111,19 @@ OpenGLContextWin32::Initialize(
 
     PIXELFORMATDESCRIPTOR formatDescriptor;
     if (auto err = ToPixelFormatDescriptor(presentationParameters, formatDescriptor); err != nullptr) {
-        return Errors::Wrap(std::move(err), "ToPixelFormatDescriptor() failed");
+        return errors::Wrap(std::move(err), "ToPixelFormatDescriptor() failed");
     }
 
     const auto pixelFormat = ::ChoosePixelFormat(hdc.get(), &formatDescriptor);
 
     if (pixelFormat == 0) {
         const auto errorCode = ::GetLastError();
-        return Errors::New("ChoosePixelFormat() failed. error code = " + std::to_string(errorCode));
+        return errors::New("ChoosePixelFormat() failed. error code = " + std::to_string(errorCode));
     }
 
     if (!SetPixelFormat(hdc.get(), pixelFormat, &formatDescriptor)) {
         const auto errorCode = ::GetLastError();
-        return Errors::New("SetPixelFormat() failed. error code = " + std::to_string(errorCode));
+        return errors::New("SetPixelFormat() failed. error code = " + std::to_string(errorCode));
     }
 
     // NOTE: Create OpenGL context.
@@ -131,7 +131,7 @@ OpenGLContextWin32::Initialize(
 
     if (!::wglMakeCurrent(hdc.get(), glrc.get())) {
         const auto errorCode = ::GetLastError();
-        return Errors::New("wglMakeCurrent() failed. error code = " + std::to_string(errorCode));
+        return errors::New("wglMakeCurrent() failed. error code = " + std::to_string(errorCode));
     }
 
     return nullptr;
@@ -164,4 +164,4 @@ void OpenGLContextWin32::SwapBuffers()
     ::SwapBuffers(hdc.get());
 }
 
-} // namespace Pomdog::Detail::Win32
+} // namespace pomdog::detail::win32

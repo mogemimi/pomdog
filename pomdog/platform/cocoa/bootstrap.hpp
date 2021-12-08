@@ -12,18 +12,18 @@
 @class PomdogOpenGLView;
 @class PomdogMetalViewController;
 
-namespace Pomdog {
+namespace pomdog {
 class Error;
 class Game;
 class GameHost;
-} // namespace Pomdog
+} // namespace pomdog
 
-namespace Pomdog::Detail::Cocoa {
+namespace pomdog::detail::cocoa {
 class GameHostCocoa;
 class GameHostMetal;
-} // namespace Pomdog::Detail::Cocoa
+} // namespace pomdog::detail::cocoa
 
-namespace Pomdog::Cocoa {
+namespace pomdog::cocoa {
 
 class POMDOG_EXPORT Bootstrap final {
 public:
@@ -52,8 +52,8 @@ public:
 private:
     std::function<void()> onCompleted;
     std::function<void(std::unique_ptr<Error>&& err)> onError;
-    std::shared_ptr<Pomdog::Detail::Cocoa::GameHostCocoa> gameHostCocoa;
-    std::shared_ptr<Pomdog::Detail::Cocoa::GameHostMetal> gameHostMetal;
+    std::shared_ptr<pomdog::detail::cocoa::GameHostCocoa> gameHostCocoa;
+    std::shared_ptr<pomdog::detail::cocoa::GameHostMetal> gameHostMetal;
     std::shared_ptr<Game> game;
     __weak NSWindow* nativeWindow = nil;
     PomdogMetalViewController* viewController = nil;
@@ -62,4 +62,4 @@ private:
     bool openGLEnabled = false;
 };
 
-} // namespace Pomdog::Cocoa
+} // namespace pomdog::cocoa

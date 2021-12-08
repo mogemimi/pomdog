@@ -5,9 +5,9 @@
 #include "pomdog/graphics/forward_declarations.hpp"
 #include <vulkan/vulkan.h>
 
-namespace Pomdog::Detail::Vulkan {
+namespace pomdog::detail::vulkan {
 
 [[nodiscard]] VkFormat
 ToSurfaceFormat(SurfaceFormat format) noexcept;
 
-} // namespace Pomdog::Detail::Vulkan
+} // namespace pomdog::detail::vulkan

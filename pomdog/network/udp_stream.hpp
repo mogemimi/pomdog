@@ -16,7 +16,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 class POMDOG_EXPORT UDPStream final {
 public:
@@ -62,7 +62,7 @@ public:
     OnReadFrom(std::function<void(const ArrayView<std::uint8_t>&, std::string_view address, const std::unique_ptr<Error>&)>&& callback);
 
 private:
-    std::unique_ptr<Detail::NativeUDPStream> nativeStream;
+    std::unique_ptr<detail::NativeUDPStream> nativeStream;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

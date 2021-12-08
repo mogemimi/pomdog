@@ -6,7 +6,7 @@
 #include "pomdog/input/mouse_state.hpp"
 #include <X11/Xlib.h>
 
-namespace Pomdog::Detail::X11 {
+namespace pomdog::detail::x11 {
 
 class MouseX11 final : public Mouse {
 public:
@@ -18,4 +18,4 @@ private:
     MouseState mouseState;
 };
 
-} // namespace Pomdog::Detail::X11
+} // namespace pomdog::detail::x11

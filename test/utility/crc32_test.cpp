@@ -3,7 +3,7 @@
 #include "pomdog/utility/crc32.hpp"
 #include <catch_amalgamated.hpp>
 
-using Pomdog::Detail::CRC32::ComputeCRC32;
+using pomdog::detail::crc32::ComputeCRC32;
 
 TEST_CASE("CRC32", "[CRC32]")
 {

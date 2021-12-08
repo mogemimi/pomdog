@@ -7,7 +7,7 @@
 #include <cstring>
 #include <utility>
 
-namespace Pomdog::Detail::X11 {
+namespace pomdog::detail::x11 {
 namespace {
 
 int trappedErrorCode = 0;
@@ -100,7 +100,7 @@ OpenGLContextX11::Initialize(
             True);
         XSync(display, False);
         if (auto errorCode = UntrapErrors(oldHandler); errorCode != 0) {
-            return Errors::New("glXCreateNewContext() failed: error code = " + std::to_string(errorCode));
+            return errors::New("glXCreateNewContext() failed: error code = " + std::to_string(errorCode));
         }
     }
     else {
@@ -162,12 +162,12 @@ OpenGLContextX11::Initialize(
         }
 
         if (lastError != 0) {
-            return Errors::New("glXCreateContextAttribsARB() failed: error code = " + std::to_string(lastError));
+            return errors::New("glXCreateContextAttribsARB() failed: error code = " + std::to_string(lastError));
         }
     }
 
     if (glxContext == nullptr) {
-        return Errors::New("glxContext is nullptr");
+        return errors::New("glxContext is nullptr");
     }
 
     return nullptr;
@@ -213,4 +213,4 @@ bool OpenGLContextX11::IsOpenGL3Supported() const noexcept
     return isOpenGL3Supported;
 }
 
-} // namespace Pomdog::Detail::X11
+} // namespace pomdog::detail::x11

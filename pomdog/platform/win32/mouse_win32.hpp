@@ -8,7 +8,7 @@
 #include "pomdog/platform/win32/prerequisites_win32.hpp"
 #include "pomdog/signals/forward_declarations.hpp"
 
-namespace Pomdog::Detail::Win32 {
+namespace pomdog::detail::win32 {
 
 class MouseWin32 final : public Mouse {
 public:
@@ -26,4 +26,4 @@ private:
 
 void TranslateMouseEvent(HWND windowHandle, const RAWMOUSE& mouse, const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue) noexcept;
 
-} // namespace Pomdog::Detail::Win32
+} // namespace pomdog::detail::win32

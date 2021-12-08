@@ -5,7 +5,7 @@
 #include "pomdog/math/containment_type.hpp"
 #include "pomdog/utility/assert.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 
 BoundingCircle::BoundingCircle(const Vector2& center, float radius)
     : Center(center)
@@ -68,4 +68,4 @@ bool BoundingCircle::Intersects(const BoundingCircle& circle) const
     return distance <= this->Radius + circle.Radius;
 }
 
-} // namespace Pomdog
+} // namespace pomdog

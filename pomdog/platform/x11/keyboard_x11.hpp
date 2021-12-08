@@ -7,7 +7,7 @@
 #include <X11/Xlib.h>
 #include <array>
 
-namespace Pomdog::Detail::X11 {
+namespace pomdog::detail::x11 {
 
 class KeyboardX11 final : public Keyboard {
 public:
@@ -22,4 +22,4 @@ private:
     KeyboardState keyboardState;
 };
 
-} // namespace Pomdog::Detail::X11
+} // namespace pomdog::detail::x11

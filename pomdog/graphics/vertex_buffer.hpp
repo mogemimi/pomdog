@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 class POMDOG_EXPORT VertexBuffer final {
 public:
@@ -21,7 +21,7 @@ public:
     VertexBuffer(VertexBuffer&&) = default;
 
     VertexBuffer(
-        std::unique_ptr<Detail::NativeBuffer>&& nativeBuffer,
+        std::unique_ptr<detail::NativeBuffer>&& nativeBuffer,
         std::size_t vertexCount,
         std::size_t strideInBytes,
         BufferUsage bufferUsage);
@@ -54,13 +54,13 @@ public:
         std::size_t strideInBytes);
 
     /// Gets the pointer of the native vertex buffer resource.
-    Detail::NativeBuffer* GetNativeBuffer();
+    detail::NativeBuffer* GetNativeBuffer();
 
 private:
-    std::unique_ptr<Detail::NativeBuffer> nativeBuffer;
+    std::unique_ptr<detail::NativeBuffer> nativeBuffer;
     std::uint32_t vertexCount;
     std::uint32_t strideInBytes;
     BufferUsage bufferUsage;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

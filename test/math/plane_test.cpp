@@ -8,7 +8,7 @@
 #include "pomdog/math/ray.hpp"
 #include <catch_amalgamated.hpp>
 
-using namespace Pomdog;
+using namespace pomdog;
 
 namespace {
 

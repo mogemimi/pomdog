@@ -5,11 +5,11 @@
 #include "pomdog/input/keyboard.hpp"
 #include "pomdog/input/keyboard_state.hpp"
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 class SystemEvent;
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail
 
-namespace Pomdog::Detail::Cocoa {
+namespace pomdog::detail::cocoa {
 
 class KeyboardCocoa final : public Keyboard {
 public:
@@ -23,4 +23,4 @@ private:
     KeyboardState state;
 };
 
-} // namespace Pomdog::Detail::Cocoa
+} // namespace pomdog::detail::cocoa

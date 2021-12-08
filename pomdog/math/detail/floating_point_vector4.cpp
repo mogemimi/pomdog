@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 template <typename T>
 FloatingPointVector4<T>::FloatingPointVector4(const FloatingPointVector3<T>& xyz, T w) noexcept
@@ -269,4 +269,4 @@ operator*<float>(float, const FloatingPointVector4<float>&) noexcept;
 template FloatingPointVector4<double>
 operator*<double>(double, const FloatingPointVector4<double>&) noexcept;
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

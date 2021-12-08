@@ -10,7 +10,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <string>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 struct POMDOG_EXPORT GamepadUUID final {
     std::uint16_t BusType = 0;
@@ -21,4 +21,4 @@ struct POMDOG_EXPORT GamepadUUID final {
     std::string ToString() const;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

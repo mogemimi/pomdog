@@ -20,7 +20,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 template <typename T>
 class POMDOG_EXPORT EventQueue final {
@@ -44,11 +44,11 @@ public:
     void Reserve(std::size_t capacity);
 
 private:
-    using SignalBody = Detail::Signals::SignalBody<void(const T&)>;
+    using SignalBody = detail::signals::SignalBody<void(const T&)>;
     std::vector<T> events;
     std::vector<T> notifications;
     std::shared_ptr<SignalBody> signalBody;
-    Detail::SpinLock notificationProtection;
+    detail::SpinLock notificationProtection;
 };
 
 template <typename T>
@@ -78,14 +78,14 @@ EventQueue<T>::Connect(std::function<void(const T&)>&& slot)
 template <typename T>
 void EventQueue<T>::Enqueue(const T& event)
 {
-    std::lock_guard<Detail::SpinLock> lock{notificationProtection};
+    std::lock_guard<detail::SpinLock> lock{notificationProtection};
     events.push_back(event);
 }
 
 template <typename T>
 void EventQueue<T>::Enqueue(T&& event)
 {
-    std::lock_guard<Detail::SpinLock> lock{notificationProtection};
+    std::lock_guard<detail::SpinLock> lock{notificationProtection};
     events.push_back(std::move(event));
 }
 
@@ -96,7 +96,7 @@ void EventQueue<T>::Emit()
     POMDOG_ASSERT(notifications.empty());
 
     {
-        std::lock_guard<Detail::SpinLock> lock{notificationProtection};
+        std::lock_guard<detail::SpinLock> lock{notificationProtection};
         std::swap(notifications, events);
         POMDOG_ASSERT(events.empty());
     }
@@ -111,10 +111,10 @@ template <typename T>
 void EventQueue<T>::Reserve(std::size_t capacity)
 {
     {
-        std::lock_guard<Detail::SpinLock> lock{notificationProtection};
+        std::lock_guard<detail::SpinLock> lock{notificationProtection};
         events.reserve(capacity);
     }
     notifications.reserve(capacity);
 }
 
-} // namespace Pomdog
+} // namespace pomdog

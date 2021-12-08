@@ -12,15 +12,15 @@
 @class NSView;
 @class PomdogNSWindowDelegate;
 
-namespace Pomdog {
+namespace pomdog {
 class Error;
-} // namespace Pomdog
+} // namespace pomdog
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 class SystemEvent;
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail
 
-namespace Pomdog::Detail::Cocoa {
+namespace pomdog::detail::cocoa {
 
 class GameWindowCocoa final : public GameWindow {
 public:
@@ -64,4 +64,4 @@ private:
     bool isMouseCursorVisible = true;
 };
 
-} // namespace Pomdog::Detail::Cocoa
+} // namespace pomdog::detail::cocoa

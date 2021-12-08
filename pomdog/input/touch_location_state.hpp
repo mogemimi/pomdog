@@ -8,7 +8,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 enum class TouchLocationState : std::uint8_t {
     Invalid,
@@ -17,4 +17,4 @@ enum class TouchLocationState : std::uint8_t {
     Released,
 };
 
-} // namespace Pomdog
+} // namespace pomdog

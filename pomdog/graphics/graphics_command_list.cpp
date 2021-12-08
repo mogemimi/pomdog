@@ -2,9 +2,9 @@
 
 #include "pomdog/graphics/graphics_command_list.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 
 GraphicsCommandList::GraphicsCommandList() noexcept = default;
 GraphicsCommandList::~GraphicsCommandList() = default;
 
-} // namespace Pomdog
+} // namespace pomdog

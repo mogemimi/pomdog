@@ -14,7 +14,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 class POMDOG_EXPORT IOService final {
 public:
@@ -38,4 +38,4 @@ private:
     Signal<void()> tasks;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::GL4 {
+namespace pomdog::detail::gl4 {
 namespace {
 
 GLenum ToBufferUsage(BufferUsage bufferUsage) noexcept
@@ -198,4 +198,4 @@ template class BufferGL4<ConstantBuffer>;
 template class BufferGL4<IndexBuffer>;
 template class BufferGL4<VertexBuffer>;
 
-} // namespace Pomdog::Detail::GL4
+} // namespace pomdog::detail::gl4

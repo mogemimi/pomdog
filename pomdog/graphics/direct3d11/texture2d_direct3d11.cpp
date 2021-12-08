@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::Direct3D11 {
+namespace pomdog::detail::direct3d11 {
 namespace {
 
 void LoadPixelData(
@@ -101,7 +101,7 @@ Texture2DDirect3D11::Initialize(
     textureDesc.MiscFlags = 0;
 
     if (auto hr = device->CreateTexture2D(&textureDesc, nullptr, &texture2D); FAILED(hr)) {
-        return Errors::New("CreateTexture2D() failed: hr = " + std::to_string(hr));
+        return errors::New("CreateTexture2D() failed: hr = " + std::to_string(hr));
     }
 
     // NOTE: Create the shader resource view (SRV)
@@ -113,7 +113,7 @@ Texture2DDirect3D11::Initialize(
     srvDesc.Texture2D.MipLevels = textureDesc.MipLevels;
 
     if (auto hr = device->CreateShaderResourceView(texture2D.Get(), &srvDesc, &shaderResourceView); FAILED(hr)) {
-        return Errors::New("CreateShaderResourceView() failed: hr = " + std::to_string(hr));
+        return errors::New("CreateShaderResourceView() failed: hr = " + std::to_string(hr));
     }
 
     return nullptr;
@@ -207,4 +207,4 @@ Texture2DDirect3D11::GetShaderResourceView() const noexcept
     return shaderResourceView.Get();
 }
 
-} // namespace Pomdog::Detail::Direct3D11
+} // namespace pomdog::detail::direct3d11

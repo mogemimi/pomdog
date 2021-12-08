@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::PathHelper {
+namespace pomdog::PathHelper {
 namespace {
 
 [[nodiscard]] std::string_view::size_type
@@ -319,4 +319,4 @@ IsAbsolute(std::string_view path) noexcept
     return false;
 }
 
-} // namespace Pomdog::PathHelper
+} // namespace pomdog::PathHelper

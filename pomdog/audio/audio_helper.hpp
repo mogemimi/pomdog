@@ -10,7 +10,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstddef>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::AudioHelper {
+namespace pomdog::detail::AudioHelper {
 
 [[nodiscard]] std::size_t
 GetSamples(std::size_t sizeInBytes, int bitsPerSample, AudioChannels channels) noexcept;
@@ -18,4 +18,4 @@ GetSamples(std::size_t sizeInBytes, int bitsPerSample, AudioChannels channels) n
 [[nodiscard]] Duration
 GetSampleDuration(std::size_t samples, int sampleRate) noexcept;
 
-} // namespace Pomdog::Detail::AudioHelper
+} // namespace pomdog::detail::AudioHelper

@@ -6,7 +6,7 @@
 #include "pomdog/graphics/sampler_description.hpp"
 #include "pomdog/utility/assert.hpp"
 
-namespace Pomdog::Detail::Metal {
+namespace pomdog::detail::metal {
 namespace {
 
 MTLSamplerAddressMode ToSamplerAddressMode(TextureAddressMode addressMode) noexcept
@@ -96,7 +96,7 @@ SamplerStateMetal::Initialize(id<MTLDevice> device, const SamplerDescription& de
 
     samplerState = [device newSamplerStateWithDescriptor:descriptor];
     if (samplerState == nullptr) {
-        return Errors::New("failed to create MTLSamplerState");
+        return errors::New("failed to create MTLSamplerState");
     }
     return nullptr;
 }
@@ -106,4 +106,4 @@ id<MTLSamplerState> SamplerStateMetal::GetSamplerState() const noexcept
     return samplerState;
 }
 
-} // namespace Pomdog::Detail::Metal
+} // namespace pomdog::detail::metal

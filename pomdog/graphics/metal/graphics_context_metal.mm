@@ -22,7 +22,7 @@
 #include "pomdog/math/vector4.hpp"
 #include "pomdog/utility/assert.hpp"
 
-namespace Pomdog::Detail::Metal {
+namespace pomdog::detail::metal {
 namespace {
 
 MTLIndexType ToIndexType(IndexElementSize elementSize) noexcept
@@ -305,7 +305,7 @@ void GraphicsContextMetal::DrawIndexedInstanced(
 void GraphicsContextMetal::SetViewport(const Viewport& viewport)
 {
     POMDOG_ASSERT(commandEncoder != nullptr);
-    Metal::SetViewport(commandEncoder, viewport);
+    metal::SetViewport(commandEncoder, viewport);
 }
 
 void GraphicsContextMetal::SetScissorRect(const Rectangle& scissorRect)
@@ -601,11 +601,11 @@ void GraphicsContextMetal::SetRenderPass(const RenderPass& renderPass)
     [commandEncoder setFrontFacingWinding:MTLWindingClockwise];
 
     if (renderPass.Viewport) {
-        Metal::SetViewport(commandEncoder, *renderPass.Viewport);
+        metal::SetViewport(commandEncoder, *renderPass.Viewport);
     }
     if (renderPass.ScissorRect) {
         SetScissorRectangle(commandEncoder, *renderPass.ScissorRect);
     }
 }
 
-} // namespace Pomdog::Detail::Metal
+} // namespace pomdog::detail::metal

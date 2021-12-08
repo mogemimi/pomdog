@@ -8,7 +8,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 template <typename T>
 Coordinate2D<T>::Coordinate2D(T x, T y) noexcept
@@ -134,4 +134,4 @@ operator*<std::int32_t>(std::int32_t, const Coordinate2D<std::int32_t>&) noexcep
 template Coordinate2D<std::int32_t>
 operator/<std::int32_t>(std::int32_t, const Coordinate2D<std::int32_t>&);
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

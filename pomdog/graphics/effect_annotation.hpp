@@ -5,7 +5,7 @@
 #include "pomdog/graphics/effect_variable_class.hpp"
 #include "pomdog/graphics/effect_variable_type.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 
 struct EffectAnnotation final {
     EffectVariableClass VariableClass;
@@ -15,4 +15,4 @@ struct EffectAnnotation final {
     std::uint8_t Elements;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

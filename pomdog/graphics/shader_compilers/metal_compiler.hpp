@@ -13,13 +13,13 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 class Error;
 class GraphicsDevice;
 class Shader;
-} // namespace Pomdog
+} // namespace pomdog
 
-namespace Pomdog::ShaderCompilers::MetalCompiler {
+namespace pomdog::ShaderCompilers::MetalCompiler {
 
 /// Creates a shader from a string of source code.
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
@@ -46,4 +46,4 @@ CreateShaderFromBinary(
     const std::string& entryPoint,
     ShaderPipelineStage pipelineStage);
 
-} // namespace Pomdog::ShaderCompilers::MetalCompiler
+} // namespace pomdog::ShaderCompilers::MetalCompiler

@@ -16,10 +16,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-using Pomdog::Detail::SystemEvent;
-using Pomdog::Detail::DirectInput::GamepadDirectInput;
+using pomdog::detail::SystemEvent;
+using pomdog::detail::DirectInput::GamepadDirectInput;
 
-namespace Pomdog::Win32 {
+namespace pomdog::win32 {
 
 void Bootstrap::SetInstance(HINSTANCE hInstanceIn) noexcept
 {
@@ -82,8 +82,8 @@ void Bootstrap::OnError(std::function<void(std::unique_ptr<Error>&& err)> onErro
 void Bootstrap::Run(
     const std::function<std::unique_ptr<Game>(const std::shared_ptr<GameHost>&)>& createApp)
 {
-    using Pomdog::Detail::Win32::GameHostWin32;
-    using Pomdog::Detail::Win32::GameWindowWin32;
+    using pomdog::detail::win32::GameHostWin32;
+    using pomdog::detail::win32::GameWindowWin32;
 
     PresentationParameters presentationParameters;
     presentationParameters.BackBufferHeight = backBufferHeight;
@@ -109,7 +109,7 @@ void Bootstrap::Run(
             presentationParameters);
         err != nullptr) {
         if (onError != nullptr) {
-            onError(Errors::Wrap(std::move(err), "GameWindowWin32::Initialize() failed"));
+            onError(errors::Wrap(std::move(err), "GameWindowWin32::Initialize() failed"));
         }
         return;
     }
@@ -117,7 +117,7 @@ void Bootstrap::Run(
     auto gamepad = std::make_shared<GamepadDirectInput>();
     if (auto err = gamepad->Initialize(hInstance, gameWindow->GetNativeWindowHandle()); err != nullptr) {
         if (onError != nullptr) {
-            onError(Errors::Wrap(std::move(err), "GamepadDirectInput::Initialize() failed"));
+            onError(errors::Wrap(std::move(err), "GamepadDirectInput::Initialize() failed"));
         }
         return;
     }
@@ -132,7 +132,7 @@ void Bootstrap::Run(
             useOpenGL);
         err != nullptr) {
         if (onError != nullptr) {
-            onError(Errors::Wrap(std::move(err), "GameHostWin32::Initialize() failed"));
+            onError(errors::Wrap(std::move(err), "GameHostWin32::Initialize() failed"));
         }
         return;
     }
@@ -141,7 +141,7 @@ void Bootstrap::Run(
     auto game = createApp(gameHost);
     if (game == nullptr) {
         if (onError != nullptr) {
-            onError(Errors::New("game must be != nullptr"));
+            onError(errors::New("game must be != nullptr"));
         }
         return;
     }
@@ -149,7 +149,7 @@ void Bootstrap::Run(
     POMDOG_ASSERT(game != nullptr);
     if (auto err = game->Initialize(); err != nullptr) {
         if (onError != nullptr) {
-            onError(Errors::Wrap(std::move(err), "failed to initialize game"));
+            onError(errors::Wrap(std::move(err), "failed to initialize game"));
         }
         return;
     }
@@ -160,4 +160,4 @@ void Bootstrap::Run(
     gameWindow.reset();
 }
 
-} // namespace Pomdog::Win32
+} // namespace pomdog::win32

@@ -16,7 +16,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstring>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 namespace {
 
 bool isSocketValid(::SOCKET descriptor) noexcept
@@ -55,10 +55,10 @@ UDPStreamWin32::Connect(std::string_view host, std::string_view port, const Dura
     const auto portBuf = std::string{port};
 
     std::thread connectThread([this, hostBuf = std::move(hostBuf), portBuf = std::move(portBuf), connectTimeout = connectTimeout] {
-        auto [fd, err] = Detail::ConnectSocketWin32(hostBuf, portBuf, SocketProtocol::UDP, connectTimeout);
+        auto [fd, err] = detail::ConnectSocketWin32(hostBuf, portBuf, SocketProtocol::UDP, connectTimeout);
 
         if (err != nullptr) {
-            auto wrapped = Errors::Wrap(std::move(err), "couldn't connect to UDP socket on " + hostBuf + ":" + portBuf);
+            auto wrapped = errors::Wrap(std::move(err), "couldn't connect to UDP socket on " + hostBuf + ":" + portBuf);
             std::shared_ptr<Error> shared = std::move(wrapped);
             errorConn = service->ScheduleTask([this, err = std::move(shared)] {
                 this->OnConnected(err->Clone());
@@ -89,10 +89,10 @@ UDPStreamWin32::Listen(std::string_view host, std::string_view port)
     const auto hostBuf = std::string{host};
     const auto portBuf = std::string{port};
 
-    auto [fd, err] = Detail::BindSocketWin32(hostBuf, portBuf, SocketProtocol::UDP);
+    auto [fd, err] = detail::BindSocketWin32(hostBuf, portBuf, SocketProtocol::UDP);
 
     if (err != nullptr) {
-        auto wrapped = Errors::Wrap(std::move(err), "couldn't listen to UDP socket on " + hostBuf + ":" + portBuf);
+        auto wrapped = errors::Wrap(std::move(err), "couldn't listen to UDP socket on " + hostBuf + ":" + portBuf);
         std::shared_ptr<Error> shared = wrapped->Clone();
         errorConn = service->ScheduleTask([this, err = std::move(shared)] {
             this->OnConnected(err->Clone());
@@ -132,7 +132,7 @@ UDPStreamWin32::Write(const ArrayView<std::uint8_t const>& data)
     auto result = ::send(this->descriptor, reinterpret_cast<const char*>(data.GetData()), static_cast<int>(data.GetSize()), flags);
 
     if (result == SOCKET_ERROR) {
-        return Errors::New("send failed with error: " + std::to_string(::WSAGetLastError()));
+        return errors::New("send failed with error: " + std::to_string(::WSAGetLastError()));
     }
 
     return nullptr;
@@ -145,7 +145,7 @@ UDPStreamWin32::WriteTo(const ArrayView<std::uint8_t const>& data, std::string_v
     POMDOG_ASSERT(data.GetData() != nullptr);
     POMDOG_ASSERT(data.GetSize() > 0);
 
-    const auto [family, hostView, portView] = Detail::AddressParser::TransformAddress(address);
+    const auto [family, hostView, portView] = detail::AddressParser::TransformAddress(address);
     auto host = std::string{hostView};
     auto port = std::string{portView};
 
@@ -159,7 +159,7 @@ UDPStreamWin32::WriteTo(const ArrayView<std::uint8_t const>& data, std::string_v
 
     auto res = ::getaddrinfo(host.data(), port.data(), &hints, &addrListRaw);
     if (res != 0) {
-        return Errors::New("getaddrinfo failed with error " + std::to_string(res));
+        return errors::New("getaddrinfo failed with error " + std::to_string(res));
     }
 
     auto addrList = std::unique_ptr<struct ::addrinfo, void(WSAAPI*)(struct ::addrinfo*)>{addrListRaw, ::freeaddrinfo};
@@ -181,7 +181,7 @@ UDPStreamWin32::WriteTo(const ArrayView<std::uint8_t const>& data, std::string_v
     }
 
     if (lastError != std::nullopt) {
-        return Errors::New("sendto failed with error: " + std::to_string(*lastError));
+        return errors::New("sendto failed with error: " + std::to_string(*lastError));
     }
 
     return nullptr;
@@ -207,7 +207,7 @@ void UDPStreamWin32::ReadEventLoop()
             return;
         }
 
-        this->OnRead({}, Errors::New("read failed with error: " + std::to_string(errorCode)));
+        this->OnRead({}, errors::New("read failed with error: " + std::to_string(errorCode)));
         return;
     }
 
@@ -239,7 +239,7 @@ void UDPStreamWin32::ReadFromEventLoop()
             return;
         }
 
-        this->OnReadFrom({}, "", Errors::New("read failed with error: " + std::to_string(errorCode)));
+        this->OnReadFrom({}, "", errors::New("read failed with error: " + std::to_string(errorCode)));
         return;
     }
 
@@ -251,4 +251,4 @@ void UDPStreamWin32::ReadFromEventLoop()
     this->OnReadFrom(std::move(view), addr.ToString(), nullptr);
 }
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

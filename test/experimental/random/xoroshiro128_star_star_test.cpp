@@ -6,7 +6,7 @@
 #include <cstdint>
 #include <random>
 
-using Pomdog::Random::Xoroshiro128StarStar;
+using pomdog::random::Xoroshiro128StarStar;
 
 TEST_CASE("Xoroshiro128StarStar", "[Random]")
 {

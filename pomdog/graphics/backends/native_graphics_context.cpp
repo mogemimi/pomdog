@@ -2,8 +2,8 @@
 
 #include "pomdog/graphics/backends/native_graphics_context.hpp"
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 NativeGraphicsContext::~NativeGraphicsContext() = default;
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

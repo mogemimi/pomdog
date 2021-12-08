@@ -9,7 +9,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <type_traits>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Math::Detail {
+namespace pomdog::math::detail {
 
 template <class Tp>
 struct IsTaggedFloatingPoint final
@@ -17,8 +17,8 @@ struct IsTaggedFloatingPoint final
 };
 
 template <class T, class Tag>
-struct IsTaggedFloatingPoint<Pomdog::Detail::TaggedArithmetic<T, Tag>> final
+struct IsTaggedFloatingPoint<pomdog::detail::TaggedArithmetic<T, Tag>> final
     : public std::integral_constant<bool, std::is_floating_point<T>::value> {
 };
 
-} // namespace Pomdog::Math::Detail
+} // namespace pomdog::math::detail

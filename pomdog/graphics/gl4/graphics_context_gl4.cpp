@@ -36,7 +36,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::GL4 {
+namespace pomdog::detail::gl4 {
 namespace {
 
 GLenum ToIndexElementType(IndexElementSize indexElementSize) noexcept
@@ -338,7 +338,7 @@ const GLvoid* ComputeStartIndexLocationPointer(
     IndexElementSize indexElementSize,
     std::size_t startIndexLocation) noexcept
 {
-    using Detail::BufferHelper::ToIndexElementOffsetBytes;
+    using detail::BufferHelper::ToIndexElementOffsetBytes;
     auto offsetBytes = startIndexLocation * ToIndexElementOffsetBytes(indexElementSize);
     return reinterpret_cast<const GLvoid*>(offsetBytes);
 }
@@ -649,7 +649,7 @@ void GraphicsContextGL4::SetViewport(const Viewport& viewport)
     POMDOG_ASSERT(renderTargets.size() == 8);
 
     const bool useBackBuffer = (renderTargets.front() == nullptr);
-    GL4::SetViewport(viewport, graphicsDevice, useBackBuffer);
+    gl4::SetViewport(viewport, graphicsDevice, useBackBuffer);
 }
 
 void GraphicsContextGL4::SetScissorRect(const Rectangle& scissorRect)
@@ -853,7 +853,7 @@ void GraphicsContextGL4::SetRenderPass(const RenderPass& renderPass)
     }
 
     if (renderPass.Viewport) {
-        GL4::SetViewport(*renderPass.Viewport, graphicsDevice, useBackBuffer);
+        gl4::SetViewport(*renderPass.Viewport, graphicsDevice, useBackBuffer);
     }
     if (renderPass.ScissorRect) {
         SetScissorRectangle(*renderPass.ScissorRect, graphicsDevice, useBackBuffer);
@@ -996,4 +996,4 @@ void GraphicsContextGL4::SetRenderPass(const RenderPass& renderPass)
     }
 }
 
-} // namespace Pomdog::Detail::GL4
+} // namespace pomdog::detail::gl4

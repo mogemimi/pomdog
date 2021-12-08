@@ -9,12 +9,12 @@
 #include <cstdint>
 #include <optional>
 
-namespace Pomdog {
+namespace pomdog {
 class Error;
 enum class AudioChannels : std::uint8_t;
-} // namespace Pomdog
+} // namespace pomdog
 
-namespace Pomdog::Detail::OpenAL {
+namespace pomdog::detail::openal {
 
 class AudioClipAL final : public AudioClip {
 private:
@@ -66,4 +66,4 @@ public:
     GetNativeBuffer() const noexcept;
 };
 
-} // namespace Pomdog::Detail::OpenAL
+} // namespace pomdog::detail::openal

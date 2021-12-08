@@ -7,7 +7,7 @@
 #include <optional>
 #include <utility>
 
-namespace Pomdog::Detail::Vulkan {
+namespace pomdog::detail::vulkan {
 namespace {
 
 VkBufferUsageFlags ToVkBufferUsageFlags(BufferBindMode bindMode) noexcept
@@ -307,4 +307,4 @@ VkBuffer BufferVulkan::GetBuffer() const
     return nativeBuffer;
 }
 
-} // namespace Pomdog::Detail::Vulkan
+} // namespace pomdog::detail::vulkan

@@ -5,7 +5,7 @@
 #include "pomdog/math/rectangle.hpp"
 #include "pomdog/utility/assert.hpp"
 
-namespace Pomdog::Detail::GL4 {
+namespace pomdog::detail::gl4 {
 
 std::unique_ptr<Error>
 RenderTarget2DGL4::Initialize(
@@ -16,7 +16,7 @@ RenderTarget2DGL4::Initialize(
     std::int32_t multiSampleCount) noexcept
 {
     if (auto err = texture.Initialize(pixelWidthIn, pixelHeightIn, levelCountIn, formatIn); err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to initialize texture");
+        return errors::Wrap(std::move(err), "failed to initialize texture");
     }
 
     pixelWidth = pixelWidthIn;
@@ -144,4 +144,4 @@ Texture2DObjectGL4 RenderTarget2DGL4::GetTextureHandle() const noexcept
     return texture.GetTextureHandle();
 }
 
-} // namespace Pomdog::Detail::GL4
+} // namespace pomdog::detail::gl4

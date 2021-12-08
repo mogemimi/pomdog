@@ -11,7 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::Win32 {
+namespace pomdog::detail::win32 {
 
 /// Create a new directory with the specified path.
 [[nodiscard]] std::unique_ptr<Error>
@@ -53,4 +53,4 @@ GetTempDirectoryPath() noexcept;
 [[nodiscard]] std::tuple<std::string, std::unique_ptr<Error>>
 GetCurrentWorkingDirectory() noexcept;
 
-} // namespace Pomdog::Detail::Win32
+} // namespace pomdog::detail::win32

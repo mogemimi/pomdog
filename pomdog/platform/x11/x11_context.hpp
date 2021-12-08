@@ -7,7 +7,7 @@
 #include <X11/Xlib.h>
 #include <memory>
 
-namespace Pomdog::Detail::X11 {
+namespace pomdog::detail::x11 {
 
 class X11Context final {
 public:
@@ -22,4 +22,4 @@ public:
     Initialize() noexcept;
 };
 
-} // namespace Pomdog::Detail::X11
+} // namespace pomdog::detail::x11

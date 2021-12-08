@@ -9,7 +9,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::Win32 {
+namespace pomdog::detail::win32 {
 namespace {
 
 bool IsHighContrast() noexcept
@@ -126,7 +126,7 @@ std::unique_ptr<Error> UseImmersiveDarkMode(HWND windowHandle, bool enabled) noe
     }
 
     if (auto hr = ::SetWindowTheme(windowHandle, L"DarkMode_Explorer", nullptr); FAILED(hr)) {
-        return Errors::New("SetWindowTheme() failed.");
+        return errors::New("SetWindowTheme() failed.");
     }
 
     constexpr DWORD DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1 = 19;
@@ -142,10 +142,10 @@ std::unique_ptr<Error> UseImmersiveDarkMode(HWND windowHandle, bool enabled) noe
 
     const BOOL useDarkMode = enabled ? TRUE : FALSE;
     if (auto hr = ::DwmSetWindowAttribute(windowHandle, attribute, &useDarkMode, sizeof(useDarkMode)); FAILED(hr)) {
-        return Errors::New("DwmSetWindowAttribute(..., DWMWA_USE_IMMERSIVE_DARK_MODE, ...) failed.");
+        return errors::New("DwmSetWindowAttribute(..., DWMWA_USE_IMMERSIVE_DARK_MODE, ...) failed.");
     }
 
     return nullptr;
 }
 
-} // namespace Pomdog::Detail::Win32
+} // namespace pomdog::detail::win32

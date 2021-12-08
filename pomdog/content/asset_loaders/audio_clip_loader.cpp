@@ -19,7 +19,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 std::tuple<std::shared_ptr<AudioClip>, std::unique_ptr<Error>>
 AssetLoader<AudioClip>::operator()(AssetManager& assets, const std::string& filePath)
@@ -27,26 +27,26 @@ AssetLoader<AudioClip>::operator()(AssetManager& assets, const std::string& file
     std::ifstream stream{filePath, std::ifstream::binary};
 
     if (!stream) {
-        auto err = Errors::New("cannot open the file, " + filePath);
+        auto err = errors::New("cannot open the file, " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
     auto [byteLength, sizeErr] = FileSystem::GetFileSize(filePath);
     if (sizeErr != nullptr) {
-        auto err = Errors::Wrap(std::move(sizeErr), "failed to get file size, " + filePath);
+        auto err = errors::Wrap(std::move(sizeErr), "failed to get file size, " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
     POMDOG_ASSERT(stream);
 
     if (byteLength < (sizeof(std::uint8_t) * 12)) {
-        auto err = Errors::New("The audio file is too small " + filePath);
+        auto err = errors::New("The audio file is too small " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
     auto signature = BinaryReader::ReadArray<std::uint8_t, 12>(stream);
     if (stream.fail()) {
-        auto err = Errors::New("failed to read signature in the file " + filePath);
+        auto err = errors::New("failed to read signature in the file " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
@@ -62,7 +62,7 @@ AssetLoader<AudioClip>::operator()(AssetManager& assets, const std::string& file
             auto [audioClip, loadErr] = WAV::Load(assets.GetAudioEngine(), std::move(stream), byteLength);
 
             if (loadErr != nullptr) {
-                auto err = Errors::Wrap(std::move(loadErr), "Cannot load the wave file " + filePath);
+                auto err = errors::Wrap(std::move(loadErr), "Cannot load the wave file " + filePath);
                 return std::make_tuple(nullptr, std::move(err));
             }
             return std::make_tuple(std::move(audioClip), nullptr);
@@ -74,14 +74,14 @@ AssetLoader<AudioClip>::operator()(AssetManager& assets, const std::string& file
 
         auto [audioClip, loadErr] = Vorbis::Load(assets.GetAudioEngine(), filePath);
         if (loadErr != nullptr) {
-            auto err = Errors::Wrap(std::move(loadErr), "Cannot load the ogg/vorbis file " + filePath);
+            auto err = errors::Wrap(std::move(loadErr), "Cannot load the ogg/vorbis file " + filePath);
             return std::make_tuple(nullptr, std::move(err));
         }
         return std::make_tuple(std::move(audioClip), nullptr);
     }
 
-    auto err = Errors::New("This audio file format is not supported " + filePath);
+    auto err = errors::New("This audio file format is not supported " + filePath);
     return std::make_tuple(nullptr, std::move(err));
 }
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

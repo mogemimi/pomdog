@@ -7,7 +7,7 @@
 #include "pomdog/math/ray.hpp"
 #include "pomdog/utility/assert.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 
 BoundingBox::BoundingBox(const Vector3& minIn, const Vector3& maxIn)
     : Min(minIn)
@@ -108,4 +108,4 @@ std::array<Vector3, BoundingBox::CornerCount> BoundingBox::GetCorners() const no
     }};
 }
 
-} // namespace Pomdog
+} // namespace pomdog

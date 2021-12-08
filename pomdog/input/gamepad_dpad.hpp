@@ -4,7 +4,7 @@
 
 #include "pomdog/input/button_state.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 
 struct GamepadDPad final {
     ButtonState Down = ButtonState::Released;
@@ -13,4 +13,4 @@ struct GamepadDPad final {
     ButtonState Right = ButtonState::Released;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

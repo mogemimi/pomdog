@@ -12,13 +12,13 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 class Error;
 class Game;
 class GameHost;
-} // namespace Pomdog
+} // namespace pomdog
 
-namespace Pomdog::Win32 {
+namespace pomdog::win32 {
 
 class POMDOG_EXPORT Bootstrap final {
 public:
@@ -73,4 +73,4 @@ private:
     bool openGLEnabled = false;
 };
 
-} // namespace Pomdog::Win32
+} // namespace pomdog::win32

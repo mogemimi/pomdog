@@ -18,7 +18,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <thread>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 class UDPStreamWin32 final {
 public:
@@ -78,4 +78,4 @@ private:
     ::SOCKET descriptor = INVALID_SOCKET;
 };
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

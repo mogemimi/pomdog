@@ -6,7 +6,7 @@
 #include "pomdog/graphics/texture2d.hpp"
 #include <vulkan/vulkan.h>
 
-namespace Pomdog::Detail::Vulkan {
+namespace pomdog::detail::vulkan {
 
 class Texture2DVulkan final : public Texture2D {
 public:
@@ -42,4 +42,4 @@ private:
     ::VkImageView view;
 };
 
-} // namespace Pomdog::Detail::Vulkan
+} // namespace pomdog::detail::vulkan

@@ -20,7 +20,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::GL4 {
+namespace pomdog::detail::gl4 {
 
 class InputLayoutGL4;
 using PrimitiveTopologyGL4 = Tagged<GLenum, PrimitiveTopology>;
@@ -57,4 +57,4 @@ private:
     PrimitiveTopologyGL4 primitiveTopology;
 };
 
-} // namespace Pomdog::Detail::GL4
+} // namespace pomdog::detail::gl4

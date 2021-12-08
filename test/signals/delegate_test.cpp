@@ -7,8 +7,8 @@
 #include <utility>
 #include <vector>
 
-using Pomdog::Connection;
-using Pomdog::Delegate;
+using pomdog::Connection;
+using pomdog::Delegate;
 
 TEST_CASE("Delegate", "[Signals]")
 {

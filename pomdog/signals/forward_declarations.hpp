@@ -8,8 +8,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <functional>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
-namespace Detail::Signals {
+namespace pomdog::detail::signals {
 
 template <typename Function>
 using Slot = std::function<Function>;
@@ -20,7 +19,9 @@ class SignalBody;
 template <typename Function>
 class DelegateBody;
 
-} // namespace Detail::Signals
+} // namespace pomdog::detail::signals
+
+namespace pomdog {
 
 template <typename Event>
 class EventQueue;
@@ -36,4 +37,4 @@ class Signal;
 template <typename Function>
 class Delegate;
 
-} // namespace Pomdog
+} // namespace pomdog

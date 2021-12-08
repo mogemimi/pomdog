@@ -15,10 +15,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::WAV {
+namespace pomdog::WAV {
 
 /// Reads an audio data from Waveform Audio File (.wav) format data.
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<AudioClip>, std::unique_ptr<Error>>
 Load(const std::shared_ptr<AudioEngine>& audioEngine, std::ifstream&& stream, std::size_t byteLength) noexcept;
 
-} // namespace Pomdog::WAV
+} // namespace pomdog::WAV

@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 class POMDOG_EXPORT EffectReflection {
 public:
@@ -26,4 +26,4 @@ public:
     GetConstantBuffers() const noexcept = 0;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

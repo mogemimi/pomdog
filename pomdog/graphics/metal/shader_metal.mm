@@ -7,7 +7,7 @@
 #include "pomdog/utility/string_helper.hpp"
 #import <Metal/Metal.h>
 
-namespace Pomdog::Detail::Metal {
+namespace pomdog::detail::metal {
 
 ShaderMetal::~ShaderMetal() = default;
 
@@ -42,26 +42,26 @@ ShaderMetal::Initialize(
     }
 
     if (compileError != nullptr) {
-        return Errors::New(StringHelper::Format(
+        return errors::New(StringHelper::Format(
             "Failed to compile shader.\n"
             "error: %s",
             [[compileError localizedDescription] UTF8String]));
     }
 
     if (library == nullptr) {
-        return Errors::New("MTLLibrary must be != nullptr");
+        return errors::New("MTLLibrary must be != nullptr");
     }
 
     POMDOG_ASSERT(!compileOptions.EntryPoint.empty());
 
     auto funcName = [NSString stringWithUTF8String:compileOptions.EntryPoint.data()];
     if (funcName == nullptr) {
-        return Errors::New("funcName must be != nullptr");
+        return errors::New("funcName must be != nullptr");
     }
     this->shader = [library newFunctionWithName:funcName];
 
     if (shader == nullptr) {
-        return Errors::New("MTLFunction must be != nullptr");
+        return errors::New("MTLFunction must be != nullptr");
     }
 
     return nullptr;
@@ -77,7 +77,7 @@ ShaderMetal::Initialize(
     POMDOG_ASSERT(library != nullptr);
 
     if (library == nullptr) {
-        return Errors::New("MTLLibrary must be != nullptr");
+        return errors::New("MTLLibrary must be != nullptr");
     }
 
     POMDOG_ASSERT(!compileOptions.EntryPoint.empty());
@@ -93,4 +93,4 @@ id<MTLFunction> ShaderMetal::GetShader() const noexcept
     return shader;
 }
 
-} // namespace Pomdog::Detail::Metal
+} // namespace pomdog::detail::metal

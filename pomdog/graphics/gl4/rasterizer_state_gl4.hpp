@@ -8,7 +8,7 @@
 #include "pomdog/utility/errors.hpp"
 #include "pomdog/utility/tagged.hpp"
 
-namespace Pomdog::Detail::GL4 {
+namespace pomdog::detail::gl4 {
 
 using FillModeGL4 = Tagged<GLenum, FillMode>;
 
@@ -27,4 +27,4 @@ private:
     bool multisampleAntiAliasEnable = false;
 };
 
-} // namespace Pomdog::Detail::GL4
+} // namespace pomdog::detail::gl4

@@ -4,7 +4,7 @@
 #include <emscripten.h>
 #include <type_traits>
 
-namespace Pomdog::Detail::Emscripten {
+namespace pomdog::detail::emscripten {
 
 TimePoint TimeSourceEmscripten::Now() const
 {
@@ -13,4 +13,4 @@ TimePoint TimeSourceEmscripten::Now() const
     return TimePoint{Duration{now * 0.001}};
 }
 
-} // namespace Pomdog::Detail::Emscripten
+} // namespace pomdog::detail::emscripten

@@ -12,7 +12,7 @@
 #include <cmath>
 #include <utility>
 
-namespace Pomdog::Detail::OpenAL {
+namespace pomdog::detail::openal {
 
 SoundEffectAL::SoundEffectAL() noexcept = default;
 
@@ -196,4 +196,4 @@ void SoundEffectAL::SetVolume(float volumeIn) noexcept
     POMDOG_CHECK_ERROR_OPENAL("alSourcef()");
 }
 
-} // namespace Pomdog::Detail::OpenAL
+} // namespace pomdog::detail::openal

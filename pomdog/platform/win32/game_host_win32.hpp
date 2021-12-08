@@ -10,21 +10,21 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 class Error;
 class Game;
 struct PresentationParameters;
-} // namespace Pomdog
+} // namespace pomdog
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 class SystemEvent;
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 class NativeGamepad;
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail
 
-namespace Pomdog::Detail::Win32 {
+namespace pomdog::detail::win32 {
 
 class GameWindowWin32;
 
@@ -84,4 +84,4 @@ private:
     std::unique_ptr<Impl> impl;
 };
 
-} // namespace Pomdog::Detail::Win32
+} // namespace pomdog::detail::win32

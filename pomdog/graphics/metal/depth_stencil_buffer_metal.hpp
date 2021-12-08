@@ -8,7 +8,7 @@
 #include "pomdog/utility/errors.hpp"
 #import <Metal/MTLTexture.h>
 
-namespace Pomdog::Detail::Metal {
+namespace pomdog::detail::metal {
 
 class DepthStencilBufferMetal final : public DepthStencilBuffer {
 public:
@@ -43,4 +43,4 @@ private:
     bool multiSampleEnabled = false;
 };
 
-} // namespace Pomdog::Detail::Metal
+} // namespace pomdog::detail::metal

@@ -8,7 +8,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 std::shared_ptr<HTTPRequest>
 HTTPRequest::Create(HTTPMethod method, const std::string& url)
@@ -24,4 +24,4 @@ void HTTPRequest::AddHeader(const std::string& key, const std::string& value)
     this->Headers.emplace_back(key, value);
 }
 
-} // namespace Pomdog
+} // namespace pomdog

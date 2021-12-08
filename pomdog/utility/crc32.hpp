@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <type_traits>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::CRC32 {
+namespace pomdog::detail::crc32 {
 
 // CRC-32 (Cyclic Redundancy Check for 32bit)
 
@@ -27,4 +27,4 @@ ComputeCRC32(const std::basic_string<CharT>& data) noexcept
     return ComputeCRC32(data.data(), data.length() * sizeof(CharT));
 }
 
-} // namespace Pomdog::Detail::CRC32
+} // namespace pomdog::detail::crc32

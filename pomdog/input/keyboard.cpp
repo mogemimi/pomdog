@@ -2,8 +2,8 @@
 
 #include "pomdog/input/keyboard.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 
 Keyboard::~Keyboard() = default;
 
-} // namespace Pomdog
+} // namespace pomdog

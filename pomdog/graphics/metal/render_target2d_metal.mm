@@ -8,7 +8,7 @@
 #import <Metal/MTLDevice.h>
 #import <Metal/MTLTexture.h>
 
-namespace Pomdog::Detail::Metal {
+namespace pomdog::detail::metal {
 
 std::unique_ptr<Error>
 RenderTarget2DMetal::Initialize(
@@ -41,7 +41,7 @@ RenderTarget2DMetal::Initialize(
 
     texture = [device newTextureWithDescriptor:descriptor];
     if (texture == nullptr) {
-        return Errors::New("failed to create MTLTexture");
+        return errors::New("failed to create MTLTexture");
     }
 
     return nullptr;
@@ -96,4 +96,4 @@ id<MTLTexture> RenderTarget2DMetal::GetTexture() const noexcept
     return texture;
 }
 
-} // namespace Pomdog::Detail::Metal
+} // namespace pomdog::detail::metal

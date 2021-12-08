@@ -4,7 +4,7 @@
 
 #include "pomdog/basic/export.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 
 class POMDOG_EXPORT Texture {
 public:
@@ -18,4 +18,4 @@ public:
     virtual ~Texture();
 };
 
-} // namespace Pomdog
+} // namespace pomdog

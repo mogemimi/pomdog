@@ -2,11 +2,11 @@
 
 #pragma once
 
-namespace Pomdog {
+namespace pomdog {
 
 enum class ButtonState : bool {
     Released = false,
     Pressed = true
 };
 
-} // namespace Pomdog
+} // namespace pomdog

@@ -17,7 +17,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <thread>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 class UDPStreamPOSIX final {
 public:
@@ -77,4 +77,4 @@ private:
     int descriptor = -1;
 };
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

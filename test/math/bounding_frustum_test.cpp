@@ -9,7 +9,7 @@
 #include "pomdog/math/radian.hpp"
 #include <catch_amalgamated.hpp>
 
-using namespace Pomdog;
+using namespace pomdog;
 
 namespace {
 

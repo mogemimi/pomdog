@@ -4,7 +4,7 @@
 #include "pomdog/math/vector2.hpp"
 #include <catch_amalgamated.hpp>
 
-using Pomdog::Vector2;
+using pomdog::Vector2;
 
 TEST_CASE("Vector2", "[Vector2]")
 {
@@ -73,22 +73,22 @@ TEST_CASE("Vector2", "[Vector2]")
             REQUIRE(vec.Y == approx(0.0f));
         }
         {
-            auto vec = Vector2::Rotate(Vector2{1.0f, 0.0f}, Pomdog::Math::PiOver2<float>);
+            auto vec = Vector2::Rotate(Vector2{1.0f, 0.0f}, pomdog::math::PiOver2<float>);
             REQUIRE(vec.X == approx(0.0f));
             REQUIRE(vec.Y == approx(1.0f));
         }
         {
-            auto vec = Vector2::Rotate(Vector2{1.0f, 0.0f}, Pomdog::Math::Pi<float>);
+            auto vec = Vector2::Rotate(Vector2{1.0f, 0.0f}, pomdog::math::Pi<float>);
             REQUIRE(vec.X == approx(-1.0f));
             REQUIRE(vec.Y == approx(0.0f));
         }
         {
-            auto vec = Vector2::Rotate(Vector2{1.0f, 0.0f}, -Pomdog::Math::PiOver2<float>);
+            auto vec = Vector2::Rotate(Vector2{1.0f, 0.0f}, -pomdog::math::PiOver2<float>);
             REQUIRE(vec.X == approx(0.0f));
             REQUIRE(vec.Y == approx(-1.0f));
         }
         {
-            auto vec = Vector2::Rotate(Vector2{1.0f, 0.0f}, Pomdog::Math::TwoPi<float>);
+            auto vec = Vector2::Rotate(Vector2{1.0f, 0.0f}, pomdog::math::TwoPi<float>);
             REQUIRE(vec.X == approx(1.0f));
             REQUIRE(vec.Y == approx(0.0f));
         }

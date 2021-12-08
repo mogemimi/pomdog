@@ -9,7 +9,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <type_traits>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 template <typename Character>
 [[nodiscard]] constexpr std::uint32_t
@@ -25,4 +25,4 @@ MakeFourCC(Character c0, Character c1, Character c2, Character c3) noexcept
         (static_cast<std::uint32_t>(c3) << 24);
 }
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

@@ -2,6 +2,6 @@
 
 #include "pomdog/network/http_response.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 
-} // namespace Pomdog
+} // namespace pomdog

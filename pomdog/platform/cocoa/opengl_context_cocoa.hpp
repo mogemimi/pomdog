@@ -9,13 +9,13 @@
 
 @class NSOpenGLContext;
 
-namespace Pomdog {
+namespace pomdog {
 class Error;
-} // namespace Pomdog
+} // namespace pomdog
 
-namespace Pomdog::Detail::Cocoa {
+namespace pomdog::detail::cocoa {
 
-class OpenGLContextCocoa final : public GL4::OpenGLContext {
+class OpenGLContextCocoa final : public gl4::OpenGLContext {
 public:
     OpenGLContextCocoa() noexcept;
     OpenGLContextCocoa(const OpenGLContextCocoa&) = delete;
@@ -47,4 +47,4 @@ private:
     __strong NSOpenGLContext* openGLContext = nil;
 };
 
-} // namespace Pomdog::Detail::Cocoa
+} // namespace pomdog::detail::cocoa

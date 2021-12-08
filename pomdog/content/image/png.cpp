@@ -13,7 +13,7 @@ extern "C" {
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::PNG {
+namespace pomdog::PNG {
 namespace {
 
 struct PNGBinaryContext final {
@@ -47,12 +47,12 @@ Decode(const std::uint8_t* data, std::size_t byteLength)
 
     auto pngPtr = ::png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
     if (nullptr == pngPtr) {
-        return std::make_tuple(std::move(image), Errors::New("png_create_read_struct() failed"));
+        return std::make_tuple(std::move(image), errors::New("png_create_read_struct() failed"));
     }
 
     auto infoPtr = ::png_create_info_struct(pngPtr);
 
-    Detail::ScopeGuard scopedDestroyReadStruct([&] {
+    detail::ScopeGuard scopedDestroyReadStruct([&] {
         if (nullptr != pngPtr) {
             if (nullptr != infoPtr) {
                 ::png_destroy_read_struct(&pngPtr, &infoPtr, nullptr);
@@ -64,7 +64,7 @@ Decode(const std::uint8_t* data, std::size_t byteLength)
     });
 
     if (nullptr == infoPtr) {
-        return std::make_tuple(std::move(image), Errors::New("infoPtr is null"));
+        return std::make_tuple(std::move(image), errors::New("infoPtr is null"));
     }
 
     PNGBinaryContext context;
@@ -163,4 +163,4 @@ Decode(const std::uint8_t* data, std::size_t byteLength)
     return std::make_tuple(std::move(image), nullptr);
 }
 
-} // namespace Pomdog::PNG
+} // namespace pomdog::PNG

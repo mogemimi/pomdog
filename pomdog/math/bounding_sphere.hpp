@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <optional>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 /// BoundingSphere is a bounding sphere in 3D space.
 class POMDOG_EXPORT BoundingSphere final {
@@ -53,4 +53,4 @@ public:
     CreateFromPoints(std::function<Vector3(std::size_t)> points, std::size_t pointCount) noexcept;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

@@ -11,7 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 class GraphicsCommandListImmediate;
 class NativeGraphicsContext;
@@ -40,4 +40,4 @@ private:
     std::shared_ptr<NativeGraphicsContext> graphicsContext;
 };
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

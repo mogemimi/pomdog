@@ -6,9 +6,9 @@
 #include "pomdog/math/vector3.hpp"
 #include <catch_amalgamated.hpp>
 
-using Pomdog::Matrix3x3;
-using Pomdog::Vector2;
-using Pomdog::Vector3;
+using pomdog::Matrix3x3;
+using pomdog::Vector2;
+using pomdog::Vector3;
 
 namespace {
 

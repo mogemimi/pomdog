@@ -4,7 +4,7 @@
 #include "pomdog/audio/audio_channels.hpp"
 #include "pomdog/utility/assert.hpp"
 
-namespace Pomdog::Detail::AudioHelper {
+namespace pomdog::detail::AudioHelper {
 
 [[nodiscard]] std::size_t
 GetSamples(std::size_t sizeInBytes, int bitsPerSample, AudioChannels channels) noexcept
@@ -34,4 +34,4 @@ GetSampleDuration(std::size_t samples, int sampleRate) noexcept
     return std::chrono::seconds(samples / static_cast<std::size_t>(sampleRate));
 }
 
-} // namespace Pomdog::Detail::AudioHelper
+} // namespace pomdog::detail::AudioHelper

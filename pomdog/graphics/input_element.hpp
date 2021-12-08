@@ -10,7 +10,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 struct InputElement final {
     std::uint16_t ByteOffset;
@@ -20,4 +20,4 @@ struct InputElement final {
     std::uint16_t InstanceStepRate;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

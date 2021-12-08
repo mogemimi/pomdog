@@ -5,11 +5,11 @@
 #include "pomdog/input/mouse.hpp"
 #include "pomdog/input/mouse_state.hpp"
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 class SystemEvent;
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail
 
-namespace Pomdog::Detail::Cocoa {
+namespace pomdog::detail::cocoa {
 
 class MouseCocoa final : public Mouse {
 public:
@@ -24,4 +24,4 @@ private:
     double scrollWheel;
 };
 
-} // namespace Pomdog::Detail::Cocoa
+} // namespace pomdog::detail::cocoa

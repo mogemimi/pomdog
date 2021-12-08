@@ -6,7 +6,7 @@
 #include <cmath>
 #include <thread>
 
-using namespace Pomdog;
+using namespace pomdog;
 
 TEST_CASE("GameClock", "[GameClock]")
 {

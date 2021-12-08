@@ -5,7 +5,7 @@
 #include "pomdog/utility/errors.hpp"
 #include <sstream>
 
-namespace Pomdog::Detail::OpenAL {
+namespace pomdog::detail::openal {
 namespace {
 
 [[nodiscard]] std::string
@@ -33,7 +33,7 @@ MakeOpenALError(ALenum err, std::string&& message) noexcept
 {
     message += ": ";
     message += ToErrorCodeString(err);
-    return Errors::New(std::move(message));
+    return errors::New(std::move(message));
 }
 
 #if defined(DEBUG) && !defined(NDEBUG)
@@ -65,4 +65,4 @@ void CheckError(const char* command, const char* filename, int line) noexcept
 }
 #endif
 
-} // namespace Pomdog::Detail::OpenAL
+} // namespace pomdog::detail::openal

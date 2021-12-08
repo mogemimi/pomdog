@@ -8,7 +8,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 /// HTTPMethod represents comman HTTP methods.
 enum class HTTPMethod : std::int8_t {
@@ -34,4 +34,4 @@ enum class HTTPMethod : std::int8_t {
     Trace,
 };
 
-} // namespace Pomdog
+} // namespace pomdog

@@ -11,10 +11,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 IndexBuffer::IndexBuffer(
-    std::unique_ptr<Detail::NativeBuffer>&& nativeBufferIn,
+    std::unique_ptr<detail::NativeBuffer>&& nativeBufferIn,
     IndexElementSize elementSizeIn,
     std::size_t indexCountIn,
     BufferUsage bufferUsageIn)
@@ -42,7 +42,7 @@ IndexElementSize IndexBuffer::GetElementSize() const noexcept
 std::size_t IndexBuffer::GetSizeInBytes() const noexcept
 {
     POMDOG_ASSERT(indexCount > 0);
-    return indexCount * Detail::BufferHelper::ToIndexElementOffsetBytes(elementSize);
+    return indexCount * detail::BufferHelper::ToIndexElementOffsetBytes(elementSize);
 }
 
 BufferUsage IndexBuffer::GetBufferUsage() const noexcept
@@ -56,9 +56,9 @@ void IndexBuffer::SetData(const void* source, std::size_t elementCountIn)
     POMDOG_ASSERT(elementCountIn > 0);
     POMDOG_ASSERT(elementCountIn <= indexCount);
     POMDOG_ASSERT(nativeBuffer != nullptr);
-    POMDOG_ASSERT(bufferUsage != Pomdog::BufferUsage::Immutable);
+    POMDOG_ASSERT(bufferUsage != pomdog::BufferUsage::Immutable);
     nativeBuffer->SetData(0, source,
-        Detail::BufferHelper::ToIndexElementOffsetBytes(elementSize) * elementCountIn);
+        detail::BufferHelper::ToIndexElementOffsetBytes(elementSize) * elementCountIn);
 }
 
 void IndexBuffer::SetData(
@@ -70,15 +70,15 @@ void IndexBuffer::SetData(
     POMDOG_ASSERT(elementCountIn > 0);
     POMDOG_ASSERT(elementCountIn <= indexCount);
     POMDOG_ASSERT(nativeBuffer != nullptr);
-    POMDOG_ASSERT(bufferUsage != Pomdog::BufferUsage::Immutable);
+    POMDOG_ASSERT(bufferUsage != pomdog::BufferUsage::Immutable);
     nativeBuffer->SetData(offsetInBytes, source,
-        Detail::BufferHelper::ToIndexElementOffsetBytes(elementSize) * elementCountIn);
+        detail::BufferHelper::ToIndexElementOffsetBytes(elementSize) * elementCountIn);
 }
 
-Detail::NativeBuffer* IndexBuffer::GetNativeBuffer()
+detail::NativeBuffer* IndexBuffer::GetNativeBuffer()
 {
     POMDOG_ASSERT(nativeBuffer != nullptr);
     return nativeBuffer.get();
 }
 
-} // namespace Pomdog
+} // namespace pomdog

@@ -14,7 +14,7 @@
 #include <thread>
 #include <unordered_map>
 
-using namespace Pomdog;
+using namespace pomdog;
 
 TEST_CASE("Ping Pong Server using UDP Connection", "[Network]")
 {

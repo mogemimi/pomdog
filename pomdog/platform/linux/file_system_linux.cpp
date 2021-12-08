@@ -13,17 +13,17 @@
 #include <cstddef>
 #include <cstdio>
 
-namespace Pomdog::Detail::Linux {
+namespace pomdog::detail::linux {
 
 std::unique_ptr<Error>
 CreateNewDirectory(const std::string& path) noexcept
 {
     if (path.empty()) {
-        return Errors::New("path is empty");
+        return errors::New("path is empty");
     }
     if (::mkdir(path.data(), S_IRWXU) != 0) {
-        auto err = Detail::ToErrc(errno);
-        return Errors::New(err, "::mkdir() failed");
+        auto err = detail::ToErrc(errno);
+        return errors::New(err, "::mkdir() failed");
     }
     return nullptr;
 }
@@ -32,7 +32,7 @@ std::unique_ptr<Error>
 CreateDirectories(const std::string& path) noexcept
 {
     if (path.empty()) {
-        return Errors::New("path is empty");
+        return errors::New("path is empty");
     }
 
     auto tmp = path;
@@ -40,23 +40,23 @@ CreateDirectories(const std::string& path) noexcept
         tmp.pop_back();
     }
     if (tmp.empty()) {
-        return Errors::New("tmp is empty");
+        return errors::New("tmp is empty");
     }
 
     for (auto iter = std::next(std::begin(tmp), 1); iter != std::end(tmp); iter++) {
         if (*iter == '/') {
             *iter = 0;
             if (::mkdir(tmp.data(), S_IRWXU) != 0) {
-                auto err = Detail::ToErrc(errno);
-                return Errors::New(err, "::mkdir() failed");
+                auto err = detail::ToErrc(errno);
+                return errors::New(err, "::mkdir() failed");
             }
             *iter = '/';
         }
     }
 
     if (::mkdir(tmp.data(), S_IRWXU) != 0) {
-        auto err = Detail::ToErrc(errno);
-        return Errors::New(err, "::mkdir() failed");
+        auto err = detail::ToErrc(errno);
+        return errors::New(err, "::mkdir() failed");
     }
     return nullptr;
 }
@@ -82,8 +82,8 @@ GetFileSize(const std::string& path) noexcept
 {
     struct ::stat st;
     if (::stat(path.data(), &st) != 0) {
-        auto err = Detail::ToErrc(errno);
-        return std::make_tuple(0, Errors::New(err, "::stat() failed"));
+        auto err = detail::ToErrc(errno);
+        return std::make_tuple(0, errors::New(err, "::stat() failed"));
     }
     return std::make_tuple(st.st_size, nullptr);
 }
@@ -91,13 +91,13 @@ GetFileSize(const std::string& path) noexcept
 std::tuple<std::string, std::unique_ptr<Error>>
 GetLocalAppDataDirectoryPath() noexcept
 {
-    return std::make_tuple("", Errors::New("not implemented yet"));
+    return std::make_tuple("", errors::New("not implemented yet"));
 }
 
 std::tuple<std::string, std::unique_ptr<Error>>
 GetAppDataDirectoryPath() noexcept
 {
-    return std::make_tuple("", Errors::New("not implemented yet"));
+    return std::make_tuple("", errors::New("not implemented yet"));
 }
 
 std::tuple<std::string, std::unique_ptr<Error>>
@@ -107,7 +107,7 @@ GetResourceDirectoryPath() noexcept
     std::fill(std::begin(buf), std::end(buf), 0);
     auto size = ::readlink("/proc/self/exe", buf.data(), PATH_MAX);
     if (size < 0) {
-        return std::make_tuple("", Errors::New("readlink() failed"));
+        return std::make_tuple("", errors::New("readlink() failed"));
     }
 
     std::string_view executablePath{buf.data(), static_cast<std::size_t>(size)};
@@ -126,10 +126,10 @@ GetCurrentWorkingDirectory() noexcept
 {
     char dir[PATH_MAX];
     if (::getcwd(dir, sizeof(dir)) == nullptr) {
-        auto err = Detail::ToErrc(errno);
-        return std::make_tuple("", Errors::New(err, "::getcwd() failed"));
+        auto err = detail::ToErrc(errno);
+        return std::make_tuple("", errors::New(err, "::getcwd() failed"));
     }
     return std::make_tuple(dir, nullptr);
 }
 
-} // namespace Pomdog::Detail::Linux
+} // namespace pomdog::detail::linux

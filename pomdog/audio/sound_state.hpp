@@ -8,7 +8,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 /// Specifies the states of a sound effect.
 enum class SoundState : std::uint8_t {
@@ -22,4 +22,4 @@ enum class SoundState : std::uint8_t {
     Stopped,
 };
 
-} // namespace Pomdog
+} // namespace pomdog

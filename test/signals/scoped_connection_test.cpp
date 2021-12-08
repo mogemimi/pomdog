@@ -6,9 +6,9 @@
 #include <catch_amalgamated.hpp>
 #include <utility>
 
-using Pomdog::Connection;
-using Pomdog::ScopedConnection;
-using Pomdog::Signal;
+using pomdog::Connection;
+using pomdog::ScopedConnection;
+using pomdog::Signal;
 
 TEST_CASE("ScopeGuard", "[ScopedConnection]")
 {

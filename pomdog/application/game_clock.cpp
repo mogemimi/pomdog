@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <numeric>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 namespace {
 
 template <typename T>
@@ -60,7 +60,7 @@ private:
     Duration GetPredictFrameDuration() const;
 
 public:
-    Detail::TimeSource timeSource;
+    detail::TimeSource timeSource;
     TimePoint sourceStartTime;
     TimePoint sourceLastTime;
     std::deque<Duration> frameDurationHistory;
@@ -219,4 +219,4 @@ Duration GameClock::GetElapsedTime() const noexcept
     return impl->GetElapsedTime();
 }
 
-} // namespace Pomdog
+} // namespace pomdog

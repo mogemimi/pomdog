@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdlib>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Math {
+namespace pomdog::math {
 
 Point2D ToPoint2D(const Vector2& vec) noexcept
 {
@@ -65,4 +65,4 @@ Point3D Abs(const Point3D& point) noexcept
     };
 }
 
-} // namespace Pomdog::Math
+} // namespace pomdog::math

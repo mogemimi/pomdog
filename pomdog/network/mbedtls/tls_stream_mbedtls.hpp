@@ -42,7 +42,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #endif
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 class TLSStreamMbedTLS final {
 public:
@@ -98,4 +98,4 @@ private:
     std::atomic<bool> isConnected = false;
 };
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

@@ -4,7 +4,7 @@
 #include <catch_amalgamated.hpp>
 #include <type_traits>
 
-using Pomdog::Keys;
+using pomdog::Keys;
 
 TEST_CASE("Keys::Unknown", "[Keys]")
 {

@@ -2,9 +2,9 @@
 
 #include "pomdog/application/game_host.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 
 GameHost::GameHost() = default;
 GameHost::~GameHost() = default;
 
-} // namespace Pomdog
+} // namespace pomdog

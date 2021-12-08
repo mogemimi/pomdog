@@ -2,8 +2,8 @@
 
 #include "pomdog/audio/sound_effect.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 
 SoundEffect::~SoundEffect() noexcept = default;
 
-} // namespace Pomdog
+} // namespace pomdog

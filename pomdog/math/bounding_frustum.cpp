@@ -9,7 +9,7 @@
 #include "pomdog/math/ray.hpp"
 #include "pomdog/utility/assert.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 namespace {
 
 namespace PlaneIndex {
@@ -415,4 +415,4 @@ std::optional<float> BoundingFrustum::Intersects(const Ray& ray) const noexcept
     return d;
 }
 
-} // namespace Pomdog
+} // namespace pomdog

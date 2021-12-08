@@ -8,11 +8,11 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstddef>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 struct GraphicsCapabilities final {
     std::size_t ConstantBufferSlotCount;
     std::size_t SamplerSlotCount;
 };
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

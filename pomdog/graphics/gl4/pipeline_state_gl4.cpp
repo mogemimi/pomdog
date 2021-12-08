@@ -19,7 +19,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <unordered_set>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::GL4 {
+namespace pomdog::detail::gl4 {
 namespace {
 
 // NOTE: Please refer to D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT.
@@ -62,7 +62,7 @@ LinkShaders(const VertexShaderGL4& vertexShader, const PixelShaderGL4& pixelShad
         const std::string message = messageBuffer.data();
 
         glDeleteProgram(program.value);
-        return std::make_tuple(std::nullopt, Errors::New("failed to link shaders: " + message));
+        return std::make_tuple(std::nullopt, errors::New("failed to link shaders: " + message));
     }
 
     return std::make_tuple(std::move(program), nullptr);
@@ -76,25 +76,25 @@ std::unique_ptr<Error>
 PipelineStateGL4::Initialize(const PipelineStateDescription& description) noexcept
 {
     if (auto err = blendState.Initialize(description.BlendState); err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to initialize blendState");
+        return errors::Wrap(std::move(err), "failed to initialize blendState");
     }
     if (auto err = rasterizerState.Initialize(description.RasterizerState); err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to initialize rasterizerState");
+        return errors::Wrap(std::move(err), "failed to initialize rasterizerState");
     }
     if (auto err = depthStencilState.Initialize(description.DepthStencilState); err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to initialize depthStencilState");
+        return errors::Wrap(std::move(err), "failed to initialize depthStencilState");
     }
 
     primitiveTopology = ToPrimitiveTopology(description.PrimitiveTopology);
 
     auto vertexShader = std::dynamic_pointer_cast<VertexShaderGL4>(description.VertexShader);
     if (vertexShader == nullptr) {
-        return Errors::New("invalid vertex shader");
+        return errors::New("invalid vertex shader");
     }
 
     auto pixelShader = std::dynamic_pointer_cast<PixelShaderGL4>(description.PixelShader);
     if (pixelShader == nullptr) {
-        return Errors::New("invalid pixel shader");
+        return errors::New("invalid pixel shader");
     }
 
     POMDOG_ASSERT(vertexShader);
@@ -102,7 +102,7 @@ PipelineStateGL4::Initialize(const PipelineStateDescription& description) noexce
 
     auto [linkResult, linkErr] = LinkShaders(*vertexShader, *pixelShader);
     if (linkErr != nullptr) {
-        return Errors::Wrap(std::move(linkErr), "failed to link shader program");
+        return errors::Wrap(std::move(linkErr), "failed to link shader program");
     }
     shaderProgram = std::move(linkResult);
     POMDOG_ASSERT(shaderProgram != std::nullopt);
@@ -111,7 +111,7 @@ PipelineStateGL4::Initialize(const PipelineStateDescription& description) noexce
 
     EffectReflectionGL4 shaderReflection;
     if (auto err = shaderReflection.Initialize(*shaderProgram); err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to initialize EffectReflectionGL4");
+        return errors::Wrap(std::move(err), "failed to initialize EffectReflectionGL4");
     }
 
     {
@@ -247,4 +247,4 @@ PrimitiveTopologyGL4 PipelineStateGL4::GetPrimitiveTopology() const noexcept
     return primitiveTopology;
 }
 
-} // namespace Pomdog::Detail::GL4
+} // namespace pomdog::detail::gl4

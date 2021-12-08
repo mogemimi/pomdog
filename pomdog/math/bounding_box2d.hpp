@@ -11,7 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 /// BoundingBox2D is an axis-aligned bounding box in 2D space.
 class POMDOG_EXPORT BoundingBox2D final {
@@ -45,4 +45,4 @@ public:
     GetCorners() const noexcept;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

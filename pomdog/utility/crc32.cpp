@@ -8,7 +8,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::CRC32 {
+namespace pomdog::detail::crc32 {
 namespace {
 
 //
@@ -153,4 +153,4 @@ ComputeCRC32(const void* data, std::size_t length) noexcept
     return BlockChecksum(data, length, InitValueCRC32);
 }
 
-} // namespace Pomdog::Detail::CRC32
+} // namespace pomdog::detail::crc32

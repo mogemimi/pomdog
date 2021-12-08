@@ -10,7 +10,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::Direct3D11 {
+namespace pomdog::detail::direct3d11 {
 namespace {
 
 D3D11_FILTER ToFilter(TextureFilter textureFilter) noexcept
@@ -83,7 +83,7 @@ SamplerStateDirect3D11::Initialize(
 
     POMDOG_ASSERT(device != nullptr);
     if (auto hr = device->CreateSamplerState(&samplerDesc, &samplerState); FAILED(hr)) {
-        return Errors::New("CreateSamplerState() failed");
+        return errors::New("CreateSamplerState() failed");
     }
 
     return nullptr;
@@ -95,4 +95,4 @@ ID3D11SamplerState* SamplerStateDirect3D11::GetSamplerState() const noexcept
     return samplerState.Get();
 }
 
-} // namespace Pomdog::Detail::Direct3D11
+} // namespace pomdog::detail::direct3d11

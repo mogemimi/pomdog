@@ -2,11 +2,11 @@
 
 #pragma once
 
-namespace Pomdog {
+namespace pomdog {
 
 enum class KeyState : bool {
     Up = false,
     Down = true,
 };
 
-} // namespace Pomdog
+} // namespace pomdog

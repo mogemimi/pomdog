@@ -5,7 +5,7 @@
 #include "pomdog/utility/string_helper.hpp"
 #include <catch_amalgamated.hpp>
 
-using namespace Pomdog;
+using namespace pomdog;
 
 TEST_CASE("FileSystem", "[FileSystem]")
 {

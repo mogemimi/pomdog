@@ -8,7 +8,7 @@
 #import <Metal/MTLDevice.h>
 #import <Metal/MTLTexture.h>
 
-namespace Pomdog::Detail::Metal {
+namespace pomdog::detail::metal {
 
 std::unique_ptr<Error>
 DepthStencilBufferMetal::Initialize(
@@ -27,11 +27,11 @@ DepthStencilBufferMetal::Initialize(
 
     if ((depthStencilFormat == SurfaceFormat::Depth24Stencil8) && !device.isDepth24Stencil8PixelFormatSupported) {
         // NOTE: MTLPixelFormatDepth24Unorm_Stencil8 is only supported in certain devices.
-        return Errors::New("This device does not support MTLPixelFormatDepth24Unorm_Stencil8.");
+        return errors::New("This device does not support MTLPixelFormatDepth24Unorm_Stencil8.");
     }
 
     if (depthStencilFormat == SurfaceFormat::Invalid) {
-        return Errors::New("depthStencilFormat must be != SurfaceFormat::None");
+        return errors::New("depthStencilFormat must be != SurfaceFormat::None");
     }
 
     MTLTextureDescriptor* descriptor = [MTLTextureDescriptor
@@ -48,7 +48,7 @@ DepthStencilBufferMetal::Initialize(
 
     depthStencilTexture = [device newTextureWithDescriptor:descriptor];
     if (depthStencilTexture == nullptr) {
-        return Errors::New("failed to create MTLTexture");
+        return errors::New("failed to create MTLTexture");
     }
 
     return nullptr;
@@ -79,4 +79,4 @@ id<MTLTexture> DepthStencilBufferMetal::GetTexture() const noexcept
     return depthStencilTexture;
 }
 
-} // namespace Pomdog::Detail::Metal
+} // namespace pomdog::detail::metal

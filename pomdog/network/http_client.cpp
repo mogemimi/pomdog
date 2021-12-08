@@ -22,7 +22,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 namespace {
 
 struct URLParseResult final {
@@ -39,7 +39,7 @@ ParseURL(std::string_view url)
     URLParseResult result;
 
     if (auto iter = source.find("://"); iter == std::string_view::npos) {
-        return std::make_tuple(std::move(result), Errors::New("no protocol scheme (i.e. 'https://' or 'http://') in request URL"));
+        return std::make_tuple(std::move(result), errors::New("no protocol scheme (i.e. 'https://' or 'http://') in request URL"));
     }
     else {
         result.protocolScheme = url.substr(0, iter + 3);
@@ -55,7 +55,7 @@ ParseURL(std::string_view url)
     }
 
     if (result.hostName.empty()) {
-        return std::make_tuple(std::move(result), Errors::New("no Host in request URL"));
+        return std::make_tuple(std::move(result), errors::New("no Host in request URL"));
     }
 
     source = result.hostName;
@@ -65,7 +65,7 @@ ParseURL(std::string_view url)
         result.port = source.substr(iter);
 
         if (result.port.size() <= 1) {
-            return std::make_tuple(std::move(result), Errors::New("no Port in request URL"));
+            return std::make_tuple(std::move(result), errors::New("no Port in request URL"));
         }
         result.port.remove_prefix(1);
     }
@@ -209,7 +209,7 @@ template <class SocketStream>
 class HTTPSession final : public Session {
 private:
     SocketStream stream;
-    Detail::HTTPParser parser;
+    detail::HTTPParser parser;
     std::shared_ptr<HTTPRequest> request;
     std::shared_ptr<SessionKeeper> keeper;
     std::string socketAddress;
@@ -259,7 +259,7 @@ void HTTPSession<SocketStream>::CreateSession(
     auto sendRequest = [this](const std::unique_ptr<Error>& connErr) {
         if (connErr != nullptr) {
             POMDOG_ASSERT(request != nullptr);
-            this->Complete(nullptr, Errors::Wrap(connErr->Clone(), "HTTP request error"));
+            this->Complete(nullptr, errors::Wrap(connErr->Clone(), "HTTP request error"));
             return;
         }
 
@@ -267,7 +267,7 @@ void HTTPSession<SocketStream>::CreateSession(
 
         auto [parsedURL, parseErr] = ParseURL(request->URL);
         if (parseErr != nullptr) {
-            auto err = Errors::Wrap(std::move(parseErr), "invalid url " + request->URL);
+            auto err = errors::Wrap(std::move(parseErr), "invalid url " + request->URL);
             KeepAlive(keeper, std::move(socketAddress), std::move(stream));
             this->Complete(nullptr, std::move(err));
             return;
@@ -316,7 +316,7 @@ void HTTPSession<SocketStream>::CreateSession(
     readConn = stream.OnRead([this](const ArrayView<std::uint8_t>& view, const std::unique_ptr<Error>& readErr) {
         if (readErr != nullptr) {
             POMDOG_ASSERT(request != nullptr);
-            this->Complete(nullptr, Errors::Wrap(readErr->Clone(), "HTTP request error"));
+            this->Complete(nullptr, errors::Wrap(readErr->Clone(), "HTTP request error"));
             stream.Disconnect();
             return;
         }
@@ -328,13 +328,13 @@ void HTTPSession<SocketStream>::CreateSession(
             return;
         }
 
-        POMDOG_ASSERT(result != Detail::HTTPParseResult::Error);
+        POMDOG_ASSERT(result != detail::HTTPParseResult::Error);
 
-        if (result == Detail::HTTPParseResult::WouldBlock) {
+        if (result == detail::HTTPParseResult::WouldBlock) {
             return;
         }
 
-        POMDOG_ASSERT(result == Detail::HTTPParseResult::EndOfFile);
+        POMDOG_ASSERT(result == detail::HTTPParseResult::EndOfFile);
         POMDOG_ASSERT(request != nullptr);
 
         auto response = parser.GetResponse();
@@ -347,7 +347,7 @@ void HTTPSession<SocketStream>::CreateSession(
 
     disconnectConn = stream.OnDisconnect([this] {
         POMDOG_ASSERT(request != nullptr);
-        this->Complete(nullptr, Errors::New("HTTP request disconnect"));
+        this->Complete(nullptr, errors::New("HTTP request disconnect"));
     });
 }
 
@@ -387,26 +387,26 @@ std::unique_ptr<Error> HTTPSession<SocketStream>::Abort()
         disconnectConn.Disconnect();
         readConn.Disconnect();
         stream.Disconnect();
-        this->Complete(nullptr, Errors::New("HTTP request abort"));
+        this->Complete(nullptr, errors::New("HTTP request abort"));
         return nullptr;
     }
 
     connectedConn = stream.OnConnected([this](const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
             POMDOG_ASSERT(request != nullptr);
-            this->Complete(nullptr, Errors::Wrap(err->Clone(), "HTTP request error"));
+            this->Complete(nullptr, errors::Wrap(err->Clone(), "HTTP request error"));
             return;
         }
 
         KeepAlive(keeper, std::move(socketAddress), std::move(stream));
-        this->Complete(nullptr, Errors::New("HTTP request abort"));
+        this->Complete(nullptr, errors::New("HTTP request abort"));
     });
 
     readConn.Disconnect();
 
     disconnectConn = stream.OnDisconnect([this] {
         POMDOG_ASSERT(request != nullptr);
-        this->Complete(nullptr, Errors::New("HTTP request disconnect"));
+        this->Complete(nullptr, errors::New("HTTP request disconnect"));
     });
 
     return nullptr;
@@ -489,7 +489,7 @@ HTTPClient::Impl::Do(const std::shared_ptr<HTTPRequest>& req)
 
     auto [parsedURL, parseErr] = ParseURL(req->URL);
     if (parseErr != nullptr) {
-        return Errors::Wrap(std::move(parseErr), "invalid url " + req->URL);
+        return errors::Wrap(std::move(parseErr), "invalid url " + req->URL);
     }
 
     auto socketAddress = MakeSocketAddress(parsedURL);
@@ -506,7 +506,7 @@ HTTPClient::Impl::Do(const std::shared_ptr<HTTPRequest>& req)
         if (!sessionStream.IsConnected()) {
             auto [stream, err] = TLSStream::Connect(service, socketAddress);
             if (err != nullptr) {
-                return Errors::Wrap(std::move(err), "failed to connect to server");
+                return errors::Wrap(std::move(err), "failed to connect to server");
             }
             sessionStream = std::move(stream);
         }
@@ -527,7 +527,7 @@ HTTPClient::Impl::Do(const std::shared_ptr<HTTPRequest>& req)
         if (!sessionStream.IsConnected()) {
             auto [stream, err] = TCPStream::Connect(service, socketAddress);
             if (err != nullptr) {
-                return Errors::Wrap(std::move(err), "failed to connect to server");
+                return errors::Wrap(std::move(err), "failed to connect to server");
             }
             sessionStream = std::move(stream);
         }
@@ -538,7 +538,7 @@ HTTPClient::Impl::Do(const std::shared_ptr<HTTPRequest>& req)
     }
     else {
         // error
-        return Errors::New("unsupported protocol scheme");
+        return errors::New("unsupported protocol scheme");
     }
 
     return nullptr;
@@ -634,4 +634,4 @@ HTTPClient::CancelRequest(const std::shared_ptr<HTTPRequest>& req)
     return impl->CancelRequest(req);
 }
 
-} // namespace Pomdog
+} // namespace pomdog

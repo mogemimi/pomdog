@@ -16,18 +16,18 @@
 #error "Platform undefined or not supported."
 #endif
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 #if defined(POMDOG_PLATFORM_MACOSX) || defined(POMDOG_PLATFORM_APPLE_IOS)
-using TimeSource = Detail::Apple::TimeSourceApple;
+using TimeSource = detail::apple::TimeSourceApple;
 #elif defined(POMDOG_PLATFORM_WIN32)
-using TimeSource = Detail::Win32::TimeSourceWin32;
+using TimeSource = detail::win32::TimeSourceWin32;
 #elif defined(POMDOG_PLATFORM_LINUX) || defined(POMDOG_PLATFORM_ANDROID)
-using TimeSource = Detail::Linux::TimeSourceLinux;
+using TimeSource = detail::linux::TimeSourceLinux;
 #elif defined(POMDOG_PLATFORM_EMSCRIPTEN)
-using TimeSource = Detail::Emscripten::TimeSourceEmscripten;
+using TimeSource = detail::emscripten::TimeSourceEmscripten;
 #else
 #error "Platform undefined or not supported."
 #endif
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

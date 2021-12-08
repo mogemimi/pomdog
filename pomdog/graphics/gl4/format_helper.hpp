@@ -5,8 +5,8 @@
 #include "pomdog/graphics/forward_declarations.hpp"
 #include "pomdog/graphics/gl4/opengl_prerequisites.hpp"
 
-namespace Pomdog::Detail::GL4 {
+namespace pomdog::detail::gl4 {
 
 GLenum ToComparisonFunctionGL4NonTypesafe(ComparisonFunction comparison) noexcept;
 
-} // namespace Pomdog::Detail::GL4
+} // namespace pomdog::detail::gl4

@@ -7,21 +7,21 @@
 #include <functional>
 #include <memory>
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 class SystemEvent;
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail
 
-namespace Pomdog::Detail::Cocoa {
+namespace pomdog::detail::cocoa {
 class OpenGLContextCocoa;
-} // namespace Pomdog::Detail::Cocoa
+} // namespace pomdog::detail::cocoa
 
 @interface PomdogOpenGLView : NSView
 
 - (instancetype)initWithFrame:(NSRect)frameRect;
 
-- (void)setEventQueue:(std::shared_ptr<Pomdog::EventQueue<Pomdog::Detail::SystemEvent>>)eventQueue;
+- (void)setEventQueue:(std::shared_ptr<pomdog::EventQueue<pomdog::detail::SystemEvent>>)eventQueue;
 
-- (void)setOpenGLContext:(std::shared_ptr<Pomdog::Detail::Cocoa::OpenGLContextCocoa>)openGLContext;
+- (void)setOpenGLContext:(std::shared_ptr<pomdog::detail::cocoa::OpenGLContextCocoa>)openGLContext;
 
 - (void)setRenderCallback:(std::function<void()>)callback;
 

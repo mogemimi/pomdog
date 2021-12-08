@@ -11,11 +11,11 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 class POMDOG_EXPORT Connection final {
 private:
-    using ConnectionBody = Detail::Signals::ConnectionBody;
+    using ConnectionBody = detail::signals::ConnectionBody;
     std::unique_ptr<ConnectionBody> body;
 
 public:
@@ -34,4 +34,4 @@ public:
     [[nodiscard]] bool IsConnected() const;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

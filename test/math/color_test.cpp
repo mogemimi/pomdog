@@ -5,9 +5,9 @@
 #include "pomdog/math/vector4.hpp"
 #include <catch_amalgamated.hpp>
 
-using Pomdog::Color;
-using Pomdog::Vector3;
-using Pomdog::Vector4;
+using pomdog::Color;
+using pomdog::Vector3;
+using pomdog::Vector4;
 
 TEST_CASE("Color", "[Color]")
 {
@@ -19,13 +19,13 @@ TEST_CASE("Color", "[Color]")
         REQUIRE(color.B == 255);
         REQUIRE(color.A == 255);
 
-        color = Pomdog::Color{0, 0, 0, 0};
+        color = pomdog::Color{0, 0, 0, 0};
         REQUIRE(color.R == 0);
         REQUIRE(color.G == 0);
         REQUIRE(color.B == 0);
         REQUIRE(color.A == 0);
 
-        color = Pomdog::Color{1, 2, 3, 4};
+        color = pomdog::Color{1, 2, 3, 4};
         REQUIRE(color.R == 1);
         REQUIRE(color.G == 2);
         REQUIRE(color.B == 3);

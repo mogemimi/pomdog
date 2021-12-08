@@ -4,9 +4,9 @@
 
 #include "pomdog/math/detail/floating_point_vector4.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 
 /// Vector4 is a vector in 4-dimensional space.
-using Vector4 = Detail::FloatingPointVector4<float>;
+using Vector4 = detail::FloatingPointVector4<float>;
 
-} // namespace Pomdog
+} // namespace pomdog

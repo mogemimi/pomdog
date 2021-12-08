@@ -14,9 +14,9 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <type_traits>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::Win32 {
+namespace pomdog::detail::win32 {
 
-class OpenGLContextWin32 final : public GL4::OpenGLContext {
+class OpenGLContextWin32 final : public gl4::OpenGLContext {
 public:
     OpenGLContextWin32() noexcept;
 
@@ -47,4 +47,4 @@ private:
         glrc;
 };
 
-} // namespace Pomdog::Detail::Win32
+} // namespace pomdog::detail::win32

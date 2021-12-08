@@ -9,9 +9,9 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 /// Point2D is a point in 2-dimensional space.
-using Point2D = Detail::Coordinate2D<std::int32_t>;
+using Point2D = detail::Coordinate2D<std::int32_t>;
 
-} // namespace Pomdog
+} // namespace pomdog

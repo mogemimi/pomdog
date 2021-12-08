@@ -8,7 +8,7 @@
 #import <Metal/Metal.h>
 #include <cstring>
 
-namespace Pomdog::Detail::Metal {
+namespace pomdog::detail::metal {
 namespace {
 
 MTLResourceOptions ToResourceOptions(BufferUsage bufferUsage) noexcept
@@ -36,7 +36,7 @@ std::size_t ComputeAlignedSize(std::size_t sizeInBytes, BufferBindMode bindMode)
     constexpr std::size_t alignmentSize = 256;
     if (sizeInBytes % alignmentSize != 0) {
 #if defined(DEBUG) && !defined(NDEBUG)
-        Log::Warning("Pomdog",
+        Log::Warning("pomdog",
             "You must set the sizeInBytes value in multiples of 256.\n"
             "ConstantBuffer size also needs to be a multiples of 256.");
 #endif
@@ -60,7 +60,7 @@ BufferMetal::Initialize(
     const auto alignedSize = ComputeAlignedSize(sizeInBytes, bindMode);
     nativeBuffer = [device newBufferWithLength:alignedSize options:ToResourceOptions(bufferUsage)];
     if (nativeBuffer == nullptr) {
-        return Errors::New("failed to create MTLBuffer");
+        return errors::New("failed to create MTLBuffer");
     }
 
     nativeBuffer.label = @"Pomdog.BufferMetal";
@@ -78,7 +78,7 @@ BufferMetal::Initialize(
     const auto alignedSize = ComputeAlignedSize(sizeInBytes, bindMode);
     nativeBuffer = [device newBufferWithLength:alignedSize options:ToResourceOptions(bufferUsage)];
     if (nativeBuffer == nullptr) {
-        return Errors::New("failed to create MTLBuffer");
+        return errors::New("failed to create MTLBuffer");
     }
 
     nativeBuffer.label = @"Pomdog.BufferMetal";
@@ -113,4 +113,4 @@ id<MTLBuffer> BufferMetal::GetBuffer() const noexcept
     return nativeBuffer;
 }
 
-} // namespace Pomdog::Detail::Metal
+} // namespace pomdog::detail::metal

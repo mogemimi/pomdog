@@ -6,7 +6,7 @@
 #include "pomdog/signals/connection.hpp"
 #include "pomdog/signals/forward_declarations.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 
 class POMDOG_EXPORT ScopedConnection final {
 private:
@@ -33,4 +33,4 @@ public:
     bool IsConnected() const;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

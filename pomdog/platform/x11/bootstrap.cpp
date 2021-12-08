@@ -7,7 +7,7 @@
 #include "pomdog/utility/errors.hpp"
 #include <utility>
 
-namespace Pomdog::X11 {
+namespace pomdog::x11 {
 
 void Bootstrap::SetSurfaceFormat(SurfaceFormat surfaceFormatIn) noexcept
 {
@@ -45,7 +45,7 @@ void Bootstrap::OnError(std::function<void(std::unique_ptr<Error>&& err)> onErro
 void Bootstrap::Run(
     const std::function<std::unique_ptr<Game>(const std::shared_ptr<GameHost>&)>& createApp)
 {
-    using Pomdog::Detail::X11::GameHostX11;
+    using pomdog::detail::x11::GameHostX11;
 
     PresentationParameters presentationParameters;
     presentationParameters.BackBufferHeight = backBufferHeight;
@@ -62,7 +62,7 @@ void Bootstrap::Run(
     gameHost = std::make_shared<GameHostX11>();
     if (auto err = gameHost->Initialize(presentationParameters); err != nullptr) {
         if (onError != nullptr) {
-            onError(Errors::Wrap(std::move(err), "failed to initialize GameHostX11"));
+            onError(errors::Wrap(std::move(err), "failed to initialize GameHostX11"));
         }
         return;
     }
@@ -71,7 +71,7 @@ void Bootstrap::Run(
     game = createApp(gameHost);
     if (game == nullptr) {
         if (onError != nullptr) {
-            onError(Errors::New("game must be != nullptr"));
+            onError(errors::New("game must be != nullptr"));
         }
         return;
     }
@@ -79,7 +79,7 @@ void Bootstrap::Run(
     POMDOG_ASSERT(game != nullptr);
     if (auto err = game->Initialize(); err != nullptr) {
         if (onError != nullptr) {
-            onError(Errors::Wrap(std::move(err), "failed to initialize game"));
+            onError(errors::Wrap(std::move(err), "failed to initialize game"));
         }
         return;
     }
@@ -90,4 +90,4 @@ void Bootstrap::Run(
     gameHost.reset();
 }
 
-} // namespace Pomdog::X11
+} // namespace pomdog::x11

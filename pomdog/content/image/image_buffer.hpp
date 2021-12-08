@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 struct POMDOG_EXPORT ImageBuffer final {
     /// Raw pixel data.
@@ -37,4 +37,4 @@ struct POMDOG_EXPORT ImageBuffer final {
     SurfaceFormat Format = SurfaceFormat::R8_UNorm;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

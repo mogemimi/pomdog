@@ -4,11 +4,11 @@
 
 #include "pomdog/math/vector2.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 
 struct GamepadThumbSticks final {
     Vector2 Left = Vector2::Zero;
     Vector2 Right = Vector2::Zero;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

@@ -7,7 +7,7 @@
 #include "pomdog/input/keyboard_state.hpp"
 #include "pomdog/platform/win32/prerequisites_win32.hpp"
 
-namespace Pomdog::Detail::Win32 {
+namespace pomdog::detail::win32 {
 
 class KeyboardWin32 final : public Keyboard {
 public:
@@ -21,4 +21,4 @@ private:
 
 void TranslateKeyboardEvent(const RAWKEYBOARD& keyboard, const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue) noexcept;
 
-} // namespace Pomdog::Detail::Win32
+} // namespace pomdog::detail::win32

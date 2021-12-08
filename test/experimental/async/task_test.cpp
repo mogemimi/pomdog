@@ -5,9 +5,9 @@
 #include <catch_amalgamated.hpp>
 #include <thread>
 
-using Pomdog::Concurrency::Task;
-using Pomdog::Concurrency::TaskCompletionSource;
-namespace Concurrency = Pomdog::Concurrency;
+using pomdog::concurrency::Task;
+using pomdog::concurrency::TaskCompletionSource;
+namespace Concurrency = pomdog::concurrency;
 
 //POMDOG_EXPORT
 //Task<void> Delay(const Duration& dueTime, const std::shared_ptr<Scheduler>& scheduler)
@@ -930,8 +930,8 @@ TEST_CASE("TaskCompletionSource::SetException", "[TaskCompletionSource]")
 
 TEST_CASE("TaskCompletionSource::WithSignal", "[TaskCompletionSource]")
 {
-    using Pomdog::Signal;
-    using Pomdog::Signals::ConnectSingleShot;
+    using pomdog::Signal;
+    using pomdog::Signals::ConnectSingleShot;
 
     Signal<void(std::string const&)> nameChanged;
 
@@ -958,7 +958,7 @@ TEST_CASE("TaskCompletionSource::WithSignal", "[TaskCompletionSource]")
 
 TEST_CASE("TaskCompletionSource::FromSingleShotSignal", "[TaskCompletionSource]")
 {
-    using Pomdog::Signal;
+    using pomdog::Signal;
 
     Signal<void(std::string const&)> nameChanged;
 

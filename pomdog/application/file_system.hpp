@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::FileSystem {
+namespace pomdog::FileSystem {
 
 /// Create a new directory with the specified path.
 [[nodiscard]] POMDOG_EXPORT std::unique_ptr<Error>
@@ -73,4 +73,4 @@ GetTempDirectoryPath() noexcept;
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::string, std::unique_ptr<Error>>
 GetCurrentWorkingDirectory() noexcept;
 
-} // namespace Pomdog::FileSystem
+} // namespace pomdog::FileSystem

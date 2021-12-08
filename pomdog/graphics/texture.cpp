@@ -2,8 +2,8 @@
 
 #include "pomdog/graphics/texture.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 
 Texture::~Texture() = default;
 
-} // namespace Pomdog
+} // namespace pomdog

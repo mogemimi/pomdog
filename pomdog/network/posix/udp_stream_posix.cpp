@@ -20,7 +20,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstring>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 namespace {
 
 constexpr int InvalidSocket = -1;
@@ -65,10 +65,10 @@ UDPStreamPOSIX::Connect(std::string_view host, std::string_view port, const Dura
     const auto portBuf = std::string{port};
 
     std::thread connectThread([this, hostBuf = std::move(hostBuf), portBuf = std::move(portBuf), connectTimeout = connectTimeout] {
-        auto [fd, err] = Detail::ConnectSocketPOSIX(hostBuf, portBuf, SocketProtocol::UDP, connectTimeout);
+        auto [fd, err] = detail::ConnectSocketPOSIX(hostBuf, portBuf, SocketProtocol::UDP, connectTimeout);
 
         if (err != nullptr) {
-            auto wrapped = Errors::Wrap(std::move(err), "couldn't connect to UDP socket on " + hostBuf + ":" + portBuf);
+            auto wrapped = errors::Wrap(std::move(err), "couldn't connect to UDP socket on " + hostBuf + ":" + portBuf);
             std::shared_ptr<Error> shared = std::move(wrapped);
             errorConn = service->ScheduleTask([this, err = std::move(shared)] {
                 this->OnConnected(err->Clone());
@@ -99,7 +99,7 @@ UDPStreamPOSIX::Listen(std::string_view host, std::string_view port)
     const auto hostBuf = std::string{host};
     const auto portBuf = std::string{port};
 
-    auto [fd, err] = Detail::BindSocketPOSIX(hostBuf, portBuf, SocketProtocol::UDP);
+    auto [fd, err] = detail::BindSocketPOSIX(hostBuf, portBuf, SocketProtocol::UDP);
 
     if (err != nullptr) {
         std::shared_ptr<Error> shared = err->Clone();
@@ -141,8 +141,8 @@ UDPStreamPOSIX::Write(const ArrayView<std::uint8_t const>& data)
     auto result = ::send(this->descriptor, data.GetData(), data.GetSize(), flags);
 
     if (result == -1) {
-        auto errorCode = Detail::ToErrc(errno);
-        return Errors::New(errorCode, "send failed with error");
+        auto errorCode = detail::ToErrc(errno);
+        return errors::New(errorCode, "send failed with error");
     }
 
     return nullptr;
@@ -155,7 +155,7 @@ UDPStreamPOSIX::WriteTo(const ArrayView<std::uint8_t const>& data, std::string_v
     POMDOG_ASSERT(data.GetData() != nullptr);
     POMDOG_ASSERT(data.GetSize() > 0);
 
-    const auto [family, hostView, portView] = Detail::AddressParser::TransformAddress(address);
+    const auto [family, hostView, portView] = detail::AddressParser::TransformAddress(address);
     auto host = std::string{hostView};
     auto port = std::string{portView};
 
@@ -169,7 +169,7 @@ UDPStreamPOSIX::WriteTo(const ArrayView<std::uint8_t const>& data, std::string_v
 
     auto res = ::getaddrinfo(host.data(), port.data(), &hints, &addrListRaw);
     if (res != 0) {
-        return Errors::New("getaddrinfo failed with error " + std::to_string(res));
+        return errors::New("getaddrinfo failed with error " + std::to_string(res));
     }
 
     auto addrList = std::unique_ptr<struct ::addrinfo, void (*)(struct ::addrinfo*)>{addrListRaw, ::freeaddrinfo};
@@ -183,7 +183,7 @@ UDPStreamPOSIX::WriteTo(const ArrayView<std::uint8_t const>& data, std::string_v
             info->ai_addr, static_cast<int>(info->ai_addrlen));
 
         if (result == -1) {
-            lastError = Detail::ToErrc(errno);
+            lastError = detail::ToErrc(errno);
             continue;
         }
         lastError = std::nullopt;
@@ -191,7 +191,7 @@ UDPStreamPOSIX::WriteTo(const ArrayView<std::uint8_t const>& data, std::string_v
     }
 
     if (lastError != std::nullopt) {
-        return Errors::New(*lastError, "sendto failed with error");
+        return errors::New(*lastError, "sendto failed with error");
     }
 
     return nullptr;
@@ -211,13 +211,13 @@ void UDPStreamPOSIX::ReadEventLoop()
 
     const auto readSize = ::recv(this->descriptor, buffer.data(), buffer.size(), flags);
     if (readSize == -1) {
-        const auto errorCode = Detail::ToErrc(errno);
+        const auto errorCode = detail::ToErrc(errno);
         if (errorCode == std::errc::resource_unavailable_try_again || errorCode == std::errc::operation_would_block) {
             // NOTE: There is no data to be read yet
             return;
         }
 
-        this->OnRead({}, Errors::New(errorCode, "read failed with error"));
+        this->OnRead({}, errors::New(errorCode, "read failed with error"));
         return;
     }
 
@@ -247,13 +247,13 @@ void UDPStreamPOSIX::ReadFromEventLoop()
         reinterpret_cast<struct sockaddr*>(&addrInfo), &addrLen);
 
     if (readSize == -1) {
-        const auto errorCode = Detail::ToErrc(errno);
+        const auto errorCode = detail::ToErrc(errno);
         if (errorCode == std::errc::resource_unavailable_try_again || errorCode == std::errc::operation_would_block) {
             // NOTE: There is no data to be read yet
             return;
         }
 
-        this->OnReadFrom({}, "", Errors::New(errorCode, "read failed with error"));
+        this->OnReadFrom({}, "", errors::New(errorCode, "read failed with error"));
         return;
     }
 
@@ -269,4 +269,4 @@ void UDPStreamPOSIX::ReadFromEventLoop()
     this->OnReadFrom(std::move(view), addr.ToString(), nullptr);
 }
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

@@ -17,7 +17,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <variant>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 enum class SystemEventKind : std::uint8_t {
     WindowWillCloseEvent,
@@ -103,4 +103,4 @@ public:
     EventBody Data;
 };
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

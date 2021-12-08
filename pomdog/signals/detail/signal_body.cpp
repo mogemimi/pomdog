@@ -7,8 +7,8 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::Signals {
+namespace pomdog::detail::signals {
 
 ConnectionBody::~ConnectionBody() = default;
 
-} // namespace Pomdog::Detail::Signals
+} // namespace pomdog::detail::signals

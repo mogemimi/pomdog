@@ -24,12 +24,12 @@
 #include <tuple>
 #include <vector>
 
-using Pomdog::Detail::NativeGamepad;
-using Pomdog::Detail::GL4::GraphicsContextGL4;
-using Pomdog::Detail::GL4::GraphicsDeviceGL4;
-using Pomdog::Detail::OpenAL::AudioEngineAL;
+using pomdog::detail::NativeGamepad;
+using pomdog::detail::gl4::GraphicsContextGL4;
+using pomdog::detail::gl4::GraphicsDeviceGL4;
+using pomdog::detail::openal::AudioEngineAL;
 
-namespace Pomdog::Detail::X11 {
+namespace pomdog::detail::x11 {
 namespace {
 
 [[nodiscard]] bool
@@ -51,7 +51,7 @@ ChooseFramebufferConfig(
     const PresentationParameters& presentationParameters)
 {
     if (!CheckFrameBufferConfigSupport(display)) {
-        return std::make_tuple(nullptr, Errors::New("GLX of version lower than 1.3.2 is not supported."));
+        return std::make_tuple(nullptr, errors::New("GLX of version lower than 1.3.2 is not supported."));
     }
 
     class final {
@@ -135,7 +135,7 @@ ChooseFramebufferConfig(
     case SurfaceFormat::Invalid:
         break;
     default:
-        return std::make_tuple(nullptr, Errors::New("invalid depth stencil format"));
+        return std::make_tuple(nullptr, errors::New("invalid depth stencil format"));
     }
 
     attributes.add(None, None);
@@ -148,7 +148,7 @@ ChooseFramebufferConfig(
         &framebufferConfigCount);
 
     if ((framebufferConfigs == nullptr) || (framebufferConfigCount <= 0)) {
-        return std::make_tuple(nullptr, Errors::New("failed to retrieve FBConfig"));
+        return std::make_tuple(nullptr, errors::New("failed to retrieve FBConfig"));
     }
 
     GLXFBConfig bestConfig = nullptr;
@@ -176,7 +176,7 @@ ChooseFramebufferConfig(
     XFree(framebufferConfigs);
 
     if (bestConfig == nullptr) {
-        return std::make_tuple(nullptr, Errors::New("cannot find any matching FBConfig"));
+        return std::make_tuple(nullptr, errors::New("cannot find any matching FBConfig"));
     }
 
     return std::make_tuple(bestConfig, nullptr);
@@ -237,13 +237,13 @@ GameHostX11::Impl::Initialize(const PresentationParameters& presentationParamete
     // NOTE: Create X11 context.
     x11Context = std::make_shared<X11Context>();
     if (auto err = x11Context->Initialize(); err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to initialize X11Context");
+        return errors::Wrap(std::move(err), "failed to initialize X11Context");
     }
 
     auto [framebufferConfig, framebufferConfigErr] =
         ChooseFramebufferConfig(x11Context->Display, presentationParameters);
     if (framebufferConfigErr != nullptr) {
-        return Errors::Wrap(std::move(framebufferConfigErr), "ChooseFramebufferConfig() failed");
+        return errors::Wrap(std::move(framebufferConfigErr), "ChooseFramebufferConfig() failed");
     }
 
     // NOTE: Create a game window.
@@ -254,16 +254,16 @@ GameHostX11::Impl::Initialize(const PresentationParameters& presentationParamete
             presentationParameters.BackBufferWidth,
             presentationParameters.BackBufferHeight);
         err != nullptr) {
-        return Errors::Wrap(std::move(framebufferConfigErr), "failed to initialize GameWindowX11");
+        return errors::Wrap(std::move(framebufferConfigErr), "failed to initialize GameWindowX11");
     }
 
     // NOTE: Create an OpenGL context.
     openGLContext = std::make_shared<OpenGLContextX11>();
     if (auto err = openGLContext->Initialize(window, framebufferConfig); err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to initialize OpenGLContextX11");
+        return errors::Wrap(std::move(err), "failed to initialize OpenGLContextX11");
     }
     if (!openGLContext->IsOpenGL3Supported()) {
-        return Errors::New("Pomdog doesn't support versions of OpenGL lower than 3.3/4.0.");
+        return errors::New("Pomdog doesn't support versions of OpenGL lower than 3.3/4.0.");
     }
 
     openGLContext->MakeCurrent();
@@ -271,19 +271,19 @@ GameHostX11::Impl::Initialize(const PresentationParameters& presentationParamete
     auto const errorCode = glewInit();
     if (GLEW_OK != errorCode) {
         std::string description = reinterpret_cast<const char*>(glewGetErrorString(errorCode));
-        return Errors::New("glewInit() failed: " + description);
+        return errors::New("glewInit() failed: " + description);
     }
 
     // NOTE: Create a graphics device.
     graphicsDevice = std::make_shared<GraphicsDeviceGL4>();
     if (auto err = graphicsDevice->Initialize(presentationParameters); err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to initialize GraphicsDeviceGL4");
+        return errors::Wrap(std::move(err), "failed to initialize GraphicsDeviceGL4");
     }
 
     // NOTE: Create a graphics context.
     graphicsContext = std::make_shared<GraphicsContextGL4>();
     if (auto err = graphicsContext->Initialize(openGLContext, graphicsDevice); err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to initialize GraphicsContextGL4");
+        return errors::Wrap(std::move(err), "failed to initialize GraphicsContextGL4");
     }
 
     graphicsCommandQueue = std::make_shared<GraphicsCommandQueueImmediate>(graphicsContext);
@@ -291,15 +291,15 @@ GameHostX11::Impl::Initialize(const PresentationParameters& presentationParamete
     // NOTE: Create audio engine.
     audioEngine = std::make_shared<AudioEngineAL>();
     if (auto err = audioEngine->Initialize(); err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to initialize AudioEngineAL");
+        return errors::Wrap(std::move(err), "failed to initialize AudioEngineAL");
     }
 
     keyboard = std::make_unique<KeyboardX11>(x11Context->Display);
-    gamepad = Detail::X11::CreateGamepad();
+    gamepad = detail::x11::CreateGamepad();
 
     auto [resourceDir, resourceDirErr] = FileSystem::GetResourceDirectoryPath();
     if (resourceDirErr != nullptr) {
-        return Errors::Wrap(std::move(resourceDirErr), "FileSystem::GetResourceDirectoryPath() failed.");
+        return errors::Wrap(std::move(resourceDirErr), "FileSystem::GetResourceDirectoryPath() failed.");
     }
     auto contentDirectory = PathHelper::Join(resourceDir, "Content");
 
@@ -311,7 +311,7 @@ GameHostX11::Impl::Initialize(const PresentationParameters& presentationParamete
 
     ioService = std::make_unique<IOService>(&clock);
     if (auto err = ioService->Initialize(); err != nullptr) {
-        return Errors::Wrap(std::move(err), "failed to initialize IOService");
+        return errors::Wrap(std::move(err), "failed to initialize IOService");
     }
     httpClient = std::make_unique<HTTPClient>(ioService.get());
 
@@ -322,7 +322,7 @@ GameHostX11::Impl::~Impl()
 {
     httpClient.reset();
     if (auto err = ioService->Shutdown(); err != nullptr) {
-        Log::Warning("Pomdog", err->ToString());
+        Log::Warning("pomdog", err->ToString());
     }
     ioService.reset();
     gamepad.reset();
@@ -547,4 +547,4 @@ std::shared_ptr<HTTPClient> GameHostX11::GetHTTPClient() noexcept
     return shared;
 }
 
-} // namespace Pomdog::Detail::X11
+} // namespace pomdog::detail::x11

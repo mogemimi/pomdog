@@ -15,7 +15,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 class POMDOG_EXPORT ConstantBuffer final {
 public:
@@ -24,7 +24,7 @@ public:
     ConstantBuffer& operator=(const ConstantBuffer&) = delete;
 
     ConstantBuffer(
-        std::unique_ptr<Detail::NativeBuffer>&& nativeBuffer,
+        std::unique_ptr<detail::NativeBuffer>&& nativeBuffer,
         std::size_t sizeInBytes,
         BufferUsage bufferUsage);
 
@@ -68,12 +68,12 @@ public:
     BufferUsage GetBufferUsage() const noexcept;
 
     /// Gets the pointer of the native constant buffer resource.
-    Detail::NativeBuffer* GetNativeBuffer();
+    detail::NativeBuffer* GetNativeBuffer();
 
 private:
-    std::unique_ptr<Detail::NativeBuffer> nativeBuffer;
+    std::unique_ptr<detail::NativeBuffer> nativeBuffer;
     std::uint32_t sizeInBytes;
     BufferUsage bufferUsage;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

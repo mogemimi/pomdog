@@ -11,7 +11,7 @@
 #include <cstdint>
 #include <memory>
 
-namespace Pomdog::Detail::Linux {
+namespace pomdog::detail::linux {
 
 struct ThumbStickInfo final {
     std::int32_t Minimum = 0;
@@ -58,4 +58,4 @@ private:
     std::array<GamepadDevice, 4> gamepads;
 };
 
-} // namespace Pomdog::Detail::Linux
+} // namespace pomdog::detail::linux

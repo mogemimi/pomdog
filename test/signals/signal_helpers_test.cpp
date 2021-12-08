@@ -7,14 +7,14 @@
 #include <utility>
 #include <vector>
 
-using Pomdog::Signal;
-using namespace Pomdog::Signals;
+using pomdog::Signal;
+using namespace pomdog::Signals;
 
 TEST_CASE("helpers for Signals", "[Signals]")
 {
     SECTION("ConnectSingleShot")
     {
-        Pomdog::Signal<void(std::string const&)> nameChanged;
+        pomdog::Signal<void(std::string const&)> nameChanged;
 
         std::vector<std::string> result;
         auto connection = ConnectSingleShot(nameChanged, [&](std::string const& n) {
@@ -35,7 +35,7 @@ TEST_CASE("helpers for Signals", "[Signals]")
     }
     SECTION("ConnectSingleShot Disconnect")
     {
-        Pomdog::Signal<void(std::string const&)> nameChanged;
+        pomdog::Signal<void(std::string const&)> nameChanged;
 
         std::vector<std::string> result;
         auto connection = ConnectSingleShot(nameChanged, [&](std::string const& n) {

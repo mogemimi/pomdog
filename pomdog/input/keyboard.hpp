@@ -11,7 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <string>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 enum class Keys : std::uint8_t;
 class KeyboardState;
@@ -33,4 +33,4 @@ public:
     Signal<void(const std::string& text)> TextInput;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

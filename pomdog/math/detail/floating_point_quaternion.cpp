@@ -16,7 +16,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 template <typename T>
 FloatingPointQuaternion<T>::FloatingPointQuaternion(T x, T y, T z, T w) noexcept
@@ -206,10 +206,10 @@ void FloatingPointQuaternion<T>::Lerp(
     T amount,
     FloatingPointQuaternion& result)
 {
-    result.X = Math::Lerp(source1.X, source2.X, amount);
-    result.Y = Math::Lerp(source1.Y, source2.Y, amount);
-    result.Z = Math::Lerp(source1.Z, source2.Z, amount);
-    result.W = Math::Lerp(source1.W, source2.W, amount);
+    result.X = math::Lerp(source1.X, source2.X, amount);
+    result.Y = math::Lerp(source1.Y, source2.Y, amount);
+    result.Z = math::Lerp(source1.Z, source2.Z, amount);
+    result.W = math::Lerp(source1.W, source2.W, amount);
     result.Normalize();
 }
 
@@ -458,12 +458,12 @@ FloatingPointQuaternion<T>::ToEulerAngles(const FloatingPointQuaternion& q) noex
 
     if (singularityTest > singularityValue) {
         pitchYawRoll.X = zero;
-        pitchYawRoll.Y = Math::PiOver2<T>;
+        pitchYawRoll.Y = math::PiOver2<T>;
         pitchYawRoll.Z = two * std::atan2(q.X, q.W);
     }
     else if (singularityTest < -singularityValue) {
         pitchYawRoll.X = zero;
-        pitchYawRoll.Y = -Math::PiOver2<T>;
+        pitchYawRoll.Y = -math::PiOver2<T>;
         pitchYawRoll.Z = -two * std::atan2(q.X, q.W);
     }
     else {
@@ -510,4 +510,4 @@ operator*<float>(float, const FloatingPointQuaternion<float>&) noexcept;
 template FloatingPointQuaternion<double>
 operator*<double>(double, const FloatingPointQuaternion<double>&) noexcept;
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

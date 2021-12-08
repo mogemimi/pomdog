@@ -20,7 +20,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 IOService::IOService(const GameClock* clockIn)
     : clock(clockIn)
@@ -35,7 +35,7 @@ std::unique_ptr<Error> IOService::Initialize()
     defined(POMDOG_PLATFORM_LINUX)
     // NOTE: nothing to do
 #elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
-    if (auto err = Detail::Win32::PrepareNetworkService(); err != nullptr) {
+    if (auto err = detail::win32::PrepareNetworkService(); err != nullptr) {
         return err;
     }
 #else
@@ -52,7 +52,7 @@ std::unique_ptr<Error> IOService::Shutdown()
     defined(POMDOG_PLATFORM_LINUX)
     // NOTE: nothing to do
 #elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
-    if (auto err = Detail::Win32::ShutdownNetworkService(); err != nullptr) {
+    if (auto err = detail::win32::ShutdownNetworkService(); err != nullptr) {
         return err;
     }
 #else
@@ -77,4 +77,4 @@ TimePoint IOService::GetNowTime() const
     return TimePoint{clock->GetTotalGameTime()};
 }
 
-} // namespace Pomdog
+} // namespace pomdog

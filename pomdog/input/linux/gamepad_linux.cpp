@@ -12,7 +12,7 @@
 #include <cstring>
 #include <tuple>
 
-namespace Pomdog::Detail::Linux {
+namespace pomdog::detail::linux {
 namespace {
 
 constexpr size_t BitCount(size_t n)
@@ -383,4 +383,4 @@ void GamepadLinux::PollEvents()
     }
 }
 
-} // namespace Pomdog::Detail::Linux
+} // namespace pomdog::detail::linux

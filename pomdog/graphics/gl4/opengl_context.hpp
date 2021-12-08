@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Pomdog::Detail::GL4 {
+namespace pomdog::detail::gl4 {
 
 class OpenGLContext {
 public:
@@ -15,4 +15,4 @@ public:
     virtual void SwapBuffers() = 0;
 };
 
-} // namespace Pomdog::Detail::GL4
+} // namespace pomdog::detail::gl4

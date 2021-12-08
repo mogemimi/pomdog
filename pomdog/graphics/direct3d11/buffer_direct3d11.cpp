@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 using Microsoft::WRL::ComPtr;
 
-namespace Pomdog::Detail::Direct3D11 {
+namespace pomdog::detail::direct3d11 {
 namespace {
 
 [[nodiscard]] std::tuple<ID3D11Buffer*, std::unique_ptr<Error>>
@@ -31,7 +31,7 @@ CreateNativeBuffer(
 
     if (bindFlag == D3D11_BIND_CONSTANT_BUFFER) {
         if (sizeInBytes > D3D11_REQ_CONSTANT_BUFFER_ELEMENT_COUNT) {
-            auto err = Errors::New(
+            auto err = errors::New(
                 "You must set the sizeInBytes value less than or"
                 " equal to D3D11_REQ_CONSTANT_BUFFER_ELEMENT_COUNT.");
             return std::make_tuple(nullptr, std::move(err));
@@ -39,7 +39,7 @@ CreateNativeBuffer(
 
         if (sizeInBytes % 16 != 0) {
 #if defined(DEBUG) && !defined(NDEBUG)
-            Log::Warning("Pomdog",
+            Log::Warning("pomdog",
                 "You must set the sizeInBytes value in multiples of 16.\n"
                 "ConstantBuffer size also needs to be a multiples of 16.");
 #endif
@@ -84,7 +84,7 @@ CreateNativeBuffer(
 
     ID3D11Buffer* buffer = nullptr;
     if (auto hr = device->CreateBuffer(&bufferDesc, initialData, &buffer); FAILED(hr)) {
-        auto err = Errors::New("failed to create ID3D11Buffer");
+        auto err = errors::New("failed to create ID3D11Buffer");
         return std::make_tuple(nullptr, std::move(err));
     }
 
@@ -132,7 +132,7 @@ BufferDirect3D11::Initialize(
         bufferUsage,
         bindFlag);
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "CreateNativeBuffer() failed");
+        return errors::Wrap(std::move(err), "CreateNativeBuffer() failed");
     }
 
     return nullptr;
@@ -156,7 +156,7 @@ BufferDirect3D11::Initialize(
         bufferUsage,
         bindFlag);
     if (err != nullptr) {
-        return Errors::Wrap(std::move(err), "CreateNativeBuffer() failed");
+        return errors::Wrap(std::move(err), "CreateNativeBuffer() failed");
     }
 
     return nullptr;
@@ -234,4 +234,4 @@ ID3D11Buffer* BufferDirect3D11::GetBuffer() const noexcept
     return buffer.Get();
 }
 
-} // namespace Pomdog::Detail::Direct3D11
+} // namespace pomdog::detail::direct3d11

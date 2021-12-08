@@ -4,8 +4,8 @@
 #include "pomdog/math/vector4.hpp"
 #include <catch_amalgamated.hpp>
 
-using Pomdog::Matrix4x4;
-using Pomdog::Vector4;
+using pomdog::Matrix4x4;
+using pomdog::Vector4;
 
 TEST_CASE("Vector4", "[Vector4]")
 {

@@ -16,7 +16,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 /// An HTTPRequest represents an HTTP request for a client connection.
 class POMDOG_EXPORT HTTPRequest final {
@@ -45,4 +45,4 @@ public:
     bool PersistentConnection = true;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

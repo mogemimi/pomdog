@@ -11,7 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Vorbis {
+namespace pomdog::Vorbis {
 namespace {
 
 [[nodiscard]] AudioChannels ToAudioChannels(int channels) noexcept
@@ -39,20 +39,20 @@ Load(const std::shared_ptr<AudioEngine>& audioEngine, const std::string& filenam
     auto vorbis = stb_vorbis_open_filename(filename.data(), &error, nullptr);
 
     if (error != 0) {
-        auto err = Errors::New("failed to read ogg/vorbis file " + filename);
+        auto err = errors::New("failed to read ogg/vorbis file " + filename);
         return std::make_tuple(nullptr, std::move(err));
     }
 
     auto info = stb_vorbis_get_info(vorbis);
     if (info.channels <= 0) {
-        return std::make_tuple(nullptr, Errors::New("info.channels must be > 0, " + filename));
+        return std::make_tuple(nullptr, errors::New("info.channels must be > 0, " + filename));
     }
 
     auto channels = ToAudioChannels(info.channels);
     int totalSamples = static_cast<int>(stb_vorbis_stream_length_in_samples(vorbis));
 
     if (totalSamples <= 0) {
-        return std::make_tuple(nullptr, Errors::New("totalSamples must be > 0, " + filename));
+        return std::make_tuple(nullptr, errors::New("totalSamples must be > 0, " + filename));
     }
 
     std::vector<std::uint8_t> audioData;
@@ -81,7 +81,7 @@ Load(const std::shared_ptr<AudioEngine>& audioEngine, const std::string& filenam
     stb_vorbis_close(vorbis);
 
     if (audioEngine == nullptr) {
-        auto err = Errors::New("audioEngine is null.");
+        auto err = errors::New("audioEngine is null.");
         return std::make_tuple(nullptr, std::move(err));
     }
     POMDOG_ASSERT(audioEngine != nullptr);
@@ -95,11 +95,11 @@ Load(const std::shared_ptr<AudioEngine>& audioEngine, const std::string& filenam
         channels);
 
     if (audioClipErr != nullptr) {
-        auto err = Errors::Wrap(std::move(audioClipErr), "CreateAudioClip() failed.");
+        auto err = errors::Wrap(std::move(audioClipErr), "CreateAudioClip() failed.");
         return std::make_tuple(nullptr, std::move(err));
     }
 
     return std::make_tuple(std::move(audioClip), nullptr);
 }
 
-} // namespace Pomdog::Vorbis
+} // namespace pomdog::Vorbis

@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <type_traits>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 /// FloatingPointMatrix3x2 is a 3x2 matrix in row-major order.
 template <typename T>
@@ -134,4 +134,4 @@ template <typename T>
 FloatingPointMatrix3x2<T> POMDOG_EXPORT
 operator*(T scaleFactor, const FloatingPointMatrix3x2<T>& matrix) noexcept;
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

@@ -9,7 +9,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 TCPStreamEmscripten::TCPStreamEmscripten([[maybe_unused]] IOService* serviceIn)
 {
@@ -31,14 +31,14 @@ TCPStreamEmscripten::Connect(
     [[maybe_unused]] const Duration& connectTimeout)
 {
     // FIXME: Not implemented yet.
-    return Errors::New("not implemented yet");
+    return errors::New("not implemented yet");
 }
 
 std::unique_ptr<Error>
 TCPStreamEmscripten::Write([[maybe_unused]] const ArrayView<std::uint8_t const>& data)
 {
     // FIXME: Not implemented yet.
-    return Errors::New("not implemented yet");
+    return errors::New("not implemented yet");
 }
 
 bool TCPStreamEmscripten::IsConnected() const noexcept
@@ -52,4 +52,4 @@ void TCPStreamEmscripten::SetTimeout([[maybe_unused]] const Duration& timeoutIn)
     // FIXME: Not implemented yet.
 }
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

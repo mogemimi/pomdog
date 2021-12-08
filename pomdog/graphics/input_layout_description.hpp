@@ -9,10 +9,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 struct InputLayoutDescription final {
-    std::vector<Pomdog::InputElement> InputElements;
+    std::vector<pomdog::InputElement> InputElements;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

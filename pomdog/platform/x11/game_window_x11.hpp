@@ -11,7 +11,7 @@
 #include <memory>
 #include <string>
 
-namespace Pomdog::Detail::X11 {
+namespace pomdog::detail::x11 {
 
 class X11Context;
 
@@ -73,4 +73,4 @@ private:
     bool isMouseCursorVisible = true;
 };
 
-} // namespace Pomdog::Detail::X11
+} // namespace pomdog::detail::x11

@@ -8,7 +8,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 AssetManager::AssetManager(
     const std::string& contentDirectoryIn,
@@ -54,4 +54,4 @@ std::string AssetManager::GetAssetPath(const std::string& assetName) const noexc
     return PathHelper::Join(contentDirectory, assetName);
 }
 
-} // namespace Pomdog
+} // namespace pomdog

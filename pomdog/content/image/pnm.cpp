@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <system_error>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::PNM {
+namespace pomdog::PNM {
 namespace {
 
 template <class StringIterator>
@@ -67,7 +67,7 @@ Decode(const char* data, std::size_t size)
     image.MipmapCount = 0;
 
     if (size < 7) {
-        return std::make_tuple(std::move(image), Errors::New("The PNM data size is too small"));
+        return std::make_tuple(std::move(image), errors::New("The PNM data size is too small"));
     }
 
     const std::string_view view{data, size};
@@ -117,11 +117,11 @@ Decode(const char* data, std::size_t size)
         maxLuma = 255;
     }
     else {
-        return std::make_tuple(std::move(image), Errors::New("The image is not PNM format"));
+        return std::make_tuple(std::move(image), errors::New("The image is not PNM format"));
     }
 
     if (iter == std::end(view)) {
-        return std::make_tuple(std::move(image), Errors::New("Invalid PNM format"));
+        return std::make_tuple(std::move(image), errors::New("Invalid PNM format"));
     }
     ++iter;
 
@@ -131,26 +131,26 @@ Decode(const char* data, std::size_t size)
     int height = 0;
 
     if (auto word = GetWord(iter, std::end(view)); iter == std::end(view)) {
-        return std::make_tuple(std::move(image), Errors::New("Invalid PNM format"));
+        return std::make_tuple(std::move(image), errors::New("Invalid PNM format"));
     }
     else if (auto [p, err] = std::from_chars(word.data(), word.data() + word.size(), width); err != std::errc{}) {
-        return std::make_tuple(std::move(image), Errors::New("Invalid PNM format"));
+        return std::make_tuple(std::move(image), errors::New("Invalid PNM format"));
     }
 
     if (iter == std::end(view)) {
-        return std::make_tuple(std::move(image), Errors::New("Invalid PNM format"));
+        return std::make_tuple(std::move(image), errors::New("Invalid PNM format"));
     }
     ++iter;
 
     if (auto word = GetWord(iter, std::end(view)); iter == std::end(view)) {
-        return std::make_tuple(std::move(image), Errors::New("Invalid PNM format"));
+        return std::make_tuple(std::move(image), errors::New("Invalid PNM format"));
     }
     else if (auto [p, err] = std::from_chars(word.data(), word.data() + word.size(), height); err != std::errc{}) {
-        return std::make_tuple(std::move(image), Errors::New("Invalid PNM format"));
+        return std::make_tuple(std::move(image), errors::New("Invalid PNM format"));
     }
 
     if (iter == std::end(view)) {
-        return std::make_tuple(std::move(image), Errors::New("Invalid PNM format"));
+        return std::make_tuple(std::move(image), errors::New("Invalid PNM format"));
     }
     ++iter;
 
@@ -163,21 +163,21 @@ Decode(const char* data, std::size_t size)
         [[fallthrough]];
     case PNMSubtype::Pixmap:
         if (auto word = GetWord(iter, std::end(view)); iter == std::end(view)) {
-            return std::make_tuple(std::move(image), Errors::New("Invalid PNM format"));
+            return std::make_tuple(std::move(image), errors::New("Invalid PNM format"));
         }
         else if (auto [p, err] = std::from_chars(word.data(), word.data() + word.size(), maxLuma); err != std::errc{}) {
-            return std::make_tuple(std::move(image), Errors::New("Invalid PNM format"));
+            return std::make_tuple(std::move(image), errors::New("Invalid PNM format"));
         }
 
         if ((iter != std::end(view)) && (*iter == '\n')) {
             ++iter;
         }
         else {
-            return std::make_tuple(std::move(image), Errors::New("Invalid PNM format"));
+            return std::make_tuple(std::move(image), errors::New("Invalid PNM format"));
         }
 
         if ((maxLuma <= 0) || (maxLuma > 255)) {
-            return std::make_tuple(std::move(image), Errors::New("Invalid PNM format"));
+            return std::make_tuple(std::move(image), errors::New("Invalid PNM format"));
         }
         break;
     }
@@ -187,10 +187,10 @@ Decode(const char* data, std::size_t size)
     }
 
     if ((width <= 0) || (height <= 0)) {
-        return std::make_tuple(std::move(image), Errors::New("The PNM image is too small"));
+        return std::make_tuple(std::move(image), errors::New("The PNM image is too small"));
     }
     if ((width > 32767) || (height > 32767)) {
-        return std::make_tuple(std::move(image), Errors::New("The PNM image is too large"));
+        return std::make_tuple(std::move(image), errors::New("The PNM image is too large"));
     }
 
     switch (pnmSubtype) {
@@ -229,7 +229,7 @@ Decode(const char* data, std::size_t size)
             }
 
             if (iter == iterEnd) {
-                return std::make_tuple(std::move(image), Errors::New("Invalid PNM format"));
+                return std::make_tuple(std::move(image), errors::New("Invalid PNM format"));
             }
 
             int perChannel = 0;
@@ -243,7 +243,7 @@ Decode(const char* data, std::size_t size)
             }
 
             if (auto [p, err] = std::from_chars(word.data(), word.data() + word.size(), perChannel); err != std::errc{}) {
-                return std::make_tuple(std::move(image), Errors::New("Invalid PNM format"));
+                return std::make_tuple(std::move(image), errors::New("Invalid PNM format"));
             }
 
             image.RawData.push_back(static_cast<std::uint8_t>(perChannel));
@@ -264,7 +264,7 @@ Decode(const char* data, std::size_t size)
         case PNMSubtype::Bitmap:
             while (iter != std::end(view)) {
                 if (image.RawData.capacity() <= image.RawData.size()) {
-                    return std::make_tuple(std::move(image), Errors::New("Invalid PNM format"));
+                    return std::make_tuple(std::move(image), errors::New("Invalid PNM format"));
                 }
                 const auto bits = *reinterpret_cast<const std::uint8_t*>(&*iter);
                 image.RawData.push_back(bits & 0b10000000);
@@ -293,7 +293,7 @@ Decode(const char* data, std::size_t size)
                 }
 
                 if (iter == std::end(view)) {
-                    return std::make_tuple(std::move(image), Errors::New("Invalid PNM format"));
+                    return std::make_tuple(std::move(image), errors::New("Invalid PNM format"));
                 }
 
                 image.RawData.push_back(*reinterpret_cast<const std::uint8_t*>(&*iter));
@@ -397,13 +397,13 @@ Encode(const Color* data, std::size_t size, int width, int height, const PNMEnco
     writeString("\n");
 
     if (width <= 0) {
-        return std::make_tuple(std::move(buffer), Errors::New("width is too small"));
+        return std::make_tuple(std::move(buffer), errors::New("width is too small"));
     }
     if (height <= 0) {
-        return std::make_tuple(std::move(buffer), Errors::New("height is too small"));
+        return std::make_tuple(std::move(buffer), errors::New("height is too small"));
     }
     if (options.MaxValue <= 0) {
-        return std::make_tuple(std::move(buffer), Errors::New("MaxValue is too small"));
+        return std::make_tuple(std::move(buffer), errors::New("MaxValue is too small"));
     }
 
     writeString(std::to_string(width));
@@ -419,7 +419,7 @@ Encode(const Color* data, std::size_t size, int width, int height, const PNMEnco
     const auto pixelCount = (width * height);
 
     if (size < static_cast<std::size_t>(pixelCount)) {
-        return std::make_tuple(std::move(buffer), Errors::New("size of pixel data is too small"));
+        return std::make_tuple(std::move(buffer), errors::New("size of pixel data is too small"));
     }
 
     switch (options.Encoding) {
@@ -501,4 +501,4 @@ Encode(const Color* data, std::size_t size, int width, int height, const PNMEnco
     return std::make_tuple(std::move(buffer), nullptr);
 }
 
-} // namespace Pomdog::PNM
+} // namespace pomdog::PNM

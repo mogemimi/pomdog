@@ -8,7 +8,7 @@
 #include "pomdog/utility/assert.hpp"
 #include "pomdog/utility/exception.hpp"
 
-namespace Pomdog::Detail::Vulkan {
+namespace pomdog::detail::vulkan {
 
 Texture2DVulkan::Texture2DVulkan(
     ::VkDevice deviceIn,
@@ -116,4 +116,4 @@ void Texture2DVulkan::SetData(const void* pixelData)
     POMDOG_ASSERT(pixelData != nullptr);
 }
 
-} // namespace Pomdog::Detail::Vulkan
+} // namespace pomdog::detail::vulkan

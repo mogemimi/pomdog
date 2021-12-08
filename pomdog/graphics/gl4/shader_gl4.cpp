@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::GL4 {
+namespace pomdog::detail::gl4 {
 namespace {
 
 [[nodiscard]] std::tuple<std::optional<GLuint>, std::unique_ptr<Error>>
@@ -46,7 +46,7 @@ CompileShader(const ShaderBytecode& source, GLenum pipelineStage) noexcept
 
     auto result = std::make_optional(glCreateShader(pipelineStage));
     if (*result == 0) {
-        return std::make_tuple(std::nullopt, Errors::New("glCreateShader() failed"));
+        return std::make_tuple(std::nullopt, errors::New("glCreateShader() failed"));
     }
 
     std::array<const GLchar*, 1> shaderSource = {{
@@ -72,7 +72,7 @@ CompileShader(const ShaderBytecode& source, GLenum pipelineStage) noexcept
         const std::string message = messageBuffer.data();
 
         glDeleteShader(*result);
-        return std::make_tuple(std::nullopt, Errors::New("glCompileShader() failed: " + message));
+        return std::make_tuple(std::nullopt, errors::New("glCompileShader() failed: " + message));
     }
 
     return std::make_tuple(std::move(result), nullptr);
@@ -86,7 +86,7 @@ ShaderGL4<PipelineStage>::Initialize(const ShaderBytecode& source) noexcept
 {
     auto [result, compileErr] = CompileShader(source, pipelineStage);
     if (compileErr != nullptr) {
-        return Errors::Wrap(std::move(compileErr), "failed to compile shader");
+        return errors::Wrap(std::move(compileErr), "failed to compile shader");
     }
     POMDOG_ASSERT(result != std::nullopt);
     shader = std::move(result);
@@ -118,4 +118,4 @@ template class ShaderGL4<GL_FRAGMENT_SHADER>;
 //template class ShaderGL4<GL_TESS_EVALUATION_SHADER>;
 //template class ShaderGL4<GL_COMPUTE_SHADER>;
 
-} // namespace Pomdog::Detail::GL4
+} // namespace pomdog::detail::gl4

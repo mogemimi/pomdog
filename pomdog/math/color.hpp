@@ -10,7 +10,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 /// Color describes a 32-bit packed RGBA color.
 class POMDOG_EXPORT Color final {
@@ -75,4 +75,4 @@ public:
     static const Color TransparentBlack;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

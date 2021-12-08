@@ -15,7 +15,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::GL4 {
+namespace pomdog::detail::gl4 {
 namespace {
 
 GLint GetActiveUniformBlockIntValue(
@@ -685,4 +685,4 @@ EffectReflectionGL4::GetConstantBuffers() const noexcept
     return result;
 }
 
-} // namespace Pomdog::Detail::GL4
+} // namespace pomdog::detail::gl4

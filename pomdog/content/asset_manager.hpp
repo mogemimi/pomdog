@@ -23,7 +23,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 class AudioEngine;
 class GraphicsDevice;
@@ -61,7 +61,7 @@ public:
             assets.erase(iter);
         }
 
-        Detail::AssetLoader<T> loader;
+        detail::AssetLoader<T> loader;
         auto [asset, err] = loader(*this, filePath);
         if (err != nullptr) {
             return std::make_tuple(nullptr, std::move(err));
@@ -115,4 +115,4 @@ private:
     std::unordered_map<std::string, std::any> assets;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

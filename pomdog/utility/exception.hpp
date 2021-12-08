@@ -10,8 +10,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <string>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
-namespace Detail::ExceptionInternal {
+namespace pomdog::detail::ExceptionInternal {
 
 template <typename T>
 constexpr const char* ToString() noexcept
@@ -85,14 +84,16 @@ T CreateException(const std::string& description, const std::string& source, con
     return T(ss.str());
 }
 
-} // namespace Detail::ExceptionInternal
+} // namespace pomdog::detail::ExceptionInternal
+
+namespace pomdog {
 
 #if !defined(POMDOG_THROW_EXCEPTION)
 
 #define POMDOG_THROW_EXCEPTION(exceptionClass, description) \
-    throw Pomdog::Detail::ExceptionInternal::CreateException< \
+    throw pomdog::detail::ExceptionInternal::CreateException< \
         exceptionClass>(description, __func__, __FILE__, __LINE__)
 
 #endif // !defined(POMDOG_THROW_EXCEPTION)
 
-} // namespace Pomdog
+} // namespace pomdog

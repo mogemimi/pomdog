@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 struct POMDOG_EXPORT BlendDescription final {
     std::array<RenderTargetBlendDescription, 8> RenderTargets;
@@ -69,4 +69,4 @@ struct POMDOG_EXPORT BlendDescription final {
     }
 };
 
-} // namespace Pomdog
+} // namespace pomdog

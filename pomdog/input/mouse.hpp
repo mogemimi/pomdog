@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 class MouseState;
 
@@ -35,4 +35,4 @@ public:
     Signal<void(std::int32_t delta)> ScrollWheel;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

@@ -17,7 +17,7 @@
 #include <thread>
 #include <unordered_map>
 
-using namespace Pomdog;
+using namespace pomdog;
 
 namespace {
 

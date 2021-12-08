@@ -11,18 +11,18 @@
 #include <memory>
 #include <utility>
 
-using Pomdog::Detail::Cocoa::OpenGLContextCocoa;
-using Pomdog::Detail::InputKeyEvent;
-using Pomdog::Detail::MouseButtonCocoaEvent;
-using Pomdog::Detail::MouseButtonState;
-using Pomdog::Detail::MousePositionEvent;
-using Pomdog::Detail::SystemEvent;
-using Pomdog::Detail::SystemEventKind;
-using Pomdog::EventQueue;
-using Pomdog::KeyState;
-using Pomdog::Keys;
-using Pomdog::MouseButtons;
-using Pomdog::Point2D;
+using pomdog::detail::cocoa::OpenGLContextCocoa;
+using pomdog::detail::InputKeyEvent;
+using pomdog::detail::MouseButtonCocoaEvent;
+using pomdog::detail::MouseButtonState;
+using pomdog::detail::MousePositionEvent;
+using pomdog::detail::SystemEvent;
+using pomdog::detail::SystemEventKind;
+using pomdog::EventQueue;
+using pomdog::KeyState;
+using pomdog::Keys;
+using pomdog::MouseButtons;
+using pomdog::Point2D;
 
 namespace {
 
@@ -304,7 +304,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     eventQueue = eventQueueIn;
 }
 
-- (void)setOpenGLContext:(std::shared_ptr<Pomdog::Detail::Cocoa::OpenGLContextCocoa>)openGLContextIn
+- (void)setOpenGLContext:(std::shared_ptr<pomdog::detail::cocoa::OpenGLContextCocoa>)openGLContextIn
 {
     openGLContext = openGLContextIn;
 }
@@ -573,7 +573,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
         return;
     }
 
-    Pomdog::Detail::ScrollWheelCocoaEvent event;
+    pomdog::detail::ScrollWheelCocoaEvent event;
 
     double scrollingDeltaY = static_cast<double>([theEvent scrollingDeltaY]);
     if ([theEvent hasPreciseScrollingDeltas]) {
@@ -594,7 +594,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 - (void)keyDown:(NSEvent*)theEvent
 {
     auto key = TranslateKey([theEvent keyCode]);
-    if (key != Pomdog::Keys::Unknown) {
+    if (key != pomdog::Keys::Unknown) {
         eventQueue->Enqueue(SystemEvent{
             .Kind = SystemEventKind::InputKeyEvent,
             .Data = InputKeyEvent{
@@ -604,7 +604,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
         });
     }
 
-    using Pomdog::Detail::InputTextEvent;
+    using pomdog::detail::InputTextEvent;
     std::string text = [[theEvent characters] UTF8String];
 
     eventQueue->Enqueue(SystemEvent{
@@ -618,7 +618,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 - (void)keyUp:(NSEvent*)theEvent
 {
     auto key = TranslateKey([theEvent keyCode]);
-    if (key != Pomdog::Keys::Unknown) {
+    if (key != pomdog::Keys::Unknown) {
         eventQueue->Enqueue(SystemEvent{
             .Kind = SystemEventKind::InputKeyEvent,
             .Data = InputKeyEvent{
@@ -632,7 +632,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 - (void)flagsChanged:(NSEvent*)event
 {
     const auto key = TranslateKey([event keyCode]);
-    if (key == Pomdog::Keys::Unknown) {
+    if (key == pomdog::Keys::Unknown) {
         return;
     }
 

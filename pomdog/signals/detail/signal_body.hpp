@@ -21,7 +21,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::Signals {
+namespace pomdog::detail::signals {
 
 class POMDOG_EXPORT ConnectionBody {
 public:
@@ -299,4 +299,4 @@ bool SignalBody<void(Arguments...)>::IsConnected(std::int32_t slotIndex)
     return (iter != std::end(addedObservers)) && (iter->second != nullptr);
 }
 
-} // namespace Pomdog::Detail::Signals
+} // namespace pomdog::detail::signals

@@ -21,12 +21,12 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 TCPStream::TCPStream() = default;
 
 TCPStream::TCPStream(IOService* service)
-    : nativeStream(std::make_unique<Detail::NativeTCPStream>(service))
+    : nativeStream(std::make_unique<detail::NativeTCPStream>(service))
 {
 }
 
@@ -45,7 +45,7 @@ TCPStream::Connect(IOService* service, std::string_view address)
     TCPStream stream{service};
     POMDOG_ASSERT(stream.nativeStream != nullptr);
 
-    const auto [family, host, port] = Detail::AddressParser::TransformAddress(address);
+    const auto [family, host, port] = detail::AddressParser::TransformAddress(address);
 
     if (auto err = stream.nativeStream->Connect(host, port, std::chrono::seconds{5}); err != nullptr) {
         return std::make_tuple(std::move(stream), std::move(err));
@@ -61,7 +61,7 @@ TCPStream::Connect(IOService* service, std::string_view address, const Duration&
     TCPStream stream{service};
     POMDOG_ASSERT(stream.nativeStream != nullptr);
 
-    const auto [family, host, port] = Detail::AddressParser::TransformAddress(address);
+    const auto [family, host, port] = detail::AddressParser::TransformAddress(address);
 
     if (auto err = stream.nativeStream->Connect(host, port, timeout); err != nullptr) {
         return std::make_tuple(std::move(stream), std::move(err));
@@ -113,4 +113,4 @@ void TCPStream::SetTimeout(const Duration& timeout)
     nativeStream->SetTimeout(timeout);
 }
 
-} // namespace Pomdog
+} // namespace pomdog

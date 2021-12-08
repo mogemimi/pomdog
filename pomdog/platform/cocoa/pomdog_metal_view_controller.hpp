@@ -8,18 +8,18 @@
 #include <functional>
 #include <memory>
 
-namespace Pomdog {
+namespace pomdog {
 
 class Game;
 class GameHost;
 class GraphicsDevice;
 class GraphicsCommandQueue;
 
-} // namespace Pomdog
+} // namespace pomdog
 
 @interface PomdogMetalViewController : NSViewController <MTKViewDelegate>
 
-- (void)startGame:(std::function<std::shared_ptr<Pomdog::Game>(const std::shared_ptr<Pomdog::GameHost>&)>&&)createGame
+- (void)startGame:(std::function<std::shared_ptr<pomdog::Game>(const std::shared_ptr<pomdog::GameHost>&)>&&)createGame
         completed:(std::function<void()>&&)onCompleted;
 
 - (void)setMouseCursor:(NSCursor*)cursor;

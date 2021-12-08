@@ -17,7 +17,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <thread>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 class UDPStreamEmscripten final {
 public:
@@ -62,4 +62,4 @@ public:
     Delegate<void(const ArrayView<std::uint8_t>& view, std::string_view address, const std::unique_ptr<Error>&)> OnReadFrom;
 };
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

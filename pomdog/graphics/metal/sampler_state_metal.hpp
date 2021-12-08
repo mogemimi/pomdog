@@ -7,7 +7,7 @@
 #include "pomdog/utility/errors.hpp"
 #import <Metal/MTLSampler.h>
 
-namespace Pomdog::Detail::Metal {
+namespace pomdog::detail::metal {
 
 class SamplerStateMetal final : public SamplerState {
 public:
@@ -25,4 +25,4 @@ private:
     id<MTLSamplerState> samplerState = nullptr;
 };
 
-} // namespace Pomdog::Detail::Metal
+} // namespace pomdog::detail::metal

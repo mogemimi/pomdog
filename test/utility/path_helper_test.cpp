@@ -4,7 +4,7 @@
 #include "pomdog/utility/path_helper.hpp"
 #include <catch_amalgamated.hpp>
 
-namespace PathHelper = Pomdog::PathHelper;
+namespace PathHelper = pomdog::PathHelper;
 
 TEST_CASE("PathHelper", "[PathHelper]")
 {

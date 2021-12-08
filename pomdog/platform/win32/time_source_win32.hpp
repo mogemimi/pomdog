@@ -4,7 +4,7 @@
 
 #include "pomdog/application/time_point.hpp"
 
-namespace Pomdog::Detail::Win32 {
+namespace pomdog::detail::win32 {
 
 class TimeSourceWin32 final {
 public:
@@ -16,4 +16,4 @@ private:
     double secondsPerTick;
 };
 
-} // namespace Pomdog::Detail::Win32
+} // namespace pomdog::detail::win32

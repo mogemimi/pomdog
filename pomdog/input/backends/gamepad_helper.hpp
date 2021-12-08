@@ -9,14 +9,14 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 struct GamepadState;
-} // namespace Pomdog
+} // namespace pomdog
 
-namespace Pomdog::Detail::GamepadHelper {
+namespace pomdog::detail::GamepadHelper {
 
 [[nodiscard]] int ToInt(PlayerIndex index) noexcept;
 
 void ClearState(GamepadState& state) noexcept;
 
-} // namespace Pomdog::Detail::GamepadHelper
+} // namespace pomdog::detail::GamepadHelper

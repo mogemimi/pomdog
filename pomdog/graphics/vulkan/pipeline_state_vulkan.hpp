@@ -6,7 +6,7 @@
 #include "pomdog/graphics/pipeline_state.hpp"
 #include <vulkan/vulkan.h>
 
-namespace Pomdog::Detail::Vulkan {
+namespace pomdog::detail::vulkan {
 
 class PipelineStateVulkan final : public PipelineState {
 public:
@@ -23,4 +23,4 @@ private:
     VkDescriptorSetLayout descriptorSetLayout;
 };
 
-} // namespace Pomdog::Detail::Vulkan
+} // namespace pomdog::detail::vulkan

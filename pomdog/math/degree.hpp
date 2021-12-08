@@ -5,11 +5,11 @@
 #include "pomdog/math/detail/tagged_arithmetic.hpp"
 #include "pomdog/math/forward_declarations.hpp"
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 namespace Tags {
 
 struct DegreeTag {
 };
 
 } // namespace Tags
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

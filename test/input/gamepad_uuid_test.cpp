@@ -3,7 +3,7 @@
 #include "pomdog/input/gamepad_uuid.hpp"
 #include <catch_amalgamated.hpp>
 
-using Pomdog::GamepadUUID;
+using pomdog::GamepadUUID;
 
 TEST_CASE("GamepadUUID::ToString", "[GamepadUUID]")
 {

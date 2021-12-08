@@ -3,8 +3,8 @@
 #include "pomdog/audio/audio_engine.hpp"
 #include "pomdog/utility/assert.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 
 AudioEngine::~AudioEngine() noexcept = default;
 
-} // namespace Pomdog
+} // namespace pomdog

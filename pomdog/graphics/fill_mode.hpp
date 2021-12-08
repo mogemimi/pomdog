@@ -8,7 +8,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 /// Determines the fill mode to use when rendering primitives.
 enum class FillMode : std::uint8_t {
@@ -19,4 +19,4 @@ enum class FillMode : std::uint8_t {
     Solid,
 };
 
-} // namespace Pomdog
+} // namespace pomdog

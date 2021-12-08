@@ -14,11 +14,11 @@
 #import <MetalKit/MTKView.h>
 #include <utility>
 
-using Pomdog::Detail::SystemEvent;
-using Pomdog::Detail::Cocoa::GameHostCocoa;
-using Pomdog::Detail::Cocoa::GameWindowCocoa;
+using pomdog::detail::SystemEvent;
+using pomdog::detail::cocoa::GameHostCocoa;
+using pomdog::detail::cocoa::GameWindowCocoa;
 
-namespace Pomdog::Cocoa {
+namespace pomdog::cocoa {
 
 void Bootstrap::SetWindow(NSWindow* window)
 {
@@ -100,22 +100,22 @@ Bootstrap::Run(std::function<std::shared_ptr<Game>(const std::shared_ptr<GameHos
         // NOTE: Create a window.
         auto gameWindow = std::make_shared<GameWindowCocoa>();
         if (auto err = gameWindow->Initialize(nativeWindow, eventQueue); err != nullptr) {
-            return Errors::Wrap(std::move(err), "GameWindowCocoa::Initialize() failed.");
+            return errors::Wrap(std::move(err), "GameWindowCocoa::Initialize() failed.");
         }
 
         // NOTE: Create a game host for Cocoa.
         gameHostCocoa = std::make_shared<GameHostCocoa>();
         if (auto err = gameHostCocoa->Initialize(view, gameWindow, eventQueue, presentationParameters); err != nullptr) {
-            return Errors::Wrap(std::move(err), "GameHostCocoa::Initialize() failed.");
+            return errors::Wrap(std::move(err), "GameHostCocoa::Initialize() failed.");
         }
 
         game = createGame(gameHostCocoa);
         if (game == nullptr) {
-            return Errors::New("game must be != nullptr");
+            return errors::New("game must be != nullptr");
         }
 
         if (auto err = gameHostCocoa->Run(game, std::move(onCompleted)); err != nullptr) {
-            return Errors::Wrap(std::move(err), "GameHostCocoa::Run() failed.");
+            return errors::Wrap(std::move(err), "GameHostCocoa::Run() failed.");
         }
     }
     else {
@@ -143,4 +143,4 @@ Bootstrap::Run(std::function<std::shared_ptr<Game>(const std::shared_ptr<GameHos
     return nullptr;
 }
 
-} // namespace Pomdog::Cocoa
+} // namespace pomdog::cocoa

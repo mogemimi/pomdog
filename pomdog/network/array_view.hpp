@@ -11,7 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <type_traits>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 /// ArrayView represents a view into the contiguous sequence data held in a buffer.
 template <typename T>
@@ -72,4 +72,4 @@ public:
     }
 };
 
-} // namespace Pomdog
+} // namespace pomdog

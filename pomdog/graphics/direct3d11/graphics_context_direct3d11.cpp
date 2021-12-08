@@ -28,7 +28,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::Direct3D11 {
+namespace pomdog::detail::direct3d11 {
 namespace {
 
 using Microsoft::WRL::ComPtr;
@@ -147,7 +147,7 @@ GraphicsContextDirect3D11::Initialize(
 
         auto hr = device->CreateDeferredContext3(0, &deferredContext);
         if (FAILED(hr)) {
-            return Errors::New("CreateDeferredContext3() failed");
+            return errors::New("CreateDeferredContext3() failed");
         }
         POMDOG_ASSERT(deferredContext);
     }
@@ -181,7 +181,7 @@ GraphicsContextDirect3D11::Initialize(
         HRESULT hr = dxgiFactory->CreateSwapChain(device.Get(), &swapChainDesc, &swapChain);
 
         if (FAILED(hr)) {
-            return Errors::New("CreateSwapChain() failed");
+            return errors::New("CreateSwapChain() failed");
         }
     }
     {
@@ -200,7 +200,7 @@ GraphicsContextDirect3D11::Initialize(
                 presentationParameters.BackBufferFormat,
                 multiSampleCount);
             err != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to initialize back buffer");
+            return errors::Wrap(std::move(err), "failed to initialize back buffer");
         }
 
         renderTargets.reserve(D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT);
@@ -219,7 +219,7 @@ GraphicsContextDirect3D11::Initialize(
                 backBufferDepthFormat,
                 multiSampleCount);
             err != nullptr) {
-            return Errors::Wrap(std::move(err), "failed to initialize depth stencil buffer");
+            return errors::Wrap(std::move(err), "failed to initialize depth stencil buffer");
         }
     }
 
@@ -749,7 +749,7 @@ GraphicsContextDirect3D11::ResizeBackBuffers(
             backBufferFormat,
             0);
         FAILED(hr)) {
-        return Errors::New("failed to resize back buffer");
+        return errors::New("failed to resize back buffer");
     }
 
     if (auto err = backBuffer->ResetBackBuffer(
@@ -758,7 +758,7 @@ GraphicsContextDirect3D11::ResizeBackBuffers(
             preferredBackBufferWidth,
             preferredBackBufferHeight);
         err != nullptr) {
-        return Errors::Wrap(std::move(err), "backBuffer->ResetBackBuffer() failed");
+        return errors::Wrap(std::move(err), "backBuffer->ResetBackBuffer() failed");
     }
 
     if (backBufferDepthStencil != nullptr) {
@@ -772,7 +772,7 @@ GraphicsContextDirect3D11::ResizeBackBuffers(
                 backBufferDepthFormat,
                 multiSampleCount);
             err != nullptr) {
-            return Errors::Wrap(std::move(err), "backBufferDepthStencil->ResetBuffer() failed");
+            return errors::Wrap(std::move(err), "backBufferDepthStencil->ResetBuffer() failed");
         }
     }
 
@@ -791,4 +791,4 @@ ID3D11DeviceContext3* GraphicsContextDirect3D11::GetDeferredContext() noexcept
     return deferredContext.Get();
 }
 
-} // namespace Pomdog::Detail::Direct3D11
+} // namespace pomdog::detail::direct3d11

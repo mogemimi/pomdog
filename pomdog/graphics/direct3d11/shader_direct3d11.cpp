@@ -11,7 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::Direct3D11 {
+namespace pomdog::detail::direct3d11 {
 namespace {
 
 HRESULT CreateShader(
@@ -54,7 +54,7 @@ ShaderDirect3D11<NativeShaderType>::Initialize(
             compileOptions);
 
         if (compileErr != nullptr) {
-            return Errors::Wrap(std::move(compileErr), "CompileHLSL() failed");
+            return errors::Wrap(std::move(compileErr), "CompileHLSL() failed");
         }
 
         POMDOG_ASSERT(compiledShaderBlob.Get() != nullptr);
@@ -67,7 +67,7 @@ ShaderDirect3D11<NativeShaderType>::Initialize(
     POMDOG_ASSERT(!codeBlob.empty());
 
     if (auto hr = CreateShader(device, codeBlob.data(), codeBlob.size(), &shader); FAILED(hr)) {
-        return Errors::New("CreateShader() failed: hr = " + std::to_string(hr));
+        return errors::New("CreateShader() failed: hr = " + std::to_string(hr));
     }
 
     return nullptr;
@@ -98,4 +98,4 @@ template class ShaderDirect3D11<ID3D11PixelShader>;
 // template class ShaderDirect3D11<ID3D11HullShader>;
 // template class ShaderDirect3D11<ID3D11ComputeShader>;
 
-} // namespace Pomdog::Detail::Direct3D11
+} // namespace pomdog::detail::direct3d11

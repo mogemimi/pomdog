@@ -9,7 +9,7 @@
 #include <memory>
 #include <vector>
 
-namespace Pomdog::Detail::Metal {
+namespace pomdog::detail::metal {
 
 class GraphicsContextMetal final : public NativeGraphicsContext {
 public:
@@ -97,4 +97,4 @@ private:
     bool isDrawing = false;
 };
 
-} // namespace Pomdog::Detail::Metal
+} // namespace pomdog::detail::metal

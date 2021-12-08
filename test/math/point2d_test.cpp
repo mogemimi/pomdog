@@ -3,7 +3,7 @@
 #include "pomdog/math/point2d.hpp"
 #include <catch_amalgamated.hpp>
 
-using Pomdog::Point2D;
+using pomdog::Point2D;
 
 TEST_CASE("Point2D", "[Point2D]")
 {

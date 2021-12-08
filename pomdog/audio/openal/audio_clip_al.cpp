@@ -9,7 +9,7 @@
 #include <tuple>
 #include <utility>
 
-namespace Pomdog::Detail::OpenAL {
+namespace pomdog::detail::openal {
 namespace {
 
 [[nodiscard]] std::tuple<ALenum, std::unique_ptr<Error>>
@@ -33,7 +33,7 @@ ToFormat(AudioChannels channel, int bitPerSample) noexcept
         }
         break;
     }
-    return std::make_tuple(AL_FORMAT_STEREO8, Errors::New("Unsupported audio format"));
+    return std::make_tuple(AL_FORMAT_STEREO8, errors::New("Unsupported audio format"));
 }
 
 } // namespace
@@ -78,7 +78,7 @@ AudioClipAL::Initialize(
 
     auto [format, formatErr] = ToFormat(channels, bitsPerSample);
     if (formatErr != nullptr) {
-        return Errors::Wrap(std::move(formatErr), "ToFormat() failed.");
+        return errors::Wrap(std::move(formatErr), "ToFormat() failed.");
     }
 
     alBufferData(*buffer, format, data, static_cast<ALsizei>(sizeInBytes), sampleRate);
@@ -91,8 +91,8 @@ AudioClipAL::Initialize(
 
 Duration AudioClipAL::GetLength() const noexcept
 {
-    auto samples = Detail::AudioHelper::GetSamples(sizeInBytes, bitsPerSample, channels);
-    auto sampleDuration = Detail::AudioHelper::GetSampleDuration(samples, sampleRate);
+    auto samples = detail::AudioHelper::GetSamples(sizeInBytes, bitsPerSample, channels);
+    auto sampleDuration = detail::AudioHelper::GetSampleDuration(samples, sampleRate);
     return sampleDuration;
 }
 
@@ -122,4 +122,4 @@ ALuint AudioClipAL::GetNativeBuffer() const noexcept
     return *buffer;
 }
 
-} // namespace Pomdog::Detail::OpenAL
+} // namespace pomdog::detail::openal

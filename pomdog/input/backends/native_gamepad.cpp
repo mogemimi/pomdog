@@ -2,8 +2,8 @@
 
 #include "pomdog/input/backends/native_gamepad.hpp"
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 NativeGamepad::~NativeGamepad() = default;
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

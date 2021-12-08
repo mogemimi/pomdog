@@ -9,11 +9,11 @@
 #include <cstdint>
 #include <memory>
 
-using Pomdog::Vector3;
-using Pomdog::ECS::AddComponent;
-using Pomdog::ECS::Entity;
-using Pomdog::ECS::EntityArchtype;
-using Pomdog::ECS::EntityManager;
+using pomdog::Vector3;
+using pomdog::ecs::AddComponent;
+using pomdog::ecs::Entity;
+using pomdog::ecs::EntityArchtype;
+using pomdog::ecs::EntityManager;
 
 namespace {
 

@@ -15,7 +15,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 /// An HTTPClient represents an HTTP Client for sending HTTP requests and receiving HTTP responses.
 class POMDOG_EXPORT HTTPClient final {
@@ -52,4 +52,4 @@ private:
     std::unique_ptr<Impl> impl;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

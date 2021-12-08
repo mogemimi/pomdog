@@ -4,9 +4,9 @@
 #include "pomdog/input/keys.hpp"
 #include <catch_amalgamated.hpp>
 
-using Pomdog::KeyboardState;
-using Pomdog::Keys;
-using Pomdog::KeyState;
+using pomdog::KeyboardState;
+using pomdog::Keys;
+using pomdog::KeyState;
 
 TEST_CASE("KeysToInteger", "[KeyboardState]")
 {

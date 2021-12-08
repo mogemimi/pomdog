@@ -8,7 +8,7 @@
 #include "pomdog/utility/errors.hpp"
 #import <Metal/MTLTexture.h>
 
-namespace Pomdog::Detail::Metal {
+namespace pomdog::detail::metal {
 
 class RenderTarget2DMetal final : public RenderTarget2D {
 public:
@@ -51,4 +51,4 @@ private:
     bool multiSampleEnabled = false;
 };
 
-} // namespace Pomdog::Detail::Metal
+} // namespace pomdog::detail::metal

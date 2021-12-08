@@ -9,9 +9,9 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 /// Point3D is a point in 3-dimensional space.
-using Point3D = Detail::Coordinate3D<std::int32_t>;
+using Point3D = detail::Coordinate3D<std::int32_t>;
 
-} // namespace Pomdog
+} // namespace pomdog

@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 static_assert(static_cast<std::underlying_type<Keys>::type>(Keys::Unknown) == 0);
 static_assert(std::is_same<std::underlying_type<Keys>::type, std::uint8_t>::value);
@@ -60,4 +60,4 @@ void KeyboardState::ClearAllKeys()
     POMDOG_ASSERT(keyset.none());
 }
 
-} // namespace Pomdog
+} // namespace pomdog

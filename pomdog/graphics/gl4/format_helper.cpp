@@ -4,7 +4,7 @@
 #include "pomdog/basic/unreachable.hpp"
 #include "pomdog/graphics/comparison_function.hpp"
 
-namespace Pomdog::Detail::GL4 {
+namespace pomdog::detail::gl4 {
 
 GLenum ToComparisonFunctionGL4NonTypesafe(ComparisonFunction comparison) noexcept
 {
@@ -29,4 +29,4 @@ GLenum ToComparisonFunctionGL4NonTypesafe(ComparisonFunction comparison) noexcep
     POMDOG_UNREACHABLE("Unsupported comparison function");
 }
 
-} // namespace Pomdog::Detail::GL4
+} // namespace pomdog::detail::gl4

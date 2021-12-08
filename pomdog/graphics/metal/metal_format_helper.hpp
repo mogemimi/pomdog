@@ -6,10 +6,10 @@
 #import <Metal/MTLDepthStencil.h>
 #import <Metal/MTLTexture.h>
 
-namespace Pomdog::Detail::Metal {
+namespace pomdog::detail::metal {
 
 [[nodiscard]] MTLPixelFormat ToPixelFormat(SurfaceFormat format) noexcept;
 
 [[nodiscard]] MTLCompareFunction ToComparisonFunction(ComparisonFunction compareFunction) noexcept;
 
-} // namespace Pomdog::Detail::Metal
+} // namespace pomdog::detail::metal

@@ -16,7 +16,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 template <typename T>
 FloatingPointMatrix3x3<T>::FloatingPointMatrix3x3(
@@ -570,15 +570,15 @@ template <typename T>
 void FloatingPointMatrix3x3<T>::Lerp(const FloatingPointMatrix3x3& source1,
     const FloatingPointMatrix3x3& source2, T amount, FloatingPointMatrix3x3& result) noexcept
 {
-    result.m[0][0] = Math::Lerp(source1.m[0][0], source2.m[0][0], amount);
-    result.m[0][1] = Math::Lerp(source1.m[0][1], source2.m[0][1], amount);
-    result.m[0][2] = Math::Lerp(source1.m[0][2], source2.m[0][2], amount);
-    result.m[1][0] = Math::Lerp(source1.m[1][0], source2.m[1][0], amount);
-    result.m[1][1] = Math::Lerp(source1.m[1][1], source2.m[1][1], amount);
-    result.m[1][2] = Math::Lerp(source1.m[1][2], source2.m[1][2], amount);
-    result.m[2][0] = Math::Lerp(source1.m[2][0], source2.m[2][0], amount);
-    result.m[2][1] = Math::Lerp(source1.m[2][1], source2.m[2][1], amount);
-    result.m[2][2] = Math::Lerp(source1.m[2][2], source2.m[2][2], amount);
+    result.m[0][0] = math::Lerp(source1.m[0][0], source2.m[0][0], amount);
+    result.m[0][1] = math::Lerp(source1.m[0][1], source2.m[0][1], amount);
+    result.m[0][2] = math::Lerp(source1.m[0][2], source2.m[0][2], amount);
+    result.m[1][0] = math::Lerp(source1.m[1][0], source2.m[1][0], amount);
+    result.m[1][1] = math::Lerp(source1.m[1][1], source2.m[1][1], amount);
+    result.m[1][2] = math::Lerp(source1.m[1][2], source2.m[1][2], amount);
+    result.m[2][0] = math::Lerp(source1.m[2][0], source2.m[2][0], amount);
+    result.m[2][1] = math::Lerp(source1.m[2][1], source2.m[2][1], amount);
+    result.m[2][2] = math::Lerp(source1.m[2][2], source2.m[2][2], amount);
 }
 
 template <typename T>
@@ -660,4 +660,4 @@ operator*<float>(float, const FloatingPointMatrix3x3<float>&) noexcept;
 template FloatingPointMatrix3x3<double>
 operator*<double>(double, const FloatingPointMatrix3x3<double>&) noexcept;
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

@@ -8,7 +8,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 enum class BlendFactor : std::uint8_t {
     Zero,
@@ -30,4 +30,4 @@ enum class BlendFactor : std::uint8_t {
     InverseSource1Alpha,
 };
 
-} // namespace Pomdog
+} // namespace pomdog

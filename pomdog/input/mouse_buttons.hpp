@@ -4,7 +4,7 @@
 
 #include <cstdint>
 
-namespace Pomdog {
+namespace pomdog {
 
 enum class MouseButtons : std::int8_t {
     Left,
@@ -14,4 +14,4 @@ enum class MouseButtons : std::int8_t {
     XButton2,
 };
 
-} // namespace Pomdog
+} // namespace pomdog

@@ -2,8 +2,8 @@
 
 #include "pomdog/graphics/backends/native_buffer.hpp"
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 NativeBuffer::~NativeBuffer() = default;
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

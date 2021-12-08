@@ -5,7 +5,7 @@
 #include "pomdog/math/containment_type.hpp"
 #include "pomdog/utility/assert.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 
 BoundingBox2D::BoundingBox2D(const Vector2& minIn, const Vector2& maxIn)
     : Min(minIn)
@@ -83,4 +83,4 @@ std::array<Vector2, BoundingBox2D::CornerCount> BoundingBox2D::GetCorners() cons
     }};
 }
 
-} // namespace Pomdog
+} // namespace pomdog
