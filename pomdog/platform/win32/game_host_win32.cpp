@@ -116,7 +116,7 @@ CreateGraphicsDeviceGL4(
     const PresentationParameters& presentationParameters)
 {
     // NOTE: Create an OpenGL context.
-    auto openGLContext = std::make_shared<Win32::OpenGLContextWin32>();
+    auto openGLContext = std::make_shared<win32::OpenGLContextWin32>();
     if (auto err = openGLContext->Initialize(
             window->GetNativeWindowHandle(),
             presentationParameters);
