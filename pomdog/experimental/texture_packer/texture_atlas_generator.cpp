@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <unordered_map>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 namespace TexturePacker {
 namespace {
 
@@ -244,4 +244,4 @@ TextureAtlasGeneratorResult TextureAtlasGenerator::Generate(
 }
 
 } // namespace TexturePacker
-} // namespace Pomdog
+} // namespace pomdog

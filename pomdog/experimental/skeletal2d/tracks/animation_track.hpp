@@ -4,7 +4,7 @@
 
 #include "pomdog/experimental/skeletal2d/animation_time_interval.hpp"
 
-namespace Pomdog::Skeletal2D {
+namespace pomdog::skeletal2d {
 
 class Skeleton;
 class SkeletonPose;
@@ -23,4 +23,4 @@ public:
     virtual AnimationTimeInterval GetLength() const = 0;
 };
 
-} // namespace Pomdog::Skeletal2D
+} // namespace pomdog::skeletal2d

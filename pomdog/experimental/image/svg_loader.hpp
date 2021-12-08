@@ -13,12 +13,12 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 class Texture2D;
 class GraphicsDevice;
-} // namespace Pomdog
+} // namespace pomdog
 
-namespace Pomdog::SVG {
+namespace pomdog::SVG {
 
 /// Reads a SVG image from data (.svg).
 [[nodiscard]] POMDOG_EXPORT std::tuple<ImageBuffer, std::unique_ptr<Error>>
@@ -43,4 +43,4 @@ LoadTexture(
     int width,
     int height);
 
-} // namespace Pomdog::SVG
+} // namespace pomdog::SVG

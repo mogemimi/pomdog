@@ -6,7 +6,7 @@
 #include "pomdog/experimental/skeletal2d/joint_pose.hpp"
 #include "pomdog/math/matrix3x2.hpp"
 
-namespace Pomdog::Skeletal2D {
+namespace pomdog::skeletal2d {
 
 struct Joint final {
     Matrix3x2 InverseBindPose;
@@ -17,4 +17,4 @@ struct Joint final {
     JointIndex Sibling;
 };
 
-} // namespace Pomdog::Skeletal2D
+} // namespace pomdog::skeletal2d

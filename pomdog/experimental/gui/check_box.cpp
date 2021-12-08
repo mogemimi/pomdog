@@ -7,7 +7,7 @@
 #include "pomdog/experimental/gui/ui_helper.hpp"
 #include "pomdog/experimental/tween/easing_helper.hpp"
 
-namespace Pomdog::GUI {
+namespace pomdog::gui {
 namespace {
 
 constexpr int checkBoxWidth = 20;
@@ -99,7 +99,7 @@ void CheckBox::Draw(DrawingContext& drawingContext)
 
     constexpr int iconPixelSize = 32;
     constexpr int checkIconPixelSize = 14;
-    const auto transformOffset = Math::ToVector2(globalPos);
+    const auto transformOffset = math::ToVector2(globalPos);
 
     drawingContext.DrawIcon(
         "ionicons/ios-square.svg",
@@ -128,4 +128,4 @@ void CheckBox::Draw(DrawingContext& drawingContext)
     }
 }
 
-} // namespace Pomdog::GUI
+} // namespace pomdog::gui

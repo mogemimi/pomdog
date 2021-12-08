@@ -14,12 +14,12 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Spine {
+namespace pomdog::spine {
 namespace {
 
-using Skeletal2D::Joint;
-using Skeletal2D::JointIndex;
-using Skeletal2D::Skeleton;
+using skeletal2d::Joint;
+using skeletal2d::JointIndex;
+using skeletal2d::Skeleton;
 
 JointIndex
 FindBoneParent(
@@ -49,7 +49,7 @@ std::vector<Matrix3x2> CreateInverseBindPoseByJoints(const Skeleton& skeleton)
     std::vector<Matrix3x2> bindPose;
     bindPose.resize(skeleton.JointCount());
 
-    Skeletal2D::SkeletonHelper::Traverse(skeleton, skeleton.Root().Index, [&bindPose](const Joint& bone) {
+    skeletal2d::SkeletonHelper::Traverse(skeleton, skeleton.Root().Index, [&bindPose](const Joint& bone) {
         Matrix3x2 matrix = Matrix3x2::CreateScale(bone.BindPose.Scale);
         matrix *= Matrix3x2::CreateRotation(bone.BindPose.Rotation);
         matrix *= Matrix3x2::CreateTranslation(bone.BindPose.Translate);
@@ -132,11 +132,11 @@ std::vector<Joint> CreateBones(const std::vector<BoneDesc>& boneDescriptions)
 
 } // namespace
 
-Skeletal2D::Skeleton CreateSkeleton(const std::vector<Spine::BoneDesc>& bones)
+skeletal2d::Skeleton CreateSkeleton(const std::vector<spine::BoneDesc>& bones)
 {
     POMDOG_ASSERT(!bones.empty());
 
-    Skeletal2D::Skeleton skeleton{CreateBones(bones)};
+    skeletal2d::Skeleton skeleton{CreateBones(bones)};
 
     auto inverseBindPose = CreateInverseBindPoseByJoints(skeleton);
     for (auto& joint : skeleton) {
@@ -147,4 +147,4 @@ Skeletal2D::Skeleton CreateSkeleton(const std::vector<Spine::BoneDesc>& bones)
     return skeleton;
 }
 
-} // namespace Pomdog::Spine
+} // namespace pomdog::spine

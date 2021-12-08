@@ -5,7 +5,7 @@
 #include "pomdog/experimental/gui/hierarchy_sort_order.hpp"
 #include "pomdog/experimental/gui/ui_helper.hpp"
 
-namespace Pomdog::GUI {
+namespace pomdog::gui {
 
 WidgetHierarchy::WidgetHierarchy(
     const std::shared_ptr<GameWindow>& window,
@@ -171,4 +171,4 @@ void WidgetHierarchy::RenderSizeChanged(int width, int height)
     }
 }
 
-} // namespace Pomdog::GUI
+} // namespace pomdog::gui

@@ -33,7 +33,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstring>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 namespace {
 
 // Built-in shaders
@@ -330,7 +330,7 @@ void LineBatch::DrawCircle(const Vector2& position, float radius, const Color& c
     POMDOG_ASSERT(radius > 0);
 
     POMDOG_ASSERT(segments >= 3);
-    Radian<float> centralAngle = Math::TwoPi<float> / segments;
+    Radian<float> centralAngle = math::TwoPi<float> / segments;
     Vector2 prevPoint = position + Vector2{radius, 0};
 
     auto colorVector = color.ToVector4();
@@ -465,11 +465,11 @@ void LineBatch::DrawSphere(
     // Create sphere vertices
     sphereVertices.push_back(Vector3{0.0f, 1.0f, 0.0f});
     for (int ring = 1; ring < rings; ++ring) {
-        const auto latitude = Math::Pi<float> * ring * R;
+        const auto latitude = math::Pi<float> * ring * R;
         const auto y = std::cos(latitude);
         const auto r = std::sin(latitude);
         for (int s = 0; s < sectors; ++s) {
-            auto longitude = Math::TwoPi<float> * s * S;
+            auto longitude = math::TwoPi<float> * s * S;
             auto x = r * std::cos(longitude);
             auto z = r * std::sin(longitude);
             sphereVertices.push_back(Vector3{x, y, z});
@@ -537,4 +537,4 @@ void LineBatch::DrawTriangle(
     impl->DrawTriangle(point1, point2, point3, colorVector1, colorVector2, colorVector3);
 }
 
-} // namespace Pomdog
+} // namespace pomdog

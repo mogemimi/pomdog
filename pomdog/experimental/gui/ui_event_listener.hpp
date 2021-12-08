@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Pomdog {
+namespace pomdog {
 namespace UI {
 
 class PointerPoint;
@@ -29,4 +29,4 @@ public:
 };
 
 } // namespace UI
-} // namespace Pomdog
+} // namespace pomdog

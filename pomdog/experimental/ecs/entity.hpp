@@ -9,7 +9,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <functional>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::ECS {
+namespace pomdog::ecs {
 
 class Entity final {
 public:
@@ -64,13 +64,13 @@ private:
     std::uint64_t id;
 };
 
-} // namespace Pomdog::ECS
+} // namespace pomdog::ecs
 
 namespace std {
 
 template <>
-struct hash<Pomdog::ECS::Entity> {
-    std::size_t operator()(const Pomdog::ECS::Entity& key) const noexcept;
+struct hash<pomdog::ecs::Entity> {
+    std::size_t operator()(const pomdog::ecs::Entity& key) const noexcept;
 };
 
 } // namespace std

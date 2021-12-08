@@ -37,9 +37,9 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 #include "pomdog/graphics/rasterizer_description.hpp"
 
-using Pomdog::Detail::AlignedNew;
+using pomdog::detail::AlignedNew;
 
-namespace Pomdog {
+namespace pomdog {
 namespace {
 
 // Built-in shaders
@@ -51,7 +51,7 @@ namespace {
 
 struct PolylineBatchVertex final {
     Vector3 Position;
-    Pomdog::Color Color;
+    pomdog::Color Color;
 };
 
 struct alignas(16) PolylineVertex final : public AlignedNew<PolylineVertex> {
@@ -518,7 +518,7 @@ void PolylineBatch::DrawCircle(const Vector2& position, float radius, const Colo
     POMDOG_ASSERT(radius > 0);
 
     POMDOG_ASSERT(segments >= 3);
-    Radian<float> centralAngle = Math::TwoPi<float> / segments;
+    Radian<float> centralAngle = math::TwoPi<float> / segments;
     Vector2 prevPoint = position + Vector2{radius, 0};
 
     for (int i = 0; i < segments; ++i) {
@@ -651,11 +651,11 @@ void PolylineBatch::DrawSphere(
     // Create sphere vertices
     sphereVertices.push_back(Vector3{0.0f, 1.0f, 0.0f});
     for (int ring = 1; ring < rings; ++ring) {
-        const auto latitude = Math::Pi<float> * ring * R;
+        const auto latitude = math::Pi<float> * ring * R;
         const auto y = std::cos(latitude);
         const auto r = std::sin(latitude);
         for (int s = 0; s < sectors; ++s) {
-            auto longitude = Math::TwoPi<float> * s * S;
+            auto longitude = math::TwoPi<float> * s * S;
             auto x = r * std::cos(longitude);
             auto z = r * std::sin(longitude);
             sphereVertices.push_back(Vector3{x, y, z});
@@ -744,4 +744,4 @@ void PolylineBatch::DrawTriangle(
     }, false, thickness);
 }
 
-} // namespace Pomdog
+} // namespace pomdog

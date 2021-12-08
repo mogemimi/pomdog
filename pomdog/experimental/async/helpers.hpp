@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Concurrency {
+namespace pomdog::concurrency {
 
 template <typename Argument>
 [[nodiscard]] POMDOG_EXPORT auto
@@ -29,4 +29,4 @@ FromSingleShotSignal(Signal<void(Argument)>& signal)
     return task;
 }
 
-} // namespace Pomdog::Concurrency
+} // namespace pomdog::concurrency

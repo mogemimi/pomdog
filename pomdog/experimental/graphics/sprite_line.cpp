@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cmath>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 void SpriteLine::Draw(
     SpriteBatch& spriteBatch,
@@ -45,4 +45,4 @@ void SpriteLine::Draw(
         color, rotation, {0.0f, 0.5f}, lineThickness);
 }
 
-} // namespace Pomdog
+} // namespace pomdog

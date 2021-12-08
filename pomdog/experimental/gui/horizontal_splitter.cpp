@@ -7,7 +7,7 @@
 #include "pomdog/experimental/gui/ui_helper.hpp"
 #include "pomdog/math/math.hpp"
 
-namespace Pomdog::GUI {
+namespace pomdog::gui {
 
 class HorizontalSplitterHandle final
     : public Widget
@@ -589,4 +589,4 @@ void HorizontalSplitterHandle::Draw(DrawingContext& drawingContext)
     primitiveBatch->Flush();
 }
 
-} // namespace Pomdog::GUI
+} // namespace pomdog::gui

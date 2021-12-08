@@ -13,20 +13,20 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 class AssetManager;
-} // namespace Pomdog
+} // namespace pomdog
 
-namespace Pomdog::MagicaVoxel {
+namespace pomdog::magicavoxel {
 class VoxModel;
-} // namespace Pomdog::MagicaVoxel
+} // namespace pomdog::magicavoxel
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 template <>
-struct POMDOG_EXPORT AssetLoader<MagicaVoxel::VoxModel> final {
-    [[nodiscard]] std::tuple<std::shared_ptr<MagicaVoxel::VoxModel>, std::unique_ptr<Error>>
+struct POMDOG_EXPORT AssetLoader<magicavoxel::VoxModel> final {
+    [[nodiscard]] std::tuple<std::shared_ptr<magicavoxel::VoxModel>, std::unique_ptr<Error>>
     operator()(AssetManager& assets, const std::string& filePath);
 };
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

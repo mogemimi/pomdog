@@ -14,16 +14,16 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Spine {
+namespace pomdog::spine {
 namespace {
 
-using Skeletal2D::SkinnedMeshPart;
-using Skeletal2D::SkinnedVertex;
+using skeletal2d::SkinnedMeshPart;
+using skeletal2d::SkinnedVertex;
 using TexturePacker::TextureAtlas;
 using TexturePacker::TextureAtlasRegion;
 
 struct SkinnedMeshSlot final {
-    std::vector<Skeletal2D::SkinnedVertex> Vertices;
+    std::vector<skeletal2d::SkinnedVertex> Vertices;
     std::vector<std::uint16_t> Indices;
     std::uint16_t DrawOrder;
 };
@@ -71,7 +71,7 @@ CreateSkinnedMeshSlot(
     Matrix3x2 scaling = Matrix3x2::CreateScale(attachment.Scale * size);
     Matrix3x2 rotate = Matrix3x2::CreateRotation(attachment.Rotation);
     if (textureRegion.Rotate) {
-        rotate = Matrix3x2::CreateRotation(-Math::PiOver2<float>) * rotate;
+        rotate = Matrix3x2::CreateRotation(-math::PiOver2<float>) * rotate;
     }
     Matrix3x2 translate = Matrix3x2::CreateTranslation(attachment.Translate);
 
@@ -156,7 +156,7 @@ CreateSkinnedMeshSlot(
     return meshSlot;
 }
 
-Skeletal2D::SkinnedMesh
+skeletal2d::SkinnedMesh
 CreateVertices(
     const std::vector<SlotDesc>& slots,
     const SkinDesc& skin,
@@ -253,7 +253,7 @@ CreateVertices(
             return a.DrawOrder < b.DrawOrder;
         });
 
-    Skeletal2D::SkinnedMesh result;
+    skeletal2d::SkinnedMesh result;
     result.MeshParts.reserve(meshSlots.size());
 
     std::uint16_t startIndex = 0;
@@ -289,7 +289,7 @@ CreateVertices(
 
 } // namespace
 
-std::tuple<Skeletal2D::SkinnedMesh, std::unique_ptr<Error>>
+std::tuple<skeletal2d::SkinnedMesh, std::unique_ptr<Error>>
 CreateSkinnedMesh(
     const std::vector<Matrix3x2>& bindPosesInGlobal,
     const SkeletonDesc& skeletonDesc,
@@ -304,8 +304,8 @@ CreateSkinnedMesh(
         [&](const SkinDesc& desc) { return desc.Name == skinName; });
 
     if (iter == std::end(skeletonDesc.Skins)) {
-        auto err = Errors::New("Skin not found '" + skinName + "'");
-        return std::make_tuple(Skeletal2D::SkinnedMesh{}, std::move(err));
+        auto err = errors::New("Skin not found '" + skinName + "'");
+        return std::make_tuple(skeletal2d::SkinnedMesh{}, std::move(err));
     }
 
     POMDOG_ASSERT(iter != std::end(skeletonDesc.Skins));
@@ -314,4 +314,4 @@ CreateSkinnedMesh(
     return std::make_tuple(std::move(meshData), nullptr);
 }
 
-} // namespace Pomdog::Spine
+} // namespace pomdog::spine

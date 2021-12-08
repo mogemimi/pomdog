@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Skeletal2D::Detail {
+namespace pomdog::skeletal2d::detail {
 
 AnimationLerpNode::AnimationLerpNode(
     std::unique_ptr<AnimationNode>&& blendNode1In,
@@ -45,7 +45,7 @@ const AnimationNode* AnimationLerpNode::B() const noexcept
 
 void AnimationLerpNode::Calculate(
     const AnimationTimeInterval& time,
-    const Detail::AnimationGraphWeightCollection& weights,
+    const detail::AnimationGraphWeightCollection& weights,
     const Skeleton& skeleton,
     SkeletonPose& skeletonPose,
     Skin* skin) const
@@ -60,8 +60,8 @@ void AnimationLerpNode::Calculate(
     nodeB->Calculate(time, weights, skeleton, sourcePose2, nullptr);
 
     auto weight = weights.GetFloatAtIndex(weightIndex);
-    using Detail::WeightBlendingHelper::Lerp;
+    using detail::WeightBlendingHelper::Lerp;
     Lerp(sourcePose1.JointPoses, sourcePose2.JointPoses, weight, skeletonPose.JointPoses);
 }
 
-} // namespace Pomdog::Skeletal2D::Detail
+} // namespace pomdog::skeletal2d::detail

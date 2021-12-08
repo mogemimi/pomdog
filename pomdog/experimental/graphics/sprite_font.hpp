@@ -14,7 +14,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 struct FontGlyph;
 class SpriteBatch;
@@ -94,4 +94,4 @@ private:
     std::unique_ptr<Impl> impl;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

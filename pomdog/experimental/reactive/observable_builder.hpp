@@ -30,7 +30,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Reactive {
+namespace pomdog::reactive {
 
 using ObservableConnection = std::vector<std::shared_ptr<ObservableBase>>;
 
@@ -64,7 +64,7 @@ public:
 
     ObservableBuilder<std::vector<T>> Buffer(int count)
     {
-        auto buffer = std::make_shared<Detail::BufferOperator<T>>(count);
+        auto buffer = std::make_shared<detail::BufferOperator<T>>(count);
         POMDOG_ASSERT(back);
         back->Subscribe(buffer);
 
@@ -74,7 +74,7 @@ public:
 
     ObservableBuilder Delay(const Duration& interval)
     {
-        auto delay = std::make_shared<Detail::DelayOperator<T>>(interval, gameHost);
+        auto delay = std::make_shared<detail::DelayOperator<T>>(interval, gameHost);
         POMDOG_ASSERT(back);
         back->Subscribe(delay);
 
@@ -84,7 +84,7 @@ public:
 
     ObservableBuilder Debounce(const Duration& dueTime)
     {
-        auto debounce = std::make_shared<Detail::DebounceOperator<T>>(dueTime, gameHost);
+        auto debounce = std::make_shared<detail::DebounceOperator<T>>(dueTime, gameHost);
         POMDOG_ASSERT(back);
         back->Subscribe(debounce);
 
@@ -94,7 +94,7 @@ public:
 
     ObservableBuilder Distinct()
     {
-        auto distinct = std::make_shared<Detail::DistinctOperator<T>>();
+        auto distinct = std::make_shared<detail::DistinctOperator<T>>();
         POMDOG_ASSERT(back);
         back->Subscribe(distinct);
 
@@ -122,7 +122,7 @@ public:
         std::function<void()>&& onError,
         std::function<void()>&& onCompleted)
     {
-        auto doOperator = std::make_shared<Detail::DoOperator<T>>(
+        auto doOperator = std::make_shared<detail::DoOperator<T>>(
             std::move(onNext), std::move(onError), std::move(onCompleted));
         POMDOG_ASSERT(back);
         back->Subscribe(doOperator);
@@ -133,7 +133,7 @@ public:
 
     ObservableBuilder Filter(std::function<bool(const T& value)>&& filter)
     {
-        auto filterOperator = std::make_shared<Detail::FilterOperator<T>>(std::move(filter));
+        auto filterOperator = std::make_shared<detail::FilterOperator<T>>(std::move(filter));
         POMDOG_ASSERT(back);
         back->Subscribe(filterOperator);
 
@@ -143,7 +143,7 @@ public:
 
     ObservableBuilder First()
     {
-        auto firstOperator = std::make_shared<Detail::FirstOperator<T>>();
+        auto firstOperator = std::make_shared<detail::FirstOperator<T>>();
         POMDOG_ASSERT(back);
         back->Subscribe(firstOperator);
 
@@ -153,7 +153,7 @@ public:
 
     ObservableBuilder Last()
     {
-        auto lastOperator = std::make_shared<Detail::LastOperator<T>>();
+        auto lastOperator = std::make_shared<detail::LastOperator<T>>();
         POMDOG_ASSERT(back);
         back->Subscribe(lastOperator);
 
@@ -165,7 +165,7 @@ public:
     auto Map(std::function<TResult(T&& value)>&& map)
         -> ObservableBuilder<TResult>
     {
-        auto mapOperator = std::make_shared<Detail::MapOperator<T, TResult>>(std::move(map));
+        auto mapOperator = std::make_shared<detail::MapOperator<T, TResult>>(std::move(map));
         POMDOG_ASSERT(back);
         back->Subscribe(mapOperator);
 
@@ -175,7 +175,7 @@ public:
 
     ObservableBuilder Merge(ObservableBuilder&& other)
     {
-        auto merge = std::make_shared<Detail::MergeOperator<T>>();
+        auto merge = std::make_shared<detail::MergeOperator<T>>();
         POMDOG_ASSERT(back);
         back->Subscribe(merge);
         other.back->Subscribe(merge);
@@ -189,7 +189,7 @@ public:
 
     ObservableBuilder Scan(std::function<T(const T& accumulation, const T& value)>&& accumulator)
     {
-        auto scanOperator = std::make_shared<Detail::ScanOperator<T>>(std::move(accumulator));
+        auto scanOperator = std::make_shared<detail::ScanOperator<T>>(std::move(accumulator));
         POMDOG_ASSERT(back);
         back->Subscribe(scanOperator);
 
@@ -199,7 +199,7 @@ public:
 
     ObservableBuilder Skip(int count)
     {
-        auto skip = std::make_shared<Detail::SkipOperator<T>>(count);
+        auto skip = std::make_shared<detail::SkipOperator<T>>(count);
         POMDOG_ASSERT(back);
         back->Subscribe(skip);
 
@@ -209,7 +209,7 @@ public:
 
     ObservableBuilder SkipLast(int count)
     {
-        auto skipLast = std::make_shared<Detail::SkipLastOperator<T>>(count);
+        auto skipLast = std::make_shared<detail::SkipLastOperator<T>>(count);
         POMDOG_ASSERT(back);
         back->Subscribe(skipLast);
 
@@ -219,7 +219,7 @@ public:
 
     ObservableBuilder Take(int limit)
     {
-        auto take = std::make_shared<Detail::TakeOperator<T>>(limit);
+        auto take = std::make_shared<detail::TakeOperator<T>>(limit);
         POMDOG_ASSERT(back);
         back->Subscribe(take);
 
@@ -229,7 +229,7 @@ public:
 
     ObservableBuilder Timeout(const Duration& dueTime)
     {
-        auto timeout = std::make_shared<Detail::TimeoutOperator<T>>(dueTime, gameHost);
+        auto timeout = std::make_shared<detail::TimeoutOperator<T>>(dueTime, gameHost);
         POMDOG_ASSERT(back);
         back->Subscribe(timeout);
 
@@ -242,7 +242,7 @@ public:
         ObservableBuilder<TOther>&& other,
         std::function<TResult(const T& a, const TOther& b)>&& zipper)
     {
-        auto zipOperator = std::make_shared<Detail::ZipOperator<T, TOther, TResult>>(std::move(zipper));
+        auto zipOperator = std::make_shared<detail::ZipOperator<T, TOther, TResult>>(std::move(zipper));
         POMDOG_ASSERT(back);
         back->Subscribe(zipOperator->GetObserver1());
         auto otherFront = other.Subscribe(zipOperator->GetObserver2());
@@ -310,4 +310,4 @@ auto FromObservable(
     return observable;
 }
 
-} // namespace Pomdog::Reactive
+} // namespace pomdog::reactive

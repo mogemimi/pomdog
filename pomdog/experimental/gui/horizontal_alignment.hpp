@@ -8,7 +8,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::GUI {
+namespace pomdog::gui {
 
 enum class HorizontalAlignment : std::uint8_t {
     Left,
@@ -17,4 +17,4 @@ enum class HorizontalAlignment : std::uint8_t {
     Right,
 };
 
-} // namespace Pomdog::GUI
+} // namespace pomdog::gui

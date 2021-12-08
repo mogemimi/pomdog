@@ -3,7 +3,7 @@
 #include "pomdog/experimental/ecs/component_type_index.hpp"
 #include "pomdog/utility/assert.hpp"
 
-namespace Pomdog::ECS::Detail {
+namespace pomdog::ecs::detail {
 
 ComponentTypeIndex::IndexType ComponentTypeIndex::count = 0;
 
@@ -15,4 +15,4 @@ ComponentTypeIndex::IndexType ComponentTypeIndex::IncrementIndex()
     return count;
 }
 
-} // namespace Pomdog::ECS::Detail
+} // namespace pomdog::ecs::detail

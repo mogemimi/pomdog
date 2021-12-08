@@ -9,7 +9,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <random>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::Particles {
+namespace pomdog::detail::particles {
 
 ParticleEmitterShapeHemisphere::ParticleEmitterShapeHemisphere(float radiusIn)
     : radius(radiusIn)
@@ -17,7 +17,7 @@ ParticleEmitterShapeHemisphere::ParticleEmitterShapeHemisphere(float radiusIn)
 }
 
 std::tuple<Vector3, Vector3>
-ParticleEmitterShapeHemisphere::Compute(Random::Xoroshiro128StarStar& random) const
+ParticleEmitterShapeHemisphere::Compute(random::Xoroshiro128StarStar& random) const
 {
     POMDOG_ASSERT(radius >= 0.0f);
     std::uniform_real_distribution<float> dist(-radius, radius);
@@ -28,4 +28,4 @@ ParticleEmitterShapeHemisphere::Compute(Random::Xoroshiro128StarStar& random) co
     return std::make_tuple(std::move(emitPosition), std::move(emitDirection));
 }
 
-} // namespace Pomdog::Detail::Particles
+} // namespace pomdog::detail::particles

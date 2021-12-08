@@ -9,7 +9,7 @@
 #include "pomdog/experimental/gui/widget.hpp"
 #include "pomdog/signals/scoped_connection.hpp"
 
-namespace Pomdog::GUI {
+namespace pomdog::gui {
 
 class TreeView final
     : public Widget
@@ -59,4 +59,4 @@ private:
     bool needToUpdateLayout;
 };
 
-} // namespace Pomdog::GUI
+} // namespace pomdog::gui

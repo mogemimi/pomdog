@@ -11,7 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <optional>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::GUI {
+namespace pomdog::gui {
 
 enum class PointerMouseEvent : std::uint8_t {
     LeftButtonPressed,
@@ -32,4 +32,4 @@ public:
     std::int32_t ClickCount = 0;
 };
 
-} // namespace Pomdog::GUI
+} // namespace pomdog::gui

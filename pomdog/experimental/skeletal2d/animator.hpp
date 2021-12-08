@@ -10,7 +10,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <string>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Skeletal2D {
+namespace pomdog::skeletal2d {
 
 class AnimationGraph;
 class Skeleton;
@@ -20,7 +20,7 @@ class Animator final {
 public:
     Animator(
         const std::shared_ptr<Skeleton>& skeleton,
-        const std::shared_ptr<Skeletal2D::SkeletonPose>& skeletonPose,
+        const std::shared_ptr<skeletal2d::SkeletonPose>& skeletonPose,
         const std::shared_ptr<AnimationGraph>& animationGraph);
 
     ~Animator();
@@ -46,4 +46,4 @@ private:
     std::unique_ptr<Impl> impl;
 };
 
-} // namespace Pomdog::Skeletal2D
+} // namespace pomdog::skeletal2d

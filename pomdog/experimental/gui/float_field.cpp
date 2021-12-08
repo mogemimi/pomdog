@@ -15,7 +15,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::GUI::Detail {
+namespace pomdog::gui::detail {
 
 std::string FloatFieldDataContext::ToString() const
 {
@@ -150,14 +150,14 @@ bool FloatFieldDataContext::TextSubmitted(const std::string& text)
     return true;
 }
 
-} // namespace Pomdog::GUI::Detail
+} // namespace pomdog::gui::detail
 
-namespace Pomdog::GUI {
+namespace pomdog::gui {
 
 FloatField::FloatField(const std::shared_ptr<UIEventDispatcher>& dispatcher)
     : Widget(dispatcher)
 {
-    dataContext = std::make_shared<Detail::FloatFieldDataContext>();
+    dataContext = std::make_shared<detail::FloatFieldDataContext>();
     numberField = std::make_shared<NumberField>(dispatcher, dataContext);
     SetSize(numberField->GetWidth(), numberField->GetHeight());
 }
@@ -366,4 +366,4 @@ void FloatField::Draw(DrawingContext& drawingContext)
     drawingContext.PopTransform();
 }
 
-} // namespace Pomdog::GUI
+} // namespace pomdog::gui

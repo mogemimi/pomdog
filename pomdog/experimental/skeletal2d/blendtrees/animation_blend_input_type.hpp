@@ -8,11 +8,11 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Skeletal2D {
+namespace pomdog::skeletal2d {
 
 enum class AnimationBlendInputType : std::uint8_t {
     Float,
     Bool,
 };
 
-} // namespace Pomdog::Skeletal2D
+} // namespace pomdog::skeletal2d

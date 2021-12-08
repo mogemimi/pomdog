@@ -12,15 +12,15 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 class Error;
-} // namespace Pomdog
+} // namespace pomdog
 
-namespace Pomdog::GLTF {
+namespace pomdog::GLTF {
 
 class Document;
 
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<Document>, std::unique_ptr<Error>>
 Open(const std::string& filePath) noexcept;
 
-} // namespace Pomdog::GLTF
+} // namespace pomdog::GLTF

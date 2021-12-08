@@ -9,7 +9,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <random>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::Particles {
+namespace pomdog::detail::particles {
 
 ParticleEmitterShapeCone::ParticleEmitterShapeCone(float radiusIn, float heightIn)
     : radius(radiusIn)
@@ -23,7 +23,7 @@ ParticleEmitterShapeCone::ParticleEmitterShapeCone(float radiusIn, float heightI
 }
 
 std::tuple<Vector3, Vector3>
-ParticleEmitterShapeCone::Compute(Random::Xoroshiro128StarStar& random) const
+ParticleEmitterShapeCone::Compute(random::Xoroshiro128StarStar& random) const
 {
     // TODO: Not implemented yet.
     POMDOG_ASSERT(radius >= 0.0f);
@@ -40,4 +40,4 @@ ParticleEmitterShapeCone::Compute(Random::Xoroshiro128StarStar& random) const
     return std::make_tuple(std::move(emitPosition), std::move(emitDirection));
 }
 
-} // namespace Pomdog::Detail::Particles
+} // namespace pomdog::detail::particles

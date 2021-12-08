@@ -16,7 +16,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 class BeamSystem final {
 public:
@@ -38,7 +38,7 @@ public:
 private:
     Duration erapsedTime;
     Duration emissionTimer;
-    Random::Xoroshiro128StarStar random;
+    random::Xoroshiro128StarStar random;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <string>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::GUI {
+namespace pomdog::gui {
 
 class DebugNavigator final : public Widget {
 public:
@@ -30,4 +30,4 @@ private:
     std::string frameRateString;
 };
 
-} // namespace Pomdog::GUI
+} // namespace pomdog::gui

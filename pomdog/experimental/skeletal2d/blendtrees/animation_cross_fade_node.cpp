@@ -8,7 +8,7 @@
 #include "pomdog/experimental/skeletal2d/skeleton_pose.hpp"
 #include "pomdog/utility/assert.hpp"
 
-namespace Pomdog::Skeletal2D::Detail {
+namespace pomdog::skeletal2d::detail {
 namespace {
 
 AnimationTimeInterval
@@ -41,7 +41,7 @@ AnimationCrossFadeNode::AnimationCrossFadeNode(
 
 void AnimationCrossFadeNode::Calculate(
     const AnimationTimeInterval& time,
-    const Detail::AnimationGraphWeightCollection& weights,
+    const detail::AnimationGraphWeightCollection& weights,
     const Skeleton& skeleton,
     SkeletonPose& skeletonPose,
     Skin* skin) const
@@ -79,7 +79,7 @@ void AnimationCrossFadeNode::Calculate(
         nextAnimation.Node->Calculate(sourceTime, weights, skeleton, sourcePose2, skin2);
     }
 
-    using Detail::WeightBlendingHelper::Lerp;
+    using detail::WeightBlendingHelper::Lerp;
     Lerp(sourcePose1.JointPoses, sourcePose2.JointPoses, weight, skeletonPose.JointPoses);
 }
 
@@ -88,4 +88,4 @@ AnimationTimeInterval AnimationCrossFadeNode::GetLength() const
     return transitionDuration;
 }
 
-} // namespace Pomdog::Skeletal2D::Detail
+} // namespace pomdog::skeletal2d::detail

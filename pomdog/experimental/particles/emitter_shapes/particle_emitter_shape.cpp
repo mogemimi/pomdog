@@ -2,8 +2,8 @@
 
 #include "pomdog/experimental/particles/emitter_shapes/particle_emitter_shape.hpp"
 
-namespace Pomdog::Detail::Particles {
+namespace pomdog::detail::particles {
 
 ParticleEmitterShape::~ParticleEmitterShape() = default;
 
-} // namespace Pomdog::Detail::Particles
+} // namespace pomdog::detail::particles

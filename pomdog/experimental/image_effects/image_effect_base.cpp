@@ -2,9 +2,9 @@
 
 #include "pomdog/experimental/image_effects/image_effect_base.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 
 ImageEffectPreRenderable::~ImageEffectPreRenderable() = default;
 ImageEffectBase::~ImageEffectBase() = default;
 
-} // namespace Pomdog
+} // namespace pomdog

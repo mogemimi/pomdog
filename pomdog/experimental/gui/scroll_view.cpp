@@ -9,7 +9,7 @@
 #include "pomdog/experimental/gui/vertical_scroll_bar.hpp"
 #include "pomdog/math/math.hpp"
 
-namespace Pomdog::GUI {
+namespace pomdog::gui {
 
 ScrollView::ScrollView(
     const std::shared_ptr<UIEventDispatcher>& dispatcher,
@@ -328,7 +328,7 @@ void ScrollView::Draw(DrawingContext& drawingContext)
         primitiveBatch->Flush();
     }
 
-    auto innerBoundPos = Math::ToVector2(globalPos);
+    auto innerBoundPos = math::ToVector2(globalPos);
 
     // NOTE: Mask scissor
     drawingContext.PushScissorRect(Rectangle{
@@ -352,4 +352,4 @@ void ScrollView::Draw(DrawingContext& drawingContext)
     drawingContext.PopTransform();
 }
 
-} // namespace Pomdog::GUI
+} // namespace pomdog::gui

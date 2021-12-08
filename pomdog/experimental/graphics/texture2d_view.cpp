@@ -10,7 +10,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 std::int32_t Texture2DVariant::GetWidth() const
 {
@@ -160,4 +160,4 @@ std::shared_ptr<RenderTarget2D> Texture2DView::AsRenderTarget2D() const noexcept
     return std::static_pointer_cast<RenderTarget2D>(body.variant);
 }
 
-} // namespace Pomdog
+} // namespace pomdog

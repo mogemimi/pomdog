@@ -2,7 +2,7 @@
 
 #include "pomdog/experimental/gui/ui_helper.hpp"
 
-namespace Pomdog::GUI::UIHelper {
+namespace pomdog::gui::UIHelper {
 
 Point2D
 ProjectToWorldSpace(const Point2D& positionInChild, const Point2D& toWorldSpace) noexcept
@@ -16,4 +16,4 @@ ProjectToChildSpace(const Point2D& positionInWorld, const Point2D& toChildSpace)
     return positionInWorld - toChildSpace;
 }
 
-} // namespace Pomdog::GUI::UIHelper
+} // namespace pomdog::gui::UIHelper

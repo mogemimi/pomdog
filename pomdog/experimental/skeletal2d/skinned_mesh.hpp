@@ -12,13 +12,13 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Skeletal2D {
+namespace pomdog::skeletal2d {
 
 class SkinnedMesh final {
 public:
-    std::vector<Skeletal2D::SkinnedVertex> Vertices;
+    std::vector<skeletal2d::SkinnedVertex> Vertices;
     std::vector<std::uint16_t> Indices;
-    std::vector<Skeletal2D::SkinnedMeshPart> MeshParts;
+    std::vector<skeletal2d::SkinnedMeshPart> MeshParts;
 };
 
-} // namespace Pomdog::Skeletal2D
+} // namespace pomdog::skeletal2d

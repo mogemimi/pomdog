@@ -7,7 +7,7 @@
 #include "pomdog/experimental/gui/ui_helper.hpp"
 #include "pomdog/math/math.hpp"
 
-namespace Pomdog::GUI {
+namespace pomdog::gui {
 
 ContextMenuButton::ContextMenuButton(const std::shared_ptr<UIEventDispatcher>& dispatcher)
     : Widget(dispatcher)
@@ -175,7 +175,7 @@ void ContextMenuButton::Draw(DrawingContext& drawingContext)
         auto spriteBatch = drawingContext.GetSpriteBatch();
         auto spriteFont = drawingContext.GetFont(fontWeight, FontSize::Medium);
 
-        const auto buttonPos = Math::ToVector2(globalPos);
+        const auto buttonPos = math::ToVector2(globalPos);
         const auto buttonSize = Vector2{static_cast<float>(GetWidth()), static_cast<float>(GetHeight())};
 
         const auto baselineHeight = 3.0f;
@@ -211,4 +211,4 @@ void ContextMenuButton::Draw(DrawingContext& drawingContext)
     }
 }
 
-} // namespace Pomdog::GUI
+} // namespace pomdog::gui

@@ -8,7 +8,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <limits>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Skeletal2D::Detail {
+namespace pomdog::skeletal2d::detail {
 
 std::uint16_t AnimationGraphWeightCollection::AddFloat()
 {
@@ -81,4 +81,4 @@ std::uint16_t AnimationGraphWeightCollection::GetCount() const noexcept
     return static_cast<std::uint16_t>(parameters.size());
 }
 
-} // namespace Pomdog::Skeletal2D::Detail
+} // namespace pomdog::skeletal2d::detail

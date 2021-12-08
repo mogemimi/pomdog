@@ -31,7 +31,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstring>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 namespace {
 
 struct alignas(16) BillboardInfo final {
@@ -370,4 +370,4 @@ void BillboardBatchEffect::Draw(
         0);
 }
 
-} // namespace Pomdog
+} // namespace pomdog

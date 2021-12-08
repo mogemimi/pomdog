@@ -14,7 +14,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::Particles {
+namespace pomdog::detail::particles {
 
 template <typename ForwardIterator, typename KeyType>
 std::pair<ForwardIterator, ForwardIterator>
@@ -66,7 +66,7 @@ public:
 
         ParticleCurveKey<T> key;
         key.TimeSeconds = normalizedScale;
-        using Detail::Particles::BinarySearchNearestPoints;
+        using detail::particles::BinarySearchNearestPoints;
         auto pair = BinarySearchNearestPoints(std::begin(keys), std::end(keys), key);
 
         if (pair.first == pair.second) {
@@ -81,11 +81,11 @@ public:
         POMDOG_ASSERT(frameTime != 0.0f);
         auto amount = diffTime / frameTime;
 
-        using Detail::Particles::ParticleCurveLerp;
+        using detail::particles::ParticleCurveLerp;
         return ParticleCurveLerp<T>()(pair.first->Value, pair.second->Value, amount);
     }
 
-    T Compute(float normalizedScale, Random::Xoroshiro128StarStar&) const override
+    T Compute(float normalizedScale, random::Xoroshiro128StarStar&) const override
     {
         return Compute(normalizedScale);
     }
@@ -95,10 +95,10 @@ public:
         return Compute(normalizedScale);
     }
 
-    float GenerateVariance(Random::Xoroshiro128StarStar&) const override
+    float GenerateVariance(random::Xoroshiro128StarStar&) const override
     {
         return 1.0f;
     }
 };
 
-} // namespace Pomdog::Detail::Particles
+} // namespace pomdog::detail::particles

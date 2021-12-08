@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::TexturePacker {
+namespace pomdog::TexturePacker {
 
 class POMDOG_EXPORT TextureAtlasLoader final {
 public:
@@ -21,4 +21,4 @@ public:
     Load(const std::string& filePath);
 };
 
-} // namespace Pomdog::TexturePacker
+} // namespace pomdog::TexturePacker

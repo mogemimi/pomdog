@@ -9,11 +9,11 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Skeletal2D {
+namespace pomdog::skeletal2d {
 class AnimationClip;
-} // namespace Pomdog::Skeletal2D
+} // namespace pomdog::skeletal2d
 
-namespace Pomdog::Skeletal2D::Detail {
+namespace pomdog::skeletal2d::detail {
 
 class AnimationClipNode final : public AnimationNode {
 public:
@@ -21,7 +21,7 @@ public:
 
     void Calculate(
         const AnimationTimeInterval& time,
-        const Detail::AnimationGraphWeightCollection& weights,
+        const detail::AnimationGraphWeightCollection& weights,
         const Skeleton& skeleton,
         SkeletonPose& skeletonPose,
         Skin* skin) const override;
@@ -32,4 +32,4 @@ private:
     std::shared_ptr<AnimationClip> clip;
 };
 
-} // namespace Pomdog::Skeletal2D::Detail
+} // namespace pomdog::skeletal2d::detail

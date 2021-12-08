@@ -9,7 +9,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cmath>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::GUI {
+namespace pomdog::gui {
 
 ScenePanelController::~ScenePanelController() = default;
 
@@ -149,4 +149,4 @@ void ScenePanel::OnPointerReleased([[maybe_unused]] const PointerPoint& pointerP
     }
 }
 
-} // namespace Pomdog::GUI
+} // namespace pomdog::gui

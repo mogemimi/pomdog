@@ -37,11 +37,11 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::GLTF {
+namespace pomdog::GLTF {
 namespace {
 
-using Detail::BinaryReader;
-using Detail::MakeFourCC;
+using detail::BinaryReader;
+using detail::MakeFourCC;
 
 [[nodiscard]] std::optional<ComponentType>
 ToComponentType(std::uint32_t v) noexcept
@@ -97,20 +97,20 @@ ToAccessorType(std::string_view s) noexcept
 ParseAsset(const rapidjson::Value& asset, GLTF::Asset& result) noexcept
 {
     if (auto iter = asset.FindMember("version"); iter == asset.MemberEnd()) {
-        return Errors::New("cannot find version");
+        return errors::New("cannot find version");
     }
     else if (auto& value = iter->value; !value.IsString()) {
-        return Errors::New("version must be == string");
+        return errors::New("version must be == string");
     }
     else {
         result.Version = value.GetString();
     }
 
     if (auto iter = asset.FindMember("generator"); iter == asset.MemberEnd()) {
-        return Errors::New("cannot find generator");
+        return errors::New("cannot find generator");
     }
     else if (auto& value = iter->value; !value.IsString()) {
-        return Errors::New("version must be == string");
+        return errors::New("version must be == string");
     }
     else {
         result.Generator = value.GetString();
@@ -123,14 +123,14 @@ ParseAsset(const rapidjson::Value& asset, GLTF::Asset& result) noexcept
 ParseUintArray(const rapidjson::Value& array, std::vector<std::uint32_t>& result) noexcept
 {
     if (!array.IsArray()) {
-        return Errors::New("array must be == array");
+        return errors::New("array must be == array");
     }
 
     result.reserve(array.GetArray().Size());
 
     for (auto& v : array.GetArray()) {
         if (!v.IsUint()) {
-            return Errors::New("v must be == uint");
+            return errors::New("v must be == uint");
         }
         result.push_back(v.GetUint());
     }
@@ -142,16 +142,16 @@ ParseUintArray(const rapidjson::Value& array, std::vector<std::uint32_t>& result
 ParseQuaternion(const rapidjson::Value& array, Quaternion& result) noexcept
 {
     if (!array.IsArray()) {
-        return Errors::New("array must be == array");
+        return errors::New("array must be == array");
     }
 
     const auto vec = array.GetArray();
     if (vec.Size() != 4) {
-        return Errors::New("vec.Size() must be == 4");
+        return errors::New("vec.Size() must be == 4");
     }
     for (auto& v : vec) {
         if (!v.IsFloat()) {
-            return Errors::New("v must be float type");
+            return errors::New("v must be float type");
         }
     }
     result.X = vec[0].IsFloat();
@@ -166,16 +166,16 @@ ParseQuaternion(const rapidjson::Value& array, Quaternion& result) noexcept
 ParseVector3(const rapidjson::Value& array, Vector3& result) noexcept
 {
     if (!array.IsArray()) {
-        return Errors::New("array must be == array");
+        return errors::New("array must be == array");
     }
 
     const auto vec = array.GetArray();
     if (vec.Size() != 3) {
-        return Errors::New("vec.Size() must be == 3");
+        return errors::New("vec.Size() must be == 3");
     }
     for (auto& v : vec) {
         if (!v.IsFloat()) {
-            return Errors::New("v must be float type");
+            return errors::New("v must be float type");
         }
     }
     result.X = vec[0].IsFloat();
@@ -189,7 +189,7 @@ ParseVector3(const rapidjson::Value& array, Vector3& result) noexcept
 ParseScene(const rapidjson::Value& scene, GLTF::Scene& result) noexcept
 {
     if (!scene.IsObject()) {
-        return Errors::New("scene must be == object");
+        return errors::New("scene must be == object");
     }
 
     auto sceneObject = scene.GetObject();
@@ -198,7 +198,7 @@ ParseScene(const rapidjson::Value& scene, GLTF::Scene& result) noexcept
         // NOTE: nothing to do.
     }
     else if (auto& value = iter->value; !value.IsString()) {
-        return Errors::New("name must be == string");
+        return errors::New("name must be == string");
     }
     else {
         result.Name = value.GetString();
@@ -208,7 +208,7 @@ ParseScene(const rapidjson::Value& scene, GLTF::Scene& result) noexcept
         // NOTE: nothing to do.
     }
     else if (auto err = ParseUintArray(iter->value, result.Nodes); err != nullptr) {
-        return Errors::Wrap(std::move(err), "ParseUintArray() failed");
+        return errors::Wrap(std::move(err), "ParseUintArray() failed");
     }
 
     return nullptr;
@@ -218,7 +218,7 @@ ParseScene(const rapidjson::Value& scene, GLTF::Scene& result) noexcept
 ParseNode(const rapidjson::Value& node, GLTF::Node& result) noexcept
 {
     if (!node.IsObject()) {
-        return Errors::New("node must be == object");
+        return errors::New("node must be == object");
     }
 
     auto nodeObject = node.GetObject();
@@ -227,7 +227,7 @@ ParseNode(const rapidjson::Value& node, GLTF::Node& result) noexcept
         // NOTE: nothing to do.
     }
     else if (auto& value = iter->value; !value.IsString()) {
-        return Errors::New("name must be == string");
+        return errors::New("name must be == string");
     }
     else {
         result.Name = value.GetString();
@@ -237,7 +237,7 @@ ParseNode(const rapidjson::Value& node, GLTF::Node& result) noexcept
         // NOTE: nothing to do.
     }
     else if (auto& value = iter->value; !value.IsUint()) {
-        return Errors::New("mesh must be == string");
+        return errors::New("mesh must be == string");
     }
     else {
         result.Mesh = value.GetUint();
@@ -249,7 +249,7 @@ ParseNode(const rapidjson::Value& node, GLTF::Node& result) noexcept
     else {
         Quaternion quaternion;
         if (auto err = ParseQuaternion(iter->value, quaternion); err != nullptr) {
-            return Errors::Wrap(std::move(err), "ParseQuaternion() failed");
+            return errors::Wrap(std::move(err), "ParseQuaternion() failed");
         }
         result.Rotation = quaternion;
     }
@@ -260,7 +260,7 @@ ParseNode(const rapidjson::Value& node, GLTF::Node& result) noexcept
     else {
         Vector3 vec;
         if (auto err = ParseVector3(iter->value, vec); err != nullptr) {
-            return Errors::Wrap(std::move(err), "ParseVector3() failed");
+            return errors::Wrap(std::move(err), "ParseVector3() failed");
         }
         result.Translation = vec;
     }
@@ -271,7 +271,7 @@ ParseNode(const rapidjson::Value& node, GLTF::Node& result) noexcept
     else {
         Vector3 vec;
         if (auto err = ParseVector3(iter->value, vec); err != nullptr) {
-            return Errors::Wrap(std::move(err), "ParseVector3() failed");
+            return errors::Wrap(std::move(err), "ParseVector3() failed");
         }
         result.Scale = vec;
     }
@@ -283,7 +283,7 @@ ParseNode(const rapidjson::Value& node, GLTF::Node& result) noexcept
 ParseMaterial(const rapidjson::Value& material, GLTF::Material& result) noexcept
 {
     if (!material.IsObject()) {
-        return Errors::New("material must be == object");
+        return errors::New("material must be == object");
     }
 
     result.DoubleSided = false;
@@ -294,7 +294,7 @@ ParseMaterial(const rapidjson::Value& material, GLTF::Material& result) noexcept
         // NOTE: nothing to do.
     }
     else if (auto& value = iter->value; !value.IsString()) {
-        return Errors::New("name must be == string");
+        return errors::New("name must be == string");
     }
     else {
         result.Name = value.GetString();
@@ -304,7 +304,7 @@ ParseMaterial(const rapidjson::Value& material, GLTF::Material& result) noexcept
         // NOTE: nothing to do.
     }
     else if (auto& value = iter->value; !value.IsBool()) {
-        return Errors::New("doubleSided must be == bool");
+        return errors::New("doubleSided must be == bool");
     }
     else {
         result.DoubleSided = value.GetBool();
@@ -317,17 +317,17 @@ ParseMaterial(const rapidjson::Value& material, GLTF::Material& result) noexcept
 ParseAttributeList(const rapidjson::Value& attributes, GLTF::AttributeList& result) noexcept
 {
     if (!attributes.IsObject()) {
-        return Errors::New("attributes must be == object");
+        return errors::New("attributes must be == object");
     }
 
     auto attributesObject = attributes.GetObject();
 
     for (auto& kv : attributesObject) {
         if (!kv.name.IsString()) {
-            return Errors::New("kv.name must be == string");
+            return errors::New("kv.name must be == string");
         }
         if (!kv.value.IsUint()) {
-            return Errors::New("kv.value must be == uint");
+            return errors::New("kv.value must be == uint");
         }
         result.emplace(kv.name.GetString(), kv.value.GetUint());
     }
@@ -339,7 +339,7 @@ ParseAttributeList(const rapidjson::Value& attributes, GLTF::AttributeList& resu
 ParsePrimitive(const rapidjson::Value& primitive, GLTF::Primitive& result) noexcept
 {
     if (!primitive.IsObject()) {
-        return Errors::New("primitive must be == object");
+        return errors::New("primitive must be == object");
     }
 
     auto primitiveObject = primitive.GetObject();
@@ -348,14 +348,14 @@ ParsePrimitive(const rapidjson::Value& primitive, GLTF::Primitive& result) noexc
         // NOTE: nothing to do.
     }
     else if (auto err = ParseAttributeList(iter->value, result.Attributes); err != nullptr) {
-        return Errors::Wrap(std::move(err), "ParseAttributeList() failed");
+        return errors::Wrap(std::move(err), "ParseAttributeList() failed");
     }
 
     if (auto iter = primitiveObject.FindMember("indices"); iter == primitiveObject.MemberEnd()) {
         // NOTE: nothing to do.
     }
     else if (auto& value = iter->value; !value.IsUint()) {
-        return Errors::New("indices must be == uint");
+        return errors::New("indices must be == uint");
     }
     else {
         result.Indices = value.GetUint();
@@ -365,7 +365,7 @@ ParsePrimitive(const rapidjson::Value& primitive, GLTF::Primitive& result) noexc
         // NOTE: nothing to do.
     }
     else if (auto& value = iter->value; !value.IsUint()) {
-        return Errors::New("material must be == uint");
+        return errors::New("material must be == uint");
     }
     else {
         result.Material = value.GetUint();
@@ -378,7 +378,7 @@ ParsePrimitive(const rapidjson::Value& primitive, GLTF::Primitive& result) noexc
 ParseMesh(const rapidjson::Value& mesh, GLTF::Mesh& result) noexcept
 {
     if (!mesh.IsObject()) {
-        return Errors::New("mesh must be == object");
+        return errors::New("mesh must be == object");
     }
 
     auto meshObject = mesh.GetObject();
@@ -387,7 +387,7 @@ ParseMesh(const rapidjson::Value& mesh, GLTF::Mesh& result) noexcept
         // NOTE: nothing to do.
     }
     else if (auto& value = iter->value; !value.IsString()) {
-        return Errors::New("name must be == string");
+        return errors::New("name must be == string");
     }
     else {
         result.Name = value.GetString();
@@ -397,13 +397,13 @@ ParseMesh(const rapidjson::Value& mesh, GLTF::Mesh& result) noexcept
         // NOTE: nothing to do.
     }
     else if (auto& value = iter->value; !value.IsArray()) {
-        return Errors::New("primitives must be == object");
+        return errors::New("primitives must be == object");
     }
     else {
         for (auto& primitive : value.GetArray()) {
             GLTF::Primitive gltfPrimitive;
             if (auto err = ParsePrimitive(primitive, gltfPrimitive); err != nullptr) {
-                return Errors::Wrap(std::move(err), "ParsePrimitive() failed");
+                return errors::Wrap(std::move(err), "ParsePrimitive() failed");
             }
             result.Primitives.push_back(std::move(gltfPrimitive));
         }
@@ -416,7 +416,7 @@ ParseMesh(const rapidjson::Value& mesh, GLTF::Mesh& result) noexcept
 ParseAccessor(const rapidjson::Value& accessor, GLTF::Accessor& result) noexcept
 {
     if (!accessor.IsObject()) {
-        return Errors::New("accessor must be == object");
+        return errors::New("accessor must be == object");
     }
 
     result.BufferView = 0;
@@ -428,7 +428,7 @@ ParseAccessor(const rapidjson::Value& accessor, GLTF::Accessor& result) noexcept
         // NOTE: nothing to do.
     }
     else if (auto& value = iter->value; !value.IsUint()) {
-        return Errors::New("bufferView must be == uint");
+        return errors::New("bufferView must be == uint");
     }
     else {
         result.BufferView = value.GetUint();
@@ -438,7 +438,7 @@ ParseAccessor(const rapidjson::Value& accessor, GLTF::Accessor& result) noexcept
         // NOTE: nothing to do.
     }
     else if (auto& value = iter->value; !value.IsUint()) {
-        return Errors::New("count must be == uint");
+        return errors::New("count must be == uint");
     }
     else {
         result.Count = value.GetUint();
@@ -448,10 +448,10 @@ ParseAccessor(const rapidjson::Value& accessor, GLTF::Accessor& result) noexcept
         // NOTE: nothing to do.
     }
     else if (auto& value = iter->value; !value.IsUint()) {
-        return Errors::New("componentType must be == uint");
+        return errors::New("componentType must be == uint");
     }
     else if (auto v = ToComponentType(value.GetUint()); v == std::nullopt) {
-        return Errors::New("invalid componentType");
+        return errors::New("invalid componentType");
     }
     else {
         result.ComponentType = *v;
@@ -461,10 +461,10 @@ ParseAccessor(const rapidjson::Value& accessor, GLTF::Accessor& result) noexcept
         // NOTE: nothing to do.
     }
     else if (auto& value = iter->value; !value.IsString()) {
-        return Errors::New("type must be == string");
+        return errors::New("type must be == string");
     }
     else if (auto v = ToAccessorType(value.GetString()); v == std::nullopt) {
-        return Errors::New("ToAccessorType() failed");
+        return errors::New("ToAccessorType() failed");
     }
     else {
         result.Type = *v;
@@ -477,7 +477,7 @@ ParseAccessor(const rapidjson::Value& accessor, GLTF::Accessor& result) noexcept
 ParseBufferView(const rapidjson::Value& bufferView, GLTF::BufferView& result) noexcept
 {
     if (!bufferView.IsObject()) {
-        return Errors::New("bufferView must be == object");
+        return errors::New("bufferView must be == object");
     }
 
     result.Buffer = 0;
@@ -492,7 +492,7 @@ ParseBufferView(const rapidjson::Value& bufferView, GLTF::BufferView& result) no
         // NOTE: nothing to do.
     }
     else if (auto& value = iter->value; !value.IsUint()) {
-        return Errors::New("buffer must be == uint");
+        return errors::New("buffer must be == uint");
     }
     else {
         result.Buffer = value.GetUint();
@@ -502,7 +502,7 @@ ParseBufferView(const rapidjson::Value& bufferView, GLTF::BufferView& result) no
         // NOTE: nothing to do.
     }
     else if (auto& value = iter->value; !value.IsUint()) {
-        return Errors::New("byteLength must be == uint");
+        return errors::New("byteLength must be == uint");
     }
     else {
         result.ByteLength = value.GetUint();
@@ -512,7 +512,7 @@ ParseBufferView(const rapidjson::Value& bufferView, GLTF::BufferView& result) no
         // NOTE: nothing to do.
     }
     else if (auto& value = iter->value; !value.IsUint()) {
-        return Errors::New("byteOffset must be == uint");
+        return errors::New("byteOffset must be == uint");
     }
     else {
         result.ByteOffset = value.GetUint();
@@ -522,7 +522,7 @@ ParseBufferView(const rapidjson::Value& bufferView, GLTF::BufferView& result) no
         // NOTE: nothing to do.
     }
     else if (auto& value = iter->value; !value.IsUint()) {
-        return Errors::New("byteStride must be == uint");
+        return errors::New("byteStride must be == uint");
     }
     else {
         result.ByteStride = value.GetUint();
@@ -535,7 +535,7 @@ ParseBufferView(const rapidjson::Value& bufferView, GLTF::BufferView& result) no
 ParseBuffer(const rapidjson::Value& buffer, GLTF::Buffer& result) noexcept
 {
     if (!buffer.IsObject()) {
-        return Errors::New("buffer must be == object");
+        return errors::New("buffer must be == object");
     }
 
     result.ByteLength = 0;
@@ -545,7 +545,7 @@ ParseBuffer(const rapidjson::Value& buffer, GLTF::Buffer& result) noexcept
         // NOTE: nothing to do.
     }
     else if (auto& value = iter->value; !value.IsString()) {
-        return Errors::New("name must be == string");
+        return errors::New("name must be == string");
     }
     else {
         result.Name = value.GetString();
@@ -555,7 +555,7 @@ ParseBuffer(const rapidjson::Value& buffer, GLTF::Buffer& result) noexcept
         // NOTE: nothing to do.
     }
     else if (auto& value = iter->value; !value.IsString()) {
-        return Errors::New("uri must be == string");
+        return errors::New("uri must be == string");
     }
     else {
         result.URI = value.GetString();
@@ -565,7 +565,7 @@ ParseBuffer(const rapidjson::Value& buffer, GLTF::Buffer& result) noexcept
         // NOTE: nothing to do.
     }
     else if (auto& value = iter->value; !value.IsUint()) {
-        return Errors::New("byteLength must be == uint");
+        return errors::New("byteLength must be == uint");
     }
     else {
         result.ByteLength = value.GetUint();
@@ -581,21 +581,21 @@ ParseJSON(const char* json, std::size_t jsonLength, GLTF::Document& result) noex
     doc.Parse(json, jsonLength);
 
     if (doc.HasParseError()) {
-        return Errors::New("failed to parse JSON");
+        return errors::New("failed to parse JSON");
     }
     if (!doc.IsObject() || doc.MemberBegin() == doc.MemberEnd()) {
-        return Errors::New("doc must be object type");
+        return errors::New("doc must be object type");
     }
 
     if (auto iter = doc.FindMember("asset"); iter == doc.MemberEnd()) {
-        return Errors::New("cannot find asset object");
+        return errors::New("cannot find asset object");
     }
     else if (auto& asset = iter->value; !asset.IsObject()) {
-        return Errors::New("asset must be == object");
+        return errors::New("asset must be == object");
     }
     else {
         if (auto err = ParseAsset(asset, result.Asset); err != nullptr) {
-            return Errors::Wrap(std::move(err), "ParseAsset() failed");
+            return errors::Wrap(std::move(err), "ParseAsset() failed");
         }
     }
 
@@ -603,7 +603,7 @@ ParseJSON(const char* json, std::size_t jsonLength, GLTF::Document& result) noex
         // NOTE: nothing to do
     }
     else if (auto& scene = iter->value; !scene.IsUint()) {
-        return Errors::New("scene must be == object");
+        return errors::New("scene must be == object");
     }
     else {
         result.Scene = scene.GetUint();
@@ -613,13 +613,13 @@ ParseJSON(const char* json, std::size_t jsonLength, GLTF::Document& result) noex
         // NOTE: nothing to do
     }
     else if (auto& scenes = iter->value; !scenes.IsArray()) {
-        return Errors::New("scenes must be == array");
+        return errors::New("scenes must be == array");
     }
     else {
         for (auto& scene : scenes.GetArray()) {
             GLTF::Scene gltfScene;
             if (auto err = ParseScene(scene, gltfScene); err != nullptr) {
-                return Errors::Wrap(std::move(err), "ParseScene() failed");
+                return errors::Wrap(std::move(err), "ParseScene() failed");
             }
             result.Scenes.push_back(std::move(gltfScene));
         }
@@ -629,13 +629,13 @@ ParseJSON(const char* json, std::size_t jsonLength, GLTF::Document& result) noex
         // NOTE: nothing to do
     }
     else if (auto& nodes = iter->value; !nodes.IsArray()) {
-        return Errors::New("nodes must be == array");
+        return errors::New("nodes must be == array");
     }
     else {
         for (auto& node : nodes.GetArray()) {
             GLTF::Node gltfNode;
             if (auto err = ParseNode(node, gltfNode); err != nullptr) {
-                return Errors::Wrap(std::move(err), "ParseNode() failed");
+                return errors::Wrap(std::move(err), "ParseNode() failed");
             }
             result.Nodes.push_back(std::move(gltfNode));
         }
@@ -645,13 +645,13 @@ ParseJSON(const char* json, std::size_t jsonLength, GLTF::Document& result) noex
         // NOTE: nothing to do
     }
     else if (auto& materials = iter->value; !materials.IsArray()) {
-        return Errors::New("materials must be == array");
+        return errors::New("materials must be == array");
     }
     else {
         for (auto& material : materials.GetArray()) {
             GLTF::Material gltfMaterial;
             if (auto err = ParseMaterial(material, gltfMaterial); err != nullptr) {
-                return Errors::Wrap(std::move(err), "ParseMaterial() failed");
+                return errors::Wrap(std::move(err), "ParseMaterial() failed");
             }
             result.Materials.push_back(std::move(gltfMaterial));
         }
@@ -661,13 +661,13 @@ ParseJSON(const char* json, std::size_t jsonLength, GLTF::Document& result) noex
         // NOTE: nothing to do
     }
     else if (auto& meshes = iter->value; !meshes.IsArray()) {
-        return Errors::New("meshes must be == array");
+        return errors::New("meshes must be == array");
     }
     else {
         for (auto& mesh : meshes.GetArray()) {
             GLTF::Mesh gltfMesh;
             if (auto err = ParseMesh(mesh, gltfMesh); err != nullptr) {
-                return Errors::Wrap(std::move(err), "ParseMesh() failed");
+                return errors::Wrap(std::move(err), "ParseMesh() failed");
             }
             result.Meshes.push_back(std::move(gltfMesh));
         }
@@ -677,13 +677,13 @@ ParseJSON(const char* json, std::size_t jsonLength, GLTF::Document& result) noex
         // NOTE: nothing to do
     }
     else if (auto& accessors = iter->value; !accessors.IsArray()) {
-        return Errors::New("accessors must be == array");
+        return errors::New("accessors must be == array");
     }
     else {
         for (auto& accessor : accessors.GetArray()) {
             GLTF::Accessor gltfAccessor;
             if (auto err = ParseAccessor(accessor, gltfAccessor); err != nullptr) {
-                return Errors::Wrap(std::move(err), "ParseAccessor() failed");
+                return errors::Wrap(std::move(err), "ParseAccessor() failed");
             }
             result.Accessors.push_back(std::move(gltfAccessor));
         }
@@ -693,13 +693,13 @@ ParseJSON(const char* json, std::size_t jsonLength, GLTF::Document& result) noex
         // NOTE: nothing to do
     }
     else if (auto& bufferViews = iter->value; !bufferViews.IsArray()) {
-        return Errors::New("bufferViews must be == array");
+        return errors::New("bufferViews must be == array");
     }
     else {
         for (auto& bufferView : bufferViews.GetArray()) {
             GLTF::BufferView gltfBufferView;
             if (auto err = ParseBufferView(bufferView, gltfBufferView); err != nullptr) {
-                return Errors::Wrap(std::move(err), "ParseBufferView() failed");
+                return errors::Wrap(std::move(err), "ParseBufferView() failed");
             }
             result.BufferViews.push_back(std::move(gltfBufferView));
         }
@@ -709,13 +709,13 @@ ParseJSON(const char* json, std::size_t jsonLength, GLTF::Document& result) noex
         // NOTE: nothing to do
     }
     else if (auto& buffers = iter->value; !buffers.IsArray()) {
-        return Errors::New("buffers must be == array");
+        return errors::New("buffers must be == array");
     }
     else {
         for (auto& buffer : buffers.GetArray()) {
             GLTF::Buffer gltfBuffer;
             if (auto err = ParseBuffer(buffer, gltfBuffer); err != nullptr) {
-                return Errors::Wrap(std::move(err), "ParseBuffer() failed");
+                return errors::Wrap(std::move(err), "ParseBuffer() failed");
             }
             result.Buffers.push_back(std::move(gltfBuffer));
         }
@@ -731,12 +731,12 @@ Open(const std::string& filePath) noexcept
 {
     auto [fileSize, sizeErr] = FileSystem::GetFileSize(filePath);
     if (sizeErr != nullptr) {
-        auto err = Errors::Wrap(std::move(sizeErr), "failed to get file size, " + filePath);
+        auto err = errors::Wrap(std::move(sizeErr), "failed to get file size, " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
     if (fileSize <= 12) {
-        auto err = Errors::New("the font file is too small, " + filePath);
+        auto err = errors::New("the font file is too small, " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
@@ -744,7 +744,7 @@ Open(const std::string& filePath) noexcept
     std::size_t readByteSize = 0;
 
     if (!stream) {
-        auto err = Errors::New("cannot open the file, " + filePath);
+        auto err = errors::New("cannot open the file, " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
@@ -752,24 +752,24 @@ Open(const std::string& filePath) noexcept
     static_assert(magicGLB == 0x46546C67);
 
     if (auto magic = BinaryReader::Read<std::uint32_t>(stream); magic != magicGLB) {
-        auto err = Errors::New("invalid Binary glTF format, " + filePath);
+        auto err = errors::New("invalid Binary glTF format, " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
     if (auto version = BinaryReader::Read<std::uint32_t>(stream); version != 2) {
-        auto err = Errors::New("version does not much, " + filePath);
+        auto err = errors::New("version does not much, " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
     const auto totalLength = BinaryReader::Read<std::uint32_t>(stream);
     if (totalLength > fileSize) {
-        auto err = Errors::New("length must be <= fileSize, " + filePath);
+        auto err = errors::New("length must be <= fileSize, " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
     readByteSize += 12;
 
     if (!stream) {
-        auto err = Errors::New("failed to read file, " + filePath);
+        auto err = errors::New("failed to read file, " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
@@ -779,25 +779,25 @@ Open(const std::string& filePath) noexcept
     while (stream) {
         const auto chunkLength = BinaryReader::Read<std::uint32_t>(stream);
         if (!stream) {
-            auto err = Errors::New("failed to read chuk length, " + filePath);
+            auto err = errors::New("failed to read chuk length, " + filePath);
             return std::make_tuple(nullptr, std::move(err));
         }
         if (chunkLength <= 0) {
-            auto err = Errors::New("chunkLength must be > 0, " + filePath);
+            auto err = errors::New("chunkLength must be > 0, " + filePath);
             return std::make_tuple(nullptr, std::move(err));
         }
         readByteSize += 4;
 
         const auto chunkType = BinaryReader::Read<std::uint32_t>(stream);
         if (!stream) {
-            auto err = Errors::New("failed to read chuk type, " + filePath);
+            auto err = errors::New("failed to read chuk type, " + filePath);
             return std::make_tuple(nullptr, std::move(err));
         }
         readByteSize += 4;
 
         auto chunkData = BinaryReader::ReadArray<std::uint8_t>(stream, chunkLength);
         if (!stream) {
-            auto err = Errors::New("failed to read chunk data, " + filePath);
+            auto err = errors::New("failed to read chunk data, " + filePath);
             return std::make_tuple(nullptr, std::move(err));
         }
         POMDOG_ASSERT(chunkLength == chunkData.size());
@@ -811,13 +811,13 @@ Open(const std::string& filePath) noexcept
 
         if (chunkType == chunkTypeJSON) {
             if (auto err = ParseJSON(reinterpret_cast<const char*>(chunkData.data()), chunkData.size(), *doc); err != nullptr) {
-                auto wrapped = Errors::Wrap(std::move(err), "ParseJSON failed, " + filePath);
+                auto wrapped = errors::Wrap(std::move(err), "ParseJSON failed, " + filePath);
                 return std::make_tuple(nullptr, std::move(wrapped));
             }
         }
         else if (chunkType == chunkTypeBIN) {
             if (bufferCount >= doc->Buffers.size()) {
-                auto err = Errors::New("invalid buffer chunk, " + filePath);
+                auto err = errors::New("invalid buffer chunk, " + filePath);
                 return std::make_tuple(nullptr, std::move(err));
             }
 
@@ -825,14 +825,14 @@ Open(const std::string& filePath) noexcept
             buffer.Data = std::move(chunkData);
 
             if (buffer.ByteLength > buffer.Data.size()) {
-                auto err = Errors::New("buffer.ByteLength must be <= buffer.Data.size(), " + filePath);
+                auto err = errors::New("buffer.ByteLength must be <= buffer.Data.size(), " + filePath);
                 return std::make_tuple(nullptr, std::move(err));
             }
 
             bufferCount += 1;
         }
         else {
-            auto err = Errors::New("invalid chunk type, " + filePath);
+            auto err = errors::New("invalid chunk type, " + filePath);
             return std::make_tuple(nullptr, std::move(err));
         }
 
@@ -843,4 +843,4 @@ Open(const std::string& filePath) noexcept
 
     return std::make_tuple(std::move(doc), nullptr);
 }
-} // namespace Pomdog::GLTF
+} // namespace pomdog::GLTF

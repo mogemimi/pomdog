@@ -9,7 +9,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <random>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::Particles {
+namespace pomdog::detail::particles {
 
 ParticleEmitterShapeBox::ParticleEmitterShapeBox(const Vector3& size)
     : halfSize(size * 0.5f)
@@ -17,7 +17,7 @@ ParticleEmitterShapeBox::ParticleEmitterShapeBox(const Vector3& size)
 }
 
 std::tuple<Vector3, Vector3>
-ParticleEmitterShapeBox::Compute(Random::Xoroshiro128StarStar& random) const
+ParticleEmitterShapeBox::Compute(random::Xoroshiro128StarStar& random) const
 {
     POMDOG_ASSERT(halfSize.X >= 0.0f);
     POMDOG_ASSERT(halfSize.Y >= 0.0f);
@@ -32,4 +32,4 @@ ParticleEmitterShapeBox::Compute(Random::Xoroshiro128StarStar& random) const
     return std::make_tuple(std::move(emitPosition), std::move(emitDirection));
 }
 
-} // namespace Pomdog::Detail::Particles
+} // namespace pomdog::detail::particles

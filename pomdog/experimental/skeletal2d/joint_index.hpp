@@ -11,7 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <type_traits>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Skeletal2D::Detail {
+namespace pomdog::skeletal2d::detail {
 
 template <typename T>
 class OptionalUnsigned final {
@@ -59,8 +59,8 @@ public:
     }
 };
 
-} // namespace Pomdog::Skeletal2D::Detail
+} // namespace pomdog::skeletal2d::detail
 
-namespace Pomdog::Skeletal2D {
-using JointIndex = Detail::OptionalUnsigned<std::uint8_t>;
-} // namespace Pomdog::Skeletal2D
+namespace pomdog::skeletal2d {
+using JointIndex = detail::OptionalUnsigned<std::uint8_t>;
+} // namespace pomdog::skeletal2d

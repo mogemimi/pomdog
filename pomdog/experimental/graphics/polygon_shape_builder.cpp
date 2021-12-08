@@ -9,7 +9,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cmath>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 namespace {
 
 constexpr std::size_t DefaultMaxVertexCount = 4096 * 8;
@@ -86,7 +86,7 @@ void PolygonShapeBuilder::DrawArc(
 
     const auto center = Vector3{position, 0.0f};
     const Radian<float> centralAngle =
-        std::min(arcAngle.value, Math::TwoPi<float>) / segments;
+        std::min(arcAngle.value, math::TwoPi<float>) / segments;
 
     auto computePoint = [&](int index) {
         auto rad = startAngle + centralAngle * static_cast<float>(index);
@@ -219,7 +219,7 @@ void PolygonShapeBuilder::DrawCircle(
     POMDOG_ASSERT(radius > 0);
     POMDOG_ASSERT(segments >= 3);
 
-    Radian<float> centralAngle = Math::TwoPi<float> / segments;
+    Radian<float> centralAngle = math::TwoPi<float> / segments;
     auto prevPoint = position + Vector3{radius, 0, 0};
 
     auto colorVector = color.ToVector4();
@@ -457,11 +457,11 @@ void PolygonShapeBuilder::DrawSphere(
     const auto S = 1.0f / static_cast<float>(sectors - 1);
 
     for (int ring = 0; ring < rings; ++ring) {
-        const auto latitude = Math::Pi<float> * ring * R;
+        const auto latitude = math::Pi<float> * ring * R;
         const auto y = std::cos(latitude);
         const auto r = std::sin(latitude);
         for (int s = 0; s < sectors; ++s) {
-            const auto longitude = Math::TwoPi<float> * s * S;
+            const auto longitude = math::TwoPi<float> * s * S;
             const auto x = r * std::cos(longitude);
             const auto z = r * std::sin(longitude);
             sphereVertices.push_back(Vector3{x, y, z} * radius + position);
@@ -567,4 +567,4 @@ void PolygonShapeBuilder::DrawTriangle(
     vertices.push_back(Vertex{point3, color3});
 }
 
-} // namespace Pomdog
+} // namespace pomdog

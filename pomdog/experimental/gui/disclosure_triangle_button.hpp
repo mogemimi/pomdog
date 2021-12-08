@@ -6,7 +6,7 @@
 #include "pomdog/signals/scoped_connection.hpp"
 #include "pomdog/signals/signal.hpp"
 
-namespace Pomdog::GUI {
+namespace pomdog::gui {
 
 class DisclosureTriangleButton final
     : public Widget
@@ -39,4 +39,4 @@ private:
     bool isEnabled;
 };
 
-} // namespace Pomdog::GUI
+} // namespace pomdog::gui

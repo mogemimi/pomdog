@@ -7,7 +7,7 @@
 #include "pomdog/experimental/gui/ui_event_dispatcher.hpp"
 #include "pomdog/experimental/gui/ui_helper.hpp"
 
-namespace Pomdog::GUI {
+namespace pomdog::gui {
 
 TextField::TextField(const std::shared_ptr<UIEventDispatcher>& dispatcher)
     : Widget(dispatcher)
@@ -195,4 +195,4 @@ void TextField::Draw(DrawingContext& drawingContext)
     drawingContext.PopTransform();
 }
 
-} // namespace Pomdog::GUI
+} // namespace pomdog::gui

@@ -8,7 +8,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::MagicaVoxel {
+namespace pomdog::magicavoxel {
 
 struct VoxChunkHeader final {
     std::int32_t ID;
@@ -16,4 +16,4 @@ struct VoxChunkHeader final {
     std::int32_t ChildrenSize;
 };
 
-} // namespace Pomdog::MagicaVoxel
+} // namespace pomdog::magicavoxel

@@ -4,7 +4,7 @@
 #include "pomdog/experimental/skeletal2d/animation_clip.hpp"
 #include "pomdog/utility/assert.hpp"
 
-namespace Pomdog::Skeletal2D {
+namespace pomdog::skeletal2d {
 
 AnimationState::AnimationState(const std::shared_ptr<AnimationClip>& animationClipIn)
     : AnimationState(animationClipIn, 1, false)
@@ -82,4 +82,4 @@ void AnimationState::SetLoop(bool loopIn) noexcept
     this->loop = loopIn;
 }
 
-} // namespace Pomdog::Skeletal2D
+} // namespace pomdog::skeletal2d

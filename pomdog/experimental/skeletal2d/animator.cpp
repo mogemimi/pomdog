@@ -17,7 +17,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <optional>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Skeletal2D {
+namespace pomdog::skeletal2d {
 namespace {
 
 auto FindState(
@@ -53,7 +53,7 @@ class Animator::Impl final {
 public:
     Impl(
         const std::shared_ptr<Skeleton>& skeleton,
-        const std::shared_ptr<Skeletal2D::SkeletonPose>& skeletonPose,
+        const std::shared_ptr<skeletal2d::SkeletonPose>& skeletonPose,
         const std::shared_ptr<AnimationGraph>& animationGraph);
 
     void Update(const Duration& frameDuration);
@@ -67,11 +67,11 @@ public:
     void SetBool(const std::string& name, bool value);
 
 public:
-    Detail::AnimationGraphWeightCollection graphWeights;
+    detail::AnimationGraphWeightCollection graphWeights;
     std::shared_ptr<Skeleton> skeleton;
-    std::shared_ptr<Skeletal2D::SkeletonPose> skeletonPose;
-    Detail::SkeletonAnimationState currentAnimation;
-    std::optional<Detail::SkeletonAnimationState> nextAnimation;
+    std::shared_ptr<skeletal2d::SkeletonPose> skeletonPose;
+    detail::SkeletonAnimationState currentAnimation;
+    std::optional<detail::SkeletonAnimationState> nextAnimation;
     std::shared_ptr<AnimationGraph const> animationGraph;
     AnimationTimeInterval time;
     float playbackRate;
@@ -79,7 +79,7 @@ public:
 
 Animator::Impl::Impl(
     const std::shared_ptr<Skeleton>& skeletonIn,
-    const std::shared_ptr<Skeletal2D::SkeletonPose>& skeletonPoseIn,
+    const std::shared_ptr<skeletal2d::SkeletonPose>& skeletonPoseIn,
     const std::shared_ptr<AnimationGraph>& animationGraphIn)
     : skeleton(skeletonIn)
     , skeletonPose(skeletonPoseIn)
@@ -164,11 +164,11 @@ void Animator::Impl::CrossFade(const std::string& stateName, const Duration& tra
     }
 
     POMDOG_ASSERT(iter->Tree);
-    nextAnimation = Detail::SkeletonAnimationState{};
+    nextAnimation = detail::SkeletonAnimationState{};
     nextAnimation->Node = std::shared_ptr<AnimationNode>(animationGraph, iter->Tree.get());
     nextAnimation->Name = stateName;
 
-    auto crossFade = std::make_shared<Detail::AnimationCrossFadeNode>(currentAnimation, *nextAnimation, transitionDuration, time);
+    auto crossFade = std::make_shared<detail::AnimationCrossFadeNode>(currentAnimation, *nextAnimation, transitionDuration, time);
 
     currentAnimation.Node = crossFade;
     time = AnimationTimeInterval::zero();
@@ -214,7 +214,7 @@ void Animator::Impl::SetBool(const std::string& name, bool value)
 
 Animator::Animator(
     const std::shared_ptr<Skeleton>& skeleton,
-    const std::shared_ptr<Skeletal2D::SkeletonPose>& skeletonPose,
+    const std::shared_ptr<skeletal2d::SkeletonPose>& skeletonPose,
     const std::shared_ptr<AnimationGraph>& animationGraph)
     : impl(std::make_unique<Impl>(skeleton, skeletonPose, animationGraph))
 {
@@ -270,4 +270,4 @@ std::string Animator::GetCurrentStateName() const noexcept
     return impl->currentAnimation.Name;
 }
 
-} // namespace Pomdog::Skeletal2D
+} // namespace pomdog::skeletal2d

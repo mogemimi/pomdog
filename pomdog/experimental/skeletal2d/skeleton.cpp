@@ -3,7 +3,7 @@
 #include "pomdog/experimental/skeletal2d/skeleton.hpp"
 #include "pomdog/utility/assert.hpp"
 
-namespace Pomdog::Skeletal2D {
+namespace pomdog::skeletal2d {
 
 Skeleton::Skeleton(std::vector<Joint>&& jointsIn)
     : joints(std::move(jointsIn))
@@ -53,4 +53,4 @@ Skeleton::iterator Skeleton::end()
     return std::end(joints);
 }
 
-} // namespace Pomdog::Skeletal2D
+} // namespace pomdog::skeletal2d

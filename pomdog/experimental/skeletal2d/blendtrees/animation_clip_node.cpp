@@ -4,7 +4,7 @@
 #include "pomdog/experimental/skeletal2d/animation_clip.hpp"
 #include "pomdog/utility/assert.hpp"
 
-namespace Pomdog::Skeletal2D::Detail {
+namespace pomdog::skeletal2d::detail {
 
 AnimationClipNode::AnimationClipNode(const std::shared_ptr<AnimationClip>& animationClipIn)
     : clip(animationClipIn)
@@ -19,7 +19,7 @@ AnimationTimeInterval AnimationClipNode::GetLength() const
 
 void AnimationClipNode::Calculate(
     const AnimationTimeInterval& time,
-    const Detail::AnimationGraphWeightCollection&,
+    const detail::AnimationGraphWeightCollection&,
     const Skeleton& skeleton,
     SkeletonPose& skeletonPose,
     Skin* skin) const
@@ -28,4 +28,4 @@ void AnimationClipNode::Calculate(
     clip->Apply(time, skeleton, skeletonPose, skin);
 }
 
-} // namespace Pomdog::Skeletal2D::Detail
+} // namespace pomdog::skeletal2d::detail

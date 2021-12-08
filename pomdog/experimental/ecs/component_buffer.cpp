@@ -2,8 +2,8 @@
 
 #include "pomdog/experimental/ecs/component_buffer.hpp"
 
-namespace Pomdog::ECS::Detail {
+namespace pomdog::ecs::detail {
 
 ComponentBufferBase::~ComponentBufferBase() = default;
 
-} // namespace Pomdog::ECS::Detail
+} // namespace pomdog::ecs::detail

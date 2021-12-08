@@ -5,7 +5,7 @@
 #include "pomdog/experimental/gui/widget.hpp"
 #include "pomdog/signals/scoped_connection.hpp"
 
-namespace Pomdog::GUI {
+namespace pomdog::gui {
 
 class HorizontalLine final
     : public Widget
@@ -19,4 +19,4 @@ public:
     void Draw(DrawingContext& drawingContext) override;
 };
 
-} // namespace Pomdog::GUI
+} // namespace pomdog::gui

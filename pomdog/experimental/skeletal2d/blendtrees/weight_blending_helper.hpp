@@ -8,11 +8,11 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Skeletal2D {
+namespace pomdog::skeletal2d {
 struct JointPose;
-} // namespace Pomdog::Skeletal2D
+} // namespace pomdog::skeletal2d
 
-namespace Pomdog::Skeletal2D::Detail::WeightBlendingHelper {
+namespace pomdog::skeletal2d::detail::WeightBlendingHelper {
 
 void Lerp(
     const std::vector<JointPose>& sourcePoses1,
@@ -20,4 +20,4 @@ void Lerp(
     float weight,
     std::vector<JointPose>& output);
 
-} // namespace Pomdog::Skeletal2D::Detail::WeightBlendingHelper
+} // namespace pomdog::skeletal2d::detail::WeightBlendingHelper

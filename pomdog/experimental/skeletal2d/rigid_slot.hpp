@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Skeletal2D {
+namespace pomdog::skeletal2d {
 
 class RigidSlot final {
 public:
@@ -21,13 +21,13 @@ public:
     Vector2 Translate;
     Vector2 Scale;
     Radian<float> Rotation;
-    Pomdog::Color Color;
+    pomdog::Color Color;
     Vector2 Origin;
-    Skeletal2D::JointIndex JointIndex;
+    skeletal2d::JointIndex JointIndex;
     std::uint32_t HashID;
     std::int16_t DrawOrder;
     std::int16_t TexturePage;
     bool TextureRotate;
 };
 
-} // namespace Pomdog::Skeletal2D
+} // namespace pomdog::skeletal2d

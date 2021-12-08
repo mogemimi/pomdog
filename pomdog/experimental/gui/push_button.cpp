@@ -7,7 +7,7 @@
 #include "pomdog/experimental/gui/ui_helper.hpp"
 #include "pomdog/experimental/tween/easing_helper.hpp"
 
-namespace Pomdog::GUI {
+namespace pomdog::gui {
 
 PushButton::PushButton(const std::shared_ptr<UIEventDispatcher>& dispatcher)
     : Widget(dispatcher)
@@ -157,7 +157,7 @@ void PushButton::Draw(DrawingContext& drawingContext)
 
     primitiveBatch->DrawRectangle(
         Matrix3x2::Identity,
-        Math::ToVector2(globalPos),
+        math::ToVector2(globalPos),
         static_cast<float>(GetWidth()),
         static_cast<float>(GetHeight()),
         rectColor);
@@ -168,7 +168,7 @@ void PushButton::Draw(DrawingContext& drawingContext)
         auto spriteBatch = drawingContext.GetSpriteBatch();
         auto spriteFont = drawingContext.GetFont(fontWeight, FontSize::Medium);
 
-        const auto buttonPos = Math::ToVector2(globalPos);
+        const auto buttonPos = math::ToVector2(globalPos);
         const auto buttonSize = Vector2{static_cast<float>(GetWidth()), static_cast<float>(GetHeight())};
 
         const auto baselineHeight = 3.0f;
@@ -205,4 +205,4 @@ void PushButton::Draw(DrawingContext& drawingContext)
     }
 }
 
-} // namespace Pomdog::GUI
+} // namespace pomdog::gui

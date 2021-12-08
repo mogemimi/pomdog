@@ -10,7 +10,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <functional>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Concurrency {
+namespace pomdog::concurrency {
 
 class POMDOG_EXPORT Scheduler {
 public:
@@ -21,4 +21,4 @@ public:
         const Duration& delayTime = Duration::zero()) = 0;
 };
 
-} // namespace Pomdog::Concurrency
+} // namespace pomdog::concurrency

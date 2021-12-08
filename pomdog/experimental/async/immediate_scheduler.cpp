@@ -8,7 +8,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <thread>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Concurrency {
+namespace pomdog::concurrency {
 
 void ImmediateScheduler::Schedule(
     std::function<void()>&& task,
@@ -22,4 +22,4 @@ void ImmediateScheduler::Schedule(
     task();
 }
 
-} // namespace Pomdog::Concurrency
+} // namespace pomdog::concurrency

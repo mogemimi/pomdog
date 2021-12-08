@@ -15,7 +15,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Reactive::Detail {
+namespace pomdog::reactive::detail {
 
 template <class T1, class T2, class TResult>
 class ZipOperator final : public Observable<TResult> {
@@ -111,4 +111,4 @@ private:
     bool isStopped;
 };
 
-} // namespace Pomdog::Reactive::Detail
+} // namespace pomdog::reactive::detail

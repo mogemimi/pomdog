@@ -2,15 +2,15 @@
 
 #include "pomdog/experimental/ecs/entity.hpp"
 
-namespace Pomdog::ECS {
+namespace pomdog::ecs {
 
 const Entity Entity::Null = Entity{};
 
-} // namespace Pomdog::ECS
+} // namespace pomdog::ecs
 
 namespace std {
 
-std::size_t hash<Pomdog::ECS::Entity>::operator()(const Pomdog::ECS::Entity& key) const noexcept
+std::size_t hash<pomdog::ecs::Entity>::operator()(const pomdog::ecs::Entity& key) const noexcept
 {
     return std::hash<std::uint64_t>()(key.GetUInt64Value());
 }

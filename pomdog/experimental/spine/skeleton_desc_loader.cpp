@@ -39,11 +39,11 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Spine {
+namespace pomdog::spine {
 namespace {
 
-using Skeletal2D::AnimationTimeInterval;
-using Skeletal2D::JointIndex;
+using skeletal2d::AnimationTimeInterval;
+using skeletal2d::JointIndex;
 
 template <typename T>
 JointIndex ToJointIndex(T index)
@@ -117,7 +117,7 @@ void ReadJsonMember(const rapidjson::Value& object, const char* memberName, Radi
         while (degreeAngle < -180.0f) {
             degreeAngle += 360.0f;
         }
-        output = Math::ToRadians(degreeAngle);
+        output = math::ToRadians(degreeAngle);
     }
 }
 
@@ -137,7 +137,7 @@ template <typename T, T Denom>
 void ReadJsonMember(
     const rapidjson::Value& object,
     const char* memberName,
-    Skeletal2D::Detail::CompressedFloat<T, Denom>& output)
+    skeletal2d::detail::CompressedFloat<T, Denom>& output)
 {
     if (!object.HasMember(memberName)) {
         return;
@@ -320,7 +320,7 @@ std::vector<SkinnedMeshVertexDesc> ReadSkinnedMeshVertices(
         struct LocalVertex final {
             Vector2 Position;
             float Weight;
-            Skeletal2D::JointIndex JointIndex;
+            skeletal2d::JointIndex JointIndex;
         };
 
         POMDOG_ASSERT(verticesArray[verticesIter].IsUint());
@@ -466,25 +466,25 @@ ReadSkinnedMeshAttachment(const rapidjson::Value::ConstMemberIterator& iter)
     if (!attachmentObject.HasMember("type")
         || !attachmentObject["type"].IsString()
         || std::strcmp(attachmentObject["type"].GetString(), "skinnedmesh") != 0) {
-        auto err = Errors::New("invalid format");
+        auto err = errors::New("invalid format");
         return std::make_tuple(SkinnedMeshAttachmentDesc{}, std::move(err));
     }
 
     POMDOG_ASSERT(!(!attachmentObject.HasMember("triangles") || !attachmentObject["triangles"].IsArray()));
     if (!attachmentObject.HasMember("triangles") || !attachmentObject["triangles"].IsArray()) {
-        auto err = Errors::New("invalid format");
+        auto err = errors::New("invalid format");
         return std::make_tuple(SkinnedMeshAttachmentDesc{}, std::move(err));
     }
 
     POMDOG_ASSERT(!(!attachmentObject.HasMember("vertices") || !attachmentObject["vertices"].IsArray()));
     if (!attachmentObject.HasMember("vertices") || !attachmentObject["vertices"].IsArray()) {
-        auto err = Errors::New("invalid format");
+        auto err = errors::New("invalid format");
         return std::make_tuple(SkinnedMeshAttachmentDesc{}, std::move(err));
     }
 
     POMDOG_ASSERT(!(!attachmentObject.HasMember("uvs") || !attachmentObject["uvs"].IsArray()));
     if (!attachmentObject.HasMember("uvs") || !attachmentObject["uvs"].IsArray()) {
-        auto err = Errors::New("invalid format");
+        auto err = errors::New("invalid format");
         return std::make_tuple(SkinnedMeshAttachmentDesc{}, std::move(err));
     }
 
@@ -638,7 +638,7 @@ std::vector<AnimationSamplePointRotate> ReadAnimationRotateSamples(const rapidjs
         while (degreeAngle < -180.0f) {
             degreeAngle += 360.0f;
         }
-        samplePoint.Rotation = Math::ToRadians(degreeAngle).value;
+        samplePoint.Rotation = math::ToRadians(degreeAngle).value;
 
         samplePoints.push_back(std::move(samplePoint));
     }
@@ -811,25 +811,25 @@ std::vector<AnimationClipDesc> ReadAnimationClips(const rapidjson::Value& docume
 std::tuple<SkeletonDesc, std::unique_ptr<Error>>
 SkeletonDescLoader::Load(const std::string& filePath)
 {
-    using Detail::BinaryReader;
+    using detail::BinaryReader;
 
     std::ifstream stream{filePath, std::ifstream::binary};
 
     if (!stream) {
-        auto err = Errors::New("cannot open the file, " + filePath);
+        auto err = errors::New("cannot open the file, " + filePath);
         return std::make_tuple(SkeletonDesc{}, std::move(err));
     }
 
     auto [byteLength, sizeErr] = FileSystem::GetFileSize(filePath);
     if (sizeErr != nullptr) {
-        auto err = Errors::Wrap(std::move(sizeErr), "failed to get file size, " + filePath);
+        auto err = errors::Wrap(std::move(sizeErr), "failed to get file size, " + filePath);
         return std::make_tuple(SkeletonDesc{}, std::move(err));
     }
 
     POMDOG_ASSERT(stream);
 
     if (byteLength <= 0) {
-        auto err = Errors::New("the file is too small " + filePath);
+        auto err = errors::New("the file is too small " + filePath);
         return std::make_tuple(SkeletonDesc{}, std::move(err));
     }
 
@@ -842,11 +842,11 @@ SkeletonDescLoader::Load(const std::string& filePath)
     doc.Parse(json.data());
 
     if (doc.HasParseError() || !doc.IsObject()) {
-        auto err = Errors::New("failed to parse JSON " + filePath);
+        auto err = errors::New("failed to parse JSON " + filePath);
         return std::make_tuple(SkeletonDesc{}, std::move(err));
     }
 
-    Spine::SkeletonDesc skeleton;
+    spine::SkeletonDesc skeleton;
 
     if (doc.HasMember("bones")) {
         skeleton.Bones = ReadBones(doc["bones"]);
@@ -864,4 +864,4 @@ SkeletonDescLoader::Load(const std::string& filePath)
     return std::make_tuple(std::move(skeleton), nullptr);
 }
 
-} // namespace Pomdog::Spine
+} // namespace pomdog::spine

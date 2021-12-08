@@ -4,7 +4,7 @@
 #include "pomdog/experimental/gui/widget.hpp"
 #include "pomdog/utility/assert.hpp"
 
-namespace Pomdog::GUI {
+namespace pomdog::gui {
 
 Widget::Widget(const std::shared_ptr<UIEventDispatcher>& dispatcherIn)
     : localPosition(0, 0)
@@ -252,4 +252,4 @@ std::optional<MouseCursor> Widget::GetCurrentCursor() const
     return cursor;
 }
 
-} // namespace Pomdog::GUI
+} // namespace pomdog::gui

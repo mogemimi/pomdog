@@ -14,7 +14,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Skeletal2D::Detail {
+namespace pomdog::skeletal2d::detail {
 namespace {
 
 template <typename ForwardIterator, typename T>
@@ -67,8 +67,8 @@ void RotationTrack::Apply(
         POMDOG_ASSERT((time <= keys.front().Time) || (time >= keys.back().Time));
 
         auto diff = pointPair.first->Rotation.ToFloat();
-        POMDOG_ASSERT(diff <= Math::Pi<float>);
-        POMDOG_ASSERT(diff >= -Math::Pi<float>);
+        POMDOG_ASSERT(diff <= math::Pi<float>);
+        POMDOG_ASSERT(diff >= -math::Pi<float>);
         pose.Rotation = bindPose.Rotation + diff;
         return;
     }
@@ -86,12 +86,12 @@ void RotationTrack::Apply(
     auto rotation1 = pointPair.first->Rotation.ToFloat();
     auto rotation2 = pointPair.second->Rotation.ToFloat();
 
-    POMDOG_ASSERT(rotation1 <= Math::Pi<float>);
-    POMDOG_ASSERT(rotation1 >= -Math::Pi<float>);
-    POMDOG_ASSERT(rotation2 <= Math::Pi<float>);
-    POMDOG_ASSERT(rotation2 >= -Math::Pi<float>);
+    POMDOG_ASSERT(rotation1 <= math::Pi<float>);
+    POMDOG_ASSERT(rotation1 >= -math::Pi<float>);
+    POMDOG_ASSERT(rotation2 <= math::Pi<float>);
+    POMDOG_ASSERT(rotation2 >= -math::Pi<float>);
 
-    pose.Rotation = bindPose.Rotation + Math::Lerp(rotation1, rotation2, amount);
+    pose.Rotation = bindPose.Rotation + math::Lerp(rotation1, rotation2, amount);
 }
 
 AnimationTimeInterval RotationTrack::GetLength() const
@@ -148,7 +148,7 @@ void ScaleTrack::Apply(
     float amount = diffTime / frameTime;
     float scale1 = pointPair.first->Scale.ToFloat();
     float scale2 = pointPair.second->Scale.ToFloat();
-    pose.Scale = bindPose.Scale * Math::Lerp(scale1, scale2, amount);
+    pose.Scale = bindPose.Scale * math::Lerp(scale1, scale2, amount);
 }
 
 AnimationTimeInterval ScaleTrack::GetLength() const
@@ -218,10 +218,10 @@ AnimationTimeInterval TranslationTrack::GetLength() const
     return keys.back().Time;
 }
 
-} // namespace Pomdog::Skeletal2D::Detail
+} // namespace pomdog::skeletal2d::detail
 
-namespace Pomdog::Skeletal2D {
+namespace pomdog::skeletal2d {
 
 AnimationTrack::~AnimationTrack() = default;
 
-} // namespace Pomdog::Skeletal2D
+} // namespace pomdog::skeletal2d

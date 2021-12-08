@@ -2,8 +2,8 @@
 
 #include "pomdog/experimental/async/scheduler.hpp"
 
-namespace Pomdog::Concurrency {
+namespace pomdog::concurrency {
 
 Scheduler::~Scheduler() noexcept = default;
 
-} // namespace Pomdog::Concurrency
+} // namespace pomdog::concurrency

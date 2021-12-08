@@ -17,7 +17,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Reactive {
+namespace pomdog::reactive {
 
 class KeyDownSubject final : public Observable<Keys> {
 public:
@@ -45,4 +45,4 @@ private:
     ScopedConnection connection;
 };
 
-} // namespace Pomdog::Reactive
+} // namespace pomdog::reactive

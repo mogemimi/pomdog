@@ -14,16 +14,16 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Skeletal2D {
+namespace pomdog::skeletal2d {
 class SkeletonPose;
 class SkinnedMesh;
-} // namespace Pomdog::Skeletal2D
+} // namespace pomdog::skeletal2d
 
-namespace Pomdog::Spine {
+namespace pomdog::spine {
 
 class SkeletonDesc;
 
-[[nodiscard]] std::tuple<Skeletal2D::SkinnedMesh, std::unique_ptr<Error>>
+[[nodiscard]] std::tuple<skeletal2d::SkinnedMesh, std::unique_ptr<Error>>
 CreateSkinnedMesh(
     const std::vector<Matrix3x2>& bindPosesInGlobal,
     const SkeletonDesc& skeletonDesc,
@@ -31,4 +31,4 @@ CreateSkinnedMesh(
     const Vector2& textureSize,
     const std::string& skinName);
 
-} // namespace Pomdog::Spine
+} // namespace pomdog::spine

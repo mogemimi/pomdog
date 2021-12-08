@@ -17,7 +17,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <optional>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::GUI {
+namespace pomdog::gui {
 
 class ContextMenuButton final
     : public Widget
@@ -85,4 +85,4 @@ private:
     bool isFocused;
 };
 
-} // namespace Pomdog::GUI
+} // namespace pomdog::gui

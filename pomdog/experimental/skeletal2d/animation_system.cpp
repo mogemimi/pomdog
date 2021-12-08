@@ -16,15 +16,15 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Skeletal2D {
+namespace pomdog::skeletal2d {
 namespace {
 
 class SkeletonAnimationContext final {
 public:
-    std::shared_ptr<Skeletal2D::AnimationState> AnimationState;
-    std::shared_ptr<Skeletal2D::Skeleton const> Skeleton;
-    std::shared_ptr<Skeletal2D::SkeletonPose> SkeletonPose;
-    std::shared_ptr<Skeletal2D::Skin> Skin;
+    std::shared_ptr<skeletal2d::AnimationState> AnimationState;
+    std::shared_ptr<skeletal2d::Skeleton const> Skeleton;
+    std::shared_ptr<skeletal2d::SkeletonPose> SkeletonPose;
+    std::shared_ptr<skeletal2d::Skin> Skin;
 };
 
 } // namespace
@@ -114,4 +114,4 @@ void AnimationSystem::Remove(const std::shared_ptr<AnimationState>& state)
     impl->Remove(state);
 }
 
-} // namespace Pomdog::Skeletal2D
+} // namespace pomdog::skeletal2d

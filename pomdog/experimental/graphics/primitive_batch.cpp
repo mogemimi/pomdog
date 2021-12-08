@@ -34,7 +34,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstring>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 namespace {
 
 // Built-in shaders
@@ -483,4 +483,4 @@ int PrimitiveBatch::GetDrawCallCount() const noexcept
     return impl->drawCallCount;
 }
 
-} // namespace Pomdog
+} // namespace pomdog

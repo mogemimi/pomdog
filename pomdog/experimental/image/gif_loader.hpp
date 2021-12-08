@@ -13,10 +13,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::GIF {
+namespace pomdog::GIF {
 
 /// Reads a GIF animation image from file (.gif).
 [[nodiscard]] POMDOG_EXPORT std::tuple<GIFImage, std::unique_ptr<Error>>
 DecodeFile(const std::string& filePath);
 
-} // namespace Pomdog::GIF
+} // namespace pomdog::GIF

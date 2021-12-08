@@ -10,7 +10,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Concurrency {
+namespace pomdog::concurrency {
 
 class POMDOG_EXPORT QueuedScheduler final : public Scheduler {
 private:
@@ -40,4 +40,4 @@ private:
     void MergeTasks();
 };
 
-} // namespace Pomdog::Concurrency
+} // namespace pomdog::concurrency

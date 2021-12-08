@@ -8,7 +8,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::GUI {
+namespace pomdog::gui {
 
 enum class VerticalAlignment : std::uint8_t {
     //Bottom,
@@ -17,4 +17,4 @@ enum class VerticalAlignment : std::uint8_t {
     Top,
 };
 
-} // namespace Pomdog::GUI
+} // namespace pomdog::gui

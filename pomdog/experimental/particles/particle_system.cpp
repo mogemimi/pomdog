@@ -17,7 +17,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <random>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 namespace {
 
 template <typename RandomGenerator>
@@ -129,7 +129,7 @@ void ParticleSystem::Simulate(
         const auto x0 = 1.0 / clip->EmissionRate;
         const auto x1 = 1.0 / clip->EmissionRateOverTime;
         const auto normalizedTime = erapsedTime.count() / clip->Duration.count();
-        const auto lerpInterval = Math::Lerp(x0, x1, normalizedTime);
+        const auto lerpInterval = math::Lerp(x0, x1, normalizedTime);
         const auto emissionInterval = std::max(std::numeric_limits<Duration>::epsilon(), Duration{lerpInterval});
 
         POMDOG_ASSERT(emissionInterval.count() > 0);
@@ -218,4 +218,4 @@ bool ParticleSystem::IsLoop() const noexcept
     return clip->Looping;
 }
 
-} // namespace Pomdog
+} // namespace pomdog

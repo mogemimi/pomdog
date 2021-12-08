@@ -10,7 +10,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <type_traits>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::ECS::Detail {
+namespace pomdog::ecs::detail {
 
 template <std::uint8_t MaxComponentCapacity>
 class EntityDesc final {
@@ -20,4 +20,4 @@ public:
     bool IsEnabled = false;
 };
 
-} // namespace Pomdog::ECS::Detail
+} // namespace pomdog::ecs::detail

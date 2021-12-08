@@ -16,7 +16,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 ScreenQuad::ScreenQuad(const std::shared_ptr<GraphicsDevice>& graphicsDevice)
 {
@@ -58,4 +58,4 @@ void ScreenQuad::DrawQuad(GraphicsCommandList& commandList)
     commandList.Draw(vertexBuffer->GetVertexCount(), 0);
 }
 
-} // namespace Pomdog
+} // namespace pomdog

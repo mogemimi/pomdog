@@ -10,7 +10,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <random>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::Particles {
+namespace pomdog::detail::particles {
 
 ParticleEmitterShapeSector::ParticleEmitterShapeSector(Radian<float>&& centralAngleIn)
     : centralAngle(std::move(centralAngleIn))
@@ -18,7 +18,7 @@ ParticleEmitterShapeSector::ParticleEmitterShapeSector(Radian<float>&& centralAn
 }
 
 std::tuple<Vector3, Vector3>
-ParticleEmitterShapeSector::Compute(Random::Xoroshiro128StarStar& random) const
+ParticleEmitterShapeSector::Compute(random::Xoroshiro128StarStar& random) const
 {
     auto emitPosition = Vector3::Zero;
 
@@ -29,4 +29,4 @@ ParticleEmitterShapeSector::Compute(Random::Xoroshiro128StarStar& random) const
     return std::make_tuple(std::move(emitPosition), std::move(emitDirection));
 }
 
-} // namespace Pomdog::Detail::Particles
+} // namespace pomdog::detail::particles

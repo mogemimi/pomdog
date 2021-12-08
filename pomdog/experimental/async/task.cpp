@@ -8,7 +8,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <atomic>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Concurrency::Detail {
+namespace pomdog::concurrency::detail {
 
 void TaskImpl::InnerSetResult(
     const TaskCompletionSource<void>& tcs,
@@ -37,7 +37,7 @@ Task<void> WhenAllImpl(const std::vector<Task<void>>& tasks)
     POMDOG_ASSERT(!tasks.empty());
 
     TaskCompletionSource<void> tcs;
-    auto whenAllPromise = std::make_shared<Detail::WhenAllPromise<void>>();
+    auto whenAllPromise = std::make_shared<detail::WhenAllPromise<void>>();
     whenAllPromise->count = static_cast<int>(tasks.size());
     whenAllPromise->isRejected = false;
 
@@ -64,4 +64,4 @@ Task<void> WhenAllImpl(const std::vector<Task<void>>& tasks)
     return task;
 }
 
-} // namespace Pomdog::Concurrency::Detail
+} // namespace pomdog::concurrency::detail

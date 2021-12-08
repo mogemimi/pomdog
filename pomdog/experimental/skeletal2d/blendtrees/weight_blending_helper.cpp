@@ -5,7 +5,7 @@
 #include "pomdog/math/math.hpp"
 #include "pomdog/utility/assert.hpp"
 
-namespace Pomdog::Skeletal2D::Detail::WeightBlendingHelper {
+namespace pomdog::skeletal2d::detail::WeightBlendingHelper {
 
 void Lerp(
     const std::vector<JointPose>& sourcePoses1,
@@ -25,10 +25,10 @@ void Lerp(
         POMDOG_ASSERT(i < output.size());
         auto& result = output[i];
 
-        result.Scale = Math::Lerp(pose1.Scale, pose2.Scale, weight);
-        result.Rotation = Math::Lerp(pose1.Rotation.value, pose2.Rotation.value, weight);
+        result.Scale = math::Lerp(pose1.Scale, pose2.Scale, weight);
+        result.Rotation = math::Lerp(pose1.Rotation.value, pose2.Rotation.value, weight);
         result.Translate = Vector2::Lerp(pose1.Translate, pose2.Translate, weight);
     }
 }
 
-} // namespace Pomdog::Skeletal2D::Detail::WeightBlendingHelper
+} // namespace pomdog::skeletal2d::detail::WeightBlendingHelper

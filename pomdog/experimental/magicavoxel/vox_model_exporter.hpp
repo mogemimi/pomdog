@@ -10,13 +10,13 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <string>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::MagicaVoxel {
+namespace pomdog::magicavoxel {
 class VoxModel;
-} // namespace Pomdog::MagicaVoxel
+} // namespace pomdog::magicavoxel
 
-namespace Pomdog::MagicaVoxel::VoxModelExporter {
+namespace pomdog::magicavoxel::VoxModelExporter {
 
 [[nodiscard]] POMDOG_EXPORT std::unique_ptr<Error>
 Export(const VoxModel& model, const std::string& filePath) noexcept;
 
-} // namespace Pomdog::MagicaVoxel::VoxModelExporter
+} // namespace pomdog::magicavoxel::VoxModelExporter

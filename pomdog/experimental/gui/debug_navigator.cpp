@@ -11,7 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cmath>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::GUI {
+namespace pomdog::gui {
 namespace {
 
 constexpr float minFramerate = 10.0f;
@@ -37,7 +37,7 @@ void DebugNavigator::Draw(DrawingContext& drawingContext)
         if (clock->GetTotalGameTime() - duration > Duration(0.2)) {
             auto frameRate = clock->GetFrameRate();
             frameRateString = StringHelper::Format("%4.2lf fps", static_cast<double>(frameRate));
-            frameRates.push_back(std::round(Math::Clamp(frameRate, minFramerate, maxFramerate)));
+            frameRates.push_back(std::round(math::Clamp(frameRate, minFramerate, maxFramerate)));
 
             if (frameRates.size() > maxHistories) {
                 frameRates.pop_front();
@@ -67,11 +67,11 @@ void DebugNavigator::Draw(DrawingContext& drawingContext)
     auto graphX = startPosition;
     for (auto& frameRate : frameRates) {
         auto amount = ((frameRate - minFramerate) / (maxFramerate - minFramerate));
-        auto barHeight = Math::Clamp((maxGraphHeight - (graphMargin * 2)) * amount, 1.0f, maxGraphHeight);
+        auto barHeight = math::Clamp((maxGraphHeight - (graphMargin * 2)) * amount, 1.0f, maxGraphHeight);
 
         primitiveBatch->DrawRectangle(
             Matrix3x2::Identity,
-            Vector2{graphX, graphMargin} + Math::ToVector2(globalPos),
+            Vector2{graphX, graphMargin} + math::ToVector2(globalPos),
             barWidth,
             barHeight,
             chartBarColor);
@@ -79,7 +79,7 @@ void DebugNavigator::Draw(DrawingContext& drawingContext)
     }
     primitiveBatch->Flush();
 
-    auto textPosition = Math::ToVector2(globalPos) + Vector2{0.0f, maxGraphHeight + 5.0f};
+    auto textPosition = math::ToVector2(globalPos) + Vector2{0.0f, maxGraphHeight + 5.0f};
 
     auto spriteBatch = drawingContext.GetSpriteBatch();
     auto spriteFont = drawingContext.GetFont(FontWeight::Bold, FontSize::Medium);
@@ -87,4 +87,4 @@ void DebugNavigator::Draw(DrawingContext& drawingContext)
     spriteFont->Draw(*spriteBatch, frameRateString, textPosition, Color{198, 198, 198, 255});
 }
 
-} // namespace Pomdog::GUI
+} // namespace pomdog::gui

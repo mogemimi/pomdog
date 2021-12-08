@@ -59,7 +59,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #endif
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::SVG {
+namespace pomdog::SVG {
 namespace {
 
 std::tuple<ImageBuffer, std::unique_ptr<Error>>
@@ -68,33 +68,33 @@ DecodeSVG(std::uint8_t* data, std::size_t size, int canvasWidth, int canvasHeigh
     ImageBuffer imageBuffer;
 
     if ((canvasWidth <= 0) || (canvasHeight <= 0)) {
-        auto err = Errors::New("invalid width or height");
+        auto err = errors::New("invalid width or height");
         return std::make_tuple(std::move(imageBuffer), std::move(err));
     }
 
     if (size <= 0) {
-        auto err = Errors::New("invalid size");
+        auto err = errors::New("invalid size");
         return std::make_tuple(std::move(imageBuffer), std::move(err));
     }
 
     auto image = nsvgParse(reinterpret_cast<char*>(data), "px", 96);
     if (image == nullptr) {
-        auto err = Errors::New("failed to parse svg");
+        auto err = errors::New("failed to parse svg");
         return std::make_tuple(std::move(imageBuffer), std::move(err));
     }
 
-    [[maybe_unused]] Detail::ScopeGuard defer([&] { nsvgDelete(image); });
+    [[maybe_unused]] detail::ScopeGuard defer([&] { nsvgDelete(image); });
 
     auto rasterizer = nsvgCreateRasterizer();
     if (rasterizer == nullptr) {
-        auto err = Errors::New("could not initialize SVG rasterizer");
+        auto err = errors::New("could not initialize SVG rasterizer");
         return std::make_tuple(std::move(imageBuffer), std::move(err));
     }
 
-    [[maybe_unused]] Detail::ScopeGuard defer2([&] { nsvgDeleteRasterizer(rasterizer); });
+    [[maybe_unused]] detail::ScopeGuard defer2([&] { nsvgDeleteRasterizer(rasterizer); });
 
     if ((image->width <= 0.0f) || (image->height <= 0.0f)) {
-        auto err = Errors::New("invalid svg format");
+        auto err = errors::New("invalid svg format");
         return std::make_tuple(std::move(imageBuffer), std::move(err));
     }
 
@@ -155,13 +155,13 @@ DecodeFile(
     std::ifstream stream{filePath, std::ifstream::binary};
 
     if (!stream) {
-        auto err = Errors::New("cannot open the file, " + filePath);
+        auto err = errors::New("cannot open the file, " + filePath);
         return std::make_tuple(ImageBuffer{}, std::move(err));
     }
 
     auto [byteLength, sizeErr] = FileSystem::GetFileSize(filePath);
     if (sizeErr != nullptr) {
-        auto err = Errors::Wrap(std::move(sizeErr), "failed to get file size, " + filePath);
+        auto err = errors::Wrap(std::move(sizeErr), "failed to get file size, " + filePath);
         return std::make_tuple(ImageBuffer{}, std::move(err));
     }
 
@@ -171,7 +171,7 @@ DecodeFile(
     binary.resize(byteLength);
     stream.read(reinterpret_cast<char*>(binary.data()), binary.size());
     if (!stream) {
-        auto err = Errors::New("failed to read the file " + filePath);
+        auto err = errors::New("failed to read the file " + filePath);
         return std::make_tuple(ImageBuffer{}, std::move(err));
     }
 
@@ -192,7 +192,7 @@ LoadTexture(
 
     auto [image, decodeErr] = DecodeFile(filePath, width, height);
     if (decodeErr != nullptr) {
-        auto err = Errors::Wrap(std::move(decodeErr), "failed to decode SVG file, " + filePath);
+        auto err = errors::Wrap(std::move(decodeErr), "failed to decode SVG file, " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
@@ -213,4 +213,4 @@ LoadTexture(
     return std::make_tuple(std::move(texture), nullptr);
 }
 
-} // namespace Pomdog::SVG
+} // namespace pomdog::SVG

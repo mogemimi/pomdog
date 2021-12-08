@@ -15,7 +15,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::GUI {
+namespace pomdog::gui {
 namespace {
 
 constexpr int prependAreaWidth = 10;
@@ -421,7 +421,7 @@ void NumberField::Draw(DrawingContext& drawingContext)
         spriteFont->Draw(
             *spriteBatch,
             prependAreaText,
-            Math::ToVector2(globalPos + Point2D{prependAreaWidth / 2, GetHeight() / 2}) + Vector2{1.0f, 2.5f},
+            math::ToVector2(globalPos + Point2D{prependAreaWidth / 2, GetHeight() / 2}) + Vector2{1.0f, 2.5f},
             Color{231, 229, 230, 255},
             0.0f,
             Vector2{0.5f, 0.5f},
@@ -457,4 +457,4 @@ void NumberField::Draw(DrawingContext& drawingContext)
     drawingContext.PopTransform();
 }
 
-} // namespace Pomdog::GUI
+} // namespace pomdog::gui

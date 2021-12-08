@@ -23,7 +23,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstring>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 namespace {
 
 // Built-in shaders
@@ -115,4 +115,4 @@ void FXAA::Apply(
     commandList.SetPipelineState(pipelineState);
 }
 
-} // namespace Pomdog
+} // namespace pomdog

@@ -5,7 +5,7 @@
 #include "pomdog/math/radian.hpp"
 #include "pomdog/math/vector2.hpp"
 
-namespace Pomdog::Skeletal2D {
+namespace pomdog::skeletal2d {
 
 struct JointPose final {
     Vector2 Translate;
@@ -13,4 +13,4 @@ struct JointPose final {
     float Scale;
 };
 
-} // namespace Pomdog::Skeletal2D
+} // namespace pomdog::skeletal2d

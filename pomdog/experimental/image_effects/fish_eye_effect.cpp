@@ -25,7 +25,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstring>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 namespace {
 
 // Built-in shaders
@@ -120,7 +120,7 @@ FishEyeEffect::FishEyeEffect(
 void FishEyeEffect::SetStrength(float strength)
 {
     FishEyeBlock block;
-    block.Strength = Math::Clamp(strength, -0.5f, 0.5f);
+    block.Strength = math::Clamp(strength, -0.5f, 0.5f);
 
     POMDOG_ASSERT(constantBufferFishEye);
     constantBufferFishEye->SetValue(std::move(block));
@@ -140,4 +140,4 @@ void FishEyeEffect::Apply(
     commandList.SetPipelineState(pipelineState);
 }
 
-} // namespace Pomdog
+} // namespace pomdog

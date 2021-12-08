@@ -15,7 +15,7 @@
 #include "pomdog/graphics/texture2d.hpp"
 #include "pomdog/logging/log.hpp"
 
-namespace Pomdog::GUI {
+namespace pomdog::gui {
 namespace {
 
 std::uint32_t MakeFontID(FontWeight fontWeight, FontSize fontSize)
@@ -55,12 +55,12 @@ DrawingContext::DrawingContext(
 
     std::tie(fontRegular, fontErr) = assets.Load<TrueTypeFont>("Fonts/Roboto/Roboto-Medium.ttf");
     if (fontErr != nullptr) {
-        Log::Critical("Pomdog", "failed to load font file, " + fontErr->ToString());
+        Log::Critical("pomdog", "failed to load font file, " + fontErr->ToString());
     }
 
     std::tie(fontBold, fontErr) = assets.Load<TrueTypeFont>("Fonts/Roboto/Roboto-Black.ttf");
     if (fontErr != nullptr) {
-        Log::Critical("Pomdog", "failed to load font file, " + fontErr->ToString());
+        Log::Critical("pomdog", "failed to load font file, " + fontErr->ToString());
     }
 
     std::array<std::pair<FontWeight, FontSize>, 9> fontPairs = {{
@@ -388,4 +388,4 @@ const ColorScheme* DrawingContext::GetColorScheme() const
     return &colorScheme;
 }
 
-} // namespace Pomdog::GUI
+} // namespace pomdog::gui

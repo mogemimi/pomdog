@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::GUI {
+namespace pomdog::gui {
 
 class DrawingContext;
 class Widget;
@@ -50,4 +50,4 @@ private:
     int viewportHeight;
 };
 
-} // namespace Pomdog::GUI
+} // namespace pomdog::gui

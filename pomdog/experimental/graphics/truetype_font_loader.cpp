@@ -8,7 +8,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 std::tuple<std::shared_ptr<TrueTypeFont>, std::unique_ptr<Error>>
 AssetLoader<TrueTypeFont>::operator()([[maybe_unused]] AssetManager& assets, const std::string& filePath)
@@ -22,4 +22,4 @@ AssetLoader<TrueTypeFont>::operator()([[maybe_unused]] AssetManager& assets, con
     return std::make_tuple(std::move(font), nullptr);
 }
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

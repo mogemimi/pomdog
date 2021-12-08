@@ -10,7 +10,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <type_traits>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::ECS::Detail {
+namespace pomdog::ecs::detail {
 
 class ComponentTypeIndex {
 public:
@@ -33,4 +33,4 @@ private:
     static IndexType count;
 };
 
-} // namespace Pomdog::ECS::Detail
+} // namespace pomdog::ecs::detail

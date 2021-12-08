@@ -18,14 +18,14 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Spine {
+namespace pomdog::spine {
 namespace {
 
-using Skeletal2D::AnimationClip;
-using Skeletal2D::AnimationTrack;
-using Skeletal2D::JointIndex;
-using Skeletal2D::Detail::SpriteAnimationTrack;
-using Skeletal2D::Detail::SpriteKeyframe;
+using skeletal2d::AnimationClip;
+using skeletal2d::AnimationTrack;
+using skeletal2d::JointIndex;
+using skeletal2d::detail::SpriteAnimationTrack;
+using skeletal2d::detail::SpriteKeyframe;
 
 JointIndex
 FindJoint(const std::vector<BoneDesc>& bones, const std::string& name)
@@ -46,7 +46,7 @@ void BuildSpriteAnimationTracks(
     std::vector<std::unique_ptr<AnimationTrack>>& tracks)
 {
     for (auto& animationTrack : animationClip.SlotTracks) {
-        auto slotIndex = Detail::CRC32::ComputeCRC32(animationTrack.SlotName);
+        auto slotIndex = detail::crc32::ComputeCRC32(animationTrack.SlotName);
 
         if (animationTrack.AttachmentSamples.empty()) {
             continue;
@@ -89,7 +89,7 @@ void BuildSpriteAnimationTracks(
             keys.push_back(std::move(key));
         }
 
-        using Skeletal2D::Detail::AnimationKeyHelper::Less;
+        using skeletal2d::detail::AnimationKeyHelper::Less;
         std::sort(std::begin(keys), std::end(keys), Less<SpriteKeyframe>);
 
         auto timeline = std::make_unique<SpriteAnimationTrack>(std::move(keys), std::move(slotIndex));
@@ -99,7 +99,7 @@ void BuildSpriteAnimationTracks(
 
 } // namespace
 
-std::tuple<std::shared_ptr<Skeletal2D::AnimationClip>, std::unique_ptr<Error>>
+std::tuple<std::shared_ptr<skeletal2d::AnimationClip>, std::unique_ptr<Error>>
 CreateAnimationClip(
     const SkeletonDesc& desc,
     const std::optional<TexturePacker::TextureAtlas>& textureAtlas,
@@ -109,7 +109,7 @@ CreateAnimationClip(
         [&name](const AnimationClipDesc& clip) { return clip.Name == name; });
 
     if (std::end(desc.AnimationClips) == iter) {
-        auto err = Errors::New("cannot find animation clip '" + name + "'");
+        auto err = errors::New("cannot find animation clip '" + name + "'");
         return std::make_tuple(nullptr, std::move(err));
     }
 
@@ -121,7 +121,7 @@ CreateAnimationClip(
         auto jointIndex = FindJoint(desc.Bones, track.BoneName);
         POMDOG_ASSERT(jointIndex);
 
-        using namespace Pomdog::Skeletal2D::Detail;
+        using namespace pomdog::skeletal2d::detail;
 
         if (!track.RotateSamples.empty()) {
             std::vector<RotationKeyframe> keys;
@@ -177,8 +177,8 @@ CreateAnimationClip(
         BuildSpriteAnimationTracks(animationClip, *textureAtlas, tracks);
     }
 
-    auto clip = std::make_shared<Skeletal2D::AnimationClip>(std::move(tracks));
+    auto clip = std::make_shared<skeletal2d::AnimationClip>(std::move(tracks));
     return std::make_tuple(std::move(clip), nullptr);
 }
 
-} // namespace Pomdog::Spine
+} // namespace pomdog::spine

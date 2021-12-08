@@ -18,7 +18,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Concurrency {
+namespace pomdog::concurrency {
 
 template <typename TResult>
 class Task;
@@ -32,7 +32,7 @@ class TaskCompletionSource<void>;
 class ConcurrencyException final : public std::exception {
 };
 
-namespace Detail {
+namespace detail {
 
 template <typename T>
 struct TaskResult final {
@@ -199,7 +199,7 @@ struct TaskTypeTraits<Task<T>> {
 template <typename TFunction>
 using TaskResultOf = typename TaskTypeTraits<ResultOf<TFunction>>::ResultType;
 
-} // namespace Detail
+} // namespace detail
 
 template <typename TResult>
 class POMDOG_EXPORT TaskCompletionSource final {
@@ -207,18 +207,18 @@ private:
     template <typename T>
     friend class Task;
 
-    std::shared_ptr<Detail::TaskBody<TResult>> body;
+    std::shared_ptr<detail::TaskBody<TResult>> body;
 
 public:
     TaskCompletionSource()
-        : body(std::make_shared<Detail::TaskBody<TResult>>())
+        : body(std::make_shared<detail::TaskBody<TResult>>())
     {
     }
 
     void SetResult(const TResult& result) const
     {
         POMDOG_ASSERT(body);
-        Detail::TaskResult<TResult> wrapper;
+        detail::TaskResult<TResult> wrapper;
         wrapper.value = result;
         body->SetResult(std::move(wrapper));
     }
@@ -236,18 +236,18 @@ private:
     template <typename T>
     friend class Task;
 
-    std::shared_ptr<Detail::TaskBody<void>> body;
+    std::shared_ptr<detail::TaskBody<void>> body;
 
 public:
     TaskCompletionSource()
-        : body(std::make_shared<Detail::TaskBody<void>>())
+        : body(std::make_shared<detail::TaskBody<void>>())
     {
     }
 
     void SetResult() const
     {
         POMDOG_ASSERT(body);
-        Detail::TaskResult<void> wrapper;
+        detail::TaskResult<void> wrapper;
         body->SetResult(std::move(wrapper));
     }
 
@@ -261,13 +261,13 @@ public:
 template <typename TResult>
 class POMDOG_EXPORT Task final {
 private:
-    friend struct Detail::TaskImpl;
+    friend struct detail::TaskImpl;
 
-    std::shared_ptr<Detail::TaskBody<TResult>> body;
+    std::shared_ptr<detail::TaskBody<TResult>> body;
 
 public:
     Task()
-        : body(std::make_shared<Detail::TaskBody<TResult>>())
+        : body(std::make_shared<detail::TaskBody<TResult>>())
     {
     }
 
@@ -279,14 +279,14 @@ public:
 
     template <typename TFunction>
     auto Then(const TFunction& continuation) const
-        -> Task<Detail::TaskResultOf<TFunction>>;
+        -> Task<detail::TaskResultOf<TFunction>>;
 
     template <typename TFunction>
     Task<void> Catch(const TFunction& func) const;
 
     template <typename TFunction>
     auto ContinueWith(const TFunction& continuation) const
-        -> Task<Detail::TaskResultOf<TFunction>>;
+        -> Task<detail::TaskResultOf<TFunction>>;
 
     bool IsDone() const
     {
@@ -297,11 +297,11 @@ public:
     bool IsRejected() const
     {
         POMDOG_ASSERT(body);
-        return body->status.load() == Detail::TaskStatus::Rejected;
+        return body->status.load() == detail::TaskStatus::Rejected;
     }
 };
 
-namespace Detail {
+namespace detail {
 
 template <typename TFunction, typename TResult>
 [[nodiscard]] POMDOG_EXPORT auto
@@ -512,19 +512,19 @@ struct POMDOG_EXPORT InnerHandleException<std::exception_ptr> final {
     }
 };
 
-} // namespace Detail
+} // namespace detail
 
 template <typename TResult>
 template <typename TFunction>
 auto Task<TResult>::Then(const TFunction& continuation) const
-    -> Task<Detail::TaskResultOf<TFunction>>
+    -> Task<detail::TaskResultOf<TFunction>>
 {
     POMDOG_ASSERT(body);
 
-    using TContinuationResult = Detail::TaskResultOf<TFunction>;
+    using TContinuationResult = detail::TaskResultOf<TFunction>;
     TaskCompletionSource<TContinuationResult> tcs;
 
-    Detail::TaskImpl::ScheduleContinuation(*this,
+    detail::TaskImpl::ScheduleContinuation(*this,
         [antecedent = body, continuation, tcs] {
             POMDOG_ASSERT(antecedent);
             POMDOG_ASSERT(antecedent->IsDone());
@@ -533,7 +533,7 @@ auto Task<TResult>::Then(const TFunction& continuation) const
                 return;
             }
             try {
-                Detail::TaskImpl::InnerInvokeContinuation(
+                detail::TaskImpl::InnerInvokeContinuation(
                     continuation, tcs, antecedent->result);
             }
             catch (...) {
@@ -551,14 +551,14 @@ Task<void> Task<TResult>::Catch(const TFunction& func) const
 {
     POMDOG_ASSERT(body);
 
-    using TException = Detail::ArgumentOf<TFunction>;
+    using TException = detail::ArgumentOf<TFunction>;
     TaskCompletionSource<void> tcs;
 
-    Detail::TaskImpl::ScheduleContinuation(*this,
+    detail::TaskImpl::ScheduleContinuation(*this,
         [antecedent = body, onRejection = func, tcs] {
             POMDOG_ASSERT(antecedent);
             POMDOG_ASSERT(antecedent->IsDone());
-            Detail::InnerHandleException<TException>::Perform(
+            detail::InnerHandleException<TException>::Perform(
                 antecedent->exceptionPointer, onRejection);
             tcs.SetResult();
         });
@@ -570,19 +570,19 @@ Task<void> Task<TResult>::Catch(const TFunction& func) const
 template <typename TResult>
 template <typename TFunction>
 auto Task<TResult>::ContinueWith(const TFunction& continuation) const
-    -> Task<Detail::TaskResultOf<TFunction>>
+    -> Task<detail::TaskResultOf<TFunction>>
 {
     POMDOG_ASSERT(body);
 
-    using TContinuationResult = Detail::TaskResultOf<TFunction>;
+    using TContinuationResult = detail::TaskResultOf<TFunction>;
     TaskCompletionSource<TContinuationResult> tcs;
 
-    Detail::TaskImpl::ScheduleContinuation(*this,
+    detail::TaskImpl::ScheduleContinuation(*this,
         [antecedent = *this, continuation, tcs] {
             POMDOG_ASSERT(antecedent.body);
             POMDOG_ASSERT(antecedent.body->IsDone());
             try {
-                Detail::TaskImpl::InnerInvokeContinuationWithTask(
+                detail::TaskImpl::InnerInvokeContinuationWithTask(
                     continuation, tcs, antecedent);
             }
             catch (...) {
@@ -615,7 +615,7 @@ FromResult(TResult&& result)
     return task;
 }
 
-namespace Detail {
+namespace detail {
 
 struct WhenAnyPromise final {
     std::atomic_bool isAnyTaskComplete;
@@ -660,7 +660,7 @@ WhenAllImpl(const std::vector<Task<TResult>>& tasks)
     POMDOG_ASSERT(!tasks.empty());
 
     TaskCompletionSource<std::vector<TResult>> tcs;
-    auto whenAllPromise = std::make_shared<Detail::WhenAllPromise<TResult>>();
+    auto whenAllPromise = std::make_shared<detail::WhenAllPromise<TResult>>();
     whenAllPromise->count = static_cast<int>(tasks.size());
     whenAllPromise->isRejected = false;
 
@@ -692,20 +692,20 @@ WhenAllImpl(const std::vector<Task<TResult>>& tasks)
 [[nodiscard]] POMDOG_EXPORT Task<void>
 WhenAllImpl(const std::vector<Task<void>>& tasks);
 
-} // namespace Detail
+} // namespace detail
 
 template <typename TResult>
 [[nodiscard]] POMDOG_EXPORT Task<TResult>
 WhenAny(const std::vector<Task<TResult>>& tasks)
 {
     if (tasks.empty()) {
-        return Detail::TaskFromDefaultResult<TResult>::Perform();
+        return detail::TaskFromDefaultResult<TResult>::Perform();
     }
 
     POMDOG_ASSERT(!tasks.empty());
 
     TaskCompletionSource<TResult> tcs;
-    auto whenAnyPromise = std::make_shared<Detail::WhenAnyPromise>();
+    auto whenAnyPromise = std::make_shared<detail::WhenAnyPromise>();
     whenAnyPromise->isAnyTaskComplete.store(false);
 
     for (auto& task : tasks) {
@@ -714,10 +714,10 @@ WhenAny(const std::vector<Task<TResult>>& tasks)
                 return;
             }
             if (t.IsRejected()) {
-                tcs.SetException(Detail::TaskImpl::GetExceptionPointer(t));
+                tcs.SetException(detail::TaskImpl::GetExceptionPointer(t));
             }
             else {
-                Detail::TaskImpl::InnerSetResult(tcs, Detail::TaskImpl::GetResult(t));
+                detail::TaskImpl::InnerSetResult(tcs, detail::TaskImpl::GetResult(t));
             }
         });
     }
@@ -727,9 +727,9 @@ WhenAny(const std::vector<Task<TResult>>& tasks)
 
 template <typename TaskType>
 [[nodiscard]] POMDOG_EXPORT auto
-WhenAll(const std::vector<TaskType>& tasks) -> decltype(Detail::WhenAllImpl(tasks))
+WhenAll(const std::vector<TaskType>& tasks) -> decltype(detail::WhenAllImpl(tasks))
 {
-    return Detail::WhenAllImpl(tasks);
+    return detail::WhenAllImpl(tasks);
 }
 
-} // namespace Pomdog::Concurrency
+} // namespace pomdog::concurrency

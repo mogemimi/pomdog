@@ -4,11 +4,11 @@
 
 #include "pomdog/experimental/skeletal2d/animation_time_interval.hpp"
 
-namespace Pomdog::Skeletal2D::Detail {
+namespace pomdog::skeletal2d::detail {
 class AnimationGraphWeightCollection;
-} // namespace Pomdog::Skeletal2D::Detail
+} // namespace pomdog::skeletal2d::detail
 
-namespace Pomdog::Skeletal2D {
+namespace pomdog::skeletal2d {
 
 class Skeleton;
 class SkeletonPose;
@@ -20,7 +20,7 @@ public:
 
     virtual void Calculate(
         const AnimationTimeInterval& time,
-        const Detail::AnimationGraphWeightCollection& weights,
+        const detail::AnimationGraphWeightCollection& weights,
         const Skeleton& skeleton,
         SkeletonPose& skeletonPose,
         Skin* skin) const = 0;
@@ -28,4 +28,4 @@ public:
     virtual AnimationTimeInterval GetLength() const = 0;
 };
 
-} // namespace Pomdog::Skeletal2D
+} // namespace pomdog::skeletal2d

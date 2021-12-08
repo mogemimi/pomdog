@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 enum class Texture2DViewIndex : std::int8_t {
     Texture2D,
@@ -73,4 +73,4 @@ public:
     [[nodiscard]] std::shared_ptr<RenderTarget2D> AsRenderTarget2D() const noexcept;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

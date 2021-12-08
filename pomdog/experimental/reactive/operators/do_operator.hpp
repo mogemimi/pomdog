@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Reactive::Detail {
+namespace pomdog::reactive::detail {
 
 template <class T>
 class DoOperator final
@@ -88,4 +88,4 @@ private:
     std::function<void()> onCompleted;
 };
 
-} // namespace Pomdog::Reactive::Detail
+} // namespace pomdog::reactive::detail

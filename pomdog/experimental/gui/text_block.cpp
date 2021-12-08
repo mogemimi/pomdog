@@ -7,7 +7,7 @@
 #include "pomdog/experimental/gui/ui_helper.hpp"
 #include "pomdog/math/math.hpp"
 
-namespace Pomdog::GUI {
+namespace pomdog::gui {
 
 TextBlock::TextBlock(const std::shared_ptr<UIEventDispatcher>& dispatcher)
     : Widget(dispatcher)
@@ -84,7 +84,7 @@ void TextBlock::Draw(DrawingContext& drawingContext)
     auto spriteFont = drawingContext.GetFont(fontWeight, fontSize);
     auto globalPos = UIHelper::ProjectToWorldSpace(GetPosition(), drawingContext.GetCurrentTransform());
 
-    auto position = Math::ToVector2(globalPos) + Vector2{0.0f, baselineHeight};
+    auto position = math::ToVector2(globalPos) + Vector2{0.0f, baselineHeight};
     auto originPivot = Vector2::Zero;
 
     switch (textAlignment) {
@@ -112,4 +112,4 @@ void TextBlock::Draw(DrawingContext& drawingContext)
     spriteBatch->Flush();
 }
 
-} // namespace Pomdog::GUI
+} // namespace pomdog::gui

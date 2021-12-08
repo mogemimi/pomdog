@@ -11,7 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::ECS::Detail {
+namespace pomdog::ecs::detail {
 
 class ComponentBufferBase {
 public:
@@ -53,4 +53,4 @@ private:
     std::vector<TComponent> components;
 };
 
-} // namespace Pomdog::ECS::Detail
+} // namespace pomdog::ecs::detail

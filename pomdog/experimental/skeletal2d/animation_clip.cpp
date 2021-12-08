@@ -9,7 +9,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Skeletal2D {
+namespace pomdog::skeletal2d {
 namespace {
 
 AnimationTimeInterval
@@ -53,4 +53,4 @@ AnimationTimeInterval AnimationClip::GetLength() const
     return length;
 }
 
-} // namespace Pomdog::Skeletal2D
+} // namespace pomdog::skeletal2d

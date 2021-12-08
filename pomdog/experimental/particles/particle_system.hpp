@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 class ParticleClip;
 
@@ -54,8 +54,8 @@ private:
     std::shared_ptr<ParticleClip const> clip;
     Duration erapsedTime;
     Duration emissionTimer;
-    Random::Xoroshiro128StarStar random;
+    random::Xoroshiro128StarStar random;
     ParticleSystemState state;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

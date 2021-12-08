@@ -12,20 +12,20 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 class Image;
-} // namespace Pomdog
+} // namespace pomdog
 
-namespace Pomdog::TexturePacker {
+namespace pomdog::TexturePacker {
 
 struct POMDOG_EXPORT TextureAtlasGeneratorResult final {
-    std::shared_ptr<Pomdog::Image> Image;
+    std::shared_ptr<pomdog::Image> Image;
     TextureAtlas Atlas;
     bool HasError;
 };
 
 struct POMDOG_EXPORT TextureAtlasGeneratorSource final {
-    std::shared_ptr<Pomdog::Image> Image;
+    std::shared_ptr<pomdog::Image> Image;
     std::string Name;
 };
 
@@ -37,4 +37,4 @@ public:
         int height);
 };
 
-} // namespace Pomdog::TexturePacker
+} // namespace pomdog::TexturePacker

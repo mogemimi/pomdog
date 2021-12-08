@@ -6,7 +6,7 @@
 #include "pomdog/experimental/gui/ui_event_dispatcher.hpp"
 #include "pomdog/experimental/gui/ui_helper.hpp"
 
-namespace Pomdog::GUI {
+namespace pomdog::gui {
 
 VerticalLayout::VerticalLayout(
     const std::shared_ptr<UIEventDispatcher>& dispatcher,
@@ -237,4 +237,4 @@ void VerticalLayout::Draw(DrawingContext& drawingContext)
     drawingContext.PopTransform();
 }
 
-} // namespace Pomdog::GUI
+} // namespace pomdog::gui

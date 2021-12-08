@@ -45,9 +45,9 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-using Pomdog::Detail::AlignedNew;
+using pomdog::detail::AlignedNew;
 
-namespace Pomdog {
+namespace pomdog {
 namespace {
 
 // Built-in shaders
@@ -810,4 +810,4 @@ int SpriteBatch::GetDrawCallCount() const noexcept
     return impl->drawCallCount;
 }
 
-} // namespace Pomdog
+} // namespace pomdog

@@ -9,18 +9,18 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Random {
+namespace pomdog::random {
 class Xoroshiro128StarStar;
-} // namespace Pomdog::Random
+} // namespace pomdog::random
 
-namespace Pomdog::Detail::Particles {
+namespace pomdog::detail::particles {
 
 class ParticleEmitterShape {
 public:
     virtual ~ParticleEmitterShape();
 
     virtual std::tuple<Vector3, Vector3>
-    Compute(Random::Xoroshiro128StarStar& random) const = 0;
+    Compute(random::Xoroshiro128StarStar& random) const = 0;
 };
 
-} // namespace Pomdog::Detail::Particles
+} // namespace pomdog::detail::particles

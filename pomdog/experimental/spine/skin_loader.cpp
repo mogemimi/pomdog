@@ -10,10 +10,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Spine {
+namespace pomdog::spine {
 namespace {
 
-using Skeletal2D::RigidSlot;
+using skeletal2d::RigidSlot;
 using TexturePacker::TextureAtlas;
 using TexturePacker::TextureAtlasRegion;
 
@@ -98,7 +98,7 @@ CreateSlots(
 
         POMDOG_ASSERT(slotDesc.Joint);
         slot.JointIndex = slotDesc.Joint;
-        slot.HashID = Detail::CRC32::ComputeCRC32(slotDesc.Name);
+        slot.HashID = detail::crc32::ComputeCRC32(slotDesc.Name);
 
         slot.Color = Color::White;
         slot.DrawOrder = drawOrder;
@@ -130,7 +130,7 @@ CreateSlots(
 
 } // namespace
 
-std::shared_ptr<Skeletal2D::Skin>
+std::shared_ptr<skeletal2d::Skin>
 CreateSkin(
     const SkeletonDesc& skeletonDesc,
     const TexturePacker::TextureAtlas& textureAtlas,
@@ -156,8 +156,8 @@ CreateSkin(
 //    }
 
     auto slots = CreateSlots(skeletonDesc.Slots, iter->Slots, textureAtlas);
-    auto skin = std::make_shared<Skeletal2D::Skin>(std::move(slots));
+    auto skin = std::make_shared<skeletal2d::Skin>(std::move(slots));
     return skin;
 }
 
-} // namespace Pomdog::Spine
+} // namespace pomdog::spine

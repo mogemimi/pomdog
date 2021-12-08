@@ -17,7 +17,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <functional>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::GIF {
+namespace pomdog::GIF {
 namespace {
 
 void DumpExtensions(
@@ -51,7 +51,7 @@ DecodeFile(const std::string& filePath)
     result.LoopCount = 0;
 
     if (filePath.empty()) {
-        auto err = Errors::New("file path is empty");
+        auto err = errors::New("file path is empty");
         return std::make_tuple(std::move(result), std::move(err));
     }
 
@@ -65,12 +65,12 @@ DecodeFile(const std::string& filePath)
         });
 
     if (gifError != 0) {
-        auto err = Errors::New("cannot read the gif file, " + filePath);
+        auto err = errors::New("cannot read the gif file, " + filePath);
         return std::make_tuple(std::move(result), std::move(err));
     }
 
     if (DGifSlurp(gifFileIn.get()) == GIF_ERROR) {
-        auto err = Errors::New("invalid gif format, " + filePath);
+        auto err = errors::New("invalid gif format, " + filePath);
         return std::make_tuple(std::move(result), std::move(err));
     }
 
@@ -81,7 +81,7 @@ DecodeFile(const std::string& filePath)
             result.LoopCount = loopCountIn;
         });
 
-    std::shared_ptr<Pomdog::Image const> prevImage;
+    std::shared_ptr<pomdog::Image const> prevImage;
 
     for (int index = 0; index < gifFileIn->ImageCount; ++index) {
         auto& saveImage = gifFileIn->SavedImages[index];
@@ -100,7 +100,7 @@ DecodeFile(const std::string& filePath)
             ? saveImage.ImageDesc.ColorMap
             : gifFileIn->SColorMap;
 
-        auto img = std::make_shared<Pomdog::Image>(gifFileIn->SWidth, gifFileIn->SHeight);
+        auto img = std::make_shared<pomdog::Image>(gifFileIn->SWidth, gifFileIn->SHeight);
 
         if (hasGCB && gcb.DisposalMode == DISPOSE_BACKGROUND) {
             auto fillColor = [&]() -> Color {
@@ -177,4 +177,4 @@ DecodeFile(const std::string& filePath)
     return std::make_tuple(std::move(result), nullptr);
 }
 
-} // namespace Pomdog::GIF
+} // namespace pomdog::GIF

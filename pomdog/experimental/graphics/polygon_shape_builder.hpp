@@ -19,7 +19,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 struct PrimitiveBatchVertex final {
     // {xyz} = position.xyz
@@ -189,4 +189,4 @@ public:
         const Vector4& color3);
 };
 
-} // namespace Pomdog
+} // namespace pomdog

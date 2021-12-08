@@ -18,21 +18,21 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Spine {
+namespace pomdog::spine {
 
 class BoneDesc final {
 public:
     std::string Name;
     std::string Parent;
-    Skeletal2D::JointPose Pose;
+    skeletal2d::JointPose Pose;
 };
 
 class SlotDesc final {
 public:
     std::string Name;
     std::string Attachement;
-    Pomdog::Color Color;
-    Skeletal2D::JointIndex Joint;
+    pomdog::Color Color;
+    skeletal2d::JointIndex Joint;
 };
 
 class AttachmentDesc final {
@@ -52,7 +52,7 @@ public:
     ///@note To get the Weights[3] value, run the following code:
     /// auto weight3 = 1 - (Weights[0] + Weights[1] + Weights[2]);
     std::array<float, 3> Weights;
-    std::array<Skeletal2D::JointIndex, 4> Joints;
+    std::array<skeletal2d::JointIndex, 4> Joints;
 };
 
 class SkinnedMeshAttachmentDesc final {
@@ -83,9 +83,9 @@ enum class KeyframeCurve : std::uint8_t {
 
 class AnimationSamplePointTranslate final {
 public:
-    Skeletal2D::AnimationTimeInterval Time;
-    Skeletal2D::Detail::CompressedFloat<std::int16_t, 7> TranslateX;
-    Skeletal2D::Detail::CompressedFloat<std::int16_t, 7> TranslateY;
+    skeletal2d::AnimationTimeInterval Time;
+    skeletal2d::detail::CompressedFloat<std::int16_t, 7> TranslateX;
+    skeletal2d::detail::CompressedFloat<std::int16_t, 7> TranslateY;
     KeyframeCurve Curve;
 
     static_assert(decltype(TranslateX)::Max() > 1024.0f, "");
@@ -96,8 +96,8 @@ public:
 
 class AnimationSamplePointRotate final {
 public:
-    Skeletal2D::AnimationTimeInterval Time;
-    Skeletal2D::Detail::CompressedFloat<std::int16_t, 4500> Rotation;
+    skeletal2d::AnimationTimeInterval Time;
+    skeletal2d::detail::CompressedFloat<std::int16_t, 4500> Rotation;
     KeyframeCurve Curve;
 
     static_assert(decltype(Rotation)::Max() > 3.1416f * 2.0f, "");
@@ -106,8 +106,8 @@ public:
 
 class AnimationSamplePointScale final {
 public:
-    Skeletal2D::AnimationTimeInterval Time;
-    Skeletal2D::Detail::CompressedFloat<std::int16_t, 1500> Scale;
+    skeletal2d::AnimationTimeInterval Time;
+    skeletal2d::detail::CompressedFloat<std::int16_t, 1500> Scale;
     KeyframeCurve Curve;
 
     static_assert(decltype(Scale)::Max() > 20.0f, "");
@@ -125,7 +125,7 @@ public:
 class AnimationSamplePointAttachment final {
 public:
     std::string AttachmentName;
-    Skeletal2D::AnimationTimeInterval Time;
+    skeletal2d::AnimationTimeInterval Time;
 };
 
 class SlotAnimationTrackDesc final {
@@ -149,4 +149,4 @@ public:
     std::vector<AnimationClipDesc> AnimationClips;
 };
 
-} // namespace Pomdog::Spine
+} // namespace pomdog::spine

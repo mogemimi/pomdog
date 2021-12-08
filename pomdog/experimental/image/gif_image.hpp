@@ -12,13 +12,13 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 using GIFDuration = std::chrono::duration<long long, std::ratio<1LL, 100LL>>;
 
 class POMDOG_EXPORT GIFImageFrame final {
 public:
-    std::shared_ptr<Pomdog::Image> Image;
+    std::shared_ptr<pomdog::Image> Image;
     GIFDuration Delay;
 };
 
@@ -28,4 +28,4 @@ public:
     int LoopCount;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

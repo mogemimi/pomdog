@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Pomdog::Skeletal2D::Detail::AnimationKeyHelper {
+namespace pomdog::skeletal2d::detail::AnimationKeyHelper {
 
 template <class Keyframe>
 [[nodiscard]] bool Less(const Keyframe& a, const Keyframe& b) noexcept
@@ -10,4 +10,4 @@ template <class Keyframe>
     return a.Time < b.Time;
 }
 
-} // namespace Pomdog::Skeletal2D::Detail::AnimationKeyHelper
+} // namespace pomdog::skeletal2d::detail::AnimationKeyHelper

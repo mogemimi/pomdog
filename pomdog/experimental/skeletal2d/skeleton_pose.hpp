@@ -10,7 +10,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Skeletal2D {
+namespace pomdog::skeletal2d {
 
 class Skeleton;
 
@@ -21,4 +21,4 @@ public:
     static SkeletonPose CreateBindPose(const Skeleton& skeleton);
 };
 
-} // namespace Pomdog::Skeletal2D
+} // namespace pomdog::skeletal2d

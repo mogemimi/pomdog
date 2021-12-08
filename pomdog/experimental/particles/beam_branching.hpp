@@ -9,7 +9,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <random>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 class BeamBranching final {
 public:
@@ -22,4 +22,4 @@ public:
     std::uint8_t MaxBranches = 0;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

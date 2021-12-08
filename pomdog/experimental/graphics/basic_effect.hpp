@@ -9,12 +9,12 @@
 #include "pomdog/math/vector3.hpp"
 #include "pomdog/math/vector4.hpp"
 
-namespace Pomdog {
+namespace pomdog {
 class AssetManager;
 class PipelineState;
-} // namespace Pomdog
+} // namespace pomdog
 
-namespace Pomdog::BasicEffect {
+namespace pomdog::BasicEffect {
 
 struct VertexPositionColor final {
     /// position
@@ -116,4 +116,4 @@ struct POMDOG_EXPORT BasicEffectDescription final {
 [[nodiscard]] POMDOG_EXPORT AssetBuilders::Builder<PipelineState>
 CreateBasicEffect(AssetManager& assets, const BasicEffectDescription& desc);
 
-} // namespace Pomdog::BasicEffect
+} // namespace pomdog::BasicEffect

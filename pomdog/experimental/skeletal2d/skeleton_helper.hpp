@@ -11,13 +11,13 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Skeletal2D {
+namespace pomdog::skeletal2d {
 class Skeleton;
 class SkeletonPose;
 struct Joint;
-} // namespace Pomdog::Skeletal2D
+} // namespace pomdog::skeletal2d
 
-namespace Pomdog::Skeletal2D::SkeletonHelper {
+namespace pomdog::skeletal2d::SkeletonHelper {
 
 void Traverse(
     const Skeleton& skeleton,
@@ -38,4 +38,4 @@ ToGlobalPose(
     const Skeleton& skeleton,
     const SkeletonPose& skeletonPose);
 
-} // namespace Pomdog::Skeletal2D::SkeletonHelper
+} // namespace pomdog::skeletal2d::SkeletonHelper

@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::ECS::Detail {
+namespace pomdog::ecs::detail {
 
 template <std::uint8_t MaxComponentCapacity>
 class EntityArchtype final {
@@ -46,10 +46,10 @@ private:
     std::bitset<MaxComponentCapacity> componentBitMask;
 };
 
-} // namespace Pomdog::ECS::Detail
+} // namespace pomdog::ecs::detail
 
-namespace Pomdog::ECS {
+namespace pomdog::ecs {
 
-using EntityArchtype = Detail::EntityArchtype<64>;
+using EntityArchtype = detail::EntityArchtype<64>;
 
-} // namespace Pomdog::ECS
+} // namespace pomdog::ecs

@@ -11,11 +11,11 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <random>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 class BeamEmitter final {
 public:
-    Pomdog::Duration Duration{5.0};
+    pomdog::Duration Duration{5.0};
     bool Looping = true;
 
     Color StartColor = Color::White;
@@ -40,4 +40,4 @@ public:
     std::uint16_t EmissionRate = 4;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

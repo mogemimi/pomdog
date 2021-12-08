@@ -7,7 +7,7 @@
 #include "pomdog/experimental/gui/ui_helper.hpp"
 #include "pomdog/math/math.hpp"
 
-namespace Pomdog::GUI {
+namespace pomdog::gui {
 
 HorizontalLine::HorizontalLine(const std::shared_ptr<UIEventDispatcher>& dispatcher)
     : Widget(dispatcher)
@@ -30,10 +30,10 @@ void HorizontalLine::Draw(DrawingContext& drawingContext)
     auto globalPos = UIHelper::ProjectToWorldSpace(GetPosition(), drawingContext.GetCurrentTransform());
     auto primitiveBatch = drawingContext.GetPrimitiveBatch();
 
-    auto offset = Math::ToVector2(globalPos);
+    auto offset = math::ToVector2(globalPos);
     auto start = offset + Vector2{0.0f, 0.0f};
     auto end = offset + Vector2{static_cast<float>(GetWidth()), 0.0f};
     primitiveBatch->DrawLine(start, end, Color{92, 91, 90, 255}, 1.0f);
 }
 
-} // namespace Pomdog::GUI
+} // namespace pomdog::gui

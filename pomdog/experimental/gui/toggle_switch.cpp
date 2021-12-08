@@ -7,7 +7,7 @@
 #include "pomdog/experimental/gui/ui_helper.hpp"
 #include "pomdog/experimental/tween/easing_helper.hpp"
 
-namespace Pomdog::GUI {
+namespace pomdog::gui {
 namespace {
 
 const Color toggleOnInnerColor = {162, 122, 16, 255};
@@ -135,23 +135,23 @@ void ToggleSwitch::Draw(DrawingContext& drawingContext)
         }
     }
 
-    const auto transformOffset = Math::ToVector2(globalPos);
+    const auto transformOffset = math::ToVector2(globalPos);
 
     primitiveBatch->DrawArc(
         transformOffset + Vector2{
                               static_cast<float>(GetWidth()) - (thumbRadius + thumbPadding),
                               (thumbRadius + thumbPadding)},
-        thumbRadius + thumbPadding, Math::ToRadians(270.0f), Math::ToRadians(180.0f), segments, innerColor);
+        thumbRadius + thumbPadding, math::ToRadians(270.0f), math::ToRadians(180.0f), segments, innerColor);
 
     primitiveBatch->DrawArc(
         transformOffset + Vector2{
                               (thumbRadius + thumbPadding),
                               (thumbRadius + thumbPadding)},
-        thumbRadius + thumbPadding, Math::ToRadians(90.0f), Math::ToRadians(180.0f), segments, innerColor);
+        thumbRadius + thumbPadding, math::ToRadians(90.0f), math::ToRadians(180.0f), segments, innerColor);
 
     primitiveBatch->DrawRectangle(
         Matrix3x2::Identity,
-        Vector2{(thumbRadius + thumbPadding), 0.0f} + Math::ToVector2(globalPos),
+        Vector2{(thumbRadius + thumbPadding), 0.0f} + math::ToVector2(globalPos),
         GetWidth() - (thumbRadius + thumbPadding) * 2.0f,
         (thumbRadius + thumbPadding) * 2.0f,
         innerColor);
@@ -192,15 +192,15 @@ void ToggleSwitch::Draw(DrawingContext& drawingContext)
     auto spriteFont = drawingContext.GetFont(FontWeight::Bold, FontSize::Small);
 
     if (isOn) {
-        auto textPosition = Math::ToVector2(globalPos) + Vector2{thumbPadding, thumbPadding} + Vector2{9.0f, 3.0f};
+        auto textPosition = math::ToVector2(globalPos) + Vector2{thumbPadding, thumbPadding} + Vector2{9.0f, 3.0f};
         spriteFont->Draw(*spriteBatch, "ON", textPosition, toggleOnThumbColor);
     }
     else {
-        auto textPosition = Math::ToVector2(globalPos) + Vector2{static_cast<float>(GetWidth()) - (thumbRadius + thumbPadding), thumbPadding} + Vector2{-19.0f, 3.0f};
+        auto textPosition = math::ToVector2(globalPos) + Vector2{static_cast<float>(GetWidth()) - (thumbRadius + thumbPadding), thumbPadding} + Vector2{-19.0f, 3.0f};
         spriteFont->Draw(*spriteBatch, "OFF", textPosition, Color{250, 250, 250, 255});
     }
 
     spriteBatch->Flush();
 }
 
-} // namespace Pomdog::GUI
+} // namespace pomdog::gui

@@ -24,12 +24,12 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 class RenderCommand;
 class SpriteFont;
-} // namespace Pomdog
+} // namespace pomdog
 
-namespace Pomdog::GUI {
+namespace pomdog::gui {
 
 struct ColorScheme final {
     Color SliderTextColor = Color::White;
@@ -142,4 +142,4 @@ private:
     int viewportHeight;
 };
 
-} // namespace Pomdog::GUI
+} // namespace pomdog::gui

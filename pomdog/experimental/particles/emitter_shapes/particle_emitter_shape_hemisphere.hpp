@@ -9,7 +9,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::Particles {
+namespace pomdog::detail::particles {
 
 class ParticleEmitterShapeHemisphere final : public ParticleEmitterShape {
 private:
@@ -19,7 +19,7 @@ public:
     explicit ParticleEmitterShapeHemisphere(float radiusIn);
 
     std::tuple<Vector3, Vector3>
-    Compute(Random::Xoroshiro128StarStar& random) const override;
+    Compute(random::Xoroshiro128StarStar& random) const override;
 };
 
-} // namespace Pomdog::Detail::Particles
+} // namespace pomdog::detail::particles

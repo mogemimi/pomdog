@@ -17,7 +17,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 namespace {
 
 struct BitmapFontInfo final {
@@ -310,20 +310,20 @@ AssetLoader<SpriteFont>::operator()(AssetManager& assets, const std::string& fil
     std::ifstream stream{filePath, std::ifstream::binary};
 
     if (!stream) {
-        auto err = Errors::New("cannot open the file, " + filePath);
+        auto err = errors::New("cannot open the file, " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
     auto [byteLength, sizeErr] = FileSystem::GetFileSize(filePath);
     if (sizeErr != nullptr) {
-        auto err = Errors::Wrap(std::move(sizeErr), "failed to get file size, " + filePath);
+        auto err = errors::Wrap(std::move(sizeErr), "failed to get file size, " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
     POMDOG_ASSERT(stream);
 
     if (byteLength <= 0) {
-        auto err = Errors::New("the font file is too small " + filePath);
+        auto err = errors::New("the font file is too small " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
@@ -364,7 +364,7 @@ AssetLoader<SpriteFont>::operator()(AssetManager& assets, const std::string& fil
     }
 
     if (pages.empty()) {
-        auto err = Errors::New("invalid file format " + filePath);
+        auto err = errors::New("invalid file format " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
     POMDOG_ASSERT(!pages.empty());
@@ -375,7 +375,7 @@ AssetLoader<SpriteFont>::operator()(AssetManager& assets, const std::string& fil
 
     std::sort(std::begin(pages), std::end(pages), pageLess);
     if (std::unique(std::begin(pages), std::end(pages), pageLess) != std::end(pages)) {
-        auto err = Errors::New("invalid file format " + filePath);
+        auto err = errors::New("invalid file format " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
     POMDOG_ASSERT(std::unique(std::begin(pages), std::end(pages), pageLess) == std::end(pages));
@@ -389,7 +389,7 @@ AssetLoader<SpriteFont>::operator()(AssetManager& assets, const std::string& fil
         for (auto& page : pages) {
             auto [texture, textureErr] = assets.Load<Texture2D>(PathHelper::Join(directoryName, page.Path));
             if (textureErr != nullptr) {
-                auto err = Errors::Wrap(std::move(textureErr), "failed to load sprite font texture " + page.Path);
+                auto err = errors::Wrap(std::move(textureErr), "failed to load sprite font texture " + page.Path);
                 return std::make_tuple(nullptr, std::move(err));
             }
             textures.push_back(std::move(texture));
@@ -413,4 +413,4 @@ AssetLoader<SpriteFont>::operator()(AssetManager& assets, const std::string& fil
     return std::make_tuple(std::move(spriteFont), nullptr);
 }
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

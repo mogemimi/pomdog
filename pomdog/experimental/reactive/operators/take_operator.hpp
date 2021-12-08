@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Reactive::Detail {
+namespace pomdog::reactive::detail {
 
 template <class T>
 class TakeOperator final
@@ -77,4 +77,4 @@ private:
     int remaining;
 };
 
-} // namespace Pomdog::Reactive::Detail
+} // namespace pomdog::reactive::detail

@@ -2,7 +2,7 @@
 
 #include "pomdog/experimental/tween/easing_helper.hpp"
 
-namespace Pomdog::Detail::Easings {
+namespace pomdog::detail::Easings {
 
 template <typename T>
 T Quadratic(T time) noexcept
@@ -51,7 +51,7 @@ T Sine(T time) noexcept
         "You can only use floating-point types");
 
     // Sinusoidal easing
-    return 1 - std::cos(time * Math::PiOver2<T>);
+    return 1 - std::cos(time * math::PiOver2<T>);
 }
 
 template <typename T>
@@ -86,7 +86,7 @@ T Elastic(T time) noexcept
     const auto postFix = std::pow(T(2), 10 * (time - 1));
     return (time <= 0 || time >= 1)
         ? time
-        : -(postFix * std::sin(((time - 1) - s) * Math::TwoPi<T> / period));
+        : -(postFix * std::sin(((time - 1) - s) * math::TwoPi<T> / period));
 }
 
 template <typename T>
@@ -138,4 +138,4 @@ template float Elastic(float time) noexcept;
 template float Bounce(float time) noexcept;
 template float Back(float time) noexcept;
 
-} // namespace Pomdog::Detail::Easings
+} // namespace pomdog::detail::Easings

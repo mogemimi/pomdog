@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Pomdog::GUI {
+namespace pomdog::gui {
 
 struct Thickness final {
     int Top;
@@ -11,4 +11,4 @@ struct Thickness final {
     int Left;
 };
 
-} // namespace Pomdog::GUI
+} // namespace pomdog::gui

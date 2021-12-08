@@ -10,7 +10,7 @@
 #include "pomdog/experimental/gui/vertical_layout.hpp"
 #include "pomdog/math/math.hpp"
 
-namespace Pomdog::GUI {
+namespace pomdog::gui {
 
 ListView::ListView(
     const std::shared_ptr<UIEventDispatcher>& dispatcher,
@@ -269,4 +269,4 @@ void ListView::Draw(DrawingContext& drawingContext)
     drawingContext.PopTransform();
 }
 
-} // namespace Pomdog::GUI
+} // namespace pomdog::gui

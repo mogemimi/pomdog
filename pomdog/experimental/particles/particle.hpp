@@ -11,15 +11,15 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 class Particle final {
 public:
     Vector3 Position{0.0f, 0.0f, 0.0f};
     Vector3 Velocity{1.0f, 1.0f, 1.0f};
 
-    Pomdog::Color StartColor = Pomdog::Color::White;
-    Pomdog::Color Color = Pomdog::Color::White;
+    pomdog::Color StartColor = pomdog::Color::White;
+    pomdog::Color Color = pomdog::Color::White;
     float ColorVariance = 0.0f;
 
     Radian<float> Rotation = 0.0f;
@@ -32,4 +32,4 @@ public:
     float TimeToLive = 2.0f;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

@@ -3,7 +3,7 @@
 #include "pomdog/experimental/skeletal2d/skeleton_pose.hpp"
 #include "pomdog/experimental/skeletal2d/skeleton.hpp"
 
-namespace Pomdog::Skeletal2D {
+namespace pomdog::skeletal2d {
 
 SkeletonPose SkeletonPose::CreateBindPose(const Skeleton& skeleton)
 {
@@ -16,4 +16,4 @@ SkeletonPose SkeletonPose::CreateBindPose(const Skeleton& skeleton)
     return skeletonPose;
 }
 
-} // namespace Pomdog::Skeletal2D
+} // namespace pomdog::skeletal2d

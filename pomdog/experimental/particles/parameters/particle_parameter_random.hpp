@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <random>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::Particles {
+namespace pomdog::detail::particles {
 
 template <typename T>
 class ParticleParameterRandom final : public ParticleParameter<T> {
@@ -30,26 +30,26 @@ public:
         static_assert(std::is_convertible<Type2, T>::value, "");
     }
 
-    T Compute(Random::Xoroshiro128StarStar& random) const
+    T Compute(random::Xoroshiro128StarStar& random) const
     {
-        return Detail::Particles::ParticleCurveLerp<T>()(min, max,
+        return detail::particles::ParticleCurveLerp<T>()(min, max,
             std::generate_canonical<float, std::numeric_limits<float>::digits>(random));
     }
 
-    T Compute(float, Random::Xoroshiro128StarStar& random) const override
+    T Compute(float, random::Xoroshiro128StarStar& random) const override
     {
         return Compute(random);
     }
 
     T Compute(float, float amount) const override
     {
-        return Detail::Particles::ParticleCurveLerp<T>()(min, max, amount);
+        return detail::particles::ParticleCurveLerp<T>()(min, max, amount);
     }
 
-    float GenerateVariance(Random::Xoroshiro128StarStar& random) const override
+    float GenerateVariance(random::Xoroshiro128StarStar& random) const override
     {
         return std::generate_canonical<float, std::numeric_limits<float>::digits>(random);
     }
 };
 
-} // namespace Pomdog::Detail::Particles
+} // namespace pomdog::detail::particles

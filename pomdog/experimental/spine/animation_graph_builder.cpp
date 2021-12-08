@@ -39,17 +39,17 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Spine {
+namespace pomdog::spine {
 namespace {
 
-using Detail::BinaryReader;
-using Skeletal2D::AnimationBlendInput;
-using Skeletal2D::AnimationBlendInputType;
-using Skeletal2D::AnimationClip;
-using Skeletal2D::AnimationGraphState;
-using Skeletal2D::AnimationNode;
-using Skeletal2D::Detail::AnimationClipNode;
-using Skeletal2D::Detail::AnimationLerpNode;
+using detail::BinaryReader;
+using skeletal2d::AnimationBlendInput;
+using skeletal2d::AnimationBlendInputType;
+using skeletal2d::AnimationClip;
+using skeletal2d::AnimationGraphState;
+using skeletal2d::AnimationNode;
+using skeletal2d::detail::AnimationClipNode;
+using skeletal2d::detail::AnimationLerpNode;
 
 enum class AnimationNodeType : std::uint8_t {
     Clip,
@@ -75,12 +75,12 @@ CreateAnimationNode(
     switch (desc.Type) {
     case AnimationNodeType::Clip: {
         if (desc.ClipName == std::nullopt) {
-            auto err = Errors::New("ClipName is nullopt");
+            auto err = errors::New("ClipName is nullopt");
             return std::make_tuple(nullptr, std::move(err));
         }
-        auto [animationClip, err] = Spine::CreateAnimationClip(skeletonDesc, std::nullopt, *desc.ClipName);
+        auto [animationClip, err] = spine::CreateAnimationClip(skeletonDesc, std::nullopt, *desc.ClipName);
         if (err != nullptr) {
-            auto wrapped = Errors::Wrap(std::move(err), "failed to create animation clip, " + *desc.ClipName);
+            auto wrapped = errors::Wrap(std::move(err), "failed to create animation clip, " + *desc.ClipName);
             return std::make_tuple(nullptr, std::move(wrapped));
         }
         auto node = std::make_unique<AnimationClipNode>(animationClip);
@@ -100,13 +100,13 @@ CreateAnimationNode(
 
         auto [node1, err1] = CreateAnimationNode(*iter1, inputs, nodes, skeletonDesc);
         if (err1 != nullptr) {
-            auto wrapped = Errors::Wrap(std::move(err1), "failed to create lerp input node[0]");
+            auto wrapped = errors::Wrap(std::move(err1), "failed to create lerp input node[0]");
             return std::make_tuple(nullptr, std::move(wrapped));
         }
 
         auto [node2, err2] = CreateAnimationNode(*iter2, inputs, nodes, skeletonDesc);
         if (err2 != nullptr) {
-            auto wrapped = Errors::Wrap(std::move(err2), "failed to create lerp input node[1]");
+            auto wrapped = errors::Wrap(std::move(err2), "failed to create lerp input node[1]");
             return std::make_tuple(nullptr, std::move(wrapped));
         }
 
@@ -126,32 +126,32 @@ CreateAnimationNode(
     }
     }
 
-    auto err = Errors::New("unknown animation node type");
+    auto err = errors::New("unknown animation node type");
     return std::make_tuple(nullptr, std::move(err));
 }
 
 } // namespace
 
-std::tuple<std::shared_ptr<Skeletal2D::AnimationGraph>, std::unique_ptr<Error>>
+std::tuple<std::shared_ptr<skeletal2d::AnimationGraph>, std::unique_ptr<Error>>
 LoadAnimationGraph(const SkeletonDesc& skeletonDesc, const std::string& filePath)
 {
     std::ifstream stream{filePath, std::ifstream::binary};
 
     if (!stream) {
-        auto err = Errors::New("cannot open the file, " + filePath);
+        auto err = errors::New("cannot open the file, " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
     auto [byteLength, sizeErr] = FileSystem::GetFileSize(filePath);
     if (sizeErr != nullptr) {
-        auto err = Errors::Wrap(std::move(sizeErr), "failed to get file size, " + filePath);
+        auto err = errors::Wrap(std::move(sizeErr), "failed to get file size, " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
     POMDOG_ASSERT(stream);
 
     if (byteLength <= 0) {
-        auto err = Errors::New("the file is too small " + filePath);
+        auto err = errors::New("the file is too small " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
@@ -164,12 +164,12 @@ LoadAnimationGraph(const SkeletonDesc& skeletonDesc, const std::string& filePath
     doc.Parse(json.data());
 
     if (doc.HasParseError()) {
-        auto err = Errors::New("failed to parse JSON, " + filePath);
+        auto err = errors::New("failed to parse JSON, " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
     if (!doc.IsObject()) {
-        auto err = Errors::New("invalid file format " + filePath);
+        auto err = errors::New("invalid file format " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
@@ -194,7 +194,7 @@ LoadAnimationGraph(const SkeletonDesc& skeletonDesc, const std::string& filePath
                     desc.Type = AnimationNodeType::Lerp;
                 }
                 else {
-                    auto err = Errors::New("invalid type, " + std::string{typeObject.GetString()});
+                    auto err = errors::New("invalid type, " + std::string{typeObject.GetString()});
                     return std::make_tuple(nullptr, std::move(err));
                 }
             }
@@ -225,7 +225,7 @@ LoadAnimationGraph(const SkeletonDesc& skeletonDesc, const std::string& filePath
     }
 
     std::vector<AnimationBlendInput> inputs;
-    auto animationGraph = std::make_shared<Skeletal2D::AnimationGraph>();
+    auto animationGraph = std::make_shared<skeletal2d::AnimationGraph>();
 
     if (doc.HasMember("states") && doc["states"].IsObject()) {
         auto& stateArray = doc["states"];
@@ -244,7 +244,7 @@ LoadAnimationGraph(const SkeletonDesc& skeletonDesc, const std::string& filePath
 
             auto [node, err] = CreateAnimationNode(*rootNodeDesc, inputs, nodes, skeletonDesc);
             if (err != nullptr) {
-                auto wrapped = Errors::Wrap(std::move(err), "failed to create animation node");
+                auto wrapped = errors::Wrap(std::move(err), "failed to create animation node");
                 return std::make_tuple(nullptr, std::move(wrapped));
             }
 
@@ -258,4 +258,4 @@ LoadAnimationGraph(const SkeletonDesc& skeletonDesc, const std::string& filePath
     return std::make_tuple(std::move(animationGraph), nullptr);
 }
 
-} // namespace Pomdog::Spine
+} // namespace pomdog::spine

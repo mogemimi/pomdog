@@ -12,11 +12,11 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Spine {
+namespace pomdog::spine {
 
 class SkeletonDesc;
 
-[[nodiscard]] std::tuple<std::shared_ptr<Skeletal2D::AnimationGraph>, std::unique_ptr<Error>>
+[[nodiscard]] std::tuple<std::shared_ptr<skeletal2d::AnimationGraph>, std::unique_ptr<Error>>
 LoadAnimationGraph(const SkeletonDesc& skeletonDesc, const std::string& assetName);
 
-} // namespace Pomdog::Spine
+} // namespace pomdog::spine

@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Spine {
+namespace pomdog::spine {
 
 class SkeletonDescLoader final {
 public:
@@ -20,4 +20,4 @@ public:
     Load(const std::string& filePath);
 };
 
-} // namespace Pomdog::Spine
+} // namespace pomdog::spine

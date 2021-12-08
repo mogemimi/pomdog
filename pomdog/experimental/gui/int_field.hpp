@@ -18,7 +18,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <string>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::GUI::Detail {
+namespace pomdog::gui::detail {
 
 class IntFieldDataContext final : public NumberFieldDataContext {
 public:
@@ -45,9 +45,9 @@ private:
     int startDragValue = 0;
 };
 
-} // namespace Pomdog::GUI::Detail
+} // namespace pomdog::gui::detail
 
-namespace Pomdog::GUI {
+namespace pomdog::gui {
 
 class IntField final
     : public Widget
@@ -105,8 +105,8 @@ public:
 
 private:
     std::shared_ptr<NumberField> numberField;
-    std::shared_ptr<Detail::IntFieldDataContext> dataContext;
+    std::shared_ptr<detail::IntFieldDataContext> dataContext;
     ScopedConnection valueChangedConn;
 };
 
-} // namespace Pomdog::GUI
+} // namespace pomdog::gui

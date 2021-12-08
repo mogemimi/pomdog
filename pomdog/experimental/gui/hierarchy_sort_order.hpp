@@ -8,7 +8,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::GUI {
+namespace pomdog::gui {
 
 enum class HierarchySortOrder : std::uint8_t {
     Front = 0,
@@ -16,4 +16,4 @@ enum class HierarchySortOrder : std::uint8_t {
     Back = 2,
 };
 
-} // namespace Pomdog::GUI
+} // namespace pomdog::gui

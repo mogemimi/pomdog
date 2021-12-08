@@ -13,12 +13,12 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::MagicaVoxel::VoxModelExporter {
+namespace pomdog::magicavoxel::VoxModelExporter {
 
 [[nodiscard]] std::unique_ptr<Error>
 Export(const VoxModel& model, const std::string& filePath) noexcept
 {
-    using Detail::MakeFourCC;
+    using detail::MakeFourCC;
 
     constexpr std::int32_t MagicaVoxelVersion = 150;
     constexpr auto fourCC = MakeFourCC('V', 'O', 'X', ' ');
@@ -41,7 +41,7 @@ Export(const VoxModel& model, const std::string& filePath) noexcept
     std::int32_t const voxelCount = static_cast<std::int32_t>(model.Voxels.size());
     POMDOG_ASSERT(voxelCount >= 0);
 
-    std::vector<MagicaVoxel::Voxel> voxels = model.Voxels;
+    std::vector<magicavoxel::Voxel> voxels = model.Voxels;
 
     std::array<Color, 256> colors = model.ColorPalette;
 
@@ -53,7 +53,7 @@ Export(const VoxModel& model, const std::string& filePath) noexcept
 
     POMDOG_ASSERT(colors.back() == Color::Black);
 
-    using MagicaVoxel::VoxChunkHeader;
+    using magicavoxel::VoxChunkHeader;
 
     VoxChunkHeader sizeChunk;
     sizeChunk.ID = IdSize;
@@ -62,7 +62,7 @@ Export(const VoxModel& model, const std::string& filePath) noexcept
 
     VoxChunkHeader xyziChunk;
     xyziChunk.ID = IdXYZI;
-    const auto xyziChunkContentSize = sizeof(voxelCount) + (sizeof(MagicaVoxel::Voxel) * voxels.size());
+    const auto xyziChunkContentSize = sizeof(voxelCount) + (sizeof(magicavoxel::Voxel) * voxels.size());
     xyziChunk.ContentSize = static_cast<std::int32_t>(xyziChunkContentSize);
     xyziChunk.ChildrenSize = 0;
 
@@ -84,7 +84,7 @@ Export(const VoxModel& model, const std::string& filePath) noexcept
     std::ofstream stream(filePath, std::ios::binary);
 
     if (stream.fail()) {
-        return Errors::New("cannot open file: " + filePath);
+        return errors::New("cannot open file: " + filePath);
     }
 
     stream.write(reinterpret_cast<const char*>(&fourCC), sizeof(fourCC));
@@ -101,4 +101,4 @@ Export(const VoxModel& model, const std::string& filePath) noexcept
     return nullptr;
 }
 
-} // namespace Pomdog::MagicaVoxel::VoxModelExporter
+} // namespace pomdog::magicavoxel::VoxModelExporter

@@ -14,7 +14,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Reactive::Detail {
+namespace pomdog::reactive::detail {
 
 template <class T>
 class SkipLastOperator final
@@ -73,4 +73,4 @@ private:
     int count;
 };
 
-} // namespace Pomdog::Reactive::Detail
+} // namespace pomdog::reactive::detail

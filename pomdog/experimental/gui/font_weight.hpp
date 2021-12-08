@@ -8,7 +8,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::GUI {
+namespace pomdog::gui {
 
 enum class FontWeight : std::uint8_t {
     Light,
@@ -16,4 +16,4 @@ enum class FontWeight : std::uint8_t {
     Bold,
 };
 
-} // namespace Pomdog::GUI
+} // namespace pomdog::gui

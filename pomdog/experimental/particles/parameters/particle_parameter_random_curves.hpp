@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <random>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::Particles {
+namespace pomdog::detail::particles {
 
 template <typename T>
 class ParticleParameterRandomCurves final : public ParticleParameter<T> {
@@ -31,7 +31,7 @@ public:
         static_assert(std::is_constructible<decltype(curve2), Type2>::value, "");
     }
 
-    T Compute(float normalizedTime, Random::Xoroshiro128StarStar& random) const override
+    T Compute(float normalizedTime, random::Xoroshiro128StarStar& random) const override
     {
         return Compute(normalizedTime,
             std::generate_canonical<float, std::numeric_limits<float>::digits>(random));
@@ -39,14 +39,14 @@ public:
 
     T Compute(float normalizedTime, float amount) const override
     {
-        return Detail::Particles::ParticleCurveLerp<T>()(
+        return detail::particles::ParticleCurveLerp<T>()(
             curve1.Compute(normalizedTime), curve2.Compute(normalizedTime), amount);
     }
 
-    float GenerateVariance(Random::Xoroshiro128StarStar& random) const override
+    float GenerateVariance(random::Xoroshiro128StarStar& random) const override
     {
         return std::generate_canonical<float, std::numeric_limits<float>::digits>(random);
     }
 };
 
-} // namespace Pomdog::Detail::Particles
+} // namespace pomdog::detail::particles

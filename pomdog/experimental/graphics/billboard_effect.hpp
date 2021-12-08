@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <optional>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 class AssetManager;
 class GraphicsDevice;
 class GraphicsCommandList;
@@ -21,9 +21,9 @@ class Texture2D;
 class PipelineState;
 class SamplerState;
 class VertexBuffer;
-} // namespace Pomdog
+} // namespace pomdog
 
-namespace Pomdog {
+namespace pomdog {
 
 class POMDOG_EXPORT BillboardBatchBuffer final {
 public:
@@ -113,4 +113,4 @@ private:
     std::unique_ptr<Impl> impl;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

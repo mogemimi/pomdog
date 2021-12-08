@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::TexturePacker {
+namespace pomdog::TexturePacker {
 namespace {
 
 enum class ParserState {
@@ -47,7 +47,7 @@ TextureAtlasLoader::Load(const std::string& filePath)
     std::ifstream stream{filePath, std::ifstream::binary};
 
     if (!stream) {
-        auto err = Errors::New("cannot open the file, " + filePath);
+        auto err = errors::New("cannot open the file, " + filePath);
         return std::make_tuple(TextureAtlas{}, std::move(err));
     }
 
@@ -182,11 +182,11 @@ TextureAtlasLoader::Load(const std::string& filePath)
         result.pages.clear();
         result.regions.clear();
 
-        auto err = Errors::New("cannot parse the file, " + filePath);
+        auto err = errors::New("cannot parse the file, " + filePath);
         return std::make_tuple(TextureAtlas{}, std::move(err));
     }
 
     return std::make_tuple(std::move(result), nullptr);
 }
 
-} // namespace Pomdog::TexturePacker
+} // namespace pomdog::TexturePacker

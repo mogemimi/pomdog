@@ -4,7 +4,7 @@
 #include "pomdog/experimental/ecs/component_type.hpp"
 #include "pomdog/experimental/ecs/entity_archtype.hpp"
 
-namespace Pomdog::ECS::Detail {
+namespace pomdog::ecs::detail {
 namespace {
 
 void ResetComponents(
@@ -157,4 +157,4 @@ std::size_t EntityManager<MaxComponentCapacity>::GetCapacity() const noexcept
 // explicit instantiations
 template class EntityManager<64>;
 
-} // namespace Pomdog::ECS::Detail
+} // namespace pomdog::ecs::detail

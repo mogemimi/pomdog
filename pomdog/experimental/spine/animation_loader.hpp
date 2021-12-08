@@ -13,18 +13,18 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Skeletal2D {
+namespace pomdog::skeletal2d {
 class AnimationClip;
-} // namespace Pomdog::Skeletal2D
+} // namespace pomdog::skeletal2d
 
-namespace Pomdog::Spine {
+namespace pomdog::spine {
 
 class SkeletonDesc;
 
-[[nodiscard]] std::tuple<std::shared_ptr<Skeletal2D::AnimationClip>, std::unique_ptr<Error>>
+[[nodiscard]] std::tuple<std::shared_ptr<skeletal2d::AnimationClip>, std::unique_ptr<Error>>
 CreateAnimationClip(
     const SkeletonDesc& desc,
     const std::optional<TexturePacker::TextureAtlas>& textureAtlas,
     const std::string& name);
 
-} // namespace Pomdog::Spine
+} // namespace pomdog::spine

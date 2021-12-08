@@ -10,18 +10,18 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <string>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Skeletal2D {
+namespace pomdog::skeletal2d {
 class Skin;
-} // namespace Pomdog::Skeletal2D
+} // namespace pomdog::skeletal2d
 
-namespace Pomdog::Spine {
+namespace pomdog::spine {
 
 class SkeletonDesc;
 
-[[nodiscard]] std::shared_ptr<Skeletal2D::Skin>
+[[nodiscard]] std::shared_ptr<skeletal2d::Skin>
 CreateSkin(
     const SkeletonDesc& skeletonDesc,
     const TexturePacker::TextureAtlas& textureAtlas,
     const std::string& skinName);
 
-} // namespace Pomdog::Spine
+} // namespace pomdog::spine

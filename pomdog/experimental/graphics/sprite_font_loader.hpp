@@ -13,12 +13,12 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 class AssetManager;
 class SpriteFont;
-} // namespace Pomdog
+} // namespace pomdog
 
-namespace Pomdog::Detail {
+namespace pomdog::detail {
 
 template <>
 struct POMDOG_EXPORT AssetLoader<SpriteFont> final {
@@ -26,4 +26,4 @@ struct POMDOG_EXPORT AssetLoader<SpriteFont> final {
     operator()(AssetManager& assets, const std::string& filePath);
 };
 
-} // namespace Pomdog::Detail
+} // namespace pomdog::detail

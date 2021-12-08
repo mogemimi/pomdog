@@ -7,7 +7,7 @@
 #include "pomdog/math/matrix4x4.hpp"
 #include "pomdog/utility/assert.hpp"
 
-namespace Pomdog::Skeletal2D::SkeletonHelper {
+namespace pomdog::skeletal2d::SkeletonHelper {
 
 void Traverse(
     const Skeleton& skeleton,
@@ -71,4 +71,4 @@ ToGlobalPose(
     return globalPose;
 }
 
-} // namespace Pomdog::Skeletal2D::SkeletonHelper
+} // namespace pomdog::skeletal2d::SkeletonHelper

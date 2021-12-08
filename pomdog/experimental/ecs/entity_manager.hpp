@@ -20,7 +20,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::ECS::Detail {
+namespace pomdog::ecs::detail {
 
 template <std::uint8_t MaxComponentCapacity>
 class EntityArchtype;
@@ -125,9 +125,9 @@ void EntityManager<MaxComponentCapacity>::SetComponentData(const Entity& entity,
 
     POMDOG_ASSERT(entity.GetIndex() < entities->GetSize());
 
-    auto nativeEntities = static_cast<Detail::ComponentBuffer<T>*>(entities.get());
+    auto nativeEntities = static_cast<detail::ComponentBuffer<T>*>(entities.get());
     POMDOG_ASSERT(nativeEntities != nullptr);
-    POMDOG_ASSERT(nativeEntities == dynamic_cast<Detail::ComponentBuffer<T>*>(entities.get()));
+    POMDOG_ASSERT(nativeEntities == dynamic_cast<detail::ComponentBuffer<T>*>(entities.get()));
     POMDOG_ASSERT(desc.ComponentBitMask[typeIndex]);
     POMDOG_ASSERT(HasComponent<T>(entity));
     auto component = nativeEntities->GetComponent(entity.GetIndex());
@@ -155,10 +155,10 @@ EntityQuery<MaxComponentCapacity, T, Components...> EntityManager<MaxComponentCa
     return query;
 }
 
-} // namespace Pomdog::ECS::Detail
+} // namespace pomdog::ecs::detail
 
-namespace Pomdog::ECS {
+namespace pomdog::ecs {
 
-using EntityManager = Detail::EntityManager<64>;
+using EntityManager = detail::EntityManager<64>;
 
-} // namespace Pomdog::ECS
+} // namespace pomdog::ecs

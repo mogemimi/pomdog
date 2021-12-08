@@ -8,7 +8,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 namespace {
 
 std::vector<Vector2>
@@ -17,7 +17,7 @@ CreateJaggedLine(
     std::uint32_t interpolationPoints,
     const Vector2& start,
     const Vector2& end,
-    Random::Xoroshiro128StarStar& random)
+    random::Xoroshiro128StarStar& random)
 {
     if (Vector2::DistanceSquared(start, end) <= std::numeric_limits<float>::epsilon()) {
         return {};
@@ -64,7 +64,7 @@ CreateJaggedLine(
         constexpr float envelopeScale = (1.0f / (1.0f - threshold));
         float envelope = (position > threshold) ? envelopeScale * (1.0f - position) : 1.0f;
 
-        float displacement = Math::SmoothStep(prevDisplacement, distribution(random), scale);
+        float displacement = math::SmoothStep(prevDisplacement, distribution(random), scale);
         displacement *= envelope;
 
         Vector2 point = start + tangent * position + normal * displacement;
@@ -90,7 +90,7 @@ CreateBranch(
     const Vector2& sourceStart,
     const Vector2& sourceEnd,
     const Beam& parentBeam,
-    Random::Xoroshiro128StarStar& random)
+    random::Xoroshiro128StarStar& random)
 {
     POMDOG_ASSERT(!parentBeam.Points.empty());
     POMDOG_ASSERT(parentBeam.Points.size() >= 2);
@@ -257,4 +257,4 @@ Vector2 BeamSystem::CreateTarget(
     return targetPosition;
 }
 
-} // namespace Pomdog
+} // namespace pomdog

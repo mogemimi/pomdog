@@ -15,7 +15,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 class POMDOG_EXPORT PostProcessCompositor final {
 private:
@@ -66,4 +66,4 @@ private:
     void UpdateConstantBuffer();
 };
 
-} // namespace Pomdog
+} // namespace pomdog

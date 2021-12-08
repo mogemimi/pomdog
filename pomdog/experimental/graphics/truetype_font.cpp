@@ -31,7 +31,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #endif
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 class TrueTypeFont::Impl final {
 public:
@@ -56,30 +56,30 @@ TrueTypeFont::Impl::LoadFont(const std::string& filePath)
     std::ifstream stream{filePath, std::ifstream::binary};
 
     if (!stream) {
-        return Errors::New("cannot open the file, " + filePath);
+        return errors::New("cannot open the file, " + filePath);
     }
 
     auto [byteLength, sizeErr] = FileSystem::GetFileSize(filePath);
     if (sizeErr != nullptr) {
-        return Errors::Wrap(std::move(sizeErr), "failed to get file size, " + filePath);
+        return errors::Wrap(std::move(sizeErr), "failed to get file size, " + filePath);
     }
 
     POMDOG_ASSERT(stream);
 
     if (byteLength <= 0) {
-        return Errors::New("the font file is too small " + filePath);
+        return errors::New("the font file is too small " + filePath);
     }
 
     Reset();
 
-    using Pomdog::Detail::BinaryReader;
+    using pomdog::detail::BinaryReader;
     ttfBinary = BinaryReader::ReadArray<std::uint8_t>(stream, byteLength);
 
     const auto offset = stbtt_GetFontOffsetForIndex(ttfBinary.data(), 0);
     if (!stbtt_InitFont(&fontInfo, ttfBinary.data(), offset)) {
         ttfBinary.clear();
 
-        return Errors::New("failed to initialize truetype font " + filePath);
+        return errors::New("failed to initialize truetype font " + filePath);
     }
 
     return nullptr;
@@ -183,4 +183,4 @@ std::optional<FontGlyph> TrueTypeFont::RasterizeGlyph(
 //    return baseline;
 //}
 
-} // namespace Pomdog
+} // namespace pomdog

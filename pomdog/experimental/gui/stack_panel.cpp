@@ -7,7 +7,7 @@
 #include "pomdog/experimental/gui/ui_helper.hpp"
 #include "pomdog/math/math.hpp"
 
-namespace Pomdog::GUI {
+namespace pomdog::gui {
 
 StackPanel::StackPanel(
     const std::shared_ptr<UIEventDispatcher>& dispatcher,
@@ -83,7 +83,7 @@ void StackPanel::OnPointerPressed(const PointerPoint& pointerPoint)
         collisionHeight};
 
     if (captionBar.Contains(pointInView)) {
-        startTouchPoint = Math::ToVector2(pointInView);
+        startTouchPoint = math::ToVector2(pointInView);
     }
 }
 
@@ -94,17 +94,17 @@ void StackPanel::OnPointerMoved(const PointerPoint& pointerPoint)
     }
 
     auto pointInView = UIHelper::ProjectToChildSpace(pointerPoint.Position, GetGlobalPosition());
-    auto position = Math::ToVector2(pointInView);
+    auto position = math::ToVector2(pointInView);
 
     auto tangent = position - *startTouchPoint;
     auto distanceSquared = tangent.LengthSquared();
 
     if (distanceSquared >= 1.4143f) {
-        SetPosition(GetPosition() + Math::ToPoint2D(tangent));
+        SetPosition(GetPosition() + math::ToPoint2D(tangent));
 
         // NOTE: recalculate position in current coordinate system
         pointInView = UIHelper::ProjectToChildSpace(pointerPoint.Position, GetGlobalPosition());
-        position = Math::ToVector2(pointInView);
+        position = math::ToVector2(pointInView);
         startTouchPoint = position;
     }
 }
@@ -213,7 +213,7 @@ void StackPanel::Draw(DrawingContext& drawingContext)
         Rectangle{globalPos.X, globalPos.Y + (GetHeight() - barHeight), GetWidth(), barHeight},
         colorScheme->PanelTitleBarColor);
 
-    const auto pos = Math::ToVector2(globalPos);
+    const auto pos = math::ToVector2(globalPos);
     primitiveBatch->DrawLine(pos + Vector2{0.0f, 0.0f}, pos + Vector2{w, 0.0f}, colorScheme->PanelOutlineBorderColor, 1.0f);
     primitiveBatch->DrawLine(pos + Vector2{0.0f, 0.0f}, pos + Vector2{0.0f, h}, colorScheme->PanelOutlineBorderColor, 1.0f);
     primitiveBatch->DrawLine(pos + Vector2{0.0f, h}, pos + Vector2{w, h}, colorScheme->PanelOutlineBorderColor, 1.0f);
@@ -228,4 +228,4 @@ void StackPanel::Draw(DrawingContext& drawingContext)
     drawingContext.PopTransform();
 }
 
-} // namespace Pomdog::GUI
+} // namespace pomdog::gui

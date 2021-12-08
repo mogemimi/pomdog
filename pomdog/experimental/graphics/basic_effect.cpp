@@ -11,7 +11,7 @@
 #include "pomdog/graphics/shader.hpp"
 #include "pomdog/graphics/shader_pipeline_stage.hpp"
 
-namespace Pomdog::BasicEffect {
+namespace pomdog::BasicEffect {
 namespace {
 
 // Built-in shaders
@@ -100,4 +100,4 @@ CreateBasicEffect(AssetManager& assets, const BasicEffectDescription& desc)
     return builder;
 }
 
-} // namespace Pomdog::BasicEffect
+} // namespace pomdog::BasicEffect

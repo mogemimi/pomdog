@@ -7,7 +7,7 @@
 #include "pomdog/experimental/gui/ui_helper.hpp"
 #include "pomdog/math/math.hpp"
 
-namespace Pomdog::GUI {
+namespace pomdog::gui {
 
 DisclosureTriangleButton::DisclosureTriangleButton(const std::shared_ptr<UIEventDispatcher>& dispatcher)
     : Widget(dispatcher)
@@ -84,7 +84,7 @@ void DisclosureTriangleButton::Draw(DrawingContext& drawingContext)
         thumbColor = Color{162, 160, 161, 255};
     }
 
-    const auto transformOffset = Math::ToVector2(globalPos);
+    const auto transformOffset = math::ToVector2(globalPos);
 
     constexpr float triangleWidth = 7.0f;
     constexpr float triangleHeight = triangleWidth * 1.73205f * 0.5f;
@@ -105,4 +105,4 @@ void DisclosureTriangleButton::Draw(DrawingContext& drawingContext)
     primitiveBatch->Flush();
 }
 
-} // namespace Pomdog::GUI
+} // namespace pomdog::gui

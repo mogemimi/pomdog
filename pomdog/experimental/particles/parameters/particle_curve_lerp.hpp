@@ -7,13 +7,13 @@
 #include "pomdog/math/radian.hpp"
 #include "pomdog/math/vector3.hpp"
 
-namespace Pomdog::Detail::Particles {
+namespace pomdog::detail::particles {
 
 template <typename T>
 struct ParticleCurveLerp final {
     T operator()(const T& a, const T& b, float amount)
     {
-        return Math::Lerp(a, b, amount);
+        return math::Lerp(a, b, amount);
     }
 };
 
@@ -21,7 +21,7 @@ template <>
 struct ParticleCurveLerp<Radian<float>> final {
     Radian<float> operator()(const Radian<float>& a, const Radian<float>& b, float amount)
     {
-        return Math::Lerp(a.value, b.value, amount);
+        return math::Lerp(a.value, b.value, amount);
     }
 };
 
@@ -41,4 +41,4 @@ struct ParticleCurveLerp<Vector3> final {
     }
 };
 
-} // namespace Pomdog::Detail::Particles
+} // namespace pomdog::detail::particles

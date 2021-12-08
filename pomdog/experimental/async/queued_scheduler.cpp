@@ -8,7 +8,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Concurrency {
+namespace pomdog::concurrency {
 namespace {
 
 template <class TDeferredTask>
@@ -103,4 +103,4 @@ void QueuedScheduler::MergeTasks()
     POMDOG_ASSERT(std::is_sorted(std::begin(tasks), std::end(tasks), Compare<DeferredTask>));
 }
 
-} // namespace Pomdog::Concurrency
+} // namespace pomdog::concurrency

@@ -19,7 +19,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::ECS::Detail {
+namespace pomdog::ecs::detail {
 
 template <std::uint8_t MaxComponentCapacity, typename T, typename... Components>
 class EntityQuery;
@@ -74,9 +74,9 @@ T* GetComponent(
 
     POMDOG_ASSERT(entity.GetIndex() < entities->GetSize());
 
-    auto nativeEntities = static_cast<Detail::ComponentBuffer<T>*>(entities.get());
+    auto nativeEntities = static_cast<detail::ComponentBuffer<T>*>(entities.get());
     POMDOG_ASSERT(nativeEntities != nullptr);
-    POMDOG_ASSERT(nativeEntities == dynamic_cast<Detail::ComponentBuffer<T>*>(entities.get()));
+    POMDOG_ASSERT(nativeEntities == dynamic_cast<detail::ComponentBuffer<T>*>(entities.get()));
     POMDOG_ASSERT(desc.ComponentBitMask[typeIndex]);
     return nativeEntities->GetComponent(entity.GetIndex());
 }
@@ -213,4 +213,4 @@ private:
     std::vector<EntityDesc<MaxComponentCapacity>>& descriptions;
 };
 
-} // namespace Pomdog::ECS::Detail
+} // namespace pomdog::ecs::detail

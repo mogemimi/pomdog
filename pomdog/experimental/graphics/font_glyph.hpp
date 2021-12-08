@@ -9,7 +9,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 // NOTE:
 //          XAdvance
@@ -39,4 +39,4 @@ struct FontGlyph final {
     std::int16_t TexturePage;
 };
 
-} // namespace Pomdog
+} // namespace pomdog

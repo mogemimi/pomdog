@@ -4,7 +4,7 @@
 
 #include "pomdog/math/point2d.hpp"
 
-namespace Pomdog::GUI::UIHelper {
+namespace pomdog::gui::UIHelper {
 
 [[nodiscard]] Point2D
 ProjectToWorldSpace(const Point2D& positionInChild, const Point2D& toWorldSpace) noexcept;
@@ -12,4 +12,4 @@ ProjectToWorldSpace(const Point2D& positionInChild, const Point2D& toWorldSpace)
 [[nodiscard]] Point2D
 ProjectToChildSpace(const Point2D& positionInWorld, const Point2D& toChildSpace) noexcept;
 
-} // namespace Pomdog::GUI::UIHelper
+} // namespace pomdog::gui::UIHelper

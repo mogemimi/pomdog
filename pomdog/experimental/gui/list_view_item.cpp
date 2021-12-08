@@ -8,7 +8,7 @@
 #include "pomdog/experimental/gui/ui_helper.hpp"
 #include "pomdog/math/math.hpp"
 
-namespace Pomdog::GUI {
+namespace pomdog::gui {
 
 ListViewItem::ListViewItem(const std::shared_ptr<UIEventDispatcher>& dispatcher)
     : Widget(dispatcher)
@@ -227,4 +227,4 @@ void ListViewItem::Draw(DrawingContext& drawingContext)
     }
 }
 
-} // namespace Pomdog::GUI
+} // namespace pomdog::gui

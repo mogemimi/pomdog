@@ -9,7 +9,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 
 Image::Image(int widthIn, int heightIn)
     : width(widthIn)
@@ -108,4 +108,4 @@ void Image::PremultiplyAlpha()
     }
 }
 
-} // namespace Pomdog
+} // namespace pomdog

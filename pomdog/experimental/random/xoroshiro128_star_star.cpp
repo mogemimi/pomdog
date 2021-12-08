@@ -2,7 +2,7 @@
 
 #include "pomdog/experimental/random/xoroshiro128_star_star.hpp"
 
-namespace Pomdog::Random {
+namespace pomdog::random {
 namespace {
 
 std::uint64_t rotl(const std::uint64_t x, int k) noexcept
@@ -67,4 +67,4 @@ std::uint64_t Xoroshiro128StarStar::operator()() noexcept
     return Next();
 }
 
-} // namespace Pomdog::Random
+} // namespace pomdog::random

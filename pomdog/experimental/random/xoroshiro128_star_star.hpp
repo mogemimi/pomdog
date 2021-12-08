@@ -9,7 +9,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <limits>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Random {
+namespace pomdog::random {
 
 class Xoroshiro128StarStar final {
 private:
@@ -39,4 +39,4 @@ public:
     }
 };
 
-} // namespace Pomdog::Random
+} // namespace pomdog::random

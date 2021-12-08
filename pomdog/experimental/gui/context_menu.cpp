@@ -10,7 +10,7 @@
 #include "pomdog/experimental/gui/vertical_layout.hpp"
 #include "pomdog/math/math.hpp"
 
-namespace Pomdog::GUI {
+namespace pomdog::gui {
 
 ContextMenu::ContextMenu(
     const std::shared_ptr<UIEventDispatcher>& dispatcher,
@@ -26,7 +26,7 @@ ContextMenu::ContextMenu(
     verticalLayout->SetStackedLayout(true);
     verticalLayout->SetLayoutSpacing(0);
 
-    scrollView = std::make_shared<GUI::ScrollView>(dispatcher, 140, 100);
+    scrollView = std::make_shared<gui::ScrollView>(dispatcher, 140, 100);
     scrollView->SetWidget(verticalLayout);
 
     SetHierarchySortOrder(HierarchySortOrder::Front);
@@ -186,14 +186,14 @@ void ContextMenu::Draw(DrawingContext& drawingContext)
 
     primitiveBatch->DrawRectangle(
         Matrix3x2::Identity,
-        Math::ToVector2(globalPos) + Vector2{-4.0f, -4.0f},
+        math::ToVector2(globalPos) + Vector2{-4.0f, -4.0f},
         w + 8.0f,
         h + 7.0f,
         colorScheme->ContextMenuShadowColor);
 
     primitiveBatch->DrawRectangle(
         Matrix3x2::Identity,
-        Math::ToVector2(globalPos) + Vector2{-1.5f, -1.5f},
+        math::ToVector2(globalPos) + Vector2{-1.5f, -1.5f},
         w + 3.0f,
         h + 3.0f,
         colorScheme->ContextMenuShadowColor);
@@ -220,4 +220,4 @@ void ContextMenu::Draw(DrawingContext& drawingContext)
     drawingContext.PopTransform();
 }
 
-} // namespace Pomdog::GUI
+} // namespace pomdog::gui

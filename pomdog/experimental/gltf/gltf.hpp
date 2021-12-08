@@ -21,7 +21,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::GLTF {
+namespace pomdog::GLTF {
 
 class Accessor;
 class Asset;
@@ -217,4 +217,4 @@ public:
     std::vector<GLTF::Scene> Scenes;
 };
 
-} // namespace Pomdog::GLTF
+} // namespace pomdog::GLTF

@@ -15,7 +15,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <string>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::GUI {
+namespace pomdog::gui {
 
 class TextBlock final
     : public Widget
@@ -53,4 +53,4 @@ private:
     HorizontalAlignment horizontalAlignment;
 };
 
-} // namespace Pomdog::GUI
+} // namespace pomdog::gui

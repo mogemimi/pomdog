@@ -15,7 +15,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utfcpp/source/utf8/cpp17.h>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::GUI {
+namespace pomdog::gui {
 namespace {
 constexpr double CursorBlinkInterval = 1.0;
 constexpr double CursorMoveMarginInterval = 0.5;
@@ -578,7 +578,7 @@ void TextEdit::Draw(DrawingContext& drawingContext)
     }
 
     const auto marginLeftBottom = Vector2{static_cast<float>(textMargin.Left), static_cast<float>(textMargin.Bottom)};
-    const auto textEditPos = Math::ToVector2(globalPos);
+    const auto textEditPos = math::ToVector2(globalPos);
     const auto textPosition = textEditPos + marginLeftBottom + Vector2{0.0f, baselineHeight};
     const auto innerBoundPos = textEditPos + marginLeftBottom;
     const auto innerBoundSize = Vector2{
@@ -640,7 +640,7 @@ void TextEdit::Draw(DrawingContext& drawingContext)
 
         primitiveBatch->DrawRectangle(
             Matrix3x2::Identity,
-            startPos + Vector2{0.0f, cursorHeightMargin} + Math::ToVector2(globalPos),
+            startPos + Vector2{0.0f, cursorHeightMargin} + math::ToVector2(globalPos),
             selectionWidth,
             GetHeight() - cursorHeightMargin * 2.0f - 0.5f,
             selectionBoundsColor);
@@ -654,7 +654,7 @@ void TextEdit::Draw(DrawingContext& drawingContext)
 
         primitiveBatch->DrawRectangle(
             Matrix3x2::Identity,
-            cursorDrawPosition + Vector2{0.0f, cursorHeightMargin} + Math::ToVector2(globalPos),
+            cursorDrawPosition + Vector2{0.0f, cursorHeightMargin} + math::ToVector2(globalPos),
             cursorThickness,
             GetHeight() - cursorHeightMargin * 2.0f - 0.5f,
             cursorColor);
@@ -711,4 +711,4 @@ void TextEdit::Draw(DrawingContext& drawingContext)
     }
 }
 
-} // namespace Pomdog::GUI
+} // namespace pomdog::gui

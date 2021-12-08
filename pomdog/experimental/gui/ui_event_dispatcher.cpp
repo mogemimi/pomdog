@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::GUI {
+namespace pomdog::gui {
 namespace {
 
 constexpr double DoubleClickTimeInterval = 0.500;
@@ -400,7 +400,7 @@ UIEventDispatcher::CheckMouseButton(
     const MouseState& mouseState,
     const PointerMouseEvent& pointerMouseEvent) const
 {
-    using Pomdog::GUI::PointerMouseEvent;
+    using pomdog::gui::PointerMouseEvent;
     switch (pointerMouseEvent) {
     case PointerMouseEvent::LeftButtonPressed:
         return mouseState.LeftButton;
@@ -418,4 +418,4 @@ UIEventDispatcher::CheckMouseButton(
     return ButtonState::Released;
 }
 
-} // namespace Pomdog::GUI
+} // namespace pomdog::gui

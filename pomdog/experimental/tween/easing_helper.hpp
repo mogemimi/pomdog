@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <type_traits>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::Easings {
+namespace pomdog::detail::Easings {
 
 template <typename T, T (*Function)(T)>
 class POMDOG_EXPORT Ease final {
@@ -100,19 +100,19 @@ using EaseQuintic = Ease<T, Quintic<T>>;
 template <typename T>
 using EaseSine = Ease<T, Sine<T>>;
 
-} // namespace Pomdog::Detail::Easings
+} // namespace pomdog::detail::Easings
 
-namespace Pomdog::Easings {
+namespace pomdog::Easings {
 
-using EaseBack = Detail::Easings::EaseBack<float>;
-using EaseBounce = Detail::Easings::EaseBounce<float>;
-using EaseCircle = Detail::Easings::EaseCircle<float>;
-using EaseCubic = Detail::Easings::EaseCubic<float>;
-using EaseElastic = Detail::Easings::EaseElastic<float>;
-using EaseExponential = Detail::Easings::EaseExponential<float>;
-using EaseQuadratic = Detail::Easings::EaseQuadratic<float>;
-using EaseQuartic = Detail::Easings::EaseQuartic<float>;
-using EaseQuintic = Detail::Easings::EaseQuintic<float>;
-using EaseSine = Detail::Easings::EaseSine<float>;
+using EaseBack = detail::Easings::EaseBack<float>;
+using EaseBounce = detail::Easings::EaseBounce<float>;
+using EaseCircle = detail::Easings::EaseCircle<float>;
+using EaseCubic = detail::Easings::EaseCubic<float>;
+using EaseElastic = detail::Easings::EaseElastic<float>;
+using EaseExponential = detail::Easings::EaseExponential<float>;
+using EaseQuadratic = detail::Easings::EaseQuadratic<float>;
+using EaseQuartic = detail::Easings::EaseQuartic<float>;
+using EaseQuintic = detail::Easings::EaseQuintic<float>;
+using EaseSine = detail::Easings::EaseSine<float>;
 
-} // namespace Pomdog::Easings
+} // namespace pomdog::Easings

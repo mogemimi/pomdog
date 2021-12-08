@@ -20,7 +20,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog {
+namespace pomdog {
 namespace {
 
 struct PostProcessInfo {
@@ -227,4 +227,4 @@ bool PostProcessCompositor::CanSkipPostProcess() const noexcept
     return imageEffects.empty();
 }
 
-} // namespace Pomdog
+} // namespace pomdog

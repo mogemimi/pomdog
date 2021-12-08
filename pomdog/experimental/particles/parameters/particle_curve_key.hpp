@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Pomdog::Detail::Particles {
+namespace pomdog::detail::particles {
 
 template <typename T>
 struct ParticleCurveKey {
@@ -11,4 +11,4 @@ struct ParticleCurveKey {
     T Value;
 };
 
-} // namespace Pomdog::Detail::Particles
+} // namespace pomdog::detail::particles

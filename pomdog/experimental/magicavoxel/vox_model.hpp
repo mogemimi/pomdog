@@ -11,7 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::MagicaVoxel {
+namespace pomdog::magicavoxel {
 
 struct Voxel final {
     std::uint8_t X;
@@ -29,4 +29,4 @@ public:
     std::int32_t Z;
 };
 
-} // namespace Pomdog::MagicaVoxel
+} // namespace pomdog::magicavoxel

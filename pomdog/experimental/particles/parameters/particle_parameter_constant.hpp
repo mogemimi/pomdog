@@ -9,7 +9,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace Pomdog::Detail::Particles {
+namespace pomdog::detail::particles {
 
 template <typename T>
 class ParticleParameterConstant final : public ParticleParameter<T> {
@@ -24,7 +24,7 @@ public:
         static_assert(std::is_convertible<InType, T>::value, "");
     }
 
-    T Compute(float, Random::Xoroshiro128StarStar&) const override
+    T Compute(float, random::Xoroshiro128StarStar&) const override
     {
         return value;
     }
@@ -34,10 +34,10 @@ public:
         return value;
     }
 
-    float GenerateVariance(Random::Xoroshiro128StarStar&) const override
+    float GenerateVariance(random::Xoroshiro128StarStar&) const override
     {
         return 1.0f;
     }
 };
 
-} // namespace Pomdog::Detail::Particles
+} // namespace pomdog::detail::particles
