@@ -17,7 +17,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::detail::direct3d11 {
 namespace {
 
-using Direct3D::HLSLReflectionHelper;
+using direct3d::HLSLReflectionHelper;
 
 std::vector<EffectVariable> EnumerateEffectVariables(
     ID3D11ShaderReflectionConstantBuffer* constantBufferReflector)

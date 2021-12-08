@@ -49,7 +49,7 @@ ShaderDirect3D11<NativeShaderType>::Initialize(
         std::memcpy(codeBlob.data(), shaderBytecode.Code, codeBlob.size());
     }
     else {
-        auto [compiledShaderBlob, compileErr] = Direct3D::CompileHLSL(
+        auto [compiledShaderBlob, compileErr] = direct3d::CompileHLSL(
             shaderBytecode,
             compileOptions);
 

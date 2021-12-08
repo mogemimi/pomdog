@@ -117,7 +117,7 @@ GraphicsContextDirect3D11::Initialize(
     preferredBackBufferWidth = 1;
     preferredBackBufferHeight = 1;
     backBufferCount = 2;
-    backBufferFormat = DXGI::ToDXGIFormat(presentationParameters.BackBufferFormat);
+    backBufferFormat = dxgi::ToDXGIFormat(presentationParameters.BackBufferFormat);
     backBufferDepthFormat = presentationParameters.DepthStencilFormat;
     needToApplyPipelineState = true;
 
@@ -360,7 +360,7 @@ void GraphicsContextDirect3D11::SetIndexBuffer(const std::shared_ptr<IndexBuffer
 
     deferredContext->IASetIndexBuffer(
         nativeBuffer->GetBuffer(),
-        DXGI::ToDXGIFormat(indexBuffer->GetElementSize()),
+        dxgi::ToDXGIFormat(indexBuffer->GetElementSize()),
         0);
 }
 

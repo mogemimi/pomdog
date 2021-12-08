@@ -14,7 +14,7 @@ namespace pomdog::detail::x11 {
 CreateGamepad() noexcept
 {
 #if defined(POMDOG_PLATFORM_LINUX)
-    return std::make_unique<Linux::GamepadLinux>();
+    return std::make_unique<linux::GamepadLinux>();
 #else
 #error "Platform undefined or not supported."
 #endif

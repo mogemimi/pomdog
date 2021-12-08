@@ -45,7 +45,7 @@ BuildDepthBuffer(
 
     // NOTE: Create depth stencil texture
     D3D11_TEXTURE2D_DESC textureDesc;
-    textureDesc.Format = DXGI::ToDXGIFormat(depthStencilFormat);
+    textureDesc.Format = dxgi::ToDXGIFormat(depthStencilFormat);
     textureDesc.Width = pixelWidth;
     textureDesc.Height = pixelHeight;
     textureDesc.ArraySize = 1;

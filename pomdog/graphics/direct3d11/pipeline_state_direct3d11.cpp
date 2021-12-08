@@ -333,7 +333,7 @@ BuildInputElements(
         D3D11_INPUT_ELEMENT_DESC elementDesc;
         elementDesc.SemanticName = signature->SemanticName;
         elementDesc.SemanticIndex = signature->SemanticIndex;
-        elementDesc.Format = DXGI::ToDXGIFormat(sourceElement.Format);
+        elementDesc.Format = dxgi::ToDXGIFormat(sourceElement.Format);
         elementDesc.InputSlot = sourceElement.InputSlot;
         elementDesc.AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
         elementDesc.InputSlotClass = ToD3D11InputClassification(sourceElement.InputSlotClass);

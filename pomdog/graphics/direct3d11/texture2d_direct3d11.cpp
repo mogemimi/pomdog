@@ -88,7 +88,7 @@ Texture2DDirect3D11::Initialize(
     POMDOG_ASSERT(levelCount >= 1);
 
     D3D11_TEXTURE2D_DESC textureDesc;
-    textureDesc.Format = DXGI::ToDXGIFormat(format);
+    textureDesc.Format = dxgi::ToDXGIFormat(format);
     textureDesc.Width = pixelWidth;
     textureDesc.Height = pixelHeight;
     textureDesc.ArraySize = 1;
