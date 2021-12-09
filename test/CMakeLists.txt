@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(PomdogTest CXX)
+project(pomdog_test CXX)
 
 # NOTE: Remove /RTC1 option from default compiler options for Visual Studio
 STRING(REGEX REPLACE "/RTC(su|[1su])" "" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
@@ -21,9 +21,9 @@ source_group(network                REGULAR_EXPRESSION test/network/*)
 source_group(signals                REGULAR_EXPRESSION test/signals/*)
 source_group(utility                REGULAR_EXPRESSION test/utility/*)
 
-add_executable(PomdogTest)
+add_executable(pomdog_test)
 
-target_sources(PomdogTest PRIVATE
+target_sources(pomdog_test PRIVATE
     ${POMDOG_TEST_DIR}/main.cpp
     ${POMDOG_TEST_DIR}/pomdog_test.cpp
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:
@@ -93,18 +93,18 @@ target_sources(PomdogTest PRIVATE
     ${POMDOG_TEST_DIR}/utility/string_helper_test.cpp
 )
 
-set_target_properties(PomdogTest PROPERTIES
+set_target_properties(pomdog_test PROPERTIES
     CXX_STANDARD 20
     CXX_STANDARD_REQUIRED ON
     CXX_EXTENSIONS OFF
 )
 
-target_include_directories(PomdogTest PRIVATE
+target_include_directories(pomdog_test PRIVATE
     ${POMDOG_DIR}
     ${POMDOG_DIR}/dependencies/Catch2/extras
 )
 
-target_compile_definitions(PomdogTest PRIVATE
+target_compile_definitions(pomdog_test PRIVATE
     $<$<CONFIG:Debug>:_DEBUG;DEBUG=1>
     $<$<CONFIG:Release>:NDEBUG>
 
@@ -115,7 +115,7 @@ target_compile_definitions(PomdogTest PRIVATE
     >
 )
 
-target_compile_options(PomdogTest PRIVATE
+target_compile_options(pomdog_test PRIVATE
     # NOTE: Clang and GCC
     $<$<CXX_COMPILER_ID:Clang,AppleClang,GNU>:
         -Wall
@@ -151,7 +151,7 @@ target_compile_options(PomdogTest PRIVATE
     >
 )
 
-target_link_options(PomdogTest PRIVATE
+target_link_options(pomdog_test PRIVATE
     # NOTE: Apple macOS
     $<$<PLATFORM_ID:Darwin>:
         "SHELL: -framework AudioToolBox"
@@ -182,7 +182,7 @@ target_link_options(PomdogTest PRIVATE
     >
 )
 
-set_target_properties(PomdogTest PROPERTIES
+set_target_properties(pomdog_test PROPERTIES
     XCODE_ATTRIBUTE_GCC_OPTIMIZATION_LEVEL[variant=Debug] "0" # -O0
     XCODE_ATTRIBUTE_GCC_OPTIMIZATION_LEVEL[variant=Release] "3" # -O3
     XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH[variant=Debug] "YES"
@@ -252,9 +252,9 @@ set_target_properties(PomdogTest PROPERTIES
 )
 
 add_subdirectory(${POMDOG_DIR}/cmake/dependencies/catch2 "${CMAKE_CURRENT_BINARY_DIR}/catch2_build")
-target_link_libraries(PomdogTest catch2_static)
+target_link_libraries(pomdog_test catch2_static)
 
 if(NOT POMDOG_BUILD_TARGET_ALL)
     add_subdirectory(${POMDOG_DIR}/cmake/pomdog ${CMAKE_CURRENT_BINARY_DIR}/pomdog_build)
 endif()
-target_link_libraries(PomdogTest pomdog_static)
+target_link_libraries(pomdog_test pomdog_static)

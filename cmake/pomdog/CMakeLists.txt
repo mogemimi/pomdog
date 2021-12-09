@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(Pomdog CXX)
+project(pomdog CXX)
 
 # NOTE: Remove /RTC1 option from default compiler options for Visual Studio
 STRING(REGEX REPLACE "/RTC(su|[1su])" "" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
@@ -46,19 +46,19 @@ set(POMDOG_USE_EXPERIMENTAL true CACHE BOOL "Use Experimental")
 
 # NOTE: static library
 add_library(pomdog_static STATIC)
-include(PomdogApplication.cmake)
-include(PomdogAudio.cmake)
-include(PomdogBasic.cmake)
-include(PomdogContent.cmake)
-include(PomdogExperimental.cmake)
-include(PomdogGraphics.cmake)
-include(PomdogInput.cmake)
-include(PomdogLogging.cmake)
-include(PomdogMath.cmake)
-include(PomdogNetwork.cmake)
-include(PomdogPlatform.cmake)
-include(PomdogSignals.cmake)
-include(PomdogUtility.cmake)
+include(application.cmake)
+include(audio.cmake)
+include(basic.cmake)
+include(content.cmake)
+include(experimental.cmake)
+include(graphics.cmake)
+include(input.cmake)
+include(logging.cmake)
+include(math.cmake)
+include(network.cmake)
+include(platform.cmake)
+include(signals.cmake)
+include(utility.cmake)
 
 set_target_properties(pomdog_static PROPERTIES
     CXX_STANDARD 20
@@ -320,7 +320,7 @@ target_compile_options(pomdog_static PRIVATE
 # NOTE: For dynamic library
 # NOTE: see https://cmake.org/cmake/help/v3.9/prop_tgt/FRAMEWORK.html
 # set_target_properties(pomdog_static PROPERTIES
-#   XCODE_ATTRIBUTE_PRODUCT_NAME "Pomdog"
+#   XCODE_ATTRIBUTE_PRODUCT_NAME "pomdog"
 #   XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER "net.enginetrouble.pomdog"
 #   XCODE_ATTRIBUTE_INFOPLIST_FILE "src/Platform.Apple/Info.plist"
 #   XCODE_ATTRIBUTE_INSTALL_PATH "$(LOCAL_LIBRARY_DIR)/Frameworks"

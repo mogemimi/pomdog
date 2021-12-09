@@ -47,4 +47,4 @@ jobs:
       - name: Build
         run: ninja -C build.cmake -k 20
       - name: Run test
-        run: ./build.cmake/test/PomdogTest
+        run: ./build.cmake/test/pomdog_test

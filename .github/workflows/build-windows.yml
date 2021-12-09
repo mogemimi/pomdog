@@ -27,4 +27,4 @@ jobs:
       - name: Build
         run: cmake --build build.cmake --config ${{ matrix.build_config }}
       - name: Run test
-        run: ./build.cmake/test/${{ matrix.build_config }}/PomdogTest
+        run: ./build.cmake/test/${{ matrix.build_config }}/pomdog_test

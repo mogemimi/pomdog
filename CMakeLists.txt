@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(Pomdog)
+project(pomdog)
 
 set(POMDOG_BUILD_TARGET_ALL ON)
 add_subdirectory(cmake/pomdog)
