@@ -134,14 +134,14 @@ Keys TranslateKey(Display* display, unsigned int keyCode)
     case XK_Alt_R:
         return Keys::RightAlt;
     case XK_Super_L:
-        return Keys::LeftWindows;
+        return Keys::LeftSuper;
     case XK_Super_R:
-        return Keys::RightWindows;
+        return Keys::RightSuper;
 #if defined(POMDOG_PLATFORM_MACOSX)
     case XK_Meta_L:
-        return Keys::LeftApple;
+        return Keys::LeftSuper;
     case XK_Meta_R:
-        return Keys::RightApple;
+        return Keys::RightSuper;
 #endif
 
     case XK_F1:
@@ -249,12 +249,12 @@ Keys TranslateKey(Display* display, unsigned int keyCode)
 
     case XK_Mode_switch:
         return Keys::RightAlt;
-    case XK_ISO_Level3_Shift:
-        return Keys::RightAlt;
-    case XK_Kanji:
-        return Keys::KanjiMode;
-    case XK_kana_switch:
-        return Keys::KanaMode;
+    // case XK_ISO_Level3_Shift:
+    //     return Keys::RightAlt;
+    // case XK_Kanji:
+    //     return Keys::KanjiMode;
+    // case XK_kana_switch:
+    //     return Keys::KanaMode;
     default:
         break;
     }
