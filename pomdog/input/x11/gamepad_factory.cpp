@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/platform/x11/gamepad_factory.hpp"
+#include "pomdog/input/x11/gamepad_factory.hpp"
 #include "pomdog/basic/platform.hpp"
 #if defined(POMDOG_PLATFORM_LINUX)
 #include "pomdog/input/linux/gamepad_linux.hpp"
