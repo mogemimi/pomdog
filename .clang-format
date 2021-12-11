@@ -6,7 +6,6 @@ UseTab: Never
 Standard: Cpp11
 AccessModifierOffset: -4
 AlignAfterOpenBracket: DontAlign
-AlignTrailingComments: false
 AllowAllParametersOfDeclarationOnNextLine: true
 AllowShortFunctionsOnASingleLine: Inline
 AllowShortIfStatementsOnASingleLine: false
