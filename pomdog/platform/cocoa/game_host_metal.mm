@@ -3,7 +3,8 @@
 #include "pomdog/platform/cocoa/game_host_metal.hpp"
 #include "pomdog/application/file_system.hpp"
 #include "pomdog/application/game.hpp"
-#include "pomdog/application/game_clock.hpp"
+#include "pomdog/chrono/detail/game_clock_impl.hpp"
+#include "pomdog/chrono/apple/time_source_apple.hpp"
 #include "pomdog/application/system_events.hpp"
 #include "pomdog/audio/openal/audio_engine_al.hpp"
 #include "pomdog/content/asset_manager.hpp"
@@ -88,7 +89,7 @@ public:
     GetWindow() noexcept;
 
     [[nodiscard]] std::shared_ptr<GameClock>
-    GetClock(std::shared_ptr<GameHost>&& gameHost) noexcept;
+    GetClock() noexcept;
 
     [[nodiscard]] std::shared_ptr<GraphicsDevice>
     GetGraphicsDevice() noexcept;
@@ -129,12 +130,13 @@ private:
     void GameWillExit();
 
 private:
-    GameClock clock;
     ScopedConnection systemEventConnection;
     std::atomic_bool viewLiveResizing = false;
     std::function<void()> onCompleted;
 
     std::weak_ptr<Game> weakGame;
+    std::shared_ptr<detail::apple::TimeSourceApple> timeSource_;
+    std::shared_ptr<GameClockImpl> clock_;
     std::shared_ptr<EventQueue<SystemEvent>> eventQueue;
     std::shared_ptr<GameWindowCocoa> window;
     std::shared_ptr<GraphicsDeviceMetal> graphicsDevice;
@@ -146,7 +148,7 @@ private:
     std::shared_ptr<MouseCocoa> mouse;
     std::shared_ptr<GamepadIOKit> gamepad;
 
-    std::unique_ptr<IOService> ioService;
+    std::unique_ptr<IOService> ioService_;
     std::unique_ptr<HTTPClient> httpClient;
 
     __weak MTKView* metalView = nullptr;
@@ -170,6 +172,12 @@ GameHostMetal::Impl::Initialize(
 
     POMDOG_ASSERT(window);
     POMDOG_ASSERT(metalView != nullptr);
+
+    timeSource_ = std::make_shared<detail::apple::TimeSourceApple>();
+    clock_ = std::make_shared<GameClockImpl>();
+    if (auto err = clock_->Initialize(presentationParameters.PresentationInterval, timeSource_); err != nullptr) {
+        return errors::Wrap(std::move(err), "GameClockImpl::Initialize() failed.");
+    }
 
     window->SetView(metalView);
 
@@ -232,11 +240,11 @@ GameHostMetal::Impl::Initialize(
         audioEngine,
         graphicsDevice);
 
-    ioService = std::make_unique<IOService>(&clock);
-    if (auto err = ioService->Initialize(); err != nullptr) {
+    ioService_ = std::make_unique<IOService>();
+    if (auto err = ioService_->Initialize(clock_); err != nullptr) {
         return errors::Wrap(std::move(err), "IOService::Initialize() failed.");
     }
-    httpClient = std::make_unique<HTTPClient>(ioService.get());
+    httpClient = std::make_unique<HTTPClient>(ioService_.get());
 
     POMDOG_ASSERT(presentationParameters.PresentationInterval > 0);
     presentationInterval = Duration(1) / presentationParameters.PresentationInterval;
@@ -248,10 +256,10 @@ GameHostMetal::Impl::~Impl()
 {
     systemEventConnection.Disconnect();
     httpClient.reset();
-    if (auto err = ioService->Shutdown(); err != nullptr) {
+    if (auto err = ioService_->Shutdown(); err != nullptr) {
         Log::Warning("pomdog", err->ToString());
     }
-    ioService.reset();
+    ioService_.reset();
     assetManager.reset();
     gamepad.reset();
     keyboard.reset();
@@ -338,9 +346,9 @@ void GameHostMetal::Impl::GameLoop()
     auto game = weakGame.lock();
     POMDOG_ASSERT(game);
 
-    clock.Tick();
+    clock_->Tick();
     DoEvents();
-    ioService->Step();
+    ioService_->Step();
 
     if (exitRequest) {
         return;
@@ -429,10 +437,9 @@ GameHostMetal::Impl::GetWindow() noexcept
 }
 
 std::shared_ptr<GameClock>
-GameHostMetal::Impl::GetClock(std::shared_ptr<GameHost>&& gameHost) noexcept
+GameHostMetal::Impl::GetClock() noexcept
 {
-    std::shared_ptr<GameClock> shared{gameHost, &clock};
-    return shared;
+    return clock_;
 }
 
 std::shared_ptr<GraphicsDevice>
@@ -481,8 +488,8 @@ GameHostMetal::Impl::GetGamepad() noexcept
 std::shared_ptr<IOService>
 GameHostMetal::Impl::GetIOService(std::shared_ptr<GameHost>&& gameHost) noexcept
 {
-    POMDOG_ASSERT(ioService != nullptr);
-    std::shared_ptr<IOService> shared{std::move(gameHost), ioService.get()};
+    POMDOG_ASSERT(ioService_ != nullptr);
+    std::shared_ptr<IOService> shared{std::move(gameHost), ioService_.get()};
     return shared;
 }
 
@@ -550,7 +557,7 @@ std::shared_ptr<GameWindow> GameHostMetal::GetWindow() noexcept
 std::shared_ptr<GameClock> GameHostMetal::GetClock() noexcept
 {
     POMDOG_ASSERT(impl);
-    return impl->GetClock(shared_from_this());
+    return impl->GetClock();
 }
 
 std::shared_ptr<GraphicsDevice> GameHostMetal::GetGraphicsDevice() noexcept

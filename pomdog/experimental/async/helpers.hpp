@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "pomdog/application/duration.hpp"
 #include "pomdog/basic/conditional_compilation.hpp"
 #include "pomdog/basic/export.hpp"
+#include "pomdog/chrono/duration.hpp"
 #include "pomdog/experimental/async/task.hpp"
 #include "pomdog/signals/signal.hpp"
 #include "pomdog/signals/signal_helpers.hpp"

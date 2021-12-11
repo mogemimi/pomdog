@@ -10,8 +10,6 @@ target_sources(pomdog_static PRIVATE
         # NOTE: platform/apple
         ${POMDOG_SRC_DIR}/platform/apple/file_system_apple.hpp
         ${POMDOG_SRC_DIR}/platform/apple/file_system_apple.mm
-        ${POMDOG_SRC_DIR}/platform/apple/time_source_apple.cpp
-        ${POMDOG_SRC_DIR}/platform/apple/time_source_apple.hpp
     >
 
     $<$<PLATFORM_ID:Darwin>:
@@ -48,16 +46,12 @@ target_sources(pomdog_static PRIVATE
         # NOTE: platform/emscripten
         ${POMDOG_SRC_DIR}/platform/emscripten/file_system_emscripten.cpp
         ${POMDOG_SRC_DIR}/platform/emscripten/file_system_emscripten.hpp
-        ${POMDOG_SRC_DIR}/platform/emscripten/time_source_emscripten.cpp
-        ${POMDOG_SRC_DIR}/platform/emscripten/time_source_emscripten.hpp
     >
 
     $<$<PLATFORM_ID:Linux>:
         # NOTE: platform/linux
         ${POMDOG_SRC_DIR}/platform/linux/file_system_linux.cpp
         ${POMDOG_SRC_DIR}/platform/linux/file_system_linux.hpp
-        ${POMDOG_SRC_DIR}/platform/linux/time_source_linux.cpp
-        ${POMDOG_SRC_DIR}/platform/linux/time_source_linux.hpp
     >
 
     $<$<PLATFORM_ID:Linux>:
@@ -99,8 +93,6 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/platform/win32/mouse_win32.cpp
         ${POMDOG_SRC_DIR}/platform/win32/mouse_win32.hpp
         ${POMDOG_SRC_DIR}/platform/win32/prerequisites_win32.hpp
-        ${POMDOG_SRC_DIR}/platform/win32/time_source_win32.cpp
-        ${POMDOG_SRC_DIR}/platform/win32/time_source_win32.hpp
     >
 
     $<$<AND:$<PLATFORM_ID:Windows>,$<BOOL:${POMDOG_USE_GL4}>>:

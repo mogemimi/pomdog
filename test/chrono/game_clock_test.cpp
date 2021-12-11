@@ -1,10 +1,16 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/application/game_clock.hpp"
+#include "pomdog/chrono/detail/game_clock_impl.hpp"
+#include "pomdog/chrono/detail/make_time_source.hpp"
+#include "pomdog/chrono/game_clock.hpp"
+#include "pomdog/utility/errors.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <catch_amalgamated.hpp>
 #include <chrono>
 #include <cmath>
 #include <thread>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 using namespace pomdog;
 
@@ -14,8 +20,11 @@ TEST_CASE("GameClock", "[GameClock]")
     {
         constexpr auto Epsilon = std::numeric_limits<float>::epsilon();
 
+        auto timeSource = detail::makeTimeSource();
         const int framesPerSecond = 30;
-        GameClock clock{framesPerSecond};
+        detail::GameClockImpl clock;
+        REQUIRE(clock.Initialize(framesPerSecond, timeSource) == nullptr);
+
         const auto sleepTime = std::chrono::milliseconds(1);
         auto prevTotalTime = clock.GetTotalGameTime();
 
@@ -64,7 +73,11 @@ TEST_CASE("GameClock", "[GameClock]")
     }
     SECTION("ElapsedTime")
     {
-        GameClock clock;
+        auto timeSource = detail::makeTimeSource();
+        const int framesPerSecond = 60;
+        detail::GameClockImpl clock;
+        REQUIRE(clock.Initialize(framesPerSecond, timeSource) == nullptr);
+
         const auto sleepTime = std::chrono::milliseconds(16);
 
         clock.Tick();

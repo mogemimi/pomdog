@@ -1,12 +1,12 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/platform/win32/time_source_win32.hpp"
-#include "pomdog/Platform/Win32/prerequisites_win32.hpp"
+#include "pomdog/chrono/win32/time_source_win32.hpp"
+#include "pomdog/platform/win32/prerequisites_win32.hpp"
 #include "pomdog/utility/assert.hpp"
 
 namespace pomdog::detail::win32 {
 
-TimeSourceWin32::TimeSourceWin32()
+TimeSourceWin32::TimeSourceWin32() noexcept
 {
     LARGE_INTEGER frequency;
     ::QueryPerformanceFrequency(&frequency);
@@ -17,7 +17,7 @@ TimeSourceWin32::TimeSourceWin32()
     secondsPerTick = 1.0 / frequency.QuadPart;
 }
 
-TimePoint TimeSourceWin32::Now() const
+TimePoint TimeSourceWin32::Now() const noexcept
 {
     LARGE_INTEGER time;
     ::QueryPerformanceCounter(&time);

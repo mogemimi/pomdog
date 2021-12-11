@@ -1,12 +1,15 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/platform/apple/time_source_apple.hpp"
+#include "pomdog/chrono/apple/time_source_apple.hpp"
 #include "pomdog/utility/assert.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <mach/mach_time.h>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail::apple {
 
-TimeSourceApple::TimeSourceApple()
+TimeSourceApple::TimeSourceApple() noexcept
 {
     mach_timebase_info_data_t timeBase;
     mach_timebase_info(&timeBase);
@@ -15,13 +18,13 @@ TimeSourceApple::TimeSourceApple()
     double nanoSeconds = static_cast<double>(timeBase.numer) / timeBase.denom;
 
     constexpr double nanoScale = (1.0 / 1000000000LL);
-    secondsPerTick = nanoScale * nanoSeconds;
+    secondsPerTick_ = nanoScale * nanoSeconds;
 }
 
-TimePoint TimeSourceApple::Now() const
+TimePoint TimeSourceApple::Now() const noexcept
 {
-    auto currentSeconds = mach_absolute_time() * secondsPerTick;
-    return TimePoint(Duration(currentSeconds));
+    const auto currentSeconds = mach_absolute_time() * secondsPerTick_;
+    return TimePoint{Duration{currentSeconds}};
 }
 
 } // namespace pomdog::detail::apple

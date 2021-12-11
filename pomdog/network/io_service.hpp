@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "pomdog/application/game_clock.hpp"
-#include "pomdog/application/time_point.hpp"
 #include "pomdog/basic/conditional_compilation.hpp"
 #include "pomdog/basic/export.hpp"
+#include "pomdog/chrono/game_clock.hpp"
+#include "pomdog/chrono/time_point.hpp"
 #include "pomdog/signals/signal.hpp"
 #include "pomdog/utility/errors.hpp"
 
@@ -18,14 +18,16 @@ namespace pomdog {
 
 class POMDOG_EXPORT IOService final {
 public:
-    explicit IOService(const GameClock* clock);
+    IOService() noexcept;
 
     IOService(const IOService&) = delete;
     IOService& operator=(const IOService&) = delete;
 
-    [[nodiscard]] std::unique_ptr<Error> Initialize();
+    [[nodiscard]] std::unique_ptr<Error>
+    Initialize(const std::shared_ptr<GameClock>& clock);
 
-    [[nodiscard]] std::unique_ptr<Error> Shutdown();
+    [[nodiscard]] std::unique_ptr<Error>
+    Shutdown();
 
     void Step();
 
@@ -34,8 +36,8 @@ public:
     TimePoint GetNowTime() const;
 
 private:
-    const GameClock* clock = nullptr;
-    Signal<void()> tasks;
+    std::shared_ptr<GameClock> clock_;
+    Signal<void()> tasks_;
 };
 
 } // namespace pomdog

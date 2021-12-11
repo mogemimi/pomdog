@@ -1,12 +1,15 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/platform/emscripten/time_source_emscripten.hpp"
+#include "pomdog/chrono/emscripten/time_source_emscripten.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <emscripten.h>
 #include <type_traits>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail::emscripten {
 
-TimePoint TimeSourceEmscripten::Now() const
+TimePoint TimeSourceEmscripten::Now() const noexcept
 {
     const auto now = ::emscripten_get_now();
     static_assert(std::is_same_v<std::remove_const_t<decltype(now)>, double>);

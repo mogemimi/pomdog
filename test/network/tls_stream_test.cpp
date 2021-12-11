@@ -1,7 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "executor.hpp"
-#include "pomdog/application/game_clock.hpp"
+#include "pomdog/chrono/game_clock.hpp"
 #include "pomdog/network/array_view.hpp"
 #include "pomdog/network/io_service.hpp"
 #include "pomdog/network/tls_stream.hpp"

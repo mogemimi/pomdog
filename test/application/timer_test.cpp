@@ -1,7 +1,9 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/application/game_clock.hpp"
 #include "pomdog/application/timer.hpp"
+#include "pomdog/chrono/detail/game_clock_impl.hpp"
+#include "pomdog/chrono/detail/make_time_source.hpp"
+#include "pomdog/utility/errors.hpp"
 #include <catch_amalgamated.hpp>
 #include <chrono>
 #include <cmath>
@@ -11,7 +13,10 @@ using namespace pomdog;
 
 TEST_CASE("Timer", "[Timer]")
 {
-    GameClock clock;
+    auto timeSource = detail::makeTimeSource();
+    detail::GameClockImpl clock;
+    REQUIRE(clock.Initialize(60, timeSource) == nullptr);
+
     Timer timer(clock);
 
     SECTION("Timer")

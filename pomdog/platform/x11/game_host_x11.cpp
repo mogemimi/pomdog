@@ -4,6 +4,7 @@
 #include "pomdog/application/file_system.hpp"
 #include "pomdog/application/game.hpp"
 #include "pomdog/audio/openal/audio_engine_al.hpp"
+#include "pomdog/chrono/detail/make_time_source.hpp"
 #include "pomdog/content/asset_manager.hpp"
 #include "pomdog/graphics/backends/graphics_command_queue_immediate.hpp"
 #include "pomdog/graphics/gl4/graphics_context_gl4.hpp"
@@ -204,7 +205,8 @@ private:
     void RenderFrame(Game& game);
 
 public:
-    GameClock clock;
+    std::shared_ptr<detail::TimeSource> timeSource_;
+    std::shared_ptr<GameClockImpl> clock_;
     std::shared_ptr<X11Context> x11Context;
     std::shared_ptr<GameWindowX11> window;
     std::shared_ptr<OpenGLContextX11> openGLContext;
@@ -216,7 +218,7 @@ public:
     std::unique_ptr<KeyboardX11> keyboard;
     MouseX11 mouse;
     std::unique_ptr<NativeGamepad> gamepad;
-    std::unique_ptr<IOService> ioService;
+    std::unique_ptr<IOService> ioService_;
     std::unique_ptr<HTTPClient> httpClient;
     Duration presentationInterval;
     SurfaceFormat backBufferSurfaceFormat;
@@ -233,6 +235,12 @@ GameHostX11::Impl::Initialize(const PresentationParameters& presentationParamete
 
     POMDOG_ASSERT(presentationParameters.PresentationInterval > 0);
     presentationInterval = Duration(1.0) / presentationParameters.PresentationInterval;
+
+    timeSource_ = detail::makeTimeSource();
+    clock_ = std::make_shared<GameClockImpl>();
+    if (auto err = clock_->Initialize(presentationParameters.PresentationInterval, timeSource_); err != nullptr) {
+        return errors::Wrap(std::move(err), "GameClockImpl::Initialize() failed.");
+    }
 
     // NOTE: Create X11 context.
     x11Context = std::make_shared<X11Context>();
@@ -309,11 +317,11 @@ GameHostX11::Impl::Initialize(const PresentationParameters& presentationParamete
         audioEngine,
         graphicsDevice);
 
-    ioService = std::make_unique<IOService>(&clock);
-    if (auto err = ioService->Initialize(); err != nullptr) {
+    ioService_ = std::make_unique<IOService>();
+    if (auto err = ioService_->Initialize(clock_); err != nullptr) {
         return errors::Wrap(std::move(err), "failed to initialize IOService");
     }
-    httpClient = std::make_unique<HTTPClient>(ioService.get());
+    httpClient = std::make_unique<HTTPClient>(ioService_.get());
 
     return nullptr;
 }
@@ -321,10 +329,10 @@ GameHostX11::Impl::Initialize(const PresentationParameters& presentationParamete
 GameHostX11::Impl::~Impl()
 {
     httpClient.reset();
-    if (auto err = ioService->Shutdown(); err != nullptr) {
+    if (auto err = ioService_->Shutdown(); err != nullptr) {
         Log::Warning("pomdog", err->ToString());
     }
-    ioService.reset();
+    ioService_.reset();
     gamepad.reset();
     keyboard.reset();
     assetManager.reset();
@@ -399,19 +407,19 @@ void GameHostX11::Impl::ProcessEvent(::XEvent& event)
 void GameHostX11::Impl::Run(Game& game)
 {
     while (!exitRequest) {
-        clock.Tick();
+        clock_->Tick();
         MessagePump();
         constexpr int64_t gamepadDetectionInterval = 240;
-        if (((clock.GetFrameNumber() % gamepadDetectionInterval) == 1) && (clock.GetFrameRate() >= 30.0f)) {
+        if (((clock_->GetFrameNumber() % gamepadDetectionInterval) == 1) && (clock_->GetFrameRate() >= 30.0f)) {
             gamepad->EnumerateDevices();
         }
         gamepad->PollEvents();
-        ioService->Step();
+        ioService_->Step();
 
         game.Update();
         RenderFrame(game);
 
-        auto elapsedTime = clock.GetElapsedTime();
+        auto elapsedTime = clock_->GetElapsedTime();
 
         if (elapsedTime < presentationInterval) {
             auto sleepTime = (presentationInterval - elapsedTime);
@@ -472,9 +480,7 @@ std::shared_ptr<GameWindow> GameHostX11::GetWindow() noexcept
 std::shared_ptr<GameClock> GameHostX11::GetClock() noexcept
 {
     POMDOG_ASSERT(impl);
-    auto gameHost = shared_from_this();
-    std::shared_ptr<GameClock> sharedClock(gameHost, &impl->clock);
-    return sharedClock;
+    return impl->clock_;
 }
 
 std::shared_ptr<GraphicsDevice> GameHostX11::GetGraphicsDevice() noexcept
@@ -534,7 +540,7 @@ std::shared_ptr<IOService> GameHostX11::GetIOService() noexcept
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->ioService);
     auto gameHost = shared_from_this();
-    std::shared_ptr<IOService> shared{gameHost, impl->ioService.get()};
+    std::shared_ptr<IOService> shared{gameHost, impl->ioService_.get()};
     return shared;
 }
 

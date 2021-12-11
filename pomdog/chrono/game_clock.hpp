@@ -2,14 +2,13 @@
 
 #pragma once
 
-#include "pomdog/application/duration.hpp"
 #include "pomdog/basic/conditional_compilation.hpp"
 #include "pomdog/basic/export.hpp"
+#include "pomdog/chrono/duration.hpp"
 #include "pomdog/signals/signal.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
-#include <memory>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
@@ -17,52 +16,41 @@ namespace pomdog {
 /// Application-based time storage.
 ///
 /// Instances of this class are unique.
-class POMDOG_EXPORT GameClock final {
+class POMDOG_EXPORT GameClock {
 public:
-    /// Constructs GameClock with default value of FPS.
-    /// Default value is 30.
-    /// @see GameClock(int)
-    GameClock();
-
-    /// Constructs GameClock with initial FPS.
-    /// @param framesPerSecond Amount of update / render cycles in one second.
-    /// Should be greater than 0.
-    explicit GameClock(int framesPerSecond);
-
+    GameClock() noexcept;
     GameClock(const GameClock&) = delete;
-    GameClock(GameClock&&) = default;
-
     GameClock& operator=(const GameClock&) = delete;
-    GameClock& operator=(GameClock&&) = default;
 
-    ~GameClock();
+    virtual ~GameClock();
 
     /// Increments frame number.
     /// Fires @ref OnTick.
-    void Tick();
+    virtual void Tick() = 0;
 
     /// @return Total amount of elapsed time in seconds since the game launch.
-    Duration GetTotalGameTime() const noexcept;
+    [[nodiscard]] virtual Duration
+    GetTotalGameTime() const noexcept = 0;
 
     /// @return Number of current frame in usage.
     /// @note Can't be greater than framesPerSecond in GameClock(int).
-    std::int64_t GetFrameNumber() const noexcept;
+    [[nodiscard]] virtual std::int64_t
+    GetFrameNumber() const noexcept = 0;
 
     /// @return Duration in seconds of one frame per one second.
-    Duration GetFrameDuration() const noexcept;
+    [[nodiscard]] virtual Duration
+    GetFrameDuration() const noexcept = 0;
 
     /// @return Approximate quantity of actual frames per second.
-    float GetFrameRate() const noexcept;
+    [[nodiscard]] virtual float
+    GetFrameRate() const noexcept = 0;
 
     /// @return Total amount of elasped time in seconds since last Tick().
-    Duration GetElapsedTime() const noexcept;
+    [[nodiscard]] virtual Duration
+    GetElapsedTime() const noexcept = 0;
 
     /// Signal that fires on every Tick().
     Signal<void(const Duration& frameDuration)> OnTick;
-
-private:
-    class Impl;
-    std::unique_ptr<Impl> impl;
 };
 
 } // namespace pomdog

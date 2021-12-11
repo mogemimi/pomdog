@@ -9,6 +9,7 @@ set(POMDOG_TEST_DIR "${POMDOG_DIR}/test")
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
 
 source_group(application            REGULAR_EXPRESSION test/application/*)
+source_group(chrono                 REGULAR_EXPRESSION test/chrono/*)
 source_group(content                REGULAR_EXPRESSION test/content/*)
 source_group(experimental\\async    REGULAR_EXPRESSION test/experimental/async/*)
 source_group(experimental\\ecs      REGULAR_EXPRESSION test/experimental/ecs/*)
@@ -30,8 +31,8 @@ target_sources(pomdog_test PRIVATE
         # TODO: Need to implement for Emscripten.
         ${POMDOG_TEST_DIR}/application/file_system_test.cpp
     >
-    ${POMDOG_TEST_DIR}/application/game_clock_test.cpp
     ${POMDOG_TEST_DIR}/application/timer_test.cpp
+    ${POMDOG_TEST_DIR}/chrono/game_clock_test.cpp
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:
         # TODO: Need to implement for Emscripten.
         ${POMDOG_TEST_DIR}/experimental/async/scheduler_test.cpp

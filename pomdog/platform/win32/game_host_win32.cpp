@@ -18,11 +18,12 @@
 #endif
 #include "pomdog/application/file_system.hpp"
 #include "pomdog/application/game.hpp"
-#include "pomdog/application/game_clock.hpp"
 #include "pomdog/application/subsystem_scheduler.hpp"
 #include "pomdog/application/system_events.hpp"
 #include "pomdog/audio/xaudio2/audio_engine_xaudio2.hpp"
 #include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/chrono/game_clock.hpp"
+#include "pomdog/chrono/win32/time_source_win32.hpp"
 #include "pomdog/content/asset_manager.hpp"
 #include "pomdog/graphics/graphics_command_queue.hpp"
 #include "pomdog/graphics/graphics_device.hpp"
@@ -290,7 +291,7 @@ public:
     GetWindow() noexcept;
 
     [[nodiscard]] std::shared_ptr<GameClock>
-    GetClock(std::shared_ptr<GameHost>&& gameHost) noexcept;
+    GetClock() noexcept;
 
     [[nodiscard]] std::shared_ptr<GraphicsCommandQueue>
     GetGraphicsCommandQueue() noexcept;
@@ -329,7 +330,8 @@ private:
     void ClientSizeChanged();
 
 private:
-    GameClock clock;
+    std::shared_ptr<detail::linux::TimeSourceLinux> timeSource_;
+    std::shared_ptr<GameClockImpl> clock_;
     detail::SubsystemScheduler subsystemScheduler;
     ScopedConnection systemEventConnection;
 
@@ -346,7 +348,7 @@ private:
     std::shared_ptr<MouseWin32> mouse;
     std::shared_ptr<NativeGamepad> gamepad;
 
-    std::unique_ptr<IOService> ioService;
+    std::unique_ptr<IOService> ioService_;
     std::unique_ptr<HTTPClient> httpClient;
 
     std::thread gamepadThread;
@@ -375,6 +377,12 @@ GameHostWin32::Impl::Initialize(
 
     POMDOG_ASSERT(presentationParameters.PresentationInterval > 0);
     presentationInterval = Duration(1.0) / presentationParameters.PresentationInterval;
+
+    timeSource_ = std::make_shared<detail::win32::TimeSourceWin32>();
+    clock_ = std::make_shared<GameClockImpl>();
+    if (auto err = clock_->Initialize(presentationParameters.PresentationInterval, timeSource_); err != nullptr) {
+        return errors::Wrap(std::move(err), "GameClockImpl::Initialize() failed.");
+    }
 
 #if !defined(POMDOG_DISABLE_GL4)
     if (useOpenGL) {
@@ -429,11 +437,11 @@ GameHostWin32::Impl::Initialize(
         graphicsDevice);
 
     // NOTE: Create IO service.
-    ioService = std::make_unique<IOService>(&clock);
-    if (auto err = ioService->Initialize(); err != nullptr) {
+    ioService_ = std::make_unique<IOService>();
+    if (auto err = ioService_->Initialize(clock_); err != nullptr) {
         return errors::Wrap(std::move(err), "IOService::Initialize() failed");
     }
-    httpClient = std::make_unique<HTTPClient>(ioService.get());
+    httpClient = std::make_unique<HTTPClient>(ioService_.get());
 
     gamepadThread = std::thread([this] {
         while (!exitRequest) {
@@ -453,10 +461,10 @@ GameHostWin32::Impl::~Impl()
 
     eventQueue.reset();
     httpClient.reset();
-    if (auto err = ioService->Shutdown(); err != nullptr) {
+    if (auto err = ioService_->Shutdown(); err != nullptr) {
         Log::Warning("pomdog", err->ToString());
     }
-    ioService.reset();
+    ioService_.reset();
     assetManager.reset();
     gamepad.reset();
     keyboard.reset();
@@ -476,16 +484,16 @@ GameHostWin32::Impl::~Impl()
 void GameHostWin32::Impl::Run(Game& game)
 {
     while (!exitRequest) {
-        clock.Tick();
+        clock_->Tick();
         MessagePump();
         DoEvents();
         gamepad->PollEvents();
-        ioService->Step();
+        ioService_->Step();
         subsystemScheduler.OnUpdate();
         game.Update();
         RenderFrame(game);
 
-        auto elapsedTime = clock.GetElapsedTime();
+        auto elapsedTime = clock_->GetElapsedTime();
 
         if (elapsedTime < presentationInterval) {
             ::Sleep(1);
@@ -559,10 +567,9 @@ GameHostWin32::Impl::GetWindow() noexcept
 }
 
 std::shared_ptr<GameClock>
-GameHostWin32::Impl::GetClock(std::shared_ptr<GameHost>&& gameHost) noexcept
+GameHostWin32::Impl::GetClock() noexcept
 {
-    std::shared_ptr<GameClock> shared{std::move(gameHost), &clock};
-    return shared;
+    return clock_;
 }
 
 std::shared_ptr<GraphicsCommandQueue>
@@ -618,8 +625,8 @@ GameHostWin32::Impl::GetGamepad() noexcept
 std::shared_ptr<IOService>
 GameHostWin32::Impl::GetIOService(std::shared_ptr<GameHost>&& gameHost) noexcept
 {
-    POMDOG_ASSERT(ioService != nullptr);
-    std::shared_ptr<IOService> shared{std::move(gameHost), ioService.get()};
+    POMDOG_ASSERT(ioService_ != nullptr);
+    std::shared_ptr<IOService> shared{std::move(gameHost), ioService_.get()};
     return shared;
 }
 
@@ -676,7 +683,7 @@ std::shared_ptr<GameWindow> GameHostWin32::GetWindow() noexcept
 std::shared_ptr<GameClock> GameHostWin32::GetClock() noexcept
 {
     POMDOG_ASSERT(impl);
-    return impl->GetClock(shared_from_this());
+    return impl->GetClock();
 }
 
 std::shared_ptr<GraphicsCommandQueue> GameHostWin32::GetGraphicsCommandQueue() noexcept

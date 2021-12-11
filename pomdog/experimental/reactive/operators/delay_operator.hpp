@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "pomdog/application/duration.hpp"
-#include "pomdog/application/game_clock.hpp"
 #include "pomdog/application/game_host.hpp"
 #include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/chrono/duration.hpp"
+#include "pomdog/chrono/game_clock.hpp"
 #include "pomdog/experimental/Reactive/Observable.hpp"
 #include "pomdog/experimental/Reactive/Observer.hpp"
 #include "pomdog/signals/scoped_connection.hpp"

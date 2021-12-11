@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "pomdog/application/duration.hpp"
-#include "pomdog/application/game_clock.hpp"
 #include "pomdog/application/game_host.hpp"
+#include "pomdog/chrono/duration.hpp"
+#include "pomdog/chrono/game_clock.hpp"
 #include "pomdog/graphics/presentation_parameters.hpp"
 #include "pomdog/platform/x11/game_window_x11.hpp"
 #include "pomdog/platform/x11/keyboard_x11.hpp"

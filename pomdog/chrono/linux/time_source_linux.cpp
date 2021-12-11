@@ -1,12 +1,15 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/platform/linux/time_source_linux.hpp"
+#include "pomdog/chrono/linux/time_source_linux.hpp"
 #include "pomdog/utility/exception.hpp"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <ctime>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail::linux {
 
-TimePoint TimeSourceLinux::Now() const
+TimePoint TimeSourceLinux::Now() const noexcept
 {
     struct timespec now;
     if (0 != clock_gettime(CLOCK_MONOTONIC, &now)) {

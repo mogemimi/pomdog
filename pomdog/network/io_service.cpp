@@ -5,8 +5,8 @@
 #include "pomdog/basic/platform.hpp"
 #include "pomdog/utility/assert.hpp"
 
-#if defined(POMDOG_PLATFORM_MACOSX) || \
-    defined(POMDOG_PLATFORM_APPLE_IOS) || \
+#if defined(POMDOG_PLATFORM_MACOSX) ||     \
+    defined(POMDOG_PLATFORM_APPLE_IOS) ||  \
     defined(POMDOG_PLATFORM_EMSCRIPTEN) || \
     defined(POMDOG_PLATFORM_LINUX)
 // NOTE: nothing to do
@@ -22,15 +22,16 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 
-IOService::IOService(const GameClock* clockIn)
-    : clock(clockIn)
-{
-}
+IOService::IOService() noexcept = default;
 
-std::unique_ptr<Error> IOService::Initialize()
+std::unique_ptr<Error>
+IOService::Initialize(const std::shared_ptr<GameClock>& clock)
 {
-#if defined(POMDOG_PLATFORM_MACOSX) || \
-    defined(POMDOG_PLATFORM_APPLE_IOS) || \
+    POMDOG_ASSERT(clock != nullptr);
+    clock_ = clock;
+
+#if defined(POMDOG_PLATFORM_MACOSX) ||     \
+    defined(POMDOG_PLATFORM_APPLE_IOS) ||  \
     defined(POMDOG_PLATFORM_EMSCRIPTEN) || \
     defined(POMDOG_PLATFORM_LINUX)
     // NOTE: nothing to do
@@ -46,8 +47,8 @@ std::unique_ptr<Error> IOService::Initialize()
 
 std::unique_ptr<Error> IOService::Shutdown()
 {
-#if defined(POMDOG_PLATFORM_MACOSX) || \
-    defined(POMDOG_PLATFORM_APPLE_IOS) || \
+#if defined(POMDOG_PLATFORM_MACOSX) ||     \
+    defined(POMDOG_PLATFORM_APPLE_IOS) ||  \
     defined(POMDOG_PLATFORM_EMSCRIPTEN) || \
     defined(POMDOG_PLATFORM_LINUX)
     // NOTE: nothing to do
@@ -63,18 +64,18 @@ std::unique_ptr<Error> IOService::Shutdown()
 
 void IOService::Step()
 {
-    tasks();
+    tasks_();
 }
 
 Connection IOService::ScheduleTask(std::function<void()>&& func)
 {
-    return tasks.Connect(std::move(func));
+    return tasks_.Connect(std::move(func));
 }
 
 TimePoint IOService::GetNowTime() const
 {
-    POMDOG_ASSERT(clock != nullptr);
-    return TimePoint{clock->GetTotalGameTime()};
+    POMDOG_ASSERT(clock_ != nullptr);
+    return TimePoint{clock_->GetTotalGameTime()};
 }
 
 } // namespace pomdog

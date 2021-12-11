@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "pomdog/application/duration.hpp"
 #include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/chrono/duration.hpp"
 #include "pomdog/network/forward_declarations.hpp"
 #include "pomdog/signals/delegate.hpp"
 #include "pomdog/signals/scoped_connection.hpp"

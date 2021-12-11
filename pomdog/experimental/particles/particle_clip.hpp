@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "pomdog/application/duration.hpp"
 #include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/chrono/duration.hpp"
 #include "pomdog/experimental/particles/emitter_shapes/particle_emitter_shape.hpp"
 #include "pomdog/experimental/particles/parameters/particle_parameter.hpp"
 #include "pomdog/math/color.hpp"

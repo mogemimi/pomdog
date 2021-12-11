@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "pomdog/application/duration.hpp"
 #include "pomdog/audio/forward_declarations.hpp"
 #include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/chrono/duration.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstddef>
