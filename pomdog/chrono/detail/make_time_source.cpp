@@ -6,11 +6,11 @@
 #if defined(POMDOG_PLATFORM_MACOSX) || defined(POMDOG_PLATFORM_APPLE_IOS)
 #include "pomdog/chrono/apple/time_source_apple.hpp"
 #elif defined(POMDOG_PLATFORM_WIN32)
-#include "pomdog/chrono/apple/time_source_win32.hpp"
+#include "pomdog/chrono/win32/time_source_win32.hpp"
 #elif defined(POMDOG_PLATFORM_LINUX) || defined(POMDOG_PLATFORM_ANDROID)
-#include "pomdog/chrono/apple/time_source_linux.hpp"
+#include "pomdog/chrono/linux/time_source_linux.hpp"
 #elif defined(POMDOG_PLATFORM_EMSCRIPTEN)
-#include "pomdog/chrono/apple/time_source_emscripten.hpp"
+#include "pomdog/chrono/emscripten/time_source_emscripten.hpp"
 #else
 #error "Platform undefined or not supported."
 #endif
