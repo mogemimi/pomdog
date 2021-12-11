@@ -323,7 +323,7 @@ target_compile_options(pomdog_static PRIVATE
 # set_target_properties(pomdog_static PROPERTIES
 #   XCODE_ATTRIBUTE_PRODUCT_NAME "pomdog"
 #   XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER "net.enginetrouble.pomdog"
-#   XCODE_ATTRIBUTE_INFOPLIST_FILE "src/Platform.Apple/Info.plist"
+#   XCODE_ATTRIBUTE_INFOPLIST_FILE "Info.plist"
 #   XCODE_ATTRIBUTE_INSTALL_PATH "$(LOCAL_LIBRARY_DIR)/Frameworks"
 #   XCODE_ATTRIBUTE_DYLIB_INSTALL_NAME_BASE "@rpath"
 #   XCODE_ATTRIBUTE_LD_RUNPATH_SEARCH_PATHS "$(inherited);@executable_path/../Frameworks;@loader_path/Frameworks"
