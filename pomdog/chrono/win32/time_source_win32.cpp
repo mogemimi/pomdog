@@ -11,7 +11,7 @@ TimeSourceWin32::TimeSourceWin32() noexcept
     ::LARGE_INTEGER frequency;
     ::QueryPerformanceFrequency(&frequency);
 
-    POME_ASSERT(frequency.QuadPart != 0);
+    POMDOG_ASSERT(frequency.QuadPart != 0);
 
     secondsPerTick_ = 1.0 / static_cast<double>(frequency.QuadPart);
 }
