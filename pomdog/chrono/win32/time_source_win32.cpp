@@ -8,21 +8,20 @@ namespace pomdog::detail::win32 {
 
 TimeSourceWin32::TimeSourceWin32() noexcept
 {
-    LARGE_INTEGER frequency;
+    ::LARGE_INTEGER frequency;
     ::QueryPerformanceFrequency(&frequency);
 
-    POMDOG_ASSERT_MESSAGE(0 != frequency.QuadPart,
-        "High-resolution performance counter not supported by installed hardware.");
+    POME_ASSERT(frequency.QuadPart != 0);
 
-    secondsPerTick = 1.0 / frequency.QuadPart;
+    secondsPerTick_ = 1.0 / static_cast<double>(frequency.QuadPart);
 }
 
 TimePoint TimeSourceWin32::Now() const noexcept
 {
-    LARGE_INTEGER time;
+    ::LARGE_INTEGER time;
     ::QueryPerformanceCounter(&time);
-    auto currentSeconds = time.QuadPart * secondsPerTick;
-    return TimePoint(Duration(currentSeconds));
+    auto currentSeconds = static_cast<double>(time.QuadPart) * secondsPerTick_;
+    return TimePoint{Duration{currentSeconds}};
 }
 
 } // namespace pomdog::detail::win32
