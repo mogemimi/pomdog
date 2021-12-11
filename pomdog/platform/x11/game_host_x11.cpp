@@ -4,6 +4,7 @@
 #include "pomdog/application/file_system.hpp"
 #include "pomdog/application/game.hpp"
 #include "pomdog/audio/openal/audio_engine_al.hpp"
+#include "pomdog/chrono/detail/game_clock_impl.hpp"
 #include "pomdog/chrono/detail/make_time_source.hpp"
 #include "pomdog/content/asset_manager.hpp"
 #include "pomdog/graphics/backends/graphics_command_queue_immediate.hpp"

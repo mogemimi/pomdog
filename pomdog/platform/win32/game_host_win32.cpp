@@ -22,7 +22,7 @@
 #include "pomdog/application/system_events.hpp"
 #include "pomdog/audio/xaudio2/audio_engine_xaudio2.hpp"
 #include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/chrono/game_clock.hpp"
+#include "pomdog/chrono/detail/game_clock_impl.hpp"
 #include "pomdog/chrono/win32/time_source_win32.hpp"
 #include "pomdog/content/asset_manager.hpp"
 #include "pomdog/graphics/graphics_command_queue.hpp"
