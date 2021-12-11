@@ -32,7 +32,7 @@ makeTimeSource() noexcept
 #error "Platform undefined or not supported."
 #endif
 
-#if defined(__GNUC__)
+#if !defined(__clang__) && defined(__GNUC__)
     return timeSource;
 #else
     return std::move(timeSource);
