@@ -3,8 +3,8 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/experimental/Reactive/Observable.hpp"
-#include "pomdog/experimental/Reactive/Observer.hpp"
+#include "pomdog/experimental/reactive/observable.hpp"
+#include "pomdog/experimental/reactive/observer.hpp"
 #include "pomdog/utility/assert.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN

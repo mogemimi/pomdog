@@ -6,8 +6,8 @@
 #include "pomdog/basic/conditional_compilation.hpp"
 #include "pomdog/chrono/duration.hpp"
 #include "pomdog/chrono/game_clock.hpp"
-#include "pomdog/experimental/Reactive/Observable.hpp"
-#include "pomdog/experimental/Reactive/Observer.hpp"
+#include "pomdog/experimental/reactive/observable.hpp"
+#include "pomdog/experimental/reactive/observer.hpp"
 #include "pomdog/signals/scoped_connection.hpp"
 #include "pomdog/utility/assert.hpp"
 
