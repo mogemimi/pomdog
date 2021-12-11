@@ -18,7 +18,8 @@ TEST_CASE("Delegate", "[Signals]")
     Delegate<void(const std::string& s)> onText;
     REQUIRE(!onText.IsConnected());
 
-    SECTION("basic usage") {
+    SECTION("basic usage")
+    {
         auto conn = onText.Connect(callback);
         REQUIRE(conn.IsConnected());
         REQUIRE(onText.IsConnected());
@@ -40,7 +41,8 @@ TEST_CASE("Delegate", "[Signals]")
         REQUIRE(messages[0] == "hi");
         REQUIRE(messages[1] == "hello");
     }
-    SECTION("bool operator") {
+    SECTION("bool operator")
+    {
         auto conn = onText.Connect(callback);
         REQUIRE(conn.IsConnected());
         REQUIRE(onText.IsConnected());
@@ -62,7 +64,8 @@ TEST_CASE("Delegate", "[Signals]")
         REQUIRE(messages.size() == 1);
         REQUIRE(messages[0] == "hi");
     }
-    SECTION("when a new callback is assigned") {
+    SECTION("when a new callback is assigned")
+    {
         auto conn1 = onText.Connect(callback);
         REQUIRE(conn1.IsConnected());
         REQUIRE(onText.IsConnected());
@@ -92,7 +95,8 @@ TEST_CASE("Delegate", "[Signals]")
         REQUIRE(messages[0] == "hi");
         REQUIRE(messages[1] == ">> hello");
     }
-    SECTION("when called recursively") {
+    SECTION("when called recursively")
+    {
         int i = 0;
         auto conn = onText.Connect([&](const std::string& s) {
             if (i > 4) {
@@ -111,7 +115,8 @@ TEST_CASE("Delegate", "[Signals]")
         REQUIRE(messages[3] == "count: 3");
         REQUIRE(messages[4] == "count: 4");
     }
-    SECTION("when a nullptr is assigned") {
+    SECTION("when a nullptr is assigned")
+    {
         auto conn = onText.Connect(nullptr);
         REQUIRE(!conn.IsConnected());
         REQUIRE(!onText.IsConnected());
@@ -123,7 +128,8 @@ TEST_CASE("Delegate", "[Signals]")
         REQUIRE(!conn.IsConnected());
         REQUIRE(!onText.IsConnected());
     }
-    SECTION("Disconnect() was executed when calling a callback.") {
+    SECTION("Disconnect() was executed when calling a callback.")
+    {
         Connection conn;
         conn = onText.Connect([&](const std::string& s) {
             messages.push_back(s);
@@ -142,7 +148,8 @@ TEST_CASE("Delegate", "[Signals]")
         REQUIRE(messages.size() == 1);
         REQUIRE(messages[0] == "hi");
     }
-    SECTION("Connect() was executed when calling a callback.") {
+    SECTION("Connect() was executed when calling a callback.")
+    {
         Connection conn;
         conn = onText.Connect([&](const std::string& s) {
             messages.push_back(s);
@@ -162,7 +169,8 @@ TEST_CASE("Delegate", "[Signals]")
         REQUIRE(messages.size() == 1);
         REQUIRE(messages[0] == "hi");
     }
-    SECTION("signal has expired before disconnecting connection") {
+    SECTION("signal has expired before disconnecting connection")
+    {
         auto conn = onText.Connect(callback);
         REQUIRE(conn.IsConnected());
         REQUIRE(onText.IsConnected());

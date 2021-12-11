@@ -18,7 +18,8 @@ TEST_CASE("Singal", "[Singals]")
     Signal<void(const std::string& s)> onText;
     REQUIRE(onText.GetInvocationCount() == 0);
 
-    SECTION("basic usage") {
+    SECTION("basic usage")
+    {
         auto conn = onText.Connect(callback);
         REQUIRE(conn.IsConnected());
         REQUIRE(onText.GetInvocationCount() == 1);
@@ -40,7 +41,8 @@ TEST_CASE("Singal", "[Singals]")
         REQUIRE(messages[0] == "hi");
         REQUIRE(messages[1] == "hello");
     }
-    SECTION("when a new callback is assigned") {
+    SECTION("when a new callback is assigned")
+    {
         auto conn1 = onText.Connect(callback);
         REQUIRE(conn1.IsConnected());
         REQUIRE(onText.GetInvocationCount() == 1);
@@ -73,7 +75,8 @@ TEST_CASE("Singal", "[Singals]")
         REQUIRE(messages[1] == "hello");
         REQUIRE(messages[2] == ">> hello");
     }
-    SECTION("when called recursively") {
+    SECTION("when called recursively")
+    {
         int i = 0;
         auto conn = onText.Connect([&](const std::string& s) {
             if (i > 4) {
@@ -92,7 +95,8 @@ TEST_CASE("Singal", "[Singals]")
         REQUIRE(messages[3] == "count: 3");
         REQUIRE(messages[4] == "count: 4");
     }
-    SECTION("Disconnect() was executed when calling a callback.") {
+    SECTION("Disconnect() was executed when calling a callback.")
+    {
         Connection conn;
         conn = onText.Connect([&](const std::string& s) {
             messages.push_back(s);
@@ -111,7 +115,8 @@ TEST_CASE("Singal", "[Singals]")
         REQUIRE(messages.size() == 1);
         REQUIRE(messages[0] == "hi");
     }
-    SECTION("signal has expired before disconnecting connection") {
+    SECTION("signal has expired before disconnecting connection")
+    {
         auto conn = onText.Connect(callback);
         REQUIRE(conn.IsConnected());
         REQUIRE(onText.GetInvocationCount() == 1);
@@ -127,7 +132,8 @@ TEST_CASE("Singal", "[Singals]")
         REQUIRE(!conn.IsConnected());
         REQUIRE(onText.GetInvocationCount() == 0);
     }
-    SECTION("Disconnect() was executed when calling a callback.") {
+    SECTION("Disconnect() was executed when calling a callback.")
+    {
         Connection conn;
         conn = onText.Connect([&](const std::string& s) {
             messages.push_back(s);
@@ -146,7 +152,8 @@ TEST_CASE("Singal", "[Singals]")
         REQUIRE(messages.size() == 1);
         REQUIRE(messages[0] == "hi");
     }
-    SECTION("Connect() was executed when calling a callback.") {
+    SECTION("Connect() was executed when calling a callback.")
+    {
         Connection conn;
         conn = onText.Connect([&](const std::string& s) {
             messages.push_back(">> " + s);
@@ -178,17 +185,20 @@ TEST_CASE("Singal", "[Singals]")
 
 TEST_CASE("Singal and Slot", "[Singals]")
 {
-    SECTION("fundamental types - void") {
+    SECTION("fundamental types - void")
+    {
         Signal<void()> signal;
         std::string text;
-        SECTION("void") {
-            auto conn = signal.Connect([&]{ text = "Done"; });
+        SECTION("void")
+        {
+            auto conn = signal.Connect([&] { text = "Done"; });
             signal();
             REQUIRE(text == "Done");
             REQUIRE(conn.IsConnected());
         }
-        SECTION("void") {
-            auto conn = signal.Connect([&]{ text += "Doki"; });
+        SECTION("void")
+        {
+            auto conn = signal.Connect([&] { text += "Doki"; });
             signal();
             signal();
             signal();
@@ -196,16 +206,18 @@ TEST_CASE("Singal and Slot", "[Singals]")
             REQUIRE(text == "DokiDokiDokiDoki");
             REQUIRE(conn.IsConnected());
         }
-        SECTION("void") {
-            auto conn1 = signal.Connect([&]{ text += "Chuck "; });
-            auto conn2 = signal.Connect([&]{ text += "Norris"; });
+        SECTION("void")
+        {
+            auto conn1 = signal.Connect([&] { text += "Chuck "; });
+            auto conn2 = signal.Connect([&] { text += "Norris"; });
             signal();
             REQUIRE(text == "Chuck Norris");
             REQUIRE(conn1.IsConnected());
             REQUIRE(conn2.IsConnected());
         }
     }
-    SECTION("fundamental types - bool") {
+    SECTION("fundamental types - bool")
+    {
         Signal<void(bool)> signal;
         bool result;
         auto conn = signal.Connect([&](bool in) { result = in; });
@@ -217,7 +229,8 @@ TEST_CASE("Singal and Slot", "[Singals]")
         REQUIRE(false == result);
         REQUIRE(conn.IsConnected());
     }
-    SECTION("fundamental types - int") {
+    SECTION("fundamental types - int")
+    {
         Signal<void(int)> signal;
         int result;
         auto conn = signal.Connect([&](int in) { result = in; });
@@ -229,7 +242,8 @@ TEST_CASE("Singal and Slot", "[Singals]")
         REQUIRE(result == 72);
         REQUIRE(conn.IsConnected());
     }
-    SECTION("fundamental types - float") {
+    SECTION("fundamental types - float")
+    {
         Signal<void(float)> signal;
         float result;
         auto conn = signal.Connect([&](float in) { result = in; });
@@ -241,7 +255,8 @@ TEST_CASE("Singal and Slot", "[Singals]")
         REQUIRE(result == 72.0f);
         REQUIRE(conn.IsConnected());
     }
-    SECTION("fundamental types - char") {
+    SECTION("fundamental types - char")
+    {
         Signal<void(char)> signal;
         char result;
         auto conn = signal.Connect([&](char in) { result = in; });
@@ -253,11 +268,13 @@ TEST_CASE("Singal and Slot", "[Singals]")
         REQUIRE(result == '\n');
         REQUIRE(conn.IsConnected());
     }
-    SECTION("string") {
+    SECTION("string")
+    {
         Signal<void(const std::string&)> signal;
         std::string result;
-        SECTION("string") {
-            auto conn = signal.Connect([&](const std::string& in){ result = in; });
+        SECTION("string")
+        {
+            auto conn = signal.Connect([&](const std::string& in) { result = in; });
             signal("Norris");
             REQUIRE(result == "Norris");
             signal(std::string{"Chuck"});
@@ -266,8 +283,9 @@ TEST_CASE("Singal and Slot", "[Singals]")
             REQUIRE(result == "Chuck");
             REQUIRE(conn.IsConnected());
         }
-        SECTION("string") {
-            auto conn = signal.Connect([&](std::string in){ result = in; });
+        SECTION("string")
+        {
+            auto conn = signal.Connect([&](std::string in) { result = in; });
             signal("Norris");
             REQUIRE(result == "Norris");
             signal(std::string{"Chuck"});
@@ -277,11 +295,13 @@ TEST_CASE("Singal and Slot", "[Singals]")
             REQUIRE(conn.IsConnected());
         }
     }
-    SECTION("string") {
+    SECTION("string")
+    {
         Signal<void(std::string)> signal;
         std::string result;
-        SECTION("string") {
-            auto conn = signal.Connect([&](std::string in){ result = in; });
+        SECTION("string")
+        {
+            auto conn = signal.Connect([&](std::string in) { result = in; });
             signal("Norris");
             REQUIRE(result == "Norris");
             signal(std::string{"Chuck"});
@@ -290,8 +310,9 @@ TEST_CASE("Singal and Slot", "[Singals]")
             REQUIRE(result == "Chuck");
             REQUIRE(conn.IsConnected());
         }
-        SECTION("string") {
-            auto conn = signal.Connect([&](const std::string& in){ result = in; });
+        SECTION("string")
+        {
+            auto conn = signal.Connect([&](const std::string& in) { result = in; });
             signal("Norris");
             REQUIRE(result == "Norris");
             signal(std::string{"Chuck"});
@@ -301,7 +322,8 @@ TEST_CASE("Singal and Slot", "[Singals]")
             REQUIRE(conn.IsConnected());
         }
     }
-    SECTION("string") {
+    SECTION("string")
+    {
         Signal<void(std::string&)> signal;
         std::string result;
         auto conn1 = signal.Connect([](std::string& in) { in += "Chuck "; });
@@ -311,7 +333,8 @@ TEST_CASE("Singal and Slot", "[Singals]")
         REQUIRE(conn1.IsConnected());
         REQUIRE(conn2.IsConnected());
     }
-    SECTION("custom class") {
+    SECTION("custom class")
+    {
         struct Chuck {
             int value;
 
@@ -327,7 +350,8 @@ TEST_CASE("Singal and Slot", "[Singals]")
             Chuck& operator=(const Chuck&) = delete;
         };
 
-        SECTION("custom class") {
+        SECTION("custom class")
+        {
             Signal<void(Chuck const&)> signal;
             int result = 0;
             auto conn1 = signal.Connect([&](const Chuck& in) { result += in.value; });
@@ -338,7 +362,8 @@ TEST_CASE("Singal and Slot", "[Singals]")
             REQUIRE(conn1.IsConnected());
             REQUIRE(conn2.IsConnected());
         }
-        SECTION("custom class") {
+        SECTION("custom class")
+        {
             Signal<void(Chuck const&, Chuck const&)> signal;
             int result = 0;
             auto conn1 = signal.Connect([&](const Chuck& in1, const Chuck& in2) { result += (in1.value + in2.value); });
@@ -353,7 +378,8 @@ TEST_CASE("Singal and Slot", "[Singals]")
             REQUIRE(conn2.IsConnected());
         }
     }
-    SECTION("invoke int") {
+    SECTION("invoke int")
+    {
         Signal<void(int)> valueChanged;
         std::vector<int> integers;
 
@@ -369,7 +395,8 @@ TEST_CASE("Singal and Slot", "[Singals]")
         REQUIRE(integers[1] == 43);
         REQUIRE(integers[2] == 44);
     }
-    SECTION("disconnect") {
+    SECTION("disconnect")
+    {
         Signal<void(int)> valueChanged;
         std::vector<int> integers;
 
@@ -385,7 +412,8 @@ TEST_CASE("Singal and Slot", "[Singals]")
         REQUIRE(integers[0] == 42);
         REQUIRE(integers[1] == 43);
     }
-    SECTION("move constructor") {
+    SECTION("move constructor")
+    {
         Signal<void(int)> valueChanged;
         std::vector<int> integers;
 
@@ -411,7 +439,8 @@ TEST_CASE("Singal and Slot", "[Singals]")
     //    signalNew(42);
     //    REQUIRE(integers.empty());
     //}
-    SECTION("move assignment") {
+    SECTION("move assignment")
+    {
         Signal<void(int)> valueChanged;
         std::vector<int> integers;
 
@@ -441,7 +470,8 @@ TEST_CASE("Singal and Slot", "[Singals]")
         REQUIRE(integers[1] == 43);
         REQUIRE(integers[2] == 44);
     }
-    SECTION("connect some slots") {
+    SECTION("connect some slots")
+    {
         Signal<void(int)> valueChanged;
         std::vector<int> integers;
 
@@ -461,7 +491,8 @@ TEST_CASE("Singal and Slot", "[Singals]")
         REQUIRE(integers[1] == 42);
         REQUIRE(integers[2] == 42);
     }
-    SECTION("disconnect slots") {
+    SECTION("disconnect slots")
+    {
         Signal<void(int)> valueChanged;
         std::vector<int> integers;
 
