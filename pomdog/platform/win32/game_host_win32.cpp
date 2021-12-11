@@ -331,7 +331,7 @@ private:
     void ClientSizeChanged();
 
 private:
-    std::shared_ptr<detail::linux::TimeSourceLinux> timeSource_;
+    std::shared_ptr<detail::win32::TimeSourceWin32> timeSource_;
     std::shared_ptr<GameClockImpl> clock_;
     detail::SubsystemScheduler subsystemScheduler;
     ScopedConnection systemEventConnection;
