@@ -7,7 +7,7 @@
 
 namespace pomdog::detail::win32 {
 
-class TimeSourceWin32 final {
+class TimeSourceWin32 final : public TimeSource {
 public:
     TimeSourceWin32() noexcept;
 
