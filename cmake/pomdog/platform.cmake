@@ -56,8 +56,6 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/platform/x11/bootstrap.cpp
         ${POMDOG_SRC_DIR}/platform/x11/game_host_x11.cpp
         ${POMDOG_SRC_DIR}/platform/x11/game_host_x11.hpp
-        ${POMDOG_SRC_DIR}/platform/x11/gamepad_factory.hpp
-        ${POMDOG_SRC_DIR}/platform/x11/gamepad_factory.cpp
         ${POMDOG_SRC_DIR}/platform/x11/game_window_x11.cpp
         ${POMDOG_SRC_DIR}/platform/x11/game_window_x11.hpp
         ${POMDOG_SRC_DIR}/platform/x11/opengl_context_x11.cpp

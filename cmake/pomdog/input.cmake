@@ -70,6 +70,8 @@ target_sources(pomdog_static PRIVATE
 
     $<$<PLATFORM_ID:Linux>:
         # NOTE: input/x11
+        ${POMDOG_SRC_DIR}/input/x11/gamepad_factory.cpp
+        ${POMDOG_SRC_DIR}/input/x11/gamepad_factory.hpp
         ${POMDOG_SRC_DIR}/input/x11/keyboard_x11.cpp
         ${POMDOG_SRC_DIR}/input/x11/keyboard_x11.hpp
         ${POMDOG_SRC_DIR}/input/x11/mouse_x11.cpp
