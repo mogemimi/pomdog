@@ -13,6 +13,8 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/chrono/time_point.hpp
     ${POMDOG_SRC_DIR}/chrono/time_source.cpp
     ${POMDOG_SRC_DIR}/chrono/time_source.hpp
+    ${POMDOG_SRC_DIR}/chrono/timer.hpp
+    ${POMDOG_SRC_DIR}/chrono/timer.cpp
     ${POMDOG_SRC_DIR}/chrono/detail/game_clock_impl.cpp
     ${POMDOG_SRC_DIR}/chrono/detail/game_clock_impl.hpp
     ${POMDOG_SRC_DIR}/chrono/detail/make_time_source.cpp

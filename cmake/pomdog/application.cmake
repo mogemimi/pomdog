@@ -13,6 +13,4 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/application/mouse_cursor.hpp
     ${POMDOG_SRC_DIR}/application/subsystem_scheduler.hpp
     ${POMDOG_SRC_DIR}/application/system_events.hpp
-    ${POMDOG_SRC_DIR}/application/timer.hpp
-    ${POMDOG_SRC_DIR}/application/timer.cpp
 )

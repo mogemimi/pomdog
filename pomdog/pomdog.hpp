@@ -11,10 +11,11 @@ namespace pomdog {
 #include "pomdog/application/game_host.hpp"
 #include "pomdog/application/game_window.hpp"
 #include "pomdog/application/mouse_cursor.hpp"
-#include "pomdog/application/timer.hpp"
+
 #include "pomdog/chrono/duration.hpp"
 #include "pomdog/chrono/game_clock.hpp"
 #include "pomdog/chrono/time_point.hpp"
+#include "pomdog/chrono/timer.hpp"
 
 #include "pomdog/audio/audio_channels.hpp"
 #include "pomdog/audio/audio_clip.hpp"

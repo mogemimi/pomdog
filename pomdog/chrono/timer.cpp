@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/application/timer.hpp"
+#include "pomdog/chrono/timer.hpp"
 #include "pomdog/basic/conditional_compilation.hpp"
 #include "pomdog/chrono/game_clock.hpp"
 #include "pomdog/utility/assert.hpp"
