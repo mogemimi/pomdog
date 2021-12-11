@@ -304,7 +304,7 @@ void TranslateKeyboardEvent(const RAWKEYBOARD& keyboard, const std::shared_ptr<E
         .Kind = SystemEventKind::InputKeyEvent,
         .Data = InputKeyEvent{
             .State = keyState,
-            .Key = *key,
+            .Key = key,
         },
     });
 }
