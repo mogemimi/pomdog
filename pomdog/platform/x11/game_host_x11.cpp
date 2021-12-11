@@ -540,7 +540,7 @@ std::shared_ptr<Gamepad> GameHostX11::GetGamepad() noexcept
 std::shared_ptr<IOService> GameHostX11::GetIOService() noexcept
 {
     POMDOG_ASSERT(impl);
-    POMDOG_ASSERT(impl->ioService);
+    POMDOG_ASSERT(impl->ioService_);
     auto gameHost = shared_from_this();
     std::shared_ptr<IOService> shared{gameHost, impl->ioService_.get()};
     return shared;
