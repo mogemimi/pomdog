@@ -35,6 +35,7 @@
 #include "pomdog/signals/event_queue.hpp"
 #include "pomdog/signals/scoped_connection.hpp"
 #include "pomdog/utility/assert.hpp"
+#include "pomdog/utility/errors.hpp"
 #include "pomdog/utility/path_helper.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN

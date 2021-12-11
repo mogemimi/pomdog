@@ -19,6 +19,7 @@
 #include "pomdog/network/io_service.hpp"
 #include "pomdog/platform/x11/gamepad_factory.hpp"
 #include "pomdog/utility/assert.hpp"
+#include "pomdog/utility/errors.hpp"
 #include "pomdog/utility/path_helper.hpp"
 #include <chrono>
 #include <string>
