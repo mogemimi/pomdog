@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/platform/x11/keyboard_x11.hpp"
+#include "pomdog/input/x11/keyboard_x11.hpp"
 #include "pomdog/basic/platform.hpp"
 #include "pomdog/input/key_state.hpp"
 #include "pomdog/input/keys.hpp"

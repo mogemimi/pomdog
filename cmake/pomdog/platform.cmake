@@ -20,10 +20,6 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/platform/cocoa/game_host_cocoa.mm
         ${POMDOG_SRC_DIR}/platform/cocoa/game_window_cocoa.hpp
         ${POMDOG_SRC_DIR}/platform/cocoa/game_window_cocoa.mm
-        ${POMDOG_SRC_DIR}/platform/cocoa/keyboard_cocoa.hpp
-        ${POMDOG_SRC_DIR}/platform/cocoa/keyboard_cocoa.cpp
-        ${POMDOG_SRC_DIR}/platform/cocoa/mouse_cocoa.hpp
-        ${POMDOG_SRC_DIR}/platform/cocoa/mouse_cocoa.cpp
     >
 
     $<$<AND:$<PLATFORM_ID:Darwin>,$<BOOL:${POMDOG_USE_GL4}>>:
@@ -64,10 +60,6 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/platform/x11/gamepad_factory.cpp
         ${POMDOG_SRC_DIR}/platform/x11/game_window_x11.cpp
         ${POMDOG_SRC_DIR}/platform/x11/game_window_x11.hpp
-        ${POMDOG_SRC_DIR}/platform/x11/keyboard_x11.cpp
-        ${POMDOG_SRC_DIR}/platform/x11/keyboard_x11.hpp
-        ${POMDOG_SRC_DIR}/platform/x11/mouse_x11.cpp
-        ${POMDOG_SRC_DIR}/platform/x11/mouse_x11.hpp
         ${POMDOG_SRC_DIR}/platform/x11/opengl_context_x11.cpp
         ${POMDOG_SRC_DIR}/platform/x11/opengl_context_x11.hpp
         ${POMDOG_SRC_DIR}/platform/x11/x11_atom_cache.hpp
@@ -88,10 +80,6 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/platform/win32/game_window_win32.hpp
         ${POMDOG_SRC_DIR}/platform/win32/file_system_win32.cpp
         ${POMDOG_SRC_DIR}/platform/win32/file_system_win32.hpp
-        ${POMDOG_SRC_DIR}/platform/win32/keyboard_win32.cpp
-        ${POMDOG_SRC_DIR}/platform/win32/keyboard_win32.hpp
-        ${POMDOG_SRC_DIR}/platform/win32/mouse_win32.cpp
-        ${POMDOG_SRC_DIR}/platform/win32/mouse_win32.hpp
         ${POMDOG_SRC_DIR}/platform/win32/prerequisites_win32.hpp
     >
 

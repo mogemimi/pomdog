@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/platform/win32/keyboard_win32.hpp"
+#include "pomdog/input/win32/keyboard_win32.hpp"
 #include "pomdog/basic/conditional_compilation.hpp"
 #include "pomdog/input/key_state.hpp"
 #include "pomdog/input/keys.hpp"

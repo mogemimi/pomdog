@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/platform/cocoa/mouse_cocoa.hpp"
+#include "pomdog/input/cocoa/mouse_cocoa.hpp"
 #include "pomdog/application/system_events.hpp"
 #include "pomdog/utility/assert.hpp"
 #include <type_traits>
