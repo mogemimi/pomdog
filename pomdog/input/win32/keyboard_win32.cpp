@@ -44,7 +44,7 @@ Keys TranslateKey(std::uint16_t keyCode) noexcept
         Keys::Unknown,         // 0x1A:
         Keys::Escape,          // 0x1B: VK_ESCAPE
         Keys::IMEConvert,      // 0x1C: VK_CONVERT
-        Keys::IMENoConvert,    // 0x1D: VK_NONCONVERT
+        Keys::IMENonConvert,   // 0x1D: VK_NONCONVERT
         Keys::Accept,          // 0x1E: VK_ACCEPT
         Keys::ModeChange,      // 0x1F: VK_MODECHANGE
         Keys::Space,           // 0x20: VK_SPACE
