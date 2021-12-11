@@ -12,397 +12,148 @@ namespace pomdog {
 
 /// Keys specifies keyboard keys and key codes.
 enum class Keys : std::uint8_t {
-    /// Reserved (never is pressed)
-    Unknown = 0,
-
-    /// BackSpace key
-    BackSpace = 1,
-
-    /// Tab key
-    Tab = 2,
-
-    /// Enter key
-    Enter = 3,
-
-    /// Escape key
-    Escape = 4,
-
-    /// Space key
-    Space = 5,
-
-    /// Delete key
-    Delete = 6,
-
-    /// Pause key
-    Pause = 7,
-
-    /// CapsLock key
-    CapsLock = 8,
-
-    /// Help key
-    Help = 9,
-
-    //
-    // Alphanumerical keys
-    //
-
-    /// Zero key
-    Alpha0 = 10,
-
-    /// One key
-    Alpha1 = 11,
-
-    /// Two key
-    Alpha2 = 12,
-
-    /// Three key
-    Alpha3 = 13,
-
-    /// Four key
-    Alpha4 = 14,
-
-    /// Five key
-    Alpha5 = 15,
-
-    /// Six key
-    Alpha6 = 16,
-
-    /// Seven key
-    Alpha7 = 17,
-
-    /// Eight key
-    Alpha8 = 18,
-
-    /// Nine key
-    Alpha9 = 19,
-
-    /// Letter A key
-    A = 20,
-
-    /// Letter B key
-    B = 21,
-
-    /// Letter C key
-    C = 22,
-
-    /// Letter D key
-    D = 23,
-
-    /// Letter E key
-    E = 24,
-
-    /// Letter F key
-    F = 25,
-
-    /// Letter G key
-    G = 26,
-
-    /// Letter H key
-    H = 27,
-
-    /// Letter I key
-    I = 28,
-
-    /// Letter J key
-    J = 29,
-
-    /// Letter K key
-    K = 30,
-
-    /// Letter L key
-    L = 31,
-
-    /// Letter M key
-    M = 32,
-
-    /// Letter N key
-    N = 33,
-
-    /// Letter O key
-    O = 34,
-
-    /// Letter P key
-    P = 35,
-
-    /// Letter Q key
-    Q = 36,
-
-    /// Letter R key
-    R = 37,
-
-    /// Letter S key
-    S = 38,
-
-    /// Letter T key
-    T = 39,
-
-    /// Letter U key
-    U = 40,
-
-    /// Letter V key
-    V = 41,
-
-    /// Letter W key
-    W = 42,
-
-    /// Letter X key
-    X = 43,
-
-    /// Letter Y key
-    Y = 44,
-
-    /// Letter Z key
-    Z = 45,
-
-    //
-    // Numeric keypad keys
-    //
-
-    /// Numeric keypad 0
-    Keypad0 = 46,
-
-    /// Numeric keypad 1
-    Keypad1 = 47,
-
-    /// Numeric keypad 2
-    Keypad2 = 48,
-
-    /// Numeric keypad 3
-    Keypad3 = 49,
-
-    /// Numeric keypad 4
-    Keypad4 = 50,
-
-    /// Numeric keypad 5
-    Keypad5 = 51,
-
-    /// Numeric keypad 6
-    Keypad6 = 52,
-
-    /// Numeric keypad 7
-    Keypad7 = 53,
-
-    /// Numeric keypad 8
-    Keypad8 = 54,
-
-    /// Numeric keypad 9
-    Keypad9 = 55,
-
-    /// Numeric keypad '.'
-    KeypadDecimal = 56,
-
-    /// Numeric keypad '+'
-    KeypadAdd = 57,
-
-    /// Numeric keypad '/'
-    KeypadDivide = 58,
-
-    /// Numeric keypad '*'
-    KeypadMultiply = 59,
-
-    /// Numeric keypad '-'
-    KeypadSubtract = 60,
-
-    //
-    // keys on Arrow keypad
-    //
-
-    /// Up arrow key
-    UpArrow = 61,
-
-    /// Down arrow key
-    DownArrow = 62,
-
-    /// Left arrow key
-    LeftArrow = 63,
-
-    /// Right arrow key
-    RightArrow = 64,
-
-    /// Insert key
-    Insert = 65,
-
-    /// Home key
-    Home = 66,
-
-    /// End key
-    End = 67,
-
-    /// Page down key
-    PageDown = 68,
-
-    /// Page up key
-    PageUp = 69,
-
-    //
-    // Function keys
-    //
-
-    /// F1 function key
-    F1 = 71,
-
-    /// F2 function key
-    F2 = 72,
-
-    /// F3 function key
-    F3 = 73,
-
-    /// F4 function key
-    F4 = 74,
-
-    /// F5 function key
-    F5 = 75,
-
-    /// F6 function key
-    F6 = 76,
-
-    /// F7 function key
-    F7 = 77,
-
-    /// F8 function key
-    F8 = 78,
-
-    /// F9 function key
-    F9 = 79,
-
-    /// F10 function key
-    F10 = 80,
-
-    /// F11 function key
-    F11 = 81,
-
-    /// F12 function key
-    F12 = 82,
-
-    /// F13 function key
-    F13 = 83,
-
-    /// F14 function key
-    F14 = 84,
-
-    /// F15 function key
-    F15 = 85,
-
-    //
-    // Special keys
-    //
-
-    /// Clear key
-    Clear = 90,
-
-    /// Print key
-    Print = 91,
-
-    /// PrintScreen key
-    PrintScreen = 92,
-
-    /// NumLock key
-    NumLock = 93,
-
-    /// ScrollLock key
-    ScrollLock = 94,
-
-    /// Left Shift key
-    LeftShift = 95,
-
-    /// Right Shift key
-    RightShift = 96,
-
-    /// Left Control key
-    LeftControl = 97,
-
-    /// Right Control key
-    RightControl = 98,
-
-    /// Left Alt key
-    LeftAlt = 99,
-
-    /// Right Alt key
-    RightAlt = 100,
-
-    //
-    // Windows and Apple keys
-    //
-
-    /// Left Apple key
-    LeftApple = 101,
-
-    /// Right Apple key
-    RightApple = 102,
-
-    /// Left Windows key
-    LeftWindows = 103,
-
-    /// Right Windows key
-    RightWindows = 104,
-
-    //
-    // IME keys
-    //
-
-    /// IME Convert key
-    IMEConvert = 105,
-
-    /// IME NoConvert key
-    IMENoConvert = 106,
-
-    /// IME Kana mode key
-    KanaMode = 107,
-
-    /// IME Kanji mode key
-    KanjiMode = 108,
-
-    /// IME Hangul mode key
-    HangulMode = 109,
-
-    //
-    // OEM keys
-    //
-
-    /// OEM ',' key
-    Comma = 110,
-
-    /// OEM '=' key
-    Equals = 111,
-
-    /// OEM ';' key
-    Semicolon = 112,
-
-    /// OEM '+' key
-    Plus = 113,
-
-    /// OEM '.' key
-    Period = 114,
-
-    /// OEM '/' key
-    Slash = 115,
-
-    /// OEM '-' key
-    Minus = 116,
-
-    /// OEM '?' key
-    Question = 117,
-
-    /// OEM ''' key
-    Quote = 118,
-
-    /// OEM '"' key
-    DoubleQuote = 119,
-
-    /// OEM '`' key
-    AccentGrave = 120,
-
-    /// OEM '\' key
-    Backslash = 121,
-
-    /// OEM '~' key
-    Tilde = 122,
-
-    /// OEM '[' key
-    OpenBracket = 123,
-
-    /// OEM ']' key
-    CloseBracket = 124,
+    Unknown = 0,     ///< Reserved (never is pressed)
+    Cancel,          ///< Cancel key.
+    Help,            ///< Help key.
+    BackSpace,       ///< BackSpace key.
+    Tab,             ///< Tab key.
+    Clear,           ///< Clear key.
+    Enter,           ///< Enter key.
+    LeftShift,       ///< Left Shift key.
+    RightShift,      ///< Right Shift key.
+    LeftControl,     ///< Left Control key.
+    RightControl,    ///< Right Control key.
+    LeftAlt,         ///< Left Alt key.
+    RightAlt,        ///< Right Alt key.
+    Pause,           ///< Pause key.
+    CapsLock,        ///< Caps lock key.
+    KanaMode,        ///< IME Kana mode key.
+    HangulMode,      ///< IME Hangul mode key.
+    JunjaMode,       ///< IME Junja mode key.
+    FinalMode,       ///< IME final mode key.
+    KanjiMode,       ///< IME Kanji mode key.
+    Escape,          ///< Escape key.
+    IMEConvert,      ///< IME Convert key.
+    IMENonConvert,   ///< IME NonConvert key.
+    Accept,          ///< Accept key.
+    ModeChange,      ///< ModeChange key.
+    Space,           ///< Space key.
+    PageUp,          ///< Page up key.
+    PageDown,        ///< Page down key.
+    End,             ///< End key.
+    Home,            ///< Home key.
+    LeftArrow,       ///< Left arrow key.
+    UpArrow,         ///< Up arrow key.
+    RightArrow,      ///< Right arrow key.
+    DownArrow,       ///< Down arrow key.
+    Select,          ///< Select key.
+    Print,           ///< Print key.
+    Execute,         ///< Execute key.
+    PrintScreen,     ///< PrintScreen key.
+    Insert,          ///< Insert key.
+    Delete,          ///< Delete key.
+    Alpha0,          ///< '0' key.
+    Alpha1,          ///< '1' key.
+    Alpha2,          ///< '2' key.
+    Alpha3,          ///< '3' key.
+    Alpha4,          ///< '4' key.
+    Alpha5,          ///< '5' key.
+    Alpha6,          ///< '6' key.
+    Alpha7,          ///< '7' key.
+    Alpha8,          ///< '8' key.
+    Alpha9,          ///< '9' key.
+    Colon,           ///< ':' key.
+    Semicolon,       ///< ';' key.
+    Equals,          ///< '=' key.
+    Question,        ///< '?' key.
+    A,               ///< Letter 'A' key.
+    B,               ///< Letter 'B' key.
+    C,               ///< Letter 'C' key.
+    D,               ///< Letter 'D' key.
+    E,               ///< Letter 'E' key.
+    F,               ///< Letter 'F' key.
+    G,               ///< Letter 'G' key.
+    H,               ///< Letter 'H' key.
+    I,               ///< Letter 'I' key.
+    J,               ///< Letter 'J' key.
+    K,               ///< Letter 'K' key.
+    L,               ///< Letter 'L' key.
+    M,               ///< Letter 'M' key.
+    N,               ///< Letter 'N' key.
+    O,               ///< Letter 'O' key.
+    P,               ///< Letter 'P' key.
+    Q,               ///< Letter 'Q' key.
+    R,               ///< Letter 'R' key.
+    S,               ///< Letter 'S' key.
+    T,               ///< Letter 'T' key.
+    U,               ///< Letter 'U' key.
+    V,               ///< Letter 'V' key.
+    W,               ///< Letter 'W' key.
+    X,               ///< Letter 'X' key.
+    Y,               ///< Letter 'Y' key.
+    Z,               ///< Letter 'Z' key.
+    LeftSuper,       ///< Left Apple/Windows key.
+    RightSuper,      ///< Right Apple/Windows key.
+    Applications,    ///< Applications key.
+    Sleep,           ///< Sleep key.
+    Keypad0,         ///< '0' key on the numeric keypad.
+    Keypad1,         ///< '1' key on the numeric keypad.
+    Keypad2,         ///< '2' key on the numeric keypad.
+    Keypad3,         ///< '3' key on the numeric keypad.
+    Keypad4,         ///< '4' key on the numeric keypad.
+    Keypad5,         ///< '5' key on the numeric keypad.
+    Keypad6,         ///< '6' key on the numeric keypad.
+    Keypad7,         ///< '7' key on the numeric keypad.
+    Keypad8,         ///< '8' key on the numeric keypad.
+    Keypad9,         ///< '9' key on the numeric keypad.
+    KeypadMultiply,  ///< '*' key on the numeric keypad.
+    KeypadAdd,       ///< '+' key on the numeric keypad.
+    KeypadSeparator, ///< VK_SEPARATOR or DOM_VK_SEPARATOR
+    KeypadSubtract,  ///< '-' key on the numeric keypad.
+    KeypadDecimal,   ///< '.' key on the numeric keypad.
+    KeypadDivide,    ///< '/' key on the numeric keypad.
+    F1,              ///< F1 function key.
+    F2,              ///< F2 function key.
+    F3,              ///< F3 function key.
+    F4,              ///< F4 function key.
+    F5,              ///< F5 function key.
+    F6,              ///< F6 function key.
+    F7,              ///< F7 function key.
+    F8,              ///< F8 function key.
+    F9,              ///< F9 function key.
+    F10,             ///< F10 function key.
+    F11,             ///< F11 function key.
+    F12,             ///< F12 function key.
+    F13,             ///< F13 function key.
+    F14,             ///< F14 function key.
+    F15,             ///< F15 function key.
+    F16,             ///< F16 function key.
+    F17,             ///< F17 function key.
+    F18,             ///< F18 function key.
+    F19,             ///< F19 function key.
+    F20,             ///< F20 function key.
+    F21,             ///< F21 function key.
+    F22,             ///< F22 function key.
+    F23,             ///< F23 function key.
+    F24,             ///< F24 function key.
+    NumLock,         ///< NumLock key.
+    ScrollLock,      ///< ScrollLock key.
+    DoubleQuote,     ///< Double quote '"' key.
+    Asterisk,        ///< Asterisk '*' key.
+    Plus,            ///< Plus '+' key.
+    Minus,           ///< Minus '-' key.
+    Tilde,           ///< Tilde '~' key.
+    VolumeMute,      ///< Volume Mute key.
+    VolumeDown,      ///< Volume Down key.
+    VolumeUp,        ///< Volume Up key.
+    Comma,           ///< Comma ',' key.
+    Period,          ///< Period '.' key.
+    Slash,           ///< Slash '/' key.
+    BackQuate,       ///< Back quate '`' key.
+    OpenBracket,     ///< Open square bracket '[' key.
+    Backslash,       ///< Back slash '\' key.
+    CloseBracket,    ///< Close square bracket ']' key.
+    Quote,           ///< Quate ''' key.
 };
 
 } // namespace pomdog

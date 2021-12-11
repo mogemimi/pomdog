@@ -27,7 +27,7 @@ public:
     void ClearAllKeys();
 
 private:
-    std::bitset<128> keyset;
+    std::bitset<142> keyset;
 };
 
 } // namespace pomdog

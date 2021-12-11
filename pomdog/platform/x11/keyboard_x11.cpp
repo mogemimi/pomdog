@@ -15,12 +15,10 @@
 namespace pomdog::detail::x11 {
 namespace {
 
-constexpr Keys Keys_None = static_cast<Keys>(0);
-
 Keys TranslateKey(Display* display, unsigned int keyCode)
 {
     if (keyCode < 8 || keyCode > 255) {
-        return Keys_None;
+        return Keys::Unknown;
     }
 
     auto keySym = ::XkbKeycodeToKeysym(display, static_cast<::KeyCode>(keyCode), 0, 1);
@@ -226,8 +224,8 @@ Keys TranslateKey(Display* display, unsigned int keyCode)
         return Keys::CloseBracket;
     case XK_semicolon:
         return Keys::Semicolon;
-    // case XK_colon:
-    //     return Keys::Colon;
+    case XK_colon:
+        return Keys::Colon;
     case XK_question:
         return Keys::Question;
     case XK_backslash:
@@ -237,7 +235,7 @@ Keys TranslateKey(Display* display, unsigned int keyCode)
     case XK_apostrophe:
         return Keys::Quote;
     case XK_grave:
-        return Keys::AccentGrave;
+        return Keys::BackQuate;
     case XK_comma:
         return Keys::Comma;
     case XK_period:
@@ -251,22 +249,22 @@ Keys TranslateKey(Display* display, unsigned int keyCode)
 
     case XK_Mode_switch:
         return Keys::RightAlt;
-    // case XK_ISO_Level3_Shift:
-    //     return Keys::RightAlt;
-    // case XK_Kanji:
-    //     return Keys::KanjiMode;
-    // case XK_kana_switch:
-    //     return Keys::KanaMode;
+    case XK_ISO_Level3_Shift:
+        return Keys::RightAlt;
+    case XK_Kanji:
+        return Keys::KanjiMode;
+    case XK_kana_switch:
+        return Keys::KanaMode;
     default:
         break;
     }
 
-    return Keys_None;
+    return Keys::Unknown;
 }
 
 void BuildKeyMap(Display* display, std::array<Keys, 256>& keys)
 {
-    std::fill(std::begin(keys), std::end(keys), Keys_None);
+    std::fill(std::begin(keys), std::end(keys), Keys::Unknown);
 
     std::array<char, XkbKeyNameLength + 1> name;
     std::fill(std::begin(name), std::end(name), 0);
@@ -350,7 +348,7 @@ void BuildKeyMap(Display* display, std::array<Keys, 256>& keys)
     }
 
     for (unsigned int keyCode = 0; keyCode < keys.size(); ++keyCode) {
-        if (keys[keyCode] == Keys_None) {
+        if (keys[keyCode] == Keys::Unknown) {
             keys[keyCode] = TranslateKey(display, keyCode);
         }
     }
@@ -359,7 +357,7 @@ void BuildKeyMap(Display* display, std::array<Keys, 256>& keys)
 Keys ToKeys(const std::array<Keys, 256>& keys, unsigned int keyCode)
 {
     if (keyCode < 8 || keyCode > keys.size()) {
-        return Keys_None;
+        return Keys::Unknown;
     }
 
     POMDOG_ASSERT(keyCode < keys.size());
@@ -388,7 +386,7 @@ void KeyboardX11::HandleEvent(XEvent& event, ::XIC inputContext)
     auto key = ToKeys(mappedKeys, event.xkey.keycode);
     auto keyState = (event.type == KeyPress ? KeyState::Down : KeyState::Up);
 
-    if (key == Keys_None) {
+    if (key == Keys::Unknown) {
         return;
     }
 
@@ -443,7 +441,7 @@ void KeyboardX11::HandleEvent(XEvent& event, ::XIC inputContext)
     }
 
 #if defined(DEBUG) && !defined(NDEBUG)
-    if (key == Keys_None) {
+    if (key == Keys::Unknown) {
         Log::Internal(std::string("IsKeyDown: Unspecified key: ") +
                       std::to_string(static_cast<int>(event.xkey.keycode)));
     }

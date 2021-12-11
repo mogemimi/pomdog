@@ -15,10 +15,13 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 
-static_assert(static_cast<std::underlying_type<Keys>::type>(Keys::Unknown) == 0);
-static_assert(std::is_same<std::underlying_type<Keys>::type, std::uint8_t>::value);
-static_assert(std::is_unsigned<std::underlying_type<Keys>::type>::value,
-    "Keys is unsinged integer type.");
+static_assert(static_cast<std::underlying_type_t<Keys>>(Keys::Unknown) == 0);
+static_assert(static_cast<std::underlying_type_t<Keys>>(Keys::Cancel) == 1);
+static_assert(static_cast<std::underlying_type_t<Keys>>(Keys::Help) == 2);
+static_assert(static_cast<std::underlying_type_t<Keys>>(Keys::CloseBracket) == 140);
+static_assert(static_cast<std::underlying_type_t<Keys>>(Keys::Quote) == 141);
+static_assert(std::is_same_v<std::underlying_type_t<Keys>, std::uint8_t>);
+static_assert(std::is_unsigned_v<std::underlying_type_t<Keys>>, "Keys is unsinged integer type.");
 
 KeyState KeyboardState::operator[](Keys key) const
 {
