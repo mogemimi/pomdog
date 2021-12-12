@@ -20,9 +20,13 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/math/forward_declarations.hpp
     ${POMDOG_SRC_DIR}/math/math.cpp
     ${POMDOG_SRC_DIR}/math/math.hpp
+    ${POMDOG_SRC_DIR}/math/matrix2x2.cpp
     ${POMDOG_SRC_DIR}/math/matrix2x2.hpp
+    ${POMDOG_SRC_DIR}/math/matrix3x2.cpp
     ${POMDOG_SRC_DIR}/math/matrix3x2.hpp
+    ${POMDOG_SRC_DIR}/math/matrix3x3.cpp
     ${POMDOG_SRC_DIR}/math/matrix3x3.hpp
+    ${POMDOG_SRC_DIR}/math/matrix4x4.cpp
     ${POMDOG_SRC_DIR}/math/matrix4x4.hpp
     ${POMDOG_SRC_DIR}/math/plane_intersection_type.hpp
     ${POMDOG_SRC_DIR}/math/plane.cpp
@@ -31,31 +35,19 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/math/point2d.hpp
     ${POMDOG_SRC_DIR}/math/point3d.cpp
     ${POMDOG_SRC_DIR}/math/point3d.hpp
+    ${POMDOG_SRC_DIR}/math/quaternion.cpp
     ${POMDOG_SRC_DIR}/math/quaternion.hpp
     ${POMDOG_SRC_DIR}/math/radian.hpp
     ${POMDOG_SRC_DIR}/math/ray.cpp
     ${POMDOG_SRC_DIR}/math/ray.hpp
     ${POMDOG_SRC_DIR}/math/rectangle.cpp
     ${POMDOG_SRC_DIR}/math/rectangle.hpp
+    ${POMDOG_SRC_DIR}/math/vector2.cpp
     ${POMDOG_SRC_DIR}/math/vector2.hpp
+    ${POMDOG_SRC_DIR}/math/vector3.cpp
     ${POMDOG_SRC_DIR}/math/vector3.hpp
+    ${POMDOG_SRC_DIR}/math/vector4.cpp
     ${POMDOG_SRC_DIR}/math/vector4.hpp
-    ${POMDOG_SRC_DIR}/math/detail/floating_point_matrix2x2.cpp
-    ${POMDOG_SRC_DIR}/math/detail/floating_point_matrix2x2.hpp
-    ${POMDOG_SRC_DIR}/math/detail/floating_point_matrix3x2.cpp
-    ${POMDOG_SRC_DIR}/math/detail/floating_point_matrix3x2.hpp
-    ${POMDOG_SRC_DIR}/math/detail/floating_point_matrix3x3.cpp
-    ${POMDOG_SRC_DIR}/math/detail/floating_point_matrix3x3.hpp
-    ${POMDOG_SRC_DIR}/math/detail/floating_point_matrix4x4.cpp
-    ${POMDOG_SRC_DIR}/math/detail/floating_point_matrix4x4.hpp
-    ${POMDOG_SRC_DIR}/math/detail/floating_point_quaternion.cpp
-    ${POMDOG_SRC_DIR}/math/detail/floating_point_quaternion.hpp
-    ${POMDOG_SRC_DIR}/math/detail/floating_point_vector2.cpp
-    ${POMDOG_SRC_DIR}/math/detail/floating_point_vector2.hpp
-    ${POMDOG_SRC_DIR}/math/detail/floating_point_vector3.cpp
-    ${POMDOG_SRC_DIR}/math/detail/floating_point_vector3.hpp
-    ${POMDOG_SRC_DIR}/math/detail/floating_point_vector4.cpp
-    ${POMDOG_SRC_DIR}/math/detail/floating_point_vector4.hpp
     ${POMDOG_SRC_DIR}/math/detail/tagged_arithmetic.hpp
     ${POMDOG_SRC_DIR}/math/detail/type_traits.hpp
 )

@@ -1,12 +1,12 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/math/detail/floating_point_matrix4x4.hpp"
+#include "pomdog/math/matrix4x4.hpp"
 #include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/math/detail/floating_point_matrix3x3.hpp"
-#include "pomdog/math/detail/floating_point_quaternion.hpp"
-#include "pomdog/math/detail/floating_point_vector3.hpp"
 #include "pomdog/math/math.hpp"
+#include "pomdog/math/matrix3x3.hpp"
+#include "pomdog/math/quaternion.hpp"
 #include "pomdog/math/radian.hpp"
+#include "pomdog/math/vector3.hpp"
 #include "pomdog/utility/assert.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -15,14 +15,22 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail {
+namespace pomdog {
 
-template <typename T>
-FloatingPointMatrix4x4<T>::FloatingPointMatrix4x4(
-    T m00, T m01, T m02, T m03,
-    T m10, T m11, T m12, T m13,
-    T m20, T m21, T m22, T m23,
-    T m30, T m31, T m32, T m33) noexcept
+Matrix4x4 const Matrix4x4::Identity = {
+    1, 0, 0, 0, //
+    0, 1, 0, 0, //
+    0, 0, 1, 0, //
+    0, 0, 0, 1, //
+};
+
+Matrix4x4::Matrix4x4() noexcept = default;
+
+Matrix4x4::Matrix4x4(
+    float m00, float m01, float m02, float m03,
+    float m10, float m11, float m12, float m13,
+    float m20, float m21, float m22, float m23,
+    float m30, float m31, float m32, float m33) noexcept
 {
     m[0][0] = m00;
     m[0][1] = m01;
@@ -42,45 +50,41 @@ FloatingPointMatrix4x4<T>::FloatingPointMatrix4x4(
     m[3][3] = m33;
 }
 
-template <typename T>
-const T& FloatingPointMatrix4x4<T>::operator()(std::size_t row, std::size_t column) const
+const float& Matrix4x4::operator()(std::size_t row, std::size_t column) const
 {
     POMDOG_ASSERT_MESSAGE(row < RowSize, "row: out of range");
     POMDOG_ASSERT_MESSAGE(column < ColumnSize, "column: out of range");
     return m[row][column];
 }
 
-template <typename T>
-T& FloatingPointMatrix4x4<T>::operator()(std::size_t row, std::size_t column)
+float& Matrix4x4::operator()(std::size_t row, std::size_t column)
 {
     POMDOG_ASSERT_MESSAGE(row < RowSize, "row: out of range");
     POMDOG_ASSERT_MESSAGE(column < ColumnSize, "column: out of range");
     return m[row][column];
 }
 
-//template <typename T>
-//const std::array<T, 4>& FloatingPointMatrix4x4<T>::operator[](std::size_t row) const
+//
+//const std::array<T, 4>& Matrix4x4::operator[](std::size_t row) const
 //{
-//    POMDOG_ASSERT_MESSAGE(row < RowSize, "FloatingPointMatrix4x4, subscript out of range");
+//    POMDOG_ASSERT_MESSAGE(row < RowSize, "Matrix4x4, subscript out of range");
 //    return m[row];
 //}
 
-//template <typename T>
-//std::array<T, 4> & FloatingPointMatrix4x4<T>::operator[](std::size_t row)
+//
+//std::array<T, 4> & Matrix4x4::operator[](std::size_t row)
 //{
-//    POMDOG_ASSERT_MESSAGE(row < RowSize, "FloatingPointMatrix4x4, subscript out of range");
+//    POMDOG_ASSERT_MESSAGE(row < RowSize, "Matrix4x4, subscript out of range");
 //    return m[row];
 //}
 
-template <typename T>
-FloatingPointMatrix4x4<T>& FloatingPointMatrix4x4<T>::operator*=(const FloatingPointMatrix4x4& other) noexcept
+Matrix4x4& Matrix4x4::operator*=(const Matrix4x4& other) noexcept
 {
     *this = Multiply(*this, other);
     return *this;
 }
 
-template <typename T>
-FloatingPointMatrix4x4<T>& FloatingPointMatrix4x4<T>::operator+=(const FloatingPointMatrix4x4& other) noexcept
+Matrix4x4& Matrix4x4::operator+=(const Matrix4x4& other) noexcept
 {
     m[0][0] += other.m[0][0];
     m[0][1] += other.m[0][1];
@@ -101,8 +105,7 @@ FloatingPointMatrix4x4<T>& FloatingPointMatrix4x4<T>::operator+=(const FloatingP
     return *this;
 }
 
-template <typename T>
-FloatingPointMatrix4x4<T>& FloatingPointMatrix4x4<T>::operator-=(const FloatingPointMatrix4x4& other) noexcept
+Matrix4x4& Matrix4x4::operator-=(const Matrix4x4& other) noexcept
 {
     m[0][0] -= other.m[0][0];
     m[0][1] -= other.m[0][1];
@@ -123,18 +126,16 @@ FloatingPointMatrix4x4<T>& FloatingPointMatrix4x4<T>::operator-=(const FloatingP
     return *this;
 }
 
-template <typename T>
-FloatingPointMatrix4x4<T>& FloatingPointMatrix4x4<T>::operator*=(T scaleFactor) noexcept
+Matrix4x4& Matrix4x4::operator*=(float scaleFactor) noexcept
 {
     *this = Multiply(*this, scaleFactor);
     return *this;
 }
 
-template <typename T>
-FloatingPointMatrix4x4<T>& FloatingPointMatrix4x4<T>::operator/=(T scaleFactor)
+Matrix4x4& Matrix4x4::operator/=(float scaleFactor)
 {
     POMDOG_ASSERT(scaleFactor != 0);
-    auto const inverseDivider = 1 / scaleFactor;
+    const auto inverseDivider = 1 / scaleFactor;
     m[0][0] *= inverseDivider;
     m[0][1] *= inverseDivider;
     m[0][2] *= inverseDivider;
@@ -154,20 +155,17 @@ FloatingPointMatrix4x4<T>& FloatingPointMatrix4x4<T>::operator/=(T scaleFactor)
     return *this;
 }
 
-template <typename T>
-FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator+() const noexcept
+Matrix4x4 Matrix4x4::operator+() const noexcept
 {
     return *this;
 }
 
-template <typename T>
-FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator-() const noexcept
+Matrix4x4 Matrix4x4::operator-() const noexcept
 {
     return Multiply(*this, -1);
 }
 
-template <typename T>
-FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator+(const FloatingPointMatrix4x4& other) const noexcept
+Matrix4x4 Matrix4x4::operator+(const Matrix4x4& other) const noexcept
 {
     return {
         m[0][0] + other.m[0][0],
@@ -188,8 +186,7 @@ FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator+(const FloatingPoi
         m[3][3] + other.m[3][3]};
 }
 
-template <typename T>
-FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator-(const FloatingPointMatrix4x4& other) const noexcept
+Matrix4x4 Matrix4x4::operator-(const Matrix4x4& other) const noexcept
 {
     return {
         m[0][0] - other.m[0][0],
@@ -210,23 +207,20 @@ FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator-(const FloatingPoi
         m[3][3] - other.m[3][3]};
 }
 
-template <typename T>
-FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator*(const FloatingPointMatrix4x4& other) const noexcept
+Matrix4x4 Matrix4x4::operator*(const Matrix4x4& other) const noexcept
 {
     return Multiply(*this, other);
 }
 
-template <typename T>
-FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator*(T scaleFactor) const noexcept
+Matrix4x4 Matrix4x4::operator*(float scaleFactor) const noexcept
 {
     return Multiply(*this, scaleFactor);
 }
 
-template <typename T>
-FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator/(T scaleFactor) const
+Matrix4x4 Matrix4x4::operator/(float scaleFactor) const
 {
-    POMDOG_ASSERT(scaleFactor != T{0});
-    auto const inverseDivider = T{1} / scaleFactor;
+    POMDOG_ASSERT(scaleFactor != 0.0f);
+    const auto inverseDivider = 1.0f / scaleFactor;
     return {
         m[0][0] * inverseDivider,
         m[0][1] * inverseDivider,
@@ -246,8 +240,7 @@ FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::operator/(T scaleFactor) co
         m[3][3] * inverseDivider};
 }
 
-template <typename T>
-bool FloatingPointMatrix4x4<T>::operator==(const FloatingPointMatrix4x4& other) const noexcept
+bool Matrix4x4::operator==(const Matrix4x4& other) const noexcept
 {
     return m[0][0] == other.m[0][0] &&
            m[0][1] == other.m[0][1] &&
@@ -267,8 +260,7 @@ bool FloatingPointMatrix4x4<T>::operator==(const FloatingPointMatrix4x4& other) 
            m[3][3] == other.m[3][3];
 }
 
-template <typename T>
-bool FloatingPointMatrix4x4<T>::operator!=(const FloatingPointMatrix4x4& other) const noexcept
+bool Matrix4x4::operator!=(const Matrix4x4& other) const noexcept
 {
     return m[0][0] != other.m[0][0] ||
            m[0][1] != other.m[0][1] ||
@@ -288,10 +280,9 @@ bool FloatingPointMatrix4x4<T>::operator!=(const FloatingPointMatrix4x4& other) 
            m[3][3] != other.m[3][3];
 }
 
-template <typename T>
-FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::Multiply(
-    const FloatingPointMatrix4x4& matrix1,
-    const FloatingPointMatrix4x4& matrix2) noexcept
+Matrix4x4 Matrix4x4::Multiply(
+    const Matrix4x4& matrix1,
+    const Matrix4x4& matrix2) noexcept
 {
     const auto& a = matrix1;
     const auto& b = matrix2;
@@ -317,9 +308,8 @@ FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::Multiply(
         a.m[3][0] * b.m[0][3] + a.m[3][1] * b.m[1][3] + a.m[3][2] * b.m[2][3] + a.m[3][3] * b.m[3][3]};
 }
 
-template <typename T>
-FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::Multiply(
-    const FloatingPointMatrix4x4& matrix1, T scaleFactor) noexcept
+Matrix4x4 Matrix4x4::Multiply(
+    const Matrix4x4& matrix1, float scaleFactor) noexcept
 {
     return {
         matrix1.m[0][0] * scaleFactor,
@@ -340,39 +330,34 @@ FloatingPointMatrix4x4<T> FloatingPointMatrix4x4<T>::Multiply(
         matrix1.m[3][3] * scaleFactor};
 }
 
-template <typename T>
-void FloatingPointMatrix4x4<T>::SetTranslation(const FloatingPointVector3<T>& position) noexcept
+void Matrix4x4::SetTranslation(const Vector3& position) noexcept
 {
     m[3][0] = position.X;
     m[3][1] = position.Y;
     m[3][2] = position.Z;
 }
 
-template <typename T>
-FloatingPointVector3<T> FloatingPointMatrix4x4<T>::GetTranslation() const noexcept
+Vector3 Matrix4x4::GetTranslation() const noexcept
 {
     return {m[3][0], m[3][1], m[3][2]};
 }
 
-template <typename T>
-void FloatingPointMatrix4x4<T>::SetScale(const FloatingPointVector3<T>& scale) noexcept
+void Matrix4x4::SetScale(const Vector3& scale) noexcept
 {
     m[0][0] = scale.X;
     m[1][1] = scale.Y;
     m[2][2] = scale.Z;
 }
 
-template <typename T>
-FloatingPointVector3<T> FloatingPointMatrix4x4<T>::GetScale() const noexcept
+Vector3 Matrix4x4::GetScale() const noexcept
 {
     return {m[0][0], m[1][1], m[2][2]};
 }
 
-template <typename T>
-T FloatingPointMatrix4x4<T>::Determinant() const noexcept
+float Matrix4x4::Determinant() const noexcept
 {
     // TODO: Replace with simple process using cofactors to compute a determinant
-    // please see: FloatingPointMatrix3x3::Determinant implementation
+    // please see: Matrix3x3::Determinant implementation
     return m[0][0] * m[1][1] * m[2][2] * m[3][3] + m[0][0] * m[1][2] * m[2][3] * m[3][1] + m[0][0] * m[1][3] * m[2][1] * m[3][2] +
            m[0][1] * m[1][0] * m[2][3] * m[3][2] + m[0][1] * m[1][2] * m[2][0] * m[3][3] + m[0][1] * m[1][3] * m[2][2] * m[3][0] +
            m[0][2] * m[1][0] * m[2][1] * m[3][3] + m[0][2] * m[1][1] * m[2][3] * m[3][0] + m[0][2] * m[1][3] * m[2][0] * m[3][1] +
@@ -383,8 +368,7 @@ T FloatingPointMatrix4x4<T>::Determinant() const noexcept
            m[0][3] * m[1][0] * m[2][1] * m[3][2] - m[0][3] * m[1][1] * m[2][2] * m[3][0] - m[0][3] * m[1][2] * m[2][0] * m[3][1];
 }
 
-template <typename T>
-FloatingPointMatrix3x3<T> FloatingPointMatrix4x4<T>::Minor3x3(std::size_t row, std::size_t column) const
+Matrix3x3 Matrix4x4::Minor3x3(std::size_t row, std::size_t column) const
 {
     POMDOG_ASSERT_MESSAGE(row < RowSize, "row: out of range");
     POMDOG_ASSERT_MESSAGE(column < ColumnSize, "column: out of range");
@@ -398,9 +382,9 @@ FloatingPointMatrix3x3<T> FloatingPointMatrix4x4<T>::Minor3x3(std::size_t row, s
 
 #if defined(_MSC_VER) && !defined(NDEBUG)
     // NOTE: Avoid MSVC warning C4701: potentially uninitialized local variable 'minorMatrix' used
-    auto minorMatrix = FloatingPointMatrix3x3<T>::Identity;
+    auto minorMatrix = Matrix3x3::Identity;
 #else
-    FloatingPointMatrix3x3<T> minorMatrix;
+    Matrix3x3 minorMatrix;
 #endif
     for (std::size_t i = 0, s = 0; i < 4; ++i) {
         if (row == i) {
@@ -420,9 +404,8 @@ FloatingPointMatrix3x3<T> FloatingPointMatrix4x4<T>::Minor3x3(std::size_t row, s
     return minorMatrix;
 }
 
-template <typename T>
-FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::Adjoint(const FloatingPointMatrix4x4& matrix)
+Matrix4x4
+Matrix4x4::Adjoint(const Matrix4x4& matrix)
 {
     return {
         +matrix.Minor3x3(0, 0).Determinant(),
@@ -443,8 +426,7 @@ FloatingPointMatrix4x4<T>::Adjoint(const FloatingPointMatrix4x4& matrix)
         +matrix.Minor3x3(3, 3).Determinant()};
 }
 
-template <typename T>
-void FloatingPointMatrix4x4<T>::Transpose(const FloatingPointMatrix4x4& matrix, FloatingPointMatrix4x4& result) noexcept
+void Matrix4x4::Transpose(const Matrix4x4& matrix, Matrix4x4& result) noexcept
 {
     result = {
         matrix.m[0][0], matrix.m[1][0], matrix.m[2][0], matrix.m[3][0],
@@ -453,9 +435,8 @@ void FloatingPointMatrix4x4<T>::Transpose(const FloatingPointMatrix4x4& matrix, 
         matrix.m[0][3], matrix.m[1][3], matrix.m[2][3], matrix.m[3][3]};
 }
 
-template <typename T>
-FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::Transpose(const FloatingPointMatrix4x4& matrix) noexcept
+Matrix4x4
+Matrix4x4::Transpose(const Matrix4x4& matrix) noexcept
 {
     return {
         matrix.m[0][0], matrix.m[1][0], matrix.m[2][0], matrix.m[3][0],
@@ -464,27 +445,24 @@ FloatingPointMatrix4x4<T>::Transpose(const FloatingPointMatrix4x4& matrix) noexc
         matrix.m[0][3], matrix.m[1][3], matrix.m[2][3], matrix.m[3][3]};
 }
 
-template <typename T>
-void FloatingPointMatrix4x4<T>::Invert(const FloatingPointMatrix4x4& matrix, FloatingPointMatrix4x4& result)
+void Matrix4x4::Invert(const Matrix4x4& matrix, Matrix4x4& result)
 {
     const auto determinant = matrix.Determinant();
     POMDOG_ASSERT_MESSAGE(0 != determinant, "This is singular matrix");
-    const auto inverseDet = static_cast<T>(1) / determinant;
+    const auto inverseDet = static_cast<float>(1) / determinant;
     result = Adjoint(matrix) * inverseDet;
 }
 
-template <typename T>
-FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::Invert(const FloatingPointMatrix4x4& matrix)
+Matrix4x4
+Matrix4x4::Invert(const Matrix4x4& matrix)
 {
-    FloatingPointMatrix4x4 result;
+    Matrix4x4 result;
     Invert(matrix, result);
     return result;
 }
 
-template <typename T>
-void FloatingPointMatrix4x4<T>::Lerp(const FloatingPointMatrix4x4& source1, const FloatingPointMatrix4x4& source2,
-    T amount, FloatingPointMatrix4x4& result) noexcept
+void Matrix4x4::Lerp(const Matrix4x4& source1, const Matrix4x4& source2,
+    float amount, Matrix4x4& result) noexcept
 {
     result.m[0][0] = math::Lerp(source1.m[0][0], source2.m[0][0], amount);
     result.m[0][1] = math::Lerp(source1.m[0][1], source2.m[0][1], amount);
@@ -504,18 +482,16 @@ void FloatingPointMatrix4x4<T>::Lerp(const FloatingPointMatrix4x4& source1, cons
     result.m[3][3] = math::Lerp(source1.m[3][3], source2.m[3][3], amount);
 }
 
-template <typename T>
-FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::Lerp(const FloatingPointMatrix4x4& source1, const FloatingPointMatrix4x4& source2,
-    T amount) noexcept
+Matrix4x4
+Matrix4x4::Lerp(const Matrix4x4& source1, const Matrix4x4& source2,
+    float amount) noexcept
 {
-    FloatingPointMatrix4x4 result;
+    Matrix4x4 result;
     Lerp(source1, source2, amount, result);
     return result;
 }
 
-template <typename T>
-void FloatingPointMatrix4x4<T>::CreateTranslation(const FloatingPointVector3<T>& position, FloatingPointMatrix4x4& result) noexcept
+void Matrix4x4::CreateTranslation(const Vector3& position, Matrix4x4& result) noexcept
 {
     result = Identity;
     result.m[3][0] = position.X;
@@ -523,17 +499,15 @@ void FloatingPointMatrix4x4<T>::CreateTranslation(const FloatingPointVector3<T>&
     result.m[3][2] = position.Z;
 }
 
-template <typename T>
-FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::CreateTranslation(const FloatingPointVector3<T>& position) noexcept
+Matrix4x4
+Matrix4x4::CreateTranslation(const Vector3& position) noexcept
 {
-    FloatingPointMatrix4x4 result;
+    Matrix4x4 result;
     CreateTranslation(position, result);
     return result;
 }
 
-template <typename T>
-void FloatingPointMatrix4x4<T>::CreateScale(T scale, FloatingPointMatrix4x4& result) noexcept
+void Matrix4x4::CreateScale(float scale, Matrix4x4& result) noexcept
 {
     result = Identity;
     result.m[0][0] = scale;
@@ -541,17 +515,15 @@ void FloatingPointMatrix4x4<T>::CreateScale(T scale, FloatingPointMatrix4x4& res
     result.m[2][2] = scale;
 }
 
-template <typename T>
-FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::CreateScale(T scale) noexcept
+Matrix4x4
+Matrix4x4::CreateScale(float scale) noexcept
 {
-    FloatingPointMatrix4x4 result;
+    Matrix4x4 result;
     CreateScale(scale, result);
     return result;
 }
 
-template <typename T>
-void FloatingPointMatrix4x4<T>::CreateScale(const FloatingPointVector3<T>& scale, FloatingPointMatrix4x4& result) noexcept
+void Matrix4x4::CreateScale(const Vector3& scale, Matrix4x4& result) noexcept
 {
     result = Identity;
     result.m[0][0] = scale.X;
@@ -559,21 +531,19 @@ void FloatingPointMatrix4x4<T>::CreateScale(const FloatingPointVector3<T>& scale
     result.m[2][2] = scale.Z;
 }
 
-template <typename T>
-FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::CreateScale(const FloatingPointVector3<T>& scale) noexcept
+Matrix4x4
+Matrix4x4::CreateScale(const Vector3& scale) noexcept
 {
-    FloatingPointMatrix4x4 result;
+    Matrix4x4 result;
     CreateScale(scale, result);
     return result;
 }
 
-template <typename T>
-void FloatingPointMatrix4x4<T>::CreateRotationX(const Radian<T>& angle, FloatingPointMatrix4x4& result)
+void Matrix4x4::CreateRotationX(const Radian<float>& angle, Matrix4x4& result)
 {
     result = Identity;
-    auto const sinAngle = std::sin(angle.value);
-    auto const cosAngle = std::cos(angle.value);
+    const auto sinAngle = std::sin(angle.value);
+    const auto cosAngle = std::cos(angle.value);
 
     result.m[1][1] = cosAngle;
     result.m[1][2] = sinAngle;
@@ -581,21 +551,19 @@ void FloatingPointMatrix4x4<T>::CreateRotationX(const Radian<T>& angle, Floating
     result.m[2][2] = cosAngle;
 }
 
-template <typename T>
-FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::CreateRotationX(const Radian<T>& angle)
+Matrix4x4
+Matrix4x4::CreateRotationX(const Radian<float>& angle)
 {
-    FloatingPointMatrix4x4 result;
+    Matrix4x4 result;
     CreateRotationX(angle, result);
     return result;
 }
 
-template <typename T>
-void FloatingPointMatrix4x4<T>::CreateRotationY(const Radian<T>& angle, FloatingPointMatrix4x4& result)
+void Matrix4x4::CreateRotationY(const Radian<float>& angle, Matrix4x4& result)
 {
     result = Identity;
-    auto const sinAngle = std::sin(angle.value);
-    auto const cosAngle = std::cos(angle.value);
+    const auto sinAngle = std::sin(angle.value);
+    const auto cosAngle = std::cos(angle.value);
 
     result.m[0][0] = cosAngle;
     result.m[0][2] = -sinAngle;
@@ -603,21 +571,19 @@ void FloatingPointMatrix4x4<T>::CreateRotationY(const Radian<T>& angle, Floating
     result.m[2][2] = cosAngle;
 }
 
-template <typename T>
-FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::CreateRotationY(const Radian<T>& angle)
+Matrix4x4
+Matrix4x4::CreateRotationY(const Radian<float>& angle)
 {
-    FloatingPointMatrix4x4 result;
+    Matrix4x4 result;
     CreateRotationY(angle, result);
     return result;
 }
 
-template <typename T>
-void FloatingPointMatrix4x4<T>::CreateRotationZ(const Radian<T>& angle, FloatingPointMatrix4x4& result)
+void Matrix4x4::CreateRotationZ(const Radian<float>& angle, Matrix4x4& result)
 {
     result = Identity;
-    auto const sinAngle = std::sin(angle.value);
-    auto const cosAngle = std::cos(angle.value);
+    const auto sinAngle = std::sin(angle.value);
+    const auto cosAngle = std::cos(angle.value);
 
     result.m[0][0] = cosAngle;
     result.m[0][1] = sinAngle;
@@ -625,27 +591,25 @@ void FloatingPointMatrix4x4<T>::CreateRotationZ(const Radian<T>& angle, Floating
     result.m[1][1] = cosAngle;
 }
 
-template <typename T>
-FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::CreateRotationZ(const Radian<T>& angle)
+Matrix4x4
+Matrix4x4::CreateRotationZ(const Radian<float>& angle)
 {
-    FloatingPointMatrix4x4 result;
+    Matrix4x4 result;
     CreateRotationZ(angle, result);
     return result;
 }
 
-template <typename T>
-void FloatingPointMatrix4x4<T>::CreateFromQuaternion(const FloatingPointQuaternion<T>& quaternion, FloatingPointMatrix4x4& result)
+void Matrix4x4::CreateFromQuaternion(const Quaternion& quaternion, Matrix4x4& result)
 {
-    auto const xx = quaternion.X * quaternion.X;
-    auto const yy = quaternion.Y * quaternion.Y;
-    auto const zz = quaternion.Z * quaternion.Z;
-    auto const xy = quaternion.X * quaternion.Y;
-    auto const zw = quaternion.Z * quaternion.W;
-    auto const zx = quaternion.Z * quaternion.X;
-    auto const yw = quaternion.Y * quaternion.W;
-    auto const yz = quaternion.Y * quaternion.Z;
-    auto const xw = quaternion.X * quaternion.W;
+    const auto xx = quaternion.X * quaternion.X;
+    const auto yy = quaternion.Y * quaternion.Y;
+    const auto zz = quaternion.Z * quaternion.Z;
+    const auto xy = quaternion.X * quaternion.Y;
+    const auto zw = quaternion.Z * quaternion.W;
+    const auto zx = quaternion.Z * quaternion.X;
+    const auto yw = quaternion.Y * quaternion.W;
+    const auto yz = quaternion.Y * quaternion.Z;
+    const auto xw = quaternion.X * quaternion.W;
 
     result.m[0][0] = 1 - (2 * (yy + zz));
     result.m[0][1] = 2 * (xy + zw);
@@ -668,21 +632,19 @@ void FloatingPointMatrix4x4<T>::CreateFromQuaternion(const FloatingPointQuaterni
     result.m[3][3] = 1;
 }
 
-template <typename T>
-FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::CreateFromQuaternion(const FloatingPointQuaternion<T>& quaternion)
+Matrix4x4
+Matrix4x4::CreateFromQuaternion(const Quaternion& quaternion)
 {
-    FloatingPointMatrix4x4 result;
+    Matrix4x4 result;
     CreateFromQuaternion(quaternion, result);
     return result;
 }
 
-template <typename T>
-void FloatingPointMatrix4x4<T>::CreateLookAtLH(
-    const FloatingPointVector3<T>& eye,
-    const FloatingPointVector3<T>& at,
-    const FloatingPointVector3<T>& up,
-    FloatingPointMatrix4x4& result)
+void Matrix4x4::CreateLookAtLH(
+    const Vector3& eye,
+    const Vector3& at,
+    const Vector3& up,
+    Matrix4x4& result)
 {
     // zaxis = normal(At - Eye)
     // xaxis = normal(cross(Up, zaxis))
@@ -693,9 +655,9 @@ void FloatingPointMatrix4x4<T>::CreateLookAtLH(
     //  xaxis.z           yaxis.z           zaxis.z          0
     // -dot(xaxis, eye)  -dot(yaxis, eye)  -dot(zaxis, eye)  1
 
-    auto const zaxis = FloatingPointVector3<T>::Normalize(at - eye); // RH: eye - at
-    auto const xaxis = FloatingPointVector3<T>::Normalize(FloatingPointVector3<T>::Cross(up, zaxis));
-    auto const yaxis = FloatingPointVector3<T>::Cross(zaxis, xaxis);
+    const auto zaxis = Vector3::Normalize(at - eye); // RH: eye - at
+    const auto xaxis = Vector3::Normalize(Vector3::Cross(up, zaxis));
+    const auto yaxis = Vector3::Cross(zaxis, xaxis);
 
     result.m[0][0] = xaxis.X;
     result.m[0][1] = yaxis.X;
@@ -712,26 +674,24 @@ void FloatingPointMatrix4x4<T>::CreateLookAtLH(
     result.m[2][2] = zaxis.Z;
     result.m[2][3] = 0;
 
-    result.m[3][0] = -FloatingPointVector3<T>::Dot(xaxis, eye);
-    result.m[3][1] = -FloatingPointVector3<T>::Dot(yaxis, eye);
-    result.m[3][2] = -FloatingPointVector3<T>::Dot(zaxis, eye);
+    result.m[3][0] = -Vector3::Dot(xaxis, eye);
+    result.m[3][1] = -Vector3::Dot(yaxis, eye);
+    result.m[3][2] = -Vector3::Dot(zaxis, eye);
     result.m[3][3] = 1;
 }
 
-template <typename T>
-FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::CreateLookAtLH(const FloatingPointVector3<T>& eye, const FloatingPointVector3<T>& at,
-    const FloatingPointVector3<T>& up)
+Matrix4x4
+Matrix4x4::CreateLookAtLH(const Vector3& eye, const Vector3& at,
+    const Vector3& up)
 {
     // NOTE: Left-handed Cartesian Coordinates
-    FloatingPointMatrix4x4 result;
+    Matrix4x4 result;
     CreateLookAtLH(eye, at, up, result);
     return result;
 }
 
-template <typename T>
-void FloatingPointMatrix4x4<T>::CreateLookAtRH(const FloatingPointVector3<T>& eye, const FloatingPointVector3<T>& at,
-    const FloatingPointVector3<T>& up, FloatingPointMatrix4x4& result)
+void Matrix4x4::CreateLookAtRH(const Vector3& eye, const Vector3& at,
+    const Vector3& up, Matrix4x4& result)
 {
     // zaxis = normal(Eye - At)
     // xaxis = normal(cross(Up, zaxis))
@@ -742,9 +702,9 @@ void FloatingPointMatrix4x4<T>::CreateLookAtRH(const FloatingPointVector3<T>& ey
     //  xaxis.z           yaxis.z           zaxis.z          0
     // -dot(xaxis, eye)  -dot(yaxis, eye)  -dot(zaxis, eye)  1
 
-    auto const zaxis = FloatingPointVector3<T>::Normalize(eye - at); // LH: at - eye
-    auto const xaxis = FloatingPointVector3<T>::Normalize(FloatingPointVector3<T>::Cross(up, zaxis));
-    auto const yaxis = FloatingPointVector3<T>::Cross(zaxis, xaxis);
+    const auto zaxis = Vector3::Normalize(eye - at); // LH: at - eye
+    const auto xaxis = Vector3::Normalize(Vector3::Cross(up, zaxis));
+    const auto yaxis = Vector3::Cross(zaxis, xaxis);
 
     result.m[0][0] = xaxis.X;
     result.m[0][1] = yaxis.X;
@@ -761,25 +721,23 @@ void FloatingPointMatrix4x4<T>::CreateLookAtRH(const FloatingPointVector3<T>& ey
     result.m[2][2] = zaxis.Z;
     result.m[2][3] = 0;
 
-    result.m[3][0] = -FloatingPointVector3<T>::Dot(xaxis, eye);
-    result.m[3][1] = -FloatingPointVector3<T>::Dot(yaxis, eye);
-    result.m[3][2] = -FloatingPointVector3<T>::Dot(zaxis, eye);
+    result.m[3][0] = -Vector3::Dot(xaxis, eye);
+    result.m[3][1] = -Vector3::Dot(yaxis, eye);
+    result.m[3][2] = -Vector3::Dot(zaxis, eye);
     result.m[3][3] = 1;
 }
 
-template <typename T>
-FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::CreateLookAtRH(const FloatingPointVector3<T>& eye, const FloatingPointVector3<T>& at,
-    const FloatingPointVector3<T>& up)
+Matrix4x4
+Matrix4x4::CreateLookAtRH(const Vector3& eye, const Vector3& at,
+    const Vector3& up)
 {
     // NOTE: Right-handed Cartesian Coordinates
-    FloatingPointMatrix4x4 result;
-    FloatingPointMatrix4x4::CreateLookAtRH(eye, at, up, result);
+    Matrix4x4 result;
+    Matrix4x4::CreateLookAtRH(eye, at, up, result);
     return result;
 }
 
-template <typename T>
-void FloatingPointMatrix4x4<T>::CreatePerspectiveLH(T width, T height, T zNear, T zFar, FloatingPointMatrix4x4& result)
+void Matrix4x4::CreatePerspectiveLH(float width, float height, float zNear, float zFar, Matrix4x4& result)
 {
     POMDOG_ASSERT_MESSAGE(width > 0, "width: out of range");
     POMDOG_ASSERT_MESSAGE(height > 0, "height: out of range");
@@ -792,10 +750,10 @@ void FloatingPointMatrix4x4<T>::CreatePerspectiveLH(T width, T height, T zNear, 
     // 0       0       zf/(zf-zn)     1
     // 0       0       zn*zf/(zn-zf)  0
 
-    T const a = 2 * zNear / width;
-    T const b = 2 * zNear / height;
-    T const c = zFar / (zFar - zNear); // RH: c = zFar / (zNear - zFar);
-    T const d = zNear * zFar / (zNear - zFar);
+    float const a = 2 * zNear / width;
+    float const b = 2 * zNear / height;
+    float const c = zFar / (zFar - zNear); // RH: c = zFar / (zNear - zFar);
+    float const d = zNear * zFar / (zNear - zFar);
 
     result.m[0][0] = a;
     result.m[0][1] = 0;
@@ -818,18 +776,16 @@ void FloatingPointMatrix4x4<T>::CreatePerspectiveLH(T width, T height, T zNear, 
     result.m[3][3] = 0;
 }
 
-template <typename T>
-FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::CreatePerspectiveLH(T width, T height, T zNear, T zFar)
+Matrix4x4
+Matrix4x4::CreatePerspectiveLH(float width, float height, float zNear, float zFar)
 {
     // NOTE: Left-handed Cartesian Coordinates
-    FloatingPointMatrix4x4 result;
+    Matrix4x4 result;
     CreatePerspectiveLH(width, height, zNear, zFar, result);
     return result;
 }
 
-template <typename T>
-void FloatingPointMatrix4x4<T>::CreatePerspectiveRH(T width, T height, T zNear, T zFar, FloatingPointMatrix4x4& result)
+void Matrix4x4::CreatePerspectiveRH(float width, float height, float zNear, float zFar, Matrix4x4& result)
 {
     POMDOG_ASSERT_MESSAGE(width > 0, "width: out of range");
     POMDOG_ASSERT_MESSAGE(height > 0, "height: out of range");
@@ -842,10 +798,10 @@ void FloatingPointMatrix4x4<T>::CreatePerspectiveRH(T width, T height, T zNear, 
     // 0       0       zf/(zn-zf)    -1
     // 0       0       zn*zf/(zn-zf)  0
 
-    T const a = T(2.0) * zNear / width;
-    T const b = T(2.0) * zNear / height;
-    T const c = zFar / (zNear - zFar); //LH: c = zFar / (zFar - zNear);
-    T const d = zNear * zFar / (zNear - zFar);
+    float const a = 2.0f * zNear / width;
+    float const b = 2.0f * zNear / height;
+    float const c = zFar / (zNear - zFar); //LH: c = zFar / (zFar - zNear);
+    float const d = zNear * zFar / (zNear - zFar);
 
     result.m[0][0] = a;
     result.m[0][1] = 0;
@@ -868,19 +824,17 @@ void FloatingPointMatrix4x4<T>::CreatePerspectiveRH(T width, T height, T zNear, 
     result.m[3][3] = 0;
 }
 
-template <typename T>
-FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::CreatePerspectiveRH(T width, T height, T zNear, T zFar)
+Matrix4x4
+Matrix4x4::CreatePerspectiveRH(float width, float height, float zNear, float zFar)
 {
     // NOTE: Right-handed Cartesian Coordinates
-    FloatingPointMatrix4x4 result;
+    Matrix4x4 result;
     CreatePerspectiveRH(width, height, zNear, zFar, result);
     return result;
 }
 
-template <typename T>
-void FloatingPointMatrix4x4<T>::CreatePerspectiveFieldOfViewLH(const Radian<T>& fovy, T aspect, T zNear, T zFar,
-    FloatingPointMatrix4x4& result)
+void Matrix4x4::CreatePerspectiveFieldOfViewLH(const Radian<float>& fovy, float aspect, float zNear, float zFar,
+    Matrix4x4& result)
 {
     POMDOG_ASSERT_MESSAGE(fovy > 0, "fovy: out of range");
     POMDOG_ASSERT_MESSAGE(aspect > 0, "aspect: out of range");
@@ -898,9 +852,9 @@ void FloatingPointMatrix4x4<T>::CreatePerspectiveFieldOfViewLH(const Radian<T>& 
     // 0           0   zf/(zf-zn)      1
     // 0           0   -zn*zf/(zf-zn)  0
 
-    T const yScale = T{1} / std::tan(fovy.value / 2);
-    T const xScale = yScale / aspect;
-    T const p = zFar / (zFar - zNear);
+    float const yScale = 1.0f / std::tan(fovy.value / 2.0f);
+    float const xScale = yScale / aspect;
+    float const p = zFar / (zFar - zNear);
 
     result.m[0][0] = xScale;
     result.m[0][1] = 0;
@@ -923,19 +877,17 @@ void FloatingPointMatrix4x4<T>::CreatePerspectiveFieldOfViewLH(const Radian<T>& 
     result.m[3][3] = 0;
 }
 
-template <typename T>
-FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::CreatePerspectiveFieldOfViewLH(const Radian<T>& fovy, T aspect, T zNear, T zFar)
+Matrix4x4
+Matrix4x4::CreatePerspectiveFieldOfViewLH(const Radian<float>& fovy, float aspect, float zNear, float zFar)
 {
     // NOTE: Left-handed Cartesian Coordinates
-    FloatingPointMatrix4x4 result;
+    Matrix4x4 result;
     CreatePerspectiveFieldOfViewLH(fovy, aspect, zNear, zFar, result);
     return result;
 }
 
-template <typename T>
-void FloatingPointMatrix4x4<T>::CreatePerspectiveFieldOfViewRH(const Radian<T>& fovy, T aspect, T zNear, T zFar,
-    FloatingPointMatrix4x4& result)
+void Matrix4x4::CreatePerspectiveFieldOfViewRH(const Radian<float>& fovy, float aspect, float zNear, float zFar,
+    Matrix4x4& result)
 {
     POMDOG_ASSERT_MESSAGE(fovy > 0, "fovy: out of range");
     POMDOG_ASSERT_MESSAGE(aspect > 0, "aspect: out of range");
@@ -953,9 +905,9 @@ void FloatingPointMatrix4x4<T>::CreatePerspectiveFieldOfViewRH(const Radian<T>& 
     // 0           0   zf/(zn-zf)     -1
     // 0           0   zn*zf/(zn-zf)   0
 
-    T const yScale = 1 / std::tan(fovy.value / 2);
-    T const xScale = yScale / aspect;
-    T const p = zFar / (zNear - zFar);
+    float const yScale = 1 / std::tan(fovy.value / 2);
+    float const xScale = yScale / aspect;
+    float const p = zFar / (zNear - zFar);
 
     result.m[0][0] = xScale;
     result.m[0][1] = 0;
@@ -978,19 +930,17 @@ void FloatingPointMatrix4x4<T>::CreatePerspectiveFieldOfViewRH(const Radian<T>& 
     result.m[3][3] = 0;
 }
 
-template <typename T>
-FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::CreatePerspectiveFieldOfViewRH(const Radian<T>& fovy, T aspect, T zNear, T zFar)
+Matrix4x4
+Matrix4x4::CreatePerspectiveFieldOfViewRH(const Radian<float>& fovy, float aspect, float zNear, float zFar)
 {
     // NOTE: Right-handed Cartesian Coordinates
-    FloatingPointMatrix4x4 result;
+    Matrix4x4 result;
     CreatePerspectiveFieldOfViewRH(fovy, aspect, zNear, zFar, result);
     return result;
 }
 
-template <typename T>
-void FloatingPointMatrix4x4<T>::CreatePerspectiveOffCenterLH(T left, T right, T bottom, T top, T zNear, T zFar,
-    FloatingPointMatrix4x4& result)
+void Matrix4x4::CreatePerspectiveOffCenterLH(float left, float right, float bottom, float top, float zNear, float zFar,
+    Matrix4x4& result)
 {
     POMDOG_ASSERT_MESSAGE(zNear > 0, "zNear: out of range");
     POMDOG_ASSERT_MESSAGE(zFar > 0, "zFar: out of range");
@@ -1001,12 +951,12 @@ void FloatingPointMatrix4x4<T>::CreatePerspectiveOffCenterLH(T left, T right, T 
     // (l+r)/(l-r)  (t+b)/(b-t)  zf/(zf-zn)     1
     // 0            0            zn*zf/(zn-zf)  0
 
-    T const x = 2 * zNear / (right - left);
-    T const y = 2 * zNear / (top - bottom);
-    T const a = (left + right) / (left - right); // RH: (left + right) / (right - left)
-    T const b = (top + bottom) / (bottom - top); // RH: (top + bottom) / (top - bottom)
-    T const c = zFar / (zFar - zNear); // RH: zFar / (zNear - zFar)
-    T const d = zNear * zFar / (zNear - zFar);
+    float const x = 2 * zNear / (right - left);
+    float const y = 2 * zNear / (top - bottom);
+    float const a = (left + right) / (left - right); // RH: (left + right) / (right - left)
+    float const b = (top + bottom) / (bottom - top); // RH: (top + bottom) / (top - bottom)
+    float const c = zFar / (zFar - zNear);           // RH: zFar / (zNear - zFar)
+    float const d = zNear * zFar / (zNear - zFar);
 
     result.m[0][0] = x;
     result.m[0][1] = 0;
@@ -1029,19 +979,17 @@ void FloatingPointMatrix4x4<T>::CreatePerspectiveOffCenterLH(T left, T right, T 
     result.m[3][3] = 0;
 }
 
-template <typename T>
-FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::CreatePerspectiveOffCenterLH(T left, T right, T bottom, T top, T zNear, T zFar)
+Matrix4x4
+Matrix4x4::CreatePerspectiveOffCenterLH(float left, float right, float bottom, float top, float zNear, float zFar)
 {
     // NOTE: Left-handed Cartesian Coordinates
-    FloatingPointMatrix4x4 result;
+    Matrix4x4 result;
     CreatePerspectiveOffCenterLH(left, right, bottom, top, zNear, zFar, result);
     return result;
 }
 
-template <typename T>
-void FloatingPointMatrix4x4<T>::CreatePerspectiveOffCenterRH(T left, T right, T bottom, T top, T zNear, T zFar,
-    FloatingPointMatrix4x4& result)
+void Matrix4x4::CreatePerspectiveOffCenterRH(float left, float right, float bottom, float top, float zNear, float zFar,
+    Matrix4x4& result)
 {
     POMDOG_ASSERT_MESSAGE(zNear > 0, "zNear: out of range");
     POMDOG_ASSERT_MESSAGE(zFar > 0, "zFar: out of range");
@@ -1052,12 +1000,12 @@ void FloatingPointMatrix4x4<T>::CreatePerspectiveOffCenterRH(T left, T right, T 
     // (l+r)/(r-l)  (t+b)/(t-b)  zf/(zn-zf)    -1
     // 0            0            zn*zf/(zn-zf)  0
 
-    T const x = 2 * zNear / (right - left);
-    T const y = 2 * zNear / (top - bottom);
-    T const a = (left + right) / (right - left); // LH: (left + right) / (left - right)
-    T const b = (top + bottom) / (top - bottom); // LH: (top + bottom) / (bottom - top)
-    T const c = zFar / (zNear - zFar); // LH: zFar / (zFar - zNear)
-    T const d = zNear * zFar / (zNear - zFar);
+    float const x = 2 * zNear / (right - left);
+    float const y = 2 * zNear / (top - bottom);
+    float const a = (left + right) / (right - left); // LH: (left + right) / (left - right)
+    float const b = (top + bottom) / (top - bottom); // LH: (top + bottom) / (bottom - top)
+    float const c = zFar / (zNear - zFar);           // LH: zFar / (zFar - zNear)
+    float const d = zNear * zFar / (zNear - zFar);
 
     result.m[0][0] = x;
     result.m[0][1] = 0;
@@ -1080,19 +1028,17 @@ void FloatingPointMatrix4x4<T>::CreatePerspectiveOffCenterRH(T left, T right, T 
     result.m[3][3] = 0;
 }
 
-template <typename T>
-FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::CreatePerspectiveOffCenterRH(T left, T right, T bottom, T top, T zNear, T zFar)
+Matrix4x4
+Matrix4x4::CreatePerspectiveOffCenterRH(float left, float right, float bottom, float top, float zNear, float zFar)
 {
     // NOTE: Right-handed Cartesian Coordinates
-    FloatingPointMatrix4x4 result;
+    Matrix4x4 result;
     CreatePerspectiveOffCenterRH(left, right, bottom, top, zNear, zFar, result);
     return result;
 }
 
-template <typename T>
-void FloatingPointMatrix4x4<T>::CreateOrthographicOffCenterLH(T left, T right, T bottom, T top, T zNearPlane, T zFarPlane,
-    FloatingPointMatrix4x4& result)
+void Matrix4x4::CreateOrthographicOffCenterLH(float left, float right, float bottom, float top, float zNearPlane, float zFarPlane,
+    Matrix4x4& result)
 {
     POMDOG_ASSERT((right - left) != 0);
     POMDOG_ASSERT((top - bottom) != 0);
@@ -1104,9 +1050,9 @@ void FloatingPointMatrix4x4<T>::CreateOrthographicOffCenterLH(T left, T right, T
     // 0            0            1/(zf-zn)   0
     // (l+r)/(l-r)  (t+b)/(b-t)  zn/(zn-zf)  1
 
-    T const inverseRightLeft = 1 / (right - left);
-    T const inverseTopBottom = 1 / (top - bottom);
-    T const inverseFarNear = 1 / (zFarPlane - zNearPlane);
+    float const inverseRightLeft = 1 / (right - left);
+    float const inverseTopBottom = 1 / (top - bottom);
+    float const inverseFarNear = 1 / (zFarPlane - zNearPlane);
 
     result.m[0][0] = 2 * inverseRightLeft;
     result.m[0][1] = 0;
@@ -1129,19 +1075,17 @@ void FloatingPointMatrix4x4<T>::CreateOrthographicOffCenterLH(T left, T right, T
     result.m[3][3] = 1;
 }
 
-template <typename T>
-FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::CreateOrthographicOffCenterLH(T left, T right, T bottom, T top, T zNearPlane, T zFarPlane)
+Matrix4x4
+Matrix4x4::CreateOrthographicOffCenterLH(float left, float right, float bottom, float top, float zNearPlane, float zFarPlane)
 {
     // NOTE: Left-handed Cartesian Coordinates
-    FloatingPointMatrix4x4 result;
+    Matrix4x4 result;
     CreateOrthographicOffCenterLH(left, right, bottom, top, zNearPlane, zFarPlane, result);
     return result;
 }
 
-template <typename T>
-void FloatingPointMatrix4x4<T>::CreateOrthographicOffCenterRH(T left, T right, T bottom, T top, T zNearPlane, T zFarPlane,
-    FloatingPointMatrix4x4& result)
+void Matrix4x4::CreateOrthographicOffCenterRH(float left, float right, float bottom, float top, float zNearPlane, float zFarPlane,
+    Matrix4x4& result)
 {
     POMDOG_ASSERT((right - left) != 0);
     POMDOG_ASSERT((top - bottom) != 0);
@@ -1153,9 +1097,9 @@ void FloatingPointMatrix4x4<T>::CreateOrthographicOffCenterRH(T left, T right, T
     // 0            0            1/(zn-zf)   0
     // (l+r)/(l-r)  (t+b)/(b-t)  zn/(zn-zf)  1
 
-    T const inverseRightLeft = 1 / (right - left);
-    T const inverseTopBottom = 1 / (top - bottom);
-    T const inverseFarNear = 1 / (zNearPlane - zFarPlane);
+    float const inverseRightLeft = 1 / (right - left);
+    float const inverseTopBottom = 1 / (top - bottom);
+    float const inverseFarNear = 1 / (zNearPlane - zFarPlane);
 
     result.m[0][0] = 2 * inverseRightLeft;
     result.m[0][1] = 0;
@@ -1178,63 +1122,57 @@ void FloatingPointMatrix4x4<T>::CreateOrthographicOffCenterRH(T left, T right, T
     result.m[3][3] = 1;
 }
 
-template <typename T>
-FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::CreateOrthographicOffCenterRH(T left, T right, T bottom, T top, T zNearPlane, T zFarPlane)
+Matrix4x4
+Matrix4x4::CreateOrthographicOffCenterRH(float left, float right, float bottom, float top, float zNearPlane, float zFarPlane)
 {
     // NOTE: Right-handed Cartesian Coordinates
-    FloatingPointMatrix4x4 result;
+    Matrix4x4 result;
     CreateOrthographicOffCenterRH(left, right, bottom, top, zNearPlane, zFarPlane, result);
     return result;
 }
 
-template <typename T>
-void FloatingPointMatrix4x4<T>::CreateOrthographicLH(T width, T height, T zNearPlane, T zFarPlane, FloatingPointMatrix4x4& result)
+void Matrix4x4::CreateOrthographicLH(float width, float height, float zNearPlane, float zFarPlane, Matrix4x4& result)
 {
     CreateOrthographicOffCenterLH(
         -width / 2, width / 2, -height / 2, height / 2, zNearPlane, zFarPlane, result);
 }
 
-template <typename T>
-FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::CreateOrthographicLH(T width, T height, T zNearPlane, T zFarPlane)
+Matrix4x4
+Matrix4x4::CreateOrthographicLH(float width, float height, float zNearPlane, float zFarPlane)
 {
     // NOTE: Left-handed Cartesian Coordinates
-    FloatingPointMatrix4x4 result;
+    Matrix4x4 result;
     CreateOrthographicLH(width, height, zNearPlane, zFarPlane, result);
     return result;
 }
 
-template <typename T>
-void FloatingPointMatrix4x4<T>::CreateOrthographicRH(T width, T height, T zNearPlane, T zFarPlane, FloatingPointMatrix4x4& result)
+void Matrix4x4::CreateOrthographicRH(float width, float height, float zNearPlane, float zFarPlane, Matrix4x4& result)
 {
     CreateOrthographicOffCenterRH(
         -width / 2, width / 2, -height / 2, height / 2, zNearPlane, zFarPlane, result);
 }
 
-template <typename T>
-FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::CreateOrthographicRH(T width, T height, T zNearPlane, T zFarPlane)
+Matrix4x4
+Matrix4x4::CreateOrthographicRH(float width, float height, float zNearPlane, float zFarPlane)
 {
     // NOTE: Right-handed Cartesian Coordinates
-    FloatingPointMatrix4x4 result;
+    Matrix4x4 result;
     CreateOrthographicRH(width, height, zNearPlane, zFarPlane, result);
     return result;
 }
 
-template <typename T>
-void FloatingPointMatrix4x4<T>::CreateFromAxisAngle(
-    const FloatingPointVector3<T>& axis, const Radian<T>& angle, FloatingPointMatrix4x4& result)
+void Matrix4x4::CreateFromAxisAngle(
+    const Vector3& axis, const Radian<float>& angle, Matrix4x4& result)
 {
-    auto const sinAngle = std::sin(angle.value);
-    auto const cosAngle = std::cos(angle.value);
-    auto const scaleFactor = T{1} - cosAngle;
-    auto const xx = axis.X * axis.X;
-    auto const yy = axis.Y * axis.Y;
-    auto const zz = axis.Z * axis.Z;
-    auto const xy = axis.X * axis.Y;
-    auto const xz = axis.X * axis.Z;
-    auto const yz = axis.Y * axis.Z;
+    const auto sinAngle = std::sin(angle.value);
+    const auto cosAngle = std::cos(angle.value);
+    const auto scaleFactor = 1.0f - cosAngle;
+    const auto xx = axis.X * axis.X;
+    const auto yy = axis.Y * axis.Y;
+    const auto zz = axis.Z * axis.Z;
+    const auto xy = axis.X * axis.Y;
+    const auto xz = axis.X * axis.Z;
+    const auto yz = axis.Y * axis.Z;
 
     result.m[0][0] = scaleFactor * xx + cosAngle;
     result.m[0][1] = scaleFactor * xy + sinAngle * axis.Z;
@@ -1254,45 +1192,28 @@ void FloatingPointMatrix4x4<T>::CreateFromAxisAngle(
     result.m[3][3] = 1;
 }
 
-template <typename T>
-FloatingPointMatrix4x4<T>
-FloatingPointMatrix4x4<T>::CreateFromAxisAngle(const FloatingPointVector3<T>& axis, const Radian<T>& angle)
+Matrix4x4
+Matrix4x4::CreateFromAxisAngle(const Vector3& axis, const Radian<float>& angle)
 {
-    FloatingPointMatrix4x4 result;
+    Matrix4x4 result;
     CreateFromAxisAngle(axis, angle, result);
     return result;
 }
 
-template <typename T>
-const T* FloatingPointMatrix4x4<T>::Data() const noexcept
+const float* Matrix4x4::Data() const noexcept
 {
-    static_assert(std::is_floating_point<T>::value, "T is floating point number");
     return m[0];
 }
 
-template <typename T>
-T* FloatingPointMatrix4x4<T>::Data() noexcept
+float* Matrix4x4::Data() noexcept
 {
-    static_assert(std::is_floating_point<T>::value, "T is floating point number");
     return m[0];
 }
 
-template <typename T>
-FloatingPointMatrix4x4<T> operator*(T scaleFactor, const FloatingPointMatrix4x4<T>& matrix) noexcept
+[[nodiscard]] Matrix4x4
+operator*(float scaleFactor, const Matrix4x4& matrix) noexcept
 {
-    return FloatingPointMatrix4x4<T>::Multiply(matrix, scaleFactor);
+    return Matrix4x4::Multiply(matrix, scaleFactor);
 }
 
-// NOTE: explicit instantiations
-template class FloatingPointMatrix4x4<float>;
-template class FloatingPointMatrix4x4<double>;
-
-// NOTE: explicit instantiations
-template FloatingPointMatrix4x4<float>
-operator*<float>(float, const FloatingPointMatrix4x4<float>&) noexcept;
-
-// NOTE: explicit instantiations
-template FloatingPointMatrix4x4<double>
-operator*<double>(double, const FloatingPointMatrix4x4<double>&) noexcept;
-
-} // namespace pomdog::detail
+} // namespace pomdog

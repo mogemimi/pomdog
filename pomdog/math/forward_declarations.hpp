@@ -13,36 +13,6 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail {
 
-template <typename T>
-class Coordinate2D;
-
-template <typename T>
-class Coordinate3D;
-
-template <typename RealType>
-class POMDOG_EXPORT FloatingPointMatrix2x2;
-
-template <typename RealType>
-class POMDOG_EXPORT FloatingPointMatrix3x2;
-
-template <typename RealType>
-class POMDOG_EXPORT FloatingPointMatrix3x3;
-
-template <typename RealType>
-class POMDOG_EXPORT FloatingPointMatrix4x4;
-
-template <typename RealType>
-class POMDOG_EXPORT FloatingPointQuaternion;
-
-template <typename RealType>
-class POMDOG_EXPORT FloatingPointVector2;
-
-template <typename RealType>
-class POMDOG_EXPORT FloatingPointVector3;
-
-template <typename RealType>
-class POMDOG_EXPORT FloatingPointVector4;
-
 template <typename T, class PhantomType>
 class TaggedArithmetic;
 
@@ -56,15 +26,6 @@ struct RadianTag;
 
 namespace pomdog {
 
-using Matrix2x2 = detail::FloatingPointMatrix2x2<float>;
-using Matrix3x2 = detail::FloatingPointMatrix3x2<float>;
-using Matrix3x3 = detail::FloatingPointMatrix3x3<float>;
-using Matrix4x4 = detail::FloatingPointMatrix4x4<float>;
-using Quaternion = detail::FloatingPointQuaternion<float>;
-using Vector2 = detail::FloatingPointVector2<float>;
-using Vector3 = detail::FloatingPointVector3<float>;
-using Vector4 = detail::FloatingPointVector4<float>;
-
 template <typename T>
 using Degree = detail::TaggedArithmetic<T, detail::Tags::DegreeTag>;
 
@@ -77,11 +38,19 @@ class BoundingCircle;
 class BoundingFrustum;
 class BoundingSphere;
 class Color;
+class Matrix2x2;
+class Matrix3x2;
+class Matrix3x3;
+class Matrix4x4;
 class Plane;
 class Point2D;
 class Point3D;
+class Quaternion;
 class Ray;
 class Rectangle;
+class Vector2;
+class Vector3;
+class Vector4;
 
 // Enumerations:
 enum class ContainmentType : std::uint8_t;
