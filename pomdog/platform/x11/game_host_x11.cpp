@@ -1,12 +1,12 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/platform/x11/game_host_x11.hpp"
-#include "pomdog/application/file_system.hpp"
 #include "pomdog/application/game.hpp"
 #include "pomdog/audio/openal/audio_engine_al.hpp"
 #include "pomdog/chrono/detail/game_clock_impl.hpp"
 #include "pomdog/chrono/detail/make_time_source.hpp"
 #include "pomdog/content/asset_manager.hpp"
+#include "pomdog/filesystem/file_system.hpp"
 #include "pomdog/graphics/backends/graphics_command_queue_immediate.hpp"
 #include "pomdog/graphics/gl4/graphics_context_gl4.hpp"
 #include "pomdog/graphics/gl4/graphics_device_gl4.hpp"

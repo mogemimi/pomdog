@@ -2,8 +2,6 @@ source_group(application REGULAR_EXPRESSION "pomdog/application/*")
 
 target_sources(pomdog_static PRIVATE
     # NOTE: application
-    ${POMDOG_SRC_DIR}/application/file_system.hpp
-    ${POMDOG_SRC_DIR}/application/file_system.cpp
     ${POMDOG_SRC_DIR}/application/game.hpp
     ${POMDOG_SRC_DIR}/application/game.cpp
     ${POMDOG_SRC_DIR}/application/game_host.hpp

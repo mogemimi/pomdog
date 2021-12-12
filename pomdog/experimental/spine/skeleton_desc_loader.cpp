@@ -1,10 +1,10 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/experimental/spine/skeleton_desc_loader.hpp"
-#include "pomdog/application/file_system.hpp"
 #include "pomdog/basic/conditional_compilation.hpp"
 #include "pomdog/content/asset_manager.hpp"
 #include "pomdog/content/utility/binary_reader.hpp"
+#include "pomdog/filesystem/file_system.hpp"
 #include "pomdog/math/degree.hpp"
 #include "pomdog/math/math.hpp"
 #include "pomdog/utility/assert.hpp"

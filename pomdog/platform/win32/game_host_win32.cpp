@@ -16,7 +16,6 @@
 #include "pomdog/graphics/direct3d11/graphics_context_direct3d11.hpp"
 #include "pomdog/graphics/direct3d11/graphics_device_direct3d11.hpp"
 #endif
-#include "pomdog/application/file_system.hpp"
 #include "pomdog/application/game.hpp"
 #include "pomdog/application/subsystem_scheduler.hpp"
 #include "pomdog/application/system_events.hpp"
@@ -25,6 +24,7 @@
 #include "pomdog/chrono/detail/game_clock_impl.hpp"
 #include "pomdog/chrono/win32/time_source_win32.hpp"
 #include "pomdog/content/asset_manager.hpp"
+#include "pomdog/filesystem/file_system.hpp"
 #include "pomdog/graphics/graphics_command_queue.hpp"
 #include "pomdog/graphics/graphics_device.hpp"
 #include "pomdog/graphics/presentation_parameters.hpp"

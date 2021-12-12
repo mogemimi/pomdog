@@ -1,7 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/experimental/particles/particle_clip_loader.hpp"
-#include "pomdog/application/file_system.hpp"
 #include "pomdog/basic/conditional_compilation.hpp"
 #include "pomdog/content/utility/binary_reader.hpp"
 #include "pomdog/experimental/particles/emitter_shapes/particle_emitter_shape_box.hpp"
@@ -14,6 +13,7 @@
 #include "pomdog/experimental/particles/parameters/particle_parameter_random.hpp"
 #include "pomdog/experimental/particles/parameters/particle_parameter_random_curves.hpp"
 #include "pomdog/experimental/particles/particle_clip.hpp"
+#include "pomdog/filesystem/file_system.hpp"
 #include "pomdog/utility/assert.hpp"
 #include "pomdog/utility/string_helper.hpp"
 

@@ -8,12 +8,12 @@ set(POMDOG_DIR "..")
 set(POMDOG_TEST_DIR "${POMDOG_DIR}/test")
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
 
-source_group(application            REGULAR_EXPRESSION test/application/*)
 source_group(chrono                 REGULAR_EXPRESSION test/chrono/*)
 source_group(content                REGULAR_EXPRESSION test/content/*)
 source_group(experimental\\async    REGULAR_EXPRESSION test/experimental/async/*)
 source_group(experimental\\ecs      REGULAR_EXPRESSION test/experimental/ecs/*)
 source_group(experimental\\random   REGULAR_EXPRESSION test/experimental/random/*)
+source_group(filesystem             REGULAR_EXPRESSION test/filesystem/*)
 source_group(graphics               REGULAR_EXPRESSION test/graphics/*)
 source_group(input                  REGULAR_EXPRESSION test/input/*)
 source_group(logging                REGULAR_EXPRESSION test/logging/*)
@@ -27,10 +27,6 @@ add_executable(pomdog_test)
 target_sources(pomdog_test PRIVATE
     ${POMDOG_TEST_DIR}/main.cpp
     ${POMDOG_TEST_DIR}/pomdog_test.cpp
-    $<$<PLATFORM_ID:Windows,Linux,Darwin>:
-        # TODO: Need to implement for Emscripten.
-        ${POMDOG_TEST_DIR}/application/file_system_test.cpp
-    >
     ${POMDOG_TEST_DIR}/chrono/game_clock_test.cpp
     ${POMDOG_TEST_DIR}/chrono/timer_test.cpp
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:
@@ -41,6 +37,10 @@ target_sources(pomdog_test PRIVATE
     ${POMDOG_TEST_DIR}/experimental/ecs/entity_test.cpp
     ${POMDOG_TEST_DIR}/experimental/ecs/entity_manager_test.cpp
     ${POMDOG_TEST_DIR}/experimental/random/xoroshiro128_star_star_test.cpp
+    $<$<PLATFORM_ID:Windows,Linux,Darwin>:
+        # TODO: Need to implement for Emscripten.
+        ${POMDOG_TEST_DIR}/filesystem/file_system_test.cpp
+    >
     ${POMDOG_TEST_DIR}/graphics/input_layout_helper_test.cpp
     ${POMDOG_TEST_DIR}/input/gamepad_uuid_test.cpp
     ${POMDOG_TEST_DIR}/input/keyboard_state_test.cpp

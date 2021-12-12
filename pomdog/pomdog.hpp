@@ -6,7 +6,6 @@
 namespace pomdog {
 } // namespace pomdog
 
-#include "pomdog/application/file_system.hpp"
 #include "pomdog/application/game.hpp"
 #include "pomdog/application/game_host.hpp"
 #include "pomdog/application/game_window.hpp"
@@ -28,6 +27,8 @@ namespace pomdog {
 #include "pomdog/content/asset_builders/pipeline_state_builder.hpp"
 #include "pomdog/content/asset_builders/shader_builder.hpp"
 #include "pomdog/content/asset_manager.hpp"
+
+#include "pomdog/filesystem/file_system.hpp"
 
 #include "pomdog/math/bounding_box.hpp"
 #include "pomdog/math/bounding_box2d.hpp"

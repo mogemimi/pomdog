@@ -1,13 +1,13 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/experimental/magicavoxel/vox_model_loader.hpp"
-#include "pomdog/application/file_system.hpp"
 #include "pomdog/basic/conditional_compilation.hpp"
 #include "pomdog/content/asset_manager.hpp"
 #include "pomdog/content/utility/binary_reader.hpp"
 #include "pomdog/content/utility/make_fourcc.hpp"
 #include "pomdog/experimental/magicavoxel/vox_chunk_header.hpp"
 #include "pomdog/experimental/magicavoxel/vox_model.hpp"
+#include "pomdog/filesystem/file_system.hpp"
 #include "pomdog/utility/assert.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN

@@ -1,10 +1,10 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/content/asset_builders/shader_builder.hpp"
-#include "pomdog/application/file_system.hpp"
 #include "pomdog/basic/conditional_compilation.hpp"
 #include "pomdog/content/asset_manager.hpp"
 #include "pomdog/content/utility/binary_reader.hpp"
+#include "pomdog/filesystem/file_system.hpp"
 #include "pomdog/graphics/backends/shader_bytecode.hpp"
 #include "pomdog/graphics/graphics_device.hpp"
 #include "pomdog/graphics/shader.hpp"

@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/platform/win32/file_system_win32.hpp"
+#include "pomdog/filesystem/win32/file_system_win32.hpp"
 #include "pomdog/basic/conditional_compilation.hpp"
 #include "pomdog/platform/win32/prerequisites_win32.hpp"
 #include "pomdog/utility/assert.hpp"

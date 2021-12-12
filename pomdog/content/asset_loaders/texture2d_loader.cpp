@@ -1,7 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/content/asset_loaders/texture2d_loader.hpp"
-#include "pomdog/application/file_system.hpp"
 #include "pomdog/basic/conditional_compilation.hpp"
 #include "pomdog/content/asset_manager.hpp"
 #include "pomdog/content/image/dds.hpp"
@@ -9,6 +8,7 @@
 #include "pomdog/content/image/pnm.hpp"
 #include "pomdog/content/utility/binary_reader.hpp"
 #include "pomdog/content/utility/make_fourcc.hpp"
+#include "pomdog/filesystem/file_system.hpp"
 #include "pomdog/graphics/graphics_device.hpp"
 #include "pomdog/graphics/surface_format.hpp"
 #include "pomdog/graphics/texture2d.hpp"

@@ -1,13 +1,13 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/platform/cocoa/game_host_cocoa.hpp"
-#include "pomdog/application/file_system.hpp"
 #include "pomdog/application/game.hpp"
 #include "pomdog/application/system_events.hpp"
 #include "pomdog/audio/openal/audio_engine_al.hpp"
 #include "pomdog/chrono/apple/time_source_apple.hpp"
 #include "pomdog/chrono/detail/game_clock_impl.hpp"
 #include "pomdog/content/asset_manager.hpp"
+#include "pomdog/filesystem/file_system.hpp"
 #include "pomdog/graphics/backends/graphics_command_queue_immediate.hpp"
 #include "pomdog/graphics/gl4/graphics_context_gl4.hpp"
 #include "pomdog/graphics/gl4/graphics_device_gl4.hpp"

@@ -1,17 +1,8 @@
-source_group(platform/apple      REGULAR_EXPRESSION "pomdog/platform/apple/*")
 source_group(platform/cocoa      REGULAR_EXPRESSION "pomdog/platform/cocoa/*")
-source_group(platform/emscripten REGULAR_EXPRESSION "pomdog/platform/emscripten/*")
-source_group(platform/linux      REGULAR_EXPRESSION "pomdog/platform/linux/*")
 source_group(platform/win32      REGULAR_EXPRESSION "pomdog/platform/win32/*")
 source_group(platform/x11        REGULAR_EXPRESSION "pomdog/platform/x11/*")
 
 target_sources(pomdog_static PRIVATE
-    $<$<PLATFORM_ID:Darwin,iOS>:
-        # NOTE: platform/apple
-        ${POMDOG_SRC_DIR}/platform/apple/file_system_apple.hpp
-        ${POMDOG_SRC_DIR}/platform/apple/file_system_apple.mm
-    >
-
     $<$<PLATFORM_ID:Darwin>:
         # NOTE: platform/cocoa
         ${POMDOG_SRC_DIR}/platform/cocoa/bootstrap.hpp
@@ -36,18 +27,6 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/platform/cocoa/game_host_metal.mm
         ${POMDOG_SRC_DIR}/platform/cocoa/pomdog_metal_view_controller.hpp
         ${POMDOG_SRC_DIR}/platform/cocoa/pomdog_metal_view_controller.mm
-    >
-
-    $<$<PLATFORM_ID:Emscripten>:
-        # NOTE: platform/emscripten
-        ${POMDOG_SRC_DIR}/platform/emscripten/file_system_emscripten.cpp
-        ${POMDOG_SRC_DIR}/platform/emscripten/file_system_emscripten.hpp
-    >
-
-    $<$<PLATFORM_ID:Linux>:
-        # NOTE: platform/linux
-        ${POMDOG_SRC_DIR}/platform/linux/file_system_linux.cpp
-        ${POMDOG_SRC_DIR}/platform/linux/file_system_linux.hpp
     >
 
     $<$<PLATFORM_ID:Linux>:
@@ -76,8 +55,6 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/platform/win32/game_host_win32.hpp
         ${POMDOG_SRC_DIR}/platform/win32/game_window_win32.cpp
         ${POMDOG_SRC_DIR}/platform/win32/game_window_win32.hpp
-        ${POMDOG_SRC_DIR}/platform/win32/file_system_win32.cpp
-        ${POMDOG_SRC_DIR}/platform/win32/file_system_win32.hpp
         ${POMDOG_SRC_DIR}/platform/win32/prerequisites_win32.hpp
     >
 

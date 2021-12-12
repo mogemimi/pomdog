@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/platform/emscripten/file_system_emscripten.hpp"
+#include "pomdog/filesystem/linux/file_system_linux.hpp"
 #include "pomdog/utility/assert.hpp"
 #include "pomdog/utility/error_helper.hpp"
 #include "pomdog/utility/path_helper.hpp"
@@ -13,7 +13,7 @@
 #include <cstddef>
 #include <cstdio>
 
-namespace pomdog::detail::emscripten {
+namespace pomdog::detail::linux {
 
 std::unique_ptr<Error>
 CreateNewDirectory(const std::string& path) noexcept
@@ -132,4 +132,4 @@ GetCurrentWorkingDirectory() noexcept
     return std::make_tuple(dir, nullptr);
 }
 
-} // namespace pomdog::detail::emscripten
+} // namespace pomdog::detail::linux

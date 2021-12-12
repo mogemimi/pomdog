@@ -1,11 +1,11 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/experimental/gltf/gltf_loader.hpp"
-#include "pomdog/application/file_system.hpp"
 #include "pomdog/basic/conditional_compilation.hpp"
 #include "pomdog/content/utility/binary_reader.hpp"
 #include "pomdog/content/utility/make_fourcc.hpp"
 #include "pomdog/experimental/gltf/gltf.hpp"
+#include "pomdog/filesystem/file_system.hpp"
 #include "pomdog/utility/assert.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN

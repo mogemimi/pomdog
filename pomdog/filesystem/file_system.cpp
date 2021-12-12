@@ -1,16 +1,16 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/application/file_system.hpp"
+#include "pomdog/filesystem/file_system.hpp"
 #include "pomdog/basic/platform.hpp"
 
 #if defined(POMDOG_PLATFORM_MACOSX) || defined(POMDOG_PLATFORM_APPLE_IOS)
-#include "pomdog/platform/apple/file_system_apple.hpp"
+#include "pomdog/filesystem/apple/file_system_apple.hpp"
 #elif defined(POMDOG_PLATFORM_WIN32)
-#include "pomdog/platform/win32/file_system_win32.hpp"
+#include "pomdog/filesystem/win32/file_system_win32.hpp"
 #elif defined(POMDOG_PLATFORM_LINUX) || defined(POMDOG_PLATFORM_ANDROID)
-#include "pomdog/platform/linux/file_system_linux.hpp"
+#include "pomdog/filesystem/linux/file_system_linux.hpp"
 #elif defined(POMDOG_PLATFORM_EMSCRIPTEN)
-#include "pomdog/platform/emscripten/file_system_emscripten.hpp"
+#include "pomdog/filesystem/emscripten/file_system_emscripten.hpp"
 #else
 #error "Platform undefined or not supported."
 #endif

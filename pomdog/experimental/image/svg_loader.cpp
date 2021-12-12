@@ -1,8 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/experimental/image/svg_loader.hpp"
-#include "pomdog/application/file_system.hpp"
 #include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/filesystem/file_system.hpp"
 #include "pomdog/graphics/graphics_device.hpp"
 #include "pomdog/graphics/texture2d.hpp"
 #include "pomdog/utility/assert.hpp"

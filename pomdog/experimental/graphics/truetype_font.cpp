@@ -1,11 +1,11 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/experimental/graphics/truetype_font.hpp"
-#include "pomdog/application/file_system.hpp"
 #include "pomdog/basic/conditional_compilation.hpp"
 #include "pomdog/content/utility/binary_reader.hpp"
 #include "pomdog/experimental/graphics/font_glyph.hpp"
 #include "pomdog/experimental/graphics/sprite_font.hpp"
+#include "pomdog/filesystem/file_system.hpp"
 #include "pomdog/math/point2d.hpp"
 #include "pomdog/utility/assert.hpp"
 

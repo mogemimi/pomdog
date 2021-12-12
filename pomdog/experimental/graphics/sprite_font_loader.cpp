@@ -1,11 +1,11 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/experimental/graphics/sprite_font_loader.hpp"
-#include "pomdog/application/file_system.hpp"
 #include "pomdog/basic/conditional_compilation.hpp"
 #include "pomdog/content/asset_manager.hpp"
 #include "pomdog/experimental/graphics/font_glyph.hpp"
 #include "pomdog/experimental/graphics/sprite_font.hpp"
+#include "pomdog/filesystem/file_system.hpp"
 #include "pomdog/utility/assert.hpp"
 #include "pomdog/utility/path_helper.hpp"
 

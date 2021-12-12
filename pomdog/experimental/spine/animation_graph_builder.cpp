@@ -1,7 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/experimental/spine/animation_graph_builder.hpp"
-#include "pomdog/application/file_system.hpp"
 #include "pomdog/basic/conditional_compilation.hpp"
 #include "pomdog/content/utility/binary_reader.hpp"
 #include "pomdog/experimental/skeletal2d/animation_clip.hpp"
@@ -9,6 +8,7 @@
 #include "pomdog/experimental/skeletal2d/blendtrees/animation_lerp_node.hpp"
 #include "pomdog/experimental/spine/animation_loader.hpp"
 #include "pomdog/experimental/spine/skeleton_desc.hpp"
+#include "pomdog/filesystem/file_system.hpp"
 #include "pomdog/utility/assert.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN

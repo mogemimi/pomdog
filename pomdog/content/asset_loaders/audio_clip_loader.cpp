@@ -1,7 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/content/asset_loaders/audio_clip_loader.hpp"
-#include "pomdog/application/file_system.hpp"
 #include "pomdog/audio/audio_clip.hpp"
 #include "pomdog/basic/conditional_compilation.hpp"
 #include "pomdog/content/asset_manager.hpp"
@@ -9,6 +8,7 @@
 #include "pomdog/content/audio/wav.hpp"
 #include "pomdog/content/utility/binary_reader.hpp"
 #include "pomdog/content/utility/make_fourcc.hpp"
+#include "pomdog/filesystem/file_system.hpp"
 #include "pomdog/utility/assert.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
