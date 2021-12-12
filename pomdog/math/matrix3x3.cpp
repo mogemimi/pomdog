@@ -90,9 +90,11 @@ Matrix3x3& Matrix3x3::operator*=(float scaleFactor) noexcept
     return *this;
 }
 
-Matrix3x3& Matrix3x3::operator/=(float scaleFactor)
+Matrix3x3& Matrix3x3::operator/=(float scaleFactor) noexcept
 {
-    POMDOG_ASSERT(scaleFactor != 0.0f);
+    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_ZERO);
+    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_NAN);
+    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_INFINITE);
     const auto inverseDivider = 1.0f / scaleFactor;
     m[0][0] *= inverseDivider;
     m[0][1] *= inverseDivider;
@@ -154,9 +156,11 @@ Matrix3x3 Matrix3x3::operator*(float scaleFactor) const noexcept
     return Multiply(*this, scaleFactor);
 }
 
-Matrix3x3 Matrix3x3::operator/(float scaleFactor) const
+Matrix3x3 Matrix3x3::operator/(float scaleFactor) const noexcept
 {
-    POMDOG_ASSERT(scaleFactor != 0.0f);
+    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_ZERO);
+    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_NAN);
+    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_INFINITE);
     const auto inverseDivider = 1.0f / scaleFactor;
     return {
         m[0][0] * inverseDivider,
@@ -196,14 +200,14 @@ bool Matrix3x3::operator!=(const Matrix3x3& other) const noexcept
            m[2][2] != other.m[2][2];
 }
 
-float& Matrix3x3::operator()(std::size_t row, std::size_t column)
+float& Matrix3x3::operator()(std::size_t row, std::size_t column) noexcept
 {
     POMDOG_ASSERT_MESSAGE(row < RowSize, "row: out of range");
     POMDOG_ASSERT_MESSAGE(column < ColumnSize, "column: out of range");
     return m[row][column];
 }
 
-const float& Matrix3x3::operator()(std::size_t row, std::size_t column) const
+const float& Matrix3x3::operator()(std::size_t row, std::size_t column) const noexcept
 {
     POMDOG_ASSERT_MESSAGE(row < RowSize, "row: out of range");
     POMDOG_ASSERT_MESSAGE(column < ColumnSize, "column: out of range");
@@ -359,7 +363,11 @@ Matrix3x3
 Matrix3x3::Invert(const Matrix3x3& matrix)
 {
     const auto determinant = matrix.Determinant();
-    POMDOG_ASSERT_MESSAGE(0.0f != determinant, "This is singular matrix");
+
+    // NOTE: The 'matrix' must be non-singular matrix.
+    POMDOG_ASSERT(std::fpclassify(determinant) != FP_ZERO);
+    POMDOG_ASSERT(std::fpclassify(determinant) != FP_NAN);
+    POMDOG_ASSERT(std::fpclassify(determinant) != FP_INFINITE);
 
     return Adjoint(matrix) / determinant;
 }

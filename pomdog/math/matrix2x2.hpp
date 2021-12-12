@@ -34,7 +34,7 @@ public:
     Matrix2x2& operator+=(const Matrix2x2& other) noexcept;
     Matrix2x2& operator-=(const Matrix2x2& other) noexcept;
     Matrix2x2& operator*=(float scaleFactor) noexcept;
-    Matrix2x2& operator/=(float scaleFactor);
+    Matrix2x2& operator/=(float scaleFactor) noexcept;
 
     // Unary operators:
     Matrix2x2 operator+() const noexcept;
@@ -45,14 +45,14 @@ public:
     [[nodiscard]] Matrix2x2 operator-(const Matrix2x2& other) const noexcept;
     [[nodiscard]] Matrix2x2 operator*(const Matrix2x2& other) const noexcept;
     [[nodiscard]] Matrix2x2 operator*(float scaleFactor) const noexcept;
-    [[nodiscard]] Matrix2x2 operator/(float scaleFactor) const;
+    [[nodiscard]] Matrix2x2 operator/(float scaleFactor) const noexcept;
 
     [[nodiscard]] bool operator==(const Matrix2x2& other) const noexcept;
     [[nodiscard]] bool operator!=(const Matrix2x2& other) const noexcept;
 
     // Function-call operators:
-    [[nodiscard]] const float& operator()(std::size_t row, std::size_t column) const;
-    [[nodiscard]] float& operator()(std::size_t row, std::size_t column);
+    [[nodiscard]] const float& operator()(std::size_t row, std::size_t column) const noexcept;
+    [[nodiscard]] float& operator()(std::size_t row, std::size_t column) noexcept;
 
     [[nodiscard]] float Determinant() const noexcept;
 

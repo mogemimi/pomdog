@@ -38,7 +38,7 @@ public:
     Matrix4x4& operator+=(const Matrix4x4&) noexcept;
     Matrix4x4& operator-=(const Matrix4x4&) noexcept;
     Matrix4x4& operator*=(float scaleFactor) noexcept;
-    Matrix4x4& operator/=(float scaleFactor);
+    Matrix4x4& operator/=(float scaleFactor) noexcept;
 
     // Unary operators:
     Matrix4x4 operator+() const noexcept;
@@ -49,14 +49,14 @@ public:
     [[nodiscard]] Matrix4x4 operator-(const Matrix4x4&) const noexcept;
     [[nodiscard]] Matrix4x4 operator*(const Matrix4x4&) const noexcept;
     [[nodiscard]] Matrix4x4 operator*(float scaleFactor) const noexcept;
-    [[nodiscard]] Matrix4x4 operator/(float scaleFactor) const;
+    [[nodiscard]] Matrix4x4 operator/(float scaleFactor) const noexcept;
 
     [[nodiscard]] bool operator==(const Matrix4x4&) const noexcept;
     [[nodiscard]] bool operator!=(const Matrix4x4&) const noexcept;
 
     // Function-call operators:
-    [[nodiscard]] const float& operator()(std::size_t row, std::size_t column) const;
-    [[nodiscard]] float& operator()(std::size_t row, std::size_t column);
+    [[nodiscard]] const float& operator()(std::size_t row, std::size_t column) const noexcept;
+    [[nodiscard]] float& operator()(std::size_t row, std::size_t column) noexcept;
 
     void SetTranslation(const Vector3&) noexcept;
 

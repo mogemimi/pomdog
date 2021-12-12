@@ -33,7 +33,7 @@ public:
     Quaternion& operator-=(const Quaternion&) noexcept;
     Quaternion& operator*=(const Quaternion&) noexcept;
     Quaternion& operator*=(float scaleFactor) noexcept;
-    Quaternion& operator/=(float scaleFactor);
+    Quaternion& operator/=(float scaleFactor) noexcept;
 
     // Unary operators:
     Quaternion operator+() const noexcept;
@@ -44,7 +44,7 @@ public:
     [[nodiscard]] Quaternion operator-(const Quaternion&) const noexcept;
     [[nodiscard]] Quaternion operator*(const Quaternion&) const noexcept;
     [[nodiscard]] Quaternion operator*(float scaleFactor) const noexcept;
-    [[nodiscard]] Quaternion operator/(float scaleFactor) const;
+    [[nodiscard]] Quaternion operator/(float scaleFactor) const noexcept;
 
     [[nodiscard]] bool operator==(const Quaternion&) const noexcept;
     [[nodiscard]] bool operator!=(const Quaternion&) const noexcept;

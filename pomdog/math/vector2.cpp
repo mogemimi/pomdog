@@ -47,8 +47,11 @@ Vector2& Vector2::operator*=(float scaleFactor) noexcept
     return *this;
 }
 
-Vector2& Vector2::operator/=(float scaleFactor)
+Vector2& Vector2::operator/=(float scaleFactor) noexcept
 {
+    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_ZERO);
+    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_NAN);
+    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_INFINITE);
     this->X /= scaleFactor;
     this->Y /= scaleFactor;
     return *this;
@@ -69,9 +72,11 @@ Vector2 Vector2::operator*(float scaleFactor) const noexcept
     return Vector2(X * scaleFactor, Y * scaleFactor);
 }
 
-Vector2 Vector2::operator/(float scaleFactor) const
+Vector2 Vector2::operator/(float scaleFactor) const noexcept
 {
-    POMDOG_ASSERT(scaleFactor != 0);
+    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_ZERO);
+    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_NAN);
+    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_INFINITE);
     return Vector2(X / scaleFactor, Y / scaleFactor);
 }
 
@@ -90,8 +95,11 @@ Vector2 Vector2::operator*(const Vector2& other) const noexcept
     return Vector2(X * other.X, Y * other.Y);
 }
 
-Vector2 Vector2::operator/(const Vector2& other) const
+Vector2 Vector2::operator/(const Vector2& other) const noexcept
 {
+    POMDOG_ASSERT(std::fpclassify(other.X) != FP_ZERO);
+    POMDOG_ASSERT(std::fpclassify(other.Y) != FP_ZERO);
+
     return Vector2(X / other.X, Y / other.Y);
 }
 

@@ -30,7 +30,7 @@ public:
     Vector2& operator+=(const Vector2&) noexcept;
     Vector2& operator-=(const Vector2&) noexcept;
     Vector2& operator*=(float) noexcept;
-    Vector2& operator/=(float);
+    Vector2& operator/=(float) noexcept;
 
     // Unary operators:
     Vector2 operator+() const noexcept;
@@ -40,10 +40,10 @@ public:
     [[nodiscard]] Vector2 operator+(const Vector2&) const noexcept;
     [[nodiscard]] Vector2 operator-(const Vector2&) const noexcept;
     [[nodiscard]] Vector2 operator*(const Vector2&) const noexcept;
-    [[nodiscard]] Vector2 operator/(const Vector2&) const;
+    [[nodiscard]] Vector2 operator/(const Vector2&) const noexcept;
 
     [[nodiscard]] Vector2 operator*(float scaleFactor) const noexcept;
-    [[nodiscard]] Vector2 operator/(float scaleFactor) const;
+    [[nodiscard]] Vector2 operator/(float scaleFactor) const noexcept;
 
     [[nodiscard]] bool operator==(const Vector2& other) const noexcept;
     [[nodiscard]] bool operator!=(const Vector2& other) const noexcept;

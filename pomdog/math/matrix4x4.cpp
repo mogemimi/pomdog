@@ -50,14 +50,14 @@ Matrix4x4::Matrix4x4(
     m[3][3] = m33;
 }
 
-const float& Matrix4x4::operator()(std::size_t row, std::size_t column) const
+const float& Matrix4x4::operator()(std::size_t row, std::size_t column) const noexcept
 {
     POMDOG_ASSERT_MESSAGE(row < RowSize, "row: out of range");
     POMDOG_ASSERT_MESSAGE(column < ColumnSize, "column: out of range");
     return m[row][column];
 }
 
-float& Matrix4x4::operator()(std::size_t row, std::size_t column)
+float& Matrix4x4::operator()(std::size_t row, std::size_t column) noexcept
 {
     POMDOG_ASSERT_MESSAGE(row < RowSize, "row: out of range");
     POMDOG_ASSERT_MESSAGE(column < ColumnSize, "column: out of range");
@@ -132,10 +132,12 @@ Matrix4x4& Matrix4x4::operator*=(float scaleFactor) noexcept
     return *this;
 }
 
-Matrix4x4& Matrix4x4::operator/=(float scaleFactor)
+Matrix4x4& Matrix4x4::operator/=(float scaleFactor) noexcept
 {
-    POMDOG_ASSERT(scaleFactor != 0);
-    const auto inverseDivider = 1 / scaleFactor;
+    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_ZERO);
+    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_NAN);
+    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_INFINITE);
+    const auto inverseDivider = 1.0f / scaleFactor;
     m[0][0] *= inverseDivider;
     m[0][1] *= inverseDivider;
     m[0][2] *= inverseDivider;
@@ -217,9 +219,11 @@ Matrix4x4 Matrix4x4::operator*(float scaleFactor) const noexcept
     return Multiply(*this, scaleFactor);
 }
 
-Matrix4x4 Matrix4x4::operator/(float scaleFactor) const
+Matrix4x4 Matrix4x4::operator/(float scaleFactor) const noexcept
 {
-    POMDOG_ASSERT(scaleFactor != 0.0f);
+    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_ZERO);
+    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_NAN);
+    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_INFINITE);
     const auto inverseDivider = 1.0f / scaleFactor;
     return {
         m[0][0] * inverseDivider,
@@ -448,8 +452,13 @@ Matrix4x4::Transpose(const Matrix4x4& matrix) noexcept
 void Matrix4x4::Invert(const Matrix4x4& matrix, Matrix4x4& result)
 {
     const auto determinant = matrix.Determinant();
-    POMDOG_ASSERT_MESSAGE(0 != determinant, "This is singular matrix");
-    const auto inverseDet = static_cast<float>(1) / determinant;
+
+    // NOTE: The 'matrix' must be non-singular matrix.
+    POMDOG_ASSERT(std::fpclassify(determinant) != FP_ZERO);
+    POMDOG_ASSERT(std::fpclassify(determinant) != FP_NAN);
+    POMDOG_ASSERT(std::fpclassify(determinant) != FP_INFINITE);
+
+    const auto inverseDet = 1.0f / determinant;
     result = Adjoint(matrix) * inverseDet;
 }
 

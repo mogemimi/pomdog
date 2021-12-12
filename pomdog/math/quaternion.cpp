@@ -62,9 +62,11 @@ Quaternion& Quaternion::operator*=(float scaleFactor) noexcept
     return *this;
 }
 
-Quaternion& Quaternion::operator/=(float scaleFactor)
+Quaternion& Quaternion::operator/=(float scaleFactor) noexcept
 {
-    POMDOG_ASSERT(scaleFactor != 0);
+    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_ZERO);
+    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_NAN);
+    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_INFINITE);
     X /= scaleFactor;
     W /= scaleFactor;
     Z /= scaleFactor;
@@ -121,9 +123,11 @@ Quaternion Quaternion::operator*(float scaleFactor) const noexcept
         W * scaleFactor);
 }
 
-Quaternion Quaternion::operator/(float scaleFactor) const
+Quaternion Quaternion::operator/(float scaleFactor) const noexcept
 {
-    POMDOG_ASSERT(scaleFactor != 0);
+    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_ZERO);
+    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_NAN);
+    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_INFINITE);
     return Quaternion(
         X / scaleFactor,
         Y / scaleFactor,
@@ -263,7 +267,7 @@ Vector3
 Quaternion::Rotate(const Quaternion& quaternion, const Vector3& vector)
 {
     auto xyz = Vector3{quaternion.X, quaternion.Y, quaternion.Z};
-    auto t = static_cast<float>(2) * Vector3::Cross(xyz, vector);
+    auto t = 2.0f * Vector3::Cross(xyz, vector);
     return vector + quaternion.W * t + Vector3::Cross(xyz, t);
 }
 
@@ -410,10 +414,10 @@ Quaternion::ToEulerAngles(const Quaternion& q) noexcept
     const auto zz = q.Z * q.Z;
 
     constexpr auto epsilon = std::numeric_limits<float>::epsilon();
-    constexpr auto zero = static_cast<float>(0);
-    constexpr auto one = static_cast<float>(1);
-    constexpr auto two = static_cast<float>(2);
-    constexpr auto half = (static_cast<float>(0.5L) - epsilon);
+    constexpr auto zero = 0.0f;
+    constexpr auto one = 1.0f;
+    constexpr auto two = 2.0f;
+    constexpr auto half = 0.5f - epsilon;
 
     const auto lengthSquared = xx + yy + zz + ww;
     const auto singularityTest = q.X * q.Z + q.Y * q.W;

@@ -37,7 +37,7 @@ public:
     Matrix3x3& operator+=(const Matrix3x3& other) noexcept;
     Matrix3x3& operator-=(const Matrix3x3& other) noexcept;
     Matrix3x3& operator*=(float scaleFactor) noexcept;
-    Matrix3x3& operator/=(float scaleFactor);
+    Matrix3x3& operator/=(float scaleFactor) noexcept;
 
     // Unary operators:
     Matrix3x3 operator+() const noexcept;
@@ -48,14 +48,14 @@ public:
     [[nodiscard]] Matrix3x3 operator-(const Matrix3x3& other) const noexcept;
     [[nodiscard]] Matrix3x3 operator*(const Matrix3x3& other) const noexcept;
     [[nodiscard]] Matrix3x3 operator*(float scaleFactor) const noexcept;
-    [[nodiscard]] Matrix3x3 operator/(float scaleFactor) const;
+    [[nodiscard]] Matrix3x3 operator/(float scaleFactor) const noexcept;
 
     [[nodiscard]] bool operator==(const Matrix3x3& other) const noexcept;
     [[nodiscard]] bool operator!=(const Matrix3x3& other) const noexcept;
 
     // Function-call operators:
-    [[nodiscard]] const float& operator()(std::size_t row, std::size_t column) const;
-    [[nodiscard]] float& operator()(std::size_t row, std::size_t column);
+    [[nodiscard]] const float& operator()(std::size_t row, std::size_t column) const noexcept;
+    [[nodiscard]] float& operator()(std::size_t row, std::size_t column) noexcept;
 
     void SetScale(const Vector3& scale) noexcept;
 

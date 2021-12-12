@@ -33,7 +33,7 @@ public:
     Vector4& operator+=(const Vector4& other) noexcept;
     Vector4& operator-=(const Vector4& other) noexcept;
     Vector4& operator*=(float scaleFactor) noexcept;
-    Vector4& operator/=(float scaleFactor);
+    Vector4& operator/=(float scaleFactor) noexcept;
 
     // Unary operators:
     Vector4 operator+() const noexcept;
@@ -43,9 +43,9 @@ public:
     [[nodiscard]] Vector4 operator+(const Vector4& other) const noexcept;
     [[nodiscard]] Vector4 operator-(const Vector4& other) const noexcept;
     [[nodiscard]] Vector4 operator*(const Vector4& other) const noexcept;
-    [[nodiscard]] Vector4 operator/(const Vector4& other) const;
+    [[nodiscard]] Vector4 operator/(const Vector4& other) const noexcept;
     [[nodiscard]] Vector4 operator*(float scaleFactor) const noexcept;
-    [[nodiscard]] Vector4 operator/(float scaleFactor) const;
+    [[nodiscard]] Vector4 operator/(float scaleFactor) const noexcept;
 
     [[nodiscard]] bool operator==(const Vector4& other) const noexcept;
     [[nodiscard]] bool operator!=(const Vector4& other) const noexcept;

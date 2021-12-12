@@ -64,9 +64,11 @@ Matrix2x2::operator*=(float scaleFactor) noexcept
 }
 
 Matrix2x2&
-Matrix2x2::operator/=(float scaleFactor)
+Matrix2x2::operator/=(float scaleFactor) noexcept
 {
-    POMDOG_ASSERT(scaleFactor != 0.0f);
+    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_ZERO);
+    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_NAN);
+    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_INFINITE);
     const auto inverseDivider = 1.0f / scaleFactor;
     m[0][0] *= inverseDivider;
     m[0][1] *= inverseDivider;
@@ -113,9 +115,11 @@ Matrix2x2 Matrix2x2::operator*(float scaleFactor) const noexcept
     return Multiply(*this, scaleFactor);
 }
 
-Matrix2x2 Matrix2x2::operator/(float scaleFactor) const
+Matrix2x2 Matrix2x2::operator/(float scaleFactor) const noexcept
 {
-    POMDOG_ASSERT(scaleFactor != 0.0f);
+    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_ZERO);
+    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_NAN);
+    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_INFINITE);
     const auto inverseDivider = 1.0f / scaleFactor;
     return {
         m[0][0] * inverseDivider,
@@ -140,14 +144,14 @@ bool Matrix2x2::operator!=(const Matrix2x2& other) const noexcept
            m[1][1] != other.m[1][1];
 }
 
-float& Matrix2x2::operator()(std::size_t row, std::size_t column)
+float& Matrix2x2::operator()(std::size_t row, std::size_t column) noexcept
 {
     POMDOG_ASSERT_MESSAGE(row < RowSize, "row: out of range");
     POMDOG_ASSERT_MESSAGE(column < ColumnSize, "column: out of range");
     return m[row][column];
 }
 
-const float& Matrix2x2::operator()(std::size_t row, std::size_t column) const
+const float& Matrix2x2::operator()(std::size_t row, std::size_t column) const noexcept
 {
     POMDOG_ASSERT_MESSAGE(row < RowSize, "row: out of range");
     POMDOG_ASSERT_MESSAGE(column < ColumnSize, "column: out of range");

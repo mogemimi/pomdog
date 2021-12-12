@@ -65,8 +65,11 @@ Vector3& Vector3::operator*=(float scaleFactor) noexcept
     return *this;
 }
 
-Vector3& Vector3::operator/=(float scaleFactor)
+Vector3& Vector3::operator/=(float scaleFactor) noexcept
 {
+    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_ZERO);
+    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_NAN);
+    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_INFINITE);
     X /= scaleFactor;
     Y /= scaleFactor;
     Z /= scaleFactor;
@@ -107,11 +110,11 @@ Vector3 Vector3::operator*(const Vector3& other) const noexcept
         Z * other.Z);
 }
 
-Vector3 Vector3::operator/(const Vector3& other) const
+Vector3 Vector3::operator/(const Vector3& other) const noexcept
 {
-    POMDOG_ASSERT(other.X != 0);
-    POMDOG_ASSERT(other.Y != 0);
-    POMDOG_ASSERT(other.Z != 0);
+    POMDOG_ASSERT(std::fpclassify(other.X) != FP_ZERO);
+    POMDOG_ASSERT(std::fpclassify(other.Y) != FP_ZERO);
+    POMDOG_ASSERT(std::fpclassify(other.Z) != FP_ZERO);
 
     return Vector3(
         X / other.X,
@@ -127,9 +130,11 @@ Vector3 Vector3::operator*(float scaleFactor) const noexcept
         Z * scaleFactor);
 }
 
-Vector3 Vector3::operator/(float scaleFactor) const
+Vector3 Vector3::operator/(float scaleFactor) const noexcept
 {
-    POMDOG_ASSERT(scaleFactor != 0);
+    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_ZERO);
+    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_NAN);
+    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_INFINITE);
     return Vector3(
         X / scaleFactor,
         Y / scaleFactor,
