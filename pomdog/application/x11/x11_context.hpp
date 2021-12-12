@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "pomdog/platform/x11/x11_atom_cache.hpp"
+#include "pomdog/application/x11/x11_atom_cache.hpp"
 #include "pomdog/utility/errors.hpp"
 #include <X11/Xlib.h>
 #include <memory>

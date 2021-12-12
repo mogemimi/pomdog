@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/platform/x11/game_host_x11.hpp"
+#include "pomdog/application/x11/game_host_x11.hpp"
 #include "pomdog/application/game.hpp"
 #include "pomdog/audio/openal/audio_engine_al.hpp"
 #include "pomdog/chrono/detail/game_clock_impl.hpp"

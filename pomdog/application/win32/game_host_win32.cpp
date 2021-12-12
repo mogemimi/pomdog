@@ -1,10 +1,10 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/platform/win32/game_host_win32.hpp"
+#include "pomdog/application/win32/game_host_win32.hpp"
+#include "pomdog/application/win32/game_window_win32.hpp"
 #include "pomdog/input/backends/native_gamepad.hpp"
 #include "pomdog/input/win32/keyboard_win32.hpp"
 #include "pomdog/input/win32/mouse_win32.hpp"
-#include "pomdog/platform/win32/game_window_win32.hpp"
 #if !defined(POMDOG_DISABLE_GL4)
 #include "pomdog/graphics/backends/graphics_command_queue_immediate.hpp"
 #include "pomdog/graphics/gl4/graphics_context_gl4.hpp"

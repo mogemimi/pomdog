@@ -1,14 +1,14 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/platform/cocoa/bootstrap.hpp"
+#include "pomdog/platform/cocoa/bootstrap_cocoa.hpp"
+#include "pomdog/application/cocoa/game_host_cocoa.hpp"
+#include "pomdog/application/cocoa/game_window_cocoa.hpp"
+#include "pomdog/application/cocoa/pomdog_metal_view_controller.hpp"
+#include "pomdog/application/cocoa/pomdog_opengl_view.hpp"
 #include "pomdog/application/game.hpp"
 #include "pomdog/application/game_host.hpp"
 #include "pomdog/application/system_events.hpp"
 #include "pomdog/graphics/presentation_parameters.hpp"
-#include "pomdog/platform/cocoa/game_host_cocoa.hpp"
-#include "pomdog/platform/cocoa/game_window_cocoa.hpp"
-#include "pomdog/platform/cocoa/pomdog_metal_view_controller.hpp"
-#include "pomdog/platform/cocoa/pomdog_opengl_view.hpp"
 #include "pomdog/utility/assert.hpp"
 #include "pomdog/utility/errors.hpp"
 #import <MetalKit/MTKView.h>

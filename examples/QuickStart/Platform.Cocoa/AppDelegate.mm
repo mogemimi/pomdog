@@ -1,6 +1,6 @@
 #import "AppDelegate.h"
 #include "../Source/QuickStartGame.hpp"
-#include <pomdog/platform/cocoa/bootstrap.hpp>
+#include <pomdog/platform/cocoa/bootstrap_cocoa.hpp>
 #include <pomdog/pomdog.hpp>
 #include <memory>
 #ifdef DEBUG

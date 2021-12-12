@@ -1,6 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/platform/cocoa/game_host_cocoa.hpp"
+#include "pomdog/application/cocoa/game_host_metal.hpp"
+#include "pomdog/application/cocoa/game_window_cocoa.hpp"
 #include "pomdog/application/game.hpp"
 #include "pomdog/application/system_events.hpp"
 #include "pomdog/audio/openal/audio_engine_al.hpp"
@@ -9,21 +10,20 @@
 #include "pomdog/content/asset_manager.hpp"
 #include "pomdog/filesystem/file_system.hpp"
 #include "pomdog/graphics/backends/graphics_command_queue_immediate.hpp"
-#include "pomdog/graphics/gl4/graphics_context_gl4.hpp"
-#include "pomdog/graphics/gl4/graphics_device_gl4.hpp"
 #include "pomdog/graphics/graphics_command_queue.hpp"
 #include "pomdog/graphics/graphics_device.hpp"
+#include "pomdog/graphics/metal/graphics_context_metal.hpp"
+#include "pomdog/graphics/metal/graphics_device_metal.hpp"
+#include "pomdog/graphics/metal/metal_format_helper.hpp"
 #include "pomdog/graphics/presentation_parameters.hpp"
 #include "pomdog/graphics/viewport.hpp"
 #include "pomdog/input/cocoa/keyboard_cocoa.hpp"
 #include "pomdog/input/cocoa/mouse_cocoa.hpp"
 #include "pomdog/input/iokit/gamepad_iokit.hpp"
+#include "pomdog/input/key_state.hpp"
 #include "pomdog/logging/log.hpp"
 #include "pomdog/network/http_client.hpp"
 #include "pomdog/network/io_service.hpp"
-#include "pomdog/platform/cocoa/game_window_cocoa.hpp"
-#include "pomdog/platform/cocoa/opengl_context_cocoa.hpp"
-#include "pomdog/platform/cocoa/pomdog_opengl_view.hpp"
 #include "pomdog/signals/scoped_connection.hpp"
 #include "pomdog/utility/assert.hpp"
 #include "pomdog/utility/errors.hpp"
@@ -34,30 +34,54 @@
 #include <utility>
 #include <vector>
 
-using pomdog::detail::gl4::GraphicsDeviceGL4;
-using pomdog::detail::gl4::GraphicsContextGL4;
+#import <Metal/Metal.h>
+#import <MetalKit/MetalKit.h>
+
+using pomdog::detail::metal::GraphicsContextMetal;
+using pomdog::detail::metal::GraphicsDeviceMetal;
+using pomdog::detail::metal::ToPixelFormat;
 using pomdog::detail::IOKit::GamepadIOKit;
 using pomdog::detail::openal::AudioEngineAL;
 
 namespace pomdog::detail::cocoa {
+namespace {
 
-// MARK: - GameHostCocoa::Impl
+void SetupMetalView(
+    MTKView* view,
+    id<MTLDevice> device,
+    const PresentationParameters& presentationParameters)
+{
+    // Set the view to use the default device
+    view.device = device;
 
-class GameHostCocoa::Impl final {
+    // Setup the render target, choose values based on your app
+    view.sampleCount = presentationParameters.MultiSampleCount;
+    view.depthStencilPixelFormat = ToPixelFormat(presentationParameters.DepthStencilFormat);
+}
+
+} // namespace
+
+// MARK: GameHostMetal::Impl
+
+class GameHostMetal::Impl final {
 public:
     ~Impl();
 
     [[nodiscard]] std::unique_ptr<Error>
     Initialize(
-        PomdogOpenGLView* openGLView,
+        MTKView* metalView,
         const std::shared_ptr<GameWindowCocoa>& window,
         const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
         const PresentationParameters& presentationParameters);
 
     [[nodiscard]] std::unique_ptr<Error>
-    Run(
+    InitializeGame(
         const std::weak_ptr<Game>& game,
-        std::function<void()>&& onCompleted);
+        const std::function<void()>& onCompleted);
+
+    void GameLoop();
+
+    bool IsMetalSupported() const;
 
     void Exit();
 
@@ -95,8 +119,6 @@ public:
     GetHTTPClient(std::shared_ptr<GameHost>&& gameHost) noexcept;
 
 private:
-    void GameLoop();
-
     void RenderFrame();
 
     void DoEvents();
@@ -107,19 +129,9 @@ private:
 
     void GameWillExit();
 
-    static CVReturn DisplayLinkCallback(
-        CVDisplayLinkRef displayLink,
-        const CVTimeStamp* now,
-        const CVTimeStamp* outputTime,
-        CVOptionFlags flagsIn,
-        CVOptionFlags* flagsOut,
-        void* displayLinkContext);
-
 private:
     ScopedConnection systemEventConnection;
-    std::mutex renderMutex;
     std::atomic_bool viewLiveResizing = false;
-    CVDisplayLinkRef displayLink = nullptr;
     std::function<void()> onCompleted;
 
     std::weak_ptr<Game> weakGame;
@@ -127,9 +139,8 @@ private:
     std::shared_ptr<GameClockImpl> clock_;
     std::shared_ptr<EventQueue<SystemEvent>> eventQueue;
     std::shared_ptr<GameWindowCocoa> window;
-    std::shared_ptr<OpenGLContextCocoa> openGLContext;
-    std::shared_ptr<GraphicsDeviceGL4> graphicsDevice;
-    std::shared_ptr<GraphicsContextGL4> graphicsContext;
+    std::shared_ptr<GraphicsDeviceMetal> graphicsDevice;
+    std::shared_ptr<GraphicsContextMetal> graphicsContext;
     std::shared_ptr<GraphicsCommandQueue> graphicsCommandQueue;
     std::shared_ptr<AudioEngineAL> audioEngine;
     std::unique_ptr<AssetManager> assetManager;
@@ -140,32 +151,27 @@ private:
     std::unique_ptr<IOService> ioService_;
     std::unique_ptr<HTTPClient> httpClient;
 
-    __weak PomdogOpenGLView* openGLView = nullptr;
+    __weak MTKView* metalView = nullptr;
     Duration presentationInterval = Duration::zero();
     bool exitRequest = false;
-    bool displayLinkEnabled = true;
 };
 
 std::unique_ptr<Error>
-GameHostCocoa::Impl::Initialize(
-    PomdogOpenGLView* openGLViewIn,
+GameHostMetal::Impl::Initialize(
+    MTKView* metalViewIn,
     const std::shared_ptr<GameWindowCocoa>& windowIn,
     const std::shared_ptr<EventQueue<SystemEvent>>& eventQueueIn,
     const PresentationParameters& presentationParameters)
 {
     this->viewLiveResizing = false;
-    this->displayLink = nullptr;
     this->eventQueue = eventQueueIn;
     this->window = windowIn;
-    this->openGLView = openGLViewIn;
+    this->metalView = metalViewIn;
+    this->presentationInterval = Duration(1) / 60;
     this->exitRequest = false;
-    this->displayLinkEnabled = true;
 
-    if (presentationParameters.PresentationInterval <= 0) {
-        return errors::New("PresentationInterval must be > 0.");
-    }
-    POMDOG_ASSERT(presentationParameters.PresentationInterval > 0);
-    presentationInterval = Duration(1) / presentationParameters.PresentationInterval;
+    POMDOG_ASSERT(window);
+    POMDOG_ASSERT(metalView != nullptr);
 
     timeSource_ = std::make_shared<detail::apple::TimeSourceApple>();
     clock_ = std::make_shared<GameClockImpl>();
@@ -173,38 +179,33 @@ GameHostCocoa::Impl::Initialize(
         return errors::Wrap(std::move(err), "GameClockImpl::Initialize() failed.");
     }
 
-    POMDOG_ASSERT(window);
-    window->SetView(openGLView);
+    window->SetView(metalView);
 
-    // NOTE: Create OpenGL context.
-    openGLContext = std::make_shared<OpenGLContextCocoa>();
-    if (auto err = openGLContext->Initialize(presentationParameters); err != nullptr) {
-        return errors::Wrap(std::move(err), "OpenGLContextCocoa::Initialize() failed.");
-    }
-
-    POMDOG_ASSERT(openGLView != nullptr);
-    [openGLView setEventQueue:eventQueue];
-    [openGLView setOpenGLContext:openGLContext];
-
-    // Create graphics device and device resources
-    openGLContext->Lock();
-    openGLContext->SetView(openGLView);
-    openGLContext->MakeCurrent();
-
-    // NOTE: Create a graphics device.
-    graphicsDevice = std::make_shared<GraphicsDeviceGL4>();
+    // NOTE: Create graphics device
+    graphicsDevice = std::make_shared<GraphicsDeviceMetal>();
     if (auto err = graphicsDevice->Initialize(presentationParameters); err != nullptr) {
-        return errors::Wrap(std::move(err), "GraphicsDeviceGL4::Initialize() failed.");
+        return errors::New("failed to initialize GraphicsDeviceMetal");
     }
 
-    // NOTE: Create a graphics context.
-    graphicsContext = std::make_shared<GraphicsContextGL4>();
-    if (auto err = graphicsContext->Initialize(openGLContext, graphicsDevice); err != nullptr) {
-        return errors::Wrap(std::move(err), "GraphicsContextGL4::Initialize() failed.");
+    // NOTE: Get MTLDevice object.
+    POMDOG_ASSERT(graphicsDevice != nullptr);
+    id<MTLDevice> metalDevice = graphicsDevice->GetMTLDevice();
+
+    if (metalDevice == nullptr) {
+        return errors::New("Metal is not supported on this device.");
     }
 
+    // NOTE: Setup metal view
+    SetupMetalView(metalView, metalDevice, presentationParameters);
+
+    POMDOG_ASSERT(metalDevice != nullptr);
+
+    // NOTE: Create graphics context
+    graphicsContext = std::make_shared<GraphicsContextMetal>(metalDevice);
+    graphicsContext->SetMTKView(metalView);
+
+    // NOTE: Create graphics command queue
     graphicsCommandQueue = std::make_shared<GraphicsCommandQueueImmediate>(graphicsContext);
-    openGLContext->Unlock();
 
     // NOTE: Create audio engine.
     audioEngine = std::make_shared<AudioEngineAL>();
@@ -212,7 +213,7 @@ GameHostCocoa::Impl::Initialize(
         return errors::Wrap(std::move(err), "AudioEngineAL::Initialize() failed.");
     }
 
-    // Create subsystems
+    // NOTE: Create subsystems
     keyboard = std::make_shared<KeyboardCocoa>();
     mouse = std::make_shared<MouseCocoa>();
 
@@ -222,7 +223,7 @@ GameHostCocoa::Impl::Initialize(
         return errors::Wrap(std::move(err), "GamepadIOKit::Initialize() failed.");
     }
 
-    // Connect to system event signal
+    // NOTE: Connect to system event signal
     POMDOG_ASSERT(eventQueue);
     systemEventConnection = eventQueue->Connect(
         [this](const SystemEvent& event) { ProcessSystemEvents(event); });
@@ -245,23 +246,14 @@ GameHostCocoa::Impl::Initialize(
     }
     httpClient = std::make_unique<HTTPClient>(ioService_.get());
 
-    CVDisplayLinkCreateWithActiveCGDisplays(&displayLink);
-    CVDisplayLinkSetOutputCallback(displayLink, &DisplayLinkCallback, this);
+    POMDOG_ASSERT(presentationParameters.PresentationInterval > 0);
+    presentationInterval = Duration(1) / presentationParameters.PresentationInterval;
 
     return nullptr;
 }
 
-GameHostCocoa::Impl::~Impl()
+GameHostMetal::Impl::~Impl()
 {
-    if (displayLink != nullptr) {
-        CVDisplayLinkRelease(displayLink);
-        displayLink = nullptr;
-    }
-
-    if (openGLView != nullptr) {
-        [openGLView setEventQueue:{}];
-    }
-
     systemEventConnection.Disconnect();
     httpClient.reset();
     if (auto err = ioService_->Shutdown(); err != nullptr) {
@@ -276,78 +268,51 @@ GameHostCocoa::Impl::~Impl()
     graphicsCommandQueue.reset();
     graphicsContext.reset();
     graphicsDevice.reset();
-    openGLContext.reset();
     window.reset();
     eventQueue.reset();
-    openGLView = nullptr;
+    metalView = nullptr;
 }
 
 std::unique_ptr<Error>
-GameHostCocoa::Impl::Run(
+GameHostMetal::Impl::InitializeGame(
     const std::weak_ptr<Game>& weakGameIn,
-    std::function<void()>&& onCompletedIn)
+    const std::function<void()>& onCompletedIn)
 {
     POMDOG_ASSERT(!weakGameIn.expired());
     POMDOG_ASSERT(onCompletedIn);
     weakGame = weakGameIn;
-    onCompleted = std::move(onCompletedIn);
+    onCompleted = onCompletedIn;
 
     POMDOG_ASSERT(!weakGame.expired());
     auto game = weakGame.lock();
 
-    openGLContext->Lock();
-    openGLContext->SetView(openGLView);
-    openGLContext->MakeCurrent();
-
     if (auto err = game->Initialize(); err != nullptr) {
-        openGLContext->Unlock();
         GameWillExit();
-        return errors::Wrap(std::move(err), "failed to initialzie game");
+        return errors::Wrap(std::move(err), "failed to initialize game");
     }
-
-    openGLContext->Unlock();
 
     if (exitRequest) {
         GameWillExit();
-        return nullptr;
     }
-
-    POMDOG_ASSERT(openGLView != nullptr);
-
-    auto nsOpenGLContext = openGLContext->GetNativeOpenGLContext();
-    NSOpenGLPixelFormat* nsPixelFormat = [nsOpenGLContext pixelFormat];
-    CGLContextObj cglContext = [nsOpenGLContext CGLContextObj];
-    CGLPixelFormatObj cglPixelFormat = [nsPixelFormat CGLPixelFormatObj];
-
-    [openGLView setResizingCallback:[this](bool resizing) {
-        viewLiveResizing = resizing;
-    }];
-
-    [openGLView setRenderCallback:[this] {
-        std::lock_guard<std::mutex> lock(renderMutex);
-        ClientSizeChanged();
-
-        // NOTE: In order to prevent the RenderFrame() function from being
-        // executed before the Game::Update() function is called, if the frame
-        // number is <= 0, do not render.
-        if (clock_->GetFrameNumber() > 0) {
-            RenderFrame();
-        }
-    }];
-
-    CVDisplayLinkSetCurrentCGDisplayFromOpenGLContext(
-        displayLink, cglContext, cglPixelFormat);
-    CVDisplayLinkStart(displayLink);
 
     return nullptr;
 }
 
-void GameHostCocoa::Impl::GameWillExit()
+bool GameHostMetal::Impl::IsMetalSupported() const
 {
-    if (openGLView != nullptr) {
-        [openGLView setRenderCallback:[] {}];
+    if (!graphicsDevice) {
+        return false;
     }
 
+    // NOTE: Get MTLDevice object.
+    POMDOG_ASSERT(graphicsDevice != nullptr);
+    id<MTLDevice> metalDevice = graphicsDevice->GetMTLDevice();
+
+    return metalDevice != nullptr;
+}
+
+void GameHostMetal::Impl::GameWillExit()
+{
     if (window) {
         window->SetView(nullptr);
     }
@@ -359,43 +324,24 @@ void GameHostCocoa::Impl::GameWillExit()
     }
 }
 
-void GameHostCocoa::Impl::Exit()
+void GameHostMetal::Impl::Exit()
 {
     exitRequest = true;
+    GameWillExit();
+}
 
-    if (displayLinkEnabled) {
-        if (displayLink != nullptr) {
-            dispatch_async(dispatch_get_main_queue(), [this] {
-                CVDisplayLinkStop(displayLink);
-            });
-        }
-        GameWillExit();
+void GameHostMetal::Impl::GameLoop()
+{
+    POMDOG_ASSERT(graphicsContext != nullptr);
+
+    if (exitRequest) {
+        return;
     }
-}
 
-CVReturn
-GameHostCocoa::Impl::DisplayLinkCallback(
-    [[maybe_unused]] CVDisplayLinkRef displayLink,
-    [[maybe_unused]] const CVTimeStamp* now,
-    [[maybe_unused]] const CVTimeStamp* outputTime,
-    [[maybe_unused]] CVOptionFlags flagsIn,
-    [[maybe_unused]] CVOptionFlags* flagsOut,
-    void* displayLinkContext)
-{
-    dispatch_sync(dispatch_get_main_queue(), ^{
-        auto gameHost = reinterpret_cast<GameHostCocoa::Impl*>(displayLinkContext);
-        POMDOG_ASSERT(gameHost != nullptr);
-        gameHost->GameLoop();
-    });
-    return kCVReturnSuccess;
-}
+    graphicsContext->DispatchSemaphoreWait();
 
-void GameHostCocoa::Impl::GameLoop()
-{
     POMDOG_ASSERT(!exitRequest);
     POMDOG_ASSERT(!weakGame.expired());
-
-    std::lock_guard<std::mutex> lock(renderMutex);
 
     auto game = weakGame.lock();
     POMDOG_ASSERT(game);
@@ -408,28 +354,14 @@ void GameHostCocoa::Impl::GameLoop()
         return;
     }
 
-    openGLContext->Lock();
-    openGLContext->SetView(openGLView);
-    openGLContext->MakeCurrent();
     game->Update();
-    openGLContext->Unlock();
 
     if (!viewLiveResizing.load()) {
         RenderFrame();
     }
-
-    if (!displayLinkEnabled) {
-        auto elapsedTime = clock_->GetElapsedTime();
-
-        if (elapsedTime < presentationInterval) {
-            lock.~lock_guard();
-            auto sleepTime = (presentationInterval - elapsedTime);
-            std::this_thread::sleep_for(sleepTime);
-        }
-    }
 }
 
-void GameHostCocoa::Impl::RenderFrame()
+void GameHostMetal::Impl::RenderFrame()
 {
     POMDOG_ASSERT(window);
     POMDOG_ASSERT(!weakGame.expired());
@@ -443,23 +375,16 @@ void GameHostCocoa::Impl::RenderFrame()
     auto game = weakGame.lock();
 
     POMDOG_ASSERT(game);
-    POMDOG_ASSERT(openGLView != nullptr);
-
-    openGLContext->Lock();
-    openGLContext->SetView(openGLView);
-    openGLContext->MakeCurrent();
 
     game->Draw();
-
-    openGLContext->Unlock();
 }
 
-void GameHostCocoa::Impl::DoEvents()
+void GameHostMetal::Impl::DoEvents()
 {
     eventQueue->Emit();
 }
 
-void GameHostCocoa::Impl::ProcessSystemEvents(const SystemEvent& event)
+void GameHostMetal::Impl::ProcessSystemEvents(const SystemEvent& event)
 {
     switch (event.Kind) {
     case SystemEventKind::WindowShouldCloseEvent:
@@ -481,6 +406,8 @@ void GameHostCocoa::Impl::ProcessSystemEvents(const SystemEvent& event)
         Log::Internal(StringHelper::Format(
             "ViewDidEndLiveResizeEvent: {w: %d, h: %d}",
             rect.Width, rect.Height));
+
+        ClientSizeChanged();
         break;
     }
     default:
@@ -494,82 +421,72 @@ void GameHostCocoa::Impl::ProcessSystemEvents(const SystemEvent& event)
     }
 }
 
-void GameHostCocoa::Impl::ClientSizeChanged()
+void GameHostMetal::Impl::ClientSizeChanged()
 {
-    openGLContext->Lock();
-    openGLContext->MakeCurrent();
-
-    auto nativeContext = openGLContext->GetNativeOpenGLContext();
-    POMDOG_ASSERT(nativeContext != nullptr);
-    [nativeContext update];
-
     POMDOG_ASSERT(graphicsDevice != nullptr);
-
     auto bounds = window->GetClientBounds();
 
     graphicsDevice->ClientSizeChanged(bounds.Width, bounds.Height);
     window->ClientSizeChanged(bounds.Width, bounds.Height);
-
-    openGLContext->Unlock();
 }
 
 std::shared_ptr<GameWindow>
-GameHostCocoa::Impl::GetWindow() noexcept
+GameHostMetal::Impl::GetWindow() noexcept
 {
     return window;
 }
 
 std::shared_ptr<GameClock>
-GameHostCocoa::Impl::GetClock() noexcept
+GameHostMetal::Impl::GetClock() noexcept
 {
     return clock_;
 }
 
 std::shared_ptr<GraphicsDevice>
-GameHostCocoa::Impl::GetGraphicsDevice() noexcept
+GameHostMetal::Impl::GetGraphicsDevice() noexcept
 {
     return graphicsDevice;
 }
 
 std::shared_ptr<GraphicsCommandQueue>
-GameHostCocoa::Impl::GetGraphicsCommandQueue() noexcept
+GameHostMetal::Impl::GetGraphicsCommandQueue() noexcept
 {
     return graphicsCommandQueue;
 }
 
 std::shared_ptr<AudioEngine>
-GameHostCocoa::Impl::GetAudioEngine() noexcept
+GameHostMetal::Impl::GetAudioEngine() noexcept
 {
     return audioEngine;
 }
 
 std::shared_ptr<AssetManager>
-GameHostCocoa::Impl::GetAssetManager(std::shared_ptr<GameHost>&& gameHost) noexcept
+GameHostMetal::Impl::GetAssetManager(std::shared_ptr<GameHost>&& gameHost) noexcept
 {
     std::shared_ptr<AssetManager> shared{gameHost, assetManager.get()};
     return shared;
 }
 
 std::shared_ptr<Keyboard>
-GameHostCocoa::Impl::GetKeyboard() noexcept
+GameHostMetal::Impl::GetKeyboard() noexcept
 {
     return keyboard;
 }
 
 std::shared_ptr<Mouse>
-GameHostCocoa::Impl::GetMouse() noexcept
+GameHostMetal::Impl::GetMouse() noexcept
 {
     return mouse;
 }
 
 std::shared_ptr<Gamepad>
-GameHostCocoa::Impl::GetGamepad() noexcept
+GameHostMetal::Impl::GetGamepad() noexcept
 {
     return gamepad;
 }
 
 std::shared_ptr<IOService>
-GameHostCocoa::Impl::GetIOService(std::shared_ptr<GameHost>&& gameHost) noexcept
+GameHostMetal::Impl::GetIOService(std::shared_ptr<GameHost>&& gameHost) noexcept
 {
     POMDOG_ASSERT(ioService_ != nullptr);
     std::shared_ptr<IOService> shared{std::move(gameHost), ioService_.get()};
@@ -577,109 +494,121 @@ GameHostCocoa::Impl::GetIOService(std::shared_ptr<GameHost>&& gameHost) noexcept
 }
 
 std::shared_ptr<HTTPClient>
-GameHostCocoa::Impl::GetHTTPClient(std::shared_ptr<GameHost>&& gameHost) noexcept
+GameHostMetal::Impl::GetHTTPClient(std::shared_ptr<GameHost>&& gameHost) noexcept
 {
     POMDOG_ASSERT(httpClient != nullptr);
     std::shared_ptr<HTTPClient> shared(std::move(gameHost), httpClient.get());
     return shared;
 }
 
-// MARK: - GameHostCocoa
+// MARK: GameHostMetal
 
-GameHostCocoa::GameHostCocoa()
+GameHostMetal::GameHostMetal()
     : impl(std::make_unique<Impl>())
 {
 }
 
-GameHostCocoa::~GameHostCocoa() = default;
+GameHostMetal::~GameHostMetal() = default;
 
 std::unique_ptr<Error>
-GameHostCocoa::Initialize(
-    PomdogOpenGLView* openGLView,
+GameHostMetal::Initialize(
+    MTKView* metalView,
     const std::shared_ptr<GameWindowCocoa>& window,
     const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
     const PresentationParameters& presentationParameters)
 {
     POMDOG_ASSERT(impl);
-    return impl->Initialize(openGLView, window, eventQueue, presentationParameters);
+    return impl->Initialize(metalView, window, eventQueue, presentationParameters);
 }
 
 std::unique_ptr<Error>
-GameHostCocoa::Run(
+GameHostMetal::InitializeGame(
     const std::weak_ptr<Game>& game,
-    std::function<void()>&& onCompleted)
+    const std::function<void()>& onCompleted)
 {
     POMDOG_ASSERT(impl != nullptr);
-    return impl->Run(game, std::move(onCompleted));
+    return impl->InitializeGame(game, onCompleted);
 }
 
-void GameHostCocoa::Exit()
+void GameHostMetal::GameLoop()
+{
+    POMDOG_ASSERT(impl);
+    impl->GameLoop();
+}
+
+bool GameHostMetal::IsMetalSupported() const noexcept
+{
+    POMDOG_ASSERT(impl);
+    return impl->IsMetalSupported();
+}
+
+void GameHostMetal::Exit()
 {
     POMDOG_ASSERT(impl);
     impl->Exit();
 }
 
-std::shared_ptr<GameWindow> GameHostCocoa::GetWindow() noexcept
+std::shared_ptr<GameWindow> GameHostMetal::GetWindow() noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->GetWindow();
 }
 
-std::shared_ptr<GameClock> GameHostCocoa::GetClock() noexcept
+std::shared_ptr<GameClock> GameHostMetal::GetClock() noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->GetClock();
 }
 
-std::shared_ptr<GraphicsDevice> GameHostCocoa::GetGraphicsDevice() noexcept
+std::shared_ptr<GraphicsDevice> GameHostMetal::GetGraphicsDevice() noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->GetGraphicsDevice();
 }
 
-std::shared_ptr<GraphicsCommandQueue> GameHostCocoa::GetGraphicsCommandQueue() noexcept
+std::shared_ptr<GraphicsCommandQueue> GameHostMetal::GetGraphicsCommandQueue() noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->GetGraphicsCommandQueue();
 }
 
-std::shared_ptr<AudioEngine> GameHostCocoa::GetAudioEngine() noexcept
+std::shared_ptr<AudioEngine> GameHostMetal::GetAudioEngine() noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->GetAudioEngine();
 }
 
-std::shared_ptr<AssetManager> GameHostCocoa::GetAssetManager() noexcept
+std::shared_ptr<AssetManager> GameHostMetal::GetAssetManager() noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->GetAssetManager(shared_from_this());
 }
 
-std::shared_ptr<Keyboard> GameHostCocoa::GetKeyboard() noexcept
+std::shared_ptr<Keyboard> GameHostMetal::GetKeyboard() noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->GetKeyboard();
 }
 
-std::shared_ptr<Mouse> GameHostCocoa::GetMouse() noexcept
+std::shared_ptr<Mouse> GameHostMetal::GetMouse() noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->GetMouse();
 }
 
-std::shared_ptr<Gamepad> GameHostCocoa::GetGamepad() noexcept
+std::shared_ptr<Gamepad> GameHostMetal::GetGamepad() noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->GetGamepad();
 }
 
-std::shared_ptr<IOService> GameHostCocoa::GetIOService() noexcept
+std::shared_ptr<IOService> GameHostMetal::GetIOService() noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->GetIOService(shared_from_this());
 }
 
-std::shared_ptr<HTTPClient> GameHostCocoa::GetHTTPClient() noexcept
+std::shared_ptr<HTTPClient> GameHostMetal::GetHTTPClient() noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->GetHTTPClient(shared_from_this());

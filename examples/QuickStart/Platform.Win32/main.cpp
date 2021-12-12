@@ -1,6 +1,6 @@
 #include "Resource.hpp"
 #include "../Source/QuickStartGame.hpp"
-#include <pomdog/platform/win32/bootstrap.hpp>
+#include <pomdog/platform/win32/bootstrap_win32.hpp>
 #include <pomdog/pomdog.hpp>
 
 #if defined(DEBUG) && !defined(NDEBUG)

@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/platform/cocoa/game_window_cocoa.hpp"
+#include "pomdog/application/cocoa/game_window_cocoa.hpp"
 #include "pomdog/application/mouse_cursor.hpp"
 #include "pomdog/application/system_events.hpp"
 #include "pomdog/signals/event_queue.hpp"

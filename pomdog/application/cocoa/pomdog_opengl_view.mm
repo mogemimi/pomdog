@@ -1,23 +1,17 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/platform/cocoa/pomdog_metal_view_controller.hpp"
+#import "pomdog/application/cocoa/pomdog_opengl_view.hpp"
+#include "pomdog/application/cocoa/game_host_cocoa.hpp"
 #include "pomdog/application/system_events.hpp"
-#include "pomdog/graphics/metal/graphics_context_metal.hpp"
-#include "pomdog/graphics/presentation_parameters.hpp"
 #include "pomdog/input/button_state.hpp"
 #include "pomdog/input/keys.hpp"
 #include "pomdog/math/point2d.hpp"
-#include "pomdog/platform/cocoa/game_host_metal.hpp"
-#include "pomdog/platform/cocoa/game_window_cocoa.hpp"
+#include "pomdog/platform/cocoa/opengl_context_cocoa.hpp"
 #include "pomdog/utility/assert.hpp"
-#include "pomdog/utility/errors.hpp"
-#include "pomdog/utility/exception.hpp"
+#include <memory>
+#include <utility>
 
-#import <Metal/Metal.h>
-#import <MetalKit/MetalKit.h>
-
-using pomdog::detail::cocoa::GameHostMetal;
-using pomdog::detail::cocoa::GameWindowCocoa;
+using pomdog::detail::cocoa::OpenGLContextCocoa;
 using pomdog::detail::InputKeyEvent;
 using pomdog::detail::MouseButtonCocoaEvent;
 using pomdog::detail::MouseButtonState;
@@ -25,21 +19,18 @@ using pomdog::detail::MousePositionEvent;
 using pomdog::detail::SystemEvent;
 using pomdog::detail::SystemEventKind;
 using pomdog::EventQueue;
-using pomdog::Game;
-using pomdog::Keys;
 using pomdog::KeyState;
+using pomdog::Keys;
 using pomdog::MouseButtons;
 using pomdog::Point2D;
-using pomdog::PresentationParameters;
-using pomdog::SurfaceFormat;
 
 namespace {
 
-Point2D ToPoint2D(const NSPoint& point, const NSSize& bounds)
+Point2D ToPoint2D(const NSPoint& point)
 {
     // NOTE: Convert from cartesian coordinates to screen coordinate system.
     // FIXME: Avoid using magic number `-2`
-    return Point2D(point.x - 2, bounds.height - point.y - 2);
+    return Point2D(point.x - 2, point.y - 2);
 }
 
 Keys TranslateKey(std::uint16_t keyCode)
@@ -205,142 +196,134 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 
 } // namespace
 
-@implementation PomdogMetalViewController {
-    std::function<std::shared_ptr<pomdog::Game>(const std::shared_ptr<pomdog::GameHost>&)> createGame;
-    std::function<void()> onCompleted;
-    std::shared_ptr<GameHostMetal> gameHost;
+@implementation PomdogOpenGLView {
+@private
+    std::function<void()> renderCallback;
+    std::function<void(bool)> resizingCallback;
     std::shared_ptr<EventQueue<SystemEvent>> eventQueue;
-    std::shared_ptr<Game> game;
-    NSTrackingArea* trackingArea;
+    std::shared_ptr<OpenGLContextCocoa> openGLContext;
+    NSTrackingRectTag trackingRect;
     NSCursor* cursor;
     BOOL wasAcceptingMouseEvents;
 }
 
-- (void)viewDidLoad
+- (instancetype)initWithFrame:(NSRect)frameRect
 {
-    [super viewDidLoad];
-
-    POMDOG_ASSERT(!gameHost);
-    POMDOG_ASSERT(!game);
-
-    wasAcceptingMouseEvents = NO;
-    cursor = nullptr;
-
-    ///@todo MSAA is not implemented yet
-    constexpr int multiSampleCount = 1;
-
-    // Setup presentation parameters
-    PresentationParameters presentationParameters;
-    presentationParameters.BackBufferWidth = self.view.bounds.size.width;
-    presentationParameters.BackBufferHeight = self.view.bounds.size.height;
-    presentationParameters.PresentationInterval = 60;
-    presentationParameters.MultiSampleCount = multiSampleCount;
-    presentationParameters.BackBufferFormat = SurfaceFormat::B8G8R8A8_UNorm;
-    presentationParameters.DepthStencilFormat = SurfaceFormat::Depth32_Float_Stencil8_Uint;
-    presentationParameters.IsFullScreen = false;
-
-    [self _setupMetal:presentationParameters];
-
-    if (gameHost->IsMetalSupported()) {
-        MTKView* metalView = static_cast<MTKView*>(self.view);
-        metalView.delegate = self;
-        [self runGame];
+    self = [super initWithFrame:frameRect];
+    if (self) {
+        wasAcceptingMouseEvents = NO;
+        cursor = nullptr;
     }
-    else {
-        // Fallback to a blank NSView, an application could also fallback to OpenGL here.
-        NSLog(@"Metal is not supported on this device");
-        self.view = [[NSView alloc] initWithFrame:self.view.frame];
-    }
-
-    // NOTE: To enable mouse tracking, add TrackingArea to view.
-    [self setMouseTrackingArea:self.view.bounds view:self.view];
-
-    [[self.view window] makeFirstResponder:self];
+    return self;
 }
 
-- (void)setMouseTrackingArea:(NSRect)bounds view:(NSView*)view
+- (instancetype)initWithCoder:(NSCoder*)aDecoder
 {
-    if (trackingArea != nil) {
-        [view removeTrackingArea:trackingArea];
-        trackingArea = nil;
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        wasAcceptingMouseEvents = NO;
     }
-
-    trackingArea = [[NSTrackingArea alloc]
-        initWithRect:bounds
-             options:NSTrackingMouseMoved | NSTrackingMouseEnteredAndExited | NSTrackingActiveInKeyWindow | NSTrackingActiveAlways
-               owner:self
-            userInfo:nil];
-    [view addTrackingArea:trackingArea];
+    return self;
 }
 
-- (void)_setupMetal:(const PresentationParameters&)presentationParameters
+- (void)drawRect:(NSRect)dirtyRect
 {
-    MTKView* metalView = static_cast<MTKView*>(self.view);
-    NSWindow* nativeWindow = [metalView window];
-    POMDOG_ASSERT(nativeWindow != nil);
-
-    eventQueue = std::make_shared<EventQueue<SystemEvent>>();
-
-    // NOTE: Create a window.
-    auto gameWindow = std::make_shared<GameWindowCocoa>();
-    if (auto err = gameWindow->Initialize(nativeWindow, eventQueue); err != nullptr) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "GameWindowCocoa::Initialize() failed: " + err->ToString());
-    }
-
-    // NOTE: Create a game host for Metal.
-    gameHost = std::make_shared<GameHostMetal>();
-    if (auto err = gameHost->Initialize(metalView, gameWindow, eventQueue, presentationParameters); err != nullptr) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "GameHostMetal::Initialize() failed: " + err->ToString());
+    [super drawRect:dirtyRect];
+    if (renderCallback) {
+        renderCallback();
     }
 }
 
-- (void)runGame
+// MARK: - View Event Handling
+
+- (void)viewWillStartLiveResize
 {
-    POMDOG_ASSERT(createGame);
-    POMDOG_ASSERT(gameHost);
+    if (eventQueue) {
+        eventQueue->Enqueue(SystemEvent{.Kind = SystemEventKind::ViewWillStartLiveResizeEvent});
+    }
 
-    game = createGame(gameHost);
-    POMDOG_ASSERT(game);
-
-    if (auto err = gameHost->InitializeGame(game, std::move(onCompleted)); err != nullptr) {
-        POMDOG_THROW_EXCEPTION(std::runtime_error, "GameHostMetal::InitializeGame() failed: " + err->ToString());
+    if (resizingCallback) {
+        resizingCallback(true);
     }
 }
 
-- (void)startGame:(std::function<std::shared_ptr<pomdog::Game>(const std::shared_ptr<pomdog::GameHost>&)>&&)createGameIn
-        completed:(std::function<void()>&&)onCompletedIn
+- (void)viewDidEndLiveResize
 {
-    createGame = std::move(createGameIn);
-    onCompleted = std::move(onCompletedIn);
-}
-
-- (void)_render
-{
-    POMDOG_ASSERT(gameHost);
-    gameHost->GameLoop();
-}
-
-- (void)mtkView:(nonnull MTKView*)view drawableSizeWillChange:(CGSize)size
-{
-    //    if (eventQueue) {
-    //        eventQueue->Enqueue<ViewWillStartLiveResizeEvent>();
-    //    }
-
-    // NOTE: To enable mouse tracking, add TrackingArea to view.
-    [self setMouseTrackingArea:view.bounds view:view];
-
     if (eventQueue) {
         eventQueue->Enqueue(SystemEvent{
             .Kind = SystemEventKind::ViewDidEndLiveResizeEvent,
         });
     }
+
+    if (resizingCallback) {
+        resizingCallback(false);
+    }
 }
 
-- (void)drawInMTKView:(nonnull MTKView*)view
+- (void)viewDidMoveToWindow
 {
-    @autoreleasepool {
-        [self _render];
+    [super viewDidMoveToWindow];
+
+    if ([self window] == nil) {
+        auto nativeContext = openGLContext->GetNativeOpenGLContext();
+        [nativeContext clearDrawable];
     }
+
+    trackingRect = [self addTrackingRect:[self bounds] owner:self userData:nullptr assumeInside:NO];
+}
+
+- (void)viewWillMoveToWindow:(NSWindow*)newWindow
+{
+    [super viewWillMoveToWindow:newWindow];
+
+    if ([self window] && trackingRect) {
+        [self removeTrackingRect:trackingRect];
+    }
+}
+
+// MARK: - Mouse-Tracking and Cursor
+
+- (void)setFrame:(NSRect)frame
+{
+    [super setFrame:frame];
+    [self removeTrackingRect:trackingRect];
+    trackingRect = [self addTrackingRect:[self bounds] owner:self userData:nullptr assumeInside:NO];
+}
+
+- (void)setBounds:(NSRect)bounds
+{
+    [super setBounds:bounds];
+    [self removeTrackingRect:trackingRect];
+    trackingRect = [self addTrackingRect:[self bounds] owner:self userData:nullptr assumeInside:NO];
+}
+
+// MARK: - Getter/Setter
+
+- (void)setEventQueue:(std::shared_ptr<EventQueue<SystemEvent>>)eventQueueIn
+{
+    eventQueue = eventQueueIn;
+}
+
+- (void)setOpenGLContext:(std::shared_ptr<pomdog::detail::cocoa::OpenGLContextCocoa>)openGLContextIn
+{
+    openGLContext = openGLContextIn;
+}
+
+- (void)setRenderCallback:(std::function<void()>)callback
+{
+    renderCallback = callback;
+}
+
+- (void)setResizingCallback:(std::function<void(bool)>)callback
+{
+    resizingCallback = callback;
+}
+
+// MARK: - Settings
+
+- (BOOL)isFlipped
+{
+    return TRUE;
 }
 
 // MARK: - Mouse Event Handling
@@ -363,14 +346,15 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
         return;
     }
 
-    wasAcceptingMouseEvents = [[[self view] window] acceptsMouseMovedEvents];
-    [[[self view] window] setAcceptsMouseMovedEvents:YES];
+    wasAcceptingMouseEvents = [[self window] acceptsMouseMovedEvents];
+    [[self window] setAcceptsMouseMovedEvents:YES];
+    [[self window] makeFirstResponder:self];
 
-    NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
+    NSPoint locationInView = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     eventQueue->Enqueue(SystemEvent{
         .Kind = SystemEventKind::MouseEnteredEvent,
         .Data = MousePositionEvent{
-            .Position = ToPoint2D(locationInView, self.view.bounds.size),
+            .Position = ToPoint2D(locationInView),
         },
     });
 }
@@ -378,11 +362,11 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 - (void)mouseMoved:(NSEvent*)theEvent
 {
     if (eventQueue) {
-        NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
+        NSPoint locationInView = [self convertPoint:[theEvent locationInWindow] fromView:nil];
         eventQueue->Enqueue(SystemEvent{
             .Kind = SystemEventKind::MouseMovedEvent,
             .Data = MousePositionEvent{
-                .Position = ToPoint2D(locationInView, self.view.bounds.size),
+                .Position = ToPoint2D(locationInView),
             },
         });
     }
@@ -390,14 +374,14 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 
 - (void)mouseExited:(NSEvent*)theEvent
 {
-    [[[self view] window] setAcceptsMouseMovedEvents:wasAcceptingMouseEvents];
+    [[self window] setAcceptsMouseMovedEvents:wasAcceptingMouseEvents];
 
     if (eventQueue) {
-        NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
+        NSPoint locationInView = [self convertPoint:[theEvent locationInWindow] fromView:nil];
         eventQueue->Enqueue(SystemEvent{
             .Kind = SystemEventKind::MouseExitedEvent,
             .Data = MousePositionEvent{
-                .Position = ToPoint2D(locationInView, self.view.bounds.size),
+                .Position = ToPoint2D(locationInView),
             },
         });
     }
@@ -406,11 +390,11 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 - (void)mouseDown:(NSEvent*)theEvent
 {
     if (eventQueue) {
-        NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
+        NSPoint locationInView = [self convertPoint:[theEvent locationInWindow] fromView:nil];
         eventQueue->Enqueue(SystemEvent{
             .Kind = SystemEventKind::MouseButtonEvent,
             .Data = MouseButtonCocoaEvent{
-                .Position = ToPoint2D(locationInView, self.view.bounds.size),
+                .Position = ToPoint2D(locationInView),
                 .Button = MouseButtons::Left,
                 .State = MouseButtonState::Down,
             },
@@ -421,11 +405,11 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 - (void)mouseDragged:(NSEvent*)theEvent
 {
     if (eventQueue) {
-        NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
+        NSPoint locationInView = [self convertPoint:[theEvent locationInWindow] fromView:nil];
         eventQueue->Enqueue(SystemEvent{
             .Kind = SystemEventKind::MouseButtonEvent,
             .Data = MouseButtonCocoaEvent{
-                .Position = ToPoint2D(locationInView, self.view.bounds.size),
+                .Position = ToPoint2D(locationInView),
                 .Button = MouseButtons::Left,
                 .State = MouseButtonState::Dragged,
             },
@@ -436,11 +420,11 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 - (void)mouseUp:(NSEvent*)theEvent
 {
     if (eventQueue) {
-        NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
+        NSPoint locationInView = [self convertPoint:[theEvent locationInWindow] fromView:nil];
         eventQueue->Enqueue(SystemEvent{
             .Kind = SystemEventKind::MouseButtonEvent,
             .Data = MouseButtonCocoaEvent{
-                .Position = ToPoint2D(locationInView, self.view.bounds.size),
+                .Position = ToPoint2D(locationInView),
                 .Button = MouseButtons::Left,
                 .State = MouseButtonState::Up,
             },
@@ -451,11 +435,11 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 - (void)rightMouseDown:(NSEvent*)theEvent
 {
     if (eventQueue) {
-        NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
+        NSPoint locationInView = [self convertPoint:[theEvent locationInWindow] fromView:nil];
         eventQueue->Enqueue(SystemEvent{
             .Kind = SystemEventKind::MouseButtonEvent,
             .Data = MouseButtonCocoaEvent{
-                .Position = ToPoint2D(locationInView, self.view.bounds.size),
+                .Position = ToPoint2D(locationInView),
                 .Button = MouseButtons::Right,
                 .State = MouseButtonState::Down,
             },
@@ -466,11 +450,11 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 - (void)rightMouseDragged:(NSEvent*)theEvent
 {
     if (eventQueue) {
-        NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
+        NSPoint locationInView = [self convertPoint:[theEvent locationInWindow] fromView:nil];
         eventQueue->Enqueue(SystemEvent{
             .Kind = SystemEventKind::MouseButtonEvent,
             .Data = MouseButtonCocoaEvent{
-                .Position = ToPoint2D(locationInView, self.view.bounds.size),
+                .Position = ToPoint2D(locationInView),
                 .Button = MouseButtons::Right,
                 .State = MouseButtonState::Dragged,
             },
@@ -481,11 +465,11 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 - (void)rightMouseUp:(NSEvent*)theEvent
 {
     if (eventQueue) {
-        NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
+        NSPoint locationInView = [self convertPoint:[theEvent locationInWindow] fromView:nil];
         eventQueue->Enqueue(SystemEvent{
             .Kind = SystemEventKind::MouseButtonEvent,
             .Data = MouseButtonCocoaEvent{
-                .Position = ToPoint2D(locationInView, self.view.bounds.size),
+                .Position = ToPoint2D(locationInView),
                 .Button = MouseButtons::Right,
                 .State = MouseButtonState::Up,
             },
@@ -512,10 +496,10 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
         event.Button = MouseButtons::XButton2;
     }
 
-    NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
+    NSPoint locationInView = [self convertPoint:[theEvent locationInWindow] fromView:nil];
 
     event.State = MouseButtonState::Down;
-    event.Position = ToPoint2D(locationInView, self.view.bounds.size);
+    event.Position = ToPoint2D(locationInView);
 
     eventQueue->Enqueue(SystemEvent{
         .Kind = SystemEventKind::MouseButtonEvent,
@@ -542,10 +526,10 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
         event.Button = MouseButtons::XButton2;
     }
 
-    NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
+    NSPoint locationInView = [self convertPoint:[theEvent locationInWindow] fromView:nil];
 
     event.State = MouseButtonState::Dragged;
-    event.Position = ToPoint2D(locationInView, self.view.bounds.size);
+    event.Position = ToPoint2D(locationInView);
 
     eventQueue->Enqueue(SystemEvent{
         .Kind = SystemEventKind::MouseButtonEvent,
@@ -572,10 +556,10 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
         event.Button = MouseButtons::XButton2;
     }
 
-    NSPoint locationInView = [[self view] convertPoint:[theEvent locationInWindow] fromView:nil];
+    NSPoint locationInView = [self convertPoint:[theEvent locationInWindow] fromView:nil];
 
     event.State = MouseButtonState::Up;
-    event.Position = ToPoint2D(locationInView, self.view.bounds.size);
+    event.Position = ToPoint2D(locationInView);
 
     eventQueue->Enqueue(SystemEvent{
         .Kind = SystemEventKind::MouseButtonEvent,
@@ -610,7 +594,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 - (void)keyDown:(NSEvent*)theEvent
 {
     auto key = TranslateKey([theEvent keyCode]);
-    if (key != Keys::Unknown) {
+    if (key != pomdog::Keys::Unknown) {
         eventQueue->Enqueue(SystemEvent{
             .Kind = SystemEventKind::InputKeyEvent,
             .Data = InputKeyEvent{

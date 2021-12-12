@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/platform/x11/x11_context.hpp"
+#include "pomdog/application/x11/x11_context.hpp"
 
 namespace pomdog::detail::x11 {
 

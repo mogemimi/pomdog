@@ -1,9 +1,9 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/platform/x11/bootstrap.hpp"
+#include "pomdog/platform/x11/bootstrap_x11.hpp"
 #include "pomdog/application/game.hpp"
+#include "pomdog/application/x11/game_host_x11.hpp"
 #include "pomdog/graphics/presentation_parameters.hpp"
-#include "pomdog/platform/x11/game_host_x11.hpp"
 #include "pomdog/utility/errors.hpp"
 #include <utility>
 
