@@ -1,9 +1,9 @@
 source_group(chrono             REGULAR_EXPRESSION "pomdog/chrono/*")
-source_group(chrono\\apple      REGULAR_EXPRESSION "pomdog/chrono/apple/*")
-source_group(chrono\\detail     REGULAR_EXPRESSION "pomdog/chrono/detail/*")
-source_group(chrono\\emscripten REGULAR_EXPRESSION "pomdog/chrono/emscripten/*")
-source_group(chrono\\linux      REGULAR_EXPRESSION "pomdog/chrono/linux/*")
-source_group(chrono\\win32      REGULAR_EXPRESSION "pomdog/chrono/win32/*")
+source_group(chrono/apple       REGULAR_EXPRESSION "pomdog/chrono/apple/*")
+source_group(chrono/detail      REGULAR_EXPRESSION "pomdog/chrono/detail/*")
+source_group(chrono/emscripten  REGULAR_EXPRESSION "pomdog/chrono/emscripten/*")
+source_group(chrono/linux       REGULAR_EXPRESSION "pomdog/chrono/linux/*")
+source_group(chrono/win32       REGULAR_EXPRESSION "pomdog/chrono/win32/*")
 
 target_sources(pomdog_static PRIVATE
     # NOTE: chrono

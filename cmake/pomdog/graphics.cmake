@@ -1,12 +1,12 @@
 source_group(graphics                   REGULAR_EXPRESSION "pomdog/graphics/*")
-source_group(graphics\\backends         REGULAR_EXPRESSION "pomdog/graphics/backends/*")
-source_group(graphics\\dxgi             REGULAR_EXPRESSION "pomdog/graphics/dxgi/*")
-source_group(graphics\\direct3d         REGULAR_EXPRESSION "pomdog/graphics/direct3d/*")
-source_group(graphics\\direct3d11       REGULAR_EXPRESSION "pomdog/graphics/direct3d11/*")
-source_group(graphics\\gl4              REGULAR_EXPRESSION "pomdog/graphics/gl4/*")
-source_group(graphics\\metal            REGULAR_EXPRESSION "pomdog/graphics/metal/*")
-source_group(graphics\\shader_compilers REGULAR_EXPRESSION "pomdog/graphics/shader_compilers/*")
-source_group(graphics\\vulkan           REGULAR_EXPRESSION "pomdog/graphics/vulkan/*")
+source_group(graphics/backends          REGULAR_EXPRESSION "pomdog/graphics/backends/*")
+source_group(graphics/dxgi              REGULAR_EXPRESSION "pomdog/graphics/dxgi/*")
+source_group(graphics/direct3d          REGULAR_EXPRESSION "pomdog/graphics/direct3d/*")
+source_group(graphics/direct3d11        REGULAR_EXPRESSION "pomdog/graphics/direct3d11/*")
+source_group(graphics/gl4               REGULAR_EXPRESSION "pomdog/graphics/gl4/*")
+source_group(graphics/metal             REGULAR_EXPRESSION "pomdog/graphics/metal/*")
+source_group(graphics/shader_compilers  REGULAR_EXPRESSION "pomdog/graphics/shader_compilers/*")
+source_group(graphics/vulkan            REGULAR_EXPRESSION "pomdog/graphics/vulkan/*")
 
 target_sources(pomdog_static PRIVATE
     # NOTE: graphics

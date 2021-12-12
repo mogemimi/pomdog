@@ -1,5 +1,5 @@
 source_group(math           REGULAR_EXPRESSION "pomdog/math/*")
-source_group(math\\detail   REGULAR_EXPRESSION "pomdog/math/detail/*")
+source_group(math/detail    REGULAR_EXPRESSION "pomdog/math/detail/*")
 
 target_sources(pomdog_static PRIVATE
     # NOTE: math

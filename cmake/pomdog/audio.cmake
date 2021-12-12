@@ -1,6 +1,6 @@
 source_group(audio          REGULAR_EXPRESSION "pomdog/audio/*")
-source_group(audio\\openal  REGULAR_EXPRESSION "pomdog/audio/openal/*")
-source_group(audio\\xaudio2 REGULAR_EXPRESSION "pomdog/audio/xaudio2/*")
+source_group(audio/openal   REGULAR_EXPRESSION "pomdog/audio/openal/*")
+source_group(audio/xaudio2  REGULAR_EXPRESSION "pomdog/audio/xaudio2/*")
 
 target_sources(pomdog_static PRIVATE
     # NOTE: audio

@@ -1,9 +1,9 @@
-source_group(content                    REGULAR_EXPRESSION "pomdog/content/*")
-source_group(content\\asset_builders    REGULAR_EXPRESSION "pomdog/content/asset_builders/*")
-source_group(content\\asset_loaders     REGULAR_EXPRESSION "pomdog/content/asset_loaders/*")
-source_group(content\\audio             REGULAR_EXPRESSION "pomdog/content/audio/*")
-source_group(content\\image             REGULAR_EXPRESSION "pomdog/content/image/*")
-source_group(content\\utility           REGULAR_EXPRESSION "pomdog/content/utility/*")
+source_group(content                REGULAR_EXPRESSION "pomdog/content/*")
+source_group(content/asset_builders REGULAR_EXPRESSION "pomdog/content/asset_builders/*")
+source_group(content/asset_loaders  REGULAR_EXPRESSION "pomdog/content/asset_loaders/*")
+source_group(content/audio          REGULAR_EXPRESSION "pomdog/content/audio/*")
+source_group(content/image          REGULAR_EXPRESSION "pomdog/content/image/*")
+source_group(content/utility        REGULAR_EXPRESSION "pomdog/content/utility/*")
 
 target_sources(pomdog_static PRIVATE
     # NOTE: content
