@@ -142,6 +142,7 @@ target_compile_options(pomdog_test PRIVATE
         /W4
         /WX
         /std:c++latest
+        /utf-8
         $<$<CONFIG:Debug>:/Od;/MTd>
         $<$<CONFIG:Release>:/O2;/Ob2;/MT>
         $<$<CONFIG:Release>:/GL> # NOTE: For LTO build

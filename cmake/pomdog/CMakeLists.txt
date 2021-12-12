@@ -310,6 +310,7 @@ target_compile_options(pomdog_static PRIVATE
         /wd5219 # NOTE: implicit conversion from 'int' to 'float', possible loss of data
         /std:c++latest
         /permissive-
+        /utf-8
         $<$<CONFIG:Debug>:/Od;/MTd>
         $<$<CONFIG:Release>:/O2;/Ob2;/MT>
     >
