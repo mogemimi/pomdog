@@ -2,7 +2,7 @@ name: "Build on Linux"
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, develop ]
   pull_request:
     branches: [ main ]
 
