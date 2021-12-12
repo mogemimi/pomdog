@@ -60,8 +60,6 @@ using Matrix2x2 = detail::FloatingPointMatrix2x2<float>;
 using Matrix3x2 = detail::FloatingPointMatrix3x2<float>;
 using Matrix3x3 = detail::FloatingPointMatrix3x3<float>;
 using Matrix4x4 = detail::FloatingPointMatrix4x4<float>;
-using Point2D = detail::Coordinate2D<std::int32_t>;
-using Point3D = detail::Coordinate3D<std::int32_t>;
 using Quaternion = detail::FloatingPointQuaternion<float>;
 using Vector2 = detail::FloatingPointVector2<float>;
 using Vector3 = detail::FloatingPointVector3<float>;
@@ -80,6 +78,8 @@ class BoundingFrustum;
 class BoundingSphere;
 class Color;
 class Plane;
+class Point2D;
+class Point3D;
 class Ray;
 class Rectangle;
 

@@ -27,7 +27,9 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/math/plane_intersection_type.hpp
     ${POMDOG_SRC_DIR}/math/plane.cpp
     ${POMDOG_SRC_DIR}/math/plane.hpp
+    ${POMDOG_SRC_DIR}/math/point2d.cpp
     ${POMDOG_SRC_DIR}/math/point2d.hpp
+    ${POMDOG_SRC_DIR}/math/point3d.cpp
     ${POMDOG_SRC_DIR}/math/point3d.hpp
     ${POMDOG_SRC_DIR}/math/quaternion.hpp
     ${POMDOG_SRC_DIR}/math/radian.hpp
@@ -38,10 +40,6 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/math/vector2.hpp
     ${POMDOG_SRC_DIR}/math/vector3.hpp
     ${POMDOG_SRC_DIR}/math/vector4.hpp
-    ${POMDOG_SRC_DIR}/math/detail/coordinate2d.cpp
-    ${POMDOG_SRC_DIR}/math/detail/coordinate2d.hpp
-    ${POMDOG_SRC_DIR}/math/detail/coordinate3d.cpp
-    ${POMDOG_SRC_DIR}/math/detail/coordinate3d.hpp
     ${POMDOG_SRC_DIR}/math/detail/floating_point_matrix2x2.cpp
     ${POMDOG_SRC_DIR}/math/detail/floating_point_matrix2x2.hpp
     ${POMDOG_SRC_DIR}/math/detail/floating_point_matrix3x2.cpp
