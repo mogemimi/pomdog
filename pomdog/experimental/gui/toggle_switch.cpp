@@ -172,10 +172,10 @@ void ToggleSwitch::Draw(DrawingContext& drawingContext)
     }
     switch (toggleAnimation) {
     case ToggleAnimation::OnToOff:
-        circlePos = Vector2::Lerp(offPos, onPos, 1.0f - Easings::EaseSine::InOut(animationDuration));
+        circlePos = math::Lerp(offPos, onPos, 1.0f - Easings::EaseSine::InOut(animationDuration));
         break;
     case ToggleAnimation::OffToOn:
-        circlePos = Vector2::Lerp(offPos, onPos, Easings::EaseSine::InOut(animationDuration));
+        circlePos = math::Lerp(offPos, onPos, Easings::EaseSine::InOut(animationDuration));
         break;
     case ToggleAnimation::Stopped:
         break;

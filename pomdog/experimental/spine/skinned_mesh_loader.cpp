@@ -79,7 +79,7 @@ CreateSkinnedMeshSlot(
     Matrix3x2 transform = scaling * rotate * translate * bindPosesInGlobal[*slotDesc.Joint];
 
     for (auto& vertex : slot.Vertices) {
-        auto position = Vector2::Transform(Vector2(vertex.PositionTextureCoord.X, vertex.PositionTextureCoord.Y) - origin, transform);
+        auto position = math::Transform(Vector2(vertex.PositionTextureCoord.X, vertex.PositionTextureCoord.Y) - origin, transform);
 
         vertex.PositionTextureCoord.X = position.X;
         vertex.PositionTextureCoord.Y = position.Y;
@@ -115,7 +115,7 @@ CreateSkinnedMeshSlot(
         POMDOG_ASSERT(!source.Joints.empty());
         POMDOG_ASSERT(source.Joints.front());
         POMDOG_ASSERT(*source.Joints.front() < bindPosesInGlobal.size());
-        auto position = Vector2::Transform(source.Position, bindPosesInGlobal[*source.Joints.front()]);
+        auto position = math::Transform(source.Position, bindPosesInGlobal[*source.Joints.front()]);
 
         auto originInUV = Vector2{
             static_cast<float>(textureRegion.Subrect.X),

@@ -207,7 +207,7 @@ void TranslationTrack::Apply(
     auto translate1 = Vector2{pointPair.first->TranslateX.ToFloat(), pointPair.first->TranslateY.ToFloat()};
     auto translate2 = Vector2{pointPair.second->TranslateX.ToFloat(), pointPair.second->TranslateY.ToFloat()};
 
-    pose.Translate = bindPose.Translate + Vector2::Lerp(translate1, translate2, amount);
+    pose.Translate = bindPose.Translate + math::Lerp(translate1, translate2, amount);
 }
 
 AnimationTimeInterval TranslationTrack::GetLength() const

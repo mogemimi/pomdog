@@ -174,7 +174,7 @@ void PushButton::Draw(DrawingContext& drawingContext)
         const auto baselineHeight = 3.0f;
         const auto horizontalPadding = 6.0f;
 
-        Vector2 originPivot = Vector2::Zero;
+        auto originPivot = Vector2::Zero();
         Vector2 padding = Vector2{0.0f, baselineHeight};
         switch (textAlignment) {
         case TextAlignment::Left:

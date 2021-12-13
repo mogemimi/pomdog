@@ -85,7 +85,7 @@ void TextBlock::Draw(DrawingContext& drawingContext)
     auto globalPos = UIHelper::ProjectToWorldSpace(GetPosition(), drawingContext.GetCurrentTransform());
 
     auto position = math::ToVector2(globalPos) + Vector2{0.0f, baselineHeight};
-    auto originPivot = Vector2::Zero;
+    auto originPivot = Vector2::Zero();
 
     switch (textAlignment) {
     case TextAlignment::Left:

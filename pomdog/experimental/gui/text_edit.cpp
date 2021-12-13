@@ -608,7 +608,7 @@ void TextEdit::Draw(DrawingContext& drawingContext)
         return marginLeftBottom.X + v.X + offset;
     };
 
-    Vector2 cursorDrawPosition = Vector2::Zero;
+    auto cursorDrawPosition = Vector2::Zero();
     if (cursorPosition != std::nullopt) {
         cursorDrawPosition.X = calculatePositionInSprite(*cursorPosition);
 
@@ -665,7 +665,7 @@ void TextEdit::Draw(DrawingContext& drawingContext)
     if (!text.empty()) {
         // NOTE: Draw input text
         auto spriteBatch = drawingContext.GetSpriteBatch();
-        Vector2 startPos = Vector2::Zero;
+        auto startPos = Vector2::Zero();
         if (textStartPositionX != std::nullopt) {
             startPos.X = *textStartPositionX;
         }

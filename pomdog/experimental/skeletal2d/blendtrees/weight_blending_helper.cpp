@@ -27,7 +27,7 @@ void Lerp(
 
         result.Scale = math::Lerp(pose1.Scale, pose2.Scale, weight);
         result.Rotation = math::Lerp(pose1.Rotation.value, pose2.Rotation.value, weight);
-        result.Translate = Vector2::Lerp(pose1.Translate, pose2.Translate, weight);
+        result.Translate = math::Lerp(pose1.Translate, pose2.Translate, weight);
     }
 }
 

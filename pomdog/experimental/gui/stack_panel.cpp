@@ -97,7 +97,7 @@ void StackPanel::OnPointerMoved(const PointerPoint& pointerPoint)
     auto position = math::ToVector2(pointInView);
 
     auto tangent = position - *startTouchPoint;
-    auto distanceSquared = tangent.LengthSquared();
+    auto distanceSquared = math::LengthSquared(tangent);
 
     if (distanceSquared >= 1.4143f) {
         SetPosition(GetPosition() + math::ToPoint2D(tangent));

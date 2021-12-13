@@ -19,15 +19,15 @@ CreateJaggedLine(
     const Vector2& end,
     random::Xoroshiro128StarStar& random)
 {
-    if (Vector2::DistanceSquared(start, end) <= std::numeric_limits<float>::epsilon()) {
+    if (math::DistanceSquared(start, end) <= std::numeric_limits<float>::epsilon()) {
         return {};
     }
 
     auto tangent = end - start;
     auto normal = Vector2{-tangent.Y, tangent.X};
 
-    POMDOG_ASSERT(tangent.LengthSquared() > std::numeric_limits<float>::epsilon());
-    POMDOG_ASSERT(normal.LengthSquared() > std::numeric_limits<float>::epsilon());
+    POMDOG_ASSERT(math::LengthSquared(tangent) > std::numeric_limits<float>::epsilon());
+    POMDOG_ASSERT(math::LengthSquared(normal) > std::numeric_limits<float>::epsilon());
 
     std::vector<float> positions;
 
@@ -46,7 +46,7 @@ CreateJaggedLine(
     float prevDisplacement = 0;
     float prevPosition = 0;
 
-    auto length = std::max(Vector2::Distance(start, end), std::numeric_limits<float>::epsilon());
+    auto length = std::max(math::Distance(start, end), std::numeric_limits<float>::epsilon());
     POMDOG_ASSERT(length > 0);
 
     for (auto& position : positions) {
@@ -111,22 +111,22 @@ CreateBranch(
 
     std::uniform_real_distribution<float> middlePointDistribution(0.1f, 0.95f);
     auto middlePoint = middlePointDistribution(random);
-    Vector2 start = Vector2::Lerp(parentBeam.Points[index1], parentBeam.Points[index2], middlePoint);
+    Vector2 start = math::Lerp(parentBeam.Points[index1], parentBeam.Points[index2], middlePoint);
 
     Vector2 tangent = sourceEnd - start;
     Vector2 normal{-tangent.Y, tangent.X};
 
     auto distribution = branching.SpreadRange;
-    auto lengthSq1 = (sourceEnd - start).LengthSquared();
-    auto lengthSq2 = (sourceEnd - sourceStart).LengthSquared();
+    auto lengthSq1 = math::LengthSquared(sourceEnd - start);
+    auto lengthSq2 = math::LengthSquared(sourceEnd - sourceStart);
     POMDOG_ASSERT(lengthSq2 > std::numeric_limits<float>::epsilon());
     POMDOG_ASSERT(lengthSq1 > std::numeric_limits<float>::epsilon());
 
     auto amount = (lengthSq1 / (lengthSq2 * (middlePointDistribution.max() - middlePointDistribution.min())));
 
-    Vector2 end = sourceEnd + (Vector2::Normalize(normal) * distribution(random) * amount);
+    Vector2 end = sourceEnd + (math::Normalize(normal) * distribution(random) * amount);
 
-    auto scale = Vector2::Distance(end, start) / Vector2::Distance(sourceEnd, sourceStart);
+    auto scale = math::Distance(end, start) / math::Distance(sourceEnd, sourceStart);
     auto scaledPoints = static_cast<uint32_t>(emitter.InterpolationPoints * scale);
 
     return CreateJaggedLine(emitter, scaledPoints, start, end, random);
@@ -209,7 +209,7 @@ void BeamSystem::Update(const Duration& frameDuration, const Vector2& emitterPos
 
             const auto tangent = target - emitterPosition;
             const auto normal = Vector2{-tangent.Y, tangent.X};
-            const auto end = target + (Vector2::Normalize(normal) * distribution(random));
+            const auto end = target + (math::Normalize(normal) * distribution(random));
 
             Beam beam;
 

@@ -106,7 +106,7 @@ void CheckBox::Draw(DrawingContext& drawingContext)
         transformOffset + Vector2{-1.0f, -1.0f},
         Color{93, 90, 91, 255},
         0.0f,
-        Vector2::Zero,
+        Vector2::Zero(),
         static_cast<float>(checkBoxWidth + 2) / iconPixelSize);
 
     drawingContext.DrawIcon(
@@ -114,7 +114,7 @@ void CheckBox::Draw(DrawingContext& drawingContext)
         transformOffset,
         innerColor,
         0.0f,
-        Vector2::Zero,
+        Vector2::Zero(),
         static_cast<float>(checkBoxWidth) / iconPixelSize);
 
     if (isOn) {
@@ -123,7 +123,7 @@ void CheckBox::Draw(DrawingContext& drawingContext)
             transformOffset + Vector2{3.0f, 3.5f},
             checkColor,
             0.0f,
-            Vector2::Zero,
+            Vector2::Zero(),
             static_cast<float>(checkIconPixelSize) / iconPixelSize);
     }
 }
