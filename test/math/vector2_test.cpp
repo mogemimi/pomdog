@@ -1,6 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/math/math.hpp"
+#include "pomdog/math/radian.hpp"
 #include "pomdog/math/vector2.hpp"
 #include <catch_amalgamated.hpp>
 
@@ -20,7 +21,7 @@ TEST_CASE("Vector2", "[Vector2]")
     }
     SECTION("Constants")
     {
-        REQUIRE(Vector2{0.0f, 0.0f} == Vector2::Zero);
+        REQUIRE(Vector2{0.0f, 0.0f} == Vector2::Zero());
     }
     SECTION("Addition")
     {
@@ -47,48 +48,51 @@ TEST_CASE("Vector2", "[Vector2]")
     }
     SECTION("Lerp")
     {
-        REQUIRE(Vector2{0.0f, 0.0f} == Vector2::Lerp(Vector2::Zero, Vector2{40.0f, 50.0f}, 0.0f));
-        REQUIRE(Vector2{4.0f, 5.0f} == Vector2::Lerp(Vector2::Zero, Vector2{40.0f, 50.0f}, 0.1f));
-        REQUIRE(Vector2{36.f, 45.f} == Vector2::Lerp(Vector2::Zero, Vector2{40.0f, 50.0f}, 0.9f));
-        REQUIRE(Vector2{40.f, 50.f} == Vector2::Lerp(Vector2::Zero, Vector2{40.0f, 50.0f}, 1.0f));
+        using pomdog::math::Lerp;
+        REQUIRE(Vector2{0.0f, 0.0f} == Lerp(Vector2::Zero(), Vector2{40.0f, 50.0f}, 0.0f));
+        REQUIRE(Vector2{4.0f, 5.0f} == Lerp(Vector2::Zero(), Vector2{40.0f, 50.0f}, 0.1f));
+        REQUIRE(Vector2{36.f, 45.f} == Lerp(Vector2::Zero(), Vector2{40.0f, 50.0f}, 0.9f));
+        REQUIRE(Vector2{40.f, 50.f} == Lerp(Vector2::Zero(), Vector2{40.0f, 50.0f}, 1.0f));
 
-        REQUIRE(Vector2{1.0f, 2.0f} == Vector2::Lerp(Vector2{1.0f, 2.0f}, Vector2{4.0f, 5.0f}, 0.0f));
-        REQUIRE(Vector2{2.5f, 3.5f} == Vector2::Lerp(Vector2{1.0f, 2.0f}, Vector2{4.0f, 5.0f}, 0.5f));
-        REQUIRE(Vector2{4.0f, 5.0f} == Vector2::Lerp(Vector2{1.0f, 2.0f}, Vector2{4.0f, 5.0f}, 1.0f));
+        REQUIRE(Vector2{1.0f, 2.0f} == Lerp(Vector2{1.0f, 2.0f}, Vector2{4.0f, 5.0f}, 0.0f));
+        REQUIRE(Vector2{2.5f, 3.5f} == Lerp(Vector2{1.0f, 2.0f}, Vector2{4.0f, 5.0f}, 0.5f));
+        REQUIRE(Vector2{4.0f, 5.0f} == Lerp(Vector2{1.0f, 2.0f}, Vector2{4.0f, 5.0f}, 1.0f));
     }
     SECTION("Normalize")
     {
-        REQUIRE(Vector2::Normalize(Vector2{0.0f, 0.0f}) == Vector2{0.0f, 0.0f});
-        REQUIRE(Vector2::Normalize(Vector2{1.0f, 0.0f}) == Vector2{1.0f, 0.0f});
-        REQUIRE(Vector2::Normalize(Vector2{0.0f, 1.0f}) == Vector2{0.0f, 1.0f});
+        using pomdog::math::Normalize;
+        REQUIRE(Normalize(Vector2{0.0f, 0.0f}) == Vector2{0.0f, 0.0f});
+        REQUIRE(Normalize(Vector2{1.0f, 0.0f}) == Vector2{1.0f, 0.0f});
+        REQUIRE(Normalize(Vector2{0.0f, 1.0f}) == Vector2{0.0f, 1.0f});
     }
     SECTION("Rotate")
     {
-        REQUIRE(Vector2::Rotate(Vector2{0.0f, 0.0f}, 0.0f) == Vector2{0.0f, 0.0f});
+        using pomdog::math::Rotate;
+        REQUIRE(Rotate(Vector2{0.0f, 0.0f}, 0.0f) == Vector2{0.0f, 0.0f});
 
         const auto approx = [](float x) -> auto { return Catch::Approx(x).margin(0.000001f); };
         {
-            auto vec = Vector2::Rotate(Vector2{1.0f, 0.0f}, 0.0f);
+            auto vec = Rotate(Vector2{1.0f, 0.0f}, 0.0f);
             REQUIRE(vec.X == approx(1.0f));
             REQUIRE(vec.Y == approx(0.0f));
         }
         {
-            auto vec = Vector2::Rotate(Vector2{1.0f, 0.0f}, pomdog::math::PiOver2<float>);
+            auto vec = Rotate(Vector2{1.0f, 0.0f}, pomdog::math::PiOver2<float>);
             REQUIRE(vec.X == approx(0.0f));
             REQUIRE(vec.Y == approx(1.0f));
         }
         {
-            auto vec = Vector2::Rotate(Vector2{1.0f, 0.0f}, pomdog::math::Pi<float>);
+            auto vec = Rotate(Vector2{1.0f, 0.0f}, pomdog::math::Pi<float>);
             REQUIRE(vec.X == approx(-1.0f));
             REQUIRE(vec.Y == approx(0.0f));
         }
         {
-            auto vec = Vector2::Rotate(Vector2{1.0f, 0.0f}, -pomdog::math::PiOver2<float>);
+            auto vec = Rotate(Vector2{1.0f, 0.0f}, -pomdog::math::PiOver2<float>);
             REQUIRE(vec.X == approx(0.0f));
             REQUIRE(vec.Y == approx(-1.0f));
         }
         {
-            auto vec = Vector2::Rotate(Vector2{1.0f, 0.0f}, pomdog::math::TwoPi<float>);
+            auto vec = Rotate(Vector2{1.0f, 0.0f}, pomdog::math::TwoPi<float>);
             REQUIRE(vec.X == approx(1.0f));
             REQUIRE(vec.Y == approx(0.0f));
         }

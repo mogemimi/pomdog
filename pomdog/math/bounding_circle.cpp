@@ -16,7 +16,7 @@ BoundingCircle::BoundingCircle(const Vector2& center, float radius)
 
 ContainmentType BoundingCircle::Contains(const Vector2& point) const
 {
-    auto distanceSquared = Vector2::DistanceSquared(point, Center);
+    auto distanceSquared = math::DistanceSquared(point, Center);
     auto radiusSquared = Radius * Radius;
     if (distanceSquared > radiusSquared) {
         return ContainmentType::Disjoint;
@@ -47,7 +47,7 @@ ContainmentType BoundingCircle::Contains(const BoundingBox2D& box) const
 
 ContainmentType BoundingCircle::Contains(const BoundingCircle& circle) const
 {
-    auto distance = Vector2::Distance(this->Center, circle.Center);
+    auto distance = math::Distance(this->Center, circle.Center);
     if (distance > this->Radius + circle.Radius) {
         return ContainmentType::Disjoint;
     }
@@ -64,7 +64,7 @@ bool BoundingCircle::Intersects(const BoundingBox2D& box) const
 
 bool BoundingCircle::Intersects(const BoundingCircle& circle) const
 {
-    auto distance = Vector2::Distance(this->Center, circle.Center);
+    auto distance = math::Distance(this->Center, circle.Center);
     return distance <= this->Radius + circle.Radius;
 }
 

@@ -45,8 +45,8 @@ ContainmentType BoundingBox2D::Contains(const BoundingBox2D& box) const
 
 ContainmentType BoundingBox2D::Contains(const BoundingCircle& circle) const
 {
-    auto clamped = Vector2::Clamp(circle.Center, this->Min, this->Max);
-    auto distanceSquared = Vector2::DistanceSquared(circle.Center, clamped);
+    auto clamped = math::Clamp(circle.Center, this->Min, this->Max);
+    auto distanceSquared = math::DistanceSquared(circle.Center, clamped);
 
     if (distanceSquared > circle.Radius * circle.Radius) {
         return ContainmentType::Disjoint;
@@ -68,8 +68,8 @@ bool BoundingBox2D::Intersects(const BoundingBox2D& box) const
 
 bool BoundingBox2D::Intersects(const BoundingCircle& circle) const
 {
-    auto clamped = Vector2::Clamp(circle.Center, this->Min, this->Max);
-    auto distanceSquared = Vector2::DistanceSquared(circle.Center, clamped);
+    auto clamped = math::Clamp(circle.Center, this->Min, this->Max);
+    auto distanceSquared = math::DistanceSquared(circle.Center, clamped);
     return distanceSquared <= circle.Radius * circle.Radius;
 }
 

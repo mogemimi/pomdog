@@ -18,11 +18,11 @@ TEST_CASE("BoundingBox2D", "[BoundingBox2D]")
     SECTION("Constructors")
     {
         BoundingBox2D box2;
-        box2.Min = Vector2::Zero;
+        box2.Min = Vector2::Zero();
         box2.Max = Vector2{42.0f, 3.14f};
 
         box = box2;
-        REQUIRE(Vector2::Zero == box.Min);
+        REQUIRE(Vector2::Zero() == box.Min);
         REQUIRE(Vector2{42.0f, 3.14f} == box.Max);
 
         BoundingBox2D box3{Vector2{-1.0f, 2.718f}, Vector2{17.0f, 8.0f}};
@@ -99,25 +99,25 @@ TEST_CASE("BoundingBox2D", "[BoundingBox2D]")
 
         REQUIRE(ContainmentType::Contains == box.Contains(box));
 
-        REQUIRE(ContainmentType::Contains == box.Contains(BoundingBox2D{box.Min, Vector2::Lerp(box.Min, box.Max, 0.01f)}));
-        REQUIRE(ContainmentType::Contains == box.Contains(BoundingBox2D{box.Min, Vector2::Lerp(box.Min, box.Max, 0.5f)}));
-        REQUIRE(ContainmentType::Contains == box.Contains(BoundingBox2D{box.Min, Vector2::Lerp(box.Min, box.Max, 0.99f)}));
-        REQUIRE(ContainmentType::Intersects == box.Contains(BoundingBox2D{box.Min, Vector2::Lerp(box.Min, box.Max, 1.1f)}));
-        REQUIRE(ContainmentType::Intersects == box.Contains(BoundingBox2D{Vector2::Zero, Vector2(a, b)}));
-        REQUIRE(ContainmentType::Disjoint == box.Contains(BoundingBox2D{Vector2::Zero, Vector2(a - 1, b)}));
+        REQUIRE(ContainmentType::Contains == box.Contains(BoundingBox2D{box.Min, pomdog::math::Lerp(box.Min, box.Max, 0.01f)}));
+        REQUIRE(ContainmentType::Contains == box.Contains(BoundingBox2D{box.Min, pomdog::math::Lerp(box.Min, box.Max, 0.5f)}));
+        REQUIRE(ContainmentType::Contains == box.Contains(BoundingBox2D{box.Min, pomdog::math::Lerp(box.Min, box.Max, 0.99f)}));
+        REQUIRE(ContainmentType::Intersects == box.Contains(BoundingBox2D{box.Min, pomdog::math::Lerp(box.Min, box.Max, 1.1f)}));
+        REQUIRE(ContainmentType::Intersects == box.Contains(BoundingBox2D{Vector2::Zero(), Vector2(a, b)}));
+        REQUIRE(ContainmentType::Disjoint == box.Contains(BoundingBox2D{Vector2::Zero(), Vector2(a - 1, b)}));
     }
     SECTION("Contains_BoundingCircle")
     {
         box.Min = Vector2{12.0f, 16.0f};
         box.Max = Vector2{32.0f, 64.0f};
-        auto center = Vector2::Lerp(box.Min, box.Max, 0.5f);
+        auto center = pomdog::math::Lerp(box.Min, box.Max, 0.5f);
 
         REQUIRE(ContainmentType::Contains == box.Contains(BoundingCircle{center, 1.0f}));
         REQUIRE(ContainmentType::Contains == box.Contains(BoundingCircle{center, (box.Max - box.Min).X / 2}));
         REQUIRE(ContainmentType::Intersects == box.Contains(BoundingCircle{center, (box.Max - box.Min).Y / 2}));
 
         REQUIRE(ContainmentType::Intersects == box.Contains(BoundingCircle{Vector2{0.0f, 16.0f}, 12.01f}));
-        REQUIRE(ContainmentType::Intersects == box.Contains(BoundingCircle{Vector2{12.0f, 0.0f,}, 16.01f}));
+        REQUIRE(ContainmentType::Intersects == box.Contains(BoundingCircle{Vector2{12.0f, 0.0f}, 16.01f}));
         REQUIRE(ContainmentType::Disjoint == box.Contains(BoundingCircle{Vector2{0.0f, 16.0f}, 11.99f}));
         REQUIRE(ContainmentType::Disjoint == box.Contains(BoundingCircle{Vector2{12.0f, 0.0f}, 15.99f}));
     }
@@ -132,18 +132,18 @@ TEST_CASE("BoundingBox2D", "[BoundingBox2D]")
         box.Max = Vector2{d, e};
 
         REQUIRE(box.Intersects(box));
-        REQUIRE(box.Intersects(BoundingBox2D{box.Min, Vector2::Lerp(box.Min, box.Max, 0.01f)}));
-        REQUIRE(box.Intersects(BoundingBox2D{box.Min, Vector2::Lerp(box.Min, box.Max, 0.5f)}));
-        REQUIRE(box.Intersects(BoundingBox2D{box.Min, Vector2::Lerp(box.Min, box.Max, 0.99f)}));
-        REQUIRE(box.Intersects(BoundingBox2D{box.Min, Vector2::Lerp(box.Min, box.Max, 1.1f)}));
-        REQUIRE(box.Intersects(BoundingBox2D{Vector2::Zero, Vector2(a, b)}));
-        REQUIRE_FALSE(box.Intersects(BoundingBox2D{Vector2::Zero, Vector2(a - 1, b)}));
+        REQUIRE(box.Intersects(BoundingBox2D{box.Min, pomdog::math::Lerp(box.Min, box.Max, 0.01f)}));
+        REQUIRE(box.Intersects(BoundingBox2D{box.Min, pomdog::math::Lerp(box.Min, box.Max, 0.5f)}));
+        REQUIRE(box.Intersects(BoundingBox2D{box.Min, pomdog::math::Lerp(box.Min, box.Max, 0.99f)}));
+        REQUIRE(box.Intersects(BoundingBox2D{box.Min, pomdog::math::Lerp(box.Min, box.Max, 1.1f)}));
+        REQUIRE(box.Intersects(BoundingBox2D{Vector2::Zero(), Vector2(a, b)}));
+        REQUIRE_FALSE(box.Intersects(BoundingBox2D{Vector2::Zero(), Vector2(a - 1, b)}));
     }
     SECTION("Intersects_BoundingCircle")
     {
         box.Min = Vector2{12.0f, 16.0f};
         box.Max = Vector2{32.0f, 64.0f};
-        auto center = Vector2::Lerp(box.Min, box.Max, 0.5f);
+        auto center = pomdog::math::Lerp(box.Min, box.Max, 0.5f);
 
         REQUIRE(box.Intersects(BoundingCircle{center, 1.0f}));
         REQUIRE(box.Intersects(BoundingCircle{center, (box.Max - box.Min).X / 2}));
