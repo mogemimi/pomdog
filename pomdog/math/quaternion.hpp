@@ -32,8 +32,8 @@ public:
     Quaternion& operator+=(const Quaternion&) noexcept;
     Quaternion& operator-=(const Quaternion&) noexcept;
     Quaternion& operator*=(const Quaternion&) noexcept;
-    Quaternion& operator*=(float scaleFactor) noexcept;
-    Quaternion& operator/=(float scaleFactor) noexcept;
+    Quaternion& operator*=(float factor) noexcept;
+    Quaternion& operator/=(float factor) noexcept;
 
     // Unary operators:
     Quaternion operator+() const noexcept;
@@ -43,80 +43,29 @@ public:
     [[nodiscard]] Quaternion operator+(const Quaternion&) const noexcept;
     [[nodiscard]] Quaternion operator-(const Quaternion&) const noexcept;
     [[nodiscard]] Quaternion operator*(const Quaternion&) const noexcept;
-    [[nodiscard]] Quaternion operator*(float scaleFactor) const noexcept;
-    [[nodiscard]] Quaternion operator/(float scaleFactor) const noexcept;
+    [[nodiscard]] Quaternion operator*(float factor) const noexcept;
+    [[nodiscard]] Quaternion operator/(float factor) const noexcept;
 
     [[nodiscard]] bool operator==(const Quaternion&) const noexcept;
     [[nodiscard]] bool operator!=(const Quaternion&) const noexcept;
 
-    [[nodiscard]] float Length() const noexcept;
+    /// Returns pointer to the first element.
+    [[nodiscard]] const float* Data() const noexcept;
 
-    [[nodiscard]] float LengthSquared() const noexcept;
-
-    [[nodiscard]] static float
-    Dot(const Quaternion& a, const Quaternion& b) noexcept;
-
-    void Normalize() noexcept;
-
-    [[nodiscard]] static Quaternion
-    Normalize(const Quaternion& quaternion) noexcept;
-
-    static void
-    Normalize(const Quaternion& quaternion, Quaternion& result) noexcept;
-
-    static void
-    Lerp(const Quaternion& source1, const Quaternion& source2, float amount, Quaternion& result);
-
-    [[nodiscard]] static Quaternion
-    Lerp(const Quaternion& source1, const Quaternion& source2, float amount);
-
-    static void
-    Slerp(const Quaternion& begin, const Quaternion& end, float amount, Quaternion& result);
-
-    [[nodiscard]] static Quaternion
-    Slerp(const Quaternion& begin, const Quaternion& end, float amount);
-
-    static void
-    Inverse(const Quaternion& source, Quaternion& result);
-
-    [[nodiscard]] static Quaternion
-    Inverse(const Quaternion& source);
-
-    /// Rotates a vector by a quaternion.
-    [[nodiscard]] static Vector3
-    Rotate(const Quaternion& quaternion, const Vector3& vector);
-
-    ///@param axis The normalized axis of the rotation.
-    static void
-    CreateFromAxisAngle(const Vector3& axis, const Radian<float>& angle, Quaternion& result);
+    /// Returns pointer to the first element.
+    [[nodiscard]] float* Data() noexcept;
 
     ///@param axis The normalized axis of the rotation.
     [[nodiscard]] static Quaternion
     CreateFromAxisAngle(const Vector3& axis, const Radian<float>& angle);
 
     /// Convert rotation matrix to quaternion.
-    static void
-    CreateFromRotationMatrix(const Matrix4x4& rotation, Quaternion& result);
-
-    /// Convert rotation matrix to quaternion.
     [[nodiscard]] static Quaternion
     CreateFromRotationMatrix(const Matrix4x4& rotation);
 
     /// Convert rotation matrix to quaternion.
-    static void
-    CreateFromRotationMatrix(const Matrix3x3& rotation, Quaternion& result);
-
-    /// Convert rotation matrix to quaternion.
     [[nodiscard]] static Quaternion
     CreateFromRotationMatrix(const Matrix3x3& rotation);
-
-    /// Creates a quaternion from the specified yaw, pitch, and roll.
-    ///
-    ///@param yaw The rotation around the y-axis in radians.
-    ///@param pitch The rotation around the x-axis in radians.
-    ///@param roll The rotation around the z-axis in radians.
-    static void
-    CreateFromYawPitchRoll(const Radian<float>& yaw, const Radian<float>& pitch, const Radian<float>& roll, Quaternion& result);
 
     /// Creates a quaternion from the specified yaw, pitch, and roll.
     ///
@@ -136,16 +85,48 @@ public:
     [[nodiscard]] static Vector3
     ToEulerAngles(const Quaternion& quaternion) noexcept;
 
-    /// Returns pointer to the first element.
-    [[nodiscard]] const float* Data() const noexcept;
-
-    /// Returns pointer to the first element.
-    [[nodiscard]] float* Data() noexcept;
-
-    static Quaternion const Identity;
+    [[nodiscard]] static Quaternion
+    Identity() noexcept;
 };
 
+/// Multiplies a quaternion by a scalar factor.
 [[nodiscard]] Quaternion POMDOG_EXPORT
-operator*(float scaleFactor, const Quaternion& quaternion) noexcept;
+operator*(float factor, const Quaternion& quaternion) noexcept;
 
 } // namespace pomdog
+
+namespace pomdog::math {
+
+/// Calculates and returns the length of a quaternion.
+[[nodiscard]] float POMDOG_EXPORT
+Length(const Quaternion& quaternion) noexcept;
+
+/// Calculates and returns the squared length of a quaternion.
+[[nodiscard]] float POMDOG_EXPORT
+LengthSquared(const Quaternion& quaternion) noexcept;
+
+/// Calculates and returns the dot product of two quaternions.
+[[nodiscard]] float POMDOG_EXPORT
+Dot(const Quaternion& a, const Quaternion& b) noexcept;
+
+/// Returns a unit quaternion in the same rotation from the specified quaternion.
+[[nodiscard]] Quaternion POMDOG_EXPORT
+Normalize(const Quaternion& quaternion) noexcept;
+
+/// Performs a linear interpolation between two quaternions.
+[[nodiscard]] Quaternion POMDOG_EXPORT
+Lerp(const Quaternion& source1, const Quaternion& source2, float amount);
+
+/// Performs a spherical linear interpolation between two quaternions.
+[[nodiscard]] Quaternion POMDOG_EXPORT
+Slerp(const Quaternion& begin, const Quaternion& end, float amount);
+
+/// Calculates and returns the inverse of a quaternion.
+[[nodiscard]] Quaternion POMDOG_EXPORT
+Invert(const Quaternion& source);
+
+/// Rotates a vector by a quaternion.
+[[nodiscard]] Vector3 POMDOG_EXPORT
+Rotate(const Quaternion& quaternion, const Vector3& vector);
+
+} // namespace pomdog::math

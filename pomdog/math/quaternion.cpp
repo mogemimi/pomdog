@@ -18,8 +18,6 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 
-Quaternion const Quaternion::Identity = {0, 0, 0, 1};
-
 Quaternion::Quaternion() noexcept = default;
 
 Quaternion::Quaternion(float x, float y, float z, float w) noexcept
@@ -53,24 +51,24 @@ Quaternion& Quaternion::operator*=(const Quaternion& other) noexcept
     return (*this) = (*this) * other;
 }
 
-Quaternion& Quaternion::operator*=(float scaleFactor) noexcept
+Quaternion& Quaternion::operator*=(float factor) noexcept
 {
-    X *= scaleFactor;
-    Y *= scaleFactor;
-    Z *= scaleFactor;
-    W *= scaleFactor;
+    X *= factor;
+    Y *= factor;
+    Z *= factor;
+    W *= factor;
     return *this;
 }
 
-Quaternion& Quaternion::operator/=(float scaleFactor) noexcept
+Quaternion& Quaternion::operator/=(float factor) noexcept
 {
-    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_ZERO);
-    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_NAN);
-    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_INFINITE);
-    X /= scaleFactor;
-    W /= scaleFactor;
-    Z /= scaleFactor;
-    W /= scaleFactor;
+    POMDOG_ASSERT(std::fpclassify(factor) != FP_ZERO);
+    POMDOG_ASSERT(std::fpclassify(factor) != FP_NAN);
+    POMDOG_ASSERT(std::fpclassify(factor) != FP_INFINITE);
+    X /= factor;
+    W /= factor;
+    Z /= factor;
+    W /= factor;
     return *this;
 }
 
@@ -107,32 +105,35 @@ Quaternion Quaternion::operator*(const Quaternion& other) const noexcept
     // Quaternion(
     //     w * other.Xyz + xyz * other.W + Vector3::Cross(this->xyz, other.Xyz),
     //     w * other.W - Vector3::Dot(this->xyz, other.Xyz));
-    return Quaternion(
+    return Quaternion{
         W * other.X + X * other.W + Y * other.Z - Z * other.Y,
         W * other.Y + Y * other.W + Z * other.X - X * other.Z,
         W * other.Z + Z * other.W + X * other.Y - Y * other.X,
-        W * other.W - X * other.X - Y * other.Y - Z * other.Z);
+        W * other.W - X * other.X - Y * other.Y - Z * other.Z,
+    };
 }
 
-Quaternion Quaternion::operator*(float scaleFactor) const noexcept
+Quaternion Quaternion::operator*(float factor) const noexcept
 {
-    return Quaternion(
-        X * scaleFactor,
-        Y * scaleFactor,
-        Z * scaleFactor,
-        W * scaleFactor);
+    return Quaternion{
+        X * factor,
+        Y * factor,
+        Z * factor,
+        W * factor,
+    };
 }
 
-Quaternion Quaternion::operator/(float scaleFactor) const noexcept
+Quaternion Quaternion::operator/(float factor) const noexcept
 {
-    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_ZERO);
-    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_NAN);
-    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_INFINITE);
-    return Quaternion(
-        X / scaleFactor,
-        Y / scaleFactor,
-        Z / scaleFactor,
-        W / scaleFactor);
+    POMDOG_ASSERT(std::fpclassify(factor) != FP_ZERO);
+    POMDOG_ASSERT(std::fpclassify(factor) != FP_NAN);
+    POMDOG_ASSERT(std::fpclassify(factor) != FP_INFINITE);
+    return Quaternion{
+        X / factor,
+        Y / factor,
+        Z / factor,
+        W / factor,
+    };
 }
 
 bool Quaternion::operator==(const Quaternion& other) const noexcept
@@ -145,156 +146,35 @@ bool Quaternion::operator!=(const Quaternion& other) const noexcept
     return X != other.X || Y != other.Y || Z != other.Z || W != other.W;
 }
 
-float Quaternion::Length() const noexcept
+const float* Quaternion::Data() const noexcept
 {
-    return std::sqrt(X * X + Y * Y + Z * Z + W * W);
+    return &X;
 }
 
-float Quaternion::LengthSquared() const noexcept
+float* Quaternion::Data() noexcept
 {
-    return X * X + Y * Y + Z * Z + W * W;
-}
-
-float Quaternion::Dot(const Quaternion& a, const Quaternion& b) noexcept
-{
-    return a.X * b.X + a.Y * b.Y + a.Z * b.Z + a.W * b.W;
-}
-
-void Quaternion::Normalize() noexcept
-{
-    *this = Normalize(*this);
-}
-
-void Quaternion::Normalize(const Quaternion& source, Quaternion& result) noexcept
-{
-    const auto length = source.Length();
-
-    if (length > std::numeric_limits<decltype(length)>::epsilon()) {
-        const auto InverseLength = 1 / length;
-        result.X = source.X * InverseLength;
-        result.Y = source.Y * InverseLength;
-        result.Z = source.Z * InverseLength;
-        result.W = source.W * InverseLength;
-    }
-}
-
-Quaternion
-Quaternion::Normalize(const Quaternion& source) noexcept
-{
-    Quaternion result;
-    Normalize(source, result);
-    return result;
-}
-
-void Quaternion::Lerp(
-    const Quaternion& source1,
-    const Quaternion& source2,
-    float amount,
-    Quaternion& result)
-{
-    result.X = math::Lerp(source1.X, source2.X, amount);
-    result.Y = math::Lerp(source1.Y, source2.Y, amount);
-    result.Z = math::Lerp(source1.Z, source2.Z, amount);
-    result.W = math::Lerp(source1.W, source2.W, amount);
-    result.Normalize();
-}
-
-Quaternion
-Quaternion::Lerp(
-    const Quaternion& source1,
-    const Quaternion& source2,
-    float amount)
-{
-    Quaternion result;
-    Lerp(source1, source2, amount, result);
-    return result;
-}
-
-void Quaternion::Slerp(
-    const Quaternion& begin,
-    const Quaternion& end,
-    float amount,
-    Quaternion& result)
-{
-    auto cosAngle = Quaternion::Dot(begin, end);
-
-    const auto angle(std::acos(cosAngle));
-    const auto inverseSinAngle = 1 / std::sin(angle);
-
-    const auto coefficient1 = std::sin((1 - amount) * angle) * inverseSinAngle;
-    const auto coefficient2 = std::sin(amount * angle) * inverseSinAngle;
-
-    result.X = coefficient1 * begin.X + coefficient2 * end.X;
-    result.Y = coefficient1 * begin.Y + coefficient2 * end.Y;
-    result.Z = coefficient1 * begin.Z + coefficient2 * end.Z;
-    result.W = coefficient1 * begin.W + coefficient2 * end.W;
-}
-
-Quaternion
-Quaternion::Slerp(
-    const Quaternion& begin,
-    const Quaternion& end,
-    float amount)
-{
-    Quaternion result;
-    Slerp(begin, end, amount, result);
-    return result;
-}
-
-void Quaternion::Inverse(const Quaternion& source, Quaternion& result)
-{
-    const auto lengthSquared = source.LengthSquared();
-    if (0 < lengthSquared) {
-        const auto inverseLengthSquared = 1 / lengthSquared;
-        result.X = source.X * -inverseLengthSquared;
-        result.Y = source.Y * -inverseLengthSquared;
-        result.Z = source.Z * -inverseLengthSquared;
-        result.W = source.W * inverseLengthSquared;
-    }
-    // Failed to calculate inverse
-    //result = Identity;
-}
-
-Quaternion
-Quaternion::Inverse(const Quaternion& source)
-{
-    Quaternion result;
-    Inverse(source, result);
-    return result;
-}
-
-Vector3
-Quaternion::Rotate(const Quaternion& quaternion, const Vector3& vector)
-{
-    auto xyz = Vector3{quaternion.X, quaternion.Y, quaternion.Z};
-    auto t = 2.0f * Vector3::Cross(xyz, vector);
-    return vector + quaternion.W * t + Vector3::Cross(xyz, t);
-}
-
-void Quaternion::CreateFromAxisAngle(const Vector3& axis, const Radian<float>& angle,
-    Quaternion& result)
-{
-    const auto halfAngle(angle.value / 2);
-    const auto sinAngle(std::sin(halfAngle));
-    const auto cosAngle(std::cos(halfAngle));
-
-    result.X = axis.X * sinAngle;
-    result.Y = axis.Y * sinAngle;
-    result.Z = axis.Z * sinAngle;
-    result.W = cosAngle;
+    return &X;
 }
 
 Quaternion
 Quaternion::CreateFromAxisAngle(const Vector3& axis, const Radian<float>& angle)
 {
-    Quaternion result;
-    CreateFromAxisAngle(axis, angle, result);
-    return result;
+    const auto halfAngle(angle.value / 2);
+    const auto sinAngle(std::sin(halfAngle));
+    const auto cosAngle(std::cos(halfAngle));
+
+    return Quaternion{
+        axis.X * sinAngle,
+        axis.Y * sinAngle,
+        axis.Z * sinAngle,
+        cosAngle,
+    };
 }
 
 namespace {
 template <class MatrixClass>
-void CreateFromRotationMatrixImplementation(const MatrixClass& rotation, Quaternion& result)
+[[nodiscard]] Quaternion
+CreateFromRotationMatrixImpl(const MatrixClass& rotation)
 {
     // NOTE: Algorithm from the article "Quaternion Calculus and Fast Animation"
     // by Ken Shoemake, SIGGRAPH 1987 Course Notes.
@@ -305,67 +185,59 @@ void CreateFromRotationMatrixImplementation(const MatrixClass& rotation, Quatern
     constexpr float half = 0.5f;
 
     if (trace > 0) {
-        auto root = std::sqrt(trace + 1);
-        result.W = half * root;
-        root = half / root;
-        result.X = (rotation(2, 1) - rotation(1, 2)) * root;
-        result.Y = (rotation(0, 2) - rotation(2, 0)) * root;
-        result.Z = (rotation(1, 0) - rotation(0, 1)) * root;
+        const auto root = std::sqrt(trace + 1.0f);
+        const auto factor = half / root;
+        return Quaternion{
+            (rotation(2, 1) - rotation(1, 2)) * factor,
+            (rotation(0, 2) - rotation(2, 0)) * factor,
+            (rotation(1, 0) - rotation(0, 1)) * factor,
+            half * root,
+        };
     }
-    else {
-        std::size_t i = 0;
-        if (rotation(1, 1) > rotation(0, 0))
-            i = 1;
-        if (rotation(2, 2) > rotation(i, i))
-            i = 2;
 
-        // (i, j, k) = (0, 1, 2), (1, 2, 0) or (2, 0, 1).
-        //std::size_t const j = (i+1) % 3;
-        //std::size_t const k = (i+2) % 3;
-
-        static std::size_t const indices[3] = {1, 2, 0};
-        std::size_t const j = indices[i];
-        std::size_t const k = indices[j];
-
-        auto root = std::sqrt(rotation(i, i) - rotation(j, j) - rotation(k, k) + 1.0f);
-        std::array<float*, 3> const quat = {{&result.X, &result.Y, &result.Z}};
-        *quat[i] = half * root;
-        root = half / root;
-        result.W = (rotation(k, j) - rotation(j, k)) * root;
-        *quat[j] = (rotation(j, i) + rotation(i, j)) * root;
-        *quat[k] = (rotation(k, i) + rotation(i, k)) * root;
+    std::size_t i = 0;
+    if (rotation(1, 1) > rotation(0, 0)) {
+        i = 1;
     }
+    if (rotation(2, 2) > rotation(i, i)) {
+        i = 2;
+    }
+
+    // (i, j, k) = (0, 1, 2), (1, 2, 0) or (2, 0, 1).
+    //std::size_t const j = (i+1) % 3;
+    //std::size_t const k = (i+2) % 3;
+
+    static std::size_t const indices[3] = {1, 2, 0};
+    std::size_t const j = indices[i];
+    std::size_t const k = indices[j];
+
+    const auto root = std::sqrt(rotation(i, i) - rotation(j, j) - rotation(k, k) + 1.0f);
+    const auto factor = half / root;
+
+    Quaternion result;
+    std::array<float*, 3> const quat = {{&result.X, &result.Y, &result.Z}};
+    *quat[i] = half * root;
+    *quat[j] = (rotation(j, i) + rotation(i, j)) * factor;
+    *quat[k] = (rotation(k, i) + rotation(i, k)) * factor;
+    result.W = (rotation(k, j) - rotation(j, k)) * factor;
+    return result;
 }
 } // namespace
-
-void Quaternion::CreateFromRotationMatrix(const Matrix4x4& rotation, Quaternion& result)
-{
-    CreateFromRotationMatrixImplementation(rotation, result);
-}
 
 Quaternion
 Quaternion::CreateFromRotationMatrix(const Matrix4x4& rotation)
 {
-    Quaternion result;
-    CreateFromRotationMatrix(rotation, result);
-    return result;
-}
-
-void Quaternion::CreateFromRotationMatrix(const Matrix3x3& rotation, Quaternion& result)
-{
-    CreateFromRotationMatrixImplementation(rotation, result);
+    return CreateFromRotationMatrixImpl(rotation);
 }
 
 Quaternion
 Quaternion::CreateFromRotationMatrix(const Matrix3x3& rotation)
 {
-    Quaternion result;
-    CreateFromRotationMatrix(rotation, result);
-    return result;
+    return CreateFromRotationMatrixImpl(rotation);
 }
 
-void Quaternion::CreateFromYawPitchRoll(
-    const Radian<float>& yaw, const Radian<float>& pitch, const Radian<float>& roll, Quaternion& result)
+Quaternion
+Quaternion::CreateFromYawPitchRoll(const Radian<float>& yaw, const Radian<float>& pitch, const Radian<float>& roll)
 {
     const auto halfYaw = yaw.value / 2;
     const auto cosYaw = std::cos(halfYaw);
@@ -384,19 +256,12 @@ void Quaternion::CreateFromYawPitchRoll(
     const auto cosPitchCosRoll = cosPitch * cosRoll;
     const auto sinPitchSinRoll = sinPitch * sinRoll;
 
-    result.X = (cosYaw * sinPitchCosRoll) + (sinYaw * cosPitchSinRoll);
-    result.Y = (sinYaw * cosPitchCosRoll) - (cosYaw * sinPitchSinRoll);
-    result.Z = (cosYaw * cosPitchSinRoll) - (sinYaw * sinPitchCosRoll);
-    result.W = (cosYaw * cosPitchCosRoll) + (sinYaw * sinPitchSinRoll);
-}
-
-Quaternion
-Quaternion::CreateFromYawPitchRoll(
-    const Radian<float>& yaw, const Radian<float>& pitch, const Radian<float>& roll)
-{
-    Quaternion result;
-    CreateFromYawPitchRoll(yaw, pitch, roll, result);
-    return result;
+    return Quaternion{
+        (cosYaw * sinPitchCosRoll) + (sinYaw * cosPitchSinRoll),
+        (sinYaw * cosPitchCosRoll) - (cosYaw * sinPitchSinRoll),
+        (cosYaw * cosPitchSinRoll) - (sinYaw * sinPitchCosRoll),
+        (cosYaw * cosPitchCosRoll) + (sinYaw * sinPitchSinRoll),
+    };
 }
 
 Quaternion
@@ -444,24 +309,116 @@ Quaternion::ToEulerAngles(const Quaternion& q) noexcept
     return pitchYawRoll;
 }
 
-const float* Quaternion::Data() const noexcept
+Quaternion
+Quaternion::Identity() noexcept
 {
-    return &X;
-}
-
-float* Quaternion::Data() noexcept
-{
-    return &X;
+    return Quaternion{0.0f, 0.0f, 0.0f, 1.0f};
 }
 
 [[nodiscard]] Quaternion
-operator*(float scaleFactor, const Quaternion& quaternion) noexcept
+operator*(float factor, const Quaternion& quaternion) noexcept
 {
-    return Quaternion(
-        scaleFactor * quaternion.X,
-        scaleFactor * quaternion.Y,
-        scaleFactor * quaternion.Z,
-        scaleFactor * quaternion.W);
+    return Quaternion{
+        factor * quaternion.X,
+        factor * quaternion.Y,
+        factor * quaternion.Z,
+        factor * quaternion.W,
+    };
 }
 
 } // namespace pomdog
+
+namespace pomdog::math {
+
+[[nodiscard]] float Length(const Quaternion& q) noexcept
+{
+    return std::sqrt(q.X * q.X + q.Y * q.Y + q.Z * q.Z + q.W * q.W);
+}
+
+[[nodiscard]] float LengthSquared(const Quaternion& q) noexcept
+{
+    return q.X * q.X + q.Y * q.Y + q.Z * q.Z + q.W * q.W;
+}
+
+[[nodiscard]] float Dot(const Quaternion& a, const Quaternion& b) noexcept
+{
+    return a.X * b.X + a.Y * b.Y + a.Z * b.Z + a.W * b.W;
+}
+
+[[nodiscard]] Quaternion
+Normalize(const Quaternion& source) noexcept
+{
+    const auto length = math::Length(source);
+
+    if (length > std::numeric_limits<decltype(length)>::epsilon()) {
+        POMDOG_ASSERT(std::fpclassify(length) != FP_ZERO);
+        POMDOG_ASSERT(std::fpclassify(length) != FP_NAN);
+        POMDOG_ASSERT(std::fpclassify(length) != FP_INFINITE);
+        const auto inverseLength = 1.0f / length;
+        return source * inverseLength;
+    }
+
+    // FIXME: Add error handling
+    return source;
+}
+
+[[nodiscard]] Quaternion
+Lerp(const Quaternion& source1, const Quaternion& source2, float amount)
+{
+    return math::Normalize(Quaternion{
+        math::Lerp(source1.X, source2.X, amount),
+        math::Lerp(source1.Y, source2.Y, amount),
+        math::Lerp(source1.Z, source2.Z, amount),
+        math::Lerp(source1.W, source2.W, amount),
+    });
+}
+
+[[nodiscard]] Quaternion
+Slerp(const Quaternion& begin, const Quaternion& end, float amount)
+{
+    const auto cosAngle = math::Dot(begin, end);
+
+    const auto angle(std::acos(cosAngle));
+    const auto inverseSinAngle = 1.0f / std::sin(angle);
+
+    const auto coefficient1 = std::sin((1.0f - amount) * angle) * inverseSinAngle;
+    const auto coefficient2 = std::sin(amount * angle) * inverseSinAngle;
+
+    return Quaternion{
+        coefficient1 * begin.X + coefficient2 * end.X,
+        coefficient1 * begin.Y + coefficient2 * end.Y,
+        coefficient1 * begin.Z + coefficient2 * end.Z,
+        coefficient1 * begin.W + coefficient2 * end.W,
+    };
+}
+
+[[nodiscard]] Quaternion
+Invert(const Quaternion& source)
+{
+    const auto lengthSquared = math::LengthSquared(source);
+    if (lengthSquared > std::numeric_limits<decltype(lengthSquared)>::epsilon()) {
+        POMDOG_ASSERT(std::fpclassify(lengthSquared) != FP_ZERO);
+        POMDOG_ASSERT(std::fpclassify(lengthSquared) != FP_NAN);
+        POMDOG_ASSERT(std::fpclassify(lengthSquared) != FP_INFINITE);
+        const auto inverseLenSq = 1.0f / lengthSquared;
+        return Quaternion{
+            source.X * -inverseLenSq,
+            source.Y * -inverseLenSq,
+            source.Z * -inverseLenSq,
+            source.W * inverseLenSq,
+        };
+    }
+
+    // FIXME: Add error handling
+    return source;
+}
+
+[[nodiscard]] Vector3
+Rotate(const Quaternion& quaternion, const Vector3& vector)
+{
+    const auto xyz = Vector3{quaternion.X, quaternion.Y, quaternion.Z};
+    const auto t = 2.0f * Vector3::Cross(xyz, vector);
+    return vector + quaternion.W * t + Vector3::Cross(xyz, t);
+}
+
+} // namespace pomdog::math
