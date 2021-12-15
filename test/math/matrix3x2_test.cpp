@@ -6,6 +6,7 @@
 #include "pomdog/math/vector3.hpp"
 #include <catch_amalgamated.hpp>
 
+using namespace pomdog;
 using pomdog::Matrix3x2;
 using pomdog::Vector2;
 
@@ -45,14 +46,14 @@ TEST_CASE("Matrix3x2", "[Matrix3x2]")
     }
     SECTION("Identity")
     {
-        REQUIRE(1.0f == Matrix3x2::Identity(0, 0));
-        REQUIRE(0.0f == Matrix3x2::Identity(0, 1));
-        REQUIRE(0.0f == Matrix3x2::Identity(1, 0));
-        REQUIRE(1.0f == Matrix3x2::Identity(1, 1));
-        REQUIRE(0.0f == Matrix3x2::Identity(2, 0));
-        REQUIRE(0.0f == Matrix3x2::Identity(2, 1));
+        REQUIRE(1.0f == Matrix3x2::Identity()(0, 0));
+        REQUIRE(0.0f == Matrix3x2::Identity()(0, 1));
+        REQUIRE(0.0f == Matrix3x2::Identity()(1, 0));
+        REQUIRE(1.0f == Matrix3x2::Identity()(1, 1));
+        REQUIRE(0.0f == Matrix3x2::Identity()(2, 0));
+        REQUIRE(0.0f == Matrix3x2::Identity()(2, 1));
 
-        Matrix3x2 matrix = Matrix3x2::Identity;
+        Matrix3x2 matrix = Matrix3x2::Identity();
         REQUIRE(1.0f == matrix(0, 0));
         REQUIRE(0.0f == matrix(0, 1));
         REQUIRE(0.0f == matrix(1, 0));
@@ -90,29 +91,29 @@ TEST_CASE("Matrix3x2", "[Matrix3x2]")
     {
         REQUIRE(
             Matrix3x2(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f) ==
-            Matrix3x2::Multiply(Matrix3x2::Identity, 0.0f));
+            math::Multiply(Matrix3x2::Identity(), 0.0f));
         REQUIRE(
-            Matrix3x2::Identity ==
-            Matrix3x2::Multiply(Matrix3x2::Identity, 1.0f));
+            Matrix3x2::Identity() ==
+            math::Multiply(Matrix3x2::Identity(), 1.0f));
         REQUIRE(
             Matrix3x2(4.0f, 0.0f, 0.0f, 4.0f, 0.0f, 0.0f) ==
-            Matrix3x2::Multiply(Matrix3x2::Identity, 4.0f));
+            math::Multiply(Matrix3x2::Identity(), 4.0f));
     }
     SECTION("Multiply_Matrix")
     {
         REQUIRE(
-            Matrix3x2::Identity ==
-            Matrix3x2::Multiply(
-                Matrix3x2::Identity,
-                Matrix3x2::Identity));
+            Matrix3x2::Identity() ==
+            math::Multiply(
+                Matrix3x2::Identity(),
+                Matrix3x2::Identity()));
 
         REQUIRE(
             Matrix3x2(
                 0.0f, 0.0f,
                 0.0f, 0.0f,
                 0.0f, 0.0f) ==
-            Matrix3x2::Multiply(
-                Matrix3x2::Identity,
+            math::Multiply(
+                Matrix3x2::Identity(),
                 Matrix3x2(
                     0.0f, 0.0f,
                     0.0f, 0.0f,
@@ -123,19 +124,19 @@ TEST_CASE("Matrix3x2", "[Matrix3x2]")
                 0.0f, 0.0f,
                 0.0f, 0.0f,
                 0.0f, 0.0f) ==
-            Matrix3x2::Multiply(
+            math::Multiply(
                 Matrix3x2(
                     0.0f, 0.0f,
                     0.0f, 0.0f,
                     0.0f, 0.0f),
-                Matrix3x2::Identity));
+                Matrix3x2::Identity()));
 
         REQUIRE(
             Matrix3x2(
                 46.0f, 41.0f,
                 106.0f, 101.0f,
                 48.0f, 130.0f) ==
-            Matrix3x2::Multiply(
+            math::Multiply(
                 Matrix3x2(
                     3.0f, 4.0f,
                     8.0f, 9.0f,
