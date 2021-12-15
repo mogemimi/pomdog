@@ -18,10 +18,6 @@ class POMDOG_EXPORT Matrix2x2 final {
 public:
     float m[2][2];
 
-private:
-    static constexpr std::size_t RowSize = 2;
-    static constexpr std::size_t ColumnSize = 2;
-
 public:
     // Constructors:
     Matrix2x2() noexcept;
@@ -33,8 +29,8 @@ public:
     Matrix2x2& operator*=(const Matrix2x2& other) noexcept;
     Matrix2x2& operator+=(const Matrix2x2& other) noexcept;
     Matrix2x2& operator-=(const Matrix2x2& other) noexcept;
-    Matrix2x2& operator*=(float scaleFactor) noexcept;
-    Matrix2x2& operator/=(float scaleFactor) noexcept;
+    Matrix2x2& operator*=(float factor) noexcept;
+    Matrix2x2& operator/=(float factor) noexcept;
 
     // Unary operators:
     Matrix2x2 operator+() const noexcept;
@@ -44,8 +40,8 @@ public:
     [[nodiscard]] Matrix2x2 operator+(const Matrix2x2& other) const noexcept;
     [[nodiscard]] Matrix2x2 operator-(const Matrix2x2& other) const noexcept;
     [[nodiscard]] Matrix2x2 operator*(const Matrix2x2& other) const noexcept;
-    [[nodiscard]] Matrix2x2 operator*(float scaleFactor) const noexcept;
-    [[nodiscard]] Matrix2x2 operator/(float scaleFactor) const noexcept;
+    [[nodiscard]] Matrix2x2 operator*(float factor) const noexcept;
+    [[nodiscard]] Matrix2x2 operator/(float factor) const noexcept;
 
     [[nodiscard]] bool operator==(const Matrix2x2& other) const noexcept;
     [[nodiscard]] bool operator!=(const Matrix2x2& other) const noexcept;
@@ -54,24 +50,34 @@ public:
     [[nodiscard]] const float& operator()(std::size_t row, std::size_t column) const noexcept;
     [[nodiscard]] float& operator()(std::size_t row, std::size_t column) noexcept;
 
-    [[nodiscard]] float Determinant() const noexcept;
-
-    [[nodiscard]] static Matrix2x2
-    Multiply(const Matrix2x2& matrix1, const Matrix2x2& matrix2) noexcept;
-
-    [[nodiscard]] static Matrix2x2
-    Multiply(const Matrix2x2& matrix1, float scaleFactor) noexcept;
-
     /// Returns pointer to the first element.
     [[nodiscard]] const float* Data() const noexcept;
 
     /// Returns pointer to the first element.
     [[nodiscard]] float* Data() noexcept;
 
-    static Matrix2x2 const Identity;
+    /// Returns the identity matrix.
+    [[nodiscard]] static Matrix2x2 Identity() noexcept;
 };
 
+/// Multiplies a matrix by a scalar factor.
 [[nodiscard]] Matrix2x2 POMDOG_EXPORT
-operator*(float scaleFactor, const Matrix2x2& matrix) noexcept;
+operator*(float factor, const Matrix2x2& matrix) noexcept;
 
 } // namespace pomdog
+
+namespace pomdog::math {
+
+/// Calculates and returns the determinant of the matrix.
+[[nodiscard]] float POMDOG_EXPORT
+Determinant(const Matrix2x2& matrix) noexcept;
+
+/// Multiplies a matrix by another matrix.
+[[nodiscard]] Matrix2x2 POMDOG_EXPORT
+Multiply(const Matrix2x2& matrix1, const Matrix2x2& matrix2) noexcept;
+
+/// Multiplies a matrix by a scalar factor.
+[[nodiscard]] Matrix2x2 POMDOG_EXPORT
+Multiply(const Matrix2x2& matrix1, float factor) noexcept;
+
+} // namespace pomdog::math

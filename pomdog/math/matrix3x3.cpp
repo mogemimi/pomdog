@@ -261,15 +261,16 @@ Matrix3x3
 Matrix3x3::Adjoint(const Matrix3x3& matrix)
 {
     return {
-        matrix.Minor2x2(0, 0).Determinant(),
-        -matrix.Minor2x2(1, 0).Determinant(),
-        matrix.Minor2x2(2, 0).Determinant(),
-        -matrix.Minor2x2(0, 1).Determinant(),
-        matrix.Minor2x2(1, 1).Determinant(),
-        -matrix.Minor2x2(2, 1).Determinant(),
-        matrix.Minor2x2(0, 2).Determinant(),
-        -matrix.Minor2x2(1, 2).Determinant(),
-        matrix.Minor2x2(2, 2).Determinant()};
+        math::Determinant(matrix.Minor2x2(0, 0)),
+        -math::Determinant(matrix.Minor2x2(1, 0)),
+        math::Determinant(matrix.Minor2x2(2, 0)),
+        -math::Determinant(matrix.Minor2x2(0, 1)),
+        math::Determinant(matrix.Minor2x2(1, 1)),
+        -math::Determinant(matrix.Minor2x2(2, 1)),
+        math::Determinant(matrix.Minor2x2(0, 2)),
+        -math::Determinant(matrix.Minor2x2(1, 2)),
+        math::Determinant(matrix.Minor2x2(2, 2)),
+    };
 }
 
 Matrix3x3 Matrix3x3::Multiply(
