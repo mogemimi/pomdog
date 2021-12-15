@@ -44,14 +44,7 @@ std::uint32_t ColorPackUint(
 
 } // namespace
 
-const Color Color::White{255, 255, 255, 255};
-const Color Color::Black{0, 0, 0, 255};
-const Color Color::Red{255, 0, 0, 255};
-const Color Color::Green{0, 255, 0, 255};
-const Color Color::Blue{0, 0, 255, 255};
-const Color Color::Yellow{255, 255, 0, 255};
-const Color Color::CornflowerBlue{100, 149, 237, 255};
-const Color Color::TransparentBlack{0, 0, 0, 0};
+Color::Color() noexcept = default;
 
 Color::Color(
     std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a) noexcept
@@ -127,7 +120,74 @@ Color Color::FromPackedValue(std::uint32_t packedValue)
     return color;
 }
 
-Color Color::Lerp(const Color& source1, const Color& source2, float amount)
+Color Color::White() noexcept
+{
+    return Color{255, 255, 255, 255};
+}
+
+Color Color::Black() noexcept
+{
+    return Color{0, 0, 0, 255};
+}
+
+Color Color::Red() noexcept
+{
+    return Color{255, 0, 0, 255};
+}
+
+Color Color::Green() noexcept
+{
+    return Color{0, 255, 0, 255};
+}
+
+Color Color::Blue() noexcept
+{
+    return Color{0, 0, 255, 255};
+}
+
+Color Color::Yellow() noexcept
+{
+    return Color{255, 255, 0, 255};
+}
+
+Color Color::CornflowerBlue() noexcept
+{
+    return Color{100, 149, 237, 255};
+}
+
+Color Color::TransparentBlack() noexcept
+{
+    return Color{0, 0, 0, 0};
+}
+
+} // namespace pomdog
+
+namespace pomdog::math {
+
+[[nodiscard]] Color
+Multiply(const Color& color, float factor)
+{
+    Color result;
+    result.R = PackUint8(math::Clamp(color.R * factor, 0.0f, 255.0f));
+    result.G = PackUint8(math::Clamp(color.G * factor, 0.0f, 255.0f));
+    result.B = PackUint8(math::Clamp(color.B * factor, 0.0f, 255.0f));
+    result.A = PackUint8(math::Clamp(color.A * factor, 0.0f, 255.0f));
+    return result;
+}
+
+[[nodiscard]] Color
+Multiply(const Color& color1, const Color& color2)
+{
+    Color result;
+    result.R = PackUint8(math::Clamp((static_cast<float>(color1.R) / 255.0f) * static_cast<float>(color2.R), 0.0f, 255.0f));
+    result.G = PackUint8(math::Clamp((static_cast<float>(color1.G) / 255.0f) * static_cast<float>(color2.G), 0.0f, 255.0f));
+    result.B = PackUint8(math::Clamp((static_cast<float>(color1.B) / 255.0f) * static_cast<float>(color2.B), 0.0f, 255.0f));
+    result.A = PackUint8(math::Clamp((static_cast<float>(color1.A) / 255.0f) * static_cast<float>(color2.A), 0.0f, 255.0f));
+    return result;
+}
+
+[[nodiscard]] Color
+Lerp(const Color& source1, const Color& source2, float amount)
 {
     Color color;
     color.R = PackUint8(source1.R + amount * (source2.R - source1.R));
@@ -137,34 +197,15 @@ Color Color::Lerp(const Color& source1, const Color& source2, float amount)
     return color;
 }
 
-Color Color::SmoothStep(const Color& source1, const Color& source2, float amount)
+[[nodiscard]] Color
+SmoothStep(const Color& source1, const Color& source2, float amount)
 {
     Color color;
-    color.R = PackUint8(math::SmoothStep<float>(source1.R, source2.R, amount));
-    color.G = PackUint8(math::SmoothStep<float>(source1.G, source2.G, amount));
-    color.B = PackUint8(math::SmoothStep<float>(source1.B, source2.B, amount));
-    color.A = PackUint8(math::SmoothStep<float>(source1.A, source2.A, amount));
+    color.R = PackUint8(math::SmoothStep(static_cast<float>(source1.R), static_cast<float>(source2.R), amount));
+    color.G = PackUint8(math::SmoothStep(static_cast<float>(source1.G), static_cast<float>(source2.G), amount));
+    color.B = PackUint8(math::SmoothStep(static_cast<float>(source1.B), static_cast<float>(source2.B), amount));
+    color.A = PackUint8(math::SmoothStep(static_cast<float>(source1.A), static_cast<float>(source2.A), amount));
     return color;
 }
 
-Color Color::Multiply(const Color& color, float scale)
-{
-    Color result;
-    result.R = PackUint8(math::Clamp(color.R * scale, 0.0f, 255.0f));
-    result.G = PackUint8(math::Clamp(color.G * scale, 0.0f, 255.0f));
-    result.B = PackUint8(math::Clamp(color.B * scale, 0.0f, 255.0f));
-    result.A = PackUint8(math::Clamp(color.A * scale, 0.0f, 255.0f));
-    return result;
-}
-
-Color Color::Multiply(const Color& color1, const Color& color2)
-{
-    Color result;
-    result.R = PackUint8(math::Clamp((color1.R / 255.0f) * color2.R, 0.0f, 255.0f));
-    result.G = PackUint8(math::Clamp((color1.G / 255.0f) * color2.G, 0.0f, 255.0f));
-    result.B = PackUint8(math::Clamp((color1.B / 255.0f) * color2.B, 0.0f, 255.0f));
-    result.A = PackUint8(math::Clamp((color1.A / 255.0f) * color2.A, 0.0f, 255.0f));
-    return result;
-}
-
-} // namespace pomdog
+} // namespace pomdog::math

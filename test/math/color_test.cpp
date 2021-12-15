@@ -5,6 +5,7 @@
 #include "pomdog/math/vector4.hpp"
 #include <catch_amalgamated.hpp>
 
+using namespace pomdog;
 using pomdog::Color;
 using pomdog::Vector3;
 using pomdog::Vector4;
@@ -33,14 +34,14 @@ TEST_CASE("Color", "[Color]")
     }
     SECTION("Constants")
     {
-        REQUIRE(Color::Black == Color{0, 0, 0, 255});
-        REQUIRE(Color::White == Color{255, 255, 255, 255});
-        REQUIRE(Color::Red == Color{255, 0, 0, 255});
-        REQUIRE(Color::Green == Color{0, 255, 0, 255});
-        REQUIRE(Color::Blue == Color{0, 0, 255, 255});
-        REQUIRE(Color::Yellow == Color{255, 255, 0, 255});
-        REQUIRE(Color::TransparentBlack == Color{0, 0, 0, 0});
-        REQUIRE(Color::CornflowerBlue == Color{100, 149, 237, 255});
+        REQUIRE(Color::Black() == Color{0, 0, 0, 255});
+        REQUIRE(Color::White() == Color{255, 255, 255, 255});
+        REQUIRE(Color::Red() == Color{255, 0, 0, 255});
+        REQUIRE(Color::Green() == Color{0, 255, 0, 255});
+        REQUIRE(Color::Blue() == Color{0, 0, 255, 255});
+        REQUIRE(Color::Yellow() == Color{255, 255, 0, 255});
+        REQUIRE(Color::TransparentBlack() == Color{0, 0, 0, 0});
+        REQUIRE(Color::CornflowerBlue() == Color{100, 149, 237, 255});
     }
     SECTION("ToVector")
     {
@@ -97,13 +98,13 @@ TEST_CASE("Color", "[Color]")
     }
     SECTION("Multiply")
     {
-        REQUIRE(Color{255, 255, 255, 255} == Color::Multiply(Color::White, 2.0f));
-        REQUIRE(Color{255, 255, 255, 255} == Color::Multiply(Color::White, 1.0f));
-        REQUIRE(Color{128, 128, 128, 128} == Color::Multiply(Color::White, 0.5f));
-        REQUIRE(Color{64, 64, 64, 64} == Color::Multiply(Color::White, 0.25f));
-        REQUIRE(Color{0, 0, 0, 0} == Color::Multiply(Color::White, 0.0f));
-        REQUIRE(Color{0, 0, 0, 0} == Color::Multiply(Color::TransparentBlack, 2.0f));
-        REQUIRE(Color{0, 0, 0, 0} == Color::Multiply(Color::TransparentBlack, 1.0f));
-        REQUIRE(Color{0, 0, 0, 0} == Color::Multiply(Color::TransparentBlack, 0.0f));
+        REQUIRE(Color{255, 255, 255, 255} == math::Multiply(Color::White(), 2.0f));
+        REQUIRE(Color{255, 255, 255, 255} == math::Multiply(Color::White(), 1.0f));
+        REQUIRE(Color{128, 128, 128, 128} == math::Multiply(Color::White(), 0.5f));
+        REQUIRE(Color{64, 64, 64, 64} == math::Multiply(Color::White(), 0.25f));
+        REQUIRE(Color{0, 0, 0, 0} == math::Multiply(Color::White(), 0.0f));
+        REQUIRE(Color{0, 0, 0, 0} == math::Multiply(Color::TransparentBlack(), 2.0f));
+        REQUIRE(Color{0, 0, 0, 0} == math::Multiply(Color::TransparentBlack(), 1.0f));
+        REQUIRE(Color{0, 0, 0, 0} == math::Multiply(Color::TransparentBlack(), 0.0f));
     }
 }

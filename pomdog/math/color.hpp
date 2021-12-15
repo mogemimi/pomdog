@@ -15,10 +15,13 @@ namespace pomdog {
 /// Color describes a 32-bit packed RGBA color.
 class POMDOG_EXPORT Color final {
 public:
-    std::uint8_t R, G, B, A;
+    std::uint8_t R;
+    std::uint8_t G;
+    std::uint8_t B;
+    std::uint8_t A;
 
 public:
-    Color() noexcept = default;
+    Color() noexcept;
 
     /// Constructs from unsigned integer values.
     Color(std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a) noexcept;
@@ -38,41 +41,49 @@ public:
     [[nodiscard]] static Color
     FromPackedValue(std::uint32_t packedValue);
 
-    [[nodiscard]] static Color
-    Lerp(const Color& source1, const Color& source2, float amount);
+    /// Returns the Color (255, 255, 255, 255).
+    [[nodiscard]] static Color White() noexcept;
 
-    [[nodiscard]] static Color
-    SmoothStep(const Color& source1, const Color& source2, float amount);
+    /// Returns the Color (0, 0, 0, 255).
+    [[nodiscard]] static Color Black() noexcept;
 
-    [[nodiscard]] static Color
-    Multiply(const Color& color, float scale);
+    /// Returns the Color (255, 0, 0, 255).
+    [[nodiscard]] static Color Red() noexcept;
 
-    [[nodiscard]] static Color
-    Multiply(const Color& source1, const Color& source2);
+    /// Returns the Color (0, 255, 0, 255).
+    [[nodiscard]] static Color Green() noexcept;
 
-    ///@note (R, G, B, A) = (255, 255, 255, 255)
-    static const Color White;
+    /// Returns the Color (0, 0, 255, 255).
+    [[nodiscard]] static Color Blue() noexcept;
 
-    ///@note (R, G, B, A) = (0, 0, 0, 255)
-    static const Color Black;
+    /// Returns the Color (255, 255, 0, 255).
+    [[nodiscard]] static Color Yellow() noexcept;
 
-    ///@note (R, G, B, A) = (255, 0, 0, 255)
-    static const Color Red;
+    /// Returns the Color (100, 149 ,237, 255).
+    [[nodiscard]] static Color CornflowerBlue() noexcept;
 
-    ///@note (R, G, B, A) = (0, 255, 0, 255)
-    static const Color Green;
-
-    ///@note (R, G, B, A) = (0, 0, 255, 255)
-    static const Color Blue;
-
-    ///@note (R, G, B, A) = (255, 255, 0, 255)
-    static const Color Yellow;
-
-    ///@note (R, G, B, A) = (100, 149 ,237, 255)
-    static const Color CornflowerBlue;
-
-    ///@note (R, G, B, A) = (0, 0, 0, 0)
-    static const Color TransparentBlack;
+    /// Returns the Color (0, 0, 0, 0).
+    [[nodiscard]] static Color TransparentBlack() noexcept;
 };
 
 } // namespace pomdog
+
+namespace pomdog::math {
+
+/// Multiplies a color by a scalar factor.
+[[nodiscard]] Color POMDOG_EXPORT
+Multiply(const Color& color, float factor);
+
+/// Multiplies a color by another color.
+[[nodiscard]] Color POMDOG_EXPORT
+Multiply(const Color& source1, const Color& source2);
+
+/// Performs a linear interpolation between two colors.
+[[nodiscard]] Color POMDOG_EXPORT
+Lerp(const Color& source1, const Color& source2, float amount);
+
+/// Performs Hermite interpolation between two colors.
+[[nodiscard]] Color POMDOG_EXPORT
+SmoothStep(const Color& source1, const Color& source2, float amount);
+
+} // namespace pomdog::math
