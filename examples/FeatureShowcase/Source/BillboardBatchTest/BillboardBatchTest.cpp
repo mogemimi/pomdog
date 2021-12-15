@@ -96,11 +96,11 @@ void BillboardBatchTest::Draw()
     const auto totalTime = static_cast<float>(timer->GetTotalTime().count());
     const auto lookAtPosition = Vector3{0.0f, 0.0f, 5.0f};
     const auto rotation = Matrix4x4::CreateRotationY(math::TwoPi<float> * totalTime);
-    const auto cameraPosition = lookAtPosition + Vector3::Transform(Vector3{0.0f, 6.0f, -8.0f}, rotation);
-    const auto viewMatrix = Matrix4x4::CreateLookAtLH(cameraPosition, lookAtPosition, Vector3::UnitY);
+    const auto cameraPosition = lookAtPosition + math::Transform(Vector3{0.0f, 6.0f, -8.0f}, rotation);
+    const auto viewMatrix = Matrix4x4::CreateLookAtLH(cameraPosition, lookAtPosition, Vector3::UnitY());
     const auto viewProjection = viewMatrix * projectionMatrix;
 
-    const auto lightDirection = Vector3::Normalize(Vector3{-0.5f, -1.0f, 0.5f});
+    const auto lightDirection = math::Normalize(Vector3{-0.5f, -1.0f, 0.5f});
 
     // NOTE: Update constant buffer for world
     BasicEffect::WorldConstantBuffer constants;

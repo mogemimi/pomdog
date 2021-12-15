@@ -67,7 +67,7 @@ void VoxelModelTest::Draw()
         -100.0f,
         100.0f);
 
-    auto viewMatrix = Matrix4x4::CreateLookAtLH(Vector3::Zero, Vector3{2.0f, -3.0f, -10.0f}, Vector3::UnitY);
+    auto viewMatrix = Matrix4x4::CreateLookAtLH(Vector3::Zero(), Vector3{2.0f, -3.0f, -10.0f}, Vector3::UnitY());
     auto rotateX = Matrix4x4::CreateRotationX(math::PiOver2<float> * 3.0f);
     auto rotateY = Matrix4x4::CreateRotationY(math::TwoPi<float> * rotateSpeed * static_cast<float>(gameHost->GetClock()->GetTotalGameTime().count()));
 

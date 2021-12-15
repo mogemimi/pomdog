@@ -260,8 +260,8 @@ void PolygonShapeBuilder::DrawLine(
     auto vec = end - start;
     std::swap(vec.X, vec.Y);
 
-    auto a = Vector2::Normalize(vec * Vector2{1, -1}) * halfWeight;
-    auto b = Vector2::Normalize(vec * Vector2{-1, 1}) * halfWeight;
+    auto a = math::Normalize(vec * Vector2{1, -1}) * halfWeight;
+    auto b = math::Normalize(vec * Vector2{-1, 1}) * halfWeight;
 
     Vector3 p1 = Vector3{start + a, 0.0f};
     Vector3 p2 = Vector3{start + b, 0.0f};
@@ -296,8 +296,8 @@ void PolygonShapeBuilder::DrawPolyline(
         auto vec = end - start;
         std::swap(vec.X, vec.Y);
 
-        auto a = Vector2::Normalize(vec * Vector2{1, -1}) * halfThickness;
-        auto b = Vector2::Normalize(vec * Vector2{-1, 1}) * halfThickness;
+        auto a = math::Normalize(vec * Vector2{1, -1}) * halfThickness;
+        auto b = math::Normalize(vec * Vector2{-1, 1}) * halfThickness;
 
         Vector3 p1 = Vector3{start + a, 0.0f};
         Vector3 p2 = Vector3{start + b, 0.0f};
@@ -382,7 +382,7 @@ void PolygonShapeBuilder::DrawRectangle(
     }};
 
     for (auto& vertex : rectVertices) {
-        auto vec2 = Vector2::Transform(Vector2{vertex.X, vertex.Y}, matrix);
+        auto vec2 = math::Transform(Vector2{vertex.X, vertex.Y}, matrix);
         vertex.X = vec2.X;
         vertex.Y = vec2.Y;
     }

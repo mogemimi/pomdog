@@ -56,7 +56,7 @@ std::unique_ptr<Error> ParticleClipLoaderTest::Initialize()
         particleSystem->Play();
     }
 
-    emitterPosition = Vector2::Zero;
+    emitterPosition = Vector2::Zero();
 
     auto mouse = gameHost->GetMouse();
     auto onMoved = [this](const Point2D& mousePos) {

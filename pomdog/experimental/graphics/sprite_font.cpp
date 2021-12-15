@@ -125,7 +125,7 @@ SpriteFont::Impl::Impl(
 template <typename Func>
 void SpriteFont::Impl::ForEach(const std::string& text, Func func)
 {
-    Vector2 position = Vector2::Zero;
+    auto position = Vector2::Zero();
 
     auto textIter = std::begin(text);
     const auto textEnd = std::end(text);
@@ -255,11 +255,11 @@ Vector2 SpriteFont::Impl::MeasureString(const std::string& text)
 {
     POMDOG_ASSERT(!text.empty());
 
-    Vector2 result = Vector2::Zero;
+    auto result = Vector2::Zero();
 
     ForEach(text, [&](const FontGlyph& glyph, const Vector2& postion) {
         if (glyph.Character == U'\n') {
-            result = Vector2::Max(result, postion + Vector2{0.0f, lineSpacing});
+            result = math::Max(result, postion + Vector2{0.0f, lineSpacing});
             return;
         }
         float w = static_cast<float>(glyph.Subrect.Width);
@@ -271,7 +271,7 @@ Vector2 SpriteFont::Impl::MeasureString(const std::string& text)
             w += (static_cast<float>(advance) - spacing);
         }
 
-        result = Vector2::Max(result, postion + Vector2{w, h});
+        result = math::Max(result, postion + Vector2{w, h});
     });
 
     return result;
@@ -364,7 +364,7 @@ Vector2 SpriteFont::MeasureString(const std::string& utf8String) const
 {
     POMDOG_ASSERT(impl);
     if (utf8String.empty()) {
-        return Vector2::Zero;
+        return Vector2::Zero();
     }
     return impl->MeasureString(utf8String);
 }

@@ -37,7 +37,7 @@ template <>
 struct ParticleCurveLerp<Vector3> final {
     Vector3 operator()(const Vector3& a, const Vector3& b, float amount)
     {
-        return Vector3::Lerp(a, b, amount);
+        return math::Lerp(a, b, amount);
     }
 };
 

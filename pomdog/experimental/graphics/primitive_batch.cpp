@@ -322,8 +322,8 @@ void PrimitiveBatch::DrawLine(
     float weight)
 {
     POMDOG_ASSERT(impl);
-    auto transformedStart = Vector2::Transform(start, matrix);
-    auto transformedEnd = Vector2::Transform(end, matrix);
+    auto transformedStart = math::Transform(start, matrix);
+    auto transformedEnd = math::Transform(end, matrix);
     impl->polygonShapes.DrawLine(transformedStart, transformedEnd, color, weight);
 }
 

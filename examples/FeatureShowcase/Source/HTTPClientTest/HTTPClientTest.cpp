@@ -92,7 +92,7 @@ void HTTPClientTest::Draw()
 
     spriteBatch->Begin(commandList, projectionMatrix);
     spriteFont->Draw(*spriteBatch, requestURL, Vector2{-200, 120}, Color::Black, 0.0f, Vector2{0.0f, 0.5f}, 1.0f);
-    spriteFont->Draw(*spriteBatch, webText, Vector2::Zero, Color::White, 0.0f, Vector2{0.5f, 0.5f}, 1.0f);
+    spriteFont->Draw(*spriteBatch, webText, Vector2::Zero(), Color::White, 0.0f, Vector2{0.5f, 0.5f}, 1.0f);
 
     spriteBatch->End();
 

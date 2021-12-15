@@ -77,7 +77,7 @@ std::unique_ptr<Error> Beam2DTest::Initialize()
 
 void Beam2DTest::Update()
 {
-    const auto emitterPosition = Vector2::Zero;
+    const auto emitterPosition = Vector2::Zero();
     const auto clock = gameHost->GetClock();
     const auto frameDuration = clock->GetFrameDuration();
     beamSystem->Update(frameDuration, emitterPosition, emitterTarget);

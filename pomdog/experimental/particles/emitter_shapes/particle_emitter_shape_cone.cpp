@@ -36,7 +36,7 @@ ParticleEmitterShapeCone::Compute(random::Xoroshiro128StarStar& random) const
     std::uniform_real_distribution<float> dist(-r, r);
 
     auto emitPosition = Vector3{dist(random), y, dist(random)};
-    auto emitDirection = Vector3::Normalize(emitPosition);
+    auto emitDirection = math::Normalize(emitPosition);
     return std::make_tuple(std::move(emitPosition), std::move(emitDirection));
 }
 

@@ -29,7 +29,7 @@ std::unique_ptr<Error> LineBatchTest::Initialize()
     timer->SetInterval(std::chrono::seconds(1));
     timer->SetScale(0.1);
 
-    path.push_back(Vector2::Zero);
+    path.push_back(Vector2::Zero());
 
     auto mouse = gameHost->GetMouse();
     connect(mouse->ButtonDown, [this](MouseButtons button) {
@@ -42,7 +42,7 @@ std::unique_ptr<Error> LineBatchTest::Initialize()
         }
         if (button == MouseButtons::Right) {
             path.clear();
-            path.push_back(Vector2::Zero);
+            path.push_back(Vector2::Zero());
         }
     });
 
@@ -86,7 +86,7 @@ void LineBatchTest::Draw()
             500.0f);
 
         lineBatch2->Begin(commandList, world * view * projectionMatrix);
-        lineBatch2->DrawSphere(Vector3::Zero, 100.0f, Color::Blue, 16);
+        lineBatch2->DrawSphere(Vector3::Zero(), 100.0f, Color::Blue, 16);
         lineBatch2->End();
     }
 

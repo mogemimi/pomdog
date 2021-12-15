@@ -260,7 +260,7 @@ void LineBatch::End()
 
 void LineBatch::DrawBox(const BoundingBox& box, const Color& color)
 {
-    this->DrawBox(box.Min, box.Max - box.Min, Vector3::Zero, color);
+    this->DrawBox(box.Min, box.Max - box.Min, Vector3::Zero(), color);
 }
 
 void LineBatch::DrawBox(
@@ -268,7 +268,7 @@ void LineBatch::DrawBox(
     const Vector3& scale,
     const Color& color)
 {
-    this->DrawBox(position, scale, Vector3::Zero, color);
+    this->DrawBox(position, scale, Vector3::Zero(), color);
 }
 
 void LineBatch::DrawBox(
@@ -425,7 +425,7 @@ void LineBatch::DrawRectangle(const Matrix3x2& matrix,
     }};
 
     for (auto& vertex : rectVertices) {
-        vertex = Vector2::Transform(vertex, matrix);
+        vertex = math::Transform(vertex, matrix);
     }
 
     auto colorVector = color.ToVector4();

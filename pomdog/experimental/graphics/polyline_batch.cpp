@@ -303,7 +303,7 @@ void PolylineBatch::Impl::DrawPath(std::vector<PolylineBatchVertex>&& path, bool
                 prevPoint = start;
                 nextPoint = end;
 
-                if (Vector3::DistanceSquared(v.Position, nextPoint) < 0.0001f) {
+                if (math::DistanceSquared(v.Position, nextPoint) < 0.0001f) {
                     auto dir = v.Position - start;
                     nextPoint = v.Position + dir;
                 }
@@ -326,7 +326,7 @@ void PolylineBatch::Impl::DrawPath(std::vector<PolylineBatchVertex>&& path, bool
                 prevPoint = start;
                 nextPoint = end;
 
-                if (Vector3::DistanceSquared(v.Position, nextPoint) < 0.0001f) {
+                if (math::DistanceSquared(v.Position, nextPoint) < 0.0001f) {
                     auto dir = v.Position - start;
                     nextPoint = v.Position + dir;
                 }
@@ -347,7 +347,7 @@ void PolylineBatch::Impl::DrawPath(std::vector<PolylineBatchVertex>&& path, bool
             prevPoint = start;
             nextPoint = end;
 
-            if (Vector3::DistanceSquared(v.Position, nextPoint) < 0.0001f) {
+            if (math::DistanceSquared(v.Position, nextPoint) < 0.0001f) {
                 auto dir = v.Position - start;
                 nextPoint = v.Position + dir;
             }
@@ -356,9 +356,9 @@ void PolylineBatch::Impl::DrawPath(std::vector<PolylineBatchVertex>&& path, bool
         if (i < (n - 1) || closed) {
             // NOTE: shape corner
             constexpr float cutoff = -0.90f;
-            const auto v1 = Vector3::Normalize(v.Position - prevPoint);
-            const auto v2 = Vector3::Normalize(nextPoint - v.Position);
-            if (Vector3::Dot(v2, v1) < cutoff) {
+            const auto v1 = math::Normalize(v.Position - prevPoint);
+            const auto v2 = math::Normalize(nextPoint - v.Position);
+            if (math::Dot(v2, v1) < cutoff) {
                 const auto next = v.Position + v1;
                 vertices.push_back(MakeVertex(v.Position, next, prevPoint, color, -1.0f, thickness));
                 vertices.push_back(MakeVertex(v.Position, next, prevPoint, color, 1.0f, thickness));
@@ -451,7 +451,7 @@ void PolylineBatch::DrawPath(const std::vector<Vector2>& path, bool closed, cons
 
 void PolylineBatch::DrawBox(const BoundingBox& box, const Color& color, float thickness)
 {
-    this->DrawBox(box.Min, box.Max - box.Min, Vector3::Zero, color, thickness);
+    this->DrawBox(box.Min, box.Max - box.Min, Vector3::Zero(), color, thickness);
 }
 
 void PolylineBatch::DrawBox(
@@ -460,7 +460,7 @@ void PolylineBatch::DrawBox(
     const Color& color,
     float thickness)
 {
-    this->DrawBox(position, scale, Vector3::Zero, color, thickness);
+    this->DrawBox(position, scale, Vector3::Zero(), color, thickness);
 }
 
 void PolylineBatch::DrawBox(
@@ -612,7 +612,7 @@ void PolylineBatch::DrawRectangle(const Matrix3x2& matrix,
     }};
 
     for (auto& vertex : rectVertices) {
-        vertex = Vector2::Transform(vertex, matrix);
+        vertex = math::Transform(vertex, matrix);
     }
 
     this->DrawLine(rectVertices[0], rectVertices[1], color, color, thickness);

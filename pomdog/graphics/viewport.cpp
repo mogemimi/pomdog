@@ -49,7 +49,7 @@ Vector3 Viewport::Project(
     const Vector3& source,
     const Matrix4x4& worldViewProjection) const
 {
-    auto result = Vector3::Transform(source, worldViewProjection);
+    auto result = math::Transform(source, worldViewProjection);
     auto divisor = source.X * worldViewProjection(0, 3) +
                    source.Y * worldViewProjection(1, 3) +
                    source.Z * worldViewProjection(2, 3) +
@@ -79,7 +79,7 @@ Vector3 Viewport::Unproject(
     vec.Z = (source.Z - MinDepth) / (MaxDepth - MinDepth);
 
     Matrix4x4 invertWVP = Matrix4x4::Invert(worldViewProjection);
-    auto result = Vector3::Transform(vec, invertWVP);
+    auto result = math::Transform(vec, invertWVP);
     auto divisor = vec.X * invertWVP(0, 3) +
                    vec.Y * invertWVP(1, 3) +
                    vec.Z * invertWVP(2, 3) +

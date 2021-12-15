@@ -59,7 +59,7 @@ void PolylineDrawingTest::Update()
             path.push_back(pos);
             path.push_back(pos);
         }
-        else if (Vector2::DistanceSquared(pos, path[path.size() - 2]) > 10.0f) {
+        else if (math::DistanceSquared(pos, path[path.size() - 2]) > 10.0f) {
             path.back() = pos;
             path.push_back(pos);
         }

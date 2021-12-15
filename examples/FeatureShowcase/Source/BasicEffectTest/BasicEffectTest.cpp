@@ -238,9 +238,9 @@ void BasicEffectTest::Update()
 
     auto cameraPosition = Vector3{0.0f, 6.0f, 0.0f};
     auto cameraDirection = Vector3{0.0f, -1.0f, 1.0f};
-    auto viewMatrix = Matrix4x4::CreateLookAtLH(cameraPosition, cameraPosition + cameraDirection, Vector3::UnitY);
+    auto viewMatrix = Matrix4x4::CreateLookAtLH(cameraPosition, cameraPosition + cameraDirection, Vector3::UnitY());
 
-    auto lightDirection = Vector3::Normalize(Vector3{-0.5f, -1.0f, 0.5f});
+    auto lightDirection = math::Normalize(Vector3{-0.5f, -1.0f, 0.5f});
 
     // NOTE: Update constant buffer for world
     BasicEffect::WorldConstantBuffer worldConstants;

@@ -229,7 +229,7 @@ void Skinning2DTest::Update()
     BasicEffect::WorldConstantBuffer worldConstants;
     worldConstants.ViewProjection = viewMatrix * projectionMatrix;
     worldConstants.InverseView = Matrix4x4::Invert(viewMatrix);
-    worldConstants.LightDirection = Vector4{Vector3::UnitZ, 0.0f};
+    worldConstants.LightDirection = Vector4{Vector3::UnitZ(), 0.0f};
     worldConstantBuffer->SetValue(worldConstants);
 
     constexpr float metalness = 0.1f;
@@ -264,7 +264,7 @@ void Skinning2DTest::Update()
 #endif
 
         auto skinPos = Vector2{skinVertex.PositionTextureCoord.X, skinVertex.PositionTextureCoord.Y};
-        auto position = Vector2::Transform(skinPos, skinning);
+        auto position = math::Transform(skinPos, skinning);
 
         Vertex vertex;
         vertex.Position = Vector3{position.X, position.Y, 0.0f};

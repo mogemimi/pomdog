@@ -223,7 +223,7 @@ void Skeletal2DTest::Update()
     BasicEffect::WorldConstantBuffer worldConstants;
     worldConstants.ViewProjection = viewMatrix * projectionMatrix;
     worldConstants.InverseView = Matrix4x4::Invert(viewMatrix);
-    worldConstants.LightDirection = Vector4{Vector3::UnitZ, 0.0f};
+    worldConstants.LightDirection = Vector4{Vector3::UnitZ(), 0.0f};
     worldConstantBuffer->SetValue(worldConstants);
 
     constexpr float metalness = 0.1f;
@@ -277,7 +277,7 @@ void Skeletal2DTest::Update()
 
         for (const auto& v : quadVertices) {
             auto pos = Vector2{v.Position.X, v.Position.Y};
-            pos = Vector2::Transform(pos - slot.Origin, transformMatrix);
+            pos = math::Transform(pos - slot.Origin, transformMatrix);
 
             auto vertex = v;
             vertex.Position = Vector3{pos, layerDepth};

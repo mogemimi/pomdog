@@ -24,7 +24,7 @@ ParticleEmitterShapeHemisphere::Compute(random::Xoroshiro128StarStar& random) co
     std::uniform_real_distribution<float> distY(0.0f, radius);
 
     auto emitPosition = Vector3{dist(random), distY(random), dist(random)};
-    auto emitDirection = Vector3::Normalize(emitPosition);
+    auto emitDirection = math::Normalize(emitPosition);
     return std::make_tuple(std::move(emitPosition), std::move(emitDirection));
 }
 

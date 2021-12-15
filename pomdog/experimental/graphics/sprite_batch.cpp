@@ -62,7 +62,7 @@ namespace {
 Vector2 ComputeSpriteOffset(const TextureRegion& region, const Vector2& originPivot) noexcept
 {
     if ((region.Subrect.Width <= 0) || (region.Subrect.Height <= 0)) {
-        return Vector2::Zero;
+        return Vector2::Zero();
     }
 
     POMDOG_ASSERT(region.Subrect.Width > 0);

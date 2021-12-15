@@ -232,9 +232,9 @@ void PongGame::Update()
 {
     switch (pongScene) {
     case PongScenes::StartWaiting: {
-        ball.Position = Vector2::Zero;
-        ball.PositionOld = Vector2::Zero;
-        ball.Velocity = Vector2::Zero;
+        ball.Position = Vector2::Zero();
+        ball.PositionOld = Vector2::Zero();
+        ball.Velocity = Vector2::Zero();
 
         auto keyboard = gameHost->GetKeyboard();
         startButtonConn = keyboard->KeyDown.Connect([this](Keys key) {
@@ -260,9 +260,7 @@ void PongGame::Update()
         std::uniform_real_distribution<float> distribution(0.7f, 1.0f);
         static bool flipflop = false;
         flipflop = !flipflop;
-        ball.Velocity = Vector2::Normalize(Vector2{
-                            (flipflop ? -1.0f : 1.0f), distribution(random)}) *
-                        speed;
+        ball.Velocity = math::Normalize(Vector2{(flipflop ? -1.0f : 1.0f), distribution(random)}) * speed;
 
         soundEffect2->Stop();
         soundEffect2->Play();
@@ -400,7 +398,7 @@ void PongGame::Draw()
 
     // NOTE: Draw sprites and fonts
     spriteBatch->Begin(commandList, Matrix4x4::CreateScale(0.002f) * viewProjection);
-    spriteFont->Draw(*spriteBatch, "", Vector2::Zero, Color::White, 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
+    spriteFont->Draw(*spriteBatch, "", Vector2::Zero(), Color::White, 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
     {
         // Header Text
         spriteFont->Draw(

@@ -19,11 +19,11 @@ Ray ScreenPointToRay(
     if (isOrthoProjection) {
         const auto cameraPositionInScreen = Vector3{math::ToVector2(screenPoint), -1.0f};
         const auto cameraPositionInWorld = viewport.Unproject(cameraPositionInScreen, viewProjection);
-        Ray ray = {cameraPositionInWorld, Vector3::Normalize(worldPoint - cameraPositionInWorld)};
+        Ray ray = {cameraPositionInWorld, math::Normalize(worldPoint - cameraPositionInWorld)};
         return ray;
     }
 
-    Ray ray = {cameraPosition, Vector3::Normalize(worldPoint - cameraPosition)};
+    Ray ray = {cameraPosition, math::Normalize(worldPoint - cameraPosition)};
     return ray;
 }
 
@@ -99,7 +99,7 @@ std::unique_ptr<Error> Particle3DTest::Initialize()
         particleSystem->Play();
     }
 
-    emitterPosition = Vector3::Zero;
+    emitterPosition = Vector3::Zero();
 
     auto mouse = gameHost->GetMouse();
     auto onClipChanged = [this] {
@@ -141,7 +141,7 @@ void Particle3DTest::Update()
 {
     auto clock = gameHost->GetClock();
     auto frameDuration = clock->GetFrameDuration();
-    particleSystem->Simulate(emitterPosition, Quaternion::CreateFromAxisAngle(Vector3::UnitY, 0.0f), frameDuration);
+    particleSystem->Simulate(emitterPosition, Quaternion::CreateFromAxisAngle(Vector3::UnitY(), 0.0f), frameDuration);
 }
 
 void Particle3DTest::Draw()
@@ -169,11 +169,11 @@ void Particle3DTest::Draw()
     const auto totalTime = static_cast<float>(timer->GetTotalTime().count());
     const auto lookAtPosition = Vector3{0.0f, 0.0f, 5.0f};
     const auto rotation = Matrix4x4::CreateRotationY(math::TwoPi<float> * totalTime);
-    const auto cameraPosition = lookAtPosition + Vector3::Transform(Vector3{0.0f, 6.0f, -8.0f}, rotation);
-    const auto viewMatrix = Matrix4x4::CreateLookAtLH(cameraPosition, lookAtPosition, Vector3::UnitY);
+    const auto cameraPosition = lookAtPosition + math::Transform(Vector3{0.0f, 6.0f, -8.0f}, rotation);
+    const auto viewMatrix = Matrix4x4::CreateLookAtLH(cameraPosition, lookAtPosition, Vector3::UnitY());
     const auto viewProjection = viewMatrix * projectionMatrix;
 
-    const auto lightDirection = Vector3::Normalize(Vector3{-0.5f, -1.0f, 0.5f});
+    const auto lightDirection = math::Normalize(Vector3{-0.5f, -1.0f, 0.5f});
 
     const auto mouseState = gameHost->GetMouse()->GetState();
     if (mouseState.LeftButton == ButtonState::Pressed) {
@@ -183,7 +183,7 @@ void Particle3DTest::Draw()
             viewport,
             viewProjection,
             false);
-        auto plane = Plane::CreateFromPointNormal(Vector3::Zero, Vector3::UnitY);
+        auto plane = Plane::CreateFromPointNormal(Vector3::Zero(), Vector3::UnitY());
         auto rayIntersection = ray.Intersects(plane);
         if (rayIntersection) {
             emitterPosition = ray.Position + ray.Direction * (*rayIntersection);

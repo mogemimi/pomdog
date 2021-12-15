@@ -39,12 +39,12 @@ Particle CreateParticle(
         // Position
         const auto rotation = Matrix4x4::CreateFromQuaternion(emitterRotation);
         const auto worldMatrix = rotation * Matrix4x4::CreateTranslation(emitterPosition);
-        particle.Position = Vector3::Transform(emitPosition, worldMatrix);
+        particle.Position = math::Transform(emitPosition, worldMatrix);
 
         // Velocity
         POMDOG_ASSERT(clip.StartSpeed);
         const auto startSpeed = clip.StartSpeed->Compute(normalizedTime, random);
-        particle.Velocity = Vector3::Transform(emitDirection * startSpeed, rotation);
+        particle.Velocity = math::Transform(emitDirection * startSpeed, rotation);
     }
     {
         // Rotation
@@ -99,7 +99,7 @@ void ParticleSystem::Simulate(
 {
     Simulate(
         Vector3{emitterPosition.X, emitterPosition.Y, 0.0f},
-        Quaternion::CreateFromAxisAngle(Vector3::UnitZ, emitterRotation.value),
+        Quaternion::CreateFromAxisAngle(Vector3::UnitZ(), emitterRotation.value),
         duration);
 }
 

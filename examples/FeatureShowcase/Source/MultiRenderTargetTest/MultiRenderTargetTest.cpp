@@ -299,9 +299,9 @@ void MultiRenderTargetTest::Update()
 
     auto cameraPosition = Vector3{0.0f, 6.0f, 0.0f};
     auto cameraDirection = Vector3{0.0f, -1.0f, 1.0f};
-    auto viewMatrix = Matrix4x4::CreateLookAtLH(cameraPosition, cameraPosition + cameraDirection, Vector3::UnitY);
+    auto viewMatrix = Matrix4x4::CreateLookAtLH(cameraPosition, cameraPosition + cameraDirection, Vector3::UnitY());
 
-    auto lightDirection = Vector3::Normalize(Vector3{-0.5f, -1.0f, 0.5f});
+    auto lightDirection = math::Normalize(Vector3{-0.5f, -1.0f, 0.5f});
 
     // NOTE: Update constant buffer for world
     BasicEffect::WorldConstantBuffer worldConstants;
@@ -384,7 +384,7 @@ void MultiRenderTargetTest::Draw()
         spriteBatch->Begin(commandList, projectionMatrix);
 
         auto draw = [&](std::shared_ptr<RenderTarget2D> rt, Vector2 pos) {
-            auto originPivot = Vector2::Zero;
+            auto originPivot = Vector2::Zero();
             auto scale = Vector2{0.5f, 0.5f};
             if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::GLSL) {
                 // NOTE: Flip horizontally for OpenGL coordinate system.

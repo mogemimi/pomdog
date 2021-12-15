@@ -360,8 +360,8 @@ void EditorGUITest::Draw()
     primitiveBatch->End();
 
     spriteBatch->Begin(commandList, projectionMatrix);
-    spriteFont->Draw(*spriteBatch, propertyText1, Vector2::Zero, Color{255, 255, 255, 190}, 0.0f, Vector2{0.0f, 1.0f}, 1.0f);
-    spriteFont->Draw(*spriteBatch, propertyText2, Vector2::Zero, Color::White, 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
+    spriteFont->Draw(*spriteBatch, propertyText1, Vector2::Zero(), Color{255, 255, 255, 190}, 0.0f, Vector2{0.0f, 1.0f}, 1.0f);
+    spriteFont->Draw(*spriteBatch, propertyText2, Vector2::Zero(), Color::White, 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
     spriteBatch->End();
 
     auto viewMatrix = Matrix4x4::CreateTranslation(Vector3{

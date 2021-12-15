@@ -162,7 +162,7 @@ std::unique_ptr<Error> Particle2DTest::Initialize()
     particleSystem = std::make_unique<ParticleSystem>(particleClip);
     particleSystem->Play();
 
-    emitterPosition = Vector2::Zero;
+    emitterPosition = Vector2::Zero();
 
     auto mouse = gameHost->GetMouse();
     connect(mouse->Moved, [this](const Point2D& mousePos) {
