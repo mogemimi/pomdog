@@ -32,13 +32,13 @@ Plane::Plane(const Vector3& point0, const Vector3& point1, const Vector3& point2
     // NOTE: Left-handed coordinate system (not right-handed one)
     const auto vector1 = point1 - point0;
     const auto vector2 = point2 - point0;
-    Normal = Vector3::Normalize(Vector3::Cross(vector1, vector2));
-    Distance = -Vector3::Dot(Normal, point0);
+    Normal = math::Normalize(math::Cross(vector1, vector2));
+    Distance = -math::Dot(Normal, point0);
 }
 
 void Plane::Normalize() noexcept
 {
-    const auto length = this->Normal.Length();
+    const auto length = math::Length(this->Normal);
 
     if (length >= std::numeric_limits<float>::epsilon()) {
         const auto inverseLength = 1.0f / length;
@@ -69,7 +69,7 @@ float Plane::DotCoordinate(const Vector3& vec) const noexcept
 
 float Plane::DotNormal(const Vector3& vec) const noexcept
 {
-    return Vector3::Dot(this->Normal, vec);
+    return math::Dot(this->Normal, vec);
 }
 
 float Plane::GetDistanceToPoint(const Vector3& point) const noexcept
@@ -142,7 +142,7 @@ Plane Plane::Transform(const Plane& plane, const Matrix4x4& matrix)
 {
     const auto transformMatrix = Matrix4x4::Invert(matrix);
     const auto vector = Vector4{plane.Normal, plane.Distance};
-    const auto transformedVector = Vector4::Transform(vector, transformMatrix);
+    const auto transformedVector = math::Transform(vector, transformMatrix);
 
     Plane result;
     result.Normal.X = transformedVector.X;
@@ -154,7 +154,7 @@ Plane Plane::Transform(const Plane& plane, const Matrix4x4& matrix)
 
 Plane Plane::CreateFromPointNormal(const Vector3& point, const Vector3& normal)
 {
-    return Plane(normal, -Vector3::Dot(normal, point));
+    return Plane(normal, -math::Dot(normal, point));
 }
 
 } // namespace pomdog

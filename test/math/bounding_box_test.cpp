@@ -18,19 +18,19 @@ TEST_CASE("BoundingBox", "[BoundingBox]")
     SECTION("Constructors")
     {
         BoundingBox box2;
-        box2.Min = Vector3::Zero;
-        box2.Max = Vector3::UnitY;
+        box2.Min = Vector3::Zero();
+        box2.Max = Vector3::UnitY();
 
         box = box2;
-        REQUIRE(Vector3::Zero == box.Min);
-        REQUIRE(Vector3::UnitY == box.Max);
+        REQUIRE(Vector3::Zero() == box.Min);
+        REQUIRE(Vector3::UnitY() == box.Max);
 
-        BoundingBox box3{Vector3::UnitX, Vector3::UnitZ};
+        BoundingBox box3{Vector3::UnitX(), Vector3::UnitZ()};
         box = box3;
-        REQUIRE(Vector3::UnitX == box.Min);
-        REQUIRE(Vector3::UnitX == box3.Min);
-        REQUIRE(Vector3::UnitZ == box.Max);
-        REQUIRE(Vector3::UnitZ == box3.Max);
+        REQUIRE(Vector3::UnitX() == box.Min);
+        REQUIRE(Vector3::UnitX() == box3.Min);
+        REQUIRE(Vector3::UnitZ() == box.Max);
+        REQUIRE(Vector3::UnitZ() == box3.Max);
     }
     SECTION("GetCorners")
     {
@@ -129,18 +129,20 @@ TEST_CASE("BoundingBox", "[BoundingBox]")
 
         REQUIRE(ContainmentType::Contains == box.Contains(box));
 
-        REQUIRE(ContainmentType::Contains == box.Contains(BoundingBox{box.Min, Vector3::Lerp(box.Min, box.Max, 0.01f)}));
-        REQUIRE(ContainmentType::Contains == box.Contains(BoundingBox{box.Min, Vector3::Lerp(box.Min, box.Max, 0.5f)}));
-        REQUIRE(ContainmentType::Contains == box.Contains(BoundingBox{box.Min, Vector3::Lerp(box.Min, box.Max, 0.99f)}));
-        REQUIRE(ContainmentType::Intersects == box.Contains(BoundingBox{box.Min, Vector3::Lerp(box.Min, box.Max, 1.1f)}));
-        REQUIRE(ContainmentType::Intersects == box.Contains(BoundingBox{Vector3::Zero, Vector3(a, b, c)}));
-        REQUIRE(ContainmentType::Disjoint == box.Contains(BoundingBox{Vector3::Zero, Vector3(a - 1, b, c)}));
+        using pomdog::math::Lerp;
+        REQUIRE(ContainmentType::Contains == box.Contains(BoundingBox{box.Min, Lerp(box.Min, box.Max, 0.01f)}));
+        REQUIRE(ContainmentType::Contains == box.Contains(BoundingBox{box.Min, Lerp(box.Min, box.Max, 0.5f)}));
+        REQUIRE(ContainmentType::Contains == box.Contains(BoundingBox{box.Min, Lerp(box.Min, box.Max, 0.99f)}));
+        REQUIRE(ContainmentType::Intersects == box.Contains(BoundingBox{box.Min, Lerp(box.Min, box.Max, 1.1f)}));
+        REQUIRE(ContainmentType::Intersects == box.Contains(BoundingBox{Vector3::Zero(), Vector3(a, b, c)}));
+        REQUIRE(ContainmentType::Disjoint == box.Contains(BoundingBox{Vector3::Zero(), Vector3(a - 1, b, c)}));
     }
     SECTION("Contains_BoundingSphere")
     {
+        using pomdog::math::Lerp;
         box.Min = Vector3{12.0f, 16.0f, 24.0f};
         box.Max = Vector3{32.0f, 64.0f, 96.0f};
-        auto center = Vector3::Lerp(box.Min, box.Max, 0.5f);
+        auto center = Lerp(box.Min, box.Max, 0.5f);
 
         REQUIRE(ContainmentType::Contains == box.Contains(BoundingSphere{center, 1.0f}));
         REQUIRE(ContainmentType::Contains == box.Contains(BoundingSphere{center, (box.Max - box.Min).X / 2}));
@@ -167,18 +169,18 @@ TEST_CASE("BoundingBox", "[BoundingBox]")
         box.Max = Vector3{d, e, f};
 
         REQUIRE(box.Intersects(box));
-        REQUIRE(box.Intersects(BoundingBox{box.Min, Vector3::Lerp(box.Min, box.Max, 0.01f)}));
-        REQUIRE(box.Intersects(BoundingBox{box.Min, Vector3::Lerp(box.Min, box.Max, 0.5f)}));
-        REQUIRE(box.Intersects(BoundingBox{box.Min, Vector3::Lerp(box.Min, box.Max, 0.99f)}));
-        REQUIRE(box.Intersects(BoundingBox{box.Min, Vector3::Lerp(box.Min, box.Max, 1.1f)}));
-        REQUIRE(box.Intersects(BoundingBox{Vector3::Zero, Vector3(a, b, c)}));
-        REQUIRE_FALSE(box.Intersects(BoundingBox{Vector3::Zero, Vector3(a - 1, b, c)}));
+        REQUIRE(box.Intersects(BoundingBox{box.Min, math::Lerp(box.Min, box.Max, 0.01f)}));
+        REQUIRE(box.Intersects(BoundingBox{box.Min, math::Lerp(box.Min, box.Max, 0.5f)}));
+        REQUIRE(box.Intersects(BoundingBox{box.Min, math::Lerp(box.Min, box.Max, 0.99f)}));
+        REQUIRE(box.Intersects(BoundingBox{box.Min, math::Lerp(box.Min, box.Max, 1.1f)}));
+        REQUIRE(box.Intersects(BoundingBox{Vector3::Zero(), Vector3(a, b, c)}));
+        REQUIRE_FALSE(box.Intersects(BoundingBox{Vector3::Zero(), Vector3(a - 1, b, c)}));
     }
     SECTION("Intersects_BoundingSphere")
     {
         box.Min = Vector3{12.0f, 16.0f, 24.0f};
         box.Max = Vector3{32.0f, 64.0f, 96.0f};
-        auto center = Vector3::Lerp(box.Min, box.Max, 0.5f);
+        auto center = math::Lerp(box.Min, box.Max, 0.5f);
 
         REQUIRE(box.Intersects(BoundingSphere{center, 1.0f}));
         REQUIRE(box.Intersects(BoundingSphere{center, (box.Max - box.Min).X / 2}));

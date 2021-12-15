@@ -22,7 +22,7 @@ TEST_CASE("Point3D", "[Point3D]")
         coodinate = {
             std::numeric_limits<int>::max(),
             std::numeric_limits<int>::min(),
-            std::numeric_limits<int>::denorm_min()
+            std::numeric_limits<int>::denorm_min(),
         };
         REQUIRE(std::numeric_limits<int>::max() == coodinate.X);
         REQUIRE(std::numeric_limits<int>::min() == coodinate.Y);

@@ -51,24 +51,24 @@ Vector4& Vector4::operator-=(const Vector4& other) noexcept
     return *this;
 }
 
-Vector4& Vector4::operator*=(float scaleFactor) noexcept
+Vector4& Vector4::operator*=(float factor) noexcept
 {
-    X *= scaleFactor;
-    Y *= scaleFactor;
-    Z *= scaleFactor;
-    W *= scaleFactor;
+    X *= factor;
+    Y *= factor;
+    Z *= factor;
+    W *= factor;
     return *this;
 }
 
-Vector4& Vector4::operator/=(float scaleFactor) noexcept
+Vector4& Vector4::operator/=(float factor) noexcept
 {
-    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_ZERO);
-    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_NAN);
-    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_INFINITE);
-    X /= scaleFactor;
-    Y /= scaleFactor;
-    Z /= scaleFactor;
-    W /= scaleFactor;
+    POMDOG_ASSERT(std::fpclassify(factor) != FP_ZERO);
+    POMDOG_ASSERT(std::fpclassify(factor) != FP_NAN);
+    POMDOG_ASSERT(std::fpclassify(factor) != FP_INFINITE);
+    X /= factor;
+    Y /= factor;
+    Z /= factor;
+    W /= factor;
     return *this;
 }
 
@@ -122,25 +122,25 @@ Vector4 Vector4::operator/(const Vector4& other) const noexcept
         W / other.W);
 }
 
-Vector4 Vector4::operator*(float scaleFactor) const noexcept
+Vector4 Vector4::operator*(float factor) const noexcept
 {
     return Vector4(
-        X * scaleFactor,
-        Y * scaleFactor,
-        Z * scaleFactor,
-        W * scaleFactor);
+        X * factor,
+        Y * factor,
+        Z * factor,
+        W * factor);
 }
 
-Vector4 Vector4::operator/(float scaleFactor) const noexcept
+Vector4 Vector4::operator/(float factor) const noexcept
 {
-    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_ZERO);
-    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_NAN);
-    POMDOG_ASSERT(std::fpclassify(scaleFactor) != FP_INFINITE);
+    POMDOG_ASSERT(std::fpclassify(factor) != FP_ZERO);
+    POMDOG_ASSERT(std::fpclassify(factor) != FP_NAN);
+    POMDOG_ASSERT(std::fpclassify(factor) != FP_INFINITE);
     return Vector4(
-        X / scaleFactor,
-        Y / scaleFactor,
-        Z / scaleFactor,
-        W / scaleFactor);
+        X / factor,
+        Y / factor,
+        Z / factor,
+        W / factor);
 }
 
 bool Vector4::operator==(const Vector4& other) const noexcept
@@ -151,69 +151,6 @@ bool Vector4::operator==(const Vector4& other) const noexcept
 bool Vector4::operator!=(const Vector4& other) const noexcept
 {
     return X != other.X || Y != other.Y || Z != other.Z || W != other.W;
-}
-
-float Vector4::Length() const noexcept
-{
-    return std::sqrt(X * X + Y * Y + Z * Z + W * W);
-}
-
-float Vector4::LengthSquared() const noexcept
-{
-    return X * X + Y * Y + Z * Z + W * W;
-}
-
-float Vector4::Distance(const Vector4& a, const Vector4& b) noexcept
-{
-    return (a - b).Length();
-}
-
-float Vector4::DistanceSquared(const Vector4& a, const Vector4& b) noexcept
-{
-    return (a - b).LengthSquared();
-}
-
-float Vector4::Dot(const Vector4& a, const Vector4& b) noexcept
-{
-    return a.X * b.X + a.Y * b.Y + a.Z * b.Z + a.W * b.W;
-}
-
-void Vector4::Normalize() noexcept
-{
-    *this = Normalize(*this);
-}
-
-Vector4
-Vector4::Normalize(const Vector4& source) noexcept
-{
-    auto result = source;
-    Normalize(source, result);
-    return result;
-}
-
-void Vector4::Normalize(const Vector4& source, Vector4& result) noexcept
-{
-    const auto length = source.Length();
-
-    if (length > std::numeric_limits<decltype(length)>::epsilon()) {
-        constexpr float One = 1;
-        const auto inverseLength = One / length;
-        result.X = source.X * inverseLength;
-        result.Y = source.Y * inverseLength;
-        result.Z = source.Z * inverseLength;
-        result.W = source.W * inverseLength;
-    }
-}
-
-Vector4
-Vector4::Transform(const Vector4& vector, const Matrix4x4& matrix) noexcept
-{
-    return Vector4{
-        (vector.X * matrix.m[0][0]) + (vector.Y * matrix.m[1][0]) + (vector.Z * matrix.m[2][0]) + (vector.W * matrix.m[3][0]),
-        (vector.X * matrix.m[0][1]) + (vector.Y * matrix.m[1][1]) + (vector.Z * matrix.m[2][1]) + (vector.W * matrix.m[3][1]),
-        (vector.X * matrix.m[0][2]) + (vector.Y * matrix.m[1][2]) + (vector.Z * matrix.m[2][2]) + (vector.W * matrix.m[3][2]),
-        (vector.X * matrix.m[0][3]) + (vector.Y * matrix.m[1][3]) + (vector.Z * matrix.m[2][3]) + (vector.W * matrix.m[3][3]),
-    };
 }
 
 const float* Vector4::Data() const noexcept
@@ -227,13 +164,73 @@ float* Vector4::Data() noexcept
 }
 
 [[nodiscard]] Vector4
-operator*(float scaleFactor, const Vector4& vector) noexcept
+operator*(float factor, const Vector4& vector) noexcept
 {
     return Vector4(
-        scaleFactor * vector.X,
-        scaleFactor * vector.Y,
-        scaleFactor * vector.Z,
-        scaleFactor * vector.W);
+        factor * vector.X,
+        factor * vector.Y,
+        factor * vector.Z,
+        factor * vector.W);
 }
 
 } // namespace pomdog
+
+namespace pomdog::math {
+
+[[nodiscard]] float
+Length(const Vector4& v) noexcept
+{
+    return std::sqrt(v.X * v.X + v.Y * v.Y + v.Z * v.Z + v.W * v.W);
+}
+
+[[nodiscard]] float
+LengthSquared(const Vector4& v) noexcept
+{
+    return v.X * v.X + v.Y * v.Y + v.Z * v.Z + v.W * v.W;
+}
+
+[[nodiscard]] float
+Distance(const Vector4& a, const Vector4& b) noexcept
+{
+    return math::Length(a - b);
+}
+
+[[nodiscard]] float
+DistanceSquared(const Vector4& a, const Vector4& b) noexcept
+{
+    return math::LengthSquared(a - b);
+}
+
+[[nodiscard]] float
+Dot(const Vector4& a, const Vector4& b) noexcept
+{
+    return a.X * b.X + a.Y * b.Y + a.Z * b.Z + a.W * b.W;
+}
+
+[[nodiscard]] Vector4
+Normalize(const Vector4& source) noexcept
+{
+    const auto length = math::Length(source);
+
+    if (length > std::numeric_limits<decltype(length)>::epsilon()) {
+        POMDOG_ASSERT(std::fpclassify(length) != FP_ZERO);
+        POMDOG_ASSERT(std::fpclassify(length) != FP_NAN);
+        POMDOG_ASSERT(std::fpclassify(length) != FP_INFINITE);
+        const auto inverseLength = 1.0f / length;
+        return source * inverseLength;
+    }
+    return source;
+}
+
+[[nodiscard]] Vector4
+Transform(const Vector4& vector, const Matrix4x4& matrix) noexcept
+{
+    return Vector4{
+        (vector.X * matrix.m[0][0]) + (vector.Y * matrix.m[1][0]) + (vector.Z * matrix.m[2][0]) + (vector.W * matrix.m[3][0]),
+        (vector.X * matrix.m[0][1]) + (vector.Y * matrix.m[1][1]) + (vector.Z * matrix.m[2][1]) + (vector.W * matrix.m[3][1]),
+        (vector.X * matrix.m[0][2]) + (vector.Y * matrix.m[1][2]) + (vector.Z * matrix.m[2][2]) + (vector.W * matrix.m[3][2]),
+        (vector.X * matrix.m[0][3]) + (vector.Y * matrix.m[1][3]) + (vector.Z * matrix.m[2][3]) + (vector.W * matrix.m[3][3]),
+    };
+}
+
+} // namespace pomdog::math

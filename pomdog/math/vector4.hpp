@@ -32,8 +32,8 @@ public:
     // Assignment operators:
     Vector4& operator+=(const Vector4& other) noexcept;
     Vector4& operator-=(const Vector4& other) noexcept;
-    Vector4& operator*=(float scaleFactor) noexcept;
-    Vector4& operator/=(float scaleFactor) noexcept;
+    Vector4& operator*=(float factor) noexcept;
+    Vector4& operator/=(float factor) noexcept;
 
     // Unary operators:
     Vector4 operator+() const noexcept;
@@ -44,36 +44,11 @@ public:
     [[nodiscard]] Vector4 operator-(const Vector4& other) const noexcept;
     [[nodiscard]] Vector4 operator*(const Vector4& other) const noexcept;
     [[nodiscard]] Vector4 operator/(const Vector4& other) const noexcept;
-    [[nodiscard]] Vector4 operator*(float scaleFactor) const noexcept;
-    [[nodiscard]] Vector4 operator/(float scaleFactor) const noexcept;
+    [[nodiscard]] Vector4 operator*(float factor) const noexcept;
+    [[nodiscard]] Vector4 operator/(float factor) const noexcept;
 
     [[nodiscard]] bool operator==(const Vector4& other) const noexcept;
     [[nodiscard]] bool operator!=(const Vector4& other) const noexcept;
-
-    [[nodiscard]] float Length() const noexcept;
-
-    [[nodiscard]] float LengthSquared() const noexcept;
-
-    [[nodiscard]] static float
-    Distance(const Vector4& a, const Vector4& b) noexcept;
-
-    [[nodiscard]] static float
-    DistanceSquared(const Vector4& a, const Vector4& b) noexcept;
-
-    [[nodiscard]] static float
-    Dot(const Vector4& a, const Vector4& b) noexcept;
-
-    void Normalize() noexcept;
-
-    [[nodiscard]] static Vector4
-    Normalize(const Vector4& source) noexcept;
-
-    static void Normalize(const Vector4& source, Vector4& result) noexcept;
-
-    [[nodiscard]] static Vector4
-    Transform(
-        const Vector4& position,
-        const Matrix4x4& matrix) noexcept;
 
     /// Returns pointer to the first element.
     [[nodiscard]] const float* Data() const noexcept;
@@ -82,7 +57,40 @@ public:
     [[nodiscard]] float* Data() noexcept;
 };
 
+/// Multiplies a vector by a scalar factor.
 [[nodiscard]] Vector4 POMDOG_EXPORT
-operator*(float scaleFactor, const Vector4& vector) noexcept;
+operator*(float factor, const Vector4& vector) noexcept;
 
 } // namespace pomdog
+
+namespace pomdog::math {
+
+/// Calculates and returns the length of a vector.
+[[nodiscard]] float POMDOG_EXPORT
+Length(const Vector4& v) noexcept;
+
+/// Calculates and returns the squared length of a vector.
+[[nodiscard]] float POMDOG_EXPORT
+LengthSquared(const Vector4& v) noexcept;
+
+/// Calculates and returns the distance between two vectors.
+[[nodiscard]] float POMDOG_EXPORT
+Distance(const Vector4& a, const Vector4& b) noexcept;
+
+/// Calculates and returns the squared distance between two vectors.
+[[nodiscard]] float POMDOG_EXPORT
+DistanceSquared(const Vector4& a, const Vector4& b) noexcept;
+
+/// Calculates and returns the dot product of two vectors.
+[[nodiscard]] float POMDOG_EXPORT
+Dot(const Vector4& a, const Vector4& b) noexcept;
+
+/// Returns a unit vector in the same direction from the specified vector.
+[[nodiscard]] Vector4 POMDOG_EXPORT
+Normalize(const Vector4& source) noexcept;
+
+/// Returns a transformed vector by the specified matrix.
+[[nodiscard]] Vector4 POMDOG_EXPORT
+Transform(const Vector4& position, const Matrix4x4& matrix) noexcept;
+
+} // namespace pomdog::math

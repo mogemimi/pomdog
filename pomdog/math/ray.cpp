@@ -118,14 +118,14 @@ std::optional<float> Ray::Intersects(const BoundingFrustum& frustum) const
 std::optional<float> Ray::Intersects(const BoundingSphere& sphere) const
 {
     const auto toSphere = sphere.Center - this->Position;
-    const auto toSphereLengthSquared = toSphere.LengthSquared();
+    const auto toSphereLengthSquared = math::LengthSquared(toSphere);
     const auto sphereRadiusSquared = sphere.Radius * sphere.Radius;
 
     if (toSphereLengthSquared < sphereRadiusSquared) {
         return 0.0f;
     }
 
-    const auto distance = Vector3::Dot(this->Direction, toSphere);
+    const auto distance = math::Dot(this->Direction, toSphere);
     if (distance < 0) {
         return std::nullopt;
     }
@@ -141,12 +141,12 @@ std::optional<float> Ray::Intersects(const Plane& plane) const
 {
     constexpr auto Epsilon = 1e-6f;
 
-    const auto denom = Vector3::Dot(plane.Normal, Direction);
+    const auto denom = math::Dot(plane.Normal, Direction);
     if (std::abs(denom) < Epsilon) {
         return std::nullopt;
     }
 
-    const auto dot = Vector3::Dot(plane.Normal, Position) + plane.Distance;
+    const auto dot = math::Dot(plane.Normal, Position) + plane.Distance;
     const auto distance = -dot / denom;
     if (distance < 0.0f) {
         return std::nullopt;

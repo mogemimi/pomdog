@@ -53,8 +53,8 @@ ContainmentType BoundingBox::Contains(const BoundingBox& box) const
 
 ContainmentType BoundingBox::Contains(const BoundingSphere& sphere) const
 {
-    auto clamped = Vector3::Clamp(sphere.Center, this->Min, this->Max);
-    auto distanceSquared = Vector3::DistanceSquared(sphere.Center, clamped);
+    auto clamped = math::Clamp(sphere.Center, this->Min, this->Max);
+    auto distanceSquared = math::DistanceSquared(sphere.Center, clamped);
 
     if (distanceSquared > sphere.Radius * sphere.Radius) {
         return ContainmentType::Disjoint;
@@ -79,8 +79,8 @@ bool BoundingBox::Intersects(const BoundingBox& box) const
 
 bool BoundingBox::Intersects(const BoundingSphere& sphere) const
 {
-    auto clamped = Vector3::Clamp(sphere.Center, this->Min, this->Max);
-    auto distanceSquared = Vector3::DistanceSquared(sphere.Center, clamped);
+    auto clamped = math::Clamp(sphere.Center, this->Min, this->Max);
+    auto distanceSquared = math::DistanceSquared(sphere.Center, clamped);
     return distanceSquared <= sphere.Radius * sphere.Radius;
 }
 

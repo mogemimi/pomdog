@@ -119,11 +119,11 @@ void MakePlane(Plane& plane, float x, float y, float z, float d)
 
 Vector3 ComputeIntersectionPoint(const Plane& a, const Plane& b, const Plane& c)
 {
-    const auto cross = Vector3::Cross(b.Normal, c.Normal);
-    const auto denom = -1.0f * Vector3::Dot(a.Normal, cross);
-    const auto v1 = a.Distance * Vector3::Cross(b.Normal, c.Normal);
-    const auto v2 = b.Distance * Vector3::Cross(c.Normal, a.Normal);
-    const auto v3 = c.Distance * Vector3::Cross(a.Normal, b.Normal);
+    const auto cross = math::Cross(b.Normal, c.Normal);
+    const auto denom = -1.0f * math::Dot(a.Normal, cross);
+    const auto v1 = a.Distance * math::Cross(b.Normal, c.Normal);
+    const auto v2 = b.Distance * math::Cross(c.Normal, a.Normal);
+    const auto v3 = c.Distance * math::Cross(a.Normal, b.Normal);
 
     Vector3 result = (v1 + v2 + v3) / denom;
     return result;

@@ -124,7 +124,7 @@ float* Vector2::Data() noexcept
 
 Vector2 Vector2::Zero() noexcept
 {
-    return Vector2{0, 0};
+    return Vector2{0.0f, 0.0f};
 }
 
 [[nodiscard]] Vector2

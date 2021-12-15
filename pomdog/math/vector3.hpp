@@ -44,69 +44,11 @@ public:
     [[nodiscard]] Vector3 operator-(const Vector3&) const noexcept;
     [[nodiscard]] Vector3 operator*(const Vector3&) const noexcept;
     [[nodiscard]] Vector3 operator/(const Vector3&) const noexcept;
-    [[nodiscard]] Vector3 operator*(float scaleFactor) const noexcept;
-    [[nodiscard]] Vector3 operator/(float scaleFactor) const noexcept;
+    [[nodiscard]] Vector3 operator*(float factor) const noexcept;
+    [[nodiscard]] Vector3 operator/(float factor) const noexcept;
 
     [[nodiscard]] bool operator==(const Vector3& other) const noexcept;
     [[nodiscard]] bool operator!=(const Vector3& other) const noexcept;
-
-    [[nodiscard]] float Length() const noexcept;
-
-    [[nodiscard]] float LengthSquared() const noexcept;
-
-    [[nodiscard]] static float
-    Distance(const Vector3& a, const Vector3& b) noexcept;
-
-    [[nodiscard]] static float
-    DistanceSquared(const Vector3& a, const Vector3& b) noexcept;
-
-    [[nodiscard]] static float
-    Dot(const Vector3& a, const Vector3& b) noexcept;
-
-    [[nodiscard]] static Vector3
-    Cross(const Vector3& a, const Vector3& b) noexcept;
-
-    [[nodiscard]] static Vector3
-    Min(const Vector3& a, const Vector3& b) noexcept;
-
-    [[nodiscard]] static Vector3
-    Max(const Vector3& a, const Vector3& b) noexcept;
-
-    [[nodiscard]] static Vector3
-    Clamp(
-        const Vector3& source,
-        const Vector3& min,
-        const Vector3& max) noexcept;
-
-    [[nodiscard]] static Vector3
-    Lerp(
-        const Vector3& source1,
-        const Vector3& source2,
-        float amount);
-
-    [[nodiscard]] static Vector3
-    SmoothStep(
-        const Vector3& source1,
-        const Vector3& source2,
-        float amount);
-
-    void Normalize() noexcept;
-
-    [[nodiscard]] static Vector3
-    Normalize(const Vector3& source) noexcept;
-
-    static void
-    Normalize(const Vector3&, Vector3& result) noexcept;
-
-    [[nodiscard]] static Vector3
-    Transform(
-        const Vector3& position,
-        const Matrix4x4& matrix) noexcept;
-
-    [[nodiscard]] static Vector3
-    TransformNormal(
-        const Vector3& normal,
-        const Matrix4x4& matrix) noexcept;
 
     [[nodiscard]] static Vector3
     ToEulerAngles(const Quaternion& quaternion);
@@ -117,20 +59,81 @@ public:
     /// Returns pointer to the first element.
     [[nodiscard]] float* Data() noexcept;
 
-    ///@note (0, 0, 0)
-    static Vector3 const Zero;
+    /// Returns the Vector3 (0, 0, 0).
+    [[nodiscard]] static Vector3 Zero() noexcept;
 
-    ///@note (1, 0, 0)
-    static Vector3 const UnitX;
+    /// Returns the Vector3 (1, 0, 0).
+    [[nodiscard]] static Vector3 UnitX() noexcept;
 
-    ///@note (0, 1, 0)
-    static Vector3 const UnitY;
+    /// Returns the Vector3 (0, 1, 0).
+    [[nodiscard]] static Vector3 UnitY() noexcept;
 
-    ///@note (0, 0, 1)
-    static Vector3 const UnitZ;
+    /// Returns the Vector3 (0, 0, 1).
+    [[nodiscard]] static Vector3 UnitZ() noexcept;
 };
 
+/// Multiplies a vector by a scalar factor.
 [[nodiscard]] Vector3 POMDOG_EXPORT
-operator*(float scaleFactor, const Vector3& vector) noexcept;
+operator*(float factor, const Vector3& vector) noexcept;
 
 } // namespace pomdog
+
+namespace pomdog::math {
+
+/// Calculates and returns the length of a vector.
+[[nodiscard]] float POMDOG_EXPORT
+Length(const Vector3& v) noexcept;
+
+/// Calculates and returns the squared length of a vector.
+[[nodiscard]] float POMDOG_EXPORT
+LengthSquared(const Vector3& v) noexcept;
+
+/// Calculates and returns the distance between two vectors.
+[[nodiscard]] float POMDOG_EXPORT
+Distance(const Vector3& a, const Vector3& b) noexcept;
+
+/// Calculates and returns the squared distance between two vectors.
+[[nodiscard]] float POMDOG_EXPORT
+DistanceSquared(const Vector3& a, const Vector3& b) noexcept;
+
+/// Calculates and returns the dot product of two vectors.
+[[nodiscard]] float POMDOG_EXPORT
+Dot(const Vector3& a, const Vector3& b) noexcept;
+
+/// Calculates and returns the cross product of two vectors.
+[[nodiscard]] Vector3 POMDOG_EXPORT
+Cross(const Vector3& a, const Vector3& b) noexcept;
+
+/// Returns a vector that contains the smallest components of two vectors.
+[[nodiscard]] Vector3 POMDOG_EXPORT
+Min(const Vector3& a, const Vector3& b) noexcept;
+
+/// Returns a vector that contains the largest components of two vectors.
+[[nodiscard]] Vector3 POMDOG_EXPORT
+Max(const Vector3& a, const Vector3& b) noexcept;
+
+/// Restricts a vector between a minimum and a maximum value.
+[[nodiscard]] Vector3 POMDOG_EXPORT
+Clamp(const Vector3& source, const Vector3& min, const Vector3& max) noexcept;
+
+/// Performs a linear interpolation between two vectors.
+[[nodiscard]] Vector3 POMDOG_EXPORT
+Lerp(const Vector3& source1, const Vector3& source2, float amount);
+
+/// Performs Hermite interpolation between two vectors.
+[[nodiscard]] Vector3 POMDOG_EXPORT
+SmoothStep(const Vector3& source1, const Vector3& source2, float amount);
+
+/// Returns a unit vector in the same direction from the specified vector.
+[[nodiscard]] Vector3 POMDOG_EXPORT
+Normalize(const Vector3& source) noexcept;
+
+/// Returns a transformed vector by the specified matrix.
+[[nodiscard]] Vector3 POMDOG_EXPORT
+Transform(const Vector3& position, const Matrix4x4& matrix) noexcept;
+
+/// Returns a transformed vector normal by the specified matrix.
+[[nodiscard]] Vector3 POMDOG_EXPORT
+TransformNormal(const Vector3& normal, const Matrix4x4& matrix) noexcept;
+
+} // namespace pomdog::math

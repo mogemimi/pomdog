@@ -21,9 +21,9 @@ TEST_CASE("Matrix3x3", "[Matrix3x3]")
     SECTION("FirstTestCase")
     {
         Matrix3x3 matrix{
-            1.0f, 1.0f, 1.0f,
-            1.0f, 1.0f, 1.0f,
-            1.0f, 1.0f, 1.0f
+            1.0f, 1.0f, 1.0f, //
+            1.0f, 1.0f, 1.0f, //
+            1.0f, 1.0f, 1.0f, //
         };
         REQUIRE(1.0f == matrix(0, 0));
         REQUIRE(1.0f == matrix(0, 1));
@@ -36,9 +36,9 @@ TEST_CASE("Matrix3x3", "[Matrix3x3]")
         REQUIRE(1.0f == matrix(2, 2));
 
         matrix = Matrix3x3{
-            0.0f, 1.0f, 2.0f,
-            3.0f, 4.0f, 5.0f,
-            6.0f, 7.0f, 8.0f
+            0.0f, 1.0f, 2.0f, //
+            3.0f, 4.0f, 5.0f, //
+            6.0f, 7.0f, 8.0f, //
         };
         REQUIRE(0.0f == matrix(0, 0));
         REQUIRE(1.0f == matrix(0, 1));

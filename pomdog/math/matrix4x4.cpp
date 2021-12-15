@@ -664,9 +664,9 @@ void Matrix4x4::CreateLookAtLH(
     //  xaxis.z           yaxis.z           zaxis.z          0
     // -dot(xaxis, eye)  -dot(yaxis, eye)  -dot(zaxis, eye)  1
 
-    const auto zaxis = Vector3::Normalize(at - eye); // RH: eye - at
-    const auto xaxis = Vector3::Normalize(Vector3::Cross(up, zaxis));
-    const auto yaxis = Vector3::Cross(zaxis, xaxis);
+    const auto zaxis = math::Normalize(at - eye); // RH: eye - at
+    const auto xaxis = math::Normalize(math::Cross(up, zaxis));
+    const auto yaxis = math::Cross(zaxis, xaxis);
 
     result.m[0][0] = xaxis.X;
     result.m[0][1] = yaxis.X;
@@ -683,9 +683,9 @@ void Matrix4x4::CreateLookAtLH(
     result.m[2][2] = zaxis.Z;
     result.m[2][3] = 0;
 
-    result.m[3][0] = -Vector3::Dot(xaxis, eye);
-    result.m[3][1] = -Vector3::Dot(yaxis, eye);
-    result.m[3][2] = -Vector3::Dot(zaxis, eye);
+    result.m[3][0] = -math::Dot(xaxis, eye);
+    result.m[3][1] = -math::Dot(yaxis, eye);
+    result.m[3][2] = -math::Dot(zaxis, eye);
     result.m[3][3] = 1;
 }
 
@@ -711,9 +711,9 @@ void Matrix4x4::CreateLookAtRH(const Vector3& eye, const Vector3& at,
     //  xaxis.z           yaxis.z           zaxis.z          0
     // -dot(xaxis, eye)  -dot(yaxis, eye)  -dot(zaxis, eye)  1
 
-    const auto zaxis = Vector3::Normalize(eye - at); // LH: at - eye
-    const auto xaxis = Vector3::Normalize(Vector3::Cross(up, zaxis));
-    const auto yaxis = Vector3::Cross(zaxis, xaxis);
+    const auto zaxis = math::Normalize(eye - at); // LH: at - eye
+    const auto xaxis = math::Normalize(math::Cross(up, zaxis));
+    const auto yaxis = math::Cross(zaxis, xaxis);
 
     result.m[0][0] = xaxis.X;
     result.m[0][1] = yaxis.X;
@@ -730,9 +730,9 @@ void Matrix4x4::CreateLookAtRH(const Vector3& eye, const Vector3& at,
     result.m[2][2] = zaxis.Z;
     result.m[2][3] = 0;
 
-    result.m[3][0] = -Vector3::Dot(xaxis, eye);
-    result.m[3][1] = -Vector3::Dot(yaxis, eye);
-    result.m[3][2] = -Vector3::Dot(zaxis, eye);
+    result.m[3][0] = -math::Dot(xaxis, eye);
+    result.m[3][1] = -math::Dot(yaxis, eye);
+    result.m[3][2] = -math::Dot(zaxis, eye);
     result.m[3][3] = 1;
 }
 

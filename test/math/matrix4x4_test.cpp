@@ -19,10 +19,10 @@ TEST_CASE("Matrix4x4", "[Matrix4x4]")
     SECTION("FirstTestCase")
     {
         Matrix4x4 matrix{
-            1.0f, 1.0f, 1.0f, 1.0f,
-            1.0f, 1.0f, 1.0f, 1.0f,
-            1.0f, 1.0f, 1.0f, 1.0f,
-            1.0f, 1.0f, 1.0f, 1.0f
+            1.0f, 1.0f, 1.0f, 1.0f, //
+            1.0f, 1.0f, 1.0f, 1.0f, //
+            1.0f, 1.0f, 1.0f, 1.0f, //
+            1.0f, 1.0f, 1.0f, 1.0f, //
         };
         REQUIRE(1.0f == matrix(0, 0));
         REQUIRE(1.0f == matrix(0, 1));
@@ -42,10 +42,10 @@ TEST_CASE("Matrix4x4", "[Matrix4x4]")
         REQUIRE(1.0f == matrix(3, 3));
 
         matrix = Matrix4x4{
-            0.0f, 1.0f, 2.0f, 3.0f,
-            4.0f, 5.0f, 6.0f, 7.0f,
-            8.0f, 9.0f, 10.0f, 11.0f,
-            12.0f, 13.0f, 14.0f, 15.0f
+            0.0f, 1.0f, 2.0f, 3.0f,     //
+            4.0f, 5.0f, 6.0f, 7.0f,     //
+            8.0f, 9.0f, 10.0f, 11.0f,   //
+            12.0f, 13.0f, 14.0f, 15.0f, //
         };
         REQUIRE(0.0f == matrix(0, 0));
         REQUIRE(1.0f == matrix(0, 1));
@@ -267,10 +267,10 @@ TEST_CASE("Matrix4x4", "[Matrix4x4]")
     SECTION("Data")
     {
         Matrix4x4 matrix{
-            0.0f, 1.0f, 2.0f, 3.0f,
-            4.0f, 5.0f, 6.0f, 7.0f,
-            8.0f, 9.0f, 10.0f, 11.0f,
-            12.0f, 13.0f, 14.0f, 15.0f
+            0.0f, 1.0f, 2.0f, 3.0f,     //
+            4.0f, 5.0f, 6.0f, 7.0f,     //
+            8.0f, 9.0f, 10.0f, 11.0f,   //
+            12.0f, 13.0f, 14.0f, 15.0f, //
         };
         REQUIRE(0.0f == *(matrix.Data() + 0));
         REQUIRE(1.0f == *(matrix.Data() + 1));

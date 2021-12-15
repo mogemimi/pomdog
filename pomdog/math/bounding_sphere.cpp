@@ -23,7 +23,7 @@ BoundingSphere::BoundingSphere(const Vector3& center, float radius)
 
 ContainmentType BoundingSphere::Contains(const Vector3& point) const
 {
-    auto distanceSquared = Vector3::DistanceSquared(point, Center);
+    auto distanceSquared = math::DistanceSquared(point, Center);
     auto radiusSquared = Radius * Radius;
     if (distanceSquared > radiusSquared) {
         return ContainmentType::Disjoint;
@@ -54,7 +54,7 @@ ContainmentType BoundingSphere::Contains(const BoundingBox& box) const
 
 ContainmentType BoundingSphere::Contains(const BoundingSphere& sphere) const
 {
-    auto distance = Vector3::Distance(this->Center, sphere.Center);
+    auto distance = math::Distance(this->Center, sphere.Center);
     if (distance > this->Radius + sphere.Radius) {
         return ContainmentType::Disjoint;
     }
@@ -71,7 +71,7 @@ bool BoundingSphere::Intersects(const BoundingBox& box) const
 
 bool BoundingSphere::Intersects(const BoundingSphere& sphere) const
 {
-    auto distance = Vector3::Distance(this->Center, sphere.Center);
+    auto distance = math::Distance(this->Center, sphere.Center);
     return distance <= this->Radius + sphere.Radius;
 }
 
@@ -130,9 +130,9 @@ BoundingSphere::CreateFromPoints(std::function<Vector3(std::size_t)> points, std
         }
     }
 
-    const auto distX = Vector3::DistanceSquared(points(maxX), points(minX));
-    const auto distY = Vector3::DistanceSquared(points(maxY), points(minY));
-    const auto distZ = Vector3::DistanceSquared(points(maxZ), points(minZ));
+    const auto distX = math::DistanceSquared(points(maxX), points(minX));
+    const auto distY = math::DistanceSquared(points(maxY), points(minY));
+    const auto distZ = math::DistanceSquared(points(maxZ), points(minZ));
 
     std::size_t max = maxX;
     std::size_t min = minX;
@@ -146,20 +146,20 @@ BoundingSphere::CreateFromPoints(std::function<Vector3(std::size_t)> points, std
     }
 
     auto center = (points(max) + points(min)) * 0.5f;
-    auto radius = Vector3::Distance(points(max), center);
+    auto radius = math::Distance(points(max), center);
     auto radiusSq = radius * radius;
 
     // NOTE: Compute strict bounding sphere.
     for (std::size_t i = 0; i < pointCount; i++) {
         const auto p = points(i);
         const auto diff = p - center;
-        const auto distanceSq = diff.LengthSquared();
+        const auto distanceSq = math::LengthSquared(diff);
         if (distanceSq > radiusSq) {
             const auto distance = std::sqrt(distanceSq);
             const auto direction = diff / distance;
             const auto g = center - radius * direction;
             center = (g + p) * 0.5f;
-            radius = Vector3::Distance(p, center);
+            radius = math::Distance(p, center);
             radiusSq = radius * radius;
         }
     }

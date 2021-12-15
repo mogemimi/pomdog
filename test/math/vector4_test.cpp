@@ -48,41 +48,44 @@ TEST_CASE("Vector4", "[Vector4]")
     }
     SECTION("Normalize")
     {
-        REQUIRE(Vector4::Normalize(Vector4{0.0f, 0.0f, 0.0f, 0.0f}) == Vector4{0.0f, 0.0f, 0.0f, 0.0f});
-        REQUIRE(Vector4::Normalize(Vector4{1.0f, 0.0f, 0.0f, 0.0f}) == Vector4{1.0f, 0.0f, 0.0f, 0.0f});
-        REQUIRE(Vector4::Normalize(Vector4{0.0f, 1.0f, 0.0f, 0.0f}) == Vector4{0.0f, 1.0f, 0.0f, 0.0f});
-        REQUIRE(Vector4::Normalize(Vector4{0.0f, 0.0f, 1.0f, 0.0f}) == Vector4{0.0f, 0.0f, 1.0f, 0.0f});
-        REQUIRE(Vector4::Normalize(Vector4{0.0f, 0.0f, 0.0f, 1.0f}) == Vector4{0.0f, 0.0f, 0.0f, 1.0f});
+        using pomdog::math::Normalize;
+        REQUIRE(Normalize(Vector4{0.0f, 0.0f, 0.0f, 0.0f}) == Vector4{0.0f, 0.0f, 0.0f, 0.0f});
+        REQUIRE(Normalize(Vector4{1.0f, 0.0f, 0.0f, 0.0f}) == Vector4{1.0f, 0.0f, 0.0f, 0.0f});
+        REQUIRE(Normalize(Vector4{0.0f, 1.0f, 0.0f, 0.0f}) == Vector4{0.0f, 1.0f, 0.0f, 0.0f});
+        REQUIRE(Normalize(Vector4{0.0f, 0.0f, 1.0f, 0.0f}) == Vector4{0.0f, 0.0f, 1.0f, 0.0f});
+        REQUIRE(Normalize(Vector4{0.0f, 0.0f, 0.0f, 1.0f}) == Vector4{0.0f, 0.0f, 0.0f, 1.0f});
     }
     SECTION("Transform_IdentityMatrix")
     {
-        REQUIRE(Vector4{0.0f, 0.0f, 0.0f, 0.0f} == Vector4::Transform(Vector4{0.0f, 0.0f, 0.0f, 0.0f}, Matrix4x4::Identity));
-        REQUIRE(Vector4{1.0f, 2.0f, 3.0f, 4.0f} == Vector4::Transform(Vector4{1.0f, 2.0f, 3.0f, 4.0f}, Matrix4x4::Identity));
+        using pomdog::math::Transform;
+        REQUIRE(Vector4{0.0f, 0.0f, 0.0f, 0.0f} == Transform(Vector4{0.0f, 0.0f, 0.0f, 0.0f}, Matrix4x4::Identity));
+        REQUIRE(Vector4{1.0f, 2.0f, 3.0f, 4.0f} == Transform(Vector4{1.0f, 2.0f, 3.0f, 4.0f}, Matrix4x4::Identity));
     }
     SECTION("Transform")
     {
-        REQUIRE(Vector4{26.0f, 37.0f, 48.0f, 59.0f} == Vector4::Transform(Vector4{26.0f, 37.0f, 48.0f, 59.0f}, Matrix4x4(
-            1.0f, 0.0f, 0.0f, 0.0f,
-            0.0f, 1.0f, 0.0f, 0.0f,
-            0.0f, 0.0f, 1.0f, 0.0f,
-            0.0f, 0.0f, 0.0f, 1.0f)));
+        using pomdog::math::Transform;
+        REQUIRE(Vector4{26.0f, 37.0f, 48.0f, 59.0f} == Transform(Vector4{26.0f, 37.0f, 48.0f, 59.0f}, Matrix4x4{
+                                                                                                          1.0f, 0.0f, 0.0f, 0.0f,
+                                                                                                          0.0f, 1.0f, 0.0f, 0.0f,
+                                                                                                          0.0f, 0.0f, 1.0f, 0.0f,
+                                                                                                          0.0f, 0.0f, 0.0f, 1.0f}));
 
-        REQUIRE(Vector4{52.0f, 74.0f, 96.0f, 59.0f} == Vector4::Transform(Vector4{26.0f, 37.0f, 48.0f, 59.0f}, Matrix4x4(
-            2.0f, 0.0f, 0.0f, 0.0f,
-            0.0f, 2.0f, 0.0f, 0.0f,
-            0.0f, 0.0f, 2.0f, 0.0f,
-            0.0f, 0.0f, 0.0f, 1.0f)));
+        REQUIRE(Vector4{52.0f, 74.0f, 96.0f, 59.0f} == Transform(Vector4{26.0f, 37.0f, 48.0f, 59.0f}, Matrix4x4{
+                                                                                                          2.0f, 0.0f, 0.0f, 0.0f,
+                                                                                                          0.0f, 2.0f, 0.0f, 0.0f,
+                                                                                                          0.0f, 0.0f, 2.0f, 0.0f,
+                                                                                                          0.0f, 0.0f, 0.0f, 1.0f}));
 
-        REQUIRE(Vector4{52.0f, 74.0f, 96.0f, 4588.0f} == Vector4::Transform(Vector4{26.0f, 37.0f, 48.0f, 59.0f}, Matrix4x4(
-            2.0f, 0.0f, 0.0f, 42.0f,
-            0.0f, 2.0f, 0.0f, 41.0f,
-            0.0f, 0.0f, 2.0f, 40.0f,
-            0.0f, 0.0f, 0.0f, 1.0f)));
+        REQUIRE(Vector4{52.0f, 74.0f, 96.0f, 4588.0f} == Transform(Vector4{26.0f, 37.0f, 48.0f, 59.0f}, Matrix4x4{
+                                                                                                            2.0f, 0.0f, 0.0f, 42.0f,
+                                                                                                            0.0f, 2.0f, 0.0f, 41.0f,
+                                                                                                            0.0f, 0.0f, 2.0f, 40.0f,
+                                                                                                            0.0f, 0.0f, 0.0f, 1.0f}));
 
-        REQUIRE(Vector4{388.0f, 74.0f, 304.0f, 4588.0f} == Vector4::Transform(Vector4{26.0f, 37.0f, 48.0f, 59.0f}, Matrix4x4(
-            2.0f, 0.0f, 8.0f, 42.0f,
-            0.0f, 2.0f, 0.0f, 41.0f,
-            7.0f, 0.0f, 2.0f, 40.0f,
-            0.0f, 0.0f, 0.0f, 1.0f)));
+        REQUIRE(Vector4{388.0f, 74.0f, 304.0f, 4588.0f} == Transform(Vector4{26.0f, 37.0f, 48.0f, 59.0f}, Matrix4x4{
+                                                                                                              2.0f, 0.0f, 8.0f, 42.0f,
+                                                                                                              0.0f, 2.0f, 0.0f, 41.0f,
+                                                                                                              7.0f, 0.0f, 2.0f, 40.0f,
+                                                                                                              0.0f, 0.0f, 0.0f, 1.0f}));
     }
 }

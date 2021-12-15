@@ -417,8 +417,8 @@ Invert(const Quaternion& source)
 Rotate(const Quaternion& quaternion, const Vector3& vector)
 {
     const auto xyz = Vector3{quaternion.X, quaternion.Y, quaternion.Z};
-    const auto t = 2.0f * Vector3::Cross(xyz, vector);
-    return vector + quaternion.W * t + Vector3::Cross(xyz, t);
+    const auto t = 2.0f * math::Cross(xyz, vector);
+    return vector + quaternion.W * t + math::Cross(xyz, t);
 }
 
 } // namespace pomdog::math
