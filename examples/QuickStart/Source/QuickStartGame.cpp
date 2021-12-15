@@ -139,7 +139,7 @@ std::unique_ptr<Error> QuickStartGame::Initialize()
         auto updateShaderConstants = [this]([[maybe_unused]] int width, [[maybe_unused]] int height) {
             const auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
-            const auto viewMatrix = Matrix4x4::Identity;
+            const auto viewMatrix = Matrix4x4::Identity();
             const auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
                 static_cast<float>(presentationParameters.BackBufferWidth),
                 static_cast<float>(presentationParameters.BackBufferHeight),

@@ -206,7 +206,7 @@ void HardwareInstancingTest::Draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
-    auto viewMatrix = Matrix4x4::Identity;
+    auto viewMatrix = Matrix4x4::Identity();
     auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
         static_cast<float>(presentationParameters.BackBufferWidth),
         static_cast<float>(presentationParameters.BackBufferHeight),

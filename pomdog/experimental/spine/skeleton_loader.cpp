@@ -65,7 +65,7 @@ std::vector<Matrix3x2> CreateInverseBindPoseByJoints(const Skeleton& skeleton)
     });
 
     for (auto& matrix : bindPose) {
-        matrix = Matrix3x2::Invert(matrix);
+        matrix = math::Invert(matrix);
     }
     return bindPose;
 }

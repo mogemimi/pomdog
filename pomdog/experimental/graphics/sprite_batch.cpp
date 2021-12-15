@@ -333,7 +333,7 @@ void SpriteBatch::Impl::Begin(
     POMDOG_ASSERT(constantBuffer);
 
     SpriteBatchConstantBuffer constants;
-    constants.ViewProjection = Matrix4x4::Transpose(transformMatrix);
+    constants.ViewProjection = math::Transpose(transformMatrix);
 
     if (distanceFieldParameters != std::nullopt) {
         constants.DistanceFieldParameters.X = distanceFieldParameters->Smoothing;

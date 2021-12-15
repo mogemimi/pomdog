@@ -70,7 +70,7 @@ void DebugNavigator::Draw(DrawingContext& drawingContext)
         auto barHeight = math::Clamp((maxGraphHeight - (graphMargin * 2)) * amount, 1.0f, maxGraphHeight);
 
         primitiveBatch->DrawRectangle(
-            Matrix3x2::Identity,
+            Matrix3x2::Identity(),
             Vector2{graphX, graphMargin} + math::ToVector2(globalPos),
             barWidth,
             barHeight,

@@ -259,13 +259,13 @@ void Slider::Draw(DrawingContext& drawingContext)
     const auto paddingY = (static_cast<float>(GetHeight()) - sliderHeight) * 0.5f;
 
     primitiveBatch->DrawRectangle(
-        Matrix3x2::Identity,
+        Matrix3x2::Identity(),
         Vector2{0.0f, paddingY} + math::ToVector2(globalPos),
         static_cast<float>(GetWidth()),
         sliderHeight,
         trackColor);
     primitiveBatch->DrawRectangle(
-        Matrix3x2::Identity,
+        Matrix3x2::Identity(),
         Vector2{0.0f, paddingY} + math::ToVector2(globalPos),
         sliderWidth2,
         sliderHeight,
@@ -281,7 +281,7 @@ void Slider::Draw(DrawingContext& drawingContext)
         auto size = Vector2(thumbSize + 2 * pixel, thumbSize + 2 * pixel);
 
         primitiveBatch->DrawRectangle(
-            Matrix3x2::Identity,
+            Matrix3x2::Identity(),
             pos + math::ToVector2(globalPos),
             size.X,
             size.Y,
@@ -292,7 +292,7 @@ void Slider::Draw(DrawingContext& drawingContext)
         // NOTE: Draw Thumb
         auto pos = Vector2(controlPosition2, 0);
         primitiveBatch->DrawRectangle(
-            Matrix3x2::Identity,
+            Matrix3x2::Identity(),
             pos + math::ToVector2(globalPos),
             thumbSize,
             thumbSize,

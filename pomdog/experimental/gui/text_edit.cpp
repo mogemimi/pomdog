@@ -639,7 +639,7 @@ void TextEdit::Draw(DrawingContext& drawingContext)
         constexpr float cursorHeightMargin = 2.0f;
 
         primitiveBatch->DrawRectangle(
-            Matrix3x2::Identity,
+            Matrix3x2::Identity(),
             startPos + Vector2{0.0f, cursorHeightMargin} + math::ToVector2(globalPos),
             selectionWidth,
             GetHeight() - cursorHeightMargin * 2.0f - 0.5f,
@@ -653,7 +653,7 @@ void TextEdit::Draw(DrawingContext& drawingContext)
         constexpr float cursorHeightMargin = 2.0f;
 
         primitiveBatch->DrawRectangle(
-            Matrix3x2::Identity,
+            Matrix3x2::Identity(),
             cursorDrawPosition + Vector2{0.0f, cursorHeightMargin} + math::ToVector2(globalPos),
             cursorThickness,
             GetHeight() - cursorHeightMargin * 2.0f - 0.5f,

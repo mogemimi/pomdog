@@ -185,14 +185,14 @@ void ContextMenu::Draw(DrawingContext& drawingContext)
     const auto h = static_cast<float>(GetHeight());
 
     primitiveBatch->DrawRectangle(
-        Matrix3x2::Identity,
+        Matrix3x2::Identity(),
         math::ToVector2(globalPos) + Vector2{-4.0f, -4.0f},
         w + 8.0f,
         h + 7.0f,
         colorScheme->ContextMenuShadowColor);
 
     primitiveBatch->DrawRectangle(
-        Matrix3x2::Identity,
+        Matrix3x2::Identity(),
         math::ToVector2(globalPos) + Vector2{-1.5f, -1.5f},
         w + 3.0f,
         h + 3.0f,

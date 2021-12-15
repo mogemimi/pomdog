@@ -156,7 +156,7 @@ void PushButton::Draw(DrawingContext& drawingContext)
     }
 
     primitiveBatch->DrawRectangle(
-        Matrix3x2::Identity,
+        Matrix3x2::Identity(),
         math::ToVector2(globalPos),
         static_cast<float>(GetWidth()),
         static_cast<float>(GetHeight()),

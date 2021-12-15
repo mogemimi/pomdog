@@ -150,7 +150,7 @@ void ToggleSwitch::Draw(DrawingContext& drawingContext)
         thumbRadius + thumbPadding, math::ToRadians(90.0f), math::ToRadians(180.0f), segments, innerColor);
 
     primitiveBatch->DrawRectangle(
-        Matrix3x2::Identity,
+        Matrix3x2::Identity(),
         Vector2{(thumbRadius + thumbPadding), 0.0f} + math::ToVector2(globalPos),
         GetWidth() - (thumbRadius + thumbPadding) * 2.0f,
         (thumbRadius + thumbPadding) * 2.0f,

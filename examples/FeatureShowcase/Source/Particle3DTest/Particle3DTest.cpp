@@ -195,7 +195,7 @@ void Particle3DTest::Draw()
     constants.ViewProjection = viewProjection;
     constants.View = viewMatrix;
     constants.Projection = projectionMatrix;
-    constants.InverseView = Matrix4x4::Invert(viewMatrix);
+    constants.InverseView = math::Invert(viewMatrix);
     constants.LightDirection = Vector4{lightDirection, 0.0f};
     constantBuffer->SetValue(constants);
 

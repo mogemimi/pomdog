@@ -271,7 +271,7 @@ void GLTFModelTest::Update()
     worldConstants.ViewProjection = viewMatrix * projectionMatrix;
     worldConstants.View = viewMatrix;
     worldConstants.Projection = projectionMatrix;
-    worldConstants.InverseView = Matrix4x4::Invert(viewMatrix);
+    worldConstants.InverseView = math::Invert(viewMatrix);
     worldConstants.LightDirection = Vector4{lightDirection, 0.0f};
     worldConstantBuffer->SetValue(worldConstants);
 

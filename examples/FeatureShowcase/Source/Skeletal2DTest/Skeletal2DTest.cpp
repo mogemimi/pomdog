@@ -217,12 +217,12 @@ void Skeletal2DTest::Update()
         -1.0f,
         1000.0f);
 
-    auto viewMatrix = Matrix4x4::Identity;
+    auto viewMatrix = Matrix4x4::Identity();
 
     // NOTE: Update constant buffer for world
     BasicEffect::WorldConstantBuffer worldConstants;
     worldConstants.ViewProjection = viewMatrix * projectionMatrix;
-    worldConstants.InverseView = Matrix4x4::Invert(viewMatrix);
+    worldConstants.InverseView = math::Invert(viewMatrix);
     worldConstants.LightDirection = Vector4{Vector3::UnitZ(), 0.0f};
     worldConstantBuffer->SetValue(worldConstants);
 

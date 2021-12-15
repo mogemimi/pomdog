@@ -165,7 +165,7 @@ void PrimitiveBatch::Impl::Begin(
     POMDOG_ASSERT(commandListIn);
     commandList = commandListIn;
 
-    alignas(16) Matrix4x4 transposedMatrix = Matrix4x4::Transpose(transformMatrix);
+    alignas(16) Matrix4x4 transposedMatrix = math::Transpose(transformMatrix);
     constantBuffer->SetValue(transposedMatrix);
 
     startVertexLocation = 0;
