@@ -289,7 +289,7 @@ std::vector<SlotDesc> ReadSlots(const rapidjson::Value& slotsDOM, const std::vec
         SlotDesc slotDesc;
         slotDesc.Name = name.GetString();
         slotDesc.Attachement = attachment.GetString();
-        slotDesc.Color = Color::White;
+        slotDesc.Color = Color::White();
         slotDesc.Joint = FindJointIndex(bone.GetString(), bones);
 
         ReadJsonMember(slot, "color", slotDesc.Color);

@@ -51,7 +51,7 @@ Export(const VoxModel& model, const std::string& filePath) noexcept
         std::next(std::begin(colors), 1),
         std::end(colors));
 
-    POMDOG_ASSERT(colors.back() == Color::Black);
+    POMDOG_ASSERT(colors.back() == Color::Black());
 
     using magicavoxel::VoxChunkHeader;
 

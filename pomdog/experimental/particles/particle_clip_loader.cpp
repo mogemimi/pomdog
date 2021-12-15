@@ -106,7 +106,7 @@ ParseColor(const rapidjson::Value& value)
         color.A = static_cast<std::uint8_t>(value[3].GetUint());
         return std::make_tuple(color, nullptr);
     }
-    return std::make_tuple(Color::TransparentBlack, errors::New("member is not Color"));
+    return std::make_tuple(Color::TransparentBlack(), errors::New("member is not Color"));
 }
 
 std::unique_ptr<Error>

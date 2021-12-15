@@ -77,7 +77,7 @@ void BillboardBatchTest::Draw()
 
     Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
     RenderPass pass;
-    pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue.ToVector4()};
+    pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
     pass.DepthStencilBuffer = nullptr;
     pass.ClearDepth = 1.0f;
     pass.ClearStencil = std::uint8_t(0);
@@ -124,7 +124,7 @@ void BillboardBatchTest::Draw()
             float x = static_cast<float>(i) * gridSize + startOffsetX;
             float z = static_cast<float>(i) * gridSize + startOffsetZ;
 
-            auto color = Color::White;
+            auto color = Color::White();
             if (i % 5 != 0) {
                 color = Color{255, 255, 255, 100};
             }
@@ -141,7 +141,7 @@ void BillboardBatchTest::Draw()
         Vector3{0.0f, 0.0f, 2.0f},
         Vector2{0.0f, 0.0f},
         Vector2{1.0f, 1.0f},
-        Color::White, 0.0f,
+        Color::White(), 0.0f,
         Vector2{0.5f, 0.5f},
         Vector2{1.0f, 1.0f});
 
@@ -149,7 +149,7 @@ void BillboardBatchTest::Draw()
         Vector3{0.0f, 0.0f, 5.0f},
         Vector2{0.0f, 0.0f},
         Vector2{1.0f, 1.0f},
-        Color::Red,
+        Color::Red(),
         math::ToRadians(45.0f),
         Vector2{0.5f, 0.5f},
         Vector2{1.0f, 1.0f});
@@ -158,7 +158,7 @@ void BillboardBatchTest::Draw()
         Vector3{0.0f, 0.0f, 7.0f},
         Vector2{0.0f, 0.0f},
         Vector2{0.5f, 1.0f},
-        Color::Green,
+        Color::Green(),
         math::ToRadians(0.0f),
         Vector2{0.5f, 0.0f},
         Vector2{1.0f, 2.0f});
@@ -167,7 +167,7 @@ void BillboardBatchTest::Draw()
         Vector3{0.0f, 0.0f, 10.0f},
         Vector2{0.0f, 0.0f},
         Vector2{1.0f, 0.5f},
-        Color::Blue,
+        Color::Blue(),
         math::ToRadians(0.0f),
         Vector2{0.0f, 0.0f},
         Vector2{2.0f, 1.0f});

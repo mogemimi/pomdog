@@ -266,7 +266,7 @@ void VerticalScrollBar::Draw(DrawingContext& drawingContext)
             std::swap(startColor, targetColor);
         }
         const auto scaleFactor = colorAnimation->time / colorAnimation->duration;
-        thumbColor = Color::SmoothStep(startColor, targetColor, scaleFactor);
+        thumbColor = math::SmoothStep(startColor, targetColor, scaleFactor);
     }
     else if (isPointerEntered) {
         POMDOG_ASSERT(isEnabled);

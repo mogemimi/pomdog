@@ -338,7 +338,7 @@ void FeatureShowcaseGame::DrawMenu()
         {
             Color color = Color{121, 120, 118, 255};
             if (button.Selected) {
-                color = Color::Lerp(
+                color = math::Lerp(
                     Color{160, 160, 160, 255},
                     Color{191, 190, 180, 255},
                     0.5f + 0.5f * std::cos(math::TwoPi<float> * static_cast<float>(timer->GetTotalTime().count())));
@@ -355,7 +355,7 @@ void FeatureShowcaseGame::DrawMenu()
 
             Color color = Color{221, 220, 218, 255};
             if (button.Selected) {
-                color = Color::White;
+                color = Color::White();
             }
 
             position.X += 10.0f;
@@ -383,7 +383,7 @@ void FeatureShowcaseGame::DrawMenu()
         spriteFont->Draw(*spriteBatch,
             footerString,
             Vector2{static_cast<float>(viewport.Width) - 8.0f, 8.0f},
-            Color::White,
+            Color::White(),
             0.0f,
             Vector2{1.0f, 0.0f},
             1.0f);

@@ -152,7 +152,7 @@ std::unique_ptr<Error> HardwareInstancingTest::Initialize()
     {
         SpriteInfo sprite;
         sprite.Translation = Vector4{0.0f, 0.0f, 32.0f, 32.0f};
-        sprite.Color = Color::White.ToVector4();
+        sprite.Color = Color::White().ToVector4();
 
         // NOTE: Add new sprite
         sprites.push_back(std::move(sprite));
@@ -222,7 +222,7 @@ void HardwareInstancingTest::Draw()
 
     Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
     RenderPass pass;
-    pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue.ToVector4()};
+    pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
     pass.DepthStencilBuffer = nullptr;
     pass.ClearDepth = 1.0f;
     pass.ClearStencil = std::uint8_t(0);

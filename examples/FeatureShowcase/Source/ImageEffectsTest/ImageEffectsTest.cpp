@@ -113,7 +113,7 @@ void ImageEffectsTest::Draw()
 
     Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
     RenderPass pass;
-    pass.RenderTargets[0] = {renderTarget, Color::CornflowerBlue.ToVector4()};
+    pass.RenderTargets[0] = {renderTarget, Color::CornflowerBlue().ToVector4()};
     pass.DepthStencilBuffer = depthStencilBuffer;
     pass.ClearDepth = 1.0f;
     pass.ClearStencil = std::uint8_t(0);
@@ -142,14 +142,14 @@ void ImageEffectsTest::Draw()
     primitiveBatch->DrawLine(Vector2{w * 0.25f, -h * 0.5f}, Vector2{w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
 
     // Drawing rectangle
-    primitiveBatch->DrawRectangle(Vector2::Zero(), 100, 40, Vector2{1.0f, 1.0f}, Color::White);
-    primitiveBatch->DrawRectangle(Vector2::Zero(), 40, 100, Vector2{0.0f, 0.0f}, Color::Black);
-    primitiveBatch->DrawRectangle(Vector2::Zero(), 30, 30, Vector2{0.5f, 0.5f}, Color::Green);
+    primitiveBatch->DrawRectangle(Vector2::Zero(), 100, 40, Vector2{1.0f, 1.0f}, Color::White());
+    primitiveBatch->DrawRectangle(Vector2::Zero(), 40, 100, Vector2{0.0f, 0.0f}, Color::Black());
+    primitiveBatch->DrawRectangle(Vector2::Zero(), 30, 30, Vector2{0.5f, 0.5f}, Color::Green());
 
     // Drawing triangle
     primitiveBatch->DrawTriangle(
         Vector2{0.0f, -40.0f}, Vector2{40.0f, 0.0f}, Vector2{40.0f, -40.0f},
-        Color::Black, Color::Green, Color::Red);
+        Color::Black(), Color::Green(), Color::Red());
 
     primitiveBatch->End();
 

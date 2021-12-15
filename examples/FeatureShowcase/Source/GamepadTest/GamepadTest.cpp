@@ -59,7 +59,7 @@ void GamepadTest::Draw()
 
     Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
     RenderPass pass;
-    pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue.ToVector4()};
+    pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
     pass.DepthStencilBuffer = nullptr;
     pass.ClearDepth = 1.0f;
     pass.ClearStencil = std::uint8_t(0);
@@ -73,21 +73,21 @@ void GamepadTest::Draw()
     auto textPos = Vector2{-240.0f, 220.0f};
     constexpr float fontScale = 0.7f;
     auto printText = [&](const std::string& name, const std::string& s) {
-        spriteFont->Draw(*spriteBatch, name + ":", textPos, Color::White, 0.0f, Vector2{1.0f, 0.5f}, fontScale);
-        spriteFont->Draw(*spriteBatch, s, textPos + Vector2{10.0f, 0.0f}, Color::Yellow, 0.0f, Vector2{0.0f, 0.5f}, fontScale);
+        spriteFont->Draw(*spriteBatch, name + ":", textPos, Color::White(), 0.0f, Vector2{1.0f, 0.5f}, fontScale);
+        spriteFont->Draw(*spriteBatch, s, textPos + Vector2{10.0f, 0.0f}, Color::Yellow(), 0.0f, Vector2{0.0f, 0.5f}, fontScale);
         textPos.Y -= 18.0f;
     };
 
     auto gamepad = gameHost->GetGamepad();
 
     auto printButton = [&](const std::string& name, ButtonState button, bool hasButton) {
-        spriteFont->Draw(*spriteBatch, name + ":", textPos, Color::White, 0.0f, Vector2{1.0f, 0.5f}, fontScale);
+        spriteFont->Draw(*spriteBatch, name + ":", textPos, Color::White(), 0.0f, Vector2{1.0f, 0.5f}, fontScale);
         auto pos = textPos + Vector2{10.0f, 0.0f};
         if (!hasButton) {
-            spriteFont->Draw(*spriteBatch, "Disabled", pos, Color::Red, 0.0f, Vector2{0.0f, 0.5f}, fontScale);
+            spriteFont->Draw(*spriteBatch, "Disabled", pos, Color::Red(), 0.0f, Vector2{0.0f, 0.5f}, fontScale);
         }
         else if (button == ButtonState::Pressed) {
-            spriteFont->Draw(*spriteBatch, "Press", pos, Color::Green, 0.0f, Vector2{0.0f, 0.5f}, fontScale);
+            spriteFont->Draw(*spriteBatch, "Press", pos, Color::Green(), 0.0f, Vector2{0.0f, 0.5f}, fontScale);
         }
         else {
             spriteFont->Draw(*spriteBatch, "Released", pos, Color{0, 255, 255, 120}, 0.0f, Vector2{0.0f, 0.5f}, fontScale);
@@ -97,10 +97,10 @@ void GamepadTest::Draw()
     };
 
     auto printThumbstick = [&](const std::string& name, float s, bool hasButton) {
-        spriteFont->Draw(*spriteBatch, name + ":", textPos, Color::White, 0.0f, Vector2{1.0f, 0.5f}, fontScale);
+        spriteFont->Draw(*spriteBatch, name + ":", textPos, Color::White(), 0.0f, Vector2{1.0f, 0.5f}, fontScale);
         auto pos = textPos + Vector2{10.0f, 0.0f};
         if (!hasButton) {
-            spriteFont->Draw(*spriteBatch, "Disabled", pos, Color::Red, 0.0f, Vector2{0.0f, 0.5f}, fontScale);
+            spriteFont->Draw(*spriteBatch, "Disabled", pos, Color::Red(), 0.0f, Vector2{0.0f, 0.5f}, fontScale);
         }
         else {
             spriteFont->Draw(*spriteBatch, StringHelper::Format("%.4f", s), pos, Color{0, 255, 255, 120}, 0.0f, Vector2{0.0f, 0.5f}, fontScale);

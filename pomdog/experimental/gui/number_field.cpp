@@ -44,7 +44,7 @@ NumberField::NumberField(
     textBlock = std::make_shared<TextBlock>(dispatcher);
     textBlock->SetBaselineHeight(4.0f);
     textBlock->SetTextAlignment(TextAlignment::Center);
-    textBlock->SetColor(Color::White);
+    textBlock->SetColor(Color::White());
     textBlock->SetText(dataContext->ToString());
 
     addButton = std::make_shared<PushButton>(dispatcher);

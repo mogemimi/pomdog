@@ -171,7 +171,7 @@ void ParticleSystem::Simulate(
             const auto normalizedTime = 1.0f - particle.TimeToLive * invertedLifetime;
 
             POMDOG_ASSERT(clip->ColorOverLifetime);
-            particle.Color = Color::Multiply(particle.StartColor,
+            particle.Color = math::Multiply(particle.StartColor,
                 clip->ColorOverLifetime->Compute(normalizedTime, particle.ColorVariance));
 
             // Rotation

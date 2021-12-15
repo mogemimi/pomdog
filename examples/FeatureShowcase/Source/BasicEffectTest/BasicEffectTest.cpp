@@ -82,34 +82,34 @@ std::unique_ptr<Error> BasicEffectTest::Initialize()
         // NOTE: Create vertex buffer
         std::array<VertexCombined, 20> verticesCombo = {{
             // top
-            {Vector3{0.0f, 1.0f, 0.0f}, Color::White.ToVector4()},
-            {Vector3{1.0f, 1.0f, 0.0f}, Color::White.ToVector4()},
-            {Vector3{1.0f, 1.0f, 1.0f}, Color::White.ToVector4()},
-            {Vector3{0.0f, 1.0f, 1.0f}, Color::White.ToVector4()},
+            {Vector3{0.0f, 1.0f, 0.0f}, Color::White().ToVector4()},
+            {Vector3{1.0f, 1.0f, 0.0f}, Color::White().ToVector4()},
+            {Vector3{1.0f, 1.0f, 1.0f}, Color::White().ToVector4()},
+            {Vector3{0.0f, 1.0f, 1.0f}, Color::White().ToVector4()},
 
             // left
-            {Vector3{0.0f, 0.0f, 1.0f}, Color::Yellow.ToVector4()},
-            {Vector3{0.0f, 0.0f, 0.0f}, Color::Yellow.ToVector4()},
-            {Vector3{0.0f, 1.0f, 0.0f}, Color::Yellow.ToVector4()},
-            {Vector3{0.0f, 1.0f, 1.0f}, Color::Yellow.ToVector4()},
+            {Vector3{0.0f, 0.0f, 1.0f}, Color::Yellow().ToVector4()},
+            {Vector3{0.0f, 0.0f, 0.0f}, Color::Yellow().ToVector4()},
+            {Vector3{0.0f, 1.0f, 0.0f}, Color::Yellow().ToVector4()},
+            {Vector3{0.0f, 1.0f, 1.0f}, Color::Yellow().ToVector4()},
 
             // right
-            {Vector3{1.0f, 0.0f, 1.0f}, Color::Red.ToVector4()},
-            {Vector3{1.0f, 0.0f, 0.0f}, Color::Red.ToVector4()},
-            {Vector3{1.0f, 1.0f, 0.0f}, Color::Red.ToVector4()},
-            {Vector3{1.0f, 1.0f, 1.0f}, Color::Red.ToVector4()},
+            {Vector3{1.0f, 0.0f, 1.0f}, Color::Red().ToVector4()},
+            {Vector3{1.0f, 0.0f, 0.0f}, Color::Red().ToVector4()},
+            {Vector3{1.0f, 1.0f, 0.0f}, Color::Red().ToVector4()},
+            {Vector3{1.0f, 1.0f, 1.0f}, Color::Red().ToVector4()},
 
             // front
-            {Vector3{0.0f, 0.0f, 0.0f}, Color::Blue.ToVector4()},
-            {Vector3{1.0f, 0.0f, 0.0f}, Color::Blue.ToVector4()},
-            {Vector3{1.0f, 1.0f, 0.0f}, Color::Blue.ToVector4()},
-            {Vector3{0.0f, 1.0f, 0.0f}, Color::Blue.ToVector4()},
+            {Vector3{0.0f, 0.0f, 0.0f}, Color::Blue().ToVector4()},
+            {Vector3{1.0f, 0.0f, 0.0f}, Color::Blue().ToVector4()},
+            {Vector3{1.0f, 1.0f, 0.0f}, Color::Blue().ToVector4()},
+            {Vector3{0.0f, 1.0f, 0.0f}, Color::Blue().ToVector4()},
 
             // back
-            {Vector3{0.0f, 0.0f, 1.0f}, Color::Red.ToVector4()},
-            {Vector3{1.0f, 0.0f, 1.0f}, Color::Yellow.ToVector4()},
-            {Vector3{1.0f, 1.0f, 1.0f}, Color::Blue.ToVector4()},
-            {Vector3{0.0f, 1.0f, 1.0f}, Color::White.ToVector4()},
+            {Vector3{0.0f, 0.0f, 1.0f}, Color::Red().ToVector4()},
+            {Vector3{1.0f, 0.0f, 1.0f}, Color::Yellow().ToVector4()},
+            {Vector3{1.0f, 1.0f, 1.0f}, Color::Blue().ToVector4()},
+            {Vector3{0.0f, 1.0f, 1.0f}, Color::White().ToVector4()},
         }};
 
         std::tie(vertexBuffer2, err) = graphicsDevice->CreateVertexBuffer(
@@ -280,7 +280,7 @@ void BasicEffectTest::Draw()
 
     Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
     RenderPass pass;
-    pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue.ToVector4()};
+    pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
     pass.DepthStencilBuffer = nullptr;
     pass.ClearDepth = 1.0f;
     pass.ClearStencil = std::uint8_t(0);

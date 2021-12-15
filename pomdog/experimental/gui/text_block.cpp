@@ -11,7 +11,7 @@ namespace pomdog::gui {
 
 TextBlock::TextBlock(const std::shared_ptr<UIEventDispatcher>& dispatcher)
     : Widget(dispatcher)
-    , textColor(Color::Black)
+    , textColor(Color::Black())
     , baselineHeight(0.0f)
     , fontWeight(FontWeight::Normal)
     , fontSize(FontSize::Medium)

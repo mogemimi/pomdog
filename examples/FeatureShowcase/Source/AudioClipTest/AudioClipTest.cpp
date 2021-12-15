@@ -113,7 +113,7 @@ void AudioClipTest::Draw()
 
     Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
     RenderPass pass;
-    pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue.ToVector4()};
+    pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
     pass.DepthStencilBuffer = nullptr;
     pass.ClearDepth = 1.0f;
     pass.ClearStencil = std::uint8_t(0);
@@ -126,13 +126,13 @@ void AudioClipTest::Draw()
     const auto width = static_cast<float>(viewport.Width);
     spriteBatch->Begin(commandList, projectionMatrix);
     if (soundEffect2->GetState() != SoundState::Playing) {
-        spriteFont->Draw(*spriteBatch, "Click here to play BGM", Vector2{-width * 0.5f + 10.0f, 20.0f}, Color::White, 0.0f, Vector2{0.0f, 0.5f}, 1.0f);
+        spriteFont->Draw(*spriteBatch, "Click here to play BGM", Vector2{-width * 0.5f + 10.0f, 20.0f}, Color::White(), 0.0f, Vector2{0.0f, 0.5f}, 1.0f);
     }
     else {
-        spriteFont->Draw(*spriteBatch, "Click here to pause BGM", Vector2{-width * 0.5f + 10.0f, 20.0f}, Color::Green, 0.0f, Vector2{0.0f, 0.5f}, 1.0f);
+        spriteFont->Draw(*spriteBatch, "Click here to pause BGM", Vector2{-width * 0.5f + 10.0f, 20.0f}, Color::Green(), 0.0f, Vector2{0.0f, 0.5f}, 1.0f);
     }
 
-    spriteFont->Draw(*spriteBatch, "Click here to play SE", Vector2{width * 0.5f - 10.0f, -20.0f}, Color::White, 0.0f, Vector2{1.0f, 0.5f}, 1.0f);
+    spriteFont->Draw(*spriteBatch, "Click here to play SE", Vector2{width * 0.5f - 10.0f, -20.0f}, Color::White(), 0.0f, Vector2{1.0f, 0.5f}, 1.0f);
     spriteBatch->End();
 
     commandList->Close();

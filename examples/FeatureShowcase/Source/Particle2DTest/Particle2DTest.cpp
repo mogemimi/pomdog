@@ -55,15 +55,15 @@ std::shared_ptr<ParticleClip> CreateEmitterFireBlock()
 #endif
 
 #if 0
-    clip->StartColor = std::make_unique<ParticleParameterConstant<Color>>(Color::White);
+    clip->StartColor = std::make_unique<ParticleParameterConstant<Color>>(Color::White());
 #else
-    clip->StartColor = std::make_unique<ParticleParameterRandom<Color>>(Color::Black, Color{200, 180, 100, 50});
+    clip->StartColor = std::make_unique<ParticleParameterRandom<Color>>(Color::Black(), Color{200, 180, 100, 50});
 #endif
 
 #if 0
-    clip->ColorOverLifetime = std::make_unique<ParticleParameterConstant<Color>>(Color::White);
+    clip->ColorOverLifetime = std::make_unique<ParticleParameterConstant<Color>>(Color::White());
 #elif 0
-    clip->ColorOverLifetime = std::make_unique<ParticleParameterRandom<Color>>(Color::Yellow, Color::Black);
+    clip->ColorOverLifetime = std::make_unique<ParticleParameterRandom<Color>>(Color::Yellow(), Color::Black());
 #else
     clip->ColorOverLifetime = std::make_unique<ParticleParameterCurve<Color>>(
         std::initializer_list<ParticleCurveKey<Color>>{
@@ -194,7 +194,7 @@ void Particle2DTest::Draw()
 
     Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
     RenderPass pass;
-    pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue.ToVector4()};
+    pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
     pass.DepthStencilBuffer = nullptr;
     pass.ClearDepth = 1.0f;
     pass.ClearStencil = std::uint8_t(0);

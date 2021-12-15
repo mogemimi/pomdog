@@ -32,16 +32,16 @@ class SpriteFont;
 namespace pomdog::gui {
 
 struct ColorScheme final {
-    Color SliderTextColor = Color::White;
+    Color SliderTextColor = Color::White();
     Color SliderFillColorBase = {27, 141, 206, 255};
     Color SliderFillColorHovered = {56, 150, 225, 255};
     Color SliderFillColorDisabled = {150, 161, 167, 255};
     Color SliderTrackColorBase = {110, 108, 109, 255};
     Color SliderTrackColorHovered = {121, 120, 120, 255};
-    Color SliderThumbColorBase = Color::Black;
+    Color SliderThumbColorBase = Color::Black();
     Color SliderThumbColorFocused = {229, 20, 0, 255};
 
-    Color TextFieldTextColor = Color::White;
+    Color TextFieldTextColor = Color::White();
     Color TextFieldRectColorBase = Color{92, 90, 91, 255};
     Color TextFieldBorderColorBase = Color{104, 100, 101, 255};
     Color TextFieldBorderColorFocus = Color{31, 115, 172, 255};
@@ -52,7 +52,7 @@ struct ColorScheme final {
     Color ScrollBarTrackColor = Color{62, 60, 61, 255};
     Color ScrollBarBorderColor = Color{95, 92, 91, 255};
 
-    Color CheckBoxCheckMarkColorBase = Color::White;
+    Color CheckBoxCheckMarkColorBase = Color::White();
     Color CheckBoxCheckMarkColorDisabled = Color{137, 137, 137, 255};
     Color CheckBoxRectColorOn = Color{27, 141, 206, 255};
     Color CheckBoxRectColorOff = Color{160, 160, 160, 255};

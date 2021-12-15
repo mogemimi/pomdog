@@ -70,7 +70,7 @@ std::unique_ptr<Error> EditorGUITest::Initialize()
             verticalLayout->AddChild(horizontalLayout);
 
             auto textBlock = std::make_shared<gui::TextBlock>(dispatcher);
-            textBlock->SetColor(Color::White);
+            textBlock->SetColor(Color::White());
             textBlock->SetText("Vector3");
             horizontalLayout->AddChild(textBlock);
 
@@ -115,7 +115,7 @@ std::unique_ptr<Error> EditorGUITest::Initialize()
 
         for (int i = 0; i < 40; ++i) {
             auto textBlock = std::make_shared<gui::TextBlock>(dispatcher);
-            textBlock->SetColor(Color::White);
+            textBlock->SetColor(Color::White());
             textBlock->SetText("Text " + std::to_string(i));
             listView->AddChild(textBlock);
         }
@@ -158,7 +158,7 @@ std::unique_ptr<Error> EditorGUITest::Initialize()
         stackPanel->AddChild(horizontalLayout);
 
         auto textBlock = std::make_shared<gui::TextBlock>(dispatcher);
-        textBlock->SetColor(Color::White);
+        textBlock->SetColor(Color::White());
         textBlock->SetText("Slider");
         horizontalLayout->AddChild(textBlock);
 
@@ -173,7 +173,7 @@ std::unique_ptr<Error> EditorGUITest::Initialize()
         stackPanel->AddChild(horizontalLayout);
 
         auto textBlock = std::make_shared<gui::TextBlock>(dispatcher);
-        textBlock->SetColor(Color::White);
+        textBlock->SetColor(Color::White());
         textBlock->SetText("Toggle");
         horizontalLayout->AddChild(textBlock);
 
@@ -185,7 +185,7 @@ std::unique_ptr<Error> EditorGUITest::Initialize()
         stackPanel->AddChild(horizontalLayout);
 
         auto textBlock = std::make_shared<gui::TextBlock>(dispatcher);
-        textBlock->SetColor(Color::White);
+        textBlock->SetColor(Color::White());
         textBlock->SetText("CheckBox");
         horizontalLayout->AddChild(textBlock);
 
@@ -197,7 +197,7 @@ std::unique_ptr<Error> EditorGUITest::Initialize()
         stackPanel->AddChild(horizontalLayout);
 
         auto textBlock = std::make_shared<gui::TextBlock>(dispatcher);
-        textBlock->SetColor(Color::White);
+        textBlock->SetColor(Color::White());
         textBlock->SetText("PopupMenu");
         horizontalLayout->AddChild(textBlock);
 
@@ -216,7 +216,7 @@ std::unique_ptr<Error> EditorGUITest::Initialize()
         stackPanel->AddChild(horizontalLayout);
 
         auto textBlock = std::make_shared<gui::TextBlock>(dispatcher);
-        textBlock->SetColor(Color::White);
+        textBlock->SetColor(Color::White());
         textBlock->SetText("Button");
         horizontalLayout->AddChild(textBlock);
 
@@ -240,7 +240,7 @@ std::unique_ptr<Error> EditorGUITest::Initialize()
         stackPanel->AddChild(horizontalLayout);
 
         auto textBlock = std::make_shared<gui::TextBlock>(dispatcher);
-        textBlock->SetColor(Color::White);
+        textBlock->SetColor(Color::White());
         textBlock->SetText("TextField");
         horizontalLayout->AddChild(textBlock);
 
@@ -256,7 +256,7 @@ std::unique_ptr<Error> EditorGUITest::Initialize()
         stackPanel->AddChild(horizontalLayout);
 
         auto textBlock = std::make_shared<gui::TextBlock>(dispatcher);
-        textBlock->SetColor(Color::White);
+        textBlock->SetColor(Color::White());
         textBlock->SetText("FloatField");
         horizontalLayout->AddChild(textBlock);
 
@@ -272,7 +272,7 @@ std::unique_ptr<Error> EditorGUITest::Initialize()
         stackPanel->AddChild(horizontalLayout);
 
         auto textBlock = std::make_shared<gui::TextBlock>(dispatcher);
-        textBlock->SetColor(Color::White);
+        textBlock->SetColor(Color::White());
         textBlock->SetText("IntField");
         horizontalLayout->AddChild(textBlock);
 
@@ -288,7 +288,7 @@ std::unique_ptr<Error> EditorGUITest::Initialize()
         stackPanel->AddChild(horizontalLayout);
 
         auto textBlock = std::make_shared<gui::TextBlock>(dispatcher);
-        textBlock->SetColor(Color::White);
+        textBlock->SetColor(Color::White());
         textBlock->SetText("Vector3");
         horizontalLayout->AddChild(textBlock);
 
@@ -337,7 +337,7 @@ void EditorGUITest::Draw()
 
     Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
     RenderPass pass;
-    pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue.ToVector4()};
+    pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
     pass.DepthStencilBuffer = nullptr;
     pass.ClearDepth = 1.0f;
     pass.ClearStencil = std::uint8_t(0);
@@ -361,7 +361,7 @@ void EditorGUITest::Draw()
 
     spriteBatch->Begin(commandList, projectionMatrix);
     spriteFont->Draw(*spriteBatch, propertyText1, Vector2::Zero(), Color{255, 255, 255, 190}, 0.0f, Vector2{0.0f, 1.0f}, 1.0f);
-    spriteFont->Draw(*spriteBatch, propertyText2, Vector2::Zero(), Color::White, 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
+    spriteFont->Draw(*spriteBatch, propertyText2, Vector2::Zero(), Color::White(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
     spriteBatch->End();
 
     auto viewMatrix = Matrix4x4::CreateTranslation(Vector3{

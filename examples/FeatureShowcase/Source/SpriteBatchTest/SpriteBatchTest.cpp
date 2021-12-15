@@ -89,7 +89,7 @@ void SpriteBatchTest::Draw()
 
     Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
     RenderPass pass;
-    pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue.ToVector4()};
+    pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
     pass.DepthStencilBuffer = nullptr;
     pass.ClearDepth = 1.0f;
     pass.ClearStencil = std::uint8_t(0);
@@ -136,7 +136,7 @@ void SpriteBatchTest::Draw()
         texture,
         Vector2{64.0f, 64.0f},
         Rectangle{0, 0, texture->GetWidth(), texture->GetHeight()},
-        Color::White,
+        Color::White(),
         math::TwoPi<float> * Easings::EaseSine::InOut(t),
         Vector2{1.0f, 1.0f},
         2.0f);

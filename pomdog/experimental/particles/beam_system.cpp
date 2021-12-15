@@ -146,7 +146,7 @@ BeamSystem::BeamSystem()
     emitter.Jaggedness = 0.7f;
     emitter.MaxBeams = 100;
     emitter.EmissionRate = 10;
-    emitter.StartColor = Color::White;
+    emitter.StartColor = Color::White();
     emitter.EndColor = {255, 220, 130, 0};
     emitter.StartThickness = 1.4f;
 
@@ -236,7 +236,7 @@ void BeamSystem::Update(const Duration& frameDuration, const Vector2& emitterPos
 
             float normalizedTime = 1.0f - beam.TimeToLive / emitter.StartLifetime;
 
-            beam.Color = Color::SmoothStep(emitter.StartColor, emitter.EndColor, normalizedTime);
+            beam.Color = math::SmoothStep(emitter.StartColor, emitter.EndColor, normalizedTime);
         }
 
         beams.erase(std::remove_if(std::begin(beams), std::end(beams),

@@ -18,8 +18,8 @@ public:
     Vector3 Position{0.0f, 0.0f, 0.0f};
     Vector3 Velocity{1.0f, 1.0f, 1.0f};
 
-    pomdog::Color StartColor = pomdog::Color::White;
-    pomdog::Color Color = pomdog::Color::White;
+    pomdog::Color StartColor = pomdog::Color::White();
+    pomdog::Color Color = pomdog::Color::White();
     float ColorVariance = 0.0f;
 
     Radian<float> Rotation = 0.0f;

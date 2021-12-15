@@ -29,7 +29,7 @@ template <>
 struct ParticleCurveLerp<Color> final {
     Color operator()(const Color& a, const Color& b, float amount)
     {
-        return Color::Lerp(a, b, amount);
+        return math::Lerp(a, b, amount);
     }
 };
 

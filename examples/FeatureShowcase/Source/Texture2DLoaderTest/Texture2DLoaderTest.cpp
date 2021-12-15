@@ -105,7 +105,7 @@ void Texture2DLoaderTest::Draw()
 
     Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
     RenderPass pass;
-    pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue.ToVector4()};
+    pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
     pass.DepthStencilBuffer = nullptr;
     pass.ClearDepth = 1.0f;
     pass.ClearStencil = std::uint8_t(0);
@@ -143,12 +143,12 @@ void Texture2DLoaderTest::Draw()
     constexpr float startY = 160.0f;
     float posY = startY;
     for (auto& t : textures) {
-        spriteBatch->Draw(t, Vector2{-100.0f, posY}, Color::White);
+        spriteBatch->Draw(t, Vector2{-100.0f, posY}, Color::White());
         posY = posY - marginY;
     }
     posY = startY;
     for (auto& t : texts) {
-        spriteFont->Draw(*spriteBatch, t, Vector2{-60.0f, posY}, Color::White, 0.0f, Vector2{0.0f, 0.3f}, 0.8f);
+        spriteFont->Draw(*spriteBatch, t, Vector2{-60.0f, posY}, Color::White(), 0.0f, Vector2{0.0f, 0.3f}, 0.8f);
         posY = posY - marginY;
     }
     spriteBatch->End();

@@ -100,7 +100,7 @@ CreateSlots(
         slot.JointIndex = slotDesc.Joint;
         slot.HashID = detail::crc32::ComputeCRC32(slotDesc.Name);
 
-        slot.Color = Color::White;
+        slot.Color = Color::White();
         slot.DrawOrder = drawOrder;
         slot.Scale = attachment->Scale;
         slot.Translate = attachment->Translate;

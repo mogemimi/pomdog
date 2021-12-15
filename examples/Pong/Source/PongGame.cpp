@@ -367,10 +367,10 @@ void PongGame::Draw()
             auto p2 = Vector2(static_cast<float>(gameFieldSize.GetLeft()), static_cast<float>(gameFieldSize.GetTop()));
             auto p3 = Vector2(static_cast<float>(gameFieldSize.GetRight()), static_cast<float>(gameFieldSize.GetTop()));
             auto p4 = Vector2(static_cast<float>(gameFieldSize.GetRight()), static_cast<float>(gameFieldSize.GetBottom()));
-            primitiveBatch->DrawLine(p1, p2, Color::White, 2.0f);
-            primitiveBatch->DrawLine(p2, p3, Color::White, 2.0f);
-            primitiveBatch->DrawLine(p3, p4, Color::White, 2.0f);
-            primitiveBatch->DrawLine(p4, p1, Color::White, 2.0f);
+            primitiveBatch->DrawLine(p1, p2, Color::White(), 2.0f);
+            primitiveBatch->DrawLine(p2, p3, Color::White(), 2.0f);
+            primitiveBatch->DrawLine(p3, p4, Color::White(), 2.0f);
+            primitiveBatch->DrawLine(p4, p1, Color::White(), 2.0f);
         }
         {
             // Dotted line
@@ -381,61 +381,61 @@ void PongGame::Draw()
             for (int i = 0; i < count; ++i) {
                 Vector2 start = {0.0f, height / count * i + startY};
                 Vector2 end = {0.0f, height / count * (i + offset) + startY};
-                primitiveBatch->DrawLine(start, end, Color::White, 2.0f);
+                primitiveBatch->DrawLine(start, end, Color::White(), 2.0f);
             }
         }
 
         // Paddle 1
-        primitiveBatch->DrawRectangle(paddle1.Position, 10.0f, paddle1.Height, {0.5f, 0.5f}, Color::White);
+        primitiveBatch->DrawRectangle(paddle1.Position, 10.0f, paddle1.Height, {0.5f, 0.5f}, Color::White());
 
         // Paddle 2
-        primitiveBatch->DrawRectangle(paddle2.Position, 10.0f, paddle2.Height, {0.5f, 0.5f}, Color::White);
+        primitiveBatch->DrawRectangle(paddle2.Position, 10.0f, paddle2.Height, {0.5f, 0.5f}, Color::White());
 
         // Ball
-        primitiveBatch->DrawCircle(ball.Position, 6.0f, 32, Color::White);
+        primitiveBatch->DrawCircle(ball.Position, 6.0f, 32, Color::White());
     }
     primitiveBatch->End();
 
     // NOTE: Draw sprites and fonts
     spriteBatch->Begin(commandList, Matrix4x4::CreateScale(0.002f) * viewProjection);
-    spriteFont->Draw(*spriteBatch, "", Vector2::Zero(), Color::White, 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
+    spriteFont->Draw(*spriteBatch, "", Vector2::Zero(), Color::White(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
     {
         // Header Text
         spriteFont->Draw(
             *spriteBatch,
             headerText,
-            Vector2{-110, 140}, Color::White, 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
+            Vector2{-110, 140}, Color::White(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
 
         // Footer Text
         spriteFont->Draw(
             *spriteBatch,
             "[SPACE] to start, WS and Up/Down to move",
-            Vector2{-180, -170}, Color::White, 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
+            Vector2{-180, -170}, Color::White(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
     }
     if (scoreTextVisible) {
         // "Player 1" Text
         spriteFont->Draw(
             *spriteBatch,
             "Player 1",
-            Vector2{-135, 90}, Color::Yellow, 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
+            Vector2{-135, 90}, Color::Yellow(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
 
         // "Player 2" Text
         spriteFont->Draw(
             *spriteBatch,
             "Player 2",
-            Vector2{65, 90}, Color::Yellow, 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
+            Vector2{65, 90}, Color::Yellow(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
 
         // "Player 1" Score Text
         spriteFont->Draw(
             *spriteBatch,
             std::to_string(player1.GetScore()),
-            Vector2{-110, 50}, Color::White, 0.0f, Vector2{0.0f, 0.0f}, 2.0f);
+            Vector2{-110, 50}, Color::White(), 0.0f, Vector2{0.0f, 0.0f}, 2.0f);
 
         // "Player 2" Score Text
         spriteFont->Draw(
             *spriteBatch,
             std::to_string(player2.GetScore()),
-            Vector2{80, 50}, Color::White, 0.0f, Vector2{0.0f, 0.0f}, 2.0f);
+            Vector2{80, 50}, Color::White(), 0.0f, Vector2{0.0f, 0.0f}, 2.0f);
     }
     spriteBatch->End();
 

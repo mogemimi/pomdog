@@ -58,7 +58,7 @@ HorizontalSplitter::HorizontalSplitter(
     int heightIn)
     : Widget(dispatcher)
     , margin{0, 0, 0, 0}
-    , backgroundColor(Color::TransparentBlack)
+    , backgroundColor(Color::TransparentBlack())
     , needToUpdateLayout(true)
 {
     SetSize(widthIn, heightIn);

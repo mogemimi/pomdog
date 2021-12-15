@@ -117,7 +117,7 @@ void ToggleSwitch::Draw(DrawingContext& drawingContext)
     auto primitiveBatch = drawingContext.GetPrimitiveBatch();
 
     auto innerColor = Color{109, 109, 109, 255};
-    auto thumbColor = Color::White;
+    auto thumbColor = Color::White();
 
     if (!isEnabled) {
         innerColor = disabledInnerColor;

@@ -230,7 +230,7 @@ void Slider::Draw(DrawingContext& drawingContext)
             std::swap(startColor, targetColor);
         }
         const auto scaleFactor = colorAnimation->time / colorAnimation->duration;
-        fillColor = Color::SmoothStep(startColor, targetColor, scaleFactor);
+        fillColor = math::SmoothStep(startColor, targetColor, scaleFactor);
     }
     else if (isPointerEntered) {
         POMDOG_ASSERT(isEnabled);

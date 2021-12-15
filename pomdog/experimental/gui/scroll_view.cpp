@@ -17,7 +17,7 @@ ScrollView::ScrollView(
     int heightIn)
     : Widget(dispatcher)
     , margin{0, 0, 0, 0}
-    , backgroundColor(Color::TransparentBlack)
+    , backgroundColor(Color::TransparentBlack())
     , horizontalAlignment(HorizontalAlignment::Stretch)
     , needToUpdateLayout(true)
 {

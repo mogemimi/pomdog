@@ -60,7 +60,7 @@ void DistanceFieldFontTest::Draw()
 
     Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
     RenderPass pass;
-    pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue.ToVector4()};
+    pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
     pass.DepthStencilBuffer = nullptr;
     pass.ClearDepth = 1.0f;
     pass.ClearStencil = std::uint8_t(0);
@@ -84,18 +84,18 @@ void DistanceFieldFontTest::Draw()
     primitiveBatch->DrawLine(Vector2{w * 0.25f, -h * 0.5f}, Vector2{w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
 
     const auto size = spriteFont->MeasureString(text);
-    primitiveBatch->DrawLine(Vector2::Zero(), Vector2{0.0f, 1.0f} * size, Color::Blue, 1.0f);
-    primitiveBatch->DrawLine(Vector2::Zero(), Vector2{1.0f, 0.0f} * size, Color::Blue, 1.0f);
-    primitiveBatch->DrawLine(size, Vector2{0.0f, 1.0f} * size, Color::Blue, 1.0f);
-    primitiveBatch->DrawLine(size, Vector2{1.0f, 0.0f} * size, Color::Blue, 1.0f);
+    primitiveBatch->DrawLine(Vector2::Zero(), Vector2{0.0f, 1.0f} * size, Color::Blue(), 1.0f);
+    primitiveBatch->DrawLine(Vector2::Zero(), Vector2{1.0f, 0.0f} * size, Color::Blue(), 1.0f);
+    primitiveBatch->DrawLine(size, Vector2{0.0f, 1.0f} * size, Color::Blue(), 1.0f);
+    primitiveBatch->DrawLine(size, Vector2{1.0f, 0.0f} * size, Color::Blue(), 1.0f);
 
     primitiveBatch->End();
 
     spriteBatch->Begin(commandList, projectionMatrix);
-    spriteFont->Draw(*spriteBatch, text, Vector2::Zero(), Color::White, 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
-    spriteFont->Draw(*spriteBatch, text, Vector2::Zero(), Color::Green, math::ToRadians(-90.0f), Vector2{0.0f, 0.0f}, 1.0f);
-    spriteFont->Draw(*spriteBatch, text, Vector2::Zero(), Color::Red, math::ToRadians(90.0f), Vector2{0.5f, 0.0f}, Vector2{-1.0f, 0.5f});
-    spriteFont->Draw(*spriteBatch, text, Vector2{-100.0f, 100.0f}, Color::Blue, math::ToRadians(-45.0f), Vector2{0.5f, 0.5f}, 0.7f);
+    spriteFont->Draw(*spriteBatch, text, Vector2::Zero(), Color::White(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
+    spriteFont->Draw(*spriteBatch, text, Vector2::Zero(), Color::Green(), math::ToRadians(-90.0f), Vector2{0.0f, 0.0f}, 1.0f);
+    spriteFont->Draw(*spriteBatch, text, Vector2::Zero(), Color::Red(), math::ToRadians(90.0f), Vector2{0.5f, 0.0f}, Vector2{-1.0f, 0.5f});
+    spriteFont->Draw(*spriteBatch, text, Vector2{-100.0f, 100.0f}, Color::Blue(), math::ToRadians(-45.0f), Vector2{0.5f, 0.5f}, 0.7f);
     spriteBatch->End();
 
     commandList->Close();
