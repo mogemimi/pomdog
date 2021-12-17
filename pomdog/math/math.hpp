@@ -2,15 +2,7 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.hpp"
 #include "pomdog/basic/export.hpp"
-#include "pomdog/math/degree.hpp"
-#include "pomdog/math/detail/type_traits.hpp"
-#include "pomdog/math/radian.hpp"
-
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <type_traits>
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::math {
 
@@ -40,105 +32,28 @@ constexpr inline float PiOver2<float> = 1.5707963267f;
 template <>
 constexpr inline float PiOver4<float> = 0.7853981633f;
 
-template <typename T>
-[[nodiscard]] T
-Clamp(T x, T min, T max) noexcept
-{
-    static_assert(std::is_arithmetic<T>::value || detail::IsTaggedFloatingPoint<T>::value, "");
-    POMDOG_ASSERT_MESSAGE(min < max, "In Clamp, maxval is out of range");
-    if (x < min) {
-        return min;
-    }
-    if (x > max) {
-        return max;
-    }
-    return x;
-}
+[[nodiscard]] float POMDOG_EXPORT
+Clamp(float x, float min, float max) noexcept;
 
-template <typename T>
-[[nodiscard]] T
-Saturate(T x) noexcept
-{
-    static_assert(
-        std::is_floating_point<T>::value || detail::IsTaggedFloatingPoint<T>::value,
-        "T is floaing point number");
-    return Clamp(x, T{0}, T{1});
-}
+[[nodiscard]] double POMDOG_EXPORT
+Clamp(double x, double min, double max) noexcept;
 
-template <typename T>
-[[nodiscard]] T
-Lerp(T source1, T source2, T amount) noexcept
-{
-    static_assert(
-        std::is_floating_point<T>::value || detail::IsTaggedFloatingPoint<T>::value,
-        "T is floaing point number");
-    return source1 + amount * (source2 - source1);
-}
+[[nodiscard]] float POMDOG_EXPORT
+Saturate(float x) noexcept;
 
-template <typename T>
-[[nodiscard]] T
-SmoothStep(T min, T max, T amount) noexcept
-{
-    static_assert(
-        std::is_floating_point<T>::value || detail::IsTaggedFloatingPoint<T>::value,
-        "T is floaing point number");
-    const auto x = Saturate(amount);
-    const auto scale = x * x * (T{3} - T{2} * x);
-    return min + scale * (max - min);
-}
+[[nodiscard]] double POMDOG_EXPORT
+Saturate(double x) noexcept;
 
-template <typename T>
-[[nodiscard]] Radian<T>
-ToRadians(const Degree<T>& degrees) noexcept
-{
-    static_assert(std::is_floating_point<T>::value, "");
-    constexpr auto scaleFactor = math::Pi<T> * (T{1} / T{180});
-    return Radian<T>(degrees.value * scaleFactor);
-}
+[[nodiscard]] float POMDOG_EXPORT
+Lerp(float source1, float source2, float amount) noexcept;
 
-template <typename T>
-[[nodiscard]] Radian<T>
-ToRadians(const T& degrees) noexcept
-{
-    static_assert(std::is_floating_point<T>::value, "");
-    constexpr auto scaleFactor = math::Pi<T> * (T{1} / T{180});
-    return Radian<T>(degrees * scaleFactor);
-}
+[[nodiscard]] double POMDOG_EXPORT
+Lerp(double source1, double source2, double amount) noexcept;
 
-template <typename T>
-[[nodiscard]] Degree<T>
-ToDegrees(const Radian<T>& radians) noexcept
-{
-    static_assert(std::is_floating_point<T>::value, "");
-    constexpr auto scaleFactor = T{180} * (T{1} / math::Pi<T>);
-    return Degree<T>(radians.value * scaleFactor);
-}
+[[nodiscard]] float POMDOG_EXPORT
+SmoothStep(float min, float max, float amount) noexcept;
 
-template <typename T>
-[[nodiscard]] Degree<T>
-ToDegrees(const T& radians) noexcept
-{
-    static_assert(std::is_floating_point<T>::value, "");
-    constexpr auto scaleFactor = T{180} * (T{1} / math::Pi<T>);
-    return Degree<T>(radians * scaleFactor);
-}
-
-[[nodiscard]] POMDOG_EXPORT Point2D
-ToPoint2D(const Vector2& vec) noexcept;
-
-[[nodiscard]] POMDOG_EXPORT Vector2
-ToVector2(const Point2D& point) noexcept;
-
-[[nodiscard]] POMDOG_EXPORT Point3D
-ToPoint3D(const Vector3& vec) noexcept;
-
-[[nodiscard]] POMDOG_EXPORT Vector3
-ToVector3(const Point3D& point) noexcept;
-
-[[nodiscard]] POMDOG_EXPORT Point2D
-Abs(const Point2D& point) noexcept;
-
-[[nodiscard]] POMDOG_EXPORT Point3D
-Abs(const Point3D& point) noexcept;
+[[nodiscard]] double POMDOG_EXPORT
+SmoothStep(double min, double max, double amount) noexcept;
 
 } // namespace pomdog::math

@@ -26,7 +26,7 @@ TEST_CASE("Point2D", "[Point2D]")
     }
     SECTION("Constants")
     {
-        REQUIRE(Point2D{0, 0} == Point2D::Zero);
+        REQUIRE(Point2D{0, 0} == Point2D::Zero());
     }
     SECTION("Addition")
     {

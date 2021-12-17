@@ -39,6 +39,11 @@ public:
     {
     }
 
+    [[nodiscard]] explicit operator T() noexcept
+    {
+        return value;
+    }
+
     // Assignment operators:
     TaggedArithmetic& operator+=(const TaggedArithmetic& v) noexcept
     {
@@ -78,14 +83,14 @@ public:
 
     TaggedArithmetic& operator/=(const TaggedArithmetic& v)
     {
-        POMDOG_ASSERT(v.value != 0);
+        POMDOG_ASSERT(v.value != T{0});
         value /= v.value;
         return *this;
     }
 
     TaggedArithmetic& operator/=(TaggedArithmetic&& v)
     {
-        POMDOG_ASSERT(v.value != 0);
+        POMDOG_ASSERT(v.value != T{0});
         value /= std::move(v.value);
         return *this;
     }
@@ -98,7 +103,7 @@ public:
 
     TaggedArithmetic& operator/=(const T& scale)
     {
-        POMDOG_ASSERT(scale != 0);
+        POMDOG_ASSERT(scale != T{0});
         value /= scale;
         return *this;
     }

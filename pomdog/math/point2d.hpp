@@ -4,6 +4,7 @@
 
 #include "pomdog/basic/conditional_compilation.hpp"
 #include "pomdog/basic/export.hpp"
+#include "pomdog/math/forward_declarations.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
@@ -27,8 +28,8 @@ public:
     // Assignment operators:
     Point2D& operator+=(const Point2D&) noexcept;
     Point2D& operator-=(const Point2D&) noexcept;
-    Point2D& operator*=(std::int32_t scaleFactor) noexcept;
-    Point2D& operator/=(std::int32_t scaleFactor) noexcept;
+    Point2D& operator*=(std::int32_t factor) noexcept;
+    Point2D& operator/=(std::int32_t factor) noexcept;
 
     // Unary operators:
     Point2D operator+() const noexcept;
@@ -39,16 +40,31 @@ public:
     [[nodiscard]] Point2D operator-(const Point2D&) const noexcept;
     [[nodiscard]] Point2D operator*(const Point2D&) const noexcept;
     [[nodiscard]] Point2D operator/(const Point2D&) const noexcept;
-    [[nodiscard]] Point2D operator*(std::int32_t scaleFactor) const noexcept;
-    [[nodiscard]] Point2D operator/(std::int32_t scaleFactor) const noexcept;
+    [[nodiscard]] Point2D operator*(std::int32_t factor) const noexcept;
+    [[nodiscard]] Point2D operator/(std::int32_t factor) const noexcept;
 
     [[nodiscard]] bool operator==(const Point2D&) const noexcept;
     [[nodiscard]] bool operator!=(const Point2D&) const noexcept;
 
-    static Point2D const Zero;
+    /// Returns the Point2D (0, 0).
+    [[nodiscard]] static Point2D Zero() noexcept;
 };
 
+/// Multiplies a 2D point by a scalar factor.
 [[nodiscard]] Point2D POMDOG_EXPORT
-operator*(std::int32_t scaleFactor, const Point2D& coordinate) noexcept;
+operator*(std::int32_t factor, const Point2D& coordinate) noexcept;
 
 } // namespace pomdog
+
+namespace pomdog::math {
+
+[[nodiscard]] POMDOG_EXPORT Point2D
+ToPoint2D(const Vector2& vec) noexcept;
+
+[[nodiscard]] POMDOG_EXPORT Vector2
+ToVector2(const Point2D& point) noexcept;
+
+[[nodiscard]] POMDOG_EXPORT Point2D
+Abs(const Point2D& point) noexcept;
+
+} // namespace pomdog::math

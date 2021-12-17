@@ -1,68 +1,74 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/math/math.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/math/point2d.hpp"
-#include "pomdog/math/point3d.hpp"
-#include "pomdog/math/vector2.hpp"
-#include "pomdog/math/vector3.hpp"
-
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cmath>
-#include <cstdlib>
-POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
+#include "pomdog/utility/assert.hpp"
 
 namespace pomdog::math {
 
-Point2D ToPoint2D(const Vector2& vec) noexcept
+[[nodiscard]] float
+Clamp(float x, float min, float max) noexcept
 {
-    return Point2D{
-        static_cast<std::int32_t>(vec.X),
-        static_cast<std::int32_t>(vec.Y),
-    };
+    POMDOG_ASSERT(min < max);
+    if (x < min) {
+        return min;
+    }
+    if (x > max) {
+        return max;
+    }
+    return x;
 }
 
-Vector2 ToVector2(const Point2D& point) noexcept
+[[nodiscard]] double
+Clamp(double x, double min, double max) noexcept
 {
-    return Vector2{
-        static_cast<float>(point.X),
-        static_cast<float>(point.Y),
-    };
+    POMDOG_ASSERT(min < max);
+    if (x < min) {
+        return min;
+    }
+    if (x > max) {
+        return max;
+    }
+    return x;
 }
 
-Point3D ToPoint3D(const Vector3& vec) noexcept
+[[nodiscard]] float
+Saturate(float x) noexcept
 {
-    return Point3D{
-        static_cast<std::int32_t>(vec.X),
-        static_cast<std::int32_t>(vec.Y),
-        static_cast<std::int32_t>(vec.Z),
-    };
+    return Clamp(x, 0.0f, 1.0f);
 }
 
-Vector3 ToVector3(const Point3D& point) noexcept
+[[nodiscard]] double
+Saturate(double x) noexcept
 {
-    return Vector3{
-        static_cast<float>(point.X),
-        static_cast<float>(point.Y),
-        static_cast<float>(point.Z),
-    };
+    return Clamp(x, 0.0, 1.0);
 }
 
-Point2D Abs(const Point2D& point) noexcept
+[[nodiscard]] float
+Lerp(float source1, float source2, float amount) noexcept
 {
-    return Point2D{
-        std::abs(point.X),
-        std::abs(point.Y),
-    };
+    return source1 + amount * (source2 - source1);
 }
 
-Point3D Abs(const Point3D& point) noexcept
+[[nodiscard]] double
+Lerp(double source1, double source2, double amount) noexcept
 {
-    return Point3D{
-        std::abs(point.X),
-        std::abs(point.Y),
-        std::abs(point.Z),
-    };
+    return source1 + amount * (source2 - source1);
+}
+
+[[nodiscard]] float
+SmoothStep(float min, float max, float amount) noexcept
+{
+    const auto x = Saturate(amount);
+    const auto scale = x * x * (3.0f - 2.0f * x);
+    return min + scale * (max - min);
+}
+
+[[nodiscard]] double
+SmoothStep(double min, double max, double amount) noexcept
+{
+    const auto x = Saturate(amount);
+    const auto scale = x * x * (3.0 - 2.0 * x);
+    return min + scale * (max - min);
 }
 
 } // namespace pomdog::math

@@ -4,6 +4,7 @@
 
 #include "pomdog/basic/conditional_compilation.hpp"
 #include "pomdog/basic/export.hpp"
+#include "pomdog/math/forward_declarations.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
@@ -28,8 +29,8 @@ public:
     // Assignment operators:
     Point3D& operator+=(const Point3D&) noexcept;
     Point3D& operator-=(const Point3D&) noexcept;
-    Point3D& operator*=(std::int32_t scaleFactor) noexcept;
-    Point3D& operator/=(std::int32_t scaleFactor) noexcept;
+    Point3D& operator*=(std::int32_t factor) noexcept;
+    Point3D& operator/=(std::int32_t factor) noexcept;
 
     // Unary operators:
     Point3D operator+() const noexcept;
@@ -40,16 +41,31 @@ public:
     [[nodiscard]] Point3D operator-(const Point3D&) const noexcept;
     [[nodiscard]] Point3D operator*(const Point3D&) const noexcept;
     [[nodiscard]] Point3D operator/(const Point3D&) const;
-    [[nodiscard]] Point3D operator*(std::int32_t scaleFactor) const noexcept;
-    [[nodiscard]] Point3D operator/(std::int32_t scaleFactor) const noexcept;
+    [[nodiscard]] Point3D operator*(std::int32_t factor) const noexcept;
+    [[nodiscard]] Point3D operator/(std::int32_t factor) const noexcept;
 
     [[nodiscard]] bool operator==(const Point3D&) const noexcept;
     [[nodiscard]] bool operator!=(const Point3D&) const noexcept;
 
-    static Point3D const Zero;
+    /// Returns the Point3D (0, 0).
+    [[nodiscard]] static Point3D Zero() noexcept;
 };
 
+/// Multiplies a 3D point by a scalar factor.
 [[nodiscard]] Point3D POMDOG_EXPORT
-operator*(std::int32_t scaleFactor, const Point3D& coordinate) noexcept;
+operator*(std::int32_t factor, const Point3D& coordinate) noexcept;
 
 } // namespace pomdog
+
+namespace pomdog::math {
+
+[[nodiscard]] POMDOG_EXPORT Point3D
+ToPoint3D(const Vector3& vec) noexcept;
+
+[[nodiscard]] POMDOG_EXPORT Vector3
+ToVector3(const Point3D& point) noexcept;
+
+[[nodiscard]] POMDOG_EXPORT Point3D
+Abs(const Point3D& point) noexcept;
+
+} // namespace pomdog::math

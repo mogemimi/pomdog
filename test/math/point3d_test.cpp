@@ -30,7 +30,7 @@ TEST_CASE("Point3D", "[Point3D]")
     }
     SECTION("Constants")
     {
-        REQUIRE(Point3D{0, 0, 0} == Point3D::Zero);
+        REQUIRE(Point3D{0, 0, 0} == Point3D::Zero());
     }
     SECTION("Addition")
     {
