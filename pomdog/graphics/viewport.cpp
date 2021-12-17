@@ -78,7 +78,7 @@ Vector3 Viewport::Unproject(
     vec.Y = -(((source.Y - static_cast<float>(TopLeftY)) / static_cast<float>(Height) * 2.0f) - 1.0f);
     vec.Z = (source.Z - MinDepth) / (MaxDepth - MinDepth);
 
-    Matrix4x4 invertWVP = Matrix4x4::Invert(worldViewProjection);
+    Matrix4x4 invertWVP = math::Invert(worldViewProjection);
     auto result = math::Transform(vec, invertWVP);
     auto divisor = vec.X * invertWVP(0, 3) +
                    vec.Y * invertWVP(1, 3) +

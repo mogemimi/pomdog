@@ -5,6 +5,7 @@
 #include "pomdog/math/vector3.hpp"
 #include <catch_amalgamated.hpp>
 
+using namespace pomdog;
 using pomdog::Matrix4x4;
 using pomdog::Vector3;
 
@@ -66,24 +67,24 @@ TEST_CASE("Matrix4x4", "[Matrix4x4]")
     }
     SECTION("Identity")
     {
-        REQUIRE(1.0f == Matrix4x4::Identity(0, 0));
-        REQUIRE(0.0f == Matrix4x4::Identity(0, 1));
-        REQUIRE(0.0f == Matrix4x4::Identity(0, 2));
-        REQUIRE(0.0f == Matrix4x4::Identity(0, 3));
-        REQUIRE(0.0f == Matrix4x4::Identity(1, 0));
-        REQUIRE(1.0f == Matrix4x4::Identity(1, 1));
-        REQUIRE(0.0f == Matrix4x4::Identity(1, 2));
-        REQUIRE(0.0f == Matrix4x4::Identity(1, 3));
-        REQUIRE(0.0f == Matrix4x4::Identity(2, 0));
-        REQUIRE(0.0f == Matrix4x4::Identity(2, 1));
-        REQUIRE(1.0f == Matrix4x4::Identity(2, 2));
-        REQUIRE(0.0f == Matrix4x4::Identity(2, 3));
-        REQUIRE(0.0f == Matrix4x4::Identity(3, 0));
-        REQUIRE(0.0f == Matrix4x4::Identity(3, 1));
-        REQUIRE(0.0f == Matrix4x4::Identity(3, 2));
-        REQUIRE(1.0f == Matrix4x4::Identity(3, 3));
+        REQUIRE(1.0f == Matrix4x4::Identity()(0, 0));
+        REQUIRE(0.0f == Matrix4x4::Identity()(0, 1));
+        REQUIRE(0.0f == Matrix4x4::Identity()(0, 2));
+        REQUIRE(0.0f == Matrix4x4::Identity()(0, 3));
+        REQUIRE(0.0f == Matrix4x4::Identity()(1, 0));
+        REQUIRE(1.0f == Matrix4x4::Identity()(1, 1));
+        REQUIRE(0.0f == Matrix4x4::Identity()(1, 2));
+        REQUIRE(0.0f == Matrix4x4::Identity()(1, 3));
+        REQUIRE(0.0f == Matrix4x4::Identity()(2, 0));
+        REQUIRE(0.0f == Matrix4x4::Identity()(2, 1));
+        REQUIRE(1.0f == Matrix4x4::Identity()(2, 2));
+        REQUIRE(0.0f == Matrix4x4::Identity()(2, 3));
+        REQUIRE(0.0f == Matrix4x4::Identity()(3, 0));
+        REQUIRE(0.0f == Matrix4x4::Identity()(3, 1));
+        REQUIRE(0.0f == Matrix4x4::Identity()(3, 2));
+        REQUIRE(1.0f == Matrix4x4::Identity()(3, 3));
 
-        Matrix4x4 matrix = Matrix4x4::Identity;
+        Matrix4x4 matrix = Matrix4x4::Identity();
         REQUIRE(1.0f == matrix(0, 0));
         REQUIRE(0.0f == matrix(0, 1));
         REQUIRE(0.0f == matrix(0, 2));
@@ -109,17 +110,17 @@ TEST_CASE("Matrix4x4", "[Matrix4x4]")
                 0.0f, 0.0f, 0.0f, 0.0f,
                 0.0f, 0.0f, 0.0f, 0.0f,
                 0.0f, 0.0f, 0.0f, 0.0f) ==
-            Matrix4x4::Multiply(Matrix4x4::Identity, 0.0f));
+            math::Multiply(Matrix4x4::Identity(), 0.0f));
         REQUIRE(
-            Matrix4x4::Identity ==
-            Matrix4x4::Multiply(Matrix4x4::Identity, 1.0f));
+            Matrix4x4::Identity() ==
+            math::Multiply(Matrix4x4::Identity(), 1.0f));
         REQUIRE(
             Matrix4x4(
                 4.0f, 0.0f, 0.0f, 0.0f,
                 0.0f, 4.0f, 0.0f, 0.0f,
                 0.0f, 0.0f, 4.0f, 0.0f,
                 0.0f, 0.0f, 0.0f, 4.0f) ==
-            Matrix4x4::Multiply(Matrix4x4::Identity, 4.0f));
+            math::Multiply(Matrix4x4::Identity(), 4.0f));
     }
     SECTION("Multiply_Matrix")
     {
@@ -129,8 +130,8 @@ TEST_CASE("Matrix4x4", "[Matrix4x4]")
                 0.0f, 0.0f, 0.0f, 0.0f,
                 0.0f, 0.0f, 0.0f, 0.0f,
                 0.0f, 0.0f, 0.0f, 0.0f) ==
-            Matrix4x4::Multiply(
-                Matrix4x4::Identity,
+            math::Multiply(
+                Matrix4x4::Identity(),
                 Matrix4x4(
                     0.0f, 0.0f, 0.0f, 0.0f,
                     0.0f, 0.0f, 0.0f, 0.0f,
@@ -138,8 +139,8 @@ TEST_CASE("Matrix4x4", "[Matrix4x4]")
                     0.0f, 0.0f, 0.0f, 0.0f)));
 
         REQUIRE(
-            Matrix4x4::Identity ==
-            Matrix4x4::Multiply(Matrix4x4::Identity, Matrix4x4::Identity));
+            Matrix4x4::Identity() ==
+            math::Multiply(Matrix4x4::Identity(), Matrix4x4::Identity()));
 
         REQUIRE(
             Matrix4x4(
@@ -147,7 +148,7 @@ TEST_CASE("Matrix4x4", "[Matrix4x4]")
                 268.0f, 317.0f, 593.0f, 188.0f,
                 222.0f, 301.0f, 649.0f, 276.0f,
                 97.0f, 95.0f, 933.0f, 65.0f) ==
-            Matrix4x4::Multiply(
+            math::Multiply(
                 Matrix4x4(
                     3.0f, 9.0f, 4.0f, 2.0f,
                     2.0f, 7.0f, 19.0f, 6.0f,

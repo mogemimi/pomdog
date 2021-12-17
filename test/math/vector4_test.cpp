@@ -58,8 +58,8 @@ TEST_CASE("Vector4", "[Vector4]")
     SECTION("Transform_IdentityMatrix")
     {
         using pomdog::math::Transform;
-        REQUIRE(Vector4{0.0f, 0.0f, 0.0f, 0.0f} == Transform(Vector4{0.0f, 0.0f, 0.0f, 0.0f}, Matrix4x4::Identity));
-        REQUIRE(Vector4{1.0f, 2.0f, 3.0f, 4.0f} == Transform(Vector4{1.0f, 2.0f, 3.0f, 4.0f}, Matrix4x4::Identity));
+        REQUIRE(Vector4{0.0f, 0.0f, 0.0f, 0.0f} == Transform(Vector4{0.0f, 0.0f, 0.0f, 0.0f}, Matrix4x4::Identity()));
+        REQUIRE(Vector4{1.0f, 2.0f, 3.0f, 4.0f} == Transform(Vector4{1.0f, 2.0f, 3.0f, 4.0f}, Matrix4x4::Identity()));
     }
     SECTION("Transform")
     {

@@ -6,6 +6,7 @@
 #include "pomdog/math/vector3.hpp"
 #include <catch_amalgamated.hpp>
 
+using namespace pomdog;
 using pomdog::Matrix3x3;
 using pomdog::Vector2;
 using pomdog::Vector3;
@@ -52,17 +53,17 @@ TEST_CASE("Matrix3x3", "[Matrix3x3]")
     }
     SECTION("Identity")
     {
-        REQUIRE(1.0f == Matrix3x3::Identity(0, 0));
-        REQUIRE(0.0f == Matrix3x3::Identity(0, 1));
-        REQUIRE(0.0f == Matrix3x3::Identity(0, 2));
-        REQUIRE(0.0f == Matrix3x3::Identity(1, 0));
-        REQUIRE(1.0f == Matrix3x3::Identity(1, 1));
-        REQUIRE(0.0f == Matrix3x3::Identity(1, 2));
-        REQUIRE(0.0f == Matrix3x3::Identity(2, 0));
-        REQUIRE(0.0f == Matrix3x3::Identity(2, 1));
-        REQUIRE(1.0f == Matrix3x3::Identity(2, 2));
+        REQUIRE(1.0f == Matrix3x3::Identity()(0, 0));
+        REQUIRE(0.0f == Matrix3x3::Identity()(0, 1));
+        REQUIRE(0.0f == Matrix3x3::Identity()(0, 2));
+        REQUIRE(0.0f == Matrix3x3::Identity()(1, 0));
+        REQUIRE(1.0f == Matrix3x3::Identity()(1, 1));
+        REQUIRE(0.0f == Matrix3x3::Identity()(1, 2));
+        REQUIRE(0.0f == Matrix3x3::Identity()(2, 0));
+        REQUIRE(0.0f == Matrix3x3::Identity()(2, 1));
+        REQUIRE(1.0f == Matrix3x3::Identity()(2, 2));
 
-        Matrix3x3 matrix = Matrix3x3::Identity;
+        Matrix3x3 matrix = Matrix3x3::Identity();
         REQUIRE(1.0f == matrix(0, 0));
         REQUIRE(0.0f == matrix(0, 1));
         REQUIRE(0.0f == matrix(0, 2));
@@ -80,32 +81,32 @@ TEST_CASE("Matrix3x3", "[Matrix3x3]")
                 0.0f, 0.0f, 0.0f,
                 0.0f, 0.0f, 0.0f,
                 0.0f, 0.0f, 0.0f) ==
-            Matrix3x3::Multiply(Matrix3x3::Identity, 0.0f));
+            math::Multiply(Matrix3x3::Identity(), 0.0f));
         REQUIRE(
-            Matrix3x3::Identity ==
-            Matrix3x3::Multiply(Matrix3x3::Identity, 1.0f));
+            Matrix3x3::Identity() ==
+            math::Multiply(Matrix3x3::Identity(), 1.0f));
         REQUIRE(
             Matrix3x3(
                 4.0f, 0.0f, 0.0f,
                 0.0f, 4.0f, 0.0f,
                 0.0f, 0.0f, 4.0f) ==
-            Matrix3x3::Multiply(Matrix3x3::Identity, 4.0f));
+            math::Multiply(Matrix3x3::Identity(), 4.0f));
     }
     SECTION("Multiply_Matrix")
     {
         REQUIRE(
-            Matrix3x3::Identity ==
-            Matrix3x3::Multiply(
-                Matrix3x3::Identity,
-                Matrix3x3::Identity));
+            Matrix3x3::Identity() ==
+            math::Multiply(
+                Matrix3x3::Identity(),
+                Matrix3x3::Identity()));
 
         REQUIRE(
             Matrix3x3(
                 0.0f, 0.0f, 0.0f,
                 0.0f, 0.0f, 0.0f,
                 0.0f, 0.0f, 0.0f) ==
-            Matrix3x3::Multiply(
-                Matrix3x3::Identity,
+            math::Multiply(
+                Matrix3x3::Identity(),
                 Matrix3x3(
                     0.0f, 0.0f, 0.0f,
                     0.0f, 0.0f, 0.0f,
@@ -116,19 +117,19 @@ TEST_CASE("Matrix3x3", "[Matrix3x3]")
                 0.0f, 0.0f, 0.0f,
                 0.0f, 0.0f, 0.0f,
                 0.0f, 0.0f, 0.0f) ==
-            Matrix3x3::Multiply(
+            math::Multiply(
                 Matrix3x3(
                     0.0f, 0.0f, 0.0f,
                     0.0f, 0.0f, 0.0f,
                     0.0f, 0.0f, 0.0f),
-                Matrix3x3::Identity));
+                Matrix3x3::Identity()));
 
         REQUIRE(
             Matrix3x3(
                 90.0f, 107.0f, 203.0f,
                 114.0f, 113.0f, 200.0f,
                 64.0f, 154.0f, 289.0f) ==
-            Matrix3x3::Multiply(
+            math::Multiply(
                 Matrix3x3(
                     3.0f, 4.0f, 11.0f,
                     8.0f, 9.0f, 2.0f,

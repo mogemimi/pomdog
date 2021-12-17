@@ -140,7 +140,7 @@ PlaneIntersectionType Plane::Intersects(const BoundingSphere& sphere) const noex
 
 Plane Plane::Transform(const Plane& plane, const Matrix4x4& matrix)
 {
-    const auto transformMatrix = Matrix4x4::Invert(matrix);
+    const auto transformMatrix = math::Invert(matrix);
     const auto vector = Vector4{plane.Normal, plane.Distance};
     const auto transformedVector = math::Transform(vector, transformMatrix);
 

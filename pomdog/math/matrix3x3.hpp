@@ -18,10 +18,6 @@ class POMDOG_EXPORT Matrix3x3 final {
 public:
     float m[3][3];
 
-private:
-    static constexpr std::size_t RowSize = 3;
-    static constexpr std::size_t ColumnSize = 3;
-
 public:
     // Constructors:
     Matrix3x3() noexcept;
@@ -36,8 +32,8 @@ public:
     Matrix3x3& operator*=(const Matrix3x3& other) noexcept;
     Matrix3x3& operator+=(const Matrix3x3& other) noexcept;
     Matrix3x3& operator-=(const Matrix3x3& other) noexcept;
-    Matrix3x3& operator*=(float scaleFactor) noexcept;
-    Matrix3x3& operator/=(float scaleFactor) noexcept;
+    Matrix3x3& operator*=(float factor) noexcept;
+    Matrix3x3& operator/=(float factor) noexcept;
 
     // Unary operators:
     Matrix3x3 operator+() const noexcept;
@@ -47,8 +43,8 @@ public:
     [[nodiscard]] Matrix3x3 operator+(const Matrix3x3& other) const noexcept;
     [[nodiscard]] Matrix3x3 operator-(const Matrix3x3& other) const noexcept;
     [[nodiscard]] Matrix3x3 operator*(const Matrix3x3& other) const noexcept;
-    [[nodiscard]] Matrix3x3 operator*(float scaleFactor) const noexcept;
-    [[nodiscard]] Matrix3x3 operator/(float scaleFactor) const noexcept;
+    [[nodiscard]] Matrix3x3 operator*(float factor) const noexcept;
+    [[nodiscard]] Matrix3x3 operator/(float factor) const noexcept;
 
     [[nodiscard]] bool operator==(const Matrix3x3& other) const noexcept;
     [[nodiscard]] bool operator!=(const Matrix3x3& other) const noexcept;
@@ -62,98 +58,78 @@ public:
     [[nodiscard]] Vector3
     GetScale() const noexcept;
 
-    [[nodiscard]] float Determinant() const noexcept;
-
-    [[nodiscard]] Matrix2x2
-    Minor2x2(std::size_t row, std::size_t column) const;
-
-    [[nodiscard]] static Matrix3x3
-    Multiply(const Matrix3x3& matrix1, const Matrix3x3& matrix2) noexcept;
-
-    [[nodiscard]] static Matrix3x3
-    Multiply(const Matrix3x3& matrix1, float scaleFactor) noexcept;
-
-    [[nodiscard]] static Matrix3x3
-    Adjoint(const Matrix3x3& matrix);
-
-    static void
-    Transpose(const Matrix3x3& matrix, Matrix3x3& result) noexcept;
-
-    [[nodiscard]] static Matrix3x3
-    Transpose(const Matrix3x3& matrix) noexcept;
-
-    static void
-    Invert(const Matrix3x3& matrix, Matrix3x3& result);
-
-    [[nodiscard]] static Matrix3x3
-    Invert(const Matrix3x3& matrix);
-
-    static void
-    Lerp(const Matrix3x3& source1, const Matrix3x3& source2,
-        float amount, Matrix3x3& result) noexcept;
-
-    [[nodiscard]] static Matrix3x3
-    Lerp(const Matrix3x3& source1, const Matrix3x3& source2,
-        float amount) noexcept;
-
-    static void
-    CreateTranslation(const Vector2& position, Matrix3x3& result) noexcept;
-
-    [[nodiscard]] static Matrix3x3
-    CreateTranslation(const Vector2& position) noexcept;
-
-    static void
-    CreateScale(float scale, Matrix3x3& result) noexcept;
-
-    [[nodiscard]] static Matrix3x3
-    CreateScale(float scale) noexcept;
-
-    static void
-    CreateScale(const Vector3& scale, Matrix3x3& result) noexcept;
-
-    [[nodiscard]] static Matrix3x3
-    CreateScale(const Vector3& scale) noexcept;
-
-    static void
-    CreateRotationX(const Radian<float>& angle, Matrix3x3& result);
-
-    [[nodiscard]] static Matrix3x3
-    CreateRotationX(const Radian<float>& angle);
-
-    static void
-    CreateRotationY(const Radian<float>& angle, Matrix3x3& result);
-
-    [[nodiscard]] static Matrix3x3
-    CreateRotationY(const Radian<float>& angle);
-
-    static void
-    CreateRotationZ(const Radian<float>& angle, Matrix3x3& result);
-
-    [[nodiscard]] static Matrix3x3
-    CreateRotationZ(const Radian<float>& angle);
-
-    static void
-    CreateFromQuaternion(const Quaternion& quaternion, Matrix3x3& result);
-
-    [[nodiscard]] static Matrix3x3
-    CreateFromQuaternion(const Quaternion& quaternion);
-
-    static void
-    CreateFromAxisAngle(const Vector3& axis, const Radian<float>& angle, Matrix3x3& result);
-
-    [[nodiscard]] static Matrix3x3
-    CreateFromAxisAngle(const Vector3& axis, const Radian<float>& angle);
-
     /// Returns pointer to the first element.
     [[nodiscard]] const float* Data() const noexcept;
 
     /// Returns pointer to the first element.
     [[nodiscard]] float* Data() noexcept;
 
-    static Matrix3x3 const Identity;
+    [[nodiscard]] static Matrix3x3
+    CreateTranslation(const Vector2& position) noexcept;
+
+    [[nodiscard]] static Matrix3x3
+    CreateScale(float scale) noexcept;
+
+    [[nodiscard]] static Matrix3x3
+    CreateScale(const Vector3& scale) noexcept;
+
+    [[nodiscard]] static Matrix3x3
+    CreateRotationX(const Radian<float>& angle);
+
+    [[nodiscard]] static Matrix3x3
+    CreateRotationY(const Radian<float>& angle);
+
+    [[nodiscard]] static Matrix3x3
+    CreateRotationZ(const Radian<float>& angle);
+
+    [[nodiscard]] static Matrix3x3
+    CreateFromQuaternion(const Quaternion& quaternion);
+
+    [[nodiscard]] static Matrix3x3
+    CreateFromAxisAngle(const Vector3& axis, const Radian<float>& angle);
+
+    /// Returns the identity matrix.
+    [[nodiscard]] static Matrix3x3 Identity() noexcept;
 };
 
+/// Multiplies a matrix by a scalar factor.
 [[nodiscard]] Matrix3x3 POMDOG_EXPORT
-operator*(float scaleFactor, const Matrix3x3& matrix) noexcept;
+operator*(float factor, const Matrix3x3& matrix) noexcept;
 
 } // namespace pomdog
+
+namespace pomdog::math {
+
+/// Calculates and returns the determinant of the matrix.
+[[nodiscard]] float POMDOG_EXPORT
+Determinant(const Matrix3x3& matrix) noexcept;
+
+/// Returns the minor of a matrix.
+[[nodiscard]] Matrix2x2 POMDOG_EXPORT
+Minor2x2(const Matrix3x3& matrix, std::size_t row, std::size_t column);
+
+/// Multiplies a matrix by another matrix.
+[[nodiscard]] Matrix3x3 POMDOG_EXPORT
+Multiply(const Matrix3x3& matrix1, const Matrix3x3& matrix2) noexcept;
+
+/// Multiplies a matrix by a scalar factor.
+[[nodiscard]] Matrix3x3 POMDOG_EXPORT
+Multiply(const Matrix3x3& matrix1, float factor) noexcept;
+
+/// Calculates and returns the adjoint matrix.
+[[nodiscard]] Matrix3x3 POMDOG_EXPORT
+Adjoint(const Matrix3x3& matrix);
+
+/// Returns a matrix that transposes the rows and columns of the input matrix.
+[[nodiscard]] Matrix3x3 POMDOG_EXPORT
+Transpose(const Matrix3x3& matrix) noexcept;
+
+/// Calculates and returns the inverse of a matrix.
+[[nodiscard]] Matrix3x3 POMDOG_EXPORT
+Invert(const Matrix3x3& matrix);
+
+/// Performs a linear interpolation between two matrices.
+[[nodiscard]] Matrix3x3 POMDOG_EXPORT
+Lerp(const Matrix3x3& source1, const Matrix3x3& source2, float amount) noexcept;
+
+} // namespace pomdog::math
