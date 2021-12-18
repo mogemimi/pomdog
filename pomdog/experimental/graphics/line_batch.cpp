@@ -22,6 +22,7 @@
 #include "pomdog/math/math.hpp"
 #include "pomdog/math/matrix3x2.hpp"
 #include "pomdog/math/matrix4x4.hpp"
+#include "pomdog/math/radian.hpp"
 #include "pomdog/math/rectangle.hpp"
 #include "pomdog/math/vector2.hpp"
 #include "pomdog/math/vector3.hpp"
@@ -330,7 +331,7 @@ void LineBatch::DrawCircle(const Vector2& position, float radius, const Color& c
     POMDOG_ASSERT(radius > 0);
 
     POMDOG_ASSERT(segments >= 3);
-    Radian<float> centralAngle = math::TwoPi<float> / segments;
+    const auto centralAngle = Radian<float>{math::TwoPi<float> / segments};
     Vector2 prevPoint = position + Vector2{radius, 0};
 
     auto colorVector = color.ToVector4();

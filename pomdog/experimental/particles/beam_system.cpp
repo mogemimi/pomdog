@@ -3,6 +3,8 @@
 #include "pomdog/experimental/particles/beam_system.hpp"
 #include "pomdog/basic/conditional_compilation.hpp"
 #include "pomdog/math/math.hpp"
+#include "pomdog/math/radian.hpp"
+#include "pomdog/utility/assert.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>

@@ -13,6 +13,7 @@
 #include "pomdog/math/color.hpp"
 #include "pomdog/math/matrix3x2.hpp"
 #include "pomdog/math/matrix4x4.hpp"
+#include "pomdog/math/radian.hpp"
 #include "pomdog/math/rectangle.hpp"
 #include "pomdog/math/vector2.hpp"
 

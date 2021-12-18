@@ -344,13 +344,13 @@ void PongGame::Draw()
     pass.ScissorRect = viewport.GetBounds();
 
     const auto projectionMatrix = Matrix4x4::CreatePerspectiveFieldOfViewLH(
-        math::ToRadians<float>(45.0f),
+        math::ToRadians(45.0f),
         viewport.GetAspectRatio(),
         0.01f,
         1000.0f);
 
     const auto cameraPosition = Vector3{0, 0, -512.0f};
-    const auto cameraRotation = math::ToRadians<float>(-15.0f);
+    const auto cameraRotation = math::ToRadians(-15.0f);
     const auto viewMatrix = Matrix4x4::CreateRotationX(-cameraRotation) * Matrix4x4::CreateTranslation(-cameraPosition);
     const auto viewProjection = viewMatrix * projectionMatrix;
 
