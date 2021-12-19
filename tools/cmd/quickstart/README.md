@@ -3,14 +3,7 @@
 ## Build
 
 ```sh
-cd path/to/pomdog/tools/quickstart
-
-# Install the following golang packages
-go get -u github.com/pkg/errors
-
-# Refactor all source files in source directories
-go run tools/refactor_sources/main.go -i include
-go run tools/refactor_sources/main.go -i src
+cd path/to/pomdog/tools/cmd/quickstart
 
 # Build
 go build
@@ -25,13 +18,13 @@ cd path/to/your/develop/directory
 ls pomdog
 
 # Run
-./pomdog/tools/quickstart/quickstart
+./pomdog/tools/cmd/quickstart/quickstart
 ```
 
 e.g.
 
 ```sh
-$ ./pomdog/tools/quickstart/quickstart
+$ ./pomdog/tools/cmd/quickstart/quickstart
 > Where is a Pomdog directory? (e.g. path/to/pomdog) pomdog
 > Where do you want to create your new gamedev project? [.]
 > What is your project name? (e.g. MyGame) MyGame
@@ -42,7 +35,7 @@ Done.
 You can also use non-interactive mode for CI with the `-non-interactive` option:
 
 ```sh
-./pomdog/tools/quickstart/quickstart \
+./pomdog/tools/cmd/quickstart/quickstart \
     -non-interactive \
     -pomdog path/to/pomdog \
     -o . \

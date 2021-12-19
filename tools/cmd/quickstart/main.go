@@ -6,7 +6,6 @@ import (
 	"bufio"
 	"flag"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"log"
 	"os"
@@ -15,7 +14,9 @@ import (
 	"strings"
 
 	"github.com/fatih/color"
+	pkg "github.com/mogemimi/pomdog/tools/pkg"
 	"github.com/pkg/errors"
+	"golang.org/x/sync/errgroup"
 )
 
 type projectConfig struct {
@@ -34,7 +35,7 @@ func main() {
 	var config projectConfig
 	flag.StringVar(&config.Dir, "o", ".", "project directory path")
 	flag.StringVar(&config.Name, "name", "", "project name")
-	flag.StringVar(&config.URL, "url", "com.example.QuickStart", "project url")
+	flag.StringVar(&config.URL, "url", "com.example.quickstart", "project url")
 	flag.StringVar(&config.PomdogDir, "pomdog", "", "pomdog directory path")
 	flag.BoolVar(&options.NonInteractive, "non-interactive", false, "non-interactive mode for CI")
 	flag.BoolVar(&options.Verbose, "verbose", false, "verbose")
@@ -43,8 +44,8 @@ func main() {
 	if !options.NonInteractive {
 		config.PomdogDir = ask("Where is a Pomdog directory? (e.g. path/to/pomdog)", "", isValidPomdogDir)
 		config.Dir = ask("Where do you want to create your new gamedev project?", config.Dir, isValidPath)
-		config.Name = ask("What is your project name? (e.g. MyGame)", "", isValidName)
-		config.URL = strings.Replace(config.URL, "QuickStart", config.Name, 1)
+		config.Name = ask("What is your project name? (e.g. mygame)", "", isValidName)
+		config.URL = strings.Replace(config.URL, "quickstart", config.Name, 1)
 		config.URL = strings.Replace(config.URL, "_", "-", -1)
 		config.URL = ask("What is your project URL?", config.URL, isValidURL)
 	}
@@ -100,21 +101,21 @@ func createProject(config projectConfig) error {
 		return errors.Wrapf(err, "failed to copy third-party files")
 	}
 
-	if err := renameContentByURL(rootDir, config.URL, "Platform.Cocoa/Info.plist"); err != nil {
+	if err := renameContentByURL(rootDir, config.URL, "platform/cocoa/info.plist"); err != nil {
 		return errors.Wrapf(err, "failed to rename URL")
 	}
 
 	sourceFiles := []string{
 		"README.md",
 		"CMakeLists.txt",
-		"Source/QuickStartGame.cpp",
-		"Source/QuickStartGame.hpp",
-		"Platform.Cocoa/AppDelegate.mm",
-		"Platform.Cocoa/main.mm",
-		"Platform.Cocoa/Info.plist",
-		"Platform.Cocoa/Base.lproj/MainMenu.xib",
-		"Platform.Win32/main.cpp",
-		"Platform.X11/main.cpp",
+		"source/game_main.cpp",
+		"source/game_main.hpp",
+		"platform/cocoa/AppDelegate.mm",
+		"platform/cocoa/main.mm",
+		"platform/cocoa/info.plist",
+		"platform/cocoa/Base.lproj/MainMenu.xib",
+		"platform/linux/main.cpp",
+		"platform/win32/main.cpp",
 	}
 	for _, f := range sourceFiles {
 		if err := renameContentByIdent(rootDir, config.Name, f); err != nil {
@@ -124,33 +125,21 @@ func createProject(config projectConfig) error {
 	if err := renameCMakefile(rootDir, config.Name, "CMakeLists.txt"); err != nil {
 		return errors.Wrapf(err, "failed to replace cmake path")
 	}
-	if err := renamePomdogCMakefile(rootDir, config.Name, "ThirdParty/pomdog/cmake/pomdog/CMakeLists.txt"); err != nil {
+	if err := renamePomdogCMakefile(rootDir, config.Name, "third_party/pomdog/cmake/pomdog/CMakeLists.txt"); err != nil {
 		return errors.Wrapf(err, "failed to replace cmake path")
 	}
 
 	thirdPartyCMakeFiles := []string{
-		"ThirdParty/pomdog/cmake/dependencies/giflib/CMakeLists.txt",
-		"ThirdParty/pomdog/cmake/dependencies/glew/CMakeLists.txt",
-		"ThirdParty/pomdog/cmake/dependencies/libpng/CMakeLists.txt",
-		"ThirdParty/pomdog/cmake/dependencies/mbedtls/CMakeLists.txt",
-		"ThirdParty/pomdog/cmake/dependencies/stb/CMakeLists.txt",
-		"ThirdParty/pomdog/cmake/dependencies/zlib/CMakeLists.txt",
+		"third_party/pomdog/cmake/dependencies/giflib/CMakeLists.txt",
+		"third_party/pomdog/cmake/dependencies/glew/CMakeLists.txt",
+		"third_party/pomdog/cmake/dependencies/libpng/CMakeLists.txt",
+		"third_party/pomdog/cmake/dependencies/mbedtls/CMakeLists.txt",
+		"third_party/pomdog/cmake/dependencies/stb/CMakeLists.txt",
+		"third_party/pomdog/cmake/dependencies/zlib/CMakeLists.txt",
 	}
 	for _, f := range thirdPartyCMakeFiles {
 		if err := renameThirdPartyCMakefile(rootDir, config.Name, f); err != nil {
 			return errors.Wrapf(err, "failed to rename content")
-		}
-	}
-
-	renameTargetFiles := []string{
-		"Source/QuickStartGame.cpp",
-		"Source/QuickStartGame.hpp",
-	}
-	for _, f := range renameTargetFiles {
-		src := filepath.Join(rootDir, f)
-		dst := filepath.Join(rootDir, strings.Replace(f, "QuickStart", config.Name, 1))
-		if err := os.Rename(src, dst); err != nil {
-			return errors.Wrapf(err, "failed to rename file from \"%s\" to \"%s\"", src, dst)
 		}
 	}
 	return nil
@@ -158,19 +147,20 @@ func createProject(config projectConfig) error {
 
 func copyTemplateFiles(sourceRoot, destRoot string) error {
 	files := []string{
-		"Content",
-		"Platform.Cocoa",
-		"Platform.Win32",
-		"Platform.X11",
-		"Source",
+		"content",
+		"platform/cocoa",
+		"platform/linux",
+		"platform/win32",
+		"source",
 		".gitignore",
 		"CMakeLists.txt",
 		"README.md",
 	}
+	ignoreDirs := []string{}
 	for _, f := range files {
-		src := filepath.Join(sourceRoot, "examples/QuickStart", f)
+		src := filepath.Join(sourceRoot, "examples/quickstart", f)
 		dst := filepath.Join(destRoot, f)
-		if err := copyFiles(src, dst); err != nil {
+		if err := copyFiles(src, dst, ignoreDirs); err != nil {
 			return errors.Wrapf(err, "failed to copy from \"%s\" to \"%s\"", src, dst)
 		}
 		if options.Verbose {
@@ -184,16 +174,19 @@ func copyFrameworkFiles(sourceRoot, destRoot string) error {
 	files := []string{
 		"cmake/dependencies",
 		"cmake/pomdog",
-		"include",
-		"src",
+		"pomdog",
 		"LICENSE.md",
 		"README.md",
 		".gitignore",
 	}
+	ignoreDirs := []string{
+		".git",
+		".github",
+	}
 	for _, f := range files {
 		src := filepath.Join(sourceRoot, f)
-		dst := filepath.Join(filepath.Join(destRoot, "ThirdParty/pomdog"), f)
-		if err := copyFiles(src, dst); err != nil {
+		dst := filepath.Join(filepath.Join(destRoot, "third_party/pomdog"), f)
+		if err := copyFiles(src, dst, ignoreDirs); err != nil {
 			return errors.Wrapf(err, "failed to copy from \"%s\" to \"%s\"", src, dst)
 		}
 		if options.Verbose {
@@ -206,34 +199,58 @@ func copyFrameworkFiles(sourceRoot, destRoot string) error {
 func copyThirdPartyFiles(sourceRoot, destRoot string) error {
 	files := []string{
 		"giflib",
-		"glew",
 		"libpng",
-		"mbedtls",
-		"nanosvg",
-		"rapidjson",
-		"SDL_GameControllerDB",
+		"mbedtls/3rdparty/everest",
+		"mbedtls/include",
+		"mbedtls/library",
+		"nanosvg/src",
+		"rapidjson/include",
 		"stb",
-		"utfcpp",
+		"utfcpp/source",
 		"vendor",
 		"zlib",
 	}
+	ignoreDirs := []string{
+		".git",
+		".github",
+		"auto",
+		"bin",
+		"build",
+		"ChangeLog.d",
+		"contrib",
+		"gtest",
+		"data",
+		"deprecated",
+		"doc",
+		"docs",
+		"doxygen",
+		"example",
+		"extern",
+		"pic",
+		"samples",
+		"scripts",
+		"tests",
+		"tools",
+	}
+
 	for _, f := range files {
 		src := filepath.Join(sourceRoot, "dependencies", f)
-		dst := filepath.Join(filepath.Join(destRoot, "ThirdParty"), f)
-		if err := copyFiles(src, dst); err != nil {
+		dst := filepath.Join(filepath.Join(destRoot, "third_party"), f)
+		if err := copyFiles(src, dst, ignoreDirs); err != nil {
 			return errors.Wrapf(err, "failed to copy from \"%s\" to \"%s\"", src, dst)
 		}
 		if options.Verbose {
 			fmt.Println(src, "=>", dst)
 		}
 	}
+
 	return nil
 }
 
 func renameContentByURL(rootDir, url, source string) error {
 	file := filepath.Join(rootDir, source)
 	err := replaceFileContent(file, func(content string) string {
-		return strings.Replace(content, "com.example.QuickStart", url, -1)
+		return strings.Replace(content, "com.example.quickstart", url, -1)
 	})
 	return errors.Wrapf(err, "failed to rename URL in \"%s\"", file)
 }
@@ -241,7 +258,7 @@ func renameContentByURL(rootDir, url, source string) error {
 func renameContentByIdent(rootDir, ident, source string) error {
 	file := filepath.Join(rootDir, source)
 	err := replaceFileContent(file, func(content string) string {
-		content = strings.Replace(content, "QuickStart", ident, -1)
+		content = strings.Replace(content, "quickstart", ident, -1)
 		content = strings.Replace(content, "QUICKSTART", strings.ToUpper(ident), -1)
 		return content
 	})
@@ -254,7 +271,7 @@ func renameCMakefile(rootDir, ident, source string) error {
 		content = strings.Replace(
 			content,
 			`set(POMDOG_DIR "../..")`,
-			`set(POMDOG_DIR "ThirdParty/pomdog")`,
+			`set(POMDOG_DIR "third_party/pomdog")`,
 			1)
 
 		return content
@@ -313,7 +330,7 @@ func replaceFileContent(file string, replacer func(string) string) error {
 	return nil
 }
 
-func copyFiles(src, dst string) error {
+func copyFiles(src, dst string, ignoreDirs []string) error {
 	stat, err := os.Stat(src)
 	if err != nil {
 		return err
@@ -335,62 +352,38 @@ func copyFiles(src, dst string) error {
 			return err
 		}
 
-		for _, f := range files {
-			if f.IsDir() || f.Mode().IsRegular() {
-				s := filepath.Join(src, f.Name())
-				d := filepath.Join(dst, f.Name())
-				if err := copyFiles(s, d); err != nil {
-					return err
+		ignoreDir := func(filename string) bool {
+			for _, ignore := range ignoreDirs {
+				if filename == ignore {
+					return true
 				}
 			}
+			return false
+		}
+
+		var eg errgroup.Group
+		for _, f := range files {
+			file := f
+			eg.Go(func() error {
+				if ignoreDir(file.Name()) {
+					return nil
+				}
+				if file.IsDir() || file.Mode().IsRegular() {
+					s := filepath.Join(src, file.Name())
+					d := filepath.Join(dst, file.Name())
+					if err := copyFiles(s, d, ignoreDirs); err != nil {
+						return err
+					}
+				}
+				return nil
+			})
+		}
+		if err := eg.Wait(); err != nil {
+			return errors.Wrapf(err, "failed to copy files")
 		}
 		return nil
 	}
-	return copyFile(src, dst)
-}
-
-func copyFile(src, dst string) error {
-	srcInfo, err := os.Stat(src)
-	if err != nil {
-		return err
-	}
-	if !srcInfo.Mode().IsRegular() {
-		return fmt.Errorf("non-regular source file %s (%q)", srcInfo.Name(), srcInfo.Mode().String())
-	}
-	dstInfo, err := os.Stat(dst)
-	if err != nil {
-		if !os.IsNotExist(err) {
-			return errors.Wrapf(err, "failed to copy to \"%s\"", dst)
-		}
-	} else {
-		if !dstInfo.Mode().IsRegular() {
-			return fmt.Errorf("non-regular destination file %s (%q)", dstInfo.Name(), dstInfo.Mode().String())
-		}
-		if os.SameFile(srcInfo, dstInfo) {
-			return nil
-		}
-	}
-
-	in, err := os.Open(src)
-	if err != nil {
-		return err
-	}
-	defer in.Close()
-	out, err := os.Create(dst)
-	if err != nil {
-		return err
-	}
-	defer func() {
-		cerr := out.Close()
-		if err == nil {
-			err = cerr
-		}
-	}()
-	if _, err = io.Copy(out, in); err != nil {
-		return err
-	}
-	err = out.Sync()
-	return err
+	return pkg.CopyFile(src, dst)
 }
 
 func isValidPomdogDir(dir string) bool {
