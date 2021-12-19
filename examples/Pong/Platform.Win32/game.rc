@@ -1,5 +1,0 @@
-#include "Resource.hpp"
-
-// Icon
-IDI_POMDOG_ICON       ICON "Resources/icon_256px.ico"
-IDI_POMDOG_ICON_SMALL ICON "Resources/icon_16px.ico"

@@ -429,7 +429,7 @@ GameHostWin32::Impl::Initialize(
     if (resourceDirErr != nullptr) {
         return errors::Wrap(std::move(resourceDirErr), "FileSystem::GetResourceDirectoryPath() failed");
     }
-    auto contentDirectory = PathHelper::Join(resourceDir, "Content");
+    auto contentDirectory = PathHelper::Join(resourceDir, "content");
 
     // NOTE: Create asset manager.
     assetManager = std::make_unique<AssetManager>(
