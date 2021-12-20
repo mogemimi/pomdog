@@ -8,39 +8,39 @@ set(PRODUCT_NAME feature_showcase)
 set(POMDOG_DIR "../..")
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
 
-source_group(source                         REGULAR_EXPRESSION "source/*")
-source_group(source/AnimationGraphTest      REGULAR_EXPRESSION "source/AnimationGraphTest/*")
-source_group(source/AudioClipTest           REGULAR_EXPRESSION "source/AudioClipTest/*")
-source_group(source/BasicEffectTest         REGULAR_EXPRESSION "source/BasicEffectTest/*")
-source_group(source/Beam2DTest              REGULAR_EXPRESSION "source/Beam2DTest/*")
-source_group(source/BillboardBatchTest      REGULAR_EXPRESSION "source/BillboardBatchTest/*")
-source_group(source/DistanceFieldFontTest   REGULAR_EXPRESSION "source/DistanceFieldFontTest/*")
-source_group(source/EditorGUITest           REGULAR_EXPRESSION "source/EditorGUITest/*")
-source_group(source/GamepadTest             REGULAR_EXPRESSION "source/GamepadTest/*")
-source_group(source/GIFDecodeTest           REGULAR_EXPRESSION "source/GIFDecodeTest/*")
-source_group(source/GLTFModelTest           REGULAR_EXPRESSION "source/GLTFModelTest/*")
-source_group(source/GUISplitterTest         REGULAR_EXPRESSION "source/GUISplitterTest/*")
-source_group(source/HardwareInstancingTest  REGULAR_EXPRESSION "source/HardwareInstancingTest/*")
-source_group(source/HTTPClientTest          REGULAR_EXPRESSION "source/HTTPClientTest/*")
-source_group(source/ImageEffectsTest        REGULAR_EXPRESSION "source/ImageEffectsTest/*")
-source_group(source/LineBatchTest           REGULAR_EXPRESSION "source/LineBatchTest/*")
-source_group(source/MultiRenderTargetTest   REGULAR_EXPRESSION "source/MultiRenderTargetTest/*")
-source_group(source/Particle2DTest          REGULAR_EXPRESSION "source/Particle2DTest/*")
-source_group(source/Particle3DTest          REGULAR_EXPRESSION "source/Particle3DTest/*")
-source_group(source/ParticleClipLoaderTest  REGULAR_EXPRESSION "source/ParticleClipLoaderTest/*")
-source_group(source/PolylineDrawingTest     REGULAR_EXPRESSION "source/PolylineDrawingTest/*")
-source_group(source/PrimitiveBatchTest      REGULAR_EXPRESSION "source/PrimitiveBatchTest/*")
-source_group(source/Skeletal2DTest          REGULAR_EXPRESSION "source/Skeletal2DTest/*")
-source_group(source/Skinning2DTest          REGULAR_EXPRESSION "source/Skinning2DTest/*")
-source_group(source/SpriteBatchTest         REGULAR_EXPRESSION "source/SpriteBatchTest/*")
-source_group(source/SpriteFontTest          REGULAR_EXPRESSION "source/SpriteFontTest/*")
-source_group(source/SpriteLineTest          REGULAR_EXPRESSION "source/SpriteLineTest/*")
-source_group(source/SVGDecodeTest           REGULAR_EXPRESSION "source/SVGDecodeTest/*")
-source_group(source/Texture2DLoaderTest     REGULAR_EXPRESSION "source/Texture2DLoaderTest/*")
-source_group(source/VoxelModelTest          REGULAR_EXPRESSION "source/VoxelModelTest/*")
-source_group(platform/cocoa                 REGULAR_EXPRESSION "platform/cocoa/*")
-source_group(platform/linux                 REGULAR_EXPRESSION "platform/linux/*")
-source_group(platform/win32                 REGULAR_EXPRESSION "platform/win32/*")
+source_group(source                             REGULAR_EXPRESSION "source/*")
+source_group(source/animation_graph_test        REGULAR_EXPRESSION "source/animation_graph_test/*")
+source_group(source/audio_clip_test             REGULAR_EXPRESSION "source/audio_clip_test/*")
+source_group(source/basic_effect_test           REGULAR_EXPRESSION "source/basic_effect_test/*")
+source_group(source/beam2d_test                 REGULAR_EXPRESSION "source/beam2d_test/*")
+source_group(source/billboard_batch_test        REGULAR_EXPRESSION "source/billboard_batch_test/*")
+source_group(source/distance_field_font_test    REGULAR_EXPRESSION "source/distance_field_font_test/*")
+source_group(source/editor_gui_test             REGULAR_EXPRESSION "source/editor_gui_test/*")
+source_group(source/gamepad_test                REGULAR_EXPRESSION "source/gamepad_test/*")
+source_group(source/gif_decode_test             REGULAR_EXPRESSION "source/gif_decode_test/*")
+source_group(source/gltf_model_test             REGULAR_EXPRESSION "source/gltf_model_test/*")
+source_group(source/gui_splitter_test           REGULAR_EXPRESSION "source/gui_splitter_test/*")
+source_group(source/hardware_instancing_test    REGULAR_EXPRESSION "source/hardware_instancing_test/*")
+source_group(source/http_client_test            REGULAR_EXPRESSION "source/http_client_test/*")
+source_group(source/image_effects_test          REGULAR_EXPRESSION "source/image_effects_test/*")
+source_group(source/line_batch_test             REGULAR_EXPRESSION "source/line_batch_test/*")
+source_group(source/multi_render_target_test    REGULAR_EXPRESSION "source/multi_render_target_test/*")
+source_group(source/particle_clip_loader_test   REGULAR_EXPRESSION "source/particle_clip_loader_test/*")
+source_group(source/particle2d_test             REGULAR_EXPRESSION "source/particle2d_test/*")
+source_group(source/particle3d_test             REGULAR_EXPRESSION "source/particle3d_test/*")
+source_group(source/polyline_drawing_test       REGULAR_EXPRESSION "source/polyline_drawing_test/*")
+source_group(source/primitive_batch_test        REGULAR_EXPRESSION "source/primitive_batch_test/*")
+source_group(source/skeletal2d_test             REGULAR_EXPRESSION "source/skeletal2d_test/*")
+source_group(source/skinning2d_test             REGULAR_EXPRESSION "source/skinning2d_test/*")
+source_group(source/sprite_batch_test           REGULAR_EXPRESSION "source/sprite_batch_test/*")
+source_group(source/sprite_font_test            REGULAR_EXPRESSION "source/sprite_font_test/*")
+source_group(source/sprite_line_test            REGULAR_EXPRESSION "source/sprite_line_test/*")
+source_group(source/svg_decode_test             REGULAR_EXPRESSION "source/svg_decode_test/*")
+source_group(source/texture2d_loader_test       REGULAR_EXPRESSION "source/texture2d_loader_test/*")
+source_group(source/voxel_model_test            REGULAR_EXPRESSION "source/voxel_model_test/*")
+source_group(platform/cocoa                     REGULAR_EXPRESSION "platform/cocoa/*")
+source_group(platform/linux                     REGULAR_EXPRESSION "platform/linux/*")
+source_group(platform/win32                     REGULAR_EXPRESSION "platform/win32/*")
 
 set(RESOURCE_FILES
     # `content` directory
@@ -58,67 +58,67 @@ add_executable(${PRODUCT_NAME} WIN32)
 target_sources(${PRODUCT_NAME} PRIVATE
     source/game_main.cpp
     source/game_main.hpp
-    source/AnimationGraphTest/AnimationGraphTest.cpp
-    source/AnimationGraphTest/AnimationGraphTest.hpp
-    source/AudioClipTest/AudioClipTest.cpp
-    source/AudioClipTest/AudioClipTest.hpp
-    source/BasicEffectTest/BasicEffectTest.cpp
-    source/BasicEffectTest/BasicEffectTest.hpp
-    source/Beam2DTest/Beam2DTest.cpp
-    source/Beam2DTest/Beam2DTest.hpp
-    source/BillboardBatchTest/BillboardBatchTest.cpp
-    source/BillboardBatchTest/BillboardBatchTest.hpp
-    source/DistanceFieldFontTest/DistanceFieldFontTest.cpp
-    source/DistanceFieldFontTest/DistanceFieldFontTest.hpp
-    source/EditorGUITest/EditorGUITest.cpp
-    source/EditorGUITest/EditorGUITest.hpp
-    source/GamepadTest/GamepadTest.cpp
-    source/GamepadTest/GamepadTest.hpp
-    source/GIFDecodeTest/GIFDecodeTest.cpp
-    source/GIFDecodeTest/GIFDecodeTest.hpp
-    source/GLTFModelTest/GLTFModelTest.cpp
-    source/GLTFModelTest/GLTFModelTest.hpp
-    source/GUISplitterTest/GUISplitterTest.cpp
-    source/GUISplitterTest/GUISplitterTest.hpp
-    source/HardwareInstancingTest/HardwareInstancingTest.cpp
-    source/HardwareInstancingTest/HardwareInstancingTest.hpp
+    source/animation_graph_test/animation_graph_test.cpp
+    source/animation_graph_test/animation_graph_test.hpp
+    source/audio_clip_test/audio_clip_test.cpp
+    source/audio_clip_test/audio_clip_test.hpp
+    source/basic_effect_test/basic_effect_test.cpp
+    source/basic_effect_test/basic_effect_test.hpp
+    source/beam2d_test/beam2d_test.cpp
+    source/beam2d_test/beam2d_test.hpp
+    source/billboard_batch_test/billboard_batch_test.cpp
+    source/billboard_batch_test/billboard_batch_test.hpp
+    source/distance_field_font_test/distance_field_font_test.cpp
+    source/distance_field_font_test/distance_field_font_test.hpp
+    source/editor_gui_test/editor_gui_test.cpp
+    source/editor_gui_test/editor_gui_test.hpp
+    source/gamepad_test/gamepad_test.cpp
+    source/gamepad_test/gamepad_test.hpp
+    source/gif_decode_test/gif_decode_test.cpp
+    source/gif_decode_test/gif_decode_test.hpp
+    source/gltf_model_test/gltf_model_test.cpp
+    source/gltf_model_test/gltf_model_test.hpp
+    source/gui_splitter_test/gui_splitter_test.cpp
+    source/gui_splitter_test/gui_splitter_test.hpp
+    source/hardware_instancing_test/hardware_instancing_test.cpp
+    source/hardware_instancing_test/hardware_instancing_test.hpp
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:
         # TODO: Add emscripten support
-        source/HTTPClientTest/HTTPClientTest.cpp
-        source/HTTPClientTest/HTTPClientTest.hpp
+        source/http_client_test/http_client_test.cpp
+        source/http_client_test/http_client_test.hpp
     >
-    source/ImageEffectsTest/ImageEffectsTest.cpp
-    source/ImageEffectsTest/ImageEffectsTest.hpp
-    source/LineBatchTest/LineBatchTest.cpp
-    source/LineBatchTest/LineBatchTest.hpp
-    source/MultiRenderTargetTest/MultiRenderTargetTest.cpp
-    source/MultiRenderTargetTest/MultiRenderTargetTest.hpp
-    source/Particle2DTest/Particle2DTest.cpp
-    source/Particle2DTest/Particle2DTest.hpp
-    source/Particle3DTest/Particle3DTest.cpp
-    source/Particle3DTest/Particle3DTest.hpp
-    source/ParticleClipLoaderTest/ParticleClipLoaderTest.cpp
-    source/ParticleClipLoaderTest/ParticleClipLoaderTest.hpp
-    source/PolylineDrawingTest/PolylineDrawingTest.cpp
-    source/PolylineDrawingTest/PolylineDrawingTest.hpp
-    source/PrimitiveBatchTest/PrimitiveBatchTest.cpp
-    source/PrimitiveBatchTest/PrimitiveBatchTest.hpp
-    source/Skeletal2DTest/Skeletal2DTest.cpp
-    source/Skeletal2DTest/Skeletal2DTest.hpp
-    source/Skinning2DTest/Skinning2DTest.cpp
-    source/Skinning2DTest/Skinning2DTest.hpp
-    source/SpriteBatchTest/SpriteBatchTest.cpp
-    source/SpriteBatchTest/SpriteBatchTest.hpp
-    source/SpriteFontTest/SpriteFontTest.cpp
-    source/SpriteFontTest/SpriteFontTest.hpp
-    source/SpriteLineTest/SpriteLineTest.cpp
-    source/SpriteLineTest/SpriteLineTest.hpp
-    source/SVGDecodeTest/SVGDecodeTest.cpp
-    source/SVGDecodeTest/SVGDecodeTest.hpp
-    source/Texture2DLoaderTest/Texture2DLoaderTest.cpp
-    source/Texture2DLoaderTest/Texture2DLoaderTest.hpp
-    source/VoxelModelTest/VoxelModelTest.cpp
-    source/VoxelModelTest/VoxelModelTest.hpp
+    source/image_effects_test/image_effects_test.cpp
+    source/image_effects_test/image_effects_test.hpp
+    source/line_batch_test/line_batch_test.cpp
+    source/line_batch_test/line_batch_test.hpp
+    source/multi_render_target_test/multi_render_target_test.cpp
+    source/multi_render_target_test/multi_render_target_test.hpp
+    source/particle_clip_loader_test/particle_clip_loader_test.cpp
+    source/particle_clip_loader_test/particle_clip_loader_test.hpp
+    source/particle2d_test/particle2d_test.cpp
+    source/particle2d_test/particle2d_test.hpp
+    source/particle3d_test/particle3d_test.cpp
+    source/particle3d_test/particle3d_test.hpp
+    source/polyline_drawing_test/polyline_drawing_test.cpp
+    source/polyline_drawing_test/polyline_drawing_test.hpp
+    source/primitive_batch_test/primitive_batch_test.cpp
+    source/primitive_batch_test/primitive_batch_test.hpp
+    source/skeletal2d_test/skeletal2d_test.cpp
+    source/skeletal2d_test/skeletal2d_test.hpp
+    source/skinning2d_test/skinning2d_test.cpp
+    source/skinning2d_test/skinning2d_test.hpp
+    source/sprite_batch_test/sprite_batch_test.cpp
+    source/sprite_batch_test/sprite_batch_test.hpp
+    source/sprite_font_test/sprite_font_test.cpp
+    source/sprite_font_test/sprite_font_test.hpp
+    source/sprite_line_test/sprite_line_test.cpp
+    source/sprite_line_test/sprite_line_test.hpp
+    source/svg_decode_test/svg_decode_test.cpp
+    source/svg_decode_test/svg_decode_test.hpp
+    source/texture2d_loader_test/texture2d_loader_test.cpp
+    source/texture2d_loader_test/texture2d_loader_test.hpp
+    source/voxel_model_test/voxel_model_test.cpp
+    source/voxel_model_test/voxel_model_test.hpp
     ${RESOURCE_FILES}
 
     # On Mac
