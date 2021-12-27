@@ -1,4 +1,4 @@
-source_group(math           REGULAR_EXPRESSION "pomdog/math/*")
+source_group(math REGULAR_EXPRESSION "pomdog/math/*")
 
 target_sources(pomdog_static PRIVATE
     # NOTE: math
