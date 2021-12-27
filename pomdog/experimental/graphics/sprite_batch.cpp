@@ -36,7 +36,7 @@
 #include "pomdog/math/vector2.hpp"
 #include "pomdog/math/vector3.hpp"
 #include "pomdog/math/vector4.hpp"
-#include "pomdog/utility/aligned_new.hpp"
+#include "pomdog/memory/aligned_new.hpp"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
