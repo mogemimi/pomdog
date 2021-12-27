@@ -1,13 +1,13 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/graphics/truetype_font.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/content/utility/binary_reader.hpp"
-#include "pomdog/experimental/graphics/font_glyph.hpp"
-#include "pomdog/experimental/graphics/sprite_font.hpp"
-#include "pomdog/filesystem/file_system.hpp"
-#include "pomdog/math/point2d.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/experimental/graphics/truetype_font.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/content/utility/binary_reader.h"
+#include "pomdog/experimental/graphics/font_glyph.h"
+#include "pomdog/experimental/graphics/sprite_font.h"
+#include "pomdog/filesystem/file_system.h"
+#include "pomdog/math/point2d.h"
+#include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <fstream>

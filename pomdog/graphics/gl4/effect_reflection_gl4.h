@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/graphics/effect_reflection.hpp"
-#include "pomdog/graphics/gl4/opengl_prerequisites.hpp"
-#include "pomdog/graphics/gl4/typesafe_gl4.hpp"
-#include "pomdog/utility/errors.hpp"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/graphics/effect_reflection.h"
+#include "pomdog/graphics/gl4/opengl_prerequisites.h"
+#include "pomdog/graphics/gl4/typesafe_gl4.h"
+#include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>

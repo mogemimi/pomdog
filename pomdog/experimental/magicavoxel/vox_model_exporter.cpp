@@ -1,11 +1,11 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/magicavoxel/vox_model_exporter.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/content/utility/make_fourcc.hpp"
-#include "pomdog/experimental/magicavoxel/vox_chunk_header.hpp"
-#include "pomdog/experimental/magicavoxel/vox_model.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/experimental/magicavoxel/vox_model_exporter.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/content/utility/make_fourcc.h"
+#include "pomdog/experimental/magicavoxel/vox_chunk_header.h"
+#include "pomdog/experimental/magicavoxel/vox_model.h"
+#include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>

@@ -1,7 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/async/helpers.hpp"
-#include "pomdog/experimental/async/task.hpp"
+#include "pomdog/experimental/async/helpers.h"
+#include "pomdog/experimental/async/task.h"
 #include <catch_amalgamated.hpp>
 #include <thread>
 

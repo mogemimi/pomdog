@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "pomdog/application/game_host.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/signals/forward_declarations.hpp"
+#include "pomdog/application/game_host.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/signals/forward_declarations.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>

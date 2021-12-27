@@ -1,10 +1,10 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/constant_buffer.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/graphics/backends/buffer_bind_mode.hpp"
-#include "pomdog/graphics/backends/native_buffer.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/graphics/constant_buffer.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/graphics/backends/buffer_bind_mode.h"
+#include "pomdog/graphics/backends/native_buffer.h"
+#include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>

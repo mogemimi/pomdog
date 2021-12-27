@@ -1,17 +1,17 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/application/cocoa/pomdog_metal_view_controller.hpp"
-#include "pomdog/application/cocoa/game_host_metal.hpp"
-#include "pomdog/application/cocoa/game_window_cocoa.hpp"
-#include "pomdog/application/system_events.hpp"
-#include "pomdog/graphics/metal/graphics_context_metal.hpp"
-#include "pomdog/graphics/presentation_parameters.hpp"
-#include "pomdog/input/button_state.hpp"
-#include "pomdog/input/keys.hpp"
-#include "pomdog/math/point2d.hpp"
-#include "pomdog/utility/assert.hpp"
-#include "pomdog/utility/errors.hpp"
-#include "pomdog/utility/exception.hpp"
+#include "pomdog/application/cocoa/pomdog_metal_view_controller.h"
+#include "pomdog/application/cocoa/game_host_metal.h"
+#include "pomdog/application/cocoa/game_window_cocoa.h"
+#include "pomdog/application/system_events.h"
+#include "pomdog/graphics/metal/graphics_context_metal.h"
+#include "pomdog/graphics/presentation_parameters.h"
+#include "pomdog/input/button_state.h"
+#include "pomdog/input/keys.h"
+#include "pomdog/math/point2d.h"
+#include "pomdog/utility/assert.h"
+#include "pomdog/utility/errors.h"
+#include "pomdog/utility/exception.h"
 
 #import <Metal/Metal.h>
 #import <MetalKit/MetalKit.h>

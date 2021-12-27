@@ -1,10 +1,10 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/input/iokit/gamepad_iokit.hpp"
-#include "pomdog/input/backends/gamepad_helper.hpp"
-#include "pomdog/logging/log.hpp"
-#include "pomdog/signals/event_queue.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/input/iokit/gamepad_iokit.h"
+#include "pomdog/input/backends/gamepad_helper.h"
+#include "pomdog/logging/log.h"
+#include "pomdog/signals/event_queue.h"
+#include "pomdog/utility/assert.h"
 #include <algorithm>
 
 namespace pomdog::detail::IOKit {

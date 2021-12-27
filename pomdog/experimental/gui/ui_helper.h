@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "pomdog/math/point2d.hpp"
+#include "pomdog/math/point2d.h"
 
 namespace pomdog::gui::UIHelper {
 

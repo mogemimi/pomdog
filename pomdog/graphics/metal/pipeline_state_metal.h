@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "pomdog/graphics/forward_declarations.hpp"
-#include "pomdog/graphics/pipeline_state.hpp"
-#include "pomdog/utility/errors.hpp"
+#include "pomdog/graphics/forward_declarations.h"
+#include "pomdog/graphics/pipeline_state.h"
+#include "pomdog/utility/errors.h"
 #import <Metal/MTLDepthStencil.h>
 #import <Metal/MTLRenderCommandEncoder.h>
 #import <Metal/MTLRenderPipeline.h>

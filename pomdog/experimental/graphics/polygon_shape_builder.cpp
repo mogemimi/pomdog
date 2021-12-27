@@ -1,8 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/graphics/polygon_shape_builder.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/math/math.hpp"
+#include "pomdog/experimental/graphics/polygon_shape_builder.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/math/math.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>

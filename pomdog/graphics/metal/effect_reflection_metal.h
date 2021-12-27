@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "pomdog/graphics/effect_reflection.hpp"
-#include "pomdog/graphics/forward_declarations.hpp"
+#include "pomdog/graphics/effect_reflection.h"
+#include "pomdog/graphics/forward_declarations.h"
 #import <Metal/Metal.h>
 
 namespace pomdog::detail::metal {

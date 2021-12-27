@@ -1,8 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/filesystem/file_system.hpp"
-#include "pomdog/basic/platform.hpp"
-#include "pomdog/utility/string_helper.hpp"
+#include "pomdog/filesystem/file_system.h"
+#include "pomdog/basic/platform.h"
+#include "pomdog/utility/string_helper.h"
 #include <catch_amalgamated.hpp>
 
 using namespace pomdog;

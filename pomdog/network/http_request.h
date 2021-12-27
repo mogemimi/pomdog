@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/basic/export.hpp"
-#include "pomdog/network/forward_declarations.hpp"
-#include "pomdog/network/http_method.hpp"
-#include "pomdog/signals/delegate.hpp"
-#include "pomdog/utility/errors.hpp"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/export.h"
+#include "pomdog/network/forward_declarations.h"
+#include "pomdog/network/http_method.h"
+#include "pomdog/signals/delegate.h"
+#include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <functional>

@@ -1,10 +1,10 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/spine/skin_loader.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/experimental/skeletal2d/skin.hpp"
-#include "pomdog/experimental/spine/skeleton_desc.hpp"
-#include "pomdog/utility/crc32.hpp"
+#include "pomdog/experimental/spine/skin_loader.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/experimental/skeletal2d/skin.h"
+#include "pomdog/experimental/spine/skeleton_desc.h"
+#include "pomdog/utility/crc32.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>

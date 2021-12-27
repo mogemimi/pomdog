@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/audio/sound_effect.hpp"
+#include "pomdog/audio/sound_effect.h"
 
 namespace pomdog {
 

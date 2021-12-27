@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/basic/export.hpp"
-#include "pomdog/chrono/duration.hpp"
-#include "pomdog/signals/signal.hpp"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/export.h"
+#include "pomdog/chrono/duration.h"
+#include "pomdog/signals/signal.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>

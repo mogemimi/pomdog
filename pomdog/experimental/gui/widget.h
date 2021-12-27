@@ -2,14 +2,14 @@
 
 #pragma once
 
-#include "pomdog/application/mouse_cursor.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/chrono/duration.hpp"
-#include "pomdog/experimental/gui/hierarchy_sort_order.hpp"
-#include "pomdog/experimental/gui/horizontal_alignment.hpp"
-#include "pomdog/experimental/gui/vertical_alignment.hpp"
-#include "pomdog/math/point2d.hpp"
-#include "pomdog/math/rectangle.hpp"
+#include "pomdog/application/mouse_cursor.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/chrono/duration.h"
+#include "pomdog/experimental/gui/hierarchy_sort_order.h"
+#include "pomdog/experimental/gui/horizontal_alignment.h"
+#include "pomdog/experimental/gui/vertical_alignment.h"
+#include "pomdog/math/point2d.h"
+#include "pomdog/math/rectangle.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>

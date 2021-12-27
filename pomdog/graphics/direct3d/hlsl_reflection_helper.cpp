@@ -1,8 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/direct3d/hlsl_reflection_helper.hpp"
-#include "pomdog/graphics/effect_variable_class.hpp"
-#include "pomdog/graphics/effect_variable_type.hpp"
+#include "pomdog/graphics/direct3d/hlsl_reflection_helper.h"
+#include "pomdog/graphics/effect_variable_class.h"
+#include "pomdog/graphics/effect_variable_type.h"
 
 namespace pomdog::detail::direct3d {
 

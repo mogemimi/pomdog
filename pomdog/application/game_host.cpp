@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/application/game_host.hpp"
+#include "pomdog/application/game_host.h"
 
 namespace pomdog {
 

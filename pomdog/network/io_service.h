@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/basic/export.hpp"
-#include "pomdog/chrono/game_clock.hpp"
-#include "pomdog/chrono/time_point.hpp"
-#include "pomdog/signals/signal.hpp"
-#include "pomdog/utility/errors.hpp"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/export.h"
+#include "pomdog/chrono/game_clock.h"
+#include "pomdog/chrono/time_point.h"
+#include "pomdog/signals/signal.h"
+#include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <functional>

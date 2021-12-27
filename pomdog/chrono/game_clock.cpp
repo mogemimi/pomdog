@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/chrono/game_clock.hpp"
+#include "pomdog/chrono/game_clock.h"
 
 namespace pomdog {
 

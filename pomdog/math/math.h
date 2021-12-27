@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "pomdog/basic/export.hpp"
+#include "pomdog/basic/export.h"
 
 namespace pomdog::math {
 

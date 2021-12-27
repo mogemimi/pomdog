@@ -1,9 +1,9 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/direct3d11/depth_stencil_buffer_direct3d11.hpp"
-#include "pomdog/graphics/dxgi/dxgi_format_helper.hpp"
-#include "pomdog/math/rectangle.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/graphics/direct3d11/depth_stencil_buffer_direct3d11.h"
+#include "pomdog/graphics/dxgi/dxgi_format_helper.h"
+#include "pomdog/math/rectangle.h"
+#include "pomdog/utility/assert.h"
 
 namespace pomdog::detail::direct3d11 {
 namespace {

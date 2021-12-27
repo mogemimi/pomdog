@@ -1,9 +1,9 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/metal/effect_reflection_metal.hpp"
-#include "pomdog/graphics/effect_constant_description.hpp"
-#include "pomdog/utility/assert.hpp"
-#include "pomdog/utility/exception.hpp"
+#include "pomdog/graphics/metal/effect_reflection_metal.h"
+#include "pomdog/graphics/effect_constant_description.h"
+#include "pomdog/utility/assert.h"
+#include "pomdog/utility/exception.h"
 
 namespace pomdog::detail::metal {
 namespace {

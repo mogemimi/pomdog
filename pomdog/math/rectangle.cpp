@@ -1,7 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/math/rectangle.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/math/rectangle.h"
+#include "pomdog/utility/assert.h"
 
 namespace pomdog {
 

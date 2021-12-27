@@ -1,8 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/utility/spin_lock.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/basic/platform.hpp"
+#include "pomdog/utility/spin_lock.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/platform.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #if defined(POMDOG_PLATFORM_LINUX) && (defined(__x86_64__) || defined(_M_X64) || defined(_M_AMD64))

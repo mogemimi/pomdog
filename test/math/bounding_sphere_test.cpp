@@ -1,8 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/math/bounding_box.hpp"
-#include "pomdog/math/bounding_sphere.hpp"
-#include "pomdog/math/containment_type.hpp"
+#include "pomdog/math/bounding_box.h"
+#include "pomdog/math/bounding_sphere.h"
+#include "pomdog/math/containment_type.h"
 #include <catch_amalgamated.hpp>
 
 using namespace pomdog;

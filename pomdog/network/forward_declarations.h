@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/basic/platform.hpp"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/platform.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>

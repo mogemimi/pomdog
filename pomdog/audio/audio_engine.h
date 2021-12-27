@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "pomdog/audio/forward_declarations.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/basic/export.hpp"
+#include "pomdog/audio/forward_declarations.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/export.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>

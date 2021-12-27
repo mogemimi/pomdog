@@ -1,11 +1,11 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/direct3d11/buffer_direct3d11.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/graphics/buffer_usage.hpp"
-#include "pomdog/logging/log.hpp"
-#include "pomdog/utility/assert.hpp"
-#include "pomdog/utility/exception.hpp"
+#include "pomdog/graphics/direct3d11/buffer_direct3d11.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/graphics/buffer_usage.h"
+#include "pomdog/logging/log.h"
+#include "pomdog/utility/assert.h"
+#include "pomdog/utility/exception.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>

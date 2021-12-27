@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/experimental/gui/thickness.hpp"
-#include "pomdog/experimental/gui/widget.hpp"
-#include "pomdog/math/color.hpp"
-#include "pomdog/signals/scoped_connection.hpp"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/experimental/gui/thickness.h"
+#include "pomdog/experimental/gui/widget.h"
+#include "pomdog/math/color.h"
+#include "pomdog/signals/scoped_connection.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <list>

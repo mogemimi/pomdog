@@ -1,12 +1,12 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/graphics/sprite_line.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/experimental/graphics/sprite_batch.hpp"
-#include "pomdog/math/color.hpp"
-#include "pomdog/math/radian.hpp"
-#include "pomdog/math/rectangle.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/experimental/graphics/sprite_line.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/experimental/graphics/sprite_batch.h"
+#include "pomdog/math/color.h"
+#include "pomdog/math/radian.h"
+#include "pomdog/math/rectangle.h"
+#include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cmath>

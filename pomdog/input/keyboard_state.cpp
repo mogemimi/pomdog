@@ -1,10 +1,10 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/input/keyboard_state.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/input/key_state.hpp"
-#include "pomdog/input/keys.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/input/keyboard_state.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/input/key_state.h"
+#include "pomdog/input/keys.h"
+#include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>

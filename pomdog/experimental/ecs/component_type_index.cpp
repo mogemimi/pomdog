@@ -1,7 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/ecs/component_type_index.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/experimental/ecs/component_type_index.h"
+#include "pomdog/utility/assert.h"
 
 namespace pomdog::ecs::detail {
 

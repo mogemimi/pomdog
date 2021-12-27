@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/experimental/particles/parameters/particle_curve_lerp.hpp"
-#include "pomdog/experimental/particles/parameters/particle_parameter.hpp"
-#include "pomdog/experimental/particles/parameters/particle_parameter_curve.hpp"
-#include "pomdog/experimental/random/xoroshiro128_star_star.hpp"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/experimental/particles/parameters/particle_curve_lerp.h"
+#include "pomdog/experimental/particles/parameters/particle_parameter.h"
+#include "pomdog/experimental/particles/parameters/particle_parameter_curve.h"
+#include "pomdog/experimental/random/xoroshiro128_star_star.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <limits>

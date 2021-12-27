@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "pomdog/application/game_window.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/platform/win32/prerequisites_win32.hpp"
-#include "pomdog/signals/event_queue.hpp"
+#include "pomdog/application/game_window.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/platform/win32/prerequisites_win32.h"
+#include "pomdog/signals/event_queue.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>

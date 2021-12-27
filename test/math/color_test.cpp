@@ -1,8 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/math/color.hpp"
-#include "pomdog/math/vector3.hpp"
-#include "pomdog/math/vector4.hpp"
+#include "pomdog/math/color.h"
+#include "pomdog/math/vector3.h"
+#include "pomdog/math/vector4.h"
 #include <catch_amalgamated.hpp>
 
 using namespace pomdog;

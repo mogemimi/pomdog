@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/ecs/entity.hpp"
+#include "pomdog/experimental/ecs/entity.h"
 
 namespace pomdog::ecs {
 

@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/experimental/skeletal2d/joint_index.hpp"
-#include "pomdog/math/color.hpp"
-#include "pomdog/math/radian.hpp"
-#include "pomdog/math/rectangle.hpp"
-#include "pomdog/math/vector2.hpp"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/experimental/skeletal2d/joint_index.h"
+#include "pomdog/math/color.h"
+#include "pomdog/math/radian.h"
+#include "pomdog/math/rectangle.h"
+#include "pomdog/math/vector2.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>

@@ -1,9 +1,9 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/vulkan/render_target2d_vulkan.hpp"
-#include "pomdog/graphics/surface_format.hpp"
-#include "pomdog/utility/assert.hpp"
-#include "pomdog/utility/exception.hpp"
+#include "pomdog/graphics/vulkan/render_target2d_vulkan.h"
+#include "pomdog/graphics/surface_format.h"
+#include "pomdog/utility/assert.h"
+#include "pomdog/utility/exception.h"
 
 namespace pomdog::detail::vulkan {
 

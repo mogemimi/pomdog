@@ -1,8 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/input/x11/mouse_x11.hpp"
-#include "pomdog/input/mouse_buttons.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/input/x11/mouse_x11.h"
+#include "pomdog/input/mouse_buttons.h"
+#include "pomdog/utility/assert.h"
 #include <optional>
 
 namespace pomdog::detail::x11 {

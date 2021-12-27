@@ -1,14 +1,14 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/backends/graphics_command_list_immediate.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/graphics/backends/native_graphics_context.hpp"
-#include "pomdog/graphics/constant_buffer.hpp"
-#include "pomdog/graphics/graphics_device.hpp"
-#include "pomdog/graphics/render_pass.hpp"
-#include "pomdog/graphics/viewport.hpp"
-#include "pomdog/math/rectangle.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/graphics/backends/graphics_command_list_immediate.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/graphics/backends/native_graphics_context.h"
+#include "pomdog/graphics/constant_buffer.h"
+#include "pomdog/graphics/graphics_device.h"
+#include "pomdog/graphics/render_pass.h"
+#include "pomdog/graphics/viewport.h"
+#include "pomdog/math/rectangle.h"
+#include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>

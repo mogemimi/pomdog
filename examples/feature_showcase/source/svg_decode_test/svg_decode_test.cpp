@@ -1,5 +1,5 @@
 #include "svg_decode_test.h"
-#include "pomdog/experimental/image/svg_loader.hpp"
+#include "pomdog/experimental/image/svg_loader.h"
 
 namespace feature_showcase {
 

@@ -1,7 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/signals/detail/signal_body.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/signals/detail/signal_body.h"
+#include "pomdog/basic/conditional_compilation.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>

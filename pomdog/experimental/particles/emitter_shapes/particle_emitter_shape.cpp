@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/particles/emitter_shapes/particle_emitter_shape.hpp"
+#include "pomdog/experimental/particles/emitter_shapes/particle_emitter_shape.h"
 
 namespace pomdog::detail::particles {
 

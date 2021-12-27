@@ -1,8 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/math/matrix2x2.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/math/matrix2x2.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cmath>

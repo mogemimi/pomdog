@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "pomdog/graphics/gl4/opengl_context.hpp"
-#include "pomdog/graphics/gl4/opengl_prerequisites.hpp"
-#include "pomdog/utility/errors.hpp"
+#include "pomdog/graphics/gl4/opengl_context.h"
+#include "pomdog/graphics/gl4/opengl_prerequisites.h"
+#include "pomdog/utility/errors.h"
 #include <GL/glx.h>
 #include <memory>
 

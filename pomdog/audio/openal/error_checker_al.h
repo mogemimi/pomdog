@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "pomdog/audio/openal/prerequisites_openal.hpp"
+#include "pomdog/audio/openal/prerequisites_openal.h"
 #include <memory>
 #include <string>
 

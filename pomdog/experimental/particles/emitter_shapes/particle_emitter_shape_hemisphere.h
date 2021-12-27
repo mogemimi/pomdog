@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/experimental/particles/emitter_shapes/particle_emitter_shape.hpp"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/experimental/particles/emitter_shapes/particle_emitter_shape.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <tuple>

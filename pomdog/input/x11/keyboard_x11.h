@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "pomdog/input/keyboard.hpp"
-#include "pomdog/input/keyboard_state.hpp"
+#include "pomdog/input/keyboard.h"
+#include "pomdog/input/keyboard_state.h"
 #include <X11/Xlib.h>
 #include <array>
 

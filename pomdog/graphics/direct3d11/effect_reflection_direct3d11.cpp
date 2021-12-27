@@ -1,13 +1,13 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/direct3d11/effect_reflection_direct3d11.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/graphics/backends/shader_bytecode.hpp"
-#include "pomdog/graphics/direct3d/hlsl_reflection_helper.hpp"
-#include "pomdog/graphics/direct3d/prerequisites_direct3d.hpp"
-#include "pomdog/graphics/effect_constant_description.hpp"
-#include "pomdog/utility/assert.hpp"
-#include "pomdog/utility/exception.hpp"
+#include "pomdog/graphics/direct3d11/effect_reflection_direct3d11.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/graphics/backends/shader_bytecode.h"
+#include "pomdog/graphics/direct3d/hlsl_reflection_helper.h"
+#include "pomdog/graphics/direct3d/prerequisites_direct3d.h"
+#include "pomdog/graphics/effect_constant_description.h"
+#include "pomdog/utility/assert.h"
+#include "pomdog/utility/exception.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>

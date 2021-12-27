@@ -1,6 +1,6 @@
 #include "particle3d_test.h"
-#include "pomdog/experimental/graphics/basic_effect.hpp"
-#include "pomdog/experimental/particles/particle_clip_loader.hpp"
+#include "pomdog/experimental/graphics/basic_effect.h"
+#include "pomdog/experimental/particles/particle_clip_loader.h"
 #include <random>
 
 namespace feature_showcase {

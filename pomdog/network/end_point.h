@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/basic/platform.hpp"
-#include "pomdog/network/address_family.hpp"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/platform.h"
+#include "pomdog/network/address_family.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>

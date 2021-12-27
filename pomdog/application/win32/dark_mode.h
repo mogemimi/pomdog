@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/platform/win32/prerequisites_win32.hpp"
-#include "pomdog/utility/errors.hpp"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/platform/win32/prerequisites_win32.h"
+#include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>

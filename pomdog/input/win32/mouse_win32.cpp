@@ -1,9 +1,9 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/input/win32/mouse_win32.hpp"
-#include "pomdog/input/mouse_buttons.hpp"
-#include "pomdog/signals/event_queue.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/input/win32/mouse_win32.h"
+#include "pomdog/input/mouse_buttons.h"
+#include "pomdog/signals/event_queue.h"
+#include "pomdog/utility/assert.h"
 
 namespace pomdog::detail::win32 {
 

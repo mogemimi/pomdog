@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/basic/export.hpp"
-#include "pomdog/graphics/render_target_blend_description.hpp"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/export.h"
+#include "pomdog/graphics/render_target_blend_description.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>

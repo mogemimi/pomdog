@@ -1,18 +1,18 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/vulkan/graphics_device_vulkan.hpp"
-#include "pomdog/basic/platform.hpp"
-#include "pomdog/basic/version.hpp"
-#include "pomdog/graphics/effect_reflection.hpp"
-#include "pomdog/graphics/shader_language.hpp"
-#include "pomdog/graphics/vulkan/buffer_vulkan.hpp"
-#include "pomdog/graphics/vulkan/pipeline_state_vulkan.hpp"
-#include "pomdog/graphics/vulkan/render_target2d_vulkan.hpp"
-#include "pomdog/graphics/vulkan/sampler_state_vulkan.hpp"
-#include "pomdog/graphics/vulkan/shader_vulkan.hpp"
-#include "pomdog/graphics/vulkan/texture2d_vulkan.hpp"
-#include "pomdog/utility/assert.hpp"
-#include "pomdog/utility/exception.hpp"
+#include "pomdog/graphics/vulkan/graphics_device_vulkan.h"
+#include "pomdog/basic/platform.h"
+#include "pomdog/basic/version.h"
+#include "pomdog/graphics/effect_reflection.h"
+#include "pomdog/graphics/shader_language.h"
+#include "pomdog/graphics/vulkan/buffer_vulkan.h"
+#include "pomdog/graphics/vulkan/pipeline_state_vulkan.h"
+#include "pomdog/graphics/vulkan/render_target2d_vulkan.h"
+#include "pomdog/graphics/vulkan/sampler_state_vulkan.h"
+#include "pomdog/graphics/vulkan/shader_vulkan.h"
+#include "pomdog/graphics/vulkan/texture2d_vulkan.h"
+#include "pomdog/utility/assert.h"
+#include "pomdog/utility/exception.h"
 #include <vulkan/vulkan.h>
 #include <array>
 #include <tuple>

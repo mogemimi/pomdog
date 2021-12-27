@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/application/game_window.hpp"
+#include "pomdog/application/game_window.h"
 
 namespace pomdog {
 

@@ -2,14 +2,14 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/graphics/blend_description.hpp"
-#include "pomdog/graphics/depth_stencil_description.hpp"
-#include "pomdog/graphics/forward_declarations.hpp"
-#include "pomdog/graphics/input_layout_description.hpp"
-#include "pomdog/graphics/primitive_topology.hpp"
-#include "pomdog/graphics/rasterizer_description.hpp"
-#include "pomdog/graphics/surface_format.hpp"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/graphics/blend_description.h"
+#include "pomdog/graphics/depth_stencil_description.h"
+#include "pomdog/graphics/forward_declarations.h"
+#include "pomdog/graphics/input_layout_description.h"
+#include "pomdog/graphics/primitive_topology.h"
+#include "pomdog/graphics/rasterizer_description.h"
+#include "pomdog/graphics/surface_format.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>

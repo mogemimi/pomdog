@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/chrono/time_source.hpp"
+#include "pomdog/chrono/time_source.h"
 
 namespace pomdog::detail {
 

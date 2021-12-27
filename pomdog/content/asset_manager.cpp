@@ -1,8 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/content/asset_manager.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/filesystem/file_system.hpp"
+#include "pomdog/content/asset_manager.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/filesystem/file_system.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>

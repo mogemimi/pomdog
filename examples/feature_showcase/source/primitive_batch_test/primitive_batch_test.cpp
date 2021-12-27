@@ -1,5 +1,5 @@
 #include "primitive_batch_test.h"
-#include "pomdog/experimental/tween/easing_helper.hpp"
+#include "pomdog/experimental/tween/easing_helper.h"
 
 namespace feature_showcase {
 

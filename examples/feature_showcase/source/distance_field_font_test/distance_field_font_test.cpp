@@ -1,5 +1,5 @@
 #include "distance_field_font_test.h"
-#include "pomdog/experimental/graphics/sprite_font_loader.hpp"
+#include "pomdog/experimental/graphics/sprite_font_loader.h"
 
 namespace feature_showcase {
 

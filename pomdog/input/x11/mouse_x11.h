@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "pomdog/input/mouse.hpp"
-#include "pomdog/input/mouse_state.hpp"
+#include "pomdog/input/mouse.h"
+#include "pomdog/input/mouse_state.h"
 #include <X11/Xlib.h>
 
 namespace pomdog::detail::x11 {

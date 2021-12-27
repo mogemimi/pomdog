@@ -1,9 +1,9 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/filesystem/linux/file_system_linux.hpp"
-#include "pomdog/utility/assert.hpp"
-#include "pomdog/utility/error_helper.hpp"
-#include "pomdog/utility/path_helper.hpp"
+#include "pomdog/filesystem/linux/file_system_linux.h"
+#include "pomdog/utility/assert.h"
+#include "pomdog/utility/error_helper.h"
+#include "pomdog/utility/path_helper.h"
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>

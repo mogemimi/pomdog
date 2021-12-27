@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/experimental/skeletal2d/blendtrees/animation_blend_input_type.hpp"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/experimental/skeletal2d/blendtrees/animation_blend_input_type.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <string>

@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/math/matrix2x2.hpp"
+#include "pomdog/math/matrix2x2.h"
 #include <catch_amalgamated.hpp>
 
 using namespace pomdog;

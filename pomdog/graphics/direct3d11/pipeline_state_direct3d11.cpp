@@ -1,17 +1,17 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/direct3d11/pipeline_state_direct3d11.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/graphics/backends/shader_bytecode.hpp"
-#include "pomdog/graphics/direct3d/prerequisites_direct3d.hpp"
-#include "pomdog/graphics/direct3d11/format_helper.hpp"
-#include "pomdog/graphics/direct3d11/graphics_device_direct3d11.hpp"
-#include "pomdog/graphics/direct3d11/shader_direct3d11.hpp"
-#include "pomdog/graphics/dxgi/dxgi_format_helper.hpp"
-#include "pomdog/graphics/input_layout_description.hpp"
-#include "pomdog/graphics/pipeline_state_description.hpp"
-#include "pomdog/graphics/primitive_topology.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/graphics/direct3d11/pipeline_state_direct3d11.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/graphics/backends/shader_bytecode.h"
+#include "pomdog/graphics/direct3d/prerequisites_direct3d.h"
+#include "pomdog/graphics/direct3d11/format_helper.h"
+#include "pomdog/graphics/direct3d11/graphics_device_direct3d11.h"
+#include "pomdog/graphics/direct3d11/shader_direct3d11.h"
+#include "pomdog/graphics/dxgi/dxgi_format_helper.h"
+#include "pomdog/graphics/input_layout_description.h"
+#include "pomdog/graphics/pipeline_state_description.h"
+#include "pomdog/graphics/primitive_topology.h"
+#include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>

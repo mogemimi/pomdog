@@ -1,7 +1,7 @@
 #pragma once
 
-#include "pomdog/experimental/graphics/line_batch.hpp"
-#include "pomdog/pomdog.hpp"
+#include "pomdog/experimental/graphics/line_batch.h"
+#include "pomdog/pomdog.h"
 
 namespace feature_showcase {
 

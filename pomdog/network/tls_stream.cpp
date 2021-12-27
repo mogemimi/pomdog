@@ -1,13 +1,13 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/network/tls_stream.hpp"
-#include "pomdog/network/address_parser.hpp"
+#include "pomdog/network/tls_stream.h"
+#include "pomdog/network/address_parser.h"
 
 #if defined(POMDOG_PLATFORM_EMSCRIPTEN)
-#include "pomdog/network/emscripten/tls_stream_emscripten.hpp"
+#include "pomdog/network/emscripten/tls_stream_emscripten.h"
 #else
-#include "pomdog/network/mbedtls/certificates.hpp"
-#include "pomdog/network/mbedtls/tls_stream_mbedtls.hpp"
+#include "pomdog/network/mbedtls/certificates.h"
+#include "pomdog/network/mbedtls/tls_stream_mbedtls.h"
 #endif
 
 namespace pomdog {

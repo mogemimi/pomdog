@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "pomdog/basic/export.hpp"
-#include "pomdog/math/forward_declarations.hpp"
+#include "pomdog/basic/export.h"
+#include "pomdog/math/forward_declarations.h"
 
 namespace pomdog {
 

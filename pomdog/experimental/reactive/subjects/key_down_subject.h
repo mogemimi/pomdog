@@ -2,14 +2,14 @@
 
 #pragma once
 
-#include "pomdog/application/game_host.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/chrono/game_clock.hpp"
-#include "pomdog/experimental/reactive/observable.hpp"
-#include "pomdog/experimental/reactive/observer.hpp"
-#include "pomdog/input/keyboard.hpp"
-#include "pomdog/signals/scoped_connection.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/application/game_host.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/chrono/game_clock.h"
+#include "pomdog/experimental/reactive/observable.h"
+#include "pomdog/experimental/reactive/observer.h"
+#include "pomdog/input/keyboard.h"
+#include "pomdog/signals/scoped_connection.h"
+#include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <functional>

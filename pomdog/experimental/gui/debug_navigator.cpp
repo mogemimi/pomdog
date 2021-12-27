@@ -1,11 +1,11 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/gui/debug_navigator.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/experimental/gui/drawing_context.hpp"
-#include "pomdog/experimental/gui/ui_helper.hpp"
-#include "pomdog/math/math.hpp"
-#include "pomdog/utility/string_helper.hpp"
+#include "pomdog/experimental/gui/debug_navigator.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/experimental/gui/drawing_context.h"
+#include "pomdog/experimental/gui/ui_helper.h"
+#include "pomdog/math/math.h"
+#include "pomdog/utility/string_helper.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cmath>

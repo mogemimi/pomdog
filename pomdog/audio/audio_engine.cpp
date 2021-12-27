@@ -1,7 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/audio/audio_engine.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/audio/audio_engine.h"
+#include "pomdog/utility/assert.h"
 
 namespace pomdog {
 

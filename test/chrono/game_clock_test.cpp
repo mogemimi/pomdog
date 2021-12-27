@@ -1,9 +1,9 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/chrono/detail/game_clock_impl.hpp"
-#include "pomdog/chrono/detail/make_time_source.hpp"
-#include "pomdog/chrono/game_clock.hpp"
-#include "pomdog/utility/errors.hpp"
+#include "pomdog/chrono/detail/game_clock_impl.h"
+#include "pomdog/chrono/detail/make_time_source.h"
+#include "pomdog/chrono/game_clock.h"
+#include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <catch_amalgamated.hpp>

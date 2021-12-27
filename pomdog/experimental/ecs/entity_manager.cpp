@@ -1,8 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/ecs/entity_manager.hpp"
-#include "pomdog/experimental/ecs/component_type.hpp"
-#include "pomdog/experimental/ecs/entity_archtype.hpp"
+#include "pomdog/experimental/ecs/entity_manager.h"
+#include "pomdog/experimental/ecs/component_type.h"
+#include "pomdog/experimental/ecs/entity_archtype.h"
 
 namespace pomdog::ecs::detail {
 namespace {

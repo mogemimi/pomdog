@@ -1,7 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/vulkan/format_helper.hpp"
-#include "pomdog/graphics/comparison_function.hpp"
+#include "pomdog/graphics/vulkan/format_helper.h"
+#include "pomdog/graphics/comparison_function.h"
 
 namespace pomdog::detail::vulkan {
 

@@ -1,12 +1,12 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/application/x11/game_window_x11.hpp"
-#include "pomdog/application/mouse_cursor.hpp"
-#include "pomdog/application/x11/x11_context.hpp"
-#include "pomdog/basic/platform.hpp"
-#include "pomdog/logging/log.hpp"
-#include "pomdog/utility/assert.hpp"
-#include "pomdog/utility/scope_guard.hpp"
+#include "pomdog/application/x11/game_window_x11.h"
+#include "pomdog/application/mouse_cursor.h"
+#include "pomdog/application/x11/x11_context.h"
+#include "pomdog/basic/platform.h"
+#include "pomdog/logging/log.h"
+#include "pomdog/utility/assert.h"
+#include "pomdog/utility/scope_guard.h"
 #include <X11/Xutil.h>
 #include <X11/cursorfont.h>
 #include <optional>

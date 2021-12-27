@@ -1,24 +1,24 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/graphics/basic_effect.hpp"
-#include "pomdog/content/asset_builders/pipeline_state_builder.hpp"
-#include "pomdog/content/asset_builders/shader_builder.hpp"
-#include "pomdog/content/asset_manager.hpp"
-#include "pomdog/graphics/graphics_device.hpp"
-#include "pomdog/graphics/input_layout_helper.hpp"
-#include "pomdog/graphics/pipeline_state.hpp"
-#include "pomdog/graphics/presentation_parameters.hpp"
-#include "pomdog/graphics/shader.hpp"
-#include "pomdog/graphics/shader_pipeline_stage.hpp"
+#include "pomdog/experimental/graphics/basic_effect.h"
+#include "pomdog/content/asset_builders/pipeline_state_builder.h"
+#include "pomdog/content/asset_builders/shader_builder.h"
+#include "pomdog/content/asset_manager.h"
+#include "pomdog/graphics/graphics_device.h"
+#include "pomdog/graphics/input_layout_helper.h"
+#include "pomdog/graphics/pipeline_state.h"
+#include "pomdog/graphics/presentation_parameters.h"
+#include "pomdog/graphics/shader.h"
+#include "pomdog/graphics/shader_pipeline_stage.h"
 
 namespace pomdog::BasicEffect {
 namespace {
 
 // Built-in shaders
-#include "shaders/glsl.embedded/basic_effect_ps.inc.hpp"
-#include "shaders/glsl.embedded/basic_effect_vs.inc.hpp"
-#include "shaders/hlsl.embedded/basic_effect.inc.hpp"
-#include "shaders/metal.embedded/basic_effect.inc.hpp"
+#include "shaders/glsl.embedded/basic_effect_ps.inc.h"
+#include "shaders/glsl.embedded/basic_effect_vs.inc.h"
+#include "shaders/hlsl.embedded/basic_effect.inc.h"
+#include "shaders/metal.embedded/basic_effect.inc.h"
 
 } // namespace
 

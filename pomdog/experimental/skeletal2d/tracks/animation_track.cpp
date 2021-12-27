@@ -1,14 +1,14 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/skeletal2d/tracks/animation_track.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/experimental/skeletal2d/skeleton.hpp"
-#include "pomdog/experimental/skeletal2d/skeleton_pose.hpp"
-#include "pomdog/experimental/skeletal2d/tracks/animation_key_helper.hpp"
-#include "pomdog/experimental/skeletal2d/tracks/rotation_track.hpp"
-#include "pomdog/experimental/skeletal2d/tracks/scale_track.hpp"
-#include "pomdog/experimental/skeletal2d/tracks/translation_track.hpp"
-#include "pomdog/math/math.hpp"
+#include "pomdog/experimental/skeletal2d/tracks/animation_track.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/experimental/skeletal2d/skeleton.h"
+#include "pomdog/experimental/skeletal2d/skeleton_pose.h"
+#include "pomdog/experimental/skeletal2d/tracks/animation_key_helper.h"
+#include "pomdog/experimental/skeletal2d/tracks/rotation_track.h"
+#include "pomdog/experimental/skeletal2d/tracks/scale_track.h"
+#include "pomdog/experimental/skeletal2d/tracks/translation_track.h"
+#include "pomdog/math/math.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>

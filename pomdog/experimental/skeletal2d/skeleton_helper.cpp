@@ -1,11 +1,11 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/skeletal2d/skeleton_helper.hpp"
-#include "pomdog/experimental/skeletal2d/joint_index.hpp"
-#include "pomdog/experimental/skeletal2d/skeleton.hpp"
-#include "pomdog/experimental/skeletal2d/skeleton_pose.hpp"
-#include "pomdog/math/matrix4x4.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/experimental/skeletal2d/skeleton_helper.h"
+#include "pomdog/experimental/skeletal2d/joint_index.h"
+#include "pomdog/experimental/skeletal2d/skeleton.h"
+#include "pomdog/experimental/skeletal2d/skeleton_pose.h"
+#include "pomdog/math/matrix4x4.h"
+#include "pomdog/utility/assert.h"
 
 namespace pomdog::skeletal2d::SkeletonHelper {
 

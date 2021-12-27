@@ -1,9 +1,9 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/logging/log.hpp"
-#include "pomdog/logging/log_channel.hpp"
-#include "pomdog/logging/log_entry.hpp"
-#include "pomdog/signals/scoped_connection.hpp"
+#include "pomdog/logging/log.h"
+#include "pomdog/logging/log_channel.h"
+#include "pomdog/logging/log_entry.h"
+#include "pomdog/signals/scoped_connection.h"
 #include <catch_amalgamated.hpp>
 #include <vector>
 

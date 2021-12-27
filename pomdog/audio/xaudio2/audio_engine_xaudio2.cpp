@@ -1,12 +1,12 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/audio/xaudio2/audio_engine_xaudio2.hpp"
-#include "pomdog/audio/xaudio2/audio_clip_xaudio2.hpp"
-#include "pomdog/audio/xaudio2/sound_effect_xaudio2.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/math/math.hpp"
-#include "pomdog/utility/assert.hpp"
-#include "pomdog/utility/errors.hpp"
+#include "pomdog/audio/xaudio2/audio_engine_xaudio2.h"
+#include "pomdog/audio/xaudio2/audio_clip_xaudio2.h"
+#include "pomdog/audio/xaudio2/sound_effect_xaudio2.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/math/math.h"
+#include "pomdog/utility/assert.h"
+#include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #if (_WIN32_WINNT >= 0x0602 /*_WIN32_WINNT_WIN8*/) && !defined(__cplusplus_winrt)

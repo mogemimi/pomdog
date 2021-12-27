@@ -1,8 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/platform/x11/opengl_context_x11.hpp"
-#include "pomdog/application/x11/game_window_x11.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/platform/x11/opengl_context_x11.h"
+#include "pomdog/application/x11/game_window_x11.h"
+#include "pomdog/utility/assert.h"
 #include <X11/Xlib.h>
 #include <cstring>
 #include <utility>

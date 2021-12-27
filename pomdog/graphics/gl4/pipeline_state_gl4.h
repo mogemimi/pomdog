@@ -2,15 +2,15 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/graphics/forward_declarations.hpp"
-#include "pomdog/graphics/gl4/blend_state_gl4.hpp"
-#include "pomdog/graphics/gl4/depth_stencil_state_gl4.hpp"
-#include "pomdog/graphics/gl4/opengl_prerequisites.hpp"
-#include "pomdog/graphics/gl4/rasterizer_state_gl4.hpp"
-#include "pomdog/graphics/gl4/typesafe_gl4.hpp"
-#include "pomdog/graphics/pipeline_state.hpp"
-#include "pomdog/utility/errors.hpp"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/graphics/forward_declarations.h"
+#include "pomdog/graphics/gl4/blend_state_gl4.h"
+#include "pomdog/graphics/gl4/depth_stencil_state_gl4.h"
+#include "pomdog/graphics/gl4/opengl_prerequisites.h"
+#include "pomdog/graphics/gl4/rasterizer_state_gl4.h"
+#include "pomdog/graphics/gl4/typesafe_gl4.h"
+#include "pomdog/graphics/pipeline_state.h"
+#include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>

@@ -1,13 +1,13 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#import "pomdog/application/cocoa/pomdog_opengl_view.hpp"
-#include "pomdog/application/cocoa/game_host_cocoa.hpp"
-#include "pomdog/application/system_events.hpp"
-#include "pomdog/input/button_state.hpp"
-#include "pomdog/input/keys.hpp"
-#include "pomdog/math/point2d.hpp"
-#include "pomdog/platform/cocoa/opengl_context_cocoa.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/application/cocoa/pomdog_opengl_view.h"
+#include "pomdog/application/cocoa/game_host_cocoa.h"
+#include "pomdog/application/system_events.h"
+#include "pomdog/input/button_state.h"
+#include "pomdog/input/keys.h"
+#include "pomdog/math/point2d.h"
+#include "pomdog/platform/cocoa/opengl_context_cocoa.h"
+#include "pomdog/utility/assert.h"
 #include <memory>
 #include <utility>
 

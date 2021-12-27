@@ -2,16 +2,16 @@
 
 #pragma once
 
-#include "pomdog/application/game_host.hpp"
-#include "pomdog/application/x11/game_window_x11.hpp"
-#include "pomdog/application/x11/x11_context.hpp"
-#include "pomdog/chrono/duration.hpp"
-#include "pomdog/chrono/game_clock.hpp"
-#include "pomdog/graphics/presentation_parameters.hpp"
-#include "pomdog/input/x11/keyboard_x11.hpp"
-#include "pomdog/input/x11/mouse_x11.hpp"
-#include "pomdog/platform/x11/opengl_context_x11.hpp"
-#include "pomdog/utility/errors.hpp"
+#include "pomdog/application/game_host.h"
+#include "pomdog/application/x11/game_window_x11.h"
+#include "pomdog/application/x11/x11_context.h"
+#include "pomdog/chrono/duration.h"
+#include "pomdog/chrono/game_clock.h"
+#include "pomdog/graphics/presentation_parameters.h"
+#include "pomdog/input/x11/keyboard_x11.h"
+#include "pomdog/input/x11/mouse_x11.h"
+#include "pomdog/platform/x11/opengl_context_x11.h"
+#include "pomdog/utility/errors.h"
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <memory>

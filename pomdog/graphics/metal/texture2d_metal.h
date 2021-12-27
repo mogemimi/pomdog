@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "pomdog/graphics/forward_declarations.hpp"
-#include "pomdog/graphics/texture2d.hpp"
-#include "pomdog/utility/errors.hpp"
+#include "pomdog/graphics/forward_declarations.h"
+#include "pomdog/graphics/texture2d.h"
+#include "pomdog/utility/errors.h"
 #import <Metal/MTLTexture.h>
 
 namespace pomdog::detail::metal {

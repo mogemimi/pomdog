@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/graphics_command_list.hpp"
+#include "pomdog/graphics/graphics_command_list.h"
 
 namespace pomdog {
 

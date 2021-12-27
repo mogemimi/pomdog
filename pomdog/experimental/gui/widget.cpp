@@ -1,8 +1,8 @@
 // Copyright (c) 2013-2021 mogemimi.
 // Distributed under the MIT license. See LICENSE.md file for details.
 
-#include "pomdog/experimental/gui/widget.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/experimental/gui/widget.h"
+#include "pomdog/utility/assert.h"
 
 namespace pomdog::gui {
 

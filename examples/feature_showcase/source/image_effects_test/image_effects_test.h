@@ -1,9 +1,9 @@
 #pragma once
 
-#include "pomdog/experimental/graphics/primitive_batch.hpp"
-#include "pomdog/experimental/graphics/sprite_batch.hpp"
-#include "pomdog/experimental/image_effects/post_process_compositor.hpp"
-#include "pomdog/pomdog.hpp"
+#include "pomdog/experimental/graphics/primitive_batch.h"
+#include "pomdog/experimental/graphics/sprite_batch.h"
+#include "pomdog/experimental/image_effects/post_process_compositor.h"
+#include "pomdog/pomdog.h"
 
 namespace feature_showcase {
 

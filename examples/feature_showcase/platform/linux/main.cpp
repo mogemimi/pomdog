@@ -1,6 +1,6 @@
 #include "game_main.h"
-#include "pomdog/platform/x11/bootstrap_x11.hpp"
-#include "pomdog/pomdog.hpp"
+#include "pomdog/platform/x11/bootstrap_x11.h"
+#include "pomdog/pomdog.h"
 
 int main(int argc, char** argv)
 {

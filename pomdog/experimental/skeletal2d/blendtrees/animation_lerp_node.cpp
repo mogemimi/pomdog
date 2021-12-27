@@ -1,13 +1,13 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/skeletal2d/blendtrees/animation_lerp_node.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/experimental/skeletal2d/blendtrees/animation_graph_weight_collection.hpp"
-#include "pomdog/experimental/skeletal2d/blendtrees/weight_blending_helper.hpp"
-#include "pomdog/experimental/skeletal2d/skeleton_pose.hpp"
-#include "pomdog/math/math.hpp"
-#include "pomdog/math/vector2.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/experimental/skeletal2d/blendtrees/animation_lerp_node.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/experimental/skeletal2d/blendtrees/animation_graph_weight_collection.h"
+#include "pomdog/experimental/skeletal2d/blendtrees/weight_blending_helper.h"
+#include "pomdog/experimental/skeletal2d/skeleton_pose.h"
+#include "pomdog/math/math.h"
+#include "pomdog/math/vector2.h"
+#include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>

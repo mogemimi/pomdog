@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "pomdog/graphics/forward_declarations.hpp"
+#include "pomdog/graphics/forward_declarations.h"
 #import <Metal/MTLDepthStencil.h>
 #import <Metal/MTLTexture.h>
 

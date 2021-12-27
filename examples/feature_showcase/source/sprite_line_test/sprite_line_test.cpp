@@ -1,5 +1,5 @@
 #include "sprite_line_test.h"
-#include "pomdog/experimental/graphics/sprite_line.hpp"
+#include "pomdog/experimental/graphics/sprite_line.h"
 #include <random>
 
 namespace feature_showcase {

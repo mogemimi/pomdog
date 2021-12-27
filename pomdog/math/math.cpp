@@ -1,7 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/math/math.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/math/math.h"
+#include "pomdog/utility/assert.h"
 
 namespace pomdog::math {
 

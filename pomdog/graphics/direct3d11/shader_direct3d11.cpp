@@ -1,11 +1,11 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/direct3d11/shader_direct3d11.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/graphics/backends/shader_bytecode.hpp"
-#include "pomdog/graphics/backends/shader_compile_options.hpp"
-#include "pomdog/graphics/direct3d/hlsl_compiling.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/graphics/direct3d11/shader_direct3d11.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/graphics/backends/shader_bytecode.h"
+#include "pomdog/graphics/backends/shader_compile_options.h"
+#include "pomdog/graphics/direct3d/hlsl_compiling.h"
+#include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>

@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/utility/crc32.hpp"
+#include "pomdog/utility/crc32.h"
 #include <catch_amalgamated.hpp>
 
 using pomdog::detail::crc32::ComputeCRC32;

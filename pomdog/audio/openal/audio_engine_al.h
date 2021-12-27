@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "pomdog/audio/audio_engine.hpp"
-#include "pomdog/audio/openal/prerequisites_openal.hpp"
-#include "pomdog/utility/errors.hpp"
+#include "pomdog/audio/audio_engine.h"
+#include "pomdog/audio/openal/prerequisites_openal.h"
+#include "pomdog/utility/errors.h"
 #include <memory>
 
 namespace pomdog {

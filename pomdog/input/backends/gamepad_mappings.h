@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/input/backends/gamepad_helper.hpp"
-#include "pomdog/input/gamepad_capabilities.hpp"
-#include "pomdog/input/gamepad_state.hpp"
-#include "pomdog/input/gamepad_uuid.hpp"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/input/backends/gamepad_helper.h"
+#include "pomdog/input/gamepad_capabilities.h"
+#include "pomdog/input/gamepad_state.h"
+#include "pomdog/input/gamepad_uuid.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>

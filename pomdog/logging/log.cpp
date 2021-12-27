@@ -1,11 +1,11 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/logging/log.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/logging/log_channel.hpp"
-#include "pomdog/logging/log_entry.hpp"
-#include "pomdog/signals/connection.hpp"
-#include "pomdog/signals/scoped_connection.hpp"
+#include "pomdog/logging/log.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/logging/log_channel.h"
+#include "pomdog/logging/log_entry.h"
+#include "pomdog/signals/connection.h"
+#include "pomdog/signals/scoped_connection.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>

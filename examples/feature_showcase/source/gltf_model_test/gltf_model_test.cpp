@@ -1,7 +1,7 @@
 #include "gltf_model_test.h"
-#include "pomdog/experimental/gltf/gltf.hpp"
-#include "pomdog/experimental/gltf/gltf_loader.hpp"
-#include "pomdog/experimental/graphics/basic_effect.hpp"
+#include "pomdog/experimental/gltf/gltf.h"
+#include "pomdog/experimental/gltf/gltf_loader.h"
+#include "pomdog/experimental/graphics/basic_effect.h"
 #include <cmath>
 
 namespace feature_showcase {

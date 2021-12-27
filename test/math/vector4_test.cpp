@@ -1,7 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/math/matrix4x4.hpp"
-#include "pomdog/math/vector4.hpp"
+#include "pomdog/math/matrix4x4.h"
+#include "pomdog/math/vector4.h"
 #include <catch_amalgamated.hpp>
 
 using pomdog::Matrix4x4;

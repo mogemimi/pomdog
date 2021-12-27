@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "pomdog/graphics/forward_declarations.hpp"
-#include "pomdog/graphics/sampler_state.hpp"
-#include "pomdog/utility/errors.hpp"
+#include "pomdog/graphics/forward_declarations.h"
+#include "pomdog/graphics/sampler_state.h"
+#include "pomdog/utility/errors.h"
 #import <Metal/MTLSampler.h>
 
 namespace pomdog::detail::metal {

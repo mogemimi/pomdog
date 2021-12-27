@@ -1,12 +1,12 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/image/svg_loader.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/filesystem/file_system.hpp"
-#include "pomdog/graphics/graphics_device.hpp"
-#include "pomdog/graphics/texture2d.hpp"
-#include "pomdog/utility/assert.hpp"
-#include "pomdog/utility/scope_guard.hpp"
+#include "pomdog/experimental/image/svg_loader.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/filesystem/file_system.h"
+#include "pomdog/graphics/graphics_device.h"
+#include "pomdog/graphics/texture2d.h"
+#include "pomdog/utility/assert.h"
+#include "pomdog/utility/scope_guard.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>

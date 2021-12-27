@@ -1,25 +1,25 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/image_effects/fish_eye_effect.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/basic/platform.hpp"
-#include "pomdog/content/asset_builders/pipeline_state_builder.hpp"
-#include "pomdog/content/asset_builders/shader_builder.hpp"
-#include "pomdog/graphics/blend_description.hpp"
-#include "pomdog/graphics/buffer_usage.hpp"
-#include "pomdog/graphics/constant_buffer.hpp"
-#include "pomdog/graphics/depth_stencil_description.hpp"
-#include "pomdog/graphics/graphics_command_list.hpp"
-#include "pomdog/graphics/graphics_device.hpp"
-#include "pomdog/graphics/input_layout_helper.hpp"
-#include "pomdog/graphics/pipeline_state.hpp"
-#include "pomdog/graphics/presentation_parameters.hpp"
-#include "pomdog/graphics/primitive_topology.hpp"
-#include "pomdog/graphics/render_target2d.hpp"
-#include "pomdog/graphics/sampler_state.hpp"
-#include "pomdog/graphics/shader.hpp"
-#include "pomdog/math/math.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/experimental/image_effects/fish_eye_effect.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/platform.h"
+#include "pomdog/content/asset_builders/pipeline_state_builder.h"
+#include "pomdog/content/asset_builders/shader_builder.h"
+#include "pomdog/graphics/blend_description.h"
+#include "pomdog/graphics/buffer_usage.h"
+#include "pomdog/graphics/constant_buffer.h"
+#include "pomdog/graphics/depth_stencil_description.h"
+#include "pomdog/graphics/graphics_command_list.h"
+#include "pomdog/graphics/graphics_device.h"
+#include "pomdog/graphics/input_layout_helper.h"
+#include "pomdog/graphics/pipeline_state.h"
+#include "pomdog/graphics/presentation_parameters.h"
+#include "pomdog/graphics/primitive_topology.h"
+#include "pomdog/graphics/render_target2d.h"
+#include "pomdog/graphics/sampler_state.h"
+#include "pomdog/graphics/shader.h"
+#include "pomdog/math/math.h"
+#include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstring>
@@ -33,16 +33,16 @@ namespace {
     defined(POMDOG_PLATFORM_LINUX) || \
     defined(POMDOG_PLATFORM_MACOSX) || \
     defined(POMDOG_PLATFORM_EMSCRIPTEN)
-#include "shaders/glsl.embedded/fish_eye_ps.inc.hpp"
-#include "shaders/glsl.embedded/screen_quad_vs.inc.hpp"
+#include "shaders/glsl.embedded/fish_eye_ps.inc.h"
+#include "shaders/glsl.embedded/screen_quad_vs.inc.h"
 #endif
 #if defined(POMDOG_PLATFORM_WIN32)
-#include "shaders/hlsl.embedded/fish_eye_ps.inc.hpp"
-#include "shaders/hlsl.embedded/screen_quad_vs.inc.hpp"
+#include "shaders/hlsl.embedded/fish_eye_ps.inc.h"
+#include "shaders/hlsl.embedded/screen_quad_vs.inc.h"
 #endif
 #if defined(POMDOG_PLATFORM_MACOSX)
-#include "shaders/metal.embedded/fish_eye_ps.inc.hpp"
-#include "shaders/metal.embedded/screen_quad_vs.inc.hpp"
+#include "shaders/metal.embedded/fish_eye_ps.inc.h"
+#include "shaders/metal.embedded/screen_quad_vs.inc.h"
 #endif
 
 struct FishEyeBlock final {

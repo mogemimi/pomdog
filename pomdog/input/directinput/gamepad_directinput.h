@@ -2,13 +2,13 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/input/backends/gamepad_mappings.hpp"
-#include "pomdog/input/backends/native_gamepad.hpp"
-#include "pomdog/input/directinput/prerequisites_directinput.hpp"
-#include "pomdog/input/gamepad.hpp"
-#include "pomdog/input/gamepad_capabilities.hpp"
-#include "pomdog/input/gamepad_state.hpp"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/input/backends/gamepad_mappings.h"
+#include "pomdog/input/backends/native_gamepad.h"
+#include "pomdog/input/directinput/prerequisites_directinput.h"
+#include "pomdog/input/gamepad.h"
+#include "pomdog/input/gamepad_capabilities.h"
+#include "pomdog/input/gamepad_state.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <wrl/client.h>

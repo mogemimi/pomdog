@@ -1,9 +1,9 @@
 #pragma once
 
-#include "pomdog/experimental/graphics/primitive_batch.hpp"
-#include "pomdog/experimental/magicavoxel/vox_model.hpp"
-#include "pomdog/experimental/magicavoxel/vox_model_loader.hpp"
-#include "pomdog/pomdog.hpp"
+#include "pomdog/experimental/graphics/primitive_batch.h"
+#include "pomdog/experimental/magicavoxel/vox_model.h"
+#include "pomdog/experimental/magicavoxel/vox_model_loader.h"
+#include "pomdog/pomdog.h"
 
 namespace feature_showcase {
 

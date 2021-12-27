@@ -1,15 +1,15 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/content/asset_builders/pipeline_state_builder.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/content/asset_manager.hpp"
-#include "pomdog/graphics/effect_reflection.hpp"
-#include "pomdog/graphics/graphics_device.hpp"
-#include "pomdog/graphics/pipeline_state.hpp"
-#include "pomdog/graphics/pipeline_state_description.hpp"
-#include "pomdog/graphics/shader.hpp"
-#include "pomdog/utility/assert.hpp"
-#include "pomdog/utility/errors.hpp"
+#include "pomdog/content/asset_builders/pipeline_state_builder.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/content/asset_manager.h"
+#include "pomdog/graphics/effect_reflection.h"
+#include "pomdog/graphics/graphics_device.h"
+#include "pomdog/graphics/pipeline_state.h"
+#include "pomdog/graphics/pipeline_state_description.h"
+#include "pomdog/graphics/shader.h"
+#include "pomdog/utility/assert.h"
+#include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>

@@ -1,8 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/audio/openal/error_checker_al.hpp"
-#include "pomdog/logging/log.hpp"
-#include "pomdog/utility/errors.hpp"
+#include "pomdog/audio/openal/error_checker_al.h"
+#include "pomdog/logging/log.h"
+#include "pomdog/utility/errors.h"
 #include <sstream>
 
 namespace pomdog::detail::openal {

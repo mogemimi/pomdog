@@ -1,7 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/chrono/linux/time_source_linux.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/chrono/linux/time_source_linux.h"
+#include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <ctime>

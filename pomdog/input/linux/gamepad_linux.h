@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include "pomdog/input/backends/gamepad_mappings.hpp"
-#include "pomdog/input/backends/native_gamepad.hpp"
-#include "pomdog/input/gamepad.hpp"
-#include "pomdog/input/gamepad_capabilities.hpp"
-#include "pomdog/input/gamepad_state.hpp"
+#include "pomdog/input/backends/gamepad_mappings.h"
+#include "pomdog/input/backends/native_gamepad.h"
+#include "pomdog/input/gamepad.h"
+#include "pomdog/input/gamepad_capabilities.h"
+#include "pomdog/input/gamepad_state.h"
 #include <array>
 #include <cstdint>
 #include <memory>

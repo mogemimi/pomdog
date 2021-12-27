@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/network/mbedtls/certificates.hpp"
+#include "pomdog/network/mbedtls/certificates.h"
 
 namespace pomdog::detail {
 namespace {

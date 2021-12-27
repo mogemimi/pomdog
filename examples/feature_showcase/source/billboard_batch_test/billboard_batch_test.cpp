@@ -1,5 +1,5 @@
 #include "billboard_batch_test.h"
-#include "pomdog/experimental/graphics/basic_effect.hpp"
+#include "pomdog/experimental/graphics/basic_effect.h"
 #include <random>
 
 namespace feature_showcase {

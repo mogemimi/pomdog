@@ -1,11 +1,11 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/math/bounding_box.hpp"
-#include "pomdog/math/bounding_sphere.hpp"
-#include "pomdog/math/containment_type.hpp"
-#include "pomdog/math/plane.hpp"
-#include "pomdog/math/ray.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/math/bounding_box.h"
+#include "pomdog/math/bounding_sphere.h"
+#include "pomdog/math/containment_type.h"
+#include "pomdog/math/plane.h"
+#include "pomdog/math/ray.h"
+#include "pomdog/utility/assert.h"
 
 namespace pomdog {
 

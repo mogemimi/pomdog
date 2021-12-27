@@ -1,8 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/vulkan/vulkan_format_helper.hpp"
-#include "pomdog/graphics/surface_format.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/graphics/vulkan/vulkan_format_helper.h"
+#include "pomdog/graphics/surface_format.h"
+#include "pomdog/utility/assert.h"
 
 namespace pomdog::detail::vulkan {
 

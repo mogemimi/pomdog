@@ -1,10 +1,10 @@
 #pragma once
 
-#include "pomdog/experimental/graphics/primitive_batch.hpp"
-#include "pomdog/experimental/graphics/sprite_batch.hpp"
-#include "pomdog/experimental/graphics/sprite_font.hpp"
-#include "pomdog/experimental/graphics/truetype_font.hpp"
-#include "pomdog/pomdog.hpp"
+#include "pomdog/experimental/graphics/primitive_batch.h"
+#include "pomdog/experimental/graphics/sprite_batch.h"
+#include "pomdog/experimental/graphics/sprite_font.h"
+#include "pomdog/experimental/graphics/truetype_font.h"
+#include "pomdog/pomdog.h"
 
 namespace feature_showcase {
 

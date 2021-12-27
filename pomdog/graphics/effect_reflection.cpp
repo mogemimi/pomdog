@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/effect_reflection.hpp"
+#include "pomdog/graphics/effect_reflection.h"
 
 namespace pomdog {
 

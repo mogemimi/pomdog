@@ -1,17 +1,17 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/network/http_client.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/network/array_view.hpp"
-#include "pomdog/network/http_method.hpp"
-#include "pomdog/network/http_parser.hpp"
-#include "pomdog/network/http_request.hpp"
-#include "pomdog/network/http_response.hpp"
-#include "pomdog/network/io_service.hpp"
-#include "pomdog/network/tcp_stream.hpp"
-#include "pomdog/network/tls_stream.hpp"
-#include "pomdog/signals/scoped_connection.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/network/http_client.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/network/array_view.h"
+#include "pomdog/network/http_method.h"
+#include "pomdog/network/http_parser.h"
+#include "pomdog/network/http_request.h"
+#include "pomdog/network/http_response.h"
+#include "pomdog/network/io_service.h"
+#include "pomdog/network/tcp_stream.h"
+#include "pomdog/network/tls_stream.h"
+#include "pomdog/signals/scoped_connection.h"
+#include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>

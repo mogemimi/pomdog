@@ -1,8 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/math/radian.hpp"
-#include "pomdog/math/degree.hpp"
-#include "pomdog/math/math.hpp"
+#include "pomdog/math/radian.h"
+#include "pomdog/math/degree.h"
+#include "pomdog/math/math.h"
 
 namespace pomdog::math {
 

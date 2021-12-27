@@ -1,8 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/skeletal2d/blendtrees/animation_clip_node.hpp"
-#include "pomdog/experimental/skeletal2d/animation_clip.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/experimental/skeletal2d/blendtrees/animation_clip_node.h"
+#include "pomdog/experimental/skeletal2d/animation_clip.h"
+#include "pomdog/utility/assert.h"
 
 namespace pomdog::skeletal2d::detail {
 

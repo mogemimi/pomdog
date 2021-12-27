@@ -1,8 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/filesystem/apple/file_system_apple.hpp"
-#include "pomdog/utility/assert.hpp"
-#include "pomdog/utility/error_helper.hpp"
+#include "pomdog/filesystem/apple/file_system_apple.h"
+#include "pomdog/utility/assert.h"
+#include "pomdog/utility/error_helper.h"
 #include <Foundation/Foundation.h>
 #include <sys/stat.h>
 #include <unistd.h>

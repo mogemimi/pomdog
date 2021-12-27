@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/basic/export.hpp"
-#include "pomdog/math/forward_declarations.hpp"
-#include "pomdog/math/matrix4x4.hpp"
-#include "pomdog/math/plane.hpp"
-#include "pomdog/math/vector3.hpp"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/export.h"
+#include "pomdog/math/forward_declarations.h"
+#include "pomdog/math/matrix4x4.h"
+#include "pomdog/math/plane.h"
+#include "pomdog/math/vector3.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>

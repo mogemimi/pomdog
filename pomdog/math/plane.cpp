@@ -1,13 +1,13 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/math/plane.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/math/bounding_box.hpp"
-#include "pomdog/math/bounding_frustum.hpp"
-#include "pomdog/math/bounding_sphere.hpp"
-#include "pomdog/math/matrix4x4.hpp"
-#include "pomdog/math/plane_intersection_type.hpp"
-#include "pomdog/math/vector4.hpp"
+#include "pomdog/math/plane.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/math/bounding_box.h"
+#include "pomdog/math/bounding_frustum.h"
+#include "pomdog/math/bounding_sphere.h"
+#include "pomdog/math/matrix4x4.h"
+#include "pomdog/math/plane_intersection_type.h"
+#include "pomdog/math/vector4.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <limits>

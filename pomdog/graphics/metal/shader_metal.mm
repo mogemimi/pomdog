@@ -1,10 +1,10 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/metal/shader_metal.hpp"
-#include "pomdog/graphics/backends/shader_bytecode.hpp"
-#include "pomdog/graphics/backends/shader_compile_options.hpp"
-#include "pomdog/utility/assert.hpp"
-#include "pomdog/utility/string_helper.hpp"
+#include "pomdog/graphics/metal/shader_metal.h"
+#include "pomdog/graphics/backends/shader_bytecode.h"
+#include "pomdog/graphics/backends/shader_compile_options.h"
+#include "pomdog/utility/assert.h"
+#include "pomdog/utility/string_helper.h"
 #import <Metal/Metal.h>
 
 namespace pomdog::detail::metal {

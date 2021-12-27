@@ -1,7 +1,7 @@
 #include "resource.h"
 #include "game_main.h"
-#include "pomdog/platform/win32/bootstrap_win32.hpp"
-#include "pomdog/pomdog.hpp"
+#include "pomdog/platform/win32/bootstrap_win32.h"
+#include "pomdog/pomdog.h"
 
 #if defined(DEBUG) && !defined(NDEBUG)
 #define POMDOG_CRTDEBUG

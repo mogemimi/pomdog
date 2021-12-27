@@ -1,10 +1,10 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/input/win32/keyboard_win32.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/input/key_state.hpp"
-#include "pomdog/input/keys.hpp"
-#include "pomdog/signals/event_queue.hpp"
+#include "pomdog/input/win32/keyboard_win32.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/input/key_state.h"
+#include "pomdog/input/keys.h"
+#include "pomdog/signals/event_queue.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>

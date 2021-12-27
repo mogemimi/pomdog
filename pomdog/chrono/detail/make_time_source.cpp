@@ -1,16 +1,16 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/chrono/detail/make_time_source.hpp"
-#include "pomdog/basic/platform.hpp"
+#include "pomdog/chrono/detail/make_time_source.h"
+#include "pomdog/basic/platform.h"
 
 #if defined(POMDOG_PLATFORM_MACOSX) || defined(POMDOG_PLATFORM_APPLE_IOS)
-#include "pomdog/chrono/apple/time_source_apple.hpp"
+#include "pomdog/chrono/apple/time_source_apple.h"
 #elif defined(POMDOG_PLATFORM_WIN32)
-#include "pomdog/chrono/win32/time_source_win32.hpp"
+#include "pomdog/chrono/win32/time_source_win32.h"
 #elif defined(POMDOG_PLATFORM_LINUX) || defined(POMDOG_PLATFORM_ANDROID)
-#include "pomdog/chrono/linux/time_source_linux.hpp"
+#include "pomdog/chrono/linux/time_source_linux.h"
 #elif defined(POMDOG_PLATFORM_EMSCRIPTEN)
-#include "pomdog/chrono/emscripten/time_source_emscripten.hpp"
+#include "pomdog/chrono/emscripten/time_source_emscripten.h"
 #else
 #error "Platform undefined or not supported."
 #endif

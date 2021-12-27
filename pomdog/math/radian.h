@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/basic/export.hpp"
-#include "pomdog/math/forward_declarations.hpp"
-#include "pomdog/math/tagged_arithmetic.hpp"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/export.h"
+#include "pomdog/math/forward_declarations.h"
+#include "pomdog/math/tagged_arithmetic.h"
 
 namespace pomdog::detail {
 namespace Tags {

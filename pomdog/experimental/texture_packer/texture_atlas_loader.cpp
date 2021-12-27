@@ -1,9 +1,9 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/texture_packer/texture_atlas_loader.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/content/asset_manager.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/experimental/texture_packer/texture_atlas_loader.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/content/asset_manager.h"
+#include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>

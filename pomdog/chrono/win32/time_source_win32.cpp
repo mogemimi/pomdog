@@ -1,8 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/chrono/win32/time_source_win32.hpp"
-#include "pomdog/platform/win32/prerequisites_win32.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/chrono/win32/time_source_win32.h"
+#include "pomdog/platform/win32/prerequisites_win32.h"
+#include "pomdog/utility/assert.h"
 
 namespace pomdog::detail::win32 {
 

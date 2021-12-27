@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "pomdog/chrono/time_point.hpp"
-#include "pomdog/chrono/time_source.hpp"
+#include "pomdog/chrono/time_point.h"
+#include "pomdog/chrono/time_source.h"
 
 namespace pomdog::detail::apple {
 

@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/backends/native_buffer.hpp"
+#include "pomdog/graphics/backends/native_buffer.h"
 
 namespace pomdog::detail {
 

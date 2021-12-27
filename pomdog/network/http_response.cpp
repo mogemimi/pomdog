@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/network/http_response.hpp"
+#include "pomdog/network/http_response.h"
 
 namespace pomdog {
 

@@ -2,15 +2,15 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/basic/export.hpp"
-#include "pomdog/content/asset_builders/builder.hpp"
-#include "pomdog/content/asset_loaders/asset_loader.hpp"
-#include "pomdog/content/asset_loaders/audio_clip_loader.hpp"
-#include "pomdog/content/asset_loaders/texture2d_loader.hpp"
-#include "pomdog/utility/assert.hpp"
-#include "pomdog/utility/errors.hpp"
-#include "pomdog/utility/path_helper.hpp"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/export.h"
+#include "pomdog/content/asset_builders/builder.h"
+#include "pomdog/content/asset_loaders/asset_loader.h"
+#include "pomdog/content/asset_loaders/audio_clip_loader.h"
+#include "pomdog/content/asset_loaders/texture2d_loader.h"
+#include "pomdog/utility/assert.h"
+#include "pomdog/utility/errors.h"
+#include "pomdog/utility/path_helper.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <any>

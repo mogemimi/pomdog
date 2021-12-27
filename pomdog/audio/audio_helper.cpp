@@ -1,8 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/audio/audio_helper.hpp"
-#include "pomdog/audio/audio_channels.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/audio/audio_helper.h"
+#include "pomdog/audio/audio_channels.h"
+#include "pomdog/utility/assert.h"
 
 namespace pomdog::detail::AudioHelper {
 

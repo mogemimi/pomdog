@@ -1,9 +1,9 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/content/image/pnm.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/math/color.hpp"
-#include "pomdog/utility/string_helper.hpp"
+#include "pomdog/content/image/pnm.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/math/color.h"
+#include "pomdog/utility/string_helper.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <charconv>

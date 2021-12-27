@@ -1,16 +1,16 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/skeletal2d/animator.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/experimental/skeletal2d/animation_state.hpp"
-#include "pomdog/experimental/skeletal2d/blendtrees/animation_cross_fade_node.hpp"
-#include "pomdog/experimental/skeletal2d/blendtrees/animation_graph.hpp"
-#include "pomdog/experimental/skeletal2d/blendtrees/animation_graph_weight_collection.hpp"
-#include "pomdog/experimental/skeletal2d/blendtrees/animation_node.hpp"
-#include "pomdog/experimental/skeletal2d/blendtrees/weight_blending_helper.hpp"
-#include "pomdog/experimental/skeletal2d/skeleton.hpp"
-#include "pomdog/experimental/skeletal2d/skeleton_helper.hpp"
-#include "pomdog/experimental/skeletal2d/skeleton_pose.hpp"
+#include "pomdog/experimental/skeletal2d/animator.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/experimental/skeletal2d/animation_state.h"
+#include "pomdog/experimental/skeletal2d/blendtrees/animation_cross_fade_node.h"
+#include "pomdog/experimental/skeletal2d/blendtrees/animation_graph.h"
+#include "pomdog/experimental/skeletal2d/blendtrees/animation_graph_weight_collection.h"
+#include "pomdog/experimental/skeletal2d/blendtrees/animation_node.h"
+#include "pomdog/experimental/skeletal2d/blendtrees/weight_blending_helper.h"
+#include "pomdog/experimental/skeletal2d/skeleton.h"
+#include "pomdog/experimental/skeletal2d/skeleton_helper.h"
+#include "pomdog/experimental/skeletal2d/skeleton_pose.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cmath>

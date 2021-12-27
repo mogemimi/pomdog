@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "pomdog/math/radian.hpp"
-#include "pomdog/math/vector2.hpp"
+#include "pomdog/math/radian.h"
+#include "pomdog/math/vector2.h"
 
 namespace pomdog::skeletal2d {
 

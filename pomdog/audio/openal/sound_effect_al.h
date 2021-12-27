@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "pomdog/audio/openal/prerequisites_openal.hpp"
-#include "pomdog/audio/sound_effect.hpp"
-#include "pomdog/audio/sound_state.hpp"
+#include "pomdog/audio/openal/prerequisites_openal.h"
+#include "pomdog/audio/sound_effect.h"
+#include "pomdog/audio/sound_state.h"
 #include <memory>
 #include <optional>
 

@@ -1,13 +1,13 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/network/posix/udp_stream_posix.hpp"
-#include "pomdog/network/address_parser.hpp"
-#include "pomdog/network/array_view.hpp"
-#include "pomdog/network/end_point.hpp"
-#include "pomdog/network/io_service.hpp"
-#include "pomdog/network/posix/socket_helper_posix.hpp"
-#include "pomdog/utility/assert.hpp"
-#include "pomdog/utility/error_helper.hpp"
+#include "pomdog/network/posix/udp_stream_posix.h"
+#include "pomdog/network/address_parser.h"
+#include "pomdog/network/array_view.h"
+#include "pomdog/network/end_point.h"
+#include "pomdog/network/io_service.h"
+#include "pomdog/network/posix/socket_helper_posix.h"
+#include "pomdog/utility/assert.h"
+#include "pomdog/utility/error_helper.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <arpa/inet.h>

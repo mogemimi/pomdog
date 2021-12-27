@@ -1,16 +1,16 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/platform/win32/bootstrap_win32.hpp"
-#include "pomdog/application/game.hpp"
-#include "pomdog/application/game_host.hpp"
-#include "pomdog/application/system_events.hpp"
-#include "pomdog/application/win32/game_host_win32.hpp"
-#include "pomdog/application/win32/game_window_win32.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/graphics/presentation_parameters.hpp"
-#include "pomdog/input/directinput/gamepad_directinput.hpp"
-#include "pomdog/logging/log.hpp"
-#include "pomdog/utility/errors.hpp"
+#include "pomdog/platform/win32/bootstrap_win32.h"
+#include "pomdog/application/game.h"
+#include "pomdog/application/game_host.h"
+#include "pomdog/application/system_events.h"
+#include "pomdog/application/win32/game_host_win32.h"
+#include "pomdog/application/win32/game_window_win32.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/graphics/presentation_parameters.h"
+#include "pomdog/input/directinput/gamepad_directinput.h"
+#include "pomdog/logging/log.h"
+#include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>

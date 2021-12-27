@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/graphics/forward_declarations.hpp"
-#include "pomdog/graphics/graphics_command_list.hpp"
-#include "pomdog/math/forward_declarations.hpp"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/graphics/forward_declarations.h"
+#include "pomdog/graphics/graphics_command_list.h"
+#include "pomdog/math/forward_declarations.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdlib>

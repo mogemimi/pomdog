@@ -1,9 +1,9 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/input/linux/gamepad_linux.hpp"
-#include "pomdog/input/backends/gamepad_helper.hpp"
-#include "pomdog/logging/log.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/input/linux/gamepad_linux.h"
+#include "pomdog/input/backends/gamepad_helper.h"
+#include "pomdog/logging/log.h"
+#include "pomdog/utility/assert.h"
 #include <errno.h>
 #include <fcntl.h>
 #include <linux/input.h>

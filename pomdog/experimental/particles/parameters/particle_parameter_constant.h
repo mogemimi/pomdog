@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/experimental/particles/parameters/particle_parameter.hpp"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/experimental/particles/parameters/particle_parameter.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>

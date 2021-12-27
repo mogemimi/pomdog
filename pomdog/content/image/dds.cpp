@@ -1,11 +1,11 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/content/image/dds.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/content/utility/binary_reader.hpp"
-#include "pomdog/content/utility/make_fourcc.hpp"
-#include "pomdog/graphics/surface_format.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/content/image/dds.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/content/utility/binary_reader.h"
+#include "pomdog/content/utility/make_fourcc.h"
+#include "pomdog/graphics/surface_format.h"
+#include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <optional>

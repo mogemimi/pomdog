@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/input/mouse.hpp"
+#include "pomdog/input/mouse.h"
 
 namespace pomdog {
 

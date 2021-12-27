@@ -1,11 +1,11 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/gl4/blend_state_gl4.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/basic/unreachable.hpp"
-#include "pomdog/graphics/blend_description.hpp"
-#include "pomdog/graphics/gl4/error_checker.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/graphics/gl4/blend_state_gl4.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/unreachable.h"
+#include "pomdog/graphics/blend_description.h"
+#include "pomdog/graphics/gl4/error_checker.h"
+#include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>

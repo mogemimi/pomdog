@@ -1,7 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/chrono/apple/time_source_apple.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/chrono/apple/time_source_apple.h"
+#include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <mach/mach_time.h>

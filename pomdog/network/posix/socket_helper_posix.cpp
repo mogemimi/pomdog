@@ -1,8 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/network/posix/socket_helper_posix.hpp"
-#include "pomdog/utility/assert.hpp"
-#include "pomdog/utility/error_helper.hpp"
+#include "pomdog/network/posix/socket_helper_posix.h"
+#include "pomdog/utility/assert.h"
+#include "pomdog/utility/error_helper.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <fcntl.h>

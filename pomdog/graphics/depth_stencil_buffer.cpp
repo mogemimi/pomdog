@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/depth_stencil_buffer.hpp"
+#include "pomdog/graphics/depth_stencil_buffer.h"
 
 namespace pomdog {
 

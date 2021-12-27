@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "pomdog/experimental/gui/widget.hpp"
-#include "pomdog/signals/scoped_connection.hpp"
+#include "pomdog/experimental/gui/widget.h"
+#include "pomdog/signals/scoped_connection.h"
 
 namespace pomdog::gui {
 

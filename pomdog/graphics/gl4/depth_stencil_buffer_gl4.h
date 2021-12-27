@@ -2,14 +2,14 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/graphics/depth_stencil_buffer.hpp"
-#include "pomdog/graphics/forward_declarations.hpp"
-#include "pomdog/graphics/gl4/opengl_prerequisites.hpp"
-#include "pomdog/graphics/gl4/texture2d_gl4.hpp"
-#include "pomdog/graphics/surface_format.hpp"
-#include "pomdog/utility/errors.hpp"
-#include "pomdog/utility/tagged.hpp"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/graphics/depth_stencil_buffer.h"
+#include "pomdog/graphics/forward_declarations.h"
+#include "pomdog/graphics/gl4/opengl_prerequisites.h"
+#include "pomdog/graphics/gl4/texture2d_gl4.h"
+#include "pomdog/graphics/surface_format.h"
+#include "pomdog/utility/errors.h"
+#include "pomdog/utility/tagged.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <optional>

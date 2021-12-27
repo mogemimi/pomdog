@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "pomdog/math/color.hpp"
-#include "pomdog/math/math.hpp"
-#include "pomdog/math/radian.hpp"
-#include "pomdog/math/vector3.hpp"
+#include "pomdog/math/color.h"
+#include "pomdog/math/math.h"
+#include "pomdog/math/radian.h"
+#include "pomdog/math/vector3.h"
 
 namespace pomdog::detail::particles {
 

@@ -1,10 +1,10 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/platform/cocoa/opengl_context_cocoa.hpp"
-#include "pomdog/graphics/gl4/opengl_prerequisites.hpp"
-#include "pomdog/graphics/presentation_parameters.hpp"
-#include "pomdog/utility/assert.hpp"
-#include "pomdog/utility/errors.hpp"
+#include "pomdog/platform/cocoa/opengl_context_cocoa.h"
+#include "pomdog/graphics/gl4/opengl_prerequisites.h"
+#include "pomdog/graphics/presentation_parameters.h"
+#include "pomdog/utility/assert.h"
+#include "pomdog/utility/errors.h"
 #include <vector>
 
 namespace pomdog::detail::cocoa {

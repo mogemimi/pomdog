@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/ecs/component_buffer.hpp"
+#include "pomdog/experimental/ecs/component_buffer.h"
 
 namespace pomdog::ecs::detail {
 

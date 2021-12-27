@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/chrono/duration.hpp"
-#include "pomdog/experimental/particles/emitter_shapes/particle_emitter_shape.hpp"
-#include "pomdog/experimental/particles/parameters/particle_parameter.hpp"
-#include "pomdog/math/color.hpp"
-#include "pomdog/math/radian.hpp"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/chrono/duration.h"
+#include "pomdog/experimental/particles/emitter_shapes/particle_emitter_shape.h"
+#include "pomdog/experimental/particles/parameters/particle_parameter.h"
+#include "pomdog/math/color.h"
+#include "pomdog/math/radian.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>

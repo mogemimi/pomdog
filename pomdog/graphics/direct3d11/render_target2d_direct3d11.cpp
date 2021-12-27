@@ -1,10 +1,10 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/direct3d11/render_target2d_direct3d11.hpp"
-#include "pomdog/graphics/dxgi/dxgi_format_helper.hpp"
-#include "pomdog/math/rectangle.hpp"
-#include "pomdog/utility/assert.hpp"
-#include "pomdog/utility/exception.hpp"
+#include "pomdog/graphics/direct3d11/render_target2d_direct3d11.h"
+#include "pomdog/graphics/dxgi/dxgi_format_helper.h"
+#include "pomdog/math/rectangle.h"
+#include "pomdog/utility/assert.h"
+#include "pomdog/utility/exception.h"
 
 namespace pomdog::detail::direct3d11 {
 namespace {

@@ -1,18 +1,18 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/content/asset_loaders/texture2d_loader.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/content/asset_manager.hpp"
-#include "pomdog/content/image/dds.hpp"
-#include "pomdog/content/image/png.hpp"
-#include "pomdog/content/image/pnm.hpp"
-#include "pomdog/content/utility/binary_reader.hpp"
-#include "pomdog/content/utility/make_fourcc.hpp"
-#include "pomdog/filesystem/file_system.hpp"
-#include "pomdog/graphics/graphics_device.hpp"
-#include "pomdog/graphics/surface_format.hpp"
-#include "pomdog/graphics/texture2d.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/content/asset_loaders/texture2d_loader.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/content/asset_manager.h"
+#include "pomdog/content/image/dds.h"
+#include "pomdog/content/image/png.h"
+#include "pomdog/content/image/pnm.h"
+#include "pomdog/content/utility/binary_reader.h"
+#include "pomdog/content/utility/make_fourcc.h"
+#include "pomdog/filesystem/file_system.h"
+#include "pomdog/graphics/graphics_device.h"
+#include "pomdog/graphics/surface_format.h"
+#include "pomdog/graphics/texture2d.h"
+#include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>

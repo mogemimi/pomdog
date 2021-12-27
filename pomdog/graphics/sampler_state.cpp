@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/sampler_state.hpp"
+#include "pomdog/graphics/sampler_state.h"
 
 namespace pomdog {
 

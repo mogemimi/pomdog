@@ -1,7 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/signals/connection.hpp"
-#include "pomdog/signals/event_queue.hpp"
+#include "pomdog/signals/connection.h"
+#include "pomdog/signals/event_queue.h"
 #include <catch_amalgamated.hpp>
 #include <any>
 #include <utility>

@@ -1,10 +1,10 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/content/audio/vorbis.hpp"
-#include "pomdog/audio/audio_channels.hpp"
-#include "pomdog/audio/audio_engine.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/content/audio/vorbis.h"
+#include "pomdog/audio/audio_channels.h"
+#include "pomdog/audio/audio_engine.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <stb_vorbis.h>

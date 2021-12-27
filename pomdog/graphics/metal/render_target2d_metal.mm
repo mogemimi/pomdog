@@ -1,10 +1,10 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/metal/render_target2d_metal.hpp"
-#include "pomdog/graphics/backends/surface_format_helper.hpp"
-#include "pomdog/graphics/metal/metal_format_helper.hpp"
-#include "pomdog/math/rectangle.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/graphics/metal/render_target2d_metal.h"
+#include "pomdog/graphics/backends/surface_format_helper.h"
+#include "pomdog/graphics/metal/metal_format_helper.h"
+#include "pomdog/math/rectangle.h"
+#include "pomdog/utility/assert.h"
 #import <Metal/MTLDevice.h>
 #import <Metal/MTLTexture.h>
 

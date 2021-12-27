@@ -1,15 +1,15 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/particles/particle_system.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/experimental/particles/particle_clip.hpp"
-#include "pomdog/math/math.hpp"
-#include "pomdog/math/matrix4x4.hpp"
-#include "pomdog/math/quaternion.hpp"
-#include "pomdog/math/radian.hpp"
-#include "pomdog/math/vector2.hpp"
-#include "pomdog/math/vector3.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/experimental/particles/particle_system.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/experimental/particles/particle_clip.h"
+#include "pomdog/math/math.h"
+#include "pomdog/math/matrix4x4.h"
+#include "pomdog/math/quaternion.h"
+#include "pomdog/math/radian.h"
+#include "pomdog/math/vector2.h"
+#include "pomdog/math/vector3.h"
+#include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>

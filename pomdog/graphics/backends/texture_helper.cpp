@@ -1,10 +1,10 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/backends/texture_helper.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/graphics/backends/surface_format_helper.hpp"
-#include "pomdog/graphics/surface_format.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/graphics/backends/texture_helper.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/graphics/backends/surface_format_helper.h"
+#include "pomdog/graphics/surface_format.h"
+#include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>

@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/ecs/entity.hpp"
+#include "pomdog/experimental/ecs/entity.h"
 #include <catch_amalgamated.hpp>
 #include <algorithm>
 #include <cstdint>

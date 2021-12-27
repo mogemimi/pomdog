@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "pomdog/application/game_window.hpp"
-#include "pomdog/graphics/gl4/opengl_prerequisites.hpp"
-#include "pomdog/math/rectangle.hpp"
-#include "pomdog/utility/errors.hpp"
+#include "pomdog/application/game_window.h"
+#include "pomdog/graphics/gl4/opengl_prerequisites.h"
+#include "pomdog/math/rectangle.h"
+#include "pomdog/utility/errors.h"
 #include <GL/glx.h>
 #include <X11/Xlib.h>
 #include <memory>

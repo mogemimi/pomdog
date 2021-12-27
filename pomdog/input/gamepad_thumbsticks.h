@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "pomdog/math/vector2.hpp"
+#include "pomdog/math/vector2.h"
 
 namespace pomdog {
 

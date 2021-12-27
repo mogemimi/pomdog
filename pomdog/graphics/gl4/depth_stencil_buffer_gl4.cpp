@@ -1,10 +1,10 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/gl4/depth_stencil_buffer_gl4.hpp"
-#include "pomdog/graphics/gl4/error_checker.hpp"
-#include "pomdog/graphics/surface_format.hpp"
-#include "pomdog/math/rectangle.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/graphics/gl4/depth_stencil_buffer_gl4.h"
+#include "pomdog/graphics/gl4/error_checker.h"
+#include "pomdog/graphics/surface_format.h"
+#include "pomdog/math/rectangle.h"
+#include "pomdog/utility/assert.h"
 
 namespace pomdog::detail::gl4 {
 namespace {

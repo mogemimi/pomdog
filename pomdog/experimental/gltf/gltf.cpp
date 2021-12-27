@@ -1,7 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/gltf/gltf.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
+#include "pomdog/experimental/gltf/gltf.h"
+#include "pomdog/basic/conditional_compilation.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>

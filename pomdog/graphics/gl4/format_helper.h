@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "pomdog/graphics/forward_declarations.hpp"
-#include "pomdog/graphics/gl4/opengl_prerequisites.hpp"
+#include "pomdog/graphics/forward_declarations.h"
+#include "pomdog/graphics/gl4/opengl_prerequisites.h"
 
 namespace pomdog::detail::gl4 {
 

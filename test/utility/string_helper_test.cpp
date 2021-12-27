@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/utility/string_helper.hpp"
+#include "pomdog/utility/string_helper.h"
 #include <catch_amalgamated.hpp>
 
 namespace StringHelper = pomdog::StringHelper;

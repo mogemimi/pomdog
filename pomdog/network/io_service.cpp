@@ -1,9 +1,9 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/network/io_service.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/basic/platform.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/network/io_service.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/platform.h"
+#include "pomdog/utility/assert.h"
 
 #if defined(POMDOG_PLATFORM_MACOSX) ||     \
     defined(POMDOG_PLATFORM_APPLE_IOS) ||  \
@@ -11,7 +11,7 @@
     defined(POMDOG_PLATFORM_LINUX)
 // NOTE: nothing to do
 #elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
-#include "pomdog/network/win32/io_service_win32.hpp"
+#include "pomdog/network/win32/io_service_win32.h"
 #else
 #error "Platform undefined or not supported."
 #endif

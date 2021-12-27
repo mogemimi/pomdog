@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/tween/easing_helper.hpp"
+#include "pomdog/experimental/tween/easing_helper.h"
 
 namespace pomdog::detail::Easings {
 

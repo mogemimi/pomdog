@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "pomdog/input/gamepad.hpp"
+#include "pomdog/input/gamepad.h"
 
 namespace pomdog::detail {
 

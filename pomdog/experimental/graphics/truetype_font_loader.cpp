@@ -1,8 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/graphics/truetype_font_loader.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/experimental/graphics/truetype_font.hpp"
+#include "pomdog/experimental/graphics/truetype_font_loader.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/experimental/graphics/truetype_font.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>

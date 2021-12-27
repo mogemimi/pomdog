@@ -1,9 +1,9 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/math/bounding_circle.hpp"
-#include "pomdog/math/bounding_box2d.hpp"
-#include "pomdog/math/containment_type.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/math/bounding_circle.h"
+#include "pomdog/math/bounding_box2d.h"
+#include "pomdog/math/containment_type.h"
+#include "pomdog/utility/assert.h"
 
 namespace pomdog {
 

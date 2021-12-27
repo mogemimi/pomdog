@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "pomdog/graphics/depth_stencil_buffer.hpp"
-#include "pomdog/graphics/forward_declarations.hpp"
-#include "pomdog/graphics/surface_format.hpp"
-#include "pomdog/utility/errors.hpp"
+#include "pomdog/graphics/depth_stencil_buffer.h"
+#include "pomdog/graphics/forward_declarations.h"
+#include "pomdog/graphics/surface_format.h"
+#include "pomdog/utility/errors.h"
 #import <Metal/MTLTexture.h>
 
 namespace pomdog::detail::metal {

@@ -1,10 +1,10 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/audio/xaudio2/audio_clip_xaudio2.hpp"
-#include "pomdog/audio/audio_helper.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/utility/assert.hpp"
-#include "pomdog/utility/errors.hpp"
+#include "pomdog/audio/xaudio2/audio_clip_xaudio2.h"
+#include "pomdog/audio/audio_helper.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/utility/assert.h"
+#include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstring>

@@ -2,20 +2,20 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/experimental/graphics/primitive_batch.hpp"
-#include "pomdog/experimental/graphics/sprite_batch.hpp"
-#include "pomdog/experimental/graphics/sprite_font.hpp"
-#include "pomdog/experimental/graphics/truetype_font.hpp"
-#include "pomdog/experimental/gui/font_size.hpp"
-#include "pomdog/experimental/gui/font_weight.hpp"
-#include "pomdog/experimental/texture_packer/texture_atlas.hpp"
-#include "pomdog/math/color.hpp"
-#include "pomdog/math/matrix3x2.hpp"
-#include "pomdog/math/matrix4x4.hpp"
-#include "pomdog/math/radian.hpp"
-#include "pomdog/math/rectangle.hpp"
-#include "pomdog/math/vector2.hpp"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/experimental/graphics/primitive_batch.h"
+#include "pomdog/experimental/graphics/sprite_batch.h"
+#include "pomdog/experimental/graphics/sprite_font.h"
+#include "pomdog/experimental/graphics/truetype_font.h"
+#include "pomdog/experimental/gui/font_size.h"
+#include "pomdog/experimental/gui/font_weight.h"
+#include "pomdog/experimental/texture_packer/texture_atlas.h"
+#include "pomdog/math/color.h"
+#include "pomdog/math/matrix3x2.h"
+#include "pomdog/math/matrix4x4.h"
+#include "pomdog/math/radian.h"
+#include "pomdog/math/rectangle.h"
+#include "pomdog/math/vector2.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>

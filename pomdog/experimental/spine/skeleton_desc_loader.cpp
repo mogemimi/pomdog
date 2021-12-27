@@ -1,13 +1,13 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/spine/skeleton_desc_loader.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/content/asset_manager.hpp"
-#include "pomdog/content/utility/binary_reader.hpp"
-#include "pomdog/filesystem/file_system.hpp"
-#include "pomdog/math/degree.hpp"
-#include "pomdog/math/math.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/experimental/spine/skeleton_desc_loader.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/content/asset_manager.h"
+#include "pomdog/content/utility/binary_reader.h"
+#include "pomdog/filesystem/file_system.h"
+#include "pomdog/math/degree.h"
+#include "pomdog/math/math.h"
+#include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #if defined(__clang__)

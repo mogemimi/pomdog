@@ -1,14 +1,14 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/network/win32/udp_stream_win32.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/network/address_parser.hpp"
-#include "pomdog/network/array_view.hpp"
-#include "pomdog/network/end_point.hpp"
-#include "pomdog/network/io_service.hpp"
-#include "pomdog/network/win32/socket_helper_win32.hpp"
-#include "pomdog/utility/assert.hpp"
-#include "pomdog/utility/error_helper.hpp"
+#include "pomdog/network/win32/udp_stream_win32.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/network/address_parser.h"
+#include "pomdog/network/array_view.h"
+#include "pomdog/network/end_point.h"
+#include "pomdog/network/io_service.h"
+#include "pomdog/network/win32/socket_helper_win32.h"
+#include "pomdog/utility/assert.h"
+#include "pomdog/utility/error_helper.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <WS2tcpip.h>

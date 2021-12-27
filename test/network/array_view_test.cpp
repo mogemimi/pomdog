@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/network/array_view.hpp"
+#include "pomdog/network/array_view.h"
 #include <catch_amalgamated.hpp>
 #include <array>
 #include <cstdint>

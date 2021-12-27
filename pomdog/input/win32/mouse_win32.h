@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include "pomdog/application/system_events.hpp"
-#include "pomdog/input/mouse.hpp"
-#include "pomdog/input/mouse_state.hpp"
-#include "pomdog/platform/win32/prerequisites_win32.hpp"
-#include "pomdog/signals/forward_declarations.hpp"
+#include "pomdog/application/system_events.h"
+#include "pomdog/input/mouse.h"
+#include "pomdog/input/mouse_state.h"
+#include "pomdog/platform/win32/prerequisites_win32.h"
+#include "pomdog/signals/forward_declarations.h"
 
 namespace pomdog::detail::win32 {
 

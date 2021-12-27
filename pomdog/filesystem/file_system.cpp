@@ -1,22 +1,22 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/filesystem/file_system.hpp"
-#include "pomdog/basic/platform.hpp"
+#include "pomdog/filesystem/file_system.h"
+#include "pomdog/basic/platform.h"
 
 #if defined(POMDOG_PLATFORM_MACOSX) || defined(POMDOG_PLATFORM_APPLE_IOS)
-#include "pomdog/filesystem/apple/file_system_apple.hpp"
+#include "pomdog/filesystem/apple/file_system_apple.h"
 #elif defined(POMDOG_PLATFORM_WIN32)
-#include "pomdog/filesystem/win32/file_system_win32.hpp"
+#include "pomdog/filesystem/win32/file_system_win32.h"
 #elif defined(POMDOG_PLATFORM_LINUX) || defined(POMDOG_PLATFORM_ANDROID)
-#include "pomdog/filesystem/linux/file_system_linux.hpp"
+#include "pomdog/filesystem/linux/file_system_linux.h"
 #elif defined(POMDOG_PLATFORM_EMSCRIPTEN)
-#include "pomdog/filesystem/emscripten/file_system_emscripten.hpp"
+#include "pomdog/filesystem/emscripten/file_system_emscripten.h"
 #else
 #error "Platform undefined or not supported."
 #endif
 
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/utility/path_helper.hpp"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/utility/path_helper.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>

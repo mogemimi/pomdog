@@ -1,10 +1,10 @@
 #pragma once
 
-#include "pomdog/experimental/graphics/primitive_batch.hpp"
-#include "pomdog/experimental/graphics/sprite_batch.hpp"
-#include "pomdog/experimental/particles/particle_clip.hpp"
-#include "pomdog/experimental/particles/particle_system.hpp"
-#include "pomdog/pomdog.hpp"
+#include "pomdog/experimental/graphics/primitive_batch.h"
+#include "pomdog/experimental/graphics/sprite_batch.h"
+#include "pomdog/experimental/particles/particle_clip.h"
+#include "pomdog/experimental/particles/particle_system.h"
+#include "pomdog/pomdog.h"
 
 namespace feature_showcase {
 

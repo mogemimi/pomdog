@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/basic/export.hpp"
-#include "pomdog/content/asset_manager.hpp"
-#include "pomdog/experimental/image_effects/image_effect_base.hpp"
-#include "pomdog/graphics/forward_declarations.hpp"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/basic/export.h"
+#include "pomdog/content/asset_manager.h"
+#include "pomdog/experimental/image_effects/image_effect_base.h"
+#include "pomdog/graphics/forward_declarations.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>

@@ -1,15 +1,15 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/image_effects/screen_quad.hpp"
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/graphics/graphics_command_list.hpp"
-#include "pomdog/graphics/graphics_device.hpp"
-#include "pomdog/graphics/shader_language.hpp"
-#include "pomdog/graphics/vertex_buffer.hpp"
-#include "pomdog/math/vector2.hpp"
-#include "pomdog/math/vector3.hpp"
-#include "pomdog/utility/assert.hpp"
-#include "pomdog/utility/errors.hpp"
+#include "pomdog/experimental/image_effects/screen_quad.h"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/graphics/graphics_command_list.h"
+#include "pomdog/graphics/graphics_device.h"
+#include "pomdog/graphics/shader_language.h"
+#include "pomdog/graphics/vertex_buffer.h"
+#include "pomdog/math/vector2.h"
+#include "pomdog/math/vector3.h"
+#include "pomdog/utility/assert.h"
+#include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>

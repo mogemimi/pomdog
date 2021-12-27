@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "pomdog/graphics/forward_declarations.hpp"
-#include "pomdog/graphics/graphics_command_list.hpp"
+#include "pomdog/graphics/forward_declarations.h"
+#include "pomdog/graphics/graphics_command_list.h"
 #include <vulkan/vulkan.h>
 
 namespace pomdog::detail::vulkan {

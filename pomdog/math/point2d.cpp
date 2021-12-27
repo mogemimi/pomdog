@@ -1,8 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/math/point2d.hpp"
-#include "pomdog/math/vector2.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/math/point2d.h"
+#include "pomdog/math/vector2.h"
+#include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cmath>

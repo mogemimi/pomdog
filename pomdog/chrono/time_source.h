@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "pomdog/basic/export.hpp"
-#include "pomdog/chrono/time_point.hpp"
+#include "pomdog/basic/export.h"
+#include "pomdog/chrono/time_point.h"
 
 namespace pomdog::detail {
 

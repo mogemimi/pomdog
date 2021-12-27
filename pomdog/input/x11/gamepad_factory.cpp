@@ -1,9 +1,9 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/input/x11/gamepad_factory.hpp"
-#include "pomdog/basic/platform.hpp"
+#include "pomdog/input/x11/gamepad_factory.h"
+#include "pomdog/basic/platform.h"
 #if defined(POMDOG_PLATFORM_LINUX)
-#include "pomdog/input/linux/gamepad_linux.hpp"
+#include "pomdog/input/linux/gamepad_linux.h"
 #else
 #error "Platform undefined or not supported."
 #endif

@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/experimental/ecs/component_buffer.hpp"
-#include "pomdog/experimental/ecs/component_type.hpp"
-#include "pomdog/experimental/ecs/entity.hpp"
-#include "pomdog/experimental/ecs/entity_desc.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/experimental/ecs/component_buffer.h"
+#include "pomdog/experimental/ecs/component_type.h"
+#include "pomdog/experimental/ecs/entity.h"
+#include "pomdog/experimental/ecs/entity_desc.h"
+#include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>

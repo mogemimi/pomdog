@@ -1,13 +1,13 @@
 #include "skinning2d_test.h"
-#include "pomdog/experimental/graphics/basic_effect.hpp"
-#include "pomdog/experimental/skeletal2d/animation_clip.hpp"
-#include "pomdog/experimental/skeletal2d/skeleton_helper.hpp"
-#include "pomdog/experimental/spine/animation_loader.hpp"
-#include "pomdog/experimental/spine/skeleton_desc_loader.hpp"
-#include "pomdog/experimental/spine/skeleton_loader.hpp"
-#include "pomdog/experimental/spine/skin_loader.hpp"
-#include "pomdog/experimental/spine/skinned_mesh_loader.hpp"
-#include "pomdog/experimental/texture_packer/texture_atlas_loader.hpp"
+#include "pomdog/experimental/graphics/basic_effect.h"
+#include "pomdog/experimental/skeletal2d/animation_clip.h"
+#include "pomdog/experimental/skeletal2d/skeleton_helper.h"
+#include "pomdog/experimental/spine/animation_loader.h"
+#include "pomdog/experimental/spine/skeleton_desc_loader.h"
+#include "pomdog/experimental/spine/skeleton_loader.h"
+#include "pomdog/experimental/spine/skin_loader.h"
+#include "pomdog/experimental/spine/skinned_mesh_loader.h"
+#include "pomdog/experimental/texture_packer/texture_atlas_loader.h"
 #include <random>
 
 namespace feature_showcase {

@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "pomdog/signals/signal.hpp"
+#include "pomdog/signals/signal.h"
 
 namespace pomdog::detail {
 

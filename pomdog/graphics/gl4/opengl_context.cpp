@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/gl4/opengl_context.hpp"
+#include "pomdog/graphics/gl4/opengl_context.h"
 
 namespace pomdog::detail::gl4 {
 

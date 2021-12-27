@@ -1,10 +1,10 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/metal/sampler_state_metal.hpp"
-#include "pomdog/basic/unreachable.hpp"
-#include "pomdog/graphics/metal/metal_format_helper.hpp"
-#include "pomdog/graphics/sampler_description.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/graphics/metal/sampler_state_metal.h"
+#include "pomdog/basic/unreachable.h"
+#include "pomdog/graphics/metal/metal_format_helper.h"
+#include "pomdog/graphics/sampler_description.h"
+#include "pomdog/utility/assert.h"
 
 namespace pomdog::detail::metal {
 namespace {

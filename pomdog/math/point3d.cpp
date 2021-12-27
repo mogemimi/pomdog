@@ -1,8 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/math/point3d.hpp"
-#include "pomdog/math/vector3.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/math/point3d.h"
+#include "pomdog/math/vector3.h"
+#include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cmath>

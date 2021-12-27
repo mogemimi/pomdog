@@ -1,7 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/experimental/skeletal2d/skeleton.hpp"
-#include "pomdog/utility/assert.hpp"
+#include "pomdog/experimental/skeletal2d/skeleton.h"
+#include "pomdog/utility/assert.h"
 
 namespace pomdog::skeletal2d {
 

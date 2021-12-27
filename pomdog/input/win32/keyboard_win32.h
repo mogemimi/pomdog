@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "pomdog/application/system_events.hpp"
-#include "pomdog/input/keyboard.hpp"
-#include "pomdog/input/keyboard_state.hpp"
-#include "pomdog/platform/win32/prerequisites_win32.hpp"
+#include "pomdog/application/system_events.h"
+#include "pomdog/input/keyboard.h"
+#include "pomdog/input/keyboard_state.h"
+#include "pomdog/platform/win32/prerequisites_win32.h"
 
 namespace pomdog::detail::win32 {
 

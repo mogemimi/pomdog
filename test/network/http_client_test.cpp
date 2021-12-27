@@ -1,15 +1,15 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "executor.h"
-#include "pomdog/chrono/game_clock.hpp"
-#include "pomdog/network/array_view.hpp"
-#include "pomdog/network/http_client.hpp"
-#include "pomdog/network/http_method.hpp"
-#include "pomdog/network/http_request.hpp"
-#include "pomdog/network/http_response.hpp"
-#include "pomdog/network/io_service.hpp"
-#include "pomdog/utility/errors.hpp"
-#include "pomdog/utility/string_helper.hpp"
+#include "pomdog/chrono/game_clock.h"
+#include "pomdog/network/array_view.h"
+#include "pomdog/network/http_client.h"
+#include "pomdog/network/http_method.h"
+#include "pomdog/network/http_request.h"
+#include "pomdog/network/http_response.h"
+#include "pomdog/network/io_service.h"
+#include "pomdog/utility/errors.h"
+#include "pomdog/utility/string_helper.h"
 #include <catch_amalgamated.hpp>
 #include <algorithm>
 #include <cstring>

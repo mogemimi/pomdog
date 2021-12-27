@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "pomdog/basic/conditional_compilation.hpp"
-#include "pomdog/experimental/gui/pointer_event_type.hpp"
-#include "pomdog/math/point2d.hpp"
+#include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/experimental/gui/pointer_event_type.h"
+#include "pomdog/math/point2d.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>

@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/chrono/emscripten/time_source_emscripten.hpp"
+#include "pomdog/chrono/emscripten/time_source_emscripten.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <emscripten.h>
