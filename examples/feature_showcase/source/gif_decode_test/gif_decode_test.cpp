@@ -1,8 +1,8 @@
-#include "gif_decode_test.hpp"
-#include <pomdog/experimental/image/gif_image.hpp>
-#include <pomdog/experimental/image/gif_loader.hpp>
-#include <pomdog/experimental/texture_packer/texture_atlas_generator.hpp>
-#include <pomdog/experimental/tween/easing_helper.hpp>
+#include "gif_decode_test.h"
+#include "pomdog/experimental/image/gif_image.hpp"
+#include "pomdog/experimental/image/gif_loader.hpp"
+#include "pomdog/experimental/texture_packer/texture_atlas_generator.hpp"
+#include "pomdog/experimental/tween/easing_helper.hpp"
 #include <cstdint>
 #include <random>
 

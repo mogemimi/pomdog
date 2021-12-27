@@ -1,4 +1,4 @@
-#include "texture2d_loader_test.hpp"
+#include "texture2d_loader_test.h"
 
 namespace feature_showcase {
 

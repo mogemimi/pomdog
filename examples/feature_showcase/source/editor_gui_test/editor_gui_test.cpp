@@ -1,4 +1,4 @@
-#include "editor_gui_test.hpp"
+#include "editor_gui_test.h"
 
 namespace feature_showcase {
 

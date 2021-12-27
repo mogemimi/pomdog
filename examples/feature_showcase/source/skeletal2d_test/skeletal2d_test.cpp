@@ -1,12 +1,12 @@
-#include "skeletal2d_test.hpp"
-#include <pomdog/experimental/graphics/basic_effect.hpp>
-#include <pomdog/experimental/skeletal2d/animation_clip.hpp>
-#include <pomdog/experimental/skeletal2d/skeleton_helper.hpp>
-#include <pomdog/experimental/spine/animation_loader.hpp>
-#include <pomdog/experimental/spine/skeleton_desc_loader.hpp>
-#include <pomdog/experimental/spine/skeleton_loader.hpp>
-#include <pomdog/experimental/spine/skin_loader.hpp>
-#include <pomdog/experimental/texture_packer/texture_atlas_loader.hpp>
+#include "skeletal2d_test.h"
+#include "pomdog/experimental/graphics/basic_effect.hpp"
+#include "pomdog/experimental/skeletal2d/animation_clip.hpp"
+#include "pomdog/experimental/skeletal2d/skeleton_helper.hpp"
+#include "pomdog/experimental/spine/animation_loader.hpp"
+#include "pomdog/experimental/spine/skeleton_desc_loader.hpp"
+#include "pomdog/experimental/spine/skeleton_loader.hpp"
+#include "pomdog/experimental/spine/skin_loader.hpp"
+#include "pomdog/experimental/texture_packer/texture_atlas_loader.hpp"
 #include <random>
 
 namespace feature_showcase {

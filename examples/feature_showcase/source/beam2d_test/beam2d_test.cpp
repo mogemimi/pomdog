@@ -1,6 +1,6 @@
-#include "beam2d_test.hpp"
-#include <pomdog/experimental/graphics/sprite_line.hpp>
-#include <pomdog/experimental/particles/beam_system.hpp>
+#include "beam2d_test.h"
+#include "pomdog/experimental/graphics/sprite_line.hpp"
+#include "pomdog/experimental/particles/beam_system.hpp"
 #include <random>
 
 namespace feature_showcase {

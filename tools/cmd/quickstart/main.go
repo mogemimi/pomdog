@@ -109,7 +109,7 @@ func createProject(config projectConfig) error {
 		"README.md",
 		"CMakeLists.txt",
 		"source/game_main.cpp",
-		"source/game_main.hpp",
+		"source/game_main.h",
 		"platform/cocoa/AppDelegate.mm",
 		"platform/cocoa/main.mm",
 		"platform/cocoa/info.plist",

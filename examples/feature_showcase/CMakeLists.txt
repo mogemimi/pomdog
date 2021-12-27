@@ -57,68 +57,68 @@ add_executable(${PRODUCT_NAME} WIN32)
 
 target_sources(${PRODUCT_NAME} PRIVATE
     source/game_main.cpp
-    source/game_main.hpp
+    source/game_main.h
     source/animation_graph_test/animation_graph_test.cpp
-    source/animation_graph_test/animation_graph_test.hpp
+    source/animation_graph_test/animation_graph_test.h
     source/audio_clip_test/audio_clip_test.cpp
-    source/audio_clip_test/audio_clip_test.hpp
+    source/audio_clip_test/audio_clip_test.h
     source/basic_effect_test/basic_effect_test.cpp
-    source/basic_effect_test/basic_effect_test.hpp
+    source/basic_effect_test/basic_effect_test.h
     source/beam2d_test/beam2d_test.cpp
-    source/beam2d_test/beam2d_test.hpp
+    source/beam2d_test/beam2d_test.h
     source/billboard_batch_test/billboard_batch_test.cpp
-    source/billboard_batch_test/billboard_batch_test.hpp
+    source/billboard_batch_test/billboard_batch_test.h
     source/distance_field_font_test/distance_field_font_test.cpp
-    source/distance_field_font_test/distance_field_font_test.hpp
+    source/distance_field_font_test/distance_field_font_test.h
     source/editor_gui_test/editor_gui_test.cpp
-    source/editor_gui_test/editor_gui_test.hpp
+    source/editor_gui_test/editor_gui_test.h
     source/gamepad_test/gamepad_test.cpp
-    source/gamepad_test/gamepad_test.hpp
+    source/gamepad_test/gamepad_test.h
     source/gif_decode_test/gif_decode_test.cpp
-    source/gif_decode_test/gif_decode_test.hpp
+    source/gif_decode_test/gif_decode_test.h
     source/gltf_model_test/gltf_model_test.cpp
-    source/gltf_model_test/gltf_model_test.hpp
+    source/gltf_model_test/gltf_model_test.h
     source/gui_splitter_test/gui_splitter_test.cpp
-    source/gui_splitter_test/gui_splitter_test.hpp
+    source/gui_splitter_test/gui_splitter_test.h
     source/hardware_instancing_test/hardware_instancing_test.cpp
-    source/hardware_instancing_test/hardware_instancing_test.hpp
+    source/hardware_instancing_test/hardware_instancing_test.h
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:
         # TODO: Add emscripten support
         source/http_client_test/http_client_test.cpp
-        source/http_client_test/http_client_test.hpp
+        source/http_client_test/http_client_test.h
     >
     source/image_effects_test/image_effects_test.cpp
-    source/image_effects_test/image_effects_test.hpp
+    source/image_effects_test/image_effects_test.h
     source/line_batch_test/line_batch_test.cpp
-    source/line_batch_test/line_batch_test.hpp
+    source/line_batch_test/line_batch_test.h
     source/multi_render_target_test/multi_render_target_test.cpp
-    source/multi_render_target_test/multi_render_target_test.hpp
+    source/multi_render_target_test/multi_render_target_test.h
     source/particle_clip_loader_test/particle_clip_loader_test.cpp
-    source/particle_clip_loader_test/particle_clip_loader_test.hpp
+    source/particle_clip_loader_test/particle_clip_loader_test.h
     source/particle2d_test/particle2d_test.cpp
-    source/particle2d_test/particle2d_test.hpp
+    source/particle2d_test/particle2d_test.h
     source/particle3d_test/particle3d_test.cpp
-    source/particle3d_test/particle3d_test.hpp
+    source/particle3d_test/particle3d_test.h
     source/polyline_drawing_test/polyline_drawing_test.cpp
-    source/polyline_drawing_test/polyline_drawing_test.hpp
+    source/polyline_drawing_test/polyline_drawing_test.h
     source/primitive_batch_test/primitive_batch_test.cpp
-    source/primitive_batch_test/primitive_batch_test.hpp
+    source/primitive_batch_test/primitive_batch_test.h
     source/skeletal2d_test/skeletal2d_test.cpp
-    source/skeletal2d_test/skeletal2d_test.hpp
+    source/skeletal2d_test/skeletal2d_test.h
     source/skinning2d_test/skinning2d_test.cpp
-    source/skinning2d_test/skinning2d_test.hpp
+    source/skinning2d_test/skinning2d_test.h
     source/sprite_batch_test/sprite_batch_test.cpp
-    source/sprite_batch_test/sprite_batch_test.hpp
+    source/sprite_batch_test/sprite_batch_test.h
     source/sprite_font_test/sprite_font_test.cpp
-    source/sprite_font_test/sprite_font_test.hpp
+    source/sprite_font_test/sprite_font_test.h
     source/sprite_line_test/sprite_line_test.cpp
-    source/sprite_line_test/sprite_line_test.hpp
+    source/sprite_line_test/sprite_line_test.h
     source/svg_decode_test/svg_decode_test.cpp
-    source/svg_decode_test/svg_decode_test.hpp
+    source/svg_decode_test/svg_decode_test.h
     source/texture2d_loader_test/texture2d_loader_test.cpp
-    source/texture2d_loader_test/texture2d_loader_test.hpp
+    source/texture2d_loader_test/texture2d_loader_test.h
     source/voxel_model_test/voxel_model_test.cpp
-    source/voxel_model_test/voxel_model_test.hpp
+    source/voxel_model_test/voxel_model_test.h
     ${RESOURCE_FILES}
 
     # On Mac
@@ -137,7 +137,7 @@ target_sources(${PRODUCT_NAME} PRIVATE
     $<$<PLATFORM_ID:Windows>:
         platform/win32/game.rc
         platform/win32/main.cpp
-        platform/win32/resource.hpp
+        platform/win32/resource.h
     >
 )
 

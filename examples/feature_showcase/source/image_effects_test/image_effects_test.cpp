@@ -1,10 +1,10 @@
-#include "image_effects_test.hpp"
-#include <pomdog/experimental/image_effects/chromatic_aberration.hpp>
-#include <pomdog/experimental/image_effects/fxaa.hpp>
-#include <pomdog/experimental/image_effects/fish_eye_effect.hpp>
-#include <pomdog/experimental/image_effects/retro_crt_effect.hpp>
-#include <pomdog/experimental/image_effects/sepia_tone_effect.hpp>
-#include <pomdog/experimental/image_effects/vignette_effect.hpp>
+#include "image_effects_test.h"
+#include "pomdog/experimental/image_effects/chromatic_aberration.hpp"
+#include "pomdog/experimental/image_effects/fxaa.hpp"
+#include "pomdog/experimental/image_effects/fish_eye_effect.hpp"
+#include "pomdog/experimental/image_effects/retro_crt_effect.hpp"
+#include "pomdog/experimental/image_effects/sepia_tone_effect.hpp"
+#include "pomdog/experimental/image_effects/vignette_effect.hpp"
 #include <random>
 
 namespace feature_showcase {

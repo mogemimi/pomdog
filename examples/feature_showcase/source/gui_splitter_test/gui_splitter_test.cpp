@@ -1,4 +1,4 @@
-#include "gui_splitter_test.hpp"
+#include "gui_splitter_test.h"
 
 namespace feature_showcase {
 

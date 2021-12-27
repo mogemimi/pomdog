@@ -49,7 +49,7 @@ func createEmbeddedFile(src string, compileOptions compileOptions) error {
 	dir := filepath.Dir(src)
 	lang := findShaderLanguageFromExtension(ext)
 
-	dst := filepath.Join(dir+".Embedded", base+".inc.hpp")
+	dst := filepath.Join(dir+".Embedded", base+".inc.h")
 
 	content := ""
 

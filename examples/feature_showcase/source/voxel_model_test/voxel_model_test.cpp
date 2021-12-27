@@ -1,4 +1,4 @@
-#include "voxel_model_test.hpp"
+#include "voxel_model_test.h"
 
 namespace feature_showcase {
 

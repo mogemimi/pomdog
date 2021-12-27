@@ -1,4 +1,4 @@
-#include "game_main.hpp"
+#include "game_main.h"
 #include <cmath>
 #include <utility>
 

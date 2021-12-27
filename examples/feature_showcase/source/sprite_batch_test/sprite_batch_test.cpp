@@ -1,5 +1,5 @@
-#include "sprite_batch_test.hpp"
-#include <pomdog/experimental/tween/easing_helper.hpp>
+#include "sprite_batch_test.h"
+#include "pomdog/experimental/tween/easing_helper.hpp"
 #include <cstdint>
 #include <random>
 

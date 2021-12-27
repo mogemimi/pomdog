@@ -1,5 +1,5 @@
-#include "multi_render_target_test.hpp"
-#include <pomdog/experimental/graphics/basic_effect.hpp>
+#include "multi_render_target_test.h"
+#include "pomdog/experimental/graphics/basic_effect.hpp"
 #include <cmath>
 
 namespace feature_showcase {

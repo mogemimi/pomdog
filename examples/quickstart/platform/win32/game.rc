@@ -1,4 +1,4 @@
-#include "resource.hpp"
+#include "resource.h"
 
 // Icon
 IDI_POMDOG_ICON       ICON "resources/icon_256px.ico"

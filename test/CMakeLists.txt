@@ -69,7 +69,7 @@ target_sources(pomdog_test PRIVATE
     ${POMDOG_TEST_DIR}/math/vector3_test.cpp
     ${POMDOG_TEST_DIR}/math/vector4_test.cpp
     ${POMDOG_TEST_DIR}/network/array_view_test.cpp
-    ${POMDOG_TEST_DIR}/network/executor.hpp
+    ${POMDOG_TEST_DIR}/network/executor.h
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:
         # TODO: Need to implement for Emscripten.
         ${POMDOG_TEST_DIR}/network/http_client_test.cpp

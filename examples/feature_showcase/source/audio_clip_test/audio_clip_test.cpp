@@ -1,4 +1,4 @@
-#include "audio_clip_test.hpp"
+#include "audio_clip_test.h"
 
 namespace feature_showcase {
 

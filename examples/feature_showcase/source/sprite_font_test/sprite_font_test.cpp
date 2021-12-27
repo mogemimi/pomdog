@@ -1,4 +1,4 @@
-#include "sprite_font_test.hpp"
+#include "sprite_font_test.h"
 
 namespace feature_showcase {
 

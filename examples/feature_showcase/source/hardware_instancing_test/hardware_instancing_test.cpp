@@ -1,4 +1,4 @@
-#include "hardware_instancing_test.hpp"
+#include "hardware_instancing_test.h"
 #include <cmath>
 #include <random>
 

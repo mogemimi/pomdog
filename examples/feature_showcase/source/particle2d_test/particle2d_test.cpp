@@ -1,10 +1,10 @@
-#include "particle2d_test.hpp"
-#include <pomdog/experimental/particles/emitter_shapes/particle_emitter_shape_box.hpp>
-#include <pomdog/experimental/particles/emitter_shapes/particle_emitter_shape_sector.hpp>
-#include <pomdog/experimental/particles/parameters/particle_parameter_constant.hpp>
-#include <pomdog/experimental/particles/parameters/particle_parameter_curve.hpp>
-#include <pomdog/experimental/particles/parameters/particle_parameter_random.hpp>
-#include <pomdog/experimental/particles/parameters/particle_parameter_random_curves.hpp>
+#include "particle2d_test.h"
+#include "pomdog/experimental/particles/emitter_shapes/particle_emitter_shape_box.hpp"
+#include "pomdog/experimental/particles/emitter_shapes/particle_emitter_shape_sector.hpp"
+#include "pomdog/experimental/particles/parameters/particle_parameter_constant.hpp"
+#include "pomdog/experimental/particles/parameters/particle_parameter_curve.hpp"
+#include "pomdog/experimental/particles/parameters/particle_parameter_random.hpp"
+#include "pomdog/experimental/particles/parameters/particle_parameter_random_curves.hpp"
 #include <random>
 
 namespace feature_showcase {

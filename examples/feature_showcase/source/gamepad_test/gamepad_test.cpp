@@ -1,4 +1,4 @@
-#include "gamepad_test.hpp"
+#include "gamepad_test.h"
 
 namespace feature_showcase {
 
