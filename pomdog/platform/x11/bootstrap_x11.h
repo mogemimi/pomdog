@@ -3,7 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/export.h"
-#include "pomdog/graphics/surface_format.h"
+#include "pomdog/gpu/surface_format.h"
 #include <functional>
 #include <memory>
 

@@ -1,8 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/backends/surface_format_helper.h"
+#include "pomdog/gpu/backends/surface_format_helper.h"
 #include "pomdog/basic/unreachable.h"
-#include "pomdog/graphics/surface_format.h"
+#include "pomdog/gpu/surface_format.h"
 
 namespace pomdog::detail {
 

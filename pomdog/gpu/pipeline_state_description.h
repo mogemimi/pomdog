@@ -3,13 +3,13 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/graphics/blend_description.h"
-#include "pomdog/graphics/depth_stencil_description.h"
-#include "pomdog/graphics/forward_declarations.h"
-#include "pomdog/graphics/input_layout_description.h"
-#include "pomdog/graphics/primitive_topology.h"
-#include "pomdog/graphics/rasterizer_description.h"
-#include "pomdog/graphics/surface_format.h"
+#include "pomdog/gpu/blend_description.h"
+#include "pomdog/gpu/depth_stencil_description.h"
+#include "pomdog/gpu/forward_declarations.h"
+#include "pomdog/gpu/input_layout_description.h"
+#include "pomdog/gpu/primitive_topology.h"
+#include "pomdog/gpu/rasterizer_description.h"
+#include "pomdog/gpu/surface_format.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>

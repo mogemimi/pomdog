@@ -4,7 +4,7 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
-#include "pomdog/graphics/forward_declarations.h"
+#include "pomdog/gpu/forward_declarations.h"
 #include "pomdog/math/forward_declarations.h"
 #include "pomdog/math/vector2.h"
 

@@ -3,8 +3,8 @@
 #include "pomdog/experimental/image/svg_loader.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/filesystem/file_system.h"
-#include "pomdog/graphics/graphics_device.h"
-#include "pomdog/graphics/texture2d.h"
+#include "pomdog/gpu/graphics_device.h"
+#include "pomdog/gpu/texture2d.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/scope_guard.h"
 

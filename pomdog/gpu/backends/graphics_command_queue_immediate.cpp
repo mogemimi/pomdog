@@ -1,9 +1,9 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/backends/graphics_command_queue_immediate.h"
-#include "pomdog/graphics/backends/graphics_command_list_immediate.h"
-#include "pomdog/graphics/backends/native_graphics_context.h"
-#include "pomdog/graphics/graphics_command_list.h"
+#include "pomdog/gpu/backends/graphics_command_queue_immediate.h"
+#include "pomdog/gpu/backends/graphics_command_list_immediate.h"
+#include "pomdog/gpu/backends/native_graphics_context.h"
+#include "pomdog/gpu/graphics_command_list.h"
 #include "pomdog/utility/assert.h"
 
 namespace pomdog::detail {

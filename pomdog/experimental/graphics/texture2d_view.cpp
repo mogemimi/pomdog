@@ -2,8 +2,8 @@
 
 #include "pomdog/experimental/graphics/texture2d_view.h"
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/graphics/render_target2d.h"
-#include "pomdog/graphics/texture2d.h"
+#include "pomdog/gpu/render_target2d.h"
+#include "pomdog/gpu/texture2d.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN

@@ -1,7 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/direct3d11/format_helper.h"
-#include "pomdog/graphics/comparison_function.h"
+#include "pomdog/gpu/direct3d11/format_helper.h"
+#include "pomdog/gpu/comparison_function.h"
 
 namespace pomdog::detail::direct3d11 {
 

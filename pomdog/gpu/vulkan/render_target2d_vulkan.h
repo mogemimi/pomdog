@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "pomdog/graphics/forward_declarations.h"
-#include "pomdog/graphics/render_target2d.h"
-#include "pomdog/graphics/vulkan/texture2d_vulkan.h"
+#include "pomdog/gpu/forward_declarations.h"
+#include "pomdog/gpu/render_target2d.h"
+#include "pomdog/gpu/vulkan/texture2d_vulkan.h"
 #include <vulkan/vulkan.h>
 
 namespace pomdog::detail::vulkan {

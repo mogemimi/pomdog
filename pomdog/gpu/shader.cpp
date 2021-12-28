@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/shader.h"
+#include "pomdog/gpu/shader.h"
 
 namespace pomdog {
 

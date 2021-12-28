@@ -3,9 +3,9 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/graphics/direct3d11/prerequisites_direct3d11.h"
-#include "pomdog/graphics/graphics_device.h"
-#include "pomdog/graphics/presentation_parameters.h"
+#include "pomdog/gpu/direct3d11/prerequisites_direct3d11.h"
+#include "pomdog/gpu/graphics_device.h"
+#include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/platform/win32/prerequisites_win32.h"
 #include "pomdog/utility/errors.h"
 

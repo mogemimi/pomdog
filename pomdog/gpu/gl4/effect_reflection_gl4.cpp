@@ -1,9 +1,9 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/gl4/effect_reflection_gl4.h"
+#include "pomdog/gpu/gl4/effect_reflection_gl4.h"
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/graphics/effect_constant_description.h"
-#include "pomdog/graphics/gl4/error_checker.h"
+#include "pomdog/gpu/effect_constant_description.h"
+#include "pomdog/gpu/gl4/error_checker.h"
 #include "pomdog/logging/log.h"
 #include "pomdog/logging/log_level.h"
 #include "pomdog/utility/assert.h"

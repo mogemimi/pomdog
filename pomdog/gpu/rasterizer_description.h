@@ -4,8 +4,8 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
-#include "pomdog/graphics/cull_mode.h"
-#include "pomdog/graphics/fill_mode.h"
+#include "pomdog/gpu/cull_mode.h"
+#include "pomdog/gpu/fill_mode.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>

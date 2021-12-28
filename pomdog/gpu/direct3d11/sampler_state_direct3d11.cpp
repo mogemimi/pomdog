@@ -1,9 +1,9 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/direct3d11/sampler_state_direct3d11.h"
+#include "pomdog/gpu/direct3d11/sampler_state_direct3d11.h"
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/graphics/direct3d11/format_helper.h"
-#include "pomdog/graphics/sampler_description.h"
+#include "pomdog/gpu/direct3d11/format_helper.h"
+#include "pomdog/gpu/sampler_description.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN

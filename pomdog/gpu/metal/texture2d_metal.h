@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "pomdog/graphics/forward_declarations.h"
-#include "pomdog/graphics/texture2d.h"
+#include "pomdog/gpu/forward_declarations.h"
+#include "pomdog/gpu/texture2d.h"
 #include "pomdog/utility/errors.h"
 #import <Metal/MTLTexture.h>
 

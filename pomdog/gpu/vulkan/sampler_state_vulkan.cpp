@@ -1,8 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/vulkan/sampler_state_vulkan.h"
-#include "pomdog/graphics/sampler_description.h"
-#include "pomdog/graphics/vulkan/format_helper.h"
+#include "pomdog/gpu/vulkan/sampler_state_vulkan.h"
+#include "pomdog/gpu/sampler_description.h"
+#include "pomdog/gpu/vulkan/format_helper.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/exception.h"
 #include <tuple>

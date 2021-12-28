@@ -1,11 +1,11 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/gl4/sampler_state_gl4.h"
+#include "pomdog/gpu/gl4/sampler_state_gl4.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/unreachable.h"
-#include "pomdog/graphics/gl4/error_checker.h"
-#include "pomdog/graphics/gl4/format_helper.h"
-#include "pomdog/graphics/sampler_description.h"
+#include "pomdog/gpu/gl4/error_checker.h"
+#include "pomdog/gpu/gl4/format_helper.h"
+#include "pomdog/gpu/sampler_description.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN

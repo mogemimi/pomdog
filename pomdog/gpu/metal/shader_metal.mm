@@ -1,8 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/metal/shader_metal.h"
-#include "pomdog/graphics/backends/shader_bytecode.h"
-#include "pomdog/graphics/backends/shader_compile_options.h"
+#include "pomdog/gpu/metal/shader_metal.h"
+#include "pomdog/gpu/backends/shader_bytecode.h"
+#include "pomdog/gpu/backends/shader_compile_options.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/string_helper.h"
 #import <Metal/Metal.h>

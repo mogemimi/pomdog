@@ -5,19 +5,19 @@
 #include "pomdog/content/asset_builders/pipeline_state_builder.h"
 #include "pomdog/content/asset_builders/shader_builder.h"
 #include "pomdog/content/asset_manager.h"
-#include "pomdog/graphics/blend_description.h"
-#include "pomdog/graphics/buffer_usage.h"
-#include "pomdog/graphics/constant_buffer.h"
-#include "pomdog/graphics/depth_stencil_description.h"
-#include "pomdog/graphics/graphics_command_list.h"
-#include "pomdog/graphics/graphics_device.h"
-#include "pomdog/graphics/index_buffer.h"
-#include "pomdog/graphics/input_layout_helper.h"
-#include "pomdog/graphics/pipeline_state.h"
-#include "pomdog/graphics/presentation_parameters.h"
-#include "pomdog/graphics/primitive_topology.h"
-#include "pomdog/graphics/shader.h"
-#include "pomdog/graphics/vertex_buffer.h"
+#include "pomdog/gpu/blend_description.h"
+#include "pomdog/gpu/buffer_usage.h"
+#include "pomdog/gpu/constant_buffer.h"
+#include "pomdog/gpu/depth_stencil_description.h"
+#include "pomdog/gpu/graphics_command_list.h"
+#include "pomdog/gpu/graphics_device.h"
+#include "pomdog/gpu/index_buffer.h"
+#include "pomdog/gpu/input_layout_helper.h"
+#include "pomdog/gpu/pipeline_state.h"
+#include "pomdog/gpu/presentation_parameters.h"
+#include "pomdog/gpu/primitive_topology.h"
+#include "pomdog/gpu/shader.h"
+#include "pomdog/gpu/vertex_buffer.h"
 #include "pomdog/math/bounding_box.h"
 #include "pomdog/math/color.h"
 #include "pomdog/math/math.h"
@@ -36,7 +36,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstring>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-#include "pomdog/graphics/rasterizer_description.h"
+#include "pomdog/gpu/rasterizer_description.h"
 
 using pomdog::detail::AlignedNew;
 

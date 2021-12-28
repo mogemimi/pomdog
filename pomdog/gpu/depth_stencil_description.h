@@ -4,8 +4,8 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
-#include "pomdog/graphics/comparison_function.h"
-#include "pomdog/graphics/depth_stencil_operation.h"
+#include "pomdog/gpu/comparison_function.h"
+#include "pomdog/gpu/depth_stencil_operation.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>

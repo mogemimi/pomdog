@@ -1,11 +1,11 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/direct3d11/effect_reflection_direct3d11.h"
+#include "pomdog/gpu/direct3d11/effect_reflection_direct3d11.h"
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/graphics/backends/shader_bytecode.h"
-#include "pomdog/graphics/direct3d/hlsl_reflection_helper.h"
-#include "pomdog/graphics/direct3d/prerequisites_direct3d.h"
-#include "pomdog/graphics/effect_constant_description.h"
+#include "pomdog/gpu/backends/shader_bytecode.h"
+#include "pomdog/gpu/direct3d/hlsl_reflection_helper.h"
+#include "pomdog/gpu/direct3d/prerequisites_direct3d.h"
+#include "pomdog/gpu/effect_constant_description.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/exception.h"
 

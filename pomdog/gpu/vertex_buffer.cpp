@@ -1,10 +1,10 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/vertex_buffer.h"
+#include "pomdog/gpu/vertex_buffer.h"
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/graphics/backends/buffer_bind_mode.h"
-#include "pomdog/graphics/backends/native_buffer.h"
-#include "pomdog/graphics/buffer_usage.h"
+#include "pomdog/gpu/backends/buffer_bind_mode.h"
+#include "pomdog/gpu/backends/native_buffer.h"
+#include "pomdog/gpu/buffer_usage.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN

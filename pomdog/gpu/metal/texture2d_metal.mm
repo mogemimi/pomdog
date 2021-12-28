@@ -1,10 +1,10 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/metal/texture2d_metal.h"
-#include "pomdog/graphics/backends/surface_format_helper.h"
-#include "pomdog/graphics/backends/texture_helper.h"
-#include "pomdog/graphics/metal/metal_format_helper.h"
-#include "pomdog/graphics/surface_format.h"
+#include "pomdog/gpu/metal/texture2d_metal.h"
+#include "pomdog/gpu/backends/surface_format_helper.h"
+#include "pomdog/gpu/backends/texture_helper.h"
+#include "pomdog/gpu/metal/metal_format_helper.h"
+#include "pomdog/gpu/surface_format.h"
 #include "pomdog/utility/assert.h"
 #import <Metal/MTLDevice.h>
 #include <algorithm>

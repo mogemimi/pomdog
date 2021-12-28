@@ -1,14 +1,14 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/vulkan/pipeline_state_vulkan.h"
-#include "pomdog/graphics/backends/buffer_helper.h"
-#include "pomdog/graphics/backends/shader_bytecode.h"
-#include "pomdog/graphics/input_layout_description.h"
-#include "pomdog/graphics/pipeline_state_description.h"
-#include "pomdog/graphics/primitive_topology.h"
-#include "pomdog/graphics/vulkan/format_helper.h"
-#include "pomdog/graphics/vulkan/shader_vulkan.h"
-#include "pomdog/graphics/vulkan/vulkan_format_helper.h"
+#include "pomdog/gpu/vulkan/pipeline_state_vulkan.h"
+#include "pomdog/gpu/backends/buffer_helper.h"
+#include "pomdog/gpu/backends/shader_bytecode.h"
+#include "pomdog/gpu/input_layout_description.h"
+#include "pomdog/gpu/pipeline_state_description.h"
+#include "pomdog/gpu/primitive_topology.h"
+#include "pomdog/gpu/vulkan/format_helper.h"
+#include "pomdog/gpu/vulkan/shader_vulkan.h"
+#include "pomdog/gpu/vulkan/vulkan_format_helper.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/exception.h"
 

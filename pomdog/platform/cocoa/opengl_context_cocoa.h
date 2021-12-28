@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "pomdog/graphics/forward_declarations.h"
-#include "pomdog/graphics/gl4/opengl_context.h"
+#include "pomdog/gpu/forward_declarations.h"
+#include "pomdog/gpu/gl4/opengl_context.h"
 #import <Cocoa/Cocoa.h>
 #include <memory>
 

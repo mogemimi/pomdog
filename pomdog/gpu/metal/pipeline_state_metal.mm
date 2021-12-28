@@ -1,14 +1,14 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/metal/pipeline_state_metal.h"
+#include "pomdog/gpu/metal/pipeline_state_metal.h"
 #include "pomdog/basic/unreachable.h"
-#include "pomdog/graphics/backends/buffer_helper.h"
-#include "pomdog/graphics/metal/constants_metal.h"
-#include "pomdog/graphics/metal/metal_format_helper.h"
-#include "pomdog/graphics/metal/shader_metal.h"
-#include "pomdog/graphics/pipeline_state_description.h"
-#include "pomdog/graphics/primitive_topology.h"
-#include "pomdog/graphics/surface_format.h"
+#include "pomdog/gpu/backends/buffer_helper.h"
+#include "pomdog/gpu/metal/constants_metal.h"
+#include "pomdog/gpu/metal/metal_format_helper.h"
+#include "pomdog/gpu/metal/shader_metal.h"
+#include "pomdog/gpu/pipeline_state_description.h"
+#include "pomdog/gpu/primitive_topology.h"
+#include "pomdog/gpu/surface_format.h"
 #include "pomdog/utility/assert.h"
 #import <Metal/MTLVertexDescriptor.h>
 

@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "pomdog/graphics/backends/native_graphics_context.h"
-#include "pomdog/graphics/forward_declarations.h"
+#include "pomdog/gpu/backends/native_graphics_context.h"
+#include "pomdog/gpu/forward_declarations.h"
 #import <Metal/Metal.h>
 #import <MetalKit/MetalKit.h>
 #include <memory>

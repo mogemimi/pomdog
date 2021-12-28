@@ -7,7 +7,7 @@
 #include "pomdog/application/x11/x11_context.h"
 #include "pomdog/chrono/duration.h"
 #include "pomdog/chrono/game_clock.h"
-#include "pomdog/graphics/presentation_parameters.h"
+#include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/input/x11/keyboard_x11.h"
 #include "pomdog/input/x11/mouse_x11.h"
 #include "pomdog/platform/x11/opengl_context_x11.h"

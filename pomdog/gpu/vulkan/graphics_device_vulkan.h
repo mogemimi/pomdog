@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "pomdog/graphics/graphics_device.h"
+#include "pomdog/gpu/graphics_device.h"
 #include <memory>
 
 namespace pomdog::detail::vulkan {

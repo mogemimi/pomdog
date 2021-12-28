@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/vulkan/graphics_command_queue_vulkan.h"
+#include "pomdog/gpu/vulkan/graphics_command_queue_vulkan.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/exception.h"
 

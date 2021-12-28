@@ -1,14 +1,14 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/gl4/pipeline_state_gl4.h"
+#include "pomdog/gpu/gl4/pipeline_state_gl4.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/unreachable.h"
-#include "pomdog/graphics/gl4/effect_reflection_gl4.h"
-#include "pomdog/graphics/gl4/error_checker.h"
-#include "pomdog/graphics/gl4/input_layout_gl4.h"
-#include "pomdog/graphics/gl4/shader_gl4.h"
-#include "pomdog/graphics/pipeline_state_description.h"
-#include "pomdog/graphics/primitive_topology.h"
+#include "pomdog/gpu/gl4/effect_reflection_gl4.h"
+#include "pomdog/gpu/gl4/error_checker.h"
+#include "pomdog/gpu/gl4/input_layout_gl4.h"
+#include "pomdog/gpu/gl4/shader_gl4.h"
+#include "pomdog/gpu/pipeline_state_description.h"
+#include "pomdog/gpu/primitive_topology.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/scope_guard.h"
 

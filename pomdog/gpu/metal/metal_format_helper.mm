@@ -1,9 +1,9 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/metal/metal_format_helper.h"
+#include "pomdog/gpu/metal/metal_format_helper.h"
 #include "pomdog/basic/unreachable.h"
-#include "pomdog/graphics/comparison_function.h"
-#include "pomdog/graphics/surface_format.h"
+#include "pomdog/gpu/comparison_function.h"
+#include "pomdog/gpu/surface_format.h"
 
 namespace pomdog::detail::metal {
 

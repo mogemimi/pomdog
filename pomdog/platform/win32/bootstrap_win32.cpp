@@ -7,7 +7,7 @@
 #include "pomdog/application/win32/game_host_win32.h"
 #include "pomdog/application/win32/game_window_win32.h"
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/graphics/presentation_parameters.h"
+#include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/input/directinput/gamepad_directinput.h"
 #include "pomdog/logging/log.h"
 #include "pomdog/utility/errors.h"

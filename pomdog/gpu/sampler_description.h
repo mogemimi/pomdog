@@ -4,9 +4,9 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
-#include "pomdog/graphics/comparison_function.h"
-#include "pomdog/graphics/texture_address_mode.h"
-#include "pomdog/graphics/texture_filter.h"
+#include "pomdog/gpu/comparison_function.h"
+#include "pomdog/gpu/texture_address_mode.h"
+#include "pomdog/gpu/texture_filter.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>

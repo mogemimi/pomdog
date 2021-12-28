@@ -4,8 +4,8 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
-#include "pomdog/graphics/buffer_usage.h"
-#include "pomdog/graphics/forward_declarations.h"
+#include "pomdog/gpu/buffer_usage.h"
+#include "pomdog/gpu/forward_declarations.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>

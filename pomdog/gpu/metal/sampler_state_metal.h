@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "pomdog/graphics/forward_declarations.h"
-#include "pomdog/graphics/sampler_state.h"
+#include "pomdog/gpu/forward_declarations.h"
+#include "pomdog/gpu/sampler_state.h"
 #include "pomdog/utility/errors.h"
 #import <Metal/MTLSampler.h>
 

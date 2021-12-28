@@ -1,7 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/vulkan/render_target2d_vulkan.h"
-#include "pomdog/graphics/surface_format.h"
+#include "pomdog/gpu/vulkan/render_target2d_vulkan.h"
+#include "pomdog/gpu/surface_format.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/exception.h"
 

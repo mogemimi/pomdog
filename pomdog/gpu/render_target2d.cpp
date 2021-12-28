@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/render_target2d.h"
+#include "pomdog/gpu/render_target2d.h"
 
 namespace pomdog {
 

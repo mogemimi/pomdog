@@ -3,9 +3,9 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/graphics/backends/native_buffer.h"
-#include "pomdog/graphics/direct3d11/prerequisites_direct3d11.h"
-#include "pomdog/graphics/forward_declarations.h"
+#include "pomdog/gpu/backends/native_buffer.h"
+#include "pomdog/gpu/direct3d11/prerequisites_direct3d11.h"
+#include "pomdog/gpu/forward_declarations.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN

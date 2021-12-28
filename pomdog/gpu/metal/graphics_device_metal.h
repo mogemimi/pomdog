@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "pomdog/graphics/graphics_device.h"
-#include "pomdog/graphics/presentation_parameters.h"
+#include "pomdog/gpu/graphics_device.h"
+#include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/utility/errors.h"
 #include <memory>
 

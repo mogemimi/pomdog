@@ -3,7 +3,7 @@
 #include "pomdog/platform/x11/bootstrap_x11.h"
 #include "pomdog/application/game.h"
 #include "pomdog/application/x11/game_host_x11.h"
-#include "pomdog/graphics/presentation_parameters.h"
+#include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/utility/errors.h"
 #include <utility>
 

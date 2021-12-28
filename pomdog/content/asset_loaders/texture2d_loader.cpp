@@ -9,9 +9,9 @@
 #include "pomdog/content/utility/binary_reader.h"
 #include "pomdog/content/utility/make_fourcc.h"
 #include "pomdog/filesystem/file_system.h"
-#include "pomdog/graphics/graphics_device.h"
-#include "pomdog/graphics/surface_format.h"
-#include "pomdog/graphics/texture2d.h"
+#include "pomdog/gpu/graphics_device.h"
+#include "pomdog/gpu/surface_format.h"
+#include "pomdog/gpu/texture2d.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN

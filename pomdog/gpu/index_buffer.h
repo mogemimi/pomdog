@@ -4,9 +4,9 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
-#include "pomdog/graphics/buffer_usage.h"
-#include "pomdog/graphics/forward_declarations.h"
-#include "pomdog/graphics/index_element_size.h"
+#include "pomdog/gpu/buffer_usage.h"
+#include "pomdog/gpu/forward_declarations.h"
+#include "pomdog/gpu/index_element_size.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstddef>

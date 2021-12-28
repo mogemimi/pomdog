@@ -2,9 +2,9 @@
 
 #include "pomdog/platform/win32/opengl_context_win32.h"
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/graphics/gl4/error_checker.h"
-#include "pomdog/graphics/gl4/opengl_prerequisites.h"
-#include "pomdog/graphics/presentation_parameters.h"
+#include "pomdog/gpu/gl4/error_checker.h"
+#include "pomdog/gpu/gl4/opengl_prerequisites.h"
+#include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN

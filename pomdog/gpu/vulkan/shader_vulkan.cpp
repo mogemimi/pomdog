@@ -1,7 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/vulkan/shader_vulkan.h"
-#include "pomdog/graphics/backends/shader_bytecode.h"
+#include "pomdog/gpu/vulkan/shader_vulkan.h"
+#include "pomdog/gpu/backends/shader_bytecode.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/exception.h"
 

@@ -1,7 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/vulkan/buffer_vulkan.h"
-#include "pomdog/graphics/buffer_usage.h"
+#include "pomdog/gpu/vulkan/buffer_vulkan.h"
+#include "pomdog/gpu/buffer_usage.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/exception.h"
 #include <optional>

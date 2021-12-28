@@ -1,12 +1,12 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/backends/graphics_command_list_immediate.h"
+#include "pomdog/gpu/backends/graphics_command_list_immediate.h"
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/graphics/backends/native_graphics_context.h"
-#include "pomdog/graphics/constant_buffer.h"
-#include "pomdog/graphics/graphics_device.h"
-#include "pomdog/graphics/render_pass.h"
-#include "pomdog/graphics/viewport.h"
+#include "pomdog/gpu/backends/native_graphics_context.h"
+#include "pomdog/gpu/constant_buffer.h"
+#include "pomdog/gpu/graphics_device.h"
+#include "pomdog/gpu/render_pass.h"
+#include "pomdog/gpu/viewport.h"
 #include "pomdog/math/rectangle.h"
 #include "pomdog/utility/assert.h"
 

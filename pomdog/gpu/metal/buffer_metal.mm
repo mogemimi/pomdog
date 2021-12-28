@@ -1,8 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/metal/buffer_metal.h"
+#include "pomdog/gpu/metal/buffer_metal.h"
 #include "pomdog/basic/unreachable.h"
-#include "pomdog/graphics/buffer_usage.h"
+#include "pomdog/gpu/buffer_usage.h"
 #include "pomdog/logging/log.h"
 #include "pomdog/utility/assert.h"
 #import <Metal/Metal.h>

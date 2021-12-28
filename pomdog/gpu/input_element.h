@@ -3,8 +3,8 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/graphics/input_classification.h"
-#include "pomdog/graphics/input_element_format.h"
+#include "pomdog/gpu/input_classification.h"
+#include "pomdog/gpu/input_element_format.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>

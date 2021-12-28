@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "pomdog/graphics/depth_stencil_buffer.h"
-#include "pomdog/graphics/forward_declarations.h"
-#include "pomdog/graphics/surface_format.h"
+#include "pomdog/gpu/depth_stencil_buffer.h"
+#include "pomdog/gpu/forward_declarations.h"
+#include "pomdog/gpu/surface_format.h"
 #include "pomdog/utility/errors.h"
 #import <Metal/MTLTexture.h>
 

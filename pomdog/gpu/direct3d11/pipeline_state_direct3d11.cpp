@@ -1,16 +1,16 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/direct3d11/pipeline_state_direct3d11.h"
+#include "pomdog/gpu/direct3d11/pipeline_state_direct3d11.h"
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/graphics/backends/shader_bytecode.h"
-#include "pomdog/graphics/direct3d/prerequisites_direct3d.h"
-#include "pomdog/graphics/direct3d11/format_helper.h"
-#include "pomdog/graphics/direct3d11/graphics_device_direct3d11.h"
-#include "pomdog/graphics/direct3d11/shader_direct3d11.h"
-#include "pomdog/graphics/dxgi/dxgi_format_helper.h"
-#include "pomdog/graphics/input_layout_description.h"
-#include "pomdog/graphics/pipeline_state_description.h"
-#include "pomdog/graphics/primitive_topology.h"
+#include "pomdog/gpu/backends/shader_bytecode.h"
+#include "pomdog/gpu/direct3d/prerequisites_direct3d.h"
+#include "pomdog/gpu/direct3d11/format_helper.h"
+#include "pomdog/gpu/direct3d11/graphics_device_direct3d11.h"
+#include "pomdog/gpu/direct3d11/shader_direct3d11.h"
+#include "pomdog/gpu/dxgi/dxgi_format_helper.h"
+#include "pomdog/gpu/input_layout_description.h"
+#include "pomdog/gpu/pipeline_state_description.h"
+#include "pomdog/gpu/primitive_topology.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN

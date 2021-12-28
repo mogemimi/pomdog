@@ -5,7 +5,7 @@
 #include "pomdog/application/system_events.h"
 #include "pomdog/application/win32/dark_mode.h"
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/graphics/presentation_parameters.h"
+#include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/input/win32/keyboard_win32.h"
 #include "pomdog/input/win32/mouse_win32.h"
 #include "pomdog/math/rectangle.h"

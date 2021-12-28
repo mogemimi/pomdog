@@ -1,12 +1,12 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/shader_compilers/glsl_compiler.h"
+#include "pomdog/gpu/shader_compilers/glsl_compiler.h"
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/graphics/backends/shader_bytecode.h"
-#include "pomdog/graphics/backends/shader_compile_options.h"
-#include "pomdog/graphics/graphics_device.h"
-#include "pomdog/graphics/shader.h"
-#include "pomdog/graphics/shader_language.h"
+#include "pomdog/gpu/backends/shader_bytecode.h"
+#include "pomdog/gpu/backends/shader_compile_options.h"
+#include "pomdog/gpu/graphics_device.h"
+#include "pomdog/gpu/shader.h"
+#include "pomdog/gpu/shader_language.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
 

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "pomdog/application/game_window.h"
-#include "pomdog/graphics/gl4/opengl_prerequisites.h"
+#include "pomdog/gpu/gl4/opengl_prerequisites.h"
 #include "pomdog/math/rectangle.h"
 #include "pomdog/utility/errors.h"
 #include <GL/glx.h>

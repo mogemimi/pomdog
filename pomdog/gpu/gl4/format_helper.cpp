@@ -1,8 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/gl4/format_helper.h"
+#include "pomdog/gpu/gl4/format_helper.h"
 #include "pomdog/basic/unreachable.h"
-#include "pomdog/graphics/comparison_function.h"
+#include "pomdog/gpu/comparison_function.h"
 
 namespace pomdog::detail::gl4 {
 

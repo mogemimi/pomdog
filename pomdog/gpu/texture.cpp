@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/texture.h"
+#include "pomdog/gpu/texture.h"
 
 namespace pomdog {
 

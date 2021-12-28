@@ -3,10 +3,10 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/graphics/forward_declarations.h"
-#include "pomdog/graphics/gl4/opengl_prerequisites.h"
-#include "pomdog/graphics/gl4/typesafe_gl4.h"
-#include "pomdog/graphics/gl4/vertex_buffer_binding_gl4.h"
+#include "pomdog/gpu/forward_declarations.h"
+#include "pomdog/gpu/gl4/opengl_prerequisites.h"
+#include "pomdog/gpu/gl4/typesafe_gl4.h"
+#include "pomdog/gpu/gl4/vertex_buffer_binding_gl4.h"
 #include "pomdog/utility/tagged.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN

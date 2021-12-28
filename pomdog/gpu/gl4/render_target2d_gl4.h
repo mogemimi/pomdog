@@ -3,11 +3,11 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/graphics/forward_declarations.h"
-#include "pomdog/graphics/gl4/opengl_prerequisites.h"
-#include "pomdog/graphics/gl4/texture2d_gl4.h"
-#include "pomdog/graphics/render_target2d.h"
-#include "pomdog/graphics/surface_format.h"
+#include "pomdog/gpu/forward_declarations.h"
+#include "pomdog/gpu/gl4/opengl_prerequisites.h"
+#include "pomdog/gpu/gl4/texture2d_gl4.h"
+#include "pomdog/gpu/render_target2d.h"
+#include "pomdog/gpu/surface_format.h"
 #include "pomdog/utility/errors.h"
 #include "pomdog/utility/tagged.h"
 

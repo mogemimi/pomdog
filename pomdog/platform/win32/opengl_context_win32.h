@@ -3,8 +3,8 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/graphics/forward_declarations.h"
-#include "pomdog/graphics/gl4/opengl_context.h"
+#include "pomdog/gpu/forward_declarations.h"
+#include "pomdog/gpu/gl4/opengl_context.h"
 #include "pomdog/platform/win32/prerequisites_win32.h"
 #include "pomdog/utility/errors.h"
 

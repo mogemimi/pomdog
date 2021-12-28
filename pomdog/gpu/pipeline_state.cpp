@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/pipeline_state.h"
+#include "pomdog/gpu/pipeline_state.h"
 
 namespace pomdog {
 

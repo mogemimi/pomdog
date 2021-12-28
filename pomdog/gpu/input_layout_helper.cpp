@@ -1,8 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/input_layout_helper.h"
-#include "pomdog/graphics/backends/buffer_helper.h"
-#include "pomdog/graphics/input_element_format.h"
+#include "pomdog/gpu/input_layout_helper.h"
+#include "pomdog/gpu/backends/buffer_helper.h"
+#include "pomdog/gpu/input_element_format.h"
 #include "pomdog/utility/assert.h"
 
 namespace pomdog {

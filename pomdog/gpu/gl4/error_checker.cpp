@@ -1,8 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/gl4/error_checker.h"
+#include "pomdog/gpu/gl4/error_checker.h"
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/graphics/gl4/opengl_prerequisites.h"
+#include "pomdog/gpu/gl4/opengl_prerequisites.h"
 #include "pomdog/logging/log.h"
 #include "pomdog/utility/errors.h"
 

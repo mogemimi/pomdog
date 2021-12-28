@@ -1,9 +1,9 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/gl4/rasterizer_state_gl4.h"
+#include "pomdog/gpu/gl4/rasterizer_state_gl4.h"
 #include "pomdog/basic/unreachable.h"
-#include "pomdog/graphics/gl4/error_checker.h"
-#include "pomdog/graphics/rasterizer_description.h"
+#include "pomdog/gpu/gl4/error_checker.h"
+#include "pomdog/gpu/rasterizer_description.h"
 #include "pomdog/utility/assert.h"
 
 namespace pomdog::detail::gl4 {

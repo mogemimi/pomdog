@@ -8,7 +8,7 @@
 #include "pomdog/application/game.h"
 #include "pomdog/application/game_host.h"
 #include "pomdog/application/system_events.h"
-#include "pomdog/graphics/presentation_parameters.h"
+#include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
 #import <MetalKit/MTKView.h>

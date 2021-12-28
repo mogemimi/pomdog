@@ -1,10 +1,10 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/graphics/vulkan/texture2d_vulkan.h"
-#include "pomdog/graphics/backends/texture_helper.h"
-#include "pomdog/graphics/surface_format.h"
-#include "pomdog/graphics/vulkan/buffer_vulkan.h"
-#include "pomdog/graphics/vulkan/vulkan_format_helper.h"
+#include "pomdog/gpu/vulkan/texture2d_vulkan.h"
+#include "pomdog/gpu/backends/texture_helper.h"
+#include "pomdog/gpu/surface_format.h"
+#include "pomdog/gpu/vulkan/buffer_vulkan.h"
+#include "pomdog/gpu/vulkan/vulkan_format_helper.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/exception.h"
 

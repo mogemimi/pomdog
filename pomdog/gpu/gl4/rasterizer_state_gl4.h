@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "pomdog/graphics/cull_mode.h"
-#include "pomdog/graphics/forward_declarations.h"
-#include "pomdog/graphics/gl4/opengl_prerequisites.h"
+#include "pomdog/gpu/cull_mode.h"
+#include "pomdog/gpu/forward_declarations.h"
+#include "pomdog/gpu/gl4/opengl_prerequisites.h"
 #include "pomdog/utility/errors.h"
 #include "pomdog/utility/tagged.h"
 
