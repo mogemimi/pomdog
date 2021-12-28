@@ -33,16 +33,16 @@ public:
     IndexBuffer& operator=(IndexBuffer&&) = default;
 
     /// Gets the number of indices.
-    std::size_t GetIndexCount() const noexcept;
+    [[nodiscard]] std::size_t GetIndexCount() const noexcept;
 
     /// Gets the size in bytes of per-index element.
-    IndexElementSize GetElementSize() const noexcept;
+    [[nodiscard]] IndexElementSize GetElementSize() const noexcept;
 
     /// Gets the size in bytes of this index buffer.
-    std::size_t GetSizeInBytes() const noexcept;
+    [[nodiscard]] std::size_t GetSizeInBytes() const noexcept;
 
     /// Gets the expected usage hint of this index buffer.
-    BufferUsage GetBufferUsage() const noexcept;
+    [[nodiscard]] BufferUsage GetBufferUsage() const noexcept;
 
     /// Sets index buffer data.
     void SetData(const void* source, std::size_t elementCount);
@@ -54,7 +54,7 @@ public:
         std::size_t elementCount);
 
     /// Gets the pointer of the native index buffer resource.
-    detail::NativeBuffer* GetNativeBuffer();
+    [[nodiscard]] detail::NativeBuffer* GetNativeBuffer();
 
 private:
     std::unique_ptr<detail::NativeBuffer> nativeBuffer;

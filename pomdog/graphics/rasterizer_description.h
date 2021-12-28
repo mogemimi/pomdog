@@ -32,12 +32,12 @@ struct POMDOG_EXPORT RasterizerDescription final {
     /// Enable multisample antialiasing (MSAA).
     bool MultisampleEnable;
 
-    static RasterizerDescription CreateDefault() noexcept
+    [[nodiscard]] static RasterizerDescription CreateDefault() noexcept
     {
         return CreateCullCounterClockwise();
     }
 
-    static RasterizerDescription CreateCullClockwise() noexcept
+    [[nodiscard]] static RasterizerDescription CreateCullClockwise() noexcept
     {
         RasterizerDescription desc;
         desc.CullMode = CullMode::ClockwiseFace;
@@ -48,7 +48,7 @@ struct POMDOG_EXPORT RasterizerDescription final {
         return desc;
     }
 
-    static RasterizerDescription CreateCullCounterClockwise() noexcept
+    [[nodiscard]] static RasterizerDescription CreateCullCounterClockwise() noexcept
     {
         RasterizerDescription desc;
         desc.CullMode = CullMode::CounterClockwiseFace;
@@ -59,7 +59,7 @@ struct POMDOG_EXPORT RasterizerDescription final {
         return desc;
     }
 
-    static RasterizerDescription CreateCullNone() noexcept
+    [[nodiscard]] static RasterizerDescription CreateCullNone() noexcept
     {
         RasterizerDescription desc;
         desc.CullMode = CullMode::None;

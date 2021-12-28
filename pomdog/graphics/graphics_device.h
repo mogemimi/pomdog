@@ -26,10 +26,12 @@ public:
     virtual ~GraphicsDevice();
 
     /// Gets the currently supported shader language.
-    virtual ShaderLanguage GetSupportedLanguage() const noexcept = 0;
+    [[nodiscard]] virtual ShaderLanguage
+    GetSupportedLanguage() const noexcept = 0;
 
     /// Gets the presentation parameters.
-    virtual PresentationParameters GetPresentationParameters() const noexcept = 0;
+    [[nodiscard]] virtual PresentationParameters
+    GetPresentationParameters() const noexcept = 0;
 
     /// Creates a graphics command list.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<GraphicsCommandList>, std::unique_ptr<Error>>

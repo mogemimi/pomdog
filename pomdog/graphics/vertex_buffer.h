@@ -32,16 +32,16 @@ public:
     VertexBuffer& operator=(VertexBuffer&&) = default;
 
     /// Gets the number of vertices.
-    std::size_t GetVertexCount() const noexcept;
+    [[nodiscard]] std::size_t GetVertexCount() const noexcept;
 
     /// Gets the size in bytes of per-vertex data.
-    std::size_t GetStrideBytes() const noexcept;
+    [[nodiscard]] std::size_t GetStrideBytes() const noexcept;
 
     /// Gets the size in bytes of this vertex buffer.
-    std::size_t GetSizeInBytes() const noexcept;
+    [[nodiscard]] std::size_t GetSizeInBytes() const noexcept;
 
     /// Gets the expected usage hint of this vertex buffer.
-    BufferUsage GetBufferUsage() const noexcept;
+    [[nodiscard]] BufferUsage GetBufferUsage() const noexcept;
 
     /// Sets vertex buffer data.
     void SetData(const void* source, std::size_t elementCount);
@@ -54,7 +54,7 @@ public:
         std::size_t strideInBytes);
 
     /// Gets the pointer of the native vertex buffer resource.
-    detail::NativeBuffer* GetNativeBuffer();
+    [[nodiscard]] detail::NativeBuffer* GetNativeBuffer();
 
 private:
     std::unique_ptr<detail::NativeBuffer> nativeBuffer;

@@ -62,13 +62,13 @@ public:
         std::size_t sizeInBytes);
 
     /// Gets the size in bytes of this constant buffer.
-    std::size_t GetSizeInBytes() const noexcept;
+    [[nodiscard]] std::size_t GetSizeInBytes() const noexcept;
 
     /// Gets the expected usage hint of this constant buffer.
-    BufferUsage GetBufferUsage() const noexcept;
+    [[nodiscard]] BufferUsage GetBufferUsage() const noexcept;
 
     /// Gets the pointer of the native constant buffer resource.
-    detail::NativeBuffer* GetNativeBuffer();
+    [[nodiscard]] detail::NativeBuffer* GetNativeBuffer();
 
 private:
     std::unique_ptr<detail::NativeBuffer> nativeBuffer;

@@ -24,16 +24,16 @@ public:
     virtual ~Texture2D() override;
 
     /// Gets the width of the texture data, in pixels.
-    virtual std::int32_t GetWidth() const noexcept = 0;
+    [[nodiscard]] virtual std::int32_t GetWidth() const noexcept = 0;
 
     /// Gets the height of the texture data, in pixels.
-    virtual std::int32_t GetHeight() const noexcept = 0;
+    [[nodiscard]] virtual std::int32_t GetHeight() const noexcept = 0;
 
     /// Gets the mipmap level.
-    virtual std::int32_t GetLevelCount() const noexcept = 0;
+    [[nodiscard]] virtual std::int32_t GetLevelCount() const noexcept = 0;
 
     /// Gets the format of the pixel data in the texture.
-    virtual SurfaceFormat GetFormat() const noexcept = 0;
+    [[nodiscard]] virtual SurfaceFormat GetFormat() const noexcept = 0;
 
     /// Sets texture data.
     virtual void SetData(const void* pixelData) = 0;

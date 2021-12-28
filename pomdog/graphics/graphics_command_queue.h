@@ -23,7 +23,7 @@ public:
 
     virtual ~GraphicsCommandQueue();
 
-    virtual std::size_t GetCommandCount() const noexcept = 0;
+    [[nodiscard]] virtual std::size_t GetCommandCount() const noexcept = 0;
 
     virtual void Reset() = 0;
 

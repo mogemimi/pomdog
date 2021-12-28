@@ -38,14 +38,12 @@ public:
         float minDepth, float maxDepth) noexcept;
 
     /// Projects a position from object space into screen space.
-    Vector3 Project(
-        const Vector3& source,
-        const Matrix4x4& worldViewProjection) const;
+    [[nodiscard]] Vector3
+    Project(const Vector3& source, const Matrix4x4& worldViewProjection) const;
 
     /// Projects a position from screen space into world space.
-    Vector3 Unproject(
-        const Vector3& source,
-        const Matrix4x4& worldViewProjection) const;
+    [[nodiscard]] Vector3
+    Unproject(const Vector3& source, const Matrix4x4& worldViewProjection) const;
 
     /// Gets the boundary of this viewport.
     [[nodiscard]] Rectangle GetBounds() const noexcept;

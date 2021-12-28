@@ -29,7 +29,7 @@ public:
     virtual void Reset() = 0;
 
     /// Gets the count of graphics commands.
-    virtual std::size_t GetCount() const noexcept = 0;
+    [[nodiscard]] virtual std::size_t GetCount() const noexcept = 0;
 
     /// Draws the specified non-indexed primitives.
     ///
