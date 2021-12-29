@@ -8,7 +8,7 @@
 #include "pomdog/gpu/blend_descriptor.h"
 #include "pomdog/gpu/constant_buffer.h"
 #include "pomdog/gpu/depth_stencil_descriptor.h"
-#include "pomdog/gpu/graphics_command_list.h"
+#include "pomdog/gpu/command_list.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/input_layout_helper.h"
 #include "pomdog/gpu/pipeline_state.h"
@@ -45,17 +45,17 @@ namespace {
 } // namespace
 
 FXAA::FXAA(
-    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     AssetManager& assets)
 {
     samplerLinear = std::get<0>(graphicsDevice->CreateSamplerState(
-        SamplerDescriptor::CreateLinearClamp()));
+        gpu::SamplerDescriptor::CreateLinearClamp()));
 
-    auto inputLayout = InputLayoutHelper{}
+    auto inputLayout = gpu::InputLayoutHelper{}
         .Float3().Float2();
 
-    auto vertexShaderBuilder = assets.CreateBuilder<Shader>(ShaderPipelineStage::VertexShader);
-    auto pixelShaderBuilder = assets.CreateBuilder<Shader>(ShaderPipelineStage::PixelShader);
+    auto vertexShaderBuilder = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader);
+    auto pixelShaderBuilder = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader);
 
 #if defined(POMDOG_PLATFORM_WIN32) || \
     defined(POMDOG_PLATFORM_LINUX) || \
@@ -86,15 +86,15 @@ FXAA::FXAA(
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
     std::unique_ptr<Error> pipelineStateErr;
-    std::tie(pipelineState, pipelineStateErr) = assets.CreateBuilder<PipelineState>()
+    std::tie(pipelineState, pipelineStateErr) = assets.CreateBuilder<gpu::PipelineState>()
         .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
         .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
         .SetVertexShader(std::move(vertexShader))
         .SetPixelShader(std::move(pixelShader))
         .SetInputLayout(inputLayout.CreateInputLayout())
-        .SetPrimitiveTopology(PrimitiveTopology::TriangleList)
-        .SetBlendState(BlendDescriptor::CreateOpaque())
-        .SetDepthStencilState(DepthStencilDescriptor::CreateNone())
+        .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
+        .SetBlendState(gpu::BlendDescriptor::CreateOpaque())
+        .SetDepthStencilState(gpu::DepthStencilDescriptor::CreateNone())
         .SetConstantBufferBindSlot("ImageEffectConstants", 0)
         .Build();
     if (pipelineStateErr != nullptr) {
@@ -103,9 +103,9 @@ FXAA::FXAA(
 }
 
 void FXAA::Apply(
-    GraphicsCommandList& commandList,
-    const std::shared_ptr<RenderTarget2D>& source,
-    const std::shared_ptr<ConstantBuffer>& constantBuffer)
+    gpu::CommandList& commandList,
+    const std::shared_ptr<gpu::RenderTarget2D>& source,
+    const std::shared_ptr<gpu::ConstantBuffer>& constantBuffer)
 {
     POMDOG_ASSERT(source);
     POMDOG_ASSERT(constantBuffer);

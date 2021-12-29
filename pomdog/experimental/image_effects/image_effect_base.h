@@ -18,8 +18,8 @@ public:
     virtual ~ImageEffectPreRenderable();
 
     virtual void PreRender(
-        GraphicsCommandList& commandList,
-        const std::shared_ptr<ConstantBuffer>& constantBuffer,
+        gpu::CommandList& commandList,
+        const std::shared_ptr<gpu::ConstantBuffer>& constantBuffer,
         const std::function<void()>& draw) = 0;
 };
 
@@ -28,9 +28,9 @@ public:
     virtual ~ImageEffectBase();
 
     virtual void Apply(
-        GraphicsCommandList& commandList,
-        const std::shared_ptr<RenderTarget2D>& source,
-        const std::shared_ptr<ConstantBuffer>& constantBuffer) = 0;
+        gpu::CommandList& commandList,
+        const std::shared_ptr<gpu::RenderTarget2D>& source,
+        const std::shared_ptr<gpu::ConstantBuffer>& constantBuffer) = 0;
 };
 
 } // namespace pomdog

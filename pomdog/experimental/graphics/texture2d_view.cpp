@@ -16,11 +16,11 @@ std::int32_t Texture2DVariant::GetWidth() const
 {
     POMDOG_ASSERT(variant != nullptr);
     if (index == Texture2DViewIndex::Texture2D) {
-        auto texture = std::static_pointer_cast<Texture2D>(variant);
+        auto texture = std::static_pointer_cast<gpu::Texture2D>(variant);
         POMDOG_ASSERT(texture != nullptr);
         return texture->GetWidth();
     }
-    auto renderTarget = std::static_pointer_cast<RenderTarget2D>(variant);
+    auto renderTarget = std::static_pointer_cast<gpu::RenderTarget2D>(variant);
     POMDOG_ASSERT(renderTarget != nullptr);
     return renderTarget->GetWidth();
 }
@@ -29,24 +29,24 @@ std::int32_t Texture2DVariant::GetHeight() const
 {
     POMDOG_ASSERT(variant != nullptr);
     if (index == Texture2DViewIndex::Texture2D) {
-        auto texture = std::static_pointer_cast<Texture2D>(variant);
+        auto texture = std::static_pointer_cast<gpu::Texture2D>(variant);
         POMDOG_ASSERT(texture != nullptr);
         return texture->GetHeight();
     }
-    auto renderTarget = std::static_pointer_cast<RenderTarget2D>(variant);
+    auto renderTarget = std::static_pointer_cast<gpu::RenderTarget2D>(variant);
     POMDOG_ASSERT(renderTarget != nullptr);
     return renderTarget->GetHeight();
 }
 
-SurfaceFormat Texture2DVariant::GetFormat() const
+PixelFormat Texture2DVariant::GetFormat() const
 {
     POMDOG_ASSERT(variant != nullptr);
     if (index == Texture2DViewIndex::Texture2D) {
-        auto texture = std::static_pointer_cast<Texture2D>(variant);
+        auto texture = std::static_pointer_cast<gpu::Texture2D>(variant);
         POMDOG_ASSERT(texture != nullptr);
         return texture->GetFormat();
     }
-    auto renderTarget = std::static_pointer_cast<RenderTarget2D>(variant);
+    auto renderTarget = std::static_pointer_cast<gpu::RenderTarget2D>(variant);
     POMDOG_ASSERT(renderTarget != nullptr);
     return renderTarget->GetFormat();
 }
@@ -55,52 +55,52 @@ Texture2DView::Texture2DView(std::nullptr_t)
 {
 }
 
-Texture2DView::Texture2DView(const std::shared_ptr<Texture2D>& textureIn)
+Texture2DView::Texture2DView(const std::shared_ptr<gpu::Texture2D>& textureIn)
 {
     body.variant = textureIn;
     body.index = Texture2DViewIndex::Texture2D;
 }
 
-Texture2DView::Texture2DView(std::shared_ptr<Texture2D>&& textureIn)
+Texture2DView::Texture2DView(std::shared_ptr<gpu::Texture2D>&& textureIn)
 {
     body.variant = std::move(textureIn);
     body.index = Texture2DViewIndex::Texture2D;
 }
 
-Texture2DView::Texture2DView(std::shared_ptr<RenderTarget2D>&& renderTargetIn)
+Texture2DView::Texture2DView(std::shared_ptr<gpu::RenderTarget2D>&& renderTargetIn)
 {
     body.variant = renderTargetIn;
     body.index = Texture2DViewIndex::RenderTarget2D;
 }
 
-Texture2DView::Texture2DView(const std::shared_ptr<RenderTarget2D>& renderTargetIn)
+Texture2DView::Texture2DView(const std::shared_ptr<gpu::RenderTarget2D>& renderTargetIn)
 {
     body.variant = std::move(renderTargetIn);
     body.index = Texture2DViewIndex::RenderTarget2D;
 }
 
-Texture2DView& Texture2DView::operator=(const std::shared_ptr<Texture2D>& textureIn)
+Texture2DView& Texture2DView::operator=(const std::shared_ptr<gpu::Texture2D>& textureIn)
 {
     body.variant = textureIn;
     body.index = Texture2DViewIndex::Texture2D;
     return *this;
 }
 
-Texture2DView& Texture2DView::operator=(std::shared_ptr<Texture2D>&& textureIn)
+Texture2DView& Texture2DView::operator=(std::shared_ptr<gpu::Texture2D>&& textureIn)
 {
     body.variant = std::move(textureIn);
     body.index = Texture2DViewIndex::Texture2D;
     return *this;
 }
 
-Texture2DView& Texture2DView::operator=(std::shared_ptr<RenderTarget2D>&& renderTargetIn)
+Texture2DView& Texture2DView::operator=(std::shared_ptr<gpu::RenderTarget2D>&& renderTargetIn)
 {
     body.variant = std::move(renderTargetIn);
     body.index = Texture2DViewIndex::RenderTarget2D;
     return *this;
 }
 
-Texture2DView& Texture2DView::operator=(const std::shared_ptr<RenderTarget2D>& renderTargetIn)
+Texture2DView& Texture2DView::operator=(const std::shared_ptr<gpu::RenderTarget2D>& renderTargetIn)
 {
     body.variant = renderTargetIn;
     body.index = Texture2DViewIndex::RenderTarget2D;
@@ -148,16 +148,16 @@ Texture2DViewIndex Texture2DView::GetIndex() const noexcept
     return body.index;
 }
 
-std::shared_ptr<Texture2D> Texture2DView::AsTexture2D() const noexcept
+std::shared_ptr<gpu::Texture2D> Texture2DView::AsTexture2D() const noexcept
 {
     POMDOG_ASSERT(body.index == Texture2DViewIndex::Texture2D);
-    return std::static_pointer_cast<Texture2D>(body.variant);
+    return std::static_pointer_cast<gpu::Texture2D>(body.variant);
 }
 
-std::shared_ptr<RenderTarget2D> Texture2DView::AsRenderTarget2D() const noexcept
+std::shared_ptr<gpu::RenderTarget2D> Texture2DView::AsRenderTarget2D() const noexcept
 {
     POMDOG_ASSERT(body.index == Texture2DViewIndex::RenderTarget2D);
-    return std::static_pointer_cast<RenderTarget2D>(body.variant);
+    return std::static_pointer_cast<gpu::RenderTarget2D>(body.variant);
 }
 
 } // namespace pomdog

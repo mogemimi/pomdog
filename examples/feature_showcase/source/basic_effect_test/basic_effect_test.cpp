@@ -7,7 +7,7 @@ namespace feature_showcase {
 BasicEffectTest::BasicEffectTest(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
     , graphicsDevice(gameHostIn->GetGraphicsDevice())
-    , commandQueue(gameHostIn->GetGraphicsCommandQueue())
+    , commandQueue(gameHostIn->GetCommandQueue())
 {
 }
 
@@ -19,13 +19,13 @@ std::unique_ptr<Error> BasicEffectTest::Initialize()
     std::unique_ptr<Error> err;
 
     // NOTE: Create graphics command list
-    std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
+    std::tie(commandList, err) = graphicsDevice->CreateCommandList();
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to create graphics command list");
     }
 
     // NOTE: Load texture from image file
-    std::tie(texture, err) = assets->Load<Texture2D>("Textures/pomdog.png");
+    std::tie(texture, err) = assets->Load<gpu::Texture2D>("Textures/pomdog.png");
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to load texture");
     }
@@ -70,7 +70,7 @@ std::unique_ptr<Error> BasicEffectTest::Initialize()
             verticesCombo.data(),
             verticesCombo.size(),
             sizeof(VertexCombined),
-            BufferUsage::Immutable);
+            gpu::BufferUsage::Immutable);
 
         if (err != nullptr) {
             return errors::Wrap(std::move(err), "failed to create vertex buffer");
@@ -116,7 +116,7 @@ std::unique_ptr<Error> BasicEffectTest::Initialize()
             verticesCombo.data(),
             verticesCombo.size(),
             sizeof(VertexCombined),
-            BufferUsage::Immutable);
+            gpu::BufferUsage::Immutable);
 
         if (err != nullptr) {
             return errors::Wrap(std::move(err), "failed to create vertex buffer");
@@ -142,10 +142,10 @@ std::unique_ptr<Error> BasicEffectTest::Initialize()
         }};
 
         std::tie(indexBuffer, err) = graphicsDevice->CreateIndexBuffer(
-            IndexElementSize::SixteenBits,
+            gpu::IndexElementSize::SixteenBits,
             indices.data(),
             indices.size(),
-            BufferUsage::Immutable);
+            gpu::BufferUsage::Immutable);
 
         if (err != nullptr) {
             return errors::Wrap(std::move(err), "failed to create index buffer");
@@ -155,7 +155,7 @@ std::unique_ptr<Error> BasicEffectTest::Initialize()
         // NOTE: Create constant buffer
         std::tie(modelConstantBuffer, err) = graphicsDevice->CreateConstantBuffer(
             sizeof(BasicEffect::ModelConstantBuffer),
-            BufferUsage::Dynamic);
+            gpu::BufferUsage::Dynamic);
 
         if (err != nullptr) {
             return errors::Wrap(std::move(err), "failed to create constant buffer");
@@ -163,7 +163,7 @@ std::unique_ptr<Error> BasicEffectTest::Initialize()
 
         std::tie(worldConstantBuffer, err) = graphicsDevice->CreateConstantBuffer(
             sizeof(BasicEffect::WorldConstantBuffer),
-            BufferUsage::Dynamic);
+            gpu::BufferUsage::Dynamic);
 
         if (err != nullptr) {
             return errors::Wrap(std::move(err), "failed to create constant buffer");
@@ -172,7 +172,7 @@ std::unique_ptr<Error> BasicEffectTest::Initialize()
     {
         // NOTE: Create sampler state
         std::tie(sampler, err) = graphicsDevice->CreateSamplerState(
-            SamplerDescriptor::CreateLinearClamp());
+            gpu::SamplerDescriptor::CreateLinearClamp());
 
         if (err != nullptr) {
             return errors::Wrap(std::move(err), "failed to create sampler state");
@@ -190,10 +190,10 @@ std::unique_ptr<Error> BasicEffectTest::Initialize()
         std::tie(pipelineState1, err) = BasicEffect::CreateBasicEffect(*assets, effectDesc)
             .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
             .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
-            .SetPrimitiveTopology(PrimitiveTopology::TriangleList)
-            .SetDepthStencilState(DepthStencilDescriptor::CreateDefault())
-            .SetBlendState(BlendDescriptor::CreateNonPremultiplied())
-            .SetRasterizerState(RasterizerDescriptor::CreateDefault())
+            .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
+            .SetDepthStencilState(gpu::DepthStencilDescriptor::CreateDefault())
+            .SetBlendState(gpu::BlendDescriptor::CreateNonPremultiplied())
+            .SetRasterizerState(gpu::RasterizerDescriptor::CreateDefault())
             .Build();
         if (err != nullptr) {
             return errors::Wrap(std::move(err), "failed to create pipeline state");
@@ -211,10 +211,10 @@ std::unique_ptr<Error> BasicEffectTest::Initialize()
         std::tie(pipelineState2, err) = BasicEffect::CreateBasicEffect(*assets, effectDesc)
             .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
             .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
-            .SetPrimitiveTopology(PrimitiveTopology::TriangleList)
-            .SetDepthStencilState(DepthStencilDescriptor::CreateDefault())
-            .SetBlendState(BlendDescriptor::CreateNonPremultiplied())
-            .SetRasterizerState(RasterizerDescriptor::CreateDefault())
+            .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
+            .SetDepthStencilState(gpu::DepthStencilDescriptor::CreateDefault())
+            .SetBlendState(gpu::BlendDescriptor::CreateNonPremultiplied())
+            .SetRasterizerState(gpu::RasterizerDescriptor::CreateDefault())
             .Build();
         if (err != nullptr) {
             return errors::Wrap(std::move(err), "failed to create pipeline state");
@@ -278,8 +278,8 @@ void BasicEffectTest::Draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
-    Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
-    RenderPass pass;
+    gpu::Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
+    gpu::RenderPass pass;
     pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
     pass.DepthStencilBuffer = nullptr;
     pass.ClearDepth = 1.0f;

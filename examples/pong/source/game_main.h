@@ -153,9 +153,9 @@ public:
 private:
     std::shared_ptr<GameHost> gameHost;
     std::shared_ptr<GameWindow> window;
-    std::shared_ptr<GraphicsDevice> graphicsDevice;
-    std::shared_ptr<GraphicsCommandQueue> commandQueue;
-    std::shared_ptr<GraphicsCommandList> commandList;
+    std::shared_ptr<gpu::GraphicsDevice> graphicsDevice;
+    std::shared_ptr<gpu::CommandQueue> commandQueue;
+    std::shared_ptr<gpu::CommandList> commandList;
     std::shared_ptr<AssetManager> assets;
     std::shared_ptr<GameClock> clock;
     std::shared_ptr<AudioEngine> audioEngine;
@@ -163,8 +163,8 @@ private:
     std::shared_ptr<SpriteBatch> spriteBatch;
     std::shared_ptr<SpriteFont> spriteFont;
     std::shared_ptr<PrimitiveBatch> primitiveBatch;
-    std::shared_ptr<RenderTarget2D> renderTarget;
-    std::shared_ptr<DepthStencilBuffer> depthStencilBuffer;
+    std::shared_ptr<gpu::RenderTarget2D> renderTarget;
+    std::shared_ptr<gpu::DepthStencilBuffer> depthStencilBuffer;
     PostProcessCompositor postProcessCompositor;
 
     std::shared_ptr<SoundEffect> soundEffect1;

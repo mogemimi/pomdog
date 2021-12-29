@@ -7,7 +7,7 @@
 #include "pomdog/content/asset_manager.h"
 #include "pomdog/gpu/blend_descriptor.h"
 #include "pomdog/gpu/depth_stencil_descriptor.h"
-#include "pomdog/gpu/graphics_command_list.h"
+#include "pomdog/gpu/command_list.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/index_buffer.h"
 #include "pomdog/gpu/input_layout_helper.h"
@@ -17,7 +17,7 @@
 #include "pomdog/gpu/rasterizer_descriptor.h"
 #include "pomdog/gpu/shader.h"
 #include "pomdog/gpu/shader_pipeline_stage.h"
-#include "pomdog/gpu/surface_format.h"
+#include "pomdog/gpu/pixel_format.h"
 #include "pomdog/gpu/vertex_buffer.h"
 #include "pomdog/math/color.h"
 #include "pomdog/math/radian.h"
@@ -64,11 +64,11 @@ struct alignas(16) BillboardInfo final {
 class BillboardBatchBuffer::Impl final {
 public:
     std::vector<BillboardInfo> instances;
-    std::shared_ptr<VertexBuffer> vertexBuffer;
+    std::shared_ptr<gpu::VertexBuffer> vertexBuffer;
 };
 
 BillboardBatchBuffer::BillboardBatchBuffer(
-    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     int capacity)
     : impl(std::make_unique<Impl>())
 {
@@ -79,7 +79,7 @@ BillboardBatchBuffer::BillboardBatchBuffer(
     impl->vertexBuffer = std::get<0>(graphicsDevice->CreateVertexBuffer(
         maxBatchSize,
         sizeof(BillboardInfo),
-        BufferUsage::Dynamic));
+        gpu::BufferUsage::Dynamic));
 }
 
 BillboardBatchBuffer::~BillboardBatchBuffer() = default;
@@ -177,7 +177,7 @@ void BillboardBatchBuffer::FetchBuffer()
         sizeof(BillboardInfo));
 }
 
-const std::shared_ptr<VertexBuffer>& BillboardBatchBuffer::GetVertexBuffer() const
+const std::shared_ptr<gpu::VertexBuffer>& BillboardBatchBuffer::GetVertexBuffer() const
 {
     POMDOG_ASSERT(impl);
     return impl->vertexBuffer;
@@ -198,13 +198,13 @@ int BillboardBatchBuffer::GetCapacity() const noexcept
 
 class BillboardBatchEffect::Impl final {
 public:
-    std::shared_ptr<VertexBuffer> vertexBuffer;
-    std::shared_ptr<IndexBuffer> indexBuffer;
-    std::shared_ptr<PipelineState> pipelineState;
+    std::shared_ptr<gpu::VertexBuffer> vertexBuffer;
+    std::shared_ptr<gpu::IndexBuffer> indexBuffer;
+    std::shared_ptr<gpu::PipelineState> pipelineState;
 };
 
 BillboardBatchEffect::BillboardBatchEffect(
-    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     AssetManager& assets)
     : BillboardBatchEffect(
           graphicsDevice,
@@ -218,12 +218,12 @@ BillboardBatchEffect::BillboardBatchEffect(
 }
 
 BillboardBatchEffect::BillboardBatchEffect(
-    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-    std::optional<BlendDescriptor>&& blendDesc,
-    std::optional<DepthStencilDescriptor>&& depthStencilDesc,
-    std::optional<RasterizerDescriptor>&& rasterizerDesc,
-    std::optional<SurfaceFormat>&& renderTargetViewFormat,
-    std::optional<SurfaceFormat>&& depthStencilViewFormat,
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+    std::optional<gpu::BlendDescriptor>&& blendDesc,
+    std::optional<gpu::DepthStencilDescriptor>&& depthStencilDesc,
+    std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc,
+    std::optional<PixelFormat>&& renderTargetViewFormat,
+    std::optional<PixelFormat>&& depthStencilViewFormat,
     AssetManager& assets)
     : impl(std::make_unique<Impl>())
 {
@@ -233,13 +233,13 @@ BillboardBatchEffect::BillboardBatchEffect(
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
     if (!blendDesc) {
-        blendDesc = BlendDescriptor::CreateNonPremultiplied();
+        blendDesc = gpu::BlendDescriptor::CreateNonPremultiplied();
     }
     if (!depthStencilDesc) {
-        depthStencilDesc = DepthStencilDescriptor::CreateDefault();
+        depthStencilDesc = gpu::DepthStencilDescriptor::CreateDefault();
     }
     if (!rasterizerDesc) {
-        rasterizerDesc = RasterizerDescriptor::CreateCullNone();
+        rasterizerDesc = gpu::RasterizerDescriptor::CreateCullNone();
     }
     if (!renderTargetViewFormat) {
         renderTargetViewFormat = presentationParameters.BackBufferFormat;
@@ -269,34 +269,34 @@ BillboardBatchEffect::BillboardBatchEffect(
             vertices.data(),
             vertices.size(),
             sizeof(PositionTextureCoord),
-            BufferUsage::Immutable));
+            gpu::BufferUsage::Immutable));
     }
     {
         std::array<std::uint16_t, 6> const indices = {{0, 1, 2, 2, 3, 0}};
 
         // NOTE: Create index buffer
         impl->indexBuffer = std::get<0>(graphicsDevice->CreateIndexBuffer(
-            IndexElementSize::SixteenBits,
+            gpu::IndexElementSize::SixteenBits,
             indices.data(),
             indices.size(),
-            BufferUsage::Immutable));
+            gpu::BufferUsage::Immutable));
     }
     {
-        auto inputLayout = InputLayoutHelper{}
+        auto inputLayout = gpu::InputLayoutHelper{}
             .AddInputSlot()
             .Float4()
-            .AddInputSlot(InputClassification::InputPerInstance, 1)
+            .AddInputSlot(gpu::InputClassification::InputPerInstance, 1)
             .Float4()
             .Float4()
             .Float4()
             .Float4();
 
-        auto vertexShaderBuilder = assets.CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
+        auto vertexShaderBuilder = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
             .SetGLSL(Builtin_GLSL_BillboardBatch_VS, std::strlen(Builtin_GLSL_BillboardBatch_VS))
             .SetHLSLPrecompiled(BuiltinHLSL_BillboardBatch_VS, sizeof(BuiltinHLSL_BillboardBatch_VS))
             .SetMetal(Builtin_Metal_BillboardBatch, sizeof(Builtin_Metal_BillboardBatch), "BillboardBatchVS");
 
-        auto pixelShaderBuilder = assets.CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
+        auto pixelShaderBuilder = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader)
             .SetGLSL(Builtin_GLSL_BillboardBatch_PS, std::strlen(Builtin_GLSL_BillboardBatch_PS))
             .SetHLSLPrecompiled(BuiltinHLSL_BillboardBatch_PS, sizeof(BuiltinHLSL_BillboardBatch_PS))
             .SetMetal(Builtin_Metal_BillboardBatch, sizeof(Builtin_Metal_BillboardBatch), "BillboardBatchPS");
@@ -312,13 +312,13 @@ BillboardBatchEffect::BillboardBatchEffect(
         }
 
         std::unique_ptr<Error> pipelineStateErr;
-        std::tie(impl->pipelineState, pipelineStateErr) = assets.CreateBuilder<PipelineState>()
+        std::tie(impl->pipelineState, pipelineStateErr) = assets.CreateBuilder<gpu::PipelineState>()
             .SetRenderTargetViewFormat(*renderTargetViewFormat)
             .SetDepthStencilViewFormat(*depthStencilViewFormat)
             .SetVertexShader(std::move(vertexShader))
             .SetPixelShader(std::move(pixelShader))
             .SetInputLayout(inputLayout.CreateInputLayout())
-            .SetPrimitiveTopology(PrimitiveTopology::TriangleList)
+            .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
             .SetBlendState(*blendDesc)
             .SetDepthStencilState(*depthStencilDesc)
             .SetRasterizerState(*rasterizerDesc)
@@ -333,10 +333,10 @@ BillboardBatchEffect::BillboardBatchEffect(
 BillboardBatchEffect::~BillboardBatchEffect() = default;
 
 void BillboardBatchEffect::Draw(
-    const std::shared_ptr<GraphicsCommandList>& commandList,
-    const std::shared_ptr<Texture2D>& texture,
-    const std::shared_ptr<SamplerState>& sampler,
-    const std::shared_ptr<ConstantBuffer>& constantBuffer,
+    const std::shared_ptr<gpu::CommandList>& commandList,
+    const std::shared_ptr<gpu::Texture2D>& texture,
+    const std::shared_ptr<gpu::SamplerState>& sampler,
+    const std::shared_ptr<gpu::ConstantBuffer>& constantBuffer,
     std::size_t constantBufferOffset,
     const BillboardBatchBuffer& billboardInstances)
 {

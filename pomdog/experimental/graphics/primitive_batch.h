@@ -21,19 +21,19 @@ class AssetManager;
 class POMDOG_EXPORT PrimitiveBatch final {
 public:
     PrimitiveBatch(
-        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
         AssetManager& assets);
 
     PrimitiveBatch(
-        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-        std::optional<DepthStencilDescriptor>&& depthStencilDesc,
-        std::optional<RasterizerDescriptor>&& rasterizerDesc,
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+        std::optional<gpu::DepthStencilDescriptor>&& depthStencilDesc,
+        std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc,
         AssetManager& assets);
 
     ~PrimitiveBatch();
 
     void Begin(
-        const std::shared_ptr<GraphicsCommandList>& commandList,
+        const std::shared_ptr<gpu::CommandList>& commandList,
         const Matrix4x4& transformMatrix);
 
     void DrawArc(

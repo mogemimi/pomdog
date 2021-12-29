@@ -8,7 +8,7 @@ namespace feature_showcase {
 SpriteBatchTest::SpriteBatchTest(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
     , graphicsDevice(gameHostIn->GetGraphicsDevice())
-    , commandQueue(gameHostIn->GetGraphicsCommandQueue())
+    , commandQueue(gameHostIn->GetCommandQueue())
 {
 }
 
@@ -20,7 +20,7 @@ std::unique_ptr<Error> SpriteBatchTest::Initialize()
     std::unique_ptr<Error> err;
 
     // NOTE: Create graphics command list
-    std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
+    std::tie(commandList, err) = graphicsDevice->CreateCommandList();
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to create graphics command list");
     }
@@ -28,16 +28,16 @@ std::unique_ptr<Error> SpriteBatchTest::Initialize()
     primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
     spriteBatch = std::make_shared<SpriteBatch>(
         graphicsDevice,
-        BlendDescriptor::CreateNonPremultiplied(),
+        gpu::BlendDescriptor::CreateNonPremultiplied(),
         std::nullopt,
-        SamplerDescriptor::CreatePointWrap(),
+        gpu::SamplerDescriptor::CreatePointWrap(),
         std::nullopt,
         std::nullopt,
         SpriteBatchPixelShaderMode::Default,
         *assets);
 
     // NOTE: Load PNG texture.
-    std::tie(texture, err) = assets->Load<Texture2D>("Textures/pomdog.png");
+    std::tie(texture, err) = assets->Load<gpu::Texture2D>("Textures/pomdog.png");
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to load texture");
     }
@@ -87,8 +87,8 @@ void SpriteBatchTest::Draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
-    Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
-    RenderPass pass;
+    gpu::Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
+    gpu::RenderPass pass;
     pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
     pass.DepthStencilBuffer = nullptr;
     pass.ClearDepth = 1.0f;

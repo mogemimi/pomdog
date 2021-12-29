@@ -10,7 +10,7 @@
 #include "pomdog/gpu/buffer_usage.h"
 #include "pomdog/gpu/constant_buffer.h"
 #include "pomdog/gpu/depth_stencil_descriptor.h"
-#include "pomdog/gpu/graphics_command_list.h"
+#include "pomdog/gpu/command_list.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/input_layout_helper.h"
 #include "pomdog/gpu/pipeline_state.h"
@@ -53,10 +53,10 @@ public:
     using Vertex = PrimitiveBatchVertex;
 
 private:
-    std::shared_ptr<GraphicsCommandList> commandList;
-    std::shared_ptr<VertexBuffer> vertexBuffer;
-    std::shared_ptr<PipelineState> pipelineState;
-    std::shared_ptr<ConstantBuffer> constantBuffer;
+    std::shared_ptr<gpu::CommandList> commandList;
+    std::shared_ptr<gpu::VertexBuffer> vertexBuffer;
+    std::shared_ptr<gpu::PipelineState> pipelineState;
+    std::shared_ptr<gpu::ConstantBuffer> constantBuffer;
 
 public:
     PolygonShapeBuilder polygonShapes;
@@ -65,13 +65,13 @@ public:
 
 public:
     Impl(
-        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-        std::optional<DepthStencilDescriptor>&& depthStencilDesc,
-        std::optional<RasterizerDescriptor>&& rasterizerDesc,
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+        std::optional<gpu::DepthStencilDescriptor>&& depthStencilDesc,
+        std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc,
         AssetManager& assets);
 
     void Begin(
-        const std::shared_ptr<GraphicsCommandList>& commandListIn,
+        const std::shared_ptr<gpu::CommandList>& commandListIn,
         const Matrix4x4& transformMatrix);
 
     void DrawTriangle(
@@ -84,18 +84,18 @@ public:
 };
 
 PrimitiveBatch::Impl::Impl(
-    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-    std::optional<DepthStencilDescriptor>&& depthStencilDesc,
-    std::optional<RasterizerDescriptor>&& rasterizerDesc,
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+    std::optional<gpu::DepthStencilDescriptor>&& depthStencilDesc,
+    std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc,
     AssetManager& assets)
     : startVertexLocation(0)
     , drawCallCount(0)
 {
     if (!depthStencilDesc) {
-        depthStencilDesc = DepthStencilDescriptor::CreateNone();
+        depthStencilDesc = gpu::DepthStencilDescriptor::CreateNone();
     }
     if (!rasterizerDesc) {
-        rasterizerDesc = RasterizerDescriptor::CreateCullCounterClockwise();
+        rasterizerDesc = gpu::RasterizerDescriptor::CreateCullCounterClockwise();
     }
 
     POMDOG_ASSERT(depthStencilDesc);
@@ -106,13 +106,13 @@ PrimitiveBatch::Impl::Impl(
         vertexBuffer = std::get<0>(graphicsDevice->CreateVertexBuffer(
             maxVertexCount,
             sizeof(Vertex),
-            BufferUsage::Dynamic));
+            gpu::BufferUsage::Dynamic));
     }
     {
-        auto inputLayout = InputLayoutHelper{}
+        auto inputLayout = gpu::InputLayoutHelper{}
             .Float3().Float4();
 
-        auto [vertexShader, vertexShaderErr] = assets.CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
+        auto [vertexShader, vertexShaderErr] = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
             .SetGLSL(Builtin_GLSL_PrimitiveBatch_VS, std::strlen(Builtin_GLSL_PrimitiveBatch_VS))
             .SetHLSLPrecompiled(BuiltinHLSL_PrimitiveBatch_VS, sizeof(BuiltinHLSL_PrimitiveBatch_VS))
             .SetMetal(Builtin_Metal_PrimitiveBatch, std::strlen(Builtin_Metal_PrimitiveBatch), "PrimitiveBatchVS")
@@ -122,7 +122,7 @@ PrimitiveBatch::Impl::Impl(
             // FIXME: error handling
         }
 
-        auto [pixelShader, pixelShaderErr] = assets.CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
+        auto [pixelShader, pixelShaderErr] = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader)
             .SetGLSL(Builtin_GLSL_PrimitiveBatch_PS, std::strlen(Builtin_GLSL_PrimitiveBatch_PS))
             .SetHLSLPrecompiled(BuiltinHLSL_PrimitiveBatch_PS, sizeof(BuiltinHLSL_PrimitiveBatch_PS))
             .SetMetal(Builtin_Metal_PrimitiveBatch, std::strlen(Builtin_Metal_PrimitiveBatch), "PrimitiveBatchPS")
@@ -135,14 +135,14 @@ PrimitiveBatch::Impl::Impl(
         auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
         std::unique_ptr<Error> pipelineStateErr;
-        std::tie(pipelineState, pipelineStateErr) = assets.CreateBuilder<PipelineState>()
+        std::tie(pipelineState, pipelineStateErr) = assets.CreateBuilder<gpu::PipelineState>()
             .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
             .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
             .SetVertexShader(std::move(vertexShader))
             .SetPixelShader(std::move(pixelShader))
             .SetInputLayout(inputLayout.CreateInputLayout())
-            .SetPrimitiveTopology(PrimitiveTopology::TriangleList)
-            .SetBlendState(BlendDescriptor::CreateNonPremultiplied())
+            .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
+            .SetBlendState(gpu::BlendDescriptor::CreateNonPremultiplied())
             .SetDepthStencilState(*depthStencilDesc)
             .SetRasterizerState(*rasterizerDesc)
             .SetConstantBufferBindSlot("TransformMatrix", 0)
@@ -155,11 +155,11 @@ PrimitiveBatch::Impl::Impl(
 
     constantBuffer = std::get<0>(graphicsDevice->CreateConstantBuffer(
         sizeof(Matrix4x4),
-        BufferUsage::Dynamic));
+        gpu::BufferUsage::Dynamic));
 }
 
 void PrimitiveBatch::Impl::Begin(
-    const std::shared_ptr<GraphicsCommandList>& commandListIn,
+    const std::shared_ptr<gpu::CommandList>& commandListIn,
     const Matrix4x4& transformMatrix)
 {
     POMDOG_ASSERT(commandListIn);
@@ -209,16 +209,16 @@ void PrimitiveBatch::Impl::Flush()
 // MARK: - PrimitiveBatch
 
 PrimitiveBatch::PrimitiveBatch(
-    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     AssetManager& assets)
     : PrimitiveBatch(graphicsDevice, std::nullopt, std::nullopt, assets)
 {
 }
 
 PrimitiveBatch::PrimitiveBatch(
-    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-    std::optional<DepthStencilDescriptor>&& depthStencilDesc,
-    std::optional<RasterizerDescriptor>&& rasterizerDesc,
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+    std::optional<gpu::DepthStencilDescriptor>&& depthStencilDesc,
+    std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc,
     AssetManager& assets)
     : impl(std::make_unique<Impl>(
           graphicsDevice,
@@ -231,7 +231,7 @@ PrimitiveBatch::PrimitiveBatch(
 PrimitiveBatch::~PrimitiveBatch() = default;
 
 void PrimitiveBatch::Begin(
-    const std::shared_ptr<GraphicsCommandList>& commandListIn,
+    const std::shared_ptr<gpu::CommandList>& commandListIn,
     const Matrix4x4& transformMatrixIn)
 {
     POMDOG_ASSERT(impl);

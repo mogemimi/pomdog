@@ -43,9 +43,9 @@ public:
 
 private:
     std::shared_ptr<GameHost> gameHost;
-    std::shared_ptr<GraphicsDevice> graphicsDevice;
-    std::shared_ptr<GraphicsCommandQueue> commandQueue;
-    std::shared_ptr<GraphicsCommandList> commandList;
+    std::shared_ptr<gpu::GraphicsDevice> graphicsDevice;
+    std::shared_ptr<gpu::CommandQueue> commandQueue;
+    std::shared_ptr<gpu::CommandList> commandList;
     ConnectionList connect;
     std::shared_ptr<SpriteBatch> spriteBatch;
     std::shared_ptr<SpriteFont> spriteFont;

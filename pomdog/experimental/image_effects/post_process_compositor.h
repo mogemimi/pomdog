@@ -21,15 +21,15 @@ class POMDOG_EXPORT PostProcessCompositor final {
 private:
     std::vector<std::shared_ptr<ImageEffectPreRenderable>> preRenderables;
     std::vector<std::shared_ptr<ImageEffectBase>> imageEffects;
-    std::array<std::shared_ptr<RenderTarget2D>, 2> renderTargets;
-    std::shared_ptr<DepthStencilBuffer> depthStencilBuffer;
-    std::shared_ptr<ConstantBuffer> constantBuffer;
+    std::array<std::shared_ptr<gpu::RenderTarget2D>, 2> renderTargets;
+    std::shared_ptr<gpu::DepthStencilBuffer> depthStencilBuffer;
+    std::shared_ptr<gpu::ConstantBuffer> constantBuffer;
     ScreenQuad screenQuad;
     Rectangle viewport;
 
 public:
     explicit PostProcessCompositor(
-        const std::shared_ptr<GraphicsDevice>& graphicsDevice);
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice);
 
     void Composite(
         std::vector<std::shared_ptr<ImageEffectBase>>&& imageEffects);
@@ -39,29 +39,29 @@ public:
         std::vector<std::shared_ptr<ImageEffectPreRenderable>>&& preRenderableEffects);
 
     void SetViewportSize(
-        GraphicsDevice& graphicsDevice,
+        gpu::GraphicsDevice& graphicsDevice,
         int width,
         int height,
-        SurfaceFormat depthFormat);
+        PixelFormat depthFormat);
 
     void Draw(
-        GraphicsCommandList& commandList,
-        const std::shared_ptr<RenderTarget2D>& source);
+        gpu::CommandList& commandList,
+        const std::shared_ptr<gpu::RenderTarget2D>& source);
 
     void Draw(
-        GraphicsCommandList& commandList,
-        const std::shared_ptr<RenderTarget2D>& source,
-        const std::shared_ptr<RenderTarget2D>& destination);
+        gpu::CommandList& commandList,
+        const std::shared_ptr<gpu::RenderTarget2D>& source,
+        const std::shared_ptr<gpu::RenderTarget2D>& destination);
 
     bool CanSkipPostProcess() const noexcept;
 
 private:
     void BuildRenderTargets(
-        GraphicsDevice& graphicsDevice,
+        gpu::GraphicsDevice& graphicsDevice,
         int width,
         int height,
-        SurfaceFormat surfaceFormat,
-        SurfaceFormat depthFormat);
+        PixelFormat surfaceFormat,
+        PixelFormat depthFormat);
 
     void UpdateConstantBuffer();
 };

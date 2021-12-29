@@ -21,7 +21,7 @@ enum class Texture2DViewIndex : std::int8_t {
 
 class Texture2DVariant final {
 public:
-    std::shared_ptr<Texture> variant;
+    std::shared_ptr<gpu::Texture> variant;
     Texture2DViewIndex index = Texture2DViewIndex::Texture2D;
 
 public:
@@ -29,7 +29,7 @@ public:
 
     [[nodiscard]] std::int32_t GetHeight() const;
 
-    [[nodiscard]] SurfaceFormat GetFormat() const;
+    [[nodiscard]] PixelFormat GetFormat() const;
 };
 
 class Texture2DView final {
@@ -42,18 +42,18 @@ public:
     Texture2DView(Texture2DView&&) = default;
 
     Texture2DView(std::nullptr_t);
-    Texture2DView(const std::shared_ptr<Texture2D>& textureIn);
-    Texture2DView(std::shared_ptr<Texture2D>&& textureIn);
-    Texture2DView(std::shared_ptr<RenderTarget2D>&& renderTargetIn);
-    Texture2DView(const std::shared_ptr<RenderTarget2D>& renderTargetIn);
+    Texture2DView(const std::shared_ptr<gpu::Texture2D>& textureIn);
+    Texture2DView(std::shared_ptr<gpu::Texture2D>&& textureIn);
+    Texture2DView(std::shared_ptr<gpu::RenderTarget2D>&& renderTargetIn);
+    Texture2DView(const std::shared_ptr<gpu::RenderTarget2D>& renderTargetIn);
 
     Texture2DView& operator=(const Texture2DView&) = default;
     Texture2DView& operator=(Texture2DView&&) = default;
 
-    Texture2DView& operator=(const std::shared_ptr<Texture2D>& textureIn);
-    Texture2DView& operator=(std::shared_ptr<Texture2D>&& textureIn);
-    Texture2DView& operator=(std::shared_ptr<RenderTarget2D>&& renderTargetIn);
-    Texture2DView& operator=(const std::shared_ptr<RenderTarget2D>& renderTargetIn);
+    Texture2DView& operator=(const std::shared_ptr<gpu::Texture2D>& textureIn);
+    Texture2DView& operator=(std::shared_ptr<gpu::Texture2D>&& textureIn);
+    Texture2DView& operator=(std::shared_ptr<gpu::RenderTarget2D>&& renderTargetIn);
+    Texture2DView& operator=(const std::shared_ptr<gpu::RenderTarget2D>& renderTargetIn);
     Texture2DView& operator=(std::nullptr_t);
 
     [[nodiscard]] bool operator==(const Texture2DView& v) const noexcept;
@@ -68,9 +68,9 @@ public:
 
     [[nodiscard]] Texture2DViewIndex GetIndex() const noexcept;
 
-    [[nodiscard]] std::shared_ptr<Texture2D> AsTexture2D() const noexcept;
+    [[nodiscard]] std::shared_ptr<gpu::Texture2D> AsTexture2D() const noexcept;
 
-    [[nodiscard]] std::shared_ptr<RenderTarget2D> AsRenderTarget2D() const noexcept;
+    [[nodiscard]] std::shared_ptr<gpu::RenderTarget2D> AsRenderTarget2D() const noexcept;
 };
 
 } // namespace pomdog

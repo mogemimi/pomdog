@@ -19,13 +19,13 @@ class AssetManager;
 class POMDOG_EXPORT PolylineBatch final {
 public:
     PolylineBatch(
-        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
         AssetManager& assets);
 
     ~PolylineBatch();
 
     void Begin(
-        const std::shared_ptr<GraphicsCommandList>& commandList,
+        const std::shared_ptr<gpu::CommandList>& commandList,
         const Matrix4x4& transformMatrix);
 
     void DrawPath(

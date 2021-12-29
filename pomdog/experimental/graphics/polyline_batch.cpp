@@ -9,7 +9,7 @@
 #include "pomdog/gpu/buffer_usage.h"
 #include "pomdog/gpu/constant_buffer.h"
 #include "pomdog/gpu/depth_stencil_descriptor.h"
-#include "pomdog/gpu/graphics_command_list.h"
+#include "pomdog/gpu/command_list.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/index_buffer.h"
 #include "pomdog/gpu/input_layout_helper.h"
@@ -104,14 +104,14 @@ public:
     static constexpr std::size_t MaxIndexCount = (MaxVertexCount - 2) * 6;
 
 private:
-    std::shared_ptr<GraphicsCommandList> commandList;
-    std::shared_ptr<VertexBuffer> vertexBuffer;
+    std::shared_ptr<gpu::CommandList> commandList;
+    std::shared_ptr<gpu::VertexBuffer> vertexBuffer;
 #ifdef POMDOG_POLYLINE_DEBUG
-    std::shared_ptr<VertexBuffer> debugVertexBuffer;
+    std::shared_ptr<gpu::VertexBuffer> debugVertexBuffer;
 #endif
-    std::shared_ptr<IndexBuffer> indexBuffer;
-    std::shared_ptr<PipelineState> pipelineState;
-    std::shared_ptr<ConstantBuffer> constantBuffer;
+    std::shared_ptr<gpu::IndexBuffer> indexBuffer;
+    std::shared_ptr<gpu::PipelineState> pipelineState;
+    std::shared_ptr<gpu::ConstantBuffer> constantBuffer;
 
     std::vector<PolylineVertex> vertices;
     std::vector<std::uint16_t> indices;
@@ -119,11 +119,11 @@ private:
 
 public:
     Impl(
-        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
         AssetManager& assets);
 
     void Begin(
-        const std::shared_ptr<GraphicsCommandList>& commandListIn,
+        const std::shared_ptr<gpu::CommandList>& commandListIn,
         const Matrix4x4& transformMatrix);
 
     void DrawPath(std::vector<PolylineBatchVertex>&& path, bool closed, float thickness);
@@ -134,7 +134,7 @@ public:
 };
 
 PolylineBatch::Impl::Impl(
-    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     AssetManager& assets)
 {
     {
@@ -144,11 +144,11 @@ PolylineBatch::Impl::Impl(
         vertexBuffer = std::get<0>(graphicsDevice->CreateVertexBuffer(
             maxVertexCount,
             sizeof(PolylineVertex),
-            BufferUsage::Dynamic));
+            gpu::BufferUsage::Dynamic));
 
 #ifdef POMDOG_POLYLINE_DEBUG
         debugVertexBuffer = std::make_shared<VertexBuffer>(graphicsDevice,
-            maxVertexCount, sizeof(PolylineVertex), BufferUsage::Dynamic);
+            maxVertexCount, sizeof(PolylineVertex), gpu::BufferUsage::Dynamic);
 #endif
     }
     {
@@ -156,20 +156,20 @@ PolylineBatch::Impl::Impl(
 
         constexpr auto maxIndexCount = MaxIndexCount;
         indexBuffer = std::get<0>(graphicsDevice->CreateIndexBuffer(
-            IndexElementSize::SixteenBits,
+            gpu::IndexElementSize::SixteenBits,
             maxIndexCount,
-            BufferUsage::Dynamic));
+            gpu::BufferUsage::Dynamic));
     }
     {
-        auto inputLayout = InputLayoutHelper{}
+        auto inputLayout = gpu::InputLayoutHelper{}
             .Float4().Float4().Float4().Float4();
 
-        auto vertexShaderBuilder = assets.CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
+        auto vertexShaderBuilder = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
             .SetGLSL(Builtin_GLSL_PolylineBatch_VS, std::strlen(Builtin_GLSL_PolylineBatch_VS))
             .SetHLSLPrecompiled(BuiltinHLSL_PolylineBatch_VS, sizeof(BuiltinHLSL_PolylineBatch_VS))
             .SetMetal(Builtin_Metal_PolylineBatch, std::strlen(Builtin_Metal_PolylineBatch), "PolylineBatchVS");
 
-        auto pixelShaderBuilder = assets.CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
+        auto pixelShaderBuilder = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader)
             .SetGLSL(Builtin_GLSL_PolylineBatch_PS, std::strlen(Builtin_GLSL_PolylineBatch_PS))
             .SetHLSLPrecompiled(BuiltinHLSL_PolylineBatch_PS, sizeof(BuiltinHLSL_PolylineBatch_PS))
             .SetMetal(Builtin_Metal_PolylineBatch, std::strlen(Builtin_Metal_PolylineBatch), "PolylineBatchPS");
@@ -187,16 +187,16 @@ PolylineBatch::Impl::Impl(
         auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
         std::unique_ptr<Error> pipelineStateErr;
-        std::tie(pipelineState, pipelineStateErr) = assets.CreateBuilder<PipelineState>()
+        std::tie(pipelineState, pipelineStateErr) = assets.CreateBuilder<gpu::PipelineState>()
             .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
             .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
             .SetVertexShader(std::move(vertexShader))
             .SetPixelShader(std::move(pixelShader))
             .SetInputLayout(inputLayout.CreateInputLayout())
-            .SetPrimitiveTopology(PrimitiveTopology::TriangleList)
-            .SetBlendState(BlendDescriptor::CreateNonPremultiplied())
-            .SetDepthStencilState(DepthStencilDescriptor::CreateDefault())
-            .SetRasterizerState(RasterizerDescriptor::CreateCullNone())
+            .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
+            .SetBlendState(gpu::BlendDescriptor::CreateNonPremultiplied())
+            .SetDepthStencilState(gpu::DepthStencilDescriptor::CreateDefault())
+            .SetRasterizerState(gpu::RasterizerDescriptor::CreateCullNone())
             .SetConstantBufferBindSlot("TransformMatrix", 0)
             .Build();
         if (pipelineStateErr != nullptr) {
@@ -206,11 +206,11 @@ PolylineBatch::Impl::Impl(
 
     constantBuffer = std::get<0>(graphicsDevice->CreateConstantBuffer(
         sizeof(Matrix4x4),
-        BufferUsage::Dynamic));
+        gpu::BufferUsage::Dynamic));
 }
 
 void PolylineBatch::Impl::Begin(
-    const std::shared_ptr<GraphicsCommandList>& commandListIn,
+    const std::shared_ptr<gpu::CommandList>& commandListIn,
     const Matrix4x4& transformMatrix)
 {
     POMDOG_ASSERT(commandListIn);
@@ -266,7 +266,7 @@ void PolylineBatch::Impl::Flush()
 
 #ifdef POMDOG_POLYLINE_DEBUG
     commandList->SetVertexBuffer(debugVertexBuffer);
-    commandList->SetPrimitiveTopology(PrimitiveTopology::LineStrip);
+    commandList->SetPrimitiveTopology(gpu::PrimitiveTopology::LineStrip);
     commandList->DrawIndexed(indexBuffer, indices.size(), startIndexLocation);
 #endif
 
@@ -415,7 +415,7 @@ void PolylineBatch::Impl::DrawPath(std::vector<PolylineBatchVertex>&& path, bool
 // MARK: - PolylineBatch
 
 PolylineBatch::PolylineBatch(
-    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     AssetManager& assets)
     : impl(std::make_unique<Impl>(graphicsDevice, assets))
 {
@@ -424,7 +424,7 @@ PolylineBatch::PolylineBatch(
 PolylineBatch::~PolylineBatch() = default;
 
 void PolylineBatch::Begin(
-    const std::shared_ptr<GraphicsCommandList>& commandListIn,
+    const std::shared_ptr<gpu::CommandList>& commandListIn,
     const Matrix4x4& transformMatrixIn)
 {
     POMDOG_ASSERT(impl);

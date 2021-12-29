@@ -13,10 +13,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog {
+namespace pomdog::gpu {
 class Texture2D;
 class GraphicsDevice;
-} // namespace pomdog
+} // namespace pomdog::gpu
 
 namespace pomdog::SVG {
 
@@ -36,9 +36,9 @@ DecodeFile(
     int height);
 
 /// Creates a texture from SVG file (.svg).
-[[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<Texture2D>, std::unique_ptr<Error>>
+[[nodiscard]] POMDOG_EXPORT std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
 LoadTexture(
-    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     const std::string& filePath,
     int width,
     int height);

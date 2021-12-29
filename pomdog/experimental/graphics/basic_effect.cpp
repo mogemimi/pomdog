@@ -22,10 +22,10 @@ namespace {
 
 } // namespace
 
-AssetBuilders::Builder<PipelineState>
+AssetBuilders::Builder<gpu::PipelineState>
 CreateBasicEffect(AssetManager& assets, const BasicEffectDescription& desc)
 {
-    InputLayoutHelper inputLayoutBuilder;
+    gpu::InputLayoutHelper inputLayoutBuilder;
     inputLayoutBuilder.Float3();
 
     if (desc.LightingEnabled) {
@@ -66,13 +66,13 @@ CreateBasicEffect(AssetManager& assets, const BasicEffectDescription& desc)
 
     auto inputLayout = inputLayoutBuilder.CreateInputLayout();
 
-    auto [vertexShader, vertexShaderErr] = assets.CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
+    auto [vertexShader, vertexShaderErr] = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
         .SetGLSL(sourceGLSLVS.data(), sourceGLSLVS.size())
         .SetHLSL(sourceHLSL.data(), sourceHLSL.size(), "BasicEffectVS")
         .SetMetal(sourceMetal.data(), sourceMetal.size(), "BasicEffectVS")
         .Build();
 
-    auto [pixelShader, pixelShaderErr] = assets.CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
+    auto [pixelShader, pixelShaderErr] = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader)
         .SetGLSL(sourceGLSLPS.data(), sourceGLSLPS.size())
         .SetHLSL(sourceHLSL.data(), sourceHLSL.size(), "BasicEffectPS")
         .SetMetal(sourceMetal.data(), sourceMetal.size(), "BasicEffectPS")
@@ -80,7 +80,7 @@ CreateBasicEffect(AssetManager& assets, const BasicEffectDescription& desc)
 
     auto graphicsDevice = assets.GetGraphicsDevice();
 
-    auto builder = assets.CreateBuilder<PipelineState>();
+    auto builder = assets.CreateBuilder<gpu::PipelineState>();
     if (vertexShaderErr != nullptr) {
         builder.SetError(std::move(vertexShaderErr));
         return builder;

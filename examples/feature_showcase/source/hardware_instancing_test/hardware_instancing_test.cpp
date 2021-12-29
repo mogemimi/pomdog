@@ -7,7 +7,7 @@ namespace feature_showcase {
 HardwareInstancingTest::HardwareInstancingTest(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
     , graphicsDevice(gameHostIn->GetGraphicsDevice())
-    , commandQueue(gameHostIn->GetGraphicsCommandQueue())
+    , commandQueue(gameHostIn->GetCommandQueue())
 {
 }
 
@@ -19,13 +19,13 @@ std::unique_ptr<Error> HardwareInstancingTest::Initialize()
     std::unique_ptr<Error> err;
 
     // NOTE: Create graphics command list
-    std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
+    std::tie(commandList, err) = graphicsDevice->CreateCommandList();
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to create graphics command list");
     }
 
     // NOTE: Load texture from PNG image file.
-    std::tie(texture, err) = assets->Load<Texture2D>("Textures/pomdog.png");
+    std::tie(texture, err) = assets->Load<gpu::Texture2D>("Textures/pomdog.png");
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to load texture");
     }
@@ -50,7 +50,7 @@ std::unique_ptr<Error> HardwareInstancingTest::Initialize()
             verticesCombo.data(),
             verticesCombo.size(),
             sizeof(VertexCombined),
-            BufferUsage::Immutable);
+            gpu::BufferUsage::Immutable);
 
         if (err != nullptr) {
             return errors::Wrap(std::move(err), "failed to create vertex buffer");
@@ -61,10 +61,10 @@ std::unique_ptr<Error> HardwareInstancingTest::Initialize()
         std::array<std::uint16_t, 6> indices = {{0, 1, 2, 2, 3, 0}};
 
         std::tie(indexBuffer, err) = graphicsDevice->CreateIndexBuffer(
-            IndexElementSize::SixteenBits,
+            gpu::IndexElementSize::SixteenBits,
             indices.data(),
             indices.size(),
-            BufferUsage::Immutable);
+            gpu::BufferUsage::Immutable);
 
         if (err != nullptr) {
             return errors::Wrap(std::move(err), "failed to create index buffer");
@@ -75,7 +75,7 @@ std::unique_ptr<Error> HardwareInstancingTest::Initialize()
         std::tie(instanceBuffer, err) = graphicsDevice->CreateVertexBuffer(
             maxSpriteCount,
             sizeof(SpriteInfo),
-            BufferUsage::Dynamic);
+            gpu::BufferUsage::Dynamic);
 
         if (err != nullptr) {
             return errors::Wrap(std::move(err), "failed to create instance buffer");
@@ -85,7 +85,7 @@ std::unique_ptr<Error> HardwareInstancingTest::Initialize()
         // NOTE: Create constant buffer
         std::tie(constantBuffer, err) = graphicsDevice->CreateConstantBuffer(
             sizeof(Matrix4x4),
-            BufferUsage::Dynamic);
+            gpu::BufferUsage::Dynamic);
 
         if (err != nullptr) {
             return errors::Wrap(std::move(err), "failed to create constant buffer");
@@ -94,7 +94,7 @@ std::unique_ptr<Error> HardwareInstancingTest::Initialize()
     {
         // NOTE: Create sampler state
         std::tie(sampler, err) = graphicsDevice->CreateSamplerState(
-            SamplerDescriptor::CreateLinearClamp());
+            gpu::SamplerDescriptor::CreateLinearClamp());
 
         if (err != nullptr) {
             return errors::Wrap(std::move(err), "failed to create sampler state");
@@ -102,16 +102,16 @@ std::unique_ptr<Error> HardwareInstancingTest::Initialize()
     }
     {
         // For details, see 'struct VertexCombined' members
-        auto inputLayout = InputLayoutHelper{}
+        auto inputLayout = gpu::InputLayoutHelper{}
             .Float3() // NOTE: VertexCombined::Position
             .Float2() // NOTE: VertexCombined::TextureCoord
-            .AddInputSlot(InputClassification::InputPerInstance, 1)
+            .AddInputSlot(gpu::InputClassification::InputPerInstance, 1)
             .Float4() // NOTE: SpriteInfo::Translation
             .Float4() // NOTE: SpriteInfo::Color
             .CreateInputLayout();
 
         // NOTE: Create vertex shader
-        auto [vertexShader, vertexShaderErr] = assets->CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
+        auto [vertexShader, vertexShaderErr] = assets->CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
             .SetGLSLFromFile("Shaders/HardwareInstancingVS.glsl")
             .SetHLSLFromFile("Shaders/HardwareInstancing.hlsl", "HardwareInstancingVS")
             .SetMetalFromFile("Shaders/HardwareInstancing.metal", "HardwareInstancingVS")
@@ -122,7 +122,7 @@ std::unique_ptr<Error> HardwareInstancingTest::Initialize()
         }
 
         // NOTE: Create pixel shader
-        auto [pixelShader, pixelShaderErr] = assets->CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
+        auto [pixelShader, pixelShaderErr] = assets->CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader)
             .SetGLSLFromFile("Shaders/HardwareInstancingPS.glsl")
             .SetHLSLFromFile("Shaders/HardwareInstancing.hlsl", "HardwareInstancingPS")
             .SetMetalFromFile("Shaders/HardwareInstancing.metal", "HardwareInstancingPS")
@@ -135,11 +135,11 @@ std::unique_ptr<Error> HardwareInstancingTest::Initialize()
         auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
         // NOTE: Create pipeline state
-        std::tie(pipelineState, err) = assets->CreateBuilder<PipelineState>()
+        std::tie(pipelineState, err) = assets->CreateBuilder<gpu::PipelineState>()
             .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
             .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
             .SetInputLayout(inputLayout)
-            .SetPrimitiveTopology(PrimitiveTopology::TriangleList)
+            .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
             .SetVertexShader(std::move(vertexShader))
             .SetPixelShader(std::move(pixelShader))
             .SetConstantBufferBindSlot("MyShaderConstants", 0)
@@ -220,8 +220,8 @@ void HardwareInstancingTest::Draw()
     // NOTE: Update instance buffer
     instanceBuffer->SetData(sprites.data(), sprites.size());
 
-    Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
-    RenderPass pass;
+    gpu::Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
+    gpu::RenderPass pass;
     pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
     pass.DepthStencilBuffer = nullptr;
     pass.ClearDepth = 1.0f;

@@ -39,7 +39,7 @@ GameMain::GameMain(const std::shared_ptr<GameHost>& gameHostIn)
     , graphicsDevice(gameHostIn->GetGraphicsDevice())
     , assets(gameHostIn->GetAssetManager())
     , clock(gameHostIn->GetClock())
-    , commandQueue(gameHostIn->GetGraphicsCommandQueue())
+    , commandQueue(gameHostIn->GetCommandQueue())
 {
 }
 
@@ -48,7 +48,7 @@ GameMain::Initialize()
 {
     window->SetTitle("Feature Showcase");
     window->SetAllowUserResizing(true);
-    commandList = std::get<0>(graphicsDevice->CreateGraphicsCommandList());
+    commandList = std::get<0>(graphicsDevice->CreateCommandList());
 
     auto [font, fontErr] = assets->Load<TrueTypeFont>("Fonts/NotoSans/NotoSans-Regular.ttf");
     if (fontErr != nullptr) {
@@ -312,8 +312,8 @@ void GameMain::DrawMenu()
         clearColor = Color{60, 60, 60, 255}.ToVector4();
     }
 
-    Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
-    RenderPass pass;
+    gpu::Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
+    gpu::RenderPass pass;
     pass.RenderTargets[0] = {nullptr, clearColor};
     pass.DepthStencilBuffer = nullptr;
     pass.ClearDepth = 1.0f;

@@ -120,7 +120,7 @@ std::shared_ptr<ParticleClip> CreateEmitterFireBlock()
 Particle2DTest::Particle2DTest(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
     , graphicsDevice(gameHostIn->GetGraphicsDevice())
-    , commandQueue(gameHostIn->GetGraphicsCommandQueue())
+    , commandQueue(gameHostIn->GetCommandQueue())
 {
 }
 
@@ -132,7 +132,7 @@ std::unique_ptr<Error> Particle2DTest::Initialize()
     std::unique_ptr<Error> err;
 
     // NOTE: Create graphics command list
-    std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
+    std::tie(commandList, err) = graphicsDevice->CreateCommandList();
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to create graphics command list");
     }
@@ -140,16 +140,16 @@ std::unique_ptr<Error> Particle2DTest::Initialize()
     primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
     spriteBatch = std::make_shared<SpriteBatch>(
         graphicsDevice,
-        BlendDescriptor::CreateAlphaBlend(),
+        gpu::BlendDescriptor::CreateAlphaBlend(),
         std::nullopt,
-        SamplerDescriptor::CreateLinearWrap(),
+        gpu::SamplerDescriptor::CreateLinearWrap(),
         std::nullopt,
         std::nullopt,
         SpriteBatchPixelShaderMode::Default,
         *assets);
 
     // NOTE: Load particle texture
-    std::tie(texture, err) = assets->Load<Texture2D>("Textures/particle_smoke.png");
+    std::tie(texture, err) = assets->Load<gpu::Texture2D>("Textures/particle_smoke.png");
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to load texture");
     }
@@ -192,8 +192,8 @@ void Particle2DTest::Draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
-    Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
-    RenderPass pass;
+    gpu::Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
+    gpu::RenderPass pass;
     pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
     pass.DepthStencilBuffer = nullptr;
     pass.ClearDepth = 1.0f;

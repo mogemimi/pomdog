@@ -16,7 +16,7 @@ namespace feature_showcase {
 AnimationGraphTest::AnimationGraphTest(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
     , graphicsDevice(gameHostIn->GetGraphicsDevice())
-    , commandQueue(gameHostIn->GetGraphicsCommandQueue())
+    , commandQueue(gameHostIn->GetCommandQueue())
 {
 }
 
@@ -28,7 +28,7 @@ std::unique_ptr<Error> AnimationGraphTest::Initialize()
     std::unique_ptr<Error> err;
 
     // NOTE: Create graphics command list
-    std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
+    std::tie(commandList, err) = graphicsDevice->CreateCommandList();
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to create graphics command list");
     }
@@ -36,9 +36,9 @@ std::unique_ptr<Error> AnimationGraphTest::Initialize()
     primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
     spriteBatch = std::make_shared<SpriteBatch>(
         graphicsDevice,
-        BlendDescriptor::CreateNonPremultiplied(),
+        gpu::BlendDescriptor::CreateNonPremultiplied(),
         std::nullopt,
-        SamplerDescriptor::CreatePointWrap(),
+        gpu::SamplerDescriptor::CreatePointWrap(),
         std::nullopt,
         std::nullopt,
         SpriteBatchPixelShaderMode::Default,
@@ -50,7 +50,7 @@ std::unique_ptr<Error> AnimationGraphTest::Initialize()
     auto animationGraphJSONPath = PathHelper::Join(assets->GetContentDirectory(), "Skeletal2D/MaidGun/AnimationGraph.json");
 
     // NOTE: Load texture file for skeletal animation model
-    std::tie(texture, err) = assets->Load<Texture2D>(texturePath);
+    std::tie(texture, err) = assets->Load<gpu::Texture2D>(texturePath);
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to load texture");
     }
@@ -122,7 +122,7 @@ std::unique_ptr<Error> AnimationGraphTest::Initialize()
             verticesCombo.data(),
             skinnedMesh.Vertices.size(),
             sizeof(VertexCombined),
-            BufferUsage::Dynamic);
+            gpu::BufferUsage::Dynamic);
 
         if (err != nullptr) {
             return errors::Wrap(std::move(err), "failed to create vertex buffer");
@@ -131,10 +131,10 @@ std::unique_ptr<Error> AnimationGraphTest::Initialize()
     {
         // NOTE: Create index buffer
         std::tie(indexBuffer, err) = graphicsDevice->CreateIndexBuffer(
-            IndexElementSize::SixteenBits,
+            gpu::IndexElementSize::SixteenBits,
             skinnedMesh.Indices.data(),
             skinnedMesh.Indices.size(),
-            BufferUsage::Immutable);
+            gpu::BufferUsage::Immutable);
 
         if (err != nullptr) {
             return errors::Wrap(std::move(err), "failed to create index buffer");
@@ -144,7 +144,7 @@ std::unique_ptr<Error> AnimationGraphTest::Initialize()
         // NOTE: Create constant buffer
         std::tie(modelConstantBuffer, err) = graphicsDevice->CreateConstantBuffer(
             sizeof(BasicEffect::ModelConstantBuffer),
-            BufferUsage::Dynamic);
+            gpu::BufferUsage::Dynamic);
 
         if (err != nullptr) {
             return errors::Wrap(std::move(err), "failed to create constant buffer");
@@ -152,7 +152,7 @@ std::unique_ptr<Error> AnimationGraphTest::Initialize()
 
         std::tie(worldConstantBuffer, err) = graphicsDevice->CreateConstantBuffer(
             sizeof(BasicEffect::WorldConstantBuffer),
-            BufferUsage::Dynamic);
+            gpu::BufferUsage::Dynamic);
 
         if (err != nullptr) {
             return errors::Wrap(std::move(err), "failed to create constant buffer");
@@ -170,27 +170,23 @@ std::unique_ptr<Error> AnimationGraphTest::Initialize()
         std::tie(pipelineState, err) = BasicEffect::CreateBasicEffect(*assets, effectDesc)
             .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
             .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
-            .SetPrimitiveTopology(PrimitiveTopology::TriangleList)
-            .SetDepthStencilState(DepthStencilDescriptor::CreateDefault())
-            .SetBlendState(BlendDescriptor::CreateNonPremultiplied())
-            .SetRasterizerState(RasterizerDescriptor::CreateDefault())
+            .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
+            .SetDepthStencilState(gpu::DepthStencilDescriptor::CreateDefault())
+            .SetBlendState(gpu::BlendDescriptor::CreateNonPremultiplied())
+            .SetRasterizerState(gpu::RasterizerDescriptor::CreateDefault())
             .Build();
         if (err != nullptr) {
             return errors::Wrap(std::move(err), "failed to create pipeline state");
         }
 
-        // NOTE: Create pipeline state for wireframe debug rendering
-        auto rasterizerDesc = RasterizerDescriptor::CreateCullNone();
-        rasterizerDesc.FillMode = FillMode::WireFrame;
-
         // NOTE: Create pipeline state
         std::tie(pipelineStateWireframe, err) = BasicEffect::CreateBasicEffect(*assets, effectDesc)
             .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
             .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
-            .SetPrimitiveTopology(PrimitiveTopology::TriangleList)
-            .SetDepthStencilState(DepthStencilDescriptor::CreateDefault())
-            .SetBlendState(BlendDescriptor::CreateOpaque())
-            .SetRasterizerState(rasterizerDesc)
+            .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
+            .SetDepthStencilState(gpu::DepthStencilDescriptor::CreateDefault())
+            .SetBlendState(gpu::BlendDescriptor::CreateOpaque())
+            .SetRasterizerState(gpu::RasterizerDescriptor::CreateCullNoneWireframe())
             .Build();
         if (err != nullptr) {
             return errors::Wrap(std::move(err), "failed to create pipeline state");
@@ -199,7 +195,7 @@ std::unique_ptr<Error> AnimationGraphTest::Initialize()
     {
         // NOTE: Create sampler state
         std::tie(sampler, err) = graphicsDevice->CreateSamplerState(
-            SamplerDescriptor::CreateLinearWrap());
+            gpu::SamplerDescriptor::CreateLinearWrap());
         if (err != nullptr) {
             return errors::Wrap(std::move(err), "failed to create sampler state");
         }
@@ -294,8 +290,8 @@ void AnimationGraphTest::Draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
-    Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
-    RenderPass pass;
+    gpu::Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
+    gpu::RenderPass pass;
     pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
     pass.DepthStencilBuffer = nullptr;
     pass.ClearDepth = 1.0f;

@@ -8,7 +8,7 @@ namespace feature_showcase {
 Beam2DTest::Beam2DTest(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
     , graphicsDevice(gameHostIn->GetGraphicsDevice())
-    , commandQueue(gameHostIn->GetGraphicsCommandQueue())
+    , commandQueue(gameHostIn->GetCommandQueue())
 {
 }
 
@@ -20,7 +20,7 @@ std::unique_ptr<Error> Beam2DTest::Initialize()
     std::unique_ptr<Error> err;
 
     // NOTE: Create graphics command list
-    std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
+    std::tie(commandList, err) = graphicsDevice->CreateCommandList();
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to create graphics command list");
     }
@@ -28,16 +28,16 @@ std::unique_ptr<Error> Beam2DTest::Initialize()
     primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
     spriteBatch = std::make_shared<SpriteBatch>(
         graphicsDevice,
-        BlendDescriptor::CreateAlphaBlend(),
+        gpu::BlendDescriptor::CreateAlphaBlend(),
         std::nullopt,
-        SamplerDescriptor::CreatePointWrap(),
+        gpu::SamplerDescriptor::CreatePointWrap(),
         std::nullopt,
         std::nullopt,
         SpriteBatchPixelShaderMode::Default,
         *assets);
 
     // NOTE: Load texture from PNG image file.
-    std::tie(texture, err) = assets->Load<Texture2D>("Textures/particle_lightning.png");
+    std::tie(texture, err) = assets->Load<gpu::Texture2D>("Textures/particle_lightning.png");
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to load texture");
     }
@@ -87,8 +87,8 @@ void Beam2DTest::Draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
-    Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
-    RenderPass pass;
+    gpu::Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
+    gpu::RenderPass pass;
     pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
     pass.DepthStencilBuffer = nullptr;
     pass.ClearDepth = 1.0f;

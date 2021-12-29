@@ -38,13 +38,13 @@ class TrueTypeFont;
 class POMDOG_EXPORT SpriteFont final {
 public:
     SpriteFont(
-        std::vector<std::shared_ptr<Texture2D>>&& textures,
+        std::vector<std::shared_ptr<gpu::Texture2D>>&& textures,
         const std::vector<FontGlyph>& glyphs,
         float spacing,
         float lineSpacing);
 
     SpriteFont(
-        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
         const std::shared_ptr<TrueTypeFont>& font,
         float fontSize,
         float lineSpacing);

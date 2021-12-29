@@ -89,7 +89,7 @@ struct ColorScheme final {
 class DrawingContext final {
 public:
     DrawingContext(
-        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
         AssetManager& assets);
 
     Point2D GetCurrentTransform() const;
@@ -105,7 +105,7 @@ public:
     void PopScissorRect();
 
     void BeginDraw(
-        const std::shared_ptr<GraphicsCommandList>& commandList,
+        const std::shared_ptr<gpu::CommandList>& commandList,
         const Matrix4x4& transformMatrix);
 
     void EndDraw();
@@ -130,11 +130,11 @@ private:
     std::unordered_map<std::uint32_t, std::shared_ptr<SpriteFont>> spriteFonts;
 
     TexturePacker::TextureAtlas iconTextureAtlas;
-    std::shared_ptr<Texture2D> iconTexture;
+    std::shared_ptr<gpu::Texture2D> iconTexture;
 
     ColorScheme colorScheme;
 
-    std::shared_ptr<GraphicsCommandList> commandList;
+    std::shared_ptr<gpu::CommandList> commandList;
     std::shared_ptr<SpriteBatch> spriteBatch;
     std::shared_ptr<PrimitiveBatch> primitiveBatch;
     std::vector<Point2D> matrixStack;

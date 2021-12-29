@@ -11,7 +11,7 @@ namespace feature_showcase {
 GIFDecodeTest::GIFDecodeTest(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
     , graphicsDevice(gameHostIn->GetGraphicsDevice())
-    , commandQueue(gameHostIn->GetGraphicsCommandQueue())
+    , commandQueue(gameHostIn->GetCommandQueue())
 {
 }
 
@@ -23,16 +23,16 @@ std::unique_ptr<Error> GIFDecodeTest::Initialize()
     std::unique_ptr<Error> err;
 
     // NOTE: Create graphics command list
-    std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
+    std::tie(commandList, err) = graphicsDevice->CreateCommandList();
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to create graphics command list");
     }
 
     spriteBatch = std::make_shared<SpriteBatch>(
         graphicsDevice,
-        BlendDescriptor::CreateAlphaBlend(),
+        gpu::BlendDescriptor::CreateAlphaBlend(),
         std::nullopt,
-        SamplerDescriptor::CreatePointWrap(),
+        gpu::SamplerDescriptor::CreatePointWrap(),
         std::nullopt,
         std::nullopt,
         SpriteBatchPixelShaderMode::Default,
@@ -63,7 +63,7 @@ std::unique_ptr<Error> GIFDecodeTest::Initialize()
         result.Image->GetWidth(),
         result.Image->GetHeight(),
         false,
-        SurfaceFormat::R8G8B8A8_UNorm);
+        PixelFormat::R8G8B8A8_UNorm);
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to create texture from packed image");
     }
@@ -129,8 +129,8 @@ void GIFDecodeTest::Draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
-    Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
-    RenderPass pass;
+    gpu::Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
+    gpu::RenderPass pass;
     pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
     pass.DepthStencilBuffer = nullptr;
     pass.ClearDepth = 1.0f;

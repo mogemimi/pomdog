@@ -9,7 +9,7 @@
 #include "pomdog/gpu/buffer_usage.h"
 #include "pomdog/gpu/constant_buffer.h"
 #include "pomdog/gpu/depth_stencil_descriptor.h"
-#include "pomdog/gpu/graphics_command_list.h"
+#include "pomdog/gpu/command_list.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/input_layout_helper.h"
 #include "pomdog/gpu/pipeline_state.h"
@@ -64,18 +64,18 @@ public:
     std::vector<Vertex> vertices;
 
 private:
-    std::shared_ptr<GraphicsCommandList> commandList;
-    std::shared_ptr<VertexBuffer> vertexBuffer;
-    std::shared_ptr<PipelineState> pipelineState;
-    std::shared_ptr<ConstantBuffer> constantBuffer;
+    std::shared_ptr<gpu::CommandList> commandList;
+    std::shared_ptr<gpu::VertexBuffer> vertexBuffer;
+    std::shared_ptr<gpu::PipelineState> pipelineState;
+    std::shared_ptr<gpu::ConstantBuffer> constantBuffer;
 
 public:
     Impl(
-        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
         AssetManager& assets);
 
     void Begin(
-        const std::shared_ptr<GraphicsCommandList>& commandListIn,
+        const std::shared_ptr<gpu::CommandList>& commandListIn,
         const Matrix4x4& transformMatrix);
 
     void DrawLine(
@@ -96,7 +96,7 @@ public:
 };
 
 LineBatch::Impl::Impl(
-    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     AssetManager& assets)
 {
     vertices.reserve(MinVertexCount);
@@ -106,18 +106,18 @@ LineBatch::Impl::Impl(
         vertexBuffer = std::get<0>(graphicsDevice->CreateVertexBuffer(
             maxVertexCount,
             sizeof(Vertex),
-            BufferUsage::Dynamic));
+            gpu::BufferUsage::Dynamic));
     }
     {
-        auto inputLayout = InputLayoutHelper{}
+        auto inputLayout = gpu::InputLayoutHelper{}
             .Float3().Float4();
 
-        auto vertexShaderBuilder = assets.CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
+        auto vertexShaderBuilder = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
             .SetGLSL(Builtin_GLSL_LineBatch_VS, std::strlen(Builtin_GLSL_LineBatch_VS))
             .SetHLSLPrecompiled(BuiltinHLSL_LineBatch_VS, sizeof(BuiltinHLSL_LineBatch_VS))
             .SetMetal(Builtin_Metal_LineBatch, std::strlen(Builtin_Metal_LineBatch), "LineBatchVS");
 
-        auto pixelShaderBuilder = assets.CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
+        auto pixelShaderBuilder = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader)
             .SetGLSL(Builtin_GLSL_LineBatch_PS, std::strlen(Builtin_GLSL_LineBatch_PS))
             .SetHLSLPrecompiled(BuiltinHLSL_LineBatch_PS, sizeof(BuiltinHLSL_LineBatch_PS))
             .SetMetal(Builtin_Metal_LineBatch, std::strlen(Builtin_Metal_LineBatch), "LineBatchPS");
@@ -135,15 +135,15 @@ LineBatch::Impl::Impl(
         auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
         std::unique_ptr<Error> pipelineStateErr;
-        std::tie(pipelineState, pipelineStateErr) = assets.CreateBuilder<PipelineState>()
+        std::tie(pipelineState, pipelineStateErr) = assets.CreateBuilder<gpu::PipelineState>()
             .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
             .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
             .SetVertexShader(std::move(vertexShader))
             .SetPixelShader(std::move(pixelShader))
             .SetInputLayout(inputLayout.CreateInputLayout())
-            .SetPrimitiveTopology(PrimitiveTopology::LineList)
-            .SetBlendState(BlendDescriptor::CreateNonPremultiplied())
-            .SetDepthStencilState(DepthStencilDescriptor::CreateDefault())
+            .SetPrimitiveTopology(gpu::PrimitiveTopology::LineList)
+            .SetBlendState(gpu::BlendDescriptor::CreateNonPremultiplied())
+            .SetDepthStencilState(gpu::DepthStencilDescriptor::CreateDefault())
             .SetConstantBufferBindSlot("TransformMatrix", 0)
             .Build();
         if (pipelineStateErr != nullptr) {
@@ -153,11 +153,11 @@ LineBatch::Impl::Impl(
 
     constantBuffer = std::get<0>(graphicsDevice->CreateConstantBuffer(
         sizeof(Matrix4x4),
-        BufferUsage::Dynamic));
+        gpu::BufferUsage::Dynamic));
 }
 
 void LineBatch::Impl::Begin(
-    const std::shared_ptr<GraphicsCommandList>& commandListIn,
+    const std::shared_ptr<gpu::CommandList>& commandListIn,
     const Matrix4x4& transformMatrix)
 {
     POMDOG_ASSERT(commandListIn);
@@ -237,7 +237,7 @@ void LineBatch::Impl::DrawTriangle(
 // MARK: - LineBatch
 
 LineBatch::LineBatch(
-    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     AssetManager& assets)
     : impl(std::make_unique<Impl>(graphicsDevice, assets))
 {
@@ -246,7 +246,7 @@ LineBatch::LineBatch(
 LineBatch::~LineBatch() = default;
 
 void LineBatch::Begin(
-    const std::shared_ptr<GraphicsCommandList>& commandListIn,
+    const std::shared_ptr<gpu::CommandList>& commandListIn,
     const Matrix4x4& transformMatrixIn)
 {
     POMDOG_ASSERT(impl);

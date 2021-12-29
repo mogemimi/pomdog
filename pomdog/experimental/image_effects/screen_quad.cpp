@@ -2,7 +2,7 @@
 
 #include "pomdog/experimental/image_effects/screen_quad.h"
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/gpu/graphics_command_list.h"
+#include "pomdog/gpu/command_list.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/shader_language.h"
 #include "pomdog/gpu/vertex_buffer.h"
@@ -18,7 +18,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 
-ScreenQuad::ScreenQuad(const std::shared_ptr<GraphicsDevice>& graphicsDevice)
+ScreenQuad::ScreenQuad(const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
 {
     struct ScreenQuadVertex {
         Vector3 Position;
@@ -32,8 +32,8 @@ ScreenQuad::ScreenQuad(const std::shared_ptr<GraphicsDevice>& graphicsDevice)
         ScreenQuadVertex{Vector3{ 1.0f, -1.0f, 0.5f}, Vector2{1.0f, 0.0f}},
     }};
 
-    if ((graphicsDevice->GetSupportedLanguage() == ShaderLanguage::HLSL) ||
-        (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::Metal)) {
+    if ((graphicsDevice->GetSupportedLanguage() == gpu::ShaderLanguage::HLSL) ||
+        (graphicsDevice->GetSupportedLanguage() == gpu::ShaderLanguage::Metal)) {
         // Convert to Texture Coordinates in Direct3D
         for (auto& vertex : verticesCombo) {
             vertex.TextureCoord.Y = (1.0f - vertex.TextureCoord.Y);
@@ -49,10 +49,10 @@ ScreenQuad::ScreenQuad(const std::shared_ptr<GraphicsDevice>& graphicsDevice)
         vertices.data(),
         vertices.size(),
         sizeof(ScreenQuadVertex),
-        BufferUsage::Immutable));
+        gpu::BufferUsage::Immutable));
 }
 
-void ScreenQuad::DrawQuad(GraphicsCommandList& commandList)
+void ScreenQuad::DrawQuad(gpu::CommandList& commandList)
 {
     commandList.SetVertexBuffer(0, vertexBuffer);
     commandList.Draw(vertexBuffer->GetVertexCount(), 0);

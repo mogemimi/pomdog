@@ -17,17 +17,17 @@ namespace pomdog {
 class POMDOG_EXPORT ChromaticAberration final : public ImageEffectBase {
 public:
     ChromaticAberration(
-        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
         AssetManager& assets);
 
     void Apply(
-        GraphicsCommandList& commandList,
-        const std::shared_ptr<RenderTarget2D>& source,
-        const std::shared_ptr<ConstantBuffer>& constantBuffer) override;
+        gpu::CommandList& commandList,
+        const std::shared_ptr<gpu::RenderTarget2D>& source,
+        const std::shared_ptr<gpu::ConstantBuffer>& constantBuffer) override;
 
 private:
-    std::shared_ptr<SamplerState> samplerState;
-    std::shared_ptr<PipelineState> pipelineState;
+    std::shared_ptr<gpu::SamplerState> samplerState;
+    std::shared_ptr<gpu::PipelineState> pipelineState;
 };
 
 } // namespace pomdog

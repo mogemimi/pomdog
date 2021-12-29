@@ -19,20 +19,20 @@ public:
 
 private:
     std::shared_ptr<GameHost> gameHost;
-    std::shared_ptr<GraphicsDevice> graphicsDevice;
-    std::shared_ptr<GraphicsCommandQueue> commandQueue;
-    std::shared_ptr<GraphicsCommandList> commandList;
+    std::shared_ptr<gpu::GraphicsDevice> graphicsDevice;
+    std::shared_ptr<gpu::CommandQueue> commandQueue;
+    std::shared_ptr<gpu::CommandList> commandList;
     ConnectionList connect;
 
-    std::shared_ptr<VertexBuffer> vertexBuffer1;
-    std::shared_ptr<VertexBuffer> vertexBuffer2;
-    std::shared_ptr<IndexBuffer> indexBuffer;
-    std::shared_ptr<PipelineState> pipelineState1;
-    std::shared_ptr<PipelineState> pipelineState2;
-    std::shared_ptr<SamplerState> sampler;
-    std::shared_ptr<ConstantBuffer> modelConstantBuffer;
-    std::shared_ptr<ConstantBuffer> worldConstantBuffer;
-    std::shared_ptr<Texture2D> texture;
+    std::shared_ptr<gpu::VertexBuffer> vertexBuffer1;
+    std::shared_ptr<gpu::VertexBuffer> vertexBuffer2;
+    std::shared_ptr<gpu::IndexBuffer> indexBuffer;
+    std::shared_ptr<gpu::PipelineState> pipelineState1;
+    std::shared_ptr<gpu::PipelineState> pipelineState2;
+    std::shared_ptr<gpu::SamplerState> sampler;
+    std::shared_ptr<gpu::ConstantBuffer> modelConstantBuffer;
+    std::shared_ptr<gpu::ConstantBuffer> worldConstantBuffer;
+    std::shared_ptr<gpu::Texture2D> texture;
 };
 
 } // namespace feature_showcase

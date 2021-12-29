@@ -107,7 +107,7 @@ DecodeSVG(std::uint8_t* data, std::size_t size, int canvasWidth, int canvasHeigh
     imageBuffer.RawData.resize(canvasWidth * canvasHeight * 4);
     imageBuffer.PixelData = imageBuffer.RawData.data();
     imageBuffer.ByteLength = imageBuffer.RawData.size();
-    imageBuffer.Format = SurfaceFormat::R8G8B8A8_UNorm;
+    imageBuffer.Format = PixelFormat::R8G8B8A8_UNorm;
     imageBuffer.Width = canvasWidth;
     imageBuffer.Height = canvasHeight;
 
@@ -178,9 +178,9 @@ DecodeFile(
     return DecodeSVG(binary.data(), binary.size(), width, height);
 }
 
-std::tuple<std::shared_ptr<Texture2D>, std::unique_ptr<Error>>
+std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
 LoadTexture(
-    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     const std::string& filePath,
     int width,
     int height)

@@ -47,13 +47,13 @@ public:
     float fontSize;
 
     Impl(
-        std::vector<std::shared_ptr<Texture2D>>&& textures,
+        std::vector<std::shared_ptr<gpu::Texture2D>>&& textures,
         const std::vector<FontGlyph>& glyphs,
         float spacing,
         float lineSpacing);
 
     Impl(
-        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
         const std::shared_ptr<TrueTypeFont>& font,
         float fontSize,
         float lineSpacing);
@@ -75,8 +75,8 @@ public:
     void PrepareFonts(const std::string& text);
 
 private:
-    std::vector<std::shared_ptr<Texture2D>> textures;
-    std::shared_ptr<GraphicsDevice> graphicsDevice;
+    std::vector<std::shared_ptr<gpu::Texture2D>> textures;
+    std::shared_ptr<gpu::GraphicsDevice> graphicsDevice;
     std::shared_ptr<TrueTypeFont> font;
     std::vector<std::uint8_t> pixelData;
     Point2D currentPoint;
@@ -84,7 +84,7 @@ private:
 };
 
 SpriteFont::Impl::Impl(
-    std::vector<std::shared_ptr<Texture2D>>&& texturesIn,
+    std::vector<std::shared_ptr<gpu::Texture2D>>&& texturesIn,
     const std::vector<FontGlyph>& glyphsIn,
     float spacingIn,
     float lineSpacingIn)
@@ -100,7 +100,7 @@ SpriteFont::Impl::Impl(
 }
 
 SpriteFont::Impl::Impl(
-    const std::shared_ptr<GraphicsDevice>& graphicsDeviceIn,
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDeviceIn,
     const std::shared_ptr<TrueTypeFont>& fontIn,
     float fontSizeIn,
     float lineSpacingIn)
@@ -118,7 +118,7 @@ SpriteFont::Impl::Impl(
     bottomY = 1;
 
     auto texture = std::get<0>(graphicsDevice->CreateTexture2D(
-        TextureWidth, TextureHeight, false, SurfaceFormat::A8_UNorm));
+        TextureWidth, TextureHeight, false, PixelFormat::A8_UNorm));
     textures.push_back(texture);
 }
 
@@ -221,7 +221,7 @@ void SpriteFont::Impl::PrepareFonts(const std::string& text)
                     std::fill(std::begin(pixelData), std::end(pixelData), static_cast<std::uint8_t>(0));
 
                     auto textureNew = std::get<0>(graphicsDevice->CreateTexture2D(
-                        TextureWidth, TextureHeight, false, SurfaceFormat::A8_UNorm));
+                        TextureWidth, TextureHeight, false, PixelFormat::A8_UNorm));
                     textures.push_back(textureNew);
                     currentPoint = {1, 1};
                     bottomY = 1;
@@ -335,7 +335,7 @@ void SpriteFont::Impl::Draw(
 // MARK: - SpriteFont
 
 SpriteFont::SpriteFont(
-    std::vector<std::shared_ptr<Texture2D>>&& textures,
+    std::vector<std::shared_ptr<gpu::Texture2D>>&& textures,
     const std::vector<FontGlyph>& glyphs,
     float spacing,
     float lineSpacing)
@@ -344,7 +344,7 @@ SpriteFont::SpriteFont(
 }
 
 SpriteFont::SpriteFont(
-    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     const std::shared_ptr<TrueTypeFont>& font,
     float fontSize,
     float lineSpacing)

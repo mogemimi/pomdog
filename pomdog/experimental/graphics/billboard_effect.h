@@ -15,12 +15,6 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 class AssetManager;
-class GraphicsDevice;
-class GraphicsCommandList;
-class Texture2D;
-class PipelineState;
-class SamplerState;
-class VertexBuffer;
 } // namespace pomdog
 
 namespace pomdog {
@@ -28,7 +22,7 @@ namespace pomdog {
 class POMDOG_EXPORT BillboardBatchBuffer final {
 public:
     BillboardBatchBuffer(
-        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
         int capacity);
 
     BillboardBatchBuffer(const BillboardBatchBuffer&) = delete;
@@ -64,7 +58,7 @@ public:
 
     void FetchBuffer();
 
-    const std::shared_ptr<VertexBuffer>& GetVertexBuffer() const;
+    const std::shared_ptr<gpu::VertexBuffer>& GetVertexBuffer() const;
 
     /// Return the number of instances of the billboard.
     int GetSize() const noexcept;
@@ -80,16 +74,16 @@ private:
 class POMDOG_EXPORT BillboardBatchEffect final {
 public:
     BillboardBatchEffect(
-        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
         AssetManager& assets);
 
     BillboardBatchEffect(
-        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-        std::optional<BlendDescriptor>&& blendDesc,
-        std::optional<DepthStencilDescriptor>&& depthStencilDesc,
-        std::optional<RasterizerDescriptor>&& rasterizerDesc,
-        std::optional<SurfaceFormat>&& renderTargetViewFormat,
-        std::optional<SurfaceFormat>&& depthStencilViewFormat,
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+        std::optional<gpu::BlendDescriptor>&& blendDesc,
+        std::optional<gpu::DepthStencilDescriptor>&& depthStencilDesc,
+        std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc,
+        std::optional<PixelFormat>&& renderTargetViewFormat,
+        std::optional<PixelFormat>&& depthStencilViewFormat,
         AssetManager& assets);
 
     ~BillboardBatchEffect();
@@ -101,10 +95,10 @@ public:
     BillboardBatchEffect& operator=(BillboardBatchEffect&&) = default;
 
     void Draw(
-        const std::shared_ptr<GraphicsCommandList>& commandList,
-        const std::shared_ptr<Texture2D>& texture,
-        const std::shared_ptr<SamplerState>& sampler,
-        const std::shared_ptr<ConstantBuffer>& constantBuffer,
+        const std::shared_ptr<gpu::CommandList>& commandList,
+        const std::shared_ptr<gpu::Texture2D>& texture,
+        const std::shared_ptr<gpu::SamplerState>& sampler,
+        const std::shared_ptr<gpu::ConstantBuffer>& constantBuffer,
         std::size_t constantBufferOffset,
         const BillboardBatchBuffer& billboardInstances);
 

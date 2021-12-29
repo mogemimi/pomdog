@@ -15,7 +15,7 @@ GameMain::GameMain(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
     , window(gameHostIn->GetWindow())
     , graphicsDevice(gameHostIn->GetGraphicsDevice())
-    , commandQueue(gameHostIn->GetGraphicsCommandQueue())
+    , commandQueue(gameHostIn->GetCommandQueue())
     , assets(gameHostIn->GetAssetManager())
     , clock(gameHostIn->GetClock())
     , audioEngine(gameHostIn->GetAudioEngine())
@@ -36,7 +36,7 @@ std::unique_ptr<Error> GameMain::Initialize()
     std::unique_ptr<Error> err;
 
     // NOTE: Create graphics command list
-    std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
+    std::tie(commandList, err) = graphicsDevice->CreateCommandList();
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to create graphics command list");
     }
@@ -334,8 +334,8 @@ void GameMain::Draw()
 
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
-    Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
-    RenderPass pass;
+    gpu::Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
+    gpu::RenderPass pass;
     pass.RenderTargets[0] = {renderTarget, backgroundColor.ToVector4()};
     pass.DepthStencilBuffer = depthStencilBuffer;
     pass.ClearDepth = 1.0f;

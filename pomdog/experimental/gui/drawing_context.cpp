@@ -8,7 +8,7 @@
 #include "pomdog/experimental/texture_packer/texture_atlas_generator.h"
 #include "pomdog/gpu/blend_descriptor.h"
 #include "pomdog/gpu/depth_stencil_descriptor.h"
-#include "pomdog/gpu/graphics_command_list.h"
+#include "pomdog/gpu/command_list.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/rasterizer_descriptor.h"
 #include "pomdog/gpu/sampler_descriptor.h"
@@ -28,7 +28,7 @@ std::uint32_t MakeFontID(FontWeight fontWeight, FontSize fontSize)
 } // namespace
 
 DrawingContext::DrawingContext(
-    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     AssetManager& assets)
     : viewportWidth(1)
     , viewportHeight(1)
@@ -36,14 +36,14 @@ DrawingContext::DrawingContext(
     primitiveBatch = std::make_shared<PrimitiveBatch>(
         graphicsDevice,
         std::nullopt,
-        RasterizerDescriptor::CreateCullNone(),
+        gpu::RasterizerDescriptor::CreateCullNone(),
         assets);
 
     spriteBatch = std::make_shared<SpriteBatch>(
         graphicsDevice,
-        BlendDescriptor::CreateNonPremultiplied(),
-        RasterizerDescriptor::CreateCullNone(),
-        SamplerDescriptor::CreateLinearWrap(),
+        gpu::BlendDescriptor::CreateNonPremultiplied(),
+        gpu::RasterizerDescriptor::CreateCullNone(),
+        gpu::SamplerDescriptor::CreateLinearWrap(),
         std::nullopt,
         std::nullopt,
         SpriteBatchPixelShaderMode::Default,
@@ -197,7 +197,7 @@ DrawingContext::DrawingContext(
         result.Image->GetWidth(),
         result.Image->GetHeight(),
         false,
-        SurfaceFormat::R8G8B8A8_UNorm));
+        PixelFormat::R8G8B8A8_UNorm));
     iconTexture->SetData(result.Image->GetData());
 
     iconTextureAtlas = std::move(result.Atlas);
@@ -328,7 +328,7 @@ void DrawingContext::PopScissorRect()
 }
 
 void DrawingContext::BeginDraw(
-    const std::shared_ptr<GraphicsCommandList>& commandListIn,
+    const std::shared_ptr<gpu::CommandList>& commandListIn,
     const Matrix4x4& transformMatrix)
 {
     commandList = commandListIn;

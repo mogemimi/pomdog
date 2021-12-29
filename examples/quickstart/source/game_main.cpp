@@ -10,7 +10,7 @@ GameMain::GameMain(const std::shared_ptr<GameHost>& gameHostIn)
     , graphicsDevice(gameHostIn->GetGraphicsDevice())
     , assets(gameHostIn->GetAssetManager())
     , clock(gameHostIn->GetClock())
-    , commandQueue(gameHostIn->GetGraphicsCommandQueue())
+    , commandQueue(gameHostIn->GetCommandQueue())
 {
 }
 
@@ -25,19 +25,19 @@ std::unique_ptr<Error> GameMain::Initialize()
     std::unique_ptr<Error> err;
 
     // NOTE: Create graphics command list
-    std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
+    std::tie(commandList, err) = graphicsDevice->CreateCommandList();
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to create graphics command list");
     }
 
     // NOTE: Load a PNG image as texture
-    std::tie(texture, err) = assets->Load<Texture2D>("pomdog.png");
+    std::tie(texture, err) = assets->Load<gpu::Texture2D>("pomdog.png");
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to load texture");
     }
 
     // NOTE: Create sampler state
-    std::tie(sampler, err) = graphicsDevice->CreateSamplerState(SamplerDescriptor::CreatePointClamp());
+    std::tie(sampler, err) = graphicsDevice->CreateSamplerState(gpu::SamplerDescriptor::CreatePointClamp());
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to create sampler state");
     }
@@ -60,7 +60,7 @@ std::unique_ptr<Error> GameMain::Initialize()
             verticesCombo.data(),
             verticesCombo.size(),
             sizeof(VertexCombined),
-            BufferUsage::Immutable);
+            gpu::BufferUsage::Immutable);
 
         if (err != nullptr) {
             return errors::Wrap(std::move(err), "failed to create vertex buffer");
@@ -71,10 +71,10 @@ std::unique_ptr<Error> GameMain::Initialize()
         std::array<std::uint16_t, 6> indices = {{0, 1, 2, 2, 3, 0}};
 
         std::tie(indexBuffer, err) = graphicsDevice->CreateIndexBuffer(
-            IndexElementSize::SixteenBits,
+            gpu::IndexElementSize::SixteenBits,
             indices.data(),
             indices.size(),
-            BufferUsage::Immutable);
+            gpu::BufferUsage::Immutable);
 
         if (err != nullptr) {
             return errors::Wrap(std::move(err), "failed to create index buffer");
@@ -84,7 +84,7 @@ std::unique_ptr<Error> GameMain::Initialize()
         // NOTE: Create constant buffer
         std::tie(constantBuffer, err) = graphicsDevice->CreateConstantBuffer(
             sizeof(MyShaderConstants),
-            BufferUsage::Dynamic);
+            gpu::BufferUsage::Dynamic);
 
         if (err != nullptr) {
             return errors::Wrap(std::move(err), "failed to create constant buffer");
@@ -92,12 +92,12 @@ std::unique_ptr<Error> GameMain::Initialize()
     }
     {
         // NOTE: For details, see 'struct VertexCombined' members
-        auto inputLayout = InputLayoutHelper{}
+        auto inputLayout = gpu::InputLayoutHelper{}
             .Float3()
             .Float2()
             .CreateInputLayout();
 
-        auto [vertexShader, vertexShaderErr] = assets->CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
+        auto [vertexShader, vertexShaderErr] = assets->CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
             .SetGLSLFromFile("simple_effect_vs.glsl")
             .SetHLSLFromFile("simple_effect_vs.hlsl", "SimpleEffectVS")
             .SetMetalFromFile("simple_effect.metal", "SimpleEffectVS")
@@ -107,7 +107,7 @@ std::unique_ptr<Error> GameMain::Initialize()
             return errors::Wrap(std::move(vertexShaderErr), "failed to create vertex shader");
         }
 
-        auto [pixelShader, pixelShaderErr] = assets->CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
+        auto [pixelShader, pixelShaderErr] = assets->CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader)
             .SetGLSLFromFile("simple_effect_ps.glsl")
             .SetHLSLFromFile("simple_effect_ps.hlsl", "SimpleEffectPS")
             .SetMetalFromFile("simple_effect.metal", "SimpleEffectPS")
@@ -120,11 +120,11 @@ std::unique_ptr<Error> GameMain::Initialize()
         auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
         // NOTE: Create pipeline state
-        std::tie(pipelineState, err) = assets->CreateBuilder<PipelineState>()
+        std::tie(pipelineState, err) = assets->CreateBuilder<gpu::PipelineState>()
             .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
             .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
             .SetInputLayout(inputLayout)
-            .SetPrimitiveTopology(PrimitiveTopology::TriangleList)
+            .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
             .SetVertexShader(std::move(vertexShader))
             .SetPixelShader(std::move(pixelShader))
             .SetConstantBufferBindSlot("MyShaderConstants", 0)
@@ -193,8 +193,8 @@ void GameMain::Draw()
 {
     const auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
-    Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
-    RenderPass pass;
+    gpu::Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
+    gpu::RenderPass pass;
     pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
     pass.DepthStencilBuffer = nullptr;
     pass.ClearDepth = 1.0f;

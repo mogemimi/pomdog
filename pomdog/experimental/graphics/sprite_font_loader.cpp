@@ -383,11 +383,11 @@ AssetLoader<SpriteFont>::operator()(AssetManager& assets, const std::string& fil
     POMDOG_ASSERT(pages.front().ID == 0);
     POMDOG_ASSERT(pages.back().ID == (pages.size() - 1));
 
-    std::vector<std::shared_ptr<Texture2D>> textures;
+    std::vector<std::shared_ptr<gpu::Texture2D>> textures;
     {
         auto directoryName = std::get<0>(PathHelper::Split(filePath));
         for (auto& page : pages) {
-            auto [texture, textureErr] = assets.Load<Texture2D>(PathHelper::Join(directoryName, page.Path));
+            auto [texture, textureErr] = assets.Load<gpu::Texture2D>(PathHelper::Join(directoryName, page.Path));
             if (textureErr != nullptr) {
                 auto err = errors::Wrap(std::move(textureErr), "failed to load sprite font texture " + page.Path);
                 return std::make_tuple(nullptr, std::move(err));

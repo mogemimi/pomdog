@@ -11,7 +11,7 @@
 #include "pomdog/gpu/buffer_usage.h"
 #include "pomdog/gpu/constant_buffer.h"
 #include "pomdog/gpu/depth_stencil_descriptor.h"
-#include "pomdog/gpu/graphics_command_list.h"
+#include "pomdog/gpu/command_list.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/index_buffer.h"
 #include "pomdog/gpu/index_element_size.h"
@@ -25,7 +25,7 @@
 #include "pomdog/gpu/sampler_state.h"
 #include "pomdog/gpu/shader.h"
 #include "pomdog/gpu/shader_language.h"
-#include "pomdog/gpu/surface_format.h"
+#include "pomdog/gpu/pixel_format.h"
 #include "pomdog/gpu/texture2d.h"
 #include "pomdog/gpu/vertex_buffer.h"
 #include "pomdog/gpu/viewport.h"
@@ -132,16 +132,16 @@ private:
 private:
     std::vector<SpriteInfo> spriteQueue;
 
-    std::shared_ptr<GraphicsCommandList> commandList;
+    std::shared_ptr<gpu::CommandList> commandList;
     Texture2DView currentTexture;
 
-    std::shared_ptr<VertexBuffer> planeVertices;
-    std::shared_ptr<IndexBuffer> planeIndices;
-    std::shared_ptr<VertexBuffer> instanceVertices;
+    std::shared_ptr<gpu::VertexBuffer> planeVertices;
+    std::shared_ptr<gpu::IndexBuffer> planeIndices;
+    std::shared_ptr<gpu::VertexBuffer> instanceVertices;
 
-    std::shared_ptr<PipelineState> pipelineState;
-    std::shared_ptr<ConstantBuffer> constantBuffer;
-    std::shared_ptr<SamplerState> sampler;
+    std::shared_ptr<gpu::PipelineState> pipelineState;
+    std::shared_ptr<gpu::ConstantBuffer> constantBuffer;
+    std::shared_ptr<gpu::SamplerState> sampler;
 
     Vector2 inverseTextureSize;
     std::size_t startInstanceLocation;
@@ -151,17 +151,17 @@ public:
 
 public:
     Impl(
-        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-        std::optional<BlendDescriptor>&& blendState,
-        std::optional<RasterizerDescriptor>&& rasterizerDesc,
-        std::optional<SamplerDescriptor>&& samplerState,
-        std::optional<SurfaceFormat>&& renderTargetViewFormat,
-        std::optional<SurfaceFormat>&& depthStencilViewFormat,
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+        std::optional<gpu::BlendDescriptor>&& blendState,
+        std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc,
+        std::optional<gpu::SamplerDescriptor>&& samplerState,
+        std::optional<PixelFormat>&& renderTargetViewFormat,
+        std::optional<PixelFormat>&& depthStencilViewFormat,
         SpriteBatchPixelShaderMode pixelShaderMode,
         AssetManager& assets);
 
     void Begin(
-        const std::shared_ptr<GraphicsCommandList>& commandListIn,
+        const std::shared_ptr<gpu::CommandList>& commandListIn,
         const Matrix4x4& transformMatrix,
         std::optional<SpriteBatchDistanceFieldParameters>&& distanceFieldParameters);
 
@@ -188,12 +188,12 @@ private:
 };
 
 SpriteBatch::Impl::Impl(
-    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-    std::optional<BlendDescriptor>&& blendDesc,
-    std::optional<RasterizerDescriptor>&& rasterizerDesc,
-    std::optional<SamplerDescriptor>&& samplerDesc,
-    std::optional<SurfaceFormat>&& renderTargetViewFormat,
-    std::optional<SurfaceFormat>&& depthStencilViewFormat,
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+    std::optional<gpu::BlendDescriptor>&& blendDesc,
+    std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc,
+    std::optional<gpu::SamplerDescriptor>&& samplerDesc,
+    std::optional<PixelFormat>&& renderTargetViewFormat,
+    std::optional<PixelFormat>&& depthStencilViewFormat,
     SpriteBatchPixelShaderMode pixelShaderMode,
     AssetManager& assets)
     : startInstanceLocation(0)
@@ -202,13 +202,13 @@ SpriteBatch::Impl::Impl(
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
     if (!blendDesc) {
-        blendDesc = BlendDescriptor::CreateNonPremultiplied();
+        blendDesc = gpu::BlendDescriptor::CreateNonPremultiplied();
     }
     if (!rasterizerDesc) {
-        rasterizerDesc = RasterizerDescriptor::CreateCullNone();
+        rasterizerDesc = gpu::RasterizerDescriptor::CreateCullNone();
     }
     if (!samplerDesc) {
-        samplerDesc = SamplerDescriptor::CreateLinearWrap();
+        samplerDesc = gpu::SamplerDescriptor::CreateLinearWrap();
     }
     if (!renderTargetViewFormat) {
         renderTargetViewFormat = presentationParameters.BackBufferFormat;
@@ -236,41 +236,41 @@ SpriteBatch::Impl::Impl(
             verticesCombo.data(),
             verticesCombo.size(),
             sizeof(PositionTextureCoord),
-            BufferUsage::Immutable));
+            gpu::BufferUsage::Immutable));
     }
     {
         std::array<std::uint16_t, 6> const indices = {{0, 1, 2, 2, 3, 0}};
 
         // Create index buffer
         planeIndices = std::get<0>(graphicsDevice->CreateIndexBuffer(
-            IndexElementSize::SixteenBits,
+            gpu::IndexElementSize::SixteenBits,
             indices.data(),
             indices.size(),
-            BufferUsage::Immutable));
+            gpu::BufferUsage::Immutable));
     }
     {
         const auto maxBatchSize = MaxBatchSize;
         instanceVertices = std::get<0>(graphicsDevice->CreateVertexBuffer(
             maxBatchSize,
             sizeof(SpriteInfo),
-            BufferUsage::Dynamic));
+            gpu::BufferUsage::Dynamic));
     }
     {
         constantBuffer = std::get<0>(graphicsDevice->CreateConstantBuffer(
             sizeof(SpriteBatchConstantBuffer),
-            BufferUsage::Dynamic));
+            gpu::BufferUsage::Dynamic));
 
         sampler = std::get<0>(graphicsDevice->CreateSamplerState(
             *samplerDesc));
     }
     {
-        auto inputLayout = InputLayoutHelper{}
+        auto inputLayout = gpu::InputLayoutHelper{}
             .AddInputSlot()
             .Float4()
-            .AddInputSlot(InputClassification::InputPerInstance, 1)
+            .AddInputSlot(gpu::InputClassification::InputPerInstance, 1)
             .Float4().Float4().Float4().Float4().Float4();
 
-        auto vertexShaderBuilder = assets.CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
+        auto vertexShaderBuilder = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
             .SetGLSL(Builtin_GLSL_SpriteBatch_VS, std::strlen(Builtin_GLSL_SpriteBatch_VS))
             .SetHLSLPrecompiled(BuiltinHLSL_SpriteBatch_VS, sizeof(BuiltinHLSL_SpriteBatch_VS))
             .SetMetal(Builtin_Metal_SpriteBatch, sizeof(Builtin_Metal_SpriteBatch), "SpriteBatchVS");
@@ -280,7 +280,7 @@ SpriteBatch::Impl::Impl(
             // FIXME: error handling
         }
 
-        auto pixelShaderBuilder = assets.CreateBuilder<Shader>(ShaderPipelineStage::PixelShader);
+        auto pixelShaderBuilder = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader);
 
         switch (pixelShaderMode) {
         case SpriteBatchPixelShaderMode::Default:
@@ -301,15 +301,15 @@ SpriteBatch::Impl::Impl(
         }
 
         std::unique_ptr<Error> pipelineStateErr;
-        std::tie(pipelineState, pipelineStateErr) = assets.CreateBuilder<PipelineState>()
+        std::tie(pipelineState, pipelineStateErr) = assets.CreateBuilder<gpu::PipelineState>()
             .SetRenderTargetViewFormat(*renderTargetViewFormat)
             .SetDepthStencilViewFormat(*depthStencilViewFormat)
             .SetVertexShader(std::move(vertexShader))
             .SetPixelShader(std::move(pixelShader))
             .SetInputLayout(inputLayout.CreateInputLayout())
-            .SetPrimitiveTopology(PrimitiveTopology::TriangleList)
+            .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
             .SetBlendState(*blendDesc)
-            .SetDepthStencilState(DepthStencilDescriptor::CreateNone())
+            .SetDepthStencilState(gpu::DepthStencilDescriptor::CreateNone())
             .SetRasterizerState(*rasterizerDesc)
             .SetConstantBufferBindSlot("SpriteBatchConstants", 0)
             .Build();
@@ -323,7 +323,7 @@ SpriteBatch::Impl::Impl(
 }
 
 void SpriteBatch::Impl::Begin(
-    const std::shared_ptr<GraphicsCommandList>& commandListIn,
+    const std::shared_ptr<gpu::CommandList>& commandListIn,
     const Matrix4x4& transformMatrix,
     std::optional<SpriteBatchDistanceFieldParameters>&& distanceFieldParameters)
 {
@@ -484,31 +484,31 @@ void SpriteBatch::Impl::Draw(
     bool compensationAlpha = false;
 
     switch (texture->GetFormat()) {
-    case SurfaceFormat::R8_UNorm:
-    case SurfaceFormat::R8G8_UNorm:
-    case SurfaceFormat::R16G16_Float:
-    case SurfaceFormat::R11G11B10_Float:
-    case SurfaceFormat::R32_Float:
+    case PixelFormat::R8_UNorm:
+    case PixelFormat::R8G8_UNorm:
+    case PixelFormat::R16G16_Float:
+    case PixelFormat::R11G11B10_Float:
+    case PixelFormat::R32_Float:
         sourceAlphaEnabled = false;
         compensationAlpha = true;
         break;
-    case SurfaceFormat::A8_UNorm:
+    case PixelFormat::A8_UNorm:
         sourceRGBEnabled = false;
         compensationRGB = true;
         break;
-    case SurfaceFormat::Invalid:
-    case SurfaceFormat::R8G8B8A8_UNorm:
-    case SurfaceFormat::R10G10B10A2_UNorm:
-    case SurfaceFormat::B8G8R8A8_UNorm:
-    case SurfaceFormat::R16G16B16A16_Float:
-    case SurfaceFormat::R32G32B32A32_Float:
-    case SurfaceFormat::BlockComp1_UNorm:
-    case SurfaceFormat::BlockComp2_UNorm:
-    case SurfaceFormat::BlockComp3_UNorm:
-    case SurfaceFormat::Depth16:
-    case SurfaceFormat::Depth32:
-    case SurfaceFormat::Depth24Stencil8:
-    case SurfaceFormat::Depth32_Float_Stencil8_Uint:
+    case PixelFormat::Invalid:
+    case PixelFormat::R8G8B8A8_UNorm:
+    case PixelFormat::R10G10B10A2_UNorm:
+    case PixelFormat::B8G8R8A8_UNorm:
+    case PixelFormat::R16G16B16A16_Float:
+    case PixelFormat::R32G32B32A32_Float:
+    case PixelFormat::BlockComp1_UNorm:
+    case PixelFormat::BlockComp2_UNorm:
+    case PixelFormat::BlockComp3_UNorm:
+    case PixelFormat::Depth16:
+    case PixelFormat::Depth32:
+    case PixelFormat::Depth24Stencil8:
+    case PixelFormat::Depth32_Float_Stencil8_Uint:
         break;
     }
 
@@ -558,7 +558,7 @@ void SpriteBatch::Impl::Draw(
 // MARK: - SpriteBatch
 
 SpriteBatch::SpriteBatch(
-    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     AssetManager& assets)
     : SpriteBatch(
           graphicsDevice,
@@ -573,12 +573,12 @@ SpriteBatch::SpriteBatch(
 }
 
 SpriteBatch::SpriteBatch(
-    const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-    std::optional<BlendDescriptor>&& blendDesc,
-    std::optional<RasterizerDescriptor>&& rasterizerDesc,
-    std::optional<SamplerDescriptor>&& samplerDesc,
-    std::optional<SurfaceFormat>&& renderTargetViewFormat,
-    std::optional<SurfaceFormat>&& depthStencilViewFormat,
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+    std::optional<gpu::BlendDescriptor>&& blendDesc,
+    std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc,
+    std::optional<gpu::SamplerDescriptor>&& samplerDesc,
+    std::optional<PixelFormat>&& renderTargetViewFormat,
+    std::optional<PixelFormat>&& depthStencilViewFormat,
     SpriteBatchPixelShaderMode pixelShaderMode,
     AssetManager& assets)
     : impl(std::make_unique<Impl>(
@@ -596,7 +596,7 @@ SpriteBatch::SpriteBatch(
 SpriteBatch::~SpriteBatch() = default;
 
 void SpriteBatch::Begin(
-    const std::shared_ptr<GraphicsCommandList>& commandList,
+    const std::shared_ptr<gpu::CommandList>& commandList,
     const Matrix4x4& transformMatrixIn)
 {
     POMDOG_ASSERT(impl);
@@ -604,7 +604,7 @@ void SpriteBatch::Begin(
 }
 
 void SpriteBatch::Begin(
-    const std::shared_ptr<GraphicsCommandList>& commandList,
+    const std::shared_ptr<gpu::CommandList>& commandList,
     const Matrix4x4& transformMatrixIn,
     const SpriteBatchDistanceFieldParameters& distanceFieldParameters)
 {
@@ -625,7 +625,7 @@ void SpriteBatch::End()
 }
 
 void SpriteBatch::Draw(
-    const std::shared_ptr<Texture2D>& texture,
+    const std::shared_ptr<gpu::Texture2D>& texture,
     const Rectangle& sourceRect,
     const Color& color)
 {
@@ -635,7 +635,7 @@ void SpriteBatch::Draw(
 }
 
 void SpriteBatch::Draw(
-    const std::shared_ptr<Texture2D>& texture,
+    const std::shared_ptr<gpu::Texture2D>& texture,
     const Vector2& position,
     const Color& color)
 {
@@ -646,7 +646,7 @@ void SpriteBatch::Draw(
 }
 
 void SpriteBatch::Draw(
-    const std::shared_ptr<Texture2D>& texture,
+    const std::shared_ptr<gpu::Texture2D>& texture,
     const Vector2& position,
     const Rectangle& sourceRect,
     const Color& color)
@@ -657,7 +657,7 @@ void SpriteBatch::Draw(
 }
 
 void SpriteBatch::Draw(
-    const std::shared_ptr<Texture2D>& texture,
+    const std::shared_ptr<gpu::Texture2D>& texture,
     const Vector2& position,
     const Rectangle& sourceRect,
     const Color& color,
@@ -671,7 +671,7 @@ void SpriteBatch::Draw(
 }
 
 void SpriteBatch::Draw(
-    const std::shared_ptr<Texture2D>& texture,
+    const std::shared_ptr<gpu::Texture2D>& texture,
     const Vector2& position,
     const Rectangle& sourceRect,
     const Color& color,
@@ -685,7 +685,7 @@ void SpriteBatch::Draw(
 }
 
 void SpriteBatch::Draw(
-    const std::shared_ptr<Texture2D>& texture,
+    const std::shared_ptr<gpu::Texture2D>& texture,
     const Vector2& position,
     const TextureRegion& textureRegion,
     const Color& color,
@@ -700,7 +700,7 @@ void SpriteBatch::Draw(
 }
 
 void SpriteBatch::Draw(
-    const std::shared_ptr<Texture2D>& texture,
+    const std::shared_ptr<gpu::Texture2D>& texture,
     const Vector2& position,
     const TextureRegion& textureRegion,
     const Color& color,
@@ -715,7 +715,7 @@ void SpriteBatch::Draw(
 }
 
 void SpriteBatch::Draw(
-    const std::shared_ptr<RenderTarget2D>& texture,
+    const std::shared_ptr<gpu::RenderTarget2D>& texture,
     const Rectangle& sourceRect,
     const Color& color)
 {
@@ -725,7 +725,7 @@ void SpriteBatch::Draw(
 }
 
 void SpriteBatch::Draw(
-    const std::shared_ptr<RenderTarget2D>& texture,
+    const std::shared_ptr<gpu::RenderTarget2D>& texture,
     const Vector2& position,
     const Color& color)
 {
@@ -736,7 +736,7 @@ void SpriteBatch::Draw(
 }
 
 void SpriteBatch::Draw(
-    const std::shared_ptr<RenderTarget2D>& texture,
+    const std::shared_ptr<gpu::RenderTarget2D>& texture,
     const Vector2& position,
     const Rectangle& sourceRect,
     const Color& color)
@@ -747,7 +747,7 @@ void SpriteBatch::Draw(
 }
 
 void SpriteBatch::Draw(
-    const std::shared_ptr<RenderTarget2D>& texture,
+    const std::shared_ptr<gpu::RenderTarget2D>& texture,
     const Vector2& position,
     const Rectangle& sourceRect,
     const Color& color,
@@ -761,7 +761,7 @@ void SpriteBatch::Draw(
 }
 
 void SpriteBatch::Draw(
-    const std::shared_ptr<RenderTarget2D>& texture,
+    const std::shared_ptr<gpu::RenderTarget2D>& texture,
     const Vector2& position,
     const Rectangle& sourceRect,
     const Color& color,
@@ -775,7 +775,7 @@ void SpriteBatch::Draw(
 }
 
 void SpriteBatch::Draw(
-    const std::shared_ptr<RenderTarget2D>& texture,
+    const std::shared_ptr<gpu::RenderTarget2D>& texture,
     const Vector2& position,
     const TextureRegion& textureRegion,
     const Color& color,
@@ -790,7 +790,7 @@ void SpriteBatch::Draw(
 }
 
 void SpriteBatch::Draw(
-    const std::shared_ptr<RenderTarget2D>& texture,
+    const std::shared_ptr<gpu::RenderTarget2D>& texture,
     const Vector2& position,
     const TextureRegion& textureRegion,
     const Color& color,

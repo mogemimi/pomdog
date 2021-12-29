@@ -7,7 +7,7 @@ namespace feature_showcase {
 BillboardBatchTest::BillboardBatchTest(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
     , graphicsDevice(gameHostIn->GetGraphicsDevice())
-    , commandQueue(gameHostIn->GetGraphicsCommandQueue())
+    , commandQueue(gameHostIn->GetCommandQueue())
 {
 }
 
@@ -19,7 +19,7 @@ std::unique_ptr<Error> BillboardBatchTest::Initialize()
     std::unique_ptr<Error> err;
 
     // NOTE: Create graphics command list
-    std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
+    std::tie(commandList, err) = graphicsDevice->CreateCommandList();
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to create graphics command list");
     }
@@ -29,7 +29,7 @@ std::unique_ptr<Error> BillboardBatchTest::Initialize()
     // NOTE: Create billboard batch effect
     billboardEffect = std::make_shared<BillboardBatchEffect>(
         graphicsDevice,
-        BlendDescriptor::CreateNonPremultiplied(),
+        gpu::BlendDescriptor::CreateNonPremultiplied(),
         std::nullopt,
         std::nullopt,
         std::nullopt,
@@ -41,7 +41,7 @@ std::unique_ptr<Error> BillboardBatchTest::Initialize()
 
     // NOTE: Create sampler state
     std::tie(sampler, err) = graphicsDevice->CreateSamplerState(
-        SamplerDescriptor::CreateLinearClamp());
+        gpu::SamplerDescriptor::CreateLinearClamp());
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to create sampler state");
     }
@@ -49,13 +49,13 @@ std::unique_ptr<Error> BillboardBatchTest::Initialize()
     // NOTE: Create constant buffer
     std::tie(constantBuffer, err) = graphicsDevice->CreateConstantBuffer(
         sizeof(BasicEffect::WorldConstantBuffer),
-        BufferUsage::Dynamic);
+        gpu::BufferUsage::Dynamic);
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to create constant buffer");
     }
 
     // NOTE: Load texture from PNG image file.
-    std::tie(texture, err) = assets->Load<Texture2D>("Textures/pomdog.png");
+    std::tie(texture, err) = assets->Load<gpu::Texture2D>("Textures/pomdog.png");
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to load texture");
     }
@@ -75,8 +75,8 @@ void BillboardBatchTest::Draw()
 {
     const auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
-    Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
-    RenderPass pass;
+    gpu::Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
+    gpu::RenderPass pass;
     pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
     pass.DepthStencilBuffer = nullptr;
     pass.ClearDepth = 1.0f;

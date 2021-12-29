@@ -14,12 +14,12 @@ namespace pomdog {
 
 class POMDOG_EXPORT ScreenQuad final {
 public:
-    explicit ScreenQuad(const std::shared_ptr<GraphicsDevice>& graphicsDevice);
+    explicit ScreenQuad(const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice);
 
-    void DrawQuad(GraphicsCommandList& commandList);
+    void DrawQuad(gpu::CommandList& commandList);
 
 private:
-    std::shared_ptr<VertexBuffer> vertexBuffer;
+    std::shared_ptr<gpu::VertexBuffer> vertexBuffer;
 };
 
 } // namespace pomdog

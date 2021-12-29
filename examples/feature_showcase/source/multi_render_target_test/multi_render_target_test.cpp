@@ -7,7 +7,7 @@ namespace feature_showcase {
 MultiRenderTargetTest::MultiRenderTargetTest(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
     , graphicsDevice(gameHostIn->GetGraphicsDevice())
-    , commandQueue(gameHostIn->GetGraphicsCommandQueue())
+    , commandQueue(gameHostIn->GetCommandQueue())
 {
 }
 
@@ -19,22 +19,22 @@ std::unique_ptr<Error> MultiRenderTargetTest::Initialize()
     std::unique_ptr<Error> err;
 
     // NOTE: Create graphics command list
-    std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
+    std::tie(commandList, err) = graphicsDevice->CreateCommandList();
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to create graphics command list");
     }
 
     // NOTE: Load texture from image file
-    std::tie(texture, err) = assets->Load<Texture2D>("Textures/pomdog.png");
+    std::tie(texture, err) = assets->Load<gpu::Texture2D>("Textures/pomdog.png");
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to load texture");
     }
 
     spriteBatch = std::make_shared<SpriteBatch>(
         graphicsDevice,
-        BlendDescriptor::CreateNonPremultiplied(),
+        gpu::BlendDescriptor::CreateNonPremultiplied(),
         std::nullopt,
-        SamplerDescriptor::CreatePointWrap(),
+        gpu::SamplerDescriptor::CreatePointWrap(),
         std::nullopt,
         std::nullopt,
         SpriteBatchPixelShaderMode::Default,
@@ -80,7 +80,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::Initialize()
             verticesCombo.data(),
             verticesCombo.size(),
             sizeof(VertexCombined),
-            BufferUsage::Immutable);
+            gpu::BufferUsage::Immutable);
 
         if (err != nullptr) {
             return errors::Wrap(std::move(err), "failed to create vertex buffer");
@@ -106,10 +106,10 @@ std::unique_ptr<Error> MultiRenderTargetTest::Initialize()
         }};
 
         std::tie(indexBuffer, err) = graphicsDevice->CreateIndexBuffer(
-            IndexElementSize::SixteenBits,
+            gpu::IndexElementSize::SixteenBits,
             indices.data(),
             indices.size(),
-            BufferUsage::Immutable);
+            gpu::BufferUsage::Immutable);
 
         if (err != nullptr) {
             return errors::Wrap(std::move(err), "failed to create index buffer");
@@ -119,7 +119,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::Initialize()
         // NOTE: Create constant buffer
         std::tie(modelConstantBuffer, err) = graphicsDevice->CreateConstantBuffer(
             sizeof(BasicEffect::ModelConstantBuffer),
-            BufferUsage::Dynamic);
+            gpu::BufferUsage::Dynamic);
 
         if (err != nullptr) {
             return errors::Wrap(std::move(err), "failed to create constant buffer");
@@ -127,7 +127,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::Initialize()
 
         std::tie(worldConstantBuffer, err) = graphicsDevice->CreateConstantBuffer(
             sizeof(BasicEffect::WorldConstantBuffer),
-            BufferUsage::Dynamic);
+            gpu::BufferUsage::Dynamic);
 
         if (err != nullptr) {
             return errors::Wrap(std::move(err), "failed to create constant buffer");
@@ -136,7 +136,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::Initialize()
     {
         // NOTE: Create sampler state
         std::tie(sampler, err) = graphicsDevice->CreateSamplerState(
-            SamplerDescriptor::CreateLinearClamp());
+            gpu::SamplerDescriptor::CreateLinearClamp());
 
         if (err != nullptr) {
             return errors::Wrap(std::move(err), "failed to create sampler state");
@@ -144,14 +144,14 @@ std::unique_ptr<Error> MultiRenderTargetTest::Initialize()
     }
     {
         // For details, see 'struct VertexCombined' members
-        auto inputLayout = InputLayoutHelper{}
+        auto inputLayout = gpu::InputLayoutHelper{}
             .Float3() // NOTE: VertexCombined::Position
             .Float3() // NOTE: VertexCombined::Normal
             .Float2() // NOTE: VertexCombined::TextureCoord
             .CreateInputLayout();
 
         // NOTE: Create vertex shader
-        auto [vertexShader, vertexShaderErr] = assets->CreateBuilder<Shader>(ShaderPipelineStage::VertexShader)
+        auto [vertexShader, vertexShaderErr] = assets->CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
             .SetGLSLFromFile("Shaders/MultiRTVS.glsl")
             .SetHLSLFromFile("Shaders/MultiRT.hlsl", "MultiRTVS")
             .SetMetalFromFile("Shaders/MultiRT.metal", "MultiRTVS")
@@ -162,7 +162,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::Initialize()
         }
 
         // NOTE: Create pixel shader
-        auto [pixelShader, pixelShaderErr] = assets->CreateBuilder<Shader>(ShaderPipelineStage::PixelShader)
+        auto [pixelShader, pixelShaderErr] = assets->CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader)
             .SetGLSLFromFile("Shaders/MultiRTPS.glsl")
             .SetHLSLFromFile("Shaders/MultiRT.hlsl", "MultiRTPS")
             .SetMetalFromFile("Shaders/MultiRT.metal", "MultiRTPS")
@@ -175,18 +175,18 @@ std::unique_ptr<Error> MultiRenderTargetTest::Initialize()
         auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
         // NOTE: Create pipeline state
-        std::tie(pipelineState, err) = assets->CreateBuilder<PipelineState>()
+        std::tie(pipelineState, err) = assets->CreateBuilder<gpu::PipelineState>()
             .SetRenderTargetViewFormats({
-                SurfaceFormat::R8G8B8A8_UNorm, // NOTE: Albedo
-                SurfaceFormat::R10G10B10A2_UNorm, // NOTE: Normal
-                SurfaceFormat::R32_Float, // NOTE: Depth
-                SurfaceFormat::R8G8B8A8_UNorm, // NOTE: Lighting
+                PixelFormat::R8G8B8A8_UNorm, // NOTE: Albedo
+                PixelFormat::R10G10B10A2_UNorm, // NOTE: Normal
+                PixelFormat::R32_Float, // NOTE: Depth
+                PixelFormat::R8G8B8A8_UNorm, // NOTE: Lighting
             })
             .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
-            .SetPrimitiveTopology(PrimitiveTopology::TriangleList)
-            .SetDepthStencilState(DepthStencilDescriptor::CreateDefault())
-            .SetBlendState(BlendDescriptor::CreateOpaque())
-            .SetRasterizerState(RasterizerDescriptor::CreateDefault())
+            .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
+            .SetDepthStencilState(gpu::DepthStencilDescriptor::CreateDefault())
+            .SetBlendState(gpu::BlendDescriptor::CreateOpaque())
+            .SetRasterizerState(gpu::RasterizerDescriptor::CreateDefault())
             .SetInputLayout(inputLayout)
             .SetVertexShader(std::move(vertexShader))
             .SetPixelShader(std::move(pixelShader))
@@ -205,7 +205,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::Initialize()
         presentationParameters.BackBufferWidth,
         presentationParameters.BackBufferHeight,
         false,
-        SurfaceFormat::R8G8B8A8_UNorm);
+        PixelFormat::R8G8B8A8_UNorm);
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to create render target");
     }
@@ -215,7 +215,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::Initialize()
         presentationParameters.BackBufferWidth,
         presentationParameters.BackBufferHeight,
         false,
-        SurfaceFormat::R10G10B10A2_UNorm);
+        PixelFormat::R10G10B10A2_UNorm);
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to create render target");
     }
@@ -225,7 +225,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::Initialize()
         presentationParameters.BackBufferWidth,
         presentationParameters.BackBufferHeight,
         false,
-        SurfaceFormat::R32_Float);
+        PixelFormat::R32_Float);
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to create render target");
     }
@@ -235,7 +235,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::Initialize()
         presentationParameters.BackBufferWidth,
         presentationParameters.BackBufferHeight,
         false,
-        SurfaceFormat::R8G8B8A8_UNorm);
+        PixelFormat::R8G8B8A8_UNorm);
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to create render target");
     }
@@ -342,8 +342,8 @@ void MultiRenderTargetTest::Draw()
     commandList->Reset();
 
     {
-        Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
-        RenderPass pass;
+        gpu::Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
+        gpu::RenderPass pass;
         pass.RenderTargets[0] = {renderTargetAlbedo, Color::CornflowerBlue().ToVector4()};
         pass.RenderTargets[1] = {renderTargetNormal, Vector4{0.0f, 0.0f, 1.0f, 1.0f}};
         pass.RenderTargets[2] = {renderTargetDepth, Vector4{0.0f, 0.0f, 0.0f, 1.0f}};
@@ -366,8 +366,8 @@ void MultiRenderTargetTest::Draw()
         commandList->DrawIndexed(indexBuffer->GetIndexCount(), 0);
     }
     {
-        Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
-        RenderPass pass;
+        gpu::Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
+        gpu::RenderPass pass;
         pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
         pass.DepthStencilBuffer = nullptr;
         pass.ClearDepth = 1.0f;
@@ -383,10 +383,10 @@ void MultiRenderTargetTest::Draw()
 
         spriteBatch->Begin(commandList, projectionMatrix);
 
-        auto draw = [&](std::shared_ptr<RenderTarget2D> rt, Vector2 pos) {
+        auto draw = [&](std::shared_ptr<gpu::RenderTarget2D> rt, Vector2 pos) {
             auto originPivot = Vector2::Zero();
             auto scale = Vector2{0.5f, 0.5f};
-            if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::GLSL) {
+            if (graphicsDevice->GetSupportedLanguage() == gpu::ShaderLanguage::GLSL) {
                 // NOTE: Flip horizontally for OpenGL coordinate system.
                 originPivot.Y = 1.0f;
                 scale.Y = -0.5f;

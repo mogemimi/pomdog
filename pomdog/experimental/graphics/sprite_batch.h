@@ -59,16 +59,16 @@ struct SpriteBatchDistanceFieldParameters final {
 class POMDOG_EXPORT SpriteBatch final {
 public:
     SpriteBatch(
-        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
         AssetManager& assets);
 
     SpriteBatch(
-        const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-        std::optional<BlendDescriptor>&& blendDesc,
-        std::optional<RasterizerDescriptor>&& rasterizerDesc,
-        std::optional<SamplerDescriptor>&& samplerDesc,
-        std::optional<SurfaceFormat>&& renderTargetViewFormat,
-        std::optional<SurfaceFormat>&& depthStencilViewFormat,
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
+        std::optional<gpu::BlendDescriptor>&& blendDesc,
+        std::optional<gpu::RasterizerDescriptor>&& rasterizerDesc,
+        std::optional<gpu::SamplerDescriptor>&& samplerDesc,
+        std::optional<PixelFormat>&& renderTargetViewFormat,
+        std::optional<PixelFormat>&& depthStencilViewFormat,
         SpriteBatchPixelShaderMode pixelShaderMode,
         AssetManager& assets);
 
@@ -82,32 +82,32 @@ public:
     ~SpriteBatch();
 
     void Begin(
-        const std::shared_ptr<GraphicsCommandList>& commandList,
+        const std::shared_ptr<gpu::CommandList>& commandList,
         const Matrix4x4& transformMatrix);
 
     void Begin(
-        const std::shared_ptr<GraphicsCommandList>& commandList,
+        const std::shared_ptr<gpu::CommandList>& commandList,
         const Matrix4x4& transformMatrix,
         const SpriteBatchDistanceFieldParameters& distanceFieldParameters);
 
     void Draw(
-        const std::shared_ptr<Texture2D>& texture,
+        const std::shared_ptr<gpu::Texture2D>& texture,
         const Rectangle& sourceRect,
         const Color& color);
 
     void Draw(
-        const std::shared_ptr<Texture2D>& texture,
+        const std::shared_ptr<gpu::Texture2D>& texture,
         const Vector2& position,
         const Color& color);
 
     void Draw(
-        const std::shared_ptr<Texture2D>& texture,
+        const std::shared_ptr<gpu::Texture2D>& texture,
         const Vector2& position,
         const Rectangle& sourceRect,
         const Color& color);
 
     void Draw(
-        const std::shared_ptr<Texture2D>& texture,
+        const std::shared_ptr<gpu::Texture2D>& texture,
         const Vector2& position,
         const Rectangle& sourceRect,
         const Color& color,
@@ -116,7 +116,7 @@ public:
         float scale);
 
     void Draw(
-        const std::shared_ptr<Texture2D>& texture,
+        const std::shared_ptr<gpu::Texture2D>& texture,
         const Vector2& position,
         const Rectangle& sourceRect,
         const Color& color,
@@ -125,7 +125,7 @@ public:
         const Vector2& scale);
 
     void Draw(
-        const std::shared_ptr<Texture2D>& texture,
+        const std::shared_ptr<gpu::Texture2D>& texture,
         const Vector2& position,
         const TextureRegion& textureRegion,
         const Color& color,
@@ -134,7 +134,7 @@ public:
         float scale);
 
     void Draw(
-        const std::shared_ptr<Texture2D>& texture,
+        const std::shared_ptr<gpu::Texture2D>& texture,
         const Vector2& position,
         const TextureRegion& textureRegion,
         const Color& color,
@@ -143,23 +143,23 @@ public:
         const Vector2& scale);
 
     void Draw(
-        const std::shared_ptr<RenderTarget2D>& texture,
+        const std::shared_ptr<gpu::RenderTarget2D>& texture,
         const Rectangle& sourceRect,
         const Color& color);
 
     void Draw(
-        const std::shared_ptr<RenderTarget2D>& texture,
+        const std::shared_ptr<gpu::RenderTarget2D>& texture,
         const Vector2& position,
         const Color& color);
 
     void Draw(
-        const std::shared_ptr<RenderTarget2D>& texture,
+        const std::shared_ptr<gpu::RenderTarget2D>& texture,
         const Vector2& position,
         const Rectangle& sourceRect,
         const Color& color);
 
     void Draw(
-        const std::shared_ptr<RenderTarget2D>& texture,
+        const std::shared_ptr<gpu::RenderTarget2D>& texture,
         const Vector2& position,
         const Rectangle& sourceRect,
         const Color& color,
@@ -168,7 +168,7 @@ public:
         float scale);
 
     void Draw(
-        const std::shared_ptr<RenderTarget2D>& texture,
+        const std::shared_ptr<gpu::RenderTarget2D>& texture,
         const Vector2& position,
         const Rectangle& sourceRect,
         const Color& color,
@@ -177,7 +177,7 @@ public:
         const Vector2& scale);
 
     void Draw(
-        const std::shared_ptr<RenderTarget2D>& texture,
+        const std::shared_ptr<gpu::RenderTarget2D>& texture,
         const Vector2& position,
         const TextureRegion& textureRegion,
         const Color& color,
@@ -186,7 +186,7 @@ public:
         float scale);
 
     void Draw(
-        const std::shared_ptr<RenderTarget2D>& texture,
+        const std::shared_ptr<gpu::RenderTarget2D>& texture,
         const Vector2& position,
         const TextureRegion& textureRegion,
         const Color& color,

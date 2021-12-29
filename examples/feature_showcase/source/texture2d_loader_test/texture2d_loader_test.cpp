@@ -5,7 +5,7 @@ namespace feature_showcase {
 Texture2DLoaderTest::Texture2DLoaderTest(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
     , graphicsDevice(gameHostIn->GetGraphicsDevice())
-    , commandQueue(gameHostIn->GetGraphicsCommandQueue())
+    , commandQueue(gameHostIn->GetCommandQueue())
 {
 }
 
@@ -17,7 +17,7 @@ std::unique_ptr<Error> Texture2DLoaderTest::Initialize()
     std::unique_ptr<Error> err;
 
     // NOTE: Create graphics command list
-    std::tie(commandList, err) = graphicsDevice->CreateGraphicsCommandList();
+    std::tie(commandList, err) = graphicsDevice->CreateCommandList();
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to create graphics command list");
     }
@@ -33,55 +33,55 @@ std::unique_ptr<Error> Texture2DLoaderTest::Initialize()
     spriteFont->PrepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
 
     // NOTE: Load PNG texture.
-    std::tie(texturePNG, err) = assets->Load<Texture2D>("Textures/pomdog.png");
+    std::tie(texturePNG, err) = assets->Load<gpu::Texture2D>("Textures/pomdog.png");
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to load texture");
     }
 
     // NOTE: Load DDS texture (DXT1 compression).
-    std::tie(textureDXT1, err) = assets->Load<Texture2D>("Textures/pomdog-dxt1.dds");
+    std::tie(textureDXT1, err) = assets->Load<gpu::Texture2D>("Textures/pomdog-dxt1.dds");
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to load texture");
     }
 
     // NOTE: Load DDS texture (DXT5 compression).
-    std::tie(textureDXT5, err) = assets->Load<Texture2D>("Textures/pomdog-dxt5.dds");
+    std::tie(textureDXT5, err) = assets->Load<gpu::Texture2D>("Textures/pomdog-dxt5.dds");
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to load texture");
     }
 
     // NOTE: Load PNM/Netpbm bitmap ascii texture (P1).
-    std::tie(texturePNMP1, err) = assets->Load<Texture2D>("Textures/pomdog-p1.pbm");
+    std::tie(texturePNMP1, err) = assets->Load<gpu::Texture2D>("Textures/pomdog-p1.pbm");
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to load texture");
     }
 
     // NOTE: Load PNM/Netpbm graymap ascii texture (P2).
-    std::tie(texturePNMP2, err) = assets->Load<Texture2D>("Textures/pomdog-p2.pgm");
+    std::tie(texturePNMP2, err) = assets->Load<gpu::Texture2D>("Textures/pomdog-p2.pgm");
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to load texture");
     }
 
     // NOTE: Load PNM/Netpbm pixmap ascii texture (P3).
-    std::tie(texturePNMP3, err) = assets->Load<Texture2D>("Textures/pomdog-p3.ppm");
+    std::tie(texturePNMP3, err) = assets->Load<gpu::Texture2D>("Textures/pomdog-p3.ppm");
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to load texture");
     }
 
     // NOTE: Load PNM/Netpbm bitmap binary texture (P4).
-    std::tie(texturePNMP4, err) = assets->Load<Texture2D>("Textures/pomdog-p4.pbm");
+    std::tie(texturePNMP4, err) = assets->Load<gpu::Texture2D>("Textures/pomdog-p4.pbm");
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to load texture");
     }
 
     // NOTE: Load PNM/Netpbm graymap binary texture (P5).
-    std::tie(texturePNMP5, err) = assets->Load<Texture2D>("Textures/pomdog-p5.pgm");
+    std::tie(texturePNMP5, err) = assets->Load<gpu::Texture2D>("Textures/pomdog-p5.pgm");
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to load texture");
     }
 
     // NOTE: Load PNM/Netpbm pixmap binary texture (P6).
-    std::tie(texturePNMP6, err) = assets->Load<Texture2D>("Textures/pomdog-p6.ppm");
+    std::tie(texturePNMP6, err) = assets->Load<gpu::Texture2D>("Textures/pomdog-p6.ppm");
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to load texture");
     }
@@ -103,8 +103,8 @@ void Texture2DLoaderTest::Draw()
         0.0f,
         100.0f);
 
-    Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
-    RenderPass pass;
+    gpu::Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
+    gpu::RenderPass pass;
     pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
     pass.DepthStencilBuffer = nullptr;
     pass.ClearDepth = 1.0f;
