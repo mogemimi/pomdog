@@ -22,7 +22,7 @@ public:
     ~SamplerStateGL4() override;
 
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(const SamplerDescription& description) noexcept;
+    Initialize(const SamplerDescriptor& descriptor) noexcept;
 
     void Apply(int index);
 

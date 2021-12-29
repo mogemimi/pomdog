@@ -5,8 +5,8 @@
 #include "pomdog/content/asset_builders/pipeline_state_builder.h"
 #include "pomdog/content/asset_builders/shader_builder.h"
 #include "pomdog/content/asset_manager.h"
-#include "pomdog/gpu/blend_description.h"
-#include "pomdog/gpu/depth_stencil_description.h"
+#include "pomdog/gpu/blend_descriptor.h"
+#include "pomdog/gpu/depth_stencil_descriptor.h"
 #include "pomdog/gpu/graphics_command_list.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/index_buffer.h"
@@ -14,7 +14,7 @@
 #include "pomdog/gpu/pipeline_state.h"
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/gpu/primitive_topology.h"
-#include "pomdog/gpu/rasterizer_description.h"
+#include "pomdog/gpu/rasterizer_descriptor.h"
 #include "pomdog/gpu/shader.h"
 #include "pomdog/gpu/shader_pipeline_stage.h"
 #include "pomdog/gpu/surface_format.h"
@@ -219,9 +219,9 @@ BillboardBatchEffect::BillboardBatchEffect(
 
 BillboardBatchEffect::BillboardBatchEffect(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-    std::optional<BlendDescription>&& blendDesc,
-    std::optional<DepthStencilDescription>&& depthStencilDesc,
-    std::optional<RasterizerDescription>&& rasterizerDesc,
+    std::optional<BlendDescriptor>&& blendDesc,
+    std::optional<DepthStencilDescriptor>&& depthStencilDesc,
+    std::optional<RasterizerDescriptor>&& rasterizerDesc,
     std::optional<SurfaceFormat>&& renderTargetViewFormat,
     std::optional<SurfaceFormat>&& depthStencilViewFormat,
     AssetManager& assets)
@@ -233,13 +233,13 @@ BillboardBatchEffect::BillboardBatchEffect(
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
     if (!blendDesc) {
-        blendDesc = BlendDescription::CreateNonPremultiplied();
+        blendDesc = BlendDescriptor::CreateNonPremultiplied();
     }
     if (!depthStencilDesc) {
-        depthStencilDesc = DepthStencilDescription::CreateDefault();
+        depthStencilDesc = DepthStencilDescriptor::CreateDefault();
     }
     if (!rasterizerDesc) {
-        rasterizerDesc = RasterizerDescription::CreateCullNone();
+        rasterizerDesc = RasterizerDescriptor::CreateCullNone();
     }
     if (!renderTargetViewFormat) {
         renderTargetViewFormat = presentationParameters.BackBufferFormat;

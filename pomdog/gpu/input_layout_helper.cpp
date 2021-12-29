@@ -101,9 +101,9 @@ InputLayoutHelper& InputLayoutHelper::AddInputSlot(
     return *this;
 }
 
-InputLayoutDescription InputLayoutHelper::CreateInputLayout()
+InputLayoutDescriptor InputLayoutHelper::CreateInputLayout()
 {
-    return InputLayoutDescription{elements};
+    return InputLayoutDescriptor{elements};
 }
 
 } // namespace pomdog

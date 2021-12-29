@@ -3,7 +3,7 @@
 #include "pomdog/gpu/direct3d11/sampler_state_direct3d11.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/gpu/direct3d11/format_helper.h"
-#include "pomdog/gpu/sampler_description.h"
+#include "pomdog/gpu/sampler_descriptor.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -58,21 +58,21 @@ D3D11_TEXTURE_ADDRESS_MODE ToTextureAddressMode(TextureAddressMode addressMode) 
 std::unique_ptr<Error>
 SamplerStateDirect3D11::Initialize(
     ID3D11Device* device,
-    const SamplerDescription& description) noexcept
+    const SamplerDescriptor& descriptor) noexcept
 {
     D3D11_SAMPLER_DESC samplerDesc;
     ZeroMemory(&samplerDesc, sizeof(samplerDesc));
-    samplerDesc.Filter = ToFilter(description.Filter);
-    samplerDesc.AddressU = ToTextureAddressMode(description.AddressU);
-    samplerDesc.AddressV = ToTextureAddressMode(description.AddressV);
-    samplerDesc.AddressW = ToTextureAddressMode(description.AddressW);
-    samplerDesc.MinLOD = description.MinMipLevel;
-    samplerDesc.MaxLOD = description.MaxMipLevel;
-    samplerDesc.MipLODBias = description.MipMapLevelOfDetailBias;
-    samplerDesc.MaxAnisotropy = description.MaxAnisotropy;
-    samplerDesc.ComparisonFunc = ToComparisonFunction(description.ComparisonFunction);
+    samplerDesc.Filter = ToFilter(descriptor.Filter);
+    samplerDesc.AddressU = ToTextureAddressMode(descriptor.AddressU);
+    samplerDesc.AddressV = ToTextureAddressMode(descriptor.AddressV);
+    samplerDesc.AddressW = ToTextureAddressMode(descriptor.AddressW);
+    samplerDesc.MinLOD = descriptor.MinMipLevel;
+    samplerDesc.MaxLOD = descriptor.MaxMipLevel;
+    samplerDesc.MipLODBias = descriptor.MipMapLevelOfDetailBias;
+    samplerDesc.MaxAnisotropy = descriptor.MaxAnisotropy;
+    samplerDesc.ComparisonFunc = ToComparisonFunction(descriptor.ComparisonFunction);
 
-    // TODO: Add support for the following options in SamplerDescription
+    // TODO: Add support for the following options in SamplerDescriptor
     samplerDesc.BorderColor[0] = 0.0f;
     samplerDesc.BorderColor[1] = 0.0f;
     samplerDesc.BorderColor[2] = 0.0f;

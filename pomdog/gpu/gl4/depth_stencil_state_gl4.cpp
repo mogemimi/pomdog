@@ -2,7 +2,7 @@
 
 #include "pomdog/gpu/gl4/depth_stencil_state_gl4.h"
 #include "pomdog/basic/unreachable.h"
-#include "pomdog/gpu/depth_stencil_description.h"
+#include "pomdog/gpu/depth_stencil_descriptor.h"
 #include "pomdog/gpu/gl4/error_checker.h"
 #include "pomdog/gpu/gl4/format_helper.h"
 #include "pomdog/utility/assert.h"
@@ -64,21 +64,21 @@ void ToDepthStencilFaceOperationGL4(
 } // namespace
 
 std::unique_ptr<Error>
-DepthStencilStateGL4::Initialize(const DepthStencilDescription& description) noexcept
+DepthStencilStateGL4::Initialize(const DepthStencilDescriptor& descriptor) noexcept
 {
     static_assert(std::is_same<GLuint, std::uint32_t>::value, "");
     static_assert(std::is_same<GLint, std::int32_t>::value, "");
 
-    depthFunction = ToComparisonFunctionGL4(description.DepthBufferFunction);
-    referenceStencil = description.ReferenceStencil;
-    stencilMask = description.StencilMask;
-    stencilWriteMask = description.StencilWriteMask;
-    depthBufferWriteEnable = description.DepthBufferWriteEnable ? GL_TRUE : GL_FALSE;
-    stencilEnable = description.StencilEnable;
-    depthBufferEnable = description.DepthBufferEnable;
+    depthFunction = ToComparisonFunctionGL4(descriptor.DepthBufferFunction);
+    referenceStencil = descriptor.ReferenceStencil;
+    stencilMask = descriptor.StencilMask;
+    stencilWriteMask = descriptor.StencilWriteMask;
+    depthBufferWriteEnable = descriptor.DepthBufferWriteEnable ? GL_TRUE : GL_FALSE;
+    stencilEnable = descriptor.StencilEnable;
+    depthBufferEnable = descriptor.DepthBufferEnable;
 
-    ToDepthStencilFaceOperationGL4(description.ClockwiseFace, clockwiseFace);
-    ToDepthStencilFaceOperationGL4(description.CounterClockwiseFace, counterClockwiseFace);
+    ToDepthStencilFaceOperationGL4(descriptor.ClockwiseFace, clockwiseFace);
+    ToDepthStencilFaceOperationGL4(descriptor.CounterClockwiseFace, counterClockwiseFace);
 
     return nullptr;
 }

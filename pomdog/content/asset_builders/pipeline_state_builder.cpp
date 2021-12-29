@@ -6,7 +6,7 @@
 #include "pomdog/gpu/effect_reflection.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/pipeline_state.h"
-#include "pomdog/gpu/pipeline_state_description.h"
+#include "pomdog/gpu/pipeline_descriptor.h"
 #include "pomdog/gpu/shader.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
@@ -19,7 +19,7 @@ namespace pomdog::AssetBuilders {
 
 class Builder<PipelineState>::Impl final {
 public:
-    PipelineStateDescription description;
+    PipelineStateDescriptor descriptor;
     std::reference_wrapper<AssetManager const> assets;
     std::shared_ptr<GraphicsDevice> graphicsDevice;
     std::unique_ptr<Error> lastError;
@@ -41,8 +41,8 @@ Builder<PipelineState>::Impl::Impl(AssetManager& assetsIn)
     : assets(assetsIn)
 {
     graphicsDevice = assetsIn.GetGraphicsDevice();
-    description.MultiSampleMask = std::numeric_limits<std::uint32_t>::max();
-    description.PrimitiveTopology = PrimitiveTopology::TriangleList;
+    descriptor.MultiSampleMask = std::numeric_limits<std::uint32_t>::max();
+    descriptor.PrimitiveTopology = PrimitiveTopology::TriangleList;
 }
 
 std::tuple<std::shared_ptr<PipelineState>, std::unique_ptr<Error>>
@@ -52,24 +52,24 @@ Builder<PipelineState>::Impl::Load()
         return std::make_tuple(nullptr, std::move(lastError));
     }
 
-    POMDOG_ASSERT(!description.InputLayout.InputElements.empty());
+    POMDOG_ASSERT(!descriptor.InputLayout.InputElements.empty());
 
     if (!hasPrimitiveTopology) {
         return std::make_tuple(nullptr, errors::New("PrimitiveTopology must be specified"));
     }
 
     if (!hasBlendState) {
-        description.BlendState = BlendDescription::CreateDefault();
+        descriptor.BlendState = BlendDescriptor::CreateDefault();
         hasBlendState = true;
     }
 
     if (!hasRasterizerState) {
-        description.RasterizerState = RasterizerDescription::CreateDefault();
+        descriptor.RasterizerState = RasterizerDescriptor::CreateDefault();
         hasRasterizerState = true;
     }
 
     if (!hasDepthStencilState) {
-        description.DepthStencilState = DepthStencilDescription::CreateDefault();
+        descriptor.DepthStencilState = DepthStencilDescriptor::CreateDefault();
         hasDepthStencilState = true;
     }
 
@@ -84,7 +84,7 @@ Builder<PipelineState>::Impl::Load()
         return std::make_tuple(nullptr, errors::New("DepthStencilViewFormat must be specified"));
     }
 
-    auto [pipelineState, err] = graphicsDevice->CreatePipelineState(description);
+    auto [pipelineState, err] = graphicsDevice->CreatePipelineState(descriptor);
     if (err != nullptr) {
         return std::make_tuple(nullptr, errors::Wrap(std::move(err), "CreatePipelineState() failed"));
     }
@@ -105,7 +105,7 @@ Builder<PipelineState>& Builder<PipelineState>::SetVertexShader(
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(vertexShader);
-    impl->description.VertexShader = vertexShader;
+    impl->descriptor.VertexShader = vertexShader;
     return *this;
 }
 
@@ -114,7 +114,7 @@ Builder<PipelineState>& Builder<PipelineState>::SetVertexShader(
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(vertexShader);
-    impl->description.VertexShader = std::move(vertexShader);
+    impl->descriptor.VertexShader = std::move(vertexShader);
     return *this;
 }
 
@@ -123,7 +123,7 @@ Builder<PipelineState>& Builder<PipelineState>::SetPixelShader(
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(pixelShader);
-    impl->description.PixelShader = pixelShader;
+    impl->descriptor.PixelShader = pixelShader;
     return *this;
 }
 
@@ -132,25 +132,25 @@ Builder<PipelineState>& Builder<PipelineState>::SetPixelShader(
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(pixelShader);
-    impl->description.PixelShader = std::move(pixelShader);
+    impl->descriptor.PixelShader = std::move(pixelShader);
     return *this;
 }
 
 Builder<PipelineState>& Builder<PipelineState>::SetInputLayout(
-    const InputLayoutDescription& inputLayout)
+    const InputLayoutDescriptor& inputLayout)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(!inputLayout.InputElements.empty());
-    impl->description.InputLayout = inputLayout;
+    impl->descriptor.InputLayout = inputLayout;
     return *this;
 }
 
 Builder<PipelineState>& Builder<PipelineState>::SetInputLayout(
-    InputLayoutDescription&& inputLayout)
+    InputLayoutDescriptor&& inputLayout)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(!inputLayout.InputElements.empty());
-    impl->description.InputLayout = std::move(inputLayout);
+    impl->descriptor.InputLayout = std::move(inputLayout);
     return *this;
 }
 
@@ -158,34 +158,34 @@ Builder<PipelineState>&
 Builder<PipelineState>::SetPrimitiveTopology(PrimitiveTopology primitiveTopology)
 {
     POMDOG_ASSERT(impl);
-    impl->description.PrimitiveTopology = primitiveTopology;
+    impl->descriptor.PrimitiveTopology = primitiveTopology;
     impl->hasPrimitiveTopology = true;
     return *this;
 }
 
 Builder<PipelineState>& Builder<PipelineState>::SetBlendState(
-    const BlendDescription& blendState)
+    const BlendDescriptor& blendState)
 {
     POMDOG_ASSERT(impl);
-    impl->description.BlendState = blendState;
+    impl->descriptor.BlendState = blendState;
     impl->hasBlendState = true;
     return *this;
 }
 
 Builder<PipelineState>& Builder<PipelineState>::SetRasterizerState(
-    const RasterizerDescription& rasterizerState)
+    const RasterizerDescriptor& rasterizerState)
 {
     POMDOG_ASSERT(impl);
-    impl->description.RasterizerState = rasterizerState;
+    impl->descriptor.RasterizerState = rasterizerState;
     impl->hasRasterizerState = true;
     return *this;
 }
 
 Builder<PipelineState>& Builder<PipelineState>::SetDepthStencilState(
-    const DepthStencilDescription& depthStencilState)
+    const DepthStencilDescriptor& depthStencilState)
 {
     POMDOG_ASSERT(impl);
-    impl->description.DepthStencilState = depthStencilState;
+    impl->descriptor.DepthStencilState = depthStencilState;
     impl->hasDepthStencilState = true;
     return *this;
 }
@@ -198,12 +198,12 @@ Builder<PipelineState>& Builder<PipelineState>::SetConstantBufferBindSlot(
     POMDOG_ASSERT(slotIndex >= 0);
 
 #if defined(DEBUG) && !defined(NDEBUG)
-    for (auto& pair : impl->description.ConstantBufferBindHints) {
+    for (auto& pair : impl->descriptor.ConstantBufferBindHints) {
         POMDOG_ASSERT(slotIndex != pair.second);
     }
 #endif
 
-    impl->description.ConstantBufferBindHints.emplace(name, slotIndex);
+    impl->descriptor.ConstantBufferBindHints.emplace(name, slotIndex);
     return *this;
 }
 
@@ -215,12 +215,12 @@ Builder<PipelineState>& Builder<PipelineState>::SetSamplerBindSlot(
     POMDOG_ASSERT(slotIndex >= 0);
 
 #if defined(DEBUG) && !defined(NDEBUG)
-    for (auto& pair : impl->description.SamplerBindHints) {
+    for (auto& pair : impl->descriptor.SamplerBindHints) {
         POMDOG_ASSERT(slotIndex != pair.second);
     }
 #endif
 
-    impl->description.SamplerBindHints.emplace(name, slotIndex);
+    impl->descriptor.SamplerBindHints.emplace(name, slotIndex);
     return *this;
 }
 
@@ -229,8 +229,8 @@ Builder<PipelineState>& Builder<PipelineState>::SetRenderTargetViewFormat(
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(!impl->hasRenderTargetViewFormats);
-    impl->description.RenderTargetViewFormats.clear();
-    impl->description.RenderTargetViewFormats.push_back(renderTargetViewFormat);
+    impl->descriptor.RenderTargetViewFormats.clear();
+    impl->descriptor.RenderTargetViewFormats.push_back(renderTargetViewFormat);
     impl->hasRenderTargetViewFormats = true;
     return *this;
 }
@@ -239,7 +239,7 @@ Builder<PipelineState>& Builder<PipelineState>::SetRenderTargetViewFormats(
     const std::vector<SurfaceFormat>& renderTargetViewFormats)
 {
     POMDOG_ASSERT(impl);
-    impl->description.RenderTargetViewFormats = renderTargetViewFormats;
+    impl->descriptor.RenderTargetViewFormats = renderTargetViewFormats;
     impl->hasRenderTargetViewFormats = true;
     return *this;
 }
@@ -248,7 +248,7 @@ Builder<PipelineState>& Builder<PipelineState>::SetRenderTargetViewFormats(
     std::vector<SurfaceFormat>&& renderTargetViewFormats)
 {
     POMDOG_ASSERT(impl);
-    impl->description.RenderTargetViewFormats = std::move(renderTargetViewFormats);
+    impl->descriptor.RenderTargetViewFormats = std::move(renderTargetViewFormats);
     impl->hasRenderTargetViewFormats = true;
     return *this;
 }
@@ -257,7 +257,7 @@ Builder<PipelineState>& Builder<PipelineState>::SetDepthStencilViewFormat(
     SurfaceFormat depthStencilViewFormat)
 {
     POMDOG_ASSERT(impl);
-    impl->description.DepthStencilViewFormat = depthStencilViewFormat;
+    impl->descriptor.DepthStencilViewFormat = depthStencilViewFormat;
     impl->hasDepthStencilViewFormat = true;
     return *this;
 }
@@ -276,15 +276,15 @@ std::shared_ptr<EffectReflection> Builder<PipelineState>::CreateEffectReflection
     POMDOG_ASSERT(pipelineState);
 
     auto effectReflection = std::get<0>(impl->graphicsDevice->CreateEffectReflection(
-        impl->description,
+        impl->descriptor,
         pipelineState));
     return effectReflection;
 }
 
-const PipelineStateDescription& Builder<PipelineState>::GetDescription() const
+const PipelineStateDescriptor& Builder<PipelineState>::GetDescription() const
 {
     POMDOG_ASSERT(impl);
-    return impl->description;
+    return impl->descriptor;
 }
 
 void Builder<PipelineState>::SetError(std::unique_ptr<Error>&& err)

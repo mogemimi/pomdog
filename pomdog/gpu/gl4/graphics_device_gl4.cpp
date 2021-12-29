@@ -182,12 +182,12 @@ GraphicsDeviceGL4::CreateConstantBuffer(
 }
 
 std::tuple<std::shared_ptr<PipelineState>, std::unique_ptr<Error>>
-GraphicsDeviceGL4::CreatePipelineState(const PipelineStateDescription& description) noexcept
+GraphicsDeviceGL4::CreatePipelineState(const PipelineStateDescriptor& descriptor) noexcept
 {
     auto pipelineState = std::make_shared<PipelineStateGL4>();
     POMDOG_ASSERT(pipelineState != nullptr);
 
-    if (auto err = pipelineState->Initialize(description); err != nullptr) {
+    if (auto err = pipelineState->Initialize(descriptor); err != nullptr) {
         return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize PipelineStateGL4"));
     }
     return std::make_tuple(std::move(pipelineState), nullptr);
@@ -195,7 +195,7 @@ GraphicsDeviceGL4::CreatePipelineState(const PipelineStateDescription& descripti
 
 std::tuple<std::shared_ptr<EffectReflection>, std::unique_ptr<Error>>
 GraphicsDeviceGL4::CreateEffectReflection(
-    [[maybe_unused]] const PipelineStateDescription& description,
+    [[maybe_unused]] const PipelineStateDescriptor& descriptor,
     const std::shared_ptr<PipelineState>& pipelineState) noexcept
 {
     const auto pipelineStateGL4 = dynamic_cast<PipelineStateGL4*>(pipelineState.get());
@@ -307,12 +307,12 @@ GraphicsDeviceGL4::CreateDepthStencilBuffer(
 }
 
 std::tuple<std::shared_ptr<SamplerState>, std::unique_ptr<Error>>
-GraphicsDeviceGL4::CreateSamplerState(const SamplerDescription& description) noexcept
+GraphicsDeviceGL4::CreateSamplerState(const SamplerDescriptor& descriptor) noexcept
 {
     auto samplerState = std::make_shared<SamplerStateGL4>();
     POMDOG_ASSERT(samplerState != nullptr);
 
-    if (auto err = samplerState->Initialize(description); err != nullptr) {
+    if (auto err = samplerState->Initialize(descriptor); err != nullptr) {
         return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize SamplerStateGL4"));
     }
     return std::make_tuple(std::move(samplerState), nullptr);

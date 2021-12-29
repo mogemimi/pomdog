@@ -37,20 +37,20 @@ class VertexBuffer;
 class Viewport;
 
 // Structures
-struct BlendDescription;
-struct DepthStencilDescription;
+struct BlendDescriptor;
+struct DepthStencilDescriptor;
 struct DepthStencilOperation;
 struct EffectAnnotation;
 struct EffectConstantDescription;
 struct EffectVariable;
 struct InputElement;
-struct InputLayoutDescription;
-struct PipelineStateDescription;
+struct InputLayoutDescriptor;
+struct PipelineStateDescriptor;
 struct PresentationParameters;
-struct RasterizerDescription;
+struct RasterizerDescriptor;
 struct RenderPass;
-struct RenderTargetBlendDescription;
-struct SamplerDescription;
+struct RenderTargetBlendDescriptor;
+struct SamplerDescriptor;
 
 // Enumerations
 enum class BlendFactor : std::uint8_t;

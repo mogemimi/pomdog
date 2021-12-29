@@ -5,9 +5,9 @@
 #include "pomdog/basic/platform.h"
 #include "pomdog/content/asset_builders/pipeline_state_builder.h"
 #include "pomdog/content/asset_builders/shader_builder.h"
-#include "pomdog/gpu/blend_description.h"
+#include "pomdog/gpu/blend_descriptor.h"
 #include "pomdog/gpu/constant_buffer.h"
-#include "pomdog/gpu/depth_stencil_description.h"
+#include "pomdog/gpu/depth_stencil_descriptor.h"
 #include "pomdog/gpu/graphics_command_list.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/input_layout_helper.h"
@@ -49,7 +49,7 @@ FXAA::FXAA(
     AssetManager& assets)
 {
     samplerLinear = std::get<0>(graphicsDevice->CreateSamplerState(
-        SamplerDescription::CreateLinearClamp()));
+        SamplerDescriptor::CreateLinearClamp()));
 
     auto inputLayout = InputLayoutHelper{}
         .Float3().Float2();
@@ -93,8 +93,8 @@ FXAA::FXAA(
         .SetPixelShader(std::move(pixelShader))
         .SetInputLayout(inputLayout.CreateInputLayout())
         .SetPrimitiveTopology(PrimitiveTopology::TriangleList)
-        .SetBlendState(BlendDescription::CreateOpaque())
-        .SetDepthStencilState(DepthStencilDescription::CreateNone())
+        .SetBlendState(BlendDescriptor::CreateOpaque())
+        .SetDepthStencilState(DepthStencilDescriptor::CreateNone())
         .SetConstantBufferBindSlot("ImageEffectConstants", 0)
         .Build();
     if (pipelineStateErr != nullptr) {

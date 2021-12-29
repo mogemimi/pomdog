@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 
-struct POMDOG_EXPORT RenderTargetBlendDescription final {
+struct POMDOG_EXPORT RenderTargetBlendDescriptor final {
     BlendFactor ColorSourceBlend;
     BlendFactor ColorDestinationBlend;
     BlendOperation ColorBlendOperation;
@@ -22,57 +22,17 @@ struct POMDOG_EXPORT RenderTargetBlendDescription final {
     BlendOperation AlphaBlendOperation;
     bool BlendEnable;
 
-    static RenderTargetBlendDescription CreateAdditive() noexcept
-    {
-        RenderTargetBlendDescription desc;
-        desc.BlendEnable = true;
-        desc.ColorBlendOperation = BlendOperation::Add;
-        desc.AlphaBlendOperation = BlendOperation::Add;
-        desc.ColorSourceBlend = BlendFactor::SourceAlpha;
-        desc.AlphaSourceBlend = BlendFactor::SourceAlpha;
-        desc.ColorDestinationBlend = BlendFactor::One;
-        desc.AlphaDestinationBlend = BlendFactor::One;
-        return desc;
-    }
+    [[nodiscard]] static RenderTargetBlendDescriptor
+    CreateAdditive() noexcept;
 
-    static RenderTargetBlendDescription CreateAlphaBlend() noexcept
-    {
-        RenderTargetBlendDescription desc;
-        desc.BlendEnable = true;
-        desc.ColorBlendOperation = BlendOperation::Add;
-        desc.AlphaBlendOperation = BlendOperation::Add;
-        desc.ColorSourceBlend = BlendFactor::One;
-        desc.AlphaSourceBlend = BlendFactor::One;
-        desc.ColorDestinationBlend = BlendFactor::InverseSourceAlpha;
-        desc.AlphaDestinationBlend = BlendFactor::InverseSourceAlpha;
-        return desc;
-    }
+    [[nodiscard]] static RenderTargetBlendDescriptor
+    CreateAlphaBlend() noexcept;
 
-    static RenderTargetBlendDescription CreateNonPremultiplied() noexcept
-    {
-        RenderTargetBlendDescription desc;
-        desc.BlendEnable = true;
-        desc.ColorBlendOperation = BlendOperation::Add;
-        desc.AlphaBlendOperation = BlendOperation::Add;
-        desc.ColorSourceBlend = BlendFactor::SourceAlpha;
-        desc.AlphaSourceBlend = BlendFactor::SourceAlpha;
-        desc.ColorDestinationBlend = BlendFactor::InverseSourceAlpha;
-        desc.AlphaDestinationBlend = BlendFactor::InverseSourceAlpha;
-        return desc;
-    }
+    [[nodiscard]] static RenderTargetBlendDescriptor
+    CreateNonPremultiplied() noexcept;
 
-    static RenderTargetBlendDescription CreateOpaque() noexcept
-    {
-        RenderTargetBlendDescription desc;
-        desc.BlendEnable = false;
-        desc.ColorBlendOperation = BlendOperation::Add;
-        desc.AlphaBlendOperation = BlendOperation::Add;
-        desc.ColorSourceBlend = BlendFactor::One;
-        desc.AlphaSourceBlend = BlendFactor::One;
-        desc.ColorDestinationBlend = BlendFactor::Zero;
-        desc.AlphaDestinationBlend = BlendFactor::Zero;
-        return desc;
-    }
+    [[nodiscard]] static RenderTargetBlendDescriptor
+    CreateOpaque() noexcept;
 };
 
 } // namespace pomdog

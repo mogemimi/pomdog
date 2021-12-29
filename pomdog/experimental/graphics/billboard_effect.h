@@ -85,9 +85,9 @@ public:
 
     BillboardBatchEffect(
         const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-        std::optional<BlendDescription>&& blendDesc,
-        std::optional<DepthStencilDescription>&& depthStencilDesc,
-        std::optional<RasterizerDescription>&& rasterizerDesc,
+        std::optional<BlendDescriptor>&& blendDesc,
+        std::optional<DepthStencilDescriptor>&& depthStencilDesc,
+        std::optional<RasterizerDescriptor>&& rasterizerDesc,
         std::optional<SurfaceFormat>&& renderTargetViewFormat,
         std::optional<SurfaceFormat>&& depthStencilViewFormat,
         AssetManager& assets);

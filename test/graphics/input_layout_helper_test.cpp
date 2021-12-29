@@ -6,7 +6,7 @@
 using pomdog::InputClassification;
 using pomdog::InputElement;
 using pomdog::InputElementFormat;
-using pomdog::InputLayoutDescription;
+using pomdog::InputLayoutDescriptor;
 using pomdog::InputLayoutHelper;
 
 TEST_CASE("InputLayoutHelper", "[InputLayoutHelper]")
@@ -19,7 +19,7 @@ TEST_CASE("InputLayoutHelper", "[InputLayoutHelper]")
             .Float3()
             .Float2()
             .Float();
-        InputLayoutDescription inputLayout = helper.CreateInputLayout();
+        InputLayoutDescriptor inputLayout = helper.CreateInputLayout();
 
         auto& elements = inputLayout.InputElements;
 
@@ -58,7 +58,7 @@ TEST_CASE("InputLayoutHelper", "[InputLayoutHelper]")
             .Float3()
             .Float4()
             .Float2();
-        InputLayoutDescription inputLayout = helper.CreateInputLayout();
+        InputLayoutDescriptor inputLayout = helper.CreateInputLayout();
 
         auto& elements = inputLayout.InputElements;
 

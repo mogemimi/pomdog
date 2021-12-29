@@ -19,7 +19,7 @@ public:
     [[nodiscard]] std::unique_ptr<Error>
     Initialize(
         ID3D11Device* device,
-        const SamplerDescription& description) noexcept;
+        const SamplerDescriptor& descriptor) noexcept;
 
     /// Gets the pointer of the native sampler state.
     [[nodiscard]] ID3D11SamplerState* GetSamplerState() const noexcept;

@@ -19,7 +19,7 @@
 #include "pomdog/gpu/direct3d11/shader_direct3d11.h"
 #include "pomdog/gpu/direct3d11/texture2d_direct3d11.h"
 #include "pomdog/gpu/index_buffer.h"
-#include "pomdog/gpu/pipeline_state_description.h"
+#include "pomdog/gpu/pipeline_descriptor.h"
 #include "pomdog/gpu/shader_language.h"
 #include "pomdog/gpu/vertex_buffer.h"
 #include "pomdog/logging/log.h"
@@ -563,12 +563,12 @@ GraphicsDeviceDirect3D11::CreateConstantBuffer(
 }
 
 std::tuple<std::shared_ptr<PipelineState>, std::unique_ptr<Error>>
-GraphicsDeviceDirect3D11::CreatePipelineState(const PipelineStateDescription& description) noexcept
+GraphicsDeviceDirect3D11::CreatePipelineState(const PipelineStateDescriptor& descriptor) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
     auto pipelineState = std::make_shared<PipelineStateDirect3D11>();
 
-    if (auto err = pipelineState->Initialize(device.Get(), description); err != nullptr) {
+    if (auto err = pipelineState->Initialize(device.Get(), descriptor); err != nullptr) {
         return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize PipelineStateDirect3D11"));
     }
 
@@ -577,15 +577,15 @@ GraphicsDeviceDirect3D11::CreatePipelineState(const PipelineStateDescription& de
 
 std::tuple<std::shared_ptr<EffectReflection>, std::unique_ptr<Error>>
 GraphicsDeviceDirect3D11::CreateEffectReflection(
-    const PipelineStateDescription& description,
+    const PipelineStateDescriptor& descriptor,
     [[maybe_unused]] const std::shared_ptr<PipelineState>& pipelineState) noexcept
 {
-    auto vertexShader = std::dynamic_pointer_cast<VertexShaderDirect3D11>(description.VertexShader);
+    auto vertexShader = std::dynamic_pointer_cast<VertexShaderDirect3D11>(descriptor.VertexShader);
     if (vertexShader == nullptr) {
         return std::make_tuple(nullptr, errors::New("failed to cast VertexShader to VertexShaderDirect3D11"));
     }
 
-    auto pixelShader = std::dynamic_pointer_cast<PixelShaderDirect3D11>(description.PixelShader);
+    auto pixelShader = std::dynamic_pointer_cast<PixelShaderDirect3D11>(descriptor.PixelShader);
     if (pixelShader == nullptr) {
         return std::make_tuple(nullptr, errors::New("failed to cast PixelShader to PixelShaderDirect3D11"));
     }
@@ -702,12 +702,12 @@ GraphicsDeviceDirect3D11::CreateDepthStencilBuffer(
 }
 
 std::tuple<std::shared_ptr<SamplerState>, std::unique_ptr<Error>>
-GraphicsDeviceDirect3D11::CreateSamplerState(const SamplerDescription& description) noexcept
+GraphicsDeviceDirect3D11::CreateSamplerState(const SamplerDescriptor& descriptor) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
     auto samplerState = std::make_shared<SamplerStateDirect3D11>();
 
-    if (auto err = samplerState->Initialize(device.Get(), description); err != nullptr) {
+    if (auto err = samplerState->Initialize(device.Get(), descriptor); err != nullptr) {
         return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize SamplerStateDirect3D11"));
     }
 

@@ -26,8 +26,8 @@ public:
 
     PrimitiveBatch(
         const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-        std::optional<DepthStencilDescription>&& depthStencilDesc,
-        std::optional<RasterizerDescription>&& rasterizerDesc,
+        std::optional<DepthStencilDescriptor>&& depthStencilDesc,
+        std::optional<RasterizerDescriptor>&& rasterizerDesc,
         AssetManager& assets);
 
     ~PrimitiveBatch();

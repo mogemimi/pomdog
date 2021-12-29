@@ -5,10 +5,10 @@
 #include "pomdog/content/asset_builders/pipeline_state_builder.h"
 #include "pomdog/content/asset_builders/shader_builder.h"
 #include "pomdog/content/asset_manager.h"
-#include "pomdog/gpu/blend_description.h"
+#include "pomdog/gpu/blend_descriptor.h"
 #include "pomdog/gpu/buffer_usage.h"
 #include "pomdog/gpu/constant_buffer.h"
-#include "pomdog/gpu/depth_stencil_description.h"
+#include "pomdog/gpu/depth_stencil_descriptor.h"
 #include "pomdog/gpu/graphics_command_list.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/index_buffer.h"
@@ -36,7 +36,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstring>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-#include "pomdog/gpu/rasterizer_description.h"
+#include "pomdog/gpu/rasterizer_descriptor.h"
 
 using pomdog::detail::AlignedNew;
 
@@ -194,9 +194,9 @@ PolylineBatch::Impl::Impl(
             .SetPixelShader(std::move(pixelShader))
             .SetInputLayout(inputLayout.CreateInputLayout())
             .SetPrimitiveTopology(PrimitiveTopology::TriangleList)
-            .SetBlendState(BlendDescription::CreateNonPremultiplied())
-            .SetDepthStencilState(DepthStencilDescription::CreateDefault())
-            .SetRasterizerState(RasterizerDescription::CreateCullNone())
+            .SetBlendState(BlendDescriptor::CreateNonPremultiplied())
+            .SetDepthStencilState(DepthStencilDescriptor::CreateDefault())
+            .SetRasterizerState(RasterizerDescriptor::CreateCullNone())
             .SetConstantBufferBindSlot("TransformMatrix", 0)
             .Build();
         if (pipelineStateErr != nullptr) {

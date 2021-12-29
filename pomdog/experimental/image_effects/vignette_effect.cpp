@@ -5,10 +5,10 @@
 #include "pomdog/basic/platform.h"
 #include "pomdog/content/asset_builders/pipeline_state_builder.h"
 #include "pomdog/content/asset_builders/shader_builder.h"
-#include "pomdog/gpu/blend_description.h"
+#include "pomdog/gpu/blend_descriptor.h"
 #include "pomdog/gpu/buffer_usage.h"
 #include "pomdog/gpu/constant_buffer.h"
-#include "pomdog/gpu/depth_stencil_description.h"
+#include "pomdog/gpu/depth_stencil_descriptor.h"
 #include "pomdog/gpu/graphics_command_list.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/input_layout_helper.h"
@@ -56,7 +56,7 @@ VignetteEffect::VignetteEffect(
     AssetManager& assets)
 {
     samplerLinear = std::get<0>(graphicsDevice->CreateSamplerState(
-        SamplerDescription::CreateLinearWrap()));
+        SamplerDescriptor::CreateLinearWrap()));
 
     auto inputLayout = InputLayoutHelper{}
         .Float3().Float2();
@@ -100,8 +100,8 @@ VignetteEffect::VignetteEffect(
         .SetPixelShader(std::move(pixelShader))
         .SetInputLayout(inputLayout.CreateInputLayout())
         .SetPrimitiveTopology(PrimitiveTopology::TriangleList)
-        .SetBlendState(BlendDescription::CreateOpaque())
-        .SetDepthStencilState(DepthStencilDescription::CreateNone())
+        .SetBlendState(BlendDescriptor::CreateOpaque())
+        .SetDepthStencilState(DepthStencilDescriptor::CreateNone())
         .SetConstantBufferBindSlot("ImageEffectConstants", 0)
         .SetConstantBufferBindSlot("VignetteBlock", 1)
         .Build();

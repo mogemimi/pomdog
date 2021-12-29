@@ -10,8 +10,8 @@ source_group(gpu/vulkan             REGULAR_EXPRESSION "pomdog/gpu/vulkan/*")
 
 target_sources(pomdog_static PRIVATE
     # NOTE: graphics
-    ${POMDOG_SRC_DIR}/gpu/blend_description.cpp
-    ${POMDOG_SRC_DIR}/gpu/blend_description.h
+    ${POMDOG_SRC_DIR}/gpu/blend_descriptor.cpp
+    ${POMDOG_SRC_DIR}/gpu/blend_descriptor.h
     ${POMDOG_SRC_DIR}/gpu/blend_factor.h
     ${POMDOG_SRC_DIR}/gpu/blend_operation.h
     ${POMDOG_SRC_DIR}/gpu/buffer_usage.h
@@ -21,8 +21,8 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/gpu/cull_mode.h
     ${POMDOG_SRC_DIR}/gpu/depth_stencil_buffer.cpp
     ${POMDOG_SRC_DIR}/gpu/depth_stencil_buffer.h
-    ${POMDOG_SRC_DIR}/gpu/depth_stencil_description.cpp
-    ${POMDOG_SRC_DIR}/gpu/depth_stencil_description.h
+    ${POMDOG_SRC_DIR}/gpu/depth_stencil_descriptor.cpp
+    ${POMDOG_SRC_DIR}/gpu/depth_stencil_descriptor.h
     ${POMDOG_SRC_DIR}/gpu/depth_stencil_operation.h
     ${POMDOG_SRC_DIR}/gpu/effect_annotation.h
     ${POMDOG_SRC_DIR}/gpu/effect_constant_description.h
@@ -45,22 +45,23 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/gpu/input_classification.h
     ${POMDOG_SRC_DIR}/gpu/input_element_format.h
     ${POMDOG_SRC_DIR}/gpu/input_element.h
-    ${POMDOG_SRC_DIR}/gpu/input_layout_description.h
+    ${POMDOG_SRC_DIR}/gpu/input_layout_descriptor.h
     ${POMDOG_SRC_DIR}/gpu/input_layout_helper.cpp
     ${POMDOG_SRC_DIR}/gpu/input_layout_helper.h
-    ${POMDOG_SRC_DIR}/gpu/pipeline_state_description.h
+    ${POMDOG_SRC_DIR}/gpu/pipeline_descriptor.h
     ${POMDOG_SRC_DIR}/gpu/pipeline_state.cpp
     ${POMDOG_SRC_DIR}/gpu/pipeline_state.h
     ${POMDOG_SRC_DIR}/gpu/presentation_parameters.h
     ${POMDOG_SRC_DIR}/gpu/primitive_topology.h
-    ${POMDOG_SRC_DIR}/gpu/rasterizer_description.cpp
-    ${POMDOG_SRC_DIR}/gpu/rasterizer_description.h
+    ${POMDOG_SRC_DIR}/gpu/rasterizer_descriptor.cpp
+    ${POMDOG_SRC_DIR}/gpu/rasterizer_descriptor.h
     ${POMDOG_SRC_DIR}/gpu/render_pass.h
-    ${POMDOG_SRC_DIR}/gpu/render_target_blend_description.h
+    ${POMDOG_SRC_DIR}/gpu/render_target_blend_descriptor.cpp
+    ${POMDOG_SRC_DIR}/gpu/render_target_blend_descriptor.h
     ${POMDOG_SRC_DIR}/gpu/render_target2d.cpp
     ${POMDOG_SRC_DIR}/gpu/render_target2d.h
-    ${POMDOG_SRC_DIR}/gpu/sampler_description.cpp
-    ${POMDOG_SRC_DIR}/gpu/sampler_description.h
+    ${POMDOG_SRC_DIR}/gpu/sampler_descriptor.cpp
+    ${POMDOG_SRC_DIR}/gpu/sampler_descriptor.h
     ${POMDOG_SRC_DIR}/gpu/sampler_state.cpp
     ${POMDOG_SRC_DIR}/gpu/sampler_state.h
     ${POMDOG_SRC_DIR}/gpu/shader_language.h

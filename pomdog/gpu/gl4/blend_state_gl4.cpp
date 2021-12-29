@@ -3,7 +3,7 @@
 #include "pomdog/gpu/gl4/blend_state_gl4.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/unreachable.h"
-#include "pomdog/gpu/blend_description.h"
+#include "pomdog/gpu/blend_descriptor.h"
 #include "pomdog/gpu/gl4/error_checker.h"
 #include "pomdog/utility/assert.h"
 
@@ -85,8 +85,8 @@ BlendOperationGL4 ToBlendOperationGL4(BlendOperation operation) noexcept
 }
 
 void ToRenderTargetBlendGL4(
-    const RenderTargetBlendDescription& desc,
-    RenderTargetBlendDescGL4& result) noexcept
+    const RenderTargetBlendDescriptor& desc,
+    RenderTargetBlendDescriptorGL4& result) noexcept
 {
     result.ColorSource = ToBlendGL4(desc.ColorSourceBlend);
     result.ColorDestination = ToBlendGL4(desc.ColorDestinationBlend);
@@ -100,14 +100,14 @@ void ToRenderTargetBlendGL4(
 } // namespace
 
 std::unique_ptr<Error>
-BlendStateGL4::Initialize(const BlendDescription& description) noexcept
+BlendStateGL4::Initialize(const BlendDescriptor& descriptor) noexcept
 {
-    independentBlendEnable = description.IndependentBlendEnable;
-    alphaToCoverageEnable = description.AlphaToCoverageEnable;
+    independentBlendEnable = descriptor.IndependentBlendEnable;
+    alphaToCoverageEnable = descriptor.AlphaToCoverageEnable;
 
-    for (std::size_t i = 0; i < description.RenderTargets.size(); ++i) {
+    for (std::size_t i = 0; i < descriptor.RenderTargets.size(); ++i) {
         POMDOG_ASSERT(i < renderTargets.size());
-        ToRenderTargetBlendGL4(description.RenderTargets[i], renderTargets[i]);
+        ToRenderTargetBlendGL4(descriptor.RenderTargets[i], renderTargets[i]);
     }
     return nullptr;
 }

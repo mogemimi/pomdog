@@ -3,7 +3,7 @@
 #include "pomdog/gpu/metal/sampler_state_metal.h"
 #include "pomdog/basic/unreachable.h"
 #include "pomdog/gpu/metal/metal_format_helper.h"
-#include "pomdog/gpu/sampler_description.h"
+#include "pomdog/gpu/sampler_descriptor.h"
 #include "pomdog/utility/assert.h"
 
 namespace pomdog::detail::metal {
@@ -29,72 +29,72 @@ MTLSamplerAddressMode ToSamplerAddressMode(TextureAddressMode addressMode) noexc
 SamplerStateMetal::~SamplerStateMetal() = default;
 
 std::unique_ptr<Error>
-SamplerStateMetal::Initialize(id<MTLDevice> device, const SamplerDescription& description) noexcept
+SamplerStateMetal::Initialize(id<MTLDevice> device, const SamplerDescriptor& descriptor) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
 
-    MTLSamplerDescriptor* descriptor = [[MTLSamplerDescriptor alloc] init];
-    descriptor.sAddressMode = ToSamplerAddressMode(description.AddressU);
-    descriptor.tAddressMode = ToSamplerAddressMode(description.AddressV);
-    descriptor.rAddressMode = ToSamplerAddressMode(description.AddressW);
+    MTLSamplerDescriptor* samplerDesc = [[MTLSamplerDescriptor alloc] init];
+    samplerDesc.sAddressMode = ToSamplerAddressMode(descriptor.AddressU);
+    samplerDesc.tAddressMode = ToSamplerAddressMode(descriptor.AddressV);
+    samplerDesc.rAddressMode = ToSamplerAddressMode(descriptor.AddressW);
 
-    switch (description.Filter) {
+    switch (descriptor.Filter) {
     case TextureFilter::Anisotropic:
-        descriptor.minFilter = MTLSamplerMinMagFilterLinear;
-        descriptor.magFilter = MTLSamplerMinMagFilterLinear;
-        descriptor.mipFilter = MTLSamplerMipFilterNotMipmapped;
+        samplerDesc.minFilter = MTLSamplerMinMagFilterLinear;
+        samplerDesc.magFilter = MTLSamplerMinMagFilterLinear;
+        samplerDesc.mipFilter = MTLSamplerMipFilterNotMipmapped;
         break;
     case TextureFilter::Linear:
-        descriptor.minFilter = MTLSamplerMinMagFilterLinear;
-        descriptor.magFilter = MTLSamplerMinMagFilterLinear;
-        descriptor.mipFilter = MTLSamplerMipFilterLinear;
+        samplerDesc.minFilter = MTLSamplerMinMagFilterLinear;
+        samplerDesc.magFilter = MTLSamplerMinMagFilterLinear;
+        samplerDesc.mipFilter = MTLSamplerMipFilterLinear;
         break;
     case TextureFilter::Point:
-        descriptor.minFilter = MTLSamplerMinMagFilterNearest;
-        descriptor.magFilter = MTLSamplerMinMagFilterNearest;
-        descriptor.mipFilter = MTLSamplerMipFilterNearest;
+        samplerDesc.minFilter = MTLSamplerMinMagFilterNearest;
+        samplerDesc.magFilter = MTLSamplerMinMagFilterNearest;
+        samplerDesc.mipFilter = MTLSamplerMipFilterNearest;
         break;
     case TextureFilter::LinearMipPoint:
-        descriptor.minFilter = MTLSamplerMinMagFilterLinear;
-        descriptor.magFilter = MTLSamplerMinMagFilterLinear;
-        descriptor.mipFilter = MTLSamplerMipFilterNearest;
+        samplerDesc.minFilter = MTLSamplerMinMagFilterLinear;
+        samplerDesc.magFilter = MTLSamplerMinMagFilterLinear;
+        samplerDesc.mipFilter = MTLSamplerMipFilterNearest;
         break;
     case TextureFilter::PointMipLinear:
-        descriptor.minFilter = MTLSamplerMinMagFilterNearest;
-        descriptor.magFilter = MTLSamplerMinMagFilterNearest;
-        descriptor.mipFilter = MTLSamplerMipFilterLinear;
+        samplerDesc.minFilter = MTLSamplerMinMagFilterNearest;
+        samplerDesc.magFilter = MTLSamplerMinMagFilterNearest;
+        samplerDesc.mipFilter = MTLSamplerMipFilterLinear;
         break;
     case TextureFilter::MinLinearMagPointMipLinear:
-        descriptor.minFilter = MTLSamplerMinMagFilterLinear;
-        descriptor.magFilter = MTLSamplerMinMagFilterNearest;
-        descriptor.mipFilter = MTLSamplerMipFilterLinear;
+        samplerDesc.minFilter = MTLSamplerMinMagFilterLinear;
+        samplerDesc.magFilter = MTLSamplerMinMagFilterNearest;
+        samplerDesc.mipFilter = MTLSamplerMipFilterLinear;
         break;
     case TextureFilter::MinLinearMagPointMipPoint:
-        descriptor.minFilter = MTLSamplerMinMagFilterLinear;
-        descriptor.magFilter = MTLSamplerMinMagFilterNearest;
-        descriptor.mipFilter = MTLSamplerMipFilterNearest;
+        samplerDesc.minFilter = MTLSamplerMinMagFilterLinear;
+        samplerDesc.magFilter = MTLSamplerMinMagFilterNearest;
+        samplerDesc.mipFilter = MTLSamplerMipFilterNearest;
         break;
     case TextureFilter::MinPointMagLinearMipLinear:
-        descriptor.minFilter = MTLSamplerMinMagFilterNearest;
-        descriptor.magFilter = MTLSamplerMinMagFilterLinear;
-        descriptor.mipFilter = MTLSamplerMipFilterLinear;
+        samplerDesc.minFilter = MTLSamplerMinMagFilterNearest;
+        samplerDesc.magFilter = MTLSamplerMinMagFilterLinear;
+        samplerDesc.mipFilter = MTLSamplerMipFilterLinear;
         break;
     case TextureFilter::MinPointMagLinearMipPoint:
-        descriptor.minFilter = MTLSamplerMinMagFilterNearest;
-        descriptor.magFilter = MTLSamplerMinMagFilterLinear;
-        descriptor.mipFilter = MTLSamplerMipFilterNearest;
+        samplerDesc.minFilter = MTLSamplerMinMagFilterNearest;
+        samplerDesc.magFilter = MTLSamplerMinMagFilterLinear;
+        samplerDesc.mipFilter = MTLSamplerMipFilterNearest;
         break;
     }
 
-    descriptor.lodMaxClamp = description.MaxMipLevel;
-    descriptor.lodMinClamp = description.MinMipLevel;
+    samplerDesc.lodMaxClamp = descriptor.MaxMipLevel;
+    samplerDesc.lodMinClamp = descriptor.MinMipLevel;
 
-    descriptor.compareFunction = ToComparisonFunction(description.ComparisonFunction);
+    samplerDesc.compareFunction = ToComparisonFunction(descriptor.ComparisonFunction);
 
     // NOTE: `MTLSamplerDescriptor's max anisotropy value must be >= one.
-    descriptor.maxAnisotropy = std::max<std::uint32_t>(description.MaxAnisotropy, 1);
+    samplerDesc.maxAnisotropy = std::max<std::uint32_t>(descriptor.MaxAnisotropy, 1);
 
-    samplerState = [device newSamplerStateWithDescriptor:descriptor];
+    samplerState = [device newSamplerStateWithDescriptor:samplerDesc];
     if (samplerState == nullptr) {
         return errors::New("failed to create MTLSamplerState");
     }

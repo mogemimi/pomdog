@@ -16,7 +16,7 @@ public:
     [[nodiscard]] std::unique_ptr<Error>
     Initialize(
         id<MTLDevice> device,
-        const SamplerDescription& description) noexcept;
+        const SamplerDescriptor& descriptor) noexcept;
 
     /// Gets the pointer of the native sampler object.
     id<MTLSamplerState> GetSamplerState() const noexcept;

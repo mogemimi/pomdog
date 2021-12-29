@@ -82,12 +82,12 @@ public:
 
     /// Creates a pipeline state object.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<PipelineState>, std::unique_ptr<Error>>
-    CreatePipelineState(const PipelineStateDescription& description) noexcept = 0;
+    CreatePipelineState(const PipelineStateDescriptor& descriptor) noexcept = 0;
 
     /// Creates an effect reflection.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<EffectReflection>, std::unique_ptr<Error>>
     CreateEffectReflection(
-        const PipelineStateDescription& description,
+        const PipelineStateDescriptor& descriptor,
         const std::shared_ptr<PipelineState>& pipelineState) noexcept = 0;
 
     /// Creates a shader object.
@@ -119,7 +119,7 @@ public:
 
     /// Creates a sampler state object.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<SamplerState>, std::unique_ptr<Error>>
-    CreateSamplerState(const SamplerDescription& description) noexcept = 0;
+    CreateSamplerState(const SamplerDescriptor& descriptor) noexcept = 0;
 
     /// Creates a 2D texture.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<Texture2D>, std::unique_ptr<Error>>

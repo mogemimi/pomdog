@@ -4,69 +4,34 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
-#include "pomdog/gpu/render_target_blend_description.h"
+#include "pomdog/gpu/render_target_blend_descriptor.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>
 #include <cstdint>
-#include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 
-struct POMDOG_EXPORT BlendDescription final {
-    std::array<RenderTargetBlendDescription, 8> RenderTargets;
+struct POMDOG_EXPORT BlendDescriptor final {
+    std::array<RenderTargetBlendDescriptor, 8> RenderTargets;
     bool AlphaToCoverageEnable;
     bool IndependentBlendEnable;
 
-    [[nodiscard]] static BlendDescription CreateDefault() noexcept
-    {
-        return CreateOpaque();
-    }
+    [[nodiscard]] static BlendDescriptor
+    CreateDefault() noexcept;
 
-    [[nodiscard]] static BlendDescription CreateAdditive() noexcept
-    {
-        BlendDescription desc;
-        desc.AlphaToCoverageEnable = false;
-        desc.IndependentBlendEnable = false;
-        for (auto& renderTarget : desc.RenderTargets) {
-            renderTarget = RenderTargetBlendDescription::CreateAdditive();
-        }
-        return desc;
-    }
+    [[nodiscard]] static BlendDescriptor
+    CreateAdditive() noexcept;
 
-    [[nodiscard]] static BlendDescription CreateAlphaBlend() noexcept
-    {
-        BlendDescription desc;
-        desc.AlphaToCoverageEnable = false;
-        desc.IndependentBlendEnable = false;
-        for (auto& renderTarget : desc.RenderTargets) {
-            renderTarget = RenderTargetBlendDescription::CreateAlphaBlend();
-        }
-        return desc;
-    }
+    [[nodiscard]] static BlendDescriptor
+    CreateAlphaBlend() noexcept;
 
-    [[nodiscard]] static BlendDescription CreateNonPremultiplied() noexcept
-    {
-        BlendDescription desc;
-        desc.AlphaToCoverageEnable = false;
-        desc.IndependentBlendEnable = false;
-        for (auto& renderTarget : desc.RenderTargets) {
-            renderTarget = RenderTargetBlendDescription::CreateNonPremultiplied();
-        }
-        return desc;
-    }
+    [[nodiscard]] static BlendDescriptor
+    CreateNonPremultiplied() noexcept;
 
-    [[nodiscard]] static BlendDescription CreateOpaque() noexcept
-    {
-        BlendDescription desc;
-        desc.AlphaToCoverageEnable = false;
-        desc.IndependentBlendEnable = false;
-        for (auto& renderTarget : desc.RenderTargets) {
-            renderTarget = RenderTargetBlendDescription::CreateOpaque();
-        }
-        return desc;
-    }
+    [[nodiscard]] static BlendDescriptor
+    CreateOpaque() noexcept;
 };
 
 } // namespace pomdog

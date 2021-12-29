@@ -10,13 +10,11 @@
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
-#include <limits>
-#include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 
-struct POMDOG_EXPORT SamplerDescription final {
+struct POMDOG_EXPORT SamplerDescriptor final {
     std::uint32_t MaxAnisotropy;
     float MinMipLevel;
     float MaxMipLevel;
@@ -28,100 +26,26 @@ struct POMDOG_EXPORT SamplerDescription final {
     pomdog::ComparisonFunction ComparisonFunction;
     //std::array<float, 4> BorderColor;
 
-    static SamplerDescription CreateDefault() noexcept
-    {
-        return CreateLinearClamp();
-    }
+    [[nodiscard]] static SamplerDescriptor
+    CreateDefault() noexcept;
 
-    static SamplerDescription CreateAnisotropicClamp() noexcept
-    {
-        SamplerDescription desc;
-        desc.Filter = TextureFilter::Anisotropic;
-        desc.AddressU = TextureAddressMode::Clamp;
-        desc.AddressV = TextureAddressMode::Clamp;
-        desc.AddressW = TextureAddressMode::Clamp;
-        desc.MipMapLevelOfDetailBias = 0;
-        desc.MaxAnisotropy = 0;
-        desc.MinMipLevel = 0;
-        desc.MaxMipLevel = 1000;
-        desc.ComparisonFunction = ComparisonFunction::Never;
-        return desc;
-    }
+    [[nodiscard]] static SamplerDescriptor
+    CreateAnisotropicClamp() noexcept;
 
-    static SamplerDescription CreateAnisotropicWrap() noexcept
-    {
-        SamplerDescription desc;
-        desc.Filter = TextureFilter::Anisotropic;
-        desc.AddressU = TextureAddressMode::Wrap;
-        desc.AddressV = TextureAddressMode::Wrap;
-        desc.AddressW = TextureAddressMode::Wrap;
-        desc.MipMapLevelOfDetailBias = 0;
-        desc.MaxAnisotropy = 0;
-        desc.MinMipLevel = 0;
-        desc.MaxMipLevel = 1000;
-        desc.ComparisonFunction = ComparisonFunction::Never;
-        return desc;
-    }
+    [[nodiscard]] static SamplerDescriptor
+    CreateAnisotropicWrap() noexcept;
 
-    static SamplerDescription CreateLinearClamp() noexcept
-    {
-        SamplerDescription desc;
-        desc.Filter = TextureFilter::Linear;
-        desc.AddressU = TextureAddressMode::Clamp;
-        desc.AddressV = TextureAddressMode::Clamp;
-        desc.AddressW = TextureAddressMode::Clamp;
-        desc.MipMapLevelOfDetailBias = 0;
-        desc.MaxAnisotropy = 0;
-        desc.MinMipLevel = 0;
-        desc.MaxMipLevel = std::numeric_limits<float>::max();
-        desc.ComparisonFunction = ComparisonFunction::Never;
-        return desc;
-    }
+    [[nodiscard]] static SamplerDescriptor
+    CreateLinearClamp() noexcept;
 
-    static SamplerDescription CreateLinearWrap() noexcept
-    {
-        SamplerDescription desc;
-        desc.Filter = TextureFilter::Linear;
-        desc.AddressU = TextureAddressMode::Wrap;
-        desc.AddressV = TextureAddressMode::Wrap;
-        desc.AddressW = TextureAddressMode::Wrap;
-        desc.MipMapLevelOfDetailBias = 0;
-        desc.MaxAnisotropy = 0;
-        desc.MinMipLevel = 0;
-        desc.MaxMipLevel = std::numeric_limits<float>::max();
-        desc.ComparisonFunction = ComparisonFunction::Never;
-        return desc;
-    }
+    [[nodiscard]] static SamplerDescriptor
+    CreateLinearWrap() noexcept;
 
-    static SamplerDescription CreatePointClamp() noexcept
-    {
-        SamplerDescription desc;
-        desc.Filter = TextureFilter::Point;
-        desc.AddressU = TextureAddressMode::Clamp;
-        desc.AddressV = TextureAddressMode::Clamp;
-        desc.AddressW = TextureAddressMode::Clamp;
-        desc.MipMapLevelOfDetailBias = 0;
-        desc.MaxAnisotropy = 0;
-        desc.MinMipLevel = 0;
-        desc.MaxMipLevel = std::numeric_limits<float>::max();
-        desc.ComparisonFunction = ComparisonFunction::Never;
-        return desc;
-    }
+    [[nodiscard]] static SamplerDescriptor
+    CreatePointClamp() noexcept;
 
-    static SamplerDescription CreatePointWrap() noexcept
-    {
-        SamplerDescription desc;
-        desc.Filter = TextureFilter::Point;
-        desc.AddressU = TextureAddressMode::Wrap;
-        desc.AddressV = TextureAddressMode::Wrap;
-        desc.AddressW = TextureAddressMode::Wrap;
-        desc.MipMapLevelOfDetailBias = 0;
-        desc.MaxAnisotropy = 0;
-        desc.MinMipLevel = 0;
-        desc.MaxMipLevel = std::numeric_limits<float>::max();
-        desc.ComparisonFunction = ComparisonFunction::Never;
-        return desc;
-    }
+    [[nodiscard]] static SamplerDescriptor
+    CreatePointWrap() noexcept;
 };
 
 } // namespace pomdog

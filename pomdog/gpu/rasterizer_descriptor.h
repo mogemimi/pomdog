@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 
-struct POMDOG_EXPORT RasterizerDescription final {
+struct POMDOG_EXPORT RasterizerDescriptor final {
     /// A constant depth bias applied to a given pixel.
     ///
     /// The depth bias (or z-bias) can be added to each of the polygons that
@@ -32,43 +32,17 @@ struct POMDOG_EXPORT RasterizerDescription final {
     /// Enable multisample antialiasing (MSAA).
     bool MultisampleEnable;
 
-    [[nodiscard]] static RasterizerDescription CreateDefault() noexcept
-    {
-        return CreateCullCounterClockwise();
-    }
+    [[nodiscard]] static RasterizerDescriptor
+    CreateDefault() noexcept;
 
-    [[nodiscard]] static RasterizerDescription CreateCullClockwise() noexcept
-    {
-        RasterizerDescription desc;
-        desc.CullMode = CullMode::ClockwiseFace;
-        desc.FillMode = FillMode::Solid;
-        desc.DepthBias = 0;
-        desc.SlopeScaledDepthBias = 0;
-        desc.MultisampleEnable = false;
-        return desc;
-    }
+    [[nodiscard]] static RasterizerDescriptor
+    CreateCullClockwise() noexcept;
 
-    [[nodiscard]] static RasterizerDescription CreateCullCounterClockwise() noexcept
-    {
-        RasterizerDescription desc;
-        desc.CullMode = CullMode::CounterClockwiseFace;
-        desc.FillMode = FillMode::Solid;
-        desc.DepthBias = 0;
-        desc.SlopeScaledDepthBias = 0;
-        desc.MultisampleEnable = false;
-        return desc;
-    }
+    [[nodiscard]] static RasterizerDescriptor
+    CreateCullCounterClockwise() noexcept;
 
-    [[nodiscard]] static RasterizerDescription CreateCullNone() noexcept
-    {
-        RasterizerDescription desc;
-        desc.CullMode = CullMode::None;
-        desc.FillMode = FillMode::Solid;
-        desc.DepthBias = 0;
-        desc.SlopeScaledDepthBias = 0;
-        desc.MultisampleEnable = false;
-        return desc;
-    }
+    [[nodiscard]] static RasterizerDescriptor
+    CreateCullNone() noexcept;
 };
 
 } // namespace pomdog

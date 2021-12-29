@@ -7,10 +7,10 @@
 #include "pomdog/content/asset_manager.h"
 #include "pomdog/experimental/graphics/texture2d_view.h"
 #include "pomdog/experimental/texture_packer/texture_region.h"
-#include "pomdog/gpu/blend_description.h"
+#include "pomdog/gpu/blend_descriptor.h"
 #include "pomdog/gpu/buffer_usage.h"
 #include "pomdog/gpu/constant_buffer.h"
-#include "pomdog/gpu/depth_stencil_description.h"
+#include "pomdog/gpu/depth_stencil_descriptor.h"
 #include "pomdog/gpu/graphics_command_list.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/index_buffer.h"
@@ -19,9 +19,9 @@
 #include "pomdog/gpu/pipeline_state.h"
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/gpu/primitive_topology.h"
-#include "pomdog/gpu/rasterizer_description.h"
+#include "pomdog/gpu/rasterizer_descriptor.h"
 #include "pomdog/gpu/render_target2d.h"
-#include "pomdog/gpu/sampler_description.h"
+#include "pomdog/gpu/sampler_descriptor.h"
 #include "pomdog/gpu/sampler_state.h"
 #include "pomdog/gpu/shader.h"
 #include "pomdog/gpu/shader_language.h"
@@ -152,9 +152,9 @@ public:
 public:
     Impl(
         const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-        std::optional<BlendDescription>&& blendState,
-        std::optional<RasterizerDescription>&& rasterizerDesc,
-        std::optional<SamplerDescription>&& samplerState,
+        std::optional<BlendDescriptor>&& blendState,
+        std::optional<RasterizerDescriptor>&& rasterizerDesc,
+        std::optional<SamplerDescriptor>&& samplerState,
         std::optional<SurfaceFormat>&& renderTargetViewFormat,
         std::optional<SurfaceFormat>&& depthStencilViewFormat,
         SpriteBatchPixelShaderMode pixelShaderMode,
@@ -189,9 +189,9 @@ private:
 
 SpriteBatch::Impl::Impl(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-    std::optional<BlendDescription>&& blendDesc,
-    std::optional<RasterizerDescription>&& rasterizerDesc,
-    std::optional<SamplerDescription>&& samplerDesc,
+    std::optional<BlendDescriptor>&& blendDesc,
+    std::optional<RasterizerDescriptor>&& rasterizerDesc,
+    std::optional<SamplerDescriptor>&& samplerDesc,
     std::optional<SurfaceFormat>&& renderTargetViewFormat,
     std::optional<SurfaceFormat>&& depthStencilViewFormat,
     SpriteBatchPixelShaderMode pixelShaderMode,
@@ -202,13 +202,13 @@ SpriteBatch::Impl::Impl(
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
     if (!blendDesc) {
-        blendDesc = BlendDescription::CreateNonPremultiplied();
+        blendDesc = BlendDescriptor::CreateNonPremultiplied();
     }
     if (!rasterizerDesc) {
-        rasterizerDesc = RasterizerDescription::CreateCullNone();
+        rasterizerDesc = RasterizerDescriptor::CreateCullNone();
     }
     if (!samplerDesc) {
-        samplerDesc = SamplerDescription::CreateLinearWrap();
+        samplerDesc = SamplerDescriptor::CreateLinearWrap();
     }
     if (!renderTargetViewFormat) {
         renderTargetViewFormat = presentationParameters.BackBufferFormat;
@@ -309,7 +309,7 @@ SpriteBatch::Impl::Impl(
             .SetInputLayout(inputLayout.CreateInputLayout())
             .SetPrimitiveTopology(PrimitiveTopology::TriangleList)
             .SetBlendState(*blendDesc)
-            .SetDepthStencilState(DepthStencilDescription::CreateNone())
+            .SetDepthStencilState(DepthStencilDescriptor::CreateNone())
             .SetRasterizerState(*rasterizerDesc)
             .SetConstantBufferBindSlot("SpriteBatchConstants", 0)
             .Build();
@@ -574,9 +574,9 @@ SpriteBatch::SpriteBatch(
 
 SpriteBatch::SpriteBatch(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-    std::optional<BlendDescription>&& blendDesc,
-    std::optional<RasterizerDescription>&& rasterizerDesc,
-    std::optional<SamplerDescription>&& samplerDesc,
+    std::optional<BlendDescriptor>&& blendDesc,
+    std::optional<RasterizerDescriptor>&& rasterizerDesc,
+    std::optional<SamplerDescriptor>&& samplerDesc,
     std::optional<SurfaceFormat>&& renderTargetViewFormat,
     std::optional<SurfaceFormat>&& depthStencilViewFormat,
     SpriteBatchPixelShaderMode pixelShaderMode,

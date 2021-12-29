@@ -196,7 +196,7 @@ std::unique_ptr<Error> GLTFModelTest::Initialize()
     {
         // NOTE: Create sampler state
         std::tie(sampler, err) = graphicsDevice->CreateSamplerState(
-            SamplerDescription::CreateLinearClamp());
+            SamplerDescriptor::CreateLinearClamp());
 
         if (err != nullptr) {
             return errors::Wrap(std::move(err), "failed to create sampler state");
@@ -215,9 +215,9 @@ std::unique_ptr<Error> GLTFModelTest::Initialize()
             .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
             .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
             .SetPrimitiveTopology(PrimitiveTopology::TriangleList)
-            .SetDepthStencilState(DepthStencilDescription::CreateDefault())
-            .SetBlendState(BlendDescription::CreateNonPremultiplied())
-            .SetRasterizerState(RasterizerDescription::CreateDefault())
+            .SetDepthStencilState(DepthStencilDescriptor::CreateDefault())
+            .SetBlendState(BlendDescriptor::CreateNonPremultiplied())
+            .SetRasterizerState(RasterizerDescriptor::CreateDefault())
             .Build();
         if (err != nullptr) {
             return errors::Wrap(std::move(err), "failed to create pipeline state");
@@ -236,9 +236,9 @@ std::unique_ptr<Error> GLTFModelTest::Initialize()
             .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
             .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
             .SetPrimitiveTopology(PrimitiveTopology::TriangleList)
-            .SetDepthStencilState(DepthStencilDescription::CreateDefault())
-            .SetBlendState(BlendDescription::CreateNonPremultiplied())
-            .SetRasterizerState(RasterizerDescription::CreateDefault())
+            .SetDepthStencilState(DepthStencilDescriptor::CreateDefault())
+            .SetBlendState(BlendDescriptor::CreateNonPremultiplied())
+            .SetRasterizerState(RasterizerDescriptor::CreateDefault())
             .Build();
         if (err != nullptr) {
             return errors::Wrap(std::move(err), "failed to create pipeline state");

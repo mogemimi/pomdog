@@ -1,7 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/gpu/vulkan/sampler_state_vulkan.h"
-#include "pomdog/gpu/sampler_description.h"
+#include "pomdog/gpu/sampler_descriptor.h"
 #include "pomdog/gpu/vulkan/format_helper.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/exception.h"
@@ -85,7 +85,7 @@ ToTextureFilter(TextureFilter filter)
 
 SamplerStateVulkan::SamplerStateVulkan(
     ::VkDevice deviceIn,
-    const SamplerDescription& description)
+    const SamplerDescriptor& descriptor)
     : device(deviceIn)
     , sampler(nullptr)
 {
@@ -98,25 +98,25 @@ SamplerStateVulkan::SamplerStateVulkan(
     std::tie(
         createInfo.minFilter,
         createInfo.magFilter,
-        createInfo.mipmapMode) = ToTextureFilter(description.Filter);
-    createInfo.addressModeU = ToSamplerAddressMode(description.AddressU);
-    createInfo.addressModeV = ToSamplerAddressMode(description.AddressV);
-    createInfo.addressModeW = ToSamplerAddressMode(description.AddressW);
+        createInfo.mipmapMode) = ToTextureFilter(descriptor.Filter);
+    createInfo.addressModeU = ToSamplerAddressMode(descriptor.AddressU);
+    createInfo.addressModeV = ToSamplerAddressMode(descriptor.AddressV);
+    createInfo.addressModeW = ToSamplerAddressMode(descriptor.AddressW);
     createInfo.mipLodBias = 0.0f;
     createInfo.anisotropyEnable = VK_FALSE;
 
-    if (description.ComparisonFunction == ComparisonFunction::Never) {
+    if (descriptor.ComparisonFunction == ComparisonFunction::Never) {
         createInfo.compareEnable = VK_FALSE;
         createInfo.compareOp = VK_COMPARE_OP_NEVER;
     }
     else {
         createInfo.compareEnable = VK_TRUE;
-        createInfo.compareOp = ToComparisonFunction(description.ComparisonFunction);
+        createInfo.compareOp = ToComparisonFunction(descriptor.ComparisonFunction);
     }
 
-    createInfo.minLod = description.MinMipLevel;
-    createInfo.maxLod = description.MaxMipLevel;
-    createInfo.maxAnisotropy = description.MaxAnisotropy;
+    createInfo.minLod = descriptor.MinMipLevel;
+    createInfo.maxLod = descriptor.MaxMipLevel;
+    createInfo.maxAnisotropy = descriptor.MaxAnisotropy;
     createInfo.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
     createInfo.unnormalizedCoordinates = VK_FALSE;
 

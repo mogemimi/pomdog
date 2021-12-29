@@ -7,7 +7,7 @@
 #include "pomdog/gpu/gl4/error_checker.h"
 #include "pomdog/gpu/gl4/input_layout_gl4.h"
 #include "pomdog/gpu/gl4/shader_gl4.h"
-#include "pomdog/gpu/pipeline_state_description.h"
+#include "pomdog/gpu/pipeline_descriptor.h"
 #include "pomdog/gpu/primitive_topology.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/scope_guard.h"
@@ -73,26 +73,26 @@ LinkShaders(const VertexShaderGL4& vertexShader, const PixelShaderGL4& pixelShad
 PipelineStateGL4::PipelineStateGL4() = default;
 
 std::unique_ptr<Error>
-PipelineStateGL4::Initialize(const PipelineStateDescription& description) noexcept
+PipelineStateGL4::Initialize(const PipelineStateDescriptor& descriptor) noexcept
 {
-    if (auto err = blendState.Initialize(description.BlendState); err != nullptr) {
+    if (auto err = blendState.Initialize(descriptor.BlendState); err != nullptr) {
         return errors::Wrap(std::move(err), "failed to initialize blendState");
     }
-    if (auto err = rasterizerState.Initialize(description.RasterizerState); err != nullptr) {
+    if (auto err = rasterizerState.Initialize(descriptor.RasterizerState); err != nullptr) {
         return errors::Wrap(std::move(err), "failed to initialize rasterizerState");
     }
-    if (auto err = depthStencilState.Initialize(description.DepthStencilState); err != nullptr) {
+    if (auto err = depthStencilState.Initialize(descriptor.DepthStencilState); err != nullptr) {
         return errors::Wrap(std::move(err), "failed to initialize depthStencilState");
     }
 
-    primitiveTopology = ToPrimitiveTopology(description.PrimitiveTopology);
+    primitiveTopology = ToPrimitiveTopology(descriptor.PrimitiveTopology);
 
-    auto vertexShader = std::dynamic_pointer_cast<VertexShaderGL4>(description.VertexShader);
+    auto vertexShader = std::dynamic_pointer_cast<VertexShaderGL4>(descriptor.VertexShader);
     if (vertexShader == nullptr) {
         return errors::New("invalid vertex shader");
     }
 
-    auto pixelShader = std::dynamic_pointer_cast<PixelShaderGL4>(description.PixelShader);
+    auto pixelShader = std::dynamic_pointer_cast<PixelShaderGL4>(descriptor.PixelShader);
     if (pixelShader == nullptr) {
         return errors::New("invalid pixel shader");
     }
@@ -107,7 +107,7 @@ PipelineStateGL4::Initialize(const PipelineStateDescription& description) noexce
     shaderProgram = std::move(linkResult);
     POMDOG_ASSERT(shaderProgram != std::nullopt);
 
-    inputLayout = std::make_unique<InputLayoutGL4>(*shaderProgram, description.InputLayout);
+    inputLayout = std::make_unique<InputLayoutGL4>(*shaderProgram, descriptor.InputLayout);
 
     EffectReflectionGL4 shaderReflection;
     if (auto err = shaderReflection.Initialize(*shaderProgram); err != nullptr) {
@@ -120,7 +120,7 @@ PipelineStateGL4::Initialize(const PipelineStateDescription& description) noexce
         std::unordered_set<int> reservedSlots;
         std::unordered_set<int> reservedBlocks;
 
-        auto& bindSlots = description.ConstantBufferBindHints;
+        auto& bindSlots = descriptor.ConstantBufferBindHints;
 
         for (auto& uniformBlock : uniformBlocks) {
             auto binding = bindSlots.find(uniformBlock.Name);
@@ -150,7 +150,7 @@ PipelineStateGL4::Initialize(const PipelineStateDescription& description) noexce
     {
         auto uniforms = shaderReflection.GetNativeUniforms();
 
-        auto& hints = description.SamplerBindHints;
+        auto& hints = descriptor.SamplerBindHints;
 
         std::uint16_t slotIndex = 0;
         for (auto& uniform : uniforms) {

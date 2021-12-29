@@ -64,9 +64,9 @@ public:
 
     SpriteBatch(
         const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-        std::optional<BlendDescription>&& blendDesc,
-        std::optional<RasterizerDescription>&& rasterizerDesc,
-        std::optional<SamplerDescription>&& samplerDesc,
+        std::optional<BlendDescriptor>&& blendDesc,
+        std::optional<RasterizerDescriptor>&& rasterizerDesc,
+        std::optional<SamplerDescriptor>&& samplerDesc,
         std::optional<SurfaceFormat>&& renderTargetViewFormat,
         std::optional<SurfaceFormat>&& depthStencilViewFormat,
         SpriteBatchPixelShaderMode pixelShaderMode,

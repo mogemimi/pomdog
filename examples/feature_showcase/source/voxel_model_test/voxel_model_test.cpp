@@ -25,7 +25,7 @@ std::unique_ptr<Error> VoxelModelTest::Initialize()
     // NOTE: Create PrimitiveBatch effect
     primitiveBatch = std::make_shared<PrimitiveBatch>(
         graphicsDevice,
-        DepthStencilDescription::CreateDefault(),
+        DepthStencilDescriptor::CreateDefault(),
         std::nullopt,
         *assets);
 

@@ -54,8 +54,8 @@ std::unique_ptr<Error> Particle3DTest::Initialize()
     // NOTE: Create billboard batch effect
     billboardEffect = std::make_shared<BillboardBatchEffect>(
         graphicsDevice,
-        BlendDescription::CreateAlphaBlend(),
-        DepthStencilDescription::CreateReadOnlyDepth(),
+        BlendDescriptor::CreateAlphaBlend(),
+        DepthStencilDescriptor::CreateReadOnlyDepth(),
         std::nullopt,
         std::nullopt,
         std::nullopt,
@@ -65,7 +65,7 @@ std::unique_ptr<Error> Particle3DTest::Initialize()
     billboardBuffer = std::make_shared<BillboardBatchBuffer>(graphicsDevice, 4096);
 
     // NOTE: Create sampler state
-    std::tie(sampler, err) = graphicsDevice->CreateSamplerState(SamplerDescription::CreateLinearClamp());
+    std::tie(sampler, err) = graphicsDevice->CreateSamplerState(SamplerDescriptor::CreateLinearClamp());
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to create sampler state");
     }

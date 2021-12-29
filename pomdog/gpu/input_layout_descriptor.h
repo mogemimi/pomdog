@@ -11,7 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 
-struct InputLayoutDescription final {
+struct InputLayoutDescriptor final {
     std::vector<pomdog::InputElement> InputElements;
 };
 

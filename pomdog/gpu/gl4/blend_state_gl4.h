@@ -17,7 +17,7 @@ namespace pomdog::detail::gl4 {
 using BlendGL4 = Tagged<GLenum, BlendFactor>;
 using BlendOperationGL4 = Tagged<GLenum, BlendOperation>;
 
-struct RenderTargetBlendDescGL4 final {
+struct RenderTargetBlendDescriptorGL4 final {
     BlendGL4 ColorSource;
     BlendGL4 ColorDestination;
     BlendOperationGL4 ColorOperation;
@@ -30,12 +30,12 @@ struct RenderTargetBlendDescGL4 final {
 class BlendStateGL4 final {
 public:
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(const BlendDescription& description) noexcept;
+    Initialize(const BlendDescriptor& descriptor) noexcept;
 
     void Apply();
 
 private:
-    std::array<RenderTargetBlendDescGL4, 8> renderTargets;
+    std::array<RenderTargetBlendDescriptorGL4, 8> renderTargets;
     bool independentBlendEnable = false;
     bool alphaToCoverageEnable = false;
 };

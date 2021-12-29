@@ -3,7 +3,7 @@
 #include "pomdog/gpu/gl4/rasterizer_state_gl4.h"
 #include "pomdog/basic/unreachable.h"
 #include "pomdog/gpu/gl4/error_checker.h"
-#include "pomdog/gpu/rasterizer_description.h"
+#include "pomdog/gpu/rasterizer_descriptor.h"
 #include "pomdog/utility/assert.h"
 
 namespace pomdog::detail::gl4 {
@@ -23,13 +23,13 @@ FillModeGL4 ToFillModeGL4(const FillMode& fillMode) noexcept
 } // namespace
 
 std::unique_ptr<Error>
-RasterizerStateGL4::Initialize(const RasterizerDescription& description) noexcept
+RasterizerStateGL4::Initialize(const RasterizerDescriptor& descriptor) noexcept
 {
-    fillMode = ToFillModeGL4(description.FillMode);
-    cullMode = description.CullMode;
-    depthBias = static_cast<decltype(depthBias)>(description.DepthBias);
-    slopeScaledDepthBias = description.SlopeScaledDepthBias;
-    multisampleAntiAliasEnable = description.MultisampleEnable;
+    fillMode = ToFillModeGL4(descriptor.FillMode);
+    cullMode = descriptor.CullMode;
+    depthBias = static_cast<decltype(depthBias)>(descriptor.DepthBias);
+    slopeScaledDepthBias = descriptor.SlopeScaledDepthBias;
+    multisampleAntiAliasEnable = descriptor.MultisampleEnable;
     return nullptr;
 }
 

@@ -3,8 +3,8 @@
 #include "pomdog/gpu/vulkan/pipeline_state_vulkan.h"
 #include "pomdog/gpu/backends/buffer_helper.h"
 #include "pomdog/gpu/backends/shader_bytecode.h"
-#include "pomdog/gpu/input_layout_description.h"
-#include "pomdog/gpu/pipeline_state_description.h"
+#include "pomdog/gpu/input_layout_descriptor.h"
+#include "pomdog/gpu/pipeline_descriptor.h"
 #include "pomdog/gpu/primitive_topology.h"
 #include "pomdog/gpu/vulkan/format_helper.h"
 #include "pomdog/gpu/vulkan/shader_vulkan.h"
@@ -172,7 +172,7 @@ VkBool32 ToVkBool32(bool is) noexcept
     return is ? VK_TRUE : VK_FALSE;
 }
 
-VkPipelineColorBlendAttachmentState ToColorBlendAttachmentState(const RenderTargetBlendDescription& desc) noexcept
+VkPipelineColorBlendAttachmentState ToColorBlendAttachmentState(const RenderTargetBlendDescriptor& desc) noexcept
 {
     VkPipelineColorBlendAttachmentState state;
     state.blendEnable = ToVkBool32(desc.BlendEnable);
@@ -191,7 +191,7 @@ VkPipelineColorBlendAttachmentState ToColorBlendAttachmentState(const RenderTarg
 }
 
 void ToBlendState(
-    const BlendDescription& desc,
+    const BlendDescriptor& desc,
     const std::vector<VkPipelineColorBlendAttachmentState>& blendAttachments,
     VkPipelineColorBlendStateCreateInfo& state) noexcept
 {
@@ -210,20 +210,20 @@ void ToBlendState(
 
 void ToDepthStencilOperation(
     const DepthStencilOperation& operation,
-    const DepthStencilDescription& description,
+    const DepthStencilDescriptor& descriptor,
     VkStencilOpState& state) noexcept
 {
     state.failOp = ToStencilOperation(operation.StencilFail);
     state.passOp = ToStencilOperation(operation.StencilPass);
     state.depthFailOp = ToStencilOperation(operation.StencilDepthBufferFail);
     state.compareOp = ToComparisonFunction(operation.StencilFunction);
-    state.compareMask = description.StencilMask;
-    state.writeMask = description.StencilWriteMask;
+    state.compareMask = descriptor.StencilMask;
+    state.writeMask = descriptor.StencilWriteMask;
     state.reference = 0;
 }
 
 void ToDepthStencilState(
-    const DepthStencilDescription& desc,
+    const DepthStencilDescriptor& desc,
     VkPipelineDepthStencilStateCreateInfo& info) noexcept
 {
     info.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
@@ -245,7 +245,7 @@ void ToDepthStencilState(
 }
 
 void ToRasterizationState(
-    const RasterizerDescription& desc,
+    const RasterizerDescriptor& desc,
     VkPipelineRasterizationStateCreateInfo& info) noexcept
 {
     info.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
@@ -264,7 +264,7 @@ void ToRasterizationState(
 }
 
 std::tuple<std::vector<VkVertexInputBindingDescription>, std::vector<VkVertexInputAttributeDescription>>
-ToVertexBindingsAndAttributes(const InputLayoutDescription& inputLayout)
+ToVertexBindingsAndAttributes(const InputLayoutDescriptor& inputLayout)
 {
     std::vector<VkVertexInputBindingDescription> bindings;
     std::vector<VkVertexInputAttributeDescription> attributes;
@@ -304,7 +304,7 @@ ToVertexBindingsAndAttributes(const InputLayoutDescription& inputLayout)
 }
 
 void ToVertexInputState(
-    const InputLayoutDescription& inputLayout,
+    const InputLayoutDescriptor& inputLayout,
     const std::vector<VkVertexInputBindingDescription>& vertexBindings,
     const std::vector<VkVertexInputAttributeDescription> vertexAttributes,
     VkPipelineVertexInputStateCreateInfo& info) noexcept
@@ -320,13 +320,13 @@ void ToVertexInputState(
 
 void CreateDescriptorSetLayout(
     VkDevice device,
-    const PipelineStateDescription& description,
+    const PipelineStateDescriptor& descriptor,
     VkDescriptorSetLayout& descriptorSetLayout)
 {
     std::vector<VkDescriptorSetLayoutBinding> layoutBindings;
-    layoutBindings.reserve(description.ConstantBufferBindSlots.size());
+    layoutBindings.reserve(descriptor.ConstantBufferBindSlots.size());
 
-    for (const auto& slot : description.ConstantBufferBindSlots) {
+    for (const auto& slot : descriptor.ConstantBufferBindSlots) {
         VkDescriptorSetLayoutBinding layoutBinding;
         layoutBinding.binding = static_cast<std::uint32_t>(slot.second);
 
@@ -360,19 +360,19 @@ void CreateDescriptorSetLayout(
 
 void CreateRenderPass(
     VkDevice device,
-    const PipelineStateDescription& description,
+    const PipelineStateDescriptor& descriptor,
     VkRenderPass& renderPass)
 {
     std::array<VkAttachmentDescription, 9> colorAttachments;
     std::array<VkAttachmentReference, 9> colorAttachmentRefs;
     VkAttachmentReference* depthAttachmentRef = nullptr;
 
-    POMDOG_ASSERT(colorAttachments.size() >= description.RenderTargetViewFormats.size());
-    POMDOG_ASSERT(colorAttachmentRefs.size() >= description.RenderTargetViewFormats.size());
+    POMDOG_ASSERT(colorAttachments.size() >= descriptor.RenderTargetViewFormats.size());
+    POMDOG_ASSERT(colorAttachmentRefs.size() >= descriptor.RenderTargetViewFormats.size());
 
     std::uint32_t attachmentIndex = 0;
 
-    for (const auto& surfaceFormat : description.RenderTargetViewFormats) {
+    for (const auto& surfaceFormat : descriptor.RenderTargetViewFormats) {
         POMDOG_ASSERT(attachmentIndex < colorAttachments.size());
         POMDOG_ASSERT(attachmentIndex < colorAttachmentRefs.size());
 
@@ -395,13 +395,13 @@ void CreateRenderPass(
     }
     const auto colorAttachemntCount = attachmentIndex;
 
-    if (description.DepthStencilViewFormat != SurfaceFormat::Invalid) {
+    if (descriptor.DepthStencilViewFormat != SurfaceFormat::Invalid) {
         POMDOG_ASSERT(attachmentIndex < colorAttachments.size());
         POMDOG_ASSERT(attachmentIndex < colorAttachmentRefs.size());
 
         auto& depthAttachment = colorAttachments[attachmentIndex];
         depthAttachment.flags = 0;
-        depthAttachment.format = ToSurfaceFormat(description.DepthStencilViewFormat);
+        depthAttachment.format = ToSurfaceFormat(descriptor.DepthStencilViewFormat);
         depthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
         depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
         depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
@@ -459,7 +459,7 @@ void CreateRenderPass(
 
 PipelineStateVulkan::PipelineStateVulkan(
     VkDevice deviceIn,
-    const PipelineStateDescription& description)
+    const PipelineStateDescriptor& descriptor)
     : device(deviceIn)
     , pipeline(nullptr)
     , renderPass(nullptr)
@@ -467,11 +467,11 @@ PipelineStateVulkan::PipelineStateVulkan(
 {
     POMDOG_ASSERT(device != nullptr);
 
-    auto vertexShaderVulkan = std::dynamic_pointer_cast<ShaderVulkan>(description.VertexShader);
+    auto vertexShaderVulkan = std::dynamic_pointer_cast<ShaderVulkan>(descriptor.VertexShader);
     if (!vertexShaderVulkan) {
         POMDOG_THROW_EXCEPTION(std::runtime_error, "Invalid vertex shader.");
     }
-    auto pixelShaderVulkan = std::dynamic_pointer_cast<ShaderVulkan>(description.PixelShader);
+    auto pixelShaderVulkan = std::dynamic_pointer_cast<ShaderVulkan>(descriptor.PixelShader);
     if (!pixelShaderVulkan) {
         POMDOG_THROW_EXCEPTION(std::runtime_error, "Invalid pixel shader.");
     }
@@ -508,27 +508,27 @@ PipelineStateVulkan::PipelineStateVulkan(
         pixelShaderStageInfo,
     }};
 
-    const auto [vertexBindings, vertexAttributes] = ToVertexBindingsAndAttributes(description.InputLayout);
+    const auto [vertexBindings, vertexAttributes] = ToVertexBindingsAndAttributes(descriptor.InputLayout);
 
     VkPipelineVertexInputStateCreateInfo vertexInputState;
-    ToVertexInputState(description.InputLayout, vertexBindings, vertexAttributes, vertexInputState);
+    ToVertexInputState(descriptor.InputLayout, vertexBindings, vertexAttributes, vertexInputState);
 
     VkPipelineInputAssemblyStateCreateInfo inputAssemblyState;
     inputAssemblyState.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-    inputAssemblyState.topology = ToVkPrimitiveTopology(description.PrimitiveTopology);
+    inputAssemblyState.topology = ToVkPrimitiveTopology(descriptor.PrimitiveTopology);
     inputAssemblyState.primitiveRestartEnable = VK_FALSE;
 
     VkPipelineDepthStencilStateCreateInfo depthStencilState;
-    ToDepthStencilState(description.DepthStencilState, depthStencilState);
+    ToDepthStencilState(descriptor.DepthStencilState, depthStencilState);
 
     VkPipelineRasterizationStateCreateInfo rasterizationState;
-    ToRasterizationState(description.RasterizerState, rasterizationState);
+    ToRasterizationState(descriptor.RasterizerState, rasterizationState);
 
     std::vector<VkPipelineColorBlendAttachmentState> blendAttachments;
     {
         std::size_t index = 0;
-        for (auto& renderTarget : description.BlendState.RenderTargets) {
-            if (index >= description.RenderTargetViewFormats.size()) {
+        for (auto& renderTarget : descriptor.BlendState.RenderTargets) {
+            if (index >= descriptor.RenderTargetViewFormats.size()) {
                 break;
             }
             blendAttachments.push_back(ToColorBlendAttachmentState(renderTarget));
@@ -537,7 +537,7 @@ PipelineStateVulkan::PipelineStateVulkan(
     }
 
     VkPipelineColorBlendStateCreateInfo blendState;
-    ToBlendState(description.BlendState, blendAttachments, blendState);
+    ToBlendState(descriptor.BlendState, blendAttachments, blendState);
 
     VkPipelineMultisampleStateCreateInfo multisampleState;
     multisampleState.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
@@ -547,10 +547,10 @@ PipelineStateVulkan::PipelineStateVulkan(
     multisampleState.sampleShadingEnable = VK_FALSE;
     multisampleState.minSampleShading = 0.0f;
     multisampleState.pSampleMask = nullptr;
-    multisampleState.alphaToCoverageEnable = ToVkBool32(description.BlendState.AlphaToCoverageEnable);
+    multisampleState.alphaToCoverageEnable = ToVkBool32(descriptor.BlendState.AlphaToCoverageEnable);
     multisampleState.alphaToOneEnable = VK_FALSE;
 
-    CreateDescriptorSetLayout(device, description, descriptorSetLayout);
+    CreateDescriptorSetLayout(device, descriptor, descriptorSetLayout);
 
     VkPipelineLayoutCreateInfo pipelineLayoutInfo;
     pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
@@ -590,7 +590,7 @@ PipelineStateVulkan::PipelineStateVulkan(
     viewportState.scissorCount = 1;
     viewportState.pScissors = &scissor;
 
-    CreateRenderPass(device, description, renderPass);
+    CreateRenderPass(device, descriptor, renderPass);
 
     std::array<VkDynamicState, 3> const dynamicStates = {{
         VK_DYNAMIC_STATE_BLEND_CONSTANTS,

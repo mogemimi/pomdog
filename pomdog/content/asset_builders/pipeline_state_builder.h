@@ -39,18 +39,18 @@ public:
 
     Builder& SetPixelShader(std::shared_ptr<Shader>&& pixelShader);
 
-    Builder& SetInputLayout(const InputLayoutDescription& inputLayout);
+    Builder& SetInputLayout(const InputLayoutDescriptor& inputLayout);
 
-    Builder& SetInputLayout(InputLayoutDescription&& inputLayout);
+    Builder& SetInputLayout(InputLayoutDescriptor&& inputLayout);
 
     /// Specifies the geometric primitive type for the input assembler stage.
     Builder& SetPrimitiveTopology(PrimitiveTopology primitiveTopology);
 
-    Builder& SetBlendState(const BlendDescription& blendState);
+    Builder& SetBlendState(const BlendDescriptor& blendState);
 
-    Builder& SetRasterizerState(const RasterizerDescription& rasterizerState);
+    Builder& SetRasterizerState(const RasterizerDescriptor& rasterizerState);
 
-    Builder& SetDepthStencilState(const DepthStencilDescription& depthStencilState);
+    Builder& SetDepthStencilState(const DepthStencilDescriptor& depthStencilState);
 
     Builder& SetConstantBufferBindSlot(const std::string& name, int slotIndex);
 
@@ -71,7 +71,7 @@ public:
     [[nodiscard]] std::shared_ptr<EffectReflection>
     CreateEffectReflection(const std::shared_ptr<PipelineState>& pipelineState);
 
-    const PipelineStateDescription& GetDescription() const;
+    const PipelineStateDescriptor& GetDescription() const;
 
     void SetError(std::unique_ptr<Error>&& err);
 

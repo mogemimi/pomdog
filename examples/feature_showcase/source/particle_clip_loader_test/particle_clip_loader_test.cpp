@@ -27,9 +27,9 @@ std::unique_ptr<Error> ParticleClipLoaderTest::Initialize()
     primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
     spriteBatch = std::make_shared<SpriteBatch>(
         graphicsDevice,
-        BlendDescription::CreateAlphaBlend(),
+        BlendDescriptor::CreateAlphaBlend(),
         std::nullopt,
-        SamplerDescription::CreatePointWrap(),
+        SamplerDescriptor::CreatePointWrap(),
         std::nullopt,
         std::nullopt,
         SpriteBatchPixelShaderMode::Default,

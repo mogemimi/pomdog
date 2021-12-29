@@ -223,11 +223,11 @@ GraphicsDeviceMetal::CreateConstantBuffer(
 }
 
 std::tuple<std::shared_ptr<PipelineState>, std::unique_ptr<Error>>
-GraphicsDeviceMetal::CreatePipelineState(const PipelineStateDescription& description) noexcept
+GraphicsDeviceMetal::CreatePipelineState(const PipelineStateDescriptor& descriptor) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
     auto pipelineState = std::make_shared<PipelineStateMetal>();
-    if (auto err = pipelineState->Initialize(device, description); err != nullptr) {
+    if (auto err = pipelineState->Initialize(device, descriptor); err != nullptr) {
         return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize PipelineStateMetal"));
     }
     return std::make_tuple(std::move(pipelineState), nullptr);
@@ -235,7 +235,7 @@ GraphicsDeviceMetal::CreatePipelineState(const PipelineStateDescription& descrip
 
 std::tuple<std::shared_ptr<EffectReflection>, std::unique_ptr<Error>>
 GraphicsDeviceMetal::CreateEffectReflection(
-    const PipelineStateDescription& description,
+    const PipelineStateDescriptor& descriptor,
     const std::shared_ptr<PipelineState>& pipelineState) noexcept
 {
     return std::make_tuple(nullptr, errors::New("not implemented yet"));
@@ -339,11 +339,11 @@ GraphicsDeviceMetal::CreateDepthStencilBuffer(
 }
 
 std::tuple<std::shared_ptr<SamplerState>, std::unique_ptr<Error>>
-GraphicsDeviceMetal::CreateSamplerState(const SamplerDescription& description) noexcept
+GraphicsDeviceMetal::CreateSamplerState(const SamplerDescriptor& descriptor) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
     auto samplerState = std::make_shared<SamplerStateMetal>();
-    if (auto err = samplerState->Initialize(device, description); err != nullptr) {
+    if (auto err = samplerState->Initialize(device, descriptor); err != nullptr) {
         return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize SamplerStateMetal"));
     }
     return std::make_tuple(std::move(samplerState), nullptr);

@@ -25,7 +25,7 @@ public:
     [[nodiscard]] std::unique_ptr<Error>
     Initialize(
         id<MTLDevice> device,
-        const PipelineStateDescription& description) noexcept;
+        const PipelineStateDescriptor& descriptor) noexcept;
 
     void Apply(id<MTLRenderCommandEncoder> commandEncoder);
 

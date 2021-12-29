@@ -27,9 +27,9 @@ std::unique_ptr<Error> SpriteLineTest::Initialize()
     primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
     spriteBatch = std::make_shared<SpriteBatch>(
         graphicsDevice,
-        BlendDescription::CreateAlphaBlend(),
+        BlendDescriptor::CreateAlphaBlend(),
         std::nullopt,
-        SamplerDescription::CreateLinearWrap(),
+        SamplerDescriptor::CreateLinearWrap(),
         std::nullopt,
         std::nullopt,
         SpriteBatchPixelShaderMode::Default,

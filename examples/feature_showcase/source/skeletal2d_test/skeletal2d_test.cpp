@@ -34,9 +34,9 @@ std::unique_ptr<Error> Skeletal2DTest::Initialize()
     primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
     spriteBatch = std::make_shared<SpriteBatch>(
         graphicsDevice,
-        BlendDescription::CreateNonPremultiplied(),
+        BlendDescriptor::CreateNonPremultiplied(),
         std::nullopt,
-        SamplerDescription::CreatePointWrap(),
+        SamplerDescriptor::CreatePointWrap(),
         std::nullopt,
         std::nullopt,
         SpriteBatchPixelShaderMode::Default,
@@ -161,9 +161,9 @@ std::unique_ptr<Error> Skeletal2DTest::Initialize()
             .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
             .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
             .SetPrimitiveTopology(PrimitiveTopology::TriangleList)
-            .SetDepthStencilState(DepthStencilDescription::CreateDefault())
-            .SetBlendState(BlendDescription::CreateNonPremultiplied())
-            .SetRasterizerState(RasterizerDescription::CreateDefault())
+            .SetDepthStencilState(DepthStencilDescriptor::CreateDefault())
+            .SetBlendState(BlendDescriptor::CreateNonPremultiplied())
+            .SetRasterizerState(RasterizerDescriptor::CreateDefault())
             .Build();
 
         if (err != nullptr) {
@@ -171,7 +171,7 @@ std::unique_ptr<Error> Skeletal2DTest::Initialize()
         }
 
         // NOTE: Create pipeline state for wireframe debug rendering
-        auto rasterizerDesc = RasterizerDescription::CreateCullNone();
+        auto rasterizerDesc = RasterizerDescriptor::CreateCullNone();
         rasterizerDesc.FillMode = FillMode::WireFrame;
 
         // NOTE: Create pipeline state
@@ -179,8 +179,8 @@ std::unique_ptr<Error> Skeletal2DTest::Initialize()
             .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
             .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
             .SetPrimitiveTopology(PrimitiveTopology::TriangleList)
-            .SetDepthStencilState(DepthStencilDescription::CreateDefault())
-            .SetBlendState(BlendDescription::CreateOpaque())
+            .SetDepthStencilState(DepthStencilDescriptor::CreateDefault())
+            .SetBlendState(BlendDescriptor::CreateOpaque())
             .SetRasterizerState(rasterizerDesc)
             .Build();
 
@@ -191,7 +191,7 @@ std::unique_ptr<Error> Skeletal2DTest::Initialize()
     {
         // NOTE: Create sampler state
         std::tie(sampler, err) = graphicsDevice->CreateSamplerState(
-            SamplerDescription::CreateLinearWrap());
+            SamplerDescriptor::CreateLinearWrap());
 
         if (err != nullptr) {
             return errors::Wrap(std::move(err), "failed to create pipeline state");

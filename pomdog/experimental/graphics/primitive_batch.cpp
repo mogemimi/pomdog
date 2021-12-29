@@ -6,17 +6,17 @@
 #include "pomdog/content/asset_builders/shader_builder.h"
 #include "pomdog/content/asset_manager.h"
 #include "pomdog/experimental/graphics/polygon_shape_builder.h"
-#include "pomdog/gpu/blend_description.h"
+#include "pomdog/gpu/blend_descriptor.h"
 #include "pomdog/gpu/buffer_usage.h"
 #include "pomdog/gpu/constant_buffer.h"
-#include "pomdog/gpu/depth_stencil_description.h"
+#include "pomdog/gpu/depth_stencil_descriptor.h"
 #include "pomdog/gpu/graphics_command_list.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/input_layout_helper.h"
 #include "pomdog/gpu/pipeline_state.h"
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/gpu/primitive_topology.h"
-#include "pomdog/gpu/rasterizer_description.h"
+#include "pomdog/gpu/rasterizer_descriptor.h"
 #include "pomdog/gpu/shader.h"
 #include "pomdog/gpu/vertex_buffer.h"
 #include "pomdog/math/bounding_box.h"
@@ -66,8 +66,8 @@ public:
 public:
     Impl(
         const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-        std::optional<DepthStencilDescription>&& depthStencilDesc,
-        std::optional<RasterizerDescription>&& rasterizerDesc,
+        std::optional<DepthStencilDescriptor>&& depthStencilDesc,
+        std::optional<RasterizerDescriptor>&& rasterizerDesc,
         AssetManager& assets);
 
     void Begin(
@@ -85,17 +85,17 @@ public:
 
 PrimitiveBatch::Impl::Impl(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-    std::optional<DepthStencilDescription>&& depthStencilDesc,
-    std::optional<RasterizerDescription>&& rasterizerDesc,
+    std::optional<DepthStencilDescriptor>&& depthStencilDesc,
+    std::optional<RasterizerDescriptor>&& rasterizerDesc,
     AssetManager& assets)
     : startVertexLocation(0)
     , drawCallCount(0)
 {
     if (!depthStencilDesc) {
-        depthStencilDesc = DepthStencilDescription::CreateNone();
+        depthStencilDesc = DepthStencilDescriptor::CreateNone();
     }
     if (!rasterizerDesc) {
-        rasterizerDesc = RasterizerDescription::CreateCullCounterClockwise();
+        rasterizerDesc = RasterizerDescriptor::CreateCullCounterClockwise();
     }
 
     POMDOG_ASSERT(depthStencilDesc);
@@ -142,7 +142,7 @@ PrimitiveBatch::Impl::Impl(
             .SetPixelShader(std::move(pixelShader))
             .SetInputLayout(inputLayout.CreateInputLayout())
             .SetPrimitiveTopology(PrimitiveTopology::TriangleList)
-            .SetBlendState(BlendDescription::CreateNonPremultiplied())
+            .SetBlendState(BlendDescriptor::CreateNonPremultiplied())
             .SetDepthStencilState(*depthStencilDesc)
             .SetRasterizerState(*rasterizerDesc)
             .SetConstantBufferBindSlot("TransformMatrix", 0)
@@ -217,8 +217,8 @@ PrimitiveBatch::PrimitiveBatch(
 
 PrimitiveBatch::PrimitiveBatch(
     const std::shared_ptr<GraphicsDevice>& graphicsDevice,
-    std::optional<DepthStencilDescription>&& depthStencilDesc,
-    std::optional<RasterizerDescription>&& rasterizerDesc,
+    std::optional<DepthStencilDescriptor>&& depthStencilDesc,
+    std::optional<RasterizerDescriptor>&& rasterizerDesc,
     AssetManager& assets)
     : impl(std::make_unique<Impl>(
           graphicsDevice,

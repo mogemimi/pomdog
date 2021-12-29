@@ -5,10 +5,10 @@
 #include "pomdog/content/asset_builders/pipeline_state_builder.h"
 #include "pomdog/content/asset_builders/shader_builder.h"
 #include "pomdog/content/asset_manager.h"
-#include "pomdog/gpu/blend_description.h"
+#include "pomdog/gpu/blend_descriptor.h"
 #include "pomdog/gpu/buffer_usage.h"
 #include "pomdog/gpu/constant_buffer.h"
-#include "pomdog/gpu/depth_stencil_description.h"
+#include "pomdog/gpu/depth_stencil_descriptor.h"
 #include "pomdog/gpu/graphics_command_list.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/input_layout_helper.h"
@@ -142,8 +142,8 @@ LineBatch::Impl::Impl(
             .SetPixelShader(std::move(pixelShader))
             .SetInputLayout(inputLayout.CreateInputLayout())
             .SetPrimitiveTopology(PrimitiveTopology::LineList)
-            .SetBlendState(BlendDescription::CreateNonPremultiplied())
-            .SetDepthStencilState(DepthStencilDescription::CreateDefault())
+            .SetBlendState(BlendDescriptor::CreateNonPremultiplied())
+            .SetDepthStencilState(DepthStencilDescriptor::CreateDefault())
             .SetConstantBufferBindSlot("TransformMatrix", 0)
             .Build();
         if (pipelineStateErr != nullptr) {

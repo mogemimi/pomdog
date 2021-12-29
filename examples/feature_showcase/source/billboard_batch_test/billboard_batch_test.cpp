@@ -29,7 +29,7 @@ std::unique_ptr<Error> BillboardBatchTest::Initialize()
     // NOTE: Create billboard batch effect
     billboardEffect = std::make_shared<BillboardBatchEffect>(
         graphicsDevice,
-        BlendDescription::CreateNonPremultiplied(),
+        BlendDescriptor::CreateNonPremultiplied(),
         std::nullopt,
         std::nullopt,
         std::nullopt,
@@ -41,7 +41,7 @@ std::unique_ptr<Error> BillboardBatchTest::Initialize()
 
     // NOTE: Create sampler state
     std::tie(sampler, err) = graphicsDevice->CreateSamplerState(
-        SamplerDescription::CreateLinearClamp());
+        SamplerDescriptor::CreateLinearClamp());
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to create sampler state");
     }

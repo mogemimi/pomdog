@@ -55,7 +55,7 @@ public:
 
     InputLayoutGL4(
         const ShaderProgramGL4& shaderProgram,
-        const InputLayoutDescription& description);
+        const InputLayoutDescriptor& descriptor);
 
     ~InputLayoutGL4();
 

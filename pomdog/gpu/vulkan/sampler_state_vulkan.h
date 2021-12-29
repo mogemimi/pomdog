@@ -12,7 +12,7 @@ class SamplerStateVulkan final : public SamplerState {
 public:
     SamplerStateVulkan(
         ::VkDevice device,
-        const SamplerDescription& description);
+        const SamplerDescriptor& descriptor);
 
     ~SamplerStateVulkan();
 

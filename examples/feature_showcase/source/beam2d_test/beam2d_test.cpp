@@ -28,9 +28,9 @@ std::unique_ptr<Error> Beam2DTest::Initialize()
     primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
     spriteBatch = std::make_shared<SpriteBatch>(
         graphicsDevice,
-        BlendDescription::CreateAlphaBlend(),
+        BlendDescriptor::CreateAlphaBlend(),
         std::nullopt,
-        SamplerDescription::CreatePointWrap(),
+        SamplerDescriptor::CreatePointWrap(),
         std::nullopt,
         std::nullopt,
         SpriteBatchPixelShaderMode::Default,

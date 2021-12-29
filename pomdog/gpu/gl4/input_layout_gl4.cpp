@@ -6,7 +6,7 @@
 #include "pomdog/gpu/gl4/buffer_gl4.h"
 #include "pomdog/gpu/gl4/error_checker.h"
 #include "pomdog/gpu/gl4/typesafe_helper_gl4.h"
-#include "pomdog/gpu/input_layout_description.h"
+#include "pomdog/gpu/input_layout_descriptor.h"
 #include "pomdog/gpu/vertex_buffer.h"
 #include "pomdog/logging/log.h"
 #include "pomdog/logging/log_level.h"
@@ -421,13 +421,13 @@ GLuint GetMaxAttributeCount()
 #endif // defined(DEBUG) && !defined(NDEBUG)
 
 std::vector<InputElementGL4> BuildInputElements(
-    const InputLayoutDescription& description,
+    const InputLayoutDescriptor& descriptor,
     std::vector<InputElementGL4>&& attributes)
 {
-    POMDOG_ASSERT(!description.InputElements.empty());
+    POMDOG_ASSERT(!descriptor.InputElements.empty());
     POMDOG_ASSERT(!attributes.empty());
 
-    auto sortedElements = description.InputElements;
+    auto sortedElements = descriptor.InputElements;
     std::sort(std::begin(sortedElements), std::end(sortedElements),
         [](const InputElement& a, const InputElement& b) {
             if (a.InputSlot == b.InputSlot) {
@@ -567,7 +567,7 @@ InputLayoutGL4::InputLayoutGL4(const ShaderProgramGL4& shaderProgram)
 
 InputLayoutGL4::InputLayoutGL4(
     const ShaderProgramGL4& shaderProgram,
-    const InputLayoutDescription& description)
+    const InputLayoutDescriptor& descriptor)
 {
     // Build vertex array object
     inputLayout = ([] {
@@ -584,11 +584,11 @@ InputLayoutGL4::InputLayoutGL4(
 
     inputElements = BuildAttributes(shaderProgram);
 
-    if (description.InputElements.empty()) {
+    if (descriptor.InputElements.empty()) {
         inputElements = BuildInputElements(std::move(inputElements));
     }
     else {
-        inputElements = BuildInputElements(description, std::move(inputElements));
+        inputElements = BuildInputElements(descriptor, std::move(inputElements));
     }
 
     inputElements.shrink_to_fit();

@@ -6,12 +6,12 @@
 #include "pomdog/experimental/image/image.h"
 #include "pomdog/experimental/image/svg_loader.h"
 #include "pomdog/experimental/texture_packer/texture_atlas_generator.h"
-#include "pomdog/gpu/blend_description.h"
-#include "pomdog/gpu/depth_stencil_description.h"
+#include "pomdog/gpu/blend_descriptor.h"
+#include "pomdog/gpu/depth_stencil_descriptor.h"
 #include "pomdog/gpu/graphics_command_list.h"
 #include "pomdog/gpu/graphics_device.h"
-#include "pomdog/gpu/rasterizer_description.h"
-#include "pomdog/gpu/sampler_description.h"
+#include "pomdog/gpu/rasterizer_descriptor.h"
+#include "pomdog/gpu/sampler_descriptor.h"
 #include "pomdog/gpu/texture2d.h"
 #include "pomdog/logging/log.h"
 
@@ -36,14 +36,14 @@ DrawingContext::DrawingContext(
     primitiveBatch = std::make_shared<PrimitiveBatch>(
         graphicsDevice,
         std::nullopt,
-        RasterizerDescription::CreateCullNone(),
+        RasterizerDescriptor::CreateCullNone(),
         assets);
 
     spriteBatch = std::make_shared<SpriteBatch>(
         graphicsDevice,
-        BlendDescription::CreateNonPremultiplied(),
-        RasterizerDescription::CreateCullNone(),
-        SamplerDescription::CreateLinearWrap(),
+        BlendDescriptor::CreateNonPremultiplied(),
+        RasterizerDescriptor::CreateCullNone(),
+        SamplerDescriptor::CreateLinearWrap(),
         std::nullopt,
         std::nullopt,
         SpriteBatchPixelShaderMode::Default,
