@@ -26,7 +26,7 @@ namespace pomdog::AssetBuilders {
 template <>
 class POMDOG_EXPORT Builder<Shader> final {
 public:
-    Builder(AssetManager& assets, ShaderPipelineStage pipelineStage);
+    Builder(AssetManager& assets, gpu::ShaderPipelineStage pipelineStage);
 
     Builder(Builder&&) = default;
     Builder(const Builder&) = default;

@@ -2,8 +2,8 @@
 
 #include "pomdog/gpu/backends/native_buffer.h"
 
-namespace pomdog::detail {
+namespace pomdog::gpu::detail {
 
 NativeBuffer::~NativeBuffer() = default;
 
-} // namespace pomdog::detail
+} // namespace pomdog::gpu::detail

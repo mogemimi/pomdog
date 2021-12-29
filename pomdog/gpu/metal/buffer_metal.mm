@@ -8,7 +8,7 @@
 #import <Metal/Metal.h>
 #include <cstring>
 
-namespace pomdog::detail::metal {
+namespace pomdog::gpu::detail::metal {
 namespace {
 
 MTLResourceOptions ToResourceOptions(BufferUsage bufferUsage) noexcept
@@ -113,4 +113,4 @@ id<MTLBuffer> BufferMetal::GetBuffer() const noexcept
     return nativeBuffer;
 }
 
-} // namespace pomdog::detail::metal
+} // namespace pomdog::gpu::detail::metal

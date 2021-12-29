@@ -60,7 +60,7 @@ bool IsPNMFormat(const std::array<std::uint8_t, 8>& signature) noexcept
 
 } // namespace
 
-std::tuple<std::shared_ptr<Texture2D>, std::unique_ptr<Error>>
+std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
 AssetLoader<Texture2D>::operator()(AssetManager& assets, const std::string& filePath)
 {
     std::ifstream stream{filePath, std::ifstream::binary};

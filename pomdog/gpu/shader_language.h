@@ -8,7 +8,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog {
+namespace pomdog::gpu {
 
 /// ShaderLanguage specifies the shader language supported by the graphics device.
 enum class ShaderLanguage : std::uint8_t {
@@ -22,4 +22,4 @@ enum class ShaderLanguage : std::uint8_t {
     Metal,
 };
 
-} // namespace pomdog
+} // namespace pomdog::gpu

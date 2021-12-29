@@ -5,7 +5,7 @@
 #include "pomdog/gpu/input_element_format.h"
 #include "pomdog/utility/assert.h"
 
-namespace pomdog {
+namespace pomdog::gpu {
 namespace {
 
 #ifdef DEBUG
@@ -106,4 +106,4 @@ InputLayoutDescriptor InputLayoutHelper::CreateInputLayout()
     return InputLayoutDescriptor{elements};
 }
 
-} // namespace pomdog
+} // namespace pomdog::gpu

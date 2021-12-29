@@ -28,7 +28,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail::direct3d11 {
+namespace pomdog::gpu::detail::direct3d11 {
 namespace {
 
 using Microsoft::WRL::ComPtr;
@@ -515,7 +515,7 @@ void GraphicsContextDirect3D11::SetTexture(int index)
     deferredContext->PSSetShaderResources(index, 1, &textureResourceViews[index]);
 }
 
-void GraphicsContextDirect3D11::SetTexture(int index, const std::shared_ptr<Texture2D>& textureIn)
+void GraphicsContextDirect3D11::SetTexture(int index, const std::shared_ptr<gpu::Texture2D>& textureIn)
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(index < D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT);
@@ -791,4 +791,4 @@ ID3D11DeviceContext3* GraphicsContextDirect3D11::GetDeferredContext() noexcept
     return deferredContext.Get();
 }
 
-} // namespace pomdog::detail::direct3d11
+} // namespace pomdog::gpu::detail::direct3d11

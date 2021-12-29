@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog {
+namespace pomdog::gpu {
 
 class POMDOG_EXPORT GraphicsCommandList {
 public:
@@ -98,7 +98,7 @@ public:
     virtual void SetTexture(int index) = 0;
 
     /// Sets a texture to the specified slot.
-    virtual void SetTexture(int index, const std::shared_ptr<Texture2D>& texture) = 0;
+    virtual void SetTexture(int index, const std::shared_ptr<gpu::Texture2D>& texture) = 0;
 
     /// Sets a texture to the specified slot.
     virtual void SetTexture(int index, const std::shared_ptr<RenderTarget2D>& texture) = 0;
@@ -107,4 +107,4 @@ public:
     virtual void SetSamplerState(int index, const std::shared_ptr<SamplerState>& samplerState) = 0;
 };
 
-} // namespace pomdog
+} // namespace pomdog::gpu

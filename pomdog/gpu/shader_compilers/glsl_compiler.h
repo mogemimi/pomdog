@@ -16,11 +16,14 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 class Error;
-class GraphicsDevice;
-class Shader;
 } // namespace pomdog
 
-namespace pomdog::ShaderCompilers::GLSLCompiler {
+namespace pomdog::gpu {
+class GraphicsDevice;
+class Shader;
+} // namespace pomdog::gpu
+
+namespace pomdog::gpu::shader_compilers::GLSLCompiler {
 
 /// Creates a shader from a string of source code.
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
@@ -31,4 +34,4 @@ CreateShader(
     ShaderPipelineStage pipelineStage,
     std::optional<std::string>&& currentDirectory);
 
-} // namespace pomdog::ShaderCompilers::GLSLCompiler
+} // namespace pomdog::gpu::shader_compilers::GLSLCompiler

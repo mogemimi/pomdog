@@ -11,7 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog {
+namespace pomdog::gpu {
 
 VertexBuffer::VertexBuffer(
     std::unique_ptr<detail::NativeBuffer>&& nativeBufferIn,
@@ -83,4 +83,4 @@ detail::NativeBuffer* VertexBuffer::GetNativeBuffer()
     return nativeBuffer.get();
 }
 
-} // namespace pomdog
+} // namespace pomdog::gpu

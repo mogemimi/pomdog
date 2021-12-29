@@ -6,7 +6,7 @@
 #include "pomdog/gpu/sampler_state.h"
 #include <vulkan/vulkan.h>
 
-namespace pomdog::detail::vulkan {
+namespace pomdog::gpu::detail::vulkan {
 
 class SamplerStateVulkan final : public SamplerState {
 public:
@@ -23,4 +23,4 @@ private:
     ::VkSampler sampler;
 };
 
-} // namespace pomdog::detail::vulkan
+} // namespace pomdog::gpu::detail::vulkan

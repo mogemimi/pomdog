@@ -9,7 +9,7 @@
 #include <memory>
 #include <vector>
 
-namespace pomdog::detail::metal {
+namespace pomdog::gpu::detail::metal {
 
 class GraphicsContextMetal final : public NativeGraphicsContext {
 public:
@@ -73,7 +73,7 @@ public:
 
     void SetTexture(int index) override;
 
-    void SetTexture(int index, const std::shared_ptr<Texture2D>& texture) override;
+    void SetTexture(int index, const std::shared_ptr<gpu::Texture2D>& texture) override;
 
     void SetTexture(int index, const std::shared_ptr<RenderTarget2D>& texture) override;
 
@@ -97,4 +97,4 @@ private:
     bool isDrawing = false;
 };
 
-} // namespace pomdog::detail::metal
+} // namespace pomdog::gpu::detail::metal

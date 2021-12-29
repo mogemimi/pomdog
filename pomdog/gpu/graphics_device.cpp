@@ -2,9 +2,9 @@
 
 #include "pomdog/gpu/graphics_device.h"
 
-namespace pomdog {
+namespace pomdog::gpu {
 
 GraphicsDevice::GraphicsDevice() noexcept = default;
 GraphicsDevice::~GraphicsDevice() = default;
 
-} // namespace pomdog
+} // namespace pomdog::gpu

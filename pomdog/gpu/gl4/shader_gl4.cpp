@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail::gl4 {
+namespace pomdog::gpu::detail::gl4 {
 namespace {
 
 [[nodiscard]] std::tuple<std::optional<GLuint>, std::unique_ptr<Error>>
@@ -118,4 +118,4 @@ template class ShaderGL4<GL_FRAGMENT_SHADER>;
 //template class ShaderGL4<GL_TESS_EVALUATION_SHADER>;
 //template class ShaderGL4<GL_COMPUTE_SHADER>;
 
-} // namespace pomdog::detail::gl4
+} // namespace pomdog::gpu::detail::gl4

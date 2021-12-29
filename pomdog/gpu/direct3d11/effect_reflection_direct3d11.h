@@ -12,11 +12,11 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <wrl/client.h>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail {
+namespace pomdog::gpu::detail {
 class ShaderBytecode;
-} // namespace pomdog::detail
+} // namespace pomdog::gpu::detail
 
-namespace pomdog::detail::direct3d11 {
+namespace pomdog::gpu::detail::direct3d11 {
 
 class EffectReflectionDirect3D11 final : public EffectReflection {
 public:
@@ -33,4 +33,4 @@ private:
     Microsoft::WRL::ComPtr<ID3D11ShaderReflection> pixelShaderReflector;
 };
 
-} // namespace pomdog::detail::direct3d11
+} // namespace pomdog::gpu::detail::direct3d11

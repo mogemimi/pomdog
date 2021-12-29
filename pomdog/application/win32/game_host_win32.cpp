@@ -47,12 +47,12 @@ using pomdog::detail::NativeGamepad;
 using pomdog::detail::win32::GameWindowWin32;
 using pomdog::detail::xaudio2::AudioEngineXAudio2;
 #if !defined(POMDOG_DISABLE_GL4)
-using pomdog::detail::gl4::GraphicsContextGL4;
-using pomdog::detail::gl4::GraphicsDeviceGL4;
+using pomdog::gpu::detail::gl4::GraphicsContextGL4;
+using pomdog::gpu::detail::gl4::GraphicsDeviceGL4;
 #endif
 #if !defined(POMDOG_DISABLE_DIRECT3D11)
-using pomdog::detail::direct3d11::GraphicsContextDirect3D11;
-using pomdog::detail::direct3d11::GraphicsDeviceDirect3D11;
+using pomdog::gpu::detail::direct3d11::GraphicsContextDirect3D11;
+using pomdog::gpu::detail::direct3d11::GraphicsDeviceDirect3D11;
 #endif
 
 namespace pomdog::detail::win32 {
@@ -74,8 +74,8 @@ struct GraphicsBridgeWin32 {
 };
 
 using CreateGraphicsDeviceResult = std::tuple<
-    std::shared_ptr<GraphicsDevice>,
-    std::shared_ptr<GraphicsCommandQueue>,
+    std::shared_ptr<gpu::GraphicsDevice>,
+    std::shared_ptr<gpu::GraphicsCommandQueue>,
     std::unique_ptr<GraphicsBridgeWin32>,
     std::unique_ptr<Error>>;
 
@@ -84,12 +84,12 @@ using CreateGraphicsDeviceResult = std::tuple<
 class GraphicsBridgeWin32GL4 final : public GraphicsBridgeWin32 {
 private:
     std::shared_ptr<GraphicsDeviceGL4> graphicsDevice;
-    std::shared_ptr<GraphicsCommandQueueImmediate> commandQueue;
+    std::shared_ptr<gpu::detail::GraphicsCommandQueueImmediate> commandQueue;
 
 public:
     GraphicsBridgeWin32GL4(
         const std::shared_ptr<GraphicsDeviceGL4>& graphicsDeviceIn,
-        const std::shared_ptr<GraphicsCommandQueueImmediate>& commandQueueIn)
+        const std::shared_ptr<gpu::detail::GraphicsCommandQueueImmediate>& commandQueueIn)
         : graphicsDevice(graphicsDeviceIn)
         , commandQueue(commandQueueIn)
     {
@@ -160,7 +160,7 @@ CreateGraphicsDeviceGL4(
             errors::Wrap(std::move(err), "GraphicsContextGL4::Initialize() failed."));
     }
 
-    auto graphicsCommandQueue = std::make_shared<GraphicsCommandQueueImmediate>(graphicsContext);
+    auto graphicsCommandQueue = std::make_shared<gpu::detail::GraphicsCommandQueueImmediate>(graphicsContext);
 
     POMDOG_ASSERT(graphicsDevice);
     POMDOG_ASSERT(graphicsContext);
@@ -184,13 +184,13 @@ class GraphicsBridgeWin32Direct3D11 final : public GraphicsBridgeWin32 {
 private:
     std::shared_ptr<GraphicsDeviceDirect3D11> graphicsDevice;
     std::shared_ptr<GraphicsContextDirect3D11> graphicsContext;
-    std::shared_ptr<GraphicsCommandQueueImmediate> commandQueue;
+    std::shared_ptr<gpu::detail::GraphicsCommandQueueImmediate> commandQueue;
 
 public:
     GraphicsBridgeWin32Direct3D11(
         const std::shared_ptr<GraphicsDeviceDirect3D11>& graphicsDeviceIn,
         const std::shared_ptr<GraphicsContextDirect3D11>& graphicsContextIn,
-        const std::shared_ptr<GraphicsCommandQueueImmediate>& commandQueueIn)
+        const std::shared_ptr<gpu::detail::GraphicsCommandQueueImmediate>& commandQueueIn)
         : graphicsDevice(graphicsDeviceIn)
         , graphicsContext(graphicsContextIn)
         , commandQueue(commandQueueIn)
@@ -251,7 +251,7 @@ CreateGraphicsDeviceDirect3D11(
             errors::Wrap(std::move(err), "failed to initialize GraphicsContextDirect3D11"));
     }
 
-    auto graphicsCommandQueue = std::make_shared<GraphicsCommandQueueImmediate>(graphicsContext);
+    auto graphicsCommandQueue = std::make_shared<gpu::detail::GraphicsCommandQueueImmediate>(graphicsContext);
 
     POMDOG_ASSERT(graphicsDevice);
     POMDOG_ASSERT(graphicsContext);
@@ -294,10 +294,10 @@ public:
     [[nodiscard]] std::shared_ptr<GameClock>
     GetClock() noexcept;
 
-    [[nodiscard]] std::shared_ptr<GraphicsCommandQueue>
+    [[nodiscard]] std::shared_ptr<gpu::GraphicsCommandQueue>
     GetGraphicsCommandQueue() noexcept;
 
-    [[nodiscard]] std::shared_ptr<GraphicsDevice>
+    [[nodiscard]] std::shared_ptr<gpu::GraphicsDevice>
     GetGraphicsDevice() noexcept;
 
     [[nodiscard]] std::shared_ptr<AudioEngine>
@@ -340,8 +340,8 @@ private:
     std::shared_ptr<GameWindowWin32> window;
 
     std::unique_ptr<GraphicsBridgeWin32> graphicsBridge;
-    std::shared_ptr<GraphicsDevice> graphicsDevice;
-    std::shared_ptr<GraphicsCommandQueue> graphicsCommandQueue;
+    std::shared_ptr<gpu::GraphicsDevice> graphicsDevice;
+    std::shared_ptr<gpu::GraphicsCommandQueue> graphicsCommandQueue;
     std::unique_ptr<AssetManager> assetManager;
     std::shared_ptr<AudioEngineXAudio2> audioEngine;
 
@@ -573,14 +573,14 @@ GameHostWin32::Impl::GetClock() noexcept
     return clock_;
 }
 
-std::shared_ptr<GraphicsCommandQueue>
+std::shared_ptr<gpu::GraphicsCommandQueue>
 GameHostWin32::Impl::GetGraphicsCommandQueue() noexcept
 {
     POMDOG_ASSERT(graphicsCommandQueue != nullptr);
     return graphicsCommandQueue;
 }
 
-std::shared_ptr<GraphicsDevice>
+std::shared_ptr<gpu::GraphicsDevice>
 GameHostWin32::Impl::GetGraphicsDevice() noexcept
 {
     POMDOG_ASSERT(graphicsDevice != nullptr);
@@ -687,13 +687,13 @@ std::shared_ptr<GameClock> GameHostWin32::GetClock() noexcept
     return impl->GetClock();
 }
 
-std::shared_ptr<GraphicsCommandQueue> GameHostWin32::GetGraphicsCommandQueue() noexcept
+std::shared_ptr<gpu::GraphicsCommandQueue> GameHostWin32::GetGraphicsCommandQueue() noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->GetGraphicsCommandQueue();
 }
 
-std::shared_ptr<GraphicsDevice> GameHostWin32::GetGraphicsDevice() noexcept
+std::shared_ptr<gpu::GraphicsDevice> GameHostWin32::GetGraphicsDevice() noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->GetGraphicsDevice();

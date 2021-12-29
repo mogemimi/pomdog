@@ -2,7 +2,7 @@
 
 #include "pomdog/gpu/render_target_blend_descriptor.h"
 
-namespace pomdog {
+namespace pomdog::gpu {
 
 RenderTargetBlendDescriptor RenderTargetBlendDescriptor::CreateAdditive() noexcept
 {
@@ -56,4 +56,4 @@ RenderTargetBlendDescriptor RenderTargetBlendDescriptor::CreateOpaque() noexcept
     return desc;
 }
 
-} // namespace pomdog
+} // namespace pomdog::gpu

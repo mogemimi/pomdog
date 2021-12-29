@@ -14,7 +14,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail {
+namespace pomdog::gpu::detail {
 namespace {
 
 using detail::GraphicsCommand;
@@ -158,7 +158,7 @@ struct SetSamplerStateCommand final : public GraphicsCommand {
 };
 
 struct SetTextureCommand final : public GraphicsCommand {
-    std::shared_ptr<Texture2D> texture;
+    std::shared_ptr<gpu::Texture2D> texture;
     int slotIndex;
 
     void Execute(NativeGraphicsContext& graphicsContext) override
@@ -417,7 +417,7 @@ void GraphicsCommandListImmediate::SetTexture(int index)
     commands.push_back(std::move(command));
 }
 
-void GraphicsCommandListImmediate::SetTexture(int index, const std::shared_ptr<Texture2D>& texture)
+void GraphicsCommandListImmediate::SetTexture(int index, const std::shared_ptr<gpu::Texture2D>& texture)
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(texture);
@@ -649,4 +649,4 @@ void GraphicsCommandListImmediate::SortCommandsForMetal()
     }
 }
 
-} // namespace pomdog::detail
+} // namespace pomdog::gpu::detail

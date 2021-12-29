@@ -37,9 +37,9 @@
 #import <Metal/Metal.h>
 #import <MetalKit/MetalKit.h>
 
-using pomdog::detail::metal::GraphicsContextMetal;
-using pomdog::detail::metal::GraphicsDeviceMetal;
-using pomdog::detail::metal::ToPixelFormat;
+using pomdog::gpu::detail::metal::GraphicsContextMetal;
+using pomdog::gpu::detail::metal::GraphicsDeviceMetal;
+using pomdog::gpu::detail::metal::ToPixelFormat;
 using pomdog::detail::IOKit::GamepadIOKit;
 using pomdog::detail::openal::AudioEngineAL;
 
@@ -91,10 +91,10 @@ public:
     [[nodiscard]] std::shared_ptr<GameClock>
     GetClock() noexcept;
 
-    [[nodiscard]] std::shared_ptr<GraphicsDevice>
+    [[nodiscard]] std::shared_ptr<gpu::GraphicsDevice>
     GetGraphicsDevice() noexcept;
 
-    [[nodiscard]] std::shared_ptr<GraphicsCommandQueue>
+    [[nodiscard]] std::shared_ptr<gpu::GraphicsCommandQueue>
     GetGraphicsCommandQueue() noexcept;
 
     [[nodiscard]] std::shared_ptr<AssetManager>
@@ -141,7 +141,7 @@ private:
     std::shared_ptr<GameWindowCocoa> window;
     std::shared_ptr<GraphicsDeviceMetal> graphicsDevice;
     std::shared_ptr<GraphicsContextMetal> graphicsContext;
-    std::shared_ptr<GraphicsCommandQueue> graphicsCommandQueue;
+    std::shared_ptr<gpu::GraphicsCommandQueue> graphicsCommandQueue;
     std::shared_ptr<AudioEngineAL> audioEngine;
     std::unique_ptr<AssetManager> assetManager;
     std::shared_ptr<KeyboardCocoa> keyboard;
@@ -205,7 +205,7 @@ GameHostMetal::Impl::Initialize(
     graphicsContext->SetMTKView(metalView);
 
     // NOTE: Create graphics command queue
-    graphicsCommandQueue = std::make_shared<GraphicsCommandQueueImmediate>(graphicsContext);
+    graphicsCommandQueue = std::make_shared<gpu::detail::GraphicsCommandQueueImmediate>(graphicsContext);
 
     // NOTE: Create audio engine.
     audioEngine = std::make_shared<AudioEngineAL>();
@@ -442,13 +442,13 @@ GameHostMetal::Impl::GetClock() noexcept
     return clock_;
 }
 
-std::shared_ptr<GraphicsDevice>
+std::shared_ptr<gpu::GraphicsDevice>
 GameHostMetal::Impl::GetGraphicsDevice() noexcept
 {
     return graphicsDevice;
 }
 
-std::shared_ptr<GraphicsCommandQueue>
+std::shared_ptr<gpu::GraphicsCommandQueue>
 GameHostMetal::Impl::GetGraphicsCommandQueue() noexcept
 {
     return graphicsCommandQueue;
@@ -560,13 +560,13 @@ std::shared_ptr<GameClock> GameHostMetal::GetClock() noexcept
     return impl->GetClock();
 }
 
-std::shared_ptr<GraphicsDevice> GameHostMetal::GetGraphicsDevice() noexcept
+std::shared_ptr<gpu::GraphicsDevice> GameHostMetal::GetGraphicsDevice() noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->GetGraphicsDevice();
 }
 
-std::shared_ptr<GraphicsCommandQueue> GameHostMetal::GetGraphicsCommandQueue() noexcept
+std::shared_ptr<gpu::GraphicsCommandQueue> GameHostMetal::GetGraphicsCommandQueue() noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->GetGraphicsCommandQueue();

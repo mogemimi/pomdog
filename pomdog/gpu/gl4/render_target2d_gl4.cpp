@@ -5,7 +5,7 @@
 #include "pomdog/math/rectangle.h"
 #include "pomdog/utility/assert.h"
 
-namespace pomdog::detail::gl4 {
+namespace pomdog::gpu::detail::gl4 {
 
 std::unique_ptr<Error>
 RenderTarget2DGL4::Initialize(
@@ -144,4 +144,4 @@ Texture2DObjectGL4 RenderTarget2DGL4::GetTextureHandle() const noexcept
     return texture.GetTextureHandle();
 }
 
-} // namespace pomdog::detail::gl4
+} // namespace pomdog::gpu::detail::gl4

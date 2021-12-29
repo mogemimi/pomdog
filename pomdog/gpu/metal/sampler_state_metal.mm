@@ -6,7 +6,7 @@
 #include "pomdog/gpu/sampler_descriptor.h"
 #include "pomdog/utility/assert.h"
 
-namespace pomdog::detail::metal {
+namespace pomdog::gpu::detail::metal {
 namespace {
 
 MTLSamplerAddressMode ToSamplerAddressMode(TextureAddressMode addressMode) noexcept
@@ -106,4 +106,4 @@ id<MTLSamplerState> SamplerStateMetal::GetSamplerState() const noexcept
     return samplerState;
 }
 
-} // namespace pomdog::detail::metal
+} // namespace pomdog::gpu::detail::metal

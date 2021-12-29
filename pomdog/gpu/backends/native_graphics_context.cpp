@@ -2,8 +2,8 @@
 
 #include "pomdog/gpu/backends/native_graphics_context.h"
 
-namespace pomdog::detail {
+namespace pomdog::gpu::detail {
 
 NativeGraphicsContext::~NativeGraphicsContext() = default;
 
-} // namespace pomdog::detail
+} // namespace pomdog::gpu::detail

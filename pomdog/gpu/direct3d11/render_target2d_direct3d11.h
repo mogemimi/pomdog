@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <wrl/client.h>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail::direct3d11 {
+namespace pomdog::gpu::detail::direct3d11 {
 
 class RenderTarget2DDirect3D11 final : public RenderTarget2D {
 public:
@@ -83,4 +83,4 @@ private:
     bool multiSampleEnabled = false;
 };
 
-} // namespace pomdog::detail::direct3d11
+} // namespace pomdog::gpu::detail::direct3d11

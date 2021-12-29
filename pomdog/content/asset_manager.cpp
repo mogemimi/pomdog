@@ -13,7 +13,7 @@ namespace pomdog {
 AssetManager::AssetManager(
     const std::string& contentDirectoryIn,
     const std::shared_ptr<AudioEngine>& audioEngineIn,
-    const std::shared_ptr<GraphicsDevice>& graphicsDeviceIn)
+    const std::shared_ptr<gpu::GraphicsDevice>& graphicsDeviceIn)
     : contentDirectory(contentDirectoryIn)
     , audioEngine(audioEngineIn)
     , graphicsDevice(graphicsDeviceIn)
@@ -40,7 +40,7 @@ std::shared_ptr<AudioEngine> AssetManager::GetAudioEngine() const noexcept
     return audioEngine.lock();
 }
 
-std::shared_ptr<GraphicsDevice> AssetManager::GetGraphicsDevice() const noexcept
+std::shared_ptr<gpu::GraphicsDevice> AssetManager::GetGraphicsDevice() const noexcept
 {
     return graphicsDevice.lock();
 }

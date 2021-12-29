@@ -14,10 +14,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-using pomdog::detail::ShaderBytecode;
-using pomdog::detail::ShaderCompileOptions;
+using pomdog::gpu::detail::ShaderBytecode;
+using pomdog::gpu::detail::ShaderCompileOptions;
 
-namespace pomdog::ShaderCompilers::MetalCompiler {
+namespace pomdog::gpu::shader_compilers::MetalCompiler {
 
 [[nodiscard]] std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
 CreateShaderFromSource(
@@ -87,4 +87,4 @@ CreateShaderFromBinary(
     return graphicsDevice.CreateShader(std::move(shaderBytecode), std::move(compileOptions));
 }
 
-} // namespace pomdog::ShaderCompilers::MetalCompiler
+} // namespace pomdog::gpu::shader_compilers::MetalCompiler

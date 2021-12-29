@@ -8,7 +8,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog {
+namespace pomdog::gpu {
 
 /// Indicates whether to cull primitives for hidden surface removal.
 enum class CullMode : std::uint8_t {
@@ -22,4 +22,4 @@ enum class CullMode : std::uint8_t {
     CounterClockwiseFace,
 };
 
-} // namespace pomdog
+} // namespace pomdog::gpu

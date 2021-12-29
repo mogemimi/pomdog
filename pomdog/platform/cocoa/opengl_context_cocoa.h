@@ -15,7 +15,7 @@ class Error;
 
 namespace pomdog::detail::cocoa {
 
-class OpenGLContextCocoa final : public gl4::OpenGLContext {
+class OpenGLContextCocoa final : public gpu::detail::gl4::OpenGLContext {
 public:
     OpenGLContextCocoa() noexcept;
     OpenGLContextCocoa(const OpenGLContextCocoa&) = delete;

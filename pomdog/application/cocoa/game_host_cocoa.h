@@ -50,10 +50,10 @@ public:
     [[nodiscard]] std::shared_ptr<GameClock>
     GetClock() noexcept override;
 
-    [[nodiscard]] std::shared_ptr<GraphicsDevice>
+    [[nodiscard]] std::shared_ptr<gpu::GraphicsDevice>
     GetGraphicsDevice() noexcept override;
 
-    [[nodiscard]] std::shared_ptr<GraphicsCommandQueue>
+    [[nodiscard]] std::shared_ptr<gpu::GraphicsCommandQueue>
     GetGraphicsCommandQueue() noexcept override;
 
     [[nodiscard]] std::shared_ptr<AudioEngine>

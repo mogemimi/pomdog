@@ -18,7 +18,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail::direct3d {
+namespace pomdog::gpu::detail::direct3d {
 namespace {
 
 [[nodiscard]] std::string
@@ -232,4 +232,4 @@ CompileHLSL(
     return std::make_tuple(std::move(codeBlob), nullptr);
 }
 
-} // namespace pomdog::detail::direct3d
+} // namespace pomdog::gpu::detail::direct3d

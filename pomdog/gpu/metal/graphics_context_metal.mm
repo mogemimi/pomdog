@@ -22,7 +22,7 @@
 #include "pomdog/math/vector4.h"
 #include "pomdog/utility/assert.h"
 
-namespace pomdog::detail::metal {
+namespace pomdog::gpu::detail::metal {
 namespace {
 
 MTLIndexType ToIndexType(IndexElementSize elementSize) noexcept
@@ -432,7 +432,7 @@ void GraphicsContextMetal::SetTexture(int index)
     [commandEncoder setFragmentTexture:nullptr atIndex:index];
 }
 
-void GraphicsContextMetal::SetTexture(int index, const std::shared_ptr<Texture2D>& textureIn)
+void GraphicsContextMetal::SetTexture(int index, const std::shared_ptr<gpu::Texture2D>& textureIn)
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(textureIn);
@@ -608,4 +608,4 @@ void GraphicsContextMetal::SetRenderPass(const RenderPass& renderPass)
     }
 }
 
-} // namespace pomdog::detail::metal
+} // namespace pomdog::gpu::detail::metal

@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog {
+namespace pomdog::gpu {
 
 struct POMDOG_EXPORT SamplerDescriptor final {
     std::uint32_t MaxAnisotropy;
@@ -23,7 +23,7 @@ struct POMDOG_EXPORT SamplerDescriptor final {
     TextureAddressMode AddressU;
     TextureAddressMode AddressV;
     TextureAddressMode AddressW;
-    pomdog::ComparisonFunction ComparisonFunction;
+    pomdog::gpu::ComparisonFunction ComparisonFunction;
     //std::array<float, 4> BorderColor;
 
     [[nodiscard]] static SamplerDescriptor
@@ -48,4 +48,4 @@ struct POMDOG_EXPORT SamplerDescriptor final {
     CreatePointWrap() noexcept;
 };
 
-} // namespace pomdog
+} // namespace pomdog::gpu

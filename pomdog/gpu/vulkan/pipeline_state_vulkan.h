@@ -6,7 +6,7 @@
 #include "pomdog/gpu/pipeline_state.h"
 #include <vulkan/vulkan.h>
 
-namespace pomdog::detail::vulkan {
+namespace pomdog::gpu::detail::vulkan {
 
 class PipelineStateVulkan final : public PipelineState {
 public:
@@ -23,4 +23,4 @@ private:
     VkDescriptorSetLayout descriptorSetLayout;
 };
 
-} // namespace pomdog::detail::vulkan
+} // namespace pomdog::gpu::detail::vulkan

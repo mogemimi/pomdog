@@ -15,14 +15,17 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 class AssetManager;
-class Texture2D;
 } // namespace pomdog
+
+namespace pomdog::gpu {
+class Texture2D;
+} // namespace pomdog::gpu
 
 namespace pomdog::detail {
 
 template <>
-struct POMDOG_EXPORT AssetLoader<Texture2D> final {
-    [[nodiscard]] std::tuple<std::shared_ptr<Texture2D>, std::unique_ptr<Error>>
+struct POMDOG_EXPORT AssetLoader<gpu::Texture2D> final {
+    [[nodiscard]] std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
     operator()(AssetManager& assets, const std::string& filePath);
 };
 

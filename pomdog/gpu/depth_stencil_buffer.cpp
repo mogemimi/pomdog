@@ -2,9 +2,9 @@
 
 #include "pomdog/gpu/depth_stencil_buffer.h"
 
-namespace pomdog {
+namespace pomdog::gpu {
 
 DepthStencilBuffer::DepthStencilBuffer() noexcept = default;
 DepthStencilBuffer::~DepthStencilBuffer() = default;
 
-} // namespace pomdog
+} // namespace pomdog::gpu

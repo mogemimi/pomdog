@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog {
+namespace pomdog::gpu {
 
 class POMDOG_EXPORT RenderTarget2D : public Texture {
 public:
@@ -52,4 +52,4 @@ public:
     virtual void GetData(void* result, std::size_t offsetInBytes, std::size_t sizeInBytes) const = 0;
 };
 
-} // namespace pomdog
+} // namespace pomdog::gpu

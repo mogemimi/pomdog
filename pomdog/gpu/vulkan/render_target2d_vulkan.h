@@ -7,7 +7,7 @@
 #include "pomdog/gpu/vulkan/texture2d_vulkan.h"
 #include <vulkan/vulkan.h>
 
-namespace pomdog::detail::vulkan {
+namespace pomdog::gpu::detail::vulkan {
 
 class RenderTarget2DVulkan final : public RenderTarget2D {
 public:
@@ -44,4 +44,4 @@ public:
 private:
 };
 
-} // namespace pomdog::detail::vulkan
+} // namespace pomdog::gpu::detail::vulkan

@@ -13,9 +13,9 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <optional>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail::gl4 {
+namespace pomdog::gpu::detail::gl4 {
 
-using SamplerObjectGL4 = Tagged<GLuint, SamplerState>;
+using SamplerObjectGL4 = pomdog::detail::Tagged<GLuint, SamplerState>;
 
 class SamplerStateGL4 final : public SamplerState {
 public:
@@ -30,4 +30,4 @@ private:
     std::optional<SamplerObjectGL4> samplerObject;
 };
 
-} // namespace pomdog::detail::gl4
+} // namespace pomdog::gpu::detail::gl4

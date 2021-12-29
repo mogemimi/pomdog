@@ -10,7 +10,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog {
+namespace pomdog::gpu {
 
 ConstantBuffer::ConstantBuffer(
     std::unique_ptr<detail::NativeBuffer>&& nativeBufferIn,
@@ -63,4 +63,4 @@ detail::NativeBuffer* ConstantBuffer::GetNativeBuffer()
     return nativeBuffer.get();
 }
 
-} // namespace pomdog
+} // namespace pomdog::gpu

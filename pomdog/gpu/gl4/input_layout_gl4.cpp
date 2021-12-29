@@ -19,7 +19,9 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail::gl4 {
+using pomdog::detail::ScopeGuard;
+
+namespace pomdog::gpu::detail::gl4 {
 namespace {
 
 ScalarTypeGL4 ToScalarType(GLenum attributeClass)
@@ -613,4 +615,4 @@ void InputLayoutGL4::Apply(const std::array<VertexBufferBindingGL4, 8>& vertexBu
     ApplyInputElements(inputElements, vertexBuffers);
 }
 
-} // namespace pomdog::detail::gl4
+} // namespace pomdog::gpu::detail::gl4

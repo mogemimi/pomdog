@@ -6,7 +6,7 @@
 #include "pomdog/math/rectangle.h"
 #include "pomdog/utility/assert.h"
 
-namespace pomdog::detail::gl4 {
+namespace pomdog::gpu::detail::gl4 {
 namespace {
 
 [[nodiscard]] std::optional<GLenum>
@@ -163,4 +163,4 @@ void DepthStencilBufferGL4::BindToFramebuffer(GLuint frameBuffer) noexcept
 #endif
 }
 
-} // namespace pomdog::detail::gl4
+} // namespace pomdog::gpu::detail::gl4

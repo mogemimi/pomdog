@@ -12,7 +12,7 @@ namespace pomdog::detail::x11 {
 
 class GameWindowX11;
 
-class OpenGLContextX11 final : public gl4::OpenGLContext {
+class OpenGLContextX11 final : public gpu::detail::gl4::OpenGLContext {
 public:
     OpenGLContextX11() noexcept;
 

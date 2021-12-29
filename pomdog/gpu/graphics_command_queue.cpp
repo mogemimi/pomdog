@@ -2,9 +2,9 @@
 
 #include "pomdog/gpu/graphics_command_queue.h"
 
-namespace pomdog {
+namespace pomdog::gpu {
 
 GraphicsCommandQueue::GraphicsCommandQueue() noexcept = default;
 GraphicsCommandQueue::~GraphicsCommandQueue() = default;
 
-} // namespace pomdog
+} // namespace pomdog::gpu

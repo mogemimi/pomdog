@@ -16,18 +16,18 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog {
+namespace pomdog::gpu {
 class GraphicsDevice;
-} // namespace pomdog
+} // namespace pomdog::gpu
 
-namespace pomdog::detail::gl4 {
+namespace pomdog::gpu::detail::gl4 {
 
 namespace Tags {
 struct FrameBufferTag;
 } // namespace Tags
 
-using FrameBufferGL4 = Tagged<GLuint, Tags::FrameBufferTag>;
-using PrimitiveTopologyGL4 = Tagged<GLenum, PrimitiveTopology>;
+using FrameBufferGL4 = pomdog::detail::Tagged<GLuint, Tags::FrameBufferTag>;
+using PrimitiveTopologyGL4 = pomdog::detail::Tagged<GLenum, PrimitiveTopology>;
 
 class OpenGLContext;
 class PipelineStateGL4;
@@ -96,7 +96,7 @@ public:
 
     void SetTexture(int index) override;
 
-    void SetTexture(int index, const std::shared_ptr<Texture2D>& texture) override;
+    void SetTexture(int index, const std::shared_ptr<gpu::Texture2D>& texture) override;
 
     void SetTexture(int index, const std::shared_ptr<RenderTarget2D>& texture) override;
 
@@ -123,4 +123,4 @@ private:
     bool needToApplyPipelineState = true;
 };
 
-} // namespace pomdog::detail::gl4
+} // namespace pomdog::gpu::detail::gl4

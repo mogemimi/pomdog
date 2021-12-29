@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog {
+namespace pomdog::gpu {
 
 class POMDOG_EXPORT InputLayoutHelper final {
 public:
@@ -47,4 +47,8 @@ private:
     InputClassification slotClass = InputClassification::InputPerVertex;
 };
 
+} // namespace pomdog::gpu
+
+namespace pomdog {
+using pomdog::gpu::InputLayoutHelper;
 } // namespace pomdog

@@ -9,7 +9,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail {
+namespace pomdog::gpu::detail {
 
 struct TextureHelper final {
     static std::int32_t ComputeMipmapLevelCount(
@@ -23,4 +23,4 @@ struct TextureHelper final {
         SurfaceFormat format);
 };
 
-} // namespace pomdog::detail
+} // namespace pomdog::gpu::detail

@@ -2,9 +2,9 @@
 
 #include "pomdog/gpu/pipeline_state.h"
 
-namespace pomdog {
+namespace pomdog::gpu {
 
 PipelineState::PipelineState() noexcept = default;
 PipelineState::~PipelineState() = default;
 
-} // namespace pomdog
+} // namespace pomdog::gpu

@@ -9,7 +9,7 @@
 #import <Metal/MTLDevice.h>
 #include <algorithm>
 
-namespace pomdog::detail::metal {
+namespace pomdog::gpu::detail::metal {
 
 std::unique_ptr<Error>
 Texture2DMetal::Initialize(
@@ -121,4 +121,4 @@ id<MTLTexture> Texture2DMetal::GetTexture() const noexcept
     return texture;
 }
 
-} // namespace pomdog::detail::metal
+} // namespace pomdog::gpu::detail::metal

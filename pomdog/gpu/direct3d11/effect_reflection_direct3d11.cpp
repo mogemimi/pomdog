@@ -14,7 +14,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail::direct3d11 {
+namespace pomdog::gpu::detail::direct3d11 {
 namespace {
 
 using direct3d::HLSLReflectionHelper;
@@ -195,4 +195,4 @@ EffectReflectionDirect3D11::GetConstantBuffers() const noexcept
     return std::move(result);
 }
 
-} // namespace pomdog::detail::direct3d11
+} // namespace pomdog::gpu::detail::direct3d11

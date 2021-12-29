@@ -8,7 +8,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog {
+namespace pomdog::gpu {
 
 enum class ShaderPipelineStage : std::uint8_t {
     VertexShader,
@@ -17,4 +17,8 @@ enum class ShaderPipelineStage : std::uint8_t {
     //ComputeShader,
 };
 
+} // namespace pomdog::gpu
+
+namespace pomdog {
+using pomdog::gpu::ShaderPipelineStage;
 } // namespace pomdog

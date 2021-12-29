@@ -6,7 +6,7 @@
 #include "pomdog/gpu/forward_declarations.h"
 #import <Metal/Metal.h>
 
-namespace pomdog::detail::metal {
+namespace pomdog::gpu::detail::metal {
 
 class EffectReflectionMetal final : public EffectReflection {
 public:
@@ -19,4 +19,4 @@ private:
     __strong MTLRenderPipelineReflection* reflection = nullptr;
 };
 
-} // namespace pomdog::detail::metal
+} // namespace pomdog::gpu::detail::metal

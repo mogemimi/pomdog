@@ -13,12 +13,12 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail {
+namespace pomdog::gpu::detail {
 class ShaderBytecode;
 struct ShaderCompileOptions;
-} // namespace pomdog::detail
+} // namespace pomdog::gpu::detail
 
-namespace pomdog::detail::direct3d11 {
+namespace pomdog::gpu::detail::direct3d11 {
 
 template <class NativeShaderType>
 class ShaderDirect3D11 final : public Shader {
@@ -45,4 +45,4 @@ private:
 using VertexShaderDirect3D11 = ShaderDirect3D11<ID3D11VertexShader>;
 using PixelShaderDirect3D11 = ShaderDirect3D11<ID3D11PixelShader>;
 
-} // namespace pomdog::detail::direct3d11
+} // namespace pomdog::gpu::detail::direct3d11

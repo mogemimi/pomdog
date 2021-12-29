@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 using Microsoft::WRL::ComPtr;
 
-namespace pomdog::detail::direct3d11 {
+namespace pomdog::gpu::detail::direct3d11 {
 namespace {
 
 [[nodiscard]] std::tuple<ID3D11Buffer*, std::unique_ptr<Error>>
@@ -234,4 +234,4 @@ ID3D11Buffer* BufferDirect3D11::GetBuffer() const noexcept
     return buffer.Get();
 }
 
-} // namespace pomdog::detail::direct3d11
+} // namespace pomdog::gpu::detail::direct3d11

@@ -10,7 +10,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail::direct3d11 {
+namespace pomdog::gpu::detail::direct3d11 {
 namespace {
 
 D3D11_FILTER ToFilter(TextureFilter textureFilter) noexcept
@@ -95,4 +95,4 @@ ID3D11SamplerState* SamplerStateDirect3D11::GetSamplerState() const noexcept
     return samplerState.Get();
 }
 
-} // namespace pomdog::detail::direct3d11
+} // namespace pomdog::gpu::detail::direct3d11

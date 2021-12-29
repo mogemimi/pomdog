@@ -11,7 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog {
+namespace pomdog::gpu {
 
 struct POMDOG_EXPORT BlendDescriptor final {
     std::array<RenderTargetBlendDescriptor, 8> RenderTargets;
@@ -34,4 +34,4 @@ struct POMDOG_EXPORT BlendDescriptor final {
     CreateOpaque() noexcept;
 };
 
-} // namespace pomdog
+} // namespace pomdog::gpu

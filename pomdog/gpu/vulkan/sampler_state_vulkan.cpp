@@ -7,7 +7,7 @@
 #include "pomdog/utility/exception.h"
 #include <tuple>
 
-namespace pomdog::detail::vulkan {
+namespace pomdog::gpu::detail::vulkan {
 namespace {
 
 VkSamplerAddressMode ToSamplerAddressMode(TextureAddressMode addressMode) noexcept
@@ -141,4 +141,4 @@ SamplerStateVulkan::~SamplerStateVulkan()
     return sampler;
 }
 
-} // namespace pomdog::detail::vulkan
+} // namespace pomdog::gpu::detail::vulkan

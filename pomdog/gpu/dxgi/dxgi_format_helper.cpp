@@ -6,7 +6,7 @@
 #include "pomdog/gpu/input_element_format.h"
 #include "pomdog/gpu/surface_format.h"
 
-namespace pomdog::detail::dxgi {
+namespace pomdog::gpu::detail::dxgi {
 
 DXGI_FORMAT ToDXGIFormat(SurfaceFormat format) noexcept
 {
@@ -87,4 +87,4 @@ DXGI_FORMAT ToDXGIFormat(InputElementFormat format) noexcept
     POMDOG_UNREACHABLE("Unsupported input element format");
 }
 
-} // namespace pomdog::detail::dxgi
+} // namespace pomdog::gpu::detail::dxgi

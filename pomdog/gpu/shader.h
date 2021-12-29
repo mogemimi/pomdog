@@ -4,11 +4,15 @@
 
 #include "pomdog/basic/export.h"
 
-namespace pomdog {
+namespace pomdog::gpu {
 
 class POMDOG_EXPORT Shader {
 public:
     virtual ~Shader();
 };
 
+} // namespace pomdog::gpu
+
+namespace pomdog {
+using pomdog::gpu::Shader;
 } // namespace pomdog

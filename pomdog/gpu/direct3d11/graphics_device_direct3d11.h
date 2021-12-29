@@ -15,7 +15,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail::direct3d11 {
+namespace pomdog::gpu::detail::direct3d11 {
 
 class AdapterManager final {
 private:
@@ -136,13 +136,13 @@ public:
     CreateSamplerState(const SamplerDescriptor& descriptor) noexcept override;
 
     /// Creates a 2D texture.
-    std::tuple<std::shared_ptr<Texture2D>, std::unique_ptr<Error>>
+    std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
     CreateTexture2D(
         std::int32_t width,
         std::int32_t height) noexcept override;
 
     /// Creates a 2D texture.
-    std::tuple<std::shared_ptr<Texture2D>, std::unique_ptr<Error>>
+    std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
     CreateTexture2D(
         std::int32_t width,
         std::int32_t height,
@@ -168,4 +168,4 @@ private:
     PresentationParameters presentationParameters;
 };
 
-} // namespace pomdog::detail::direct3d11
+} // namespace pomdog::gpu::detail::direct3d11

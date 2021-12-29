@@ -3,7 +3,7 @@
 #include "pomdog/gpu/vulkan/format_helper.h"
 #include "pomdog/gpu/comparison_function.h"
 
-namespace pomdog::detail::vulkan {
+namespace pomdog::gpu::detail::vulkan {
 
 VkCompareOp ToComparisonFunction(ComparisonFunction compareFunction) noexcept
 {
@@ -28,4 +28,4 @@ VkCompareOp ToComparisonFunction(ComparisonFunction compareFunction) noexcept
     return VK_COMPARE_OP_LESS_OR_EQUAL;
 }
 
-} // namespace pomdog::detail::vulkan
+} // namespace pomdog::gpu::detail::vulkan

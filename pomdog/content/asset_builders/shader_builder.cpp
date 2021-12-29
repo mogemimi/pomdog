@@ -29,12 +29,12 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 using pomdog::detail::BinaryReader;
-using pomdog::detail::ShaderBytecode;
+using pomdog::gpu::detail::ShaderBytecode;
 
 namespace pomdog::AssetBuilders {
 namespace {
 
-using namespace pomdog::ShaderCompilers;
+using namespace pomdog::gpu::shader_compilers;
 
 [[nodiscard]] std::optional<std::string>
 IncludeGLSLFilesRecursive(const std::string& path, std::set<std::string>& includes)
@@ -107,7 +107,7 @@ public:
 public:
     explicit Impl(AssetManager& assets);
 
-    std::shared_ptr<GraphicsDevice> GetDevice()
+    std::shared_ptr<gpu::GraphicsDevice> GetDevice()
     {
         return assets.get().GetGraphicsDevice();
     }

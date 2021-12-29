@@ -10,10 +10,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdlib>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail::BufferHelper {
+namespace pomdog::gpu::detail::BufferHelper {
 
 std::size_t ToIndexElementOffsetBytes(IndexElementSize elementSize) noexcept;
 
 std::uint16_t ToByteSize(InputElementFormat format) noexcept;
 
-} // namespace pomdog::detail::BufferHelper
+} // namespace pomdog::gpu::detail::BufferHelper

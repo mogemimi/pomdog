@@ -21,7 +21,7 @@ class Builder<PipelineState>::Impl final {
 public:
     PipelineStateDescriptor descriptor;
     std::reference_wrapper<AssetManager const> assets;
-    std::shared_ptr<GraphicsDevice> graphicsDevice;
+    std::shared_ptr<gpu::GraphicsDevice> graphicsDevice;
     std::unique_ptr<Error> lastError;
     bool hasPrimitiveTopology = false;
     bool hasBlendState = false;

@@ -7,10 +7,10 @@
 #include "pomdog/utility/errors.h"
 #include "pomdog/utility/tagged.h"
 
-namespace pomdog::detail::gl4 {
+namespace pomdog::gpu::detail::gl4 {
 
-using ComparisonFunctionGL4 = Tagged<GLenum, ComparisonFunction>;
-using StencilOperationGL4 = Tagged<GLenum, StencilOperation>;
+using ComparisonFunctionGL4 = pomdog::detail::Tagged<GLenum, ComparisonFunction>;
+using StencilOperationGL4 = pomdog::detail::Tagged<GLenum, StencilOperation>;
 
 struct DepthStencilFaceOperationGL4 final {
     ComparisonFunctionGL4 stencilFunction = GL_ALWAYS;
@@ -43,4 +43,4 @@ private:
     bool depthBufferEnable = false;
 };
 
-} // namespace pomdog::detail::gl4
+} // namespace pomdog::gpu::detail::gl4

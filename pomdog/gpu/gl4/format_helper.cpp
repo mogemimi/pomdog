@@ -4,7 +4,7 @@
 #include "pomdog/basic/unreachable.h"
 #include "pomdog/gpu/comparison_function.h"
 
-namespace pomdog::detail::gl4 {
+namespace pomdog::gpu::detail::gl4 {
 
 GLenum ToComparisonFunctionGL4NonTypesafe(ComparisonFunction comparison) noexcept
 {
@@ -29,4 +29,4 @@ GLenum ToComparisonFunctionGL4NonTypesafe(ComparisonFunction comparison) noexcep
     POMDOG_UNREACHABLE("Unsupported comparison function");
 }
 
-} // namespace pomdog::detail::gl4
+} // namespace pomdog::gpu::detail::gl4

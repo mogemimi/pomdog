@@ -11,7 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail {
+namespace pomdog::gpu::detail {
 
 struct ShaderModel final {
     std::uint8_t Major;
@@ -19,7 +19,7 @@ struct ShaderModel final {
 };
 
 struct ShaderProfile final {
-    pomdog::detail::ShaderModel ShaderModel;
+    pomdog::gpu::detail::ShaderModel ShaderModel;
     ShaderPipelineStage PipelineStage;
 };
 
@@ -36,4 +36,4 @@ struct ShaderCompileOptions final {
     bool Precompiled;
 };
 
-} // namespace pomdog::detail
+} // namespace pomdog::gpu::detail

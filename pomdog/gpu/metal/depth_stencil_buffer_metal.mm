@@ -8,7 +8,7 @@
 #import <Metal/MTLDevice.h>
 #import <Metal/MTLTexture.h>
 
-namespace pomdog::detail::metal {
+namespace pomdog::gpu::detail::metal {
 
 std::unique_ptr<Error>
 DepthStencilBufferMetal::Initialize(
@@ -79,4 +79,4 @@ id<MTLTexture> DepthStencilBufferMetal::GetTexture() const noexcept
     return depthStencilTexture;
 }
 
-} // namespace pomdog::detail::metal
+} // namespace pomdog::gpu::detail::metal

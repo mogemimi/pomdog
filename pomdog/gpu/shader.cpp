@@ -2,8 +2,8 @@
 
 #include "pomdog/gpu/shader.h"
 
-namespace pomdog {
+namespace pomdog::gpu {
 
 Shader::~Shader() = default;
 
-} // namespace pomdog
+} // namespace pomdog::gpu

@@ -7,7 +7,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog {
+namespace pomdog::gpu {
 
 SamplerDescriptor SamplerDescriptor::CreateDefault() noexcept
 {
@@ -104,4 +104,4 @@ SamplerDescriptor SamplerDescriptor::CreatePointWrap() noexcept
     return desc;
 }
 
-} // namespace pomdog
+} // namespace pomdog::gpu

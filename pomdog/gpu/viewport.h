@@ -5,7 +5,7 @@
 #include "pomdog/basic/export.h"
 #include "pomdog/math/forward_declarations.h"
 
-namespace pomdog {
+namespace pomdog::gpu {
 
 class POMDOG_EXPORT Viewport final {
 public:
@@ -52,4 +52,4 @@ public:
     [[nodiscard]] float GetAspectRatio() const noexcept;
 };
 
-} // namespace pomdog
+} // namespace pomdog::gpu

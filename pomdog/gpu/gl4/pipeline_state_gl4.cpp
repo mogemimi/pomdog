@@ -19,7 +19,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <unordered_set>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail::gl4 {
+namespace pomdog::gpu::detail::gl4 {
 namespace {
 
 // NOTE: Please refer to D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT.
@@ -247,4 +247,4 @@ PrimitiveTopologyGL4 PipelineStateGL4::GetPrimitiveTopology() const noexcept
     return primitiveTopology;
 }
 
-} // namespace pomdog::detail::gl4
+} // namespace pomdog::gpu::detail::gl4

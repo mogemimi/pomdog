@@ -18,7 +18,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog {
+namespace pomdog::gpu {
 
 struct PipelineStateDescriptor final {
     // NOTE: Since OpenGL 4.1 and earlier, location attribute cannot be used,
@@ -41,4 +41,4 @@ struct PipelineStateDescriptor final {
     std::uint32_t MultiSampleMask;
 };
 
-} // namespace pomdog
+} // namespace pomdog::gpu

@@ -6,7 +6,7 @@
 #include "pomdog/gpu/rasterizer_descriptor.h"
 #include "pomdog/utility/assert.h"
 
-namespace pomdog::detail::gl4 {
+namespace pomdog::gpu::detail::gl4 {
 namespace {
 
 FillModeGL4 ToFillModeGL4(const FillMode& fillMode) noexcept
@@ -94,4 +94,4 @@ void RasterizerStateGL4::Apply()
     }
 }
 
-} // namespace pomdog::detail::gl4
+} // namespace pomdog::gpu::detail::gl4

@@ -2,7 +2,7 @@
 
 #include "pomdog/gpu/blend_descriptor.h"
 
-namespace pomdog {
+namespace pomdog::gpu {
 
 BlendDescriptor BlendDescriptor::CreateDefault() noexcept
 {
@@ -53,4 +53,4 @@ BlendDescriptor BlendDescriptor::CreateOpaque() noexcept
     return desc;
 }
 
-} // namespace pomdog
+} // namespace pomdog::gpu

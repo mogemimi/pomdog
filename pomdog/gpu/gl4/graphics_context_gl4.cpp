@@ -36,7 +36,9 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail::gl4 {
+using pomdog::detail::ScopeGuard;
+
+namespace pomdog::gpu::detail::gl4 {
 namespace {
 
 GLenum ToIndexElementType(IndexElementSize indexElementSize) noexcept
@@ -769,7 +771,7 @@ void GraphicsContextGL4::SetTexture(int index)
     textures[index] = std::nullopt;
 }
 
-void GraphicsContextGL4::SetTexture(int index, const std::shared_ptr<Texture2D>& textureIn)
+void GraphicsContextGL4::SetTexture(int index, const std::shared_ptr<gpu::Texture2D>& textureIn)
 {
     POMDOG_ASSERT(!textures.empty());
     POMDOG_ASSERT(index >= 0);
@@ -996,4 +998,4 @@ void GraphicsContextGL4::SetRenderPass(const RenderPass& renderPass)
     }
 }
 
-} // namespace pomdog::detail::gl4
+} // namespace pomdog::gpu::detail::gl4

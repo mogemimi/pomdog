@@ -8,7 +8,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog {
+namespace pomdog::gpu {
 
 enum class ComparisonFunction : std::uint8_t {
     Never,
@@ -21,4 +21,4 @@ enum class ComparisonFunction : std::uint8_t {
     Always,
 };
 
-} // namespace pomdog
+} // namespace pomdog::gpu

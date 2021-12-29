@@ -15,7 +15,7 @@ namespace pomdog {
 class Error;
 } // namespace pomdog
 
-namespace pomdog {
+namespace pomdog::gpu {
 
 class POMDOG_EXPORT GraphicsDevice {
 public:
@@ -122,13 +122,13 @@ public:
     CreateSamplerState(const SamplerDescriptor& descriptor) noexcept = 0;
 
     /// Creates a 2D texture.
-    [[nodiscard]] virtual std::tuple<std::shared_ptr<Texture2D>, std::unique_ptr<Error>>
+    [[nodiscard]] virtual std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
     CreateTexture2D(
         std::int32_t width,
         std::int32_t height) noexcept = 0;
 
     /// Creates a 2D texture.
-    [[nodiscard]] virtual std::tuple<std::shared_ptr<Texture2D>, std::unique_ptr<Error>>
+    [[nodiscard]] virtual std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
     CreateTexture2D(
         std::int32_t width,
         std::int32_t height,
@@ -136,4 +136,4 @@ public:
         SurfaceFormat format) noexcept = 0;
 };
 
-} // namespace pomdog
+} // namespace pomdog::gpu

@@ -5,7 +5,7 @@
 #include "pomdog/gpu/gl4/opengl_prerequisites.h"
 #include "pomdog/utility/tagged.h"
 
-namespace pomdog::detail::gl4 {
+namespace pomdog::gpu::detail::gl4 {
 
 namespace Tags {
 
@@ -13,6 +13,6 @@ class ShaderProgramTag;
 
 } // namespace Tags
 
-using ShaderProgramGL4 = Tagged<GLuint, Tags::ShaderProgramTag>;
+using ShaderProgramGL4 = pomdog::detail::Tagged<GLuint, Tags::ShaderProgramTag>;
 
-} // namespace pomdog::detail::gl4
+} // namespace pomdog::gpu::detail::gl4

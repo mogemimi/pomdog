@@ -4,7 +4,7 @@
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/exception.h"
 
-namespace pomdog::detail::vulkan {
+namespace pomdog::gpu::detail::vulkan {
 
 void GraphicsCommandQueueVulkan::Reset()
 {
@@ -32,4 +32,4 @@ std::size_t GraphicsCommandQueueVulkan::GetCommandCount() const noexcept
     return 0;
 }
 
-} // namespace pomdog::detail::vulkan
+} // namespace pomdog::gpu::detail::vulkan

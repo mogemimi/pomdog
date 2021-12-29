@@ -4,7 +4,7 @@
 #include "pomdog/gpu/effect_variable_class.h"
 #include "pomdog/gpu/effect_variable_type.h"
 
-namespace pomdog::detail::direct3d {
+namespace pomdog::gpu::detail::direct3d {
 
 EffectVariableType HLSLReflectionHelper::ToEffectVariableType(
     D3D_SHADER_VARIABLE_TYPE variableType) noexcept
@@ -52,4 +52,4 @@ EffectVariableClass HLSLReflectionHelper::ToEffectVariableClass(
     return EffectVariableClass::Scalar;
 }
 
-} // namespace pomdog::detail::direct3d
+} // namespace pomdog::gpu::detail::direct3d

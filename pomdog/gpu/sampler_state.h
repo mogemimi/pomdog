@@ -11,7 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog {
+namespace pomdog::gpu {
 
 class POMDOG_EXPORT SamplerState {
 public:
@@ -22,4 +22,4 @@ public:
     virtual ~SamplerState();
 };
 
-} // namespace pomdog
+} // namespace pomdog::gpu

@@ -31,7 +31,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail::direct3d11 {
+namespace pomdog::gpu::detail::direct3d11 {
 namespace {
 
 using Microsoft::WRL::ComPtr;
@@ -714,7 +714,7 @@ GraphicsDeviceDirect3D11::CreateSamplerState(const SamplerDescriptor& descriptor
     return std::make_tuple(std::move(samplerState), nullptr);
 }
 
-std::tuple<std::shared_ptr<Texture2D>, std::unique_ptr<Error>>
+std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
 GraphicsDeviceDirect3D11::CreateTexture2D(
     std::int32_t width,
     std::int32_t height) noexcept
@@ -726,7 +726,7 @@ GraphicsDeviceDirect3D11::CreateTexture2D(
         SurfaceFormat::R8G8B8A8_UNorm);
 }
 
-std::tuple<std::shared_ptr<Texture2D>, std::unique_ptr<Error>>
+std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
 GraphicsDeviceDirect3D11::CreateTexture2D(
     std::int32_t width,
     std::int32_t height,
@@ -774,4 +774,4 @@ void GraphicsDeviceDirect3D11::ClientSizeChanged(int width, int height)
     presentationParameters.BackBufferHeight = height;
 }
 
-} // namespace pomdog::detail::direct3d11
+} // namespace pomdog::gpu::detail::direct3d11

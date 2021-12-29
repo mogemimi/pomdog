@@ -11,7 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog {
+namespace pomdog::gpu {
 
 struct POMDOG_EXPORT DepthStencilDescriptor final {
     DepthStencilOperation ClockwiseFace;
@@ -37,4 +37,4 @@ struct POMDOG_EXPORT DepthStencilDescriptor final {
     CreateNone() noexcept;
 };
 
-} // namespace pomdog
+} // namespace pomdog::gpu

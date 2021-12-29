@@ -23,7 +23,7 @@
 #include "pomdog/utility/errors.h"
 #include "pomdog/utility/string_helper.h"
 
-namespace pomdog::detail::gl4 {
+namespace pomdog::gpu::detail::gl4 {
 
 std::unique_ptr<Error>
 GraphicsDeviceGL4::Initialize(const PresentationParameters& presentationParametersIn) noexcept
@@ -318,7 +318,7 @@ GraphicsDeviceGL4::CreateSamplerState(const SamplerDescriptor& descriptor) noexc
     return std::make_tuple(std::move(samplerState), nullptr);
 }
 
-std::tuple<std::shared_ptr<Texture2D>, std::unique_ptr<Error>>
+std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
 GraphicsDeviceGL4::CreateTexture2D(
     std::int32_t width,
     std::int32_t height) noexcept
@@ -330,7 +330,7 @@ GraphicsDeviceGL4::CreateTexture2D(
         SurfaceFormat::R8G8B8A8_UNorm);
 }
 
-std::tuple<std::shared_ptr<Texture2D>, std::unique_ptr<Error>>
+std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
 GraphicsDeviceGL4::CreateTexture2D(
     std::int32_t width,
     std::int32_t height,
@@ -364,4 +364,4 @@ void GraphicsDeviceGL4::ClientSizeChanged(int width, int height)
     presentationParameters.BackBufferHeight = height;
 }
 
-} // namespace pomdog::detail::gl4
+} // namespace pomdog::gpu::detail::gl4

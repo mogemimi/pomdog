@@ -15,7 +15,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail::direct3d11 {
+namespace pomdog::gpu::detail::direct3d11 {
 
 class DepthStencilBufferDirect3D11;
 class PipelineStateDirect3D11;
@@ -86,7 +86,7 @@ public:
 
     void SetTexture(int index) override;
 
-    void SetTexture(int index, const std::shared_ptr<Texture2D>& texture) override;
+    void SetTexture(int index, const std::shared_ptr<gpu::Texture2D>& texture) override;
 
     void SetTexture(int index, const std::shared_ptr<RenderTarget2D>& texture) override;
 
@@ -125,4 +125,4 @@ private:
     bool needToApplyPipelineState = true;
 };
 
-} // namespace pomdog::detail::direct3d11
+} // namespace pomdog::gpu::detail::direct3d11

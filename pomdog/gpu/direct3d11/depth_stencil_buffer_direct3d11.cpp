@@ -5,7 +5,7 @@
 #include "pomdog/math/rectangle.h"
 #include "pomdog/utility/assert.h"
 
-namespace pomdog::detail::direct3d11 {
+namespace pomdog::gpu::detail::direct3d11 {
 namespace {
 
 using Microsoft::WRL::ComPtr;
@@ -172,4 +172,4 @@ DepthStencilBufferDirect3D11::ResetBuffer(
     return nullptr;
 }
 
-} // namespace pomdog::detail::direct3d11
+} // namespace pomdog::gpu::detail::direct3d11

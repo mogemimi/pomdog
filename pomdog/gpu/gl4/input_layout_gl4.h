@@ -16,7 +16,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail::gl4 {
+namespace pomdog::gpu::detail::gl4 {
 
 namespace Tags {
 
@@ -27,8 +27,8 @@ struct VertexArrayTag {
 
 } // namespace Tags
 
-using ScalarTypeGL4 = Tagged<GLuint, Tags::ScalarDataTypeTag>;
-using VertexArrayGL4 = Tagged<GLuint, Tags::VertexArrayTag>;
+using ScalarTypeGL4 = pomdog::detail::Tagged<GLuint, Tags::ScalarDataTypeTag>;
+using VertexArrayGL4 = pomdog::detail::Tagged<GLuint, Tags::VertexArrayTag>;
 
 struct InputElementGL4 final {
     GLuint AttributeLocation;
@@ -66,4 +66,4 @@ private:
     std::optional<VertexArrayGL4> inputLayout;
 };
 
-} // namespace pomdog::detail::gl4
+} // namespace pomdog::gpu::detail::gl4

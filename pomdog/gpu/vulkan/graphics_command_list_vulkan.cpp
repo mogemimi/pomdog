@@ -18,7 +18,7 @@
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/exception.h"
 
-namespace pomdog::detail::vulkan {
+namespace pomdog::gpu::detail::vulkan {
 namespace {
 
 VkIndexType ToVkIndexType(IndexElementSize elementSize) noexcept
@@ -400,7 +400,7 @@ void GraphicsCommandListVulkan::SetTexture(int index)
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 
-void GraphicsCommandListVulkan::SetTexture(int index, const std::shared_ptr<Texture2D>& texture)
+void GraphicsCommandListVulkan::SetTexture(int index, const std::shared_ptr<gpu::Texture2D>& texture)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
@@ -410,4 +410,4 @@ void GraphicsCommandListVulkan::SetTexture(int index, const std::shared_ptr<Rend
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 
-} // namespace pomdog::detail::vulkan
+} // namespace pomdog::gpu::detail::vulkan

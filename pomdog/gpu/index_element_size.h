@@ -8,7 +8,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog {
+namespace pomdog::gpu {
 
 enum class IndexElementSize : std::uint8_t {
     /// A 16-bit unsigned integer used as a the size of a primitive index.
@@ -18,4 +18,4 @@ enum class IndexElementSize : std::uint8_t {
     ThirtyTwoBits,
 };
 
-} // namespace pomdog
+} // namespace pomdog::gpu

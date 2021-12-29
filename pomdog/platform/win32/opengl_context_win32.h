@@ -16,7 +16,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail::win32 {
 
-class OpenGLContextWin32 final : public gl4::OpenGLContext {
+class OpenGLContextWin32 final : public gpu::detail::gl4::OpenGLContext {
 public:
     OpenGLContextWin32() noexcept;
 

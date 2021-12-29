@@ -13,10 +13,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <optional>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail::gl4 {
+namespace pomdog::gpu::detail::gl4 {
 
 template <class Tag>
-using BufferObjectGL4 = Tagged<GLuint, Tag>;
+using BufferObjectGL4 = pomdog::detail::Tagged<GLuint, Tag>;
 
 template <class Tag>
 class BufferGL4 final : public NativeBuffer {
@@ -57,4 +57,4 @@ using ConstantBufferGL4 = BufferGL4<ConstantBuffer>;
 using IndexBufferGL4 = BufferGL4<IndexBuffer>;
 using VertexBufferGL4 = BufferGL4<VertexBuffer>;
 
-} // namespace pomdog::detail::gl4
+} // namespace pomdog::gpu::detail::gl4

@@ -11,7 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog {
+namespace pomdog::gpu {
 
 class GraphicsCommandList;
 
@@ -34,4 +34,4 @@ public:
     virtual void Present() = 0;
 };
 
-} // namespace pomdog
+} // namespace pomdog::gpu

@@ -8,7 +8,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog {
+namespace pomdog::gpu {
 
 enum class TextureFilter : std::uint8_t {
     Linear,
@@ -30,4 +30,4 @@ enum class TextureFilter : std::uint8_t {
     MinPointMagLinearMipPoint,
 };
 
-} // namespace pomdog
+} // namespace pomdog::gpu

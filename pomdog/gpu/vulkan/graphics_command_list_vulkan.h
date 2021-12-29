@@ -6,7 +6,7 @@
 #include "pomdog/gpu/graphics_command_list.h"
 #include <vulkan/vulkan.h>
 
-namespace pomdog::detail::vulkan {
+namespace pomdog::gpu::detail::vulkan {
 
 class GraphicsCommandListVulkan final : public GraphicsCommandList {
 public:
@@ -87,7 +87,7 @@ public:
     void SetTexture(int index) override;
 
     /// Sets a texture to the specified slot.
-    void SetTexture(int index, const std::shared_ptr<Texture2D>& texture) override;
+    void SetTexture(int index, const std::shared_ptr<gpu::Texture2D>& texture) override;
 
     /// Sets a texture to the specified slot.
     void SetTexture(int index, const std::shared_ptr<RenderTarget2D>& texture) override;
@@ -99,4 +99,4 @@ private:
     VkCommandBuffer commandBuffer;
 };
 
-} // namespace pomdog::detail::vulkan
+} // namespace pomdog::gpu::detail::vulkan

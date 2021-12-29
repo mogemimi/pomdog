@@ -11,7 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail::direct3d11 {
+namespace pomdog::gpu::detail::direct3d11 {
 namespace {
 
 HRESULT CreateShader(
@@ -98,4 +98,4 @@ template class ShaderDirect3D11<ID3D11PixelShader>;
 // template class ShaderDirect3D11<ID3D11HullShader>;
 // template class ShaderDirect3D11<ID3D11ComputeShader>;
 
-} // namespace pomdog::detail::direct3d11
+} // namespace pomdog::gpu::detail::direct3d11

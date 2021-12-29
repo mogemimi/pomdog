@@ -34,8 +34,8 @@
 #include <utility>
 #include <vector>
 
-using pomdog::detail::gl4::GraphicsDeviceGL4;
-using pomdog::detail::gl4::GraphicsContextGL4;
+using pomdog::gpu::detail::gl4::GraphicsDeviceGL4;
+using pomdog::gpu::detail::gl4::GraphicsContextGL4;
 using pomdog::detail::IOKit::GamepadIOKit;
 using pomdog::detail::openal::AudioEngineAL;
 
@@ -67,10 +67,10 @@ public:
     [[nodiscard]] std::shared_ptr<GameClock>
     GetClock() noexcept;
 
-    [[nodiscard]] std::shared_ptr<GraphicsDevice>
+    [[nodiscard]] std::shared_ptr<gpu::GraphicsDevice>
     GetGraphicsDevice() noexcept;
 
-    [[nodiscard]] std::shared_ptr<GraphicsCommandQueue>
+    [[nodiscard]] std::shared_ptr<gpu::GraphicsCommandQueue>
     GetGraphicsCommandQueue() noexcept;
 
     [[nodiscard]] std::shared_ptr<AssetManager>
@@ -130,7 +130,7 @@ private:
     std::shared_ptr<OpenGLContextCocoa> openGLContext;
     std::shared_ptr<GraphicsDeviceGL4> graphicsDevice;
     std::shared_ptr<GraphicsContextGL4> graphicsContext;
-    std::shared_ptr<GraphicsCommandQueue> graphicsCommandQueue;
+    std::shared_ptr<gpu::GraphicsCommandQueue> graphicsCommandQueue;
     std::shared_ptr<AudioEngineAL> audioEngine;
     std::unique_ptr<AssetManager> assetManager;
     std::shared_ptr<KeyboardCocoa> keyboard;
@@ -203,7 +203,7 @@ GameHostCocoa::Impl::Initialize(
         return errors::Wrap(std::move(err), "GraphicsContextGL4::Initialize() failed.");
     }
 
-    graphicsCommandQueue = std::make_shared<GraphicsCommandQueueImmediate>(graphicsContext);
+    graphicsCommandQueue = std::make_shared<gpu::detail::GraphicsCommandQueueImmediate>(graphicsContext);
     openGLContext->Unlock();
 
     // NOTE: Create audio engine.
@@ -525,13 +525,13 @@ GameHostCocoa::Impl::GetClock() noexcept
     return clock_;
 }
 
-std::shared_ptr<GraphicsDevice>
+std::shared_ptr<gpu::GraphicsDevice>
 GameHostCocoa::Impl::GetGraphicsDevice() noexcept
 {
     return graphicsDevice;
 }
 
-std::shared_ptr<GraphicsCommandQueue>
+std::shared_ptr<gpu::GraphicsCommandQueue>
 GameHostCocoa::Impl::GetGraphicsCommandQueue() noexcept
 {
     return graphicsCommandQueue;
@@ -631,13 +631,13 @@ std::shared_ptr<GameClock> GameHostCocoa::GetClock() noexcept
     return impl->GetClock();
 }
 
-std::shared_ptr<GraphicsDevice> GameHostCocoa::GetGraphicsDevice() noexcept
+std::shared_ptr<gpu::GraphicsDevice> GameHostCocoa::GetGraphicsDevice() noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->GetGraphicsDevice();
 }
 
-std::shared_ptr<GraphicsCommandQueue> GameHostCocoa::GetGraphicsCommandQueue() noexcept
+std::shared_ptr<gpu::GraphicsCommandQueue> GameHostCocoa::GetGraphicsCommandQueue() noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->GetGraphicsCommandQueue();

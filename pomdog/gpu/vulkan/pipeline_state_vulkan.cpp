@@ -12,7 +12,7 @@
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/exception.h"
 
-namespace pomdog::detail::vulkan {
+namespace pomdog::gpu::detail::vulkan {
 namespace {
 
 VkPrimitiveTopology
@@ -648,4 +648,4 @@ PipelineStateVulkan::~PipelineStateVulkan()
     }
 }
 
-} // namespace pomdog::detail::vulkan
+} // namespace pomdog::gpu::detail::vulkan

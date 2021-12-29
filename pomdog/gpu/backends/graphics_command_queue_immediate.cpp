@@ -6,7 +6,7 @@
 #include "pomdog/gpu/graphics_command_list.h"
 #include "pomdog/utility/assert.h"
 
-namespace pomdog::detail {
+namespace pomdog::gpu::detail {
 
 GraphicsCommandQueueImmediate::GraphicsCommandQueueImmediate(
     const std::shared_ptr<NativeGraphicsContext>& graphicsContextIn)
@@ -52,4 +52,4 @@ std::size_t GraphicsCommandQueueImmediate::GetCommandCount() const noexcept
     return count;
 }
 
-} // namespace pomdog::detail
+} // namespace pomdog::gpu::detail

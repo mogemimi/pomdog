@@ -8,9 +8,9 @@
 #include "pomdog/utility/errors.h"
 #include "pomdog/utility/tagged.h"
 
-namespace pomdog::detail::gl4 {
+namespace pomdog::gpu::detail::gl4 {
 
-using FillModeGL4 = Tagged<GLenum, FillMode>;
+using FillModeGL4 = pomdog::detail::Tagged<GLenum, FillMode>;
 
 class RasterizerStateGL4 final {
 public:
@@ -27,4 +27,4 @@ private:
     bool multisampleAntiAliasEnable = false;
 };
 
-} // namespace pomdog::detail::gl4
+} // namespace pomdog::gpu::detail::gl4

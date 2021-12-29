@@ -5,7 +5,7 @@
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/exception.h"
 
-namespace pomdog::detail::metal {
+namespace pomdog::gpu::detail::metal {
 namespace {
 
 EffectVariableType ToEffectVariableType(MTLDataType variableType) noexcept
@@ -176,4 +176,4 @@ EffectReflectionMetal::GetConstantBuffers() const noexcept
 #endif
 }
 
-} // namespace pomdog::detail::metal
+} // namespace pomdog::gpu::detail::metal

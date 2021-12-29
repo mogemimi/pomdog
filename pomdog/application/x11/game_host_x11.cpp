@@ -28,8 +28,8 @@
 #include <vector>
 
 using pomdog::detail::NativeGamepad;
-using pomdog::detail::gl4::GraphicsContextGL4;
-using pomdog::detail::gl4::GraphicsDeviceGL4;
+using pomdog::gpu::detail::gl4::GraphicsContextGL4;
+using pomdog::gpu::detail::gl4::GraphicsDeviceGL4;
 using pomdog::detail::openal::AudioEngineAL;
 
 namespace pomdog::detail::x11 {
@@ -214,7 +214,7 @@ public:
     std::shared_ptr<OpenGLContextX11> openGLContext;
     std::shared_ptr<GraphicsDeviceGL4> graphicsDevice;
     std::shared_ptr<GraphicsContextGL4> graphicsContext;
-    std::shared_ptr<GraphicsCommandQueue> graphicsCommandQueue;
+    std::shared_ptr<gpu::GraphicsCommandQueue> graphicsCommandQueue;
     std::shared_ptr<AudioEngineAL> audioEngine;
     std::unique_ptr<AssetManager> assetManager;
     std::unique_ptr<KeyboardX11> keyboard;
@@ -296,7 +296,7 @@ GameHostX11::Impl::Initialize(const PresentationParameters& presentationParamete
         return errors::Wrap(std::move(err), "failed to initialize GraphicsContextGL4");
     }
 
-    graphicsCommandQueue = std::make_shared<GraphicsCommandQueueImmediate>(graphicsContext);
+    graphicsCommandQueue = std::make_shared<gpu::detail::GraphicsCommandQueueImmediate>(graphicsContext);
 
     // NOTE: Create audio engine.
     audioEngine = std::make_shared<AudioEngineAL>();
@@ -485,13 +485,13 @@ std::shared_ptr<GameClock> GameHostX11::GetClock() noexcept
     return impl->clock_;
 }
 
-std::shared_ptr<GraphicsDevice> GameHostX11::GetGraphicsDevice() noexcept
+std::shared_ptr<gpu::GraphicsDevice> GameHostX11::GetGraphicsDevice() noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->graphicsDevice;
 }
 
-std::shared_ptr<GraphicsCommandQueue> GameHostX11::GetGraphicsCommandQueue() noexcept
+std::shared_ptr<gpu::GraphicsCommandQueue> GameHostX11::GetGraphicsCommandQueue() noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->graphicsCommandQueue;

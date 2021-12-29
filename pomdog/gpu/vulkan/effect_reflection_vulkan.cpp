@@ -4,7 +4,7 @@
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/exception.h"
 
-namespace pomdog::detail::vulkan {
+namespace pomdog::gpu::detail::vulkan {
 namespace {
 
 } // namespace
@@ -21,4 +21,4 @@ EffectReflectionVulkan::GetConstantBuffers() const noexcept
     return {};
 }
 
-} // namespace pomdog::detail::vulkan
+} // namespace pomdog::gpu::detail::vulkan

@@ -4,7 +4,7 @@
 #include "pomdog/gpu/surface_format.h"
 #include "pomdog/utility/assert.h"
 
-namespace pomdog::detail::vulkan {
+namespace pomdog::gpu::detail::vulkan {
 
 VkFormat
 ToSurfaceFormat(SurfaceFormat format) noexcept
@@ -52,4 +52,4 @@ ToSurfaceFormat(SurfaceFormat format) noexcept
     return VK_FORMAT_UNDEFINED;
 }
 
-} // namespace pomdog::detail::vulkan
+} // namespace pomdog::gpu::detail::vulkan

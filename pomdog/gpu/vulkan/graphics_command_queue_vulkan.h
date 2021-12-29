@@ -6,7 +6,7 @@
 #include "pomdog/gpu/graphics_command_queue.h"
 #include <vulkan/vulkan.h>
 
-namespace pomdog::detail::vulkan {
+namespace pomdog::gpu::detail::vulkan {
 
 class GraphicsCommandQueueVulkan final : public GraphicsCommandQueue {
 public:
@@ -23,4 +23,4 @@ public:
 private:
 };
 
-} // namespace pomdog::detail::vulkan
+} // namespace pomdog::gpu::detail::vulkan

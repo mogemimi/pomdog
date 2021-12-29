@@ -4,7 +4,7 @@
 
 #include "pomdog/basic/export.h"
 
-namespace pomdog {
+namespace pomdog::gpu {
 
 class POMDOG_EXPORT Texture {
 public:
@@ -18,4 +18,4 @@ public:
     virtual ~Texture();
 };
 
-} // namespace pomdog
+} // namespace pomdog::gpu

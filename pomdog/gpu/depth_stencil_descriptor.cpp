@@ -6,7 +6,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <limits>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog {
+namespace pomdog::gpu {
 
 DepthStencilDescriptor DepthStencilDescriptor::CreateDefault() noexcept
 {
@@ -76,4 +76,4 @@ DepthStencilDescriptor DepthStencilDescriptor::CreateNone() noexcept
     return desc;
 }
 
-} // namespace pomdog
+} // namespace pomdog::gpu

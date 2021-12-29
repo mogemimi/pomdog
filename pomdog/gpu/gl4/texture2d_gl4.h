@@ -13,9 +13,9 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <optional>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail::gl4 {
+namespace pomdog::gpu::detail::gl4 {
 
-using Texture2DObjectGL4 = Tagged<GLuint, Texture2D>;
+using Texture2DObjectGL4 = pomdog::detail::Tagged<GLuint, Texture2D>;
 
 class Texture2DGL4 final : public Texture2D {
 public:
@@ -60,4 +60,4 @@ private:
     SurfaceFormat format = SurfaceFormat::A8_UNorm;
 };
 
-} // namespace pomdog::detail::gl4
+} // namespace pomdog::gpu::detail::gl4

@@ -11,7 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <sstream>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail::gl4 {
+namespace pomdog::gpu::detail::gl4 {
 namespace {
 
 [[nodiscard]] std::string
@@ -82,4 +82,4 @@ void CheckError(const char* command, const char* filename, int line)
 }
 #endif
 
-} // namespace pomdog::detail::gl4
+} // namespace pomdog::gpu::detail::gl4

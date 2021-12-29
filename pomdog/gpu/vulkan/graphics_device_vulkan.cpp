@@ -25,7 +25,7 @@
 #include <vulkan/vulkan_macos.h>
 #endif
 
-namespace pomdog::detail::vulkan {
+namespace pomdog::gpu::detail::vulkan {
 namespace {
 
 constexpr std::uint32_t GetUint32EngineVersion() noexcept
@@ -428,4 +428,4 @@ GraphicsDeviceVulkan::CreateRenderTarget2D(
         format, depthStencilFormat, multiSampleCount);
 }
 
-} // namespace pomdog::detail::vulkan
+} // namespace pomdog::gpu::detail::vulkan

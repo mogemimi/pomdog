@@ -16,16 +16,16 @@ namespace pomdog {
 class Error;
 } // namespace pomdog
 
-namespace pomdog::detail {
+namespace pomdog::gpu::detail {
 class ShaderBytecode;
 struct ShaderCompileOptions;
-} // namespace pomdog::detail
+} // namespace pomdog::gpu::detail
 
-namespace pomdog::detail::direct3d {
+namespace pomdog::gpu::detail::direct3d {
 
 [[nodiscard]] std::tuple<Microsoft::WRL::ComPtr<ID3DBlob>, std::unique_ptr<Error>>
 CompileHLSL(
     const ShaderBytecode& shaderBytecode,
     const ShaderCompileOptions& compileOptions) noexcept;
 
-} // namespace pomdog::detail::direct3d
+} // namespace pomdog::gpu::detail::direct3d

@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail {
+namespace pomdog::gpu::detail {
 
 class NativeGraphicsContext;
 
@@ -128,7 +128,7 @@ public:
     void SetTexture(int index) override;
 
     /// Sets a texture to the specified slot.
-    void SetTexture(int index, const std::shared_ptr<Texture2D>& texture) override;
+    void SetTexture(int index, const std::shared_ptr<gpu::Texture2D>& texture) override;
 
     /// Sets a texture to the specified slot.
     void SetTexture(int index, const std::shared_ptr<RenderTarget2D>& texture) override;
@@ -145,4 +145,4 @@ private:
     std::vector<std::shared_ptr<detail::GraphicsCommand>> commands;
 };
 
-} // namespace pomdog::detail
+} // namespace pomdog::gpu::detail

@@ -20,10 +20,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail::gl4 {
+namespace pomdog::gpu::detail::gl4 {
 
 class InputLayoutGL4;
-using PrimitiveTopologyGL4 = Tagged<GLenum, PrimitiveTopology>;
+using PrimitiveTopologyGL4 = pomdog::detail::Tagged<GLenum, PrimitiveTopology>;
 
 struct TextureBindingGL4 final {
     GLint UniformLocation;
@@ -57,4 +57,4 @@ private:
     PrimitiveTopologyGL4 primitiveTopology;
 };
 
-} // namespace pomdog::detail::gl4
+} // namespace pomdog::gpu::detail::gl4

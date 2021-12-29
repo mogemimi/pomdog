@@ -2,9 +2,9 @@
 
 #include "pomdog/gpu/sampler_state.h"
 
-namespace pomdog {
+namespace pomdog::gpu {
 
 SamplerState::SamplerState() noexcept = default;
 SamplerState::~SamplerState() = default;
 
-} // namespace pomdog
+} // namespace pomdog::gpu

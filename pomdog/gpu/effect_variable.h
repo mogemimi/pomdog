@@ -10,7 +10,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <string>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog {
+namespace pomdog::gpu {
 
 struct EffectVariable final {
     std::string Name;
@@ -18,4 +18,4 @@ struct EffectVariable final {
     std::uint32_t StartOffset;
 };
 
-} // namespace pomdog
+} // namespace pomdog::gpu

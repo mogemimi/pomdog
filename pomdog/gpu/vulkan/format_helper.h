@@ -5,8 +5,8 @@
 #include "pomdog/gpu/forward_declarations.h"
 #include <vulkan/vulkan.h>
 
-namespace pomdog::detail::vulkan {
+namespace pomdog::gpu::detail::vulkan {
 
 VkCompareOp ToComparisonFunction(ComparisonFunction compareFunction) noexcept;
 
-} // namespace pomdog::detail::vulkan
+} // namespace pomdog::gpu::detail::vulkan

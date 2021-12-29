@@ -24,16 +24,21 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
-
 class AudioEngine;
+} // namespace pomdog
+
+namespace pomdog::gpu {
 class GraphicsDevice;
+} // namespace pomdog::gpu
+
+namespace pomdog {
 
 class POMDOG_EXPORT AssetManager final {
 public:
     AssetManager(
         const std::string& contentDirectory,
         const std::shared_ptr<AudioEngine>& audioEngine,
-        const std::shared_ptr<GraphicsDevice>& graphicsDevice);
+        const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice);
 
     AssetManager(const AssetManager&) = delete;
     AssetManager& operator=(const AssetManager&) = delete;
@@ -101,7 +106,7 @@ public:
     GetAudioEngine() const noexcept;
 
     /// Gets the graphics device for creating graphics resources.
-    [[nodiscard]] std::shared_ptr<GraphicsDevice>
+    [[nodiscard]] std::shared_ptr<gpu::GraphicsDevice>
     GetGraphicsDevice() const noexcept;
 
     /// Gets the full path to the asset.
@@ -111,7 +116,7 @@ public:
 private:
     std::string contentDirectory;
     std::weak_ptr<AudioEngine> audioEngine;
-    std::weak_ptr<GraphicsDevice> graphicsDevice;
+    std::weak_ptr<gpu::GraphicsDevice> graphicsDevice;
     std::unordered_map<std::string, std::any> assets;
 };
 

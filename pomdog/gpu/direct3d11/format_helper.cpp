@@ -3,7 +3,7 @@
 #include "pomdog/gpu/direct3d11/format_helper.h"
 #include "pomdog/gpu/comparison_function.h"
 
-namespace pomdog::detail::direct3d11 {
+namespace pomdog::gpu::detail::direct3d11 {
 
 D3D11_COMPARISON_FUNC ToComparisonFunction(ComparisonFunction compareFunction) noexcept
 {
@@ -28,4 +28,4 @@ D3D11_COMPARISON_FUNC ToComparisonFunction(ComparisonFunction compareFunction) n
     return D3D11_COMPARISON_LESS_EQUAL;
 }
 
-} // namespace pomdog::detail::direct3d11
+} // namespace pomdog::gpu::detail::direct3d11

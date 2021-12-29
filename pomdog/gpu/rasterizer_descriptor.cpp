@@ -2,7 +2,7 @@
 
 #include "pomdog/gpu/rasterizer_descriptor.h"
 
-namespace pomdog {
+namespace pomdog::gpu {
 
 RasterizerDescriptor RasterizerDescriptor::CreateDefault() noexcept
 {
@@ -42,4 +42,4 @@ RasterizerDescriptor RasterizerDescriptor::CreateCullNone() noexcept
     return desc;
 }
 
-} // namespace pomdog
+} // namespace pomdog::gpu

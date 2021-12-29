@@ -5,7 +5,7 @@
 #include "pomdog/gpu/comparison_function.h"
 #include "pomdog/gpu/stencil_operation.h"
 
-namespace pomdog {
+namespace pomdog::gpu {
 
 struct DepthStencilOperation final {
     StencilOperation StencilDepthBufferFail;
@@ -14,4 +14,4 @@ struct DepthStencilOperation final {
     ComparisonFunction StencilFunction;
 };
 
-} // namespace pomdog
+} // namespace pomdog::gpu

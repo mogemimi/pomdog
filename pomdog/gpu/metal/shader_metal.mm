@@ -7,7 +7,7 @@
 #include "pomdog/utility/string_helper.h"
 #import <Metal/Metal.h>
 
-namespace pomdog::detail::metal {
+namespace pomdog::gpu::detail::metal {
 
 ShaderMetal::~ShaderMetal() = default;
 
@@ -93,4 +93,4 @@ id<MTLFunction> ShaderMetal::GetShader() const noexcept
     return shader;
 }
 
-} // namespace pomdog::detail::metal
+} // namespace pomdog::gpu::detail::metal

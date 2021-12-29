@@ -7,7 +7,7 @@
 #include "pomdog/utility/errors.h"
 #import <Metal/MTLTexture.h>
 
-namespace pomdog::detail::metal {
+namespace pomdog::gpu::detail::metal {
 
 class Texture2DMetal final : public Texture2D {
 public:
@@ -45,4 +45,4 @@ private:
     SurfaceFormat format = SurfaceFormat::A8_UNorm;
 };
 
-} // namespace pomdog::detail::metal
+} // namespace pomdog::gpu::detail::metal

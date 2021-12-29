@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace pomdog::detail {
+namespace pomdog::gpu::detail {
 
 enum class BufferBindMode {
     ConstantBuffer,
@@ -10,4 +10,4 @@ enum class BufferBindMode {
     VertexBuffer,
 };
 
-} // namespace pomdog::detail
+} // namespace pomdog::gpu::detail

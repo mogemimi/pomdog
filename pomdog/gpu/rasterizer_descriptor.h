@@ -11,7 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog {
+namespace pomdog::gpu {
 
 struct POMDOG_EXPORT RasterizerDescriptor final {
     /// A constant depth bias applied to a given pixel.
@@ -24,10 +24,10 @@ struct POMDOG_EXPORT RasterizerDescriptor final {
     float SlopeScaledDepthBias;
 
     /// Indicates whether to cull primitives for hidden surface removal.
-    pomdog::CullMode CullMode;
+    pomdog::gpu::CullMode CullMode;
 
     /// Determines the fill mode to use when rendering primitives.
-    pomdog::FillMode FillMode;
+    pomdog::gpu::FillMode FillMode;
 
     /// Enable multisample antialiasing (MSAA).
     bool MultisampleEnable;
@@ -45,4 +45,4 @@ struct POMDOG_EXPORT RasterizerDescriptor final {
     CreateCullNone() noexcept;
 };
 
-} // namespace pomdog
+} // namespace pomdog::gpu

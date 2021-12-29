@@ -7,7 +7,7 @@
 #include "pomdog/utility/errors.h"
 #import <Metal/MTLSampler.h>
 
-namespace pomdog::detail::metal {
+namespace pomdog::gpu::detail::metal {
 
 class SamplerStateMetal final : public SamplerState {
 public:
@@ -25,4 +25,4 @@ private:
     id<MTLSamplerState> samplerState = nullptr;
 };
 
-} // namespace pomdog::detail::metal
+} // namespace pomdog::gpu::detail::metal

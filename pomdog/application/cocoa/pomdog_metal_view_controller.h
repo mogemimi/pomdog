@@ -9,13 +9,14 @@
 #include <memory>
 
 namespace pomdog {
-
 class Game;
 class GameHost;
+} // namespace pomdog
+
+namespace pomdog::gpu {
 class GraphicsDevice;
 class GraphicsCommandQueue;
-
-} // namespace pomdog
+} // namespace pomdog::gpu
 
 @interface PomdogMetalViewController : NSViewController <MTKViewDelegate>
 

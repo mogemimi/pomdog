@@ -22,7 +22,7 @@
 #include "pomdog/utility/errors.h"
 #import <Metal/Metal.h>
 
-namespace pomdog::detail::metal {
+namespace pomdog::gpu::detail::metal {
 
 std::unique_ptr<Error>
 GraphicsDeviceMetal::Initialize(const PresentationParameters& presentationParametersIn) noexcept
@@ -349,7 +349,7 @@ GraphicsDeviceMetal::CreateSamplerState(const SamplerDescriptor& descriptor) noe
     return std::make_tuple(std::move(samplerState), nullptr);
 }
 
-std::tuple<std::shared_ptr<Texture2D>, std::unique_ptr<Error>>
+std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
 GraphicsDeviceMetal::CreateTexture2D(
     std::int32_t width,
     std::int32_t height) noexcept
@@ -361,7 +361,7 @@ GraphicsDeviceMetal::CreateTexture2D(
         SurfaceFormat::R8G8B8A8_UNorm);
 }
 
-std::tuple<std::shared_ptr<Texture2D>, std::unique_ptr<Error>>
+std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
 GraphicsDeviceMetal::CreateTexture2D(
     std::int32_t width,
     std::int32_t height,
@@ -402,4 +402,4 @@ void GraphicsDeviceMetal::ClientSizeChanged(int width, int height) noexcept
     presentationParameters.BackBufferHeight = height;
 }
 
-} // namespace pomdog::detail::metal
+} // namespace pomdog::gpu::detail::metal

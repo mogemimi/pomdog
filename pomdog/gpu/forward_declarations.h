@@ -8,18 +8,17 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail {
+namespace pomdog::gpu::detail {
 
 class NativeBuffer;
 
 class ShaderBytecode;
 struct ShaderCompileOptions;
 
-} // namespace pomdog::detail
+} // namespace pomdog::gpu::detail
 
-namespace pomdog {
+namespace pomdog::gpu {
 
-// Classes
 class ConstantBuffer;
 class DepthStencilBuffer;
 class EffectReflection;
@@ -36,7 +35,6 @@ class Texture2D;
 class VertexBuffer;
 class Viewport;
 
-// Structures
 struct BlendDescriptor;
 struct DepthStencilDescriptor;
 struct DepthStencilOperation;
@@ -46,13 +44,11 @@ struct EffectVariable;
 struct InputElement;
 struct InputLayoutDescriptor;
 struct PipelineStateDescriptor;
-struct PresentationParameters;
 struct RasterizerDescriptor;
 struct RenderPass;
 struct RenderTargetBlendDescriptor;
 struct SamplerDescriptor;
 
-// Enumerations
 enum class BlendFactor : std::uint8_t;
 enum class BlendOperation : std::uint8_t;
 enum class BufferUsage : std::uint8_t;
@@ -70,5 +66,61 @@ enum class StencilOperation : std::uint8_t;
 enum class SurfaceFormat : std::uint8_t;
 enum class TextureAddressMode : std::uint8_t;
 enum class TextureFilter : std::uint8_t;
+
+} // namespace pomdog::gpu
+
+namespace pomdog {
+
+// Classes
+using pomdog::gpu::ConstantBuffer;
+using pomdog::gpu::DepthStencilBuffer;
+using pomdog::gpu::EffectReflection;
+using pomdog::gpu::GraphicsCommandList;
+using pomdog::gpu::GraphicsCommandQueue;
+using pomdog::gpu::GraphicsDevice;
+using pomdog::gpu::IndexBuffer;
+using pomdog::gpu::PipelineState;
+using pomdog::gpu::RenderTarget2D;
+using pomdog::gpu::SamplerState;
+using pomdog::gpu::Shader;
+using pomdog::gpu::Texture;
+using pomdog::gpu::Texture2D;
+using pomdog::gpu::VertexBuffer;
+using pomdog::gpu::Viewport;
+
+// Structures
+using pomdog::gpu::BlendDescriptor;
+using pomdog::gpu::DepthStencilDescriptor;
+using pomdog::gpu::DepthStencilOperation;
+using pomdog::gpu::EffectAnnotation;
+using pomdog::gpu::EffectConstantDescription;
+using pomdog::gpu::EffectVariable;
+using pomdog::gpu::InputElement;
+using pomdog::gpu::InputLayoutDescriptor;
+using pomdog::gpu::PipelineStateDescriptor;
+using pomdog::gpu::RasterizerDescriptor;
+using pomdog::gpu::RenderPass;
+using pomdog::gpu::RenderTargetBlendDescriptor;
+using pomdog::gpu::SamplerDescriptor;
+struct PresentationParameters;
+
+// Enumerations
+using pomdog::gpu::BlendFactor;
+using pomdog::gpu::BlendOperation;
+using pomdog::gpu::BufferUsage;
+using pomdog::gpu::ComparisonFunction;
+using pomdog::gpu::CullMode;
+using pomdog::gpu::EffectVariableClass;
+using pomdog::gpu::EffectVariableType;
+using pomdog::gpu::FillMode;
+using pomdog::gpu::IndexElementSize;
+using pomdog::gpu::InputClassification;
+using pomdog::gpu::InputElementFormat;
+using pomdog::gpu::PrimitiveTopology;
+using pomdog::gpu::ShaderLanguage;
+using pomdog::gpu::StencilOperation;
+using pomdog::gpu::SurfaceFormat;
+using pomdog::gpu::TextureAddressMode;
+using pomdog::gpu::TextureFilter;
 
 } // namespace pomdog

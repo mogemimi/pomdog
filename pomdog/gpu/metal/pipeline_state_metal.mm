@@ -12,7 +12,7 @@
 #include "pomdog/utility/assert.h"
 #import <Metal/MTLVertexDescriptor.h>
 
-namespace pomdog::detail::metal {
+namespace pomdog::gpu::detail::metal {
 namespace {
 
 MTLPrimitiveType ToPrimitiveType(PrimitiveTopology primitiveTopology) noexcept
@@ -364,4 +364,4 @@ MTLPrimitiveType PipelineStateMetal::GetPrimitiveType() const noexcept
     return primitiveType;
 }
 
-} // namespace pomdog::detail::metal
+} // namespace pomdog::gpu::detail::metal

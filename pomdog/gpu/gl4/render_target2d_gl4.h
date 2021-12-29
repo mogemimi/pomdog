@@ -15,9 +15,9 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <optional>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail::gl4 {
+namespace pomdog::gpu::detail::gl4 {
 
-using RenderBuffer2DGL4 = Tagged<GLuint, RenderTarget2D>;
+using RenderBuffer2DGL4 = pomdog::detail::Tagged<GLuint, RenderTarget2D>;
 
 class RenderTarget2DGL4 final : public RenderTarget2D {
 public:
@@ -66,4 +66,4 @@ private:
     bool multiSampleEnabled = false;
 };
 
-} // namespace pomdog::detail::gl4
+} // namespace pomdog::gpu::detail::gl4

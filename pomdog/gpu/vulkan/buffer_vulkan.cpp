@@ -7,7 +7,7 @@
 #include <optional>
 #include <utility>
 
-namespace pomdog::detail::vulkan {
+namespace pomdog::gpu::detail::vulkan {
 namespace {
 
 VkBufferUsageFlags ToVkBufferUsageFlags(BufferBindMode bindMode) noexcept
@@ -307,4 +307,4 @@ VkBuffer BufferVulkan::GetBuffer() const
     return nativeBuffer;
 }
 
-} // namespace pomdog::detail::vulkan
+} // namespace pomdog::gpu::detail::vulkan

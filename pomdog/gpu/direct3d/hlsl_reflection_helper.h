@@ -5,7 +5,7 @@
 #include "pomdog/gpu/direct3d/prerequisites_direct3d.h"
 #include "pomdog/gpu/forward_declarations.h"
 
-namespace pomdog::detail::direct3d {
+namespace pomdog::gpu::detail::direct3d {
 
 struct HLSLReflectionHelper final {
     static EffectVariableType
@@ -15,4 +15,4 @@ struct HLSLReflectionHelper final {
     ToEffectVariableClass(D3D_SHADER_VARIABLE_CLASS variableClass) noexcept;
 };
 
-} // namespace pomdog::detail::direct3d
+} // namespace pomdog::gpu::detail::direct3d

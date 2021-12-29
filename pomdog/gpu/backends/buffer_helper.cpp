@@ -6,7 +6,7 @@
 #include "pomdog/gpu/input_element_format.h"
 #include "pomdog/utility/assert.h"
 
-namespace pomdog::detail::BufferHelper {
+namespace pomdog::gpu::detail::BufferHelper {
 
 std::size_t ToIndexElementOffsetBytes(IndexElementSize elementSize) noexcept
 {
@@ -39,4 +39,4 @@ std::uint16_t ToByteSize(InputElementFormat format) noexcept
     POMDOG_UNREACHABLE("Unsupported input element format");
 }
 
-} // namespace pomdog::detail::BufferHelper
+} // namespace pomdog::gpu::detail::BufferHelper

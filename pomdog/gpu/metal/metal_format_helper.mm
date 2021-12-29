@@ -5,7 +5,7 @@
 #include "pomdog/gpu/comparison_function.h"
 #include "pomdog/gpu/surface_format.h"
 
-namespace pomdog::detail::metal {
+namespace pomdog::gpu::detail::metal {
 
 MTLPixelFormat ToPixelFormat(SurfaceFormat format) noexcept
 {
@@ -75,4 +75,4 @@ MTLCompareFunction ToComparisonFunction(ComparisonFunction compareFunction) noex
     POMDOG_UNREACHABLE("Unsupported comparison function");
 }
 
-} // namespace pomdog::detail::metal
+} // namespace pomdog::gpu::detail::metal

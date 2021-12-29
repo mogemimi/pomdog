@@ -2,8 +2,8 @@
 
 #include "pomdog/gpu/texture.h"
 
-namespace pomdog {
+namespace pomdog::gpu {
 
 Texture::~Texture() = default;
 
-} // namespace pomdog
+} // namespace pomdog::gpu

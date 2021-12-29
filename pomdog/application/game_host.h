@@ -10,18 +10,23 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
-
 class AssetManager;
 class AudioEngine;
 class GameClock;
 class Gamepad;
 class GameWindow;
-class GraphicsCommandQueue;
-class GraphicsDevice;
 class HTTPClient;
 class IOService;
 class Keyboard;
 class Mouse;
+} // namespace pomdog
+
+namespace pomdog::gpu {
+class GraphicsCommandQueue;
+class GraphicsDevice;
+} // namespace pomdog::gpu
+
+namespace pomdog {
 
 /// Base interface for platform-specific hosts, thats conduct the game lifecycle.
 ///
@@ -47,11 +52,11 @@ public:
     GetClock() noexcept = 0;
 
     /// @return Associated to this host GraphicsDevice with selected video backend.
-    [[nodiscard]] virtual std::shared_ptr<GraphicsDevice>
+    [[nodiscard]] virtual std::shared_ptr<gpu::GraphicsDevice>
     GetGraphicsDevice() noexcept = 0;
 
     /// @return Associated to this host GraphicsCommandQueue.
-    [[nodiscard]] virtual std::shared_ptr<GraphicsCommandQueue>
+    [[nodiscard]] virtual std::shared_ptr<gpu::GraphicsCommandQueue>
     GetGraphicsCommandQueue() noexcept = 0;
 
     /// @return Associated to this host AudioEngine with selected audio backend.

@@ -11,7 +11,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail::gl4 {
+namespace pomdog::gpu::detail::gl4 {
 
 class GraphicsDeviceGL4 final : public GraphicsDevice {
 public:
@@ -113,13 +113,13 @@ public:
     CreateSamplerState(const SamplerDescriptor& descriptor) noexcept override;
 
     /// Creates a 2D texture.
-    std::tuple<std::shared_ptr<Texture2D>, std::unique_ptr<Error>>
+    std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
     CreateTexture2D(
         std::int32_t width,
         std::int32_t height) noexcept override;
 
     /// Creates a 2D texture.
-    std::tuple<std::shared_ptr<Texture2D>, std::unique_ptr<Error>>
+    std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
     CreateTexture2D(
         std::int32_t width,
         std::int32_t height,
@@ -132,4 +132,4 @@ private:
     PresentationParameters presentationParameters;
 };
 
-} // namespace pomdog::detail::gl4
+} // namespace pomdog::gpu::detail::gl4

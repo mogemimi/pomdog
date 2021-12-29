@@ -17,7 +17,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog {
+namespace pomdog::gpu {
 
 using RenderTargetAndClearColor = std::tuple<std::shared_ptr<RenderTarget2D>, std::optional<Vector4>>;
 
@@ -41,4 +41,4 @@ struct POMDOG_EXPORT RenderPass final {
     std::optional<std::uint8_t> ClearStencil;
 };
 
-} // namespace pomdog
+} // namespace pomdog::gpu

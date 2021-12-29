@@ -5,7 +5,7 @@
 #include "pomdog/gpu/graphics_device.h"
 #include <memory>
 
-namespace pomdog::detail::vulkan {
+namespace pomdog::gpu::detail::vulkan {
 
 class GraphicsDeviceVulkan final : public GraphicsDevice {
 public:
@@ -102,13 +102,13 @@ public:
     CreateSamplerState(const SamplerDescriptor& descriptor) noexcept override;
 
     /// Creates a 2D texture.
-    std::tuple<std::shared_ptr<Texture2D>, std::unique_ptr<Error>>
+    std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
     CreateTexture2D(
         std::int32_t width,
         std::int32_t height) noexcept override;
 
     /// Creates a 2D texture.
-    std::tuple<std::shared_ptr<Texture2D>, std::unique_ptr<Error>>
+    std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
     CreateTexture2D(
         std::int32_t width,
         std::int32_t height,
@@ -120,4 +120,4 @@ private:
     std::unique_ptr<Impl> impl;
 };
 
-} // namespace pomdog::detail::vulkan
+} // namespace pomdog::gpu::detail::vulkan

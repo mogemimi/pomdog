@@ -4,10 +4,10 @@
 
 #include "pomdog/gpu/forward_declarations.h"
 
-namespace pomdog::detail {
+namespace pomdog::gpu::detail {
 
 struct SurfaceFormatHelper final {
     static int ToBytesPerBlock(SurfaceFormat format) noexcept;
 };
 
-} // namespace pomdog::detail
+} // namespace pomdog::gpu::detail
