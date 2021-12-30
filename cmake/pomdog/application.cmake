@@ -1,5 +1,6 @@
 source_group(application        REGULAR_EXPRESSION "pomdog/application/*")
 source_group(application/cocoa  REGULAR_EXPRESSION "pomdog/application/cocoa/*")
+source_group(application/linux  REGULAR_EXPRESSION "pomdog/application/linux/*")
 source_group(application/win32  REGULAR_EXPRESSION "pomdog/application/win32/*")
 source_group(application/x11    REGULAR_EXPRESSION "pomdog/application/x11/*")
 
@@ -38,9 +39,13 @@ target_sources(pomdog_static PRIVATE
     >
 
     $<$<PLATFORM_ID:Linux>:
+        # NOTE: platform/linux
+        ${POMDOG_SRC_DIR}/application/linux/game_host_linux.cpp
+        ${POMDOG_SRC_DIR}/application/linux/game_host_linux.h
+    >
+
+    $<$<PLATFORM_ID:Linux>:
         # NOTE: platform/x11
-        ${POMDOG_SRC_DIR}/application/x11/game_host_x11.cpp
-        ${POMDOG_SRC_DIR}/application/x11/game_host_x11.h
         ${POMDOG_SRC_DIR}/application/x11/game_window_x11.cpp
         ${POMDOG_SRC_DIR}/application/x11/game_window_x11.h
         ${POMDOG_SRC_DIR}/application/x11/x11_atom_cache.h

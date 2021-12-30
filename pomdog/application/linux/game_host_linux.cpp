@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/application/x11/game_host_x11.h"
+#include "pomdog/application/linux/game_host_linux.h"
 #include "pomdog/application/game.h"
 #include "pomdog/audio/openal/audio_engine_al.h"
 #include "pomdog/chrono/detail/game_clock_impl.h"
@@ -31,8 +31,13 @@ using pomdog::detail::NativeGamepad;
 using pomdog::gpu::detail::gl4::GraphicsContextGL4;
 using pomdog::gpu::detail::gl4::GraphicsDeviceGL4;
 using pomdog::detail::openal::AudioEngineAL;
+using pomdog::detail::x11::X11Context;
+using pomdog::detail::x11::KeyboardX11;
+using pomdog::detail::x11::MouseX11;
+using pomdog::detail::x11::OpenGLContextX11;
+using pomdog::detail::x11::GameWindowX11;
 
-namespace pomdog::detail::x11 {
+namespace pomdog::detail::linux {
 namespace {
 
 [[nodiscard]] bool
@@ -187,9 +192,9 @@ ChooseFramebufferConfig(
 
 } // namespace
 
-// MARK: - GameHostX11
+// MARK: - GameHostLinux
 
-class GameHostX11::Impl final {
+class GameHostLinux::Impl final {
 public:
     ~Impl();
 
@@ -229,7 +234,7 @@ public:
 };
 
 std::unique_ptr<Error>
-GameHostX11::Impl::Initialize(const gpu::PresentationParameters& presentationParameters)
+GameHostLinux::Impl::Initialize(const gpu::PresentationParameters& presentationParameters)
 {
     backBufferSurfaceFormat = presentationParameters.BackBufferFormat;
     backBufferDepthStencilFormat = presentationParameters.DepthStencilFormat;
@@ -328,7 +333,7 @@ GameHostX11::Impl::Initialize(const gpu::PresentationParameters& presentationPar
     return nullptr;
 }
 
-GameHostX11::Impl::~Impl()
+GameHostLinux::Impl::~Impl()
 {
     httpClient.reset();
     if (auto err = ioService_->Shutdown(); err != nullptr) {
@@ -346,7 +351,7 @@ GameHostX11::Impl::~Impl()
     window.reset();
 }
 
-void GameHostX11::Impl::MessagePump()
+void GameHostLinux::Impl::MessagePump()
 {
     ::XLockDisplay(x11Context->Display);
     const auto eventCount = XPending(x11Context->Display);
@@ -362,7 +367,7 @@ void GameHostX11::Impl::MessagePump()
     }
 }
 
-void GameHostX11::Impl::ProcessEvent(::XEvent& event)
+void GameHostLinux::Impl::ProcessEvent(::XEvent& event)
 {
     if (event.xany.window != window->GetNativeWindow()) {
         return;
@@ -406,7 +411,7 @@ void GameHostX11::Impl::ProcessEvent(::XEvent& event)
     window->ProcessEvent(event);
 }
 
-void GameHostX11::Impl::Run(Game& game)
+void GameHostLinux::Impl::Run(Game& game)
 {
     while (!exitRequest) {
         clock_->Tick();
@@ -430,12 +435,12 @@ void GameHostX11::Impl::Run(Game& game)
     }
 }
 
-void GameHostX11::Impl::Exit()
+void GameHostLinux::Impl::Exit()
 {
     exitRequest = true;
 }
 
-void GameHostX11::Impl::RenderFrame(Game& game)
+void GameHostLinux::Impl::RenderFrame(Game& game)
 {
     if (!window || window->IsMinimized()) {
         // skip rendering
@@ -445,66 +450,66 @@ void GameHostX11::Impl::RenderFrame(Game& game)
     game.Draw();
 }
 
-// MARK: - GameHostX11
+// MARK: - GameHostLinux
 
-GameHostX11::GameHostX11() noexcept
+GameHostLinux::GameHostLinux() noexcept
     : impl(std::make_unique<Impl>())
 {
 }
 
-GameHostX11::~GameHostX11() = default;
+GameHostLinux::~GameHostLinux() = default;
 
 std::unique_ptr<Error>
-GameHostX11::Initialize(const gpu::PresentationParameters& presentationParameters)
+GameHostLinux::Initialize(const gpu::PresentationParameters& presentationParameters)
 {
     POMDOG_ASSERT(impl != nullptr);
     return impl->Initialize(presentationParameters);
 }
 
-void GameHostX11::Run(Game& game)
+void GameHostLinux::Run(Game& game)
 {
     POMDOG_ASSERT(impl);
     impl->Run(game);
 }
 
-void GameHostX11::Exit()
+void GameHostLinux::Exit()
 {
     POMDOG_ASSERT(impl);
     impl->Exit();
 }
 
-std::shared_ptr<GameWindow> GameHostX11::GetWindow() noexcept
+std::shared_ptr<GameWindow> GameHostLinux::GetWindow() noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->window;
 }
 
-std::shared_ptr<GameClock> GameHostX11::GetClock() noexcept
+std::shared_ptr<GameClock> GameHostLinux::GetClock() noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->clock_;
 }
 
-std::shared_ptr<gpu::GraphicsDevice> GameHostX11::GetGraphicsDevice() noexcept
+std::shared_ptr<gpu::GraphicsDevice> GameHostLinux::GetGraphicsDevice() noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->graphicsDevice;
 }
 
-std::shared_ptr<gpu::CommandQueue> GameHostX11::GetCommandQueue() noexcept
+std::shared_ptr<gpu::CommandQueue> GameHostLinux::GetCommandQueue() noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->graphicsCommandQueue;
 }
 
-std::shared_ptr<AudioEngine> GameHostX11::GetAudioEngine() noexcept
+std::shared_ptr<AudioEngine> GameHostLinux::GetAudioEngine() noexcept
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->audioEngine);
     return impl->audioEngine;
 }
 
-std::shared_ptr<AssetManager> GameHostX11::GetAssetManager() noexcept
+std::shared_ptr<AssetManager> GameHostLinux::GetAssetManager() noexcept
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->assetManager);
@@ -513,7 +518,7 @@ std::shared_ptr<AssetManager> GameHostX11::GetAssetManager() noexcept
     return shared;
 }
 
-std::shared_ptr<Keyboard> GameHostX11::GetKeyboard() noexcept
+std::shared_ptr<Keyboard> GameHostLinux::GetKeyboard() noexcept
 {
     POMDOG_ASSERT(impl);
     auto gameHost = shared_from_this();
@@ -521,7 +526,7 @@ std::shared_ptr<Keyboard> GameHostX11::GetKeyboard() noexcept
     return shared;
 }
 
-std::shared_ptr<Mouse> GameHostX11::GetMouse() noexcept
+std::shared_ptr<Mouse> GameHostLinux::GetMouse() noexcept
 {
     POMDOG_ASSERT(impl);
     auto gameHost = shared_from_this();
@@ -529,7 +534,7 @@ std::shared_ptr<Mouse> GameHostX11::GetMouse() noexcept
     return shared;
 }
 
-std::shared_ptr<Gamepad> GameHostX11::GetGamepad() noexcept
+std::shared_ptr<Gamepad> GameHostLinux::GetGamepad() noexcept
 {
     POMDOG_ASSERT(impl);
     auto gameHost = shared_from_this();
@@ -537,7 +542,7 @@ std::shared_ptr<Gamepad> GameHostX11::GetGamepad() noexcept
     return shared;
 }
 
-std::shared_ptr<IOService> GameHostX11::GetIOService() noexcept
+std::shared_ptr<IOService> GameHostLinux::GetIOService() noexcept
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->ioService_);
@@ -546,7 +551,7 @@ std::shared_ptr<IOService> GameHostX11::GetIOService() noexcept
     return shared;
 }
 
-std::shared_ptr<HTTPClient> GameHostX11::GetHTTPClient() noexcept
+std::shared_ptr<HTTPClient> GameHostLinux::GetHTTPClient() noexcept
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->httpClient);
@@ -555,4 +560,4 @@ std::shared_ptr<HTTPClient> GameHostX11::GetHTTPClient() noexcept
     return shared;
 }
 
-} // namespace pomdog::detail::x11
+} // namespace pomdog::detail::linux

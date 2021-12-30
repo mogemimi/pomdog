@@ -20,13 +20,13 @@ namespace pomdog {
 class Game;
 } // namespace pomdog
 
-namespace pomdog::detail::x11 {
+namespace pomdog::detail::linux {
 
-class GameHostX11 final : public GameHost {
+class GameHostLinux final : public GameHost {
 public:
-    GameHostX11() noexcept;
+    GameHostLinux() noexcept;
 
-    ~GameHostX11() override;
+    ~GameHostLinux() override;
 
     [[nodiscard]] std::unique_ptr<Error>
     Initialize(const gpu::PresentationParameters& presentationParameters);
@@ -73,4 +73,4 @@ private:
     std::unique_ptr<Impl> impl;
 };
 
-} // namespace pomdog::detail::x11
+} // namespace pomdog::detail::linux

@@ -2,7 +2,7 @@
 
 #include "pomdog/platform/x11/bootstrap_x11.h"
 #include "pomdog/application/game.h"
-#include "pomdog/application/x11/game_host_x11.h"
+#include "pomdog/application/linux/game_host_linux.h"
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/utility/errors.h"
 #include <utility>
@@ -45,8 +45,6 @@ void Bootstrap::OnError(std::function<void(std::unique_ptr<Error>&& err)> onErro
 void Bootstrap::Run(
     const std::function<std::unique_ptr<Game>(const std::shared_ptr<GameHost>&)>& createApp)
 {
-    using pomdog::detail::x11::GameHostX11;
-
     gpu::PresentationParameters presentationParameters;
     presentationParameters.BackBufferHeight = backBufferHeight;
     presentationParameters.BackBufferWidth = backBufferWidth;
@@ -56,19 +54,16 @@ void Bootstrap::Run(
     presentationParameters.MultiSampleCount = 1;
     presentationParameters.IsFullScreen = isFullScreen;
 
-    std::shared_ptr<GameHostX11> gameHost;
-    std::unique_ptr<Game> game;
-
-    gameHost = std::make_shared<GameHostX11>();
+    auto gameHost = std::make_shared<pomdog::detail::linux::GameHostLinux>();
     if (auto err = gameHost->Initialize(presentationParameters); err != nullptr) {
         if (onError != nullptr) {
-            onError(errors::Wrap(std::move(err), "failed to initialize GameHostX11"));
+            onError(errors::Wrap(std::move(err), "failed to initialize GameHostLinux"));
         }
         return;
     }
 
     POMDOG_ASSERT(createApp);
-    game = createApp(gameHost);
+    auto game = createApp(gameHost);
     if (game == nullptr) {
         if (onError != nullptr) {
             onError(errors::New("game must be != nullptr"));
