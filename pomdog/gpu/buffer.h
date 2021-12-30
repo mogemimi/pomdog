@@ -8,15 +8,15 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstddef>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::gpu::detail {
+namespace pomdog::gpu {
 
-class NativeBuffer {
+class Buffer {
 public:
-    NativeBuffer() = default;
-    NativeBuffer(const NativeBuffer&) = delete;
-    NativeBuffer& operator=(const NativeBuffer&) = delete;
+    Buffer() noexcept;
+    Buffer(const Buffer&) = delete;
+    Buffer& operator=(const Buffer&) = delete;
 
-    virtual ~NativeBuffer();
+    virtual ~Buffer();
 
     virtual void GetData(
         std::size_t offsetInBytes,
@@ -29,4 +29,4 @@ public:
         std::size_t sizeInBytes) = 0;
 };
 
-} // namespace pomdog::gpu::detail
+} // namespace pomdog::gpu

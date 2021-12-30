@@ -508,7 +508,7 @@ void ApplyInputElements(
 
         POMDOG_ASSERT(vertexBuffer);
 
-        auto vertexBufferGL4 = dynamic_cast<VertexBufferGL4*>(vertexBuffer->GetNativeBuffer());
+        auto vertexBufferGL4 = dynamic_cast<VertexBufferGL4*>(vertexBuffer->GetBuffer());
         POMDOG_ASSERT(vertexBufferGL4 != nullptr);
 
         // NOTE: The following code is the same as

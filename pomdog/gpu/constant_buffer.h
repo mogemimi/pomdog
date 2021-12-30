@@ -24,7 +24,7 @@ public:
     ConstantBuffer& operator=(const ConstantBuffer&) = delete;
 
     ConstantBuffer(
-        std::unique_ptr<detail::NativeBuffer>&& nativeBuffer,
+        std::unique_ptr<Buffer>&& nativeBuffer,
         std::size_t sizeInBytes,
         BufferUsage bufferUsage);
 
@@ -68,10 +68,10 @@ public:
     [[nodiscard]] BufferUsage GetBufferUsage() const noexcept;
 
     /// Gets the pointer of the native constant buffer resource.
-    [[nodiscard]] detail::NativeBuffer* GetNativeBuffer();
+    [[nodiscard]] Buffer* GetBuffer();
 
 private:
-    std::unique_ptr<detail::NativeBuffer> nativeBuffer;
+    std::unique_ptr<Buffer> nativeBuffer;
     std::uint32_t sizeInBytes;
     BufferUsage bufferUsage;
 };

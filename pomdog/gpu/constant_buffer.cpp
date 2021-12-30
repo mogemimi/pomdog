@@ -3,7 +3,7 @@
 #include "pomdog/gpu/constant_buffer.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/gpu/backends/buffer_bind_mode.h"
-#include "pomdog/gpu/backends/native_buffer.h"
+#include "pomdog/gpu/buffer.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::gpu {
 
 ConstantBuffer::ConstantBuffer(
-    std::unique_ptr<detail::NativeBuffer>&& nativeBufferIn,
+    std::unique_ptr<Buffer>&& nativeBufferIn,
     std::size_t sizeInBytesIn,
     BufferUsage bufferUsageIn)
     : nativeBuffer(std::move(nativeBufferIn))
@@ -57,7 +57,7 @@ BufferUsage ConstantBuffer::GetBufferUsage() const noexcept
     return bufferUsage;
 }
 
-detail::NativeBuffer* ConstantBuffer::GetNativeBuffer()
+Buffer* ConstantBuffer::GetBuffer()
 {
     POMDOG_ASSERT(nativeBuffer != nullptr);
     return nativeBuffer.get();

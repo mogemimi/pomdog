@@ -65,7 +65,7 @@ public:
 
     void SetConstantBuffer(
         int index,
-        const std::shared_ptr<NativeBuffer>& constantBuffer,
+        const std::shared_ptr<Buffer>& constantBuffer,
         std::size_t offset,
         std::size_t sizeInBytes) override;
 

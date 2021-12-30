@@ -21,7 +21,7 @@ public:
     VertexBuffer(VertexBuffer&&) = default;
 
     VertexBuffer(
-        std::unique_ptr<detail::NativeBuffer>&& nativeBuffer,
+        std::unique_ptr<Buffer>&& nativeBuffer,
         std::size_t vertexCount,
         std::size_t strideInBytes,
         BufferUsage bufferUsage);
@@ -54,10 +54,10 @@ public:
         std::size_t strideInBytes);
 
     /// Gets the pointer of the native vertex buffer resource.
-    [[nodiscard]] detail::NativeBuffer* GetNativeBuffer();
+    [[nodiscard]] Buffer* GetBuffer();
 
 private:
-    std::unique_ptr<detail::NativeBuffer> nativeBuffer;
+    std::unique_ptr<Buffer> nativeBuffer;
     std::uint32_t vertexCount;
     std::uint32_t strideInBytes;
     BufferUsage bufferUsage;

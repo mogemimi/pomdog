@@ -22,7 +22,7 @@ public:
     IndexBuffer(IndexBuffer&&) = default;
 
     IndexBuffer(
-        std::unique_ptr<detail::NativeBuffer>&& nativeBuffer,
+        std::unique_ptr<Buffer>&& nativeBuffer,
         IndexElementSize elementSize,
         std::size_t indexCount,
         BufferUsage bufferUsage);
@@ -54,10 +54,10 @@ public:
         std::size_t elementCount);
 
     /// Gets the pointer of the native index buffer resource.
-    [[nodiscard]] detail::NativeBuffer* GetNativeBuffer();
+    [[nodiscard]] Buffer* GetBuffer();
 
 private:
-    std::unique_ptr<detail::NativeBuffer> nativeBuffer;
+    std::unique_ptr<Buffer> nativeBuffer;
     std::uint32_t indexCount;
     IndexElementSize elementSize;
     BufferUsage bufferUsage;

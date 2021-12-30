@@ -15,6 +15,8 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/gpu/blend_factor.h
     ${POMDOG_SRC_DIR}/gpu/blend_operation.h
     ${POMDOG_SRC_DIR}/gpu/buffer_usage.h
+    ${POMDOG_SRC_DIR}/gpu/buffer.cpp
+    ${POMDOG_SRC_DIR}/gpu/buffer.h
     ${POMDOG_SRC_DIR}/gpu/command_list.cpp
     ${POMDOG_SRC_DIR}/gpu/command_list.h
     ${POMDOG_SRC_DIR}/gpu/command_queue.cpp
@@ -98,8 +100,6 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/gpu/backends/command_queue_immediate.cpp
     ${POMDOG_SRC_DIR}/gpu/backends/command_queue_immediate.h
     ${POMDOG_SRC_DIR}/gpu/backends/graphics_capabilities.h
-    ${POMDOG_SRC_DIR}/gpu/backends/native_buffer.cpp
-    ${POMDOG_SRC_DIR}/gpu/backends/native_buffer.h
     ${POMDOG_SRC_DIR}/gpu/backends/native_graphics_context.cpp
     ${POMDOG_SRC_DIR}/gpu/backends/native_graphics_context.h
     ${POMDOG_SRC_DIR}/gpu/backends/shader_bytecode.h

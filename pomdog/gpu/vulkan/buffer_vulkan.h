@@ -3,7 +3,7 @@
 #pragma once
 
 #include "pomdog/gpu/backends/buffer_bind_mode.h"
-#include "pomdog/gpu/backends/native_buffer.h"
+#include "pomdog/gpu/buffer.h"
 #include "pomdog/gpu/forward_declarations.h"
 #include <vulkan/vulkan.h>
 #include <cstddef>
@@ -12,7 +12,7 @@
 
 namespace pomdog::gpu::detail::vulkan {
 
-class BufferVulkan final : public NativeBuffer {
+class BufferVulkan final : public Buffer {
 public:
     BufferVulkan(
         ::VkDevice device,

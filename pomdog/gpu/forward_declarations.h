@@ -9,16 +9,13 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu::detail {
-
-class NativeBuffer;
-
 class ShaderBytecode;
 struct ShaderCompileOptions;
-
 } // namespace pomdog::gpu::detail
 
 namespace pomdog::gpu {
 
+class Buffer;
 class CommandList;
 class CommandQueue;
 class ConstantBuffer;

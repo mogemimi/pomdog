@@ -3,7 +3,7 @@
 #include "pomdog/gpu/vertex_buffer.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/gpu/backends/buffer_bind_mode.h"
-#include "pomdog/gpu/backends/native_buffer.h"
+#include "pomdog/gpu/buffer.h"
 #include "pomdog/gpu/buffer_usage.h"
 #include "pomdog/utility/assert.h"
 
@@ -14,7 +14,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::gpu {
 
 VertexBuffer::VertexBuffer(
-    std::unique_ptr<detail::NativeBuffer>&& nativeBufferIn,
+    std::unique_ptr<Buffer>&& nativeBufferIn,
     std::size_t vertexCountIn,
     std::size_t strideInBytesIn,
     BufferUsage bufferUsageIn)
@@ -77,7 +77,7 @@ void VertexBuffer::SetData(
         elementCount * strideInBytesIn);
 }
 
-detail::NativeBuffer* VertexBuffer::GetNativeBuffer()
+Buffer* VertexBuffer::GetBuffer()
 {
     POMDOG_ASSERT(nativeBuffer != nullptr);
     return nativeBuffer.get();

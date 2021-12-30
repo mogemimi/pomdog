@@ -129,7 +129,7 @@ struct SetPipelineStateCommand final : public GraphicsCommand {
 };
 
 struct SetConstantBufferCommand final : public GraphicsCommand {
-    std::shared_ptr<NativeBuffer> constantBuffer;
+    std::shared_ptr<Buffer> constantBuffer;
     int slotIndex;
     std::size_t offset;
     std::size_t sizeInBytes;
@@ -365,7 +365,7 @@ void CommandListImmediate::SetConstantBuffer(
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(constantBuffer);
 
-    std::shared_ptr<NativeBuffer> nativeBuffer(constantBuffer, constantBuffer->GetNativeBuffer());
+    std::shared_ptr<Buffer> nativeBuffer{constantBuffer, constantBuffer->GetBuffer()};
 
     auto command = std::make_unique<SetConstantBufferCommand>();
     command->commandType = GraphicsCommandType::SetConstantBufferCommand;
@@ -385,7 +385,7 @@ void CommandListImmediate::SetConstantBuffer(
     POMDOG_ASSERT(constantBuffer);
     static_assert(std::is_unsigned_v<decltype(offset)>, "offset >= 0");
 
-    std::shared_ptr<NativeBuffer> nativeBuffer(constantBuffer, constantBuffer->GetNativeBuffer());
+    std::shared_ptr<Buffer> nativeBuffer{constantBuffer, constantBuffer->GetBuffer()};
 
     auto command = std::make_unique<SetConstantBufferCommand>();
     command->commandType = GraphicsCommandType::SetConstantBufferCommand;

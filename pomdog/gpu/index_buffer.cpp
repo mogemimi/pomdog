@@ -4,7 +4,7 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/gpu/backends/buffer_bind_mode.h"
 #include "pomdog/gpu/backends/buffer_helper.h"
-#include "pomdog/gpu/backends/native_buffer.h"
+#include "pomdog/gpu/buffer.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -14,7 +14,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::gpu {
 
 IndexBuffer::IndexBuffer(
-    std::unique_ptr<detail::NativeBuffer>&& nativeBufferIn,
+    std::unique_ptr<Buffer>&& nativeBufferIn,
     IndexElementSize elementSizeIn,
     std::size_t indexCountIn,
     BufferUsage bufferUsageIn)
@@ -75,7 +75,7 @@ void IndexBuffer::SetData(
         detail::BufferHelper::ToIndexElementOffsetBytes(elementSize) * elementCountIn);
 }
 
-detail::NativeBuffer* IndexBuffer::GetNativeBuffer()
+Buffer* IndexBuffer::GetBuffer()
 {
     POMDOG_ASSERT(nativeBuffer != nullptr);
     return nativeBuffer.get();

@@ -383,7 +383,7 @@ void CommandListVulkan::SetPipelineState(const std::shared_ptr<NativePipelineSta
 
 void CommandListVulkan::SetConstantBuffer(
     int index,
-    const std::shared_ptr<NativeBuffer>& constantBuffer,
+    const std::shared_ptr<Buffer>& constantBuffer,
     std::size_t offset,
     std::size_t sizeInBytes)
 {

@@ -352,7 +352,7 @@ GraphicsDeviceVulkan::CreateShader(
         impl->device, shaderBytecode, compileOptions);
 }
 
-std::unique_ptr<NativeBuffer>
+std::unique_ptr<Buffer>
 GraphicsDeviceVulkan::CreateBuffer(
     std::size_t sizeInBytes, BufferUsage bufferUsage, BufferBindMode bindMode)
 {
@@ -362,7 +362,7 @@ GraphicsDeviceVulkan::CreateBuffer(
         impl->device, impl->physicalDevice, sizeInBytes, bufferUsage, bindMode);
 }
 
-std::unique_ptr<NativeBuffer>
+std::unique_ptr<Buffer>
 GraphicsDeviceVulkan::CreateBuffer(
     const void* sourceData,
     std::size_t sizeInBytes,

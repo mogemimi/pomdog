@@ -327,12 +327,12 @@ void GraphicsContextMetal::SetVertexBuffer(
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(vertexBuffer != nullptr);
-    POMDOG_ASSERT(vertexBuffer->GetNativeBuffer() != nullptr);
+    POMDOG_ASSERT(vertexBuffer->GetBuffer() != nullptr);
     POMDOG_ASSERT((offset % 256) == 0);
 
-    auto nativeVertexBuffer = static_cast<BufferMetal*>(vertexBuffer->GetNativeBuffer());
+    auto nativeVertexBuffer = static_cast<BufferMetal*>(vertexBuffer->GetBuffer());
     POMDOG_ASSERT(nativeVertexBuffer != nullptr);
-    POMDOG_ASSERT(nativeVertexBuffer == dynamic_cast<BufferMetal*>(vertexBuffer->GetNativeBuffer()));
+    POMDOG_ASSERT(nativeVertexBuffer == dynamic_cast<BufferMetal*>(vertexBuffer->GetBuffer()));
     POMDOG_ASSERT(nativeVertexBuffer->GetBuffer() != nullptr);
 
     const auto slotIndex = index + VertexBufferSlotOffset;
@@ -347,9 +347,9 @@ void GraphicsContextMetal::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& in
 {
     POMDOG_ASSERT(indexBufferIn != nullptr);
 
-    auto nativeIndexBuffer = static_cast<BufferMetal*>(indexBufferIn->GetNativeBuffer());
+    auto nativeIndexBuffer = static_cast<BufferMetal*>(indexBufferIn->GetBuffer());
     POMDOG_ASSERT(nativeIndexBuffer != nullptr);
-    POMDOG_ASSERT(nativeIndexBuffer == dynamic_cast<BufferMetal*>(indexBufferIn->GetNativeBuffer()));
+    POMDOG_ASSERT(nativeIndexBuffer == dynamic_cast<BufferMetal*>(indexBufferIn->GetBuffer()));
 
     this->indexType = ToIndexType(indexBufferIn->GetElementSize());
     this->indexBuffer = nativeIndexBuffer->GetBuffer();
@@ -372,7 +372,7 @@ void GraphicsContextMetal::SetPipelineState(const std::shared_ptr<PipelineState>
 
 void GraphicsContextMetal::SetConstantBuffer(
     int index,
-    const std::shared_ptr<NativeBuffer>& constantBufferIn,
+    const std::shared_ptr<Buffer>& constantBufferIn,
     std::size_t offset,
     [[maybe_unused]] std::size_t sizeInBytes)
 {

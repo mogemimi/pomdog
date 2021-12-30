@@ -3,14 +3,14 @@
 #pragma once
 
 #include "pomdog/gpu/backends/buffer_bind_mode.h"
-#include "pomdog/gpu/backends/native_buffer.h"
+#include "pomdog/gpu/buffer.h"
 #include "pomdog/gpu/forward_declarations.h"
 #include "pomdog/utility/errors.h"
 #import <Metal/MTLBuffer.h>
 
 namespace pomdog::gpu::detail::metal {
 
-class BufferMetal final : public NativeBuffer {
+class BufferMetal final : public Buffer {
 public:
     [[nodiscard]] std::unique_ptr<Error>
     Initialize(

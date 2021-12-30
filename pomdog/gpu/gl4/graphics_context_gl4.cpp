@@ -513,7 +513,7 @@ void GraphicsContextGL4::DrawIndexed(
 
     // Bind index buffer
     POMDOG_ASSERT(indexBuffer);
-    auto indexBufferGL = dynamic_cast<IndexBufferGL4*>(indexBuffer->GetNativeBuffer());
+    auto indexBufferGL = dynamic_cast<IndexBufferGL4*>(indexBuffer->GetBuffer());
     POMDOG_ASSERT(indexBufferGL != nullptr);
     indexBufferGL->BindBuffer();
 
@@ -588,7 +588,7 @@ void GraphicsContextGL4::DrawIndexedInstanced(
 
     // Bind index buffer
     POMDOG_ASSERT(indexBuffer);
-    auto indexBufferGL = dynamic_cast<IndexBufferGL4*>(indexBuffer->GetNativeBuffer());
+    auto indexBufferGL = dynamic_cast<IndexBufferGL4*>(indexBuffer->GetBuffer());
     POMDOG_ASSERT(indexBufferGL != nullptr);
     indexBufferGL->BindBuffer();
 
@@ -704,7 +704,7 @@ void GraphicsContextGL4::SetPipelineState(const std::shared_ptr<PipelineState>& 
 
 void GraphicsContextGL4::SetConstantBuffer(
     int index,
-    const std::shared_ptr<NativeBuffer>& constantBufferIn,
+    const std::shared_ptr<Buffer>& constantBufferIn,
     std::size_t offset,
     std::size_t sizeInBytes)
 {

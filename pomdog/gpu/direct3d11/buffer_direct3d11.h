@@ -3,7 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/gpu/backends/native_buffer.h"
+#include "pomdog/gpu/buffer.h"
 #include "pomdog/gpu/direct3d11/prerequisites_direct3d11.h"
 #include "pomdog/gpu/forward_declarations.h"
 #include "pomdog/utility/errors.h"
@@ -14,7 +14,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu::detail::direct3d11 {
 
-class BufferDirect3D11 final : public NativeBuffer {
+class BufferDirect3D11 final : public Buffer {
 public:
     [[nodiscard]] std::unique_ptr<Error>
     Initialize(

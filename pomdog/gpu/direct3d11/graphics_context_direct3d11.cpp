@@ -354,9 +354,9 @@ void GraphicsContextDirect3D11::SetIndexBuffer(const std::shared_ptr<IndexBuffer
     POMDOG_ASSERT(deferredContext != nullptr);
     POMDOG_ASSERT(indexBuffer != nullptr);
 
-    auto nativeBuffer = static_cast<BufferDirect3D11*>(indexBuffer->GetNativeBuffer());
+    auto nativeBuffer = static_cast<BufferDirect3D11*>(indexBuffer->GetBuffer());
     POMDOG_ASSERT(nativeBuffer != nullptr);
-    POMDOG_ASSERT(nativeBuffer == dynamic_cast<BufferDirect3D11*>(indexBuffer->GetNativeBuffer()));
+    POMDOG_ASSERT(nativeBuffer == dynamic_cast<BufferDirect3D11*>(indexBuffer->GetBuffer()));
 
     deferredContext->IASetIndexBuffer(
         nativeBuffer->GetBuffer(),
@@ -423,11 +423,11 @@ void GraphicsContextDirect3D11::SetVertexBuffer(
     std::size_t offset)
 {
     POMDOG_ASSERT(vertexBuffer != nullptr);
-    POMDOG_ASSERT(vertexBuffer->GetNativeBuffer() != nullptr);
+    POMDOG_ASSERT(vertexBuffer->GetBuffer() != nullptr);
 
-    auto nativeBuffer = static_cast<BufferDirect3D11*>(vertexBuffer->GetNativeBuffer());
+    auto nativeBuffer = static_cast<BufferDirect3D11*>(vertexBuffer->GetBuffer());
     POMDOG_ASSERT(nativeBuffer != nullptr);
-    POMDOG_ASSERT(nativeBuffer == dynamic_cast<BufferDirect3D11*>(vertexBuffer->GetNativeBuffer()));
+    POMDOG_ASSERT(nativeBuffer == dynamic_cast<BufferDirect3D11*>(vertexBuffer->GetBuffer()));
 
     const auto buffer = nativeBuffer->GetBuffer();
     const auto stride = static_cast<UINT>(vertexBuffer->GetStrideBytes());
@@ -456,7 +456,7 @@ void GraphicsContextDirect3D11::SetPipelineState(const std::shared_ptr<PipelineS
 
 void GraphicsContextDirect3D11::SetConstantBuffer(
     int index,
-    const std::shared_ptr<NativeBuffer>& constantBufferIn,
+    const std::shared_ptr<Buffer>& constantBufferIn,
     std::size_t offset,
     std::size_t sizeInBytes)
 {

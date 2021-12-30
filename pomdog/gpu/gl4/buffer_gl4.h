@@ -3,7 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/gpu/backends/native_buffer.h"
+#include "pomdog/gpu/buffer.h"
 #include "pomdog/gpu/forward_declarations.h"
 #include "pomdog/gpu/gl4/opengl_prerequisites.h"
 #include "pomdog/utility/errors.h"
@@ -19,7 +19,7 @@ template <class Tag>
 using BufferObjectGL4 = pomdog::detail::Tagged<GLuint, Tag>;
 
 template <class Tag>
-class BufferGL4 final : public NativeBuffer {
+class BufferGL4 final : public Buffer {
 public:
     ~BufferGL4() override;
 
