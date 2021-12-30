@@ -42,4 +42,15 @@ RasterizerDescriptor RasterizerDescriptor::CreateCullNone() noexcept
     return desc;
 }
 
+RasterizerDescriptor RasterizerDescriptor::CreateCullNoneWireframe() noexcept
+{
+    RasterizerDescriptor desc;
+    desc.CullMode = CullMode::None;
+    desc.FillMode = FillMode::Wireframe;
+    desc.DepthBias = 0;
+    desc.SlopeScaledDepthBias = 0;
+    desc.MultisampleEnable = false;
+    return desc;
+}
+
 } // namespace pomdog::gpu

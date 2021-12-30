@@ -205,10 +205,10 @@ MTLCullMode ToCullMode(CullMode cullMode) noexcept
 MTLTriangleFillMode ToFillMode(FillMode fillMode) noexcept
 {
     switch (fillMode) {
-    case FillMode::WireFrame:
-        return MTLTriangleFillModeLines;
     case FillMode::Solid:
         return MTLTriangleFillModeFill;
+    case FillMode::Wireframe:
+        return MTLTriangleFillModeLines;
     }
     POMDOG_UNREACHABLE("Unsupported fill mode");
 }

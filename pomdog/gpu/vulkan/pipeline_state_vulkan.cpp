@@ -159,10 +159,10 @@ VkCullModeFlags ToVkCullModeFlags(CullMode cullMode) noexcept
 VkPolygonMode ToVkPolygonMode(FillMode fillMode) noexcept
 {
     switch (fillMode) {
-    case FillMode::WireFrame:
-        return VK_POLYGON_MODE_LINE;
     case FillMode::Solid:
         return VK_POLYGON_MODE_FILL;
+    case FillMode::Wireframe:
+        return VK_POLYGON_MODE_LINE;
     }
     return VK_POLYGON_MODE_FILL;
 }

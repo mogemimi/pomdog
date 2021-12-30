@@ -136,10 +136,10 @@ D3D11_CULL_MODE ToCullMode(CullMode cullMode) noexcept
 D3D11_FILL_MODE ToFillMode(FillMode fillMode) noexcept
 {
     switch (fillMode) {
-    case FillMode::WireFrame:
-        return D3D11_FILL_WIREFRAME;
     case FillMode::Solid:
         return D3D11_FILL_SOLID;
+    case FillMode::Wireframe:
+        return D3D11_FILL_WIREFRAME;
     }
     return D3D11_FILL_SOLID;
 }

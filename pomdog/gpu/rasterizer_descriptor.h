@@ -43,6 +43,9 @@ struct POMDOG_EXPORT RasterizerDescriptor final {
 
     [[nodiscard]] static RasterizerDescriptor
     CreateCullNone() noexcept;
+
+    [[nodiscard]] static RasterizerDescriptor
+    CreateCullNoneWireframe() noexcept;
 };
 
 } // namespace pomdog::gpu
