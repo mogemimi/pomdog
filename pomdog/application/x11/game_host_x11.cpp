@@ -214,7 +214,7 @@ public:
     std::shared_ptr<OpenGLContextX11> openGLContext;
     std::shared_ptr<GraphicsDeviceGL4> graphicsDevice;
     std::shared_ptr<GraphicsContextGL4> graphicsContext;
-    std::shared_ptr<gpu::GraphicsCommandQueue> graphicsCommandQueue;
+    std::shared_ptr<gpu::CommandQueue> graphicsCommandQueue;
     std::shared_ptr<AudioEngineAL> audioEngine;
     std::unique_ptr<AssetManager> assetManager;
     std::unique_ptr<KeyboardX11> keyboard;
@@ -296,7 +296,7 @@ GameHostX11::Impl::Initialize(const PresentationParameters& presentationParamete
         return errors::Wrap(std::move(err), "failed to initialize GraphicsContextGL4");
     }
 
-    graphicsCommandQueue = std::make_shared<gpu::detail::GraphicsCommandQueueImmediate>(graphicsContext);
+    graphicsCommandQueue = std::make_shared<gpu::detail::CommandQueueImmediate>(graphicsContext);
 
     // NOTE: Create audio engine.
     audioEngine = std::make_shared<AudioEngineAL>();
@@ -491,7 +491,7 @@ std::shared_ptr<gpu::GraphicsDevice> GameHostX11::GetGraphicsDevice() noexcept
     return impl->graphicsDevice;
 }
 
-std::shared_ptr<gpu::GraphicsCommandQueue> GameHostX11::GetGraphicsCommandQueue() noexcept
+std::shared_ptr<gpu::CommandQueue> GameHostX11::GetCommandQueue() noexcept
 {
     POMDOG_ASSERT(impl);
     return impl->graphicsCommandQueue;

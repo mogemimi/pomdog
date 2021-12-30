@@ -8,7 +8,7 @@
 
 namespace pomdog::gpu::detail::vulkan {
 
-class GraphicsCommandQueueVulkan final : public GraphicsCommandQueue {
+class CommandQueueVulkan final : public CommandQueue {
 public:
     void Reset();
 

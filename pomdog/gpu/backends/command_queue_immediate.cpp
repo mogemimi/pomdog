@@ -8,18 +8,18 @@
 
 namespace pomdog::gpu::detail {
 
-GraphicsCommandQueueImmediate::GraphicsCommandQueueImmediate(
+CommandQueueImmediate::CommandQueueImmediate(
     const std::shared_ptr<NativeGraphicsContext>& graphicsContextIn)
     : graphicsContext(graphicsContextIn)
 {
 }
 
-void GraphicsCommandQueueImmediate::Reset()
+void CommandQueueImmediate::Reset()
 {
     commandLists.clear();
 }
 
-void GraphicsCommandQueueImmediate::PushbackCommandList(
+void CommandQueueImmediate::PushbackCommandList(
     const std::shared_ptr<CommandList>& commandList)
 {
     POMDOG_ASSERT(commandList);
@@ -31,18 +31,18 @@ void GraphicsCommandQueueImmediate::PushbackCommandList(
     }
 }
 
-void GraphicsCommandQueueImmediate::ExecuteCommandLists()
+void CommandQueueImmediate::ExecuteCommandLists()
 {
     graphicsContext->ExecuteCommandLists(commandLists);
 }
 
-void GraphicsCommandQueueImmediate::Present()
+void CommandQueueImmediate::Present()
 {
     POMDOG_ASSERT(graphicsContext);
     graphicsContext->Present();
 }
 
-std::size_t GraphicsCommandQueueImmediate::GetCommandCount() const noexcept
+std::size_t CommandQueueImmediate::GetCommandCount() const noexcept
 {
     std::size_t count = 0;
     for (auto& commandList : commandLists) {

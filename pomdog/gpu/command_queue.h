@@ -13,15 +13,13 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu {
 
-class CommandList;
-
-class POMDOG_EXPORT GraphicsCommandQueue {
+class POMDOG_EXPORT CommandQueue {
 public:
-    GraphicsCommandQueue() noexcept;
-    GraphicsCommandQueue(const GraphicsCommandQueue&) = delete;
-    GraphicsCommandQueue& operator=(const GraphicsCommandQueue&) = delete;
+    CommandQueue() noexcept;
+    CommandQueue(const CommandQueue&) = delete;
+    CommandQueue& operator=(const CommandQueue&) = delete;
 
-    virtual ~GraphicsCommandQueue();
+    virtual ~CommandQueue();
 
     [[nodiscard]] virtual std::size_t GetCommandCount() const noexcept = 0;
 

@@ -94,8 +94,8 @@ public:
     [[nodiscard]] std::shared_ptr<gpu::GraphicsDevice>
     GetGraphicsDevice() noexcept;
 
-    [[nodiscard]] std::shared_ptr<gpu::GraphicsCommandQueue>
-    GetGraphicsCommandQueue() noexcept;
+    [[nodiscard]] std::shared_ptr<gpu::CommandQueue>
+    GetCommandQueue() noexcept;
 
     [[nodiscard]] std::shared_ptr<AssetManager>
     GetAssetManager(std::shared_ptr<GameHost>&& gameHost) noexcept;
@@ -141,7 +141,7 @@ private:
     std::shared_ptr<GameWindowCocoa> window;
     std::shared_ptr<GraphicsDeviceMetal> graphicsDevice;
     std::shared_ptr<GraphicsContextMetal> graphicsContext;
-    std::shared_ptr<gpu::GraphicsCommandQueue> graphicsCommandQueue;
+    std::shared_ptr<gpu::CommandQueue> graphicsCommandQueue;
     std::shared_ptr<AudioEngineAL> audioEngine;
     std::unique_ptr<AssetManager> assetManager;
     std::shared_ptr<KeyboardCocoa> keyboard;
@@ -205,7 +205,7 @@ GameHostMetal::Impl::Initialize(
     graphicsContext->SetMTKView(metalView);
 
     // NOTE: Create graphics command queue
-    graphicsCommandQueue = std::make_shared<gpu::detail::GraphicsCommandQueueImmediate>(graphicsContext);
+    graphicsCommandQueue = std::make_shared<gpu::detail::CommandQueueImmediate>(graphicsContext);
 
     // NOTE: Create audio engine.
     audioEngine = std::make_shared<AudioEngineAL>();
@@ -448,8 +448,8 @@ GameHostMetal::Impl::GetGraphicsDevice() noexcept
     return graphicsDevice;
 }
 
-std::shared_ptr<gpu::GraphicsCommandQueue>
-GameHostMetal::Impl::GetGraphicsCommandQueue() noexcept
+std::shared_ptr<gpu::CommandQueue>
+GameHostMetal::Impl::GetCommandQueue() noexcept
 {
     return graphicsCommandQueue;
 }
@@ -566,10 +566,10 @@ std::shared_ptr<gpu::GraphicsDevice> GameHostMetal::GetGraphicsDevice() noexcept
     return impl->GetGraphicsDevice();
 }
 
-std::shared_ptr<gpu::GraphicsCommandQueue> GameHostMetal::GetGraphicsCommandQueue() noexcept
+std::shared_ptr<gpu::CommandQueue> GameHostMetal::GetCommandQueue() noexcept
 {
     POMDOG_ASSERT(impl);
-    return impl->GetGraphicsCommandQueue();
+    return impl->GetCommandQueue();
 }
 
 std::shared_ptr<AudioEngine> GameHostMetal::GetAudioEngine() noexcept

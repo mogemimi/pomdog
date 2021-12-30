@@ -16,13 +16,13 @@ namespace pomdog::gpu::detail {
 class CommandListImmediate;
 class NativeGraphicsContext;
 
-class GraphicsCommandQueueImmediate final : public GraphicsCommandQueue {
+class CommandQueueImmediate final : public CommandQueue {
 public:
-    GraphicsCommandQueueImmediate() = delete;
-    GraphicsCommandQueueImmediate(const GraphicsCommandQueueImmediate&) = delete;
-    GraphicsCommandQueueImmediate& operator=(const GraphicsCommandQueueImmediate&) = delete;
+    CommandQueueImmediate() = delete;
+    CommandQueueImmediate(const CommandQueueImmediate&) = delete;
+    CommandQueueImmediate& operator=(const CommandQueueImmediate&) = delete;
 
-    explicit GraphicsCommandQueueImmediate(
+    explicit CommandQueueImmediate(
         const std::shared_ptr<NativeGraphicsContext>& graphicsContext);
 
     std::size_t GetCommandCount() const noexcept override;

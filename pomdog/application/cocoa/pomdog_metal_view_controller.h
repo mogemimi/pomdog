@@ -15,7 +15,7 @@ class GameHost;
 
 namespace pomdog::gpu {
 class GraphicsDevice;
-class GraphicsCommandQueue;
+class CommandQueue;
 } // namespace pomdog::gpu
 
 @interface PomdogMetalViewController : NSViewController <MTKViewDelegate>

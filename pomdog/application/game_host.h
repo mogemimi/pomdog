@@ -22,7 +22,7 @@ class Mouse;
 } // namespace pomdog
 
 namespace pomdog::gpu {
-class GraphicsCommandQueue;
+class CommandQueue;
 class GraphicsDevice;
 } // namespace pomdog::gpu
 
@@ -55,9 +55,9 @@ public:
     [[nodiscard]] virtual std::shared_ptr<gpu::GraphicsDevice>
     GetGraphicsDevice() noexcept = 0;
 
-    /// @return Associated to this host GraphicsCommandQueue.
-    [[nodiscard]] virtual std::shared_ptr<gpu::GraphicsCommandQueue>
-    GetGraphicsCommandQueue() noexcept = 0;
+    /// @return Associated to this host CommandQueue.
+    [[nodiscard]] virtual std::shared_ptr<gpu::CommandQueue>
+    GetCommandQueue() noexcept = 0;
 
     /// @return Associated to this host AudioEngine with selected audio backend.
     [[nodiscard]] virtual std::shared_ptr<AudioEngine>

@@ -20,10 +20,10 @@ struct ShaderCompileOptions;
 namespace pomdog::gpu {
 
 class CommandList;
+class CommandQueue;
 class ConstantBuffer;
 class DepthStencilBuffer;
 class EffectReflection;
-class GraphicsCommandQueue;
 class GraphicsDevice;
 class IndexBuffer;
 class PipelineState;
@@ -75,8 +75,6 @@ namespace pomdog {
 using pomdog::gpu::ConstantBuffer;
 using pomdog::gpu::DepthStencilBuffer;
 using pomdog::gpu::EffectReflection;
-using pomdog::gpu::CommandList;
-using pomdog::gpu::GraphicsCommandQueue;
 using pomdog::gpu::GraphicsDevice;
 using pomdog::gpu::IndexBuffer;
 using pomdog::gpu::PipelineState;

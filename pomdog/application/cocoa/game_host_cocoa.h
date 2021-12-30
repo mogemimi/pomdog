@@ -53,8 +53,8 @@ public:
     [[nodiscard]] std::shared_ptr<gpu::GraphicsDevice>
     GetGraphicsDevice() noexcept override;
 
-    [[nodiscard]] std::shared_ptr<gpu::GraphicsCommandQueue>
-    GetGraphicsCommandQueue() noexcept override;
+    [[nodiscard]] std::shared_ptr<gpu::CommandQueue>
+    GetCommandQueue() noexcept override;
 
     [[nodiscard]] std::shared_ptr<AudioEngine>
     GetAudioEngine() noexcept override;

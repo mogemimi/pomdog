@@ -70,8 +70,8 @@ public:
     [[nodiscard]] std::shared_ptr<gpu::GraphicsDevice>
     GetGraphicsDevice() noexcept;
 
-    [[nodiscard]] std::shared_ptr<gpu::GraphicsCommandQueue>
-    GetGraphicsCommandQueue() noexcept;
+    [[nodiscard]] std::shared_ptr<gpu::CommandQueue>
+    GetCommandQueue() noexcept;
 
     [[nodiscard]] std::shared_ptr<AssetManager>
     GetAssetManager(std::shared_ptr<GameHost>&& gameHost) noexcept;
@@ -130,7 +130,7 @@ private:
     std::shared_ptr<OpenGLContextCocoa> openGLContext;
     std::shared_ptr<GraphicsDeviceGL4> graphicsDevice;
     std::shared_ptr<GraphicsContextGL4> graphicsContext;
-    std::shared_ptr<gpu::GraphicsCommandQueue> graphicsCommandQueue;
+    std::shared_ptr<gpu::CommandQueue> graphicsCommandQueue;
     std::shared_ptr<AudioEngineAL> audioEngine;
     std::unique_ptr<AssetManager> assetManager;
     std::shared_ptr<KeyboardCocoa> keyboard;
@@ -203,7 +203,7 @@ GameHostCocoa::Impl::Initialize(
         return errors::Wrap(std::move(err), "GraphicsContextGL4::Initialize() failed.");
     }
 
-    graphicsCommandQueue = std::make_shared<gpu::detail::GraphicsCommandQueueImmediate>(graphicsContext);
+    graphicsCommandQueue = std::make_shared<gpu::detail::CommandQueueImmediate>(graphicsContext);
     openGLContext->Unlock();
 
     // NOTE: Create audio engine.
@@ -531,8 +531,8 @@ GameHostCocoa::Impl::GetGraphicsDevice() noexcept
     return graphicsDevice;
 }
 
-std::shared_ptr<gpu::GraphicsCommandQueue>
-GameHostCocoa::Impl::GetGraphicsCommandQueue() noexcept
+std::shared_ptr<gpu::CommandQueue>
+GameHostCocoa::Impl::GetCommandQueue() noexcept
 {
     return graphicsCommandQueue;
 }
@@ -637,10 +637,10 @@ std::shared_ptr<gpu::GraphicsDevice> GameHostCocoa::GetGraphicsDevice() noexcept
     return impl->GetGraphicsDevice();
 }
 
-std::shared_ptr<gpu::GraphicsCommandQueue> GameHostCocoa::GetGraphicsCommandQueue() noexcept
+std::shared_ptr<gpu::CommandQueue> GameHostCocoa::GetCommandQueue() noexcept
 {
     POMDOG_ASSERT(impl);
-    return impl->GetGraphicsCommandQueue();
+    return impl->GetCommandQueue();
 }
 
 std::shared_ptr<AudioEngine> GameHostCocoa::GetAudioEngine() noexcept
