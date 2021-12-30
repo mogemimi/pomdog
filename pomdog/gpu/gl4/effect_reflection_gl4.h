@@ -3,9 +3,9 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/gpu/effect_reflection.h"
 #include "pomdog/gpu/gl4/opengl_prerequisites.h"
 #include "pomdog/gpu/gl4/typesafe_gl4.h"
+#include "pomdog/gpu/shader_reflections/effect_reflection.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN

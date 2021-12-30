@@ -1,8 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/gpu/direct3d/hlsl_reflection_helper.h"
-#include "pomdog/gpu/effect_variable_class.h"
-#include "pomdog/gpu/effect_variable_type.h"
+#include "pomdog/gpu/shader_reflections/effect_variable_class.h"
+#include "pomdog/gpu/shader_reflections/effect_variable_type.h"
 
 namespace pomdog::gpu::detail::direct3d {
 

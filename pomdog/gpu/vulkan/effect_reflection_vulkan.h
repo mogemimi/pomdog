@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "pomdog/gpu/effect_reflection.h"
 #include "pomdog/gpu/forward_declarations.h"
+#include "pomdog/gpu/shader_reflections/effect_reflection.h"
 #include <vulkan/vulkan.h>
 
 namespace pomdog::gpu::detail::vulkan {

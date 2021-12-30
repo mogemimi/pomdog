@@ -3,11 +3,11 @@
 #include "pomdog/content/asset_builders/pipeline_state_builder.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/content/asset_manager.h"
-#include "pomdog/gpu/effect_reflection.h"
 #include "pomdog/gpu/graphics_device.h"
-#include "pomdog/gpu/pipeline_state.h"
 #include "pomdog/gpu/pipeline_descriptor.h"
+#include "pomdog/gpu/pipeline_state.h"
 #include "pomdog/gpu/shader.h"
+#include "pomdog/gpu/shader_reflections/effect_reflection.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
 

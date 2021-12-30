@@ -5,7 +5,7 @@
 #include "pomdog/gpu/backends/shader_bytecode.h"
 #include "pomdog/gpu/direct3d/hlsl_reflection_helper.h"
 #include "pomdog/gpu/direct3d/prerequisites_direct3d.h"
-#include "pomdog/gpu/effect_constant_description.h"
+#include "pomdog/gpu/shader_reflections/effect_constant_description.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/exception.h"
 

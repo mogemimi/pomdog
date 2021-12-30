@@ -6,6 +6,7 @@ source_group(gpu/direct3d11         REGULAR_EXPRESSION "pomdog/gpu/direct3d11/*"
 source_group(gpu/gl4                REGULAR_EXPRESSION "pomdog/gpu/gl4/*")
 source_group(gpu/metal              REGULAR_EXPRESSION "pomdog/gpu/metal/*")
 source_group(gpu/shader_compilers   REGULAR_EXPRESSION "pomdog/gpu/shader_compilers/*")
+source_group(gpu/shader_reflections REGULAR_EXPRESSION "pomdog/gpu/shader_reflections/*")
 source_group(gpu/vulkan             REGULAR_EXPRESSION "pomdog/gpu/vulkan/*")
 
 target_sources(pomdog_static PRIVATE
@@ -30,13 +31,6 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/gpu/depth_stencil_descriptor.cpp
     ${POMDOG_SRC_DIR}/gpu/depth_stencil_descriptor.h
     ${POMDOG_SRC_DIR}/gpu/depth_stencil_operation.h
-    ${POMDOG_SRC_DIR}/gpu/effect_annotation.h
-    ${POMDOG_SRC_DIR}/gpu/effect_constant_description.h
-    ${POMDOG_SRC_DIR}/gpu/effect_reflection.cpp
-    ${POMDOG_SRC_DIR}/gpu/effect_reflection.h
-    ${POMDOG_SRC_DIR}/gpu/effect_variable_class.h
-    ${POMDOG_SRC_DIR}/gpu/effect_variable_type.h
-    ${POMDOG_SRC_DIR}/gpu/effect_variable.h
     ${POMDOG_SRC_DIR}/gpu/fill_mode.h
     ${POMDOG_SRC_DIR}/gpu/forward_declarations.h
     ${POMDOG_SRC_DIR}/gpu/graphics_device.cpp
@@ -90,6 +84,15 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/gpu/shader_compilers/hlsl_compiler.h
     ${POMDOG_SRC_DIR}/gpu/shader_compilers/metal_compiler.cpp
     ${POMDOG_SRC_DIR}/gpu/shader_compilers/metal_compiler.h
+
+    # NOTE: gpu/shader_reflections
+    ${POMDOG_SRC_DIR}/gpu/shader_reflections/effect_annotation.h
+    ${POMDOG_SRC_DIR}/gpu/shader_reflections/effect_constant_description.h
+    ${POMDOG_SRC_DIR}/gpu/shader_reflections/effect_reflection.cpp
+    ${POMDOG_SRC_DIR}/gpu/shader_reflections/effect_reflection.h
+    ${POMDOG_SRC_DIR}/gpu/shader_reflections/effect_variable_class.h
+    ${POMDOG_SRC_DIR}/gpu/shader_reflections/effect_variable_type.h
+    ${POMDOG_SRC_DIR}/gpu/shader_reflections/effect_variable.h
 
     # NOTE: gpu/backends
     ${POMDOG_SRC_DIR}/gpu/backends/buffer_bind_mode.h

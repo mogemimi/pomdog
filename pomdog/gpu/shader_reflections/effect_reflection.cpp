@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/gpu/effect_reflection.h"
+#include "pomdog/gpu/shader_reflections/effect_reflection.h"
 
 namespace pomdog::gpu {
 

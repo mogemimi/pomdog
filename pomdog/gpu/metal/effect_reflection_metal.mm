@@ -1,7 +1,7 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/gpu/metal/effect_reflection_metal.h"
-#include "pomdog/gpu/effect_constant_description.h"
+#include "pomdog/gpu/shader_reflections/effect_constant_description.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/exception.h"
 
