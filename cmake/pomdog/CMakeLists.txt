@@ -233,7 +233,6 @@ target_compile_options(pomdog_static PRIVATE
 
         # FIXME: Remove the following `-Wno-...` flags.
         -Wno-float-equal
-        -Wno-global-constructors
         -Wno-sign-conversion
         -Wno-switch-enum
         -Wno-undefined-func-template

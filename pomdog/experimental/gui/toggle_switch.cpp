@@ -10,13 +10,6 @@
 namespace pomdog::gui {
 namespace {
 
-const Color toggleOnInnerColor = {162, 122, 16, 255};
-const Color toggleOnThumbColor = {252, 252, 250, 255};
-const Color toggleOffInnerColor = {160, 160, 160, 255};
-const Color toggleOffThumbColor = {81, 81, 81, 255};
-const Color disabledInnerColor = {81, 81, 81, 255};
-const Color disabledThumbColor = {137, 137, 137, 255};
-
 constexpr float thumbRadius = 7.0f;
 constexpr float thumbPadding = 2.0f;
 constexpr int segments = 12;
@@ -113,6 +106,13 @@ void ToggleSwitch::UpdateAnimation(const Duration& frameDuration)
 
 void ToggleSwitch::Draw(DrawingContext& drawingContext)
 {
+    const Color toggleOnInnerColor = {162, 122, 16, 255};
+    const Color toggleOnThumbColor = {252, 252, 250, 255};
+    const Color toggleOffInnerColor = {160, 160, 160, 255};
+    const Color toggleOffThumbColor = {81, 81, 81, 255};
+    const Color disabledInnerColor = {81, 81, 81, 255};
+    const Color disabledThumbColor = {137, 137, 137, 255};
+
     auto globalPos = UIHelper::ProjectToWorldSpace(GetPosition(), drawingContext.GetCurrentTransform());
     auto primitiveBatch = drawingContext.GetPrimitiveBatch();
 
