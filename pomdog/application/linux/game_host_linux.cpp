@@ -15,8 +15,7 @@
 #include "pomdog/gpu/gl4/graphics_device_gl4.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/presentation_parameters.h"
-#include "pomdog/input/backends/native_gamepad.h"
-#include "pomdog/input/x11/gamepad_factory.h"
+#include "pomdog/input/linux/gamepad_linux.h"
 #include "pomdog/input/x11/keyboard_x11.h"
 #include "pomdog/logging/log.h"
 #include "pomdog/network/http_client.h"
@@ -268,7 +267,7 @@ GameHostLinux::Initialize(const gpu::PresentationParameters& presentationParamet
     }
 
     keyboard_ = std::make_unique<x11::KeyboardX11>(x11Context_->Display);
-    gamepad_ = detail::x11::CreateGamepad();
+    gamepad_ = std::make_unique<linux::GamepadLinux>();
 
     auto [resourceDir, resourceDirErr] = FileSystem::GetResourceDirectoryPath();
     if (resourceDirErr != nullptr) {
@@ -441,7 +440,6 @@ std::shared_ptr<AssetManager> GameHostLinux::GetAssetManager() noexcept
 
 std::shared_ptr<Keyboard> GameHostLinux::GetKeyboard() noexcept
 {
-    POMDOG_ASSERT(impl);
     auto gameHost = shared_from_this();
     std::shared_ptr<Keyboard> shared{std::move(gameHost), keyboard_.get()};
     return shared;

@@ -8,7 +8,6 @@
 #include "pomdog/application/win32/game_window_win32.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/gpu/presentation_parameters.h"
-#include "pomdog/input/directinput/gamepad_directinput.h"
 #include "pomdog/logging/log.h"
 #include "pomdog/utility/errors.h"
 
@@ -17,7 +16,6 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 using pomdog::detail::SystemEvent;
-using pomdog::detail::DirectInput::GamepadDirectInput;
 
 namespace pomdog::win32 {
 
@@ -114,20 +112,12 @@ void Bootstrap::Run(
         return;
     }
 
-    auto gamepad = std::make_shared<GamepadDirectInput>();
-    if (auto err = gamepad->Initialize(hInstance, gameWindow->GetNativeWindowHandle()); err != nullptr) {
-        if (onError != nullptr) {
-            onError(errors::Wrap(std::move(err), "GamepadDirectInput::Initialize() failed"));
-        }
-        return;
-    }
-
     auto gameHost = std::make_shared<GameHostWin32>();
 
     if (auto err = gameHost->Initialize(
             gameWindow,
+            hInstance,
             eventQueue,
-            gamepad,
             presentationParameters,
             useOpenGL);
         err != nullptr) {

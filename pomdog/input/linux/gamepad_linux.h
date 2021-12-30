@@ -3,7 +3,6 @@
 #pragma once
 
 #include "pomdog/input/backends/gamepad_mappings.h"
-#include "pomdog/input/backends/native_gamepad.h"
 #include "pomdog/input/gamepad.h"
 #include "pomdog/input/gamepad_capabilities.h"
 #include "pomdog/input/gamepad_state.h"
@@ -40,9 +39,9 @@ public:
     bool PollEvents();
 };
 
-class GamepadLinux final : public NativeGamepad {
+class GamepadLinux final : public Gamepad {
 public:
-    GamepadLinux();
+    GamepadLinux() noexcept;
 
     ~GamepadLinux() override;
 
@@ -50,9 +49,9 @@ public:
 
     GamepadState GetState(PlayerIndex index) const override;
 
-    void EnumerateDevices() override;
+    void EnumerateDevices();
 
-    void PollEvents() override;
+    void PollEvents();
 
 private:
     std::array<GamepadDevice, 4> gamepads;

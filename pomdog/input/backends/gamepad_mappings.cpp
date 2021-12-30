@@ -46,27 +46,27 @@ void ParseMapping(const char* source, GamepadMappings& mappings, std::string& na
     std::tie(name, source) = Parse(source, ',');
 
     const std::unordered_map<std::string, std::tuple<ButtonKind, ThumbStickKind>> dict = {
-        {"a", std::make_tuple(ButtonKind::A, ThumbStickKind::None)},
-        {"b", std::make_tuple(ButtonKind::B, ThumbStickKind::None)},
-        {"x", std::make_tuple(ButtonKind::X, ThumbStickKind::None)},
-        {"y", std::make_tuple(ButtonKind::Y, ThumbStickKind::None)},
-        {"guide", std::make_tuple(ButtonKind::Guide, ThumbStickKind::None)},
-        {"back", std::make_tuple(ButtonKind::LeftMenu, ThumbStickKind::None)},
-        {"start", std::make_tuple(ButtonKind::RightMenu, ThumbStickKind::None)},
-        {"leftshoulder", std::make_tuple(ButtonKind::LeftShoulder, ThumbStickKind::None)},
-        {"rightshoulder", std::make_tuple(ButtonKind::RightShoulder, ThumbStickKind::None)},
-        {"leftstick", std::make_tuple(ButtonKind::LeftStick, ThumbStickKind::None)},
-        {"rightstick", std::make_tuple(ButtonKind::RightStick, ThumbStickKind::None)},
-        {"dpup", std::make_tuple(ButtonKind::DPadUp, ThumbStickKind::None)},
-        {"dpdown", std::make_tuple(ButtonKind::DPadDown, ThumbStickKind::None)},
-        {"dpleft", std::make_tuple(ButtonKind::DPadLeft, ThumbStickKind::None)},
-        {"dpright", std::make_tuple(ButtonKind::DPadRight, ThumbStickKind::None)},
-        {"lefttrigger", std::make_tuple(ButtonKind::LeftTrigger, ThumbStickKind::None)},
-        {"righttrigger", std::make_tuple(ButtonKind::RightTrigger, ThumbStickKind::None)},
-        {"leftx", std::make_tuple(ButtonKind::None, ThumbStickKind::LeftStickX)},
-        {"lefty", std::make_tuple(ButtonKind::None, ThumbStickKind::LeftStickY)},
-        {"rightx", std::make_tuple(ButtonKind::None, ThumbStickKind::RightStickX)},
-        {"righty", std::make_tuple(ButtonKind::None, ThumbStickKind::RightStickY)},
+        {"a", std::make_tuple(ButtonKind::A, ThumbStickKind::Invalid)},
+        {"b", std::make_tuple(ButtonKind::B, ThumbStickKind::Invalid)},
+        {"x", std::make_tuple(ButtonKind::X, ThumbStickKind::Invalid)},
+        {"y", std::make_tuple(ButtonKind::Y, ThumbStickKind::Invalid)},
+        {"guide", std::make_tuple(ButtonKind::Guide, ThumbStickKind::Invalid)},
+        {"back", std::make_tuple(ButtonKind::LeftMenu, ThumbStickKind::Invalid)},
+        {"start", std::make_tuple(ButtonKind::RightMenu, ThumbStickKind::Invalid)},
+        {"leftshoulder", std::make_tuple(ButtonKind::LeftShoulder, ThumbStickKind::Invalid)},
+        {"rightshoulder", std::make_tuple(ButtonKind::RightShoulder, ThumbStickKind::Invalid)},
+        {"leftstick", std::make_tuple(ButtonKind::LeftStick, ThumbStickKind::Invalid)},
+        {"rightstick", std::make_tuple(ButtonKind::RightStick, ThumbStickKind::Invalid)},
+        {"dpup", std::make_tuple(ButtonKind::DPadUp, ThumbStickKind::Invalid)},
+        {"dpdown", std::make_tuple(ButtonKind::DPadDown, ThumbStickKind::Invalid)},
+        {"dpleft", std::make_tuple(ButtonKind::DPadLeft, ThumbStickKind::Invalid)},
+        {"dpright", std::make_tuple(ButtonKind::DPadRight, ThumbStickKind::Invalid)},
+        {"lefttrigger", std::make_tuple(ButtonKind::LeftTrigger, ThumbStickKind::Invalid)},
+        {"righttrigger", std::make_tuple(ButtonKind::RightTrigger, ThumbStickKind::Invalid)},
+        {"leftx", std::make_tuple(ButtonKind::Invalid, ThumbStickKind::LeftStickX)},
+        {"lefty", std::make_tuple(ButtonKind::Invalid, ThumbStickKind::LeftStickY)},
+        {"rightx", std::make_tuple(ButtonKind::Invalid, ThumbStickKind::RightStickX)},
+        {"righty", std::make_tuple(ButtonKind::Invalid, ThumbStickKind::RightStickY)},
     };
 
     int buttonIndex = 0;
@@ -134,7 +134,7 @@ void ParseMapping(const char* source, GamepadMappings& mappings, std::string& na
 ButtonKind ToButtonIndex(int physicalIndex, GamepadButtonMappings mappings)
 {
     if ((physicalIndex < 0) || (physicalIndex >= static_cast<int>(mappings.size()))) {
-        return ButtonKind::None;
+        return ButtonKind::Invalid;
     }
     POMDOG_ASSERT(physicalIndex >= 0);
     POMDOG_ASSERT(physicalIndex < static_cast<int>(mappings.size()));
@@ -153,7 +153,7 @@ GetButton(GamepadState& state, const GamepadButtonMappings& mappings, int physic
 [[nodiscard]] ButtonState*
 GetButton(GamepadState& state, ButtonKind kind) noexcept
 {
-    if (kind == ButtonKind::None) {
+    if (kind == ButtonKind::Invalid) {
         return nullptr;
     }
     const auto index = static_cast<int>(kind);
@@ -187,7 +187,7 @@ GetButton(GamepadState& state, ButtonKind kind) noexcept
 [[nodiscard]] float*
 GetThumbStick(GamepadState& state, ThumbStickKind kind) noexcept
 {
-    if (kind == ThumbStickKind::None) {
+    if (kind == ThumbStickKind::Invalid) {
         return nullptr;
     }
     const auto index = static_cast<int>(kind);
@@ -213,7 +213,7 @@ HasButton(GamepadCapabilities& caps, const GamepadButtonMappings& mappings, int 
 [[nodiscard]] bool*
 HasButton(GamepadCapabilities& caps, ButtonKind kind) noexcept
 {
-    if (kind == ButtonKind::None) {
+    if (kind == ButtonKind::Invalid) {
         return nullptr;
     }
     const auto index = static_cast<int>(kind);
@@ -247,7 +247,7 @@ HasButton(GamepadCapabilities& caps, ButtonKind kind) noexcept
 [[nodiscard]] bool*
 HasThumbStick(GamepadCapabilities& caps, ThumbStickKind kind) noexcept
 {
-    if (kind == ThumbStickKind::None) {
+    if (kind == ThumbStickKind::Invalid) {
         return nullptr;
     }
     const auto index = static_cast<int>(kind);
@@ -290,9 +290,9 @@ GetMappings(const std::string& uuidString) noexcept
         ButtonKind::RightStick,
         ButtonKind::Extra1,
         ButtonKind::Extra2,
-        ButtonKind::None,
-        ButtonKind::None,
-        ButtonKind::None,
+        ButtonKind::Invalid,
+        ButtonKind::Invalid,
+        ButtonKind::Invalid,
     }};
 #elif defined(POMDOG_PLATFORM_MACOSX)
     mappings.buttons = {{
@@ -311,7 +311,7 @@ GetMappings(const std::string& uuidString) noexcept
         ButtonKind::Guide,
         ButtonKind::Extra1,
         ButtonKind::Extra2,
-        ButtonKind::None,
+        ButtonKind::Invalid,
     }};
 #else
     mappings.buttons = {{
@@ -328,19 +328,19 @@ GetMappings(const std::string& uuidString) noexcept
         ButtonKind::Guide,
         ButtonKind::Extra1,
         ButtonKind::Extra2,
-        ButtonKind::None,
-        ButtonKind::None,
-        ButtonKind::None,
+        ButtonKind::Invalid,
+        ButtonKind::Invalid,
+        ButtonKind::Invalid,
     }};
 #endif
 
     mappings.axes = {{
-        AxisMapper{ThumbStickKind::LeftStickX, ButtonKind::None, ButtonKind::None},
-        AxisMapper{ThumbStickKind::LeftStickY, ButtonKind::None, ButtonKind::None},
-        AxisMapper{ThumbStickKind::None, ButtonKind::LeftTrigger, ButtonKind::None},
-        AxisMapper{ThumbStickKind::RightStickX, ButtonKind::None, ButtonKind::None},
-        AxisMapper{ThumbStickKind::RightStickY, ButtonKind::None, ButtonKind::None},
-        AxisMapper{ThumbStickKind::None, ButtonKind::RightTrigger, ButtonKind::None},
+        AxisMapper{ThumbStickKind::LeftStickX, ButtonKind::Invalid, ButtonKind::Invalid},
+        AxisMapper{ThumbStickKind::LeftStickY, ButtonKind::Invalid, ButtonKind::Invalid},
+        AxisMapper{ThumbStickKind::Invalid, ButtonKind::LeftTrigger, ButtonKind::Invalid},
+        AxisMapper{ThumbStickKind::RightStickX, ButtonKind::Invalid, ButtonKind::Invalid},
+        AxisMapper{ThumbStickKind::RightStickY, ButtonKind::Invalid, ButtonKind::Invalid},
+        AxisMapper{ThumbStickKind::Invalid, ButtonKind::RightTrigger, ButtonKind::Invalid},
     }};
 
     std::string deviceName;
@@ -351,11 +351,11 @@ GetMappings(const std::string& uuidString) noexcept
         std::string s = m;
         if (StringHelper::HasPrefix(s, uuidString)) {
             // found
-            std::fill(std::begin(mappings.buttons), std::end(mappings.buttons), ButtonKind::None);
+            std::fill(std::begin(mappings.buttons), std::end(mappings.buttons), ButtonKind::Invalid);
             for (auto& axis : mappings.axes) {
-                axis.thumbStick = ThumbStickKind::None;
-                axis.positiveTrigger = ButtonKind::None;
-                axis.negativeTrigger = ButtonKind::None;
+                axis.thumbStick = ThumbStickKind::Invalid;
+                axis.positiveTrigger = ButtonKind::Invalid;
+                axis.negativeTrigger = ButtonKind::Invalid;
             }
             ParseMapping(m, mappings, deviceName);
             break;

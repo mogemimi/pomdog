@@ -2,7 +2,7 @@
 
 #include "pomdog/application/win32/game_host_win32.h"
 #include "pomdog/application/win32/game_window_win32.h"
-#include "pomdog/input/backends/native_gamepad.h"
+#include "pomdog/input/directinput/gamepad_directinput.h"
 #include "pomdog/input/win32/keyboard_win32.h"
 #include "pomdog/input/win32/mouse_win32.h"
 #if !defined(POMDOG_DISABLE_GL4)
@@ -43,7 +43,6 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <thread>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-using pomdog::detail::NativeGamepad;
 using pomdog::detail::win32::GameWindowWin32;
 using pomdog::detail::xaudio2::AudioEngineXAudio2;
 #if !defined(POMDOG_DISABLE_GL4)
@@ -279,8 +278,8 @@ public:
     [[nodiscard]] std::unique_ptr<Error>
     Initialize(
         const std::shared_ptr<GameWindowWin32>& window,
+        HINSTANCE hInstance,
         const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
-        const std::shared_ptr<NativeGamepad>& gamepad,
         const gpu::PresentationParameters& presentationParameters,
         bool useOpenGL) noexcept;
 
@@ -347,7 +346,7 @@ private:
 
     std::shared_ptr<KeyboardWin32> keyboard;
     std::shared_ptr<MouseWin32> mouse;
-    std::shared_ptr<NativeGamepad> gamepad;
+    std::shared_ptr<directinput::GamepadDirectInput> gamepad;
 
     std::unique_ptr<IOService> ioService_;
     std::unique_ptr<HTTPClient> httpClient;
@@ -364,8 +363,8 @@ private:
 std::unique_ptr<Error>
 GameHostWin32::Impl::Initialize(
     const std::shared_ptr<GameWindowWin32>& windowIn,
+    HINSTANCE hInstance,
     const std::shared_ptr<EventQueue<SystemEvent>>& eventQueueIn,
-    const std::shared_ptr<NativeGamepad>& gamepadIn,
     const gpu::PresentationParameters& presentationParameters,
     bool useOpenGL) noexcept
 {
@@ -423,7 +422,11 @@ GameHostWin32::Impl::Initialize(
 
     keyboard = std::make_shared<KeyboardWin32>();
     mouse = std::make_shared<MouseWin32>(window->GetNativeWindowHandle());
-    gamepad = gamepadIn;
+
+    gamepad = std::make_shared<directinput::GamepadDirectInput>();
+    if (auto err = gamepad->Initialize(hInstance, window->GetNativeWindowHandle()); err != nullptr) {
+        return errors::Wrap(std::move(err), "GamepadDirectInput::Initialize() failed");
+    }
 
     auto [resourceDir, resourceDirErr] = FileSystem::GetResourceDirectoryPath();
     if (resourceDirErr != nullptr) {
@@ -649,16 +652,16 @@ GameHostWin32::~GameHostWin32() = default;
 std::unique_ptr<Error>
 GameHostWin32::Initialize(
     const std::shared_ptr<GameWindowWin32>& window,
+    HINSTANCE hInstance,
     const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
-    const std::shared_ptr<NativeGamepad>& gamepad,
     const gpu::PresentationParameters& presentationParameters,
     bool useOpenGL) noexcept
 {
     POMDOG_ASSERT(impl != nullptr);
     return impl->Initialize(
         window,
+        hInstance,
         eventQueue,
-        gamepad,
         presentationParameters,
         useOpenGL);
 }

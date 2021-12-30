@@ -4,6 +4,7 @@
 
 #include "pomdog/application/game_host.h"
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/platform/win32/prerequisites_win32.h"
 #include "pomdog/signals/forward_declarations.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -23,10 +24,6 @@ namespace pomdog::detail {
 class SystemEvent;
 } // namespace pomdog::detail
 
-namespace pomdog::detail {
-class NativeGamepad;
-} // namespace pomdog::detail
-
 namespace pomdog::detail::win32 {
 
 class GameWindowWin32;
@@ -40,8 +37,8 @@ public:
     [[nodiscard]] std::unique_ptr<Error>
     Initialize(
         const std::shared_ptr<GameWindowWin32>& window,
+        HINSTANCE hInstance,
         const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
-        const std::shared_ptr<NativeGamepad>& gamepad,
         const gpu::PresentationParameters& presentationParameters,
         bool useOpenGL) noexcept;
 

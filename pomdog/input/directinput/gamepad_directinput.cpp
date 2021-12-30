@@ -17,7 +17,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <tuple>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail::DirectInput {
+namespace pomdog::detail::directinput {
 namespace {
 
 constexpr LONG ThumbStickMinValue = -32768;
@@ -305,10 +305,10 @@ bool GetCaps(GamepadDevice& gamepad)
         // FIXME: Use XInput instead of DirectInput
         for (auto& axis : gamepad.mappings.axes) {
             if (axis.positiveTrigger == ButtonKind::RightTrigger) {
-                axis.positiveTrigger = ButtonKind::None;
+                axis.positiveTrigger = ButtonKind::Invalid;
             }
             if ((axis.positiveTrigger == ButtonKind::LeftTrigger) &&
-                (axis.negativeTrigger == ButtonKind::None)) {
+                (axis.negativeTrigger == ButtonKind::Invalid)) {
                 axis.negativeTrigger = ButtonKind::RightTrigger;
             }
         }
@@ -680,4 +680,4 @@ void GamepadDirectInput::PollEvents()
     }
 }
 
-} // namespace pomdog::detail::DirectInput
+} // namespace pomdog::detail::directinput

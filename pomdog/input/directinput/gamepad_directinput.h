@@ -4,7 +4,6 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/input/backends/gamepad_mappings.h"
-#include "pomdog/input/backends/native_gamepad.h"
 #include "pomdog/input/directinput/prerequisites_directinput.h"
 #include "pomdog/input/gamepad.h"
 #include "pomdog/input/gamepad_capabilities.h"
@@ -22,7 +21,7 @@ namespace pomdog {
 class Error;
 } // namespace pomdog
 
-namespace pomdog::detail::DirectInput {
+namespace pomdog::detail::directinput {
 
 enum class GamepadStateDirectInput : std::uint8_t {
     NotInitialized,
@@ -54,7 +53,7 @@ struct GamepadDevice final {
     void PollEvents();
 };
 
-class GamepadDirectInput final : public NativeGamepad {
+class GamepadDirectInput final : public Gamepad {
 public:
     ~GamepadDirectInput();
 
@@ -65,7 +64,7 @@ public:
 
     GamepadState GetState(PlayerIndex index) const override;
 
-    void PollEvents() override;
+    void PollEvents();
 
     void EnumerateDevices();
 
@@ -78,4 +77,4 @@ private:
     std::mutex mutex;
 };
 
-} // namespace pomdog::detail::DirectInput
+} // namespace pomdog::detail::directinput

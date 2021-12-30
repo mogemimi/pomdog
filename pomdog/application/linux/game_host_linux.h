@@ -20,7 +20,6 @@ class Error;
 } // namespace pomdog
 
 namespace pomdog::detail {
-class NativeGamepad;
 class GameClockImpl;
 class TimeSource;
 } // namespace pomdog::detail
@@ -33,6 +32,10 @@ namespace pomdog::gpu::detail::gl4 {
 class GraphicsContextGL4;
 class GraphicsDeviceGL4;
 } // namespace pomdog::gpu::detail::gl4
+
+namespace pomdog::detail::linux {
+class GamepadLinux;
+} // namespace pomdog::detail::linux
 
 namespace pomdog::detail::x11 {
 class X11Context;
@@ -114,7 +117,7 @@ private:
     std::shared_ptr<AssetManager> assetManager_;
     std::unique_ptr<x11::KeyboardX11> keyboard_;
     x11::MouseX11 mouse_;
-    std::unique_ptr<detail::NativeGamepad> gamepad_;
+    std::unique_ptr<GamepadLinux> gamepad_;
     std::unique_ptr<IOService> ioService_;
     std::unique_ptr<HTTPClient> httpClient_;
     Duration presentationInterval_;

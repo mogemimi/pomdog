@@ -303,7 +303,7 @@ bool GamepadDevice::PollEvents()
     return true;
 }
 
-GamepadLinux::GamepadLinux()
+GamepadLinux::GamepadLinux() noexcept
 {
     gamepads[0].playerIndex = PlayerIndex::One;
     gamepads[1].playerIndex = PlayerIndex::Two;

@@ -38,8 +38,6 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/input/backends/gamepad_helper.h
     ${POMDOG_SRC_DIR}/input/backends/gamepad_mappings.cpp
     ${POMDOG_SRC_DIR}/input/backends/gamepad_mappings.h
-    ${POMDOG_SRC_DIR}/input/backends/native_gamepad.cpp
-    ${POMDOG_SRC_DIR}/input/backends/native_gamepad.h
 
     $<$<PLATFORM_ID:Darwin>:
         # NOTE: input/cocoa
@@ -70,8 +68,6 @@ target_sources(pomdog_static PRIVATE
 
     $<$<PLATFORM_ID:Linux>:
         # NOTE: input/x11
-        ${POMDOG_SRC_DIR}/input/x11/gamepad_factory.cpp
-        ${POMDOG_SRC_DIR}/input/x11/gamepad_factory.h
         ${POMDOG_SRC_DIR}/input/x11/keyboard_x11.cpp
         ${POMDOG_SRC_DIR}/input/x11/keyboard_x11.h
         ${POMDOG_SRC_DIR}/input/x11/mouse_x11.cpp

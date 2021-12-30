@@ -19,7 +19,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::detail {
 
 enum class ButtonKind : std::int8_t {
-    None = -1,
+    Invalid = -1,
     A = 0,
     B = 1,
     X = 2,
@@ -42,7 +42,7 @@ enum class ButtonKind : std::int8_t {
 };
 
 enum class ThumbStickKind : std::int8_t {
-    None = -1,
+    Invalid = -1,
     LeftStickX = 0,
     LeftStickY = 1,
     RightStickX = 2,
@@ -50,9 +50,9 @@ enum class ThumbStickKind : std::int8_t {
 };
 
 struct AxisMapper final {
-    ThumbStickKind thumbStick = ThumbStickKind::None;
-    ButtonKind positiveTrigger = ButtonKind::None;
-    ButtonKind negativeTrigger = ButtonKind::None;
+    ThumbStickKind thumbStick = ThumbStickKind::Invalid;
+    ButtonKind positiveTrigger = ButtonKind::Invalid;
+    ButtonKind negativeTrigger = ButtonKind::Invalid;
 };
 
 using GamepadButtonMappings = std::array<ButtonKind, 16>;
