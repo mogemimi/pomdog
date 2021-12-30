@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/gpu/graphics_command_queue.h"
+#include "pomdog/gpu/command_queue.h"
 
 namespace pomdog::gpu {
 

@@ -2,7 +2,7 @@
 
 #include "pomdog/gpu/gl4/graphics_device_gl4.h"
 #include "pomdog/gpu/backends/buffer_helper.h"
-#include "pomdog/gpu/backends/graphics_command_list_immediate.h"
+#include "pomdog/gpu/backends/command_list_immediate.h"
 #include "pomdog/gpu/backends/shader_compile_options.h"
 #include "pomdog/gpu/backends/texture_helper.h"
 #include "pomdog/gpu/buffer_usage.h"

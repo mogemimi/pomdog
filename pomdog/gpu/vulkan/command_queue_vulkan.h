@@ -2,8 +2,8 @@
 
 #pragma once
 
+#include "pomdog/gpu/command_queue.h"
 #include "pomdog/gpu/forward_declarations.h"
-#include "pomdog/gpu/graphics_command_queue.h"
 #include <vulkan/vulkan.h>
 
 namespace pomdog::gpu::detail::vulkan {

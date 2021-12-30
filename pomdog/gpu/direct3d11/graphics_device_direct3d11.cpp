@@ -4,7 +4,7 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/gpu/backends/buffer_bind_mode.h"
 #include "pomdog/gpu/backends/buffer_helper.h"
-#include "pomdog/gpu/backends/graphics_command_list_immediate.h"
+#include "pomdog/gpu/backends/command_list_immediate.h"
 #include "pomdog/gpu/backends/shader_bytecode.h"
 #include "pomdog/gpu/backends/shader_compile_options.h"
 #include "pomdog/gpu/backends/texture_helper.h"

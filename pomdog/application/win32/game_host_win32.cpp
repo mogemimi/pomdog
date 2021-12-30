@@ -6,13 +6,13 @@
 #include "pomdog/input/win32/keyboard_win32.h"
 #include "pomdog/input/win32/mouse_win32.h"
 #if !defined(POMDOG_DISABLE_GL4)
-#include "pomdog/gpu/backends/graphics_command_queue_immediate.h"
+#include "pomdog/gpu/backends/command_queue_immediate.h"
 #include "pomdog/gpu/gl4/graphics_context_gl4.h"
 #include "pomdog/gpu/gl4/graphics_device_gl4.h"
 #include "pomdog/platform/win32/opengl_context_win32.h"
 #endif
 #if !defined(POMDOG_DISABLE_DIRECT3D11)
-#include "pomdog/gpu/backends/graphics_command_queue_immediate.h"
+#include "pomdog/gpu/backends/command_queue_immediate.h"
 #include "pomdog/gpu/direct3d11/graphics_context_direct3d11.h"
 #include "pomdog/gpu/direct3d11/graphics_device_direct3d11.h"
 #endif
@@ -25,7 +25,7 @@
 #include "pomdog/chrono/win32/time_source_win32.h"
 #include "pomdog/content/asset_manager.h"
 #include "pomdog/filesystem/file_system.h"
-#include "pomdog/gpu/graphics_command_queue.h"
+#include "pomdog/gpu/command_queue.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/logging/log.h"

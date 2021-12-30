@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/gpu/backends/graphics_command_list_immediate.h"
+#include "pomdog/gpu/backends/command_list_immediate.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/gpu/backends/native_graphics_context.h"
 #include "pomdog/gpu/constant_buffer.h"

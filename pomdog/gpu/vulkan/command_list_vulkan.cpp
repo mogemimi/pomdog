@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/gpu/vulkan/graphics_command_list_vulkan.h"
+#include "pomdog/gpu/vulkan/command_list_vulkan.h"
 #include "pomdog/gpu/backends/graphics_capabilities.h"
 #include "pomdog/gpu/index_buffer.h"
 #include "pomdog/gpu/presentation_parameters.h"

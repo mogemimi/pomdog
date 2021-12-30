@@ -3,7 +3,7 @@
 #include "pomdog/gpu/metal/graphics_context_metal.h"
 #include "pomdog/basic/unreachable.h"
 #include "pomdog/gpu/backends/graphics_capabilities.h"
-#include "pomdog/gpu/backends/graphics_command_list_immediate.h"
+#include "pomdog/gpu/backends/command_list_immediate.h"
 #include "pomdog/gpu/index_buffer.h"
 #include "pomdog/gpu/metal/buffer_metal.h"
 #include "pomdog/gpu/metal/constants_metal.h"

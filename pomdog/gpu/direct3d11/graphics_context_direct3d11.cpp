@@ -2,8 +2,8 @@
 
 #include "pomdog/gpu/direct3d11/graphics_context_direct3d11.h"
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/gpu/backends/command_list_immediate.h"
 #include "pomdog/gpu/backends/graphics_capabilities.h"
-#include "pomdog/gpu/backends/graphics_command_list_immediate.h"
 #include "pomdog/gpu/direct3d11/buffer_direct3d11.h"
 #include "pomdog/gpu/direct3d11/depth_stencil_buffer_direct3d11.h"
 #include "pomdog/gpu/direct3d11/pipeline_state_direct3d11.h"

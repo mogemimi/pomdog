@@ -15,6 +15,10 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/gpu/blend_factor.h
     ${POMDOG_SRC_DIR}/gpu/blend_operation.h
     ${POMDOG_SRC_DIR}/gpu/buffer_usage.h
+    ${POMDOG_SRC_DIR}/gpu/command_list.cpp
+    ${POMDOG_SRC_DIR}/gpu/command_list.h
+    ${POMDOG_SRC_DIR}/gpu/command_queue.cpp
+    ${POMDOG_SRC_DIR}/gpu/command_queue.h
     ${POMDOG_SRC_DIR}/gpu/comparison_function.h
     ${POMDOG_SRC_DIR}/gpu/constant_buffer.cpp
     ${POMDOG_SRC_DIR}/gpu/constant_buffer.h
@@ -33,10 +37,6 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/gpu/effect_variable.h
     ${POMDOG_SRC_DIR}/gpu/fill_mode.h
     ${POMDOG_SRC_DIR}/gpu/forward_declarations.h
-    ${POMDOG_SRC_DIR}/gpu/graphics_command_list.cpp
-    ${POMDOG_SRC_DIR}/gpu/graphics_command_list.h
-    ${POMDOG_SRC_DIR}/gpu/graphics_command_queue.cpp
-    ${POMDOG_SRC_DIR}/gpu/graphics_command_queue.h
     ${POMDOG_SRC_DIR}/gpu/graphics_device.cpp
     ${POMDOG_SRC_DIR}/gpu/graphics_device.h
     ${POMDOG_SRC_DIR}/gpu/index_buffer.cpp
@@ -93,11 +93,11 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/gpu/backends/buffer_bind_mode.h
     ${POMDOG_SRC_DIR}/gpu/backends/buffer_helper.cpp
     ${POMDOG_SRC_DIR}/gpu/backends/buffer_helper.h
+    ${POMDOG_SRC_DIR}/gpu/backends/command_list_immediate.cpp
+    ${POMDOG_SRC_DIR}/gpu/backends/command_list_immediate.h
+    ${POMDOG_SRC_DIR}/gpu/backends/command_queue_immediate.cpp
+    ${POMDOG_SRC_DIR}/gpu/backends/command_queue_immediate.h
     ${POMDOG_SRC_DIR}/gpu/backends/graphics_capabilities.h
-    ${POMDOG_SRC_DIR}/gpu/backends/graphics_command_list_immediate.cpp
-    ${POMDOG_SRC_DIR}/gpu/backends/graphics_command_list_immediate.h
-    ${POMDOG_SRC_DIR}/gpu/backends/graphics_command_queue_immediate.cpp
-    ${POMDOG_SRC_DIR}/gpu/backends/graphics_command_queue_immediate.h
     ${POMDOG_SRC_DIR}/gpu/backends/native_buffer.cpp
     ${POMDOG_SRC_DIR}/gpu/backends/native_buffer.h
     ${POMDOG_SRC_DIR}/gpu/backends/native_graphics_context.cpp
@@ -224,14 +224,14 @@ target_sources(pomdog_static PRIVATE
         # NOTE: gpu/vulkan
         ${POMDOG_SRC_DIR}/gpu/vulkan/buffer_vulkan.cpp
         ${POMDOG_SRC_DIR}/gpu/vulkan/buffer_vulkan.h
+        ${POMDOG_SRC_DIR}/gpu/vulkan/command_list_vulkan.cpp
+        ${POMDOG_SRC_DIR}/gpu/vulkan/command_list_vulkan.h
+        ${POMDOG_SRC_DIR}/gpu/vulkan/command_queue_vulkan.cpp
+        ${POMDOG_SRC_DIR}/gpu/vulkan/command_queue_vulkan.h
         ${POMDOG_SRC_DIR}/gpu/vulkan/effect_reflection_vulkan.cpp
         ${POMDOG_SRC_DIR}/gpu/vulkan/effect_reflection_vulkan.h
         ${POMDOG_SRC_DIR}/gpu/vulkan/format_helper.cpp
         ${POMDOG_SRC_DIR}/gpu/vulkan/format_helper.h
-        ${POMDOG_SRC_DIR}/gpu/vulkan/graphics_command_list_vulkan.cpp
-        ${POMDOG_SRC_DIR}/gpu/vulkan/graphics_command_list_vulkan.h
-        ${POMDOG_SRC_DIR}/gpu/vulkan/graphics_command_queue_vulkan.cpp
-        ${POMDOG_SRC_DIR}/gpu/vulkan/graphics_command_queue_vulkan.h
         ${POMDOG_SRC_DIR}/gpu/vulkan/graphics_device_vulkan.cpp
         ${POMDOG_SRC_DIR}/gpu/vulkan/graphics_device_vulkan.h
         ${POMDOG_SRC_DIR}/gpu/vulkan/pipeline_state_vulkan.cpp

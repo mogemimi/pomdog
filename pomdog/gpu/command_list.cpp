@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/gpu/graphics_command_list.h"
+#include "pomdog/gpu/command_list.h"
 
 namespace pomdog::gpu {
 
