@@ -18,6 +18,8 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
+using pomdog::detail::BinaryReader;
+
 namespace pomdog::gpu::detail::direct3d {
 namespace {
 
