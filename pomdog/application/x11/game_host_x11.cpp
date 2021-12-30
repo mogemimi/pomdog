@@ -223,8 +223,8 @@ public:
     std::unique_ptr<IOService> ioService_;
     std::unique_ptr<HTTPClient> httpClient;
     Duration presentationInterval;
-    SurfaceFormat backBufferSurfaceFormat;
-    SurfaceFormat backBufferDepthStencilFormat;
+    gpu::SurfaceFormat backBufferSurfaceFormat;
+    gpu::SurfaceFormat backBufferDepthStencilFormat;
     bool exitRequest = false;
 };
 

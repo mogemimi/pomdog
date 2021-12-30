@@ -57,8 +57,8 @@ private:
     std::shared_ptr<Game> game;
     __weak NSWindow* nativeWindow = nil;
     PomdogMetalViewController* viewController = nil;
-    SurfaceFormat surfaceFormat = SurfaceFormat::R8G8B8A8_UNorm;
-    SurfaceFormat depthFormat = SurfaceFormat::Depth24Stencil8;
+    gpu::SurfaceFormat surfaceFormat = SurfaceFormat::R8G8B8A8_UNorm;
+    gpu::SurfaceFormat depthFormat = SurfaceFormat::Depth24Stencil8;
     bool openGLEnabled = false;
 };
 

@@ -34,7 +34,7 @@ struct POMDOG_EXPORT ImageBuffer final {
     std::int32_t MipmapCount = 0;
 
     /// Surface format of the image.
-    SurfaceFormat Format = SurfaceFormat::R8_UNorm;
+    gpu::SurfaceFormat Format = SurfaceFormat::R8_UNorm;
 };
 
 } // namespace pomdog

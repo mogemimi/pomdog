@@ -67,29 +67,5 @@ enum class TextureFilter : std::uint8_t;
 } // namespace pomdog::gpu
 
 namespace pomdog {
-
-// Classes
-using pomdog::gpu::ConstantBuffer;
-using pomdog::gpu::DepthStencilBuffer;
-using pomdog::gpu::IndexBuffer;
-using pomdog::gpu::PipelineState;
-using pomdog::gpu::RenderTarget2D;
-using pomdog::gpu::SamplerState;
-using pomdog::gpu::Texture2D;
-using pomdog::gpu::VertexBuffer;
-using pomdog::gpu::Viewport;
-
-// Structures
-using pomdog::gpu::BlendDescriptor;
-using pomdog::gpu::DepthStencilDescriptor;
-using pomdog::gpu::DepthStencilOperation;
-using pomdog::gpu::RasterizerDescriptor;
-using pomdog::gpu::RenderPass;
-using pomdog::gpu::RenderTargetBlendDescriptor;
-using pomdog::gpu::SamplerDescriptor;
 struct PresentationParameters;
-
-// Enumerations
-using pomdog::gpu::SurfaceFormat;
-
 } // namespace pomdog

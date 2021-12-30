@@ -67,8 +67,8 @@ private:
     int presentationInterval = 60;
     int backBufferWidth = 800;
     int backBufferHeight = 480;
-    SurfaceFormat surfaceFormat = SurfaceFormat::R8G8B8A8_UNorm;
-    SurfaceFormat depthFormat = SurfaceFormat::Depth24Stencil8;
+    gpu::SurfaceFormat surfaceFormat = SurfaceFormat::R8G8B8A8_UNorm;
+    gpu::SurfaceFormat depthFormat = SurfaceFormat::Depth24Stencil8;
     bool isFullScreen = false;
     bool openGLEnabled = false;
 };

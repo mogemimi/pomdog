@@ -26,10 +26,10 @@ struct POMDOG_EXPORT RenderPass final {
     std::array<RenderTargetAndClearColor, 8> RenderTargets;
 
     /// A depth stencil buffer.
-    std::shared_ptr<pomdog::DepthStencilBuffer> DepthStencilBuffer;
+    std::shared_ptr<pomdog::gpu::DepthStencilBuffer> DepthStencilBuffer;
 
     /// A viewport for projection transformations and clipping.
-    std::optional<pomdog::Viewport> Viewport;
+    std::optional<pomdog::gpu::Viewport> Viewport;
 
     /// A scissor rectangle for a scissor test.
     std::optional<Rectangle> ScissorRect;

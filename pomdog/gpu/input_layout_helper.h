@@ -48,7 +48,3 @@ private:
 };
 
 } // namespace pomdog::gpu
-
-namespace pomdog {
-using pomdog::gpu::InputLayoutHelper;
-} // namespace pomdog

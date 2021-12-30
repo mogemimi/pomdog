@@ -60,17 +60,17 @@ Builder<gpu::PipelineState>::Impl::Load()
     }
 
     if (!hasBlendState) {
-        descriptor.BlendState = BlendDescriptor::CreateDefault();
+        descriptor.BlendState = gpu::BlendDescriptor::CreateDefault();
         hasBlendState = true;
     }
 
     if (!hasRasterizerState) {
-        descriptor.RasterizerState = RasterizerDescriptor::CreateDefault();
+        descriptor.RasterizerState = gpu::RasterizerDescriptor::CreateDefault();
         hasRasterizerState = true;
     }
 
     if (!hasDepthStencilState) {
-        descriptor.DepthStencilState = DepthStencilDescriptor::CreateDefault();
+        descriptor.DepthStencilState = gpu::DepthStencilDescriptor::CreateDefault();
         hasDepthStencilState = true;
     }
 
@@ -164,8 +164,8 @@ Builder<gpu::PipelineState>::SetPrimitiveTopology(gpu::PrimitiveTopology primiti
     return *this;
 }
 
-Builder<gpu::PipelineState>& Builder<gpu::PipelineState>::SetBlendState(
-    const BlendDescriptor& blendState)
+Builder<gpu::PipelineState>&
+Builder<gpu::PipelineState>::SetBlendState(const gpu::BlendDescriptor& blendState)
 {
     POMDOG_ASSERT(impl);
     impl->descriptor.BlendState = blendState;
