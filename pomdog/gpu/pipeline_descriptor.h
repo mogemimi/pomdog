@@ -7,9 +7,9 @@
 #include "pomdog/gpu/depth_stencil_descriptor.h"
 #include "pomdog/gpu/forward_declarations.h"
 #include "pomdog/gpu/input_layout_descriptor.h"
+#include "pomdog/gpu/pixel_format.h"
 #include "pomdog/gpu/primitive_topology.h"
 #include "pomdog/gpu/rasterizer_descriptor.h"
-#include "pomdog/gpu/surface_format.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <memory>
@@ -36,8 +36,8 @@ struct PipelineDescriptor final {
     BlendDescriptor BlendState;
     RasterizerDescriptor RasterizerState;
     DepthStencilDescriptor DepthStencilState;
-    std::vector<SurfaceFormat> RenderTargetViewFormats;
-    SurfaceFormat DepthStencilViewFormat;
+    std::vector<PixelFormat> RenderTargetViewFormats;
+    PixelFormat DepthStencilViewFormat;
     std::uint32_t MultiSampleMask;
 };
 

@@ -4,7 +4,7 @@
 #include "pomdog/gpu/backends/surface_format_helper.h"
 #include "pomdog/gpu/backends/texture_helper.h"
 #include "pomdog/gpu/metal/metal_format_helper.h"
-#include "pomdog/gpu/surface_format.h"
+#include "pomdog/gpu/pixel_format.h"
 #include "pomdog/utility/assert.h"
 #import <Metal/MTLDevice.h>
 #include <algorithm>
@@ -17,7 +17,7 @@ Texture2DMetal::Initialize(
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn,
     std::int32_t levelCountIn,
-    SurfaceFormat formatIn) noexcept
+    PixelFormat formatIn) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
 
@@ -59,7 +59,7 @@ std::int32_t Texture2DMetal::GetLevelCount() const noexcept
     return levelCount;
 }
 
-SurfaceFormat Texture2DMetal::GetFormat() const noexcept
+PixelFormat Texture2DMetal::GetFormat() const noexcept
 {
     return format;
 }
@@ -83,11 +83,11 @@ void Texture2DMetal::SetData(const void* pixelData)
 
         auto bytesPerRow = mipmapWidth * bytesPerPixel;
         switch (format) {
-        case SurfaceFormat::BlockComp1_UNorm:
+        case PixelFormat::BlockComp1_UNorm:
             bytesPerRow = 8 * (std::max(mipmapWidth, 4) / 4);
             break;
-        case SurfaceFormat::BlockComp2_UNorm:
-        case SurfaceFormat::BlockComp3_UNorm:
+        case PixelFormat::BlockComp2_UNorm:
+        case PixelFormat::BlockComp3_UNorm:
             bytesPerRow = 16 * (std::max(mipmapWidth, 4) / 4);
             break;
         default:
@@ -101,9 +101,9 @@ void Texture2DMetal::SetData(const void* pixelData)
 
         auto strideBytesPerMipmap = mipmapWidth * mipmapHeight * bytesPerPixel;
         switch (format) {
-        case SurfaceFormat::BlockComp1_UNorm:
-        case SurfaceFormat::BlockComp2_UNorm:
-        case SurfaceFormat::BlockComp3_UNorm:
+        case PixelFormat::BlockComp1_UNorm:
+        case PixelFormat::BlockComp2_UNorm:
+        case PixelFormat::BlockComp3_UNorm:
             strideBytesPerMipmap = bytesPerRow * (std::max(mipmapHeight, 4) / 4);
             break;
         default:

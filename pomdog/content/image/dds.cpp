@@ -4,7 +4,7 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/content/utility/binary_reader.h"
 #include "pomdog/content/utility/make_fourcc.h"
-#include "pomdog/gpu/surface_format.h"
+#include "pomdog/gpu/pixel_format.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -81,29 +81,29 @@ IsDDSFormat(std::uint32_t signature) noexcept
     return (signature == fourCC);
 }
 
-[[nodiscard]] std::optional<SurfaceFormat>
-ToSurfaceFormat(const DDSPixelFormat& pixelFormat)
+[[nodiscard]] std::optional<PixelFormat>
+ToPixelFormat(const DDSPixelFormat& pixelFormat)
 {
     constexpr std::uint32_t FourCC_A32B32G32R32_Float = 0x00000074;
 
     if (pixelFormat.Flags & DirectDrawPixelFormat::FourCC) {
         if (pixelFormat.FourCC == MakeFourCC('D', 'X', 'T', '1')) {
-            return SurfaceFormat::BlockComp1_UNorm;
+            return PixelFormat::BlockComp1_UNorm;
         }
         else if (pixelFormat.FourCC == MakeFourCC('D', 'X', 'T', '2')) {
-            return SurfaceFormat::BlockComp2_UNorm;
+            return PixelFormat::BlockComp2_UNorm;
         }
         else if (pixelFormat.FourCC == MakeFourCC('D', 'X', 'T', '3')) {
-            return SurfaceFormat::BlockComp2_UNorm;
+            return PixelFormat::BlockComp2_UNorm;
         }
         else if (pixelFormat.FourCC == MakeFourCC('D', 'X', 'T', '4')) {
-            return SurfaceFormat::BlockComp3_UNorm;
+            return PixelFormat::BlockComp3_UNorm;
         }
         else if (pixelFormat.FourCC == MakeFourCC('D', 'X', 'T', '5')) {
-            return SurfaceFormat::BlockComp3_UNorm;
+            return PixelFormat::BlockComp3_UNorm;
         }
         else if (pixelFormat.FourCC == FourCC_A32B32G32R32_Float) {
-            return SurfaceFormat::R32G32B32A32_Float;
+            return PixelFormat::R32G32B32A32_Float;
         }
     }
     else if (pixelFormat.Flags & DirectDrawPixelFormat::RGB) {
@@ -114,19 +114,19 @@ ToSurfaceFormat(const DDSPixelFormat& pixelFormat)
                 (0x0000ff00 == pixelFormat.GreenBitMask) &&
                 (0x00ff0000 == pixelFormat.BlueBitMask) &&
                 (0xff000000 == pixelFormat.AlphaBitMask)) {
-                return SurfaceFormat::R8G8B8A8_UNorm;
+                return PixelFormat::R8G8B8A8_UNorm;
             }
             else if (
                 (0x000000ff == pixelFormat.BlueBitMask) &&
                 (0x0000ff00 == pixelFormat.GreenBitMask) &&
                 (0x00ff0000 == pixelFormat.RedBitMask) &&
                 (0xff000000 == pixelFormat.AlphaBitMask)) {
-                return SurfaceFormat::B8G8R8A8_UNorm;
+                return PixelFormat::B8G8R8A8_UNorm;
             }
             else if (
                 (0x0000ffff == pixelFormat.RedBitMask) &&
                 (0xffff0000 == pixelFormat.GreenBitMask)) {
-                return SurfaceFormat::R16G16_Float;
+                return PixelFormat::R16G16_Float;
             }
             break;
         case 24:
@@ -138,7 +138,7 @@ ToSurfaceFormat(const DDSPixelFormat& pixelFormat)
     }
     else if (pixelFormat.Flags & DirectDrawPixelFormat::Alpha) {
         if (8 == pixelFormat.RGBBitCount) {
-            return SurfaceFormat::A8_UNorm;
+            return PixelFormat::A8_UNorm;
         }
     }
     else if (pixelFormat.Flags & DirectDrawPixelFormat::Luminance) {
@@ -149,7 +149,7 @@ ToSurfaceFormat(const DDSPixelFormat& pixelFormat)
                 (0x00000000 == pixelFormat.GreenBitMask) &&
                 (0x00000000 == pixelFormat.BlueBitMask) &&
                 (0x00000000 == pixelFormat.AlphaBitMask)) {
-                return SurfaceFormat::R8_UNorm;
+                return PixelFormat::R8_UNorm;
             }
             break;
         case 16:
@@ -159,7 +159,7 @@ ToSurfaceFormat(const DDSPixelFormat& pixelFormat)
                 (0x00000000 == pixelFormat.GreenBitMask) &&
                 (0x00000000 == pixelFormat.BlueBitMask) &&
                 (0x0000ff00 == pixelFormat.AlphaBitMask)) {
-                return SurfaceFormat::R8G8_UNorm;
+                return PixelFormat::R8G8_UNorm;
             }
             break;
         default:
@@ -171,17 +171,17 @@ ToSurfaceFormat(const DDSPixelFormat& pixelFormat)
 }
 
 [[nodiscard]] std::size_t
-ComputePixelDataByteLength(const DDSHeader& ddsHeader, SurfaceFormat format)
+ComputePixelDataByteLength(const DDSHeader& ddsHeader, PixelFormat format)
 {
     const auto levelCount = (ddsHeader.MipMapCount > 0) ? ddsHeader.MipMapCount : 1;
 
     const auto bytesPerBlock = [&format]() -> int {
         switch (format) {
-        case SurfaceFormat::BlockComp1_UNorm:
+        case PixelFormat::BlockComp1_UNorm:
             return 8;
-        case SurfaceFormat::BlockComp2_UNorm:
+        case PixelFormat::BlockComp2_UNorm:
             return 16;
-        case SurfaceFormat::BlockComp3_UNorm:
+        case PixelFormat::BlockComp3_UNorm:
             return 16;
         default:
             break;
@@ -260,7 +260,7 @@ Decode(const std::uint8_t* data, std::size_t size)
     image.Height = static_cast<std::int32_t>(ddsHeader.PixelHeight);
     image.MipmapCount = static_cast<std::int32_t>(ddsHeader.MipMapCount);
 
-    if (auto format = ToSurfaceFormat(ddsHeader.PixelFormat); format != std::nullopt) {
+    if (auto format = ToPixelFormat(ddsHeader.PixelFormat); format != std::nullopt) {
         image.Format = *format;
     }
     else {

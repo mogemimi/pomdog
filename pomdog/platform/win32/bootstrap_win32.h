@@ -4,7 +4,7 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
-#include "pomdog/gpu/surface_format.h"
+#include "pomdog/gpu/pixel_format.h"
 #include "pomdog/platform/win32/prerequisites_win32.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -35,10 +35,10 @@ public:
     void SetIconSmall(HICON iconSmall) noexcept;
 
     /// Sets the format of the back buffer.
-    void SetSurfaceFormat(SurfaceFormat surfaceFormat) noexcept;
+    void SetSurfaceFormat(PixelFormat surfaceFormat) noexcept;
 
     /// Sets the format of the depth stencil buffer.
-    void SetDepthFormat(SurfaceFormat depthFormat) noexcept;
+    void SetDepthFormat(PixelFormat depthFormat) noexcept;
 
     /// Sets the maximum rate at which the back buffers can be presented. 60 by default.
     void SetPresentationInterval(int presentationInterval) noexcept;
@@ -67,8 +67,8 @@ private:
     int presentationInterval = 60;
     int backBufferWidth = 800;
     int backBufferHeight = 480;
-    gpu::SurfaceFormat surfaceFormat = SurfaceFormat::R8G8B8A8_UNorm;
-    gpu::SurfaceFormat depthFormat = SurfaceFormat::Depth24Stencil8;
+    PixelFormat surfaceFormat = PixelFormat::R8G8B8A8_UNorm;
+    PixelFormat depthFormat = PixelFormat::Depth24Stencil8;
     bool isFullScreen = false;
     bool openGLEnabled = false;
 };

@@ -16,7 +16,7 @@ public:
         std::int32_t pixelWidth,
         std::int32_t pixelHeight,
         std::int32_t levelCount,
-        SurfaceFormat format);
+        PixelFormat format);
 
     ~Texture2DVulkan() override;
 
@@ -30,7 +30,7 @@ public:
     std::int32_t GetLevelCount() const noexcept override;
 
     /// Gets the format of the pixel data in the texture.
-    SurfaceFormat GetFormat() const noexcept override;
+    PixelFormat GetFormat() const noexcept override;
 
     /// Sets texture data.
     void SetData(const void* pixelData) override;

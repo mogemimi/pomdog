@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::gpu::detail::dxgi {
 
 [[nodiscard]] DXGI_FORMAT
-ToDXGIFormat(SurfaceFormat format) noexcept;
+ToDXGIFormat(PixelFormat format) noexcept;
 
 [[nodiscard]] DXGI_FORMAT
 ToDXGIFormat(IndexElementSize elementSize) noexcept;

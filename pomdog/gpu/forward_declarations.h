@@ -60,7 +60,6 @@ enum class InputElementFormat : std::uint8_t;
 enum class PrimitiveTopology : std::uint8_t;
 enum class ShaderLanguage : std::uint8_t;
 enum class StencilOperation : std::uint8_t;
-enum class SurfaceFormat : std::uint8_t;
 enum class TextureAddressMode : std::uint8_t;
 enum class TextureFilter : std::uint8_t;
 
@@ -68,4 +67,5 @@ enum class TextureFilter : std::uint8_t;
 
 namespace pomdog {
 struct PresentationParameters;
+enum class PixelFormat : std::uint8_t;
 } // namespace pomdog

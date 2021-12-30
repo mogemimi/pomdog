@@ -31,7 +31,7 @@ using pomdog::KeyState;
 using pomdog::MouseButtons;
 using pomdog::Point2D;
 using pomdog::PresentationParameters;
-using pomdog::SurfaceFormat;
+using pomdog::PixelFormat;
 
 namespace {
 
@@ -235,8 +235,8 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     presentationParameters.BackBufferHeight = self.view.bounds.size.height;
     presentationParameters.PresentationInterval = 60;
     presentationParameters.MultiSampleCount = multiSampleCount;
-    presentationParameters.BackBufferFormat = SurfaceFormat::B8G8R8A8_UNorm;
-    presentationParameters.DepthStencilFormat = SurfaceFormat::Depth32_Float_Stencil8_Uint;
+    presentationParameters.BackBufferFormat = PixelFormat::B8G8R8A8_UNorm;
+    presentationParameters.DepthStencilFormat = PixelFormat::Depth32_Float_Stencil8_Uint;
     presentationParameters.IsFullScreen = false;
 
     [self _setupMetal:presentationParameters];

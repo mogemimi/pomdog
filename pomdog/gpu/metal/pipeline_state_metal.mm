@@ -8,7 +8,7 @@
 #include "pomdog/gpu/metal/shader_metal.h"
 #include "pomdog/gpu/pipeline_descriptor.h"
 #include "pomdog/gpu/primitive_topology.h"
-#include "pomdog/gpu/surface_format.h"
+#include "pomdog/gpu/pixel_format.h"
 #include "pomdog/utility/assert.h"
 #import <Metal/MTLVertexDescriptor.h>
 
@@ -263,19 +263,19 @@ PipelineStateMetal::Initialize(
     pipelineDesc.vertexDescriptor = ToVertexDescriptor(descriptor.InputLayout);
     pipelineDesc.sampleCount = multiSampleCount;
     switch (descriptor.DepthStencilViewFormat) {
-    case SurfaceFormat::Depth16:
+    case PixelFormat::Depth16:
         [[fallthrough]];
-    case SurfaceFormat::Depth32:
+    case PixelFormat::Depth32:
         pipelineDesc.depthAttachmentPixelFormat = depthStencilFormat;
         pipelineDesc.stencilAttachmentPixelFormat = MTLPixelFormatInvalid;
         break;
-    case SurfaceFormat::Depth24Stencil8:
+    case PixelFormat::Depth24Stencil8:
         [[fallthrough]];
-    case SurfaceFormat::Depth32_Float_Stencil8_Uint:
+    case PixelFormat::Depth32_Float_Stencil8_Uint:
         pipelineDesc.depthAttachmentPixelFormat = depthStencilFormat;
         pipelineDesc.stencilAttachmentPixelFormat = depthStencilFormat;
         break;
-    case SurfaceFormat::Invalid:
+    case PixelFormat::Invalid:
         [[fallthrough]];
     default:
         pipelineDesc.depthAttachmentPixelFormat = MTLPixelFormatInvalid;

@@ -30,7 +30,7 @@ public:
     [[nodiscard]] virtual std::int32_t GetHeight() const noexcept = 0;
 
     /// Gets the format of the pixel data in the depth-stencil buffer.
-    [[nodiscard]] virtual SurfaceFormat GetFormat() const noexcept = 0;
+    [[nodiscard]] virtual PixelFormat GetFormat() const noexcept = 0;
 
     /// Gets the size of the texture resource.
     [[nodiscard]] virtual Rectangle GetBounds() const noexcept = 0;

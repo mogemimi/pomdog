@@ -3,7 +3,7 @@
 #include "pomdog/gpu/backends/texture_helper.h"
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/gpu/backends/surface_format_helper.h"
-#include "pomdog/gpu/surface_format.h"
+#include "pomdog/gpu/pixel_format.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -33,7 +33,7 @@ std::int32_t TextureHelper::ComputeTextureSizeInBytes(
     std::int32_t pixelWidth,
     std::int32_t pixelHeight,
     std::int32_t levelCount,
-    SurfaceFormat format)
+    PixelFormat format)
 {
     POMDOG_ASSERT(pixelWidth > 0);
     POMDOG_ASSERT(pixelHeight > 0);
@@ -48,11 +48,11 @@ std::int32_t TextureHelper::ComputeTextureSizeInBytes(
     for (int mipmapLevel = 0; mipmapLevel < levelCount; ++mipmapLevel) {
         auto bytesPerRow = mipmapWidth * bytesPerBlock;
         switch (format) {
-        case SurfaceFormat::BlockComp1_UNorm:
+        case PixelFormat::BlockComp1_UNorm:
             bytesPerRow = 8 * (std::max(mipmapWidth, 4) / 4);
             break;
-        case SurfaceFormat::BlockComp2_UNorm:
-        case SurfaceFormat::BlockComp3_UNorm:
+        case PixelFormat::BlockComp2_UNorm:
+        case PixelFormat::BlockComp3_UNorm:
             bytesPerRow = 16 * (std::max(mipmapWidth, 4) / 4);
             break;
         default:
@@ -61,9 +61,9 @@ std::int32_t TextureHelper::ComputeTextureSizeInBytes(
 
         auto strideBytesPerMipmap = bytesPerRow * mipmapHeight;
         switch (format) {
-        case SurfaceFormat::BlockComp1_UNorm:
-        case SurfaceFormat::BlockComp2_UNorm:
-        case SurfaceFormat::BlockComp3_UNorm:
+        case PixelFormat::BlockComp1_UNorm:
+        case PixelFormat::BlockComp2_UNorm:
+        case PixelFormat::BlockComp3_UNorm:
             strideBytesPerMipmap = bytesPerRow * (std::max(mipmapHeight, 4) / 4);
             break;
         default:

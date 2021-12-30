@@ -2,38 +2,38 @@
 
 #include "pomdog/gpu/backends/surface_format_helper.h"
 #include "pomdog/basic/unreachable.h"
-#include "pomdog/gpu/surface_format.h"
+#include "pomdog/gpu/pixel_format.h"
 
 namespace pomdog::gpu::detail {
 
-int SurfaceFormatHelper::ToBytesPerBlock(SurfaceFormat format) noexcept
+int SurfaceFormatHelper::ToBytesPerBlock(PixelFormat format) noexcept
 {
     switch (format) {
-    case SurfaceFormat::Invalid:
+    case PixelFormat::Invalid:
         return 0;
-    case SurfaceFormat::A8_UNorm:
-    case SurfaceFormat::R8_UNorm:
+    case PixelFormat::A8_UNorm:
+    case PixelFormat::R8_UNorm:
         return 1;
-    case SurfaceFormat::R8G8_UNorm:
-    case SurfaceFormat::BlockComp1_UNorm:
-    case SurfaceFormat::Depth16:
+    case PixelFormat::R8G8_UNorm:
+    case PixelFormat::BlockComp1_UNorm:
+    case PixelFormat::Depth16:
         return 2;
-    case SurfaceFormat::R8G8B8A8_UNorm:
-    case SurfaceFormat::B8G8R8A8_UNorm:
-    case SurfaceFormat::R10G10B10A2_UNorm:
-    case SurfaceFormat::R11G11B10_Float:
-    case SurfaceFormat::R16G16_Float:
-    case SurfaceFormat::R32_Float:
-    case SurfaceFormat::BlockComp2_UNorm:
-    case SurfaceFormat::BlockComp3_UNorm:
-    case SurfaceFormat::Depth24Stencil8:
-    case SurfaceFormat::Depth32:
+    case PixelFormat::R8G8B8A8_UNorm:
+    case PixelFormat::B8G8R8A8_UNorm:
+    case PixelFormat::R10G10B10A2_UNorm:
+    case PixelFormat::R11G11B10_Float:
+    case PixelFormat::R16G16_Float:
+    case PixelFormat::R32_Float:
+    case PixelFormat::BlockComp2_UNorm:
+    case PixelFormat::BlockComp3_UNorm:
+    case PixelFormat::Depth24Stencil8:
+    case PixelFormat::Depth32:
         return 4;
-    case SurfaceFormat::Depth32_Float_Stencil8_Uint:
+    case PixelFormat::Depth32_Float_Stencil8_Uint:
         return 5;
-    case SurfaceFormat::R16G16B16A16_Float:
+    case PixelFormat::R16G16B16A16_Float:
         return 8;
-    case SurfaceFormat::R32G32B32A32_Float:
+    case PixelFormat::R32G32B32A32_Float:
         return 16;
     }
     POMDOG_UNREACHABLE("Unsupported surface format");

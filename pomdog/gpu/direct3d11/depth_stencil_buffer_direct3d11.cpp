@@ -13,7 +13,7 @@ using Microsoft::WRL::ComPtr;
 [[nodiscard]] std::unique_ptr<Error>
 BuildDepthBuffer(
     ID3D11Device* device,
-    SurfaceFormat depthStencilFormat,
+    PixelFormat depthStencilFormat,
     std::int32_t pixelWidth,
     std::int32_t pixelHeight,
     std::int32_t levelCount,
@@ -21,8 +21,8 @@ BuildDepthBuffer(
     ComPtr<ID3D11Texture2D>& depthStencil,
     ComPtr<ID3D11DepthStencilView>& depthStencilView) noexcept
 {
-    if (depthStencilFormat == SurfaceFormat::Invalid) {
-        return errors::New("depthStencilFormat must be != SurfaceFormat::Invalid");
+    if (depthStencilFormat == PixelFormat::Invalid) {
+        return errors::New("depthStencilFormat must be != PixelFormat::Invalid");
     }
     if (pixelWidth <= 0) {
         return errors::New("pixelWidth must be > 0");
@@ -84,7 +84,7 @@ DepthStencilBufferDirect3D11::Initialize(
     ID3D11Device* device,
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn,
-    SurfaceFormat depthStencilFormatIn,
+    PixelFormat depthStencilFormatIn,
     std::int32_t multiSampleCount) noexcept
 {
     pixelWidth = pixelWidthIn;
@@ -120,7 +120,7 @@ std::int32_t DepthStencilBufferDirect3D11::GetHeight() const noexcept
     return pixelHeight;
 }
 
-SurfaceFormat DepthStencilBufferDirect3D11::GetFormat() const noexcept
+PixelFormat DepthStencilBufferDirect3D11::GetFormat() const noexcept
 {
     return depthStencilFormat;
 }
@@ -141,7 +141,7 @@ DepthStencilBufferDirect3D11::ResetBuffer(
     ID3D11Device* device,
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn,
-    SurfaceFormat depthStencilFormatIn,
+    PixelFormat depthStencilFormatIn,
     std::int32_t multiSampleCount) noexcept
 {
     POMDOG_ASSERT(device != nullptr);

@@ -47,6 +47,7 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/gpu/pipeline_descriptor.h
     ${POMDOG_SRC_DIR}/gpu/pipeline_state.cpp
     ${POMDOG_SRC_DIR}/gpu/pipeline_state.h
+    ${POMDOG_SRC_DIR}/gpu/pixel_format.h
     ${POMDOG_SRC_DIR}/gpu/presentation_parameters.h
     ${POMDOG_SRC_DIR}/gpu/primitive_topology.h
     ${POMDOG_SRC_DIR}/gpu/rasterizer_descriptor.cpp
@@ -65,7 +66,6 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/gpu/shader.cpp
     ${POMDOG_SRC_DIR}/gpu/shader.h
     ${POMDOG_SRC_DIR}/gpu/stencil_operation.h
-    ${POMDOG_SRC_DIR}/gpu/surface_format.h
     ${POMDOG_SRC_DIR}/gpu/texture_address_mode.h
     ${POMDOG_SRC_DIR}/gpu/texture_filter.h
     ${POMDOG_SRC_DIR}/gpu/texture.cpp

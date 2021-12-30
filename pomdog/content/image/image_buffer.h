@@ -4,7 +4,7 @@
 
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
-#include "pomdog/gpu/surface_format.h"
+#include "pomdog/gpu/pixel_format.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
@@ -34,7 +34,7 @@ struct POMDOG_EXPORT ImageBuffer final {
     std::int32_t MipmapCount = 0;
 
     /// Surface format of the image.
-    gpu::SurfaceFormat Format = SurfaceFormat::R8_UNorm;
+    PixelFormat Format = PixelFormat::R8_UNorm;
 };
 
 } // namespace pomdog

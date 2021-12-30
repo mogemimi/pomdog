@@ -10,7 +10,7 @@
 #include "pomdog/content/utility/make_fourcc.h"
 #include "pomdog/filesystem/file_system.h"
 #include "pomdog/gpu/graphics_device.h"
-#include "pomdog/gpu/surface_format.h"
+#include "pomdog/gpu/pixel_format.h"
 #include "pomdog/gpu/texture2d.h"
 #include "pomdog/utility/assert.h"
 

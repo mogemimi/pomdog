@@ -14,7 +14,7 @@ using Microsoft::WRL::ComPtr;
 [[nodiscard]] std::unique_ptr<Error>
 BuildRenderTarget(
     ID3D11Device* device,
-    SurfaceFormat format,
+    PixelFormat format,
     std::int32_t pixelWidth,
     std::int32_t pixelHeight,
     std::int32_t levelCount,
@@ -104,7 +104,7 @@ RenderTarget2DDirect3D11::Initialize(
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn,
     std::int32_t levelCountIn,
-    SurfaceFormat formatIn,
+    PixelFormat formatIn,
     std::int32_t multiSampleCount) noexcept
 {
     pixelWidth = pixelWidthIn;
@@ -139,7 +139,7 @@ RenderTarget2DDirect3D11::Initialize(
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn,
     std::int32_t levelCountIn,
-    SurfaceFormat formatIn,
+    PixelFormat formatIn,
     std::int32_t multiSampleCount) noexcept
 {
     pixelWidth = pixelWidthIn;
@@ -176,7 +176,7 @@ std::int32_t RenderTarget2DDirect3D11::GetLevelCount() const noexcept
     return levelCount;
 }
 
-SurfaceFormat RenderTarget2DDirect3D11::GetFormat() const noexcept
+PixelFormat RenderTarget2DDirect3D11::GetFormat() const noexcept
 {
     return format;
 }

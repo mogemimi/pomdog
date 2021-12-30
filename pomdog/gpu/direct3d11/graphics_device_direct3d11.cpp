@@ -636,7 +636,7 @@ GraphicsDeviceDirect3D11::CreateRenderTarget2D(
         width,
         height,
         false,
-        SurfaceFormat::R8G8B8A8_UNorm);
+        PixelFormat::R8G8B8A8_UNorm);
 }
 
 std::tuple<std::shared_ptr<RenderTarget2D>, std::unique_ptr<Error>>
@@ -644,7 +644,7 @@ GraphicsDeviceDirect3D11::CreateRenderTarget2D(
     std::int32_t width,
     std::int32_t height,
     bool generateMipmap,
-    SurfaceFormat format) noexcept
+    PixelFormat format) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
     POMDOG_ASSERT(width > 0);
@@ -677,7 +677,7 @@ std::tuple<std::shared_ptr<DepthStencilBuffer>, std::unique_ptr<Error>>
 GraphicsDeviceDirect3D11::CreateDepthStencilBuffer(
     std::int32_t width,
     std::int32_t height,
-    SurfaceFormat depthStencilFormat) noexcept
+    PixelFormat depthStencilFormat) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
     POMDOG_ASSERT(width > 0);
@@ -723,7 +723,7 @@ GraphicsDeviceDirect3D11::CreateTexture2D(
         width,
         height,
         false,
-        SurfaceFormat::R8G8B8A8_UNorm);
+        PixelFormat::R8G8B8A8_UNorm);
 }
 
 std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
@@ -731,7 +731,7 @@ GraphicsDeviceDirect3D11::CreateTexture2D(
     std::int32_t width,
     std::int32_t height,
     bool mipMap,
-    SurfaceFormat format) noexcept
+    PixelFormat format) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
     POMDOG_ASSERT(width > 0);

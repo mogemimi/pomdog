@@ -36,16 +36,16 @@ ToPixelFormatDescriptor(
     };
 
     switch (presentationParameters.BackBufferFormat) {
-    case SurfaceFormat::R8G8B8A8_UNorm:
+    case PixelFormat::R8G8B8A8_UNorm:
         descriptor.cColorBits = 32;
         break;
-    case SurfaceFormat::B8G8R8A8_UNorm:
+    case PixelFormat::B8G8R8A8_UNorm:
         descriptor.cColorBits = 32;
         break;
-    case SurfaceFormat::R16G16B16A16_Float:
+    case PixelFormat::R16G16B16A16_Float:
         descriptor.cColorBits = 64;
         break;
-    case SurfaceFormat::R32G32B32A32_Float:
+    case PixelFormat::R32G32B32A32_Float:
         descriptor.cColorBits = 128;
         break;
     default:
@@ -53,23 +53,23 @@ ToPixelFormatDescriptor(
     }
 
     switch (presentationParameters.DepthStencilFormat) {
-    case SurfaceFormat::Depth16:
+    case PixelFormat::Depth16:
         descriptor.cDepthBits = 16;
         descriptor.cStencilBits = 0;
         break;
-    case SurfaceFormat::Depth24Stencil8:
+    case PixelFormat::Depth24Stencil8:
         descriptor.cDepthBits = 24;
         descriptor.cStencilBits = 8;
         break;
-    case SurfaceFormat::Depth32:
+    case PixelFormat::Depth32:
         descriptor.cDepthBits = 32;
         descriptor.cStencilBits = 0;
         break;
-    case SurfaceFormat::Depth32_Float_Stencil8_Uint:
+    case PixelFormat::Depth32_Float_Stencil8_Uint:
         descriptor.cDepthBits = 32;
         descriptor.cStencilBits = 8;
         break;
-    case SurfaceFormat::Invalid:
+    case PixelFormat::Invalid:
         descriptor.cDepthBits = 0;
         descriptor.cStencilBits = 0;
         break;

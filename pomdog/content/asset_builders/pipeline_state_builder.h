@@ -56,13 +56,13 @@ public:
 
     Builder& SetSamplerBindSlot(const std::string& name, int slotIndex);
 
-    Builder& SetRenderTargetViewFormat(gpu::SurfaceFormat renderTargetViewFormat);
+    Builder& SetRenderTargetViewFormat(PixelFormat renderTargetViewFormat);
 
-    Builder& SetRenderTargetViewFormats(const std::vector<gpu::SurfaceFormat>& renderTargetViewFormats);
+    Builder& SetRenderTargetViewFormats(const std::vector<PixelFormat>& renderTargetViewFormats);
 
-    Builder& SetRenderTargetViewFormats(std::vector<gpu::SurfaceFormat>&& renderTargetViewFormats);
+    Builder& SetRenderTargetViewFormats(std::vector<PixelFormat>&& renderTargetViewFormats);
 
-    Builder& SetDepthStencilViewFormat(gpu::SurfaceFormat depthStencilViewFormat);
+    Builder& SetDepthStencilViewFormat(PixelFormat depthStencilViewFormat);
 
     /// Returns a pipeline state object.
     [[nodiscard]] std::tuple<std::shared_ptr<gpu::PipelineState>, std::unique_ptr<Error>>

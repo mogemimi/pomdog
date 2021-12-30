@@ -26,7 +26,7 @@ public:
         std::int32_t pixelWidth,
         std::int32_t pixelHeight,
         std::int32_t levelCount,
-        SurfaceFormat format) noexcept;
+        PixelFormat format) noexcept;
 
     /// Gets the width of the texture data, in pixels.
     std::int32_t GetWidth() const noexcept override;
@@ -38,7 +38,7 @@ public:
     std::int32_t GetLevelCount() const noexcept override;
 
     /// Gets the format of the pixel data in the texture.
-    SurfaceFormat GetFormat() const noexcept override;
+    PixelFormat GetFormat() const noexcept override;
 
     /// Sets texture data.
     void SetData(const void* pixelData) override;
@@ -57,7 +57,7 @@ private:
     std::int32_t pixelWidth = 0;
     std::int32_t pixelHeight = 0;
     std::int32_t levelCount = 0;
-    SurfaceFormat format = SurfaceFormat::A8_UNorm;
+    PixelFormat format = PixelFormat::A8_UNorm;
 };
 
 } // namespace pomdog::gpu::detail::gl4

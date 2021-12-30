@@ -5,7 +5,7 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/basic/export.h"
 #include "pomdog/gpu/forward_declarations.h"
-#include "pomdog/gpu/surface_format.h"
+#include "pomdog/gpu/pixel_format.h"
 #include "pomdog/gpu/texture.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -33,7 +33,7 @@ public:
     [[nodiscard]] virtual std::int32_t GetLevelCount() const noexcept = 0;
 
     /// Gets the format of the pixel data in the texture.
-    [[nodiscard]] virtual SurfaceFormat GetFormat() const noexcept = 0;
+    [[nodiscard]] virtual PixelFormat GetFormat() const noexcept = 0;
 
     /// Sets texture data.
     virtual void SetData(const void* pixelData) = 0;

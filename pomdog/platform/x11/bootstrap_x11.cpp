@@ -9,12 +9,12 @@
 
 namespace pomdog::x11 {
 
-void Bootstrap::SetSurfaceFormat(SurfaceFormat surfaceFormatIn) noexcept
+void Bootstrap::SetSurfaceFormat(PixelFormat surfaceFormatIn) noexcept
 {
     surfaceFormat = surfaceFormatIn;
 }
 
-void Bootstrap::SetDepthFormat(SurfaceFormat depthFormatIn) noexcept
+void Bootstrap::SetDepthFormat(PixelFormat depthFormatIn) noexcept
 {
     depthFormat = depthFormatIn;
 }

@@ -2,7 +2,7 @@
 
 #include "pomdog/gpu/vulkan/texture2d_vulkan.h"
 #include "pomdog/gpu/backends/texture_helper.h"
-#include "pomdog/gpu/surface_format.h"
+#include "pomdog/gpu/pixel_format.h"
 #include "pomdog/gpu/vulkan/buffer_vulkan.h"
 #include "pomdog/gpu/vulkan/vulkan_format_helper.h"
 #include "pomdog/utility/assert.h"
@@ -16,7 +16,7 @@ Texture2DVulkan::Texture2DVulkan(
     std::int32_t pixelWidth,
     std::int32_t pixelHeight,
     std::int32_t levelCount,
-    SurfaceFormat format)
+    PixelFormat format)
     : device(deviceIn)
     , image(nullptr)
     , deviceMemory(nullptr)

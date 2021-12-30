@@ -140,20 +140,20 @@ Decode(const std::uint8_t* data, std::size_t byteLength)
 
     image.Width = static_cast<std::int32_t>(pixelWidth);
     image.Height = static_cast<std::int32_t>(pixelHeight);
-    image.Format = ([](::png_byte colorTypeIn) -> SurfaceFormat {
+    image.Format = ([](::png_byte colorTypeIn) -> PixelFormat {
         POMDOG_ASSERT(colorTypeIn != PNG_COLOR_TYPE_RGB);
         switch (colorTypeIn) {
         case PNG_COLOR_TYPE_GRAY:
-            return SurfaceFormat::R8_UNorm;
+            return PixelFormat::R8_UNorm;
         case PNG_COLOR_TYPE_GRAY_ALPHA:
-            return SurfaceFormat::R8G8_UNorm;
+            return PixelFormat::R8G8_UNorm;
         case PNG_COLOR_TYPE_RGB_ALPHA:
-            return SurfaceFormat::R8G8B8A8_UNorm;
+            return PixelFormat::R8G8B8A8_UNorm;
         default:
             POMDOG_ASSERT(colorTypeIn != PNG_COLOR_TYPE_PALETTE);
             break;
         }
-        return SurfaceFormat::A8_UNorm;
+        return PixelFormat::A8_UNorm;
     })(colorType);
 
     image.RawData = std::move(rowData);

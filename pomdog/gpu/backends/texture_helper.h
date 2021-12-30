@@ -20,7 +20,7 @@ struct TextureHelper final {
         std::int32_t pixelWidth,
         std::int32_t pixelHeight,
         std::int32_t levelCount,
-        SurfaceFormat format);
+        PixelFormat format);
 };
 
 } // namespace pomdog::gpu::detail

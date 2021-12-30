@@ -395,7 +395,7 @@ void CreateRenderPass(
     }
     const auto colorAttachemntCount = attachmentIndex;
 
-    if (descriptor.DepthStencilViewFormat != SurfaceFormat::Invalid) {
+    if (descriptor.DepthStencilViewFormat != PixelFormat::Invalid) {
         POMDOG_ASSERT(attachmentIndex < colorAttachments.size());
         POMDOG_ASSERT(attachmentIndex < colorAttachmentRefs.size());
 

@@ -355,8 +355,8 @@ private:
     std::thread gamepadThread;
 
     Duration presentationInterval;
-    gpu::SurfaceFormat backBufferSurfaceFormat;
-    gpu::SurfaceFormat backBufferDepthStencilFormat;
+    PixelFormat backBufferSurfaceFormat;
+    PixelFormat backBufferDepthStencilFormat;
     std::atomic<bool> exitRequest = false;
     bool surfaceResizeRequest = false;
 };

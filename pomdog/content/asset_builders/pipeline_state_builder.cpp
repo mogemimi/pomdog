@@ -226,7 +226,7 @@ Builder<gpu::PipelineState>::SetSamplerBindSlot(const std::string& name, int slo
 }
 
 Builder<gpu::PipelineState>&
-Builder<gpu::PipelineState>::SetRenderTargetViewFormat(gpu::SurfaceFormat renderTargetViewFormat)
+Builder<gpu::PipelineState>::SetRenderTargetViewFormat(PixelFormat renderTargetViewFormat)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(!impl->hasRenderTargetViewFormats);
@@ -237,7 +237,7 @@ Builder<gpu::PipelineState>::SetRenderTargetViewFormat(gpu::SurfaceFormat render
 }
 
 Builder<gpu::PipelineState>&
-Builder<gpu::PipelineState>::SetRenderTargetViewFormats(const std::vector<gpu::SurfaceFormat>& renderTargetViewFormats)
+Builder<gpu::PipelineState>::SetRenderTargetViewFormats(const std::vector<PixelFormat>& renderTargetViewFormats)
 {
     POMDOG_ASSERT(impl);
     impl->descriptor.RenderTargetViewFormats = renderTargetViewFormats;
@@ -246,7 +246,7 @@ Builder<gpu::PipelineState>::SetRenderTargetViewFormats(const std::vector<gpu::S
 }
 
 Builder<gpu::PipelineState>&
-Builder<gpu::PipelineState>::SetRenderTargetViewFormats(std::vector<gpu::SurfaceFormat>&& renderTargetViewFormats)
+Builder<gpu::PipelineState>::SetRenderTargetViewFormats(std::vector<PixelFormat>&& renderTargetViewFormats)
 {
     POMDOG_ASSERT(impl);
     impl->descriptor.RenderTargetViewFormats = std::move(renderTargetViewFormats);
@@ -255,7 +255,7 @@ Builder<gpu::PipelineState>::SetRenderTargetViewFormats(std::vector<gpu::Surface
 }
 
 Builder<gpu::PipelineState>&
-Builder<gpu::PipelineState>::SetDepthStencilViewFormat(gpu::SurfaceFormat depthStencilViewFormat)
+Builder<gpu::PipelineState>::SetDepthStencilViewFormat(PixelFormat depthStencilViewFormat)
 {
     POMDOG_ASSERT(impl);
     impl->descriptor.DepthStencilViewFormat = depthStencilViewFormat;

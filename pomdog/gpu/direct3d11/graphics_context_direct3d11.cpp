@@ -207,7 +207,7 @@ GraphicsContextDirect3D11::Initialize(
         renderTargets.push_back(backBuffer);
     }
 
-    if (backBufferDepthFormat != SurfaceFormat::Invalid) {
+    if (backBufferDepthFormat != PixelFormat::Invalid) {
         // TODO: MSAA is not implemented yet.
         constexpr int multiSampleCount = 1;
 

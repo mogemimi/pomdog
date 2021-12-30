@@ -6,7 +6,7 @@
 #include "pomdog/gpu/depth_stencil_buffer.h"
 #include "pomdog/gpu/direct3d11/prerequisites_direct3d11.h"
 #include "pomdog/gpu/forward_declarations.h"
-#include "pomdog/gpu/surface_format.h"
+#include "pomdog/gpu/pixel_format.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -22,7 +22,7 @@ public:
         ID3D11Device* device,
         std::int32_t pixelWidth,
         std::int32_t pixelHeight,
-        SurfaceFormat depthStencilFormat,
+        PixelFormat depthStencilFormat,
         std::int32_t multiSampleCount) noexcept;
 
     /// Gets the width of the texture data, in pixels.
@@ -32,7 +32,7 @@ public:
     std::int32_t GetHeight() const noexcept override;
 
     /// Gets the format of the pixel data in the depth-stencil buffer.
-    SurfaceFormat GetFormat() const noexcept override;
+    PixelFormat GetFormat() const noexcept override;
 
     /// Gets the size of the texture resource.
     Rectangle GetBounds() const noexcept override;
@@ -46,7 +46,7 @@ public:
         ID3D11Device* device,
         std::int32_t pixelWidth,
         std::int32_t pixelHeight,
-        SurfaceFormat depthStencilFormat,
+        PixelFormat depthStencilFormat,
         std::int32_t multiSampleCount) noexcept;
 
 private:
@@ -54,7 +54,7 @@ private:
     Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView;
     std::int32_t pixelWidth = 0;
     std::int32_t pixelHeight = 0;
-    SurfaceFormat depthStencilFormat = SurfaceFormat::Invalid;
+    PixelFormat depthStencilFormat = PixelFormat::Invalid;
     bool multiSampleEnabled = false;
 };
 

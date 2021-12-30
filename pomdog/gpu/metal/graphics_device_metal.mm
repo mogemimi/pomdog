@@ -277,7 +277,7 @@ GraphicsDeviceMetal::CreateRenderTarget2D(
         width,
         height,
         false,
-        SurfaceFormat::R8G8B8A8_UNorm);
+        PixelFormat::R8G8B8A8_UNorm);
 }
 
 std::tuple<std::shared_ptr<RenderTarget2D>, std::unique_ptr<Error>>
@@ -285,7 +285,7 @@ GraphicsDeviceMetal::CreateRenderTarget2D(
     std::int32_t width,
     std::int32_t height,
     bool generateMipmap,
-    SurfaceFormat format) noexcept
+    PixelFormat format) noexcept
 {
     POMDOG_ASSERT(width > 0);
     POMDOG_ASSERT(height > 0);
@@ -316,7 +316,7 @@ std::tuple<std::shared_ptr<DepthStencilBuffer>, std::unique_ptr<Error>>
 GraphicsDeviceMetal::CreateDepthStencilBuffer(
     std::int32_t width,
     std::int32_t height,
-    SurfaceFormat depthStencilFormat) noexcept
+    PixelFormat depthStencilFormat) noexcept
 {
     POMDOG_ASSERT(width > 0);
     POMDOG_ASSERT(height > 0);
@@ -358,7 +358,7 @@ GraphicsDeviceMetal::CreateTexture2D(
         width,
         height,
         false,
-        SurfaceFormat::R8G8B8A8_UNorm);
+        PixelFormat::R8G8B8A8_UNorm);
 }
 
 std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
@@ -366,7 +366,7 @@ GraphicsDeviceMetal::CreateTexture2D(
     std::int32_t width,
     std::int32_t height,
     bool mipMap,
-    SurfaceFormat format) noexcept
+    PixelFormat format) noexcept
 {
     POMDOG_ASSERT(width > 0);
     POMDOG_ASSERT(height > 0);

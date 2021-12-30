@@ -5,7 +5,7 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/gpu/backends/native_graphics_context.h"
 #include "pomdog/gpu/direct3d11/prerequisites_direct3d11.h"
-#include "pomdog/gpu/surface_format.h"
+#include "pomdog/gpu/pixel_format.h"
 #include "pomdog/utility/errors.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -121,7 +121,7 @@ private:
     int preferredBackBufferHeight = 1;
     UINT backBufferCount = 2;
     DXGI_FORMAT backBufferFormat = DXGI_FORMAT_UNKNOWN;
-    SurfaceFormat backBufferDepthFormat = SurfaceFormat::Invalid;
+    PixelFormat backBufferDepthFormat = PixelFormat::Invalid;
     bool needToApplyPipelineState = true;
 };
 

@@ -99,14 +99,14 @@ public:
         std::int32_t width,
         std::int32_t height,
         bool generateMipmap,
-        SurfaceFormat format) noexcept override;
+        PixelFormat format) noexcept override;
 
     /// Creates a depth stencil buffer.
     std::tuple<std::shared_ptr<DepthStencilBuffer>, std::unique_ptr<Error>>
     CreateDepthStencilBuffer(
         std::int32_t width,
         std::int32_t height,
-        SurfaceFormat depthStencilFormat) noexcept override;
+        PixelFormat depthStencilFormat) noexcept override;
 
     /// Creates a sampler state object.
     std::tuple<std::shared_ptr<SamplerState>, std::unique_ptr<Error>>
@@ -124,7 +124,7 @@ public:
         std::int32_t width,
         std::int32_t height,
         bool mipMap,
-        SurfaceFormat format) noexcept override;
+        PixelFormat format) noexcept override;
 
     void ClientSizeChanged(int width, int height);
 

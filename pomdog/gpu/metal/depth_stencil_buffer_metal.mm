@@ -15,7 +15,7 @@ DepthStencilBufferMetal::Initialize(
     id<MTLDevice> device,
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn,
-    SurfaceFormat depthStencilFormatIn,
+    PixelFormat depthStencilFormatIn,
     std::int32_t multiSampleCount) noexcept
 {
     pixelWidth = pixelWidthIn;
@@ -25,13 +25,13 @@ DepthStencilBufferMetal::Initialize(
 
     POMDOG_ASSERT(device != nullptr);
 
-    if ((depthStencilFormat == SurfaceFormat::Depth24Stencil8) && !device.isDepth24Stencil8PixelFormatSupported) {
+    if ((depthStencilFormat == PixelFormat::Depth24Stencil8) && !device.isDepth24Stencil8PixelFormatSupported) {
         // NOTE: MTLPixelFormatDepth24Unorm_Stencil8 is only supported in certain devices.
         return errors::New("This device does not support MTLPixelFormatDepth24Unorm_Stencil8.");
     }
 
-    if (depthStencilFormat == SurfaceFormat::Invalid) {
-        return errors::New("depthStencilFormat must be != SurfaceFormat::None");
+    if (depthStencilFormat == PixelFormat::Invalid) {
+        return errors::New("depthStencilFormat must be != PixelFormat::None");
     }
 
     MTLTextureDescriptor* descriptor = [MTLTextureDescriptor
@@ -64,7 +64,7 @@ std::int32_t DepthStencilBufferMetal::GetHeight() const noexcept
     return pixelHeight;
 }
 
-SurfaceFormat DepthStencilBufferMetal::GetFormat() const noexcept
+PixelFormat DepthStencilBufferMetal::GetFormat() const noexcept
 {
     return depthStencilFormat;
 }

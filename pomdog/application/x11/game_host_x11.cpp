@@ -92,21 +92,21 @@ ChooseFramebufferConfig(
     }
 
     switch (presentationParameters.BackBufferFormat) {
-    case SurfaceFormat::R16G16B16A16_Float:
+    case PixelFormat::R16G16B16A16_Float:
         attributes.add(GLX_RENDER_TYPE, GLX_RGBA_FLOAT_BIT_ARB);
         attributes.add(GLX_RED_SIZE, 16);
         attributes.add(GLX_GREEN_SIZE, 16);
         attributes.add(GLX_BLUE_SIZE, 16);
         attributes.add(GLX_ALPHA_SIZE, 16);
         break;
-    case SurfaceFormat::R32G32B32A32_Float:
+    case PixelFormat::R32G32B32A32_Float:
         attributes.add(GLX_RENDER_TYPE, GLX_RGBA_FLOAT_BIT_ARB);
         attributes.add(GLX_RED_SIZE, 32);
         attributes.add(GLX_GREEN_SIZE, 32);
         attributes.add(GLX_BLUE_SIZE, 32);
         attributes.add(GLX_ALPHA_SIZE, 32);
         break;
-    case SurfaceFormat::R8G8B8A8_UNorm:
+    case PixelFormat::R8G8B8A8_UNorm:
         attributes.add(GLX_RENDER_TYPE, GLX_RGBA_BIT);
         attributes.add(GLX_RED_SIZE, 8);
         attributes.add(GLX_GREEN_SIZE, 8);
@@ -121,21 +121,21 @@ ChooseFramebufferConfig(
     }
 
     switch (presentationParameters.DepthStencilFormat) {
-    case SurfaceFormat::Depth16:
+    case PixelFormat::Depth16:
         attributes.add(GLX_DEPTH_SIZE, 16);
         break;
-    case SurfaceFormat::Depth24Stencil8:
+    case PixelFormat::Depth24Stencil8:
         attributes.add(GLX_DEPTH_SIZE, 24);
         attributes.add(GLX_STENCIL_SIZE, 8);
         break;
-    case SurfaceFormat::Depth32:
+    case PixelFormat::Depth32:
         attributes.add(GLX_DEPTH_SIZE, 32);
         break;
-    case SurfaceFormat::Depth32_Float_Stencil8_Uint:
+    case PixelFormat::Depth32_Float_Stencil8_Uint:
         attributes.add(GLX_DEPTH_SIZE, 32);
         attributes.add(GLX_STENCIL_SIZE, 8);
         break;
-    case SurfaceFormat::Invalid:
+    case PixelFormat::Invalid:
         break;
     default:
         return std::make_tuple(nullptr, errors::New("invalid depth stencil format"));
@@ -223,8 +223,8 @@ public:
     std::unique_ptr<IOService> ioService_;
     std::unique_ptr<HTTPClient> httpClient;
     Duration presentationInterval;
-    gpu::SurfaceFormat backBufferSurfaceFormat;
-    gpu::SurfaceFormat backBufferDepthStencilFormat;
+    PixelFormat backBufferSurfaceFormat;
+    PixelFormat backBufferDepthStencilFormat;
     bool exitRequest = false;
 };
 

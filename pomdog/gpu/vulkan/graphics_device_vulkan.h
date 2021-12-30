@@ -94,8 +94,8 @@ public:
         std::int32_t width,
         std::int32_t height,
         bool generateMipmap,
-        SurfaceFormat format,
-        SurfaceFormat depthStencilFormat) noexcept override;
+        PixelFormat format,
+        PixelFormat depthStencilFormat) noexcept override;
 
     /// Creates a sampler state object.
     std::tuple<std::shared_ptr<SamplerState>, std::unique_ptr<Error>>
@@ -113,7 +113,7 @@ public:
         std::int32_t width,
         std::int32_t height,
         bool mipMap,
-        SurfaceFormat format) noexcept override;
+        PixelFormat format) noexcept override;
 
 private:
     class Impl;

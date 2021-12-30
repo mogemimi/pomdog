@@ -33,34 +33,34 @@ CreatePixelFormat(const PresentationParameters& presentationParameters) noexcept
     }
 
     switch (presentationParameters.BackBufferFormat) {
-    case SurfaceFormat::R8G8B8A8_UNorm:
-    case SurfaceFormat::B8G8R8A8_UNorm:
+    case PixelFormat::R8G8B8A8_UNorm:
+    case PixelFormat::B8G8R8A8_UNorm:
         attributes.push_back(NSOpenGLPFAColorSize);
         attributes.push_back(24);
         attributes.push_back(NSOpenGLPFAAlphaSize);
         attributes.push_back(8);
         break;
-    case SurfaceFormat::R16G16B16A16_Float:
+    case PixelFormat::R16G16B16A16_Float:
         attributes.push_back(NSOpenGLPFAColorSize);
         attributes.push_back(48);
         attributes.push_back(NSOpenGLPFAAlphaSize);
         attributes.push_back(16);
         break;
-    case SurfaceFormat::R32G32B32A32_Float:
+    case PixelFormat::R32G32B32A32_Float:
         attributes.push_back(NSOpenGLPFAColorSize);
         attributes.push_back(96);
         attributes.push_back(NSOpenGLPFAAlphaSize);
         attributes.push_back(32);
         break;
-    case SurfaceFormat::A8_UNorm:
+    case PixelFormat::A8_UNorm:
         attributes.push_back(NSOpenGLPFAAlphaSize);
         attributes.push_back(8);
         break;
-    case SurfaceFormat::R8_UNorm:
+    case PixelFormat::R8_UNorm:
         attributes.push_back(NSOpenGLPFAColorSize);
         attributes.push_back(8);
         break;
-    case SurfaceFormat::R8G8_UNorm:
+    case PixelFormat::R8G8_UNorm:
         attributes.push_back(NSOpenGLPFAColorSize);
         attributes.push_back(16);
         break;
@@ -73,27 +73,27 @@ CreatePixelFormat(const PresentationParameters& presentationParameters) noexcept
     }
 
     switch (presentationParameters.DepthStencilFormat) {
-    case SurfaceFormat::Depth16:
+    case PixelFormat::Depth16:
         attributes.push_back(NSOpenGLPFADepthSize);
         attributes.push_back(16);
         break;
-    case SurfaceFormat::Depth24Stencil8:
+    case PixelFormat::Depth24Stencil8:
         attributes.push_back(NSOpenGLPFADepthSize);
         attributes.push_back(24);
         attributes.push_back(NSOpenGLPFAStencilSize);
         attributes.push_back(8);
         break;
-    case SurfaceFormat::Depth32:
+    case PixelFormat::Depth32:
         attributes.push_back(NSOpenGLPFADepthSize);
         attributes.push_back(32);
         break;
-    case SurfaceFormat::Depth32_Float_Stencil8_Uint:
+    case PixelFormat::Depth32_Float_Stencil8_Uint:
         attributes.push_back(NSOpenGLPFADepthSize);
         attributes.push_back(32);
         attributes.push_back(NSOpenGLPFAStencilSize);
         attributes.push_back(8);
         break;
-    case SurfaceFormat::Invalid:
+    case PixelFormat::Invalid:
         [[fallthrough]];
     default:
         break;

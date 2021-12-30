@@ -8,6 +8,6 @@
 namespace pomdog::gpu::detail::vulkan {
 
 [[nodiscard]] VkFormat
-ToSurfaceFormat(SurfaceFormat format) noexcept;
+ToSurfaceFormat(PixelFormat format) noexcept;
 
 } // namespace pomdog::gpu::detail::vulkan

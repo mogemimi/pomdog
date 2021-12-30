@@ -6,7 +6,7 @@
 #include "pomdog/gpu/backends/surface_format_helper.h"
 #include "pomdog/gpu/gl4/error_checker.h"
 #include "pomdog/gpu/gl4/typesafe_helper_gl4.h"
-#include "pomdog/gpu/surface_format.h"
+#include "pomdog/gpu/pixel_format.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/scope_guard.h"
 
@@ -21,85 +21,85 @@ namespace pomdog::gpu::detail::gl4 {
 namespace {
 
 [[nodiscard]] GLenum
-ToInternalFormatGL4(SurfaceFormat format) noexcept
+ToInternalFormatGL4(PixelFormat format) noexcept
 {
     switch (format) {
-    case SurfaceFormat::Invalid:
+    case PixelFormat::Invalid:
         // NOTE: unknown format
         return GL_R8;
-    case SurfaceFormat::BlockComp1_UNorm:
+    case PixelFormat::BlockComp1_UNorm:
         return GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
-    case SurfaceFormat::BlockComp2_UNorm:
+    case PixelFormat::BlockComp2_UNorm:
         return GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
-    case SurfaceFormat::BlockComp3_UNorm:
+    case PixelFormat::BlockComp3_UNorm:
         return GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
-    case SurfaceFormat::R8_UNorm:
+    case PixelFormat::R8_UNorm:
         return GL_R8;
-    case SurfaceFormat::R8G8_UNorm:
+    case PixelFormat::R8G8_UNorm:
         return GL_RG8;
-    case SurfaceFormat::R8G8B8A8_UNorm:
-    case SurfaceFormat::B8G8R8A8_UNorm:
+    case PixelFormat::R8G8B8A8_UNorm:
+    case PixelFormat::B8G8R8A8_UNorm:
         return GL_RGBA8;
-    case SurfaceFormat::R11G11B10_Float:
+    case PixelFormat::R11G11B10_Float:
         return GL_R11F_G11F_B10F;
-    case SurfaceFormat::R32G32B32A32_Float:
+    case PixelFormat::R32G32B32A32_Float:
         return GL_RGBA32F;
-    case SurfaceFormat::R10G10B10A2_UNorm:
+    case PixelFormat::R10G10B10A2_UNorm:
         return GL_RGB10_A2;
-    case SurfaceFormat::R16G16_Float:
+    case PixelFormat::R16G16_Float:
         return GL_RG16;
-    case SurfaceFormat::R16G16B16A16_Float:
+    case PixelFormat::R16G16B16A16_Float:
         return GL_RGBA16;
-    case SurfaceFormat::R32_Float:
+    case PixelFormat::R32_Float:
         return GL_R32F;
-    case SurfaceFormat::A8_UNorm:
+    case PixelFormat::A8_UNorm:
         return GL_R8;
-    case SurfaceFormat::Depth16:
+    case PixelFormat::Depth16:
         return GL_DEPTH_COMPONENT16;
-    case SurfaceFormat::Depth24Stencil8:
+    case PixelFormat::Depth24Stencil8:
         return GL_DEPTH24_STENCIL8;
-    case SurfaceFormat::Depth32:
+    case PixelFormat::Depth32:
         return GL_DEPTH_COMPONENT32;
-    case SurfaceFormat::Depth32_Float_Stencil8_Uint:
+    case PixelFormat::Depth32_Float_Stencil8_Uint:
         return GL_DEPTH32F_STENCIL8;
     }
     POMDOG_UNREACHABLE("Unsupported surface format");
 }
 
 [[nodiscard]] GLenum
-ToFormatComponents(SurfaceFormat format) noexcept
+ToFormatComponents(PixelFormat format) noexcept
 {
     switch (format) {
-    case SurfaceFormat::Invalid:
+    case PixelFormat::Invalid:
         // NOTE: unknown format
         return GL_RED;
-    case SurfaceFormat::R8G8B8A8_UNorm:
-    case SurfaceFormat::R16G16B16A16_Float:
-    case SurfaceFormat::R32G32B32A32_Float:
-    case SurfaceFormat::R10G10B10A2_UNorm:
+    case PixelFormat::R8G8B8A8_UNorm:
+    case PixelFormat::R16G16B16A16_Float:
+    case PixelFormat::R32G32B32A32_Float:
+    case PixelFormat::R10G10B10A2_UNorm:
         return GL_RGBA;
-    case SurfaceFormat::R11G11B10_Float:
+    case PixelFormat::R11G11B10_Float:
         return GL_RGB;
-    case SurfaceFormat::R8G8_UNorm:
-    case SurfaceFormat::R16G16_Float:
+    case PixelFormat::R8G8_UNorm:
+    case PixelFormat::R16G16_Float:
         return GL_RG;
-    case SurfaceFormat::R8_UNorm:
-    case SurfaceFormat::R32_Float:
-    case SurfaceFormat::A8_UNorm:
+    case PixelFormat::R8_UNorm:
+    case PixelFormat::R32_Float:
+    case PixelFormat::A8_UNorm:
         return GL_RED;
-    case SurfaceFormat::B8G8R8A8_UNorm:
+    case PixelFormat::B8G8R8A8_UNorm:
         return GL_BGRA;
-    case SurfaceFormat::Depth16:
+    case PixelFormat::Depth16:
         return GL_DEPTH_COMPONENT;
-    case SurfaceFormat::Depth24Stencil8:
+    case PixelFormat::Depth24Stencil8:
         return GL_DEPTH_COMPONENT;
-    case SurfaceFormat::Depth32:
+    case PixelFormat::Depth32:
         return GL_DEPTH_COMPONENT;
-    case SurfaceFormat::Depth32_Float_Stencil8_Uint:
+    case PixelFormat::Depth32_Float_Stencil8_Uint:
         return GL_DEPTH_COMPONENT;
-    case SurfaceFormat::BlockComp1_UNorm:
-    case SurfaceFormat::BlockComp2_UNorm:
-    case SurfaceFormat::BlockComp3_UNorm:
+    case PixelFormat::BlockComp1_UNorm:
+    case PixelFormat::BlockComp2_UNorm:
+    case PixelFormat::BlockComp3_UNorm:
         // Cannot find format
         return GL_RED;
     }
@@ -107,36 +107,36 @@ ToFormatComponents(SurfaceFormat format) noexcept
 }
 
 [[nodiscard]] GLenum
-ToPixelFundamentalType(SurfaceFormat format) noexcept
+ToPixelFundamentalType(PixelFormat format) noexcept
 {
     switch (format) {
-    case SurfaceFormat::Invalid:
+    case PixelFormat::Invalid:
         return GL_UNSIGNED_BYTE;
-    case SurfaceFormat::A8_UNorm:
-    case SurfaceFormat::R8_UNorm:
-    case SurfaceFormat::R8G8_UNorm:
-    case SurfaceFormat::R8G8B8A8_UNorm:
-    case SurfaceFormat::B8G8R8A8_UNorm:
+    case PixelFormat::A8_UNorm:
+    case PixelFormat::R8_UNorm:
+    case PixelFormat::R8G8_UNorm:
+    case PixelFormat::R8G8B8A8_UNorm:
+    case PixelFormat::B8G8R8A8_UNorm:
         return GL_UNSIGNED_BYTE;
-    case SurfaceFormat::R11G11B10_Float:
-    case SurfaceFormat::R32G32B32A32_Float:
-    case SurfaceFormat::R16G16_Float:
-    case SurfaceFormat::R16G16B16A16_Float:
-    case SurfaceFormat::R32_Float:
+    case PixelFormat::R11G11B10_Float:
+    case PixelFormat::R32G32B32A32_Float:
+    case PixelFormat::R16G16_Float:
+    case PixelFormat::R16G16B16A16_Float:
+    case PixelFormat::R32_Float:
         return GL_FLOAT;
-    case SurfaceFormat::R10G10B10A2_UNorm:
+    case PixelFormat::R10G10B10A2_UNorm:
         return GL_UNSIGNED_INT_10_10_10_2;
-    case SurfaceFormat::Depth16:
+    case PixelFormat::Depth16:
         return GL_UNSIGNED_SHORT;
-    case SurfaceFormat::Depth24Stencil8:
+    case PixelFormat::Depth24Stencil8:
         return GL_UNSIGNED_INT;
-    case SurfaceFormat::Depth32:
+    case PixelFormat::Depth32:
         return GL_FLOAT;
-    case SurfaceFormat::Depth32_Float_Stencil8_Uint:
+    case PixelFormat::Depth32_Float_Stencil8_Uint:
         return GL_FLOAT;
-    case SurfaceFormat::BlockComp1_UNorm:
-    case SurfaceFormat::BlockComp2_UNorm:
-    case SurfaceFormat::BlockComp3_UNorm:
+    case PixelFormat::BlockComp1_UNorm:
+    case PixelFormat::BlockComp2_UNorm:
+    case PixelFormat::BlockComp3_UNorm:
         // Cannot find format
         return GL_UNSIGNED_BYTE;
     }
@@ -155,7 +155,7 @@ void SetPixelDataTexture2DCompressedGL4(
     std::int32_t pixelWidth,
     std::int32_t pixelHeight,
     std::int32_t levelCount,
-    SurfaceFormat format,
+    PixelFormat format,
     const void* pixelData)
 {
     POMDOG_ASSERT(pixelWidth > 0);
@@ -163,19 +163,19 @@ void SetPixelDataTexture2DCompressedGL4(
     POMDOG_ASSERT(levelCount >= 1);
     POMDOG_ASSERT(pixelData != nullptr);
     POMDOG_ASSERT(
-        format == SurfaceFormat::BlockComp1_UNorm ||
-        format == SurfaceFormat::BlockComp2_UNorm ||
-        format == SurfaceFormat::BlockComp3_UNorm);
+        format == PixelFormat::BlockComp1_UNorm ||
+        format == PixelFormat::BlockComp2_UNorm ||
+        format == PixelFormat::BlockComp3_UNorm);
 
     auto const internalFormat = ToInternalFormatGL4(format);
 
     const auto blockSize = [&format]() -> GLint {
         switch (format) {
-        case SurfaceFormat::BlockComp1_UNorm:
+        case PixelFormat::BlockComp1_UNorm:
             return 8;
-        case SurfaceFormat::BlockComp2_UNorm:
+        case PixelFormat::BlockComp2_UNorm:
             return 16;
-        case SurfaceFormat::BlockComp3_UNorm:
+        case PixelFormat::BlockComp3_UNorm:
             return 16;
         default:
             break;
@@ -217,7 +217,7 @@ void SetPixelDataTexture2DGL4(
     std::int32_t pixelWidth,
     std::int32_t pixelHeight,
     std::int32_t levelCount,
-    SurfaceFormat format,
+    PixelFormat format,
     const void* pixelData)
 {
     POMDOG_ASSERT(pixelWidth > 0);
@@ -225,9 +225,9 @@ void SetPixelDataTexture2DGL4(
     POMDOG_ASSERT(levelCount >= 1);
     POMDOG_ASSERT(pixelData != nullptr);
     POMDOG_ASSERT(
-        format != SurfaceFormat::BlockComp1_UNorm &&
-        format != SurfaceFormat::BlockComp2_UNorm &&
-        format != SurfaceFormat::BlockComp3_UNorm);
+        format != PixelFormat::BlockComp1_UNorm &&
+        format != PixelFormat::BlockComp2_UNorm &&
+        format != PixelFormat::BlockComp3_UNorm);
 
     auto const formatComponents = ToFormatComponents(format);
     auto const pixelFundamentalType = ToPixelFundamentalType(format);
@@ -276,7 +276,7 @@ Texture2DGL4::Initialize(
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn,
     std::int32_t levelCountIn,
-    SurfaceFormat formatIn) noexcept
+    PixelFormat formatIn) noexcept
 {
     pixelWidth = pixelWidthIn;
     pixelHeight = pixelHeightIn;
@@ -317,7 +317,7 @@ Texture2DGL4::Initialize(
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, levelCount - 1);
 
-    if (format == SurfaceFormat::A8_UNorm) {
+    if (format == PixelFormat::A8_UNorm) {
         // NOTE: Emulate DXGI_FORMAT_A8_UNORM or MTLPixelFormatA8Unorm on OpenGL.
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, GL_GREEN);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_A, GL_RED);
@@ -349,7 +349,7 @@ std::int32_t Texture2DGL4::GetLevelCount() const noexcept
     return levelCount;
 }
 
-SurfaceFormat Texture2DGL4::GetFormat() const noexcept
+PixelFormat Texture2DGL4::GetFormat() const noexcept
 {
     return format;
 }
@@ -396,9 +396,9 @@ void Texture2DGL4::SetData(const void* pixelData)
     POMDOG_CHECK_ERROR_GL4("glBindTexture");
 
     switch (format) {
-    case SurfaceFormat::BlockComp1_UNorm:
-    case SurfaceFormat::BlockComp2_UNorm:
-    case SurfaceFormat::BlockComp3_UNorm:
+    case PixelFormat::BlockComp1_UNorm:
+    case PixelFormat::BlockComp2_UNorm:
+    case PixelFormat::BlockComp3_UNorm:
         SetPixelDataTexture2DCompressedGL4(
             pixelWidth, pixelHeight, levelCount, format, pixelData);
         break;

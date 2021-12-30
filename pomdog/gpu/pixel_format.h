@@ -8,10 +8,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::gpu {
+namespace pomdog {
 
-/// SurfaceFormat specifies the format used by pixels in the texture.
-enum class SurfaceFormat : std::uint8_t {
+/// PixelFormat specifies the format used by pixels in the texture.
+enum class PixelFormat : std::uint8_t {
     /// The pixel format is invalid. You cannot create a texture with this format.
     Invalid,
 
@@ -75,8 +75,4 @@ enum class SurfaceFormat : std::uint8_t {
     Depth32_Float_Stencil8_Uint,
 };
 
-} // namespace pomdog::gpu
-
-namespace pomdog {
-using pomdog::gpu::SurfaceFormat;
 } // namespace pomdog

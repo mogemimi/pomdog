@@ -404,7 +404,7 @@ GraphicsDeviceVulkan::CreateTexture2D(
     std::int32_t width,
     std::int32_t height,
     std::int32_t mipmapLevels,
-    SurfaceFormat format)
+    PixelFormat format)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->device != nullptr);
@@ -417,8 +417,8 @@ GraphicsDeviceVulkan::CreateRenderTarget2D(
     std::int32_t width,
     std::int32_t height,
     std::int32_t mipmapLevels,
-    SurfaceFormat format,
-    SurfaceFormat depthStencilFormat,
+    PixelFormat format,
+    PixelFormat depthStencilFormat,
     std::int32_t multiSampleCount)
 {
     POMDOG_ASSERT(impl);

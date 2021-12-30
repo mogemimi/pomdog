@@ -8,7 +8,7 @@
 
 namespace pomdog::gpu::detail::metal {
 
-[[nodiscard]] MTLPixelFormat ToPixelFormat(SurfaceFormat format) noexcept;
+[[nodiscard]] MTLPixelFormat ToPixelFormat(PixelFormat format) noexcept;
 
 [[nodiscard]] MTLCompareFunction ToComparisonFunction(ComparisonFunction compareFunction) noexcept;
 

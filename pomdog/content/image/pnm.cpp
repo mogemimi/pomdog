@@ -195,13 +195,13 @@ Decode(const char* data, std::size_t size)
 
     switch (pnmSubtype) {
     case PNMSubtype::Bitmap:
-        image.Format = SurfaceFormat::R8_UNorm;
+        image.Format = PixelFormat::R8_UNorm;
         break;
     case PNMSubtype::Graymap:
-        image.Format = SurfaceFormat::R8_UNorm;
+        image.Format = PixelFormat::R8_UNorm;
         break;
     case PNMSubtype::Pixmap:
-        image.Format = SurfaceFormat::R8G8B8A8_UNorm;
+        image.Format = PixelFormat::R8G8B8A8_UNorm;
         break;
     }
 

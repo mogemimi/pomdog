@@ -12,7 +12,7 @@ RenderTarget2DGL4::Initialize(
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn,
     std::int32_t levelCountIn,
-    SurfaceFormat formatIn,
+    PixelFormat formatIn,
     std::int32_t multiSampleCount) noexcept
 {
     if (auto err = texture.Initialize(pixelWidthIn, pixelHeightIn, levelCountIn, formatIn); err != nullptr) {
@@ -46,7 +46,7 @@ std::int32_t RenderTarget2DGL4::GetLevelCount() const noexcept
     return levelCount;
 }
 
-SurfaceFormat RenderTarget2DGL4::GetFormat() const noexcept
+PixelFormat RenderTarget2DGL4::GetFormat() const noexcept
 {
     return format;
 }

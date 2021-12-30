@@ -5,7 +5,7 @@
 #include "pomdog/gpu/backends/surface_format_helper.h"
 #include "pomdog/gpu/backends/texture_helper.h"
 #include "pomdog/gpu/dxgi/dxgi_format_helper.h"
-#include "pomdog/gpu/surface_format.h"
+#include "pomdog/gpu/pixel_format.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/exception.h"
 
@@ -22,7 +22,7 @@ void LoadPixelData(
     std::int32_t width,
     std::int32_t height,
     std::int32_t levelCount,
-    SurfaceFormat format)
+    PixelFormat format)
 {
     std::size_t sizeInBytes = TextureHelper::ComputeTextureSizeInBytes(
         width, height, levelCount, format);
@@ -75,7 +75,7 @@ Texture2DDirect3D11::Initialize(
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn,
     std::int32_t levelCountIn,
-    SurfaceFormat formatIn) noexcept
+    PixelFormat formatIn) noexcept
 {
     pixelWidth = pixelWidthIn;
     pixelHeight = pixelHeightIn;
@@ -134,7 +134,7 @@ std::int32_t Texture2DDirect3D11::GetLevelCount() const noexcept
     return levelCount;
 }
 
-SurfaceFormat Texture2DDirect3D11::GetFormat() const noexcept
+PixelFormat Texture2DDirect3D11::GetFormat() const noexcept
 {
     return format;
 }
@@ -171,24 +171,24 @@ void Texture2DDirect3D11::SetData(const void* pixelData)
     }
     else {
         switch (format) {
-        case SurfaceFormat::R8_UNorm:
-        case SurfaceFormat::R8G8_UNorm:
-        case SurfaceFormat::R8G8B8A8_UNorm:
+        case PixelFormat::R8_UNorm:
+        case PixelFormat::R8G8_UNorm:
+        case PixelFormat::R8G8B8A8_UNorm:
             LoadPixelDataWithStride(mappedResource.pData, pixelData, pixelHeight, mappedResource.RowPitch, inputRowPitch);
             break;
-        case SurfaceFormat::BlockComp1_UNorm:
+        case PixelFormat::BlockComp1_UNorm:
             LoadPixelDataBlockComp1(mappedResource.pData, pixelData, pixelWidth, pixelHeight, mappedResource.RowPitch);
             break;
-        case SurfaceFormat::A8_UNorm:
-        case SurfaceFormat::B8G8R8A8_UNorm:
-        case SurfaceFormat::R10G10B10A2_UNorm:
-        case SurfaceFormat::R11G11B10_Float:
-        case SurfaceFormat::R16G16_Float:
-        case SurfaceFormat::R16G16B16A16_Float:
-        case SurfaceFormat::R32_Float:
-        case SurfaceFormat::R32G32B32A32_Float:
-        case SurfaceFormat::BlockComp2_UNorm:
-        case SurfaceFormat::BlockComp3_UNorm:
+        case PixelFormat::A8_UNorm:
+        case PixelFormat::B8G8R8A8_UNorm:
+        case PixelFormat::R10G10B10A2_UNorm:
+        case PixelFormat::R11G11B10_Float:
+        case PixelFormat::R16G16_Float:
+        case PixelFormat::R16G16B16A16_Float:
+        case PixelFormat::R32_Float:
+        case PixelFormat::R32G32B32A32_Float:
+        case PixelFormat::BlockComp2_UNorm:
+        case PixelFormat::BlockComp3_UNorm:
             LoadPixelData(mappedResource.pData, pixelData, pixelWidth, pixelHeight, levelCount, format);
             break;
         default:

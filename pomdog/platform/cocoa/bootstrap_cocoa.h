@@ -3,7 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/export.h"
-#include "pomdog/gpu/surface_format.h"
+#include "pomdog/gpu/pixel_format.h"
 #include <functional>
 #include <memory>
 
@@ -34,10 +34,10 @@ public:
     void SetOpenGLEnabled(bool enabled);
 
     /// Sets the format of the back buffer when using the OpenGL renderer.
-    void SetOpenGLSurfaceFormat(SurfaceFormat surfaceFormat);
+    void SetOpenGLSurfaceFormat(PixelFormat surfaceFormat);
 
     /// Sets the format of the depth stencil buffer when using the OpenGL renderer.
-    void SetOpenGLDepthFormat(SurfaceFormat depthFormat);
+    void SetOpenGLDepthFormat(PixelFormat depthFormat);
 
     /// Sets an error event handler to a log stream.
     void OnError(std::function<void(std::unique_ptr<Error>&& err)>&& onError);
@@ -57,8 +57,8 @@ private:
     std::shared_ptr<Game> game;
     __weak NSWindow* nativeWindow = nil;
     PomdogMetalViewController* viewController = nil;
-    gpu::SurfaceFormat surfaceFormat = SurfaceFormat::R8G8B8A8_UNorm;
-    gpu::SurfaceFormat depthFormat = SurfaceFormat::Depth24Stencil8;
+    PixelFormat surfaceFormat = PixelFormat::R8G8B8A8_UNorm;
+    PixelFormat depthFormat = PixelFormat::Depth24Stencil8;
     bool openGLEnabled = false;
 };
 

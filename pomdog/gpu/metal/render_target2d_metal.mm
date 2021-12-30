@@ -16,7 +16,7 @@ RenderTarget2DMetal::Initialize(
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn,
     std::int32_t levelCountIn,
-    SurfaceFormat formatIn,
+    PixelFormat formatIn,
     std::int32_t multiSampleCount) noexcept
 {
     pixelWidth = pixelWidthIn;
@@ -62,7 +62,7 @@ std::int32_t RenderTarget2DMetal::GetLevelCount() const noexcept
     return levelCount;
 }
 
-SurfaceFormat RenderTarget2DMetal::GetFormat() const noexcept
+PixelFormat RenderTarget2DMetal::GetFormat() const noexcept
 {
     return format;
 }

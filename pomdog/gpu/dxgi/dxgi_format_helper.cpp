@@ -4,50 +4,50 @@
 #include "pomdog/basic/unreachable.h"
 #include "pomdog/gpu/index_element_size.h"
 #include "pomdog/gpu/input_element_format.h"
-#include "pomdog/gpu/surface_format.h"
+#include "pomdog/gpu/pixel_format.h"
 
 namespace pomdog::gpu::detail::dxgi {
 
-DXGI_FORMAT ToDXGIFormat(SurfaceFormat format) noexcept
+DXGI_FORMAT ToDXGIFormat(PixelFormat format) noexcept
 {
     switch (format) {
-    case SurfaceFormat::Invalid:
+    case PixelFormat::Invalid:
         return DXGI_FORMAT_UNKNOWN;
-    case SurfaceFormat::A8_UNorm:
+    case PixelFormat::A8_UNorm:
         return DXGI_FORMAT_A8_UNORM;
-    case SurfaceFormat::B8G8R8A8_UNorm:
+    case PixelFormat::B8G8R8A8_UNorm:
         return DXGI_FORMAT_B8G8R8A8_UNORM;
-    case SurfaceFormat::BlockComp1_UNorm:
+    case PixelFormat::BlockComp1_UNorm:
         return DXGI_FORMAT_BC1_UNORM;
-    case SurfaceFormat::BlockComp2_UNorm:
+    case PixelFormat::BlockComp2_UNorm:
         return DXGI_FORMAT_BC2_UNORM;
-    case SurfaceFormat::BlockComp3_UNorm:
+    case PixelFormat::BlockComp3_UNorm:
         return DXGI_FORMAT_BC3_UNORM;
-    case SurfaceFormat::R10G10B10A2_UNorm:
+    case PixelFormat::R10G10B10A2_UNorm:
         return DXGI_FORMAT_R10G10B10A2_UNORM;
-    case SurfaceFormat::R11G11B10_Float:
+    case PixelFormat::R11G11B10_Float:
         return DXGI_FORMAT_R11G11B10_FLOAT;
-    case SurfaceFormat::R16G16B16A16_Float:
+    case PixelFormat::R16G16B16A16_Float:
         return DXGI_FORMAT_R16G16B16A16_FLOAT;
-    case SurfaceFormat::R16G16_Float:
+    case PixelFormat::R16G16_Float:
         return DXGI_FORMAT_R16G16_FLOAT;
-    case SurfaceFormat::R32G32B32A32_Float:
+    case PixelFormat::R32G32B32A32_Float:
         return DXGI_FORMAT_R32G32B32A32_FLOAT;
-    case SurfaceFormat::R32_Float:
+    case PixelFormat::R32_Float:
         return DXGI_FORMAT_R32_FLOAT;
-    case SurfaceFormat::R8G8B8A8_UNorm:
+    case PixelFormat::R8G8B8A8_UNorm:
         return DXGI_FORMAT_R8G8B8A8_UNORM;
-    case SurfaceFormat::R8G8_UNorm:
+    case PixelFormat::R8G8_UNorm:
         return DXGI_FORMAT_R8G8_UNORM;
-    case SurfaceFormat::R8_UNorm:
+    case PixelFormat::R8_UNorm:
         return DXGI_FORMAT_R8_UNORM;
-    case SurfaceFormat::Depth16:
+    case PixelFormat::Depth16:
         return DXGI_FORMAT_D16_UNORM;
-    case SurfaceFormat::Depth32:
+    case PixelFormat::Depth32:
         return DXGI_FORMAT_D32_FLOAT;
-    case SurfaceFormat::Depth24Stencil8:
+    case PixelFormat::Depth24Stencil8:
         return DXGI_FORMAT_D24_UNORM_S8_UINT;
-    case SurfaceFormat::Depth32_Float_Stencil8_Uint:
+    case PixelFormat::Depth32_Float_Stencil8_Uint:
         return DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
     }
     POMDOG_UNREACHABLE("Unsupported surface format");

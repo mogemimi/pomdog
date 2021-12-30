@@ -2,7 +2,7 @@
 
 #include "pomdog/gpu/gl4/depth_stencil_buffer_gl4.h"
 #include "pomdog/gpu/gl4/error_checker.h"
-#include "pomdog/gpu/surface_format.h"
+#include "pomdog/gpu/pixel_format.h"
 #include "pomdog/math/rectangle.h"
 #include "pomdog/utility/assert.h"
 
@@ -10,16 +10,16 @@ namespace pomdog::gpu::detail::gl4 {
 namespace {
 
 [[nodiscard]] std::optional<GLenum>
-ToDepthStencilFormat(SurfaceFormat depthFormat) noexcept
+ToDepthStencilFormat(PixelFormat depthFormat) noexcept
 {
     switch (depthFormat) {
-    case SurfaceFormat::Depth16:
+    case PixelFormat::Depth16:
         return GL_DEPTH_COMPONENT16;
-    case SurfaceFormat::Depth24Stencil8:
+    case PixelFormat::Depth24Stencil8:
         return GL_DEPTH24_STENCIL8;
-    case SurfaceFormat::Depth32:
+    case PixelFormat::Depth32:
         return GL_DEPTH_COMPONENT32;
-    case SurfaceFormat::Depth32_Float_Stencil8_Uint:
+    case PixelFormat::Depth32_Float_Stencil8_Uint:
         return GL_DEPTH32F_STENCIL8;
     default:
         break;
@@ -33,7 +33,7 @@ std::unique_ptr<Error>
 DepthStencilBufferGL4::Initialize(
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn,
-    SurfaceFormat depthStencilFormatIn,
+    PixelFormat depthStencilFormatIn,
     std::int32_t multiSampleCount) noexcept
 {
     pixelWidth = pixelWidthIn;
@@ -103,7 +103,7 @@ std::int32_t DepthStencilBufferGL4::GetHeight() const noexcept
     return pixelHeight;
 }
 
-SurfaceFormat DepthStencilBufferGL4::GetFormat() const noexcept
+PixelFormat DepthStencilBufferGL4::GetFormat() const noexcept
 {
     return depthStencilFormat;
 }

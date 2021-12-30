@@ -108,14 +108,14 @@ public:
         std::int32_t width,
         std::int32_t height,
         bool generateMipmap,
-        SurfaceFormat format) noexcept = 0;
+        PixelFormat format) noexcept = 0;
 
     /// Creates a depth stencil buffer.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<DepthStencilBuffer>, std::unique_ptr<Error>>
     CreateDepthStencilBuffer(
         std::int32_t width,
         std::int32_t height,
-        SurfaceFormat depthStencilFormat) noexcept = 0;
+        PixelFormat depthStencilFormat) noexcept = 0;
 
     /// Creates a sampler state object.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<SamplerState>, std::unique_ptr<Error>>
@@ -133,7 +133,7 @@ public:
         std::int32_t width,
         std::int32_t height,
         bool mipMap,
-        SurfaceFormat format) noexcept = 0;
+        PixelFormat format) noexcept = 0;
 };
 
 } // namespace pomdog::gpu

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/gpu/surface_format.h"
+#include "pomdog/gpu/pixel_format.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstdint>
@@ -26,10 +26,10 @@ struct PresentationParameters final {
     std::int32_t MultiSampleCount = 0;
 
     /// The format of the back buffer.
-    SurfaceFormat BackBufferFormat = SurfaceFormat::Invalid;
+    PixelFormat BackBufferFormat = PixelFormat::Invalid;
 
     /// The depth stencil format for the back buffer.
-    SurfaceFormat DepthStencilFormat = SurfaceFormat::Invalid;
+    PixelFormat DepthStencilFormat = PixelFormat::Invalid;
 
     /// The value indicating the window is in full screen mode.
     bool IsFullScreen = false;
