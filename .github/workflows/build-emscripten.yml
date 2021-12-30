@@ -32,11 +32,11 @@ jobs:
       - name: Generate Ninja files
         run: |
           source $EMSDK/emsdk_env.sh
-          cmake -Bbuild.cmake -H. -G Ninja \
+          cmake -Bbuild/emscripten -H. -G Ninja \
             -DCMAKE_BUILD_TYPE=${{ matrix.build_config }} \
             -DCMAKE_TOOLCHAIN_FILE=$EMSDK/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake
       - name: Build
-        run: ninja -C build.cmake
+        run: ninja -C build/emscripten
       - name: Run test
         run: |
           source $EMSDK/emsdk_env.sh
@@ -44,4 +44,4 @@ jobs:
             --experimental-modules \
             --experimental-wasm-modules \
             --experimental-wasm-threads \
-            ./build.cmake/test/pomdog_test.js
+            ./build/emscripten/test/pomdog_test.js

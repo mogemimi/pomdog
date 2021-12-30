@@ -38,13 +38,13 @@ jobs:
           fetch-depth: 50 # FIXME: for giflib submodule
       - name: Generate Ninja files
         run: |
-          cmake -Bbuild.cmake -H. -G Ninja \
+          cmake -Bbuild/linux -H. -G Ninja \
             -DCMAKE_BUILD_TYPE=${{ matrix.build_config }} \
             -DCMAKE_C_COMPILER=${{ matrix.build_targets.c_compiler }} \
             -DCMAKE_CXX_COMPILER=${{ matrix.build_targets.cxx_compiler }} \
             -DCMAKE_CXX_FLAGS="${{ matrix.build_targets.cxx_flags }}" \
             -DCMAKE_EXE_LINKER_FLAGS="${{ matrix.build_targets.linker_flags }}"
       - name: Build
-        run: ninja -C build.cmake -k 20
+        run: ninja -C build/linux -k 20
       - name: Run test
-        run: ./build.cmake/test/pomdog_test
+        run: ./build/linux/test/pomdog_test

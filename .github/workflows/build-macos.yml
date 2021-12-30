@@ -23,10 +23,10 @@ jobs:
       - name: Show Xcode version
         run: xcodebuild -version
       - name: Generate Xcode projects
-        run: cmake -Bbuild.cmake -H. -G Xcode
+        run: cmake -Bbuild/macos -H. -G Xcode
       # - name: Clean
-      #   run: xcodebuild -project build.cmake/pomdog.xcodeproj clean
+      #   run: xcodebuild -project build/macos/pomdog.xcodeproj clean
       - name: Build
-        run: xcodebuild -project build.cmake/pomdog.xcodeproj -configuration ${{ matrix.build_config }}
+        run: xcodebuild -project build/macos/pomdog.xcodeproj -configuration ${{ matrix.build_config }}
       - name: Run test
-        run: ./build.cmake/test/${{ matrix.build_config }}/pomdog_test
+        run: ./build/macos/test/${{ matrix.build_config }}/pomdog_test

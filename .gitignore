@@ -7,9 +7,6 @@
 
 # CMake
 /build/
-/build.cmake/
-/build.emscripten/
-/build.makefiles/
 
 # Visual Studio
 *.opendb

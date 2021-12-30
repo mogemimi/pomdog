@@ -42,13 +42,16 @@ Please refer to [Architecture](docs/Architecture.md) in the wiki for more detail
     cd path/to/pomdog
 
     # Generate Xcode project
-    cmake -Bbuild.cmake -H. -G Xcode
+    cmake -Bbuild/macos -H. -G Xcode
 
     # Generate projects for Visual Studio 2019
-    cmake -Bbuild.cmake -H. -G "Visual Studio 16"
+    cmake -Bbuild/windows -H. -G "Visual Studio 16"
 
-    # Generate Ninja files
-    cmake -Bbuild.cmake -H. -G Ninja
+    # Generate Ninja files for Linux
+    cmake -Bbuild/linux -H. -G Ninja
+
+    # Generate Ninja files for Emscripten
+    cmake -Bbuild/emscripten -H. -G Ninja
     ```
 
 After generating, open the .xcodeproj or .vcxproj in Xcode/Visual Studio.
