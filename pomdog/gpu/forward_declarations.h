@@ -71,14 +71,10 @@ namespace pomdog {
 // Classes
 using pomdog::gpu::ConstantBuffer;
 using pomdog::gpu::DepthStencilBuffer;
-using pomdog::gpu::EffectReflection;
-using pomdog::gpu::GraphicsDevice;
 using pomdog::gpu::IndexBuffer;
 using pomdog::gpu::PipelineState;
 using pomdog::gpu::RenderTarget2D;
 using pomdog::gpu::SamplerState;
-using pomdog::gpu::Shader;
-using pomdog::gpu::Texture;
 using pomdog::gpu::Texture2D;
 using pomdog::gpu::VertexBuffer;
 using pomdog::gpu::Viewport;
@@ -87,11 +83,6 @@ using pomdog::gpu::Viewport;
 using pomdog::gpu::BlendDescriptor;
 using pomdog::gpu::DepthStencilDescriptor;
 using pomdog::gpu::DepthStencilOperation;
-using pomdog::gpu::EffectAnnotation;
-using pomdog::gpu::EffectConstantDescription;
-using pomdog::gpu::EffectVariable;
-using pomdog::gpu::InputElement;
-using pomdog::gpu::InputLayoutDescriptor;
 using pomdog::gpu::PipelineStateDescriptor;
 using pomdog::gpu::RasterizerDescriptor;
 using pomdog::gpu::RenderPass;
@@ -100,22 +91,10 @@ using pomdog::gpu::SamplerDescriptor;
 struct PresentationParameters;
 
 // Enumerations
-using pomdog::gpu::BlendFactor;
-using pomdog::gpu::BlendOperation;
 using pomdog::gpu::BufferUsage;
-using pomdog::gpu::ComparisonFunction;
-using pomdog::gpu::CullMode;
-using pomdog::gpu::EffectVariableClass;
-using pomdog::gpu::EffectVariableType;
-using pomdog::gpu::FillMode;
 using pomdog::gpu::IndexElementSize;
-using pomdog::gpu::InputClassification;
 using pomdog::gpu::InputElementFormat;
 using pomdog::gpu::PrimitiveTopology;
-using pomdog::gpu::ShaderLanguage;
-using pomdog::gpu::StencilOperation;
 using pomdog::gpu::SurfaceFormat;
-using pomdog::gpu::TextureAddressMode;
-using pomdog::gpu::TextureFilter;
 
 } // namespace pomdog

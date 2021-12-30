@@ -21,7 +21,7 @@ class Error;
 namespace pomdog::AssetBuilders {
 
 template <>
-class POMDOG_EXPORT Builder<PipelineState> final {
+class POMDOG_EXPORT Builder<gpu::PipelineState> final {
 public:
     explicit Builder(AssetManager& assets);
 
@@ -31,47 +31,47 @@ public:
 
     ~Builder();
 
-    Builder& SetVertexShader(const std::shared_ptr<Shader>& vertexShader);
+    Builder& SetVertexShader(const std::shared_ptr<gpu::Shader>& vertexShader);
 
-    Builder& SetVertexShader(std::shared_ptr<Shader>&& vertexShader);
+    Builder& SetVertexShader(std::shared_ptr<gpu::Shader>&& vertexShader);
 
-    Builder& SetPixelShader(const std::shared_ptr<Shader>& pixelShader);
+    Builder& SetPixelShader(const std::shared_ptr<gpu::Shader>& pixelShader);
 
-    Builder& SetPixelShader(std::shared_ptr<Shader>&& pixelShader);
+    Builder& SetPixelShader(std::shared_ptr<gpu::Shader>&& pixelShader);
 
-    Builder& SetInputLayout(const InputLayoutDescriptor& inputLayout);
+    Builder& SetInputLayout(const gpu::InputLayoutDescriptor& inputLayout);
 
-    Builder& SetInputLayout(InputLayoutDescriptor&& inputLayout);
+    Builder& SetInputLayout(gpu::InputLayoutDescriptor&& inputLayout);
 
     /// Specifies the geometric primitive type for the input assembler stage.
-    Builder& SetPrimitiveTopology(PrimitiveTopology primitiveTopology);
+    Builder& SetPrimitiveTopology(gpu::PrimitiveTopology primitiveTopology);
 
-    Builder& SetBlendState(const BlendDescriptor& blendState);
+    Builder& SetBlendState(const gpu::BlendDescriptor& blendState);
 
-    Builder& SetRasterizerState(const RasterizerDescriptor& rasterizerState);
+    Builder& SetRasterizerState(const gpu::RasterizerDescriptor& rasterizerState);
 
-    Builder& SetDepthStencilState(const DepthStencilDescriptor& depthStencilState);
+    Builder& SetDepthStencilState(const gpu::DepthStencilDescriptor& depthStencilState);
 
     Builder& SetConstantBufferBindSlot(const std::string& name, int slotIndex);
 
     Builder& SetSamplerBindSlot(const std::string& name, int slotIndex);
 
-    Builder& SetRenderTargetViewFormat(SurfaceFormat renderTargetViewFormat);
+    Builder& SetRenderTargetViewFormat(gpu::SurfaceFormat renderTargetViewFormat);
 
-    Builder& SetRenderTargetViewFormats(const std::vector<SurfaceFormat>& renderTargetViewFormats);
+    Builder& SetRenderTargetViewFormats(const std::vector<gpu::SurfaceFormat>& renderTargetViewFormats);
 
-    Builder& SetRenderTargetViewFormats(std::vector<SurfaceFormat>&& renderTargetViewFormats);
+    Builder& SetRenderTargetViewFormats(std::vector<gpu::SurfaceFormat>&& renderTargetViewFormats);
 
-    Builder& SetDepthStencilViewFormat(SurfaceFormat depthStencilViewFormat);
+    Builder& SetDepthStencilViewFormat(gpu::SurfaceFormat depthStencilViewFormat);
 
     /// Returns a pipeline state object.
-    [[nodiscard]] std::tuple<std::shared_ptr<PipelineState>, std::unique_ptr<Error>>
+    [[nodiscard]] std::tuple<std::shared_ptr<gpu::PipelineState>, std::unique_ptr<Error>>
     Build();
 
-    [[nodiscard]] std::shared_ptr<EffectReflection>
-    CreateEffectReflection(const std::shared_ptr<PipelineState>& pipelineState);
+    [[nodiscard]] std::shared_ptr<gpu::EffectReflection>
+    CreateEffectReflection(const std::shared_ptr<gpu::PipelineState>& pipelineState);
 
-    const PipelineStateDescriptor& GetDescription() const;
+    const gpu::PipelineStateDescriptor& GetDescription() const;
 
     void SetError(std::unique_ptr<Error>&& err);
 

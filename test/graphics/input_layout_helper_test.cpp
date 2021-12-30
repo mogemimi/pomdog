@@ -3,11 +3,11 @@
 #include "pomdog/gpu/input_layout_helper.h"
 #include <catch_amalgamated.hpp>
 
-using pomdog::InputClassification;
-using pomdog::InputElement;
-using pomdog::InputElementFormat;
-using pomdog::InputLayoutDescriptor;
-using pomdog::InputLayoutHelper;
+using pomdog::gpu::InputClassification;
+using pomdog::gpu::InputElement;
+using pomdog::gpu::InputElementFormat;
+using pomdog::gpu::InputLayoutDescriptor;
+using pomdog::gpu::InputLayoutHelper;
 
 TEST_CASE("InputLayoutHelper", "[InputLayoutHelper]")
 {

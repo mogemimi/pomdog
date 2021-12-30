@@ -30,6 +30,8 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 using pomdog::detail::BinaryReader;
 using pomdog::gpu::detail::ShaderBytecode;
+using pomdog::gpu::Shader;
+using pomdog::gpu::ShaderLanguage;
 
 namespace pomdog::AssetBuilders {
 namespace {

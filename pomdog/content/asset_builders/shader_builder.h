@@ -24,7 +24,7 @@ class Error;
 namespace pomdog::AssetBuilders {
 
 template <>
-class POMDOG_EXPORT Builder<Shader> final {
+class POMDOG_EXPORT Builder<gpu::Shader> final {
 public:
     Builder(AssetManager& assets, gpu::ShaderPipelineStage pipelineStage);
 
@@ -83,7 +83,7 @@ public:
     Builder& SetMetalFromLibrary(const std::string& entryPoint);
 
     /// Returns an object representing shader function.
-    [[nodiscard]] std::tuple<std::shared_ptr<Shader>, std::unique_ptr<Error>>
+    [[nodiscard]] std::tuple<std::shared_ptr<gpu::Shader>, std::unique_ptr<Error>>
     Build();
 
 private:

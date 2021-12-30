@@ -12,7 +12,3 @@ public:
 };
 
 } // namespace pomdog::gpu
-
-namespace pomdog {
-using pomdog::gpu::Shader;
-} // namespace pomdog
