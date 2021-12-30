@@ -269,12 +269,14 @@ void BuildKeyMap(Display* display, std::array<Keys, 256>& keys)
     std::array<char, XkbKeyNameLength + 1> name;
     std::fill(std::begin(name), std::end(name), 0);
 
-    XkbDescPtr desc = XkbGetKeyboard(
-        display, XkbAllComponentsMask, XkbUseCoreKbd);
+    XkbDescPtr desc = XkbGetMap(display, 0, XkbUseCoreKbd);
+    POMDOG_ASSERT(desc != nullptr);
 
     detail::ScopeGuard scoped([&] {
         XkbFreeKeyboard(desc, 0, True);
     });
+
+    XkbGetNames(display, XkbKeyNamesMask | XkbKeyAliasesMask, desc);
 
     std::map<std::string, Keys> const keyCodes = {
         {"AE01", Keys::Alpha1},
@@ -335,8 +337,7 @@ void BuildKeyMap(Display* display, std::array<Keys, 256>& keys)
         std::memcpy(name.data(), desc->names->keys[keyCode].name, XkbKeyNameLength);
         POMDOG_ASSERT(name.back() == 0);
 
-        auto iter = keyCodes.find(name.data());
-        if (iter != std::end(keyCodes)) {
+        if (auto iter = keyCodes.find(name.data()); iter != std::end(keyCodes)) {
             if (keyCode >= 0 && keyCode < static_cast<int>(keys.size())) {
                 keys[keyCode] = iter->second;
             }
