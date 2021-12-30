@@ -563,7 +563,7 @@ GraphicsDeviceDirect3D11::CreateConstantBuffer(
 }
 
 std::tuple<std::shared_ptr<PipelineState>, std::unique_ptr<Error>>
-GraphicsDeviceDirect3D11::CreatePipelineState(const PipelineStateDescriptor& descriptor) noexcept
+GraphicsDeviceDirect3D11::CreatePipelineState(const PipelineDescriptor& descriptor) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
     auto pipelineState = std::make_shared<PipelineStateDirect3D11>();
@@ -577,7 +577,7 @@ GraphicsDeviceDirect3D11::CreatePipelineState(const PipelineStateDescriptor& des
 
 std::tuple<std::shared_ptr<EffectReflection>, std::unique_ptr<Error>>
 GraphicsDeviceDirect3D11::CreateEffectReflection(
-    const PipelineStateDescriptor& descriptor,
+    const PipelineDescriptor& descriptor,
     [[maybe_unused]] const std::shared_ptr<PipelineState>& pipelineState) noexcept
 {
     auto vertexShader = std::dynamic_pointer_cast<VertexShaderDirect3D11>(descriptor.VertexShader);

@@ -182,7 +182,7 @@ GraphicsDeviceGL4::CreateConstantBuffer(
 }
 
 std::tuple<std::shared_ptr<PipelineState>, std::unique_ptr<Error>>
-GraphicsDeviceGL4::CreatePipelineState(const PipelineStateDescriptor& descriptor) noexcept
+GraphicsDeviceGL4::CreatePipelineState(const PipelineDescriptor& descriptor) noexcept
 {
     auto pipelineState = std::make_shared<PipelineStateGL4>();
     POMDOG_ASSERT(pipelineState != nullptr);
@@ -195,7 +195,7 @@ GraphicsDeviceGL4::CreatePipelineState(const PipelineStateDescriptor& descriptor
 
 std::tuple<std::shared_ptr<EffectReflection>, std::unique_ptr<Error>>
 GraphicsDeviceGL4::CreateEffectReflection(
-    [[maybe_unused]] const PipelineStateDescriptor& descriptor,
+    [[maybe_unused]] const PipelineDescriptor& descriptor,
     const std::shared_ptr<PipelineState>& pipelineState) noexcept
 {
     const auto pipelineStateGL4 = dynamic_cast<PipelineStateGL4*>(pipelineState.get());

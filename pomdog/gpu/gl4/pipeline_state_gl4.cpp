@@ -73,7 +73,7 @@ LinkShaders(const VertexShaderGL4& vertexShader, const PixelShaderGL4& pixelShad
 PipelineStateGL4::PipelineStateGL4() = default;
 
 std::unique_ptr<Error>
-PipelineStateGL4::Initialize(const PipelineStateDescriptor& descriptor) noexcept
+PipelineStateGL4::Initialize(const PipelineDescriptor& descriptor) noexcept
 {
     if (auto err = blendState.Initialize(descriptor.BlendState); err != nullptr) {
         return errors::Wrap(std::move(err), "failed to initialize blendState");

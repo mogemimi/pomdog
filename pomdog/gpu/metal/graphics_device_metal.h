@@ -73,12 +73,12 @@ public:
 
     /// Creates a pipeline state object.
     std::tuple<std::shared_ptr<PipelineState>, std::unique_ptr<Error>>
-    CreatePipelineState(const PipelineStateDescriptor& descriptor) noexcept override;
+    CreatePipelineState(const PipelineDescriptor& descriptor) noexcept override;
 
     /// Creates an effect reflection.
     std::tuple<std::shared_ptr<EffectReflection>, std::unique_ptr<Error>>
     CreateEffectReflection(
-        const PipelineStateDescriptor& descriptor,
+        const PipelineDescriptor& descriptor,
         const std::shared_ptr<PipelineState>& pipelineState) noexcept override;
 
     /// Creates a shader object.

@@ -37,7 +37,7 @@ public:
     ~PipelineStateGL4() override;
 
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(const PipelineStateDescriptor& descriptor) noexcept;
+    Initialize(const PipelineDescriptor& descriptor) noexcept;
 
     void ApplyShaders();
 

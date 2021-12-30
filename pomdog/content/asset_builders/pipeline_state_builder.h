@@ -71,7 +71,7 @@ public:
     [[nodiscard]] std::shared_ptr<gpu::EffectReflection>
     CreateEffectReflection(const std::shared_ptr<gpu::PipelineState>& pipelineState);
 
-    const gpu::PipelineStateDescriptor& GetDescription() const;
+    const gpu::PipelineDescriptor& GetDescription() const;
 
     void SetError(std::unique_ptr<Error>&& err);
 

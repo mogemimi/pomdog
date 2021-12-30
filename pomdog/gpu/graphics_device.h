@@ -82,12 +82,12 @@ public:
 
     /// Creates a pipeline state object.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<PipelineState>, std::unique_ptr<Error>>
-    CreatePipelineState(const PipelineStateDescriptor& descriptor) noexcept = 0;
+    CreatePipelineState(const PipelineDescriptor& descriptor) noexcept = 0;
 
     /// Creates an effect reflection.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<EffectReflection>, std::unique_ptr<Error>>
     CreateEffectReflection(
-        const PipelineStateDescriptor& descriptor,
+        const PipelineDescriptor& descriptor,
         const std::shared_ptr<PipelineState>& pipelineState) noexcept = 0;
 
     /// Creates a shader object.

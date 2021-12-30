@@ -220,7 +220,7 @@ PipelineStateMetal::~PipelineStateMetal() = default;
 std::unique_ptr<Error>
 PipelineStateMetal::Initialize(
     id<MTLDevice> device,
-    const PipelineStateDescriptor& descriptor) noexcept
+    const PipelineDescriptor& descriptor) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
 

@@ -12,7 +12,7 @@ class PipelineStateVulkan final : public PipelineState {
 public:
     PipelineStateVulkan(
         VkDevice device,
-        const PipelineStateDescriptor& descriptor);
+        const PipelineDescriptor& descriptor);
 
     ~PipelineStateVulkan();
 

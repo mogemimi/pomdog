@@ -20,7 +20,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu {
 
-struct PipelineStateDescriptor final {
+struct PipelineDescriptor final {
     // NOTE: Since OpenGL 4.1 and earlier, location attribute cannot be used,
     // so you can give hint by name.
     std::unordered_map<std::string, int> ConstantBufferBindHints;

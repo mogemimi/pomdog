@@ -223,7 +223,7 @@ GraphicsDeviceMetal::CreateConstantBuffer(
 }
 
 std::tuple<std::shared_ptr<PipelineState>, std::unique_ptr<Error>>
-GraphicsDeviceMetal::CreatePipelineState(const PipelineStateDescriptor& descriptor) noexcept
+GraphicsDeviceMetal::CreatePipelineState(const PipelineDescriptor& descriptor) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
     auto pipelineState = std::make_shared<PipelineStateMetal>();
@@ -235,7 +235,7 @@ GraphicsDeviceMetal::CreatePipelineState(const PipelineStateDescriptor& descript
 
 std::tuple<std::shared_ptr<EffectReflection>, std::unique_ptr<Error>>
 GraphicsDeviceMetal::CreateEffectReflection(
-    const PipelineStateDescriptor& descriptor,
+    const PipelineDescriptor& descriptor,
     const std::shared_ptr<PipelineState>& pipelineState) noexcept
 {
     return std::make_tuple(nullptr, errors::New("not implemented yet"));

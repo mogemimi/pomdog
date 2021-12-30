@@ -320,7 +320,7 @@ void ToVertexInputState(
 
 void CreateDescriptorSetLayout(
     VkDevice device,
-    const PipelineStateDescriptor& descriptor,
+    const PipelineDescriptor& descriptor,
     VkDescriptorSetLayout& descriptorSetLayout)
 {
     std::vector<VkDescriptorSetLayoutBinding> layoutBindings;
@@ -360,7 +360,7 @@ void CreateDescriptorSetLayout(
 
 void CreateRenderPass(
     VkDevice device,
-    const PipelineStateDescriptor& descriptor,
+    const PipelineDescriptor& descriptor,
     VkRenderPass& renderPass)
 {
     std::array<VkAttachmentDescription, 9> colorAttachments;
@@ -459,7 +459,7 @@ void CreateRenderPass(
 
 PipelineStateVulkan::PipelineStateVulkan(
     VkDevice deviceIn,
-    const PipelineStateDescriptor& descriptor)
+    const PipelineDescriptor& descriptor)
     : device(deviceIn)
     , pipeline(nullptr)
     , renderPass(nullptr)

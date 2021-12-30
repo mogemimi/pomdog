@@ -384,7 +384,7 @@ GraphicsDeviceVulkan::CreateSamplerState(const SamplerDescriptor& descriptor)
 }
 
 std::unique_ptr<NativePipelineState>
-GraphicsDeviceVulkan::CreatePipelineState(const PipelineStateDescriptor& descriptor)
+GraphicsDeviceVulkan::CreatePipelineState(const PipelineDescriptor& descriptor)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->device != nullptr);
@@ -393,7 +393,7 @@ GraphicsDeviceVulkan::CreatePipelineState(const PipelineStateDescriptor& descrip
 
 std::unique_ptr<NativeEffectReflection>
 GraphicsDeviceVulkan::CreateEffectReflection(
-    const PipelineStateDescriptor& descriptor,
+    const PipelineDescriptor& descriptor,
     NativePipelineState& pipelineState)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");

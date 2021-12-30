@@ -424,7 +424,7 @@ CreateInputLayout(
 std::unique_ptr<Error>
 PipelineStateDirect3D11::Initialize(
     ID3D11Device* device,
-    const PipelineStateDescriptor& descriptor) noexcept
+    const PipelineDescriptor& descriptor) noexcept
 {
     POMDOG_ASSERT(device);
 

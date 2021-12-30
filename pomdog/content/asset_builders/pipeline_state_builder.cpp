@@ -19,7 +19,7 @@ namespace pomdog::AssetBuilders {
 
 class Builder<gpu::PipelineState>::Impl final {
 public:
-    PipelineStateDescriptor descriptor;
+    gpu::PipelineDescriptor descriptor;
     std::reference_wrapper<AssetManager const> assets;
     std::shared_ptr<gpu::GraphicsDevice> graphicsDevice;
     std::unique_ptr<Error> lastError;
@@ -281,7 +281,7 @@ Builder<gpu::PipelineState>::CreateEffectReflection(const std::shared_ptr<gpu::P
     return effectReflection;
 }
 
-const PipelineStateDescriptor& Builder<gpu::PipelineState>::GetDescription() const
+const gpu::PipelineDescriptor& Builder<gpu::PipelineState>::GetDescription() const
 {
     POMDOG_ASSERT(impl);
     return impl->descriptor;
