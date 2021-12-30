@@ -58,7 +58,7 @@ void VertexBuffer::SetData(const void* source, std::size_t elementCount)
     POMDOG_ASSERT(elementCount > 0);
     POMDOG_ASSERT(elementCount <= vertexCount);
     POMDOG_ASSERT(nativeBuffer != nullptr);
-    POMDOG_ASSERT(bufferUsage != pomdog::BufferUsage::Immutable);
+    POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
     nativeBuffer->SetData(0, source, elementCount * strideInBytes);
 }
 
@@ -72,7 +72,7 @@ void VertexBuffer::SetData(
     POMDOG_ASSERT(elementCount > 0);
     POMDOG_ASSERT(elementCount <= vertexCount);
     POMDOG_ASSERT(nativeBuffer != nullptr);
-    POMDOG_ASSERT(bufferUsage != pomdog::BufferUsage::Immutable);
+    POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
     nativeBuffer->SetData(offsetInBytes, source,
         elementCount * strideInBytesIn);
 }

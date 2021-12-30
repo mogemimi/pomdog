@@ -56,7 +56,7 @@ void IndexBuffer::SetData(const void* source, std::size_t elementCountIn)
     POMDOG_ASSERT(elementCountIn > 0);
     POMDOG_ASSERT(elementCountIn <= indexCount);
     POMDOG_ASSERT(nativeBuffer != nullptr);
-    POMDOG_ASSERT(bufferUsage != pomdog::BufferUsage::Immutable);
+    POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
     nativeBuffer->SetData(0, source,
         detail::BufferHelper::ToIndexElementOffsetBytes(elementSize) * elementCountIn);
 }
@@ -70,7 +70,7 @@ void IndexBuffer::SetData(
     POMDOG_ASSERT(elementCountIn > 0);
     POMDOG_ASSERT(elementCountIn <= indexCount);
     POMDOG_ASSERT(nativeBuffer != nullptr);
-    POMDOG_ASSERT(bufferUsage != pomdog::BufferUsage::Immutable);
+    POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
     nativeBuffer->SetData(offsetInBytes, source,
         detail::BufferHelper::ToIndexElementOffsetBytes(elementSize) * elementCountIn);
 }

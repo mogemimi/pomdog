@@ -90,7 +90,6 @@ using pomdog::gpu::SamplerDescriptor;
 struct PresentationParameters;
 
 // Enumerations
-using pomdog::gpu::BufferUsage;
 using pomdog::gpu::IndexElementSize;
 using pomdog::gpu::InputElementFormat;
 using pomdog::gpu::PrimitiveTopology;
