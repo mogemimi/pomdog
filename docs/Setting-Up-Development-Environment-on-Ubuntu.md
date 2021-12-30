@@ -16,32 +16,32 @@ sudo apt-get upgrade -y
 #### Installing latest Clang
 
 ```sh
-# Installing Clang 11 to Ubuntu 20.04 (focal)
+# Installing Clang 13 to Ubuntu 21.04 (hirsute)
 sudo apt-get install -y wget gnupg
 wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-echo "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-11 main" | tee /etc/apt/sources.list.d/llvm.list
-echo "deb-src http://apt.llvm.org/focal/ llvm-toolchain-focal-11 main" | tee -a /etc/apt/sources.list.d/llvm.list
+echo "deb http://apt.llvm.org/hirsute/ llvm-toolchain-hirsute-13 main" | sudo tee /etc/apt/sources.list.d/llvm.list
+echo "deb-src http://apt.llvm.org/hirsute/ llvm-toolchain-hirsute-13 main" | sudo tee -a /etc/apt/sources.list.d/llvm.list
 sudo apt-get update
 sudo apt-get install -y \
-    libllvm11 \
-    llvm-11 \
-    llvm-11-dev \
-    llvm-11-runtime \
-    clang-11 \
-    clang-tools-11 \
-    libclang-11-dev \
-    libclang1-11 \
-    clang-format-11 \
-    clangd-11 \
-    libfuzzer-11-dev \
-    lldb-11 \
-    lld-11 \
-    libc++-11-dev \
-    libc++abi-11-dev
+    libllvm13 \
+    llvm-13 \
+    llvm-13-dev \
+    llvm-13-runtime \
+    clang-13 \
+    clang-tools-13 \
+    libclang-13-dev \
+    libclang1-13 \
+    clang-format-13 \
+    clangd-13 \
+    libfuzzer-13-dev \
+    lldb-13 \
+    lld-13 \
+    libc++-13-dev \
+    libc++abi-13-dev
 
 # To use the latest clang as "clang" and "clang++" commands (optional)
-sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-11 10
-sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-11 10
+sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-13 10
+sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-13 10
 
 # Installation clean up
 sudo apt-get clean
@@ -53,7 +53,6 @@ sudo rm -rf /var/lib/apt/lists/*
 ```sh
 sudo apt-get install \
     git \
-    make \
     ninja-build \
     cmake \
     libc++-dev \
