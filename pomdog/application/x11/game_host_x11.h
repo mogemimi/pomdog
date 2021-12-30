@@ -29,7 +29,7 @@ public:
     ~GameHostX11() override;
 
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(const PresentationParameters& presentationParameters);
+    Initialize(const gpu::PresentationParameters& presentationParameters);
 
     void Run(Game& game);
 

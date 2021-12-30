@@ -100,7 +100,7 @@ public:
         HICON iconSmall,
         bool useOpenGL,
         const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
-        const PresentationParameters& presentationParameters) noexcept;
+        const gpu::PresentationParameters& presentationParameters) noexcept;
 
     void SetAllowUserResizing(bool allowResizing);
 
@@ -135,7 +135,7 @@ GameWindowWin32::Impl::Initialize(
     HICON iconSmall,
     bool useOpenGL,
     const std::shared_ptr<EventQueue<SystemEvent>>& eventQueueIn,
-    const PresentationParameters& presentationParameters) noexcept
+    const gpu::PresentationParameters& presentationParameters) noexcept
 {
     eventQueue = eventQueueIn;
     title = "Game";
@@ -532,7 +532,7 @@ GameWindowWin32::Initialize(
     HICON iconSmall,
     bool useOpenGL,
     const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
-    const PresentationParameters& presentationParameters) noexcept
+    const gpu::PresentationParameters& presentationParameters) noexcept
 {
     POMDOG_ASSERT(impl != nullptr);
     return impl->Initialize(

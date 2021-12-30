@@ -30,8 +30,8 @@ using pomdog::Keys;
 using pomdog::KeyState;
 using pomdog::MouseButtons;
 using pomdog::Point2D;
-using pomdog::PresentationParameters;
 using pomdog::PixelFormat;
+using pomdog::gpu::PresentationParameters;
 
 namespace {
 

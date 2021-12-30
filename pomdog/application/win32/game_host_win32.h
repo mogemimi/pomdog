@@ -13,8 +13,11 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog {
 class Error;
 class Game;
-struct PresentationParameters;
 } // namespace pomdog
+
+namespace pomdog::gpu {
+struct PresentationParameters;
+} // namespace pomdog::gpu
 
 namespace pomdog::detail {
 class SystemEvent;
@@ -39,7 +42,7 @@ public:
         const std::shared_ptr<GameWindowWin32>& window,
         const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
         const std::shared_ptr<NativeGamepad>& gamepad,
-        const PresentationParameters& presentationParameters,
+        const gpu::PresentationParameters& presentationParameters,
         bool useOpenGL) noexcept;
 
     void Run(Game& game);

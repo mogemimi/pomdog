@@ -115,7 +115,7 @@ public:
 [[nodiscard]] CreateGraphicsDeviceResult
 CreateGraphicsDeviceGL4(
     const std::shared_ptr<GameWindowWin32>& window,
-    const PresentationParameters& presentationParameters)
+    const gpu::PresentationParameters& presentationParameters)
 {
     // NOTE: Create an OpenGL context.
     auto openGLContext = std::make_shared<win32::OpenGLContextWin32>();
@@ -224,7 +224,7 @@ public:
 [[nodiscard]] CreateGraphicsDeviceResult
 CreateGraphicsDeviceDirect3D11(
     const std::shared_ptr<GameWindowWin32>& window,
-    const PresentationParameters& presentationParameters)
+    const gpu::PresentationParameters& presentationParameters)
 {
     auto graphicsDevice = std::make_shared<GraphicsDeviceDirect3D11>();
     if (auto err = graphicsDevice->Initialize(presentationParameters); err != nullptr) {
@@ -281,7 +281,7 @@ public:
         const std::shared_ptr<GameWindowWin32>& window,
         const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
         const std::shared_ptr<NativeGamepad>& gamepad,
-        const PresentationParameters& presentationParameters,
+        const gpu::PresentationParameters& presentationParameters,
         bool useOpenGL) noexcept;
 
     void Run(Game& game);
@@ -366,7 +366,7 @@ GameHostWin32::Impl::Initialize(
     const std::shared_ptr<GameWindowWin32>& windowIn,
     const std::shared_ptr<EventQueue<SystemEvent>>& eventQueueIn,
     const std::shared_ptr<NativeGamepad>& gamepadIn,
-    const PresentationParameters& presentationParameters,
+    const gpu::PresentationParameters& presentationParameters,
     bool useOpenGL) noexcept
 {
     eventQueue = eventQueueIn;
@@ -651,7 +651,7 @@ GameHostWin32::Initialize(
     const std::shared_ptr<GameWindowWin32>& window,
     const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
     const std::shared_ptr<NativeGamepad>& gamepad,
-    const PresentationParameters& presentationParameters,
+    const gpu::PresentationParameters& presentationParameters,
     bool useOpenGL) noexcept
 {
     POMDOG_ASSERT(impl != nullptr);

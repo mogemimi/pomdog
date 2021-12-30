@@ -25,7 +25,7 @@ public:
     [[nodiscard]] std::unique_ptr<Error>
     Initialize(
         HWND windowHandle,
-        const PresentationParameters& presentationParameters) noexcept;
+        const gpu::PresentationParameters& presentationParameters) noexcept;
 
     void MakeCurrent() override;
 

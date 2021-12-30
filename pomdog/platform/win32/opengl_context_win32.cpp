@@ -16,7 +16,7 @@ namespace {
 
 [[nodiscard]] std::unique_ptr<Error>
 ToPixelFormatDescriptor(
-    const PresentationParameters& presentationParameters,
+    const gpu::PresentationParameters& presentationParameters,
     PIXELFORMATDESCRIPTOR& descriptor) noexcept
 {
     descriptor = PIXELFORMATDESCRIPTOR{
@@ -87,7 +87,7 @@ OpenGLContextWin32::OpenGLContextWin32() noexcept = default;
 std::unique_ptr<Error>
 OpenGLContextWin32::Initialize(
     HWND windowHandleIn,
-    const PresentationParameters& presentationParameters) noexcept
+    const gpu::PresentationParameters& presentationParameters) noexcept
 {
     windowHandle = windowHandleIn;
     if (windowHandle == nullptr) {

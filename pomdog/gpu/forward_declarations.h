@@ -41,6 +41,7 @@ struct EffectVariable;
 struct InputElement;
 struct InputLayoutDescriptor;
 struct PipelineDescriptor;
+struct PresentationParameters;
 struct RasterizerDescriptor;
 struct RenderPass;
 struct RenderTargetBlendDescriptor;
@@ -66,6 +67,5 @@ enum class TextureFilter : std::uint8_t;
 } // namespace pomdog::gpu
 
 namespace pomdog {
-struct PresentationParameters;
 enum class PixelFormat : std::uint8_t;
 } // namespace pomdog

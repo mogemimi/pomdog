@@ -13,8 +13,11 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 class Error;
-struct PresentationParameters;
 } // namespace pomdog
+
+namespace pomdog::gpu {
+struct PresentationParameters;
+} // namespace pomdog::gpu
 
 namespace pomdog::detail {
 class SystemEvent;
@@ -36,7 +39,7 @@ public:
         HICON iconSmall,
         bool useOpenGL,
         const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
-        const PresentationParameters& presentationParameters) noexcept;
+        const gpu::PresentationParameters& presentationParameters) noexcept;
 
     bool GetAllowUserResizing() const override;
 

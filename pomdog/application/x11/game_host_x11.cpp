@@ -51,7 +51,7 @@ CheckFrameBufferConfigSupport(::Display* display) noexcept
 [[nodiscard]] std::tuple<GLXFBConfig, std::unique_ptr<Error>>
 ChooseFramebufferConfig(
     Display* display,
-    const PresentationParameters& presentationParameters)
+    const gpu::PresentationParameters& presentationParameters)
 {
     if (!CheckFrameBufferConfigSupport(display)) {
         return std::make_tuple(nullptr, errors::New("GLX of version lower than 1.3.2 is not supported."));
@@ -194,7 +194,7 @@ public:
     ~Impl();
 
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(const PresentationParameters& presentationParameters);
+    Initialize(const gpu::PresentationParameters& presentationParameters);
 
     void Run(Game& game);
 
@@ -229,7 +229,7 @@ public:
 };
 
 std::unique_ptr<Error>
-GameHostX11::Impl::Initialize(const PresentationParameters& presentationParameters)
+GameHostX11::Impl::Initialize(const gpu::PresentationParameters& presentationParameters)
 {
     backBufferSurfaceFormat = presentationParameters.BackBufferFormat;
     backBufferDepthStencilFormat = presentationParameters.DepthStencilFormat;
@@ -455,7 +455,7 @@ GameHostX11::GameHostX11() noexcept
 GameHostX11::~GameHostX11() = default;
 
 std::unique_ptr<Error>
-GameHostX11::Initialize(const PresentationParameters& presentationParameters)
+GameHostX11::Initialize(const gpu::PresentationParameters& presentationParameters)
 {
     POMDOG_ASSERT(impl != nullptr);
     return impl->Initialize(presentationParameters);

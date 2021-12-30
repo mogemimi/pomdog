@@ -11,8 +11,11 @@
 namespace pomdog {
 class Error;
 class Game;
-struct PresentationParameters;
 } // namespace pomdog
+
+namespace pomdog::gpu {
+struct PresentationParameters;
+} // namespace pomdog::gpu
 
 namespace pomdog::detail {
 class SystemEvent;
@@ -35,7 +38,7 @@ public:
         MTKView* metalView,
         const std::shared_ptr<GameWindowCocoa>& window,
         const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
-        const PresentationParameters& presentationParameters);
+        const gpu::PresentationParameters& presentationParameters);
 
     [[nodiscard]] std::unique_ptr<Error>
     InitializeGame(

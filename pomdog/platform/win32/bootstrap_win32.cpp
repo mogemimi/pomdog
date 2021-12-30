@@ -85,7 +85,7 @@ void Bootstrap::Run(
     using pomdog::detail::win32::GameHostWin32;
     using pomdog::detail::win32::GameWindowWin32;
 
-    PresentationParameters presentationParameters;
+    gpu::PresentationParameters presentationParameters;
     presentationParameters.BackBufferHeight = backBufferHeight;
     presentationParameters.BackBufferWidth = backBufferWidth;
     presentationParameters.PresentationInterval = presentationInterval;

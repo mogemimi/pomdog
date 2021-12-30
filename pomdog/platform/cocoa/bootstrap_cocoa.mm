@@ -83,7 +83,7 @@ Bootstrap::Run(std::function<std::shared_ptr<Game>(const std::shared_ptr<GameHos
         [nativeWindow makeKeyAndOrderFront:nullptr];
         [nativeWindow orderFrontRegardless];
 
-        PresentationParameters presentationParameters;
+        gpu::PresentationParameters presentationParameters;
         presentationParameters.BackBufferFormat = surfaceFormat;
         presentationParameters.DepthStencilFormat = depthFormat;
         presentationParameters.PresentationInterval = 60;

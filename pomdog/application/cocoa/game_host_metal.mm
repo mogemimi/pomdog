@@ -49,7 +49,7 @@ namespace {
 void SetupMetalView(
     MTKView* view,
     id<MTLDevice> device,
-    const PresentationParameters& presentationParameters)
+    const gpu::PresentationParameters& presentationParameters)
 {
     // Set the view to use the default device
     view.device = device;
@@ -72,7 +72,7 @@ public:
         MTKView* metalView,
         const std::shared_ptr<GameWindowCocoa>& window,
         const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
-        const PresentationParameters& presentationParameters);
+        const gpu::PresentationParameters& presentationParameters);
 
     [[nodiscard]] std::unique_ptr<Error>
     InitializeGame(
@@ -161,7 +161,7 @@ GameHostMetal::Impl::Initialize(
     MTKView* metalViewIn,
     const std::shared_ptr<GameWindowCocoa>& windowIn,
     const std::shared_ptr<EventQueue<SystemEvent>>& eventQueueIn,
-    const PresentationParameters& presentationParameters)
+    const gpu::PresentationParameters& presentationParameters)
 {
     this->viewLiveResizing = false;
     this->eventQueue = eventQueueIn;
@@ -515,7 +515,7 @@ GameHostMetal::Initialize(
     MTKView* metalView,
     const std::shared_ptr<GameWindowCocoa>& window,
     const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
-    const PresentationParameters& presentationParameters)
+    const gpu::PresentationParameters& presentationParameters)
 {
     POMDOG_ASSERT(impl);
     return impl->Initialize(metalView, window, eventQueue, presentationParameters);

@@ -52,7 +52,7 @@ public:
         PomdogOpenGLView* openGLView,
         const std::shared_ptr<GameWindowCocoa>& window,
         const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
-        const PresentationParameters& presentationParameters);
+        const gpu::PresentationParameters& presentationParameters);
 
     [[nodiscard]] std::unique_ptr<Error>
     Run(
@@ -151,7 +151,7 @@ GameHostCocoa::Impl::Initialize(
     PomdogOpenGLView* openGLViewIn,
     const std::shared_ptr<GameWindowCocoa>& windowIn,
     const std::shared_ptr<EventQueue<SystemEvent>>& eventQueueIn,
-    const PresentationParameters& presentationParameters)
+    const gpu::PresentationParameters& presentationParameters)
 {
     this->viewLiveResizing = false;
     this->displayLink = nullptr;
@@ -598,7 +598,7 @@ GameHostCocoa::Initialize(
     PomdogOpenGLView* openGLView,
     const std::shared_ptr<GameWindowCocoa>& window,
     const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
-    const PresentationParameters& presentationParameters)
+    const gpu::PresentationParameters& presentationParameters)
 {
     POMDOG_ASSERT(impl);
     return impl->Initialize(openGLView, window, eventQueue, presentationParameters);

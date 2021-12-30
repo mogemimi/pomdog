@@ -47,7 +47,7 @@ void Bootstrap::Run(
 {
     using pomdog::detail::x11::GameHostX11;
 
-    PresentationParameters presentationParameters;
+    gpu::PresentationParameters presentationParameters;
     presentationParameters.BackBufferHeight = backBufferHeight;
     presentationParameters.BackBufferWidth = backBufferWidth;
     presentationParameters.PresentationInterval = presentationInterval;

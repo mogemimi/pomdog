@@ -11,7 +11,7 @@ namespace pomdog::detail::cocoa {
 namespace {
 
 [[nodiscard]] NSOpenGLPixelFormat*
-CreatePixelFormat(const PresentationParameters& presentationParameters) noexcept
+CreatePixelFormat(const gpu::PresentationParameters& presentationParameters) noexcept
 {
     std::vector<NSOpenGLPixelFormatAttribute> attributes = {
         // NOTE: OpenGL >= 4.1
@@ -108,7 +108,7 @@ CreatePixelFormat(const PresentationParameters& presentationParameters) noexcept
 OpenGLContextCocoa::OpenGLContextCocoa() noexcept = default;
 
 std::unique_ptr<Error>
-OpenGLContextCocoa::Initialize(const PresentationParameters& presentationParameters) noexcept
+OpenGLContextCocoa::Initialize(const gpu::PresentationParameters& presentationParameters) noexcept
 {
     // NOTE: Create a pixel format for OpenGL context.
     auto pixelFormat = detail::cocoa::CreatePixelFormat(presentationParameters);
