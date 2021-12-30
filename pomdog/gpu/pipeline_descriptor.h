@@ -31,7 +31,7 @@ struct PipelineDescriptor final {
     InputLayoutDescriptor InputLayout;
 
     /// Specifies the geometric primitive type for the input assembler stage.
-    pomdog::PrimitiveTopology PrimitiveTopology;
+    pomdog::gpu::PrimitiveTopology PrimitiveTopology;
 
     BlendDescriptor BlendState;
     RasterizerDescriptor RasterizerState;

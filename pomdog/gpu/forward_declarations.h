@@ -90,9 +90,6 @@ using pomdog::gpu::SamplerDescriptor;
 struct PresentationParameters;
 
 // Enumerations
-using pomdog::gpu::IndexElementSize;
-using pomdog::gpu::InputElementFormat;
-using pomdog::gpu::PrimitiveTopology;
 using pomdog::gpu::SurfaceFormat;
 
 } // namespace pomdog
