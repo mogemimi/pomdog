@@ -3,22 +3,48 @@
 #pragma once
 
 #include "pomdog/application/game_host.h"
-#include "pomdog/application/x11/game_window_x11.h"
-#include "pomdog/application/x11/x11_context.h"
+#include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/chrono/duration.h"
-#include "pomdog/chrono/game_clock.h"
-#include "pomdog/gpu/presentation_parameters.h"
-#include "pomdog/input/x11/keyboard_x11.h"
+#include "pomdog/gpu/forward_declarations.h"
 #include "pomdog/input/x11/mouse_x11.h"
-#include "pomdog/platform/x11/opengl_context_x11.h"
-#include "pomdog/utility/errors.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <memory>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 class Game;
+class Error;
 } // namespace pomdog
+
+namespace pomdog::detail {
+class NativeGamepad;
+class GameClockImpl;
+class TimeSource;
+} // namespace pomdog::detail
+
+namespace pomdog::gpu::detail {
+class CommandQueueImmediate;
+} // namespace pomdog::gpu::detail
+
+namespace pomdog::gpu::detail::gl4 {
+class GraphicsContextGL4;
+class GraphicsDeviceGL4;
+} // namespace pomdog::gpu::detail::gl4
+
+namespace pomdog::detail::x11 {
+class X11Context;
+class KeyboardX11;
+class MouseX11;
+class OpenGLContextX11;
+class GameWindowX11;
+} // namespace pomdog::detail::x11
+
+namespace pomdog::detail::openal {
+class AudioEngineAL;
+} // namespace pomdog::detail::openal
 
 namespace pomdog::detail::linux {
 
@@ -69,8 +95,32 @@ public:
     GetHTTPClient() noexcept override;
 
 private:
-    class Impl;
-    std::unique_ptr<Impl> impl;
+    void MessagePump();
+
+    void ProcessEvent(::XEvent& event);
+
+    void RenderFrame(Game& game);
+
+private:
+    std::shared_ptr<TimeSource> timeSource_;
+    std::shared_ptr<GameClockImpl> clock_;
+    std::shared_ptr<x11::X11Context> x11Context_;
+    std::shared_ptr<x11::GameWindowX11> window_;
+    std::shared_ptr<x11::OpenGLContextX11> openGLContext_;
+    std::shared_ptr<gpu::detail::gl4::GraphicsDeviceGL4> graphicsDevice_;
+    std::shared_ptr<gpu::detail::gl4::GraphicsContextGL4> graphicsContext_;
+    std::shared_ptr<gpu::detail::CommandQueueImmediate> commandQueue_;
+    std::shared_ptr<openal::AudioEngineAL> audioEngine_;
+    std::shared_ptr<AssetManager> assetManager_;
+    std::unique_ptr<x11::KeyboardX11> keyboard_;
+    x11::MouseX11 mouse_;
+    std::unique_ptr<detail::NativeGamepad> gamepad_;
+    std::unique_ptr<IOService> ioService_;
+    std::unique_ptr<HTTPClient> httpClient_;
+    Duration presentationInterval_;
+    PixelFormat backBufferSurfaceFormat_;
+    PixelFormat backBufferDepthStencilFormat_;
+    bool exitRequest_ = false;
 };
 
 } // namespace pomdog::detail::linux
