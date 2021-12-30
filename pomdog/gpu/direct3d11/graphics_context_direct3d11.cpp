@@ -248,7 +248,7 @@ GraphicsContextDirect3D11::~GraphicsContextDirect3D11()
 }
 
 void GraphicsContextDirect3D11::ExecuteCommandLists(
-    const std::vector<std::shared_ptr<GraphicsCommandListImmediate>>& commandLists)
+    const std::vector<std::shared_ptr<CommandListImmediate>>& commandLists)
 {
     pipelineState = nullptr;
     needToApplyPipelineState = true;

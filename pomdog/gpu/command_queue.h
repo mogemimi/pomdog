@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu {
 
-class GraphicsCommandList;
+class CommandList;
 
 class POMDOG_EXPORT GraphicsCommandQueue {
 public:
@@ -27,7 +27,7 @@ public:
 
     virtual void Reset() = 0;
 
-    virtual void PushbackCommandList(const std::shared_ptr<GraphicsCommandList>& commandList) = 0;
+    virtual void PushbackCommandList(const std::shared_ptr<CommandList>& commandList) = 0;
 
     virtual void ExecuteCommandLists() = 0;
 

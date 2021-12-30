@@ -4,7 +4,7 @@
 
 namespace pomdog::gpu {
 
-GraphicsCommandList::GraphicsCommandList() noexcept = default;
-GraphicsCommandList::~GraphicsCommandList() = default;
+CommandList::CommandList() noexcept = default;
+CommandList::~CommandList() = default;
 
 } // namespace pomdog::gpu

@@ -52,10 +52,10 @@ PresentationParameters GraphicsDeviceMetal::GetPresentationParameters() const no
     return presentationParameters;
 }
 
-std::tuple<std::shared_ptr<GraphicsCommandList>, std::unique_ptr<Error>>
-GraphicsDeviceMetal::CreateGraphicsCommandList() noexcept
+std::tuple<std::shared_ptr<CommandList>, std::unique_ptr<Error>>
+GraphicsDeviceMetal::CreateCommandList() noexcept
 {
-    auto commandList = std::make_shared<GraphicsCommandListImmediate>();
+    auto commandList = std::make_shared<CommandListImmediate>();
     return std::make_tuple(std::move(commandList), nullptr);
 }
 

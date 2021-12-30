@@ -14,13 +14,13 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu {
 
-class POMDOG_EXPORT GraphicsCommandList {
+class POMDOG_EXPORT CommandList {
 public:
-    GraphicsCommandList() noexcept;
-    GraphicsCommandList(const GraphicsCommandList&) = delete;
-    GraphicsCommandList& operator=(const GraphicsCommandList&) = delete;
+    CommandList() noexcept;
+    CommandList(const CommandList&) = delete;
+    CommandList& operator=(const CommandList&) = delete;
 
-    virtual ~GraphicsCommandList();
+    virtual ~CommandList();
 
     /// Declares that recording to the command list is completed.
     virtual void Close() = 0;

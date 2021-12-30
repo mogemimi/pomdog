@@ -25,8 +25,8 @@ public:
     PresentationParameters GetPresentationParameters() const noexcept override;
 
     /// Creates a graphics command list.
-    std::tuple<std::shared_ptr<GraphicsCommandList>, std::unique_ptr<Error>>
-    CreateGraphicsCommandList() noexcept override;
+    std::tuple<std::shared_ptr<CommandList>, std::unique_ptr<Error>>
+    CreateCommandList() noexcept override;
 
     /// Creates a vertex buffer.
     std::tuple<std::shared_ptr<VertexBuffer>, std::unique_ptr<Error>>

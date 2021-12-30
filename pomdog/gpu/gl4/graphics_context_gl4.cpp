@@ -409,7 +409,7 @@ GraphicsContextGL4::~GraphicsContextGL4()
 }
 
 void GraphicsContextGL4::ExecuteCommandLists(
-    const std::vector<std::shared_ptr<GraphicsCommandListImmediate>>& commandLists)
+    const std::vector<std::shared_ptr<CommandListImmediate>>& commandLists)
 {
     pipelineState = nullptr;
     needToApplyInputLayout = true;

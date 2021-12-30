@@ -20,13 +20,13 @@ void GraphicsCommandQueueImmediate::Reset()
 }
 
 void GraphicsCommandQueueImmediate::PushbackCommandList(
-    const std::shared_ptr<GraphicsCommandList>& commandList)
+    const std::shared_ptr<CommandList>& commandList)
 {
     POMDOG_ASSERT(commandList);
     if (commandList) {
-        auto commandListImmediate = std::static_pointer_cast<GraphicsCommandListImmediate>(commandList);
+        auto commandListImmediate = std::static_pointer_cast<CommandListImmediate>(commandList);
         POMDOG_ASSERT(commandListImmediate != nullptr);
-        POMDOG_ASSERT(commandListImmediate == std::dynamic_pointer_cast<GraphicsCommandListImmediate>(commandList));
+        POMDOG_ASSERT(commandListImmediate == std::dynamic_pointer_cast<CommandListImmediate>(commandList));
         commandLists.push_back(std::move(commandListImmediate));
     }
 }

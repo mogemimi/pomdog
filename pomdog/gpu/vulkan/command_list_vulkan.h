@@ -8,9 +8,9 @@
 
 namespace pomdog::gpu::detail::vulkan {
 
-class GraphicsCommandListVulkan final : public GraphicsCommandList {
+class CommandListVulkan final : public CommandList {
 public:
-    GraphicsCommandListVulkan();
+    CommandListVulkan();
 
     /// Declares that recording to the command list is completed.
     void Close() override;

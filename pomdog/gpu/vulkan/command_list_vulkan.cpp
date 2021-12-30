@@ -34,7 +34,7 @@ VkIndexType ToVkIndexType(IndexElementSize elementSize) noexcept
 
 } // namespace
 
-GraphicsCommandListVulkan::GraphicsCommandListVulkan()
+CommandListVulkan::CommandListVulkan()
 {
     // TODO: Not implemented
     commandBuffer = nullptr;
@@ -42,23 +42,23 @@ GraphicsCommandListVulkan::GraphicsCommandListVulkan()
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 
-void GraphicsCommandListVulkan::Close()
+void CommandListVulkan::Close()
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 
-void GraphicsCommandListVulkan::Reset()
+void CommandListVulkan::Reset()
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 
-std::size_t GraphicsCommandListVulkan::GetCount() const noexcept
+std::size_t CommandListVulkan::GetCount() const noexcept
 {
     // FIXME: Not implemented yet.
     return 0;
 }
 
-void GraphicsCommandListVulkan::Draw(
+void CommandListVulkan::Draw(
     std::size_t vertexCount,
     std::size_t startVertexLocation)
 {
@@ -72,7 +72,7 @@ void GraphicsCommandListVulkan::Draw(
         0);
 }
 
-void GraphicsCommandListVulkan::DrawIndexed(
+void CommandListVulkan::DrawIndexed(
     std::size_t indexCount,
     std::size_t startIndexLocation)
 {
@@ -87,7 +87,7 @@ void GraphicsCommandListVulkan::DrawIndexed(
         0);
 }
 
-void GraphicsCommandListVulkan::DrawInstanced(
+void CommandListVulkan::DrawInstanced(
     std::size_t vertexCountPerInstance,
     std::size_t instanceCount,
     std::size_t startVertexLocation,
@@ -103,7 +103,7 @@ void GraphicsCommandListVulkan::DrawInstanced(
         static_cast<uint32_t>(startInstanceLocation));
 }
 
-void GraphicsCommandListVulkan::DrawIndexedInstanced(
+void CommandListVulkan::DrawIndexedInstanced(
     std::size_t indexCountPerInstance,
     std::size_t instanceCount,
     std::size_t startIndexLocation,
@@ -120,7 +120,7 @@ void GraphicsCommandListVulkan::DrawIndexedInstanced(
         static_cast<uint32_t>(startInstanceLocation));
 }
 
-void GraphicsCommandListVulkan::SetRenderPass(RenderPass&& renderPass)
+void CommandListVulkan::SetRenderPass(RenderPass&& renderPass)
 {
     POMDOG_ASSERT(commandBuffer != nullptr);
 
@@ -294,7 +294,7 @@ void GraphicsCommandListVulkan::SetRenderPass(RenderPass&& renderPass)
         clearRects.data());
 }
 
-void GraphicsCommandListVulkan::SetViewport(const Viewport& viewportIn)
+void CommandListVulkan::SetViewport(const Viewport& viewportIn)
 {
     POMDOG_ASSERT(commandBuffer != nullptr);
 
@@ -312,7 +312,7 @@ void GraphicsCommandListVulkan::SetViewport(const Viewport& viewportIn)
     vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
 }
 
-void GraphicsCommandListVulkan::SetScissorRect(const Rectangle& rect)
+void CommandListVulkan::SetScissorRect(const Rectangle& rect)
 {
     POMDOG_ASSERT(commandBuffer != nullptr);
 
@@ -328,13 +328,13 @@ void GraphicsCommandListVulkan::SetScissorRect(const Rectangle& rect)
     vkCmdSetScissor(commandBuffer, 0, 1, &scissorRect);
 }
 
-void GraphicsCommandListVulkan::SetBlendFactor(const Vector4& blendFactor)
+void CommandListVulkan::SetBlendFactor(const Vector4& blendFactor)
 {
     POMDOG_ASSERT(commandBuffer != nullptr);
     vkCmdSetBlendConstants(commandBuffer, blendFactor.Data());
 }
 
-void GraphicsCommandListVulkan::SetVertexBuffer(
+void CommandListVulkan::SetVertexBuffer(
     int index,
     const std::shared_ptr<VertexBuffer>& vertexBuffer,
     std::size_t offset)
@@ -359,7 +359,7 @@ void GraphicsCommandListVulkan::SetVertexBuffer(
     vkCmdBindVertexBuffers(commandBuffer, slotIndex, 1, vertexBuffers.data(), offsets.data());
 }
 
-void GraphicsCommandListVulkan::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBufferIn)
+void CommandListVulkan::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBufferIn)
 {
     POMDOG_ASSERT(commandBuffer != nullptr);
     POMDOG_ASSERT(indexBufferIn != nullptr);
@@ -376,12 +376,12 @@ void GraphicsCommandListVulkan::SetIndexBuffer(const std::shared_ptr<IndexBuffer
     vkCmdBindIndexBuffer(commandBuffer, indexBuffer, offset, indexType);
 }
 
-void GraphicsCommandListVulkan::SetPipelineState(const std::shared_ptr<NativePipelineState>& pipelineState)
+void CommandListVulkan::SetPipelineState(const std::shared_ptr<NativePipelineState>& pipelineState)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 
-void GraphicsCommandListVulkan::SetConstantBuffer(
+void CommandListVulkan::SetConstantBuffer(
     int index,
     const std::shared_ptr<NativeBuffer>& constantBuffer,
     std::size_t offset,
@@ -390,22 +390,22 @@ void GraphicsCommandListVulkan::SetConstantBuffer(
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 
-void GraphicsCommandListVulkan::SetSampler(int index, std::shared_ptr<NativeSamplerState>&& sampler)
+void CommandListVulkan::SetSampler(int index, std::shared_ptr<NativeSamplerState>&& sampler)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 
-void GraphicsCommandListVulkan::SetTexture(int index)
+void CommandListVulkan::SetTexture(int index)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 
-void GraphicsCommandListVulkan::SetTexture(int index, const std::shared_ptr<gpu::Texture2D>& texture)
+void CommandListVulkan::SetTexture(int index, const std::shared_ptr<gpu::Texture2D>& texture)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 
-void GraphicsCommandListVulkan::SetTexture(int index, const std::shared_ptr<RenderTarget2D>& texture)
+void CommandListVulkan::SetTexture(int index, const std::shared_ptr<RenderTarget2D>& texture)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }

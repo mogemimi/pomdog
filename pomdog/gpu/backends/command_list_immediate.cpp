@@ -200,9 +200,9 @@ struct SetRenderPassCommand final : public GraphicsCommand {
 
 GraphicsCommand::~GraphicsCommand() = default;
 
-GraphicsCommandListImmediate::~GraphicsCommandListImmediate() = default;
+CommandListImmediate::~CommandListImmediate() = default;
 
-void GraphicsCommandListImmediate::Close()
+void CommandListImmediate::Close()
 {
 #if defined(__APPLE_CC__)
     constexpr bool useMetal = true;
@@ -215,17 +215,17 @@ void GraphicsCommandListImmediate::Close()
     commands.shrink_to_fit();
 }
 
-void GraphicsCommandListImmediate::Reset()
+void CommandListImmediate::Reset()
 {
     commands.clear();
 }
 
-std::size_t GraphicsCommandListImmediate::GetCount() const noexcept
+std::size_t CommandListImmediate::GetCount() const noexcept
 {
     return commands.size();
 }
 
-void GraphicsCommandListImmediate::Draw(
+void CommandListImmediate::Draw(
     std::size_t vertexCount,
     std::size_t startVertexLocation)
 {
@@ -237,7 +237,7 @@ void GraphicsCommandListImmediate::Draw(
     commands.push_back(std::move(command));
 }
 
-void GraphicsCommandListImmediate::DrawIndexed(
+void CommandListImmediate::DrawIndexed(
     std::size_t indexCount,
     std::size_t startIndexLocation)
 {
@@ -249,7 +249,7 @@ void GraphicsCommandListImmediate::DrawIndexed(
     commands.push_back(std::move(command));
 }
 
-void GraphicsCommandListImmediate::DrawInstanced(
+void CommandListImmediate::DrawInstanced(
     std::size_t vertexCountPerInstance,
     std::size_t instanceCount,
     std::size_t startVertexLocation,
@@ -265,7 +265,7 @@ void GraphicsCommandListImmediate::DrawInstanced(
     commands.push_back(std::move(command));
 }
 
-void GraphicsCommandListImmediate::DrawIndexedInstanced(
+void CommandListImmediate::DrawIndexedInstanced(
     std::size_t indexCountPerInstance,
     std::size_t instanceCount,
     std::size_t startIndexLocation,
@@ -281,7 +281,7 @@ void GraphicsCommandListImmediate::DrawIndexedInstanced(
     commands.push_back(std::move(command));
 }
 
-void GraphicsCommandListImmediate::SetRenderPass(RenderPass&& renderPass)
+void CommandListImmediate::SetRenderPass(RenderPass&& renderPass)
 {
     auto command = std::make_unique<SetRenderPassCommand>();
     command->commandType = GraphicsCommandType::SetRenderPassCommand;
@@ -293,7 +293,7 @@ void GraphicsCommandListImmediate::SetRenderPass(RenderPass&& renderPass)
     commands.push_back(std::move(command));
 }
 
-void GraphicsCommandListImmediate::SetViewport(const Viewport& viewport)
+void CommandListImmediate::SetViewport(const Viewport& viewport)
 {
     auto command = std::make_unique<SetViewportCommand>();
     command->commandType = GraphicsCommandType::SetViewportCommand;
@@ -301,7 +301,7 @@ void GraphicsCommandListImmediate::SetViewport(const Viewport& viewport)
     commands.push_back(std::move(command));
 }
 
-void GraphicsCommandListImmediate::SetScissorRect(const Rectangle& scissorRect)
+void CommandListImmediate::SetScissorRect(const Rectangle& scissorRect)
 {
     auto command = std::make_unique<SetScissorRectCommand>();
     command->commandType = GraphicsCommandType::SetScissorRectCommand;
@@ -309,7 +309,7 @@ void GraphicsCommandListImmediate::SetScissorRect(const Rectangle& scissorRect)
     commands.push_back(std::move(command));
 }
 
-void GraphicsCommandListImmediate::SetBlendFactor(const Vector4& blendFactor)
+void CommandListImmediate::SetBlendFactor(const Vector4& blendFactor)
 {
     auto command = std::make_unique<SetBlendFactorCommand>();
     command->commandType = GraphicsCommandType::SetBlendFactorCommand;
@@ -317,14 +317,14 @@ void GraphicsCommandListImmediate::SetBlendFactor(const Vector4& blendFactor)
     commands.push_back(std::move(command));
 }
 
-void GraphicsCommandListImmediate::SetVertexBuffer(
+void CommandListImmediate::SetVertexBuffer(
     int index,
     const std::shared_ptr<VertexBuffer>& vertexBuffer)
 {
     SetVertexBuffer(index, vertexBuffer, 0);
 }
 
-void GraphicsCommandListImmediate::SetVertexBuffer(
+void CommandListImmediate::SetVertexBuffer(
     int index,
     const std::shared_ptr<VertexBuffer>& vertexBuffer,
     std::size_t offset)
@@ -340,7 +340,7 @@ void GraphicsCommandListImmediate::SetVertexBuffer(
     commands.push_back(std::move(command));
 }
 
-void GraphicsCommandListImmediate::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer)
+void CommandListImmediate::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer)
 {
     POMDOG_ASSERT(indexBuffer != nullptr);
     auto command = std::make_unique<SetIndexBufferCommand>();
@@ -349,7 +349,7 @@ void GraphicsCommandListImmediate::SetIndexBuffer(const std::shared_ptr<IndexBuf
     commands.push_back(std::move(command));
 }
 
-void GraphicsCommandListImmediate::SetPipelineState(const std::shared_ptr<PipelineState>& pipelineState)
+void CommandListImmediate::SetPipelineState(const std::shared_ptr<PipelineState>& pipelineState)
 {
     POMDOG_ASSERT(pipelineState);
     auto command = std::make_unique<SetPipelineStateCommand>();
@@ -358,7 +358,7 @@ void GraphicsCommandListImmediate::SetPipelineState(const std::shared_ptr<Pipeli
     commands.push_back(std::move(command));
 }
 
-void GraphicsCommandListImmediate::SetConstantBuffer(
+void CommandListImmediate::SetConstantBuffer(
     int index,
     const std::shared_ptr<ConstantBuffer>& constantBuffer)
 {
@@ -376,7 +376,7 @@ void GraphicsCommandListImmediate::SetConstantBuffer(
     commands.push_back(std::move(command));
 }
 
-void GraphicsCommandListImmediate::SetConstantBuffer(
+void CommandListImmediate::SetConstantBuffer(
     int index,
     const std::shared_ptr<ConstantBuffer>& constantBuffer,
     std::size_t offset)
@@ -396,7 +396,7 @@ void GraphicsCommandListImmediate::SetConstantBuffer(
     commands.push_back(std::move(command));
 }
 
-void GraphicsCommandListImmediate::SetSamplerState(int index, const std::shared_ptr<SamplerState>& samplerState)
+void CommandListImmediate::SetSamplerState(int index, const std::shared_ptr<SamplerState>& samplerState)
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(samplerState != nullptr);
@@ -407,7 +407,7 @@ void GraphicsCommandListImmediate::SetSamplerState(int index, const std::shared_
     commands.push_back(std::move(command));
 }
 
-void GraphicsCommandListImmediate::SetTexture(int index)
+void CommandListImmediate::SetTexture(int index)
 {
     POMDOG_ASSERT(index >= 0);
     auto command = std::make_unique<SetTextureCommand>();
@@ -417,7 +417,7 @@ void GraphicsCommandListImmediate::SetTexture(int index)
     commands.push_back(std::move(command));
 }
 
-void GraphicsCommandListImmediate::SetTexture(int index, const std::shared_ptr<gpu::Texture2D>& texture)
+void CommandListImmediate::SetTexture(int index, const std::shared_ptr<gpu::Texture2D>& texture)
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(texture);
@@ -428,7 +428,7 @@ void GraphicsCommandListImmediate::SetTexture(int index, const std::shared_ptr<g
     commands.push_back(std::move(command));
 }
 
-void GraphicsCommandListImmediate::SetTexture(int index, const std::shared_ptr<RenderTarget2D>& texture)
+void CommandListImmediate::SetTexture(int index, const std::shared_ptr<RenderTarget2D>& texture)
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(texture);
@@ -439,7 +439,7 @@ void GraphicsCommandListImmediate::SetTexture(int index, const std::shared_ptr<R
     commands.push_back(std::move(command));
 }
 
-void GraphicsCommandListImmediate::ExecuteImmediate(NativeGraphicsContext& graphicsContext)
+void CommandListImmediate::ExecuteImmediate(NativeGraphicsContext& graphicsContext)
 {
     for (auto& command : commands) {
         POMDOG_ASSERT(command != nullptr);
@@ -447,7 +447,7 @@ void GraphicsCommandListImmediate::ExecuteImmediate(NativeGraphicsContext& graph
     }
 }
 
-void GraphicsCommandListImmediate::SortCommandsForMetal()
+void CommandListImmediate::SortCommandsForMetal()
 {
     static_assert(static_cast<int>(GraphicsCommandType::DrawCommand) == 0);
     static_assert(static_cast<int>(GraphicsCommandType::DrawIndexedCommand) == 1);

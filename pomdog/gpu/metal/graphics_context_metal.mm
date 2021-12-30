@@ -166,7 +166,7 @@ void GraphicsContextMetal::SetMTKView(MTKView* view)
 }
 
 void GraphicsContextMetal::ExecuteCommandLists(
-    const std::vector<std::shared_ptr<GraphicsCommandListImmediate>>& commandLists)
+    const std::vector<std::shared_ptr<CommandListImmediate>>& commandLists)
 {
     POMDOG_ASSERT(commandQueue != nullptr);
     POMDOG_ASSERT(targetView != nullptr);

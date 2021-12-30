@@ -335,8 +335,8 @@ ShaderLanguage GraphicsDeviceVulkan::GetSupportedLanguage() const noexcept
     return ShaderLanguage::GLSL;
 }
 
-std::unique_ptr<NativeGraphicsCommandList>
-GraphicsDeviceVulkan::CreateGraphicsCommandList()
+std::unique_ptr<NativeCommandList>
+GraphicsDeviceVulkan::CreateCommandList()
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }

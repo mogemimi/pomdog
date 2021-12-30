@@ -34,8 +34,8 @@ public:
     GetPresentationParameters() const noexcept = 0;
 
     /// Creates a graphics command list.
-    [[nodiscard]] virtual std::tuple<std::shared_ptr<GraphicsCommandList>, std::unique_ptr<Error>>
-    CreateGraphicsCommandList() noexcept = 0;
+    [[nodiscard]] virtual std::tuple<std::shared_ptr<CommandList>, std::unique_ptr<Error>>
+    CreateCommandList() noexcept = 0;
 
     /// Creates a vertex buffer.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<VertexBuffer>, std::unique_ptr<Error>>

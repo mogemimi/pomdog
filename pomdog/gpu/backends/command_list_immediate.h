@@ -44,13 +44,13 @@ public:
     GraphicsCommandType commandType;
 };
 
-class GraphicsCommandListImmediate final : public GraphicsCommandList {
+class CommandListImmediate final : public CommandList {
 public:
-    GraphicsCommandListImmediate() = default;
-    GraphicsCommandListImmediate(const GraphicsCommandListImmediate&) = delete;
-    GraphicsCommandListImmediate& operator=(const GraphicsCommandListImmediate&) = delete;
+    CommandListImmediate() = default;
+    CommandListImmediate(const CommandListImmediate&) = delete;
+    CommandListImmediate& operator=(const CommandListImmediate&) = delete;
 
-    ~GraphicsCommandListImmediate() override;
+    ~CommandListImmediate() override;
 
     /// Declares that recording to the command list is completed.
     void Close() override;

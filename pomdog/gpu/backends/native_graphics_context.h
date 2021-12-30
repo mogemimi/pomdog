@@ -14,7 +14,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu::detail {
 
-class GraphicsCommandListImmediate;
+class CommandListImmediate;
 struct GraphicsCapabilities;
 
 class NativeGraphicsContext {
@@ -29,7 +29,7 @@ public:
     virtual GraphicsCapabilities GetCapabilities() const = 0;
 
     virtual void ExecuteCommandLists(
-        const std::vector<std::shared_ptr<GraphicsCommandListImmediate>>& commandLists) = 0;
+        const std::vector<std::shared_ptr<CommandListImmediate>>& commandLists) = 0;
 
     virtual void Present() = 0;
 

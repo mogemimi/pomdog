@@ -329,10 +329,10 @@ PresentationParameters GraphicsDeviceDirect3D11::GetPresentationParameters() con
     return presentationParameters;
 }
 
-std::tuple<std::shared_ptr<GraphicsCommandList>, std::unique_ptr<Error>>
-GraphicsDeviceDirect3D11::CreateGraphicsCommandList() noexcept
+std::tuple<std::shared_ptr<CommandList>, std::unique_ptr<Error>>
+GraphicsDeviceDirect3D11::CreateCommandList() noexcept
 {
-    auto commandList = std::make_shared<GraphicsCommandListImmediate>();
+    auto commandList = std::make_shared<CommandListImmediate>();
     return std::make_tuple(std::move(commandList), nullptr);
 }
 
