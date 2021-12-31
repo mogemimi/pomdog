@@ -3,9 +3,10 @@ BasedOnStyle: LLVM
 IndentWidth: 4
 ColumnLimit: 0
 UseTab: Never
-Standard: Cpp11
+Standard: Latest
 AccessModifierOffset: -4
 AlignAfterOpenBracket: DontAlign
+AlignEscapedNewlines: DontAlign
 AllowAllParametersOfDeclarationOnNextLine: true
 AllowShortFunctionsOnASingleLine: Inline
 AllowShortIfStatementsOnASingleLine: false
@@ -20,9 +21,9 @@ IncludeBlocks: Preserve
 IncludeCategories:
   - Regex:           '^"\.\.\/'
     Priority:        2
-  - Regex:           '^"Pomdog/'
+  - Regex:           '^"pomdog/'
     Priority:        3
-  - Regex:           '"catch.hpp"'
+  - Regex:           '"catch_amalgamated.hpp"'
     Priority:        4
   - Regex:           '<[[:alnum:]_]+>'
     Priority:        6
