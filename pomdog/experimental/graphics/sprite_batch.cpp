@@ -348,7 +348,7 @@ void SpriteBatch::Impl::Begin(
         constants.DistanceFieldParameters.Y = 0.65f;
     }
 
-    constantBuffer->SetValue(constants);
+    constantBuffer->SetData(0, gpu::MakeByteSpan(constants));
 
     startInstanceLocation = 0;
     drawCallCount = 0;

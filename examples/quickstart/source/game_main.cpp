@@ -206,7 +206,7 @@ void GameMain::Draw()
     commandList->Reset();
 
     // Update constant buffer
-    constantBuffer->SetValue(myShaderConstants);
+    constantBuffer->SetData(0, gpu::MakeByteSpan(myShaderConstants));
 
     // Create graphics commands
     commandList->SetRenderPass(std::move(pass));

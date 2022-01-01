@@ -220,7 +220,7 @@ void Skeletal2DTest::Update()
     worldConstants.ViewProjection = viewMatrix * projectionMatrix;
     worldConstants.InverseView = math::Invert(viewMatrix);
     worldConstants.LightDirection = Vector4{Vector3::UnitZ(), 0.0f};
-    worldConstantBuffer->SetValue(worldConstants);
+    worldConstantBuffer->SetData(0, gpu::MakeByteSpan(worldConstants));
 
     constexpr float metalness = 0.1f;
 
@@ -229,7 +229,7 @@ void Skeletal2DTest::Update()
     modelConstants.Model = Matrix4x4::CreateTranslation(Vector3{0.0f, -180.0f, 0.0f});
     modelConstants.Material = Vector4{metalness, 0.0f, 0.0f, 0.0f};
     modelConstants.Color = Vector4{1.0f, 1.0f, 1.0f, 1.0f};
-    modelConstantBuffer->SetValue(modelConstants);
+    modelConstantBuffer->SetData(0, gpu::MakeByteSpan(modelConstants));
 
     std::vector<BasicEffect::VertexPositionTexture> vertices;
     for (const auto& slot : skin->GetSlots()) {

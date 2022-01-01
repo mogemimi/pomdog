@@ -310,7 +310,7 @@ void MultiRenderTargetTest::Update()
     worldConstants.Projection = projectionMatrix;
     worldConstants.InverseView = math::Invert(viewMatrix);
     worldConstants.LightDirection = Vector4{lightDirection, 0.0f};
-    worldConstantBuffer->SetValue(worldConstants);
+    worldConstantBuffer->SetData(0, gpu::MakeByteSpan(worldConstants));
 
     auto time = static_cast<float>(gameHost->GetClock()->GetTotalGameTime().count());
     auto rotateY = math::TwoPi<float> * rotateSpeed * time;
@@ -332,7 +332,7 @@ void MultiRenderTargetTest::Update()
     modelConstants.Model = modelMatrix;
     modelConstants.Material = Vector4{metalness, 0.0f, 0.0f, 0.0f};
     modelConstants.Color = Vector4{1.0f, 1.0f, 1.0f, 1.0f};
-    modelConstantBuffer->SetValue(modelConstants);
+    modelConstantBuffer->SetData(0, gpu::MakeByteSpan(modelConstants));
 }
 
 void MultiRenderTargetTest::Draw()

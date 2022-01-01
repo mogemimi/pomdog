@@ -122,7 +122,7 @@ void VignetteEffect::SetIntensity(float intensity)
     VignetteBlock block;
     block.Intensity = intensity;
 
-    constantBufferVignette->SetValue(std::move(block));
+    constantBufferVignette->SetData(0, gpu::MakeByteSpan(block));
 }
 
 void VignetteEffect::Apply(

@@ -215,7 +215,7 @@ void HardwareInstancingTest::Draw()
     auto viewProjection = viewMatrix * projectionMatrix;
 
     // NOTE: Update constant buffer
-    constantBuffer->SetValue(viewProjection);
+    constantBuffer->SetData(0, gpu::MakeByteSpan(viewProjection));
 
     // NOTE: Update instance buffer
     instanceBuffer->SetData(sprites.data(), sprites.size());

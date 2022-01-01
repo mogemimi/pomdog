@@ -220,7 +220,7 @@ void PolylineBatch::Impl::Begin(
     commandList = commandListIn;
 
     alignas(16) Matrix4x4 transposedMatrix = math::Transpose(transformMatrix);
-    constantBuffer->SetValue(transposedMatrix);
+    constantBuffer->SetData(0, gpu::MakeByteSpan(transposedMatrix));
 }
 
 void PolylineBatch::Impl::End()

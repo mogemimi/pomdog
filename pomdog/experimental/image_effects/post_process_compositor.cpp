@@ -123,7 +123,7 @@ void PostProcessCompositor::UpdateConstantBuffer()
     info.RcpFrame = Vector2{1.0f / viewport.Width, 1.0f / viewport.Height};
 
     POMDOG_ASSERT(constantBuffer);
-    constantBuffer->SetValue(info);
+    constantBuffer->SetData(0, gpu::MakeByteSpan(info));
 }
 
 void PostProcessCompositor::Composite(std::vector<std::shared_ptr<ImageEffectBase>>&& imageEffectsIn)
