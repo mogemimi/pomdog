@@ -71,7 +71,7 @@ std::unique_ptr<Error> GameMain::Initialize()
         std::array<std::uint16_t, 6> indices = {{0, 1, 2, 2, 3, 0}};
 
         std::tie(indexBuffer, err) = graphicsDevice->CreateIndexBuffer(
-            gpu::IndexElementSize::SixteenBits,
+            gpu::IndexFormat::UInt16,
             indices.data(),
             indices.size(),
             gpu::BufferUsage::Immutable);

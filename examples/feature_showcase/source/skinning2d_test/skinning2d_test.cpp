@@ -128,7 +128,7 @@ std::unique_ptr<Error> Skinning2DTest::Initialize()
     {
         // NOTE: Create index buffer
         std::tie(indexBuffer, err) = graphicsDevice->CreateIndexBuffer(
-            gpu::IndexElementSize::SixteenBits,
+            gpu::IndexFormat::UInt16,
             skinnedMesh.Indices.data(),
             skinnedMesh.Indices.size(),
             gpu::BufferUsage::Immutable);

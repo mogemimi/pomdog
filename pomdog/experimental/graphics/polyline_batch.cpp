@@ -156,7 +156,7 @@ PolylineBatch::Impl::Impl(
 
         constexpr auto maxIndexCount = MaxIndexCount;
         indexBuffer = std::get<0>(graphicsDevice->CreateIndexBuffer(
-            gpu::IndexElementSize::SixteenBits,
+            gpu::IndexFormat::UInt16,
             maxIndexCount,
             gpu::BufferUsage::Dynamic));
     }

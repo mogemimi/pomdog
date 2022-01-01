@@ -106,7 +106,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::Initialize()
         }};
 
         std::tie(indexBuffer, err) = graphicsDevice->CreateIndexBuffer(
-            gpu::IndexElementSize::SixteenBits,
+            gpu::IndexFormat::UInt16,
             indices.data(),
             indices.size(),
             gpu::BufferUsage::Immutable);

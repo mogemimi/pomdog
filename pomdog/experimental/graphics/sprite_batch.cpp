@@ -14,7 +14,7 @@
 #include "pomdog/gpu/depth_stencil_descriptor.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/index_buffer.h"
-#include "pomdog/gpu/index_element_size.h"
+#include "pomdog/gpu/index_format.h"
 #include "pomdog/gpu/input_layout_helper.h"
 #include "pomdog/gpu/pipeline_state.h"
 #include "pomdog/gpu/pixel_format.h"
@@ -243,7 +243,7 @@ SpriteBatch::Impl::Impl(
 
         // Create index buffer
         planeIndices = std::get<0>(graphicsDevice->CreateIndexBuffer(
-            gpu::IndexElementSize::SixteenBits,
+            gpu::IndexFormat::UInt16,
             indices.data(),
             indices.size(),
             gpu::BufferUsage::Immutable));
