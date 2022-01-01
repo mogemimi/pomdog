@@ -7,9 +7,9 @@
 #include "pomdog/content/asset_manager.h"
 #include "pomdog/gpu/blend_descriptor.h"
 #include "pomdog/gpu/buffer_usage.h"
+#include "pomdog/gpu/command_list.h"
 #include "pomdog/gpu/constant_buffer.h"
 #include "pomdog/gpu/depth_stencil_descriptor.h"
-#include "pomdog/gpu/command_list.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/index_buffer.h"
 #include "pomdog/gpu/input_layout_helper.h"
@@ -162,17 +162,20 @@ PolylineBatch::Impl::Impl(
     }
     {
         auto inputLayout = gpu::InputLayoutHelper{}
-            .Float4().Float4().Float4().Float4();
+                               .Float4()
+                               .Float4()
+                               .Float4()
+                               .Float4();
 
         auto vertexShaderBuilder = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
-            .SetGLSL(Builtin_GLSL_PolylineBatch_VS, std::strlen(Builtin_GLSL_PolylineBatch_VS))
-            .SetHLSLPrecompiled(BuiltinHLSL_PolylineBatch_VS, sizeof(BuiltinHLSL_PolylineBatch_VS))
-            .SetMetal(Builtin_Metal_PolylineBatch, std::strlen(Builtin_Metal_PolylineBatch), "PolylineBatchVS");
+                                       .SetGLSL(Builtin_GLSL_PolylineBatch_VS, std::strlen(Builtin_GLSL_PolylineBatch_VS))
+                                       .SetHLSLPrecompiled(BuiltinHLSL_PolylineBatch_VS, sizeof(BuiltinHLSL_PolylineBatch_VS))
+                                       .SetMetal(Builtin_Metal_PolylineBatch, std::strlen(Builtin_Metal_PolylineBatch), "PolylineBatchVS");
 
         auto pixelShaderBuilder = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader)
-            .SetGLSL(Builtin_GLSL_PolylineBatch_PS, std::strlen(Builtin_GLSL_PolylineBatch_PS))
-            .SetHLSLPrecompiled(BuiltinHLSL_PolylineBatch_PS, sizeof(BuiltinHLSL_PolylineBatch_PS))
-            .SetMetal(Builtin_Metal_PolylineBatch, std::strlen(Builtin_Metal_PolylineBatch), "PolylineBatchPS");
+                                      .SetGLSL(Builtin_GLSL_PolylineBatch_PS, std::strlen(Builtin_GLSL_PolylineBatch_PS))
+                                      .SetHLSLPrecompiled(BuiltinHLSL_PolylineBatch_PS, sizeof(BuiltinHLSL_PolylineBatch_PS))
+                                      .SetMetal(Builtin_Metal_PolylineBatch, std::strlen(Builtin_Metal_PolylineBatch), "PolylineBatchPS");
 
         auto [vertexShader, vertexShaderErr] = vertexShaderBuilder.Build();
         if (vertexShaderErr != nullptr) {
@@ -188,17 +191,17 @@ PolylineBatch::Impl::Impl(
 
         std::unique_ptr<Error> pipelineStateErr;
         std::tie(pipelineState, pipelineStateErr) = assets.CreateBuilder<gpu::PipelineState>()
-            .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
-            .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
-            .SetVertexShader(std::move(vertexShader))
-            .SetPixelShader(std::move(pixelShader))
-            .SetInputLayout(inputLayout.CreateInputLayout())
-            .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
-            .SetBlendState(gpu::BlendDescriptor::CreateNonPremultiplied())
-            .SetDepthStencilState(gpu::DepthStencilDescriptor::CreateDefault())
-            .SetRasterizerState(gpu::RasterizerDescriptor::CreateCullNone())
-            .SetConstantBufferBindSlot("TransformMatrix", 0)
-            .Build();
+                                                        .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
+                                                        .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
+                                                        .SetVertexShader(std::move(vertexShader))
+                                                        .SetPixelShader(std::move(pixelShader))
+                                                        .SetInputLayout(inputLayout.CreateInputLayout())
+                                                        .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
+                                                        .SetBlendState(gpu::BlendDescriptor::CreateNonPremultiplied())
+                                                        .SetDepthStencilState(gpu::DepthStencilDescriptor::CreateDefault())
+                                                        .SetRasterizerState(gpu::RasterizerDescriptor::CreateCullNone())
+                                                        .SetConstantBufferBindSlot("TransformMatrix", 0)
+                                                        .Build();
         if (pipelineStateErr != nullptr) {
             // FIXME: error handling
         }
@@ -536,36 +539,40 @@ void PolylineBatch::DrawLine(const Vector2& start, const Vector2& end, const Col
 {
     POMDOG_ASSERT(impl);
     impl->DrawPath(std::vector<PolylineBatchVertex>{
-        PolylineBatchVertex{Vector3{start, 0.0f}, color},
-        PolylineBatchVertex{Vector3{end, 0.0f}, color},
-    }, false, thickness);
+                       PolylineBatchVertex{Vector3{start, 0.0f}, color},
+                       PolylineBatchVertex{Vector3{end, 0.0f}, color},
+                   },
+        false, thickness);
 }
 
 void PolylineBatch::DrawLine(const Vector2& start, const Vector2& end, const Color& startColor, const Color& endColor, float thickness)
 {
     POMDOG_ASSERT(impl);
     impl->DrawPath(std::vector<PolylineBatchVertex>{
-        PolylineBatchVertex{Vector3{start, 0.0f}, startColor},
-        PolylineBatchVertex{Vector3{end, 0.0f}, endColor},
-    }, false, thickness);
+                       PolylineBatchVertex{Vector3{start, 0.0f}, startColor},
+                       PolylineBatchVertex{Vector3{end, 0.0f}, endColor},
+                   },
+        false, thickness);
 }
 
 void PolylineBatch::DrawLine(const Vector3& start, const Vector3& end, const Color& color, float thickness)
 {
     POMDOG_ASSERT(impl);
     impl->DrawPath(std::vector<PolylineBatchVertex>{
-        PolylineBatchVertex{start, color},
-        PolylineBatchVertex{end, color},
-    }, false, thickness);
+                       PolylineBatchVertex{start, color},
+                       PolylineBatchVertex{end, color},
+                   },
+        false, thickness);
 }
 
 void PolylineBatch::DrawLine(const Vector3& start, const Vector3& end, const Color& startColor, const Color& endColor, float thickness)
 {
     POMDOG_ASSERT(impl);
     impl->DrawPath(std::vector<PolylineBatchVertex>{
-        PolylineBatchVertex{start, startColor},
-        PolylineBatchVertex{end, endColor},
-    }, false, thickness);
+                       PolylineBatchVertex{start, startColor},
+                       PolylineBatchVertex{end, endColor},
+                   },
+        false, thickness);
 }
 
 void PolylineBatch::DrawRectangle(const Rectangle& sourceRect, const Color& color, float thickness)
@@ -720,13 +727,14 @@ void PolylineBatch::DrawTriangle(const Vector2& point1, const Vector2& point2, c
     POMDOG_ASSERT(impl);
 
     impl->DrawPath(std::vector<PolylineBatchVertex>{
-        PolylineBatchVertex{Vector3{point1, 0.0f}, color},
-        PolylineBatchVertex{Vector3{point2, 0.0f}, color},
-        PolylineBatchVertex{Vector3{point2, 0.0f}, color},
-        PolylineBatchVertex{Vector3{point3, 0.0f}, color},
-        PolylineBatchVertex{Vector3{point3, 0.0f}, color},
-        PolylineBatchVertex{Vector3{point1, 0.0f}, color},
-    }, false, thickness);
+                       PolylineBatchVertex{Vector3{point1, 0.0f}, color},
+                       PolylineBatchVertex{Vector3{point2, 0.0f}, color},
+                       PolylineBatchVertex{Vector3{point2, 0.0f}, color},
+                       PolylineBatchVertex{Vector3{point3, 0.0f}, color},
+                       PolylineBatchVertex{Vector3{point3, 0.0f}, color},
+                       PolylineBatchVertex{Vector3{point1, 0.0f}, color},
+                   },
+        false, thickness);
 }
 
 void PolylineBatch::DrawTriangle(
@@ -736,13 +744,14 @@ void PolylineBatch::DrawTriangle(
 {
     POMDOG_ASSERT(impl);
     impl->DrawPath(std::vector<PolylineBatchVertex>{
-        PolylineBatchVertex{Vector3{point1, 0.0f}, color1},
-        PolylineBatchVertex{Vector3{point2, 0.0f}, color2},
-        PolylineBatchVertex{Vector3{point2, 0.0f}, color2},
-        PolylineBatchVertex{Vector3{point3, 0.0f}, color3},
-        PolylineBatchVertex{Vector3{point3, 0.0f}, color3},
-        PolylineBatchVertex{Vector3{point1, 0.0f}, color1},
-    }, false, thickness);
+                       PolylineBatchVertex{Vector3{point1, 0.0f}, color1},
+                       PolylineBatchVertex{Vector3{point2, 0.0f}, color2},
+                       PolylineBatchVertex{Vector3{point2, 0.0f}, color2},
+                       PolylineBatchVertex{Vector3{point3, 0.0f}, color3},
+                       PolylineBatchVertex{Vector3{point3, 0.0f}, color3},
+                       PolylineBatchVertex{Vector3{point1, 0.0f}, color1},
+                   },
+        false, thickness);
 }
 
 } // namespace pomdog

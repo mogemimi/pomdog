@@ -8,9 +8,9 @@
 #include "pomdog/experimental/graphics/polygon_shape_builder.h"
 #include "pomdog/gpu/blend_descriptor.h"
 #include "pomdog/gpu/buffer_usage.h"
+#include "pomdog/gpu/command_list.h"
 #include "pomdog/gpu/constant_buffer.h"
 #include "pomdog/gpu/depth_stencil_descriptor.h"
-#include "pomdog/gpu/command_list.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/input_layout_helper.h"
 #include "pomdog/gpu/pipeline_state.h"
@@ -110,23 +110,24 @@ PrimitiveBatch::Impl::Impl(
     }
     {
         auto inputLayout = gpu::InputLayoutHelper{}
-            .Float3().Float4();
+                               .Float3()
+                               .Float4();
 
         auto [vertexShader, vertexShaderErr] = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
-            .SetGLSL(Builtin_GLSL_PrimitiveBatch_VS, std::strlen(Builtin_GLSL_PrimitiveBatch_VS))
-            .SetHLSLPrecompiled(BuiltinHLSL_PrimitiveBatch_VS, sizeof(BuiltinHLSL_PrimitiveBatch_VS))
-            .SetMetal(Builtin_Metal_PrimitiveBatch, std::strlen(Builtin_Metal_PrimitiveBatch), "PrimitiveBatchVS")
-            .Build();
+                                                   .SetGLSL(Builtin_GLSL_PrimitiveBatch_VS, std::strlen(Builtin_GLSL_PrimitiveBatch_VS))
+                                                   .SetHLSLPrecompiled(BuiltinHLSL_PrimitiveBatch_VS, sizeof(BuiltinHLSL_PrimitiveBatch_VS))
+                                                   .SetMetal(Builtin_Metal_PrimitiveBatch, std::strlen(Builtin_Metal_PrimitiveBatch), "PrimitiveBatchVS")
+                                                   .Build();
 
         if (vertexShaderErr != nullptr) {
             // FIXME: error handling
         }
 
         auto [pixelShader, pixelShaderErr] = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader)
-            .SetGLSL(Builtin_GLSL_PrimitiveBatch_PS, std::strlen(Builtin_GLSL_PrimitiveBatch_PS))
-            .SetHLSLPrecompiled(BuiltinHLSL_PrimitiveBatch_PS, sizeof(BuiltinHLSL_PrimitiveBatch_PS))
-            .SetMetal(Builtin_Metal_PrimitiveBatch, std::strlen(Builtin_Metal_PrimitiveBatch), "PrimitiveBatchPS")
-            .Build();
+                                                 .SetGLSL(Builtin_GLSL_PrimitiveBatch_PS, std::strlen(Builtin_GLSL_PrimitiveBatch_PS))
+                                                 .SetHLSLPrecompiled(BuiltinHLSL_PrimitiveBatch_PS, sizeof(BuiltinHLSL_PrimitiveBatch_PS))
+                                                 .SetMetal(Builtin_Metal_PrimitiveBatch, std::strlen(Builtin_Metal_PrimitiveBatch), "PrimitiveBatchPS")
+                                                 .Build();
 
         if (pixelShaderErr != nullptr) {
             // FIXME: error handling
@@ -136,17 +137,17 @@ PrimitiveBatch::Impl::Impl(
 
         std::unique_ptr<Error> pipelineStateErr;
         std::tie(pipelineState, pipelineStateErr) = assets.CreateBuilder<gpu::PipelineState>()
-            .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
-            .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
-            .SetVertexShader(std::move(vertexShader))
-            .SetPixelShader(std::move(pixelShader))
-            .SetInputLayout(inputLayout.CreateInputLayout())
-            .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
-            .SetBlendState(gpu::BlendDescriptor::CreateNonPremultiplied())
-            .SetDepthStencilState(*depthStencilDesc)
-            .SetRasterizerState(*rasterizerDesc)
-            .SetConstantBufferBindSlot("TransformMatrix", 0)
-            .Build();
+                                                        .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
+                                                        .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
+                                                        .SetVertexShader(std::move(vertexShader))
+                                                        .SetPixelShader(std::move(pixelShader))
+                                                        .SetInputLayout(inputLayout.CreateInputLayout())
+                                                        .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
+                                                        .SetBlendState(gpu::BlendDescriptor::CreateNonPremultiplied())
+                                                        .SetDepthStencilState(*depthStencilDesc)
+                                                        .SetRasterizerState(*rasterizerDesc)
+                                                        .SetConstantBufferBindSlot("TransformMatrix", 0)
+                                                        .Build();
 
         if (pipelineStateErr != nullptr) {
             // FIXME: error handling

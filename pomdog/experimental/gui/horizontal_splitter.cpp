@@ -414,9 +414,9 @@ void HorizontalSplitter::UpdateLayout()
         case VerticalAlignment::Top:
             position.Y = GetHeight() - child.widget->GetHeight() - margin.Top;
             break;
-        // case VerticalAlignment::Center:
-        //     position.Y = (GetHeight() - child.widget->GetHeight()) / 2;
-        //     break;
+            // case VerticalAlignment::Center:
+            //     position.Y = (GetHeight() - child.widget->GetHeight()) / 2;
+            //     break;
         }
 
         child.widget->SetPosition(position);

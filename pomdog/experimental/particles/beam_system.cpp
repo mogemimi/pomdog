@@ -241,8 +241,12 @@ void BeamSystem::Update(const Duration& frameDuration, const Vector2& emitterPos
             beam.Color = math::SmoothStep(emitter.StartColor, emitter.EndColor, normalizedTime);
         }
 
-        beams.erase(std::remove_if(std::begin(beams), std::end(beams),
-            [](const Beam& beam){ return beam.TimeToLive <= 0; }), std::end(beams));
+        beams.erase(
+            std::remove_if(
+                std::begin(beams),
+                std::end(beams),
+                [](const Beam& beam) { return beam.TimeToLive <= 0; }),
+            std::end(beams));
     }
 }
 

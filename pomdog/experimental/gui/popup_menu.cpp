@@ -337,9 +337,10 @@ void PopupMenu::Draw(DrawingContext& drawingContext)
     constexpr auto iconBaseSize = 32.0f;
     constexpr auto iconScaleSize = 12.0f;
     constexpr auto paddingRight = 2.0f;
-    auto transformOffset = math::ToVector2(globalPos)
-        + Vector2{static_cast<float>(GetWidth()), static_cast<float>(GetHeight()) * 0.5f}
-        - Vector2{iconScaleSize + paddingRight, iconScaleSize * 0.5f + 1.0f};
+    auto transformOffset =
+        math::ToVector2(globalPos) +
+        Vector2{static_cast<float>(GetWidth()), static_cast<float>(GetHeight()) * 0.5f} -
+        Vector2{iconScaleSize + paddingRight, iconScaleSize * 0.5f + 1.0f};
 
     drawingContext.DrawIcon(
         "ionicons/ios-arrow-down.svg",

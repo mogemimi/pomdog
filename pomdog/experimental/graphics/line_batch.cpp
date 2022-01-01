@@ -7,9 +7,9 @@
 #include "pomdog/content/asset_manager.h"
 #include "pomdog/gpu/blend_descriptor.h"
 #include "pomdog/gpu/buffer_usage.h"
+#include "pomdog/gpu/command_list.h"
 #include "pomdog/gpu/constant_buffer.h"
 #include "pomdog/gpu/depth_stencil_descriptor.h"
-#include "pomdog/gpu/command_list.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/input_layout_helper.h"
 #include "pomdog/gpu/pipeline_state.h"
@@ -110,17 +110,18 @@ LineBatch::Impl::Impl(
     }
     {
         auto inputLayout = gpu::InputLayoutHelper{}
-            .Float3().Float4();
+                               .Float3()
+                               .Float4();
 
         auto vertexShaderBuilder = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
-            .SetGLSL(Builtin_GLSL_LineBatch_VS, std::strlen(Builtin_GLSL_LineBatch_VS))
-            .SetHLSLPrecompiled(BuiltinHLSL_LineBatch_VS, sizeof(BuiltinHLSL_LineBatch_VS))
-            .SetMetal(Builtin_Metal_LineBatch, std::strlen(Builtin_Metal_LineBatch), "LineBatchVS");
+                                       .SetGLSL(Builtin_GLSL_LineBatch_VS, std::strlen(Builtin_GLSL_LineBatch_VS))
+                                       .SetHLSLPrecompiled(BuiltinHLSL_LineBatch_VS, sizeof(BuiltinHLSL_LineBatch_VS))
+                                       .SetMetal(Builtin_Metal_LineBatch, std::strlen(Builtin_Metal_LineBatch), "LineBatchVS");
 
         auto pixelShaderBuilder = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader)
-            .SetGLSL(Builtin_GLSL_LineBatch_PS, std::strlen(Builtin_GLSL_LineBatch_PS))
-            .SetHLSLPrecompiled(BuiltinHLSL_LineBatch_PS, sizeof(BuiltinHLSL_LineBatch_PS))
-            .SetMetal(Builtin_Metal_LineBatch, std::strlen(Builtin_Metal_LineBatch), "LineBatchPS");
+                                      .SetGLSL(Builtin_GLSL_LineBatch_PS, std::strlen(Builtin_GLSL_LineBatch_PS))
+                                      .SetHLSLPrecompiled(BuiltinHLSL_LineBatch_PS, sizeof(BuiltinHLSL_LineBatch_PS))
+                                      .SetMetal(Builtin_Metal_LineBatch, std::strlen(Builtin_Metal_LineBatch), "LineBatchPS");
 
         auto [vertexShader, vertexShaderErr] = vertexShaderBuilder.Build();
         if (vertexShaderErr != nullptr) {
@@ -136,16 +137,16 @@ LineBatch::Impl::Impl(
 
         std::unique_ptr<Error> pipelineStateErr;
         std::tie(pipelineState, pipelineStateErr) = assets.CreateBuilder<gpu::PipelineState>()
-            .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
-            .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
-            .SetVertexShader(std::move(vertexShader))
-            .SetPixelShader(std::move(pixelShader))
-            .SetInputLayout(inputLayout.CreateInputLayout())
-            .SetPrimitiveTopology(gpu::PrimitiveTopology::LineList)
-            .SetBlendState(gpu::BlendDescriptor::CreateNonPremultiplied())
-            .SetDepthStencilState(gpu::DepthStencilDescriptor::CreateDefault())
-            .SetConstantBufferBindSlot("TransformMatrix", 0)
-            .Build();
+                                                        .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
+                                                        .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
+                                                        .SetVertexShader(std::move(vertexShader))
+                                                        .SetPixelShader(std::move(pixelShader))
+                                                        .SetInputLayout(inputLayout.CreateInputLayout())
+                                                        .SetPrimitiveTopology(gpu::PrimitiveTopology::LineList)
+                                                        .SetBlendState(gpu::BlendDescriptor::CreateNonPremultiplied())
+                                                        .SetDepthStencilState(gpu::DepthStencilDescriptor::CreateDefault())
+                                                        .SetConstantBufferBindSlot("TransformMatrix", 0)
+                                                        .Build();
         if (pipelineStateErr != nullptr) {
             // FIXME: error handling
         }

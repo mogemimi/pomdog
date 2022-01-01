@@ -86,9 +86,9 @@ CreateSkinnedMeshSlot(
     }
 
     for (auto& vertex : slot.Vertices) {
-        auto position = Vector2(vertex.PositionTextureCoord.Z, vertex.PositionTextureCoord.W)
-            * size
-            + Vector2{static_cast<float>(textureRegion.Subrect.X), static_cast<float>(textureRegion.Subrect.Y)};
+        auto position =
+            Vector2{vertex.PositionTextureCoord.Z, vertex.PositionTextureCoord.W} * size +
+            Vector2{static_cast<float>(textureRegion.Subrect.X), static_cast<float>(textureRegion.Subrect.Y)};
 
         POMDOG_ASSERT(textureSize.X > 0);
         POMDOG_ASSERT(textureSize.Y > 0);
@@ -126,14 +126,20 @@ CreateSkinnedMeshSlot(
             static_cast<float>(textureRegion.Subrect.Height),
         };
 
-        Vector2 textureCoordInUV = (textureRegion.Rotate
-            ? Vector2{source.TextureCoordinate.Y * sizeInUV.Y, (1 - source.TextureCoordinate.X) * sizeInUV.X}
-            : source.TextureCoordinate * sizeInUV);
+        Vector2 textureCoordInUV = textureRegion.Rotate
+                                       ? Vector2{
+                                             source.TextureCoordinate.Y * sizeInUV.Y,
+                                             (1 - source.TextureCoordinate.X) * sizeInUV.X,
+                                         }
+                                       : source.TextureCoordinate * sizeInUV;
 
         auto textureCoord = (originInUV + textureCoordInUV) / textureSize;
 
         vertex.PositionTextureCoord = {
-            position.X, position.Y, textureCoord.X, textureCoord.Y
+            position.X,
+            position.Y,
+            textureCoord.X,
+            textureCoord.Y,
         };
 
         for (size_t i = 0; i < source.Joints.size(); ++i) {

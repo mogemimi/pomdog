@@ -36,8 +36,7 @@ FindBoneParent(
 
     std::size_t jointIndex = std::distance(std::begin(boneDescs), iter);
     POMDOG_ASSERT(jointIndex < bones.size());
-    POMDOG_ASSERT(jointIndex < std::numeric_limits<typename std::remove_reference<
-        decltype(*JointIndex())>::type>::max());
+    POMDOG_ASSERT(jointIndex < std::numeric_limits<std::remove_reference_t<decltype(*JointIndex())>>::max());
     return JointIndex{static_cast<std::uint8_t>(jointIndex)};
 }
 

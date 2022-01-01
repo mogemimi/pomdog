@@ -58,8 +58,11 @@ void AnimationSystem::Impl::Add(
 
 void AnimationSystem::Impl::Remove(const std::shared_ptr<AnimationState>& state)
 {
-    skeletonAnimations.erase(std::remove_if(std::begin(skeletonAnimations), std::end(skeletonAnimations),
-        [&state](const SkeletonAnimationContext& context) { return context.AnimationState == state; }),
+    skeletonAnimations.erase(
+        std::remove_if(
+            std::begin(skeletonAnimations),
+            std::end(skeletonAnimations),
+            [&state](const SkeletonAnimationContext& context) { return context.AnimationState == state; }),
         std::end(skeletonAnimations));
 }
 

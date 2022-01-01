@@ -67,16 +67,16 @@ CreateBasicEffect(AssetManager& assets, const BasicEffectDescription& desc)
     auto inputLayout = inputLayoutBuilder.CreateInputLayout();
 
     auto [vertexShader, vertexShaderErr] = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
-        .SetGLSL(sourceGLSLVS.data(), sourceGLSLVS.size())
-        .SetHLSL(sourceHLSL.data(), sourceHLSL.size(), "BasicEffectVS")
-        .SetMetal(sourceMetal.data(), sourceMetal.size(), "BasicEffectVS")
-        .Build();
+                                               .SetGLSL(sourceGLSLVS.data(), sourceGLSLVS.size())
+                                               .SetHLSL(sourceHLSL.data(), sourceHLSL.size(), "BasicEffectVS")
+                                               .SetMetal(sourceMetal.data(), sourceMetal.size(), "BasicEffectVS")
+                                               .Build();
 
     auto [pixelShader, pixelShaderErr] = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader)
-        .SetGLSL(sourceGLSLPS.data(), sourceGLSLPS.size())
-        .SetHLSL(sourceHLSL.data(), sourceHLSL.size(), "BasicEffectPS")
-        .SetMetal(sourceMetal.data(), sourceMetal.size(), "BasicEffectPS")
-        .Build();
+                                             .SetGLSL(sourceGLSLPS.data(), sourceGLSLPS.size())
+                                             .SetHLSL(sourceHLSL.data(), sourceHLSL.size(), "BasicEffectPS")
+                                             .SetMetal(sourceMetal.data(), sourceMetal.size(), "BasicEffectPS")
+                                             .Build();
 
     auto graphicsDevice = assets.GetGraphicsDevice();
 

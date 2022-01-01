@@ -56,7 +56,7 @@ public:
         POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys),
             [](const CurveKeyType& a, const CurveKeyType& b) { return a.TimeSeconds < b.TimeSeconds; }));
         POMDOG_ASSERT(std::find_if(std::begin(keys), std::end(keys),
-            [](const CurveKeyType& p){ return p.TimeSeconds < 0 || p.TimeSeconds > 1; }) == std::end(keys));
+                          [](const CurveKeyType& p) { return p.TimeSeconds < 0 || p.TimeSeconds > 1; }) == std::end(keys));
 #endif
     }
 

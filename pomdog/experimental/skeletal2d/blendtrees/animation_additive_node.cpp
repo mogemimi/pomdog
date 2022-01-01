@@ -64,7 +64,7 @@ void AnimationAdditiveNode::Calculate(
     Skin* skin) const
 {
     auto sourcePose1 = SkeletonPose::CreateBindPose(skeleton);
-//    auto sourcePose2 = SkeletonPose::CreateBindPose(skeleton);
+    // auto sourcePose2 = SkeletonPose::CreateBindPose(skeleton);
     auto sourcePose2 = CreateEmptyPose(skeleton);
 
     POMDOG_ASSERT(base);
@@ -73,17 +73,16 @@ void AnimationAdditiveNode::Calculate(
     base->Calculate(time, weights, skeleton, sourcePose1, skin);
     additive->Calculate(time, weights, skeleton, sourcePose2, nullptr);
 
-//    SkeletonPose bindPose = SkeletonHelper::CreateBindPose(skeleton);
-//
-//    for (size_t i = 0; i < sourcePose2.JointPoses.size(); ++i)
-//    {
-//        auto & pose = bindPose.JointPoses[i];
-//        auto & additivePose = sourcePose2.JointPoses[i];
-//
-//        additivePose.Scale = additivePose.Scale - pose.Scale;
-//        additivePose.Rotation = additivePose.Rotation - pose.Rotation;
-//        additivePose.Translate = additivePose.Translate - pose.Translate;
-//    }
+    // SkeletonPose bindPose = SkeletonHelper::CreateBindPose(skeleton);
+    //
+    // for (size_t i = 0; i < sourcePose2.JointPoses.size(); ++i) {
+    //     auto & pose = bindPose.JointPoses[i];
+    //     auto & additivePose = sourcePose2.JointPoses[i];
+    //
+    //     additivePose.Scale = additivePose.Scale - pose.Scale;
+    //     additivePose.Rotation = additivePose.Rotation - pose.Rotation;
+    //     additivePose.Translate = additivePose.Translate - pose.Translate;
+    // }
 
     POMDOG_ASSERT(!sourcePose1.JointPoses.empty());
     POMDOG_ASSERT(!sourcePose2.JointPoses.empty());

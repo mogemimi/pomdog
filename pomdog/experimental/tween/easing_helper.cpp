@@ -85,8 +85,8 @@ T Elastic(T time) noexcept
     constexpr auto s = period / 4;
     const auto postFix = std::pow(T(2), 10 * (time - 1));
     return (time <= 0 || time >= 1)
-        ? time
-        : -(postFix * std::sin(((time - 1) - s) * math::TwoPi<T> / period));
+               ? time
+               : -(postFix * std::sin(((time - 1) - s) * math::TwoPi<T> / period));
 }
 
 template <typename T>

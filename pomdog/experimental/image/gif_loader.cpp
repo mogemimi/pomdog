@@ -97,8 +97,8 @@ DecodeFile(const std::string& filePath)
         }
 
         const auto colorMap = saveImage.ImageDesc.ColorMap
-            ? saveImage.ImageDesc.ColorMap
-            : gifFileIn->SColorMap;
+                                  ? saveImage.ImageDesc.ColorMap
+                                  : gifFileIn->SColorMap;
 
         auto img = std::make_shared<pomdog::Image>(gifFileIn->SWidth, gifFileIn->SHeight);
 

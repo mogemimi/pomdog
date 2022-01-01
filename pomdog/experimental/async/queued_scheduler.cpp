@@ -29,7 +29,7 @@ void QueuedScheduler::Schedule(
     DeferredTask deferred;
     deferred.Function = std::move(task);
     deferred.StartTime = clockType::now() +
-        std::chrono::duration_cast<clockType::duration>(delayTime);
+                         std::chrono::duration_cast<clockType::duration>(delayTime);
 
     {
         std::lock_guard<std::recursive_mutex> lock(addingProtection);

@@ -460,12 +460,12 @@ ReadSkinnedMeshAttachment(const rapidjson::Value::ConstMemberIterator& iter)
 
     auto& attachmentObject = iter->value;
 
-    POMDOG_ASSERT(!(!attachmentObject.HasMember("type")
-        || !attachmentObject["type"].IsString()
-        || std::strcmp(attachmentObject["type"].GetString(), "skinnedmesh") != 0));
-    if (!attachmentObject.HasMember("type")
-        || !attachmentObject["type"].IsString()
-        || std::strcmp(attachmentObject["type"].GetString(), "skinnedmesh") != 0) {
+    POMDOG_ASSERT(!(!attachmentObject.HasMember("type") ||
+                    !attachmentObject["type"].IsString() ||
+                    std::strcmp(attachmentObject["type"].GetString(), "skinnedmesh") != 0));
+    if (!attachmentObject.HasMember("type") ||
+        !attachmentObject["type"].IsString() ||
+        std::strcmp(attachmentObject["type"].GetString(), "skinnedmesh") != 0) {
         auto err = errors::New("invalid format");
         return std::make_tuple(SkinnedMeshAttachmentDesc{}, std::move(err));
     }
@@ -524,9 +524,9 @@ ReadSkinSlots(const rapidjson::Value& slotsDOM)
 
             auto& attachmentObject = iter->value;
 
-            if (attachmentObject.HasMember("type")
-                && attachmentObject["type"].IsString()
-                && std::strcmp(attachmentObject["type"].GetString(), "skinnedmesh") == 0) {
+            if (attachmentObject.HasMember("type") &&
+                attachmentObject["type"].IsString() &&
+                std::strcmp(attachmentObject["type"].GetString(), "skinnedmesh") == 0) {
                 auto [desc, err] = ReadSkinnedMeshAttachment(iter);
                 if (err != nullptr) {
                     ///@todo Not implemented

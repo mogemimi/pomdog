@@ -35,8 +35,8 @@ public:
     {
         constexpr auto half = static_cast<T>(1) / static_cast<T>(2);
         return (normalizedTime < half)
-            ? half * In(normalizedTime * static_cast<T>(2))
-            : half + half * Out(normalizedTime * static_cast<T>(2) - static_cast<T>(1));
+                   ? half * In(normalizedTime * static_cast<T>(2))
+                   : half + half * Out(normalizedTime * static_cast<T>(2) - static_cast<T>(1));
     }
 };
 

@@ -9,14 +9,15 @@
 #include "pomdog/experimental/texture_packer/texture_region.h"
 #include "pomdog/gpu/blend_descriptor.h"
 #include "pomdog/gpu/buffer_usage.h"
+#include "pomdog/gpu/command_list.h"
 #include "pomdog/gpu/constant_buffer.h"
 #include "pomdog/gpu/depth_stencil_descriptor.h"
-#include "pomdog/gpu/command_list.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/index_buffer.h"
 #include "pomdog/gpu/index_element_size.h"
 #include "pomdog/gpu/input_layout_helper.h"
 #include "pomdog/gpu/pipeline_state.h"
+#include "pomdog/gpu/pixel_format.h"
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/gpu/primitive_topology.h"
 #include "pomdog/gpu/rasterizer_descriptor.h"
@@ -25,7 +26,6 @@
 #include "pomdog/gpu/sampler_state.h"
 #include "pomdog/gpu/shader.h"
 #include "pomdog/gpu/shader_language.h"
-#include "pomdog/gpu/pixel_format.h"
 #include "pomdog/gpu/texture2d.h"
 #include "pomdog/gpu/vertex_buffer.h"
 #include "pomdog/gpu/viewport.h"
@@ -265,15 +265,19 @@ SpriteBatch::Impl::Impl(
     }
     {
         auto inputLayout = gpu::InputLayoutHelper{}
-            .AddInputSlot()
-            .Float4()
-            .AddInputSlot(gpu::InputClassification::InputPerInstance, 1)
-            .Float4().Float4().Float4().Float4().Float4();
+                               .AddInputSlot()
+                               .Float4()
+                               .AddInputSlot(gpu::InputClassification::InputPerInstance, 1)
+                               .Float4()
+                               .Float4()
+                               .Float4()
+                               .Float4()
+                               .Float4();
 
         auto vertexShaderBuilder = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
-            .SetGLSL(Builtin_GLSL_SpriteBatch_VS, std::strlen(Builtin_GLSL_SpriteBatch_VS))
-            .SetHLSLPrecompiled(BuiltinHLSL_SpriteBatch_VS, sizeof(BuiltinHLSL_SpriteBatch_VS))
-            .SetMetal(Builtin_Metal_SpriteBatch, sizeof(Builtin_Metal_SpriteBatch), "SpriteBatchVS");
+                                       .SetGLSL(Builtin_GLSL_SpriteBatch_VS, std::strlen(Builtin_GLSL_SpriteBatch_VS))
+                                       .SetHLSLPrecompiled(BuiltinHLSL_SpriteBatch_VS, sizeof(BuiltinHLSL_SpriteBatch_VS))
+                                       .SetMetal(Builtin_Metal_SpriteBatch, sizeof(Builtin_Metal_SpriteBatch), "SpriteBatchVS");
 
         auto [vertexShader, vertexShaderErr] = vertexShaderBuilder.Build();
         if (vertexShaderErr != nullptr) {
@@ -302,17 +306,17 @@ SpriteBatch::Impl::Impl(
 
         std::unique_ptr<Error> pipelineStateErr;
         std::tie(pipelineState, pipelineStateErr) = assets.CreateBuilder<gpu::PipelineState>()
-            .SetRenderTargetViewFormat(*renderTargetViewFormat)
-            .SetDepthStencilViewFormat(*depthStencilViewFormat)
-            .SetVertexShader(std::move(vertexShader))
-            .SetPixelShader(std::move(pixelShader))
-            .SetInputLayout(inputLayout.CreateInputLayout())
-            .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
-            .SetBlendState(*blendDesc)
-            .SetDepthStencilState(gpu::DepthStencilDescriptor::CreateNone())
-            .SetRasterizerState(*rasterizerDesc)
-            .SetConstantBufferBindSlot("SpriteBatchConstants", 0)
-            .Build();
+                                                        .SetRenderTargetViewFormat(*renderTargetViewFormat)
+                                                        .SetDepthStencilViewFormat(*depthStencilViewFormat)
+                                                        .SetVertexShader(std::move(vertexShader))
+                                                        .SetPixelShader(std::move(pixelShader))
+                                                        .SetInputLayout(inputLayout.CreateInputLayout())
+                                                        .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
+                                                        .SetBlendState(*blendDesc)
+                                                        .SetDepthStencilState(gpu::DepthStencilDescriptor::CreateNone())
+                                                        .SetRasterizerState(*rasterizerDesc)
+                                                        .SetConstantBufferBindSlot("SpriteBatchConstants", 0)
+                                                        .Build();
 
         if (pipelineStateErr != nullptr) {
             // FIXME: error handling
@@ -529,19 +533,19 @@ void SpriteBatch::Impl::Draw(
         position.X,
         position.Y,
         scale.X,
-        scale.Y
+        scale.Y,
     };
     info.SourceRect = Vector4{
         static_cast<float>(sourceRect.X),
         static_cast<float>(sourceRect.Y),
         static_cast<float>(sourceRect.Width),
-        static_cast<float>(sourceRect.Height)
+        static_cast<float>(sourceRect.Height),
     };
     info.OriginRotationLayerDepth = Vector4{
         originPivot.X,
         originPivot.Y,
         rotation.value,
-        layerDepth
+        layerDepth,
     };
     info.Color = color.ToVector4();
     info.InverseTextureSize = Vector4{

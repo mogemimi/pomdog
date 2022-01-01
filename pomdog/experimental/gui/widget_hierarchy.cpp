@@ -124,7 +124,7 @@ void WidgetHierarchy::Update()
     }
 
     POMDOG_ASSERT(std::end(children) == std::unique(std::begin(children), std::end(children),
-        [](const std::shared_ptr<Widget>& a, const std::shared_ptr<Widget>& b) { return a == b; }));
+                                            [](const std::shared_ptr<Widget>& a, const std::shared_ptr<Widget>& b) { return a == b; }));
 }
 
 void WidgetHierarchy::UpdateAnimation(const Duration& frameDuration)

@@ -6,18 +6,18 @@
 #include "pomdog/content/asset_builders/shader_builder.h"
 #include "pomdog/content/asset_manager.h"
 #include "pomdog/gpu/blend_descriptor.h"
-#include "pomdog/gpu/depth_stencil_descriptor.h"
 #include "pomdog/gpu/command_list.h"
+#include "pomdog/gpu/depth_stencil_descriptor.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/index_buffer.h"
 #include "pomdog/gpu/input_layout_helper.h"
 #include "pomdog/gpu/pipeline_state.h"
+#include "pomdog/gpu/pixel_format.h"
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/gpu/primitive_topology.h"
 #include "pomdog/gpu/rasterizer_descriptor.h"
 #include "pomdog/gpu/shader.h"
 #include "pomdog/gpu/shader_pipeline_stage.h"
-#include "pomdog/gpu/pixel_format.h"
 #include "pomdog/gpu/vertex_buffer.h"
 #include "pomdog/math/color.h"
 #include "pomdog/math/radian.h"
@@ -283,23 +283,23 @@ BillboardBatchEffect::BillboardBatchEffect(
     }
     {
         auto inputLayout = gpu::InputLayoutHelper{}
-            .AddInputSlot()
-            .Float4()
-            .AddInputSlot(gpu::InputClassification::InputPerInstance, 1)
-            .Float4()
-            .Float4()
-            .Float4()
-            .Float4();
+                               .AddInputSlot()
+                               .Float4()
+                               .AddInputSlot(gpu::InputClassification::InputPerInstance, 1)
+                               .Float4()
+                               .Float4()
+                               .Float4()
+                               .Float4();
 
         auto vertexShaderBuilder = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
-            .SetGLSL(Builtin_GLSL_BillboardBatch_VS, std::strlen(Builtin_GLSL_BillboardBatch_VS))
-            .SetHLSLPrecompiled(BuiltinHLSL_BillboardBatch_VS, sizeof(BuiltinHLSL_BillboardBatch_VS))
-            .SetMetal(Builtin_Metal_BillboardBatch, sizeof(Builtin_Metal_BillboardBatch), "BillboardBatchVS");
+                                       .SetGLSL(Builtin_GLSL_BillboardBatch_VS, std::strlen(Builtin_GLSL_BillboardBatch_VS))
+                                       .SetHLSLPrecompiled(BuiltinHLSL_BillboardBatch_VS, sizeof(BuiltinHLSL_BillboardBatch_VS))
+                                       .SetMetal(Builtin_Metal_BillboardBatch, sizeof(Builtin_Metal_BillboardBatch), "BillboardBatchVS");
 
         auto pixelShaderBuilder = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader)
-            .SetGLSL(Builtin_GLSL_BillboardBatch_PS, std::strlen(Builtin_GLSL_BillboardBatch_PS))
-            .SetHLSLPrecompiled(BuiltinHLSL_BillboardBatch_PS, sizeof(BuiltinHLSL_BillboardBatch_PS))
-            .SetMetal(Builtin_Metal_BillboardBatch, sizeof(Builtin_Metal_BillboardBatch), "BillboardBatchPS");
+                                      .SetGLSL(Builtin_GLSL_BillboardBatch_PS, std::strlen(Builtin_GLSL_BillboardBatch_PS))
+                                      .SetHLSLPrecompiled(BuiltinHLSL_BillboardBatch_PS, sizeof(BuiltinHLSL_BillboardBatch_PS))
+                                      .SetMetal(Builtin_Metal_BillboardBatch, sizeof(Builtin_Metal_BillboardBatch), "BillboardBatchPS");
 
         auto [vertexShader, vertexShaderErr] = vertexShaderBuilder.Build();
         if (vertexShaderErr != nullptr) {
@@ -313,17 +313,17 @@ BillboardBatchEffect::BillboardBatchEffect(
 
         std::unique_ptr<Error> pipelineStateErr;
         std::tie(impl->pipelineState, pipelineStateErr) = assets.CreateBuilder<gpu::PipelineState>()
-            .SetRenderTargetViewFormat(*renderTargetViewFormat)
-            .SetDepthStencilViewFormat(*depthStencilViewFormat)
-            .SetVertexShader(std::move(vertexShader))
-            .SetPixelShader(std::move(pixelShader))
-            .SetInputLayout(inputLayout.CreateInputLayout())
-            .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
-            .SetBlendState(*blendDesc)
-            .SetDepthStencilState(*depthStencilDesc)
-            .SetRasterizerState(*rasterizerDesc)
-            .SetConstantBufferBindSlot("WorldConstants", 0)
-            .Build();
+                                                              .SetRenderTargetViewFormat(*renderTargetViewFormat)
+                                                              .SetDepthStencilViewFormat(*depthStencilViewFormat)
+                                                              .SetVertexShader(std::move(vertexShader))
+                                                              .SetPixelShader(std::move(pixelShader))
+                                                              .SetInputLayout(inputLayout.CreateInputLayout())
+                                                              .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
+                                                              .SetBlendState(*blendDesc)
+                                                              .SetDepthStencilState(*depthStencilDesc)
+                                                              .SetRasterizerState(*rasterizerDesc)
+                                                              .SetConstantBufferBindSlot("WorldConstants", 0)
+                                                              .Build();
         if (pipelineStateErr != nullptr) {
             // FIXME: error handling
         }

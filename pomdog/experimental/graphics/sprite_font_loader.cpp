@@ -122,12 +122,12 @@ BitmapFontInfo ParseInfo(std::istream& stream)
             else if (name == "italic") {
                 info.Italic = std::stoul(arguments) != 0;
             }
-//            else if (name == "charset") {
-//                if (std::regex_match(arguments, match2, exprString)) {
-//                    POMDOG_ASSERT(match2.size() >= 2);
-//                    std::cout << name << ": " << match2[1] << std::endl;
-//                }
-//            }
+            // else if (name == "charset") {
+            //     if (std::regex_match(arguments, match2, exprString)) {
+            //         POMDOG_ASSERT(match2.size() >= 2);
+            //         std::cout << name << ": " << match2[1] << std::endl;
+            //     }
+            // }
             else if (name == "unicode") {
                 info.Unicode = std::stoul(arguments) != 0;
             }

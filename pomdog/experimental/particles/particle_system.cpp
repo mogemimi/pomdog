@@ -176,16 +176,21 @@ void ParticleSystem::Simulate(
 
             // Rotation
             POMDOG_ASSERT(clip->RotationOverLifetime);
-            particle.Rotation = particle.Rotation
-                + deltaTime * clip->RotationOverLifetime->Compute(normalizedTime, particle.RotationVariance);
+            particle.Rotation =
+                particle.Rotation +
+                deltaTime * clip->RotationOverLifetime->Compute(normalizedTime, particle.RotationVariance);
 
             // Size
             POMDOG_ASSERT(clip->SizeOverLifetime);
             particle.Size = particle.StartSize * clip->SizeOverLifetime->Compute(normalizedTime, particle.SizeVariance);
         }
 
-        particles.erase(std::remove_if(std::begin(particles), std::end(particles),
-            [](const Particle& p){ return p.TimeToLive <= 0; }), std::end(particles));
+        particles.erase(
+            std::remove_if(
+                std::begin(particles),
+                std::end(particles),
+                [](const Particle& p) { return p.TimeToLive <= 0; }),
+            std::end(particles));
     }
 }
 

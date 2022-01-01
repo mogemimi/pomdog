@@ -7,9 +7,9 @@
 #include "pomdog/content/asset_builders/shader_builder.h"
 #include "pomdog/gpu/blend_descriptor.h"
 #include "pomdog/gpu/buffer_usage.h"
+#include "pomdog/gpu/command_list.h"
 #include "pomdog/gpu/constant_buffer.h"
 #include "pomdog/gpu/depth_stencil_descriptor.h"
-#include "pomdog/gpu/command_list.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/input_layout_helper.h"
 #include "pomdog/gpu/pipeline_state.h"
@@ -59,7 +59,8 @@ VignetteEffect::VignetteEffect(
         gpu::SamplerDescriptor::CreateLinearWrap()));
 
     auto inputLayout = gpu::InputLayoutHelper{}
-        .Float3().Float2();
+                           .Float3()
+                           .Float2();
 
     auto vertexShaderBuilder = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader);
     auto pixelShaderBuilder = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader);
@@ -94,17 +95,17 @@ VignetteEffect::VignetteEffect(
 
     std::unique_ptr<Error> pipelineStateErr;
     std::tie(pipelineState, pipelineStateErr) = assets.CreateBuilder<gpu::PipelineState>()
-        .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
-        .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
-        .SetVertexShader(std::move(vertexShader))
-        .SetPixelShader(std::move(pixelShader))
-        .SetInputLayout(inputLayout.CreateInputLayout())
-        .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
-        .SetBlendState(gpu::BlendDescriptor::CreateOpaque())
-        .SetDepthStencilState(gpu::DepthStencilDescriptor::CreateNone())
-        .SetConstantBufferBindSlot("ImageEffectConstants", 0)
-        .SetConstantBufferBindSlot("VignetteBlock", 1)
-        .Build();
+                                                    .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
+                                                    .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
+                                                    .SetVertexShader(std::move(vertexShader))
+                                                    .SetPixelShader(std::move(pixelShader))
+                                                    .SetInputLayout(inputLayout.CreateInputLayout())
+                                                    .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
+                                                    .SetBlendState(gpu::BlendDescriptor::CreateOpaque())
+                                                    .SetDepthStencilState(gpu::DepthStencilDescriptor::CreateNone())
+                                                    .SetConstantBufferBindSlot("ImageEffectConstants", 0)
+                                                    .SetConstantBufferBindSlot("VignetteBlock", 1)
+                                                    .Build();
     if (pipelineStateErr != nullptr) {
         // FIXME: error handling
     }

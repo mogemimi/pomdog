@@ -36,37 +36,37 @@ CreateSlots(
         POMDOG_ASSERT(iter != std::end(skinSlotDescs));
 
         if (iter == std::end(skinSlotDescs)) {
-            ///@todo Not implemented
-            // Error
+            // TODO: Not implemented
+            // FIXME: Add error handling
             continue;
         }
 
         if (iter->Attachments.empty() && !iter->SkinnedMeshAttachments.empty()) {
-            ///@todo Not implemented
+            // TODO: Not implemented
 
-//            ///@note push dummy attachment data
-//            RigidSlot slot;
-//            slot.JointIndex = JointIndex(0);
-//            slot.DrawOrder = drawOrder;
-//            slot.Scale = {1, 1};
-//            slot.Translate = {0, 0};
-//            slot.Rotation = 0;
-//            slot.TexturePage = 0;
-//            slot.TextureRotate = false;
-//            slot.Subrect = {0, 0, 1, 1};
-//            slot.Origin.X = 0;
-//            slot.Origin.Y = 0;
-//
-//            slots.push_back(std::move(slot));
-//            ++drawOrder;
+            // // NOTE: push dummy attachment data
+            // RigidSlot slot;
+            // slot.JointIndex = JointIndex(0);
+            // slot.DrawOrder = drawOrder;
+            // slot.Scale = {1, 1};
+            // slot.Translate = {0, 0};
+            // slot.Rotation = 0;
+            // slot.TexturePage = 0;
+            // slot.TextureRotate = false;
+            // slot.Subrect = {0, 0, 1, 1};
+            // slot.Origin.X = 0;
+            // slot.Origin.Y = 0;
+            //
+            // slots.push_back(std::move(slot));
+            // ++drawOrder;
             continue;
         }
 
         POMDOG_ASSERT(!iter->Attachments.empty());
 
         if (iter->Attachments.empty()) {
-            ///@todo Not implemented
-            // Error
+            // TODO: Not implemented
+            // FIXME: Add error handling
             continue;
         }
 
@@ -77,8 +77,8 @@ CreateSlots(
         POMDOG_ASSERT(attachment != std::end(iter->Attachments));
 
         if (attachment == std::end(iter->Attachments)) {
-            ///@todo Not implemented
-            // Error
+            // TODO: Not implemented
+            // FIXME: Add error handling
             continue;
         }
 
@@ -89,8 +89,8 @@ CreateSlots(
         POMDOG_ASSERT(textureAtlasRegion != std::end(textureAtlas.regions));
 
         if (textureAtlasRegion == std::end(textureAtlas.regions)) {
-            ///@todo Not implemented
-            // Error
+            // TODO: Not implemented
+            // FIXME: Add error handling
             continue;
         }
 
@@ -111,10 +111,8 @@ CreateSlots(
         slot.Subrect = textureAtlasRegion->Region.Subrect;
         auto textureXOffset = textureAtlasRegion->Region.XOffset;
         auto textureYOffset = textureAtlasRegion->Region.YOffset;
-        slot.Origin.X = static_cast<float>(textureAtlasRegion->Region.Width / 2 - textureXOffset)
-            / textureAtlasRegion->Region.Subrect.Width;
-        slot.Origin.Y = static_cast<float>(textureAtlasRegion->Region.Height / 2 - textureYOffset)
-            / textureAtlasRegion->Region.Subrect.Height;
+        slot.Origin.X = static_cast<float>(textureAtlasRegion->Region.Width / 2 - textureXOffset) / textureAtlasRegion->Region.Subrect.Width;
+        slot.Origin.Y = static_cast<float>(textureAtlasRegion->Region.Height / 2 - textureYOffset) / textureAtlasRegion->Region.Subrect.Height;
 
         if (textureAtlasRegion->Region.Rotate) {
             std::swap(slot.Subrect.Width, slot.Subrect.Height);
@@ -150,10 +148,10 @@ CreateSkin(
 
     POMDOG_ASSERT(iter != std::end(skeletonDesc.Skins));
 
-    ///@todo Notimplemented
-//    if (iter == std::end(skeletonDesc.Skins)) {
-//        throw NotFound;
-//    }
+    // TODO: Not implemented
+    // if (iter == std::end(skeletonDesc.Skins)) {
+    //     throw NotFound;
+    // }
 
     auto slots = CreateSlots(skeletonDesc.Slots, iter->Slots, textureAtlas);
     auto skin = std::make_shared<skeletal2d::Skin>(std::move(slots));
