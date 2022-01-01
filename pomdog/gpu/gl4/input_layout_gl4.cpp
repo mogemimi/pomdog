@@ -150,8 +150,6 @@ InputElementSize ToInputElementSize(GLenum attributeClass)
     case GL_UNSIGNED_BYTE:
     case GL_SHORT:
     case GL_UNSIGNED_SHORT:
-    // 'GL_UNSIGNED_INT_VEC' See also: http://www.opengl.org/sdk/docs/man/xhtml/glGetActiveAttrib.xml
-    //case GL_UNSIGNED_INT_VEC:
         return {1, 1};
 
     case GL_FLOAT_VEC2:

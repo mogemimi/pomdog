@@ -20,21 +20,21 @@ CompileShader(const ShaderBytecode& source, GLenum pipelineStage) noexcept
 {
 #if defined(DEBUG)
     {
-        auto validPipelineStage = (pipelineStage == GL_VERTEX_SHADER)
+        const auto validPipelineStage = (pipelineStage == GL_VERTEX_SHADER)
 #ifdef GL_FRAGMENT_SHADER
-            || (pipelineStage == GL_FRAGMENT_SHADER)
+                                        || (pipelineStage == GL_FRAGMENT_SHADER)
 #endif
 #ifdef GL_GEOMETRY_SHADER
-            || (pipelineStage == GL_GEOMETRY_SHADER)
+                                        || (pipelineStage == GL_GEOMETRY_SHADER)
 #endif
 #ifdef GL_TESS_CONTROL_SHADER
-            || (pipelineStage == GL_TESS_CONTROL_SHADER)
+                                        || (pipelineStage == GL_TESS_CONTROL_SHADER)
 #endif
 #ifdef GL_TESS_EVALUATION_SHADER
-            || (pipelineStage == GL_TESS_EVALUATION_SHADER)
+                                        || (pipelineStage == GL_TESS_EVALUATION_SHADER)
 #endif
 #ifdef GL_COMPUTE_SHADER
-            || (pipelineStage == GL_COMPUTE_SHADER)
+                                        || (pipelineStage == GL_COMPUTE_SHADER)
 #endif
             ;
         POMDOG_ASSERT(validPipelineStage);

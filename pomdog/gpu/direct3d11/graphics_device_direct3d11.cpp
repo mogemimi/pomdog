@@ -223,9 +223,9 @@ BuildDevice(
         }
 
         Log::Internal("MapNoOverwriteOnDynamicBufferSRV: " +
-            std::to_string(d3d11Options.MapNoOverwriteOnDynamicBufferSRV));
+                      std::to_string(d3d11Options.MapNoOverwriteOnDynamicBufferSRV));
         Log::Internal("MapNoOverwriteOnDynamicConstantBuffer: " +
-            std::to_string(d3d11Options.MapNoOverwriteOnDynamicConstantBuffer));
+                      std::to_string(d3d11Options.MapNoOverwriteOnDynamicConstantBuffer));
     }
 #endif
     return nullptr;
@@ -651,8 +651,8 @@ GraphicsDeviceDirect3D11::CreateRenderTarget2D(
     POMDOG_ASSERT(height > 0);
 
     const auto levelCount = generateMipmap
-        ? detail::TextureHelper::ComputeMipmapLevelCount(width, height)
-        : 1;
+                                ? detail::TextureHelper::ComputeMipmapLevelCount(width, height)
+                                : 1;
 
     // TODO: MSAA is not implemented yet.
     constexpr int multiSampleCount = 1;
@@ -738,8 +738,8 @@ GraphicsDeviceDirect3D11::CreateTexture2D(
     POMDOG_ASSERT(height > 0);
 
     const auto levelCount = mipMap
-        ? detail::TextureHelper::ComputeMipmapLevelCount(width, height)
-        : 1;
+                                ? detail::TextureHelper::ComputeMipmapLevelCount(width, height)
+                                : 1;
 
     auto texture = std::make_shared<Texture2DDirect3D11>();
 

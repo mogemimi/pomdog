@@ -232,8 +232,8 @@ void ToDepthStencilState(
     info.depthTestEnable = ToVkBool32(desc.DepthBufferEnable);
     info.depthWriteEnable = ToVkBool32(desc.DepthBufferWriteEnable);
     info.depthCompareOp = desc.DepthBufferEnable
-        ? ToComparisonFunction(desc.DepthBufferFunction)
-        : VK_COMPARE_OP_ALWAYS;
+                              ? ToComparisonFunction(desc.DepthBufferFunction)
+                              : VK_COMPARE_OP_ALWAYS;
     info.stencilTestEnable = ToVkBool32(desc.StencilEnable);
     ToDepthStencilOperation(desc.ClockwiseFace, desc, info.front);
     ToDepthStencilOperation(desc.CounterClockwiseFace, desc, info.back);

@@ -473,17 +473,17 @@ void CommandListImmediate::SortCommandsForMetal()
         priorityDrawCommand, // DrawIndexedCommand
         priorityDrawCommand, // DrawInstancedCommand
         priorityDrawCommand, // DrawIndexedInstancedCommand
-        0, // SetRenderPassCommand
-        priorityDefault, // SetViewportCommand
-        priorityDefault, // SetScissorRectCommand
-        priorityDefault, // SetBlendFactorCommand
-        priorityDefault, // SetVertexBuffersCommand
-        priorityDefault, // SetIndexBufferCommand
-        priorityDefault, // SetPipelineStateCommand
-        priorityDefault, // SetConstantBufferCommand
-        priorityDefault, // SetSamplerStateCommand
-        priorityDefault, // SetTextureCommand
-        priorityDefault, // SetTextureRenderTarget2DCommand
+        0,                   // SetRenderPassCommand
+        priorityDefault,     // SetViewportCommand
+        priorityDefault,     // SetScissorRectCommand
+        priorityDefault,     // SetBlendFactorCommand
+        priorityDefault,     // SetVertexBuffersCommand
+        priorityDefault,     // SetIndexBufferCommand
+        priorityDefault,     // SetPipelineStateCommand
+        priorityDefault,     // SetConstantBufferCommand
+        priorityDefault,     // SetSamplerStateCommand
+        priorityDefault,     // SetTextureCommand
+        priorityDefault,     // SetTextureRenderTarget2DCommand
     }};
 
     // NOTE: Sort commands for MTLRenderCommandEncoder by using odd-even sort.

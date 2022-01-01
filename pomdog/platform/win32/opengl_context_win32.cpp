@@ -32,8 +32,7 @@ ToPixelFormatDescriptor(
         0,
         PFD_MAIN_PLANE,
         0,
-        0, 0, 0
-    };
+        0, 0, 0};
 
     switch (presentationParameters.BackBufferFormat) {
     case PixelFormat::R8G8B8A8_UNorm:

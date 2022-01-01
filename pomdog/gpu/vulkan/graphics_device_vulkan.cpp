@@ -31,8 +31,8 @@ namespace {
 constexpr std::uint32_t GetUint32EngineVersion() noexcept
 {
     return POMDOG_MAJOR_VERSION * 10000 +
-        POMDOG_MINOR_VERSION * 100 +
-        POMDOG_PATCH_VERSION;
+           POMDOG_MINOR_VERSION * 100 +
+           POMDOG_PATCH_VERSION;
 }
 
 std::tuple<VkInstance, VkResult> CreateVulkanInstance() noexcept

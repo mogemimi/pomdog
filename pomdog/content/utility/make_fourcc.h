@@ -20,9 +20,9 @@ MakeFourCC(Character c0, Character c1, Character c2, Character c3) noexcept
 
     // FourCC's byte order is little endian.
     return (static_cast<std::uint32_t>(c0)) |
-        (static_cast<std::uint32_t>(c1) << 8) |
-        (static_cast<std::uint32_t>(c2) << 16) |
-        (static_cast<std::uint32_t>(c3) << 24);
+           (static_cast<std::uint32_t>(c1) << 8) |
+           (static_cast<std::uint32_t>(c2) << 16) |
+           (static_cast<std::uint32_t>(c3) << 24);
 }
 
 } // namespace pomdog::detail

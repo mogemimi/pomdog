@@ -110,7 +110,8 @@ std::string CreateHeaderString(
         ss << parsedURL.path;
     }
 
-    ss << " HTTP/1.1" << "\r\n";
+    ss << " HTTP/1.1"
+       << "\r\n";
 
     const auto explicitPortNumber = [&]() -> bool {
         // NOTE: This implement strip the port number from the Host header when
@@ -137,10 +138,14 @@ std::string CreateHeaderString(
     }
 
     if (persistentConnection) {
-        ss << "Connection: " << "keep-alive" << "\r\n";
+        ss << "Connection: "
+           << "keep-alive"
+           << "\r\n";
     }
     else {
-        ss << "Connection: " << "close" << "\r\n";
+        ss << "Connection: "
+           << "close"
+           << "\r\n";
     }
 
     if (contentLength.has_value()) {

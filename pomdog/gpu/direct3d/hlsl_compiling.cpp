@@ -35,18 +35,18 @@ ToString(const ShaderProfile& profile) noexcept
     case ShaderPipelineStage::PixelShader:
         output += "ps_";
         break;
-    //case ShaderPipelineStage::GeometryShader:
-    //    output += "gs_";
-    //    break;
-    //case ShaderPipelineStage::DomainShader:
-    //    output += "ds_";
-    //    break;
-    //case ShaderPipelineStage::ComputeShader:
-    //    output += "cs_";
-    //    break;
-    //case ShaderPipelineStage::HullShader:
-    //    output += "hs_";
-    //    break;
+        //case ShaderPipelineStage::GeometryShader:
+        //    output += "gs_";
+        //    break;
+        //case ShaderPipelineStage::DomainShader:
+        //    output += "ds_";
+        //    break;
+        //case ShaderPipelineStage::ComputeShader:
+        //    output += "cs_";
+        //    break;
+        //case ShaderPipelineStage::HullShader:
+        //    output += "hs_";
+        //    break;
     }
 
     output += std::to_string(profile.ShaderModel.Major);

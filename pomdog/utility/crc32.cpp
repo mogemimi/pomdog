@@ -46,7 +46,7 @@ std::array<std::uint32_t, 256U> MakeCRCTable() noexcept
 
 const std::array<std::uint32_t, 256U> crctable = MakeCRCTable();
 
-#else // POMDOG_CRC32_CREATE_CRC_TABLE
+#else  // POMDOG_CRC32_CREATE_CRC_TABLE
 
 constexpr std::array<std::uint32_t, 256U> crctable = {{
     // clang-format off

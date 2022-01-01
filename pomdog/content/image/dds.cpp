@@ -56,7 +56,7 @@ POMDOG_INTERNAL_PACKED(struct DDSHeader final {
 });
 
 POMDOG_INTERNAL_PACKED(struct DDSHeaderDXT10 final {
-    std::uint32_t DxgiFormat; // Note: enum DXGI_FORMAT
+    std::uint32_t DxgiFormat;        // Note: enum DXGI_FORMAT
     std::uint32_t ResourceDimension; // Note: enum D3D10_RESOURCE_DIMENSION
     std::uint32_t MiscFlag;
     std::uint32_t ArraySize;
@@ -65,11 +65,11 @@ POMDOG_INTERNAL_PACKED(struct DDSHeaderDXT10 final {
 
 namespace DirectDrawPixelFormat {
 
-constexpr std::uint32_t FourCC      = 0x00000004; // DDPF_FOURCC
+constexpr std::uint32_t FourCC = 0x00000004;      // DDPF_FOURCC
 constexpr std::uint32_t AlphaPixels = 0x00000001; // DDPF_ALPHAPIXELS
-constexpr std::uint32_t Alpha       = 0x00000002; // DDPF_ALPHA
-constexpr std::uint32_t RGB         = 0x00000040; // DDPF_RGB
-constexpr std::uint32_t Luminance   = 0x00020000; // DDPF_LUMINANCE
+constexpr std::uint32_t Alpha = 0x00000002;       // DDPF_ALPHA
+constexpr std::uint32_t RGB = 0x00000040;         // DDPF_RGB
+constexpr std::uint32_t Luminance = 0x00020000;   // DDPF_LUMINANCE
 
 } // namespace DirectDrawPixelFormat
 

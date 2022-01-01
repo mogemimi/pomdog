@@ -216,8 +216,8 @@ CreateDepthStencilState(
     depthStencilDesc.DepthEnable = ToD3D11Boolean(descriptor.DepthBufferEnable);
     depthStencilDesc.DepthFunc = ToComparisonFunction(descriptor.DepthBufferFunction);
     depthStencilDesc.DepthWriteMask = (descriptor.DepthBufferWriteEnable
-            ? D3D11_DEPTH_WRITE_MASK_ALL
-            : D3D11_DEPTH_WRITE_MASK_ZERO);
+                                           ? D3D11_DEPTH_WRITE_MASK_ALL
+                                           : D3D11_DEPTH_WRITE_MASK_ZERO);
 
     depthStencilDesc.StencilEnable = ToD3D11Boolean(descriptor.StencilEnable);
     depthStencilDesc.StencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK;
@@ -269,7 +269,7 @@ CreateRasterizerState(
     rasterizerDesc.ScissorEnable = TRUE;
 
     POMDOG_ASSERT(!rasterizerDesc.AntialiasedLineEnable ||
-        (rasterizerDesc.AntialiasedLineEnable && !rasterizerDesc.MultisampleEnable));
+                  (rasterizerDesc.AntialiasedLineEnable && !rasterizerDesc.MultisampleEnable));
 
     POMDOG_ASSERT(nativeDevice != nullptr);
 
@@ -328,7 +328,7 @@ BuildInputElements(
         }
 
         POMDOG_ASSERT(sourceElement.InstanceStepRate == 0 ||
-            sourceElement.InputSlotClass == InputClassification::InputPerInstance);
+                      sourceElement.InputSlotClass == InputClassification::InputPerInstance);
 
         D3D11_INPUT_ELEMENT_DESC elementDesc;
         elementDesc.SemanticName = signature->SemanticName;

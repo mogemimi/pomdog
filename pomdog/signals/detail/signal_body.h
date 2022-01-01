@@ -143,10 +143,10 @@ auto SignalBody<void(Arguments...)>::Connect(Function&& slot)
         slotIndex = nextSlotIndex;
         ++nextSlotIndex;
 
-        POMDOG_ASSERT(std::end(addedObservers) == std::find_if(
-            std::begin(addedObservers),
-            std::end(addedObservers),
-            [&](const auto& pair) { return pair.first == slotIndex; }));
+        POMDOG_ASSERT(std::find_if(
+                          std::begin(addedObservers),
+                          std::end(addedObservers),
+                          [&](const auto& pair) { return pair.first == slotIndex; }) == std::end(addedObservers));
         addedObservers.emplace_back(slotIndex, std::forward<Function>(slot));
     }
 
@@ -198,10 +198,10 @@ void SignalBody<void(Arguments...)>::PushBackAddedListeners()
         std::lock_guard<SpinLock> lock{slotsProtection};
 
         for (auto& slot : temporarySlots) {
-            POMDOG_ASSERT(std::end(observers) == std::find_if(
-                std::begin(observers),
-                std::end(observers),
-                [&](const auto& pair) { return pair.first == slot.first; }));
+            POMDOG_ASSERT(std::find_if(
+                              std::begin(observers),
+                              std::end(observers),
+                              [&](const auto& pair) { return pair.first == slot.first; }) == std::end(observers));
             observers.push_back(std::move(slot));
         }
     }

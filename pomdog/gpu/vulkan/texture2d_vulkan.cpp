@@ -33,9 +33,9 @@ Texture2DVulkan::Texture2DVulkan(
     const bool canUseLinearTiledImage =
         formatProps.linearTilingFeatures & VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT;
 
-    const auto usageFlags = (canUseLinearTiledImage
-        ? VK_IMAGE_USAGE_SAMPLED_BIT
-        : VK_IMAGE_USAGE_TRANSFER_SRC_BIT);
+    const auto usageFlags = canUseLinearTiledImage
+                                ? VK_IMAGE_USAGE_SAMPLED_BIT
+                                : VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
 
     VkImageCreateInfo imageCreateInfo;
     imageCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;

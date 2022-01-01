@@ -83,8 +83,8 @@ BufferGL4<Tag>::Initialize(
     BufferUsage bufferUsage) noexcept
 {
     POMDOG_ASSERT(bufferUsage == BufferUsage::Immutable
-            ? sourceData != nullptr
-            : true);
+                      ? sourceData != nullptr
+                      : true);
 
     // Generate new buffer
     bufferObject = ([] {
