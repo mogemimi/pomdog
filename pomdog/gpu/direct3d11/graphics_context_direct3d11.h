@@ -3,7 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/gpu/backends/native_graphics_context.h"
+#include "pomdog/gpu/backends/graphics_context.h"
 #include "pomdog/gpu/direct3d11/prerequisites_direct3d11.h"
 #include "pomdog/gpu/pixel_format.h"
 #include "pomdog/utility/errors.h"

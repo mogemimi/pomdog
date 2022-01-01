@@ -17,36 +17,16 @@ namespace pomdog::gpu::detail {
 
 class NativeGraphicsContext;
 
-enum class GraphicsCommandType : std::int8_t {
-    DrawCommand,
-    DrawIndexedCommand,
-    DrawInstancedCommand,
-    DrawIndexedInstancedCommand,
-    SetRenderPassCommand,
-    SetViewportCommand,
-    SetScissorRectCommand,
-    SetBlendFactorCommand,
-    SetVertexBufferCommand,
-    SetIndexBufferCommand,
-    SetPipelineStateCommand,
-    SetConstantBufferCommand,
-    SetSamplerStateCommand,
-    SetTextureCommand,
-    SetTextureRenderTarget2DCommand,
-};
-
 class GraphicsCommand {
 public:
     virtual ~GraphicsCommand();
 
-    virtual void Execute(NativeGraphicsContext& graphicsContext) = 0;
-
-    GraphicsCommandType commandType;
+    virtual void Execute(NativeGraphicsContext& graphicsContext) const = 0;
 };
 
 class CommandListImmediate final : public CommandList {
 public:
-    CommandListImmediate() = default;
+    CommandListImmediate() noexcept;
     CommandListImmediate(const CommandListImmediate&) = delete;
     CommandListImmediate& operator=(const CommandListImmediate&) = delete;
 
@@ -139,10 +119,7 @@ public:
     void ExecuteImmediate(NativeGraphicsContext& graphicsContext);
 
 private:
-    void SortCommandsForMetal();
-
-private:
-    std::vector<std::shared_ptr<detail::GraphicsCommand>> commands;
+    std::vector<std::unique_ptr<const detail::GraphicsCommand>> commands_;
 };
 
 } // namespace pomdog::gpu::detail

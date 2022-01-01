@@ -2,7 +2,7 @@
 
 #include "pomdog/gpu/backends/command_queue_immediate.h"
 #include "pomdog/gpu/backends/command_list_immediate.h"
-#include "pomdog/gpu/backends/native_graphics_context.h"
+#include "pomdog/gpu/backends/graphics_context.h"
 #include "pomdog/gpu/command_list.h"
 #include "pomdog/utility/assert.h"
 

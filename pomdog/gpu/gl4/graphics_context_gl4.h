@@ -3,7 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
-#include "pomdog/gpu/backends/native_graphics_context.h"
+#include "pomdog/gpu/backends/graphics_context.h"
 #include "pomdog/gpu/gl4/opengl_prerequisites.h"
 #include "pomdog/gpu/gl4/vertex_buffer_binding_gl4.h"
 #include "pomdog/utility/errors.h"

@@ -1,6 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/gpu/backends/native_graphics_context.h"
+#include "pomdog/gpu/backends/graphics_context.h"
 
 namespace pomdog::gpu::detail {
 
