@@ -624,7 +624,7 @@ void GraphicsContextGL4::DrawIndexedInstanced(
 #endif
 }
 
-GraphicsCapabilities GraphicsContextGL4::GetCapabilities() const
+GraphicsCapabilities GraphicsContextGL4::GetCapabilities() const noexcept
 {
     GraphicsCapabilities capabilities;
 

@@ -21,7 +21,7 @@ class DepthStencilBufferDirect3D11;
 class PipelineStateDirect3D11;
 class RenderTarget2DDirect3D11;
 
-class GraphicsContextDirect3D11 final : public NativeGraphicsContext {
+class GraphicsContextDirect3D11 final : public GraphicsContext {
 public:
     [[nodiscard]] std::unique_ptr<Error>
     Initialize(
@@ -32,7 +32,8 @@ public:
 
     ~GraphicsContextDirect3D11();
 
-    GraphicsCapabilities GetCapabilities() const override;
+    /// Retrieves the capabilities of a GraphicsContext.
+    [[nodiscard]] GraphicsCapabilities GetCapabilities() const noexcept;
 
     void ExecuteCommandLists(
         const std::vector<std::shared_ptr<CommandListImmediate>>& commandLists) override;

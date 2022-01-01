@@ -138,7 +138,7 @@ GraphicsContextMetal::GraphicsContextMetal(
 
 GraphicsContextMetal::~GraphicsContextMetal() = default;
 
-GraphicsCapabilities GraphicsContextMetal::GetCapabilities() const
+GraphicsCapabilities GraphicsContextMetal::GetCapabilities() const noexcept
 {
     // NOTE: For more information, please see:
     // https://developer.apple.com/library/ios/documentation/Miscellaneous/Conceptual/MetalProgrammingGuide/MetalFeatureSetTables/MetalFeatureSetTables.html

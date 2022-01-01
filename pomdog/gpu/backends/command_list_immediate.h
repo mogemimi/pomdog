@@ -15,13 +15,13 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu::detail {
 
-class NativeGraphicsContext;
+class GraphicsContext;
 
 class GraphicsCommand {
 public:
     virtual ~GraphicsCommand();
 
-    virtual void Execute(NativeGraphicsContext& graphicsContext) const = 0;
+    virtual void Execute(GraphicsContext& graphicsContext) const = 0;
 };
 
 class CommandListImmediate final : public CommandList {
@@ -116,7 +116,7 @@ public:
     /// Sets a sampler state to the specified slot.
     void SetSamplerState(int index, const std::shared_ptr<SamplerState>& samplerState) override;
 
-    void ExecuteImmediate(NativeGraphicsContext& graphicsContext);
+    void ExecuteImmediate(GraphicsContext& graphicsContext);
 
 private:
     std::vector<std::unique_ptr<const detail::GraphicsCommand>> commands_;

@@ -364,12 +364,12 @@ void GraphicsContextDirect3D11::SetIndexBuffer(const std::shared_ptr<IndexBuffer
         0);
 }
 
-GraphicsCapabilities GraphicsContextDirect3D11::GetCapabilities() const
+GraphicsCapabilities GraphicsContextDirect3D11::GetCapabilities() const noexcept
 {
     GraphicsCapabilities caps;
     caps.SamplerSlotCount = D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT;
     caps.ConstantBufferSlotCount = D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT;
-    return std::move(caps);
+    return caps;
 }
 
 void GraphicsContextDirect3D11::SetViewport(const Viewport& viewportIn)

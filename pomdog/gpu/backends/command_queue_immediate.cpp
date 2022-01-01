@@ -9,7 +9,7 @@
 namespace pomdog::gpu::detail {
 
 CommandQueueImmediate::CommandQueueImmediate(
-    const std::shared_ptr<NativeGraphicsContext>& graphicsContextIn)
+    const std::shared_ptr<GraphicsContext>& graphicsContextIn)
     : graphicsContext(graphicsContextIn)
 {
 }

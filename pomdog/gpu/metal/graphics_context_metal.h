@@ -11,7 +11,7 @@
 
 namespace pomdog::gpu::detail::metal {
 
-class GraphicsContextMetal final : public NativeGraphicsContext {
+class GraphicsContextMetal final : public GraphicsContext {
 public:
     GraphicsContextMetal() = delete;
 
@@ -19,7 +19,8 @@ public:
 
     ~GraphicsContextMetal() override;
 
-    GraphicsCapabilities GetCapabilities() const override;
+    /// Retrieves the capabilities of a GraphicsContext.
+    [[nodiscard]] GraphicsCapabilities GetCapabilities() const noexcept;
 
     void ExecuteCommandLists(
         const std::vector<std::shared_ptr<CommandListImmediate>>& commandLists) override;

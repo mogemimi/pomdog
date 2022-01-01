@@ -21,7 +21,7 @@ struct DrawCommand final : public GraphicsCommand {
     std::size_t vertexCount;
     std::size_t startVertexLocation;
 
-    void Execute(NativeGraphicsContext& graphicsContext) const override
+    void Execute(GraphicsContext& graphicsContext) const override
     {
         graphicsContext.Draw(vertexCount, startVertexLocation);
     }
@@ -31,7 +31,7 @@ struct DrawIndexedCommand final : public GraphicsCommand {
     std::size_t indexCount;
     std::size_t startIndexLocation;
 
-    void Execute(NativeGraphicsContext& graphicsContext) const override
+    void Execute(GraphicsContext& graphicsContext) const override
     {
         graphicsContext.DrawIndexed(indexCount, startIndexLocation);
     }
@@ -43,7 +43,7 @@ struct DrawInstancedCommand final : public GraphicsCommand {
     std::size_t startVertexLocation;
     std::size_t startInstanceLocation;
 
-    void Execute(NativeGraphicsContext& graphicsContext) const override
+    void Execute(GraphicsContext& graphicsContext) const override
     {
         graphicsContext.DrawInstanced(
             vertexCountPerInstance,
@@ -59,7 +59,7 @@ struct DrawIndexedInstancedCommand final : public GraphicsCommand {
     std::size_t startIndexLocation;
     std::size_t startInstanceLocation;
 
-    void Execute(NativeGraphicsContext& graphicsContext) const override
+    void Execute(GraphicsContext& graphicsContext) const override
     {
         graphicsContext.DrawIndexedInstanced(
             indexCountPerInstance,
@@ -72,7 +72,7 @@ struct DrawIndexedInstancedCommand final : public GraphicsCommand {
 struct SetViewportCommand final : public GraphicsCommand {
     Viewport viewport;
 
-    void Execute(NativeGraphicsContext& graphicsContext) const override
+    void Execute(GraphicsContext& graphicsContext) const override
     {
         graphicsContext.SetViewport(viewport);
     }
@@ -81,7 +81,7 @@ struct SetViewportCommand final : public GraphicsCommand {
 struct SetScissorRectCommand final : public GraphicsCommand {
     Rectangle scissorRect;
 
-    void Execute(NativeGraphicsContext& graphicsContext) const override
+    void Execute(GraphicsContext& graphicsContext) const override
     {
         graphicsContext.SetScissorRect(scissorRect);
     }
@@ -90,7 +90,7 @@ struct SetScissorRectCommand final : public GraphicsCommand {
 struct SetBlendFactorCommand final : public GraphicsCommand {
     Vector4 blendFactor;
 
-    void Execute(NativeGraphicsContext& graphicsContext) const override
+    void Execute(GraphicsContext& graphicsContext) const override
     {
         graphicsContext.SetBlendFactor(blendFactor);
     }
@@ -101,7 +101,7 @@ struct SetVertexBufferCommand final : public GraphicsCommand {
     int slotIndex;
     std::size_t offset;
 
-    void Execute(NativeGraphicsContext& graphicsContext)const override
+    void Execute(GraphicsContext& graphicsContext) const override
     {
         graphicsContext.SetVertexBuffer(slotIndex, vertexBuffer, offset);
     }
@@ -110,7 +110,7 @@ struct SetVertexBufferCommand final : public GraphicsCommand {
 struct SetIndexBufferCommand final : public GraphicsCommand {
     std::shared_ptr<IndexBuffer> indexBuffer;
 
-    void Execute(NativeGraphicsContext& graphicsContext) const override
+    void Execute(GraphicsContext& graphicsContext) const override
     {
         graphicsContext.SetIndexBuffer(indexBuffer);
     }
@@ -119,7 +119,7 @@ struct SetIndexBufferCommand final : public GraphicsCommand {
 struct SetPipelineStateCommand final : public GraphicsCommand {
     std::shared_ptr<PipelineState> pipelineState;
 
-    void Execute(NativeGraphicsContext& graphicsContext) const override
+    void Execute(GraphicsContext& graphicsContext) const override
     {
         POMDOG_ASSERT(pipelineState);
         graphicsContext.SetPipelineState(pipelineState);
@@ -132,7 +132,7 @@ struct SetConstantBufferCommand final : public GraphicsCommand {
     std::size_t offset;
     std::size_t sizeInBytes;
 
-    void Execute(NativeGraphicsContext& graphicsContext) const override
+    void Execute(GraphicsContext& graphicsContext) const override
     {
         POMDOG_ASSERT(constantBuffer);
         POMDOG_ASSERT(slotIndex >= 0);
@@ -144,7 +144,7 @@ struct SetSamplerStateCommand final : public GraphicsCommand {
     std::shared_ptr<SamplerState> sampler;
     int slotIndex;
 
-    void Execute(NativeGraphicsContext& graphicsContext) const override
+    void Execute(GraphicsContext& graphicsContext) const override
     {
         if (sampler) {
             graphicsContext.SetSampler(slotIndex, sampler);
@@ -159,7 +159,7 @@ struct SetTextureCommand final : public GraphicsCommand {
     std::shared_ptr<gpu::Texture2D> texture;
     int slotIndex;
 
-    void Execute(NativeGraphicsContext& graphicsContext) const override
+    void Execute(GraphicsContext& graphicsContext) const override
     {
         if (texture) {
             graphicsContext.SetTexture(slotIndex, texture);
@@ -174,7 +174,7 @@ struct SetTextureRenderTarget2DCommand final : public GraphicsCommand {
     std::shared_ptr<RenderTarget2D> texture;
     int slotIndex;
 
-    void Execute(NativeGraphicsContext& graphicsContext) const override
+    void Execute(GraphicsContext& graphicsContext) const override
     {
         if (texture) {
             graphicsContext.SetTexture(slotIndex, texture);
@@ -188,7 +188,7 @@ struct SetTextureRenderTarget2DCommand final : public GraphicsCommand {
 struct SetRenderPassCommand final : public GraphicsCommand {
     RenderPass renderPass;
 
-    void Execute(NativeGraphicsContext& graphicsContext) const override
+    void Execute(GraphicsContext& graphicsContext) const override
     {
         graphicsContext.SetRenderPass(renderPass);
     }
@@ -413,7 +413,7 @@ void CommandListImmediate::SetTexture(int index, const std::shared_ptr<RenderTar
     commands_.push_back(std::move(command));
 }
 
-void CommandListImmediate::ExecuteImmediate(NativeGraphicsContext& graphicsContext)
+void CommandListImmediate::ExecuteImmediate(GraphicsContext& graphicsContext)
 {
     for (auto& command : commands_) {
         POMDOG_ASSERT(command != nullptr);

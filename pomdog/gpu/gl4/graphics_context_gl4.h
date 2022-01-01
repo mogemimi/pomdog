@@ -33,7 +33,7 @@ class OpenGLContext;
 class PipelineStateGL4;
 class RenderTarget2DGL4;
 
-class GraphicsContextGL4 final : public NativeGraphicsContext {
+class GraphicsContextGL4 final : public GraphicsContext {
 public:
     [[nodiscard]] std::unique_ptr<Error>
     Initialize(
@@ -42,7 +42,8 @@ public:
 
     ~GraphicsContextGL4() override;
 
-    GraphicsCapabilities GetCapabilities() const override;
+    /// Retrieves the capabilities of a GraphicsContext.
+    [[nodiscard]] GraphicsCapabilities GetCapabilities() const noexcept;
 
     void ExecuteCommandLists(
         const std::vector<std::shared_ptr<CommandListImmediate>>& commandLists) override;

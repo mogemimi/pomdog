@@ -4,6 +4,8 @@
 
 namespace pomdog::gpu::detail {
 
-NativeGraphicsContext::~NativeGraphicsContext() = default;
+GraphicsContext::GraphicsContext() noexcept = default;
+
+GraphicsContext::~GraphicsContext() = default;
 
 } // namespace pomdog::gpu::detail

@@ -14,7 +14,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::gpu::detail {
 
 class CommandListImmediate;
-class NativeGraphicsContext;
+class GraphicsContext;
 
 class CommandQueueImmediate final : public CommandQueue {
 public:
@@ -23,7 +23,7 @@ public:
     CommandQueueImmediate& operator=(const CommandQueueImmediate&) = delete;
 
     explicit CommandQueueImmediate(
-        const std::shared_ptr<NativeGraphicsContext>& graphicsContext);
+        const std::shared_ptr<GraphicsContext>& graphicsContext);
 
     std::size_t GetCommandCount() const noexcept override;
 
@@ -37,7 +37,7 @@ public:
 
 private:
     std::vector<std::shared_ptr<CommandListImmediate>> commandLists;
-    std::shared_ptr<NativeGraphicsContext> graphicsContext;
+    std::shared_ptr<GraphicsContext> graphicsContext;
 };
 
 } // namespace pomdog::gpu::detail

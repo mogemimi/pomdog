@@ -17,16 +17,13 @@ namespace pomdog::gpu::detail {
 class CommandListImmediate;
 struct GraphicsCapabilities;
 
-class NativeGraphicsContext {
+class GraphicsContext {
 public:
-    NativeGraphicsContext() = default;
-    NativeGraphicsContext(const NativeGraphicsContext&) = delete;
-    NativeGraphicsContext& operator=(const NativeGraphicsContext&) = delete;
+    GraphicsContext() noexcept;
+    GraphicsContext(const GraphicsContext&) = delete;
+    GraphicsContext& operator=(const GraphicsContext&) = delete;
 
-    virtual ~NativeGraphicsContext();
-
-    /// Retrieves the capabilities of a GraphicsContext.
-    virtual GraphicsCapabilities GetCapabilities() const = 0;
+    virtual ~GraphicsContext();
 
     virtual void ExecuteCommandLists(
         const std::vector<std::shared_ptr<CommandListImmediate>>& commandLists) = 0;
