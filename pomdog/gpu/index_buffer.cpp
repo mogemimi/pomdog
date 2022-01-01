@@ -15,7 +15,7 @@ namespace pomdog::gpu {
 
 IndexBuffer::IndexBuffer(
     std::unique_ptr<Buffer>&& nativeBufferIn,
-    IndexElementSize elementSizeIn,
+    IndexFormat elementSizeIn,
     std::size_t indexCountIn,
     BufferUsage bufferUsageIn)
     : nativeBuffer(std::move(nativeBufferIn))
@@ -34,7 +34,7 @@ std::size_t IndexBuffer::GetIndexCount() const noexcept
     return indexCount;
 }
 
-IndexElementSize IndexBuffer::GetElementSize() const noexcept
+IndexFormat IndexBuffer::GetElementSize() const noexcept
 {
     return elementSize;
 }

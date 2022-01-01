@@ -37,7 +37,7 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/gpu/graphics_device.h
     ${POMDOG_SRC_DIR}/gpu/index_buffer.cpp
     ${POMDOG_SRC_DIR}/gpu/index_buffer.h
-    ${POMDOG_SRC_DIR}/gpu/index_element_size.h
+    ${POMDOG_SRC_DIR}/gpu/index_format.h
     ${POMDOG_SRC_DIR}/gpu/input_classification.h
     ${POMDOG_SRC_DIR}/gpu/input_element_format.h
     ${POMDOG_SRC_DIR}/gpu/input_element.h

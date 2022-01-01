@@ -55,7 +55,7 @@ enum class CullMode : std::uint8_t;
 enum class EffectVariableClass : std::uint8_t;
 enum class EffectVariableType : std::uint8_t;
 enum class FillMode : std::uint8_t;
-enum class IndexElementSize : std::uint8_t;
+enum class IndexFormat : std::uint8_t;
 enum class InputClassification : std::uint8_t;
 enum class InputElementFormat : std::uint8_t;
 enum class PrimitiveTopology : std::uint8_t;

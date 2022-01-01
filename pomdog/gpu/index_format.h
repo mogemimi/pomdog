@@ -10,12 +10,13 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu {
 
-enum class IndexElementSize : std::uint8_t {
-    /// A 16-bit unsigned integer used as a the size of a primitive index.
-    SixteenBits,
+/// IndexFormat specifies the format of index buffer indices.
+enum class IndexFormat : std::uint8_t {
+    /// Specifies that indices are 16-bit unsigned integer values.
+    UInt16,
 
-    /// A 32-bit unsigned nteger used as a the size of a primitive index.
-    ThirtyTwoBits,
+    /// Specifies that indices are 32-bit unsigned integer values.
+    UInt32,
 };
 
 } // namespace pomdog::gpu

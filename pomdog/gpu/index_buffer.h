@@ -6,7 +6,7 @@
 #include "pomdog/basic/export.h"
 #include "pomdog/gpu/buffer_usage.h"
 #include "pomdog/gpu/forward_declarations.h"
-#include "pomdog/gpu/index_element_size.h"
+#include "pomdog/gpu/index_format.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstddef>
@@ -23,7 +23,7 @@ public:
 
     IndexBuffer(
         std::unique_ptr<Buffer>&& nativeBuffer,
-        IndexElementSize elementSize,
+        IndexFormat elementSize,
         std::size_t indexCount,
         BufferUsage bufferUsage);
 
@@ -36,7 +36,7 @@ public:
     [[nodiscard]] std::size_t GetIndexCount() const noexcept;
 
     /// Gets the size in bytes of per-index element.
-    [[nodiscard]] IndexElementSize GetElementSize() const noexcept;
+    [[nodiscard]] IndexFormat GetElementSize() const noexcept;
 
     /// Gets the size in bytes of this index buffer.
     [[nodiscard]] std::size_t GetSizeInBytes() const noexcept;
@@ -59,7 +59,7 @@ public:
 private:
     std::unique_ptr<Buffer> nativeBuffer;
     std::uint32_t indexCount;
-    IndexElementSize elementSize;
+    IndexFormat elementSize;
     BufferUsage bufferUsage;
 };
 

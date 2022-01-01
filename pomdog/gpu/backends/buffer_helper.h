@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu::detail::BufferHelper {
 
-std::size_t ToIndexElementOffsetBytes(IndexElementSize elementSize) noexcept;
+std::size_t ToIndexElementOffsetBytes(IndexFormat elementSize) noexcept;
 
 std::uint16_t ToByteSize(InputElementFormat format) noexcept;
 

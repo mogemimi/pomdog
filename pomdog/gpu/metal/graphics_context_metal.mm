@@ -25,12 +25,12 @@
 namespace pomdog::gpu::detail::metal {
 namespace {
 
-MTLIndexType ToIndexType(IndexElementSize elementSize) noexcept
+[[nodiscard]] MTLIndexType ToIndexType(IndexFormat elementSize) noexcept
 {
     switch (elementSize) {
-    case IndexElementSize::SixteenBits:
+    case IndexFormat::UInt16:
         return MTLIndexTypeUInt16;
-    case IndexElementSize::ThirtyTwoBits:
+    case IndexFormat::UInt32:
         return MTLIndexTypeUInt32;
     }
     POMDOG_UNREACHABLE("Unsupported index element size");

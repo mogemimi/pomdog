@@ -2,7 +2,7 @@
 
 #include "pomdog/gpu/dxgi/dxgi_format_helper.h"
 #include "pomdog/basic/unreachable.h"
-#include "pomdog/gpu/index_element_size.h"
+#include "pomdog/gpu/index_format.h"
 #include "pomdog/gpu/input_element_format.h"
 #include "pomdog/gpu/pixel_format.h"
 
@@ -53,12 +53,12 @@ DXGI_FORMAT ToDXGIFormat(PixelFormat format) noexcept
     POMDOG_UNREACHABLE("Unsupported surface format");
 }
 
-DXGI_FORMAT ToDXGIFormat(IndexElementSize elementSize) noexcept
+DXGI_FORMAT ToDXGIFormat(IndexFormat elementSize) noexcept
 {
     switch (elementSize) {
-    case IndexElementSize::SixteenBits:
+    case IndexFormat::UInt16:
         return DXGI_FORMAT_R16_UINT;
-    case IndexElementSize::ThirtyTwoBits:
+    case IndexFormat::UInt32:
         return DXGI_FORMAT_R32_UINT;
     }
     POMDOG_UNREACHABLE("Unsupported index element size");

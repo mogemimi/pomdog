@@ -15,7 +15,7 @@ namespace pomdog::gpu::detail::dxgi {
 ToDXGIFormat(PixelFormat format) noexcept;
 
 [[nodiscard]] DXGI_FORMAT
-ToDXGIFormat(IndexElementSize elementSize) noexcept;
+ToDXGIFormat(IndexFormat elementSize) noexcept;
 
 [[nodiscard]] DXGI_FORMAT
 ToDXGIFormat(InputElementFormat format) noexcept;

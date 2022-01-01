@@ -2,19 +2,19 @@
 
 #include "pomdog/gpu/backends/buffer_helper.h"
 #include "pomdog/basic/unreachable.h"
-#include "pomdog/gpu/index_element_size.h"
+#include "pomdog/gpu/index_format.h"
 #include "pomdog/gpu/input_element_format.h"
 #include "pomdog/utility/assert.h"
 
 namespace pomdog::gpu::detail::BufferHelper {
 
-std::size_t ToIndexElementOffsetBytes(IndexElementSize elementSize) noexcept
+std::size_t ToIndexElementOffsetBytes(IndexFormat elementSize) noexcept
 {
     switch (elementSize) {
-    case IndexElementSize::ThirtyTwoBits:
-        return 4;
-    case IndexElementSize::SixteenBits:
+    case IndexFormat::UInt16:
         return 2;
+    case IndexFormat::UInt32:
+        return 4;
     }
     POMDOG_UNREACHABLE("Unsupported index element size");
 }

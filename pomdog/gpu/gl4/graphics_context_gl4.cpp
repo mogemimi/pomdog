@@ -41,15 +41,15 @@ using pomdog::detail::ScopeGuard;
 namespace pomdog::gpu::detail::gl4 {
 namespace {
 
-GLenum ToIndexElementType(IndexElementSize indexElementSize) noexcept
+[[nodiscard]] GLenum ToIndexElementType(IndexFormat indexElementSize) noexcept
 {
     static_assert(sizeof(GLushort) == 2, "GLushort is not SixteenBits.");
     static_assert(sizeof(GLuint) == 4, "GLuint is not ThirtyTwoBits.");
 
     switch (indexElementSize) {
-    case IndexElementSize::SixteenBits:
+    case IndexFormat::UInt16:
         return GL_UNSIGNED_SHORT;
-    case IndexElementSize::ThirtyTwoBits:
+    case IndexFormat::UInt32:
         return GL_UNSIGNED_INT;
     }
     POMDOG_UNREACHABLE("Unsupported index element size");
@@ -337,7 +337,7 @@ void CheckUnbindingRenderTargetsError(
 #endif
 
 const GLvoid* ComputeStartIndexLocationPointer(
-    IndexElementSize indexElementSize,
+    IndexFormat indexElementSize,
     std::size_t startIndexLocation) noexcept
 {
     using detail::BufferHelper::ToIndexElementOffsetBytes;

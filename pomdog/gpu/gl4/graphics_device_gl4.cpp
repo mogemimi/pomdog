@@ -101,7 +101,7 @@ GraphicsDeviceGL4::CreateVertexBuffer(
 
 std::tuple<std::shared_ptr<IndexBuffer>, std::unique_ptr<Error>>
 GraphicsDeviceGL4::CreateIndexBuffer(
-    IndexElementSize elementSize,
+    IndexFormat elementSize,
     const void* indices,
     std::size_t indexCount,
     BufferUsage bufferUsage) noexcept
@@ -123,7 +123,7 @@ GraphicsDeviceGL4::CreateIndexBuffer(
 
 std::tuple<std::shared_ptr<IndexBuffer>, std::unique_ptr<Error>>
 GraphicsDeviceGL4::CreateIndexBuffer(
-    IndexElementSize elementSize,
+    IndexFormat elementSize,
     std::size_t indexCount,
     BufferUsage bufferUsage) noexcept
 {

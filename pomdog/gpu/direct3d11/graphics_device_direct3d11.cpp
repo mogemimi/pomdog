@@ -418,7 +418,7 @@ GraphicsDeviceDirect3D11::CreateVertexBuffer(
 
 std::tuple<std::shared_ptr<IndexBuffer>, std::unique_ptr<Error>>
 GraphicsDeviceDirect3D11::CreateIndexBuffer(
-    IndexElementSize elementSize,
+    IndexFormat elementSize,
     const void* indices,
     std::size_t indexCount,
     BufferUsage bufferUsage) noexcept
@@ -457,7 +457,7 @@ GraphicsDeviceDirect3D11::CreateIndexBuffer(
 
 std::tuple<std::shared_ptr<IndexBuffer>, std::unique_ptr<Error>>
 GraphicsDeviceDirect3D11::CreateIndexBuffer(
-    IndexElementSize elementSize,
+    IndexFormat elementSize,
     std::size_t indexCount,
     BufferUsage bufferUsage) noexcept
 {

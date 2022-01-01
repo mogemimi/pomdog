@@ -85,7 +85,7 @@ namespace pomdog {
 #include "pomdog/gpu/fill_mode.h"
 #include "pomdog/gpu/graphics_device.h"
 #include "pomdog/gpu/index_buffer.h"
-#include "pomdog/gpu/index_element_size.h"
+#include "pomdog/gpu/index_format.h"
 #include "pomdog/gpu/input_classification.h"
 #include "pomdog/gpu/input_element.h"
 #include "pomdog/gpu/input_element_format.h"

@@ -21,12 +21,12 @@
 namespace pomdog::gpu::detail::vulkan {
 namespace {
 
-VkIndexType ToVkIndexType(IndexElementSize elementSize) noexcept
+[[nodiscard]] VkIndexType ToVkIndexType(IndexFormat elementSize) noexcept
 {
     switch (elementSize) {
-    case IndexElementSize::SixteenBits:
+    case IndexFormat::UInt16:
         return VK_INDEX_TYPE_UINT16;
-    case IndexElementSize::ThirtyTwoBits:
+    case IndexFormat::UInt32:
         return VK_INDEX_TYPE_UINT32;
     }
     return VK_INDEX_TYPE_UINT16;
