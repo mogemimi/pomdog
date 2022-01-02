@@ -113,21 +113,21 @@ private:
     void EmulateStartInstanceLocation(std::size_t startInstanceLocation);
 
 private:
-    std::array<VertexBufferBindingGL4, 8> vertexBuffers;
+    std::array<VertexBufferBindingGL4, 8> vertexBuffers_;
 #if defined(DEBUG) && !defined(NDEBUG)
-    std::vector<std::weak_ptr<Texture>> weakTextures;
-    std::vector<std::weak_ptr<RenderTarget2D>> weakRenderTargets;
+    std::vector<std::weak_ptr<Texture>> weakTextures_;
+    std::vector<std::weak_ptr<RenderTarget2D>> weakRenderTargets_;
 #endif
-    std::shared_ptr<OpenGLContext> nativeContext;
-    std::shared_ptr<PipelineStateGL4> pipelineState;
-    std::shared_ptr<IndexBuffer> indexBuffer;
-    std::weak_ptr<GraphicsDevice> graphicsDevice;
-    std::vector<std::optional<GLenum>> textures;
-    std::optional<FrameBufferGL4> frameBuffer;
-    std::array<std::shared_ptr<RenderTarget2DGL4>, 8> renderTargets;
-    PrimitiveTopologyGL4 primitiveTopology;
-    bool needToApplyInputLayout = true;
-    bool needToApplyPipelineState = true;
+    std::shared_ptr<OpenGLContext> nativeContext_;
+    std::shared_ptr<PipelineStateGL4> pipelineState_;
+    std::shared_ptr<IndexBuffer> indexBuffer_;
+    std::weak_ptr<GraphicsDevice> graphicsDevice_;
+    std::vector<std::optional<GLenum>> textures_;
+    std::optional<FrameBufferGL4> frameBuffer_;
+    std::array<std::shared_ptr<RenderTarget2DGL4>, 8> renderTargets_;
+    PrimitiveTopologyGL4 primitiveTopology_;
+    bool needToApplyInputLayout_ = true;
+    bool needToApplyPipelineState_ = true;
 };
 
 } // namespace pomdog::gpu::detail::gl4
