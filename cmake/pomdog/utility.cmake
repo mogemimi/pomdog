@@ -16,6 +16,7 @@ target_sources(pomdog_static PRIVATE
     ${POMDOG_SRC_DIR}/utility/scope_guard.h
     ${POMDOG_SRC_DIR}/utility/spin_lock.cpp
     ${POMDOG_SRC_DIR}/utility/spin_lock.h
+    ${POMDOG_SRC_DIR}/utility/static_down_cast.h
     ${POMDOG_SRC_DIR}/utility/string_helper.cpp
     ${POMDOG_SRC_DIR}/utility/string_helper.h
     ${POMDOG_SRC_DIR}/utility/tagged.h
