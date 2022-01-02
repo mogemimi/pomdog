@@ -7,7 +7,7 @@
 #include "pomdog/math/forward_declarations.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstddef>
+#include <cstdint>
 #include <memory>
 #include <span>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
@@ -30,24 +30,24 @@ public:
     virtual void Present() = 0;
 
     virtual void Draw(
-        std::size_t vertexCount,
-        std::size_t startVertexLocation) = 0;
+        std::uint32_t vertexCount,
+        std::uint32_t startVertexLocation) = 0;
 
     virtual void DrawIndexed(
-        std::size_t indexCount,
-        std::size_t startIndexLocation) = 0;
+        std::uint32_t indexCount,
+        std::uint32_t startIndexLocation) = 0;
 
     virtual void DrawInstanced(
-        std::size_t vertexCountPerInstance,
-        std::size_t instanceCount,
-        std::size_t startVertexLocation,
-        std::size_t startInstanceLocation) = 0;
+        std::uint32_t vertexCountPerInstance,
+        std::uint32_t instanceCount,
+        std::uint32_t startVertexLocation,
+        std::uint32_t startInstanceLocation) = 0;
 
     virtual void DrawIndexedInstanced(
-        std::size_t indexCountPerInstance,
-        std::size_t instanceCount,
-        std::size_t startIndexLocation,
-        std::size_t startInstanceLocation) = 0;
+        std::uint32_t indexCountPerInstance,
+        std::uint32_t instanceCount,
+        std::uint32_t startIndexLocation,
+        std::uint32_t startInstanceLocation) = 0;
 
     /// Begins a new render pass.
     virtual void BeginRenderPass(const RenderPass& renderPass) = 0;
@@ -65,27 +65,27 @@ public:
     virtual void SetBlendFactor(const Vector4& blendFactor) = 0;
 
     virtual void SetVertexBuffer(
-        int index,
+        std::uint32_t index,
         const std::shared_ptr<VertexBuffer>& vertexBuffer,
-        std::size_t offset) = 0;
+        std::uint32_t offset) = 0;
 
     virtual void SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer) = 0;
 
     virtual void SetPipelineState(const std::shared_ptr<PipelineState>& pipelineState) = 0;
 
     virtual void SetConstantBuffer(
-        int index,
+        std::uint32_t index,
         const std::shared_ptr<Buffer>& constantBuffer,
-        std::size_t offset,
-        std::size_t sizeInBytes) = 0;
+        std::uint32_t offset,
+        std::uint32_t sizeInBytes) = 0;
 
-    virtual void SetSampler(int index, const std::shared_ptr<SamplerState>& sampler) = 0;
+    virtual void SetSampler(std::uint32_t index, const std::shared_ptr<SamplerState>& sampler) = 0;
 
-    virtual void SetTexture(int index) = 0;
+    virtual void SetTexture(std::uint32_t index) = 0;
 
-    virtual void SetTexture(int index, const std::shared_ptr<gpu::Texture2D>& texture) = 0;
+    virtual void SetTexture(std::uint32_t index, const std::shared_ptr<gpu::Texture2D>& texture) = 0;
 
-    virtual void SetTexture(int index, const std::shared_ptr<RenderTarget2D>& texture) = 0;
+    virtual void SetTexture(std::uint32_t index, const std::shared_ptr<RenderTarget2D>& texture) = 0;
 };
 
 } // namespace pomdog::gpu::detail

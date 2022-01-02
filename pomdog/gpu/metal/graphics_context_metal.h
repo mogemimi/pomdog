@@ -32,24 +32,24 @@ public:
     void Present() override;
 
     void Draw(
-        std::size_t vertexCount,
-        std::size_t startVertexLocation) override;
+        std::uint32_t vertexCount,
+        std::uint32_t startVertexLocation) override;
 
     void DrawIndexed(
-        std::size_t indexCount,
-        std::size_t startIndexLocation) override;
+        std::uint32_t indexCount,
+        std::uint32_t startIndexLocation) override;
 
     void DrawInstanced(
-        std::size_t vertexCountPerInstance,
-        std::size_t instanceCount,
-        std::size_t startVertexLocation,
-        std::size_t startInstanceLocation) override;
+        std::uint32_t vertexCountPerInstance,
+        std::uint32_t instanceCount,
+        std::uint32_t startVertexLocation,
+        std::uint32_t startInstanceLocation) override;
 
     void DrawIndexedInstanced(
-        std::size_t indexCountPerInstance,
-        std::size_t instanceCount,
-        std::size_t startIndexLocation,
-        std::size_t startInstanceLocation) override;
+        std::uint32_t indexCountPerInstance,
+        std::uint32_t instanceCount,
+        std::uint32_t startIndexLocation,
+        std::uint32_t startInstanceLocation) override;
 
     void BeginRenderPass(const RenderPass& renderPass) override;
 
@@ -62,27 +62,27 @@ public:
     void SetBlendFactor(const Vector4& blendFactor) override;
 
     void SetVertexBuffer(
-        int index,
+        std::uint32_t index,
         const std::shared_ptr<VertexBuffer>& vertexBuffer,
-        std::size_t offset) override;
+        std::uint32_t offset) override;
 
     void SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer) override;
 
     void SetPipelineState(const std::shared_ptr<PipelineState>& pipelineState) override;
 
     void SetConstantBuffer(
-        int index,
+        std::uint32_t index,
         const std::shared_ptr<Buffer>& constantBuffer,
-        std::size_t offset,
-        std::size_t sizeInBytes) override;
+        std::uint32_t offset,
+        std::uint32_t sizeInBytes) override;
 
-    void SetSampler(int index, const std::shared_ptr<SamplerState>& sampler) override;
+    void SetSampler(std::uint32_t index, const std::shared_ptr<SamplerState>& sampler) override;
 
-    void SetTexture(int index) override;
+    void SetTexture(std::uint32_t index) override;
 
-    void SetTexture(int index, const std::shared_ptr<gpu::Texture2D>& texture) override;
+    void SetTexture(std::uint32_t index, const std::shared_ptr<gpu::Texture2D>& texture) override;
 
-    void SetTexture(int index, const std::shared_ptr<RenderTarget2D>& texture) override;
+    void SetTexture(std::uint32_t index, const std::shared_ptr<RenderTarget2D>& texture) override;
 
     void DispatchSemaphoreWait();
 

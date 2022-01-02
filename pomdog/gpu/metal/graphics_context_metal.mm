@@ -214,8 +214,8 @@ void GraphicsContextMetal::Present()
 }
 
 void GraphicsContextMetal::Draw(
-    std::size_t vertexCount,
-    std::size_t startVertexLocation)
+    std::uint32_t vertexCount,
+    std::uint32_t startVertexLocation)
 {
     POMDOG_ASSERT(commandEncoder_ != nullptr);
     POMDOG_ASSERT(vertexCount > 0);
@@ -230,8 +230,8 @@ void GraphicsContextMetal::Draw(
 }
 
 void GraphicsContextMetal::DrawIndexed(
-    std::size_t indexCount,
-    std::size_t startIndexLocation)
+    std::uint32_t indexCount,
+    std::uint32_t startIndexLocation)
 {
     POMDOG_ASSERT(commandEncoder_ != nullptr);
     POMDOG_ASSERT(indexCount > 0);
@@ -249,10 +249,10 @@ void GraphicsContextMetal::DrawIndexed(
 }
 
 void GraphicsContextMetal::DrawInstanced(
-    std::size_t vertexCountPerInstance,
-    std::size_t instanceCount,
-    std::size_t startVertexLocation,
-    std::size_t startInstanceLocation)
+    std::uint32_t vertexCountPerInstance,
+    std::uint32_t instanceCount,
+    std::uint32_t startVertexLocation,
+    std::uint32_t startInstanceLocation)
 {
     POMDOG_ASSERT(commandEncoder_ != nullptr);
     POMDOG_ASSERT(vertexCountPerInstance > 0);
@@ -270,10 +270,10 @@ void GraphicsContextMetal::DrawInstanced(
 }
 
 void GraphicsContextMetal::DrawIndexedInstanced(
-    std::size_t indexCountPerInstance,
-    std::size_t instanceCount,
-    std::size_t startIndexLocation,
-    std::size_t startInstanceLocation)
+    std::uint32_t indexCountPerInstance,
+    std::uint32_t instanceCount,
+    std::uint32_t startIndexLocation,
+    std::uint32_t startInstanceLocation)
 {
     POMDOG_ASSERT(commandEncoder_ != nullptr);
     POMDOG_ASSERT(indexCountPerInstance > 0);
@@ -313,9 +313,9 @@ void GraphicsContextMetal::SetBlendFactor(const Vector4& blendFactor)
 }
 
 void GraphicsContextMetal::SetVertexBuffer(
-    int index,
+    std::uint32_t index,
     const std::shared_ptr<VertexBuffer>& vertexBuffer,
-    std::size_t offset)
+    std::uint32_t offset)
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(vertexBuffer != nullptr);
@@ -359,10 +359,10 @@ void GraphicsContextMetal::SetPipelineState(const std::shared_ptr<PipelineState>
 }
 
 void GraphicsContextMetal::SetConstantBuffer(
-    int index,
+    std::uint32_t index,
     const std::shared_ptr<Buffer>& constantBufferIn,
-    std::size_t offset,
-    [[maybe_unused]] std::size_t sizeInBytes)
+    std::uint32_t offset,
+    [[maybe_unused]] std::uint32_t sizeInBytes)
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(constantBufferIn);
@@ -371,7 +371,7 @@ void GraphicsContextMetal::SetConstantBuffer(
 
 #if defined(DEBUG) && !defined(NDEBUG)
     static const auto capabilities = GetCapabilities();
-    POMDOG_ASSERT(index < static_cast<int>(capabilities.ConstantBufferSlotCount));
+    POMDOG_ASSERT(index < static_cast<std::uint32_t>(capabilities.ConstantBufferSlotCount));
 #endif
 
     const auto constantBuffer = StaticDownCast<BufferMetal>(constantBufferIn.get());
@@ -386,7 +386,7 @@ void GraphicsContextMetal::SetConstantBuffer(
                                atIndex:index];
 }
 
-void GraphicsContextMetal::SetSampler(int index, const std::shared_ptr<SamplerState>& sampler)
+void GraphicsContextMetal::SetSampler(std::uint32_t index, const std::shared_ptr<SamplerState>& sampler)
 {
     POMDOG_ASSERT(sampler != nullptr);
     POMDOG_ASSERT(index >= 0);
@@ -400,14 +400,14 @@ void GraphicsContextMetal::SetSampler(int index, const std::shared_ptr<SamplerSt
     [commandEncoder_ setFragmentSamplerState:samplerStateMetal->GetSamplerState() atIndex:index];
 }
 
-void GraphicsContextMetal::SetTexture(int index)
+void GraphicsContextMetal::SetTexture(std::uint32_t index)
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(commandEncoder_ != nullptr);
 
 #if defined(DEBUG) && !defined(NDEBUG)
     POMDOG_ASSERT(!weakTextures_.empty());
-    POMDOG_ASSERT(index < static_cast<int>(weakTextures_.size()));
+    POMDOG_ASSERT(index < static_cast<std::uint32_t>(weakTextures_.size()));
     weakTextures_[index].reset();
 #endif
 
@@ -416,14 +416,14 @@ void GraphicsContextMetal::SetTexture(int index)
     [commandEncoder_ setFragmentTexture:nullptr atIndex:index];
 }
 
-void GraphicsContextMetal::SetTexture(int index, const std::shared_ptr<gpu::Texture2D>& textureIn)
+void GraphicsContextMetal::SetTexture(std::uint32_t index, const std::shared_ptr<gpu::Texture2D>& textureIn)
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(textureIn);
 
 #if defined(DEBUG) && !defined(NDEBUG)
     POMDOG_ASSERT(!weakTextures_.empty());
-    POMDOG_ASSERT(index < static_cast<int>(weakTextures_.size()));
+    POMDOG_ASSERT(index < static_cast<std::uint32_t>(weakTextures_.size()));
     weakTextures_[index] = textureIn;
 #endif
 
@@ -436,14 +436,14 @@ void GraphicsContextMetal::SetTexture(int index, const std::shared_ptr<gpu::Text
     [commandEncoder_ setFragmentTexture:textureMetal->GetTexture() atIndex:index];
 }
 
-void GraphicsContextMetal::SetTexture(int index, const std::shared_ptr<RenderTarget2D>& textureIn)
+void GraphicsContextMetal::SetTexture(std::uint32_t index, const std::shared_ptr<RenderTarget2D>& textureIn)
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(textureIn);
 
 #if defined(DEBUG) && !defined(NDEBUG)
     POMDOG_ASSERT(!weakTextures_.empty());
-    POMDOG_ASSERT(index < static_cast<int>(weakTextures_.size()));
+    POMDOG_ASSERT(index < static_cast<std::uint32_t>(weakTextures_.size()));
     weakTextures_[index] = textureIn;
 #endif
 

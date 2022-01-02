@@ -281,8 +281,8 @@ void GraphicsContextDirect3D11::ApplyPipelineState()
 }
 
 void GraphicsContextDirect3D11::Draw(
-    std::size_t vertexCount,
-    std::size_t startVertexLocation)
+    std::uint32_t vertexCount,
+    std::uint32_t startVertexLocation)
 {
     POMDOG_ASSERT(deferredContext);
 #if defined(DEBUG) && !defined(NDEBUG)
@@ -295,8 +295,8 @@ void GraphicsContextDirect3D11::Draw(
 }
 
 void GraphicsContextDirect3D11::DrawIndexed(
-    std::size_t indexCount,
-    std::size_t startIndexLocation)
+    std::uint32_t indexCount,
+    std::uint32_t startIndexLocation)
 {
     POMDOG_ASSERT(deferredContext);
 #if defined(DEBUG) && !defined(NDEBUG)
@@ -309,10 +309,10 @@ void GraphicsContextDirect3D11::DrawIndexed(
 }
 
 void GraphicsContextDirect3D11::DrawInstanced(
-    std::size_t vertexCountPerInstance,
-    std::size_t instanceCount,
-    std::size_t startVertexLocation,
-    std::size_t startInstanceLocation)
+    std::uint32_t vertexCountPerInstance,
+    std::uint32_t instanceCount,
+    std::uint32_t startVertexLocation,
+    std::uint32_t startInstanceLocation)
 {
     POMDOG_ASSERT(deferredContext);
 #if defined(DEBUG) && !defined(NDEBUG)
@@ -329,10 +329,10 @@ void GraphicsContextDirect3D11::DrawInstanced(
 }
 
 void GraphicsContextDirect3D11::DrawIndexedInstanced(
-    std::size_t indexCountPerInstance,
-    std::size_t instanceCount,
-    std::size_t startIndexLocation,
-    std::size_t startInstanceLocation)
+    std::uint32_t indexCountPerInstance,
+    std::uint32_t instanceCount,
+    std::uint32_t startIndexLocation,
+    std::uint32_t startInstanceLocation)
 {
     POMDOG_ASSERT(deferredContext);
 #if defined(DEBUG) && !defined(NDEBUG)
@@ -418,9 +418,9 @@ void GraphicsContextDirect3D11::SetBlendFactor(const Vector4& blendFactorIn)
 }
 
 void GraphicsContextDirect3D11::SetVertexBuffer(
-    int index,
+    std::uint32_t index,
     const std::shared_ptr<VertexBuffer>& vertexBuffer,
-    std::size_t offset)
+    std::uint32_t offset)
 {
     POMDOG_ASSERT(vertexBuffer != nullptr);
     POMDOG_ASSERT(vertexBuffer->GetBuffer() != nullptr);
@@ -455,12 +455,12 @@ void GraphicsContextDirect3D11::SetPipelineState(const std::shared_ptr<PipelineS
 }
 
 void GraphicsContextDirect3D11::SetConstantBuffer(
-    int index,
+    std::uint32_t index,
     const std::shared_ptr<Buffer>& constantBufferIn,
-    std::size_t offset,
-    std::size_t sizeInBytes)
+    std::uint32_t offset,
+    std::uint32_t sizeInBytes)
 {
-    POMDOG_ASSERT(index >= 0);
+    static_assert(std::is_unsigned_v<decltype(index)>, "index must be >= 0");
     POMDOG_ASSERT(index < D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT);
 
     auto constantBuffer = static_cast<BufferDirect3D11*>(constantBufferIn.get());
@@ -478,9 +478,9 @@ void GraphicsContextDirect3D11::SetConstantBuffer(
     deferredContext->PSSetConstantBuffers1(index, 1, &buffer, &startOffset, &constantSize);
 }
 
-void GraphicsContextDirect3D11::SetSampler(int index, const std::shared_ptr<SamplerState>& samplerIn)
+void GraphicsContextDirect3D11::SetSampler(std::uint32_t index, const std::shared_ptr<SamplerState>& samplerIn)
 {
-    POMDOG_ASSERT(index >= 0);
+    static_assert(std::is_unsigned_v<decltype(index)>, "index must be >= 0");
     POMDOG_ASSERT(index < D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT);
     POMDOG_ASSERT(samplerIn != nullptr);
 
@@ -497,15 +497,15 @@ void GraphicsContextDirect3D11::SetSampler(int index, const std::shared_ptr<Samp
     deferredContext->PSSetSamplers(index, static_cast<UINT>(states.size()), states.data());
 }
 
-void GraphicsContextDirect3D11::SetTexture(int index)
+void GraphicsContextDirect3D11::SetTexture(std::uint32_t index)
 {
-    POMDOG_ASSERT(index >= 0);
+    static_assert(std::is_unsigned_v<decltype(index)>, "index must be >= 0");
     POMDOG_ASSERT(index < D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT);
-    POMDOG_ASSERT(index < static_cast<int>(textureResourceViews.size()));
+    POMDOG_ASSERT(index < static_cast<std::uint32_t>(textureResourceViews.size()));
 
 #if defined(DEBUG) && !defined(NDEBUG)
     POMDOG_ASSERT(!weakTextures.empty());
-    POMDOG_ASSERT(index < static_cast<int>(weakTextures.size()));
+    POMDOG_ASSERT(index < static_cast<std::uint32_t>(weakTextures.size()));
     weakTextures[index].reset();
 #endif
 
@@ -515,11 +515,11 @@ void GraphicsContextDirect3D11::SetTexture(int index)
     deferredContext->PSSetShaderResources(index, 1, &textureResourceViews[index]);
 }
 
-void GraphicsContextDirect3D11::SetTexture(int index, const std::shared_ptr<gpu::Texture2D>& textureIn)
+void GraphicsContextDirect3D11::SetTexture(std::uint32_t index, const std::shared_ptr<gpu::Texture2D>& textureIn)
 {
-    POMDOG_ASSERT(index >= 0);
+    static_assert(std::is_unsigned_v<decltype(index)>, "index must be >= 0");
     POMDOG_ASSERT(index < D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT);
-    POMDOG_ASSERT(index < static_cast<int>(textureResourceViews.size()));
+    POMDOG_ASSERT(index < static_cast<std::uint32_t>(textureResourceViews.size()));
     POMDOG_ASSERT(textureIn != nullptr);
 
 #if defined(DEBUG) && !defined(NDEBUG)
@@ -539,16 +539,16 @@ void GraphicsContextDirect3D11::SetTexture(int index, const std::shared_ptr<gpu:
     deferredContext->PSSetShaderResources(0, 1, &textureResourceViews[index]);
 }
 
-void GraphicsContextDirect3D11::SetTexture(int index, const std::shared_ptr<RenderTarget2D>& textureIn)
+void GraphicsContextDirect3D11::SetTexture(std::uint32_t index, const std::shared_ptr<RenderTarget2D>& textureIn)
 {
-    POMDOG_ASSERT(index >= 0);
+    static_assert(std::is_unsigned_v<decltype(index)>, "index must be >= 0");
     POMDOG_ASSERT(index < D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT);
-    POMDOG_ASSERT(index < static_cast<int>(textureResourceViews.size()));
+    POMDOG_ASSERT(index < static_cast<std::uint32_t>(textureResourceViews.size()));
     POMDOG_ASSERT(textureIn != nullptr);
 
 #if defined(DEBUG) && !defined(NDEBUG)
     POMDOG_ASSERT(!weakTextures.empty());
-    POMDOG_ASSERT(index < static_cast<int>(weakTextures.size()));
+    POMDOG_ASSERT(index < static_cast<std::uint32_t>(weakTextures.size()));
     weakTextures[index] = textureIn;
 #endif
 
