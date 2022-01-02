@@ -28,9 +28,6 @@ public:
     /// Clears the graphics commands.
     virtual void Reset() = 0;
 
-    /// Gets the count of graphics commands.
-    [[nodiscard]] virtual std::size_t GetCount() const noexcept = 0;
-
     /// Draws the specified non-indexed primitives.
     ///
     /// @param vertexCount Number of vertices to draw.

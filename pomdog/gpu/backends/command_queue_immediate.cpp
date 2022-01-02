@@ -42,14 +42,4 @@ void CommandQueueImmediate::Present()
     graphicsContext->Present();
 }
 
-std::size_t CommandQueueImmediate::GetCommandCount() const noexcept
-{
-    std::size_t count = 0;
-    for (auto& commandList : commandLists) {
-        POMDOG_ASSERT(commandList);
-        count += commandList->GetCount();
-    }
-    return count;
-}
-
 } // namespace pomdog::gpu::detail

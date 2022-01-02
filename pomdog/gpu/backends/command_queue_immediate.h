@@ -25,8 +25,6 @@ public:
     explicit CommandQueueImmediate(
         const std::shared_ptr<GraphicsContext>& graphicsContext);
 
-    std::size_t GetCommandCount() const noexcept override;
-
     void Reset() override;
 
     void PushbackCommandList(const std::shared_ptr<CommandList>& commandList) override;

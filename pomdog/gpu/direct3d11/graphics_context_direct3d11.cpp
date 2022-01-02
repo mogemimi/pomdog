@@ -248,7 +248,7 @@ GraphicsContextDirect3D11::~GraphicsContextDirect3D11()
 }
 
 void GraphicsContextDirect3D11::ExecuteCommandLists(
-    const std::vector<std::shared_ptr<CommandListImmediate>>& commandLists)
+    std::span<std::shared_ptr<CommandListImmediate>> commandLists)
 {
     pipelineState = nullptr;
     needToApplyPipelineState = true;
@@ -563,7 +563,7 @@ void GraphicsContextDirect3D11::SetTexture(int index, const std::shared_ptr<Rend
     deferredContext->PSSetShaderResources(0, 1, &textureResourceViews[index]);
 }
 
-void GraphicsContextDirect3D11::SetRenderPass(const RenderPass& renderPass)
+void GraphicsContextDirect3D11::BeginRenderPass(const RenderPass& renderPass)
 {
     POMDOG_ASSERT(deferredContext);
     POMDOG_ASSERT(!renderPass.RenderTargets.empty());
@@ -725,6 +725,10 @@ void GraphicsContextDirect3D11::SetRenderPass(const RenderPass& renderPass)
             }
         }
     }
+}
+
+void GraphicsContextDirect3D11::EndRenderPass()
+{
 }
 
 std::unique_ptr<Error>

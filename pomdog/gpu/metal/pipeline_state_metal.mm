@@ -7,8 +7,8 @@
 #include "pomdog/gpu/metal/metal_format_helper.h"
 #include "pomdog/gpu/metal/shader_metal.h"
 #include "pomdog/gpu/pipeline_descriptor.h"
-#include "pomdog/gpu/primitive_topology.h"
 #include "pomdog/gpu/pixel_format.h"
+#include "pomdog/gpu/primitive_topology.h"
 #include "pomdog/utility/assert.h"
 #import <Metal/MTLVertexDescriptor.h>
 

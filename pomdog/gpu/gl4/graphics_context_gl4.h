@@ -20,6 +20,10 @@ namespace pomdog::gpu {
 class GraphicsDevice;
 } // namespace pomdog::gpu
 
+namespace pomdog::gpu::detail {
+struct GraphicsCapabilities;
+} // namespace pomdog::gpu::detail
+
 namespace pomdog::gpu::detail::gl4 {
 
 namespace Tags {
@@ -46,7 +50,7 @@ public:
     [[nodiscard]] GraphicsCapabilities GetCapabilities() const noexcept;
 
     void ExecuteCommandLists(
-        const std::vector<std::shared_ptr<CommandListImmediate>>& commandLists) override;
+        std::span<std::shared_ptr<CommandListImmediate>> commandLists) override;
 
     void Present() override;
 
@@ -70,7 +74,9 @@ public:
         std::size_t startIndexLocation,
         std::size_t startInstanceLocation) override;
 
-    void SetRenderPass(const RenderPass& renderPass) override;
+    void BeginRenderPass(const RenderPass& renderPass) override;
+
+    void EndRenderPass() override;
 
     void SetViewport(const Viewport& viewport) override;
 

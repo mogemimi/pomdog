@@ -9,13 +9,12 @@
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstddef>
 #include <memory>
-#include <vector>
+#include <span>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu::detail {
 
 class CommandListImmediate;
-struct GraphicsCapabilities;
 
 class GraphicsContext {
 public:
@@ -26,7 +25,7 @@ public:
     virtual ~GraphicsContext();
 
     virtual void ExecuteCommandLists(
-        const std::vector<std::shared_ptr<CommandListImmediate>>& commandLists) = 0;
+        std::span<std::shared_ptr<CommandListImmediate>> commandLists) = 0;
 
     virtual void Present() = 0;
 
@@ -50,12 +49,19 @@ public:
         std::size_t startIndexLocation,
         std::size_t startInstanceLocation) = 0;
 
-    virtual void SetRenderPass(const RenderPass& renderPass) = 0;
+    /// Begins a new render pass.
+    virtual void BeginRenderPass(const RenderPass& renderPass) = 0;
 
+    /// Ends the current render pass.
+    virtual void EndRenderPass() = 0;
+
+    /// Sets the viewport dynamically to the rasterizer stage.
     virtual void SetViewport(const Viewport& viewport) = 0;
 
+    /// Sets the scissor rectangle dynamically for a scissor test.
     virtual void SetScissorRect(const Rectangle& scissorRect) = 0;
 
+    /// Sets the constant blend color and alpha values.
     virtual void SetBlendFactor(const Vector4& blendFactor) = 0;
 
     virtual void SetVertexBuffer(

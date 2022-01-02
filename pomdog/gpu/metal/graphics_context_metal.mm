@@ -2,8 +2,8 @@
 
 #include "pomdog/gpu/metal/graphics_context_metal.h"
 #include "pomdog/basic/unreachable.h"
-#include "pomdog/gpu/backends/graphics_capabilities.h"
 #include "pomdog/gpu/backends/command_list_immediate.h"
+#include "pomdog/gpu/backends/graphics_capabilities.h"
 #include "pomdog/gpu/index_buffer.h"
 #include "pomdog/gpu/metal/buffer_metal.h"
 #include "pomdog/gpu/metal/constants_metal.h"
@@ -110,29 +110,24 @@ void CheckUnbindingRenderTargetsError(
 
 } // namespace
 
-GraphicsContextMetal::GraphicsContextMetal(
-    id<MTLDevice> nativeDevice)
-    : commandQueue(nullptr)
-    , commandBuffer(nullptr)
-    , commandEncoder(nullptr)
-    , indexBuffer(nullptr)
+GraphicsContextMetal::GraphicsContextMetal(id<MTLDevice> nativeDevice)
 {
     POMDOG_ASSERT(nativeDevice != nullptr);
 
-    // The max number of command buffers in flight
-    constexpr NSUInteger kMaxInflightBuffers = 1;
+    // NOTE: The max number of command buffers in flight
+    constexpr NSUInteger inflightBufferCount = 3;
 
-    // Create semaphore for Metal
-    inflightSemaphore = dispatch_semaphore_create(kMaxInflightBuffers);
+    // NOTE: Create semaphore for Metal
+    inflightSemaphore_ = dispatch_semaphore_create(inflightBufferCount);
 
     // NOTE: Create a new command queue
-    commandQueue = [nativeDevice newCommandQueue];
+    commandQueue_ = [nativeDevice newCommandQueue];
 
 #if defined(DEBUG) && !defined(NDEBUG)
-    auto graphicsCapbilities = this->GetCapabilities();
+    const auto graphicsCapbilities = this->GetCapabilities();
 
     POMDOG_ASSERT(graphicsCapbilities.SamplerSlotCount > 0);
-    weakTextures.resize(graphicsCapbilities.SamplerSlotCount);
+    weakTextures_.resize(graphicsCapbilities.SamplerSlotCount);
 #endif
 }
 
@@ -150,45 +145,45 @@ GraphicsCapabilities GraphicsContextMetal::GetCapabilities() const noexcept
 
 void GraphicsContextMetal::DispatchSemaphoreWait()
 {
-    if (!isDrawing) {
+    if (!isDrawing_) {
         // NOTE: Skip waiting
         return;
     }
 
-    dispatch_semaphore_wait(inflightSemaphore, DISPATCH_TIME_FOREVER);
-    isDrawing = false;
+    dispatch_semaphore_wait(inflightSemaphore_, DISPATCH_TIME_FOREVER);
+    isDrawing_ = false;
 }
 
 void GraphicsContextMetal::SetMTKView(MTKView* view)
 {
     POMDOG_ASSERT(view != nullptr);
-    targetView = view;
+    targetView_ = view;
 }
 
 void GraphicsContextMetal::ExecuteCommandLists(
-    const std::vector<std::shared_ptr<CommandListImmediate>>& commandLists)
+    std::span<std::shared_ptr<CommandListImmediate>> commandLists)
 {
-    POMDOG_ASSERT(commandQueue != nullptr);
-    POMDOG_ASSERT(targetView != nullptr);
-    POMDOG_ASSERT(commandBuffer == nullptr);
-    POMDOG_ASSERT(commandEncoder == nullptr);
+    POMDOG_ASSERT(commandQueue_ != nullptr);
+    POMDOG_ASSERT(targetView_ != nullptr);
+    POMDOG_ASSERT(commandBuffer_ == nullptr);
+    POMDOG_ASSERT(commandEncoder_ == nullptr);
 
-    // Create a new command buffer for each renderpass to the current drawable
-    commandBuffer = [commandQueue commandBuffer];
-    commandBuffer.label = @"PomdogCommand";
+    // NOTE: Create a new command buffer for each renderpass to the current drawable
+    commandBuffer_ = [commandQueue_ commandBuffer];
+    commandBuffer_.label = @"PomdogCommand";
 
     // Call the view's completion handler which is required by the view
     // since it will signal its semaphore and set up the next buffer
-    __block dispatch_semaphore_t blockSema = inflightSemaphore;
-    [commandBuffer addCompletedHandler:^(id<MTLCommandBuffer> buffer) {
+    __block dispatch_semaphore_t blockSema = inflightSemaphore_;
+    [commandBuffer_ addCompletedHandler:^(id<MTLCommandBuffer> buffer) {
         dispatch_semaphore_signal(blockSema);
     }];
-    isDrawing = true;
+    isDrawing_ = true;
 
-    POMDOG_ASSERT(commandBuffer != nullptr);
+    POMDOG_ASSERT(commandBuffer_ != nullptr);
 
     // NOTE: Skip rendering when the graphics device is lost.
-    const bool skipRender = (targetView.currentDrawable.texture.pixelFormat == MTLPixelFormatInvalid);
+    const bool skipRender = (targetView_.currentDrawable.texture.pixelFormat == MTLPixelFormatInvalid);
 
     if (!skipRender) {
         for (auto& commandList : commandLists) {
@@ -197,23 +192,17 @@ void GraphicsContextMetal::ExecuteCommandLists(
         }
     }
 
-    if (commandEncoder != nullptr) {
-        // We're done encoding commands
-        [commandEncoder popDebugGroup];
-        [commandEncoder endEncoding];
-        commandEncoder = nullptr;
-    }
+    POMDOG_ASSERT(commandEncoder_ == nullptr);
+    POMDOG_ASSERT(commandBuffer_ != nullptr);
 
-    POMDOG_ASSERT(commandBuffer != nullptr);
-
-    if (auto drawable = targetView.currentDrawable; drawable != nullptr) {
+    if (auto drawable = targetView_.currentDrawable; drawable != nullptr) {
         // Schedule a present once the framebuffer is complete using the current drawable
-        [commandBuffer presentDrawable:drawable];
+        [commandBuffer_ presentDrawable:drawable];
     }
 
     // Finalize rendering here & push the command buffer to the GPU
-    [commandBuffer commit];
-    commandBuffer = nullptr;
+    [commandBuffer_ commit];
+    commandBuffer_ = nullptr;
 }
 
 void GraphicsContextMetal::Present()
@@ -225,35 +214,35 @@ void GraphicsContextMetal::Draw(
     std::size_t vertexCount,
     std::size_t startVertexLocation)
 {
-    POMDOG_ASSERT(commandEncoder != nullptr);
+    POMDOG_ASSERT(commandEncoder_ != nullptr);
     POMDOG_ASSERT(vertexCount > 0);
 
 #if defined(DEBUG) && !defined(NDEBUG)
-    CheckUnbindingRenderTargetsError(weakRenderTargets, weakTextures);
+    CheckUnbindingRenderTargetsError(weakRenderTargets_, weakTextures_);
 #endif
 
-    [commandEncoder drawPrimitives:primitiveType
-                       vertexStart:startVertexLocation
-                       vertexCount:vertexCount];
+    [commandEncoder_ drawPrimitives:primitiveType_
+                        vertexStart:startVertexLocation
+                        vertexCount:vertexCount];
 }
 
 void GraphicsContextMetal::DrawIndexed(
     std::size_t indexCount,
     std::size_t startIndexLocation)
 {
-    POMDOG_ASSERT(commandEncoder != nullptr);
+    POMDOG_ASSERT(commandEncoder_ != nullptr);
     POMDOG_ASSERT(indexCount > 0);
 
 #if defined(DEBUG) && !defined(NDEBUG)
-    CheckUnbindingRenderTargetsError(weakRenderTargets, weakTextures);
+    CheckUnbindingRenderTargetsError(weakRenderTargets_, weakTextures_);
 #endif
-    const auto indexBufferOffset = startIndexLocation * ToIndexByteSize(indexType);
+    const auto indexBufferOffset = startIndexLocation * ToIndexByteSize(indexType_);
 
-    [commandEncoder drawIndexedPrimitives:primitiveType
-                               indexCount:indexCount
-                                indexType:indexType
-                              indexBuffer:indexBuffer
-                        indexBufferOffset:indexBufferOffset];
+    [commandEncoder_ drawIndexedPrimitives:primitiveType_
+                                indexCount:indexCount
+                                 indexType:indexType_
+                               indexBuffer:indexBuffer_
+                         indexBufferOffset:indexBufferOffset];
 }
 
 void GraphicsContextMetal::DrawInstanced(
@@ -262,19 +251,19 @@ void GraphicsContextMetal::DrawInstanced(
     std::size_t startVertexLocation,
     std::size_t startInstanceLocation)
 {
-    POMDOG_ASSERT(commandEncoder != nullptr);
+    POMDOG_ASSERT(commandEncoder_ != nullptr);
     POMDOG_ASSERT(vertexCountPerInstance > 0);
     POMDOG_ASSERT(instanceCount > 0);
 
 #if defined(DEBUG) && !defined(NDEBUG)
-    CheckUnbindingRenderTargetsError(weakRenderTargets, weakTextures);
+    CheckUnbindingRenderTargetsError(weakRenderTargets_, weakTextures_);
 #endif
 
-    [commandEncoder drawPrimitives:primitiveType
-                       vertexStart:startVertexLocation
-                       vertexCount:vertexCountPerInstance
-                     instanceCount:instanceCount
-                      baseInstance:startInstanceLocation];
+    [commandEncoder_ drawPrimitives:primitiveType_
+                        vertexStart:startVertexLocation
+                        vertexCount:vertexCountPerInstance
+                      instanceCount:instanceCount
+                       baseInstance:startInstanceLocation];
 }
 
 void GraphicsContextMetal::DrawIndexedInstanced(
@@ -283,41 +272,41 @@ void GraphicsContextMetal::DrawIndexedInstanced(
     std::size_t startIndexLocation,
     std::size_t startInstanceLocation)
 {
-    POMDOG_ASSERT(commandEncoder != nullptr);
+    POMDOG_ASSERT(commandEncoder_ != nullptr);
     POMDOG_ASSERT(indexCountPerInstance > 0);
     POMDOG_ASSERT(instanceCount > 0);
 
 #if defined(DEBUG) && !defined(NDEBUG)
-    CheckUnbindingRenderTargetsError(weakRenderTargets, weakTextures);
+    CheckUnbindingRenderTargetsError(weakRenderTargets_, weakTextures_);
 #endif
-    const auto indexBufferOffset = startIndexLocation * ToIndexByteSize(indexType);
+    const auto indexBufferOffset = startIndexLocation * ToIndexByteSize(indexType_);
 
-    [commandEncoder drawIndexedPrimitives:primitiveType
-                               indexCount:indexCountPerInstance
-                                indexType:indexType
-                              indexBuffer:indexBuffer
-                        indexBufferOffset:indexBufferOffset
-                            instanceCount:instanceCount
-                               baseVertex:0
-                             baseInstance:startInstanceLocation];
+    [commandEncoder_ drawIndexedPrimitives:primitiveType_
+                                indexCount:indexCountPerInstance
+                                 indexType:indexType_
+                               indexBuffer:indexBuffer_
+                         indexBufferOffset:indexBufferOffset
+                             instanceCount:instanceCount
+                                baseVertex:0
+                              baseInstance:startInstanceLocation];
 }
 
 void GraphicsContextMetal::SetViewport(const Viewport& viewport)
 {
-    POMDOG_ASSERT(commandEncoder != nullptr);
-    metal::SetViewport(commandEncoder, viewport);
+    POMDOG_ASSERT(commandEncoder_ != nullptr);
+    metal::SetViewport(commandEncoder_, viewport);
 }
 
 void GraphicsContextMetal::SetScissorRect(const Rectangle& scissorRect)
 {
-    POMDOG_ASSERT(commandEncoder != nullptr);
-    SetScissorRectangle(commandEncoder, scissorRect);
+    POMDOG_ASSERT(commandEncoder_ != nullptr);
+    SetScissorRectangle(commandEncoder_, scissorRect);
 }
 
 void GraphicsContextMetal::SetBlendFactor(const Vector4& blendFactor)
 {
-    POMDOG_ASSERT(commandEncoder != nullptr);
-    [commandEncoder setBlendColorRed:blendFactor.X green:blendFactor.Y blue:blendFactor.Z alpha:blendFactor.W];
+    POMDOG_ASSERT(commandEncoder_ != nullptr);
+    [commandEncoder_ setBlendColorRed:blendFactor.X green:blendFactor.Y blue:blendFactor.Z alpha:blendFactor.W];
 }
 
 void GraphicsContextMetal::SetVertexBuffer(
@@ -338,9 +327,9 @@ void GraphicsContextMetal::SetVertexBuffer(
     const auto slotIndex = index + VertexBufferSlotOffset;
     POMDOG_ASSERT(slotIndex < MaxVertexBufferSlotCount);
 
-    [commandEncoder setVertexBuffer:nativeVertexBuffer->GetBuffer()
-                             offset:offset
-                            atIndex:slotIndex];
+    [commandEncoder_ setVertexBuffer:nativeVertexBuffer->GetBuffer()
+                              offset:offset
+                             atIndex:slotIndex];
 }
 
 void GraphicsContextMetal::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBufferIn)
@@ -351,8 +340,8 @@ void GraphicsContextMetal::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& in
     POMDOG_ASSERT(nativeIndexBuffer != nullptr);
     POMDOG_ASSERT(nativeIndexBuffer == dynamic_cast<BufferMetal*>(indexBufferIn->GetBuffer()));
 
-    this->indexType = ToIndexType(indexBufferIn->GetElementSize());
-    this->indexBuffer = nativeIndexBuffer->GetBuffer();
+    indexType_ = ToIndexType(indexBufferIn->GetElementSize());
+    indexBuffer_ = nativeIndexBuffer->GetBuffer();
 }
 
 void GraphicsContextMetal::SetPipelineState(const std::shared_ptr<PipelineState>& pipelineState)
@@ -364,10 +353,10 @@ void GraphicsContextMetal::SetPipelineState(const std::shared_ptr<PipelineState>
     POMDOG_ASSERT(nativePipelineState != nullptr);
     POMDOG_ASSERT(nativePipelineState == dynamic_cast<PipelineStateMetal*>(pipelineState.get()));
 
-    this->primitiveType = nativePipelineState->GetPrimitiveType();
+    primitiveType_ = nativePipelineState->GetPrimitiveType();
 
-    POMDOG_ASSERT(commandEncoder != nullptr);
-    nativePipelineState->Apply(commandEncoder);
+    POMDOG_ASSERT(commandEncoder_ != nullptr);
+    nativePipelineState->Apply(commandEncoder_);
 }
 
 void GraphicsContextMetal::SetConstantBuffer(
@@ -392,12 +381,12 @@ void GraphicsContextMetal::SetConstantBuffer(
     POMDOG_ASSERT(constantBuffer == std::dynamic_pointer_cast<BufferMetal>(constantBufferIn));
 
     POMDOG_ASSERT(constantBuffer->GetBuffer() != nullptr);
-    [commandEncoder setVertexBuffer:constantBuffer->GetBuffer()
-                             offset:offset
-                            atIndex:index];
-    [commandEncoder setFragmentBuffer:constantBuffer->GetBuffer()
-                               offset:offset
-                              atIndex:index];
+    [commandEncoder_ setVertexBuffer:constantBuffer->GetBuffer()
+                              offset:offset
+                             atIndex:index];
+    [commandEncoder_ setFragmentBuffer:constantBuffer->GetBuffer()
+                                offset:offset
+                               atIndex:index];
 }
 
 void GraphicsContextMetal::SetSampler(int index, const std::shared_ptr<SamplerState>& sampler)
@@ -411,25 +400,25 @@ void GraphicsContextMetal::SetSampler(int index, const std::shared_ptr<SamplerSt
     POMDOG_ASSERT(samplerStateMetal == std::dynamic_pointer_cast<SamplerStateMetal>(sampler));
     POMDOG_ASSERT(samplerStateMetal->GetSamplerState() != nullptr);
 
-    POMDOG_ASSERT(commandEncoder != nullptr);
-    [commandEncoder setVertexSamplerState:samplerStateMetal->GetSamplerState() atIndex:index];
-    [commandEncoder setFragmentSamplerState:samplerStateMetal->GetSamplerState() atIndex:index];
+    POMDOG_ASSERT(commandEncoder_ != nullptr);
+    [commandEncoder_ setVertexSamplerState:samplerStateMetal->GetSamplerState() atIndex:index];
+    [commandEncoder_ setFragmentSamplerState:samplerStateMetal->GetSamplerState() atIndex:index];
 }
 
 void GraphicsContextMetal::SetTexture(int index)
 {
     POMDOG_ASSERT(index >= 0);
-    POMDOG_ASSERT(commandEncoder != nullptr);
+    POMDOG_ASSERT(commandEncoder_ != nullptr);
 
 #if defined(DEBUG) && !defined(NDEBUG)
-    POMDOG_ASSERT(!weakTextures.empty());
-    POMDOG_ASSERT(index < static_cast<int>(weakTextures.size()));
-    weakTextures[index].reset();
+    POMDOG_ASSERT(!weakTextures_.empty());
+    POMDOG_ASSERT(index < static_cast<int>(weakTextures_.size()));
+    weakTextures_[index].reset();
 #endif
 
-    [commandEncoder setVertexTexture:nullptr
-                             atIndex:index];
-    [commandEncoder setFragmentTexture:nullptr atIndex:index];
+    [commandEncoder_ setVertexTexture:nullptr
+                              atIndex:index];
+    [commandEncoder_ setFragmentTexture:nullptr atIndex:index];
 }
 
 void GraphicsContextMetal::SetTexture(int index, const std::shared_ptr<gpu::Texture2D>& textureIn)
@@ -438,9 +427,9 @@ void GraphicsContextMetal::SetTexture(int index, const std::shared_ptr<gpu::Text
     POMDOG_ASSERT(textureIn);
 
 #if defined(DEBUG) && !defined(NDEBUG)
-    POMDOG_ASSERT(!weakTextures.empty());
-    POMDOG_ASSERT(index < static_cast<int>(weakTextures.size()));
-    weakTextures[index] = textureIn;
+    POMDOG_ASSERT(!weakTextures_.empty());
+    POMDOG_ASSERT(index < static_cast<int>(weakTextures_.size()));
+    weakTextures_[index] = textureIn;
 #endif
 
     auto textureMetal = static_cast<Texture2DMetal*>(textureIn.get());
@@ -449,9 +438,9 @@ void GraphicsContextMetal::SetTexture(int index, const std::shared_ptr<gpu::Text
     POMDOG_ASSERT(textureMetal == dynamic_cast<Texture2DMetal*>(textureIn.get()));
     POMDOG_ASSERT(textureMetal->GetTexture() != nullptr);
 
-    POMDOG_ASSERT(commandEncoder != nullptr);
-    [commandEncoder setVertexTexture:textureMetal->GetTexture() atIndex:index];
-    [commandEncoder setFragmentTexture:textureMetal->GetTexture() atIndex:index];
+    POMDOG_ASSERT(commandEncoder_ != nullptr);
+    [commandEncoder_ setVertexTexture:textureMetal->GetTexture() atIndex:index];
+    [commandEncoder_ setFragmentTexture:textureMetal->GetTexture() atIndex:index];
 }
 
 void GraphicsContextMetal::SetTexture(int index, const std::shared_ptr<RenderTarget2D>& textureIn)
@@ -460,9 +449,9 @@ void GraphicsContextMetal::SetTexture(int index, const std::shared_ptr<RenderTar
     POMDOG_ASSERT(textureIn);
 
 #if defined(DEBUG) && !defined(NDEBUG)
-    POMDOG_ASSERT(!weakTextures.empty());
-    POMDOG_ASSERT(index < static_cast<int>(weakTextures.size()));
-    weakTextures[index] = textureIn;
+    POMDOG_ASSERT(!weakTextures_.empty());
+    POMDOG_ASSERT(index < static_cast<int>(weakTextures_.size()));
+    weakTextures_[index] = textureIn;
 #endif
 
     auto renderTargetMetal = static_cast<RenderTarget2DMetal*>(textureIn.get());
@@ -471,20 +460,20 @@ void GraphicsContextMetal::SetTexture(int index, const std::shared_ptr<RenderTar
     POMDOG_ASSERT(renderTargetMetal == dynamic_cast<RenderTarget2DMetal*>(textureIn.get()));
     POMDOG_ASSERT(renderTargetMetal->GetTexture() != nullptr);
 
-    POMDOG_ASSERT(commandEncoder != nullptr);
-    [commandEncoder setVertexTexture:renderTargetMetal->GetTexture() atIndex:index];
-    [commandEncoder setFragmentTexture:renderTargetMetal->GetTexture() atIndex:index];
+    POMDOG_ASSERT(commandEncoder_ != nullptr);
+    [commandEncoder_ setVertexTexture:renderTargetMetal->GetTexture() atIndex:index];
+    [commandEncoder_ setFragmentTexture:renderTargetMetal->GetTexture() atIndex:index];
 }
 
-void GraphicsContextMetal::SetRenderPass(const RenderPass& renderPass)
+void GraphicsContextMetal::BeginRenderPass(const RenderPass& renderPass)
 {
     POMDOG_ASSERT(!renderPass.RenderTargets.empty());
     POMDOG_ASSERT(renderPass.RenderTargets.size() <= 8);
 
 #if defined(DEBUG) && !defined(NDEBUG)
-    weakRenderTargets.clear();
+    weakRenderTargets_.clear();
     for (auto& renderTarget : renderPass.RenderTargets) {
-        weakRenderTargets.push_back(std::get<0>(renderTarget));
+        weakRenderTargets_.push_back(std::get<0>(renderTarget));
     }
 #endif
 
@@ -510,7 +499,7 @@ void GraphicsContextMetal::SetRenderPass(const RenderPass& renderPass)
         POMDOG_ASSERT(std::get<0>(renderTargetView) == nullptr);
 
         constexpr int renderTargetIndex = 0;
-        renderPassDescriptor.colorAttachments[renderTargetIndex].texture = targetView.currentDrawable.texture;
+        renderPassDescriptor.colorAttachments[renderTargetIndex].texture = targetView_.currentDrawable.texture;
         setClearColor(renderTargetIndex, clearColor);
     }
     else {
@@ -534,8 +523,8 @@ void GraphicsContextMetal::SetRenderPass(const RenderPass& renderPass)
     }
 
     if (renderPass.DepthStencilBuffer == nullptr) {
-        renderPassDescriptor.depthAttachment.texture = targetView.currentRenderPassDescriptor.depthAttachment.texture;
-        renderPassDescriptor.stencilAttachment.texture = targetView.currentRenderPassDescriptor.stencilAttachment.texture;
+        renderPassDescriptor.depthAttachment.texture = targetView_.currentRenderPassDescriptor.depthAttachment.texture;
+        renderPassDescriptor.stencilAttachment.texture = targetView_.currentRenderPassDescriptor.stencilAttachment.texture;
     }
     else {
         auto depthStencilBuffer = static_cast<DepthStencilBufferMetal*>(renderPass.DepthStencilBuffer.get());
@@ -584,27 +573,35 @@ void GraphicsContextMetal::SetRenderPass(const RenderPass& renderPass)
         renderPassDescriptor.stencilAttachment.clearStencil = *renderPass.ClearStencil;
     }
 
-    POMDOG_ASSERT(commandBuffer != nullptr);
+    POMDOG_ASSERT(commandBuffer_ != nullptr);
+    POMDOG_ASSERT(commandEncoder_ == nullptr);
 
-    if (commandEncoder != nullptr) {
-        // We're done encoding commands
-        [commandEncoder popDebugGroup];
-        [commandEncoder endEncoding];
-        commandEncoder = nullptr;
-    }
+    // NOTE: Create a render command encoder so we can render into something
+    commandEncoder_ = [commandBuffer_ renderCommandEncoderWithDescriptor:renderPassDescriptor];
+    commandEncoder_.label = @"PomdogRenderEncoder";
+    [commandEncoder_ pushDebugGroup:@"PomdogDraw"];
 
-    // Create a render command encoder so we can render into something
-    commandEncoder = [commandBuffer renderCommandEncoderWithDescriptor:renderPassDescriptor];
-    commandEncoder.label = @"PomdogRenderEncoder";
-    [commandEncoder pushDebugGroup:@"PomdogDraw"];
-
-    [commandEncoder setFrontFacingWinding:MTLWindingClockwise];
+    [commandEncoder_ setFrontFacingWinding:MTLWindingClockwise];
 
     if (renderPass.Viewport) {
-        metal::SetViewport(commandEncoder, *renderPass.Viewport);
+        metal::SetViewport(commandEncoder_, *renderPass.Viewport);
     }
     if (renderPass.ScissorRect) {
-        SetScissorRectangle(commandEncoder, *renderPass.ScissorRect);
+        SetScissorRectangle(commandEncoder_, *renderPass.ScissorRect);
+    }
+}
+
+void GraphicsContextMetal::EndRenderPass()
+{
+    POMDOG_ASSERT(commandEncoder_ != nullptr);
+
+    indexBuffer_ = nullptr;
+
+    if (commandEncoder_ != nullptr) {
+        // NOTE: We're done encoding commands
+        [commandEncoder_ popDebugGroup];
+        [commandEncoder_ endEncoding];
+        commandEncoder_ = nullptr;
     }
 }
 

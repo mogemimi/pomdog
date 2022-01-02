@@ -7,7 +7,7 @@
 #include "pomdog/gpu/forward_declarations.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
-#include <cstdlib>
+#include <cstdint>
 #include <memory>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
@@ -20,8 +20,6 @@ public:
     CommandQueue& operator=(const CommandQueue&) = delete;
 
     virtual ~CommandQueue();
-
-    [[nodiscard]] virtual std::size_t GetCommandCount() const noexcept = 0;
 
     virtual void Reset() = 0;
 

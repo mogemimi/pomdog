@@ -38,9 +38,6 @@ public:
     /// Clears the graphics commands.
     void Reset() override;
 
-    /// Gets the count of graphics commands.
-    std::size_t GetCount() const noexcept override;
-
     /// Draws the specified non-indexed primitives.
     ///
     /// @param vertexCount Number of vertices to draw.
@@ -119,7 +116,14 @@ public:
     void ExecuteImmediate(GraphicsContext& graphicsContext);
 
 private:
+    void FlushRenderPassCommands();
+
+    void EndRenderPass();
+
+private:
     std::vector<std::unique_ptr<const detail::GraphicsCommand>> commands_;
+    std::vector<std::unique_ptr<const detail::GraphicsCommand>> renderPassCommands_;
+    bool needToEndRenderPass_ = false;
 };
 
 } // namespace pomdog::gpu::detail

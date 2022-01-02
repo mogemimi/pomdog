@@ -409,7 +409,7 @@ GraphicsContextGL4::~GraphicsContextGL4()
 }
 
 void GraphicsContextGL4::ExecuteCommandLists(
-    const std::vector<std::shared_ptr<CommandListImmediate>>& commandLists)
+    std::span<std::shared_ptr<CommandListImmediate>> commandLists)
 {
     pipelineState = nullptr;
     needToApplyInputLayout = true;
@@ -829,7 +829,7 @@ void GraphicsContextGL4::SetTexture(int index, const std::shared_ptr<RenderTarge
     ApplyTexture2D(index, renderTargetGL4->GetTextureHandle());
 }
 
-void GraphicsContextGL4::SetRenderPass(const RenderPass& renderPass)
+void GraphicsContextGL4::BeginRenderPass(const RenderPass& renderPass)
 {
     POMDOG_ASSERT(!renderPass.RenderTargets.empty());
     POMDOG_ASSERT(renderPass.RenderTargets.size() == 8);
@@ -996,6 +996,10 @@ void GraphicsContextGL4::SetRenderPass(const RenderPass& renderPass)
         POMDOG_ASSERT(renderTargetCount > 0);
         ValidateFrameBuffer(*frameBuffer, attachments.data(), static_cast<GLsizei>(renderTargetCount));
     }
+}
+
+void GraphicsContextGL4::EndRenderPass()
+{
 }
 
 } // namespace pomdog::gpu::detail::gl4

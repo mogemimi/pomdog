@@ -9,6 +9,10 @@
 #include <memory>
 #include <vector>
 
+namespace pomdog::gpu::detail {
+struct GraphicsCapabilities;
+} // namespace pomdog::gpu::detail
+
 namespace pomdog::gpu::detail::metal {
 
 class GraphicsContextMetal final : public GraphicsContext {
@@ -23,7 +27,7 @@ public:
     [[nodiscard]] GraphicsCapabilities GetCapabilities() const noexcept;
 
     void ExecuteCommandLists(
-        const std::vector<std::shared_ptr<CommandListImmediate>>& commandLists) override;
+        std::span<std::shared_ptr<CommandListImmediate>> commandLists) override;
 
     void Present() override;
 
@@ -47,7 +51,9 @@ public:
         std::size_t startIndexLocation,
         std::size_t startInstanceLocation) override;
 
-    void SetRenderPass(const RenderPass& renderPass) override;
+    void BeginRenderPass(const RenderPass& renderPass) override;
+
+    void EndRenderPass() override;
 
     void SetViewport(const Viewport& viewport) override;
 
@@ -84,18 +90,18 @@ public:
 
 private:
 #if defined(DEBUG) && !defined(NDEBUG)
-    std::vector<std::weak_ptr<Texture>> weakTextures;
-    std::vector<std::weak_ptr<RenderTarget2D>> weakRenderTargets;
+    std::vector<std::weak_ptr<Texture>> weakTextures_;
+    std::vector<std::weak_ptr<RenderTarget2D>> weakRenderTargets_;
 #endif
-    dispatch_semaphore_t inflightSemaphore = nullptr;
-    id<MTLCommandQueue> commandQueue = nullptr;
-    id<MTLCommandBuffer> commandBuffer = nullptr;
-    id<MTLRenderCommandEncoder> commandEncoder = nullptr;
-    MTLPrimitiveType primitiveType;
-    id<MTLBuffer> indexBuffer = nullptr;
-    MTLIndexType indexType;
-    MTKView* targetView = nullptr;
-    bool isDrawing = false;
+    dispatch_semaphore_t inflightSemaphore_ = nullptr;
+    id<MTLCommandQueue> commandQueue_ = nullptr;
+    id<MTLCommandBuffer> commandBuffer_ = nullptr;
+    id<MTLRenderCommandEncoder> commandEncoder_ = nullptr;
+    MTLPrimitiveType primitiveType_;
+    id<MTLBuffer> indexBuffer_ = nullptr;
+    MTLIndexType indexType_;
+    MTKView* targetView_ = nullptr;
+    bool isDrawing_ = false;
 };
 
 } // namespace pomdog::gpu::detail::metal
