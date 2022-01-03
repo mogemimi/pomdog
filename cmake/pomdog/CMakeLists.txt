@@ -236,6 +236,7 @@ target_compile_options(pomdog_static PRIVATE
         -Wno-sign-conversion
         -Wno-switch-enum
         -Wno-undefined-func-template
+        -Wno-implicit-int-float-conversion
 
         # FIXME: Conflict between C++20 aggregate initializations and C99 desinated initializers.
         -Wno-c99-extensions
@@ -243,11 +244,6 @@ target_compile_options(pomdog_static PRIVATE
         # FIXME: https://itanium-cxx-abi.github.io/cxx-abi/abi.html#vague-itemplate
         # FIXME: https://bugs.llvm.org/show_bug.cgi?id=18733
         -Wno-weak-template-vtables
-
-        $<$<NOT:$<CXX_COMPILER_ID:AppleClang>>:
-            # NOTE: Clang >= 11.0
-            -Wno-implicit-int-float-conversion
-        >
 
         $<$<CXX_COMPILER_ID:AppleClang>:
             # FIXME: Remove the following `-Wno` flags.
