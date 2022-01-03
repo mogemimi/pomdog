@@ -17,7 +17,7 @@ template <typename Derived, typename Base>
 {
     static_assert(!std::is_same_v<Derived*, Base*>);
     static_assert(std::is_base_of_v<Base, Derived>);
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     POMDOG_ASSERT(dynamic_cast<Derived*>(base) == static_cast<Derived*>(base));
 #endif
     return static_cast<Derived*>(base);
@@ -28,7 +28,7 @@ template <typename Derived, typename Base>
 {
     static_assert(!std::is_same_v<Derived*, Base*>);
     static_assert(std::is_base_of_v<Base, Derived>);
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     POMDOG_ASSERT(dynamic_cast<Derived*>(base.get()) == static_cast<Derived*>(base.get()));
 #endif
     return std::static_pointer_cast<Derived>(base);
@@ -39,7 +39,7 @@ template <typename Derived, typename Base>
 {
     static_assert(!std::is_same_v<Derived*, Base*>);
     static_assert(std::is_base_of_v<Base, Derived>);
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     POMDOG_ASSERT(dynamic_cast<Derived*>(base.get()) == static_cast<Derived*>(base.get()));
 #endif
     return std::static_pointer_cast<Derived>(std::move(base));

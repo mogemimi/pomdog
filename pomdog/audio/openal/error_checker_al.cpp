@@ -36,7 +36,7 @@ MakeOpenALError(ALenum err, std::string&& message) noexcept
     return errors::New(std::move(message));
 }
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
 void CheckError(const char* command, const char* filename, int line) noexcept
 {
     const ALenum errorCode = alGetError();

@@ -35,7 +35,7 @@ RasterizerStateGL4::Initialize(const RasterizerDescriptor& descriptor) noexcept
 
 void RasterizerStateGL4::Apply()
 {
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     {
         GLint frontFace;
         glGetIntegerv(GL_FRONT_FACE, &frontFace);

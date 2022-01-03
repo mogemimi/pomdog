@@ -86,7 +86,7 @@ public:
         }
 
 #if 0
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
         if (D3D_INCLUDE_LOCAL == includeType) {
             Log::Internal("ShaderInclude: Local");
         }
@@ -149,7 +149,7 @@ CompileFromShaderFile(
     POMDOG_ASSERT(shaderBytecode.ByteLength > 0);
 
     DWORD shaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     shaderFlags |= D3DCOMPILE_DEBUG;
 #endif
 

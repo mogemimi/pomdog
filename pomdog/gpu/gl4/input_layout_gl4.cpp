@@ -86,7 +86,7 @@ ScalarTypeGL4 ToScalarType(GLenum attributeClass)
     POMDOG_ASSERT(attributeClass != GL_HALF_FLOAT);
     POMDOG_ASSERT(attributeClass != GL_FIXED);
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     Log::Internal("failed to find scalar type " + std::to_string(attributeClass));
 #endif
     return ScalarTypeGL4(GL_FLOAT);
@@ -111,7 +111,7 @@ bool IsIntegerType(const ScalarTypeGL4& scalarType)
     POMDOG_ASSERT(scalarType.value != GL_HALF_FLOAT);
     POMDOG_ASSERT(scalarType.value != GL_FIXED);
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     Log::Internal("failed to find scalar type " + std::to_string(scalarType.value));
 #endif
     return false;
@@ -211,7 +211,7 @@ InputElementSize ToInputElementSize(GLenum attributeClass)
     POMDOG_ASSERT(attributeClass != GL_HALF_FLOAT);
     POMDOG_ASSERT(attributeClass != GL_FIXED);
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     Log::Internal("failed to find class " + std::to_string(attributeClass));
 #endif
     return {1, 1};
@@ -242,7 +242,7 @@ std::uint8_t ToByteWithFromScalarTypeGL4(ScalarTypeGL4 scalarType)
     POMDOG_ASSERT(scalarType.value != GL_HALF_FLOAT);
     POMDOG_ASSERT(scalarType.value != GL_FIXED);
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     Log::Internal("failed to find scalar type " + std::to_string(scalarType.value));
 #endif
     return sizeof(float);
@@ -293,46 +293,15 @@ std::vector<InputElementGL4> BuildAttributes(const ShaderProgramGL4& shaderProgr
             POMDOG_ASSERT(attribute.Components >= 1 && attribute.Components <= 4);
             attributes.push_back(attribute);
 
-            ///@todo badcode
+            // FIXME: badcode
             // For matrix class in GLSL:
             attributeLocation += 1;
-
-            //#ifdef DEBUG
-            //Log::Stream(LogLevel::Internal)
-            //    << "[GLSL] Attribute: StartSlot = " << static_cast<std::uint32_t>(attribute.StartSlot)
-            //    << ", Name = '" << name.data() << "'.";
-            //#endif // defined(DEBUG)
         }
     }
 
     std::sort(std::begin(attributes), std::end(attributes), [](const InputElementGL4& a, const InputElementGL4& b) {
         return a.AttributeLocation < b.AttributeLocation;
     });
-
-    //#ifdef DEBUG
-    //for (auto& attribute: attributes)
-    //{
-    //    Log::Stream(LogLevel::Internal)
-    //        << "[GLSL] Attribute: ScalarType: '"
-    //        << ([](const ScalarTypeGL4& scalarType)->std::string{
-    //            switch (scalarType.value)
-    //            {
-    //            case GL_FLOAT: return "GLfloat";
-    //            case GL_INT: return "GLint";
-    //            case GL_UNSIGNED_INT: return "GLuint";
-    //            case GL_DOUBLE: return "GLdouble";
-    //            case GL_BYTE: return "GLbyte";
-    //            case GL_UNSIGNED_BYTE: return "GLubyte";
-    //            case GL_SHORT: return "GLshort";
-    //            case GL_UNSIGNED_SHORT: return "GLushort";
-    //            }
-    //            return "This type not supported";
-    //        })(attribute.ScalarType)
-    //        << "' StartSlot: '" << static_cast<std::uint32_t>(attribute.StartSlot)
-    //        << "' Components: '" << static_cast<std::uint32_t>(attribute.Components)
-    //        << "'";
-    //};
-    //#endif // defined(DEBUG)
 
     return attributes;
 }
@@ -370,7 +339,7 @@ BuildInputElements(std::vector<InputElementGL4>&& inputElements)
     return std::move(inputElements);
 }
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
 ScalarTypeGL4 ToScalarTypeGL4(InputElementFormat format)
 {
     switch (format) {
@@ -418,7 +387,7 @@ GLuint GetMaxAttributeCount()
     })();
     return maxAttributeCount;
 }
-#endif // defined(DEBUG) && !defined(NDEBUG)
+#endif
 
 std::vector<InputElementGL4> BuildInputElements(
     const InputLayoutDescriptor& descriptor,
@@ -464,11 +433,11 @@ std::vector<InputElementGL4> BuildInputElements(
         inputElement.InstanceStepRate = sourceElement.InstanceStepRate;
         inputElement.InputSlot = sourceElement.InputSlot;
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
         POMDOG_ASSERT(inputElement.ScalarType == ToScalarTypeGL4(sourceElement.Format));
         POMDOG_ASSERT(inputElement.Components == ToComponentsGL4(sourceElement.Format));
         POMDOG_ASSERT(inputElement.AttributeLocation < GetMaxAttributeCount());
-#endif // defined(DEBUG) && !defined(NDEBUG)
+#endif
 
         inputElements.push_back(std::move(inputElement));
         ++vertexAttribute;

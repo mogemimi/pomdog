@@ -38,7 +38,7 @@ CreateNativeBuffer(
         }
 
         if (sizeInBytes % 16 != 0) {
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
             Log::Warning("pomdog",
                 "You must set the sizeInBytes value in multiples of 16.\n"
                 "ConstantBuffer size also needs to be a multiples of 16.");

@@ -96,7 +96,7 @@ void SetScissorRectangle(
     [commandEncoder setScissorRect:rect];
 }
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
 void CheckUnbindingRenderTargetsError(
     const std::vector<std::weak_ptr<RenderTarget2D>>& renderTargets,
     const std::vector<std::weak_ptr<Texture>>& textures)
@@ -126,7 +126,7 @@ GraphicsContextMetal::GraphicsContextMetal(id<MTLDevice> nativeDevice)
     // NOTE: Create a new command queue
     commandQueue_ = [nativeDevice newCommandQueue];
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     const auto graphicsCapbilities = this->GetCapabilities();
 
     POMDOG_ASSERT(graphicsCapbilities.SamplerSlotCount > 0);
@@ -220,7 +220,7 @@ void GraphicsContextMetal::Draw(
     POMDOG_ASSERT(commandEncoder_ != nullptr);
     POMDOG_ASSERT(vertexCount > 0);
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     CheckUnbindingRenderTargetsError(weakRenderTargets_, weakTextures_);
 #endif
 
@@ -236,7 +236,7 @@ void GraphicsContextMetal::DrawIndexed(
     POMDOG_ASSERT(commandEncoder_ != nullptr);
     POMDOG_ASSERT(indexCount > 0);
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     CheckUnbindingRenderTargetsError(weakRenderTargets_, weakTextures_);
 #endif
     const auto indexBufferOffset = startIndexLocation * ToIndexByteSize(indexType_);
@@ -258,7 +258,7 @@ void GraphicsContextMetal::DrawInstanced(
     POMDOG_ASSERT(vertexCountPerInstance > 0);
     POMDOG_ASSERT(instanceCount > 0);
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     CheckUnbindingRenderTargetsError(weakRenderTargets_, weakTextures_);
 #endif
 
@@ -279,7 +279,7 @@ void GraphicsContextMetal::DrawIndexedInstanced(
     POMDOG_ASSERT(indexCountPerInstance > 0);
     POMDOG_ASSERT(instanceCount > 0);
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     CheckUnbindingRenderTargetsError(weakRenderTargets_, weakTextures_);
 #endif
     const auto indexBufferOffset = startIndexLocation * ToIndexByteSize(indexType_);
@@ -369,7 +369,7 @@ void GraphicsContextMetal::SetConstantBuffer(
     POMDOG_ASSERT(offset >= 0);
     POMDOG_ASSERT(sizeInBytes > 0);
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     static const auto capabilities = GetCapabilities();
     POMDOG_ASSERT(index < static_cast<std::uint32_t>(capabilities.ConstantBufferSlotCount));
 #endif
@@ -405,7 +405,7 @@ void GraphicsContextMetal::SetTexture(std::uint32_t index)
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(commandEncoder_ != nullptr);
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     POMDOG_ASSERT(!weakTextures_.empty());
     POMDOG_ASSERT(index < static_cast<std::uint32_t>(weakTextures_.size()));
     weakTextures_[index].reset();
@@ -421,7 +421,7 @@ void GraphicsContextMetal::SetTexture(std::uint32_t index, const std::shared_ptr
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(textureIn);
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     POMDOG_ASSERT(!weakTextures_.empty());
     POMDOG_ASSERT(index < static_cast<std::uint32_t>(weakTextures_.size()));
     weakTextures_[index] = textureIn;
@@ -441,7 +441,7 @@ void GraphicsContextMetal::SetTexture(std::uint32_t index, const std::shared_ptr
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(textureIn);
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     POMDOG_ASSERT(!weakTextures_.empty());
     POMDOG_ASSERT(index < static_cast<std::uint32_t>(weakTextures_.size()));
     weakTextures_[index] = textureIn;
@@ -461,7 +461,7 @@ void GraphicsContextMetal::BeginRenderPass(const RenderPass& renderPass)
     POMDOG_ASSERT(!renderPass.RenderTargets.empty());
     POMDOG_ASSERT(renderPass.RenderTargets.size() <= 8);
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     weakRenderTargets_.clear();
     for (auto& renderTarget : renderPass.RenderTargets) {
         weakRenderTargets_.push_back(std::get<0>(renderTarget));

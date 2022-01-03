@@ -12,7 +12,7 @@ namespace pomdog::skeletal2d::detail {
 
 std::uint16_t AnimationGraphWeightCollection::AddFloat()
 {
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     POMDOG_ASSERT(types.size() == parameters.size());
     types.push_back(AnimationBlendInputType::Float);
 #endif
@@ -24,7 +24,7 @@ std::uint16_t AnimationGraphWeightCollection::AddFloat()
 
 std::uint16_t AnimationGraphWeightCollection::AddBool()
 {
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     POMDOG_ASSERT(types.size() == parameters.size());
     types.push_back(AnimationBlendInputType::Bool);
 #endif
@@ -36,7 +36,7 @@ std::uint16_t AnimationGraphWeightCollection::AddBool()
 
 void AnimationGraphWeightCollection::SetValue(std::uint16_t index, float value)
 {
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     POMDOG_ASSERT(types[index] == AnimationBlendInputType::Float);
 #endif
     POMDOG_ASSERT(index < parameters.size());
@@ -45,7 +45,7 @@ void AnimationGraphWeightCollection::SetValue(std::uint16_t index, float value)
 
 void AnimationGraphWeightCollection::SetValue(std::uint16_t index, bool value)
 {
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     POMDOG_ASSERT(types[index] == AnimationBlendInputType::Bool);
 #endif
     POMDOG_ASSERT(index < parameters.size());
@@ -54,7 +54,7 @@ void AnimationGraphWeightCollection::SetValue(std::uint16_t index, bool value)
 
 float AnimationGraphWeightCollection::GetFloatAtIndex(std::uint16_t index) const
 {
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     POMDOG_ASSERT(types[index] == AnimationBlendInputType::Float);
 #endif
     POMDOG_ASSERT(index < parameters.size());
@@ -63,7 +63,7 @@ float AnimationGraphWeightCollection::GetFloatAtIndex(std::uint16_t index) const
 
 bool AnimationGraphWeightCollection::GetBoolAtIndex(std::uint16_t index) const
 {
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     POMDOG_ASSERT(types[index] == AnimationBlendInputType::Bool);
 #endif
     POMDOG_ASSERT(index < parameters.size());

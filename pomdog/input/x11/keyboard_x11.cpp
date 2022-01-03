@@ -441,7 +441,7 @@ void KeyboardX11::HandleEvent(XEvent& event, ::XIC inputContext)
         }
     }
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     if (key == Keys::Unknown) {
         Log::Internal(std::string("IsKeyDown: Unspecified key: ") +
                       std::to_string(static_cast<int>(event.xkey.keycode)));

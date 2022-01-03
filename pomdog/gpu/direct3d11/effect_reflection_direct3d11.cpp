@@ -170,7 +170,7 @@ EffectReflectionDirect3D11::GetConstantBuffers() const noexcept
         });
 
     auto equal = [](const EffectConstantDescription& a, const EffectConstantDescription& b) {
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
         if (a.Name == b.Name) {
             POMDOG_ASSERT(a.ByteSize == b.ByteSize);
             POMDOG_ASSERT(a.Variables.size() == b.Variables.size());

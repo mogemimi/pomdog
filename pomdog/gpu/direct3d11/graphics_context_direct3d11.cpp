@@ -87,7 +87,7 @@ void UseBackBufferAsRenderTarget(
         depthStencilView);
 }
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
 void CheckUnbindingRenderTargetsError(
     const std::vector<std::weak_ptr<RenderTarget2D>>& renderTargets,
     const std::vector<std::weak_ptr<Texture>>& textures)
@@ -133,7 +133,7 @@ GraphicsContextDirect3D11::Initialize(
             sampleDesc);
     }
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     Log::Internal(StringHelper::Format(
         "DXGI_SAMPLE_DESC.Count  : %d\n"
         "DXGI_SAMPLE_DESC.Quality: %d",
@@ -228,7 +228,7 @@ GraphicsContextDirect3D11::Initialize(
     // NOTE: Set default values for graphics context
     this->SetBlendFactor(Vector4{1.0f, 1.0f, 1.0f, 1.0f});
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     auto graphicsCapbilities = this->GetCapabilities();
 
     POMDOG_ASSERT(graphicsCapbilities.SamplerSlotCount > 0);
@@ -285,7 +285,7 @@ void GraphicsContextDirect3D11::Draw(
     std::uint32_t startVertexLocation)
 {
     POMDOG_ASSERT(deferredContext);
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     CheckUnbindingRenderTargetsError(weakRenderTargets, weakTextures);
 #endif
 
@@ -299,7 +299,7 @@ void GraphicsContextDirect3D11::DrawIndexed(
     std::uint32_t startIndexLocation)
 {
     POMDOG_ASSERT(deferredContext);
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     CheckUnbindingRenderTargetsError(weakRenderTargets, weakTextures);
 #endif
 
@@ -315,7 +315,7 @@ void GraphicsContextDirect3D11::DrawInstanced(
     std::uint32_t startInstanceLocation)
 {
     POMDOG_ASSERT(deferredContext);
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     CheckUnbindingRenderTargetsError(weakRenderTargets, weakTextures);
 #endif
 
@@ -335,7 +335,7 @@ void GraphicsContextDirect3D11::DrawIndexedInstanced(
     std::uint32_t startInstanceLocation)
 {
     POMDOG_ASSERT(deferredContext);
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     CheckUnbindingRenderTargetsError(weakRenderTargets, weakTextures);
 #endif
 
@@ -503,7 +503,7 @@ void GraphicsContextDirect3D11::SetTexture(std::uint32_t index)
     POMDOG_ASSERT(index < D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT);
     POMDOG_ASSERT(index < static_cast<std::uint32_t>(textureResourceViews.size()));
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     POMDOG_ASSERT(!weakTextures.empty());
     POMDOG_ASSERT(index < static_cast<std::uint32_t>(weakTextures.size()));
     weakTextures[index].reset();
@@ -522,7 +522,7 @@ void GraphicsContextDirect3D11::SetTexture(std::uint32_t index, const std::share
     POMDOG_ASSERT(index < static_cast<std::uint32_t>(textureResourceViews.size()));
     POMDOG_ASSERT(textureIn != nullptr);
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     POMDOG_ASSERT(!weakTextures.empty());
     POMDOG_ASSERT(index < static_cast<int>(weakTextures.size()));
     weakTextures[index] = textureIn;
@@ -546,7 +546,7 @@ void GraphicsContextDirect3D11::SetTexture(std::uint32_t index, const std::share
     POMDOG_ASSERT(index < static_cast<std::uint32_t>(textureResourceViews.size()));
     POMDOG_ASSERT(textureIn != nullptr);
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     POMDOG_ASSERT(!weakTextures.empty());
     POMDOG_ASSERT(index < static_cast<std::uint32_t>(weakTextures.size()));
     weakTextures[index] = textureIn;

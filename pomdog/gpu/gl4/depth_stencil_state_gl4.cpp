@@ -119,7 +119,7 @@ void DepthStencilStateGL4::ApplyStencilTest()
 
     glEnable(GL_STENCIL_TEST);
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     {
         GLint frontFace;
         glGetIntegerv(GL_FRONT_FACE, &frontFace);

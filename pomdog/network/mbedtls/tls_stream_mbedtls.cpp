@@ -206,7 +206,7 @@ TLSStreamMbedTLS::Connect(
         mbedtls_ssl_conf_authmode(&sslConfig, MBEDTLS_SSL_VERIFY_OPTIONAL);
         mbedtls_ssl_conf_ca_chain(&sslConfig, &cacert, nullptr);
         mbedtls_ssl_conf_rng(&sslConfig, mbedtls_ctr_drbg_random, &ctrDrbg);
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
         mbedtls_ssl_conf_dbg(
             &sslConfig,
             [](void* ctx, [[maybe_unused]] int level, const char* file, int line, const char* str) {
@@ -266,7 +266,7 @@ TLSStreamMbedTLS::Connect(
             std::array<char, 512> buf;
             mbedtls_x509_crt_verify_info(buf.data(), buf.size(), "  ! ", flags);
             buf.back() = 0;
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
             auto e = errors::New(std::string{"mbedtls_ssl_get_verify_result failed, "} + buf.data());
             std::shared_ptr<Error> shared = std::move(e);
             errorConn = service->ScheduleTask([this, err = std::move(shared)] {

@@ -89,7 +89,7 @@ public:
     void SetMTKView(MTKView* view);
 
 private:
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     std::vector<std::weak_ptr<Texture>> weakTextures_;
     std::vector<std::weak_ptr<RenderTarget2D>> weakRenderTargets_;
 #endif

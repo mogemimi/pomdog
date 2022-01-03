@@ -198,7 +198,7 @@ Builder<gpu::PipelineState>::SetConstantBufferBindSlot(const std::string& name, 
     POMDOG_ASSERT(!name.empty());
     POMDOG_ASSERT(slotIndex >= 0);
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     for (auto& pair : impl->descriptor.ConstantBufferBindHints) {
         POMDOG_ASSERT(slotIndex != pair.second);
     }
@@ -215,7 +215,7 @@ Builder<gpu::PipelineState>::SetSamplerBindSlot(const std::string& name, int slo
     POMDOG_ASSERT(!name.empty());
     POMDOG_ASSERT(slotIndex >= 0);
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     for (auto& pair : impl->descriptor.SamplerBindHints) {
         POMDOG_ASSERT(slotIndex != pair.second);
     }

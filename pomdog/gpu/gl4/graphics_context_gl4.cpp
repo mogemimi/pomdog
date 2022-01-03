@@ -123,7 +123,7 @@ std::optional<FrameBufferGL4> CreateFrameBuffer()
 
 void ApplyTexture2D(int index, const Texture2DObjectGL4& textureObject)
 {
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     {
         static const auto MaxCombinedTextureImageUnits = ([] {
             GLint units = 0;
@@ -265,7 +265,7 @@ void ValidateFrameBuffer(FrameBufferGL4 frameBuffer, GLenum* colorAttachments, G
     POMDOG_ASSERT(colorAttachments != nullptr);
     POMDOG_ASSERT(colorAttachmentCount > 0);
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     {
         GLint oldFrameBuffer = 0;
         glGetIntegerv(GL_FRAMEBUFFER_BINDING, &oldFrameBuffer);
@@ -322,7 +322,7 @@ void SetDepthStencilBuffer(
     depthStencilBuffer->BindToFramebuffer(frameBuffer.value);
 }
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
 void CheckUnbindingRenderTargetsError(
     const std::vector<std::weak_ptr<RenderTarget2D>>& renderTargets,
     const std::vector<std::weak_ptr<Texture>>& textures)
@@ -377,7 +377,7 @@ GraphicsContextGL4::Initialize(
     // NOTE: Set default values for graphics context
     this->SetBlendFactor(Vector4{1.0f, 1.0f, 1.0f, 1.0f});
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     auto graphicsCapbilities = this->GetCapabilities();
 
     POMDOG_ASSERT(graphicsCapbilities.SamplerSlotCount > 0);
@@ -483,7 +483,7 @@ void GraphicsContextGL4::Draw(
     std::uint32_t vertexCount,
     std::uint32_t startVertexLocation)
 {
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     CheckUnbindingRenderTargetsError(weakRenderTargets_, weakTextures_);
 #endif
 
@@ -506,7 +506,7 @@ void GraphicsContextGL4::DrawIndexed(
     std::uint32_t indexCount,
     std::uint32_t startIndexLocation)
 {
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     CheckUnbindingRenderTargetsError(weakRenderTargets_, weakTextures_);
 #endif
 
@@ -539,7 +539,7 @@ void GraphicsContextGL4::DrawInstanced(
     std::uint32_t startVertexLocation,
     std::uint32_t startInstanceLocation)
 {
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     CheckUnbindingRenderTargetsError(weakRenderTargets_, weakTextures_);
 #endif
 
@@ -581,7 +581,7 @@ void GraphicsContextGL4::DrawIndexedInstanced(
     std::uint32_t startIndexLocation,
     std::uint32_t startInstanceLocation)
 {
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     CheckUnbindingRenderTargetsError(weakRenderTargets_, weakTextures_);
 #endif
 
@@ -713,7 +713,7 @@ void GraphicsContextGL4::SetConstantBuffer(
     static_assert(std::is_unsigned_v<decltype(index)>, "index must be >= 0");
     static_assert(std::is_unsigned_v<decltype(offset)>, "offset >= 0");
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     static const auto capabilities = GetCapabilities();
     POMDOG_ASSERT(index < static_cast<std::uint32_t>(capabilities.ConstantBufferSlotCount));
 #endif
@@ -735,7 +735,7 @@ void GraphicsContextGL4::SetSampler(std::uint32_t index, const std::shared_ptr<S
     POMDOG_ASSERT(sampler != nullptr);
     static_assert(std::is_unsigned_v<decltype(index)>, "index must be >= 0");
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     static const auto capabilities = GetCapabilities();
     POMDOG_ASSERT(index < static_cast<std::uint32_t>(capabilities.SamplerSlotCount));
 #endif
@@ -752,7 +752,7 @@ void GraphicsContextGL4::SetTexture(std::uint32_t index)
     POMDOG_ASSERT(index < static_cast<std::uint32_t>(textures_.size()));
     static_assert(std::is_unsigned_v<decltype(index)>, "index must be >= 0");
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     POMDOG_ASSERT(!weakTextures_.empty());
     POMDOG_ASSERT(index < static_cast<std::uint32_t>(weakTextures_.size()));
     weakTextures_[index].reset();
@@ -775,7 +775,7 @@ void GraphicsContextGL4::SetTexture(std::uint32_t index, const std::shared_ptr<g
     POMDOG_ASSERT(index < static_cast<std::uint32_t>(textures_.size()));
     static_assert(std::is_unsigned_v<decltype(index)>, "index must be >= 0");
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     POMDOG_ASSERT(!weakTextures_.empty());
     POMDOG_ASSERT(index < static_cast<std::uint32_t>(weakTextures_.size()));
     weakTextures_[index] = textureIn;
@@ -802,7 +802,7 @@ void GraphicsContextGL4::SetTexture(std::uint32_t index, const std::shared_ptr<R
     POMDOG_ASSERT(index < static_cast<std::uint32_t>(textures_.size()));
     static_assert(std::is_unsigned_v<decltype(index)>, "index must be >= 0");
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     POMDOG_ASSERT(!weakTextures_.empty());
     POMDOG_ASSERT(index < static_cast<std::uint32_t>(weakTextures_.size()));
     weakTextures_[index] = textureIn;
@@ -941,7 +941,7 @@ void GraphicsContextGL4::BeginRenderPass(const RenderPass& renderPass)
         }
     }
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     if (useBackBuffer) {
         POMDOG_ASSERT(renderTargets_.size() >= 1);
         POMDOG_ASSERT(renderTargets_.front() == nullptr);

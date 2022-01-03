@@ -36,7 +36,7 @@ private:
 
     std::vector<Weight> parameters;
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     std::vector<AnimationBlendInputType> types;
 #endif
 };

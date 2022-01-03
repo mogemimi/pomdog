@@ -79,11 +79,11 @@ BuildInfoQueue(ID3D11Device* nativeDevice) noexcept
     return std::make_tuple(std::move(infoQueue), nullptr);
 }
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
 [[nodiscard]] std::unique_ptr<Error>
 CheckError(ID3D11InfoQueue* infoQueue) noexcept
 {
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     POMDOG_ASSERT(infoQueue != nullptr);
 #endif
     if (infoQueue == nullptr) {
@@ -139,7 +139,7 @@ BuildDevice(
     POMDOG_ASSERT(!device);
 
     UINT createDeviceFlags = 0;
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
     // NOTE: supported Direct2D1
@@ -195,7 +195,7 @@ BuildDevice(
     }
     d3d11Device.Reset();
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     {
         switch (driverType) {
         case D3D_DRIVER_TYPE_HARDWARE:
@@ -363,7 +363,7 @@ GraphicsDeviceDirect3D11::CreateVertexBuffer(
         return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize BufferDirect3D11"));
     }
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     if (auto err = CheckError(infoQueue.Get()); err != nullptr) {
         return std::make_tuple(nullptr, errors::Wrap(std::move(err), "CheckError() failed"));
     }
@@ -402,7 +402,7 @@ GraphicsDeviceDirect3D11::CreateVertexBuffer(
         return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize BufferDirect3D11"));
     }
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     if (auto err = CheckError(infoQueue.Get()); err != nullptr) {
         return std::make_tuple(nullptr, errors::Wrap(std::move(err), "CheckError() failed"));
     }
@@ -441,7 +441,7 @@ GraphicsDeviceDirect3D11::CreateIndexBuffer(
         return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize BufferDirect3D11"));
     }
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     if (auto err = CheckError(infoQueue.Get()); err != nullptr) {
         return std::make_tuple(nullptr, errors::Wrap(std::move(err), "CheckError() failed"));
     }
@@ -479,7 +479,7 @@ GraphicsDeviceDirect3D11::CreateIndexBuffer(
         return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize BufferDirect3D11"));
     }
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     if (auto err = CheckError(infoQueue.Get()); err != nullptr) {
         return std::make_tuple(nullptr, errors::Wrap(std::move(err), "CheckError() failed"));
     }
@@ -515,7 +515,7 @@ GraphicsDeviceDirect3D11::CreateConstantBuffer(
         return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize BufferDirect3D11"));
     }
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     if (auto err = CheckError(infoQueue.Get()); err != nullptr) {
         return std::make_tuple(nullptr, errors::Wrap(std::move(err), "CheckError() failed"));
     }
@@ -549,7 +549,7 @@ GraphicsDeviceDirect3D11::CreateConstantBuffer(
         return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize BufferDirect3D11"));
     }
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     if (auto err = CheckError(infoQueue.Get()); err != nullptr) {
         return std::make_tuple(nullptr, errors::Wrap(std::move(err), "CheckError() failed"));
     }

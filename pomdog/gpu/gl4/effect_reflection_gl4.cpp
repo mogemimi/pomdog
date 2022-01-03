@@ -4,8 +4,6 @@
 #include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/gpu/gl4/error_checker.h"
 #include "pomdog/gpu/shader_reflections/effect_constant_description.h"
-#include "pomdog/logging/log.h"
-#include "pomdog/logging/log_level.h"
 #include "pomdog/utility/assert.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
@@ -345,9 +343,6 @@ EffectVariableType ToEffectVariableType(GLenum uniformType)
         break;
     }
 
-#if defined(DEBUG) && !defined(NDEBUG)
-    Log::Internal("failed to find effect parameter type " + std::to_string(uniformType));
-#endif
     return EffectVariableType::Float;
 }
 
@@ -437,9 +432,6 @@ EffectVariableClass ToEffectVariableClass(GLenum uniformType)
         return EffectVariableClass::Object;
     }
 
-#if defined(DEBUG) && !defined(NDEBUG)
-    Log::Internal("failed to find effect parameter class " + std::to_string(uniformType));
-#endif
     return EffectVariableClass::Struct;
 }
 
@@ -555,9 +547,6 @@ std::tuple<int, int> ToComponents(GLenum uniformType)
         break;
     }
 
-#if defined(DEBUG) && !defined(NDEBUG)
-    Log::Internal("failed to find uniform type " + std::to_string(uniformType));
-#endif
     return std::make_tuple(1, 1);
 }
 
@@ -589,53 +578,6 @@ std::vector<EffectVariable> GetEffectVariables(const std::vector<UniformVariable
     return result;
 }
 
-#if defined(DEBUG) && !defined(NDEBUG)
-void DebugLogUniformBlocks(const std::vector<UniformBlockGL4>& uniformBlocks)
-{
-    std::stringstream stream;
-
-    for (const auto& uniformBlock : uniformBlocks) {
-        stream
-            << "-[UniformBlock]-------------------\n"
-            << "         Name: " << uniformBlock.Name << "\n"
-            << "   BlockIndex: " << uniformBlock.BlockIndex << "\n"
-            << "     ByteSize: " << uniformBlock.ByteSize << "\n"
-            << "Uniforms.size: " << uniformBlock.Uniforms.size() << "\n";
-
-        for (const auto& uniform : uniformBlock.Uniforms) {
-            stream
-                << ":- - - - - - - - - - - - - -\n"
-                << "         Name: " << uniform.Name << "\n"
-                << "  StartOffset: " << uniform.StartOffset << "\n"
-                << "     Elements: " << uniform.Elements << "\n"
-                << "         Type: " << uniform.Type << "\n"
-                << "  ArrayStride: " << uniform.ArrayStride << "\n"
-                << " MatrixStride: " << uniform.MatrixStride << "\n"
-                << "   IsRowMajor: " << (uniform.IsRowMajor ? "true" : "false") << "\n";
-        }
-    }
-
-    stream << "--------------------\n";
-    Log::Internal(stream.str());
-}
-
-void DebugLogUniforms(const std::vector<UniformGL4>& uniforms)
-{
-    std::stringstream stream;
-    for (const auto& uniform : uniforms) {
-        stream
-            << "-[Uniform]-------------------\n"
-            << "      Name: " << uniform.Name << "\n"
-            << "  Location: " << uniform.Location << "\n"
-            << "      Type: " << uniform.Type << "\n"
-            << "ArrayCount: " << uniform.ArrayCount << "\n";
-    }
-
-    stream << "--------------------\n";
-    Log::Internal(stream.str());
-}
-#endif
-
 } // namespace
 
 std::unique_ptr<Error>
@@ -648,22 +590,12 @@ EffectReflectionGL4::Initialize(const ShaderProgramGL4& shaderProgramIn) noexcep
 std::vector<UniformBlockGL4> EffectReflectionGL4::GetNativeUniformBlocks()
 {
     auto uniformBlocks = EnumerateUniformBlocks(shaderProgram);
-
-#ifdef DEBUG
-    DebugLogUniformBlocks(uniformBlocks);
-#endif
-
     return uniformBlocks;
 }
 
 std::vector<UniformGL4> EffectReflectionGL4::GetNativeUniforms()
 {
     auto uniforms = EnumerateUniforms(shaderProgram);
-
-#ifdef DEBUG
-    DebugLogUniforms(uniforms);
-#endif
-
     return uniforms;
 }
 

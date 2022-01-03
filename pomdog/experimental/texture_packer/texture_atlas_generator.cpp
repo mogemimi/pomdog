@@ -188,9 +188,6 @@ TextureAtlasGeneratorResult TextureAtlasGenerator::Generate(
         if (!node) {
             // TODO: error handling
             result.HasError = true;
-#if defined(DEBUG)
-            std::printf("Cannot pack the texture '%s'", regions[indices[image]].Name.c_str());
-#endif
             break;
         }
         node->image = image;

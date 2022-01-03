@@ -54,7 +54,7 @@ GetLastError() noexcept
     return errors::New(ToString(errorCode));
 }
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
 void CheckError(const char* command, const char* filename, int line)
 {
     const auto errorCode = glGetError();

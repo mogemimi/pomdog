@@ -18,7 +18,7 @@ namespace {
 [[nodiscard]] std::tuple<std::optional<GLuint>, std::unique_ptr<Error>>
 CompileShader(const ShaderBytecode& source, GLenum pipelineStage) noexcept
 {
-#if defined(DEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     {
         const auto validPipelineStage = (pipelineStage == GL_VERTEX_SHADER)
 #ifdef GL_FRAGMENT_SHADER

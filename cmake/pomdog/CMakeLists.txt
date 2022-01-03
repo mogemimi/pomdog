@@ -193,7 +193,7 @@ target_link_options(pomdog_static PRIVATE
 )
 
 target_compile_definitions(pomdog_static PRIVATE
-    $<$<CONFIG:Debug>:_DEBUG;DEBUG=1>
+    $<$<CONFIG:Debug>:_DEBUG;POMDOG_DEBUG_BUILD=1>
     $<$<CONFIG:Release>:NDEBUG>
     $<$<PLATFORM_ID:Windows>:
         _WIN32_WINNT=0x0602 # Windows 8 or later

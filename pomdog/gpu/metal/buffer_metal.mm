@@ -35,7 +35,7 @@ std::size_t ComputeAlignedSize(std::size_t sizeInBytes, BufferBindMode bindMode)
 
     constexpr std::size_t alignmentSize = 256;
     if (sizeInBytes % alignmentSize != 0) {
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
         Log::Warning("pomdog",
             "You must set the sizeInBytes value in multiples of 256.\n"
             "ConstantBuffer size also needs to be a multiples of 256.");

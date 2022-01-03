@@ -166,7 +166,7 @@ EffectReflectionMetal::GetConstantBuffers() const noexcept
         POMDOG_ASSERT(false);
     }
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     ///@todo Not implemented
     //reflection.fragmentArguments;
     POMDOG_ASSERT(false);

@@ -8,7 +8,7 @@
 namespace pomdog::gpu {
 namespace {
 
-#ifdef DEBUG
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
 constexpr std::uint16_t MaxInputSlotCount = 16;
 #endif
 

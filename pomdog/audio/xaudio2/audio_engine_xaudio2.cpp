@@ -196,7 +196,7 @@ AudioEngineXAudio2::Initialize() noexcept
         return errors::New("XAudio2Create() failed: " + std::to_string(hr));
     }
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     {
         XAUDIO2_DEBUG_CONFIGURATION debugConfig;
         debugConfig.TraceMask = XAUDIO2_LOG_ERRORS | XAUDIO2_LOG_WARNINGS;

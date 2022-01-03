@@ -50,7 +50,7 @@ std::tuple<VkInstance, VkResult> CreateVulkanInstance() noexcept
         "VK_LAYER_KHRONOS_validation",
     }};
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     constexpr bool enableValidationLayers = true;
 #else
     constexpr bool enableValidationLayers = false;

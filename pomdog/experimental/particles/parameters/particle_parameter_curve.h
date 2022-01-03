@@ -50,7 +50,7 @@ public:
         static_assert(std::is_convertible<InType, decltype(keys)>::value, "");
         POMDOG_ASSERT(!keys.empty());
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
         using CurveKeyType = ParticleCurveKey<T>;
 
         POMDOG_ASSERT(std::is_sorted(std::begin(keys), std::end(keys),

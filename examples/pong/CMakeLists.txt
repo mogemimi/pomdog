@@ -63,7 +63,7 @@ target_include_directories(${PRODUCT_NAME} PRIVATE
 )
 
 target_compile_definitions(${PRODUCT_NAME} PRIVATE
-    $<$<CONFIG:Debug>:DEBUG>
+    $<$<CONFIG:Debug>:_DEBUG;POMDOG_DEBUG_BUILD=1>
     $<$<CONFIG:Release>:NDEBUG>
 
     # On Windows

@@ -136,7 +136,7 @@ void BufferGL4<Tag>::GetData(
     TypesafeHelperGL4::BindBuffer(*bufferObject);
     POMDOG_CHECK_ERROR_GL4("glBindBuffer");
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     {
         GLint bufferSize = 0;
         glGetBufferParameteriv(BufferTraits<Tag>::Buffer,
@@ -165,7 +165,7 @@ void BufferGL4<Tag>::SetData(
     TypesafeHelperGL4::BindBuffer(*bufferObject);
     POMDOG_CHECK_ERROR_GL4("glBindBuffer");
 
-#if defined(DEBUG) && !defined(NDEBUG)
+#if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     {
         GLint bufferSize = 0;
         glGetBufferParameteriv(BufferTraits<Tag>::Buffer,
