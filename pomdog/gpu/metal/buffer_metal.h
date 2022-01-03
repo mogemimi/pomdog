@@ -37,7 +37,8 @@ public:
         const void* source,
         std::size_t sizeInBytes) override;
 
-    id<MTLBuffer> GetBuffer() const noexcept;
+    /// Gets the pointer of the native buffer.
+    [[nodiscard]] id<MTLBuffer> GetBuffer() const noexcept;
 
 private:
     id<MTLBuffer> nativeBuffer = nullptr;

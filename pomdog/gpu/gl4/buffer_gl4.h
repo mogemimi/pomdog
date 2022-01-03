@@ -46,7 +46,8 @@ public:
 
     void BindBuffer();
 
-    GLuint GetBuffer() const;
+    /// Gets the pointer of the native buffer.
+    [[nodiscard]] GLuint GetBuffer() const noexcept;
 
 private:
     using BufferObject = BufferObjectGL4<Tag>;

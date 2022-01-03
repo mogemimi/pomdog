@@ -189,7 +189,7 @@ void BufferGL4<Tag>::BindBuffer()
 }
 
 template <class Tag>
-GLuint BufferGL4<Tag>::GetBuffer() const
+GLuint BufferGL4<Tag>::GetBuffer() const noexcept
 {
     POMDOG_ASSERT(bufferObject);
     return bufferObject->value;
