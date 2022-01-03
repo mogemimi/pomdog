@@ -205,6 +205,8 @@ target_sources(pomdog_static PRIVATE
         ${POMDOG_SRC_DIR}/gpu/metal/depth_stencil_buffer_metal.mm
         ${POMDOG_SRC_DIR}/gpu/metal/effect_reflection_metal.h
         ${POMDOG_SRC_DIR}/gpu/metal/effect_reflection_metal.mm
+        ${POMDOG_SRC_DIR}/gpu/metal/frame_counter.cpp
+        ${POMDOG_SRC_DIR}/gpu/metal/frame_counter.h
         ${POMDOG_SRC_DIR}/gpu/metal/graphics_context_metal.h
         ${POMDOG_SRC_DIR}/gpu/metal/graphics_context_metal.mm
         ${POMDOG_SRC_DIR}/gpu/metal/graphics_device_metal.h

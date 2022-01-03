@@ -3,6 +3,7 @@
 #include "pomdog/gpu/metal/buffer_metal.h"
 #include "pomdog/basic/unreachable.h"
 #include "pomdog/gpu/buffer_usage.h"
+#include "pomdog/gpu/metal/frame_counter.h"
 #include "pomdog/logging/log.h"
 #include "pomdog/utility/assert.h"
 #import <Metal/Metal.h>
@@ -52,38 +53,74 @@ std::size_t ComputeAlignedSize(std::size_t sizeInBytes, BufferBindMode bindMode)
 
 std::unique_ptr<Error>
 BufferMetal::Initialize(
+    std::shared_ptr<const FrameCounter> frameCounter,
     id<MTLDevice> device,
     std::size_t sizeInBytes,
     BufferUsage bufferUsage,
     BufferBindMode bindMode) noexcept
 {
-    const auto alignedSize = ComputeAlignedSize(sizeInBytes, bindMode);
-    nativeBuffer = [device newBufferWithLength:alignedSize options:ToResourceOptions(bufferUsage)];
-    if (nativeBuffer == nullptr) {
-        return errors::New("failed to create MTLBuffer");
+    frameCounter_ = std::move(frameCounter);
+    if (frameCounter_ == nullptr) {
+        return errors::New("frameCounter_ must be != nullptr");
     }
 
-    nativeBuffer.label = @"Pomdog.BufferMetal";
+    if (bufferUsage == BufferUsage::Dynamic) {
+        buffers_.resize(frameCounter_->GetMaxCount());
+    }
+    else {
+        buffers_.resize(1);
+    }
+    POMDOG_ASSERT(buffers_.size() == buffers_.capacity());
+
+    for (auto& nativeBuffer : buffers_) {
+        const auto alignedSize = ComputeAlignedSize(sizeInBytes, bindMode);
+        nativeBuffer = [device newBufferWithLength:alignedSize options:ToResourceOptions(bufferUsage)];
+        if (nativeBuffer == nullptr) {
+            return errors::New("failed to create MTLBuffer");
+        }
+
+        nativeBuffer.label = @"Pomdog.BufferMetal";
+    }
+
     return nullptr;
 }
 
 std::unique_ptr<Error>
 BufferMetal::Initialize(
+    std::shared_ptr<const FrameCounter> frameCounter,
     id<MTLDevice> device,
     const void* vertices,
     std::size_t sizeInBytes,
     BufferUsage bufferUsage,
     BufferBindMode bindMode) noexcept
 {
-    const auto alignedSize = ComputeAlignedSize(sizeInBytes, bindMode);
-    nativeBuffer = [device newBufferWithLength:alignedSize options:ToResourceOptions(bufferUsage)];
-    if (nativeBuffer == nullptr) {
-        return errors::New("failed to create MTLBuffer");
+    frameCounter_ = std::move(frameCounter);
+    if (frameCounter_ == nullptr) {
+        return errors::New("frameCounter_ must be != nullptr");
     }
 
-    nativeBuffer.label = @"Pomdog.BufferMetal";
+    if (bufferUsage == BufferUsage::Dynamic) {
+        buffers_.resize(frameCounter_->GetMaxCount());
+    }
+    else {
+        buffers_.resize(1);
+    }
+    POMDOG_ASSERT(buffers_.size() == buffers_.capacity());
 
-    SetData(0, vertices, sizeInBytes);
+    for (auto& nativeBuffer : buffers_) {
+        const auto alignedSize = ComputeAlignedSize(sizeInBytes, bindMode);
+        nativeBuffer = [device newBufferWithLength:alignedSize options:ToResourceOptions(bufferUsage)];
+        if (nativeBuffer == nullptr) {
+            return errors::New("failed to create MTLBuffer");
+        }
+
+        nativeBuffer.label = @"Pomdog.BufferMetal";
+
+        // NOTE: Copy data to buffer.
+        auto destination = reinterpret_cast<std::uint8_t*>([nativeBuffer contents]);
+        std::memcpy(destination, vertices, sizeInBytes);
+    }
+
     return nullptr;
 }
 
@@ -92,6 +129,10 @@ void BufferMetal::GetData(
     void* destination,
     std::size_t sizeInBytes) const
 {
+    POMDOG_ASSERT(frameCounter_ != nullptr);
+    const auto bufferIndex = frameCounter_->GetCurrentIndex() % static_cast<std::uint32_t>(buffers_.size());
+    auto& nativeBuffer = buffers_[bufferIndex];
+
     POMDOG_ASSERT(nativeBuffer != nullptr);
     auto source = reinterpret_cast<const uint8_t*>([nativeBuffer contents]);
     std::memcpy(destination, source + offsetInBytes, sizeInBytes);
@@ -102,6 +143,10 @@ void BufferMetal::SetData(
     const void* source,
     std::size_t sizeInBytes)
 {
+    POMDOG_ASSERT(frameCounter_ != nullptr);
+    const auto bufferIndex = frameCounter_->GetCurrentIndex() % static_cast<std::uint32_t>(buffers_.size());
+    auto& nativeBuffer = buffers_[bufferIndex];
+
     POMDOG_ASSERT(nativeBuffer != nullptr);
     POMDOG_ASSERT([nativeBuffer length] >= (sizeInBytes + offsetInBytes));
     auto destination = reinterpret_cast<std::uint8_t*>([nativeBuffer contents]);
@@ -110,6 +155,10 @@ void BufferMetal::SetData(
 
 id<MTLBuffer> BufferMetal::GetBuffer() const noexcept
 {
+    POMDOG_ASSERT(frameCounter_ != nullptr);
+    const auto bufferIndex = frameCounter_->GetCurrentIndex() % static_cast<std::uint32_t>(buffers_.size());
+    auto& nativeBuffer = buffers_[bufferIndex];
+
     return nativeBuffer;
 }
 

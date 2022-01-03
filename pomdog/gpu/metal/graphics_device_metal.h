@@ -10,13 +10,19 @@
 #import <Metal/Metal.h>
 
 namespace pomdog::gpu::detail::metal {
+class FrameCounter;
+} // namespace pomdog::gpu::detail::metal
+
+namespace pomdog::gpu::detail::metal {
 
 class GraphicsDeviceMetal final : public GraphicsDevice {
 public:
     ~GraphicsDeviceMetal() override;
 
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(const PresentationParameters& presentationParameters) noexcept;
+    Initialize(
+        const PresentationParameters& presentationParameters,
+        std::shared_ptr<const FrameCounter> frameCounter) noexcept;
 
     /// Gets the currently supported shader language.
     ShaderLanguage GetSupportedLanguage() const noexcept override;
@@ -135,6 +141,7 @@ private:
     id<MTLDevice> device = nullptr;
     id<MTLLibrary> defaultLibrary = nullptr;
     PresentationParameters presentationParameters;
+    std::shared_ptr<const FrameCounter> frameCounter_;
 };
 
 } // namespace pomdog::gpu::detail::metal

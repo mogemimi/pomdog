@@ -12,6 +12,7 @@
 #include "pomdog/gpu/backends/command_queue_immediate.h"
 #include "pomdog/gpu/command_queue.h"
 #include "pomdog/gpu/graphics_device.h"
+#include "pomdog/gpu/metal/frame_counter.h"
 #include "pomdog/gpu/metal/graphics_context_metal.h"
 #include "pomdog/gpu/metal/graphics_device_metal.h"
 #include "pomdog/gpu/metal/metal_format_helper.h"
@@ -40,6 +41,7 @@
 using pomdog::gpu::detail::metal::GraphicsContextMetal;
 using pomdog::gpu::detail::metal::GraphicsDeviceMetal;
 using pomdog::gpu::detail::metal::ToPixelFormat;
+using pomdog::gpu::detail::metal::FrameCounter;
 using pomdog::detail::IOKit::GamepadIOKit;
 using pomdog::detail::openal::AudioEngineAL;
 
@@ -142,6 +144,7 @@ private:
     std::shared_ptr<GraphicsDeviceMetal> graphicsDevice;
     std::shared_ptr<GraphicsContextMetal> graphicsContext;
     std::shared_ptr<gpu::CommandQueue> graphicsCommandQueue;
+    std::shared_ptr<FrameCounter> frameCounter_;
     std::shared_ptr<AudioEngineAL> audioEngine;
     std::unique_ptr<AssetManager> assetManager;
     std::shared_ptr<KeyboardCocoa> keyboard;
@@ -181,9 +184,11 @@ GameHostMetal::Impl::Initialize(
 
     window->SetView(metalView);
 
+    frameCounter_ = std::make_shared<FrameCounter>();
+
     // NOTE: Create graphics device
     graphicsDevice = std::make_shared<GraphicsDeviceMetal>();
-    if (auto err = graphicsDevice->Initialize(presentationParameters); err != nullptr) {
+    if (auto err = graphicsDevice->Initialize(presentationParameters, frameCounter_); err != nullptr) {
         return errors::New("failed to initialize GraphicsDeviceMetal");
     }
 
@@ -265,6 +270,7 @@ GameHostMetal::Impl::~Impl()
     keyboard.reset();
     mouse.reset();
     audioEngine.reset();
+    frameCounter_.reset();
     graphicsCommandQueue.reset();
     graphicsContext.reset();
     graphicsDevice.reset();
@@ -339,6 +345,7 @@ void GameHostMetal::Impl::GameLoop()
     }
 
     graphicsContext->DispatchSemaphoreWait();
+    frameCounter_->UpdateFrame();
 
     POMDOG_ASSERT(!exitRequest);
     POMDOG_ASSERT(!weakGame.expired());

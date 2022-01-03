@@ -25,9 +25,16 @@
 namespace pomdog::gpu::detail::metal {
 
 std::unique_ptr<Error>
-GraphicsDeviceMetal::Initialize(const PresentationParameters& presentationParametersIn) noexcept
+GraphicsDeviceMetal::Initialize(
+    const PresentationParameters& presentationParametersIn,
+    std::shared_ptr<const FrameCounter> frameCounter) noexcept
 {
     presentationParameters = presentationParametersIn;
+
+    frameCounter_ = std::move(frameCounter);
+    if (frameCounter_ == nullptr) {
+        return errors::New("frameCounter_ must be != nullptr");
+    }
 
     device = MTLCreateSystemDefaultDevice();
     if (device == nullptr) {
@@ -70,11 +77,13 @@ GraphicsDeviceMetal::CreateVertexBuffer(
     POMDOG_ASSERT(vertexCount > 0);
     POMDOG_ASSERT(strideBytes > 0);
     POMDOG_ASSERT(device != nullptr);
+    POMDOG_ASSERT(frameCounter_ != nullptr);
 
     const auto sizeInBytes = vertexCount * strideBytes;
 
     auto nativeBuffer = std::make_unique<BufferMetal>();
     if (auto err = nativeBuffer->Initialize(
+            frameCounter_,
             device,
             vertices,
             sizeInBytes,
@@ -100,11 +109,13 @@ GraphicsDeviceMetal::CreateVertexBuffer(
     POMDOG_ASSERT(vertexCount > 0);
     POMDOG_ASSERT(strideBytes > 0);
     POMDOG_ASSERT(device != nullptr);
+    POMDOG_ASSERT(frameCounter_ != nullptr);
 
     const auto sizeInBytes = vertexCount * strideBytes;
 
     auto nativeBuffer = std::make_unique<BufferMetal>();
     if (auto err = nativeBuffer->Initialize(
+            frameCounter_,
             device,
             sizeInBytes,
             bufferUsage,
@@ -127,11 +138,13 @@ GraphicsDeviceMetal::CreateIndexBuffer(
 {
     POMDOG_ASSERT(indexCount > 0);
     POMDOG_ASSERT(device != nullptr);
+    POMDOG_ASSERT(frameCounter_ != nullptr);
 
     const auto sizeInBytes = indexCount * detail::BufferHelper::ToIndexElementOffsetBytes(elementSize);
 
     auto nativeBuffer = std::make_unique<BufferMetal>();
     if (auto err = nativeBuffer->Initialize(
+            frameCounter_,
             device,
             indices,
             sizeInBytes,
@@ -155,11 +168,13 @@ GraphicsDeviceMetal::CreateIndexBuffer(
     POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
     POMDOG_ASSERT(indexCount > 0);
     POMDOG_ASSERT(device != nullptr);
+    POMDOG_ASSERT(frameCounter_ != nullptr);
 
     const auto sizeInBytes = indexCount * detail::BufferHelper::ToIndexElementOffsetBytes(elementSize);
 
     auto nativeBuffer = std::make_unique<BufferMetal>();
     if (auto err = nativeBuffer->Initialize(
+            frameCounter_,
             device,
             sizeInBytes,
             bufferUsage,
@@ -181,9 +196,11 @@ GraphicsDeviceMetal::CreateConstantBuffer(
 {
     POMDOG_ASSERT(sizeInBytes > 0);
     POMDOG_ASSERT(device != nullptr);
+    POMDOG_ASSERT(frameCounter_ != nullptr);
 
     auto nativeBuffer = std::make_unique<BufferMetal>();
     if (auto err = nativeBuffer->Initialize(
+            frameCounter_,
             device,
             sourceData,
             sizeInBytes,
@@ -206,9 +223,11 @@ GraphicsDeviceMetal::CreateConstantBuffer(
     POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
     POMDOG_ASSERT(sizeInBytes > 0);
     POMDOG_ASSERT(device != nullptr);
+    POMDOG_ASSERT(frameCounter_ != nullptr);
 
     auto nativeBuffer = std::make_unique<BufferMetal>();
     if (auto err = nativeBuffer->Initialize(
+            frameCounter_,
             device,
             sizeInBytes,
             bufferUsage,

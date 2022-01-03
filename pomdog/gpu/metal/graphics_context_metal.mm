@@ -117,7 +117,8 @@ GraphicsContextMetal::GraphicsContextMetal(id<MTLDevice> nativeDevice)
 {
     POMDOG_ASSERT(nativeDevice != nullptr);
 
-    // NOTE: The max number of command buffers in flight
+    // NOTE: The max number of command buffers in flight.
+    //       Pomdog's metal renderer uses triple buffering.
     constexpr NSUInteger inflightBufferCount = 3;
 
     // NOTE: Create semaphore for Metal
