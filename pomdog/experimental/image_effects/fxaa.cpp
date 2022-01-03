@@ -103,6 +103,10 @@ FXAA::FXAA(
     }
 }
 
+void FXAA::UpdateGPUResources()
+{
+}
+
 void FXAA::Apply(
     gpu::CommandList& commandList,
     const std::shared_ptr<gpu::RenderTarget2D>& source,

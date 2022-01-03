@@ -104,6 +104,10 @@ GrayscaleEffect::GrayscaleEffect(
     }
 }
 
+void GrayscaleEffect::UpdateGPUResources()
+{
+}
+
 void GrayscaleEffect::Apply(
     gpu::CommandList& commandList,
     const std::shared_ptr<gpu::RenderTarget2D>& source,

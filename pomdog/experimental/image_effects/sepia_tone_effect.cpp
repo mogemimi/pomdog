@@ -104,6 +104,10 @@ SepiaToneEffect::SepiaToneEffect(
     }
 }
 
+void SepiaToneEffect::UpdateGPUResources()
+{
+}
+
 void SepiaToneEffect::Apply(
     gpu::CommandList& commandList,
     const std::shared_ptr<gpu::RenderTarget2D>& source,

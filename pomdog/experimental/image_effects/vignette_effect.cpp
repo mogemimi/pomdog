@@ -119,8 +119,13 @@ VignetteEffect::VignetteEffect(
 
 void VignetteEffect::SetIntensity(float intensity)
 {
+    intensity_ = intensity;
+}
+
+void VignetteEffect::UpdateGPUResources()
+{
     VignetteBlock block;
-    block.Intensity = intensity;
+    block.Intensity = intensity_;
 
     constantBufferVignette->SetData(0, gpu::MakeByteSpan(block));
 }

@@ -120,8 +120,13 @@ FishEyeEffect::FishEyeEffect(
 
 void FishEyeEffect::SetStrength(float strength)
 {
+    strength_ = math::Clamp(strength, -0.5f, 0.5f);
+}
+
+void FishEyeEffect::UpdateGPUResources()
+{
     FishEyeBlock block;
-    block.Strength = math::Clamp(strength, -0.5f, 0.5f);
+    block.Strength = strength_;
 
     POMDOG_ASSERT(constantBufferFishEye);
     constantBufferFishEye->SetData(0, gpu::MakeByteSpan(block));

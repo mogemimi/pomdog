@@ -57,7 +57,6 @@ PostProcessCompositor::PostProcessCompositor(
         presentationParameters.BackBufferHeight,
         presentationParameters.BackBufferFormat,
         presentationParameters.DepthStencilFormat);
-    UpdateConstantBuffer();
 }
 
 void PostProcessCompositor::SetViewportSize(
@@ -83,7 +82,6 @@ void PostProcessCompositor::SetViewportSize(
         viewport.Height,
         renderTargets.front()->GetFormat(),
         depthFormat);
-    UpdateConstantBuffer();
 }
 
 void PostProcessCompositor::BuildRenderTargets(
@@ -166,6 +164,12 @@ void PostProcessCompositor::Draw(
 {
     if (imageEffects.empty()) {
         return;
+    }
+
+    UpdateConstantBuffer();
+
+    for (auto& effect : imageEffects) {
+        effect->UpdateGPUResources();
     }
 
     POMDOG_ASSERT(constantBuffer);

@@ -22,6 +22,8 @@ public:
 
     void SetIntensity(float intensity);
 
+    void UpdateGPUResources() override;
+
     void Apply(
         gpu::CommandList& commandList,
         const std::shared_ptr<gpu::RenderTarget2D>& source,
@@ -31,6 +33,7 @@ private:
     std::shared_ptr<gpu::SamplerState> samplerLinear;
     std::shared_ptr<gpu::PipelineState> pipelineState;
     std::shared_ptr<gpu::ConstantBuffer> constantBufferVignette;
+    float intensity_;
 };
 
 } // namespace pomdog

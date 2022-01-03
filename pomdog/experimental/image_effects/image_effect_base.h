@@ -27,6 +27,8 @@ class ImageEffectBase {
 public:
     virtual ~ImageEffectBase();
 
+    virtual void UpdateGPUResources() = 0;
+
     virtual void Apply(
         gpu::CommandList& commandList,
         const std::shared_ptr<gpu::RenderTarget2D>& source,

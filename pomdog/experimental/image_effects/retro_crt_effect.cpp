@@ -104,6 +104,10 @@ RetroCrtEffect::RetroCrtEffect(
     }
 }
 
+void RetroCrtEffect::UpdateGPUResources()
+{
+}
+
 void RetroCrtEffect::Apply(
     gpu::CommandList& commandList,
     const std::shared_ptr<gpu::RenderTarget2D>& source,
