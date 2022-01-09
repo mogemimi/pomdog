@@ -63,7 +63,7 @@ TEST_CASE("Schedule_NestedDelay", "[Scheduler]")
         output.push_back("ok");
         scheduler->Schedule([&] { output.push_back("hello"); });
     },
-        std::chrono::milliseconds(20));
+        std::chrono::milliseconds(200));
 
     auto wait = [&](std::chrono::milliseconds millis) {
         std::this_thread::sleep_for(millis);
@@ -71,12 +71,12 @@ TEST_CASE("Schedule_NestedDelay", "[Scheduler]")
     };
 
     REQUIRE(output.empty());
-    wait(std::chrono::milliseconds(1));
+    wait(std::chrono::milliseconds(10));
     REQUIRE(output.empty());
-    wait(std::chrono::milliseconds(24));
+    wait(std::chrono::milliseconds(240));
     REQUIRE(output.size() == 1);
     REQUIRE(output.back() == "ok");
-    wait(std::chrono::milliseconds(1));
+    wait(std::chrono::milliseconds(10));
     REQUIRE(output.size() == 2);
     REQUIRE(output.back() == "hello");
 }
