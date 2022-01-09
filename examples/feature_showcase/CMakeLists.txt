@@ -228,6 +228,10 @@ target_link_options(${PRODUCT_NAME} PRIVATE
         "SHELL:-s WASM=1"
         "SHELL:-s USE_PTHREADS=1"
     >
+    # NOTE: Clang LTO
+    $<$<AND:$<CXX_COMPILER_ID:Clang>,$<CONFIG:Release>>:
+        -flto
+    >
 )
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")

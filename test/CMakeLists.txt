@@ -187,6 +187,10 @@ target_link_options(pomdog_test PRIVATE
         "SHELL:-s WASM=1"
         "SHELL:-s USE_PTHREADS=1"
     >
+    # NOTE: Clang LTO
+    $<$<AND:$<CXX_COMPILER_ID:Clang>,$<CONFIG:Release>>:
+        -flto
+    >
 )
 
 set_target_properties(pomdog_test PROPERTIES
