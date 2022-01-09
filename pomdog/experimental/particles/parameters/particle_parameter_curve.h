@@ -45,7 +45,7 @@ public:
 
     template <typename InType>
     explicit ParticleParameterCurve(InType&& keysIn)
-        : keys(std::move(keysIn))
+        : keys(std::forward<InType>(keysIn))
     {
         static_assert(std::is_convertible<InType, decltype(keys)>::value, "");
         POMDOG_ASSERT(!keys.empty());

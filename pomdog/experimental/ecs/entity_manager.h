@@ -131,7 +131,7 @@ void EntityManager<MaxComponentCapacity>::SetComponentData(const Entity& entity,
     POMDOG_ASSERT(desc.ComponentBitMask[typeIndex]);
     POMDOG_ASSERT(HasComponent<T>(entity));
     auto component = nativeEntities->GetComponent(entity.GetIndex());
-    *component = std::move(data);
+    *component = std::forward<T>(data);
 }
 
 template <std::uint8_t MaxComponentCapacity>

@@ -24,8 +24,8 @@ private:
 public:
     template <typename Type1, typename Type2>
     explicit ParticleParameterRandomCurves(Type1&& curve1In, Type2&& curve2In)
-        : curve1(std::move(curve1In))
-        , curve2(std::move(curve2In))
+        : curve1(std::forward<Type1>(curve1In))
+        , curve2(std::forward<Type2>(curve2In))
     {
         static_assert(std::is_constructible<decltype(curve1), Type1>::value, "");
         static_assert(std::is_constructible<decltype(curve2), Type2>::value, "");

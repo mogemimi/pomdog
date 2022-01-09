@@ -19,7 +19,7 @@ private:
 public:
     template <typename InType>
     explicit ParticleParameterConstant(InType&& valueIn)
-        : value(std::move(valueIn))
+        : value(std::forward<InType>(valueIn))
     {
         static_assert(std::is_convertible<InType, T>::value, "");
     }

@@ -330,7 +330,7 @@ struct POMDOG_EXPORT TaskImpl final {
         }
         else {
             std::lock_guard<std::mutex> lock(task.body->mutex);
-            task.body->continuations.push_back(std::move(continuation));
+            task.body->continuations.push_back(std::forward<Func>(continuation));
         }
     }
 

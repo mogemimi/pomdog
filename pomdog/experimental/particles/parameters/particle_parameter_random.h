@@ -23,8 +23,8 @@ private:
 public:
     template <typename Type1, typename Type2>
     explicit ParticleParameterRandom(Type1&& minIn, Type2&& maxIn)
-        : min(std::move(minIn))
-        , max(std::move(maxIn))
+        : min(std::forward<Type1>(minIn))
+        , max(std::forward<Type2>(maxIn))
     {
         static_assert(std::is_convertible<Type1, T>::value, "");
         static_assert(std::is_convertible<Type2, T>::value, "");
