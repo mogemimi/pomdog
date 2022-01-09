@@ -6,6 +6,8 @@
 #include "pomdog/gpu/command_list.h"
 #include "pomdog/gpu/forward_declarations.h"
 #include "pomdog/math/forward_declarations.h"
+#include "pomdog/memory/linear_page_allocator.h"
+#include "pomdog/memory/unsafe_ptr.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <cstddef>
@@ -29,6 +31,9 @@ public:
     CommandListImmediate() noexcept;
     CommandListImmediate(const CommandListImmediate&) = delete;
     CommandListImmediate& operator=(const CommandListImmediate&) = delete;
+
+    CommandListImmediate(CommandListImmediate&&) = delete;
+    CommandListImmediate& operator=(CommandListImmediate&&) = delete;
 
     ~CommandListImmediate() override;
 
@@ -121,8 +126,9 @@ private:
     void EndRenderPass();
 
 private:
-    std::vector<std::unique_ptr<const detail::GraphicsCommand>> commands_;
-    std::vector<std::unique_ptr<const detail::GraphicsCommand>> renderPassCommands_;
+    pomdog::detail::LinearPageAllocator allocator_;
+    std::vector<unsafe_ptr<const GraphicsCommand>> commands_;
+    std::vector<unsafe_ptr<const GraphicsCommand>> renderPassCommands_;
     bool needToEndRenderPass_ = false;
 };
 
