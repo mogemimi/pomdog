@@ -20,16 +20,31 @@ jobs:
             cxx_compiler: clang++
             cxx_flags: -stdlib=libc++
             linker_flags: -stdlib=libc++ -lc++abi
+            cmake_flags: ""
           - image: mogemimi/gamedev-ubuntu
             c_compiler: clang
             cxx_compiler: clang++
             cxx_flags: -stdlib=libstdc++
             linker_flags: -stdlib=libstdc++
+            cmake_flags: ""
           - image: mogemimi/gamedev-archlinux
             c_compiler: gcc
             cxx_compiler: g++
             cxx_flags: ""
             linker_flags: ""
+            cmake_flags: ""
+          # - image: mogemimi/gamedev-ubuntu
+          #   c_compiler: clang
+          #   cxx_compiler: clang++
+          #   cxx_flags: -stdlib=libc++
+          #   linker_flags: -stdlib=libc++ -lc++abi
+          #   cmake_flags: -DPOMDOG_USE_ADDRESS_SANITIZER=1
+          # - image: mogemimi/gamedev-ubuntu
+          #   c_compiler: clang
+          #   cxx_compiler: clang++
+          #   cxx_flags: -stdlib=libc++
+          #   linker_flags: -stdlib=libc++ -lc++abi
+          #   cmake_flags: -DPOMDOG_USE_MEMORY_SANITIZER=1
     steps:
       - name: Check out repositry
         uses: actions/checkout@v2
@@ -38,7 +53,7 @@ jobs:
           fetch-depth: 50 # FIXME: for giflib submodule
       - name: Generate Ninja files
         run: |
-          cmake -Bbuild/linux -H. -G Ninja \
+          cmake -Bbuild/linux -H. -G Ninja ${{ matrix.build_targets.cmake_flags }} \
             -DCMAKE_BUILD_TYPE=${{ matrix.build_config }} \
             -DCMAKE_C_COMPILER=${{ matrix.build_targets.c_compiler }} \
             -DCMAKE_CXX_COMPILER=${{ matrix.build_targets.cxx_compiler }} \

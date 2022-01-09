@@ -12,6 +12,9 @@ jobs:
     strategy:
       matrix:
         build_config: [Debug, Release]
+        build_targets:
+          - cmake_flags: ""
+          - cmake_flags: -DPOMDOG_USE_ADDRESS_SANITIZER=1
     steps:
       - name: Check out repositry
         uses: actions/checkout@v2
@@ -23,7 +26,7 @@ jobs:
       - name: Show Xcode version
         run: xcodebuild -version
       - name: Generate Xcode projects
-        run: cmake -Bbuild/macos -H. -G Xcode
+        run: cmake -Bbuild/macos -H. -G Xcode ${{ matrix.build_targets.cmake_flags }}
       # - name: Clean
       #   run: xcodebuild -project build/macos/pomdog.xcodeproj clean
       - name: Build

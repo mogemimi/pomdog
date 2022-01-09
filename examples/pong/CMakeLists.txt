@@ -142,6 +142,13 @@ target_link_options(${PRODUCT_NAME} PRIVATE
     $<$<AND:$<CXX_COMPILER_ID:Clang>,$<CONFIG:Release>>:
         -flto
     >
+    # NOTE: clang sanitizer
+    $<$<AND:$<CXX_COMPILER_ID:Clang>,$<BOOL:${POMDOG_USE_ADDRESS_SANITIZER}>>:
+        -fsanitize=undefined,address
+    >
+    $<$<AND:$<CXX_COMPILER_ID:Clang>,$<BOOL:${POMDOG_USE_MEMORY_SANITIZER}>>:
+        -fsanitize=memory
+    >
 )
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
@@ -242,6 +249,17 @@ set_target_properties(${PRODUCT_NAME} PROPERTIES
     XCODE_ATTRIBUTE_GCC_INLINES_ARE_PRIVATE_EXTERN "YES" # -fvisibility-inlines-hidden
     XCODE_ATTRIBUTE_GCC_SYMBOLS_PRIVATE_EXTERN "YES" # -fvisibility=hidden
 )
+
+if(POMDOG_USE_ADDRESS_SANITIZER)
+    set_target_properties(${PRODUCT_NAME} PROPERTIES
+        # Address Sanitizer
+        XCODE_ATTRIBUTE_CLANG_ADDRESS_SANITIZER_CONTAINER_OVERFLOW "YES"
+
+        # Undefined Sanitizer
+        XCODE_ATTRIBUTE_CLANG_UNDEFINED_BEHAVIOR_SANITIZER_INTEGER "YES"
+        XCODE_ATTRIBUTE_CLANG_UNDEFINED_BEHAVIOR_SANITIZER_NULLABILITY "YES"
+    )
+endif()
 
 if(NOT POMDOG_BUILD_TARGET_ALL)
     add_subdirectory(${POMDOG_DIR}/cmake/pomdog ${CMAKE_CURRENT_BINARY_DIR}/pomdog_build)
