@@ -38,11 +38,11 @@ struct BitmapFontInfo final {
 };
 
 struct BitmapFontCommon final {
-    std::int16_t LineHeight;
-    std::int16_t Base;
-    std::int16_t ScaleWidth;
-    std::int16_t ScaleHeight;
-    std::int16_t Pages;
+    std::int16_t LineHeight = 0;
+    std::int16_t Base = 0;
+    std::int16_t ScaleWidth = 0;
+    std::int16_t ScaleHeight = 0;
+    std::int16_t Pages = 0;
     bool Packed = false;
 };
 
