@@ -70,6 +70,9 @@ target_sources(pomdog_test PRIVATE
     ${POMDOG_TEST_DIR}/math/vector3_test.cpp
     ${POMDOG_TEST_DIR}/math/vector4_test.cpp
     ${POMDOG_TEST_DIR}/memory/alignment_test.cpp
+    ${POMDOG_TEST_DIR}/memory/linear_allocator_test.cpp
+    ${POMDOG_TEST_DIR}/memory/linear_page_allocator_test.cpp
+    ${POMDOG_TEST_DIR}/memory/placement_new_test.cpp
     ${POMDOG_TEST_DIR}/network/array_view_test.cpp
     ${POMDOG_TEST_DIR}/network/executor.h
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:
