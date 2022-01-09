@@ -3,6 +3,7 @@
 #pragma once
 
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/memory/alignment.h"
 
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #if defined(__APPLE_CC__)
@@ -18,11 +19,6 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail {
 
-constexpr bool IsPowerOfTwo(int x) noexcept
-{
-    return (x != 0) && ((x & (x - 1)) == 0);
-}
-
 template <typename T>
 class AlignedNew {
 public:
@@ -30,7 +26,7 @@ public:
     {
         constexpr size_t alignment = __alignof(T);
         static_assert(alignment > 8, "");
-        static_assert(IsPowerOfTwo(static_cast<int>(alignment)), "Must be integer power of 2.");
+        static_assert(IsPowerOfTwo(alignment), "Must be integer power of 2.");
 
 #if defined(_MSC_VER)
         auto ptr = ::_aligned_malloc(size, alignment);

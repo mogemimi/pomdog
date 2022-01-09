@@ -18,6 +18,7 @@ source_group(graphics               REGULAR_EXPRESSION test/graphics/*)
 source_group(input                  REGULAR_EXPRESSION test/input/*)
 source_group(logging                REGULAR_EXPRESSION test/logging/*)
 source_group(math                   REGULAR_EXPRESSION test/math/*)
+source_group(memory                 REGULAR_EXPRESSION test/memory/*)
 source_group(network                REGULAR_EXPRESSION test/network/*)
 source_group(signals                REGULAR_EXPRESSION test/signals/*)
 source_group(utility                REGULAR_EXPRESSION test/utility/*)
@@ -68,6 +69,7 @@ target_sources(pomdog_test PRIVATE
     ${POMDOG_TEST_DIR}/math/vector2_test.cpp
     ${POMDOG_TEST_DIR}/math/vector3_test.cpp
     ${POMDOG_TEST_DIR}/math/vector4_test.cpp
+    ${POMDOG_TEST_DIR}/memory/alignment_test.cpp
     ${POMDOG_TEST_DIR}/network/array_view_test.cpp
     ${POMDOG_TEST_DIR}/network/executor.h
     $<$<PLATFORM_ID:Windows,Linux,Darwin>:
