@@ -7,7 +7,7 @@ It is open source and distributed under the [MIT License](http://opensource.org/
 
 * [Homepage](http://enginetrouble.net/pomdog)
 * [GitHub](https://github.com/mogemimi/pomdog)
-* [Documentation](https://github.com/mogemimi/pomdog/tree/master/docs)
+* [Documentation](https://github.com/mogemimi/pomdog/tree/main/docs)
 * [Wiki](https://github.com/mogemimi/pomdog/wiki)
 
 Feedback, issues and pull requests are always welcome!
