@@ -1,5 +1,4 @@
-// Copyright (c) 2013-2021 mogemimi.
-// Distributed under the MIT license. See LICENSE.md file for details.
+// Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/experimental/gui/widget.h"
 #include "pomdog/utility/assert.h"
