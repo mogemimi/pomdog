@@ -65,8 +65,11 @@ If you need further information about building runtime libraries and developing 
 To create a new project with Pomdog, run `tools/quickstart/main.go`:
 
 ```sh
+cd pomdog/tools/cmd/quickstart
+go build
+
 cd path/to/your/directory
-go run pomdog/tools/quickstart/main.go
+./pomdog/tools/cmd/quickstart/quickstart
 ```
 
 For more information, please see [Getting Started](docs/Getting-Started.md).
