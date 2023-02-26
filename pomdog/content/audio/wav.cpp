@@ -113,7 +113,7 @@ ReadWaveFormat(std::ifstream& stream)
     else {
         waveFormat.ExtraBytes = BinaryReader::Read<std::uint16_t>(stream);
         if (stream.fail()) {
-            auto err = errors::New("failed to read read the extra bytes");
+            auto err = errors::New("failed to read the extra bytes");
             return std::make_tuple(std::move(waveFormat), std::move(err));
         }
 
@@ -121,7 +121,7 @@ ReadWaveFormat(std::ifstream& stream)
         stream.read(reinterpret_cast<char*>(waveFormat.ExtraData.data()), waveFormat.ExtraBytes);
 
         if (stream.fail()) {
-            auto err = errors::New("failed to read read the extra data");
+            auto err = errors::New("failed to read the extra data");
             return std::make_tuple(std::move(waveFormat), std::move(err));
         }
     }
