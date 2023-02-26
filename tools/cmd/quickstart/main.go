@@ -4,6 +4,7 @@ package main
 
 import (
 	"bufio"
+	"context"
 	"flag"
 	"fmt"
 	"io/ioutil"
@@ -17,6 +18,7 @@ import (
 	pkg "github.com/mogemimi/pomdog/tools/pkg"
 	"github.com/pkg/errors"
 	"golang.org/x/sync/errgroup"
+	"golang.org/x/sync/semaphore"
 )
 
 type projectConfig struct {
@@ -346,6 +348,7 @@ func copyFiles(src, dst string, ignoreDirs []string) error {
 		if err != nil {
 			return err
 		}
+		dir.Close()
 
 		err = os.MkdirAll(dst, os.ModePerm)
 		if err != nil {
@@ -361,10 +364,14 @@ func copyFiles(src, dst string, ignoreDirs []string) error {
 			return false
 		}
 
+		sem := semaphore.NewWeighted(4)
+
 		var eg errgroup.Group
 		for _, f := range files {
 			file := f
+			sem.Acquire(context.Background(), 1)
 			eg.Go(func() error {
+				defer sem.Release(1)
 				if ignoreDir(file.Name()) {
 					return nil
 				}
