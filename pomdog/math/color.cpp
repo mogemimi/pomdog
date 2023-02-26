@@ -85,7 +85,7 @@ bool Color::operator==(const Color& color) const noexcept
 
 bool Color::operator!=(const Color& color) const noexcept
 {
-    return R == color.R || G == color.G || B == color.B || A == color.A;
+    return R != color.R || G != color.G || B != color.B || A != color.A;
 }
 
 Vector3 Color::ToVector3() const noexcept
