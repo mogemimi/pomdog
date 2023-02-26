@@ -8,6 +8,7 @@
 #include "pomdog/math/point2d.h"
 #include "pomdog/platform/cocoa/opengl_context_cocoa.h"
 #include "pomdog/utility/assert.h"
+#include <array>
 #include <memory>
 #include <utility>
 
