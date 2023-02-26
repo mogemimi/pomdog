@@ -104,7 +104,7 @@ GetAppDataDirectoryPath() noexcept
     NSFileManager* fileManager = [NSFileManager defaultManager];
     NSString* bundleID = [[NSBundle mainBundle] bundleIdentifier];
     if (bundleID == nullptr) {
-        return std::make_tuple("", errors::New("bundleID is nullptr"));
+        return std::make_tuple(std::string{}, errors::New("bundleID is nullptr"));
     }
 
     NSArray* urlPaths = [fileManager
@@ -112,7 +112,7 @@ GetAppDataDirectoryPath() noexcept
                inDomains:NSUserDomainMask];
 
     if ((urlPaths == nullptr) || (urlPaths.count <= 0)) {
-        return std::make_tuple("", errors::New("urlPaths is empty"));
+        return std::make_tuple(std::string{}, errors::New("urlPaths is empty"));
     }
 
     // FIXME:
@@ -124,7 +124,7 @@ GetAppDataDirectoryPath() noexcept
 
     NSString* path = [appDirectory path];
     if (path == nullptr) {
-        return std::make_tuple("", errors::New("[appDirectory path] is nullptr"));
+        return std::make_tuple(std::string{}, errors::New("[appDirectory path] is nullptr"));
     }
 
     BOOL exists = [fileManager fileExistsAtPath:path];
@@ -138,7 +138,7 @@ GetAppDataDirectoryPath() noexcept
 
     std::string appDataDirecotry = [[appDirectory path] UTF8String];
     if (!exists) {
-        return std::make_tuple("", errors::New("direcotry" + appDataDirecotry + "does not exist"));
+        return std::make_tuple(std::string{}, errors::New("direcotry" + appDataDirecotry + "does not exist"));
     }
 
     return std::make_tuple(std::move(appDataDirecotry), nullptr);
