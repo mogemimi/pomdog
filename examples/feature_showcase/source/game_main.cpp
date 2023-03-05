@@ -6,7 +6,6 @@
 #include "billboard_batch_test/billboard_batch_test.h"
 #include "distance_field_font_test/distance_field_font_test.h"
 #include "editor_gui_test/editor_gui_test.h"
-#include "gif_decode_test/gif_decode_test.h"
 #include "gltf_model_test/gltf_model_test.h"
 #include "gui_splitter_test/gui_splitter_test.h"
 #include "gamepad_test/gamepad_test.h"
@@ -150,10 +149,6 @@ GameMain::Initialize()
     buttons.emplace_back("Texture2DLoader Test", [this] {
         window->SetTitle("Feature Showcase > Texture2DLoader Test");
         subGame = std::make_shared<feature_showcase::Texture2DLoaderTest>(gameHost);
-    });
-    buttons.emplace_back("GIFDecode Test", [this] {
-        window->SetTitle("Feature Showcase > GIFDecode Test");
-        subGame = std::make_shared<feature_showcase::GIFDecodeTest>(gameHost);
     });
     buttons.emplace_back("SVGDecode Test", [this] {
         window->SetTitle("Feature Showcase > SVGDecode Test");

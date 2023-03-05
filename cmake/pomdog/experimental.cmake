@@ -4,7 +4,7 @@ source_group(experimental/gltf                      REGULAR_EXPRESSION "pomdog/e
 source_group(experimental/graphics                  REGULAR_EXPRESSION "pomdog/experimental/graphics/*")
 source_group(experimental/gui                       REGULAR_EXPRESSION "pomdog/experimental/gui/*")
 source_group(experimental/image_effects             REGULAR_EXPRESSION "pomdog/experimental/image_effects/*")
-source_group(experimental/omage                     REGULAR_EXPRESSION "pomdog/experimental/image/*")
+source_group(experimental/image                     REGULAR_EXPRESSION "pomdog/experimental/image/*")
 source_group(experimental/magicavoxel               REGULAR_EXPRESSION "pomdog/experimental/magicavoxel/*")
 source_group(experimental/particles                 REGULAR_EXPRESSION "pomdog/experimental/particles/*")
 source_group(experimental/particles/emitter_shapes  REGULAR_EXPRESSION "pomdog/experimental/particles/emitter_shapes/*")
@@ -168,9 +168,6 @@ target_sources(pomdog_static PRIVATE
 
     $<$<BOOL:${POMDOG_USE_EXPERIMENTAL}>:
         # NOTE: experimental/image
-        ${POMDOG_SRC_DIR}/experimental/image/gif_image.h
-        ${POMDOG_SRC_DIR}/experimental/image/gif_loader.h
-        ${POMDOG_SRC_DIR}/experimental/image/gif_loader.cpp
         ${POMDOG_SRC_DIR}/experimental/image/image.h
         ${POMDOG_SRC_DIR}/experimental/image/image.cpp
         ${POMDOG_SRC_DIR}/experimental/image/svg_loader.h

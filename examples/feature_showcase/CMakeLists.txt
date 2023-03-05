@@ -17,7 +17,6 @@ source_group(source/billboard_batch_test        REGULAR_EXPRESSION "source/billb
 source_group(source/distance_field_font_test    REGULAR_EXPRESSION "source/distance_field_font_test/*")
 source_group(source/editor_gui_test             REGULAR_EXPRESSION "source/editor_gui_test/*")
 source_group(source/gamepad_test                REGULAR_EXPRESSION "source/gamepad_test/*")
-source_group(source/gif_decode_test             REGULAR_EXPRESSION "source/gif_decode_test/*")
 source_group(source/gltf_model_test             REGULAR_EXPRESSION "source/gltf_model_test/*")
 source_group(source/gui_splitter_test           REGULAR_EXPRESSION "source/gui_splitter_test/*")
 source_group(source/hardware_instancing_test    REGULAR_EXPRESSION "source/hardware_instancing_test/*")
@@ -74,8 +73,6 @@ target_sources(${PRODUCT_NAME} PRIVATE
     source/editor_gui_test/editor_gui_test.h
     source/gamepad_test/gamepad_test.cpp
     source/gamepad_test/gamepad_test.h
-    source/gif_decode_test/gif_decode_test.cpp
-    source/gif_decode_test/gif_decode_test.h
     source/gltf_model_test/gltf_model_test.cpp
     source/gltf_model_test/gltf_model_test.h
     source/gui_splitter_test/gui_splitter_test.cpp
