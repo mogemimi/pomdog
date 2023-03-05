@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-
-	"github.com/pkg/errors"
 )
 
 func CopyFile(src, dst string) error {
@@ -19,7 +17,7 @@ func CopyFile(src, dst string) error {
 	dstInfo, err := os.Stat(dst)
 	if err != nil {
 		if !os.IsNotExist(err) {
-			return errors.Wrapf(err, "failed to copy to \"%s\"", dst)
+			return fmt.Errorf("failed to copy to \"%s\": %w", dst, err)
 		}
 	} else {
 		if !dstInfo.Mode().IsRegular() {

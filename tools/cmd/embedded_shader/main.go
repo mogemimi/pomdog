@@ -11,8 +11,6 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
-
-	"github.com/pkg/errors"
 )
 
 var options struct {
@@ -58,20 +56,20 @@ func createEmbeddedFile(src string, compileOptions compileOptions) error {
 		prefix := "Builtin_GLSL_"
 		dat, err := ioutil.ReadFile(src)
 		if err != nil {
-			return errors.Wrapf(err, "failed to read a file \"%s\"", src)
+			return fmt.Errorf("failed to read a file \"%s\": %w", src, err)
 		}
 		content = createEmbeddedCode(base, prefix, minifyCode(string(dat)))
 	case shaderLanguageMetal:
 		if exec.Command("xcrun", "--help").Run() == nil {
 			// NOTE: When running on Mac, check compilation result
 			if _, err := compileMetal(src, dst); err != nil {
-				return errors.Wrapf(err, "failed to compile a shader \"%s\"", src)
+				return fmt.Errorf("failed to compile a shader \"%s\": %w", src, err)
 			}
 		}
 		prefix := "Builtin_Metal_"
 		dat, err := ioutil.ReadFile(src)
 		if err != nil {
-			return errors.Wrapf(err, "failed to read a file \"%s\"", src)
+			return fmt.Errorf("failed to read a file \"%s\": %w", src, err)
 		}
 		content = createEmbeddedCode(base, prefix, minifyCode(string(dat)))
 	case shaderLanguageHLSL:
@@ -79,13 +77,13 @@ func createEmbeddedFile(src string, compileOptions compileOptions) error {
 		if options.Minify {
 			dat, err := ioutil.ReadFile(src)
 			if err != nil {
-				return errors.Wrapf(err, "failed to read a file \"%s\"", src)
+				return fmt.Errorf("failed to read a file \"%s\": %w", src, err)
 			}
 			content = createEmbeddedCode(base, prefix, minifyCode(string(dat)))
 		} else {
 			data, err := compileHLSL(src, dst, compileOptions)
 			if err != nil {
-				return errors.Wrapf(err, "failed to compile a shader \"%s\"", src)
+				return fmt.Errorf("failed to compile a shader \"%s\": %w", src, err)
 			}
 			content = createEmbeddedBinary(base, prefix, binaryToByteArrayString(data))
 		}
@@ -93,7 +91,7 @@ func createEmbeddedFile(src string, compileOptions compileOptions) error {
 
 	f, err := os.Create(dst)
 	if err != nil {
-		return errors.Wrapf(err, "failed to create a file \"%s\"", dst)
+		return fmt.Errorf("failed to create a file \"%s\": %w", dst, err)
 	}
 	defer f.Close()
 
@@ -101,7 +99,7 @@ func createEmbeddedFile(src string, compileOptions compileOptions) error {
 	defer w.Flush()
 
 	if _, err := w.WriteString(content); err != nil {
-		return errors.Wrapf(err, "failed to write a file \"%s\"", dst)
+		return fmt.Errorf("failed to write a file \"%s\": %w", dst, err)
 	}
 
 	return nil

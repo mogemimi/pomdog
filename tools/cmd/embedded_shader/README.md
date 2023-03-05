@@ -5,9 +5,6 @@
 ```sh
 cd path/to/pomdog/tools/embedded_shader
 
-# Install the following golang packages
-go get -u github.com/pkg/errors
-
 # Build
 go build
 ```

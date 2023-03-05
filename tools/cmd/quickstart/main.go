@@ -16,7 +16,6 @@ import (
 
 	"github.com/fatih/color"
 	pkg "github.com/mogemimi/pomdog/tools/pkg"
-	"github.com/pkg/errors"
 	"golang.org/x/sync/errgroup"
 	"golang.org/x/sync/semaphore"
 )
@@ -88,23 +87,23 @@ func createProject(config projectConfig) error {
 	rootDir := filepath.Join(config.Dir, config.Name)
 
 	if _, err := os.Stat(rootDir); err == nil {
-		return errors.New(rootDir + " directory already exists")
+		return fmt.Errorf("%s directory already exists", rootDir)
 	}
 	if err := os.MkdirAll(rootDir, os.ModePerm); err != nil {
-		return errors.Wrapf(err, "failed to make a directory \"%s\"", rootDir)
+		return fmt.Errorf("failed to make a directory \"%s\": %w", rootDir, err)
 	}
 	if err := copyTemplateFiles(config.PomdogDir, rootDir); err != nil {
-		return errors.Wrapf(err, "failed to copy template files")
+		return fmt.Errorf("failed to copy template files: %w", err)
 	}
 	if err := copyFrameworkFiles(config.PomdogDir, rootDir); err != nil {
-		return errors.Wrapf(err, "failed to copy framework files")
+		return fmt.Errorf("failed to copy framework files: %w", err)
 	}
 	if err := copyThirdPartyFiles(config.PomdogDir, rootDir); err != nil {
-		return errors.Wrapf(err, "failed to copy third-party files")
+		return fmt.Errorf("failed to copy third-party files: %w", err)
 	}
 
 	if err := renameContentByURL(rootDir, config.URL, "platform/cocoa/info.plist"); err != nil {
-		return errors.Wrapf(err, "failed to rename URL")
+		return fmt.Errorf("failed to rename URL: %w", err)
 	}
 
 	sourceFiles := []string{
@@ -121,14 +120,14 @@ func createProject(config projectConfig) error {
 	}
 	for _, f := range sourceFiles {
 		if err := renameContentByIdent(rootDir, config.Name, f); err != nil {
-			return errors.Wrapf(err, "failed to rename content")
+			return fmt.Errorf("failed to rename content: %w", err)
 		}
 	}
 	if err := renameCMakefile(rootDir, config.Name, "CMakeLists.txt"); err != nil {
-		return errors.Wrapf(err, "failed to replace cmake path")
+		return fmt.Errorf("failed to replace cmake path: %w", err)
 	}
 	if err := renamePomdogCMakefile(rootDir, config.Name, "third_party/pomdog/cmake/pomdog/CMakeLists.txt"); err != nil {
-		return errors.Wrapf(err, "failed to replace cmake path")
+		return fmt.Errorf("failed to replace cmake path: %w", err)
 	}
 
 	thirdPartyCMakeFiles := []string{
@@ -141,7 +140,7 @@ func createProject(config projectConfig) error {
 	}
 	for _, f := range thirdPartyCMakeFiles {
 		if err := renameThirdPartyCMakefile(rootDir, config.Name, f); err != nil {
-			return errors.Wrapf(err, "failed to rename content")
+			return fmt.Errorf("failed to rename content: %w", err)
 		}
 	}
 	return nil
@@ -163,7 +162,7 @@ func copyTemplateFiles(sourceRoot, destRoot string) error {
 		src := filepath.Join(sourceRoot, "examples/quickstart", f)
 		dst := filepath.Join(destRoot, f)
 		if err := copyFiles(src, dst, ignoreDirs); err != nil {
-			return errors.Wrapf(err, "failed to copy from \"%s\" to \"%s\"", src, dst)
+			return fmt.Errorf("failed to copy from \"%s\" to \"%s\": %w", src, dst, err)
 		}
 		if options.Verbose {
 			fmt.Println(src, "=>", dst)
@@ -189,7 +188,7 @@ func copyFrameworkFiles(sourceRoot, destRoot string) error {
 		src := filepath.Join(sourceRoot, f)
 		dst := filepath.Join(filepath.Join(destRoot, "third_party/pomdog"), f)
 		if err := copyFiles(src, dst, ignoreDirs); err != nil {
-			return errors.Wrapf(err, "failed to copy from \"%s\" to \"%s\"", src, dst)
+			return fmt.Errorf("failed to copy from \"%s\" to \"%s\": %w", src, dst, err)
 		}
 		if options.Verbose {
 			fmt.Println(src, "=>", dst)
@@ -239,7 +238,7 @@ func copyThirdPartyFiles(sourceRoot, destRoot string) error {
 		src := filepath.Join(sourceRoot, "dependencies", f)
 		dst := filepath.Join(filepath.Join(destRoot, "third_party"), f)
 		if err := copyFiles(src, dst, ignoreDirs); err != nil {
-			return errors.Wrapf(err, "failed to copy from \"%s\" to \"%s\"", src, dst)
+			return fmt.Errorf("failed to copy from \"%s\" to \"%s\": %w", src, dst, err)
 		}
 		if options.Verbose {
 			fmt.Println(src, "=>", dst)
@@ -254,7 +253,7 @@ func renameContentByURL(rootDir, url, source string) error {
 	err := replaceFileContent(file, func(content string) string {
 		return strings.Replace(content, "com.example.quickstart", url, -1)
 	})
-	return errors.Wrapf(err, "failed to rename URL in \"%s\"", file)
+	return fmt.Errorf("failed to rename URL in \"%s\": %w", file, err)
 }
 
 func renameContentByIdent(rootDir, ident, source string) error {
@@ -264,7 +263,7 @@ func renameContentByIdent(rootDir, ident, source string) error {
 		content = strings.Replace(content, "QUICKSTART", strings.ToUpper(ident), -1)
 		return content
 	})
-	return errors.Wrapf(err, "failed to rename identifier in \"%s\"", file)
+	return fmt.Errorf("failed to rename identifier in \"%s\": %w", file, err)
 }
 
 func renameCMakefile(rootDir, ident, source string) error {
@@ -278,7 +277,7 @@ func renameCMakefile(rootDir, ident, source string) error {
 
 		return content
 	})
-	return errors.Wrapf(err, "failed to rename identifier in \"%s\"", file)
+	return fmt.Errorf("failed to rename identifier in \"%s\": %w", file, err)
 }
 
 func renamePomdogCMakefile(rootDir, ident, source string) error {
@@ -291,7 +290,7 @@ func renamePomdogCMakefile(rootDir, ident, source string) error {
 			-1)
 		return content
 	})
-	return errors.Wrapf(err, "failed to rename identifier in \"%s\"", file)
+	return fmt.Errorf("failed to rename identifier in \"%s\": %w", file, err)
 }
 
 func renameThirdPartyCMakefile(rootDir, ident, source string) error {
@@ -304,13 +303,13 @@ func renameThirdPartyCMakefile(rootDir, ident, source string) error {
 			1)
 		return content
 	})
-	return errors.Wrapf(err, "failed to rename identifier in \"%s\"", file)
+	return fmt.Errorf("failed to rename identifier in \"%s\": %w", file, err)
 }
 
 func replaceFileContent(file string, replacer func(string) string) error {
 	dat, err := ioutil.ReadFile(file)
 	if err != nil {
-		return errors.Wrapf(err, "failed to read a file \"%s\"", file)
+		return fmt.Errorf("failed to read a file \"%s\": %w", file, err)
 	}
 
 	content := string(dat)
@@ -318,7 +317,7 @@ func replaceFileContent(file string, replacer func(string) string) error {
 
 	f, err := os.Create(file)
 	if err != nil {
-		return errors.Wrapf(err, "failed to create a file \"%s\"", file)
+		return fmt.Errorf("failed to create a file \"%s\": %w", file, err)
 	}
 	defer f.Close()
 
@@ -326,7 +325,7 @@ func replaceFileContent(file string, replacer func(string) string) error {
 	defer w.Flush()
 
 	if _, err := w.WriteString(content); err != nil {
-		return errors.Wrapf(err, "failed to write a file \"%s\"", file)
+		return fmt.Errorf("failed to write a file \"%s\": %w", file, err)
 	}
 
 	return nil
@@ -386,7 +385,7 @@ func copyFiles(src, dst string, ignoreDirs []string) error {
 			})
 		}
 		if err := eg.Wait(); err != nil {
-			return errors.Wrapf(err, "failed to copy files")
+			return fmt.Errorf("failed to copy files: %w", err)
 		}
 		return nil
 	}

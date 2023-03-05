@@ -3,12 +3,11 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 	"os/exec"
 	"time"
-
-	"github.com/pkg/errors"
 )
 
 func compileHLSL(src, dst string, compileOptions compileOptions) ([]byte, error) {
@@ -26,19 +25,19 @@ func compileHLSL(src, dst string, compileOptions compileOptions) ([]byte, error)
 	cmd.Stderr = os.Stderr
 
 	if err := cmd.Run(); err != nil {
-		return nil, errors.Wrapf(err, "failed to compile \"%s\"", src)
+		return nil, fmt.Errorf("failed to compile \"%s\": %w", src, err)
 	}
 
 	if _, err := os.Stat(fxo); err != nil {
-		return nil, errors.Wrapf(err, "cannot find a .fxo file \"%s\"", src)
+		return nil, fmt.Errorf("cannot find a .fxo file \"%s\": %w", src, err)
 	}
 
 	dat, err := ioutil.ReadFile(fxo)
 	if err != nil {
-		return nil, errors.Wrapf(err, "cannot read a .fxo file \"%s\"", src)
+		return nil, fmt.Errorf("cannot read a .fxo file \"%s\": %w", src, err)
 	}
 	if err := os.Remove(fxo); err != nil {
-		return nil, errors.Wrapf(err, "failed to remove a .fxo file \"%s\"", src)
+		return nil, fmt.Errorf("failed to remove a .fxo file \"%s\": %w", src, err)
 	}
 	return dat, nil
 }

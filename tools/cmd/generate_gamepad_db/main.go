@@ -10,8 +10,6 @@ import (
 	"log"
 	"os"
 	"strings"
-
-	"github.com/pkg/errors"
 )
 
 var options struct {
@@ -76,7 +74,7 @@ func parse(src string) (fields []field) {
 func generate(sourceFile string, outputFile string) error {
 	dat, err := ioutil.ReadFile(sourceFile)
 	if err != nil {
-		return errors.Wrapf(err, "failed to read a file \"%s\"", sourceFile)
+		return fmt.Errorf("failed to read a file \"%s\": %w", sourceFile, err)
 	}
 
 	content := "// NOTE: This file is generated from from SDL_GameControllerDB by pomdog/tools/generate_gamepad_db.\n"
@@ -124,7 +122,7 @@ func generate(sourceFile string, outputFile string) error {
 
 	f, err := os.Create(outputFile)
 	if err != nil {
-		return errors.Wrapf(err, "failed to create a file \"%s\"", outputFile)
+		return fmt.Errorf("failed to create a file \"%s\": %w", outputFile, err)
 	}
 	defer f.Close()
 
@@ -132,7 +130,7 @@ func generate(sourceFile string, outputFile string) error {
 	defer w.Flush()
 
 	if _, err := w.WriteString(content); err != nil {
-		return errors.Wrapf(err, "failed to write a file \"%s\"", outputFile)
+		return fmt.Errorf("failed to write a file \"%s\": %w", outputFile, err)
 	}
 
 	return nil

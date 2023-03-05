@@ -11,8 +11,6 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-
-	"github.com/pkg/errors"
 )
 
 func main() {
@@ -98,12 +96,12 @@ func getFiles(args []string) (files []string, err error) {
 	for _, src := range args {
 		stat, err := os.Stat(src)
 		if err != nil {
-			return nil, errors.Wrapf(err, "invalid argument \"%s\"", src)
+			return nil, fmt.Errorf("invalid argument \"%s\": %w", src, err)
 		}
 		if stat.IsDir() {
 			err := filepath.Walk(src, func(path string, info os.FileInfo, err error) error {
 				if err != nil {
-					return errors.Wrapf(err, "failed to walk directory \"%s\"", path)
+					return fmt.Errorf("failed to walk directory \"%s\": %w", path, err)
 				}
 				if !info.IsDir() && info.Mode().IsRegular() && isSourceFile(path) {
 					files = append(files, path)
@@ -111,7 +109,7 @@ func getFiles(args []string) (files []string, err error) {
 				return nil
 			})
 			if err != nil {
-				return files, errors.Wrapf(err, "failed to get file list \"%s\"", src)
+				return files, fmt.Errorf("failed to get file list \"%s\": %w", src, err)
 			}
 		} else if stat.Mode().IsRegular() {
 			files = append(files, src)
@@ -169,7 +167,7 @@ func removeWhitespaceFromEOF(content string) string {
 func refactor(file string, inplaceEdit bool) error {
 	dat, err := ioutil.ReadFile(file)
 	if err != nil {
-		return errors.Wrapf(err, "failed to read a file \"%s\"", file)
+		return fmt.Errorf("failed to read a file \"%s\": %w", file, err)
 	}
 
 	content := string(dat)
@@ -186,7 +184,7 @@ func refactor(file string, inplaceEdit bool) error {
 
 	f, err := os.Create(file)
 	if err != nil {
-		return errors.Wrapf(err, "failed to create a file \"%s\"", file)
+		return fmt.Errorf("failed to create a file \"%s\": %w", file, err)
 	}
 	defer f.Close()
 
@@ -194,7 +192,7 @@ func refactor(file string, inplaceEdit bool) error {
 	defer w.Flush()
 
 	if _, err := w.WriteString(content); err != nil {
-		return errors.Wrapf(err, "failed to write a file \"%s\"", file)
+		return fmt.Errorf("failed to write a file \"%s\": %w", file, err)
 	}
 
 	return nil

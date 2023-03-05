@@ -1,12 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 	"os/exec"
 	"time"
-
-	"github.com/pkg/errors"
 )
 
 func compileMetal(src, dst string) ([]byte, error) {
@@ -23,19 +22,19 @@ func compileMetal(src, dst string) ([]byte, error) {
 	cmd.Stderr = os.Stderr
 
 	if err := cmd.Run(); err != nil {
-		return nil, errors.Wrapf(err, "failed to compile \"%s\"", src)
+		return nil, fmt.Errorf("failed to compile \"%s\": %w", src, err)
 	}
 
 	if _, err := os.Stat(obj); err != nil {
-		return nil, errors.Wrapf(err, "cannot find a .air file \"%s\"", src)
+		return nil, fmt.Errorf("cannot find a .air file \"%s\": %w", src, err)
 	}
 
 	dat, err := ioutil.ReadFile(obj)
 	if err != nil {
-		return nil, errors.Wrapf(err, "cannot read a .air file \"%s\"", src)
+		return nil, fmt.Errorf("cannot read a .air file \"%s\": %w", src, err)
 	}
 	if err := os.Remove(obj); err != nil {
-		return nil, errors.Wrapf(err, "failed to remove a .air file \"%s\"", src)
+		return nil, fmt.Errorf("failed to remove a .air file \"%s\": %w", src, err)
 	}
 	return dat, nil
 }
