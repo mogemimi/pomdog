@@ -29,9 +29,9 @@ TEST_CASE("TCP connection for HTTP client", "[Network]")
     fields.emplace("Host", hostName);
     fields.emplace("Connection", "close");
 
-    auto [streamResult, err] = TCPStream::Connect(executor.GetService(), std::string{hostName} + ":" + port, std::chrono::seconds(5));
-    if (err != nullptr) {
-        WARN(err->ToString());
+    auto [streamResult, connectErr] = TCPStream::Connect(executor.GetService(), std::string{hostName} + ":" + port, std::chrono::seconds(5));
+    if (connectErr != nullptr) {
+        WARN(connectErr->ToString());
         return;
     }
 

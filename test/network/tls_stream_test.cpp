@@ -29,9 +29,9 @@ TEST_CASE("TLS connection for HTTPS client", "[Network]")
     fields.emplace("Host", hostName);
     fields.emplace("Connection", "close");
 
-    auto [streamResult, err] = TLSStream::Connect(executor.GetService(), std::string{hostName} + ":" + port);
-    if (err != nullptr) {
-        WARN(err->ToString());
+    auto [streamResult, connectErr] = TLSStream::Connect(executor.GetService(), std::string{hostName} + ":" + port);
+    if (connectErr != nullptr) {
+        WARN(connectErr->ToString());
         return;
     }
 
