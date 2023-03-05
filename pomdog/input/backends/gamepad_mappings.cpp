@@ -69,14 +69,12 @@ void ParseMapping(const char* source, GamepadMappings& mappings, std::string& na
         {"righty", std::make_tuple(ButtonKind::Invalid, ThumbStickKind::RightStickY)},
     };
 
-    int buttonIndex = 0;
     while (*source != 0) {
         std::tie(key, source) = Parse(source, ':');
         std::tie(index, source) = Parse(source, ',');
 
         auto kind = dict.find(key);
         if (kind == std::end(dict)) {
-            ++buttonIndex;
             continue;
         }
 
@@ -126,8 +124,6 @@ void ParseMapping(const char* source, GamepadMappings& mappings, std::string& na
                 mappings.axes[i].negativeTrigger = std::get<ButtonKind>(kind->second);
             }
         }
-
-        ++buttonIndex;
     }
 }
 
