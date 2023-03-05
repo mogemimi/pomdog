@@ -57,6 +57,9 @@ target_compile_options(zlib PRIVATE
         $<$<CONFIG:Debug>:-g;-O0>
         $<$<CONFIG:Release>:-O3>
     >
+    $<$<CXX_COMPILER_ID:Clang>:
+        -Wno-deprecated-non-prototype
+    >
     $<$<CXX_COMPILER_ID:MSVC>:
         /nologo
         /W3
