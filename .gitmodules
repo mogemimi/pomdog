@@ -22,9 +22,6 @@
 [submodule "dependencies/SDL_GameControllerDB"]
 	path = dependencies/SDL_GameControllerDB
 	url = https://github.com/gabomdq/SDL_GameControllerDB
-[submodule "dependencies/giflib"]
-	path = dependencies/giflib
-	url = https://git.code.sf.net/p/giflib/code
 [submodule "dependencies/Catch2"]
 	path = dependencies/Catch2
 	url = https://github.com/catchorg/Catch2.git
