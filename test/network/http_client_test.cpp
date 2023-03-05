@@ -59,9 +59,9 @@ TEST_CASE("Transfer-Encoding has a 'chunked' operation.", "[Network]")
         std::string_view text{reinterpret_cast<const char*>(response->Body.data()), response->Body.size()};
 
         REQUIRE(StringHelper::HasPrefix(text,
-            "<!doctype html><html itemscope=\"\" itemtype=\"http://schema.org/WebPage\" lang=\""));
+            "<!doctype html><html "));
         REQUIRE(text.find("<head><meta charset=\"UTF-8\"><meta content=\"origin\" name=\"referrer\">"));
-        REQUIRE(StringHelper::HasSuffix(text, "</script>        </body></html>\r\n"));
+        REQUIRE(StringHelper::HasSuffix(text, "</body></html>\r\n"));
 
         executor.ExitLoop();
     });
