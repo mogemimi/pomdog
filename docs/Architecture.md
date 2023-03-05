@@ -21,7 +21,7 @@ Here is a list of some of core features of Pomdog. These are:
 The following features are experimentally supported:
 
 - Primitives, billboards, sprites, lines and text batch rendering.
-- Supporting several image formats (PNG, DDS, PNM/Netpbm, TrueType fonts, SVG, Animated GIF).
+- Supporting several image formats (PNG, DDS, PNM/Netpbm, TrueType fonts, SVG).
 - 2D/3D particle system.
 - 2D skeletal animation (blend trees, skined mesh).
 - Post process effects (FXAA, chromatic aberration, retro CRT, fish eye, sepia tone).
@@ -62,7 +62,6 @@ The following features are experimentally supported:
 - Mbed TLS
 - Mbed Crypto
 - Nano SVG
-- GIFLIB
 - RapidJSON
 - SDL_GameControllerDB
 - stb
