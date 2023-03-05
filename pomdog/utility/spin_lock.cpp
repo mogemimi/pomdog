@@ -14,6 +14,8 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail {
 
+SpinLock::SpinLock() noexcept = default;
+
 void SpinLock::lock() noexcept
 {
     while (flag.test_and_set(std::memory_order_acquire)) {
