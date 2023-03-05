@@ -131,7 +131,6 @@ func createProject(config projectConfig) error {
 	}
 
 	thirdPartyCMakeFiles := []string{
-		"third_party/pomdog/cmake/dependencies/giflib/CMakeLists.txt",
 		"third_party/pomdog/cmake/dependencies/glew/CMakeLists.txt",
 		"third_party/pomdog/cmake/dependencies/libpng/CMakeLists.txt",
 		"third_party/pomdog/cmake/dependencies/mbedtls/CMakeLists.txt",
@@ -199,7 +198,6 @@ func copyFrameworkFiles(sourceRoot, destRoot string) error {
 
 func copyThirdPartyFiles(sourceRoot, destRoot string) error {
 	files := []string{
-		"giflib",
 		"libpng",
 		"mbedtls/3rdparty/everest",
 		"mbedtls/include",

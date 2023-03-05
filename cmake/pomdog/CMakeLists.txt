@@ -75,7 +75,6 @@ set_target_properties(pomdog_static PROPERTIES
 )
 
 add_subdirectory(${POMDOG_DIR}/cmake/dependencies/libpng "${CMAKE_CURRENT_BINARY_DIR}/libpng_build")
-add_subdirectory(${POMDOG_DIR}/cmake/dependencies/giflib "${CMAKE_CURRENT_BINARY_DIR}/giflib_build")
 add_subdirectory(${POMDOG_DIR}/cmake/dependencies/mbedtls "${CMAKE_CURRENT_BINARY_DIR}/mbedtls_build")
 add_subdirectory(${POMDOG_DIR}/cmake/dependencies/stb "${CMAKE_CURRENT_BINARY_DIR}/stb_build")
 
@@ -89,7 +88,6 @@ endif()
 target_include_directories(pomdog_static PRIVATE
     ${POMDOG_DIR}
     ${POMDOG_DIR}/dependencies
-    ${POMDOG_DIR}/dependencies/giflib
     ${POMDOG_DIR}/dependencies/libpng
     ${POMDOG_DIR}/dependencies/mbedtls/include
     ${POMDOG_DIR}/dependencies/rapidjson/include
@@ -108,7 +106,6 @@ target_include_directories(pomdog_static PRIVATE
 
 target_link_libraries(pomdog_static INTERFACE
     png
-    giflib
     stb_static
 
     $<$<PLATFORM_ID:Linux>:
