@@ -54,8 +54,8 @@ bool IsPNMFormat(const std::array<std::uint8_t, 8>& signature) noexcept
         return false;
     }
 
-    auto s = reinterpret_cast<const char*>(signature.data() + 2);
-    return (*s == ' ') || (*s == '\r') || (*s == '\n');
+    const auto c = static_cast<char>(signature[2]);
+    return (c == ' ') || (c == '\r') || (c == '\n');
 }
 
 } // namespace
