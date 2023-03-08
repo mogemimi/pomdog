@@ -19,8 +19,8 @@ go build
 cd path/to/pomdog
 
 # Refactor source file
-./tools/refactor_sources/refactor_sources src/Application/Timer.cpp
+./tools/cmd/refactor_sources/refactor_sources src/Application/Timer.cpp
 
 # Refactor all source files
-./tools/refactor_sources/refactor_sources --all
+./tools/cmd/refactor_sources/refactor_sources --all
 ```
