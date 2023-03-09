@@ -310,6 +310,9 @@ target_compile_options(pomdog_static PRIVATE
     # NOTE: emcc (Emscripten Compiler Frontend)
     $<$<PLATFORM_ID:Emscripten>:
         -pthread
+
+        # FIXME: Please fix the following warning and enable the warning option.
+        -Wno-unsafe-buffer-usage
     >
 )
 
