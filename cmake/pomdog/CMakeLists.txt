@@ -242,6 +242,11 @@ target_compile_options(pomdog_static PRIVATE
         # FIXME: https://bugs.llvm.org/show_bug.cgi?id=18733
         -Wno-weak-template-vtables
 
+        $<$<PLATFORM_ID:Linux>:
+            # FIXME: Remove the following `-Wno` flags for Linux.
+            -Wno-unsafe-buffer-usage
+        >
+
         $<$<CXX_COMPILER_ID:AppleClang>:
             # FIXME: Remove the following `-Wno` flags.
             -Wno-direct-ivar-access
