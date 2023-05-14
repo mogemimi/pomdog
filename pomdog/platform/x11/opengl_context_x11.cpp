@@ -78,12 +78,15 @@ OpenGLContextX11::Initialize(
     POMDOG_ASSERT(framebufferConfig != nullptr);
     POMDOG_ASSERT(window != nullptr);
 
-    auto display = window->GetNativeDisplay();
+    const auto display = window->GetNativeDisplay();
 
-    auto glxExtensionsString = glXQueryExtensionsString(display, DefaultScreen(display));
+    const auto glxExtensionsString = glXQueryExtensionsString(display, DefaultScreen(display));
 
-    auto glXCreateContextAttribsARB = reinterpret_cast<PFNGLXCREATECONTEXTATTRIBSARBPROC>(
+POMDOG_CLANG_SUPPRESS_WARNING_PUSH
+POMDOG_CLANG_SUPPRESS_WARNING("-Wcast-function-type-strict")
+    const auto glXCreateContextAttribsARB = reinterpret_cast<PFNGLXCREATECONTEXTATTRIBSARBPROC>(
         glXGetProcAddressARB(reinterpret_cast<const GLubyte*>("glXCreateContextAttribsARB")));
+POMDOG_CLANG_SUPPRESS_WARNING_POP
 
     if (!IsExtensionSupported(glxExtensionsString, "GLX_ARB_create_context") ||
         glXCreateContextAttribsARB == nullptr) {
