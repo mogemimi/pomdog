@@ -202,14 +202,18 @@ GameWindowX11::Initialize(
             // NOTE: XIM can't get styles.
             return false;
         }
+        detail::ScopeGuard defer([&] {
+            ::XFree(styles);
+        });
 
+        if (styles->supported_styles == nullptr) {
+            return false;
+        }
         for (int i = 0; i < styles->count_styles; i++) {
             if (styles->supported_styles[i] == (XIMPreeditNothing | XIMStatusNothing)) {
                 return true;
             }
         }
-
-        ::XFree(styles);
         return false;
     }();
 
