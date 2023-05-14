@@ -38,14 +38,14 @@ public:
     virtual void SetAllowUserResizing(bool allowResizing) = 0;
 
     /// @return Title of the window.
-    virtual std::string GetTitle() const = 0;
+    [[nodiscard]] virtual std::string GetTitle() const = 0;
 
     /// Set title of the window.
     /// @param title New title of the window.
     virtual void SetTitle(const std::string& title) = 0;
 
     /// @return Rectangle that describes windows position and size.
-    virtual Rectangle GetClientBounds() const = 0;
+    [[nodiscard]] virtual Rectangle GetClientBounds() const = 0;
 
     /// Moves the window to the @p clientBounds x and y, and sets windows
     /// width and height according to the method parameter.
@@ -53,7 +53,7 @@ public:
     virtual void SetClientBounds(const Rectangle& clientBounds) = 0;
 
     /// @return True if the mouse cursor is visible, false otherwise.
-    virtual bool IsMouseCursorVisible() const = 0;
+    [[nodiscard]] virtual bool IsMouseCursorVisible() const = 0;
 
     /// Set visibility of the cursor in the window
     /// @param visible New value of the cursor visibility flag.
