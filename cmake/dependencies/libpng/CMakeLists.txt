@@ -68,6 +68,10 @@ target_compile_options(png PRIVATE
         $<$<CONFIG:Debug>:/MTd>
         $<$<CONFIG:Release>:/MT>
     >
+    # NOTE: emcc (Emscripten Compiler Frontend)
+    $<$<PLATFORM_ID:Emscripten>:
+        -pthread
+    >
 )
 
 set_target_properties(png PROPERTIES
