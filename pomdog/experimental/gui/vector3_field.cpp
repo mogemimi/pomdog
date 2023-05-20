@@ -85,49 +85,49 @@ void Vector3Field::SetAcceptable(bool acceptableIn)
 Vector3 Vector3Field::GetValue() const
 {
     Vector3 value;
-    value.X = static_cast<float>(xField->GetValue());
-    value.Y = static_cast<float>(yField->GetValue());
-    value.Z = static_cast<float>(zField->GetValue());
+    value.x = static_cast<float>(xField->GetValue());
+    value.y = static_cast<float>(yField->GetValue());
+    value.z = static_cast<float>(zField->GetValue());
     return value;
 }
 
 void Vector3Field::SetValue(const Vector3& value)
 {
-    xField->SetValue(static_cast<double>(value.X));
-    yField->SetValue(static_cast<double>(value.Y));
-    zField->SetValue(static_cast<double>(value.Z));
+    xField->SetValue(static_cast<double>(value.x));
+    yField->SetValue(static_cast<double>(value.y));
+    zField->SetValue(static_cast<double>(value.z));
 }
 
 Vector3 Vector3Field::GetMinimum() const noexcept
 {
     Vector3 value;
-    value.X = static_cast<float>(xField->GetMinimum());
-    value.Y = static_cast<float>(yField->GetMinimum());
-    value.Z = static_cast<float>(zField->GetMinimum());
+    value.x = static_cast<float>(xField->GetMinimum());
+    value.y = static_cast<float>(yField->GetMinimum());
+    value.z = static_cast<float>(zField->GetMinimum());
     return value;
 }
 
 void Vector3Field::SetMinimum(const Vector3& minimum)
 {
-    xField->SetMinimum(static_cast<double>(minimum.X));
-    yField->SetMinimum(static_cast<double>(minimum.Y));
-    zField->SetMinimum(static_cast<double>(minimum.Z));
+    xField->SetMinimum(static_cast<double>(minimum.x));
+    yField->SetMinimum(static_cast<double>(minimum.y));
+    zField->SetMinimum(static_cast<double>(minimum.z));
 }
 
 Vector3 Vector3Field::GetMaximum() const noexcept
 {
     Vector3 value;
-    value.X = static_cast<float>(xField->GetMaximum());
-    value.Y = static_cast<float>(yField->GetMaximum());
-    value.Z = static_cast<float>(zField->GetMaximum());
+    value.x = static_cast<float>(xField->GetMaximum());
+    value.y = static_cast<float>(yField->GetMaximum());
+    value.z = static_cast<float>(zField->GetMaximum());
     return value;
 }
 
 void Vector3Field::SetMaximum(const Vector3& maximum)
 {
-    xField->SetMaximum(static_cast<double>(maximum.X));
-    yField->SetMaximum(static_cast<double>(maximum.Y));
-    zField->SetMaximum(static_cast<double>(maximum.Z));
+    xField->SetMaximum(static_cast<double>(maximum.x));
+    yField->SetMaximum(static_cast<double>(maximum.y));
+    zField->SetMaximum(static_cast<double>(maximum.z));
 }
 
 int Vector3Field::GetDecimals() const

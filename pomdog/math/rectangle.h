@@ -28,8 +28,10 @@ namespace pomdog {
 ///@endcode
 class POMDOG_EXPORT Rectangle final {
 public:
-    std::int32_t X, Y;
-    std::int32_t Width, Height;
+    std::int32_t x;
+    std::int32_t y;
+    std::int32_t width;
+    std::int32_t height;
 
 public:
     Rectangle() noexcept = default;

@@ -7,17 +7,17 @@
 
 namespace pomdog {
 
-BoundingCircle::BoundingCircle(const Vector2& center, float radius)
-    : Center(center)
-    , Radius(radius)
+BoundingCircle::BoundingCircle(const Vector2& centerIn, float radiusIn)
+    : center(centerIn)
+    , radius(radiusIn)
 {
-    POMDOG_ASSERT(radius >= 0);
+    POMDOG_ASSERT(radiusIn >= 0);
 }
 
 ContainmentType BoundingCircle::Contains(const Vector2& point) const
 {
-    auto distanceSquared = math::DistanceSquared(point, Center);
-    auto radiusSquared = Radius * Radius;
+    const auto distanceSquared = math::DistanceSquared(point, center);
+    const auto radiusSquared = radius * radius;
     if (distanceSquared > radiusSquared) {
         return ContainmentType::Disjoint;
     }
@@ -47,11 +47,11 @@ ContainmentType BoundingCircle::Contains(const BoundingBox2D& box) const
 
 ContainmentType BoundingCircle::Contains(const BoundingCircle& circle) const
 {
-    auto distance = math::Distance(this->Center, circle.Center);
-    if (distance > this->Radius + circle.Radius) {
+    const auto distance = math::Distance(center, circle.center);
+    if (distance > radius + circle.radius) {
         return ContainmentType::Disjoint;
     }
-    if (distance + circle.Radius < this->Radius) {
+    if (distance + circle.radius < radius) {
         return ContainmentType::Contains;
     }
     return ContainmentType::Intersects;
@@ -64,8 +64,8 @@ bool BoundingCircle::Intersects(const BoundingBox2D& box) const
 
 bool BoundingCircle::Intersects(const BoundingCircle& circle) const
 {
-    auto distance = math::Distance(this->Center, circle.Center);
-    return distance <= this->Radius + circle.Radius;
+    const auto distance = math::Distance(center, circle.center);
+    return distance <= radius + circle.radius;
 }
 
 } // namespace pomdog

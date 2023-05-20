@@ -47,9 +47,9 @@ private:
     static constexpr int CornerCount = 8;
     static constexpr int PlaneCount = 6;
 
-    std::array<Plane, PlaneCount> planes;
-    std::array<Vector3, CornerCount> corners;
-    Matrix4x4 matrix;
+    std::array<Plane, PlaneCount> planes_;
+    std::array<Vector3, CornerCount> corners_;
+    Matrix4x4 matrix_;
 
 public:
     BoundingFrustum();

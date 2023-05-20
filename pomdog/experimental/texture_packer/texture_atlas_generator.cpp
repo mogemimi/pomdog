@@ -49,39 +49,39 @@ std::shared_ptr<TexturePackNode> Insert(
     constexpr int marginPixels = 2;
     const auto w = width + marginPixels;
     const auto h = height + marginPixels;
-    const auto dw = node->rect.Width - w;
-    const auto dh = node->rect.Height - h;
+    const auto dw = node->rect.width - w;
+    const auto dh = node->rect.height - h;
 
-    if ((w > node->rect.Width) || (h > node->rect.Height)) {
+    if ((w > node->rect.width) || (h > node->rect.height)) {
         // NOTE: This node is too small.
         return nullptr;
     }
 
     if (dw > dh) {
         node->children[0] = std::make_shared<TexturePackNode>(Rectangle{
-            node->rect.X,
-            node->rect.Y + h,
+            node->rect.x,
+            node->rect.y + h,
             w,
             dh,
         });
         node->children[1] = std::make_shared<TexturePackNode>(Rectangle{
-            node->rect.X + w,
-            node->rect.Y,
+            node->rect.x + w,
+            node->rect.y,
             dw,
-            node->rect.Height,
+            node->rect.height,
         });
     }
     else {
         node->children[0] = std::make_shared<TexturePackNode>(Rectangle{
-            node->rect.X + w,
-            node->rect.Y,
+            node->rect.x + w,
+            node->rect.y,
             dw,
             h,
         });
         node->children[1] = std::make_shared<TexturePackNode>(Rectangle{
-            node->rect.X,
-            node->rect.Y + h,
-            node->rect.Width,
+            node->rect.x,
+            node->rect.y + h,
+            node->rect.width,
             dh,
         });
     }
@@ -105,10 +105,10 @@ void Traverse(
 Rectangle Clip(const std::shared_ptr<Image>& image)
 {
     Rectangle bounds;
-    bounds.X = 0;
-    bounds.Y = 0;
-    bounds.Width = image->GetWidth();
-    bounds.Height = image->GetHeight();
+    bounds.x = 0;
+    bounds.y = 0;
+    bounds.width = image->GetWidth();
+    bounds.height = image->GetHeight();
 
     bool hasPixels = false;
     int left = image->GetWidth();
@@ -119,8 +119,8 @@ Rectangle Clip(const std::shared_ptr<Image>& image)
     for (int y = 0; y < image->GetHeight(); ++y) {
         for (int x = 0; x < image->GetWidth(); ++x) {
             auto pixel = image->GetPixel(x, y);
-            POMDOG_ASSERT(pixel.A >= 0);
-            if (pixel.A != 0) {
+            POMDOG_ASSERT(pixel.a >= 0);
+            if (pixel.a != 0) {
                 left = std::min(x, left);
                 right = std::max(x, right);
                 top = std::min(y, top);
@@ -131,23 +131,23 @@ Rectangle Clip(const std::shared_ptr<Image>& image)
     }
 
     if (!hasPixels) {
-        bounds.X = 0;
-        bounds.Y = 0;
-        bounds.Width = 1;
-        bounds.Height = 1;
+        bounds.x = 0;
+        bounds.y = 0;
+        bounds.width = 1;
+        bounds.height = 1;
         return bounds;
     }
 
     POMDOG_ASSERT(left <= right);
     POMDOG_ASSERT(top <= bottom);
 
-    bounds.X = left;
-    bounds.Y = top;
-    bounds.Width = (right - left) + 1;
-    bounds.Height = (bottom - top) + 1;
+    bounds.x = left;
+    bounds.y = top;
+    bounds.width = (right - left) + 1;
+    bounds.height = (bottom - top) + 1;
 
-    POMDOG_ASSERT(bounds.Width <= image->GetWidth());
-    POMDOG_ASSERT(bounds.Height <= image->GetHeight());
+    POMDOG_ASSERT(bounds.width <= image->GetWidth());
+    POMDOG_ASSERT(bounds.height <= image->GetHeight());
 
     return bounds;
 }
@@ -183,7 +183,7 @@ TextureAtlasGeneratorResult TextureAtlasGenerator::Generate(
     for (auto& source : sources) {
         auto& image = source.Image;
         auto clipBounds = Clip(image);
-        auto node = Insert(root, clipBounds.Width, clipBounds.Height);
+        auto node = Insert(root, clipBounds.width, clipBounds.height);
         POMDOG_ASSERT(node);
         if (!node) {
             // TODO: error handling
@@ -200,37 +200,37 @@ TextureAtlasGeneratorResult TextureAtlasGenerator::Generate(
     Traverse(root, [&](const TexturePackNode& node) {
         const auto image = node.image;
         auto& region = regions[indices[image]].Region;
-        region.Subrect.X = static_cast<int>(node.rect.X);
-        region.Subrect.Y = static_cast<int>(node.rect.Y);
-        region.Subrect.Width = node.clipBounds.Width;
-        region.Subrect.Height = node.clipBounds.Height;
+        region.subrect.x = static_cast<int>(node.rect.x);
+        region.subrect.y = static_cast<int>(node.rect.y);
+        region.subrect.width = node.clipBounds.width;
+        region.subrect.height = node.clipBounds.height;
 
-        static_assert(std::is_same<decltype(node.clipBounds.X), std::int32_t>::value, "");
-        static_assert(std::is_same<decltype(node.clipBounds.Y), std::int32_t>::value, "");
-        static_assert(std::is_same<decltype(region.XOffset), std::int16_t>::value, "");
-        static_assert(std::is_same<decltype(region.YOffset), std::int16_t>::value, "");
+        static_assert(std::is_same<decltype(node.clipBounds.x), std::int32_t>::value, "");
+        static_assert(std::is_same<decltype(node.clipBounds.y), std::int32_t>::value, "");
+        static_assert(std::is_same<decltype(region.xOffset), std::int16_t>::value, "");
+        static_assert(std::is_same<decltype(region.yOffset), std::int16_t>::value, "");
         static_assert(std::is_same<decltype(image->GetWidth()), int>::value, "");
         static_assert(std::is_same<decltype(image->GetHeight()), int>::value, "");
-        static_assert(std::is_same<decltype(region.Width), std::int16_t>::value, "");
-        static_assert(std::is_same<decltype(region.Height), std::int16_t>::value, "");
-        POMDOG_ASSERT(node.clipBounds.X <= std::numeric_limits<std::int16_t>::max());
-        POMDOG_ASSERT(node.clipBounds.Y <= std::numeric_limits<std::int16_t>::max());
+        static_assert(std::is_same<decltype(region.width), std::int16_t>::value, "");
+        static_assert(std::is_same<decltype(region.height), std::int16_t>::value, "");
+        POMDOG_ASSERT(node.clipBounds.x <= std::numeric_limits<std::int16_t>::max());
+        POMDOG_ASSERT(node.clipBounds.y <= std::numeric_limits<std::int16_t>::max());
         POMDOG_ASSERT(image->GetWidth() <= std::numeric_limits<std::int16_t>::max());
         POMDOG_ASSERT(image->GetHeight() <= std::numeric_limits<std::int16_t>::max());
 
-        region.XOffset = static_cast<std::int16_t>(node.clipBounds.X);
-        region.YOffset = static_cast<std::int16_t>(node.clipBounds.Y);
-        region.Width = static_cast<std::int16_t>(image->GetWidth());
-        region.Height = static_cast<std::int16_t>(image->GetHeight());
+        region.xOffset = static_cast<std::int16_t>(node.clipBounds.x);
+        region.yOffset = static_cast<std::int16_t>(node.clipBounds.y);
+        region.width = static_cast<std::int16_t>(image->GetWidth());
+        region.height = static_cast<std::int16_t>(image->GetHeight());
 
-        const auto start = region.Subrect.X + region.Subrect.Y * width;
-        for (int y = 0; y < region.Subrect.Height; ++y) {
-            const auto offset = region.XOffset + ((region.YOffset + y) * image->GetWidth());
+        const auto start = region.subrect.x + region.subrect.y * width;
+        for (int y = 0; y < region.subrect.height; ++y) {
+            const auto offset = region.xOffset + ((region.yOffset + y) * image->GetWidth());
             static_assert(sizeof(decltype(*image->GetData())) == sizeof(Color), "");
             std::memcpy(
                 pixelData.data() + start + (y * width),
                 image->GetData() + offset,
-                sizeof(Color) * region.Subrect.Width);
+                sizeof(Color) * region.subrect.width);
         }
     });
 

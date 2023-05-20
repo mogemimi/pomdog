@@ -5,107 +5,105 @@
 
 namespace pomdog {
 
-Rectangle::Rectangle(std::int32_t x, std::int32_t y,
-    std::int32_t width, std::int32_t height) noexcept
-    : X(x)
-    , Y(y)
-    , Width(width)
-    , Height(height)
+Rectangle::Rectangle(std::int32_t xIn, std::int32_t yIn, std::int32_t widthIn, std::int32_t heightIn) noexcept
+    : x(xIn)
+    , y(yIn)
+    , width(widthIn)
+    , height(heightIn)
 {
 }
 
-Rectangle::Rectangle(const Point2D& position,
-    std::int32_t width, std::int32_t height) noexcept
-    : X(position.X)
-    , Y(position.Y)
-    , Width(width)
-    , Height(height)
+Rectangle::Rectangle(const Point2D& position, std::int32_t widthIn, std::int32_t heightIn) noexcept
+    : x(position.x)
+    , y(position.y)
+    , width(widthIn)
+    , height(heightIn)
 {
 }
 
 bool Rectangle::operator==(const Rectangle& other) const noexcept
 {
-    return X == other.X &&
-           Y == other.Y &&
-           Width == other.Width &&
-           Height == other.Height;
+    return x == other.x &&
+           y == other.y &&
+           width == other.width &&
+           height == other.height;
 }
 
 bool Rectangle::operator!=(const Rectangle& other) const noexcept
 {
-    return X != other.X ||
-           Y != other.Y ||
-           Width != other.Width ||
-           Height != other.Height;
+    return x != other.x ||
+           y != other.y ||
+           width != other.width ||
+           height != other.height;
 }
 
 std::int32_t Rectangle::GetBottom() const noexcept
 {
-    return Y + Height;
+    return y + height;
 }
 
 std::int32_t Rectangle::GetRight() const noexcept
 {
-    return X + Width;
+    return x + width;
 }
 
 std::int32_t Rectangle::GetTop() const noexcept
 {
-    return Y;
+    return y;
 }
 
 std::int32_t Rectangle::GetLeft() const noexcept
 {
-    return X;
+    return x;
 }
 
 Point2D Rectangle::GetCenter() const
 {
-    return {X + Width / 2, Y + Height / 2};
+    return {x + width / 2, y + height / 2};
 }
 
 Point2D Rectangle::GetLocation() const
 {
-    return {X, Y};
+    return {x, y};
 }
 
 void Rectangle::SetLocation(const Point2D& position)
 {
-    this->X = position.X;
-    this->Y = position.Y;
+    x = position.x;
+    y = position.y;
 }
 
 void Rectangle::Inflate(std::int32_t horizontalAmount, std::int32_t verticalAmount)
 {
-    this->X -= horizontalAmount;
-    this->Y -= verticalAmount;
-    this->Width += horizontalAmount * 2;
-    this->Height += verticalAmount * 2;
+    x -= horizontalAmount;
+    y -= verticalAmount;
+    width += horizontalAmount * 2;
+    height += verticalAmount * 2;
 }
 
 void Rectangle::Offset(std::int32_t offsetX, std::int32_t offsetY)
 {
-    this->X += offsetX;
-    this->Y += offsetY;
+    x += offsetX;
+    y += offsetY;
 }
 
 void Rectangle::Offset(const Point2D& offset)
 {
-    X += offset.X;
-    Y += offset.Y;
+    x += offset.x;
+    y += offset.y;
 }
 
 bool Rectangle::Contains(int pointX, int pointY) const noexcept
 {
-    return pointX >= X &&
-           pointX <= (X + Width) &&
-           pointY >= Y &&
-           pointY <= (Y + Height);
+    return pointX >= x &&
+           pointX <= (x + width) &&
+           pointY >= y &&
+           pointY <= (y + height);
 }
 
 bool Rectangle::Contains(const Point2D& point) const noexcept
 {
-    return this->Contains(point.X, point.Y);
+    return Contains(point.x, point.y);
 }
 
 bool Rectangle::Contains(const Rectangle& rect) const

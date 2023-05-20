@@ -191,8 +191,8 @@ Matrix3x2::CreateTranslation(const Vector2& position) noexcept
         0.0f,
         0.0f,
         1.0f,
-        position.X,
-        position.Y,
+        position.x,
+        position.y,
     };
 }
 
@@ -213,10 +213,10 @@ Matrix3x2
 Matrix3x2::CreateScale(const Vector2& scale) noexcept
 {
     return Matrix3x2{
-        scale.X,
+        scale.x,
         0.0f,
         0.0f,
-        scale.Y,
+        scale.y,
         0.0f,
         0.0f,
     };
@@ -243,8 +243,8 @@ Matrix3x2::CreateSkew(const Vector2& skew)
 {
     return Matrix3x2{
         1.0f,
-        std::tan(skew.Y),
-        std::tan(skew.X),
+        std::tan(skew.y),
+        std::tan(skew.x),
         1.0f,
         0.0f,
         0.0f,

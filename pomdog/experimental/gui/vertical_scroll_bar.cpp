@@ -45,8 +45,8 @@ CalculateSliderRect(
     const auto controlPosition = static_cast<int>(documentLength * ratio);
 
     Rectangle sliderRect{
-        position.X,
-        position.Y + controlPosition,
+        position.x,
+        position.y + controlPosition,
         scrollBar.GetWidth(),
         sliderHeight};
 
@@ -192,7 +192,7 @@ void VerticalScrollBar::OnPointerPressed(const PointerPoint& pointerPoint)
 
     auto sliderRect = CalculateSliderRect(*this, Point2D{0, 0}, value, minimum, maximum, pageStep);
     if (sliderRect.Contains(pointInView)) {
-        sliderGrabPosition = pointInView.Y - sliderRect.Y;
+        sliderGrabPosition = pointInView.y - sliderRect.y;
     }
     else {
         const auto sliderHeight = CalculateSliderHeight(*this, minimum, maximum, pageStep);
@@ -201,7 +201,7 @@ void VerticalScrollBar::OnPointerPressed(const PointerPoint& pointerPoint)
 
         POMDOG_ASSERT((GetHeight() - sliderHeight) > 0);
         const auto documentLength = (GetHeight() - sliderHeight);
-        const auto amount = static_cast<double>(pointInView.Y - *sliderGrabPosition) / documentLength;
+        const auto amount = static_cast<double>(pointInView.y - *sliderGrabPosition) / documentLength;
         SetValue(math::Clamp(amount * (maximum - minimum) + minimum, minimum, maximum));
     }
 }
@@ -226,7 +226,7 @@ void VerticalScrollBar::OnPointerMoved(const PointerPoint& pointerPoint)
     POMDOG_ASSERT((GetHeight() - sliderHeight) > 0);
 
     const auto documentLength = GetHeight() - sliderHeight;
-    const auto amount = static_cast<double>(pointInView.Y - *sliderGrabPosition) / documentLength;
+    const auto amount = static_cast<double>(pointInView.y - *sliderGrabPosition) / documentLength;
     SetValue(math::Clamp(amount * (maximum - minimum) + minimum, minimum, maximum));
 }
 
@@ -285,11 +285,11 @@ void VerticalScrollBar::Draw(DrawingContext& drawingContext)
     auto primitiveBatch = drawingContext.GetPrimitiveBatch();
 
     primitiveBatch->DrawRectangle(
-        Rectangle{globalPos.X, globalPos.Y, GetWidth(), GetHeight()},
+        Rectangle{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
         colorScheme->ScrollBarBorderColor);
 
     primitiveBatch->DrawRectangle(
-        Rectangle{globalPos.X + 1, globalPos.Y, GetWidth() - 2, GetHeight()},
+        Rectangle{globalPos.x + 1, globalPos.y, GetWidth() - 2, GetHeight()},
         colorScheme->ScrollBarTrackColor);
 
     if (isEnabled) {

@@ -10,7 +10,7 @@ namespace pomdog::gui {
 WidgetHierarchy::WidgetHierarchy(
     const std::shared_ptr<GameWindow>& window,
     const std::shared_ptr<Keyboard>& keyboard)
-    : viewportHeight(window->GetClientBounds().Height)
+    : viewportHeight(window->GetClientBounds().height)
 {
     dispatcher = std::make_shared<UIEventDispatcher>(window, keyboard);
 
@@ -37,7 +37,7 @@ void WidgetHierarchy::Touch(const MouseState& mouseState)
 {
     POMDOG_ASSERT(dispatcher);
     MouseState transposedeState = mouseState;
-    transposedeState.Position.Y = (viewportHeight - transposedeState.Position.Y);
+    transposedeState.Position.y = (viewportHeight - transposedeState.Position.y);
     dispatcher->Touch(transposedeState, children);
     Update();
 }

@@ -179,14 +179,14 @@ void PushButton::Draw(DrawingContext& drawingContext)
         switch (textAlignment) {
         case TextAlignment::Left:
             originPivot = Vector2{0.0f, 0.5f};
-            padding.X = horizontalPadding;
+            padding.x = horizontalPadding;
             break;
         case TextAlignment::Center:
             originPivot = Vector2{0.5f, 0.5f};
             break;
         case TextAlignment::Right:
             originPivot = Vector2{1.0f, 0.5f};
-            padding.X = -horizontalPadding;
+            padding.x = -horizontalPadding;
             break;
         }
 

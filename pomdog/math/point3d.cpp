@@ -12,43 +12,43 @@ namespace pomdog {
 
 Point3D::Point3D() noexcept = default;
 
-Point3D::Point3D(std::int32_t x, std::int32_t y, std::int32_t z) noexcept
-    : X(x)
-    , Y(y)
-    , Z(z)
+Point3D::Point3D(std::int32_t xIn, std::int32_t yIn, std::int32_t zIn) noexcept
+    : x(xIn)
+    , y(yIn)
+    , z(zIn)
 {
 }
 
 Point3D& Point3D::operator+=(const Point3D& other) noexcept
 {
-    X += other.X;
-    Y += other.Y;
-    Z += other.Z;
+    x += other.x;
+    y += other.y;
+    z += other.z;
     return *this;
 }
 
 Point3D& Point3D::operator-=(const Point3D& other) noexcept
 {
-    X -= other.X;
-    Y -= other.Y;
-    Z -= other.Z;
+    x -= other.x;
+    y -= other.y;
+    z -= other.z;
     return *this;
 }
 
 Point3D& Point3D::operator*=(std::int32_t factor) noexcept
 {
-    X *= factor;
-    Y *= factor;
-    Z *= factor;
+    x *= factor;
+    y *= factor;
+    z *= factor;
     return *this;
 }
 
 Point3D& Point3D::operator/=(std::int32_t factor) noexcept
 {
     POMDOG_ASSERT(factor != 0);
-    X /= factor;
-    Y /= factor;
-    Z /= factor;
+    x /= factor;
+    y /= factor;
+    z /= factor;
     return *this;
 }
 
@@ -59,51 +59,75 @@ Point3D Point3D::operator+() const noexcept
 
 Point3D Point3D::operator-() const noexcept
 {
-    return {-X, -Y, -Z};
+    return Point3D{-x, -y, -z};
 }
 
 Point3D Point3D::operator+(const Point3D& other) const noexcept
 {
-    return {X + other.X, Y + other.Y, Z + other.Z};
+    return Point3D{
+        x + other.x,
+        y + other.y,
+        z + other.z,
+    };
 }
 
 Point3D Point3D::operator-(const Point3D& other) const noexcept
 {
-    return {X - other.X, Y - other.Y, Z - other.Z};
+    return Point3D{
+        x - other.x,
+        y - other.y,
+        z - other.z,
+    };
 }
 
 Point3D Point3D::operator*(const Point3D& other) const noexcept
 {
-    return {X * other.X, Y * other.Y, Z * other.Z};
+    return Point3D{
+        x * other.x,
+        y * other.y,
+        z * other.z,
+    };
 }
 
 Point3D Point3D::operator/(const Point3D& other) const
 {
-    POMDOG_ASSERT(other.X != 0);
-    POMDOG_ASSERT(other.Y != 0);
-    POMDOG_ASSERT(other.Z != 0);
-    return {X / other.X, Y / other.Y, Z / other.Z};
+    POMDOG_ASSERT(other.x != 0);
+    POMDOG_ASSERT(other.y != 0);
+    POMDOG_ASSERT(other.z != 0);
+    return Point3D{
+        x / other.x,
+        y / other.y,
+        z / other.z,
+    };
 }
 
 Point3D Point3D::operator*(std::int32_t factor) const noexcept
 {
-    return {X * factor, Y * factor, Z * factor};
+    return Point3D{
+        x * factor,
+        y * factor,
+        z * factor,
+    };
 }
 
 Point3D Point3D::operator/(std::int32_t factor) const noexcept
 {
     POMDOG_ASSERT(factor != 0);
-    return {X / factor, Y / factor, Z / factor};
+    return Point3D{
+        x / factor,
+        y / factor,
+        z / factor,
+    };
 }
 
 bool Point3D::operator==(const Point3D& other) const noexcept
 {
-    return (X == other.X && Y == other.Y && Z == other.Z);
+    return ((x == other.x) && (y == other.y) && (z == other.z));
 }
 
 bool Point3D::operator!=(const Point3D& other) const noexcept
 {
-    return (X != other.X || Y != other.Y || Z != other.Z);
+    return ((x != other.x) || (y != other.y) || (z != other.z));
 }
 
 Point3D Point3D::Zero() noexcept
@@ -115,9 +139,10 @@ Point3D Point3D::Zero() noexcept
 operator*(std::int32_t factor, const Point3D& coordinate) noexcept
 {
     return Point3D{
-        factor * coordinate.X,
-        factor * coordinate.Y,
-        factor * coordinate.Z};
+        factor * coordinate.x,
+        factor * coordinate.y,
+        factor * coordinate.z,
+    };
 }
 
 } // namespace pomdog
@@ -127,27 +152,27 @@ namespace pomdog::math {
 Point3D ToPoint3D(const Vector3& vec) noexcept
 {
     return Point3D{
-        static_cast<std::int32_t>(vec.X),
-        static_cast<std::int32_t>(vec.Y),
-        static_cast<std::int32_t>(vec.Z),
+        static_cast<std::int32_t>(vec.x),
+        static_cast<std::int32_t>(vec.y),
+        static_cast<std::int32_t>(vec.z),
     };
 }
 
 Vector3 ToVector3(const Point3D& point) noexcept
 {
     return Vector3{
-        static_cast<float>(point.X),
-        static_cast<float>(point.Y),
-        static_cast<float>(point.Z),
+        static_cast<float>(point.x),
+        static_cast<float>(point.y),
+        static_cast<float>(point.z),
     };
 }
 
 Point3D Abs(const Point3D& point) noexcept
 {
     return Point3D{
-        std::abs(point.X),
-        std::abs(point.Y),
-        std::abs(point.Z),
+        std::abs(point.x),
+        std::abs(point.y),
+        std::abs(point.z),
     };
 }
 

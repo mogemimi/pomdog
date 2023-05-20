@@ -27,18 +27,18 @@ void SpriteLine::Draw(
 {
     POMDOG_ASSERT(texture);
 
-    if ((middleRect.Width <= 0) || (middleRect.Height <= 0)) {
+    if ((middleRect.width <= 0) || (middleRect.height <= 0)) {
         return;
     }
-    POMDOG_ASSERT(middleRect.Width > 0);
-    POMDOG_ASSERT(middleRect.Height > 0);
+    POMDOG_ASSERT(middleRect.width > 0);
+    POMDOG_ASSERT(middleRect.height > 0);
 
-    auto lineLength = math::Distance(point2, point1);
-    auto tangent = point2 - point1;
-    auto rotation = std::atan2(tangent.Y, tangent.X);
+    const auto lineLength = math::Distance(point2, point1);
+    const auto tangent = point2 - point1;
+    const auto rotation = std::atan2(tangent.y, tangent.x);
 
     spriteBatch.Draw(texture, point1, middleRect,
-        color, rotation, {0.0f, 0.5f}, Vector2{lineLength / middleRect.Width, lineThickness});
+        color, rotation, {0.0f, 0.5f}, Vector2{lineLength / middleRect.width, lineThickness});
     spriteBatch.Draw(texture, point1, startRect,
         color, rotation, {1.0f, 0.5f}, lineThickness);
     spriteBatch.Draw(texture, point2, endRect,

@@ -36,7 +36,7 @@ ScreenQuad::ScreenQuad(const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevic
         (graphicsDevice->GetSupportedLanguage() == gpu::ShaderLanguage::Metal)) {
         // Convert to Texture Coordinates in Direct3D
         for (auto& vertex : verticesCombo) {
-            vertex.TextureCoord.Y = (1.0f - vertex.TextureCoord.Y);
+            vertex.TextureCoord.y = (1.0f - vertex.TextureCoord.y);
         }
     }
 

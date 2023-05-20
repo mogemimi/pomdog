@@ -12,12 +12,12 @@ TEST_CASE("Vector2", "[Vector2]")
     SECTION("Vector2")
     {
         Vector2 vec{0, 0};
-        REQUIRE(vec.X == 0.0f);
-        REQUIRE(vec.Y == 0.0f);
+        REQUIRE(vec.x == 0.0f);
+        REQUIRE(vec.y == 0.0f);
 
         vec = {1, 2};
-        REQUIRE(vec.X == 1.0f);
-        REQUIRE(vec.Y == 2.0f);
+        REQUIRE(vec.x == 1.0f);
+        REQUIRE(vec.y == 2.0f);
     }
     SECTION("Constants")
     {
@@ -73,28 +73,28 @@ TEST_CASE("Vector2", "[Vector2]")
         const auto approx = [](float x) -> auto { return Catch::Approx(x).margin(0.000001f); };
         {
             auto vec = Rotate(Vector2{1.0f, 0.0f}, 0.0f);
-            REQUIRE(vec.X == approx(1.0f));
-            REQUIRE(vec.Y == approx(0.0f));
+            REQUIRE(vec.x == approx(1.0f));
+            REQUIRE(vec.y == approx(0.0f));
         }
         {
             auto vec = Rotate(Vector2{1.0f, 0.0f}, pomdog::math::PiOver2<float>);
-            REQUIRE(vec.X == approx(0.0f));
-            REQUIRE(vec.Y == approx(1.0f));
+            REQUIRE(vec.x == approx(0.0f));
+            REQUIRE(vec.y == approx(1.0f));
         }
         {
             auto vec = Rotate(Vector2{1.0f, 0.0f}, pomdog::math::Pi<float>);
-            REQUIRE(vec.X == approx(-1.0f));
-            REQUIRE(vec.Y == approx(0.0f));
+            REQUIRE(vec.x == approx(-1.0f));
+            REQUIRE(vec.y == approx(0.0f));
         }
         {
             auto vec = Rotate(Vector2{1.0f, 0.0f}, -pomdog::math::PiOver2<float>);
-            REQUIRE(vec.X == approx(0.0f));
-            REQUIRE(vec.Y == approx(-1.0f));
+            REQUIRE(vec.x == approx(0.0f));
+            REQUIRE(vec.y == approx(-1.0f));
         }
         {
             auto vec = Rotate(Vector2{1.0f, 0.0f}, pomdog::math::TwoPi<float>);
-            REQUIRE(vec.X == approx(1.0f));
-            REQUIRE(vec.Y == approx(0.0f));
+            REQUIRE(vec.x == approx(1.0f));
+            REQUIRE(vec.y == approx(0.0f));
         }
     }
 }

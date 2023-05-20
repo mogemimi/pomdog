@@ -10,27 +10,27 @@
 namespace pomdog {
 
 BoundingBox::BoundingBox(const Vector3& minIn, const Vector3& maxIn)
-    : Min(minIn)
-    , Max(maxIn)
+    : min(minIn)
+    , max(maxIn)
 {
 }
 
 ContainmentType BoundingBox::Contains(const Vector3& point) const
 {
-    if (point.X < this->Min.X ||
-        point.Y < this->Min.Y ||
-        point.Z < this->Min.Z ||
-        point.X > this->Max.X ||
-        point.Y > this->Max.Y ||
-        point.Z > this->Max.Z) {
+    if ((point.x < min.x) ||
+        (point.y < min.y) ||
+        (point.z < min.z) ||
+        (point.x > max.x) ||
+        (point.y > max.y) ||
+        (point.z > max.z)) {
         return ContainmentType::Disjoint;
     }
-    if (point.X == this->Min.X ||
-        point.Y == this->Min.Y ||
-        point.Z == this->Min.Z ||
-        point.X == this->Max.X ||
-        point.Y == this->Max.Y ||
-        point.Z == this->Max.Z) {
+    if ((point.x == min.x) ||
+        (point.y == min.y) ||
+        (point.z == min.z) ||
+        (point.x == max.x) ||
+        (point.y == max.y) ||
+        (point.z == max.z)) {
         return ContainmentType::Intersects;
     }
     return ContainmentType::Contains;
@@ -38,14 +38,14 @@ ContainmentType BoundingBox::Contains(const Vector3& point) const
 
 ContainmentType BoundingBox::Contains(const BoundingBox& box) const
 {
-    if ((this->Min.X > box.Max.X || this->Max.X < box.Min.X) ||
-        (this->Min.Y > box.Max.Y || this->Max.Y < box.Min.Y) ||
-        (this->Min.Z > box.Max.Z || this->Max.Z < box.Min.Z)) {
+    if ((min.x > box.max.x || max.x < box.min.x) ||
+        (min.y > box.max.y || max.y < box.min.y) ||
+        (min.z > box.max.z || max.z < box.min.z)) {
         return ContainmentType::Disjoint;
     }
-    if ((this->Min.X <= box.Min.X && box.Max.X <= this->Max.X) &&
-        (this->Min.Y <= box.Min.Y && box.Max.Y <= this->Max.Y) &&
-        (this->Min.Z <= box.Min.Z && box.Max.Z <= this->Max.Z)) {
+    if ((min.x <= box.min.x && box.max.x <= max.x) &&
+        (min.y <= box.min.y && box.max.y <= max.y) &&
+        (min.z <= box.min.z && box.max.z <= max.z)) {
         return ContainmentType::Contains;
     }
     return ContainmentType::Intersects;
@@ -53,18 +53,18 @@ ContainmentType BoundingBox::Contains(const BoundingBox& box) const
 
 ContainmentType BoundingBox::Contains(const BoundingSphere& sphere) const
 {
-    auto clamped = math::Clamp(sphere.Center, this->Min, this->Max);
-    auto distanceSquared = math::DistanceSquared(sphere.Center, clamped);
+    const auto clamped = math::Clamp(sphere.center, min, max);
+    const auto distanceSquared = math::DistanceSquared(sphere.center, clamped);
 
-    if (distanceSquared > sphere.Radius * sphere.Radius) {
+    if (distanceSquared > sphere.radius * sphere.radius) {
         return ContainmentType::Disjoint;
     }
-    if ((sphere.Radius <= sphere.Center.X - this->Min.X) &&
-        (sphere.Radius <= sphere.Center.Y - this->Min.Y) &&
-        (sphere.Radius <= sphere.Center.Z - this->Min.Z) &&
-        (sphere.Radius <= this->Max.X - sphere.Center.X) &&
-        (sphere.Radius <= this->Max.Y - sphere.Center.Y) &&
-        (sphere.Radius <= this->Max.Z - sphere.Center.Z)) {
+    if ((sphere.radius <= sphere.center.x - min.x) &&
+        (sphere.radius <= sphere.center.y - min.y) &&
+        (sphere.radius <= sphere.center.z - min.z) &&
+        (sphere.radius <= max.x - sphere.center.x) &&
+        (sphere.radius <= max.y - sphere.center.y) &&
+        (sphere.radius <= max.z - sphere.center.z)) {
         return ContainmentType::Contains;
     }
     return ContainmentType::Intersects;
@@ -72,16 +72,16 @@ ContainmentType BoundingBox::Contains(const BoundingSphere& sphere) const
 
 bool BoundingBox::Intersects(const BoundingBox& box) const
 {
-    return (this->Max.X >= box.Min.X && this->Min.X <= box.Max.X) &&
-           (this->Max.Y >= box.Min.Y && this->Min.Y <= box.Max.Y) &&
-           (this->Max.Z >= box.Min.Z && this->Min.Z <= box.Max.Z);
+    return (max.x >= box.min.x && min.x <= box.max.x) &&
+           (max.y >= box.min.y && min.y <= box.max.y) &&
+           (max.z >= box.min.z && min.z <= box.max.z);
 }
 
 bool BoundingBox::Intersects(const BoundingSphere& sphere) const
 {
-    auto clamped = math::Clamp(sphere.Center, this->Min, this->Max);
-    auto distanceSquared = math::DistanceSquared(sphere.Center, clamped);
-    return distanceSquared <= sphere.Radius * sphere.Radius;
+    const auto clamped = math::Clamp(sphere.center, min, max);
+    const auto distanceSquared = math::DistanceSquared(sphere.center, clamped);
+    return distanceSquared <= sphere.radius * sphere.radius;
 }
 
 PlaneIntersectionType BoundingBox::Intersects(const Plane& plane) const
@@ -97,14 +97,14 @@ std::optional<float> BoundingBox::Intersects(const Ray& ray) const
 std::array<Vector3, BoundingBox::CornerCount> BoundingBox::GetCorners() const noexcept
 {
     return std::array<Vector3, BoundingBox::CornerCount>{{
-        Vector3{this->Min.X, this->Max.Y, this->Max.Z},
-        Vector3{this->Max.X, this->Max.Y, this->Max.Z},
-        Vector3{this->Max.X, this->Min.Y, this->Max.Z},
-        Vector3{this->Min.X, this->Min.Y, this->Max.Z},
-        Vector3{this->Min.X, this->Max.Y, this->Min.Z},
-        Vector3{this->Max.X, this->Max.Y, this->Min.Z},
-        Vector3{this->Max.X, this->Min.Y, this->Min.Z},
-        Vector3{this->Min.X, this->Min.Y, this->Min.Z},
+        Vector3{min.x, max.y, max.z},
+        Vector3{max.x, max.y, max.z},
+        Vector3{max.x, min.y, max.z},
+        Vector3{min.x, min.y, max.z},
+        Vector3{min.x, max.y, min.z},
+        Vector3{max.x, max.y, min.z},
+        Vector3{max.x, min.y, min.z},
+        Vector3{min.x, min.y, min.z},
     }};
 }
 

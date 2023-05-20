@@ -42,10 +42,10 @@ PostProcessCompositor::PostProcessCompositor(
     POMDOG_ASSERT(presentationParameters.BackBufferWidth > 0);
     POMDOG_ASSERT(presentationParameters.BackBufferHeight > 0);
 
-    viewport.X = 0;
-    viewport.Y = 0;
-    viewport.Width = presentationParameters.BackBufferWidth;
-    viewport.Height = presentationParameters.BackBufferHeight;
+    viewport.x = 0;
+    viewport.y = 0;
+    viewport.width = presentationParameters.BackBufferWidth;
+    viewport.height = presentationParameters.BackBufferHeight;
 
     constantBuffer = std::get<0>(graphicsDevice->CreateConstantBuffer(
         sizeof(PostProcessInfo),
@@ -69,17 +69,17 @@ void PostProcessCompositor::SetViewportSize(
     POMDOG_ASSERT(width > 0);
     POMDOG_ASSERT(height > 0);
 
-    if (viewport.Width == width && viewport.Height == height) {
+    if (viewport.width == width && viewport.height == height) {
         return;
     }
 
-    viewport.Width = width;
-    viewport.Height = height;
+    viewport.width = width;
+    viewport.height = height;
 
     BuildRenderTargets(
         graphicsDevice,
-        viewport.Width,
-        viewport.Height,
+        viewport.width,
+        viewport.height,
         renderTargets.front()->GetFormat(),
         depthFormat);
 }
@@ -112,13 +112,13 @@ void PostProcessCompositor::BuildRenderTargets(
 
 void PostProcessCompositor::UpdateConstantBuffer()
 {
-    POMDOG_ASSERT(viewport.Width > 0);
-    POMDOG_ASSERT(viewport.Height > 0);
+    POMDOG_ASSERT(viewport.width > 0);
+    POMDOG_ASSERT(viewport.height > 0);
 
     PostProcessInfo info;
-    info.RenderTargetSize.X = static_cast<float>(viewport.Width);
-    info.RenderTargetSize.Y = static_cast<float>(viewport.Height);
-    info.RcpFrame = Vector2{1.0f / viewport.Width, 1.0f / viewport.Height};
+    info.RenderTargetSize.x = static_cast<float>(viewport.width);
+    info.RenderTargetSize.y = static_cast<float>(viewport.height);
+    info.RcpFrame = Vector2{1.0f / viewport.width, 1.0f / viewport.height};
 
     POMDOG_ASSERT(constantBuffer);
     constantBuffer->SetData(0, gpu::MakeByteSpan(info));

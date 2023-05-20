@@ -91,12 +91,12 @@ void TextBlock::Draw(DrawingContext& drawingContext)
     case TextAlignment::Left:
         break;
     case TextAlignment::Center:
-        position.X += (static_cast<float>(GetWidth()) * 0.5f);
-        originPivot.X = 0.5f;
+        position.x += (static_cast<float>(GetWidth()) * 0.5f);
+        originPivot.x = 0.5f;
         break;
     case TextAlignment::Right:
-        position.X += static_cast<float>(GetWidth());
-        originPivot.X = 1.0f;
+        position.x += static_cast<float>(GetWidth());
+        originPivot.x = 1.0f;
         break;
     }
 

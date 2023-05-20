@@ -438,7 +438,7 @@ void TextEdit::OnPointerMoved(const PointerPoint& pointerPoint)
     // FIXME: UTF-8
     for (int i = 1; i <= static_cast<int>(text.size()); i++) {
         auto size = spriteFont->MeasureString(text.substr(0, i));
-        if (size.X > (pointInView.X + startPosX)) {
+        if (size.x > (pointInView.x + startPosX)) {
             break;
         }
         cursorPosition = i;
@@ -492,7 +492,7 @@ void TextEdit::OnPointerPressed(const PointerPoint& pointerPoint)
     // FIXME: UTF-8
     for (int i = 1; i <= static_cast<int>(text.size()); i++) {
         auto size = spriteFont->MeasureString(text.substr(0, i));
-        if (size.X > (pointInView.X + startPosX)) {
+        if (size.x > (pointInView.x + startPosX)) {
             break;
         }
         cursorPosition = i;
@@ -577,26 +577,26 @@ void TextEdit::Draw(DrawingContext& drawingContext)
         borderColor = borderFocusColor;
     }
 
-    const auto marginLeftBottom = Vector2{static_cast<float>(textMargin.Left), static_cast<float>(textMargin.Bottom)};
+    const auto marginLeftBottom = Vector2{static_cast<float>(textMargin.left), static_cast<float>(textMargin.bottom)};
     const auto textEditPos = math::ToVector2(globalPos);
     const auto textPosition = textEditPos + marginLeftBottom + Vector2{0.0f, baselineHeight};
     const auto innerBoundPos = textEditPos + marginLeftBottom;
     const auto innerBoundSize = Vector2{
-        GetWidth() - static_cast<float>(textMargin.Left + textMargin.Right),
-        GetHeight() - static_cast<float>(textMargin.Bottom + textMargin.Top)};
+        GetWidth() - static_cast<float>(textMargin.left + textMargin.right),
+        GetHeight() - static_cast<float>(textMargin.bottom + textMargin.top)};
 
     // NOTE: Mask scissor
     drawingContext.PushScissorRect(Rectangle{
-        static_cast<int>(innerBoundPos.X),
-        static_cast<int>(innerBoundPos.Y),
-        static_cast<int>(innerBoundSize.X),
-        static_cast<int>(innerBoundSize.Y)});
+        static_cast<int>(innerBoundPos.x),
+        static_cast<int>(innerBoundPos.y),
+        static_cast<int>(innerBoundSize.x),
+        static_cast<int>(innerBoundSize.y)});
 
     constexpr float cursorThickness = 1.0f;
 
     const auto calculatePositionInSprite = [&](int positionInText) -> float {
         if (text.empty()) {
-            return marginLeftBottom.X;
+            return marginLeftBottom.x;
         }
 
         // FIXME: UTF-8
@@ -605,18 +605,18 @@ void TextEdit::Draw(DrawingContext& drawingContext)
         auto substring = text.substr(0, positionInText);
         auto v = spriteFont->MeasureString(substring);
         constexpr float offset = 0.2f;
-        return marginLeftBottom.X + v.X + offset;
+        return marginLeftBottom.x + v.x + offset;
     };
 
     auto cursorDrawPosition = Vector2::Zero();
     if (cursorPosition != std::nullopt) {
-        cursorDrawPosition.X = calculatePositionInSprite(*cursorPosition);
+        cursorDrawPosition.x = calculatePositionInSprite(*cursorPosition);
 
         if (textStartPositionX == std::nullopt) {
-            textStartPositionX = std::max(cursorDrawPosition.X - innerBoundSize.X, 0.0f);
+            textStartPositionX = std::max(cursorDrawPosition.x - innerBoundSize.x, 0.0f);
         }
         if (*textStartPositionX > 0) {
-            cursorDrawPosition.X = cursorDrawPosition.X - *textStartPositionX;
+            cursorDrawPosition.x = cursorDrawPosition.x - *textStartPositionX;
         }
     }
 
@@ -628,12 +628,12 @@ void TextEdit::Draw(DrawingContext& drawingContext)
         POMDOG_ASSERT(textStartPositionX != std::nullopt);
         float startSelectionPosX = calculatePositionInSprite(*startSelectionPosition) - *textStartPositionX;
 
-        float selectionWidth = cursorDrawPosition.X - startSelectionPosX;
-        Vector2 startPos = Vector2{startSelectionPosX, cursorDrawPosition.Y};
+        float selectionWidth = cursorDrawPosition.x - startSelectionPosX;
+        Vector2 startPos = Vector2{startSelectionPosX, cursorDrawPosition.y};
 
-        if (cursorDrawPosition.X < startSelectionPosX) {
-            startPos.X = cursorDrawPosition.X;
-            selectionWidth = startSelectionPosX - cursorDrawPosition.X;
+        if (cursorDrawPosition.x < startSelectionPosX) {
+            startPos.x = cursorDrawPosition.x;
+            selectionWidth = startSelectionPosX - cursorDrawPosition.x;
         }
 
         constexpr float cursorHeightMargin = 2.0f;
@@ -667,7 +667,7 @@ void TextEdit::Draw(DrawingContext& drawingContext)
         auto spriteBatch = drawingContext.GetSpriteBatch();
         auto startPos = Vector2::Zero();
         if (textStartPositionX != std::nullopt) {
-            startPos.X = *textStartPositionX;
+            startPos.x = *textStartPositionX;
         }
         spriteFont->Draw(
             *spriteBatch,
@@ -700,13 +700,13 @@ void TextEdit::Draw(DrawingContext& drawingContext)
     if ((textStartPositionX != std::nullopt) &&
         (cursorPosition != std::nullopt) &&
         (cursorMoveInterval == Duration::zero())) {
-        if (cursorDrawPosition.X < marginLeftBottom.X) {
+        if (cursorDrawPosition.x < marginLeftBottom.x) {
             // NOTE: Recalculate the start position
-            textStartPositionX = (*textStartPositionX + cursorDrawPosition.X - marginLeftBottom.X);
+            textStartPositionX = (*textStartPositionX + cursorDrawPosition.x - marginLeftBottom.x);
         }
-        if (cursorDrawPosition.X > innerBoundSize.X) {
+        if (cursorDrawPosition.x > innerBoundSize.x) {
             // NOTE: Recalculate the start position
-            textStartPositionX = (*textStartPositionX + (cursorDrawPosition.X - innerBoundSize.X));
+            textStartPositionX = (*textStartPositionX + (cursorDrawPosition.x - innerBoundSize.x));
         }
     }
 }

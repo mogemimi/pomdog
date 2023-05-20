@@ -12,10 +12,10 @@ namespace pomdog {
 class POMDOG_EXPORT Plane final {
 public:
     /// The normal vector of the plane.
-    Vector3 Normal;
+    Vector3 normal;
 
     /// The distance from the origin to the point that the normal of the plane starts on.
-    float Distance;
+    float distance;
 
 public:
     Plane() noexcept;

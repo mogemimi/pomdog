@@ -10,19 +10,19 @@ TEST_CASE("Point2D", "[Point2D]")
     SECTION("FirstTestCase")
     {
         Point2D coodinate{0, 0};
-        REQUIRE(coodinate.X == 0);
-        REQUIRE(coodinate.Y == 0);
+        REQUIRE(coodinate.x == 0);
+        REQUIRE(coodinate.y == 0);
 
         coodinate = {1, 2};
-        REQUIRE(coodinate.X == 1);
-        REQUIRE(coodinate.Y == 2);
+        REQUIRE(coodinate.x == 1);
+        REQUIRE(coodinate.y == 2);
 
         coodinate = {
             std::numeric_limits<int>::max(),
             std::numeric_limits<int>::min(),
         };
-        REQUIRE(std::numeric_limits<int>::max() == coodinate.X);
-        REQUIRE(std::numeric_limits<int>::min() == coodinate.Y);
+        REQUIRE(std::numeric_limits<int>::max() == coodinate.x);
+        REQUIRE(std::numeric_limits<int>::min() == coodinate.y);
     }
     SECTION("Constants")
     {

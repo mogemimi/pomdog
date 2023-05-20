@@ -16,8 +16,8 @@ namespace pomdog {
 /// Vector2 is a vector in 2-dimensional space.
 class POMDOG_EXPORT Vector2 final {
 public:
-    float X;
-    float Y;
+    float x;
+    float y;
 
 public:
     /// Creates a new Vector2 object.

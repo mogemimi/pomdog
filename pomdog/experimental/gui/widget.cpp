@@ -44,12 +44,12 @@ std::shared_ptr<Widget> Widget::GetParent()
 
 int Widget::GetX() const noexcept
 {
-    return localPosition.X;
+    return localPosition.x;
 }
 
 int Widget::GetY() const noexcept
 {
-    return localPosition.Y;
+    return localPosition.y;
 }
 
 int Widget::GetWidth() const noexcept
@@ -70,7 +70,7 @@ void Widget::SetSize(int widthIn, int heightIn)
 
 Rectangle Widget::GetBounds() const noexcept
 {
-    return Rectangle{localPosition.X, localPosition.Y, width, height};
+    return Rectangle{localPosition.x, localPosition.y, width, height};
 }
 
 void Widget::MarkParentTransformDirty()

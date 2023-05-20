@@ -10,23 +10,23 @@ TEST_CASE("Point3D", "[Point3D]")
     SECTION("FirstTestCase")
     {
         Point3D coodinate{0, 0, 0};
-        REQUIRE(coodinate.X == 0);
-        REQUIRE(coodinate.Y == 0);
-        REQUIRE(coodinate.Z == 0);
+        REQUIRE(coodinate.x == 0);
+        REQUIRE(coodinate.y == 0);
+        REQUIRE(coodinate.z == 0);
 
         coodinate = {1, 2, 3};
-        REQUIRE(coodinate.X == 1);
-        REQUIRE(coodinate.Y == 2);
-        REQUIRE(coodinate.Z == 3);
+        REQUIRE(coodinate.x == 1);
+        REQUIRE(coodinate.y == 2);
+        REQUIRE(coodinate.z == 3);
 
         coodinate = {
             std::numeric_limits<int>::max(),
             std::numeric_limits<int>::min(),
             std::numeric_limits<int>::denorm_min(),
         };
-        REQUIRE(std::numeric_limits<int>::max() == coodinate.X);
-        REQUIRE(std::numeric_limits<int>::min() == coodinate.Y);
-        REQUIRE(std::numeric_limits<int>::denorm_min() == coodinate.Z);
+        REQUIRE(std::numeric_limits<int>::max() == coodinate.x);
+        REQUIRE(std::numeric_limits<int>::min() == coodinate.y);
+        REQUIRE(std::numeric_limits<int>::denorm_min() == coodinate.z);
     }
     SECTION("Constants")
     {

@@ -13,10 +13,10 @@ TEST_CASE("Rectangle", "[Rectangle]")
     {
         using pomdog::Rectangle;
         Rectangle rect = {320, 240, 640, 480};
-        REQUIRE(rect.X == 320);
-        REQUIRE(rect.Y == 240);
-        REQUIRE(rect.Width == 640);
-        REQUIRE(rect.Height == 480);
+        REQUIRE(rect.x == 320);
+        REQUIRE(rect.y == 240);
+        REQUIRE(rect.width == 640);
+        REQUIRE(rect.height == 480);
         REQUIRE(Point2D{320, 240} == rect.GetLocation());
 
         REQUIRE(rect.GetLeft() == 320);
@@ -28,18 +28,18 @@ TEST_CASE("Rectangle", "[Rectangle]")
     {
         using pomdog::Rectangle;
         Rectangle rect = {320, 240, 640, 480};
-        REQUIRE(rect.X == 320);
-        REQUIRE(rect.Y == 240);
-        REQUIRE(rect.Width == 640);
-        REQUIRE(rect.Height == 480);
+        REQUIRE(rect.x == 320);
+        REQUIRE(rect.y == 240);
+        REQUIRE(rect.width == 640);
+        REQUIRE(rect.height == 480);
         REQUIRE(Point2D{320, 240} == rect.GetLocation());
 
         rect.SetLocation(Point2D{-42, -24});
         REQUIRE(Point2D{-42, -24} == rect.GetLocation());
-        REQUIRE(rect.X == -42);
-        REQUIRE(rect.Y == -24);
-        REQUIRE(rect.Width == 640);
-        REQUIRE(rect.Height == 480);
+        REQUIRE(rect.x == -42);
+        REQUIRE(rect.y == -24);
+        REQUIRE(rect.width == 640);
+        REQUIRE(rect.height == 480);
         REQUIRE(rect.GetLeft() == -42);
         REQUIRE(-42 + 640 == rect.GetRight());
         REQUIRE(rect.GetTop() == -24);
@@ -50,10 +50,10 @@ TEST_CASE("Rectangle", "[Rectangle]")
         using pomdog::Rectangle;
         Rectangle rect = {320, 240, 640, 480};
         rect.Inflate(96, 42);
-        REQUIRE(320 - 96 == rect.X);
-        REQUIRE(240 - 42 == rect.Y);
-        REQUIRE(640 + (96 * 2) == rect.Width);
-        REQUIRE(480 + (42 * 2) == rect.Height);
+        REQUIRE(rect.x == 320 - 96);
+        REQUIRE(rect.y == 240 - 42);
+        REQUIRE(rect.width == 640 + (96 * 2));
+        REQUIRE(rect.height == 480 + (42 * 2));
         REQUIRE(320 - 96 == rect.GetLeft());
         REQUIRE(320 + 640 + 96 == rect.GetRight());
         REQUIRE(240 - 42 == rect.GetTop());
@@ -64,10 +64,10 @@ TEST_CASE("Rectangle", "[Rectangle]")
         using pomdog::Rectangle;
         Rectangle rect = {320, 240, 640, 480};
         rect.Offset(96, 42);
-        REQUIRE(320 + 96 == rect.X);
-        REQUIRE(240 + 42 == rect.Y);
-        REQUIRE(rect.Width == 640);
-        REQUIRE(rect.Height == 480);
+        REQUIRE(rect.x == 320 + 96);
+        REQUIRE(rect.y == 240 + 42);
+        REQUIRE(rect.width == 640);
+        REQUIRE(rect.height == 480);
         REQUIRE(320 + 96 == rect.GetLeft());
         REQUIRE(320 + 96 + 640 == rect.GetRight());
         REQUIRE(240 + 42 == rect.GetTop());
@@ -81,8 +81,8 @@ TEST_CASE("Rectangle", "[Rectangle]")
         const int right = rect.GetRight();
         const int top = rect.GetTop();
         const int bottom = rect.GetBottom();
-        const int centerX = rect.GetCenter().X;
-        const int centerY = rect.GetCenter().Y;
+        const int centerX = rect.GetCenter().x;
+        const int centerY = rect.GetCenter().y;
 
         REQUIRE(rect.Contains(left, top));
         REQUIRE(rect.Contains(centerX, centerY));
@@ -120,8 +120,8 @@ TEST_CASE("Rectangle", "[Rectangle]")
         const int right = rect.GetRight();
         const int top = rect.GetTop();
         const int bottom = rect.GetBottom();
-        const int centerX = rect.GetCenter().X;
-        const int centerY = rect.GetCenter().Y;
+        const int centerX = rect.GetCenter().x;
+        const int centerY = rect.GetCenter().y;
 
         REQUIRE(rect.Contains({left, top}));
         REQUIRE(rect.Contains({left, centerY}));

@@ -5,10 +5,10 @@
 namespace pomdog::gui {
 
 struct Thickness final {
-    int Top;
-    int Right;
-    int Bottom;
-    int Left;
+    int top;
+    int right;
+    int bottom;
+    int left;
 };
 
 } // namespace pomdog::gui

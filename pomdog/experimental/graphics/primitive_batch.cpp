@@ -263,7 +263,7 @@ void PrimitiveBatch::DrawBox(
     const Color& color)
 {
     POMDOG_ASSERT(impl);
-    impl->polygonShapes.DrawBox(box.Min, box.Max - box.Min, color);
+    impl->polygonShapes.DrawBox(box.min, box.max - box.min, color);
 }
 
 void PrimitiveBatch::DrawBox(

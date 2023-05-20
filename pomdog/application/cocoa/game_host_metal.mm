@@ -405,14 +405,14 @@ void GameHostMetal::Impl::ProcessSystemEvents(const SystemEvent& event)
         auto rect = window->GetClientBounds();
         Log::Internal(StringHelper::Format(
             "ViewWillStartLiveResizeEvent: {w: %d, h: %d}",
-            rect.Width, rect.Height));
+            rect.width, rect.height));
         break;
     }
     case SystemEventKind::ViewDidEndLiveResizeEvent: {
         auto rect = window->GetClientBounds();
         Log::Internal(StringHelper::Format(
             "ViewDidEndLiveResizeEvent: {w: %d, h: %d}",
-            rect.Width, rect.Height));
+            rect.width, rect.height));
 
         ClientSizeChanged();
         break;
@@ -433,8 +433,8 @@ void GameHostMetal::Impl::ClientSizeChanged()
     POMDOG_ASSERT(graphicsDevice != nullptr);
     auto bounds = window->GetClientBounds();
 
-    graphicsDevice->ClientSizeChanged(bounds.Width, bounds.Height);
-    window->ClientSizeChanged(bounds.Width, bounds.Height);
+    graphicsDevice->ClientSizeChanged(bounds.width, bounds.height);
+    window->ClientSizeChanged(bounds.width, bounds.height);
 }
 
 std::shared_ptr<GameWindow>

@@ -102,9 +102,9 @@ void Image::Fill(const Color& color)
 void Image::PremultiplyAlpha()
 {
     for (auto& pixel : data) {
-        const auto alpha = pixel.A;
+        const auto alpha = pixel.a;
         pixel = math::Multiply(pixel, static_cast<float>(alpha) / 255.0f);
-        pixel.A = alpha;
+        pixel.a = alpha;
     }
 }
 

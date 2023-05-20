@@ -15,8 +15,8 @@ namespace pomdog {
 /// Point2D is a point in 2-dimensional space.
 class POMDOG_EXPORT Point2D final {
 public:
-    std::int32_t X;
-    std::int32_t Y;
+    std::int32_t x;
+    std::int32_t y;
 
 public:
     /// Constructor

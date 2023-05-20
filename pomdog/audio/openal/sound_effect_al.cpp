@@ -115,12 +115,12 @@ void SoundEffectAL::Apply3D(const AudioListener& listener, const AudioEmitter& e
     }
     {
         std::array<ALfloat, 6> orientation{{
-            listener.Forward.X,
-            listener.Forward.Y,
-            listener.Forward.Z,
-            listener.Up.X,
-            listener.Up.Y,
-            listener.Up.Z,
+            listener.Forward.x,
+            listener.Forward.y,
+            listener.Forward.z,
+            listener.Up.x,
+            listener.Up.y,
+            listener.Up.z,
         }};
 
         alListenerfv(AL_POSITION, listener.Position.Data());

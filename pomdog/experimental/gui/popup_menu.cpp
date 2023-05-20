@@ -282,12 +282,12 @@ void PopupMenu::Draw(DrawingContext& drawingContext)
 
     // NOTE: Draw box border
     primitiveBatch->DrawRectangle(
-        Rectangle{globalPos.X, globalPos.Y, GetWidth(), GetHeight()},
+        Rectangle{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
         borderColor);
 
     // NOTE: Draw text field box
     primitiveBatch->DrawRectangle(
-        Rectangle{globalPos.X + 1, globalPos.Y + 1, GetWidth() - 2, GetHeight() - 2},
+        Rectangle{globalPos.x + 1, globalPos.y + 1, GetWidth() - 2, GetHeight() - 2},
         fieldColor);
 
     primitiveBatch->Flush();
@@ -309,14 +309,14 @@ void PopupMenu::Draw(DrawingContext& drawingContext)
         switch (textAlignment) {
         case TextAlignment::Left:
             originPivot = Vector2{0.0f, 0.5f};
-            padding.X = horizontalPadding;
+            padding.x = horizontalPadding;
             break;
         case TextAlignment::Center:
             originPivot = Vector2{0.5f, 0.5f};
             break;
         case TextAlignment::Right:
             originPivot = Vector2{1.0f, 0.5f};
-            padding.X = -horizontalPadding;
+            padding.x = -horizontalPadding;
             break;
         }
 

@@ -19,13 +19,13 @@ ParticleEmitterShapeBox::ParticleEmitterShapeBox(const Vector3& size)
 std::tuple<Vector3, Vector3>
 ParticleEmitterShapeBox::Compute(random::Xoroshiro128StarStar& random) const
 {
-    POMDOG_ASSERT(halfSize.X >= 0.0f);
-    POMDOG_ASSERT(halfSize.Y >= 0.0f);
-    POMDOG_ASSERT(halfSize.Z >= 0.0f);
+    POMDOG_ASSERT(halfSize.x >= 0.0f);
+    POMDOG_ASSERT(halfSize.y >= 0.0f);
+    POMDOG_ASSERT(halfSize.z >= 0.0f);
 
-    std::uniform_real_distribution<float> distX(-halfSize.X, halfSize.X);
-    std::uniform_real_distribution<float> distY(-halfSize.Y, halfSize.Y);
-    std::uniform_real_distribution<float> distZ(-halfSize.Z, halfSize.Z);
+    std::uniform_real_distribution<float> distX(-halfSize.x, halfSize.x);
+    std::uniform_real_distribution<float> distY(-halfSize.y, halfSize.y);
+    std::uniform_real_distribution<float> distZ(-halfSize.z, halfSize.z);
 
     auto emitPosition = Vector3{distX(random), distY(random), distZ(random)};
     auto emitDirection = Vector3{1.0f, 0.0f, 0.0f};

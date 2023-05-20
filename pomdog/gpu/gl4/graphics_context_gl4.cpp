@@ -146,35 +146,35 @@ void SetViewport(
     const std::weak_ptr<GraphicsDevice>& graphicsDevice,
     bool useBackBuffer)
 {
-    POMDOG_ASSERT(viewport.Width > 0);
-    POMDOG_ASSERT(viewport.Height > 0);
+    POMDOG_ASSERT(viewport.width > 0);
+    POMDOG_ASSERT(viewport.height > 0);
 
-    GLint viewportY = viewport.TopLeftY;
+    GLint viewportY = viewport.topLeftY;
 
     if (useBackBuffer) {
         if (auto device = graphicsDevice.lock(); device != nullptr) {
             auto presentationParameters = device->GetPresentationParameters();
-            viewportY = presentationParameters.BackBufferHeight - (viewport.TopLeftY + viewport.Height);
+            viewportY = presentationParameters.BackBufferHeight - (viewport.topLeftY + viewport.height);
         }
     }
 
-    glViewport(viewport.TopLeftX, viewportY, viewport.Width, viewport.Height);
+    glViewport(viewport.topLeftX, viewportY, viewport.width, viewport.height);
     POMDOG_CHECK_ERROR_GL4("glViewport");
 
-    static_assert(std::is_same<GLfloat, decltype(viewport.MinDepth)>::value && std::is_same<GLfloat, decltype(viewport.MaxDepth)>::value,
+    static_assert(std::is_same<GLfloat, decltype(viewport.minDepth)>::value && std::is_same<GLfloat, decltype(viewport.maxDepth)>::value,
         "NOTE: You can use glDepthRange instead of glDepthRangef");
 
-    POMDOG_ASSERT(!std::isinf(viewport.MinDepth));
-    POMDOG_ASSERT(!std::isinf(viewport.MaxDepth));
-    POMDOG_ASSERT(!std::isnan(viewport.MinDepth));
-    POMDOG_ASSERT(!std::isnan(viewport.MaxDepth));
+    POMDOG_ASSERT(!std::isinf(viewport.minDepth));
+    POMDOG_ASSERT(!std::isinf(viewport.maxDepth));
+    POMDOG_ASSERT(!std::isnan(viewport.minDepth));
+    POMDOG_ASSERT(!std::isnan(viewport.maxDepth));
 
     // NOTE: The MinDepth and MaxDepth must be between 0.0 and 1.0, respectively.
     // Please see https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glDepthRange.xhtml
-    POMDOG_ASSERT((0.0f <= viewport.MinDepth) && (viewport.MinDepth <= 1.0f));
-    POMDOG_ASSERT((0.0f <= viewport.MaxDepth) && (viewport.MaxDepth <= 1.0f));
+    POMDOG_ASSERT((0.0f <= viewport.minDepth) && (viewport.minDepth <= 1.0f));
+    POMDOG_ASSERT((0.0f <= viewport.maxDepth) && (viewport.maxDepth <= 1.0f));
 
-    glDepthRangef(viewport.MinDepth, viewport.MaxDepth);
+    glDepthRangef(viewport.minDepth, viewport.maxDepth);
     POMDOG_CHECK_ERROR_GL4("glDepthRangef");
 }
 
@@ -183,21 +183,21 @@ void SetScissorRectangle(
     const std::weak_ptr<GraphicsDevice>& graphicsDevice,
     bool useBackBuffer)
 {
-    POMDOG_ASSERT(rectangle.Width >= 0);
-    POMDOG_ASSERT(rectangle.Height >= 0);
+    POMDOG_ASSERT(rectangle.width >= 0);
+    POMDOG_ASSERT(rectangle.height >= 0);
 
-    GLint lowerLeftCornerY = rectangle.Y;
+    GLint lowerLeftCornerY = rectangle.y;
 
     if (useBackBuffer) {
         // FIXME: Use glClipControl(GL_UPPER_LEFT) instead when OpenGL version is >= 4.5
         if (auto device = graphicsDevice.lock(); device != nullptr) {
             auto presentationParameters = device->GetPresentationParameters();
-            lowerLeftCornerY = presentationParameters.BackBufferHeight - (rectangle.Y + rectangle.Height);
+            lowerLeftCornerY = presentationParameters.BackBufferHeight - (rectangle.y + rectangle.height);
         }
     }
 
     // NOTE: To enable the scissor test, set `RasterizerStateGL4::scissorTestEnable` to true.
-    glScissor(rectangle.X, lowerLeftCornerY, rectangle.Width, rectangle.Height);
+    glScissor(rectangle.x, lowerLeftCornerY, rectangle.width, rectangle.height);
     POMDOG_CHECK_ERROR_GL4("glScissor");
 }
 
@@ -666,7 +666,7 @@ void GraphicsContextGL4::SetScissorRect(const Rectangle& scissorRect)
 
 void GraphicsContextGL4::SetBlendFactor(const Vector4& blendFactor)
 {
-    glBlendColor(blendFactor.X, blendFactor.Y, blendFactor.Z, blendFactor.W);
+    glBlendColor(blendFactor.x, blendFactor.y, blendFactor.z, blendFactor.w);
     POMDOG_CHECK_ERROR_GL4("glBlendColor");
 }
 
@@ -904,7 +904,7 @@ void GraphicsContextGL4::BeginRenderPass(const RenderPass& renderPass)
         auto& clearColor = std::get<1>(view);
 
         if (clearColor != std::nullopt) {
-            glClearColor(clearColor->X, clearColor->Y, clearColor->Z, clearColor->W);
+            glClearColor(clearColor->x, clearColor->y, clearColor->z, clearColor->w);
             POMDOG_CHECK_ERROR_GL4("glClearColor");
 
             constexpr GLbitfield clearMask = GL_COLOR_BUFFER_BIT;
@@ -932,7 +932,7 @@ void GraphicsContextGL4::BeginRenderPass(const RenderPass& renderPass)
             std::array<GLenum, 1> attachments = {ToColorAttachment(0)};
             ValidateFrameBuffer(*frameBuffer_, attachments.data(), static_cast<GLsizei>(attachments.size()));
 
-            glClearColor(clearColor->X, clearColor->Y, clearColor->Z, clearColor->W);
+            glClearColor(clearColor->x, clearColor->y, clearColor->z, clearColor->w);
             POMDOG_CHECK_ERROR_GL4("glClearColor");
 
             constexpr GLbitfield clearMask = GL_COLOR_BUFFER_BIT;

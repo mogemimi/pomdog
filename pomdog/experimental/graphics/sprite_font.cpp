@@ -135,8 +135,8 @@ void SpriteFont::Impl::ForEach(const std::string& text, Func func)
 
         switch (character) {
         case U'\n': {
-            position.X = 0;
-            position.Y += lineSpacing;
+            position.x = 0;
+            position.y += lineSpacing;
             FontGlyph glyph;
             glyph.Character = U'\n';
             glyph.Subrect = Rectangle{0, 0, 0, 0};
@@ -169,12 +169,12 @@ void SpriteFont::Impl::ForEach(const std::string& text, Func func)
             }
 
             const auto& glyph = iter->second;
-            position.X += static_cast<float>(glyph.XOffset);
+            position.x += static_cast<float>(glyph.XOffset);
 
             func(glyph, position);
 
             const auto advance = glyph.XAdvance - glyph.XOffset;
-            position.X += (static_cast<float>(advance) - spacing);
+            position.x += (static_cast<float>(advance) - spacing);
             break;
         }
         }
@@ -211,12 +211,12 @@ void SpriteFont::Impl::PrepareFonts(const std::string& text)
 
         auto glyph = font->RasterizeGlyph(character, fontSize, TextureWidth,
             [&](int glyphWidth, int glyphHeight, Point2D& pointOut, std::uint8_t*& output) {
-                if (currentPoint.X + glyphWidth + 1 >= TextureWidth) {
+                if (currentPoint.x + glyphWidth + 1 >= TextureWidth) {
                     // advance to next row
-                    currentPoint.Y = bottomY;
-                    currentPoint.X = 1;
+                    currentPoint.y = bottomY;
+                    currentPoint.x = 1;
                 }
-                if (currentPoint.Y + glyphHeight + 1 >= TextureHeight) {
+                if (currentPoint.y + glyphHeight + 1 >= TextureHeight) {
                     fetchTextureData();
                     std::fill(std::begin(pixelData), std::end(pixelData), static_cast<std::uint8_t>(0));
 
@@ -227,8 +227,8 @@ void SpriteFont::Impl::PrepareFonts(const std::string& text)
                     bottomY = 1;
                 }
 
-                POMDOG_ASSERT(currentPoint.X + glyphWidth < TextureWidth);
-                POMDOG_ASSERT(currentPoint.Y + glyphHeight < TextureHeight);
+                POMDOG_ASSERT(currentPoint.x + glyphWidth < TextureWidth);
+                POMDOG_ASSERT(currentPoint.y + glyphHeight < TextureHeight);
 
                 pointOut = currentPoint;
                 output = pixelData.data();
@@ -238,8 +238,8 @@ void SpriteFont::Impl::PrepareFonts(const std::string& text)
             continue;
         }
 
-        currentPoint.X = currentPoint.X + glyph->Subrect.Width + 1;
-        bottomY = std::max(bottomY, currentPoint.Y + glyph->Subrect.Height + 1);
+        currentPoint.x = currentPoint.x + glyph->Subrect.width + 1;
+        bottomY = std::max(bottomY, currentPoint.y + glyph->Subrect.height + 1);
 
         POMDOG_ASSERT(!textures.empty() && textures.size() > 0);
         glyph->TexturePage = static_cast<std::int16_t>(textures.size()) - 1;
@@ -262,8 +262,8 @@ Vector2 SpriteFont::Impl::MeasureString(const std::string& text)
             result = math::Max(result, postion + Vector2{0.0f, lineSpacing});
             return;
         }
-        float w = static_cast<float>(glyph.Subrect.Width);
-        float h = static_cast<float>(glyph.Subrect.Height);
+        float w = static_cast<float>(glyph.Subrect.width);
+        float h = static_cast<float>(glyph.Subrect.height);
         h = std::max(h, lineSpacing);
 
         if (glyph.Character == U' ') {
@@ -294,24 +294,24 @@ void SpriteFont::Impl::Draw(
         return;
     }
 
-    if ((scale.X == 0.0f) || (scale.Y == 0.0f)) {
+    if ((scale.x == 0.0f) || (scale.y == 0.0f)) {
         return;
     }
 
     // FIXME: Need to optimize layout calculation here.
     const auto labelSize = MeasureString(text);
 
-    if ((labelSize.X < 1.0f) || (labelSize.Y < 1.0f)) {
+    if ((labelSize.x < 1.0f) || (labelSize.y < 1.0f)) {
         return;
     }
-    const auto baseOffset = labelSize * originPivot - Vector2{0.0f, labelSize.Y - lineSpacing};
+    const auto baseOffset = labelSize * originPivot - Vector2{0.0f, labelSize.y - lineSpacing};
 
     ForEach(text, [&](const FontGlyph& glyph, const Vector2& pos) {
         if (isSpace(glyph.Character)) {
             // NOTE: Skip rendering
             return;
         }
-        if ((glyph.Subrect.Width <= 0) || (glyph.Subrect.Height <= 0)) {
+        if ((glyph.Subrect.width <= 0) || (glyph.Subrect.height <= 0)) {
             // NOTE: Skip rendering
             return;
         }
@@ -320,12 +320,12 @@ void SpriteFont::Impl::Draw(
         POMDOG_ASSERT(glyph.TexturePage >= 0);
         POMDOG_ASSERT(glyph.TexturePage < static_cast<int>(textures.size()));
 
-        auto w = static_cast<float>(glyph.Subrect.Width);
-        auto h = static_cast<float>(glyph.Subrect.Height);
+        const auto w = static_cast<float>(glyph.Subrect.width);
+        const auto h = static_cast<float>(glyph.Subrect.height);
 
         auto offset = Vector2{
-            pos.X,
-            -pos.Y - (static_cast<float>(glyph.YOffset) + h)};
+            pos.x,
+            -pos.y - (static_cast<float>(glyph.YOffset) + h)};
         offset = (baseOffset - offset) / Vector2{w, h};
 
         spriteBatch.Draw(textures[glyph.TexturePage], position, glyph.Subrect, color, rotation, offset, scale);

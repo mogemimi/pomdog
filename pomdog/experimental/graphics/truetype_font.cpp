@@ -141,22 +141,29 @@ std::optional<FontGlyph> TrueTypeFont::RasterizeGlyph(
     callback(glyphWidth, glyphHeight, point, pixels);
 
     POMDOG_ASSERT(pixels != nullptr);
-    POMDOG_ASSERT(point.X >= 0);
-    POMDOG_ASSERT(point.Y >= 0);
+    POMDOG_ASSERT(point.x >= 0);
+    POMDOG_ASSERT(point.y >= 0);
     POMDOG_ASSERT(textureWidth > 0);
 
     if (!isSpace) {
-        stbtt_MakeGlyphBitmap(&f, pixels + point.X + point.Y * textureWidth,
-            glyphWidth, glyphHeight, textureWidth, scale, scale, g);
+        stbtt_MakeGlyphBitmap(
+            &f,
+            pixels + point.x + point.y * textureWidth,
+            glyphWidth,
+            glyphHeight,
+            textureWidth,
+            scale,
+            scale,
+            g);
     }
 
     POMDOG_ASSERT(static_cast<int>(scale * advance) <= static_cast<int>(std::numeric_limits<std::int16_t>::max()));
 
     FontGlyph glyph;
-    glyph.Subrect.X = point.X;
-    glyph.Subrect.Y = point.Y;
-    glyph.Subrect.Width = glyphWidth;
-    glyph.Subrect.Height = glyphHeight;
+    glyph.Subrect.x = point.x;
+    glyph.Subrect.y = point.y;
+    glyph.Subrect.width = glyphWidth;
+    glyph.Subrect.height = glyphHeight;
     glyph.TexturePage = 0;
     glyph.XAdvance = static_cast<std::int16_t>(scale * advance);
     glyph.XOffset = static_cast<std::int16_t>(x0);

@@ -10,22 +10,22 @@ namespace pomdog::gpu {
 class POMDOG_EXPORT Viewport final {
 public:
     /// The x coordinate of the upper-left corner of the viewport.
-    int TopLeftX;
+    int topLeftX;
 
     /// The y coordinate of the upper-left corner of the viewport.
-    int TopLeftY;
+    int topLeftY;
 
     /// The width of the viewport, in pixels.
-    int Width;
+    int width;
 
     /// The height of the viewport, in pixels.
-    int Height;
+    int height;
 
     /// The minimum depth of the clip volume. It must be between 0.0 and 1.0.
-    float MinDepth;
+    float minDepth;
 
     /// The maximum depth of the clip volume. It must be between 0.0 and 1.0.
-    float MaxDepth;
+    float maxDepth;
 
 public:
     Viewport() noexcept = default;

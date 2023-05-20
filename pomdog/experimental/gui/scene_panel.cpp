@@ -47,7 +47,7 @@ bool ScenePanel::GetSizeToFitContent() const noexcept
 
 Point2D ScenePanel::ConvertToPanelSpace(const Point2D& point) const noexcept
 {
-    return Point2D(point.X - GetX(), point.Y - GetY());
+    return Point2D(point.x - GetX(), point.y - GetY());
 }
 
 void ScenePanel::OnEnter()

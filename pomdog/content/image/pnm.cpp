@@ -429,7 +429,7 @@ Encode(const Color* data, std::size_t size, int width, int height, const PNMEnco
             for (int y = 0; y < height; ++y) {
                 for (int x = 0; x < width; ++x) {
                     const auto& pixel = data[x + y * width];
-                    if (pixel.G > 0) {
+                    if (pixel.g > 0) {
                         writeString("0");
                     }
                     else {
@@ -446,7 +446,7 @@ Encode(const Color* data, std::size_t size, int width, int height, const PNMEnco
             for (int y = 0; y < height; ++y) {
                 for (int x = 0; x < width; ++x) {
                     const auto& pixel = data[x + y * width];
-                    writeString(std::to_string(pixel.G));
+                    writeString(std::to_string(pixel.g));
                     if (x + 1 < width) {
                         writeString(" ");
                     }
@@ -457,11 +457,11 @@ Encode(const Color* data, std::size_t size, int width, int height, const PNMEnco
         case PNMSubtype::Pixmap:
             for (int i = 0; i < pixelCount; ++i) {
                 const auto& pixel = data[i];
-                writeString(std::to_string(pixel.R));
+                writeString(std::to_string(pixel.r));
                 writeString(" ");
-                writeString(std::to_string(pixel.G));
+                writeString(std::to_string(pixel.g));
                 writeString(" ");
-                writeString(std::to_string(pixel.B));
+                writeString(std::to_string(pixel.b));
                 writeString("\n");
             }
             break;
@@ -472,7 +472,7 @@ Encode(const Color* data, std::size_t size, int width, int height, const PNMEnco
         case PNMSubtype::Bitmap:
             for (int i = 0; i < pixelCount; ++i) {
                 const auto& pixel = data[i];
-                if (pixel.G > 0) {
+                if (pixel.g > 0) {
                     writeByte(0);
                 }
                 else {
@@ -483,15 +483,15 @@ Encode(const Color* data, std::size_t size, int width, int height, const PNMEnco
         case PNMSubtype::Graymap:
             for (int i = 0; i < pixelCount; ++i) {
                 const auto& pixel = data[i];
-                writeByte(pixel.G);
+                writeByte(pixel.g);
             }
             break;
         case PNMSubtype::Pixmap:
             for (int i = 0; i < pixelCount; ++i) {
                 const auto& pixel = data[i];
-                writeByte(pixel.R);
-                writeByte(pixel.G);
-                writeByte(pixel.B);
+                writeByte(pixel.r);
+                writeByte(pixel.g);
+                writeByte(pixel.b);
             }
             break;
         }

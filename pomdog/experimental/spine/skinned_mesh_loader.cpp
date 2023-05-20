@@ -55,22 +55,22 @@ CreateSkinnedMeshSlot(
     slot.Indices = {0, 1, 2, 2, 3, 0};
 
     Vector2 origin;
-    origin.X = static_cast<float>(textureRegion.Width / 2 - textureRegion.XOffset) / textureRegion.Subrect.Width;
-    origin.Y = static_cast<float>(textureRegion.Height / 2 - textureRegion.YOffset) / textureRegion.Subrect.Height;
+    origin.x = static_cast<float>(textureRegion.width / 2 - textureRegion.xOffset) / textureRegion.subrect.width;
+    origin.y = static_cast<float>(textureRegion.height / 2 - textureRegion.yOffset) / textureRegion.subrect.height;
 
     auto size = Vector2{
-        static_cast<float>(textureRegion.Subrect.Width),
-        static_cast<float>(textureRegion.Subrect.Height),
+        static_cast<float>(textureRegion.subrect.width),
+        static_cast<float>(textureRegion.subrect.height),
     };
 
-    if (textureRegion.Rotate) {
-        std::swap(size.X, size.Y);
-        std::swap(origin.X, origin.Y);
+    if (textureRegion.rotate) {
+        std::swap(size.x, size.y);
+        std::swap(origin.x, origin.y);
     }
 
     Matrix3x2 scaling = Matrix3x2::CreateScale(attachment.Scale * size);
     Matrix3x2 rotate = Matrix3x2::CreateRotation(attachment.Rotation);
-    if (textureRegion.Rotate) {
+    if (textureRegion.rotate) {
         rotate = Matrix3x2::CreateRotation(-math::PiOver2<float>) * rotate;
     }
     Matrix3x2 translate = Matrix3x2::CreateTranslation(attachment.Translate);
@@ -79,23 +79,23 @@ CreateSkinnedMeshSlot(
     Matrix3x2 transform = scaling * rotate * translate * bindPosesInGlobal[*slotDesc.Joint];
 
     for (auto& vertex : slot.Vertices) {
-        auto position = math::Transform(Vector2(vertex.PositionTextureCoord.X, vertex.PositionTextureCoord.Y) - origin, transform);
+        auto position = math::Transform(Vector2(vertex.PositionTextureCoord.x, vertex.PositionTextureCoord.y) - origin, transform);
 
-        vertex.PositionTextureCoord.X = position.X;
-        vertex.PositionTextureCoord.Y = position.Y;
+        vertex.PositionTextureCoord.x = position.x;
+        vertex.PositionTextureCoord.y = position.y;
     }
 
     for (auto& vertex : slot.Vertices) {
         auto position =
-            Vector2{vertex.PositionTextureCoord.Z, vertex.PositionTextureCoord.W} * size +
-            Vector2{static_cast<float>(textureRegion.Subrect.X), static_cast<float>(textureRegion.Subrect.Y)};
+            Vector2{vertex.PositionTextureCoord.z, vertex.PositionTextureCoord.w} * size +
+            Vector2{static_cast<float>(textureRegion.subrect.x), static_cast<float>(textureRegion.subrect.y)};
 
-        POMDOG_ASSERT(textureSize.X > 0);
-        POMDOG_ASSERT(textureSize.Y > 0);
+        POMDOG_ASSERT(textureSize.x > 0);
+        POMDOG_ASSERT(textureSize.y > 0);
         position = position / textureSize;
 
-        vertex.PositionTextureCoord.Z = position.X;
-        vertex.PositionTextureCoord.W = position.Y;
+        vertex.PositionTextureCoord.z = position.x;
+        vertex.PositionTextureCoord.w = position.y;
     }
 
     return slot;
@@ -118,28 +118,28 @@ CreateSkinnedMeshSlot(
         auto position = math::Transform(source.Position, bindPosesInGlobal[*source.Joints.front()]);
 
         auto originInUV = Vector2{
-            static_cast<float>(textureRegion.Subrect.X),
-            static_cast<float>(textureRegion.Subrect.Y),
+            static_cast<float>(textureRegion.subrect.x),
+            static_cast<float>(textureRegion.subrect.y),
         };
         auto sizeInUV = Vector2{
-            static_cast<float>(textureRegion.Subrect.Width),
-            static_cast<float>(textureRegion.Subrect.Height),
+            static_cast<float>(textureRegion.subrect.width),
+            static_cast<float>(textureRegion.subrect.height),
         };
 
-        Vector2 textureCoordInUV = textureRegion.Rotate
+        Vector2 textureCoordInUV = textureRegion.rotate
                                        ? Vector2{
-                                             source.TextureCoordinate.Y * sizeInUV.Y,
-                                             (1 - source.TextureCoordinate.X) * sizeInUV.X,
+                                             source.TextureCoordinate.y * sizeInUV.y,
+                                             (1 - source.TextureCoordinate.x) * sizeInUV.x,
                                          }
                                        : source.TextureCoordinate * sizeInUV;
 
         auto textureCoord = (originInUV + textureCoordInUV) / textureSize;
 
         vertex.PositionTextureCoord = {
-            position.X,
-            position.Y,
-            textureCoord.X,
-            textureCoord.Y,
+            position.x,
+            position.y,
+            textureCoord.x,
+            textureCoord.y,
         };
 
         for (size_t i = 0; i < source.Joints.size(); ++i) {

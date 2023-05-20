@@ -223,15 +223,15 @@ std::vector<BoneDesc> ReadBones(const rapidjson::Value& bonesDOM)
         BoneDesc boneDesc;
 
         boneDesc.Name = boneDOM["name"].GetString();
-        boneDesc.Pose.Translate.X = 0;
-        boneDesc.Pose.Translate.Y = 0;
+        boneDesc.Pose.Translate.x = 0;
+        boneDesc.Pose.Translate.y = 0;
         boneDesc.Pose.Scale = 1;
         boneDesc.Pose.Rotation = 0;
 
         ReadJsonMember(boneDOM, "parent", boneDesc.Parent);
         //ReadJsonMember(boneDOM, "length", boneDesc.Length);
-        ReadJsonMember(boneDOM, "x", boneDesc.Pose.Translate.X);
-        ReadJsonMember(boneDOM, "y", boneDesc.Pose.Translate.Y);
+        ReadJsonMember(boneDOM, "x", boneDesc.Pose.Translate.x);
+        ReadJsonMember(boneDOM, "y", boneDesc.Pose.Translate.y);
         ReadJsonMember(boneDOM, "scaleY", boneDesc.Pose.Scale);
         ReadJsonMember(boneDOM, "scaleX", boneDesc.Pose.Scale);
 
@@ -345,11 +345,11 @@ std::vector<SkinnedMeshVertexDesc> ReadSkinnedMeshVertices(
             ++verticesIter;
 
             POMDOG_ASSERT(verticesArray[verticesIter].IsNumber());
-            vertex.Position.X = verticesArray[verticesIter].GetFloat();
+            vertex.Position.x = verticesArray[verticesIter].GetFloat();
             ++verticesIter;
 
             POMDOG_ASSERT(verticesArray[verticesIter].IsNumber());
-            vertex.Position.Y = verticesArray[verticesIter].GetFloat();
+            vertex.Position.y = verticesArray[verticesIter].GetFloat();
             ++verticesIter;
 
             POMDOG_ASSERT(verticesArray[verticesIter].IsNumber());
@@ -398,11 +398,11 @@ std::vector<SkinnedMeshVertexDesc> ReadSkinnedMeshVertices(
         }
 
         POMDOG_ASSERT(uvsIter->IsNumber());
-        vertex.TextureCoordinate.X = uvsIter->GetFloat();
+        vertex.TextureCoordinate.x = uvsIter->GetFloat();
         ++uvsIter;
         POMDOG_ASSERT(uvsIter != uvsArray.End());
         POMDOG_ASSERT(uvsIter->IsNumber());
-        vertex.TextureCoordinate.Y = uvsIter->GetFloat();
+        vertex.TextureCoordinate.y = uvsIter->GetFloat();
         ++uvsIter;
 
         vertices.push_back(std::move(vertex));
@@ -441,10 +441,10 @@ AttachmentDesc ReadAttachment(const rapidjson::Value::ConstMemberIterator& iter)
 
     auto& attachmentObject = iter->value;
 
-    ReadJsonMember(attachmentObject, "x", attachmentDesc.Translate.X);
-    ReadJsonMember(attachmentObject, "y", attachmentDesc.Translate.Y);
-    ReadJsonMember(attachmentObject, "scaleX", attachmentDesc.Scale.X);
-    ReadJsonMember(attachmentObject, "scaleY", attachmentDesc.Scale.Y);
+    ReadJsonMember(attachmentObject, "x", attachmentDesc.Translate.x);
+    ReadJsonMember(attachmentObject, "y", attachmentDesc.Translate.y);
+    ReadJsonMember(attachmentObject, "scaleX", attachmentDesc.Scale.x);
+    ReadJsonMember(attachmentObject, "scaleY", attachmentDesc.Scale.y);
     ReadJsonMember(attachmentObject, "rotation", attachmentDesc.Rotation);
     ReadJsonMember(attachmentObject, "width", attachmentDesc.Width);
     ReadJsonMember(attachmentObject, "height", attachmentDesc.Height);

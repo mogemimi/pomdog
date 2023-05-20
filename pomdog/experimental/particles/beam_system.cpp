@@ -26,7 +26,7 @@ CreateJaggedLine(
     }
 
     auto tangent = end - start;
-    auto normal = Vector2{-tangent.Y, tangent.X};
+    auto normal = Vector2{-tangent.y, tangent.x};
 
     POMDOG_ASSERT(math::LengthSquared(tangent) > std::numeric_limits<float>::epsilon());
     POMDOG_ASSERT(math::LengthSquared(normal) > std::numeric_limits<float>::epsilon());
@@ -116,7 +116,7 @@ CreateBranch(
     Vector2 start = math::Lerp(parentBeam.Points[index1], parentBeam.Points[index2], middlePoint);
 
     Vector2 tangent = sourceEnd - start;
-    Vector2 normal{-tangent.Y, tangent.X};
+    Vector2 normal{-tangent.y, tangent.x};
 
     auto distribution = branching.SpreadRange;
     auto lengthSq1 = math::LengthSquared(sourceEnd - start);
@@ -210,7 +210,7 @@ void BeamSystem::Update(const Duration& frameDuration, const Vector2& emitterPos
             emissionTimer -= emissionInterval;
 
             const auto tangent = target - emitterPosition;
-            const auto normal = Vector2{-tangent.Y, tangent.X};
+            const auto normal = Vector2{-tangent.y, tangent.x};
             const auto end = target + (math::Normalize(normal) * distribution(random));
 
             Beam beam;

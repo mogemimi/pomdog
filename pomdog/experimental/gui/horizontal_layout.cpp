@@ -174,7 +174,7 @@ void HorizontalLayout::UpdateLayout()
             maxHeight = std::max(child.widget->GetHeight(), maxHeight);
         }
 
-        const auto requiredHeight = maxHeight + margin.Top + margin.Bottom;
+        const auto requiredHeight = maxHeight + margin.top + margin.bottom;
         if (requiredHeight > GetHeight()) {
             // NOTE: Resizing this panel
             SetSize(GetWidth(), requiredHeight);
@@ -193,7 +193,7 @@ void HorizontalLayout::UpdateLayout()
 
     POMDOG_ASSERT(!children.empty());
     const auto lineSpacingAll = (layoutSpacing * std::max(0, static_cast<int>(children.size()) - 1));
-    const auto horizontalSpacing = (margin.Left + margin.Right + lineSpacingAll);
+    const auto horizontalSpacing = (margin.left + margin.right + lineSpacingAll);
     const auto containerWidth = std::max(1, (GetWidth() - horizontalSpacing));
     const auto cellWidth = [&]() -> int {
         if (!isStackedLayout) {
@@ -218,7 +218,7 @@ void HorizontalLayout::UpdateLayout()
         return (GetWidth() - fixedWidth) / childrenCount;
     }();
 
-    int offsetX = margin.Left;
+    int offsetX = margin.left;
     double inverseStretchFactor = 1.0 / totalStretchFactor;
 
     auto calcWidth = [&](int stretch) -> int {
@@ -240,7 +240,7 @@ void HorizontalLayout::UpdateLayout()
             break;
         case HorizontalAlignment::Right:
             if (!isStackedLayout) {
-                position.X = offsetX + cellWidth - child.widget->GetWidth();
+                position.x = offsetX + cellWidth - child.widget->GetWidth();
             }
             break;
         case HorizontalAlignment::Left:
@@ -248,10 +248,10 @@ void HorizontalLayout::UpdateLayout()
         }
 
         if (child.widget->GetHeight() < GetHeight()) {
-            position.Y = (GetHeight() - child.widget->GetHeight()) / 2;
+            position.y = (GetHeight() - child.widget->GetHeight()) / 2;
         }
         else {
-            position.Y = margin.Bottom;
+            position.y = margin.bottom;
         }
 
         child.widget->SetPosition(position);

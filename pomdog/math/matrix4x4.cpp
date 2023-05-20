@@ -270,9 +270,9 @@ bool Matrix4x4::operator!=(const Matrix4x4& other) const noexcept
 
 void Matrix4x4::SetTranslation(const Vector3& position) noexcept
 {
-    m[3][0] = position.X;
-    m[3][1] = position.Y;
-    m[3][2] = position.Z;
+    m[3][0] = position.x;
+    m[3][1] = position.y;
+    m[3][2] = position.z;
 }
 
 Vector3 Matrix4x4::GetTranslation() const noexcept
@@ -282,9 +282,9 @@ Vector3 Matrix4x4::GetTranslation() const noexcept
 
 void Matrix4x4::SetScale(const Vector3& scale) noexcept
 {
-    m[0][0] = scale.X;
-    m[1][1] = scale.Y;
-    m[2][2] = scale.Z;
+    m[0][0] = scale.x;
+    m[1][1] = scale.y;
+    m[2][2] = scale.z;
 }
 
 Vector3 Matrix4x4::GetScale() const noexcept
@@ -299,7 +299,7 @@ Matrix4x4::CreateTranslation(const Vector3& position) noexcept
         1.0f, 0.0f, 0.0f, 0.0f,
         0.0f, 1.0f, 0.0f, 0.0f,
         0.0f, 0.0f, 1.0f, 0.0f,
-        position.X, position.Y, position.Z, 1.0f};
+        position.x, position.y, position.z, 1.0f};
 }
 
 Matrix4x4
@@ -316,9 +316,9 @@ Matrix4x4
 Matrix4x4::CreateScale(const Vector3& scale) noexcept
 {
     return Matrix4x4{
-        scale.X, 0.0f, 0.0f, 0.0f,
-        0.0f, scale.Y, 0.0f, 0.0f,
-        0.0f, 0.0f, scale.Z, 0.0f,
+        scale.x, 0.0f, 0.0f, 0.0f,
+        0.0f, scale.y, 0.0f, 0.0f,
+        0.0f, 0.0f, scale.z, 0.0f,
         0.0f, 0.0f, 0.0f, 1.0f};
 }
 
@@ -364,15 +364,15 @@ Matrix4x4::CreateRotationZ(const Radian<float>& angle)
 Matrix4x4
 Matrix4x4::CreateFromQuaternion(const Quaternion& quaternion)
 {
-    const auto xx = quaternion.X * quaternion.X;
-    const auto yy = quaternion.Y * quaternion.Y;
-    const auto zz = quaternion.Z * quaternion.Z;
-    const auto xy = quaternion.X * quaternion.Y;
-    const auto zw = quaternion.Z * quaternion.W;
-    const auto zx = quaternion.Z * quaternion.X;
-    const auto yw = quaternion.Y * quaternion.W;
-    const auto yz = quaternion.Y * quaternion.Z;
-    const auto xw = quaternion.X * quaternion.W;
+    const auto xx = quaternion.x * quaternion.x;
+    const auto yy = quaternion.y * quaternion.y;
+    const auto zz = quaternion.z * quaternion.z;
+    const auto xy = quaternion.x * quaternion.y;
+    const auto zw = quaternion.z * quaternion.w;
+    const auto zx = quaternion.z * quaternion.x;
+    const auto yw = quaternion.y * quaternion.w;
+    const auto yz = quaternion.y * quaternion.z;
+    const auto xw = quaternion.x * quaternion.w;
 
     return Matrix4x4{
         1.0f - (2.0f * (yy + zz)),
@@ -416,19 +416,19 @@ Matrix4x4::CreateLookAtLH(const Vector3& eye, const Vector3& at, const Vector3& 
     const auto yaxis = math::Cross(zaxis, xaxis);
 
     return Matrix4x4{
-        xaxis.X,
-        yaxis.X,
-        zaxis.X,
+        xaxis.x,
+        yaxis.x,
+        zaxis.x,
         0.0f,
 
-        xaxis.Y,
-        yaxis.Y,
-        zaxis.Y,
+        xaxis.y,
+        yaxis.y,
+        zaxis.y,
         0.0f,
 
-        xaxis.Z,
-        yaxis.Z,
-        zaxis.Z,
+        xaxis.z,
+        yaxis.z,
+        zaxis.z,
         0.0f,
 
         -math::Dot(xaxis, eye),
@@ -457,19 +457,19 @@ Matrix4x4::CreateLookAtRH(const Vector3& eye, const Vector3& at, const Vector3& 
     const auto yaxis = math::Cross(zaxis, xaxis);
 
     return Matrix4x4{
-        xaxis.X,
-        yaxis.X,
-        zaxis.X,
+        xaxis.x,
+        yaxis.x,
+        zaxis.x,
         0.0f,
 
-        xaxis.Y,
-        yaxis.Y,
-        zaxis.Y,
+        xaxis.y,
+        yaxis.y,
+        zaxis.y,
         0.0f,
 
-        xaxis.Z,
-        yaxis.Z,
-        zaxis.Z,
+        xaxis.z,
+        yaxis.z,
+        zaxis.z,
         0.0f,
 
         -math::Dot(xaxis, eye),
@@ -851,24 +851,24 @@ Matrix4x4::CreateFromAxisAngle(const Vector3& axis, const Radian<float>& angle)
     const auto sinAngle = std::sin(angle.value);
     const auto cosAngle = std::cos(angle.value);
     const auto factor = 1.0f - cosAngle;
-    const auto xx = axis.X * axis.X;
-    const auto yy = axis.Y * axis.Y;
-    const auto zz = axis.Z * axis.Z;
-    const auto xy = axis.X * axis.Y;
-    const auto xz = axis.X * axis.Z;
-    const auto yz = axis.Y * axis.Z;
+    const auto xx = axis.x * axis.x;
+    const auto yy = axis.y * axis.y;
+    const auto zz = axis.z * axis.z;
+    const auto xy = axis.x * axis.y;
+    const auto xz = axis.x * axis.z;
+    const auto yz = axis.y * axis.z;
 
     return Matrix4x4{
         factor * xx + cosAngle,
-        factor * xy + sinAngle * axis.Z,
-        factor * xz - sinAngle * axis.Y,
+        factor * xy + sinAngle * axis.z,
+        factor * xz - sinAngle * axis.y,
         0.0f,
-        factor * xy - sinAngle * axis.Z,
+        factor * xy - sinAngle * axis.z,
         factor * yy + cosAngle,
-        factor * yz + sinAngle * axis.X,
+        factor * yz + sinAngle * axis.x,
         0.0f,
-        factor * xz + sinAngle * axis.Y,
-        factor * yz - sinAngle * axis.X,
+        factor * xz + sinAngle * axis.y,
+        factor * yz - sinAngle * axis.x,
         factor * zz + cosAngle,
         0.0f,
         0.0f,

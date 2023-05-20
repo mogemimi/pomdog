@@ -31,8 +31,8 @@ TEST_CASE("BoundingFrustum", "[BoundingFrustum]")
         const auto projection = Matrix4x4::CreatePerspectiveFieldOfViewLH(PI / 4.0f, width / height, zNear, zFar);
 
         BoundingFrustum frustum(view * projection);
-        REQUIRE(std::abs(-frustum.GetNear().Normal.X - frustum.GetFar().Normal.X) < Epsilon2);
-        REQUIRE(std::abs(-frustum.GetNear().Normal.Y - frustum.GetFar().Normal.Y) < Epsilon2);
-        REQUIRE(std::abs(-frustum.GetNear().Normal.Z - frustum.GetFar().Normal.Z) < Epsilon2);
+        REQUIRE(std::abs(-frustum.GetNear().normal.x - frustum.GetFar().normal.x) < Epsilon2);
+        REQUIRE(std::abs(-frustum.GetNear().normal.y - frustum.GetFar().normal.y) < Epsilon2);
+        REQUIRE(std::abs(-frustum.GetNear().normal.z - frustum.GetFar().normal.z) < Epsilon2);
     }
 }

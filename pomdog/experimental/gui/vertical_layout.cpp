@@ -172,7 +172,7 @@ void VerticalLayout::UpdateLayout()
 
     POMDOG_ASSERT(!children.empty());
     const auto lineSpacingAll = (layoutSpacing * std::max(0, static_cast<int>(children.size()) - 1));
-    const auto verticalSpacing = (margin.Top + margin.Bottom + lineSpacingAll);
+    const auto verticalSpacing = (margin.top + margin.bottom + lineSpacingAll);
 
     int requiredHeight = verticalSpacing;
     for (auto& child : children) {
@@ -189,20 +189,20 @@ void VerticalLayout::UpdateLayout()
     }
 
     // NOTE: Update layout for children
-    int offsetY = margin.Top;
+    int offsetY = margin.top;
     for (auto& child : children) {
         offsetY += child->GetHeight();
-        auto position = Point2D{margin.Left, GetHeight() - offsetY};
+        auto position = Point2D{margin.left, GetHeight() - offsetY};
 
         switch (child->GetHorizontalAlignment()) {
         case HorizontalAlignment::Stretch: {
-            auto childWidth = GetWidth() - (margin.Left + margin.Right);
+            auto childWidth = GetWidth() - (margin.left + margin.right);
             child->SetSize(childWidth, child->GetHeight());
             child->MarkContentLayoutDirty();
             break;
         }
         case HorizontalAlignment::Right: {
-            position.X = GetWidth() - margin.Right - child->GetWidth();
+            position.x = GetWidth() - margin.right - child->GetWidth();
             break;
         }
         case HorizontalAlignment::Left:

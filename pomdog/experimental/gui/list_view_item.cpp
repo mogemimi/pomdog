@@ -86,8 +86,8 @@ void ListViewItem::SetMargin(const Thickness& margin)
     static_assert(std::is_same_v<decltype(marginLeft), std::int16_t>);
     static_assert(std::is_same_v<decltype(marginRight), std::int16_t>);
 
-    marginLeft = static_cast<std::int16_t>(margin.Left);
-    marginRight = static_cast<std::int16_t>(margin.Right);
+    marginLeft = static_cast<std::int16_t>(margin.left);
+    marginRight = static_cast<std::int16_t>(margin.right);
 }
 
 void ListViewItem::SetHorizontalAlignment(HorizontalAlignment horizontalAlignmentIn) noexcept
@@ -210,7 +210,7 @@ void ListViewItem::Draw(DrawingContext& drawingContext)
         }
 
         primitiveBatch->DrawRectangle(
-            Rectangle{globalPos.X, globalPos.Y, GetWidth(), GetHeight()},
+            Rectangle{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
             color);
 
         primitiveBatch->Flush();

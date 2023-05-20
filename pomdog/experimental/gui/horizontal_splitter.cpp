@@ -154,12 +154,12 @@ void HorizontalSplitter::OnEnter()
         auto pos = splitterHandle->GetPosition();
         if (offset <= 0) {
             auto& left = children[0];
-            pos.X = std::max(pos.X + offset, left.minimumWidth);
+            pos.x = std::max(pos.x + offset, left.minimumWidth);
         }
         else {
             auto& right = children[1];
-            pos.X = std::min(
-                pos.X + offset,
+            pos.x = std::min(
+                pos.x + offset,
                 GetWidth() - (right.minimumWidth + splitterHandle->GetBorderWidth()));
         }
 
@@ -342,7 +342,7 @@ void HorizontalSplitter::UpdateLayout()
             maxHeight = std::max(child.widget->GetHeight(), maxHeight);
         }
 
-        const auto requiredHeight = maxHeight + margin.Top + margin.Bottom;
+        const auto requiredHeight = maxHeight + margin.top + margin.bottom;
         if (requiredHeight > GetHeight()) {
             // NOTE: Resizing this panel
             SetSize(GetWidth(), requiredHeight);
@@ -356,8 +356,8 @@ void HorizontalSplitter::UpdateLayout()
 
     {
         auto position = splitterHandle->GetPosition();
-        position.X = std::clamp(
-            position.X,
+        position.x = std::clamp(
+            position.x,
             0,
             GetWidth() - (children[1].minimumWidth + splitterHandle->GetBorderWidth()));
         splitterHandle->SetPosition(position);
@@ -366,7 +366,7 @@ void HorizontalSplitter::UpdateLayout()
 
     POMDOG_ASSERT(!children.empty());
 
-    int offsetX = margin.Left;
+    int offsetX = margin.left;
 
     // NOTE: Update layout for children
     for (int i = 0; i < static_cast<int>(children.size()); i++) {
@@ -386,21 +386,21 @@ void HorizontalSplitter::UpdateLayout()
                 return GetWidth() - offsetX;
             }
             auto handlePosition = handle->GetBorderPosition();
-            return std::max(child.minimumWidth, handlePosition.X - position.X);
+            return std::max(child.minimumWidth, handlePosition.x - position.x);
         }();
 
         switch (child.widget->GetHorizontalAlignment()) {
         case HorizontalAlignment::Stretch: {
             auto h = child.widget->GetHeight();
             if (child.widget->GetVerticalAlignment() == VerticalAlignment::Stretch) {
-                h = GetHeight() - (margin.Bottom + margin.Top);
+                h = GetHeight() - (margin.bottom + margin.top);
             }
             child.widget->SetSize(requiredWidth, h);
             child.widget->MarkContentLayoutDirty();
             break;
         }
         case HorizontalAlignment::Right:
-            position.X = offsetX + requiredWidth - child.widget->GetWidth();
+            position.x = offsetX + requiredWidth - child.widget->GetWidth();
             break;
         case HorizontalAlignment::Left:
             break;
@@ -408,11 +408,11 @@ void HorizontalSplitter::UpdateLayout()
 
         switch (child.widget->GetVerticalAlignment()) {
         case VerticalAlignment::Stretch: {
-            position.Y = margin.Bottom;
+            position.y = margin.bottom;
             break;
         }
         case VerticalAlignment::Top:
-            position.Y = GetHeight() - child.widget->GetHeight() - margin.Top;
+            position.y = GetHeight() - child.widget->GetHeight() - margin.top;
             break;
             // case VerticalAlignment::Center:
             //     position.Y = (GetHeight() - child.widget->GetHeight()) / 2;
@@ -423,7 +423,7 @@ void HorizontalSplitter::UpdateLayout()
 
         if (handle != nullptr) {
             auto handlePosition = handle->GetPosition();
-            offsetX = handlePosition.X + handle->GetBorderWidth();
+            offsetX = handlePosition.x + handle->GetBorderWidth();
         }
     }
 
@@ -442,11 +442,11 @@ void HorizontalSplitter::Draw(DrawingContext& drawingContext)
 
     auto globalPos = UIHelper::ProjectToWorldSpace(GetPosition(), drawingContext.GetCurrentTransform());
 
-    if (backgroundColor.A > 0) {
+    if (backgroundColor.a > 0) {
         auto primitiveBatch = drawingContext.GetPrimitiveBatch();
 
         primitiveBatch->DrawRectangle(
-            Rectangle{globalPos.X, globalPos.Y, GetWidth(), GetHeight()},
+            Rectangle{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
             backgroundColor);
 
         primitiveBatch->Flush();
@@ -526,7 +526,7 @@ int HorizontalSplitterHandle::GetBorderWidthOffset() const noexcept
 Point2D HorizontalSplitterHandle::GetBorderPosition() const noexcept
 {
     auto pos = GetPosition();
-    pos.X = pos.X + GetBorderWidthOffset();
+    pos.x = pos.x + GetBorderWidthOffset();
     return pos;
 }
 
@@ -564,7 +564,7 @@ void HorizontalSplitterHandle::OnPointerMoved(const PointerPoint& pointerPoint)
 
     if (grabStartPosition) {
         auto pointInView = UIHelper::ProjectToChildSpace(pointerPoint.Position, GetGlobalPosition());
-        Resizing(pointInView.X - grabStartPosition->X);
+        Resizing(pointInView.x - grabStartPosition->x);
     }
 }
 
@@ -583,7 +583,7 @@ void HorizontalSplitterHandle::Draw(DrawingContext& drawingContext)
     auto primitiveBatch = drawingContext.GetPrimitiveBatch();
 
     primitiveBatch->DrawRectangle(
-        Rectangle{globalPos.X, globalPos.Y, borderWidth, GetHeight()},
+        Rectangle{globalPos.x, globalPos.y, borderWidth, GetHeight()},
         color);
 
     primitiveBatch->Flush();

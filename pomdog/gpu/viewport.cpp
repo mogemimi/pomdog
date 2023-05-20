@@ -15,33 +15,32 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::gpu {
 
 Viewport::Viewport(const Rectangle& bounds) noexcept
-    : TopLeftX(bounds.X)
-    , TopLeftY(bounds.Y)
-    , Width(bounds.Width)
-    , Height(bounds.Height)
-    , MinDepth(0.0f)
-    , MaxDepth(1.0f)
+    : topLeftX(bounds.x)
+    , topLeftY(bounds.y)
+    , width(bounds.width)
+    , height(bounds.height)
+    , minDepth(0.0f)
+    , maxDepth(1.0f)
 {
 }
 
 Viewport::Viewport(int xIn, int yIn, int widthIn, int heightIn) noexcept
-    : TopLeftX(xIn)
-    , TopLeftY(yIn)
-    , Width(widthIn)
-    , Height(heightIn)
-    , MinDepth(0.0f)
-    , MaxDepth(1.0f)
+    : topLeftX(xIn)
+    , topLeftY(yIn)
+    , width(widthIn)
+    , height(heightIn)
+    , minDepth(0.0f)
+    , maxDepth(1.0f)
 {
 }
 
-Viewport::Viewport(int xIn, int yIn, int widthIn, int heightIn,
-    float minDepthIn, float maxDepthIn) noexcept
-    : TopLeftX(xIn)
-    , TopLeftY(yIn)
-    , Width(widthIn)
-    , Height(heightIn)
-    , MinDepth(minDepthIn)
-    , MaxDepth(maxDepthIn)
+Viewport::Viewport(int xIn, int yIn, int widthIn, int heightIn, float minDepthIn, float maxDepthIn) noexcept
+    : topLeftX(xIn)
+    , topLeftY(yIn)
+    , width(widthIn)
+    , height(heightIn)
+    , minDepth(minDepthIn)
+    , maxDepth(maxDepthIn)
 {
 }
 
@@ -49,19 +48,20 @@ Vector3 Viewport::Project(
     const Vector3& source,
     const Matrix4x4& worldViewProjection) const
 {
+    const auto divisor = source.x * worldViewProjection(0, 3) +
+                         source.y * worldViewProjection(1, 3) +
+                         source.z * worldViewProjection(2, 3) +
+                         worldViewProjection(3, 3);
+
     auto result = math::Transform(source, worldViewProjection);
-    auto divisor = source.X * worldViewProjection(0, 3) +
-                   source.Y * worldViewProjection(1, 3) +
-                   source.Z * worldViewProjection(2, 3) +
-                   worldViewProjection(3, 3);
 
     if (std::abs(divisor) > std::numeric_limits<float>::epsilon()) {
         result = result / divisor;
     }
 
-    result.X = (result.X + 1.0f) * 0.5f * static_cast<float>(Width) + static_cast<float>(TopLeftX);
-    result.Y = (-result.Y + 1.0f) * 0.5f * static_cast<float>(Height) + static_cast<float>(TopLeftY);
-    result.Z = result.Z * (MaxDepth - MinDepth) + MinDepth;
+    result.x = (result.x + 1.0f) * 0.5f * static_cast<float>(width) + static_cast<float>(topLeftX);
+    result.y = (-result.y + 1.0f) * 0.5f * static_cast<float>(height) + static_cast<float>(topLeftY);
+    result.z = result.z * (maxDepth - minDepth) + minDepth;
     return result;
 }
 
@@ -69,22 +69,22 @@ Vector3 Viewport::Unproject(
     const Vector3& source,
     const Matrix4x4& worldViewProjection) const
 {
-    POMDOG_ASSERT(Width > 0);
-    POMDOG_ASSERT(Height > 0);
-    POMDOG_ASSERT((MaxDepth - MinDepth) != 0.0f);
+    POMDOG_ASSERT(width > 0);
+    POMDOG_ASSERT(height > 0);
+    POMDOG_ASSERT((maxDepth - minDepth) != 0.0f);
 
     Vector3 vec;
-    vec.X = ((source.X - static_cast<float>(TopLeftX)) / static_cast<float>(Width) * 2.0f) - 1.0f;
-    vec.Y = -(((source.Y - static_cast<float>(TopLeftY)) / static_cast<float>(Height) * 2.0f) - 1.0f);
-    vec.Z = (source.Z - MinDepth) / (MaxDepth - MinDepth);
+    vec.x = ((source.x - static_cast<float>(topLeftX)) / static_cast<float>(width) * 2.0f) - 1.0f;
+    vec.y = -(((source.y - static_cast<float>(topLeftY)) / static_cast<float>(height) * 2.0f) - 1.0f);
+    vec.z = (source.z - minDepth) / (maxDepth - minDepth);
 
-    Matrix4x4 invertWVP = math::Invert(worldViewProjection);
+    const auto invertWVP = math::Invert(worldViewProjection);
+    const auto divisor = vec.x * invertWVP(0, 3) +
+                         vec.y * invertWVP(1, 3) +
+                         vec.z * invertWVP(2, 3) +
+                         invertWVP(3, 3);
+
     auto result = math::Transform(vec, invertWVP);
-    auto divisor = vec.X * invertWVP(0, 3) +
-                   vec.Y * invertWVP(1, 3) +
-                   vec.Z * invertWVP(2, 3) +
-                   invertWVP(3, 3);
-
     if (std::abs(divisor) > std::numeric_limits<float>::epsilon()) {
         result = result / divisor;
     }
@@ -93,14 +93,14 @@ Vector3 Viewport::Unproject(
 
 Rectangle Viewport::GetBounds() const noexcept
 {
-    return Rectangle{TopLeftX, TopLeftY, Width, Height};
+    return Rectangle{topLeftX, topLeftY, width, height};
 }
 
 float Viewport::GetAspectRatio() const noexcept
 {
-    POMDOG_ASSERT(this->Height != 0);
-    if (this->Height != 0) {
-        return static_cast<float>(this->Width) / this->Height;
+    POMDOG_ASSERT(height != 0);
+    if (height != 0) {
+        return static_cast<float>(width) / height;
     }
     return 0.0f;
 }

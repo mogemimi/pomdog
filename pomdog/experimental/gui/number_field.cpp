@@ -125,7 +125,7 @@ void NumberField::Deselect()
 void NumberField::SetPrependAreaColor(const std::optional<Color>& color)
 {
     if (color != std::nullopt) {
-        prependAreaColor = Color{color->R, color->G, color->B, 255};
+        prependAreaColor = Color{color->r, color->g, color->b, 255};
     }
     else {
         prependAreaColor = Color{255, 255, 255, 0};
@@ -273,8 +273,8 @@ void NumberField::OnPointerMoved(const PointerPoint& pointerPoint)
         return;
     }
 
-    auto pointInView = UIHelper::ProjectToChildSpace(pointerPoint.Position, GetGlobalPosition());
-    auto amount = (pointInView.X - startDragPosition->X);
+    const auto pointInView = UIHelper::ProjectToChildSpace(pointerPoint.Position, GetGlobalPosition());
+    const auto amount = (pointInView.x - startDragPosition->x);
 
     if (pointInView != startDragPosition) {
         isDragging = true;
@@ -345,7 +345,7 @@ void NumberField::UpdateAnimation(const Duration& frameDuration)
 void NumberField::DoLayout()
 {
     int prependAreaOffset = 0;
-    const bool hasPrependArea = (prependAreaColor.A == 255);
+    const bool hasPrependArea = (prependAreaColor.a == 255);
     if (hasPrependArea) {
         prependAreaOffset = prependAreaWidth;
     }
@@ -358,7 +358,7 @@ void NumberField::DoLayout()
     POMDOG_ASSERT(textBlock != nullptr);
     auto margin = textEdit->GetTextMargin();
     textBlock->SetSize(GetWidth() - prependAreaOffset, GetHeight());
-    textBlock->SetPosition(Point2D{prependAreaOffset, margin.Bottom});
+    textBlock->SetPosition(Point2D{prependAreaOffset, margin.bottom});
     textBlock->DoLayout();
 
     POMDOG_ASSERT(addButton != nullptr);
@@ -396,19 +396,19 @@ void NumberField::Draw(DrawingContext& drawingContext)
 
     // NOTE: Draw box border
     primitiveBatch->DrawRectangle(
-        Rectangle{globalPos.X, globalPos.Y, GetWidth(), GetHeight()},
+        Rectangle{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
         borderColor);
 
     // NOTE: Draw text field box
     primitiveBatch->DrawRectangle(
-        Rectangle{globalPos.X + 1, globalPos.Y + 1, GetWidth() - 2, GetHeight() - 2},
+        Rectangle{globalPos.x + 1, globalPos.y + 1, GetWidth() - 2, GetHeight() - 2},
         fieldColor);
 
-    const bool hasPrependArea = (prependAreaColor.A == 255);
+    const bool hasPrependArea = (prependAreaColor.a == 255);
     if (hasPrependArea) {
         // NOTE: Draw prepend area box
         primitiveBatch->DrawRectangle(
-            Rectangle{globalPos.X + 1, globalPos.Y + 1, prependAreaWidth, GetHeight() - 2},
+            Rectangle{globalPos.x + 1, globalPos.y + 1, prependAreaWidth, GetHeight() - 2},
             prependAreaColor);
     }
 

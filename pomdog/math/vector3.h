@@ -16,9 +16,9 @@ namespace pomdog {
 /// Vector3 is a vector in 3-dimensional space.
 class POMDOG_EXPORT Vector3 final {
 public:
-    float X;
-    float Y;
-    float Z;
+    float x;
+    float y;
+    float z;
 
 public:
     /// Creates a new Vector3 object.

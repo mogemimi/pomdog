@@ -124,14 +124,14 @@ void ContextMenu::UpdateLayout()
         return;
     }
 
-    const auto scrollViewHeight = std::max(30, GetHeight() - (padding.Top + padding.Bottom));
+    const auto scrollViewHeight = std::max(30, GetHeight() - (padding.top + padding.bottom));
 
     if (scrollViewHeight != scrollView->GetHeight()) {
         scrollView->SetSize(scrollView->GetWidth(), scrollViewHeight);
         scrollView->DoLayout();
     }
 
-    const auto requiredHeight = padding.Top + scrollView->GetHeight() + padding.Bottom;
+    const auto requiredHeight = padding.top + scrollView->GetHeight() + padding.bottom;
     if (requiredHeight != GetHeight()) {
         // NOTE: Keeping the original position
         const auto positionOffset = Point2D{0, GetHeight() - requiredHeight};
@@ -148,11 +148,11 @@ void ContextMenu::UpdateLayout()
 
     // NOTE: Update layout for children
     {
-        scrollView->SetPosition(Point2D{padding.Left, padding.Bottom});
+        scrollView->SetPosition(Point2D{padding.left, padding.bottom});
 
         switch (scrollView->GetHorizontalAlignment()) {
         case HorizontalAlignment::Stretch: {
-            auto childWidth = GetWidth() - (padding.Left + padding.Right);
+            auto childWidth = GetWidth() - (padding.left + padding.right);
             scrollView->SetSize(childWidth, scrollView->GetHeight());
             scrollView->MarkContentLayoutDirty();
             break;
@@ -199,15 +199,15 @@ void ContextMenu::Draw(DrawingContext& drawingContext)
         colorScheme->ContextMenuShadowColor);
 
     primitiveBatch->DrawRectangle(
-        Rectangle{globalPos.X - 1, globalPos.Y - 1, GetWidth() + 2, GetHeight() + 2},
+        Rectangle{globalPos.x - 1, globalPos.y - 1, GetWidth() + 2, GetHeight() + 2},
         colorScheme->ContextMenuOutlineColor);
 
     primitiveBatch->DrawRectangle(
-        Rectangle{globalPos.X, globalPos.Y, GetWidth(), GetHeight()},
+        Rectangle{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
         colorScheme->ContextMenuBorderColor);
 
     primitiveBatch->DrawRectangle(
-        Rectangle{globalPos.X + 1, globalPos.Y + 1, GetWidth() - 2, GetHeight() - 2},
+        Rectangle{globalPos.x + 1, globalPos.y + 1, GetWidth() - 2, GetHeight() - 2},
         colorScheme->ContextMenuBackgroundColor);
 
     primitiveBatch->Flush();

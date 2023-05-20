@@ -71,8 +71,8 @@ void ContextMenuButton::SetMargin(const Thickness& margin)
     static_assert(std::is_same_v<decltype(marginLeft), std::int16_t>);
     static_assert(std::is_same_v<decltype(marginRight), std::int16_t>);
 
-    marginLeft = static_cast<std::int16_t>(margin.Left);
-    marginRight = static_cast<std::int16_t>(margin.Right);
+    marginLeft = static_cast<std::int16_t>(margin.left);
+    marginRight = static_cast<std::int16_t>(margin.right);
 }
 
 void ContextMenuButton::SetHorizontalAlignment(HorizontalAlignment horizontalAlignmentIn) noexcept
@@ -165,7 +165,7 @@ void ContextMenuButton::Draw(DrawingContext& drawingContext)
 
     if (isEnabled && (isHovered || isFocused) && (clickInterval <= 0)) {
         primitiveBatch->DrawRectangle(
-            Rectangle{globalPos.X, globalPos.Y, GetWidth(), GetHeight()},
+            Rectangle{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
             rectHoveredColor);
 
         primitiveBatch->Flush();
@@ -185,14 +185,14 @@ void ContextMenuButton::Draw(DrawingContext& drawingContext)
         switch (textAlignment) {
         case TextAlignment::Left:
             originPivot = Vector2{0.0f, 0.5f};
-            padding.X = static_cast<float>(marginLeft);
+            padding.x = static_cast<float>(marginLeft);
             break;
         case TextAlignment::Center:
             originPivot = Vector2{0.5f, 0.5f};
             break;
         case TextAlignment::Right:
             originPivot = Vector2{1.0f, 0.5f};
-            padding.X = -static_cast<float>(marginRight);
+            padding.x = -static_cast<float>(marginRight);
             break;
         }
 

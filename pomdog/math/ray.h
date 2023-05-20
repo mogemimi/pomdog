@@ -16,8 +16,8 @@ namespace pomdog {
 /// Ray represents a ray with an origin point and a direction vector in 3D space.
 class POMDOG_EXPORT Ray final {
 public:
-    Vector3 Position;
-    Vector3 Direction;
+    Vector3 position;
+    Vector3 direction;
 
 public:
     Ray() = default;

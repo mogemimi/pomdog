@@ -72,18 +72,18 @@ void BuildSpriteAnimationTracks(
             SpriteKeyframe key;
             key.Time = sample.Time;
             key.TexturePage = textureAtlasRegion->TexturePage;
-            key.TextureRotate = textureAtlasRegion->Region.Rotate;
-            key.Subrect = textureAtlasRegion->Region.Subrect;
-            const auto regionW = static_cast<float>(textureAtlasRegion->Region.Width);
-            const auto regionH = static_cast<float>(textureAtlasRegion->Region.Height);
-            const auto textureXOffset = static_cast<float>(textureAtlasRegion->Region.XOffset);
-            const auto textureYOffset = static_cast<float>(textureAtlasRegion->Region.YOffset);
-            key.Origin.X = (regionW / 2 - textureXOffset) / textureAtlasRegion->Region.Subrect.Width;
-            key.Origin.Y = (regionH / 2 - textureYOffset) / textureAtlasRegion->Region.Subrect.Height;
+            key.TextureRotate = textureAtlasRegion->Region.rotate;
+            key.Subrect = textureAtlasRegion->Region.subrect;
+            const auto regionW = static_cast<float>(textureAtlasRegion->Region.width);
+            const auto regionH = static_cast<float>(textureAtlasRegion->Region.height);
+            const auto textureXOffset = static_cast<float>(textureAtlasRegion->Region.xOffset);
+            const auto textureYOffset = static_cast<float>(textureAtlasRegion->Region.yOffset);
+            key.Origin.x = (regionW / 2 - textureXOffset) / textureAtlasRegion->Region.subrect.width;
+            key.Origin.y = (regionH / 2 - textureYOffset) / textureAtlasRegion->Region.subrect.height;
 
-            if (textureAtlasRegion->Region.Rotate) {
-                std::swap(key.Subrect.Width, key.Subrect.Height);
-                std::swap(key.Origin.X, key.Origin.Y);
+            if (textureAtlasRegion->Region.rotate) {
+                std::swap(key.Subrect.width, key.Subrect.height);
+                std::swap(key.Origin.x, key.Origin.y);
             }
 
             keys.push_back(std::move(key));

@@ -22,10 +22,10 @@ TEST_CASE("Plane", "[Plane]")
     SECTION("Constructor_Vector3_Float")
     {
         Plane plane{Vector3{1.0f, 2.0f, 3.0f}, 4.0f};
-        REQUIRE(plane.Normal.X == 1.0f);
-        REQUIRE(plane.Normal.Y == 2.0f);
-        REQUIRE(plane.Normal.Z == 3.0f);
-        REQUIRE(plane.Distance == 4.0f);
+        REQUIRE(plane.normal.x == 1.0f);
+        REQUIRE(plane.normal.y == 2.0f);
+        REQUIRE(plane.normal.z == 3.0f);
+        REQUIRE(plane.distance == 4.0f);
     }
     SECTION("Constructor_Vector3Array_1")
     {
@@ -40,30 +40,30 @@ TEST_CASE("Plane", "[Plane]")
             const auto ac = c - a;
             const auto normal = math::Normalize(math::Cross(ab, ac));
             const auto distance = -(math::Dot(normal, a));
-            REQUIRE(std::abs(plane.Normal.X - normal.X) < Epsilon2);
-            REQUIRE(std::abs(plane.Normal.Y - normal.Y) < Epsilon2);
-            REQUIRE(std::abs(plane.Normal.Z - normal.Z) < Epsilon2);
-            REQUIRE(std::abs(plane.Distance - distance) < Epsilon2);
+            REQUIRE(std::abs(plane.normal.x - normal.x) < Epsilon2);
+            REQUIRE(std::abs(plane.normal.y - normal.y) < Epsilon2);
+            REQUIRE(std::abs(plane.normal.z - normal.z) < Epsilon2);
+            REQUIRE(std::abs(plane.distance - distance) < Epsilon2);
         }
         {
             const auto bc = c - b;
             const auto ba = a - b;
             const auto normal = math::Normalize(math::Cross(bc, ba));
             const auto distance = -(math::Dot(normal, b));
-            REQUIRE(std::abs(plane.Normal.X - normal.X) < Epsilon2);
-            REQUIRE(std::abs(plane.Normal.Y - normal.Y) < Epsilon2);
-            REQUIRE(std::abs(plane.Normal.Z - normal.Z) < Epsilon2);
-            REQUIRE(std::abs(plane.Distance - distance) < Epsilon2);
+            REQUIRE(std::abs(plane.normal.x - normal.x) < Epsilon2);
+            REQUIRE(std::abs(plane.normal.y - normal.y) < Epsilon2);
+            REQUIRE(std::abs(plane.normal.z - normal.z) < Epsilon2);
+            REQUIRE(std::abs(plane.distance - distance) < Epsilon2);
         }
         {
             const auto ca = a - c;
             const auto cb = b - c;
             const auto normal = math::Normalize(math::Cross(ca, cb));
             const auto distance = -(math::Dot(normal, c));
-            REQUIRE(std::abs(plane.Normal.X - normal.X) < Epsilon2);
-            REQUIRE(std::abs(plane.Normal.Y - normal.Y) < Epsilon2);
-            REQUIRE(std::abs(plane.Normal.Z - normal.Z) < Epsilon2);
-            REQUIRE(std::abs(plane.Distance - distance) < Epsilon2);
+            REQUIRE(std::abs(plane.normal.x - normal.x) < Epsilon2);
+            REQUIRE(std::abs(plane.normal.y - normal.y) < Epsilon2);
+            REQUIRE(std::abs(plane.normal.z - normal.z) < Epsilon2);
+            REQUIRE(std::abs(plane.distance - distance) < Epsilon2);
         }
     }
     SECTION("Constructor_Vector3Array_2")
@@ -79,58 +79,58 @@ TEST_CASE("Plane", "[Plane]")
             const auto ac = c - a;
             const auto normal = math::Normalize(math::Cross(ab, ac));
             const auto distance = -(math::Dot(normal, a));
-            REQUIRE(std::abs(plane.Normal.X - normal.X) < Epsilon2);
-            REQUIRE(std::abs(plane.Normal.Y - normal.Y) < Epsilon2);
-            REQUIRE(std::abs(plane.Normal.Z - normal.Z) < Epsilon2);
-            REQUIRE(std::abs(plane.Distance - distance) < Epsilon2);
+            REQUIRE(std::abs(plane.normal.x - normal.x) < Epsilon2);
+            REQUIRE(std::abs(plane.normal.y - normal.y) < Epsilon2);
+            REQUIRE(std::abs(plane.normal.z - normal.z) < Epsilon2);
+            REQUIRE(std::abs(plane.distance - distance) < Epsilon2);
         }
         {
             const auto bc = c - b;
             const auto ba = a - b;
             const auto normal = math::Normalize(math::Cross(bc, ba));
             const auto distance = -(math::Dot(normal, b));
-            REQUIRE(std::abs(plane.Normal.X - normal.X) < Epsilon2);
-            REQUIRE(std::abs(plane.Normal.Y - normal.Y) < Epsilon2);
-            REQUIRE(std::abs(plane.Normal.Z - normal.Z) < Epsilon2);
-            REQUIRE(std::abs(plane.Distance - distance) < Epsilon2);
+            REQUIRE(std::abs(plane.normal.x - normal.x) < Epsilon2);
+            REQUIRE(std::abs(plane.normal.y - normal.y) < Epsilon2);
+            REQUIRE(std::abs(plane.normal.z - normal.z) < Epsilon2);
+            REQUIRE(std::abs(plane.distance - distance) < Epsilon2);
         }
         {
             const auto ca = a - c;
             const auto cb = b - c;
             const auto normal = math::Normalize(math::Cross(ca, cb));
             const auto distance = -(math::Dot(normal, c));
-            REQUIRE(std::abs(plane.Normal.X - normal.X) < Epsilon2);
-            REQUIRE(std::abs(plane.Normal.Y - normal.Y) < Epsilon2);
-            REQUIRE(std::abs(plane.Normal.Z - normal.Z) < Epsilon2);
-            REQUIRE(std::abs(plane.Distance - distance) < Epsilon2);
+            REQUIRE(std::abs(plane.normal.x - normal.x) < Epsilon2);
+            REQUIRE(std::abs(plane.normal.y - normal.y) < Epsilon2);
+            REQUIRE(std::abs(plane.normal.z - normal.z) < Epsilon2);
+            REQUIRE(std::abs(plane.distance - distance) < Epsilon2);
         }
     }
     SECTION("Normalize_Zero")
     {
         Plane plane{Vector3::Zero(), 0.0f};
         plane.Normalize();
-        REQUIRE(plane.Normal == Vector3{0.0f, 0.0f, 0.0f});
-        REQUIRE(plane.Distance == 0.0f);
+        REQUIRE(plane.normal == Vector3{0.0f, 0.0f, 0.0f});
+        REQUIRE(plane.distance == 0.0f);
     }
     SECTION("Normalize_Epsilon")
     {
         {
             Plane plane{Vector3{Epsilon, 0.0f, 0.0f}, 0.0f};
             plane.Normalize();
-            REQUIRE(plane.Normal == Vector3{1.0f, 0.0f, 0.0f});
-            REQUIRE(plane.Distance == 0.0f / Epsilon);
+            REQUIRE(plane.normal == Vector3{1.0f, 0.0f, 0.0f});
+            REQUIRE(plane.distance == 0.0f / Epsilon);
         }
         {
             Plane plane{Vector3{0.0f, Epsilon, 0.0f}, 3.0f};
             plane.Normalize();
-            REQUIRE(plane.Normal == Vector3{0.0f, 1.0f, 0.0f});
-            REQUIRE(plane.Distance == 3.0f / Epsilon);
+            REQUIRE(plane.normal == Vector3{0.0f, 1.0f, 0.0f});
+            REQUIRE(plane.distance == 3.0f / Epsilon);
         }
         {
             Plane plane{Vector3{0.0f, 0.0f, Epsilon}, 42.0f};
             plane.Normalize();
-            REQUIRE(plane.Normal == Vector3{0.0f, 0.0f, 1.0f});
-            REQUIRE(plane.Distance == 42.0f / Epsilon);
+            REQUIRE(plane.normal == Vector3{0.0f, 0.0f, 1.0f});
+            REQUIRE(plane.distance == 42.0f / Epsilon);
         }
     }
     SECTION("Normalize_Factor")
@@ -142,8 +142,8 @@ TEST_CASE("Plane", "[Plane]")
         plane.Normalize();
 
         const auto factor = math::Length(math::Normalize(normal)) / math::Length(normal);
-        REQUIRE(plane.Normal == normal * factor);
-        REQUIRE(plane.Distance == distance * factor);
+        REQUIRE(plane.normal == normal * factor);
+        REQUIRE(plane.distance == distance * factor);
     }
     SECTION("Intersects_Vector3_UnitX")
     {

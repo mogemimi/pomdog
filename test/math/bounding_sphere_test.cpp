@@ -14,25 +14,25 @@ TEST_CASE("BoundingSphere", "[BoundingSphere]")
         BoundingSphere sphere;
 
         BoundingSphere sphere2;
-        sphere2.Center = Vector3::Zero();
-        sphere2.Radius = 42.0f;
+        sphere2.center = Vector3::Zero();
+        sphere2.radius = 42.0f;
 
         sphere = sphere2;
-        REQUIRE(Vector3::Zero() == sphere.Center);
-        REQUIRE(sphere.Radius == 42.0f);
+        REQUIRE(Vector3::Zero() == sphere.center);
+        REQUIRE(sphere.radius == 42.0f);
 
         BoundingSphere sphere3{Vector3::UnitX(), 17.0f};
         sphere = sphere3;
-        REQUIRE(Vector3::UnitX() == sphere.Center);
-        REQUIRE(Vector3::UnitX() == sphere3.Center);
-        REQUIRE(sphere.Radius == 17.0f);
-        REQUIRE(sphere3.Radius == 17.0f);
+        REQUIRE(Vector3::UnitX() == sphere.center);
+        REQUIRE(Vector3::UnitX() == sphere3.center);
+        REQUIRE(sphere.radius == 17.0f);
+        REQUIRE(sphere3.radius == 17.0f);
     }
     SECTION("Contains_Vector3")
     {
         BoundingSphere sphere;
-        sphere.Center = Vector3::Zero();
-        sphere.Radius = 42.0f;
+        sphere.center = Vector3::Zero();
+        sphere.radius = 42.0f;
 
         REQUIRE(ContainmentType::Contains == sphere.Contains(Vector3::Zero()));
         REQUIRE(ContainmentType::Contains == sphere.Contains(Vector3{41.f, 0.f, 0.f}));
@@ -59,8 +59,8 @@ TEST_CASE("BoundingSphere", "[BoundingSphere]")
     SECTION("Contains_BoundingSphere")
     {
         BoundingSphere sphere;
-        sphere.Center = Vector3::Zero();
-        sphere.Radius = 42.0f;
+        sphere.center = Vector3::Zero();
+        sphere.radius = 42.0f;
 
         REQUIRE(ContainmentType::Intersects == sphere.Contains(sphere));
         REQUIRE(ContainmentType::Intersects == sphere.Contains(BoundingSphere{Vector3::Zero(), 43.0f}));
@@ -99,12 +99,12 @@ TEST_CASE("BoundingSphere", "[BoundingSphere]")
         using pomdog::math::Normalize;
 
         BoundingSphere sphere;
-        sphere.Center = Vector3::Zero();
-        sphere.Radius = 42.0f;
+        sphere.center = Vector3::Zero();
+        sphere.radius = 42.0f;
 
-        auto min = Normalize({-1.f, -1.f, -1.f}) * 42.0f;
-        auto max = Normalize({1.f, 1.f, 1.f}) * 42.0f;
-        auto unit = Normalize({1.f, 1.f, 1.f}) * 42.0f;
+        const auto min = Normalize({-1.f, -1.f, -1.f}) * 42.0f;
+        const auto max = Normalize({1.f, 1.f, 1.f}) * 42.0f;
+        const auto unit = Normalize({1.f, 1.f, 1.f}) * 42.0f;
 
         REQUIRE(ContainmentType::Contains == sphere.Contains(BoundingBox{Vector3::Zero(), max}));
         REQUIRE(ContainmentType::Contains == sphere.Contains(BoundingBox{Vector3::Zero() - unit * Vector3::UnitX(), max - unit * Vector3::UnitX()}));
@@ -131,12 +131,12 @@ TEST_CASE("BoundingSphere", "[BoundingSphere]")
         using pomdog::math::Normalize;
 
         BoundingSphere sphere;
-        sphere.Center = Vector3::Zero();
-        sphere.Radius = 42.0f;
+        sphere.center = Vector3::Zero();
+        sphere.radius = 42.0f;
 
-        auto min = Normalize({-1.f, -1.f, -1.f}) * 42.0f;
-        auto max = Normalize({1.f, 1.f, 1.f}) * 42.0f;
-        auto unit = Normalize({1.f, 1.f, 1.f}) * 42.0f;
+        const auto min = Normalize({-1.f, -1.f, -1.f}) * 42.0f;
+        const auto max = Normalize({1.f, 1.f, 1.f}) * 42.0f;
+        const auto unit = Normalize({1.f, 1.f, 1.f}) * 42.0f;
 
         REQUIRE(sphere.Intersects(BoundingBox{Vector3::Zero(), max}));
         REQUIRE(sphere.Intersects(BoundingBox{Vector3::Zero() - unit * Vector3::UnitX(), max - unit * Vector3::UnitX()}));
@@ -161,8 +161,8 @@ TEST_CASE("BoundingSphere", "[BoundingSphere]")
     SECTION("Intersects_BoundingSphere")
     {
         BoundingSphere sphere;
-        sphere.Center = Vector3::Zero();
-        sphere.Radius = 42.0f;
+        sphere.center = Vector3::Zero();
+        sphere.radius = 42.0f;
 
         REQUIRE(sphere.Intersects(sphere));
         REQUIRE(sphere.Intersects(BoundingSphere{Vector3::Zero(), 43.0f}));

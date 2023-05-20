@@ -17,8 +17,8 @@ namespace pomdog {
 /// BoundingBox is an axis-aligned bounding box in 3D space.
 class POMDOG_EXPORT BoundingBox final {
 public:
-    Vector3 Min;
-    Vector3 Max;
+    Vector3 min;
+    Vector3 max;
 
     static constexpr int CornerCount = 8;
 

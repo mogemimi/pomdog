@@ -258,7 +258,7 @@ void PolygonShapeBuilder::DrawLine(
     }
 
     auto vec = end - start;
-    std::swap(vec.X, vec.Y);
+    std::swap(vec.x, vec.y);
 
     auto a = math::Normalize(vec * Vector2{1, -1}) * halfWeight;
     auto b = math::Normalize(vec * Vector2{-1, 1}) * halfWeight;
@@ -294,7 +294,7 @@ void PolygonShapeBuilder::DrawPolyline(
         auto& end = points[i + 1];
 
         auto vec = end - start;
-        std::swap(vec.X, vec.Y);
+        std::swap(vec.x, vec.y);
 
         auto a = math::Normalize(vec * Vector2{1, -1}) * halfThickness;
         auto b = math::Normalize(vec * Vector2{-1, 1}) * halfThickness;
@@ -323,15 +323,15 @@ void PolygonShapeBuilder::DrawRectangle(
     const Color& color3,
     const Color& color4)
 {
-    if (sourceRect.Width <= 0 || sourceRect.Height <= 0) {
+    if (sourceRect.width <= 0 || sourceRect.height <= 0) {
         return;
     }
 
     std::array<Vector3, 4> rectVertices = {{
-        Vector3{static_cast<float>(sourceRect.GetLeft()), static_cast<float>(sourceRect.Y), 0.0f},
-        Vector3{static_cast<float>(sourceRect.GetLeft()), static_cast<float>(sourceRect.Y + sourceRect.Height), 0.0f},
-        Vector3{static_cast<float>(sourceRect.GetRight()), static_cast<float>(sourceRect.Y + sourceRect.Height), 0.0f},
-        Vector3{static_cast<float>(sourceRect.GetRight()), static_cast<float>(sourceRect.Y), 0.0f},
+        Vector3{static_cast<float>(sourceRect.GetLeft()), static_cast<float>(sourceRect.y), 0.0f},
+        Vector3{static_cast<float>(sourceRect.GetLeft()), static_cast<float>(sourceRect.y + sourceRect.height), 0.0f},
+        Vector3{static_cast<float>(sourceRect.GetRight()), static_cast<float>(sourceRect.y + sourceRect.height), 0.0f},
+        Vector3{static_cast<float>(sourceRect.GetRight()), static_cast<float>(sourceRect.y), 0.0f},
     }};
 
     auto colorVector1 = color1.ToVector4();
@@ -371,20 +371,20 @@ void PolygonShapeBuilder::DrawRectangle(
         return;
     }
 
-    const auto left = position.X;
-    const auto right = position.X + width;
+    const auto left = position.x;
+    const auto right = position.x + width;
 
     std::array<Vector3, 4> rectVertices = {{
-        Vector3{left, position.Y, 0.0f},
-        Vector3{left, position.Y + height, 0.0f},
-        Vector3{right, position.Y + height, 0.0f},
-        Vector3{right, position.Y, 0.0f},
+        Vector3{left, position.y, 0.0f},
+        Vector3{left, position.y + height, 0.0f},
+        Vector3{right, position.y + height, 0.0f},
+        Vector3{right, position.y, 0.0f},
     }};
 
     for (auto& vertex : rectVertices) {
-        auto vec2 = math::Transform(Vector2{vertex.X, vertex.Y}, matrix);
-        vertex.X = vec2.X;
-        vertex.Y = vec2.Y;
+        auto vec2 = math::Transform(Vector2{vertex.x, vertex.y}, matrix);
+        vertex.x = vec2.x;
+        vertex.y = vec2.y;
     }
 
     auto colorVector1 = color1.ToVector4();
@@ -412,10 +412,10 @@ void PolygonShapeBuilder::DrawRectangle(
     }
 
     Vector2 anchorOffset = Vector2{width, height} * originPivot;
-    const auto minX = position.X - anchorOffset.X;
-    const auto minY = position.Y - anchorOffset.Y;
-    const auto maxX = position.X + width - anchorOffset.X;
-    const auto maxY = position.Y + height - anchorOffset.Y;
+    const auto minX = position.x - anchorOffset.x;
+    const auto minY = position.y - anchorOffset.y;
+    const auto maxX = position.x + width - anchorOffset.x;
+    const auto maxY = position.y + height - anchorOffset.y;
 
     std::array<Vector3, 4> rectVertices = {{
         Vector3{minX, minY, 0.0f},

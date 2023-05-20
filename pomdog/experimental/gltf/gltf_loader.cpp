@@ -154,10 +154,10 @@ ParseQuaternion(const rapidjson::Value& array, Quaternion& result) noexcept
             return errors::New("v must be float type");
         }
     }
-    result.X = vec[0].IsFloat();
-    result.Y = vec[1].IsFloat();
-    result.Z = vec[2].IsFloat();
-    result.W = vec[3].IsFloat();
+    result.x = vec[0].IsFloat();
+    result.y = vec[1].IsFloat();
+    result.z = vec[2].IsFloat();
+    result.w = vec[3].IsFloat();
 
     return nullptr;
 }
@@ -178,9 +178,9 @@ ParseVector3(const rapidjson::Value& array, Vector3& result) noexcept
             return errors::New("v must be float type");
         }
     }
-    result.X = vec[0].IsFloat();
-    result.Y = vec[1].IsFloat();
-    result.Z = vec[2].IsFloat();
+    result.x = vec[0].IsFloat();
+    result.y = vec[1].IsFloat();
+    result.z = vec[2].IsFloat();
 
     return nullptr;
 }

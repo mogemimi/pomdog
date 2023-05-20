@@ -107,16 +107,16 @@ CreateSlots(
         slot.Rotation = attachment->Rotation;
 
         slot.TexturePage = textureAtlasRegion->TexturePage;
-        slot.TextureRotate = textureAtlasRegion->Region.Rotate;
-        slot.Subrect = textureAtlasRegion->Region.Subrect;
-        auto textureXOffset = textureAtlasRegion->Region.XOffset;
-        auto textureYOffset = textureAtlasRegion->Region.YOffset;
-        slot.Origin.X = static_cast<float>(textureAtlasRegion->Region.Width / 2 - textureXOffset) / textureAtlasRegion->Region.Subrect.Width;
-        slot.Origin.Y = static_cast<float>(textureAtlasRegion->Region.Height / 2 - textureYOffset) / textureAtlasRegion->Region.Subrect.Height;
+        slot.TextureRotate = textureAtlasRegion->Region.rotate;
+        slot.Subrect = textureAtlasRegion->Region.subrect;
+        auto textureXOffset = textureAtlasRegion->Region.xOffset;
+        auto textureYOffset = textureAtlasRegion->Region.yOffset;
+        slot.Origin.x = static_cast<float>(textureAtlasRegion->Region.width / 2 - textureXOffset) / textureAtlasRegion->Region.subrect.width;
+        slot.Origin.y = static_cast<float>(textureAtlasRegion->Region.height / 2 - textureYOffset) / textureAtlasRegion->Region.subrect.height;
 
-        if (textureAtlasRegion->Region.Rotate) {
-            std::swap(slot.Subrect.Width, slot.Subrect.Height);
-            std::swap(slot.Origin.X, slot.Origin.Y);
+        if (textureAtlasRegion->Region.rotate) {
+            std::swap(slot.Subrect.width, slot.Subrect.height);
+            std::swap(slot.Origin.x, slot.Origin.y);
         }
 
         slots.push_back(std::move(slot));

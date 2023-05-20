@@ -119,7 +119,7 @@ void ScrollView::ScrollTo(const std::shared_ptr<Widget>& widget)
         const auto w = widget->GetGlobalPosition();
         const auto s = scrollBar->GetGlobalPosition();
         const auto h = scrollBar->GetHeight();
-        const auto v = w.Y - (s.Y + h);
+        const auto v = w.y - (s.y + h);
         scrollBar->SetValue(std::clamp(static_cast<double>(v), scrollBar->GetMinimum(), scrollBar->GetMaximum()));
         needToUpdateLayout = true;
     }
@@ -318,11 +318,11 @@ void ScrollView::Draw(DrawingContext& drawingContext)
 
     auto globalPos = UIHelper::ProjectToWorldSpace(GetPosition(), drawingContext.GetCurrentTransform());
 
-    if (backgroundColor.A > 0) {
+    if (backgroundColor.a > 0) {
         auto primitiveBatch = drawingContext.GetPrimitiveBatch();
 
         primitiveBatch->DrawRectangle(
-            Rectangle{globalPos.X, globalPos.Y, GetWidth(), GetHeight()},
+            Rectangle{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
             backgroundColor);
 
         primitiveBatch->Flush();
@@ -332,8 +332,8 @@ void ScrollView::Draw(DrawingContext& drawingContext)
 
     // NOTE: Mask scissor
     drawingContext.PushScissorRect(Rectangle{
-        static_cast<int>(innerBoundPos.X),
-        static_cast<int>(innerBoundPos.Y),
+        static_cast<int>(innerBoundPos.x),
+        static_cast<int>(innerBoundPos.y),
         GetWidth(),
         GetHeight()});
 

@@ -20,29 +20,29 @@ namespace pomdog {
 
 Quaternion::Quaternion() noexcept = default;
 
-Quaternion::Quaternion(float x, float y, float z, float w) noexcept
-    : X(x)
-    , Y(y)
-    , Z(z)
-    , W(w)
+Quaternion::Quaternion(float xIn, float yIn, float zIn, float wIn) noexcept
+    : x(xIn)
+    , y(yIn)
+    , z(zIn)
+    , w(wIn)
 {
 }
 
 Quaternion& Quaternion::operator+=(const Quaternion& other) noexcept
 {
-    X += other.X;
-    Y += other.Y;
-    Z += other.Z;
-    W += other.W;
+    x += other.x;
+    y += other.y;
+    z += other.z;
+    w += other.w;
     return *this;
 }
 
 Quaternion& Quaternion::operator-=(const Quaternion& other) noexcept
 {
-    X -= other.X;
-    Y -= other.Y;
-    Z -= other.Z;
-    W -= other.W;
+    x -= other.x;
+    y -= other.y;
+    z -= other.z;
+    w -= other.w;
     return *this;
 }
 
@@ -53,10 +53,10 @@ Quaternion& Quaternion::operator*=(const Quaternion& other) noexcept
 
 Quaternion& Quaternion::operator*=(float factor) noexcept
 {
-    X *= factor;
-    Y *= factor;
-    Z *= factor;
-    W *= factor;
+    x *= factor;
+    y *= factor;
+    z *= factor;
+    w *= factor;
     return *this;
 }
 
@@ -65,10 +65,10 @@ Quaternion& Quaternion::operator/=(float factor) noexcept
     POMDOG_ASSERT(std::fpclassify(factor) != FP_ZERO);
     POMDOG_ASSERT(std::fpclassify(factor) != FP_NAN);
     POMDOG_ASSERT(std::fpclassify(factor) != FP_INFINITE);
-    X /= factor;
-    Y /= factor;
-    Z /= factor;
-    W /= factor;
+    x /= factor;
+    y /= factor;
+    z /= factor;
+    w /= factor;
     return *this;
 }
 
@@ -79,47 +79,49 @@ Quaternion Quaternion::operator+() const noexcept
 
 Quaternion Quaternion::operator-() const noexcept
 {
-    return Quaternion(-X, -Y, -Z, -W);
+    return Quaternion(-x, -y, -z, -w);
 }
 
 Quaternion Quaternion::operator+(const Quaternion& other) const noexcept
 {
-    return Quaternion(
-        X + other.X,
-        Y + other.Y,
-        Z + other.Z,
-        W + other.W);
+    return Quaternion{
+        x + other.x,
+        y + other.y,
+        z + other.z,
+        w + other.w,
+    };
 }
 
 Quaternion Quaternion::operator-(const Quaternion& other) const noexcept
 {
-    return Quaternion(
-        X - other.X,
-        Y - other.Y,
-        Z - other.Z,
-        W - other.W);
+    return Quaternion{
+        x - other.x,
+        y - other.y,
+        z - other.z,
+        w - other.w,
+    };
 }
 
 Quaternion Quaternion::operator*(const Quaternion& other) const noexcept
 {
-    // Quaternion(
-    //     w * other.Xyz + xyz * other.W + Vector3::Cross(this->xyz, other.Xyz),
-    //     w * other.W - Vector3::Dot(this->xyz, other.Xyz));
+    // NOTE: Quaternion{
+    //           w * other.xyz + xyz * other.w + Vector3::Cross(xyz, other.xyz),
+    //           w * other.w - Vector3::Dot(xyz, other.xyz)};
     return Quaternion{
-        W * other.X + X * other.W + Y * other.Z - Z * other.Y,
-        W * other.Y + Y * other.W + Z * other.X - X * other.Z,
-        W * other.Z + Z * other.W + X * other.Y - Y * other.X,
-        W * other.W - X * other.X - Y * other.Y - Z * other.Z,
+        w * other.x + x * other.w + y * other.z - z * other.y,
+        w * other.y + y * other.w + z * other.x - x * other.z,
+        w * other.z + z * other.w + x * other.y - y * other.x,
+        w * other.w - x * other.x - y * other.y - z * other.z,
     };
 }
 
 Quaternion Quaternion::operator*(float factor) const noexcept
 {
     return Quaternion{
-        X * factor,
-        Y * factor,
-        Z * factor,
-        W * factor,
+        x * factor,
+        y * factor,
+        z * factor,
+        w * factor,
     };
 }
 
@@ -129,31 +131,31 @@ Quaternion Quaternion::operator/(float factor) const noexcept
     POMDOG_ASSERT(std::fpclassify(factor) != FP_NAN);
     POMDOG_ASSERT(std::fpclassify(factor) != FP_INFINITE);
     return Quaternion{
-        X / factor,
-        Y / factor,
-        Z / factor,
-        W / factor,
+        x / factor,
+        y / factor,
+        z / factor,
+        w / factor,
     };
 }
 
 bool Quaternion::operator==(const Quaternion& other) const noexcept
 {
-    return X == other.X && Y == other.Y && Z == other.Z && W == other.W;
+    return (x == other.x) && (y == other.y) && (z == other.z) && (w == other.w);
 }
 
 bool Quaternion::operator!=(const Quaternion& other) const noexcept
 {
-    return X != other.X || Y != other.Y || Z != other.Z || W != other.W;
+    return (x != other.x) || (y != other.y) || (z != other.z) || (w != other.w);
 }
 
 const float* Quaternion::Data() const noexcept
 {
-    return &X;
+    return &x;
 }
 
 float* Quaternion::Data() noexcept
 {
-    return &X;
+    return &x;
 }
 
 Quaternion
@@ -164,9 +166,9 @@ Quaternion::CreateFromAxisAngle(const Vector3& axis, const Radian<float>& angle)
     const auto cosAngle(std::cos(halfAngle));
 
     return Quaternion{
-        axis.X * sinAngle,
-        axis.Y * sinAngle,
-        axis.Z * sinAngle,
+        axis.x * sinAngle,
+        axis.y * sinAngle,
+        axis.z * sinAngle,
         cosAngle,
     };
 }
@@ -215,11 +217,11 @@ CreateFromRotationMatrixImpl(const MatrixClass& rotation)
     const auto factor = half / root;
 
     Quaternion result;
-    std::array<float*, 3> const quat = {{&result.X, &result.Y, &result.Z}};
+    std::array<float*, 3> const quat = {{&result.x, &result.y, &result.z}};
     *quat[i] = half * root;
     *quat[j] = (rotation(j, i) + rotation(i, j)) * factor;
     *quat[k] = (rotation(k, i) + rotation(i, k)) * factor;
-    result.W = (rotation(k, j) - rotation(j, k)) * factor;
+    result.w = (rotation(k, j) - rotation(j, k)) * factor;
     return result;
 }
 } // namespace
@@ -267,16 +269,16 @@ Quaternion::CreateFromYawPitchRoll(const Radian<float>& yaw, const Radian<float>
 Quaternion
 Quaternion::Euler(const Vector3& rotation)
 {
-    return CreateFromYawPitchRoll(rotation.Y, rotation.X, rotation.Z);
+    return CreateFromYawPitchRoll(rotation.y, rotation.x, rotation.z);
 }
 
 Vector3
 Quaternion::ToEulerAngles(const Quaternion& q) noexcept
 {
-    const auto ww = q.W * q.W;
-    const auto xx = q.X * q.X;
-    const auto yy = q.Y * q.Y;
-    const auto zz = q.Z * q.Z;
+    const auto ww = q.w * q.w;
+    const auto xx = q.x * q.x;
+    const auto yy = q.y * q.y;
+    const auto zz = q.z * q.z;
 
     constexpr auto epsilon = std::numeric_limits<float>::epsilon();
     constexpr auto zero = 0.0f;
@@ -285,26 +287,26 @@ Quaternion::ToEulerAngles(const Quaternion& q) noexcept
     constexpr auto half = 0.5f - epsilon;
 
     const auto lengthSquared = xx + yy + zz + ww;
-    const auto singularityTest = q.X * q.Z + q.Y * q.W;
+    const auto singularityTest = q.x * q.z + q.y * q.w;
     const auto singularityValue = half * lengthSquared;
 
     // NOTE: {x, y, z} == {pitch, yaw, roll}
     Vector3 pitchYawRoll;
 
     if (singularityTest > singularityValue) {
-        pitchYawRoll.X = zero;
-        pitchYawRoll.Y = math::PiOver2<float>;
-        pitchYawRoll.Z = two * std::atan2(q.X, q.W);
+        pitchYawRoll.x = zero;
+        pitchYawRoll.y = math::PiOver2<float>;
+        pitchYawRoll.z = two * std::atan2(q.x, q.w);
     }
     else if (singularityTest < -singularityValue) {
-        pitchYawRoll.X = zero;
-        pitchYawRoll.Y = -math::PiOver2<float>;
-        pitchYawRoll.Z = -two * std::atan2(q.X, q.W);
+        pitchYawRoll.x = zero;
+        pitchYawRoll.y = -math::PiOver2<float>;
+        pitchYawRoll.z = -two * std::atan2(q.x, q.w);
     }
     else {
-        pitchYawRoll.X = std::atan2(two * (-q.Y * q.Z + q.X * q.W), one - two * (xx + yy));
-        pitchYawRoll.Y = std::asin(two * (q.X * q.Z + q.Y * q.W));
-        pitchYawRoll.Z = std::atan2(two * (-q.X * q.Y + q.Z * q.W), one - two * (yy + zz));
+        pitchYawRoll.x = std::atan2(two * (-q.y * q.z + q.x * q.w), one - two * (xx + yy));
+        pitchYawRoll.y = std::asin(two * (q.x * q.z + q.y * q.w));
+        pitchYawRoll.z = std::atan2(two * (-q.x * q.y + q.z * q.w), one - two * (yy + zz));
     }
     return pitchYawRoll;
 }
@@ -319,10 +321,10 @@ Quaternion::Identity() noexcept
 operator*(float factor, const Quaternion& quaternion) noexcept
 {
     return Quaternion{
-        factor * quaternion.X,
-        factor * quaternion.Y,
-        factor * quaternion.Z,
-        factor * quaternion.W,
+        factor * quaternion.x,
+        factor * quaternion.y,
+        factor * quaternion.z,
+        factor * quaternion.w,
     };
 }
 
@@ -332,17 +334,17 @@ namespace pomdog::math {
 
 [[nodiscard]] float Length(const Quaternion& q) noexcept
 {
-    return std::sqrt(q.X * q.X + q.Y * q.Y + q.Z * q.Z + q.W * q.W);
+    return std::sqrt(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w);
 }
 
 [[nodiscard]] float LengthSquared(const Quaternion& q) noexcept
 {
-    return q.X * q.X + q.Y * q.Y + q.Z * q.Z + q.W * q.W;
+    return q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w;
 }
 
 [[nodiscard]] float Dot(const Quaternion& a, const Quaternion& b) noexcept
 {
-    return a.X * b.X + a.Y * b.Y + a.Z * b.Z + a.W * b.W;
+    return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
 }
 
 [[nodiscard]] Quaternion
@@ -366,10 +368,10 @@ Normalize(const Quaternion& source) noexcept
 Lerp(const Quaternion& source1, const Quaternion& source2, float amount)
 {
     return math::Normalize(Quaternion{
-        math::Lerp(source1.X, source2.X, amount),
-        math::Lerp(source1.Y, source2.Y, amount),
-        math::Lerp(source1.Z, source2.Z, amount),
-        math::Lerp(source1.W, source2.W, amount),
+        math::Lerp(source1.x, source2.x, amount),
+        math::Lerp(source1.y, source2.y, amount),
+        math::Lerp(source1.z, source2.z, amount),
+        math::Lerp(source1.w, source2.w, amount),
     });
 }
 
@@ -385,10 +387,10 @@ Slerp(const Quaternion& begin, const Quaternion& end, float amount)
     const auto coefficient2 = std::sin(amount * angle) * inverseSinAngle;
 
     return Quaternion{
-        coefficient1 * begin.X + coefficient2 * end.X,
-        coefficient1 * begin.Y + coefficient2 * end.Y,
-        coefficient1 * begin.Z + coefficient2 * end.Z,
-        coefficient1 * begin.W + coefficient2 * end.W,
+        coefficient1 * begin.x + coefficient2 * end.x,
+        coefficient1 * begin.y + coefficient2 * end.y,
+        coefficient1 * begin.z + coefficient2 * end.z,
+        coefficient1 * begin.w + coefficient2 * end.w,
     };
 }
 
@@ -402,10 +404,10 @@ Invert(const Quaternion& source)
         POMDOG_ASSERT(std::fpclassify(lengthSquared) != FP_INFINITE);
         const auto inverseLenSq = 1.0f / lengthSquared;
         return Quaternion{
-            source.X * -inverseLenSq,
-            source.Y * -inverseLenSq,
-            source.Z * -inverseLenSq,
-            source.W * inverseLenSq,
+            source.x * -inverseLenSq,
+            source.y * -inverseLenSq,
+            source.z * -inverseLenSq,
+            source.w * inverseLenSq,
         };
     }
 
@@ -416,9 +418,9 @@ Invert(const Quaternion& source)
 [[nodiscard]] Vector3
 Rotate(const Quaternion& quaternion, const Vector3& vector)
 {
-    const auto xyz = Vector3{quaternion.X, quaternion.Y, quaternion.Z};
+    const auto xyz = Vector3{quaternion.x, quaternion.y, quaternion.z};
     const auto t = 2.0f * math::Cross(xyz, vector);
-    return vector + quaternion.W * t + math::Cross(xyz, t);
+    return vector + quaternion.w * t + math::Cross(xyz, t);
 }
 
 } // namespace pomdog::math

@@ -53,46 +53,46 @@ std::size_t ToIndexByteSize(MTLIndexType elementSize) noexcept
 MTLClearColor ToClearColor(const Vector4& color) noexcept
 {
     return MTLClearColorMake(
-        static_cast<double>(color.X),
-        static_cast<double>(color.Y),
-        static_cast<double>(color.Z),
-        static_cast<double>(color.W));
+        static_cast<double>(color.x),
+        static_cast<double>(color.y),
+        static_cast<double>(color.z),
+        static_cast<double>(color.w));
 }
 
 void SetViewport(
     id<MTLRenderCommandEncoder> commandEncoder, const Viewport& viewportIn)
 {
-    POMDOG_ASSERT(viewportIn.Width > 0);
-    POMDOG_ASSERT(viewportIn.Height > 0);
+    POMDOG_ASSERT(viewportIn.width > 0);
+    POMDOG_ASSERT(viewportIn.height > 0);
     POMDOG_ASSERT(commandEncoder != nullptr);
 
     // NOTE: The MinDepth and MaxDepth must be between 0.0 and 1.0, respectively.
     // Please see https://developer.apple.com/documentation/metal/mtlrendercommandencoder/1515527-setviewport
-    POMDOG_ASSERT((0.0f <= viewportIn.MinDepth) && (viewportIn.MinDepth <= 1.0f));
-    POMDOG_ASSERT((0.0f <= viewportIn.MaxDepth) && (viewportIn.MaxDepth <= 1.0f));
+    POMDOG_ASSERT((0.0f <= viewportIn.minDepth) && (viewportIn.minDepth <= 1.0f));
+    POMDOG_ASSERT((0.0f <= viewportIn.maxDepth) && (viewportIn.maxDepth <= 1.0f));
 
     MTLViewport viewport;
-    viewport.originX = viewportIn.TopLeftX;
-    viewport.originY = viewportIn.TopLeftY;
-    viewport.width = viewportIn.Width;
-    viewport.height = viewportIn.Height;
-    viewport.znear = static_cast<double>(viewportIn.MinDepth);
-    viewport.zfar = static_cast<double>(viewportIn.MaxDepth);
+    viewport.originX = viewportIn.topLeftX;
+    viewport.originY = viewportIn.topLeftY;
+    viewport.width = viewportIn.width;
+    viewport.height = viewportIn.height;
+    viewport.znear = static_cast<double>(viewportIn.minDepth);
+    viewport.zfar = static_cast<double>(viewportIn.maxDepth);
     [commandEncoder setViewport:viewport];
 }
 
 void SetScissorRectangle(
     id<MTLRenderCommandEncoder> commandEncoder, const Rectangle& rectangle)
 {
-    POMDOG_ASSERT(rectangle.Width >= 0);
-    POMDOG_ASSERT(rectangle.Height >= 0);
+    POMDOG_ASSERT(rectangle.width >= 0);
+    POMDOG_ASSERT(rectangle.height >= 0);
     POMDOG_ASSERT(commandEncoder != nullptr);
 
     MTLScissorRect rect;
-    rect.x = rectangle.X;
-    rect.y = rectangle.Y;
-    rect.width = rectangle.Width;
-    rect.height = rectangle.Height;
+    rect.x = rectangle.x;
+    rect.y = rectangle.y;
+    rect.width = rectangle.width;
+    rect.height = rectangle.height;
     [commandEncoder setScissorRect:rect];
 }
 
@@ -310,7 +310,7 @@ void GraphicsContextMetal::SetScissorRect(const Rectangle& scissorRect)
 void GraphicsContextMetal::SetBlendFactor(const Vector4& blendFactor)
 {
     POMDOG_ASSERT(commandEncoder_ != nullptr);
-    [commandEncoder_ setBlendColorRed:blendFactor.X green:blendFactor.Y blue:blendFactor.Z alpha:blendFactor.W];
+    [commandEncoder_ setBlendColorRed:blendFactor.x green:blendFactor.y blue:blendFactor.z alpha:blendFactor.w];
 }
 
 void GraphicsContextMetal::SetVertexBuffer(

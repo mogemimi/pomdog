@@ -16,8 +16,8 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog {
 
 Ray::Ray(const Vector3& positionIn, const Vector3& directionIn)
-    : Position(positionIn)
-    , Direction(directionIn)
+    : position(positionIn)
+    , direction(directionIn)
 {
 }
 
@@ -34,15 +34,15 @@ std::optional<float> Ray::Intersects(const BoundingBox& box) const
     auto tNear = NegativeInfinity;
     auto tFar = PositiveInfinity;
 
-    if (std::abs(ray.Direction.X) < Epsilon) {
-        if (ray.Position.X < box.Min.X || ray.Position.X > box.Max.X) {
+    if (std::abs(ray.direction.x) < Epsilon) {
+        if ((ray.position.x < box.min.x) || (ray.position.x > box.max.x)) {
             return std::nullopt;
         }
     }
     else {
-        POMDOG_ASSERT(ray.Direction.X != 0);
-        auto t1 = (box.Min.X - ray.Position.X) / ray.Direction.X;
-        auto t2 = (box.Max.X - ray.Position.X) / ray.Direction.X;
+        POMDOG_ASSERT(ray.direction.x != 0);
+        auto t1 = (box.min.x - ray.position.x) / ray.direction.x;
+        auto t2 = (box.max.x - ray.position.x) / ray.direction.x;
 
         if (t1 > t2) {
             std::swap(t1, t2);
@@ -58,15 +58,15 @@ std::optional<float> Ray::Intersects(const BoundingBox& box) const
         }
     }
 
-    if (std::abs(ray.Direction.Y) < Epsilon) {
-        if (ray.Position.Y < box.Min.Y || ray.Position.Y > box.Max.Y) {
+    if (std::abs(ray.direction.y) < Epsilon) {
+        if ((ray.position.y < box.min.y) || (ray.position.y > box.max.y)) {
             return std::nullopt;
         }
     }
     else {
-        POMDOG_ASSERT(ray.Direction.Y != 0);
-        auto t1 = (box.Min.Y - ray.Position.Y) / ray.Direction.Y;
-        auto t2 = (box.Max.Y - ray.Position.Y) / ray.Direction.Y;
+        POMDOG_ASSERT(ray.direction.y != 0);
+        auto t1 = (box.min.y - ray.position.y) / ray.direction.y;
+        auto t2 = (box.max.y - ray.position.y) / ray.direction.y;
 
         if (t1 > t2) {
             std::swap(t1, t2);
@@ -82,15 +82,15 @@ std::optional<float> Ray::Intersects(const BoundingBox& box) const
         }
     }
 
-    if (std::abs(ray.Direction.Z) < Epsilon) {
-        if (ray.Position.Z < box.Min.Z || ray.Position.Z > box.Max.Z) {
+    if (std::abs(ray.direction.z) < Epsilon) {
+        if ((ray.position.z < box.min.z) || (ray.position.z > box.max.z)) {
             return std::nullopt;
         }
     }
     else {
-        POMDOG_ASSERT(ray.Direction.Z != 0);
-        auto t1 = (box.Min.Z - ray.Position.Z) / ray.Direction.Z;
-        auto t2 = (box.Max.Z - ray.Position.Z) / ray.Direction.Z;
+        POMDOG_ASSERT(ray.direction.z != 0);
+        auto t1 = (box.min.z - ray.position.z) / ray.direction.z;
+        auto t2 = (box.max.z - ray.position.z) / ray.direction.z;
 
         if (t1 > t2) {
             std::swap(t1, t2);
@@ -117,15 +117,15 @@ std::optional<float> Ray::Intersects(const BoundingFrustum& frustum) const
 
 std::optional<float> Ray::Intersects(const BoundingSphere& sphere) const
 {
-    const auto toSphere = sphere.Center - this->Position;
+    const auto toSphere = sphere.center - position;
     const auto toSphereLengthSquared = math::LengthSquared(toSphere);
-    const auto sphereRadiusSquared = sphere.Radius * sphere.Radius;
+    const auto sphereRadiusSquared = sphere.radius * sphere.radius;
 
     if (toSphereLengthSquared < sphereRadiusSquared) {
         return 0.0f;
     }
 
-    const auto distance = math::Dot(this->Direction, toSphere);
+    const auto distance = math::Dot(direction, toSphere);
     if (distance < 0) {
         return std::nullopt;
     }
@@ -141,12 +141,12 @@ std::optional<float> Ray::Intersects(const Plane& plane) const
 {
     constexpr auto Epsilon = 1e-6f;
 
-    const auto denom = math::Dot(plane.Normal, Direction);
+    const auto denom = math::Dot(plane.normal, direction);
     if (std::abs(denom) < Epsilon) {
         return std::nullopt;
     }
 
-    const auto dot = math::Dot(plane.Normal, Position) + plane.Distance;
+    const auto dot = math::Dot(plane.normal, position) + plane.distance;
     const auto distance = -dot / denom;
     if (distance < 0.0f) {
         return std::nullopt;

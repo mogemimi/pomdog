@@ -189,10 +189,10 @@ GetThumbStick(GamepadState& state, ThumbStickKind kind) noexcept
     const auto index = static_cast<int>(kind);
 
     std::array<float*, 4> axes = {{
-        &state.ThumbSticks.Left.X,
-        &state.ThumbSticks.Left.Y,
-        &state.ThumbSticks.Right.X,
-        &state.ThumbSticks.Right.Y,
+        &state.ThumbSticks.Left.x,
+        &state.ThumbSticks.Left.y,
+        &state.ThumbSticks.Right.x,
+        &state.ThumbSticks.Right.y,
     }};
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(index < static_cast<int>(axes.size()));

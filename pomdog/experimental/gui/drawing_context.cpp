@@ -174,9 +174,9 @@ DrawingContext::DrawingContext(
             for (int y = 0; y < image->GetHeight(); y++) {
                 for (int x = 0; x < image->GetWidth(); x++) {
                     auto pixel = image->GetPixel(x, y);
-                    pixel.R = 255;
-                    pixel.G = 255;
-                    pixel.B = 255;
+                    pixel.r = 255;
+                    pixel.g = 255;
+                    pixel.b = 255;
                     image->SetPixel(x, y, pixel);
                 }
             }
@@ -249,63 +249,63 @@ void DrawingContext::PushScissorRect(const Rectangle& scissorRect)
     auto rect = scissorRect;
 
     // NOTE: Flip Y-coordinate
-    rect.Y = viewportHeight - scissorRect.Y - scissorRect.Height;
+    rect.y = viewportHeight - scissorRect.y - scissorRect.height;
 
-    if ((parentRect.Width <= 0) && (parentRect.Height <= 0)) {
-        rect.Width = 0;
-        rect.Height = 0;
+    if ((parentRect.width <= 0) && (parentRect.height <= 0)) {
+        rect.width = 0;
+        rect.height = 0;
     }
     else if (parentRect.Contains(rect)) {
         // NOTE: Not to do
     }
     else if (parentRect.Intersects(rect)) {
-        if (rect.X < parentRect.X) {
-            const auto offset = parentRect.X - rect.X;
-            rect.X = parentRect.X;
-            rect.Width = std::min(rect.Width - offset, parentRect.Width);
+        if (rect.x < parentRect.x) {
+            const auto offset = parentRect.x - rect.x;
+            rect.x = parentRect.x;
+            rect.width = std::min(rect.width - offset, parentRect.width);
         }
         else {
-            rect.Width = std::min(parentRect.Width - (rect.X - parentRect.X), rect.Width);
+            rect.width = std::min(parentRect.width - (rect.x - parentRect.x), rect.width);
         }
 
-        if (rect.Y < parentRect.Y) {
-            const auto offset = parentRect.Y - rect.Y;
-            rect.Y = parentRect.Y;
-            rect.Height = std::max(rect.Height - offset, 0);
+        if (rect.y < parentRect.y) {
+            const auto offset = parentRect.y - rect.y;
+            rect.y = parentRect.y;
+            rect.height = std::max(rect.height - offset, 0);
         }
         else {
-            rect.Height = std::min(parentRect.Height - (rect.Y - parentRect.Y), rect.Height);
+            rect.height = std::min(parentRect.height - (rect.y - parentRect.y), rect.height);
         }
     }
     else {
-        rect.Width = 0;
-        rect.Height = 0;
+        rect.width = 0;
+        rect.height = 0;
     }
 
-    if (rect.X < 0) {
-        rect.Width = std::max(rect.Width + rect.X, 0);
-        rect.X = 0;
+    if (rect.x < 0) {
+        rect.width = std::max(rect.width + rect.x, 0);
+        rect.x = 0;
     }
-    else if (rect.X > viewportWidth) {
-        rect.X = viewportWidth;
-        rect.Width = 0;
+    else if (rect.x > viewportWidth) {
+        rect.x = viewportWidth;
+        rect.width = 0;
     }
-    else if (rect.X + rect.Width > viewportWidth) {
-        auto diff = (rect.X + rect.Width) - viewportWidth;
-        rect.Width = rect.Width - diff;
+    else if (rect.x + rect.width > viewportWidth) {
+        const auto diff = (rect.x + rect.width) - viewportWidth;
+        rect.width = rect.width - diff;
     }
 
-    if (rect.Y < 0) {
-        rect.Height = std::max(rect.Height + rect.Y, 0);
-        rect.Y = 0;
+    if (rect.y < 0) {
+        rect.height = std::max(rect.height + rect.y, 0);
+        rect.y = 0;
     }
-    else if (rect.Y > viewportHeight) {
-        rect.Y = viewportHeight;
-        rect.Height = 0;
+    else if (rect.y > viewportHeight) {
+        rect.y = viewportHeight;
+        rect.height = 0;
     }
-    else if (rect.Y + rect.Height > viewportHeight) {
-        auto diff = (rect.Y + rect.Height) - viewportHeight;
-        rect.Height = rect.Height - diff;
+    else if (rect.y + rect.height > viewportHeight) {
+        const auto diff = (rect.y + rect.height) - viewportHeight;
+        rect.height = rect.height - diff;
     }
 
     primitiveBatch->Flush();

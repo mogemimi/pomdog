@@ -16,10 +16,10 @@ namespace pomdog {
 /// Quaternion represents a rotation around an axis in 3D space.
 class POMDOG_EXPORT Quaternion final {
 public:
-    float X;
-    float Y;
-    float Z;
-    float W;
+    float x;
+    float y;
+    float z;
+    float w;
 
 public:
     /// Creates a new Quaternion object.

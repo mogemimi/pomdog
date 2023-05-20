@@ -16,8 +16,8 @@ namespace pomdog {
 /// BoundingBox2D is an axis-aligned bounding box in 2D space.
 class POMDOG_EXPORT BoundingBox2D final {
 public:
-    Vector2 Min;
-    Vector2 Max;
+    Vector2 min;
+    Vector2 max;
 
     static constexpr int CornerCount = 4;
 

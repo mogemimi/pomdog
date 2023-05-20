@@ -188,7 +188,7 @@ void ListView::UpdateLayout()
         return;
     }
 
-    const auto requiredHeight = padding.Top + verticalLayout->GetHeight() + padding.Bottom;
+    const auto requiredHeight = padding.top + verticalLayout->GetHeight() + padding.bottom;
     if (requiredHeight != GetHeight()) {
         // NOTE: Keeping the original position
         const auto positionOffset = Point2D{0, GetHeight() - requiredHeight};
@@ -205,11 +205,11 @@ void ListView::UpdateLayout()
 
     // NOTE: Update layout for children
     {
-        verticalLayout->SetPosition(Point2D{padding.Left, padding.Bottom});
+        verticalLayout->SetPosition(Point2D{padding.left, padding.bottom});
 
         switch (verticalLayout->GetHorizontalAlignment()) {
         case HorizontalAlignment::Stretch: {
-            auto childWidth = GetWidth() - (padding.Left + padding.Right);
+            auto childWidth = GetWidth() - (padding.left + padding.right);
             verticalLayout->SetSize(childWidth, verticalLayout->GetHeight());
             verticalLayout->MarkContentLayoutDirty();
             break;
@@ -238,13 +238,13 @@ void ListView::Draw(DrawingContext& drawingContext)
 
     auto primitiveBatch = drawingContext.GetPrimitiveBatch();
 
-    if (colorScheme->ListViewBackgroundColorOdd.A > 0) {
+    if (colorScheme->ListViewBackgroundColorOdd.a > 0) {
         primitiveBatch->DrawRectangle(
-            Rectangle{globalPos.X, globalPos.Y, GetWidth(), GetHeight()},
+            Rectangle{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
             colorScheme->ListViewBackgroundColorOdd);
     }
 
-    if (colorScheme->ListViewBackgroundColorEven.A > 0) {
+    if (colorScheme->ListViewBackgroundColorEven.a > 0) {
         const auto itemCount = verticalLayout->GetItemCount();
         for (int i = 0; i < itemCount; i++) {
             if (i % 2 == 0) {
@@ -254,7 +254,7 @@ void ListView::Draw(DrawingContext& drawingContext)
             auto childPos = child->GetGlobalPosition();
 
             primitiveBatch->DrawRectangle(
-                Rectangle{globalPos.X, childPos.Y, GetWidth(), child->GetHeight()},
+                Rectangle{globalPos.x, childPos.y, GetWidth(), child->GetHeight()},
                 colorScheme->ListViewBackgroundColorEven);
         }
     }

@@ -215,9 +215,9 @@ const float& Matrix3x3::operator()(std::size_t row, std::size_t column) const no
 
 void Matrix3x3::SetScale(const Vector3& scale) noexcept
 {
-    m[0][0] = scale.X;
-    m[1][1] = scale.Y;
-    m[2][2] = scale.Z;
+    m[0][0] = scale.x;
+    m[1][1] = scale.y;
+    m[2][2] = scale.z;
 }
 
 Vector3 Matrix3x3::GetScale() const noexcept
@@ -231,7 +231,7 @@ Matrix3x3::CreateTranslation(const Vector2& position) noexcept
     return Matrix3x3{
         1.0f, 0.0f, 0.0f,
         0.0f, 1.0f, 0.0f,
-        position.X, position.Y, 1.0f};
+        position.x, position.y, 1.0f};
 }
 
 Matrix3x3
@@ -247,9 +247,9 @@ Matrix3x3
 Matrix3x3::CreateScale(const Vector3& scale) noexcept
 {
     return Matrix3x3{
-        scale.X, 0.0f, 0.0f,
-        0.0f, scale.Y, 0.0f,
-        0.0f, 0.0f, scale.Z};
+        scale.x, 0.0f, 0.0f,
+        0.0f, scale.y, 0.0f,
+        0.0f, 0.0f, scale.z};
 }
 
 Matrix3x3
@@ -291,15 +291,15 @@ Matrix3x3::CreateRotationZ(const Radian<float>& angle)
 Matrix3x3
 Matrix3x3::CreateFromQuaternion(const Quaternion& quaternion)
 {
-    const auto xx = quaternion.X * quaternion.X;
-    const auto yy = quaternion.Y * quaternion.Y;
-    const auto zz = quaternion.Z * quaternion.Z;
-    const auto xy = quaternion.X * quaternion.Y;
-    const auto zw = quaternion.Z * quaternion.W;
-    const auto zx = quaternion.Z * quaternion.X;
-    const auto yw = quaternion.Y * quaternion.W;
-    const auto yz = quaternion.Y * quaternion.Z;
-    const auto xw = quaternion.X * quaternion.W;
+    const auto xx = quaternion.x * quaternion.x;
+    const auto yy = quaternion.y * quaternion.y;
+    const auto zz = quaternion.z * quaternion.z;
+    const auto xy = quaternion.x * quaternion.y;
+    const auto zw = quaternion.z * quaternion.w;
+    const auto zx = quaternion.z * quaternion.x;
+    const auto yw = quaternion.y * quaternion.w;
+    const auto yz = quaternion.y * quaternion.z;
+    const auto xw = quaternion.x * quaternion.w;
 
     return Matrix3x3{
         1.0f - (2.0f * (yy + zz)),
@@ -321,24 +321,24 @@ Matrix3x3::CreateFromAxisAngle(const Vector3& axis, const Radian<float>& angle)
     const auto cosAngle = std::cos(angle.value);
 
     const auto t = 1.0f - cosAngle;
-    const auto xx = axis.X * axis.X;
-    const auto yy = axis.Y * axis.Y;
-    const auto zz = axis.Z * axis.Z;
-    const auto xy = axis.X * axis.Y;
-    const auto xz = axis.X * axis.Z;
-    const auto yz = axis.Y * axis.Z;
+    const auto xx = axis.x * axis.x;
+    const auto yy = axis.y * axis.y;
+    const auto zz = axis.z * axis.z;
+    const auto xy = axis.x * axis.y;
+    const auto xz = axis.x * axis.z;
+    const auto yz = axis.y * axis.z;
 
     // axis.Normalize();
 
     return Matrix3x3{
         t * xx + cosAngle,
-        t * xy + sinAngle * axis.Z,
-        t * xz - sinAngle * axis.Y,
-        t * xy - sinAngle * axis.Z,
+        t * xy + sinAngle * axis.z,
+        t * xz - sinAngle * axis.y,
+        t * xy - sinAngle * axis.z,
         t * yy + cosAngle,
-        t * yz + sinAngle * axis.X,
-        t * xz + sinAngle * axis.Y,
-        t * yz - sinAngle * axis.X,
+        t * yz + sinAngle * axis.x,
+        t * xz + sinAngle * axis.y,
+        t * yz - sinAngle * axis.x,
         t * zz + cosAngle,
     };
 }

@@ -246,10 +246,10 @@ BitmapFontPage ParsePage(std::istream& stream)
 FontGlyph ParseGlyph(std::istream& stream)
 {
     FontGlyph result;
-    result.Subrect.X = 0;
-    result.Subrect.Y = 0;
-    result.Subrect.Width = 1;
-    result.Subrect.Height = 1;
+    result.Subrect.x = 0;
+    result.Subrect.y = 0;
+    result.Subrect.width = 1;
+    result.Subrect.height = 1;
     result.Character = 0;
     result.XOffset = 0;
     result.YOffset = 0;
@@ -273,16 +273,16 @@ FontGlyph ParseGlyph(std::istream& stream)
                 result.TexturePage = static_cast<std::int16_t>(std::stoi(arguments));
             }
             else if (name == "x") {
-                result.Subrect.X = std::stoi(arguments);
+                result.Subrect.x = std::stoi(arguments);
             }
             else if (name == "y") {
-                result.Subrect.Y = std::stoi(arguments);
+                result.Subrect.y = std::stoi(arguments);
             }
             else if (name == "width") {
-                result.Subrect.Width = std::stoi(arguments);
+                result.Subrect.width = std::stoi(arguments);
             }
             else if (name == "height") {
-                result.Subrect.Height = std::stoi(arguments);
+                result.Subrect.height = std::stoi(arguments);
             }
             else if (name == "xoffset") {
                 static_assert(std::is_same<decltype(result.XOffset), std::int16_t>::value, "");

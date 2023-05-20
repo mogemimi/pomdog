@@ -262,7 +262,7 @@ void LineBatch::End()
 
 void LineBatch::DrawBox(const BoundingBox& box, const Color& color)
 {
-    this->DrawBox(box.Min, box.Max - box.Min, Vector3::Zero(), color);
+    this->DrawBox(box.min, box.max - box.min, Vector3::Zero(), color);
 }
 
 void LineBatch::DrawBox(
@@ -388,15 +388,15 @@ void LineBatch::DrawRectangle(const Rectangle& sourceRect,
 {
     POMDOG_ASSERT(impl);
 
-    if (sourceRect.Width <= 0 || sourceRect.Height <= 0) {
+    if (sourceRect.width <= 0 || sourceRect.height <= 0) {
         return;
     }
 
     std::array<Vector2, 4> rectVertices = {{
-        Vector2{static_cast<float>(sourceRect.GetLeft()), static_cast<float>(sourceRect.Y - sourceRect.Height)},
-        Vector2{static_cast<float>(sourceRect.GetLeft()), static_cast<float>(sourceRect.Y)},
-        Vector2{static_cast<float>(sourceRect.GetRight()), static_cast<float>(sourceRect.Y)},
-        Vector2{static_cast<float>(sourceRect.GetRight()), static_cast<float>(sourceRect.Y - sourceRect.Height)},
+        Vector2{static_cast<float>(sourceRect.GetLeft()), static_cast<float>(sourceRect.y - sourceRect.height)},
+        Vector2{static_cast<float>(sourceRect.GetLeft()), static_cast<float>(sourceRect.y)},
+        Vector2{static_cast<float>(sourceRect.GetRight()), static_cast<float>(sourceRect.y)},
+        Vector2{static_cast<float>(sourceRect.GetRight()), static_cast<float>(sourceRect.y - sourceRect.height)},
     }};
 
     auto colorVector1 = color1.ToVector4();
@@ -415,15 +415,15 @@ void LineBatch::DrawRectangle(const Matrix3x2& matrix,
 {
     POMDOG_ASSERT(impl);
 
-    if (sourceRect.Width <= 0 || sourceRect.Height <= 0) {
+    if (sourceRect.width <= 0 || sourceRect.height <= 0) {
         return;
     }
 
     std::array<Vector2, 4> rectVertices = {{
-        Vector2{static_cast<float>(sourceRect.GetLeft()), static_cast<float>(sourceRect.Y - sourceRect.Height)},
-        Vector2{static_cast<float>(sourceRect.GetLeft()), static_cast<float>(sourceRect.Y)},
-        Vector2{static_cast<float>(sourceRect.GetRight()), static_cast<float>(sourceRect.Y)},
-        Vector2{static_cast<float>(sourceRect.GetRight()), static_cast<float>(sourceRect.Y - sourceRect.Height)},
+        Vector2{static_cast<float>(sourceRect.GetLeft()), static_cast<float>(sourceRect.y - sourceRect.height)},
+        Vector2{static_cast<float>(sourceRect.GetLeft()), static_cast<float>(sourceRect.y)},
+        Vector2{static_cast<float>(sourceRect.GetRight()), static_cast<float>(sourceRect.y)},
+        Vector2{static_cast<float>(sourceRect.GetRight()), static_cast<float>(sourceRect.y - sourceRect.height)},
     }};
 
     for (auto& vertex : rectVertices) {

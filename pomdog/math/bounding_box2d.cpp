@@ -8,23 +8,23 @@
 namespace pomdog {
 
 BoundingBox2D::BoundingBox2D(const Vector2& minIn, const Vector2& maxIn)
-    : Min(minIn)
-    , Max(maxIn)
+    : min(minIn)
+    , max(maxIn)
 {
 }
 
 ContainmentType BoundingBox2D::Contains(const Vector2& point) const
 {
-    if (point.X < this->Min.X ||
-        point.Y < this->Min.Y ||
-        point.X > this->Max.X ||
-        point.Y > this->Max.Y) {
+    if ((point.x < min.x) ||
+        (point.y < min.y) ||
+        (point.x > max.x) ||
+        (point.y > max.y)) {
         return ContainmentType::Disjoint;
     }
-    if (point.X == this->Min.X ||
-        point.Y == this->Min.Y ||
-        point.X == this->Max.X ||
-        point.Y == this->Max.Y) {
+    if ((point.x == min.x) ||
+        (point.y == min.y) ||
+        (point.x == max.x) ||
+        (point.y == max.y)) {
         return ContainmentType::Intersects;
     }
     return ContainmentType::Contains;
@@ -32,12 +32,12 @@ ContainmentType BoundingBox2D::Contains(const Vector2& point) const
 
 ContainmentType BoundingBox2D::Contains(const BoundingBox2D& box) const
 {
-    if ((this->Min.X > box.Max.X || this->Max.X < box.Min.X) ||
-        (this->Min.Y > box.Max.Y || this->Max.Y < box.Min.Y)) {
+    if ((min.x > box.max.x || max.x < box.min.x) ||
+        (min.y > box.max.y || max.y < box.min.y)) {
         return ContainmentType::Disjoint;
     }
-    if ((this->Min.X <= box.Min.X && box.Max.X <= this->Max.X) &&
-        (this->Min.Y <= box.Min.Y && box.Max.Y <= this->Max.Y)) {
+    if ((min.x <= box.min.x && box.max.x <= max.x) &&
+        (min.y <= box.min.y && box.max.y <= max.y)) {
         return ContainmentType::Contains;
     }
     return ContainmentType::Intersects;
@@ -45,16 +45,16 @@ ContainmentType BoundingBox2D::Contains(const BoundingBox2D& box) const
 
 ContainmentType BoundingBox2D::Contains(const BoundingCircle& circle) const
 {
-    auto clamped = math::Clamp(circle.Center, this->Min, this->Max);
-    auto distanceSquared = math::DistanceSquared(circle.Center, clamped);
+    auto clamped = math::Clamp(circle.center, min, max);
+    auto distanceSquared = math::DistanceSquared(circle.center, clamped);
 
-    if (distanceSquared > circle.Radius * circle.Radius) {
+    if (distanceSquared > circle.radius * circle.radius) {
         return ContainmentType::Disjoint;
     }
-    if ((circle.Radius <= circle.Center.X - this->Min.X) &&
-        (circle.Radius <= circle.Center.Y - this->Min.Y) &&
-        (circle.Radius <= this->Max.X - circle.Center.X) &&
-        (circle.Radius <= this->Max.Y - circle.Center.Y)) {
+    if ((circle.radius <= circle.center.x - min.x) &&
+        (circle.radius <= circle.center.y - min.y) &&
+        (circle.radius <= max.x - circle.center.x) &&
+        (circle.radius <= max.y - circle.center.y)) {
         return ContainmentType::Contains;
     }
     return ContainmentType::Intersects;
@@ -62,24 +62,24 @@ ContainmentType BoundingBox2D::Contains(const BoundingCircle& circle) const
 
 bool BoundingBox2D::Intersects(const BoundingBox2D& box) const
 {
-    return (this->Max.X >= box.Min.X && this->Min.X <= box.Max.X) &&
-           (this->Max.Y >= box.Min.Y && this->Min.Y <= box.Max.Y);
+    return (max.x >= box.min.x && min.x <= box.max.x) &&
+           (max.y >= box.min.y && min.y <= box.max.y);
 }
 
 bool BoundingBox2D::Intersects(const BoundingCircle& circle) const
 {
-    auto clamped = math::Clamp(circle.Center, this->Min, this->Max);
-    auto distanceSquared = math::DistanceSquared(circle.Center, clamped);
-    return distanceSquared <= circle.Radius * circle.Radius;
+    const auto clamped = math::Clamp(circle.center, min, max);
+    const auto distanceSquared = math::DistanceSquared(circle.center, clamped);
+    return distanceSquared <= circle.radius * circle.radius;
 }
 
 std::array<Vector2, BoundingBox2D::CornerCount> BoundingBox2D::GetCorners() const noexcept
 {
     return std::array<Vector2, BoundingBox2D::CornerCount>{{
-        Vector2{this->Min.X, this->Max.Y},
-        Vector2{this->Max.X, this->Max.Y},
-        Vector2{this->Max.X, this->Min.Y},
-        Vector2{this->Min.X, this->Min.Y},
+        Vector2{min.x, max.y},
+        Vector2{max.x, max.y},
+        Vector2{max.x, min.y},
+        Vector2{min.x, min.y},
     }};
 }
 

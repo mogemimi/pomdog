@@ -61,25 +61,25 @@ namespace {
 
 Vector2 ComputeSpriteOffset(const TextureRegion& region, const Vector2& originPivot) noexcept
 {
-    if ((region.Subrect.Width <= 0) || (region.Subrect.Height <= 0)) {
+    if ((region.subrect.width <= 0) || (region.subrect.height <= 0)) {
         return Vector2::Zero();
     }
 
-    POMDOG_ASSERT(region.Subrect.Width > 0);
-    POMDOG_ASSERT(region.Subrect.Height > 0);
+    POMDOG_ASSERT(region.subrect.width > 0);
+    POMDOG_ASSERT(region.subrect.height > 0);
 
     const auto regionSize = Vector2{
-        static_cast<float>(region.Width),
-        static_cast<float>(region.Height)};
+        static_cast<float>(region.width),
+        static_cast<float>(region.height)};
 
     const auto baseOffset = regionSize * originPivot;
 
-    const auto w = static_cast<float>(region.Subrect.Width);
-    const auto h = static_cast<float>(region.Subrect.Height);
+    const auto w = static_cast<float>(region.subrect.width);
+    const auto h = static_cast<float>(region.subrect.height);
 
     auto offset = Vector2{
-        static_cast<float>(region.XOffset),
-        regionSize.Y - (static_cast<float>(region.YOffset) + h)};
+        static_cast<float>(region.xOffset),
+        regionSize.y - (static_cast<float>(region.yOffset) + h)};
     offset = (baseOffset - offset) / Vector2{w, h};
     return offset;
 }
@@ -340,12 +340,12 @@ void SpriteBatch::Impl::Begin(
     constants.ViewProjection = math::Transpose(transformMatrix);
 
     if (distanceFieldParameters != std::nullopt) {
-        constants.DistanceFieldParameters.X = distanceFieldParameters->Smoothing;
-        constants.DistanceFieldParameters.Y = distanceFieldParameters->Weight;
+        constants.DistanceFieldParameters.x = distanceFieldParameters->Smoothing;
+        constants.DistanceFieldParameters.y = distanceFieldParameters->Weight;
     }
     else {
-        constants.DistanceFieldParameters.X = 0.25f;
-        constants.DistanceFieldParameters.Y = 0.65f;
+        constants.DistanceFieldParameters.x = 0.25f;
+        constants.DistanceFieldParameters.y = 0.65f;
     }
 
     constantBuffer->SetData(0, gpu::MakeByteSpan(constants));
@@ -444,8 +444,8 @@ void SpriteBatch::Impl::CompareTexture(const Texture2DView& texture)
         const float w = static_cast<float>(texture->GetWidth());
         const float h = static_cast<float>(texture->GetHeight());
 
-        inverseTextureSize.X = (w > 0.0f) ? (1.0f / w) : 0.0f;
-        inverseTextureSize.Y = (h > 0.0f) ? (1.0f / h) : 0.0f;
+        inverseTextureSize.x = (w > 0.0f) ? (1.0f / w) : 0.0f;
+        inverseTextureSize.y = (h > 0.0f) ? (1.0f / h) : 0.0f;
     }
 }
 
@@ -462,14 +462,14 @@ void SpriteBatch::Impl::Draw(
     POMDOG_ASSERT(texture);
     POMDOG_ASSERT(texture->GetWidth() > 0);
     POMDOG_ASSERT(texture->GetHeight() > 0);
-    POMDOG_ASSERT(sourceRect.Width >= 0);
-    POMDOG_ASSERT(sourceRect.Height >= 0);
+    POMDOG_ASSERT(sourceRect.width >= 0);
+    POMDOG_ASSERT(sourceRect.height >= 0);
 
-    if (sourceRect.Width == 0 || sourceRect.Height == 0) {
+    if ((sourceRect.width == 0) || (sourceRect.height == 0)) {
         return;
     }
 
-    if (scale.X == 0.0f || scale.Y == 0.0f) {
+    if ((scale.x == 0.0f) || (scale.y == 0.0f)) {
         return;
     }
 
@@ -523,34 +523,34 @@ void SpriteBatch::Impl::Draw(
         (compensationAlpha ? 8 : 0);
 
     POMDOG_ASSERT((startInstanceLocation + spriteQueue.size()) < MaxBatchSize);
-    POMDOG_ASSERT(sourceRect.Width > 0);
-    POMDOG_ASSERT(sourceRect.Height > 0);
+    POMDOG_ASSERT(sourceRect.width > 0);
+    POMDOG_ASSERT(sourceRect.height > 0);
 
     CompareTexture(texture);
 
     SpriteInfo info;
     info.Translation = Vector4{
-        position.X,
-        position.Y,
-        scale.X,
-        scale.Y,
+        position.x,
+        position.y,
+        scale.x,
+        scale.y,
     };
     info.SourceRect = Vector4{
-        static_cast<float>(sourceRect.X),
-        static_cast<float>(sourceRect.Y),
-        static_cast<float>(sourceRect.Width),
-        static_cast<float>(sourceRect.Height),
+        static_cast<float>(sourceRect.x),
+        static_cast<float>(sourceRect.y),
+        static_cast<float>(sourceRect.width),
+        static_cast<float>(sourceRect.height),
     };
     info.OriginRotationLayerDepth = Vector4{
-        originPivot.X,
-        originPivot.Y,
+        originPivot.x,
+        originPivot.y,
         rotation.value,
         layerDepth,
     };
     info.Color = color.ToVector4();
     info.InverseTextureSize = Vector4{
-        inverseTextureSize.X,
-        inverseTextureSize.Y,
+        inverseTextureSize.x,
+        inverseTextureSize.y,
         static_cast<float>(colorModeFlags),
         0.0f,
     };
@@ -700,7 +700,7 @@ void SpriteBatch::Draw(
     POMDOG_ASSERT(impl);
     auto offset = ComputeSpriteOffset(textureRegion, originPivot);
     constexpr float layerDepth = 0.0f;
-    impl->Draw(texture, position, textureRegion.Subrect, color, rotation, offset, {scale, scale}, layerDepth);
+    impl->Draw(texture, position, textureRegion.subrect, color, rotation, offset, {scale, scale}, layerDepth);
 }
 
 void SpriteBatch::Draw(
@@ -715,7 +715,7 @@ void SpriteBatch::Draw(
     POMDOG_ASSERT(impl);
     auto offset = ComputeSpriteOffset(textureRegion, originPivot);
     constexpr float layerDepth = 0.0f;
-    impl->Draw(texture, position, textureRegion.Subrect, color, rotation, offset, scale, layerDepth);
+    impl->Draw(texture, position, textureRegion.subrect, color, rotation, offset, scale, layerDepth);
 }
 
 void SpriteBatch::Draw(
@@ -790,7 +790,7 @@ void SpriteBatch::Draw(
     POMDOG_ASSERT(impl);
     auto offset = ComputeSpriteOffset(textureRegion, originPivot);
     constexpr float layerDepth = 0.0f;
-    impl->Draw(texture, position, textureRegion.Subrect, color, rotation, offset, {scale, scale}, layerDepth);
+    impl->Draw(texture, position, textureRegion.subrect, color, rotation, offset, {scale, scale}, layerDepth);
 }
 
 void SpriteBatch::Draw(
@@ -805,7 +805,7 @@ void SpriteBatch::Draw(
     POMDOG_ASSERT(impl);
     auto offset = ComputeSpriteOffset(textureRegion, originPivot);
     constexpr float layerDepth = 0.0f;
-    impl->Draw(texture, position, textureRegion.Subrect, color, rotation, offset, scale, layerDepth);
+    impl->Draw(texture, position, textureRegion.subrect, color, rotation, offset, scale, layerDepth);
 }
 
 int SpriteBatch::GetDrawCallCount() const noexcept

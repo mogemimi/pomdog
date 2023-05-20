@@ -77,7 +77,7 @@ struct alignas(16) ModelConstantBuffer final {
 
     void SetMetalness(float metalness) noexcept
     {
-        Material.X = metalness;
+        Material.x = metalness;
     }
 };
 
@@ -96,9 +96,9 @@ struct alignas(16) WorldConstantBuffer final {
 
     void SetLightDirection(const Vector3& lightDirection) noexcept
     {
-        LightDirection.X = lightDirection.X;
-        LightDirection.Y = lightDirection.Y;
-        LightDirection.Z = lightDirection.Z;
+        LightDirection.x = lightDirection.x;
+        LightDirection.y = lightDirection.y;
+        LightDirection.z = lightDirection.z;
     }
 };
 

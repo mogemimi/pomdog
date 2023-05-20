@@ -138,23 +138,23 @@ void BillboardBatchBuffer::AddBillboard(
         return;
     }
 
-    if ((scale.X == 0.0f) || (scale.Y == 0.0f)) {
+    if ((scale.x == 0.0f) || (scale.y == 0.0f)) {
         return;
     }
 
     BillboardInfo info;
-    info.PositionRotation.X = position.X;
-    info.PositionRotation.Y = position.Y;
-    info.PositionRotation.Z = position.Z;
-    info.PositionRotation.W = rotationZ.value;
-    info.TextureCoordRect.X = textureCoord.X;
-    info.TextureCoordRect.Y = textureCoord.Y;
-    info.TextureCoordRect.Z = textureSize.X;
-    info.TextureCoordRect.W = textureSize.Y;
-    info.OriginPivotScale.X = originPivot.X;
-    info.OriginPivotScale.Y = originPivot.Y;
-    info.OriginPivotScale.Z = scale.X;
-    info.OriginPivotScale.W = scale.Y;
+    info.PositionRotation.x = position.x;
+    info.PositionRotation.y = position.y;
+    info.PositionRotation.z = position.z;
+    info.PositionRotation.w = rotationZ.value;
+    info.TextureCoordRect.x = textureCoord.x;
+    info.TextureCoordRect.y = textureCoord.y;
+    info.TextureCoordRect.z = textureSize.x;
+    info.TextureCoordRect.w = textureSize.y;
+    info.OriginPivotScale.x = originPivot.x;
+    info.OriginPivotScale.y = originPivot.y;
+    info.OriginPivotScale.z = scale.x;
+    info.OriginPivotScale.w = scale.y;
     info.Color = color.ToVector4();
 
     impl->instances.push_back(std::move(info));

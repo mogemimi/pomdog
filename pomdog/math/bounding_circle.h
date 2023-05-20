@@ -11,8 +11,8 @@ namespace pomdog {
 /// BoundingCircle is a bounding circle in 2D space.
 class POMDOG_EXPORT BoundingCircle final {
 public:
-    Vector2 Center;
-    float Radius;
+    Vector2 center;
+    float radius;
 
 public:
     BoundingCircle() noexcept = default;

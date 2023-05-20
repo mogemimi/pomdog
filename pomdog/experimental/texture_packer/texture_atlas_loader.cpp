@@ -29,12 +29,12 @@ TextureAtlasRegion CreateAtlasRegion(const std::string& line, std::int16_t pageI
     region.Name = line;
     region.TexturePage = pageIndex;
 
-    region.Region.Subrect = {0, 0, 1, 1};
-    region.Region.Width = 1;
-    region.Region.Height = 1;
-    region.Region.XOffset = 0;
-    region.Region.YOffset = 0;
-    region.Region.Rotate = false;
+    region.Region.subrect = {0, 0, 1, 1};
+    region.Region.width = 1;
+    region.Region.height = 1;
+    region.Region.xOffset = 0;
+    region.Region.yOffset = 0;
+    region.Region.rotate = false;
 
     return region;
 }
@@ -144,23 +144,23 @@ TextureAtlasLoader::Load(const std::string& filePath)
                     state = ParserState::ParsingError;
                 }
                 else if (value.front() == 't') {
-                    region.Region.Rotate = true;
+                    region.Region.rotate = true;
                 }
                 else if (value.front() == 'f') {
-                    region.Region.Rotate = false;
+                    region.Region.rotate = false;
                 }
             }
             else if ("xy" == propertyName) {
-                ss >> region.Region.Subrect.X >> region.Region.Subrect.Y;
+                ss >> region.Region.subrect.x >> region.Region.subrect.y;
             }
             else if ("size" == propertyName) {
-                ss >> region.Region.Subrect.Width >> region.Region.Subrect.Height;
+                ss >> region.Region.subrect.width >> region.Region.subrect.height;
             }
             else if ("orig" == propertyName) {
-                ss >> region.Region.Width >> region.Region.Height;
+                ss >> region.Region.width >> region.Region.height;
             }
             else if ("offset" == propertyName) {
-                ss >> region.Region.XOffset >> region.Region.YOffset;
+                ss >> region.Region.xOffset >> region.Region.yOffset;
             }
             //else if ("index" == propertyName) {
             //    // TODO

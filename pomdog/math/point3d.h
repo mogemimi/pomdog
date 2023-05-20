@@ -15,9 +15,9 @@ namespace pomdog {
 /// Point3D is a point in 3-dimensional space.
 class POMDOG_EXPORT Point3D final {
 public:
-    std::int32_t X;
-    std::int32_t Y;
-    std::int32_t Z;
+    std::int32_t x;
+    std::int32_t y;
+    std::int32_t z;
 
 public:
     /// Constructors

@@ -164,7 +164,7 @@ void Slider::OnPointerPressed([[maybe_unused]] const PointerPoint& pointerPoint)
     constexpr double thumbOffset = 5.0;
 
     auto pointInView = UIHelper::ProjectToChildSpace(pointerPoint.Position, GetGlobalPosition());
-    auto amount = (pointInView.X - thumbOffset / 2) / (GetWidth() - 2 * thumbOffset);
+    auto amount = (pointInView.x - thumbOffset / 2) / (GetWidth() - 2 * thumbOffset);
     SetValue(math::Clamp(amount * (maximum - minimum) + minimum, minimum, maximum));
     isDragging = true;
 }
@@ -185,7 +185,7 @@ void Slider::OnPointerMoved(const PointerPoint& pointerPoint)
     constexpr double thumbOffset = 5.0;
 
     auto pointInView = UIHelper::ProjectToChildSpace(pointerPoint.Position, GetGlobalPosition());
-    auto amount = (pointInView.X - thumbOffset / 2) / (GetWidth() - 2 * thumbOffset);
+    auto amount = (pointInView.x - thumbOffset / 2) / (GetWidth() - 2 * thumbOffset);
     SetValue(math::Clamp(amount * (maximum - minimum) + minimum, minimum, maximum));
 }
 
@@ -283,8 +283,8 @@ void Slider::Draw(DrawingContext& drawingContext)
         primitiveBatch->DrawRectangle(
             Matrix3x2::Identity(),
             pos + math::ToVector2(globalPos),
-            size.X,
-            size.Y,
+            size.x,
+            size.y,
             colorScheme->SliderThumbColorFocused);
     }
 
@@ -308,15 +308,15 @@ void Slider::Draw(DrawingContext& drawingContext)
         constexpr float textMarginX = 2.0f;
         constexpr float textMarginY = 3.5f;
         Vector2 textPosition;
-        textPosition.Y = GetHeight() * 0.5f + textMarginY;
+        textPosition.y = GetHeight() * 0.5f + textMarginY;
         Vector2 originPivot;
         if (value < math::Lerp(minimum, maximum, 0.6)) {
             originPivot = Vector2{1.0f, 0.5f};
-            textPosition.X = GetWidth() - textMarginX;
+            textPosition.x = GetWidth() - textMarginX;
         }
         else {
             originPivot = Vector2{0.0f, 0.5f};
-            textPosition.X = textMarginX;
+            textPosition.x = textMarginX;
         }
         textPosition += math::ToVector2(globalPos);
         spriteFont->Draw(*spriteBatch, text, textPosition, colorScheme->SliderTextColor, 0.0f, originPivot, 1.0f);

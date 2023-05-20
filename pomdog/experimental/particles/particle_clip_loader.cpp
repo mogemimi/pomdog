@@ -67,9 +67,9 @@ ParseVector3(const rapidjson::Value& value)
         (value[1].IsFloat() || value[1].IsInt()) &&
         (value[2].IsFloat() || value[2].IsInt())) {
         Vector3 vec;
-        vec.X = value[0].GetFloat();
-        vec.Y = value[1].GetFloat();
-        vec.Z = value[2].GetFloat();
+        vec.x = value[0].GetFloat();
+        vec.y = value[1].GetFloat();
+        vec.z = value[2].GetFloat();
         return std::make_tuple(vec, nullptr);
     }
     return std::make_tuple(Vector3{}, errors::New("member is not Vector3"));
@@ -100,10 +100,10 @@ ParseColor(const rapidjson::Value& value)
         (value[2].IsUint()) &&
         (value[3].IsUint())) {
         Color color;
-        color.R = static_cast<std::uint8_t>(value[0].GetUint());
-        color.G = static_cast<std::uint8_t>(value[1].GetUint());
-        color.B = static_cast<std::uint8_t>(value[2].GetUint());
-        color.A = static_cast<std::uint8_t>(value[3].GetUint());
+        color.r = static_cast<std::uint8_t>(value[0].GetUint());
+        color.g = static_cast<std::uint8_t>(value[1].GetUint());
+        color.b = static_cast<std::uint8_t>(value[2].GetUint());
+        color.a = static_cast<std::uint8_t>(value[3].GetUint());
         return std::make_tuple(color, nullptr);
     }
     return std::make_tuple(Color::TransparentBlack(), errors::New("member is not Color"));

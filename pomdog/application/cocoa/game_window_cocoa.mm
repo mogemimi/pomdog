@@ -157,10 +157,10 @@ Rectangle GameWindowCocoa::GetClientBounds() const
 void GameWindowCocoa::SetClientBounds(const Rectangle& clientBounds)
 {
     NSRect bounds = NSMakeRect(
-        clientBounds.X,
-        clientBounds.Y,
-        clientBounds.Width,
-        clientBounds.Height);
+        clientBounds.x,
+        clientBounds.y,
+        clientBounds.width,
+        clientBounds.height);
 
     dispatch_async(dispatch_get_main_queue(), [this, bounds] {
         [nativeWindow setFrame:bounds display:YES animate:NO];

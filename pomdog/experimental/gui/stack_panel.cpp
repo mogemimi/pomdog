@@ -75,7 +75,7 @@ void StackPanel::OnPointerPressed(const PointerPoint& pointerPoint)
 
     auto pointInView = UIHelper::ProjectToChildSpace(pointerPoint.Position, GetGlobalPosition());
 
-    const auto collisionHeight = barHeight + padding.Top;
+    const auto collisionHeight = barHeight + padding.top;
     Rectangle captionBar{
         0,
         GetHeight() - collisionHeight,
@@ -150,7 +150,7 @@ void StackPanel::UpdateLayout()
         return;
     }
 
-    const auto requiredHeight = padding.Top + barHeight + verticalLayout->GetHeight() + padding.Bottom;
+    const auto requiredHeight = padding.top + barHeight + verticalLayout->GetHeight() + padding.bottom;
     if (requiredHeight != GetHeight()) {
         // NOTE: Keeping the original position
         const auto positionOffset = Point2D{0, GetHeight() - requiredHeight};
@@ -167,11 +167,11 @@ void StackPanel::UpdateLayout()
 
     // NOTE: Update layout for children
     {
-        verticalLayout->SetPosition(Point2D{padding.Left, padding.Bottom});
+        verticalLayout->SetPosition(Point2D{padding.left, padding.bottom});
 
         switch (verticalLayout->GetHorizontalAlignment()) {
         case HorizontalAlignment::Stretch: {
-            auto childWidth = GetWidth() - (padding.Left + padding.Right);
+            auto childWidth = GetWidth() - (padding.left + padding.right);
             verticalLayout->SetSize(childWidth, verticalLayout->GetHeight());
             verticalLayout->MarkContentLayoutDirty();
             break;
@@ -206,11 +206,11 @@ void StackPanel::Draw(DrawingContext& drawingContext)
     const auto h = static_cast<float>(GetHeight());
 
     primitiveBatch->DrawRectangle(
-        Rectangle{globalPos.X, globalPos.Y, GetWidth(), GetHeight()},
+        Rectangle{globalPos.x, globalPos.y, GetWidth(), GetHeight()},
         colorScheme->PanelBackgroundColor);
 
     primitiveBatch->DrawRectangle(
-        Rectangle{globalPos.X, globalPos.Y + (GetHeight() - barHeight), GetWidth(), barHeight},
+        Rectangle{globalPos.x, globalPos.y + (GetHeight() - barHeight), GetWidth(), barHeight},
         colorScheme->PanelTitleBarColor);
 
     const auto pos = math::ToVector2(globalPos);

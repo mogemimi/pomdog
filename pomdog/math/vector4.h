@@ -16,10 +16,10 @@ namespace pomdog {
 /// Vector4 is a vector in 4-dimensional space.
 class POMDOG_EXPORT Vector4 final {
 public:
-    float X;
-    float Y;
-    float Z;
-    float W;
+    float x;
+    float y;
+    float z;
+    float w;
 
 public:
     /// Creates a new Vector4 object.

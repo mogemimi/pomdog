@@ -192,14 +192,14 @@ void TreeView::UpdateLayout()
             horizontalLayout->MarkContentLayoutDirty();
             break;
         case HorizontalAlignment::Right:
-            position.X = GetWidth() - horizontalLayout->GetWidth();
+            position.x = GetWidth() - horizontalLayout->GetWidth();
             break;
         case HorizontalAlignment::Left:
             break;
         }
         if (expanded) {
-            position.Y += layoutSpacing;
-            position.Y += verticalLayoutHeight;
+            position.y += layoutSpacing;
+            position.y += verticalLayoutHeight;
         }
         horizontalLayout->SetPosition(position);
     }
@@ -213,15 +213,15 @@ void TreeView::UpdateLayout()
             verticalLayout->MarkContentLayoutDirty();
             break;
         case HorizontalAlignment::Right:
-            position.X = GetWidth() - verticalLayout->GetWidth();
+            position.x = GetWidth() - verticalLayout->GetWidth();
             break;
         case HorizontalAlignment::Left:
             break;
         }
         if (!expanded) {
             // TODO: bad code
-            position.X = -1000;
-            position.Y = -1000;
+            position.x = -1000;
+            position.y = -1000;
         }
         verticalLayout->SetPosition(position);
     }

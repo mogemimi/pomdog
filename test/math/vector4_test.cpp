@@ -12,16 +12,16 @@ TEST_CASE("Vector4", "[Vector4]")
     SECTION("Vector4")
     {
         Vector4 vec{0, 0, 0, 0};
-        REQUIRE(vec.X == 0.0f);
-        REQUIRE(vec.Y == 0.0f);
-        REQUIRE(vec.Z == 0.0f);
-        REQUIRE(vec.W == 0.0f);
+        REQUIRE(vec.x == 0.0f);
+        REQUIRE(vec.y == 0.0f);
+        REQUIRE(vec.z == 0.0f);
+        REQUIRE(vec.w == 0.0f);
 
         vec = {1, 2, 3, 4};
-        REQUIRE(vec.X == 1.0f);
-        REQUIRE(vec.Y == 2.0f);
-        REQUIRE(vec.Z == 3.0f);
-        REQUIRE(vec.W == 4.0f);
+        REQUIRE(vec.x == 1.0f);
+        REQUIRE(vec.y == 2.0f);
+        REQUIRE(vec.z == 3.0f);
+        REQUIRE(vec.w == 4.0f);
     }
     SECTION("Addition")
     {

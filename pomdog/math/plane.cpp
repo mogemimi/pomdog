@@ -16,14 +16,14 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog {
 
 Plane::Plane() noexcept
-    : Normal(0.0f, 0.0f, 0.0f)
-    , Distance(0.0f)
+    : normal(0.0f, 0.0f, 0.0f)
+    , distance(0.0f)
 {
 }
 
 Plane::Plane(const Vector3& normalIn, float distanceIn) noexcept
-    : Normal(normalIn)
-    , Distance(distanceIn)
+    : normal(normalIn)
+    , distance(distanceIn)
 {
 }
 
@@ -32,18 +32,18 @@ Plane::Plane(const Vector3& point0, const Vector3& point1, const Vector3& point2
     // NOTE: Left-handed coordinate system (not right-handed one)
     const auto vector1 = point1 - point0;
     const auto vector2 = point2 - point0;
-    Normal = math::Normalize(math::Cross(vector1, vector2));
-    Distance = -math::Dot(Normal, point0);
+    normal = math::Normalize(math::Cross(vector1, vector2));
+    distance = -math::Dot(normal, point0);
 }
 
 void Plane::Normalize() noexcept
 {
-    const auto length = math::Length(this->Normal);
+    const auto length = math::Length(normal);
 
     if (length >= std::numeric_limits<float>::epsilon()) {
         const auto inverseLength = 1.0f / length;
-        Normal *= inverseLength;
-        Distance *= inverseLength;
+        normal *= inverseLength;
+        distance *= inverseLength;
     }
 }
 
@@ -56,35 +56,35 @@ Plane Plane::Normalize(const Plane& plane) noexcept
 
 float Plane::Dot(const Vector4& vec) const noexcept
 {
-    return this->Normal.X * vec.X +
-           this->Normal.Y * vec.Y +
-           this->Normal.Z * vec.Z +
-           this->Distance * vec.W;
+    return normal.x * vec.x +
+           normal.y * vec.y +
+           normal.z * vec.z +
+           distance * vec.w;
 }
 
 float Plane::DotCoordinate(const Vector3& vec) const noexcept
 {
-    return Normal.X * vec.X + Normal.Y * vec.Y + Normal.Z * vec.Z + Distance;
+    return normal.x * vec.x + normal.y * vec.y + normal.z * vec.z + distance;
 }
 
 float Plane::DotNormal(const Vector3& vec) const noexcept
 {
-    return math::Dot(this->Normal, vec);
+    return math::Dot(normal, vec);
 }
 
 float Plane::GetDistanceToPoint(const Vector3& point) const noexcept
 {
-    return this->DotCoordinate(point);
+    return DotCoordinate(point);
 }
 
 PlaneIntersectionType Plane::Intersects(const Vector3& point) const noexcept
 {
-    const auto distance = this->DotCoordinate(point);
+    const auto dotProduct = DotCoordinate(point);
 
-    if (distance > 0.0f) {
+    if (dotProduct > 0.0f) {
         return PlaneIntersectionType::Front;
     }
-    if (distance < 0.0f) {
+    if (dotProduct < 0.0f) {
         return PlaneIntersectionType::Back;
     }
     return PlaneIntersectionType::Intersecting;
@@ -92,29 +92,26 @@ PlaneIntersectionType Plane::Intersects(const Vector3& point) const noexcept
 
 PlaneIntersectionType Plane::Intersects(const BoundingBox& box) const noexcept
 {
-    // NOTE: See also
-    // http://zach.in.tu-clausthal.de/teaching/cg_literatur/lighthouse3d_view_frustum_culling/index.html
+    Vector3 positiveVertex{box.min.x, box.min.y, box.min.z};
+    Vector3 negativeVertex{box.max.x, box.max.y, box.max.z};
 
-    Vector3 positiveVertex{box.Min.X, box.Min.Y, box.Min.Z};
-    Vector3 negativeVertex{box.Max.X, box.Max.Y, box.Max.Z};
-
-    if (Normal.X >= 0.0f) {
-        positiveVertex.X = box.Max.X;
-        negativeVertex.X = box.Min.X;
+    if (normal.x >= 0.0f) {
+        positiveVertex.x = box.max.x;
+        negativeVertex.x = box.min.x;
     }
-    if (Normal.Y >= 0.0f) {
-        positiveVertex.Y = box.Max.Y;
-        negativeVertex.Y = box.Min.Y;
+    if (normal.y >= 0.0f) {
+        positiveVertex.y = box.max.y;
+        negativeVertex.y = box.min.y;
     }
-    if (Normal.Z >= 0.0f) {
-        positiveVertex.Z = box.Max.Z;
-        negativeVertex.Z = box.Min.Z;
+    if (normal.z >= 0.0f) {
+        positiveVertex.z = box.max.z;
+        negativeVertex.z = box.min.z;
     }
 
-    if (this->DotCoordinate(negativeVertex) > 0.0f) {
+    if (DotCoordinate(negativeVertex) > 0.0f) {
         return PlaneIntersectionType::Front;
     }
-    if (this->DotCoordinate(positiveVertex) < 0.0f) {
+    if (DotCoordinate(positiveVertex) < 0.0f) {
         return PlaneIntersectionType::Back;
     }
     return PlaneIntersectionType::Intersecting;
@@ -127,12 +124,12 @@ PlaneIntersectionType Plane::Intersects(const BoundingFrustum& frustum) const
 
 PlaneIntersectionType Plane::Intersects(const BoundingSphere& sphere) const noexcept
 {
-    const auto distance = this->DotCoordinate(sphere.Center);
+    const auto dotProduct = DotCoordinate(sphere.center);
 
-    if (distance > sphere.Radius) {
+    if (dotProduct > sphere.radius) {
         return PlaneIntersectionType::Front;
     }
-    if (distance < -sphere.Radius) {
+    if (dotProduct < -sphere.radius) {
         return PlaneIntersectionType::Back;
     }
     return PlaneIntersectionType::Intersecting;
@@ -141,14 +138,14 @@ PlaneIntersectionType Plane::Intersects(const BoundingSphere& sphere) const noex
 Plane Plane::Transform(const Plane& plane, const Matrix4x4& matrix)
 {
     const auto transformMatrix = math::Invert(matrix);
-    const auto vector = Vector4{plane.Normal, plane.Distance};
+    const auto vector = Vector4{plane.normal, plane.distance};
     const auto transformedVector = math::Transform(vector, transformMatrix);
 
     Plane result;
-    result.Normal.X = transformedVector.X;
-    result.Normal.Y = transformedVector.Y;
-    result.Normal.Z = transformedVector.Z;
-    result.Distance = transformedVector.W;
+    result.normal.x = transformedVector.x;
+    result.normal.y = transformedVector.y;
+    result.normal.z = transformedVector.z;
+    result.distance = transformedVector.w;
     return result;
 }
 

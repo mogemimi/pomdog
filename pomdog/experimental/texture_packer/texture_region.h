@@ -29,12 +29,12 @@ namespace pomdog {
 //        v   +-----------------------+
 
 struct POMDOG_EXPORT TextureRegion final {
-    Rectangle Subrect;
-    std::int16_t XOffset;
-    std::int16_t YOffset;
-    std::int16_t Width;
-    std::int16_t Height;
-    bool Rotate;
+    Rectangle subrect;
+    std::int16_t xOffset;
+    std::int16_t yOffset;
+    std::int16_t width;
+    std::int16_t height;
+    bool rotate;
 };
 
 } // namespace pomdog

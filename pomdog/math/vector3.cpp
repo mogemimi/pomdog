@@ -19,41 +19,41 @@ namespace pomdog {
 
 Vector3::Vector3() noexcept = default;
 
-Vector3::Vector3(float x, float y, float z) noexcept
-    : X(x)
-    , Y(y)
-    , Z(z)
+Vector3::Vector3(float xIn, float yIn, float zIn) noexcept
+    : x(xIn)
+    , y(yIn)
+    , z(zIn)
 {
 }
 
-Vector3::Vector3(const Vector2& vec, float z) noexcept
-    : X(vec.X)
-    , Y(vec.Y)
-    , Z(z)
+Vector3::Vector3(const Vector2& vec, float zIn) noexcept
+    : x(vec.x)
+    , y(vec.y)
+    , z(zIn)
 {
 }
 
 Vector3& Vector3::operator+=(const Vector3& vec) noexcept
 {
-    X += vec.X;
-    Y += vec.Y;
-    Z += vec.Z;
+    x += vec.x;
+    y += vec.y;
+    z += vec.z;
     return *this;
 }
 
 Vector3& Vector3::operator-=(const Vector3& vec) noexcept
 {
-    X -= vec.X;
-    Y -= vec.Y;
-    Z -= vec.Z;
+    x -= vec.x;
+    y -= vec.y;
+    z -= vec.z;
     return *this;
 }
 
 Vector3& Vector3::operator*=(float factor) noexcept
 {
-    X *= factor;
-    Y *= factor;
-    Z *= factor;
+    x *= factor;
+    y *= factor;
+    z *= factor;
     return *this;
 }
 
@@ -62,9 +62,9 @@ Vector3& Vector3::operator/=(float factor) noexcept
     POMDOG_ASSERT(std::fpclassify(factor) != FP_ZERO);
     POMDOG_ASSERT(std::fpclassify(factor) != FP_NAN);
     POMDOG_ASSERT(std::fpclassify(factor) != FP_INFINITE);
-    X /= factor;
-    Y /= factor;
-    Z /= factor;
+    x /= factor;
+    y /= factor;
+    z /= factor;
     return *this;
 }
 
@@ -75,51 +75,51 @@ Vector3 Vector3::operator+() const noexcept
 
 Vector3 Vector3::operator-() const noexcept
 {
-    return Vector3(-X, -Y, -Z);
+    return Vector3{-x, -y, -z};
 }
 
 Vector3 Vector3::operator+(const Vector3& other) const noexcept
 {
-    return Vector3(
-        X + other.X,
-        Y + other.Y,
-        Z + other.Z);
+    return Vector3{
+        x + other.x,
+        y + other.y,
+        z + other.z};
 }
 
 Vector3 Vector3::operator-(const Vector3& other) const noexcept
 {
-    return Vector3(
-        X - other.X,
-        Y - other.Y,
-        Z - other.Z);
+    return Vector3{
+        x - other.x,
+        y - other.y,
+        z - other.z};
 }
 
 Vector3 Vector3::operator*(const Vector3& other) const noexcept
 {
-    return Vector3(
-        X * other.X,
-        Y * other.Y,
-        Z * other.Z);
+    return Vector3{
+        x * other.x,
+        y * other.y,
+        z * other.z};
 }
 
 Vector3 Vector3::operator/(const Vector3& other) const noexcept
 {
-    POMDOG_ASSERT(std::fpclassify(other.X) != FP_ZERO);
-    POMDOG_ASSERT(std::fpclassify(other.Y) != FP_ZERO);
-    POMDOG_ASSERT(std::fpclassify(other.Z) != FP_ZERO);
+    POMDOG_ASSERT(std::fpclassify(other.x) != FP_ZERO);
+    POMDOG_ASSERT(std::fpclassify(other.y) != FP_ZERO);
+    POMDOG_ASSERT(std::fpclassify(other.z) != FP_ZERO);
 
-    return Vector3(
-        X / other.X,
-        Y / other.Y,
-        Z / other.Z);
+    return Vector3{
+        x / other.x,
+        y / other.y,
+        z / other.z};
 }
 
 Vector3 Vector3::operator*(float factor) const noexcept
 {
-    return Vector3(
-        X * factor,
-        Y * factor,
-        Z * factor);
+    return Vector3{
+        x * factor,
+        y * factor,
+        z * factor};
 }
 
 Vector3 Vector3::operator/(float factor) const noexcept
@@ -127,44 +127,44 @@ Vector3 Vector3::operator/(float factor) const noexcept
     POMDOG_ASSERT(std::fpclassify(factor) != FP_ZERO);
     POMDOG_ASSERT(std::fpclassify(factor) != FP_NAN);
     POMDOG_ASSERT(std::fpclassify(factor) != FP_INFINITE);
-    return Vector3(
-        X / factor,
-        Y / factor,
-        Z / factor);
+    return Vector3{
+        x / factor,
+        y / factor,
+        z / factor};
 }
 
 bool Vector3::operator==(const Vector3& other) const noexcept
 {
-    return X == other.X && Y == other.Y && Z == other.Z;
+    return x == other.x && y == other.y && z == other.z;
 }
 
 bool Vector3::operator!=(const Vector3& other) const noexcept
 {
-    return X != other.X || Y != other.Y || Z != other.Z;
+    return x != other.x || y != other.y || z != other.z;
 }
 
 Vector3
 Vector3::ToEulerAngles(const Quaternion& q)
 {
     constexpr float Two = 2;
-    const auto xx = q.X * q.X;
-    const auto yy = q.Y * q.Y;
-    const auto zz = q.Z * q.Z;
-    const auto ww = q.W * q.W;
-    auto roll = std::atan2(Two * (q.W * q.Z + q.X * q.Y), ww + xx - yy - zz);
-    auto yaw = std::asin(Two * (q.W * q.Y - q.Z * q.X));
-    auto pitch = std::atan2(Two * (q.W * q.X + q.Y * q.Z), ww - xx - yy + zz);
-    return Vector3(pitch, yaw, roll);
+    const auto xx = q.x * q.x;
+    const auto yy = q.y * q.y;
+    const auto zz = q.z * q.z;
+    const auto ww = q.w * q.w;
+    auto roll = std::atan2(Two * (q.w * q.z + q.x * q.y), ww + xx - yy - zz);
+    auto yaw = std::asin(Two * (q.w * q.y - q.z * q.x));
+    auto pitch = std::atan2(Two * (q.w * q.x + q.y * q.z), ww - xx - yy + zz);
+    return Vector3{pitch, yaw, roll};
 }
 
 const float* Vector3::Data() const noexcept
 {
-    return &X;
+    return &x;
 }
 
 float* Vector3::Data() noexcept
 {
-    return &X;
+    return &x;
 }
 
 Vector3 Vector3::Zero() noexcept
@@ -190,10 +190,10 @@ Vector3 Vector3::UnitZ() noexcept
 [[nodiscard]] Vector3
 operator*(float factor, const Vector3& vector) noexcept
 {
-    return Vector3(
-        factor * vector.X,
-        factor * vector.Y,
-        factor * vector.Z);
+    return Vector3{
+        factor * vector.x,
+        factor * vector.y,
+        factor * vector.z};
 }
 
 } // namespace pomdog
@@ -203,13 +203,13 @@ namespace pomdog::math {
 [[nodiscard]] float
 Length(const Vector3& v) noexcept
 {
-    return std::sqrt(v.X * v.X + v.Y * v.Y + v.Z * v.Z);
+    return std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 }
 
 [[nodiscard]] float
 LengthSquared(const Vector3& v) noexcept
 {
-    return v.X * v.X + v.Y * v.Y + v.Z * v.Z;
+    return v.x * v.x + v.y * v.y + v.z * v.z;
 }
 
 [[nodiscard]] float
@@ -227,16 +227,16 @@ DistanceSquared(const Vector3& a, const Vector3& b) noexcept
 [[nodiscard]] float
 Dot(const Vector3& a, const Vector3& b) noexcept
 {
-    return a.X * b.X + a.Y * b.Y + a.Z * b.Z;
+    return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
 [[nodiscard]] Vector3
 Cross(const Vector3& a, const Vector3& b) noexcept
 {
     return Vector3{
-        a.Y * b.Z - a.Z * b.Y,
-        a.Z * b.X - a.X * b.Z,
-        a.X * b.Y - a.Y * b.X,
+        a.y * b.z - a.z * b.y,
+        a.z * b.x - a.x * b.z,
+        a.x * b.y - a.y * b.x,
     };
 }
 
@@ -244,9 +244,9 @@ Cross(const Vector3& a, const Vector3& b) noexcept
 Min(const Vector3& a, const Vector3& b) noexcept
 {
     return Vector3{
-        std::min(a.X, b.X),
-        std::min(a.Y, b.Y),
-        std::min(a.Z, b.Z),
+        std::min(a.x, b.x),
+        std::min(a.y, b.y),
+        std::min(a.z, b.z),
     };
 }
 
@@ -254,9 +254,9 @@ Min(const Vector3& a, const Vector3& b) noexcept
 Max(const Vector3& a, const Vector3& b) noexcept
 {
     return Vector3{
-        std::max(a.X, b.X),
-        std::max(a.Y, b.Y),
-        std::max(a.Z, b.Z),
+        std::max(a.x, b.x),
+        std::max(a.y, b.y),
+        std::max(a.z, b.z),
     };
 }
 
@@ -264,9 +264,9 @@ Max(const Vector3& a, const Vector3& b) noexcept
 Clamp(const Vector3& source, const Vector3& min, const Vector3& max) noexcept
 {
     return Vector3{
-        math::Clamp(source.X, min.X, max.X),
-        math::Clamp(source.Y, min.Y, max.Y),
-        math::Clamp(source.Z, min.Z, max.Z),
+        math::Clamp(source.x, min.x, max.x),
+        math::Clamp(source.y, min.y, max.y),
+        math::Clamp(source.z, min.z, max.z),
     };
 }
 
@@ -274,9 +274,9 @@ Clamp(const Vector3& source, const Vector3& min, const Vector3& max) noexcept
 Lerp(const Vector3& source1, const Vector3& source2, float amount)
 {
     return Vector3{
-        math::Lerp(source1.X, source2.X, amount),
-        math::Lerp(source1.Y, source2.Y, amount),
-        math::Lerp(source1.Z, source2.Z, amount),
+        math::Lerp(source1.x, source2.x, amount),
+        math::Lerp(source1.y, source2.y, amount),
+        math::Lerp(source1.z, source2.z, amount),
     };
 }
 
@@ -284,9 +284,9 @@ Lerp(const Vector3& source1, const Vector3& source2, float amount)
 SmoothStep(const Vector3& source1, const Vector3& source2, float amount)
 {
     return Vector3{
-        math::SmoothStep(source1.X, source2.X, amount),
-        math::SmoothStep(source1.Y, source2.Y, amount),
-        math::SmoothStep(source1.Z, source2.Z, amount),
+        math::SmoothStep(source1.x, source2.x, amount),
+        math::SmoothStep(source1.y, source2.y, amount),
+        math::SmoothStep(source1.z, source2.z, amount),
     };
 }
 
@@ -309,9 +309,9 @@ Normalize(const Vector3& source) noexcept
 Transform(const Vector3& position, const Matrix4x4& matrix) noexcept
 {
     return Vector3{
-        (position.X * matrix.m[0][0]) + (position.Y * matrix.m[1][0]) + (position.Z * matrix.m[2][0]) + matrix.m[3][0],
-        (position.X * matrix.m[0][1]) + (position.Y * matrix.m[1][1]) + (position.Z * matrix.m[2][1]) + matrix.m[3][1],
-        (position.X * matrix.m[0][2]) + (position.Y * matrix.m[1][2]) + (position.Z * matrix.m[2][2]) + matrix.m[3][2],
+        (position.x * matrix.m[0][0]) + (position.y * matrix.m[1][0]) + (position.z * matrix.m[2][0]) + matrix.m[3][0],
+        (position.x * matrix.m[0][1]) + (position.y * matrix.m[1][1]) + (position.z * matrix.m[2][1]) + matrix.m[3][1],
+        (position.x * matrix.m[0][2]) + (position.y * matrix.m[1][2]) + (position.z * matrix.m[2][2]) + matrix.m[3][2],
     };
 }
 
@@ -319,9 +319,9 @@ Transform(const Vector3& position, const Matrix4x4& matrix) noexcept
 TransformNormal(const Vector3& normal, const Matrix4x4& matrix) noexcept
 {
     return Vector3{
-        (normal.X * matrix.m[0][0]) + (normal.Y * matrix.m[1][0]) + (normal.Z * matrix.m[2][0]),
-        (normal.X * matrix.m[0][1]) + (normal.Y * matrix.m[1][1]) + (normal.Z * matrix.m[2][1]),
-        (normal.X * matrix.m[0][2]) + (normal.Y * matrix.m[1][2]) + (normal.Z * matrix.m[2][2]),
+        (normal.x * matrix.m[0][0]) + (normal.y * matrix.m[1][0]) + (normal.z * matrix.m[2][0]),
+        (normal.x * matrix.m[0][1]) + (normal.y * matrix.m[1][1]) + (normal.z * matrix.m[2][1]),
+        (normal.x * matrix.m[0][2]) + (normal.y * matrix.m[1][2]) + (normal.z * matrix.m[2][2]),
     };
 }
 

@@ -473,14 +473,14 @@ void GameHostCocoa::Impl::ProcessSystemEvents(const SystemEvent& event)
         auto rect = window->GetClientBounds();
         Log::Internal(StringHelper::Format(
             "ViewWillStartLiveResizeEvent: {w: %d, h: %d}",
-            rect.Width, rect.Height));
+            rect.width, rect.height));
         break;
     }
     case SystemEventKind::ViewDidEndLiveResizeEvent: {
         auto rect = window->GetClientBounds();
         Log::Internal(StringHelper::Format(
             "ViewDidEndLiveResizeEvent: {w: %d, h: %d}",
-            rect.Width, rect.Height));
+            rect.width, rect.height));
         break;
     }
     default:
@@ -507,8 +507,8 @@ void GameHostCocoa::Impl::ClientSizeChanged()
 
     auto bounds = window->GetClientBounds();
 
-    graphicsDevice->ClientSizeChanged(bounds.Width, bounds.Height);
-    window->ClientSizeChanged(bounds.Width, bounds.Height);
+    graphicsDevice->ClientSizeChanged(bounds.width, bounds.height);
+    window->ClientSizeChanged(bounds.width, bounds.height);
 
     openGLContext->Unlock();
 }

@@ -15,10 +15,10 @@ namespace pomdog {
 /// Color describes a 32-bit packed RGBA color.
 class POMDOG_EXPORT Color final {
 public:
-    std::uint8_t R;
-    std::uint8_t G;
-    std::uint8_t B;
-    std::uint8_t A;
+    std::uint8_t r;
+    std::uint8_t g;
+    std::uint8_t b;
+    std::uint8_t a;
 
 public:
     Color() noexcept;
