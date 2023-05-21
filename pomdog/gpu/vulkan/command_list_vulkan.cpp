@@ -127,8 +127,8 @@ void CommandListVulkan::SetRenderPass(RenderPass&& renderPass)
     if (renderPass.Viewport) {
         const auto& viewportIn = *renderPass.Viewport;
 
-        POMDOG_ASSERT(viewportIn.Width > 0);
-        POMDOG_ASSERT(viewportIn.Height > 0);
+        POMDOG_ASSERT(viewportIn.width > 0);
+        POMDOG_ASSERT(viewportIn.height > 0);
 
         // NOTE: The MinDepth and MaxDepth must be between 0.0 and 1.0, respectively.
         // Please see https://www.khronos.org/registry/vulkan/specs/1.0/man/html/VkViewport.html
@@ -136,12 +136,12 @@ void CommandListVulkan::SetRenderPass(RenderPass&& renderPass)
         POMDOG_ASSERT((0.0f <= viewportIn.MaxDepth) && (viewportIn.MaxDepth <= 1.0f));
 
         VkViewport viewport;
-        viewport.x = viewportIn.TopLeftX;
-        viewport.y = viewportIn.TopLeftY;
-        viewport.width = viewportIn.Width;
-        viewport.height = viewportIn.Height;
-        viewport.minDepth = viewportIn.MinDepth;
-        viewport.maxDepth = viewportIn.MaxDepth;
+        viewport.x = viewportIn.topLeftX;
+        viewport.y = viewportIn.topLeftY;
+        viewport.width = viewportIn.width;
+        viewport.height = viewportIn.height;
+        viewport.minDepth = viewportIn.minDepth;
+        viewport.maxDepth = viewportIn.maxDepth;
 
         vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
     }
@@ -149,14 +149,14 @@ void CommandListVulkan::SetRenderPass(RenderPass&& renderPass)
     if (renderPass.ScissorRect) {
         const auto& rect = *renderPass.ScissorRect;
 
-        POMDOG_ASSERT(rect.Width > 0);
-        POMDOG_ASSERT(rect.Height > 0);
+        POMDOG_ASSERT(rect.width > 0);
+        POMDOG_ASSERT(rect.height > 0);
 
         VkRect2D scissorRect;
-        scissorRect.offset.x = rect.X;
-        scissorRect.offset.y = rect.Y;
-        scissorRect.extent.width = rect.Width;
-        scissorRect.extent.height = rect.Height;
+        scissorRect.offset.x = rect.x;
+        scissorRect.offset.y = rect.y;
+        scissorRect.extent.width = rect.width;
+        scissorRect.extent.height = rect.height;
 
         vkCmdSetScissor(commandBuffer, 0, 1, &scissorRect);
     }
@@ -169,10 +169,10 @@ void CommandListVulkan::SetRenderPass(RenderPass&& renderPass)
     const auto setClearColor = [](VkClearAttachment& attachment, std::uint32_t index, const Vector4& clearColor) {
         attachment.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
         attachment.colorAttachment = index;
-        attachment.clearValue.color.float32[0] = clearColor.X;
-        attachment.clearValue.color.float32[1] = clearColor.Y;
-        attachment.clearValue.color.float32[2] = clearColor.Z;
-        attachment.clearValue.color.float32[3] = clearColor.W;
+        attachment.clearValue.color.float32[0] = clearColor.x;
+        attachment.clearValue.color.float32[1] = clearColor.y;
+        attachment.clearValue.color.float32[2] = clearColor.z;
+        attachment.clearValue.color.float32[3] = clearColor.w;
     };
 
     // FIXME: Not implemented yet.
@@ -298,16 +298,16 @@ void CommandListVulkan::SetViewport(const Viewport& viewportIn)
 {
     POMDOG_ASSERT(commandBuffer != nullptr);
 
-    POMDOG_ASSERT(viewportIn.Width > 0);
-    POMDOG_ASSERT(viewportIn.Height > 0);
+    POMDOG_ASSERT(viewportIn.width > 0);
+    POMDOG_ASSERT(viewportIn.height > 0);
 
     VkViewport viewport;
-    viewport.x = viewportIn.TopLeftX;
-    viewport.y = viewportIn.TopLeftY;
-    viewport.width = viewportIn.Width;
-    viewport.height = viewportIn.Height;
-    viewport.minDepth = viewportIn.MinDepth;
-    viewport.maxDepth = viewportIn.MaxDepth;
+    viewport.x = viewportIn.topLeftX;
+    viewport.y = viewportIn.topLeftY;
+    viewport.width = viewportIn.width;
+    viewport.height = viewportIn.height;
+    viewport.minDepth = viewportIn.minDepth;
+    viewport.maxDepth = viewportIn.maxDepth;
 
     vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
 }
@@ -316,14 +316,14 @@ void CommandListVulkan::SetScissorRect(const Rectangle& rect)
 {
     POMDOG_ASSERT(commandBuffer != nullptr);
 
-    POMDOG_ASSERT(rect.Width > 0);
-    POMDOG_ASSERT(rect.Height > 0);
+    POMDOG_ASSERT(rect.width > 0);
+    POMDOG_ASSERT(rect.height > 0);
 
     VkRect2D scissorRect;
-    scissorRect.offset.x = rect.X;
-    scissorRect.offset.y = rect.Y;
-    scissorRect.extent.width = rect.Width;
-    scissorRect.extent.height = rect.Height;
+    scissorRect.offset.x = rect.x;
+    scissorRect.offset.y = rect.y;
+    scissorRect.extent.width = rect.width;
+    scissorRect.extent.height = rect.height;
 
     vkCmdSetScissor(commandBuffer, 0, 1, &scissorRect);
 }

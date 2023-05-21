@@ -16,33 +16,33 @@ namespace pong {
 using namespace pomdog;
 
 struct Paddle final {
-    Vector2 Position = Vector2::Zero();
-    Vector2 PositionOld = Vector2::Zero();
-    float Speed = 540.0f;
-    float Height = 50.0f;
+    Vector2 position = Vector2::Zero();
+    Vector2 positionOld = Vector2::Zero();
+    float speed = 540.0f;
+    float height = 50.0f;
 
     BoundingBox2D GetCollider() const
     {
         const float width = 10;
         const auto halfWidth = width / 2;
-        const auto halfHeight = Height / 2;
+        const auto halfHeight = height / 2;
         BoundingBox2D box;
-        box.Min = Position - Vector2{halfWidth, halfHeight};
-        box.Max = Position + Vector2{halfWidth, halfHeight};
+        box.min = position - Vector2{halfWidth, halfHeight};
+        box.max = position + Vector2{halfWidth, halfHeight};
         return box;
     }
 };
 
 struct Ball final {
-    Vector2 Position = Vector2::Zero();
-    Vector2 PositionOld = Vector2::Zero();
-    Vector2 Velocity = Vector2::Zero();
+    Vector2 position = Vector2::Zero();
+    Vector2 positionOld = Vector2::Zero();
+    Vector2 velocity = Vector2::Zero();
 
     BoundingCircle GetCollider() const
     {
         BoundingCircle circle;
-        circle.Radius = 3;
-        circle.Center = this->Position;
+        circle.radius = 3;
+        circle.center = position;
         return circle;
     }
 };

@@ -60,15 +60,16 @@ std::unique_ptr<Error> ParticleClipLoaderTest::Initialize()
 
     auto mouse = gameHost->GetMouse();
     auto onMoved = [this](const Point2D& mousePos) {
-        auto mouse = gameHost->GetMouse();
-        auto mouseState = mouse->GetState();
+        const auto mouse = gameHost->GetMouse();
+        const auto mouseState = mouse->GetState();
         if (mouseState.LeftButton != ButtonState::Pressed) {
             return;
         }
-        auto window = gameHost->GetWindow();
+        const auto window = gameHost->GetWindow();
+        const auto clientBounds = window->GetClientBounds();
         auto pos = mousePos;
-        pos.X = pos.X - (window->GetClientBounds().Width / 2);
-        pos.Y = -pos.Y + (window->GetClientBounds().Height / 2);
+        pos.x = pos.x - (clientBounds.width / 2);
+        pos.y = -pos.y + (clientBounds.height / 2);
         emitterPosition = math::ToVector2(pos);
     };
     auto onClipChanged = [this] {
@@ -153,7 +154,7 @@ void ParticleClipLoaderTest::Draw()
     for (const auto& particle : particleSystem->GetParticles()) {
         spriteBatch->Draw(
             texture,
-            Vector2{particle.Position.X, particle.Position.Y},
+            Vector2{particle.Position.x, particle.Position.y},
             Rectangle{0, 0, 64, 64},
             particle.Color,
             particle.Rotation,

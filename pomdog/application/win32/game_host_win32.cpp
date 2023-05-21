@@ -557,11 +557,11 @@ void GameHostWin32::Impl::ProcessSystemEvents(const SystemEvent& event)
 void GameHostWin32::Impl::ClientSizeChanged()
 {
     POMDOG_ASSERT(window);
-    auto bounds = window->GetClientBounds();
+    const auto bounds = window->GetClientBounds();
 
     POMDOG_ASSERT(graphicsBridge);
-    graphicsBridge->OnClientSizeChanged(bounds.Width, bounds.Height);
-    window->ClientSizeChanged(bounds.Width, bounds.Height);
+    graphicsBridge->OnClientSizeChanged(bounds.width, bounds.Height);
+    window->ClientSizeChanged(bounds.width, bounds.Height);
 }
 
 std::shared_ptr<GameWindow>

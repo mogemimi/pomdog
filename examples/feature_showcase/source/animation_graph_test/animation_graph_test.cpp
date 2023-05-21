@@ -210,13 +210,15 @@ void AnimationGraphTest::Update()
 
     auto mouse = gameHost->GetMouse()->GetState();
     if (mouse.LeftButton == ButtonState::Pressed) {
-        auto window = gameHost->GetWindow();
-        auto y = mouse.Position.Y - (window->GetClientBounds().Height / 2);
-        auto blendWeight = std::clamp(static_cast<float>(y) / 180.0f, 0.0f, 1.0f);
+        const auto window = gameHost->GetWindow();
+        const auto clientBounds = window->GetClientBounds();
+
+        const auto y = mouse.Position.y - (clientBounds.height / 2);
+        const auto blendWeight = std::clamp(static_cast<float>(y) / 180.0f, 0.0f, 1.0f);
         animator->SetFloat("Run.Weight", blendWeight);
 
-        auto x = mouse.Position.X - (window->GetClientBounds().Width / 2);
-        auto playbackRate = std::clamp(static_cast<float>(x) / 100.0f, -2.0f, 2.0f);
+        const auto x = mouse.Position.x - (clientBounds.width / 2);
+        const auto playbackRate = std::clamp(static_cast<float>(x) / 100.0f, -2.0f, 2.0f);
         animator->SetPlaybackRate(playbackRate);
     }
 
@@ -274,12 +276,12 @@ void AnimationGraphTest::Update()
         skinning = globalPose[skinVertex.Joints.front()];
 #endif
 
-        auto skinPos = Vector2{skinVertex.PositionTextureCoord.X, skinVertex.PositionTextureCoord.Y};
+        auto skinPos = Vector2{skinVertex.PositionTextureCoord.x, skinVertex.PositionTextureCoord.y};
         auto position = math::Transform(skinPos, skinning);
 
         Vertex vertex;
-        vertex.Position = Vector3{position.X, position.Y, 0.0f};
-        vertex.TextureCoordinate = Vector2{skinVertex.PositionTextureCoord.Z, skinVertex.PositionTextureCoord.W};
+        vertex.Position = Vector3{position.x, position.y, 0.0f};
+        vertex.TextureCoordinate = Vector2{skinVertex.PositionTextureCoord.z, skinVertex.PositionTextureCoord.w};
         vertices.push_back(vertex);
     }
 

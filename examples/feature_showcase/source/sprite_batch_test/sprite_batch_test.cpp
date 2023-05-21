@@ -52,12 +52,13 @@ std::unique_ptr<Error> SpriteBatchTest::Initialize()
             return;
         }
 
-        auto window = gameHost->GetWindow();
-        auto mouse = gameHost->GetMouse();
-        auto mouseState = mouse->GetState();
+        const auto window = gameHost->GetWindow();
+        const auto mouse = gameHost->GetMouse();
+        const auto mouseState = mouse->GetState();
+        const auto clientBounds = window->GetClientBounds();
         auto pos = mouseState.Position;
-        pos.X = pos.X - (window->GetClientBounds().Width / 2);
-        pos.Y = -pos.Y + (window->GetClientBounds().Height / 2);
+        pos.x = pos.x - (clientBounds.width / 2);
+        pos.y = -pos.y + (clientBounds.height / 2);
 
         std::mt19937 random(std::random_device{}());
         std::uniform_real_distribution<float> scaleDist(1.0f, 2.0f);
@@ -67,12 +68,12 @@ std::unique_ptr<Error> SpriteBatchTest::Initialize()
 
         SpriteInstance sprite;
         sprite.Position = math::ToVector2(pos);
-        sprite.Scale.X = scale;
-        sprite.Scale.Y = scale;
-        sprite.Color.R = static_cast<std::uint8_t>(colorDist(random));
-        sprite.Color.G = static_cast<std::uint8_t>(colorDist(random));
-        sprite.Color.B = static_cast<std::uint8_t>(colorDist(random));
-        sprite.Color.A = 255;
+        sprite.Scale.x = scale;
+        sprite.Scale.y = scale;
+        sprite.Color.r = static_cast<std::uint8_t>(colorDist(random));
+        sprite.Color.g = static_cast<std::uint8_t>(colorDist(random));
+        sprite.Color.b = static_cast<std::uint8_t>(colorDist(random));
+        sprite.Color.a = 255;
         sprites.push_back(std::move(sprite));
     });
 

@@ -75,7 +75,7 @@ void GamepadTest::Draw()
     auto printText = [&](const std::string& name, const std::string& s) {
         spriteFont->Draw(*spriteBatch, name + ":", textPos, Color::White(), 0.0f, Vector2{1.0f, 0.5f}, fontScale);
         spriteFont->Draw(*spriteBatch, s, textPos + Vector2{10.0f, 0.0f}, Color::Yellow(), 0.0f, Vector2{0.0f, 0.5f}, fontScale);
-        textPos.Y -= 18.0f;
+        textPos.y -= 18.0f;
     };
 
     auto gamepad = gameHost->GetGamepad();
@@ -93,7 +93,7 @@ void GamepadTest::Draw()
             spriteFont->Draw(*spriteBatch, "Released", pos, Color{0, 255, 255, 120}, 0.0f, Vector2{0.0f, 0.5f}, fontScale);
         }
 
-        textPos.Y -= 18.0f;
+        textPos.y -= 18.0f;
     };
 
     auto printThumbstick = [&](const std::string& name, float s, bool hasButton) {
@@ -106,7 +106,7 @@ void GamepadTest::Draw()
             spriteFont->Draw(*spriteBatch, StringHelper::Format("%.4f", s), pos, Color{0, 255, 255, 120}, 0.0f, Vector2{0.0f, 0.5f}, fontScale);
         }
 
-        textPos.Y -= 18.0f;
+        textPos.y -= 18.0f;
     };
 
     auto printGamepad = [&](PlayerIndex index) {
@@ -142,10 +142,10 @@ void GamepadTest::Draw()
         printButton("Extra1", state.Buttons.Extra1, caps.HasExtra1Button);
         printButton("Extra2", state.Buttons.Extra2, caps.HasExtra2Button);
 
-        printThumbstick("ThumbSticks.Left.X", state.ThumbSticks.Left.X, caps.HasLeftXThumbStick);
-        printThumbstick("ThumbSticks.Left.Y", state.ThumbSticks.Left.Y, caps.HasLeftYThumbStick);
-        printThumbstick("ThumbSticks.Right.X", state.ThumbSticks.Right.X, caps.HasRightXThumbStick);
-        printThumbstick("ThumbSticks.Right.Y", state.ThumbSticks.Right.Y, caps.HasRightYThumbStick);
+        printThumbstick("ThumbSticks.Left.X", state.ThumbSticks.Left.x, caps.HasLeftXThumbStick);
+        printThumbstick("ThumbSticks.Left.Y", state.ThumbSticks.Left.y, caps.HasLeftYThumbStick);
+        printThumbstick("ThumbSticks.Right.X", state.ThumbSticks.Right.x, caps.HasRightXThumbStick);
+        printThumbstick("ThumbSticks.Right.Y", state.ThumbSticks.Right.y, caps.HasRightYThumbStick);
 
         printButton("DPad.Up", state.DPad.Up, true);
         printButton("DPad.Down", state.DPad.Down, true);

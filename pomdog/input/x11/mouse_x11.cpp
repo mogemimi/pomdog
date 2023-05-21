@@ -82,8 +82,8 @@ void MouseX11::HandleEvent(XEvent& event)
         break;
     }
     case MotionNotify: {
-        mouseState.Position.X = event.xmotion.x;
-        mouseState.Position.Y = event.xmotion.y;
+        mouseState.Position.x = event.xmotion.x;
+        mouseState.Position.y = event.xmotion.y;
         Mouse::Moved(mouseState.Position);
         break;
     }

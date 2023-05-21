@@ -225,10 +225,11 @@ void GameMain::Update()
 
     UpdateMenuLayout();
 
-    auto mouse = gameHost->GetMouse();
-    auto mouseState = mouse->GetState();
+    const auto mouse = gameHost->GetMouse();
+    const auto mouseState = mouse->GetState();
+    const auto clientBounds = window->GetClientBounds();
     auto position = mouseState.Position;
-    position.Y = window->GetClientBounds().Height - position.Y;
+    position.y = clientBounds.height - position.y;
 
     if (subGame) {
         for (auto& button : hudButtons) {
@@ -255,30 +256,31 @@ void GameMain::Update()
 
 void GameMain::UpdateMenuLayout()
 {
-    {
-        auto mouse = gameHost->GetMouse();
+    const auto mouse = gameHost->GetMouse();
+    const auto clientBounds = window->GetClientBounds();
 
-        int y = window->GetClientBounds().Height - 36 - static_cast<int>(scrollY);
+    {
+        int y = clientBounds.height - 36 - static_cast<int>(scrollY);
         constexpr int buttonVerticalMargin = 5;
 
         for (auto& button : buttons) {
-            button.Rect.X = 10;
-            button.Rect.Y = y;
-            button.Rect.Width = 400;
-            button.Rect.Height = 28;
-            y -= (button.Rect.Height + buttonVerticalMargin);
+            button.Rect.x = 10;
+            button.Rect.y = y;
+            button.Rect.width = 400;
+            button.Rect.height = 28;
+            y -= (button.Rect.height + buttonVerticalMargin);
         }
     }
     {
-        int y = window->GetClientBounds().Height - 36;
+        int y = clientBounds.height - 36;
         constexpr int buttonVerticalMargin = 5;
 
         for (auto& button : hudButtons) {
-            button.Rect.X = 10;
-            button.Rect.Y = y;
-            button.Rect.Width = 80;
-            button.Rect.Height = 28;
-            y -= (button.Rect.Height + buttonVerticalMargin);
+            button.Rect.x = 10;
+            button.Rect.y = y;
+            button.Rect.width = 80;
+            button.Rect.height = 28;
+            y -= (button.Rect.height + buttonVerticalMargin);
         }
     }
 }
@@ -340,23 +342,24 @@ void GameMain::DrawMenu()
             }
 
             primitiveBatch->DrawRectangle(
-                Vector2{static_cast<float>(button.Rect.X), static_cast<float>(button.Rect.Y)},
-                static_cast<float>(button.Rect.Width),
-                static_cast<float>(button.Rect.Height),
+                Vector2{static_cast<float>(button.Rect.x), static_cast<float>(button.Rect.y)},
+                static_cast<float>(button.Rect.width),
+                static_cast<float>(button.Rect.height),
                 Vector2{0.0f, 0.0f}, color);
         }
         {
-            Vector2 position = {static_cast<float>(button.Rect.X), static_cast<float>(button.Rect.Y)};
+            Vector2 position = {static_cast<float>(button.Rect.x), static_cast<float>(button.Rect.y)};
 
             Color color = Color{221, 220, 218, 255};
             if (button.Selected) {
                 color = Color::White();
             }
 
-            position.X += 10.0f;
-            position.Y += 9.0f;
+            position.x += 10.0f;
+            position.y += 9.0f;
 
-            spriteFont->Draw(*spriteBatch,
+            spriteFont->Draw(
+                *spriteBatch,
                 button.Text,
                 position,
                 color,
@@ -377,7 +380,7 @@ void GameMain::DrawMenu()
 
         spriteFont->Draw(*spriteBatch,
             footerString,
-            Vector2{static_cast<float>(viewport.Width) - 8.0f, 8.0f},
+            Vector2{static_cast<float>(viewport.width) - 8.0f, 8.0f},
             Color::White(),
             0.0f,
             Vector2{1.0f, 0.0f},

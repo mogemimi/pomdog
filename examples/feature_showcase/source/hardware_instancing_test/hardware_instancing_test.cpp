@@ -168,12 +168,14 @@ std::unique_ptr<Error> HardwareInstancingTest::Initialize()
             return;
         }
 
-        auto window = gameHost->GetWindow();
-        auto mouse = gameHost->GetMouse();
-        auto mouseState = mouse->GetState();
+        const auto window = gameHost->GetWindow();
+        const auto mouse = gameHost->GetMouse();
+        const auto mouseState = mouse->GetState();
+        const auto clientBounds = window->GetClientBounds();
+
         auto pos = mouseState.Position;
-        pos.X = pos.X - (window->GetClientBounds().Width / 2);
-        pos.Y = -pos.Y + (window->GetClientBounds().Height / 2);
+        pos.x = pos.x - (clientBounds.width / 2);
+        pos.y = -pos.y + (clientBounds.height / 2);
 
         std::mt19937 random(std::random_device{}());
         std::uniform_real_distribution<float> scaleDist(16.0f, 32.0f);
@@ -182,14 +184,14 @@ std::unique_ptr<Error> HardwareInstancingTest::Initialize()
         const auto scale = scaleDist(random);
 
         SpriteInfo sprite;
-        sprite.Translation.X = static_cast<float>(pos.X);
-        sprite.Translation.Y = static_cast<float>(pos.Y);
-        sprite.Translation.Z = scale;
-        sprite.Translation.W = scale;
-        sprite.Color.X = colorDist(random);
-        sprite.Color.Y = colorDist(random);
-        sprite.Color.Z = colorDist(random);
-        sprite.Color.W = 1.0f;
+        sprite.Translation.x = static_cast<float>(pos.x);
+        sprite.Translation.y = static_cast<float>(pos.y);
+        sprite.Translation.z = scale;
+        sprite.Translation.w = scale;
+        sprite.Color.x = colorDist(random);
+        sprite.Color.y = colorDist(random);
+        sprite.Color.z = colorDist(random);
+        sprite.Color.w = 1.0f;
 
         // NOTE: Add new sprite
         sprites.push_back(std::move(sprite));

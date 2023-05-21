@@ -76,7 +76,7 @@ std::unique_ptr<Error> EditorGUITest::Initialize()
 
             auto vec3Field = std::make_shared<gui::Vector3Field>(dispatcher);
             connect(vec3Field->ValueChanged, [this](const Vector3& value) {
-                propertyText1 = StringHelper::Format("%f, %f, %f", value.X, value.Y, value.Z);
+                propertyText1 = StringHelper::Format("%f, %f, %f", value.x, value.y, value.z);
             });
             horizontalLayout->AddChild(vec3Field);
 
@@ -294,7 +294,7 @@ std::unique_ptr<Error> EditorGUITest::Initialize()
 
         auto vec3Field = std::make_shared<gui::Vector3Field>(dispatcher);
         connect(vec3Field->ValueChanged, [this](const Vector3& value) {
-            propertyText1 = StringHelper::Format("%f, %f, %f", value.X, value.Y, value.Z);
+            propertyText1 = StringHelper::Format("%f, %f, %f", value.x, value.y, value.z);
         });
         horizontalLayout->AddChild(vec3Field);
     }

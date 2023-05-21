@@ -69,18 +69,20 @@ std::unique_ptr<Error> AudioClipTest::Initialize()
             return;
         }
 
-        auto window = gameHost->GetWindow();
-        auto mouse = gameHost->GetMouse();
-        auto mouseState = mouse->GetState();
-        auto pos = mouseState.Position;
-        pos.X = pos.X - (window->GetClientBounds().Width / 2);
-        pos.Y = -pos.Y + (window->GetClientBounds().Height / 2);
+        const auto window = gameHost->GetWindow();
+        const auto mouse = gameHost->GetMouse();
+        const auto mouseState = mouse->GetState();
+        const auto clientBounds = window->GetClientBounds();
 
-        if (pos.Y > (window->GetClientBounds().Height / 2) - 50) {
+        auto pos = mouseState.Position;
+        pos.x = pos.x - (clientBounds.width / 2);
+        pos.y = -pos.y + (clientBounds.height / 2);
+
+        if (pos.y > (clientBounds.height / 2) - 50) {
             return;
         }
 
-        if (pos.X > 0) {
+        if (pos.x > 0) {
             soundEffect1->Stop();
             soundEffect1->Play();
         }
@@ -123,7 +125,7 @@ void AudioClipTest::Draw()
     commandList->Reset();
     commandList->SetRenderPass(std::move(pass));
 
-    const auto width = static_cast<float>(viewport.Width);
+    const auto width = static_cast<float>(viewport.width);
     spriteBatch->Begin(commandList, projectionMatrix);
     if (soundEffect2->GetState() != SoundState::Playing) {
         spriteFont->Draw(*spriteBatch, "Click here to play BGM", Vector2{-width * 0.5f + 10.0f, 20.0f}, Color::White(), 0.0f, Vector2{0.0f, 0.5f}, 1.0f);

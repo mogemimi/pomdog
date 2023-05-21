@@ -82,7 +82,7 @@ void VoxelModelTest::Draw()
     for (auto& v : voxelModel->Voxels) {
         auto pos = Vector3{static_cast<float>(v.X), static_cast<float>(v.Y), static_cast<float>(v.Z)} - centerOffset;
         auto color = voxelModel->ColorPalette[v.ColorIndex];
-        color.A = 255;
+        color.a = 255;
         primitiveBatch->DrawBox(pos, Vector3{1.0f, 1.0f, 1.0f}, color);
     }
 

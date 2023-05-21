@@ -153,8 +153,8 @@ std::unique_ptr<Error> GameMain::Initialize()
     }
     {
         gameFieldSize = Rectangle{0, 0, 380, 280};
-        gameFieldSize.X = -gameFieldSize.Width / 2;
-        gameFieldSize.Y = -gameFieldSize.Height / 2;
+        gameFieldSize.x = -gameFieldSize.width / 2;
+        gameFieldSize.y = -gameFieldSize.height / 2;
 
         player1.SetScore(0);
         player2.SetScore(0);
@@ -164,47 +164,47 @@ std::unique_ptr<Error> GameMain::Initialize()
         input2.Reset(Keys::W, Keys::S, keyboard);
 
         connect(input1.Up, [this] {
-            paddle1.PositionOld = paddle1.Position;
-            auto position = paddle1.Position;
-            position.Y += paddle1.Speed * static_cast<float>(clock->GetFrameDuration().count());
+            paddle1.positionOld = paddle1.position;
+            auto position = paddle1.position;
+            position.y += paddle1.speed * static_cast<float>(clock->GetFrameDuration().count());
 
-            if (position.Y > (gameFieldSize.Height / 2 - paddle1.Height / 2)) {
-                position.Y = (gameFieldSize.Height / 2 - paddle1.Height / 2);
+            if (position.y > (gameFieldSize.height / 2 - paddle1.height / 2)) {
+                position.y = (gameFieldSize.height / 2 - paddle1.height / 2);
             }
-            paddle1.Position = position;
+            paddle1.position = position;
         });
 
         connect(input1.Down, [this] {
-            paddle1.PositionOld = paddle1.Position;
-            auto position = paddle1.Position;
-            position.Y -= paddle1.Speed * clock->GetFrameDuration().count();
+            paddle1.positionOld = paddle1.position;
+            auto position = paddle1.position;
+            position.y -= paddle1.speed * clock->GetFrameDuration().count();
 
-            if (position.Y < -(gameFieldSize.Height / 2 - paddle1.Height / 2)) {
-                position.Y = -(gameFieldSize.Height / 2 - paddle1.Height / 2);
+            if (position.y < -(gameFieldSize.height / 2 - paddle1.height / 2)) {
+                position.y = -(gameFieldSize.height / 2 - paddle1.height / 2);
             }
-            paddle1.Position = position;
+            paddle1.position = position;
         });
 
         connect(input2.Up, [this] {
-            paddle2.PositionOld = paddle2.Position;
-            auto position = paddle2.Position;
-            position.Y += paddle2.Speed * clock->GetFrameDuration().count();
+            paddle2.positionOld = paddle2.position;
+            auto position = paddle2.position;
+            position.y += paddle2.speed * clock->GetFrameDuration().count();
 
-            if (position.Y > (gameFieldSize.Height / 2 - paddle2.Height / 2)) {
-                position.Y = (gameFieldSize.Height / 2 - paddle2.Height / 2);
+            if (position.y > (gameFieldSize.height / 2 - paddle2.height / 2)) {
+                position.y = (gameFieldSize.height / 2 - paddle2.height / 2);
             }
-            paddle2.Position = position;
+            paddle2.position = position;
         });
 
         connect(input2.Down, [this] {
-            paddle2.PositionOld = paddle2.Position;
-            auto position = paddle2.Position;
-            position.Y -= paddle2.Speed * clock->GetFrameDuration().count();
+            paddle2.positionOld = paddle2.position;
+            auto position = paddle2.position;
+            position.y -= paddle2.speed * clock->GetFrameDuration().count();
 
-            if (position.Y < -(gameFieldSize.Height / 2 - paddle2.Height / 2)) {
-                position.Y = -(gameFieldSize.Height / 2 - paddle2.Height / 2);
+            if (position.y < -(gameFieldSize.height / 2 - paddle2.height / 2)) {
+                position.y = -(gameFieldSize.height / 2 - paddle2.height / 2);
             }
-            paddle2.Position = position;
+            paddle2.position = position;
         });
     }
     {
@@ -219,8 +219,8 @@ std::unique_ptr<Error> GameMain::Initialize()
                 player2.GetScore());
         });
 
-        paddle1.Position = Vector2{gameFieldSize.Width / 2.0f, 0.0f};
-        paddle2.Position = Vector2{-gameFieldSize.Width / 2.0f, 0.0f};
+        paddle1.position = Vector2{gameFieldSize.width / 2.0f, 0.0f};
+        paddle2.position = Vector2{-gameFieldSize.width / 2.0f, 0.0f};
 
         pongScene = PongScenes::StartWaiting;
     }
@@ -232,9 +232,9 @@ void GameMain::Update()
 {
     switch (pongScene) {
     case PongScenes::StartWaiting: {
-        ball.Position = Vector2::Zero();
-        ball.PositionOld = Vector2::Zero();
-        ball.Velocity = Vector2::Zero();
+        ball.position = Vector2::Zero();
+        ball.positionOld = Vector2::Zero();
+        ball.velocity = Vector2::Zero();
 
         auto keyboard = gameHost->GetKeyboard();
         startButtonConn = keyboard->KeyDown.Connect([this](Keys key) {
@@ -260,7 +260,7 @@ void GameMain::Update()
         std::uniform_real_distribution<float> distribution(0.7f, 1.0f);
         static bool flipflop = false;
         flipflop = !flipflop;
-        ball.Velocity = math::Normalize(Vector2{(flipflop ? -1.0f : 1.0f), distribution(random)}) * speed;
+        ball.velocity = math::Normalize(Vector2{(flipflop ? -1.0f : 1.0f), distribution(random)}) * speed;
 
         soundEffect2->Stop();
         soundEffect2->Play();
@@ -272,45 +272,45 @@ void GameMain::Update()
         input1.Emit();
         input2.Emit();
 
-        ball.PositionOld = ball.Position;
-        auto position = ball.Position + (ball.Velocity * clock->GetFrameDuration().count());
-        ball.Position = position;
+        ball.positionOld = ball.position;
+        auto position = ball.position + (ball.velocity * clock->GetFrameDuration().count());
+        ball.position = position;
 
         bool collision = false;
 
-        if (position.X >= 0) {
+        if (position.x >= 0) {
             auto paddleCollider = paddle1.GetCollider();
-            if (paddleCollider.Intersects(ball.GetCollider()) && ball.PositionOld.X <= paddleCollider.Min.X) {
-                ball.Velocity.X *= -1;
+            if (paddleCollider.Intersects(ball.GetCollider()) && ball.positionOld.x <= paddleCollider.min.x) {
+                ball.velocity.x *= -1;
                 collision = true;
             }
         }
         else {
             auto paddleCollider = paddle2.GetCollider();
-            if (paddleCollider.Intersects(ball.GetCollider()) && ball.PositionOld.X >= paddleCollider.Max.X) {
-                ball.Velocity.X *= -1;
+            if (paddleCollider.Intersects(ball.GetCollider()) && ball.positionOld.x >= paddleCollider.max.x) {
+                ball.velocity.x *= -1;
                 collision = true;
             }
         }
 
-        const auto halfWidth = gameFieldSize.Width / 2;
-        const auto halfHeight = gameFieldSize.Height / 2;
+        const auto halfWidth = gameFieldSize.width / 2;
+        const auto halfHeight = gameFieldSize.height / 2;
 
-        if (position.Y >= halfHeight || position.Y <= -halfHeight) {
-            ball.Velocity.Y *= -1;
-            position.Y = ball.PositionOld.Y;
-            ball.Position = position;
+        if (position.y >= halfHeight || position.y <= -halfHeight) {
+            ball.velocity.y *= -1;
+            position.y = ball.positionOld.y;
+            ball.position = position;
             collision = true;
         }
 
         const float offset = 70.0f;
-        if (position.X >= (halfWidth + offset)) {
+        if (position.x >= (halfWidth + offset)) {
             player1.SetScore(player1.GetScore() + 1);
             soundEffect3->Stop();
             soundEffect3->Play();
             pongScene = PongScenes::StartWaiting;
         }
-        else if (position.X <= -(halfWidth + offset)) {
+        else if (position.x <= -(halfWidth + offset)) {
             player2.SetScore(player2.GetScore() + 1);
             soundEffect3->Stop();
             soundEffect3->Play();
@@ -376,8 +376,8 @@ void GameMain::Draw()
             // Dotted line
             int count = 32;
             float offset = 0.5f;
-            float startY = -gameFieldSize.Height * 0.5f;
-            float height = (gameFieldSize.Height + (gameFieldSize.Height / count * offset));
+            float startY = -gameFieldSize.height * 0.5f;
+            float height = (gameFieldSize.height + (gameFieldSize.height / count * offset));
             for (int i = 0; i < count; ++i) {
                 Vector2 start = {0.0f, height / count * i + startY};
                 Vector2 end = {0.0f, height / count * (i + offset) + startY};
@@ -386,13 +386,13 @@ void GameMain::Draw()
         }
 
         // Paddle 1
-        primitiveBatch->DrawRectangle(paddle1.Position, 10.0f, paddle1.Height, {0.5f, 0.5f}, Color::White());
+        primitiveBatch->DrawRectangle(paddle1.position, 10.0f, paddle1.height, {0.5f, 0.5f}, Color::White());
 
         // Paddle 2
-        primitiveBatch->DrawRectangle(paddle2.Position, 10.0f, paddle2.Height, {0.5f, 0.5f}, Color::White());
+        primitiveBatch->DrawRectangle(paddle2.position, 10.0f, paddle2.height, {0.5f, 0.5f}, Color::White());
 
         // Ball
-        primitiveBatch->DrawCircle(ball.Position, 6.0f, 32, Color::White());
+        primitiveBatch->DrawCircle(ball.position, 6.0f, 32, Color::White());
     }
     primitiveBatch->End();
 

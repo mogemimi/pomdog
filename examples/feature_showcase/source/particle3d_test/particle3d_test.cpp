@@ -186,7 +186,7 @@ void Particle3DTest::Draw()
         auto plane = Plane::CreateFromPointNormal(Vector3::Zero(), Vector3::UnitY());
         auto rayIntersection = ray.Intersects(plane);
         if (rayIntersection) {
-            emitterPosition = ray.Position + ray.Direction * (*rayIntersection);
+            emitterPosition = ray.position + ray.direction * (*rayIntersection);
         }
     }
 

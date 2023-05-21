@@ -65,10 +65,11 @@ std::unique_ptr<Error> Beam2DTest::Initialize()
         if (mouseState.LeftButton != ButtonState::Pressed) {
             return;
         }
-        auto window = gameHost->GetWindow();
+        const auto window = gameHost->GetWindow();
+        const auto clientBounds = window->GetClientBounds();
         auto pos = mousePos;
-        pos.X = pos.X - (window->GetClientBounds().Width / 2);
-        pos.Y = -pos.Y + (window->GetClientBounds().Height / 2);
+        pos.x = pos.x - (clientBounds.width / 2);
+        pos.y = -pos.y + (clientBounds.height / 2);
         emitterTarget = math::ToVector2(pos);
     });
 

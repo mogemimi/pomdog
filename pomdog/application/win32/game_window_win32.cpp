@@ -146,13 +146,13 @@ GameWindowWin32::Impl::Initialize(
     isFullScreen = presentationParameters.IsFullScreen;
     isMouseCursorVisible = true;
 
-    POMDOG_ASSERT(clientBounds.Width > 0);
-    POMDOG_ASSERT(clientBounds.Height > 0);
+    POMDOG_ASSERT(clientBounds.width > 0);
+    POMDOG_ASSERT(clientBounds.height > 0);
 
     DWORD windowStyle = 0;
     DWORD windowStyleEx = 0;
-    LONG adjustedWidth = static_cast<LONG>(clientBounds.Width);
-    LONG adjustedHeight = static_cast<LONG>(clientBounds.Height);
+    LONG adjustedWidth = static_cast<LONG>(clientBounds.width);
+    LONG adjustedHeight = static_cast<LONG>(clientBounds.height);
 
     if (useOpenGL) {
         windowStyle |= WS_CLIPCHILDREN;
@@ -169,7 +169,7 @@ GameWindowWin32::Impl::Initialize(
         DWORD const fixedWindowStyle(WS_OVERLAPPED | WS_BORDER | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX);
         windowStyle |= fixedWindowStyle;
 
-        RECT windowRect = {0, 0, static_cast<LONG>(clientBounds.Width), static_cast<LONG>(clientBounds.Height)};
+        RECT windowRect = {0, 0, static_cast<LONG>(clientBounds.width), static_cast<LONG>(clientBounds.height)};
         AdjustWindowRect(&windowRect, windowStyle, FALSE);
 
         adjustedWidth = windowRect.right - windowRect.left;
@@ -334,7 +334,7 @@ void GameWindowWin32::Impl::SetClientBounds(const Rectangle& clientBoundsIn)
 
     DWORD const dwStyle = static_cast<DWORD>(::GetWindowLong(windowHandle, GWL_STYLE));
 
-    RECT windowRect = {0, 0, clientBoundsIn.Width, clientBoundsIn.Height};
+    RECT windowRect = {0, 0, clientBoundsIn.width, clientBoundsIn.height};
 
     AdjustWindowRect(&windowRect, dwStyle, FALSE);
 
@@ -347,8 +347,8 @@ void GameWindowWin32::Impl::SetClientBounds(const Rectangle& clientBoundsIn)
         return;
     }
 
-    clientBounds.Width = clientBoundsIn.Width;
-    clientBounds.Height = clientBoundsIn.Height;
+    clientBounds.width = clientBoundsIn.width;
+    clientBounds.height = clientBoundsIn.height;
 
     eventQueue->Enqueue(SystemEvent{
         .Kind = SystemEventKind::ViewWillStartLiveResizeEvent,
@@ -458,15 +458,15 @@ GameWindowWin32::Impl::WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARA
     }
     case WM_SIZE: {
         if (window) {
-            window->clientBounds.Width = static_cast<std::int16_t>(LOWORD(lParam));
-            window->clientBounds.Height = static_cast<std::int16_t>(HIWORD(lParam));
+            window->clientBounds.width = static_cast<std::int16_t>(LOWORD(lParam));
+            window->clientBounds.height = static_cast<std::int16_t>(HIWORD(lParam));
         }
         break;
     }
     case WM_MOVE: {
         if (window) {
-            window->clientBounds.X = static_cast<std::int16_t>(LOWORD(lParam));
-            window->clientBounds.Y = static_cast<std::int16_t>(HIWORD(lParam));
+            window->clientBounds.x = static_cast<std::int16_t>(LOWORD(lParam));
+            window->clientBounds.y = static_cast<std::int16_t>(HIWORD(lParam));
         }
         break;
     }

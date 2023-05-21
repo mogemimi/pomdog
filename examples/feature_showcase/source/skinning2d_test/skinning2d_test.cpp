@@ -259,12 +259,12 @@ void Skinning2DTest::Update()
         skinning = globalPose[skinVertex.Joints.front()];
 #endif
 
-        auto skinPos = Vector2{skinVertex.PositionTextureCoord.X, skinVertex.PositionTextureCoord.Y};
+        auto skinPos = Vector2{skinVertex.PositionTextureCoord.x, skinVertex.PositionTextureCoord.y};
         auto position = math::Transform(skinPos, skinning);
 
         Vertex vertex;
-        vertex.Position = Vector3{position.X, position.Y, 0.0f};
-        vertex.TextureCoordinate = Vector2{skinVertex.PositionTextureCoord.Z, skinVertex.PositionTextureCoord.W};
+        vertex.Position = Vector3{position.x, position.y, 0.0f};
+        vertex.TextureCoordinate = Vector2{skinVertex.PositionTextureCoord.z, skinVertex.PositionTextureCoord.w};
         vertices.push_back(vertex);
     }
 

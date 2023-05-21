@@ -31,13 +31,15 @@ std::unique_ptr<Error> LineBatchTest::Initialize()
 
     path.push_back(Vector2::Zero());
 
-    auto mouse = gameHost->GetMouse();
+    const auto mouse = gameHost->GetMouse();
     connect(mouse->ButtonDown, [this](MouseButtons button) {
-        auto state = gameHost->GetMouse()->GetState();
-        auto width = gameHost->GetWindow()->GetClientBounds().Width;
-        auto height = gameHost->GetWindow()->GetClientBounds().Height;
+        const auto window = gameHost->GetWindow();
+        const auto clientBounds = window->GetClientBounds();
+        const auto mouseState = gameHost->GetMouse()->GetState();
+        const auto width = clientBounds.width;
+        const auto height = clientBounds.height;
         if (button == MouseButtons::Left) {
-            path.back() = math::ToVector2(Point2D{state.Position.X - (width / 2), (height / 2) - state.Position.Y});
+            path.back() = math::ToVector2(Point2D{mouseState.Position.x - (width / 2), (height / 2) - mouseState.Position.y});
             path.push_back(path.back());
         }
         if (button == MouseButtons::Right) {
@@ -51,10 +53,12 @@ std::unique_ptr<Error> LineBatchTest::Initialize()
 
 void LineBatchTest::Update()
 {
-    auto state = gameHost->GetMouse()->GetState();
-    auto width = gameHost->GetWindow()->GetClientBounds().Width;
-    auto height = gameHost->GetWindow()->GetClientBounds().Height;
-    path.back() = math::ToVector2(Point2D{state.Position.X - (width / 2), (height / 2) - state.Position.Y});
+    const auto state = gameHost->GetMouse()->GetState();
+    const auto window = gameHost->GetWindow();
+    const auto clientBounds = window->GetClientBounds();
+    const auto width = clientBounds.width;
+    const auto height = clientBounds.height;
+    path.back() = math::ToVector2(Point2D{state.Position.x - (width / 2), (height / 2) - state.Position.y});
 }
 
 void LineBatchTest::Draw()

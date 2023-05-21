@@ -48,13 +48,14 @@ std::unique_ptr<Error> SpriteLineTest::Initialize()
 
 void SpriteLineTest::Update()
 {
-    auto mouse = gameHost->GetMouse();
-    auto window = gameHost->GetWindow();
+    const auto mouse = gameHost->GetMouse();
+    const auto window = gameHost->GetWindow();
+    const auto clientBounds = window->GetClientBounds();
     auto pos = mouse->GetState().Position;
 
     if (mouse->GetState().LeftButton == ButtonState::Pressed) {
-        pos.X = pos.X - (window->GetClientBounds().Width / 2);
-        pos.Y = -pos.Y + (window->GetClientBounds().Height / 2);
+        pos.x = pos.x - (clientBounds.width / 2);
+        pos.y = -pos.y + (clientBounds.height / 2);
 
         mousePosition = math::ToVector2(pos);
     }

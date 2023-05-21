@@ -49,10 +49,11 @@ std::unique_ptr<Error> PolylineDrawingTest::Initialize()
 void PolylineDrawingTest::Update()
 {
     const auto mouseState = gameHost->GetMouse()->GetState();
+    const auto clientBounds = gameHost->GetWindow()->GetClientBounds();
 
-    const auto width = gameHost->GetWindow()->GetClientBounds().Width;
-    const auto height = gameHost->GetWindow()->GetClientBounds().Height;
-    const auto pos = math::ToVector2(Point2D{mouseState.Position.X - (width / 2), (height / 2) - mouseState.Position.Y});
+    const auto width = clientBounds.width;
+    const auto height = clientBounds.height;
+    const auto pos = math::ToVector2(Point2D{mouseState.Position.x - (width / 2), (height / 2) - mouseState.Position.y});
 
     if (mouseState.LeftButton == ButtonState::Pressed) {
         if (path.empty()) {

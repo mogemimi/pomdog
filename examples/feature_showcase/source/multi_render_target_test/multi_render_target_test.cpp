@@ -317,7 +317,7 @@ void MultiRenderTargetTest::Update()
 
     auto mouse = gameHost->GetMouse()->GetState();
     if (mouse.LeftButton == ButtonState::Pressed) {
-        rotateY = -math::TwoPi<float> * (static_cast<float>(mouse.Position.X) / static_cast<float>(presentationParameters.BackBufferWidth));
+        rotateY = -math::TwoPi<float> * (static_cast<float>(mouse.Position.x) / static_cast<float>(presentationParameters.BackBufferWidth));
     }
 
     auto modelMatrix = Matrix4x4::CreateTranslation(Vector3{-0.5f, -0.5f, -0.5f})
@@ -388,8 +388,8 @@ void MultiRenderTargetTest::Draw()
             auto scale = Vector2{0.5f, 0.5f};
             if (graphicsDevice->GetSupportedLanguage() == gpu::ShaderLanguage::GLSL) {
                 // NOTE: Flip horizontally for OpenGL coordinate system.
-                originPivot.Y = 1.0f;
-                scale.Y = -0.5f;
+                originPivot.y = 1.0f;
+                scale.y = -0.5f;
             }
             spriteBatch->Draw(
                 rt,

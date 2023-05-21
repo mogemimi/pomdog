@@ -258,8 +258,8 @@ void Skeletal2DTest::Update()
         }
 
         auto inverseTextureSize = Vector2{1.0f / static_cast<float>(texture->GetWidth()), 1.0f / static_cast<float>(texture->GetHeight())};
-        auto subrectPos = Vector2{static_cast<float>(slot.Subrect.X), static_cast<float>(slot.Subrect.Y)};
-        auto subrectSize = Vector2{static_cast<float>(slot.Subrect.Width), static_cast<float>(slot.Subrect.Height)};
+        auto subrectPos = Vector2{static_cast<float>(slot.Subrect.x), static_cast<float>(slot.Subrect.y)};
+        auto subrectSize = Vector2{static_cast<float>(slot.Subrect.width), static_cast<float>(slot.Subrect.height)};
         auto scaling = Matrix3x2::CreateScale(subrectSize);
 
         auto translate = Matrix3x2::CreateTranslation(slot.Translate);
@@ -272,7 +272,7 @@ void Skeletal2DTest::Update()
         auto transformMatrix = scaling * rotate * translate * poseMatrix;
 
         for (const auto& v : quadVertices) {
-            auto pos = Vector2{v.Position.X, v.Position.Y};
+            auto pos = Vector2{v.Position.x, v.Position.y};
             pos = math::Transform(pos - slot.Origin, transformMatrix);
 
             auto vertex = v;

@@ -281,8 +281,12 @@ void GameWindowX11::SetAllowUserResizing(bool allowResizing)
     }
     this->allowUserResizing = allowResizing;
 
-    UpdateNormalHints(x11Context->Display, window,
-        clientBounds.Width, clientBounds.Height, allowUserResizing);
+    UpdateNormalHints(
+        x11Context->Display,
+        window,
+        clientBounds.width,
+        clientBounds.height,
+        allowUserResizing);
 }
 
 std::string GameWindowX11::GetTitle() const
@@ -333,12 +337,16 @@ void GameWindowX11::SetClientBounds(const Rectangle& clientBoundsIn)
 {
     clientBounds = clientBoundsIn;
 
-    XMoveWindow(x11Context->Display, window, clientBounds.X, clientBounds.Y);
-    XResizeWindow(x11Context->Display, window, clientBounds.Width, clientBounds.Height);
+    XMoveWindow(x11Context->Display, window, clientBounds.x, clientBounds.y);
+    XResizeWindow(x11Context->Display, window, clientBounds.width, clientBounds.height);
 
     if (!allowUserResizing) {
-        UpdateNormalHints(x11Context->Display, window,
-            clientBounds.Width, clientBounds.Height, allowUserResizing);
+        UpdateNormalHints(
+            x11Context->Display,
+            window,
+            clientBounds.width,
+            clientBounds.height,
+            allowUserResizing);
     }
 
     XFlush(x11Context->Display);
@@ -431,13 +439,13 @@ void GameWindowX11::ProcessEvent(::XEvent& event)
 
     switch (event.type) {
     case ConfigureNotify: {
-        clientBounds.X = event.xconfigure.x;
-        clientBounds.Y = event.xconfigure.y;
+        clientBounds.x = event.xconfigure.x;
+        clientBounds.y = event.xconfigure.y;
 
-        if (clientBounds.Width != event.xconfigure.width ||
-            clientBounds.Height != event.xconfigure.height) {
-            clientBounds.Width = event.xconfigure.width;
-            clientBounds.Height = event.xconfigure.height;
+        if (clientBounds.width != event.xconfigure.width ||
+            clientBounds.height != event.xconfigure.height) {
+            clientBounds.width = event.xconfigure.width;
+            clientBounds.height = event.xconfigure.height;
             clientSizeChanged = true;
         }
         break;
@@ -472,7 +480,7 @@ void GameWindowX11::ProcessEvent(::XEvent& event)
     }
 
     if (clientSizeChanged) {
-        this->ClientSizeChanged(clientBounds.Width, clientBounds.Height);
+        this->ClientSizeChanged(clientBounds.width, clientBounds.height);
     }
 }
 

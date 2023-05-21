@@ -30,7 +30,7 @@ std::unique_ptr<Error> GUISplitterTest::Initialize()
     auto dispatcher = hierarchy->GetDispatcher();
 
     auto clientBounds = window->GetClientBounds();
-    auto splitter = std::make_shared<gui::HorizontalSplitter>(dispatcher, clientBounds.Width, clientBounds.Height);
+    auto splitter = std::make_shared<gui::HorizontalSplitter>(dispatcher, clientBounds.width, clientBounds.height);
     splitter->SetPosition(Point2D{0, 0});
     splitter->SetLayoutSpacing(1);
     hierarchy->AddChild(splitter);

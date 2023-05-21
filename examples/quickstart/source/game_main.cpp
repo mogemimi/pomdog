@@ -149,8 +149,8 @@ std::unique_ptr<Error> GameMain::Initialize()
         };
 
         // NOTE: Initialize shader resources
-        auto bounds = window->GetClientBounds();
-        updateShaderConstants(bounds.Width, bounds.Height);
+        const auto bounds = window->GetClientBounds();
+        updateShaderConstants(bounds.width, bounds.height);
 
         // NOTE: Connect to window resize event notification
         connect(window->ClientSizeChanged, updateShaderConstants);
