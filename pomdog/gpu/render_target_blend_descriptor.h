@@ -14,13 +14,13 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::gpu {
 
 struct POMDOG_EXPORT RenderTargetBlendDescriptor final {
-    BlendFactor ColorSourceBlend;
-    BlendFactor ColorDestinationBlend;
-    BlendOperation ColorBlendOperation;
-    BlendFactor AlphaSourceBlend;
-    BlendFactor AlphaDestinationBlend;
-    BlendOperation AlphaBlendOperation;
-    bool BlendEnable;
+    BlendFactor colorSourceBlend;
+    BlendFactor colorDestinationBlend;
+    BlendOperation colorBlendOperation;
+    BlendFactor alphaSourceBlend;
+    BlendFactor alphaDestinationBlend;
+    BlendOperation alphaBlendOperation;
+    bool blendEnable;
 
     [[nodiscard]] static RenderTargetBlendDescriptor
     CreateAdditive() noexcept;

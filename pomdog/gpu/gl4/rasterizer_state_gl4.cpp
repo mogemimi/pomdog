@@ -25,11 +25,11 @@ FillModeGL4 ToFillModeGL4(const FillMode& fillMode) noexcept
 std::unique_ptr<Error>
 RasterizerStateGL4::Initialize(const RasterizerDescriptor& descriptor) noexcept
 {
-    fillMode = ToFillModeGL4(descriptor.FillMode);
-    cullMode = descriptor.CullMode;
-    depthBias = static_cast<decltype(depthBias)>(descriptor.DepthBias);
-    slopeScaledDepthBias = descriptor.SlopeScaledDepthBias;
-    multisampleAntiAliasEnable = descriptor.MultisampleEnable;
+    fillMode = ToFillModeGL4(descriptor.fillMode);
+    cullMode = descriptor.cullMode;
+    depthBias = static_cast<decltype(depthBias)>(descriptor.depthBias);
+    slopeScaledDepthBias = descriptor.slopeScaledDepthBias;
+    multisampleAntiAliasEnable = descriptor.multisampleEnable;
     return nullptr;
 }
 

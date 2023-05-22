@@ -44,13 +44,13 @@ SamplerStateGL4::Initialize(const SamplerDescriptor& descriptor) noexcept
         return sampler;
     })();
 
-    glSamplerParameteri(samplerObject->value, GL_TEXTURE_WRAP_S, ToTextureAddressMode(descriptor.AddressU));
-    glSamplerParameteri(samplerObject->value, GL_TEXTURE_WRAP_T, ToTextureAddressMode(descriptor.AddressV));
-    glSamplerParameteri(samplerObject->value, GL_TEXTURE_WRAP_R, ToTextureAddressMode(descriptor.AddressW));
+    glSamplerParameteri(samplerObject->value, GL_TEXTURE_WRAP_S, ToTextureAddressMode(descriptor.addressU));
+    glSamplerParameteri(samplerObject->value, GL_TEXTURE_WRAP_T, ToTextureAddressMode(descriptor.addressV));
+    glSamplerParameteri(samplerObject->value, GL_TEXTURE_WRAP_R, ToTextureAddressMode(descriptor.addressW));
 
     POMDOG_CHECK_ERROR_GL4("glSamplerParameteri");
 
-    switch (descriptor.Filter) {
+    switch (descriptor.filter) {
     case TextureFilter::Linear:
         glSamplerParameteri(samplerObject->value, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glSamplerParameteri(samplerObject->value, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -89,14 +89,14 @@ SamplerStateGL4::Initialize(const SamplerDescriptor& descriptor) noexcept
         glSamplerParameteri(samplerObject->value, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         POMDOG_CHECK_ERROR_GL4("glSamplerParameteri");
 
-        POMDOG_ASSERT(1 <= descriptor.MaxAnisotropy && descriptor.MaxAnisotropy <= 16);
+        POMDOG_ASSERT(1 <= descriptor.maxAnisotropy && descriptor.maxAnisotropy <= 16);
 
         GLfloat deviceMaxAnisotropy = 1.0f;
         glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &deviceMaxAnisotropy);
         POMDOG_CHECK_ERROR_GL4("glGetFloatv");
 
         deviceMaxAnisotropy = std::min(deviceMaxAnisotropy,
-            static_cast<decltype(deviceMaxAnisotropy)>(descriptor.MaxAnisotropy));
+            static_cast<decltype(deviceMaxAnisotropy)>(descriptor.maxAnisotropy));
 
         glSamplerParameterf(samplerObject->value, GL_TEXTURE_MAX_ANISOTROPY_EXT, deviceMaxAnisotropy);
         POMDOG_CHECK_ERROR_GL4("glSamplerParameterf");
@@ -105,16 +105,16 @@ SamplerStateGL4::Initialize(const SamplerDescriptor& descriptor) noexcept
     }
 
     {
-        POMDOG_ASSERT(descriptor.MinMipLevel <= descriptor.MaxMipLevel);
-        POMDOG_ASSERT(descriptor.MaxMipLevel <= std::numeric_limits<GLfloat>::max());
+        POMDOG_ASSERT(descriptor.minMipLevel <= descriptor.maxMipLevel);
+        POMDOG_ASSERT(descriptor.maxMipLevel <= std::numeric_limits<GLfloat>::max());
 
-        glSamplerParameterf(samplerObject->value, GL_TEXTURE_MIN_LOD, descriptor.MinMipLevel);
-        glSamplerParameterf(samplerObject->value, GL_TEXTURE_MAX_LOD, descriptor.MaxMipLevel);
-        glSamplerParameterf(samplerObject->value, GL_TEXTURE_LOD_BIAS, descriptor.MipMapLevelOfDetailBias);
+        glSamplerParameterf(samplerObject->value, GL_TEXTURE_MIN_LOD, descriptor.minMipLevel);
+        glSamplerParameterf(samplerObject->value, GL_TEXTURE_MAX_LOD, descriptor.maxMipLevel);
+        glSamplerParameterf(samplerObject->value, GL_TEXTURE_LOD_BIAS, descriptor.mipmapLevelOfDetailBias);
         POMDOG_CHECK_ERROR_GL4("glSamplerParameterf");
     }
 
-    if (descriptor.ComparisonFunction == ComparisonFunction::Never) {
+    if (descriptor.comparisonFunction == ComparisonFunction::Never) {
         glSamplerParameteri(samplerObject->value, GL_TEXTURE_COMPARE_MODE, GL_NONE);
     }
     else {
@@ -122,7 +122,7 @@ SamplerStateGL4::Initialize(const SamplerDescriptor& descriptor) noexcept
         glSamplerParameteri(
             samplerObject->value,
             GL_TEXTURE_COMPARE_FUNC,
-            ToComparisonFunctionGL4NonTypesafe(descriptor.ComparisonFunction));
+            ToComparisonFunctionGL4NonTypesafe(descriptor.comparisonFunction));
     }
 
     return nullptr;

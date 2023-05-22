@@ -51,27 +51,27 @@ std::unique_ptr<Error> ImageEffectsTest::Initialize()
 
     // NOTE: Create render target
     std::tie(renderTarget, err) = graphicsDevice->CreateRenderTarget2D(
-        presentationParameters.BackBufferWidth,
-        presentationParameters.BackBufferHeight,
+        presentationParameters.backBufferWidth,
+        presentationParameters.backBufferHeight,
         false,
-        presentationParameters.BackBufferFormat);
+        presentationParameters.backBufferFormat);
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to create render target");
     }
 
     // NOTE: Create depth stencil buffer
     std::tie(depthStencilBuffer, err) = graphicsDevice->CreateDepthStencilBuffer(
-        presentationParameters.BackBufferWidth,
-        presentationParameters.BackBufferHeight,
-        presentationParameters.DepthStencilFormat);
+        presentationParameters.backBufferWidth,
+        presentationParameters.backBufferHeight,
+        presentationParameters.depthStencilFormat);
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to create depth stencil buffer");
     }
 
     postProcessCompositor.SetViewportSize(
-        *graphicsDevice, presentationParameters.BackBufferWidth,
-        presentationParameters.BackBufferHeight,
-        presentationParameters.DepthStencilFormat);
+        *graphicsDevice, presentationParameters.backBufferWidth,
+        presentationParameters.backBufferHeight,
+        presentationParameters.depthStencilFormat);
 
     postProcessCompositor.Composite({
         fishEyeEffect,
@@ -90,16 +90,16 @@ std::unique_ptr<Error> ImageEffectsTest::Initialize()
             width,
             height,
             false,
-            presentationParameters.BackBufferFormat));
+            presentationParameters.backBufferFormat));
 
         depthStencilBuffer = std::get<0>(graphicsDevice->CreateDepthStencilBuffer(
             width,
             height,
-            presentationParameters.DepthStencilFormat));
+            presentationParameters.depthStencilFormat));
 
         postProcessCompositor.SetViewportSize(
             *graphicsDevice, width, height,
-            presentationParameters.DepthStencilFormat);
+            presentationParameters.depthStencilFormat);
     });
 
     return nullptr;
@@ -111,29 +111,29 @@ void ImageEffectsTest::Draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
-    gpu::Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
+    gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
-    pass.RenderTargets[0] = {renderTarget, Color::CornflowerBlue().ToVector4()};
-    pass.DepthStencilBuffer = depthStencilBuffer;
-    pass.ClearDepth = 1.0f;
-    pass.ClearStencil = std::uint8_t(0);
-    pass.Viewport = viewport;
-    pass.ScissorRect = viewport.GetBounds();
+    pass.renderTargets[0] = {renderTarget, Color::CornflowerBlue().ToVector4()};
+    pass.depthStencilBuffer = depthStencilBuffer;
+    pass.clearDepth = 1.0f;
+    pass.clearStencil = std::uint8_t(0);
+    pass.viewport = viewport;
+    pass.scissorRect = viewport.GetBounds();
 
     commandList->Reset();
     commandList->SetRenderPass(std::move(pass));
 
     auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
-        static_cast<float>(presentationParameters.BackBufferWidth),
-        static_cast<float>(presentationParameters.BackBufferHeight),
+        static_cast<float>(presentationParameters.backBufferWidth),
+        static_cast<float>(presentationParameters.backBufferHeight),
         0.0f,
         100.0f);
 
     primitiveBatch->Begin(commandList, projectionMatrix);
 
     // Drawing line
-    const auto w = static_cast<float>(presentationParameters.BackBufferWidth);
-    const auto h = static_cast<float>(presentationParameters.BackBufferHeight);
+    const auto w = static_cast<float>(presentationParameters.backBufferWidth);
+    const auto h = static_cast<float>(presentationParameters.backBufferHeight);
     primitiveBatch->DrawLine(Vector2{-w * 0.5f, 0.0f}, Vector2{w * 0.5f, 0.0f}, Color{221, 220, 218, 160}, 1.0f);
     primitiveBatch->DrawLine(Vector2{0.0f, -h * 0.5f}, Vector2{0.0f, h * 0.5f}, Color{221, 220, 218, 160}, 1.0f);
     primitiveBatch->DrawLine(Vector2{-w * 0.5f, h * 0.25f}, Vector2{w * 0.5f, h * 0.25f}, Color{221, 220, 218, 60}, 1.0f);

@@ -330,26 +330,26 @@ void EditorGUITest::Draw()
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
     auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
-        static_cast<float>(presentationParameters.BackBufferWidth),
-        static_cast<float>(presentationParameters.BackBufferHeight),
+        static_cast<float>(presentationParameters.backBufferWidth),
+        static_cast<float>(presentationParameters.backBufferHeight),
         0.0f,
         100.0f);
 
-    gpu::Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
+    gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
-    pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
-    pass.DepthStencilBuffer = nullptr;
-    pass.ClearDepth = 1.0f;
-    pass.ClearStencil = std::uint8_t(0);
-    pass.Viewport = viewport;
-    pass.ScissorRect = viewport.GetBounds();
+    pass.renderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
+    pass.depthStencilBuffer = nullptr;
+    pass.clearDepth = 1.0f;
+    pass.clearStencil = std::uint8_t(0);
+    pass.viewport = viewport;
+    pass.scissorRect = viewport.GetBounds();
 
     commandList->Reset();
     commandList->SetRenderPass(std::move(pass));
 
     // Drawing line
-    const auto w = static_cast<float>(presentationParameters.BackBufferWidth);
-    const auto h = static_cast<float>(presentationParameters.BackBufferHeight);
+    const auto w = static_cast<float>(presentationParameters.backBufferWidth);
+    const auto h = static_cast<float>(presentationParameters.backBufferHeight);
     primitiveBatch->Begin(commandList, projectionMatrix);
     primitiveBatch->DrawLine(Vector2{-w * 0.5f, 0.0f}, Vector2{w * 0.5f, 0.0f}, Color{221, 220, 218, 160}, 1.0f);
     primitiveBatch->DrawLine(Vector2{0.0f, -h * 0.5f}, Vector2{0.0f, h * 0.5f}, Color{221, 220, 218, 160}, 1.0f);
@@ -365,11 +365,11 @@ void EditorGUITest::Draw()
     spriteBatch->End();
 
     auto viewMatrix = Matrix4x4::CreateTranslation(Vector3{
-        static_cast<float>(-presentationParameters.BackBufferWidth) * 0.5f,
-        static_cast<float>(-presentationParameters.BackBufferHeight) * 0.5f,
+        static_cast<float>(-presentationParameters.backBufferWidth) * 0.5f,
+        static_cast<float>(-presentationParameters.backBufferHeight) * 0.5f,
         0.0f});
 
-    drawingContext->Reset(presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight);
+    drawingContext->Reset(presentationParameters.backBufferWidth, presentationParameters.backBufferHeight);
     drawingContext->BeginDraw(commandList, viewMatrix * projectionMatrix);
     hierarchy->Draw(*drawingContext);
     drawingContext->EndDraw();

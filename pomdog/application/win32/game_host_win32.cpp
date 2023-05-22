@@ -370,17 +370,17 @@ GameHostWin32::Impl::Initialize(
 {
     eventQueue = eventQueueIn;
     window = windowIn;
-    backBufferSurfaceFormat = presentationParameters.BackBufferFormat;
-    backBufferDepthStencilFormat = presentationParameters.DepthStencilFormat;
+    backBufferSurfaceFormat = presentationParameters.backBufferFormat;
+    backBufferDepthStencilFormat = presentationParameters.depthStencilFormat;
     exitRequest = false;
     surfaceResizeRequest = false;
 
-    POMDOG_ASSERT(presentationParameters.PresentationInterval > 0);
-    presentationInterval = Duration(1.0) / presentationParameters.PresentationInterval;
+    POMDOG_ASSERT(presentationParameters.presentationInterval > 0);
+    presentationInterval = Duration(1.0) / presentationParameters.presentationInterval;
 
     timeSource_ = std::make_shared<detail::win32::TimeSourceWin32>();
     clock_ = std::make_shared<GameClockImpl>();
-    if (auto err = clock_->Initialize(presentationParameters.PresentationInterval, timeSource_); err != nullptr) {
+    if (auto err = clock_->Initialize(presentationParameters.presentationInterval, timeSource_); err != nullptr) {
         return errors::Wrap(std::move(err), "GameClockImpl::Initialize() failed.");
     }
 

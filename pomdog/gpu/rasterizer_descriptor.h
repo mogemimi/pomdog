@@ -18,19 +18,19 @@ struct POMDOG_EXPORT RasterizerDescriptor final {
     ///
     /// The depth bias (or z-bias) can be added to each of the polygons that
     /// are coplanar in 3D space to make them appear as if they are not coplanar.
-    std::int32_t DepthBias;
+    std::int32_t depthBias;
 
     /// A scale on a depth gradient of the primitive.
-    float SlopeScaledDepthBias;
+    float slopeScaledDepthBias;
 
     /// Indicates whether to cull primitives for hidden surface removal.
-    pomdog::gpu::CullMode CullMode;
+    CullMode cullMode;
 
     /// Determines the fill mode to use when rendering primitives.
-    pomdog::gpu::FillMode FillMode;
+    FillMode fillMode;
 
     /// Enable multisample antialiasing (MSAA).
-    bool MultisampleEnable;
+    bool multisampleEnable;
 
     [[nodiscard]] static RasterizerDescriptor
     CreateDefault() noexcept;

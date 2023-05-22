@@ -84,13 +84,13 @@ void Bootstrap::Run(
     using pomdog::detail::win32::GameWindowWin32;
 
     gpu::PresentationParameters presentationParameters;
-    presentationParameters.BackBufferHeight = backBufferHeight;
-    presentationParameters.BackBufferWidth = backBufferWidth;
-    presentationParameters.PresentationInterval = presentationInterval;
-    presentationParameters.BackBufferFormat = surfaceFormat;
-    presentationParameters.DepthStencilFormat = depthFormat;
-    presentationParameters.MultiSampleCount = 1;
-    presentationParameters.IsFullScreen = isFullScreen;
+    presentationParameters.backBufferHeight = backBufferHeight;
+    presentationParameters.backBufferWidth = backBufferWidth;
+    presentationParameters.presentationInterval = presentationInterval;
+    presentationParameters.backBufferFormat = surfaceFormat;
+    presentationParameters.depthStencilFormat = depthFormat;
+    presentationParameters.multiSampleCount = 1;
+    presentationParameters.isFullScreen = isFullScreen;
 
     auto eventQueue = std::make_shared<EventQueue<SystemEvent>>();
 

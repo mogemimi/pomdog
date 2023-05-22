@@ -34,11 +34,11 @@ SamplerStateMetal::Initialize(id<MTLDevice> device, const SamplerDescriptor& des
     POMDOG_ASSERT(device != nullptr);
 
     MTLSamplerDescriptor* samplerDesc = [[MTLSamplerDescriptor alloc] init];
-    samplerDesc.sAddressMode = ToSamplerAddressMode(descriptor.AddressU);
-    samplerDesc.tAddressMode = ToSamplerAddressMode(descriptor.AddressV);
-    samplerDesc.rAddressMode = ToSamplerAddressMode(descriptor.AddressW);
+    samplerDesc.sAddressMode = ToSamplerAddressMode(descriptor.addressU);
+    samplerDesc.tAddressMode = ToSamplerAddressMode(descriptor.addressV);
+    samplerDesc.rAddressMode = ToSamplerAddressMode(descriptor.addressW);
 
-    switch (descriptor.Filter) {
+    switch (descriptor.filter) {
     case TextureFilter::Anisotropic:
         samplerDesc.minFilter = MTLSamplerMinMagFilterLinear;
         samplerDesc.magFilter = MTLSamplerMinMagFilterLinear;
@@ -86,13 +86,13 @@ SamplerStateMetal::Initialize(id<MTLDevice> device, const SamplerDescriptor& des
         break;
     }
 
-    samplerDesc.lodMaxClamp = descriptor.MaxMipLevel;
-    samplerDesc.lodMinClamp = descriptor.MinMipLevel;
+    samplerDesc.lodMaxClamp = descriptor.maxMipLevel;
+    samplerDesc.lodMinClamp = descriptor.minMipLevel;
 
-    samplerDesc.compareFunction = ToComparisonFunction(descriptor.ComparisonFunction);
+    samplerDesc.compareFunction = ToComparisonFunction(descriptor.comparisonFunction);
 
     // NOTE: `MTLSamplerDescriptor's max anisotropy value must be >= one.
-    samplerDesc.maxAnisotropy = std::max<std::uint32_t>(descriptor.MaxAnisotropy, 1);
+    samplerDesc.maxAnisotropy = std::max<std::uint32_t>(descriptor.maxAnisotropy, 1);
 
     samplerState = [device newSamplerStateWithDescriptor:samplerDesc];
     if (samplerState == nullptr) {

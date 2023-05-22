@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::gpu {
 
 struct InputLayoutDescriptor final {
-    std::vector<InputElement> InputElements;
+    std::vector<InputElement> inputElements;
 };
 
 } // namespace pomdog::gpu

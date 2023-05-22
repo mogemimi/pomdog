@@ -12,9 +12,9 @@ BlendDescriptor BlendDescriptor::CreateDefault() noexcept
 BlendDescriptor BlendDescriptor::CreateAdditive() noexcept
 {
     BlendDescriptor desc;
-    desc.AlphaToCoverageEnable = false;
-    desc.IndependentBlendEnable = false;
-    for (auto& renderTarget : desc.RenderTargets) {
+    desc.alphaToCoverageEnable = false;
+    desc.independentBlendEnable = false;
+    for (auto& renderTarget : desc.renderTargets) {
         renderTarget = RenderTargetBlendDescriptor::CreateAdditive();
     }
     return desc;
@@ -23,9 +23,9 @@ BlendDescriptor BlendDescriptor::CreateAdditive() noexcept
 BlendDescriptor BlendDescriptor::CreateAlphaBlend() noexcept
 {
     BlendDescriptor desc;
-    desc.AlphaToCoverageEnable = false;
-    desc.IndependentBlendEnable = false;
-    for (auto& renderTarget : desc.RenderTargets) {
+    desc.alphaToCoverageEnable = false;
+    desc.independentBlendEnable = false;
+    for (auto& renderTarget : desc.renderTargets) {
         renderTarget = RenderTargetBlendDescriptor::CreateAlphaBlend();
     }
     return desc;
@@ -34,9 +34,9 @@ BlendDescriptor BlendDescriptor::CreateAlphaBlend() noexcept
 BlendDescriptor BlendDescriptor::CreateNonPremultiplied() noexcept
 {
     BlendDescriptor desc;
-    desc.AlphaToCoverageEnable = false;
-    desc.IndependentBlendEnable = false;
-    for (auto& renderTarget : desc.RenderTargets) {
+    desc.alphaToCoverageEnable = false;
+    desc.independentBlendEnable = false;
+    for (auto& renderTarget : desc.renderTargets) {
         renderTarget = RenderTargetBlendDescriptor::CreateNonPremultiplied();
     }
     return desc;
@@ -45,9 +45,9 @@ BlendDescriptor BlendDescriptor::CreateNonPremultiplied() noexcept
 BlendDescriptor BlendDescriptor::CreateOpaque() noexcept
 {
     BlendDescriptor desc;
-    desc.AlphaToCoverageEnable = false;
-    desc.IndependentBlendEnable = false;
-    for (auto& renderTarget : desc.RenderTargets) {
+    desc.alphaToCoverageEnable = false;
+    desc.independentBlendEnable = false;
+    for (auto& renderTarget : desc.renderTargets) {
         renderTarget = RenderTargetBlendDescriptor::CreateOpaque();
     }
     return desc;

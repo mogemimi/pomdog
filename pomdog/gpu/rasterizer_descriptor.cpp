@@ -12,44 +12,44 @@ RasterizerDescriptor RasterizerDescriptor::CreateDefault() noexcept
 RasterizerDescriptor RasterizerDescriptor::CreateCullClockwise() noexcept
 {
     RasterizerDescriptor desc;
-    desc.CullMode = CullMode::ClockwiseFace;
-    desc.FillMode = FillMode::Solid;
-    desc.DepthBias = 0;
-    desc.SlopeScaledDepthBias = 0;
-    desc.MultisampleEnable = false;
+    desc.cullMode = CullMode::ClockwiseFace;
+    desc.fillMode = FillMode::Solid;
+    desc.depthBias = 0;
+    desc.slopeScaledDepthBias = 0;
+    desc.multisampleEnable = false;
     return desc;
 }
 
 RasterizerDescriptor RasterizerDescriptor::CreateCullCounterClockwise() noexcept
 {
     RasterizerDescriptor desc;
-    desc.CullMode = CullMode::CounterClockwiseFace;
-    desc.FillMode = FillMode::Solid;
-    desc.DepthBias = 0;
-    desc.SlopeScaledDepthBias = 0;
-    desc.MultisampleEnable = false;
+    desc.cullMode = CullMode::CounterClockwiseFace;
+    desc.fillMode = FillMode::Solid;
+    desc.depthBias = 0;
+    desc.slopeScaledDepthBias = 0;
+    desc.multisampleEnable = false;
     return desc;
 }
 
 RasterizerDescriptor RasterizerDescriptor::CreateCullNone() noexcept
 {
     RasterizerDescriptor desc;
-    desc.CullMode = CullMode::None;
-    desc.FillMode = FillMode::Solid;
-    desc.DepthBias = 0;
-    desc.SlopeScaledDepthBias = 0;
-    desc.MultisampleEnable = false;
+    desc.cullMode = CullMode::None;
+    desc.fillMode = FillMode::Solid;
+    desc.depthBias = 0;
+    desc.slopeScaledDepthBias = 0;
+    desc.multisampleEnable = false;
     return desc;
 }
 
 RasterizerDescriptor RasterizerDescriptor::CreateCullNoneWireframe() noexcept
 {
     RasterizerDescriptor desc;
-    desc.CullMode = CullMode::None;
-    desc.FillMode = FillMode::Wireframe;
-    desc.DepthBias = 0;
-    desc.SlopeScaledDepthBias = 0;
-    desc.MultisampleEnable = false;
+    desc.cullMode = CullMode::None;
+    desc.fillMode = FillMode::Wireframe;
+    desc.depthBias = 0;
+    desc.slopeScaledDepthBias = 0;
+    desc.multisampleEnable = false;
     return desc;
 }
 

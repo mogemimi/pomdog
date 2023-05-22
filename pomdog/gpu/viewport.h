@@ -34,8 +34,7 @@ public:
 
     Viewport(int x, int y, int width, int height) noexcept;
 
-    Viewport(int x, int y, int width, int height,
-        float minDepth, float maxDepth) noexcept;
+    Viewport(int x, int y, int width, int height, float minDepth, float maxDepth) noexcept;
 
     /// Projects a position from object space into screen space.
     [[nodiscard]] Vector3

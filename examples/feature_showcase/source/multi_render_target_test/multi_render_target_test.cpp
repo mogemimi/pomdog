@@ -182,7 +182,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::Initialize()
                 PixelFormat::R32_Float, // NOTE: Depth
                 PixelFormat::R8G8B8A8_UNorm, // NOTE: Lighting
             })
-            .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
+            .SetDepthStencilViewFormat(presentationParameters.depthStencilFormat)
             .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
             .SetDepthStencilState(gpu::DepthStencilDescriptor::CreateDefault())
             .SetBlendState(gpu::BlendDescriptor::CreateOpaque())
@@ -202,8 +202,8 @@ std::unique_ptr<Error> MultiRenderTargetTest::Initialize()
 
     // NOTE: Create render target
     std::tie(renderTargetAlbedo, err) = graphicsDevice->CreateRenderTarget2D(
-        presentationParameters.BackBufferWidth,
-        presentationParameters.BackBufferHeight,
+        presentationParameters.backBufferWidth,
+        presentationParameters.backBufferHeight,
         false,
         PixelFormat::R8G8B8A8_UNorm);
     if (err != nullptr) {
@@ -212,8 +212,8 @@ std::unique_ptr<Error> MultiRenderTargetTest::Initialize()
 
     // NOTE: Create render target
     std::tie(renderTargetNormal, err) = graphicsDevice->CreateRenderTarget2D(
-        presentationParameters.BackBufferWidth,
-        presentationParameters.BackBufferHeight,
+        presentationParameters.backBufferWidth,
+        presentationParameters.backBufferHeight,
         false,
         PixelFormat::R10G10B10A2_UNorm);
     if (err != nullptr) {
@@ -222,8 +222,8 @@ std::unique_ptr<Error> MultiRenderTargetTest::Initialize()
 
     // NOTE: Create render target
     std::tie(renderTargetDepth, err) = graphicsDevice->CreateRenderTarget2D(
-        presentationParameters.BackBufferWidth,
-        presentationParameters.BackBufferHeight,
+        presentationParameters.backBufferWidth,
+        presentationParameters.backBufferHeight,
         false,
         PixelFormat::R32_Float);
     if (err != nullptr) {
@@ -232,8 +232,8 @@ std::unique_ptr<Error> MultiRenderTargetTest::Initialize()
 
     // NOTE: Create render target
     std::tie(renderTargetLighting, err) = graphicsDevice->CreateRenderTarget2D(
-        presentationParameters.BackBufferWidth,
-        presentationParameters.BackBufferHeight,
+        presentationParameters.backBufferWidth,
+        presentationParameters.backBufferHeight,
         false,
         PixelFormat::R8G8B8A8_UNorm);
     if (err != nullptr) {
@@ -242,9 +242,9 @@ std::unique_ptr<Error> MultiRenderTargetTest::Initialize()
 
     // NOTE: Create depth stencil buffer
     std::tie(depthStencilBuffer, err) = graphicsDevice->CreateDepthStencilBuffer(
-        presentationParameters.BackBufferWidth,
-        presentationParameters.BackBufferHeight,
-        presentationParameters.DepthStencilFormat);
+        presentationParameters.backBufferWidth,
+        presentationParameters.backBufferHeight,
+        presentationParameters.depthStencilFormat);
     if (err != nullptr) {
         return errors::Wrap(std::move(err), "failed to create depth stencil buffer");
     }
@@ -293,7 +293,7 @@ void MultiRenderTargetTest::Update()
 
     auto projectionMatrix = Matrix4x4::CreatePerspectiveFieldOfViewLH(
         math::ToRadians(45.0f),
-        static_cast<float>(presentationParameters.BackBufferWidth) / presentationParameters.BackBufferHeight,
+        static_cast<float>(presentationParameters.backBufferWidth) / presentationParameters.backBufferHeight,
         0.01f,
         1000.0f);
 
@@ -317,7 +317,7 @@ void MultiRenderTargetTest::Update()
 
     auto mouse = gameHost->GetMouse()->GetState();
     if (mouse.LeftButton == ButtonState::Pressed) {
-        rotateY = -math::TwoPi<float> * (static_cast<float>(mouse.Position.x) / static_cast<float>(presentationParameters.BackBufferWidth));
+        rotateY = -math::TwoPi<float> * (static_cast<float>(mouse.Position.x) / static_cast<float>(presentationParameters.backBufferWidth));
     }
 
     auto modelMatrix = Matrix4x4::CreateTranslation(Vector3{-0.5f, -0.5f, -0.5f})
@@ -342,17 +342,17 @@ void MultiRenderTargetTest::Draw()
     commandList->Reset();
 
     {
-        gpu::Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
+        gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
         gpu::RenderPass pass;
-        pass.RenderTargets[0] = {renderTargetAlbedo, Color::CornflowerBlue().ToVector4()};
-        pass.RenderTargets[1] = {renderTargetNormal, Vector4{0.0f, 0.0f, 1.0f, 1.0f}};
-        pass.RenderTargets[2] = {renderTargetDepth, Vector4{0.0f, 0.0f, 0.0f, 1.0f}};
-        pass.RenderTargets[3] = {renderTargetLighting, Color::CornflowerBlue().ToVector4()};
-        pass.DepthStencilBuffer = depthStencilBuffer;
-        pass.ClearDepth = 1.0f;
-        pass.ClearStencil = std::uint8_t(0);
-        pass.Viewport = viewport;
-        pass.ScissorRect = viewport.GetBounds();
+        pass.renderTargets[0] = {renderTargetAlbedo, Color::CornflowerBlue().ToVector4()};
+        pass.renderTargets[1] = {renderTargetNormal, Vector4{0.0f, 0.0f, 1.0f, 1.0f}};
+        pass.renderTargets[2] = {renderTargetDepth, Vector4{0.0f, 0.0f, 0.0f, 1.0f}};
+        pass.renderTargets[3] = {renderTargetLighting, Color::CornflowerBlue().ToVector4()};
+        pass.depthStencilBuffer = depthStencilBuffer;
+        pass.clearDepth = 1.0f;
+        pass.clearStencil = std::uint8_t(0);
+        pass.viewport = viewport;
+        pass.scissorRect = viewport.GetBounds();
 
         commandList->SetRenderPass(std::move(pass));
         commandList->SetConstantBuffer(0, modelConstantBuffer);
@@ -366,17 +366,17 @@ void MultiRenderTargetTest::Draw()
         commandList->DrawIndexed(indexBuffer->GetIndexCount(), 0);
     }
     {
-        gpu::Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
+        gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
         gpu::RenderPass pass;
-        pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
-        pass.DepthStencilBuffer = nullptr;
-        pass.ClearDepth = 1.0f;
-        pass.ClearStencil = std::uint8_t(0);
-        pass.Viewport = viewport;
-        pass.ScissorRect = viewport.GetBounds();
+        pass.renderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
+        pass.depthStencilBuffer = nullptr;
+        pass.clearDepth = 1.0f;
+        pass.clearStencil = std::uint8_t(0);
+        pass.viewport = viewport;
+        pass.scissorRect = viewport.GetBounds();
 
-        const auto w = static_cast<float>(presentationParameters.BackBufferWidth);
-        const auto h = static_cast<float>(presentationParameters.BackBufferHeight);
+        const auto w = static_cast<float>(presentationParameters.backBufferWidth);
+        const auto h = static_cast<float>(presentationParameters.backBufferHeight);
         const auto projectionMatrix = Matrix4x4::CreateOrthographicLH(w, h, 0.0f, 100.0f);
 
         commandList->SetRenderPass(std::move(pass));

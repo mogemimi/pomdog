@@ -82,17 +82,17 @@ ChooseFramebufferConfig(
     attributes.add(GLX_X_VISUAL_TYPE, GLX_TRUE_COLOR);
     attributes.add(GLX_DOUBLEBUFFER, True);
 
-    if (presentationParameters.MultiSampleCount >= 2) {
+    if (presentationParameters.multiSampleCount >= 2) {
         // NOTE: Enable multi-sampling
         attributes.add(GLX_SAMPLE_BUFFERS, 1);
-        attributes.add(GLX_SAMPLES, presentationParameters.MultiSampleCount);
+        attributes.add(GLX_SAMPLES, presentationParameters.multiSampleCount);
     }
     else {
         // NOTE: No multi-sampling
         attributes.add(GLX_SAMPLE_BUFFERS, 0);
     }
 
-    switch (presentationParameters.BackBufferFormat) {
+    switch (presentationParameters.backBufferFormat) {
     case PixelFormat::R16G16B16A16_Float:
         attributes.add(GLX_RENDER_TYPE, GLX_RGBA_FLOAT_BIT_ARB);
         attributes.add(GLX_RED_SIZE, 16);
@@ -121,7 +121,7 @@ ChooseFramebufferConfig(
         break;
     }
 
-    switch (presentationParameters.DepthStencilFormat) {
+    switch (presentationParameters.depthStencilFormat) {
     case PixelFormat::Depth16:
         attributes.add(GLX_DEPTH_SIZE, 16);
         break;
@@ -193,16 +193,16 @@ GameHostLinux::GameHostLinux() noexcept = default;
 std::unique_ptr<Error>
 GameHostLinux::Initialize(const gpu::PresentationParameters& presentationParameters)
 {
-    backBufferSurfaceFormat_ = presentationParameters.BackBufferFormat;
-    backBufferDepthStencilFormat_ = presentationParameters.DepthStencilFormat;
+    backBufferSurfaceFormat_ = presentationParameters.backBufferFormat;
+    backBufferDepthStencilFormat_ = presentationParameters.depthStencilFormat;
     exitRequest_ = false;
 
-    POMDOG_ASSERT(presentationParameters.PresentationInterval > 0);
-    presentationInterval_ = Duration(1.0) / presentationParameters.PresentationInterval;
+    POMDOG_ASSERT(presentationParameters.presentationInterval > 0);
+    presentationInterval_ = Duration(1.0) / presentationParameters.presentationInterval;
 
     timeSource_ = detail::makeTimeSource();
     clock_ = std::make_shared<GameClockImpl>();
-    if (auto err = clock_->Initialize(presentationParameters.PresentationInterval, timeSource_); err != nullptr) {
+    if (auto err = clock_->Initialize(presentationParameters.presentationInterval, timeSource_); err != nullptr) {
         return errors::Wrap(std::move(err), "GameClockImpl::Initialize() failed.");
     }
 
@@ -223,8 +223,8 @@ GameHostLinux::Initialize(const gpu::PresentationParameters& presentationParamet
     if (auto err = window_->Initialize(
             x11Context_,
             framebufferConfig,
-            presentationParameters.BackBufferWidth,
-            presentationParameters.BackBufferHeight);
+            presentationParameters.backBufferWidth,
+            presentationParameters.backBufferHeight);
         err != nullptr) {
         return errors::Wrap(std::move(framebufferConfigErr), "failed to initialize GameWindowX11");
     }
@@ -342,8 +342,8 @@ void GameHostLinux::ProcessEvent(::XEvent& event)
     case ConfigureNotify: {
         POMDOG_ASSERT(graphicsDevice_ != nullptr);
         const auto presentationParameters = graphicsDevice_->GetPresentationParameters();
-        if ((presentationParameters.BackBufferWidth != event.xconfigure.width) ||
-            (presentationParameters.BackBufferHeight != event.xconfigure.height)) {
+        if ((presentationParameters.backBufferWidth != event.xconfigure.width) ||
+            (presentationParameters.backBufferHeight != event.xconfigure.height)) {
             graphicsDevice_->ClientSizeChanged(event.xconfigure.width, event.xconfigure.height);
         }
         break;

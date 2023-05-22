@@ -231,13 +231,13 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 
     // Setup presentation parameters
     PresentationParameters presentationParameters;
-    presentationParameters.BackBufferWidth = self.view.bounds.size.width;
-    presentationParameters.BackBufferHeight = self.view.bounds.size.height;
-    presentationParameters.PresentationInterval = 60;
-    presentationParameters.MultiSampleCount = multiSampleCount;
-    presentationParameters.BackBufferFormat = PixelFormat::B8G8R8A8_UNorm;
-    presentationParameters.DepthStencilFormat = PixelFormat::Depth32_Float_Stencil8_Uint;
-    presentationParameters.IsFullScreen = false;
+    presentationParameters.backBufferWidth = self.view.bounds.size.width;
+    presentationParameters.backBufferHeight = self.view.bounds.size.height;
+    presentationParameters.presentationInterval = 60;
+    presentationParameters.multiSampleCount = multiSampleCount;
+    presentationParameters.backBufferFormat = PixelFormat::B8G8R8A8_UNorm;
+    presentationParameters.depthStencilFormat = PixelFormat::Depth32_Float_Stencil8_Uint;
+    presentationParameters.isFullScreen = false;
 
     [self _setupMetal:presentationParameters];
 

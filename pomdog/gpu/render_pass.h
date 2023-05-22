@@ -23,22 +23,22 @@ using RenderTargetAndClearColor = std::tuple<std::shared_ptr<RenderTarget2D>, st
 
 struct POMDOG_EXPORT RenderPass final {
     /// An array of render targets.
-    std::array<RenderTargetAndClearColor, 8> RenderTargets;
+    std::array<RenderTargetAndClearColor, 8> renderTargets;
 
     /// A depth stencil buffer.
-    std::shared_ptr<pomdog::gpu::DepthStencilBuffer> DepthStencilBuffer;
+    std::shared_ptr<DepthStencilBuffer> depthStencilBuffer;
 
     /// A viewport for projection transformations and clipping.
-    std::optional<pomdog::gpu::Viewport> Viewport;
+    std::optional<Viewport> viewport;
 
     /// A scissor rectangle for a scissor test.
-    std::optional<Rectangle> ScissorRect;
+    std::optional<Rectangle> scissorRect;
 
     /// The depth value to use when the depth buffer is cleared.
-    std::optional<float> ClearDepth;
+    std::optional<float> clearDepth;
 
     /// The stencil value to use when the stencil buffer is cleared.
-    std::optional<std::uint8_t> ClearStencil;
+    std::optional<std::uint8_t> clearStencil;
 };
 
 } // namespace pomdog::gpu

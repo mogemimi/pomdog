@@ -75,24 +75,24 @@ PipelineStateGL4::PipelineStateGL4() = default;
 std::unique_ptr<Error>
 PipelineStateGL4::Initialize(const PipelineDescriptor& descriptor) noexcept
 {
-    if (auto err = blendState.Initialize(descriptor.BlendState); err != nullptr) {
+    if (auto err = blendState.Initialize(descriptor.blendState); err != nullptr) {
         return errors::Wrap(std::move(err), "failed to initialize blendState");
     }
-    if (auto err = rasterizerState.Initialize(descriptor.RasterizerState); err != nullptr) {
+    if (auto err = rasterizerState.Initialize(descriptor.rasterizerState); err != nullptr) {
         return errors::Wrap(std::move(err), "failed to initialize rasterizerState");
     }
-    if (auto err = depthStencilState.Initialize(descriptor.DepthStencilState); err != nullptr) {
+    if (auto err = depthStencilState.Initialize(descriptor.depthStencilState); err != nullptr) {
         return errors::Wrap(std::move(err), "failed to initialize depthStencilState");
     }
 
-    primitiveTopology = ToPrimitiveTopology(descriptor.PrimitiveTopology);
+    primitiveTopology = ToPrimitiveTopology(descriptor.primitiveTopology);
 
-    auto vertexShader = std::dynamic_pointer_cast<VertexShaderGL4>(descriptor.VertexShader);
+    auto vertexShader = std::dynamic_pointer_cast<VertexShaderGL4>(descriptor.vertexShader);
     if (vertexShader == nullptr) {
         return errors::New("invalid vertex shader");
     }
 
-    auto pixelShader = std::dynamic_pointer_cast<PixelShaderGL4>(descriptor.PixelShader);
+    auto pixelShader = std::dynamic_pointer_cast<PixelShaderGL4>(descriptor.pixelShader);
     if (pixelShader == nullptr) {
         return errors::New("invalid pixel shader");
     }
@@ -107,7 +107,7 @@ PipelineStateGL4::Initialize(const PipelineDescriptor& descriptor) noexcept
     shaderProgram = std::move(linkResult);
     POMDOG_ASSERT(shaderProgram != std::nullopt);
 
-    inputLayout = std::make_unique<InputLayoutGL4>(*shaderProgram, descriptor.InputLayout);
+    inputLayout = std::make_unique<InputLayoutGL4>(*shaderProgram, descriptor.inputLayout);
 
     EffectReflectionGL4 shaderReflection;
     if (auto err = shaderReflection.Initialize(*shaderProgram); err != nullptr) {
@@ -120,7 +120,7 @@ PipelineStateGL4::Initialize(const PipelineDescriptor& descriptor) noexcept
         std::unordered_set<int> reservedSlots;
         std::unordered_set<int> reservedBlocks;
 
-        auto& bindSlots = descriptor.ConstantBufferBindHints;
+        auto& bindSlots = descriptor.constantBufferBindHints;
 
         for (auto& uniformBlock : uniformBlocks) {
             auto binding = bindSlots.find(uniformBlock.Name);
@@ -150,7 +150,7 @@ PipelineStateGL4::Initialize(const PipelineDescriptor& descriptor) noexcept
     {
         auto uniforms = shaderReflection.GetNativeUniforms();
 
-        auto& hints = descriptor.SamplerBindHints;
+        auto& hints = descriptor.samplerBindHints;
 
         std::uint16_t slotIndex = 0;
         for (auto& uniform : uniforms) {

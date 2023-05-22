@@ -23,22 +23,22 @@ namespace pomdog::gpu {
 struct PipelineDescriptor final {
     // NOTE: Since OpenGL 4.1 and earlier, location attribute cannot be used,
     // so you can give hint by name.
-    std::unordered_map<std::string, int> ConstantBufferBindHints;
-    std::unordered_map<std::string, int> SamplerBindHints;
+    std::unordered_map<std::string, int> constantBufferBindHints;
+    std::unordered_map<std::string, int> samplerBindHints;
 
-    std::shared_ptr<Shader> VertexShader;
-    std::shared_ptr<Shader> PixelShader;
-    InputLayoutDescriptor InputLayout;
+    std::shared_ptr<Shader> vertexShader;
+    std::shared_ptr<Shader> pixelShader;
+    InputLayoutDescriptor inputLayout;
 
     /// Specifies the geometric primitive type for the input assembler stage.
-    pomdog::gpu::PrimitiveTopology PrimitiveTopology;
+    PrimitiveTopology primitiveTopology;
 
-    BlendDescriptor BlendState;
-    RasterizerDescriptor RasterizerState;
-    DepthStencilDescriptor DepthStencilState;
-    std::vector<PixelFormat> RenderTargetViewFormats;
-    PixelFormat DepthStencilViewFormat;
-    std::uint32_t MultiSampleMask;
+    BlendDescriptor blendState;
+    RasterizerDescriptor rasterizerState;
+    DepthStencilDescriptor depthStencilState;
+    std::vector<PixelFormat> renderTargetViewFormats;
+    PixelFormat depthStencilViewFormat;
+    std::uint32_t multiSampleMask;
 };
 
 } // namespace pomdog::gpu

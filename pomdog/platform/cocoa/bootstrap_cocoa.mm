@@ -84,13 +84,13 @@ Bootstrap::Run(std::function<std::shared_ptr<Game>(const std::shared_ptr<GameHos
         [nativeWindow orderFrontRegardless];
 
         gpu::PresentationParameters presentationParameters;
-        presentationParameters.BackBufferFormat = surfaceFormat;
-        presentationParameters.DepthStencilFormat = depthFormat;
-        presentationParameters.PresentationInterval = 60;
-        presentationParameters.MultiSampleCount = 1;
-        presentationParameters.BackBufferWidth = bounds.size.width;
-        presentationParameters.BackBufferHeight = bounds.size.height;
-        presentationParameters.IsFullScreen = false;
+        presentationParameters.backBufferFormat = surfaceFormat;
+        presentationParameters.depthStencilFormat = depthFormat;
+        presentationParameters.presentationInterval = 60;
+        presentationParameters.multiSampleCount = 1;
+        presentationParameters.backBufferWidth = bounds.size.width;
+        presentationParameters.backBufferHeight = bounds.size.height;
+        presentationParameters.isFullScreen = false;
 
         POMDOG_ASSERT(onCompleted);
         POMDOG_ASSERT(createGame);

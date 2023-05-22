@@ -34,7 +34,7 @@ ToPixelFormatDescriptor(
         0,
         0, 0, 0};
 
-    switch (presentationParameters.BackBufferFormat) {
+    switch (presentationParameters.backBufferFormat) {
     case PixelFormat::R8G8B8A8_UNorm:
         descriptor.cColorBits = 32;
         break;
@@ -51,7 +51,7 @@ ToPixelFormatDescriptor(
         return errors::New("invalid back buffer format");
     }
 
-    switch (presentationParameters.DepthStencilFormat) {
+    switch (presentationParameters.depthStencilFormat) {
     case PixelFormat::Depth16:
         descriptor.cDepthBits = 16;
         descriptor.cStencilBits = 0;

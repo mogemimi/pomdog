@@ -17,15 +17,15 @@ constexpr std::uint16_t MaxInputSlotCount = 16;
 InputLayoutHelper& InputLayoutHelper::PushBack(InputElementFormat format)
 {
     InputElement element;
-    element.Format = format;
-    element.InputSlot = inputSlot;
-    element.InputSlotClass = slotClass;
-    element.InstanceStepRate = instanceStepRate;
-    element.ByteOffset = byteOffset;
+    element.format = format;
+    element.inputSlot = inputSlot;
+    element.inputSlotClass = slotClass;
+    element.instanceStepRate = instanceStepRate;
+    element.byteOffset = byteOffset;
 
     byteOffset += detail::BufferHelper::ToByteSize(format);
     elements.push_back(std::move(element));
-    POMDOG_ASSERT_MESSAGE(element.ByteOffset < byteOffset, "Overflowing of unsigned int.");
+    POMDOG_ASSERT_MESSAGE(element.byteOffset < byteOffset, "Overflowing of unsigned int.");
 
     return *this;
 }

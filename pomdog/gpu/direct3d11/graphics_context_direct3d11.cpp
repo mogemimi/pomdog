@@ -117,19 +117,19 @@ GraphicsContextDirect3D11::Initialize(
     preferredBackBufferWidth = 1;
     preferredBackBufferHeight = 1;
     backBufferCount = 2;
-    backBufferFormat = dxgi::ToDXGIFormat(presentationParameters.BackBufferFormat);
-    backBufferDepthFormat = presentationParameters.DepthStencilFormat;
+    backBufferFormat = dxgi::ToDXGIFormat(presentationParameters.backBufferFormat);
+    backBufferDepthFormat = presentationParameters.depthStencilFormat;
     needToApplyPipelineState = true;
 
     DXGI_SAMPLE_DESC sampleDesc;
     sampleDesc.Count = 1;
     sampleDesc.Quality = 0;
 
-    if (presentationParameters.MultiSampleCount > 1) {
+    if (presentationParameters.multiSampleCount > 1) {
         ChooseMultiSampleSetting(
             device.Get(),
             backBufferFormat,
-            presentationParameters.MultiSampleCount,
+            presentationParameters.multiSampleCount,
             sampleDesc);
     }
 
@@ -197,7 +197,7 @@ GraphicsContextDirect3D11::Initialize(
                 preferredBackBufferWidth,
                 preferredBackBufferHeight,
                 backBufferMipLevels,
-                presentationParameters.BackBufferFormat,
+                presentationParameters.backBufferFormat,
                 multiSampleCount);
             err != nullptr) {
             return errors::Wrap(std::move(err), "failed to initialize back buffer");

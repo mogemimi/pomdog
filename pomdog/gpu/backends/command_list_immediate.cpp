@@ -318,8 +318,8 @@ void CommandListImmediate::SetRenderPass(RenderPass&& renderPass)
     auto command = PlacementNew<BeginRenderPassCommand>(allocator_);
     command->renderPass = std::move(renderPass);
 
-    if (command->renderPass.RenderTargets.empty()) {
-        command->renderPass.RenderTargets[0] = {nullptr, std::nullopt};
+    if (command->renderPass.renderTargets.empty()) {
+        command->renderPass.renderTargets[0] = {nullptr, std::nullopt};
     }
     commands_.push_back(std::move(command));
     needToEndRenderPass_ = true;

@@ -417,8 +417,8 @@ id<MTLDevice> GraphicsDeviceMetal::GetMTLDevice() noexcept
 
 void GraphicsDeviceMetal::ClientSizeChanged(int width, int height) noexcept
 {
-    presentationParameters.BackBufferWidth = width;
-    presentationParameters.BackBufferHeight = height;
+    presentationParameters.backBufferWidth = width;
+    presentationParameters.backBufferHeight = height;
 }
 
 } // namespace pomdog::gpu::detail::metal

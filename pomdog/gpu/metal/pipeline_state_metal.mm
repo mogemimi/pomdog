@@ -69,22 +69,22 @@ MTLVertexDescriptor* ToVertexDescriptor(const InputLayoutDescriptor& inputLayout
     MTLVertexDescriptor* vertexDescriptor = [MTLVertexDescriptor new];
 
     int attributeIndex = 0;
-    for (auto& element : inputLayout.InputElements) {
-        const auto slotIndex = element.InputSlot + VertexBufferSlotOffset;
+    for (auto& element : inputLayout.inputElements) {
+        const auto slotIndex = element.inputSlot + VertexBufferSlotOffset;
         POMDOG_ASSERT(slotIndex < MaxVertexBufferSlotCount);
 
         auto bufferLayout = vertexDescriptor.layouts[slotIndex];
-        bufferLayout.stride = element.ByteOffset + BufferHelper::ToByteSize(element.Format);
-        bufferLayout.stepFunction = ToVertexStepFunction(element.InputSlotClass);
-        bufferLayout.stepRate = element.InstanceStepRate;
-        if (element.InputSlotClass == InputClassification::InputPerVertex) {
+        bufferLayout.stride = element.byteOffset + BufferHelper::ToByteSize(element.format);
+        bufferLayout.stepFunction = ToVertexStepFunction(element.inputSlotClass);
+        bufferLayout.stepRate = element.instanceStepRate;
+        if (element.inputSlotClass == InputClassification::InputPerVertex) {
             // NOTE: `stepRate` must be one if stepFunction is MTLVertexStepFunctionPerVertex.
             bufferLayout.stepRate = 1;
         }
 
         auto attribute = vertexDescriptor.attributes[attributeIndex];
-        attribute.format = ToVertexFormat(element.Format);
-        attribute.offset = element.ByteOffset;
+        attribute.format = ToVertexFormat(element.format);
+        attribute.offset = element.byteOffset;
         attribute.bufferIndex = slotIndex;
         ++attributeIndex;
     }
@@ -180,13 +180,13 @@ void ToDepthStencilOperation(
     const DepthStencilOperation& operation,
     const DepthStencilDescriptor& descriptor)
 {
-    desc.stencilCompareFunction = ToComparisonFunction(operation.StencilFunction);
-    desc.depthStencilPassOperation = ToStencilOperation(operation.StencilPass);
-    desc.stencilFailureOperation = ToStencilOperation(operation.StencilFail);
-    desc.depthFailureOperation = ToStencilOperation(operation.StencilDepthBufferFail);
+    desc.stencilCompareFunction = ToComparisonFunction(operation.stencilFunction);
+    desc.depthStencilPassOperation = ToStencilOperation(operation.stencilPass);
+    desc.stencilFailureOperation = ToStencilOperation(operation.stencilFail);
+    desc.depthFailureOperation = ToStencilOperation(operation.stencilDepthBufferFail);
 
-    desc.readMask = descriptor.StencilMask;
-    desc.writeMask = descriptor.StencilWriteMask;
+    desc.readMask = descriptor.stencilMask;
+    desc.writeMask = descriptor.stencilWriteMask;
 }
 
 MTLCullMode ToCullMode(CullMode cullMode) noexcept
@@ -224,14 +224,14 @@ PipelineStateMetal::Initialize(
 {
     POMDOG_ASSERT(device != nullptr);
 
-    primitiveType = ToPrimitiveType(descriptor.PrimitiveTopology);
+    primitiveType = ToPrimitiveType(descriptor.primitiveTopology);
 
-    rasterizerState.depthBias = descriptor.RasterizerState.DepthBias;
-    rasterizerState.slopeScaledDepthBias = descriptor.RasterizerState.SlopeScaledDepthBias;
-    rasterizerState.cullMode = ToCullMode(descriptor.RasterizerState.CullMode);
-    rasterizerState.fillMode = ToFillMode(descriptor.RasterizerState.FillMode);
+    rasterizerState.depthBias = descriptor.rasterizerState.depthBias;
+    rasterizerState.slopeScaledDepthBias = descriptor.rasterizerState.slopeScaledDepthBias;
+    rasterizerState.cullMode = ToCullMode(descriptor.rasterizerState.cullMode);
+    rasterizerState.fillMode = ToFillMode(descriptor.rasterizerState.fillMode);
 
-    auto vertexShaderMetal = std::dynamic_pointer_cast<ShaderMetal>(descriptor.VertexShader);
+    auto vertexShaderMetal = std::dynamic_pointer_cast<ShaderMetal>(descriptor.vertexShader);
     if (vertexShaderMetal == nullptr) {
         return errors::New("invalid vertex shader");
     }
@@ -241,7 +241,7 @@ PipelineStateMetal::Initialize(
         return errors::New("vertexShader must be != nullptr");
     }
 
-    auto pixelShaderMetal = std::dynamic_pointer_cast<ShaderMetal>(descriptor.PixelShader);
+    auto pixelShaderMetal = std::dynamic_pointer_cast<ShaderMetal>(descriptor.pixelShader);
     if (pixelShaderMetal == nullptr) {
         return errors::New("invalid pixel shader");
     }
@@ -254,15 +254,15 @@ PipelineStateMetal::Initialize(
     ///@todo MSAA is not implemented yet
     constexpr int multiSampleCount = 1;
 
-    const auto depthStencilFormat = ToPixelFormat(descriptor.DepthStencilViewFormat);
+    const auto depthStencilFormat = ToPixelFormat(descriptor.depthStencilViewFormat);
 
     MTLRenderPipelineDescriptor* pipelineDesc = [[MTLRenderPipelineDescriptor alloc] init];
     pipelineDesc.label = @"Pomdog.RenderPipeline";
     pipelineDesc.vertexFunction = vertexShader;
     pipelineDesc.fragmentFunction = pixelShader;
-    pipelineDesc.vertexDescriptor = ToVertexDescriptor(descriptor.InputLayout);
+    pipelineDesc.vertexDescriptor = ToVertexDescriptor(descriptor.inputLayout);
     pipelineDesc.sampleCount = multiSampleCount;
-    switch (descriptor.DepthStencilViewFormat) {
+    switch (descriptor.depthStencilViewFormat) {
     case PixelFormat::Depth16:
         [[fallthrough]];
     case PixelFormat::Depth32:
@@ -284,20 +284,20 @@ PipelineStateMetal::Initialize(
     }
 
     std::size_t index = 0;
-    for (auto& renderTarget : descriptor.BlendState.RenderTargets) {
-        if (index >= descriptor.RenderTargetViewFormats.size()) {
+    for (auto& renderTarget : descriptor.blendState.renderTargets) {
+        if (index >= descriptor.renderTargetViewFormats.size()) {
             break;
         }
 
         auto colorAttachment = pipelineDesc.colorAttachments[index];
-        colorAttachment.pixelFormat = ToPixelFormat(descriptor.RenderTargetViewFormats[index]);
-        colorAttachment.rgbBlendOperation = ToBlendOperation(renderTarget.ColorBlendOperation);
-        colorAttachment.alphaBlendOperation = ToBlendOperation(renderTarget.AlphaBlendOperation);
-        colorAttachment.sourceRGBBlendFactor = ToBlendFactor(renderTarget.ColorSourceBlend);
-        colorAttachment.sourceAlphaBlendFactor = ToBlendFactor(renderTarget.AlphaSourceBlend);
-        colorAttachment.destinationRGBBlendFactor = ToBlendFactor(renderTarget.ColorDestinationBlend);
-        colorAttachment.destinationAlphaBlendFactor = ToBlendFactor(renderTarget.AlphaDestinationBlend);
-        colorAttachment.blendingEnabled = renderTarget.BlendEnable;
+        colorAttachment.pixelFormat = ToPixelFormat(descriptor.renderTargetViewFormats[index]);
+        colorAttachment.rgbBlendOperation = ToBlendOperation(renderTarget.colorBlendOperation);
+        colorAttachment.alphaBlendOperation = ToBlendOperation(renderTarget.alphaBlendOperation);
+        colorAttachment.sourceRGBBlendFactor = ToBlendFactor(renderTarget.colorSourceBlend);
+        colorAttachment.sourceAlphaBlendFactor = ToBlendFactor(renderTarget.alphaSourceBlend);
+        colorAttachment.destinationRGBBlendFactor = ToBlendFactor(renderTarget.colorDestinationBlend);
+        colorAttachment.destinationAlphaBlendFactor = ToBlendFactor(renderTarget.alphaDestinationBlend);
+        colorAttachment.blendingEnabled = renderTarget.blendEnable;
 
         // TODO: Not implemented
         colorAttachment.writeMask = MTLColorWriteMaskAll;
@@ -324,20 +324,20 @@ PipelineStateMetal::Initialize(
     MTLDepthStencilDescriptor* depthStencilDesc = [[MTLDepthStencilDescriptor alloc] init];
     depthStencilDesc.label = @"Pomdog.DepthStencilState";
     depthStencilDesc.depthCompareFunction = ToComparisonFunction(
-        descriptor.DepthStencilState.DepthBufferEnable
-            ? descriptor.DepthStencilState.DepthBufferFunction
+        descriptor.depthStencilState.depthBufferEnable
+            ? descriptor.depthStencilState.depthBufferFunction
             : ComparisonFunction::Always);
-    depthStencilDesc.depthWriteEnabled = descriptor.DepthStencilState.DepthBufferWriteEnable ? YES : NO;
+    depthStencilDesc.depthWriteEnabled = descriptor.depthStencilState.depthBufferWriteEnable ? YES : NO;
 
     ToDepthStencilOperation(
         depthStencilDesc.frontFaceStencil,
-        descriptor.DepthStencilState.ClockwiseFace,
-        descriptor.DepthStencilState);
+        descriptor.depthStencilState.clockwiseFace,
+        descriptor.depthStencilState);
 
     ToDepthStencilOperation(
         depthStencilDesc.backFaceStencil,
-        descriptor.DepthStencilState.CounterClockwiseFace,
-        descriptor.DepthStencilState);
+        descriptor.depthStencilState.counterClockwiseFace,
+        descriptor.depthStencilState);
 
     depthStencilState = [device newDepthStencilStateWithDescriptor:depthStencilDesc];
     if (this->depthStencilState == nullptr) {

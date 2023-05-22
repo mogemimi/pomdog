@@ -15,16 +15,16 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::gpu {
 
 struct POMDOG_EXPORT SamplerDescriptor final {
-    std::uint32_t MaxAnisotropy;
-    float MinMipLevel;
-    float MaxMipLevel;
-    float MipMapLevelOfDetailBias;
-    TextureFilter Filter;
-    TextureAddressMode AddressU;
-    TextureAddressMode AddressV;
-    TextureAddressMode AddressW;
-    pomdog::gpu::ComparisonFunction ComparisonFunction;
-    //std::array<float, 4> BorderColor;
+    std::uint32_t maxAnisotropy;
+    float minMipLevel;
+    float maxMipLevel;
+    float mipmapLevelOfDetailBias;
+    TextureFilter filter;
+    TextureAddressMode addressU;
+    TextureAddressMode addressV;
+    TextureAddressMode addressW;
+    pomdog::gpu::ComparisonFunction comparisonFunction;
+    //std::array<float, 4> borderColor;
 
     [[nodiscard]] static SamplerDescriptor
     CreateDefault() noexcept;

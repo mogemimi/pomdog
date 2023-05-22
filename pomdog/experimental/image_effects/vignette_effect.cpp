@@ -95,8 +95,8 @@ VignetteEffect::VignetteEffect(
 
     std::unique_ptr<Error> pipelineStateErr;
     std::tie(pipelineState, pipelineStateErr) = assets.CreateBuilder<gpu::PipelineState>()
-                                                    .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
-                                                    .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
+                                                    .SetRenderTargetViewFormat(presentationParameters.backBufferFormat)
+                                                    .SetDepthStencilViewFormat(presentationParameters.depthStencilFormat)
                                                     .SetVertexShader(std::move(vertexShader))
                                                     .SetPixelShader(std::move(pixelShader))
                                                     .SetInputLayout(inputLayout.CreateInputLayout())

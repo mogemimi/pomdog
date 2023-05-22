@@ -360,8 +360,8 @@ GraphicsDeviceGL4::CreateTexture2D(
 
 void GraphicsDeviceGL4::ClientSizeChanged(int width, int height)
 {
-    presentationParameters.BackBufferWidth = width;
-    presentationParameters.BackBufferHeight = height;
+    presentationParameters.backBufferWidth = width;
+    presentationParameters.backBufferHeight = height;
 }
 
 } // namespace pomdog::gpu::detail::gl4

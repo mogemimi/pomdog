@@ -88,13 +88,13 @@ void ToRenderTargetBlendGL4(
     const RenderTargetBlendDescriptor& desc,
     RenderTargetBlendDescriptorGL4& result) noexcept
 {
-    result.ColorSource = ToBlendGL4(desc.ColorSourceBlend);
-    result.ColorDestination = ToBlendGL4(desc.ColorDestinationBlend);
-    result.ColorOperation = ToBlendOperationGL4(desc.ColorBlendOperation);
-    result.AlphaSource = ToBlendGL4(desc.AlphaSourceBlend);
-    result.AlphaDestination = ToBlendGL4(desc.AlphaDestinationBlend);
-    result.AlphaOperation = ToBlendOperationGL4(desc.AlphaBlendOperation);
-    result.BlendEnable = desc.BlendEnable;
+    result.ColorSource = ToBlendGL4(desc.colorSourceBlend);
+    result.ColorDestination = ToBlendGL4(desc.colorDestinationBlend);
+    result.ColorOperation = ToBlendOperationGL4(desc.colorBlendOperation);
+    result.AlphaSource = ToBlendGL4(desc.alphaSourceBlend);
+    result.AlphaDestination = ToBlendGL4(desc.alphaDestinationBlend);
+    result.AlphaOperation = ToBlendOperationGL4(desc.alphaBlendOperation);
+    result.BlendEnable = desc.blendEnable;
 }
 
 } // namespace
@@ -102,12 +102,12 @@ void ToRenderTargetBlendGL4(
 std::unique_ptr<Error>
 BlendStateGL4::Initialize(const BlendDescriptor& descriptor) noexcept
 {
-    independentBlendEnable = descriptor.IndependentBlendEnable;
-    alphaToCoverageEnable = descriptor.AlphaToCoverageEnable;
+    independentBlendEnable = descriptor.independentBlendEnable;
+    alphaToCoverageEnable = descriptor.alphaToCoverageEnable;
 
-    for (std::size_t i = 0; i < descriptor.RenderTargets.size(); ++i) {
+    for (std::size_t i = 0; i < descriptor.renderTargets.size(); ++i) {
         POMDOG_ASSERT(i < renderTargets.size());
-        ToRenderTargetBlendGL4(descriptor.RenderTargets[i], renderTargets[i]);
+        ToRenderTargetBlendGL4(descriptor.renderTargets[i], renderTargets[i]);
     }
     return nullptr;
 }

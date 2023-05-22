@@ -309,24 +309,24 @@ void GameMain::DrawMenu()
         clearColor = Color{60, 60, 60, 255}.ToVector4();
     }
 
-    gpu::Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
+    gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
-    pass.RenderTargets[0] = {nullptr, clearColor};
-    pass.DepthStencilBuffer = nullptr;
-    pass.ClearDepth = 1.0f;
-    pass.ClearStencil = std::uint8_t(0);
-    pass.Viewport = viewport;
-    pass.ScissorRect = viewport.GetBounds();
+    pass.renderTargets[0] = {nullptr, clearColor};
+    pass.depthStencilBuffer = nullptr;
+    pass.clearDepth = 1.0f;
+    pass.clearStencil = std::uint8_t(0);
+    pass.viewport = viewport;
+    pass.scissorRect = viewport.GetBounds();
 
     auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
-        static_cast<float>(presentationParameters.BackBufferWidth),
-        static_cast<float>(presentationParameters.BackBufferHeight),
+        static_cast<float>(presentationParameters.backBufferWidth),
+        static_cast<float>(presentationParameters.backBufferHeight),
         0.0f,
         100.0f);
 
     auto viewMatrix = Matrix4x4::CreateTranslation(Vector3{
-        static_cast<float>(-presentationParameters.BackBufferWidth) * 0.5f,
-        static_cast<float>(-presentationParameters.BackBufferHeight) * 0.5f,
+        static_cast<float>(-presentationParameters.backBufferWidth) * 0.5f,
+        static_cast<float>(-presentationParameters.backBufferHeight) * 0.5f,
         0.0f});
 
     auto viewProjection = viewMatrix * projectionMatrix;

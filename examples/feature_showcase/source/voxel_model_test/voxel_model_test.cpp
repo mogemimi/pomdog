@@ -46,14 +46,14 @@ void VoxelModelTest::Draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
-    gpu::Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
+    gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
-    pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
-    pass.DepthStencilBuffer = nullptr;
-    pass.ClearDepth = 1.0f;
-    pass.ClearStencil = std::uint8_t(0);
-    pass.Viewport = viewport;
-    pass.ScissorRect = viewport.GetBounds();
+    pass.renderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
+    pass.depthStencilBuffer = nullptr;
+    pass.clearDepth = 1.0f;
+    pass.clearStencil = std::uint8_t(0);
+    pass.viewport = viewport;
+    pass.scissorRect = viewport.GetBounds();
 
     commandList->Reset();
     commandList->SetRenderPass(std::move(pass));
@@ -62,8 +62,8 @@ void VoxelModelTest::Draw()
     constexpr float rotateSpeed = 0.7f;
 
     auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
-        presentationParameters.BackBufferWidth / orthographicSize,
-        presentationParameters.BackBufferHeight / orthographicSize,
+        presentationParameters.backBufferWidth / orthographicSize,
+        presentationParameters.backBufferHeight / orthographicSize,
         -100.0f,
         100.0f);
 

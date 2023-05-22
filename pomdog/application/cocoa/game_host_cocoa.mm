@@ -161,15 +161,15 @@ GameHostCocoa::Impl::Initialize(
     this->exitRequest = false;
     this->displayLinkEnabled = true;
 
-    if (presentationParameters.PresentationInterval <= 0) {
+    if (presentationParameters.presentationInterval <= 0) {
         return errors::New("PresentationInterval must be > 0.");
     }
-    POMDOG_ASSERT(presentationParameters.PresentationInterval > 0);
-    presentationInterval = Duration(1) / presentationParameters.PresentationInterval;
+    POMDOG_ASSERT(presentationParameters.presentationInterval > 0);
+    presentationInterval = Duration(1) / presentationParameters.presentationInterval;
 
     timeSource_ = std::make_shared<detail::apple::TimeSourceApple>();
     clock_ = std::make_shared<GameClockImpl>();
-    if (auto err = clock_->Initialize(presentationParameters.PresentationInterval, timeSource_); err != nullptr) {
+    if (auto err = clock_->Initialize(presentationParameters.presentationInterval, timeSource_); err != nullptr) {
         return errors::Wrap(std::move(err), "GameClockImpl::Initialize() failed.");
     }
 

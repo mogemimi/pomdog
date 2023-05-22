@@ -212,8 +212,8 @@ std::unique_ptr<Error> GLTFModelTest::Initialize()
 
         // NOTE: Create pipeline state
         std::tie(pipelineState1, err) = BasicEffect::CreateBasicEffect(*assets, effectDesc)
-            .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
-            .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
+            .SetRenderTargetViewFormat(presentationParameters.backBufferFormat)
+            .SetDepthStencilViewFormat(presentationParameters.depthStencilFormat)
             .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
             .SetDepthStencilState(gpu::DepthStencilDescriptor::CreateDefault())
             .SetBlendState(gpu::BlendDescriptor::CreateNonPremultiplied())
@@ -233,8 +233,8 @@ std::unique_ptr<Error> GLTFModelTest::Initialize()
 
         // NOTE: Create pipeline state
         std::tie(pipelineState2, err) = BasicEffect::CreateBasicEffect(*assets, effectDesc)
-            .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
-            .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
+            .SetRenderTargetViewFormat(presentationParameters.backBufferFormat)
+            .SetDepthStencilViewFormat(presentationParameters.depthStencilFormat)
             .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
             .SetDepthStencilState(gpu::DepthStencilDescriptor::CreateDefault())
             .SetBlendState(gpu::BlendDescriptor::CreateNonPremultiplied())
@@ -256,7 +256,7 @@ void GLTFModelTest::Update()
 
     auto projectionMatrix = Matrix4x4::CreatePerspectiveFieldOfViewLH(
         math::ToRadians(45.0f),
-        static_cast<float>(presentationParameters.BackBufferWidth) / presentationParameters.BackBufferHeight,
+        static_cast<float>(presentationParameters.backBufferWidth) / presentationParameters.backBufferHeight,
         0.01f,
         1000.0f);
 
@@ -280,7 +280,7 @@ void GLTFModelTest::Update()
 
     auto mouse = gameHost->GetMouse()->GetState();
     if (mouse.LeftButton == ButtonState::Pressed) {
-        rotateY = -math::TwoPi<float> * (static_cast<float>(mouse.Position.x) / static_cast<float>(presentationParameters.BackBufferWidth));
+        rotateY = -math::TwoPi<float> * (static_cast<float>(mouse.Position.x) / static_cast<float>(presentationParameters.backBufferWidth));
     }
 
     auto modelMatrix = Matrix4x4::CreateTranslation(Vector3{-0.5f, -0.5f, -0.5f})
@@ -302,14 +302,14 @@ void GLTFModelTest::Draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
-    gpu::Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
+    gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
-    pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
-    pass.DepthStencilBuffer = nullptr;
-    pass.ClearDepth = 1.0f;
-    pass.ClearStencil = std::uint8_t(0);
-    pass.Viewport = viewport;
-    pass.ScissorRect = viewport.GetBounds();
+    pass.renderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
+    pass.depthStencilBuffer = nullptr;
+    pass.clearDepth = 1.0f;
+    pass.clearStencil = std::uint8_t(0);
+    pass.viewport = viewport;
+    pass.scissorRect = viewport.GetBounds();
 
     auto mouse = gameHost->GetMouse()->GetState();
 

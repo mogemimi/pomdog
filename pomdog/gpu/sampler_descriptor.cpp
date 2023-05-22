@@ -17,90 +17,90 @@ SamplerDescriptor SamplerDescriptor::CreateDefault() noexcept
 SamplerDescriptor SamplerDescriptor::CreateAnisotropicClamp() noexcept
 {
     SamplerDescriptor desc;
-    desc.Filter = TextureFilter::Anisotropic;
-    desc.AddressU = TextureAddressMode::Clamp;
-    desc.AddressV = TextureAddressMode::Clamp;
-    desc.AddressW = TextureAddressMode::Clamp;
-    desc.MipMapLevelOfDetailBias = 0;
-    desc.MaxAnisotropy = 0;
-    desc.MinMipLevel = 0;
-    desc.MaxMipLevel = 1000;
-    desc.ComparisonFunction = ComparisonFunction::Never;
+    desc.filter = TextureFilter::Anisotropic;
+    desc.addressU = TextureAddressMode::Clamp;
+    desc.addressV = TextureAddressMode::Clamp;
+    desc.addressW = TextureAddressMode::Clamp;
+    desc.mipmapLevelOfDetailBias = 0;
+    desc.maxAnisotropy = 0;
+    desc.minMipLevel = 0;
+    desc.maxMipLevel = 1000;
+    desc.comparisonFunction = ComparisonFunction::Never;
     return desc;
 }
 
 SamplerDescriptor SamplerDescriptor::CreateAnisotropicWrap() noexcept
 {
     SamplerDescriptor desc;
-    desc.Filter = TextureFilter::Anisotropic;
-    desc.AddressU = TextureAddressMode::Wrap;
-    desc.AddressV = TextureAddressMode::Wrap;
-    desc.AddressW = TextureAddressMode::Wrap;
-    desc.MipMapLevelOfDetailBias = 0;
-    desc.MaxAnisotropy = 0;
-    desc.MinMipLevel = 0;
-    desc.MaxMipLevel = 1000;
-    desc.ComparisonFunction = ComparisonFunction::Never;
+    desc.filter = TextureFilter::Anisotropic;
+    desc.addressU = TextureAddressMode::Wrap;
+    desc.addressV = TextureAddressMode::Wrap;
+    desc.addressW = TextureAddressMode::Wrap;
+    desc.mipmapLevelOfDetailBias = 0;
+    desc.maxAnisotropy = 0;
+    desc.minMipLevel = 0;
+    desc.maxMipLevel = 1000;
+    desc.comparisonFunction = ComparisonFunction::Never;
     return desc;
 }
 
 SamplerDescriptor SamplerDescriptor::CreateLinearClamp() noexcept
 {
     SamplerDescriptor desc;
-    desc.Filter = TextureFilter::Linear;
-    desc.AddressU = TextureAddressMode::Clamp;
-    desc.AddressV = TextureAddressMode::Clamp;
-    desc.AddressW = TextureAddressMode::Clamp;
-    desc.MipMapLevelOfDetailBias = 0;
-    desc.MaxAnisotropy = 0;
-    desc.MinMipLevel = 0;
-    desc.MaxMipLevel = std::numeric_limits<float>::max();
-    desc.ComparisonFunction = ComparisonFunction::Never;
+    desc.filter = TextureFilter::Linear;
+    desc.addressU = TextureAddressMode::Clamp;
+    desc.addressV = TextureAddressMode::Clamp;
+    desc.addressW = TextureAddressMode::Clamp;
+    desc.mipmapLevelOfDetailBias = 0;
+    desc.maxAnisotropy = 0;
+    desc.minMipLevel = 0;
+    desc.maxMipLevel = std::numeric_limits<float>::max();
+    desc.comparisonFunction = ComparisonFunction::Never;
     return desc;
 }
 
 SamplerDescriptor SamplerDescriptor::CreateLinearWrap() noexcept
 {
     SamplerDescriptor desc;
-    desc.Filter = TextureFilter::Linear;
-    desc.AddressU = TextureAddressMode::Wrap;
-    desc.AddressV = TextureAddressMode::Wrap;
-    desc.AddressW = TextureAddressMode::Wrap;
-    desc.MipMapLevelOfDetailBias = 0;
-    desc.MaxAnisotropy = 0;
-    desc.MinMipLevel = 0;
-    desc.MaxMipLevel = std::numeric_limits<float>::max();
-    desc.ComparisonFunction = ComparisonFunction::Never;
+    desc.filter = TextureFilter::Linear;
+    desc.addressU = TextureAddressMode::Wrap;
+    desc.addressV = TextureAddressMode::Wrap;
+    desc.addressW = TextureAddressMode::Wrap;
+    desc.mipmapLevelOfDetailBias = 0;
+    desc.maxAnisotropy = 0;
+    desc.minMipLevel = 0;
+    desc.maxMipLevel = std::numeric_limits<float>::max();
+    desc.comparisonFunction = ComparisonFunction::Never;
     return desc;
 }
 
 SamplerDescriptor SamplerDescriptor::CreatePointClamp() noexcept
 {
     SamplerDescriptor desc;
-    desc.Filter = TextureFilter::Point;
-    desc.AddressU = TextureAddressMode::Clamp;
-    desc.AddressV = TextureAddressMode::Clamp;
-    desc.AddressW = TextureAddressMode::Clamp;
-    desc.MipMapLevelOfDetailBias = 0;
-    desc.MaxAnisotropy = 0;
-    desc.MinMipLevel = 0;
-    desc.MaxMipLevel = std::numeric_limits<float>::max();
-    desc.ComparisonFunction = ComparisonFunction::Never;
+    desc.filter = TextureFilter::Point;
+    desc.addressU = TextureAddressMode::Clamp;
+    desc.addressV = TextureAddressMode::Clamp;
+    desc.addressW = TextureAddressMode::Clamp;
+    desc.mipmapLevelOfDetailBias = 0;
+    desc.maxAnisotropy = 0;
+    desc.minMipLevel = 0;
+    desc.maxMipLevel = std::numeric_limits<float>::max();
+    desc.comparisonFunction = ComparisonFunction::Never;
     return desc;
 }
 
 SamplerDescriptor SamplerDescriptor::CreatePointWrap() noexcept
 {
     SamplerDescriptor desc;
-    desc.Filter = TextureFilter::Point;
-    desc.AddressU = TextureAddressMode::Wrap;
-    desc.AddressV = TextureAddressMode::Wrap;
-    desc.AddressW = TextureAddressMode::Wrap;
-    desc.MipMapLevelOfDetailBias = 0;
-    desc.MaxAnisotropy = 0;
-    desc.MinMipLevel = 0;
-    desc.MaxMipLevel = std::numeric_limits<float>::max();
-    desc.ComparisonFunction = ComparisonFunction::Never;
+    desc.filter = TextureFilter::Point;
+    desc.addressU = TextureAddressMode::Wrap;
+    desc.addressV = TextureAddressMode::Wrap;
+    desc.addressW = TextureAddressMode::Wrap;
+    desc.mipmapLevelOfDetailBias = 0;
+    desc.maxAnisotropy = 0;
+    desc.minMipLevel = 0;
+    desc.maxMipLevel = std::numeric_limits<float>::max();
+    desc.comparisonFunction = ComparisonFunction::Never;
     return desc;
 }
 

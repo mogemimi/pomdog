@@ -154,7 +154,7 @@ void SetViewport(
     if (useBackBuffer) {
         if (auto device = graphicsDevice.lock(); device != nullptr) {
             auto presentationParameters = device->GetPresentationParameters();
-            viewportY = presentationParameters.BackBufferHeight - (viewport.topLeftY + viewport.height);
+            viewportY = presentationParameters.backBufferHeight - (viewport.topLeftY + viewport.height);
         }
     }
 
@@ -192,7 +192,7 @@ void SetScissorRectangle(
         // FIXME: Use glClipControl(GL_UPPER_LEFT) instead when OpenGL version is >= 4.5
         if (auto device = graphicsDevice.lock(); device != nullptr) {
             auto presentationParameters = device->GetPresentationParameters();
-            lowerLeftCornerY = presentationParameters.BackBufferHeight - (rectangle.y + rectangle.height);
+            lowerLeftCornerY = presentationParameters.backBufferHeight - (rectangle.y + rectangle.height);
         }
     }
 
@@ -825,13 +825,13 @@ void GraphicsContextGL4::SetTexture(std::uint32_t index, const std::shared_ptr<R
 
 void GraphicsContextGL4::BeginRenderPass(const RenderPass& renderPass)
 {
-    POMDOG_ASSERT(!renderPass.RenderTargets.empty());
-    POMDOG_ASSERT(renderPass.RenderTargets.size() == 8);
+    POMDOG_ASSERT(!renderPass.renderTargets.empty());
+    POMDOG_ASSERT(renderPass.renderTargets.size() == 8);
 
     POMDOG_ASSERT(renderTargets_.size() >= 1);
     POMDOG_ASSERT(renderTargets_.front() == nullptr);
 
-    const bool useBackBuffer = (std::get<0>(renderPass.RenderTargets.front()) == nullptr);
+    const bool useBackBuffer = (std::get<0>(renderPass.renderTargets.front()) == nullptr);
 
     if (useBackBuffer) {
         // NOTE: Bind default framebuffer
@@ -844,42 +844,42 @@ void GraphicsContextGL4::BeginRenderPass(const RenderPass& renderPass)
         POMDOG_CHECK_ERROR_GL4("glBindFramebuffer");
     }
 
-    if (renderPass.Viewport) {
-        gl4::SetViewport(*renderPass.Viewport, graphicsDevice_, useBackBuffer);
+    if (renderPass.viewport) {
+        gl4::SetViewport(*renderPass.viewport, graphicsDevice_, useBackBuffer);
     }
-    if (renderPass.ScissorRect) {
-        SetScissorRectangle(*renderPass.ScissorRect, graphicsDevice_, useBackBuffer);
+    if (renderPass.scissorRect) {
+        SetScissorRectangle(*renderPass.scissorRect, graphicsDevice_, useBackBuffer);
     }
 
     {
         if (!useBackBuffer) {
             // NOTE: Set depth stencil buffer.
-            SetDepthStencilBuffer(*frameBuffer_, renderPass.DepthStencilBuffer);
+            SetDepthStencilBuffer(*frameBuffer_, renderPass.depthStencilBuffer);
         }
 
         GLbitfield clearMask = 0;
-        if (renderPass.ClearDepth) {
+        if (renderPass.clearDepth) {
             // NOTE: glDepthMask() must be enabled to clear the depth buffer.
             glDepthMask(GL_TRUE);
             POMDOG_CHECK_ERROR_GL4("glDepthMask");
 
             clearMask |= GL_DEPTH_BUFFER_BIT;
-            auto clamped = std::min(std::max(*renderPass.ClearDepth, 0.0f), 1.0f);
+            auto clamped = std::min(std::max(*renderPass.clearDepth, 0.0f), 1.0f);
             glClearDepthf(clamped);
             POMDOG_CHECK_ERROR_GL4("glClearDepthf");
         }
-        if (renderPass.ClearStencil) {
+        if (renderPass.clearStencil) {
             // NOTE: glStencilMask() must be enabled to clear the stencil buffer.
             glStencilMask(GL_TRUE);
             POMDOG_CHECK_ERROR_GL4("glStencilMask");
 
             clearMask |= GL_STENCIL_BUFFER_BIT;
-            glClearStencil(*renderPass.ClearStencil);
+            glClearStencil(*renderPass.clearStencil);
             POMDOG_CHECK_ERROR_GL4("glClearStencil");
         }
 
         if ((clearMask != 0) && !useBackBuffer) {
-            auto& view = renderPass.RenderTargets[0];
+            auto& view = renderPass.renderTargets[0];
             auto& renderTarget = std::get<0>(view);
             POMDOG_ASSERT(renderTarget != nullptr);
 
@@ -900,7 +900,7 @@ void GraphicsContextGL4::BeginRenderPass(const RenderPass& renderPass)
     }
 
     if (useBackBuffer) {
-        auto& view = renderPass.RenderTargets[0];
+        auto& view = renderPass.renderTargets[0];
         auto& clearColor = std::get<1>(view);
 
         if (clearColor != std::nullopt) {
@@ -913,7 +913,7 @@ void GraphicsContextGL4::BeginRenderPass(const RenderPass& renderPass)
         }
     }
     else {
-        for (const auto& view : renderPass.RenderTargets) {
+        for (const auto& view : renderPass.renderTargets) {
             auto& renderTarget = std::get<0>(view);
             auto& clearColor = std::get<1>(view);
 
@@ -959,7 +959,7 @@ void GraphicsContextGL4::BeginRenderPass(const RenderPass& renderPass)
 
         // NOTE: Bind color attachments to frame buffer.
         int index = 0;
-        for (auto& tuple : renderPass.RenderTargets) {
+        for (auto& tuple : renderPass.renderTargets) {
             auto& renderTarget = std::get<0>(tuple);
             if (renderTarget == nullptr) {
                 break;

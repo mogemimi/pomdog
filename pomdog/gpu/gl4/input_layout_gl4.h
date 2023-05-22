@@ -31,22 +31,22 @@ using ScalarTypeGL4 = pomdog::detail::Tagged<GLuint, Tags::ScalarDataTypeTag>;
 using VertexArrayGL4 = pomdog::detail::Tagged<GLuint, Tags::VertexArrayTag>;
 
 struct InputElementGL4 final {
-    GLuint AttributeLocation;
+    GLuint attributeLocation;
 
     // Input element offset.
-    std::uint32_t ByteOffset;
+    std::uint32_t byteOffset;
 
-    std::uint16_t InputSlot;
+    std::uint16_t inputSlot;
 
-    std::uint16_t InstanceStepRate;
+    std::uint16_t instanceStepRate;
 
     // Specifies the scalar data type.
-    ScalarTypeGL4 ScalarType;
+    ScalarTypeGL4 scalarType;
 
     // Must be 1, 2, 3, and 4.
-    std::int8_t Components;
+    std::int8_t components;
 
-    bool IsInteger = false;
+    bool isInteger = false;
 };
 
 class InputLayoutGL4 final {

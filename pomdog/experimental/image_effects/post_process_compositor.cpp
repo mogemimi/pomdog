@@ -39,13 +39,13 @@ PostProcessCompositor::PostProcessCompositor(
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
-    POMDOG_ASSERT(presentationParameters.BackBufferWidth > 0);
-    POMDOG_ASSERT(presentationParameters.BackBufferHeight > 0);
+    POMDOG_ASSERT(presentationParameters.backBufferWidth > 0);
+    POMDOG_ASSERT(presentationParameters.backBufferHeight > 0);
 
     viewport.x = 0;
     viewport.y = 0;
-    viewport.width = presentationParameters.BackBufferWidth;
-    viewport.height = presentationParameters.BackBufferHeight;
+    viewport.width = presentationParameters.backBufferWidth;
+    viewport.height = presentationParameters.backBufferHeight;
 
     constantBuffer = std::get<0>(graphicsDevice->CreateConstantBuffer(
         sizeof(PostProcessInfo),
@@ -53,10 +53,10 @@ PostProcessCompositor::PostProcessCompositor(
 
     BuildRenderTargets(
         *graphicsDevice,
-        presentationParameters.BackBufferWidth,
-        presentationParameters.BackBufferHeight,
-        presentationParameters.BackBufferFormat,
-        presentationParameters.DepthStencilFormat);
+        presentationParameters.backBufferWidth,
+        presentationParameters.backBufferHeight,
+        presentationParameters.backBufferFormat,
+        presentationParameters.depthStencilFormat);
 }
 
 void PostProcessCompositor::SetViewportSize(
@@ -200,19 +200,19 @@ void PostProcessCompositor::Draw(
         bool isLast = (index + 1) >= imageEffects.size();
         if (isLast) {
             gpu::RenderPass renderPass;
-            renderPass.RenderTargets[0] = {nullptr, std::nullopt};
-            renderPass.DepthStencilBuffer = nullptr;
-            renderPass.Viewport = gpu::Viewport{viewport};
-            renderPass.ScissorRect = viewport;
+            renderPass.renderTargets[0] = {nullptr, std::nullopt};
+            renderPass.depthStencilBuffer = nullptr;
+            renderPass.viewport = gpu::Viewport{viewport};
+            renderPass.scissorRect = viewport;
             commandList.SetRenderPass(std::move(renderPass));
         }
         else {
             POMDOG_ASSERT(currentSource != writeTarget);
             gpu::RenderPass renderPass;
-            renderPass.RenderTargets[0] = {writeTarget, std::nullopt};
-            renderPass.DepthStencilBuffer = depthStencilBuffer;
-            renderPass.Viewport = gpu::Viewport{viewport};
-            renderPass.ScissorRect = viewport;
+            renderPass.renderTargets[0] = {writeTarget, std::nullopt};
+            renderPass.depthStencilBuffer = depthStencilBuffer;
+            renderPass.viewport = gpu::Viewport{viewport};
+            renderPass.scissorRect = viewport;
             commandList.SetRenderPass(std::move(renderPass));
         }
 

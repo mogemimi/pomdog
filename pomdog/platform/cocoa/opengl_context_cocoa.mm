@@ -24,15 +24,15 @@ CreatePixelFormat(const gpu::PresentationParameters& presentationParameters) noe
         NSOpenGLPFAAllowOfflineRenderers,
     };
 
-    if (presentationParameters.MultiSampleCount > 1) {
+    if (presentationParameters.multiSampleCount > 1) {
         attributes.push_back(NSOpenGLPFAMultisample);
         attributes.push_back(NSOpenGLPFASampleBuffers);
         attributes.push_back(1);
         attributes.push_back(NSOpenGLPFASamples);
-        attributes.push_back(presentationParameters.MultiSampleCount);
+        attributes.push_back(presentationParameters.multiSampleCount);
     }
 
-    switch (presentationParameters.BackBufferFormat) {
+    switch (presentationParameters.backBufferFormat) {
     case PixelFormat::R8G8B8A8_UNorm:
     case PixelFormat::B8G8R8A8_UNorm:
         attributes.push_back(NSOpenGLPFAColorSize);
@@ -72,7 +72,7 @@ CreatePixelFormat(const gpu::PresentationParameters& presentationParameters) noe
         break;
     }
 
-    switch (presentationParameters.DepthStencilFormat) {
+    switch (presentationParameters.depthStencilFormat) {
     case PixelFormat::Depth16:
         attributes.push_back(NSOpenGLPFADepthSize);
         attributes.push_back(16);

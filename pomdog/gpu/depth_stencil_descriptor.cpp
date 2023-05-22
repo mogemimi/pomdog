@@ -16,63 +16,63 @@ DepthStencilDescriptor DepthStencilDescriptor::CreateDefault() noexcept
 DepthStencilDescriptor DepthStencilDescriptor::CreateReadWriteDepth() noexcept
 {
     DepthStencilDescriptor desc;
-    desc.DepthBufferEnable = true;
-    desc.DepthBufferWriteEnable = true;
-    desc.StencilEnable = false;
-    desc.DepthBufferFunction = ComparisonFunction::LessEqual;
-    desc.ReferenceStencil = 0;
-    desc.StencilMask = std::numeric_limits<std::uint32_t>::max();
-    desc.StencilWriteMask = std::numeric_limits<std::uint32_t>::max();
+    desc.depthBufferEnable = true;
+    desc.depthBufferWriteEnable = true;
+    desc.stencilEnable = false;
+    desc.depthBufferFunction = ComparisonFunction::LessEqual;
+    desc.referenceStencil = 0;
+    desc.stencilMask = std::numeric_limits<std::uint32_t>::max();
+    desc.stencilWriteMask = std::numeric_limits<std::uint32_t>::max();
     DepthStencilOperation defaultOperation = {
         StencilOperation::Keep,
         StencilOperation::Keep,
         StencilOperation::Keep,
         ComparisonFunction::Always,
     };
-    desc.ClockwiseFace = defaultOperation;
-    desc.CounterClockwiseFace = defaultOperation;
+    desc.clockwiseFace = defaultOperation;
+    desc.counterClockwiseFace = defaultOperation;
     return desc;
 }
 
 DepthStencilDescriptor DepthStencilDescriptor::CreateReadOnlyDepth() noexcept
 {
     DepthStencilDescriptor desc;
-    desc.DepthBufferEnable = true;
-    desc.DepthBufferWriteEnable = false;
-    desc.StencilEnable = false;
-    desc.DepthBufferFunction = ComparisonFunction::LessEqual;
-    desc.ReferenceStencil = 0;
-    desc.StencilMask = std::numeric_limits<std::uint32_t>::max();
-    desc.StencilWriteMask = std::numeric_limits<std::uint32_t>::max();
+    desc.depthBufferEnable = true;
+    desc.depthBufferWriteEnable = false;
+    desc.stencilEnable = false;
+    desc.depthBufferFunction = ComparisonFunction::LessEqual;
+    desc.referenceStencil = 0;
+    desc.stencilMask = std::numeric_limits<std::uint32_t>::max();
+    desc.stencilWriteMask = std::numeric_limits<std::uint32_t>::max();
     DepthStencilOperation defaultOperation = {
         StencilOperation::Keep,
         StencilOperation::Keep,
         StencilOperation::Keep,
         ComparisonFunction::Always,
     };
-    desc.ClockwiseFace = defaultOperation;
-    desc.CounterClockwiseFace = defaultOperation;
+    desc.clockwiseFace = defaultOperation;
+    desc.counterClockwiseFace = defaultOperation;
     return desc;
 }
 
 DepthStencilDescriptor DepthStencilDescriptor::CreateNone() noexcept
 {
     DepthStencilDescriptor desc;
-    desc.DepthBufferEnable = false;
-    desc.DepthBufferWriteEnable = false;
-    desc.StencilEnable = false;
-    desc.DepthBufferFunction = ComparisonFunction::Always;
-    desc.ReferenceStencil = 0;
-    desc.StencilMask = std::numeric_limits<std::uint32_t>::max();
-    desc.StencilWriteMask = std::numeric_limits<std::uint32_t>::max();
+    desc.depthBufferEnable = false;
+    desc.depthBufferWriteEnable = false;
+    desc.stencilEnable = false;
+    desc.depthBufferFunction = ComparisonFunction::Always;
+    desc.referenceStencil = 0;
+    desc.stencilMask = std::numeric_limits<std::uint32_t>::max();
+    desc.stencilWriteMask = std::numeric_limits<std::uint32_t>::max();
     DepthStencilOperation defaultOperation = {
         StencilOperation::Keep,
         StencilOperation::Keep,
         StencilOperation::Keep,
         ComparisonFunction::Always,
     };
-    desc.ClockwiseFace = defaultOperation;
-    desc.CounterClockwiseFace = defaultOperation;
+    desc.clockwiseFace = defaultOperation;
+    desc.counterClockwiseFace = defaultOperation;
     return desc;
 }
 

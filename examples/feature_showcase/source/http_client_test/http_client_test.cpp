@@ -73,19 +73,19 @@ void HTTPClientTest::Draw()
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
     auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
-        static_cast<float>(presentationParameters.BackBufferWidth),
-        static_cast<float>(presentationParameters.BackBufferHeight),
+        static_cast<float>(presentationParameters.backBufferWidth),
+        static_cast<float>(presentationParameters.backBufferHeight),
         0.0f,
         100.0f);
 
-    gpu::Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
+    gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
-    pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
-    pass.DepthStencilBuffer = nullptr;
-    pass.ClearDepth = 1.0f;
-    pass.ClearStencil = std::uint8_t(0);
-    pass.Viewport = viewport;
-    pass.ScissorRect = viewport.GetBounds();
+    pass.renderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
+    pass.depthStencilBuffer = nullptr;
+    pass.clearDepth = 1.0f;
+    pass.clearStencil = std::uint8_t(0);
+    pass.viewport = viewport;
+    pass.scissorRect = viewport.GetBounds();
 
     commandList->Reset();
     commandList->SetRenderPass(std::move(pass));

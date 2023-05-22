@@ -168,8 +168,8 @@ std::unique_ptr<Error> AnimationGraphTest::Initialize()
 
         // NOTE: Create pipeline state
         std::tie(pipelineState, err) = BasicEffect::CreateBasicEffect(*assets, effectDesc)
-            .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
-            .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
+            .SetRenderTargetViewFormat(presentationParameters.backBufferFormat)
+            .SetDepthStencilViewFormat(presentationParameters.depthStencilFormat)
             .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
             .SetDepthStencilState(gpu::DepthStencilDescriptor::CreateDefault())
             .SetBlendState(gpu::BlendDescriptor::CreateNonPremultiplied())
@@ -181,8 +181,8 @@ std::unique_ptr<Error> AnimationGraphTest::Initialize()
 
         // NOTE: Create pipeline state
         std::tie(pipelineStateWireframe, err) = BasicEffect::CreateBasicEffect(*assets, effectDesc)
-            .SetRenderTargetViewFormat(presentationParameters.BackBufferFormat)
-            .SetDepthStencilViewFormat(presentationParameters.DepthStencilFormat)
+            .SetRenderTargetViewFormat(presentationParameters.backBufferFormat)
+            .SetDepthStencilViewFormat(presentationParameters.depthStencilFormat)
             .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
             .SetDepthStencilState(gpu::DepthStencilDescriptor::CreateDefault())
             .SetBlendState(gpu::BlendDescriptor::CreateOpaque())
@@ -231,8 +231,8 @@ void AnimationGraphTest::Update()
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
     auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
-        static_cast<float>(presentationParameters.BackBufferWidth),
-        static_cast<float>(presentationParameters.BackBufferHeight),
+        static_cast<float>(presentationParameters.backBufferWidth),
+        static_cast<float>(presentationParameters.backBufferHeight),
         -1.0f,
         1000.0f);
 
@@ -292,27 +292,27 @@ void AnimationGraphTest::Draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
-    gpu::Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
+    gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
-    pass.RenderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
-    pass.DepthStencilBuffer = nullptr;
-    pass.ClearDepth = 1.0f;
-    pass.ClearStencil = std::uint8_t(0);
-    pass.Viewport = viewport;
-    pass.ScissorRect = viewport.GetBounds();
+    pass.renderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
+    pass.depthStencilBuffer = nullptr;
+    pass.clearDepth = 1.0f;
+    pass.clearStencil = std::uint8_t(0);
+    pass.viewport = viewport;
+    pass.scissorRect = viewport.GetBounds();
 
     commandList->Reset();
     commandList->SetRenderPass(std::move(pass));
 
     auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
-        static_cast<float>(presentationParameters.BackBufferWidth),
-        static_cast<float>(presentationParameters.BackBufferHeight),
+        static_cast<float>(presentationParameters.backBufferWidth),
+        static_cast<float>(presentationParameters.backBufferHeight),
         0.0f,
         100.0f);
 
     // Drawing line
-    const auto w = static_cast<float>(presentationParameters.BackBufferWidth);
-    const auto h = static_cast<float>(presentationParameters.BackBufferHeight);
+    const auto w = static_cast<float>(presentationParameters.backBufferWidth);
+    const auto h = static_cast<float>(presentationParameters.backBufferHeight);
     primitiveBatch->Begin(commandList, projectionMatrix);
     primitiveBatch->DrawLine(Vector2{-w * 0.5f, 0.0f}, Vector2{w * 0.5f, 0.0f}, Color{221, 220, 218, 160}, 1.0f);
     primitiveBatch->DrawLine(Vector2{0.0f, -h * 0.5f}, Vector2{0.0f, h * 0.5f}, Color{221, 220, 218, 160}, 1.0f);

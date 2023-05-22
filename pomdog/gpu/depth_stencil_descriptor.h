@@ -14,15 +14,15 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::gpu {
 
 struct POMDOG_EXPORT DepthStencilDescriptor final {
-    DepthStencilOperation ClockwiseFace;
-    DepthStencilOperation CounterClockwiseFace;
-    std::int32_t ReferenceStencil;
-    std::uint32_t StencilMask;
-    std::uint32_t StencilWriteMask;
-    ComparisonFunction DepthBufferFunction;
-    bool DepthBufferEnable;
-    bool DepthBufferWriteEnable;
-    bool StencilEnable;
+    DepthStencilOperation clockwiseFace;
+    DepthStencilOperation counterClockwiseFace;
+    std::int32_t referenceStencil;
+    std::uint32_t stencilMask;
+    std::uint32_t stencilWriteMask;
+    ComparisonFunction depthBufferFunction;
+    bool depthBufferEnable;
+    bool depthBufferWriteEnable;
+    bool stencilEnable;
 
     [[nodiscard]] static DepthStencilDescriptor
     CreateDefault() noexcept;

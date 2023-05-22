@@ -770,8 +770,8 @@ GraphicsDeviceDirect3D11::GetDXGIFactory() noexcept
 
 void GraphicsDeviceDirect3D11::ClientSizeChanged(int width, int height)
 {
-    presentationParameters.BackBufferWidth = width;
-    presentationParameters.BackBufferHeight = height;
+    presentationParameters.backBufferWidth = width;
+    presentationParameters.backBufferHeight = height;
 }
 
 } // namespace pomdog::gpu::detail::direct3d11

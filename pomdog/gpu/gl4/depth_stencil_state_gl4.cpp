@@ -55,10 +55,10 @@ void ToDepthStencilFaceOperationGL4(
     const DepthStencilOperation& face,
     DepthStencilFaceOperationGL4& result) noexcept
 {
-    result.stencilFunction = ToComparisonFunctionGL4(face.StencilFunction);
-    result.stencilDepthBufferFail = ToStencilOperationGL4(face.StencilDepthBufferFail);
-    result.stencilFail = ToStencilOperationGL4(face.StencilFail);
-    result.stencilPass = ToStencilOperationGL4(face.StencilPass);
+    result.stencilFunction = ToComparisonFunctionGL4(face.stencilFunction);
+    result.stencilDepthBufferFail = ToStencilOperationGL4(face.stencilDepthBufferFail);
+    result.stencilFail = ToStencilOperationGL4(face.stencilFail);
+    result.stencilPass = ToStencilOperationGL4(face.stencilPass);
 }
 
 } // namespace
@@ -69,16 +69,16 @@ DepthStencilStateGL4::Initialize(const DepthStencilDescriptor& descriptor) noexc
     static_assert(std::is_same<GLuint, std::uint32_t>::value, "");
     static_assert(std::is_same<GLint, std::int32_t>::value, "");
 
-    depthFunction = ToComparisonFunctionGL4(descriptor.DepthBufferFunction);
-    referenceStencil = descriptor.ReferenceStencil;
-    stencilMask = descriptor.StencilMask;
-    stencilWriteMask = descriptor.StencilWriteMask;
-    depthBufferWriteEnable = descriptor.DepthBufferWriteEnable ? GL_TRUE : GL_FALSE;
-    stencilEnable = descriptor.StencilEnable;
-    depthBufferEnable = descriptor.DepthBufferEnable;
+    depthFunction = ToComparisonFunctionGL4(descriptor.depthBufferFunction);
+    referenceStencil = descriptor.referenceStencil;
+    stencilMask = descriptor.stencilMask;
+    stencilWriteMask = descriptor.stencilWriteMask;
+    depthBufferWriteEnable = descriptor.depthBufferWriteEnable ? GL_TRUE : GL_FALSE;
+    stencilEnable = descriptor.stencilEnable;
+    depthBufferEnable = descriptor.depthBufferEnable;
 
-    ToDepthStencilFaceOperationGL4(descriptor.ClockwiseFace, clockwiseFace);
-    ToDepthStencilFaceOperationGL4(descriptor.CounterClockwiseFace, counterClockwiseFace);
+    ToDepthStencilFaceOperationGL4(descriptor.clockwiseFace, clockwiseFace);
+    ToDepthStencilFaceOperationGL4(descriptor.counterClockwiseFace, counterClockwiseFace);
 
     return nullptr;
 }

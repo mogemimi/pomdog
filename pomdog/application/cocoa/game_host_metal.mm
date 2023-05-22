@@ -57,8 +57,8 @@ void SetupMetalView(
     view.device = device;
 
     // Setup the render target, choose values based on your app
-    view.sampleCount = presentationParameters.MultiSampleCount;
-    view.depthStencilPixelFormat = ToPixelFormat(presentationParameters.DepthStencilFormat);
+    view.sampleCount = presentationParameters.multiSampleCount;
+    view.depthStencilPixelFormat = ToPixelFormat(presentationParameters.depthStencilFormat);
 }
 
 } // namespace
@@ -178,7 +178,7 @@ GameHostMetal::Impl::Initialize(
 
     timeSource_ = std::make_shared<detail::apple::TimeSourceApple>();
     clock_ = std::make_shared<GameClockImpl>();
-    if (auto err = clock_->Initialize(presentationParameters.PresentationInterval, timeSource_); err != nullptr) {
+    if (auto err = clock_->Initialize(presentationParameters.presentationInterval, timeSource_); err != nullptr) {
         return errors::Wrap(std::move(err), "GameClockImpl::Initialize() failed.");
     }
 
@@ -251,8 +251,8 @@ GameHostMetal::Impl::Initialize(
     }
     httpClient = std::make_unique<HTTPClient>(ioService_.get());
 
-    POMDOG_ASSERT(presentationParameters.PresentationInterval > 0);
-    presentationInterval = Duration(1) / presentationParameters.PresentationInterval;
+    POMDOG_ASSERT(presentationParameters.presentationInterval > 0);
+    presentationInterval = Duration(1) / presentationParameters.presentationInterval;
 
     return nullptr;
 }

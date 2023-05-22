@@ -459,12 +459,12 @@ void GraphicsContextMetal::SetTexture(std::uint32_t index, const std::shared_ptr
 
 void GraphicsContextMetal::BeginRenderPass(const RenderPass& renderPass)
 {
-    POMDOG_ASSERT(!renderPass.RenderTargets.empty());
-    POMDOG_ASSERT(renderPass.RenderTargets.size() <= 8);
+    POMDOG_ASSERT(!renderPass.renderTargets.empty());
+    POMDOG_ASSERT(renderPass.renderTargets.size() <= 8);
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     weakRenderTargets_.clear();
-    for (auto& renderTarget : renderPass.RenderTargets) {
+    for (auto& renderTarget : renderPass.renderTargets) {
         weakRenderTargets_.push_back(std::get<0>(renderTarget));
     }
 #endif
@@ -472,7 +472,7 @@ void GraphicsContextMetal::BeginRenderPass(const RenderPass& renderPass)
     MTLRenderPassDescriptor* renderPassDescriptor = [[MTLRenderPassDescriptor alloc] init];
     POMDOG_ASSERT(renderPassDescriptor != nullptr);
 
-    const bool useBackBuffer = (std::get<0>(renderPass.RenderTargets.front()) == nullptr);
+    const bool useBackBuffer = (std::get<0>(renderPass.renderTargets.front()) == nullptr);
 
     const auto setClearColor = [&](int index, const std::optional<Vector4>& clearColor) {
         if (clearColor) {
@@ -486,7 +486,7 @@ void GraphicsContextMetal::BeginRenderPass(const RenderPass& renderPass)
     };
 
     if (useBackBuffer) {
-        auto& renderTargetView = renderPass.RenderTargets.front();
+        auto& renderTargetView = renderPass.renderTargets.front();
         auto& clearColor = std::get<1>(renderTargetView);
         POMDOG_ASSERT(std::get<0>(renderTargetView) == nullptr);
 
@@ -496,7 +496,7 @@ void GraphicsContextMetal::BeginRenderPass(const RenderPass& renderPass)
     }
     else {
         int renderTargetIndex = 0;
-        for (const auto& renderTargetView : renderPass.RenderTargets) {
+        for (const auto& renderTargetView : renderPass.renderTargets) {
             auto& renderTarget = std::get<0>(renderTargetView);
             auto& clearColor = std::get<1>(renderTargetView);
 
@@ -513,12 +513,12 @@ void GraphicsContextMetal::BeginRenderPass(const RenderPass& renderPass)
         }
     }
 
-    if (renderPass.DepthStencilBuffer == nullptr) {
+    if (renderPass.depthStencilBuffer == nullptr) {
         renderPassDescriptor.depthAttachment.texture = targetView_.currentRenderPassDescriptor.depthAttachment.texture;
         renderPassDescriptor.stencilAttachment.texture = targetView_.currentRenderPassDescriptor.stencilAttachment.texture;
     }
     else {
-        const auto depthStencilBuffer = StaticDownCast<DepthStencilBufferMetal>(renderPass.DepthStencilBuffer.get());
+        const auto depthStencilBuffer = StaticDownCast<DepthStencilBufferMetal>(renderPass.depthStencilBuffer.get());
         POMDOG_ASSERT(depthStencilBuffer != nullptr);
 
         renderPassDescriptor.depthAttachment.texture = depthStencilBuffer->GetTexture();
@@ -554,13 +554,13 @@ void GraphicsContextMetal::BeginRenderPass(const RenderPass& renderPass)
         renderPassDescriptor.stencilAttachment.storeAction = MTLStoreActionStore;
     }
 
-    if (renderPass.ClearDepth) {
+    if (renderPass.clearDepth) {
         renderPassDescriptor.depthAttachment.loadAction = MTLLoadActionClear;
-        renderPassDescriptor.depthAttachment.clearDepth = static_cast<double>(*renderPass.ClearDepth);
+        renderPassDescriptor.depthAttachment.clearDepth = static_cast<double>(*renderPass.clearDepth);
     }
-    if (renderPass.ClearStencil) {
+    if (renderPass.clearStencil) {
         renderPassDescriptor.stencilAttachment.loadAction = MTLLoadActionClear;
-        renderPassDescriptor.stencilAttachment.clearStencil = *renderPass.ClearStencil;
+        renderPassDescriptor.stencilAttachment.clearStencil = *renderPass.clearStencil;
     }
 
     POMDOG_ASSERT(commandBuffer_ != nullptr);
@@ -573,11 +573,11 @@ void GraphicsContextMetal::BeginRenderPass(const RenderPass& renderPass)
 
     [commandEncoder_ setFrontFacingWinding:MTLWindingClockwise];
 
-    if (renderPass.Viewport) {
-        metal::SetViewport(commandEncoder_, *renderPass.Viewport);
+    if (renderPass.viewport) {
+        metal::SetViewport(commandEncoder_, *renderPass.viewport);
     }
-    if (renderPass.ScissorRect) {
-        SetScissorRectangle(commandEncoder_, *renderPass.ScissorRect);
+    if (renderPass.scissorRect) {
+        SetScissorRectangle(commandEncoder_, *renderPass.scissorRect);
     }
 }
 

@@ -242,10 +242,10 @@ BillboardBatchEffect::BillboardBatchEffect(
         rasterizerDesc = gpu::RasterizerDescriptor::CreateCullNone();
     }
     if (!renderTargetViewFormat) {
-        renderTargetViewFormat = presentationParameters.BackBufferFormat;
+        renderTargetViewFormat = presentationParameters.backBufferFormat;
     }
     if (!depthStencilViewFormat) {
-        depthStencilViewFormat = presentationParameters.DepthStencilFormat;
+        depthStencilViewFormat = presentationParameters.depthStencilFormat;
     }
 
     POMDOG_ASSERT(blendDesc);

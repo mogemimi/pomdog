@@ -13,11 +13,11 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::gpu {
 
 struct InputElement final {
-    std::uint16_t ByteOffset;
-    std::uint16_t InputSlot;
-    InputElementFormat Format;
-    InputClassification InputSlotClass;
-    std::uint16_t InstanceStepRate;
+    std::uint16_t byteOffset;
+    std::uint16_t inputSlot;
+    InputElementFormat format;
+    InputClassification inputSlotClass;
+    std::uint16_t instanceStepRate;
 };
 
 } // namespace pomdog::gpu

@@ -282,15 +282,15 @@ std::vector<InputElementGL4> BuildAttributes(const ShaderProgramGL4& shaderProgr
 
         for (std::uint16_t row = 0; row < attributeSize.SemanticIndex * attributeVariableArraySize; ++row) {
             InputElementGL4 attribute;
-            attribute.AttributeLocation = attributeLocation;
-            attribute.ScalarType = attributeScalarType;
-            attribute.Components = attributeSize.ComponentCount;
-            attribute.IsInteger = IsIntegerType(attribute.ScalarType);
-            attribute.ByteOffset = 0; // NOTE: See CalculateByteOffset function.
-            attribute.InputSlot = 0;
-            attribute.InstanceStepRate = 0;
+            attribute.attributeLocation = attributeLocation;
+            attribute.scalarType = attributeScalarType;
+            attribute.components = attributeSize.ComponentCount;
+            attribute.isInteger = IsIntegerType(attributeScalarType);
+            attribute.byteOffset = 0; // NOTE: See CalculateByteOffset function.
+            attribute.inputSlot = 0;
+            attribute.instanceStepRate = 0;
 
-            POMDOG_ASSERT(attribute.Components >= 1 && attribute.Components <= 4);
+            POMDOG_ASSERT(attribute.components >= 1 && attribute.components <= 4);
             attributes.push_back(attribute);
 
             // FIXME: badcode
@@ -300,7 +300,7 @@ std::vector<InputElementGL4> BuildAttributes(const ShaderProgramGL4& shaderProgr
     }
 
     std::sort(std::begin(attributes), std::end(attributes), [](const InputElementGL4& a, const InputElementGL4& b) {
-        return a.AttributeLocation < b.AttributeLocation;
+        return a.attributeLocation < b.attributeLocation;
     });
 
     return attributes;
@@ -309,7 +309,7 @@ std::vector<InputElementGL4> BuildAttributes(const ShaderProgramGL4& shaderProgr
 void EnableAttributes(const std::vector<InputElementGL4>& inputElements)
 {
     for (auto& inputElement : inputElements) {
-        glEnableVertexAttribArray(inputElement.AttributeLocation);
+        glEnableVertexAttribArray(inputElement.attributeLocation);
         POMDOG_CHECK_ERROR_GL4("glEnableVertexAttribArray");
     }
 }
@@ -329,10 +329,10 @@ BuildInputElements(std::vector<InputElementGL4>&& inputElements)
 
     std::uint32_t offsetBytes = 0;
     for (auto& inputElement : inputElements) {
-        inputElement.ByteOffset = offsetBytes;
-        inputElement.InstanceStepRate = 0;
-        inputElement.InputSlot = 0;
-        offsetBytes += CalculateByteOffset(inputElement.ScalarType, inputElement.Components);
+        inputElement.byteOffset = offsetBytes;
+        inputElement.instanceStepRate = 0;
+        inputElement.inputSlot = 0;
+        offsetBytes += CalculateByteOffset(inputElement.scalarType, inputElement.components);
         POMDOG_ASSERT(offsetBytes > 0);
     }
 
@@ -393,16 +393,16 @@ std::vector<InputElementGL4> BuildInputElements(
     const InputLayoutDescriptor& descriptor,
     std::vector<InputElementGL4>&& attributes)
 {
-    POMDOG_ASSERT(!descriptor.InputElements.empty());
+    POMDOG_ASSERT(!descriptor.inputElements.empty());
     POMDOG_ASSERT(!attributes.empty());
 
-    auto sortedElements = descriptor.InputElements;
+    auto sortedElements = descriptor.inputElements;
     std::sort(std::begin(sortedElements), std::end(sortedElements),
         [](const InputElement& a, const InputElement& b) {
-            if (a.InputSlot == b.InputSlot) {
-                return a.ByteOffset < b.ByteOffset;
+            if (a.inputSlot == b.inputSlot) {
+                return a.byteOffset < b.byteOffset;
             }
-            return a.InputSlot < b.InputSlot;
+            return a.inputSlot < b.inputSlot;
         });
 
     POMDOG_ASSERT(!sortedElements.empty());
@@ -418,25 +418,25 @@ std::vector<InputElementGL4> BuildInputElements(
 
         auto& sourceElement = sortedElements[locationIndex];
 
-        POMDOG_ASSERT(sourceElement.InputSlot >= 0);
+        POMDOG_ASSERT(sourceElement.inputSlot >= 0);
 
-        if (locationIndex != vertexAttribute->AttributeLocation) {
+        if (locationIndex != vertexAttribute->attributeLocation) {
             continue;
         }
 
         InputElementGL4 inputElement;
-        inputElement.AttributeLocation = vertexAttribute->AttributeLocation;
-        inputElement.ScalarType = vertexAttribute->ScalarType;
-        inputElement.Components = vertexAttribute->Components;
-        inputElement.IsInteger = vertexAttribute->IsInteger;
-        inputElement.ByteOffset = sourceElement.ByteOffset;
-        inputElement.InstanceStepRate = sourceElement.InstanceStepRate;
-        inputElement.InputSlot = sourceElement.InputSlot;
+        inputElement.attributeLocation = vertexAttribute->attributeLocation;
+        inputElement.scalarType = vertexAttribute->scalarType;
+        inputElement.components = vertexAttribute->components;
+        inputElement.isInteger = vertexAttribute->isInteger;
+        inputElement.byteOffset = sourceElement.byteOffset;
+        inputElement.instanceStepRate = sourceElement.instanceStepRate;
+        inputElement.inputSlot = sourceElement.inputSlot;
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-        POMDOG_ASSERT(inputElement.ScalarType == ToScalarTypeGL4(sourceElement.Format));
-        POMDOG_ASSERT(inputElement.Components == ToComponentsGL4(sourceElement.Format));
-        POMDOG_ASSERT(inputElement.AttributeLocation < GetMaxAttributeCount());
+        POMDOG_ASSERT(inputElement.scalarType == ToScalarTypeGL4(sourceElement.format));
+        POMDOG_ASSERT(inputElement.components == ToComponentsGL4(sourceElement.format));
+        POMDOG_ASSERT(inputElement.attributeLocation < GetMaxAttributeCount());
 #endif
 
         inputElements.push_back(std::move(inputElement));
@@ -485,36 +485,36 @@ void ApplyInputElements(
         POMDOG_ASSERT(vertexBuffer->GetStrideBytes() > 0);
         POMDOG_ASSERT(vertexBuffer->GetStrideBytes() <= static_cast<std::size_t>(std::numeric_limits<GLsizei>::max()));
 
-        const auto currentInputSlot = inputElement->InputSlot;
+        const auto currentInputSlot = inputElement->inputSlot;
 
         for (; inputElement != std::end(inputElements); ++inputElement) {
-            POMDOG_ASSERT(currentInputSlot <= inputElement->InputSlot);
+            POMDOG_ASSERT(currentInputSlot <= inputElement->inputSlot);
 
-            if (currentInputSlot != inputElement->InputSlot) {
+            if (currentInputSlot != inputElement->inputSlot) {
                 break;
             }
 
-            if (inputElement->IsInteger) {
+            if (inputElement->isInteger) {
                 glVertexAttribIPointer(
-                    inputElement->AttributeLocation,
-                    inputElement->Components,
-                    inputElement->ScalarType.value,
+                    inputElement->attributeLocation,
+                    inputElement->components,
+                    inputElement->scalarType.value,
                     static_cast<GLsizei>(vertexBuffer->GetStrideBytes()),
-                    ComputeBufferOffset(inputElement->ByteOffset + vertexOffset));
+                    ComputeBufferOffset(inputElement->byteOffset + vertexOffset));
                 POMDOG_CHECK_ERROR_GL4("glVertexAttribIPointer");
             }
             else {
                 glVertexAttribPointer(
-                    inputElement->AttributeLocation,
-                    inputElement->Components,
-                    inputElement->ScalarType.value,
+                    inputElement->attributeLocation,
+                    inputElement->components,
+                    inputElement->scalarType.value,
                     GL_FALSE,
                     static_cast<GLsizei>(vertexBuffer->GetStrideBytes()),
-                    ComputeBufferOffset(inputElement->ByteOffset + vertexOffset));
+                    ComputeBufferOffset(inputElement->byteOffset + vertexOffset));
                 POMDOG_CHECK_ERROR_GL4("glVertexAttribPointer");
             }
 
-            glVertexAttribDivisor(inputElement->AttributeLocation, inputElement->InstanceStepRate);
+            glVertexAttribDivisor(inputElement->attributeLocation, inputElement->instanceStepRate);
             POMDOG_CHECK_ERROR_GL4("glVertexAttribDivisor");
         }
     }
@@ -553,7 +553,7 @@ InputLayoutGL4::InputLayoutGL4(
 
     inputElements = BuildAttributes(shaderProgram);
 
-    if (descriptor.InputElements.empty()) {
+    if (descriptor.inputElements.empty()) {
         inputElements = BuildInputElements(std::move(inputElements));
     }
     else {

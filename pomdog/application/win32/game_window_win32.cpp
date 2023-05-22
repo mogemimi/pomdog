@@ -139,7 +139,7 @@ GameWindowWin32::Impl::Initialize(
 {
     eventQueue = eventQueueIn;
     title = "Game";
-    clientBounds = Rectangle{0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
+    clientBounds = Rectangle{0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     instanceHandle = hInstance;
     windowHandle = nullptr;
     allowUserResizing = false;

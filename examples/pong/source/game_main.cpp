@@ -99,10 +99,10 @@ std::unique_ptr<Error> GameMain::Initialize()
 
         // NOTE: Create render target
         std::tie(renderTarget, err) = graphicsDevice->CreateRenderTarget2D(
-            presentationParameters.BackBufferWidth,
-            presentationParameters.BackBufferHeight,
+            presentationParameters.backBufferWidth,
+            presentationParameters.backBufferHeight,
             false,
-            presentationParameters.BackBufferFormat);
+            presentationParameters.backBufferFormat);
 
         if (err != nullptr) {
             return errors::Wrap(std::move(err), "failed to create render target");
@@ -110,18 +110,18 @@ std::unique_ptr<Error> GameMain::Initialize()
 
         // NOTE: Create depth stencil buffer
         std::tie(depthStencilBuffer, err) = graphicsDevice->CreateDepthStencilBuffer(
-            presentationParameters.BackBufferWidth,
-            presentationParameters.BackBufferHeight,
-            presentationParameters.DepthStencilFormat);
+            presentationParameters.backBufferWidth,
+            presentationParameters.backBufferHeight,
+            presentationParameters.depthStencilFormat);
 
         if (err != nullptr) {
             return errors::Wrap(std::move(err), "failed to create render target");
         }
 
         postProcessCompositor.SetViewportSize(
-            *graphicsDevice, presentationParameters.BackBufferWidth,
-            presentationParameters.BackBufferHeight,
-            presentationParameters.DepthStencilFormat);
+            *graphicsDevice, presentationParameters.backBufferWidth,
+            presentationParameters.backBufferHeight,
+            presentationParameters.depthStencilFormat);
 
         postProcessCompositor.Composite({
             fxaa,
@@ -139,16 +139,16 @@ std::unique_ptr<Error> GameMain::Initialize()
                 width,
                 height,
                 false,
-                presentationParameters.BackBufferFormat));
+                presentationParameters.backBufferFormat));
 
             depthStencilBuffer = std::get<0>(graphicsDevice->CreateDepthStencilBuffer(
                 width,
                 height,
-                presentationParameters.DepthStencilFormat));
+                presentationParameters.depthStencilFormat));
 
             postProcessCompositor.SetViewportSize(
                 *graphicsDevice, width, height,
-                presentationParameters.DepthStencilFormat);
+                presentationParameters.depthStencilFormat);
         });
     }
     {
@@ -334,14 +334,14 @@ void GameMain::Draw()
 
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
-    gpu::Viewport viewport = {0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight};
+    gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
-    pass.RenderTargets[0] = {renderTarget, backgroundColor.ToVector4()};
-    pass.DepthStencilBuffer = depthStencilBuffer;
-    pass.ClearDepth = 1.0f;
-    pass.ClearStencil = std::uint8_t(0);
-    pass.Viewport = viewport;
-    pass.ScissorRect = viewport.GetBounds();
+    pass.renderTargets[0] = {renderTarget, backgroundColor.ToVector4()};
+    pass.depthStencilBuffer = depthStencilBuffer;
+    pass.clearDepth = 1.0f;
+    pass.clearStencil = std::uint8_t(0);
+    pass.viewport = viewport;
+    pass.scissorRect = viewport.GetBounds();
 
     const auto projectionMatrix = Matrix4x4::CreatePerspectiveFieldOfViewLH(
         math::ToRadians(45.0f),
