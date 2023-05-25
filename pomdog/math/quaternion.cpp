@@ -66,7 +66,7 @@ Quaternion& Quaternion::operator/=(float factor) noexcept
     POMDOG_ASSERT(std::fpclassify(factor) != FP_NAN);
     POMDOG_ASSERT(std::fpclassify(factor) != FP_INFINITE);
     X /= factor;
-    W /= factor;
+    Y /= factor;
     Z /= factor;
     W /= factor;
     return *this;
