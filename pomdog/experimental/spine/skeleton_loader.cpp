@@ -49,9 +49,9 @@ std::vector<Matrix3x2> CreateInverseBindPoseByJoints(const Skeleton& skeleton)
     bindPose.resize(skeleton.JointCount());
 
     skeletal2d::SkeletonHelper::Traverse(skeleton, skeleton.Root().Index, [&bindPose](const Joint& bone) {
-        Matrix3x2 matrix = Matrix3x2::CreateScale(bone.BindPose.Scale);
-        matrix *= Matrix3x2::CreateRotation(bone.BindPose.Rotation);
-        matrix *= Matrix3x2::CreateTranslation(bone.BindPose.Translate);
+        auto matrix = Matrix3x2::createScale(bone.BindPose.Scale);
+        matrix *= Matrix3x2::createRotation(bone.BindPose.Rotation);
+        matrix *= Matrix3x2::createTranslation(bone.BindPose.Translate);
 
         if (bone.Parent) {
             POMDOG_ASSERT(*bone.Parent < bindPose.size());
@@ -64,7 +64,7 @@ std::vector<Matrix3x2> CreateInverseBindPoseByJoints(const Skeleton& skeleton)
     });
 
     for (auto& matrix : bindPose) {
-        matrix = math::Invert(matrix);
+        matrix = math::invert(matrix);
     }
     return bindPose;
 }

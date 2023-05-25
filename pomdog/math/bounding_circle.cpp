@@ -7,16 +7,17 @@
 
 namespace pomdog {
 
-BoundingCircle::BoundingCircle(const Vector2& centerIn, float radiusIn)
+BoundingCircle::BoundingCircle(const Vector2& centerIn, float radiusIn) noexcept
     : center(centerIn)
     , radius(radiusIn)
 {
     POMDOG_ASSERT(radiusIn >= 0);
 }
 
-ContainmentType BoundingCircle::Contains(const Vector2& point) const
+ContainmentType
+BoundingCircle::contains(const Vector2& point) const noexcept
 {
-    const auto distanceSquared = math::DistanceSquared(point, center);
+    const auto distanceSquared = math::distanceSquared(point, center);
     const auto radiusSquared = radius * radius;
     if (distanceSquared > radiusSquared) {
         return ContainmentType::Disjoint;
@@ -27,11 +28,12 @@ ContainmentType BoundingCircle::Contains(const Vector2& point) const
     return ContainmentType::Intersects;
 }
 
-ContainmentType BoundingCircle::Contains(const BoundingBox2D& box) const
+ContainmentType
+BoundingCircle::contains(const BoundingBox2D& box) const noexcept
 {
     bool inside = true;
-    for (auto& corner : box.GetCorners()) {
-        if (this->Contains(corner) == ContainmentType::Disjoint) {
+    for (auto& corner : box.getCorners()) {
+        if (contains(corner) == ContainmentType::Disjoint) {
             inside = false;
             break;
         }
@@ -39,15 +41,16 @@ ContainmentType BoundingCircle::Contains(const BoundingBox2D& box) const
     if (inside) {
         return ContainmentType::Contains;
     }
-    if (this->Intersects(box)) {
+    if (intersects(box)) {
         return ContainmentType::Intersects;
     }
     return ContainmentType::Disjoint;
 }
 
-ContainmentType BoundingCircle::Contains(const BoundingCircle& circle) const
+ContainmentType
+BoundingCircle::contains(const BoundingCircle& circle) const noexcept
 {
-    const auto distance = math::Distance(center, circle.center);
+    const auto distance = math::distance(center, circle.center);
     if (distance > radius + circle.radius) {
         return ContainmentType::Disjoint;
     }
@@ -57,14 +60,14 @@ ContainmentType BoundingCircle::Contains(const BoundingCircle& circle) const
     return ContainmentType::Intersects;
 }
 
-bool BoundingCircle::Intersects(const BoundingBox2D& box) const
+bool BoundingCircle::intersects(const BoundingBox2D& box) const noexcept
 {
-    return box.Intersects(*this);
+    return box.intersects(*this);
 }
 
-bool BoundingCircle::Intersects(const BoundingCircle& circle) const
+bool BoundingCircle::intersects(const BoundingCircle& circle) const noexcept
 {
-    const auto distance = math::Distance(center, circle.center);
+    const auto distance = math::distance(center, circle.center);
     return distance <= radius + circle.radius;
 }
 

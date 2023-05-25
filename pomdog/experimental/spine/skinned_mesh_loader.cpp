@@ -68,18 +68,18 @@ CreateSkinnedMeshSlot(
         std::swap(origin.x, origin.y);
     }
 
-    Matrix3x2 scaling = Matrix3x2::CreateScale(attachment.Scale * size);
-    Matrix3x2 rotate = Matrix3x2::CreateRotation(attachment.Rotation);
+    auto scaling = Matrix3x2::createScale(attachment.Scale * size);
+    auto rotate = Matrix3x2::createRotation(attachment.Rotation);
     if (textureRegion.rotate) {
-        rotate = Matrix3x2::CreateRotation(-math::PiOver2<float>) * rotate;
+        rotate = Matrix3x2::createRotation(-math::PiOver2<float>) * rotate;
     }
-    Matrix3x2 translate = Matrix3x2::CreateTranslation(attachment.Translate);
+    const auto translate = Matrix3x2::createTranslation(attachment.Translate);
 
     POMDOG_ASSERT(*slotDesc.Joint < bindPosesInGlobal.size());
     Matrix3x2 transform = scaling * rotate * translate * bindPosesInGlobal[*slotDesc.Joint];
 
     for (auto& vertex : slot.Vertices) {
-        auto position = math::Transform(Vector2(vertex.PositionTextureCoord.x, vertex.PositionTextureCoord.y) - origin, transform);
+        auto position = math::transform(Vector2(vertex.PositionTextureCoord.x, vertex.PositionTextureCoord.y) - origin, transform);
 
         vertex.PositionTextureCoord.x = position.x;
         vertex.PositionTextureCoord.y = position.y;
@@ -115,7 +115,7 @@ CreateSkinnedMeshSlot(
         POMDOG_ASSERT(!source.Joints.empty());
         POMDOG_ASSERT(source.Joints.front());
         POMDOG_ASSERT(*source.Joints.front() < bindPosesInGlobal.size());
-        auto position = math::Transform(source.Position, bindPosesInGlobal[*source.Joints.front()]);
+        auto position = math::transform(source.Position, bindPosesInGlobal[*source.Joints.front()]);
 
         auto originInUV = Vector2{
             static_cast<float>(textureRegion.subrect.x),

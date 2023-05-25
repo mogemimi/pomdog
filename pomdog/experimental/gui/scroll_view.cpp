@@ -17,7 +17,7 @@ ScrollView::ScrollView(
     int heightIn)
     : Widget(dispatcher)
     , margin{0, 0, 0, 0}
-    , backgroundColor(Color::TransparentBlack())
+    , backgroundColor(Color::createTransparentBlack())
     , horizontalAlignment(HorizontalAlignment::Stretch)
     , needToUpdateLayout(true)
 {
@@ -194,19 +194,19 @@ std::shared_ptr<Widget> ScrollView::GetChildAt(const Point2D& position)
 {
     if (scrollBar != nullptr) {
         auto bounds = scrollBar->GetBounds();
-        if (bounds.Contains(position)) {
+        if (bounds.contains(position)) {
             return scrollBar;
         }
     }
 
     auto clipBounds = Rectangle{0, 0, GetWidth(), GetHeight()};
-    if (!clipBounds.Contains(position)) {
+    if (!clipBounds.contains(position)) {
         return nullptr;
     }
 
     if (child != nullptr) {
         auto bounds = child->GetBounds();
-        if (bounds.Contains(position)) {
+        if (bounds.contains(position)) {
             return child;
         }
     }
@@ -328,7 +328,7 @@ void ScrollView::Draw(DrawingContext& drawingContext)
         primitiveBatch->Flush();
     }
 
-    auto innerBoundPos = math::ToVector2(globalPos);
+    auto innerBoundPos = math::toVector2(globalPos);
 
     // NOTE: Mask scissor
     drawingContext.PushScissorRect(Rectangle{

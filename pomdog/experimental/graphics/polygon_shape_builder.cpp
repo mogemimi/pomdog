@@ -96,7 +96,7 @@ void PolygonShapeBuilder::DrawArc(
     };
 
     auto prevPoint = computePoint(0);
-    auto colorVector = color.ToVector4();
+    auto colorVector = color.toVector4();
 
     for (int i = 0; i < segments; ++i) {
         auto nextPoint = computePoint(i + 1);
@@ -162,7 +162,7 @@ void PolygonShapeBuilder::DrawBox(
         v = ((v - originPivot) * scale) + position;
     }
 
-    const auto colorVector = color.ToVector4();
+    const auto colorVector = color.toVector4();
     auto draw = [&](int a, int b, int c) {
         DrawTriangle(
             boxVertices[a],
@@ -222,7 +222,7 @@ void PolygonShapeBuilder::DrawCircle(
     Radian<float> centralAngle = math::TwoPi<float> / segments;
     auto prevPoint = position + Vector3{radius, 0, 0};
 
-    auto colorVector = color.ToVector4();
+    auto colorVector = color.toVector4();
 
     for (int i = 0; i < segments; ++i) {
         auto rad = centralAngle * static_cast<float>(i + 1);
@@ -260,8 +260,8 @@ void PolygonShapeBuilder::DrawLine(
     auto vec = end - start;
     std::swap(vec.x, vec.y);
 
-    auto a = math::Normalize(vec * Vector2{1, -1}) * halfWeight;
-    auto b = math::Normalize(vec * Vector2{-1, 1}) * halfWeight;
+    auto a = math::normalize(vec * Vector2{1, -1}) * halfWeight;
+    auto b = math::normalize(vec * Vector2{-1, 1}) * halfWeight;
 
     Vector3 p1 = Vector3{start + a, 0.0f};
     Vector3 p2 = Vector3{start + b, 0.0f};
@@ -296,8 +296,8 @@ void PolygonShapeBuilder::DrawPolyline(
         auto vec = end - start;
         std::swap(vec.x, vec.y);
 
-        auto a = math::Normalize(vec * Vector2{1, -1}) * halfThickness;
-        auto b = math::Normalize(vec * Vector2{-1, 1}) * halfThickness;
+        auto a = math::normalize(vec * Vector2{1, -1}) * halfThickness;
+        auto b = math::normalize(vec * Vector2{-1, 1}) * halfThickness;
 
         Vector3 p1 = Vector3{start + a, 0.0f};
         Vector3 p2 = Vector3{start + b, 0.0f};
@@ -328,16 +328,16 @@ void PolygonShapeBuilder::DrawRectangle(
     }
 
     std::array<Vector3, 4> rectVertices = {{
-        Vector3{static_cast<float>(sourceRect.GetLeft()), static_cast<float>(sourceRect.y), 0.0f},
-        Vector3{static_cast<float>(sourceRect.GetLeft()), static_cast<float>(sourceRect.y + sourceRect.height), 0.0f},
-        Vector3{static_cast<float>(sourceRect.GetRight()), static_cast<float>(sourceRect.y + sourceRect.height), 0.0f},
-        Vector3{static_cast<float>(sourceRect.GetRight()), static_cast<float>(sourceRect.y), 0.0f},
+        Vector3{static_cast<float>(sourceRect.getLeft()), static_cast<float>(sourceRect.y), 0.0f},
+        Vector3{static_cast<float>(sourceRect.getLeft()), static_cast<float>(sourceRect.y + sourceRect.height), 0.0f},
+        Vector3{static_cast<float>(sourceRect.getRight()), static_cast<float>(sourceRect.y + sourceRect.height), 0.0f},
+        Vector3{static_cast<float>(sourceRect.getRight()), static_cast<float>(sourceRect.y), 0.0f},
     }};
 
-    auto colorVector1 = color1.ToVector4();
-    auto colorVector2 = color2.ToVector4();
-    auto colorVector3 = color3.ToVector4();
-    auto colorVector4 = color4.ToVector4();
+    const auto colorVector1 = color1.toVector4();
+    const auto colorVector2 = color2.toVector4();
+    const auto colorVector3 = color3.toVector4();
+    const auto colorVector4 = color4.toVector4();
 
     DrawTriangle(
         rectVertices[0], rectVertices[1], rectVertices[2],
@@ -382,15 +382,15 @@ void PolygonShapeBuilder::DrawRectangle(
     }};
 
     for (auto& vertex : rectVertices) {
-        auto vec2 = math::Transform(Vector2{vertex.x, vertex.y}, matrix);
+        const auto vec2 = math::transform(Vector2{vertex.x, vertex.y}, matrix);
         vertex.x = vec2.x;
         vertex.y = vec2.y;
     }
 
-    auto colorVector1 = color1.ToVector4();
-    auto colorVector2 = color2.ToVector4();
-    auto colorVector3 = color3.ToVector4();
-    auto colorVector4 = color4.ToVector4();
+    const auto colorVector1 = color1.toVector4();
+    const auto colorVector2 = color2.toVector4();
+    const auto colorVector3 = color3.toVector4();
+    const auto colorVector4 = color4.toVector4();
 
     DrawTriangle(
         rectVertices[0], rectVertices[1], rectVertices[2],
@@ -424,7 +424,7 @@ void PolygonShapeBuilder::DrawRectangle(
         Vector3{maxX, minY, 0.0f},
     }};
 
-    auto colorVector = color.ToVector4();
+    const auto colorVector = color.toVector4();
 
     DrawTriangle(
         rectVertices[0], rectVertices[1], rectVertices[2],
@@ -468,7 +468,7 @@ void PolygonShapeBuilder::DrawSphere(
         }
     }
 
-    const auto colorVector = color.ToVector4();
+    const auto colorVector = color.toVector4();
     const auto drawIndices = [&](std::size_t a, std::size_t b, std::size_t c, std::size_t d) {
         POMDOG_ASSERT(a < sphereVertices.size());
         POMDOG_ASSERT(b < sphereVertices.size());
@@ -507,7 +507,7 @@ void PolygonShapeBuilder::DrawTriangle(
     const Vector2& point3,
     const Color& color)
 {
-    auto colorVector = color.ToVector4();
+    auto colorVector = color.toVector4();
     DrawTriangle(
         Vector3{point1, 0.0f},
         Vector3{point2, 0.0f},
@@ -527,9 +527,9 @@ void PolygonShapeBuilder::DrawTriangle(
         Vector3{point1, 0.0f},
         Vector3{point2, 0.0f},
         Vector3{point3, 0.0f},
-        color1.ToVector4(),
-        color2.ToVector4(),
-        color3.ToVector4());
+        color1.toVector4(),
+        color2.toVector4(),
+        color3.toVector4());
 }
 
 void PolygonShapeBuilder::DrawTriangle(
@@ -541,7 +541,7 @@ void PolygonShapeBuilder::DrawTriangle(
     const Color& color3)
 {
     DrawTriangle(point1, point2, point3,
-        color1.ToVector4(), color2.ToVector4(), color3.ToVector4());
+        color1.toVector4(), color2.toVector4(), color3.toVector4());
 }
 
 void PolygonShapeBuilder::DrawTriangle(

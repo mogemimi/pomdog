@@ -36,8 +36,8 @@ public:
     Matrix3x3& operator/=(float factor) noexcept;
 
     // Unary operators:
-    Matrix3x3 operator+() const noexcept;
-    Matrix3x3 operator-() const noexcept;
+    [[nodiscard]] Matrix3x3 operator+() const noexcept;
+    [[nodiscard]] Matrix3x3 operator-() const noexcept;
 
     // Binary operators:
     [[nodiscard]] Matrix3x3 operator+(const Matrix3x3& other) const noexcept;
@@ -53,43 +53,44 @@ public:
     [[nodiscard]] const float& operator()(std::size_t row, std::size_t column) const noexcept;
     [[nodiscard]] float& operator()(std::size_t row, std::size_t column) noexcept;
 
-    void SetScale(const Vector3& scale) noexcept;
+    void setScale(const Vector3& scale) noexcept;
 
     [[nodiscard]] Vector3
-    GetScale() const noexcept;
+    getScale() const noexcept;
 
     /// Returns pointer to the first element.
-    [[nodiscard]] const float* Data() const noexcept;
+    [[nodiscard]] const float* data() const noexcept;
 
     /// Returns pointer to the first element.
-    [[nodiscard]] float* Data() noexcept;
+    [[nodiscard]] float* data() noexcept;
 
     [[nodiscard]] static Matrix3x3
-    CreateTranslation(const Vector2& position) noexcept;
+    createTranslation(const Vector2& position) noexcept;
 
     [[nodiscard]] static Matrix3x3
-    CreateScale(float scale) noexcept;
+    createScale(float scale) noexcept;
 
     [[nodiscard]] static Matrix3x3
-    CreateScale(const Vector3& scale) noexcept;
+    createScale(const Vector3& scale) noexcept;
 
     [[nodiscard]] static Matrix3x3
-    CreateRotationX(const Radian<float>& angle);
+    createRotationX(const Radian<float>& angle);
 
     [[nodiscard]] static Matrix3x3
-    CreateRotationY(const Radian<float>& angle);
+    createRotationY(const Radian<float>& angle);
 
     [[nodiscard]] static Matrix3x3
-    CreateRotationZ(const Radian<float>& angle);
+    createRotationZ(const Radian<float>& angle);
 
     [[nodiscard]] static Matrix3x3
-    CreateFromQuaternion(const Quaternion& quaternion);
+    createFromQuaternion(const Quaternion& quaternion);
 
     [[nodiscard]] static Matrix3x3
-    CreateFromAxisAngle(const Vector3& axis, const Radian<float>& angle);
+    createFromAxisAngle(const Vector3& axis, const Radian<float>& angle);
 
     /// Returns the identity matrix.
-    [[nodiscard]] static Matrix3x3 Identity() noexcept;
+    [[nodiscard]] static Matrix3x3
+    createIdentity() noexcept;
 };
 
 /// Multiplies a matrix by a scalar factor.
@@ -102,34 +103,34 @@ namespace pomdog::math {
 
 /// Calculates and returns the determinant of the matrix.
 [[nodiscard]] float POMDOG_EXPORT
-Determinant(const Matrix3x3& matrix) noexcept;
+determinant(const Matrix3x3& matrix) noexcept;
 
 /// Returns the minor of a matrix.
 [[nodiscard]] Matrix2x2 POMDOG_EXPORT
-Minor2x2(const Matrix3x3& matrix, std::size_t row, std::size_t column);
+minor2x2(const Matrix3x3& matrix, std::size_t row, std::size_t column);
 
 /// Multiplies a matrix by another matrix.
 [[nodiscard]] Matrix3x3 POMDOG_EXPORT
-Multiply(const Matrix3x3& matrix1, const Matrix3x3& matrix2) noexcept;
+multiply(const Matrix3x3& matrix1, const Matrix3x3& matrix2) noexcept;
 
 /// Multiplies a matrix by a scalar factor.
 [[nodiscard]] Matrix3x3 POMDOG_EXPORT
-Multiply(const Matrix3x3& matrix1, float factor) noexcept;
+multiply(const Matrix3x3& matrix1, float factor) noexcept;
 
 /// Calculates and returns the adjoint matrix.
 [[nodiscard]] Matrix3x3 POMDOG_EXPORT
-Adjoint(const Matrix3x3& matrix);
+adjoint(const Matrix3x3& matrix);
 
 /// Returns a matrix that transposes the rows and columns of the input matrix.
 [[nodiscard]] Matrix3x3 POMDOG_EXPORT
-Transpose(const Matrix3x3& matrix) noexcept;
+transpose(const Matrix3x3& matrix) noexcept;
 
 /// Calculates and returns the inverse of a matrix.
 [[nodiscard]] Matrix3x3 POMDOG_EXPORT
-Invert(const Matrix3x3& matrix);
+invert(const Matrix3x3& matrix);
 
 /// Performs a linear interpolation between two matrices.
 [[nodiscard]] Matrix3x3 POMDOG_EXPORT
-Lerp(const Matrix3x3& source1, const Matrix3x3& source2, float amount) noexcept;
+lerp(const Matrix3x3& source1, const Matrix3x3& source2, float amount) noexcept;
 
 } // namespace pomdog::math

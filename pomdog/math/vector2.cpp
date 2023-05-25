@@ -112,17 +112,17 @@ bool Vector2::operator!=(const Vector2& other) const noexcept
     return x != other.x || y != other.y;
 }
 
-const float* Vector2::Data() const noexcept
+const float* Vector2::data() const noexcept
 {
     return &x;
 }
 
-float* Vector2::Data() noexcept
+float* Vector2::data() noexcept
 {
     return &x;
 }
 
-Vector2 Vector2::Zero() noexcept
+Vector2 Vector2::createZero() noexcept
 {
     return Vector2{0.0f, 0.0f};
 }
@@ -138,84 +138,84 @@ operator*(float factor, const Vector2& vector) noexcept
 namespace pomdog::math {
 
 [[nodiscard]] float
-Length(const Vector2& v) noexcept
+length(const Vector2& v) noexcept
 {
     return std::sqrt(v.x * v.x + v.y * v.y);
 }
 
 [[nodiscard]] float
-LengthSquared(const Vector2& v) noexcept
+lengthSquared(const Vector2& v) noexcept
 {
     return v.x * v.x + v.y * v.y;
 }
 
 [[nodiscard]] float
-Distance(const Vector2& a, const Vector2& b) noexcept
+distance(const Vector2& a, const Vector2& b) noexcept
 {
-    return math::Length(a - b);
+    return math::length(a - b);
 }
 
 [[nodiscard]] float
-DistanceSquared(const Vector2& a, const Vector2& b) noexcept
+distanceSquared(const Vector2& a, const Vector2& b) noexcept
 {
-    return math::LengthSquared(a - b);
+    return math::lengthSquared(a - b);
 }
 
 [[nodiscard]] float
-Dot(const Vector2& a, const Vector2& b) noexcept
+dot(const Vector2& a, const Vector2& b) noexcept
 {
     return a.x * b.x + a.y * b.y;
 }
 
 [[nodiscard]] float
-Cross(const Vector2& a, const Vector2& b) noexcept
+cross(const Vector2& a, const Vector2& b) noexcept
 {
     return a.x * b.y - a.y * b.x;
 }
 
 [[nodiscard]] Vector2
-Min(const Vector2& a, const Vector2& b) noexcept
+min(const Vector2& a, const Vector2& b) noexcept
 {
     return Vector2{std::min(a.x, b.x), std::min(a.y, b.y)};
 }
 
 [[nodiscard]] Vector2
-Max(const Vector2& a, const Vector2& b) noexcept
+max(const Vector2& a, const Vector2& b) noexcept
 {
     return Vector2{std::max(a.x, b.x), std::max(a.y, b.y)};
 }
 
 [[nodiscard]] Vector2
-Clamp(const Vector2& source, const Vector2& min, const Vector2& max) noexcept
+clamp(const Vector2& source, const Vector2& min, const Vector2& max) noexcept
 {
     return Vector2{
-        math::Clamp(source.x, min.x, max.x),
-        math::Clamp(source.y, min.y, max.y),
+        math::clamp(source.x, min.x, max.x),
+        math::clamp(source.y, min.y, max.y),
     };
 }
 
 [[nodiscard]] Vector2
-Lerp(const Vector2& source1, const Vector2& source2, float amount)
+lerp(const Vector2& source1, const Vector2& source2, float amount)
 {
     return Vector2{
-        math::Lerp(source1.x, source2.x, amount),
-        math::Lerp(source1.y, source2.y, amount),
+        math::lerp(source1.x, source2.x, amount),
+        math::lerp(source1.y, source2.y, amount),
     };
 }
 
 [[nodiscard]] Vector2
-SmoothStep(const Vector2& source1, const Vector2& source2, float amount)
+smoothstep(const Vector2& source1, const Vector2& source2, float amount)
 {
     return Vector2{
-        math::SmoothStep(source1.x, source2.x, amount),
-        math::SmoothStep(source1.y, source2.y, amount),
+        math::smoothstep(source1.x, source2.x, amount),
+        math::smoothstep(source1.y, source2.y, amount),
     };
 }
 
 [[nodiscard]] Vector2
-Normalize(const Vector2& source) noexcept
+normalize(const Vector2& source) noexcept
 {
-    const auto length = math::Length(source);
+    const auto length = math::length(source);
 
     if (length > std::numeric_limits<decltype(length)>::epsilon()) {
         POMDOG_ASSERT(std::fpclassify(length) != FP_ZERO);
@@ -228,7 +228,7 @@ Normalize(const Vector2& source) noexcept
 }
 
 [[nodiscard]] Vector2
-Rotate(const Vector2& vector, const Radian<float>& radian) noexcept
+rotate(const Vector2& vector, const Radian<float>& radian) noexcept
 {
     const auto sin = std::sin(radian.value);
     const auto cos = std::cos(radian.value);
@@ -239,7 +239,7 @@ Rotate(const Vector2& vector, const Radian<float>& radian) noexcept
 }
 
 [[nodiscard]] Vector2
-Transform(const Vector2& position, const Matrix3x2& matrix) noexcept
+transform(const Vector2& position, const Matrix3x2& matrix) noexcept
 {
     return Vector2{
         (position.x * matrix.m[0][0]) + (position.y * matrix.m[1][0]) + matrix.m[2][0],
@@ -248,7 +248,7 @@ Transform(const Vector2& position, const Matrix3x2& matrix) noexcept
 }
 
 [[nodiscard]] Vector2
-Transform(const Vector2& position, const Matrix4x4& matrix) noexcept
+transform(const Vector2& position, const Matrix4x4& matrix) noexcept
 {
     return Vector2{
         (position.x * matrix.m[0][0]) + (position.y * matrix.m[1][0]) + matrix.m[3][0],
@@ -257,7 +257,7 @@ Transform(const Vector2& position, const Matrix4x4& matrix) noexcept
 }
 
 [[nodiscard]] Vector2
-Transform(const Vector2& position, const Quaternion& rotation) noexcept
+transform(const Vector2& position, const Quaternion& rotation) noexcept
 {
     const auto x = 2 * (position.y * -rotation.z);
     const auto y = 2 * (position.x * rotation.z);
@@ -270,7 +270,7 @@ Transform(const Vector2& position, const Quaternion& rotation) noexcept
 }
 
 [[nodiscard]] Vector2
-TransformNormal(const Vector2& normal, const Matrix4x4& matrix) noexcept
+transformNormal(const Vector2& normal, const Matrix4x4& matrix) noexcept
 {
     return Vector2{
         (normal.x * matrix.m[0][0]) + (normal.y * matrix.m[1][0]),

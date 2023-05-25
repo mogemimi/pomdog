@@ -84,7 +84,7 @@ void DisclosureTriangleButton::Draw(DrawingContext& drawingContext)
         thumbColor = Color{162, 160, 161, 255};
     }
 
-    const auto transformOffset = math::ToVector2(globalPos);
+    const auto transformOffset = math::toVector2(globalPos);
 
     constexpr float triangleWidth = 7.0f;
     constexpr float triangleHeight = triangleWidth * 1.73205f * 0.5f;

@@ -152,7 +152,7 @@ std::unique_ptr<Error> HardwareInstancingTest::Initialize()
     {
         SpriteInfo sprite;
         sprite.Translation = Vector4{0.0f, 0.0f, 32.0f, 32.0f};
-        sprite.Color = Color::White().ToVector4();
+        sprite.Color = Color::createWhite().toVector4();
 
         // NOTE: Add new sprite
         sprites.push_back(std::move(sprite));
@@ -208,8 +208,8 @@ void HardwareInstancingTest::Draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
-    auto viewMatrix = Matrix4x4::Identity();
-    auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
+    auto viewMatrix = Matrix4x4::createIdentity();
+    auto projectionMatrix = Matrix4x4::createOrthographicLH(
         static_cast<float>(presentationParameters.backBufferWidth),
         static_cast<float>(presentationParameters.backBufferHeight),
         0.0f,
@@ -224,7 +224,7 @@ void HardwareInstancingTest::Draw()
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
-    pass.renderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
+    pass.renderTargets[0] = {nullptr, Color::createCornflowerBlue().toVector4()};
     pass.depthStencilBuffer = nullptr;
     pass.clearDepth = 1.0f;
     pass.clearStencil = std::uint8_t(0);

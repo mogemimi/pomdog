@@ -33,8 +33,8 @@ public:
     Point3D& operator/=(std::int32_t factor) noexcept;
 
     // Unary operators:
-    Point3D operator+() const noexcept;
-    Point3D operator-() const noexcept;
+    [[nodiscard]] Point3D operator+() const noexcept;
+    [[nodiscard]] Point3D operator-() const noexcept;
 
     // Binary operators:
     [[nodiscard]] Point3D operator+(const Point3D&) const noexcept;
@@ -48,7 +48,8 @@ public:
     [[nodiscard]] bool operator!=(const Point3D&) const noexcept;
 
     /// Returns the Point3D (0, 0).
-    [[nodiscard]] static Point3D Zero() noexcept;
+    [[nodiscard]] static Point3D
+    createZero() noexcept;
 };
 
 /// Multiplies a 3D point by a scalar factor.
@@ -60,12 +61,12 @@ operator*(std::int32_t factor, const Point3D& coordinate) noexcept;
 namespace pomdog::math {
 
 [[nodiscard]] POMDOG_EXPORT Point3D
-ToPoint3D(const Vector3& vec) noexcept;
+toPoint3D(const Vector3& vec) noexcept;
 
 [[nodiscard]] POMDOG_EXPORT Vector3
-ToVector3(const Point3D& point) noexcept;
+toVector3(const Point3D& point) noexcept;
 
 [[nodiscard]] POMDOG_EXPORT Point3D
-Abs(const Point3D& point) noexcept;
+abs(const Point3D& point) noexcept;
 
 } // namespace pomdog::math

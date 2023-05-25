@@ -119,7 +119,7 @@ AssetLoader<magicavoxel::VoxModel>::operator()([[maybe_unused]] AssetManager& as
         else if (chunk.ID == IdRGBA) {
             model->ColorPalette = BinaryReader::Read<decltype(model->ColorPalette)>(stream);
 
-            model->ColorPalette.back() = Color::Black();
+            model->ColorPalette.back() = Color::createBlack();
 
             POMDOG_ASSERT(model->ColorPalette.size() == 256);
             std::rotate(

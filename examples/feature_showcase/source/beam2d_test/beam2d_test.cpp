@@ -70,7 +70,7 @@ std::unique_ptr<Error> Beam2DTest::Initialize()
         auto pos = mousePos;
         pos.x = pos.x - (clientBounds.width / 2);
         pos.y = -pos.y + (clientBounds.height / 2);
-        emitterTarget = math::ToVector2(pos);
+        emitterTarget = math::toVector2(pos);
     });
 
     return nullptr;
@@ -78,7 +78,7 @@ std::unique_ptr<Error> Beam2DTest::Initialize()
 
 void Beam2DTest::Update()
 {
-    const auto emitterPosition = Vector2::Zero();
+    const auto emitterPosition = Vector2::createZero();
     const auto clock = gameHost->GetClock();
     const auto frameDuration = clock->GetFrameDuration();
     beamSystem->Update(frameDuration, emitterPosition, emitterTarget);
@@ -90,7 +90,7 @@ void Beam2DTest::Draw()
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
-    pass.renderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
+    pass.renderTargets[0] = {nullptr, Color::createCornflowerBlue().toVector4()};
     pass.depthStencilBuffer = nullptr;
     pass.clearDepth = 1.0f;
     pass.clearStencil = std::uint8_t(0);
@@ -100,7 +100,7 @@ void Beam2DTest::Draw()
     commandList->Reset();
     commandList->SetRenderPass(std::move(pass));
 
-    auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
+    auto projectionMatrix = Matrix4x4::createOrthographicLH(
         static_cast<float>(presentationParameters.backBufferWidth),
         static_cast<float>(presentationParameters.backBufferHeight),
         0.0f,

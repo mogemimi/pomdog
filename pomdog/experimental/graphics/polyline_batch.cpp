@@ -219,7 +219,7 @@ void PolylineBatch::Impl::Begin(
     POMDOG_ASSERT(commandListIn);
     commandList = commandListIn;
 
-    alignas(16) Matrix4x4 transposedMatrix = math::Transpose(transformMatrix);
+    alignas(16) Matrix4x4 transposedMatrix = math::transpose(transformMatrix);
     constantBuffer->SetData(0, gpu::MakeByteSpan(transposedMatrix));
 }
 
@@ -292,7 +292,7 @@ void PolylineBatch::Impl::DrawPath(std::vector<PolylineBatchVertex>&& path, bool
     for (int i = 0; i < n; i++) {
         POMDOG_ASSERT(n >= 2);
         const auto& v = path[i];
-        auto color = v.Color.ToVector4();
+        auto color = v.Color.toVector4();
 
         Vector3 prevPoint;
         Vector3 nextPoint;
@@ -307,7 +307,7 @@ void PolylineBatch::Impl::DrawPath(std::vector<PolylineBatchVertex>&& path, bool
                 prevPoint = start;
                 nextPoint = end;
 
-                if (math::DistanceSquared(v.Position, nextPoint) < 0.0001f) {
+                if (math::distanceSquared(v.Position, nextPoint) < 0.0001f) {
                     auto dir = v.Position - start;
                     nextPoint = v.Position + dir;
                 }
@@ -330,7 +330,7 @@ void PolylineBatch::Impl::DrawPath(std::vector<PolylineBatchVertex>&& path, bool
                 prevPoint = start;
                 nextPoint = end;
 
-                if (math::DistanceSquared(v.Position, nextPoint) < 0.0001f) {
+                if (math::distanceSquared(v.Position, nextPoint) < 0.0001f) {
                     auto dir = v.Position - start;
                     nextPoint = v.Position + dir;
                 }
@@ -351,7 +351,7 @@ void PolylineBatch::Impl::DrawPath(std::vector<PolylineBatchVertex>&& path, bool
             prevPoint = start;
             nextPoint = end;
 
-            if (math::DistanceSquared(v.Position, nextPoint) < 0.0001f) {
+            if (math::distanceSquared(v.Position, nextPoint) < 0.0001f) {
                 auto dir = v.Position - start;
                 nextPoint = v.Position + dir;
             }
@@ -360,9 +360,9 @@ void PolylineBatch::Impl::DrawPath(std::vector<PolylineBatchVertex>&& path, bool
         if (i < (n - 1) || closed) {
             // NOTE: shape corner
             constexpr float cutoff = -0.90f;
-            const auto v1 = math::Normalize(v.Position - prevPoint);
-            const auto v2 = math::Normalize(nextPoint - v.Position);
-            if (math::Dot(v2, v1) < cutoff) {
+            const auto v1 = math::normalize(v.Position - prevPoint);
+            const auto v2 = math::normalize(nextPoint - v.Position);
+            if (math::dot(v2, v1) < cutoff) {
                 const auto next = v.Position + v1;
                 vertices.push_back(MakeVertex(v.Position, next, prevPoint, color, -1.0f, thickness));
                 vertices.push_back(MakeVertex(v.Position, next, prevPoint, color, 1.0f, thickness));
@@ -455,7 +455,7 @@ void PolylineBatch::DrawPath(const std::vector<Vector2>& path, bool closed, cons
 
 void PolylineBatch::DrawBox(const BoundingBox& box, const Color& color, float thickness)
 {
-    this->DrawBox(box.min, box.max - box.min, Vector3::Zero(), color, thickness);
+    this->DrawBox(box.min, box.max - box.min, Vector3::createZero(), color, thickness);
 }
 
 void PolylineBatch::DrawBox(
@@ -464,7 +464,7 @@ void PolylineBatch::DrawBox(
     const Color& color,
     float thickness)
 {
-    this->DrawBox(position, scale, Vector3::Zero(), color, thickness);
+    this->DrawBox(position, scale, Vector3::createZero(), color, thickness);
 }
 
 void PolylineBatch::DrawBox(
@@ -591,10 +591,10 @@ void PolylineBatch::DrawRectangle(const Rectangle& sourceRect,
     }
 
     std::array<Vector2, 4> rectVertices = {{
-        Vector2{static_cast<float>(sourceRect.GetLeft()), static_cast<float>(sourceRect.y - sourceRect.height)},
-        Vector2{static_cast<float>(sourceRect.GetLeft()), static_cast<float>(sourceRect.y)},
-        Vector2{static_cast<float>(sourceRect.GetRight()), static_cast<float>(sourceRect.y)},
-        Vector2{static_cast<float>(sourceRect.GetRight()), static_cast<float>(sourceRect.y - sourceRect.height)},
+        Vector2{static_cast<float>(sourceRect.getLeft()), static_cast<float>(sourceRect.y - sourceRect.height)},
+        Vector2{static_cast<float>(sourceRect.getLeft()), static_cast<float>(sourceRect.y)},
+        Vector2{static_cast<float>(sourceRect.getRight()), static_cast<float>(sourceRect.y)},
+        Vector2{static_cast<float>(sourceRect.getRight()), static_cast<float>(sourceRect.y - sourceRect.height)},
     }};
 
     this->DrawLine(rectVertices[0], rectVertices[1], color1, color2, thickness);
@@ -613,14 +613,14 @@ void PolylineBatch::DrawRectangle(const Matrix3x2& matrix,
     }
 
     std::array<Vector2, 4> rectVertices = {{
-        Vector2{static_cast<float>(sourceRect.GetLeft()), static_cast<float>(sourceRect.y - sourceRect.height)},
-        Vector2{static_cast<float>(sourceRect.GetLeft()), static_cast<float>(sourceRect.y)},
-        Vector2{static_cast<float>(sourceRect.GetRight()), static_cast<float>(sourceRect.y)},
-        Vector2{static_cast<float>(sourceRect.GetRight()), static_cast<float>(sourceRect.y - sourceRect.height)},
+        Vector2{static_cast<float>(sourceRect.getLeft()), static_cast<float>(sourceRect.y - sourceRect.height)},
+        Vector2{static_cast<float>(sourceRect.getLeft()), static_cast<float>(sourceRect.y)},
+        Vector2{static_cast<float>(sourceRect.getRight()), static_cast<float>(sourceRect.y)},
+        Vector2{static_cast<float>(sourceRect.getRight()), static_cast<float>(sourceRect.y - sourceRect.height)},
     }};
 
     for (auto& vertex : rectVertices) {
-        vertex = math::Transform(vertex, matrix);
+        vertex = math::transform(vertex, matrix);
     }
 
     this->DrawLine(rectVertices[0], rectVertices[1], color, color, thickness);

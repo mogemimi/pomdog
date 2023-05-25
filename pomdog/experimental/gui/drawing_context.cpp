@@ -255,10 +255,10 @@ void DrawingContext::PushScissorRect(const Rectangle& scissorRect)
         rect.width = 0;
         rect.height = 0;
     }
-    else if (parentRect.Contains(rect)) {
+    else if (parentRect.contains(rect)) {
         // NOTE: Not to do
     }
-    else if (parentRect.Intersects(rect)) {
+    else if (parentRect.intersects(rect)) {
         if (rect.x < parentRect.x) {
             const auto offset = parentRect.x - rect.x;
             rect.x = parentRect.x;

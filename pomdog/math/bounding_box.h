@@ -25,31 +25,31 @@ public:
 public:
     BoundingBox() noexcept = default;
 
-    BoundingBox(const Vector3& min, const Vector3& max);
+    BoundingBox(const Vector3& min, const Vector3& max) noexcept;
 
     [[nodiscard]] ContainmentType
-    Contains(const Vector3& point) const;
+    contains(const Vector3& point) const noexcept;
 
     [[nodiscard]] ContainmentType
-    Contains(const BoundingBox& box) const;
+    contains(const BoundingBox& box) const noexcept;
 
     [[nodiscard]] ContainmentType
-    Contains(const BoundingSphere& sphere) const;
+    contains(const BoundingSphere& sphere) const noexcept;
 
     [[nodiscard]] bool
-    Intersects(const BoundingBox& box) const;
+    intersects(const BoundingBox& box) const noexcept;
 
     [[nodiscard]] bool
-    Intersects(const BoundingSphere& sphere) const;
+    intersects(const BoundingSphere& sphere) const noexcept;
 
     [[nodiscard]] PlaneIntersectionType
-    Intersects(const Plane& plane) const;
+    intersects(const Plane& plane) const noexcept;
 
     [[nodiscard]] std::optional<float>
-    Intersects(const Ray& ray) const;
+    intersects(const Ray& ray) const noexcept;
 
     [[nodiscard]] std::array<Vector3, CornerCount>
-    GetCorners() const noexcept;
+    getCorners() const noexcept;
 };
 
 } // namespace pomdog

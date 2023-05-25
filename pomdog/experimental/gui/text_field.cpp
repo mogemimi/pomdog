@@ -122,8 +122,8 @@ void TextField::MarkParentTransformDirty()
 std::shared_ptr<Widget> TextField::GetChildAt(const Point2D& position)
 {
     if (textEdit != nullptr) {
-        auto bounds = textEdit->GetBounds();
-        if (bounds.Contains(position)) {
+        const auto bounds = textEdit->GetBounds();
+        if (bounds.contains(position)) {
             return textEdit;
         }
     }

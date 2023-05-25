@@ -50,33 +50,43 @@ public:
     [[nodiscard]] bool operator==(const Rectangle&) const noexcept;
     [[nodiscard]] bool operator!=(const Rectangle&) const noexcept;
 
-    [[nodiscard]] std::int32_t GetBottom() const noexcept;
+    [[nodiscard]] std::int32_t
+    getBottom() const noexcept;
 
-    [[nodiscard]] std::int32_t GetRight() const noexcept;
+    [[nodiscard]] std::int32_t
+    getRight() const noexcept;
 
-    [[nodiscard]] std::int32_t GetTop() const noexcept;
+    [[nodiscard]] std::int32_t
+    getTop() const noexcept;
 
-    [[nodiscard]] std::int32_t GetLeft() const noexcept;
+    [[nodiscard]] std::int32_t
+    getLeft() const noexcept;
 
-    [[nodiscard]] Point2D GetCenter() const;
+    [[nodiscard]] Point2D
+    getCenter() const;
 
-    [[nodiscard]] Point2D GetLocation() const;
+    [[nodiscard]] Point2D
+    getLocation() const;
 
-    void SetLocation(const Point2D& position);
+    void setLocation(const Point2D& position);
 
-    void Inflate(std::int32_t horizontalAmount, std::int32_t verticalAmount);
+    void inflate(std::int32_t horizontalAmount, std::int32_t verticalAmount);
 
-    void Offset(std::int32_t offsetX, std::int32_t offsetY);
+    void offset(std::int32_t offsetX, std::int32_t offsetY);
 
-    void Offset(const Point2D& offset);
+    void offset(const Point2D& offset);
 
-    [[nodiscard]] bool Contains(int x, int y) const noexcept;
+    [[nodiscard]] bool
+    contains(int x, int y) const noexcept;
 
-    [[nodiscard]] bool Contains(const Point2D& point) const noexcept;
+    [[nodiscard]] bool
+    contains(const Point2D& point) const noexcept;
 
-    [[nodiscard]] bool Contains(const Rectangle& rectangle) const;
+    [[nodiscard]] bool
+    contains(const Rectangle& rectangle) const;
 
-    [[nodiscard]] bool Intersects(const Rectangle& rectangle) const;
+    [[nodiscard]] bool
+    intersects(const Rectangle& rectangle) const;
 };
 
 } // namespace pomdog

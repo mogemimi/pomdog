@@ -61,7 +61,7 @@ float& Matrix4x4::operator()(std::size_t row, std::size_t column) noexcept
 
 Matrix4x4& Matrix4x4::operator*=(const Matrix4x4& other) noexcept
 {
-    *this = math::Multiply(*this, other);
+    *this = math::multiply(*this, other);
     return *this;
 }
 
@@ -109,7 +109,7 @@ Matrix4x4& Matrix4x4::operator-=(const Matrix4x4& other) noexcept
 
 Matrix4x4& Matrix4x4::operator*=(float factor) noexcept
 {
-    *this = math::Multiply(*this, factor);
+    *this = math::multiply(*this, factor);
     return *this;
 }
 
@@ -145,7 +145,7 @@ Matrix4x4 Matrix4x4::operator+() const noexcept
 
 Matrix4x4 Matrix4x4::operator-() const noexcept
 {
-    return math::Multiply(*this, -1);
+    return math::multiply(*this, -1);
 }
 
 Matrix4x4 Matrix4x4::operator+(const Matrix4x4& other) const noexcept
@@ -194,12 +194,12 @@ Matrix4x4 Matrix4x4::operator-(const Matrix4x4& other) const noexcept
 
 Matrix4x4 Matrix4x4::operator*(const Matrix4x4& other) const noexcept
 {
-    return math::Multiply(*this, other);
+    return math::multiply(*this, other);
 }
 
 Matrix4x4 Matrix4x4::operator*(float factor) const noexcept
 {
-    return math::Multiply(*this, factor);
+    return math::multiply(*this, factor);
 }
 
 Matrix4x4 Matrix4x4::operator/(float factor) const noexcept
@@ -268,32 +268,32 @@ bool Matrix4x4::operator!=(const Matrix4x4& other) const noexcept
            m[3][3] != other.m[3][3];
 }
 
-void Matrix4x4::SetTranslation(const Vector3& position) noexcept
+void Matrix4x4::setTranslation(const Vector3& position) noexcept
 {
     m[3][0] = position.x;
     m[3][1] = position.y;
     m[3][2] = position.z;
 }
 
-Vector3 Matrix4x4::GetTranslation() const noexcept
+Vector3 Matrix4x4::getTranslation() const noexcept
 {
     return Vector3{m[3][0], m[3][1], m[3][2]};
 }
 
-void Matrix4x4::SetScale(const Vector3& scale) noexcept
+void Matrix4x4::setScale(const Vector3& scale) noexcept
 {
     m[0][0] = scale.x;
     m[1][1] = scale.y;
     m[2][2] = scale.z;
 }
 
-Vector3 Matrix4x4::GetScale() const noexcept
+Vector3 Matrix4x4::getScale() const noexcept
 {
     return Vector3{m[0][0], m[1][1], m[2][2]};
 }
 
 Matrix4x4
-Matrix4x4::CreateTranslation(const Vector3& position) noexcept
+Matrix4x4::createTranslation(const Vector3& position) noexcept
 {
     return Matrix4x4{
         1.0f, 0.0f, 0.0f, 0.0f,
@@ -303,7 +303,7 @@ Matrix4x4::CreateTranslation(const Vector3& position) noexcept
 }
 
 Matrix4x4
-Matrix4x4::CreateScale(float scale) noexcept
+Matrix4x4::createScale(float scale) noexcept
 {
     return Matrix4x4{
         scale, 0.0f, 0.0f, 0.0f,
@@ -313,7 +313,7 @@ Matrix4x4::CreateScale(float scale) noexcept
 }
 
 Matrix4x4
-Matrix4x4::CreateScale(const Vector3& scale) noexcept
+Matrix4x4::createScale(const Vector3& scale) noexcept
 {
     return Matrix4x4{
         scale.x, 0.0f, 0.0f, 0.0f,
@@ -323,7 +323,7 @@ Matrix4x4::CreateScale(const Vector3& scale) noexcept
 }
 
 Matrix4x4
-Matrix4x4::CreateRotationX(const Radian<float>& angle)
+Matrix4x4::createRotationX(const Radian<float>& angle)
 {
     const auto sinAngle = std::sin(angle.value);
     const auto cosAngle = std::cos(angle.value);
@@ -336,7 +336,7 @@ Matrix4x4::CreateRotationX(const Radian<float>& angle)
 }
 
 Matrix4x4
-Matrix4x4::CreateRotationY(const Radian<float>& angle)
+Matrix4x4::createRotationY(const Radian<float>& angle)
 {
     const auto sinAngle = std::sin(angle.value);
     const auto cosAngle = std::cos(angle.value);
@@ -349,7 +349,7 @@ Matrix4x4::CreateRotationY(const Radian<float>& angle)
 }
 
 Matrix4x4
-Matrix4x4::CreateRotationZ(const Radian<float>& angle)
+Matrix4x4::createRotationZ(const Radian<float>& angle)
 {
     const auto sinAngle = std::sin(angle.value);
     const auto cosAngle = std::cos(angle.value);
@@ -362,7 +362,7 @@ Matrix4x4::CreateRotationZ(const Radian<float>& angle)
 }
 
 Matrix4x4
-Matrix4x4::CreateFromQuaternion(const Quaternion& quaternion)
+Matrix4x4::createFromQuaternion(const Quaternion& quaternion)
 {
     const auto xx = quaternion.x * quaternion.x;
     const auto yy = quaternion.y * quaternion.y;
@@ -398,7 +398,7 @@ Matrix4x4::CreateFromQuaternion(const Quaternion& quaternion)
 }
 
 Matrix4x4
-Matrix4x4::CreateLookAtLH(const Vector3& eye, const Vector3& at, const Vector3& up)
+Matrix4x4::createLookAtLH(const Vector3& eye, const Vector3& at, const Vector3& up)
 {
     // NOTE: Left-handed Cartesian Coordinates
     //
@@ -411,9 +411,9 @@ Matrix4x4::CreateLookAtLH(const Vector3& eye, const Vector3& at, const Vector3& 
     //  xaxis.z           yaxis.z           zaxis.z          0
     // -dot(xaxis, eye)  -dot(yaxis, eye)  -dot(zaxis, eye)  1
 
-    const auto zaxis = math::Normalize(at - eye); // RH: eye - at
-    const auto xaxis = math::Normalize(math::Cross(up, zaxis));
-    const auto yaxis = math::Cross(zaxis, xaxis);
+    const auto zaxis = math::normalize(at - eye); // RH: eye - at
+    const auto xaxis = math::normalize(math::cross(up, zaxis));
+    const auto yaxis = math::cross(zaxis, xaxis);
 
     return Matrix4x4{
         xaxis.x,
@@ -431,15 +431,15 @@ Matrix4x4::CreateLookAtLH(const Vector3& eye, const Vector3& at, const Vector3& 
         zaxis.z,
         0.0f,
 
-        -math::Dot(xaxis, eye),
-        -math::Dot(yaxis, eye),
-        -math::Dot(zaxis, eye),
+        -math::dot(xaxis, eye),
+        -math::dot(yaxis, eye),
+        -math::dot(zaxis, eye),
         1.0f,
     };
 }
 
 Matrix4x4
-Matrix4x4::CreateLookAtRH(const Vector3& eye, const Vector3& at, const Vector3& up)
+Matrix4x4::createLookAtRH(const Vector3& eye, const Vector3& at, const Vector3& up)
 {
     // NOTE: Right-handed Cartesian Coordinates
     //
@@ -452,9 +452,9 @@ Matrix4x4::CreateLookAtRH(const Vector3& eye, const Vector3& at, const Vector3& 
     //  xaxis.z           yaxis.z           zaxis.z          0
     // -dot(xaxis, eye)  -dot(yaxis, eye)  -dot(zaxis, eye)  1
 
-    const auto zaxis = math::Normalize(eye - at); // LH: at - eye
-    const auto xaxis = math::Normalize(math::Cross(up, zaxis));
-    const auto yaxis = math::Cross(zaxis, xaxis);
+    const auto zaxis = math::normalize(eye - at); // LH: at - eye
+    const auto xaxis = math::normalize(math::cross(up, zaxis));
+    const auto yaxis = math::cross(zaxis, xaxis);
 
     return Matrix4x4{
         xaxis.x,
@@ -472,15 +472,15 @@ Matrix4x4::CreateLookAtRH(const Vector3& eye, const Vector3& at, const Vector3& 
         zaxis.z,
         0.0f,
 
-        -math::Dot(xaxis, eye),
-        -math::Dot(yaxis, eye),
-        -math::Dot(zaxis, eye),
+        -math::dot(xaxis, eye),
+        -math::dot(yaxis, eye),
+        -math::dot(zaxis, eye),
         1.0f,
     };
 }
 
 Matrix4x4
-Matrix4x4::CreatePerspectiveLH(float width, float height, float zNear, float zFar)
+Matrix4x4::createPerspectiveLH(float width, float height, float zNear, float zFar)
 {
     POMDOG_ASSERT_MESSAGE(width > 0, "width: out of range");
     POMDOG_ASSERT_MESSAGE(height > 0, "height: out of range");
@@ -524,7 +524,7 @@ Matrix4x4::CreatePerspectiveLH(float width, float height, float zNear, float zFa
 }
 
 Matrix4x4
-Matrix4x4::CreatePerspectiveRH(float width, float height, float zNear, float zFar)
+Matrix4x4::createPerspectiveRH(float width, float height, float zNear, float zFar)
 {
     POMDOG_ASSERT_MESSAGE(width > 0, "width: out of range");
     POMDOG_ASSERT_MESSAGE(height > 0, "height: out of range");
@@ -568,7 +568,7 @@ Matrix4x4::CreatePerspectiveRH(float width, float height, float zNear, float zFa
 }
 
 Matrix4x4
-Matrix4x4::CreatePerspectiveFieldOfViewLH(const Radian<float>& fovy, float aspect, float zNear, float zFar)
+Matrix4x4::createPerspectiveFieldOfViewLH(const Radian<float>& fovy, float aspect, float zNear, float zFar)
 {
     POMDOG_ASSERT_MESSAGE(fovy > 0, "fovy: out of range");
     POMDOG_ASSERT_MESSAGE(aspect > 0, "aspect: out of range");
@@ -615,7 +615,7 @@ Matrix4x4::CreatePerspectiveFieldOfViewLH(const Radian<float>& fovy, float aspec
 }
 
 Matrix4x4
-Matrix4x4::CreatePerspectiveFieldOfViewRH(const Radian<float>& fovy, float aspect, float zNear, float zFar)
+Matrix4x4::createPerspectiveFieldOfViewRH(const Radian<float>& fovy, float aspect, float zNear, float zFar)
 {
     POMDOG_ASSERT_MESSAGE(fovy > 0, "fovy: out of range");
     POMDOG_ASSERT_MESSAGE(aspect > 0, "aspect: out of range");
@@ -662,7 +662,7 @@ Matrix4x4::CreatePerspectiveFieldOfViewRH(const Radian<float>& fovy, float aspec
 }
 
 Matrix4x4
-Matrix4x4::CreatePerspectiveOffCenterLH(float left, float right, float bottom, float top, float zNear, float zFar)
+Matrix4x4::createPerspectiveOffCenterLH(float left, float right, float bottom, float top, float zNear, float zFar)
 {
     POMDOG_ASSERT_MESSAGE(zNear > 0, "zNear: out of range");
     POMDOG_ASSERT_MESSAGE(zFar > 0, "zFar: out of range");
@@ -706,7 +706,7 @@ Matrix4x4::CreatePerspectiveOffCenterLH(float left, float right, float bottom, f
 }
 
 Matrix4x4
-Matrix4x4::CreatePerspectiveOffCenterRH(float left, float right, float bottom, float top, float zNear, float zFar)
+Matrix4x4::createPerspectiveOffCenterRH(float left, float right, float bottom, float top, float zNear, float zFar)
 {
     POMDOG_ASSERT_MESSAGE(zNear > 0, "zNear: out of range");
     POMDOG_ASSERT_MESSAGE(zFar > 0, "zFar: out of range");
@@ -750,7 +750,7 @@ Matrix4x4::CreatePerspectiveOffCenterRH(float left, float right, float bottom, f
 }
 
 Matrix4x4
-Matrix4x4::CreateOrthographicOffCenterLH(float left, float right, float bottom, float top, float zNearPlane, float zFarPlane)
+Matrix4x4::createOrthographicOffCenterLH(float left, float right, float bottom, float top, float zNearPlane, float zFarPlane)
 {
     POMDOG_ASSERT((right - left) != 0);
     POMDOG_ASSERT((top - bottom) != 0);
@@ -791,7 +791,7 @@ Matrix4x4::CreateOrthographicOffCenterLH(float left, float right, float bottom, 
 }
 
 Matrix4x4
-Matrix4x4::CreateOrthographicOffCenterRH(float left, float right, float bottom, float top, float zNearPlane, float zFarPlane)
+Matrix4x4::createOrthographicOffCenterRH(float left, float right, float bottom, float top, float zNearPlane, float zFarPlane)
 {
     POMDOG_ASSERT((right - left) != 0);
     POMDOG_ASSERT((top - bottom) != 0);
@@ -832,21 +832,21 @@ Matrix4x4::CreateOrthographicOffCenterRH(float left, float right, float bottom, 
 }
 
 Matrix4x4
-Matrix4x4::CreateOrthographicLH(float width, float height, float zNearPlane, float zFarPlane)
+Matrix4x4::createOrthographicLH(float width, float height, float zNearPlane, float zFarPlane)
 {
-    return CreateOrthographicOffCenterLH(
+    return createOrthographicOffCenterLH(
         -width * 0.5f, width * 0.5f, -height * 0.5f, height * 0.5f, zNearPlane, zFarPlane);
 }
 
 Matrix4x4
-Matrix4x4::CreateOrthographicRH(float width, float height, float zNearPlane, float zFarPlane)
+Matrix4x4::createOrthographicRH(float width, float height, float zNearPlane, float zFarPlane)
 {
-    return CreateOrthographicOffCenterRH(
+    return createOrthographicOffCenterRH(
         -width * 0.5f, width * 0.5f, -height * 0.5f, height * 0.5f, zNearPlane, zFarPlane);
 }
 
 Matrix4x4
-Matrix4x4::CreateFromAxisAngle(const Vector3& axis, const Radian<float>& angle)
+Matrix4x4::createFromAxisAngle(const Vector3& axis, const Radian<float>& angle)
 {
     const auto sinAngle = std::sin(angle.value);
     const auto cosAngle = std::cos(angle.value);
@@ -878,12 +878,12 @@ Matrix4x4::CreateFromAxisAngle(const Vector3& axis, const Radian<float>& angle)
     };
 }
 
-const float* Matrix4x4::Data() const noexcept
+const float* Matrix4x4::data() const noexcept
 {
     return m[0];
 }
 
-float* Matrix4x4::Data() noexcept
+float* Matrix4x4::data() noexcept
 {
     return m[0];
 }
@@ -891,10 +891,10 @@ float* Matrix4x4::Data() noexcept
 [[nodiscard]] Matrix4x4
 operator*(float factor, const Matrix4x4& matrix) noexcept
 {
-    return math::Multiply(matrix, factor);
+    return math::multiply(matrix, factor);
 }
 
-Matrix4x4 Matrix4x4::Identity() noexcept
+Matrix4x4 Matrix4x4::createIdentity() noexcept
 {
     return Matrix4x4{
         1.0f, 0.0f, 0.0f, 0.0f,
@@ -908,7 +908,7 @@ Matrix4x4 Matrix4x4::Identity() noexcept
 namespace pomdog::math {
 
 [[nodiscard]] float
-Determinant(const Matrix4x4& matrix) noexcept
+determinant(const Matrix4x4& matrix) noexcept
 {
     const auto& m = matrix.m;
 
@@ -925,7 +925,7 @@ Determinant(const Matrix4x4& matrix) noexcept
 }
 
 [[nodiscard]] Matrix3x3
-Minor3x3(const Matrix4x4& matrix, std::size_t row, std::size_t column)
+minor3x3(const Matrix4x4& matrix, std::size_t row, std::size_t column)
 {
     static_assert(std::is_same_v<decltype(matrix.m), float[4][4]>);
     constexpr std::size_t rowSize = 4;
@@ -943,7 +943,7 @@ Minor3x3(const Matrix4x4& matrix, std::size_t row, std::size_t column)
 
 #if defined(_MSC_VER) && !defined(NDEBUG)
     // NOTE: Avoid MSVC warning C4701: potentially uninitialized local variable 'minorMatrix' used
-    auto minorMatrix = Matrix3x3::Identity();
+    auto minorMatrix = Matrix3x3::createIdentity();
 #else
     Matrix3x3 minorMatrix;
 #endif
@@ -966,7 +966,7 @@ Minor3x3(const Matrix4x4& matrix, std::size_t row, std::size_t column)
 }
 
 [[nodiscard]] Matrix4x4
-Multiply(const Matrix4x4& matrix1, const Matrix4x4& matrix2) noexcept
+multiply(const Matrix4x4& matrix1, const Matrix4x4& matrix2) noexcept
 {
     const auto& a = matrix1.m;
     const auto& b = matrix2.m;
@@ -994,7 +994,7 @@ Multiply(const Matrix4x4& matrix1, const Matrix4x4& matrix2) noexcept
 }
 
 [[nodiscard]] Matrix4x4
-Multiply(const Matrix4x4& matrix1, float factor) noexcept
+multiply(const Matrix4x4& matrix1, float factor) noexcept
 {
     return Matrix4x4{
         matrix1.m[0][0] * factor,
@@ -1017,30 +1017,30 @@ Multiply(const Matrix4x4& matrix1, float factor) noexcept
 }
 
 [[nodiscard]] Matrix4x4
-Adjoint(const Matrix4x4& matrix)
+adjoint(const Matrix4x4& matrix)
 {
     return Matrix4x4{
-        +math::Determinant(math::Minor3x3(matrix, 0, 0)),
-        -math::Determinant(math::Minor3x3(matrix, 1, 0)),
-        +math::Determinant(math::Minor3x3(matrix, 2, 0)),
-        -math::Determinant(math::Minor3x3(matrix, 3, 0)),
-        -math::Determinant(math::Minor3x3(matrix, 0, 1)),
-        +math::Determinant(math::Minor3x3(matrix, 1, 1)),
-        -math::Determinant(math::Minor3x3(matrix, 2, 1)),
-        +math::Determinant(math::Minor3x3(matrix, 3, 1)),
-        +math::Determinant(math::Minor3x3(matrix, 0, 2)),
-        -math::Determinant(math::Minor3x3(matrix, 1, 2)),
-        +math::Determinant(math::Minor3x3(matrix, 2, 2)),
-        -math::Determinant(math::Minor3x3(matrix, 3, 2)),
-        -math::Determinant(math::Minor3x3(matrix, 0, 3)),
-        +math::Determinant(math::Minor3x3(matrix, 1, 3)),
-        -math::Determinant(math::Minor3x3(matrix, 2, 3)),
-        +math::Determinant(math::Minor3x3(matrix, 3, 3)),
+        +math::determinant(math::minor3x3(matrix, 0, 0)),
+        -math::determinant(math::minor3x3(matrix, 1, 0)),
+        +math::determinant(math::minor3x3(matrix, 2, 0)),
+        -math::determinant(math::minor3x3(matrix, 3, 0)),
+        -math::determinant(math::minor3x3(matrix, 0, 1)),
+        +math::determinant(math::minor3x3(matrix, 1, 1)),
+        -math::determinant(math::minor3x3(matrix, 2, 1)),
+        +math::determinant(math::minor3x3(matrix, 3, 1)),
+        +math::determinant(math::minor3x3(matrix, 0, 2)),
+        -math::determinant(math::minor3x3(matrix, 1, 2)),
+        +math::determinant(math::minor3x3(matrix, 2, 2)),
+        -math::determinant(math::minor3x3(matrix, 3, 2)),
+        -math::determinant(math::minor3x3(matrix, 0, 3)),
+        +math::determinant(math::minor3x3(matrix, 1, 3)),
+        -math::determinant(math::minor3x3(matrix, 2, 3)),
+        +math::determinant(math::minor3x3(matrix, 3, 3)),
     };
 }
 
 [[nodiscard]] Matrix4x4
-Transpose(const Matrix4x4& matrix) noexcept
+transpose(const Matrix4x4& matrix) noexcept
 {
     return Matrix4x4{
         matrix.m[0][0], matrix.m[1][0], matrix.m[2][0], matrix.m[3][0],
@@ -1050,9 +1050,9 @@ Transpose(const Matrix4x4& matrix) noexcept
 }
 
 [[nodiscard]] Matrix4x4
-Invert(const Matrix4x4& matrix)
+invert(const Matrix4x4& matrix)
 {
-    const auto determinant = math::Determinant(matrix);
+    const auto determinant = math::determinant(matrix);
 
     // NOTE: The 'matrix' must be non-singular matrix.
     POMDOG_ASSERT(std::fpclassify(determinant) != FP_ZERO);
@@ -1060,29 +1060,29 @@ Invert(const Matrix4x4& matrix)
     POMDOG_ASSERT(std::fpclassify(determinant) != FP_INFINITE);
 
     const auto inverseDet = 1.0f / determinant;
-    return Adjoint(matrix) * inverseDet;
+    return adjoint(matrix) * inverseDet;
 }
 
 [[nodiscard]] Matrix4x4
-Lerp(const Matrix4x4& source1, const Matrix4x4& source2, float amount) noexcept
+lerp(const Matrix4x4& source1, const Matrix4x4& source2, float amount) noexcept
 {
     return Matrix4x4{
-        math::Lerp(source1.m[0][0], source2.m[0][0], amount),
-        math::Lerp(source1.m[0][1], source2.m[0][1], amount),
-        math::Lerp(source1.m[0][2], source2.m[0][2], amount),
-        math::Lerp(source1.m[0][3], source2.m[0][3], amount),
-        math::Lerp(source1.m[1][0], source2.m[1][0], amount),
-        math::Lerp(source1.m[1][1], source2.m[1][1], amount),
-        math::Lerp(source1.m[1][2], source2.m[1][2], amount),
-        math::Lerp(source1.m[1][3], source2.m[1][3], amount),
-        math::Lerp(source1.m[2][0], source2.m[2][0], amount),
-        math::Lerp(source1.m[2][1], source2.m[2][1], amount),
-        math::Lerp(source1.m[2][2], source2.m[2][2], amount),
-        math::Lerp(source1.m[2][3], source2.m[2][3], amount),
-        math::Lerp(source1.m[3][0], source2.m[3][0], amount),
-        math::Lerp(source1.m[3][1], source2.m[3][1], amount),
-        math::Lerp(source1.m[3][2], source2.m[3][2], amount),
-        math::Lerp(source1.m[3][3], source2.m[3][3], amount),
+        math::lerp(source1.m[0][0], source2.m[0][0], amount),
+        math::lerp(source1.m[0][1], source2.m[0][1], amount),
+        math::lerp(source1.m[0][2], source2.m[0][2], amount),
+        math::lerp(source1.m[0][3], source2.m[0][3], amount),
+        math::lerp(source1.m[1][0], source2.m[1][0], amount),
+        math::lerp(source1.m[1][1], source2.m[1][1], amount),
+        math::lerp(source1.m[1][2], source2.m[1][2], amount),
+        math::lerp(source1.m[1][3], source2.m[1][3], amount),
+        math::lerp(source1.m[2][0], source2.m[2][0], amount),
+        math::lerp(source1.m[2][1], source2.m[2][1], amount),
+        math::lerp(source1.m[2][2], source2.m[2][2], amount),
+        math::lerp(source1.m[2][3], source2.m[2][3], amount),
+        math::lerp(source1.m[3][0], source2.m[3][0], amount),
+        math::lerp(source1.m[3][1], source2.m[3][1], amount),
+        math::lerp(source1.m[3][2], source2.m[3][2], amount),
+        math::lerp(source1.m[3][3], source2.m[3][3], amount),
     };
 }
 

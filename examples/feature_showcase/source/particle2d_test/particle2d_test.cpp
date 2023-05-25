@@ -55,15 +55,15 @@ std::shared_ptr<ParticleClip> CreateEmitterFireBlock()
 #endif
 
 #if 0
-    clip->StartColor = std::make_unique<ParticleParameterConstant<Color>>(Color::White());
+    clip->StartColor = std::make_unique<ParticleParameterConstant<Color>>(Color::createWhite());
 #else
-    clip->StartColor = std::make_unique<ParticleParameterRandom<Color>>(Color::Black(), Color{200, 180, 100, 50});
+    clip->StartColor = std::make_unique<ParticleParameterRandom<Color>>(Color::createBlack(), Color{200, 180, 100, 50});
 #endif
 
 #if 0
-    clip->ColorOverLifetime = std::make_unique<ParticleParameterConstant<Color>>(Color::White());
+    clip->ColorOverLifetime = std::make_unique<ParticleParameterConstant<Color>>(Color::createWhite());
 #elif 0
-    clip->ColorOverLifetime = std::make_unique<ParticleParameterRandom<Color>>(Color::Yellow(), Color::Black());
+    clip->ColorOverLifetime = std::make_unique<ParticleParameterRandom<Color>>(Color::createYellow(), Color::createBlack());
 #else
     clip->ColorOverLifetime = std::make_unique<ParticleParameterCurve<Color>>(
         std::initializer_list<ParticleCurveKey<Color>>{
@@ -162,7 +162,7 @@ std::unique_ptr<Error> Particle2DTest::Initialize()
     particleSystem = std::make_unique<ParticleSystem>(particleClip);
     particleSystem->Play();
 
-    emitterPosition = Vector2::Zero();
+    emitterPosition = Vector2::createZero();
 
     auto mouse = gameHost->GetMouse();
     connect(mouse->Moved, [this](const Point2D& mousePos) {
@@ -176,7 +176,7 @@ std::unique_ptr<Error> Particle2DTest::Initialize()
         auto pos = mousePos;
         pos.x = pos.x - (clientBounds.width / 2);
         pos.y = -pos.y + (clientBounds.height / 2);
-        emitterPosition = math::ToVector2(pos);
+        emitterPosition = math::toVector2(pos);
     });
 
     return nullptr;
@@ -186,7 +186,7 @@ void Particle2DTest::Update()
 {
     auto clock = gameHost->GetClock();
     auto frameDuration = clock->GetFrameDuration();
-    particleSystem->Simulate(emitterPosition, math::ToRadians(90.0f), frameDuration);
+    particleSystem->Simulate(emitterPosition, math::toRadians(90.0f), frameDuration);
 }
 
 void Particle2DTest::Draw()
@@ -195,7 +195,7 @@ void Particle2DTest::Draw()
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
-    pass.renderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
+    pass.renderTargets[0] = {nullptr, Color::createCornflowerBlue().toVector4()};
     pass.depthStencilBuffer = nullptr;
     pass.clearDepth = 1.0f;
     pass.clearStencil = std::uint8_t(0);
@@ -205,7 +205,7 @@ void Particle2DTest::Draw()
     commandList->Reset();
     commandList->SetRenderPass(std::move(pass));
 
-    auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
+    auto projectionMatrix = Matrix4x4::createOrthographicLH(
         static_cast<float>(presentationParameters.backBufferWidth),
         static_cast<float>(presentationParameters.backBufferHeight),
         0.0f,

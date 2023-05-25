@@ -33,8 +33,8 @@ void ClearState(GamepadState& state) noexcept
     state.DPad.Up = ButtonState::Released;
     state.DPad.Left = ButtonState::Released;
     state.DPad.Right = ButtonState::Released;
-    state.ThumbSticks.Left = Vector2::Zero();
-    state.ThumbSticks.Right = Vector2::Zero();
+    state.ThumbSticks.Left = Vector2::createZero();
+    state.ThumbSticks.Right = Vector2::createZero();
     state.IsConnected = false;
 }
 

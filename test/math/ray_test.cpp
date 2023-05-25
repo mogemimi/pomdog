@@ -24,32 +24,32 @@ TEST_CASE("Ray", "[Ray]")
     SECTION("Intersects_BoundingBox_1")
     {
         Ray const data[] = {
-            {Vector3::Zero(), Vector3::Zero()},
-            {Vector3::Zero(), Vector3::UnitX()},
-            {Vector3::Zero(), Vector3::UnitY()},
-            {Vector3::Zero(), Vector3::UnitZ()},
-            {Vector3::Zero(), -Vector3::UnitX()},
-            {Vector3::Zero(), -Vector3::UnitY()},
-            {Vector3::Zero(), -Vector3::UnitZ()},
+            {Vector3::createZero(), Vector3::createZero()},
+            {Vector3::createZero(), Vector3::createUnitX()},
+            {Vector3::createZero(), Vector3::createUnitY()},
+            {Vector3::createZero(), Vector3::createUnitZ()},
+            {Vector3::createZero(), -Vector3::createUnitX()},
+            {Vector3::createZero(), -Vector3::createUnitY()},
+            {Vector3::createZero(), -Vector3::createUnitZ()},
         };
 
         BoundingBox box;
         box.min = Vector3{-0.5f, -0.5f, -0.5f} * Epsilon;
         box.max = Vector3{0.5f, 0.5f, 0.5f} * Epsilon;
         for (auto ray : data) {
-            REQUIRE(ray.Intersects(box));
+            REQUIRE(ray.intersects(box));
         }
 
         box.min = Vector3{-0.5f, -0.5f, -0.5f};
         box.max = Vector3{0.5f, 0.5f, 0.5f};
         for (auto ray : data) {
-            REQUIRE(ray.Intersects(box));
+            REQUIRE(ray.intersects(box));
         }
 
         box.min = Vector3{-0.5f, -0.5f, -0.5f} * std::numeric_limits<float>::max() / 2;
         box.max = Vector3{0.5f, 0.5f, 0.5f} * std::numeric_limits<float>::max() / 2;
         for (auto ray : data) {
-            REQUIRE(ray.Intersects(box));
+            REQUIRE(ray.intersects(box));
         }
     }
     SECTION("Intersects_BoundingBox_2")
@@ -59,369 +59,369 @@ TEST_CASE("Ray", "[Ray]")
         box.max = Vector3{0.5f, 0.5f, 0.5f};
 
         Ray ray;
-        ray.position = Vector3::UnitX();
-        ray.direction = -Vector3::UnitX();
-        REQUIRE(ray.Intersects(box));
+        ray.position = Vector3::createUnitX();
+        ray.direction = -Vector3::createUnitX();
+        REQUIRE(ray.intersects(box));
 
-        ray.position = -Vector3::UnitX();
-        ray.direction = Vector3::UnitX();
-        REQUIRE(ray.Intersects(box));
+        ray.position = -Vector3::createUnitX();
+        ray.direction = Vector3::createUnitX();
+        REQUIRE(ray.intersects(box));
 
-        ray.position = Vector3::UnitY();
-        ray.direction = -Vector3::UnitY();
-        REQUIRE(ray.Intersects(box));
+        ray.position = Vector3::createUnitY();
+        ray.direction = -Vector3::createUnitY();
+        REQUIRE(ray.intersects(box));
 
-        ray.position = -Vector3::UnitY();
-        ray.direction = Vector3::UnitY();
-        REQUIRE(ray.Intersects(box));
+        ray.position = -Vector3::createUnitY();
+        ray.direction = Vector3::createUnitY();
+        REQUIRE(ray.intersects(box));
 
-        ray.position = Vector3::UnitZ();
-        ray.direction = -Vector3::UnitZ();
-        REQUIRE(ray.Intersects(box));
+        ray.position = Vector3::createUnitZ();
+        ray.direction = -Vector3::createUnitZ();
+        REQUIRE(ray.intersects(box));
 
-        ray.position = -Vector3::UnitZ();
-        ray.direction = Vector3::UnitZ();
-        REQUIRE(ray.Intersects(box));
+        ray.position = -Vector3::createUnitZ();
+        ray.direction = Vector3::createUnitZ();
+        REQUIRE(ray.intersects(box));
 
         //
-        ray.position = Vector3::UnitX();
+        ray.position = Vector3::createUnitX();
         ray.direction = Vector3{0.0f, 0.5f, 0.5f} - ray.position;
-        REQUIRE(ray.Intersects(box));
+        REQUIRE(ray.intersects(box));
 
-        ray.position = -Vector3::UnitX();
+        ray.position = -Vector3::createUnitX();
         ray.direction = Vector3{0.0f, 0.5f, 0.5f} - ray.position;
-        REQUIRE(ray.Intersects(box));
+        REQUIRE(ray.intersects(box));
 
-        ray.position = Vector3::UnitY();
+        ray.position = Vector3::createUnitY();
         ray.direction = Vector3{0.5f, 0.0f, 0.5f} - ray.position;
-        REQUIRE(ray.Intersects(box));
+        REQUIRE(ray.intersects(box));
 
-        ray.position = -Vector3::UnitY();
+        ray.position = -Vector3::createUnitY();
         ray.direction = Vector3{0.5f, 0.0f, 0.5f} - ray.position;
-        REQUIRE(ray.Intersects(box));
+        REQUIRE(ray.intersects(box));
 
-        ray.position = Vector3::UnitZ();
+        ray.position = Vector3::createUnitZ();
         ray.direction = Vector3{0.5f, 0.5f, 0.0f} - ray.position;
-        REQUIRE(ray.Intersects(box));
+        REQUIRE(ray.intersects(box));
 
-        ray.position = -Vector3::UnitZ();
+        ray.position = -Vector3::createUnitZ();
         ray.direction = Vector3{0.5f, 0.5f, 0.0f} - ray.position;
-        REQUIRE(ray.Intersects(box));
+        REQUIRE(ray.intersects(box));
 
         //
-        ray.position = Vector3::UnitX();
-        ray.direction = Vector3::UnitX();
-        REQUIRE_FALSE(ray.Intersects(box));
+        ray.position = Vector3::createUnitX();
+        ray.direction = Vector3::createUnitX();
+        REQUIRE_FALSE(ray.intersects(box));
 
-        ray.position = -Vector3::UnitX();
-        ray.direction = -Vector3::UnitX();
-        REQUIRE_FALSE(ray.Intersects(box));
+        ray.position = -Vector3::createUnitX();
+        ray.direction = -Vector3::createUnitX();
+        REQUIRE_FALSE(ray.intersects(box));
 
-        ray.position = Vector3::UnitY();
-        ray.direction = Vector3::UnitY();
-        REQUIRE_FALSE(ray.Intersects(box));
+        ray.position = Vector3::createUnitY();
+        ray.direction = Vector3::createUnitY();
+        REQUIRE_FALSE(ray.intersects(box));
 
-        ray.position = -Vector3::UnitY();
-        ray.direction = -Vector3::UnitY();
-        REQUIRE_FALSE(ray.Intersects(box));
+        ray.position = -Vector3::createUnitY();
+        ray.direction = -Vector3::createUnitY();
+        REQUIRE_FALSE(ray.intersects(box));
 
-        ray.position = Vector3::UnitZ();
-        ray.direction = Vector3::UnitZ();
-        REQUIRE_FALSE(ray.Intersects(box));
+        ray.position = Vector3::createUnitZ();
+        ray.direction = Vector3::createUnitZ();
+        REQUIRE_FALSE(ray.intersects(box));
 
-        ray.position = -Vector3::UnitZ();
-        ray.direction = -Vector3::UnitZ();
-        REQUIRE_FALSE(ray.Intersects(box));
+        ray.position = -Vector3::createUnitZ();
+        ray.direction = -Vector3::createUnitZ();
+        REQUIRE_FALSE(ray.intersects(box));
 
         //
-        ray.direction = -Vector3::UnitY();
+        ray.direction = -Vector3::createUnitY();
         ray.position = Vector3{-0.5f - Epsilon, 1.0f, 0.0f};
-        REQUIRE_FALSE(ray.Intersects(box));
+        REQUIRE_FALSE(ray.intersects(box));
         ray.position = Vector3{-0.5f + Epsilon, 1.0f, 0.0f};
-        REQUIRE(ray.Intersects(box));
+        REQUIRE(ray.intersects(box));
         ray.position = Vector3{0.0f, 1.0f, 0.0f};
-        REQUIRE(ray.Intersects(box));
+        REQUIRE(ray.intersects(box));
         ray.position = Vector3{0.5f - Epsilon, 1.0f, 0.0f};
-        REQUIRE(ray.Intersects(box));
+        REQUIRE(ray.intersects(box));
         ray.position = Vector3{0.5f + Epsilon, 1.0f, 0.0f};
-        REQUIRE_FALSE(ray.Intersects(box));
+        REQUIRE_FALSE(ray.intersects(box));
 
-        ray.direction = Vector3::UnitY();
+        ray.direction = Vector3::createUnitY();
         ray.position = Vector3{-0.5f - Epsilon, -1.0f, 0.0f};
-        REQUIRE_FALSE(ray.Intersects(box));
+        REQUIRE_FALSE(ray.intersects(box));
         ray.position = Vector3{-0.5f + Epsilon, -1.0f, 0.0f};
-        REQUIRE(ray.Intersects(box));
+        REQUIRE(ray.intersects(box));
         ray.position = Vector3{0.0f, -1.0f, 0.0f};
-        REQUIRE(ray.Intersects(box));
+        REQUIRE(ray.intersects(box));
         ray.position = Vector3{0.5f - Epsilon, -1.0f, 0.0f};
-        REQUIRE(ray.Intersects(box));
+        REQUIRE(ray.intersects(box));
         ray.position = Vector3{0.5f + Epsilon, -1.0f, 0.0f};
-        REQUIRE_FALSE(ray.Intersects(box));
+        REQUIRE_FALSE(ray.intersects(box));
 
-        ray.direction = -Vector3::UnitZ();
+        ray.direction = -Vector3::createUnitZ();
         ray.position = Vector3{0.0f, -0.5f - Epsilon, 1.0f};
-        REQUIRE_FALSE(ray.Intersects(box));
+        REQUIRE_FALSE(ray.intersects(box));
         ray.position = Vector3{0.0f, -0.5f + Epsilon, 1.0f};
-        REQUIRE(ray.Intersects(box));
+        REQUIRE(ray.intersects(box));
         ray.position = Vector3{0.0f, 0.0f, 1.0f};
-        REQUIRE(ray.Intersects(box));
+        REQUIRE(ray.intersects(box));
         ray.position = Vector3{0.0f, 0.5f - Epsilon, 1.0f};
-        REQUIRE(ray.Intersects(box));
+        REQUIRE(ray.intersects(box));
         ray.position = Vector3{0.0f, 0.5f + Epsilon, 1.0f};
-        REQUIRE_FALSE(ray.Intersects(box));
+        REQUIRE_FALSE(ray.intersects(box));
 
-        ray.direction = Vector3::UnitZ();
+        ray.direction = Vector3::createUnitZ();
         ray.position = Vector3{0.0f, -0.5f - Epsilon, -1.0f};
-        REQUIRE_FALSE(ray.Intersects(box));
+        REQUIRE_FALSE(ray.intersects(box));
         ray.position = Vector3{0.0f, -0.5f + Epsilon, -1.0f};
-        REQUIRE(ray.Intersects(box));
+        REQUIRE(ray.intersects(box));
         ray.position = Vector3{0.0f, 0.0f, -1.0f};
-        REQUIRE(ray.Intersects(box));
+        REQUIRE(ray.intersects(box));
         ray.position = Vector3{0.0f, 0.5f - Epsilon, -1.0f};
-        REQUIRE(ray.Intersects(box));
+        REQUIRE(ray.intersects(box));
         ray.position = Vector3{0.0f, 0.5f + Epsilon, -1.0f};
-        REQUIRE_FALSE(ray.Intersects(box));
+        REQUIRE_FALSE(ray.intersects(box));
 
-        ray.direction = -Vector3::UnitX();
+        ray.direction = -Vector3::createUnitX();
         ray.position = Vector3{1.0f, 0.0f, -0.5f - Epsilon};
-        REQUIRE_FALSE(ray.Intersects(box));
+        REQUIRE_FALSE(ray.intersects(box));
         ray.position = Vector3{1.0f, 0.0f, -0.5f + Epsilon};
-        REQUIRE(ray.Intersects(box));
+        REQUIRE(ray.intersects(box));
         ray.position = Vector3{1.0f, 0.0f, 0.0f};
-        REQUIRE(ray.Intersects(box));
+        REQUIRE(ray.intersects(box));
         ray.position = Vector3{1.0f, 0.0f, 0.5f - Epsilon};
-        REQUIRE(ray.Intersects(box));
+        REQUIRE(ray.intersects(box));
         ray.position = Vector3{1.0f, 0.0f, 0.5f + Epsilon};
-        REQUIRE_FALSE(ray.Intersects(box));
+        REQUIRE_FALSE(ray.intersects(box));
 
-        ray.direction = Vector3::UnitX();
+        ray.direction = Vector3::createUnitX();
         ray.position = Vector3{-1.0f, 0.0f, -0.5f - Epsilon};
-        REQUIRE_FALSE(ray.Intersects(box));
+        REQUIRE_FALSE(ray.intersects(box));
         ray.position = Vector3{-1.0f, 0.0f, -0.5f + Epsilon};
-        REQUIRE(ray.Intersects(box));
+        REQUIRE(ray.intersects(box));
         ray.position = Vector3{-1.0f, 0.0f, 0.0f};
-        REQUIRE(ray.Intersects(box));
+        REQUIRE(ray.intersects(box));
         ray.position = Vector3{-1.0f, 0.0f, 0.5f - Epsilon};
-        REQUIRE(ray.Intersects(box));
+        REQUIRE(ray.intersects(box));
         ray.position = Vector3{-1.0f, 0.0f, 0.5f + Epsilon};
-        REQUIRE_FALSE(ray.Intersects(box));
+        REQUIRE_FALSE(ray.intersects(box));
     }
     SECTION("Intersects_BoundingSphere_1")
     {
         Ray const data[] = {
-            {Vector3::Zero(), Vector3::Zero()},
-            {Vector3::Zero(), Vector3::UnitX()},
-            {Vector3::Zero(), Vector3::UnitY()},
-            {Vector3::Zero(), Vector3::UnitZ()},
-            {Vector3::Zero(), -Vector3::UnitX()},
-            {Vector3::Zero(), -Vector3::UnitY()},
-            {Vector3::Zero(), -Vector3::UnitZ()},
+            {Vector3::createZero(), Vector3::createZero()},
+            {Vector3::createZero(), Vector3::createUnitX()},
+            {Vector3::createZero(), Vector3::createUnitY()},
+            {Vector3::createZero(), Vector3::createUnitZ()},
+            {Vector3::createZero(), -Vector3::createUnitX()},
+            {Vector3::createZero(), -Vector3::createUnitY()},
+            {Vector3::createZero(), -Vector3::createUnitZ()},
         };
 
         BoundingSphere sphere;
-        sphere.center = Vector3::Zero();
+        sphere.center = Vector3::createZero();
         sphere.radius = Epsilon;
         for (auto ray : data) {
-            REQUIRE(ray.Intersects(sphere));
+            REQUIRE(ray.intersects(sphere));
         }
 
-        sphere.center = Vector3::Zero();
+        sphere.center = Vector3::createZero();
         sphere.radius = 1.0f;
         for (auto ray : data) {
-            REQUIRE(ray.Intersects(sphere));
+            REQUIRE(ray.intersects(sphere));
         }
 
-        sphere.center = Vector3::Zero();
+        sphere.center = Vector3::createZero();
         sphere.radius = std::numeric_limits<float>::max() / 2;
         for (auto ray : data) {
-            REQUIRE(ray.Intersects(sphere));
+            REQUIRE(ray.intersects(sphere));
         }
     }
     SECTION("Intersects_BoundingSphere_2")
     {
         Ray const data[] = {
-            {Vector3{1.0f, 1.0f, 1.0f}, Vector3::Zero()},
-            {Vector3{1.0f, 1.0f, 0.0f}, Vector3::Zero()},
-            {Vector3{1.0f, 0.0f, 1.0f}, Vector3::Zero()},
-            {Vector3{1.0f, 0.0f, 0.0f}, Vector3::Zero()},
-            {Vector3{0.0f, 1.0f, 1.0f}, Vector3::Zero()},
-            {Vector3{0.0f, 1.0f, 0.0f}, Vector3::Zero()},
-            {Vector3{0.0f, 0.0f, 1.0f}, Vector3::Zero()},
+            {Vector3{1.0f, 1.0f, 1.0f}, Vector3::createZero()},
+            {Vector3{1.0f, 1.0f, 0.0f}, Vector3::createZero()},
+            {Vector3{1.0f, 0.0f, 1.0f}, Vector3::createZero()},
+            {Vector3{1.0f, 0.0f, 0.0f}, Vector3::createZero()},
+            {Vector3{0.0f, 1.0f, 1.0f}, Vector3::createZero()},
+            {Vector3{0.0f, 1.0f, 0.0f}, Vector3::createZero()},
+            {Vector3{0.0f, 0.0f, 1.0f}, Vector3::createZero()},
         };
 
         BoundingSphere sphere;
-        sphere.center = Vector3::Zero();
+        sphere.center = Vector3::createZero();
         sphere.radius = Epsilon;
         for (auto ray : data) {
-            REQUIRE_FALSE(ray.Intersects(sphere));
+            REQUIRE_FALSE(ray.intersects(sphere));
         }
 
-        sphere.center = Vector3::Zero();
+        sphere.center = Vector3::createZero();
         sphere.radius = 1.0f - Epsilon;
         for (auto ray : data) {
-            ray.position = math::Normalize(ray.position);
-            REQUIRE_FALSE(ray.Intersects(sphere));
+            ray.position = math::normalize(ray.position);
+            REQUIRE_FALSE(ray.intersects(sphere));
         }
 
-        sphere.center = Vector3::Zero();
+        sphere.center = Vector3::createZero();
         sphere.radius = 1.0f + Epsilon;
         for (auto ray : data) {
-            ray.position = math::Normalize(ray.position);
-            REQUIRE(ray.Intersects(sphere));
+            ray.position = math::normalize(ray.position);
+            REQUIRE(ray.intersects(sphere));
         }
     }
     SECTION("Intersects_BoundingSphere_3")
     {
         BoundingSphere sphere;
-        sphere.center = Vector3::Zero();
+        sphere.center = Vector3::createZero();
         sphere.radius = 0.5f;
 
         Ray ray;
-        ray.position = Vector3::UnitX();
-        ray.direction = -Vector3::UnitX();
-        REQUIRE(ray.Intersects(sphere));
+        ray.position = Vector3::createUnitX();
+        ray.direction = -Vector3::createUnitX();
+        REQUIRE(ray.intersects(sphere));
 
-        ray.position = -Vector3::UnitX();
-        ray.direction = Vector3::UnitX();
-        REQUIRE(ray.Intersects(sphere));
+        ray.position = -Vector3::createUnitX();
+        ray.direction = Vector3::createUnitX();
+        REQUIRE(ray.intersects(sphere));
 
-        ray.position = Vector3::UnitY();
-        ray.direction = -Vector3::UnitY();
-        REQUIRE(ray.Intersects(sphere));
+        ray.position = Vector3::createUnitY();
+        ray.direction = -Vector3::createUnitY();
+        REQUIRE(ray.intersects(sphere));
 
-        ray.position = -Vector3::UnitY();
-        ray.direction = Vector3::UnitY();
-        REQUIRE(ray.Intersects(sphere));
+        ray.position = -Vector3::createUnitY();
+        ray.direction = Vector3::createUnitY();
+        REQUIRE(ray.intersects(sphere));
 
-        ray.position = Vector3::UnitZ();
-        ray.direction = -Vector3::UnitZ();
-        REQUIRE(ray.Intersects(sphere));
+        ray.position = Vector3::createUnitZ();
+        ray.direction = -Vector3::createUnitZ();
+        REQUIRE(ray.intersects(sphere));
 
-        ray.position = -Vector3::UnitZ();
-        ray.direction = Vector3::UnitZ();
-        REQUIRE(ray.Intersects(sphere));
+        ray.position = -Vector3::createUnitZ();
+        ray.direction = Vector3::createUnitZ();
+        REQUIRE(ray.intersects(sphere));
 
         //
-        ray.position = Vector3::UnitX();
+        ray.position = Vector3::createUnitX();
         ray.direction = Vector3{0.0f, 0.5f, 0.5f} - ray.position;
-        REQUIRE(ray.Intersects(sphere));
+        REQUIRE(ray.intersects(sphere));
 
-        ray.position = -Vector3::UnitX();
+        ray.position = -Vector3::createUnitX();
         ray.direction = Vector3{0.0f, 0.5f, 0.5f} - ray.position;
-        REQUIRE(ray.Intersects(sphere));
+        REQUIRE(ray.intersects(sphere));
 
-        ray.position = Vector3::UnitY();
+        ray.position = Vector3::createUnitY();
         ray.direction = Vector3{0.5f, 0.0f, 0.5f} - ray.position;
-        REQUIRE(ray.Intersects(sphere));
+        REQUIRE(ray.intersects(sphere));
 
-        ray.position = -Vector3::UnitY();
+        ray.position = -Vector3::createUnitY();
         ray.direction = Vector3{0.5f, 0.0f, 0.5f} - ray.position;
-        REQUIRE(ray.Intersects(sphere));
+        REQUIRE(ray.intersects(sphere));
 
-        ray.position = Vector3::UnitZ();
+        ray.position = Vector3::createUnitZ();
         ray.direction = Vector3{0.5f, 0.5f, 0.0f} - ray.position;
-        REQUIRE(ray.Intersects(sphere));
+        REQUIRE(ray.intersects(sphere));
 
-        ray.position = -Vector3::UnitZ();
+        ray.position = -Vector3::createUnitZ();
         ray.direction = Vector3{0.5f, 0.5f, 0.0f} - ray.position;
-        REQUIRE(ray.Intersects(sphere));
+        REQUIRE(ray.intersects(sphere));
 
         //
-        ray.position = Vector3::UnitX();
-        ray.direction = Vector3::UnitX();
-        REQUIRE_FALSE(ray.Intersects(sphere));
+        ray.position = Vector3::createUnitX();
+        ray.direction = Vector3::createUnitX();
+        REQUIRE_FALSE(ray.intersects(sphere));
 
-        ray.position = -Vector3::UnitX();
-        ray.direction = -Vector3::UnitX();
-        REQUIRE_FALSE(ray.Intersects(sphere));
+        ray.position = -Vector3::createUnitX();
+        ray.direction = -Vector3::createUnitX();
+        REQUIRE_FALSE(ray.intersects(sphere));
 
-        ray.position = Vector3::UnitY();
-        ray.direction = Vector3::UnitY();
-        REQUIRE_FALSE(ray.Intersects(sphere));
+        ray.position = Vector3::createUnitY();
+        ray.direction = Vector3::createUnitY();
+        REQUIRE_FALSE(ray.intersects(sphere));
 
-        ray.position = -Vector3::UnitY();
-        ray.direction = -Vector3::UnitY();
-        REQUIRE_FALSE(ray.Intersects(sphere));
+        ray.position = -Vector3::createUnitY();
+        ray.direction = -Vector3::createUnitY();
+        REQUIRE_FALSE(ray.intersects(sphere));
 
-        ray.position = Vector3::UnitZ();
-        ray.direction = Vector3::UnitZ();
-        REQUIRE_FALSE(ray.Intersects(sphere));
+        ray.position = Vector3::createUnitZ();
+        ray.direction = Vector3::createUnitZ();
+        REQUIRE_FALSE(ray.intersects(sphere));
 
-        ray.position = -Vector3::UnitZ();
-        ray.direction = -Vector3::UnitZ();
-        REQUIRE_FALSE(ray.Intersects(sphere));
+        ray.position = -Vector3::createUnitZ();
+        ray.direction = -Vector3::createUnitZ();
+        REQUIRE_FALSE(ray.intersects(sphere));
 
         //
-        ray.direction = -Vector3::UnitY();
+        ray.direction = -Vector3::createUnitY();
         ray.position = Vector3{-0.5f - Epsilon, 1.0f, 0.0f};
-        REQUIRE_FALSE(ray.Intersects(sphere));
+        REQUIRE_FALSE(ray.intersects(sphere));
         ray.position = Vector3{-0.5f + Epsilon, 1.0f, 0.0f};
-        REQUIRE(ray.Intersects(sphere));
+        REQUIRE(ray.intersects(sphere));
         ray.position = Vector3{0.0f, 1.0f, 0.0f};
-        REQUIRE(ray.Intersects(sphere));
+        REQUIRE(ray.intersects(sphere));
         ray.position = Vector3{0.5f - Epsilon, 1.0f, 0.0f};
-        REQUIRE(ray.Intersects(sphere));
+        REQUIRE(ray.intersects(sphere));
         ray.position = Vector3{0.5f + Epsilon, 1.0f, 0.0f};
-        REQUIRE_FALSE(ray.Intersects(sphere));
+        REQUIRE_FALSE(ray.intersects(sphere));
 
-        ray.direction = Vector3::UnitY();
+        ray.direction = Vector3::createUnitY();
         ray.position = Vector3{-0.5f - Epsilon, -1.0f, 0.0f};
-        REQUIRE_FALSE(ray.Intersects(sphere));
+        REQUIRE_FALSE(ray.intersects(sphere));
         ray.position = Vector3{-0.5f + Epsilon, -1.0f, 0.0f};
-        REQUIRE(ray.Intersects(sphere));
+        REQUIRE(ray.intersects(sphere));
         ray.position = Vector3{0.0f, -1.0f, 0.0f};
-        REQUIRE(ray.Intersects(sphere));
+        REQUIRE(ray.intersects(sphere));
         ray.position = Vector3{0.5f - Epsilon, -1.0f, 0.0f};
-        REQUIRE(ray.Intersects(sphere));
+        REQUIRE(ray.intersects(sphere));
         ray.position = Vector3{0.5f + Epsilon, -1.0f, 0.0f};
-        REQUIRE_FALSE(ray.Intersects(sphere));
+        REQUIRE_FALSE(ray.intersects(sphere));
 
-        ray.direction = -Vector3::UnitZ();
+        ray.direction = -Vector3::createUnitZ();
         ray.position = Vector3{0.0f, -0.5f - Epsilon, 1.0f};
-        REQUIRE_FALSE(ray.Intersects(sphere));
+        REQUIRE_FALSE(ray.intersects(sphere));
         ray.position = Vector3{0.0f, -0.5f + Epsilon, 1.0f};
-        REQUIRE(ray.Intersects(sphere));
+        REQUIRE(ray.intersects(sphere));
         ray.position = Vector3{0.0f, 0.0f, 1.0f};
-        REQUIRE(ray.Intersects(sphere));
+        REQUIRE(ray.intersects(sphere));
         ray.position = Vector3{0.0f, 0.5f - Epsilon, 1.0f};
-        REQUIRE(ray.Intersects(sphere));
+        REQUIRE(ray.intersects(sphere));
         ray.position = Vector3{0.0f, 0.5f + Epsilon, 1.0f};
-        REQUIRE_FALSE(ray.Intersects(sphere));
+        REQUIRE_FALSE(ray.intersects(sphere));
 
-        ray.direction = Vector3::UnitZ();
+        ray.direction = Vector3::createUnitZ();
         ray.position = Vector3{0.0f, -0.5f - Epsilon, -1.0f};
-        REQUIRE_FALSE(ray.Intersects(sphere));
+        REQUIRE_FALSE(ray.intersects(sphere));
         ray.position = Vector3{0.0f, -0.5f + Epsilon, -1.0f};
-        REQUIRE(ray.Intersects(sphere));
+        REQUIRE(ray.intersects(sphere));
         ray.position = Vector3{0.0f, 0.0f, -1.0f};
-        REQUIRE(ray.Intersects(sphere));
+        REQUIRE(ray.intersects(sphere));
         ray.position = Vector3{0.0f, 0.5f - Epsilon, -1.0f};
-        REQUIRE(ray.Intersects(sphere));
+        REQUIRE(ray.intersects(sphere));
         ray.position = Vector3{0.0f, 0.5f + Epsilon, -1.0f};
-        REQUIRE_FALSE(ray.Intersects(sphere));
+        REQUIRE_FALSE(ray.intersects(sphere));
 
-        ray.direction = -Vector3::UnitX();
+        ray.direction = -Vector3::createUnitX();
         ray.position = Vector3{1.0f, 0.0f, -0.5f - Epsilon};
-        REQUIRE_FALSE(ray.Intersects(sphere));
+        REQUIRE_FALSE(ray.intersects(sphere));
         ray.position = Vector3{1.0f, 0.0f, -0.5f + Epsilon};
-        REQUIRE(ray.Intersects(sphere));
+        REQUIRE(ray.intersects(sphere));
         ray.position = Vector3{1.0f, 0.0f, 0.0f};
-        REQUIRE(ray.Intersects(sphere));
+        REQUIRE(ray.intersects(sphere));
         ray.position = Vector3{1.0f, 0.0f, 0.5f - Epsilon};
-        REQUIRE(ray.Intersects(sphere));
+        REQUIRE(ray.intersects(sphere));
         ray.position = Vector3{1.0f, 0.0f, 0.5f + Epsilon};
-        REQUIRE_FALSE(ray.Intersects(sphere));
+        REQUIRE_FALSE(ray.intersects(sphere));
 
-        ray.direction = Vector3::UnitX();
+        ray.direction = Vector3::createUnitX();
         ray.position = Vector3{-1.0f, 0.0f, -0.5f - Epsilon};
-        REQUIRE_FALSE(ray.Intersects(sphere));
+        REQUIRE_FALSE(ray.intersects(sphere));
         ray.position = Vector3{-1.0f, 0.0f, -0.5f + Epsilon};
-        REQUIRE(ray.Intersects(sphere));
+        REQUIRE(ray.intersects(sphere));
         ray.position = Vector3{-1.0f, 0.0f, 0.0f};
-        REQUIRE(ray.Intersects(sphere));
+        REQUIRE(ray.intersects(sphere));
         ray.position = Vector3{-1.0f, 0.0f, 0.5f - Epsilon};
-        REQUIRE(ray.Intersects(sphere));
+        REQUIRE(ray.intersects(sphere));
         ray.position = Vector3{-1.0f, 0.0f, 0.5f + Epsilon};
-        REQUIRE_FALSE(ray.Intersects(sphere));
+        REQUIRE_FALSE(ray.intersects(sphere));
     }
 }

@@ -7,13 +7,14 @@
 
 namespace pomdog {
 
-BoundingBox2D::BoundingBox2D(const Vector2& minIn, const Vector2& maxIn)
+BoundingBox2D::BoundingBox2D(const Vector2& minIn, const Vector2& maxIn) noexcept
     : min(minIn)
     , max(maxIn)
 {
 }
 
-ContainmentType BoundingBox2D::Contains(const Vector2& point) const
+ContainmentType
+BoundingBox2D::contains(const Vector2& point) const noexcept
 {
     if ((point.x < min.x) ||
         (point.y < min.y) ||
@@ -30,7 +31,8 @@ ContainmentType BoundingBox2D::Contains(const Vector2& point) const
     return ContainmentType::Contains;
 }
 
-ContainmentType BoundingBox2D::Contains(const BoundingBox2D& box) const
+ContainmentType
+BoundingBox2D::contains(const BoundingBox2D& box) const noexcept
 {
     if ((min.x > box.max.x || max.x < box.min.x) ||
         (min.y > box.max.y || max.y < box.min.y)) {
@@ -43,10 +45,11 @@ ContainmentType BoundingBox2D::Contains(const BoundingBox2D& box) const
     return ContainmentType::Intersects;
 }
 
-ContainmentType BoundingBox2D::Contains(const BoundingCircle& circle) const
+ContainmentType
+BoundingBox2D::contains(const BoundingCircle& circle) const noexcept
 {
-    auto clamped = math::Clamp(circle.center, min, max);
-    auto distanceSquared = math::DistanceSquared(circle.center, clamped);
+    auto clamped = math::clamp(circle.center, min, max);
+    auto distanceSquared = math::distanceSquared(circle.center, clamped);
 
     if (distanceSquared > circle.radius * circle.radius) {
         return ContainmentType::Disjoint;
@@ -60,20 +63,21 @@ ContainmentType BoundingBox2D::Contains(const BoundingCircle& circle) const
     return ContainmentType::Intersects;
 }
 
-bool BoundingBox2D::Intersects(const BoundingBox2D& box) const
+bool BoundingBox2D::intersects(const BoundingBox2D& box) const noexcept
 {
     return (max.x >= box.min.x && min.x <= box.max.x) &&
            (max.y >= box.min.y && min.y <= box.max.y);
 }
 
-bool BoundingBox2D::Intersects(const BoundingCircle& circle) const
+bool BoundingBox2D::intersects(const BoundingCircle& circle) const noexcept
 {
-    const auto clamped = math::Clamp(circle.center, min, max);
-    const auto distanceSquared = math::DistanceSquared(circle.center, clamped);
+    const auto clamped = math::clamp(circle.center, min, max);
+    const auto distanceSquared = math::distanceSquared(circle.center, clamped);
     return distanceSquared <= circle.radius * circle.radius;
 }
 
-std::array<Vector2, BoundingBox2D::CornerCount> BoundingBox2D::GetCorners() const noexcept
+std::array<Vector2, BoundingBox2D::CornerCount>
+BoundingBox2D::getCorners() const noexcept
 {
     return std::array<Vector2, BoundingBox2D::CornerCount>{{
         Vector2{min.x, max.y},

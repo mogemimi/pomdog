@@ -23,34 +23,34 @@ public:
 public:
     BoundingSphere() noexcept = default;
 
-    BoundingSphere(const Vector3& center, float radius);
+    BoundingSphere(const Vector3& center, float radius) noexcept;
 
     [[nodiscard]] ContainmentType
-    Contains(const Vector3& point) const;
+    contains(const Vector3& point) const noexcept;
 
     [[nodiscard]] ContainmentType
-    Contains(const BoundingBox& box) const;
+    contains(const BoundingBox& box) const noexcept;
 
     [[nodiscard]] ContainmentType
-    Contains(const BoundingSphere& sphere) const;
+    contains(const BoundingSphere& sphere) const noexcept;
 
     [[nodiscard]] bool
-    Intersects(const BoundingBox& box) const;
+    intersects(const BoundingBox& box) const noexcept;
 
     [[nodiscard]] bool
-    Intersects(const BoundingSphere& sphere) const;
+    intersects(const BoundingSphere& sphere) const noexcept;
 
     [[nodiscard]] PlaneIntersectionType
-    Intersects(const Plane& plane) const;
+    intersects(const Plane& plane) const noexcept;
 
     [[nodiscard]] std::optional<float>
-    Intersects(const Ray& ray) const;
+    intersects(const Ray& ray) const noexcept;
 
     [[nodiscard]] static BoundingSphere
-    CreateFromPoints(const Vector3* points, std::size_t pointCount) noexcept;
+    createFromPoints(const Vector3* points, std::size_t pointCount) noexcept;
 
     [[nodiscard]] static BoundingSphere
-    CreateFromPoints(std::function<Vector3(std::size_t)> points, std::size_t pointCount) noexcept;
+    createFromPoints(std::function<Vector3(std::size_t)> points, std::size_t pointCount) noexcept;
 };
 
 } // namespace pomdog

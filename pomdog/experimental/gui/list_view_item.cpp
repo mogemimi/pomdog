@@ -163,7 +163,7 @@ std::shared_ptr<Widget> ListViewItem::GetChildAt(const Point2D& position)
 {
     if (child != nullptr) {
         auto bounds = child->GetBounds();
-        if (bounds.Contains(position)) {
+        if (bounds.contains(position)) {
             return child;
         }
     }

@@ -148,18 +148,18 @@ bool Quaternion::operator!=(const Quaternion& other) const noexcept
     return (x != other.x) || (y != other.y) || (z != other.z) || (w != other.w);
 }
 
-const float* Quaternion::Data() const noexcept
+const float* Quaternion::data() const noexcept
 {
     return &x;
 }
 
-float* Quaternion::Data() noexcept
+float* Quaternion::data() noexcept
 {
     return &x;
 }
 
 Quaternion
-Quaternion::CreateFromAxisAngle(const Vector3& axis, const Radian<float>& angle)
+Quaternion::createFromAxisAngle(const Vector3& axis, const Radian<float>& angle)
 {
     const auto halfAngle(angle.value / 2);
     const auto sinAngle(std::sin(halfAngle));
@@ -176,7 +176,7 @@ Quaternion::CreateFromAxisAngle(const Vector3& axis, const Radian<float>& angle)
 namespace {
 template <class MatrixClass>
 [[nodiscard]] Quaternion
-CreateFromRotationMatrixImpl(const MatrixClass& rotation)
+createFromRotationMatrixImpl(const MatrixClass& rotation)
 {
     // NOTE: Algorithm from the article "Quaternion Calculus and Fast Animation"
     // by Ken Shoemake, SIGGRAPH 1987 Course Notes.
@@ -227,19 +227,19 @@ CreateFromRotationMatrixImpl(const MatrixClass& rotation)
 } // namespace
 
 Quaternion
-Quaternion::CreateFromRotationMatrix(const Matrix4x4& rotation)
+Quaternion::createFromRotationMatrix(const Matrix4x4& rotation)
 {
-    return CreateFromRotationMatrixImpl(rotation);
+    return createFromRotationMatrixImpl(rotation);
 }
 
 Quaternion
-Quaternion::CreateFromRotationMatrix(const Matrix3x3& rotation)
+Quaternion::createFromRotationMatrix(const Matrix3x3& rotation)
 {
-    return CreateFromRotationMatrixImpl(rotation);
+    return createFromRotationMatrixImpl(rotation);
 }
 
 Quaternion
-Quaternion::CreateFromYawPitchRoll(const Radian<float>& yaw, const Radian<float>& pitch, const Radian<float>& roll)
+Quaternion::createFromYawPitchRoll(const Radian<float>& yaw, const Radian<float>& pitch, const Radian<float>& roll)
 {
     const auto halfYaw = yaw.value / 2;
     const auto cosYaw = std::cos(halfYaw);
@@ -267,13 +267,13 @@ Quaternion::CreateFromYawPitchRoll(const Radian<float>& yaw, const Radian<float>
 }
 
 Quaternion
-Quaternion::Euler(const Vector3& rotation)
+Quaternion::euler(const Vector3& rotation)
 {
-    return CreateFromYawPitchRoll(rotation.y, rotation.x, rotation.z);
+    return createFromYawPitchRoll(rotation.y, rotation.x, rotation.z);
 }
 
 Vector3
-Quaternion::ToEulerAngles(const Quaternion& q) noexcept
+Quaternion::toEulerAngles(const Quaternion& q) noexcept
 {
     const auto ww = q.w * q.w;
     const auto xx = q.x * q.x;
@@ -312,7 +312,7 @@ Quaternion::ToEulerAngles(const Quaternion& q) noexcept
 }
 
 Quaternion
-Quaternion::Identity() noexcept
+Quaternion::createIdentity() noexcept
 {
     return Quaternion{0.0f, 0.0f, 0.0f, 1.0f};
 }
@@ -332,25 +332,28 @@ operator*(float factor, const Quaternion& quaternion) noexcept
 
 namespace pomdog::math {
 
-[[nodiscard]] float Length(const Quaternion& q) noexcept
+[[nodiscard]] float
+length(const Quaternion& q) noexcept
 {
     return std::sqrt(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w);
 }
 
-[[nodiscard]] float LengthSquared(const Quaternion& q) noexcept
+[[nodiscard]] float
+lengthSquared(const Quaternion& q) noexcept
 {
     return q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w;
 }
 
-[[nodiscard]] float Dot(const Quaternion& a, const Quaternion& b) noexcept
+[[nodiscard]] float
+dot(const Quaternion& a, const Quaternion& b) noexcept
 {
     return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
 }
 
 [[nodiscard]] Quaternion
-Normalize(const Quaternion& source) noexcept
+normalize(const Quaternion& source) noexcept
 {
-    const auto length = math::Length(source);
+    const auto length = math::length(source);
 
     if (length > std::numeric_limits<decltype(length)>::epsilon()) {
         POMDOG_ASSERT(std::fpclassify(length) != FP_ZERO);
@@ -365,20 +368,20 @@ Normalize(const Quaternion& source) noexcept
 }
 
 [[nodiscard]] Quaternion
-Lerp(const Quaternion& source1, const Quaternion& source2, float amount)
+lerp(const Quaternion& source1, const Quaternion& source2, float amount)
 {
-    return math::Normalize(Quaternion{
-        math::Lerp(source1.x, source2.x, amount),
-        math::Lerp(source1.y, source2.y, amount),
-        math::Lerp(source1.z, source2.z, amount),
-        math::Lerp(source1.w, source2.w, amount),
+    return math::normalize(Quaternion{
+        math::lerp(source1.x, source2.x, amount),
+        math::lerp(source1.y, source2.y, amount),
+        math::lerp(source1.z, source2.z, amount),
+        math::lerp(source1.w, source2.w, amount),
     });
 }
 
 [[nodiscard]] Quaternion
-Slerp(const Quaternion& begin, const Quaternion& end, float amount)
+slerp(const Quaternion& begin, const Quaternion& end, float amount)
 {
-    const auto cosAngle = math::Dot(begin, end);
+    const auto cosAngle = math::dot(begin, end);
 
     const auto angle(std::acos(cosAngle));
     const auto inverseSinAngle = 1.0f / std::sin(angle);
@@ -395,9 +398,9 @@ Slerp(const Quaternion& begin, const Quaternion& end, float amount)
 }
 
 [[nodiscard]] Quaternion
-Invert(const Quaternion& source)
+invert(const Quaternion& source)
 {
-    const auto lengthSquared = math::LengthSquared(source);
+    const auto lengthSquared = math::lengthSquared(source);
     if (lengthSquared > std::numeric_limits<decltype(lengthSquared)>::epsilon()) {
         POMDOG_ASSERT(std::fpclassify(lengthSquared) != FP_ZERO);
         POMDOG_ASSERT(std::fpclassify(lengthSquared) != FP_NAN);
@@ -416,11 +419,11 @@ Invert(const Quaternion& source)
 }
 
 [[nodiscard]] Vector3
-Rotate(const Quaternion& quaternion, const Vector3& vector)
+rotate(const Quaternion& quaternion, const Vector3& vector)
 {
     const auto xyz = Vector3{quaternion.x, quaternion.y, quaternion.z};
-    const auto t = 2.0f * math::Cross(xyz, vector);
-    return vector + quaternion.w * t + math::Cross(xyz, t);
+    const auto t = 2.0f * math::cross(xyz, vector);
+    return vector + quaternion.w * t + math::cross(xyz, t);
 }
 
 } // namespace pomdog::math

@@ -23,7 +23,7 @@ TEST_CASE("Quaternion", "[Quaternion]")
     }
     SECTION("Constants")
     {
-        REQUIRE(Quaternion(0.0f, 0.0f, 0.0f, 1.0f) == Quaternion::Identity());
+        REQUIRE(Quaternion(0.0f, 0.0f, 0.0f, 1.0f) == Quaternion::createIdentity());
     }
     SECTION("operator/=")
     {

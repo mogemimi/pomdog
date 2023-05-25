@@ -14,16 +14,17 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog {
 
-BoundingSphere::BoundingSphere(const Vector3& centerIn, float radiusIn)
+BoundingSphere::BoundingSphere(const Vector3& centerIn, float radiusIn) noexcept
     : center(centerIn)
     , radius(radiusIn)
 {
     POMDOG_ASSERT(radiusIn >= 0);
 }
 
-ContainmentType BoundingSphere::Contains(const Vector3& point) const
+ContainmentType
+BoundingSphere::contains(const Vector3& point) const noexcept
 {
-    const auto distanceSquared = math::DistanceSquared(point, center);
+    const auto distanceSquared = math::distanceSquared(point, center);
     const auto radiusSquared = radius * radius;
     if (distanceSquared > radiusSquared) {
         return ContainmentType::Disjoint;
@@ -34,11 +35,12 @@ ContainmentType BoundingSphere::Contains(const Vector3& point) const
     return ContainmentType::Intersects;
 }
 
-ContainmentType BoundingSphere::Contains(const BoundingBox& box) const
+ContainmentType
+BoundingSphere::contains(const BoundingBox& box) const noexcept
 {
     bool inside = true;
-    for (auto& corner : box.GetCorners()) {
-        if (Contains(corner) == ContainmentType::Disjoint) {
+    for (auto& corner : box.getCorners()) {
+        if (contains(corner) == ContainmentType::Disjoint) {
             inside = false;
             break;
         }
@@ -46,15 +48,16 @@ ContainmentType BoundingSphere::Contains(const BoundingBox& box) const
     if (inside) {
         return ContainmentType::Contains;
     }
-    if (Intersects(box)) {
+    if (intersects(box)) {
         return ContainmentType::Intersects;
     }
     return ContainmentType::Disjoint;
 }
 
-ContainmentType BoundingSphere::Contains(const BoundingSphere& sphere) const
+ContainmentType
+BoundingSphere::contains(const BoundingSphere& sphere) const noexcept
 {
-    auto distance = math::Distance(center, sphere.center);
+    const auto distance = math::distance(center, sphere.center);
     if (distance > radius + sphere.radius) {
         return ContainmentType::Disjoint;
     }
@@ -64,38 +67,40 @@ ContainmentType BoundingSphere::Contains(const BoundingSphere& sphere) const
     return ContainmentType::Intersects;
 }
 
-bool BoundingSphere::Intersects(const BoundingBox& box) const
+bool BoundingSphere::intersects(const BoundingBox& box) const noexcept
 {
-    return box.Intersects(*this);
+    return box.intersects(*this);
 }
 
-bool BoundingSphere::Intersects(const BoundingSphere& sphere) const
+bool BoundingSphere::intersects(const BoundingSphere& sphere) const noexcept
 {
-    const auto distance = math::Distance(center, sphere.center);
+    const auto distance = math::distance(center, sphere.center);
     return distance <= radius + sphere.radius;
 }
 
-PlaneIntersectionType BoundingSphere::Intersects(const Plane& plane) const
+PlaneIntersectionType
+BoundingSphere::intersects(const Plane& plane) const noexcept
 {
-    return plane.Intersects(*this);
+    return plane.intersects(*this);
 }
 
-std::optional<float> BoundingSphere::Intersects(const Ray& ray) const
+std::optional<float>
+BoundingSphere::intersects(const Ray& ray) const noexcept
 {
-    return ray.Intersects(*this);
+    return ray.intersects(*this);
 }
 
 BoundingSphere
-BoundingSphere::CreateFromPoints(const Vector3* points, std::size_t pointCount) noexcept
+BoundingSphere::createFromPoints(const Vector3* points, std::size_t pointCount) noexcept
 {
     POMDOG_ASSERT(points != nullptr);
     POMDOG_ASSERT(pointCount > 0);
     auto accessor = [&](std::size_t i) -> Vector3 { return points[i]; };
-    return CreateFromPoints(std::move(accessor), pointCount);
+    return createFromPoints(std::move(accessor), pointCount);
 }
 
 BoundingSphere
-BoundingSphere::CreateFromPoints(std::function<Vector3(std::size_t)> points, std::size_t pointCount) noexcept
+BoundingSphere::createFromPoints(std::function<Vector3(std::size_t)> points, std::size_t pointCount) noexcept
 {
     POMDOG_ASSERT(points != nullptr);
     POMDOG_ASSERT(pointCount > 0);
@@ -130,9 +135,9 @@ BoundingSphere::CreateFromPoints(std::function<Vector3(std::size_t)> points, std
         }
     }
 
-    const auto distX = math::DistanceSquared(points(maxX), points(minX));
-    const auto distY = math::DistanceSquared(points(maxY), points(minY));
-    const auto distZ = math::DistanceSquared(points(maxZ), points(minZ));
+    const auto distX = math::distanceSquared(points(maxX), points(minX));
+    const auto distY = math::distanceSquared(points(maxY), points(minY));
+    const auto distZ = math::distanceSquared(points(maxZ), points(minZ));
 
     std::size_t max = maxX;
     std::size_t min = minX;
@@ -146,20 +151,20 @@ BoundingSphere::CreateFromPoints(std::function<Vector3(std::size_t)> points, std
     }
 
     auto center = (points(max) + points(min)) * 0.5f;
-    auto radius = math::Distance(points(max), center);
+    auto radius = math::distance(points(max), center);
     auto radiusSq = radius * radius;
 
     // NOTE: Compute strict bounding sphere.
     for (std::size_t i = 0; i < pointCount; i++) {
         const auto p = points(i);
         const auto diff = p - center;
-        const auto distanceSq = math::LengthSquared(diff);
+        const auto distanceSq = math::lengthSquared(diff);
         if (distanceSq > radiusSq) {
             const auto distance = std::sqrt(distanceSq);
             const auto direction = diff / distance;
             const auto g = center - radius * direction;
             center = (g + p) * 0.5f;
-            radius = math::Distance(p, center);
+            radius = math::distance(p, center);
             radiusSq = radius * radius;
         }
     }

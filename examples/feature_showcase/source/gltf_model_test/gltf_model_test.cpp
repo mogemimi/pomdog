@@ -254,24 +254,24 @@ void GLTFModelTest::Update()
 
     constexpr float rotateSpeed = 0.5f;
 
-    auto projectionMatrix = Matrix4x4::CreatePerspectiveFieldOfViewLH(
-        math::ToRadians(45.0f),
+    auto projectionMatrix = Matrix4x4::createPerspectiveFieldOfViewLH(
+        math::toRadians(45.0f),
         static_cast<float>(presentationParameters.backBufferWidth) / presentationParameters.backBufferHeight,
         0.01f,
         1000.0f);
 
     auto cameraPosition = Vector3{0.0f, 8.0f, -2.0f};
     auto cameraDirection = Vector3{0.0f, -1.0f, 1.0f};
-    auto viewMatrix = Matrix4x4::CreateLookAtLH(cameraPosition, cameraPosition + cameraDirection, Vector3::UnitY());
+    auto viewMatrix = Matrix4x4::createLookAtLH(cameraPosition, cameraPosition + cameraDirection, Vector3::createUnitY());
 
-    auto lightDirection = math::Normalize(Vector3{-0.5f, -1.0f, 0.5f});
+    auto lightDirection = math::normalize(Vector3{-0.5f, -1.0f, 0.5f});
 
     // NOTE: Update constant buffer for world
     BasicEffect::WorldConstantBuffer worldConstants;
     worldConstants.ViewProjection = viewMatrix * projectionMatrix;
     worldConstants.View = viewMatrix;
     worldConstants.Projection = projectionMatrix;
-    worldConstants.InverseView = math::Invert(viewMatrix);
+    worldConstants.InverseView = math::invert(viewMatrix);
     worldConstants.LightDirection = Vector4{lightDirection, 0.0f};
     worldConstantBuffer->SetData(0, gpu::MakeByteSpan(worldConstants));
 
@@ -283,10 +283,10 @@ void GLTFModelTest::Update()
         rotateY = -math::TwoPi<float> * (static_cast<float>(mouse.Position.x) / static_cast<float>(presentationParameters.backBufferWidth));
     }
 
-    auto modelMatrix = Matrix4x4::CreateTranslation(Vector3{-0.5f, -0.5f, -0.5f})
-        * Matrix4x4::CreateScale(1.0f + std::cos(time * 5.0f) * 0.1f)
-        * Matrix4x4::CreateRotationY(rotateY)
-        * Matrix4x4::CreateTranslation(Vector3{0.0f, 0.0f, 6.0f});
+    auto modelMatrix = Matrix4x4::createTranslation(Vector3{-0.5f, -0.5f, -0.5f})
+        * Matrix4x4::createScale(1.0f + std::cos(time * 5.0f) * 0.1f)
+        * Matrix4x4::createRotationY(rotateY)
+        * Matrix4x4::createTranslation(Vector3{0.0f, 0.0f, 6.0f});
 
     constexpr float metalness = 0.1f;
 
@@ -304,7 +304,7 @@ void GLTFModelTest::Draw()
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
-    pass.renderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
+    pass.renderTargets[0] = {nullptr, Color::createCornflowerBlue().toVector4()};
     pass.depthStencilBuffer = nullptr;
     pass.clearDepth = 1.0f;
     pass.clearStencil = std::uint8_t(0);

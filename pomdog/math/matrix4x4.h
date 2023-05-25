@@ -37,8 +37,8 @@ public:
     Matrix4x4& operator/=(float factor) noexcept;
 
     // Unary operators:
-    Matrix4x4 operator+() const noexcept;
-    Matrix4x4 operator-() const noexcept;
+    [[nodiscard]] Matrix4x4 operator+() const noexcept;
+    [[nodiscard]] Matrix4x4 operator-() const noexcept;
 
     // Binary operators:
     [[nodiscard]] Matrix4x4 operator+(const Matrix4x4&) const noexcept;
@@ -54,84 +54,85 @@ public:
     [[nodiscard]] const float& operator()(std::size_t row, std::size_t column) const noexcept;
     [[nodiscard]] float& operator()(std::size_t row, std::size_t column) noexcept;
 
-    void SetTranslation(const Vector3&) noexcept;
+    void setTranslation(const Vector3&) noexcept;
 
     [[nodiscard]] Vector3
-    GetTranslation() const noexcept;
+    getTranslation() const noexcept;
 
-    void SetScale(const Vector3&) noexcept;
+    void setScale(const Vector3&) noexcept;
 
     [[nodiscard]] Vector3
-    GetScale() const noexcept;
+    getScale() const noexcept;
 
     [[nodiscard]] static Matrix4x4
-    CreateTranslation(const Vector3& position) noexcept;
+    createTranslation(const Vector3& position) noexcept;
 
     [[nodiscard]] static Matrix4x4
-    CreateScale(float scale) noexcept;
+    createScale(float scale) noexcept;
 
     [[nodiscard]] static Matrix4x4
-    CreateScale(const Vector3& scale) noexcept;
+    createScale(const Vector3& scale) noexcept;
 
     [[nodiscard]] static Matrix4x4
-    CreateRotationX(const Radian<float>& angle);
+    createRotationX(const Radian<float>& angle);
 
     [[nodiscard]] static Matrix4x4
-    CreateRotationY(const Radian<float>& angle);
+    createRotationY(const Radian<float>& angle);
 
     [[nodiscard]] static Matrix4x4
-    CreateRotationZ(const Radian<float>& angle);
+    createRotationZ(const Radian<float>& angle);
 
     [[nodiscard]] static Matrix4x4
-    CreateFromQuaternion(const Quaternion& quaternion);
+    createFromQuaternion(const Quaternion& quaternion);
 
     [[nodiscard]] static Matrix4x4
-    CreateLookAtLH(const Vector3& eye, const Vector3& at, const Vector3& up);
+    createLookAtLH(const Vector3& eye, const Vector3& at, const Vector3& up);
 
     [[nodiscard]] static Matrix4x4
-    CreateLookAtRH(const Vector3& eye, const Vector3& at, const Vector3& up);
+    createLookAtRH(const Vector3& eye, const Vector3& at, const Vector3& up);
 
     [[nodiscard]] static Matrix4x4
-    CreatePerspectiveLH(float width, float height, float zNear, float zFar);
+    createPerspectiveLH(float width, float height, float zNear, float zFar);
 
     [[nodiscard]] static Matrix4x4
-    CreatePerspectiveRH(float width, float height, float zNear, float zFar);
+    createPerspectiveRH(float width, float height, float zNear, float zFar);
 
     [[nodiscard]] static Matrix4x4
-    CreatePerspectiveFieldOfViewLH(const Radian<float>& fovy, float aspect, float zNear, float zFar);
+    createPerspectiveFieldOfViewLH(const Radian<float>& fovy, float aspect, float zNear, float zFar);
 
     [[nodiscard]] static Matrix4x4
-    CreatePerspectiveFieldOfViewRH(const Radian<float>& fovy, float aspect, float zNear, float zFar);
+    createPerspectiveFieldOfViewRH(const Radian<float>& fovy, float aspect, float zNear, float zFar);
 
     [[nodiscard]] static Matrix4x4
-    CreatePerspectiveOffCenterLH(float left, float right, float bottom, float top, float zNear, float zFar);
+    createPerspectiveOffCenterLH(float left, float right, float bottom, float top, float zNear, float zFar);
 
     [[nodiscard]] static Matrix4x4
-    CreatePerspectiveOffCenterRH(float left, float right, float bottom, float top, float zNear, float zFar);
+    createPerspectiveOffCenterRH(float left, float right, float bottom, float top, float zNear, float zFar);
 
     [[nodiscard]] static Matrix4x4
-    CreateOrthographicLH(float width, float height, float zNearPlane, float zFarPlane);
+    createOrthographicLH(float width, float height, float zNearPlane, float zFarPlane);
 
     [[nodiscard]] static Matrix4x4
-    CreateOrthographicRH(float width, float height, float zNearPlane, float zFarPlane);
+    createOrthographicRH(float width, float height, float zNearPlane, float zFarPlane);
 
     [[nodiscard]] static Matrix4x4
-    CreateOrthographicOffCenterLH(float left, float right, float bottom, float top, float zNearPlane, float zFarPlane);
+    createOrthographicOffCenterLH(float left, float right, float bottom, float top, float zNearPlane, float zFarPlane);
 
     [[nodiscard]] static Matrix4x4
-    CreateOrthographicOffCenterRH(float left, float right, float bottom, float top, float zNearPlane, float zFarPlane);
+    createOrthographicOffCenterRH(float left, float right, float bottom, float top, float zNearPlane, float zFarPlane);
 
     [[nodiscard]] static Matrix4x4
-    CreateFromAxisAngle(const Vector3& axis, const Radian<float>& angle);
+    createFromAxisAngle(const Vector3& axis, const Radian<float>& angle);
 
     /// Returns pointer to the first element.
-    [[nodiscard]] const float* Data() const noexcept;
+    [[nodiscard]] const float* data() const noexcept;
 
     /// Returns pointer to the first element.
-    [[nodiscard]] float* Data() noexcept;
+    [[nodiscard]] float* data() noexcept;
 
     /// Returns the identity matrix.
-    [[nodiscard]] static Matrix4x4 Identity() noexcept;
+    [[nodiscard]] static Matrix4x4
+    createIdentity() noexcept;
 };
 
 /// Multiplies a matrix by a scalar factor.
@@ -144,34 +145,34 @@ namespace pomdog::math {
 
 /// Calculates and returns the determinant of the matrix.
 [[nodiscard]] float POMDOG_EXPORT
-Determinant(const Matrix4x4& matrix) noexcept;
+determinant(const Matrix4x4& matrix) noexcept;
 
 /// Returns the minor of a matrix.
 [[nodiscard]] Matrix3x3 POMDOG_EXPORT
-Minor3x3(const Matrix4x4& matrix, std::size_t row, std::size_t column);
+minor3x3(const Matrix4x4& matrix, std::size_t row, std::size_t column);
 
 /// Multiplies a matrix by another matrix.
 [[nodiscard]] Matrix4x4 POMDOG_EXPORT
-Multiply(const Matrix4x4& matrix1, const Matrix4x4& matrix2) noexcept;
+multiply(const Matrix4x4& matrix1, const Matrix4x4& matrix2) noexcept;
 
 /// Multiplies a matrix by a scalar factor.
 [[nodiscard]] Matrix4x4 POMDOG_EXPORT
-Multiply(const Matrix4x4& matrix1, float factor) noexcept;
+multiply(const Matrix4x4& matrix1, float factor) noexcept;
 
 /// Calculates and returns the adjoint matrix.
 [[nodiscard]] Matrix4x4 POMDOG_EXPORT
-Adjoint(const Matrix4x4& matrix);
+adjoint(const Matrix4x4& matrix);
 
 /// Returns a matrix that transposes the rows and columns of the input matrix.
 [[nodiscard]] Matrix4x4 POMDOG_EXPORT
-Transpose(const Matrix4x4& matrix) noexcept;
+transpose(const Matrix4x4& matrix) noexcept;
 
 /// Calculates and returns the inverse of a matrix.
 [[nodiscard]] Matrix4x4 POMDOG_EXPORT
-Invert(const Matrix4x4& matrix);
+invert(const Matrix4x4& matrix);
 
 /// Performs a linear interpolation between two matrices.
 [[nodiscard]] Matrix4x4 POMDOG_EXPORT
-Lerp(const Matrix4x4& source1, const Matrix4x4& source2, float amount) noexcept;
+lerp(const Matrix4x4& source1, const Matrix4x4& source2, float amount) noexcept;
 
 } // namespace pomdog::math

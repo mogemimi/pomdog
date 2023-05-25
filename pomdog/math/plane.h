@@ -26,29 +26,40 @@ public:
     // NOTE: You should only use the vectors of a triangle in a left-handed coordinate system.
     Plane(const Vector3& point0, const Vector3& point1, const Vector3& point2) noexcept;
 
-    void Normalize() noexcept;
+    void normalize() noexcept;
 
-    static Plane Normalize(const Plane& plane) noexcept;
+    [[nodiscard]] static Plane
+    normalize(const Plane& plane) noexcept;
 
-    float Dot(const Vector4& vec) const noexcept;
+    [[nodiscard]] float
+    dot(const Vector4& vec) const noexcept;
 
-    float DotCoordinate(const Vector3& vec) const noexcept;
+    [[nodiscard]] float
+    dotCoordinate(const Vector3& vec) const noexcept;
 
-    float DotNormal(const Vector3& vec) const noexcept;
+    [[nodiscard]] float
+    dotNormal(const Vector3& vec) const noexcept;
 
-    float GetDistanceToPoint(const Vector3& point) const noexcept;
+    [[nodiscard]] float
+    getDistanceToPoint(const Vector3& point) const noexcept;
 
-    PlaneIntersectionType Intersects(const Vector3& point) const noexcept;
+    [[nodiscard]] PlaneIntersectionType
+    intersects(const Vector3& point) const noexcept;
 
-    PlaneIntersectionType Intersects(const BoundingBox& box) const noexcept;
+    [[nodiscard]] PlaneIntersectionType
+    intersects(const BoundingBox& box) const noexcept;
 
-    PlaneIntersectionType Intersects(const BoundingFrustum& frustum) const;
+    [[nodiscard]] PlaneIntersectionType
+    intersects(const BoundingFrustum& frustum) const;
 
-    PlaneIntersectionType Intersects(const BoundingSphere& sphere) const noexcept;
+    [[nodiscard]] PlaneIntersectionType
+    intersects(const BoundingSphere& sphere) const noexcept;
 
-    static Plane Transform(const Plane& plane, const Matrix4x4& matrix);
+    [[nodiscard]] static Plane
+    transform(const Plane& plane, const Matrix4x4& matrix);
 
-    static Plane CreateFromPointNormal(const Vector3& point, const Vector3& normal);
+    [[nodiscard]] static Plane
+    createFromPointNormal(const Vector3& point, const Vector3& normal);
 };
 
 } // namespace pomdog

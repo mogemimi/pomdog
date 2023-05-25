@@ -37,43 +37,43 @@ bool Rectangle::operator!=(const Rectangle& other) const noexcept
            height != other.height;
 }
 
-std::int32_t Rectangle::GetBottom() const noexcept
+std::int32_t Rectangle::getBottom() const noexcept
 {
     return y + height;
 }
 
-std::int32_t Rectangle::GetRight() const noexcept
+std::int32_t Rectangle::getRight() const noexcept
 {
     return x + width;
 }
 
-std::int32_t Rectangle::GetTop() const noexcept
+std::int32_t Rectangle::getTop() const noexcept
 {
     return y;
 }
 
-std::int32_t Rectangle::GetLeft() const noexcept
+std::int32_t Rectangle::getLeft() const noexcept
 {
     return x;
 }
 
-Point2D Rectangle::GetCenter() const
+Point2D Rectangle::getCenter() const
 {
     return {x + width / 2, y + height / 2};
 }
 
-Point2D Rectangle::GetLocation() const
+Point2D Rectangle::getLocation() const
 {
     return {x, y};
 }
 
-void Rectangle::SetLocation(const Point2D& position)
+void Rectangle::setLocation(const Point2D& position)
 {
     x = position.x;
     y = position.y;
 }
 
-void Rectangle::Inflate(std::int32_t horizontalAmount, std::int32_t verticalAmount)
+void Rectangle::inflate(std::int32_t horizontalAmount, std::int32_t verticalAmount)
 {
     x -= horizontalAmount;
     y -= verticalAmount;
@@ -81,19 +81,19 @@ void Rectangle::Inflate(std::int32_t horizontalAmount, std::int32_t verticalAmou
     height += verticalAmount * 2;
 }
 
-void Rectangle::Offset(std::int32_t offsetX, std::int32_t offsetY)
+void Rectangle::offset(std::int32_t offsetX, std::int32_t offsetY)
 {
     x += offsetX;
     y += offsetY;
 }
 
-void Rectangle::Offset(const Point2D& offset)
+void Rectangle::offset(const Point2D& offset)
 {
     x += offset.x;
     y += offset.y;
 }
 
-bool Rectangle::Contains(int pointX, int pointY) const noexcept
+bool Rectangle::contains(int pointX, int pointY) const noexcept
 {
     return pointX >= x &&
            pointX <= (x + width) &&
@@ -101,29 +101,29 @@ bool Rectangle::Contains(int pointX, int pointY) const noexcept
            pointY <= (y + height);
 }
 
-bool Rectangle::Contains(const Point2D& point) const noexcept
+bool Rectangle::contains(const Point2D& point) const noexcept
 {
-    return Contains(point.x, point.y);
+    return contains(point.x, point.y);
 }
 
-bool Rectangle::Contains(const Rectangle& rect) const
+bool Rectangle::contains(const Rectangle& rect) const
 {
-    return rect.GetLeft() >= GetLeft() &&
-           rect.GetRight() <= GetRight() &&
-           rect.GetTop() >= GetTop() &&
-           rect.GetBottom() <= GetBottom();
+    return rect.getLeft() >= getLeft() &&
+           rect.getRight() <= getRight() &&
+           rect.getTop() >= getTop() &&
+           rect.getBottom() <= getBottom();
 }
 
-bool Rectangle::Intersects(const Rectangle& rect) const
+bool Rectangle::intersects(const Rectangle& rect) const
 {
-    POMDOG_ASSERT(GetLeft() <= GetRight());
-    POMDOG_ASSERT(GetTop() <= GetBottom());
-    POMDOG_ASSERT(rect.GetLeft() <= rect.GetRight());
+    POMDOG_ASSERT(getLeft() <= getRight());
+    POMDOG_ASSERT(getTop() <= getBottom());
+    POMDOG_ASSERT(rect.getLeft() <= rect.getRight());
 
-    return GetLeft() < rect.GetRight() &&
-           GetRight() > rect.GetLeft() &&
-           GetTop() < rect.GetBottom() &&
-           GetBottom() > rect.GetTop();
+    return getLeft() < rect.getRight() &&
+           getRight() > rect.getLeft() &&
+           getTop() < rect.getBottom() &&
+           getBottom() > rect.getTop();
 }
 
 } // namespace pomdog

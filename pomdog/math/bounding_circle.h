@@ -17,22 +17,22 @@ public:
 public:
     BoundingCircle() noexcept = default;
 
-    BoundingCircle(const Vector2& center, float radius);
+    BoundingCircle(const Vector2& center, float radius) noexcept;
 
     [[nodiscard]] ContainmentType
-    Contains(const Vector2& box) const;
+    contains(const Vector2& box) const noexcept;
 
     [[nodiscard]] ContainmentType
-    Contains(const BoundingBox2D& box) const;
+    contains(const BoundingBox2D& box) const noexcept;
 
     [[nodiscard]] ContainmentType
-    Contains(const BoundingCircle& circle) const;
+    contains(const BoundingCircle& circle) const noexcept;
 
     [[nodiscard]] bool
-    Intersects(const BoundingBox2D& box) const;
+    intersects(const BoundingBox2D& box) const noexcept;
 
     [[nodiscard]] bool
-    Intersects(const BoundingCircle& circle) const;
+    intersects(const BoundingCircle& circle) const noexcept;
 };
 
 } // namespace pomdog

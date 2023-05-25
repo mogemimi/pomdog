@@ -116,7 +116,7 @@ bool Point2D::operator!=(const Point2D& other) const noexcept
     return ((x != other.x) || (y != other.y));
 }
 
-Point2D Point2D::Zero() noexcept
+Point2D Point2D::createZero() noexcept
 {
     return Point2D{0, 0};
 }
@@ -134,7 +134,8 @@ operator*(std::int32_t factor, const Point2D& coordinate) noexcept
 
 namespace pomdog::math {
 
-Point2D ToPoint2D(const Vector2& vec) noexcept
+Point2D
+toPoint2D(const Vector2& vec) noexcept
 {
     return Point2D{
         static_cast<std::int32_t>(vec.x),
@@ -142,7 +143,8 @@ Point2D ToPoint2D(const Vector2& vec) noexcept
     };
 }
 
-Vector2 ToVector2(const Point2D& point) noexcept
+Vector2
+toVector2(const Point2D& point) noexcept
 {
     return Vector2{
         static_cast<float>(point.x),
@@ -150,7 +152,8 @@ Vector2 ToVector2(const Point2D& point) noexcept
     };
 }
 
-Point2D Abs(const Point2D& point) noexcept
+Point2D
+abs(const Point2D& point) noexcept
 {
     return Point2D{
         std::abs(point.x),

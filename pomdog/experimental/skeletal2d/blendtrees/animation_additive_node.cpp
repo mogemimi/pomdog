@@ -22,7 +22,7 @@ SkeletonPose CreateEmptyPose(const Skeleton& skeleton)
     JointPose jointPose;
     jointPose.Scale = 0;
     jointPose.Rotation = 0;
-    jointPose.Translate = Vector2::Zero();
+    jointPose.Translate = Vector2::createZero();
     skeletonPose.JointPoses.resize(skeleton.JointCount(), jointPose);
     return skeletonPose;
 }

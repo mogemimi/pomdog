@@ -20,7 +20,7 @@ ParticleEmitterShapeSector::ParticleEmitterShapeSector(Radian<float>&& centralAn
 std::tuple<Vector3, Vector3>
 ParticleEmitterShapeSector::Compute(random::Xoroshiro128StarStar& random) const
 {
-    auto emitPosition = Vector3::Zero();
+    auto emitPosition = Vector3::createZero();
 
     std::uniform_real_distribution<float> distribution{-0.5f, 0.5f};
     auto emitAngle = centralAngle * distribution(random);

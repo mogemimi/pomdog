@@ -23,10 +23,10 @@ TEST_CASE("Vector3", "[Vector3]")
     }
     SECTION("Constants")
     {
-        REQUIRE(Vector3{1.0f, 0.0f, 0.0f} == Vector3::UnitX());
-        REQUIRE(Vector3{0.0f, 1.0f, 0.0f} == Vector3::UnitY());
-        REQUIRE(Vector3{0.0f, 0.0f, 1.0f} == Vector3::UnitZ());
-        REQUIRE(Vector3{0.0f, 0.0f, 0.0f} == Vector3::Zero());
+        REQUIRE(Vector3{1.0f, 0.0f, 0.0f} == Vector3::createUnitX());
+        REQUIRE(Vector3{0.0f, 1.0f, 0.0f} == Vector3::createUnitY());
+        REQUIRE(Vector3{0.0f, 0.0f, 1.0f} == Vector3::createUnitZ());
+        REQUIRE(Vector3{0.0f, 0.0f, 0.0f} == Vector3::createZero());
     }
     SECTION("Addition")
     {
@@ -53,71 +53,71 @@ TEST_CASE("Vector3", "[Vector3]")
     }
     SECTION("Lerp")
     {
-        using pomdog::math::Lerp;
-        REQUIRE(Vector3{0.0f, 0.0f, 0.0f} == Lerp(Vector3::Zero(), Vector3{40.0f, 50.0f, 60.0f}, 0.0f));
-        REQUIRE(Vector3{4.0f, 5.0f, 6.0f} == Lerp(Vector3::Zero(), Vector3{40.0f, 50.0f, 60.0f}, 0.1f));
-        REQUIRE(Vector3{36.f, 45.f, 54.f} == Lerp(Vector3::Zero(), Vector3{40.0f, 50.0f, 60.0f}, 0.9f));
-        REQUIRE(Vector3{40.f, 50.f, 60.f} == Lerp(Vector3::Zero(), Vector3{40.0f, 50.0f, 60.0f}, 1.0f));
+        using pomdog::math::lerp;
+        REQUIRE(Vector3{0.0f, 0.0f, 0.0f} == lerp(Vector3::createZero(), Vector3{40.0f, 50.0f, 60.0f}, 0.0f));
+        REQUIRE(Vector3{4.0f, 5.0f, 6.0f} == lerp(Vector3::createZero(), Vector3{40.0f, 50.0f, 60.0f}, 0.1f));
+        REQUIRE(Vector3{36.f, 45.f, 54.f} == lerp(Vector3::createZero(), Vector3{40.0f, 50.0f, 60.0f}, 0.9f));
+        REQUIRE(Vector3{40.f, 50.f, 60.f} == lerp(Vector3::createZero(), Vector3{40.0f, 50.0f, 60.0f}, 1.0f));
 
-        REQUIRE(Vector3{1.0f, 2.0f, 3.0f} == Lerp(Vector3{1.0f, 2.0f, 3.0f}, Vector3{4.0f, 5.0f, 6.0f}, 0.0f));
-        REQUIRE(Vector3{2.5f, 3.5f, 4.5f} == Lerp(Vector3{1.0f, 2.0f, 3.0f}, Vector3{4.0f, 5.0f, 6.0f}, 0.5f));
-        REQUIRE(Vector3{4.0f, 5.0f, 6.0f} == Lerp(Vector3{1.0f, 2.0f, 3.0f}, Vector3{4.0f, 5.0f, 6.0f}, 1.0f));
+        REQUIRE(Vector3{1.0f, 2.0f, 3.0f} == lerp(Vector3{1.0f, 2.0f, 3.0f}, Vector3{4.0f, 5.0f, 6.0f}, 0.0f));
+        REQUIRE(Vector3{2.5f, 3.5f, 4.5f} == lerp(Vector3{1.0f, 2.0f, 3.0f}, Vector3{4.0f, 5.0f, 6.0f}, 0.5f));
+        REQUIRE(Vector3{4.0f, 5.0f, 6.0f} == lerp(Vector3{1.0f, 2.0f, 3.0f}, Vector3{4.0f, 5.0f, 6.0f}, 1.0f));
     }
     SECTION("Normalize")
     {
-        using pomdog::math::Normalize;
-        REQUIRE(Normalize(Vector3{0.0f, 0.0f, 0.0f}) == Vector3{0.0f, 0.0f, 0.0f});
-        REQUIRE(Normalize(Vector3{1.0f, 0.0f, 0.0f}) == Vector3{1.0f, 0.0f, 0.0f});
-        REQUIRE(Normalize(Vector3{0.0f, 1.0f, 0.0f}) == Vector3{0.0f, 1.0f, 0.0f});
-        REQUIRE(Normalize(Vector3{0.0f, 0.0f, 1.0f}) == Vector3{0.0f, 0.0f, 1.0f});
+        using pomdog::math::normalize;
+        REQUIRE(normalize(Vector3{0.0f, 0.0f, 0.0f}) == Vector3{0.0f, 0.0f, 0.0f});
+        REQUIRE(normalize(Vector3{1.0f, 0.0f, 0.0f}) == Vector3{1.0f, 0.0f, 0.0f});
+        REQUIRE(normalize(Vector3{0.0f, 1.0f, 0.0f}) == Vector3{0.0f, 1.0f, 0.0f});
+        REQUIRE(normalize(Vector3{0.0f, 0.0f, 1.0f}) == Vector3{0.0f, 0.0f, 1.0f});
     }
     SECTION("Cross_AssociativeLow")
     {
-        using pomdog::math::Cross;
+        using pomdog::math::cross;
 
         // NOTE: Associative low of vectors
-        const Vector3 p = Vector3::UnitX();
-        const Vector3 q = Vector3::UnitY();
-        const Vector3 r = Vector3::UnitZ();
+        const Vector3 p = Vector3::createUnitX();
+        const Vector3 q = Vector3::createUnitY();
+        const Vector3 r = Vector3::createUnitZ();
 
-        REQUIRE(3.0f * Cross(Vector3::Zero(), p) == Cross(Vector3::Zero(), 3.0f * p));
-        REQUIRE(-7.0f * Cross(Vector3::Zero(), q) == Cross(Vector3::Zero(), -7.0f * q));
-        REQUIRE(42.0f * Cross(Vector3::Zero(), r) == Cross(Vector3::Zero(), 42.0f * r));
+        REQUIRE(3.0f * cross(Vector3::createZero(), p) == cross(Vector3::createZero(), 3.0f * p));
+        REQUIRE(-7.0f * cross(Vector3::createZero(), q) == cross(Vector3::createZero(), -7.0f * q));
+        REQUIRE(42.0f * cross(Vector3::createZero(), r) == cross(Vector3::createZero(), 42.0f * r));
 
         const Vector3 a = {42.0f, 7.0f, 13.0f};
         const Vector3 b = {5.0f, -8.0f, 9.0f};
         const Vector3 c = {-81.0f, -63.0f, -2.0f};
 
-        REQUIRE(5.0f * Cross(a, b) == Cross(5.0f * a, b));
-        REQUIRE(5.0f * Cross(a, b) == Cross(a, 5.0f * b));
-        REQUIRE(-14.0f * Cross(b, c) == Cross(-14.0f * b, c));
-        REQUIRE(-14.0f * Cross(b, c) == Cross(b, -14.0f * c));
-        REQUIRE(-72.0f * Cross(c, a) == Cross(-72.0f * c, a));
-        REQUIRE(-72.0f * Cross(c, a) == Cross(c, -72.0f * a));
+        REQUIRE(5.0f * cross(a, b) == cross(5.0f * a, b));
+        REQUIRE(5.0f * cross(a, b) == cross(a, 5.0f * b));
+        REQUIRE(-14.0f * cross(b, c) == cross(-14.0f * b, c));
+        REQUIRE(-14.0f * cross(b, c) == cross(b, -14.0f * c));
+        REQUIRE(-72.0f * cross(c, a) == cross(-72.0f * c, a));
+        REQUIRE(-72.0f * cross(c, a) == cross(c, -72.0f * a));
     }
     SECTION("Cross_CommutativeProperty")
     {
-        using pomdog::math::Cross;
+        using pomdog::math::cross;
 
         // NOTE: Commutative property of vectors
-        REQUIRE(Vector3::Zero() == Cross(Vector3::Zero(), Vector3::Zero()));
+        REQUIRE(Vector3::createZero() == cross(Vector3::createZero(), Vector3::createZero()));
 
-        REQUIRE(-Cross(Vector3::UnitX(), Vector3::Zero()) == Cross(Vector3::Zero(), Vector3::UnitX()));
-        REQUIRE(-Cross(Vector3::UnitY(), Vector3::Zero()) == Cross(Vector3::Zero(), Vector3::UnitY()));
-        REQUIRE(-Cross(Vector3::UnitZ(), Vector3::Zero()) == Cross(Vector3::Zero(), Vector3::UnitZ()));
+        REQUIRE(-cross(Vector3::createUnitX(), Vector3::createZero()) == cross(Vector3::createZero(), Vector3::createUnitX()));
+        REQUIRE(-cross(Vector3::createUnitY(), Vector3::createZero()) == cross(Vector3::createZero(), Vector3::createUnitY()));
+        REQUIRE(-cross(Vector3::createUnitZ(), Vector3::createZero()) == cross(Vector3::createZero(), Vector3::createUnitZ()));
 
         const Vector3 a = {42.0f, 7.0f, 13.0f};
         const Vector3 b = {5.0f, -8.0f, 9.0f};
         const Vector3 c = {-81.0f, -63.0f, -2.0f};
 
-        REQUIRE(-Cross(a, b) == Cross(b, a));
-        REQUIRE(-Cross(a, c) == Cross(c, a));
-        REQUIRE(-Cross(b, c) == Cross(c, b));
+        REQUIRE(-cross(a, b) == cross(b, a));
+        REQUIRE(-cross(a, c) == cross(c, a));
+        REQUIRE(-cross(b, c) == cross(c, b));
     }
     SECTION("Transform_IdentityMatrix")
     {
-        using pomdog::math::Transform;
-        REQUIRE(Vector3{0.0f, 0.0f, 0.0f} == Transform(Vector3{0.0f, 0.0f, 0.0f}, Matrix4x4::Identity()));
-        REQUIRE(Vector3{41.0f, 42.0f, 43.0f} == Transform(Vector3{41.0f, 42.0f, 43.0f}, Matrix4x4::Identity()));
+        using pomdog::math::transform;
+        REQUIRE(Vector3{0.0f, 0.0f, 0.0f} == transform(Vector3{0.0f, 0.0f, 0.0f}, Matrix4x4::createIdentity()));
+        REQUIRE(Vector3{41.0f, 42.0f, 43.0f} == transform(Vector3{41.0f, 42.0f, 43.0f}, Matrix4x4::createIdentity()));
     }
 }

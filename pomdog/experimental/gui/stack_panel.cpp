@@ -82,8 +82,8 @@ void StackPanel::OnPointerPressed(const PointerPoint& pointerPoint)
         GetWidth(),
         collisionHeight};
 
-    if (captionBar.Contains(pointInView)) {
-        startTouchPoint = math::ToVector2(pointInView);
+    if (captionBar.contains(pointInView)) {
+        startTouchPoint = math::toVector2(pointInView);
     }
 }
 
@@ -94,17 +94,17 @@ void StackPanel::OnPointerMoved(const PointerPoint& pointerPoint)
     }
 
     auto pointInView = UIHelper::ProjectToChildSpace(pointerPoint.Position, GetGlobalPosition());
-    auto position = math::ToVector2(pointInView);
+    auto position = math::toVector2(pointInView);
 
     auto tangent = position - *startTouchPoint;
-    auto distanceSquared = math::LengthSquared(tangent);
+    auto distanceSquared = math::lengthSquared(tangent);
 
     if (distanceSquared >= 1.4143f) {
-        SetPosition(GetPosition() + math::ToPoint2D(tangent));
+        SetPosition(GetPosition() + math::toPoint2D(tangent));
 
         // NOTE: recalculate position in current coordinate system
         pointInView = UIHelper::ProjectToChildSpace(pointerPoint.Position, GetGlobalPosition());
-        position = math::ToVector2(pointInView);
+        position = math::toVector2(pointInView);
         startTouchPoint = position;
     }
 }
@@ -129,7 +129,7 @@ std::shared_ptr<Widget> StackPanel::GetChildAt(const Point2D& position)
 {
     POMDOG_ASSERT(verticalLayout != nullptr);
     auto bounds = verticalLayout->GetBounds();
-    if (bounds.Contains(position)) {
+    if (bounds.contains(position)) {
         return verticalLayout;
     }
     return nullptr;
@@ -213,7 +213,7 @@ void StackPanel::Draw(DrawingContext& drawingContext)
         Rectangle{globalPos.x, globalPos.y + (GetHeight() - barHeight), GetWidth(), barHeight},
         colorScheme->PanelTitleBarColor);
 
-    const auto pos = math::ToVector2(globalPos);
+    const auto pos = math::toVector2(globalPos);
     primitiveBatch->DrawLine(pos + Vector2{0.0f, 0.0f}, pos + Vector2{w, 0.0f}, colorScheme->PanelOutlineBorderColor, 1.0f);
     primitiveBatch->DrawLine(pos + Vector2{0.0f, 0.0f}, pos + Vector2{0.0f, h}, colorScheme->PanelOutlineBorderColor, 1.0f);
     primitiveBatch->DrawLine(pos + Vector2{0.0f, h}, pos + Vector2{w, h}, colorScheme->PanelOutlineBorderColor, 1.0f);

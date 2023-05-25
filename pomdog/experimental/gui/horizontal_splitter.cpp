@@ -58,7 +58,7 @@ HorizontalSplitter::HorizontalSplitter(
     int heightIn)
     : Widget(dispatcher)
     , margin{0, 0, 0, 0}
-    , backgroundColor(Color::TransparentBlack())
+    , backgroundColor(Color::createTransparentBlack())
     , needToUpdateLayout(true)
 {
     SetSize(widthIn, heightIn);
@@ -235,7 +235,7 @@ std::shared_ptr<Widget> HorizontalSplitter::GetChildAt(const Point2D& position)
 {
     {
         auto bounds = splitterHandle->GetBounds();
-        if (bounds.Contains(position)) {
+        if (bounds.contains(position)) {
             return splitterHandle;
         }
     }
@@ -245,7 +245,7 @@ std::shared_ptr<Widget> HorizontalSplitter::GetChildAt(const Point2D& position)
             continue;
         }
         auto bounds = child.widget->GetBounds();
-        if (bounds.Contains(position)) {
+        if (bounds.contains(position)) {
             return child.widget;
         }
     }

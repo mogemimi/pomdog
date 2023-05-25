@@ -120,7 +120,7 @@ FishEyeEffect::FishEyeEffect(
 
 void FishEyeEffect::SetStrength(float strength)
 {
-    strength_ = math::Clamp(strength, -0.5f, 0.5f);
+    strength_ = math::clamp(strength, -0.5f, 0.5f);
 }
 
 void FishEyeEffect::UpdateGPUResources()

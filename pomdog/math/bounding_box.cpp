@@ -9,13 +9,14 @@
 
 namespace pomdog {
 
-BoundingBox::BoundingBox(const Vector3& minIn, const Vector3& maxIn)
+BoundingBox::BoundingBox(const Vector3& minIn, const Vector3& maxIn) noexcept
     : min(minIn)
     , max(maxIn)
 {
 }
 
-ContainmentType BoundingBox::Contains(const Vector3& point) const
+ContainmentType
+BoundingBox::contains(const Vector3& point) const noexcept
 {
     if ((point.x < min.x) ||
         (point.y < min.y) ||
@@ -36,7 +37,8 @@ ContainmentType BoundingBox::Contains(const Vector3& point) const
     return ContainmentType::Contains;
 }
 
-ContainmentType BoundingBox::Contains(const BoundingBox& box) const
+ContainmentType
+BoundingBox::contains(const BoundingBox& box) const noexcept
 {
     if ((min.x > box.max.x || max.x < box.min.x) ||
         (min.y > box.max.y || max.y < box.min.y) ||
@@ -51,10 +53,11 @@ ContainmentType BoundingBox::Contains(const BoundingBox& box) const
     return ContainmentType::Intersects;
 }
 
-ContainmentType BoundingBox::Contains(const BoundingSphere& sphere) const
+ContainmentType
+BoundingBox::contains(const BoundingSphere& sphere) const noexcept
 {
-    const auto clamped = math::Clamp(sphere.center, min, max);
-    const auto distanceSquared = math::DistanceSquared(sphere.center, clamped);
+    const auto clamped = math::clamp(sphere.center, min, max);
+    const auto distanceSquared = math::distanceSquared(sphere.center, clamped);
 
     if (distanceSquared > sphere.radius * sphere.radius) {
         return ContainmentType::Disjoint;
@@ -70,31 +73,34 @@ ContainmentType BoundingBox::Contains(const BoundingSphere& sphere) const
     return ContainmentType::Intersects;
 }
 
-bool BoundingBox::Intersects(const BoundingBox& box) const
+bool BoundingBox::intersects(const BoundingBox& box) const noexcept
 {
     return (max.x >= box.min.x && min.x <= box.max.x) &&
            (max.y >= box.min.y && min.y <= box.max.y) &&
            (max.z >= box.min.z && min.z <= box.max.z);
 }
 
-bool BoundingBox::Intersects(const BoundingSphere& sphere) const
+bool BoundingBox::intersects(const BoundingSphere& sphere) const noexcept
 {
-    const auto clamped = math::Clamp(sphere.center, min, max);
-    const auto distanceSquared = math::DistanceSquared(sphere.center, clamped);
+    const auto clamped = math::clamp(sphere.center, min, max);
+    const auto distanceSquared = math::distanceSquared(sphere.center, clamped);
     return distanceSquared <= sphere.radius * sphere.radius;
 }
 
-PlaneIntersectionType BoundingBox::Intersects(const Plane& plane) const
+PlaneIntersectionType
+BoundingBox::intersects(const Plane& plane) const noexcept
 {
-    return plane.Intersects(*this);
+    return plane.intersects(*this);
 }
 
-std::optional<float> BoundingBox::Intersects(const Ray& ray) const
+std::optional<float>
+BoundingBox::intersects(const Ray& ray) const noexcept
 {
-    return ray.Intersects(*this);
+    return ray.intersects(*this);
 }
 
-std::array<Vector3, BoundingBox::CornerCount> BoundingBox::GetCorners() const noexcept
+std::array<Vector3, BoundingBox::CornerCount>
+BoundingBox::getCorners() const noexcept
 {
     return std::array<Vector3, BoundingBox::CornerCount>{{
         Vector3{min.x, max.y, max.z},

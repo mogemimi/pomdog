@@ -232,9 +232,9 @@ void GameMain::Update()
 {
     switch (pongScene) {
     case PongScenes::StartWaiting: {
-        ball.position = Vector2::Zero();
-        ball.positionOld = Vector2::Zero();
-        ball.velocity = Vector2::Zero();
+        ball.position = Vector2::createZero();
+        ball.positionOld = Vector2::createZero();
+        ball.velocity = Vector2::createZero();
 
         auto keyboard = gameHost->GetKeyboard();
         startButtonConn = keyboard->KeyDown.Connect([this](Keys key) {
@@ -260,7 +260,7 @@ void GameMain::Update()
         std::uniform_real_distribution<float> distribution(0.7f, 1.0f);
         static bool flipflop = false;
         flipflop = !flipflop;
-        ball.velocity = math::Normalize(Vector2{(flipflop ? -1.0f : 1.0f), distribution(random)}) * speed;
+        ball.velocity = math::normalize(Vector2{(flipflop ? -1.0f : 1.0f), distribution(random)}) * speed;
 
         soundEffect2->Stop();
         soundEffect2->Play();
@@ -280,14 +280,14 @@ void GameMain::Update()
 
         if (position.x >= 0) {
             auto paddleCollider = paddle1.GetCollider();
-            if (paddleCollider.Intersects(ball.GetCollider()) && ball.positionOld.x <= paddleCollider.min.x) {
+            if (paddleCollider.intersects(ball.GetCollider()) && ball.positionOld.x <= paddleCollider.min.x) {
                 ball.velocity.x *= -1;
                 collision = true;
             }
         }
         else {
             auto paddleCollider = paddle2.GetCollider();
-            if (paddleCollider.Intersects(ball.GetCollider()) && ball.positionOld.x >= paddleCollider.max.x) {
+            if (paddleCollider.intersects(ball.GetCollider()) && ball.positionOld.x >= paddleCollider.max.x) {
                 ball.velocity.x *= -1;
                 collision = true;
             }
@@ -336,22 +336,22 @@ void GameMain::Draw()
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
-    pass.renderTargets[0] = {renderTarget, backgroundColor.ToVector4()};
+    pass.renderTargets[0] = {renderTarget, backgroundColor.toVector4()};
     pass.depthStencilBuffer = depthStencilBuffer;
     pass.clearDepth = 1.0f;
     pass.clearStencil = std::uint8_t(0);
     pass.viewport = viewport;
     pass.scissorRect = viewport.GetBounds();
 
-    const auto projectionMatrix = Matrix4x4::CreatePerspectiveFieldOfViewLH(
-        math::ToRadians(45.0f),
+    const auto projectionMatrix = Matrix4x4::createPerspectiveFieldOfViewLH(
+        math::toRadians(45.0f),
         viewport.GetAspectRatio(),
         0.01f,
         1000.0f);
 
     const auto cameraPosition = Vector3{0, 0, -512.0f};
-    const auto cameraRotation = math::ToRadians(-15.0f);
-    const auto viewMatrix = Matrix4x4::CreateRotationX(-cameraRotation) * Matrix4x4::CreateTranslation(-cameraPosition);
+    const auto cameraRotation = math::toRadians(-15.0f);
+    const auto viewMatrix = Matrix4x4::createRotationX(-cameraRotation) * Matrix4x4::createTranslation(-cameraPosition);
     const auto viewProjection = viewMatrix * projectionMatrix;
 
     commandList->Reset();
@@ -363,14 +363,14 @@ void GameMain::Draw()
         // NOTE: Draw background
         {
             // Rectangle outline
-            auto p1 = Vector2(static_cast<float>(gameFieldSize.GetLeft()), static_cast<float>(gameFieldSize.GetBottom()));
-            auto p2 = Vector2(static_cast<float>(gameFieldSize.GetLeft()), static_cast<float>(gameFieldSize.GetTop()));
-            auto p3 = Vector2(static_cast<float>(gameFieldSize.GetRight()), static_cast<float>(gameFieldSize.GetTop()));
-            auto p4 = Vector2(static_cast<float>(gameFieldSize.GetRight()), static_cast<float>(gameFieldSize.GetBottom()));
-            primitiveBatch->DrawLine(p1, p2, Color::White(), 2.0f);
-            primitiveBatch->DrawLine(p2, p3, Color::White(), 2.0f);
-            primitiveBatch->DrawLine(p3, p4, Color::White(), 2.0f);
-            primitiveBatch->DrawLine(p4, p1, Color::White(), 2.0f);
+            auto p1 = Vector2(static_cast<float>(gameFieldSize.getLeft()), static_cast<float>(gameFieldSize.getBottom()));
+            auto p2 = Vector2(static_cast<float>(gameFieldSize.getLeft()), static_cast<float>(gameFieldSize.getTop()));
+            auto p3 = Vector2(static_cast<float>(gameFieldSize.getRight()), static_cast<float>(gameFieldSize.getTop()));
+            auto p4 = Vector2(static_cast<float>(gameFieldSize.getRight()), static_cast<float>(gameFieldSize.getBottom()));
+            primitiveBatch->DrawLine(p1, p2, Color::createWhite(), 2.0f);
+            primitiveBatch->DrawLine(p2, p3, Color::createWhite(), 2.0f);
+            primitiveBatch->DrawLine(p3, p4, Color::createWhite(), 2.0f);
+            primitiveBatch->DrawLine(p4, p1, Color::createWhite(), 2.0f);
         }
         {
             // Dotted line
@@ -381,61 +381,61 @@ void GameMain::Draw()
             for (int i = 0; i < count; ++i) {
                 Vector2 start = {0.0f, height / count * i + startY};
                 Vector2 end = {0.0f, height / count * (i + offset) + startY};
-                primitiveBatch->DrawLine(start, end, Color::White(), 2.0f);
+                primitiveBatch->DrawLine(start, end, Color::createWhite(), 2.0f);
             }
         }
 
         // Paddle 1
-        primitiveBatch->DrawRectangle(paddle1.position, 10.0f, paddle1.height, {0.5f, 0.5f}, Color::White());
+        primitiveBatch->DrawRectangle(paddle1.position, 10.0f, paddle1.height, {0.5f, 0.5f}, Color::createWhite());
 
         // Paddle 2
-        primitiveBatch->DrawRectangle(paddle2.position, 10.0f, paddle2.height, {0.5f, 0.5f}, Color::White());
+        primitiveBatch->DrawRectangle(paddle2.position, 10.0f, paddle2.height, {0.5f, 0.5f}, Color::createWhite());
 
         // Ball
-        primitiveBatch->DrawCircle(ball.position, 6.0f, 32, Color::White());
+        primitiveBatch->DrawCircle(ball.position, 6.0f, 32, Color::createWhite());
     }
     primitiveBatch->End();
 
     // NOTE: Draw sprites and fonts
-    spriteBatch->Begin(commandList, Matrix4x4::CreateScale(0.002f) * viewProjection);
-    spriteFont->Draw(*spriteBatch, "", Vector2::Zero(), Color::White(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
+    spriteBatch->Begin(commandList, Matrix4x4::createScale(0.002f) * viewProjection);
+    spriteFont->Draw(*spriteBatch, "", Vector2::createZero(), Color::createWhite(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
     {
         // Header Text
         spriteFont->Draw(
             *spriteBatch,
             headerText,
-            Vector2{-110, 140}, Color::White(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
+            Vector2{-110, 140}, Color::createWhite(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
 
         // Footer Text
         spriteFont->Draw(
             *spriteBatch,
             "[SPACE] to start, WS and Up/Down to move",
-            Vector2{-180, -170}, Color::White(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
+            Vector2{-180, -170}, Color::createWhite(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
     }
     if (scoreTextVisible) {
         // "Player 1" Text
         spriteFont->Draw(
             *spriteBatch,
             "Player 1",
-            Vector2{-135, 90}, Color::Yellow(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
+            Vector2{-135, 90}, Color::createYellow(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
 
         // "Player 2" Text
         spriteFont->Draw(
             *spriteBatch,
             "Player 2",
-            Vector2{65, 90}, Color::Yellow(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
+            Vector2{65, 90}, Color::createYellow(), 0.0f, Vector2{0.0f, 0.0f}, 1.0f);
 
         // "Player 1" Score Text
         spriteFont->Draw(
             *spriteBatch,
             std::to_string(player1.GetScore()),
-            Vector2{-110, 50}, Color::White(), 0.0f, Vector2{0.0f, 0.0f}, 2.0f);
+            Vector2{-110, 50}, Color::createWhite(), 0.0f, Vector2{0.0f, 0.0f}, 2.0f);
 
         // "Player 2" Score Text
         spriteFont->Draw(
             *spriteBatch,
             std::to_string(player2.GetScore()),
-            Vector2{80, 50}, Color::White(), 0.0f, Vector2{0.0f, 0.0f}, 2.0f);
+            Vector2{80, 50}, Color::createWhite(), 0.0f, Vector2{0.0f, 0.0f}, 2.0f);
     }
     spriteBatch->End();
 

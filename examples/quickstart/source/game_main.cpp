@@ -139,8 +139,8 @@ std::unique_ptr<Error> GameMain::Initialize()
         auto updateShaderConstants = [this]([[maybe_unused]] int width, [[maybe_unused]] int height) {
             const auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
-            const auto viewMatrix = Matrix4x4::Identity();
-            const auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
+            const auto viewMatrix = Matrix4x4::createIdentity();
+            const auto projectionMatrix = Matrix4x4::createOrthographicLH(
                 static_cast<float>(presentationParameters.backBufferWidth),
                 static_cast<float>(presentationParameters.backBufferHeight),
                 0.0f,
@@ -180,8 +180,8 @@ void GameMain::Update()
 {
     auto totalTime = static_cast<float>(clock->GetTotalGameTime().count());
 
-    auto rotate = Matrix4x4::CreateRotationZ(std::cos(totalTime));
-    auto scale = Matrix4x4::CreateScale(Vector3{
+    auto rotate = Matrix4x4::createRotationZ(std::cos(totalTime));
+    auto scale = Matrix4x4::createScale(Vector3{
         static_cast<float>(texture->GetWidth()),
         static_cast<float>(texture->GetHeight()),
         1.0f});
@@ -195,7 +195,7 @@ void GameMain::Draw()
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
-    pass.renderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
+    pass.renderTargets[0] = {nullptr, Color::createCornflowerBlue().toVector4()};
     pass.depthStencilBuffer = nullptr;
     pass.clearDepth = 1.0f;
     pass.clearStencil = std::uint8_t(0);

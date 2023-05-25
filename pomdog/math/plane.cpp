@@ -32,13 +32,13 @@ Plane::Plane(const Vector3& point0, const Vector3& point1, const Vector3& point2
     // NOTE: Left-handed coordinate system (not right-handed one)
     const auto vector1 = point1 - point0;
     const auto vector2 = point2 - point0;
-    normal = math::Normalize(math::Cross(vector1, vector2));
-    distance = -math::Dot(normal, point0);
+    normal = math::normalize(math::cross(vector1, vector2));
+    distance = -math::dot(normal, point0);
 }
 
-void Plane::Normalize() noexcept
+void Plane::normalize() noexcept
 {
-    const auto length = math::Length(normal);
+    const auto length = math::length(normal);
 
     if (length >= std::numeric_limits<float>::epsilon()) {
         const auto inverseLength = 1.0f / length;
@@ -47,14 +47,14 @@ void Plane::Normalize() noexcept
     }
 }
 
-Plane Plane::Normalize(const Plane& plane) noexcept
+Plane Plane::normalize(const Plane& plane) noexcept
 {
     auto result = plane;
-    result.Normalize();
+    result.normalize();
     return result;
 }
 
-float Plane::Dot(const Vector4& vec) const noexcept
+float Plane::dot(const Vector4& vec) const noexcept
 {
     return normal.x * vec.x +
            normal.y * vec.y +
@@ -62,24 +62,25 @@ float Plane::Dot(const Vector4& vec) const noexcept
            distance * vec.w;
 }
 
-float Plane::DotCoordinate(const Vector3& vec) const noexcept
+float Plane::dotCoordinate(const Vector3& vec) const noexcept
 {
     return normal.x * vec.x + normal.y * vec.y + normal.z * vec.z + distance;
 }
 
-float Plane::DotNormal(const Vector3& vec) const noexcept
+float Plane::dotNormal(const Vector3& vec) const noexcept
 {
-    return math::Dot(normal, vec);
+    return math::dot(normal, vec);
 }
 
-float Plane::GetDistanceToPoint(const Vector3& point) const noexcept
+float Plane::getDistanceToPoint(const Vector3& point) const noexcept
 {
-    return DotCoordinate(point);
+    return dotCoordinate(point);
 }
 
-PlaneIntersectionType Plane::Intersects(const Vector3& point) const noexcept
+PlaneIntersectionType
+Plane::intersects(const Vector3& point) const noexcept
 {
-    const auto dotProduct = DotCoordinate(point);
+    const auto dotProduct = dotCoordinate(point);
 
     if (dotProduct > 0.0f) {
         return PlaneIntersectionType::Front;
@@ -90,7 +91,8 @@ PlaneIntersectionType Plane::Intersects(const Vector3& point) const noexcept
     return PlaneIntersectionType::Intersecting;
 }
 
-PlaneIntersectionType Plane::Intersects(const BoundingBox& box) const noexcept
+PlaneIntersectionType
+Plane::intersects(const BoundingBox& box) const noexcept
 {
     Vector3 positiveVertex{box.min.x, box.min.y, box.min.z};
     Vector3 negativeVertex{box.max.x, box.max.y, box.max.z};
@@ -108,23 +110,25 @@ PlaneIntersectionType Plane::Intersects(const BoundingBox& box) const noexcept
         negativeVertex.z = box.min.z;
     }
 
-    if (DotCoordinate(negativeVertex) > 0.0f) {
+    if (dotCoordinate(negativeVertex) > 0.0f) {
         return PlaneIntersectionType::Front;
     }
-    if (DotCoordinate(positiveVertex) < 0.0f) {
+    if (dotCoordinate(positiveVertex) < 0.0f) {
         return PlaneIntersectionType::Back;
     }
     return PlaneIntersectionType::Intersecting;
 }
 
-PlaneIntersectionType Plane::Intersects(const BoundingFrustum& frustum) const
+PlaneIntersectionType
+Plane::intersects(const BoundingFrustum& frustum) const
 {
-    return frustum.Intersects(*this);
+    return frustum.intersects(*this);
 }
 
-PlaneIntersectionType Plane::Intersects(const BoundingSphere& sphere) const noexcept
+PlaneIntersectionType
+Plane::intersects(const BoundingSphere& sphere) const noexcept
 {
-    const auto dotProduct = DotCoordinate(sphere.center);
+    const auto dotProduct = dotCoordinate(sphere.center);
 
     if (dotProduct > sphere.radius) {
         return PlaneIntersectionType::Front;
@@ -135,11 +139,11 @@ PlaneIntersectionType Plane::Intersects(const BoundingSphere& sphere) const noex
     return PlaneIntersectionType::Intersecting;
 }
 
-Plane Plane::Transform(const Plane& plane, const Matrix4x4& matrix)
+Plane Plane::transform(const Plane& plane, const Matrix4x4& matrix)
 {
-    const auto transformMatrix = math::Invert(matrix);
+    const auto transformMatrix = math::invert(matrix);
     const auto vector = Vector4{plane.normal, plane.distance};
-    const auto transformedVector = math::Transform(vector, transformMatrix);
+    const auto transformedVector = math::transform(vector, transformMatrix);
 
     Plane result;
     result.normal.x = transformedVector.x;
@@ -149,9 +153,9 @@ Plane Plane::Transform(const Plane& plane, const Matrix4x4& matrix)
     return result;
 }
 
-Plane Plane::CreateFromPointNormal(const Vector3& point, const Vector3& normal)
+Plane Plane::createFromPointNormal(const Vector3& point, const Vector3& normal)
 {
-    return Plane(normal, -math::Dot(normal, point));
+    return Plane(normal, -math::dot(normal, point));
 }
 
 } // namespace pomdog

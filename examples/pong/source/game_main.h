@@ -16,8 +16,8 @@ namespace pong {
 using namespace pomdog;
 
 struct Paddle final {
-    Vector2 position = Vector2::Zero();
-    Vector2 positionOld = Vector2::Zero();
+    Vector2 position = Vector2::createZero();
+    Vector2 positionOld = Vector2::createZero();
     float speed = 540.0f;
     float height = 50.0f;
 
@@ -34,9 +34,9 @@ struct Paddle final {
 };
 
 struct Ball final {
-    Vector2 position = Vector2::Zero();
-    Vector2 positionOld = Vector2::Zero();
-    Vector2 velocity = Vector2::Zero();
+    Vector2 position = Vector2::createZero();
+    Vector2 positionOld = Vector2::createZero();
+    Vector2 velocity = Vector2::createZero();
 
     BoundingCircle GetCollider() const
     {

@@ -578,7 +578,7 @@ void TextEdit::Draw(DrawingContext& drawingContext)
     }
 
     const auto marginLeftBottom = Vector2{static_cast<float>(textMargin.left), static_cast<float>(textMargin.bottom)};
-    const auto textEditPos = math::ToVector2(globalPos);
+    const auto textEditPos = math::toVector2(globalPos);
     const auto textPosition = textEditPos + marginLeftBottom + Vector2{0.0f, baselineHeight};
     const auto innerBoundPos = textEditPos + marginLeftBottom;
     const auto innerBoundSize = Vector2{
@@ -608,7 +608,7 @@ void TextEdit::Draw(DrawingContext& drawingContext)
         return marginLeftBottom.x + v.x + offset;
     };
 
-    auto cursorDrawPosition = Vector2::Zero();
+    auto cursorDrawPosition = Vector2::createZero();
     if (cursorPosition != std::nullopt) {
         cursorDrawPosition.x = calculatePositionInSprite(*cursorPosition);
 
@@ -639,8 +639,8 @@ void TextEdit::Draw(DrawingContext& drawingContext)
         constexpr float cursorHeightMargin = 2.0f;
 
         primitiveBatch->DrawRectangle(
-            Matrix3x2::Identity(),
-            startPos + Vector2{0.0f, cursorHeightMargin} + math::ToVector2(globalPos),
+            Matrix3x2::createIdentity(),
+            startPos + Vector2{0.0f, cursorHeightMargin} + math::toVector2(globalPos),
             selectionWidth,
             GetHeight() - cursorHeightMargin * 2.0f - 0.5f,
             selectionBoundsColor);
@@ -653,8 +653,8 @@ void TextEdit::Draw(DrawingContext& drawingContext)
         constexpr float cursorHeightMargin = 2.0f;
 
         primitiveBatch->DrawRectangle(
-            Matrix3x2::Identity(),
-            cursorDrawPosition + Vector2{0.0f, cursorHeightMargin} + math::ToVector2(globalPos),
+            Matrix3x2::createIdentity(),
+            cursorDrawPosition + Vector2{0.0f, cursorHeightMargin} + math::toVector2(globalPos),
             cursorThickness,
             GetHeight() - cursorHeightMargin * 2.0f - 0.5f,
             cursorColor);
@@ -665,7 +665,7 @@ void TextEdit::Draw(DrawingContext& drawingContext)
     if (!text.empty()) {
         // NOTE: Draw input text
         auto spriteBatch = drawingContext.GetSpriteBatch();
-        auto startPos = Vector2::Zero();
+        auto startPos = Vector2::createZero();
         if (textStartPositionX != std::nullopt) {
             startPos.x = *textStartPositionX;
         }

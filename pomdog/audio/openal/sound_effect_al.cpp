@@ -100,13 +100,13 @@ void SoundEffectAL::Apply3D(const AudioListener& listener, const AudioEmitter& e
 {
     {
         POMDOG_ASSERT(source != std::nullopt);
-        alSourcefv(source.value(), AL_POSITION, emitter.Position.Data());
+        alSourcefv(source.value(), AL_POSITION, emitter.Position.data());
         POMDOG_CHECK_ERROR_OPENAL("alSourcefv(AL_POSITION)");
 
-        alSourcefv(source.value(), AL_VELOCITY, emitter.Velocity.Data());
+        alSourcefv(source.value(), AL_VELOCITY, emitter.Velocity.data());
         POMDOG_CHECK_ERROR_OPENAL("alSourcefv(AL_VELOCITY)");
 
-        alSourcefv(source.value(), AL_DIRECTION, emitter.Forward.Data());
+        alSourcefv(source.value(), AL_DIRECTION, emitter.Forward.data());
         POMDOG_CHECK_ERROR_OPENAL("alSourcefv(AL_DIRECTION)");
 
         POMDOG_ASSERT(emitter.DopplerScale >= 0.0f);
@@ -123,10 +123,10 @@ void SoundEffectAL::Apply3D(const AudioListener& listener, const AudioEmitter& e
             listener.Up.z,
         }};
 
-        alListenerfv(AL_POSITION, listener.Position.Data());
+        alListenerfv(AL_POSITION, listener.Position.data());
         POMDOG_CHECK_ERROR_OPENAL("alListenerfv(AL_POSITION)");
 
-        alListenerfv(AL_VELOCITY, listener.Velocity.Data());
+        alListenerfv(AL_VELOCITY, listener.Velocity.data());
         POMDOG_CHECK_ERROR_OPENAL("alListenerfv(AL_VELOCITY)");
 
         alListenerfv(AL_ORIENTATION, orientation.data());

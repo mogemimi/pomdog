@@ -24,25 +24,25 @@ public:
 public:
     BoundingBox2D() noexcept = default;
 
-    BoundingBox2D(const Vector2& min, const Vector2& max);
+    BoundingBox2D(const Vector2& min, const Vector2& max) noexcept;
 
     [[nodiscard]] ContainmentType
-    Contains(const Vector2& point) const;
+    contains(const Vector2& point) const noexcept;
 
     [[nodiscard]] ContainmentType
-    Contains(const BoundingBox2D& box) const;
+    contains(const BoundingBox2D& box) const noexcept;
 
     [[nodiscard]] ContainmentType
-    Contains(const BoundingCircle& circle) const;
+    contains(const BoundingCircle& circle) const noexcept;
 
     [[nodiscard]] bool
-    Intersects(const BoundingBox2D& box) const;
+    intersects(const BoundingBox2D& box) const noexcept;
 
     [[nodiscard]] bool
-    Intersects(const BoundingCircle& circle) const;
+    intersects(const BoundingCircle& circle) const noexcept;
 
     [[nodiscard]] std::array<Vector2, CornerCount>
-    GetCorners() const noexcept;
+    getCorners() const noexcept;
 };
 
 } // namespace pomdog

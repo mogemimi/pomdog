@@ -109,12 +109,12 @@ public:
     }
 
     // Unary operators:
-    TaggedArithmetic operator+() const noexcept
+    [[nodiscard]] TaggedArithmetic operator+() const noexcept
     {
         return {+value};
     }
 
-    TaggedArithmetic operator-() const noexcept
+    [[nodiscard]] TaggedArithmetic operator-() const noexcept
     {
         return {-value};
     }

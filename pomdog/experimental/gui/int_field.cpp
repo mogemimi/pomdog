@@ -226,7 +226,7 @@ std::shared_ptr<Widget> IntField::GetChildAt(const Point2D& position)
 {
     if (numberField != nullptr) {
         auto bounds = numberField->GetBounds();
-        if (bounds.Contains(position)) {
+        if (bounds.contains(position)) {
             return numberField;
         }
     }

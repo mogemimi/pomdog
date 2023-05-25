@@ -7,41 +7,41 @@
 namespace pomdog::math {
 
 [[nodiscard]] Radian<float>
-ToRadians(Degree<float> degrees) noexcept
+toRadians(Degree<float> degrees) noexcept
 {
     constexpr auto factor = math::Pi<float> * (1.0f / 180.0f);
     return Radian<float>(degrees.value * factor);
 }
 
 [[nodiscard]] Radian<float>
-ToRadians(float degrees) noexcept
+toRadians(float degrees) noexcept
 {
     constexpr auto factor = math::Pi<float> * (1.0f / 180.0f);
     return Radian<float>(degrees * factor);
 }
 
 [[nodiscard]] Radian<float>
-Clamp(Radian<float> x, Radian<float> min, Radian<float> max) noexcept
+clamp(Radian<float> x, Radian<float> min, Radian<float> max) noexcept
 {
-    return Radian<float>{Clamp(x.value, min.value, max.value)};
+    return Radian<float>{clamp(x.value, min.value, max.value)};
 }
 
 [[nodiscard]] Radian<float>
-Saturate(Radian<float> x) noexcept
+saturate(Radian<float> x) noexcept
 {
-    return Radian<float>{Saturate(x.value)};
+    return Radian<float>{saturate(x.value)};
 }
 
 [[nodiscard]] Radian<float>
-Lerp(Radian<float> source1, Radian<float> source2, float amount) noexcept
+lerp(Radian<float> source1, Radian<float> source2, float amount) noexcept
 {
-    return Radian<float>{Lerp(source1.value, source2.value, amount)};
+    return Radian<float>{lerp(source1.value, source2.value, amount)};
 }
 
 [[nodiscard]] Radian<float>
-SmoothStep(Radian<float> min, Radian<float> max, float amount) noexcept
+smoothstep(Radian<float> min, Radian<float> max, float amount) noexcept
 {
-    return Radian<float>{SmoothStep(min.value, max.value, amount)};
+    return Radian<float>{smoothstep(min.value, max.value, amount)};
 }
 
 } // namespace pomdog::math

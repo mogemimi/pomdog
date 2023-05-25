@@ -36,8 +36,8 @@ public:
     Vector4& operator/=(float factor) noexcept;
 
     // Unary operators:
-    Vector4 operator+() const noexcept;
-    Vector4 operator-() const noexcept;
+    [[nodiscard]] Vector4 operator+() const noexcept;
+    [[nodiscard]] Vector4 operator-() const noexcept;
 
     // Binary operators:
     [[nodiscard]] Vector4 operator+(const Vector4& other) const noexcept;
@@ -51,10 +51,10 @@ public:
     [[nodiscard]] bool operator!=(const Vector4& other) const noexcept;
 
     /// Returns pointer to the first element.
-    [[nodiscard]] const float* Data() const noexcept;
+    [[nodiscard]] const float* data() const noexcept;
 
     /// Returns pointer to the first element.
-    [[nodiscard]] float* Data() noexcept;
+    [[nodiscard]] float* data() noexcept;
 };
 
 /// Multiplies a vector by a scalar factor.
@@ -67,30 +67,30 @@ namespace pomdog::math {
 
 /// Calculates and returns the length of a vector.
 [[nodiscard]] float POMDOG_EXPORT
-Length(const Vector4& v) noexcept;
+length(const Vector4& v) noexcept;
 
 /// Calculates and returns the squared length of a vector.
 [[nodiscard]] float POMDOG_EXPORT
-LengthSquared(const Vector4& v) noexcept;
+lengthSquared(const Vector4& v) noexcept;
 
 /// Calculates and returns the distance between two vectors.
 [[nodiscard]] float POMDOG_EXPORT
-Distance(const Vector4& a, const Vector4& b) noexcept;
+distance(const Vector4& a, const Vector4& b) noexcept;
 
 /// Calculates and returns the squared distance between two vectors.
 [[nodiscard]] float POMDOG_EXPORT
-DistanceSquared(const Vector4& a, const Vector4& b) noexcept;
+distanceSquared(const Vector4& a, const Vector4& b) noexcept;
 
 /// Calculates and returns the dot product of two vectors.
 [[nodiscard]] float POMDOG_EXPORT
-Dot(const Vector4& a, const Vector4& b) noexcept;
+dot(const Vector4& a, const Vector4& b) noexcept;
 
 /// Returns a unit vector in the same direction from the specified vector.
 [[nodiscard]] Vector4 POMDOG_EXPORT
-Normalize(const Vector4& source) noexcept;
+normalize(const Vector4& source) noexcept;
 
 /// Returns a transformed vector by the specified matrix.
 [[nodiscard]] Vector4 POMDOG_EXPORT
-Transform(const Vector4& position, const Matrix4x4& matrix) noexcept;
+transform(const Vector4& position, const Matrix4x4& matrix) noexcept;
 
 } // namespace pomdog::math

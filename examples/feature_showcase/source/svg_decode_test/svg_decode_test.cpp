@@ -74,7 +74,7 @@ void SVGDecodeTest::Draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
-    auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
+    auto projectionMatrix = Matrix4x4::createOrthographicLH(
         static_cast<float>(presentationParameters.backBufferWidth),
         static_cast<float>(presentationParameters.backBufferHeight),
         0.0f,
@@ -82,7 +82,7 @@ void SVGDecodeTest::Draw()
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
-    pass.renderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
+    pass.renderTargets[0] = {nullptr, Color::createCornflowerBlue().toVector4()};
     pass.depthStencilBuffer = nullptr;
     pass.clearDepth = 1.0f;
     pass.clearStencil = std::uint8_t(0);
@@ -97,12 +97,12 @@ void SVGDecodeTest::Draw()
     constexpr float startY = 210.0f;
     float posY = startY;
     for (auto& t : textures) {
-        spriteBatch->Draw(t, Vector2{-100.0f, posY}, Color::White());
+        spriteBatch->Draw(t, Vector2{-100.0f, posY}, Color::createWhite());
         posY = posY - marginY;
     }
     posY = startY;
     for (auto& t : svgFiles) {
-        spriteFont->Draw(*spriteBatch, t, Vector2{-60.0f, posY}, Color::White(), 0.0f, Vector2{0.0f, 0.3f}, 0.8f);
+        spriteFont->Draw(*spriteBatch, t, Vector2{-60.0f, posY}, Color::createWhite(), 0.0f, Vector2{0.0f, 0.3f}, 0.8f);
         posY = posY - marginY;
     }
     spriteBatch->End();

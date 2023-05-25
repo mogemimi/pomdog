@@ -6,7 +6,7 @@
 namespace pomdog::math {
 
 [[nodiscard]] float
-Clamp(float x, float min, float max) noexcept
+clamp(float x, float min, float max) noexcept
 {
     POMDOG_ASSERT(min < max);
     if (x < min) {
@@ -19,7 +19,7 @@ Clamp(float x, float min, float max) noexcept
 }
 
 [[nodiscard]] double
-Clamp(double x, double min, double max) noexcept
+clamp(double x, double min, double max) noexcept
 {
     POMDOG_ASSERT(min < max);
     if (x < min) {
@@ -32,41 +32,41 @@ Clamp(double x, double min, double max) noexcept
 }
 
 [[nodiscard]] float
-Saturate(float x) noexcept
+saturate(float x) noexcept
 {
-    return Clamp(x, 0.0f, 1.0f);
+    return clamp(x, 0.0f, 1.0f);
 }
 
 [[nodiscard]] double
-Saturate(double x) noexcept
+saturate(double x) noexcept
 {
-    return Clamp(x, 0.0, 1.0);
+    return clamp(x, 0.0, 1.0);
 }
 
 [[nodiscard]] float
-Lerp(float source1, float source2, float amount) noexcept
+lerp(float source1, float source2, float amount) noexcept
 {
     return source1 + amount * (source2 - source1);
 }
 
 [[nodiscard]] double
-Lerp(double source1, double source2, double amount) noexcept
+lerp(double source1, double source2, double amount) noexcept
 {
     return source1 + amount * (source2 - source1);
 }
 
 [[nodiscard]] float
-SmoothStep(float min, float max, float amount) noexcept
+smoothstep(float min, float max, float amount) noexcept
 {
-    const auto x = Saturate(amount);
+    const auto x = saturate(amount);
     const auto scale = x * x * (3.0f - 2.0f * x);
     return min + scale * (max - min);
 }
 
 [[nodiscard]] double
-SmoothStep(double min, double max, double amount) noexcept
+smoothstep(double min, double max, double amount) noexcept
 {
-    const auto x = Saturate(amount);
+    const auto x = saturate(amount);
     const auto scale = x * x * (3.0 - 2.0 * x);
     return min + scale * (max - min);
 }

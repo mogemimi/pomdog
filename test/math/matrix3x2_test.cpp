@@ -46,14 +46,14 @@ TEST_CASE("Matrix3x2", "[Matrix3x2]")
     }
     SECTION("Identity")
     {
-        REQUIRE(1.0f == Matrix3x2::Identity()(0, 0));
-        REQUIRE(0.0f == Matrix3x2::Identity()(0, 1));
-        REQUIRE(0.0f == Matrix3x2::Identity()(1, 0));
-        REQUIRE(1.0f == Matrix3x2::Identity()(1, 1));
-        REQUIRE(0.0f == Matrix3x2::Identity()(2, 0));
-        REQUIRE(0.0f == Matrix3x2::Identity()(2, 1));
+        REQUIRE(1.0f == Matrix3x2::createIdentity()(0, 0));
+        REQUIRE(0.0f == Matrix3x2::createIdentity()(0, 1));
+        REQUIRE(0.0f == Matrix3x2::createIdentity()(1, 0));
+        REQUIRE(1.0f == Matrix3x2::createIdentity()(1, 1));
+        REQUIRE(0.0f == Matrix3x2::createIdentity()(2, 0));
+        REQUIRE(0.0f == Matrix3x2::createIdentity()(2, 1));
 
-        Matrix3x2 matrix = Matrix3x2::Identity();
+        Matrix3x2 matrix = Matrix3x2::createIdentity();
         REQUIRE(1.0f == matrix(0, 0));
         REQUIRE(0.0f == matrix(0, 1));
         REQUIRE(0.0f == matrix(1, 0));
@@ -63,8 +63,8 @@ TEST_CASE("Matrix3x2", "[Matrix3x2]")
     }
     SECTION("Add")
     {
-        auto matrix1 = Matrix3x2::CreateTranslation({3.0f, 4.0f});
-        auto matrix2 = Matrix3x2::CreateTranslation({5.0f, 2.0f});
+        auto matrix1 = Matrix3x2::createTranslation({3.0f, 4.0f});
+        auto matrix2 = Matrix3x2::createTranslation({5.0f, 2.0f});
 
         auto matrix = matrix1 + matrix2;
         REQUIRE(2.0f == matrix(0, 0));
@@ -76,8 +76,8 @@ TEST_CASE("Matrix3x2", "[Matrix3x2]")
     }
     SECTION("Subtract")
     {
-        auto matrix1 = Matrix3x2::CreateTranslation({5.0f, 4.0f});
-        auto matrix2 = Matrix3x2::CreateTranslation({2.0f, 3.0f});
+        auto matrix1 = Matrix3x2::createTranslation({5.0f, 4.0f});
+        auto matrix2 = Matrix3x2::createTranslation({2.0f, 3.0f});
 
         auto matrix = matrix1 - matrix2;
         REQUIRE(0.0f == matrix(0, 0));
@@ -91,29 +91,29 @@ TEST_CASE("Matrix3x2", "[Matrix3x2]")
     {
         REQUIRE(
             Matrix3x2(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f) ==
-            math::Multiply(Matrix3x2::Identity(), 0.0f));
+            math::multiply(Matrix3x2::createIdentity(), 0.0f));
         REQUIRE(
-            Matrix3x2::Identity() ==
-            math::Multiply(Matrix3x2::Identity(), 1.0f));
+            Matrix3x2::createIdentity() ==
+            math::multiply(Matrix3x2::createIdentity(), 1.0f));
         REQUIRE(
             Matrix3x2(4.0f, 0.0f, 0.0f, 4.0f, 0.0f, 0.0f) ==
-            math::Multiply(Matrix3x2::Identity(), 4.0f));
+            math::multiply(Matrix3x2::createIdentity(), 4.0f));
     }
     SECTION("Multiply_Matrix")
     {
         REQUIRE(
-            Matrix3x2::Identity() ==
-            math::Multiply(
-                Matrix3x2::Identity(),
-                Matrix3x2::Identity()));
+            Matrix3x2::createIdentity() ==
+            math::multiply(
+                Matrix3x2::createIdentity(),
+                Matrix3x2::createIdentity()));
 
         REQUIRE(
             Matrix3x2(
                 0.0f, 0.0f,
                 0.0f, 0.0f,
                 0.0f, 0.0f) ==
-            math::Multiply(
-                Matrix3x2::Identity(),
+            math::multiply(
+                Matrix3x2::createIdentity(),
                 Matrix3x2(
                     0.0f, 0.0f,
                     0.0f, 0.0f,
@@ -124,19 +124,19 @@ TEST_CASE("Matrix3x2", "[Matrix3x2]")
                 0.0f, 0.0f,
                 0.0f, 0.0f,
                 0.0f, 0.0f) ==
-            math::Multiply(
+            math::multiply(
                 Matrix3x2(
                     0.0f, 0.0f,
                     0.0f, 0.0f,
                     0.0f, 0.0f),
-                Matrix3x2::Identity()));
+                Matrix3x2::createIdentity()));
 
         REQUIRE(
             Matrix3x2(
                 46.0f, 41.0f,
                 106.0f, 101.0f,
                 48.0f, 130.0f) ==
-            math::Multiply(
+            math::multiply(
                 Matrix3x2(
                     3.0f, 4.0f,
                     8.0f, 9.0f,
@@ -148,7 +148,7 @@ TEST_CASE("Matrix3x2", "[Matrix3x2]")
     }
     SECTION("CreateTranslation")
     {
-        auto matrix = Matrix3x2::CreateTranslation({3.0f, 4.0f});
+        auto matrix = Matrix3x2::createTranslation({3.0f, 4.0f});
         REQUIRE(1.0f == matrix(0, 0));
         REQUIRE(0.0f == matrix(0, 1));
         REQUIRE(0.0f == matrix(1, 0));
@@ -158,7 +158,7 @@ TEST_CASE("Matrix3x2", "[Matrix3x2]")
     }
     SECTION("CreateScale")
     {
-        auto matrix = Matrix3x2::CreateScale({3.0f, 4.0f});
+        auto matrix = Matrix3x2::createScale({3.0f, 4.0f});
         REQUIRE(3.0f == matrix(0, 0));
         REQUIRE(0.0f == matrix(0, 1));
         REQUIRE(0.0f == matrix(1, 0));
@@ -166,7 +166,7 @@ TEST_CASE("Matrix3x2", "[Matrix3x2]")
         REQUIRE(0.0f == matrix(2, 0));
         REQUIRE(0.0f == matrix(2, 1));
 
-        matrix = Matrix3x2::CreateScale(7.0f);
+        matrix = Matrix3x2::createScale(7.0f);
         REQUIRE(7.0f == matrix(0, 0));
         REQUIRE(0.0f == matrix(0, 1));
         REQUIRE(0.0f == matrix(1, 0));
@@ -176,7 +176,7 @@ TEST_CASE("Matrix3x2", "[Matrix3x2]")
     }
     SECTION("CreateRotation")
     {
-        auto matrix = Matrix3x2::CreateRotation(3.0f);
+        auto matrix = Matrix3x2::createRotation(3.0f);
         REQUIRE(std::abs(std::cos(3.0f) - matrix(0, 0)) < Epsilon);
         REQUIRE(std::abs(std::sin(3.0f) - matrix(0, 1)) < Epsilon);
         REQUIRE(std::abs(-std::sin(3.0f) - matrix(1, 0)) < Epsilon);
@@ -186,7 +186,7 @@ TEST_CASE("Matrix3x2", "[Matrix3x2]")
     }
     SECTION("CreateSkew")
     {
-        auto matrix = Matrix3x2::CreateSkew({3.0f, 4.0f});
+        auto matrix = Matrix3x2::createSkew({3.0f, 4.0f});
         REQUIRE(1.0f == matrix(0, 0));
         REQUIRE(1.0f == matrix(1, 1));
         REQUIRE(std::abs(std::tan(4.0f) - matrix(0, 1)) < Epsilon);
@@ -197,11 +197,11 @@ TEST_CASE("Matrix3x2", "[Matrix3x2]")
     SECTION("Data")
     {
         Matrix3x2 matrix{0.0f, 1.0f, 2.0f, 3.0f, 4.0f, 5.0f};
-        REQUIRE(0.0f == *(matrix.Data() + 0));
-        REQUIRE(1.0f == *(matrix.Data() + 1));
-        REQUIRE(2.0f == *(matrix.Data() + 2));
-        REQUIRE(3.0f == *(matrix.Data() + 3));
-        REQUIRE(4.0f == *(matrix.Data() + 4));
-        REQUIRE(5.0f == *(matrix.Data() + 5));
+        REQUIRE(0.0f == *(matrix.data() + 0));
+        REQUIRE(1.0f == *(matrix.data() + 1));
+        REQUIRE(2.0f == *(matrix.data() + 2));
+        REQUIRE(3.0f == *(matrix.data() + 3));
+        REQUIRE(4.0f == *(matrix.data() + 4));
+        REQUIRE(5.0f == *(matrix.data() + 5));
     }
 }

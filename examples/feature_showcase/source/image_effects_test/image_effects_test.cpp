@@ -113,7 +113,7 @@ void ImageEffectsTest::Draw()
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
-    pass.renderTargets[0] = {renderTarget, Color::CornflowerBlue().ToVector4()};
+    pass.renderTargets[0] = {renderTarget, Color::createCornflowerBlue().toVector4()};
     pass.depthStencilBuffer = depthStencilBuffer;
     pass.clearDepth = 1.0f;
     pass.clearStencil = std::uint8_t(0);
@@ -123,7 +123,7 @@ void ImageEffectsTest::Draw()
     commandList->Reset();
     commandList->SetRenderPass(std::move(pass));
 
-    auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
+    auto projectionMatrix = Matrix4x4::createOrthographicLH(
         static_cast<float>(presentationParameters.backBufferWidth),
         static_cast<float>(presentationParameters.backBufferHeight),
         0.0f,
@@ -142,14 +142,14 @@ void ImageEffectsTest::Draw()
     primitiveBatch->DrawLine(Vector2{w * 0.25f, -h * 0.5f}, Vector2{w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
 
     // Drawing rectangle
-    primitiveBatch->DrawRectangle(Vector2::Zero(), 100, 40, Vector2{1.0f, 1.0f}, Color::White());
-    primitiveBatch->DrawRectangle(Vector2::Zero(), 40, 100, Vector2{0.0f, 0.0f}, Color::Black());
-    primitiveBatch->DrawRectangle(Vector2::Zero(), 30, 30, Vector2{0.5f, 0.5f}, Color::Green());
+    primitiveBatch->DrawRectangle(Vector2::createZero(), 100, 40, Vector2{1.0f, 1.0f}, Color::createWhite());
+    primitiveBatch->DrawRectangle(Vector2::createZero(), 40, 100, Vector2{0.0f, 0.0f}, Color::createBlack());
+    primitiveBatch->DrawRectangle(Vector2::createZero(), 30, 30, Vector2{0.5f, 0.5f}, Color::createGreen());
 
     // Drawing triangle
     primitiveBatch->DrawTriangle(
         Vector2{0.0f, -40.0f}, Vector2{40.0f, 0.0f}, Vector2{40.0f, -40.0f},
-        Color::Black(), Color::Green(), Color::Red());
+        Color::createBlack(), Color::createGreen(), Color::createRed());
 
     primitiveBatch->End();
 

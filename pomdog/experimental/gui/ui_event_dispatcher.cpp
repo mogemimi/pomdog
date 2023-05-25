@@ -19,13 +19,13 @@ constexpr double DoubleClickTimeInterval = 0.500;
 
 bool Intersects(const Point2D& position, Widget& widget)
 {
-    auto bounds = widget.GetBounds();
-    auto parent = widget.GetParent();
+    const auto bounds = widget.GetBounds();
+    const auto parent = widget.GetParent();
     if (parent == nullptr) {
-        return bounds.Contains(position);
+        return bounds.contains(position);
     }
     auto positionInChild = UIHelper::ProjectToChildSpace(position, parent->GetGlobalPosition());
-    return bounds.Contains(positionInChild);
+    return bounds.contains(positionInChild);
 }
 
 std::shared_ptr<Widget>

@@ -164,7 +164,7 @@ void LineBatch::Impl::Begin(
     POMDOG_ASSERT(commandListIn);
     commandList = commandListIn;
 
-    alignas(16) Matrix4x4 transposedMatrix = math::Transpose(transformMatrix);
+    alignas(16) Matrix4x4 transposedMatrix = math::transpose(transformMatrix);
     constantBuffer->SetData(0, gpu::MakeByteSpan(transposedMatrix));
 }
 
@@ -262,7 +262,7 @@ void LineBatch::End()
 
 void LineBatch::DrawBox(const BoundingBox& box, const Color& color)
 {
-    this->DrawBox(box.min, box.max - box.min, Vector3::Zero(), color);
+    this->DrawBox(box.min, box.max - box.min, Vector3::createZero(), color);
 }
 
 void LineBatch::DrawBox(
@@ -270,7 +270,7 @@ void LineBatch::DrawBox(
     const Vector3& scale,
     const Color& color)
 {
-    this->DrawBox(position, scale, Vector3::Zero(), color);
+    this->DrawBox(position, scale, Vector3::createZero(), color);
 }
 
 void LineBatch::DrawBox(
@@ -296,7 +296,7 @@ void LineBatch::DrawBox(
         v = ((v - originPivot) * scale) + position;
     }
 
-    const auto colorVector = color.ToVector4();
+    const auto colorVector = color.toVector4();
     auto draw = [&](int a, int b) {
         impl->DrawLine(
             boxVertices[a],
@@ -335,13 +335,13 @@ void LineBatch::DrawCircle(const Vector2& position, float radius, const Color& c
     const auto centralAngle = Radian<float>{math::TwoPi<float> / segments};
     Vector2 prevPoint = position + Vector2{radius, 0};
 
-    auto colorVector = color.ToVector4();
+    auto colorVector = color.toVector4();
 
     for (int i = 0; i < segments; ++i) {
-        auto rad = centralAngle * static_cast<float>(i + 1);
-        auto cos = std::cos(rad.value);
-        auto sin = std::sin(rad.value);
-        auto nextPoint = position + (radius * Vector2{cos, sin});
+        const auto rad = centralAngle * static_cast<float>(i + 1);
+        const auto cos = std::cos(rad.value);
+        const auto sin = std::sin(rad.value);
+        const auto nextPoint = position + (radius * Vector2{cos, sin});
         impl->DrawLine(nextPoint, prevPoint, colorVector, colorVector);
         prevPoint = nextPoint;
     }
@@ -350,30 +350,30 @@ void LineBatch::DrawCircle(const Vector2& position, float radius, const Color& c
 void LineBatch::DrawLine(const Vector2& start, const Vector2& end, const Color& color)
 {
     POMDOG_ASSERT(impl);
-    auto colorVector = color.ToVector4();
+    const auto colorVector = color.toVector4();
     impl->DrawLine(start, end, colorVector, colorVector);
 }
 
 void LineBatch::DrawLine(const Vector2& start, const Vector2& end, const Color& startColor, const Color& endColor)
 {
     POMDOG_ASSERT(impl);
-    auto colorVector1 = startColor.ToVector4();
-    auto colorVector2 = endColor.ToVector4();
+    const auto colorVector1 = startColor.toVector4();
+    const auto colorVector2 = endColor.toVector4();
     impl->DrawLine(start, end, colorVector1, colorVector2);
 }
 
 void LineBatch::DrawLine(const Vector3& start, const Vector3& end, const Color& color)
 {
     POMDOG_ASSERT(impl);
-    auto colorVector = color.ToVector4();
+    const auto colorVector = color.toVector4();
     impl->DrawLine(start, end, colorVector, colorVector);
 }
 
 void LineBatch::DrawLine(const Vector3& start, const Vector3& end, const Color& startColor, const Color& endColor)
 {
     POMDOG_ASSERT(impl);
-    auto colorVector1 = startColor.ToVector4();
-    auto colorVector2 = endColor.ToVector4();
+    const auto colorVector1 = startColor.toVector4();
+    const auto colorVector2 = endColor.toVector4();
     impl->DrawLine(start, end, colorVector1, colorVector2);
 }
 
@@ -393,16 +393,16 @@ void LineBatch::DrawRectangle(const Rectangle& sourceRect,
     }
 
     std::array<Vector2, 4> rectVertices = {{
-        Vector2{static_cast<float>(sourceRect.GetLeft()), static_cast<float>(sourceRect.y - sourceRect.height)},
-        Vector2{static_cast<float>(sourceRect.GetLeft()), static_cast<float>(sourceRect.y)},
-        Vector2{static_cast<float>(sourceRect.GetRight()), static_cast<float>(sourceRect.y)},
-        Vector2{static_cast<float>(sourceRect.GetRight()), static_cast<float>(sourceRect.y - sourceRect.height)},
+        Vector2{static_cast<float>(sourceRect.getLeft()), static_cast<float>(sourceRect.y - sourceRect.height)},
+        Vector2{static_cast<float>(sourceRect.getLeft()), static_cast<float>(sourceRect.y)},
+        Vector2{static_cast<float>(sourceRect.getRight()), static_cast<float>(sourceRect.y)},
+        Vector2{static_cast<float>(sourceRect.getRight()), static_cast<float>(sourceRect.y - sourceRect.height)},
     }};
 
-    auto colorVector1 = color1.ToVector4();
-    auto colorVector2 = color2.ToVector4();
-    auto colorVector3 = color3.ToVector4();
-    auto colorVector4 = color4.ToVector4();
+    const auto colorVector1 = color1.toVector4();
+    const auto colorVector2 = color2.toVector4();
+    const auto colorVector3 = color3.toVector4();
+    const auto colorVector4 = color4.toVector4();
 
     impl->DrawLine(rectVertices[0], rectVertices[1], colorVector1, colorVector2);
     impl->DrawLine(rectVertices[1], rectVertices[2], colorVector2, colorVector3);
@@ -420,17 +420,17 @@ void LineBatch::DrawRectangle(const Matrix3x2& matrix,
     }
 
     std::array<Vector2, 4> rectVertices = {{
-        Vector2{static_cast<float>(sourceRect.GetLeft()), static_cast<float>(sourceRect.y - sourceRect.height)},
-        Vector2{static_cast<float>(sourceRect.GetLeft()), static_cast<float>(sourceRect.y)},
-        Vector2{static_cast<float>(sourceRect.GetRight()), static_cast<float>(sourceRect.y)},
-        Vector2{static_cast<float>(sourceRect.GetRight()), static_cast<float>(sourceRect.y - sourceRect.height)},
+        Vector2{static_cast<float>(sourceRect.getLeft()), static_cast<float>(sourceRect.y - sourceRect.height)},
+        Vector2{static_cast<float>(sourceRect.getLeft()), static_cast<float>(sourceRect.y)},
+        Vector2{static_cast<float>(sourceRect.getRight()), static_cast<float>(sourceRect.y)},
+        Vector2{static_cast<float>(sourceRect.getRight()), static_cast<float>(sourceRect.y - sourceRect.height)},
     }};
 
     for (auto& vertex : rectVertices) {
-        vertex = math::Transform(vertex, matrix);
+        vertex = math::transform(vertex, matrix);
     }
 
-    auto colorVector = color.ToVector4();
+    const auto colorVector = color.toVector4();
 
     impl->DrawLine(rectVertices[0], rectVertices[1], colorVector, colorVector);
     impl->DrawLine(rectVertices[1], rectVertices[2], colorVector, colorVector);
@@ -484,7 +484,7 @@ void LineBatch::DrawSphere(
         v = v * radius + position;
     }
 
-    const auto colorVector = color.ToVector4();
+    const auto colorVector = color.toVector4();
     const auto drawIndices = [&](std::size_t a, std::size_t b) {
         POMDOG_ASSERT(a < sphereVertices.size());
         POMDOG_ASSERT(b < sphereVertices.size());
@@ -524,7 +524,7 @@ void LineBatch::DrawSphere(
 void LineBatch::DrawTriangle(const Vector2& point1, const Vector2& point2, const Vector2& point3, const Color& color)
 {
     POMDOG_ASSERT(impl);
-    auto colorVector = color.ToVector4();
+    const auto colorVector = color.toVector4();
     impl->DrawTriangle(point1, point2, point3, colorVector, colorVector, colorVector);
 }
 
@@ -533,9 +533,9 @@ void LineBatch::DrawTriangle(
     const Color& color1, const Color& color2, const Color& color3)
 {
     POMDOG_ASSERT(impl);
-    auto colorVector1 = color1.ToVector4();
-    auto colorVector2 = color2.ToVector4();
-    auto colorVector3 = color3.ToVector4();
+    const auto colorVector1 = color1.toVector4();
+    const auto colorVector2 = color2.toVector4();
+    const auto colorVector3 = color3.toVector4();
     impl->DrawTriangle(point1, point2, point3, colorVector1, colorVector2, colorVector3);
 }
 

@@ -77,7 +77,7 @@ void BillboardBatchTest::Draw()
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
-    pass.renderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
+    pass.renderTargets[0] = {nullptr, Color::createCornflowerBlue().toVector4()};
     pass.depthStencilBuffer = nullptr;
     pass.clearDepth = 1.0f;
     pass.clearStencil = std::uint8_t(0);
@@ -87,27 +87,27 @@ void BillboardBatchTest::Draw()
     commandList->Reset();
     commandList->SetRenderPass(std::move(pass));
 
-    const auto projectionMatrix = Matrix4x4::CreatePerspectiveFieldOfViewLH(
-        math::ToRadians(45.0f),
+    const auto projectionMatrix = Matrix4x4::createPerspectiveFieldOfViewLH(
+        math::toRadians(45.0f),
         static_cast<float>(presentationParameters.backBufferWidth) / presentationParameters.backBufferHeight,
         0.01f,
         500.0f);
 
     const auto totalTime = static_cast<float>(timer->GetTotalTime().count());
     const auto lookAtPosition = Vector3{0.0f, 0.0f, 5.0f};
-    const auto rotation = Matrix4x4::CreateRotationY(math::TwoPi<float> * totalTime);
-    const auto cameraPosition = lookAtPosition + math::Transform(Vector3{0.0f, 6.0f, -8.0f}, rotation);
-    const auto viewMatrix = Matrix4x4::CreateLookAtLH(cameraPosition, lookAtPosition, Vector3::UnitY());
+    const auto rotation = Matrix4x4::createRotationY(math::TwoPi<float> * totalTime);
+    const auto cameraPosition = lookAtPosition + math::transform(Vector3{0.0f, 6.0f, -8.0f}, rotation);
+    const auto viewMatrix = Matrix4x4::createLookAtLH(cameraPosition, lookAtPosition, Vector3::createUnitY());
     const auto viewProjection = viewMatrix * projectionMatrix;
 
-    const auto lightDirection = math::Normalize(Vector3{-0.5f, -1.0f, 0.5f});
+    const auto lightDirection = math::normalize(Vector3{-0.5f, -1.0f, 0.5f});
 
     // NOTE: Update constant buffer for world
     BasicEffect::WorldConstantBuffer constants;
     constants.ViewProjection = viewProjection;
     constants.View = viewMatrix;
     constants.Projection = projectionMatrix;
-    constants.InverseView = math::Invert(viewMatrix);
+    constants.InverseView = math::invert(viewMatrix);
     constants.LightDirection = Vector4{lightDirection, 0.0f};
     constantBuffer->SetData(0, gpu::MakeByteSpan(constants));
 
@@ -124,7 +124,7 @@ void BillboardBatchTest::Draw()
             float x = static_cast<float>(i) * gridSize + startOffsetX;
             float z = static_cast<float>(i) * gridSize + startOffsetZ;
 
-            auto color = Color::White();
+            auto color = Color::createWhite();
             if (i % 5 != 0) {
                 color = Color{255, 255, 255, 100};
             }
@@ -141,7 +141,7 @@ void BillboardBatchTest::Draw()
         Vector3{0.0f, 0.0f, 2.0f},
         Vector2{0.0f, 0.0f},
         Vector2{1.0f, 1.0f},
-        Color::White(), 0.0f,
+        Color::createWhite(), 0.0f,
         Vector2{0.5f, 0.5f},
         Vector2{1.0f, 1.0f});
 
@@ -149,8 +149,8 @@ void BillboardBatchTest::Draw()
         Vector3{0.0f, 0.0f, 5.0f},
         Vector2{0.0f, 0.0f},
         Vector2{1.0f, 1.0f},
-        Color::Red(),
-        math::ToRadians(45.0f),
+        Color::createRed(),
+        math::toRadians(45.0f),
         Vector2{0.5f, 0.5f},
         Vector2{1.0f, 1.0f});
 
@@ -158,8 +158,8 @@ void BillboardBatchTest::Draw()
         Vector3{0.0f, 0.0f, 7.0f},
         Vector2{0.0f, 0.0f},
         Vector2{0.5f, 1.0f},
-        Color::Green(),
-        math::ToRadians(0.0f),
+        Color::createGreen(),
+        math::toRadians(0.0f),
         Vector2{0.5f, 0.0f},
         Vector2{1.0f, 2.0f});
 
@@ -167,8 +167,8 @@ void BillboardBatchTest::Draw()
         Vector3{0.0f, 0.0f, 10.0f},
         Vector2{0.0f, 0.0f},
         Vector2{1.0f, 0.5f},
-        Color::Blue(),
-        math::ToRadians(0.0f),
+        Color::createBlue(),
+        math::toRadians(0.0f),
         Vector2{0.0f, 0.0f},
         Vector2{2.0f, 1.0f});
 

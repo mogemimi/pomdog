@@ -72,7 +72,7 @@ void HTTPClientTest::Draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
-    auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
+    auto projectionMatrix = Matrix4x4::createOrthographicLH(
         static_cast<float>(presentationParameters.backBufferWidth),
         static_cast<float>(presentationParameters.backBufferHeight),
         0.0f,
@@ -80,7 +80,7 @@ void HTTPClientTest::Draw()
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
-    pass.renderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
+    pass.renderTargets[0] = {nullptr, Color::createCornflowerBlue().toVector4()};
     pass.depthStencilBuffer = nullptr;
     pass.clearDepth = 1.0f;
     pass.clearStencil = std::uint8_t(0);
@@ -91,8 +91,8 @@ void HTTPClientTest::Draw()
     commandList->SetRenderPass(std::move(pass));
 
     spriteBatch->Begin(commandList, projectionMatrix);
-    spriteFont->Draw(*spriteBatch, requestURL, Vector2{-200, 120}, Color::Black(), 0.0f, Vector2{0.0f, 0.5f}, 1.0f);
-    spriteFont->Draw(*spriteBatch, webText, Vector2::Zero(), Color::White(), 0.0f, Vector2{0.5f, 0.5f}, 1.0f);
+    spriteFont->Draw(*spriteBatch, requestURL, Vector2{-200, 120}, Color::createBlack(), 0.0f, Vector2{0.0f, 0.5f}, 1.0f);
+    spriteFont->Draw(*spriteBatch, webText, Vector2::createZero(), Color::createWhite(), 0.0f, Vector2{0.5f, 0.5f}, 1.0f);
 
     spriteBatch->End();
 

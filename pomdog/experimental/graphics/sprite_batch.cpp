@@ -62,7 +62,7 @@ namespace {
 Vector2 ComputeSpriteOffset(const TextureRegion& region, const Vector2& originPivot) noexcept
 {
     if ((region.subrect.width <= 0) || (region.subrect.height <= 0)) {
-        return Vector2::Zero();
+        return Vector2::createZero();
     }
 
     POMDOG_ASSERT(region.subrect.width > 0);
@@ -337,7 +337,7 @@ void SpriteBatch::Impl::Begin(
     POMDOG_ASSERT(constantBuffer);
 
     SpriteBatchConstantBuffer constants;
-    constants.ViewProjection = math::Transpose(transformMatrix);
+    constants.ViewProjection = math::transpose(transformMatrix);
 
     if (distanceFieldParameters != std::nullopt) {
         constants.DistanceFieldParameters.x = distanceFieldParameters->Smoothing;
@@ -547,7 +547,7 @@ void SpriteBatch::Impl::Draw(
         rotation.value,
         layerDepth,
     };
-    info.Color = color.ToVector4();
+    info.Color = color.toVector4();
     info.InverseTextureSize = Vector4{
         inverseTextureSize.x,
         inverseTextureSize.y,

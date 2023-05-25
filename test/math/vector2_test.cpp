@@ -21,7 +21,7 @@ TEST_CASE("Vector2", "[Vector2]")
     }
     SECTION("Constants")
     {
-        REQUIRE(Vector2{0.0f, 0.0f} == Vector2::Zero());
+        REQUIRE(Vector2{0.0f, 0.0f} == Vector2::createZero());
     }
     SECTION("Addition")
     {
@@ -48,51 +48,51 @@ TEST_CASE("Vector2", "[Vector2]")
     }
     SECTION("Lerp")
     {
-        using pomdog::math::Lerp;
-        REQUIRE(Vector2{0.0f, 0.0f} == Lerp(Vector2::Zero(), Vector2{40.0f, 50.0f}, 0.0f));
-        REQUIRE(Vector2{4.0f, 5.0f} == Lerp(Vector2::Zero(), Vector2{40.0f, 50.0f}, 0.1f));
-        REQUIRE(Vector2{36.f, 45.f} == Lerp(Vector2::Zero(), Vector2{40.0f, 50.0f}, 0.9f));
-        REQUIRE(Vector2{40.f, 50.f} == Lerp(Vector2::Zero(), Vector2{40.0f, 50.0f}, 1.0f));
+        using pomdog::math::lerp;
+        REQUIRE(Vector2{0.0f, 0.0f} == lerp(Vector2::createZero(), Vector2{40.0f, 50.0f}, 0.0f));
+        REQUIRE(Vector2{4.0f, 5.0f} == lerp(Vector2::createZero(), Vector2{40.0f, 50.0f}, 0.1f));
+        REQUIRE(Vector2{36.f, 45.f} == lerp(Vector2::createZero(), Vector2{40.0f, 50.0f}, 0.9f));
+        REQUIRE(Vector2{40.f, 50.f} == lerp(Vector2::createZero(), Vector2{40.0f, 50.0f}, 1.0f));
 
-        REQUIRE(Vector2{1.0f, 2.0f} == Lerp(Vector2{1.0f, 2.0f}, Vector2{4.0f, 5.0f}, 0.0f));
-        REQUIRE(Vector2{2.5f, 3.5f} == Lerp(Vector2{1.0f, 2.0f}, Vector2{4.0f, 5.0f}, 0.5f));
-        REQUIRE(Vector2{4.0f, 5.0f} == Lerp(Vector2{1.0f, 2.0f}, Vector2{4.0f, 5.0f}, 1.0f));
+        REQUIRE(Vector2{1.0f, 2.0f} == lerp(Vector2{1.0f, 2.0f}, Vector2{4.0f, 5.0f}, 0.0f));
+        REQUIRE(Vector2{2.5f, 3.5f} == lerp(Vector2{1.0f, 2.0f}, Vector2{4.0f, 5.0f}, 0.5f));
+        REQUIRE(Vector2{4.0f, 5.0f} == lerp(Vector2{1.0f, 2.0f}, Vector2{4.0f, 5.0f}, 1.0f));
     }
     SECTION("Normalize")
     {
-        using pomdog::math::Normalize;
-        REQUIRE(Normalize(Vector2{0.0f, 0.0f}) == Vector2{0.0f, 0.0f});
-        REQUIRE(Normalize(Vector2{1.0f, 0.0f}) == Vector2{1.0f, 0.0f});
-        REQUIRE(Normalize(Vector2{0.0f, 1.0f}) == Vector2{0.0f, 1.0f});
+        using pomdog::math::normalize;
+        REQUIRE(normalize(Vector2{0.0f, 0.0f}) == Vector2{0.0f, 0.0f});
+        REQUIRE(normalize(Vector2{1.0f, 0.0f}) == Vector2{1.0f, 0.0f});
+        REQUIRE(normalize(Vector2{0.0f, 1.0f}) == Vector2{0.0f, 1.0f});
     }
     SECTION("Rotate")
     {
-        using pomdog::math::Rotate;
-        REQUIRE(Rotate(Vector2{0.0f, 0.0f}, 0.0f) == Vector2{0.0f, 0.0f});
+        using pomdog::math::rotate;
+        REQUIRE(rotate(Vector2{0.0f, 0.0f}, 0.0f) == Vector2{0.0f, 0.0f});
 
         const auto approx = [](float x) -> auto { return Catch::Approx(x).margin(0.000001f); };
         {
-            auto vec = Rotate(Vector2{1.0f, 0.0f}, 0.0f);
+            auto vec = rotate(Vector2{1.0f, 0.0f}, 0.0f);
             REQUIRE(vec.x == approx(1.0f));
             REQUIRE(vec.y == approx(0.0f));
         }
         {
-            auto vec = Rotate(Vector2{1.0f, 0.0f}, pomdog::math::PiOver2<float>);
+            auto vec = rotate(Vector2{1.0f, 0.0f}, pomdog::math::PiOver2<float>);
             REQUIRE(vec.x == approx(0.0f));
             REQUIRE(vec.y == approx(1.0f));
         }
         {
-            auto vec = Rotate(Vector2{1.0f, 0.0f}, pomdog::math::Pi<float>);
+            auto vec = rotate(Vector2{1.0f, 0.0f}, pomdog::math::Pi<float>);
             REQUIRE(vec.x == approx(-1.0f));
             REQUIRE(vec.y == approx(0.0f));
         }
         {
-            auto vec = Rotate(Vector2{1.0f, 0.0f}, -pomdog::math::PiOver2<float>);
+            auto vec = rotate(Vector2{1.0f, 0.0f}, -pomdog::math::PiOver2<float>);
             REQUIRE(vec.x == approx(0.0f));
             REQUIRE(vec.y == approx(-1.0f));
         }
         {
-            auto vec = Rotate(Vector2{1.0f, 0.0f}, pomdog::math::TwoPi<float>);
+            auto vec = rotate(Vector2{1.0f, 0.0f}, pomdog::math::TwoPi<float>);
             REQUIRE(vec.x == approx(1.0f));
             REQUIRE(vec.y == approx(0.0f));
         }

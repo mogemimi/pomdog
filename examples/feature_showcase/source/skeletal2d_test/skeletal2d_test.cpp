@@ -207,26 +207,26 @@ void Skeletal2DTest::Update()
 
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
-    auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
+    auto projectionMatrix = Matrix4x4::createOrthographicLH(
         static_cast<float>(presentationParameters.backBufferWidth),
         static_cast<float>(presentationParameters.backBufferHeight),
         -1.0f,
         1000.0f);
 
-    auto viewMatrix = Matrix4x4::Identity();
+    auto viewMatrix = Matrix4x4::createIdentity();
 
     // NOTE: Update constant buffer for world
     BasicEffect::WorldConstantBuffer worldConstants;
     worldConstants.ViewProjection = viewMatrix * projectionMatrix;
-    worldConstants.InverseView = math::Invert(viewMatrix);
-    worldConstants.LightDirection = Vector4{Vector3::UnitZ(), 0.0f};
+    worldConstants.InverseView = math::invert(viewMatrix);
+    worldConstants.LightDirection = Vector4{Vector3::createUnitZ(), 0.0f};
     worldConstantBuffer->SetData(0, gpu::MakeByteSpan(worldConstants));
 
     constexpr float metalness = 0.1f;
 
     // NOTE: Update constant buffer for model
     BasicEffect::ModelConstantBuffer modelConstants;
-    modelConstants.Model = Matrix4x4::CreateTranslation(Vector3{0.0f, -180.0f, 0.0f});
+    modelConstants.Model = Matrix4x4::createTranslation(Vector3{0.0f, -180.0f, 0.0f});
     modelConstants.Material = Vector4{metalness, 0.0f, 0.0f, 0.0f};
     modelConstants.Color = Vector4{1.0f, 1.0f, 1.0f, 1.0f};
     modelConstantBuffer->SetData(0, gpu::MakeByteSpan(modelConstants));
@@ -260,20 +260,20 @@ void Skeletal2DTest::Update()
         auto inverseTextureSize = Vector2{1.0f / static_cast<float>(texture->GetWidth()), 1.0f / static_cast<float>(texture->GetHeight())};
         auto subrectPos = Vector2{static_cast<float>(slot.Subrect.x), static_cast<float>(slot.Subrect.y)};
         auto subrectSize = Vector2{static_cast<float>(slot.Subrect.width), static_cast<float>(slot.Subrect.height)};
-        auto scaling = Matrix3x2::CreateScale(subrectSize);
+        auto scaling = Matrix3x2::createScale(subrectSize);
 
-        auto translate = Matrix3x2::CreateTranslation(slot.Translate);
-        auto rotate = Matrix3x2::CreateRotation(slot.Rotation);
+        auto translate = Matrix3x2::createTranslation(slot.Translate);
+        auto rotate = Matrix3x2::createRotation(slot.Rotation);
 
         if (slot.TextureRotate) {
-            rotate = rotate * Matrix3x2::CreateRotation(-math::PiOver2<float>);
+            rotate = rotate * Matrix3x2::createRotation(-math::PiOver2<float>);
         }
 
         auto transformMatrix = scaling * rotate * translate * poseMatrix;
 
         for (const auto& v : quadVertices) {
             auto pos = Vector2{v.Position.x, v.Position.y};
-            pos = math::Transform(pos - slot.Origin, transformMatrix);
+            pos = math::transform(pos - slot.Origin, transformMatrix);
 
             auto vertex = v;
             vertex.Position = Vector3{pos, layerDepth};
@@ -291,7 +291,7 @@ void Skeletal2DTest::Draw()
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
-    pass.renderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
+    pass.renderTargets[0] = {nullptr, Color::createCornflowerBlue().toVector4()};
     pass.depthStencilBuffer = nullptr;
     pass.clearDepth = 1.0f;
     pass.clearStencil = std::uint8_t(0);
@@ -301,7 +301,7 @@ void Skeletal2DTest::Draw()
     commandList->Reset();
     commandList->SetRenderPass(std::move(pass));
 
-    auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
+    auto projectionMatrix = Matrix4x4::createOrthographicLH(
         static_cast<float>(presentationParameters.backBufferWidth),
         static_cast<float>(presentationParameters.backBufferHeight),
         0.0f,

@@ -29,7 +29,7 @@ std::unique_ptr<Error> LineBatchTest::Initialize()
     timer->SetInterval(std::chrono::seconds(1));
     timer->SetScale(0.1);
 
-    path.push_back(Vector2::Zero());
+    path.push_back(Vector2::createZero());
 
     const auto mouse = gameHost->GetMouse();
     connect(mouse->ButtonDown, [this](MouseButtons button) {
@@ -39,12 +39,12 @@ std::unique_ptr<Error> LineBatchTest::Initialize()
         const auto width = clientBounds.width;
         const auto height = clientBounds.height;
         if (button == MouseButtons::Left) {
-            path.back() = math::ToVector2(Point2D{mouseState.Position.x - (width / 2), (height / 2) - mouseState.Position.y});
+            path.back() = math::toVector2(Point2D{mouseState.Position.x - (width / 2), (height / 2) - mouseState.Position.y});
             path.push_back(path.back());
         }
         if (button == MouseButtons::Right) {
             path.clear();
-            path.push_back(Vector2::Zero());
+            path.push_back(Vector2::createZero());
         }
     });
 
@@ -58,7 +58,7 @@ void LineBatchTest::Update()
     const auto clientBounds = window->GetClientBounds();
     const auto width = clientBounds.width;
     const auto height = clientBounds.height;
-    path.back() = math::ToVector2(Point2D{state.Position.x - (width / 2), (height / 2) - state.Position.y});
+    path.back() = math::toVector2(Point2D{state.Position.x - (width / 2), (height / 2) - state.Position.y});
 }
 
 void LineBatchTest::Draw()
@@ -67,7 +67,7 @@ void LineBatchTest::Draw()
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
-    pass.renderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
+    pass.renderTargets[0] = {nullptr, Color::createCornflowerBlue().toVector4()};
     pass.depthStencilBuffer = nullptr;
     pass.clearDepth = 1.0f;
     pass.clearStencil = std::uint8_t(0);
@@ -78,23 +78,23 @@ void LineBatchTest::Draw()
     commandList->SetRenderPass(std::move(pass));
 
     {
-        auto world = Matrix4x4::CreateScale(0.1f) *
-            Matrix4x4::CreateRotationX(math::PiOver4<float>) *
-            Matrix4x4::CreateRotationY(std::sin( math::TwoPi<float> * static_cast<float>(timer->GetTotalTime().count())));
-        auto view = Matrix4x4::CreateTranslation(Vector3{0.0f, 0.0f, 50.0f});
+        auto world = Matrix4x4::createScale(0.1f) *
+            Matrix4x4::createRotationX(math::PiOver4<float>) *
+            Matrix4x4::createRotationY(std::sin( math::TwoPi<float> * static_cast<float>(timer->GetTotalTime().count())));
+        auto view = Matrix4x4::createTranslation(Vector3{0.0f, 0.0f, 50.0f});
 
-        auto projectionMatrix = Matrix4x4::CreatePerspectiveFieldOfViewLH(
+        auto projectionMatrix = Matrix4x4::createPerspectiveFieldOfViewLH(
             math::PiOver4<float>,
             static_cast<float>(presentationParameters.backBufferWidth) / static_cast<float>(presentationParameters.backBufferHeight),
             0.0001f,
             500.0f);
 
         lineBatch2->Begin(commandList, world * view * projectionMatrix);
-        lineBatch2->DrawSphere(Vector3::Zero(), 100.0f, Color::Blue(), 16);
+        lineBatch2->DrawSphere(Vector3::createZero(), 100.0f, Color::createBlue(), 16);
         lineBatch2->End();
     }
 
-    auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
+    auto projectionMatrix = Matrix4x4::createOrthographicLH(
         static_cast<float>(presentationParameters.backBufferWidth),
         static_cast<float>(presentationParameters.backBufferHeight),
         0.0f,

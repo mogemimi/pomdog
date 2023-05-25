@@ -144,7 +144,7 @@ bool Vector3::operator!=(const Vector3& other) const noexcept
 }
 
 Vector3
-Vector3::ToEulerAngles(const Quaternion& q)
+Vector3::toEulerAngles(const Quaternion& q)
 {
     constexpr float Two = 2;
     const auto xx = q.x * q.x;
@@ -157,32 +157,32 @@ Vector3::ToEulerAngles(const Quaternion& q)
     return Vector3{pitch, yaw, roll};
 }
 
-const float* Vector3::Data() const noexcept
+const float* Vector3::data() const noexcept
 {
     return &x;
 }
 
-float* Vector3::Data() noexcept
+float* Vector3::data() noexcept
 {
     return &x;
 }
 
-Vector3 Vector3::Zero() noexcept
+Vector3 Vector3::createZero() noexcept
 {
     return Vector3{0.0f, 0.0f, 0.0f};
 }
 
-Vector3 Vector3::UnitX() noexcept
+Vector3 Vector3::createUnitX() noexcept
 {
     return Vector3{1.0f, 0.0f, 0.0f};
 }
 
-Vector3 Vector3::UnitY() noexcept
+Vector3 Vector3::createUnitY() noexcept
 {
     return Vector3{0.0f, 1.0f, 0.0f};
 }
 
-Vector3 Vector3::UnitZ() noexcept
+Vector3 Vector3::createUnitZ() noexcept
 {
     return Vector3{0.0f, 0.0f, 1.0f};
 }
@@ -201,37 +201,37 @@ operator*(float factor, const Vector3& vector) noexcept
 namespace pomdog::math {
 
 [[nodiscard]] float
-Length(const Vector3& v) noexcept
+length(const Vector3& v) noexcept
 {
     return std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 }
 
 [[nodiscard]] float
-LengthSquared(const Vector3& v) noexcept
+lengthSquared(const Vector3& v) noexcept
 {
     return v.x * v.x + v.y * v.y + v.z * v.z;
 }
 
 [[nodiscard]] float
-Distance(const Vector3& a, const Vector3& b) noexcept
+distance(const Vector3& a, const Vector3& b) noexcept
 {
-    return math::Length(a - b);
+    return math::length(a - b);
 }
 
 [[nodiscard]] float
-DistanceSquared(const Vector3& a, const Vector3& b) noexcept
+distanceSquared(const Vector3& a, const Vector3& b) noexcept
 {
-    return math::LengthSquared(a - b);
+    return math::lengthSquared(a - b);
 }
 
 [[nodiscard]] float
-Dot(const Vector3& a, const Vector3& b) noexcept
+dot(const Vector3& a, const Vector3& b) noexcept
 {
     return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
 [[nodiscard]] Vector3
-Cross(const Vector3& a, const Vector3& b) noexcept
+cross(const Vector3& a, const Vector3& b) noexcept
 {
     return Vector3{
         a.y * b.z - a.z * b.y,
@@ -241,7 +241,7 @@ Cross(const Vector3& a, const Vector3& b) noexcept
 }
 
 [[nodiscard]] Vector3
-Min(const Vector3& a, const Vector3& b) noexcept
+min(const Vector3& a, const Vector3& b) noexcept
 {
     return Vector3{
         std::min(a.x, b.x),
@@ -251,7 +251,7 @@ Min(const Vector3& a, const Vector3& b) noexcept
 }
 
 [[nodiscard]] Vector3
-Max(const Vector3& a, const Vector3& b) noexcept
+max(const Vector3& a, const Vector3& b) noexcept
 {
     return Vector3{
         std::max(a.x, b.x),
@@ -261,39 +261,39 @@ Max(const Vector3& a, const Vector3& b) noexcept
 }
 
 [[nodiscard]] Vector3
-Clamp(const Vector3& source, const Vector3& min, const Vector3& max) noexcept
+clamp(const Vector3& source, const Vector3& min, const Vector3& max) noexcept
 {
     return Vector3{
-        math::Clamp(source.x, min.x, max.x),
-        math::Clamp(source.y, min.y, max.y),
-        math::Clamp(source.z, min.z, max.z),
+        math::clamp(source.x, min.x, max.x),
+        math::clamp(source.y, min.y, max.y),
+        math::clamp(source.z, min.z, max.z),
     };
 }
 
 [[nodiscard]] Vector3
-Lerp(const Vector3& source1, const Vector3& source2, float amount)
+lerp(const Vector3& source1, const Vector3& source2, float amount)
 {
     return Vector3{
-        math::Lerp(source1.x, source2.x, amount),
-        math::Lerp(source1.y, source2.y, amount),
-        math::Lerp(source1.z, source2.z, amount),
+        math::lerp(source1.x, source2.x, amount),
+        math::lerp(source1.y, source2.y, amount),
+        math::lerp(source1.z, source2.z, amount),
     };
 }
 
 [[nodiscard]] Vector3
-SmoothStep(const Vector3& source1, const Vector3& source2, float amount)
+smoothstep(const Vector3& source1, const Vector3& source2, float amount)
 {
     return Vector3{
-        math::SmoothStep(source1.x, source2.x, amount),
-        math::SmoothStep(source1.y, source2.y, amount),
-        math::SmoothStep(source1.z, source2.z, amount),
+        math::smoothstep(source1.x, source2.x, amount),
+        math::smoothstep(source1.y, source2.y, amount),
+        math::smoothstep(source1.z, source2.z, amount),
     };
 }
 
 [[nodiscard]] Vector3
-Normalize(const Vector3& source) noexcept
+normalize(const Vector3& source) noexcept
 {
-    const auto length = math::Length(source);
+    const auto length = math::length(source);
 
     if (length > std::numeric_limits<decltype(length)>::epsilon()) {
         POMDOG_ASSERT(std::fpclassify(length) != FP_ZERO);
@@ -306,7 +306,7 @@ Normalize(const Vector3& source) noexcept
 }
 
 [[nodiscard]] Vector3
-Transform(const Vector3& position, const Matrix4x4& matrix) noexcept
+transform(const Vector3& position, const Matrix4x4& matrix) noexcept
 {
     return Vector3{
         (position.x * matrix.m[0][0]) + (position.y * matrix.m[1][0]) + (position.z * matrix.m[2][0]) + matrix.m[3][0],
@@ -316,7 +316,7 @@ Transform(const Vector3& position, const Matrix4x4& matrix) noexcept
 }
 
 [[nodiscard]] Vector3
-TransformNormal(const Vector3& normal, const Matrix4x4& matrix) noexcept
+transformNormal(const Vector3& normal, const Matrix4x4& matrix) noexcept
 {
     return Vector3{
         (normal.x * matrix.m[0][0]) + (normal.y * matrix.m[1][0]) + (normal.z * matrix.m[2][0]),

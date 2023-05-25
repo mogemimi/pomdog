@@ -104,7 +104,7 @@ void GUISplitterTest::Draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
-    auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
+    auto projectionMatrix = Matrix4x4::createOrthographicLH(
         static_cast<float>(presentationParameters.backBufferWidth),
         static_cast<float>(presentationParameters.backBufferHeight),
         0.0f,
@@ -112,7 +112,7 @@ void GUISplitterTest::Draw()
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
-    pass.renderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
+    pass.renderTargets[0] = {nullptr, Color::createCornflowerBlue().toVector4()};
     pass.depthStencilBuffer = nullptr;
     pass.clearDepth = 1.0f;
     pass.clearStencil = std::uint8_t(0);
@@ -122,7 +122,7 @@ void GUISplitterTest::Draw()
     commandList->Reset();
     commandList->SetRenderPass(std::move(pass));
 
-    auto viewMatrix = Matrix4x4::CreateTranslation(Vector3{
+    auto viewMatrix = Matrix4x4::createTranslation(Vector3{
         static_cast<float>(-presentationParameters.backBufferWidth) * 0.5f,
         static_cast<float>(-presentationParameters.backBufferHeight) * 0.5f,
         0.0f});

@@ -25,7 +25,7 @@ Matrix2x2::Matrix2x2(float m00, float m01, float m10, float m11) noexcept
 Matrix2x2&
 Matrix2x2::operator*=(const Matrix2x2& other) noexcept
 {
-    *this = math::Multiply(*this, other);
+    *this = math::multiply(*this, other);
     return *this;
 }
 
@@ -105,12 +105,12 @@ Matrix2x2 Matrix2x2::operator-(const Matrix2x2& other) const noexcept
 
 Matrix2x2 Matrix2x2::operator*(const Matrix2x2& other) const noexcept
 {
-    return math::Multiply(*this, other);
+    return math::multiply(*this, other);
 }
 
 Matrix2x2 Matrix2x2::operator*(float factor) const noexcept
 {
-    return math::Multiply(*this, factor);
+    return math::multiply(*this, factor);
 }
 
 Matrix2x2 Matrix2x2::operator/(float factor) const noexcept
@@ -159,17 +159,17 @@ const float& Matrix2x2::operator()(std::size_t row, std::size_t column) const no
     return m[row][column];
 }
 
-const float* Matrix2x2::Data() const noexcept
+const float* Matrix2x2::data() const noexcept
 {
     return m[0];
 }
 
-float* Matrix2x2::Data() noexcept
+float* Matrix2x2::data() noexcept
 {
     return m[0];
 }
 
-Matrix2x2 Matrix2x2::Identity() noexcept
+Matrix2x2 Matrix2x2::createIdentity() noexcept
 {
     return Matrix2x2{
         1, 0,
@@ -179,7 +179,7 @@ Matrix2x2 Matrix2x2::Identity() noexcept
 [[nodiscard]] Matrix2x2
 operator*(float factor, const Matrix2x2& matrix) noexcept
 {
-    return math::Multiply(matrix, factor);
+    return math::multiply(matrix, factor);
 }
 
 } // namespace pomdog
@@ -187,13 +187,13 @@ operator*(float factor, const Matrix2x2& matrix) noexcept
 namespace pomdog::math {
 
 [[nodiscard]] float
-Determinant(const Matrix2x2& matrix) noexcept
+determinant(const Matrix2x2& matrix) noexcept
 {
     return matrix.m[0][0] * matrix.m[1][1] - matrix.m[0][1] * matrix.m[1][0];
 }
 
 [[nodiscard]] Matrix2x2
-Multiply(const Matrix2x2& matrix1, const Matrix2x2& matrix2) noexcept
+multiply(const Matrix2x2& matrix1, const Matrix2x2& matrix2) noexcept
 {
     return Matrix2x2{
         matrix1.m[0][0] * matrix2.m[0][0] + matrix1.m[0][1] * matrix2.m[1][0],
@@ -204,7 +204,7 @@ Multiply(const Matrix2x2& matrix1, const Matrix2x2& matrix2) noexcept
 }
 
 [[nodiscard]] Matrix2x2
-Multiply(const Matrix2x2& matrix1, float factor) noexcept
+multiply(const Matrix2x2& matrix1, float factor) noexcept
 {
     return Matrix2x2{
         matrix1.m[0][0] * factor,

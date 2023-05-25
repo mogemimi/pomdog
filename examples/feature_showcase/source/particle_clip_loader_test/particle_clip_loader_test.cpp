@@ -56,7 +56,7 @@ std::unique_ptr<Error> ParticleClipLoaderTest::Initialize()
         particleSystem->Play();
     }
 
-    emitterPosition = Vector2::Zero();
+    emitterPosition = Vector2::createZero();
 
     auto mouse = gameHost->GetMouse();
     auto onMoved = [this](const Point2D& mousePos) {
@@ -70,7 +70,7 @@ std::unique_ptr<Error> ParticleClipLoaderTest::Initialize()
         auto pos = mousePos;
         pos.x = pos.x - (clientBounds.width / 2);
         pos.y = -pos.y + (clientBounds.height / 2);
-        emitterPosition = math::ToVector2(pos);
+        emitterPosition = math::toVector2(pos);
     };
     auto onClipChanged = [this] {
         std::array<std::string, 2> filenames = {
@@ -112,7 +112,7 @@ void ParticleClipLoaderTest::Update()
 {
     auto clock = gameHost->GetClock();
     auto frameDuration = clock->GetFrameDuration();
-    particleSystem->Simulate(emitterPosition, math::ToRadians(90.0f), frameDuration);
+    particleSystem->Simulate(emitterPosition, math::toRadians(90.0f), frameDuration);
 }
 
 void ParticleClipLoaderTest::Draw()
@@ -121,7 +121,7 @@ void ParticleClipLoaderTest::Draw()
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
-    pass.renderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
+    pass.renderTargets[0] = {nullptr, Color::createCornflowerBlue().toVector4()};
     pass.depthStencilBuffer = nullptr;
     pass.clearDepth = 1.0f;
     pass.clearStencil = std::uint8_t(0);
@@ -131,7 +131,7 @@ void ParticleClipLoaderTest::Draw()
     commandList->Reset();
     commandList->SetRenderPass(std::move(pass));
 
-    auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
+    auto projectionMatrix = Matrix4x4::createOrthographicLH(
         static_cast<float>(presentationParameters.backBufferWidth),
         static_cast<float>(presentationParameters.backBufferHeight),
         0.0f,

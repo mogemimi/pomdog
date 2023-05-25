@@ -160,7 +160,7 @@ std::shared_ptr<Widget> ListView::GetChildAt(const Point2D& position)
 {
     POMDOG_ASSERT(verticalLayout != nullptr);
     auto bounds = verticalLayout->GetBounds();
-    if (bounds.Contains(position)) {
+    if (bounds.contains(position)) {
         return verticalLayout;
     }
     return nullptr;

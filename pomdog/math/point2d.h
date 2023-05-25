@@ -32,8 +32,8 @@ public:
     Point2D& operator/=(std::int32_t factor) noexcept;
 
     // Unary operators:
-    Point2D operator+() const noexcept;
-    Point2D operator-() const noexcept;
+    [[nodiscard]] Point2D operator+() const noexcept;
+    [[nodiscard]] Point2D operator-() const noexcept;
 
     // Binary operators:
     [[nodiscard]] Point2D operator+(const Point2D&) const noexcept;
@@ -47,7 +47,8 @@ public:
     [[nodiscard]] bool operator!=(const Point2D&) const noexcept;
 
     /// Returns the Point2D (0, 0).
-    [[nodiscard]] static Point2D Zero() noexcept;
+    [[nodiscard]] static Point2D
+    createZero() noexcept;
 };
 
 /// Multiplies a 2D point by a scalar factor.
@@ -59,12 +60,12 @@ operator*(std::int32_t factor, const Point2D& coordinate) noexcept;
 namespace pomdog::math {
 
 [[nodiscard]] POMDOG_EXPORT Point2D
-ToPoint2D(const Vector2& vec) noexcept;
+toPoint2D(const Vector2& vec) noexcept;
 
 [[nodiscard]] POMDOG_EXPORT Vector2
-ToVector2(const Point2D& point) noexcept;
+toVector2(const Point2D& point) noexcept;
 
 [[nodiscard]] POMDOG_EXPORT Point2D
-Abs(const Point2D& point) noexcept;
+abs(const Point2D& point) noexcept;
 
 } // namespace pomdog::math

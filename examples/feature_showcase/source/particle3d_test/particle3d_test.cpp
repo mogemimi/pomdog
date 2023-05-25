@@ -13,17 +13,17 @@ Ray ScreenPointToRay(
     const Matrix4x4& viewProjection,
     bool isOrthoProjection)
 {
-    const auto screenPointVector = Vector3{math::ToVector2(screenPoint), 1.0f};
+    const auto screenPointVector = Vector3{math::toVector2(screenPoint), 1.0f};
     const auto worldPoint = viewport.Unproject(screenPointVector, viewProjection);
 
     if (isOrthoProjection) {
-        const auto cameraPositionInScreen = Vector3{math::ToVector2(screenPoint), -1.0f};
+        const auto cameraPositionInScreen = Vector3{math::toVector2(screenPoint), -1.0f};
         const auto cameraPositionInWorld = viewport.Unproject(cameraPositionInScreen, viewProjection);
-        Ray ray = {cameraPositionInWorld, math::Normalize(worldPoint - cameraPositionInWorld)};
+        Ray ray = {cameraPositionInWorld, math::normalize(worldPoint - cameraPositionInWorld)};
         return ray;
     }
 
-    Ray ray = {cameraPosition, math::Normalize(worldPoint - cameraPosition)};
+    Ray ray = {cameraPosition, math::normalize(worldPoint - cameraPosition)};
     return ray;
 }
 
@@ -99,7 +99,7 @@ std::unique_ptr<Error> Particle3DTest::Initialize()
         particleSystem->Play();
     }
 
-    emitterPosition = Vector3::Zero();
+    emitterPosition = Vector3::createZero();
 
     auto mouse = gameHost->GetMouse();
     auto onClipChanged = [this] {
@@ -141,7 +141,7 @@ void Particle3DTest::Update()
 {
     auto clock = gameHost->GetClock();
     auto frameDuration = clock->GetFrameDuration();
-    particleSystem->Simulate(emitterPosition, Quaternion::CreateFromAxisAngle(Vector3::UnitY(), 0.0f), frameDuration);
+    particleSystem->Simulate(emitterPosition, Quaternion::createFromAxisAngle(Vector3::createUnitY(), 0.0f), frameDuration);
 }
 
 void Particle3DTest::Draw()
@@ -150,7 +150,7 @@ void Particle3DTest::Draw()
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
-    pass.renderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
+    pass.renderTargets[0] = {nullptr, Color::createCornflowerBlue().toVector4()};
     pass.depthStencilBuffer = nullptr;
     pass.clearDepth = 1.0f;
     pass.clearStencil = std::uint8_t(0);
@@ -160,20 +160,20 @@ void Particle3DTest::Draw()
     commandList->Reset();
     commandList->SetRenderPass(std::move(pass));
 
-    const auto projectionMatrix = Matrix4x4::CreatePerspectiveFieldOfViewLH(
-        math::ToRadians(45.0f),
+    const auto projectionMatrix = Matrix4x4::createPerspectiveFieldOfViewLH(
+        math::toRadians(45.0f),
         static_cast<float>(presentationParameters.backBufferWidth) / presentationParameters.backBufferHeight,
         0.01f,
         500.0f);
 
     const auto totalTime = static_cast<float>(timer->GetTotalTime().count());
     const auto lookAtPosition = Vector3{0.0f, 0.0f, 5.0f};
-    const auto rotation = Matrix4x4::CreateRotationY(math::TwoPi<float> * totalTime);
-    const auto cameraPosition = lookAtPosition + math::Transform(Vector3{0.0f, 6.0f, -8.0f}, rotation);
-    const auto viewMatrix = Matrix4x4::CreateLookAtLH(cameraPosition, lookAtPosition, Vector3::UnitY());
+    const auto rotation = Matrix4x4::createRotationY(math::TwoPi<float> * totalTime);
+    const auto cameraPosition = lookAtPosition + math::transform(Vector3{0.0f, 6.0f, -8.0f}, rotation);
+    const auto viewMatrix = Matrix4x4::createLookAtLH(cameraPosition, lookAtPosition, Vector3::createUnitY());
     const auto viewProjection = viewMatrix * projectionMatrix;
 
-    const auto lightDirection = math::Normalize(Vector3{-0.5f, -1.0f, 0.5f});
+    const auto lightDirection = math::normalize(Vector3{-0.5f, -1.0f, 0.5f});
 
     const auto mouseState = gameHost->GetMouse()->GetState();
     if (mouseState.LeftButton == ButtonState::Pressed) {
@@ -183,8 +183,8 @@ void Particle3DTest::Draw()
             viewport,
             viewProjection,
             false);
-        auto plane = Plane::CreateFromPointNormal(Vector3::Zero(), Vector3::UnitY());
-        auto rayIntersection = ray.Intersects(plane);
+        auto plane = Plane::createFromPointNormal(Vector3::createZero(), Vector3::createUnitY());
+        auto rayIntersection = ray.intersects(plane);
         if (rayIntersection) {
             emitterPosition = ray.position + ray.direction * (*rayIntersection);
         }
@@ -195,7 +195,7 @@ void Particle3DTest::Draw()
     constants.ViewProjection = viewProjection;
     constants.View = viewMatrix;
     constants.Projection = projectionMatrix;
-    constants.InverseView = math::Invert(viewMatrix);
+    constants.InverseView = math::invert(viewMatrix);
     constants.LightDirection = Vector4{lightDirection, 0.0f};
     constantBuffer->SetData(0, gpu::MakeByteSpan(constants));
 
@@ -212,7 +212,7 @@ void Particle3DTest::Draw()
             float x = static_cast<float>(i) * gridSize + startOffsetX;
             float z = static_cast<float>(i) * gridSize + startOffsetZ;
 
-            auto color = Color::White();
+            auto color = Color::createWhite();
             if (i % 5 != 0) {
                 color = Color{255, 255, 255, 100};
             }

@@ -36,8 +36,8 @@ public:
     Matrix3x2& operator/=(float factor) noexcept;
 
     // Unary operators:
-    Matrix3x2 operator+() const noexcept;
-    Matrix3x2 operator-() const noexcept;
+    [[nodiscard]] Matrix3x2 operator+() const noexcept;
+    [[nodiscard]] Matrix3x2 operator-() const noexcept;
 
     // Binary operators:
     [[nodiscard]] Matrix3x2 operator+(const Matrix3x2& other) const noexcept;
@@ -54,28 +54,29 @@ public:
     [[nodiscard]] float& operator()(std::size_t row, std::size_t column) noexcept;
 
     [[nodiscard]] static Matrix3x2
-    CreateTranslation(const Vector2& position) noexcept;
+    createTranslation(const Vector2& position) noexcept;
 
     [[nodiscard]] static Matrix3x2
-    CreateScale(float scale) noexcept;
+    createScale(float scale) noexcept;
 
     [[nodiscard]] static Matrix3x2
-    CreateScale(const Vector2& scale) noexcept;
+    createScale(const Vector2& scale) noexcept;
 
     [[nodiscard]] static Matrix3x2
-    CreateRotation(const Radian<float>& angle);
+    createRotation(const Radian<float>& angle);
 
     [[nodiscard]] static Matrix3x2
-    CreateSkew(const Vector2& skew);
+    createSkew(const Vector2& skew);
 
     /// Returns pointer to the first element.
-    const float* Data() const noexcept;
+    [[nodiscard]] const float* data() const noexcept;
 
     /// Returns pointer to the first element.
-    float* Data() noexcept;
+    [[nodiscard]] float* data() noexcept;
 
     /// Returns the identity matrix.
-    [[nodiscard]] static Matrix3x2 Identity() noexcept;
+    [[nodiscard]] static Matrix3x2
+    createIdentity() noexcept;
 };
 
 /// Multiplies a matrix by a scalar factor.
@@ -88,22 +89,22 @@ namespace pomdog::math {
 
 /// Calculates and returns the determinant of the matrix.
 [[nodiscard]] float POMDOG_EXPORT
-Determinant(const Matrix3x2& matrix) noexcept;
+determinant(const Matrix3x2& matrix) noexcept;
 
 /// Multiplies a matrix by another matrix.
 [[nodiscard]] Matrix3x2 POMDOG_EXPORT
-Multiply(const Matrix3x2& matrix1, const Matrix3x2& matrix2) noexcept;
+multiply(const Matrix3x2& matrix1, const Matrix3x2& matrix2) noexcept;
 
 /// Multiplies a matrix by a scalar factor.
 [[nodiscard]] Matrix3x2 POMDOG_EXPORT
-Multiply(const Matrix3x2& matrix1, float factor) noexcept;
+multiply(const Matrix3x2& matrix1, float factor) noexcept;
 
 /// Calculates and returns the inverse of a matrix.
 [[nodiscard]] Matrix3x2 POMDOG_EXPORT
-Invert(const Matrix3x2& matrix);
+invert(const Matrix3x2& matrix);
 
 /// Performs a linear interpolation between two matrices.
 [[nodiscard]] Matrix3x2 POMDOG_EXPORT
-Lerp(const Matrix3x2& source1, const Matrix3x2& source2, float amount) noexcept;
+lerp(const Matrix3x2& source1, const Matrix3x2& source2, float amount) noexcept;
 
 } // namespace pomdog::math

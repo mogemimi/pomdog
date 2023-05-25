@@ -35,6 +35,9 @@ constexpr int FarLeftBottom = 7;
 //#define POMDOG_CREATE_PLANES_BEFORE_CORNERS 0
 #define POMDOG_CREATE_PLANES_BEFORE_CORNERS 1
 
+//#define POMDOG_BOUNDING_FRUSTUM_FAST_CONTAINS 0
+#define POMDOG_BOUNDING_FRUSTUM_FAST_CONTAINS 1
+
 } // namespace
 
 BoundingFrustum::BoundingFrustum() = default;
@@ -44,63 +47,64 @@ BoundingFrustum::BoundingFrustum(const Matrix4x4& matrixIn)
     matrix_ = matrixIn;
 
 #if POMDOG_CREATE_PLANES_BEFORE_CORNERS
-    CreatePlanes();
-    CreateCorners();
+    createPlanes();
+    createCorners();
 #else
-    CreateCorners();
-    CreatePlanes();
+    createCorners();
+    createPlanes();
 #endif
 }
 
-const Matrix4x4& BoundingFrustum::GetMatrix() const noexcept
+const Matrix4x4& BoundingFrustum::getMatrix() const noexcept
 {
     return matrix_;
 }
 
-void BoundingFrustum::SetMatrix(const Matrix4x4& matrixIn) noexcept
+void BoundingFrustum::setMatrix(const Matrix4x4& matrixIn) noexcept
 {
     matrix_ = matrixIn;
 
 #if POMDOG_CREATE_PLANES_BEFORE_CORNERS
-    CreatePlanes();
-    CreateCorners();
+    createPlanes();
+    createCorners();
 #else
-    CreateCorners();
-    CreatePlanes();
+    createCorners();
+    createPlanes();
 #endif
 }
 
-const Plane& BoundingFrustum::GetNear() const noexcept
+const Plane& BoundingFrustum::getNear() const noexcept
 {
     return planes_[PlaneIndex::Near];
 }
 
-const Plane& BoundingFrustum::GetFar() const noexcept
+const Plane& BoundingFrustum::getFar() const noexcept
 {
     return planes_[PlaneIndex::Far];
 }
 
-const Plane& BoundingFrustum::GetLeft() const noexcept
+const Plane& BoundingFrustum::getLeft() const noexcept
 {
     return planes_[PlaneIndex::Left];
 }
 
-const Plane& BoundingFrustum::GetRight() const noexcept
+const Plane& BoundingFrustum::getRight() const noexcept
 {
     return planes_[PlaneIndex::Right];
 }
 
-const Plane& BoundingFrustum::GetTop() const noexcept
+const Plane& BoundingFrustum::getTop() const noexcept
 {
     return planes_[PlaneIndex::Top];
 }
 
-const Plane& BoundingFrustum::GetBottom() const noexcept
+const Plane& BoundingFrustum::getBottom() const noexcept
 {
     return planes_[PlaneIndex::Bottom];
 }
 
-const std::array<Vector3, BoundingFrustum::CornerCount>& BoundingFrustum::GetCorners() const noexcept
+const std::array<Vector3, BoundingFrustum::CornerCount>&
+BoundingFrustum::getCorners() const noexcept
 {
     return corners_;
 }
@@ -109,7 +113,7 @@ namespace {
 
 #if POMDOG_CREATE_PLANES_BEFORE_CORNERS
 
-void MakePlane(Plane& plane, float x, float y, float z, float d)
+void makePlane(Plane& plane, float x, float y, float z, float d)
 {
     plane.normal.x = x;
     plane.normal.y = y;
@@ -117,13 +121,14 @@ void MakePlane(Plane& plane, float x, float y, float z, float d)
     plane.distance = d;
 }
 
-Vector3 ComputeIntersectionPoint(const Plane& a, const Plane& b, const Plane& c)
+[[nodiscard]] Vector3
+computeIntersectionPoint(const Plane& a, const Plane& b, const Plane& c)
 {
-    const auto cross = math::Cross(b.normal, c.normal);
-    const auto denom = -1.0f * math::Dot(a.normal, cross);
-    const auto v1 = a.distance * math::Cross(b.normal, c.normal);
-    const auto v2 = b.distance * math::Cross(c.normal, a.normal);
-    const auto v3 = c.distance * math::Cross(a.normal, b.normal);
+    const auto cross = math::cross(b.normal, c.normal);
+    const auto denom = -1.0f * math::dot(a.normal, cross);
+    const auto v1 = a.distance * math::cross(b.normal, c.normal);
+    const auto v2 = b.distance * math::cross(c.normal, a.normal);
+    const auto v3 = c.distance * math::cross(a.normal, b.normal);
 
     Vector3 result = (v1 + v2 + v3) / denom;
     return result;
@@ -142,45 +147,45 @@ constexpr auto FLB = CornerIndex::FarLeftBottom;
 
 } // namespace
 
-void BoundingFrustum::CreatePlanes()
+void BoundingFrustum::createPlanes()
 {
 #if POMDOG_CREATE_PLANES_BEFORE_CORNERS
-    MakePlane(
+    makePlane(
         planes_[PlaneIndex::Near],
         -matrix_(0, 2),
         -matrix_(1, 2),
         -matrix_(2, 2),
         -matrix_(3, 2));
 
-    MakePlane(
+    makePlane(
         planes_[PlaneIndex::Far],
         -matrix_(0, 3) + matrix_(0, 2),
         -matrix_(1, 3) + matrix_(1, 2),
         -matrix_(2, 3) + matrix_(2, 2),
         -matrix_(3, 3) + matrix_(3, 2));
 
-    MakePlane(
+    makePlane(
         planes_[PlaneIndex::Left],
         -matrix_(0, 3) - matrix_(0, 0),
         -matrix_(1, 3) - matrix_(1, 0),
         -matrix_(2, 3) - matrix_(2, 0),
         -matrix_(3, 3) - matrix_(3, 0));
 
-    MakePlane(
+    makePlane(
         planes_[PlaneIndex::Right],
         -matrix_(0, 3) + matrix_(0, 0),
         -matrix_(1, 3) + matrix_(1, 0),
         -matrix_(2, 3) + matrix_(2, 0),
         -matrix_(3, 3) + matrix_(3, 0));
 
-    MakePlane(
+    makePlane(
         planes_[PlaneIndex::Top],
         -matrix_(0, 3) + matrix_(0, 1),
         -matrix_(1, 3) + matrix_(1, 1),
         -matrix_(2, 3) + matrix_(2, 1),
         -matrix_(3, 3) + matrix_(3, 1));
 
-    MakePlane(
+    makePlane(
         planes_[PlaneIndex::Bottom],
         -matrix_(0, 3) - matrix_(0, 1),
         -matrix_(1, 3) - matrix_(1, 1),
@@ -188,7 +193,7 @@ void BoundingFrustum::CreatePlanes()
         -matrix_(3, 3) - matrix_(3, 1));
 
     for (auto& plane : planes_) {
-        plane.Normalize();
+        plane.normalize();
     }
 #else
     // NOTE: Left-handed coordinate system
@@ -212,7 +217,7 @@ void BoundingFrustum::CreatePlanes()
 #endif
 }
 
-void BoundingFrustum::CreateCorners()
+void BoundingFrustum::createCorners()
 {
 #if POMDOG_CREATE_PLANES_BEFORE_CORNERS
     constexpr auto N = PlaneIndex::Near;
@@ -222,14 +227,14 @@ void BoundingFrustum::CreateCorners()
     constexpr auto T = PlaneIndex::Top;
     constexpr auto B = PlaneIndex::Bottom;
 
-    corners_[NLT] = ComputeIntersectionPoint(planes_[N], planes_[L], planes_[T]);
-    corners_[NRT] = ComputeIntersectionPoint(planes_[N], planes_[R], planes_[T]);
-    corners_[NRB] = ComputeIntersectionPoint(planes_[N], planes_[R], planes_[B]);
-    corners_[NLB] = ComputeIntersectionPoint(planes_[N], planes_[L], planes_[B]);
-    corners_[FLT] = ComputeIntersectionPoint(planes_[F], planes_[L], planes_[T]);
-    corners_[FRT] = ComputeIntersectionPoint(planes_[F], planes_[R], planes_[T]);
-    corners_[FRB] = ComputeIntersectionPoint(planes_[F], planes_[R], planes_[B]);
-    corners_[FLB] = ComputeIntersectionPoint(planes_[F], planes_[L], planes_[B]);
+    corners_[NLT] = computeIntersectionPoint(planes_[N], planes_[L], planes_[T]);
+    corners_[NRT] = computeIntersectionPoint(planes_[N], planes_[R], planes_[T]);
+    corners_[NRB] = computeIntersectionPoint(planes_[N], planes_[R], planes_[B]);
+    corners_[NLB] = computeIntersectionPoint(planes_[N], planes_[L], planes_[B]);
+    corners_[FLT] = computeIntersectionPoint(planes_[F], planes_[L], planes_[T]);
+    corners_[FRT] = computeIntersectionPoint(planes_[F], planes_[R], planes_[T]);
+    corners_[FRB] = computeIntersectionPoint(planes_[F], planes_[R], planes_[B]);
+    corners_[FLB] = computeIntersectionPoint(planes_[F], planes_[L], planes_[B]);
 #else
     constexpr auto xMin = -1.0f;
     constexpr auto xMax = +1.0f;
@@ -250,19 +255,20 @@ void BoundingFrustum::CreateCorners()
     corners_[FRB] = Vector3{xMax, yMin, zMax};
     corners_[FLB] = Vector3{xMin, yMin, zMax};
 
-    auto inverseMatrix = math::Invert(matrix_);
+    auto inverseMatrix = math::invert(matrix_);
     for (auto& corner : corners_) {
-        corner = math::Transform(corner, inverseMatrix);
+        corner = math::transform(corner, inverseMatrix);
     }
 #endif
 }
 
-ContainmentType BoundingFrustum::Contains(const Vector3& point) const noexcept
+ContainmentType
+BoundingFrustum::contains(const Vector3& point) const noexcept
 {
-#if 1
+#if POMDOG_BOUNDING_FRUSTUM_FAST_CONTAINS
     // NOTE: fast mode
     for (auto& plane : planes_) {
-        const auto distance = plane.DotCoordinate(point);
+        const auto distance = plane.dotCoordinate(point);
         if (distance > 0.0f) {
             return ContainmentType::Disjoint;
         }
@@ -271,7 +277,7 @@ ContainmentType BoundingFrustum::Contains(const Vector3& point) const noexcept
 #else
     bool intersects = false;
     for (auto& plane : planes_) {
-        const auto distance = plane.DotCoordinate(point);
+        const auto distance = plane.dotCoordinate(point);
         if (distance > 0.0f) {
             return ContainmentType::Disjoint;
         }
@@ -286,11 +292,12 @@ ContainmentType BoundingFrustum::Contains(const Vector3& point) const noexcept
 #endif
 }
 
-ContainmentType BoundingFrustum::Contains(const BoundingBox& box) const noexcept
+ContainmentType
+BoundingFrustum::contains(const BoundingBox& box) const noexcept
 {
     bool intersects = false;
     for (auto& plane : planes_) {
-        const auto planeIntersectionType = plane.Intersects(box);
+        const auto planeIntersectionType = plane.intersects(box);
         if (planeIntersectionType == PlaneIntersectionType::Front) {
             return ContainmentType::Disjoint;
         }
@@ -304,11 +311,12 @@ ContainmentType BoundingFrustum::Contains(const BoundingBox& box) const noexcept
     return ContainmentType::Contains;
 }
 
-ContainmentType BoundingFrustum::Contains(const BoundingFrustum& frustum) const noexcept
+ContainmentType
+BoundingFrustum::contains(const BoundingFrustum& frustum) const noexcept
 {
     bool intersects = false;
     for (auto& plane : planes_) {
-        const auto planeIntersectionType = plane.Intersects(frustum);
+        const auto planeIntersectionType = plane.intersects(frustum);
         if (planeIntersectionType == PlaneIntersectionType::Front) {
             return ContainmentType::Disjoint;
         }
@@ -322,11 +330,12 @@ ContainmentType BoundingFrustum::Contains(const BoundingFrustum& frustum) const 
     return ContainmentType::Contains;
 }
 
-ContainmentType BoundingFrustum::Contains(const BoundingSphere& sphere) const noexcept
+ContainmentType
+BoundingFrustum::contains(const BoundingSphere& sphere) const noexcept
 {
     bool intersects = false;
     for (auto& plane : planes_) {
-        const auto planeIntersectionType = plane.Intersects(sphere);
+        const auto planeIntersectionType = plane.intersects(sphere);
         if (planeIntersectionType == PlaneIntersectionType::Front) {
             return ContainmentType::Disjoint;
         }
@@ -340,20 +349,20 @@ ContainmentType BoundingFrustum::Contains(const BoundingSphere& sphere) const no
     return ContainmentType::Contains;
 }
 
-bool BoundingFrustum::Intersects(const BoundingBox& box) const noexcept
+bool BoundingFrustum::intersects(const BoundingBox& box) const noexcept
 {
     for (auto& plane : planes_) {
-        if (plane.Intersects(box) == PlaneIntersectionType::Front) {
+        if (plane.intersects(box) == PlaneIntersectionType::Front) {
             return false;
         }
     }
     return true;
 }
 
-bool BoundingFrustum::Intersects(const BoundingFrustum& frustum) const noexcept
+bool BoundingFrustum::intersects(const BoundingFrustum& frustum) const noexcept
 {
     for (auto& plane : planes_) {
-        const auto planeIntersectionType = plane.Intersects(frustum);
+        const auto planeIntersectionType = plane.intersects(frustum);
         if (planeIntersectionType == PlaneIntersectionType::Front) {
             return false;
         }
@@ -361,10 +370,10 @@ bool BoundingFrustum::Intersects(const BoundingFrustum& frustum) const noexcept
     return true;
 }
 
-bool BoundingFrustum::Intersects(const BoundingSphere& sphere) const noexcept
+bool BoundingFrustum::intersects(const BoundingSphere& sphere) const noexcept
 {
     for (auto& plane : planes_) {
-        const auto planeIntersectionType = plane.Intersects(sphere);
+        const auto planeIntersectionType = plane.intersects(sphere);
         if (planeIntersectionType == PlaneIntersectionType::Front) {
             return false;
         }
@@ -372,24 +381,26 @@ bool BoundingFrustum::Intersects(const BoundingSphere& sphere) const noexcept
     return true;
 }
 
-PlaneIntersectionType BoundingFrustum::Intersects(const Plane& plane) const noexcept
+PlaneIntersectionType
+BoundingFrustum::intersects(const Plane& plane) const noexcept
 {
-    auto result = plane.Intersects(corners_.front());
+    auto result = plane.intersects(corners_.front());
     for (std::size_t i = 1; i < corners_.size(); ++i) {
-        if (result != plane.Intersects(corners_[i])) {
+        if (result != plane.intersects(corners_[i])) {
             result = PlaneIntersectionType::Intersecting;
         }
     }
     return result;
 }
 
-std::optional<float> BoundingFrustum::Intersects(const Ray& ray) const noexcept
+std::optional<float>
+BoundingFrustum::intersects(const Ray& ray) const noexcept
 {
     std::array<std::optional<float>, PlaneCount> distances;
     for (int i = 0; i < PlaneCount; ++i) {
         auto& plane = planes_[i];
-        const auto d = ray.Intersects(plane);
-        const auto distanceToRayPosition = plane.DotCoordinate(ray.position);
+        const auto d = ray.intersects(plane);
+        const auto distanceToRayPosition = plane.dotCoordinate(ray.position);
         if ((distanceToRayPosition < 0.0f) && !d) {
             return std::nullopt;
         }

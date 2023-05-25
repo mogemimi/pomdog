@@ -117,7 +117,7 @@ void ToggleSwitch::Draw(DrawingContext& drawingContext)
     auto primitiveBatch = drawingContext.GetPrimitiveBatch();
 
     auto innerColor = Color{109, 109, 109, 255};
-    auto thumbColor = Color::White();
+    auto thumbColor = Color::createWhite();
 
     if (!isEnabled) {
         innerColor = disabledInnerColor;
@@ -135,23 +135,23 @@ void ToggleSwitch::Draw(DrawingContext& drawingContext)
         }
     }
 
-    const auto transformOffset = math::ToVector2(globalPos);
+    const auto transformOffset = math::toVector2(globalPos);
 
     primitiveBatch->DrawArc(
         transformOffset + Vector2{
                               static_cast<float>(GetWidth()) - (thumbRadius + thumbPadding),
                               (thumbRadius + thumbPadding)},
-        thumbRadius + thumbPadding, math::ToRadians(270.0f), math::ToRadians(180.0f), segments, innerColor);
+        thumbRadius + thumbPadding, math::toRadians(270.0f), math::toRadians(180.0f), segments, innerColor);
 
     primitiveBatch->DrawArc(
         transformOffset + Vector2{
                               (thumbRadius + thumbPadding),
                               (thumbRadius + thumbPadding)},
-        thumbRadius + thumbPadding, math::ToRadians(90.0f), math::ToRadians(180.0f), segments, innerColor);
+        thumbRadius + thumbPadding, math::toRadians(90.0f), math::toRadians(180.0f), segments, innerColor);
 
     primitiveBatch->DrawRectangle(
-        Matrix3x2::Identity(),
-        Vector2{(thumbRadius + thumbPadding), 0.0f} + math::ToVector2(globalPos),
+        Matrix3x2::createIdentity(),
+        Vector2{(thumbRadius + thumbPadding), 0.0f} + math::toVector2(globalPos),
         GetWidth() - (thumbRadius + thumbPadding) * 2.0f,
         (thumbRadius + thumbPadding) * 2.0f,
         innerColor);
@@ -172,10 +172,10 @@ void ToggleSwitch::Draw(DrawingContext& drawingContext)
     }
     switch (toggleAnimation) {
     case ToggleAnimation::OnToOff:
-        circlePos = math::Lerp(offPos, onPos, 1.0f - Easings::EaseSine::InOut(animationDuration));
+        circlePos = math::lerp(offPos, onPos, 1.0f - Easings::EaseSine::InOut(animationDuration));
         break;
     case ToggleAnimation::OffToOn:
-        circlePos = math::Lerp(offPos, onPos, Easings::EaseSine::InOut(animationDuration));
+        circlePos = math::lerp(offPos, onPos, Easings::EaseSine::InOut(animationDuration));
         break;
     case ToggleAnimation::Stopped:
         break;
@@ -192,11 +192,11 @@ void ToggleSwitch::Draw(DrawingContext& drawingContext)
     auto spriteFont = drawingContext.GetFont(FontWeight::Bold, FontSize::Small);
 
     if (isOn) {
-        auto textPosition = math::ToVector2(globalPos) + Vector2{thumbPadding, thumbPadding} + Vector2{9.0f, 3.0f};
+        auto textPosition = math::toVector2(globalPos) + Vector2{thumbPadding, thumbPadding} + Vector2{9.0f, 3.0f};
         spriteFont->Draw(*spriteBatch, "ON", textPosition, toggleOnThumbColor);
     }
     else {
-        auto textPosition = math::ToVector2(globalPos) + Vector2{static_cast<float>(GetWidth()) - (thumbRadius + thumbPadding), thumbPadding} + Vector2{-19.0f, 3.0f};
+        auto textPosition = math::toVector2(globalPos) + Vector2{static_cast<float>(GetWidth()) - (thumbRadius + thumbPadding), thumbPadding} + Vector2{-19.0f, 3.0f};
         spriteFont->Draw(*spriteBatch, "OFF", textPosition, Color{250, 250, 250, 255});
     }
 

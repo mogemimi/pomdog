@@ -7,8 +7,8 @@
 namespace pomdog {
 
 struct GamepadThumbSticks final {
-    Vector2 Left = Vector2::Zero();
-    Vector2 Right = Vector2::Zero();
+    Vector2 Left = Vector2::createZero();
+    Vector2 Right = Vector2::createZero();
 };
 
 } // namespace pomdog

@@ -100,7 +100,7 @@ std::shared_ptr<Widget> HorizontalLayout::GetChildAt(const Point2D& position)
     for (auto& child : children) {
         POMDOG_ASSERT(child.widget != nullptr);
         auto bounds = child.widget->GetBounds();
-        if (bounds.Contains(position)) {
+        if (bounds.contains(position)) {
             return child.widget;
         }
     }

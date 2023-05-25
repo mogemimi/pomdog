@@ -38,7 +38,7 @@ Matrix3x3::Matrix3x3(
 
 Matrix3x3& Matrix3x3::operator*=(const Matrix3x3& other) noexcept
 {
-    *this = math::Multiply(*this, other);
+    *this = math::multiply(*this, other);
     return *this;
 }
 
@@ -109,7 +109,7 @@ Matrix3x3 Matrix3x3::operator+() const noexcept
 
 Matrix3x3 Matrix3x3::operator-() const noexcept
 {
-    return math::Multiply(*this, -1.0f);
+    return math::multiply(*this, -1.0f);
 }
 
 Matrix3x3 Matrix3x3::operator+(const Matrix3x3& other) const noexcept
@@ -144,12 +144,12 @@ Matrix3x3 Matrix3x3::operator-(const Matrix3x3& other) const noexcept
 
 Matrix3x3 Matrix3x3::operator*(const Matrix3x3& other) const noexcept
 {
-    return math::Multiply(*this, other);
+    return math::multiply(*this, other);
 }
 
 Matrix3x3 Matrix3x3::operator*(float factor) const noexcept
 {
-    return math::Multiply(*this, factor);
+    return math::multiply(*this, factor);
 }
 
 Matrix3x3 Matrix3x3::operator/(float factor) const noexcept
@@ -213,20 +213,20 @@ const float& Matrix3x3::operator()(std::size_t row, std::size_t column) const no
     return m[row][column];
 }
 
-void Matrix3x3::SetScale(const Vector3& scale) noexcept
+void Matrix3x3::setScale(const Vector3& scale) noexcept
 {
     m[0][0] = scale.x;
     m[1][1] = scale.y;
     m[2][2] = scale.z;
 }
 
-Vector3 Matrix3x3::GetScale() const noexcept
+Vector3 Matrix3x3::getScale() const noexcept
 {
     return Vector3{m[0][0], m[1][1], m[2][2]};
 }
 
 Matrix3x3
-Matrix3x3::CreateTranslation(const Vector2& position) noexcept
+Matrix3x3::createTranslation(const Vector2& position) noexcept
 {
     return Matrix3x3{
         1.0f, 0.0f, 0.0f,
@@ -235,7 +235,7 @@ Matrix3x3::CreateTranslation(const Vector2& position) noexcept
 }
 
 Matrix3x3
-Matrix3x3::CreateScale(float scale) noexcept
+Matrix3x3::createScale(float scale) noexcept
 {
     return Matrix3x3{
         scale, 0.0f, 0.0f,
@@ -244,7 +244,7 @@ Matrix3x3::CreateScale(float scale) noexcept
 }
 
 Matrix3x3
-Matrix3x3::CreateScale(const Vector3& scale) noexcept
+Matrix3x3::createScale(const Vector3& scale) noexcept
 {
     return Matrix3x3{
         scale.x, 0.0f, 0.0f,
@@ -253,7 +253,7 @@ Matrix3x3::CreateScale(const Vector3& scale) noexcept
 }
 
 Matrix3x3
-Matrix3x3::CreateRotationX(const Radian<float>& angle)
+Matrix3x3::createRotationX(const Radian<float>& angle)
 {
     const auto sinAngle = std::sin(angle.value);
     const auto cosAngle = std::cos(angle.value);
@@ -265,7 +265,7 @@ Matrix3x3::CreateRotationX(const Radian<float>& angle)
 }
 
 Matrix3x3
-Matrix3x3::CreateRotationY(const Radian<float>& angle)
+Matrix3x3::createRotationY(const Radian<float>& angle)
 {
     const auto sinAngle = std::sin(angle.value);
     const auto cosAngle = std::cos(angle.value);
@@ -277,7 +277,7 @@ Matrix3x3::CreateRotationY(const Radian<float>& angle)
 }
 
 Matrix3x3
-Matrix3x3::CreateRotationZ(const Radian<float>& angle)
+Matrix3x3::createRotationZ(const Radian<float>& angle)
 {
     const auto sinAngle = std::sin(angle.value);
     const auto cosAngle = std::cos(angle.value);
@@ -289,7 +289,7 @@ Matrix3x3::CreateRotationZ(const Radian<float>& angle)
 }
 
 Matrix3x3
-Matrix3x3::CreateFromQuaternion(const Quaternion& quaternion)
+Matrix3x3::createFromQuaternion(const Quaternion& quaternion)
 {
     const auto xx = quaternion.x * quaternion.x;
     const auto yy = quaternion.y * quaternion.y;
@@ -315,7 +315,7 @@ Matrix3x3::CreateFromQuaternion(const Quaternion& quaternion)
 }
 
 Matrix3x3
-Matrix3x3::CreateFromAxisAngle(const Vector3& axis, const Radian<float>& angle)
+Matrix3x3::createFromAxisAngle(const Vector3& axis, const Radian<float>& angle)
 {
     const auto sinAngle = std::sin(angle.value);
     const auto cosAngle = std::cos(angle.value);
@@ -343,12 +343,12 @@ Matrix3x3::CreateFromAxisAngle(const Vector3& axis, const Radian<float>& angle)
     };
 }
 
-const float* Matrix3x3::Data() const noexcept
+const float* Matrix3x3::data() const noexcept
 {
     return m[0];
 }
 
-float* Matrix3x3::Data() noexcept
+float* Matrix3x3::data() noexcept
 {
     return m[0];
 }
@@ -356,10 +356,10 @@ float* Matrix3x3::Data() noexcept
 [[nodiscard]] Matrix3x3
 operator*(float factor, const Matrix3x3& matrix) noexcept
 {
-    return math::Multiply(matrix, factor);
+    return math::multiply(matrix, factor);
 }
 
-Matrix3x3 Matrix3x3::Identity() noexcept
+Matrix3x3 Matrix3x3::createIdentity() noexcept
 {
     return Matrix3x3{
         1.0f, 0.0f, 0.0f,
@@ -372,7 +372,7 @@ Matrix3x3 Matrix3x3::Identity() noexcept
 namespace pomdog::math {
 
 [[nodiscard]] float
-Determinant(const Matrix3x3& matrix) noexcept
+determinant(const Matrix3x3& matrix) noexcept
 {
     // NOTE:
     // | m00 m01 m02 | determinant =
@@ -393,7 +393,7 @@ Determinant(const Matrix3x3& matrix) noexcept
 }
 
 [[nodiscard]] Matrix2x2
-Minor2x2(const Matrix3x3& matrix, std::size_t row, std::size_t column)
+minor2x2(const Matrix3x3& matrix, std::size_t row, std::size_t column)
 {
     static_assert(std::is_same_v<decltype(matrix.m), float[3][3]>);
     constexpr std::size_t rowSize = 3;
@@ -410,7 +410,7 @@ Minor2x2(const Matrix3x3& matrix, std::size_t row, std::size_t column)
 
 #if defined(_MSC_VER) && !defined(NDEBUG)
     // NOTE: Avoid MSVC warning C4701: potentially uninitialized local variable 'minorMatrix' used
-    auto minorMatrix = Matrix2x2::Identity();
+    auto minorMatrix = Matrix2x2::createIdentity();
 #else
     Matrix2x2 minorMatrix;
 #endif
@@ -435,7 +435,7 @@ Minor2x2(const Matrix3x3& matrix, std::size_t row, std::size_t column)
 }
 
 [[nodiscard]] Matrix3x3
-Multiply(const Matrix3x3& matrix1, const Matrix3x3& matrix2) noexcept
+multiply(const Matrix3x3& matrix1, const Matrix3x3& matrix2) noexcept
 {
     return Matrix3x3{
         matrix1.m[0][0] * matrix2.m[0][0] + matrix1.m[0][1] * matrix2.m[1][0] + matrix1.m[0][2] * matrix2.m[2][0],
@@ -451,7 +451,7 @@ Multiply(const Matrix3x3& matrix1, const Matrix3x3& matrix2) noexcept
 }
 
 [[nodiscard]] Matrix3x3
-Multiply(const Matrix3x3& matrix1, float factor) noexcept
+multiply(const Matrix3x3& matrix1, float factor) noexcept
 {
     return Matrix3x3{
         matrix1.m[0][0] * factor,
@@ -467,23 +467,23 @@ Multiply(const Matrix3x3& matrix1, float factor) noexcept
 }
 
 [[nodiscard]] Matrix3x3
-Adjoint(const Matrix3x3& matrix)
+adjoint(const Matrix3x3& matrix)
 {
     return Matrix3x3{
-        +math::Determinant(math::Minor2x2(matrix, 0, 0)),
-        -math::Determinant(math::Minor2x2(matrix, 1, 0)),
-        +math::Determinant(math::Minor2x2(matrix, 2, 0)),
-        -math::Determinant(math::Minor2x2(matrix, 0, 1)),
-        +math::Determinant(math::Minor2x2(matrix, 1, 1)),
-        -math::Determinant(math::Minor2x2(matrix, 2, 1)),
-        +math::Determinant(math::Minor2x2(matrix, 0, 2)),
-        -math::Determinant(math::Minor2x2(matrix, 1, 2)),
-        +math::Determinant(math::Minor2x2(matrix, 2, 2)),
+        +math::determinant(math::minor2x2(matrix, 0, 0)),
+        -math::determinant(math::minor2x2(matrix, 1, 0)),
+        +math::determinant(math::minor2x2(matrix, 2, 0)),
+        -math::determinant(math::minor2x2(matrix, 0, 1)),
+        +math::determinant(math::minor2x2(matrix, 1, 1)),
+        -math::determinant(math::minor2x2(matrix, 2, 1)),
+        +math::determinant(math::minor2x2(matrix, 0, 2)),
+        -math::determinant(math::minor2x2(matrix, 1, 2)),
+        +math::determinant(math::minor2x2(matrix, 2, 2)),
     };
 }
 
 [[nodiscard]] Matrix3x3
-Transpose(const Matrix3x3& matrix) noexcept
+transpose(const Matrix3x3& matrix) noexcept
 {
     return Matrix3x3{
         matrix.m[0][0], matrix.m[1][0], matrix.m[2][0],
@@ -492,9 +492,9 @@ Transpose(const Matrix3x3& matrix) noexcept
 }
 
 [[nodiscard]] Matrix3x3
-Invert(const Matrix3x3& matrix)
+invert(const Matrix3x3& matrix)
 {
-    const auto determinant = math::Determinant(matrix);
+    const auto determinant = math::determinant(matrix);
 
     // NOTE: The 'matrix' must be non-singular matrix.
     POMDOG_ASSERT(std::fpclassify(determinant) != FP_ZERO);
@@ -502,22 +502,22 @@ Invert(const Matrix3x3& matrix)
     POMDOG_ASSERT(std::fpclassify(determinant) != FP_INFINITE);
 
     const auto inverseDet = 1.0f / determinant;
-    return Adjoint(matrix) * inverseDet;
+    return adjoint(matrix) * inverseDet;
 }
 
 [[nodiscard]] Matrix3x3
-Lerp(const Matrix3x3& source1, const Matrix3x3& source2, float amount) noexcept
+lerp(const Matrix3x3& source1, const Matrix3x3& source2, float amount) noexcept
 {
     return Matrix3x3{
-        math::Lerp(source1.m[0][0], source2.m[0][0], amount),
-        math::Lerp(source1.m[0][1], source2.m[0][1], amount),
-        math::Lerp(source1.m[0][2], source2.m[0][2], amount),
-        math::Lerp(source1.m[1][0], source2.m[1][0], amount),
-        math::Lerp(source1.m[1][1], source2.m[1][1], amount),
-        math::Lerp(source1.m[1][2], source2.m[1][2], amount),
-        math::Lerp(source1.m[2][0], source2.m[2][0], amount),
-        math::Lerp(source1.m[2][1], source2.m[2][1], amount),
-        math::Lerp(source1.m[2][2], source2.m[2][2], amount),
+        math::lerp(source1.m[0][0], source2.m[0][0], amount),
+        math::lerp(source1.m[0][1], source2.m[0][1], amount),
+        math::lerp(source1.m[0][2], source2.m[0][2], amount),
+        math::lerp(source1.m[1][0], source2.m[1][0], amount),
+        math::lerp(source1.m[1][1], source2.m[1][1], amount),
+        math::lerp(source1.m[1][2], source2.m[1][2], amount),
+        math::lerp(source1.m[2][0], source2.m[2][0], amount),
+        math::lerp(source1.m[2][1], source2.m[2][1], amount),
+        math::lerp(source1.m[2][2], source2.m[2][2], amount),
     };
 }
 

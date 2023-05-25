@@ -21,7 +21,8 @@ Ray::Ray(const Vector3& positionIn, const Vector3& directionIn)
 {
 }
 
-std::optional<float> Ray::Intersects(const BoundingBox& box) const
+std::optional<float>
+Ray::intersects(const BoundingBox& box) const
 {
     using T = float;
 
@@ -110,22 +111,24 @@ std::optional<float> Ray::Intersects(const BoundingBox& box) const
     return tNear;
 }
 
-std::optional<float> Ray::Intersects(const BoundingFrustum& frustum) const
+std::optional<float>
+Ray::intersects(const BoundingFrustum& frustum) const
 {
-    return frustum.Intersects(*this);
+    return frustum.intersects(*this);
 }
 
-std::optional<float> Ray::Intersects(const BoundingSphere& sphere) const
+std::optional<float>
+Ray::intersects(const BoundingSphere& sphere) const
 {
     const auto toSphere = sphere.center - position;
-    const auto toSphereLengthSquared = math::LengthSquared(toSphere);
+    const auto toSphereLengthSquared = math::lengthSquared(toSphere);
     const auto sphereRadiusSquared = sphere.radius * sphere.radius;
 
     if (toSphereLengthSquared < sphereRadiusSquared) {
         return 0.0f;
     }
 
-    const auto distance = math::Dot(direction, toSphere);
+    const auto distance = math::dot(direction, toSphere);
     if (distance < 0) {
         return std::nullopt;
     }
@@ -137,16 +140,17 @@ std::optional<float> Ray::Intersects(const BoundingSphere& sphere) const
     return std::max(distance - std::sqrt(discriminant), 0.0f);
 }
 
-std::optional<float> Ray::Intersects(const Plane& plane) const
+std::optional<float>
+Ray::intersects(const Plane& plane) const
 {
     constexpr auto Epsilon = 1e-6f;
 
-    const auto denom = math::Dot(plane.normal, direction);
+    const auto denom = math::dot(plane.normal, direction);
     if (std::abs(denom) < Epsilon) {
         return std::nullopt;
     }
 
-    const auto dot = math::Dot(plane.normal, position) + plane.distance;
+    const auto dot = math::dot(plane.normal, position) + plane.distance;
     const auto distance = -dot / denom;
     if (distance < 0.0f) {
         return std::nullopt;

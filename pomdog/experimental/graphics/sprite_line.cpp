@@ -33,7 +33,7 @@ void SpriteLine::Draw(
     POMDOG_ASSERT(middleRect.width > 0);
     POMDOG_ASSERT(middleRect.height > 0);
 
-    const auto lineLength = math::Distance(point2, point1);
+    const auto lineLength = math::distance(point2, point1);
     const auto tangent = point2 - point1;
     const auto rotation = std::atan2(tangent.y, tangent.x);
 

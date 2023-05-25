@@ -233,12 +233,12 @@ void GameMain::Update()
 
     if (subGame) {
         for (auto& button : hudButtons) {
-            button.Selected = button.Rect.Contains(position);
+            button.Selected = button.Rect.contains(position);
         }
     }
     else {
         for (auto& button : buttons) {
-            button.Selected = button.Rect.Contains(position);
+            button.Selected = button.Rect.contains(position);
         }
     }
 
@@ -306,7 +306,7 @@ void GameMain::DrawMenu()
 
     std::optional<Vector4> clearColor;
     if (!subGame) {
-        clearColor = Color{60, 60, 60, 255}.ToVector4();
+        clearColor = Color{60, 60, 60, 255}.toVector4();
     }
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
@@ -318,13 +318,13 @@ void GameMain::DrawMenu()
     pass.viewport = viewport;
     pass.scissorRect = viewport.GetBounds();
 
-    auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
+    auto projectionMatrix = Matrix4x4::createOrthographicLH(
         static_cast<float>(presentationParameters.backBufferWidth),
         static_cast<float>(presentationParameters.backBufferHeight),
         0.0f,
         100.0f);
 
-    auto viewMatrix = Matrix4x4::CreateTranslation(Vector3{
+    auto viewMatrix = Matrix4x4::createTranslation(Vector3{
         static_cast<float>(-presentationParameters.backBufferWidth) * 0.5f,
         static_cast<float>(-presentationParameters.backBufferHeight) * 0.5f,
         0.0f});
@@ -335,7 +335,7 @@ void GameMain::DrawMenu()
         {
             Color color = Color{121, 120, 118, 255};
             if (button.Selected) {
-                color = math::Lerp(
+                color = math::lerp(
                     Color{160, 160, 160, 255},
                     Color{191, 190, 180, 255},
                     0.5f + 0.5f * std::cos(math::TwoPi<float> * static_cast<float>(timer->GetTotalTime().count())));
@@ -352,7 +352,7 @@ void GameMain::DrawMenu()
 
             Color color = Color{221, 220, 218, 255};
             if (button.Selected) {
-                color = Color::White();
+                color = Color::createWhite();
             }
 
             position.x += 10.0f;
@@ -381,7 +381,7 @@ void GameMain::DrawMenu()
         spriteFont->Draw(*spriteBatch,
             footerString,
             Vector2{static_cast<float>(viewport.width) - 8.0f, 8.0f},
-            Color::White(),
+            Color::createWhite(),
             0.0f,
             Vector2{1.0f, 0.0f},
             1.0f);

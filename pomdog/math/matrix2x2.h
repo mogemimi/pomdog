@@ -33,8 +33,8 @@ public:
     Matrix2x2& operator/=(float factor) noexcept;
 
     // Unary operators:
-    Matrix2x2 operator+() const noexcept;
-    Matrix2x2 operator-() const noexcept;
+    [[nodiscard]] Matrix2x2 operator+() const noexcept;
+    [[nodiscard]] Matrix2x2 operator-() const noexcept;
 
     // Binary operators:
     [[nodiscard]] Matrix2x2 operator+(const Matrix2x2& other) const noexcept;
@@ -51,13 +51,14 @@ public:
     [[nodiscard]] float& operator()(std::size_t row, std::size_t column) noexcept;
 
     /// Returns pointer to the first element.
-    [[nodiscard]] const float* Data() const noexcept;
+    [[nodiscard]] const float* data() const noexcept;
 
     /// Returns pointer to the first element.
-    [[nodiscard]] float* Data() noexcept;
+    [[nodiscard]] float* data() noexcept;
 
     /// Returns the identity matrix.
-    [[nodiscard]] static Matrix2x2 Identity() noexcept;
+    [[nodiscard]] static Matrix2x2
+    createIdentity() noexcept;
 };
 
 /// Multiplies a matrix by a scalar factor.
@@ -70,14 +71,14 @@ namespace pomdog::math {
 
 /// Calculates and returns the determinant of the matrix.
 [[nodiscard]] float POMDOG_EXPORT
-Determinant(const Matrix2x2& matrix) noexcept;
+determinant(const Matrix2x2& matrix) noexcept;
 
 /// Multiplies a matrix by another matrix.
 [[nodiscard]] Matrix2x2 POMDOG_EXPORT
-Multiply(const Matrix2x2& matrix1, const Matrix2x2& matrix2) noexcept;
+multiply(const Matrix2x2& matrix1, const Matrix2x2& matrix2) noexcept;
 
 /// Multiplies a matrix by a scalar factor.
 [[nodiscard]] Matrix2x2 POMDOG_EXPORT
-Multiply(const Matrix2x2& matrix1, float factor) noexcept;
+multiply(const Matrix2x2& matrix1, float factor) noexcept;
 
 } // namespace pomdog::math

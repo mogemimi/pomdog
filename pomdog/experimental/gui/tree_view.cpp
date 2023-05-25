@@ -132,7 +132,7 @@ std::shared_ptr<Widget> TreeView::GetChildAt(const Point2D& position)
             continue;
         }
         auto bounds = child->GetBounds();
-        if (bounds.Contains(position)) {
+        if (bounds.contains(position)) {
             return child;
         }
     }

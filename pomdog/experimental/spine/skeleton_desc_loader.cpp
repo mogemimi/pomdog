@@ -117,7 +117,7 @@ void ReadJsonMember(const rapidjson::Value& object, const char* memberName, Radi
         while (degreeAngle < -180.0f) {
             degreeAngle += 360.0f;
         }
-        output = math::ToRadians(degreeAngle);
+        output = math::toRadians(degreeAngle);
     }
 }
 
@@ -190,7 +190,7 @@ void ReadJsonMember(const rapidjson::Value& object, const char* memberName, Colo
     if (memberObject.IsString()) {
         auto hexColor = static_cast<std::uint32_t>(
             std::stoul(memberObject.GetString(), nullptr, 16));
-        output = Color::FromPackedValue(hexColor);
+        output = Color::fromPackedValue(hexColor);
     }
 }
 
@@ -289,7 +289,7 @@ std::vector<SlotDesc> ReadSlots(const rapidjson::Value& slotsDOM, const std::vec
         SlotDesc slotDesc;
         slotDesc.Name = name.GetString();
         slotDesc.Attachement = attachment.GetString();
-        slotDesc.Color = Color::White();
+        slotDesc.Color = Color::createWhite();
         slotDesc.Joint = FindJointIndex(bone.GetString(), bones);
 
         ReadJsonMember(slot, "color", slotDesc.Color);
@@ -638,7 +638,7 @@ std::vector<AnimationSamplePointRotate> ReadAnimationRotateSamples(const rapidjs
         while (degreeAngle < -180.0f) {
             degreeAngle += 360.0f;
         }
-        samplePoint.Rotation = math::ToRadians(degreeAngle).value;
+        samplePoint.Rotation = math::toRadians(degreeAngle).value;
 
         samplePoints.push_back(std::move(samplePoint));
     }

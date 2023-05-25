@@ -56,50 +56,62 @@ public:
 
     explicit BoundingFrustum(const Matrix4x4& matrix);
 
-    [[nodiscard]] const Matrix4x4& GetMatrix() const noexcept;
+    [[nodiscard]] const Matrix4x4&
+    getMatrix() const noexcept;
 
-    void SetMatrix(const Matrix4x4& matrix) noexcept;
+    void setMatrix(const Matrix4x4& matrix) noexcept;
 
-    [[nodiscard]] const Plane& GetNear() const noexcept;
-    [[nodiscard]] const Plane& GetFar() const noexcept;
-    [[nodiscard]] const Plane& GetLeft() const noexcept;
-    [[nodiscard]] const Plane& GetRight() const noexcept;
-    [[nodiscard]] const Plane& GetTop() const noexcept;
-    [[nodiscard]] const Plane& GetBottom() const noexcept;
+    [[nodiscard]] const Plane&
+    getNear() const noexcept;
+
+    [[nodiscard]] const Plane&
+    getFar() const noexcept;
+
+    [[nodiscard]] const Plane&
+    getLeft() const noexcept;
+
+    [[nodiscard]] const Plane&
+    getRight() const noexcept;
+
+    [[nodiscard]] const Plane&
+    getTop() const noexcept;
+
+    [[nodiscard]] const Plane&
+    getBottom() const noexcept;
 
     [[nodiscard]] const std::array<Vector3, CornerCount>&
-    GetCorners() const noexcept;
+    getCorners() const noexcept;
 
     [[nodiscard]] ContainmentType
-    Contains(const Vector3& point) const noexcept;
+    contains(const Vector3& point) const noexcept;
 
     [[nodiscard]] ContainmentType
-    Contains(const BoundingBox& box) const noexcept;
+    contains(const BoundingBox& box) const noexcept;
 
     [[nodiscard]] ContainmentType
-    Contains(const BoundingFrustum& frustum) const noexcept;
+    contains(const BoundingFrustum& frustum) const noexcept;
 
     [[nodiscard]] ContainmentType
-    Contains(const BoundingSphere& sphere) const noexcept;
+    contains(const BoundingSphere& sphere) const noexcept;
 
     [[nodiscard]] bool
-    Intersects(const BoundingBox& box) const noexcept;
+    intersects(const BoundingBox& box) const noexcept;
 
     [[nodiscard]] bool
-    Intersects(const BoundingFrustum& frustum) const noexcept;
+    intersects(const BoundingFrustum& frustum) const noexcept;
 
     [[nodiscard]] bool
-    Intersects(const BoundingSphere& sphere) const noexcept;
+    intersects(const BoundingSphere& sphere) const noexcept;
 
     [[nodiscard]] PlaneIntersectionType
-    Intersects(const Plane& plane) const noexcept;
+    intersects(const Plane& plane) const noexcept;
 
     [[nodiscard]] std::optional<float>
-    Intersects(const Ray& ray) const noexcept;
+    intersects(const Ray& ray) const noexcept;
 
 private:
-    void CreatePlanes();
-    void CreateCorners();
+    void createPlanes();
+    void createCorners();
 };
 
 } // namespace pomdog

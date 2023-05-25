@@ -37,14 +37,14 @@ Particle CreateParticle(
         const auto [emitPosition, emitDirection] = clip.Shape->Compute(random);
 
         // Position
-        const auto rotation = Matrix4x4::CreateFromQuaternion(emitterRotation);
-        const auto worldMatrix = rotation * Matrix4x4::CreateTranslation(emitterPosition);
-        particle.Position = math::Transform(emitPosition, worldMatrix);
+        const auto rotation = Matrix4x4::createFromQuaternion(emitterRotation);
+        const auto worldMatrix = rotation * Matrix4x4::createTranslation(emitterPosition);
+        particle.Position = math::transform(emitPosition, worldMatrix);
 
         // Velocity
         POMDOG_ASSERT(clip.StartSpeed);
         const auto startSpeed = clip.StartSpeed->Compute(normalizedTime, random);
-        particle.Velocity = math::Transform(emitDirection * startSpeed, rotation);
+        particle.Velocity = math::transform(emitDirection * startSpeed, rotation);
     }
     {
         // Rotation
@@ -99,7 +99,7 @@ void ParticleSystem::Simulate(
 {
     Simulate(
         Vector3{emitterPosition.x, emitterPosition.y, 0.0f},
-        Quaternion::CreateFromAxisAngle(Vector3::UnitZ(), emitterRotation.value),
+        Quaternion::createFromAxisAngle(Vector3::createUnitZ(), emitterRotation.value),
         duration);
 }
 
@@ -129,7 +129,7 @@ void ParticleSystem::Simulate(
         const auto x0 = 1.0 / clip->EmissionRate;
         const auto x1 = 1.0 / clip->EmissionRateOverTime;
         const auto normalizedTime = erapsedTime.count() / clip->Duration.count();
-        const auto lerpInterval = math::Lerp(x0, x1, normalizedTime);
+        const auto lerpInterval = math::lerp(x0, x1, normalizedTime);
         const auto emissionInterval = std::max(std::numeric_limits<Duration>::epsilon(), Duration{lerpInterval});
 
         POMDOG_ASSERT(emissionInterval.count() > 0);
@@ -171,7 +171,7 @@ void ParticleSystem::Simulate(
             const auto normalizedTime = 1.0f - particle.TimeToLive * invertedLifetime;
 
             POMDOG_ASSERT(clip->ColorOverLifetime);
-            particle.Color = math::Multiply(particle.StartColor,
+            particle.Color = math::multiply(particle.StartColor,
                 clip->ColorOverLifetime->Compute(normalizedTime, particle.ColorVariance));
 
             // Rotation

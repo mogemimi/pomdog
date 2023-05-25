@@ -107,7 +107,7 @@ void AudioClipTest::Draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
-    auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
+    auto projectionMatrix = Matrix4x4::createOrthographicLH(
         static_cast<float>(presentationParameters.backBufferWidth),
         static_cast<float>(presentationParameters.backBufferHeight),
         0.0f,
@@ -115,7 +115,7 @@ void AudioClipTest::Draw()
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
-    pass.renderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
+    pass.renderTargets[0] = {nullptr, Color::createCornflowerBlue().toVector4()};
     pass.depthStencilBuffer = nullptr;
     pass.clearDepth = 1.0f;
     pass.clearStencil = std::uint8_t(0);
@@ -128,13 +128,13 @@ void AudioClipTest::Draw()
     const auto width = static_cast<float>(viewport.width);
     spriteBatch->Begin(commandList, projectionMatrix);
     if (soundEffect2->GetState() != SoundState::Playing) {
-        spriteFont->Draw(*spriteBatch, "Click here to play BGM", Vector2{-width * 0.5f + 10.0f, 20.0f}, Color::White(), 0.0f, Vector2{0.0f, 0.5f}, 1.0f);
+        spriteFont->Draw(*spriteBatch, "Click here to play BGM", Vector2{-width * 0.5f + 10.0f, 20.0f}, Color::createWhite(), 0.0f, Vector2{0.0f, 0.5f}, 1.0f);
     }
     else {
-        spriteFont->Draw(*spriteBatch, "Click here to pause BGM", Vector2{-width * 0.5f + 10.0f, 20.0f}, Color::Green(), 0.0f, Vector2{0.0f, 0.5f}, 1.0f);
+        spriteFont->Draw(*spriteBatch, "Click here to pause BGM", Vector2{-width * 0.5f + 10.0f, 20.0f}, Color::createGreen(), 0.0f, Vector2{0.0f, 0.5f}, 1.0f);
     }
 
-    spriteFont->Draw(*spriteBatch, "Click here to play SE", Vector2{width * 0.5f - 10.0f, -20.0f}, Color::White(), 0.0f, Vector2{1.0f, 0.5f}, 1.0f);
+    spriteFont->Draw(*spriteBatch, "Click here to play SE", Vector2{width * 0.5f - 10.0f, -20.0f}, Color::createWhite(), 0.0f, Vector2{1.0f, 0.5f}, 1.0f);
     spriteBatch->End();
 
     commandList->Close();

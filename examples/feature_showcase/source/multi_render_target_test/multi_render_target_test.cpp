@@ -291,24 +291,24 @@ void MultiRenderTargetTest::Update()
 
     constexpr float rotateSpeed = 0.5f;
 
-    auto projectionMatrix = Matrix4x4::CreatePerspectiveFieldOfViewLH(
-        math::ToRadians(45.0f),
+    auto projectionMatrix = Matrix4x4::createPerspectiveFieldOfViewLH(
+        math::toRadians(45.0f),
         static_cast<float>(presentationParameters.backBufferWidth) / presentationParameters.backBufferHeight,
         0.01f,
         1000.0f);
 
     auto cameraPosition = Vector3{0.0f, 6.0f, 0.0f};
     auto cameraDirection = Vector3{0.0f, -1.0f, 1.0f};
-    auto viewMatrix = Matrix4x4::CreateLookAtLH(cameraPosition, cameraPosition + cameraDirection, Vector3::UnitY());
+    auto viewMatrix = Matrix4x4::createLookAtLH(cameraPosition, cameraPosition + cameraDirection, Vector3::createUnitY());
 
-    auto lightDirection = math::Normalize(Vector3{-0.5f, -1.0f, 0.5f});
+    auto lightDirection = math::normalize(Vector3{-0.5f, -1.0f, 0.5f});
 
     // NOTE: Update constant buffer for world
     BasicEffect::WorldConstantBuffer worldConstants;
     worldConstants.ViewProjection = viewMatrix * projectionMatrix;
     worldConstants.View = viewMatrix;
     worldConstants.Projection = projectionMatrix;
-    worldConstants.InverseView = math::Invert(viewMatrix);
+    worldConstants.InverseView = math::invert(viewMatrix);
     worldConstants.LightDirection = Vector4{lightDirection, 0.0f};
     worldConstantBuffer->SetData(0, gpu::MakeByteSpan(worldConstants));
 
@@ -320,10 +320,10 @@ void MultiRenderTargetTest::Update()
         rotateY = -math::TwoPi<float> * (static_cast<float>(mouse.Position.x) / static_cast<float>(presentationParameters.backBufferWidth));
     }
 
-    auto modelMatrix = Matrix4x4::CreateTranslation(Vector3{-0.5f, -0.5f, -0.5f})
-        * Matrix4x4::CreateScale(1.0f + std::cos(time * 5.0f) * 0.1f)
-        * Matrix4x4::CreateRotationY(rotateY)
-        * Matrix4x4::CreateTranslation(Vector3{0.0f, 0.0f, 6.0f});
+    auto modelMatrix = Matrix4x4::createTranslation(Vector3{-0.5f, -0.5f, -0.5f})
+        * Matrix4x4::createScale(1.0f + std::cos(time * 5.0f) * 0.1f)
+        * Matrix4x4::createRotationY(rotateY)
+        * Matrix4x4::createTranslation(Vector3{0.0f, 0.0f, 6.0f});
 
     constexpr float metalness = 0.1f;
 
@@ -344,10 +344,10 @@ void MultiRenderTargetTest::Draw()
     {
         gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
         gpu::RenderPass pass;
-        pass.renderTargets[0] = {renderTargetAlbedo, Color::CornflowerBlue().ToVector4()};
+        pass.renderTargets[0] = {renderTargetAlbedo, Color::createCornflowerBlue().toVector4()};
         pass.renderTargets[1] = {renderTargetNormal, Vector4{0.0f, 0.0f, 1.0f, 1.0f}};
         pass.renderTargets[2] = {renderTargetDepth, Vector4{0.0f, 0.0f, 0.0f, 1.0f}};
-        pass.renderTargets[3] = {renderTargetLighting, Color::CornflowerBlue().ToVector4()};
+        pass.renderTargets[3] = {renderTargetLighting, Color::createCornflowerBlue().toVector4()};
         pass.depthStencilBuffer = depthStencilBuffer;
         pass.clearDepth = 1.0f;
         pass.clearStencil = std::uint8_t(0);
@@ -368,7 +368,7 @@ void MultiRenderTargetTest::Draw()
     {
         gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
         gpu::RenderPass pass;
-        pass.renderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
+        pass.renderTargets[0] = {nullptr, Color::createCornflowerBlue().toVector4()};
         pass.depthStencilBuffer = nullptr;
         pass.clearDepth = 1.0f;
         pass.clearStencil = std::uint8_t(0);
@@ -377,14 +377,14 @@ void MultiRenderTargetTest::Draw()
 
         const auto w = static_cast<float>(presentationParameters.backBufferWidth);
         const auto h = static_cast<float>(presentationParameters.backBufferHeight);
-        const auto projectionMatrix = Matrix4x4::CreateOrthographicLH(w, h, 0.0f, 100.0f);
+        const auto projectionMatrix = Matrix4x4::createOrthographicLH(w, h, 0.0f, 100.0f);
 
         commandList->SetRenderPass(std::move(pass));
 
         spriteBatch->Begin(commandList, projectionMatrix);
 
         auto draw = [&](std::shared_ptr<gpu::RenderTarget2D> rt, Vector2 pos) {
-            auto originPivot = Vector2::Zero();
+            auto originPivot = Vector2::createZero();
             auto scale = Vector2{0.5f, 0.5f};
             if (graphicsDevice->GetSupportedLanguage() == gpu::ShaderLanguage::GLSL) {
                 // NOTE: Flip horizontally for OpenGL coordinate system.
@@ -395,7 +395,7 @@ void MultiRenderTargetTest::Draw()
                 rt,
                 pos,
                 Rectangle{0, 0, rt->GetWidth(), rt->GetHeight()},
-                Color::White(),
+                Color::createWhite(),
                 0.0f,
                 originPivot,
                 scale);

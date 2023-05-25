@@ -53,14 +53,14 @@ void PolylineDrawingTest::Update()
 
     const auto width = clientBounds.width;
     const auto height = clientBounds.height;
-    const auto pos = math::ToVector2(Point2D{mouseState.Position.x - (width / 2), (height / 2) - mouseState.Position.y});
+    const auto pos = math::toVector2(Point2D{mouseState.Position.x - (width / 2), (height / 2) - mouseState.Position.y});
 
     if (mouseState.LeftButton == ButtonState::Pressed) {
         if (path.empty()) {
             path.push_back(pos);
             path.push_back(pos);
         }
-        else if (math::DistanceSquared(pos, path[path.size() - 2]) > 10.0f) {
+        else if (math::distanceSquared(pos, path[path.size() - 2]) > 10.0f) {
             path.back() = pos;
             path.push_back(pos);
         }
@@ -77,7 +77,7 @@ void PolylineDrawingTest::Draw()
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
-    pass.renderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
+    pass.renderTargets[0] = {nullptr, Color::createCornflowerBlue().toVector4()};
     pass.depthStencilBuffer = nullptr;
     pass.clearDepth = 1.0f;
     pass.clearStencil = std::uint8_t(0);
@@ -87,7 +87,7 @@ void PolylineDrawingTest::Draw()
     commandList->Reset();
     commandList->SetRenderPass(std::move(pass));
 
-    auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
+    auto projectionMatrix = Matrix4x4::createOrthographicLH(
         static_cast<float>(presentationParameters.backBufferWidth),
         static_cast<float>(presentationParameters.backBufferHeight),
         0.0f,

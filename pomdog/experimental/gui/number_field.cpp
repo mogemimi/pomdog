@@ -44,7 +44,7 @@ NumberField::NumberField(
     textBlock = std::make_shared<TextBlock>(dispatcher);
     textBlock->SetBaselineHeight(4.0f);
     textBlock->SetTextAlignment(TextAlignment::Center);
-    textBlock->SetColor(Color::White());
+    textBlock->SetColor(Color::createWhite());
     textBlock->SetText(dataContext->ToString());
 
     addButton = std::make_shared<PushButton>(dispatcher);
@@ -325,7 +325,7 @@ std::shared_ptr<Widget> NumberField::GetChildAt(const Point2D& position)
         }
 
         auto bounds = child->GetBounds();
-        if (bounds.Contains(position)) {
+        if (bounds.contains(position)) {
             return child;
         }
     }
@@ -421,7 +421,7 @@ void NumberField::Draw(DrawingContext& drawingContext)
         spriteFont->Draw(
             *spriteBatch,
             prependAreaText,
-            math::ToVector2(globalPos + Point2D{prependAreaWidth / 2, GetHeight() / 2}) + Vector2{1.0f, 2.5f},
+            math::toVector2(globalPos + Point2D{prependAreaWidth / 2, GetHeight() / 2}) + Vector2{1.0f, 2.5f},
             Color{231, 229, 230, 255},
             0.0f,
             Vector2{0.5f, 0.5f},

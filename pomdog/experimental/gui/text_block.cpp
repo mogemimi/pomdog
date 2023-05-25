@@ -11,7 +11,7 @@ namespace pomdog::gui {
 
 TextBlock::TextBlock(const std::shared_ptr<UIEventDispatcher>& dispatcher)
     : Widget(dispatcher)
-    , textColor(Color::Black())
+    , textColor(Color::createBlack())
     , baselineHeight(0.0f)
     , fontWeight(FontWeight::Normal)
     , fontSize(FontSize::Medium)
@@ -84,8 +84,8 @@ void TextBlock::Draw(DrawingContext& drawingContext)
     auto spriteFont = drawingContext.GetFont(fontWeight, fontSize);
     auto globalPos = UIHelper::ProjectToWorldSpace(GetPosition(), drawingContext.GetCurrentTransform());
 
-    auto position = math::ToVector2(globalPos) + Vector2{0.0f, baselineHeight};
-    auto originPivot = Vector2::Zero();
+    auto position = math::toVector2(globalPos) + Vector2{0.0f, baselineHeight};
+    auto originPivot = Vector2::createZero();
 
     switch (textAlignment) {
     case TextAlignment::Left:

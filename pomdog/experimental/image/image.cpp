@@ -103,7 +103,7 @@ void Image::PremultiplyAlpha()
 {
     for (auto& pixel : data) {
         const auto alpha = pixel.a;
-        pixel = math::Multiply(pixel, static_cast<float>(alpha) / 255.0f);
+        pixel = math::multiply(pixel, static_cast<float>(alpha) / 255.0f);
         pixel.a = alpha;
     }
 }

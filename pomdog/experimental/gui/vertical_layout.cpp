@@ -123,7 +123,7 @@ std::shared_ptr<Widget> VerticalLayout::GetChildAt(const Point2D& position)
     for (auto& child : children) {
         POMDOG_ASSERT(child != nullptr);
         auto bounds = child->GetBounds();
-        if (bounds.Contains(position)) {
+        if (bounds.contains(position)) {
             return child;
         }
     }

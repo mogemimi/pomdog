@@ -165,7 +165,7 @@ void Slider::OnPointerPressed([[maybe_unused]] const PointerPoint& pointerPoint)
 
     auto pointInView = UIHelper::ProjectToChildSpace(pointerPoint.Position, GetGlobalPosition());
     auto amount = (pointInView.x - thumbOffset / 2) / (GetWidth() - 2 * thumbOffset);
-    SetValue(math::Clamp(amount * (maximum - minimum) + minimum, minimum, maximum));
+    SetValue(math::clamp(amount * (maximum - minimum) + minimum, minimum, maximum));
     isDragging = true;
 }
 
@@ -186,7 +186,7 @@ void Slider::OnPointerMoved(const PointerPoint& pointerPoint)
 
     auto pointInView = UIHelper::ProjectToChildSpace(pointerPoint.Position, GetGlobalPosition());
     auto amount = (pointInView.x - thumbOffset / 2) / (GetWidth() - 2 * thumbOffset);
-    SetValue(math::Clamp(amount * (maximum - minimum) + minimum, minimum, maximum));
+    SetValue(math::clamp(amount * (maximum - minimum) + minimum, minimum, maximum));
 }
 
 void Slider::OnPointerReleased([[maybe_unused]] const PointerPoint& pointerPoint)
@@ -230,7 +230,7 @@ void Slider::Draw(DrawingContext& drawingContext)
             std::swap(startColor, targetColor);
         }
         const auto scaleFactor = colorAnimation->time / colorAnimation->duration;
-        fillColor = math::SmoothStep(startColor, targetColor, scaleFactor);
+        fillColor = math::smoothstep(startColor, targetColor, scaleFactor);
     }
     else if (isPointerEntered) {
         POMDOG_ASSERT(isEnabled);
@@ -259,14 +259,14 @@ void Slider::Draw(DrawingContext& drawingContext)
     const auto paddingY = (static_cast<float>(GetHeight()) - sliderHeight) * 0.5f;
 
     primitiveBatch->DrawRectangle(
-        Matrix3x2::Identity(),
-        Vector2{0.0f, paddingY} + math::ToVector2(globalPos),
+        Matrix3x2::createIdentity(),
+        Vector2{0.0f, paddingY} + math::toVector2(globalPos),
         static_cast<float>(GetWidth()),
         sliderHeight,
         trackColor);
     primitiveBatch->DrawRectangle(
-        Matrix3x2::Identity(),
-        Vector2{0.0f, paddingY} + math::ToVector2(globalPos),
+        Matrix3x2::createIdentity(),
+        Vector2{0.0f, paddingY} + math::toVector2(globalPos),
         sliderWidth2,
         sliderHeight,
         fillColor);
@@ -281,8 +281,8 @@ void Slider::Draw(DrawingContext& drawingContext)
         auto size = Vector2(thumbSize + 2 * pixel, thumbSize + 2 * pixel);
 
         primitiveBatch->DrawRectangle(
-            Matrix3x2::Identity(),
-            pos + math::ToVector2(globalPos),
+            Matrix3x2::createIdentity(),
+            pos + math::toVector2(globalPos),
             size.x,
             size.y,
             colorScheme->SliderThumbColorFocused);
@@ -292,8 +292,8 @@ void Slider::Draw(DrawingContext& drawingContext)
         // NOTE: Draw Thumb
         auto pos = Vector2(controlPosition2, 0);
         primitiveBatch->DrawRectangle(
-            Matrix3x2::Identity(),
-            pos + math::ToVector2(globalPos),
+            Matrix3x2::createIdentity(),
+            pos + math::toVector2(globalPos),
             thumbSize,
             thumbSize,
             colorScheme->SliderTrackColorBase);
@@ -310,7 +310,7 @@ void Slider::Draw(DrawingContext& drawingContext)
         Vector2 textPosition;
         textPosition.y = GetHeight() * 0.5f + textMarginY;
         Vector2 originPivot;
-        if (value < math::Lerp(minimum, maximum, 0.6)) {
+        if (value < math::lerp(minimum, maximum, 0.6)) {
             originPivot = Vector2{1.0f, 0.5f};
             textPosition.x = GetWidth() - textMarginX;
         }
@@ -318,7 +318,7 @@ void Slider::Draw(DrawingContext& drawingContext)
             originPivot = Vector2{0.0f, 0.5f};
             textPosition.x = textMarginX;
         }
-        textPosition += math::ToVector2(globalPos);
+        textPosition += math::toVector2(globalPos);
         spriteFont->Draw(*spriteBatch, text, textPosition, colorScheme->SliderTextColor, 0.0f, originPivot, 1.0f);
     }
 }

@@ -32,38 +32,41 @@ public:
     [[nodiscard]] bool operator==(const Color&) const noexcept;
     [[nodiscard]] bool operator!=(const Color&) const noexcept;
 
-    [[nodiscard]] Vector3 ToVector3() const noexcept;
-    [[nodiscard]] Vector4 ToVector4() const noexcept;
+    [[nodiscard]] Vector3
+    toVector3() const noexcept;
+
+    [[nodiscard]] Vector4
+    toVector4() const noexcept;
 
     [[nodiscard]] std::uint32_t
-    ToPackedValue() const noexcept;
+    toPackedValue() const noexcept;
 
     [[nodiscard]] static Color
-    FromPackedValue(std::uint32_t packedValue);
+    fromPackedValue(std::uint32_t packedValue) noexcept;
 
     /// Returns the Color (255, 255, 255, 255).
-    [[nodiscard]] static Color White() noexcept;
+    [[nodiscard]] static Color createWhite() noexcept;
 
     /// Returns the Color (0, 0, 0, 255).
-    [[nodiscard]] static Color Black() noexcept;
+    [[nodiscard]] static Color createBlack() noexcept;
 
     /// Returns the Color (255, 0, 0, 255).
-    [[nodiscard]] static Color Red() noexcept;
+    [[nodiscard]] static Color createRed() noexcept;
 
     /// Returns the Color (0, 255, 0, 255).
-    [[nodiscard]] static Color Green() noexcept;
+    [[nodiscard]] static Color createGreen() noexcept;
 
     /// Returns the Color (0, 0, 255, 255).
-    [[nodiscard]] static Color Blue() noexcept;
+    [[nodiscard]] static Color createBlue() noexcept;
 
     /// Returns the Color (255, 255, 0, 255).
-    [[nodiscard]] static Color Yellow() noexcept;
+    [[nodiscard]] static Color createYellow() noexcept;
 
     /// Returns the Color (100, 149 ,237, 255).
-    [[nodiscard]] static Color CornflowerBlue() noexcept;
+    [[nodiscard]] static Color createCornflowerBlue() noexcept;
 
     /// Returns the Color (0, 0, 0, 0).
-    [[nodiscard]] static Color TransparentBlack() noexcept;
+    [[nodiscard]] static Color createTransparentBlack() noexcept;
 };
 
 } // namespace pomdog
@@ -72,18 +75,18 @@ namespace pomdog::math {
 
 /// Multiplies a color by a scalar factor.
 [[nodiscard]] Color POMDOG_EXPORT
-Multiply(const Color& color, float factor);
+multiply(const Color& color, float factor);
 
 /// Multiplies a color by another color.
 [[nodiscard]] Color POMDOG_EXPORT
-Multiply(const Color& source1, const Color& source2);
+multiply(const Color& source1, const Color& source2);
 
 /// Performs a linear interpolation between two colors.
 [[nodiscard]] Color POMDOG_EXPORT
-Lerp(const Color& source1, const Color& source2, float amount);
+lerp(const Color& source1, const Color& source2, float amount);
 
 /// Performs Hermite interpolation between two colors.
 [[nodiscard]] Color POMDOG_EXPORT
-SmoothStep(const Color& source1, const Color& source2, float amount);
+smoothstep(const Color& source1, const Color& source2, float amount);
 
 } // namespace pomdog::math

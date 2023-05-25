@@ -83,7 +83,7 @@ std::unique_ptr<Error> Skinning2DTest::Initialize()
 #if 1
         // FIXME: Isn't a bind pose required?
         for (auto& m : globalPose) {
-            m = Matrix3x2::Identity();
+            m = Matrix3x2::createIdentity();
         }
 #endif
 
@@ -213,26 +213,26 @@ void Skinning2DTest::Update()
 
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
-    auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
+    auto projectionMatrix = Matrix4x4::createOrthographicLH(
         static_cast<float>(presentationParameters.backBufferWidth),
         static_cast<float>(presentationParameters.backBufferHeight),
         -1.0f,
         1000.0f);
 
-    auto viewMatrix = Matrix4x4::Identity();
+    auto viewMatrix = Matrix4x4::createIdentity();
 
     // NOTE: Update constant buffer for world
     BasicEffect::WorldConstantBuffer worldConstants;
     worldConstants.ViewProjection = viewMatrix * projectionMatrix;
-    worldConstants.InverseView = math::Invert(viewMatrix);
-    worldConstants.LightDirection = Vector4{Vector3::UnitZ(), 0.0f};
+    worldConstants.InverseView = math::invert(viewMatrix);
+    worldConstants.LightDirection = Vector4{Vector3::createUnitZ(), 0.0f};
     worldConstantBuffer->SetData(0, gpu::MakeByteSpan(worldConstants));
 
     constexpr float metalness = 0.1f;
 
     // NOTE: Update constant buffer for model
     BasicEffect::ModelConstantBuffer modelConstants;
-    modelConstants.Model = Matrix4x4::CreateTranslation(Vector3{0.0f, -180.0f, 0.0f});
+    modelConstants.Model = Matrix4x4::createTranslation(Vector3{0.0f, -180.0f, 0.0f});
     modelConstants.Material = Vector4{metalness, 0.0f, 0.0f, 0.0f};
     modelConstants.Color = Vector4{1.0f, 1.0f, 1.0f, 1.0f};
     modelConstantBuffer->SetData(0, gpu::MakeByteSpan(modelConstants));
@@ -260,7 +260,7 @@ void Skinning2DTest::Update()
 #endif
 
         auto skinPos = Vector2{skinVertex.PositionTextureCoord.x, skinVertex.PositionTextureCoord.y};
-        auto position = math::Transform(skinPos, skinning);
+        auto position = math::transform(skinPos, skinning);
 
         Vertex vertex;
         vertex.Position = Vector3{position.x, position.y, 0.0f};
@@ -277,7 +277,7 @@ void Skinning2DTest::Draw()
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
-    pass.renderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
+    pass.renderTargets[0] = {nullptr, Color::createCornflowerBlue().toVector4()};
     pass.depthStencilBuffer = nullptr;
     pass.clearDepth = 1.0f;
     pass.clearStencil = std::uint8_t(0);
@@ -287,7 +287,7 @@ void Skinning2DTest::Draw()
     commandList->Reset();
     commandList->SetRenderPass(std::move(pass));
 
-    auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
+    auto projectionMatrix = Matrix4x4::createOrthographicLH(
         static_cast<float>(presentationParameters.backBufferWidth),
         static_cast<float>(presentationParameters.backBufferHeight),
         0.0f,

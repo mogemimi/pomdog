@@ -67,7 +67,7 @@ std::unique_ptr<Error> SpriteBatchTest::Initialize()
         const auto scale = scaleDist(random);
 
         SpriteInstance sprite;
-        sprite.Position = math::ToVector2(pos);
+        sprite.Position = math::toVector2(pos);
         sprite.Scale.x = scale;
         sprite.Scale.y = scale;
         sprite.Color.r = static_cast<std::uint8_t>(colorDist(random));
@@ -90,7 +90,7 @@ void SpriteBatchTest::Draw()
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
-    pass.renderTargets[0] = {nullptr, Color::CornflowerBlue().ToVector4()};
+    pass.renderTargets[0] = {nullptr, Color::createCornflowerBlue().toVector4()};
     pass.depthStencilBuffer = nullptr;
     pass.clearDepth = 1.0f;
     pass.clearStencil = std::uint8_t(0);
@@ -100,7 +100,7 @@ void SpriteBatchTest::Draw()
     commandList->Reset();
     commandList->SetRenderPass(std::move(pass));
 
-    auto projectionMatrix = Matrix4x4::CreateOrthographicLH(
+    auto projectionMatrix = Matrix4x4::createOrthographicLH(
         static_cast<float>(presentationParameters.backBufferWidth),
         static_cast<float>(presentationParameters.backBufferHeight),
         0.0f,
@@ -137,7 +137,7 @@ void SpriteBatchTest::Draw()
         texture,
         Vector2{64.0f, 64.0f},
         Rectangle{0, 0, texture->GetWidth(), texture->GetHeight()},
-        Color::White(),
+        Color::createWhite(),
         math::TwoPi<float> * Easings::EaseSine::InOut(t),
         Vector2{1.0f, 1.0f},
         2.0f);

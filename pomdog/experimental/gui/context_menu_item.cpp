@@ -175,12 +175,12 @@ void ContextMenuButton::Draw(DrawingContext& drawingContext)
         auto spriteBatch = drawingContext.GetSpriteBatch();
         auto spriteFont = drawingContext.GetFont(fontWeight, FontSize::Medium);
 
-        const auto buttonPos = math::ToVector2(globalPos);
+        const auto buttonPos = math::toVector2(globalPos);
         const auto buttonSize = Vector2{static_cast<float>(GetWidth()), static_cast<float>(GetHeight())};
 
         const auto baselineHeight = 3.0f;
 
-        Vector2 originPivot = Vector2::Zero();
+        Vector2 originPivot = Vector2::createZero();
         Vector2 padding = Vector2{0.0f, baselineHeight};
         switch (textAlignment) {
         case TextAlignment::Left:

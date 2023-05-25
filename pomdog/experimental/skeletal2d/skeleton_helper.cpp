@@ -47,9 +47,9 @@ void ToGlobalPose(
         POMDOG_ASSERT(*bone.Index < skeletonPose.JointPoses.size());
         auto& pose = skeletonPose.JointPoses[*bone.Index];
 
-        Matrix3x2 matrix = Matrix3x2::CreateScale(pose.Scale);
-        matrix *= Matrix3x2::CreateRotation(pose.Rotation);
-        matrix *= Matrix3x2::CreateTranslation(pose.Translate);
+        auto matrix = Matrix3x2::createScale(pose.Scale);
+        matrix *= Matrix3x2::createRotation(pose.Rotation);
+        matrix *= Matrix3x2::createTranslation(pose.Translate);
 
         if (bone.Parent) {
             POMDOG_ASSERT(*bone.Parent < globalPose.size());

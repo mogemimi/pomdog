@@ -155,7 +155,7 @@ void BillboardBatchBuffer::AddBillboard(
     info.OriginPivotScale.y = originPivot.y;
     info.OriginPivotScale.z = scale.x;
     info.OriginPivotScale.w = scale.y;
-    info.Color = color.ToVector4();
+    info.Color = color.toVector4();
 
     impl->instances.push_back(std::move(info));
 }

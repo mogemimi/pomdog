@@ -53,7 +53,7 @@ Vector3 Viewport::Project(
                          source.z * worldViewProjection(2, 3) +
                          worldViewProjection(3, 3);
 
-    auto result = math::Transform(source, worldViewProjection);
+    auto result = math::transform(source, worldViewProjection);
 
     if (std::abs(divisor) > std::numeric_limits<float>::epsilon()) {
         result = result / divisor;
@@ -78,13 +78,13 @@ Vector3 Viewport::Unproject(
     vec.y = -(((source.y - static_cast<float>(topLeftY)) / static_cast<float>(height) * 2.0f) - 1.0f);
     vec.z = (source.z - minDepth) / (maxDepth - minDepth);
 
-    const auto invertWVP = math::Invert(worldViewProjection);
+    const auto invertWVP = math::invert(worldViewProjection);
     const auto divisor = vec.x * invertWVP(0, 3) +
                          vec.y * invertWVP(1, 3) +
                          vec.z * invertWVP(2, 3) +
                          invertWVP(3, 3);
 
-    auto result = math::Transform(vec, invertWVP);
+    auto result = math::transform(vec, invertWVP);
     if (std::abs(divisor) > std::numeric_limits<float>::epsilon()) {
         result = result / divisor;
     }

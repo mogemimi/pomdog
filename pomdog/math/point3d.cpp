@@ -130,7 +130,8 @@ bool Point3D::operator!=(const Point3D& other) const noexcept
     return ((x != other.x) || (y != other.y) || (z != other.z));
 }
 
-Point3D Point3D::Zero() noexcept
+Point3D
+Point3D::createZero() noexcept
 {
     return Point3D{0, 0, 0};
 }
@@ -149,7 +150,7 @@ operator*(std::int32_t factor, const Point3D& coordinate) noexcept
 
 namespace pomdog::math {
 
-Point3D ToPoint3D(const Vector3& vec) noexcept
+[[nodiscard]] Point3D toPoint3D(const Vector3& vec) noexcept
 {
     return Point3D{
         static_cast<std::int32_t>(vec.x),
@@ -158,7 +159,7 @@ Point3D ToPoint3D(const Vector3& vec) noexcept
     };
 }
 
-Vector3 ToVector3(const Point3D& point) noexcept
+[[nodiscard]] Vector3 toVector3(const Point3D& point) noexcept
 {
     return Vector3{
         static_cast<float>(point.x),
@@ -167,7 +168,7 @@ Vector3 ToVector3(const Point3D& point) noexcept
     };
 }
 
-Point3D Abs(const Point3D& point) noexcept
+[[nodiscard]] Point3D abs(const Point3D& point) noexcept
 {
     return Point3D{
         std::abs(point.x),

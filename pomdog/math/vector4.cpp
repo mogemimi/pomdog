@@ -159,12 +159,12 @@ bool Vector4::operator!=(const Vector4& other) const noexcept
     return (x != other.x) || (y != other.y) || (z != other.z) || (w != other.w);
 }
 
-const float* Vector4::Data() const noexcept
+const float* Vector4::data() const noexcept
 {
     return &x;
 }
 
-float* Vector4::Data() noexcept
+float* Vector4::data() noexcept
 {
     return &x;
 }
@@ -185,39 +185,39 @@ operator*(float factor, const Vector4& vector) noexcept
 namespace pomdog::math {
 
 [[nodiscard]] float
-Length(const Vector4& v) noexcept
+length(const Vector4& v) noexcept
 {
     return std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z + v.w * v.w);
 }
 
 [[nodiscard]] float
-LengthSquared(const Vector4& v) noexcept
+lengthSquared(const Vector4& v) noexcept
 {
     return v.x * v.x + v.y * v.y + v.z * v.z + v.w * v.w;
 }
 
 [[nodiscard]] float
-Distance(const Vector4& a, const Vector4& b) noexcept
+distance(const Vector4& a, const Vector4& b) noexcept
 {
-    return math::Length(a - b);
+    return math::length(a - b);
 }
 
 [[nodiscard]] float
-DistanceSquared(const Vector4& a, const Vector4& b) noexcept
+distanceSquared(const Vector4& a, const Vector4& b) noexcept
 {
-    return math::LengthSquared(a - b);
+    return math::lengthSquared(a - b);
 }
 
 [[nodiscard]] float
-Dot(const Vector4& a, const Vector4& b) noexcept
+dot(const Vector4& a, const Vector4& b) noexcept
 {
     return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
 }
 
 [[nodiscard]] Vector4
-Normalize(const Vector4& source) noexcept
+normalize(const Vector4& source) noexcept
 {
-    const auto length = math::Length(source);
+    const auto length = math::length(source);
 
     if (length > std::numeric_limits<decltype(length)>::epsilon()) {
         POMDOG_ASSERT(std::fpclassify(length) != FP_ZERO);
@@ -230,7 +230,7 @@ Normalize(const Vector4& source) noexcept
 }
 
 [[nodiscard]] Vector4
-Transform(const Vector4& vector, const Matrix4x4& matrix) noexcept
+transform(const Vector4& vector, const Matrix4x4& matrix) noexcept
 {
     return Vector4{
         (vector.x * matrix.m[0][0]) + (vector.y * matrix.m[1][0]) + (vector.z * matrix.m[2][0]) + (vector.w * matrix.m[3][0]),

@@ -22,8 +22,8 @@ ParticleEmitterShapeSphere::Compute(random::Xoroshiro128StarStar& random) const
     POMDOG_ASSERT(radius >= 0.0f);
     std::uniform_real_distribution<float> dist(-radius, radius);
 
-    auto emitPosition = Vector3{dist(random), dist(random), dist(random)};
-    auto emitDirection = math::Normalize(emitPosition);
+    const auto emitPosition = Vector3{dist(random), dist(random), dist(random)};
+    const auto emitDirection = math::normalize(emitPosition);
     return std::make_tuple(std::move(emitPosition), std::move(emitDirection));
 }
 

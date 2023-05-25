@@ -25,9 +25,9 @@ void Lerp(
         POMDOG_ASSERT(i < output.size());
         auto& result = output[i];
 
-        result.Scale = math::Lerp(pose1.Scale, pose2.Scale, weight);
-        result.Rotation = math::Lerp(pose1.Rotation.value, pose2.Rotation.value, weight);
-        result.Translate = math::Lerp(pose1.Translate, pose2.Translate, weight);
+        result.Scale = math::lerp(pose1.Scale, pose2.Scale, weight);
+        result.Rotation = math::lerp(pose1.Rotation.value, pose2.Rotation.value, weight);
+        result.Translate = math::lerp(pose1.Translate, pose2.Translate, weight);
     }
 }
 

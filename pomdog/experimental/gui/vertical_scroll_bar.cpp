@@ -191,7 +191,7 @@ void VerticalScrollBar::OnPointerPressed(const PointerPoint& pointerPoint)
     auto pointInView = UIHelper::ProjectToChildSpace(pointerPoint.Position, GetGlobalPosition());
 
     auto sliderRect = CalculateSliderRect(*this, Point2D{0, 0}, value, minimum, maximum, pageStep);
-    if (sliderRect.Contains(pointInView)) {
+    if (sliderRect.contains(pointInView)) {
         sliderGrabPosition = pointInView.y - sliderRect.y;
     }
     else {
@@ -202,7 +202,7 @@ void VerticalScrollBar::OnPointerPressed(const PointerPoint& pointerPoint)
         POMDOG_ASSERT((GetHeight() - sliderHeight) > 0);
         const auto documentLength = (GetHeight() - sliderHeight);
         const auto amount = static_cast<double>(pointInView.y - *sliderGrabPosition) / documentLength;
-        SetValue(math::Clamp(amount * (maximum - minimum) + minimum, minimum, maximum));
+        SetValue(math::clamp(amount * (maximum - minimum) + minimum, minimum, maximum));
     }
 }
 
@@ -227,7 +227,7 @@ void VerticalScrollBar::OnPointerMoved(const PointerPoint& pointerPoint)
 
     const auto documentLength = GetHeight() - sliderHeight;
     const auto amount = static_cast<double>(pointInView.y - *sliderGrabPosition) / documentLength;
-    SetValue(math::Clamp(amount * (maximum - minimum) + minimum, minimum, maximum));
+    SetValue(math::clamp(amount * (maximum - minimum) + minimum, minimum, maximum));
 }
 
 void VerticalScrollBar::OnPointerReleased([[maybe_unused]] const PointerPoint& pointerPoint)
@@ -266,7 +266,7 @@ void VerticalScrollBar::Draw(DrawingContext& drawingContext)
             std::swap(startColor, targetColor);
         }
         const auto scaleFactor = colorAnimation->time / colorAnimation->duration;
-        thumbColor = math::SmoothStep(startColor, targetColor, scaleFactor);
+        thumbColor = math::smoothstep(startColor, targetColor, scaleFactor);
     }
     else if (isPointerEntered) {
         POMDOG_ASSERT(isEnabled);

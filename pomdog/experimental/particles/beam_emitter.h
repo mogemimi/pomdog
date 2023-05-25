@@ -18,8 +18,8 @@ public:
     pomdog::Duration Duration{5.0};
     bool Looping = true;
 
-    Color StartColor = Color::White();
-    Color EndColor = Color::White();
+    Color StartColor = Color::createWhite();
+    Color EndColor = Color::createWhite();
 
     ///@note [0, std::numelic_limits<T>::max()]
     std::uint32_t InterpolationPoints = 90;

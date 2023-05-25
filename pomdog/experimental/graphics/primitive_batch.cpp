@@ -166,7 +166,7 @@ void PrimitiveBatch::Impl::Begin(
     POMDOG_ASSERT(commandListIn);
     commandList = commandListIn;
 
-    alignas(16) Matrix4x4 transposedMatrix = math::Transpose(transformMatrix);
+    alignas(16) Matrix4x4 transposedMatrix = math::transpose(transformMatrix);
     constantBuffer->SetData(0, gpu::MakeByteSpan(transposedMatrix));
 
     startVertexLocation = 0;
@@ -323,8 +323,8 @@ void PrimitiveBatch::DrawLine(
     float weight)
 {
     POMDOG_ASSERT(impl);
-    auto transformedStart = math::Transform(start, matrix);
-    auto transformedEnd = math::Transform(end, matrix);
+    auto transformedStart = math::transform(start, matrix);
+    auto transformedEnd = math::transform(end, matrix);
     impl->polygonShapes.DrawLine(transformedStart, transformedEnd, color, weight);
 }
 

@@ -19,21 +19,21 @@ struct DegreeTag {
 namespace pomdog::math {
 
 [[nodiscard]] Degree<float> POMDOG_EXPORT
-ToDegrees(Radian<float> radians) noexcept;
+toDegrees(Radian<float> radians) noexcept;
 
 [[nodiscard]] Degree<float> POMDOG_EXPORT
-ToDegrees(float radians) noexcept;
+toDegrees(float radians) noexcept;
 
 [[nodiscard]] Degree<float> POMDOG_EXPORT
-Clamp(Degree<float> x, Degree<float> min, Degree<float> max) noexcept;
+clamp(Degree<float> x, Degree<float> min, Degree<float> max) noexcept;
 
 [[nodiscard]] Degree<float> POMDOG_EXPORT
-Saturate(Degree<float> x) noexcept;
+saturate(Degree<float> x) noexcept;
 
 [[nodiscard]] Degree<float> POMDOG_EXPORT
-Lerp(Degree<float> source1, Degree<float> source2, float amount) noexcept;
+lerp(Degree<float> source1, Degree<float> source2, float amount) noexcept;
 
 [[nodiscard]] Degree<float> POMDOG_EXPORT
-SmoothStep(Degree<float> min, Degree<float> max, float amount) noexcept;
+smoothstep(Degree<float> min, Degree<float> max, float amount) noexcept;
 
 } // namespace pomdog::math

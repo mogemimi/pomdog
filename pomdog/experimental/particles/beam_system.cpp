@@ -21,15 +21,15 @@ CreateJaggedLine(
     const Vector2& end,
     random::Xoroshiro128StarStar& random)
 {
-    if (math::DistanceSquared(start, end) <= std::numeric_limits<float>::epsilon()) {
+    if (math::distanceSquared(start, end) <= std::numeric_limits<float>::epsilon()) {
         return {};
     }
 
     auto tangent = end - start;
     auto normal = Vector2{-tangent.y, tangent.x};
 
-    POMDOG_ASSERT(math::LengthSquared(tangent) > std::numeric_limits<float>::epsilon());
-    POMDOG_ASSERT(math::LengthSquared(normal) > std::numeric_limits<float>::epsilon());
+    POMDOG_ASSERT(math::lengthSquared(tangent) > std::numeric_limits<float>::epsilon());
+    POMDOG_ASSERT(math::lengthSquared(normal) > std::numeric_limits<float>::epsilon());
 
     std::vector<float> positions;
 
@@ -48,7 +48,7 @@ CreateJaggedLine(
     float prevDisplacement = 0;
     float prevPosition = 0;
 
-    auto length = std::max(math::Distance(start, end), std::numeric_limits<float>::epsilon());
+    auto length = std::max(math::distance(start, end), std::numeric_limits<float>::epsilon());
     POMDOG_ASSERT(length > 0);
 
     for (auto& position : positions) {
@@ -66,7 +66,7 @@ CreateJaggedLine(
         constexpr float envelopeScale = (1.0f / (1.0f - threshold));
         float envelope = (position > threshold) ? envelopeScale * (1.0f - position) : 1.0f;
 
-        float displacement = math::SmoothStep(prevDisplacement, distribution(random), scale);
+        float displacement = math::smoothstep(prevDisplacement, distribution(random), scale);
         displacement *= envelope;
 
         Vector2 point = start + tangent * position + normal * displacement;
@@ -112,23 +112,23 @@ CreateBranch(
     POMDOG_ASSERT(index2 < parentBeam.Points.size());
 
     std::uniform_real_distribution<float> middlePointDistribution(0.1f, 0.95f);
-    auto middlePoint = middlePointDistribution(random);
-    Vector2 start = math::Lerp(parentBeam.Points[index1], parentBeam.Points[index2], middlePoint);
+    const auto middlePoint = middlePointDistribution(random);
+    const auto start = math::lerp(parentBeam.Points[index1], parentBeam.Points[index2], middlePoint);
 
-    Vector2 tangent = sourceEnd - start;
-    Vector2 normal{-tangent.y, tangent.x};
+    const auto tangent = sourceEnd - start;
+    const auto normal = Vector2{-tangent.y, tangent.x};
 
     auto distribution = branching.SpreadRange;
-    auto lengthSq1 = math::LengthSquared(sourceEnd - start);
-    auto lengthSq2 = math::LengthSquared(sourceEnd - sourceStart);
+    const auto lengthSq1 = math::lengthSquared(sourceEnd - start);
+    const auto lengthSq2 = math::lengthSquared(sourceEnd - sourceStart);
     POMDOG_ASSERT(lengthSq2 > std::numeric_limits<float>::epsilon());
     POMDOG_ASSERT(lengthSq1 > std::numeric_limits<float>::epsilon());
 
     auto amount = (lengthSq1 / (lengthSq2 * (middlePointDistribution.max() - middlePointDistribution.min())));
 
-    Vector2 end = sourceEnd + (math::Normalize(normal) * distribution(random) * amount);
+    Vector2 end = sourceEnd + (math::normalize(normal) * distribution(random) * amount);
 
-    auto scale = math::Distance(end, start) / math::Distance(sourceEnd, sourceStart);
+    auto scale = math::distance(end, start) / math::distance(sourceEnd, sourceStart);
     auto scaledPoints = static_cast<uint32_t>(emitter.InterpolationPoints * scale);
 
     return CreateJaggedLine(emitter, scaledPoints, start, end, random);
@@ -148,7 +148,7 @@ BeamSystem::BeamSystem()
     emitter.Jaggedness = 0.7f;
     emitter.MaxBeams = 100;
     emitter.EmissionRate = 10;
-    emitter.StartColor = Color::White();
+    emitter.StartColor = Color::createWhite();
     emitter.EndColor = {255, 220, 130, 0};
     emitter.StartThickness = 1.4f;
 
@@ -211,7 +211,7 @@ void BeamSystem::Update(const Duration& frameDuration, const Vector2& emitterPos
 
             const auto tangent = target - emitterPosition;
             const auto normal = Vector2{-tangent.y, tangent.x};
-            const auto end = target + (math::Normalize(normal) * distribution(random));
+            const auto end = target + (math::normalize(normal) * distribution(random));
 
             Beam beam;
 
@@ -238,7 +238,7 @@ void BeamSystem::Update(const Duration& frameDuration, const Vector2& emitterPos
 
             float normalizedTime = 1.0f - beam.TimeToLive / emitter.StartLifetime;
 
-            beam.Color = math::SmoothStep(emitter.StartColor, emitter.EndColor, normalizedTime);
+            beam.Color = math::smoothstep(emitter.StartColor, emitter.EndColor, normalizedTime);
         }
 
         beams.erase(
