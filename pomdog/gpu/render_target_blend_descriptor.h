@@ -23,16 +23,16 @@ struct POMDOG_EXPORT RenderTargetBlendDescriptor final {
     bool blendEnable;
 
     [[nodiscard]] static RenderTargetBlendDescriptor
-    CreateAdditive() noexcept;
+    createAdditive() noexcept;
 
     [[nodiscard]] static RenderTargetBlendDescriptor
-    CreateAlphaBlend() noexcept;
+    createAlphaBlend() noexcept;
 
     [[nodiscard]] static RenderTargetBlendDescriptor
-    CreateNonPremultiplied() noexcept;
+    createNonPremultiplied() noexcept;
 
     [[nodiscard]] static RenderTargetBlendDescriptor
-    CreateOpaque() noexcept;
+    createOpaque() noexcept;
 };
 
 } // namespace pomdog::gpu

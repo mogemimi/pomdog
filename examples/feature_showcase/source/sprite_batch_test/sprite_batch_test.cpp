@@ -28,9 +28,9 @@ std::unique_ptr<Error> SpriteBatchTest::initialize()
     primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
     spriteBatch = std::make_shared<SpriteBatch>(
         graphicsDevice,
-        gpu::BlendDescriptor::CreateNonPremultiplied(),
+        gpu::BlendDescriptor::createNonPremultiplied(),
         std::nullopt,
-        gpu::SamplerDescriptor::CreatePointWrap(),
+        gpu::SamplerDescriptor::createPointWrap(),
         std::nullopt,
         std::nullopt,
         SpriteBatchPixelShaderMode::Default,

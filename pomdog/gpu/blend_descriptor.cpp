@@ -4,51 +4,51 @@
 
 namespace pomdog::gpu {
 
-BlendDescriptor BlendDescriptor::CreateDefault() noexcept
+BlendDescriptor BlendDescriptor::createDefault() noexcept
 {
-    return CreateOpaque();
+    return createOpaque();
 }
 
-BlendDescriptor BlendDescriptor::CreateAdditive() noexcept
+BlendDescriptor BlendDescriptor::createAdditive() noexcept
 {
     BlendDescriptor desc;
     desc.alphaToCoverageEnable = false;
     desc.independentBlendEnable = false;
     for (auto& renderTarget : desc.renderTargets) {
-        renderTarget = RenderTargetBlendDescriptor::CreateAdditive();
+        renderTarget = RenderTargetBlendDescriptor::createAdditive();
     }
     return desc;
 }
 
-BlendDescriptor BlendDescriptor::CreateAlphaBlend() noexcept
+BlendDescriptor BlendDescriptor::createAlphaBlend() noexcept
 {
     BlendDescriptor desc;
     desc.alphaToCoverageEnable = false;
     desc.independentBlendEnable = false;
     for (auto& renderTarget : desc.renderTargets) {
-        renderTarget = RenderTargetBlendDescriptor::CreateAlphaBlend();
+        renderTarget = RenderTargetBlendDescriptor::createAlphaBlend();
     }
     return desc;
 }
 
-BlendDescriptor BlendDescriptor::CreateNonPremultiplied() noexcept
+BlendDescriptor BlendDescriptor::createNonPremultiplied() noexcept
 {
     BlendDescriptor desc;
     desc.alphaToCoverageEnable = false;
     desc.independentBlendEnable = false;
     for (auto& renderTarget : desc.renderTargets) {
-        renderTarget = RenderTargetBlendDescriptor::CreateNonPremultiplied();
+        renderTarget = RenderTargetBlendDescriptor::createNonPremultiplied();
     }
     return desc;
 }
 
-BlendDescriptor BlendDescriptor::CreateOpaque() noexcept
+BlendDescriptor BlendDescriptor::createOpaque() noexcept
 {
     BlendDescriptor desc;
     desc.alphaToCoverageEnable = false;
     desc.independentBlendEnable = false;
     for (auto& renderTarget : desc.renderTargets) {
-        renderTarget = RenderTargetBlendDescriptor::CreateOpaque();
+        renderTarget = RenderTargetBlendDescriptor::createOpaque();
     }
     return desc;
 }

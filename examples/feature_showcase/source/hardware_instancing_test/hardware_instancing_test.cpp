@@ -94,7 +94,7 @@ std::unique_ptr<Error> HardwareInstancingTest::initialize()
     {
         // NOTE: Create sampler state
         std::tie(sampler, err) = graphicsDevice->CreateSamplerState(
-            gpu::SamplerDescriptor::CreateLinearClamp());
+            gpu::SamplerDescriptor::createLinearClamp());
 
         if (err != nullptr) {
             return errors::wrap(std::move(err), "failed to create sampler state");

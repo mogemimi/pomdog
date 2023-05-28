@@ -202,13 +202,13 @@ SpriteBatch::Impl::Impl(
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
     if (!blendDesc) {
-        blendDesc = gpu::BlendDescriptor::CreateNonPremultiplied();
+        blendDesc = gpu::BlendDescriptor::createNonPremultiplied();
     }
     if (!rasterizerDesc) {
-        rasterizerDesc = gpu::RasterizerDescriptor::CreateCullNone();
+        rasterizerDesc = gpu::RasterizerDescriptor::createCullNone();
     }
     if (!samplerDesc) {
-        samplerDesc = gpu::SamplerDescriptor::CreateLinearWrap();
+        samplerDesc = gpu::SamplerDescriptor::createLinearWrap();
     }
     if (!renderTargetViewFormat) {
         renderTargetViewFormat = presentationParameters.backBufferFormat;
@@ -313,7 +313,7 @@ SpriteBatch::Impl::Impl(
                                                         .SetInputLayout(inputLayout.CreateInputLayout())
                                                         .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
                                                         .SetBlendState(*blendDesc)
-                                                        .SetDepthStencilState(gpu::DepthStencilDescriptor::CreateNone())
+                                                        .SetDepthStencilState(gpu::DepthStencilDescriptor::createNone())
                                                         .SetRasterizerState(*rasterizerDesc)
                                                         .SetConstantBufferBindSlot("SpriteBatchConstants", 0)
                                                         .Build();

@@ -49,7 +49,7 @@ FXAA::FXAA(
     AssetManager& assets)
 {
     samplerLinear = std::get<0>(graphicsDevice->CreateSamplerState(
-        gpu::SamplerDescriptor::CreateLinearClamp()));
+        gpu::SamplerDescriptor::createLinearClamp()));
 
     auto inputLayout = gpu::InputLayoutHelper{}
                            .Float3()
@@ -94,8 +94,8 @@ FXAA::FXAA(
                                                     .SetPixelShader(std::move(pixelShader))
                                                     .SetInputLayout(inputLayout.CreateInputLayout())
                                                     .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
-                                                    .SetBlendState(gpu::BlendDescriptor::CreateOpaque())
-                                                    .SetDepthStencilState(gpu::DepthStencilDescriptor::CreateNone())
+                                                    .SetBlendState(gpu::BlendDescriptor::createOpaque())
+                                                    .SetDepthStencilState(gpu::DepthStencilDescriptor::createNone())
                                                     .SetConstantBufferBindSlot("ImageEffectConstants", 0)
                                                     .Build();
     if (pipelineStateErr != nullptr) {

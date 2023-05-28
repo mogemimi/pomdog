@@ -33,19 +33,19 @@ struct POMDOG_EXPORT RasterizerDescriptor final {
     bool multisampleEnable;
 
     [[nodiscard]] static RasterizerDescriptor
-    CreateDefault() noexcept;
+    createDefault() noexcept;
 
     [[nodiscard]] static RasterizerDescriptor
-    CreateCullClockwise() noexcept;
+    createCullClockwise() noexcept;
 
     [[nodiscard]] static RasterizerDescriptor
-    CreateCullCounterClockwise() noexcept;
+    createCullCounterClockwise() noexcept;
 
     [[nodiscard]] static RasterizerDescriptor
-    CreateCullNone() noexcept;
+    createCullNone() noexcept;
 
     [[nodiscard]] static RasterizerDescriptor
-    CreateCullNoneWireframe() noexcept;
+    createCullNoneWireframe() noexcept;
 };
 
 } // namespace pomdog::gpu

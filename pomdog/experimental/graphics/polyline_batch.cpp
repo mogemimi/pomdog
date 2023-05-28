@@ -197,9 +197,9 @@ PolylineBatch::Impl::Impl(
                                                         .SetPixelShader(std::move(pixelShader))
                                                         .SetInputLayout(inputLayout.CreateInputLayout())
                                                         .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
-                                                        .SetBlendState(gpu::BlendDescriptor::CreateNonPremultiplied())
-                                                        .SetDepthStencilState(gpu::DepthStencilDescriptor::CreateDefault())
-                                                        .SetRasterizerState(gpu::RasterizerDescriptor::CreateCullNone())
+                                                        .SetBlendState(gpu::BlendDescriptor::createNonPremultiplied())
+                                                        .SetDepthStencilState(gpu::DepthStencilDescriptor::createDefault())
+                                                        .SetRasterizerState(gpu::RasterizerDescriptor::createCullNone())
                                                         .SetConstantBufferBindSlot("TransformMatrix", 0)
                                                         .Build();
         if (pipelineStateErr != nullptr) {

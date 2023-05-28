@@ -233,13 +233,13 @@ BillboardBatchEffect::BillboardBatchEffect(
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
     if (!blendDesc) {
-        blendDesc = gpu::BlendDescriptor::CreateNonPremultiplied();
+        blendDesc = gpu::BlendDescriptor::createNonPremultiplied();
     }
     if (!depthStencilDesc) {
-        depthStencilDesc = gpu::DepthStencilDescriptor::CreateDefault();
+        depthStencilDesc = gpu::DepthStencilDescriptor::createDefault();
     }
     if (!rasterizerDesc) {
-        rasterizerDesc = gpu::RasterizerDescriptor::CreateCullNone();
+        rasterizerDesc = gpu::RasterizerDescriptor::createCullNone();
     }
     if (!renderTargetViewFormat) {
         renderTargetViewFormat = presentationParameters.backBufferFormat;

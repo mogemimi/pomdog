@@ -9,12 +9,12 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu {
 
-SamplerDescriptor SamplerDescriptor::CreateDefault() noexcept
+SamplerDescriptor SamplerDescriptor::createDefault() noexcept
 {
-    return CreateLinearClamp();
+    return createLinearClamp();
 }
 
-SamplerDescriptor SamplerDescriptor::CreateAnisotropicClamp() noexcept
+SamplerDescriptor SamplerDescriptor::createAnisotropicClamp() noexcept
 {
     SamplerDescriptor desc;
     desc.filter = TextureFilter::Anisotropic;
@@ -29,7 +29,7 @@ SamplerDescriptor SamplerDescriptor::CreateAnisotropicClamp() noexcept
     return desc;
 }
 
-SamplerDescriptor SamplerDescriptor::CreateAnisotropicWrap() noexcept
+SamplerDescriptor SamplerDescriptor::createAnisotropicWrap() noexcept
 {
     SamplerDescriptor desc;
     desc.filter = TextureFilter::Anisotropic;
@@ -44,7 +44,7 @@ SamplerDescriptor SamplerDescriptor::CreateAnisotropicWrap() noexcept
     return desc;
 }
 
-SamplerDescriptor SamplerDescriptor::CreateLinearClamp() noexcept
+SamplerDescriptor SamplerDescriptor::createLinearClamp() noexcept
 {
     SamplerDescriptor desc;
     desc.filter = TextureFilter::Linear;
@@ -59,7 +59,7 @@ SamplerDescriptor SamplerDescriptor::CreateLinearClamp() noexcept
     return desc;
 }
 
-SamplerDescriptor SamplerDescriptor::CreateLinearWrap() noexcept
+SamplerDescriptor SamplerDescriptor::createLinearWrap() noexcept
 {
     SamplerDescriptor desc;
     desc.filter = TextureFilter::Linear;
@@ -74,7 +74,7 @@ SamplerDescriptor SamplerDescriptor::CreateLinearWrap() noexcept
     return desc;
 }
 
-SamplerDescriptor SamplerDescriptor::CreatePointClamp() noexcept
+SamplerDescriptor SamplerDescriptor::createPointClamp() noexcept
 {
     SamplerDescriptor desc;
     desc.filter = TextureFilter::Point;
@@ -89,7 +89,7 @@ SamplerDescriptor SamplerDescriptor::CreatePointClamp() noexcept
     return desc;
 }
 
-SamplerDescriptor SamplerDescriptor::CreatePointWrap() noexcept
+SamplerDescriptor SamplerDescriptor::createPointWrap() noexcept
 {
     SamplerDescriptor desc;
     desc.filter = TextureFilter::Point;

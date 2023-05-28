@@ -32,9 +32,9 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
 
     spriteBatch = std::make_shared<SpriteBatch>(
         graphicsDevice,
-        gpu::BlendDescriptor::CreateNonPremultiplied(),
+        gpu::BlendDescriptor::createNonPremultiplied(),
         std::nullopt,
-        gpu::SamplerDescriptor::CreatePointWrap(),
+        gpu::SamplerDescriptor::createPointWrap(),
         std::nullopt,
         std::nullopt,
         SpriteBatchPixelShaderMode::Default,
@@ -136,7 +136,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
     {
         // NOTE: Create sampler state
         std::tie(sampler, err) = graphicsDevice->CreateSamplerState(
-            gpu::SamplerDescriptor::CreateLinearClamp());
+            gpu::SamplerDescriptor::createLinearClamp());
 
         if (err != nullptr) {
             return errors::wrap(std::move(err), "failed to create sampler state");
@@ -184,9 +184,9 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
             })
             .SetDepthStencilViewFormat(presentationParameters.depthStencilFormat)
             .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
-            .SetDepthStencilState(gpu::DepthStencilDescriptor::CreateDefault())
-            .SetBlendState(gpu::BlendDescriptor::CreateOpaque())
-            .SetRasterizerState(gpu::RasterizerDescriptor::CreateDefault())
+            .SetDepthStencilState(gpu::DepthStencilDescriptor::createDefault())
+            .SetBlendState(gpu::BlendDescriptor::createOpaque())
+            .SetRasterizerState(gpu::RasterizerDescriptor::createDefault())
             .SetInputLayout(inputLayout)
             .SetVertexShader(std::move(vertexShader))
             .SetPixelShader(std::move(pixelShader))

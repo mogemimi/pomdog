@@ -56,7 +56,7 @@ VignetteEffect::VignetteEffect(
     AssetManager& assets)
 {
     samplerLinear = std::get<0>(graphicsDevice->CreateSamplerState(
-        gpu::SamplerDescriptor::CreateLinearWrap()));
+        gpu::SamplerDescriptor::createLinearWrap()));
 
     auto inputLayout = gpu::InputLayoutHelper{}
                            .Float3()
@@ -101,8 +101,8 @@ VignetteEffect::VignetteEffect(
                                                     .SetPixelShader(std::move(pixelShader))
                                                     .SetInputLayout(inputLayout.CreateInputLayout())
                                                     .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
-                                                    .SetBlendState(gpu::BlendDescriptor::CreateOpaque())
-                                                    .SetDepthStencilState(gpu::DepthStencilDescriptor::CreateNone())
+                                                    .SetBlendState(gpu::BlendDescriptor::createOpaque())
+                                                    .SetDepthStencilState(gpu::DepthStencilDescriptor::createNone())
                                                     .SetConstantBufferBindSlot("ImageEffectConstants", 0)
                                                     .SetConstantBufferBindSlot("VignetteBlock", 1)
                                                     .Build();

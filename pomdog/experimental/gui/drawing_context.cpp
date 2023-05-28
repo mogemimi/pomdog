@@ -36,14 +36,14 @@ DrawingContext::DrawingContext(
     primitiveBatch = std::make_shared<PrimitiveBatch>(
         graphicsDevice,
         std::nullopt,
-        gpu::RasterizerDescriptor::CreateCullNone(),
+        gpu::RasterizerDescriptor::createCullNone(),
         assets);
 
     spriteBatch = std::make_shared<SpriteBatch>(
         graphicsDevice,
-        gpu::BlendDescriptor::CreateNonPremultiplied(),
-        gpu::RasterizerDescriptor::CreateCullNone(),
-        gpu::SamplerDescriptor::CreateLinearWrap(),
+        gpu::BlendDescriptor::createNonPremultiplied(),
+        gpu::RasterizerDescriptor::createCullNone(),
+        gpu::SamplerDescriptor::createLinearWrap(),
         std::nullopt,
         std::nullopt,
         SpriteBatchPixelShaderMode::Default,

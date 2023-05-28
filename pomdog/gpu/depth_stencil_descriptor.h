@@ -25,16 +25,16 @@ struct POMDOG_EXPORT DepthStencilDescriptor final {
     bool stencilEnable;
 
     [[nodiscard]] static DepthStencilDescriptor
-    CreateDefault() noexcept;
+    createDefault() noexcept;
 
     [[nodiscard]] static DepthStencilDescriptor
-    CreateReadWriteDepth() noexcept;
+    createReadWriteDepth() noexcept;
 
     [[nodiscard]] static DepthStencilDescriptor
-    CreateReadOnlyDepth() noexcept;
+    createReadOnlyDepth() noexcept;
 
     [[nodiscard]] static DepthStencilDescriptor
-    CreateNone() noexcept;
+    createNone() noexcept;
 };
 
 } // namespace pomdog::gpu

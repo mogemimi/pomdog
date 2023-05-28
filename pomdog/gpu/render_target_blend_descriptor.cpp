@@ -4,7 +4,7 @@
 
 namespace pomdog::gpu {
 
-RenderTargetBlendDescriptor RenderTargetBlendDescriptor::CreateAdditive() noexcept
+RenderTargetBlendDescriptor RenderTargetBlendDescriptor::createAdditive() noexcept
 {
     RenderTargetBlendDescriptor desc;
     desc.blendEnable = true;
@@ -17,7 +17,7 @@ RenderTargetBlendDescriptor RenderTargetBlendDescriptor::CreateAdditive() noexce
     return desc;
 }
 
-RenderTargetBlendDescriptor RenderTargetBlendDescriptor::CreateAlphaBlend() noexcept
+RenderTargetBlendDescriptor RenderTargetBlendDescriptor::createAlphaBlend() noexcept
 {
     RenderTargetBlendDescriptor desc;
     desc.blendEnable = true;
@@ -30,7 +30,7 @@ RenderTargetBlendDescriptor RenderTargetBlendDescriptor::CreateAlphaBlend() noex
     return desc;
 }
 
-RenderTargetBlendDescriptor RenderTargetBlendDescriptor::CreateNonPremultiplied() noexcept
+RenderTargetBlendDescriptor RenderTargetBlendDescriptor::createNonPremultiplied() noexcept
 {
     RenderTargetBlendDescriptor desc;
     desc.blendEnable = true;
@@ -43,7 +43,7 @@ RenderTargetBlendDescriptor RenderTargetBlendDescriptor::CreateNonPremultiplied(
     return desc;
 }
 
-RenderTargetBlendDescriptor RenderTargetBlendDescriptor::CreateOpaque() noexcept
+RenderTargetBlendDescriptor RenderTargetBlendDescriptor::createOpaque() noexcept
 {
     RenderTargetBlendDescriptor desc;
     desc.blendEnable = false;

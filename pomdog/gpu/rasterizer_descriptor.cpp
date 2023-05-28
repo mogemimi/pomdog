@@ -4,12 +4,12 @@
 
 namespace pomdog::gpu {
 
-RasterizerDescriptor RasterizerDescriptor::CreateDefault() noexcept
+RasterizerDescriptor RasterizerDescriptor::createDefault() noexcept
 {
-    return CreateCullCounterClockwise();
+    return createCullCounterClockwise();
 }
 
-RasterizerDescriptor RasterizerDescriptor::CreateCullClockwise() noexcept
+RasterizerDescriptor RasterizerDescriptor::createCullClockwise() noexcept
 {
     RasterizerDescriptor desc;
     desc.cullMode = CullMode::ClockwiseFace;
@@ -20,7 +20,7 @@ RasterizerDescriptor RasterizerDescriptor::CreateCullClockwise() noexcept
     return desc;
 }
 
-RasterizerDescriptor RasterizerDescriptor::CreateCullCounterClockwise() noexcept
+RasterizerDescriptor RasterizerDescriptor::createCullCounterClockwise() noexcept
 {
     RasterizerDescriptor desc;
     desc.cullMode = CullMode::CounterClockwiseFace;
@@ -31,7 +31,7 @@ RasterizerDescriptor RasterizerDescriptor::CreateCullCounterClockwise() noexcept
     return desc;
 }
 
-RasterizerDescriptor RasterizerDescriptor::CreateCullNone() noexcept
+RasterizerDescriptor RasterizerDescriptor::createCullNone() noexcept
 {
     RasterizerDescriptor desc;
     desc.cullMode = CullMode::None;
@@ -42,7 +42,7 @@ RasterizerDescriptor RasterizerDescriptor::CreateCullNone() noexcept
     return desc;
 }
 
-RasterizerDescriptor RasterizerDescriptor::CreateCullNoneWireframe() noexcept
+RasterizerDescriptor RasterizerDescriptor::createCullNoneWireframe() noexcept
 {
     RasterizerDescriptor desc;
     desc.cullMode = CullMode::None;

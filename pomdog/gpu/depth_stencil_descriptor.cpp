@@ -8,12 +8,12 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::gpu {
 
-DepthStencilDescriptor DepthStencilDescriptor::CreateDefault() noexcept
+DepthStencilDescriptor DepthStencilDescriptor::createDefault() noexcept
 {
-    return CreateReadWriteDepth();
+    return createReadWriteDepth();
 }
 
-DepthStencilDescriptor DepthStencilDescriptor::CreateReadWriteDepth() noexcept
+DepthStencilDescriptor DepthStencilDescriptor::createReadWriteDepth() noexcept
 {
     DepthStencilDescriptor desc;
     desc.depthBufferEnable = true;
@@ -34,7 +34,7 @@ DepthStencilDescriptor DepthStencilDescriptor::CreateReadWriteDepth() noexcept
     return desc;
 }
 
-DepthStencilDescriptor DepthStencilDescriptor::CreateReadOnlyDepth() noexcept
+DepthStencilDescriptor DepthStencilDescriptor::createReadOnlyDepth() noexcept
 {
     DepthStencilDescriptor desc;
     desc.depthBufferEnable = true;
@@ -55,7 +55,7 @@ DepthStencilDescriptor DepthStencilDescriptor::CreateReadOnlyDepth() noexcept
     return desc;
 }
 
-DepthStencilDescriptor DepthStencilDescriptor::CreateNone() noexcept
+DepthStencilDescriptor DepthStencilDescriptor::createNone() noexcept
 {
     DepthStencilDescriptor desc;
     desc.depthBufferEnable = false;

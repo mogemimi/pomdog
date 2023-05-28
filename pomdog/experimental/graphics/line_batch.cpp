@@ -143,8 +143,8 @@ LineBatch::Impl::Impl(
                                                         .SetPixelShader(std::move(pixelShader))
                                                         .SetInputLayout(inputLayout.CreateInputLayout())
                                                         .SetPrimitiveTopology(gpu::PrimitiveTopology::LineList)
-                                                        .SetBlendState(gpu::BlendDescriptor::CreateNonPremultiplied())
-                                                        .SetDepthStencilState(gpu::DepthStencilDescriptor::CreateDefault())
+                                                        .SetBlendState(gpu::BlendDescriptor::createNonPremultiplied())
+                                                        .SetDepthStencilState(gpu::DepthStencilDescriptor::createDefault())
                                                         .SetConstantBufferBindSlot("TransformMatrix", 0)
                                                         .Build();
         if (pipelineStateErr != nullptr) {

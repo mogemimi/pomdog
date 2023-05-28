@@ -27,25 +27,25 @@ struct POMDOG_EXPORT SamplerDescriptor final {
     //std::array<float, 4> borderColor;
 
     [[nodiscard]] static SamplerDescriptor
-    CreateDefault() noexcept;
+    createDefault() noexcept;
 
     [[nodiscard]] static SamplerDescriptor
-    CreateAnisotropicClamp() noexcept;
+    createAnisotropicClamp() noexcept;
 
     [[nodiscard]] static SamplerDescriptor
-    CreateAnisotropicWrap() noexcept;
+    createAnisotropicWrap() noexcept;
 
     [[nodiscard]] static SamplerDescriptor
-    CreateLinearClamp() noexcept;
+    createLinearClamp() noexcept;
 
     [[nodiscard]] static SamplerDescriptor
-    CreateLinearWrap() noexcept;
+    createLinearWrap() noexcept;
 
     [[nodiscard]] static SamplerDescriptor
-    CreatePointClamp() noexcept;
+    createPointClamp() noexcept;
 
     [[nodiscard]] static SamplerDescriptor
-    CreatePointWrap() noexcept;
+    createPointWrap() noexcept;
 };
 
 } // namespace pomdog::gpu

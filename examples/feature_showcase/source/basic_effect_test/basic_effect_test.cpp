@@ -172,7 +172,7 @@ std::unique_ptr<Error> BasicEffectTest::initialize()
     {
         // NOTE: Create sampler state
         std::tie(sampler, err) = graphicsDevice->CreateSamplerState(
-            gpu::SamplerDescriptor::CreateLinearClamp());
+            gpu::SamplerDescriptor::createLinearClamp());
 
         if (err != nullptr) {
             return errors::wrap(std::move(err), "failed to create sampler state");
@@ -191,9 +191,9 @@ std::unique_ptr<Error> BasicEffectTest::initialize()
             .SetRenderTargetViewFormat(presentationParameters.backBufferFormat)
             .SetDepthStencilViewFormat(presentationParameters.depthStencilFormat)
             .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
-            .SetDepthStencilState(gpu::DepthStencilDescriptor::CreateDefault())
-            .SetBlendState(gpu::BlendDescriptor::CreateNonPremultiplied())
-            .SetRasterizerState(gpu::RasterizerDescriptor::CreateDefault())
+            .SetDepthStencilState(gpu::DepthStencilDescriptor::createDefault())
+            .SetBlendState(gpu::BlendDescriptor::createNonPremultiplied())
+            .SetRasterizerState(gpu::RasterizerDescriptor::createDefault())
             .Build();
         if (err != nullptr) {
             return errors::wrap(std::move(err), "failed to create pipeline state");
@@ -212,9 +212,9 @@ std::unique_ptr<Error> BasicEffectTest::initialize()
             .SetRenderTargetViewFormat(presentationParameters.backBufferFormat)
             .SetDepthStencilViewFormat(presentationParameters.depthStencilFormat)
             .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
-            .SetDepthStencilState(gpu::DepthStencilDescriptor::CreateDefault())
-            .SetBlendState(gpu::BlendDescriptor::CreateNonPremultiplied())
-            .SetRasterizerState(gpu::RasterizerDescriptor::CreateDefault())
+            .SetDepthStencilState(gpu::DepthStencilDescriptor::createDefault())
+            .SetBlendState(gpu::BlendDescriptor::createNonPremultiplied())
+            .SetRasterizerState(gpu::RasterizerDescriptor::createDefault())
             .Build();
         if (err != nullptr) {
             return errors::wrap(std::move(err), "failed to create pipeline state");

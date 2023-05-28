@@ -60,17 +60,17 @@ Builder<gpu::PipelineState>::Impl::Load()
     }
 
     if (!hasBlendState) {
-        descriptor.blendState = gpu::BlendDescriptor::CreateDefault();
+        descriptor.blendState = gpu::BlendDescriptor::createDefault();
         hasBlendState = true;
     }
 
     if (!hasRasterizerState) {
-        descriptor.rasterizerState = gpu::RasterizerDescriptor::CreateDefault();
+        descriptor.rasterizerState = gpu::RasterizerDescriptor::createDefault();
         hasRasterizerState = true;
     }
 
     if (!hasDepthStencilState) {
-        descriptor.depthStencilState = gpu::DepthStencilDescriptor::CreateDefault();
+        descriptor.depthStencilState = gpu::DepthStencilDescriptor::createDefault();
         hasDepthStencilState = true;
     }
 

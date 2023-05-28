@@ -19,19 +19,19 @@ struct POMDOG_EXPORT BlendDescriptor final {
     bool independentBlendEnable;
 
     [[nodiscard]] static BlendDescriptor
-    CreateDefault() noexcept;
+    createDefault() noexcept;
 
     [[nodiscard]] static BlendDescriptor
-    CreateAdditive() noexcept;
+    createAdditive() noexcept;
 
     [[nodiscard]] static BlendDescriptor
-    CreateAlphaBlend() noexcept;
+    createAlphaBlend() noexcept;
 
     [[nodiscard]] static BlendDescriptor
-    CreateNonPremultiplied() noexcept;
+    createNonPremultiplied() noexcept;
 
     [[nodiscard]] static BlendDescriptor
-    CreateOpaque() noexcept;
+    createOpaque() noexcept;
 };
 
 } // namespace pomdog::gpu

@@ -50,7 +50,7 @@ RetroCrtEffect::RetroCrtEffect(
     AssetManager& assets)
 {
     samplerState = std::get<0>(graphicsDevice->CreateSamplerState(
-        gpu::SamplerDescriptor::CreateLinearClamp()));
+        gpu::SamplerDescriptor::createLinearClamp()));
 
     auto inputLayout = gpu::InputLayoutHelper{}
                            .Float3()
@@ -95,8 +95,8 @@ RetroCrtEffect::RetroCrtEffect(
                                                     .SetPixelShader(std::move(pixelShader))
                                                     .SetInputLayout(inputLayout.CreateInputLayout())
                                                     .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
-                                                    .SetBlendState(gpu::BlendDescriptor::CreateOpaque())
-                                                    .SetDepthStencilState(gpu::DepthStencilDescriptor::CreateNone())
+                                                    .SetBlendState(gpu::BlendDescriptor::createOpaque())
+                                                    .SetDepthStencilState(gpu::DepthStencilDescriptor::createNone())
                                                     .SetConstantBufferBindSlot("ImageEffectConstants", 0)
                                                     .Build();
     if (pipelineStateErr != nullptr) {

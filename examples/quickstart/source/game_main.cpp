@@ -37,7 +37,7 @@ std::unique_ptr<Error> GameMain::initialize()
     }
 
     // NOTE: Create sampler state
-    std::tie(sampler, err) = graphicsDevice->CreateSamplerState(gpu::SamplerDescriptor::CreatePointClamp());
+    std::tie(sampler, err) = graphicsDevice->CreateSamplerState(gpu::SamplerDescriptor::createPointClamp());
     if (err != nullptr) {
         return errors::wrap(std::move(err), "failed to create sampler state");
     }

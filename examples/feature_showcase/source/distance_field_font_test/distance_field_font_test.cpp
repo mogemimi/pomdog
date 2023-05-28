@@ -26,9 +26,9 @@ std::unique_ptr<Error> DistanceFieldFontTest::initialize()
     primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
     spriteBatch = std::make_shared<SpriteBatch>(
         graphicsDevice,
-        gpu::BlendDescriptor::CreateNonPremultiplied(),
+        gpu::BlendDescriptor::createNonPremultiplied(),
         std::nullopt,
-        gpu::SamplerDescriptor::CreateLinearWrap(),
+        gpu::SamplerDescriptor::createLinearWrap(),
         std::nullopt,
         std::nullopt,
         SpriteBatchPixelShaderMode::DistanceField,

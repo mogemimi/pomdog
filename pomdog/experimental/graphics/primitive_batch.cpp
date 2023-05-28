@@ -92,10 +92,10 @@ PrimitiveBatch::Impl::Impl(
     , drawCallCount(0)
 {
     if (!depthStencilDesc) {
-        depthStencilDesc = gpu::DepthStencilDescriptor::CreateNone();
+        depthStencilDesc = gpu::DepthStencilDescriptor::createNone();
     }
     if (!rasterizerDesc) {
-        rasterizerDesc = gpu::RasterizerDescriptor::CreateCullCounterClockwise();
+        rasterizerDesc = gpu::RasterizerDescriptor::createCullCounterClockwise();
     }
 
     POMDOG_ASSERT(depthStencilDesc);
@@ -143,7 +143,7 @@ PrimitiveBatch::Impl::Impl(
                                                         .SetPixelShader(std::move(pixelShader))
                                                         .SetInputLayout(inputLayout.CreateInputLayout())
                                                         .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
-                                                        .SetBlendState(gpu::BlendDescriptor::CreateNonPremultiplied())
+                                                        .SetBlendState(gpu::BlendDescriptor::createNonPremultiplied())
                                                         .SetDepthStencilState(*depthStencilDesc)
                                                         .SetRasterizerState(*rasterizerDesc)
                                                         .SetConstantBufferBindSlot("TransformMatrix", 0)
