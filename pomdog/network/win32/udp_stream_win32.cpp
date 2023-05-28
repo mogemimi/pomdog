@@ -58,7 +58,7 @@ UDPStreamWin32::Connect(std::string_view host, std::string_view port, const Dura
         auto [fd, err] = detail::ConnectSocketWin32(hostBuf, portBuf, SocketProtocol::UDP, connectTimeout);
 
         if (err != nullptr) {
-            auto wrapped = errors::Wrap(std::move(err), "couldn't connect to UDP socket on " + hostBuf + ":" + portBuf);
+            auto wrapped = errors::wrap(std::move(err), "couldn't connect to UDP socket on " + hostBuf + ":" + portBuf);
             std::shared_ptr<Error> shared = std::move(wrapped);
             errorConn = service->ScheduleTask([this, err = std::move(shared)] {
                 this->OnConnected(err->Clone());
@@ -92,7 +92,7 @@ UDPStreamWin32::Listen(std::string_view host, std::string_view port)
     auto [fd, err] = detail::BindSocketWin32(hostBuf, portBuf, SocketProtocol::UDP);
 
     if (err != nullptr) {
-        auto wrapped = errors::Wrap(std::move(err), "couldn't listen to UDP socket on " + hostBuf + ":" + portBuf);
+        auto wrapped = errors::wrap(std::move(err), "couldn't listen to UDP socket on " + hostBuf + ":" + portBuf);
         std::shared_ptr<Error> shared = wrapped->Clone();
         errorConn = service->ScheduleTask([this, err = std::move(shared)] {
             this->OnConnected(err->Clone());
@@ -132,7 +132,7 @@ UDPStreamWin32::Write(const ArrayView<std::uint8_t const>& data)
     auto result = ::send(this->descriptor, reinterpret_cast<const char*>(data.GetData()), static_cast<int>(data.GetSize()), flags);
 
     if (result == SOCKET_ERROR) {
-        return errors::New("send failed with error: " + std::to_string(::WSAGetLastError()));
+        return errors::make("send failed with error: " + std::to_string(::WSAGetLastError()));
     }
 
     return nullptr;
@@ -159,7 +159,7 @@ UDPStreamWin32::WriteTo(const ArrayView<std::uint8_t const>& data, std::string_v
 
     auto res = ::getaddrinfo(host.data(), port.data(), &hints, &addrListRaw);
     if (res != 0) {
-        return errors::New("getaddrinfo failed with error " + std::to_string(res));
+        return errors::make("getaddrinfo failed with error " + std::to_string(res));
     }
 
     auto addrList = std::unique_ptr<struct ::addrinfo, void(WSAAPI*)(struct ::addrinfo*)>{addrListRaw, ::freeaddrinfo};
@@ -181,7 +181,7 @@ UDPStreamWin32::WriteTo(const ArrayView<std::uint8_t const>& data, std::string_v
     }
 
     if (lastError != std::nullopt) {
-        return errors::New("sendto failed with error: " + std::to_string(*lastError));
+        return errors::make("sendto failed with error: " + std::to_string(*lastError));
     }
 
     return nullptr;
@@ -207,7 +207,7 @@ void UDPStreamWin32::ReadEventLoop()
             return;
         }
 
-        this->OnRead({}, errors::New("read failed with error: " + std::to_string(errorCode)));
+        this->OnRead({}, errors::make("read failed with error: " + std::to_string(errorCode)));
         return;
     }
 
@@ -239,7 +239,7 @@ void UDPStreamWin32::ReadFromEventLoop()
             return;
         }
 
-        this->OnReadFrom({}, "", errors::New("read failed with error: " + std::to_string(errorCode)));
+        this->OnReadFrom({}, "", errors::make("read failed with error: " + std::to_string(errorCode)));
         return;
     }
 

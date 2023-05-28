@@ -41,7 +41,7 @@ RenderTarget2DMetal::Initialize(
 
     texture = [device newTextureWithDescriptor:descriptor];
     if (texture == nullptr) {
-        return errors::New("failed to create MTLTexture");
+        return errors::make("failed to create MTLTexture");
     }
 
     return nullptr;

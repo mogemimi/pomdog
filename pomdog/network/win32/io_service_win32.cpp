@@ -16,7 +16,7 @@ std::unique_ptr<Error> PrepareNetworkService()
 
     const auto result = ::WSAStartup(MAKEWORD(2, 2), &wsaData);
     if (result != 0) {
-        auto err = errors::New("WSAStartup failed with error " + std::to_string(result));
+        auto err = errors::make("WSAStartup failed with error " + std::to_string(result));
         return err;
     }
     return nullptr;
@@ -26,7 +26,7 @@ std::unique_ptr<Error> ShutdownNetworkService()
 {
     const auto result = ::WSACleanup();
     if (result != 0) {
-        auto err = errors::New("WSACleanup failed with error " + std::to_string(result));
+        auto err = errors::make("WSACleanup failed with error " + std::to_string(result));
         return err;
     }
     return nullptr;

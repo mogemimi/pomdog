@@ -112,20 +112,20 @@ TLSStreamMbedTLS::Connect(
             reinterpret_cast<const unsigned char*>(pers),
             std::strlen(pers));
         ret != 0) {
-        auto err = errors::New("mbedtls_ctr_drbg_seed failed, " + MbedTLSErrorToString(ret));
-        std::shared_ptr<Error> shared = err->Clone();
+        auto err = errors::make("mbedtls_ctr_drbg_seed failed, " + MbedTLSErrorToString(ret));
+        std::shared_ptr<Error> shared = err->clone();
         errorConn = service->ScheduleTask([this, err = std::move(shared)] {
-            this->OnConnected(err->Clone());
+            this->OnConnected(err->clone());
             this->errorConn.Disconnect();
         });
         return err;
     }
 
     if (!certPEM.IsEmpty() && (certPEM.GetBack() != 0)) {
-        auto err = errors::New("Certificates (PEM) must be null-terminated string");
-        std::shared_ptr<Error> shared = err->Clone();
+        auto err = errors::make("Certificates (PEM) must be null-terminated string");
+        std::shared_ptr<Error> shared = err->clone();
         errorConn = service->ScheduleTask([this, err = std::move(shared)] {
-            this->OnConnected(err->Clone());
+            this->OnConnected(err->clone());
             this->errorConn.Disconnect();
         });
         return err;
@@ -137,10 +137,10 @@ TLSStreamMbedTLS::Connect(
             reinterpret_cast<const unsigned char*>(certPEM.GetData()),
             certPEM.GetSize());
         ret < 0) {
-        auto err = errors::New("mbedtls_x509_crt_parse failed, " + MbedTLSErrorToString(ret));
-        std::shared_ptr<Error> shared = err->Clone();
+        auto err = errors::make("mbedtls_x509_crt_parse failed, " + MbedTLSErrorToString(ret));
+        std::shared_ptr<Error> shared = err->clone();
         errorConn = service->ScheduleTask([this, err = std::move(shared)] {
-            this->OnConnected(err->Clone());
+            this->OnConnected(err->clone());
             this->errorConn.Disconnect();
         });
         return err;
@@ -156,7 +156,7 @@ TLSStreamMbedTLS::Connect(
         auto ret = mbedtls_net_connect(&descriptor, hostBuf.data(), portBuf.data(), MBEDTLS_NET_PROTO_TCP);
         if (ret != 0) {
             errorConn = service->ScheduleTask([this, ret = ret] {
-                auto err = errors::New("mbedtls_net_connect failed, " + MbedTLSErrorToString(ret));
+                auto err = errors::make("mbedtls_net_connect failed, " + MbedTLSErrorToString(ret));
                 this->OnConnected(std::move(err));
                 this->errorConn.Disconnect();
             });
@@ -178,7 +178,7 @@ TLSStreamMbedTLS::Connect(
         if (connectErr != nullptr) {
             std::shared_ptr<Error> shared = std::move(connectErr);
             errorConn = service->ScheduleTask([this, err = std::move(shared)] {
-                this->OnConnected(err->Clone());
+                this->OnConnected(err->clone());
                 this->errorConn.Disconnect();
             });
             return;
@@ -195,7 +195,7 @@ TLSStreamMbedTLS::Connect(
 
         if (ret != 0) {
             errorConn = service->ScheduleTask([this, ret = ret] {
-                auto err = errors::New("mbedtls_ssl_config_defaults failed, " + MbedTLSErrorToString(ret));
+                auto err = errors::make("mbedtls_ssl_config_defaults failed, " + MbedTLSErrorToString(ret));
                 this->OnConnected(std::move(err));
                 this->errorConn.Disconnect();
             });
@@ -224,7 +224,7 @@ TLSStreamMbedTLS::Connect(
         ret = mbedtls_ssl_setup(&ssl, &sslConfig);
         if (ret != 0) {
             errorConn = service->ScheduleTask([this, ret = ret] {
-                auto err = errors::New("mbedtls_ssl_setup failed, " + MbedTLSErrorToString(ret));
+                auto err = errors::make("mbedtls_ssl_setup failed, " + MbedTLSErrorToString(ret));
                 this->OnConnected(std::move(err));
                 this->errorConn.Disconnect();
             });
@@ -234,7 +234,7 @@ TLSStreamMbedTLS::Connect(
         ret = mbedtls_ssl_set_hostname(&ssl, hostBuf.data());
         if (ret != 0) {
             errorConn = service->ScheduleTask([this, ret = ret] {
-                auto err = errors::New("mbedtls_ssl_set_hostname failed, " + MbedTLSErrorToString(ret));
+                auto err = errors::make("mbedtls_ssl_set_hostname failed, " + MbedTLSErrorToString(ret));
                 this->OnConnected(std::move(err));
                 this->errorConn.Disconnect();
             });
@@ -252,7 +252,7 @@ TLSStreamMbedTLS::Connect(
 
             if ((ret != MBEDTLS_ERR_SSL_WANT_READ) && (ret != MBEDTLS_ERR_SSL_WANT_WRITE)) {
                 errorConn = service->ScheduleTask([this, ret = ret] {
-                    auto err = errors::New("mbedtls_ssl_handshake failed, " + MbedTLSErrorToString(ret));
+                    auto err = errors::make("mbedtls_ssl_handshake failed, " + MbedTLSErrorToString(ret));
                     this->OnConnected(std::move(err));
                     this->errorConn.Disconnect();
                 });
@@ -267,10 +267,10 @@ TLSStreamMbedTLS::Connect(
             mbedtls_x509_crt_verify_info(buf.data(), buf.size(), "  ! ", flags);
             buf.back() = 0;
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
-            auto e = errors::New(std::string{"mbedtls_ssl_get_verify_result failed, "} + buf.data());
+            auto e = errors::make(std::string{"mbedtls_ssl_get_verify_result failed, "} + buf.data());
             std::shared_ptr<Error> shared = std::move(e);
             errorConn = service->ScheduleTask([this, err = std::move(shared)] {
-                this->OnConnected(err->Clone());
+                this->OnConnected(err->clone());
                 this->errorConn.Disconnect();
             });
 #endif
@@ -311,7 +311,7 @@ TLSStreamMbedTLS::Write(const ArrayView<std::uint8_t const>& data)
             break;
         }
         if ((ret != MBEDTLS_ERR_SSL_WANT_READ) && (ret != MBEDTLS_ERR_SSL_WANT_WRITE)) {
-            return errors::New("mbedtls_ssl_write failed, " + MbedTLSErrorToString(ret));
+            return errors::make("mbedtls_ssl_write failed, " + MbedTLSErrorToString(ret));
         }
     }
 
@@ -336,7 +336,7 @@ void TLSStreamMbedTLS::ReadEventLoop()
 {
     if (timeoutInterval.has_value()) {
         if ((service->GetNowTime() - lastActiveTime) > *timeoutInterval) {
-            this->OnRead({}, errors::New("timeout socket connection"));
+            this->OnRead({}, errors::make("timeout socket connection"));
             this->Close();
             this->OnDisconnect();
             return;
@@ -357,7 +357,7 @@ void TLSStreamMbedTLS::ReadEventLoop()
         return;
     }
     if (ret < 0) {
-        this->OnRead({}, errors::New("mbedtls_ssl_read failed, " + MbedTLSErrorToString(ret)));
+        this->OnRead({}, errors::make("mbedtls_ssl_read failed, " + MbedTLSErrorToString(ret)));
         return;
     }
 

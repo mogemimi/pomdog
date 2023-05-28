@@ -61,7 +61,7 @@ BufferMetal::Initialize(
 {
     frameCounter_ = std::move(frameCounter);
     if (frameCounter_ == nullptr) {
-        return errors::New("frameCounter_ must be != nullptr");
+        return errors::make("frameCounter_ must be != nullptr");
     }
 
     if (bufferUsage == BufferUsage::Dynamic) {
@@ -76,7 +76,7 @@ BufferMetal::Initialize(
         const auto alignedSize = ComputeAlignedSize(sizeInBytes, bindMode);
         nativeBuffer = [device newBufferWithLength:alignedSize options:ToResourceOptions(bufferUsage)];
         if (nativeBuffer == nullptr) {
-            return errors::New("failed to create MTLBuffer");
+            return errors::make("failed to create MTLBuffer");
         }
 
         nativeBuffer.label = @"Pomdog.BufferMetal";
@@ -96,7 +96,7 @@ BufferMetal::Initialize(
 {
     frameCounter_ = std::move(frameCounter);
     if (frameCounter_ == nullptr) {
-        return errors::New("frameCounter_ must be != nullptr");
+        return errors::make("frameCounter_ must be != nullptr");
     }
 
     if (bufferUsage == BufferUsage::Dynamic) {
@@ -111,7 +111,7 @@ BufferMetal::Initialize(
         const auto alignedSize = ComputeAlignedSize(sizeInBytes, bindMode);
         nativeBuffer = [device newBufferWithLength:alignedSize options:ToResourceOptions(bufferUsage)];
         if (nativeBuffer == nullptr) {
-            return errors::New("failed to create MTLBuffer");
+            return errors::make("failed to create MTLBuffer");
         }
 
         nativeBuffer.label = @"Pomdog.BufferMetal";

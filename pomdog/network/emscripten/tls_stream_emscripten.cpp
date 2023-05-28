@@ -28,7 +28,7 @@ TLSStreamEmscripten::Connect(
     [[maybe_unused]] const Duration& connectTimeoutIn)
 {
     // FIXME: Not implemented yet.
-    return errors::New("not implemented yet");
+    return errors::make("not implemented yet");
 }
 
 void TLSStreamEmscripten::Close()
@@ -40,7 +40,7 @@ std::unique_ptr<Error>
 TLSStreamEmscripten::Write([[maybe_unused]] const ArrayView<std::uint8_t const>& data)
 {
     // FIXME: Not implemented yet.
-    return errors::New("not implemented yet");
+    return errors::make("not implemented yet");
 }
 
 bool TLSStreamEmscripten::IsConnected() const noexcept

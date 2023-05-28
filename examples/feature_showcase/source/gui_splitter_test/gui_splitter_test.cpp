@@ -19,7 +19,7 @@ std::unique_ptr<Error> GUISplitterTest::initialize()
     // NOTE: Create graphics command list
     std::tie(commandList, err) = graphicsDevice->CreateCommandList();
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to create graphics command list");
+        return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
     drawingContext = std::make_unique<gui::DrawingContext>(graphicsDevice, *assets);

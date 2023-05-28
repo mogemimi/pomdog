@@ -17,7 +17,7 @@ int main(int argc, char** argv)
     bootstrap.SetBackBufferSize(800, 480);
 
     bootstrap.OnError([](std::unique_ptr<Error>&& err) {
-        Log::Critical("pomdog", err->ToString());
+        Log::Critical("pomdog", err->toString());
     });
 
     bootstrap.Run([](std::shared_ptr<GameHost> const& gameHost) {

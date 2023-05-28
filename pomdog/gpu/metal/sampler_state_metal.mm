@@ -96,7 +96,7 @@ SamplerStateMetal::Initialize(id<MTLDevice> device, const SamplerDescriptor& des
 
     samplerState = [device newSamplerStateWithDescriptor:samplerDesc];
     if (samplerState == nullptr) {
-        return errors::New("failed to create MTLSamplerState");
+        return errors::make("failed to create MTLSamplerState");
     }
     return nullptr;
 }

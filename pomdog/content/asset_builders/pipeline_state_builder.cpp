@@ -56,7 +56,7 @@ Builder<gpu::PipelineState>::Impl::Load()
     POMDOG_ASSERT(!descriptor.inputLayout.inputElements.empty());
 
     if (!hasPrimitiveTopology) {
-        return std::make_tuple(nullptr, errors::New("PrimitiveTopology must be specified"));
+        return std::make_tuple(nullptr, errors::make("PrimitiveTopology must be specified"));
     }
 
     if (!hasBlendState) {
@@ -78,16 +78,16 @@ Builder<gpu::PipelineState>::Impl::Load()
     POMDOG_ASSERT(hasDepthStencilViewFormat);
 
     if (!hasRenderTargetViewFormats) {
-        return std::make_tuple(nullptr, errors::New("RenderTargetViewFormats must be specified"));
+        return std::make_tuple(nullptr, errors::make("RenderTargetViewFormats must be specified"));
     }
 
     if (!hasDepthStencilViewFormat) {
-        return std::make_tuple(nullptr, errors::New("DepthStencilViewFormat must be specified"));
+        return std::make_tuple(nullptr, errors::make("DepthStencilViewFormat must be specified"));
     }
 
     auto [pipelineState, err] = graphicsDevice->CreatePipelineState(descriptor);
     if (err != nullptr) {
-        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "CreatePipelineState() failed"));
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "CreatePipelineState() failed"));
     }
     return std::make_tuple(std::move(pipelineState), nullptr);
 }

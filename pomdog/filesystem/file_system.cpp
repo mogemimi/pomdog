@@ -75,7 +75,7 @@ GetCanonicalPath(const std::string& path) noexcept
     if (!PathHelper::IsAbsolute(result)) {
         auto [cwd, err] = FileSystem::GetCurrentWorkingDirectory();
         if (err != nullptr) {
-            return std::make_tuple("", errors::Wrap(std::move(err), "GetCurrentWorkingDirectory() failed"));
+            return std::make_tuple("", errors::wrap(std::move(err), "GetCurrentWorkingDirectory() failed"));
         }
         result = PathHelper::Normalize(PathHelper::Join(cwd, result));
     }

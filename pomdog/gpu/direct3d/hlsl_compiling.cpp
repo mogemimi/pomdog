@@ -100,18 +100,18 @@ public:
         std::ifstream stream{includePath, std::ifstream::binary};
 
         if (!stream) {
-            lastError = errors::New("Could not find a shader source file: " + includePath);
+            lastError = errors::make("Could not find a shader source file: " + includePath);
             return E_FAIL;
         }
 
         auto [size, err] = FileSystem::GetFileSize(includePath);
         if (err != nullptr) {
-            lastError = errors::New("failed to get file size: " + includePath);
+            lastError = errors::make("failed to get file size: " + includePath);
             return E_FAIL;
         }
 
         if (size <= 0) {
-            lastError = errors::New("The file is too small: " + includePath);
+            lastError = errors::make("The file is too small: " + includePath);
             return E_FAIL;
         }
 
@@ -170,20 +170,20 @@ CompileFromShaderFile(
         &errorBlob);
 
     if (auto err = shaderInclude.MoveLastError(); err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to compile shader");
+        return errors::wrap(std::move(err), "failed to compile shader");
     }
 
     if (FAILED(hr)) {
         if (errorBlob != nullptr) {
             std::string str(reinterpret_cast<LPCSTR>(errorBlob->GetBufferPointer()), errorBlob->GetBufferSize());
-            return errors::New("failed to compile shader. error: " + str);
+            return errors::make("failed to compile shader. error: " + str);
         }
-        return errors::New("D3DCompile() failed. HRESULT = " + std::to_string(hr));
+        return errors::make("D3DCompile() failed. HRESULT = " + std::to_string(hr));
     }
 
     if (errorBlob != nullptr) {
         std::string str(reinterpret_cast<LPCSTR>(errorBlob->GetBufferPointer()), errorBlob->GetBufferSize());
-        return errors::New("warning: " + str);
+        return errors::make("warning: " + str);
     }
 
     return nullptr;
@@ -204,7 +204,7 @@ CompileHLSL(
 
     for (auto& macro : compileOptions.PreprocessorMacros) {
         if (macro.Name.empty()) {
-            return std::make_tuple(nullptr, errors::New("macro.Name is empty"));
+            return std::make_tuple(nullptr, errors::make("macro.Name is empty"));
         }
 
         D3D_SHADER_MACRO shaderMacro;
@@ -228,7 +228,7 @@ CompileHLSL(
             (defines.empty() ? nullptr : defines.data()),
             &codeBlob);
         err != nullptr) {
-        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "CompileFromShaderFile() failed"));
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "CompileFromShaderFile() failed"));
     }
 
     return std::make_tuple(std::move(codeBlob), nullptr);

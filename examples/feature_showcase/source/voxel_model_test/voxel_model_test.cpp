@@ -19,7 +19,7 @@ std::unique_ptr<Error> VoxelModelTest::initialize()
     // NOTE: Create graphics command list
     std::tie(commandList, err) = graphicsDevice->CreateCommandList();
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to create graphics command list");
+        return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
     // NOTE: Create PrimitiveBatch effect
@@ -32,7 +32,7 @@ std::unique_ptr<Error> VoxelModelTest::initialize()
     // NOTE: Load MagicaVoxel model
     std::tie(voxelModel, err) = assets->Load<magicavoxel::VoxModel>("VoxelModels/MaidChan.vox");
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to load texture");
+        return errors::wrap(std::move(err), "failed to load texture");
     }
 
     return nullptr;

@@ -51,7 +51,7 @@ GameMain::initialize()
 
     auto [font, fontErr] = assets->Load<TrueTypeFont>("Fonts/NotoSans/NotoSans-Regular.ttf");
     if (fontErr != nullptr) {
-        Log::Critical("Error", "failed to load a font file: " + fontErr->ToString());
+        Log::Critical("Error", "failed to load a font file: " + fontErr->toString());
     }
 
     spriteFont = std::make_shared<SpriteFont>(graphicsDevice, font, 20.0f, 20.0f);
@@ -199,7 +199,7 @@ GameMain::initialize()
                     button.OnClicked();
                     if (subGame) {
                         if (auto err = subGame->initialize(); err != nullptr) {
-                            Log::Critical("Error", "failed to initialize game: " + err->ToString());
+                            Log::Critical("Error", "failed to initialize game: " + err->toString());
                             subGame.reset();
                         }
                     }

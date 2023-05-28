@@ -54,7 +54,7 @@ ShaderDirect3D11<NativeShaderType>::Initialize(
             compileOptions);
 
         if (compileErr != nullptr) {
-            return errors::Wrap(std::move(compileErr), "CompileHLSL() failed");
+            return errors::wrap(std::move(compileErr), "CompileHLSL() failed");
         }
 
         POMDOG_ASSERT(compiledShaderBlob.Get() != nullptr);
@@ -67,7 +67,7 @@ ShaderDirect3D11<NativeShaderType>::Initialize(
     POMDOG_ASSERT(!codeBlob.empty());
 
     if (auto hr = CreateShader(device, codeBlob.data(), codeBlob.size(), &shader); FAILED(hr)) {
-        return errors::New("CreateShader() failed: hr = " + std::to_string(hr));
+        return errors::make("CreateShader() failed: hr = " + std::to_string(hr));
     }
 
     return nullptr;

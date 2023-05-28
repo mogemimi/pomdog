@@ -222,26 +222,26 @@ Decode(const std::uint8_t* data, std::size_t size)
     std::size_t offsetBytes = 0;
 
     if (!BinaryReader::CanRead<std::uint32_t>(size - offsetBytes)) {
-        return std::make_tuple(std::move(image), errors::New("cannot find dds signature"));
+        return std::make_tuple(std::move(image), errors::make("cannot find dds signature"));
     }
     const auto ddsSignature = BinaryReader::Read<std::uint32_t>(data + offsetBytes);
     offsetBytes += sizeof(ddsSignature);
 
     if (!IsDDSFormat(ddsSignature)) {
-        return std::make_tuple(std::move(image), errors::New("invalid format"));
+        return std::make_tuple(std::move(image), errors::make("invalid format"));
     }
 
     if (!BinaryReader::CanRead<DDSHeader>(size - offsetBytes)) {
-        return std::make_tuple(std::move(image), errors::New("dds header has an invalid format"));
+        return std::make_tuple(std::move(image), errors::make("dds header has an invalid format"));
     }
     const auto ddsHeader = BinaryReader::Read<DDSHeader>(data + offsetBytes);
     offsetBytes += sizeof(ddsHeader);
 
     if (ddsHeader.ByteSize != sizeof(DDSHeader)) {
-        return std::make_tuple(std::move(image), errors::New("dds header has an invalid format"));
+        return std::make_tuple(std::move(image), errors::make("dds header has an invalid format"));
     }
     if (ddsHeader.PixelFormat.ByteSize != sizeof(DDSPixelFormat)) {
-        return std::make_tuple(std::move(image), errors::New("dds header has an invalid format"));
+        return std::make_tuple(std::move(image), errors::make("dds header has an invalid format"));
     }
 
     bool hasDXT10Header = false;
@@ -253,7 +253,7 @@ Decode(const std::uint8_t* data, std::size_t size)
 
     if (hasDXT10Header) {
         // FIXME: Not implemented yet.
-        return std::make_tuple(std::move(image), errors::New("Sorry, DXT10 header is not supported yet."));
+        return std::make_tuple(std::move(image), errors::make("Sorry, DXT10 header is not supported yet."));
     }
 
     image.Width = static_cast<std::int32_t>(ddsHeader.PixelWidth);
@@ -264,12 +264,12 @@ Decode(const std::uint8_t* data, std::size_t size)
         image.Format = *format;
     }
     else {
-        return std::make_tuple(std::move(image), errors::New("cannot find the surface format. Undefined or not supported"));
+        return std::make_tuple(std::move(image), errors::make("cannot find the surface format. Undefined or not supported"));
     }
     image.ByteLength = ComputePixelDataByteLength(ddsHeader, image.Format);
 
     if ((size - offsetBytes) < image.ByteLength) {
-        return std::make_tuple(std::move(image), errors::New("dds header has an invalid format"));
+        return std::make_tuple(std::move(image), errors::make("dds header has an invalid format"));
     }
     image.PixelData = data + offsetBytes;
 

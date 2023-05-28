@@ -32,7 +32,7 @@ GetWord(StringIterator begin, StringIterator end, std::function<bool(char)> isSe
             break;
         }
         if (c <= 31) {
-            return std::make_tuple(word, it, errors::New("Invalid HTTP Response"));
+            return std::make_tuple(word, it, errors::make("Invalid HTTP Response"));
             break;
         }
         ++count;
@@ -124,7 +124,7 @@ ParseFields(std::vector<char>::const_iterator& iter, std::vector<char>::const_it
                 break;
             }
             else {
-                return std::make_tuple(std::move(fields), errors::New("Invalid HTTP Response field"));
+                return std::make_tuple(std::move(fields), errors::make("Invalid HTTP Response field"));
             }
         }
 
@@ -134,7 +134,7 @@ ParseFields(std::vector<char>::const_iterator& iter, std::vector<char>::const_it
 
         iter = Skip(iter, end, '\r');
         if (!ReadChar(iter, end, '\n')) {
-            return std::make_tuple(std::move(fields), errors::New("Invalid HTTP Response field"));
+            return std::make_tuple(std::move(fields), errors::make("Invalid HTTP Response field"));
         }
     }
 
@@ -171,7 +171,7 @@ ParseResponse(HTTPResponse& response, std::vector<char>& rawData)
         response.Protocol = word;
     }
     else {
-        return errors::New("Invalid HTTP Response protocol");
+        return errors::make("Invalid HTTP Response protocol");
     }
 
     std::string_view status;
@@ -186,17 +186,17 @@ ParseResponse(HTTPResponse& response, std::vector<char>& rawData)
         std::stringstream ss;
         ss << status[0] << status[1] << status[2];
         if (!(ss >> response.StatusCode)) {
-            return errors::New("Invalid HTTP Response status");
+            return errors::make("Invalid HTTP Response status");
         }
         response.Status = status;
     }
     else {
-        return errors::New("Invalid HTTP Response status");
+        return errors::make("Invalid HTTP Response status");
     }
 
     iter = Skip<std::vector<char>::const_iterator>(iter, std::end(rawData), '\r');
     if (!ReadChar<std::vector<char>::const_iterator>(iter, std::end(rawData), '\n')) {
-        return errors::New("Invalid HTTP Response");
+        return errors::make("Invalid HTTP Response");
     }
 
     std::tie(response.Header, err) = ParseFields(iter, std::end(rawData));
@@ -206,7 +206,7 @@ ParseResponse(HTTPResponse& response, std::vector<char>& rawData)
 
     iter = Skip<std::vector<char>::const_iterator>(iter, std::end(rawData), '\r');
     if (!ReadChar<std::vector<char>::const_iterator>(iter, std::end(rawData), '\n')) {
-        return errors::New("Invalid HTTP Response");
+        return errors::make("Invalid HTTP Response");
     }
 
     if (auto field = FindField(response.Header, "Content-Length"); field.has_value()) {
@@ -214,7 +214,7 @@ ParseResponse(HTTPResponse& response, std::vector<char>& rawData)
         ss << *field;
         size_t length;
         if (!(ss >> length)) {
-            return errors::New("Invalid HTTP Response 'Content-Length'");
+            return errors::make("Invalid HTTP Response 'Content-Length'");
         }
         response.ContentLength = length;
     }
@@ -309,7 +309,7 @@ HTTPParser::Parse(const ArrayView<std::uint8_t>& view)
                 // NOTE: Remove the end of a chunk such as "\r\n"
                 iter = Skip<std::vector<char>::const_iterator>(bufferBegin, bufferEnd, '\r');
                 if (!ReadChar<std::vector<char>::const_iterator>(iter, bufferEnd, '\n')) {
-                    return errors::New("Invalid HTTP Response, TransferEncoding Chunked");
+                    return errors::make("Invalid HTTP Response, TransferEncoding Chunked");
                 }
             }
 
@@ -319,21 +319,21 @@ HTTPParser::Parse(const ArrayView<std::uint8_t>& view)
             std::tie(word, iter, err) = GetWord<std::vector<char>::const_iterator>(iter, bufferEnd, isLinebreak);
 
             if (err != nullptr) {
-                return errors::Wrap(std::move(err), "Invalid HTTP Response, TransferEncoding Chunked");
+                return errors::wrap(std::move(err), "Invalid HTTP Response, TransferEncoding Chunked");
             }
 
             std::stringstream ss;
             if (!(ss << std::hex << word)) {
-                return errors::New("Invalid HTTP Response, TransferEncoding Chunked");
+                return errors::make("Invalid HTTP Response, TransferEncoding Chunked");
             }
             std::size_t chunkSize = 0;
             if (!(ss >> chunkSize)) {
-                return errors::New("Invalid HTTP Response, TransferEncoding Chunked");
+                return errors::make("Invalid HTTP Response, TransferEncoding Chunked");
             }
 
             iter = Skip<std::vector<char>::const_iterator>(iter, bufferEnd, '\r');
             if (!ReadChar<std::vector<char>::const_iterator>(iter, bufferEnd, '\n')) {
-                return errors::New("Invalid HTTP Response, TransferEncoding Chunked");
+                return errors::make("Invalid HTTP Response, TransferEncoding Chunked");
             }
 
             const auto dataOffset = static_cast<std::size_t>(std::distance(bufferBegin, iter));

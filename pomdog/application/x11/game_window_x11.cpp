@@ -133,7 +133,7 @@ GameWindowX11::initialize(
 
     auto visualInfo = glXGetVisualFromFBConfig(display, framebufferConfig);
     if (visualInfo == nullptr) {
-        return errors::New("glXGetVisualFromFBConfig() failed");
+        return errors::make("glXGetVisualFromFBConfig() failed");
     }
 
     XLockDisplay(display);
@@ -176,7 +176,7 @@ GameWindowX11::initialize(
     ::XFree(visualInfo);
 
     if (window_ == 0) {
-        return errors::New("XCreateWindow() failed");
+        return errors::make("XCreateWindow() failed");
     }
 
     // NOTE: Put the window on screen
@@ -196,7 +196,7 @@ GameWindowX11::initialize(
 
     inputMethod_ = ::XOpenIM(display, nullptr, nullptr, nullptr);
     if (inputMethod_ == nullptr) {
-        return errors::New("could not open input method");
+        return errors::make("could not open input method");
     }
 
     const auto hasInputMethodStyle = [&]() -> bool {
@@ -221,7 +221,7 @@ GameWindowX11::initialize(
     }();
 
     if (!hasInputMethodStyle) {
-        return errors::New("XIM can't get styles");
+        return errors::make("XIM can't get styles");
     }
 
     inputContext_ = ::XCreateIC(
@@ -233,7 +233,7 @@ GameWindowX11::initialize(
         nullptr);
 
     if (inputContext_ == nullptr) {
-        return errors::New("could not open input context");
+        return errors::make("could not open input context");
     }
 
     ::XSetICFocus(inputContext_);

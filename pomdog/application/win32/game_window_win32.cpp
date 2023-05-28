@@ -80,7 +80,7 @@ RegisterInputDevices(HWND windowHandle) noexcept
         static_cast<UINT>(sizeof(inputDevices[0])));
 
     if (success == FALSE) {
-        return errors::New("RegisterRawInputDevices() failed");
+        return errors::make("RegisterRawInputDevices() failed");
     }
 
     return nullptr;
@@ -208,7 +208,7 @@ GameWindowWin32::Impl::Initialize(
     };
 
     if (::RegisterClassEx(&wcex) == 0) {
-        return errors::New("RegisterClassEx() failed");
+        return errors::make("RegisterClassEx() failed");
     }
 
     windowHandle = CreateWindowEx(
@@ -226,18 +226,18 @@ GameWindowWin32::Impl::Initialize(
         nullptr);
 
     if (windowHandle == nullptr) {
-        return errors::New("CreateWindowEx() failed");
+        return errors::make("CreateWindowEx() failed");
     }
 
     if (IsDarkMode()) {
         if (auto err = UseImmersiveDarkMode(windowHandle, true); err != nullptr) {
-            return errors::Wrap(std::move(err), "UseImmersiveDarkMode() failed");
+            return errors::wrap(std::move(err), "UseImmersiveDarkMode() failed");
         }
     }
 
     // NOTE: See http://msdn.microsoft.com/ja-jp/library/ff485844(v=vs.85).aspx
     if (auto hr = ::CoInitializeEx(nullptr, COINIT_MULTITHREADED | COINIT_DISABLE_OLE1DDE); FAILED(hr)) {
-        return errors::New("CoInitializeEx() failed");
+        return errors::make("CoInitializeEx() failed");
     }
 
     if (nCmdShow == SW_MAXIMIZE) {
@@ -258,7 +258,7 @@ GameWindowWin32::Impl::Initialize(
     ::SetWindowLongPtr(windowHandle, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
 
     if (auto err = RegisterInputDevices(windowHandle); err != nullptr) {
-        return errors::Wrap(std::move(err), "RegisterInputDevices() failed");
+        return errors::wrap(std::move(err), "RegisterInputDevices() failed");
     }
 
     return nullptr;

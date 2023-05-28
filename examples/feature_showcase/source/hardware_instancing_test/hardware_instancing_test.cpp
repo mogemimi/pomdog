@@ -21,13 +21,13 @@ std::unique_ptr<Error> HardwareInstancingTest::initialize()
     // NOTE: Create graphics command list
     std::tie(commandList, err) = graphicsDevice->CreateCommandList();
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to create graphics command list");
+        return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
     // NOTE: Load texture from PNG image file.
     std::tie(texture, err) = assets->Load<gpu::Texture2D>("Textures/pomdog.png");
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to load texture");
+        return errors::wrap(std::move(err), "failed to load texture");
     }
 
     constexpr auto maxSpriteCount = 256;
@@ -53,7 +53,7 @@ std::unique_ptr<Error> HardwareInstancingTest::initialize()
             gpu::BufferUsage::Immutable);
 
         if (err != nullptr) {
-            return errors::Wrap(std::move(err), "failed to create vertex buffer");
+            return errors::wrap(std::move(err), "failed to create vertex buffer");
         }
     }
     {
@@ -67,7 +67,7 @@ std::unique_ptr<Error> HardwareInstancingTest::initialize()
             gpu::BufferUsage::Immutable);
 
         if (err != nullptr) {
-            return errors::Wrap(std::move(err), "failed to create index buffer");
+            return errors::wrap(std::move(err), "failed to create index buffer");
         }
     }
     {
@@ -78,7 +78,7 @@ std::unique_ptr<Error> HardwareInstancingTest::initialize()
             gpu::BufferUsage::Dynamic);
 
         if (err != nullptr) {
-            return errors::Wrap(std::move(err), "failed to create instance buffer");
+            return errors::wrap(std::move(err), "failed to create instance buffer");
         }
     }
     {
@@ -88,7 +88,7 @@ std::unique_ptr<Error> HardwareInstancingTest::initialize()
             gpu::BufferUsage::Dynamic);
 
         if (err != nullptr) {
-            return errors::Wrap(std::move(err), "failed to create constant buffer");
+            return errors::wrap(std::move(err), "failed to create constant buffer");
         }
     }
     {
@@ -97,7 +97,7 @@ std::unique_ptr<Error> HardwareInstancingTest::initialize()
             gpu::SamplerDescriptor::CreateLinearClamp());
 
         if (err != nullptr) {
-            return errors::Wrap(std::move(err), "failed to create sampler state");
+            return errors::wrap(std::move(err), "failed to create sampler state");
         }
     }
     {
@@ -118,7 +118,7 @@ std::unique_ptr<Error> HardwareInstancingTest::initialize()
             .Build();
 
         if (vertexShaderErr != nullptr) {
-            return errors::Wrap(std::move(vertexShaderErr), "failed to create vertex shader");
+            return errors::wrap(std::move(vertexShaderErr), "failed to create vertex shader");
         }
 
         // NOTE: Create pixel shader
@@ -129,7 +129,7 @@ std::unique_ptr<Error> HardwareInstancingTest::initialize()
             .Build();
 
         if (pixelShaderErr != nullptr) {
-            return errors::Wrap(std::move(pixelShaderErr), "failed to create pixel shader");
+            return errors::wrap(std::move(pixelShaderErr), "failed to create pixel shader");
         }
 
         auto presentationParameters = graphicsDevice->GetPresentationParameters();
@@ -146,7 +146,7 @@ std::unique_ptr<Error> HardwareInstancingTest::initialize()
             .Build();
 
         if (err != nullptr) {
-            return errors::Wrap(std::move(err), "failed to create pipeline state");
+            return errors::wrap(std::move(err), "failed to create pipeline state");
         }
     }
     {

@@ -17,7 +17,7 @@ X11Context::initialize() noexcept
     // NOTE: Connect to the X server.
     display = ::XOpenDisplay(nullptr);
     if (display == nullptr) {
-        return errors::New("XOpenDisplay() failed");
+        return errors::make("XOpenDisplay() failed");
     }
 
     // NOTE: Initialize Atoms.

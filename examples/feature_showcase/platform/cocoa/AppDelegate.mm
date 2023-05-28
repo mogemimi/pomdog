@@ -43,7 +43,7 @@ using pomdog::ScopedConnection;
     bootstrap.SetOpenGLEnabled(false);
 
     bootstrap.OnError([](std::unique_ptr<Error>&& err) {
-        Log::Critical("pomdog", err->ToString());
+        Log::Critical("pomdog", err->toString());
     });
 
     bootstrap.OnCompleted([=] {
@@ -59,7 +59,7 @@ using pomdog::ScopedConnection;
 
     if (auto err = bootstrap.Run(std::move(createGame)); err != nullptr) {
 #ifdef DEBUG
-        std::cerr << err->ToString() << std::endl;
+        std::cerr << err->toString() << std::endl;
 #endif
         // Shutdown your application
         [NSApp terminate:nil];

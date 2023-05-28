@@ -466,25 +466,25 @@ ReadSkinnedMeshAttachment(const rapidjson::Value::ConstMemberIterator& iter)
     if (!attachmentObject.HasMember("type") ||
         !attachmentObject["type"].IsString() ||
         std::strcmp(attachmentObject["type"].GetString(), "skinnedmesh") != 0) {
-        auto err = errors::New("invalid format");
+        auto err = errors::make("invalid format");
         return std::make_tuple(SkinnedMeshAttachmentDesc{}, std::move(err));
     }
 
     POMDOG_ASSERT(!(!attachmentObject.HasMember("triangles") || !attachmentObject["triangles"].IsArray()));
     if (!attachmentObject.HasMember("triangles") || !attachmentObject["triangles"].IsArray()) {
-        auto err = errors::New("invalid format");
+        auto err = errors::make("invalid format");
         return std::make_tuple(SkinnedMeshAttachmentDesc{}, std::move(err));
     }
 
     POMDOG_ASSERT(!(!attachmentObject.HasMember("vertices") || !attachmentObject["vertices"].IsArray()));
     if (!attachmentObject.HasMember("vertices") || !attachmentObject["vertices"].IsArray()) {
-        auto err = errors::New("invalid format");
+        auto err = errors::make("invalid format");
         return std::make_tuple(SkinnedMeshAttachmentDesc{}, std::move(err));
     }
 
     POMDOG_ASSERT(!(!attachmentObject.HasMember("uvs") || !attachmentObject["uvs"].IsArray()));
     if (!attachmentObject.HasMember("uvs") || !attachmentObject["uvs"].IsArray()) {
-        auto err = errors::New("invalid format");
+        auto err = errors::make("invalid format");
         return std::make_tuple(SkinnedMeshAttachmentDesc{}, std::move(err));
     }
 
@@ -816,20 +816,20 @@ SkeletonDescLoader::Load(const std::string& filePath)
     std::ifstream stream{filePath, std::ifstream::binary};
 
     if (!stream) {
-        auto err = errors::New("cannot open the file, " + filePath);
+        auto err = errors::make("cannot open the file, " + filePath);
         return std::make_tuple(SkeletonDesc{}, std::move(err));
     }
 
     auto [byteLength, sizeErr] = FileSystem::GetFileSize(filePath);
     if (sizeErr != nullptr) {
-        auto err = errors::Wrap(std::move(sizeErr), "failed to get file size, " + filePath);
+        auto err = errors::wrap(std::move(sizeErr), "failed to get file size, " + filePath);
         return std::make_tuple(SkeletonDesc{}, std::move(err));
     }
 
     POMDOG_ASSERT(stream);
 
     if (byteLength <= 0) {
-        auto err = errors::New("the file is too small " + filePath);
+        auto err = errors::make("the file is too small " + filePath);
         return std::make_tuple(SkeletonDesc{}, std::move(err));
     }
 
@@ -842,7 +842,7 @@ SkeletonDescLoader::Load(const std::string& filePath)
     doc.Parse(json.data());
 
     if (doc.HasParseError() || !doc.IsObject()) {
-        auto err = errors::New("failed to parse JSON " + filePath);
+        auto err = errors::make("failed to parse JSON " + filePath);
         return std::make_tuple(SkeletonDesc{}, std::move(err));
     }
 

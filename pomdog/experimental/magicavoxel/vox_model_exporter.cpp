@@ -84,7 +84,7 @@ Export(const VoxModel& model, const std::string& filePath) noexcept
     std::ofstream stream(filePath, std::ios::binary);
 
     if (stream.fail()) {
-        return errors::New("cannot open file: " + filePath);
+        return errors::make("cannot open file: " + filePath);
     }
 
     stream.write(reinterpret_cast<const char*>(&fourCC), sizeof(fourCC));

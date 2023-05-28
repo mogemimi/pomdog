@@ -46,7 +46,7 @@ TEST_CASE("Transfer-Encoding has a 'chunked' operation.", "[Network]")
     request->AddHeader("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:42.0) Gecko/20100101 Firefox/42.0");
     auto conn = request->OnCompleted.Connect([&](std::unique_ptr<HTTPResponse>&& response, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
-            WARN("http connection error: " + err->ToString());
+            WARN("http connection error: " + err->toString());
             executor.ExitLoop();
             return;
         }
@@ -69,7 +69,7 @@ TEST_CASE("Transfer-Encoding has a 'chunked' operation.", "[Network]")
     auto client = HTTPClient{executor.GetService()};
     auto err = client.Do(request);
     if (err != nullptr) {
-        WARN("http connection error: " + err->ToString());
+        WARN("http connection error: " + err->toString());
         return;
     }
 
@@ -83,7 +83,7 @@ TEST_CASE("HTTPClient Get", "[Network]")
     auto request = HTTPRequest::Create(HTTPMethod::Get, "http://httpbin.org/get");
     auto conn = request->OnCompleted.Connect([&](std::unique_ptr<HTTPResponse>&& response, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
-            WARN("http connection error: " + err->ToString());
+            WARN("http connection error: " + err->toString());
             executor.ExitLoop();
             return;
         }
@@ -124,7 +124,7 @@ TEST_CASE("HTTPClient Get", "[Network]")
     auto client = HTTPClient{executor.GetService()};
     auto err = client.Do(request);
     if (err != nullptr) {
-        WARN("http connection error: " + err->ToString());
+        WARN("http connection error: " + err->toString());
         return;
     }
 
@@ -138,7 +138,7 @@ TEST_CASE("HTTPClient Post", "[Network]")
     auto request = HTTPRequest::Create(HTTPMethod::Post, "http://httpbin.org/post");
     auto conn = request->OnCompleted.Connect([&](std::unique_ptr<HTTPResponse>&& response, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
-            WARN("http connection error: " + err->ToString());
+            WARN("http connection error: " + err->toString());
             executor.ExitLoop();
             return;
         }
@@ -191,7 +191,7 @@ TEST_CASE("HTTPClient Post", "[Network]")
     auto client = HTTPClient{executor.GetService()};
     auto err = client.Do(request);
     if (err != nullptr) {
-        WARN("http connection error: " + err->ToString());
+        WARN("http connection error: " + err->toString());
         return;
     }
 
@@ -205,7 +205,7 @@ TEST_CASE("HTTPClient Get Secure", "[Network]")
     auto request = HTTPRequest::Create(HTTPMethod::Get, "https://httpbin.org/get");
     auto conn = request->OnCompleted.Connect([&](std::unique_ptr<HTTPResponse>&& response, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
-            WARN("http connection error: " + err->ToString());
+            WARN("http connection error: " + err->toString());
             executor.ExitLoop();
             return;
         }
@@ -246,7 +246,7 @@ TEST_CASE("HTTPClient Get Secure", "[Network]")
     auto client = HTTPClient{executor.GetService()};
     auto err = client.Do(request);
     if (err != nullptr) {
-        WARN("http connection error: " + err->ToString());
+        WARN("http connection error: " + err->toString());
         return;
     }
 
@@ -265,7 +265,7 @@ TEST_CASE("HTTPClient Post Secure", "[Network]")
 
     auto conn = request->OnCompleted.Connect([&](std::unique_ptr<HTTPResponse>&& response, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
-            WARN("http connection error: " + err->ToString());
+            WARN("http connection error: " + err->toString());
             executor.ExitLoop();
             return;
         }
@@ -314,7 +314,7 @@ TEST_CASE("HTTPClient Post Secure", "[Network]")
     auto client = HTTPClient{executor.GetService()};
     auto err = client.Do(request);
     if (err != nullptr) {
-        WARN("http connection error: " + err->ToString());
+        WARN("http connection error: " + err->toString());
         return;
     }
 
@@ -327,7 +327,7 @@ TEST_CASE("HTTPClient::Get", "[Network]")
 
     auto callback = [&](std::unique_ptr<HTTPResponse>&& response, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
-            WARN("http connection error: " + err->ToString());
+            WARN("http connection error: " + err->toString());
             executor.ExitLoop();
             return;
         }
@@ -379,7 +379,7 @@ TEST_CASE("HTTPClient::Post", "[Network]")
 
     auto callback = [&](std::unique_ptr<HTTPResponse>&& response, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
-            WARN("http connection error: " + err->ToString());
+            WARN("http connection error: " + err->toString());
             executor.ExitLoop();
             return;
         }
@@ -450,7 +450,7 @@ TEST_CASE("multiple connection", "[Network]")
 
     auto callback1 = [&](std::unique_ptr<HTTPResponse>&& response, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
-            WARN("http connection error: " + err->ToString());
+            WARN("http connection error: " + err->toString());
             executor.ExitLoop();
             return;
         }
@@ -502,7 +502,7 @@ TEST_CASE("Cancel HTTP Request", "[Network]")
     auto client = HTTPClient{executor.GetService()};
     auto err = client.Do(request);
     if (err != nullptr) {
-        WARN("http connection error: " + err->ToString());
+        WARN("http connection error: " + err->toString());
         return;
     }
 

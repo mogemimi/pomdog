@@ -65,7 +65,7 @@ SoundEffectXAudio2::Initialize(
     POMDOG_ASSERT(audioClip->GetWaveFormat() != nullptr);
 
     if (auto hr = xAudio2->CreateSourceVoice(&sourceVoice, audioClip->GetWaveFormat()); FAILED(hr)) {
-        return errors::New("CreateSourceVoice() failed: " + std::to_string(hr));
+        return errors::make("CreateSourceVoice() failed: " + std::to_string(hr));
     }
 
     XAUDIO2_BUFFER bufferDesc;
@@ -74,7 +74,7 @@ SoundEffectXAudio2::Initialize(
     if (auto hr = sourceVoice->SubmitSourceBuffer(&bufferDesc); FAILED(hr)) {
         sourceVoice->DestroyVoice();
         sourceVoice = nullptr;
-        return errors::New("SubmitSourceBuffer() failed: " + std::to_string(hr));
+        return errors::make("SubmitSourceBuffer() failed: " + std::to_string(hr));
     }
 
     return nullptr;

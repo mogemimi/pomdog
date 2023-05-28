@@ -51,7 +51,7 @@ GetLastError() noexcept
     if (errorCode == GL_NO_ERROR) {
         return nullptr;
     }
-    return errors::New(ToString(errorCode));
+    return errors::make(ToString(errorCode));
 }
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)

@@ -16,7 +16,7 @@ RenderTarget2DGL4::Initialize(
     std::int32_t multiSampleCount) noexcept
 {
     if (auto err = texture.Initialize(pixelWidthIn, pixelHeightIn, levelCountIn, formatIn); err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to initialize texture");
+        return errors::wrap(std::move(err), "failed to initialize texture");
     }
 
     pixelWidth = pixelWidthIn;

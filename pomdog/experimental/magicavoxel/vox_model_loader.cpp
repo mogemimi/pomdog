@@ -47,37 +47,37 @@ AssetLoader<magicavoxel::VoxModel>::operator()([[maybe_unused]] AssetManager& as
     std::ifstream stream{filePath, std::ifstream::binary};
 
     if (!stream) {
-        auto err = errors::New("cannot open the file, " + filePath);
+        auto err = errors::make("cannot open the file, " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
     auto [byteLength, sizeErr] = FileSystem::GetFileSize(filePath);
     if (sizeErr != nullptr) {
-        auto err = errors::Wrap(std::move(sizeErr), "failed to get file size, " + filePath);
+        auto err = errors::wrap(std::move(sizeErr), "failed to get file size, " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
     POMDOG_ASSERT(stream);
 
     if (byteLength <= 0) {
-        auto err = errors::New("the font file is too small " + filePath);
+        auto err = errors::make("the font file is too small " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
     if (fourCC != BinaryReader::Read<std::uint32_t>(stream)) {
-        auto err = errors::New("invalid VOX format " + filePath);
+        auto err = errors::make("invalid VOX format " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
     if (MagicaVoxelVersion != BinaryReader::Read<std::int32_t>(stream)) {
-        auto err = errors::New("version does not much " + filePath);
+        auto err = errors::make("version does not much " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
     const auto mainChunk = BinaryReader::Read<VoxChunkHeader>(stream);
 
     if (mainChunk.ID != IdMain) {
-        auto err = errors::New("cannot find main chunk " + filePath);
+        auto err = errors::make("cannot find main chunk " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
@@ -101,14 +101,14 @@ AssetLoader<magicavoxel::VoxModel>::operator()([[maybe_unused]] AssetManager& as
             POMDOG_ASSERT(model->Z >= 0);
 
             if (model->X < 0 || model->Y < 0 || model->Z < 0) {
-                auto err = errors::New("invalid VOX format " + filePath);
+                auto err = errors::make("invalid VOX format " + filePath);
                 return std::make_tuple(nullptr, std::move(err));
             }
         }
         else if (chunk.ID == IdXYZI) {
             const auto voxelCount = BinaryReader::Read<std::int32_t>(stream);
             if (voxelCount < 0) {
-                auto err = errors::New("negative number of voxels " + filePath);
+                auto err = errors::make("negative number of voxels " + filePath);
                 return std::make_tuple(nullptr, std::move(err));
             }
 

@@ -42,7 +42,7 @@ int WINAPI WinMain(
     bootstrap.SetOpenGLEnabled(false);
 
     bootstrap.OnError([](std::unique_ptr<Error>&& err) {
-        Log::Critical("pomdog", err->ToString());
+        Log::Critical("pomdog", err->toString());
 #if defined(POMDOG_CRTDEBUG)
         _CrtDbgBreak();
 #endif

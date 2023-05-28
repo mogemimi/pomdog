@@ -72,19 +72,19 @@ ParseVector3(const rapidjson::Value& value)
         vec.z = value[2].GetFloat();
         return std::make_tuple(vec, nullptr);
     }
-    return std::make_tuple(Vector3{}, errors::New("member is not Vector3"));
+    return std::make_tuple(Vector3{}, errors::make("member is not Vector3"));
 }
 
 [[maybe_unused]] std::unique_ptr<Error>
 ParseMember(const rapidjson::Value& value, const char* name, Vector3& vec)
 {
     if (!value.HasMember(name)) {
-        return errors::New(StringHelper::Format("should have a '%s' member", name));
+        return errors::make(StringHelper::Format("should have a '%s' member", name));
     }
 
     auto [res, err] = ParseVector3(value[name]);
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), StringHelper::Format("Value of '%s' should be Vector3", name));
+        return errors::wrap(std::move(err), StringHelper::Format("Value of '%s' should be Vector3", name));
     }
     vec = res;
     return nullptr;
@@ -106,19 +106,19 @@ ParseColor(const rapidjson::Value& value)
         color.a = static_cast<std::uint8_t>(value[3].GetUint());
         return std::make_tuple(color, nullptr);
     }
-    return std::make_tuple(Color::createTransparentBlack(), errors::New("member is not Color"));
+    return std::make_tuple(Color::createTransparentBlack(), errors::make("member is not Color"));
 }
 
 std::unique_ptr<Error>
 ParseMember(const rapidjson::Value& value, const char* name, Color& vec)
 {
     if (!value.HasMember(name)) {
-        return errors::New(StringHelper::Format("should have a '%s' member", name));
+        return errors::make(StringHelper::Format("should have a '%s' member", name));
     }
 
     auto [res, err] = ParseColor(value[name]);
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), StringHelper::Format("Value of '%s' should be Color", name));
+        return errors::wrap(std::move(err), StringHelper::Format("Value of '%s' should be Color", name));
     }
     vec = res;
     return nullptr;
@@ -128,11 +128,11 @@ std::unique_ptr<Error>
 ParseMember(const rapidjson::Value& value, const char* name, int& result)
 {
     if (!value.HasMember(name)) {
-        return errors::New(StringHelper::Format("should have a '%s' member", name));
+        return errors::make(StringHelper::Format("should have a '%s' member", name));
     }
     auto& member = value[name];
     if (!member.IsInt()) {
-        return errors::New(StringHelper::Format("Value of '%s' should be int", name));
+        return errors::make(StringHelper::Format("Value of '%s' should be int", name));
     }
     result = member.GetInt();
     return nullptr;
@@ -142,11 +142,11 @@ std::unique_ptr<Error>
 ParseMember(const rapidjson::Value& value, const char* name, double& result)
 {
     if (!value.HasMember(name)) {
-        return errors::New(StringHelper::Format("should have a '%s' member", name));
+        return errors::make(StringHelper::Format("should have a '%s' member", name));
     }
     auto& member = value[name];
     if (!member.IsDouble()) {
-        return errors::New(StringHelper::Format("Value of '%s' should be double", name));
+        return errors::make(StringHelper::Format("Value of '%s' should be double", name));
     }
     result = member.GetDouble();
     return nullptr;
@@ -156,11 +156,11 @@ std::unique_ptr<Error>
 ParseMember(const rapidjson::Value& value, const char* name, float& result)
 {
     if (!value.HasMember(name)) {
-        return errors::New(StringHelper::Format("should have a '%s' member", name));
+        return errors::make(StringHelper::Format("should have a '%s' member", name));
     }
     auto& member = value[name];
     if (!member.IsFloat()) {
-        return errors::New(StringHelper::Format("Value of '%s' should be double", name));
+        return errors::make(StringHelper::Format("Value of '%s' should be double", name));
     }
     result = member.GetFloat();
     return nullptr;
@@ -170,11 +170,11 @@ std::unique_ptr<Error>
 ParseMember(const rapidjson::Value& value, const char* name, bool& result)
 {
     if (!value.HasMember(name)) {
-        return errors::New(StringHelper::Format("should have a '%s' member", name));
+        return errors::make(StringHelper::Format("should have a '%s' member", name));
     }
     auto& member = value[name];
     if (!member.IsBool()) {
-        return errors::New(StringHelper::Format("Value of '%s' should be double", name));
+        return errors::make(StringHelper::Format("Value of '%s' should be double", name));
     }
     result = member.GetBool();
     return nullptr;
@@ -221,25 +221,25 @@ ReadParticleClip(const rapidjson::Value& object)
     }
 
     if ((clip.MaxParticles <= 0) || (clip.MaxParticles > 4096)) {
-        auto err = errors::New("invalid range, MaxParticles");
+        auto err = errors::make("invalid range, MaxParticles");
         return std::make_tuple(nullptr, std::move(err));
     }
     if (clip.StartLifetime <= 0) {
-        auto err = errors::New("StartLifetime should be > 0");
+        auto err = errors::make("StartLifetime should be > 0");
         return std::make_tuple(nullptr, std::move(err));
     }
     if (clip.EmissionRate <= 0) {
-        auto err = errors::New("EmissionRate should be > 0");
+        auto err = errors::make("EmissionRate should be > 0");
         return std::make_tuple(nullptr, std::move(err));
     }
     if (clip.EmissionRateOverTime <= 0) {
-        auto err = errors::New("EmissionRateOverTime should be > 0");
+        auto err = errors::make("EmissionRateOverTime should be > 0");
         return std::make_tuple(nullptr, std::move(err));
     }
 
     const auto readShape = [&]() -> std::unique_ptr<Error> {
         if (!object.HasMember("shape")) {
-            return errors::New("should have a 'shape' member");
+            return errors::make("should have a 'shape' member");
         }
         auto& shape = object["shape"];
         auto& shapeType = shape["type"];
@@ -283,7 +283,7 @@ ReadParticleClip(const rapidjson::Value& object)
 
     const auto readFloatParameter = [&](const char* name, std::unique_ptr<detail::particles::ParticleParameter<float>>& result) -> std::unique_ptr<Error> {
         if (!object.HasMember(name)) {
-            return errors::New("should have a 'start_speed' member");
+            return errors::make("should have a 'start_speed' member");
         }
         auto& shape = object[name];
 
@@ -314,7 +314,7 @@ ReadParticleClip(const rapidjson::Value& object)
     };
     const auto readRadianParameter = [&](const char* name, std::unique_ptr<detail::particles::ParticleParameter<Radian<float>>>& result) -> std::unique_ptr<Error> {
         if (!object.HasMember(name)) {
-            return errors::New("should have a 'start_speed' member");
+            return errors::make("should have a 'start_speed' member");
         }
         auto& shape = object[name];
 
@@ -345,7 +345,7 @@ ReadParticleClip(const rapidjson::Value& object)
     };
     const auto readColorParameter = [&](const char* name, std::unique_ptr<detail::particles::ParticleParameter<Color>>& result) -> std::unique_ptr<Error> {
         if (!object.HasMember(name)) {
-            return errors::New("should have a 'start_speed' member");
+            return errors::make("should have a 'start_speed' member");
         }
         auto& shape = object[name];
 
@@ -421,20 +421,20 @@ AssetLoader<ParticleClip>::operator()(
     std::ifstream stream{filePath, std::ifstream::binary};
 
     if (!stream) {
-        auto err = errors::New("cannot open the file, " + filePath);
+        auto err = errors::make("cannot open the file, " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
     auto [byteLength, sizeErr] = FileSystem::GetFileSize(filePath);
     if (sizeErr != nullptr) {
-        auto err = errors::Wrap(std::move(sizeErr), "failed to get file size, " + filePath);
+        auto err = errors::wrap(std::move(sizeErr), "failed to get file size, " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
     POMDOG_ASSERT(stream);
 
     if (byteLength <= 0) {
-        auto err = errors::New("the file is too small " + filePath);
+        auto err = errors::make("the file is too small " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
@@ -442,7 +442,7 @@ AssetLoader<ParticleClip>::operator()(
     POMDOG_ASSERT(!json.empty());
 
     if (json.empty()) {
-        auto err = errors::New("the file is too small " + filePath);
+        auto err = errors::make("the file is too small " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
     json.push_back('\0');
@@ -451,7 +451,7 @@ AssetLoader<ParticleClip>::operator()(
     doc.Parse(json.data());
 
     if (doc.HasParseError() || !doc.IsObject() || doc.MemberBegin() == doc.MemberEnd()) {
-        auto err = errors::New("failed to parse JSON " + filePath);
+        auto err = errors::make("failed to parse JSON " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 

@@ -33,7 +33,7 @@ MakeOpenALError(ALenum err, std::string&& message) noexcept
 {
     message += ": ";
     message += ToErrorCodeString(err);
-    return errors::New(std::move(message));
+    return errors::make(std::move(message));
 }
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)

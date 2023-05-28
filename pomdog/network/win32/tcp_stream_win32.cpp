@@ -64,7 +64,7 @@ TCPStreamWin32::Connect(std::string_view host, std::string_view port, const Dura
         auto [fd, err] = detail::ConnectSocketWin32(hostBuf, portBuf, SocketProtocol::TCP, connectTimeout);
 
         if (err != nullptr) {
-            auto wrapped = errors::Wrap(std::move(err), "couldn't connect to TCP socket on " + hostBuf + ":" + portBuf);
+            auto wrapped = errors::wrap(std::move(err), "couldn't connect to TCP socket on " + hostBuf + ":" + portBuf);
             std::shared_ptr<Error> shared = std::move(wrapped);
             errorConn = service->ScheduleTask([this, err = std::move(shared)] {
                 this->OnConnected(err->Clone());
@@ -105,7 +105,7 @@ TCPStreamWin32::Write(const ArrayView<std::uint8_t const>& data)
         0);
 
     if (result == SOCKET_ERROR) {
-        return errors::New("send failed with error: " + std::to_string(::WSAGetLastError()));
+        return errors::make("send failed with error: " + std::to_string(::WSAGetLastError()));
     }
 
     // NOTE: Update timestamp of last read/write
@@ -136,7 +136,7 @@ void TCPStreamWin32::ReadEventLoop()
 
     if (timeoutInterval.has_value()) {
         if ((service->GetNowTime() - lastActiveTime) > *timeoutInterval) {
-            this->OnRead({}, errors::New("timeout socket connection"));
+            this->OnRead({}, errors::make("timeout socket connection"));
             this->Close();
             this->OnDisconnect();
             return;
@@ -154,7 +154,7 @@ void TCPStreamWin32::ReadEventLoop()
             return;
         }
 
-        this->OnRead({}, errors::New("read failed with error: " + std::to_string(errorCode)));
+        this->OnRead({}, errors::make("read failed with error: " + std::to_string(errorCode)));
         return;
     }
 

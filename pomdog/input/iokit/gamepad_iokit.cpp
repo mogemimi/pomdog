@@ -189,12 +189,12 @@ GamepadIOKit::Initialize(const std::shared_ptr<EventQueue<SystemEvent>>& eventQu
 
     hidManager = IOHIDManagerCreate(kCFAllocatorDefault, kIOHIDOptionsTypeNone);
     if (hidManager == nullptr) {
-        return errors::New("IOHIDManagerCreate() failed");
+        return errors::make("IOHIDManagerCreate() failed");
     }
 
     auto deviceMatcher = CFArrayCreateMutable(kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks);
     if (deviceMatcher == nullptr) {
-        return errors::New("CFArrayCreateMutable() failed");
+        return errors::make("CFArrayCreateMutable() failed");
     }
 
     AppendDeviceMatching(deviceMatcher, kHIDPage_GenericDesktop, kHIDUsage_GD_Joystick);

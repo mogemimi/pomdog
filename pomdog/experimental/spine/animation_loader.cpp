@@ -109,7 +109,7 @@ CreateAnimationClip(
         [&name](const AnimationClipDesc& clip) { return clip.Name == name; });
 
     if (std::end(desc.AnimationClips) == iter) {
-        auto err = errors::New("cannot find animation clip '" + name + "'");
+        auto err = errors::make("cannot find animation clip '" + name + "'");
         return std::make_tuple(nullptr, std::move(err));
     }
 

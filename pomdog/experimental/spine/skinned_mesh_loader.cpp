@@ -310,7 +310,7 @@ CreateSkinnedMesh(
         [&](const SkinDesc& desc) { return desc.Name == skinName; });
 
     if (iter == std::end(skeletonDesc.Skins)) {
-        auto err = errors::New("Skin not found '" + skinName + "'");
+        auto err = errors::make("Skin not found '" + skinName + "'");
         return std::make_tuple(skeletal2d::SkinnedMesh{}, std::move(err));
     }
 

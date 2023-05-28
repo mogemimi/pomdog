@@ -31,7 +31,7 @@ TEST_CASE("TLS connection for HTTPS client", "[Network]")
 
     auto [streamResult, connectErr] = TLSStream::Connect(executor.GetService(), std::string{hostName} + ":" + port);
     if (connectErr != nullptr) {
-        WARN(connectErr->ToString());
+        WARN(connectErr->toString());
         return;
     }
 

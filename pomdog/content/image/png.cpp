@@ -47,7 +47,7 @@ Decode(const std::uint8_t* data, std::size_t byteLength)
 
     auto pngPtr = ::png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
     if (nullptr == pngPtr) {
-        return std::make_tuple(std::move(image), errors::New("png_create_read_struct() failed"));
+        return std::make_tuple(std::move(image), errors::make("png_create_read_struct() failed"));
     }
 
     auto infoPtr = ::png_create_info_struct(pngPtr);
@@ -64,7 +64,7 @@ Decode(const std::uint8_t* data, std::size_t byteLength)
     });
 
     if (nullptr == infoPtr) {
-        return std::make_tuple(std::move(image), errors::New("infoPtr is null"));
+        return std::make_tuple(std::move(image), errors::make("infoPtr is null"));
     }
 
     PNGBinaryContext context;

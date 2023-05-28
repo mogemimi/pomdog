@@ -48,7 +48,7 @@ ToPixelFormatDescriptor(
         descriptor.cColorBits = 128;
         break;
     default:
-        return errors::New("invalid back buffer format");
+        return errors::make("invalid back buffer format");
     }
 
     switch (presentationParameters.depthStencilFormat) {
@@ -73,7 +73,7 @@ ToPixelFormatDescriptor(
         descriptor.cStencilBits = 0;
         break;
     default:
-        return errors::New("invalid depth stencil format");
+        return errors::make("invalid depth stencil format");
     }
 
     return nullptr;
@@ -90,7 +90,7 @@ OpenGLContextWin32::Initialize(
 {
     windowHandle = windowHandleIn;
     if (windowHandle == nullptr) {
-        return errors::New("windowHandle must be != nullptr");
+        return errors::make("windowHandle must be != nullptr");
     }
 
     using hdcType = decltype(hdc);
@@ -110,19 +110,19 @@ OpenGLContextWin32::Initialize(
 
     PIXELFORMATDESCRIPTOR formatDescriptor;
     if (auto err = ToPixelFormatDescriptor(presentationParameters, formatDescriptor); err != nullptr) {
-        return errors::Wrap(std::move(err), "ToPixelFormatDescriptor() failed");
+        return errors::wrap(std::move(err), "ToPixelFormatDescriptor() failed");
     }
 
     const auto pixelFormat = ::ChoosePixelFormat(hdc.get(), &formatDescriptor);
 
     if (pixelFormat == 0) {
         const auto errorCode = ::GetLastError();
-        return errors::New("ChoosePixelFormat() failed. error code = " + std::to_string(errorCode));
+        return errors::make("ChoosePixelFormat() failed. error code = " + std::to_string(errorCode));
     }
 
     if (!SetPixelFormat(hdc.get(), pixelFormat, &formatDescriptor)) {
         const auto errorCode = ::GetLastError();
-        return errors::New("SetPixelFormat() failed. error code = " + std::to_string(errorCode));
+        return errors::make("SetPixelFormat() failed. error code = " + std::to_string(errorCode));
     }
 
     // NOTE: Create OpenGL context.
@@ -130,7 +130,7 @@ OpenGLContextWin32::Initialize(
 
     if (!::wglMakeCurrent(hdc.get(), glrc.get())) {
         const auto errorCode = ::GetLastError();
-        return errors::New("wglMakeCurrent() failed. error code = " + std::to_string(errorCode));
+        return errors::make("wglMakeCurrent() failed. error code = " + std::to_string(errorCode));
     }
 
     return nullptr;

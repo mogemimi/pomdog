@@ -18,17 +18,17 @@ namespace {
 
 class StringError final : public Error {
 public:
-    std::string Message;
+    std::string message;
 
-    [[nodiscard]] std::string ToString() const noexcept override
+    [[nodiscard]] std::string toString() const noexcept override
     {
-        return this->Message;
+        return message;
     }
 
-    [[nodiscard]] std::unique_ptr<Error> Clone() const noexcept override
+    [[nodiscard]] std::unique_ptr<Error> clone() const noexcept override
     {
         auto err = std::make_unique<StringError>();
-        err->Message = this->Message;
+        err->message = message;
 #if defined(__GNUC__) && !defined(__clang__)
         return err;
 #else
@@ -39,42 +39,42 @@ public:
 
 class WrappedError final : public Error {
 public:
-    std::unique_ptr<Error> Err;
-    std::string Message;
+    std::unique_ptr<Error> err;
+    std::string message;
 
-    [[nodiscard]] std::string ToString() const noexcept override
+    [[nodiscard]] std::string toString() const noexcept override
     {
-        if (this->Err != nullptr) {
-            return this->Message + ": " + this->Err->ToString();
+        if (err != nullptr) {
+            return message + ": " + err->toString();
         }
-        return this->Message;
+        return message;
     }
 
-    [[nodiscard]] std::unique_ptr<Error> Clone() const noexcept override
+    [[nodiscard]] std::unique_ptr<Error> clone() const noexcept override
     {
-        auto err = std::make_unique<WrappedError>();
-        err->Err = this->Err->Clone();
-        err->Message = this->Message;
+        auto wrapped = std::make_unique<WrappedError>();
+        wrapped->err = err->clone();
+        wrapped->message = message;
 #if defined(__GNUC__) && !defined(__clang__)
-        return err;
+        return wrapped;
 #else
-        return std::move(err);
+        return std::move(wrapped);
 #endif
     }
 };
 
 } // namespace
 
-std::string IOError::ToString() const noexcept
+std::string IOError::toString() const noexcept
 {
-    return this->Reason + ": " + std::make_error_code(this->Kind).message();
+    return reason + ": " + std::make_error_code(kind).message();
 }
 
-std::unique_ptr<Error> IOError::Clone() const noexcept
+std::unique_ptr<Error> IOError::clone() const noexcept
 {
     auto err = std::make_unique<IOError>();
-    err->Kind = this->Kind;
-    err->Reason = this->Reason;
+    err->kind = kind;
+    err->reason = reason;
 #if defined(__GNUC__) && !defined(__clang__)
     return err;
 #else
@@ -82,18 +82,18 @@ std::unique_ptr<Error> IOError::Clone() const noexcept
 #endif
 }
 
-std::unique_ptr<IOError> New(std::errc kind, std::string&& reason) noexcept
+std::unique_ptr<IOError> makeIOError(std::errc kind, std::string&& reason) noexcept
 {
     auto err = std::make_unique<IOError>();
-    err->Kind = kind;
-    err->Reason = std::move(reason);
+    err->kind = kind;
+    err->reason = std::move(reason);
     return err;
 }
 
-std::unique_ptr<Error> New(std::string&& message) noexcept
+std::unique_ptr<Error> make(std::string&& message) noexcept
 {
     auto err = std::make_unique<StringError>();
-    err->Message = std::move(message);
+    err->message = std::move(message);
 #if defined(__GNUC__) && !defined(__clang__)
     return err;
 #else
@@ -101,11 +101,11 @@ std::unique_ptr<Error> New(std::string&& message) noexcept
 #endif
 }
 
-std::unique_ptr<Error> Wrap(std::unique_ptr<Error>&& err, std::string&& message) noexcept
+std::unique_ptr<Error> wrap(std::unique_ptr<Error>&& err, std::string&& message) noexcept
 {
     auto wrapped = std::make_unique<WrappedError>();
-    wrapped->Err = std::move(err);
-    wrapped->Message = std::move(message);
+    wrapped->err = std::move(err);
+    wrapped->message = std::move(message);
 #if defined(__GNUC__) && !defined(__clang__)
     return wrapped;
 #else

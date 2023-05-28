@@ -33,7 +33,7 @@ ToFormat(AudioChannels channel, int bitPerSample) noexcept
         }
         break;
     }
-    return std::make_tuple(AL_FORMAT_STEREO8, errors::New("Unsupported audio format"));
+    return std::make_tuple(AL_FORMAT_STEREO8, errors::make("Unsupported audio format"));
 }
 
 } // namespace
@@ -78,7 +78,7 @@ AudioClipAL::Initialize(
 
     auto [format, formatErr] = ToFormat(channels, bitsPerSample);
     if (formatErr != nullptr) {
-        return errors::Wrap(std::move(formatErr), "ToFormat() failed.");
+        return errors::wrap(std::move(formatErr), "ToFormat() failed.");
     }
 
     alBufferData(*buffer, format, data, static_cast<ALsizei>(sizeInBytes), sampleRate);

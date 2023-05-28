@@ -21,13 +21,13 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
     // NOTE: Create graphics command list
     std::tie(commandList, err) = graphicsDevice->CreateCommandList();
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to create graphics command list");
+        return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
     // NOTE: Load texture from image file
     std::tie(texture, err) = assets->Load<gpu::Texture2D>("Textures/pomdog.png");
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to load texture");
+        return errors::wrap(std::move(err), "failed to load texture");
     }
 
     spriteBatch = std::make_shared<SpriteBatch>(
@@ -83,7 +83,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
             gpu::BufferUsage::Immutable);
 
         if (err != nullptr) {
-            return errors::Wrap(std::move(err), "failed to create vertex buffer");
+            return errors::wrap(std::move(err), "failed to create vertex buffer");
         }
     }
     {
@@ -112,7 +112,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
             gpu::BufferUsage::Immutable);
 
         if (err != nullptr) {
-            return errors::Wrap(std::move(err), "failed to create index buffer");
+            return errors::wrap(std::move(err), "failed to create index buffer");
         }
     }
     {
@@ -122,7 +122,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
             gpu::BufferUsage::Dynamic);
 
         if (err != nullptr) {
-            return errors::Wrap(std::move(err), "failed to create constant buffer");
+            return errors::wrap(std::move(err), "failed to create constant buffer");
         }
 
         std::tie(worldConstantBuffer, err) = graphicsDevice->CreateConstantBuffer(
@@ -130,7 +130,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
             gpu::BufferUsage::Dynamic);
 
         if (err != nullptr) {
-            return errors::Wrap(std::move(err), "failed to create constant buffer");
+            return errors::wrap(std::move(err), "failed to create constant buffer");
         }
     }
     {
@@ -139,7 +139,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
             gpu::SamplerDescriptor::CreateLinearClamp());
 
         if (err != nullptr) {
-            return errors::Wrap(std::move(err), "failed to create sampler state");
+            return errors::wrap(std::move(err), "failed to create sampler state");
         }
     }
     {
@@ -158,7 +158,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
             .Build();
 
         if (vertexShaderErr != nullptr) {
-            return errors::Wrap(std::move(vertexShaderErr), "failed to create vertex shader");
+            return errors::wrap(std::move(vertexShaderErr), "failed to create vertex shader");
         }
 
         // NOTE: Create pixel shader
@@ -169,7 +169,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
             .Build();
 
         if (pixelShaderErr != nullptr) {
-            return errors::Wrap(std::move(pixelShaderErr), "failed to create pixel shader");
+            return errors::wrap(std::move(pixelShaderErr), "failed to create pixel shader");
         }
 
         auto presentationParameters = graphicsDevice->GetPresentationParameters();
@@ -194,7 +194,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
             .SetConstantBufferBindSlot("WorldConstantBuffer", 1)
             .Build();
         if (err != nullptr) {
-            return errors::Wrap(std::move(err), "failed to create pipeline state");
+            return errors::wrap(std::move(err), "failed to create pipeline state");
         }
     }
 
@@ -207,7 +207,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
         false,
         PixelFormat::R8G8B8A8_UNorm);
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to create render target");
+        return errors::wrap(std::move(err), "failed to create render target");
     }
 
     // NOTE: Create render target
@@ -217,7 +217,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
         false,
         PixelFormat::R10G10B10A2_UNorm);
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to create render target");
+        return errors::wrap(std::move(err), "failed to create render target");
     }
 
     // NOTE: Create render target
@@ -227,7 +227,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
         false,
         PixelFormat::R32_Float);
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to create render target");
+        return errors::wrap(std::move(err), "failed to create render target");
     }
 
     // NOTE: Create render target
@@ -237,7 +237,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
         false,
         PixelFormat::R8G8B8A8_UNorm);
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to create render target");
+        return errors::wrap(std::move(err), "failed to create render target");
     }
 
     // NOTE: Create depth stencil buffer
@@ -246,7 +246,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
         presentationParameters.backBufferHeight,
         presentationParameters.depthStencilFormat);
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to create depth stencil buffer");
+        return errors::wrap(std::move(err), "failed to create depth stencil buffer");
     }
 
     auto window = gameHost->getWindow();

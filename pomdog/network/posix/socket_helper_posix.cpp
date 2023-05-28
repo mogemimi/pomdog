@@ -61,7 +61,7 @@ ConnectSocketPOSIX(
 
     auto res = ::getaddrinfo(hostName, port.data(), &hints, &addrListRaw);
     if (res != 0) {
-        return std::make_tuple(-1, errors::New("getaddrinfo failed with error " + std::to_string(res)));
+        return std::make_tuple(-1, errors::make("getaddrinfo failed with error " + std::to_string(res)));
     }
 
     auto addrList = std::unique_ptr<struct ::addrinfo, void (*)(struct ::addrinfo*)>{addrListRaw, ::freeaddrinfo};
@@ -127,7 +127,7 @@ ConnectSocketPOSIX(
     }
 
     if (socketLastError) {
-        return std::make_tuple(-1, errors::New(*socketLastError, "Unable to connect to server"));
+        return std::make_tuple(-1, errors::makeIOError(*socketLastError, "Unable to connect to server"));
     }
 
     return std::make_tuple(descriptor, nullptr);
@@ -164,7 +164,7 @@ BindSocketPOSIX(
 
     auto res = ::getaddrinfo(hostName, port.data(), &hints, &addrListRaw);
     if (res != 0) {
-        return std::make_tuple(-1, errors::New("getaddrinfo failed with error " + std::to_string(res)));
+        return std::make_tuple(-1, errors::make("getaddrinfo failed with error " + std::to_string(res)));
     }
 
     auto addrList = std::unique_ptr<struct ::addrinfo, void (*)(struct ::addrinfo*)>{addrListRaw, ::freeaddrinfo};
@@ -206,7 +206,7 @@ BindSocketPOSIX(
     }
 
     if (socketLastError) {
-        return std::make_tuple(-1, errors::New(*socketLastError, "Unable to bind socket"));
+        return std::make_tuple(-1, errors::makeIOError(*socketLastError, "Unable to bind socket"));
     }
 
     return std::make_tuple(descriptor, nullptr);

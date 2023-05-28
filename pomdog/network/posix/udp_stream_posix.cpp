@@ -68,10 +68,10 @@ UDPStreamPOSIX::Connect(std::string_view host, std::string_view port, const Dura
         auto [fd, err] = detail::ConnectSocketPOSIX(hostBuf, portBuf, SocketProtocol::UDP, connectTimeout);
 
         if (err != nullptr) {
-            auto wrapped = errors::Wrap(std::move(err), "couldn't connect to UDP socket on " + hostBuf + ":" + portBuf);
+            auto wrapped = errors::wrap(std::move(err), "couldn't connect to UDP socket on " + hostBuf + ":" + portBuf);
             std::shared_ptr<Error> shared = std::move(wrapped);
             errorConn = service->ScheduleTask([this, err = std::move(shared)] {
-                this->OnConnected(err->Clone());
+                this->OnConnected(err->clone());
                 this->errorConn.Disconnect();
             });
             return;
@@ -102,9 +102,9 @@ UDPStreamPOSIX::Listen(std::string_view host, std::string_view port)
     auto [fd, err] = detail::BindSocketPOSIX(hostBuf, portBuf, SocketProtocol::UDP);
 
     if (err != nullptr) {
-        std::shared_ptr<Error> shared = err->Clone();
+        std::shared_ptr<Error> shared = err->clone();
         errorConn = service->ScheduleTask([this, err = std::move(shared)] {
-            this->OnConnected(err->Clone());
+            this->OnConnected(err->clone());
             this->errorConn.Disconnect();
         });
         return std::move(err);
@@ -142,7 +142,7 @@ UDPStreamPOSIX::Write(const ArrayView<std::uint8_t const>& data)
 
     if (result == -1) {
         auto errorCode = detail::ToErrc(errno);
-        return errors::New(errorCode, "send failed with error");
+        return errors::makeIOError(errorCode, "send failed with error");
     }
 
     return nullptr;
@@ -169,7 +169,7 @@ UDPStreamPOSIX::WriteTo(const ArrayView<std::uint8_t const>& data, std::string_v
 
     auto res = ::getaddrinfo(host.data(), port.data(), &hints, &addrListRaw);
     if (res != 0) {
-        return errors::New("getaddrinfo failed with error " + std::to_string(res));
+        return errors::make("getaddrinfo failed with error " + std::to_string(res));
     }
 
     auto addrList = std::unique_ptr<struct ::addrinfo, void (*)(struct ::addrinfo*)>{addrListRaw, ::freeaddrinfo};
@@ -191,7 +191,7 @@ UDPStreamPOSIX::WriteTo(const ArrayView<std::uint8_t const>& data, std::string_v
     }
 
     if (lastError != std::nullopt) {
-        return errors::New(*lastError, "sendto failed with error");
+        return errors::makeIOError(*lastError, "sendto failed with error");
     }
 
     return nullptr;
@@ -217,7 +217,7 @@ void UDPStreamPOSIX::ReadEventLoop()
             return;
         }
 
-        this->OnRead({}, errors::New(errorCode, "read failed with error"));
+        this->OnRead({}, errors::makeIOError(errorCode, "read failed with error"));
         return;
     }
 
@@ -253,7 +253,7 @@ void UDPStreamPOSIX::ReadFromEventLoop()
             return;
         }
 
-        this->OnReadFrom({}, "", errors::New(errorCode, "read failed with error"));
+        this->OnReadFrom({}, "", errors::makeIOError(errorCode, "read failed with error"));
         return;
     }
 

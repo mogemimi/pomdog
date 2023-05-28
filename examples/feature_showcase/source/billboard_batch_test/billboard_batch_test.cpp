@@ -21,7 +21,7 @@ std::unique_ptr<Error> BillboardBatchTest::initialize()
     // NOTE: Create graphics command list
     std::tie(commandList, err) = graphicsDevice->CreateCommandList();
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to create graphics command list");
+        return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
     lineBatch = std::make_shared<LineBatch>(graphicsDevice, *assets);
@@ -43,7 +43,7 @@ std::unique_ptr<Error> BillboardBatchTest::initialize()
     std::tie(sampler, err) = graphicsDevice->CreateSamplerState(
         gpu::SamplerDescriptor::CreateLinearClamp());
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to create sampler state");
+        return errors::wrap(std::move(err), "failed to create sampler state");
     }
 
     // NOTE: Create constant buffer
@@ -51,13 +51,13 @@ std::unique_ptr<Error> BillboardBatchTest::initialize()
         sizeof(BasicEffect::WorldConstantBuffer),
         gpu::BufferUsage::Dynamic);
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to create constant buffer");
+        return errors::wrap(std::move(err), "failed to create constant buffer");
     }
 
     // NOTE: Load texture from PNG image file.
     std::tie(texture, err) = assets->Load<gpu::Texture2D>("Textures/pomdog.png");
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to load texture");
+        return errors::wrap(std::move(err), "failed to load texture");
     }
 
     timer = std::make_shared<Timer>(clock);

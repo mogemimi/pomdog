@@ -33,12 +33,12 @@ GraphicsDeviceMetal::Initialize(
 
     frameCounter_ = std::move(frameCounter);
     if (frameCounter_ == nullptr) {
-        return errors::New("frameCounter_ must be != nullptr");
+        return errors::make("frameCounter_ must be != nullptr");
     }
 
     device = MTLCreateSystemDefaultDevice();
     if (device == nullptr) {
-        return errors::New("MTLCreateSystemDefaultDevice() failed");
+        return errors::make("MTLCreateSystemDefaultDevice() failed");
     }
 
     // NOTE: Load all the shader files with a metal file extension in the project
@@ -90,7 +90,7 @@ GraphicsDeviceMetal::CreateVertexBuffer(
             bufferUsage,
             BufferBindMode::VertexBuffer);
         err != nullptr) {
-        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize BufferMetal"));
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize BufferMetal"));
     }
 
     POMDOG_ASSERT(nativeBuffer != nullptr);
@@ -121,7 +121,7 @@ GraphicsDeviceMetal::CreateVertexBuffer(
             bufferUsage,
             BufferBindMode::VertexBuffer);
         err != nullptr) {
-        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize BufferMetal"));
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize BufferMetal"));
     }
     POMDOG_ASSERT(nativeBuffer != nullptr);
 
@@ -151,7 +151,7 @@ GraphicsDeviceMetal::CreateIndexBuffer(
             bufferUsage,
             BufferBindMode::IndexBuffer);
         err != nullptr) {
-        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize BufferMetal"));
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize BufferMetal"));
     }
     POMDOG_ASSERT(nativeBuffer != nullptr);
 
@@ -180,7 +180,7 @@ GraphicsDeviceMetal::CreateIndexBuffer(
             bufferUsage,
             BufferBindMode::IndexBuffer);
         err != nullptr) {
-        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize BufferMetal"));
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize BufferMetal"));
     }
     POMDOG_ASSERT(nativeBuffer != nullptr);
 
@@ -207,7 +207,7 @@ GraphicsDeviceMetal::CreateConstantBuffer(
             bufferUsage,
             BufferBindMode::ConstantBuffer);
         err != nullptr) {
-        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize BufferMetal"));
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize BufferMetal"));
     }
     POMDOG_ASSERT(nativeBuffer != nullptr);
 
@@ -233,7 +233,7 @@ GraphicsDeviceMetal::CreateConstantBuffer(
             bufferUsage,
             BufferBindMode::ConstantBuffer);
         err != nullptr) {
-        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize BufferMetal"));
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize BufferMetal"));
     }
     POMDOG_ASSERT(nativeBuffer != nullptr);
 
@@ -247,7 +247,7 @@ GraphicsDeviceMetal::CreatePipelineState(const PipelineDescriptor& descriptor) n
     POMDOG_ASSERT(device != nullptr);
     auto pipelineState = std::make_shared<PipelineStateMetal>();
     if (auto err = pipelineState->Initialize(device, descriptor); err != nullptr) {
-        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize PipelineStateMetal"));
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize PipelineStateMetal"));
     }
     return std::make_tuple(std::move(pipelineState), nullptr);
 }
@@ -257,7 +257,7 @@ GraphicsDeviceMetal::CreateEffectReflection(
     const PipelineDescriptor& descriptor,
     const std::shared_ptr<PipelineState>& pipelineState) noexcept
 {
-    return std::make_tuple(nullptr, errors::New("not implemented yet"));
+    return std::make_tuple(nullptr, errors::make("not implemented yet"));
 }
 
 std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
@@ -273,7 +273,7 @@ GraphicsDeviceMetal::CreateShader(
 
         auto shader = std::make_unique<ShaderMetal>();
         if (auto err = shader->Initialize(device, defaultLibrary, compileOptions); err != nullptr) {
-            return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize ShaderMetal"));
+            return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize ShaderMetal"));
         }
 
         return std::make_tuple(std::move(shader), nullptr);
@@ -281,7 +281,7 @@ GraphicsDeviceMetal::CreateShader(
 
     auto shader = std::make_unique<ShaderMetal>();
     if (auto err = shader->Initialize(device, shaderBytecode, compileOptions); err != nullptr) {
-        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize ShaderMetal"));
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize ShaderMetal"));
     }
 
     return std::make_tuple(std::move(shader), nullptr);
@@ -326,7 +326,7 @@ GraphicsDeviceMetal::CreateRenderTarget2D(
             format,
             multiSampleCount);
         err != nullptr) {
-        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize RenderTarget2DMetal"));
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize RenderTarget2DMetal"));
     }
     return std::make_tuple(std::move(renderTarget), nullptr);
 }
@@ -352,7 +352,7 @@ GraphicsDeviceMetal::CreateDepthStencilBuffer(
             depthStencilFormat,
             multiSampleCount);
         err != nullptr) {
-        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize DepthStencilBufferMetal"));
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize DepthStencilBufferMetal"));
     }
     return std::make_tuple(std::move(depthStencilBuffer), nullptr);
 }
@@ -363,7 +363,7 @@ GraphicsDeviceMetal::CreateSamplerState(const SamplerDescriptor& descriptor) noe
     POMDOG_ASSERT(device != nullptr);
     auto samplerState = std::make_shared<SamplerStateMetal>();
     if (auto err = samplerState->Initialize(device, descriptor); err != nullptr) {
-        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize SamplerStateMetal"));
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize SamplerStateMetal"));
     }
     return std::make_tuple(std::move(samplerState), nullptr);
 }
@@ -403,7 +403,7 @@ GraphicsDeviceMetal::CreateTexture2D(
             levelCount,
             format);
         err != nullptr) {
-        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize Texture2DMetal"));
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize Texture2DMetal"));
     }
 
     return std::make_tuple(std::move(texture), nullptr);

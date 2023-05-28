@@ -103,7 +103,7 @@ OpenGLContextX11::initialize(
             True);
         XSync(display, False);
         if (auto errorCode = untrapErrors(oldHandler); errorCode != 0) {
-            return errors::New("glXCreateNewContext() failed: error code = " + std::to_string(errorCode));
+            return errors::make("glXCreateNewContext() failed: error code = " + std::to_string(errorCode));
         }
     }
     else {
@@ -165,12 +165,12 @@ OpenGLContextX11::initialize(
         }
 
         if (lastError != 0) {
-            return errors::New("glXCreateContextAttribsARB() failed: error code = " + std::to_string(lastError));
+            return errors::make("glXCreateContextAttribsARB() failed: error code = " + std::to_string(lastError));
         }
     }
 
     if (glxContext_ == nullptr) {
-        return errors::New("glxContext is nullptr");
+        return errors::make("glxContext is nullptr");
     }
 
     return nullptr;

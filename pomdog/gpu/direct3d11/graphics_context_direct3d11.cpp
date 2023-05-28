@@ -147,7 +147,7 @@ GraphicsContextDirect3D11::Initialize(
 
         auto hr = device->CreateDeferredContext3(0, &deferredContext);
         if (FAILED(hr)) {
-            return errors::New("CreateDeferredContext3() failed");
+            return errors::make("CreateDeferredContext3() failed");
         }
         POMDOG_ASSERT(deferredContext);
     }
@@ -181,7 +181,7 @@ GraphicsContextDirect3D11::Initialize(
         HRESULT hr = dxgiFactory->CreateSwapChain(device.Get(), &swapChainDesc, &swapChain);
 
         if (FAILED(hr)) {
-            return errors::New("CreateSwapChain() failed");
+            return errors::make("CreateSwapChain() failed");
         }
     }
     {
@@ -200,7 +200,7 @@ GraphicsContextDirect3D11::Initialize(
                 presentationParameters.backBufferFormat,
                 multiSampleCount);
             err != nullptr) {
-            return errors::Wrap(std::move(err), "failed to initialize back buffer");
+            return errors::wrap(std::move(err), "failed to initialize back buffer");
         }
 
         renderTargets.reserve(D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT);
@@ -219,7 +219,7 @@ GraphicsContextDirect3D11::Initialize(
                 backBufferDepthFormat,
                 multiSampleCount);
             err != nullptr) {
-            return errors::Wrap(std::move(err), "failed to initialize depth stencil buffer");
+            return errors::wrap(std::move(err), "failed to initialize depth stencil buffer");
         }
     }
 
@@ -753,7 +753,7 @@ GraphicsContextDirect3D11::ResizeBackBuffers(
             backBufferFormat,
             0);
         FAILED(hr)) {
-        return errors::New("failed to resize back buffer");
+        return errors::make("failed to resize back buffer");
     }
 
     if (auto err = backBuffer->ResetBackBuffer(
@@ -762,7 +762,7 @@ GraphicsContextDirect3D11::ResizeBackBuffers(
             preferredBackBufferWidth,
             preferredBackBufferHeight);
         err != nullptr) {
-        return errors::Wrap(std::move(err), "backBuffer->ResetBackBuffer() failed");
+        return errors::wrap(std::move(err), "backBuffer->ResetBackBuffer() failed");
     }
 
     if (backBufferDepthStencil != nullptr) {
@@ -776,7 +776,7 @@ GraphicsContextDirect3D11::ResizeBackBuffers(
                 backBufferDepthFormat,
                 multiSampleCount);
             err != nullptr) {
-            return errors::Wrap(std::move(err), "backBufferDepthStencil->ResetBuffer() failed");
+            return errors::wrap(std::move(err), "backBufferDepthStencil->ResetBuffer() failed");
         }
     }
 

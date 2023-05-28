@@ -20,7 +20,7 @@ std::unique_ptr<Error> LineBatchTest::initialize()
     // NOTE: Create graphics command list
     std::tie(commandList, err) = graphicsDevice->CreateCommandList();
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to create graphics command list");
+        return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
     lineBatch = std::make_shared<LineBatch>(graphicsDevice, *assets);

@@ -107,7 +107,7 @@ void Bootstrap::Run(
             presentationParameters);
         err != nullptr) {
         if (onError != nullptr) {
-            onError(errors::Wrap(std::move(err), "GameWindowWin32::Initialize() failed"));
+            onError(errors::wrap(std::move(err), "GameWindowWin32::Initialize() failed"));
         }
         return;
     }
@@ -122,7 +122,7 @@ void Bootstrap::Run(
             useOpenGL);
         err != nullptr) {
         if (onError != nullptr) {
-            onError(errors::Wrap(std::move(err), "GameHostWin32::Initialize() failed"));
+            onError(errors::wrap(std::move(err), "GameHostWin32::Initialize() failed"));
         }
         return;
     }
@@ -131,7 +131,7 @@ void Bootstrap::Run(
     auto game = createApp(gameHost);
     if (game == nullptr) {
         if (onError != nullptr) {
-            onError(errors::New("game must be != nullptr"));
+            onError(errors::make("game must be != nullptr"));
         }
         return;
     }
@@ -139,7 +139,7 @@ void Bootstrap::Run(
     POMDOG_ASSERT(game != nullptr);
     if (auto err = game->Initialize(); err != nullptr) {
         if (onError != nullptr) {
-            onError(errors::Wrap(std::move(err), "failed to initialize game"));
+            onError(errors::wrap(std::move(err), "failed to initialize game"));
         }
         return;
     }

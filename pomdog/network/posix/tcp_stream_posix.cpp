@@ -76,10 +76,10 @@ TCPStreamPOSIX::Connect(std::string_view host, std::string_view port, const Dura
         auto [fd, err] = detail::ConnectSocketPOSIX(hostBuf, portBuf, SocketProtocol::TCP, connectTimeout);
 
         if (err != nullptr) {
-            auto wrapped = errors::Wrap(std::move(err), "couldn't connect to TCP socket on " + hostBuf + ":" + portBuf);
+            auto wrapped = errors::wrap(std::move(err), "couldn't connect to TCP socket on " + hostBuf + ":" + portBuf);
             std::shared_ptr<Error> shared = std::move(wrapped);
             errorConn = service->ScheduleTask([this, err = std::move(shared)] {
-                this->OnConnected(err->Clone());
+                this->OnConnected(err->clone());
                 this->errorConn.Disconnect();
             });
             return;
@@ -114,7 +114,7 @@ TCPStreamPOSIX::Write(const ArrayView<std::uint8_t const>& data)
 
     if (result == -1) {
         auto errorCode = detail::ToErrc(errno);
-        return errors::New(errorCode, "write failed with error");
+        return errors::makeIOError(errorCode, "write failed with error");
     }
 
     // NOTE: Update timestamp of last read/write
@@ -145,7 +145,7 @@ void TCPStreamPOSIX::ReadEventLoop()
 
     if (timeoutInterval.has_value()) {
         if ((service->GetNowTime() - lastActiveTime) > *timeoutInterval) {
-            this->OnRead({}, errors::New("timeout socket connection"));
+            this->OnRead({}, errors::make("timeout socket connection"));
             this->Close();
             this->OnDisconnect();
             return;
@@ -163,7 +163,7 @@ void TCPStreamPOSIX::ReadEventLoop()
             return;
         }
 
-        this->OnRead({}, errors::New(errorCode, "read failed with error"));
+        this->OnRead({}, errors::makeIOError(errorCode, "read failed with error"));
         return;
     }
 

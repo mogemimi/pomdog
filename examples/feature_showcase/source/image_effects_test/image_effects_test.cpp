@@ -27,7 +27,7 @@ std::unique_ptr<Error> ImageEffectsTest::initialize()
     // NOTE: Create graphics command list
     std::tie(commandList, err) = graphicsDevice->CreateCommandList();
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to create graphics command list");
+        return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
     primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
@@ -56,7 +56,7 @@ std::unique_ptr<Error> ImageEffectsTest::initialize()
         false,
         presentationParameters.backBufferFormat);
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to create render target");
+        return errors::wrap(std::move(err), "failed to create render target");
     }
 
     // NOTE: Create depth stencil buffer
@@ -65,7 +65,7 @@ std::unique_ptr<Error> ImageEffectsTest::initialize()
         presentationParameters.backBufferHeight,
         presentationParameters.depthStencilFormat);
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to create depth stencil buffer");
+        return errors::wrap(std::move(err), "failed to create depth stencil buffer");
     }
 
     postProcessCompositor.SetViewportSize(

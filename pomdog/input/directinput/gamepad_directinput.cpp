@@ -579,7 +579,7 @@ GamepadDirectInput::Initialize(HINSTANCE hInstance, HWND windowHandleIn) noexcep
             &directInput,
             nullptr);
         FAILED(hr)) {
-        return errors::New("DirectInput8Create() failed");
+        return errors::make("DirectInput8Create() failed");
     }
 
     for (auto& gamepad : gamepads) {

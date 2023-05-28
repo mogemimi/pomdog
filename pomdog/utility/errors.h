@@ -19,10 +19,12 @@ public:
     virtual ~Error() noexcept;
 
     /// Returns a string representation of the error.
-    [[nodiscard]] virtual std::string ToString() const noexcept = 0;
+    [[nodiscard]] virtual std::string
+    toString() const noexcept = 0;
 
     /// Creates a new object that is a copy of the error.
-    [[nodiscard]] virtual std::unique_ptr<Error> Clone() const noexcept = 0;
+    [[nodiscard]] virtual std::unique_ptr<Error>
+    clone() const noexcept = 0;
 };
 
 } // namespace pomdog
@@ -31,23 +33,25 @@ namespace pomdog::errors {
 
 class POMDOG_EXPORT IOError final : public Error {
 public:
-    std::errc Kind;
-    std::string Reason;
+    std::errc kind;
+    std::string reason;
 
     /// Returns a string representation of the error.
-    [[nodiscard]] std::string ToString() const noexcept override;
+    [[nodiscard]] std::string
+    toString() const noexcept override;
 
     /// Creates a new object that is a copy of the error.
-    [[nodiscard]] std::unique_ptr<Error> Clone() const noexcept override;
+    [[nodiscard]] std::unique_ptr<Error>
+    clone() const noexcept override;
 };
 
 [[nodiscard]] POMDOG_EXPORT std::unique_ptr<IOError>
-New(std::errc kind, std::string&& reason) noexcept;
+makeIOError(std::errc kind, std::string&& reason) noexcept;
 
 [[nodiscard]] POMDOG_EXPORT std::unique_ptr<Error>
-New(std::string&& message) noexcept;
+make(std::string&& message) noexcept;
 
 [[nodiscard]] POMDOG_EXPORT std::unique_ptr<Error>
-Wrap(std::unique_ptr<Error>&& err, std::string&& message) noexcept;
+wrap(std::unique_ptr<Error>&& err, std::string&& message) noexcept;
 
 } // namespace pomdog::errors

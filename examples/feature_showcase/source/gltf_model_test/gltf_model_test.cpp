@@ -23,19 +23,19 @@ std::unique_ptr<Error> GLTFModelTest::initialize()
     // NOTE: Create graphics command list
     std::tie(commandList, err) = graphicsDevice->CreateCommandList();
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to create graphics command list");
+        return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
     // NOTE: Load texture from image file
     std::tie(texture, err) = assets->Load<gpu::Texture2D>("Textures/pomdog.png");
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to load texture");
+        return errors::wrap(std::move(err), "failed to load texture");
     }
 
     // NOTE: Load model from glTF binary file.
     auto [glb, glbErr] = GLTF::Open(assets->GetAssetPath("GLB/F15.glb"));
     if (glbErr != nullptr) {
-        return errors::Wrap(std::move(glbErr), "failed to load glTF binary");
+        return errors::wrap(std::move(glbErr), "failed to load glTF binary");
     }
 
     POMDOG_ASSERT(!glb->Meshes.empty());
@@ -106,7 +106,7 @@ std::unique_ptr<Error> GLTFModelTest::initialize()
             gpu::BufferUsage::Immutable);
 
         if (err != nullptr) {
-            return errors::Wrap(std::move(err), "failed to create vertex buffer");
+            return errors::wrap(std::move(err), "failed to create vertex buffer");
         }
     }
     {
@@ -145,7 +145,7 @@ std::unique_ptr<Error> GLTFModelTest::initialize()
             gpu::BufferUsage::Immutable);
 
         if (err != nullptr) {
-            return errors::Wrap(std::move(err), "failed to create vertex buffer");
+            return errors::wrap(std::move(err), "failed to create vertex buffer");
         }
     }
     {
@@ -172,7 +172,7 @@ std::unique_ptr<Error> GLTFModelTest::initialize()
             gpu::BufferUsage::Immutable);
 
         if (err != nullptr) {
-            return errors::Wrap(std::move(err), "failed to create index buffer");
+            return errors::wrap(std::move(err), "failed to create index buffer");
         }
     }
     {
@@ -182,7 +182,7 @@ std::unique_ptr<Error> GLTFModelTest::initialize()
             gpu::BufferUsage::Dynamic);
 
         if (err != nullptr) {
-            return errors::Wrap(std::move(err), "failed to create constant buffer");
+            return errors::wrap(std::move(err), "failed to create constant buffer");
         }
 
         std::tie(worldConstantBuffer, err) = graphicsDevice->CreateConstantBuffer(
@@ -190,7 +190,7 @@ std::unique_ptr<Error> GLTFModelTest::initialize()
             gpu::BufferUsage::Dynamic);
 
         if (err != nullptr) {
-            return errors::Wrap(std::move(err), "failed to create constant buffer");
+            return errors::wrap(std::move(err), "failed to create constant buffer");
         }
     }
     {
@@ -199,7 +199,7 @@ std::unique_ptr<Error> GLTFModelTest::initialize()
             gpu::SamplerDescriptor::CreateLinearClamp());
 
         if (err != nullptr) {
-            return errors::Wrap(std::move(err), "failed to create sampler state");
+            return errors::wrap(std::move(err), "failed to create sampler state");
         }
     }
     {
@@ -220,7 +220,7 @@ std::unique_ptr<Error> GLTFModelTest::initialize()
             .SetRasterizerState(gpu::RasterizerDescriptor::CreateDefault())
             .Build();
         if (err != nullptr) {
-            return errors::Wrap(std::move(err), "failed to create pipeline state");
+            return errors::wrap(std::move(err), "failed to create pipeline state");
         }
     }
     {
@@ -241,7 +241,7 @@ std::unique_ptr<Error> GLTFModelTest::initialize()
             .SetRasterizerState(gpu::RasterizerDescriptor::CreateDefault())
             .Build();
         if (err != nullptr) {
-            return errors::Wrap(std::move(err), "failed to create pipeline state");
+            return errors::wrap(std::move(err), "failed to create pipeline state");
         }
     }
 

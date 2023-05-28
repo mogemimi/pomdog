@@ -75,12 +75,12 @@ CreateAnimationNode(
     switch (desc.Type) {
     case AnimationNodeType::Clip: {
         if (desc.ClipName == std::nullopt) {
-            auto err = errors::New("ClipName is nullopt");
+            auto err = errors::make("ClipName is nullopt");
             return std::make_tuple(nullptr, std::move(err));
         }
         auto [animationClip, err] = spine::CreateAnimationClip(skeletonDesc, std::nullopt, *desc.ClipName);
         if (err != nullptr) {
-            auto wrapped = errors::Wrap(std::move(err), "failed to create animation clip, " + *desc.ClipName);
+            auto wrapped = errors::wrap(std::move(err), "failed to create animation clip, " + *desc.ClipName);
             return std::make_tuple(nullptr, std::move(wrapped));
         }
         auto node = std::make_unique<AnimationClipNode>(animationClip);
@@ -100,13 +100,13 @@ CreateAnimationNode(
 
         auto [node1, err1] = CreateAnimationNode(*iter1, inputs, nodes, skeletonDesc);
         if (err1 != nullptr) {
-            auto wrapped = errors::Wrap(std::move(err1), "failed to create lerp input node[0]");
+            auto wrapped = errors::wrap(std::move(err1), "failed to create lerp input node[0]");
             return std::make_tuple(nullptr, std::move(wrapped));
         }
 
         auto [node2, err2] = CreateAnimationNode(*iter2, inputs, nodes, skeletonDesc);
         if (err2 != nullptr) {
-            auto wrapped = errors::Wrap(std::move(err2), "failed to create lerp input node[1]");
+            auto wrapped = errors::wrap(std::move(err2), "failed to create lerp input node[1]");
             return std::make_tuple(nullptr, std::move(wrapped));
         }
 
@@ -126,7 +126,7 @@ CreateAnimationNode(
     }
     }
 
-    auto err = errors::New("unknown animation node type");
+    auto err = errors::make("unknown animation node type");
     return std::make_tuple(nullptr, std::move(err));
 }
 
@@ -138,20 +138,20 @@ LoadAnimationGraph(const SkeletonDesc& skeletonDesc, const std::string& filePath
     std::ifstream stream{filePath, std::ifstream::binary};
 
     if (!stream) {
-        auto err = errors::New("cannot open the file, " + filePath);
+        auto err = errors::make("cannot open the file, " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
     auto [byteLength, sizeErr] = FileSystem::GetFileSize(filePath);
     if (sizeErr != nullptr) {
-        auto err = errors::Wrap(std::move(sizeErr), "failed to get file size, " + filePath);
+        auto err = errors::wrap(std::move(sizeErr), "failed to get file size, " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
     POMDOG_ASSERT(stream);
 
     if (byteLength <= 0) {
-        auto err = errors::New("the file is too small " + filePath);
+        auto err = errors::make("the file is too small " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
@@ -164,12 +164,12 @@ LoadAnimationGraph(const SkeletonDesc& skeletonDesc, const std::string& filePath
     doc.Parse(json.data());
 
     if (doc.HasParseError()) {
-        auto err = errors::New("failed to parse JSON, " + filePath);
+        auto err = errors::make("failed to parse JSON, " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
     if (!doc.IsObject()) {
-        auto err = errors::New("invalid file format " + filePath);
+        auto err = errors::make("invalid file format " + filePath);
         return std::make_tuple(nullptr, std::move(err));
     }
 
@@ -194,7 +194,7 @@ LoadAnimationGraph(const SkeletonDesc& skeletonDesc, const std::string& filePath
                     desc.Type = AnimationNodeType::Lerp;
                 }
                 else {
-                    auto err = errors::New("invalid type, " + std::string{typeObject.GetString()});
+                    auto err = errors::make("invalid type, " + std::string{typeObject.GetString()});
                     return std::make_tuple(nullptr, std::move(err));
                 }
             }
@@ -244,7 +244,7 @@ LoadAnimationGraph(const SkeletonDesc& skeletonDesc, const std::string& filePath
 
             auto [node, err] = CreateAnimationNode(*rootNodeDesc, inputs, nodes, skeletonDesc);
             if (err != nullptr) {
-                auto wrapped = errors::Wrap(std::move(err), "failed to create animation node");
+                auto wrapped = errors::wrap(std::move(err), "failed to create animation node");
                 return std::make_tuple(nullptr, std::move(wrapped));
             }
 

@@ -133,13 +133,13 @@ Builder<Shader>::Impl::OpenStream(const std::string& filePath) const
     std::ifstream stream{filePath, std::ifstream::binary};
 
     if (!stream) {
-        auto err = errors::New("cannot open the file, " + filePath);
+        auto err = errors::make("cannot open the file, " + filePath);
         return std::make_tuple(std::move(stream), 0, std::move(err));
     }
 
     auto [byteLength, sizeErr] = FileSystem::GetFileSize(filePath);
     if (sizeErr != nullptr) {
-        auto err = errors::Wrap(std::move(sizeErr), "failed to get file size, " + filePath);
+        auto err = errors::wrap(std::move(sizeErr), "failed to get file size, " + filePath);
         return std::make_tuple(std::move(stream), 0, std::move(err));
     }
 
@@ -187,21 +187,21 @@ Builder<Shader>& Builder<Shader>::SetGLSLFromFile(const std::string& assetName)
         auto [stream, byteLength, err] = impl->OpenStream(filePath);
 
         if (err != nullptr) {
-            impl->lastError = errors::Wrap(std::move(err), "failed to open file: " + filePath);
+            impl->lastError = errors::wrap(std::move(err), "failed to open file: " + filePath);
             return *this;
         }
 
         POMDOG_ASSERT(stream);
 
         if (byteLength <= 0) {
-            impl->lastError = errors::Wrap(std::move(err), "the file is too small: " + filePath);
+            impl->lastError = errors::wrap(std::move(err), "the file is too small: " + filePath);
             return *this;
         }
 
         impl->shaderBlob = BinaryReader::ReadArray<std::uint8_t>(stream, byteLength);
 
         if (impl->shaderBlob.empty()) {
-            impl->lastError = errors::Wrap(std::move(err), "the file is too small: " + filePath);
+            impl->lastError = errors::wrap(std::move(err), "the file is too small: " + filePath);
             return *this;
         }
 
@@ -281,21 +281,21 @@ Builder<Shader>& Builder<Shader>::SetHLSLFromFile(
         auto [stream, byteLength, err] = impl->OpenStream(filePath);
 
         if (err != nullptr) {
-            impl->lastError = errors::Wrap(std::move(err), "failed to open file: " + filePath);
+            impl->lastError = errors::wrap(std::move(err), "failed to open file: " + filePath);
             return *this;
         }
 
         POMDOG_ASSERT(stream);
 
         if (byteLength <= 0) {
-            impl->lastError = errors::Wrap(std::move(err), "the file is too small: " + filePath);
+            impl->lastError = errors::wrap(std::move(err), "the file is too small: " + filePath);
             return *this;
         }
 
         impl->shaderBlob = BinaryReader::ReadArray<std::uint8_t>(stream, byteLength);
 
         if (impl->shaderBlob.empty()) {
-            impl->lastError = errors::Wrap(std::move(err), "the file is too small: " + filePath);
+            impl->lastError = errors::wrap(std::move(err), "the file is too small: " + filePath);
             return *this;
         }
 
@@ -372,21 +372,21 @@ Builder<Shader>& Builder<Shader>::SetMetalFromFile(
         auto [stream, byteLength, err] = impl->OpenStream(filePath);
 
         if (err != nullptr) {
-            impl->lastError = errors::Wrap(std::move(err), "failed to open file: " + filePath);
+            impl->lastError = errors::wrap(std::move(err), "failed to open file: " + filePath);
             return *this;
         }
 
         POMDOG_ASSERT(stream);
 
         if (byteLength <= 0) {
-            impl->lastError = errors::Wrap(std::move(err), "the file is too small: " + filePath);
+            impl->lastError = errors::wrap(std::move(err), "the file is too small: " + filePath);
             return *this;
         }
 
         impl->shaderBlob = BinaryReader::ReadArray<std::uint8_t>(stream, byteLength);
 
         if (impl->shaderBlob.empty()) {
-            impl->lastError = errors::Wrap(std::move(err), "the file is too small: " + filePath);
+            impl->lastError = errors::wrap(std::move(err), "the file is too small: " + filePath);
             return *this;
         }
 
@@ -418,21 +418,21 @@ Builder<Shader>& Builder<Shader>::SetMetalFromPrecompiledFile(
         auto [stream, byteLength, err] = impl->OpenStream(filePath);
 
         if (err != nullptr) {
-            impl->lastError = errors::Wrap(std::move(err), "failed to open file: " + filePath);
+            impl->lastError = errors::wrap(std::move(err), "failed to open file: " + filePath);
             return *this;
         }
 
         POMDOG_ASSERT(stream);
 
         if (byteLength <= 0) {
-            impl->lastError = errors::Wrap(std::move(err), "the file is too small: " + filePath);
+            impl->lastError = errors::wrap(std::move(err), "the file is too small: " + filePath);
             return *this;
         }
 
         impl->shaderBlob = BinaryReader::ReadArray<std::uint8_t>(stream, byteLength);
 
         if (impl->shaderBlob.empty()) {
-            impl->lastError = errors::Wrap(std::move(err), "the file is too small: " + filePath);
+            impl->lastError = errors::wrap(std::move(err), "the file is too small: " + filePath);
             return *this;
         }
 
@@ -538,7 +538,7 @@ Builder<Shader>::Build()
     }
     }
 
-    return std::make_tuple(nullptr, errors::New("this shading language is not supported"));
+    return std::make_tuple(nullptr, errors::make("this shading language is not supported"));
 }
 
 } // namespace pomdog::AssetBuilders

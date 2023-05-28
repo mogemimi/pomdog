@@ -19,11 +19,11 @@ std::unique_ptr<Error>
 CreateNewDirectory(const std::string& path) noexcept
 {
     if (path.empty()) {
-        return errors::New("path is empty");
+        return errors::make("path is empty");
     }
     if (::mkdir(path.data(), S_IRWXU) != 0) {
         auto err = detail::ToErrc(errno);
-        return errors::New(err, "::mkdir() failed");
+        return errors::makeIOError(err, "::mkdir() failed");
     }
     return nullptr;
 }
@@ -32,7 +32,7 @@ std::unique_ptr<Error>
 CreateDirectories(const std::string& path) noexcept
 {
     if (path.empty()) {
-        return errors::New("path is empty");
+        return errors::make("path is empty");
     }
 
     auto tmp = path;
@@ -40,7 +40,7 @@ CreateDirectories(const std::string& path) noexcept
         tmp.pop_back();
     }
     if (tmp.empty()) {
-        return errors::New("tmp is empty");
+        return errors::make("tmp is empty");
     }
 
     for (auto iter = std::next(std::begin(tmp), 1); iter != std::end(tmp); iter++) {
@@ -48,7 +48,7 @@ CreateDirectories(const std::string& path) noexcept
             *iter = 0;
             if (::mkdir(tmp.data(), S_IRWXU) != 0) {
                 auto err = detail::ToErrc(errno);
-                return errors::New(err, "::mkdir() failed");
+                return errors::makeIOError(err, "::mkdir() failed");
             }
             *iter = '/';
         }
@@ -56,7 +56,7 @@ CreateDirectories(const std::string& path) noexcept
 
     if (::mkdir(tmp.data(), S_IRWXU) != 0) {
         auto err = detail::ToErrc(errno);
-        return errors::New(err, "::mkdir() failed");
+        return errors::makeIOError(err, "::mkdir() failed");
     }
     return nullptr;
 }
@@ -83,7 +83,7 @@ GetFileSize(const std::string& path) noexcept
     struct ::stat st;
     if (::stat(path.data(), &st) != 0) {
         auto err = detail::ToErrc(errno);
-        return std::make_tuple(0, errors::New(err, "::stat() failed"));
+        return std::make_tuple(0, errors::makeIOError(err, "::stat() failed"));
     }
     return std::make_tuple(st.st_size, nullptr);
 }
@@ -91,13 +91,13 @@ GetFileSize(const std::string& path) noexcept
 std::tuple<std::string, std::unique_ptr<Error>>
 GetLocalAppDataDirectoryPath() noexcept
 {
-    return std::make_tuple("", errors::New("not implemented yet"));
+    return std::make_tuple("", errors::make("not implemented yet"));
 }
 
 std::tuple<std::string, std::unique_ptr<Error>>
 GetAppDataDirectoryPath() noexcept
 {
-    return std::make_tuple("", errors::New("not implemented yet"));
+    return std::make_tuple("", errors::make("not implemented yet"));
 }
 
 std::tuple<std::string, std::unique_ptr<Error>>
@@ -107,7 +107,7 @@ GetResourceDirectoryPath() noexcept
     std::fill(std::begin(buf), std::end(buf), 0);
     auto size = ::readlink("/proc/self/exe", buf.data(), PATH_MAX);
     if (size < 0) {
-        return std::make_tuple("", errors::New("readlink() failed"));
+        return std::make_tuple("", errors::make("readlink() failed"));
     }
 
     std::string_view executablePath{buf.data(), static_cast<std::size_t>(size)};
@@ -127,7 +127,7 @@ GetCurrentWorkingDirectory() noexcept
     char dir[PATH_MAX];
     if (::getcwd(dir, sizeof(dir)) == nullptr) {
         auto err = detail::ToErrc(errno);
-        return std::make_tuple("", errors::New(err, "::getcwd() failed"));
+        return std::make_tuple("", errors::makeIOError(err, "::getcwd() failed"));
     }
     return std::make_tuple(dir, nullptr);
 }

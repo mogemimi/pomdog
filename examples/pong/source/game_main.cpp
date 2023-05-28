@@ -38,7 +38,7 @@ std::unique_ptr<Error> GameMain::initialize()
     // NOTE: Create graphics command list
     std::tie(commandList, err) = graphicsDevice->CreateCommandList();
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to create graphics command list");
+        return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
     // NOTE: Create batch renderers
@@ -48,7 +48,7 @@ std::unique_ptr<Error> GameMain::initialize()
     // NOTE: Prepare sprite font
     auto [font, fontErr] = assets->Load<TrueTypeFont>("fonts/NotoSans/NotoSans-BoldItalic.ttf");
     if (fontErr != nullptr) {
-        return errors::Wrap(std::move(fontErr), "failed to load a font file");
+        return errors::wrap(std::move(fontErr), "failed to load a font file");
     }
     spriteFont = std::make_shared<SpriteFont>(graphicsDevice, font, 26.0f, 26.0f);
     spriteFont->PrepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
@@ -56,32 +56,32 @@ std::unique_ptr<Error> GameMain::initialize()
 
     // NOTE: Load sound effects
     if (auto [audioClip, loadErr] = assets->Load<AudioClip>("sounds/pong1.wav"); loadErr != nullptr) {
-        return errors::Wrap(std::move(loadErr), "failed to load audio clip");
+        return errors::wrap(std::move(loadErr), "failed to load audio clip");
     }
     else {
         std::tie(soundEffect1, err) = audioEngine->CreateSoundEffect(audioClip, false);
         if (err != nullptr) {
-            return errors::Wrap(std::move(err), "failed to create sound effect");
+            return errors::wrap(std::move(err), "failed to create sound effect");
         }
     }
 
     if (auto [audioClip, loadErr] = assets->Load<AudioClip>("sounds/pong2.wav"); loadErr != nullptr) {
-        return errors::Wrap(std::move(loadErr), "failed to load audio clip");
+        return errors::wrap(std::move(loadErr), "failed to load audio clip");
     }
     else {
         std::tie(soundEffect2, err) = audioEngine->CreateSoundEffect(audioClip, false);
         if (err != nullptr) {
-            return errors::Wrap(std::move(err), "failed to create sound effect");
+            return errors::wrap(std::move(err), "failed to create sound effect");
         }
     }
 
     if (auto [audioClip, loadErr] = assets->Load<AudioClip>("sounds/pong3.wav"); loadErr != nullptr) {
-        return errors::Wrap(std::move(loadErr), "failed to load audio clip");
+        return errors::wrap(std::move(loadErr), "failed to load audio clip");
     }
     else {
         std::tie(soundEffect3, err) = audioEngine->CreateSoundEffect(audioClip, false);
         if (err != nullptr) {
-            return errors::Wrap(std::move(err), "failed to create sound effect");
+            return errors::wrap(std::move(err), "failed to create sound effect");
         }
     }
 
@@ -105,7 +105,7 @@ std::unique_ptr<Error> GameMain::initialize()
             presentationParameters.backBufferFormat);
 
         if (err != nullptr) {
-            return errors::Wrap(std::move(err), "failed to create render target");
+            return errors::wrap(std::move(err), "failed to create render target");
         }
 
         // NOTE: Create depth stencil buffer
@@ -115,7 +115,7 @@ std::unique_ptr<Error> GameMain::initialize()
             presentationParameters.depthStencilFormat);
 
         if (err != nullptr) {
-            return errors::Wrap(std::move(err), "failed to create render target");
+            return errors::wrap(std::move(err), "failed to create render target");
         }
 
         postProcessCompositor.SetViewportSize(

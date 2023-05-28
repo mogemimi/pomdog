@@ -31,7 +31,7 @@ TEST_CASE("TCP connection for HTTP client", "[Network]")
 
     auto [streamResult, connectErr] = TCPStream::Connect(executor.GetService(), std::string{hostName} + ":" + port, std::chrono::seconds(5));
     if (connectErr != nullptr) {
-        WARN(connectErr->ToString());
+        WARN(connectErr->toString());
         return;
     }
 

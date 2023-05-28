@@ -20,7 +20,7 @@ CreateNewDirectory(const std::string& path) noexcept
     POMDOG_ASSERT(!path.empty());
     std::error_code err;
     if (!std::filesystem::create_directory(path, err)) {
-        return errors::New("create_directory() failed: " + err.message());
+        return errors::make("create_directory() failed: " + err.message());
     }
     return nullptr;
 }
@@ -31,7 +31,7 @@ CreateDirectories(const std::string& path) noexcept
     POMDOG_ASSERT(!path.empty());
     std::error_code err;
     if (!std::filesystem::create_directories(path, err)) {
-        return errors::New("create_directories() failed: " + err.message());
+        return errors::make("create_directories() failed: " + err.message());
     }
     return nullptr;
 }
@@ -54,7 +54,7 @@ GetFileSize(const std::string& path) noexcept
     struct ::stat st;
     if (int result = ::stat(path.data(), &st); result != 0) {
         auto err = detail::ToErrc(errno);
-        return std::make_tuple(0, errors::New(err, "::stat() failed"));
+        return std::make_tuple(0, errors::make(err, "::stat() failed"));
     }
     return std::make_tuple(st.st_size, nullptr);
 }
@@ -67,7 +67,7 @@ GetLocalAppDataDirectoryPath() noexcept
 
     auto hr = SHGetFolderPathA(nullptr, CSIDL_LOCAL_APPDATA, nullptr, 0, directory);
     if (FAILED(hr)) {
-        return std::make_tuple("", errors::New("SHGetFolderPath(CSIDL_LOCAL_APPDATA) failed: " + std::to_string(hr)));
+        return std::make_tuple("", errors::make("SHGetFolderPath(CSIDL_LOCAL_APPDATA) failed: " + std::to_string(hr)));
     }
 
     // FIXME: Change so that the user can specify any application name.
@@ -85,7 +85,7 @@ GetAppDataDirectoryPath() noexcept
 
     auto hr = SHGetFolderPathA(nullptr, CSIDL_APPDATA, nullptr, 0, directory);
     if (FAILED(hr)) {
-        return std::make_tuple("", errors::New("SHGetFolderPath(CSIDL_APPDATA) failed: " + std::to_string(hr)));
+        return std::make_tuple("", errors::make("SHGetFolderPath(CSIDL_APPDATA) failed: " + std::to_string(hr)));
     }
 
     // FIXME: Change so that the user can specify any application name.
@@ -117,7 +117,7 @@ GetCurrentWorkingDirectory() noexcept
 
     const auto length = ::GetCurrentDirectoryA(MAX_PATH - 1, directory);
     if (length <= 0) {
-        return std::make_tuple("", errors::New("GetCurrentDirectoryA() failed"));
+        return std::make_tuple("", errors::make("GetCurrentDirectoryA() failed"));
     }
     std::string result(directory, length);
     return std::make_tuple(std::move(result), nullptr);

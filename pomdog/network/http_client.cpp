@@ -39,7 +39,7 @@ ParseURL(std::string_view url)
     URLParseResult result;
 
     if (auto iter = source.find("://"); iter == std::string_view::npos) {
-        return std::make_tuple(std::move(result), errors::New("no protocol scheme (i.e. 'https://' or 'http://') in request URL"));
+        return std::make_tuple(std::move(result), errors::make("no protocol scheme (i.e. 'https://' or 'http://') in request URL"));
     }
     else {
         result.protocolScheme = url.substr(0, iter + 3);
@@ -55,7 +55,7 @@ ParseURL(std::string_view url)
     }
 
     if (result.hostName.empty()) {
-        return std::make_tuple(std::move(result), errors::New("no Host in request URL"));
+        return std::make_tuple(std::move(result), errors::make("no Host in request URL"));
     }
 
     source = result.hostName;
@@ -65,7 +65,7 @@ ParseURL(std::string_view url)
         result.port = source.substr(iter);
 
         if (result.port.size() <= 1) {
-            return std::make_tuple(std::move(result), errors::New("no Port in request URL"));
+            return std::make_tuple(std::move(result), errors::make("no Port in request URL"));
         }
         result.port.remove_prefix(1);
     }
@@ -264,7 +264,7 @@ void HTTPSession<SocketStream>::CreateSession(
     auto sendRequest = [this](const std::unique_ptr<Error>& connErr) {
         if (connErr != nullptr) {
             POMDOG_ASSERT(request != nullptr);
-            this->Complete(nullptr, errors::Wrap(connErr->Clone(), "HTTP request error"));
+            this->Complete(nullptr, errors::wrap(connErr->clone(), "HTTP request error"));
             return;
         }
 
@@ -272,7 +272,7 @@ void HTTPSession<SocketStream>::CreateSession(
 
         auto [parsedURL, parseErr] = ParseURL(request->URL);
         if (parseErr != nullptr) {
-            auto err = errors::Wrap(std::move(parseErr), "invalid url " + request->URL);
+            auto err = errors::wrap(std::move(parseErr), "invalid url " + request->URL);
             KeepAlive(keeper, std::move(socketAddress), std::move(stream));
             this->Complete(nullptr, std::move(err));
             return;
@@ -321,7 +321,7 @@ void HTTPSession<SocketStream>::CreateSession(
     readConn = stream.OnRead([this](const ArrayView<std::uint8_t>& view, const std::unique_ptr<Error>& readErr) {
         if (readErr != nullptr) {
             POMDOG_ASSERT(request != nullptr);
-            this->Complete(nullptr, errors::Wrap(readErr->Clone(), "HTTP request error"));
+            this->Complete(nullptr, errors::wrap(readErr->clone(), "HTTP request error"));
             stream.Disconnect();
             return;
         }
@@ -352,7 +352,7 @@ void HTTPSession<SocketStream>::CreateSession(
 
     disconnectConn = stream.OnDisconnect([this] {
         POMDOG_ASSERT(request != nullptr);
-        this->Complete(nullptr, errors::New("HTTP request disconnect"));
+        this->Complete(nullptr, errors::make("HTTP request disconnect"));
     });
 }
 
@@ -392,26 +392,26 @@ std::unique_ptr<Error> HTTPSession<SocketStream>::Abort()
         disconnectConn.Disconnect();
         readConn.Disconnect();
         stream.Disconnect();
-        this->Complete(nullptr, errors::New("HTTP request abort"));
+        this->Complete(nullptr, errors::make("HTTP request abort"));
         return nullptr;
     }
 
     connectedConn = stream.OnConnected([this](const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
             POMDOG_ASSERT(request != nullptr);
-            this->Complete(nullptr, errors::Wrap(err->Clone(), "HTTP request error"));
+            this->Complete(nullptr, errors::wrap(err->clone(), "HTTP request error"));
             return;
         }
 
         KeepAlive(keeper, std::move(socketAddress), std::move(stream));
-        this->Complete(nullptr, errors::New("HTTP request abort"));
+        this->Complete(nullptr, errors::make("HTTP request abort"));
     });
 
     readConn.Disconnect();
 
     disconnectConn = stream.OnDisconnect([this] {
         POMDOG_ASSERT(request != nullptr);
-        this->Complete(nullptr, errors::New("HTTP request disconnect"));
+        this->Complete(nullptr, errors::make("HTTP request disconnect"));
     });
 
     return nullptr;
@@ -494,7 +494,7 @@ HTTPClient::Impl::Do(const std::shared_ptr<HTTPRequest>& req)
 
     auto [parsedURL, parseErr] = ParseURL(req->URL);
     if (parseErr != nullptr) {
-        return errors::Wrap(std::move(parseErr), "invalid url " + req->URL);
+        return errors::wrap(std::move(parseErr), "invalid url " + req->URL);
     }
 
     auto socketAddress = MakeSocketAddress(parsedURL);
@@ -511,7 +511,7 @@ HTTPClient::Impl::Do(const std::shared_ptr<HTTPRequest>& req)
         if (!sessionStream.IsConnected()) {
             auto [stream, err] = TLSStream::Connect(service, socketAddress);
             if (err != nullptr) {
-                return errors::Wrap(std::move(err), "failed to connect to server");
+                return errors::wrap(std::move(err), "failed to connect to server");
             }
             sessionStream = std::move(stream);
         }
@@ -532,7 +532,7 @@ HTTPClient::Impl::Do(const std::shared_ptr<HTTPRequest>& req)
         if (!sessionStream.IsConnected()) {
             auto [stream, err] = TCPStream::Connect(service, socketAddress);
             if (err != nullptr) {
-                return errors::Wrap(std::move(err), "failed to connect to server");
+                return errors::wrap(std::move(err), "failed to connect to server");
             }
             sessionStream = std::move(stream);
         }
@@ -543,7 +543,7 @@ HTTPClient::Impl::Do(const std::shared_ptr<HTTPRequest>& req)
     }
     else {
         // error
-        return errors::New("unsupported protocol scheme");
+        return errors::make("unsupported protocol scheme");
     }
 
     return nullptr;

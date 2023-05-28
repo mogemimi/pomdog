@@ -20,7 +20,7 @@ std::unique_ptr<Error> DistanceFieldFontTest::initialize()
     // NOTE: Create graphics command list
     std::tie(commandList, err) = graphicsDevice->CreateCommandList();
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to create graphics command list");
+        return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
     primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
@@ -36,7 +36,7 @@ std::unique_ptr<Error> DistanceFieldFontTest::initialize()
 
     std::tie(spriteFont, err) = assets->Load<SpriteFont>("BitmapFonts/Ubuntu-Regular.fnt");
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to load a font file");
+        return errors::wrap(std::move(err), "failed to load a font file");
     }
 
     spriteFont->PrepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");

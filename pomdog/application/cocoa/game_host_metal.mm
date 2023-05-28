@@ -179,7 +179,7 @@ GameHostMetal::Impl::initialize(
     timeSource_ = std::make_shared<detail::apple::TimeSourceApple>();
     clock_ = std::make_shared<GameClockImpl>();
     if (auto err = clock_->Initialize(presentationParameters.presentationInterval, timeSource_); err != nullptr) {
-        return errors::Wrap(std::move(err), "GameClockImpl::Initialize() failed.");
+        return errors::wrap(std::move(err), "GameClockImpl::Initialize() failed.");
     }
 
     window->setView(metalView);
@@ -189,7 +189,7 @@ GameHostMetal::Impl::initialize(
     // NOTE: Create graphics device
     graphicsDevice = std::make_shared<GraphicsDeviceMetal>();
     if (auto err = graphicsDevice->Initialize(presentationParameters, frameCounter_); err != nullptr) {
-        return errors::New("failed to initialize GraphicsDeviceMetal");
+        return errors::make("failed to initialize GraphicsDeviceMetal");
     }
 
     // NOTE: Get MTLDevice object.
@@ -197,7 +197,7 @@ GameHostMetal::Impl::initialize(
     id<MTLDevice> metalDevice = graphicsDevice->GetMTLDevice();
 
     if (metalDevice == nullptr) {
-        return errors::New("Metal is not supported on this device.");
+        return errors::make("Metal is not supported on this device.");
     }
 
     // NOTE: Setup metal view
@@ -215,7 +215,7 @@ GameHostMetal::Impl::initialize(
     // NOTE: Create audio engine.
     audioEngine = std::make_shared<AudioEngineAL>();
     if (auto err = audioEngine->Initialize(); err != nullptr) {
-        return errors::Wrap(std::move(err), "AudioEngineAL::Initialize() failed.");
+        return errors::wrap(std::move(err), "AudioEngineAL::Initialize() failed.");
     }
 
     // NOTE: Create subsystems
@@ -225,7 +225,7 @@ GameHostMetal::Impl::initialize(
     // NOTE: Create gamepad
     gamepad = std::make_shared<GamepadIOKit>();
     if (auto err = gamepad->Initialize(eventQueue); err != nullptr) {
-        return errors::Wrap(std::move(err), "GamepadIOKit::Initialize() failed.");
+        return errors::wrap(std::move(err), "GamepadIOKit::Initialize() failed.");
     }
 
     // NOTE: Connect to system event signal
@@ -235,7 +235,7 @@ GameHostMetal::Impl::initialize(
 
     auto [resourceDir, resourceDirErr] = FileSystem::GetResourceDirectoryPath();
     if (resourceDirErr != nullptr) {
-        return errors::Wrap(std::move(resourceDirErr), "FileSystem::GetResourceDirectoryPath() failed.");
+        return errors::wrap(std::move(resourceDirErr), "FileSystem::GetResourceDirectoryPath() failed.");
     }
     auto contentDirectory = PathHelper::Join(resourceDir, "content");
 
@@ -247,7 +247,7 @@ GameHostMetal::Impl::initialize(
 
     ioService_ = std::make_unique<IOService>();
     if (auto err = ioService_->Initialize(clock_); err != nullptr) {
-        return errors::Wrap(std::move(err), "IOService::Initialize() failed.");
+        return errors::wrap(std::move(err), "IOService::Initialize() failed.");
     }
     httpClient = std::make_unique<HTTPClient>(ioService_.get());
 
@@ -262,7 +262,7 @@ GameHostMetal::Impl::~Impl()
     systemEventConnection.Disconnect();
     httpClient.reset();
     if (auto err = ioService_->Shutdown(); err != nullptr) {
-        Log::Warning("pomdog", err->ToString());
+        Log::Warning("pomdog", err->toString());
     }
     ioService_.reset();
     assetManager.reset();
@@ -294,7 +294,7 @@ GameHostMetal::Impl::initializeGame(
 
     if (auto err = game->initialize(); err != nullptr) {
         gameWillExit();
-        return errors::Wrap(std::move(err), "failed to initialize game");
+        return errors::wrap(std::move(err), "failed to initialize game");
     }
 
     if (exitRequest) {

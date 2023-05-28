@@ -57,7 +57,7 @@ void Bootstrap::Run(
     auto gameHost = std::make_shared<pomdog::detail::linux::GameHostLinux>();
     if (auto err = gameHost->initialize(presentationParameters); err != nullptr) {
         if (onError != nullptr) {
-            onError(errors::Wrap(std::move(err), "failed to initialize GameHostLinux"));
+            onError(errors::wrap(std::move(err), "failed to initialize GameHostLinux"));
         }
         return;
     }
@@ -66,7 +66,7 @@ void Bootstrap::Run(
     auto game = createApp(gameHost);
     if (game == nullptr) {
         if (onError != nullptr) {
-            onError(errors::New("game must be != nullptr"));
+            onError(errors::make("game must be != nullptr"));
         }
         return;
     }
@@ -74,7 +74,7 @@ void Bootstrap::Run(
     POMDOG_ASSERT(game != nullptr);
     if (auto err = game->initialize(); err != nullptr) {
         if (onError != nullptr) {
-            onError(errors::Wrap(std::move(err), "failed to initialize game"));
+            onError(errors::wrap(std::move(err), "failed to initialize game"));
         }
         return;
     }

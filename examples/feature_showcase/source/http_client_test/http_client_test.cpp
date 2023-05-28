@@ -19,14 +19,14 @@ std::unique_ptr<Error> HTTPClientTest::initialize()
     // NOTE: Create graphics command list
     std::tie(commandList, err) = graphicsDevice->CreateCommandList();
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to create graphics command list");
+        return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
     spriteBatch = std::make_shared<SpriteBatch>(graphicsDevice, *assets);
 
     auto [font, fontErr] = assets->Load<TrueTypeFont>("Fonts/NotoSans/NotoSans-Regular.ttf");
     if (fontErr != nullptr) {
-        return errors::Wrap(std::move(fontErr), "failed to load a font file");
+        return errors::wrap(std::move(fontErr), "failed to load a font file");
     }
 
     spriteFont = std::make_shared<SpriteFont>(graphicsDevice, font, 24.0f, 24.0f);
@@ -35,7 +35,7 @@ std::unique_ptr<Error> HTTPClientTest::initialize()
     auto http = gameHost->getHTTPClient();
     auto callback = [this](const std::shared_ptr<HTTPResponse>& resp, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
-            webText = err->ToString();
+            webText = err->toString();
             return;
         }
         webText = std::string{resp->Body.data(), resp->Body.size()};
@@ -57,7 +57,7 @@ std::unique_ptr<Error> HTTPClientTest::initialize()
     };
     auto [conn, connErr] = http->Get("https://www.google.com/humans.txt", std::move(callback));
     if (connErr != nullptr) {
-        webText = connErr->ToString();
+        webText = connErr->toString();
     }
     connect += std::move(conn);
 

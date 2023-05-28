@@ -27,11 +27,11 @@ DepthStencilBufferMetal::Initialize(
 
     if ((depthStencilFormat == PixelFormat::Depth24Stencil8) && !device.isDepth24Stencil8PixelFormatSupported) {
         // NOTE: MTLPixelFormatDepth24Unorm_Stencil8 is only supported in certain devices.
-        return errors::New("This device does not support MTLPixelFormatDepth24Unorm_Stencil8.");
+        return errors::make("This device does not support MTLPixelFormatDepth24Unorm_Stencil8.");
     }
 
     if (depthStencilFormat == PixelFormat::Invalid) {
-        return errors::New("depthStencilFormat must be != PixelFormat::None");
+        return errors::make("depthStencilFormat must be != PixelFormat::None");
     }
 
     MTLTextureDescriptor* descriptor = [MTLTextureDescriptor
@@ -48,7 +48,7 @@ DepthStencilBufferMetal::Initialize(
 
     depthStencilTexture = [device newTextureWithDescriptor:descriptor];
     if (depthStencilTexture == nullptr) {
-        return errors::New("failed to create MTLTexture");
+        return errors::make("failed to create MTLTexture");
     }
 
     return nullptr;

@@ -42,7 +42,7 @@ BuildRenderTarget(
     textureDesc.MiscFlags = 0;
 
     if (auto hr = device->CreateTexture2D(&textureDesc, nullptr, &texture2D); FAILED(hr)) {
-        return errors::New("CreateTexture2D() failed");
+        return errors::make("CreateTexture2D() failed");
     }
 
     // NOTE: Create a render target view (RTV)
@@ -54,7 +54,7 @@ BuildRenderTarget(
 
     POMDOG_ASSERT(texture2D);
     if (auto hr = device->CreateRenderTargetView(texture2D.Get(), &rtvDesc, &renderTargetView); FAILED(hr)) {
-        return errors::New("CreateRenderTargetView() failed");
+        return errors::make("CreateRenderTargetView() failed");
     }
 
     // NOTE: Create shader resource view (SRV)
@@ -66,7 +66,7 @@ BuildRenderTarget(
     srvDesc.Texture2D.MipLevels = textureDesc.MipLevels;
 
     if (auto hr = device->CreateShaderResourceView(texture2D.Get(), &srvDesc, &textureResourceView); FAILED(hr)) {
-        return errors::New("CreateShaderResourceView() failed");
+        return errors::make("CreateShaderResourceView() failed");
     }
 
     return nullptr;
@@ -84,13 +84,13 @@ BuildBackBufferBySwapChain(
 
     // NOTE: Get a surface in the swap chain
     if (auto hr = swapChain->GetBuffer(0, IID_PPV_ARGS(&texture2D)); FAILED(hr)) {
-        return errors::New("IDXGISwapChain::GetBuffer() failed");
+        return errors::make("IDXGISwapChain::GetBuffer() failed");
     }
 
     // NOTE: Create a render target view
     POMDOG_ASSERT(texture2D != nullptr);
     if (auto hr = device->CreateRenderTargetView(texture2D.Get(), nullptr, &renderTargetView); FAILED(hr)) {
-        return errors::New("CreateRenderTargetView() failed");
+        return errors::make("CreateRenderTargetView() failed");
     }
 
     return nullptr;
@@ -126,7 +126,7 @@ RenderTarget2DDirect3D11::Initialize(
             renderTargetView,
             textureResourceView);
         err != nullptr) {
-        return errors::Wrap(std::move(err), "BuildRenderTarget() failed");
+        return errors::wrap(std::move(err), "BuildRenderTarget() failed");
     }
 
     return nullptr;
@@ -155,7 +155,7 @@ RenderTarget2DDirect3D11::Initialize(
             texture2D,
             renderTargetView);
         err != nullptr) {
-        return errors::Wrap(std::move(err), "BuildBackBufferBySwapChain() failed");
+        return errors::wrap(std::move(err), "BuildBackBufferBySwapChain() failed");
     }
 
     return nullptr;
@@ -296,7 +296,7 @@ RenderTarget2DDirect3D11::ResetBackBuffer(
             texture2D,
             renderTargetView);
         err != nullptr) {
-        return errors::Wrap(std::move(err), "BuildBackBufferBySwapChain() failed");
+        return errors::wrap(std::move(err), "BuildBackBufferBySwapChain() failed");
     }
 
     return nullptr;

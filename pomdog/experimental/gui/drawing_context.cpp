@@ -55,12 +55,12 @@ DrawingContext::DrawingContext(
 
     std::tie(fontRegular, fontErr) = assets.Load<TrueTypeFont>("Fonts/Roboto/Roboto-Medium.ttf");
     if (fontErr != nullptr) {
-        Log::Critical("pomdog", "failed to load font file, " + fontErr->ToString());
+        Log::Critical("pomdog", "failed to load font file, " + fontErr->toString());
     }
 
     std::tie(fontBold, fontErr) = assets.Load<TrueTypeFont>("Fonts/Roboto/Roboto-Black.ttf");
     if (fontErr != nullptr) {
-        Log::Critical("pomdog", "failed to load font file, " + fontErr->ToString());
+        Log::Critical("pomdog", "failed to load font file, " + fontErr->toString());
     }
 
     std::array<std::pair<FontWeight, FontSize>, 9> fontPairs = {{
@@ -165,7 +165,7 @@ DrawingContext::DrawingContext(
         auto filePath = PathHelper::Join(svgDir, filename);
 
         if (auto [res, err] = SVG::DecodeFile(filePath, canvasWidth, canvasHeight); err != nullptr) {
-            Log::Verbose("failed to load texture: " + err->ToString());
+            Log::Verbose("failed to load texture: " + err->toString());
         }
         else {
             auto image = std::make_shared<Image>(res.Width, res.Height);

@@ -57,7 +57,7 @@ ConnectSocketWin32(
 
     auto res = ::getaddrinfo(hostName, port.data(), &hints, &addrListRaw);
     if (res != 0) {
-        return std::make_tuple(INVALID_SOCKET, errors::New("getaddrinfo failed with error " + std::to_string(res)));
+        return std::make_tuple(INVALID_SOCKET, errors::make("getaddrinfo failed with error " + std::to_string(res)));
     }
 
     auto addrList = std::unique_ptr<struct ::addrinfo, void(WSAAPI*)(struct ::addrinfo*)>{addrListRaw, ::freeaddrinfo};
@@ -121,7 +121,7 @@ ConnectSocketWin32(
     }
 
     if (socketLastError) {
-        return std::make_tuple(INVALID_SOCKET, errors::New("Unable to connect to server " + std::to_string(*socketLastError)));
+        return std::make_tuple(INVALID_SOCKET, errors::make("Unable to connect to server " + std::to_string(*socketLastError)));
     }
 
     return std::make_tuple(descriptor, nullptr);
@@ -160,7 +160,7 @@ BindSocketWin32(
 
     auto res = ::getaddrinfo(hostName, port.data(), &hints, &addrListRaw);
     if (res != 0) {
-        return std::make_tuple(INVALID_SOCKET, errors::New("getaddrinfo failed with error " + std::to_string(res)));
+        return std::make_tuple(INVALID_SOCKET, errors::make("getaddrinfo failed with error " + std::to_string(res)));
     }
 
     auto addrList = std::unique_ptr<struct ::addrinfo, void(WSAAPI*)(struct ::addrinfo*)>{addrListRaw, ::freeaddrinfo};
@@ -202,7 +202,7 @@ BindSocketWin32(
     }
 
     if (socketLastError) {
-        return std::make_tuple(INVALID_SOCKET, errors::New("Unable to bind socket " + std::to_string(*socketLastError)));
+        return std::make_tuple(INVALID_SOCKET, errors::make("Unable to bind socket " + std::to_string(*socketLastError)));
     }
 
     return std::make_tuple(descriptor, nullptr);

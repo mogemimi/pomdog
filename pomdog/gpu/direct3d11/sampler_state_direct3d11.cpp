@@ -83,7 +83,7 @@ SamplerStateDirect3D11::Initialize(
 
     POMDOG_ASSERT(device != nullptr);
     if (auto hr = device->CreateSamplerState(&samplerDesc, &samplerState); FAILED(hr)) {
-        return errors::New("CreateSamplerState() failed");
+        return errors::make("CreateSamplerState() failed");
     }
 
     return nullptr;

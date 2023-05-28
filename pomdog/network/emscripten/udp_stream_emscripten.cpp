@@ -26,7 +26,7 @@ UDPStreamEmscripten::Connect(
     [[maybe_unused]] const Duration& connectTimeout)
 {
     // FIXME: Not implemented yet.
-    return errors::New("not implemented yet");
+    return errors::make("not implemented yet");
 }
 
 std::unique_ptr<Error>
@@ -35,7 +35,7 @@ UDPStreamEmscripten::Listen(
     [[maybe_unused]] std::string_view port)
 {
     // FIXME: Not implemented yet.
-    return errors::New("not implemented yet");
+    return errors::make("not implemented yet");
 }
 
 void UDPStreamEmscripten::Close()
@@ -47,7 +47,7 @@ std::unique_ptr<Error>
 UDPStreamEmscripten::Write([[maybe_unused]] const ArrayView<std::uint8_t const>& data)
 {
     // FIXME: Not implemented yet.
-    return errors::New("not implemented yet");
+    return errors::make("not implemented yet");
 }
 
 std::unique_ptr<Error>
@@ -56,7 +56,7 @@ UDPStreamEmscripten::WriteTo(
     [[maybe_unused]] std::string_view address)
 {
     // FIXME: Not implemented yet.
-    return errors::New("not implemented yet");
+    return errors::make("not implemented yet");
 }
 
 } // namespace pomdog::detail

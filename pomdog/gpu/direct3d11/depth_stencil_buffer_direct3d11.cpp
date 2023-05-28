@@ -22,19 +22,19 @@ BuildDepthBuffer(
     ComPtr<ID3D11DepthStencilView>& depthStencilView) noexcept
 {
     if (depthStencilFormat == PixelFormat::Invalid) {
-        return errors::New("depthStencilFormat must be != PixelFormat::Invalid");
+        return errors::make("depthStencilFormat must be != PixelFormat::Invalid");
     }
     if (pixelWidth <= 0) {
-        return errors::New("pixelWidth must be > 0");
+        return errors::make("pixelWidth must be > 0");
     }
     if (pixelHeight <= 0) {
-        return errors::New("pixelHeight must be > 0");
+        return errors::make("pixelHeight must be > 0");
     }
     if (levelCount <= 0) {
-        return errors::New("levelCount must be > 0");
+        return errors::make("levelCount must be > 0");
     }
     if (multiSampleCount <= 0) {
-        return errors::New("multiSampleCount must be > 0");
+        return errors::make("multiSampleCount must be > 0");
     }
 
     POMDOG_ASSERT(device != nullptr);
@@ -58,7 +58,7 @@ BuildDepthBuffer(
     textureDesc.MiscFlags = 0;
 
     if (auto hr = device->CreateTexture2D(&textureDesc, nullptr, &depthStencil); FAILED(hr)) {
-        return errors::New("CreateTexture2D() failed");
+        return errors::make("CreateTexture2D() failed");
     }
 
     // NOTE: Create the depth stencil view (DSV)
@@ -71,7 +71,7 @@ BuildDepthBuffer(
     POMDOG_ASSERT(depthStencil != nullptr);
 
     if (auto hr = device->CreateDepthStencilView(depthStencil.Get(), &dsvDesc, &depthStencilView); FAILED(hr)) {
-        return errors::New("CreateDepthStencilView() failed");
+        return errors::make("CreateDepthStencilView() failed");
     }
 
     return nullptr;
@@ -104,7 +104,7 @@ DepthStencilBufferDirect3D11::Initialize(
             depthStencil,
             depthStencilView);
         err != nullptr) {
-        return errors::Wrap(std::move(err), "BuildDepthBuffer() failed");
+        return errors::wrap(std::move(err), "BuildDepthBuffer() failed");
     }
 
     return nullptr;
@@ -166,7 +166,7 @@ DepthStencilBufferDirect3D11::ResetBuffer(
             depthStencil,
             depthStencilView);
         err != nullptr) {
-        return errors::Wrap(std::move(err), "BuildDepthBuffer() failed");
+        return errors::wrap(std::move(err), "BuildDepthBuffer() failed");
     }
 
     return nullptr;

@@ -19,14 +19,14 @@ std::unique_ptr<Error> Texture2DLoaderTest::initialize()
     // NOTE: Create graphics command list
     std::tie(commandList, err) = graphicsDevice->CreateCommandList();
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to create graphics command list");
+        return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
     spriteBatch = std::make_shared<SpriteBatch>(graphicsDevice, *assets);
 
     auto [font, fontErr] = assets->Load<TrueTypeFont>("Fonts/NotoSans/NotoSans-Regular.ttf");
     if (fontErr != nullptr) {
-        return errors::Wrap(std::move(fontErr), "failed to load a font file");
+        return errors::wrap(std::move(fontErr), "failed to load a font file");
     }
 
     spriteFont = std::make_shared<SpriteFont>(graphicsDevice, font, 24.0f, 24.0f);
@@ -35,55 +35,55 @@ std::unique_ptr<Error> Texture2DLoaderTest::initialize()
     // NOTE: Load PNG texture.
     std::tie(texturePNG, err) = assets->Load<gpu::Texture2D>("Textures/pomdog.png");
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to load texture");
+        return errors::wrap(std::move(err), "failed to load texture");
     }
 
     // NOTE: Load DDS texture (DXT1 compression).
     std::tie(textureDXT1, err) = assets->Load<gpu::Texture2D>("Textures/pomdog-dxt1.dds");
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to load texture");
+        return errors::wrap(std::move(err), "failed to load texture");
     }
 
     // NOTE: Load DDS texture (DXT5 compression).
     std::tie(textureDXT5, err) = assets->Load<gpu::Texture2D>("Textures/pomdog-dxt5.dds");
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to load texture");
+        return errors::wrap(std::move(err), "failed to load texture");
     }
 
     // NOTE: Load PNM/Netpbm bitmap ascii texture (P1).
     std::tie(texturePNMP1, err) = assets->Load<gpu::Texture2D>("Textures/pomdog-p1.pbm");
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to load texture");
+        return errors::wrap(std::move(err), "failed to load texture");
     }
 
     // NOTE: Load PNM/Netpbm graymap ascii texture (P2).
     std::tie(texturePNMP2, err) = assets->Load<gpu::Texture2D>("Textures/pomdog-p2.pgm");
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to load texture");
+        return errors::wrap(std::move(err), "failed to load texture");
     }
 
     // NOTE: Load PNM/Netpbm pixmap ascii texture (P3).
     std::tie(texturePNMP3, err) = assets->Load<gpu::Texture2D>("Textures/pomdog-p3.ppm");
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to load texture");
+        return errors::wrap(std::move(err), "failed to load texture");
     }
 
     // NOTE: Load PNM/Netpbm bitmap binary texture (P4).
     std::tie(texturePNMP4, err) = assets->Load<gpu::Texture2D>("Textures/pomdog-p4.pbm");
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to load texture");
+        return errors::wrap(std::move(err), "failed to load texture");
     }
 
     // NOTE: Load PNM/Netpbm graymap binary texture (P5).
     std::tie(texturePNMP5, err) = assets->Load<gpu::Texture2D>("Textures/pomdog-p5.pgm");
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to load texture");
+        return errors::wrap(std::move(err), "failed to load texture");
     }
 
     // NOTE: Load PNM/Netpbm pixmap binary texture (P6).
     std::tie(texturePNMP6, err) = assets->Load<gpu::Texture2D>("Textures/pomdog-p6.ppm");
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to load texture");
+        return errors::wrap(std::move(err), "failed to load texture");
     }
 
     return nullptr;

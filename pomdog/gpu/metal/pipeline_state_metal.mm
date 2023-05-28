@@ -233,22 +233,22 @@ PipelineStateMetal::Initialize(
 
     auto vertexShaderMetal = std::dynamic_pointer_cast<ShaderMetal>(descriptor.vertexShader);
     if (vertexShaderMetal == nullptr) {
-        return errors::New("invalid vertex shader");
+        return errors::make("invalid vertex shader");
     }
 
     auto vertexShader = vertexShaderMetal->GetShader();
     if (vertexShader == nullptr) {
-        return errors::New("vertexShader must be != nullptr");
+        return errors::make("vertexShader must be != nullptr");
     }
 
     auto pixelShaderMetal = std::dynamic_pointer_cast<ShaderMetal>(descriptor.pixelShader);
     if (pixelShaderMetal == nullptr) {
-        return errors::New("invalid pixel shader");
+        return errors::make("invalid pixel shader");
     }
 
     auto pixelShader = pixelShaderMetal->GetShader();
     if (pixelShader == nullptr) {
-        return errors::New("pixelShader must be != nullptr");
+        return errors::make("pixelShader must be != nullptr");
     }
 
     ///@todo MSAA is not implemented yet
@@ -318,7 +318,7 @@ PipelineStateMetal::Initialize(
     reflection = autoReleasingReflection;
 
     if (this->pipelineState == nullptr) {
-        return errors::New(std::string{"newRenderPipelineStateWithDescriptor() failed: "} + [[error domain] UTF8String]);
+        return errors::make(std::string{"newRenderPipelineStateWithDescriptor() failed: "} + [[error domain] UTF8String]);
     }
 
     MTLDepthStencilDescriptor* depthStencilDesc = [[MTLDepthStencilDescriptor alloc] init];
@@ -341,7 +341,7 @@ PipelineStateMetal::Initialize(
 
     depthStencilState = [device newDepthStencilStateWithDescriptor:depthStencilDesc];
     if (this->depthStencilState == nullptr) {
-        return errors::New("newDepthStencilStateWithDescriptor() failed");
+        return errors::make("newDepthStencilStateWithDescriptor() failed");
     }
     return nullptr;
 }

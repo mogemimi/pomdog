@@ -31,7 +31,7 @@ TEST_CASE("Ping Pong Server using UDP Connection", "[Network]")
     conn += server.OnConnected([&](const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
             WARN("Unable to listen client");
-            serverLogs.push_back(err->ToString());
+            serverLogs.push_back(err->toString());
             executor.ExitLoop();
             return;
         }
@@ -41,7 +41,7 @@ TEST_CASE("Ping Pong Server using UDP Connection", "[Network]")
     conn += server.OnReadFrom([&](const ArrayView<uint8_t>& view, const std::string_view& address, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
             WARN("Unable to read message");
-            serverLogs.push_back(err->ToString());
+            serverLogs.push_back(err->toString());
             executor.ExitLoop();
             return;
         }
@@ -70,7 +70,7 @@ TEST_CASE("Ping Pong Server using UDP Connection", "[Network]")
     conn += client.OnConnected([&](const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
             WARN("Unable to connect server");
-            clientLogs.push_back(err->ToString());
+            clientLogs.push_back(err->toString());
             executor.ExitLoop();
             return;
         }
@@ -82,7 +82,7 @@ TEST_CASE("Ping Pong Server using UDP Connection", "[Network]")
     conn += client.OnRead([&](const ArrayView<uint8_t>& view, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
             WARN("Unable to read message");
-            clientLogs.push_back(err->ToString());
+            clientLogs.push_back(err->toString());
             executor.ExitLoop();
             return;
         }

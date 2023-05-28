@@ -20,14 +20,14 @@ std::unique_ptr<Error> SVGDecodeTest::initialize()
     // NOTE: Create graphics command list
     std::tie(commandList, err) = graphicsDevice->CreateCommandList();
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to create graphics command list");
+        return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
     spriteBatch = std::make_shared<SpriteBatch>(graphicsDevice, *assets);
 
     auto [font, fontErr] = assets->Load<TrueTypeFont>("Fonts/NotoSans/NotoSans-Regular.ttf");
     if (fontErr != nullptr) {
-        return errors::Wrap(std::move(fontErr), "failed to load a font file");
+        return errors::wrap(std::move(fontErr), "failed to load a font file");
     }
 
     spriteFont = std::make_shared<SpriteFont>(graphicsDevice, font, 24.0f, 24.0f);
@@ -58,7 +58,7 @@ std::unique_ptr<Error> SVGDecodeTest::initialize()
 
         auto [res, loadErr] = SVG::LoadTexture(graphicsDevice, filePath, canvasWidth, canvasHeight);
         if (loadErr != nullptr) {
-            return errors::Wrap(std::move(err), "failed to load texture");
+            return errors::wrap(std::move(err), "failed to load texture");
         }
         textures.push_back(std::move(res));
     }

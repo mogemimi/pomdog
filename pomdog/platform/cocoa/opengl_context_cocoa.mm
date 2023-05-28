@@ -113,13 +113,13 @@ OpenGLContextCocoa::Initialize(const gpu::PresentationParameters& presentationPa
     // NOTE: Create a pixel format for OpenGL context.
     auto pixelFormat = detail::cocoa::CreatePixelFormat(presentationParameters);
     if (pixelFormat == nil) {
-        return errors::New("failed to create NSOpenGLPixelFormat.");
+        return errors::make("failed to create NSOpenGLPixelFormat.");
     }
 
     // NOTE: Create a OpenGL context with the pixel format.
     openGLContext = [[NSOpenGLContext alloc] initWithFormat:pixelFormat shareContext:nil];
     if (openGLContext == nil) {
-        return errors::New("failed to create NSOpenGLContext.");
+        return errors::make("failed to create NSOpenGLContext.");
     }
 
     // NOTE: Make the context current.

@@ -55,7 +55,7 @@ chooseFramebufferConfig(
     const gpu::PresentationParameters& presentationParameters)
 {
     if (!checkFrameBufferConfigSupport(display)) {
-        return std::make_tuple(nullptr, errors::New("GLX of version lower than 1.3.2 is not supported."));
+        return std::make_tuple(nullptr, errors::make("GLX of version lower than 1.3.2 is not supported."));
     }
 
     class final {
@@ -139,7 +139,7 @@ chooseFramebufferConfig(
     case PixelFormat::Invalid:
         break;
     default:
-        return std::make_tuple(nullptr, errors::New("invalid depth stencil format"));
+        return std::make_tuple(nullptr, errors::make("invalid depth stencil format"));
     }
 
     attributes.add(None, None);
@@ -152,7 +152,7 @@ chooseFramebufferConfig(
         &framebufferConfigCount);
 
     if ((framebufferConfigs == nullptr) || (framebufferConfigCount <= 0)) {
-        return std::make_tuple(nullptr, errors::New("failed to retrieve FBConfig"));
+        return std::make_tuple(nullptr, errors::make("failed to retrieve FBConfig"));
     }
 
     GLXFBConfig bestConfig = nullptr;
@@ -180,7 +180,7 @@ chooseFramebufferConfig(
     XFree(framebufferConfigs);
 
     if (bestConfig == nullptr) {
-        return std::make_tuple(nullptr, errors::New("cannot find any matching FBConfig"));
+        return std::make_tuple(nullptr, errors::make("cannot find any matching FBConfig"));
     }
 
     return std::make_tuple(bestConfig, nullptr);
@@ -203,19 +203,19 @@ GameHostLinux::initialize(const gpu::PresentationParameters& presentationParamet
     timeSource_ = detail::makeTimeSource();
     clock_ = std::make_shared<GameClockImpl>();
     if (auto err = clock_->Initialize(presentationParameters.presentationInterval, timeSource_); err != nullptr) {
-        return errors::Wrap(std::move(err), "GameClockImpl::Initialize() failed.");
+        return errors::wrap(std::move(err), "GameClockImpl::Initialize() failed.");
     }
 
     // NOTE: Create X11 context.
     x11Context_ = std::make_shared<x11::X11Context>();
     if (auto err = x11Context_->initialize(); err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to initialize X11Context");
+        return errors::wrap(std::move(err), "failed to initialize X11Context");
     }
 
     auto [framebufferConfig, framebufferConfigErr] =
         chooseFramebufferConfig(x11Context_->Display, presentationParameters);
     if (framebufferConfigErr != nullptr) {
-        return errors::Wrap(std::move(framebufferConfigErr), "ChooseFramebufferConfig() failed");
+        return errors::wrap(std::move(framebufferConfigErr), "ChooseFramebufferConfig() failed");
     }
 
     // NOTE: Create a game window.
@@ -226,16 +226,16 @@ GameHostLinux::initialize(const gpu::PresentationParameters& presentationParamet
             presentationParameters.backBufferWidth,
             presentationParameters.backBufferHeight);
         err != nullptr) {
-        return errors::Wrap(std::move(framebufferConfigErr), "failed to initialize GameWindowX11");
+        return errors::wrap(std::move(framebufferConfigErr), "failed to initialize GameWindowX11");
     }
 
     // NOTE: Create an OpenGL context.
     openGLContext_ = std::make_shared<x11::OpenGLContextX11>();
     if (auto err = openGLContext_->initialize(window_, framebufferConfig); err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to initialize OpenGLContextX11");
+        return errors::wrap(std::move(err), "failed to initialize OpenGLContextX11");
     }
     if (!openGLContext_->isOpenGL3Supported()) {
-        return errors::New("Pomdog doesn't support versions of OpenGL lower than 3.3/4.0.");
+        return errors::make("Pomdog doesn't support versions of OpenGL lower than 3.3/4.0.");
     }
 
     openGLContext_->MakeCurrent();
@@ -243,19 +243,19 @@ GameHostLinux::initialize(const gpu::PresentationParameters& presentationParamet
     auto const errorCode = glewInit();
     if (GLEW_OK != errorCode) {
         std::string description = reinterpret_cast<const char*>(glewGetErrorString(errorCode));
-        return errors::New("glewInit() failed: " + description);
+        return errors::make("glewInit() failed: " + description);
     }
 
     // NOTE: Create a graphics device.
     graphicsDevice_ = std::make_shared<gpu::detail::gl4::GraphicsDeviceGL4>();
     if (auto err = graphicsDevice_->Initialize(presentationParameters); err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to initialize GraphicsDeviceGL4");
+        return errors::wrap(std::move(err), "failed to initialize GraphicsDeviceGL4");
     }
 
     // NOTE: Create a graphics context.
     graphicsContext_ = std::make_shared<gpu::detail::gl4::GraphicsContextGL4>();
     if (auto err = graphicsContext_->Initialize(openGLContext_, graphicsDevice_); err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to initialize GraphicsContextGL4");
+        return errors::wrap(std::move(err), "failed to initialize GraphicsContextGL4");
     }
 
     commandQueue_ = std::make_shared<gpu::detail::CommandQueueImmediate>(graphicsContext_);
@@ -263,7 +263,7 @@ GameHostLinux::initialize(const gpu::PresentationParameters& presentationParamet
     // NOTE: Create audio engine.
     audioEngine_ = std::make_shared<openal::AudioEngineAL>();
     if (auto err = audioEngine_->Initialize(); err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to initialize AudioEngineAL");
+        return errors::wrap(std::move(err), "failed to initialize AudioEngineAL");
     }
 
     keyboard_ = std::make_unique<x11::KeyboardX11>(x11Context_->Display);
@@ -271,7 +271,7 @@ GameHostLinux::initialize(const gpu::PresentationParameters& presentationParamet
 
     auto [resourceDir, resourceDirErr] = FileSystem::GetResourceDirectoryPath();
     if (resourceDirErr != nullptr) {
-        return errors::Wrap(std::move(resourceDirErr), "FileSystem::GetResourceDirectoryPath() failed.");
+        return errors::wrap(std::move(resourceDirErr), "FileSystem::GetResourceDirectoryPath() failed.");
     }
     auto contentDirectory = PathHelper::Join(resourceDir, "content");
 
@@ -283,7 +283,7 @@ GameHostLinux::initialize(const gpu::PresentationParameters& presentationParamet
 
     ioService_ = std::make_unique<IOService>();
     if (auto err = ioService_->Initialize(clock_); err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to initialize IOService");
+        return errors::wrap(std::move(err), "failed to initialize IOService");
     }
     httpClient_ = std::make_unique<HTTPClient>(ioService_.get());
 
@@ -294,7 +294,7 @@ GameHostLinux::~GameHostLinux()
 {
     httpClient_.reset();
     if (auto err = ioService_->Shutdown(); err != nullptr) {
-        Log::Warning("pomdog", err->ToString());
+        Log::Warning("pomdog", err->toString());
     }
     ioService_.reset();
     gamepad_.reset();

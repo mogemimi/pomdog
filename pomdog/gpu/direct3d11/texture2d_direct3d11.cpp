@@ -101,7 +101,7 @@ Texture2DDirect3D11::Initialize(
     textureDesc.MiscFlags = 0;
 
     if (auto hr = device->CreateTexture2D(&textureDesc, nullptr, &texture2D); FAILED(hr)) {
-        return errors::New("CreateTexture2D() failed: hr = " + std::to_string(hr));
+        return errors::make("CreateTexture2D() failed: hr = " + std::to_string(hr));
     }
 
     // NOTE: Create the shader resource view (SRV)
@@ -113,7 +113,7 @@ Texture2DDirect3D11::Initialize(
     srvDesc.Texture2D.MipLevels = textureDesc.MipLevels;
 
     if (auto hr = device->CreateShaderResourceView(texture2D.Get(), &srvDesc, &shaderResourceView); FAILED(hr)) {
-        return errors::New("CreateShaderResourceView() failed: hr = " + std::to_string(hr));
+        return errors::make("CreateShaderResourceView() failed: hr = " + std::to_string(hr));
     }
 
     return nullptr;

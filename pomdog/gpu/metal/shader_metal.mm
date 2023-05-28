@@ -42,26 +42,26 @@ ShaderMetal::Initialize(
     }
 
     if (compileError != nullptr) {
-        return errors::New(StringHelper::Format(
+        return errors::make(StringHelper::Format(
             "Failed to compile shader.\n"
             "error: %s",
             [[compileError localizedDescription] UTF8String]));
     }
 
     if (library == nullptr) {
-        return errors::New("MTLLibrary must be != nullptr");
+        return errors::make("MTLLibrary must be != nullptr");
     }
 
     POMDOG_ASSERT(!compileOptions.EntryPoint.empty());
 
     auto funcName = [NSString stringWithUTF8String:compileOptions.EntryPoint.data()];
     if (funcName == nullptr) {
-        return errors::New("funcName must be != nullptr");
+        return errors::make("funcName must be != nullptr");
     }
     this->shader = [library newFunctionWithName:funcName];
 
     if (shader == nullptr) {
-        return errors::New("MTLFunction must be != nullptr");
+        return errors::make("MTLFunction must be != nullptr");
     }
 
     return nullptr;
@@ -77,7 +77,7 @@ ShaderMetal::Initialize(
     POMDOG_ASSERT(library != nullptr);
 
     if (library == nullptr) {
-        return errors::New("MTLLibrary must be != nullptr");
+        return errors::make("MTLLibrary must be != nullptr");
     }
 
     POMDOG_ASSERT(!compileOptions.EntryPoint.empty());

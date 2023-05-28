@@ -47,7 +47,7 @@ TextureAtlasLoader::Load(const std::string& filePath)
     std::ifstream stream{filePath, std::ifstream::binary};
 
     if (!stream) {
-        auto err = errors::New("cannot open the file, " + filePath);
+        auto err = errors::make("cannot open the file, " + filePath);
         return std::make_tuple(TextureAtlas{}, std::move(err));
     }
 
@@ -182,7 +182,7 @@ TextureAtlasLoader::Load(const std::string& filePath)
         result.pages.clear();
         result.regions.clear();
 
-        auto err = errors::New("cannot parse the file, " + filePath);
+        auto err = errors::make("cannot parse the file, " + filePath);
         return std::make_tuple(TextureAtlas{}, std::move(err));
     }
 

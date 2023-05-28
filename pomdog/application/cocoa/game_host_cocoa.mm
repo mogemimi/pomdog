@@ -162,7 +162,7 @@ GameHostCocoa::Impl::initialize(
     this->displayLinkEnabled = true;
 
     if (presentationParameters.presentationInterval <= 0) {
-        return errors::New("PresentationInterval must be > 0.");
+        return errors::make("PresentationInterval must be > 0.");
     }
     POMDOG_ASSERT(presentationParameters.presentationInterval > 0);
     presentationInterval = Duration(1) / presentationParameters.presentationInterval;
@@ -170,7 +170,7 @@ GameHostCocoa::Impl::initialize(
     timeSource_ = std::make_shared<detail::apple::TimeSourceApple>();
     clock_ = std::make_shared<GameClockImpl>();
     if (auto err = clock_->Initialize(presentationParameters.presentationInterval, timeSource_); err != nullptr) {
-        return errors::Wrap(std::move(err), "GameClockImpl::Initialize() failed.");
+        return errors::wrap(std::move(err), "GameClockImpl::Initialize() failed.");
     }
 
     POMDOG_ASSERT(window);
@@ -179,7 +179,7 @@ GameHostCocoa::Impl::initialize(
     // NOTE: Create OpenGL context.
     openGLContext = std::make_shared<OpenGLContextCocoa>();
     if (auto err = openGLContext->Initialize(presentationParameters); err != nullptr) {
-        return errors::Wrap(std::move(err), "OpenGLContextCocoa::Initialize() failed.");
+        return errors::wrap(std::move(err), "OpenGLContextCocoa::Initialize() failed.");
     }
 
     POMDOG_ASSERT(openGLView != nullptr);
@@ -194,13 +194,13 @@ GameHostCocoa::Impl::initialize(
     // NOTE: Create a graphics device.
     graphicsDevice = std::make_shared<GraphicsDeviceGL4>();
     if (auto err = graphicsDevice->Initialize(presentationParameters); err != nullptr) {
-        return errors::Wrap(std::move(err), "GraphicsDeviceGL4::Initialize() failed.");
+        return errors::wrap(std::move(err), "GraphicsDeviceGL4::Initialize() failed.");
     }
 
     // NOTE: Create a graphics context.
     graphicsContext = std::make_shared<GraphicsContextGL4>();
     if (auto err = graphicsContext->Initialize(openGLContext, graphicsDevice); err != nullptr) {
-        return errors::Wrap(std::move(err), "GraphicsContextGL4::Initialize() failed.");
+        return errors::wrap(std::move(err), "GraphicsContextGL4::Initialize() failed.");
     }
 
     graphicsCommandQueue = std::make_shared<gpu::detail::CommandQueueImmediate>(graphicsContext);
@@ -209,7 +209,7 @@ GameHostCocoa::Impl::initialize(
     // NOTE: Create audio engine.
     audioEngine = std::make_shared<AudioEngineAL>();
     if (auto err = audioEngine->Initialize(); err != nullptr) {
-        return errors::Wrap(std::move(err), "AudioEngineAL::Initialize() failed.");
+        return errors::wrap(std::move(err), "AudioEngineAL::Initialize() failed.");
     }
 
     // Create subsystems
@@ -219,7 +219,7 @@ GameHostCocoa::Impl::initialize(
     // NOTE: Create gamepad
     gamepad = std::make_shared<GamepadIOKit>();
     if (auto err = gamepad->Initialize(eventQueue); err != nullptr) {
-        return errors::Wrap(std::move(err), "GamepadIOKit::Initialize() failed.");
+        return errors::wrap(std::move(err), "GamepadIOKit::Initialize() failed.");
     }
 
     // Connect to system event signal
@@ -229,7 +229,7 @@ GameHostCocoa::Impl::initialize(
 
     auto [resourceDir, resourceDirErr] = FileSystem::GetResourceDirectoryPath();
     if (resourceDirErr != nullptr) {
-        return errors::Wrap(std::move(resourceDirErr), "FileSystem::GetResourceDirectoryPath() failed.");
+        return errors::wrap(std::move(resourceDirErr), "FileSystem::GetResourceDirectoryPath() failed.");
     }
     auto contentDirectory = PathHelper::Join(resourceDir, "content");
 
@@ -241,7 +241,7 @@ GameHostCocoa::Impl::initialize(
 
     ioService_ = std::make_unique<IOService>();
     if (auto err = ioService_->Initialize(clock_); err != nullptr) {
-        return errors::Wrap(std::move(err), "IOService::Initialize() failed.");
+        return errors::wrap(std::move(err), "IOService::Initialize() failed.");
     }
     httpClient = std::make_unique<HTTPClient>(ioService_.get());
 
@@ -265,7 +265,7 @@ GameHostCocoa::Impl::~Impl()
     systemEventConnection.Disconnect();
     httpClient.reset();
     if (auto err = ioService_->Shutdown(); err != nullptr) {
-        Log::Warning("pomdog", err->ToString());
+        Log::Warning("pomdog", err->toString());
     }
     ioService_.reset();
     assetManager.reset();
@@ -302,7 +302,7 @@ GameHostCocoa::Impl::run(
     if (auto err = game->initialize(); err != nullptr) {
         openGLContext->Unlock();
         gameWillExit();
-        return errors::Wrap(std::move(err), "failed to initialzie game");
+        return errors::wrap(std::move(err), "failed to initialzie game");
     }
 
     openGLContext->Unlock();

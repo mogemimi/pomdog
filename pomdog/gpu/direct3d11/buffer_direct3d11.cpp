@@ -31,7 +31,7 @@ CreateNativeBuffer(
 
     if (bindFlag == D3D11_BIND_CONSTANT_BUFFER) {
         if (sizeInBytes > D3D11_REQ_CONSTANT_BUFFER_ELEMENT_COUNT) {
-            auto err = errors::New(
+            auto err = errors::make(
                 "You must set the sizeInBytes value less than or"
                 " equal to D3D11_REQ_CONSTANT_BUFFER_ELEMENT_COUNT.");
             return std::make_tuple(nullptr, std::move(err));
@@ -84,7 +84,7 @@ CreateNativeBuffer(
 
     ID3D11Buffer* buffer = nullptr;
     if (auto hr = device->CreateBuffer(&bufferDesc, initialData, &buffer); FAILED(hr)) {
-        auto err = errors::New("failed to create ID3D11Buffer");
+        auto err = errors::make("failed to create ID3D11Buffer");
         return std::make_tuple(nullptr, std::move(err));
     }
 
@@ -132,7 +132,7 @@ BufferDirect3D11::Initialize(
         bufferUsage,
         bindFlag);
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "CreateNativeBuffer() failed");
+        return errors::wrap(std::move(err), "CreateNativeBuffer() failed");
     }
 
     return nullptr;
@@ -156,7 +156,7 @@ BufferDirect3D11::Initialize(
         bufferUsage,
         bindFlag);
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "CreateNativeBuffer() failed");
+        return errors::wrap(std::move(err), "CreateNativeBuffer() failed");
     }
 
     return nullptr;

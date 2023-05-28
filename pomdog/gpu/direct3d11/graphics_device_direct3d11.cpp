@@ -46,7 +46,7 @@ BuildInfoQueue(ID3D11Device* nativeDevice) noexcept
         if (hr == E_NOINTERFACE) {
             return std::make_tuple(nullptr, nullptr);
         }
-        return std::make_tuple(nullptr, errors::New("failed to get ID3D11InfoQueue"));
+        return std::make_tuple(nullptr, errors::make("failed to get ID3D11InfoQueue"));
     }
 
     if (infoQueue == nullptr) {
@@ -70,10 +70,10 @@ BuildInfoQueue(ID3D11Device* nativeDevice) noexcept
     filter.DenyList.NumSeverities = static_cast<UINT>(severityList.size());
 
     if (auto hr = infoQueue->AddStorageFilterEntries(&filter); FAILED(hr)) {
-        return std::make_tuple(nullptr, errors::New("AddStorageFilterEntries() failed"));
+        return std::make_tuple(nullptr, errors::make("AddStorageFilterEntries() failed"));
     }
     if (auto hr = infoQueue->AddRetrievalFilterEntries(&filter); FAILED(hr)) {
-        return std::make_tuple(nullptr, errors::New("AddRetrievalFilterEntries() failed"));
+        return std::make_tuple(nullptr, errors::make("AddRetrievalFilterEntries() failed"));
     }
 
     return std::make_tuple(std::move(infoQueue), nullptr);
@@ -108,7 +108,7 @@ CheckError(ID3D11InfoQueue* infoQueue) noexcept
     }
 
     if (!message.empty()) {
-        return errors::New(std::move(message));
+        return errors::make(std::move(message));
     }
 
     return nullptr;
@@ -186,12 +186,12 @@ BuildDevice(
     }
 
     if (FAILED(hr)) {
-        return errors::New("failed to create ID3D11Device");
+        return errors::make("failed to create ID3D11Device");
     }
 
     // NOTE: Create ID3D11Device3 from ID3D11Device.
     if (hr = d3d11Device->QueryInterface(__uuidof(ID3D11Device3), &device); FAILED(hr)) {
-        return errors::New("failed to create ID3D11Device3 from ID3D11Device");
+        return errors::make("failed to create ID3D11Device3 from ID3D11Device");
     }
     d3d11Device.Reset();
 
@@ -219,7 +219,7 @@ BuildDevice(
             sizeof(D3D11_FEATURE_DATA_D3D11_OPTIONS));
 
         if (FAILED(hr)) {
-            return errors::New("CheckFeatureSupport(D3D11_FEATURE_D3D11_OPTIONS) failed");
+            return errors::make("CheckFeatureSupport(D3D11_FEATURE_D3D11_OPTIONS) failed");
         }
 
         Log::Internal("MapNoOverwriteOnDynamicBufferSRV: " +
@@ -240,14 +240,14 @@ AdapterManager::EnumAdapters() noexcept
     HRESULT hr = CreateDXGIFactory1(IID_PPV_ARGS(&dxgiFactory));
 
     if (FAILED(hr)) {
-        return errors::New("CreateDXGIFactory1() failed");
+        return errors::make("CreateDXGIFactory1() failed");
     }
 
     UINT i = 0;
     Microsoft::WRL::ComPtr<IDXGIAdapter1> newAdapter;
     while ((hr = dxgiFactory->EnumAdapters1(i, &newAdapter)) != DXGI_ERROR_NOT_FOUND) {
         if (FAILED(hr)) {
-            return errors::New("failed to enumerate adapters");
+            return errors::make("failed to enumerate adapters");
         }
 
         adapters.push_back(newAdapter);
@@ -256,7 +256,7 @@ AdapterManager::EnumAdapters() noexcept
     }
 
     if (adapters.empty()) {
-        return errors::New("List of DXGI adapters is empty");
+        return errors::make("List of DXGI adapters is empty");
     }
 
     POMDOG_ASSERT(!adapters.empty());
@@ -287,7 +287,7 @@ AdapterManager::GetFactory() noexcept
 
     ComPtr<IDXGIFactory1> dxgiFactory;
     if (auto hr = activeAdapter->GetParent(IID_PPV_ARGS(&dxgiFactory)); FAILED(hr)) {
-        return std::make_tuple(nullptr, errors::New("failed to get DXGIFactory1"));
+        return std::make_tuple(nullptr, errors::make("failed to get DXGIFactory1"));
     }
 
     return std::make_tuple(std::move(dxgiFactory), nullptr);
@@ -301,17 +301,17 @@ GraphicsDeviceDirect3D11::Initialize(const PresentationParameters& presentationP
     presentationParameters = presentationParametersIn;
 
     if (auto err = adapters.EnumAdapters(); err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to enumerate adapters");
+        return errors::wrap(std::move(err), "failed to enumerate adapters");
     }
 
     if (auto err = BuildDevice(adapters, device, driverType, featureLevel); err != nullptr) {
-        return errors::Wrap(std::move(err), "BuildDevice() failed");
+        return errors::wrap(std::move(err), "BuildDevice() failed");
     }
 
     std::unique_ptr<Error> err;
     std::tie(infoQueue, err) = BuildInfoQueue(device.Get());
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "BuildInfoQueue() failed");
+        return errors::wrap(std::move(err), "BuildInfoQueue() failed");
     }
 
     return nullptr;
@@ -360,12 +360,12 @@ GraphicsDeviceDirect3D11::CreateVertexBuffer(
             bufferUsage,
             ToBindFlag(BufferBindMode::VertexBuffer));
         err != nullptr) {
-        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize BufferDirect3D11"));
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize BufferDirect3D11"));
     }
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     if (auto err = CheckError(infoQueue.Get()); err != nullptr) {
-        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "CheckError() failed"));
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "CheckError() failed"));
     }
 #endif
 
@@ -399,12 +399,12 @@ GraphicsDeviceDirect3D11::CreateVertexBuffer(
             bufferUsage,
             ToBindFlag(BufferBindMode::VertexBuffer));
         err != nullptr) {
-        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize BufferDirect3D11"));
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize BufferDirect3D11"));
     }
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     if (auto err = CheckError(infoQueue.Get()); err != nullptr) {
-        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "CheckError() failed"));
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "CheckError() failed"));
     }
 #endif
 
@@ -438,12 +438,12 @@ GraphicsDeviceDirect3D11::CreateIndexBuffer(
             bufferUsage,
             ToBindFlag(BufferBindMode::IndexBuffer));
         err != nullptr) {
-        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize BufferDirect3D11"));
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize BufferDirect3D11"));
     }
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     if (auto err = CheckError(infoQueue.Get()); err != nullptr) {
-        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "CheckError() failed"));
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "CheckError() failed"));
     }
 #endif
 
@@ -476,12 +476,12 @@ GraphicsDeviceDirect3D11::CreateIndexBuffer(
             bufferUsage,
             ToBindFlag(BufferBindMode::IndexBuffer));
         err != nullptr) {
-        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize BufferDirect3D11"));
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize BufferDirect3D11"));
     }
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     if (auto err = CheckError(infoQueue.Get()); err != nullptr) {
-        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "CheckError() failed"));
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "CheckError() failed"));
     }
 #endif
 
@@ -512,12 +512,12 @@ GraphicsDeviceDirect3D11::CreateConstantBuffer(
             bufferUsage,
             ToBindFlag(BufferBindMode::ConstantBuffer));
         err != nullptr) {
-        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize BufferDirect3D11"));
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize BufferDirect3D11"));
     }
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     if (auto err = CheckError(infoQueue.Get()); err != nullptr) {
-        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "CheckError() failed"));
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "CheckError() failed"));
     }
 #endif
 
@@ -546,12 +546,12 @@ GraphicsDeviceDirect3D11::CreateConstantBuffer(
             bufferUsage,
             ToBindFlag(BufferBindMode::ConstantBuffer));
         err != nullptr) {
-        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize BufferDirect3D11"));
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize BufferDirect3D11"));
     }
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     if (auto err = CheckError(infoQueue.Get()); err != nullptr) {
-        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "CheckError() failed"));
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "CheckError() failed"));
     }
 #endif
 
@@ -569,7 +569,7 @@ GraphicsDeviceDirect3D11::CreatePipelineState(const PipelineDescriptor& descript
     auto pipelineState = std::make_shared<PipelineStateDirect3D11>();
 
     if (auto err = pipelineState->Initialize(device.Get(), descriptor); err != nullptr) {
-        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize PipelineStateDirect3D11"));
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize PipelineStateDirect3D11"));
     }
 
     return std::make_tuple(std::move(pipelineState), nullptr);
@@ -582,12 +582,12 @@ GraphicsDeviceDirect3D11::CreateEffectReflection(
 {
     auto vertexShader = std::dynamic_pointer_cast<VertexShaderDirect3D11>(descriptor.VertexShader);
     if (vertexShader == nullptr) {
-        return std::make_tuple(nullptr, errors::New("failed to cast VertexShader to VertexShaderDirect3D11"));
+        return std::make_tuple(nullptr, errors::make("failed to cast VertexShader to VertexShaderDirect3D11"));
     }
 
     auto pixelShader = std::dynamic_pointer_cast<PixelShaderDirect3D11>(descriptor.PixelShader);
     if (pixelShader == nullptr) {
-        return std::make_tuple(nullptr, errors::New("failed to cast PixelShader to PixelShaderDirect3D11"));
+        return std::make_tuple(nullptr, errors::make("failed to cast PixelShader to PixelShaderDirect3D11"));
     }
 
     auto effectReflection = std::make_shared<EffectReflectionDirect3D11>();
@@ -595,7 +595,7 @@ GraphicsDeviceDirect3D11::CreateEffectReflection(
             vertexShader->GetShaderBytecode(),
             pixelShader->GetShaderBytecode());
         err != nullptr) {
-        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize EffectReflectionDirect3D11"));
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize EffectReflectionDirect3D11"));
     }
 
     return std::make_tuple(std::move(effectReflection), nullptr);
@@ -612,19 +612,19 @@ GraphicsDeviceDirect3D11::CreateShader(
     case ShaderPipelineStage::VertexShader: {
         auto shader = std::make_unique<VertexShaderDirect3D11>();
         if (auto err = shader->Initialize(device.Get(), shaderBytecode, compileOptions); err != nullptr) {
-            return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize VertexShaderDirect3D11"));
+            return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize VertexShaderDirect3D11"));
         }
         return std::make_tuple(std::move(shader), nullptr);
     }
     case ShaderPipelineStage::PixelShader: {
         auto shader = std::make_unique<PixelShaderDirect3D11>();
         if (auto err = shader->Initialize(device.Get(), shaderBytecode, compileOptions); err != nullptr) {
-            return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize PixelShaderDirect3D11"));
+            return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize PixelShaderDirect3D11"));
         }
         return std::make_tuple(std::move(shader), nullptr);
     }
     }
-    return std::make_tuple(nullptr, errors::New("unsupported shader stage"));
+    return std::make_tuple(nullptr, errors::make("unsupported shader stage"));
 }
 
 std::tuple<std::shared_ptr<RenderTarget2D>, std::unique_ptr<Error>>
@@ -667,7 +667,7 @@ GraphicsDeviceDirect3D11::CreateRenderTarget2D(
             format,
             multiSampleCount);
         err != nullptr) {
-        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize RenderTarget2DDirect3D11"));
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize RenderTarget2DDirect3D11"));
     }
 
     return std::make_tuple(std::move(renderTarget), nullptr);
@@ -695,7 +695,7 @@ GraphicsDeviceDirect3D11::CreateDepthStencilBuffer(
             depthStencilFormat,
             multiSampleCount);
         err != nullptr) {
-        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize DepthStencilBufferDirect3D11"));
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize DepthStencilBufferDirect3D11"));
     }
 
     return std::make_tuple(std::move(depthStencilBuffer), nullptr);
@@ -708,7 +708,7 @@ GraphicsDeviceDirect3D11::CreateSamplerState(const SamplerDescriptor& descriptor
     auto samplerState = std::make_shared<SamplerStateDirect3D11>();
 
     if (auto err = samplerState->Initialize(device.Get(), descriptor); err != nullptr) {
-        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize SamplerStateDirect3D11"));
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize SamplerStateDirect3D11"));
     }
 
     return std::make_tuple(std::move(samplerState), nullptr);
@@ -750,7 +750,7 @@ GraphicsDeviceDirect3D11::CreateTexture2D(
             levelCount,
             format);
         err != nullptr) {
-        return std::make_tuple(nullptr, errors::Wrap(std::move(err), "failed to initialize Texture2DDirect3D11"));
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize Texture2DDirect3D11"));
     }
 
     return std::make_tuple(std::move(texture), nullptr);

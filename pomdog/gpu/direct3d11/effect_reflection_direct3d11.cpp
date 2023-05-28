@@ -141,7 +141,7 @@ EffectReflectionDirect3D11::Initialize(
         IID_PPV_ARGS(&vertexShaderReflector));
 
     if (FAILED(hr)) {
-        return errors::New("D3DReflect() failed with a vertex shader");
+        return errors::make("D3DReflect() failed with a vertex shader");
     }
 
     hr = D3DReflect(
@@ -150,7 +150,7 @@ EffectReflectionDirect3D11::Initialize(
         IID_PPV_ARGS(&pixelShaderReflector));
 
     if (FAILED(hr)) {
-        return errors::New("D3DReflect() failed with a pixel shader");
+        return errors::make("D3DReflect() failed with a pixel shader");
     }
 
     return nullptr;

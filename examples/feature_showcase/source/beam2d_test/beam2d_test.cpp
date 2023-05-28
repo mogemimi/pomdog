@@ -22,7 +22,7 @@ std::unique_ptr<Error> Beam2DTest::initialize()
     // NOTE: Create graphics command list
     std::tie(commandList, err) = graphicsDevice->CreateCommandList();
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to create graphics command list");
+        return errors::wrap(std::move(err), "failed to create graphics command list");
     }
 
     primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
@@ -39,7 +39,7 @@ std::unique_ptr<Error> Beam2DTest::initialize()
     // NOTE: Load texture from PNG image file.
     std::tie(texture, err) = assets->Load<gpu::Texture2D>("Textures/particle_lightning.png");
     if (err != nullptr) {
-        return errors::Wrap(std::move(err), "failed to load texture");
+        return errors::wrap(std::move(err), "failed to load texture");
     }
 
     timer = std::make_shared<Timer>(clock);

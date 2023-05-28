@@ -31,14 +31,14 @@ TCPStreamEmscripten::Connect(
     [[maybe_unused]] const Duration& connectTimeout)
 {
     // FIXME: Not implemented yet.
-    return errors::New("not implemented yet");
+    return errors::make("not implemented yet");
 }
 
 std::unique_ptr<Error>
 TCPStreamEmscripten::Write([[maybe_unused]] const ArrayView<std::uint8_t const>& data)
 {
     // FIXME: Not implemented yet.
-    return errors::New("not implemented yet");
+    return errors::make("not implemented yet");
 }
 
 bool TCPStreamEmscripten::IsConnected() const noexcept

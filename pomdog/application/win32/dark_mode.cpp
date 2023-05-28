@@ -126,7 +126,7 @@ namespace {
     }
 
     if (auto hr = ::SetWindowTheme(windowHandle, L"DarkMode_Explorer", nullptr); FAILED(hr)) {
-        return errors::New("SetWindowTheme() failed.");
+        return errors::make("SetWindowTheme() failed.");
     }
 
     constexpr DWORD DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1 = 19;
@@ -142,7 +142,7 @@ namespace {
 
     const BOOL useDarkMode = enabled ? TRUE : FALSE;
     if (auto hr = ::DwmSetWindowAttribute(windowHandle, attribute, &useDarkMode, sizeof(useDarkMode)); FAILED(hr)) {
-        return errors::New("DwmSetWindowAttribute(..., DWMWA_USE_IMMERSIVE_DARK_MODE, ...) failed.");
+        return errors::make("DwmSetWindowAttribute(..., DWMWA_USE_IMMERSIVE_DARK_MODE, ...) failed.");
     }
 
     return nullptr;
