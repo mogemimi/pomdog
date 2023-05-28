@@ -30,16 +30,16 @@ public:
     explicit GameMain(const std::shared_ptr<GameHost>& gameHost);
 
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize() override;
+    initialize() override;
 
-    void Update() override;
+    void update() override;
 
-    void Draw() override;
+    void draw() override;
 
 private:
-    void UpdateMenuLayout();
+    void updateMenuLayout();
 
-    void DrawMenu();
+    void drawMenu();
 
 private:
     std::shared_ptr<GameHost> gameHost;

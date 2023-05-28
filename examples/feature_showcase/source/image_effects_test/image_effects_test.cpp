@@ -11,16 +11,16 @@ namespace feature_showcase {
 
 ImageEffectsTest::ImageEffectsTest(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
-    , graphicsDevice(gameHostIn->GetGraphicsDevice())
-    , commandQueue(gameHostIn->GetCommandQueue())
-    , postProcessCompositor(gameHostIn->GetGraphicsDevice())
+    , graphicsDevice(gameHostIn->getGraphicsDevice())
+    , commandQueue(gameHostIn->getCommandQueue())
+    , postProcessCompositor(gameHostIn->getGraphicsDevice())
 {
 }
 
-std::unique_ptr<Error> ImageEffectsTest::Initialize()
+std::unique_ptr<Error> ImageEffectsTest::initialize()
 {
-    auto assets = gameHost->GetAssetManager();
-    auto clock = gameHost->GetClock();
+    auto assets = gameHost->getAssetManager();
+    auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
 
@@ -82,9 +82,9 @@ std::unique_ptr<Error> ImageEffectsTest::Initialize()
         chromaticAberration,
     });
 
-    auto window = gameHost->GetWindow();
+    auto window = gameHost->getWindow();
 
-    connect(window->ClientSizeChanged, [this](int width, int height) {
+    connect(window->clientSizeChanged, [this](int width, int height) {
         auto presentationParameters = graphicsDevice->GetPresentationParameters();
         renderTarget = std::get<0>(graphicsDevice->CreateRenderTarget2D(
             width,
@@ -105,9 +105,11 @@ std::unique_ptr<Error> ImageEffectsTest::Initialize()
     return nullptr;
 }
 
-void ImageEffectsTest::Update() {}
+void ImageEffectsTest::update()
+{
+}
 
-void ImageEffectsTest::Draw()
+void ImageEffectsTest::draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 

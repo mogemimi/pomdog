@@ -41,7 +41,7 @@ public:
 Builder<gpu::PipelineState>::Impl::Impl(AssetManager& assetsIn)
     : assets(assetsIn)
 {
-    graphicsDevice = assetsIn.GetGraphicsDevice();
+    graphicsDevice = assetsIn.getGraphicsDevice();
     descriptor.multiSampleMask = std::numeric_limits<std::uint32_t>::max();
     descriptor.primitiveTopology = gpu::PrimitiveTopology::TriangleList;
 }

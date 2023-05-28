@@ -4,15 +4,15 @@ namespace feature_showcase {
 
 GamepadTest::GamepadTest(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
-    , graphicsDevice(gameHostIn->GetGraphicsDevice())
-    , commandQueue(gameHostIn->GetCommandQueue())
+    , graphicsDevice(gameHostIn->getGraphicsDevice())
+    , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
-std::unique_ptr<Error> GamepadTest::Initialize()
+std::unique_ptr<Error> GamepadTest::initialize()
 {
-    auto assets = gameHost->GetAssetManager();
-    auto clock = gameHost->GetClock();
+    auto assets = gameHost->getAssetManager();
+    auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
 
@@ -32,22 +32,22 @@ std::unique_ptr<Error> GamepadTest::Initialize()
     spriteFont = std::make_shared<SpriteFont>(graphicsDevice, font, 24.0f, 24.0f);
     spriteFont->PrepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
 
-    connect(gameHost->GetGamepad()->Connected, [](PlayerIndex playerIndex, const GamepadCapabilities& caps) {
+    connect(gameHost->getGamepad()->Connected, [](PlayerIndex playerIndex, const GamepadCapabilities& caps) {
         Log::Verbose("Connected: " + caps.Name + " at " + std::to_string(static_cast<int>(playerIndex)));
     });
 
-    connect(gameHost->GetGamepad()->Disconnected, [](PlayerIndex playerIndex, const GamepadCapabilities& caps) {
+    connect(gameHost->getGamepad()->Disconnected, [](PlayerIndex playerIndex, const GamepadCapabilities& caps) {
         Log::Verbose("Disconnected: " + caps.Name + " at " + std::to_string(static_cast<int>(playerIndex)));
     });
 
     return nullptr;
 }
 
-void GamepadTest::Update()
+void GamepadTest::update()
 {
 }
 
-void GamepadTest::Draw()
+void GamepadTest::draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
@@ -78,7 +78,7 @@ void GamepadTest::Draw()
         textPos.y -= 18.0f;
     };
 
-    auto gamepad = gameHost->GetGamepad();
+    auto gamepad = gameHost->getGamepad();
 
     auto printButton = [&](const std::string& name, ButtonState button, bool hasButton) {
         spriteFont->Draw(*spriteBatch, name + ":", textPos, Color::createWhite(), 0.0f, Vector2{1.0f, 0.5f}, fontScale);

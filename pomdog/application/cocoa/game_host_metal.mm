@@ -70,66 +70,66 @@ public:
     ~Impl();
 
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(
+    initialize(
         MTKView* metalView,
         const std::shared_ptr<GameWindowCocoa>& window,
         const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
         const gpu::PresentationParameters& presentationParameters);
 
     [[nodiscard]] std::unique_ptr<Error>
-    InitializeGame(
+    initializeGame(
         const std::weak_ptr<Game>& game,
         const std::function<void()>& onCompleted);
 
-    void GameLoop();
+    void gameLoop();
 
-    bool IsMetalSupported() const;
+    bool isMetalSupported() const;
 
-    void Exit();
+    void exit();
 
     [[nodiscard]] std::shared_ptr<GameWindow>
-    GetWindow() noexcept;
+    getWindow() noexcept;
 
     [[nodiscard]] std::shared_ptr<GameClock>
-    GetClock() noexcept;
+    getClock() noexcept;
 
     [[nodiscard]] std::shared_ptr<gpu::GraphicsDevice>
-    GetGraphicsDevice() noexcept;
+    getGraphicsDevice() noexcept;
 
     [[nodiscard]] std::shared_ptr<gpu::CommandQueue>
-    GetCommandQueue() noexcept;
+    getCommandQueue() noexcept;
 
     [[nodiscard]] std::shared_ptr<AssetManager>
-    GetAssetManager(std::shared_ptr<GameHost>&& gameHost) noexcept;
+    getAssetManager(std::shared_ptr<GameHost>&& gameHost) noexcept;
 
     [[nodiscard]] std::shared_ptr<AudioEngine>
-    GetAudioEngine() noexcept;
+    getAudioEngine() noexcept;
 
     [[nodiscard]] std::shared_ptr<Keyboard>
-    GetKeyboard() noexcept;
+    getKeyboard() noexcept;
 
     [[nodiscard]] std::shared_ptr<Mouse>
-    GetMouse() noexcept;
+    getMouse() noexcept;
 
     [[nodiscard]] std::shared_ptr<Gamepad>
-    GetGamepad() noexcept;
+    getGamepad() noexcept;
 
     [[nodiscard]] std::shared_ptr<IOService>
-    GetIOService(std::shared_ptr<GameHost>&& gameHost) noexcept;
+    getIOService(std::shared_ptr<GameHost>&& gameHost) noexcept;
 
     [[nodiscard]] std::shared_ptr<HTTPClient>
-    GetHTTPClient(std::shared_ptr<GameHost>&& gameHost) noexcept;
+    getHTTPClient(std::shared_ptr<GameHost>&& gameHost) noexcept;
 
 private:
-    void RenderFrame();
+    void renderFrame();
 
-    void DoEvents();
+    void doEvents();
 
-    void ProcessSystemEvents(const SystemEvent& event);
+    void processSystemEvents(const SystemEvent& event);
 
-    void ClientSizeChanged();
+    void clientSizeChanged();
 
-    void GameWillExit();
+    void gameWillExit();
 
 private:
     ScopedConnection systemEventConnection;
@@ -160,7 +160,7 @@ private:
 };
 
 std::unique_ptr<Error>
-GameHostMetal::Impl::Initialize(
+GameHostMetal::Impl::initialize(
     MTKView* metalViewIn,
     const std::shared_ptr<GameWindowCocoa>& windowIn,
     const std::shared_ptr<EventQueue<SystemEvent>>& eventQueueIn,
@@ -182,7 +182,7 @@ GameHostMetal::Impl::Initialize(
         return errors::Wrap(std::move(err), "GameClockImpl::Initialize() failed.");
     }
 
-    window->SetView(metalView);
+    window->setView(metalView);
 
     frameCounter_ = std::make_shared<FrameCounter>();
 
@@ -231,7 +231,7 @@ GameHostMetal::Impl::Initialize(
     // NOTE: Connect to system event signal
     POMDOG_ASSERT(eventQueue);
     systemEventConnection = eventQueue->Connect(
-        [this](const SystemEvent& event) { ProcessSystemEvents(event); });
+        [this](const SystemEvent& event) { processSystemEvents(event); });
 
     auto [resourceDir, resourceDirErr] = FileSystem::GetResourceDirectoryPath();
     if (resourceDirErr != nullptr) {
@@ -280,7 +280,7 @@ GameHostMetal::Impl::~Impl()
 }
 
 std::unique_ptr<Error>
-GameHostMetal::Impl::InitializeGame(
+GameHostMetal::Impl::initializeGame(
     const std::weak_ptr<Game>& weakGameIn,
     const std::function<void()>& onCompletedIn)
 {
@@ -292,19 +292,19 @@ GameHostMetal::Impl::InitializeGame(
     POMDOG_ASSERT(!weakGame.expired());
     auto game = weakGame.lock();
 
-    if (auto err = game->Initialize(); err != nullptr) {
-        GameWillExit();
+    if (auto err = game->initialize(); err != nullptr) {
+        gameWillExit();
         return errors::Wrap(std::move(err), "failed to initialize game");
     }
 
     if (exitRequest) {
-        GameWillExit();
+        gameWillExit();
     }
 
     return nullptr;
 }
 
-bool GameHostMetal::Impl::IsMetalSupported() const
+bool GameHostMetal::Impl::isMetalSupported() const
 {
     if (!graphicsDevice) {
         return false;
@@ -317,10 +317,10 @@ bool GameHostMetal::Impl::IsMetalSupported() const
     return metalDevice != nullptr;
 }
 
-void GameHostMetal::Impl::GameWillExit()
+void GameHostMetal::Impl::gameWillExit()
 {
     if (window) {
-        window->SetView(nullptr);
+        window->setView(nullptr);
     }
 
     if (onCompleted) {
@@ -330,13 +330,13 @@ void GameHostMetal::Impl::GameWillExit()
     }
 }
 
-void GameHostMetal::Impl::Exit()
+void GameHostMetal::Impl::exit()
 {
     exitRequest = true;
-    GameWillExit();
+    gameWillExit();
 }
 
-void GameHostMetal::Impl::GameLoop()
+void GameHostMetal::Impl::gameLoop()
 {
     POMDOG_ASSERT(graphicsContext != nullptr);
 
@@ -354,26 +354,26 @@ void GameHostMetal::Impl::GameLoop()
     POMDOG_ASSERT(game);
 
     clock_->Tick();
-    DoEvents();
+    doEvents();
     ioService_->Step();
 
     if (exitRequest) {
         return;
     }
 
-    game->Update();
+    game->update();
 
     if (!viewLiveResizing.load()) {
-        RenderFrame();
+        renderFrame();
     }
 }
 
-void GameHostMetal::Impl::RenderFrame()
+void GameHostMetal::Impl::renderFrame()
 {
     POMDOG_ASSERT(window);
     POMDOG_ASSERT(!weakGame.expired());
 
-    bool skipRender = (!window || window->IsMinimized() || [NSApp isHidden] == YES);
+    bool skipRender = (!window || window->isMinimized() || [NSApp isHidden] == YES);
 
     if (skipRender) {
         return;
@@ -383,38 +383,38 @@ void GameHostMetal::Impl::RenderFrame()
 
     POMDOG_ASSERT(game);
 
-    game->Draw();
+    game->draw();
 }
 
-void GameHostMetal::Impl::DoEvents()
+void GameHostMetal::Impl::doEvents()
 {
     eventQueue->Emit();
 }
 
-void GameHostMetal::Impl::ProcessSystemEvents(const SystemEvent& event)
+void GameHostMetal::Impl::processSystemEvents(const SystemEvent& event)
 {
-    switch (event.Kind) {
+    switch (event.kind) {
     case SystemEventKind::WindowShouldCloseEvent:
         Log::Internal("WindowShouldCloseEvent");
-        this->Exit();
+        exit();
         break;
     case SystemEventKind::WindowWillCloseEvent:
         Log::Internal("WindowWillCloseEvent");
         break;
     case SystemEventKind::ViewWillStartLiveResizeEvent: {
-        auto rect = window->GetClientBounds();
+        auto rect = window->getClientBounds();
         Log::Internal(StringHelper::Format(
             "ViewWillStartLiveResizeEvent: {w: %d, h: %d}",
             rect.width, rect.height));
         break;
     }
     case SystemEventKind::ViewDidEndLiveResizeEvent: {
-        auto rect = window->GetClientBounds();
+        auto rect = window->getClientBounds();
         Log::Internal(StringHelper::Format(
             "ViewDidEndLiveResizeEvent: {w: %d, h: %d}",
             rect.width, rect.height));
 
-        ClientSizeChanged();
+        clientSizeChanged();
         break;
     }
     default:
@@ -428,72 +428,72 @@ void GameHostMetal::Impl::ProcessSystemEvents(const SystemEvent& event)
     }
 }
 
-void GameHostMetal::Impl::ClientSizeChanged()
+void GameHostMetal::Impl::clientSizeChanged()
 {
     POMDOG_ASSERT(graphicsDevice != nullptr);
-    auto bounds = window->GetClientBounds();
+    auto bounds = window->getClientBounds();
 
-    graphicsDevice->ClientSizeChanged(bounds.width, bounds.height);
-    window->ClientSizeChanged(bounds.width, bounds.height);
+    graphicsDevice->clientSizeChanged(bounds.width, bounds.height);
+    window->clientSizeChanged(bounds.width, bounds.height);
 }
 
 std::shared_ptr<GameWindow>
-GameHostMetal::Impl::GetWindow() noexcept
+GameHostMetal::Impl::getWindow() noexcept
 {
     return window;
 }
 
 std::shared_ptr<GameClock>
-GameHostMetal::Impl::GetClock() noexcept
+GameHostMetal::Impl::getClock() noexcept
 {
     return clock_;
 }
 
 std::shared_ptr<gpu::GraphicsDevice>
-GameHostMetal::Impl::GetGraphicsDevice() noexcept
+GameHostMetal::Impl::getGraphicsDevice() noexcept
 {
     return graphicsDevice;
 }
 
 std::shared_ptr<gpu::CommandQueue>
-GameHostMetal::Impl::GetCommandQueue() noexcept
+GameHostMetal::Impl::getCommandQueue() noexcept
 {
     return graphicsCommandQueue;
 }
 
 std::shared_ptr<AudioEngine>
-GameHostMetal::Impl::GetAudioEngine() noexcept
+GameHostMetal::Impl::getAudioEngine() noexcept
 {
     return audioEngine;
 }
 
 std::shared_ptr<AssetManager>
-GameHostMetal::Impl::GetAssetManager(std::shared_ptr<GameHost>&& gameHost) noexcept
+GameHostMetal::Impl::getAssetManager(std::shared_ptr<GameHost>&& gameHost) noexcept
 {
     std::shared_ptr<AssetManager> shared{gameHost, assetManager.get()};
     return shared;
 }
 
 std::shared_ptr<Keyboard>
-GameHostMetal::Impl::GetKeyboard() noexcept
+GameHostMetal::Impl::getKeyboard() noexcept
 {
     return keyboard;
 }
 
 std::shared_ptr<Mouse>
-GameHostMetal::Impl::GetMouse() noexcept
+GameHostMetal::Impl::getMouse() noexcept
 {
     return mouse;
 }
 
 std::shared_ptr<Gamepad>
-GameHostMetal::Impl::GetGamepad() noexcept
+GameHostMetal::Impl::getGamepad() noexcept
 {
     return gamepad;
 }
 
 std::shared_ptr<IOService>
-GameHostMetal::Impl::GetIOService(std::shared_ptr<GameHost>&& gameHost) noexcept
+GameHostMetal::Impl::getIOService(std::shared_ptr<GameHost>&& gameHost) noexcept
 {
     POMDOG_ASSERT(ioService_ != nullptr);
     std::shared_ptr<IOService> shared{std::move(gameHost), ioService_.get()};
@@ -501,7 +501,7 @@ GameHostMetal::Impl::GetIOService(std::shared_ptr<GameHost>&& gameHost) noexcept
 }
 
 std::shared_ptr<HTTPClient>
-GameHostMetal::Impl::GetHTTPClient(std::shared_ptr<GameHost>&& gameHost) noexcept
+GameHostMetal::Impl::getHTTPClient(std::shared_ptr<GameHost>&& gameHost) noexcept
 {
     POMDOG_ASSERT(httpClient != nullptr);
     std::shared_ptr<HTTPClient> shared(std::move(gameHost), httpClient.get());
@@ -511,114 +511,114 @@ GameHostMetal::Impl::GetHTTPClient(std::shared_ptr<GameHost>&& gameHost) noexcep
 // MARK: GameHostMetal
 
 GameHostMetal::GameHostMetal()
-    : impl(std::make_unique<Impl>())
+    : impl_(std::make_unique<Impl>())
 {
 }
 
 GameHostMetal::~GameHostMetal() = default;
 
 std::unique_ptr<Error>
-GameHostMetal::Initialize(
+GameHostMetal::initialize(
     MTKView* metalView,
     const std::shared_ptr<GameWindowCocoa>& window,
     const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
     const gpu::PresentationParameters& presentationParameters)
 {
-    POMDOG_ASSERT(impl);
-    return impl->Initialize(metalView, window, eventQueue, presentationParameters);
+    POMDOG_ASSERT(impl_);
+    return impl_->initialize(metalView, window, eventQueue, presentationParameters);
 }
 
 std::unique_ptr<Error>
-GameHostMetal::InitializeGame(
+GameHostMetal::initializeGame(
     const std::weak_ptr<Game>& game,
     const std::function<void()>& onCompleted)
 {
-    POMDOG_ASSERT(impl != nullptr);
-    return impl->InitializeGame(game, onCompleted);
+    POMDOG_ASSERT(impl_);
+    return impl_->initializeGame(game, onCompleted);
 }
 
-void GameHostMetal::GameLoop()
+void GameHostMetal::gameLoop()
 {
-    POMDOG_ASSERT(impl);
-    impl->GameLoop();
+    POMDOG_ASSERT(impl_);
+    impl_->gameLoop();
 }
 
-bool GameHostMetal::IsMetalSupported() const noexcept
+bool GameHostMetal::isMetalSupported() const noexcept
 {
-    POMDOG_ASSERT(impl);
-    return impl->IsMetalSupported();
+    POMDOG_ASSERT(impl_);
+    return impl_->isMetalSupported();
 }
 
-void GameHostMetal::Exit()
+void GameHostMetal::exit()
 {
-    POMDOG_ASSERT(impl);
-    impl->Exit();
+    POMDOG_ASSERT(impl_);
+    impl_->exit();
 }
 
-std::shared_ptr<GameWindow> GameHostMetal::GetWindow() noexcept
+std::shared_ptr<GameWindow> GameHostMetal::getWindow() noexcept
 {
-    POMDOG_ASSERT(impl);
-    return impl->GetWindow();
+    POMDOG_ASSERT(impl_);
+    return impl_->getWindow();
 }
 
-std::shared_ptr<GameClock> GameHostMetal::GetClock() noexcept
+std::shared_ptr<GameClock> GameHostMetal::getClock() noexcept
 {
-    POMDOG_ASSERT(impl);
-    return impl->GetClock();
+    POMDOG_ASSERT(impl_);
+    return impl_->getClock();
 }
 
-std::shared_ptr<gpu::GraphicsDevice> GameHostMetal::GetGraphicsDevice() noexcept
+std::shared_ptr<gpu::GraphicsDevice> GameHostMetal::getGraphicsDevice() noexcept
 {
-    POMDOG_ASSERT(impl);
-    return impl->GetGraphicsDevice();
+    POMDOG_ASSERT(impl_);
+    return impl_->getGraphicsDevice();
 }
 
-std::shared_ptr<gpu::CommandQueue> GameHostMetal::GetCommandQueue() noexcept
+std::shared_ptr<gpu::CommandQueue> GameHostMetal::getCommandQueue() noexcept
 {
-    POMDOG_ASSERT(impl);
-    return impl->GetCommandQueue();
+    POMDOG_ASSERT(impl_);
+    return impl_->getCommandQueue();
 }
 
-std::shared_ptr<AudioEngine> GameHostMetal::GetAudioEngine() noexcept
+std::shared_ptr<AudioEngine> GameHostMetal::getAudioEngine() noexcept
 {
-    POMDOG_ASSERT(impl);
-    return impl->GetAudioEngine();
+    POMDOG_ASSERT(impl_);
+    return impl_->getAudioEngine();
 }
 
-std::shared_ptr<AssetManager> GameHostMetal::GetAssetManager() noexcept
+std::shared_ptr<AssetManager> GameHostMetal::getAssetManager() noexcept
 {
-    POMDOG_ASSERT(impl);
-    return impl->GetAssetManager(shared_from_this());
+    POMDOG_ASSERT(impl_);
+    return impl_->getAssetManager(shared_from_this());
 }
 
-std::shared_ptr<Keyboard> GameHostMetal::GetKeyboard() noexcept
+std::shared_ptr<Keyboard> GameHostMetal::getKeyboard() noexcept
 {
-    POMDOG_ASSERT(impl);
-    return impl->GetKeyboard();
+    POMDOG_ASSERT(impl_);
+    return impl_->getKeyboard();
 }
 
-std::shared_ptr<Mouse> GameHostMetal::GetMouse() noexcept
+std::shared_ptr<Mouse> GameHostMetal::getMouse() noexcept
 {
-    POMDOG_ASSERT(impl);
-    return impl->GetMouse();
+    POMDOG_ASSERT(impl_);
+    return impl_->getMouse();
 }
 
-std::shared_ptr<Gamepad> GameHostMetal::GetGamepad() noexcept
+std::shared_ptr<Gamepad> GameHostMetal::getGamepad() noexcept
 {
-    POMDOG_ASSERT(impl);
-    return impl->GetGamepad();
+    POMDOG_ASSERT(impl_);
+    return impl_->getGamepad();
 }
 
-std::shared_ptr<IOService> GameHostMetal::GetIOService() noexcept
+std::shared_ptr<IOService> GameHostMetal::getIOService() noexcept
 {
-    POMDOG_ASSERT(impl);
-    return impl->GetIOService(shared_from_this());
+    POMDOG_ASSERT(impl_);
+    return impl_->getIOService(shared_from_this());
 }
 
-std::shared_ptr<HTTPClient> GameHostMetal::GetHTTPClient() noexcept
+std::shared_ptr<HTTPClient> GameHostMetal::getHTTPClient() noexcept
 {
-    POMDOG_ASSERT(impl);
-    return impl->GetHTTPClient(shared_from_this());
+    POMDOG_ASSERT(impl_);
+    return impl_->getHTTPClient(shared_from_this());
 }
 
 } // namespace pomdog::detail::cocoa

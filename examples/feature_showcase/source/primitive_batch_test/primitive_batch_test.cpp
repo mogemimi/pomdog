@@ -5,15 +5,15 @@ namespace feature_showcase {
 
 PrimitiveBatchTest::PrimitiveBatchTest(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
-    , graphicsDevice(gameHostIn->GetGraphicsDevice())
-    , commandQueue(gameHostIn->GetCommandQueue())
+    , graphicsDevice(gameHostIn->getGraphicsDevice())
+    , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
-std::unique_ptr<Error> PrimitiveBatchTest::Initialize()
+std::unique_ptr<Error> PrimitiveBatchTest::initialize()
 {
-    auto assets = gameHost->GetAssetManager();
-    auto clock = gameHost->GetClock();
+    auto assets = gameHost->getAssetManager();
+    auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
 
@@ -30,11 +30,11 @@ std::unique_ptr<Error> PrimitiveBatchTest::Initialize()
     return nullptr;
 }
 
-void PrimitiveBatchTest::Update()
+void PrimitiveBatchTest::update()
 {
 }
 
-void PrimitiveBatchTest::Draw()
+void PrimitiveBatchTest::draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 

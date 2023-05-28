@@ -6,15 +6,15 @@ namespace feature_showcase {
 
 SpriteLineTest::SpriteLineTest(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
-    , graphicsDevice(gameHostIn->GetGraphicsDevice())
-    , commandQueue(gameHostIn->GetCommandQueue())
+    , graphicsDevice(gameHostIn->getGraphicsDevice())
+    , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
-std::unique_ptr<Error> SpriteLineTest::Initialize()
+std::unique_ptr<Error> SpriteLineTest::initialize()
 {
-    auto assets = gameHost->GetAssetManager();
-    auto clock = gameHost->GetClock();
+    auto assets = gameHost->getAssetManager();
+    auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
 
@@ -46,11 +46,11 @@ std::unique_ptr<Error> SpriteLineTest::Initialize()
     return nullptr;
 }
 
-void SpriteLineTest::Update()
+void SpriteLineTest::update()
 {
-    const auto mouse = gameHost->GetMouse();
-    const auto window = gameHost->GetWindow();
-    const auto clientBounds = window->GetClientBounds();
+    const auto mouse = gameHost->getMouse();
+    const auto window = gameHost->getWindow();
+    const auto clientBounds = window->getClientBounds();
     auto pos = mouse->GetState().Position;
 
     if (mouse->GetState().LeftButton == ButtonState::Pressed) {
@@ -61,7 +61,7 @@ void SpriteLineTest::Update()
     }
 }
 
-void SpriteLineTest::Draw()
+void SpriteLineTest::draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 

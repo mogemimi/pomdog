@@ -29,39 +29,39 @@ public:
     ~GameWindowCocoa() noexcept override;
 
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(
+    initialize(
         NSWindow* nativeWindow,
         const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue) noexcept;
 
-    bool GetAllowUserResizing() const override;
+    bool getAllowUserResizing() const override;
 
-    void SetAllowUserResizing(bool allowResizing) override;
+    void setAllowUserResizing(bool allowResizing) override;
 
-    std::string GetTitle() const override;
+    std::string getTitle() const override;
 
-    void SetTitle(const std::string& title) override;
+    void setTitle(const std::string& title) override;
 
-    Rectangle GetClientBounds() const override;
+    Rectangle getClientBounds() const override;
 
-    void SetClientBounds(const Rectangle& clientBounds) override;
+    void setClientBounds(const Rectangle& clientBounds) override;
 
-    bool IsMouseCursorVisible() const override;
+    bool isMouseCursorVisible() const override;
 
-    void SetMouseCursorVisible(bool visible) override;
+    void setMouseCursorVisible(bool visible) override;
 
-    void SetMouseCursor(MouseCursor cursor) override;
+    void setMouseCursor(MouseCursor cursor) override;
 
     ///@return true if the window is minimized, false otherwise.
-    bool IsMinimized() const noexcept;
+    [[nodiscard]] bool isMinimized() const noexcept;
 
-    void SetView(NSView* gameView) noexcept;
+    void setView(NSView* gameView) noexcept;
 
 private:
-    std::shared_ptr<EventQueue<SystemEvent>> eventQueue;
-    __weak NSWindow* nativeWindow = nil;
-    __weak NSView* gameView = nil;
-    __strong PomdogNSWindowDelegate* windowDelegate = nil;
-    bool isMouseCursorVisible = true;
+    std::shared_ptr<EventQueue<SystemEvent>> eventQueue_;
+    __weak NSWindow* nativeWindow_ = nil;
+    __weak NSView* gameView_ = nil;
+    __strong PomdogNSWindowDelegate* windowDelegate_ = nil;
+    bool isMouseCursorVisible_ = true;
 };
 
 } // namespace pomdog::detail::cocoa

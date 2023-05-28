@@ -35,12 +35,12 @@ void AssetManager::SetContentDirectory(const std::string& dir) noexcept
     contentDirectory = dir;
 }
 
-std::shared_ptr<AudioEngine> AssetManager::GetAudioEngine() const noexcept
+std::shared_ptr<AudioEngine> AssetManager::getAudioEngine() const noexcept
 {
     return audioEngine.lock();
 }
 
-std::shared_ptr<gpu::GraphicsDevice> AssetManager::GetGraphicsDevice() const noexcept
+std::shared_ptr<gpu::GraphicsDevice> AssetManager::getGraphicsDevice() const noexcept
 {
     return graphicsDevice.lock();
 }

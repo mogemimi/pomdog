@@ -5,15 +5,15 @@ namespace feature_showcase {
 
 DistanceFieldFontTest::DistanceFieldFontTest(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
-    , graphicsDevice(gameHostIn->GetGraphicsDevice())
-    , commandQueue(gameHostIn->GetCommandQueue())
+    , graphicsDevice(gameHostIn->getGraphicsDevice())
+    , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
-std::unique_ptr<Error> DistanceFieldFontTest::Initialize()
+std::unique_ptr<Error> DistanceFieldFontTest::initialize()
 {
-    auto assets = gameHost->GetAssetManager();
-    auto clock = gameHost->GetClock();
+    auto assets = gameHost->getAssetManager();
+    auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
 
@@ -44,11 +44,11 @@ std::unique_ptr<Error> DistanceFieldFontTest::Initialize()
     return nullptr;
 }
 
-void DistanceFieldFontTest::Update()
+void DistanceFieldFontTest::update()
 {
 }
 
-void DistanceFieldFontTest::Draw()
+void DistanceFieldFontTest::draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 

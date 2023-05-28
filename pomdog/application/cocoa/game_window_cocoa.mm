@@ -34,7 +34,7 @@ using pomdog::EventQueue;
 - (BOOL)windowShouldClose:(id)sender
 {
     eventQueue->Enqueue(SystemEvent{
-        .Kind = SystemEventKind::WindowShouldCloseEvent,
+        .kind = SystemEventKind::WindowShouldCloseEvent,
     });
     return NO;
 }
@@ -42,7 +42,7 @@ using pomdog::EventQueue;
 - (void)windowWillClose:(NSNotification*)notification
 {
     eventQueue->Enqueue(SystemEvent{
-        .Kind = SystemEventKind::WindowWillCloseEvent,
+        .kind = SystemEventKind::WindowWillCloseEvent,
     });
 }
 
@@ -58,53 +58,53 @@ GameWindowCocoa::~GameWindowCocoa() noexcept
 {
     dispatch_async(dispatch_get_main_queue(), ^(void) {
         // NOTE: Remove delegate from window.
-        [nativeWindow setDelegate:nil];
+        [nativeWindow_ setDelegate:nil];
 
 #if !__has_feature(objc_arc)
-        if (windowDelegate != nil) {
-            [windowDelegate release];
+        if (windowDelegate_ != nil) {
+            [windowDelegate_ release];
         }
 #endif
-        windowDelegate = nil;
+        windowDelegate_ = nil;
 
-        if (nativeWindow != nil) {
-            [nativeWindow close];
+        if (nativeWindow_ != nil) {
+            [nativeWindow_ close];
 #if !__has_feature(objc_arc)
-            [nativeWindow release];
+            [nativeWindow_ release];
 #endif
         }
-        nativeWindow = nil;
+        nativeWindow_ = nil;
     });
 }
 
 std::unique_ptr<Error>
-GameWindowCocoa::Initialize(
+GameWindowCocoa::initialize(
     NSWindow* nativeWindowIn,
     const std::shared_ptr<EventQueue<SystemEvent>>& eventQueueIn) noexcept
 {
-    this->nativeWindow = nativeWindowIn;
-    this->eventQueue = eventQueueIn;
+    nativeWindow_ = nativeWindowIn;
+    eventQueue_ = eventQueueIn;
 
-    POMDOG_ASSERT(nativeWindow != nil);
+    POMDOG_ASSERT(nativeWindow_ != nil);
 
     // NOTE: Create a window delegate for handling window events.
-    windowDelegate = [[PomdogNSWindowDelegate alloc] initWithEventQueue:eventQueue];
-    [nativeWindow setDelegate:windowDelegate];
+    windowDelegate_ = [[PomdogNSWindowDelegate alloc] initWithEventQueue:eventQueue_];
+    [nativeWindow_ setDelegate:windowDelegate_];
 
     return nullptr;
 }
 
-bool GameWindowCocoa::GetAllowUserResizing() const
+bool GameWindowCocoa::getAllowUserResizing() const
 {
-    NSUInteger styleMask = [nativeWindow styleMask];
+    NSUInteger styleMask = [nativeWindow_ styleMask];
     return (styleMask & NSWindowStyleMaskResizable) == NSWindowStyleMaskResizable;
 }
 
-void GameWindowCocoa::SetAllowUserResizing(bool allowResizing)
+void GameWindowCocoa::setAllowUserResizing(bool allowResizing)
 {
-    POMDOG_ASSERT(nativeWindow != nil);
+    POMDOG_ASSERT(nativeWindow_ != nil);
 
-    NSUInteger styleMask = [nativeWindow styleMask];
+    NSUInteger styleMask = [nativeWindow_ styleMask];
     if (allowResizing) {
         styleMask |= NSWindowStyleMaskResizable;
         POMDOG_ASSERT((styleMask & NSWindowStyleMaskResizable) == NSWindowStyleMaskResizable);
@@ -116,36 +116,36 @@ void GameWindowCocoa::SetAllowUserResizing(bool allowResizing)
     }
 
     dispatch_async(dispatch_get_main_queue(), [this, styleMask] {
-        [nativeWindow setStyleMask:styleMask];
+        [nativeWindow_ setStyleMask:styleMask];
     });
 }
 
-std::string GameWindowCocoa::GetTitle() const
+std::string GameWindowCocoa::getTitle() const
 {
-    std::string title = [[nativeWindow title] UTF8String];
+    std::string title = [[nativeWindow_ title] UTF8String];
     return title;
 }
 
-void GameWindowCocoa::SetTitle(const std::string& title)
+void GameWindowCocoa::setTitle(const std::string& title)
 {
     dispatch_async(dispatch_get_main_queue(), [this, title = title] {
         auto str = [NSString stringWithUTF8String:title.data()];
         if (str != nil) {
-            [nativeWindow setTitle:str];
+            [nativeWindow_ setTitle:str];
         }
     });
 }
 
-Rectangle GameWindowCocoa::GetClientBounds() const
+Rectangle GameWindowCocoa::getClientBounds() const
 {
-    POMDOG_ASSERT([nativeWindow contentView] != nil);
+    POMDOG_ASSERT([nativeWindow_ contentView] != nil);
 
-    NSRect bounds = [[nativeWindow contentView] bounds];
+    NSRect bounds = [[nativeWindow_ contentView] bounds];
 
-    if (gameView != nil) {
-        bounds = [gameView bounds];
+    if (gameView_ != nil) {
+        bounds = [gameView_ bounds];
     }
-    NSRect rect = [nativeWindow convertRectToScreen:bounds];
+    NSRect rect = [nativeWindow_ convertRectToScreen:bounds];
 
     return Rectangle(
         rect.origin.x,
@@ -154,7 +154,7 @@ Rectangle GameWindowCocoa::GetClientBounds() const
         bounds.size.height);
 }
 
-void GameWindowCocoa::SetClientBounds(const Rectangle& clientBounds)
+void GameWindowCocoa::setClientBounds(const Rectangle& clientBounds)
 {
     NSRect bounds = NSMakeRect(
         clientBounds.x,
@@ -163,20 +163,20 @@ void GameWindowCocoa::SetClientBounds(const Rectangle& clientBounds)
         clientBounds.height);
 
     dispatch_async(dispatch_get_main_queue(), [this, bounds] {
-        [nativeWindow setFrame:bounds display:YES animate:NO];
+        [nativeWindow_ setFrame:bounds display:YES animate:NO];
     });
 }
 
-bool GameWindowCocoa::IsMouseCursorVisible() const
+bool GameWindowCocoa::isMouseCursorVisible() const
 {
-    return isMouseCursorVisible;
+    return isMouseCursorVisible_;
 }
 
-void GameWindowCocoa::SetMouseCursorVisible(bool visibleIn)
+void GameWindowCocoa::setMouseCursorVisible(bool visibleIn)
 {
-    isMouseCursorVisible = visibleIn;
+    isMouseCursorVisible_ = visibleIn;
 
-    if (isMouseCursorVisible) {
+    if (isMouseCursorVisible_) {
         [NSCursor unhide];
     }
     else {
@@ -184,7 +184,7 @@ void GameWindowCocoa::SetMouseCursorVisible(bool visibleIn)
     }
 }
 
-void GameWindowCocoa::SetMouseCursor(MouseCursor cursor)
+void GameWindowCocoa::setMouseCursor(MouseCursor cursor)
 {
     auto nativeCursor = ([cursor]() -> NSCursor* {
         switch (cursor) {
@@ -206,14 +206,14 @@ void GameWindowCocoa::SetMouseCursor(MouseCursor cursor)
 
 // MARK: - Low-Level API for GameHostCocoa
 
-bool GameWindowCocoa::IsMinimized() const noexcept
+bool GameWindowCocoa::isMinimized() const noexcept
 {
-    return [nativeWindow isMiniaturized] == YES;
+    return [nativeWindow_ isMiniaturized] == YES;
 }
 
-void GameWindowCocoa::SetView(NSView* gameViewIn) noexcept
+void GameWindowCocoa::setView(NSView* gameViewIn) noexcept
 {
-    gameView = gameViewIn;
+    gameView_ = gameViewIn;
 }
 
 } // namespace pomdog::detail::cocoa

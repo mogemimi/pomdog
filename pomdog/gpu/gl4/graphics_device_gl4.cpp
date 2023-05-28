@@ -358,7 +358,7 @@ GraphicsDeviceGL4::CreateTexture2D(
     return std::make_tuple(std::move(texture), nullptr);
 }
 
-void GraphicsDeviceGL4::ClientSizeChanged(int width, int height)
+void GraphicsDeviceGL4::clientSizeChanged(int width, int height)
 {
     presentationParameters.backBufferWidth = width;
     presentationParameters.backBufferHeight = height;

@@ -395,10 +395,10 @@ void GamepadIOKit::OnDeviceAttached(IOReturn result, void* sender, IOHIDDeviceRe
     Log::Internal("Attached device: " + gamepad->caps.Name);
 
     SystemEvent event;
-    event.Kind = SystemEventKind::GamepadDisconnectedEvent;
-    event.Data = GamepadEvent{
-        .PlayerIndex = gamepad->playerIndex,
-        .Capabilities = gamepad->caps,
+    event.kind = SystemEventKind::GamepadDisconnectedEvent;
+    event.data = GamepadEvent{
+        .playerIndex = gamepad->playerIndex,
+        .capabilities = gamepad->caps,
     };
     eventQueue->Enqueue(std::move(event));
 
@@ -430,25 +430,25 @@ void GamepadIOKit::OnDeviceDetached(IOReturn result, void* sender, IOHIDDeviceRe
     gamepad->Close();
 
     SystemEvent event;
-    event.Kind = SystemEventKind::GamepadDisconnectedEvent;
-    event.Data = GamepadEvent{
-        .PlayerIndex = gamepad->playerIndex,
-        .Capabilities = std::move(caps),
+    event.kind = SystemEventKind::GamepadDisconnectedEvent;
+    event.data = GamepadEvent{
+        .playerIndex = gamepad->playerIndex,
+        .capabilities = std::move(caps),
     };
     eventQueue->Enqueue(std::move(event));
 }
 
 void GamepadIOKit::HandleEvent(const SystemEvent& event)
 {
-    switch (event.Kind) {
+    switch (event.kind) {
     case SystemEventKind::GamepadConnectedEvent: {
-        const auto& e = std::get<GamepadEvent>(event.Data);
-        Connected(e.PlayerIndex, e.Capabilities);
+        const auto& e = std::get<GamepadEvent>(event.data);
+        Connected(e.playerIndex, e.capabilities);
         break;
     }
     case SystemEventKind::GamepadDisconnectedEvent: {
-        const auto& e = std::get<GamepadEvent>(event.Data);
-        Disconnected(e.PlayerIndex, e.Capabilities);
+        const auto& e = std::get<GamepadEvent>(event.data);
+        Disconnected(e.playerIndex, e.capabilities);
         break;
     }
     default:

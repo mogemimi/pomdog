@@ -14,15 +14,15 @@ namespace feature_showcase {
 
 Skinning2DTest::Skinning2DTest(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
-    , graphicsDevice(gameHostIn->GetGraphicsDevice())
-    , commandQueue(gameHostIn->GetCommandQueue())
+    , graphicsDevice(gameHostIn->getGraphicsDevice())
+    , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
-std::unique_ptr<Error> Skinning2DTest::Initialize()
+std::unique_ptr<Error> Skinning2DTest::initialize()
 {
-    auto assets = gameHost->GetAssetManager();
-    auto clock = gameHost->GetClock();
+    auto assets = gameHost->getAssetManager();
+    auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
 
@@ -203,9 +203,9 @@ std::unique_ptr<Error> Skinning2DTest::Initialize()
     return nullptr;
 }
 
-void Skinning2DTest::Update()
+void Skinning2DTest::update()
 {
-    auto clock = gameHost->GetClock();
+    auto clock = gameHost->getClock();
     animationSystem.Update(*clock);
 
     // NOTE: Global pose generation
@@ -271,7 +271,7 @@ void Skinning2DTest::Update()
     vertexBuffer->SetData(vertices.data(), vertices.size());
 }
 
-void Skinning2DTest::Draw()
+void Skinning2DTest::draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
@@ -314,7 +314,7 @@ void Skinning2DTest::Draw()
     commandList->SetIndexBuffer(indexBuffer);
     commandList->DrawIndexed(indexBuffer->GetIndexCount(), 0);
 
-    auto mouse = gameHost->GetMouse()->GetState();
+    auto mouse = gameHost->getMouse()->GetState();
     if (mouse.RightButton == ButtonState::Pressed) {
         commandList->SetPipelineState(pipelineStateWireframe);
         commandList->DrawIndexed(indexBuffer->GetIndexCount(), 0);

@@ -4,15 +4,15 @@ namespace feature_showcase {
 
 SpriteFontTest::SpriteFontTest(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
-    , graphicsDevice(gameHostIn->GetGraphicsDevice())
-    , commandQueue(gameHostIn->GetCommandQueue())
+    , graphicsDevice(gameHostIn->getGraphicsDevice())
+    , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
-std::unique_ptr<Error> SpriteFontTest::Initialize()
+std::unique_ptr<Error> SpriteFontTest::initialize()
 {
-    auto assets = gameHost->GetAssetManager();
-    auto clock = gameHost->GetClock();
+    auto assets = gameHost->getAssetManager();
+    auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
 
@@ -36,11 +36,11 @@ std::unique_ptr<Error> SpriteFontTest::Initialize()
     return nullptr;
 }
 
-void SpriteFontTest::Update()
+void SpriteFontTest::update()
 {
 }
 
-void SpriteFontTest::Draw()
+void SpriteFontTest::draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 

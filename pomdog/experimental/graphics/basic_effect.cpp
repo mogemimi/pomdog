@@ -78,7 +78,7 @@ CreateBasicEffect(AssetManager& assets, const BasicEffectDescription& desc)
                                              .SetMetal(sourceMetal.data(), sourceMetal.size(), "BasicEffectPS")
                                              .Build();
 
-    auto graphicsDevice = assets.GetGraphicsDevice();
+    auto graphicsDevice = assets.getGraphicsDevice();
 
     auto builder = assets.CreateBuilder<gpu::PipelineState>();
     if (vertexShaderErr != nullptr) {

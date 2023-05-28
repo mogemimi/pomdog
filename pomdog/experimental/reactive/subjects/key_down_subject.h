@@ -24,7 +24,7 @@ public:
     explicit KeyDownSubject(const std::shared_ptr<GameHost>& gameHost)
     {
         POMDOG_ASSERT(gameHost);
-        auto keyboard = gameHost->GetKeyboard();
+        auto keyboard = gameHost->getKeyboard();
 
         POMDOG_ASSERT(keyboard);
         connection = keyboard->KeyDown.Connect([this](Keys key) {

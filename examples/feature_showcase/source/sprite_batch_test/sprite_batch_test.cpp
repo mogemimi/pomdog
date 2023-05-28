@@ -7,15 +7,15 @@ namespace feature_showcase {
 
 SpriteBatchTest::SpriteBatchTest(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
-    , graphicsDevice(gameHostIn->GetGraphicsDevice())
-    , commandQueue(gameHostIn->GetCommandQueue())
+    , graphicsDevice(gameHostIn->getGraphicsDevice())
+    , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
-std::unique_ptr<Error> SpriteBatchTest::Initialize()
+std::unique_ptr<Error> SpriteBatchTest::initialize()
 {
-    auto assets = gameHost->GetAssetManager();
-    auto clock = gameHost->GetClock();
+    auto assets = gameHost->getAssetManager();
+    auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
 
@@ -46,16 +46,16 @@ std::unique_ptr<Error> SpriteBatchTest::Initialize()
     timer->SetInterval(std::chrono::seconds(1));
     timer->SetScale(0.2);
 
-    auto mouse = gameHost->GetMouse();
+    auto mouse = gameHost->getMouse();
     connect(mouse->ButtonDown, [this](MouseButtons mouseButton) {
         if (mouseButton != MouseButtons::Left) {
             return;
         }
 
-        const auto window = gameHost->GetWindow();
-        const auto mouse = gameHost->GetMouse();
+        const auto window = gameHost->getWindow();
+        const auto mouse = gameHost->getMouse();
         const auto mouseState = mouse->GetState();
-        const auto clientBounds = window->GetClientBounds();
+        const auto clientBounds = window->getClientBounds();
         auto pos = mouseState.Position;
         pos.x = pos.x - (clientBounds.width / 2);
         pos.y = -pos.y + (clientBounds.height / 2);
@@ -80,11 +80,11 @@ std::unique_ptr<Error> SpriteBatchTest::Initialize()
     return nullptr;
 }
 
-void SpriteBatchTest::Update()
+void SpriteBatchTest::update()
 {
 }
 
-void SpriteBatchTest::Draw()
+void SpriteBatchTest::draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 

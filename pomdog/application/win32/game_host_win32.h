@@ -35,53 +35,53 @@ public:
     ~GameHostWin32();
 
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(
+    initialize(
         const std::shared_ptr<GameWindowWin32>& window,
         HINSTANCE hInstance,
         const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
         const gpu::PresentationParameters& presentationParameters,
         bool useOpenGL) noexcept;
 
-    void Run(Game& game);
+    void run(Game& game);
 
-    void Exit() override;
+    void exit() override;
 
     [[nodiscard]] std::shared_ptr<GameWindow>
-    GetWindow() noexcept override;
+    getWindow() noexcept override;
 
     [[nodiscard]] std::shared_ptr<GameClock>
-    GetClock() noexcept override;
+    getClock() noexcept override;
 
     [[nodiscard]] std::shared_ptr<gpu::CommandQueue>
-    GetCommandQueue() noexcept override;
+    getCommandQueue() noexcept override;
 
     [[nodiscard]] std::shared_ptr<gpu::GraphicsDevice>
-    GetGraphicsDevice() noexcept override;
+    getGraphicsDevice() noexcept override;
 
     [[nodiscard]] std::shared_ptr<AudioEngine>
-    GetAudioEngine() noexcept override;
+    getAudioEngine() noexcept override;
 
     [[nodiscard]] std::shared_ptr<AssetManager>
-    GetAssetManager() noexcept override;
+    getAssetManager() noexcept override;
 
     [[nodiscard]] std::shared_ptr<Keyboard>
-    GetKeyboard() noexcept override;
+    getKeyboard() noexcept override;
 
     [[nodiscard]] std::shared_ptr<Mouse>
-    GetMouse() noexcept override;
+    getMouse() noexcept override;
 
     [[nodiscard]] std::shared_ptr<Gamepad>
-    GetGamepad() noexcept override;
+    getGamepad() noexcept override;
 
     [[nodiscard]] std::shared_ptr<IOService>
-    GetIOService() noexcept override;
+    getIOService() noexcept override;
 
     [[nodiscard]] std::shared_ptr<HTTPClient>
-    GetHTTPClient() noexcept override;
+    getHTTPClient() noexcept override;
 
 private:
     class Impl;
-    std::unique_ptr<Impl> impl;
+    std::unique_ptr<Impl> impl_;
 };
 
 } // namespace pomdog::detail::win32

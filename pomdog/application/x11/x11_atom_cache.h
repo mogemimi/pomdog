@@ -6,7 +6,7 @@
 
 namespace pomdog::detail::x11 {
 
-struct X11AtomCache {
+struct X11AtomCache final {
     Atom WmDeleteWindow = None;
     Atom Utf8String = None;
     Atom NetWmName = None;

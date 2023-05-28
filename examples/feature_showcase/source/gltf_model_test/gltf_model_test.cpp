@@ -8,15 +8,15 @@ namespace feature_showcase {
 
 GLTFModelTest::GLTFModelTest(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
-    , graphicsDevice(gameHostIn->GetGraphicsDevice())
-    , commandQueue(gameHostIn->GetCommandQueue())
+    , graphicsDevice(gameHostIn->getGraphicsDevice())
+    , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
-std::unique_ptr<Error> GLTFModelTest::Initialize()
+std::unique_ptr<Error> GLTFModelTest::initialize()
 {
-    auto assets = gameHost->GetAssetManager();
-    auto clock = gameHost->GetClock();
+    auto assets = gameHost->getAssetManager();
+    auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
 
@@ -248,7 +248,7 @@ std::unique_ptr<Error> GLTFModelTest::Initialize()
     return nullptr;
 }
 
-void GLTFModelTest::Update()
+void GLTFModelTest::update()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
@@ -275,10 +275,10 @@ void GLTFModelTest::Update()
     worldConstants.LightDirection = Vector4{lightDirection, 0.0f};
     worldConstantBuffer->SetData(0, gpu::MakeByteSpan(worldConstants));
 
-    auto time = static_cast<float>(gameHost->GetClock()->GetTotalGameTime().count());
+    auto time = static_cast<float>(gameHost->getClock()->GetTotalGameTime().count());
     auto rotateY = math::TwoPi<float> * rotateSpeed * time;
 
-    auto mouse = gameHost->GetMouse()->GetState();
+    auto mouse = gameHost->getMouse()->GetState();
     if (mouse.LeftButton == ButtonState::Pressed) {
         rotateY = -math::TwoPi<float> * (static_cast<float>(mouse.Position.x) / static_cast<float>(presentationParameters.backBufferWidth));
     }
@@ -298,7 +298,7 @@ void GLTFModelTest::Update()
     modelConstantBuffer->SetData(0, gpu::MakeByteSpan(modelConstants));
 }
 
-void GLTFModelTest::Draw()
+void GLTFModelTest::draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
@@ -311,7 +311,7 @@ void GLTFModelTest::Draw()
     pass.viewport = viewport;
     pass.scissorRect = viewport.GetBounds();
 
-    auto mouse = gameHost->GetMouse()->GetState();
+    auto mouse = gameHost->getMouse()->GetState();
 
     commandList->Reset();
     commandList->SetRenderPass(std::move(pass));

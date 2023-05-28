@@ -5,15 +5,15 @@ namespace feature_showcase {
 
 PolylineDrawingTest::PolylineDrawingTest(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
-    , graphicsDevice(gameHostIn->GetGraphicsDevice())
-    , commandQueue(gameHostIn->GetCommandQueue())
+    , graphicsDevice(gameHostIn->getGraphicsDevice())
+    , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
-std::unique_ptr<Error> PolylineDrawingTest::Initialize()
+std::unique_ptr<Error> PolylineDrawingTest::initialize()
 {
-    auto assets = gameHost->GetAssetManager();
-    auto clock = gameHost->GetClock();
+    auto assets = gameHost->getAssetManager();
+    auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
 
@@ -25,7 +25,7 @@ std::unique_ptr<Error> PolylineDrawingTest::Initialize()
 
     lineBatch = std::make_shared<PolylineBatch>(graphicsDevice, *assets);
 
-    auto mouse = gameHost->GetMouse();
+    auto mouse = gameHost->getMouse();
     connect(mouse->ButtonDown, [this](MouseButtons button) {
         if (button == MouseButtons::Left) {
             polylineClosed = false;
@@ -46,10 +46,10 @@ std::unique_ptr<Error> PolylineDrawingTest::Initialize()
     return nullptr;
 }
 
-void PolylineDrawingTest::Update()
+void PolylineDrawingTest::update()
 {
-    const auto mouseState = gameHost->GetMouse()->GetState();
-    const auto clientBounds = gameHost->GetWindow()->GetClientBounds();
+    const auto mouseState = gameHost->getMouse()->GetState();
+    const auto clientBounds = gameHost->getWindow()->getClientBounds();
 
     const auto width = clientBounds.width;
     const auto height = clientBounds.height;
@@ -71,7 +71,7 @@ void PolylineDrawingTest::Update()
     }
 }
 
-void PolylineDrawingTest::Draw()
+void PolylineDrawingTest::draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 

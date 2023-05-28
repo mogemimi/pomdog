@@ -16,31 +16,31 @@ KeyboardState KeyboardCocoa::GetState() const
 
 void KeyboardCocoa::HandleEvent(const SystemEvent& event)
 {
-    switch (event.Kind) {
+    switch (event.kind) {
     case SystemEventKind::InputKeyEvent: {
-        const auto ev = std::get<InputKeyEvent>(event.Data);
+        const auto ev = std::get<InputKeyEvent>(event.data);
         static_assert(sizeof(ev) <= 24);
-        bool isKeyDown = state.IsKeyDown(ev.Key);
+        bool isKeyDown = state.IsKeyDown(ev.key);
 
-        state.SetKey(ev.Key, ev.State);
+        state.SetKey(ev.key, ev.state);
 
-        switch (ev.State) {
+        switch (ev.state) {
         case KeyState::Down:
             if (!isKeyDown) {
-                Keyboard::KeyDown(ev.Key);
+                Keyboard::KeyDown(ev.key);
             }
             break;
         case KeyState::Up:
             if (isKeyDown) {
-                Keyboard::KeyUp(ev.Key);
+                Keyboard::KeyUp(ev.key);
             }
             break;
         }
         break;
     }
     case SystemEventKind::InputTextEvent: {
-        const auto& ev = std::get<InputTextEvent>(event.Data);
-        Keyboard::TextInput(ev.Text);
+        const auto& ev = std::get<InputTextEvent>(event.data);
+        Keyboard::TextInput(ev.text);
         break;
     }
     default:

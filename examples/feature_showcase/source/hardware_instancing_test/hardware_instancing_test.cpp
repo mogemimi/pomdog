@@ -6,15 +6,15 @@ namespace feature_showcase {
 
 HardwareInstancingTest::HardwareInstancingTest(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
-    , graphicsDevice(gameHostIn->GetGraphicsDevice())
-    , commandQueue(gameHostIn->GetCommandQueue())
+    , graphicsDevice(gameHostIn->getGraphicsDevice())
+    , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
-std::unique_ptr<Error> HardwareInstancingTest::Initialize()
+std::unique_ptr<Error> HardwareInstancingTest::initialize()
 {
-    auto assets = gameHost->GetAssetManager();
-    auto clock = gameHost->GetClock();
+    auto assets = gameHost->getAssetManager();
+    auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
 
@@ -158,7 +158,7 @@ std::unique_ptr<Error> HardwareInstancingTest::Initialize()
         sprites.push_back(std::move(sprite));
     }
 
-    auto mouse = gameHost->GetMouse();
+    auto mouse = gameHost->getMouse();
     connect(mouse->ButtonDown, [this](MouseButtons mouseButton) {
         if (mouseButton != MouseButtons::Left) {
             return;
@@ -168,10 +168,10 @@ std::unique_ptr<Error> HardwareInstancingTest::Initialize()
             return;
         }
 
-        const auto window = gameHost->GetWindow();
-        const auto mouse = gameHost->GetMouse();
+        const auto window = gameHost->getWindow();
+        const auto mouse = gameHost->getMouse();
         const auto mouseState = mouse->GetState();
-        const auto clientBounds = window->GetClientBounds();
+        const auto clientBounds = window->getClientBounds();
 
         auto pos = mouseState.Position;
         pos.x = pos.x - (clientBounds.width / 2);
@@ -200,11 +200,11 @@ std::unique_ptr<Error> HardwareInstancingTest::Initialize()
     return nullptr;
 }
 
-void HardwareInstancingTest::Update()
+void HardwareInstancingTest::update()
 {
 }
 
-void HardwareInstancingTest::Draw()
+void HardwareInstancingTest::draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 

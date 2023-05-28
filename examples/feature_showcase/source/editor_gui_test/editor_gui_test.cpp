@@ -4,15 +4,15 @@ namespace feature_showcase {
 
 EditorGUITest::EditorGUITest(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
-    , graphicsDevice(gameHostIn->GetGraphicsDevice())
-    , commandQueue(gameHostIn->GetCommandQueue())
+    , graphicsDevice(gameHostIn->getGraphicsDevice())
+    , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
-std::unique_ptr<Error> EditorGUITest::Initialize()
+std::unique_ptr<Error> EditorGUITest::initialize()
 {
-    auto assets = gameHost->GetAssetManager();
-    auto clock = gameHost->GetClock();
+    auto assets = gameHost->getAssetManager();
+    auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
 
@@ -35,8 +35,8 @@ std::unique_ptr<Error> EditorGUITest::Initialize()
 
     drawingContext = std::make_unique<gui::DrawingContext>(graphicsDevice, *assets);
 
-    auto window = gameHost->GetWindow();
-    hierarchy = std::make_unique<gui::WidgetHierarchy>(window, gameHost->GetKeyboard());
+    auto window = gameHost->getWindow();
+    hierarchy = std::make_unique<gui::WidgetHierarchy>(window, gameHost->getKeyboard());
 
     auto dispatcher = hierarchy->GetDispatcher();
     {
@@ -150,7 +150,7 @@ std::unique_ptr<Error> EditorGUITest::Initialize()
     hierarchy->AddChild(stackPanel);
 
     {
-        auto navigator = std::make_shared<gui::DebugNavigator>(dispatcher, gameHost->GetClock());
+        auto navigator = std::make_shared<gui::DebugNavigator>(dispatcher, gameHost->getClock());
         stackPanel->AddChild(navigator);
     }
     {
@@ -313,19 +313,19 @@ std::unique_ptr<Error> EditorGUITest::Initialize()
     return nullptr;
 }
 
-void EditorGUITest::Update()
+void EditorGUITest::update()
 {
     hierarchy->Update();
 
-    if (auto mouse = gameHost->GetMouse(); mouse != nullptr) {
+    if (auto mouse = gameHost->getMouse(); mouse != nullptr) {
         hierarchy->Touch(mouse->GetState());
     }
 
-    auto clock = gameHost->GetClock();
+    auto clock = gameHost->getClock();
     hierarchy->UpdateAnimation(clock->GetFrameDuration());
 }
 
-void EditorGUITest::Draw()
+void EditorGUITest::draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 

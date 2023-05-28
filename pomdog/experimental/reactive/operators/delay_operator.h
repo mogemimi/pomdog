@@ -31,7 +31,7 @@ public:
         POMDOG_ASSERT(interval >= Duration::zero());
 
         POMDOG_ASSERT(gameHost);
-        auto clock = gameHost->GetClock();
+        auto clock = gameHost->getClock();
 
         POMDOG_ASSERT(clock);
         connection = clock->OnTick.Connect([this](const Duration& frameDuration) {

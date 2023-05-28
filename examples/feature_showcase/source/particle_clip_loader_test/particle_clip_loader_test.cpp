@@ -6,15 +6,15 @@ namespace feature_showcase {
 
 ParticleClipLoaderTest::ParticleClipLoaderTest(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
-    , graphicsDevice(gameHostIn->GetGraphicsDevice())
-    , commandQueue(gameHostIn->GetCommandQueue())
+    , graphicsDevice(gameHostIn->getGraphicsDevice())
+    , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
-std::unique_ptr<Error> ParticleClipLoaderTest::Initialize()
+std::unique_ptr<Error> ParticleClipLoaderTest::initialize()
 {
-    auto assets = gameHost->GetAssetManager();
-    auto clock = gameHost->GetClock();
+    auto assets = gameHost->getAssetManager();
+    auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
 
@@ -58,15 +58,15 @@ std::unique_ptr<Error> ParticleClipLoaderTest::Initialize()
 
     emitterPosition = Vector2::createZero();
 
-    auto mouse = gameHost->GetMouse();
+    auto mouse = gameHost->getMouse();
     auto onMoved = [this](const Point2D& mousePos) {
-        const auto mouse = gameHost->GetMouse();
+        const auto mouse = gameHost->getMouse();
         const auto mouseState = mouse->GetState();
         if (mouseState.LeftButton != ButtonState::Pressed) {
             return;
         }
-        const auto window = gameHost->GetWindow();
-        const auto clientBounds = window->GetClientBounds();
+        const auto window = gameHost->getWindow();
+        const auto clientBounds = window->getClientBounds();
         auto pos = mousePos;
         pos.x = pos.x - (clientBounds.width / 2);
         pos.y = -pos.y + (clientBounds.height / 2);
@@ -84,7 +84,7 @@ std::unique_ptr<Error> ParticleClipLoaderTest::Initialize()
         }
 
         // NOTE: Load particle clip from .json file
-        auto assets = gameHost->GetAssetManager();
+        auto assets = gameHost->getAssetManager();
         auto [particleClip, clipErr] = assets->Load<ParticleClip>(filenames[currentClipIndex]);
         if (clipErr != nullptr) {
             Log::Verbose("failed to load particle json: " + clipErr->ToString());
@@ -94,7 +94,7 @@ std::unique_ptr<Error> ParticleClipLoaderTest::Initialize()
         }
     };
     connect(mouse->ButtonDown, [this, onMoved, onClipChanged]([[maybe_unused]] MouseButtons mouseButton) {
-        auto mouse = gameHost->GetMouse();
+        auto mouse = gameHost->getMouse();
         auto mouseState = mouse->GetState();
         if (mouseState.LeftButton == ButtonState::Pressed) {
             onMoved(mouseState.Position);
@@ -108,14 +108,14 @@ std::unique_ptr<Error> ParticleClipLoaderTest::Initialize()
     return nullptr;
 }
 
-void ParticleClipLoaderTest::Update()
+void ParticleClipLoaderTest::update()
 {
-    auto clock = gameHost->GetClock();
+    auto clock = gameHost->getClock();
     auto frameDuration = clock->GetFrameDuration();
     particleSystem->Simulate(emitterPosition, math::toRadians(90.0f), frameDuration);
 }
 
-void ParticleClipLoaderTest::Draw()
+void ParticleClipLoaderTest::draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 

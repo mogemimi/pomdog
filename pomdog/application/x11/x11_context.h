@@ -19,7 +19,7 @@ public:
     ~X11Context() noexcept;
 
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize() noexcept;
+    initialize() noexcept;
 };
 
 } // namespace pomdog::detail::x11

@@ -19,7 +19,7 @@ public:
     ~OpenGLContextX11() noexcept override;
 
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(
+    initialize(
         const std::shared_ptr<GameWindowX11>& window,
         const GLXFBConfig& framebufferConfig) noexcept;
 
@@ -29,12 +29,12 @@ public:
 
     void SwapBuffers() override;
 
-    [[nodiscard]] bool IsOpenGL3Supported() const noexcept;
+    [[nodiscard]] bool isOpenGL3Supported() const noexcept;
 
 private:
-    std::shared_ptr<GameWindowX11> window;
-    ::GLXContext glxContext = nullptr;
-    bool isOpenGL3Supported = false;
+    std::shared_ptr<GameWindowX11> window_;
+    ::GLXContext glxContext_ = nullptr;
+    bool isOpenGL3Supported_ = false;
 };
 
 } // namespace pomdog::detail::x11

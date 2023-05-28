@@ -32,7 +32,7 @@ public:
     ~GameWindowWin32();
 
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(
+    initialize(
         HINSTANCE hInstance,
         int nCmdShow,
         HICON icon,
@@ -41,34 +41,34 @@ public:
         const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue,
         const gpu::PresentationParameters& presentationParameters) noexcept;
 
-    bool GetAllowUserResizing() const override;
+    bool getAllowUserResizing() const override;
 
-    void SetAllowUserResizing(bool allowResizing) override;
+    void setAllowUserResizing(bool allowResizing) override;
 
-    std::string GetTitle() const override;
+    std::string getTitle() const override;
 
-    void SetTitle(const std::string& title) override;
+    void setTitle(const std::string& title) override;
 
-    Rectangle GetClientBounds() const override;
+    Rectangle getClientBounds() const override;
 
-    void SetClientBounds(const Rectangle& clientBounds) override;
+    void setClientBounds(const Rectangle& clientBounds) override;
 
-    bool IsMouseCursorVisible() const override;
+    bool isMouseCursorVisible() const override;
 
-    void SetMouseCursorVisible(bool visible) override;
+    void setMouseCursorVisible(bool visible) override;
 
-    void SetMouseCursor(MouseCursor cursor) override;
+    void setMouseCursor(MouseCursor cursor) override;
 
     ///@return true if the window is minimized, false otherwise.
-    bool IsMinimized() const;
+    bool isMinimized() const;
 
-    void Close();
+    void close();
 
-    HWND GetNativeWindowHandle() const;
+    HWND getNativeWindowHandle() const;
 
 private:
     class Impl;
-    std::unique_ptr<Impl> impl;
+    std::unique_ptr<Impl> impl_;
 };
 
 } // namespace pomdog::detail::win32

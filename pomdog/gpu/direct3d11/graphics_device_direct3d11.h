@@ -157,7 +157,7 @@ public:
     [[nodiscard]] std::tuple<Microsoft::WRL::ComPtr<IDXGIFactory1>, std::unique_ptr<Error>>
     GetDXGIFactory() noexcept;
 
-    void ClientSizeChanged(int width, int height);
+    void clientSizeChanged(int width, int height);
 
 private:
     AdapterManager adapters;

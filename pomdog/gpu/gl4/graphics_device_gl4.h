@@ -126,7 +126,7 @@ public:
         bool mipMap,
         PixelFormat format) noexcept override;
 
-    void ClientSizeChanged(int width, int height);
+    void clientSizeChanged(int width, int height);
 
 private:
     PresentationParameters presentationParameters;

@@ -12,7 +12,7 @@ public:
     SubsystemScheduler(const SubsystemScheduler&) = delete;
     SubsystemScheduler& operator=(const SubsystemScheduler&) = delete;
 
-    Signal<void()> OnUpdate;
+    Signal<void()> onUpdate;
 };
 
 } // namespace pomdog::detail

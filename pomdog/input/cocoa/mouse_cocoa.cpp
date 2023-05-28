@@ -34,24 +34,24 @@ MouseState MouseCocoa::GetState() const
 
 void MouseCocoa::HandleEvent(const SystemEvent& event)
 {
-    switch (event.Kind) {
+    switch (event.kind) {
     case SystemEventKind::MouseEnteredEvent:
         [[fallthrough]];
     case SystemEventKind::MouseMovedEvent:
         [[fallthrough]];
     case SystemEventKind::MouseExitedEvent: {
-        const auto ev = std::get<MousePositionEvent>(event.Data);
+        const auto ev = std::get<MousePositionEvent>(event.data);
         static_assert(sizeof(ev) <= 24);
-        state.Position = ev.Position;
+        state.Position = ev.position;
         Mouse::Moved(state.Position);
         break;
     }
     case SystemEventKind::MouseButtonEvent: {
-        const auto ev = std::get<MouseButtonCocoaEvent>(event.Data);
+        const auto ev = std::get<MouseButtonCocoaEvent>(event.data);
         static_assert(sizeof(ev) <= 24);
-        const auto buttonState = ToButtonState(ev.State);
+        const auto buttonState = ToButtonState(ev.state);
 
-        switch (ev.Button) {
+        switch (ev.button) {
         case MouseButtons::Left:
             state.LeftButton = buttonState;
             break;
@@ -69,17 +69,17 @@ void MouseCocoa::HandleEvent(const SystemEvent& event)
             break;
         }
 
-        if (state.Position != ev.Position) {
-            state.Position = ev.Position;
+        if (state.Position != ev.position) {
+            state.Position = ev.position;
             Mouse::Moved(state.Position);
         }
 
-        switch (ev.State) {
+        switch (ev.state) {
         case MouseButtonState::Up:
-            Mouse::ButtonUp(ev.Button);
+            Mouse::ButtonUp(ev.button);
             break;
         case MouseButtonState::Down:
-            Mouse::ButtonDown(ev.Button);
+            Mouse::ButtonDown(ev.button);
             break;
         case MouseButtonState::Dragged:
             break;
@@ -87,9 +87,9 @@ void MouseCocoa::HandleEvent(const SystemEvent& event)
         break;
     }
     case SystemEventKind::ScrollWheelEvent: {
-        const auto ev = std::get<ScrollWheelCocoaEvent>(event.Data);
+        const auto ev = std::get<ScrollWheelCocoaEvent>(event.data);
         static_assert(sizeof(ev) <= 24);
-        auto wheelDelta = ev.ScrollingDeltaY;
+        auto wheelDelta = ev.scrollingDeltaY;
         scrollWheel += wheelDelta;
         static_assert(std::is_same<double, decltype(scrollWheel)>::value, "");
         static_assert(std::is_same<std::int32_t, decltype(state.ScrollWheel)>::value, "");

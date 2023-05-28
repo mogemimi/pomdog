@@ -22,55 +22,60 @@ public:
     ~GameWindowX11() override;
 
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(
+    initialize(
         const std::shared_ptr<X11Context const>& x11Context,
         GLXFBConfig framebufferConfig,
         int width,
         int height) noexcept;
 
-    bool GetAllowUserResizing() const override;
+    bool getAllowUserResizing() const override;
 
-    void SetAllowUserResizing(bool allowResizing) override;
+    void setAllowUserResizing(bool allowResizing) override;
 
-    std::string GetTitle() const override;
+    std::string getTitle() const override;
 
-    void SetTitle(const std::string& title) override;
+    void setTitle(const std::string& title) override;
 
-    Rectangle GetClientBounds() const override;
+    Rectangle getClientBounds() const override;
 
-    void SetClientBounds(const Rectangle& clientBounds) override;
+    void setClientBounds(const Rectangle& clientBounds) override;
 
-    bool IsMouseCursorVisible() const noexcept override;
+    bool isMouseCursorVisible() const noexcept override;
 
-    void SetMouseCursorVisible(bool visible) override;
+    void setMouseCursorVisible(bool visible) override;
 
-    void SetMouseCursor(MouseCursor cursor) override;
+    void setMouseCursor(MouseCursor cursor) override;
 
-    ::Display* GetNativeDisplay() const;
+    [[nodiscard]] ::Display*
+    getNativeDisplay() const;
 
-    ::Window GetNativeWindow() const noexcept;
+    [[nodiscard]] ::Window
+    getNativeWindow() const noexcept;
 
-    ::XIC GetInputContext() const noexcept;
+    [[nodiscard]] ::XIC
+    getInputContext() const noexcept;
 
-    GLXFBConfig GetFramebufferConfig() const;
+    [[nodiscard]] GLXFBConfig
+    getFramebufferConfig() const;
 
-    bool IsMinimized() const noexcept;
+    [[nodiscard]] bool
+    isMinimized() const noexcept;
 
-    void ProcessEvent(::XEvent& event);
+    void processEvent(::XEvent& event);
 
 private:
-    std::shared_ptr<X11Context const> x11Context;
-    int framebufferConfigID = 0;
-    ::Colormap colormap = 0;
-    ::Window window = 0;
-    ::XIM inputMethod = nullptr;
-    ::XIC inputContext = nullptr;
-    std::string title;
-    Rectangle clientBounds;
-    MouseCursor mouseCursor;
-    bool allowUserResizing = true;
-    bool isMinimized = false;
-    bool isMouseCursorVisible = true;
+    std::shared_ptr<X11Context const> x11Context_;
+    int framebufferConfigID_ = 0;
+    ::Colormap colormap_ = 0;
+    ::Window window_ = 0;
+    ::XIM inputMethod_ = nullptr;
+    ::XIC inputContext_ = nullptr;
+    std::string title_;
+    Rectangle clientBounds_;
+    MouseCursor mouseCursor_;
+    bool allowUserResizing_ = true;
+    bool isMinimized_ = false;
+    bool isMouseCursorVisible_ = true;
 };
 
 } // namespace pomdog::detail::x11

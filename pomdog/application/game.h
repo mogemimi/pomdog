@@ -30,7 +30,8 @@ public:
     /// Initialization phase of the game.
     ///
     /// Called by GameHost once before any Update() or Draw().
-    [[nodiscard]] virtual std::unique_ptr<Error> Initialize() = 0;
+    [[nodiscard]] virtual std::unique_ptr<Error>
+    initialize() = 0;
 
     /// Logic update phase of the game.
     ///
@@ -41,14 +42,14 @@ public:
     /// @see x11::Bootstrap::SetPresentationInterval,
     ///      win32::Bootstrap::SetPresentationInterval
     /// @note In Cocoa, *presentation interval* is always 60
-    virtual void Update() = 0;
+    virtual void update() = 0;
 
     /// Rendering phase of the game.
     ///
     /// Called by GameHost after every Update().
     ///
     /// @note Do all computations in Update()
-    virtual void Draw() = 0;
+    virtual void draw() = 0;
 };
 
 } // namespace pomdog

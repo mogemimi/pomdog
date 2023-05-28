@@ -93,7 +93,7 @@ AssetLoader<gpu::Texture2D>::operator()(AssetManager& assets, const std::string&
     stream.clear();
     stream.seekg(0, stream.beg);
 
-    auto graphicsDevice = assets.GetGraphicsDevice();
+    auto graphicsDevice = assets.getGraphicsDevice();
     POMDOG_ASSERT(graphicsDevice);
 
     if (IsPNGFormat(signature)) {

@@ -20,21 +20,21 @@ GLContextErrorHandler([[maybe_unused]] Display* display, XErrorEvent* error) noe
 }
 
 [[nodiscard]] XErrorHandler
-TrapErrors(XErrorHandler errorHandler) noexcept
+trapErrors(XErrorHandler errorHandler) noexcept
 {
     trappedErrorCode = 0;
     return XSetErrorHandler(errorHandler);
 }
 
 [[nodiscard]] int
-UntrapErrors(XErrorHandler oldErrorHandler) noexcept
+untrapErrors(XErrorHandler oldErrorHandler) noexcept
 {
     XSetErrorHandler(oldErrorHandler);
     return trappedErrorCode;
 }
 
 [[nodiscard]] bool
-IsExtensionSupported(const char* extensionList, const char* extension) noexcept
+isExtensionSupported(const char* extensionList, const char* extension) noexcept
 {
     POMDOG_ASSERT(extensionList != nullptr);
     POMDOG_ASSERT(extension != nullptr);
@@ -67,42 +67,42 @@ IsExtensionSupported(const char* extensionList, const char* extension) noexcept
 OpenGLContextX11::OpenGLContextX11() noexcept = default;
 
 std::unique_ptr<Error>
-OpenGLContextX11::Initialize(
+OpenGLContextX11::initialize(
     const std::shared_ptr<GameWindowX11>& windowIn,
     const GLXFBConfig& framebufferConfig) noexcept
 {
-    window = windowIn;
-    glxContext = nullptr;
-    isOpenGL3Supported = false;
+    window_ = windowIn;
+    glxContext_ = nullptr;
+    isOpenGL3Supported_ = false;
 
     POMDOG_ASSERT(framebufferConfig != nullptr);
-    POMDOG_ASSERT(window != nullptr);
+    POMDOG_ASSERT(window_ != nullptr);
 
-    const auto display = window->GetNativeDisplay();
+    const auto display = window_->getNativeDisplay();
 
     const auto glxExtensionsString = glXQueryExtensionsString(display, DefaultScreen(display));
 
-POMDOG_CLANG_SUPPRESS_WARNING_PUSH
-POMDOG_CLANG_SUPPRESS_WARNING("-Wcast-function-type-strict")
+    POMDOG_CLANG_SUPPRESS_WARNING_PUSH
+    POMDOG_CLANG_SUPPRESS_WARNING("-Wcast-function-type-strict")
     const auto glXCreateContextAttribsARB = reinterpret_cast<PFNGLXCREATECONTEXTATTRIBSARBPROC>(
         glXGetProcAddressARB(reinterpret_cast<const GLubyte*>("glXCreateContextAttribsARB")));
-POMDOG_CLANG_SUPPRESS_WARNING_POP
+    POMDOG_CLANG_SUPPRESS_WARNING_POP
 
-    if (!IsExtensionSupported(glxExtensionsString, "GLX_ARB_create_context") ||
+    if (!isExtensionSupported(glxExtensionsString, "GLX_ARB_create_context") ||
         glXCreateContextAttribsARB == nullptr) {
         // NOTE:
         // glXCreateContextAttribsARB() not found
         // ... This platform is not supported OpenGL 3.0 or later.
         // ... using old-style GLX context
-        auto oldHandler = TrapErrors(GLContextErrorHandler);
-        glxContext = glXCreateNewContext(
+        auto oldHandler = trapErrors(GLContextErrorHandler);
+        glxContext_ = glXCreateNewContext(
             display,
             framebufferConfig,
             GLX_RGBA_TYPE,
             nullptr,
             True);
         XSync(display, False);
-        if (auto errorCode = UntrapErrors(oldHandler); errorCode != 0) {
+        if (auto errorCode = untrapErrors(oldHandler); errorCode != 0) {
             return errors::New("glXCreateNewContext() failed: error code = " + std::to_string(errorCode));
         }
     }
@@ -146,19 +146,19 @@ POMDOG_CLANG_SUPPRESS_WARNING_POP
 
         int lastError = 0;
         for (const auto& attribs : configs) {
-            auto oldHandler = TrapErrors(GLContextErrorHandler);
-            glxContext = glXCreateContextAttribsARB(
+            auto oldHandler = trapErrors(GLContextErrorHandler);
+            glxContext_ = glXCreateContextAttribsARB(
                 display,
                 framebufferConfig,
                 nullptr,
                 True,
                 attribs);
             XSync(display, False);
-            if (lastError = UntrapErrors(oldHandler); (lastError == 0) && (glxContext != nullptr)) {
+            if (lastError = untrapErrors(oldHandler); (lastError == 0) && (glxContext_ != nullptr)) {
                 assert(attribs[0] == GLX_CONTEXT_MAJOR_VERSION_ARB);
                 assert(attribs[1] >= 2);
                 if (attribs[1] >= 3) {
-                    isOpenGL3Supported = true;
+                    isOpenGL3Supported_ = true;
                 }
                 break;
             }
@@ -169,7 +169,7 @@ POMDOG_CLANG_SUPPRESS_WARNING_POP
         }
     }
 
-    if (glxContext == nullptr) {
+    if (glxContext_ == nullptr) {
         return errors::New("glxContext is nullptr");
     }
 
@@ -178,42 +178,42 @@ POMDOG_CLANG_SUPPRESS_WARNING_POP
 
 OpenGLContextX11::~OpenGLContextX11() noexcept
 {
-    if (glxContext != nullptr) {
-        POMDOG_ASSERT(window != nullptr);
-        auto display = window->GetNativeDisplay();
+    if (glxContext_ != nullptr) {
+        POMDOG_ASSERT(window_ != nullptr);
+        const auto display = window_->getNativeDisplay();
 
-        if (glXGetCurrentContext() == glxContext) {
+        if (glXGetCurrentContext() == glxContext_) {
             glXMakeCurrent(display, None, nullptr);
         }
-        glXDestroyContext(display, glxContext);
+        glXDestroyContext(display, glxContext_);
     }
 }
 
 void OpenGLContextX11::MakeCurrent()
 {
-    if (glXGetCurrentContext() == glxContext) {
+    if (glXGetCurrentContext() == glxContext_) {
         return;
     }
 
-    POMDOG_ASSERT(window != nullptr);
-    glXMakeCurrent(window->GetNativeDisplay(), window->GetNativeWindow(), glxContext);
+    POMDOG_ASSERT(window_ != nullptr);
+    glXMakeCurrent(window_->getNativeDisplay(), window_->getNativeWindow(), glxContext_);
 }
 
 void OpenGLContextX11::ClearCurrent()
 {
-    POMDOG_ASSERT(window != nullptr);
-    glXMakeCurrent(window->GetNativeDisplay(), None, nullptr);
+    POMDOG_ASSERT(window_ != nullptr);
+    glXMakeCurrent(window_->getNativeDisplay(), None, nullptr);
 }
 
 void OpenGLContextX11::SwapBuffers()
 {
-    POMDOG_ASSERT(window != nullptr);
-    glXSwapBuffers(window->GetNativeDisplay(), window->GetNativeWindow());
+    POMDOG_ASSERT(window_ != nullptr);
+    glXSwapBuffers(window_->getNativeDisplay(), window_->getNativeWindow());
 }
 
-bool OpenGLContextX11::IsOpenGL3Supported() const noexcept
+bool OpenGLContextX11::isOpenGL3Supported() const noexcept
 {
-    return isOpenGL3Supported;
+    return isOpenGL3Supported_;
 }
 
 } // namespace pomdog::detail::x11

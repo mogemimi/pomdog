@@ -12,10 +12,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail::win32 {
 
-bool IsWindowsVersionOrGreaterForWindows10(WORD majorVersion, WORD minorVersion, WORD buildVersion) noexcept;
+[[nodiscard]] bool isWindowsVersionOrGreaterForWindows10(WORD majorVersion, WORD minorVersion, WORD buildVersion) noexcept;
 
-bool IsDarkMode() noexcept;
+[[nodiscard]] bool isDarkMode() noexcept;
 
-std::unique_ptr<Error> UseImmersiveDarkMode(HWND windowHandle, bool enabled) noexcept;
+[[nodiscard]] std::unique_ptr<Error> useImmersiveDarkMode(HWND windowHandle, bool enabled) noexcept;
 
 } // namespace pomdog::detail::win32

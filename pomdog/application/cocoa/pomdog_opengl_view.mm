@@ -240,7 +240,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 - (void)viewWillStartLiveResize
 {
     if (eventQueue) {
-        eventQueue->Enqueue(SystemEvent{.Kind = SystemEventKind::ViewWillStartLiveResizeEvent});
+        eventQueue->Enqueue(SystemEvent{.kind = SystemEventKind::ViewWillStartLiveResizeEvent});
     }
 
     if (resizingCallback) {
@@ -252,7 +252,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 {
     if (eventQueue) {
         eventQueue->Enqueue(SystemEvent{
-            .Kind = SystemEventKind::ViewDidEndLiveResizeEvent,
+            .kind = SystemEventKind::ViewDidEndLiveResizeEvent,
         });
     }
 
@@ -353,9 +353,9 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 
     NSPoint locationInView = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     eventQueue->Enqueue(SystemEvent{
-        .Kind = SystemEventKind::MouseEnteredEvent,
-        .Data = MousePositionEvent{
-            .Position = ToPoint2D(locationInView),
+        .kind = SystemEventKind::MouseEnteredEvent,
+        .data = MousePositionEvent{
+            .position = ToPoint2D(locationInView),
         },
     });
 }
@@ -365,9 +365,9 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     if (eventQueue) {
         NSPoint locationInView = [self convertPoint:[theEvent locationInWindow] fromView:nil];
         eventQueue->Enqueue(SystemEvent{
-            .Kind = SystemEventKind::MouseMovedEvent,
-            .Data = MousePositionEvent{
-                .Position = ToPoint2D(locationInView),
+            .kind = SystemEventKind::MouseMovedEvent,
+            .data = MousePositionEvent{
+                .position = ToPoint2D(locationInView),
             },
         });
     }
@@ -380,9 +380,9 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     if (eventQueue) {
         NSPoint locationInView = [self convertPoint:[theEvent locationInWindow] fromView:nil];
         eventQueue->Enqueue(SystemEvent{
-            .Kind = SystemEventKind::MouseExitedEvent,
-            .Data = MousePositionEvent{
-                .Position = ToPoint2D(locationInView),
+            .kind = SystemEventKind::MouseExitedEvent,
+            .data = MousePositionEvent{
+                .position = ToPoint2D(locationInView),
             },
         });
     }
@@ -393,11 +393,11 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     if (eventQueue) {
         NSPoint locationInView = [self convertPoint:[theEvent locationInWindow] fromView:nil];
         eventQueue->Enqueue(SystemEvent{
-            .Kind = SystemEventKind::MouseButtonEvent,
-            .Data = MouseButtonCocoaEvent{
-                .Position = ToPoint2D(locationInView),
-                .Button = MouseButtons::Left,
-                .State = MouseButtonState::Down,
+            .kind = SystemEventKind::MouseButtonEvent,
+            .data = MouseButtonCocoaEvent{
+                .position = ToPoint2D(locationInView),
+                .button = MouseButtons::Left,
+                .state = MouseButtonState::Down,
             },
         });
     }
@@ -408,11 +408,11 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     if (eventQueue) {
         NSPoint locationInView = [self convertPoint:[theEvent locationInWindow] fromView:nil];
         eventQueue->Enqueue(SystemEvent{
-            .Kind = SystemEventKind::MouseButtonEvent,
-            .Data = MouseButtonCocoaEvent{
-                .Position = ToPoint2D(locationInView),
-                .Button = MouseButtons::Left,
-                .State = MouseButtonState::Dragged,
+            .kind = SystemEventKind::MouseButtonEvent,
+            .data = MouseButtonCocoaEvent{
+                .position = ToPoint2D(locationInView),
+                .button = MouseButtons::Left,
+                .state = MouseButtonState::Dragged,
             },
         });
     }
@@ -423,11 +423,11 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     if (eventQueue) {
         NSPoint locationInView = [self convertPoint:[theEvent locationInWindow] fromView:nil];
         eventQueue->Enqueue(SystemEvent{
-            .Kind = SystemEventKind::MouseButtonEvent,
-            .Data = MouseButtonCocoaEvent{
-                .Position = ToPoint2D(locationInView),
-                .Button = MouseButtons::Left,
-                .State = MouseButtonState::Up,
+            .kind = SystemEventKind::MouseButtonEvent,
+            .data = MouseButtonCocoaEvent{
+                .position = ToPoint2D(locationInView),
+                .button = MouseButtons::Left,
+                .state = MouseButtonState::Up,
             },
         });
     }
@@ -438,11 +438,11 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     if (eventQueue) {
         NSPoint locationInView = [self convertPoint:[theEvent locationInWindow] fromView:nil];
         eventQueue->Enqueue(SystemEvent{
-            .Kind = SystemEventKind::MouseButtonEvent,
-            .Data = MouseButtonCocoaEvent{
-                .Position = ToPoint2D(locationInView),
-                .Button = MouseButtons::Right,
-                .State = MouseButtonState::Down,
+            .kind = SystemEventKind::MouseButtonEvent,
+            .data = MouseButtonCocoaEvent{
+                .position = ToPoint2D(locationInView),
+                .button = MouseButtons::Right,
+                .state = MouseButtonState::Down,
             },
         });
     }
@@ -453,11 +453,11 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     if (eventQueue) {
         NSPoint locationInView = [self convertPoint:[theEvent locationInWindow] fromView:nil];
         eventQueue->Enqueue(SystemEvent{
-            .Kind = SystemEventKind::MouseButtonEvent,
-            .Data = MouseButtonCocoaEvent{
-                .Position = ToPoint2D(locationInView),
-                .Button = MouseButtons::Right,
-                .State = MouseButtonState::Dragged,
+            .kind = SystemEventKind::MouseButtonEvent,
+            .data = MouseButtonCocoaEvent{
+                .position = ToPoint2D(locationInView),
+                .button = MouseButtons::Right,
+                .state = MouseButtonState::Dragged,
             },
         });
     }
@@ -468,11 +468,11 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     if (eventQueue) {
         NSPoint locationInView = [self convertPoint:[theEvent locationInWindow] fromView:nil];
         eventQueue->Enqueue(SystemEvent{
-            .Kind = SystemEventKind::MouseButtonEvent,
-            .Data = MouseButtonCocoaEvent{
-                .Position = ToPoint2D(locationInView),
-                .Button = MouseButtons::Right,
-                .State = MouseButtonState::Up,
+            .kind = SystemEventKind::MouseButtonEvent,
+            .data = MouseButtonCocoaEvent{
+                .position = ToPoint2D(locationInView),
+                .button = MouseButtons::Right,
+                .state = MouseButtonState::Up,
             },
         });
     }
@@ -488,23 +488,23 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     NSInteger buttonNumber = [theEvent buttonNumber];
 
     if (buttonNumber == 2) {
-        event.Button = MouseButtons::Middle;
+        event.button = MouseButtons::Middle;
     }
     else if (buttonNumber == 3) {
-        event.Button = MouseButtons::XButton1;
+        event.button = MouseButtons::XButton1;
     }
     else if (buttonNumber == 4) {
-        event.Button = MouseButtons::XButton2;
+        event.button = MouseButtons::XButton2;
     }
 
     NSPoint locationInView = [self convertPoint:[theEvent locationInWindow] fromView:nil];
 
-    event.State = MouseButtonState::Down;
-    event.Position = ToPoint2D(locationInView);
+    event.state = MouseButtonState::Down;
+    event.position = ToPoint2D(locationInView);
 
     eventQueue->Enqueue(SystemEvent{
-        .Kind = SystemEventKind::MouseButtonEvent,
-        .Data = std::move(event),
+        .kind = SystemEventKind::MouseButtonEvent,
+        .data = std::move(event),
     });
 }
 
@@ -518,23 +518,23 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     NSInteger buttonNumber = [theEvent buttonNumber];
 
     if (buttonNumber == 2) {
-        event.Button = MouseButtons::Middle;
+        event.button = MouseButtons::Middle;
     }
     else if (buttonNumber == 3) {
-        event.Button = MouseButtons::XButton1;
+        event.button = MouseButtons::XButton1;
     }
     else if (buttonNumber == 4) {
-        event.Button = MouseButtons::XButton2;
+        event.button = MouseButtons::XButton2;
     }
 
     NSPoint locationInView = [self convertPoint:[theEvent locationInWindow] fromView:nil];
 
-    event.State = MouseButtonState::Dragged;
-    event.Position = ToPoint2D(locationInView);
+    event.state = MouseButtonState::Dragged;
+    event.position = ToPoint2D(locationInView);
 
     eventQueue->Enqueue(SystemEvent{
-        .Kind = SystemEventKind::MouseButtonEvent,
-        .Data = std::move(event),
+        .kind = SystemEventKind::MouseButtonEvent,
+        .data = std::move(event),
     });
 }
 
@@ -548,23 +548,23 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     NSInteger buttonNumber = [theEvent buttonNumber];
 
     if (buttonNumber == 2) {
-        event.Button = MouseButtons::Middle;
+        event.button = MouseButtons::Middle;
     }
     else if (buttonNumber == 3) {
-        event.Button = MouseButtons::XButton1;
+        event.button = MouseButtons::XButton1;
     }
     else if (buttonNumber == 4) {
-        event.Button = MouseButtons::XButton2;
+        event.button = MouseButtons::XButton2;
     }
 
     NSPoint locationInView = [self convertPoint:[theEvent locationInWindow] fromView:nil];
 
-    event.State = MouseButtonState::Up;
-    event.Position = ToPoint2D(locationInView);
+    event.state = MouseButtonState::Up;
+    event.position = ToPoint2D(locationInView);
 
     eventQueue->Enqueue(SystemEvent{
-        .Kind = SystemEventKind::MouseButtonEvent,
-        .Data = std::move(event),
+        .kind = SystemEventKind::MouseButtonEvent,
+        .data = std::move(event),
     });
 }
 
@@ -578,15 +578,15 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
 
     double scrollingDeltaY = static_cast<double>([theEvent scrollingDeltaY]);
     if ([theEvent hasPreciseScrollingDeltas]) {
-        event.ScrollingDeltaY = scrollingDeltaY * 0.1;
+        event.scrollingDeltaY = scrollingDeltaY * 0.1;
     }
     else {
-        event.ScrollingDeltaY = scrollingDeltaY;
+        event.scrollingDeltaY = scrollingDeltaY;
     }
 
     eventQueue->Enqueue(SystemEvent{
-        .Kind = SystemEventKind::ScrollWheelEvent,
-        .Data = std::move(event),
+        .kind = SystemEventKind::ScrollWheelEvent,
+        .data = std::move(event),
     });
 }
 
@@ -597,10 +597,10 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     auto key = TranslateKey([theEvent keyCode]);
     if (key != pomdog::Keys::Unknown) {
         eventQueue->Enqueue(SystemEvent{
-            .Kind = SystemEventKind::InputKeyEvent,
-            .Data = InputKeyEvent{
-                .State = KeyState::Down,
-                .Key = key,
+            .kind = SystemEventKind::InputKeyEvent,
+            .data = InputKeyEvent{
+                .state = KeyState::Down,
+                .key = key,
             },
         });
     }
@@ -609,9 +609,9 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     std::string text = [[theEvent characters] UTF8String];
 
     eventQueue->Enqueue(SystemEvent{
-        .Kind = SystemEventKind::InputTextEvent,
-        .Data = InputTextEvent{
-            .Text = std::move(text),
+        .kind = SystemEventKind::InputTextEvent,
+        .data = InputTextEvent{
+            .text = std::move(text),
         },
     });
 }
@@ -621,10 +621,10 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     auto key = TranslateKey([theEvent keyCode]);
     if (key != pomdog::Keys::Unknown) {
         eventQueue->Enqueue(SystemEvent{
-            .Kind = SystemEventKind::InputKeyEvent,
-            .Data = InputKeyEvent{
-                .State = KeyState::Up,
-                .Key = key,
+            .kind = SystemEventKind::InputKeyEvent,
+            .data = InputKeyEvent{
+                .state = KeyState::Up,
+                .key = key,
             },
         });
     }
@@ -641,19 +641,19 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     const auto flag = TranslateKeyToModifierFlag(key);
     if ((flag & modifierFlags) != 0) {
         eventQueue->Enqueue(SystemEvent{
-            .Kind = SystemEventKind::InputKeyEvent,
-            .Data = InputKeyEvent{
-                .State = KeyState::Down,
-                .Key = key,
+            .kind = SystemEventKind::InputKeyEvent,
+            .data = InputKeyEvent{
+                .state = KeyState::Down,
+                .key = key,
             },
         });
     }
     else {
         eventQueue->Enqueue(SystemEvent{
-            .Kind = SystemEventKind::InputKeyEvent,
-            .Data = InputKeyEvent{
-                .State = KeyState::Up,
-                .Key = key,
+            .kind = SystemEventKind::InputKeyEvent,
+            .data = InputKeyEvent{
+                .state = KeyState::Up,
+                .key = key,
             },
         });
     }

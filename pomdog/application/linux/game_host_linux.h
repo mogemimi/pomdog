@@ -58,51 +58,51 @@ public:
     ~GameHostLinux() override;
 
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(const gpu::PresentationParameters& presentationParameters);
+    initialize(const gpu::PresentationParameters& presentationParameters);
 
-    void Run(Game& game);
+    void run(Game& game);
 
-    void Exit() override;
+    void exit() override;
 
     [[nodiscard]] std::shared_ptr<GameWindow>
-    GetWindow() noexcept override;
+    getWindow() noexcept override;
 
     [[nodiscard]] std::shared_ptr<GameClock>
-    GetClock() noexcept override;
+    getClock() noexcept override;
 
     [[nodiscard]] std::shared_ptr<gpu::GraphicsDevice>
-    GetGraphicsDevice() noexcept override;
+    getGraphicsDevice() noexcept override;
 
     [[nodiscard]] std::shared_ptr<gpu::CommandQueue>
-    GetCommandQueue() noexcept override;
+    getCommandQueue() noexcept override;
 
     [[nodiscard]] std::shared_ptr<AudioEngine>
-    GetAudioEngine() noexcept override;
+    getAudioEngine() noexcept override;
 
     [[nodiscard]] std::shared_ptr<AssetManager>
-    GetAssetManager() noexcept override;
+    getAssetManager() noexcept override;
 
     [[nodiscard]] std::shared_ptr<Keyboard>
-    GetKeyboard() noexcept override;
+    getKeyboard() noexcept override;
 
     [[nodiscard]] std::shared_ptr<Mouse>
-    GetMouse() noexcept override;
+    getMouse() noexcept override;
 
     [[nodiscard]] std::shared_ptr<Gamepad>
-    GetGamepad() noexcept override;
+    getGamepad() noexcept override;
 
     [[nodiscard]] std::shared_ptr<IOService>
-    GetIOService() noexcept override;
+    getIOService() noexcept override;
 
     [[nodiscard]] std::shared_ptr<HTTPClient>
-    GetHTTPClient() noexcept override;
+    getHTTPClient() noexcept override;
 
 private:
-    void MessagePump();
+    void messagePump();
 
-    void ProcessEvent(::XEvent& event);
+    void processEvent(::XEvent& event);
 
-    void RenderFrame(Game& game);
+    void renderFrame(Game& game);
 
 private:
     std::shared_ptr<TimeSource> timeSource_;

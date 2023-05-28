@@ -7,15 +7,15 @@ namespace feature_showcase {
 
 Beam2DTest::Beam2DTest(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
-    , graphicsDevice(gameHostIn->GetGraphicsDevice())
-    , commandQueue(gameHostIn->GetCommandQueue())
+    , graphicsDevice(gameHostIn->getGraphicsDevice())
+    , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
-std::unique_ptr<Error> Beam2DTest::Initialize()
+std::unique_ptr<Error> Beam2DTest::initialize()
 {
-    auto assets = gameHost->GetAssetManager();
-    auto clock = gameHost->GetClock();
+    auto assets = gameHost->getAssetManager();
+    auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
 
@@ -58,15 +58,15 @@ std::unique_ptr<Error> Beam2DTest::Initialize()
 
     emitterTarget = Vector2{200.0, 100.0f};
 
-    auto mouse = gameHost->GetMouse();
+    auto mouse = gameHost->getMouse();
     connect(mouse->Moved, [this](const Point2D& mousePos) {
-        auto mouse = gameHost->GetMouse();
+        auto mouse = gameHost->getMouse();
         auto mouseState = mouse->GetState();
         if (mouseState.LeftButton != ButtonState::Pressed) {
             return;
         }
-        const auto window = gameHost->GetWindow();
-        const auto clientBounds = window->GetClientBounds();
+        const auto window = gameHost->getWindow();
+        const auto clientBounds = window->getClientBounds();
         auto pos = mousePos;
         pos.x = pos.x - (clientBounds.width / 2);
         pos.y = -pos.y + (clientBounds.height / 2);
@@ -76,15 +76,15 @@ std::unique_ptr<Error> Beam2DTest::Initialize()
     return nullptr;
 }
 
-void Beam2DTest::Update()
+void Beam2DTest::update()
 {
     const auto emitterPosition = Vector2::createZero();
-    const auto clock = gameHost->GetClock();
+    const auto clock = gameHost->getClock();
     const auto frameDuration = clock->GetFrameDuration();
     beamSystem->Update(frameDuration, emitterPosition, emitterTarget);
 }
 
-void Beam2DTest::Draw()
+void Beam2DTest::draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 

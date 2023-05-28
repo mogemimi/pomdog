@@ -10,7 +10,7 @@ namespace pomdog::gui {
 WidgetHierarchy::WidgetHierarchy(
     const std::shared_ptr<GameWindow>& window,
     const std::shared_ptr<Keyboard>& keyboard)
-    : viewportHeight(window->GetClientBounds().height)
+    : viewportHeight(window->getClientBounds().height)
 {
     dispatcher = std::make_shared<UIEventDispatcher>(window, keyboard);
 
@@ -22,7 +22,7 @@ WidgetHierarchy::WidgetHierarchy(
         this->RemoveChild(widget);
     };
 
-    connection = window->ClientSizeChanged.Connect([this](int width, int height) {
+    connection = window->clientSizeChanged.Connect([this](int width, int height) {
         this->RenderSizeChanged(width, height);
     });
 }

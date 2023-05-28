@@ -111,7 +111,7 @@ public:
 
     std::shared_ptr<gpu::GraphicsDevice> GetDevice()
     {
-        return assets.get().GetGraphicsDevice();
+        return assets.get().getGraphicsDevice();
     }
 
     /// Opens a stream for reading a file from the asset path.

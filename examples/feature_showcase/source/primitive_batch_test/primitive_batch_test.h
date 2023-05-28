@@ -12,11 +12,11 @@ public:
     explicit PrimitiveBatchTest(const std::shared_ptr<GameHost>& gameHost);
 
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize() override;
+    initialize() override;
 
-    void Update() override;
+    void update() override;
 
-    void Draw() override;
+    void draw() override;
 
 private:
     std::shared_ptr<GameHost> gameHost;

@@ -34,19 +34,19 @@ namespace feature_showcase {
 
 GameMain::GameMain(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
-    , window(gameHostIn->GetWindow())
-    , graphicsDevice(gameHostIn->GetGraphicsDevice())
-    , assets(gameHostIn->GetAssetManager())
-    , clock(gameHostIn->GetClock())
-    , commandQueue(gameHostIn->GetCommandQueue())
+    , window(gameHostIn->getWindow())
+    , graphicsDevice(gameHostIn->getGraphicsDevice())
+    , assets(gameHostIn->getAssetManager())
+    , clock(gameHostIn->getClock())
+    , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
 std::unique_ptr<Error>
-GameMain::Initialize()
+GameMain::initialize()
 {
-    window->SetTitle("Feature Showcase");
-    window->SetAllowUserResizing(true);
+    window->setTitle("Feature Showcase");
+    window->setAllowUserResizing(true);
     commandList = std::get<0>(graphicsDevice->CreateCommandList());
 
     auto [font, fontErr] = assets->Load<TrueTypeFont>("Fonts/NotoSans/NotoSans-Regular.ttf");
@@ -63,124 +63,124 @@ GameMain::Initialize()
     timer->SetScale(1.0);
 
     buttons.emplace_back("EditorGUI Test", [this] {
-        window->SetTitle("Feature Showcase > EditorGUI Test");
+        window->setTitle("Feature Showcase > EditorGUI Test");
         subGame = std::make_shared<feature_showcase::EditorGUITest>(gameHost);
     });
     buttons.emplace_back("GUISplitter Test", [this] {
-        window->SetTitle("Feature Showcase > GUISplitter Test");
+        window->setTitle("Feature Showcase > GUISplitter Test");
         subGame = std::make_shared<feature_showcase::GUISplitterTest>(gameHost);
     });
     buttons.emplace_back("LineBatch Test", [this] {
-        window->SetTitle("Feature Showcase > LineBatch Test");
+        window->setTitle("Feature Showcase > LineBatch Test");
         subGame = std::make_shared<feature_showcase::LineBatchTest>(gameHost);
     });
     buttons.emplace_back("PolylineDrawing Test", [this] {
-        window->SetTitle("Feature Showcase > PolylineDrawing Test");
+        window->setTitle("Feature Showcase > PolylineDrawing Test");
         subGame = std::make_shared<feature_showcase::PolylineDrawingTest>(gameHost);
     });
     buttons.emplace_back("PrimitiveBatch Test", [this] {
-        window->SetTitle("Feature Showcase > PrimitiveBatch Test");
+        window->setTitle("Feature Showcase > PrimitiveBatch Test");
         subGame = std::make_shared<feature_showcase::PrimitiveBatchTest>(gameHost);
     });
     buttons.emplace_back("BasicEffect Test", [this] {
-        window->SetTitle("Feature Showcase > BasicEffect Test");
+        window->setTitle("Feature Showcase > BasicEffect Test");
         subGame = std::make_shared<feature_showcase::BasicEffectTest>(gameHost);
     });
     buttons.emplace_back("GLTFModel Test", [this] {
-        window->SetTitle("Feature Showcase > GLTFModel Test");
+        window->setTitle("Feature Showcase > GLTFModel Test");
         subGame = std::make_shared<feature_showcase::GLTFModelTest>(gameHost);
     });
     buttons.emplace_back("HardwareInstancing Test", [this] {
-        window->SetTitle("Feature Showcase > HardwareInstancing Test");
+        window->setTitle("Feature Showcase > HardwareInstancing Test");
         subGame = std::make_shared<feature_showcase::HardwareInstancingTest>(gameHost);
     });
     buttons.emplace_back("MultiRenderTarget Test", [this] {
-        window->SetTitle("Feature Showcase > MultiRenderTarget Test");
+        window->setTitle("Feature Showcase > MultiRenderTarget Test");
         subGame = std::make_shared<feature_showcase::MultiRenderTargetTest>(gameHost);
     });
     buttons.emplace_back("SpriteBatch Test", [this] {
-        window->SetTitle("Feature Showcase > SpriteBatch Test");
+        window->setTitle("Feature Showcase > SpriteBatch Test");
         subGame = std::make_shared<feature_showcase::SpriteBatchTest>(gameHost);
     });
     buttons.emplace_back("SpriteFont Test", [this] {
-        window->SetTitle("Feature Showcase > SpriteFont Test");
+        window->setTitle("Feature Showcase > SpriteFont Test");
         subGame = std::make_shared<feature_showcase::SpriteFontTest>(gameHost);
     });
     buttons.emplace_back("DistanceFieldFont Test", [this] {
-        window->SetTitle("Feature Showcase > DistanceFieldFont Test");
+        window->setTitle("Feature Showcase > DistanceFieldFont Test");
         subGame = std::make_shared<feature_showcase::DistanceFieldFontTest>(gameHost);
     });
     buttons.emplace_back("SpriteLine Test", [this] {
-        window->SetTitle("Feature Showcase > SpriteLine Test");
+        window->setTitle("Feature Showcase > SpriteLine Test");
         subGame = std::make_shared<feature_showcase::SpriteLineTest>(gameHost);
     });
     buttons.emplace_back("BillboardBatch Test", [this] {
-        window->SetTitle("Feature Showcase > BillboardBatch Test");
+        window->setTitle("Feature Showcase > BillboardBatch Test");
         subGame = std::make_shared<feature_showcase::BillboardBatchTest>(gameHost);
     });
     buttons.emplace_back("ImageEffects Test", [this] {
-        window->SetTitle("Feature Showcase > ImageEffects Test");
+        window->setTitle("Feature Showcase > ImageEffects Test");
         subGame = std::make_shared<feature_showcase::ImageEffectsTest>(gameHost);
     });
     buttons.emplace_back("Particle2D Test", [this] {
-        window->SetTitle("Feature Showcase > Particle2D Test");
+        window->setTitle("Feature Showcase > Particle2D Test");
         subGame = std::make_shared<feature_showcase::Particle2DTest>(gameHost);
     });
     buttons.emplace_back("ParticleClipLoader Test", [this] {
-        window->SetTitle("Feature Showcase > ParticleClipLoader Test");
+        window->setTitle("Feature Showcase > ParticleClipLoader Test");
         subGame = std::make_shared<feature_showcase::ParticleClipLoaderTest>(gameHost);
     });
     buttons.emplace_back("Particle3D Test", [this] {
-        window->SetTitle("Feature Showcase > Particle3D Test");
+        window->setTitle("Feature Showcase > Particle3D Test");
         subGame = std::make_shared<feature_showcase::Particle3DTest>(gameHost);
     });
     buttons.emplace_back("Beam2D Test", [this] {
-        window->SetTitle("Feature Showcase > Beam2D Test");
+        window->setTitle("Feature Showcase > Beam2D Test");
         subGame = std::make_shared<feature_showcase::Beam2DTest>(gameHost);
     });
     buttons.emplace_back("HTTPClient Test", [this] {
-        window->SetTitle("Feature Showcase > HTTPClient Test");
+        window->setTitle("Feature Showcase > HTTPClient Test");
         subGame = std::make_shared<feature_showcase::HTTPClientTest>(gameHost);
     });
     buttons.emplace_back("AudioClip Test", [this] {
-        window->SetTitle("Feature Showcase > AudioClip Test");
+        window->setTitle("Feature Showcase > AudioClip Test");
         subGame = std::make_shared<feature_showcase::AudioClipTest>(gameHost);
     });
     buttons.emplace_back("Texture2DLoader Test", [this] {
-        window->SetTitle("Feature Showcase > Texture2DLoader Test");
+        window->setTitle("Feature Showcase > Texture2DLoader Test");
         subGame = std::make_shared<feature_showcase::Texture2DLoaderTest>(gameHost);
     });
     buttons.emplace_back("SVGDecode Test", [this] {
-        window->SetTitle("Feature Showcase > SVGDecode Test");
+        window->setTitle("Feature Showcase > SVGDecode Test");
         subGame = std::make_shared<feature_showcase::SVGDecodeTest>(gameHost);
     });
     buttons.emplace_back("VoxelModel Test", [this] {
-        window->SetTitle("Feature Showcase > VoxelModel Test");
+        window->setTitle("Feature Showcase > VoxelModel Test");
         subGame = std::make_shared<feature_showcase::VoxelModelTest>(gameHost);
     });
     buttons.emplace_back("Gamepad Test", [this] {
-        window->SetTitle("Feature Showcase > Gamepad Test");
+        window->setTitle("Feature Showcase > Gamepad Test");
         subGame = std::make_shared<feature_showcase::GamepadTest>(gameHost);
     });
     buttons.emplace_back("Skeletal2D Test", [this] {
-        window->SetTitle("Feature Showcase > Skeletal2D Test");
+        window->setTitle("Feature Showcase > Skeletal2D Test");
         subGame = std::make_shared<feature_showcase::Skeletal2DTest>(gameHost);
     });
     buttons.emplace_back("Skinning2D Test", [this] {
-        window->SetTitle("Feature Showcase > Skinning2D Test");
+        window->setTitle("Feature Showcase > Skinning2D Test");
         subGame = std::make_shared<feature_showcase::Skinning2DTest>(gameHost);
     });
     buttons.emplace_back("AnimationGraph Test", [this] {
-        window->SetTitle("Feature Showcase > AnimationGraph Test");
+        window->setTitle("Feature Showcase > AnimationGraph Test");
         subGame = std::make_shared<feature_showcase::AnimationGraphTest>(gameHost);
     });
 
     hudButtons.emplace_back("Back", [this] {
-        window->SetTitle("Feature Showcase");
+        window->setTitle("Feature Showcase");
         subGame.reset();
     });
 
-    auto mouse = gameHost->GetMouse();
+    auto mouse = gameHost->getMouse();
     connect(mouse->ButtonDown, [this](MouseButtons mouseButton) {
         if (mouseButton != MouseButtons::Left) {
             return;
@@ -198,7 +198,7 @@ GameMain::Initialize()
                 if (button.Selected) {
                     button.OnClicked();
                     if (subGame) {
-                        if (auto err = subGame->Initialize(); err != nullptr) {
+                        if (auto err = subGame->initialize(); err != nullptr) {
                             Log::Critical("Error", "failed to initialize game: " + err->ToString());
                             subGame.reset();
                         }
@@ -217,17 +217,17 @@ GameMain::Initialize()
     return nullptr;
 }
 
-void GameMain::Update()
+void GameMain::update()
 {
     if (subGame) {
-        subGame->Update();
+        subGame->update();
     }
 
-    UpdateMenuLayout();
+    updateMenuLayout();
 
-    const auto mouse = gameHost->GetMouse();
+    const auto mouse = gameHost->getMouse();
     const auto mouseState = mouse->GetState();
-    const auto clientBounds = window->GetClientBounds();
+    const auto clientBounds = window->getClientBounds();
     auto position = mouseState.Position;
     position.y = clientBounds.height - position.y;
 
@@ -254,10 +254,10 @@ void GameMain::Update()
     });
 }
 
-void GameMain::UpdateMenuLayout()
+void GameMain::updateMenuLayout()
 {
-    const auto mouse = gameHost->GetMouse();
-    const auto clientBounds = window->GetClientBounds();
+    const auto mouse = gameHost->getMouse();
+    const auto clientBounds = window->getClientBounds();
 
     {
         int y = clientBounds.height - 36 - static_cast<int>(scrollY);
@@ -285,22 +285,22 @@ void GameMain::UpdateMenuLayout()
     }
 }
 
-void GameMain::Draw()
+void GameMain::draw()
 {
     commandQueue->Reset();
 
     if (subGame) {
-        subGame->Draw();
+        subGame->draw();
     }
 
-    DrawMenu();
+    drawMenu();
     commandQueue->PushbackCommandList(commandList);
 
     commandQueue->ExecuteCommandLists();
     commandQueue->Present();
 }
 
-void GameMain::DrawMenu()
+void GameMain::drawMenu()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 

@@ -13,22 +13,22 @@ namespace pong {
 
 GameMain::GameMain(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
-    , window(gameHostIn->GetWindow())
-    , graphicsDevice(gameHostIn->GetGraphicsDevice())
-    , commandQueue(gameHostIn->GetCommandQueue())
-    , assets(gameHostIn->GetAssetManager())
-    , clock(gameHostIn->GetClock())
-    , audioEngine(gameHostIn->GetAudioEngine())
-    , postProcessCompositor(gameHostIn->GetGraphicsDevice())
+    , window(gameHostIn->getWindow())
+    , graphicsDevice(gameHostIn->getGraphicsDevice())
+    , commandQueue(gameHostIn->getCommandQueue())
+    , assets(gameHostIn->getAssetManager())
+    , clock(gameHostIn->getClock())
+    , audioEngine(gameHostIn->getAudioEngine())
+    , postProcessCompositor(gameHostIn->getGraphicsDevice())
     , textTimer(clock)
 {
-    window->SetAllowUserResizing(true);
+    window->setAllowUserResizing(true);
 }
 
-std::unique_ptr<Error> GameMain::Initialize()
+std::unique_ptr<Error> GameMain::initialize()
 {
     // NOTE: Set window name
-    window->SetTitle("Pomdog Pong");
+    window->setTitle("Pomdog Pong");
 
     // NOTE: Set main volume
     audioEngine->SetMainVolume(0.4f);
@@ -132,7 +132,7 @@ std::unique_ptr<Error> GameMain::Initialize()
             chromaticAberration,
         });
 
-        connect(window->ClientSizeChanged, [this](int width, int height) {
+        connect(window->clientSizeChanged, [this](int width, int height) {
             auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
             renderTarget = std::get<0>(graphicsDevice->CreateRenderTarget2D(
@@ -159,7 +159,7 @@ std::unique_ptr<Error> GameMain::Initialize()
         player1.SetScore(0);
         player2.SetScore(0);
 
-        auto keyboard = gameHost->GetKeyboard();
+        auto keyboard = gameHost->getKeyboard();
         input1.Reset(Keys::UpArrow, Keys::DownArrow, keyboard);
         input2.Reset(Keys::W, Keys::S, keyboard);
 
@@ -228,7 +228,7 @@ std::unique_ptr<Error> GameMain::Initialize()
     return nullptr;
 }
 
-void GameMain::Update()
+void GameMain::update()
 {
     switch (pongScene) {
     case PongScenes::StartWaiting: {
@@ -236,7 +236,7 @@ void GameMain::Update()
         ball.positionOld = Vector2::createZero();
         ball.velocity = Vector2::createZero();
 
-        auto keyboard = gameHost->GetKeyboard();
+        auto keyboard = gameHost->getKeyboard();
         startButtonConn = keyboard->KeyDown.Connect([this](Keys key) {
             if (key == Keys::Space) {
                 pongScene = PongScenes::Prepare;
@@ -328,7 +328,7 @@ void GameMain::Update()
     }
 }
 
-void GameMain::Draw()
+void GameMain::draw()
 {
     const auto backgroundColor = Color{32, 31, 30, 255};
 

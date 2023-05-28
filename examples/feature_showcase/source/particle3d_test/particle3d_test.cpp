@@ -31,15 +31,15 @@ Ray ScreenPointToRay(
 
 Particle3DTest::Particle3DTest(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
-    , graphicsDevice(gameHostIn->GetGraphicsDevice())
-    , commandQueue(gameHostIn->GetCommandQueue())
+    , graphicsDevice(gameHostIn->getGraphicsDevice())
+    , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
-std::unique_ptr<Error> Particle3DTest::Initialize()
+std::unique_ptr<Error> Particle3DTest::initialize()
 {
-    auto assets = gameHost->GetAssetManager();
-    auto clock = gameHost->GetClock();
+    auto assets = gameHost->getAssetManager();
+    auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
 
@@ -101,7 +101,7 @@ std::unique_ptr<Error> Particle3DTest::Initialize()
 
     emitterPosition = Vector3::createZero();
 
-    auto mouse = gameHost->GetMouse();
+    auto mouse = gameHost->getMouse();
     auto onClipChanged = [this] {
         std::array<std::string, 5> filenames = {
             "Particles/Fire3D_Box.json",
@@ -117,7 +117,7 @@ std::unique_ptr<Error> Particle3DTest::Initialize()
         }
 
         // NOTE: Load particle clip from .json file
-        auto assets = gameHost->GetAssetManager();
+        auto assets = gameHost->getAssetManager();
         auto [particleClip, clipErr] = assets->Load<ParticleClip>(filenames[currentClipIndex]);
         if (clipErr != nullptr) {
             Log::Verbose("failed to load particle json: " + clipErr->ToString());
@@ -127,7 +127,7 @@ std::unique_ptr<Error> Particle3DTest::Initialize()
         }
     };
     connect(mouse->ButtonDown, [this, onClipChanged]([[maybe_unused]] MouseButtons mouseButton) {
-        auto mouse = gameHost->GetMouse();
+        auto mouse = gameHost->getMouse();
         auto mouseState = mouse->GetState();
         if (mouseState.RightButton == ButtonState::Pressed) {
             onClipChanged();
@@ -137,14 +137,14 @@ std::unique_ptr<Error> Particle3DTest::Initialize()
     return nullptr;
 }
 
-void Particle3DTest::Update()
+void Particle3DTest::update()
 {
-    auto clock = gameHost->GetClock();
+    auto clock = gameHost->getClock();
     auto frameDuration = clock->GetFrameDuration();
     particleSystem->Simulate(emitterPosition, Quaternion::createFromAxisAngle(Vector3::createUnitY(), 0.0f), frameDuration);
 }
 
-void Particle3DTest::Draw()
+void Particle3DTest::draw()
 {
     const auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
@@ -175,7 +175,7 @@ void Particle3DTest::Draw()
 
     const auto lightDirection = math::normalize(Vector3{-0.5f, -1.0f, 0.5f});
 
-    const auto mouseState = gameHost->GetMouse()->GetState();
+    const auto mouseState = gameHost->getMouse()->GetState();
     if (mouseState.LeftButton == ButtonState::Pressed) {
         auto ray = ScreenPointToRay(
             mouseState.Position,

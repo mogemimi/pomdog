@@ -415,7 +415,7 @@ id<MTLDevice> GraphicsDeviceMetal::GetMTLDevice() noexcept
     return device;
 }
 
-void GraphicsDeviceMetal::ClientSizeChanged(int width, int height) noexcept
+void GraphicsDeviceMetal::clientSizeChanged(int width, int height) noexcept
 {
     presentationParameters.backBufferWidth = width;
     presentationParameters.backBufferHeight = height;

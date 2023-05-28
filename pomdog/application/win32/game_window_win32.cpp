@@ -569,7 +569,7 @@ void GameWindowWin32::SetTitle(const std::string& title)
     impl->SetTitle(title);
 }
 
-Rectangle GameWindowWin32::GetClientBounds() const
+Rectangle GameWindowWin32::getClientBounds() const
 {
     POMDOG_ASSERT(impl);
     return impl->clientBounds;

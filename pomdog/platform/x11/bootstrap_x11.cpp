@@ -55,7 +55,7 @@ void Bootstrap::Run(
     presentationParameters.isFullScreen = isFullScreen;
 
     auto gameHost = std::make_shared<pomdog::detail::linux::GameHostLinux>();
-    if (auto err = gameHost->Initialize(presentationParameters); err != nullptr) {
+    if (auto err = gameHost->initialize(presentationParameters); err != nullptr) {
         if (onError != nullptr) {
             onError(errors::Wrap(std::move(err), "failed to initialize GameHostLinux"));
         }
@@ -72,14 +72,14 @@ void Bootstrap::Run(
     }
 
     POMDOG_ASSERT(game != nullptr);
-    if (auto err = game->Initialize(); err != nullptr) {
+    if (auto err = game->initialize(); err != nullptr) {
         if (onError != nullptr) {
             onError(errors::Wrap(std::move(err), "failed to initialize game"));
         }
         return;
     }
 
-    gameHost->Run(*game);
+    gameHost->run(*game);
 
     game.reset();
     gameHost.reset();

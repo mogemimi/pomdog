@@ -6,21 +6,21 @@ namespace quickstart {
 
 GameMain::GameMain(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
-    , window(gameHostIn->GetWindow())
-    , graphicsDevice(gameHostIn->GetGraphicsDevice())
-    , assets(gameHostIn->GetAssetManager())
-    , clock(gameHostIn->GetClock())
-    , commandQueue(gameHostIn->GetCommandQueue())
+    , window(gameHostIn->getWindow())
+    , graphicsDevice(gameHostIn->getGraphicsDevice())
+    , assets(gameHostIn->getAssetManager())
+    , clock(gameHostIn->getClock())
+    , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
-std::unique_ptr<Error> GameMain::Initialize()
+std::unique_ptr<Error> GameMain::initialize()
 {
     // NOTE: Display message in log console
     Log::Verbose("Hello, quickstart.");
 
     // NOTE: Set window name
-    window->SetTitle("quickstart");
+    window->setTitle("quickstart");
 
     std::unique_ptr<Error> err;
 
@@ -149,11 +149,11 @@ std::unique_ptr<Error> GameMain::Initialize()
         };
 
         // NOTE: Initialize shader resources
-        const auto bounds = window->GetClientBounds();
+        const auto bounds = window->getClientBounds();
         updateShaderConstants(bounds.width, bounds.height);
 
         // NOTE: Connect to window resize event notification
-        connect(window->ClientSizeChanged, updateShaderConstants);
+        connect(window->clientSizeChanged, updateShaderConstants);
     }
     {
         // NOTE: Create timer
@@ -169,14 +169,14 @@ std::unique_ptr<Error> GameMain::Initialize()
                 std::to_string(clock->GetFrameNumber()).c_str());
 
             // NOTE: Set window title
-            window->SetTitle(title);
+            window->setTitle(title);
         });
     }
 
     return nullptr;
 }
 
-void GameMain::Update()
+void GameMain::update()
 {
     auto totalTime = static_cast<float>(clock->GetTotalGameTime().count());
 
@@ -189,7 +189,7 @@ void GameMain::Update()
     myShaderConstants.Model = scale * rotate;
 }
 
-void GameMain::Draw()
+void GameMain::draw()
 {
     const auto presentationParameters = graphicsDevice->GetPresentationParameters();
 

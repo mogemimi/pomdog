@@ -4,15 +4,15 @@ namespace feature_showcase {
 
 VoxelModelTest::VoxelModelTest(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
-    , graphicsDevice(gameHostIn->GetGraphicsDevice())
-    , commandQueue(gameHostIn->GetCommandQueue())
+    , graphicsDevice(gameHostIn->getGraphicsDevice())
+    , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
-std::unique_ptr<Error> VoxelModelTest::Initialize()
+std::unique_ptr<Error> VoxelModelTest::initialize()
 {
-    auto assets = gameHost->GetAssetManager();
-    auto clock = gameHost->GetClock();
+    auto assets = gameHost->getAssetManager();
+    auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
 
@@ -38,11 +38,11 @@ std::unique_ptr<Error> VoxelModelTest::Initialize()
     return nullptr;
 }
 
-void VoxelModelTest::Update()
+void VoxelModelTest::update()
 {
 }
 
-void VoxelModelTest::Draw()
+void VoxelModelTest::draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
@@ -69,7 +69,7 @@ void VoxelModelTest::Draw()
 
     auto viewMatrix = Matrix4x4::createLookAtLH(Vector3::createZero(), Vector3{2.0f, -3.0f, -10.0f}, Vector3::createUnitY());
     auto rotateX = Matrix4x4::createRotationX(math::PiOver2<float> * 3.0f);
-    auto rotateY = Matrix4x4::createRotationY(math::TwoPi<float> * rotateSpeed * static_cast<float>(gameHost->GetClock()->GetTotalGameTime().count()));
+    auto rotateY = Matrix4x4::createRotationY(math::TwoPi<float> * rotateSpeed * static_cast<float>(gameHost->getClock()->GetTotalGameTime().count()));
 
     primitiveBatch->Begin(commandList, rotateX * rotateY * viewMatrix * projectionMatrix);
 

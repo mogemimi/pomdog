@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::detail::win32 {
 namespace {
 
-bool IsHighContrast() noexcept
+[[nodiscard]] bool isHighContrast() noexcept
 {
     HIGHCONTRASTW hc;
     hc.cbSize = sizeof hc;
@@ -24,9 +24,9 @@ bool IsHighContrast() noexcept
     return highContrast;
 }
 
-bool ShouldAppsUseDarkMode() noexcept
+[[nodiscard]] bool shouldAppsUseDarkMode() noexcept
 {
-    if (!IsWindowsVersionOrGreaterForWindows10(10, 0, 0)) {
+    if (!isWindowsVersionOrGreaterForWindows10(10, 0, 0)) {
         return false;
     }
 
@@ -60,7 +60,7 @@ bool ShouldAppsUseDarkMode() noexcept
 
 } // namespace
 
-bool IsWindowsVersionOrGreaterForWindows10(WORD majorVersion, WORD minorVersion, WORD buildVersion) noexcept
+[[nodiscard]] bool isWindowsVersionOrGreaterForWindows10(WORD majorVersion, WORD minorVersion, WORD buildVersion) noexcept
 {
 #if 0
     return ::IsWindowsVersionOrGreater(majorVersion, minorVersion, buildVersion);
@@ -113,14 +113,14 @@ bool IsWindowsVersionOrGreaterForWindows10(WORD majorVersion, WORD minorVersion,
 #endif
 }
 
-bool IsDarkMode() noexcept
+[[nodiscard]] bool isDarkMode() noexcept
 {
     return ShouldAppsUseDarkMode() && !IsHighContrast();
 }
 
-std::unique_ptr<Error> UseImmersiveDarkMode(HWND windowHandle, bool enabled) noexcept
+[[nodiscard]] std::unique_ptr<Error> useImmersiveDarkMode(HWND windowHandle, bool enabled) noexcept
 {
-    if (!IsWindowsVersionOrGreaterForWindows10(10, 0, 17763)) {
+    if (!isWindowsVersionOrGreaterForWindows10(10, 0, 17763)) {
         // NOTE: not support for dark mode
         return nullptr;
     }
@@ -133,7 +133,7 @@ std::unique_ptr<Error> UseImmersiveDarkMode(HWND windowHandle, bool enabled) noe
     constexpr DWORD DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
 
     DWORD attribute = 0;
-    if (IsWindowsVersionOrGreaterForWindows10(10, 0, 18985)) {
+    if (isWindowsVersionOrGreaterForWindows10(10, 0, 18985)) {
         attribute = DWMWA_USE_IMMERSIVE_DARK_MODE;
     }
     else {

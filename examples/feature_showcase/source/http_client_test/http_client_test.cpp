@@ -4,15 +4,15 @@ namespace feature_showcase {
 
 HTTPClientTest::HTTPClientTest(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
-    , graphicsDevice(gameHostIn->GetGraphicsDevice())
-    , commandQueue(gameHostIn->GetCommandQueue())
+    , graphicsDevice(gameHostIn->getGraphicsDevice())
+    , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
-std::unique_ptr<Error> HTTPClientTest::Initialize()
+std::unique_ptr<Error> HTTPClientTest::initialize()
 {
-    auto assets = gameHost->GetAssetManager();
-    auto clock = gameHost->GetClock();
+    auto assets = gameHost->getAssetManager();
+    auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
 
@@ -32,7 +32,7 @@ std::unique_ptr<Error> HTTPClientTest::Initialize()
     spriteFont = std::make_shared<SpriteFont>(graphicsDevice, font, 24.0f, 24.0f);
     spriteFont->PrepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
 
-    auto http = gameHost->GetHTTPClient();
+    auto http = gameHost->getHTTPClient();
     auto callback = [this](const std::shared_ptr<HTTPResponse>& resp, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
             webText = err->ToString();
@@ -64,11 +64,11 @@ std::unique_ptr<Error> HTTPClientTest::Initialize()
     return nullptr;
 }
 
-void HTTPClientTest::Update()
+void HTTPClientTest::update()
 {
 }
 
-void HTTPClientTest::Draw()
+void HTTPClientTest::draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 

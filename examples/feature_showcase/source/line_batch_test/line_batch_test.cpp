@@ -5,15 +5,15 @@ namespace feature_showcase {
 
 LineBatchTest::LineBatchTest(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
-    , graphicsDevice(gameHostIn->GetGraphicsDevice())
-    , commandQueue(gameHostIn->GetCommandQueue())
+    , graphicsDevice(gameHostIn->getGraphicsDevice())
+    , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
-std::unique_ptr<Error> LineBatchTest::Initialize()
+std::unique_ptr<Error> LineBatchTest::initialize()
 {
-    auto assets = gameHost->GetAssetManager();
-    auto clock = gameHost->GetClock();
+    auto assets = gameHost->getAssetManager();
+    auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
 
@@ -31,11 +31,11 @@ std::unique_ptr<Error> LineBatchTest::Initialize()
 
     path.push_back(Vector2::createZero());
 
-    const auto mouse = gameHost->GetMouse();
+    const auto mouse = gameHost->getMouse();
     connect(mouse->ButtonDown, [this](MouseButtons button) {
-        const auto window = gameHost->GetWindow();
-        const auto clientBounds = window->GetClientBounds();
-        const auto mouseState = gameHost->GetMouse()->GetState();
+        const auto window = gameHost->getWindow();
+        const auto clientBounds = window->getClientBounds();
+        const auto mouseState = gameHost->getMouse()->GetState();
         const auto width = clientBounds.width;
         const auto height = clientBounds.height;
         if (button == MouseButtons::Left) {
@@ -51,17 +51,17 @@ std::unique_ptr<Error> LineBatchTest::Initialize()
     return nullptr;
 }
 
-void LineBatchTest::Update()
+void LineBatchTest::update()
 {
-    const auto state = gameHost->GetMouse()->GetState();
-    const auto window = gameHost->GetWindow();
-    const auto clientBounds = window->GetClientBounds();
+    const auto state = gameHost->getMouse()->GetState();
+    const auto window = gameHost->getWindow();
+    const auto clientBounds = window->getClientBounds();
     const auto width = clientBounds.width;
     const auto height = clientBounds.height;
     path.back() = math::toVector2(Point2D{state.Position.x - (width / 2), (height / 2) - state.Position.y});
 }
 
-void LineBatchTest::Draw()
+void LineBatchTest::draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 

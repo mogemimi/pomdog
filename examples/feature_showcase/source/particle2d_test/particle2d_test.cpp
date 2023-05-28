@@ -119,15 +119,15 @@ std::shared_ptr<ParticleClip> CreateEmitterFireBlock()
 
 Particle2DTest::Particle2DTest(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
-    , graphicsDevice(gameHostIn->GetGraphicsDevice())
-    , commandQueue(gameHostIn->GetCommandQueue())
+    , graphicsDevice(gameHostIn->getGraphicsDevice())
+    , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
-std::unique_ptr<Error> Particle2DTest::Initialize()
+std::unique_ptr<Error> Particle2DTest::initialize()
 {
-    auto assets = gameHost->GetAssetManager();
-    auto clock = gameHost->GetClock();
+    auto assets = gameHost->getAssetManager();
+    auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
 
@@ -164,15 +164,15 @@ std::unique_ptr<Error> Particle2DTest::Initialize()
 
     emitterPosition = Vector2::createZero();
 
-    auto mouse = gameHost->GetMouse();
+    auto mouse = gameHost->getMouse();
     connect(mouse->Moved, [this](const Point2D& mousePos) {
-        const auto mouse = gameHost->GetMouse();
+        const auto mouse = gameHost->getMouse();
         const auto mouseState = mouse->GetState();
         if (mouseState.LeftButton != ButtonState::Pressed) {
             return;
         }
-        const auto window = gameHost->GetWindow();
-        const auto clientBounds = window->GetClientBounds();
+        const auto window = gameHost->getWindow();
+        const auto clientBounds = window->getClientBounds();
         auto pos = mousePos;
         pos.x = pos.x - (clientBounds.width / 2);
         pos.y = -pos.y + (clientBounds.height / 2);
@@ -182,14 +182,14 @@ std::unique_ptr<Error> Particle2DTest::Initialize()
     return nullptr;
 }
 
-void Particle2DTest::Update()
+void Particle2DTest::update()
 {
-    auto clock = gameHost->GetClock();
+    auto clock = gameHost->getClock();
     auto frameDuration = clock->GetFrameDuration();
     particleSystem->Simulate(emitterPosition, math::toRadians(90.0f), frameDuration);
 }
 
-void Particle2DTest::Draw()
+void Particle2DTest::draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 

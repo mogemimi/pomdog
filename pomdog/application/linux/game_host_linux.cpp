@@ -37,7 +37,7 @@ namespace pomdog::detail::linux {
 namespace {
 
 [[nodiscard]] bool
-CheckFrameBufferConfigSupport(::Display* display) noexcept
+checkFrameBufferConfigSupport(::Display* display) noexcept
 {
     int majorVer = 0;
     int minorVer = 0;
@@ -50,11 +50,11 @@ CheckFrameBufferConfigSupport(::Display* display) noexcept
 }
 
 [[nodiscard]] std::tuple<GLXFBConfig, std::unique_ptr<Error>>
-ChooseFramebufferConfig(
+chooseFramebufferConfig(
     Display* display,
     const gpu::PresentationParameters& presentationParameters)
 {
-    if (!CheckFrameBufferConfigSupport(display)) {
+    if (!checkFrameBufferConfigSupport(display)) {
         return std::make_tuple(nullptr, errors::New("GLX of version lower than 1.3.2 is not supported."));
     }
 
@@ -191,7 +191,7 @@ ChooseFramebufferConfig(
 GameHostLinux::GameHostLinux() noexcept = default;
 
 std::unique_ptr<Error>
-GameHostLinux::Initialize(const gpu::PresentationParameters& presentationParameters)
+GameHostLinux::initialize(const gpu::PresentationParameters& presentationParameters)
 {
     backBufferSurfaceFormat_ = presentationParameters.backBufferFormat;
     backBufferDepthStencilFormat_ = presentationParameters.depthStencilFormat;
@@ -208,19 +208,19 @@ GameHostLinux::Initialize(const gpu::PresentationParameters& presentationParamet
 
     // NOTE: Create X11 context.
     x11Context_ = std::make_shared<x11::X11Context>();
-    if (auto err = x11Context_->Initialize(); err != nullptr) {
+    if (auto err = x11Context_->initialize(); err != nullptr) {
         return errors::Wrap(std::move(err), "failed to initialize X11Context");
     }
 
     auto [framebufferConfig, framebufferConfigErr] =
-        ChooseFramebufferConfig(x11Context_->Display, presentationParameters);
+        chooseFramebufferConfig(x11Context_->Display, presentationParameters);
     if (framebufferConfigErr != nullptr) {
         return errors::Wrap(std::move(framebufferConfigErr), "ChooseFramebufferConfig() failed");
     }
 
     // NOTE: Create a game window.
     window_ = std::make_shared<x11::GameWindowX11>();
-    if (auto err = window_->Initialize(
+    if (auto err = window_->initialize(
             x11Context_,
             framebufferConfig,
             presentationParameters.backBufferWidth,
@@ -231,10 +231,10 @@ GameHostLinux::Initialize(const gpu::PresentationParameters& presentationParamet
 
     // NOTE: Create an OpenGL context.
     openGLContext_ = std::make_shared<x11::OpenGLContextX11>();
-    if (auto err = openGLContext_->Initialize(window_, framebufferConfig); err != nullptr) {
+    if (auto err = openGLContext_->initialize(window_, framebufferConfig); err != nullptr) {
         return errors::Wrap(std::move(err), "failed to initialize OpenGLContextX11");
     }
-    if (!openGLContext_->IsOpenGL3Supported()) {
+    if (!openGLContext_->isOpenGL3Supported()) {
         return errors::New("Pomdog doesn't support versions of OpenGL lower than 3.3/4.0.");
     }
 
@@ -308,7 +308,7 @@ GameHostLinux::~GameHostLinux()
     window_.reset();
 }
 
-void GameHostLinux::MessagePump()
+void GameHostLinux::messagePump()
 {
     ::XLockDisplay(x11Context_->Display);
     const auto eventCount = XPending(x11Context_->Display);
@@ -317,16 +317,16 @@ void GameHostLinux::MessagePump()
     for (int index = 0; index < eventCount; ++index) {
         ::XEvent event;
         ::XLockDisplay(x11Context_->Display);
-        ::XNextEvent(window_->GetNativeDisplay(), &event);
+        ::XNextEvent(window_->getNativeDisplay(), &event);
         ::XUnlockDisplay(x11Context_->Display);
 
-        ProcessEvent(event);
+        processEvent(event);
     }
 }
 
-void GameHostLinux::ProcessEvent(::XEvent& event)
+void GameHostLinux::processEvent(::XEvent& event)
 {
-    if (event.xany.window != window_->GetNativeWindow()) {
+    if (event.xany.window != window_->getNativeWindow()) {
         return;
     }
 
@@ -344,13 +344,13 @@ void GameHostLinux::ProcessEvent(::XEvent& event)
         const auto presentationParameters = graphicsDevice_->GetPresentationParameters();
         if ((presentationParameters.backBufferWidth != event.xconfigure.width) ||
             (presentationParameters.backBufferHeight != event.xconfigure.height)) {
-            graphicsDevice_->ClientSizeChanged(event.xconfigure.width, event.xconfigure.height);
+            graphicsDevice_->clientSizeChanged(event.xconfigure.width, event.xconfigure.height);
         }
         break;
     }
     case KeyPress:
     case KeyRelease: {
-        keyboard_->HandleEvent(event, window_->GetInputContext());
+        keyboard_->HandleEvent(event, window_->getInputContext());
         break;
     }
     case ButtonPress:
@@ -365,14 +365,14 @@ void GameHostLinux::ProcessEvent(::XEvent& event)
         break;
     }
 
-    window_->ProcessEvent(event);
+    window_->processEvent(event);
 }
 
-void GameHostLinux::Run(Game& game)
+void GameHostLinux::run(Game& game)
 {
     while (!exitRequest_) {
         clock_->Tick();
-        MessagePump();
+        messagePump();
         constexpr int64_t gamepadDetectionInterval = 240;
         if (((clock_->GetFrameNumber() % gamepadDetectionInterval) == 1) && (clock_->GetFrameRate() >= 30.0f)) {
             gamepad_->EnumerateDevices();
@@ -380,8 +380,8 @@ void GameHostLinux::Run(Game& game)
         gamepad_->PollEvents();
         ioService_->Step();
 
-        game.Update();
-        RenderFrame(game);
+        game.update();
+        renderFrame(game);
 
         auto elapsedTime = clock_->GetElapsedTime();
 
@@ -392,74 +392,74 @@ void GameHostLinux::Run(Game& game)
     }
 }
 
-void GameHostLinux::Exit()
+void GameHostLinux::exit()
 {
     exitRequest_ = true;
 }
 
-void GameHostLinux::RenderFrame(Game& game)
+void GameHostLinux::renderFrame(Game& game)
 {
-    if ((window_ == nullptr) || window_->IsMinimized()) {
+    if ((window_ == nullptr) || window_->isMinimized()) {
         // skip rendering
         return;
     }
 
-    game.Draw();
+    game.draw();
 }
 
-std::shared_ptr<GameWindow> GameHostLinux::GetWindow() noexcept
+std::shared_ptr<GameWindow> GameHostLinux::getWindow() noexcept
 {
     return window_;
 }
 
-std::shared_ptr<GameClock> GameHostLinux::GetClock() noexcept
+std::shared_ptr<GameClock> GameHostLinux::getClock() noexcept
 {
     return clock_;
 }
 
-std::shared_ptr<gpu::GraphicsDevice> GameHostLinux::GetGraphicsDevice() noexcept
+std::shared_ptr<gpu::GraphicsDevice> GameHostLinux::getGraphicsDevice() noexcept
 {
     return graphicsDevice_;
 }
 
-std::shared_ptr<gpu::CommandQueue> GameHostLinux::GetCommandQueue() noexcept
+std::shared_ptr<gpu::CommandQueue> GameHostLinux::getCommandQueue() noexcept
 {
     return commandQueue_;
 }
 
-std::shared_ptr<AudioEngine> GameHostLinux::GetAudioEngine() noexcept
+std::shared_ptr<AudioEngine> GameHostLinux::getAudioEngine() noexcept
 {
     return audioEngine_;
 }
 
-std::shared_ptr<AssetManager> GameHostLinux::GetAssetManager() noexcept
+std::shared_ptr<AssetManager> GameHostLinux::getAssetManager() noexcept
 {
     POMDOG_ASSERT(assetManager_ != nullptr);
     return assetManager_;
 }
 
-std::shared_ptr<Keyboard> GameHostLinux::GetKeyboard() noexcept
+std::shared_ptr<Keyboard> GameHostLinux::getKeyboard() noexcept
 {
     auto gameHost = shared_from_this();
     std::shared_ptr<Keyboard> shared{std::move(gameHost), keyboard_.get()};
     return shared;
 }
 
-std::shared_ptr<Mouse> GameHostLinux::GetMouse() noexcept
+std::shared_ptr<Mouse> GameHostLinux::getMouse() noexcept
 {
     auto gameHost = shared_from_this();
     std::shared_ptr<Mouse> shared{std::move(gameHost), &mouse_};
     return shared;
 }
 
-std::shared_ptr<Gamepad> GameHostLinux::GetGamepad() noexcept
+std::shared_ptr<Gamepad> GameHostLinux::getGamepad() noexcept
 {
     auto gameHost = shared_from_this();
     std::shared_ptr<Gamepad> shared{std::move(gameHost), gamepad_.get()};
     return shared;
 }
 
-std::shared_ptr<IOService> GameHostLinux::GetIOService() noexcept
+std::shared_ptr<IOService> GameHostLinux::getIOService() noexcept
 {
     POMDOG_ASSERT(ioService_ != nullptr);
     auto gameHost = shared_from_this();
@@ -467,7 +467,7 @@ std::shared_ptr<IOService> GameHostLinux::GetIOService() noexcept
     return shared;
 }
 
-std::shared_ptr<HTTPClient> GameHostLinux::GetHTTPClient() noexcept
+std::shared_ptr<HTTPClient> GameHostLinux::getHTTPClient() noexcept
 {
     POMDOG_ASSERT(httpClient_ != nullptr);
     auto gameHost = shared_from_this();

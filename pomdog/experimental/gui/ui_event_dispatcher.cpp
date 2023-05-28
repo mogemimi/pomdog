@@ -258,10 +258,10 @@ void UIEventDispatcher::PointerEntered(
 
     node->OnPointerEntered(pointerState->pointerPoint);
     if (node->GetCurrentCursor()) {
-        window->SetMouseCursor(*node->GetCurrentCursor());
+        window->setMouseCursor(*node->GetCurrentCursor());
     }
     else {
-        window->SetMouseCursor(MouseCursor::Arrow);
+        window->setMouseCursor(MouseCursor::Arrow);
     }
 
     pointerState->focusedWidget = node;
@@ -283,7 +283,7 @@ void UIEventDispatcher::PointerExited(const Point2D& position)
     widget->OnPointerExited(pointerState->pointerPoint);
     pointerState.reset();
 
-    window->SetMouseCursor(MouseCursor::Arrow);
+    window->setMouseCursor(MouseCursor::Arrow);
 }
 
 void UIEventDispatcher::PointerPressed(const Point2D& position)

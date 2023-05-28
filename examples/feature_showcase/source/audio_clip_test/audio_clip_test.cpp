@@ -4,15 +4,15 @@ namespace feature_showcase {
 
 AudioClipTest::AudioClipTest(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
-    , graphicsDevice(gameHostIn->GetGraphicsDevice())
-    , commandQueue(gameHostIn->GetCommandQueue())
+    , graphicsDevice(gameHostIn->getGraphicsDevice())
+    , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
-std::unique_ptr<Error> AudioClipTest::Initialize()
+std::unique_ptr<Error> AudioClipTest::initialize()
 {
-    auto assets = gameHost->GetAssetManager();
-    auto clock = gameHost->GetClock();
+    auto assets = gameHost->getAssetManager();
+    auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
 
@@ -32,7 +32,7 @@ std::unique_ptr<Error> AudioClipTest::Initialize()
     spriteFont = std::make_shared<SpriteFont>(graphicsDevice, font, 24.0f, 24.0f);
     spriteFont->PrepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
 
-    auto audioEngine = gameHost->GetAudioEngine();
+    auto audioEngine = gameHost->getAudioEngine();
 
     // NOTE: Load .wav audio file.
     if (auto [audioClip, clipErr] = assets->Load<AudioClip>("Sounds/pong1.wav"); clipErr != nullptr) {
@@ -63,16 +63,16 @@ std::unique_ptr<Error> AudioClipTest::Initialize()
     // NOTE: Set main audio volume.
     audioEngine->SetMainVolume(0.3f);
 
-    auto mouse = gameHost->GetMouse();
+    auto mouse = gameHost->getMouse();
     connect(mouse->ButtonDown, [this](MouseButtons mouseButton) {
         if (mouseButton != MouseButtons::Left) {
             return;
         }
 
-        const auto window = gameHost->GetWindow();
-        const auto mouse = gameHost->GetMouse();
+        const auto window = gameHost->getWindow();
+        const auto mouse = gameHost->getMouse();
         const auto mouseState = mouse->GetState();
-        const auto clientBounds = window->GetClientBounds();
+        const auto clientBounds = window->getClientBounds();
 
         auto pos = mouseState.Position;
         pos.x = pos.x - (clientBounds.width / 2);
@@ -99,11 +99,11 @@ std::unique_ptr<Error> AudioClipTest::Initialize()
     return nullptr;
 }
 
-void AudioClipTest::Update()
+void AudioClipTest::update()
 {
 }
 
-void AudioClipTest::Draw()
+void AudioClipTest::draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 

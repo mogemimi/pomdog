@@ -15,15 +15,15 @@ namespace feature_showcase {
 
 AnimationGraphTest::AnimationGraphTest(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
-    , graphicsDevice(gameHostIn->GetGraphicsDevice())
-    , commandQueue(gameHostIn->GetCommandQueue())
+    , graphicsDevice(gameHostIn->getGraphicsDevice())
+    , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
-std::unique_ptr<Error> AnimationGraphTest::Initialize()
+std::unique_ptr<Error> AnimationGraphTest::initialize()
 {
-    auto assets = gameHost->GetAssetManager();
-    auto clock = gameHost->GetClock();
+    auto assets = gameHost->getAssetManager();
+    auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
 
@@ -204,14 +204,14 @@ std::unique_ptr<Error> AnimationGraphTest::Initialize()
     return nullptr;
 }
 
-void AnimationGraphTest::Update()
+void AnimationGraphTest::update()
 {
-    auto clock = gameHost->GetClock();
+    auto clock = gameHost->getClock();
 
-    auto mouse = gameHost->GetMouse()->GetState();
+    auto mouse = gameHost->getMouse()->GetState();
     if (mouse.LeftButton == ButtonState::Pressed) {
-        const auto window = gameHost->GetWindow();
-        const auto clientBounds = window->GetClientBounds();
+        const auto window = gameHost->getWindow();
+        const auto clientBounds = window->getClientBounds();
 
         const auto y = mouse.Position.y - (clientBounds.height / 2);
         const auto blendWeight = std::clamp(static_cast<float>(y) / 180.0f, 0.0f, 1.0f);
@@ -288,7 +288,7 @@ void AnimationGraphTest::Update()
     vertexBuffer->SetData(vertices.data(), vertices.size());
 }
 
-void AnimationGraphTest::Draw()
+void AnimationGraphTest::draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
@@ -331,7 +331,7 @@ void AnimationGraphTest::Draw()
     commandList->SetIndexBuffer(indexBuffer);
     commandList->DrawIndexed(indexBuffer->GetIndexCount(), 0);
 
-    auto mouse = gameHost->GetMouse()->GetState();
+    auto mouse = gameHost->getMouse()->GetState();
     if (mouse.RightButton == ButtonState::Pressed) {
         commandList->SetPipelineState(pipelineStateWireframe);
         commandList->DrawIndexed(indexBuffer->GetIndexCount(), 0);

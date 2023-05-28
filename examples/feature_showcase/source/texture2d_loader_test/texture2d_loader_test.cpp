@@ -4,15 +4,15 @@ namespace feature_showcase {
 
 Texture2DLoaderTest::Texture2DLoaderTest(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
-    , graphicsDevice(gameHostIn->GetGraphicsDevice())
-    , commandQueue(gameHostIn->GetCommandQueue())
+    , graphicsDevice(gameHostIn->getGraphicsDevice())
+    , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
-std::unique_ptr<Error> Texture2DLoaderTest::Initialize()
+std::unique_ptr<Error> Texture2DLoaderTest::initialize()
 {
-    auto assets = gameHost->GetAssetManager();
-    auto clock = gameHost->GetClock();
+    auto assets = gameHost->getAssetManager();
+    auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
 
@@ -89,11 +89,11 @@ std::unique_ptr<Error> Texture2DLoaderTest::Initialize()
     return nullptr;
 }
 
-void Texture2DLoaderTest::Update()
+void Texture2DLoaderTest::update()
 {
 }
 
-void Texture2DLoaderTest::Draw()
+void Texture2DLoaderTest::draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 

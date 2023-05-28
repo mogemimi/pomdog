@@ -5,15 +5,15 @@ namespace feature_showcase {
 
 SVGDecodeTest::SVGDecodeTest(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
-    , graphicsDevice(gameHostIn->GetGraphicsDevice())
-    , commandQueue(gameHostIn->GetCommandQueue())
+    , graphicsDevice(gameHostIn->getGraphicsDevice())
+    , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
-std::unique_ptr<Error> SVGDecodeTest::Initialize()
+std::unique_ptr<Error> SVGDecodeTest::initialize()
 {
-    auto assets = gameHost->GetAssetManager();
-    auto clock = gameHost->GetClock();
+    auto assets = gameHost->getAssetManager();
+    auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
 
@@ -66,11 +66,11 @@ std::unique_ptr<Error> SVGDecodeTest::Initialize()
     return nullptr;
 }
 
-void SVGDecodeTest::Update()
+void SVGDecodeTest::update()
 {
 }
 
-void SVGDecodeTest::Draw()
+void SVGDecodeTest::draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 

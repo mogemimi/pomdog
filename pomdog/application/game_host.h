@@ -41,51 +41,51 @@ public:
     virtual ~GameHost();
 
     /// Send signal to the GameHost to exit main loop and stop running the game.
-    virtual void Exit() = 0;
+    virtual void exit() = 0;
 
     /// @return Associated to this host platform-specific GameWindow.
     [[nodiscard]] virtual std::shared_ptr<GameWindow>
-    GetWindow() noexcept = 0;
+    getWindow() noexcept = 0;
 
     /// @return Associated to this host GameClock.
     [[nodiscard]] virtual std::shared_ptr<GameClock>
-    GetClock() noexcept = 0;
+    getClock() noexcept = 0;
 
     /// @return Associated to this host GraphicsDevice with selected video backend.
     [[nodiscard]] virtual std::shared_ptr<gpu::GraphicsDevice>
-    GetGraphicsDevice() noexcept = 0;
+    getGraphicsDevice() noexcept = 0;
 
     /// @return Associated to this host CommandQueue.
     [[nodiscard]] virtual std::shared_ptr<gpu::CommandQueue>
-    GetCommandQueue() noexcept = 0;
+    getCommandQueue() noexcept = 0;
 
     /// @return Associated to this host AudioEngine with selected audio backend.
     [[nodiscard]] virtual std::shared_ptr<AudioEngine>
-    GetAudioEngine() noexcept = 0;
+    getAudioEngine() noexcept = 0;
 
     /// @return Associated to this host AssetManager.
     [[nodiscard]] virtual std::shared_ptr<AssetManager>
-    GetAssetManager() noexcept = 0;
+    getAssetManager() noexcept = 0;
 
     /// @return Associated to this host Keyboard.
     [[nodiscard]] virtual std::shared_ptr<Keyboard>
-    GetKeyboard() noexcept = 0;
+    getKeyboard() noexcept = 0;
 
     /// @return Associated to this host Mouse.
     [[nodiscard]] virtual std::shared_ptr<Mouse>
-    GetMouse() noexcept = 0;
+    getMouse() noexcept = 0;
 
     /// @return Associated to this host Gamepad.
     [[nodiscard]] virtual std::shared_ptr<Gamepad>
-    GetGamepad() noexcept = 0;
+    getGamepad() noexcept = 0;
 
     /// @return Associated to this host IOService.
     [[nodiscard]] virtual std::shared_ptr<IOService>
-    GetIOService() noexcept = 0;
+    getIOService() noexcept = 0;
 
     /// @return Associated to this host HTTPClient.
     [[nodiscard]] virtual std::shared_ptr<HTTPClient>
-    GetHTTPClient() noexcept = 0;
+    getHTTPClient() noexcept = 0;
 };
 
 } // namespace pomdog

@@ -6,15 +6,15 @@ namespace feature_showcase {
 
 BillboardBatchTest::BillboardBatchTest(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
-    , graphicsDevice(gameHostIn->GetGraphicsDevice())
-    , commandQueue(gameHostIn->GetCommandQueue())
+    , graphicsDevice(gameHostIn->getGraphicsDevice())
+    , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
-std::unique_ptr<Error> BillboardBatchTest::Initialize()
+std::unique_ptr<Error> BillboardBatchTest::initialize()
 {
-    auto assets = gameHost->GetAssetManager();
-    auto clock = gameHost->GetClock();
+    auto assets = gameHost->getAssetManager();
+    auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
 
@@ -67,11 +67,11 @@ std::unique_ptr<Error> BillboardBatchTest::Initialize()
     return nullptr;
 }
 
-void BillboardBatchTest::Update()
+void BillboardBatchTest::update()
 {
 }
 
-void BillboardBatchTest::Draw()
+void BillboardBatchTest::draw()
 {
     const auto presentationParameters = graphicsDevice->GetPresentationParameters();
 

@@ -135,7 +135,7 @@ public:
     /// Gets the pointer of the native graphics device.
     id<MTLDevice> GetMTLDevice() noexcept;
 
-    void ClientSizeChanged(int width, int height) noexcept;
+    void clientSizeChanged(int width, int height) noexcept;
 
 private:
     id<MTLDevice> device = nullptr;

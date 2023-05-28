@@ -4,15 +4,15 @@ namespace feature_showcase {
 
 GUISplitterTest::GUISplitterTest(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
-    , graphicsDevice(gameHostIn->GetGraphicsDevice())
-    , commandQueue(gameHostIn->GetCommandQueue())
+    , graphicsDevice(gameHostIn->getGraphicsDevice())
+    , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
-std::unique_ptr<Error> GUISplitterTest::Initialize()
+std::unique_ptr<Error> GUISplitterTest::initialize()
 {
-    auto assets = gameHost->GetAssetManager();
-    auto clock = gameHost->GetClock();
+    auto assets = gameHost->getAssetManager();
+    auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
 
@@ -24,12 +24,12 @@ std::unique_ptr<Error> GUISplitterTest::Initialize()
 
     drawingContext = std::make_unique<gui::DrawingContext>(graphicsDevice, *assets);
 
-    auto window = gameHost->GetWindow();
-    hierarchy = std::make_unique<gui::WidgetHierarchy>(window, gameHost->GetKeyboard());
+    auto window = gameHost->getWindow();
+    hierarchy = std::make_unique<gui::WidgetHierarchy>(window, gameHost->getKeyboard());
 
     auto dispatcher = hierarchy->GetDispatcher();
 
-    auto clientBounds = window->GetClientBounds();
+    auto clientBounds = window->getClientBounds();
     auto splitter = std::make_shared<gui::HorizontalSplitter>(dispatcher, clientBounds.width, clientBounds.height);
     splitter->SetPosition(Point2D{0, 0});
     splitter->SetLayoutSpacing(1);
@@ -88,19 +88,19 @@ std::unique_ptr<Error> GUISplitterTest::Initialize()
     return nullptr;
 }
 
-void GUISplitterTest::Update()
+void GUISplitterTest::update()
 {
     hierarchy->Update();
 
-    if (auto mouse = gameHost->GetMouse(); mouse != nullptr) {
+    if (auto mouse = gameHost->getMouse(); mouse != nullptr) {
         hierarchy->Touch(mouse->GetState());
     }
 
-    auto clock = gameHost->GetClock();
+    auto clock = gameHost->getClock();
     hierarchy->UpdateAnimation(clock->GetFrameDuration());
 }
 
-void GUISplitterTest::Draw()
+void GUISplitterTest::draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 

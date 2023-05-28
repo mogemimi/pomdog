@@ -26,7 +26,7 @@ class TimeoutOperator final
     , public Observable<T> {
 public:
     TimeoutOperator(const Duration& dueTimeIn, const std::shared_ptr<GameHost>& gameHost)
-        : timer(gameHost->GetClock())
+        : timer(gameHost->getClock())
         , dueTime(dueTimeIn)
         , isStopped(false)
     {

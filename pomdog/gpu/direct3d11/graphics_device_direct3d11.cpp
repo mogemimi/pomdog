@@ -768,7 +768,7 @@ GraphicsDeviceDirect3D11::GetDXGIFactory() noexcept
     return adapters.GetFactory();
 }
 
-void GraphicsDeviceDirect3D11::ClientSizeChanged(int width, int height)
+void GraphicsDeviceDirect3D11::clientSizeChanged(int width, int height)
 {
     presentationParameters.backBufferWidth = width;
     presentationParameters.backBufferHeight = height;

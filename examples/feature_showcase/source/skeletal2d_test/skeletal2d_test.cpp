@@ -13,15 +13,15 @@ namespace feature_showcase {
 
 Skeletal2DTest::Skeletal2DTest(const std::shared_ptr<GameHost>& gameHostIn)
     : gameHost(gameHostIn)
-    , graphicsDevice(gameHostIn->GetGraphicsDevice())
-    , commandQueue(gameHostIn->GetCommandQueue())
+    , graphicsDevice(gameHostIn->getGraphicsDevice())
+    , commandQueue(gameHostIn->getCommandQueue())
 {
 }
 
-std::unique_ptr<Error> Skeletal2DTest::Initialize()
+std::unique_ptr<Error> Skeletal2DTest::initialize()
 {
-    auto assets = gameHost->GetAssetManager();
-    auto clock = gameHost->GetClock();
+    auto assets = gameHost->getAssetManager();
+    auto clock = gameHost->getClock();
 
     std::unique_ptr<Error> err;
 
@@ -197,9 +197,9 @@ std::unique_ptr<Error> Skeletal2DTest::Initialize()
     return nullptr;
 }
 
-void Skeletal2DTest::Update()
+void Skeletal2DTest::update()
 {
-    auto clock = gameHost->GetClock();
+    auto clock = gameHost->getClock();
     animationSystem.Update(*clock);
 
     // NOTE: Global pose generation
@@ -285,7 +285,7 @@ void Skeletal2DTest::Update()
     vertexBuffer->SetData(vertices.data(), vertices.size());
 }
 
-void Skeletal2DTest::Draw()
+void Skeletal2DTest::draw()
 {
     auto presentationParameters = graphicsDevice->GetPresentationParameters();
 
@@ -328,7 +328,7 @@ void Skeletal2DTest::Draw()
     commandList->SetIndexBuffer(indexBuffer);
     commandList->DrawIndexed(indexBuffer->GetIndexCount(), 0);
 
-    auto mouse = gameHost->GetMouse()->GetState();
+    auto mouse = gameHost->getMouse()->GetState();
     if (mouse.RightButton == ButtonState::Pressed) {
         commandList->SetPipelineState(pipelineStateWireframe);
         commandList->DrawIndexed(indexBuffer->GetIndexCount(), 0);

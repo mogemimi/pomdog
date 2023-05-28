@@ -103,11 +103,11 @@ public:
 
     /// Gets the audio engine for creating audio resources.
     [[nodiscard]] std::shared_ptr<AudioEngine>
-    GetAudioEngine() const noexcept;
+    getAudioEngine() const noexcept;
 
     /// Gets the graphics device for creating graphics resources.
     [[nodiscard]] std::shared_ptr<gpu::GraphicsDevice>
-    GetGraphicsDevice() const noexcept;
+    getGraphicsDevice() const noexcept;
 
     /// Gets the full path to the asset.
     [[nodiscard]] std::string

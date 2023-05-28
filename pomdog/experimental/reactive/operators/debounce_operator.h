@@ -26,7 +26,7 @@ class DebounceOperator final
     , public Observable<T> {
 public:
     DebounceOperator(const Duration& dueTimeIn, const std::shared_ptr<GameHost>& gameHost)
-        : timer(gameHost->GetClock())
+        : timer(gameHost->getClock())
         , dueTime(dueTimeIn)
         , hasValue(false)
     {

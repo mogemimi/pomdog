@@ -37,16 +37,16 @@ enum class SystemEventKind : std::uint8_t {
 };
 
 struct InputTextEvent final {
-    std::string Text;
+    std::string text;
 };
 
 struct InputKeyEvent final {
-    KeyState State;
-    Keys Key;
+    KeyState state;
+    Keys key;
 };
 
 struct MousePositionEvent final {
-    Point2D Position;
+    Point2D position;
 };
 
 enum class MouseButtonState : std::uint8_t {
@@ -57,29 +57,29 @@ enum class MouseButtonState : std::uint8_t {
 
 #if defined(POMDOG_PLATFORM_WIN32)
 struct MouseButtonWin32Event final {
-    MouseButtons Button;
-    ButtonState State;
+    MouseButtons button;
+    ButtonState state;
 };
 
 struct ScrollWheelWin32Event final {
-    std::int32_t ScrollingDeltaY;
+    std::int32_t scrollingDeltaY;
 };
 #endif
 #if defined(POMDOG_PLATFORM_MACOSX)
 struct MouseButtonCocoaEvent final {
-    Point2D Position;
-    MouseButtons Button;
-    MouseButtonState State;
+    Point2D position;
+    MouseButtons button;
+    MouseButtonState state;
 };
 
 struct ScrollWheelCocoaEvent final {
-    double ScrollingDeltaY;
+    double scrollingDeltaY;
 };
 #endif
 
 struct GamepadEvent final {
-    PlayerIndex PlayerIndex;
-    GamepadCapabilities Capabilities;
+    PlayerIndex playerIndex;
+    GamepadCapabilities capabilities;
 };
 
 class SystemEvent final {
@@ -99,8 +99,8 @@ public:
 #endif
         GamepadEvent>;
 
-    SystemEventKind Kind;
-    EventBody Data;
+    SystemEventKind kind;
+    EventBody data;
 };
 
 } // namespace pomdog::detail
