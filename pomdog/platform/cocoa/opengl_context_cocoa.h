@@ -2,10 +2,14 @@
 
 #pragma once
 
+#include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/gpu/forward_declarations.h"
 #include "pomdog/gpu/gl4/opengl_context.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #import <Cocoa/Cocoa.h>
 #include <memory>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 @class NSOpenGLContext;
 
@@ -24,27 +28,27 @@ public:
     ~OpenGLContextCocoa() noexcept override;
 
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(const gpu::PresentationParameters& presentationParameters) noexcept;
+    initialize(const gpu::PresentationParameters& presentationParameters) noexcept;
 
-    void MakeCurrent() override;
+    void makeCurrent() override;
 
-    void ClearCurrent() override;
+    void clearCurrent() override;
 
-    void SwapBuffers() override;
+    void swapBuffers() override;
 
-    void Lock() noexcept;
+    void lock() noexcept;
 
-    void Unlock() noexcept;
+    void unlock() noexcept;
 
-    void SetView(NSView* view) noexcept;
+    void setView(NSView* view) noexcept;
 
-    void SetView() noexcept;
+    void setView() noexcept;
 
     [[nodiscard]] NSOpenGLContext*
-    GetNativeOpenGLContext() noexcept;
+    getNativeOpenGLContext() noexcept;
 
 private:
-    __strong NSOpenGLContext* openGLContext = nil;
+    __strong NSOpenGLContext* openGLContext_ = nil;
 };
 
 } // namespace pomdog::detail::cocoa

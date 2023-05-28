@@ -23,28 +23,28 @@ public:
     ~OpenGLContextWin32() noexcept;
 
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(
+    initialize(
         HWND windowHandle,
         const gpu::PresentationParameters& presentationParameters) noexcept;
 
-    void MakeCurrent() override;
+    void makeCurrent() override;
 
-    void ClearCurrent() override;
+    void clearCurrent() override;
 
-    void SwapBuffers() override;
+    void swapBuffers() override;
 
 private:
-    HWND windowHandle = nullptr;
+    HWND windowHandle_ = nullptr;
 
     std::unique_ptr<
         std::remove_pointer<HDC>::type,
         std::function<void(HDC)>>
-        hdc;
+        hdc_;
 
     std::unique_ptr<
         std::remove_pointer<HGLRC>::type,
         std::function<void(HGLRC)>>
-        glrc;
+        glrc_;
 };
 
 } // namespace pomdog::detail::win32

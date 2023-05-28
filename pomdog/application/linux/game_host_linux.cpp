@@ -238,7 +238,7 @@ GameHostLinux::initialize(const gpu::PresentationParameters& presentationParamet
         return errors::make("Pomdog doesn't support versions of OpenGL lower than 3.3/4.0.");
     }
 
-    openGLContext_->MakeCurrent();
+    openGLContext_->makeCurrent();
 
     auto const errorCode = glewInit();
     if (GLEW_OK != errorCode) {

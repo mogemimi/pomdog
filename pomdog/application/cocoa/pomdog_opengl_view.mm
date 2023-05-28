@@ -266,7 +266,7 @@ NSUInteger TranslateKeyToModifierFlag(Keys key)
     [super viewDidMoveToWindow];
 
     if ([self window] == nil) {
-        auto nativeContext = openGLContext->GetNativeOpenGLContext();
+        auto nativeContext = openGLContext->getNativeOpenGLContext();
         [nativeContext clearDrawable];
     }
 

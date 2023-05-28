@@ -5,7 +5,10 @@
 #include "pomdog/gpu/presentation_parameters.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/errors.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail::cocoa {
 namespace {
@@ -108,7 +111,7 @@ CreatePixelFormat(const gpu::PresentationParameters& presentationParameters) noe
 OpenGLContextCocoa::OpenGLContextCocoa() noexcept = default;
 
 std::unique_ptr<Error>
-OpenGLContextCocoa::Initialize(const gpu::PresentationParameters& presentationParameters) noexcept
+OpenGLContextCocoa::initialize(const gpu::PresentationParameters& presentationParameters) noexcept
 {
     // NOTE: Create a pixel format for OpenGL context.
     auto pixelFormat = detail::cocoa::CreatePixelFormat(presentationParameters);
@@ -117,62 +120,62 @@ OpenGLContextCocoa::Initialize(const gpu::PresentationParameters& presentationPa
     }
 
     // NOTE: Create a OpenGL context with the pixel format.
-    openGLContext = [[NSOpenGLContext alloc] initWithFormat:pixelFormat shareContext:nil];
-    if (openGLContext == nil) {
+    openGLContext_ = [[NSOpenGLContext alloc] initWithFormat:pixelFormat shareContext:nil];
+    if (openGLContext_ == nil) {
         return errors::make("failed to create NSOpenGLContext.");
     }
 
     // NOTE: Make the context current.
-    [openGLContext makeCurrentContext];
+    [openGLContext_ makeCurrentContext];
 
     constexpr GLint swapInterval = 1;
-    [openGLContext setValues:&swapInterval forParameter:NSOpenGLContextParameterSwapInterval];
+    [openGLContext_ setValues:&swapInterval forParameter:NSOpenGLContextParameterSwapInterval];
 
     return nullptr;
 }
 
 OpenGLContextCocoa::~OpenGLContextCocoa() noexcept
 {
-    openGLContext = nil;
+    openGLContext_ = nil;
 }
 
-void OpenGLContextCocoa::MakeCurrent()
+void OpenGLContextCocoa::makeCurrent()
 {
-    POMDOG_ASSERT(openGLContext != nil);
-    [openGLContext makeCurrentContext];
+    POMDOG_ASSERT(openGLContext_ != nil);
+    [openGLContext_ makeCurrentContext];
 }
 
-void OpenGLContextCocoa::ClearCurrent()
+void OpenGLContextCocoa::clearCurrent()
 {
-    POMDOG_ASSERT(openGLContext != nil);
+    POMDOG_ASSERT(openGLContext_ != nil);
     [NSOpenGLContext clearCurrentContext];
 }
 
-void OpenGLContextCocoa::SwapBuffers()
+void OpenGLContextCocoa::swapBuffers()
 {
-    POMDOG_ASSERT(openGLContext != nil);
-    [openGLContext flushBuffer];
+    POMDOG_ASSERT(openGLContext_ != nil);
+    [openGLContext_ flushBuffer];
 }
 
-void OpenGLContextCocoa::Lock() noexcept
+void OpenGLContextCocoa::lock() noexcept
 {
-    POMDOG_ASSERT(openGLContext != nil);
-    if (auto p = [openGLContext CGLContextObj]; p != nullptr) {
+    POMDOG_ASSERT(openGLContext_ != nil);
+    if (auto p = [openGLContext_ CGLContextObj]; p != nullptr) {
         CGLLockContext(p);
     }
 }
 
-void OpenGLContextCocoa::Unlock() noexcept
+void OpenGLContextCocoa::unlock() noexcept
 {
-    POMDOG_ASSERT(openGLContext != nil);
-    if (auto p = [openGLContext CGLContextObj]; p != nullptr) {
+    POMDOG_ASSERT(openGLContext_ != nil);
+    if (auto p = [openGLContext_ CGLContextObj]; p != nullptr) {
         CGLUnlockContext(p);
     }
 }
 
-void OpenGLContextCocoa::SetView(NSView* view) noexcept
+void OpenGLContextCocoa::setView(NSView* view) noexcept
 {
-    POMDOG_ASSERT(openGLContext != nil);
+    POMDOG_ASSERT(openGLContext_ != nil);
     POMDOG_ASSERT(view != nil);
 
 #if defined(__clang__)
@@ -180,30 +183,30 @@ void OpenGLContextCocoa::SetView(NSView* view) noexcept
 #pragma clang diagnostic ignored "-Wdeprecated"
 #endif
     // FIXME
-    [openGLContext setView:view];
+    [openGLContext_ setView:view];
 #if defined(__clang__)
 #pragma clang diagnostic pop
 #endif
 }
 
-void OpenGLContextCocoa::SetView() noexcept
+void OpenGLContextCocoa::setView() noexcept
 {
-    POMDOG_ASSERT(openGLContext != nil);
+    POMDOG_ASSERT(openGLContext_ != nil);
 
 #if defined(__clang__)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
 #endif
     // FIXME
-    [openGLContext setView:nil];
+    [openGLContext_ setView:nil];
 #if defined(__clang__)
 #pragma clang diagnostic pop
 #endif
 }
 
-NSOpenGLContext* OpenGLContextCocoa::GetNativeOpenGLContext() noexcept
+NSOpenGLContext* OpenGLContextCocoa::getNativeOpenGLContext() noexcept
 {
-    return openGLContext;
+    return openGLContext_;
 }
 
 } // namespace pomdog::detail::cocoa

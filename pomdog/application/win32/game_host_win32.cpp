@@ -137,7 +137,7 @@ CreateGraphicsDeviceGL4(
             errors::make("glewInit() failed."));
     }
 
-    openGLContext->MakeCurrent();
+    openGLContext->makeCurrent();
 
     // NOTE: Create a graphics device.
     auto graphicsDevice = std::make_shared<GraphicsDeviceGL4>();

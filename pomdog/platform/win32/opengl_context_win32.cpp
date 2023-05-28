@@ -15,7 +15,7 @@ namespace pomdog::detail::win32 {
 namespace {
 
 [[nodiscard]] std::unique_ptr<Error>
-ToPixelFormatDescriptor(
+toPixelFormatDescriptor(
     const gpu::PresentationParameters& presentationParameters,
     PIXELFORMATDESCRIPTOR& descriptor) noexcept
 {
@@ -84,51 +84,51 @@ ToPixelFormatDescriptor(
 OpenGLContextWin32::OpenGLContextWin32() noexcept = default;
 
 std::unique_ptr<Error>
-OpenGLContextWin32::Initialize(
+OpenGLContextWin32::initialize(
     HWND windowHandleIn,
     const gpu::PresentationParameters& presentationParameters) noexcept
 {
-    windowHandle = windowHandleIn;
-    if (windowHandle == nullptr) {
+    windowHandle_ = windowHandleIn;
+    if (windowHandle_ == nullptr) {
         return errors::make("windowHandle must be != nullptr");
     }
 
-    using hdcType = decltype(hdc);
-    hdc = hdcType(nullptr, [this](HDC hdcIn) {
-        ::ReleaseDC(windowHandle, hdcIn);
+    using hdcType = decltype(hdc_);
+    hdc_ = hdcType(nullptr, [this](HDC hdcIn) {
+        ::ReleaseDC(windowHandle_, hdcIn);
     });
 
-    using glrcType = decltype(glrc);
-    glrc = glrcType(nullptr, [](HGLRC glrcIn) {
+    using glrcType = decltype(glrc_);
+    glrc_ = glrcType(nullptr, [](HGLRC glrcIn) {
         if (::wglGetCurrentContext() == glrcIn) {
             ::wglMakeCurrent(nullptr, nullptr);
         }
         ::wglDeleteContext(glrcIn);
     });
 
-    hdc.reset(::GetDC(windowHandle));
+    hdc_.reset(::GetDC(windowHandle_));
 
     PIXELFORMATDESCRIPTOR formatDescriptor;
-    if (auto err = ToPixelFormatDescriptor(presentationParameters, formatDescriptor); err != nullptr) {
-        return errors::wrap(std::move(err), "ToPixelFormatDescriptor() failed");
+    if (auto err = toPixelFormatDescriptor(presentationParameters, formatDescriptor); err != nullptr) {
+        return errors::wrap(std::move(err), "toPixelFormatDescriptor() failed");
     }
 
-    const auto pixelFormat = ::ChoosePixelFormat(hdc.get(), &formatDescriptor);
+    const auto pixelFormat = ::ChoosePixelFormat(hdc_.get(), &formatDescriptor);
 
     if (pixelFormat == 0) {
         const auto errorCode = ::GetLastError();
         return errors::make("ChoosePixelFormat() failed. error code = " + std::to_string(errorCode));
     }
 
-    if (!SetPixelFormat(hdc.get(), pixelFormat, &formatDescriptor)) {
+    if (!SetPixelFormat(hdc_.get(), pixelFormat, &formatDescriptor)) {
         const auto errorCode = ::GetLastError();
         return errors::make("SetPixelFormat() failed. error code = " + std::to_string(errorCode));
     }
 
     // NOTE: Create OpenGL context.
-    glrc.reset(::wglCreateContext(hdc.get()));
+    glrc_.reset(::wglCreateContext(hdc_.get()));
 
-    if (!::wglMakeCurrent(hdc.get(), glrc.get())) {
+    if (!::wglMakeCurrent(hdc_.get(), glrc_.get())) {
         const auto errorCode = ::GetLastError();
         return errors::make("wglMakeCurrent() failed. error code = " + std::to_string(errorCode));
     }
@@ -138,29 +138,29 @@ OpenGLContextWin32::Initialize(
 
 OpenGLContextWin32::~OpenGLContextWin32() noexcept
 {
-    glrc.reset();
-    hdc.reset();
+    glrc_.reset();
+    hdc_.reset();
 }
 
-void OpenGLContextWin32::MakeCurrent()
+void OpenGLContextWin32::makeCurrent()
 {
-    POMDOG_ASSERT(hdc);
-    POMDOG_ASSERT(glrc);
-    ::wglMakeCurrent(hdc.get(), glrc.get());
+    POMDOG_ASSERT(hdc_);
+    POMDOG_ASSERT(glrc_);
+    ::wglMakeCurrent(hdc_.get(), glrc_.get());
 }
 
-void OpenGLContextWin32::ClearCurrent()
+void OpenGLContextWin32::clearCurrent()
 {
     ::wglMakeCurrent(nullptr, nullptr);
 }
 
-void OpenGLContextWin32::SwapBuffers()
+void OpenGLContextWin32::swapBuffers()
 {
     ::glFlush();
     POMDOG_CHECK_ERROR_GL4("glFlush");
 
-    POMDOG_ASSERT(hdc);
-    ::SwapBuffers(hdc.get());
+    POMDOG_ASSERT(hdc_);
+    ::SwapBuffers(hdc_.get());
 }
 
 } // namespace pomdog::detail::win32

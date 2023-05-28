@@ -424,8 +424,8 @@ void GraphicsContextGL4::ExecuteCommandLists(
 
 void GraphicsContextGL4::Present()
 {
-    nativeContext_->SwapBuffers();
-    POMDOG_CHECK_ERROR_GL4("SwapBuffers");
+    nativeContext_->swapBuffers();
+    POMDOG_CHECK_ERROR_GL4("swapBuffers");
 }
 
 void GraphicsContextGL4::ApplyPipelineState()

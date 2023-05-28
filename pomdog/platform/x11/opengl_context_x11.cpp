@@ -3,9 +3,12 @@
 #include "pomdog/platform/x11/opengl_context_x11.h"
 #include "pomdog/application/x11/game_window_x11.h"
 #include "pomdog/utility/assert.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <X11/Xlib.h>
 #include <cstring>
 #include <utility>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail::x11 {
 namespace {
@@ -189,7 +192,7 @@ OpenGLContextX11::~OpenGLContextX11() noexcept
     }
 }
 
-void OpenGLContextX11::MakeCurrent()
+void OpenGLContextX11::makeCurrent()
 {
     if (glXGetCurrentContext() == glxContext_) {
         return;
@@ -199,13 +202,13 @@ void OpenGLContextX11::MakeCurrent()
     glXMakeCurrent(window_->getNativeDisplay(), window_->getNativeWindow(), glxContext_);
 }
 
-void OpenGLContextX11::ClearCurrent()
+void OpenGLContextX11::clearCurrent()
 {
     POMDOG_ASSERT(window_ != nullptr);
     glXMakeCurrent(window_->getNativeDisplay(), None, nullptr);
 }
 
-void OpenGLContextX11::SwapBuffers()
+void OpenGLContextX11::swapBuffers()
 {
     POMDOG_ASSERT(window_ != nullptr);
     glXSwapBuffers(window_->getNativeDisplay(), window_->getNativeWindow());

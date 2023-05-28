@@ -8,11 +8,11 @@ class OpenGLContext {
 public:
     virtual ~OpenGLContext();
 
-    virtual void MakeCurrent() = 0;
+    virtual void makeCurrent() = 0;
 
-    virtual void ClearCurrent() = 0;
+    virtual void clearCurrent() = 0;
 
-    virtual void SwapBuffers() = 0;
+    virtual void swapBuffers() = 0;
 };
 
 } // namespace pomdog::gpu::detail::gl4

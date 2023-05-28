@@ -178,7 +178,7 @@ GameHostCocoa::Impl::initialize(
 
     // NOTE: Create OpenGL context.
     openGLContext = std::make_shared<OpenGLContextCocoa>();
-    if (auto err = openGLContext->Initialize(presentationParameters); err != nullptr) {
+    if (auto err = openGLContext->initialize(presentationParameters); err != nullptr) {
         return errors::wrap(std::move(err), "OpenGLContextCocoa::Initialize() failed.");
     }
 
@@ -187,9 +187,9 @@ GameHostCocoa::Impl::initialize(
     [openGLView setOpenGLContext:openGLContext];
 
     // Create graphics device and device resources
-    openGLContext->Lock();
-    openGLContext->SetView(openGLView);
-    openGLContext->MakeCurrent();
+    openGLContext->lock();
+    openGLContext->setView(openGLView);
+    openGLContext->makeCurrent();
 
     // NOTE: Create a graphics device.
     graphicsDevice = std::make_shared<GraphicsDeviceGL4>();
@@ -204,7 +204,7 @@ GameHostCocoa::Impl::initialize(
     }
 
     graphicsCommandQueue = std::make_shared<gpu::detail::CommandQueueImmediate>(graphicsContext);
-    openGLContext->Unlock();
+    openGLContext->unlock();
 
     // NOTE: Create audio engine.
     audioEngine = std::make_shared<AudioEngineAL>();
@@ -295,17 +295,17 @@ GameHostCocoa::Impl::run(
     POMDOG_ASSERT(!weakGame.expired());
     auto game = weakGame.lock();
 
-    openGLContext->Lock();
-    openGLContext->SetView(openGLView);
-    openGLContext->MakeCurrent();
+    openGLContext->lock();
+    openGLContext->setView(openGLView);
+    openGLContext->makeCurrent();
 
     if (auto err = game->initialize(); err != nullptr) {
-        openGLContext->Unlock();
+        openGLContext->unlock();
         gameWillExit();
         return errors::wrap(std::move(err), "failed to initialzie game");
     }
 
-    openGLContext->Unlock();
+    openGLContext->unlock();
 
     if (exitRequest) {
         gameWillExit();
@@ -314,7 +314,7 @@ GameHostCocoa::Impl::run(
 
     POMDOG_ASSERT(openGLView != nullptr);
 
-    auto nsOpenGLContext = openGLContext->GetNativeOpenGLContext();
+    auto nsOpenGLContext = openGLContext->getNativeOpenGLContext();
     NSOpenGLPixelFormat* nsPixelFormat = [nsOpenGLContext pixelFormat];
     CGLContextObj cglContext = [nsOpenGLContext CGLContextObj];
     CGLPixelFormatObj cglPixelFormat = [nsPixelFormat CGLPixelFormatObj];
@@ -408,11 +408,11 @@ void GameHostCocoa::Impl::gameLoop()
         return;
     }
 
-    openGLContext->Lock();
-    openGLContext->SetView(openGLView);
-    openGLContext->MakeCurrent();
+    openGLContext->lock();
+    openGLContext->setView(openGLView);
+    openGLContext->makeCurrent();
     game->update();
-    openGLContext->Unlock();
+    openGLContext->unlock();
 
     if (!viewLiveResizing.load()) {
         renderFrame();
@@ -445,13 +445,13 @@ void GameHostCocoa::Impl::renderFrame()
     POMDOG_ASSERT(game);
     POMDOG_ASSERT(openGLView != nullptr);
 
-    openGLContext->Lock();
-    openGLContext->SetView(openGLView);
-    openGLContext->MakeCurrent();
+    openGLContext->lock();
+    openGLContext->setView(openGLView);
+    openGLContext->makeCurrent();
 
     game->draw();
 
-    openGLContext->Unlock();
+    openGLContext->unlock();
 }
 
 void GameHostCocoa::Impl::doEvents()
@@ -496,10 +496,10 @@ void GameHostCocoa::Impl::processSystemEvents(const SystemEvent& event)
 
 void GameHostCocoa::Impl::clientSizeChanged()
 {
-    openGLContext->Lock();
-    openGLContext->MakeCurrent();
+    openGLContext->lock();
+    openGLContext->makeCurrent();
 
-    auto nativeContext = openGLContext->GetNativeOpenGLContext();
+    auto nativeContext = openGLContext->getNativeOpenGLContext();
     POMDOG_ASSERT(nativeContext != nullptr);
     [nativeContext update];
 
@@ -510,7 +510,7 @@ void GameHostCocoa::Impl::clientSizeChanged()
     graphicsDevice->clientSizeChanged(bounds.width, bounds.height);
     window->clientSizeChanged(bounds.width, bounds.height);
 
-    openGLContext->Unlock();
+    openGLContext->unlock();
 }
 
 std::shared_ptr<GameWindow>

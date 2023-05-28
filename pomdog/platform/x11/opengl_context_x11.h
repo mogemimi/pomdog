@@ -2,11 +2,15 @@
 
 #pragma once
 
+#include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/gpu/gl4/opengl_context.h"
 #include "pomdog/gpu/gl4/opengl_prerequisites.h"
 #include "pomdog/utility/errors.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <GL/glx.h>
 #include <memory>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail::x11 {
 
@@ -23,13 +27,14 @@ public:
         const std::shared_ptr<GameWindowX11>& window,
         const GLXFBConfig& framebufferConfig) noexcept;
 
-    void MakeCurrent() override;
+    void makeCurrent() override;
 
-    void ClearCurrent() override;
+    void clearCurrent() override;
 
-    void SwapBuffers() override;
+    void swapBuffers() override;
 
-    [[nodiscard]] bool isOpenGL3Supported() const noexcept;
+    [[nodiscard]] bool
+    isOpenGL3Supported() const noexcept;
 
 private:
     std::shared_ptr<GameWindowX11> window_;
