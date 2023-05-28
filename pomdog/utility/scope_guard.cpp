@@ -10,20 +10,20 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::detail {
 
 ScopeGuard::ScopeGuard(std::function<void()>&& f) noexcept
-    : func(std::move(f))
+    : func_(std::move(f))
 {
 }
 
 ScopeGuard::~ScopeGuard() noexcept
 {
-    if (func) {
-        func();
+    if (func_) {
+        func_();
     }
 }
 
-void ScopeGuard::Dismiss() noexcept
+void ScopeGuard::dismiss() noexcept
 {
-    func = nullptr;
+    func_ = nullptr;
 }
 
 } // namespace pomdog::detail

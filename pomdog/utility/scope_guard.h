@@ -24,10 +24,10 @@ public:
 
     ~ScopeGuard() noexcept;
 
-    void Dismiss() noexcept;
+    void dismiss() noexcept;
 
 private:
-    std::function<void()> func;
+    std::function<void()> func_;
 };
 
 } // namespace pomdog::detail
