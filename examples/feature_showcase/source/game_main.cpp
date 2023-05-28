@@ -316,7 +316,7 @@ void GameMain::drawMenu()
     pass.clearDepth = 1.0f;
     pass.clearStencil = std::uint8_t(0);
     pass.viewport = viewport;
-    pass.scissorRect = viewport.GetBounds();
+    pass.scissorRect = viewport.getBounds();
 
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
         static_cast<float>(presentationParameters.backBufferWidth),

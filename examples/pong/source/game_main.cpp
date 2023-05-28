@@ -341,11 +341,11 @@ void GameMain::draw()
     pass.clearDepth = 1.0f;
     pass.clearStencil = std::uint8_t(0);
     pass.viewport = viewport;
-    pass.scissorRect = viewport.GetBounds();
+    pass.scissorRect = viewport.getBounds();
 
     const auto projectionMatrix = Matrix4x4::createPerspectiveFieldOfViewLH(
         math::toRadians(45.0f),
-        viewport.GetAspectRatio(),
+        viewport.getAspectRatio(),
         0.01f,
         1000.0f);
 

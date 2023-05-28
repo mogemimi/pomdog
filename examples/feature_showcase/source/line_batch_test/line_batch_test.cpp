@@ -72,7 +72,7 @@ void LineBatchTest::draw()
     pass.clearDepth = 1.0f;
     pass.clearStencil = std::uint8_t(0);
     pass.viewport = viewport;
-    pass.scissorRect = viewport.GetBounds();
+    pass.scissorRect = viewport.getBounds();
 
     commandList->Reset();
     commandList->SetRenderPass(std::move(pass));

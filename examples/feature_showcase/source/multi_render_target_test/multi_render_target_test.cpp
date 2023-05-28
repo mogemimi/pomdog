@@ -352,7 +352,7 @@ void MultiRenderTargetTest::draw()
         pass.clearDepth = 1.0f;
         pass.clearStencil = std::uint8_t(0);
         pass.viewport = viewport;
-        pass.scissorRect = viewport.GetBounds();
+        pass.scissorRect = viewport.getBounds();
 
         commandList->SetRenderPass(std::move(pass));
         commandList->SetConstantBuffer(0, modelConstantBuffer);
@@ -373,7 +373,7 @@ void MultiRenderTargetTest::draw()
         pass.clearDepth = 1.0f;
         pass.clearStencil = std::uint8_t(0);
         pass.viewport = viewport;
-        pass.scissorRect = viewport.GetBounds();
+        pass.scissorRect = viewport.getBounds();
 
         const auto w = static_cast<float>(presentationParameters.backBufferWidth);
         const auto h = static_cast<float>(presentationParameters.backBufferHeight);

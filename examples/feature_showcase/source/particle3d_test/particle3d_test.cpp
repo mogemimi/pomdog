@@ -14,11 +14,11 @@ Ray ScreenPointToRay(
     bool isOrthoProjection)
 {
     const auto screenPointVector = Vector3{math::toVector2(screenPoint), 1.0f};
-    const auto worldPoint = viewport.Unproject(screenPointVector, viewProjection);
+    const auto worldPoint = viewport.unproject(screenPointVector, viewProjection);
 
     if (isOrthoProjection) {
         const auto cameraPositionInScreen = Vector3{math::toVector2(screenPoint), -1.0f};
-        const auto cameraPositionInWorld = viewport.Unproject(cameraPositionInScreen, viewProjection);
+        const auto cameraPositionInWorld = viewport.unproject(cameraPositionInScreen, viewProjection);
         Ray ray = {cameraPositionInWorld, math::normalize(worldPoint - cameraPositionInWorld)};
         return ray;
     }
@@ -155,7 +155,7 @@ void Particle3DTest::draw()
     pass.clearDepth = 1.0f;
     pass.clearStencil = std::uint8_t(0);
     pass.viewport = viewport;
-    pass.scissorRect = viewport.GetBounds();
+    pass.scissorRect = viewport.getBounds();
 
     commandList->Reset();
     commandList->SetRenderPass(std::move(pass));

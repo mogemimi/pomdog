@@ -38,17 +38,19 @@ public:
 
     /// Projects a position from object space into screen space.
     [[nodiscard]] Vector3
-    Project(const Vector3& source, const Matrix4x4& worldViewProjection) const;
+    project(const Vector3& source, const Matrix4x4& worldViewProjection) const;
 
     /// Projects a position from screen space into world space.
     [[nodiscard]] Vector3
-    Unproject(const Vector3& source, const Matrix4x4& worldViewProjection) const;
+    unproject(const Vector3& source, const Matrix4x4& worldViewProjection) const;
 
     /// Gets the boundary of this viewport.
-    [[nodiscard]] Rectangle GetBounds() const noexcept;
+    [[nodiscard]] Rectangle
+    getBounds() const noexcept;
 
     /// Gets the aspect ratio used by the viewport, which is width / height.
-    [[nodiscard]] float GetAspectRatio() const noexcept;
+    [[nodiscard]] float
+    getAspectRatio() const noexcept;
 };
 
 } // namespace pomdog::gpu

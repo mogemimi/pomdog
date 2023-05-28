@@ -285,7 +285,7 @@ void BasicEffectTest::draw()
     pass.clearDepth = 1.0f;
     pass.clearStencil = std::uint8_t(0);
     pass.viewport = viewport;
-    pass.scissorRect = viewport.GetBounds();
+    pass.scissorRect = viewport.getBounds();
 
     auto mouse = gameHost->getMouse()->GetState();
 

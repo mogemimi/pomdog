@@ -44,7 +44,7 @@ Viewport::Viewport(int xIn, int yIn, int widthIn, int heightIn, float minDepthIn
 {
 }
 
-Vector3 Viewport::Project(
+Vector3 Viewport::project(
     const Vector3& source,
     const Matrix4x4& worldViewProjection) const
 {
@@ -65,7 +65,7 @@ Vector3 Viewport::Project(
     return result;
 }
 
-Vector3 Viewport::Unproject(
+Vector3 Viewport::unproject(
     const Vector3& source,
     const Matrix4x4& worldViewProjection) const
 {
@@ -91,12 +91,12 @@ Vector3 Viewport::Unproject(
     return result;
 }
 
-Rectangle Viewport::GetBounds() const noexcept
+Rectangle Viewport::getBounds() const noexcept
 {
     return Rectangle{topLeftX, topLeftY, width, height};
 }
 
-float Viewport::GetAspectRatio() const noexcept
+float Viewport::getAspectRatio() const noexcept
 {
     POMDOG_ASSERT(height != 0);
     if (height != 0) {
