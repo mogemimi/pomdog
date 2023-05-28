@@ -220,7 +220,7 @@ void PolylineBatch::Impl::Begin(
     commandList = commandListIn;
 
     alignas(16) Matrix4x4 transposedMatrix = math::transpose(transformMatrix);
-    constantBuffer->SetData(0, gpu::MakeByteSpan(transposedMatrix));
+    constantBuffer->setData(0, gpu::makeByteSpan(transposedMatrix));
 }
 
 void PolylineBatch::Impl::End()
@@ -247,11 +247,11 @@ void PolylineBatch::Impl::Flush()
 
     POMDOG_ASSERT(!vertices.empty());
     POMDOG_ASSERT(vertices.size() <= MaxVertexCount);
-    vertexBuffer->SetData(vertices.data(), vertices.size());
+    vertexBuffer->setData(vertices.data(), vertices.size());
 
     POMDOG_ASSERT(!indices.empty());
     POMDOG_ASSERT(indices.size() <= MaxIndexCount);
-    indexBuffer->SetData(indices.data(), indices.size());
+    indexBuffer->setData(indices.data(), indices.size());
 
 #ifdef POMDOG_POLYLINE_DEBUG
     auto vert = vertices;

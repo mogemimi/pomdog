@@ -22,42 +22,42 @@ public:
     ~Texture2DGL4() override;
 
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(
+    initialize(
         std::int32_t pixelWidth,
         std::int32_t pixelHeight,
         std::int32_t levelCount,
         PixelFormat format) noexcept;
 
     /// Gets the width of the texture data, in pixels.
-    std::int32_t GetWidth() const noexcept override;
+    std::int32_t getWidth() const noexcept override;
 
     /// Gets the height of the texture data, in pixels.
-    std::int32_t GetHeight() const noexcept override;
+    std::int32_t getHeight() const noexcept override;
 
     /// Gets the mipmap level.
-    std::int32_t GetLevelCount() const noexcept override;
+    std::int32_t getLevelCount() const noexcept override;
 
     /// Gets the format of the pixel data in the texture.
-    PixelFormat GetFormat() const noexcept override;
+    PixelFormat getFormat() const noexcept override;
 
     /// Sets texture data.
-    void SetData(const void* pixelData) override;
+    void setData(const void* pixelData) override;
 
     /// Copies the pixel data from texture to memory.
-    void GetData(void* result, std::size_t offsetInBytes, std::size_t sizeInBytes) const;
+    void getData(void* result, std::size_t offsetInBytes, std::size_t sizeInBytes) const;
 
     /// Generates a set of mipmaps.
-    void GenerateMipmap();
+    void generateMipmap();
 
     /// Gets the handle of the native texture resource.
-    Texture2DObjectGL4 GetTextureHandle() const noexcept;
+    [[nodiscard]] Texture2DObjectGL4 getTextureHandle() const noexcept;
 
 private:
-    std::optional<Texture2DObjectGL4> textureObject;
-    std::int32_t pixelWidth = 0;
-    std::int32_t pixelHeight = 0;
-    std::int32_t levelCount = 0;
-    PixelFormat format = PixelFormat::A8_UNorm;
+    std::optional<Texture2DObjectGL4> textureObject_;
+    std::int32_t pixelWidth_ = 0;
+    std::int32_t pixelHeight_ = 0;
+    std::int32_t levelCount_ = 0;
+    PixelFormat format_ = PixelFormat::A8_UNorm;
 };
 
 } // namespace pomdog::gpu::detail::gl4

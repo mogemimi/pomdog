@@ -127,7 +127,7 @@ void VignetteEffect::UpdateGPUResources()
     VignetteBlock block;
     block.Intensity = intensity_;
 
-    constantBufferVignette->SetData(0, gpu::MakeByteSpan(block));
+    constantBufferVignette->setData(0, gpu::makeByteSpan(block));
 }
 
 void VignetteEffect::Apply(

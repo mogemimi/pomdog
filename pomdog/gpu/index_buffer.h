@@ -33,34 +33,39 @@ public:
     IndexBuffer& operator=(IndexBuffer&&) = default;
 
     /// Gets the number of indices.
-    [[nodiscard]] std::size_t GetIndexCount() const noexcept;
+    [[nodiscard]] std::size_t
+    getIndexCount() const noexcept;
 
     /// Gets the size in bytes of per-index element.
-    [[nodiscard]] IndexFormat GetElementSize() const noexcept;
+    [[nodiscard]] IndexFormat
+    getElementSize() const noexcept;
 
     /// Gets the size in bytes of this index buffer.
-    [[nodiscard]] std::size_t GetSizeInBytes() const noexcept;
+    [[nodiscard]] std::size_t
+    getSizeInBytes() const noexcept;
 
     /// Gets the expected usage hint of this index buffer.
-    [[nodiscard]] BufferUsage GetBufferUsage() const noexcept;
+    [[nodiscard]] BufferUsage
+    getBufferUsage() const noexcept;
 
     /// Sets index buffer data.
-    void SetData(const void* source, std::size_t elementCount);
+    void setData(const void* source, std::size_t elementCount);
 
     /// Sets index buffer data.
-    void SetData(
+    void setData(
         std::size_t offsetInBytes,
         const void* source,
         std::size_t elementCount);
 
     /// Gets the pointer of the native index buffer resource.
-    [[nodiscard]] Buffer* GetBuffer();
+    [[nodiscard]] Buffer*
+    getBuffer();
 
 private:
-    std::unique_ptr<Buffer> nativeBuffer;
-    std::uint32_t indexCount;
-    IndexFormat elementSize;
-    BufferUsage bufferUsage;
+    std::unique_ptr<Buffer> nativeBuffer_;
+    std::uint32_t indexCount_;
+    IndexFormat elementSize_;
+    BufferUsage bufferUsage_;
 };
 
 } // namespace pomdog::gpu

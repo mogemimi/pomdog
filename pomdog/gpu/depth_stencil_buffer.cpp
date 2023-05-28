@@ -5,6 +5,7 @@
 namespace pomdog::gpu {
 
 DepthStencilBuffer::DepthStencilBuffer() noexcept = default;
+
 DepthStencilBuffer::~DepthStencilBuffer() = default;
 
 } // namespace pomdog::gpu

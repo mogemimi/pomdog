@@ -18,51 +18,51 @@ VertexBuffer::VertexBuffer(
     std::size_t vertexCountIn,
     std::size_t strideInBytesIn,
     BufferUsage bufferUsageIn)
-    : nativeBuffer(std::move(nativeBufferIn))
-    , vertexCount(static_cast<decltype(vertexCount)>(vertexCountIn))
-    , strideInBytes(static_cast<decltype(strideInBytes)>(strideInBytesIn))
-    , bufferUsage(bufferUsageIn)
+    : nativeBuffer_(std::move(nativeBufferIn))
+    , vertexCount_(static_cast<decltype(vertexCount_)>(vertexCountIn))
+    , strideInBytes_(static_cast<decltype(strideInBytes_)>(strideInBytesIn))
+    , bufferUsage_(bufferUsageIn)
 {
-    POMDOG_ASSERT(vertexCount > 0);
-    POMDOG_ASSERT(strideInBytes > 0);
-    POMDOG_ASSERT(nativeBuffer != nullptr);
+    POMDOG_ASSERT(vertexCount_ > 0);
+    POMDOG_ASSERT(strideInBytes_ > 0);
+    POMDOG_ASSERT(nativeBuffer_ != nullptr);
 }
 
 VertexBuffer::~VertexBuffer() = default;
 
-std::size_t VertexBuffer::GetStrideBytes() const noexcept
+std::size_t VertexBuffer::getStrideBytes() const noexcept
 {
-    return strideInBytes;
+    return strideInBytes_;
 }
 
-std::size_t VertexBuffer::GetVertexCount() const noexcept
+std::size_t VertexBuffer::getVertexCount() const noexcept
 {
-    return vertexCount;
+    return vertexCount_;
 }
 
-std::size_t VertexBuffer::GetSizeInBytes() const noexcept
+std::size_t VertexBuffer::getSizeInBytes() const noexcept
 {
-    POMDOG_ASSERT(strideInBytes > 0);
-    POMDOG_ASSERT(vertexCount > 0);
-    return vertexCount * strideInBytes;
+    POMDOG_ASSERT(strideInBytes_ > 0);
+    POMDOG_ASSERT(vertexCount_ > 0);
+    return vertexCount_ * strideInBytes_;
 }
 
-BufferUsage VertexBuffer::GetBufferUsage() const noexcept
+BufferUsage VertexBuffer::getBufferUsage() const noexcept
 {
-    return bufferUsage;
+    return bufferUsage_;
 }
 
-void VertexBuffer::SetData(const void* source, std::size_t elementCount)
+void VertexBuffer::setData(const void* source, std::size_t elementCount)
 {
     POMDOG_ASSERT(source != nullptr);
     POMDOG_ASSERT(elementCount > 0);
-    POMDOG_ASSERT(elementCount <= vertexCount);
-    POMDOG_ASSERT(nativeBuffer != nullptr);
-    POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
-    nativeBuffer->SetData(0, source, elementCount * strideInBytes);
+    POMDOG_ASSERT(elementCount <= vertexCount_);
+    POMDOG_ASSERT(nativeBuffer_ != nullptr);
+    POMDOG_ASSERT(bufferUsage_ != BufferUsage::Immutable);
+    nativeBuffer_->setData(0, source, elementCount * strideInBytes_);
 }
 
-void VertexBuffer::SetData(
+void VertexBuffer::setData(
     std::size_t offsetInBytes,
     const void* source,
     std::size_t elementCount,
@@ -70,17 +70,16 @@ void VertexBuffer::SetData(
 {
     POMDOG_ASSERT(source != nullptr);
     POMDOG_ASSERT(elementCount > 0);
-    POMDOG_ASSERT(elementCount <= vertexCount);
-    POMDOG_ASSERT(nativeBuffer != nullptr);
-    POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
-    nativeBuffer->SetData(offsetInBytes, source,
-        elementCount * strideInBytesIn);
+    POMDOG_ASSERT(elementCount <= vertexCount_);
+    POMDOG_ASSERT(nativeBuffer_ != nullptr);
+    POMDOG_ASSERT(bufferUsage_ != BufferUsage::Immutable);
+    nativeBuffer_->setData(offsetInBytes, source, elementCount * strideInBytesIn);
 }
 
-Buffer* VertexBuffer::GetBuffer()
+Buffer* VertexBuffer::getBuffer()
 {
-    POMDOG_ASSERT(nativeBuffer != nullptr);
-    return nativeBuffer.get();
+    POMDOG_ASSERT(nativeBuffer_ != nullptr);
+    return nativeBuffer_.get();
 }
 
 } // namespace pomdog::gpu

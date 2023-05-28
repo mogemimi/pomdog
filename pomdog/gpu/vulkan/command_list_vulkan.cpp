@@ -371,7 +371,7 @@ void CommandListVulkan::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& index
 
     constexpr VkDeviceSize offset = 0;
     const auto indexBuffer = nativeIndexBuffer->GetBuffer();
-    const auto indexType = ToVkIndexType(indexBufferIn->GetElementSize());
+    const auto indexType = ToVkIndexType(indexBufferIn->getElementSize());
 
     vkCmdBindIndexBuffer(commandBuffer, indexBuffer, offset, indexType);
 }

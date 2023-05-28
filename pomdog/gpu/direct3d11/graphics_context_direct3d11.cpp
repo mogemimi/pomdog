@@ -360,7 +360,7 @@ void GraphicsContextDirect3D11::SetIndexBuffer(const std::shared_ptr<IndexBuffer
 
     deferredContext->IASetIndexBuffer(
         nativeBuffer->GetBuffer(),
-        dxgi::ToDXGIFormat(indexBuffer->GetElementSize()),
+        dxgi::ToDXGIFormat(indexBuffer->getElementSize()),
         0);
 }
 
@@ -430,7 +430,7 @@ void GraphicsContextDirect3D11::SetVertexBuffer(
     POMDOG_ASSERT(nativeBuffer == dynamic_cast<BufferDirect3D11*>(vertexBuffer->GetBuffer()));
 
     const auto buffer = nativeBuffer->GetBuffer();
-    const auto stride = static_cast<UINT>(vertexBuffer->GetStrideBytes());
+    const auto stride = static_cast<UINT>(vertexBuffer->getStrideBytes());
     const auto vertexOffset = static_cast<UINT>(offset);
 
     POMDOG_ASSERT(deferredContext != nullptr);

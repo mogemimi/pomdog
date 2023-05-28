@@ -11,7 +11,7 @@
 namespace pomdog::gpu::detail::metal {
 
 std::unique_ptr<Error>
-RenderTarget2DMetal::Initialize(
+RenderTarget2DMetal::initialize(
     id<MTLDevice> device,
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn,
@@ -19,19 +19,19 @@ RenderTarget2DMetal::Initialize(
     PixelFormat formatIn,
     std::int32_t multiSampleCount) noexcept
 {
-    pixelWidth = pixelWidthIn;
-    pixelHeight = pixelHeightIn;
-    levelCount = levelCountIn;
-    format = formatIn;
-    multiSampleEnabled = (multiSampleCount > 1);
+    pixelWidth_ = pixelWidthIn;
+    pixelHeight_ = pixelHeightIn;
+    levelCount_ = levelCountIn;
+    format_ = formatIn;
+    multiSampleEnabled_ = (multiSampleCount > 1);
 
     POMDOG_ASSERT(device != nullptr);
 
     MTLTextureDescriptor* descriptor = [MTLTextureDescriptor
-        texture2DDescriptorWithPixelFormat:ToPixelFormat(format)
-                                     width:pixelWidth
-                                    height:pixelHeight
-                                 mipmapped:(levelCount > 1 ? YES : NO)];
+        texture2DDescriptorWithPixelFormat:ToPixelFormat(format_)
+                                     width:pixelWidth_
+                                    height:pixelHeight_
+                                 mipmapped:(levelCount_ > 1 ? YES : NO)];
 
     [descriptor setUsage:MTLTextureUsageRenderTarget | MTLTextureUsageShaderRead];
     // [descriptor setStorageMode:];
@@ -39,61 +39,61 @@ RenderTarget2DMetal::Initialize(
     // [descriptor setSampleCount:];
     // [descriptor setMipmapLevelCount:];
 
-    texture = [device newTextureWithDescriptor:descriptor];
-    if (texture == nullptr) {
+    texture_ = [device newTextureWithDescriptor:descriptor];
+    if (texture_ == nullptr) {
         return errors::make("failed to create MTLTexture");
     }
 
     return nullptr;
 }
 
-std::int32_t RenderTarget2DMetal::GetWidth() const noexcept
+std::int32_t RenderTarget2DMetal::getWidth() const noexcept
 {
-    return pixelWidth;
+    return pixelWidth_;
 }
 
-std::int32_t RenderTarget2DMetal::GetHeight() const noexcept
+std::int32_t RenderTarget2DMetal::getHeight() const noexcept
 {
-    return pixelHeight;
+    return pixelHeight_;
 }
 
-std::int32_t RenderTarget2DMetal::GetLevelCount() const noexcept
+std::int32_t RenderTarget2DMetal::getLevelCount() const noexcept
 {
-    return levelCount;
+    return levelCount_;
 }
 
-PixelFormat RenderTarget2DMetal::GetFormat() const noexcept
+PixelFormat RenderTarget2DMetal::getFormat() const noexcept
 {
-    return format;
+    return format_;
 }
 
-Rectangle RenderTarget2DMetal::GetBounds() const noexcept
+Rectangle RenderTarget2DMetal::getBounds() const noexcept
 {
-    return Rectangle{0, 0, pixelWidth, pixelHeight};
+    return Rectangle{0, 0, pixelWidth_, pixelHeight_};
 }
 
-void RenderTarget2DMetal::GetData(
+void RenderTarget2DMetal::getData(
     void* result,
     std::size_t offsetInBytes,
     std::size_t sizeInBytes) const
 {
-    POMDOG_ASSERT(texture != nullptr);
+    POMDOG_ASSERT(texture_ != nullptr);
     POMDOG_ASSERT(result != nullptr);
 
-    auto const bytesPerPixel = SurfaceFormatHelper::ToBytesPerBlock(format);
+    const auto bytesPerPixel = SurfaceFormatHelper::ToBytesPerBlock(format_);
 
     // FIXME: Not implemented yet.
     POMDOG_ASSERT(offsetInBytes == 0);
-    POMDOG_ASSERT(sizeInBytes == static_cast<std::size_t>(bytesPerPixel * pixelWidth * pixelHeight));
-    MTLRegion region = MTLRegionMake2D(0, 0, pixelWidth, pixelHeight);
+    POMDOG_ASSERT(sizeInBytes == static_cast<std::size_t>(bytesPerPixel * pixelWidth_ * pixelHeight_));
+    MTLRegion region = MTLRegionMake2D(0, 0, pixelWidth_, pixelHeight_);
 
     // NOTE: Don't use getBytes() for textures with MTLResourceStorageModePrivate.
-    [texture getBytes:result bytesPerRow:(bytesPerPixel * pixelWidth) fromRegion:region mipmapLevel:0];
+    [texture_ getBytes:result bytesPerRow:(bytesPerPixel * pixelWidth_) fromRegion:region mipmapLevel:0];
 }
 
-id<MTLTexture> RenderTarget2DMetal::GetTexture() const noexcept
+id<MTLTexture> RenderTarget2DMetal::getTexture() const noexcept
 {
-    return texture;
+    return texture_;
 }
 
 } // namespace pomdog::gpu::detail::metal

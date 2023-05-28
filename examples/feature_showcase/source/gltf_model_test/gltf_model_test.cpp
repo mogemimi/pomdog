@@ -273,7 +273,7 @@ void GLTFModelTest::update()
     worldConstants.Projection = projectionMatrix;
     worldConstants.InverseView = math::invert(viewMatrix);
     worldConstants.LightDirection = Vector4{lightDirection, 0.0f};
-    worldConstantBuffer->SetData(0, gpu::MakeByteSpan(worldConstants));
+    worldConstantBuffer->setData(0, gpu::makeByteSpan(worldConstants));
 
     auto time = static_cast<float>(gameHost->getClock()->GetTotalGameTime().count());
     auto rotateY = math::TwoPi<float> * rotateSpeed * time;
@@ -295,7 +295,7 @@ void GLTFModelTest::update()
     modelConstants.Model = modelMatrix;
     modelConstants.Material = Vector4{metalness, 0.0f, 0.0f, 0.0f};
     modelConstants.Color = Vector4{1.0f, 1.0f, 1.0f, 1.0f};
-    modelConstantBuffer->SetData(0, gpu::MakeByteSpan(modelConstants));
+    modelConstantBuffer->setData(0, gpu::makeByteSpan(modelConstants));
 }
 
 void GLTFModelTest::draw()
@@ -328,7 +328,7 @@ void GLTFModelTest::draw()
         commandList->SetPipelineState(pipelineState1);
     }
     commandList->SetIndexBuffer(indexBuffer);
-    commandList->DrawIndexed(indexBuffer->GetIndexCount(), 0);
+    commandList->DrawIndexed(indexBuffer->getIndexCount(), 0);
     commandList->Close();
 
     constexpr bool isStandalone = false;

@@ -208,7 +208,7 @@ LoadTexture(
     POMDOG_ASSERT(image.PixelData != nullptr);
     POMDOG_ASSERT(image.ByteLength > 0);
 
-    texture->SetData(image.PixelData);
+    texture->setData(image.PixelData);
 
     return std::make_tuple(std::move(texture), nullptr);
 }

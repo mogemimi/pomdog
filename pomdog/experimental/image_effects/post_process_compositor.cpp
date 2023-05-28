@@ -80,7 +80,7 @@ void PostProcessCompositor::SetViewportSize(
         graphicsDevice,
         viewport.width,
         viewport.height,
-        renderTargets.front()->GetFormat(),
+        renderTargets.front()->getFormat(),
         depthFormat);
 }
 
@@ -121,7 +121,7 @@ void PostProcessCompositor::UpdateConstantBuffer()
     info.RcpFrame = Vector2{1.0f / viewport.width, 1.0f / viewport.height};
 
     POMDOG_ASSERT(constantBuffer);
-    constantBuffer->SetData(0, gpu::MakeByteSpan(info));
+    constantBuffer->setData(0, gpu::makeByteSpan(info));
 }
 
 void PostProcessCompositor::Composite(std::vector<std::shared_ptr<ImageEffectBase>>&& imageEffectsIn)

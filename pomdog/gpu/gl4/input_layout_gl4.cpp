@@ -475,15 +475,15 @@ void ApplyInputElements(
 
         POMDOG_ASSERT(vertexBuffer);
 
-        auto vertexBufferGL4 = dynamic_cast<VertexBufferGL4*>(vertexBuffer->GetBuffer());
+        auto vertexBufferGL4 = dynamic_cast<VertexBufferGL4*>(vertexBuffer->getBuffer());
         POMDOG_ASSERT(vertexBufferGL4 != nullptr);
 
         // NOTE: The following code is the same as
         // `glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer)`.
-        vertexBufferGL4->BindBuffer();
+        vertexBufferGL4->bindBuffer();
 
-        POMDOG_ASSERT(vertexBuffer->GetStrideBytes() > 0);
-        POMDOG_ASSERT(vertexBuffer->GetStrideBytes() <= static_cast<std::size_t>(std::numeric_limits<GLsizei>::max()));
+        POMDOG_ASSERT(vertexBuffer->getStrideBytes() > 0);
+        POMDOG_ASSERT(vertexBuffer->getStrideBytes() <= static_cast<std::size_t>(std::numeric_limits<GLsizei>::max()));
 
         const auto currentInputSlot = inputElement->inputSlot;
 
@@ -499,7 +499,7 @@ void ApplyInputElements(
                     inputElement->attributeLocation,
                     inputElement->components,
                     inputElement->scalarType.value,
-                    static_cast<GLsizei>(vertexBuffer->GetStrideBytes()),
+                    static_cast<GLsizei>(vertexBuffer->getStrideBytes()),
                     ComputeBufferOffset(inputElement->byteOffset + vertexOffset));
                 POMDOG_CHECK_ERROR_GL4("glVertexAttribIPointer");
             }
@@ -509,7 +509,7 @@ void ApplyInputElements(
                     inputElement->components,
                     inputElement->scalarType.value,
                     GL_FALSE,
-                    static_cast<GLsizei>(vertexBuffer->GetStrideBytes()),
+                    static_cast<GLsizei>(vertexBuffer->getStrideBytes()),
                     ComputeBufferOffset(inputElement->byteOffset + vertexOffset));
                 POMDOG_CHECK_ERROR_GL4("glVertexAttribPointer");
             }

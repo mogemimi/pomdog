@@ -30,25 +30,28 @@ public:
     ~ConstantBuffer();
 
     /// Sets constant buffer data.
-    void SetData(std::size_t offsetInBytes, std::span<const std::byte> source);
+    void setData(std::size_t offsetInBytes, std::span<const std::byte> source);
 
     /// Gets the size in bytes of this constant buffer.
-    [[nodiscard]] std::size_t GetSizeInBytes() const noexcept;
+    [[nodiscard]] std::size_t
+    getSizeInBytes() const noexcept;
 
     /// Gets the expected usage hint of this constant buffer.
-    [[nodiscard]] BufferUsage GetBufferUsage() const noexcept;
+    [[nodiscard]] BufferUsage
+    getBufferUsage() const noexcept;
 
     /// Gets the pointer of the native constant buffer resource.
-    [[nodiscard]] Buffer* GetBuffer();
+    [[nodiscard]] Buffer*
+    getBuffer();
 
 private:
-    std::unique_ptr<Buffer> nativeBuffer;
-    std::uint32_t sizeInBytes;
-    BufferUsage bufferUsage;
+    std::unique_ptr<Buffer> nativeBuffer_;
+    std::uint32_t sizeInBytes_;
+    BufferUsage bufferUsage_;
 };
 
 template <typename T>
-[[nodiscard]] std::span<const std::byte> MakeByteSpan(const T& data) noexcept
+[[nodiscard]] std::span<const std::byte> makeByteSpan(const T& data) noexcept
 {
     static_assert(std::is_trivially_copyable_v<T>, "You can only use plain-old-data types.");
     static_assert(std::is_standard_layout_v<T>, "You can only use plain-old-data types.");

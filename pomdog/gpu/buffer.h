@@ -18,12 +18,12 @@ public:
 
     virtual ~Buffer();
 
-    virtual void GetData(
+    virtual void getData(
         std::size_t offsetInBytes,
         void* destination,
         std::size_t sizeInBytes) const = 0;
 
-    virtual void SetData(
+    virtual void setData(
         std::size_t offsetInBytes,
         const void* source,
         std::size_t sizeInBytes) = 0;

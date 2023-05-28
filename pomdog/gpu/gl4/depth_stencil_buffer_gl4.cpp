@@ -10,7 +10,7 @@ namespace pomdog::gpu::detail::gl4 {
 namespace {
 
 [[nodiscard]] std::optional<GLenum>
-ToDepthStencilFormat(PixelFormat depthFormat) noexcept
+toDepthStencilFormat(PixelFormat depthFormat) noexcept
 {
     switch (depthFormat) {
     case PixelFormat::Depth16:
@@ -30,26 +30,26 @@ ToDepthStencilFormat(PixelFormat depthFormat) noexcept
 } // namespace
 
 std::unique_ptr<Error>
-DepthStencilBufferGL4::Initialize(
+DepthStencilBufferGL4::initialize(
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn,
     PixelFormat depthStencilFormatIn,
     std::int32_t multiSampleCount) noexcept
 {
-    pixelWidth = pixelWidthIn;
-    pixelHeight = pixelHeightIn;
-    depthStencilFormat = depthStencilFormatIn;
-    multiSampleEnabled = (multiSampleCount > 1);
+    pixelWidth_ = pixelWidthIn;
+    pixelHeight_ = pixelHeightIn;
+    depthStencilFormat_ = depthStencilFormatIn;
+    multiSampleEnabled_ = (multiSampleCount > 1);
 
-    const auto nativeFormat = ToDepthStencilFormat(depthStencilFormat);
+    const auto nativeFormat = toDepthStencilFormat(depthStencilFormat_);
 
     if (nativeFormat == std::nullopt) {
         return errors::make("this format not supported as a depth stencil format");
     }
 
-    POMDOG_ASSERT(renderBuffer == 0);
+    POMDOG_ASSERT(renderBuffer_ == 0);
 
-    glGenRenderbuffers(1, &renderBuffer);
+    glGenRenderbuffers(1, &renderBuffer_);
     if (auto err = gl4::GetLastError(); err != nullptr) {
         return errors::wrap(std::move(err), "glGenRenderbuffers() failed");
     }
@@ -57,19 +57,19 @@ DepthStencilBufferGL4::Initialize(
     GLint oldRenderBuffer = 0;
     glGetIntegerv(GL_RENDERBUFFER_BINDING, &oldRenderBuffer);
 
-    glBindRenderbuffer(GL_RENDERBUFFER, renderBuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, renderBuffer_);
     if (auto err = gl4::GetLastError(); err != nullptr) {
         return errors::wrap(std::move(err), "glBindRenderbuffer() failed");
     }
 
-    POMDOG_ASSERT(pixelWidth > 0);
-    POMDOG_ASSERT(pixelHeight > 0);
+    POMDOG_ASSERT(pixelWidth_ > 0);
+    POMDOG_ASSERT(pixelHeight_ > 0);
 
     glRenderbufferStorage(
         GL_RENDERBUFFER,
         *nativeFormat,
-        pixelWidth,
-        pixelHeight);
+        pixelWidth_,
+        pixelHeight_);
     if (auto err = gl4::GetLastError(); err != nullptr) {
         glBindRenderbuffer(GL_RENDERBUFFER, oldRenderBuffer);
         POMDOG_CHECK_ERROR_GL4("glBindRenderbuffer");
@@ -86,40 +86,40 @@ DepthStencilBufferGL4::Initialize(
 
 DepthStencilBufferGL4::~DepthStencilBufferGL4()
 {
-    if (renderBuffer != 0) {
-        glDeleteRenderbuffers(1, &renderBuffer);
+    if (renderBuffer_ != 0) {
+        glDeleteRenderbuffers(1, &renderBuffer_);
         POMDOG_CHECK_ERROR_GL4("glDeleteRenderbuffers");
-        renderBuffer = 0;
+        renderBuffer_ = 0;
     }
 }
 
-std::int32_t DepthStencilBufferGL4::GetWidth() const noexcept
+std::int32_t DepthStencilBufferGL4::getWidth() const noexcept
 {
-    return pixelWidth;
+    return pixelWidth_;
 }
 
-std::int32_t DepthStencilBufferGL4::GetHeight() const noexcept
+std::int32_t DepthStencilBufferGL4::getHeight() const noexcept
 {
-    return pixelHeight;
+    return pixelHeight_;
 }
 
-PixelFormat DepthStencilBufferGL4::GetFormat() const noexcept
+PixelFormat DepthStencilBufferGL4::getFormat() const noexcept
 {
-    return depthStencilFormat;
+    return depthStencilFormat_;
 }
 
-Rectangle DepthStencilBufferGL4::GetBounds() const noexcept
+Rectangle DepthStencilBufferGL4::getBounds() const noexcept
 {
-    return Rectangle{0, 0, pixelWidth, pixelHeight};
+    return Rectangle{0, 0, pixelWidth_, pixelHeight_};
 }
 
-void DepthStencilBufferGL4::BindToFramebuffer(GLuint frameBuffer) noexcept
+void DepthStencilBufferGL4::bindToFramebuffer(GLuint frameBuffer) noexcept
 {
-    POMDOG_ASSERT(renderBuffer != 0);
+    POMDOG_ASSERT(renderBuffer_ != 0);
 
     // NOTE: If stencilRenderBuffer is zero, glFramebufferRenderbuffer() will
     //       detach the stencil buffer from frame buffer.
-    const auto stencilRenderBuffer = hasStencil ? renderBuffer : 0;
+    const auto stencilRenderBuffer = hasStencil_ ? renderBuffer_ : 0;
 
 #if defined(POMDOG_PLATFORM_WIN32)
     // NOTE: OpenGL >= 4.5
@@ -127,7 +127,7 @@ void DepthStencilBufferGL4::BindToFramebuffer(GLuint frameBuffer) noexcept
         frameBuffer,
         GL_DEPTH_ATTACHMENT,
         GL_RENDERBUFFER,
-        renderBuffer);
+        renderBuffer_);
     POMDOG_CHECK_ERROR_GL4("glNamedFramebufferRenderbuffer(GL_DEPTH_ATTACHMENT)");
 
     glNamedFramebufferRenderbuffer(
@@ -148,7 +148,7 @@ void DepthStencilBufferGL4::BindToFramebuffer(GLuint frameBuffer) noexcept
         GL_FRAMEBUFFER,
         GL_DEPTH_ATTACHMENT,
         GL_RENDERBUFFER,
-        renderBuffer);
+        renderBuffer_);
     POMDOG_CHECK_ERROR_GL4("glFramebufferRenderbuffer(GL_DEPTH_ATTACHMENT)");
 
     glFramebufferRenderbuffer(

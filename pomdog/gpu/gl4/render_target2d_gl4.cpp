@@ -8,60 +8,60 @@
 namespace pomdog::gpu::detail::gl4 {
 
 std::unique_ptr<Error>
-RenderTarget2DGL4::Initialize(
+RenderTarget2DGL4::initialize(
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn,
     std::int32_t levelCountIn,
     PixelFormat formatIn,
     std::int32_t multiSampleCount) noexcept
 {
-    if (auto err = texture.Initialize(pixelWidthIn, pixelHeightIn, levelCountIn, formatIn); err != nullptr) {
+    if (auto err = texture_.initialize(pixelWidthIn, pixelHeightIn, levelCountIn, formatIn); err != nullptr) {
         return errors::wrap(std::move(err), "failed to initialize texture");
     }
 
-    pixelWidth = pixelWidthIn;
-    pixelHeight = pixelHeightIn;
-    levelCount = levelCountIn;
-    format = formatIn;
-    generateMipmap = (levelCountIn > 1);
-    multiSampleEnabled = (multiSampleCount > 1);
+    pixelWidth_ = pixelWidthIn;
+    pixelHeight_ = pixelHeightIn;
+    levelCount_ = levelCountIn;
+    format_ = formatIn;
+    generateMipmap_ = (levelCountIn > 1);
+    multiSampleEnabled_ = (multiSampleCount > 1);
 
     return nullptr;
 }
 
 RenderTarget2DGL4::~RenderTarget2DGL4() = default;
 
-std::int32_t RenderTarget2DGL4::GetWidth() const noexcept
+std::int32_t RenderTarget2DGL4::getWidth() const noexcept
 {
-    return pixelWidth;
+    return pixelWidth_;
 }
 
-std::int32_t RenderTarget2DGL4::GetHeight() const noexcept
+std::int32_t RenderTarget2DGL4::getHeight() const noexcept
 {
-    return pixelHeight;
+    return pixelHeight_;
 }
 
-std::int32_t RenderTarget2DGL4::GetLevelCount() const noexcept
+std::int32_t RenderTarget2DGL4::getLevelCount() const noexcept
 {
-    return levelCount;
+    return levelCount_;
 }
 
-PixelFormat RenderTarget2DGL4::GetFormat() const noexcept
+PixelFormat RenderTarget2DGL4::getFormat() const noexcept
 {
-    return format;
+    return format_;
 }
 
-Rectangle RenderTarget2DGL4::GetBounds() const noexcept
+Rectangle RenderTarget2DGL4::getBounds() const noexcept
 {
-    return Rectangle{0, 0, pixelWidth, pixelHeight};
+    return Rectangle{0, 0, pixelWidth_, pixelHeight_};
 }
 
-void RenderTarget2DGL4::GetData(void* result, std::size_t offsetInBytes, std::size_t sizeInBytes) const
+void RenderTarget2DGL4::getData(void* result, std::size_t offsetInBytes, std::size_t sizeInBytes) const
 {
-    texture.GetData(result, offsetInBytes, sizeInBytes);
+    texture_.getData(result, offsetInBytes, sizeInBytes);
 }
 
-void RenderTarget2DGL4::BindToFramebuffer(GLuint frameBuffer, GLenum attachmentPoint)
+void RenderTarget2DGL4::bindToFramebuffer(GLuint frameBuffer, GLenum attachmentPoint)
 {
     constexpr GLint attachedMipmapLevel = 0;
 
@@ -70,11 +70,11 @@ void RenderTarget2DGL4::BindToFramebuffer(GLuint frameBuffer, GLenum attachmentP
     glNamedFramebufferTexture(
         frameBuffer,
         attachmentPoint,
-        texture.GetTextureHandle().value,
+        texture_.getTextureHandle().value,
         attachedMipmapLevel);
     POMDOG_CHECK_ERROR_GL4("glNamedFramebufferTexture");
 #else
-    const GLenum textureTarget = (multiSampleEnabled
+    const GLenum textureTarget = (multiSampleEnabled_
                                       ? GL_TEXTURE_2D_MULTISAMPLE
                                       : GL_TEXTURE_2D);
 
@@ -89,7 +89,7 @@ void RenderTarget2DGL4::BindToFramebuffer(GLuint frameBuffer, GLenum attachmentP
         GL_FRAMEBUFFER,
         attachmentPoint,
         textureTarget,
-        texture.GetTextureHandle().value,
+        texture_.getTextureHandle().value,
         attachedMipmapLevel);
     POMDOG_CHECK_ERROR_GL4("glFramebufferTexture2D");
 
@@ -98,7 +98,7 @@ void RenderTarget2DGL4::BindToFramebuffer(GLuint frameBuffer, GLenum attachmentP
 #endif
 }
 
-void RenderTarget2DGL4::UnbindFromFramebuffer(GLuint frameBuffer, GLenum attachmentPoint)
+void RenderTarget2DGL4::unbindFromFramebuffer(GLuint frameBuffer, GLenum attachmentPoint)
 {
     constexpr GLint attachedMipmapLevel = 0;
 
@@ -111,7 +111,7 @@ void RenderTarget2DGL4::UnbindFromFramebuffer(GLuint frameBuffer, GLenum attachm
         attachedMipmapLevel);
     POMDOG_CHECK_ERROR_GL4("glNamedFramebufferTexture");
 #else
-    const GLenum textureTarget = (multiSampleEnabled
+    const GLenum textureTarget = (multiSampleEnabled_
                                       ? GL_TEXTURE_2D_MULTISAMPLE
                                       : GL_TEXTURE_2D);
 
@@ -134,14 +134,14 @@ void RenderTarget2DGL4::UnbindFromFramebuffer(GLuint frameBuffer, GLenum attachm
     POMDOG_CHECK_ERROR_GL4("glBindFramebuffer");
 #endif
 
-    if (generateMipmap) {
-        texture.GenerateMipmap();
+    if (generateMipmap_) {
+        texture_.generateMipmap();
     }
 }
 
-Texture2DObjectGL4 RenderTarget2DGL4::GetTextureHandle() const noexcept
+Texture2DObjectGL4 RenderTarget2DGL4::getTextureHandle() const noexcept
 {
-    return texture.GetTextureHandle();
+    return texture_.getTextureHandle();
 }
 
 } // namespace pomdog::gpu::detail::gl4

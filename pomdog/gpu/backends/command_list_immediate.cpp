@@ -408,13 +408,13 @@ void CommandListImmediate::SetConstantBuffer(
     POMDOG_ASSERT(constantBuffer);
     static_assert(std::is_unsigned_v<decltype(offset)>, "offset >= 0");
 
-    std::shared_ptr<Buffer> nativeBuffer{constantBuffer, constantBuffer->GetBuffer()};
+    std::shared_ptr<Buffer> nativeBuffer{constantBuffer, constantBuffer->getBuffer()};
 
     auto command = PlacementNew<SetConstantBufferCommand>(allocator_);
     command->constantBuffer = nativeBuffer;
     command->slotIndex = static_cast<std::uint32_t>(index);
     command->offset = static_cast<std::uint32_t>(offset);
-    command->sizeInBytes = static_cast<std::uint32_t>(constantBuffer->GetSizeInBytes() - offset);
+    command->sizeInBytes = static_cast<std::uint32_t>(constantBuffer->getSizeInBytes() - offset);
     renderPassCommands_.push_back(std::move(command));
 }
 

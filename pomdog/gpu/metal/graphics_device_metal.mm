@@ -82,7 +82,7 @@ GraphicsDeviceMetal::CreateVertexBuffer(
     const auto sizeInBytes = vertexCount * strideBytes;
 
     auto nativeBuffer = std::make_unique<BufferMetal>();
-    if (auto err = nativeBuffer->Initialize(
+    if (auto err = nativeBuffer->initialize(
             frameCounter_,
             device,
             vertices,
@@ -114,7 +114,7 @@ GraphicsDeviceMetal::CreateVertexBuffer(
     const auto sizeInBytes = vertexCount * strideBytes;
 
     auto nativeBuffer = std::make_unique<BufferMetal>();
-    if (auto err = nativeBuffer->Initialize(
+    if (auto err = nativeBuffer->initialize(
             frameCounter_,
             device,
             sizeInBytes,
@@ -143,7 +143,7 @@ GraphicsDeviceMetal::CreateIndexBuffer(
     const auto sizeInBytes = indexCount * detail::BufferHelper::ToIndexElementOffsetBytes(elementSize);
 
     auto nativeBuffer = std::make_unique<BufferMetal>();
-    if (auto err = nativeBuffer->Initialize(
+    if (auto err = nativeBuffer->initialize(
             frameCounter_,
             device,
             indices,
@@ -173,7 +173,7 @@ GraphicsDeviceMetal::CreateIndexBuffer(
     const auto sizeInBytes = indexCount * detail::BufferHelper::ToIndexElementOffsetBytes(elementSize);
 
     auto nativeBuffer = std::make_unique<BufferMetal>();
-    if (auto err = nativeBuffer->Initialize(
+    if (auto err = nativeBuffer->initialize(
             frameCounter_,
             device,
             sizeInBytes,
@@ -199,7 +199,7 @@ GraphicsDeviceMetal::CreateConstantBuffer(
     POMDOG_ASSERT(frameCounter_ != nullptr);
 
     auto nativeBuffer = std::make_unique<BufferMetal>();
-    if (auto err = nativeBuffer->Initialize(
+    if (auto err = nativeBuffer->initialize(
             frameCounter_,
             device,
             sourceData,
@@ -226,7 +226,7 @@ GraphicsDeviceMetal::CreateConstantBuffer(
     POMDOG_ASSERT(frameCounter_ != nullptr);
 
     auto nativeBuffer = std::make_unique<BufferMetal>();
-    if (auto err = nativeBuffer->Initialize(
+    if (auto err = nativeBuffer->initialize(
             frameCounter_,
             device,
             sizeInBytes,
@@ -318,7 +318,7 @@ GraphicsDeviceMetal::CreateRenderTarget2D(
     constexpr int multiSampleCount = 1;
 
     auto renderTarget = std::make_shared<RenderTarget2DMetal>();
-    if (auto err = renderTarget->Initialize(
+    if (auto err = renderTarget->initialize(
             device,
             width,
             height,
@@ -345,7 +345,7 @@ GraphicsDeviceMetal::CreateDepthStencilBuffer(
     constexpr int multiSampleCount = 1;
 
     auto depthStencilBuffer = std::make_shared<DepthStencilBufferMetal>();
-    if (auto err = depthStencilBuffer->Initialize(
+    if (auto err = depthStencilBuffer->initialize(
             device,
             width,
             height,
@@ -396,7 +396,7 @@ GraphicsDeviceMetal::CreateTexture2D(
                                 : 1;
 
     auto texture = std::make_shared<Texture2DMetal>();
-    if (auto err = texture->Initialize(
+    if (auto err = texture->initialize(
             device,
             width,
             height,

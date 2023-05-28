@@ -194,7 +194,7 @@ void SpriteFont::Impl::PrepareFonts(const std::string& text)
     auto fetchTextureData = [&] {
         if (needToFetchPixelData) {
             auto texture = textures.back();
-            texture->SetData(pixelData.data());
+            texture->setData(pixelData.data());
             needToFetchPixelData = false;
         }
     };

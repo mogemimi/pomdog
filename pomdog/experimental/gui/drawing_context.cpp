@@ -198,7 +198,7 @@ DrawingContext::DrawingContext(
         result.Image->GetHeight(),
         false,
         PixelFormat::R8G8B8A8_UNorm));
-    iconTexture->SetData(result.Image->GetData());
+    iconTexture->setData(result.Image->GetData());
 
     iconTextureAtlas = std::move(result.Atlas);
 }

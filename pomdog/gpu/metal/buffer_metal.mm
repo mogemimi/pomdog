@@ -12,7 +12,8 @@
 namespace pomdog::gpu::detail::metal {
 namespace {
 
-MTLResourceOptions ToResourceOptions(BufferUsage bufferUsage) noexcept
+[[nodiscard]] MTLResourceOptions
+toResourceOptions(BufferUsage bufferUsage) noexcept
 {
     switch (bufferUsage) {
     case BufferUsage::Immutable:
@@ -23,7 +24,8 @@ MTLResourceOptions ToResourceOptions(BufferUsage bufferUsage) noexcept
     POMDOG_UNREACHABLE("Unsupported buffer usage");
 }
 
-std::size_t ComputeAlignedSize(std::size_t sizeInBytes, BufferBindMode bindMode)
+[[nodiscard]] std::size_t
+computeAlignedSize(std::size_t sizeInBytes, BufferBindMode bindMode)
 {
     if (bindMode != BufferBindMode::ConstantBuffer) {
         return sizeInBytes;
@@ -52,7 +54,7 @@ std::size_t ComputeAlignedSize(std::size_t sizeInBytes, BufferBindMode bindMode)
 } // namespace
 
 std::unique_ptr<Error>
-BufferMetal::Initialize(
+BufferMetal::initialize(
     std::shared_ptr<const FrameCounter> frameCounter,
     id<MTLDevice> device,
     std::size_t sizeInBytes,
@@ -73,8 +75,8 @@ BufferMetal::Initialize(
     POMDOG_ASSERT(buffers_.size() == buffers_.capacity());
 
     for (auto& nativeBuffer : buffers_) {
-        const auto alignedSize = ComputeAlignedSize(sizeInBytes, bindMode);
-        nativeBuffer = [device newBufferWithLength:alignedSize options:ToResourceOptions(bufferUsage)];
+        const auto alignedSize = computeAlignedSize(sizeInBytes, bindMode);
+        nativeBuffer = [device newBufferWithLength:alignedSize options:toResourceOptions(bufferUsage)];
         if (nativeBuffer == nullptr) {
             return errors::make("failed to create MTLBuffer");
         }
@@ -86,7 +88,7 @@ BufferMetal::Initialize(
 }
 
 std::unique_ptr<Error>
-BufferMetal::Initialize(
+BufferMetal::initialize(
     std::shared_ptr<const FrameCounter> frameCounter,
     id<MTLDevice> device,
     const void* vertices,
@@ -108,8 +110,8 @@ BufferMetal::Initialize(
     POMDOG_ASSERT(buffers_.size() == buffers_.capacity());
 
     for (auto& nativeBuffer : buffers_) {
-        const auto alignedSize = ComputeAlignedSize(sizeInBytes, bindMode);
-        nativeBuffer = [device newBufferWithLength:alignedSize options:ToResourceOptions(bufferUsage)];
+        const auto alignedSize = computeAlignedSize(sizeInBytes, bindMode);
+        nativeBuffer = [device newBufferWithLength:alignedSize options:toResourceOptions(bufferUsage)];
         if (nativeBuffer == nullptr) {
             return errors::make("failed to create MTLBuffer");
         }
@@ -124,7 +126,7 @@ BufferMetal::Initialize(
     return nullptr;
 }
 
-void BufferMetal::GetData(
+void BufferMetal::getData(
     std::size_t offsetInBytes,
     void* destination,
     std::size_t sizeInBytes) const
@@ -138,7 +140,7 @@ void BufferMetal::GetData(
     std::memcpy(destination, source + offsetInBytes, sizeInBytes);
 }
 
-void BufferMetal::SetData(
+void BufferMetal::setData(
     std::size_t offsetInBytes,
     const void* source,
     std::size_t sizeInBytes)
@@ -153,7 +155,7 @@ void BufferMetal::SetData(
     std::memcpy(destination + offsetInBytes, source, sizeInBytes);
 }
 
-id<MTLBuffer> BufferMetal::GetBuffer() const noexcept
+id<MTLBuffer> BufferMetal::getBuffer() const noexcept
 {
     POMDOG_ASSERT(frameCounter_ != nullptr);
     const auto bufferIndex = frameCounter_->GetCurrentIndex() % static_cast<std::uint32_t>(buffers_.size());

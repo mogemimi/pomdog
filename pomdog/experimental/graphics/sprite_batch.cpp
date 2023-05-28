@@ -348,7 +348,7 @@ void SpriteBatch::Impl::Begin(
         constants.DistanceFieldParameters.y = 0.65f;
     }
 
-    constantBuffer->SetData(0, gpu::MakeByteSpan(constants));
+    constantBuffer->setData(0, gpu::makeByteSpan(constants));
 
     startInstanceLocation = 0;
     drawCallCount = 0;
@@ -393,7 +393,7 @@ void SpriteBatch::Impl::RenderBatch(
 
     POMDOG_ASSERT(sprites.size() <= MaxBatchSize);
     const auto instanceOffsetBytes = sizeof(SpriteInfo) * startInstanceLocation;
-    instanceVertices->SetData(
+    instanceVertices->setData(
         instanceOffsetBytes,
         sprites.data(),
         sprites.size(),
@@ -414,7 +414,7 @@ void SpriteBatch::Impl::RenderBatch(
     commandList->SetIndexBuffer(planeIndices);
 
     commandList->DrawIndexedInstanced(
-        planeIndices->GetIndexCount(),
+        planeIndices->getIndexCount(),
         sprites.size(),
         0,
         startInstanceLocation);
@@ -645,7 +645,7 @@ void SpriteBatch::Draw(
 {
     POMDOG_ASSERT(impl);
     constexpr float layerDepth = 0.0f;
-    const Rectangle sourceRect = {0, 0, texture->GetWidth(), texture->GetHeight()};
+    const Rectangle sourceRect = {0, 0, texture->getWidth(), texture->getHeight()};
     impl->Draw(texture, position, sourceRect, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, layerDepth);
 }
 
@@ -735,7 +735,7 @@ void SpriteBatch::Draw(
 {
     POMDOG_ASSERT(impl);
     constexpr float layerDepth = 0.0f;
-    const Rectangle sourceRect = {0, 0, texture->GetWidth(), texture->GetHeight()};
+    const Rectangle sourceRect = {0, 0, texture->getWidth(), texture->getHeight()};
     impl->Draw(texture, position, sourceRect, color, 0, {0.5f, 0.5f}, {1.0f, 1.0f}, layerDepth);
 }
 

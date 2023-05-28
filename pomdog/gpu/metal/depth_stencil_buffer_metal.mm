@@ -11,33 +11,33 @@
 namespace pomdog::gpu::detail::metal {
 
 std::unique_ptr<Error>
-DepthStencilBufferMetal::Initialize(
+DepthStencilBufferMetal::initialize(
     id<MTLDevice> device,
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn,
     PixelFormat depthStencilFormatIn,
     std::int32_t multiSampleCount) noexcept
 {
-    pixelWidth = pixelWidthIn;
-    pixelHeight = pixelHeightIn;
-    depthStencilFormat = depthStencilFormatIn;
-    multiSampleEnabled = (multiSampleCount > 1);
+    pixelWidth_ = pixelWidthIn;
+    pixelHeight_ = pixelHeightIn;
+    depthStencilFormat_ = depthStencilFormatIn;
+    multiSampleEnabled_ = (multiSampleCount > 1);
 
     POMDOG_ASSERT(device != nullptr);
 
-    if ((depthStencilFormat == PixelFormat::Depth24Stencil8) && !device.isDepth24Stencil8PixelFormatSupported) {
+    if ((depthStencilFormat_ == PixelFormat::Depth24Stencil8) && !device.isDepth24Stencil8PixelFormatSupported) {
         // NOTE: MTLPixelFormatDepth24Unorm_Stencil8 is only supported in certain devices.
         return errors::make("This device does not support MTLPixelFormatDepth24Unorm_Stencil8.");
     }
 
-    if (depthStencilFormat == PixelFormat::Invalid) {
+    if (depthStencilFormat_ == PixelFormat::Invalid) {
         return errors::make("depthStencilFormat must be != PixelFormat::None");
     }
 
     MTLTextureDescriptor* descriptor = [MTLTextureDescriptor
-        texture2DDescriptorWithPixelFormat:ToPixelFormat(depthStencilFormat)
-                                     width:pixelWidth
-                                    height:pixelHeight
+        texture2DDescriptorWithPixelFormat:ToPixelFormat(depthStencilFormat_)
+                                     width:pixelWidth_
+                                    height:pixelHeight_
                                  mipmapped:NO];
 
     MTLResourceOptions resourceOptions = 0;
@@ -46,37 +46,37 @@ DepthStencilBufferMetal::Initialize(
     [descriptor setUsage:MTLTextureUsageRenderTarget];
     [descriptor setResourceOptions:resourceOptions];
 
-    depthStencilTexture = [device newTextureWithDescriptor:descriptor];
-    if (depthStencilTexture == nullptr) {
+    depthStencilTexture_ = [device newTextureWithDescriptor:descriptor];
+    if (depthStencilTexture_ == nullptr) {
         return errors::make("failed to create MTLTexture");
     }
 
     return nullptr;
 }
 
-std::int32_t DepthStencilBufferMetal::GetWidth() const noexcept
+std::int32_t DepthStencilBufferMetal::getWidth() const noexcept
 {
-    return pixelWidth;
+    return pixelWidth_;
 }
 
-std::int32_t DepthStencilBufferMetal::GetHeight() const noexcept
+std::int32_t DepthStencilBufferMetal::getHeight() const noexcept
 {
-    return pixelHeight;
+    return pixelHeight_;
 }
 
-PixelFormat DepthStencilBufferMetal::GetFormat() const noexcept
+PixelFormat DepthStencilBufferMetal::getFormat() const noexcept
 {
-    return depthStencilFormat;
+    return depthStencilFormat_;
 }
 
-Rectangle DepthStencilBufferMetal::GetBounds() const noexcept
+Rectangle DepthStencilBufferMetal::getBounds() const noexcept
 {
-    return Rectangle{0, 0, pixelWidth, pixelHeight};
+    return Rectangle{0, 0, pixelWidth_, pixelHeight_};
 }
 
-id<MTLTexture> DepthStencilBufferMetal::GetTexture() const noexcept
+id<MTLTexture> DepthStencilBufferMetal::getTexture() const noexcept
 {
-    return depthStencilTexture;
+    return depthStencilTexture_;
 }
 
 } // namespace pomdog::gpu::detail::metal

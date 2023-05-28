@@ -23,7 +23,7 @@ namespace pomdog::gpu::detail::metal {
 class BufferMetal final : public Buffer {
 public:
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(
+    initialize(
         std::shared_ptr<const FrameCounter> frameCounter,
         id<MTLDevice> device,
         std::size_t sizeInBytes,
@@ -31,7 +31,7 @@ public:
         BufferBindMode bindMode) noexcept;
 
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(
+    initialize(
         std::shared_ptr<const FrameCounter> frameCounter,
         id<MTLDevice> device,
         const void* vertices,
@@ -39,18 +39,18 @@ public:
         BufferUsage bufferUsage,
         BufferBindMode bindMode) noexcept;
 
-    void GetData(
+    void getData(
         std::size_t offsetInBytes,
         void* destination,
         std::size_t sizeInBytes) const override;
 
-    void SetData(
+    void setData(
         std::size_t offsetInBytes,
         const void* source,
         std::size_t sizeInBytes) override;
 
     /// Gets the pointer of the native buffer.
-    [[nodiscard]] id<MTLBuffer> GetBuffer() const noexcept;
+    [[nodiscard]] id<MTLBuffer> getBuffer() const noexcept;
 
 private:
     std::vector<id<MTLBuffer>> buffers_;

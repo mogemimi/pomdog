@@ -59,7 +59,7 @@ ScreenQuad::ScreenQuad(const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevic
 void ScreenQuad::DrawQuad(gpu::CommandList& commandList)
 {
     commandList.SetVertexBuffer(0, vertexBuffer);
-    commandList.Draw(vertexBuffer->GetVertexCount(), 0);
+    commandList.Draw(vertexBuffer->getVertexCount(), 0);
 }
 
 } // namespace pomdog

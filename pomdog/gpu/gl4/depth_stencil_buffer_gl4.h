@@ -22,33 +22,33 @@ public:
     ~DepthStencilBufferGL4() override;
 
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(
+    initialize(
         std::int32_t pixelWidth,
         std::int32_t pixelHeight,
         PixelFormat depthStencilFormat,
         std::int32_t multiSampleCount) noexcept;
 
     /// Gets the width of the texture data, in pixels.
-    std::int32_t GetWidth() const noexcept override;
+    std::int32_t getWidth() const noexcept override;
 
     /// Gets the height of the texture data, in pixels.
-    std::int32_t GetHeight() const noexcept override;
+    std::int32_t getHeight() const noexcept override;
 
     /// Gets the format of the pixel data in the depth-stencil buffer.
-    PixelFormat GetFormat() const noexcept override;
+    PixelFormat getFormat() const noexcept override;
 
     /// Gets the size of the texture resource.
-    Rectangle GetBounds() const noexcept override;
+    Rectangle getBounds() const noexcept override;
 
-    void BindToFramebuffer(GLuint frameBuffer) noexcept;
+    void bindToFramebuffer(GLuint frameBuffer) noexcept;
 
 private:
-    GLuint renderBuffer = 0;
-    std::int32_t pixelWidth = 0;
-    std::int32_t pixelHeight = 0;
-    PixelFormat depthStencilFormat = PixelFormat::Invalid;
-    bool multiSampleEnabled = false;
-    bool hasStencil = false;
+    GLuint renderBuffer_ = 0;
+    std::int32_t pixelWidth_ = 0;
+    std::int32_t pixelHeight_ = 0;
+    PixelFormat depthStencilFormat_ = PixelFormat::Invalid;
+    bool multiSampleEnabled_ = false;
+    bool hasStencil_ = false;
 };
 
 } // namespace pomdog::gpu::detail::gl4

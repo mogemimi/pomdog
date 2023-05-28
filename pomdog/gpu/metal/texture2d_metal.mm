@@ -12,7 +12,7 @@
 namespace pomdog::gpu::detail::metal {
 
 std::unique_ptr<Error>
-Texture2DMetal::Initialize(
+Texture2DMetal::initialize(
     id<MTLDevice> device,
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn,
@@ -21,68 +21,68 @@ Texture2DMetal::Initialize(
 {
     POMDOG_ASSERT(device != nullptr);
 
-    texture = nullptr;
-    pixelWidth = pixelWidthIn;
-    pixelHeight = pixelHeightIn;
-    levelCount = levelCountIn;
-    format = formatIn;
+    texture_ = nullptr;
+    pixelWidth_ = pixelWidthIn;
+    pixelHeight_ = pixelHeightIn;
+    levelCount_ = levelCountIn;
+    format_ = formatIn;
 
-    POMDOG_ASSERT(pixelWidth > 0);
-    POMDOG_ASSERT(pixelHeight > 0);
-    POMDOG_ASSERT(levelCount >= 1);
+    POMDOG_ASSERT(pixelWidth_ > 0);
+    POMDOG_ASSERT(pixelHeight_ > 0);
+    POMDOG_ASSERT(levelCount_ >= 1);
 
     MTLTextureDescriptor* descriptor = [MTLTextureDescriptor
-        texture2DDescriptorWithPixelFormat:ToPixelFormat(format)
-                                     width:pixelWidth
-                                    height:pixelHeight
-                                 mipmapped:(levelCount > 1 ? YES : NO)];
+        texture2DDescriptorWithPixelFormat:ToPixelFormat(format_)
+                                     width:pixelWidth_
+                                    height:pixelHeight_
+                                 mipmapped:(levelCount_ > 1 ? YES : NO)];
 
-    texture = [device newTextureWithDescriptor:descriptor];
-    if (texture == nullptr) {
+    texture_ = [device newTextureWithDescriptor:descriptor];
+    if (texture_ == nullptr) {
         return errors::make("failed to create MTLTexture");
     }
     return nullptr;
 }
 
-std::int32_t Texture2DMetal::GetWidth() const noexcept
+std::int32_t Texture2DMetal::getWidth() const noexcept
 {
-    return pixelWidth;
+    return pixelWidth_;
 }
 
-std::int32_t Texture2DMetal::GetHeight() const noexcept
+std::int32_t Texture2DMetal::getHeight() const noexcept
 {
-    return pixelHeight;
+    return pixelHeight_;
 }
 
-std::int32_t Texture2DMetal::GetLevelCount() const noexcept
+std::int32_t Texture2DMetal::getLevelCount() const noexcept
 {
-    return levelCount;
+    return levelCount_;
 }
 
-PixelFormat Texture2DMetal::GetFormat() const noexcept
+PixelFormat Texture2DMetal::getFormat() const noexcept
 {
-    return format;
+    return format_;
 }
 
-void Texture2DMetal::SetData(const void* pixelData)
+void Texture2DMetal::setData(const void* pixelData)
 {
-    POMDOG_ASSERT(texture != nullptr);
-    POMDOG_ASSERT(pixelWidth > 0);
-    POMDOG_ASSERT(pixelHeight > 0);
-    POMDOG_ASSERT(levelCount >= 1);
+    POMDOG_ASSERT(texture_ != nullptr);
+    POMDOG_ASSERT(pixelWidth_ > 0);
+    POMDOG_ASSERT(pixelHeight_ > 0);
+    POMDOG_ASSERT(levelCount_ >= 1);
     POMDOG_ASSERT(pixelData != nullptr);
 
-    auto const bytesPerPixel = SurfaceFormatHelper::ToBytesPerBlock(format);
+    auto const bytesPerPixel = SurfaceFormatHelper::ToBytesPerBlock(format_);
 
-    auto mipmapWidth = pixelWidth;
-    auto mipmapHeight = pixelHeight;
+    auto mipmapWidth = pixelWidth_;
+    auto mipmapHeight = pixelHeight_;
     std::size_t startOffset = 0;
 
-    for (int mipmapLevel = 0; mipmapLevel < levelCount; ++mipmapLevel) {
+    for (int mipmapLevel = 0; mipmapLevel < levelCount_; ++mipmapLevel) {
         MTLRegion region = MTLRegionMake2D(0, 0, mipmapWidth, mipmapHeight);
 
         auto bytesPerRow = mipmapWidth * bytesPerPixel;
-        switch (format) {
+        switch (format_) {
         case PixelFormat::BlockComp1_UNorm:
             bytesPerRow = 8 * (std::max(mipmapWidth, 4) / 4);
             break;
@@ -94,13 +94,13 @@ void Texture2DMetal::SetData(const void* pixelData)
             break;
         }
 
-        [texture replaceRegion:region
-                   mipmapLevel:mipmapLevel
-                     withBytes:reinterpret_cast<const std::uint8_t*>(pixelData) + startOffset
-                   bytesPerRow:bytesPerRow];
+        [texture_ replaceRegion:region
+                    mipmapLevel:mipmapLevel
+                      withBytes:reinterpret_cast<const std::uint8_t*>(pixelData) + startOffset
+                    bytesPerRow:bytesPerRow];
 
         auto strideBytesPerMipmap = mipmapWidth * mipmapHeight * bytesPerPixel;
-        switch (format) {
+        switch (format_) {
         case PixelFormat::BlockComp1_UNorm:
         case PixelFormat::BlockComp2_UNorm:
         case PixelFormat::BlockComp3_UNorm:
@@ -116,9 +116,9 @@ void Texture2DMetal::SetData(const void* pixelData)
     }
 }
 
-id<MTLTexture> Texture2DMetal::GetTexture() const noexcept
+id<MTLTexture> Texture2DMetal::getTexture() const noexcept
 {
-    return texture;
+    return texture_;
 }
 
 } // namespace pomdog::gpu::detail::metal

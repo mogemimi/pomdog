@@ -24,34 +24,34 @@ public:
     ~BufferGL4() override;
 
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(
+    initialize(
         std::size_t sizeInBytes,
         BufferUsage bufferUsage) noexcept;
 
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(
+    initialize(
         const void* sourceData,
         std::size_t sizeInBytes,
         BufferUsage bufferUsage) noexcept;
 
-    void GetData(
+    void getData(
         std::size_t offsetInBytes,
         void* destination,
         std::size_t sizeInBytes) const override;
 
-    void SetData(
+    void setData(
         std::size_t offsetInBytes,
         const void* source,
         std::size_t sizeInBytes) override;
 
-    void BindBuffer();
+    void bindBuffer();
 
     /// Gets the pointer of the native buffer.
-    [[nodiscard]] GLuint GetBuffer() const noexcept;
+    [[nodiscard]] GLuint getBuffer() const noexcept;
 
 private:
     using BufferObject = BufferObjectGL4<Tag>;
-    std::optional<BufferObjectGL4<Tag>> bufferObject;
+    std::optional<BufferObjectGL4<Tag>> bufferObject_;
 };
 
 using ConstantBufferGL4 = BufferGL4<ConstantBuffer>;

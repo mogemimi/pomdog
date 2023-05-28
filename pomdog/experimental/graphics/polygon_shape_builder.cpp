@@ -49,7 +49,7 @@ const PrimitiveBatchVertex* PolygonShapeBuilder::GetData() const noexcept
     return vertices.data();
 }
 
-std::size_t PolygonShapeBuilder::GetVertexCount() const noexcept
+std::size_t PolygonShapeBuilder::getVertexCount() const noexcept
 {
     return vertices.size();
 }

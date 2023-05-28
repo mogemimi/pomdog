@@ -164,7 +164,7 @@ std::unique_ptr<Error> HardwareInstancingTest::initialize()
             return;
         }
 
-        if (sprites.size() >= instanceBuffer->GetVertexCount()) {
+        if (sprites.size() >= instanceBuffer->getVertexCount()) {
             return;
         }
 
@@ -217,10 +217,10 @@ void HardwareInstancingTest::draw()
     auto viewProjection = viewMatrix * projectionMatrix;
 
     // NOTE: Update constant buffer
-    constantBuffer->SetData(0, gpu::MakeByteSpan(viewProjection));
+    constantBuffer->setData(0, gpu::makeByteSpan(viewProjection));
 
     // NOTE: Update instance buffer
-    instanceBuffer->SetData(sprites.data(), sprites.size());
+    instanceBuffer->setData(sprites.data(), sprites.size());
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
@@ -240,7 +240,7 @@ void HardwareInstancingTest::draw()
     commandList->SetVertexBuffer(0, vertexBuffer);
     commandList->SetVertexBuffer(1, instanceBuffer);
     commandList->SetIndexBuffer(indexBuffer);
-    commandList->DrawIndexedInstanced(indexBuffer->GetIndexCount(), sprites.size(), 0, 0);
+    commandList->DrawIndexedInstanced(indexBuffer->getIndexCount(), sprites.size(), 0, 0);
     commandList->Close();
 
     constexpr bool isStandalone = false;

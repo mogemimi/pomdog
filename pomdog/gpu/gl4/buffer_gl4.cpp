@@ -18,7 +18,7 @@ using pomdog::detail::ScopeGuard;
 namespace pomdog::gpu::detail::gl4 {
 namespace {
 
-GLenum ToBufferUsage(BufferUsage bufferUsage) noexcept
+[[nodiscard]] GLenum toBufferUsage(BufferUsage bufferUsage) noexcept
 {
     switch (bufferUsage) {
     case BufferUsage::Dynamic:
@@ -69,15 +69,15 @@ struct TypesafeHelperGL4::Traits<BufferObjectGL4<VertexBuffer>> {
 
 template <class Tag>
 std::unique_ptr<Error>
-BufferGL4<Tag>::Initialize(std::size_t sizeInBytes, BufferUsage bufferUsage) noexcept
+BufferGL4<Tag>::initialize(std::size_t sizeInBytes, BufferUsage bufferUsage) noexcept
 {
     POMDOG_ASSERT(bufferUsage != BufferUsage::Immutable);
-    return Initialize(nullptr, sizeInBytes, bufferUsage);
+    return initialize(nullptr, sizeInBytes, bufferUsage);
 }
 
 template <class Tag>
 std::unique_ptr<Error>
-BufferGL4<Tag>::Initialize(
+BufferGL4<Tag>::initialize(
     const void* sourceData,
     std::size_t sizeInBytes,
     BufferUsage bufferUsage) noexcept
@@ -87,7 +87,7 @@ BufferGL4<Tag>::Initialize(
                       : true);
 
     // Generate new buffer
-    bufferObject = ([] {
+    bufferObject_ = ([] {
         BufferObject buffer;
         glGenBuffers(1, buffer.Data());
         return buffer;
@@ -97,15 +97,16 @@ BufferGL4<Tag>::Initialize(
     auto const oldBuffer = TypesafeHelperGL4::Get<BufferObject>();
     ScopeGuard scope([&] { TypesafeHelperGL4::BindBuffer(oldBuffer); });
 
-    POMDOG_ASSERT(bufferObject);
-    TypesafeHelperGL4::BindBuffer(*bufferObject);
+    POMDOG_ASSERT(bufferObject_);
+    TypesafeHelperGL4::BindBuffer(*bufferObject_);
     POMDOG_CHECK_ERROR_GL4("glBindBuffer");
 
     POMDOG_ASSERT(sizeInBytes > 0);
-    glBufferData(BufferTraits<Tag>::Buffer,
+    glBufferData(
+        BufferTraits<Tag>::Buffer,
         sizeInBytes,
         sourceData,
-        ToBufferUsage(bufferUsage));
+        toBufferUsage(bufferUsage));
     POMDOG_CHECK_ERROR_GL4("glBufferData");
 
     return nullptr;
@@ -114,14 +115,14 @@ BufferGL4<Tag>::Initialize(
 template <class Tag>
 BufferGL4<Tag>::~BufferGL4()
 {
-    if (bufferObject) {
-        glDeleteBuffers(1, bufferObject->Data());
+    if (bufferObject_) {
+        glDeleteBuffers(1, bufferObject_->Data());
         POMDOG_CHECK_ERROR_GL4("glDeleteBuffers");
     }
 }
 
 template <class Tag>
-void BufferGL4<Tag>::GetData(
+void BufferGL4<Tag>::getData(
     std::size_t offsetInBytes,
     void* destination,
     std::size_t sizeInBytes) const
@@ -132,26 +133,31 @@ void BufferGL4<Tag>::GetData(
     auto const oldBuffer = TypesafeHelperGL4::Get<BufferObject>();
     ScopeGuard scope([&] { TypesafeHelperGL4::BindBuffer(oldBuffer); });
 
-    POMDOG_ASSERT(bufferObject);
-    TypesafeHelperGL4::BindBuffer(*bufferObject);
+    POMDOG_ASSERT(bufferObject_);
+    TypesafeHelperGL4::BindBuffer(*bufferObject_);
     POMDOG_CHECK_ERROR_GL4("glBindBuffer");
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     {
         GLint bufferSize = 0;
-        glGetBufferParameteriv(BufferTraits<Tag>::Buffer,
-            GL_BUFFER_SIZE, &bufferSize);
+        glGetBufferParameteriv(
+            BufferTraits<Tag>::Buffer,
+            GL_BUFFER_SIZE,
+            &bufferSize);
         POMDOG_ASSERT((offsetInBytes + sizeInBytes) <= static_cast<std::size_t>(bufferSize));
     }
 #endif
 
-    glGetBufferSubData(BufferTraits<Tag>::Buffer,
-        offsetInBytes, sizeInBytes, destination);
+    glGetBufferSubData(
+        BufferTraits<Tag>::Buffer,
+        offsetInBytes,
+        sizeInBytes,
+        destination);
     POMDOG_CHECK_ERROR_GL4("glGetBufferSubData");
 }
 
 template <class Tag>
-void BufferGL4<Tag>::SetData(
+void BufferGL4<Tag>::setData(
     std::size_t offsetInBytes,
     const void* source,
     std::size_t sizeInBytes)
@@ -161,38 +167,43 @@ void BufferGL4<Tag>::SetData(
     auto const oldBuffer = TypesafeHelperGL4::Get<BufferObject>();
     ScopeGuard scope([&] { TypesafeHelperGL4::BindBuffer(oldBuffer); });
 
-    POMDOG_ASSERT(bufferObject);
-    TypesafeHelperGL4::BindBuffer(*bufferObject);
+    POMDOG_ASSERT(bufferObject_);
+    TypesafeHelperGL4::BindBuffer(*bufferObject_);
     POMDOG_CHECK_ERROR_GL4("glBindBuffer");
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     {
         GLint bufferSize = 0;
-        glGetBufferParameteriv(BufferTraits<Tag>::Buffer,
-            GL_BUFFER_SIZE, &bufferSize);
+        glGetBufferParameteriv(
+            BufferTraits<Tag>::Buffer,
+            GL_BUFFER_SIZE,
+            &bufferSize);
         POMDOG_ASSERT(sizeInBytes <= static_cast<std::size_t>(bufferSize));
     }
 #endif
 
     POMDOG_ASSERT(sizeInBytes > 0);
-    glBufferSubData(BufferTraits<Tag>::Buffer,
-        offsetInBytes, sizeInBytes, source);
+    glBufferSubData(
+        BufferTraits<Tag>::Buffer,
+        offsetInBytes,
+        sizeInBytes,
+        source);
     POMDOG_CHECK_ERROR_GL4("glBufferSubData");
 }
 
 template <class Tag>
-void BufferGL4<Tag>::BindBuffer()
+void BufferGL4<Tag>::bindBuffer()
 {
-    POMDOG_ASSERT(bufferObject);
-    TypesafeHelperGL4::BindBuffer(*bufferObject);
+    POMDOG_ASSERT(bufferObject_);
+    TypesafeHelperGL4::BindBuffer(*bufferObject_);
     POMDOG_CHECK_ERROR_GL4("glBindBuffer");
 }
 
 template <class Tag>
-GLuint BufferGL4<Tag>::GetBuffer() const noexcept
+GLuint BufferGL4<Tag>::getBuffer() const noexcept
 {
-    POMDOG_ASSERT(bufferObject);
-    return bufferObject->value;
+    POMDOG_ASSERT(bufferObject_);
+    return bufferObject_->value;
 }
 
 // explicit instantiations

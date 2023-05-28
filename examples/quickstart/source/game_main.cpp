@@ -182,8 +182,8 @@ void GameMain::update()
 
     auto rotate = Matrix4x4::createRotationZ(std::cos(totalTime));
     auto scale = Matrix4x4::createScale(Vector3{
-        static_cast<float>(texture->GetWidth()),
-        static_cast<float>(texture->GetHeight()),
+        static_cast<float>(texture->getWidth()),
+        static_cast<float>(texture->getHeight()),
         1.0f});
 
     myShaderConstants.Model = scale * rotate;
@@ -206,7 +206,7 @@ void GameMain::draw()
     commandList->Reset();
 
     // Update constant buffer
-    constantBuffer->SetData(0, gpu::MakeByteSpan(myShaderConstants));
+    constantBuffer->setData(0, gpu::makeByteSpan(myShaderConstants));
 
     // Create graphics commands
     commandList->SetRenderPass(std::move(pass));
@@ -216,7 +216,7 @@ void GameMain::draw()
     commandList->SetTexture(0, texture);
     commandList->SetVertexBuffer(0, vertexBuffer);
     commandList->SetIndexBuffer(indexBuffer);
-    commandList->DrawIndexed(indexBuffer->GetIndexCount(), 0);
+    commandList->DrawIndexed(indexBuffer->getIndexCount(), 0);
     commandList->Close();
 
     // Submit graphics command list for execution

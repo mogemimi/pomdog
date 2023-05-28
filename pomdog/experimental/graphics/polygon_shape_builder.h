@@ -46,7 +46,7 @@ public:
 
     const PrimitiveBatchVertex* GetData() const noexcept;
 
-    std::size_t GetVertexCount() const noexcept;
+    std::size_t getVertexCount() const noexcept;
 
     bool IsEmpty() const noexcept;
 

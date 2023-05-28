@@ -18,11 +18,11 @@ std::int32_t Texture2DVariant::GetWidth() const
     if (index == Texture2DViewIndex::Texture2D) {
         auto texture = std::static_pointer_cast<gpu::Texture2D>(variant);
         POMDOG_ASSERT(texture != nullptr);
-        return texture->GetWidth();
+        return texture->getWidth();
     }
     auto renderTarget = std::static_pointer_cast<gpu::RenderTarget2D>(variant);
     POMDOG_ASSERT(renderTarget != nullptr);
-    return renderTarget->GetWidth();
+    return renderTarget->getWidth();
 }
 
 std::int32_t Texture2DVariant::GetHeight() const
@@ -31,11 +31,11 @@ std::int32_t Texture2DVariant::GetHeight() const
     if (index == Texture2DViewIndex::Texture2D) {
         auto texture = std::static_pointer_cast<gpu::Texture2D>(variant);
         POMDOG_ASSERT(texture != nullptr);
-        return texture->GetHeight();
+        return texture->getHeight();
     }
     auto renderTarget = std::static_pointer_cast<gpu::RenderTarget2D>(variant);
     POMDOG_ASSERT(renderTarget != nullptr);
-    return renderTarget->GetHeight();
+    return renderTarget->getHeight();
 }
 
 PixelFormat Texture2DVariant::GetFormat() const
@@ -44,11 +44,11 @@ PixelFormat Texture2DVariant::GetFormat() const
     if (index == Texture2DViewIndex::Texture2D) {
         auto texture = std::static_pointer_cast<gpu::Texture2D>(variant);
         POMDOG_ASSERT(texture != nullptr);
-        return texture->GetFormat();
+        return texture->getFormat();
     }
     auto renderTarget = std::static_pointer_cast<gpu::RenderTarget2D>(variant);
     POMDOG_ASSERT(renderTarget != nullptr);
-    return renderTarget->GetFormat();
+    return renderTarget->getFormat();
 }
 
 Texture2DView::Texture2DView(std::nullptr_t)

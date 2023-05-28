@@ -197,7 +197,7 @@ void Particle3DTest::draw()
     constants.Projection = projectionMatrix;
     constants.InverseView = math::invert(viewMatrix);
     constants.LightDirection = Vector4{lightDirection, 0.0f};
-    constantBuffer->SetData(0, gpu::MakeByteSpan(constants));
+    constantBuffer->setData(0, gpu::makeByteSpan(constants));
 
     // Drawing line
     lineBatch->Begin(commandList, viewProjection);

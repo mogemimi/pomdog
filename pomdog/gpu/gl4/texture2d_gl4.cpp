@@ -272,23 +272,23 @@ struct TypesafeHelperGL4::Traits<Texture2DObjectGL4> {
 };
 
 std::unique_ptr<Error>
-Texture2DGL4::Initialize(
+Texture2DGL4::initialize(
     std::int32_t pixelWidthIn,
     std::int32_t pixelHeightIn,
     std::int32_t levelCountIn,
     PixelFormat formatIn) noexcept
 {
-    pixelWidth = pixelWidthIn;
-    pixelHeight = pixelHeightIn;
-    levelCount = levelCountIn;
-    format = formatIn;
+    pixelWidth_ = pixelWidthIn;
+    pixelHeight_ = pixelHeightIn;
+    levelCount_ = levelCountIn;
+    format_ = formatIn;
 
-    POMDOG_ASSERT(pixelWidth > 0);
-    POMDOG_ASSERT(pixelHeight > 0);
-    POMDOG_ASSERT(levelCount >= 1);
+    POMDOG_ASSERT(pixelWidth_ > 0);
+    POMDOG_ASSERT(pixelHeight_ > 0);
+    POMDOG_ASSERT(levelCount_ >= 1);
 
     // Create Texture2D
-    textureObject = ([] {
+    textureObject_ = ([] {
         Texture2DObjectGL4 nativeTexture;
         glGenTextures(1, nativeTexture.Data());
         return nativeTexture;
@@ -299,25 +299,29 @@ Texture2DGL4::Initialize(
         TypesafeHelperGL4::BindTexture(prevTexture);
     });
 
-    POMDOG_ASSERT(textureObject);
-    TypesafeHelperGL4::BindTexture(*textureObject);
+    POMDOG_ASSERT(textureObject_);
+    TypesafeHelperGL4::BindTexture(*textureObject_);
     POMDOG_CHECK_ERROR_GL4("glBindTexture");
 
-    POMDOG_ASSERT(pixelWidth > 0);
-    POMDOG_ASSERT(pixelHeight > 0);
-    POMDOG_ASSERT(levelCount >= 1);
-    POMDOG_ASSERT(levelCount <= std::numeric_limits<GLsizei>::max());
+    POMDOG_ASSERT(pixelWidth_ > 0);
+    POMDOG_ASSERT(pixelHeight_ > 0);
+    POMDOG_ASSERT(levelCount_ >= 1);
+    POMDOG_ASSERT(levelCount_ <= std::numeric_limits<GLsizei>::max());
 
-    glTexStorage2D(GL_TEXTURE_2D, levelCount, ToInternalFormatGL4(format),
-        pixelWidth, pixelHeight);
+    glTexStorage2D(
+        GL_TEXTURE_2D,
+        levelCount_,
+        ToInternalFormatGL4(format_),
+        pixelWidth_,
+        pixelHeight_);
     POMDOG_CHECK_ERROR_GL4("glTexStorage2D");
 
     // Set mipmap levels
-    POMDOG_ASSERT(levelCount >= 1);
+    POMDOG_ASSERT(levelCount_ >= 1);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, levelCount - 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, levelCount_ - 1);
 
-    if (format == PixelFormat::A8_UNorm) {
+    if (format_ == PixelFormat::A8_UNorm) {
         // NOTE: Emulate DXGI_FORMAT_A8_UNORM or MTLPixelFormatA8Unorm on OpenGL.
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, GL_GREEN);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_A, GL_RED);
@@ -328,48 +332,48 @@ Texture2DGL4::Initialize(
 
 Texture2DGL4::~Texture2DGL4()
 {
-    if (textureObject) {
-        glDeleteTextures(1, textureObject->Data());
+    if (textureObject_) {
+        glDeleteTextures(1, textureObject_->Data());
         POMDOG_CHECK_ERROR_GL4("glDeleteTextures");
     }
 }
 
-std::int32_t Texture2DGL4::GetWidth() const noexcept
+std::int32_t Texture2DGL4::getWidth() const noexcept
 {
-    return pixelWidth;
+    return pixelWidth_;
 }
 
-std::int32_t Texture2DGL4::GetHeight() const noexcept
+std::int32_t Texture2DGL4::getHeight() const noexcept
 {
-    return pixelHeight;
+    return pixelHeight_;
 }
 
-std::int32_t Texture2DGL4::GetLevelCount() const noexcept
+std::int32_t Texture2DGL4::getLevelCount() const noexcept
 {
-    return levelCount;
+    return levelCount_;
 }
 
-PixelFormat Texture2DGL4::GetFormat() const noexcept
+PixelFormat Texture2DGL4::getFormat() const noexcept
 {
-    return format;
+    return format_;
 }
 
-void Texture2DGL4::GetData(void* result, [[maybe_unused]] std::size_t offsetInBytes, std::size_t sizeInBytes) const
+void Texture2DGL4::getData(void* result, [[maybe_unused]] std::size_t offsetInBytes, std::size_t sizeInBytes) const
 {
     const auto oldTexture = TypesafeHelperGL4::Get<Texture2DObjectGL4>();
     ScopeGuard scope([&] { TypesafeHelperGL4::BindTexture(oldTexture); });
 
-    POMDOG_ASSERT(textureObject);
-    TypesafeHelperGL4::BindTexture(*textureObject);
+    POMDOG_ASSERT(textureObject_);
+    TypesafeHelperGL4::BindTexture(*textureObject_);
     POMDOG_CHECK_ERROR_GL4("glBindTexture");
 
-    auto const formatComponents = ToFormatComponents(format);
-    auto const pixelFundamentalType = ToPixelFundamentalType(format);
-    auto const bytesPerBlock = SurfaceFormatHelper::ToBytesPerBlock(format);
+    auto const formatComponents = ToFormatComponents(format_);
+    auto const pixelFundamentalType = ToPixelFundamentalType(format_);
+    auto const bytesPerBlock = SurfaceFormatHelper::ToBytesPerBlock(format_);
 
     // FIXME: Not implemented yet.
-    POMDOG_ASSERT(sizeInBytes >= static_cast<std::size_t>(bytesPerBlock * pixelWidth * pixelHeight));
-    if (sizeInBytes < static_cast<std::size_t>(bytesPerBlock * pixelWidth * pixelHeight)) {
+    POMDOG_ASSERT(sizeInBytes >= static_cast<std::size_t>(bytesPerBlock * pixelWidth_ * pixelHeight_));
+    if (sizeInBytes < static_cast<std::size_t>(bytesPerBlock * pixelWidth_ * pixelHeight_)) {
         return;
     }
 
@@ -381,51 +385,51 @@ void Texture2DGL4::GetData(void* result, [[maybe_unused]] std::size_t offsetInBy
         result);
 }
 
-void Texture2DGL4::SetData(const void* pixelData)
+void Texture2DGL4::setData(const void* pixelData)
 {
-    POMDOG_ASSERT(pixelWidth > 0);
-    POMDOG_ASSERT(pixelHeight > 0);
-    POMDOG_ASSERT(levelCount >= 1);
+    POMDOG_ASSERT(pixelWidth_ > 0);
+    POMDOG_ASSERT(pixelHeight_ > 0);
+    POMDOG_ASSERT(levelCount_ >= 1);
     POMDOG_ASSERT(pixelData != nullptr);
 
     const auto oldTexture = TypesafeHelperGL4::Get<Texture2DObjectGL4>();
     ScopeGuard scope([&] { TypesafeHelperGL4::BindTexture(oldTexture); });
 
-    POMDOG_ASSERT(textureObject);
-    TypesafeHelperGL4::BindTexture(*textureObject);
+    POMDOG_ASSERT(textureObject_);
+    TypesafeHelperGL4::BindTexture(*textureObject_);
     POMDOG_CHECK_ERROR_GL4("glBindTexture");
 
-    switch (format) {
+    switch (format_) {
     case PixelFormat::BlockComp1_UNorm:
     case PixelFormat::BlockComp2_UNorm:
     case PixelFormat::BlockComp3_UNorm:
         SetPixelDataTexture2DCompressedGL4(
-            pixelWidth, pixelHeight, levelCount, format, pixelData);
+            pixelWidth_, pixelHeight_, levelCount_, format_, pixelData);
         break;
     default:
         SetPixelDataTexture2DGL4(
-            pixelWidth, pixelHeight, levelCount, format, pixelData);
+            pixelWidth_, pixelHeight_, levelCount_, format_, pixelData);
         break;
     }
 }
 
-void Texture2DGL4::GenerateMipmap()
+void Texture2DGL4::generateMipmap()
 {
-    POMDOG_ASSERT(textureObject);
+    POMDOG_ASSERT(textureObject_);
 
     const auto oldTexture = TypesafeHelperGL4::Get<Texture2DObjectGL4>();
     ScopeGuard scope([&] { TypesafeHelperGL4::BindTexture(oldTexture); });
 
     // Generate mipmap
-    glBindTexture(GL_TEXTURE_2D, textureObject->value);
+    glBindTexture(GL_TEXTURE_2D, textureObject_->value);
     glGenerateMipmap(GL_TEXTURE_2D);
     POMDOG_CHECK_ERROR_GL4("glGenerateMipmap");
 }
 
-Texture2DObjectGL4 Texture2DGL4::GetTextureHandle() const noexcept
+Texture2DObjectGL4 Texture2DGL4::getTextureHandle() const noexcept
 {
-    POMDOG_ASSERT(textureObject);
-    return *textureObject;
+    POMDOG_ASSERT(textureObject_);
+    return *textureObject_;
 }
 
 } // namespace pomdog::gpu::detail::gl4

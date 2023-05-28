@@ -68,7 +68,7 @@ GraphicsDeviceGL4::CreateVertexBuffer(
     auto nativeBuffer = std::make_unique<VertexBufferGL4>();
     POMDOG_ASSERT(nativeBuffer != nullptr);
 
-    if (auto err = nativeBuffer->Initialize(vertices, sizeInBytes, bufferUsage); err != nullptr) {
+    if (auto err = nativeBuffer->initialize(vertices, sizeInBytes, bufferUsage); err != nullptr) {
         return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize VertexBufferGL4"));
     }
 
@@ -91,7 +91,7 @@ GraphicsDeviceGL4::CreateVertexBuffer(
     auto nativeBuffer = std::make_unique<VertexBufferGL4>();
     POMDOG_ASSERT(nativeBuffer != nullptr);
 
-    if (auto err = nativeBuffer->Initialize(sizeInBytes, bufferUsage); err != nullptr) {
+    if (auto err = nativeBuffer->initialize(sizeInBytes, bufferUsage); err != nullptr) {
         return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize VertexBufferGL4"));
     }
 
@@ -113,7 +113,7 @@ GraphicsDeviceGL4::CreateIndexBuffer(
     auto nativeBuffer = std::make_unique<IndexBufferGL4>();
     POMDOG_ASSERT(nativeBuffer != nullptr);
 
-    if (auto err = nativeBuffer->Initialize(indices, sizeInBytes, bufferUsage); err != nullptr) {
+    if (auto err = nativeBuffer->initialize(indices, sizeInBytes, bufferUsage); err != nullptr) {
         return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize IndexBufferGL4"));
     }
 
@@ -135,7 +135,7 @@ GraphicsDeviceGL4::CreateIndexBuffer(
     auto nativeBuffer = std::make_unique<IndexBufferGL4>();
     POMDOG_ASSERT(nativeBuffer != nullptr);
 
-    if (auto err = nativeBuffer->Initialize(sizeInBytes, bufferUsage); err != nullptr) {
+    if (auto err = nativeBuffer->initialize(sizeInBytes, bufferUsage); err != nullptr) {
         return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize IndexBufferGL4"));
     }
 
@@ -154,7 +154,7 @@ GraphicsDeviceGL4::CreateConstantBuffer(
     auto nativeBuffer = std::make_unique<ConstantBufferGL4>();
     POMDOG_ASSERT(nativeBuffer != nullptr);
 
-    if (auto err = nativeBuffer->Initialize(sourceData, sizeInBytes, bufferUsage); err != nullptr) {
+    if (auto err = nativeBuffer->initialize(sourceData, sizeInBytes, bufferUsage); err != nullptr) {
         return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize ConstantBufferGL4"));
     }
 
@@ -173,7 +173,7 @@ GraphicsDeviceGL4::CreateConstantBuffer(
     auto nativeBuffer = std::make_unique<ConstantBufferGL4>();
     POMDOG_ASSERT(nativeBuffer != nullptr);
 
-    if (auto err = nativeBuffer->Initialize(sizeInBytes, bufferUsage); err != nullptr) {
+    if (auto err = nativeBuffer->initialize(sizeInBytes, bufferUsage); err != nullptr) {
         return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize ConstantBufferGL4"));
     }
 
@@ -268,7 +268,7 @@ GraphicsDeviceGL4::CreateRenderTarget2D(
     auto renderTarget = std::make_shared<RenderTarget2DGL4>();
     POMDOG_ASSERT(renderTarget != nullptr);
 
-    if (auto err = renderTarget->Initialize(
+    if (auto err = renderTarget->initialize(
             width,
             height,
             levelCount,
@@ -295,7 +295,7 @@ GraphicsDeviceGL4::CreateDepthStencilBuffer(
     auto depthStencilBuffer = std::make_shared<DepthStencilBufferGL4>();
     POMDOG_ASSERT(depthStencilBuffer != nullptr);
 
-    if (auto err = depthStencilBuffer->Initialize(
+    if (auto err = depthStencilBuffer->initialize(
             width,
             height,
             depthStencilFormat,
@@ -347,7 +347,7 @@ GraphicsDeviceGL4::CreateTexture2D(
     auto texture = std::make_shared<Texture2DGL4>();
     POMDOG_ASSERT(texture != nullptr);
 
-    if (auto err = texture->Initialize(
+    if (auto err = texture->initialize(
             width,
             height,
             levelCount,

@@ -32,35 +32,40 @@ public:
     VertexBuffer& operator=(VertexBuffer&&) = default;
 
     /// Gets the number of vertices.
-    [[nodiscard]] std::size_t GetVertexCount() const noexcept;
+    [[nodiscard]] std::size_t
+    getVertexCount() const noexcept;
 
     /// Gets the size in bytes of per-vertex data.
-    [[nodiscard]] std::size_t GetStrideBytes() const noexcept;
+    [[nodiscard]] std::size_t
+    getStrideBytes() const noexcept;
 
     /// Gets the size in bytes of this vertex buffer.
-    [[nodiscard]] std::size_t GetSizeInBytes() const noexcept;
+    [[nodiscard]] std::size_t
+    getSizeInBytes() const noexcept;
 
     /// Gets the expected usage hint of this vertex buffer.
-    [[nodiscard]] BufferUsage GetBufferUsage() const noexcept;
+    [[nodiscard]] BufferUsage
+    getBufferUsage() const noexcept;
 
     /// Sets vertex buffer data.
-    void SetData(const void* source, std::size_t elementCount);
+    void setData(const void* source, std::size_t elementCount);
 
     /// Sets vertex buffer data.
-    void SetData(
+    void setData(
         std::size_t offsetInBytes,
         const void* source,
         std::size_t elementCount,
         std::size_t strideInBytes);
 
     /// Gets the pointer of the native vertex buffer resource.
-    [[nodiscard]] Buffer* GetBuffer();
+    [[nodiscard]] Buffer*
+    getBuffer();
 
 private:
-    std::unique_ptr<Buffer> nativeBuffer;
-    std::uint32_t vertexCount;
-    std::uint32_t strideInBytes;
-    BufferUsage bufferUsage;
+    std::unique_ptr<Buffer> nativeBuffer_;
+    std::uint32_t vertexCount_;
+    std::uint32_t strideInBytes_;
+    BufferUsage bufferUsage_;
 };
 
 } // namespace pomdog::gpu

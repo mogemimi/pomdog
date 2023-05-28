@@ -24,7 +24,7 @@ public:
     ~RenderTarget2DGL4() override;
 
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(
+    initialize(
         std::int32_t pixelWidth,
         std::int32_t pixelHeight,
         std::int32_t levelCount,
@@ -32,38 +32,39 @@ public:
         std::int32_t multiSampleCount) noexcept;
 
     /// Gets the width of the texture data, in pixels.
-    std::int32_t GetWidth() const noexcept override;
+    std::int32_t getWidth() const noexcept override;
 
     /// Gets the height of the texture data, in pixels.
-    std::int32_t GetHeight() const noexcept override;
+    std::int32_t getHeight() const noexcept override;
 
     /// Gets the mipmap level.
-    std::int32_t GetLevelCount() const noexcept override;
+    std::int32_t getLevelCount() const noexcept override;
 
     /// Gets the format of the pixel data in the render target.
-    PixelFormat GetFormat() const noexcept override;
+    PixelFormat getFormat() const noexcept override;
 
     /// Gets the size of the texture resource.
-    Rectangle GetBounds() const noexcept override;
+    Rectangle getBounds() const noexcept override;
 
     /// Copies the pixel data from texture to memory.
-    void GetData(void* result, std::size_t offsetInBytes, std::size_t sizeInBytes) const override;
+    void getData(void* result, std::size_t offsetInBytes, std::size_t sizeInBytes) const override;
 
-    void BindToFramebuffer(GLuint frameBuffer, GLenum attachmentPoint);
+    void bindToFramebuffer(GLuint frameBuffer, GLenum attachmentPoint);
 
-    void UnbindFromFramebuffer(GLuint frameBuffer, GLenum attachmentPoint);
+    void unbindFromFramebuffer(GLuint frameBuffer, GLenum attachmentPoint);
 
     /// Gets the handle of the native texture resource.
-    Texture2DObjectGL4 GetTextureHandle() const noexcept;
+    [[nodiscard]] Texture2DObjectGL4
+    getTextureHandle() const noexcept;
 
 private:
-    Texture2DGL4 texture;
-    std::int32_t pixelWidth = 0;
-    std::int32_t pixelHeight = 0;
-    std::int32_t levelCount = 0;
-    PixelFormat format = PixelFormat::A8_UNorm;
-    bool generateMipmap = false;
-    bool multiSampleEnabled = false;
+    Texture2DGL4 texture_;
+    std::int32_t pixelWidth_ = 0;
+    std::int32_t pixelHeight_ = 0;
+    std::int32_t levelCount_ = 0;
+    PixelFormat format_ = PixelFormat::A8_UNorm;
+    bool generateMipmap_ = false;
+    bool multiSampleEnabled_ = false;
 };
 
 } // namespace pomdog::gpu::detail::gl4

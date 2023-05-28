@@ -24,19 +24,23 @@ public:
     virtual ~Texture2D() override;
 
     /// Gets the width of the texture data, in pixels.
-    [[nodiscard]] virtual std::int32_t GetWidth() const noexcept = 0;
+    [[nodiscard]] virtual std::int32_t
+    getWidth() const noexcept = 0;
 
     /// Gets the height of the texture data, in pixels.
-    [[nodiscard]] virtual std::int32_t GetHeight() const noexcept = 0;
+    [[nodiscard]] virtual std::int32_t
+    getHeight() const noexcept = 0;
 
     /// Gets the mipmap level.
-    [[nodiscard]] virtual std::int32_t GetLevelCount() const noexcept = 0;
+    [[nodiscard]] virtual std::int32_t
+    getLevelCount() const noexcept = 0;
 
     /// Gets the format of the pixel data in the texture.
-    [[nodiscard]] virtual PixelFormat GetFormat() const noexcept = 0;
+    [[nodiscard]] virtual PixelFormat
+    getFormat() const noexcept = 0;
 
     /// Sets texture data.
-    virtual void SetData(const void* pixelData) = 0;
+    virtual void setData(const void* pixelData) = 0;
 };
 
 } // namespace pomdog::gpu

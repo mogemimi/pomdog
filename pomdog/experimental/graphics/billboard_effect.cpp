@@ -132,7 +132,7 @@ void BillboardBatchBuffer::AddBillboard(
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->vertexBuffer);
-    POMDOG_ASSERT(impl->vertexBuffer->GetVertexCount() == impl->instances.capacity());
+    POMDOG_ASSERT(impl->vertexBuffer->getVertexCount() == impl->instances.capacity());
 
     if (impl->instances.size() >= impl->instances.capacity()) {
         return;
@@ -164,13 +164,13 @@ void BillboardBatchBuffer::FetchBuffer()
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->vertexBuffer);
-    POMDOG_ASSERT(impl->instances.size() <= impl->vertexBuffer->GetVertexCount());
+    POMDOG_ASSERT(impl->instances.size() <= impl->vertexBuffer->getVertexCount());
 
     if (impl->instances.empty()) {
         return;
     }
 
-    impl->vertexBuffer->SetData(
+    impl->vertexBuffer->setData(
         0,
         impl->instances.data(),
         impl->instances.size(),
@@ -193,7 +193,7 @@ int BillboardBatchBuffer::GetCapacity() const noexcept
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->vertexBuffer);
-    return static_cast<int>(impl->vertexBuffer->GetVertexCount());
+    return static_cast<int>(impl->vertexBuffer->getVertexCount());
 }
 
 class BillboardBatchEffect::Impl final {
@@ -364,7 +364,7 @@ void BillboardBatchEffect::Draw(
     commandList->SetIndexBuffer(impl->indexBuffer);
 
     commandList->DrawIndexedInstanced(
-        impl->indexBuffer->GetIndexCount(),
+        impl->indexBuffer->getIndexCount(),
         billboardInstances.GetSize(),
         0,
         0);

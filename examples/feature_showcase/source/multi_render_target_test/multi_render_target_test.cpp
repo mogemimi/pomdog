@@ -256,30 +256,30 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
             width,
             height,
             false,
-            renderTargetAlbedo->GetFormat()));
+            renderTargetAlbedo->getFormat()));
 
         renderTargetNormal = std::get<0>(graphicsDevice->CreateRenderTarget2D(
             width,
             height,
             false,
-            renderTargetNormal->GetFormat()));
+            renderTargetNormal->getFormat()));
 
         renderTargetDepth = std::get<0>(graphicsDevice->CreateRenderTarget2D(
             width,
             height,
             false,
-            renderTargetDepth->GetFormat()));
+            renderTargetDepth->getFormat()));
 
         renderTargetLighting = std::get<0>(graphicsDevice->CreateRenderTarget2D(
             width,
             height,
             false,
-            renderTargetLighting->GetFormat()));
+            renderTargetLighting->getFormat()));
 
         depthStencilBuffer = std::get<0>(graphicsDevice->CreateDepthStencilBuffer(
             width,
             height,
-            depthStencilBuffer->GetFormat()));
+            depthStencilBuffer->getFormat()));
     });
 
     return nullptr;
@@ -310,7 +310,7 @@ void MultiRenderTargetTest::update()
     worldConstants.Projection = projectionMatrix;
     worldConstants.InverseView = math::invert(viewMatrix);
     worldConstants.LightDirection = Vector4{lightDirection, 0.0f};
-    worldConstantBuffer->SetData(0, gpu::MakeByteSpan(worldConstants));
+    worldConstantBuffer->setData(0, gpu::makeByteSpan(worldConstants));
 
     auto time = static_cast<float>(gameHost->getClock()->GetTotalGameTime().count());
     auto rotateY = math::TwoPi<float> * rotateSpeed * time;
@@ -332,7 +332,7 @@ void MultiRenderTargetTest::update()
     modelConstants.Model = modelMatrix;
     modelConstants.Material = Vector4{metalness, 0.0f, 0.0f, 0.0f};
     modelConstants.Color = Vector4{1.0f, 1.0f, 1.0f, 1.0f};
-    modelConstantBuffer->SetData(0, gpu::MakeByteSpan(modelConstants));
+    modelConstantBuffer->setData(0, gpu::makeByteSpan(modelConstants));
 }
 
 void MultiRenderTargetTest::draw()
@@ -363,7 +363,7 @@ void MultiRenderTargetTest::draw()
         commandList->SetPipelineState(pipelineState);
 
         commandList->SetIndexBuffer(indexBuffer);
-        commandList->DrawIndexed(indexBuffer->GetIndexCount(), 0);
+        commandList->DrawIndexed(indexBuffer->getIndexCount(), 0);
     }
     {
         gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
@@ -394,7 +394,7 @@ void MultiRenderTargetTest::draw()
             spriteBatch->Draw(
                 rt,
                 pos,
-                Rectangle{0, 0, rt->GetWidth(), rt->GetHeight()},
+                Rectangle{0, 0, rt->getWidth(), rt->getHeight()},
                 Color::createWhite(),
                 0.0f,
                 originPivot,

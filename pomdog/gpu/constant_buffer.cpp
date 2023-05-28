@@ -16,40 +16,40 @@ ConstantBuffer::ConstantBuffer(
     std::unique_ptr<Buffer>&& nativeBufferIn,
     std::size_t sizeInBytesIn,
     BufferUsage bufferUsageIn)
-    : nativeBuffer(std::move(nativeBufferIn))
-    , sizeInBytes(static_cast<decltype(sizeInBytes)>(sizeInBytesIn))
-    , bufferUsage(bufferUsageIn)
+    : nativeBuffer_(std::move(nativeBufferIn))
+    , sizeInBytes_(static_cast<decltype(sizeInBytes_)>(sizeInBytesIn))
+    , bufferUsage_(bufferUsageIn)
 {
-    POMDOG_ASSERT(sizeInBytes > 0);
-    POMDOG_ASSERT(nativeBuffer != nullptr);
+    POMDOG_ASSERT(sizeInBytes_ > 0);
+    POMDOG_ASSERT(nativeBuffer_ != nullptr);
 }
 
 ConstantBuffer::~ConstantBuffer() = default;
 
-void ConstantBuffer::SetData(std::size_t offsetInBytes, std::span<const std::byte> source)
+void ConstantBuffer::setData(std::size_t offsetInBytes, std::span<const std::byte> source)
 {
     POMDOG_ASSERT(!source.empty());
     POMDOG_ASSERT(source.data() != nullptr);
     POMDOG_ASSERT(source.size() > 0);
-    POMDOG_ASSERT(offsetInBytes + source.size() <= sizeInBytes);
-    POMDOG_ASSERT(nativeBuffer != nullptr);
-    return nativeBuffer->SetData(offsetInBytes, source.data(), source.size());
+    POMDOG_ASSERT(offsetInBytes + source.size() <= sizeInBytes_);
+    POMDOG_ASSERT(nativeBuffer_ != nullptr);
+    return nativeBuffer_->setData(offsetInBytes, source.data(), source.size());
 }
 
-std::size_t ConstantBuffer::GetSizeInBytes() const noexcept
+std::size_t ConstantBuffer::getSizeInBytes() const noexcept
 {
-    return sizeInBytes;
+    return sizeInBytes_;
 }
 
-BufferUsage ConstantBuffer::GetBufferUsage() const noexcept
+BufferUsage ConstantBuffer::getBufferUsage() const noexcept
 {
-    return bufferUsage;
+    return bufferUsage_;
 }
 
-Buffer* ConstantBuffer::GetBuffer()
+Buffer* ConstantBuffer::getBuffer()
 {
-    POMDOG_ASSERT(nativeBuffer != nullptr);
-    return nativeBuffer.get();
+    POMDOG_ASSERT(nativeBuffer_ != nullptr);
+    return nativeBuffer_.get();
 }
 
 } // namespace pomdog::gpu

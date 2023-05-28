@@ -165,7 +165,7 @@ void LineBatch::Impl::Begin(
     commandList = commandListIn;
 
     alignas(16) Matrix4x4 transposedMatrix = math::transpose(transformMatrix);
-    constantBuffer->SetData(0, gpu::MakeByteSpan(transposedMatrix));
+    constantBuffer->setData(0, gpu::makeByteSpan(transposedMatrix));
 }
 
 void LineBatch::Impl::End()
@@ -182,7 +182,7 @@ void LineBatch::Impl::Flush()
 {
     POMDOG_ASSERT(!vertices.empty());
     POMDOG_ASSERT(vertices.size() <= MaxVertexCount);
-    vertexBuffer->SetData(vertices.data(), vertices.size());
+    vertexBuffer->setData(vertices.data(), vertices.size());
 
     commandList->SetVertexBuffer(0, vertexBuffer);
     commandList->SetPipelineState(pipelineState);

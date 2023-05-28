@@ -24,16 +24,20 @@ public:
     virtual ~DepthStencilBuffer() override;
 
     /// Gets the width of the texture data, in pixels.
-    [[nodiscard]] virtual std::int32_t GetWidth() const noexcept = 0;
+    [[nodiscard]] virtual std::int32_t
+    getWidth() const noexcept = 0;
 
     /// Gets the height of the texture data, in pixels.
-    [[nodiscard]] virtual std::int32_t GetHeight() const noexcept = 0;
+    [[nodiscard]] virtual std::int32_t
+    getHeight() const noexcept = 0;
 
     /// Gets the format of the pixel data in the depth-stencil buffer.
-    [[nodiscard]] virtual PixelFormat GetFormat() const noexcept = 0;
+    [[nodiscard]] virtual PixelFormat
+    getFormat() const noexcept = 0;
 
     /// Gets the size of the texture resource.
-    [[nodiscard]] virtual Rectangle GetBounds() const noexcept = 0;
+    [[nodiscard]] virtual Rectangle
+    getBounds() const noexcept = 0;
 };
 
 } // namespace pomdog::gpu

@@ -320,17 +320,17 @@ void GraphicsContextMetal::SetVertexBuffer(
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(vertexBuffer != nullptr);
-    POMDOG_ASSERT(vertexBuffer->GetBuffer() != nullptr);
+    POMDOG_ASSERT(vertexBuffer->getBuffer() != nullptr);
     POMDOG_ASSERT((offset % 256) == 0);
 
-    const auto nativeVertexBuffer = StaticDownCast<BufferMetal>(vertexBuffer->GetBuffer());
+    const auto nativeVertexBuffer = StaticDownCast<BufferMetal>(vertexBuffer->getBuffer());
     POMDOG_ASSERT(nativeVertexBuffer != nullptr);
-    POMDOG_ASSERT(nativeVertexBuffer->GetBuffer() != nullptr);
+    POMDOG_ASSERT(nativeVertexBuffer->getBuffer() != nullptr);
 
     const auto slotIndex = index + VertexBufferSlotOffset;
     POMDOG_ASSERT(slotIndex < MaxVertexBufferSlotCount);
 
-    [commandEncoder_ setVertexBuffer:nativeVertexBuffer->GetBuffer()
+    [commandEncoder_ setVertexBuffer:nativeVertexBuffer->getBuffer()
                               offset:offset
                              atIndex:slotIndex];
 }
@@ -339,11 +339,11 @@ void GraphicsContextMetal::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& in
 {
     POMDOG_ASSERT(indexBufferIn != nullptr);
 
-    const auto nativeIndexBuffer = StaticDownCast<BufferMetal>(indexBufferIn->GetBuffer());
+    const auto nativeIndexBuffer = StaticDownCast<BufferMetal>(indexBufferIn->getBuffer());
     POMDOG_ASSERT(nativeIndexBuffer != nullptr);
 
-    indexType_ = ToIndexType(indexBufferIn->GetElementSize());
-    indexBuffer_ = nativeIndexBuffer->GetBuffer();
+    indexType_ = ToIndexType(indexBufferIn->getElementSize());
+    indexBuffer_ = nativeIndexBuffer->getBuffer();
 }
 
 void GraphicsContextMetal::SetPipelineState(const std::shared_ptr<PipelineState>& pipelineState)
@@ -378,11 +378,11 @@ void GraphicsContextMetal::SetConstantBuffer(
     const auto constantBuffer = StaticDownCast<BufferMetal>(constantBufferIn.get());
     POMDOG_ASSERT(constantBuffer != nullptr);
 
-    POMDOG_ASSERT(constantBuffer->GetBuffer() != nullptr);
-    [commandEncoder_ setVertexBuffer:constantBuffer->GetBuffer()
+    POMDOG_ASSERT(constantBuffer->getBuffer() != nullptr);
+    [commandEncoder_ setVertexBuffer:constantBuffer->getBuffer()
                               offset:offset
                              atIndex:index];
-    [commandEncoder_ setFragmentBuffer:constantBuffer->GetBuffer()
+    [commandEncoder_ setFragmentBuffer:constantBuffer->getBuffer()
                                 offset:offset
                                atIndex:index];
 }
@@ -430,11 +430,11 @@ void GraphicsContextMetal::SetTexture(std::uint32_t index, const std::shared_ptr
 
     const auto textureMetal = StaticDownCast<Texture2DMetal>(textureIn.get());
     POMDOG_ASSERT(textureMetal != nullptr);
-    POMDOG_ASSERT(textureMetal->GetTexture() != nullptr);
+    POMDOG_ASSERT(textureMetal->getTexture() != nullptr);
 
     POMDOG_ASSERT(commandEncoder_ != nullptr);
-    [commandEncoder_ setVertexTexture:textureMetal->GetTexture() atIndex:index];
-    [commandEncoder_ setFragmentTexture:textureMetal->GetTexture() atIndex:index];
+    [commandEncoder_ setVertexTexture:textureMetal->getTexture() atIndex:index];
+    [commandEncoder_ setFragmentTexture:textureMetal->getTexture() atIndex:index];
 }
 
 void GraphicsContextMetal::SetTexture(std::uint32_t index, const std::shared_ptr<RenderTarget2D>& textureIn)
@@ -450,11 +450,11 @@ void GraphicsContextMetal::SetTexture(std::uint32_t index, const std::shared_ptr
 
     const auto renderTargetMetal = StaticDownCast<RenderTarget2DMetal>(textureIn.get());
     POMDOG_ASSERT(renderTargetMetal != nullptr);
-    POMDOG_ASSERT(renderTargetMetal->GetTexture() != nullptr);
+    POMDOG_ASSERT(renderTargetMetal->getTexture() != nullptr);
 
     POMDOG_ASSERT(commandEncoder_ != nullptr);
-    [commandEncoder_ setVertexTexture:renderTargetMetal->GetTexture() atIndex:index];
-    [commandEncoder_ setFragmentTexture:renderTargetMetal->GetTexture() atIndex:index];
+    [commandEncoder_ setVertexTexture:renderTargetMetal->getTexture() atIndex:index];
+    [commandEncoder_ setFragmentTexture:renderTargetMetal->getTexture() atIndex:index];
 }
 
 void GraphicsContextMetal::BeginRenderPass(const RenderPass& renderPass)
@@ -506,7 +506,7 @@ void GraphicsContextMetal::BeginRenderPass(const RenderPass& renderPass)
             const auto renderTargetMetal = StaticDownCast<RenderTarget2DMetal>(renderTarget.get());
             POMDOG_ASSERT(renderTargetMetal != nullptr);
 
-            renderPassDescriptor.colorAttachments[renderTargetIndex].texture = renderTargetMetal->GetTexture();
+            renderPassDescriptor.colorAttachments[renderTargetIndex].texture = renderTargetMetal->getTexture();
 
             setClearColor(renderTargetIndex, clearColor);
             ++renderTargetIndex;
@@ -521,10 +521,10 @@ void GraphicsContextMetal::BeginRenderPass(const RenderPass& renderPass)
         const auto depthStencilBuffer = StaticDownCast<DepthStencilBufferMetal>(renderPass.depthStencilBuffer.get());
         POMDOG_ASSERT(depthStencilBuffer != nullptr);
 
-        renderPassDescriptor.depthAttachment.texture = depthStencilBuffer->GetTexture();
+        renderPassDescriptor.depthAttachment.texture = depthStencilBuffer->getTexture();
 
         const bool isStencilRenderable = [&]() -> bool {
-            switch ([depthStencilBuffer->GetTexture() pixelFormat]) {
+            switch ([depthStencilBuffer->getTexture() pixelFormat]) {
             case MTLPixelFormatStencil8:
             case MTLPixelFormatX24_Stencil8:
             case MTLPixelFormatX32_Stencil8:
@@ -538,7 +538,7 @@ void GraphicsContextMetal::BeginRenderPass(const RenderPass& renderPass)
         }();
 
         if (isStencilRenderable) {
-            renderPassDescriptor.stencilAttachment.texture = depthStencilBuffer->GetTexture();
+            renderPassDescriptor.stencilAttachment.texture = depthStencilBuffer->getTexture();
         }
         else {
             renderPassDescriptor.stencilAttachment.texture = nullptr;

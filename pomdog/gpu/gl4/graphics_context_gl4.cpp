@@ -253,7 +253,7 @@ void UnbindRenderTargetsFromFrameBuffer(
     int index = 0;
     for (auto& renderTarget : renderTargets) {
         if (renderTarget != nullptr) {
-            renderTarget->UnbindFromFramebuffer(frameBuffer.value, ToColorAttachment(index));
+            renderTarget->unbindFromFramebuffer(frameBuffer.value, ToColorAttachment(index));
         }
         renderTarget = nullptr;
         ++index;
@@ -319,7 +319,7 @@ void SetDepthStencilBuffer(
 
     const auto depthStencilBuffer = StaticDownCast<DepthStencilBufferGL4>(depthStencilBufferIn.get());
     POMDOG_ASSERT(depthStencilBuffer != nullptr);
-    depthStencilBuffer->BindToFramebuffer(frameBuffer.value);
+    depthStencilBuffer->bindToFramebuffer(frameBuffer.value);
 }
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
@@ -465,7 +465,7 @@ void GraphicsContextGL4::EmulateStartInstanceLocation(std::size_t startInstanceL
         if (binding.VertexBuffer == nullptr) {
             continue;
         }
-        const auto strideBytes = binding.VertexBuffer->GetStrideBytes();
+        const auto strideBytes = binding.VertexBuffer->getStrideBytes();
         POMDOG_ASSERT(strideBytes > 0);
         binding.VertexOffset += (strideBytes * startInstanceLocation);
     }
@@ -493,7 +493,7 @@ void GraphicsContextGL4::Draw(
     POMDOG_ASSERT(!vertexBuffers_.empty());
     POMDOG_ASSERT(vertexBuffers_.front().VertexBuffer);
     POMDOG_ASSERT(vertexCount > 0);
-    POMDOG_ASSERT(vertexCount <= vertexBuffers_.front().VertexBuffer->GetVertexCount());
+    POMDOG_ASSERT(vertexCount <= vertexBuffers_.front().VertexBuffer->getVertexCount());
 
     glDrawArrays(
         primitiveTopology_.value,
@@ -514,16 +514,16 @@ void GraphicsContextGL4::DrawIndexed(
 
     // Bind index buffer
     POMDOG_ASSERT(indexBuffer_);
-    const auto indexBufferGL = StaticDownCast<IndexBufferGL4>(indexBuffer_->GetBuffer());
+    const auto indexBufferGL = StaticDownCast<IndexBufferGL4>(indexBuffer_->getBuffer());
     POMDOG_ASSERT(indexBufferGL != nullptr);
-    indexBufferGL->BindBuffer();
+    indexBufferGL->bindBuffer();
 
     // Draw
     POMDOG_ASSERT(indexBuffer_);
     POMDOG_ASSERT(indexCount > 0);
-    POMDOG_ASSERT(indexCount <= indexBuffer_->GetIndexCount());
+    POMDOG_ASSERT(indexCount <= indexBuffer_->getIndexCount());
 
-    const auto indexElementSize = indexBuffer_->GetElementSize();
+    const auto indexElementSize = indexBuffer_->getElementSize();
 
     glDrawElements(
         primitiveTopology_.value,
@@ -549,7 +549,7 @@ void GraphicsContextGL4::DrawInstanced(
     POMDOG_ASSERT(!vertexBuffers_.empty());
     POMDOG_ASSERT(vertexBuffers_.front().VertexBuffer);
     POMDOG_ASSERT(vertexCountPerInstance > 0);
-    POMDOG_ASSERT(vertexCountPerInstance <= vertexBuffers_.front().VertexBuffer->GetVertexCount());
+    POMDOG_ASSERT(vertexCountPerInstance <= vertexBuffers_.front().VertexBuffer->getVertexCount());
     POMDOG_ASSERT(instanceCount > 0);
     POMDOG_ASSERT(instanceCount <= static_cast<decltype(instanceCount)>(std::numeric_limits<GLsizei>::max()));
 
@@ -589,17 +589,17 @@ void GraphicsContextGL4::DrawIndexedInstanced(
 
     // Bind index buffer
     POMDOG_ASSERT(indexBuffer_ != nullptr);
-    const auto indexBufferGL = StaticDownCast<IndexBufferGL4>(indexBuffer_->GetBuffer());
+    const auto indexBufferGL = StaticDownCast<IndexBufferGL4>(indexBuffer_->getBuffer());
     POMDOG_ASSERT(indexBufferGL != nullptr);
-    indexBufferGL->BindBuffer();
+    indexBufferGL->bindBuffer();
 
     // Draw
     POMDOG_ASSERT(indexCountPerInstance > 0);
-    POMDOG_ASSERT(indexCountPerInstance <= indexBuffer_->GetIndexCount());
+    POMDOG_ASSERT(indexCountPerInstance <= indexBuffer_->getIndexCount());
     POMDOG_ASSERT(instanceCount > 0);
     POMDOG_ASSERT(instanceCount < static_cast<decltype(instanceCount)>(std::numeric_limits<GLsizei>::max()));
 
-    const auto indexElementSize = indexBuffer_->GetElementSize();
+    const auto indexElementSize = indexBuffer_->getElementSize();
 
 #if defined(POMDOG_PLATFORM_MACOSX)
     // NOTE:
@@ -724,7 +724,7 @@ void GraphicsContextGL4::SetConstantBuffer(
     glBindBufferRange(
         GL_UNIFORM_BUFFER,
         index,
-        constantBuffer->GetBuffer(),
+        constantBuffer->getBuffer(),
         static_cast<GLintptr>(offset),
         static_cast<GLsizeiptr>(sizeInBytes));
     POMDOG_CHECK_ERROR_GL4("glBindBufferRange");
@@ -793,7 +793,7 @@ void GraphicsContextGL4::SetTexture(std::uint32_t index, const std::shared_ptr<g
     const auto textureGL4 = StaticDownCast<Texture2DGL4>(textureIn.get());
     POMDOG_ASSERT(textureGL4 != nullptr);
 
-    ApplyTexture2D(index, textureGL4->GetTextureHandle());
+    ApplyTexture2D(index, textureGL4->getTextureHandle());
 }
 
 void GraphicsContextGL4::SetTexture(std::uint32_t index, const std::shared_ptr<RenderTarget2D>& textureIn)
@@ -820,7 +820,7 @@ void GraphicsContextGL4::SetTexture(std::uint32_t index, const std::shared_ptr<R
     const auto renderTargetGL4 = StaticDownCast<RenderTarget2DGL4>(textureIn.get());
     POMDOG_ASSERT(renderTargetGL4 != nullptr);
 
-    ApplyTexture2D(index, renderTargetGL4->GetTextureHandle());
+    ApplyTexture2D(index, renderTargetGL4->getTextureHandle());
 }
 
 void GraphicsContextGL4::BeginRenderPass(const RenderPass& renderPass)
@@ -886,7 +886,7 @@ void GraphicsContextGL4::BeginRenderPass(const RenderPass& renderPass)
             const auto renderTargetGL4 = StaticDownCast<RenderTarget2DGL4>(renderTarget.get());
             POMDOG_ASSERT(renderTargetGL4 != nullptr);
 
-            renderTargetGL4->BindToFramebuffer(frameBuffer_->value, ToColorAttachment(0));
+            renderTargetGL4->bindToFramebuffer(frameBuffer_->value, ToColorAttachment(0));
 
             std::array<GLenum, 1> attachments = {ToColorAttachment(0)};
             ValidateFrameBuffer(*frameBuffer_, attachments.data(), static_cast<GLsizei>(attachments.size()));
@@ -927,7 +927,7 @@ void GraphicsContextGL4::BeginRenderPass(const RenderPass& renderPass)
             const auto renderTargetGL4 = StaticDownCast<RenderTarget2DGL4>(renderTarget.get());
             POMDOG_ASSERT(renderTargetGL4 != nullptr);
 
-            renderTargetGL4->BindToFramebuffer(frameBuffer_->value, ToColorAttachment(0));
+            renderTargetGL4->bindToFramebuffer(frameBuffer_->value, ToColorAttachment(0));
 
             std::array<GLenum, 1> attachments = {ToColorAttachment(0)};
             ValidateFrameBuffer(*frameBuffer_, attachments.data(), static_cast<GLsizei>(attachments.size()));
@@ -967,7 +967,7 @@ void GraphicsContextGL4::BeginRenderPass(const RenderPass& renderPass)
             const auto renderTargetGL4 = StaticDownCast<RenderTarget2DGL4>(renderTarget);
             POMDOG_ASSERT(renderTargetGL4 != nullptr);
 
-            renderTargetGL4->BindToFramebuffer(frameBuffer_->value, ToColorAttachment(index));
+            renderTargetGL4->bindToFramebuffer(frameBuffer_->value, ToColorAttachment(index));
 
             renderTargets_[index] = std::move(renderTargetGL4);
             attachments[index] = ToColorAttachment(index);

@@ -88,7 +88,7 @@ std::unique_ptr<Error> Skinning2DTest::initialize()
 #endif
 
         // NOTE: Create skinned mesh
-        auto textureSize = Vector2{static_cast<float>(texture->GetWidth()), static_cast<float>(texture->GetHeight())};
+        auto textureSize = Vector2{static_cast<float>(texture->getWidth()), static_cast<float>(texture->getHeight())};
         auto [skinnedMeshData, skinnedMeshErr] = spine::CreateSkinnedMesh(
             globalPose,
             desc,
@@ -226,7 +226,7 @@ void Skinning2DTest::update()
     worldConstants.ViewProjection = viewMatrix * projectionMatrix;
     worldConstants.InverseView = math::invert(viewMatrix);
     worldConstants.LightDirection = Vector4{Vector3::createUnitZ(), 0.0f};
-    worldConstantBuffer->SetData(0, gpu::MakeByteSpan(worldConstants));
+    worldConstantBuffer->setData(0, gpu::makeByteSpan(worldConstants));
 
     constexpr float metalness = 0.1f;
 
@@ -235,7 +235,7 @@ void Skinning2DTest::update()
     modelConstants.Model = Matrix4x4::createTranslation(Vector3{0.0f, -180.0f, 0.0f});
     modelConstants.Material = Vector4{metalness, 0.0f, 0.0f, 0.0f};
     modelConstants.Color = Vector4{1.0f, 1.0f, 1.0f, 1.0f};
-    modelConstantBuffer->SetData(0, gpu::MakeByteSpan(modelConstants));
+    modelConstantBuffer->setData(0, gpu::makeByteSpan(modelConstants));
 
     std::vector<BasicEffect::VertexPositionTexture> vertices;
     vertices.reserve(skinnedMesh.Vertices.size());
@@ -268,7 +268,7 @@ void Skinning2DTest::update()
         vertices.push_back(vertex);
     }
 
-    vertexBuffer->SetData(vertices.data(), vertices.size());
+    vertexBuffer->setData(vertices.data(), vertices.size());
 }
 
 void Skinning2DTest::draw()
@@ -312,12 +312,12 @@ void Skinning2DTest::draw()
     commandList->SetTexture(0, texture);
     commandList->SetVertexBuffer(0, vertexBuffer);
     commandList->SetIndexBuffer(indexBuffer);
-    commandList->DrawIndexed(indexBuffer->GetIndexCount(), 0);
+    commandList->DrawIndexed(indexBuffer->getIndexCount(), 0);
 
     auto mouse = gameHost->getMouse()->GetState();
     if (mouse.RightButton == ButtonState::Pressed) {
         commandList->SetPipelineState(pipelineStateWireframe);
-        commandList->DrawIndexed(indexBuffer->GetIndexCount(), 0);
+        commandList->DrawIndexed(indexBuffer->getIndexCount(), 0);
     }
 
     commandList->Close();

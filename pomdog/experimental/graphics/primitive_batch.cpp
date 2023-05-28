@@ -167,7 +167,7 @@ void PrimitiveBatch::Impl::Begin(
     commandList = commandListIn;
 
     alignas(16) Matrix4x4 transposedMatrix = math::transpose(transformMatrix);
-    constantBuffer->SetData(0, gpu::MakeByteSpan(transposedMatrix));
+    constantBuffer->setData(0, gpu::makeByteSpan(transposedMatrix));
 
     startVertexLocation = 0;
     drawCallCount = 0;
@@ -187,21 +187,21 @@ void PrimitiveBatch::Impl::Flush()
 
     POMDOG_ASSERT(commandList);
     POMDOG_ASSERT(!polygonShapes.IsEmpty());
-    POMDOG_ASSERT((startVertexLocation + polygonShapes.GetVertexCount()) <= polygonShapes.GetMaxVertexCount());
+    POMDOG_ASSERT((startVertexLocation + polygonShapes.getVertexCount()) <= polygonShapes.GetMaxVertexCount());
 
     const auto vertexOffsetBytes = sizeof(Vertex) * startVertexLocation;
-    vertexBuffer->SetData(
+    vertexBuffer->setData(
         vertexOffsetBytes,
         polygonShapes.GetData(),
-        polygonShapes.GetVertexCount(),
+        polygonShapes.getVertexCount(),
         sizeof(Vertex));
 
     commandList->SetVertexBuffer(0, vertexBuffer);
     commandList->SetPipelineState(pipelineState);
     commandList->SetConstantBuffer(0, constantBuffer);
-    commandList->Draw(polygonShapes.GetVertexCount(), startVertexLocation);
+    commandList->Draw(polygonShapes.getVertexCount(), startVertexLocation);
 
-    startVertexLocation += polygonShapes.GetVertexCount();
+    startVertexLocation += polygonShapes.getVertexCount();
     ++drawCallCount;
 
     polygonShapes.Reset();
