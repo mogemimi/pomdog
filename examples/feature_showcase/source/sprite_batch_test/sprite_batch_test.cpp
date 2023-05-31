@@ -43,8 +43,8 @@ std::unique_ptr<Error> SpriteBatchTest::initialize()
     }
 
     timer = std::make_shared<Timer>(clock);
-    timer->SetInterval(std::chrono::seconds(1));
-    timer->SetScale(0.2);
+    timer->setInterval(std::chrono::seconds(1));
+    timer->setScale(0.2);
 
     auto mouse = gameHost->getMouse();
     connect(mouse->ButtonDown, [this](MouseButtons mouseButton) {
@@ -106,7 +106,7 @@ void SpriteBatchTest::draw()
         0.0f,
         100.0f);
 
-    const auto t = static_cast<float>(timer->GetTotalTime().count());
+    const auto t = static_cast<float>(timer->getTotalTime().count());
 
     // Drawing line
     const auto w = static_cast<float>(presentationParameters.backBufferWidth);

@@ -8,13 +8,14 @@
 namespace pomdog::detail::apple {
 
 class TimeSourceApple final : public TimeSource {
+private:
+    double secondsPerTick_ = 0.0;
+
 public:
     TimeSourceApple() noexcept;
 
-    [[nodiscard]] TimePoint Now() const noexcept override;
-
-private:
-    double secondsPerTick_ = 0.0;
+    [[nodiscard]] TimePoint
+    now() const noexcept override;
 };
 
 } // namespace pomdog::detail::apple

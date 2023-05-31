@@ -27,6 +27,14 @@ class GameClock;
 ///
 /// Instances of this class are unique.
 class POMDOG_EXPORT Timer {
+private:
+    ScopedConnection connection_;
+    std::optional<Duration> interval_;
+    Duration totalTime_;
+    double scale_;
+    bool enabled_;
+    bool singleShot_;
+
 public:
     /// Creates the Timer which is connected to given GameClock.
     /// The timer starts instantly after construction in repeated execution mode
@@ -48,56 +56,53 @@ public:
     ~Timer();
 
     /// Enables the timer.
-    void Start();
+    void start();
 
     /// Disables the timer with saving total elapsed time.
-    void Stop();
+    void stop();
 
     /// Sets total elapsed time to zero.
-    void Reset();
+    void reset();
 
     /// @return If timer is running.
-    bool IsEnabled() const;
+    [[nodiscard]] bool
+    isEnabled() const;
 
     /// @return Total elapsed time while timer was running.
-    Duration GetTotalTime() const;
+    [[nodiscard]] Duration
+    getTotalTime() const;
 
     /// @return If timer is executing the task only once.
-    bool IsSingleShot() const;
+    [[nodiscard]] bool
+    isSingleShot() const;
 
     /// Sets timer task repetition.
-    /// @param isSingleShot True if task must be executed only once, false otherwise.
-    void SetSingleShot(bool isSingleShot);
+    /// @param singleShot True if task must be executed only once, false otherwise.
+    void setSingleShot(bool singleShot);
 
     /// @return Time scale of the timer.
-    double GetScale() const;
+    [[nodiscard]] double
+    getScale() const;
 
     /// Sets the scale which affects duration of every frame that is
     /// summed up in total elapsed time.
     /// @param scale New scale value.
-    void SetScale(double scale);
+    void setScale(double scale);
 
     /// @return Interval between task execution, if was given.
-    std::optional<Duration> GetInterval() const;
+    [[nodiscard]] std::optional<Duration>
+    getInterval() const;
 
     /// Sets interval between task execution.
     /// @param interval New interval value.
-    void SetInterval(const Duration& interval);
+    void setInterval(const Duration& interval);
 
     /// Resets interval between task execution to undefined value.
-    void SetInterval();
+    void setInterval();
 
     /// Signal that fires when timer's elapsed time is over the duration.
     /// Can be fired multiple times, if the timer is set to re-execution.
-    Signal<void()> Elapsed;
-
-private:
-    ScopedConnection connection;
-    std::optional<Duration> interval;
-    Duration totalTime;
-    double scale;
-    bool enabled;
-    bool isSingleShot;
+    Signal<void()> elapsed;
 };
 
 } // namespace pomdog

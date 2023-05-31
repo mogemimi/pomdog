@@ -202,7 +202,7 @@ GameHostLinux::initialize(const gpu::PresentationParameters& presentationParamet
 
     timeSource_ = detail::makeTimeSource();
     clock_ = std::make_shared<GameClockImpl>();
-    if (auto err = clock_->Initialize(presentationParameters.presentationInterval, timeSource_); err != nullptr) {
+    if (auto err = clock_->initialize(presentationParameters.presentationInterval, timeSource_); err != nullptr) {
         return errors::wrap(std::move(err), "GameClockImpl::Initialize() failed.");
     }
 
@@ -371,10 +371,10 @@ void GameHostLinux::processEvent(::XEvent& event)
 void GameHostLinux::run(Game& game)
 {
     while (!exitRequest_) {
-        clock_->Tick();
+        clock_->tick();
         messagePump();
         constexpr int64_t gamepadDetectionInterval = 240;
-        if (((clock_->GetFrameNumber() % gamepadDetectionInterval) == 1) && (clock_->GetFrameRate() >= 30.0f)) {
+        if (((clock_->getFrameNumber() % gamepadDetectionInterval) == 1) && (clock_->getFrameRate() >= 30.0f)) {
             gamepad_->EnumerateDevices();
         }
         gamepad_->PollEvents();
@@ -383,7 +383,7 @@ void GameHostLinux::run(Game& game)
         game.update();
         renderFrame(game);
 
-        auto elapsedTime = clock_->GetElapsedTime();
+        auto elapsedTime = clock_->getElapsedTime();
 
         if (elapsedTime < presentationInterval_) {
             auto sleepTime = (presentationInterval_ - elapsedTime);

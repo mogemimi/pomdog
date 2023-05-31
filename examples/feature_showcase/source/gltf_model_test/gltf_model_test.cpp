@@ -275,7 +275,7 @@ void GLTFModelTest::update()
     worldConstants.LightDirection = Vector4{lightDirection, 0.0f};
     worldConstantBuffer->setData(0, gpu::makeByteSpan(worldConstants));
 
-    auto time = static_cast<float>(gameHost->getClock()->GetTotalGameTime().count());
+    auto time = static_cast<float>(gameHost->getClock()->getTotalGameTime().count());
     auto rotateY = math::TwoPi<float> * rotateSpeed * time;
 
     auto mouse = gameHost->getMouse()->GetState();

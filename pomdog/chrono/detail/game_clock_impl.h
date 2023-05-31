@@ -25,16 +25,16 @@ namespace pomdog::detail {
 template <typename T>
 class CompensatedSumAccumulator final {
 private:
-    T compensation = T::zero();
+    T compensation_ = T::zero();
 
 public:
     void operator()(T& sum, const T& num)
     {
         // Kahan summation algorithm
         // NOTE: "Velvel" means "wolf" in Yiddish.
-        auto tmp = num - compensation;
-        auto velvel = sum + tmp;
-        compensation = (velvel - sum) - tmp;
+        const auto tmp = num - compensation_;
+        const auto velvel = sum + tmp;
+        compensation_ = (velvel - sum) - tmp;
         sum = velvel;
     }
 };
@@ -47,36 +47,43 @@ public:
     /// Constructs GameClockImpl with initial FPS.
     /// @param framesPerSecond Amount of update / render cycles in one second. Should be greater than 0.
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(int framesPerSecond, const std::shared_ptr<TimeSource>& timeSource) noexcept;
+    initialize(int framesPerSecond, const std::shared_ptr<TimeSource>& timeSource) noexcept;
 
-    void Restart();
+    void restart();
 
     /// Increments frame number.
-    /// Fires @ref OnTick.
-    void Tick() override;
+    /// Fires @ref onTick.
+    void tick() override;
 
     /// @return Total amount of elapsed time in seconds since the game launch.
-    Duration GetTotalGameTime() const noexcept override;
+    [[nodiscard]] Duration
+    getTotalGameTime() const noexcept override;
 
     /// @return Number of current frame in usage.
     /// @note Can't be greater than framesPerSecond in GameClock(int).
-    std::int64_t GetFrameNumber() const noexcept override;
+    [[nodiscard]] std::int64_t
+    getFrameNumber() const noexcept override;
 
     /// @return Duration in seconds of one frame per one second.
-    Duration GetFrameDuration() const noexcept override;
+    [[nodiscard]] Duration
+    getFrameDuration() const noexcept override;
 
     /// @return Approximate quantity of actual frames per second.
-    float GetFrameRate() const noexcept override;
+    [[nodiscard]] float
+    getFrameRate() const noexcept override;
 
-    /// @return Total amount of elasped time in seconds since last Tick().
-    Duration GetElapsedTime() const noexcept override;
+    /// @return Total amount of elasped time in seconds since last tick().
+    [[nodiscard]] Duration
+    getElapsedTime() const noexcept override;
 
 private:
-    Duration GetExactLastFrameDuration();
+    [[nodiscard]] Duration
+    getExactLastFrameDuration();
 
-    void AddToFrameHistory(Duration&& exactFrameDuration);
+    void addToFrameHistory(Duration&& exactFrameDuration);
 
-    Duration GetPredictFrameDuration() const;
+    [[nodiscard]] Duration
+    getPredictFrameDuration() const;
 
 private:
     std::shared_ptr<detail::TimeSource> timeSource_;

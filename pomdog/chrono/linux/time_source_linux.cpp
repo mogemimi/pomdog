@@ -9,7 +9,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail::linux {
 
-TimePoint TimeSourceLinux::Now() const noexcept
+TimePoint TimeSourceLinux::now() const noexcept
 {
     struct timespec now;
     [[maybe_unused]] const auto result = clock_gettime(CLOCK_MONOTONIC, &now);

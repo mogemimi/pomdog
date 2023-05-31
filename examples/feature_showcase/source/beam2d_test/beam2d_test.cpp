@@ -43,8 +43,8 @@ std::unique_ptr<Error> Beam2DTest::initialize()
     }
 
     timer = std::make_shared<Timer>(clock);
-    timer->SetInterval(std::chrono::seconds(1));
-    timer->SetScale(0.2);
+    timer->setInterval(std::chrono::seconds(1));
+    timer->setScale(0.2);
 
     beamSystem = std::make_unique<BeamSystem>();
 
@@ -80,7 +80,7 @@ void Beam2DTest::update()
 {
     const auto emitterPosition = Vector2::createZero();
     const auto clock = gameHost->getClock();
-    const auto frameDuration = clock->GetFrameDuration();
+    const auto frameDuration = clock->getFrameDuration();
     beamSystem->Update(frameDuration, emitterPosition, emitterTarget);
 }
 

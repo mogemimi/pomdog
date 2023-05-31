@@ -11,7 +11,8 @@ class POMDOG_EXPORT TimeSource {
 public:
     virtual ~TimeSource() noexcept;
 
-    [[nodiscard]] virtual TimePoint Now() const noexcept = 0;
+    [[nodiscard]] virtual TimePoint
+    now() const noexcept = 0;
 };
 
 } // namespace pomdog::detail

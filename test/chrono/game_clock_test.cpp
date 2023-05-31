@@ -23,76 +23,76 @@ TEST_CASE("GameClock", "[GameClock]")
         auto timeSource = detail::makeTimeSource();
         const int framesPerSecond = 30;
         detail::GameClockImpl clock;
-        REQUIRE(clock.Initialize(framesPerSecond, timeSource) == nullptr);
+        REQUIRE(clock.initialize(framesPerSecond, timeSource) == nullptr);
 
         const auto sleepTime = std::chrono::milliseconds(1);
-        auto prevTotalTime = clock.GetTotalGameTime();
+        auto prevTotalTime = clock.getTotalGameTime();
 
-        REQUIRE(clock.GetFrameNumber() == 0);
-        REQUIRE(clock.GetTotalGameTime() == Duration::zero());
-        REQUIRE(std::abs(clock.GetFrameRate() - 30.0f) < Epsilon);
-        REQUIRE(clock.GetFrameDuration() == Duration{1.0 / 30.0});
-        REQUIRE(clock.GetElapsedTime() >= Duration::zero());
+        REQUIRE(clock.getFrameNumber() == 0);
+        REQUIRE(clock.getTotalGameTime() == Duration::zero());
+        REQUIRE(std::abs(clock.getFrameRate() - 30.0f) < Epsilon);
+        REQUIRE(clock.getFrameDuration() == Duration{1.0 / 30.0});
+        REQUIRE(clock.getElapsedTime() >= Duration::zero());
 
-        clock.Tick();
-        REQUIRE(clock.GetFrameNumber() == 1);
-        REQUIRE(clock.GetTotalGameTime() > prevTotalTime);
-        REQUIRE(clock.GetFrameRate() > 0.0f);
-        REQUIRE(clock.GetFrameDuration() > Duration::zero());
-        REQUIRE(clock.GetElapsedTime() >= Duration::zero());
+        clock.tick();
+        REQUIRE(clock.getFrameNumber() == 1);
+        REQUIRE(clock.getTotalGameTime() > prevTotalTime);
+        REQUIRE(clock.getFrameRate() > 0.0f);
+        REQUIRE(clock.getFrameDuration() > Duration::zero());
+        REQUIRE(clock.getElapsedTime() >= Duration::zero());
 
-        prevTotalTime = clock.GetTotalGameTime();
+        prevTotalTime = clock.getTotalGameTime();
         std::this_thread::sleep_for(sleepTime);
-        clock.Tick();
+        clock.tick();
 
-        REQUIRE(clock.GetFrameNumber() == 2);
-        REQUIRE(clock.GetTotalGameTime() > prevTotalTime);
-        REQUIRE(clock.GetFrameRate() > 0.0f);
-        REQUIRE(clock.GetFrameDuration() > Duration::zero());
-        REQUIRE(clock.GetElapsedTime() >= Duration::zero());
+        REQUIRE(clock.getFrameNumber() == 2);
+        REQUIRE(clock.getTotalGameTime() > prevTotalTime);
+        REQUIRE(clock.getFrameRate() > 0.0f);
+        REQUIRE(clock.getFrameDuration() > Duration::zero());
+        REQUIRE(clock.getElapsedTime() >= Duration::zero());
 
-        prevTotalTime = clock.GetTotalGameTime();
+        prevTotalTime = clock.getTotalGameTime();
         std::this_thread::sleep_for(sleepTime);
-        clock.Tick();
+        clock.tick();
 
-        REQUIRE(clock.GetFrameNumber() == 3);
-        REQUIRE(clock.GetTotalGameTime() > prevTotalTime);
-        REQUIRE(clock.GetFrameRate() > 0.0f);
-        REQUIRE(clock.GetFrameDuration() > Duration::zero());
-        REQUIRE(clock.GetElapsedTime() >= Duration::zero());
+        REQUIRE(clock.getFrameNumber() == 3);
+        REQUIRE(clock.getTotalGameTime() > prevTotalTime);
+        REQUIRE(clock.getFrameRate() > 0.0f);
+        REQUIRE(clock.getFrameDuration() > Duration::zero());
+        REQUIRE(clock.getElapsedTime() >= Duration::zero());
 
-        prevTotalTime = clock.GetTotalGameTime();
+        prevTotalTime = clock.getTotalGameTime();
         std::this_thread::sleep_for(sleepTime);
-        clock.Tick();
+        clock.tick();
 
-        REQUIRE(clock.GetFrameNumber() == 4);
-        REQUIRE(clock.GetTotalGameTime() > prevTotalTime);
-        REQUIRE(clock.GetFrameRate() > 0.0f);
-        REQUIRE(clock.GetFrameDuration() > Duration::zero());
-        REQUIRE(clock.GetElapsedTime() >= Duration::zero());
+        REQUIRE(clock.getFrameNumber() == 4);
+        REQUIRE(clock.getTotalGameTime() > prevTotalTime);
+        REQUIRE(clock.getFrameRate() > 0.0f);
+        REQUIRE(clock.getFrameDuration() > Duration::zero());
+        REQUIRE(clock.getElapsedTime() >= Duration::zero());
     }
     SECTION("ElapsedTime")
     {
         auto timeSource = detail::makeTimeSource();
         const int framesPerSecond = 60;
         detail::GameClockImpl clock;
-        REQUIRE(clock.Initialize(framesPerSecond, timeSource) == nullptr);
+        REQUIRE(clock.initialize(framesPerSecond, timeSource) == nullptr);
 
         const auto sleepTime = std::chrono::milliseconds(16);
 
-        clock.Tick();
-        auto prevElapsedTime = clock.GetElapsedTime();
-        auto nextElapsedTime = clock.GetElapsedTime();
+        clock.tick();
+        auto prevElapsedTime = clock.getElapsedTime();
+        auto nextElapsedTime = clock.getElapsedTime();
         REQUIRE(Duration::zero() <= prevElapsedTime);
         REQUIRE(prevElapsedTime <= nextElapsedTime);
 
         std::this_thread::sleep_for(sleepTime);
-        nextElapsedTime = clock.GetElapsedTime();
+        nextElapsedTime = clock.getElapsedTime();
         REQUIRE(prevElapsedTime < nextElapsedTime);
         std::swap(prevElapsedTime, nextElapsedTime);
 
         std::this_thread::sleep_for(sleepTime);
-        nextElapsedTime = clock.GetElapsedTime();
+        nextElapsedTime = clock.getElapsedTime();
         REQUIRE(prevElapsedTime < nextElapsedTime);
     }
 }

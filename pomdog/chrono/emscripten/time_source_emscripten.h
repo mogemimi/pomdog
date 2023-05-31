@@ -9,7 +9,8 @@ namespace pomdog::detail::emscripten {
 
 class TimeSourceEmscripten final : public TimeSource {
 public:
-    [[nodiscard]] TimePoint Now() const noexcept override;
+    [[nodiscard]] TimePoint
+    now() const noexcept override;
 };
 
 } // namespace pomdog::detail::emscripten

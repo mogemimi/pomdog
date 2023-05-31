@@ -85,8 +85,8 @@ std::unique_ptr<Error> Particle3DTest::initialize()
     }
 
     timer = std::make_shared<Timer>(clock);
-    timer->SetInterval(std::chrono::seconds(1));
-    timer->SetScale(0.1);
+    timer->setInterval(std::chrono::seconds(1));
+    timer->setScale(0.1);
 
     {
         // NOTE: Load particle clip from .json file
@@ -140,7 +140,7 @@ std::unique_ptr<Error> Particle3DTest::initialize()
 void Particle3DTest::update()
 {
     auto clock = gameHost->getClock();
-    auto frameDuration = clock->GetFrameDuration();
+    auto frameDuration = clock->getFrameDuration();
     particleSystem->Simulate(emitterPosition, Quaternion::createFromAxisAngle(Vector3::createUnitY(), 0.0f), frameDuration);
 }
 
@@ -166,7 +166,7 @@ void Particle3DTest::draw()
         0.01f,
         500.0f);
 
-    const auto totalTime = static_cast<float>(timer->GetTotalTime().count());
+    const auto totalTime = static_cast<float>(timer->getTotalTime().count());
     const auto lookAtPosition = Vector3{0.0f, 0.0f, 5.0f};
     const auto rotation = Matrix4x4::createRotationY(math::TwoPi<float> * totalTime);
     const auto cameraPosition = lookAtPosition + math::transform(Vector3{0.0f, 6.0f, -8.0f}, rotation);

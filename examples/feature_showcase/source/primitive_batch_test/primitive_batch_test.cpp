@@ -25,7 +25,7 @@ std::unique_ptr<Error> PrimitiveBatchTest::initialize()
 
     primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
     timer = std::make_shared<Timer>(clock);
-    timer->SetInterval(std::chrono::seconds(1));
+    timer->setInterval(std::chrono::seconds(1));
 
     return nullptr;
 }
@@ -58,7 +58,7 @@ void PrimitiveBatchTest::draw()
 
     const auto w = static_cast<float>(presentationParameters.backBufferWidth);
     const auto h = static_cast<float>(presentationParameters.backBufferHeight);
-    const auto t = static_cast<float>(timer->GetTotalTime().count());
+    const auto t = static_cast<float>(timer->getTotalTime().count());
 
     primitiveBatch->Begin(commandList, projectionMatrix);
 

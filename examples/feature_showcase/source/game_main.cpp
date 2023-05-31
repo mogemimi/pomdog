@@ -59,8 +59,8 @@ GameMain::initialize()
     spriteFont->PrepareFonts("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345689.,!?-+/():;%&`'*#=[]\" ");
     primitiveBatch = std::make_shared<PrimitiveBatch>(graphicsDevice, *assets);
     timer = std::make_shared<Timer>(clock);
-    timer->SetInterval(std::chrono::seconds(1));
-    timer->SetScale(1.0);
+    timer->setInterval(std::chrono::seconds(1));
+    timer->setScale(1.0);
 
     buttons.emplace_back("EditorGUI Test", [this] {
         window->setTitle("Feature Showcase > EditorGUI Test");
@@ -209,9 +209,9 @@ GameMain::initialize()
     });
 
     fpsTimer = std::make_shared<Timer>(clock);
-    fpsTimer->SetInterval(std::chrono::milliseconds(150));
-    connect(fpsTimer->Elapsed, [this] {
-        footerString = StringHelper::Format("%.2f fps", clock->GetFrameRate());
+    fpsTimer->setInterval(std::chrono::milliseconds(150));
+    connect(fpsTimer->elapsed, [this] {
+        footerString = StringHelper::Format("%.2f fps", clock->getFrameRate());
     });
 
     return nullptr;
@@ -338,7 +338,7 @@ void GameMain::drawMenu()
                 color = math::lerp(
                     Color{160, 160, 160, 255},
                     Color{191, 190, 180, 255},
-                    0.5f + 0.5f * std::cos(math::TwoPi<float> * static_cast<float>(timer->GetTotalTime().count())));
+                    0.5f + 0.5f * std::cos(math::TwoPi<float> * static_cast<float>(timer->getTotalTime().count())));
             }
 
             primitiveBatch->DrawRectangle(

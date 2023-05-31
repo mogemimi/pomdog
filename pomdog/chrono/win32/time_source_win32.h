@@ -11,7 +11,8 @@ class TimeSourceWin32 final : public TimeSource {
 public:
     TimeSourceWin32() noexcept;
 
-    [[nodiscard]] TimePoint Now() const noexcept override;
+    [[nodiscard]] TimePoint
+    now() const noexcept override;
 
 private:
     double secondsPerTick_ = 0.0;

@@ -25,7 +25,7 @@ public:
     {
         timeSource_ = detail::makeTimeSource();
         clock_ = std::make_shared<detail::GameClockImpl>();
-        REQUIRE(clock_->Initialize(60, timeSource_) == nullptr);
+        REQUIRE(clock_->initialize(60, timeSource_) == nullptr);
 
         service_ = std::make_unique<IOService>();
 
@@ -52,7 +52,7 @@ public:
     void RunLoop()
     {
         while (!exitRequest_) {
-            clock_->Tick();
+            clock_->tick();
             service_->Step();
 
             // NOTE: I want to suppress energy impact if possible.

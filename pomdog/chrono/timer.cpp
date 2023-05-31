@@ -12,31 +12,31 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog {
 
 Timer::Timer(GameClock& clock)
-    : totalTime(Duration::zero())
-    , scale(1)
-    , enabled(true)
-    , isSingleShot(false)
+    : totalTime_(Duration::zero())
+    , scale_(1)
+    , enabled_(true)
+    , singleShot_(false)
 {
     auto onTick = [this](const Duration& frameDurationIn) {
-        if (!enabled) {
+        if (!enabled_) {
             return;
         }
-        totalTime += (frameDurationIn * scale);
+        totalTime_ += (frameDurationIn * scale_);
 
-        if (interval && (totalTime >= *interval)) {
-            totalTime = *interval;
+        if (interval_ && (totalTime_ >= *interval_)) {
+            totalTime_ = *interval_;
 
-            this->Elapsed();
+            elapsed();
 
-            if (isSingleShot) {
-                enabled = false;
+            if (singleShot_) {
+                enabled_ = false;
             }
             else {
-                totalTime = Duration::zero();
+                totalTime_ = Duration::zero();
             }
         }
     };
-    connection = clock.OnTick.Connect(std::move(onTick));
+    connection_ = clock.onTick.Connect(std::move(onTick));
 }
 
 Timer::Timer(const std::shared_ptr<GameClock>& clock)
@@ -47,64 +47,64 @@ Timer::Timer(const std::shared_ptr<GameClock>& clock)
 
 Timer::~Timer() = default;
 
-void Timer::Start()
+void Timer::start()
 {
-    this->enabled = true;
+    enabled_ = true;
 }
 
-void Timer::Stop()
+void Timer::stop()
 {
-    this->enabled = false;
+    enabled_ = false;
 }
 
-void Timer::Reset()
+void Timer::reset()
 {
-    totalTime = Duration::zero();
+    totalTime_ = Duration::zero();
 }
 
-bool Timer::IsEnabled() const
+bool Timer::isEnabled() const
 {
-    return this->enabled;
+    return enabled_;
 }
 
-Duration Timer::GetTotalTime() const
+Duration Timer::getTotalTime() const
 {
-    return this->totalTime;
+    return totalTime_;
 }
 
-bool Timer::IsSingleShot() const
+bool Timer::isSingleShot() const
 {
-    return this->isSingleShot;
+    return singleShot_;
 }
 
-void Timer::SetSingleShot(bool isSingleShotIn)
+void Timer::setSingleShot(bool singleShotIn)
 {
-    this->isSingleShot = isSingleShotIn;
+    singleShot_ = singleShotIn;
 }
 
-void Timer::SetScale(double scaleIn)
+void Timer::setScale(double scaleIn)
 {
-    this->scale = scaleIn;
+    scale_ = scaleIn;
 }
 
-double Timer::GetScale() const
+double Timer::getScale() const
 {
-    return this->scale;
+    return scale_;
 }
 
-std::optional<Duration> Timer::GetInterval() const
+std::optional<Duration> Timer::getInterval() const
 {
-    return this->interval;
+    return interval_;
 }
 
-void Timer::SetInterval(const Duration& intervalIn)
+void Timer::setInterval(const Duration& intervalIn)
 {
-    this->interval = intervalIn;
+    interval_ = intervalIn;
 }
 
-void Timer::SetInterval()
+void Timer::setInterval()
 {
-    this->interval = std::nullopt;
+    interval_ = std::nullopt;
 }
 
 } // namespace pomdog

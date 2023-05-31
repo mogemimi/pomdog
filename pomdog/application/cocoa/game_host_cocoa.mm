@@ -169,7 +169,7 @@ GameHostCocoa::Impl::initialize(
 
     timeSource_ = std::make_shared<detail::apple::TimeSourceApple>();
     clock_ = std::make_shared<GameClockImpl>();
-    if (auto err = clock_->Initialize(presentationParameters.presentationInterval, timeSource_); err != nullptr) {
+    if (auto err = clock_->initialize(presentationParameters.presentationInterval, timeSource_); err != nullptr) {
         return errors::wrap(std::move(err), "GameClockImpl::Initialize() failed.");
     }
 
@@ -330,7 +330,7 @@ GameHostCocoa::Impl::run(
         // NOTE: In order to prevent the RenderFrame() function from being
         // executed before the Game::Update() function is called, if the frame
         // number is <= 0, do not render.
-        if (clock_->GetFrameNumber() > 0) {
+        if (clock_->getFrameNumber() > 0) {
             renderFrame();
         }
     }];
@@ -400,7 +400,7 @@ void GameHostCocoa::Impl::gameLoop()
     auto game = weakGame.lock();
     POMDOG_ASSERT(game);
 
-    clock_->Tick();
+    clock_->tick();
     doEvents();
     ioService_->Step();
 
@@ -419,7 +419,7 @@ void GameHostCocoa::Impl::gameLoop()
     }
 
     if (!displayLinkEnabled) {
-        auto elapsedTime = clock_->GetElapsedTime();
+        auto elapsedTime = clock_->getElapsedTime();
 
         if (elapsedTime < presentationInterval) {
             lock.~lock_guard();

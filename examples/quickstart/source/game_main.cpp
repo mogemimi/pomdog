@@ -158,15 +158,15 @@ std::unique_ptr<Error> GameMain::initialize()
     {
         // NOTE: Create timer
         timer = std::make_unique<Timer>(clock);
-        timer->SetInterval(std::chrono::milliseconds(500));
+        timer->setInterval(std::chrono::milliseconds(500));
 
         // NOTE: Connect to timer event notification
-        connect(timer->Elapsed, [this] {
+        connect(timer->elapsed, [this] {
             // String formatting using pomdog::StringFormat
             auto title = StringHelper::Format(
                 "quickstart %3.0f fps, %s frames",
-                std::round(clock->GetFrameRate()),
-                std::to_string(clock->GetFrameNumber()).c_str());
+                std::round(clock->getFrameRate()),
+                std::to_string(clock->getFrameNumber()).c_str());
 
             // NOTE: Set window title
             window->setTitle(title);
@@ -178,7 +178,7 @@ std::unique_ptr<Error> GameMain::initialize()
 
 void GameMain::update()
 {
-    auto totalTime = static_cast<float>(clock->GetTotalGameTime().count());
+    auto totalTime = static_cast<float>(clock->getTotalGameTime().count());
 
     auto rotate = Matrix4x4::createRotationZ(std::cos(totalTime));
     auto scale = Matrix4x4::createScale(Vector3{

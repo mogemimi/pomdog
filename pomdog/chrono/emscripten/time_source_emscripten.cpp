@@ -9,7 +9,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail::emscripten {
 
-TimePoint TimeSourceEmscripten::Now() const noexcept
+TimePoint TimeSourceEmscripten::now() const noexcept
 {
     const auto now = ::emscripten_get_now();
     static_assert(std::is_same_v<std::remove_const_t<decltype(now)>, double>);

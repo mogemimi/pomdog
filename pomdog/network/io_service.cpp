@@ -75,7 +75,7 @@ Connection IOService::ScheduleTask(std::function<void()>&& func)
 TimePoint IOService::GetNowTime() const
 {
     POMDOG_ASSERT(clock_ != nullptr);
-    return TimePoint{clock_->GetTotalGameTime()};
+    return TimePoint{clock_->getTotalGameTime()};
 }
 
 } // namespace pomdog

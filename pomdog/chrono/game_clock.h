@@ -25,32 +25,32 @@ public:
     virtual ~GameClock();
 
     /// Increments frame number.
-    /// Fires @ref OnTick.
-    virtual void Tick() = 0;
+    /// Fires @ref onTick.
+    virtual void tick() = 0;
 
     /// @return Total amount of elapsed time in seconds since the game launch.
     [[nodiscard]] virtual Duration
-    GetTotalGameTime() const noexcept = 0;
+    getTotalGameTime() const noexcept = 0;
 
     /// @return Number of current frame in usage.
     /// @note Can't be greater than framesPerSecond in GameClock(int).
     [[nodiscard]] virtual std::int64_t
-    GetFrameNumber() const noexcept = 0;
+    getFrameNumber() const noexcept = 0;
 
     /// @return Duration in seconds of one frame per one second.
     [[nodiscard]] virtual Duration
-    GetFrameDuration() const noexcept = 0;
+    getFrameDuration() const noexcept = 0;
 
     /// @return Approximate quantity of actual frames per second.
     [[nodiscard]] virtual float
-    GetFrameRate() const noexcept = 0;
+    getFrameRate() const noexcept = 0;
 
-    /// @return Total amount of elasped time in seconds since last Tick().
+    /// @return Total amount of elasped time in seconds since last tick().
     [[nodiscard]] virtual Duration
-    GetElapsedTime() const noexcept = 0;
+    getElapsedTime() const noexcept = 0;
 
     /// Signal that fires on every Tick().
-    Signal<void(const Duration& frameDuration)> OnTick;
+    Signal<void(const Duration& frameDuration)> onTick;
 };
 
 } // namespace pomdog

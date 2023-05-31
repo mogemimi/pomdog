@@ -34,15 +34,15 @@ DebugNavigator::DebugNavigator(
 void DebugNavigator::Draw(DrawingContext& drawingContext)
 {
     {
-        if (clock->GetTotalGameTime() - duration > Duration(0.2)) {
-            auto frameRate = clock->GetFrameRate();
+        if (clock->getTotalGameTime() - duration > Duration(0.2)) {
+            auto frameRate = clock->getFrameRate();
             frameRateString = StringHelper::Format("%4.2lf fps", static_cast<double>(frameRate));
             frameRates.push_back(std::round(math::clamp(frameRate, minFramerate, maxFramerate)));
 
             if (frameRates.size() > maxHistories) {
                 frameRates.pop_front();
             }
-            duration = clock->GetTotalGameTime();
+            duration = clock->getTotalGameTime();
         }
     }
 

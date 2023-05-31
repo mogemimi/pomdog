@@ -42,8 +42,8 @@ std::unique_ptr<Error> ParticleClipLoaderTest::initialize()
     }
 
     timer = std::make_shared<Timer>(clock);
-    timer->SetInterval(std::chrono::seconds(1));
-    timer->SetScale(0.2);
+    timer->setInterval(std::chrono::seconds(1));
+    timer->setScale(0.2);
 
     {
         // NOTE: Load particle clip from .json file
@@ -111,7 +111,7 @@ std::unique_ptr<Error> ParticleClipLoaderTest::initialize()
 void ParticleClipLoaderTest::update()
 {
     auto clock = gameHost->getClock();
-    auto frameDuration = clock->GetFrameDuration();
+    auto frameDuration = clock->getFrameDuration();
     particleSystem->Simulate(emitterPosition, math::toRadians(90.0f), frameDuration);
 }
 

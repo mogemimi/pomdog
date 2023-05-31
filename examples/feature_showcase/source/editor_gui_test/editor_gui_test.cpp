@@ -322,7 +322,7 @@ void EditorGUITest::update()
     }
 
     auto clock = gameHost->getClock();
-    hierarchy->UpdateAnimation(clock->GetFrameDuration());
+    hierarchy->UpdateAnimation(clock->getFrameDuration());
 }
 
 void EditorGUITest::draw()

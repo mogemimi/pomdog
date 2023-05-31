@@ -155,8 +155,8 @@ std::unique_ptr<Error> Particle2DTest::initialize()
     }
 
     timer = std::make_shared<Timer>(clock);
-    timer->SetInterval(std::chrono::seconds(1));
-    timer->SetScale(0.2);
+    timer->setInterval(std::chrono::seconds(1));
+    timer->setScale(0.2);
 
     particleClip = CreateEmitterFireBlock();
     particleSystem = std::make_unique<ParticleSystem>(particleClip);
@@ -185,7 +185,7 @@ std::unique_ptr<Error> Particle2DTest::initialize()
 void Particle2DTest::update()
 {
     auto clock = gameHost->getClock();
-    auto frameDuration = clock->GetFrameDuration();
+    auto frameDuration = clock->getFrameDuration();
     particleSystem->Simulate(emitterPosition, math::toRadians(90.0f), frameDuration);
 }
 

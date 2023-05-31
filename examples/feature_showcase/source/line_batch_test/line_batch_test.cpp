@@ -26,8 +26,8 @@ std::unique_ptr<Error> LineBatchTest::initialize()
     lineBatch = std::make_shared<LineBatch>(graphicsDevice, *assets);
     lineBatch2 = std::make_shared<LineBatch>(graphicsDevice, *assets);
     timer = std::make_shared<Timer>(clock);
-    timer->SetInterval(std::chrono::seconds(1));
-    timer->SetScale(0.1);
+    timer->setInterval(std::chrono::seconds(1));
+    timer->setScale(0.1);
 
     path.push_back(Vector2::createZero());
 
@@ -80,7 +80,7 @@ void LineBatchTest::draw()
     {
         auto world = Matrix4x4::createScale(0.1f) *
             Matrix4x4::createRotationX(math::PiOver4<float>) *
-            Matrix4x4::createRotationY(std::sin( math::TwoPi<float> * static_cast<float>(timer->GetTotalTime().count())));
+            Matrix4x4::createRotationY(std::sin( math::TwoPi<float> * static_cast<float>(timer->getTotalTime().count())));
         auto view = Matrix4x4::createTranslation(Vector3{0.0f, 0.0f, 50.0f});
 
         auto projectionMatrix = Matrix4x4::createPerspectiveFieldOfViewLH(

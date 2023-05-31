@@ -69,7 +69,7 @@ void VoxelModelTest::draw()
 
     auto viewMatrix = Matrix4x4::createLookAtLH(Vector3::createZero(), Vector3{2.0f, -3.0f, -10.0f}, Vector3::createUnitY());
     auto rotateX = Matrix4x4::createRotationX(math::PiOver2<float> * 3.0f);
-    auto rotateY = Matrix4x4::createRotationY(math::TwoPi<float> * rotateSpeed * static_cast<float>(gameHost->getClock()->GetTotalGameTime().count()));
+    auto rotateY = Matrix4x4::createRotationY(math::TwoPi<float> * rotateSpeed * static_cast<float>(gameHost->getClock()->getTotalGameTime().count()));
 
     primitiveBatch->Begin(commandList, rotateX * rotateY * viewMatrix * projectionMatrix);
 

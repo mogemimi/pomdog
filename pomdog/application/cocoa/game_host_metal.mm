@@ -178,7 +178,7 @@ GameHostMetal::Impl::initialize(
 
     timeSource_ = std::make_shared<detail::apple::TimeSourceApple>();
     clock_ = std::make_shared<GameClockImpl>();
-    if (auto err = clock_->Initialize(presentationParameters.presentationInterval, timeSource_); err != nullptr) {
+    if (auto err = clock_->initialize(presentationParameters.presentationInterval, timeSource_); err != nullptr) {
         return errors::wrap(std::move(err), "GameClockImpl::Initialize() failed.");
     }
 
@@ -353,7 +353,7 @@ void GameHostMetal::Impl::gameLoop()
     auto game = weakGame.lock();
     POMDOG_ASSERT(game);
 
-    clock_->Tick();
+    clock_->tick();
     doEvents();
     ioService_->Step();
 

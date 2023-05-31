@@ -16,7 +16,7 @@ TimeSourceWin32::TimeSourceWin32() noexcept
     secondsPerTick_ = 1.0 / static_cast<double>(frequency.QuadPart);
 }
 
-TimePoint TimeSourceWin32::Now() const noexcept
+TimePoint TimeSourceWin32::now() const noexcept
 {
     ::LARGE_INTEGER time;
     ::QueryPerformanceCounter(&time);

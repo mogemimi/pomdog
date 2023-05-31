@@ -21,7 +21,7 @@ TimeSourceApple::TimeSourceApple() noexcept
     secondsPerTick_ = nanoScale * nanoSeconds;
 }
 
-TimePoint TimeSourceApple::Now() const noexcept
+TimePoint TimeSourceApple::now() const noexcept
 {
     const auto currentSeconds = mach_absolute_time() * secondsPerTick_;
     return TimePoint{Duration{currentSeconds}};

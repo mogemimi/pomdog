@@ -223,7 +223,7 @@ void AnimationGraphTest::update()
     }
 
     // NOTE: (1) Pose extraction, and (2) Pose blending
-    animator->Update(clock->GetFrameDuration());
+    animator->Update(clock->getFrameDuration());
 
     // NOTE: (3) Global pose generation
     skeletal2d::SkeletonHelper::ToGlobalPose(*skeleton, *skeletonPose, globalPose);

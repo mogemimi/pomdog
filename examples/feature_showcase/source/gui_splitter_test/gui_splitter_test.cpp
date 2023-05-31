@@ -97,7 +97,7 @@ void GUISplitterTest::update()
     }
 
     auto clock = gameHost->getClock();
-    hierarchy->UpdateAnimation(clock->GetFrameDuration());
+    hierarchy->UpdateAnimation(clock->getFrameDuration());
 }
 
 void GUISplitterTest::draw()
