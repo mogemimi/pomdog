@@ -25,17 +25,17 @@ public:
     explicit CommandQueueImmediate(
         const std::shared_ptr<GraphicsContext>& graphicsContext);
 
-    void Reset() override;
+    void reset() override;
 
-    void PushbackCommandList(const std::shared_ptr<CommandList>& commandList) override;
+    void pushBackCommandList(const std::shared_ptr<CommandList>& commandList) override;
 
-    void ExecuteCommandLists() override;
+    void executeCommandLists() override;
 
-    void Present() override;
+    void present() override;
 
 private:
-    std::vector<std::shared_ptr<CommandListImmediate>> commandLists;
-    std::shared_ptr<GraphicsContext> graphicsContext;
+    std::vector<std::shared_ptr<CommandListImmediate>> commandLists_;
+    std::shared_ptr<GraphicsContext> graphicsContext_;
 };
 
 } // namespace pomdog::gpu::detail

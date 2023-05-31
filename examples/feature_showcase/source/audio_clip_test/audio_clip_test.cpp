@@ -17,7 +17,7 @@ std::unique_ptr<Error> AudioClipTest::initialize()
     std::unique_ptr<Error> err;
 
     // NOTE: Create graphics command list
-    std::tie(commandList, err) = graphicsDevice->CreateCommandList();
+    std::tie(commandList, err) = graphicsDevice->createCommandList();
     if (err != nullptr) {
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
@@ -105,7 +105,7 @@ void AudioClipTest::update()
 
 void AudioClipTest::draw()
 {
-    auto presentationParameters = graphicsDevice->GetPresentationParameters();
+    auto presentationParameters = graphicsDevice->getPresentationParameters();
 
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
         static_cast<float>(presentationParameters.backBufferWidth),
@@ -122,8 +122,8 @@ void AudioClipTest::draw()
     pass.viewport = viewport;
     pass.scissorRect = viewport.getBounds();
 
-    commandList->Reset();
-    commandList->SetRenderPass(std::move(pass));
+    commandList->reset();
+    commandList->setRenderPass(std::move(pass));
 
     const auto width = static_cast<float>(viewport.width);
     spriteBatch->Begin(commandList, projectionMatrix);
@@ -137,17 +137,17 @@ void AudioClipTest::draw()
     spriteFont->Draw(*spriteBatch, "Click here to play SE", Vector2{width * 0.5f - 10.0f, -20.0f}, Color::createWhite(), 0.0f, Vector2{1.0f, 0.5f}, 1.0f);
     spriteBatch->End();
 
-    commandList->Close();
+    commandList->close();
 
     constexpr bool isStandalone = false;
     if constexpr (isStandalone) {
-        commandQueue->Reset();
-        commandQueue->PushbackCommandList(commandList);
-        commandQueue->ExecuteCommandLists();
-        commandQueue->Present();
+        commandQueue->reset();
+        commandQueue->pushBackCommandList(commandList);
+        commandQueue->executeCommandLists();
+        commandQueue->present();
     }
     else {
-        commandQueue->PushbackCommandList(commandList);
+        commandQueue->pushBackCommandList(commandList);
     }
 }
 

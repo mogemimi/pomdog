@@ -24,68 +24,68 @@ public:
 
     virtual ~GraphicsContext();
 
-    virtual void ExecuteCommandLists(
+    virtual void executeCommandLists(
         std::span<std::shared_ptr<CommandListImmediate>> commandLists) = 0;
 
-    virtual void Present() = 0;
+    virtual void present() = 0;
 
-    virtual void Draw(
+    virtual void draw(
         std::uint32_t vertexCount,
         std::uint32_t startVertexLocation) = 0;
 
-    virtual void DrawIndexed(
+    virtual void drawIndexed(
         std::uint32_t indexCount,
         std::uint32_t startIndexLocation) = 0;
 
-    virtual void DrawInstanced(
+    virtual void drawInstanced(
         std::uint32_t vertexCountPerInstance,
         std::uint32_t instanceCount,
         std::uint32_t startVertexLocation,
         std::uint32_t startInstanceLocation) = 0;
 
-    virtual void DrawIndexedInstanced(
+    virtual void drawIndexedInstanced(
         std::uint32_t indexCountPerInstance,
         std::uint32_t instanceCount,
         std::uint32_t startIndexLocation,
         std::uint32_t startInstanceLocation) = 0;
 
     /// Begins a new render pass.
-    virtual void BeginRenderPass(const RenderPass& renderPass) = 0;
+    virtual void beginRenderPass(const RenderPass& renderPass) = 0;
 
     /// Ends the current render pass.
-    virtual void EndRenderPass() = 0;
+    virtual void endRenderPass() = 0;
 
     /// Sets the viewport dynamically to the rasterizer stage.
-    virtual void SetViewport(const Viewport& viewport) = 0;
+    virtual void setViewport(const Viewport& viewport) = 0;
 
     /// Sets the scissor rectangle dynamically for a scissor test.
-    virtual void SetScissorRect(const Rectangle& scissorRect) = 0;
+    virtual void setScissorRect(const Rectangle& scissorRect) = 0;
 
     /// Sets the constant blend color and alpha values.
-    virtual void SetBlendFactor(const Vector4& blendFactor) = 0;
+    virtual void setBlendFactor(const Vector4& blendFactor) = 0;
 
-    virtual void SetVertexBuffer(
+    virtual void setVertexBuffer(
         std::uint32_t index,
         const std::shared_ptr<VertexBuffer>& vertexBuffer,
         std::uint32_t offset) = 0;
 
-    virtual void SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer) = 0;
+    virtual void setIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer) = 0;
 
-    virtual void SetPipelineState(const std::shared_ptr<PipelineState>& pipelineState) = 0;
+    virtual void setPipelineState(const std::shared_ptr<PipelineState>& pipelineState) = 0;
 
-    virtual void SetConstantBuffer(
+    virtual void setConstantBuffer(
         std::uint32_t index,
         const std::shared_ptr<Buffer>& constantBuffer,
         std::uint32_t offset,
         std::uint32_t sizeInBytes) = 0;
 
-    virtual void SetSampler(std::uint32_t index, const std::shared_ptr<SamplerState>& sampler) = 0;
+    virtual void setSampler(std::uint32_t index, const std::shared_ptr<SamplerState>& sampler) = 0;
 
-    virtual void SetTexture(std::uint32_t index) = 0;
+    virtual void setTexture(std::uint32_t index) = 0;
 
-    virtual void SetTexture(std::uint32_t index, const std::shared_ptr<gpu::Texture2D>& texture) = 0;
+    virtual void setTexture(std::uint32_t index, const std::shared_ptr<gpu::Texture2D>& texture) = 0;
 
-    virtual void SetTexture(std::uint32_t index, const std::shared_ptr<RenderTarget2D>& texture) = 0;
+    virtual void setTexture(std::uint32_t index, const std::shared_ptr<RenderTarget2D>& texture) = 0;
 };
 
 } // namespace pomdog::gpu::detail

@@ -10,30 +10,29 @@ using namespace pomdog;
 
 TEST_CASE("linear_page_allocator", "[memory]")
 {
-    using pomdog::detail::LinearPageAllocator;
-    LinearPageAllocator alloc;
+    pomdog::memory::LinearPageAllocator alloc;
 
     SECTION("")
     {
-        //REQUIRE(alloc.GetAllocatedSize() == 0);
-        //REQUIRE(alloc.GetBufferSize() == 0);
-        alloc.Reset();
-        //REQUIRE(alloc.GetAllocatedSize() == 0);
-        //REQUIRE(alloc.GetBufferSize() == 0);
+        //REQUIRE(alloc.getAllocatedSize() == 0);
+        //REQUIRE(alloc.getBufferSize() == 0);
+        alloc.reset();
+        //REQUIRE(alloc.getAllocatedSize() == 0);
+        //REQUIRE(alloc.getBufferSize() == 0);
     }
     SECTION("")
     {
-        REQUIRE(alloc.Allocate(0, 0) == nullptr);
-        REQUIRE(alloc.Allocate(0, 1) == nullptr);
-        REQUIRE(alloc.Allocate(0, 2) == nullptr);
+        REQUIRE(alloc.allocate(0, 0) == nullptr);
+        REQUIRE(alloc.allocate(0, 1) == nullptr);
+        REQUIRE(alloc.allocate(0, 2) == nullptr);
 
-        REQUIRE(alloc.Allocate(1, 0) == nullptr);
-        REQUIRE(alloc.Allocate(1, 3) == nullptr);
-        REQUIRE(alloc.Allocate(1, 7) == nullptr);
+        REQUIRE(alloc.allocate(1, 0) == nullptr);
+        REQUIRE(alloc.allocate(1, 3) == nullptr);
+        REQUIRE(alloc.allocate(1, 7) == nullptr);
     }
     SECTION("")
     {
-        const auto p = alloc.Allocate(1, 1);
+        const auto p = alloc.allocate(1, 1);
         REQUIRE(p != nullptr);
         //REQUIRE(alloc.IsOwnerOf(p));
         //REQUIRE(alloc.GetAllocatedSize() == 1);
@@ -44,7 +43,7 @@ TEST_CASE("linear_page_allocator", "[memory]")
     }
     SECTION("")
     {
-        const auto p = reinterpret_cast<char*>(alloc.Allocate(4, 1));
+        const auto p = reinterpret_cast<char*>(alloc.allocate(4, 1));
         REQUIRE(p != nullptr);
         //REQUIRE(alloc.IsOwnerOf(p));
         //REQUIRE(alloc.GetAllocatedSize() == 4);
@@ -58,7 +57,7 @@ TEST_CASE("linear_page_allocator", "[memory]")
     }
     SECTION("")
     {
-        const auto p = reinterpret_cast<char*>(alloc.Allocate(4, 1));
+        const auto p = reinterpret_cast<char*>(alloc.allocate(4, 1));
         REQUIRE(p != nullptr);
         //REQUIRE(alloc.IsOwnerOf(p));
         //REQUIRE(alloc.GetAllocatedSize() == 4);
@@ -70,7 +69,7 @@ TEST_CASE("linear_page_allocator", "[memory]")
         //REQUIRE(alloc.GetAllocatedSize() == 4);
         //REQUIRE(alloc.GetBufferSize() >= 4);
 
-        const auto q = reinterpret_cast<char*>(alloc.Allocate(7, 1));
+        const auto q = reinterpret_cast<char*>(alloc.allocate(7, 1));
         REQUIRE(q != nullptr);
         REQUIRE(p != q);
         //REQUIRE(alloc.IsOwnerOf(q));
@@ -84,13 +83,13 @@ TEST_CASE("linear_page_allocator", "[memory]")
     SECTION("")
     {
         for (int i = 0; i < 512; i++) {
-            const auto p = reinterpret_cast<char*>(alloc.Allocate(127, 1));
+            const auto p = reinterpret_cast<char*>(alloc.allocate(127, 1));
             REQUIRE(p != nullptr);
         }
-        alloc.Reset();
+        alloc.reset();
 
         for (int i = 0; i < 512; i++) {
-            const auto p = reinterpret_cast<char*>(alloc.Allocate(64, 1));
+            const auto p = reinterpret_cast<char*>(alloc.allocate(64, 1));
             REQUIRE(p != nullptr);
         }
     }

@@ -28,7 +28,7 @@ std::unique_ptr<Error> AnimationGraphTest::initialize()
     std::unique_ptr<Error> err;
 
     // NOTE: Create graphics command list
-    std::tie(commandList, err) = graphicsDevice->CreateCommandList();
+    std::tie(commandList, err) = graphicsDevice->createCommandList();
     if (err != nullptr) {
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
@@ -118,7 +118,7 @@ std::unique_ptr<Error> AnimationGraphTest::initialize()
         }};
 
         // NOTE: Create vertex buffer
-        std::tie(vertexBuffer, err) = graphicsDevice->CreateVertexBuffer(
+        std::tie(vertexBuffer, err) = graphicsDevice->createVertexBuffer(
             verticesCombo.data(),
             skinnedMesh.Vertices.size(),
             sizeof(VertexCombined),
@@ -130,7 +130,7 @@ std::unique_ptr<Error> AnimationGraphTest::initialize()
     }
     {
         // NOTE: Create index buffer
-        std::tie(indexBuffer, err) = graphicsDevice->CreateIndexBuffer(
+        std::tie(indexBuffer, err) = graphicsDevice->createIndexBuffer(
             gpu::IndexFormat::UInt16,
             skinnedMesh.Indices.data(),
             skinnedMesh.Indices.size(),
@@ -142,7 +142,7 @@ std::unique_ptr<Error> AnimationGraphTest::initialize()
     }
     {
         // NOTE: Create constant buffer
-        std::tie(modelConstantBuffer, err) = graphicsDevice->CreateConstantBuffer(
+        std::tie(modelConstantBuffer, err) = graphicsDevice->createConstantBuffer(
             sizeof(BasicEffect::ModelConstantBuffer),
             gpu::BufferUsage::Dynamic);
 
@@ -150,7 +150,7 @@ std::unique_ptr<Error> AnimationGraphTest::initialize()
             return errors::wrap(std::move(err), "failed to create constant buffer");
         }
 
-        std::tie(worldConstantBuffer, err) = graphicsDevice->CreateConstantBuffer(
+        std::tie(worldConstantBuffer, err) = graphicsDevice->createConstantBuffer(
             sizeof(BasicEffect::WorldConstantBuffer),
             gpu::BufferUsage::Dynamic);
 
@@ -159,7 +159,7 @@ std::unique_ptr<Error> AnimationGraphTest::initialize()
         }
     }
     {
-        auto presentationParameters = graphicsDevice->GetPresentationParameters();
+        auto presentationParameters = graphicsDevice->getPresentationParameters();
 
         BasicEffect::BasicEffectDescription effectDesc;
         effectDesc.LightingEnabled = false;
@@ -194,7 +194,7 @@ std::unique_ptr<Error> AnimationGraphTest::initialize()
     }
     {
         // NOTE: Create sampler state
-        std::tie(sampler, err) = graphicsDevice->CreateSamplerState(
+        std::tie(sampler, err) = graphicsDevice->createSamplerState(
             gpu::SamplerDescriptor::createLinearWrap());
         if (err != nullptr) {
             return errors::wrap(std::move(err), "failed to create sampler state");
@@ -228,7 +228,7 @@ void AnimationGraphTest::update()
     // NOTE: (3) Global pose generation
     skeletal2d::SkeletonHelper::ToGlobalPose(*skeleton, *skeletonPose, globalPose);
 
-    auto presentationParameters = graphicsDevice->GetPresentationParameters();
+    auto presentationParameters = graphicsDevice->getPresentationParameters();
 
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
         static_cast<float>(presentationParameters.backBufferWidth),
@@ -290,7 +290,7 @@ void AnimationGraphTest::update()
 
 void AnimationGraphTest::draw()
 {
-    auto presentationParameters = graphicsDevice->GetPresentationParameters();
+    auto presentationParameters = graphicsDevice->getPresentationParameters();
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
@@ -301,8 +301,8 @@ void AnimationGraphTest::draw()
     pass.viewport = viewport;
     pass.scissorRect = viewport.getBounds();
 
-    commandList->Reset();
-    commandList->SetRenderPass(std::move(pass));
+    commandList->reset();
+    commandList->setRenderPass(std::move(pass));
 
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
         static_cast<float>(presentationParameters.backBufferWidth),
@@ -322,32 +322,32 @@ void AnimationGraphTest::draw()
     primitiveBatch->DrawLine(Vector2{w * 0.25f, -h * 0.5f}, Vector2{w * 0.25f, h * 0.5f}, Color{221, 220, 218, 60}, 1.0f);
     primitiveBatch->End();
 
-    commandList->SetPipelineState(pipelineState);
-    commandList->SetConstantBuffer(0, modelConstantBuffer);
-    commandList->SetConstantBuffer(1, worldConstantBuffer);
-    commandList->SetSamplerState(0, sampler);
-    commandList->SetTexture(0, texture);
-    commandList->SetVertexBuffer(0, vertexBuffer);
-    commandList->SetIndexBuffer(indexBuffer);
-    commandList->DrawIndexed(indexBuffer->getIndexCount(), 0);
+    commandList->setPipelineState(pipelineState);
+    commandList->setConstantBuffer(0, modelConstantBuffer);
+    commandList->setConstantBuffer(1, worldConstantBuffer);
+    commandList->setSamplerState(0, sampler);
+    commandList->setTexture(0, texture);
+    commandList->setVertexBuffer(0, vertexBuffer);
+    commandList->setIndexBuffer(indexBuffer);
+    commandList->drawIndexed(indexBuffer->getIndexCount(), 0);
 
     auto mouse = gameHost->getMouse()->GetState();
     if (mouse.RightButton == ButtonState::Pressed) {
-        commandList->SetPipelineState(pipelineStateWireframe);
-        commandList->DrawIndexed(indexBuffer->getIndexCount(), 0);
+        commandList->setPipelineState(pipelineStateWireframe);
+        commandList->drawIndexed(indexBuffer->getIndexCount(), 0);
     }
 
-    commandList->Close();
+    commandList->close();
 
     constexpr bool isStandalone = false;
     if constexpr (isStandalone) {
-        commandQueue->Reset();
-        commandQueue->PushbackCommandList(commandList);
-        commandQueue->ExecuteCommandLists();
-        commandQueue->Present();
+        commandQueue->reset();
+        commandQueue->pushBackCommandList(commandList);
+        commandQueue->executeCommandLists();
+        commandQueue->present();
     }
     else {
-        commandQueue->PushbackCommandList(commandList);
+        commandQueue->pushBackCommandList(commandList);
     }
 }
 

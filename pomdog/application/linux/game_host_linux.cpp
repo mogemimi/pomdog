@@ -248,13 +248,13 @@ GameHostLinux::initialize(const gpu::PresentationParameters& presentationParamet
 
     // NOTE: Create a graphics device.
     graphicsDevice_ = std::make_shared<gpu::detail::gl4::GraphicsDeviceGL4>();
-    if (auto err = graphicsDevice_->Initialize(presentationParameters); err != nullptr) {
+    if (auto err = graphicsDevice_->initialize(presentationParameters); err != nullptr) {
         return errors::wrap(std::move(err), "failed to initialize GraphicsDeviceGL4");
     }
 
     // NOTE: Create a graphics context.
     graphicsContext_ = std::make_shared<gpu::detail::gl4::GraphicsContextGL4>();
-    if (auto err = graphicsContext_->Initialize(openGLContext_, graphicsDevice_); err != nullptr) {
+    if (auto err = graphicsContext_->initialize(openGLContext_, graphicsDevice_); err != nullptr) {
         return errors::wrap(std::move(err), "failed to initialize GraphicsContextGL4");
     }
 
@@ -341,7 +341,7 @@ void GameHostLinux::processEvent(::XEvent& event)
     }
     case ConfigureNotify: {
         POMDOG_ASSERT(graphicsDevice_ != nullptr);
-        const auto presentationParameters = graphicsDevice_->GetPresentationParameters();
+        const auto presentationParameters = graphicsDevice_->getPresentationParameters();
         if ((presentationParameters.backBufferWidth != event.xconfigure.width) ||
             (presentationParameters.backBufferHeight != event.xconfigure.height)) {
             graphicsDevice_->clientSizeChanged(event.xconfigure.width, event.xconfigure.height);

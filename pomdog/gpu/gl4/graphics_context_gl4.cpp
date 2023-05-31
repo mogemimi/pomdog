@@ -153,7 +153,7 @@ void SetViewport(
 
     if (useBackBuffer) {
         if (auto device = graphicsDevice.lock(); device != nullptr) {
-            auto presentationParameters = device->GetPresentationParameters();
+            const auto presentationParameters = device->getPresentationParameters();
             viewportY = presentationParameters.backBufferHeight - (viewport.topLeftY + viewport.height);
         }
     }
@@ -191,7 +191,7 @@ void SetScissorRectangle(
     if (useBackBuffer) {
         // FIXME: Use glClipControl(GL_UPPER_LEFT) instead when OpenGL version is >= 4.5
         if (auto device = graphicsDevice.lock(); device != nullptr) {
-            auto presentationParameters = device->GetPresentationParameters();
+            const auto presentationParameters = device->getPresentationParameters();
             lowerLeftCornerY = presentationParameters.backBufferHeight - (rectangle.y + rectangle.height);
         }
     }
@@ -354,7 +354,7 @@ struct TypesafeHelperGL4::Traits<FrameBufferGL4> {
 };
 
 std::unique_ptr<Error>
-GraphicsContextGL4::Initialize(
+GraphicsContextGL4::initialize(
     const std::shared_ptr<OpenGLContext>& openGLContextIn,
     std::weak_ptr<GraphicsDevice>&& graphicsDeviceIn) noexcept
 {
@@ -375,7 +375,7 @@ GraphicsContextGL4::Initialize(
     primitiveTopology_ = GL_TRIANGLES;
 
     // NOTE: Set default values for graphics context
-    this->SetBlendFactor(Vector4{1.0f, 1.0f, 1.0f, 1.0f});
+    setBlendFactor(Vector4{1.0f, 1.0f, 1.0f, 1.0f});
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     auto graphicsCapbilities = this->GetCapabilities();
@@ -409,7 +409,7 @@ GraphicsContextGL4::~GraphicsContextGL4()
     graphicsDevice_.reset();
 }
 
-void GraphicsContextGL4::ExecuteCommandLists(
+void GraphicsContextGL4::executeCommandLists(
     std::span<std::shared_ptr<CommandListImmediate>> commandLists)
 {
     pipelineState_ = nullptr;
@@ -418,17 +418,17 @@ void GraphicsContextGL4::ExecuteCommandLists(
 
     for (auto& commandList : commandLists) {
         POMDOG_ASSERT(commandList);
-        commandList->ExecuteImmediate(*this);
+        commandList->executeImmediate(*this);
     }
 }
 
-void GraphicsContextGL4::Present()
+void GraphicsContextGL4::present()
 {
     nativeContext_->swapBuffers();
     POMDOG_CHECK_ERROR_GL4("swapBuffers");
 }
 
-void GraphicsContextGL4::ApplyPipelineState()
+void GraphicsContextGL4::applyPipelineState()
 {
     POMDOG_ASSERT(pipelineState_);
 
@@ -451,7 +451,7 @@ void GraphicsContextGL4::ApplyPipelineState()
     }
 }
 
-void GraphicsContextGL4::EmulateStartInstanceLocation(std::size_t startInstanceLocation)
+void GraphicsContextGL4::emulateStartInstanceLocation(std::size_t startInstanceLocation)
 {
     if (startInstanceLocation == 0) {
         // NOTE: nothing to do
@@ -479,7 +479,7 @@ void GraphicsContextGL4::EmulateStartInstanceLocation(std::size_t startInstanceL
     needToApplyInputLayout_ = true;
 }
 
-void GraphicsContextGL4::Draw(
+void GraphicsContextGL4::draw(
     std::uint32_t vertexCount,
     std::uint32_t startVertexLocation)
 {
@@ -487,7 +487,7 @@ void GraphicsContextGL4::Draw(
     CheckUnbindingRenderTargetsError(weakRenderTargets_, weakTextures_);
 #endif
 
-    ApplyPipelineState();
+    applyPipelineState();
 
     // Draw
     POMDOG_ASSERT(!vertexBuffers_.empty());
@@ -502,7 +502,7 @@ void GraphicsContextGL4::Draw(
     POMDOG_CHECK_ERROR_GL4("glDrawArrays");
 }
 
-void GraphicsContextGL4::DrawIndexed(
+void GraphicsContextGL4::drawIndexed(
     std::uint32_t indexCount,
     std::uint32_t startIndexLocation)
 {
@@ -510,7 +510,7 @@ void GraphicsContextGL4::DrawIndexed(
     CheckUnbindingRenderTargetsError(weakRenderTargets_, weakTextures_);
 #endif
 
-    ApplyPipelineState();
+    applyPipelineState();
 
     // Bind index buffer
     POMDOG_ASSERT(indexBuffer_);
@@ -533,7 +533,7 @@ void GraphicsContextGL4::DrawIndexed(
     POMDOG_CHECK_ERROR_GL4("glDrawElements");
 }
 
-void GraphicsContextGL4::DrawInstanced(
+void GraphicsContextGL4::drawInstanced(
     std::uint32_t vertexCountPerInstance,
     std::uint32_t instanceCount,
     std::uint32_t startVertexLocation,
@@ -543,7 +543,7 @@ void GraphicsContextGL4::DrawInstanced(
     CheckUnbindingRenderTargetsError(weakRenderTargets_, weakTextures_);
 #endif
 
-    ApplyPipelineState();
+    applyPipelineState();
 
     // Draw
     POMDOG_ASSERT(!vertexBuffers_.empty());
@@ -557,7 +557,7 @@ void GraphicsContextGL4::DrawInstanced(
     // NOTE:
     // 'glDrawArraysInstancedBaseInstance' is supported in OpenGL 4.2 and later.
     // But unfortunately, macOS Sierra (latest version of Mac 2016) still uses OpenGL 4.1.
-    EmulateStartInstanceLocation(startInstanceLocation);
+    emulateStartInstanceLocation(startInstanceLocation);
     glDrawArraysInstanced(
         primitiveTopology_.value,
         static_cast<GLint>(startVertexLocation),
@@ -575,7 +575,7 @@ void GraphicsContextGL4::DrawInstanced(
 #endif
 }
 
-void GraphicsContextGL4::DrawIndexedInstanced(
+void GraphicsContextGL4::drawIndexedInstanced(
     std::uint32_t indexCountPerInstance,
     std::uint32_t instanceCount,
     std::uint32_t startIndexLocation,
@@ -585,7 +585,7 @@ void GraphicsContextGL4::DrawIndexedInstanced(
     CheckUnbindingRenderTargetsError(weakRenderTargets_, weakTextures_);
 #endif
 
-    ApplyPipelineState();
+    applyPipelineState();
 
     // Bind index buffer
     POMDOG_ASSERT(indexBuffer_ != nullptr);
@@ -605,7 +605,7 @@ void GraphicsContextGL4::DrawIndexedInstanced(
     // NOTE:
     // 'glDrawElementsInstancedBaseInstance' is supported in OpenGL 4.2 and later.
     // But unfortunately, macOS Sierra (latest version of Mac 2016) still uses OpenGL 4.1.
-    EmulateStartInstanceLocation(startInstanceLocation);
+    emulateStartInstanceLocation(startInstanceLocation);
     glDrawElementsInstanced(
         primitiveTopology_.value,
         static_cast<GLsizei>(indexCountPerInstance),
@@ -646,7 +646,7 @@ GraphicsCapabilities GraphicsContextGL4::GetCapabilities() const noexcept
     return capabilities;
 }
 
-void GraphicsContextGL4::SetViewport(const Viewport& viewport)
+void GraphicsContextGL4::setViewport(const Viewport& viewport)
 {
     POMDOG_ASSERT(!renderTargets_.empty());
     POMDOG_ASSERT(renderTargets_.size() == 8);
@@ -655,7 +655,7 @@ void GraphicsContextGL4::SetViewport(const Viewport& viewport)
     gl4::SetViewport(viewport, graphicsDevice_, useBackBuffer);
 }
 
-void GraphicsContextGL4::SetScissorRect(const Rectangle& scissorRect)
+void GraphicsContextGL4::setScissorRect(const Rectangle& scissorRect)
 {
     POMDOG_ASSERT(!renderTargets_.empty());
     POMDOG_ASSERT(renderTargets_.size() == 8);
@@ -664,13 +664,13 @@ void GraphicsContextGL4::SetScissorRect(const Rectangle& scissorRect)
     SetScissorRectangle(scissorRect, graphicsDevice_, useBackBuffer);
 }
 
-void GraphicsContextGL4::SetBlendFactor(const Vector4& blendFactor)
+void GraphicsContextGL4::setBlendFactor(const Vector4& blendFactor)
 {
     glBlendColor(blendFactor.x, blendFactor.y, blendFactor.z, blendFactor.w);
     POMDOG_CHECK_ERROR_GL4("glBlendColor");
 }
 
-void GraphicsContextGL4::SetVertexBuffer(
+void GraphicsContextGL4::setVertexBuffer(
     std::uint32_t index,
     const std::shared_ptr<VertexBuffer>& vertexBuffer,
     std::uint32_t offset)
@@ -683,13 +683,13 @@ void GraphicsContextGL4::SetVertexBuffer(
     needToApplyInputLayout_ = true;
 }
 
-void GraphicsContextGL4::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBufferIn)
+void GraphicsContextGL4::setIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBufferIn)
 {
     POMDOG_ASSERT(indexBufferIn);
     indexBuffer_ = indexBufferIn;
 }
 
-void GraphicsContextGL4::SetPipelineState(const std::shared_ptr<PipelineState>& pipelineStateIn)
+void GraphicsContextGL4::setPipelineState(const std::shared_ptr<PipelineState>& pipelineStateIn)
 {
     POMDOG_ASSERT(pipelineStateIn);
     if (pipelineState_ != pipelineStateIn) {
@@ -702,7 +702,7 @@ void GraphicsContextGL4::SetPipelineState(const std::shared_ptr<PipelineState>& 
     }
 }
 
-void GraphicsContextGL4::SetConstantBuffer(
+void GraphicsContextGL4::setConstantBuffer(
     std::uint32_t index,
     const std::shared_ptr<Buffer>& constantBufferIn,
     std::uint32_t offset,
@@ -730,7 +730,7 @@ void GraphicsContextGL4::SetConstantBuffer(
     POMDOG_CHECK_ERROR_GL4("glBindBufferRange");
 }
 
-void GraphicsContextGL4::SetSampler(std::uint32_t index, const std::shared_ptr<SamplerState>& sampler)
+void GraphicsContextGL4::setSampler(std::uint32_t index, const std::shared_ptr<SamplerState>& sampler)
 {
     POMDOG_ASSERT(sampler != nullptr);
     static_assert(std::is_unsigned_v<decltype(index)>, "index must be >= 0");
@@ -746,7 +746,7 @@ void GraphicsContextGL4::SetSampler(std::uint32_t index, const std::shared_ptr<S
     samplerStateGL->Apply(index);
 }
 
-void GraphicsContextGL4::SetTexture(std::uint32_t index)
+void GraphicsContextGL4::setTexture(std::uint32_t index)
 {
     POMDOG_ASSERT(!textures_.empty());
     POMDOG_ASSERT(index < static_cast<std::uint32_t>(textures_.size()));
@@ -769,7 +769,7 @@ void GraphicsContextGL4::SetTexture(std::uint32_t index)
     textures_[index] = std::nullopt;
 }
 
-void GraphicsContextGL4::SetTexture(std::uint32_t index, const std::shared_ptr<gpu::Texture2D>& textureIn)
+void GraphicsContextGL4::setTexture(std::uint32_t index, const std::shared_ptr<gpu::Texture2D>& textureIn)
 {
     POMDOG_ASSERT(!textures_.empty());
     POMDOG_ASSERT(index < static_cast<std::uint32_t>(textures_.size()));
@@ -785,7 +785,7 @@ void GraphicsContextGL4::SetTexture(std::uint32_t index, const std::shared_ptr<g
 
     if (textures_[index] && *textures_[index] != textureType) {
         // Unbind texture
-        SetTexture(index);
+        setTexture(index);
     }
 
     textures_[index] = textureType;
@@ -796,7 +796,7 @@ void GraphicsContextGL4::SetTexture(std::uint32_t index, const std::shared_ptr<g
     ApplyTexture2D(index, textureGL4->getTextureHandle());
 }
 
-void GraphicsContextGL4::SetTexture(std::uint32_t index, const std::shared_ptr<RenderTarget2D>& textureIn)
+void GraphicsContextGL4::setTexture(std::uint32_t index, const std::shared_ptr<RenderTarget2D>& textureIn)
 {
     POMDOG_ASSERT(!textures_.empty());
     POMDOG_ASSERT(index < static_cast<std::uint32_t>(textures_.size()));
@@ -812,7 +812,7 @@ void GraphicsContextGL4::SetTexture(std::uint32_t index, const std::shared_ptr<R
 
     if (textures_[index] && *textures_[index] != textureType) {
         // Unbind texture
-        SetTexture(index);
+        setTexture(index);
     }
 
     textures_[index] = textureType;
@@ -823,7 +823,7 @@ void GraphicsContextGL4::SetTexture(std::uint32_t index, const std::shared_ptr<R
     ApplyTexture2D(index, renderTargetGL4->getTextureHandle());
 }
 
-void GraphicsContextGL4::BeginRenderPass(const RenderPass& renderPass)
+void GraphicsContextGL4::beginRenderPass(const RenderPass& renderPass)
 {
     POMDOG_ASSERT(!renderPass.renderTargets.empty());
     POMDOG_ASSERT(renderPass.renderTargets.size() == 8);
@@ -985,7 +985,7 @@ void GraphicsContextGL4::BeginRenderPass(const RenderPass& renderPass)
     }
 }
 
-void GraphicsContextGL4::EndRenderPass()
+void GraphicsContextGL4::endRenderPass()
 {
     if (frameBuffer_ != std::nullopt) {
         UnbindRenderTargetsFromFrameBuffer(*frameBuffer_, renderTargets_);

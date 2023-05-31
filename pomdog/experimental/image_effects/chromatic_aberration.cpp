@@ -49,12 +49,12 @@ ChromaticAberration::ChromaticAberration(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     AssetManager& assets)
 {
-    samplerState = std::get<0>(graphicsDevice->CreateSamplerState(
+    samplerState = std::get<0>(graphicsDevice->createSamplerState(
         gpu::SamplerDescriptor::createLinearClamp()));
 
     auto inputLayout = gpu::InputLayoutHelper{}
-                           .Float3()
-                           .Float2();
+                           .addFloat3()
+                           .addFloat2();
 
     auto vertexShaderBuilder = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader);
     auto pixelShaderBuilder = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader);
@@ -85,7 +85,7 @@ ChromaticAberration::ChromaticAberration(
         // FIXME: error handling
     }
 
-    auto presentationParameters = graphicsDevice->GetPresentationParameters();
+    auto presentationParameters = graphicsDevice->getPresentationParameters();
 
     std::unique_ptr<Error> pipelineStateErr;
     std::tie(pipelineState, pipelineStateErr) = assets.CreateBuilder<gpu::PipelineState>()
@@ -93,7 +93,7 @@ ChromaticAberration::ChromaticAberration(
                                                     .SetDepthStencilViewFormat(presentationParameters.depthStencilFormat)
                                                     .SetVertexShader(std::move(vertexShader))
                                                     .SetPixelShader(std::move(pixelShader))
-                                                    .SetInputLayout(inputLayout.CreateInputLayout())
+                                                    .SetInputLayout(inputLayout.createInputLayout())
                                                     .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
                                                     .SetBlendState(gpu::BlendDescriptor::createOpaque())
                                                     .SetDepthStencilState(gpu::DepthStencilDescriptor::createNone())
@@ -115,10 +115,10 @@ void ChromaticAberration::Apply(
 {
     POMDOG_ASSERT(source);
     POMDOG_ASSERT(constantBuffer);
-    commandList.SetConstantBuffer(0, constantBuffer);
-    commandList.SetSamplerState(0, samplerState);
-    commandList.SetTexture(0, source);
-    commandList.SetPipelineState(pipelineState);
+    commandList.setConstantBuffer(0, constantBuffer);
+    commandList.setSamplerState(0, samplerState);
+    commandList.setTexture(0, source);
+    commandList.setPipelineState(pipelineState);
 }
 
 } // namespace pomdog

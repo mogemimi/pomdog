@@ -18,17 +18,17 @@ ShaderMetal::Initialize(
     const ShaderCompileOptions& compileOptions) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
-    POMDOG_ASSERT(shaderBytecode.Code != nullptr);
-    POMDOG_ASSERT(shaderBytecode.ByteLength > 0);
+    POMDOG_ASSERT(shaderBytecode.code != nullptr);
+    POMDOG_ASSERT(shaderBytecode.byteLength > 0);
 
     NSError* compileError = nullptr;
 
     id<MTLLibrary> library = nullptr;
 
-    if (compileOptions.Precompiled) {
+    if (compileOptions.precompiled) {
         dispatch_data_t libraryData = dispatch_data_create(
-            shaderBytecode.Code,
-            shaderBytecode.ByteLength,
+            shaderBytecode.code,
+            shaderBytecode.byteLength,
             dispatch_get_main_queue(),
             ^{
             });
@@ -37,7 +37,7 @@ ShaderMetal::Initialize(
     }
     else {
         // NOTE: `shaderBytecode.Code` must be null-terminated string.
-        NSString* sourceString = [NSString stringWithUTF8String:reinterpret_cast<const char*>(shaderBytecode.Code)];
+        NSString* sourceString = [NSString stringWithUTF8String:reinterpret_cast<const char*>(shaderBytecode.code)];
         library = [device newLibraryWithSource:sourceString options:nullptr error:&compileError];
     }
 
@@ -52,9 +52,9 @@ ShaderMetal::Initialize(
         return errors::make("MTLLibrary must be != nullptr");
     }
 
-    POMDOG_ASSERT(!compileOptions.EntryPoint.empty());
+    POMDOG_ASSERT(!compileOptions.entryPoint.empty());
 
-    auto funcName = [NSString stringWithUTF8String:compileOptions.EntryPoint.data()];
+    auto funcName = [NSString stringWithUTF8String:compileOptions.entryPoint.data()];
     if (funcName == nullptr) {
         return errors::make("funcName must be != nullptr");
     }
@@ -80,9 +80,9 @@ ShaderMetal::Initialize(
         return errors::make("MTLLibrary must be != nullptr");
     }
 
-    POMDOG_ASSERT(!compileOptions.EntryPoint.empty());
+    POMDOG_ASSERT(!compileOptions.entryPoint.empty());
 
-    NSString* entryPoint = [NSString stringWithUTF8String:compileOptions.EntryPoint.c_str()];
+    NSString* entryPoint = [NSString stringWithUTF8String:compileOptions.entryPoint.c_str()];
     this->shader = [library newFunctionWithName:entryPoint];
 
     return nullptr;

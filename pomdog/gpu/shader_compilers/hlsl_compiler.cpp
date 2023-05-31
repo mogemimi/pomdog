@@ -28,17 +28,17 @@ CreateShaderFromBinary(
 {
     POMDOG_ASSERT(shaderSource != nullptr);
     POMDOG_ASSERT(byteLength > 0);
-    POMDOG_ASSERT(graphicsDevice.GetSupportedLanguage() == ShaderLanguage::HLSL);
+    POMDOG_ASSERT(graphicsDevice.getSupportedLanguage() == ShaderLanguage::HLSL);
 
     ShaderBytecode shaderBytecode;
-    shaderBytecode.Code = shaderSource;
-    shaderBytecode.ByteLength = byteLength;
+    shaderBytecode.code = shaderSource;
+    shaderBytecode.byteLength = byteLength;
 
     ShaderCompileOptions compileOptions;
-    compileOptions.Profile.PipelineStage = pipelineStage;
-    compileOptions.Precompiled = true;
+    compileOptions.profile.pipelineStage = pipelineStage;
+    compileOptions.precompiled = true;
 
-    return graphicsDevice.CreateShader(std::move(shaderBytecode), std::move(compileOptions));
+    return graphicsDevice.createShader(std::move(shaderBytecode), std::move(compileOptions));
 }
 
 [[nodiscard]] std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
@@ -52,24 +52,24 @@ CreateShaderFromSource(
 {
     POMDOG_ASSERT(shaderSource != nullptr);
     POMDOG_ASSERT(byteLength > 0);
-    POMDOG_ASSERT(graphicsDevice.GetSupportedLanguage() == ShaderLanguage::HLSL);
+    POMDOG_ASSERT(graphicsDevice.getSupportedLanguage() == ShaderLanguage::HLSL);
 
     ShaderBytecode shaderBytecode;
-    shaderBytecode.Code = shaderSource;
-    shaderBytecode.ByteLength = byteLength;
+    shaderBytecode.code = shaderSource;
+    shaderBytecode.byteLength = byteLength;
 
     ShaderCompileOptions compileOptions;
-    compileOptions.EntryPoint = entryPoint;
-    compileOptions.Profile.PipelineStage = pipelineStage;
-    compileOptions.Profile.ShaderModel.Major = 4;
-    compileOptions.Profile.ShaderModel.Minor = 0;
-    compileOptions.Precompiled = false;
+    compileOptions.entryPoint = entryPoint;
+    compileOptions.profile.pipelineStage = pipelineStage;
+    compileOptions.profile.shaderModel.major = 4;
+    compileOptions.profile.shaderModel.minor = 0;
+    compileOptions.precompiled = false;
 
     if (currentDirectory) {
-        compileOptions.CurrentDirectory = std::move(*currentDirectory);
+        compileOptions.currentDirectory = std::move(*currentDirectory);
     }
 
-    return graphicsDevice.CreateShader(std::move(shaderBytecode), std::move(compileOptions));
+    return graphicsDevice.createShader(std::move(shaderBytecode), std::move(compileOptions));
 }
 
 } // namespace pomdog::gpu::shader_compilers::HLSLCompiler

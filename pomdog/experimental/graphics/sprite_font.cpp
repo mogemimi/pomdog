@@ -117,7 +117,7 @@ SpriteFont::Impl::Impl(
     currentPoint = {1, 1};
     bottomY = 1;
 
-    auto texture = std::get<0>(graphicsDevice->CreateTexture2D(
+    auto texture = std::get<0>(graphicsDevice->createTexture2D(
         TextureWidth, TextureHeight, false, PixelFormat::A8_UNorm));
     textures.push_back(texture);
 }
@@ -220,7 +220,7 @@ void SpriteFont::Impl::PrepareFonts(const std::string& text)
                     fetchTextureData();
                     std::fill(std::begin(pixelData), std::end(pixelData), static_cast<std::uint8_t>(0));
 
-                    auto textureNew = std::get<0>(graphicsDevice->CreateTexture2D(
+                    auto textureNew = std::get<0>(graphicsDevice->createTexture2D(
                         TextureWidth, TextureHeight, false, PixelFormat::A8_UNorm));
                     textures.push_back(textureNew);
                     currentPoint = {1, 1};

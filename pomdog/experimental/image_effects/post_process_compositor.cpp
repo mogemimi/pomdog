@@ -37,7 +37,7 @@ PostProcessCompositor::PostProcessCompositor(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice)
     : screenQuad(graphicsDevice)
 {
-    auto presentationParameters = graphicsDevice->GetPresentationParameters();
+    auto presentationParameters = graphicsDevice->getPresentationParameters();
 
     POMDOG_ASSERT(presentationParameters.backBufferWidth > 0);
     POMDOG_ASSERT(presentationParameters.backBufferHeight > 0);
@@ -47,7 +47,7 @@ PostProcessCompositor::PostProcessCompositor(
     viewport.width = presentationParameters.backBufferWidth;
     viewport.height = presentationParameters.backBufferHeight;
 
-    constantBuffer = std::get<0>(graphicsDevice->CreateConstantBuffer(
+    constantBuffer = std::get<0>(graphicsDevice->createConstantBuffer(
         sizeof(PostProcessInfo),
         gpu::BufferUsage::Dynamic));
 
@@ -96,7 +96,7 @@ void PostProcessCompositor::BuildRenderTargets(
 
     for (auto& renderTarget : renderTargets) {
         // FIXME: Add error handling
-        renderTarget = std::get<0>(graphicsDevice.CreateRenderTarget2D(
+        renderTarget = std::get<0>(graphicsDevice.createRenderTarget2D(
             width,
             height,
             false,
@@ -104,7 +104,7 @@ void PostProcessCompositor::BuildRenderTargets(
     }
 
     // FIXME: Add error handling
-    depthStencilBuffer = std::get<0>(graphicsDevice.CreateDepthStencilBuffer(
+    depthStencilBuffer = std::get<0>(graphicsDevice.createDepthStencilBuffer(
         width,
         height,
         depthFormat));
@@ -204,7 +204,7 @@ void PostProcessCompositor::Draw(
             renderPass.depthStencilBuffer = nullptr;
             renderPass.viewport = gpu::Viewport{viewport};
             renderPass.scissorRect = viewport;
-            commandList.SetRenderPass(std::move(renderPass));
+            commandList.setRenderPass(std::move(renderPass));
         }
         else {
             POMDOG_ASSERT(currentSource != writeTarget);
@@ -213,7 +213,7 @@ void PostProcessCompositor::Draw(
             renderPass.depthStencilBuffer = depthStencilBuffer;
             renderPass.viewport = gpu::Viewport{viewport};
             renderPass.scissorRect = viewport;
-            commandList.SetRenderPass(std::move(renderPass));
+            commandList.setRenderPass(std::move(renderPass));
         }
 
         effect->Apply(commandList, currentSource, constantBuffer);
@@ -223,7 +223,7 @@ void PostProcessCompositor::Draw(
     }
 
     // Unbind texture
-    commandList.SetTexture(0);
+    commandList.setTexture(0);
 }
 
 bool PostProcessCompositor::CanSkipPostProcess() const noexcept

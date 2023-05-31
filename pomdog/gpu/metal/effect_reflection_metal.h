@@ -12,11 +12,11 @@ class EffectReflectionMetal final : public EffectReflection {
 public:
     explicit EffectReflectionMetal(MTLRenderPipelineReflection* reflectionIn);
 
-    std::vector<EffectConstantDescription>
-    GetConstantBuffers() const noexcept override;
+    [[nodiscard]] std::vector<EffectConstantDescription>
+    getConstantBuffers() const noexcept override;
 
 private:
-    __strong MTLRenderPipelineReflection* reflection = nullptr;
+    __strong MTLRenderPipelineReflection* reflection_ = nullptr;
 };
 
 } // namespace pomdog::gpu::detail::metal

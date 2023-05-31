@@ -72,7 +72,7 @@ void Texture2DMetal::setData(const void* pixelData)
     POMDOG_ASSERT(levelCount_ >= 1);
     POMDOG_ASSERT(pixelData != nullptr);
 
-    auto const bytesPerPixel = SurfaceFormatHelper::ToBytesPerBlock(format_);
+    auto const bytesPerPixel = SurfaceFormatHelper::toBytesPerBlock(format_);
 
     auto mipmapWidth = pixelWidth_;
     auto mipmapHeight = pixelHeight_;

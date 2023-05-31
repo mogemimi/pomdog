@@ -12,7 +12,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail {
+namespace pomdog::memory {
 
 class LinearPageAllocator final {
 private:
@@ -26,13 +26,14 @@ private:
     std::size_t pageSize_ = 4096;
 
 public:
-    void Reset(std::size_t pageSize) noexcept;
+    void reset(std::size_t pageSize) noexcept;
 
-    void Reset() noexcept;
+    void reset() noexcept;
 
-    [[nodiscard]] unsafe_ptr<void> Allocate(std::size_t size, std::size_t alignment) noexcept;
+    [[nodiscard]] unsafe_ptr<void>
+    allocate(std::size_t size, std::size_t alignment) noexcept;
 
-    void Deallocate(unsafe_ptr<const void> ptr) noexcept;
+    void deallocate(unsafe_ptr<const void> ptr) noexcept;
 };
 
-} // namespace pomdog::detail
+} // namespace pomdog::memory

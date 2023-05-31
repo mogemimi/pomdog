@@ -8,7 +8,8 @@
 namespace pomdog::gpu::detail::metal {
 namespace {
 
-EffectVariableType ToEffectVariableType(MTLDataType variableType) noexcept
+[[nodiscard]] EffectVariableType
+toEffectVariableType(MTLDataType variableType) noexcept
 {
     switch (variableType) {
     case MTLDataTypeFloat:
@@ -43,7 +44,8 @@ EffectVariableType ToEffectVariableType(MTLDataType variableType) noexcept
     return EffectVariableType::Float;
 }
 
-EffectVariableClass ToEffectVariableClass(MTLDataType variableClass) noexcept
+[[nodiscard]] EffectVariableClass
+toEffectVariableClass(MTLDataType variableClass) noexcept
 {
     switch (variableClass) {
     case MTLDataTypeFloat:
@@ -117,15 +119,15 @@ EffectVariableClass ToEffectVariableClass(MTLDataType variableClass) noexcept
 } // namespace
 
 EffectReflectionMetal::EffectReflectionMetal(MTLRenderPipelineReflection* reflectionIn)
-    : reflection(reflectionIn)
+    : reflection_(reflectionIn)
 {
-    POMDOG_ASSERT(reflection != nullptr);
+    POMDOG_ASSERT(reflection_ != nullptr);
 }
 
 std::vector<EffectConstantDescription>
-EffectReflectionMetal::GetConstantBuffers() const noexcept
+EffectReflectionMetal::getConstantBuffers() const noexcept
 {
-    NSArray<MTLArgument*>* arguments = reflection.vertexArguments;
+    NSArray<MTLArgument*>* arguments = reflection_.vertexArguments;
 
     std::vector<EffectConstantDescription> constants;
 
@@ -150,8 +152,8 @@ EffectReflectionMetal::GetConstantBuffers() const noexcept
             EffectVariable variable;
             variable.Name = [member.name UTF8String];
             variable.StartOffset = static_cast<std::uint32_t>(member.offset);
-            variable.Annotation.VariableType = ToEffectVariableType(member.dataType);
-            variable.Annotation.VariableClass = ToEffectVariableClass(member.dataType);
+            variable.Annotation.VariableType = toEffectVariableType(member.dataType);
+            variable.Annotation.VariableClass = toEffectVariableClass(member.dataType);
 
             ///@todo Not implemented
             POMDOG_ASSERT(false);

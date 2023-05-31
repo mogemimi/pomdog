@@ -17,7 +17,7 @@ std::unique_ptr<Error> VoxelModelTest::initialize()
     std::unique_ptr<Error> err;
 
     // NOTE: Create graphics command list
-    std::tie(commandList, err) = graphicsDevice->CreateCommandList();
+    std::tie(commandList, err) = graphicsDevice->createCommandList();
     if (err != nullptr) {
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
@@ -44,7 +44,7 @@ void VoxelModelTest::update()
 
 void VoxelModelTest::draw()
 {
-    auto presentationParameters = graphicsDevice->GetPresentationParameters();
+    auto presentationParameters = graphicsDevice->getPresentationParameters();
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
@@ -55,8 +55,8 @@ void VoxelModelTest::draw()
     pass.viewport = viewport;
     pass.scissorRect = viewport.getBounds();
 
-    commandList->Reset();
-    commandList->SetRenderPass(std::move(pass));
+    commandList->reset();
+    commandList->setRenderPass(std::move(pass));
 
     constexpr float orthographicSize = 16.0f;
     constexpr float rotateSpeed = 0.7f;
@@ -88,17 +88,17 @@ void VoxelModelTest::draw()
 
     primitiveBatch->End();
 
-    commandList->Close();
+    commandList->close();
 
     constexpr bool isStandalone = false;
     if constexpr (isStandalone) {
-        commandQueue->Reset();
-        commandQueue->PushbackCommandList(commandList);
-        commandQueue->ExecuteCommandLists();
-        commandQueue->Present();
+        commandQueue->reset();
+        commandQueue->pushBackCommandList(commandList);
+        commandQueue->executeCommandLists();
+        commandQueue->present();
     }
     else {
-        commandQueue->PushbackCommandList(commandList);
+        commandQueue->pushBackCommandList(commandList);
     }
 }
 

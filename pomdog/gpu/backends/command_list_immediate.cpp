@@ -15,9 +15,6 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-using pomdog::detail::PlacementDelete;
-using pomdog::detail::PlacementNew;
-
 namespace pomdog::gpu::detail {
 namespace {
 
@@ -25,9 +22,9 @@ struct DrawCommand final : public GraphicsCommand {
     std::uint32_t vertexCount;
     std::uint32_t startVertexLocation;
 
-    void Execute(GraphicsContext& graphicsContext) const override
+    void execute(GraphicsContext& graphicsContext) const override
     {
-        graphicsContext.Draw(vertexCount, startVertexLocation);
+        graphicsContext.draw(vertexCount, startVertexLocation);
     }
 };
 
@@ -35,9 +32,9 @@ struct DrawIndexedCommand final : public GraphicsCommand {
     std::uint32_t indexCount;
     std::uint32_t startIndexLocation;
 
-    void Execute(GraphicsContext& graphicsContext) const override
+    void execute(GraphicsContext& graphicsContext) const override
     {
-        graphicsContext.DrawIndexed(indexCount, startIndexLocation);
+        graphicsContext.drawIndexed(indexCount, startIndexLocation);
     }
 };
 
@@ -47,9 +44,9 @@ struct DrawInstancedCommand final : public GraphicsCommand {
     std::uint32_t startVertexLocation;
     std::uint32_t startInstanceLocation;
 
-    void Execute(GraphicsContext& graphicsContext) const override
+    void execute(GraphicsContext& graphicsContext) const override
     {
-        graphicsContext.DrawInstanced(
+        graphicsContext.drawInstanced(
             vertexCountPerInstance,
             instanceCount,
             startVertexLocation,
@@ -63,9 +60,9 @@ struct DrawIndexedInstancedCommand final : public GraphicsCommand {
     std::uint32_t startIndexLocation;
     std::uint32_t startInstanceLocation;
 
-    void Execute(GraphicsContext& graphicsContext) const override
+    void execute(GraphicsContext& graphicsContext) const override
     {
-        graphicsContext.DrawIndexedInstanced(
+        graphicsContext.drawIndexedInstanced(
             indexCountPerInstance,
             instanceCount,
             startIndexLocation,
@@ -76,27 +73,27 @@ struct DrawIndexedInstancedCommand final : public GraphicsCommand {
 struct SetViewportCommand final : public GraphicsCommand {
     Viewport viewport;
 
-    void Execute(GraphicsContext& graphicsContext) const override
+    void execute(GraphicsContext& graphicsContext) const override
     {
-        graphicsContext.SetViewport(viewport);
+        graphicsContext.setViewport(viewport);
     }
 };
 
 struct SetScissorRectCommand final : public GraphicsCommand {
     Rectangle scissorRect;
 
-    void Execute(GraphicsContext& graphicsContext) const override
+    void execute(GraphicsContext& graphicsContext) const override
     {
-        graphicsContext.SetScissorRect(scissorRect);
+        graphicsContext.setScissorRect(scissorRect);
     }
 };
 
 struct SetBlendFactorCommand final : public GraphicsCommand {
     Vector4 blendFactor;
 
-    void Execute(GraphicsContext& graphicsContext) const override
+    void execute(GraphicsContext& graphicsContext) const override
     {
-        graphicsContext.SetBlendFactor(blendFactor);
+        graphicsContext.setBlendFactor(blendFactor);
     }
 };
 
@@ -105,28 +102,28 @@ struct SetVertexBufferCommand final : public GraphicsCommand {
     std::uint32_t slotIndex;
     std::uint32_t offset;
 
-    void Execute(GraphicsContext& graphicsContext) const override
+    void execute(GraphicsContext& graphicsContext) const override
     {
-        graphicsContext.SetVertexBuffer(slotIndex, vertexBuffer, offset);
+        graphicsContext.setVertexBuffer(slotIndex, vertexBuffer, offset);
     }
 };
 
 struct SetIndexBufferCommand final : public GraphicsCommand {
     std::shared_ptr<IndexBuffer> indexBuffer;
 
-    void Execute(GraphicsContext& graphicsContext) const override
+    void execute(GraphicsContext& graphicsContext) const override
     {
-        graphicsContext.SetIndexBuffer(indexBuffer);
+        graphicsContext.setIndexBuffer(indexBuffer);
     }
 };
 
 struct SetPipelineStateCommand final : public GraphicsCommand {
     std::shared_ptr<PipelineState> pipelineState;
 
-    void Execute(GraphicsContext& graphicsContext) const override
+    void execute(GraphicsContext& graphicsContext) const override
     {
         POMDOG_ASSERT(pipelineState);
-        graphicsContext.SetPipelineState(pipelineState);
+        graphicsContext.setPipelineState(pipelineState);
     }
 };
 
@@ -136,11 +133,11 @@ struct SetConstantBufferCommand final : public GraphicsCommand {
     std::uint32_t offset;
     std::uint32_t sizeInBytes;
 
-    void Execute(GraphicsContext& graphicsContext) const override
+    void execute(GraphicsContext& graphicsContext) const override
     {
         static_assert(std::is_unsigned_v<decltype(slotIndex)>, "slotIndex must be >= 0");
         POMDOG_ASSERT(constantBuffer);
-        graphicsContext.SetConstantBuffer(slotIndex, constantBuffer, offset, sizeInBytes);
+        graphicsContext.setConstantBuffer(slotIndex, constantBuffer, offset, sizeInBytes);
     }
 };
 
@@ -148,13 +145,13 @@ struct SetSamplerStateCommand final : public GraphicsCommand {
     std::shared_ptr<SamplerState> sampler;
     std::uint32_t slotIndex;
 
-    void Execute(GraphicsContext& graphicsContext) const override
+    void execute(GraphicsContext& graphicsContext) const override
     {
         if (sampler) {
-            graphicsContext.SetSampler(slotIndex, sampler);
+            graphicsContext.setSampler(slotIndex, sampler);
         }
         else {
-            graphicsContext.SetSampler(slotIndex, sampler);
+            graphicsContext.setSampler(slotIndex, sampler);
         }
     }
 };
@@ -163,9 +160,9 @@ struct SetTextureCommand final : public GraphicsCommand {
     std::shared_ptr<gpu::Texture2D> texture;
     std::uint32_t slotIndex;
 
-    void Execute(GraphicsContext& graphicsContext) const override
+    void execute(GraphicsContext& graphicsContext) const override
     {
-        graphicsContext.SetTexture(slotIndex, texture);
+        graphicsContext.setTexture(slotIndex, texture);
     }
 };
 
@@ -173,18 +170,18 @@ struct SetTextureRenderTarget2DCommand final : public GraphicsCommand {
     std::shared_ptr<RenderTarget2D> texture;
     std::uint32_t slotIndex;
 
-    void Execute(GraphicsContext& graphicsContext) const override
+    void execute(GraphicsContext& graphicsContext) const override
     {
-        graphicsContext.SetTexture(slotIndex, texture);
+        graphicsContext.setTexture(slotIndex, texture);
     }
 };
 
 struct SetTextureIndexOnlyCommand final : public GraphicsCommand {
     std::uint32_t slotIndex;
 
-    void Execute(GraphicsContext& graphicsContext) const override
+    void execute(GraphicsContext& graphicsContext) const override
     {
-        graphicsContext.SetTexture(slotIndex);
+        graphicsContext.setTexture(slotIndex);
     }
 };
 
@@ -194,16 +191,16 @@ static_assert(sizeof(SetTextureIndexOnlyCommand) < sizeof(SetTextureRenderTarget
 struct BeginRenderPassCommand final : public GraphicsCommand {
     RenderPass renderPass;
 
-    void Execute(GraphicsContext& graphicsContext) const override
+    void execute(GraphicsContext& graphicsContext) const override
     {
-        graphicsContext.BeginRenderPass(renderPass);
+        graphicsContext.beginRenderPass(renderPass);
     }
 };
 
 struct EndRenderPassCommand final : public GraphicsCommand {
-    void Execute(GraphicsContext& graphicsContext) const override
+    void execute(GraphicsContext& graphicsContext) const override
     {
-        graphicsContext.EndRenderPass();
+        graphicsContext.endRenderPass();
     }
 };
 
@@ -216,28 +213,28 @@ CommandListImmediate::CommandListImmediate() noexcept = default;
 CommandListImmediate::~CommandListImmediate()
 {
     for (auto& command : commands_) {
-        PlacementDelete(allocator_, command);
+        memory::placementDelete(allocator_, command);
     }
     for (auto& command : renderPassCommands_) {
-        PlacementDelete(allocator_, command);
+        memory::placementDelete(allocator_, command);
     }
 }
 
-void CommandListImmediate::Close()
+void CommandListImmediate::close()
 {
     if (needToEndRenderPass_) {
-        EndRenderPass();
+        endRenderPass();
         needToEndRenderPass_ = false;
     }
 }
 
-void CommandListImmediate::Reset()
+void CommandListImmediate::reset()
 {
     for (auto& command : commands_) {
-        PlacementDelete(allocator_, command);
+        memory::placementDelete(allocator_, command);
     }
     for (auto& command : renderPassCommands_) {
-        PlacementDelete(allocator_, command);
+        memory::placementDelete(allocator_, command);
     }
 
     commands_.clear();
@@ -245,45 +242,45 @@ void CommandListImmediate::Reset()
     needToEndRenderPass_ = false;
 
     // NOTE: 16KB
-    allocator_.Reset(1024 * 16);
+    allocator_.reset(1024 * 16);
 }
 
-void CommandListImmediate::Draw(
+void CommandListImmediate::draw(
     std::size_t vertexCount,
     std::size_t startVertexLocation)
 {
-    FlushRenderPassCommands();
+    flushRenderPassCommands();
 
     POMDOG_ASSERT(vertexCount >= 1);
-    auto command = PlacementNew<DrawCommand>(allocator_);
+    auto command = memory::placementNew<DrawCommand>(allocator_);
     command->vertexCount = static_cast<std::uint32_t>(vertexCount);
     command->startVertexLocation = static_cast<std::uint32_t>(startVertexLocation);
     commands_.push_back(std::move(command));
 }
 
-void CommandListImmediate::DrawIndexed(
+void CommandListImmediate::drawIndexed(
     std::size_t indexCount,
     std::size_t startIndexLocation)
 {
-    FlushRenderPassCommands();
+    flushRenderPassCommands();
 
     POMDOG_ASSERT(indexCount >= 1);
-    auto command = PlacementNew<DrawIndexedCommand>(allocator_);
+    auto command = memory::placementNew<DrawIndexedCommand>(allocator_);
     command->indexCount = static_cast<std::uint32_t>(indexCount);
     command->startIndexLocation = static_cast<std::uint32_t>(startIndexLocation);
     commands_.push_back(std::move(command));
 }
 
-void CommandListImmediate::DrawInstanced(
+void CommandListImmediate::drawInstanced(
     std::size_t vertexCountPerInstance,
     std::size_t instanceCount,
     std::size_t startVertexLocation,
     std::size_t startInstanceLocation)
 {
-    FlushRenderPassCommands();
+    flushRenderPassCommands();
 
     POMDOG_ASSERT(vertexCountPerInstance >= 1);
-    auto command = PlacementNew<DrawInstancedCommand>(allocator_);
+    auto command = memory::placementNew<DrawInstancedCommand>(allocator_);
     command->vertexCountPerInstance = static_cast<std::uint32_t>(vertexCountPerInstance);
     command->instanceCount = static_cast<std::uint32_t>(instanceCount);
     command->startVertexLocation = static_cast<std::uint32_t>(startVertexLocation);
@@ -291,16 +288,16 @@ void CommandListImmediate::DrawInstanced(
     commands_.push_back(std::move(command));
 }
 
-void CommandListImmediate::DrawIndexedInstanced(
+void CommandListImmediate::drawIndexedInstanced(
     std::size_t indexCountPerInstance,
     std::size_t instanceCount,
     std::size_t startIndexLocation,
     std::size_t startInstanceLocation)
 {
-    FlushRenderPassCommands();
+    flushRenderPassCommands();
 
     POMDOG_ASSERT(indexCountPerInstance >= 1);
-    auto command = PlacementNew<DrawIndexedInstancedCommand>(allocator_);
+    auto command = memory::placementNew<DrawIndexedInstancedCommand>(allocator_);
     command->indexCountPerInstance = static_cast<std::uint32_t>(indexCountPerInstance);
     command->instanceCount = static_cast<std::uint32_t>(instanceCount);
     command->startIndexLocation = static_cast<std::uint32_t>(startIndexLocation);
@@ -308,14 +305,14 @@ void CommandListImmediate::DrawIndexedInstanced(
     commands_.push_back(std::move(command));
 }
 
-void CommandListImmediate::SetRenderPass(RenderPass&& renderPass)
+void CommandListImmediate::setRenderPass(RenderPass&& renderPass)
 {
     if (needToEndRenderPass_) {
-        EndRenderPass();
+        endRenderPass();
         needToEndRenderPass_ = false;
     }
 
-    auto command = PlacementNew<BeginRenderPassCommand>(allocator_);
+    auto command = memory::placementNew<BeginRenderPassCommand>(allocator_);
     command->renderPass = std::move(renderPass);
 
     if (command->renderPass.renderTargets.empty()) {
@@ -324,44 +321,44 @@ void CommandListImmediate::SetRenderPass(RenderPass&& renderPass)
     commands_.push_back(std::move(command));
     needToEndRenderPass_ = true;
 
-    FlushRenderPassCommands();
+    flushRenderPassCommands();
 }
 
-void CommandListImmediate::EndRenderPass()
+void CommandListImmediate::endRenderPass()
 {
-    auto command = PlacementNew<EndRenderPassCommand>(allocator_);
+    auto command = memory::placementNew<EndRenderPassCommand>(allocator_);
     commands_.push_back(std::move(command));
 }
 
-void CommandListImmediate::SetViewport(const Viewport& viewport)
+void CommandListImmediate::setViewport(const Viewport& viewport)
 {
-    auto command = PlacementNew<SetViewportCommand>(allocator_);
+    auto command = memory::placementNew<SetViewportCommand>(allocator_);
     command->viewport = viewport;
     renderPassCommands_.push_back(std::move(command));
 }
 
-void CommandListImmediate::SetScissorRect(const Rectangle& scissorRect)
+void CommandListImmediate::setScissorRect(const Rectangle& scissorRect)
 {
-    auto command = PlacementNew<SetScissorRectCommand>(allocator_);
+    auto command = memory::placementNew<SetScissorRectCommand>(allocator_);
     command->scissorRect = scissorRect;
     renderPassCommands_.push_back(std::move(command));
 }
 
-void CommandListImmediate::SetBlendFactor(const Vector4& blendFactor)
+void CommandListImmediate::setBlendFactor(const Vector4& blendFactor)
 {
-    auto command = PlacementNew<SetBlendFactorCommand>(allocator_);
+    auto command = memory::placementNew<SetBlendFactorCommand>(allocator_);
     command->blendFactor = blendFactor;
     renderPassCommands_.push_back(std::move(command));
 }
 
-void CommandListImmediate::SetVertexBuffer(
+void CommandListImmediate::setVertexBuffer(
     int index,
     const std::shared_ptr<VertexBuffer>& vertexBuffer)
 {
-    SetVertexBuffer(index, vertexBuffer, 0);
+    setVertexBuffer(index, vertexBuffer, 0);
 }
 
-void CommandListImmediate::SetVertexBuffer(
+void CommandListImmediate::setVertexBuffer(
     int index,
     const std::shared_ptr<VertexBuffer>& vertexBuffer,
     std::size_t offset)
@@ -369,37 +366,37 @@ void CommandListImmediate::SetVertexBuffer(
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(vertexBuffer != nullptr);
     static_assert(std::is_unsigned_v<decltype(offset)>, "offset >= 0");
-    auto command = PlacementNew<SetVertexBufferCommand>(allocator_);
+    auto command = memory::placementNew<SetVertexBufferCommand>(allocator_);
     command->slotIndex = static_cast<std::uint32_t>(index);
     command->vertexBuffer = vertexBuffer;
     command->offset = static_cast<std::uint32_t>(offset);
     renderPassCommands_.push_back(std::move(command));
 }
 
-void CommandListImmediate::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer)
+void CommandListImmediate::setIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer)
 {
     POMDOG_ASSERT(indexBuffer != nullptr);
-    auto command = PlacementNew<SetIndexBufferCommand>(allocator_);
+    auto command = memory::placementNew<SetIndexBufferCommand>(allocator_);
     command->indexBuffer = indexBuffer;
     renderPassCommands_.push_back(std::move(command));
 }
 
-void CommandListImmediate::SetPipelineState(const std::shared_ptr<PipelineState>& pipelineState)
+void CommandListImmediate::setPipelineState(const std::shared_ptr<PipelineState>& pipelineState)
 {
     POMDOG_ASSERT(pipelineState);
-    auto command = PlacementNew<SetPipelineStateCommand>(allocator_);
+    auto command = memory::placementNew<SetPipelineStateCommand>(allocator_);
     command->pipelineState = pipelineState;
     renderPassCommands_.push_back(std::move(command));
 }
 
-void CommandListImmediate::SetConstantBuffer(
+void CommandListImmediate::setConstantBuffer(
     int index,
     const std::shared_ptr<ConstantBuffer>& constantBuffer)
 {
-    SetConstantBuffer(index, constantBuffer, 0);
+    setConstantBuffer(index, constantBuffer, 0);
 }
 
-void CommandListImmediate::SetConstantBuffer(
+void CommandListImmediate::setConstantBuffer(
     int index,
     const std::shared_ptr<ConstantBuffer>& constantBuffer,
     std::size_t offset)
@@ -410,7 +407,7 @@ void CommandListImmediate::SetConstantBuffer(
 
     std::shared_ptr<Buffer> nativeBuffer{constantBuffer, constantBuffer->getBuffer()};
 
-    auto command = PlacementNew<SetConstantBufferCommand>(allocator_);
+    auto command = memory::placementNew<SetConstantBufferCommand>(allocator_);
     command->constantBuffer = nativeBuffer;
     command->slotIndex = static_cast<std::uint32_t>(index);
     command->offset = static_cast<std::uint32_t>(offset);
@@ -418,53 +415,53 @@ void CommandListImmediate::SetConstantBuffer(
     renderPassCommands_.push_back(std::move(command));
 }
 
-void CommandListImmediate::SetSamplerState(int index, const std::shared_ptr<SamplerState>& samplerState)
+void CommandListImmediate::setSamplerState(int index, const std::shared_ptr<SamplerState>& samplerState)
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(samplerState != nullptr);
-    auto command = PlacementNew<SetSamplerStateCommand>(allocator_);
+    auto command = memory::placementNew<SetSamplerStateCommand>(allocator_);
     command->slotIndex = static_cast<std::uint32_t>(index);
     command->sampler = samplerState;
     renderPassCommands_.push_back(std::move(command));
 }
 
-void CommandListImmediate::SetTexture(int index)
+void CommandListImmediate::setTexture(int index)
 {
     POMDOG_ASSERT(index >= 0);
-    auto command = PlacementNew<SetTextureIndexOnlyCommand>(allocator_);
+    auto command = memory::placementNew<SetTextureIndexOnlyCommand>(allocator_);
     command->slotIndex = static_cast<std::uint32_t>(index);
     renderPassCommands_.push_back(std::move(command));
 }
 
-void CommandListImmediate::SetTexture(int index, const std::shared_ptr<gpu::Texture2D>& texture)
+void CommandListImmediate::setTexture(int index, const std::shared_ptr<gpu::Texture2D>& texture)
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(texture != nullptr);
-    auto command = PlacementNew<SetTextureCommand>(allocator_);
+    auto command = memory::placementNew<SetTextureCommand>(allocator_);
     command->slotIndex = static_cast<std::uint32_t>(index);
     command->texture = texture;
     renderPassCommands_.push_back(std::move(command));
 }
 
-void CommandListImmediate::SetTexture(int index, const std::shared_ptr<RenderTarget2D>& texture)
+void CommandListImmediate::setTexture(int index, const std::shared_ptr<RenderTarget2D>& texture)
 {
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(texture != nullptr);
-    auto command = PlacementNew<SetTextureRenderTarget2DCommand>(allocator_);
+    auto command = memory::placementNew<SetTextureRenderTarget2DCommand>(allocator_);
     command->slotIndex = static_cast<std::uint32_t>(index);
     command->texture = texture;
     renderPassCommands_.push_back(std::move(command));
 }
 
-void CommandListImmediate::ExecuteImmediate(GraphicsContext& graphicsContext)
+void CommandListImmediate::executeImmediate(GraphicsContext& graphicsContext)
 {
     for (auto& command : commands_) {
         POMDOG_ASSERT(command != nullptr);
-        command->Execute(graphicsContext);
+        command->execute(graphicsContext);
     }
 }
 
-void CommandListImmediate::FlushRenderPassCommands()
+void CommandListImmediate::flushRenderPassCommands()
 {
     if (renderPassCommands_.empty()) {
         return;

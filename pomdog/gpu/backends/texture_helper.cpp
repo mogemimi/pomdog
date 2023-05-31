@@ -10,9 +10,9 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::gpu::detail {
+namespace pomdog::gpu::detail::TextureHelper {
 
-std::int32_t TextureHelper::ComputeMipmapLevelCount(std::int32_t width, std::int32_t height)
+[[nodiscard]] std::int32_t computeMipmapLevelCount(std::int32_t width, std::int32_t height)
 {
     POMDOG_ASSERT(width >= 0);
     POMDOG_ASSERT(height >= 0);
@@ -29,7 +29,7 @@ std::int32_t TextureHelper::ComputeMipmapLevelCount(std::int32_t width, std::int
     return levelCount;
 }
 
-std::int32_t TextureHelper::ComputeTextureSizeInBytes(
+[[nodiscard]] std::int32_t computeTextureSizeInBytes(
     std::int32_t pixelWidth,
     std::int32_t pixelHeight,
     std::int32_t levelCount,
@@ -39,7 +39,7 @@ std::int32_t TextureHelper::ComputeTextureSizeInBytes(
     POMDOG_ASSERT(pixelHeight > 0);
     POMDOG_ASSERT(levelCount >= 1);
 
-    const auto bytesPerBlock = SurfaceFormatHelper::ToBytesPerBlock(format);
+    const auto bytesPerBlock = SurfaceFormatHelper::toBytesPerBlock(format);
 
     std::int32_t totalBytes = 0;
     std::int32_t mipmapWidth = pixelWidth;
@@ -79,4 +79,4 @@ std::int32_t TextureHelper::ComputeTextureSizeInBytes(
     return totalBytes;
 }
 
-} // namespace pomdog::gpu::detail
+} // namespace pomdog::gpu::detail::TextureHelper

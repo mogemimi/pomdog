@@ -193,13 +193,13 @@ GameHostCocoa::Impl::initialize(
 
     // NOTE: Create a graphics device.
     graphicsDevice = std::make_shared<GraphicsDeviceGL4>();
-    if (auto err = graphicsDevice->Initialize(presentationParameters); err != nullptr) {
+    if (auto err = graphicsDevice->initialize(presentationParameters); err != nullptr) {
         return errors::wrap(std::move(err), "GraphicsDeviceGL4::Initialize() failed.");
     }
 
     // NOTE: Create a graphics context.
     graphicsContext = std::make_shared<GraphicsContextGL4>();
-    if (auto err = graphicsContext->Initialize(openGLContext, graphicsDevice); err != nullptr) {
+    if (auto err = graphicsContext->initialize(openGLContext, graphicsDevice); err != nullptr) {
         return errors::wrap(std::move(err), "GraphicsContextGL4::Initialize() failed.");
     }
 

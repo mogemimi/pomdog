@@ -11,7 +11,7 @@ void CommandQueueVulkan::Reset()
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 
-void CommandQueueVulkan::PushbackCommandList(const std::shared_ptr<CommandList>& commandList)
+void CommandQueueVulkan::pushBackCommandList(const std::shared_ptr<CommandList>& commandList)
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }

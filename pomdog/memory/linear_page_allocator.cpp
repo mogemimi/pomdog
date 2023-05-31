@@ -4,28 +4,28 @@
 #include "pomdog/memory/alignment.h"
 #include "pomdog/utility/assert.h"
 
-namespace pomdog::detail {
+namespace pomdog::memory {
 
-void LinearPageAllocator::Reset(std::size_t pageSize) noexcept
+void LinearPageAllocator::reset(std::size_t pageSize) noexcept
 {
     pageSize_ = pageSize;
     for (auto& page : pages_) {
         page.buffer.resize(pageSize_);
         page.buffer.shrink_to_fit();
-        page.allocator.Reset(page.buffer);
+        page.allocator.reset(page.buffer);
     }
     pageIndex_ = 0;
 }
 
-void LinearPageAllocator::Reset() noexcept
+void LinearPageAllocator::reset() noexcept
 {
     for (auto& page : pages_) {
-        page.allocator.Reset(page.buffer);
+        page.allocator.reset(page.buffer);
     }
     pageIndex_ = 0;
 }
 
-unsafe_ptr<void> LinearPageAllocator::Allocate(std::size_t size, std::size_t alignment) noexcept
+unsafe_ptr<void> LinearPageAllocator::allocate(std::size_t size, std::size_t alignment) noexcept
 {
     if (size > pageSize_) {
         return nullptr;
@@ -34,13 +34,13 @@ unsafe_ptr<void> LinearPageAllocator::Allocate(std::size_t size, std::size_t ali
     if (pages_.empty()) {
         Page page;
         page.buffer.resize(pageSize_);
-        page.allocator.Reset(page.buffer);
+        page.allocator.reset(page.buffer);
         pages_.push_back(std::move(page));
     }
 
     {
         auto& page = pages_[pageIndex_];
-        if (auto ptr = page.allocator.Allocate(size, alignment); ptr != nullptr) {
+        if (auto ptr = page.allocator.allocate(size, alignment); ptr != nullptr) {
             return ptr;
         }
     }
@@ -50,16 +50,16 @@ unsafe_ptr<void> LinearPageAllocator::Allocate(std::size_t size, std::size_t ali
     if (pageIndex_ >= pages_.size()) {
         Page page;
         page.buffer.resize(pageSize_);
-        page.allocator.Reset(page.buffer);
+        page.allocator.reset(page.buffer);
         pages_.push_back(std::move(page));
     }
 
     auto& page = pages_[pageIndex_];
-    return page.allocator.Allocate(size, alignment);
+    return page.allocator.allocate(size, alignment);
 }
 
-void LinearPageAllocator::Deallocate([[maybe_unused]] unsafe_ptr<const void> ptr) noexcept
+void LinearPageAllocator::deallocate([[maybe_unused]] unsafe_ptr<const void> ptr) noexcept
 {
 }
 
-} // namespace pomdog::detail
+} // namespace pomdog::memory

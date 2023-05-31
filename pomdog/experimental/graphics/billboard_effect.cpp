@@ -76,7 +76,7 @@ BillboardBatchBuffer::BillboardBatchBuffer(
     POMDOG_ASSERT(graphicsDevice);
     const auto maxBatchSize = static_cast<std::size_t>(capacity);
     impl->instances.reserve(maxBatchSize);
-    impl->vertexBuffer = std::get<0>(graphicsDevice->CreateVertexBuffer(
+    impl->vertexBuffer = std::get<0>(graphicsDevice->createVertexBuffer(
         maxBatchSize,
         sizeof(BillboardInfo),
         gpu::BufferUsage::Dynamic));
@@ -230,7 +230,7 @@ BillboardBatchEffect::BillboardBatchEffect(
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(graphicsDevice);
 
-    auto presentationParameters = graphicsDevice->GetPresentationParameters();
+    auto presentationParameters = graphicsDevice->getPresentationParameters();
 
     if (!blendDesc) {
         blendDesc = gpu::BlendDescriptor::createNonPremultiplied();
@@ -265,7 +265,7 @@ BillboardBatchEffect::BillboardBatchEffect(
         }};
 
         // NOTE: Create vertex buffer
-        impl->vertexBuffer = std::get<0>(graphicsDevice->CreateVertexBuffer(
+        impl->vertexBuffer = std::get<0>(graphicsDevice->createVertexBuffer(
             vertices.data(),
             vertices.size(),
             sizeof(PositionTextureCoord),
@@ -275,7 +275,7 @@ BillboardBatchEffect::BillboardBatchEffect(
         std::array<std::uint16_t, 6> const indices = {{0, 1, 2, 2, 3, 0}};
 
         // NOTE: Create index buffer
-        impl->indexBuffer = std::get<0>(graphicsDevice->CreateIndexBuffer(
+        impl->indexBuffer = std::get<0>(graphicsDevice->createIndexBuffer(
             gpu::IndexFormat::UInt16,
             indices.data(),
             indices.size(),
@@ -283,13 +283,13 @@ BillboardBatchEffect::BillboardBatchEffect(
     }
     {
         auto inputLayout = gpu::InputLayoutHelper{}
-                               .AddInputSlot()
-                               .Float4()
-                               .AddInputSlot(gpu::InputClassification::InputPerInstance, 1)
-                               .Float4()
-                               .Float4()
-                               .Float4()
-                               .Float4();
+                               .addInputSlot()
+                               .addFloat4()
+                               .addInputSlot(gpu::InputClassification::InputPerInstance, 1)
+                               .addFloat4()
+                               .addFloat4()
+                               .addFloat4()
+                               .addFloat4();
 
         auto vertexShaderBuilder = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
                                        .SetGLSL(Builtin_GLSL_BillboardBatch_VS, std::strlen(Builtin_GLSL_BillboardBatch_VS))
@@ -317,7 +317,7 @@ BillboardBatchEffect::BillboardBatchEffect(
                                                               .SetDepthStencilViewFormat(*depthStencilViewFormat)
                                                               .SetVertexShader(std::move(vertexShader))
                                                               .SetPixelShader(std::move(pixelShader))
-                                                              .SetInputLayout(inputLayout.CreateInputLayout())
+                                                              .SetInputLayout(inputLayout.createInputLayout())
                                                               .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
                                                               .SetBlendState(*blendDesc)
                                                               .SetDepthStencilState(*depthStencilDesc)
@@ -354,16 +354,16 @@ void BillboardBatchEffect::Draw(
         return;
     }
 
-    commandList->SetTexture(0, texture);
-    commandList->SetSamplerState(0, sampler);
+    commandList->setTexture(0, texture);
+    commandList->setSamplerState(0, sampler);
 
-    commandList->SetPipelineState(impl->pipelineState);
-    commandList->SetConstantBuffer(0, constantBuffer, constantBufferOffset);
-    commandList->SetVertexBuffer(0, impl->vertexBuffer);
-    commandList->SetVertexBuffer(1, billboardInstances.GetVertexBuffer());
-    commandList->SetIndexBuffer(impl->indexBuffer);
+    commandList->setPipelineState(impl->pipelineState);
+    commandList->setConstantBuffer(0, constantBuffer, constantBufferOffset);
+    commandList->setVertexBuffer(0, impl->vertexBuffer);
+    commandList->setVertexBuffer(1, billboardInstances.GetVertexBuffer());
+    commandList->setIndexBuffer(impl->indexBuffer);
 
-    commandList->DrawIndexedInstanced(
+    commandList->drawIndexedInstanced(
         impl->indexBuffer->getIndexCount(),
         billboardInstances.GetSize(),
         0,

@@ -21,13 +21,13 @@ public:
 
     virtual ~CommandQueue();
 
-    virtual void Reset() = 0;
+    virtual void reset() = 0;
 
-    virtual void PushbackCommandList(const std::shared_ptr<CommandList>& commandList) = 0;
+    virtual void pushBackCommandList(const std::shared_ptr<CommandList>& commandList) = 0;
 
-    virtual void ExecuteCommandLists() = 0;
+    virtual void executeCommandLists() = 0;
 
-    virtual void Present() = 0;
+    virtual void present() = 0;
 };
 
 } // namespace pomdog::gpu

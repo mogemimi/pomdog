@@ -319,25 +319,25 @@ GraphicsDeviceDirect3D11::Initialize(const PresentationParameters& presentationP
 
 GraphicsDeviceDirect3D11::~GraphicsDeviceDirect3D11() = default;
 
-ShaderLanguage GraphicsDeviceDirect3D11::GetSupportedLanguage() const noexcept
+ShaderLanguage GraphicsDeviceDirect3D11::getSupportedLanguage() const noexcept
 {
     return ShaderLanguage::HLSL;
 }
 
-PresentationParameters GraphicsDeviceDirect3D11::GetPresentationParameters() const noexcept
+PresentationParameters GraphicsDeviceDirect3D11::getPresentationParameters() const noexcept
 {
     return presentationParameters;
 }
 
 std::tuple<std::shared_ptr<CommandList>, std::unique_ptr<Error>>
-GraphicsDeviceDirect3D11::CreateCommandList() noexcept
+GraphicsDeviceDirect3D11::createCommandList() noexcept
 {
     auto commandList = std::make_shared<CommandListImmediate>();
     return std::make_tuple(std::move(commandList), nullptr);
 }
 
 std::tuple<std::shared_ptr<VertexBuffer>, std::unique_ptr<Error>>
-GraphicsDeviceDirect3D11::CreateVertexBuffer(
+GraphicsDeviceDirect3D11::createVertexBuffer(
     const void* vertices,
     std::size_t vertexCount,
     std::size_t strideBytes,
@@ -378,7 +378,7 @@ GraphicsDeviceDirect3D11::CreateVertexBuffer(
 }
 
 std::tuple<std::shared_ptr<VertexBuffer>, std::unique_ptr<Error>>
-GraphicsDeviceDirect3D11::CreateVertexBuffer(
+GraphicsDeviceDirect3D11::createVertexBuffer(
     std::size_t vertexCount,
     std::size_t strideBytes,
     BufferUsage bufferUsage) noexcept
@@ -417,7 +417,7 @@ GraphicsDeviceDirect3D11::CreateVertexBuffer(
 }
 
 std::tuple<std::shared_ptr<IndexBuffer>, std::unique_ptr<Error>>
-GraphicsDeviceDirect3D11::CreateIndexBuffer(
+GraphicsDeviceDirect3D11::createIndexBuffer(
     IndexFormat elementSize,
     const void* indices,
     std::size_t indexCount,
@@ -456,7 +456,7 @@ GraphicsDeviceDirect3D11::CreateIndexBuffer(
 }
 
 std::tuple<std::shared_ptr<IndexBuffer>, std::unique_ptr<Error>>
-GraphicsDeviceDirect3D11::CreateIndexBuffer(
+GraphicsDeviceDirect3D11::createIndexBuffer(
     IndexFormat elementSize,
     std::size_t indexCount,
     BufferUsage bufferUsage) noexcept
@@ -494,7 +494,7 @@ GraphicsDeviceDirect3D11::CreateIndexBuffer(
 }
 
 std::tuple<std::shared_ptr<ConstantBuffer>, std::unique_ptr<Error>>
-GraphicsDeviceDirect3D11::CreateConstantBuffer(
+GraphicsDeviceDirect3D11::createConstantBuffer(
     const void* sourceData,
     std::size_t sizeInBytes,
     BufferUsage bufferUsage) noexcept
@@ -529,7 +529,7 @@ GraphicsDeviceDirect3D11::CreateConstantBuffer(
 }
 
 std::tuple<std::shared_ptr<ConstantBuffer>, std::unique_ptr<Error>>
-GraphicsDeviceDirect3D11::CreateConstantBuffer(
+GraphicsDeviceDirect3D11::createConstantBuffer(
     std::size_t sizeInBytes,
     BufferUsage bufferUsage) noexcept
 {
@@ -563,7 +563,7 @@ GraphicsDeviceDirect3D11::CreateConstantBuffer(
 }
 
 std::tuple<std::shared_ptr<PipelineState>, std::unique_ptr<Error>>
-GraphicsDeviceDirect3D11::CreatePipelineState(const PipelineDescriptor& descriptor) noexcept
+GraphicsDeviceDirect3D11::createPipelineState(const PipelineDescriptor& descriptor) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
     auto pipelineState = std::make_shared<PipelineStateDirect3D11>();
@@ -576,7 +576,7 @@ GraphicsDeviceDirect3D11::CreatePipelineState(const PipelineDescriptor& descript
 }
 
 std::tuple<std::shared_ptr<EffectReflection>, std::unique_ptr<Error>>
-GraphicsDeviceDirect3D11::CreateEffectReflection(
+GraphicsDeviceDirect3D11::createEffectReflection(
     const PipelineDescriptor& descriptor,
     [[maybe_unused]] const std::shared_ptr<PipelineState>& pipelineState) noexcept
 {
@@ -602,7 +602,7 @@ GraphicsDeviceDirect3D11::CreateEffectReflection(
 }
 
 std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
-GraphicsDeviceDirect3D11::CreateShader(
+GraphicsDeviceDirect3D11::createShader(
     const detail::ShaderBytecode& shaderBytecode,
     const detail::ShaderCompileOptions& compileOptions) noexcept
 {
@@ -628,11 +628,11 @@ GraphicsDeviceDirect3D11::CreateShader(
 }
 
 std::tuple<std::shared_ptr<RenderTarget2D>, std::unique_ptr<Error>>
-GraphicsDeviceDirect3D11::CreateRenderTarget2D(
+GraphicsDeviceDirect3D11::createRenderTarget2D(
     std::int32_t width,
     std::int32_t height) noexcept
 {
-    return CreateRenderTarget2D(
+    return createRenderTarget2D(
         width,
         height,
         false,
@@ -640,7 +640,7 @@ GraphicsDeviceDirect3D11::CreateRenderTarget2D(
 }
 
 std::tuple<std::shared_ptr<RenderTarget2D>, std::unique_ptr<Error>>
-GraphicsDeviceDirect3D11::CreateRenderTarget2D(
+GraphicsDeviceDirect3D11::createRenderTarget2D(
     std::int32_t width,
     std::int32_t height,
     bool generateMipmap,
@@ -674,7 +674,7 @@ GraphicsDeviceDirect3D11::CreateRenderTarget2D(
 }
 
 std::tuple<std::shared_ptr<DepthStencilBuffer>, std::unique_ptr<Error>>
-GraphicsDeviceDirect3D11::CreateDepthStencilBuffer(
+GraphicsDeviceDirect3D11::createDepthStencilBuffer(
     std::int32_t width,
     std::int32_t height,
     PixelFormat depthStencilFormat) noexcept
@@ -702,7 +702,7 @@ GraphicsDeviceDirect3D11::CreateDepthStencilBuffer(
 }
 
 std::tuple<std::shared_ptr<SamplerState>, std::unique_ptr<Error>>
-GraphicsDeviceDirect3D11::CreateSamplerState(const SamplerDescriptor& descriptor) noexcept
+GraphicsDeviceDirect3D11::createSamplerState(const SamplerDescriptor& descriptor) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
     auto samplerState = std::make_shared<SamplerStateDirect3D11>();
@@ -715,11 +715,11 @@ GraphicsDeviceDirect3D11::CreateSamplerState(const SamplerDescriptor& descriptor
 }
 
 std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
-GraphicsDeviceDirect3D11::CreateTexture2D(
+GraphicsDeviceDirect3D11::createTexture2D(
     std::int32_t width,
     std::int32_t height) noexcept
 {
-    return CreateTexture2D(
+    return createTexture2D(
         width,
         height,
         false,
@@ -727,7 +727,7 @@ GraphicsDeviceDirect3D11::CreateTexture2D(
 }
 
 std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
-GraphicsDeviceDirect3D11::CreateTexture2D(
+GraphicsDeviceDirect3D11::createTexture2D(
     std::int32_t width,
     std::int32_t height,
     bool mipMap,

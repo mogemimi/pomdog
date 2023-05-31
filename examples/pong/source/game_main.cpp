@@ -36,7 +36,7 @@ std::unique_ptr<Error> GameMain::initialize()
     std::unique_ptr<Error> err;
 
     // NOTE: Create graphics command list
-    std::tie(commandList, err) = graphicsDevice->CreateCommandList();
+    std::tie(commandList, err) = graphicsDevice->createCommandList();
     if (err != nullptr) {
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
@@ -95,10 +95,10 @@ std::unique_ptr<Error> GameMain::initialize()
         vignetteEffect->SetIntensity(1.0f);
         fishEyeEffect->SetStrength(0.2f);
 
-        auto presentationParameters = graphicsDevice->GetPresentationParameters();
+        auto presentationParameters = graphicsDevice->getPresentationParameters();
 
         // NOTE: Create render target
-        std::tie(renderTarget, err) = graphicsDevice->CreateRenderTarget2D(
+        std::tie(renderTarget, err) = graphicsDevice->createRenderTarget2D(
             presentationParameters.backBufferWidth,
             presentationParameters.backBufferHeight,
             false,
@@ -109,7 +109,7 @@ std::unique_ptr<Error> GameMain::initialize()
         }
 
         // NOTE: Create depth stencil buffer
-        std::tie(depthStencilBuffer, err) = graphicsDevice->CreateDepthStencilBuffer(
+        std::tie(depthStencilBuffer, err) = graphicsDevice->createDepthStencilBuffer(
             presentationParameters.backBufferWidth,
             presentationParameters.backBufferHeight,
             presentationParameters.depthStencilFormat);
@@ -133,15 +133,15 @@ std::unique_ptr<Error> GameMain::initialize()
         });
 
         connect(window->clientSizeChanged, [this](int width, int height) {
-            auto presentationParameters = graphicsDevice->GetPresentationParameters();
+            auto presentationParameters = graphicsDevice->getPresentationParameters();
 
-            renderTarget = std::get<0>(graphicsDevice->CreateRenderTarget2D(
+            renderTarget = std::get<0>(graphicsDevice->createRenderTarget2D(
                 width,
                 height,
                 false,
                 presentationParameters.backBufferFormat));
 
-            depthStencilBuffer = std::get<0>(graphicsDevice->CreateDepthStencilBuffer(
+            depthStencilBuffer = std::get<0>(graphicsDevice->createDepthStencilBuffer(
                 width,
                 height,
                 presentationParameters.depthStencilFormat));
@@ -332,7 +332,7 @@ void GameMain::draw()
 {
     const auto backgroundColor = Color{32, 31, 30, 255};
 
-    auto presentationParameters = graphicsDevice->GetPresentationParameters();
+    auto presentationParameters = graphicsDevice->getPresentationParameters();
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
@@ -354,8 +354,8 @@ void GameMain::draw()
     const auto viewMatrix = Matrix4x4::createRotationX(-cameraRotation) * Matrix4x4::createTranslation(-cameraPosition);
     const auto viewProjection = viewMatrix * projectionMatrix;
 
-    commandList->Reset();
-    commandList->SetRenderPass(std::move(pass));
+    commandList->reset();
+    commandList->setRenderPass(std::move(pass));
 
     // NOTE: Draw primitives
     primitiveBatch->Begin(commandList, viewProjection);
@@ -441,13 +441,13 @@ void GameMain::draw()
 
     postProcessCompositor.Draw(*commandList, renderTarget);
 
-    commandList->Close();
+    commandList->close();
 
     // NOTE: Execute graphics commands
-    commandQueue->Reset();
-    commandQueue->PushbackCommandList(commandList);
-    commandQueue->ExecuteCommandLists();
-    commandQueue->Present();
+    commandQueue->reset();
+    commandQueue->pushBackCommandList(commandList);
+    commandQueue->executeCommandLists();
+    commandQueue->present();
 }
 
 } // namespace pong

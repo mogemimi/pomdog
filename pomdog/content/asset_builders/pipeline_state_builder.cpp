@@ -85,9 +85,9 @@ Builder<gpu::PipelineState>::Impl::Load()
         return std::make_tuple(nullptr, errors::make("DepthStencilViewFormat must be specified"));
     }
 
-    auto [pipelineState, err] = graphicsDevice->CreatePipelineState(descriptor);
+    auto [pipelineState, err] = graphicsDevice->createPipelineState(descriptor);
     if (err != nullptr) {
-        return std::make_tuple(nullptr, errors::wrap(std::move(err), "CreatePipelineState() failed"));
+        return std::make_tuple(nullptr, errors::wrap(std::move(err), "createPipelineState() failed"));
     }
     return std::make_tuple(std::move(pipelineState), nullptr);
 }
@@ -271,12 +271,12 @@ Builder<gpu::PipelineState>::Build()
 }
 
 std::shared_ptr<gpu::EffectReflection>
-Builder<gpu::PipelineState>::CreateEffectReflection(const std::shared_ptr<gpu::PipelineState>& pipelineState)
+Builder<gpu::PipelineState>::createEffectReflection(const std::shared_ptr<gpu::PipelineState>& pipelineState)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(pipelineState);
 
-    auto effectReflection = std::get<0>(impl->graphicsDevice->CreateEffectReflection(
+    auto effectReflection = std::get<0>(impl->graphicsDevice->createEffectReflection(
         impl->descriptor,
         pipelineState));
     return effectReflection;

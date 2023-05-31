@@ -55,12 +55,12 @@ VignetteEffect::VignetteEffect(
     const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevice,
     AssetManager& assets)
 {
-    samplerLinear = std::get<0>(graphicsDevice->CreateSamplerState(
+    samplerLinear = std::get<0>(graphicsDevice->createSamplerState(
         gpu::SamplerDescriptor::createLinearWrap()));
 
     auto inputLayout = gpu::InputLayoutHelper{}
-                           .Float3()
-                           .Float2();
+                           .addFloat3()
+                           .addFloat2();
 
     auto vertexShaderBuilder = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader);
     auto pixelShaderBuilder = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::PixelShader);
@@ -91,7 +91,7 @@ VignetteEffect::VignetteEffect(
         // FIXME: error handling
     }
 
-    auto presentationParameters = graphicsDevice->GetPresentationParameters();
+    auto presentationParameters = graphicsDevice->getPresentationParameters();
 
     std::unique_ptr<Error> pipelineStateErr;
     std::tie(pipelineState, pipelineStateErr) = assets.CreateBuilder<gpu::PipelineState>()
@@ -99,7 +99,7 @@ VignetteEffect::VignetteEffect(
                                                     .SetDepthStencilViewFormat(presentationParameters.depthStencilFormat)
                                                     .SetVertexShader(std::move(vertexShader))
                                                     .SetPixelShader(std::move(pixelShader))
-                                                    .SetInputLayout(inputLayout.CreateInputLayout())
+                                                    .SetInputLayout(inputLayout.createInputLayout())
                                                     .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
                                                     .SetBlendState(gpu::BlendDescriptor::createOpaque())
                                                     .SetDepthStencilState(gpu::DepthStencilDescriptor::createNone())
@@ -110,7 +110,7 @@ VignetteEffect::VignetteEffect(
         // FIXME: error handling
     }
 
-    constantBufferVignette = std::get<0>(graphicsDevice->CreateConstantBuffer(
+    constantBufferVignette = std::get<0>(graphicsDevice->createConstantBuffer(
         sizeof(VignetteBlock),
         gpu::BufferUsage::Dynamic));
 
@@ -137,11 +137,11 @@ void VignetteEffect::Apply(
 {
     POMDOG_ASSERT(source);
     POMDOG_ASSERT(constantBuffer);
-    commandList.SetConstantBuffer(0, constantBuffer);
-    commandList.SetConstantBuffer(1, constantBufferVignette);
-    commandList.SetSamplerState(0, samplerLinear);
-    commandList.SetTexture(0, source);
-    commandList.SetPipelineState(pipelineState);
+    commandList.setConstantBuffer(0, constantBuffer);
+    commandList.setConstantBuffer(1, constantBufferVignette);
+    commandList.setSamplerState(0, samplerLinear);
+    commandList.setTexture(0, source);
+    commandList.setPipelineState(pipelineState);
 }
 
 } // namespace pomdog

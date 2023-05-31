@@ -47,7 +47,7 @@ GameMain::initialize()
 {
     window->setTitle("Feature Showcase");
     window->setAllowUserResizing(true);
-    commandList = std::get<0>(graphicsDevice->CreateCommandList());
+    commandList = std::get<0>(graphicsDevice->createCommandList());
 
     auto [font, fontErr] = assets->Load<TrueTypeFont>("Fonts/NotoSans/NotoSans-Regular.ttf");
     if (fontErr != nullptr) {
@@ -287,22 +287,22 @@ void GameMain::updateMenuLayout()
 
 void GameMain::draw()
 {
-    commandQueue->Reset();
+    commandQueue->reset();
 
     if (subGame) {
         subGame->draw();
     }
 
     drawMenu();
-    commandQueue->PushbackCommandList(commandList);
+    commandQueue->pushBackCommandList(commandList);
 
-    commandQueue->ExecuteCommandLists();
-    commandQueue->Present();
+    commandQueue->executeCommandLists();
+    commandQueue->present();
 }
 
 void GameMain::drawMenu()
 {
-    auto presentationParameters = graphicsDevice->GetPresentationParameters();
+    auto presentationParameters = graphicsDevice->getPresentationParameters();
 
     std::optional<Vector4> clearColor;
     if (!subGame) {
@@ -369,8 +369,8 @@ void GameMain::drawMenu()
         }
     };
 
-    commandList->Reset();
-    commandList->SetRenderPass(std::move(pass));
+    commandList->reset();
+    commandList->setRenderPass(std::move(pass));
     primitiveBatch->Begin(commandList, viewProjection);
     spriteBatch->Begin(commandList, viewProjection);
     if (subGame) {
@@ -394,7 +394,7 @@ void GameMain::drawMenu()
     primitiveBatch->End();
     spriteBatch->End();
 
-    commandList->Close();
+    commandList->close();
 }
 
 } // namespace feature_showcase

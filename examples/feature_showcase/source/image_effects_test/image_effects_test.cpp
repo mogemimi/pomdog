@@ -25,7 +25,7 @@ std::unique_ptr<Error> ImageEffectsTest::initialize()
     std::unique_ptr<Error> err;
 
     // NOTE: Create graphics command list
-    std::tie(commandList, err) = graphicsDevice->CreateCommandList();
+    std::tie(commandList, err) = graphicsDevice->createCommandList();
     if (err != nullptr) {
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
@@ -47,10 +47,10 @@ std::unique_ptr<Error> ImageEffectsTest::initialize()
     vignetteEffect->SetIntensity(1.0f);
     fishEyeEffect->SetStrength(0.3f);
 
-    auto presentationParameters = graphicsDevice->GetPresentationParameters();
+    auto presentationParameters = graphicsDevice->getPresentationParameters();
 
     // NOTE: Create render target
-    std::tie(renderTarget, err) = graphicsDevice->CreateRenderTarget2D(
+    std::tie(renderTarget, err) = graphicsDevice->createRenderTarget2D(
         presentationParameters.backBufferWidth,
         presentationParameters.backBufferHeight,
         false,
@@ -60,7 +60,7 @@ std::unique_ptr<Error> ImageEffectsTest::initialize()
     }
 
     // NOTE: Create depth stencil buffer
-    std::tie(depthStencilBuffer, err) = graphicsDevice->CreateDepthStencilBuffer(
+    std::tie(depthStencilBuffer, err) = graphicsDevice->createDepthStencilBuffer(
         presentationParameters.backBufferWidth,
         presentationParameters.backBufferHeight,
         presentationParameters.depthStencilFormat);
@@ -85,14 +85,14 @@ std::unique_ptr<Error> ImageEffectsTest::initialize()
     auto window = gameHost->getWindow();
 
     connect(window->clientSizeChanged, [this](int width, int height) {
-        auto presentationParameters = graphicsDevice->GetPresentationParameters();
-        renderTarget = std::get<0>(graphicsDevice->CreateRenderTarget2D(
+        auto presentationParameters = graphicsDevice->getPresentationParameters();
+        renderTarget = std::get<0>(graphicsDevice->createRenderTarget2D(
             width,
             height,
             false,
             presentationParameters.backBufferFormat));
 
-        depthStencilBuffer = std::get<0>(graphicsDevice->CreateDepthStencilBuffer(
+        depthStencilBuffer = std::get<0>(graphicsDevice->createDepthStencilBuffer(
             width,
             height,
             presentationParameters.depthStencilFormat));
@@ -111,7 +111,7 @@ void ImageEffectsTest::update()
 
 void ImageEffectsTest::draw()
 {
-    auto presentationParameters = graphicsDevice->GetPresentationParameters();
+    auto presentationParameters = graphicsDevice->getPresentationParameters();
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
@@ -122,8 +122,8 @@ void ImageEffectsTest::draw()
     pass.viewport = viewport;
     pass.scissorRect = viewport.getBounds();
 
-    commandList->Reset();
-    commandList->SetRenderPass(std::move(pass));
+    commandList->reset();
+    commandList->setRenderPass(std::move(pass));
 
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
         static_cast<float>(presentationParameters.backBufferWidth),
@@ -157,17 +157,17 @@ void ImageEffectsTest::draw()
 
     postProcessCompositor.Draw(*commandList, renderTarget);
 
-    commandList->Close();
+    commandList->close();
 
     constexpr bool isStandalone = false;
     if constexpr (isStandalone) {
-        commandQueue->Reset();
-        commandQueue->PushbackCommandList(commandList);
-        commandQueue->ExecuteCommandLists();
-        commandQueue->Present();
+        commandQueue->reset();
+        commandQueue->pushBackCommandList(commandList);
+        commandQueue->executeCommandLists();
+        commandQueue->present();
     }
     else {
-        commandQueue->PushbackCommandList(commandList);
+        commandQueue->pushBackCommandList(commandList);
     }
 }
 

@@ -67,7 +67,7 @@ BufferMetal::initialize(
     }
 
     if (bufferUsage == BufferUsage::Dynamic) {
-        buffers_.resize(frameCounter_->GetMaxCount());
+        buffers_.resize(frameCounter_->getMaxCount());
     }
     else {
         buffers_.resize(1);
@@ -102,7 +102,7 @@ BufferMetal::initialize(
     }
 
     if (bufferUsage == BufferUsage::Dynamic) {
-        buffers_.resize(frameCounter_->GetMaxCount());
+        buffers_.resize(frameCounter_->getMaxCount());
     }
     else {
         buffers_.resize(1);
@@ -132,7 +132,7 @@ void BufferMetal::getData(
     std::size_t sizeInBytes) const
 {
     POMDOG_ASSERT(frameCounter_ != nullptr);
-    const auto bufferIndex = frameCounter_->GetCurrentIndex() % static_cast<std::uint32_t>(buffers_.size());
+    const auto bufferIndex = frameCounter_->getCurrentIndex() % static_cast<std::uint32_t>(buffers_.size());
     auto& nativeBuffer = buffers_[bufferIndex];
 
     POMDOG_ASSERT(nativeBuffer != nullptr);
@@ -146,7 +146,7 @@ void BufferMetal::setData(
     std::size_t sizeInBytes)
 {
     POMDOG_ASSERT(frameCounter_ != nullptr);
-    const auto bufferIndex = frameCounter_->GetCurrentIndex() % static_cast<std::uint32_t>(buffers_.size());
+    const auto bufferIndex = frameCounter_->getCurrentIndex() % static_cast<std::uint32_t>(buffers_.size());
     auto& nativeBuffer = buffers_[bufferIndex];
 
     POMDOG_ASSERT(nativeBuffer != nullptr);
@@ -158,7 +158,7 @@ void BufferMetal::setData(
 id<MTLBuffer> BufferMetal::getBuffer() const noexcept
 {
     POMDOG_ASSERT(frameCounter_ != nullptr);
-    const auto bufferIndex = frameCounter_->GetCurrentIndex() % static_cast<std::uint32_t>(buffers_.size());
+    const auto bufferIndex = frameCounter_->getCurrentIndex() % static_cast<std::uint32_t>(buffers_.size());
     auto& nativeBuffer = buffers_[bufferIndex];
 
     return nativeBuffer;

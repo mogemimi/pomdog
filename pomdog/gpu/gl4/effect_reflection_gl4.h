@@ -43,17 +43,19 @@ struct UniformGL4 final {
 class EffectReflectionGL4 final : public EffectReflection {
 public:
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(const ShaderProgramGL4& shaderProgram) noexcept;
+    initialize(const ShaderProgramGL4& shaderProgram) noexcept;
 
-    std::vector<EffectConstantDescription>
-    GetConstantBuffers() const noexcept override;
+    [[nodiscard]] std::vector<EffectConstantDescription>
+    getConstantBuffers() const noexcept override;
 
-    std::vector<UniformBlockGL4> GetNativeUniformBlocks();
+    [[nodiscard]] std::vector<UniformBlockGL4>
+    getNativeUniformBlocks();
 
-    std::vector<UniformGL4> GetNativeUniforms();
+    [[nodiscard]] std::vector<UniformGL4>
+    getNativeUniforms();
 
 private:
-    ShaderProgramGL4 shaderProgram;
+    ShaderProgramGL4 shaderProgram_;
 };
 
 } // namespace pomdog::gpu::detail::gl4

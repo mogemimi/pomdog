@@ -21,25 +21,23 @@ TEST_CASE("placement_new", "[memory]")
 
     SECTION("LinearAllocator")
     {
-        using pomdog::detail::LinearAllocator;
-        LinearAllocator alloc;
+        pomdog::memory::LinearAllocator alloc;
 
         std::array<std::uint8_t, 1024> buffer;
-        alloc.Reset(buffer);
+        alloc.reset(buffer);
 
-        auto p = PlacementNew<Foo>(alloc);
+        auto p = pomdog::memory::placementNew<Foo>(alloc);
         p->X = 42;
-        PlacementDelete(alloc, p);
+        pomdog::memory::placementDelete(alloc, p);
     }
     SECTION("LinearPageAllocator")
     {
-        using pomdog::detail::LinearPageAllocator;
-        LinearPageAllocator alloc;
+        pomdog::memory::LinearPageAllocator alloc;
 
-        alloc.Reset(1024);
+        alloc.reset(1024);
 
-        auto p = PlacementNew<Foo>(alloc);
+        auto p = pomdog::memory::placementNew<Foo>(alloc);
         p->X = 42;
-        PlacementDelete(alloc, p);
+        pomdog::memory::placementDelete(alloc, p);
     }
 }

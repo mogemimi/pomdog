@@ -330,19 +330,19 @@ GraphicsDeviceVulkan::GraphicsDeviceVulkan()
 
 GraphicsDeviceVulkan::~GraphicsDeviceVulkan() = default;
 
-ShaderLanguage GraphicsDeviceVulkan::GetSupportedLanguage() const noexcept
+ShaderLanguage GraphicsDeviceVulkan::getSupportedLanguage() const noexcept
 {
     return ShaderLanguage::GLSL;
 }
 
 std::unique_ptr<NativeCommandList>
-GraphicsDeviceVulkan::CreateCommandList()
+GraphicsDeviceVulkan::createCommandList()
 {
     POMDOG_THROW_EXCEPTION(std::runtime_error, "Not implemented");
 }
 
 std::unique_ptr<Shader>
-GraphicsDeviceVulkan::CreateShader(
+GraphicsDeviceVulkan::createShader(
     const ShaderBytecode& shaderBytecode,
     const ShaderCompileOptions& compileOptions)
 {
@@ -376,7 +376,7 @@ GraphicsDeviceVulkan::CreateBuffer(
 }
 
 std::unique_ptr<NativeSamplerState>
-GraphicsDeviceVulkan::CreateSamplerState(const SamplerDescriptor& descriptor)
+GraphicsDeviceVulkan::createSamplerState(const SamplerDescriptor& descriptor)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->device != nullptr);
@@ -384,7 +384,7 @@ GraphicsDeviceVulkan::CreateSamplerState(const SamplerDescriptor& descriptor)
 }
 
 std::unique_ptr<NativePipelineState>
-GraphicsDeviceVulkan::CreatePipelineState(const PipelineDescriptor& descriptor)
+GraphicsDeviceVulkan::createPipelineState(const PipelineDescriptor& descriptor)
 {
     POMDOG_ASSERT(impl);
     POMDOG_ASSERT(impl->device != nullptr);
@@ -392,7 +392,7 @@ GraphicsDeviceVulkan::CreatePipelineState(const PipelineDescriptor& descriptor)
 }
 
 std::unique_ptr<NativeEffectReflection>
-GraphicsDeviceVulkan::CreateEffectReflection(
+GraphicsDeviceVulkan::createEffectReflection(
     const PipelineDescriptor& descriptor,
     NativePipelineState& pipelineState)
 {
@@ -400,7 +400,7 @@ GraphicsDeviceVulkan::CreateEffectReflection(
 }
 
 std::unique_ptr<NativeTexture2D>
-GraphicsDeviceVulkan::CreateTexture2D(
+GraphicsDeviceVulkan::createTexture2D(
     std::int32_t width,
     std::int32_t height,
     std::int32_t mipmapLevels,
@@ -413,7 +413,7 @@ GraphicsDeviceVulkan::CreateTexture2D(
 }
 
 std::unique_ptr<NativeRenderTarget2D>
-GraphicsDeviceVulkan::CreateRenderTarget2D(
+GraphicsDeviceVulkan::createRenderTarget2D(
     std::int32_t width,
     std::int32_t height,
     std::int32_t mipmapLevels,

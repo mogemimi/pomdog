@@ -25,7 +25,7 @@ std::unique_ptr<Error> GameMain::initialize()
     std::unique_ptr<Error> err;
 
     // NOTE: Create graphics command list
-    std::tie(commandList, err) = graphicsDevice->CreateCommandList();
+    std::tie(commandList, err) = graphicsDevice->createCommandList();
     if (err != nullptr) {
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
@@ -37,7 +37,7 @@ std::unique_ptr<Error> GameMain::initialize()
     }
 
     // NOTE: Create sampler state
-    std::tie(sampler, err) = graphicsDevice->CreateSamplerState(gpu::SamplerDescriptor::createPointClamp());
+    std::tie(sampler, err) = graphicsDevice->createSamplerState(gpu::SamplerDescriptor::createPointClamp());
     if (err != nullptr) {
         return errors::wrap(std::move(err), "failed to create sampler state");
     }
@@ -56,7 +56,7 @@ std::unique_ptr<Error> GameMain::initialize()
             VertexCombined{Vector3{ 1.0f, -1.0f, 0.0f}, Vector2{1.0f, 1.0f}},
         }};
 
-        std::tie(vertexBuffer, err) = graphicsDevice->CreateVertexBuffer(
+        std::tie(vertexBuffer, err) = graphicsDevice->createVertexBuffer(
             verticesCombo.data(),
             verticesCombo.size(),
             sizeof(VertexCombined),
@@ -70,7 +70,7 @@ std::unique_ptr<Error> GameMain::initialize()
         // NOTE: Create index buffer
         std::array<std::uint16_t, 6> indices = {{0, 1, 2, 2, 3, 0}};
 
-        std::tie(indexBuffer, err) = graphicsDevice->CreateIndexBuffer(
+        std::tie(indexBuffer, err) = graphicsDevice->createIndexBuffer(
             gpu::IndexFormat::UInt16,
             indices.data(),
             indices.size(),
@@ -82,7 +82,7 @@ std::unique_ptr<Error> GameMain::initialize()
     }
     {
         // NOTE: Create constant buffer
-        std::tie(constantBuffer, err) = graphicsDevice->CreateConstantBuffer(
+        std::tie(constantBuffer, err) = graphicsDevice->createConstantBuffer(
             sizeof(MyShaderConstants),
             gpu::BufferUsage::Dynamic);
 
@@ -93,9 +93,9 @@ std::unique_ptr<Error> GameMain::initialize()
     {
         // NOTE: For details, see 'struct VertexCombined' members
         auto inputLayout = gpu::InputLayoutHelper{}
-            .Float3()
-            .Float2()
-            .CreateInputLayout();
+            .addFloat3()
+            .addFloat2()
+            .createInputLayout();
 
         auto [vertexShader, vertexShaderErr] = assets->CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
             .SetGLSLFromFile("simple_effect_vs.glsl")
@@ -117,7 +117,7 @@ std::unique_ptr<Error> GameMain::initialize()
             return errors::wrap(std::move(pixelShaderErr), "failed to create pixel shader");
         }
 
-        auto presentationParameters = graphicsDevice->GetPresentationParameters();
+        auto presentationParameters = graphicsDevice->getPresentationParameters();
 
         // NOTE: Create pipeline state
         std::tie(pipelineState, err) = assets->CreateBuilder<gpu::PipelineState>()
@@ -137,7 +137,7 @@ std::unique_ptr<Error> GameMain::initialize()
     }
     {
         auto updateShaderConstants = [this]([[maybe_unused]] int width, [[maybe_unused]] int height) {
-            const auto presentationParameters = graphicsDevice->GetPresentationParameters();
+            const auto presentationParameters = graphicsDevice->getPresentationParameters();
 
             const auto viewMatrix = Matrix4x4::createIdentity();
             const auto projectionMatrix = Matrix4x4::createOrthographicLH(
@@ -191,7 +191,7 @@ void GameMain::update()
 
 void GameMain::draw()
 {
-    const auto presentationParameters = graphicsDevice->GetPresentationParameters();
+    const auto presentationParameters = graphicsDevice->getPresentationParameters();
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
@@ -203,27 +203,27 @@ void GameMain::draw()
     pass.scissorRect = viewport.getBounds();
 
     // Reset graphics command list
-    commandList->Reset();
+    commandList->reset();
 
     // Update constant buffer
     constantBuffer->setData(0, gpu::makeByteSpan(myShaderConstants));
 
     // Create graphics commands
-    commandList->SetRenderPass(std::move(pass));
-    commandList->SetPipelineState(pipelineState);
-    commandList->SetConstantBuffer(0, constantBuffer);
-    commandList->SetSamplerState(0, sampler);
-    commandList->SetTexture(0, texture);
-    commandList->SetVertexBuffer(0, vertexBuffer);
-    commandList->SetIndexBuffer(indexBuffer);
-    commandList->DrawIndexed(indexBuffer->getIndexCount(), 0);
-    commandList->Close();
+    commandList->setRenderPass(std::move(pass));
+    commandList->setPipelineState(pipelineState);
+    commandList->setConstantBuffer(0, constantBuffer);
+    commandList->setSamplerState(0, sampler);
+    commandList->setTexture(0, texture);
+    commandList->setVertexBuffer(0, vertexBuffer);
+    commandList->setIndexBuffer(indexBuffer);
+    commandList->drawIndexed(indexBuffer->getIndexCount(), 0);
+    commandList->close();
 
     // Submit graphics command list for execution
-    commandQueue->Reset();
-    commandQueue->PushbackCommandList(commandList);
-    commandQueue->ExecuteCommandLists();
-    commandQueue->Present();
+    commandQueue->reset();
+    commandQueue->pushBackCommandList(commandList);
+    commandQueue->executeCommandLists();
+    commandQueue->present();
 }
 
 } // namespace quickstart

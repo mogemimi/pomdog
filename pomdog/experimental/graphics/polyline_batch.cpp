@@ -38,7 +38,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 #include "pomdog/gpu/rasterizer_descriptor.h"
 
-using pomdog::detail::AlignedNew;
+using pomdog::memory::AlignedNew;
 
 namespace pomdog {
 namespace {
@@ -141,7 +141,7 @@ PolylineBatch::Impl::Impl(
         vertices.reserve(MinVertexCount);
 
         constexpr auto maxVertexCount = MaxVertexCount;
-        vertexBuffer = std::get<0>(graphicsDevice->CreateVertexBuffer(
+        vertexBuffer = std::get<0>(graphicsDevice->createVertexBuffer(
             maxVertexCount,
             sizeof(PolylineVertex),
             gpu::BufferUsage::Dynamic));
@@ -155,17 +155,17 @@ PolylineBatch::Impl::Impl(
         indices.reserve(MinIndexCount);
 
         constexpr auto maxIndexCount = MaxIndexCount;
-        indexBuffer = std::get<0>(graphicsDevice->CreateIndexBuffer(
+        indexBuffer = std::get<0>(graphicsDevice->createIndexBuffer(
             gpu::IndexFormat::UInt16,
             maxIndexCount,
             gpu::BufferUsage::Dynamic));
     }
     {
         auto inputLayout = gpu::InputLayoutHelper{}
-                               .Float4()
-                               .Float4()
-                               .Float4()
-                               .Float4();
+                               .addFloat4()
+                               .addFloat4()
+                               .addFloat4()
+                               .addFloat4();
 
         auto vertexShaderBuilder = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
                                        .SetGLSL(Builtin_GLSL_PolylineBatch_VS, std::strlen(Builtin_GLSL_PolylineBatch_VS))
@@ -187,7 +187,7 @@ PolylineBatch::Impl::Impl(
             // FIXME: error handling
         }
 
-        auto presentationParameters = graphicsDevice->GetPresentationParameters();
+        auto presentationParameters = graphicsDevice->getPresentationParameters();
 
         std::unique_ptr<Error> pipelineStateErr;
         std::tie(pipelineState, pipelineStateErr) = assets.CreateBuilder<gpu::PipelineState>()
@@ -195,7 +195,7 @@ PolylineBatch::Impl::Impl(
                                                         .SetDepthStencilViewFormat(presentationParameters.depthStencilFormat)
                                                         .SetVertexShader(std::move(vertexShader))
                                                         .SetPixelShader(std::move(pixelShader))
-                                                        .SetInputLayout(inputLayout.CreateInputLayout())
+                                                        .SetInputLayout(inputLayout.createInputLayout())
                                                         .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
                                                         .SetBlendState(gpu::BlendDescriptor::createNonPremultiplied())
                                                         .SetDepthStencilState(gpu::DepthStencilDescriptor::createDefault())
@@ -207,7 +207,7 @@ PolylineBatch::Impl::Impl(
         }
     }
 
-    constantBuffer = std::get<0>(graphicsDevice->CreateConstantBuffer(
+    constantBuffer = std::get<0>(graphicsDevice->createConstantBuffer(
         sizeof(Matrix4x4),
         gpu::BufferUsage::Dynamic));
 }
@@ -261,16 +261,16 @@ void PolylineBatch::Impl::Flush()
     debugVertexBuffer->SetData(vert.data(), vert.size());
 #endif
 
-    commandList->SetPipelineState(pipelineState);
-    commandList->SetConstantBuffer(0, constantBuffer);
-    commandList->SetVertexBuffer(0, vertexBuffer);
-    commandList->SetIndexBuffer(indexBuffer);
-    commandList->DrawIndexed(indices.size(), startIndexLocation);
+    commandList->setPipelineState(pipelineState);
+    commandList->setConstantBuffer(0, constantBuffer);
+    commandList->setVertexBuffer(0, vertexBuffer);
+    commandList->setIndexBuffer(indexBuffer);
+    commandList->drawIndexed(indices.size(), startIndexLocation);
 
 #ifdef POMDOG_POLYLINE_DEBUG
-    commandList->SetVertexBuffer(debugVertexBuffer);
-    commandList->SetPrimitiveTopology(gpu::PrimitiveTopology::LineStrip);
-    commandList->DrawIndexed(indexBuffer, indices.size(), startIndexLocation);
+    commandList->setVertexBuffer(debugVertexBuffer);
+    commandList->setPrimitiveTopology(gpu::PrimitiveTopology::LineStrip);
+    commandList->drawIndexed(indexBuffer, indices.size(), startIndexLocation);
 #endif
 
     startIndexLocation = indices.size();

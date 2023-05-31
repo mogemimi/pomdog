@@ -17,34 +17,34 @@ namespace pomdog::gpu {
 
 class POMDOG_EXPORT InputLayoutHelper final {
 public:
-    InputLayoutHelper& PushBack(InputElementFormat format);
+    InputLayoutHelper& pushBack(InputElementFormat format);
 
-    InputLayoutHelper& Byte4();
+    InputLayoutHelper& addByte4();
 
-    InputLayoutHelper& Float();
+    InputLayoutHelper& addFloat();
 
-    InputLayoutHelper& Float2();
+    InputLayoutHelper& addFloat2();
 
-    InputLayoutHelper& Float3();
+    InputLayoutHelper& addFloat3();
 
-    InputLayoutHelper& Float4();
+    InputLayoutHelper& addFloat4();
 
-    InputLayoutHelper& Int4();
+    InputLayoutHelper& addInt4();
 
-    InputLayoutHelper& AddInputSlot();
+    InputLayoutHelper& addInputSlot();
 
-    InputLayoutHelper& AddInputSlot(
+    InputLayoutHelper& addInputSlot(
         InputClassification slotClass,
         std::uint16_t instanceStepRate);
 
-    InputLayoutDescriptor CreateInputLayout();
+    InputLayoutDescriptor createInputLayout();
 
 private:
-    std::vector<InputElement> elements;
-    std::uint16_t inputSlot = 0;
-    std::uint16_t byteOffset = 0;
-    std::uint16_t instanceStepRate = 0;
-    InputClassification slotClass = InputClassification::InputPerVertex;
+    std::vector<InputElement> elements_;
+    std::uint16_t inputSlot_ = 0;
+    std::uint16_t byteOffset_ = 0;
+    std::uint16_t instanceStepRate_ = 0;
+    InputClassification slotClass_ = InputClassification::InputPerVertex;
 };
 
 } // namespace pomdog::gpu

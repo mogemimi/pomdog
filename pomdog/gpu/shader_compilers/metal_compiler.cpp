@@ -29,18 +29,18 @@ CreateShaderFromSource(
 {
     POMDOG_ASSERT(shaderSource != nullptr);
     POMDOG_ASSERT(byteLength > 0);
-    POMDOG_ASSERT(graphicsDevice.GetSupportedLanguage() == ShaderLanguage::Metal);
+    POMDOG_ASSERT(graphicsDevice.getSupportedLanguage() == ShaderLanguage::Metal);
 
     ShaderBytecode shaderBytecode;
-    shaderBytecode.Code = shaderSource;
-    shaderBytecode.ByteLength = byteLength;
+    shaderBytecode.code = shaderSource;
+    shaderBytecode.byteLength = byteLength;
 
     ShaderCompileOptions compileOptions;
-    compileOptions.EntryPoint = entryPoint;
-    compileOptions.Profile.PipelineStage = pipelineStage;
-    compileOptions.Precompiled = false;
+    compileOptions.entryPoint = entryPoint;
+    compileOptions.profile.pipelineStage = pipelineStage;
+    compileOptions.precompiled = false;
 
-    return graphicsDevice.CreateShader(std::move(shaderBytecode), std::move(compileOptions));
+    return graphicsDevice.createShader(std::move(shaderBytecode), std::move(compileOptions));
 }
 
 [[nodiscard]] std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
@@ -50,18 +50,18 @@ CreateShaderFromDefaultLibrary(
     ShaderPipelineStage pipelineStage)
 {
     POMDOG_ASSERT(!entryPoint.empty());
-    POMDOG_ASSERT(graphicsDevice.GetSupportedLanguage() == ShaderLanguage::Metal);
+    POMDOG_ASSERT(graphicsDevice.getSupportedLanguage() == ShaderLanguage::Metal);
 
     ShaderBytecode shaderBytecode;
-    shaderBytecode.Code = nullptr;
-    shaderBytecode.ByteLength = 0;
+    shaderBytecode.code = nullptr;
+    shaderBytecode.byteLength = 0;
 
     ShaderCompileOptions compileOptions;
-    compileOptions.EntryPoint = entryPoint;
-    compileOptions.Profile.PipelineStage = pipelineStage;
-    compileOptions.Precompiled = false;
+    compileOptions.entryPoint = entryPoint;
+    compileOptions.profile.pipelineStage = pipelineStage;
+    compileOptions.precompiled = false;
 
-    return graphicsDevice.CreateShader(std::move(shaderBytecode), std::move(compileOptions));
+    return graphicsDevice.createShader(std::move(shaderBytecode), std::move(compileOptions));
 }
 
 [[nodiscard]] std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
@@ -73,18 +73,18 @@ CreateShaderFromBinary(
     ShaderPipelineStage pipelineStage)
 {
     POMDOG_ASSERT(!entryPoint.empty());
-    POMDOG_ASSERT(graphicsDevice.GetSupportedLanguage() == ShaderLanguage::Metal);
+    POMDOG_ASSERT(graphicsDevice.getSupportedLanguage() == ShaderLanguage::Metal);
 
     ShaderBytecode shaderBytecode;
-    shaderBytecode.Code = shaderSource;
-    shaderBytecode.ByteLength = byteLength;
+    shaderBytecode.code = shaderSource;
+    shaderBytecode.byteLength = byteLength;
 
     ShaderCompileOptions compileOptions;
-    compileOptions.EntryPoint = entryPoint;
-    compileOptions.Profile.PipelineStage = pipelineStage;
-    compileOptions.Precompiled = true;
+    compileOptions.entryPoint = entryPoint;
+    compileOptions.profile.pipelineStage = pipelineStage;
+    compileOptions.precompiled = true;
 
-    return graphicsDevice.CreateShader(std::move(shaderBytecode), std::move(compileOptions));
+    return graphicsDevice.createShader(std::move(shaderBytecode), std::move(compileOptions));
 }
 
 } // namespace pomdog::gpu::shader_compilers::MetalCompiler

@@ -19,7 +19,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
     std::unique_ptr<Error> err;
 
     // NOTE: Create graphics command list
-    std::tie(commandList, err) = graphicsDevice->CreateCommandList();
+    std::tie(commandList, err) = graphicsDevice->createCommandList();
     if (err != nullptr) {
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
@@ -76,7 +76,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
             {Vector3{0.0f, 1.0f, 1.0f}, Vector3{0.0f, 0.0f, 1.0f}, Vector2{0.0f, 1.0f}},
         }};
 
-        std::tie(vertexBuffer, err) = graphicsDevice->CreateVertexBuffer(
+        std::tie(vertexBuffer, err) = graphicsDevice->createVertexBuffer(
             verticesCombo.data(),
             verticesCombo.size(),
             sizeof(VertexCombined),
@@ -105,7 +105,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
             19, 16, 18,
         }};
 
-        std::tie(indexBuffer, err) = graphicsDevice->CreateIndexBuffer(
+        std::tie(indexBuffer, err) = graphicsDevice->createIndexBuffer(
             gpu::IndexFormat::UInt16,
             indices.data(),
             indices.size(),
@@ -117,7 +117,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
     }
     {
         // NOTE: Create constant buffer
-        std::tie(modelConstantBuffer, err) = graphicsDevice->CreateConstantBuffer(
+        std::tie(modelConstantBuffer, err) = graphicsDevice->createConstantBuffer(
             sizeof(BasicEffect::ModelConstantBuffer),
             gpu::BufferUsage::Dynamic);
 
@@ -125,7 +125,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
             return errors::wrap(std::move(err), "failed to create constant buffer");
         }
 
-        std::tie(worldConstantBuffer, err) = graphicsDevice->CreateConstantBuffer(
+        std::tie(worldConstantBuffer, err) = graphicsDevice->createConstantBuffer(
             sizeof(BasicEffect::WorldConstantBuffer),
             gpu::BufferUsage::Dynamic);
 
@@ -135,7 +135,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
     }
     {
         // NOTE: Create sampler state
-        std::tie(sampler, err) = graphicsDevice->CreateSamplerState(
+        std::tie(sampler, err) = graphicsDevice->createSamplerState(
             gpu::SamplerDescriptor::createLinearClamp());
 
         if (err != nullptr) {
@@ -145,10 +145,10 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
     {
         // For details, see 'struct VertexCombined' members
         auto inputLayout = gpu::InputLayoutHelper{}
-            .Float3() // NOTE: VertexCombined::Position
-            .Float3() // NOTE: VertexCombined::Normal
-            .Float2() // NOTE: VertexCombined::TextureCoord
-            .CreateInputLayout();
+            .addFloat3() // NOTE: VertexCombined::Position
+            .addFloat3() // NOTE: VertexCombined::Normal
+            .addFloat2() // NOTE: VertexCombined::TextureCoord
+            .createInputLayout();
 
         // NOTE: Create vertex shader
         auto [vertexShader, vertexShaderErr] = assets->CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
@@ -172,7 +172,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
             return errors::wrap(std::move(pixelShaderErr), "failed to create pixel shader");
         }
 
-        auto presentationParameters = graphicsDevice->GetPresentationParameters();
+        auto presentationParameters = graphicsDevice->getPresentationParameters();
 
         // NOTE: Create pipeline state
         std::tie(pipelineState, err) = assets->CreateBuilder<gpu::PipelineState>()
@@ -198,10 +198,10 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
         }
     }
 
-    auto presentationParameters = graphicsDevice->GetPresentationParameters();
+    auto presentationParameters = graphicsDevice->getPresentationParameters();
 
     // NOTE: Create render target
-    std::tie(renderTargetAlbedo, err) = graphicsDevice->CreateRenderTarget2D(
+    std::tie(renderTargetAlbedo, err) = graphicsDevice->createRenderTarget2D(
         presentationParameters.backBufferWidth,
         presentationParameters.backBufferHeight,
         false,
@@ -211,7 +211,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
     }
 
     // NOTE: Create render target
-    std::tie(renderTargetNormal, err) = graphicsDevice->CreateRenderTarget2D(
+    std::tie(renderTargetNormal, err) = graphicsDevice->createRenderTarget2D(
         presentationParameters.backBufferWidth,
         presentationParameters.backBufferHeight,
         false,
@@ -221,7 +221,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
     }
 
     // NOTE: Create render target
-    std::tie(renderTargetDepth, err) = graphicsDevice->CreateRenderTarget2D(
+    std::tie(renderTargetDepth, err) = graphicsDevice->createRenderTarget2D(
         presentationParameters.backBufferWidth,
         presentationParameters.backBufferHeight,
         false,
@@ -231,7 +231,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
     }
 
     // NOTE: Create render target
-    std::tie(renderTargetLighting, err) = graphicsDevice->CreateRenderTarget2D(
+    std::tie(renderTargetLighting, err) = graphicsDevice->createRenderTarget2D(
         presentationParameters.backBufferWidth,
         presentationParameters.backBufferHeight,
         false,
@@ -241,7 +241,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
     }
 
     // NOTE: Create depth stencil buffer
-    std::tie(depthStencilBuffer, err) = graphicsDevice->CreateDepthStencilBuffer(
+    std::tie(depthStencilBuffer, err) = graphicsDevice->createDepthStencilBuffer(
         presentationParameters.backBufferWidth,
         presentationParameters.backBufferHeight,
         presentationParameters.depthStencilFormat);
@@ -252,31 +252,31 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
     auto window = gameHost->getWindow();
 
     connect(window->clientSizeChanged, [this](int width, int height) {
-        renderTargetAlbedo = std::get<0>(graphicsDevice->CreateRenderTarget2D(
+        renderTargetAlbedo = std::get<0>(graphicsDevice->createRenderTarget2D(
             width,
             height,
             false,
             renderTargetAlbedo->getFormat()));
 
-        renderTargetNormal = std::get<0>(graphicsDevice->CreateRenderTarget2D(
+        renderTargetNormal = std::get<0>(graphicsDevice->createRenderTarget2D(
             width,
             height,
             false,
             renderTargetNormal->getFormat()));
 
-        renderTargetDepth = std::get<0>(graphicsDevice->CreateRenderTarget2D(
+        renderTargetDepth = std::get<0>(graphicsDevice->createRenderTarget2D(
             width,
             height,
             false,
             renderTargetDepth->getFormat()));
 
-        renderTargetLighting = std::get<0>(graphicsDevice->CreateRenderTarget2D(
+        renderTargetLighting = std::get<0>(graphicsDevice->createRenderTarget2D(
             width,
             height,
             false,
             renderTargetLighting->getFormat()));
 
-        depthStencilBuffer = std::get<0>(graphicsDevice->CreateDepthStencilBuffer(
+        depthStencilBuffer = std::get<0>(graphicsDevice->createDepthStencilBuffer(
             width,
             height,
             depthStencilBuffer->getFormat()));
@@ -287,7 +287,7 @@ std::unique_ptr<Error> MultiRenderTargetTest::initialize()
 
 void MultiRenderTargetTest::update()
 {
-    auto presentationParameters = graphicsDevice->GetPresentationParameters();
+    auto presentationParameters = graphicsDevice->getPresentationParameters();
 
     constexpr float rotateSpeed = 0.5f;
 
@@ -337,9 +337,9 @@ void MultiRenderTargetTest::update()
 
 void MultiRenderTargetTest::draw()
 {
-    auto presentationParameters = graphicsDevice->GetPresentationParameters();
+    auto presentationParameters = graphicsDevice->getPresentationParameters();
 
-    commandList->Reset();
+    commandList->reset();
 
     {
         gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
@@ -354,16 +354,16 @@ void MultiRenderTargetTest::draw()
         pass.viewport = viewport;
         pass.scissorRect = viewport.getBounds();
 
-        commandList->SetRenderPass(std::move(pass));
-        commandList->SetConstantBuffer(0, modelConstantBuffer);
-        commandList->SetConstantBuffer(1, worldConstantBuffer);
-        commandList->SetSamplerState(0, sampler);
-        commandList->SetTexture(0, texture);
-        commandList->SetVertexBuffer(0, vertexBuffer);
-        commandList->SetPipelineState(pipelineState);
+        commandList->setRenderPass(std::move(pass));
+        commandList->setConstantBuffer(0, modelConstantBuffer);
+        commandList->setConstantBuffer(1, worldConstantBuffer);
+        commandList->setSamplerState(0, sampler);
+        commandList->setTexture(0, texture);
+        commandList->setVertexBuffer(0, vertexBuffer);
+        commandList->setPipelineState(pipelineState);
 
-        commandList->SetIndexBuffer(indexBuffer);
-        commandList->DrawIndexed(indexBuffer->getIndexCount(), 0);
+        commandList->setIndexBuffer(indexBuffer);
+        commandList->drawIndexed(indexBuffer->getIndexCount(), 0);
     }
     {
         gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
@@ -379,14 +379,14 @@ void MultiRenderTargetTest::draw()
         const auto h = static_cast<float>(presentationParameters.backBufferHeight);
         const auto projectionMatrix = Matrix4x4::createOrthographicLH(w, h, 0.0f, 100.0f);
 
-        commandList->SetRenderPass(std::move(pass));
+        commandList->setRenderPass(std::move(pass));
 
         spriteBatch->Begin(commandList, projectionMatrix);
 
         auto draw = [&](std::shared_ptr<gpu::RenderTarget2D> rt, Vector2 pos) {
             auto originPivot = Vector2::createZero();
             auto scale = Vector2{0.5f, 0.5f};
-            if (graphicsDevice->GetSupportedLanguage() == gpu::ShaderLanguage::GLSL) {
+            if (graphicsDevice->getSupportedLanguage() == gpu::ShaderLanguage::GLSL) {
                 // NOTE: Flip horizontally for OpenGL coordinate system.
                 originPivot.y = 1.0f;
                 scale.y = -0.5f;
@@ -409,17 +409,17 @@ void MultiRenderTargetTest::draw()
         spriteBatch->End();
     }
 
-    commandList->Close();
+    commandList->close();
 
     constexpr bool isStandalone = false;
     if constexpr (isStandalone) {
-        commandQueue->Reset();
-        commandQueue->PushbackCommandList(commandList);
-        commandQueue->ExecuteCommandLists();
-        commandQueue->Present();
+        commandQueue->reset();
+        commandQueue->pushBackCommandList(commandList);
+        commandQueue->executeCommandLists();
+        commandQueue->present();
     }
     else {
-        commandQueue->PushbackCommandList(commandList);
+        commandQueue->pushBackCommandList(commandList);
     }
 }
 

@@ -11,12 +11,12 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail {
+namespace pomdog::memory {
 
 template <typename T, class Allocator, typename... Args>
-[[nodiscard]] unsafe_ptr<T> PlacementNew(Allocator& alloc, Args&&... args)
+[[nodiscard]] unsafe_ptr<T> placementNew(Allocator& alloc, Args&&... args)
 {
-    unsafe_ptr<void> p = alloc.Allocate(sizeof(T), alignof(T));
+    unsafe_ptr<void> p = alloc.allocate(sizeof(T), alignof(T));
     POMDOG_ASSERT(p != nullptr);
 
     unsafe_ptr<T> ptr = new (p) T(std::forward<Args>(args)...);
@@ -24,11 +24,11 @@ template <typename T, class Allocator, typename... Args>
 }
 
 template <typename T, class Allocator>
-void PlacementDelete(Allocator& alloc, unsafe_ptr<T> ptr)
+void placementDelete(Allocator& alloc, unsafe_ptr<T> ptr)
 {
     POMDOG_ASSERT(ptr != nullptr);
     ptr->~T();
-    alloc.Deallocate(ptr);
+    alloc.deallocate(ptr);
 }
 
-} // namespace pomdog::detail
+} // namespace pomdog::memory

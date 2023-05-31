@@ -25,18 +25,18 @@ public:
         std::shared_ptr<const FrameCounter> frameCounter) noexcept;
 
     /// Gets the currently supported shader language.
-    ShaderLanguage GetSupportedLanguage() const noexcept override;
+    ShaderLanguage getSupportedLanguage() const noexcept override;
 
     /// Gets the presentation parameters.
-    PresentationParameters GetPresentationParameters() const noexcept override;
+    PresentationParameters getPresentationParameters() const noexcept override;
 
     /// Creates a graphics command list.
     std::tuple<std::shared_ptr<CommandList>, std::unique_ptr<Error>>
-    CreateCommandList() noexcept override;
+    createCommandList() noexcept override;
 
     /// Creates a vertex buffer.
     std::tuple<std::shared_ptr<VertexBuffer>, std::unique_ptr<Error>>
-    CreateVertexBuffer(
+    createVertexBuffer(
         const void* vertices,
         std::size_t vertexCount,
         std::size_t strideBytes,
@@ -44,14 +44,14 @@ public:
 
     /// Creates a vertex buffer.
     std::tuple<std::shared_ptr<VertexBuffer>, std::unique_ptr<Error>>
-    CreateVertexBuffer(
+    createVertexBuffer(
         std::size_t vertexCount,
         std::size_t strideBytes,
         BufferUsage bufferUsage) noexcept override;
 
     /// Creates an index buffer.
     std::tuple<std::shared_ptr<IndexBuffer>, std::unique_ptr<Error>>
-    CreateIndexBuffer(
+    createIndexBuffer(
         IndexFormat elementSize,
         const void* indices,
         std::size_t indexCount,
@@ -59,49 +59,49 @@ public:
 
     /// Creates an index buffer.
     std::tuple<std::shared_ptr<IndexBuffer>, std::unique_ptr<Error>>
-    CreateIndexBuffer(
+    createIndexBuffer(
         IndexFormat elementSize,
         std::size_t indexCount,
         BufferUsage bufferUsage) noexcept override;
 
     /// Creates a constant buffer.
     std::tuple<std::shared_ptr<ConstantBuffer>, std::unique_ptr<Error>>
-    CreateConstantBuffer(
+    createConstantBuffer(
         const void* sourceData,
         std::size_t sizeInBytes,
         BufferUsage bufferUsage) noexcept override;
 
     /// Creates a constant buffer.
     std::tuple<std::shared_ptr<ConstantBuffer>, std::unique_ptr<Error>>
-    CreateConstantBuffer(
+    createConstantBuffer(
         std::size_t sizeInBytes,
         BufferUsage bufferUsage) noexcept override;
 
     /// Creates a pipeline state object.
     std::tuple<std::shared_ptr<PipelineState>, std::unique_ptr<Error>>
-    CreatePipelineState(const PipelineDescriptor& descriptor) noexcept override;
+    createPipelineState(const PipelineDescriptor& descriptor) noexcept override;
 
     /// Creates an effect reflection.
     std::tuple<std::shared_ptr<EffectReflection>, std::unique_ptr<Error>>
-    CreateEffectReflection(
+    createEffectReflection(
         const PipelineDescriptor& descriptor,
         const std::shared_ptr<PipelineState>& pipelineState) noexcept override;
 
     /// Creates a shader object.
     std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
-    CreateShader(
+    createShader(
         const detail::ShaderBytecode& shaderBytecode,
         const detail::ShaderCompileOptions& compileOptions) noexcept override;
 
     /// Creates a 2D render target.
     std::tuple<std::shared_ptr<RenderTarget2D>, std::unique_ptr<Error>>
-    CreateRenderTarget2D(
+    createRenderTarget2D(
         std::int32_t width,
         std::int32_t height) noexcept override;
 
     /// Creates a 2D render target.
     std::tuple<std::shared_ptr<RenderTarget2D>, std::unique_ptr<Error>>
-    CreateRenderTarget2D(
+    createRenderTarget2D(
         std::int32_t width,
         std::int32_t height,
         bool generateMipmap,
@@ -109,24 +109,24 @@ public:
 
     /// Creates a depth stencil buffer.
     std::tuple<std::shared_ptr<DepthStencilBuffer>, std::unique_ptr<Error>>
-    CreateDepthStencilBuffer(
+    createDepthStencilBuffer(
         std::int32_t width,
         std::int32_t height,
         PixelFormat depthStencilFormat) noexcept override;
 
     /// Creates a sampler state object.
     std::tuple<std::shared_ptr<SamplerState>, std::unique_ptr<Error>>
-    CreateSamplerState(const SamplerDescriptor& descriptor) noexcept override;
+    createSamplerState(const SamplerDescriptor& descriptor) noexcept override;
 
     /// Creates a 2D texture.
     std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
-    CreateTexture2D(
+    createTexture2D(
         std::int32_t width,
         std::int32_t height) noexcept override;
 
     /// Creates a 2D texture.
     std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
-    CreateTexture2D(
+    createTexture2D(
         std::int32_t width,
         std::int32_t height,
         bool mipMap,

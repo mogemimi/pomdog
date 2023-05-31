@@ -17,7 +17,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #endif
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail {
+namespace pomdog::memory {
 
 template <typename T>
 class AlignedNew {
@@ -26,7 +26,7 @@ public:
     {
         constexpr size_t alignment = __alignof(T);
         static_assert(alignment > 8, "");
-        static_assert(IsPowerOfTwo(alignment), "Must be integer power of 2.");
+        static_assert(isPowerOfTwo(alignment), "Must be integer power of 2.");
 
 #if defined(_MSC_VER)
         auto ptr = ::_aligned_malloc(size, alignment);
@@ -67,4 +67,4 @@ public:
     }
 };
 
-} // namespace pomdog::detail
+} // namespace pomdog::memory

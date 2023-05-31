@@ -32,8 +32,8 @@ ScreenQuad::ScreenQuad(const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevic
         ScreenQuadVertex{Vector3{1.0f, -1.0f, 0.5f}, Vector2{1.0f, 0.0f}},
     }};
 
-    if ((graphicsDevice->GetSupportedLanguage() == gpu::ShaderLanguage::HLSL) ||
-        (graphicsDevice->GetSupportedLanguage() == gpu::ShaderLanguage::Metal)) {
+    if ((graphicsDevice->getSupportedLanguage() == gpu::ShaderLanguage::HLSL) ||
+        (graphicsDevice->getSupportedLanguage() == gpu::ShaderLanguage::Metal)) {
         // Convert to Texture Coordinates in Direct3D
         for (auto& vertex : verticesCombo) {
             vertex.TextureCoord.y = (1.0f - vertex.TextureCoord.y);
@@ -49,7 +49,7 @@ ScreenQuad::ScreenQuad(const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevic
         verticesCombo[0],
     }};
 
-    vertexBuffer = std::get<0>(graphicsDevice->CreateVertexBuffer(
+    vertexBuffer = std::get<0>(graphicsDevice->createVertexBuffer(
         vertices.data(),
         vertices.size(),
         sizeof(ScreenQuadVertex),
@@ -58,8 +58,8 @@ ScreenQuad::ScreenQuad(const std::shared_ptr<gpu::GraphicsDevice>& graphicsDevic
 
 void ScreenQuad::DrawQuad(gpu::CommandList& commandList)
 {
-    commandList.SetVertexBuffer(0, vertexBuffer);
-    commandList.Draw(vertexBuffer->getVertexCount(), 0);
+    commandList.setVertexBuffer(0, vertexBuffer);
+    commandList.draw(vertexBuffer->getVertexCount(), 0);
 }
 
 } // namespace pomdog

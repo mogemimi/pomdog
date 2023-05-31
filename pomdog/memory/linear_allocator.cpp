@@ -4,43 +4,43 @@
 #include "pomdog/memory/alignment.h"
 #include "pomdog/utility/assert.h"
 
-namespace pomdog::detail {
+namespace pomdog::memory {
 
-void LinearAllocator::Reset(std::span<std::uint8_t> buffer) noexcept
+void LinearAllocator::reset(std::span<std::uint8_t> buffer) noexcept
 {
     buffer_ = std::move(buffer);
     allocatedSize_ = 0;
 }
 
-void LinearAllocator::Reset() noexcept
+void LinearAllocator::reset() noexcept
 {
     buffer_ = std::span<std::uint8_t>{};
     allocatedSize_ = 0;
 }
 
-[[nodiscard]] std::size_t LinearAllocator::GetAllocatedSize() const noexcept
+[[nodiscard]] std::size_t LinearAllocator::getAllocatedSize() const noexcept
 {
     return allocatedSize_;
 }
 
-[[nodiscard]] std::size_t LinearAllocator::GetBufferSize() const noexcept
+[[nodiscard]] std::size_t LinearAllocator::getBufferSize() const noexcept
 {
     return buffer_.size();
 }
 
-unsafe_ptr<void> LinearAllocator::Allocate(std::size_t size, std::size_t alignment) noexcept
+unsafe_ptr<void> LinearAllocator::allocate(std::size_t size, std::size_t alignment) noexcept
 {
     if (size == 0) {
         return nullptr;
     }
-    if (!IsPowerOfTwo(alignment)) {
+    if (!isPowerOfTwo(alignment)) {
         return nullptr;
     }
 
     const auto oldAllocatedSize = allocatedSize_;
 
     const auto bufferHead = buffer_.data() + oldAllocatedSize;
-    const auto allocStart = static_cast<std::uint8_t*>(AlignTo(bufferHead, alignment));
+    const auto allocStart = static_cast<std::uint8_t*>(alignTo(bufferHead, alignment));
     POMDOG_ASSERT(bufferHead <= allocStart);
 
     const auto allocEnd = allocStart + size;
@@ -62,12 +62,12 @@ unsafe_ptr<void> LinearAllocator::Allocate(std::size_t size, std::size_t alignme
     return allocStart;
 }
 
-void LinearAllocator::Deallocate([[maybe_unused]] unsafe_ptr<const void> ptr) noexcept
+void LinearAllocator::deallocate([[maybe_unused]] unsafe_ptr<const void> ptr) noexcept
 {
     // NOTE: Do nothing
 }
 
-bool LinearAllocator::IsOwnerOf(unsafe_ptr<const void> ptr) noexcept
+bool LinearAllocator::isOwnerOf(unsafe_ptr<const void> ptr) noexcept
 {
     POMDOG_ASSERT(ptr != nullptr);
     POMDOG_ASSERT(!buffer_.empty());
@@ -78,4 +78,4 @@ bool LinearAllocator::IsOwnerOf(unsafe_ptr<const void> ptr) noexcept
     return (begin <= p) && (p < end);
 }
 
-} // namespace pomdog::detail
+} // namespace pomdog::memory

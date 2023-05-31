@@ -17,7 +17,7 @@ std::unique_ptr<Error> SpriteFontTest::initialize()
     std::unique_ptr<Error> err;
 
     // NOTE: Create graphics command list
-    std::tie(commandList, err) = graphicsDevice->CreateCommandList();
+    std::tie(commandList, err) = graphicsDevice->createCommandList();
     if (err != nullptr) {
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
@@ -42,7 +42,7 @@ void SpriteFontTest::update()
 
 void SpriteFontTest::draw()
 {
-    auto presentationParameters = graphicsDevice->GetPresentationParameters();
+    auto presentationParameters = graphicsDevice->getPresentationParameters();
 
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
         static_cast<float>(presentationParameters.backBufferWidth),
@@ -59,8 +59,8 @@ void SpriteFontTest::draw()
     pass.viewport = viewport;
     pass.scissorRect = viewport.getBounds();
 
-    commandList->Reset();
-    commandList->SetRenderPass(std::move(pass));
+    commandList->reset();
+    commandList->setRenderPass(std::move(pass));
 
     constexpr auto text = "Hello, world!\n0123456789\nABCDEFghijk";
 
@@ -90,17 +90,17 @@ void SpriteFontTest::draw()
     spriteFont->Draw(*spriteBatch, text, Vector2{-100.0f, 100.0f}, Color::createBlue(), math::toRadians(-45.0f), Vector2{0.5f, 0.5f}, 0.7f);
     spriteBatch->End();
 
-    commandList->Close();
+    commandList->close();
 
     constexpr bool isStandalone = false;
     if constexpr (isStandalone) {
-        commandQueue->Reset();
-        commandQueue->PushbackCommandList(commandList);
-        commandQueue->ExecuteCommandLists();
-        commandQueue->Present();
+        commandQueue->reset();
+        commandQueue->pushBackCommandList(commandList);
+        commandQueue->executeCommandLists();
+        commandQueue->present();
     }
     else {
-        commandQueue->PushbackCommandList(commandList);
+        commandQueue->pushBackCommandList(commandList);
     }
 }
 

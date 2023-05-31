@@ -110,12 +110,12 @@ PipelineStateGL4::Initialize(const PipelineDescriptor& descriptor) noexcept
     inputLayout = std::make_unique<InputLayoutGL4>(*shaderProgram, descriptor.inputLayout);
 
     EffectReflectionGL4 shaderReflection;
-    if (auto err = shaderReflection.Initialize(*shaderProgram); err != nullptr) {
+    if (auto err = shaderReflection.initialize(*shaderProgram); err != nullptr) {
         return errors::wrap(std::move(err), "failed to initialize EffectReflectionGL4");
     }
 
     {
-        auto uniformBlocks = shaderReflection.GetNativeUniformBlocks();
+        auto uniformBlocks = shaderReflection.getNativeUniformBlocks();
 
         std::unordered_set<int> reservedSlots;
         std::unordered_set<int> reservedBlocks;
@@ -148,7 +148,7 @@ PipelineStateGL4::Initialize(const PipelineDescriptor& descriptor) noexcept
         }
     }
     {
-        auto uniforms = shaderReflection.GetNativeUniforms();
+        auto uniforms = shaderReflection.getNativeUniforms();
 
         auto& hints = descriptor.samplerBindHints;
 

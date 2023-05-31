@@ -231,7 +231,7 @@ void SetPixelDataTexture2DGL4(
 
     auto const formatComponents = ToFormatComponents(format);
     auto const pixelFundamentalType = ToPixelFundamentalType(format);
-    auto const bytesPerBlock = SurfaceFormatHelper::ToBytesPerBlock(format);
+    auto const bytesPerBlock = SurfaceFormatHelper::toBytesPerBlock(format);
 
     GLsizei mipMapPixelWidth = pixelWidth;
     GLsizei mipMapPixelHeight = pixelHeight;
@@ -369,7 +369,7 @@ void Texture2DGL4::getData(void* result, [[maybe_unused]] std::size_t offsetInBy
 
     auto const formatComponents = ToFormatComponents(format_);
     auto const pixelFundamentalType = ToPixelFundamentalType(format_);
-    auto const bytesPerBlock = SurfaceFormatHelper::ToBytesPerBlock(format_);
+    auto const bytesPerBlock = SurfaceFormatHelper::toBytesPerBlock(format_);
 
     // FIXME: Not implemented yet.
     POMDOG_ASSERT(sizeInBytes >= static_cast<std::size_t>(bytesPerBlock * pixelWidth_ * pixelHeight_));

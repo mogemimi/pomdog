@@ -26,20 +26,20 @@ AssetBuilders::Builder<gpu::PipelineState>
 CreateBasicEffect(AssetManager& assets, const BasicEffectDescription& desc)
 {
     gpu::InputLayoutHelper inputLayoutBuilder;
-    inputLayoutBuilder.Float3();
+    inputLayoutBuilder.addFloat3();
 
     if (desc.LightingEnabled) {
         // NOTE: Add surface normal into the input layout.
-        inputLayoutBuilder.Float3();
+        inputLayoutBuilder.addFloat3();
     }
 
     if (desc.TextureEnabled) {
         // NOTE: Add texture coordinates into the input layout.
-        inputLayoutBuilder.Float2();
+        inputLayoutBuilder.addFloat2();
     }
     else {
         // NOTE: Add vertex color into the input layout.
-        inputLayoutBuilder.Float4();
+        inputLayoutBuilder.addFloat4();
     }
 
     // NOTE: Generate shader code for Metal
@@ -64,7 +64,7 @@ CreateBasicEffect(AssetManager& assets, const BasicEffectDescription& desc)
     std::string sourceGLSLVS = "#version 330\n" + preprocessorMacroLines + Builtin_GLSL_BasicEffect_VS;
     std::string sourceGLSLPS = "#version 330\n" + preprocessorMacroLines + Builtin_GLSL_BasicEffect_PS;
 
-    auto inputLayout = inputLayoutBuilder.CreateInputLayout();
+    auto inputLayout = inputLayoutBuilder.createInputLayout();
 
     auto [vertexShader, vertexShaderErr] = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
                                                .SetGLSL(sourceGLSLVS.data(), sourceGLSLVS.size())

@@ -207,7 +207,7 @@ GameHostMetal::Impl::initialize(
 
     // NOTE: Create graphics context
     graphicsContext = std::make_shared<GraphicsContextMetal>(metalDevice);
-    graphicsContext->SetMTKView(metalView);
+    graphicsContext->setMTKView(metalView);
 
     // NOTE: Create graphics command queue
     graphicsCommandQueue = std::make_shared<gpu::detail::CommandQueueImmediate>(graphicsContext);
@@ -344,8 +344,8 @@ void GameHostMetal::Impl::gameLoop()
         return;
     }
 
-    graphicsContext->DispatchSemaphoreWait();
-    frameCounter_->UpdateFrame();
+    graphicsContext->dispatchSemaphoreWait();
+    frameCounter_->updateFrame();
 
     POMDOG_ASSERT(!exitRequest);
     POMDOG_ASSERT(!weakGame.expired());

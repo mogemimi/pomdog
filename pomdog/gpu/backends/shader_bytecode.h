@@ -12,8 +12,8 @@ namespace pomdog::gpu::detail {
 
 class ShaderBytecode final {
 public:
-    const void* Code = nullptr;
-    std::size_t ByteLength = 0;
+    const void* code = nullptr;
+    std::size_t byteLength = 0;
 };
 
 } // namespace pomdog::gpu::detail

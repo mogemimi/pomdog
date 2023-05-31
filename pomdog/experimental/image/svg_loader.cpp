@@ -199,7 +199,7 @@ LoadTexture(
     // FIXME: Add support multi-level texture (mipmap)
     constexpr bool generateMipmap = false;
 
-    auto texture = std::get<0>(graphicsDevice->CreateTexture2D(
+    auto texture = std::get<0>(graphicsDevice->createTexture2D(
         image.Width,
         image.Height,
         generateMipmap,

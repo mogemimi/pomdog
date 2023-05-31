@@ -19,7 +19,7 @@ std::unique_ptr<Error> HardwareInstancingTest::initialize()
     std::unique_ptr<Error> err;
 
     // NOTE: Create graphics command list
-    std::tie(commandList, err) = graphicsDevice->CreateCommandList();
+    std::tie(commandList, err) = graphicsDevice->createCommandList();
     if (err != nullptr) {
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
@@ -46,7 +46,7 @@ std::unique_ptr<Error> HardwareInstancingTest::initialize()
             VertexCombined{Vector3{ 1.0f, -1.0f, 0.0f}, Vector2{1.0f, 1.0f}},
         }};
 
-        std::tie(vertexBuffer, err) = graphicsDevice->CreateVertexBuffer(
+        std::tie(vertexBuffer, err) = graphicsDevice->createVertexBuffer(
             verticesCombo.data(),
             verticesCombo.size(),
             sizeof(VertexCombined),
@@ -60,7 +60,7 @@ std::unique_ptr<Error> HardwareInstancingTest::initialize()
         // NOTE: Create index buffer
         std::array<std::uint16_t, 6> indices = {{0, 1, 2, 2, 3, 0}};
 
-        std::tie(indexBuffer, err) = graphicsDevice->CreateIndexBuffer(
+        std::tie(indexBuffer, err) = graphicsDevice->createIndexBuffer(
             gpu::IndexFormat::UInt16,
             indices.data(),
             indices.size(),
@@ -72,7 +72,7 @@ std::unique_ptr<Error> HardwareInstancingTest::initialize()
     }
     {
         // NOTE: Create instance buffer
-        std::tie(instanceBuffer, err) = graphicsDevice->CreateVertexBuffer(
+        std::tie(instanceBuffer, err) = graphicsDevice->createVertexBuffer(
             maxSpriteCount,
             sizeof(SpriteInfo),
             gpu::BufferUsage::Dynamic);
@@ -83,7 +83,7 @@ std::unique_ptr<Error> HardwareInstancingTest::initialize()
     }
     {
         // NOTE: Create constant buffer
-        std::tie(constantBuffer, err) = graphicsDevice->CreateConstantBuffer(
+        std::tie(constantBuffer, err) = graphicsDevice->createConstantBuffer(
             sizeof(Matrix4x4),
             gpu::BufferUsage::Dynamic);
 
@@ -93,7 +93,7 @@ std::unique_ptr<Error> HardwareInstancingTest::initialize()
     }
     {
         // NOTE: Create sampler state
-        std::tie(sampler, err) = graphicsDevice->CreateSamplerState(
+        std::tie(sampler, err) = graphicsDevice->createSamplerState(
             gpu::SamplerDescriptor::createLinearClamp());
 
         if (err != nullptr) {
@@ -103,12 +103,12 @@ std::unique_ptr<Error> HardwareInstancingTest::initialize()
     {
         // For details, see 'struct VertexCombined' members
         auto inputLayout = gpu::InputLayoutHelper{}
-            .Float3() // NOTE: VertexCombined::Position
-            .Float2() // NOTE: VertexCombined::TextureCoord
-            .AddInputSlot(gpu::InputClassification::InputPerInstance, 1)
-            .Float4() // NOTE: SpriteInfo::Translation
-            .Float4() // NOTE: SpriteInfo::Color
-            .CreateInputLayout();
+            .addFloat3() // NOTE: VertexCombined::Position
+            .addFloat2() // NOTE: VertexCombined::TextureCoord
+            .addInputSlot(gpu::InputClassification::InputPerInstance, 1)
+            .addFloat4() // NOTE: SpriteInfo::Translation
+            .addFloat4() // NOTE: SpriteInfo::Color
+            .createInputLayout();
 
         // NOTE: Create vertex shader
         auto [vertexShader, vertexShaderErr] = assets->CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
@@ -132,7 +132,7 @@ std::unique_ptr<Error> HardwareInstancingTest::initialize()
             return errors::wrap(std::move(pixelShaderErr), "failed to create pixel shader");
         }
 
-        auto presentationParameters = graphicsDevice->GetPresentationParameters();
+        auto presentationParameters = graphicsDevice->getPresentationParameters();
 
         // NOTE: Create pipeline state
         std::tie(pipelineState, err) = assets->CreateBuilder<gpu::PipelineState>()
@@ -206,7 +206,7 @@ void HardwareInstancingTest::update()
 
 void HardwareInstancingTest::draw()
 {
-    auto presentationParameters = graphicsDevice->GetPresentationParameters();
+    auto presentationParameters = graphicsDevice->getPresentationParameters();
 
     auto viewMatrix = Matrix4x4::createIdentity();
     auto projectionMatrix = Matrix4x4::createOrthographicLH(
@@ -231,27 +231,27 @@ void HardwareInstancingTest::draw()
     pass.viewport = viewport;
     pass.scissorRect = viewport.getBounds();
 
-    commandList->Reset();
-    commandList->SetRenderPass(std::move(pass));
-    commandList->SetPipelineState(pipelineState);
-    commandList->SetConstantBuffer(0, constantBuffer);
-    commandList->SetSamplerState(0, sampler);
-    commandList->SetTexture(0, texture);
-    commandList->SetVertexBuffer(0, vertexBuffer);
-    commandList->SetVertexBuffer(1, instanceBuffer);
-    commandList->SetIndexBuffer(indexBuffer);
-    commandList->DrawIndexedInstanced(indexBuffer->getIndexCount(), sprites.size(), 0, 0);
-    commandList->Close();
+    commandList->reset();
+    commandList->setRenderPass(std::move(pass));
+    commandList->setPipelineState(pipelineState);
+    commandList->setConstantBuffer(0, constantBuffer);
+    commandList->setSamplerState(0, sampler);
+    commandList->setTexture(0, texture);
+    commandList->setVertexBuffer(0, vertexBuffer);
+    commandList->setVertexBuffer(1, instanceBuffer);
+    commandList->setIndexBuffer(indexBuffer);
+    commandList->drawIndexedInstanced(indexBuffer->getIndexCount(), sprites.size(), 0, 0);
+    commandList->close();
 
     constexpr bool isStandalone = false;
     if constexpr (isStandalone) {
-        commandQueue->Reset();
-        commandQueue->PushbackCommandList(commandList);
-        commandQueue->ExecuteCommandLists();
-        commandQueue->Present();
+        commandQueue->reset();
+        commandQueue->pushBackCommandList(commandList);
+        commandQueue->executeCommandLists();
+        commandQueue->present();
     }
     else {
-        commandQueue->PushbackCommandList(commandList);
+        commandQueue->pushBackCommandList(commandList);
     }
 }
 

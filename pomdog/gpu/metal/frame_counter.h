@@ -12,17 +12,17 @@ namespace pomdog::gpu::detail::metal {
 
 class FrameCounter final {
 public:
-    void UpdateFrame() noexcept;
+    void updateFrame() noexcept;
 
     [[nodiscard]] constexpr std::uint32_t
-    GetMaxCount() const noexcept
+    getMaxCount() const noexcept
     {
         // NOTE: Pomdog's metal renderer uses triple buffering.
         return 3;
     }
 
     [[nodiscard]] std::uint32_t
-    GetCurrentIndex() const noexcept;
+    getCurrentIndex() const noexcept;
 
 private:
     std::uint32_t frameIndex_ = 0;

@@ -103,15 +103,15 @@ LineBatch::Impl::Impl(
     {
         auto maxVertexCount = MaxVertexCount;
 
-        vertexBuffer = std::get<0>(graphicsDevice->CreateVertexBuffer(
+        vertexBuffer = std::get<0>(graphicsDevice->createVertexBuffer(
             maxVertexCount,
             sizeof(Vertex),
             gpu::BufferUsage::Dynamic));
     }
     {
         auto inputLayout = gpu::InputLayoutHelper{}
-                               .Float3()
-                               .Float4();
+                               .addFloat3()
+                               .addFloat4();
 
         auto vertexShaderBuilder = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
                                        .SetGLSL(Builtin_GLSL_LineBatch_VS, std::strlen(Builtin_GLSL_LineBatch_VS))
@@ -133,7 +133,7 @@ LineBatch::Impl::Impl(
             // FIXME: error handling
         }
 
-        auto presentationParameters = graphicsDevice->GetPresentationParameters();
+        auto presentationParameters = graphicsDevice->getPresentationParameters();
 
         std::unique_ptr<Error> pipelineStateErr;
         std::tie(pipelineState, pipelineStateErr) = assets.CreateBuilder<gpu::PipelineState>()
@@ -141,7 +141,7 @@ LineBatch::Impl::Impl(
                                                         .SetDepthStencilViewFormat(presentationParameters.depthStencilFormat)
                                                         .SetVertexShader(std::move(vertexShader))
                                                         .SetPixelShader(std::move(pixelShader))
-                                                        .SetInputLayout(inputLayout.CreateInputLayout())
+                                                        .SetInputLayout(inputLayout.createInputLayout())
                                                         .SetPrimitiveTopology(gpu::PrimitiveTopology::LineList)
                                                         .SetBlendState(gpu::BlendDescriptor::createNonPremultiplied())
                                                         .SetDepthStencilState(gpu::DepthStencilDescriptor::createDefault())
@@ -152,7 +152,7 @@ LineBatch::Impl::Impl(
         }
     }
 
-    constantBuffer = std::get<0>(graphicsDevice->CreateConstantBuffer(
+    constantBuffer = std::get<0>(graphicsDevice->createConstantBuffer(
         sizeof(Matrix4x4),
         gpu::BufferUsage::Dynamic));
 }
@@ -184,10 +184,10 @@ void LineBatch::Impl::Flush()
     POMDOG_ASSERT(vertices.size() <= MaxVertexCount);
     vertexBuffer->setData(vertices.data(), vertices.size());
 
-    commandList->SetVertexBuffer(0, vertexBuffer);
-    commandList->SetPipelineState(pipelineState);
-    commandList->SetConstantBuffer(0, constantBuffer);
-    commandList->Draw(vertices.size(), 0);
+    commandList->setVertexBuffer(0, vertexBuffer);
+    commandList->setPipelineState(pipelineState);
+    commandList->setConstantBuffer(0, constantBuffer);
+    commandList->draw(vertices.size(), 0);
 
     vertices.clear();
 }

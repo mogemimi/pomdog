@@ -193,7 +193,7 @@ DrawingContext::DrawingContext(
     POMDOG_ASSERT(!result.HasError);
 
     // NOTE: Creating texture from packed image
-    iconTexture = std::get<0>(graphicsDevice->CreateTexture2D(
+    iconTexture = std::get<0>(graphicsDevice->createTexture2D(
         result.Image->GetWidth(),
         result.Image->GetHeight(),
         false,
@@ -311,7 +311,7 @@ void DrawingContext::PushScissorRect(const Rectangle& scissorRect)
     primitiveBatch->Flush();
     spriteBatch->Flush();
 
-    commandList->SetScissorRect(rect);
+    commandList->setScissorRect(rect);
     scissorRects.push_back(rect);
 }
 
@@ -324,7 +324,7 @@ void DrawingContext::PopScissorRect()
     if (!scissorRects.empty()) {
         scissorRect = scissorRects.back();
     }
-    commandList->SetScissorRect(scissorRect);
+    commandList->setScissorRect(scissorRect);
 }
 
 void DrawingContext::BeginDraw(

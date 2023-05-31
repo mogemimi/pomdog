@@ -4,9 +4,9 @@
 #include "pomdog/basic/unreachable.h"
 #include "pomdog/gpu/pixel_format.h"
 
-namespace pomdog::gpu::detail {
+namespace pomdog::gpu::detail::SurfaceFormatHelper {
 
-int SurfaceFormatHelper::ToBytesPerBlock(PixelFormat format) noexcept
+[[nodiscard]] int toBytesPerBlock(PixelFormat format) noexcept
 {
     switch (format) {
     case PixelFormat::Invalid:
@@ -39,4 +39,4 @@ int SurfaceFormatHelper::ToBytesPerBlock(PixelFormat format) noexcept
     POMDOG_UNREACHABLE("Unsupported surface format");
 }
 
-} // namespace pomdog::gpu::detail
+} // namespace pomdog::gpu::detail::SurfaceFormatHelper

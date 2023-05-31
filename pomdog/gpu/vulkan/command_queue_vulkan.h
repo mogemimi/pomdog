@@ -12,7 +12,7 @@ class CommandQueueVulkan final : public CommandQueue {
 public:
     void Reset();
 
-    void PushbackCommandList(const std::shared_ptr<CommandList>& commandList);
+    void pushBackCommandList(const std::shared_ptr<CommandList>& commandList);
 
     void ExecuteCommandLists();
 

@@ -10,16 +10,16 @@ namespace pomdog::gpu::detail {
 
 CommandQueueImmediate::CommandQueueImmediate(
     const std::shared_ptr<GraphicsContext>& graphicsContextIn)
-    : graphicsContext(graphicsContextIn)
+    : graphicsContext_(graphicsContextIn)
 {
 }
 
-void CommandQueueImmediate::Reset()
+void CommandQueueImmediate::reset()
 {
-    commandLists.clear();
+    commandLists_.clear();
 }
 
-void CommandQueueImmediate::PushbackCommandList(
+void CommandQueueImmediate::pushBackCommandList(
     const std::shared_ptr<CommandList>& commandList)
 {
     POMDOG_ASSERT(commandList);
@@ -27,19 +27,19 @@ void CommandQueueImmediate::PushbackCommandList(
         auto commandListImmediate = std::static_pointer_cast<CommandListImmediate>(commandList);
         POMDOG_ASSERT(commandListImmediate != nullptr);
         POMDOG_ASSERT(commandListImmediate == std::dynamic_pointer_cast<CommandListImmediate>(commandList));
-        commandLists.push_back(std::move(commandListImmediate));
+        commandLists_.push_back(std::move(commandListImmediate));
     }
 }
 
-void CommandQueueImmediate::ExecuteCommandLists()
+void CommandQueueImmediate::executeCommandLists()
 {
-    graphicsContext->ExecuteCommandLists(commandLists);
+    graphicsContext_->executeCommandLists(commandLists_);
 }
 
-void CommandQueueImmediate::Present()
+void CommandQueueImmediate::present()
 {
-    POMDOG_ASSERT(graphicsContext);
-    graphicsContext->Present();
+    POMDOG_ASSERT(graphicsContext_);
+    graphicsContext_->present();
 }
 
 } // namespace pomdog::gpu::detail

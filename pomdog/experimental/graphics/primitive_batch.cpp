@@ -103,15 +103,15 @@ PrimitiveBatch::Impl::Impl(
 
     {
         auto maxVertexCount = polygonShapes.GetMaxVertexCount();
-        vertexBuffer = std::get<0>(graphicsDevice->CreateVertexBuffer(
+        vertexBuffer = std::get<0>(graphicsDevice->createVertexBuffer(
             maxVertexCount,
             sizeof(Vertex),
             gpu::BufferUsage::Dynamic));
     }
     {
         auto inputLayout = gpu::InputLayoutHelper{}
-                               .Float3()
-                               .Float4();
+                               .addFloat3()
+                               .addFloat4();
 
         auto [vertexShader, vertexShaderErr] = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
                                                    .SetGLSL(Builtin_GLSL_PrimitiveBatch_VS, std::strlen(Builtin_GLSL_PrimitiveBatch_VS))
@@ -133,7 +133,7 @@ PrimitiveBatch::Impl::Impl(
             // FIXME: error handling
         }
 
-        auto presentationParameters = graphicsDevice->GetPresentationParameters();
+        auto presentationParameters = graphicsDevice->getPresentationParameters();
 
         std::unique_ptr<Error> pipelineStateErr;
         std::tie(pipelineState, pipelineStateErr) = assets.CreateBuilder<gpu::PipelineState>()
@@ -141,7 +141,7 @@ PrimitiveBatch::Impl::Impl(
                                                         .SetDepthStencilViewFormat(presentationParameters.depthStencilFormat)
                                                         .SetVertexShader(std::move(vertexShader))
                                                         .SetPixelShader(std::move(pixelShader))
-                                                        .SetInputLayout(inputLayout.CreateInputLayout())
+                                                        .SetInputLayout(inputLayout.createInputLayout())
                                                         .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
                                                         .SetBlendState(gpu::BlendDescriptor::createNonPremultiplied())
                                                         .SetDepthStencilState(*depthStencilDesc)
@@ -154,7 +154,7 @@ PrimitiveBatch::Impl::Impl(
         }
     }
 
-    constantBuffer = std::get<0>(graphicsDevice->CreateConstantBuffer(
+    constantBuffer = std::get<0>(graphicsDevice->createConstantBuffer(
         sizeof(Matrix4x4),
         gpu::BufferUsage::Dynamic));
 }
@@ -196,10 +196,10 @@ void PrimitiveBatch::Impl::Flush()
         polygonShapes.getVertexCount(),
         sizeof(Vertex));
 
-    commandList->SetVertexBuffer(0, vertexBuffer);
-    commandList->SetPipelineState(pipelineState);
-    commandList->SetConstantBuffer(0, constantBuffer);
-    commandList->Draw(polygonShapes.getVertexCount(), startVertexLocation);
+    commandList->setVertexBuffer(0, vertexBuffer);
+    commandList->setPipelineState(pipelineState);
+    commandList->setConstantBuffer(0, constantBuffer);
+    commandList->draw(polygonShapes.getVertexCount(), startVertexLocation);
 
     startVertexLocation += polygonShapes.getVertexCount();
     ++drawCallCount;

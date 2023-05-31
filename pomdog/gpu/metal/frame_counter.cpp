@@ -4,13 +4,13 @@
 
 namespace pomdog::gpu::detail::metal {
 
-void FrameCounter::UpdateFrame() noexcept
+void FrameCounter::updateFrame() noexcept
 {
-    frameIndex_ = (frameIndex_ + 1) % GetMaxCount();
+    frameIndex_ = (frameIndex_ + 1) % getMaxCount();
 }
 
 [[nodiscard]] std::uint32_t
-FrameCounter::GetCurrentIndex() const noexcept
+FrameCounter::getCurrentIndex() const noexcept
 {
     return frameIndex_;
 }

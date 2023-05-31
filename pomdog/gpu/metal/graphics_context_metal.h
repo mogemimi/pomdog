@@ -24,69 +24,70 @@ public:
     ~GraphicsContextMetal() override;
 
     /// Retrieves the capabilities of a GraphicsContext.
-    [[nodiscard]] GraphicsCapabilities GetCapabilities() const noexcept;
+    [[nodiscard]] GraphicsCapabilities
+    getCapabilities() const noexcept;
 
-    void ExecuteCommandLists(
+    void executeCommandLists(
         std::span<std::shared_ptr<CommandListImmediate>> commandLists) override;
 
-    void Present() override;
+    void present() override;
 
-    void Draw(
+    void draw(
         std::uint32_t vertexCount,
         std::uint32_t startVertexLocation) override;
 
-    void DrawIndexed(
+    void drawIndexed(
         std::uint32_t indexCount,
         std::uint32_t startIndexLocation) override;
 
-    void DrawInstanced(
+    void drawInstanced(
         std::uint32_t vertexCountPerInstance,
         std::uint32_t instanceCount,
         std::uint32_t startVertexLocation,
         std::uint32_t startInstanceLocation) override;
 
-    void DrawIndexedInstanced(
+    void drawIndexedInstanced(
         std::uint32_t indexCountPerInstance,
         std::uint32_t instanceCount,
         std::uint32_t startIndexLocation,
         std::uint32_t startInstanceLocation) override;
 
-    void BeginRenderPass(const RenderPass& renderPass) override;
+    void beginRenderPass(const RenderPass& renderPass) override;
 
-    void EndRenderPass() override;
+    void endRenderPass() override;
 
-    void SetViewport(const Viewport& viewport) override;
+    void setViewport(const Viewport& viewport) override;
 
-    void SetScissorRect(const Rectangle& scissorRect) override;
+    void setScissorRect(const Rectangle& scissorRect) override;
 
-    void SetBlendFactor(const Vector4& blendFactor) override;
+    void setBlendFactor(const Vector4& blendFactor) override;
 
-    void SetVertexBuffer(
+    void setVertexBuffer(
         std::uint32_t index,
         const std::shared_ptr<VertexBuffer>& vertexBuffer,
         std::uint32_t offset) override;
 
-    void SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer) override;
+    void setIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer) override;
 
-    void SetPipelineState(const std::shared_ptr<PipelineState>& pipelineState) override;
+    void setPipelineState(const std::shared_ptr<PipelineState>& pipelineState) override;
 
-    void SetConstantBuffer(
+    void setConstantBuffer(
         std::uint32_t index,
         const std::shared_ptr<Buffer>& constantBuffer,
         std::uint32_t offset,
         std::uint32_t sizeInBytes) override;
 
-    void SetSampler(std::uint32_t index, const std::shared_ptr<SamplerState>& sampler) override;
+    void setSampler(std::uint32_t index, const std::shared_ptr<SamplerState>& sampler) override;
 
-    void SetTexture(std::uint32_t index) override;
+    void setTexture(std::uint32_t index) override;
 
-    void SetTexture(std::uint32_t index, const std::shared_ptr<gpu::Texture2D>& texture) override;
+    void setTexture(std::uint32_t index, const std::shared_ptr<gpu::Texture2D>& texture) override;
 
-    void SetTexture(std::uint32_t index, const std::shared_ptr<RenderTarget2D>& texture) override;
+    void setTexture(std::uint32_t index, const std::shared_ptr<RenderTarget2D>& texture) override;
 
-    void DispatchSemaphoreWait();
+    void dispatchSemaphoreWait();
 
-    void SetMTKView(MTKView* view);
+    void setMTKView(MTKView* view);
 
 private:
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)

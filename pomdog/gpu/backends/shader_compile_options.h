@@ -14,26 +14,26 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::gpu::detail {
 
 struct ShaderModel final {
-    std::uint8_t Major;
-    std::uint8_t Minor;
+    std::uint8_t major;
+    std::uint8_t minor;
 };
 
 struct ShaderProfile final {
-    pomdog::gpu::detail::ShaderModel ShaderModel;
-    ShaderPipelineStage PipelineStage;
+    ShaderModel shaderModel;
+    ShaderPipelineStage pipelineStage;
 };
 
 struct ShaderMacro final {
-    std::string Name;
-    std::string Definition;
+    std::string name;
+    std::string definition;
 };
 
 struct ShaderCompileOptions final {
-    std::string EntryPoint;
-    std::string CurrentDirectory;
-    std::vector<ShaderMacro> PreprocessorMacros;
-    ShaderProfile Profile;
-    bool Precompiled;
+    std::string entryPoint;
+    std::string currentDirectory;
+    std::vector<ShaderMacro> preprocessorMacros;
+    ShaderProfile profile;
+    bool precompiled;
 };
 
 } // namespace pomdog::gpu::detail

@@ -44,7 +44,7 @@ std::unique_ptr<Error> Particle3DTest::initialize()
     std::unique_ptr<Error> err;
 
     // NOTE: Create graphics command list
-    std::tie(commandList, err) = graphicsDevice->CreateCommandList();
+    std::tie(commandList, err) = graphicsDevice->createCommandList();
     if (err != nullptr) {
         return errors::wrap(std::move(err), "failed to create graphics command list");
     }
@@ -65,13 +65,13 @@ std::unique_ptr<Error> Particle3DTest::initialize()
     billboardBuffer = std::make_shared<BillboardBatchBuffer>(graphicsDevice, 4096);
 
     // NOTE: Create sampler state
-    std::tie(sampler, err) = graphicsDevice->CreateSamplerState(gpu::SamplerDescriptor::createLinearClamp());
+    std::tie(sampler, err) = graphicsDevice->createSamplerState(gpu::SamplerDescriptor::createLinearClamp());
     if (err != nullptr) {
         return errors::wrap(std::move(err), "failed to create sampler state");
     }
 
     // NOTE: Create constant buffer
-    std::tie(constantBuffer, err) = graphicsDevice->CreateConstantBuffer(
+    std::tie(constantBuffer, err) = graphicsDevice->createConstantBuffer(
         sizeof(BasicEffect::WorldConstantBuffer),
         gpu::BufferUsage::Dynamic);
     if (err != nullptr) {
@@ -146,7 +146,7 @@ void Particle3DTest::update()
 
 void Particle3DTest::draw()
 {
-    const auto presentationParameters = graphicsDevice->GetPresentationParameters();
+    const auto presentationParameters = graphicsDevice->getPresentationParameters();
 
     gpu::Viewport viewport = {0, 0, presentationParameters.backBufferWidth, presentationParameters.backBufferHeight};
     gpu::RenderPass pass;
@@ -157,8 +157,8 @@ void Particle3DTest::draw()
     pass.viewport = viewport;
     pass.scissorRect = viewport.getBounds();
 
-    commandList->Reset();
-    commandList->SetRenderPass(std::move(pass));
+    commandList->reset();
+    commandList->setRenderPass(std::move(pass));
 
     const auto projectionMatrix = Matrix4x4::createPerspectiveFieldOfViewLH(
         math::toRadians(45.0f),
@@ -239,17 +239,17 @@ void Particle3DTest::draw()
     billboardBuffer->FetchBuffer();
     billboardEffect->Draw(commandList, texture, sampler, constantBuffer, 0, *billboardBuffer);
 
-    commandList->Close();
+    commandList->close();
 
     constexpr bool isStandalone = false;
     if constexpr (isStandalone) {
-        commandQueue->Reset();
-        commandQueue->PushbackCommandList(commandList);
-        commandQueue->ExecuteCommandLists();
-        commandQueue->Present();
+        commandQueue->reset();
+        commandQueue->pushBackCommandList(commandList);
+        commandQueue->executeCommandLists();
+        commandQueue->present();
     }
     else {
-        commandQueue->PushbackCommandList(commandList);
+        commandQueue->pushBackCommandList(commandList);
     }
 }
 

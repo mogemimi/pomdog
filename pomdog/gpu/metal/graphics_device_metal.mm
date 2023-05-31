@@ -49,25 +49,25 @@ GraphicsDeviceMetal::Initialize(
 
 GraphicsDeviceMetal::~GraphicsDeviceMetal() = default;
 
-ShaderLanguage GraphicsDeviceMetal::GetSupportedLanguage() const noexcept
+ShaderLanguage GraphicsDeviceMetal::getSupportedLanguage() const noexcept
 {
     return ShaderLanguage::Metal;
 }
 
-PresentationParameters GraphicsDeviceMetal::GetPresentationParameters() const noexcept
+PresentationParameters GraphicsDeviceMetal::getPresentationParameters() const noexcept
 {
     return presentationParameters;
 }
 
 std::tuple<std::shared_ptr<CommandList>, std::unique_ptr<Error>>
-GraphicsDeviceMetal::CreateCommandList() noexcept
+GraphicsDeviceMetal::createCommandList() noexcept
 {
     auto commandList = std::make_shared<CommandListImmediate>();
     return std::make_tuple(std::move(commandList), nullptr);
 }
 
 std::tuple<std::shared_ptr<VertexBuffer>, std::unique_ptr<Error>>
-GraphicsDeviceMetal::CreateVertexBuffer(
+GraphicsDeviceMetal::createVertexBuffer(
     const void* vertices,
     std::size_t vertexCount,
     std::size_t strideBytes,
@@ -100,7 +100,7 @@ GraphicsDeviceMetal::CreateVertexBuffer(
 }
 
 std::tuple<std::shared_ptr<VertexBuffer>, std::unique_ptr<Error>>
-GraphicsDeviceMetal::CreateVertexBuffer(
+GraphicsDeviceMetal::createVertexBuffer(
     std::size_t vertexCount,
     std::size_t strideBytes,
     BufferUsage bufferUsage) noexcept
@@ -130,7 +130,7 @@ GraphicsDeviceMetal::CreateVertexBuffer(
 }
 
 std::tuple<std::shared_ptr<IndexBuffer>, std::unique_ptr<Error>>
-GraphicsDeviceMetal::CreateIndexBuffer(
+GraphicsDeviceMetal::createIndexBuffer(
     IndexFormat elementSize,
     const void* indices,
     std::size_t indexCount,
@@ -160,7 +160,7 @@ GraphicsDeviceMetal::CreateIndexBuffer(
 }
 
 std::tuple<std::shared_ptr<IndexBuffer>, std::unique_ptr<Error>>
-GraphicsDeviceMetal::CreateIndexBuffer(
+GraphicsDeviceMetal::createIndexBuffer(
     IndexFormat elementSize,
     std::size_t indexCount,
     BufferUsage bufferUsage) noexcept
@@ -189,7 +189,7 @@ GraphicsDeviceMetal::CreateIndexBuffer(
 }
 
 std::tuple<std::shared_ptr<ConstantBuffer>, std::unique_ptr<Error>>
-GraphicsDeviceMetal::CreateConstantBuffer(
+GraphicsDeviceMetal::createConstantBuffer(
     const void* sourceData,
     std::size_t sizeInBytes,
     BufferUsage bufferUsage) noexcept
@@ -216,7 +216,7 @@ GraphicsDeviceMetal::CreateConstantBuffer(
 }
 
 std::tuple<std::shared_ptr<ConstantBuffer>, std::unique_ptr<Error>>
-GraphicsDeviceMetal::CreateConstantBuffer(
+GraphicsDeviceMetal::createConstantBuffer(
     std::size_t sizeInBytes,
     BufferUsage bufferUsage) noexcept
 {
@@ -242,7 +242,7 @@ GraphicsDeviceMetal::CreateConstantBuffer(
 }
 
 std::tuple<std::shared_ptr<PipelineState>, std::unique_ptr<Error>>
-GraphicsDeviceMetal::CreatePipelineState(const PipelineDescriptor& descriptor) noexcept
+GraphicsDeviceMetal::createPipelineState(const PipelineDescriptor& descriptor) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
     auto pipelineState = std::make_shared<PipelineStateMetal>();
@@ -253,7 +253,7 @@ GraphicsDeviceMetal::CreatePipelineState(const PipelineDescriptor& descriptor) n
 }
 
 std::tuple<std::shared_ptr<EffectReflection>, std::unique_ptr<Error>>
-GraphicsDeviceMetal::CreateEffectReflection(
+GraphicsDeviceMetal::createEffectReflection(
     const PipelineDescriptor& descriptor,
     const std::shared_ptr<PipelineState>& pipelineState) noexcept
 {
@@ -261,15 +261,15 @@ GraphicsDeviceMetal::CreateEffectReflection(
 }
 
 std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
-GraphicsDeviceMetal::CreateShader(
+GraphicsDeviceMetal::createShader(
     const detail::ShaderBytecode& shaderBytecode,
     const detail::ShaderCompileOptions& compileOptions) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
 
-    if ((shaderBytecode.Code == nullptr) &&
-        (shaderBytecode.ByteLength == 0) &&
-        !compileOptions.EntryPoint.empty()) {
+    if ((shaderBytecode.code == nullptr) &&
+        (shaderBytecode.byteLength == 0) &&
+        !compileOptions.entryPoint.empty()) {
 
         auto shader = std::make_unique<ShaderMetal>();
         if (auto err = shader->Initialize(device, defaultLibrary, compileOptions); err != nullptr) {
@@ -288,11 +288,11 @@ GraphicsDeviceMetal::CreateShader(
 }
 
 std::tuple<std::shared_ptr<RenderTarget2D>, std::unique_ptr<Error>>
-GraphicsDeviceMetal::CreateRenderTarget2D(
+GraphicsDeviceMetal::createRenderTarget2D(
     std::int32_t width,
     std::int32_t height) noexcept
 {
-    return CreateRenderTarget2D(
+    return createRenderTarget2D(
         width,
         height,
         false,
@@ -300,7 +300,7 @@ GraphicsDeviceMetal::CreateRenderTarget2D(
 }
 
 std::tuple<std::shared_ptr<RenderTarget2D>, std::unique_ptr<Error>>
-GraphicsDeviceMetal::CreateRenderTarget2D(
+GraphicsDeviceMetal::createRenderTarget2D(
     std::int32_t width,
     std::int32_t height,
     bool generateMipmap,
@@ -311,7 +311,7 @@ GraphicsDeviceMetal::CreateRenderTarget2D(
     POMDOG_ASSERT(device != nullptr);
 
     const auto levelCount = generateMipmap
-                                ? detail::TextureHelper::ComputeMipmapLevelCount(width, height)
+                                ? detail::TextureHelper::computeMipmapLevelCount(width, height)
                                 : 1;
 
     // TODO: MSAA is not implemented yet.
@@ -332,7 +332,7 @@ GraphicsDeviceMetal::CreateRenderTarget2D(
 }
 
 std::tuple<std::shared_ptr<DepthStencilBuffer>, std::unique_ptr<Error>>
-GraphicsDeviceMetal::CreateDepthStencilBuffer(
+GraphicsDeviceMetal::createDepthStencilBuffer(
     std::int32_t width,
     std::int32_t height,
     PixelFormat depthStencilFormat) noexcept
@@ -358,7 +358,7 @@ GraphicsDeviceMetal::CreateDepthStencilBuffer(
 }
 
 std::tuple<std::shared_ptr<SamplerState>, std::unique_ptr<Error>>
-GraphicsDeviceMetal::CreateSamplerState(const SamplerDescriptor& descriptor) noexcept
+GraphicsDeviceMetal::createSamplerState(const SamplerDescriptor& descriptor) noexcept
 {
     POMDOG_ASSERT(device != nullptr);
     auto samplerState = std::make_shared<SamplerStateMetal>();
@@ -369,11 +369,11 @@ GraphicsDeviceMetal::CreateSamplerState(const SamplerDescriptor& descriptor) noe
 }
 
 std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
-GraphicsDeviceMetal::CreateTexture2D(
+GraphicsDeviceMetal::createTexture2D(
     std::int32_t width,
     std::int32_t height) noexcept
 {
-    return CreateTexture2D(
+    return createTexture2D(
         width,
         height,
         false,
@@ -381,7 +381,7 @@ GraphicsDeviceMetal::CreateTexture2D(
 }
 
 std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
-GraphicsDeviceMetal::CreateTexture2D(
+GraphicsDeviceMetal::createTexture2D(
     std::int32_t width,
     std::int32_t height,
     bool mipMap,
@@ -392,7 +392,7 @@ GraphicsDeviceMetal::CreateTexture2D(
     POMDOG_ASSERT(device != nullptr);
 
     const auto levelCount = mipMap
-                                ? detail::TextureHelper::ComputeMipmapLevelCount(width, height)
+                                ? detail::TextureHelper::computeMipmapLevelCount(width, height)
                                 : 1;
 
     auto texture = std::make_shared<Texture2DMetal>();

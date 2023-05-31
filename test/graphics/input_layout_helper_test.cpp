@@ -14,12 +14,12 @@ TEST_CASE("InputLayoutHelper", "[InputLayoutHelper]")
     SECTION("trivial case")
     {
         InputLayoutHelper helper;
-        helper.AddInputSlot()
-            .Float4()
-            .Float3()
-            .Float2()
-            .Float();
-        InputLayoutDescriptor inputLayout = helper.CreateInputLayout();
+        helper.addInputSlot()
+            .addFloat4()
+            .addFloat3()
+            .addFloat2()
+            .addFloat();
+        InputLayoutDescriptor inputLayout = helper.createInputLayout();
 
         auto& elements = inputLayout.inputElements;
 
@@ -48,17 +48,17 @@ TEST_CASE("InputLayoutHelper", "[InputLayoutHelper]")
     SECTION("AddInputSlot")
     {
         InputLayoutHelper helper;
-        helper.AddInputSlot()
-            .Float3()
-            .Float()
-            .AddInputSlot(InputClassification::InputPerInstance, 42)
-            .Float4()
-            .Float2()
-            .AddInputSlot(InputClassification::InputPerInstance, 1)
-            .Float3()
-            .Float4()
-            .Float2();
-        InputLayoutDescriptor inputLayout = helper.CreateInputLayout();
+        helper.addInputSlot()
+            .addFloat3()
+            .addFloat()
+            .addInputSlot(InputClassification::InputPerInstance, 42)
+            .addFloat4()
+            .addFloat2()
+            .addInputSlot(InputClassification::InputPerInstance, 1)
+            .addFloat3()
+            .addFloat4()
+            .addFloat2();
+        InputLayoutDescriptor inputLayout = helper.createInputLayout();
 
         auto& elements = inputLayout.inputElements;
 

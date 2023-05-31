@@ -41,8 +41,8 @@ CompileShader(const ShaderBytecode& source, GLenum pipelineStage) noexcept
     }
 #endif
 
-    POMDOG_ASSERT(source.Code != nullptr);
-    POMDOG_ASSERT(source.ByteLength > 0);
+    POMDOG_ASSERT(source.code != nullptr);
+    POMDOG_ASSERT(source.byteLength > 0);
 
     auto result = std::make_optional(glCreateShader(pipelineStage));
     if (*result == 0) {
@@ -50,11 +50,11 @@ CompileShader(const ShaderBytecode& source, GLenum pipelineStage) noexcept
     }
 
     std::array<const GLchar*, 1> shaderSource = {{
-        reinterpret_cast<const GLchar*>(source.Code),
+        reinterpret_cast<const GLchar*>(source.code),
     }};
 
-    POMDOG_ASSERT(source.ByteLength < static_cast<decltype(source.ByteLength)>(std::numeric_limits<GLint>::max()));
-    GLint const sourceLength = static_cast<GLint>(source.ByteLength);
+    POMDOG_ASSERT(source.byteLength < static_cast<decltype(source.byteLength)>(std::numeric_limits<GLint>::max()));
+    GLint const sourceLength = static_cast<GLint>(source.byteLength);
 
     glShaderSource(*result, 1, shaderSource.data(), &sourceLength);
 

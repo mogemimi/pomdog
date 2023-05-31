@@ -23,7 +23,7 @@ class GraphicsCommand {
 public:
     virtual ~GraphicsCommand();
 
-    virtual void Execute(GraphicsContext& graphicsContext) const = 0;
+    virtual void execute(GraphicsContext& graphicsContext) const = 0;
 };
 
 class CommandListImmediate final : public CommandList {
@@ -38,95 +38,95 @@ public:
     ~CommandListImmediate() override;
 
     /// Declares that recording to the command list is completed.
-    void Close() override;
+    void close() override;
 
     /// Clears the graphics commands.
-    void Reset() override;
+    void reset() override;
 
     /// Draws the specified non-indexed primitives.
     ///
     /// @param vertexCount Number of vertices to draw.
     /// @param startVertexLocation Index of the first vertex to draw.
-    void Draw(
+    void draw(
         std::size_t vertexCount,
         std::size_t startVertexLocation) override;
 
     /// Draws the specified indexed primitives.
-    void DrawIndexed(
+    void drawIndexed(
         std::size_t indexCount,
         std::size_t startIndexLocation) override;
 
     /// Draws the specified instanced primitives.
-    void DrawInstanced(
+    void drawInstanced(
         std::size_t vertexCountPerInstance,
         std::size_t instanceCount,
         std::size_t startVertexLocation,
         std::size_t startInstanceLocation) override;
 
     /// Draws the specified indexed, instanced primitives.
-    void DrawIndexedInstanced(
+    void drawIndexedInstanced(
         std::size_t indexCountPerInstance,
         std::size_t instanceCount,
         std::size_t startIndexLocation,
         std::size_t startInstanceLocation) override;
 
     /// Sets a group of render targets.
-    void SetRenderPass(RenderPass&& renderPass) override;
+    void setRenderPass(RenderPass&& renderPass) override;
 
     /// Sets the viewport dynamically to the rasterizer stage.
-    void SetViewport(const Viewport& viewport) override;
+    void setViewport(const Viewport& viewport) override;
 
     /// Sets the scissor rectangle dynamically for a scissor test.
-    void SetScissorRect(const Rectangle& scissorRect) override;
+    void setScissorRect(const Rectangle& scissorRect) override;
 
     /// Sets the constant blend color and alpha values.
-    void SetBlendFactor(const Vector4& blendFactor) override;
+    void setBlendFactor(const Vector4& blendFactor) override;
 
     /// Sets a vertex buffer.
-    void SetVertexBuffer(int index, const std::shared_ptr<VertexBuffer>& vertexBuffer) override;
+    void setVertexBuffer(int index, const std::shared_ptr<VertexBuffer>& vertexBuffer) override;
 
     /// Sets a vertex buffer.
-    void SetVertexBuffer(
+    void setVertexBuffer(
         int index,
         const std::shared_ptr<VertexBuffer>& vertexBuffer,
         std::size_t offset) override;
 
     /// Sets an index buffer.
-    void SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer) override;
+    void setIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer) override;
 
     /// Sets a pipeline state.
-    void SetPipelineState(const std::shared_ptr<PipelineState>& pipelineState) override;
+    void setPipelineState(const std::shared_ptr<PipelineState>& pipelineState) override;
 
     /// Sets a constant buffer.
-    void SetConstantBuffer(int index, const std::shared_ptr<ConstantBuffer>& constantBuffer) override;
+    void setConstantBuffer(int index, const std::shared_ptr<ConstantBuffer>& constantBuffer) override;
 
     /// Sets a constant buffer.
-    void SetConstantBuffer(
+    void setConstantBuffer(
         int index,
         const std::shared_ptr<ConstantBuffer>& constantBuffer,
         std::size_t offset) override;
 
     /// Sets an empty texture to the specified slot.
-    void SetTexture(int index) override;
+    void setTexture(int index) override;
 
     /// Sets a texture to the specified slot.
-    void SetTexture(int index, const std::shared_ptr<gpu::Texture2D>& texture) override;
+    void setTexture(int index, const std::shared_ptr<gpu::Texture2D>& texture) override;
 
     /// Sets a texture to the specified slot.
-    void SetTexture(int index, const std::shared_ptr<RenderTarget2D>& texture) override;
+    void setTexture(int index, const std::shared_ptr<RenderTarget2D>& texture) override;
 
     /// Sets a sampler state to the specified slot.
-    void SetSamplerState(int index, const std::shared_ptr<SamplerState>& samplerState) override;
+    void setSamplerState(int index, const std::shared_ptr<SamplerState>& samplerState) override;
 
-    void ExecuteImmediate(GraphicsContext& graphicsContext);
-
-private:
-    void FlushRenderPassCommands();
-
-    void EndRenderPass();
+    void executeImmediate(GraphicsContext& graphicsContext);
 
 private:
-    pomdog::detail::LinearPageAllocator allocator_;
+    void flushRenderPassCommands();
+
+    void endRenderPass();
+
+private:
+    pomdog::memory::LinearPageAllocator allocator_;
     std::vector<unsafe_ptr<const GraphicsCommand>> commands_;
     std::vector<unsafe_ptr<const GraphicsCommand>> renderPassCommands_;
     bool needToEndRenderPass_ = false;

@@ -80,7 +80,7 @@ void RenderTarget2DMetal::getData(
     POMDOG_ASSERT(texture_ != nullptr);
     POMDOG_ASSERT(result != nullptr);
 
-    const auto bytesPerPixel = SurfaceFormatHelper::ToBytesPerBlock(format_);
+    const auto bytesPerPixel = SurfaceFormatHelper::toBytesPerBlock(format_);
 
     // FIXME: Not implemented yet.
     POMDOG_ASSERT(offsetInBytes == 0);

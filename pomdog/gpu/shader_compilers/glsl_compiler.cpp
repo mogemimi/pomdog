@@ -29,22 +29,22 @@ CreateShader(
 {
     POMDOG_ASSERT(shaderSource != nullptr);
     POMDOG_ASSERT(byteLength > 0);
-    POMDOG_ASSERT(graphicsDevice.GetSupportedLanguage() == ShaderLanguage::GLSL);
+    POMDOG_ASSERT(graphicsDevice.getSupportedLanguage() == ShaderLanguage::GLSL);
 
     ShaderBytecode shaderBytecode;
-    shaderBytecode.Code = shaderSource;
-    shaderBytecode.ByteLength = byteLength;
+    shaderBytecode.code = shaderSource;
+    shaderBytecode.byteLength = byteLength;
 
     ShaderCompileOptions compileOptions;
-    compileOptions.EntryPoint = "main";
-    compileOptions.Profile.PipelineStage = pipelineStage;
-    compileOptions.Precompiled = false;
+    compileOptions.entryPoint = "main";
+    compileOptions.profile.pipelineStage = pipelineStage;
+    compileOptions.precompiled = false;
 
     if (currentDirectory) {
-        compileOptions.CurrentDirectory = std::move(*currentDirectory);
+        compileOptions.currentDirectory = std::move(*currentDirectory);
     }
 
-    return graphicsDevice.CreateShader(std::move(shaderBytecode), std::move(compileOptions));
+    return graphicsDevice.createShader(std::move(shaderBytecode), std::move(compileOptions));
 }
 
 } // namespace pomdog::gpu::shader_compilers::GLSLCompiler

@@ -165,9 +165,9 @@ Builder<Shader>& Builder<Shader>::SetGLSL(
     auto graphicsDevice = impl->GetDevice();
     POMDOG_ASSERT(graphicsDevice);
 
-    if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::GLSL) {
-        impl->shaderBytecode.Code = shaderSourceIn;
-        impl->shaderBytecode.ByteLength = byteLengthIn;
+    if (graphicsDevice->getSupportedLanguage() == ShaderLanguage::GLSL) {
+        impl->shaderBytecode.code = shaderSourceIn;
+        impl->shaderBytecode.byteLength = byteLengthIn;
         impl->precompiled = false;
         impl->shaderFilePath = std::nullopt;
     }
@@ -181,7 +181,7 @@ Builder<Shader>& Builder<Shader>::SetGLSLFromFile(const std::string& assetName)
     auto graphicsDevice = impl->GetDevice();
     POMDOG_ASSERT(graphicsDevice);
 
-    if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::GLSL) {
+    if (graphicsDevice->getSupportedLanguage() == ShaderLanguage::GLSL) {
         auto filePath = impl->assets.get().GetAssetPath(assetName);
 
         auto [stream, byteLength, err] = impl->OpenStream(filePath);
@@ -219,8 +219,8 @@ Builder<Shader>& Builder<Shader>::SetGLSLFromFile(const std::string& assetName)
         // NOTE: Insert null at the end of a charater array
         impl->shaderBlob.push_back(0);
 
-        impl->shaderBytecode.Code = impl->shaderBlob.data();
-        impl->shaderBytecode.ByteLength = impl->shaderBlob.size() - 1;
+        impl->shaderBytecode.code = impl->shaderBlob.data();
+        impl->shaderBytecode.byteLength = impl->shaderBlob.size() - 1;
         impl->shaderFilePath = filePath;
     }
     return *this;
@@ -238,9 +238,9 @@ Builder<Shader>& Builder<Shader>::SetHLSL(
     auto graphicsDevice = impl->GetDevice();
     POMDOG_ASSERT(graphicsDevice);
 
-    if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::HLSL) {
-        impl->shaderBytecode.Code = shaderSourceIn;
-        impl->shaderBytecode.ByteLength = byteLengthIn;
+    if (graphicsDevice->getSupportedLanguage() == ShaderLanguage::HLSL) {
+        impl->shaderBytecode.code = shaderSourceIn;
+        impl->shaderBytecode.byteLength = byteLengthIn;
         impl->entryPoint = entryPointIn;
         impl->precompiled = false;
         impl->shaderFilePath = std::nullopt;
@@ -257,9 +257,9 @@ Builder<Shader>& Builder<Shader>::SetHLSLPrecompiled(
     auto graphicsDevice = impl->GetDevice();
     POMDOG_ASSERT(graphicsDevice);
 
-    if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::HLSL) {
-        impl->shaderBytecode.Code = shaderSourceIn;
-        impl->shaderBytecode.ByteLength = byteLengthIn;
+    if (graphicsDevice->getSupportedLanguage() == ShaderLanguage::HLSL) {
+        impl->shaderBytecode.code = shaderSourceIn;
+        impl->shaderBytecode.byteLength = byteLengthIn;
         impl->precompiled = true;
         impl->shaderFilePath = std::nullopt;
     }
@@ -275,7 +275,7 @@ Builder<Shader>& Builder<Shader>::SetHLSLFromFile(
     auto graphicsDevice = impl->GetDevice();
     POMDOG_ASSERT(graphicsDevice);
 
-    if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::HLSL) {
+    if (graphicsDevice->getSupportedLanguage() == ShaderLanguage::HLSL) {
         auto filePath = impl->assets.get().GetAssetPath(assetName);
 
         auto [stream, byteLength, err] = impl->OpenStream(filePath);
@@ -302,8 +302,8 @@ Builder<Shader>& Builder<Shader>::SetHLSLFromFile(
         // NOTE: Insert null at the end of a charater array
         impl->shaderBlob.push_back(0);
 
-        impl->shaderBytecode.Code = impl->shaderBlob.data();
-        impl->shaderBytecode.ByteLength = impl->shaderBlob.size() - 1;
+        impl->shaderBytecode.code = impl->shaderBlob.data();
+        impl->shaderBytecode.byteLength = impl->shaderBlob.size() - 1;
         impl->entryPoint = entryPointIn;
         impl->precompiled = false;
         impl->shaderFilePath = filePath;
@@ -323,9 +323,9 @@ Builder<Shader>& Builder<Shader>::SetMetal(
     auto graphicsDevice = impl->GetDevice();
     POMDOG_ASSERT(graphicsDevice);
 
-    if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::Metal) {
-        impl->shaderBytecode.Code = shaderSourceIn;
-        impl->shaderBytecode.ByteLength = byteLengthIn;
+    if (graphicsDevice->getSupportedLanguage() == ShaderLanguage::Metal) {
+        impl->shaderBytecode.code = shaderSourceIn;
+        impl->shaderBytecode.byteLength = byteLengthIn;
         impl->entryPoint = entryPointIn;
         impl->precompiled = false;
         impl->fromDefaultLibrary = false;
@@ -346,9 +346,9 @@ Builder<Shader>& Builder<Shader>::SetMetalPrecompiled(
     auto graphicsDevice = impl->GetDevice();
     POMDOG_ASSERT(graphicsDevice);
 
-    if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::Metal) {
-        impl->shaderBytecode.Code = shaderSourceIn;
-        impl->shaderBytecode.ByteLength = byteLengthIn;
+    if (graphicsDevice->getSupportedLanguage() == ShaderLanguage::Metal) {
+        impl->shaderBytecode.code = shaderSourceIn;
+        impl->shaderBytecode.byteLength = byteLengthIn;
         impl->entryPoint = entryPointIn;
         impl->precompiled = true;
         impl->fromDefaultLibrary = false;
@@ -366,7 +366,7 @@ Builder<Shader>& Builder<Shader>::SetMetalFromFile(
     auto graphicsDevice = impl->GetDevice();
     POMDOG_ASSERT(graphicsDevice);
 
-    if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::Metal) {
+    if (graphicsDevice->getSupportedLanguage() == ShaderLanguage::Metal) {
         auto filePath = impl->assets.get().GetAssetPath(assetName);
 
         auto [stream, byteLength, err] = impl->OpenStream(filePath);
@@ -393,8 +393,8 @@ Builder<Shader>& Builder<Shader>::SetMetalFromFile(
         // NOTE: Insert null at the end of a charater array
         impl->shaderBlob.push_back(0);
 
-        impl->shaderBytecode.Code = impl->shaderBlob.data();
-        impl->shaderBytecode.ByteLength = impl->shaderBlob.size() - 1;
+        impl->shaderBytecode.code = impl->shaderBlob.data();
+        impl->shaderBytecode.byteLength = impl->shaderBlob.size() - 1;
         impl->entryPoint = entryPointIn;
         impl->precompiled = false;
         impl->fromDefaultLibrary = false;
@@ -412,7 +412,7 @@ Builder<Shader>& Builder<Shader>::SetMetalFromPrecompiledFile(
     auto graphicsDevice = impl->GetDevice();
     POMDOG_ASSERT(graphicsDevice);
 
-    if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::Metal) {
+    if (graphicsDevice->getSupportedLanguage() == ShaderLanguage::Metal) {
         auto filePath = impl->assets.get().GetAssetPath(assetName);
 
         auto [stream, byteLength, err] = impl->OpenStream(filePath);
@@ -436,8 +436,8 @@ Builder<Shader>& Builder<Shader>::SetMetalFromPrecompiledFile(
             return *this;
         }
 
-        impl->shaderBytecode.Code = impl->shaderBlob.data();
-        impl->shaderBytecode.ByteLength = impl->shaderBlob.size();
+        impl->shaderBytecode.code = impl->shaderBlob.data();
+        impl->shaderBytecode.byteLength = impl->shaderBlob.size();
         impl->entryPoint = entryPointIn;
         impl->precompiled = true;
         impl->fromDefaultLibrary = false;
@@ -454,9 +454,9 @@ Builder<Shader>& Builder<Shader>::SetMetalFromLibrary(
     auto graphicsDevice = impl->GetDevice();
     POMDOG_ASSERT(graphicsDevice);
 
-    if (graphicsDevice->GetSupportedLanguage() == ShaderLanguage::Metal) {
-        impl->shaderBytecode.Code = nullptr;
-        impl->shaderBytecode.ByteLength = 0;
+    if (graphicsDevice->getSupportedLanguage() == ShaderLanguage::Metal) {
+        impl->shaderBytecode.code = nullptr;
+        impl->shaderBytecode.byteLength = 0;
         impl->entryPoint = entryPointIn;
         impl->precompiled = false;
         impl->fromDefaultLibrary = true;
@@ -474,7 +474,7 @@ Builder<Shader>::Build()
     auto graphicsDevice = impl->GetDevice();
     POMDOG_ASSERT(graphicsDevice);
 
-    const auto shaderLanguage = graphicsDevice->GetSupportedLanguage();
+    const auto shaderLanguage = graphicsDevice->getSupportedLanguage();
     std::optional<std::string> currentDirectory;
     if (impl->shaderFilePath) {
         currentDirectory = PathHelper::Normalize(
@@ -483,30 +483,30 @@ Builder<Shader>::Build()
 
     switch (shaderLanguage) {
     case ShaderLanguage::GLSL: {
-        POMDOG_ASSERT(impl->shaderBytecode.Code != nullptr);
-        POMDOG_ASSERT(impl->shaderBytecode.ByteLength > 0);
+        POMDOG_ASSERT(impl->shaderBytecode.code != nullptr);
+        POMDOG_ASSERT(impl->shaderBytecode.byteLength > 0);
         return GLSLCompiler::CreateShader(
             *graphicsDevice,
-            impl->shaderBytecode.Code,
-            impl->shaderBytecode.ByteLength,
+            impl->shaderBytecode.code,
+            impl->shaderBytecode.byteLength,
             impl->pipelineStage,
             std::move(currentDirectory));
     }
     case ShaderLanguage::HLSL: {
-        POMDOG_ASSERT(impl->shaderBytecode.Code != nullptr);
-        POMDOG_ASSERT(impl->shaderBytecode.ByteLength > 0);
+        POMDOG_ASSERT(impl->shaderBytecode.code != nullptr);
+        POMDOG_ASSERT(impl->shaderBytecode.byteLength > 0);
         if (impl->precompiled) {
             return HLSLCompiler::CreateShaderFromBinary(
                 *graphicsDevice,
-                impl->shaderBytecode.Code,
-                impl->shaderBytecode.ByteLength,
+                impl->shaderBytecode.code,
+                impl->shaderBytecode.byteLength,
                 impl->pipelineStage);
         }
         POMDOG_ASSERT(!impl->entryPoint.empty());
         return HLSLCompiler::CreateShaderFromSource(
             *graphicsDevice,
-            impl->shaderBytecode.Code,
-            impl->shaderBytecode.ByteLength,
+            impl->shaderBytecode.code,
+            impl->shaderBytecode.byteLength,
             impl->entryPoint,
             impl->pipelineStage,
             std::move(currentDirectory));
@@ -519,20 +519,20 @@ Builder<Shader>::Build()
                 impl->entryPoint,
                 impl->pipelineStage);
         }
-        POMDOG_ASSERT(impl->shaderBytecode.Code != nullptr);
-        POMDOG_ASSERT(impl->shaderBytecode.ByteLength > 0);
+        POMDOG_ASSERT(impl->shaderBytecode.code != nullptr);
+        POMDOG_ASSERT(impl->shaderBytecode.byteLength > 0);
         if (impl->precompiled) {
             return MetalCompiler::CreateShaderFromBinary(
                 *graphicsDevice,
-                impl->shaderBytecode.Code,
-                impl->shaderBytecode.ByteLength,
+                impl->shaderBytecode.code,
+                impl->shaderBytecode.byteLength,
                 impl->entryPoint,
                 impl->pipelineStage);
         }
         return MetalCompiler::CreateShaderFromSource(
             *graphicsDevice,
-            impl->shaderBytecode.Code,
-            impl->shaderBytecode.ByteLength,
+            impl->shaderBytecode.code,
+            impl->shaderBytecode.byteLength,
             impl->entryPoint,
             impl->pipelineStage);
     }

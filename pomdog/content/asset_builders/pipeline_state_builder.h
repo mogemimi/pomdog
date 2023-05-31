@@ -69,7 +69,7 @@ public:
     Build();
 
     [[nodiscard]] std::shared_ptr<gpu::EffectReflection>
-    CreateEffectReflection(const std::shared_ptr<gpu::PipelineState>& pipelineState);
+    createEffectReflection(const std::shared_ptr<gpu::PipelineState>& pipelineState);
 
     const gpu::PipelineDescriptor& GetDescription() const;
 

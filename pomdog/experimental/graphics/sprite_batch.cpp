@@ -45,7 +45,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-using pomdog::detail::AlignedNew;
+using pomdog::memory::AlignedNew;
 
 namespace pomdog {
 namespace {
@@ -199,7 +199,7 @@ SpriteBatch::Impl::Impl(
     : startInstanceLocation(0)
     , drawCallCount(0)
 {
-    auto presentationParameters = graphicsDevice->GetPresentationParameters();
+    auto presentationParameters = graphicsDevice->getPresentationParameters();
 
     if (!blendDesc) {
         blendDesc = gpu::BlendDescriptor::createNonPremultiplied();
@@ -232,7 +232,7 @@ SpriteBatch::Impl::Impl(
             Vector4{1.0f, 1.0f, 1.0f, 0.0f},
             Vector4{1.0f, 0.0f, 1.0f, 1.0f},
         }};
-        planeVertices = std::get<0>(graphicsDevice->CreateVertexBuffer(
+        planeVertices = std::get<0>(graphicsDevice->createVertexBuffer(
             verticesCombo.data(),
             verticesCombo.size(),
             sizeof(PositionTextureCoord),
@@ -242,7 +242,7 @@ SpriteBatch::Impl::Impl(
         std::array<std::uint16_t, 6> const indices = {{0, 1, 2, 2, 3, 0}};
 
         // Create index buffer
-        planeIndices = std::get<0>(graphicsDevice->CreateIndexBuffer(
+        planeIndices = std::get<0>(graphicsDevice->createIndexBuffer(
             gpu::IndexFormat::UInt16,
             indices.data(),
             indices.size(),
@@ -250,29 +250,29 @@ SpriteBatch::Impl::Impl(
     }
     {
         const auto maxBatchSize = MaxBatchSize;
-        instanceVertices = std::get<0>(graphicsDevice->CreateVertexBuffer(
+        instanceVertices = std::get<0>(graphicsDevice->createVertexBuffer(
             maxBatchSize,
             sizeof(SpriteInfo),
             gpu::BufferUsage::Dynamic));
     }
     {
-        constantBuffer = std::get<0>(graphicsDevice->CreateConstantBuffer(
+        constantBuffer = std::get<0>(graphicsDevice->createConstantBuffer(
             sizeof(SpriteBatchConstantBuffer),
             gpu::BufferUsage::Dynamic));
 
-        sampler = std::get<0>(graphicsDevice->CreateSamplerState(
+        sampler = std::get<0>(graphicsDevice->createSamplerState(
             *samplerDesc));
     }
     {
         auto inputLayout = gpu::InputLayoutHelper{}
-                               .AddInputSlot()
-                               .Float4()
-                               .AddInputSlot(gpu::InputClassification::InputPerInstance, 1)
-                               .Float4()
-                               .Float4()
-                               .Float4()
-                               .Float4()
-                               .Float4();
+                               .addInputSlot()
+                               .addFloat4()
+                               .addInputSlot(gpu::InputClassification::InputPerInstance, 1)
+                               .addFloat4()
+                               .addFloat4()
+                               .addFloat4()
+                               .addFloat4()
+                               .addFloat4();
 
         auto vertexShaderBuilder = assets.CreateBuilder<gpu::Shader>(gpu::ShaderPipelineStage::VertexShader)
                                        .SetGLSL(Builtin_GLSL_SpriteBatch_VS, std::strlen(Builtin_GLSL_SpriteBatch_VS))
@@ -310,7 +310,7 @@ SpriteBatch::Impl::Impl(
                                                         .SetDepthStencilViewFormat(*depthStencilViewFormat)
                                                         .SetVertexShader(std::move(vertexShader))
                                                         .SetPixelShader(std::move(pixelShader))
-                                                        .SetInputLayout(inputLayout.CreateInputLayout())
+                                                        .SetInputLayout(inputLayout.createInputLayout())
                                                         .SetPrimitiveTopology(gpu::PrimitiveTopology::TriangleList)
                                                         .SetBlendState(*blendDesc)
                                                         .SetDepthStencilState(gpu::DepthStencilDescriptor::createNone())
@@ -359,7 +359,7 @@ void SpriteBatch::Impl::End()
     FlushBatch();
 
     if (drawCallCount > 0) {
-        commandList->SetTexture(0);
+        commandList->setTexture(0);
     }
     commandList.reset();
 }
@@ -400,20 +400,20 @@ void SpriteBatch::Impl::RenderBatch(
         sizeof(SpriteInfo));
 
     if (texture.GetIndex() == Texture2DViewIndex::Texture2D) {
-        commandList->SetTexture(0, texture.AsTexture2D());
+        commandList->setTexture(0, texture.AsTexture2D());
     }
     else if (texture.GetIndex() == Texture2DViewIndex::RenderTarget2D) {
-        commandList->SetTexture(0, texture.AsRenderTarget2D());
+        commandList->setTexture(0, texture.AsRenderTarget2D());
     }
-    commandList->SetSamplerState(0, sampler);
+    commandList->setSamplerState(0, sampler);
 
-    commandList->SetPipelineState(pipelineState);
-    commandList->SetConstantBuffer(0, constantBuffer);
-    commandList->SetVertexBuffer(0, planeVertices);
-    commandList->SetVertexBuffer(1, instanceVertices);
-    commandList->SetIndexBuffer(planeIndices);
+    commandList->setPipelineState(pipelineState);
+    commandList->setConstantBuffer(0, constantBuffer);
+    commandList->setVertexBuffer(0, planeVertices);
+    commandList->setVertexBuffer(1, instanceVertices);
+    commandList->setIndexBuffer(planeIndices);
 
-    commandList->DrawIndexedInstanced(
+    commandList->drawIndexedInstanced(
         planeIndices->getIndexCount(),
         sprites.size(),
         0,

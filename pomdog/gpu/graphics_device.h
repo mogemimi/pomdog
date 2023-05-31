@@ -27,19 +27,19 @@ public:
 
     /// Gets the currently supported shader language.
     [[nodiscard]] virtual ShaderLanguage
-    GetSupportedLanguage() const noexcept = 0;
+    getSupportedLanguage() const noexcept = 0;
 
     /// Gets the presentation parameters.
     [[nodiscard]] virtual PresentationParameters
-    GetPresentationParameters() const noexcept = 0;
+    getPresentationParameters() const noexcept = 0;
 
     /// Creates a graphics command list.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<CommandList>, std::unique_ptr<Error>>
-    CreateCommandList() noexcept = 0;
+    createCommandList() noexcept = 0;
 
     /// Creates a vertex buffer.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<VertexBuffer>, std::unique_ptr<Error>>
-    CreateVertexBuffer(
+    createVertexBuffer(
         const void* vertices,
         std::size_t vertexCount,
         std::size_t strideBytes,
@@ -47,14 +47,14 @@ public:
 
     /// Creates a vertex buffer.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<VertexBuffer>, std::unique_ptr<Error>>
-    CreateVertexBuffer(
+    createVertexBuffer(
         std::size_t vertexCount,
         std::size_t strideBytes,
         BufferUsage bufferUsage) noexcept = 0;
 
     /// Creates an index buffer.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<IndexBuffer>, std::unique_ptr<Error>>
-    CreateIndexBuffer(
+    createIndexBuffer(
         IndexFormat elementSize,
         const void* indices,
         std::size_t indexCount,
@@ -62,49 +62,49 @@ public:
 
     /// Creates an index buffer.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<IndexBuffer>, std::unique_ptr<Error>>
-    CreateIndexBuffer(
+    createIndexBuffer(
         IndexFormat elementSize,
         std::size_t indexCount,
         BufferUsage bufferUsage) noexcept = 0;
 
     /// Creates a constant buffer.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<ConstantBuffer>, std::unique_ptr<Error>>
-    CreateConstantBuffer(
+    createConstantBuffer(
         const void* sourceData,
         std::size_t sizeInBytes,
         BufferUsage bufferUsage) noexcept = 0;
 
     /// Creates a constant buffer.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<ConstantBuffer>, std::unique_ptr<Error>>
-    CreateConstantBuffer(
+    createConstantBuffer(
         std::size_t sizeInBytes,
         BufferUsage bufferUsage) noexcept = 0;
 
     /// Creates a pipeline state object.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<PipelineState>, std::unique_ptr<Error>>
-    CreatePipelineState(const PipelineDescriptor& descriptor) noexcept = 0;
+    createPipelineState(const PipelineDescriptor& descriptor) noexcept = 0;
 
     /// Creates an effect reflection.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<EffectReflection>, std::unique_ptr<Error>>
-    CreateEffectReflection(
+    createEffectReflection(
         const PipelineDescriptor& descriptor,
         const std::shared_ptr<PipelineState>& pipelineState) noexcept = 0;
 
     /// Creates a shader object.
     [[nodiscard]] virtual std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
-    CreateShader(
+    createShader(
         const detail::ShaderBytecode& shaderBytecode,
         const detail::ShaderCompileOptions& compileOptions) noexcept = 0;
 
     /// Creates a 2D render target.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<RenderTarget2D>, std::unique_ptr<Error>>
-    CreateRenderTarget2D(
+    createRenderTarget2D(
         std::int32_t width,
         std::int32_t height) noexcept = 0;
 
     /// Creates a 2D render target.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<RenderTarget2D>, std::unique_ptr<Error>>
-    CreateRenderTarget2D(
+    createRenderTarget2D(
         std::int32_t width,
         std::int32_t height,
         bool generateMipmap,
@@ -112,24 +112,24 @@ public:
 
     /// Creates a depth stencil buffer.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<DepthStencilBuffer>, std::unique_ptr<Error>>
-    CreateDepthStencilBuffer(
+    createDepthStencilBuffer(
         std::int32_t width,
         std::int32_t height,
         PixelFormat depthStencilFormat) noexcept = 0;
 
     /// Creates a sampler state object.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<SamplerState>, std::unique_ptr<Error>>
-    CreateSamplerState(const SamplerDescriptor& descriptor) noexcept = 0;
+    createSamplerState(const SamplerDescriptor& descriptor) noexcept = 0;
 
     /// Creates a 2D texture.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
-    CreateTexture2D(
+    createTexture2D(
         std::int32_t width,
         std::int32_t height) noexcept = 0;
 
     /// Creates a 2D texture.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
-    CreateTexture2D(
+    createTexture2D(
         std::int32_t width,
         std::int32_t height,
         bool mipMap,

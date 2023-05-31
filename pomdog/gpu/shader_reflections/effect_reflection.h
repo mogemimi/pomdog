@@ -23,7 +23,7 @@ public:
     virtual ~EffectReflection();
 
     [[nodiscard]] virtual std::vector<EffectConstantDescription>
-    GetConstantBuffers() const noexcept = 0;
+    getConstantBuffers() const noexcept = 0;
 };
 
 } // namespace pomdog::gpu

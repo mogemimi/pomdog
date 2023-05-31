@@ -103,7 +103,7 @@ public:
     void Shutdown() override
     {
         if (commandQueue != nullptr) {
-            commandQueue->Reset();
+            commandQueue->reset();
         }
 
         commandQueue.reset();
@@ -211,7 +211,7 @@ public:
     void Shutdown() override
     {
         if (commandQueue != nullptr) {
-            commandQueue->Reset();
+            commandQueue->reset();
         }
 
         commandQueue.reset();

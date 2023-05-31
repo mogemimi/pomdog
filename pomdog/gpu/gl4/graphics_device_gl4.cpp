@@ -26,7 +26,7 @@
 namespace pomdog::gpu::detail::gl4 {
 
 std::unique_ptr<Error>
-GraphicsDeviceGL4::Initialize(const PresentationParameters& presentationParametersIn) noexcept
+GraphicsDeviceGL4::initialize(const PresentationParameters& presentationParametersIn) noexcept
 {
     auto version = reinterpret_cast<const char*>(glGetString(GL_VERSION));
     Log::Internal(StringHelper::Format("OpenGL Version: %s", version));
@@ -35,25 +35,25 @@ GraphicsDeviceGL4::Initialize(const PresentationParameters& presentationParamete
     return nullptr;
 }
 
-ShaderLanguage GraphicsDeviceGL4::GetSupportedLanguage() const noexcept
+ShaderLanguage GraphicsDeviceGL4::getSupportedLanguage() const noexcept
 {
     return ShaderLanguage::GLSL;
 }
 
-PresentationParameters GraphicsDeviceGL4::GetPresentationParameters() const noexcept
+PresentationParameters GraphicsDeviceGL4::getPresentationParameters() const noexcept
 {
     return presentationParameters;
 }
 
 std::tuple<std::shared_ptr<CommandList>, std::unique_ptr<Error>>
-GraphicsDeviceGL4::CreateCommandList() noexcept
+GraphicsDeviceGL4::createCommandList() noexcept
 {
     auto commandList = std::make_shared<CommandListImmediate>();
     return std::make_tuple(std::move(commandList), nullptr);
 }
 
 std::tuple<std::shared_ptr<VertexBuffer>, std::unique_ptr<Error>>
-GraphicsDeviceGL4::CreateVertexBuffer(
+GraphicsDeviceGL4::createVertexBuffer(
     const void* vertices,
     std::size_t vertexCount,
     std::size_t strideBytes,
@@ -77,7 +77,7 @@ GraphicsDeviceGL4::CreateVertexBuffer(
 }
 
 std::tuple<std::shared_ptr<VertexBuffer>, std::unique_ptr<Error>>
-GraphicsDeviceGL4::CreateVertexBuffer(
+GraphicsDeviceGL4::createVertexBuffer(
     std::size_t vertexCount,
     std::size_t strideBytes,
     BufferUsage bufferUsage) noexcept
@@ -100,7 +100,7 @@ GraphicsDeviceGL4::CreateVertexBuffer(
 }
 
 std::tuple<std::shared_ptr<IndexBuffer>, std::unique_ptr<Error>>
-GraphicsDeviceGL4::CreateIndexBuffer(
+GraphicsDeviceGL4::createIndexBuffer(
     IndexFormat elementSize,
     const void* indices,
     std::size_t indexCount,
@@ -122,7 +122,7 @@ GraphicsDeviceGL4::CreateIndexBuffer(
 }
 
 std::tuple<std::shared_ptr<IndexBuffer>, std::unique_ptr<Error>>
-GraphicsDeviceGL4::CreateIndexBuffer(
+GraphicsDeviceGL4::createIndexBuffer(
     IndexFormat elementSize,
     std::size_t indexCount,
     BufferUsage bufferUsage) noexcept
@@ -144,7 +144,7 @@ GraphicsDeviceGL4::CreateIndexBuffer(
 }
 
 std::tuple<std::shared_ptr<ConstantBuffer>, std::unique_ptr<Error>>
-GraphicsDeviceGL4::CreateConstantBuffer(
+GraphicsDeviceGL4::createConstantBuffer(
     const void* sourceData,
     std::size_t sizeInBytes,
     BufferUsage bufferUsage) noexcept
@@ -163,7 +163,7 @@ GraphicsDeviceGL4::CreateConstantBuffer(
 }
 
 std::tuple<std::shared_ptr<ConstantBuffer>, std::unique_ptr<Error>>
-GraphicsDeviceGL4::CreateConstantBuffer(
+GraphicsDeviceGL4::createConstantBuffer(
     std::size_t sizeInBytes,
     BufferUsage bufferUsage) noexcept
 {
@@ -182,7 +182,7 @@ GraphicsDeviceGL4::CreateConstantBuffer(
 }
 
 std::tuple<std::shared_ptr<PipelineState>, std::unique_ptr<Error>>
-GraphicsDeviceGL4::CreatePipelineState(const PipelineDescriptor& descriptor) noexcept
+GraphicsDeviceGL4::createPipelineState(const PipelineDescriptor& descriptor) noexcept
 {
     auto pipelineState = std::make_shared<PipelineStateGL4>();
     POMDOG_ASSERT(pipelineState != nullptr);
@@ -194,7 +194,7 @@ GraphicsDeviceGL4::CreatePipelineState(const PipelineDescriptor& descriptor) noe
 }
 
 std::tuple<std::shared_ptr<EffectReflection>, std::unique_ptr<Error>>
-GraphicsDeviceGL4::CreateEffectReflection(
+GraphicsDeviceGL4::createEffectReflection(
     [[maybe_unused]] const PipelineDescriptor& descriptor,
     const std::shared_ptr<PipelineState>& pipelineState) noexcept
 {
@@ -204,18 +204,18 @@ GraphicsDeviceGL4::CreateEffectReflection(
     auto effectReflection = std::make_shared<EffectReflectionGL4>();
     POMDOG_ASSERT(effectReflection != nullptr);
 
-    if (auto err = effectReflection->Initialize(pipelineStateGL4->GetShaderProgram()); err != nullptr) {
+    if (auto err = effectReflection->initialize(pipelineStateGL4->GetShaderProgram()); err != nullptr) {
         return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize EffectReflectionGL4"));
     }
     return std::make_tuple(std::move(effectReflection), nullptr);
 }
 
 std::tuple<std::unique_ptr<Shader>, std::unique_ptr<Error>>
-GraphicsDeviceGL4::CreateShader(
+GraphicsDeviceGL4::createShader(
     const detail::ShaderBytecode& shaderBytecode,
     const detail::ShaderCompileOptions& compileOptions) noexcept
 {
-    switch (compileOptions.Profile.PipelineStage) {
+    switch (compileOptions.profile.pipelineStage) {
     case ShaderPipelineStage::VertexShader: {
         auto shader = std::make_unique<VertexShaderGL4>();
         POMDOG_ASSERT(shader != nullptr);
@@ -237,11 +237,11 @@ GraphicsDeviceGL4::CreateShader(
 }
 
 std::tuple<std::shared_ptr<RenderTarget2D>, std::unique_ptr<Error>>
-GraphicsDeviceGL4::CreateRenderTarget2D(
+GraphicsDeviceGL4::createRenderTarget2D(
     std::int32_t width,
     std::int32_t height) noexcept
 {
-    return CreateRenderTarget2D(
+    return createRenderTarget2D(
         width,
         height,
         false,
@@ -249,7 +249,7 @@ GraphicsDeviceGL4::CreateRenderTarget2D(
 }
 
 std::tuple<std::shared_ptr<RenderTarget2D>, std::unique_ptr<Error>>
-GraphicsDeviceGL4::CreateRenderTarget2D(
+GraphicsDeviceGL4::createRenderTarget2D(
     std::int32_t width,
     std::int32_t height,
     bool generateMipmap,
@@ -259,7 +259,7 @@ GraphicsDeviceGL4::CreateRenderTarget2D(
     POMDOG_ASSERT(height > 0);
 
     const auto levelCount = generateMipmap
-                                ? detail::TextureHelper::ComputeMipmapLevelCount(width, height)
+                                ? detail::TextureHelper::computeMipmapLevelCount(width, height)
                                 : 1;
 
     // TODO: MSAA is not implemented yet.
@@ -281,7 +281,7 @@ GraphicsDeviceGL4::CreateRenderTarget2D(
 }
 
 std::tuple<std::shared_ptr<DepthStencilBuffer>, std::unique_ptr<Error>>
-GraphicsDeviceGL4::CreateDepthStencilBuffer(
+GraphicsDeviceGL4::createDepthStencilBuffer(
     std::int32_t width,
     std::int32_t height,
     PixelFormat depthStencilFormat) noexcept
@@ -307,7 +307,7 @@ GraphicsDeviceGL4::CreateDepthStencilBuffer(
 }
 
 std::tuple<std::shared_ptr<SamplerState>, std::unique_ptr<Error>>
-GraphicsDeviceGL4::CreateSamplerState(const SamplerDescriptor& descriptor) noexcept
+GraphicsDeviceGL4::createSamplerState(const SamplerDescriptor& descriptor) noexcept
 {
     auto samplerState = std::make_shared<SamplerStateGL4>();
     POMDOG_ASSERT(samplerState != nullptr);
@@ -319,11 +319,11 @@ GraphicsDeviceGL4::CreateSamplerState(const SamplerDescriptor& descriptor) noexc
 }
 
 std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
-GraphicsDeviceGL4::CreateTexture2D(
+GraphicsDeviceGL4::createTexture2D(
     std::int32_t width,
     std::int32_t height) noexcept
 {
-    return CreateTexture2D(
+    return createTexture2D(
         width,
         height,
         false,
@@ -331,7 +331,7 @@ GraphicsDeviceGL4::CreateTexture2D(
 }
 
 std::tuple<std::shared_ptr<gpu::Texture2D>, std::unique_ptr<Error>>
-GraphicsDeviceGL4::CreateTexture2D(
+GraphicsDeviceGL4::createTexture2D(
     std::int32_t width,
     std::int32_t height,
     bool mipMap,
@@ -341,7 +341,7 @@ GraphicsDeviceGL4::CreateTexture2D(
     POMDOG_ASSERT(height > 0);
 
     const auto levelCount = mipMap
-                                ? detail::TextureHelper::ComputeMipmapLevelCount(width, height)
+                                ? detail::TextureHelper::computeMipmapLevelCount(width, height)
                                 : 1;
 
     auto texture = std::make_shared<Texture2DGL4>();
