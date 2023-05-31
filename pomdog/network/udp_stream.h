@@ -19,6 +19,9 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog {
 
 class POMDOG_EXPORT UDPStream final {
+private:
+    std::unique_ptr<detail::NativeUDPStream> nativeStream_;
+
 public:
     UDPStream();
     explicit UDPStream(IOService* service);
@@ -32,37 +35,35 @@ public:
     ~UDPStream();
 
     /// Opens a UDP connection to a remote host.
-    static std::tuple<UDPStream, std::unique_ptr<Error>>
-    Connect(IOService* service, std::string_view address);
+    [[nodiscard]] static std::tuple<UDPStream, std::unique_ptr<Error>>
+    connect(IOService* service, std::string_view address);
 
     /// Starts listening for incoming datagrams.
-    static std::tuple<UDPStream, std::unique_ptr<Error>>
-    Listen(IOService* service, std::string_view address);
+    [[nodiscard]] static std::tuple<UDPStream, std::unique_ptr<Error>>
+    listen(IOService* service, std::string_view address);
 
     /// Closes the connection.
-    void Disconnect();
+    void disconnect();
 
     /// Writes data to the connection.
-    std::unique_ptr<Error> Write(const ArrayView<std::uint8_t const>& data);
+    [[nodiscard]] std::unique_ptr<Error>
+    write(const ArrayView<std::uint8_t const>& data);
 
     /// Writes data to address.
-    std::unique_ptr<Error>
-    WriteTo(const ArrayView<std::uint8_t const>& data, std::string_view address);
+    [[nodiscard]] std::unique_ptr<Error>
+    writeTo(const ArrayView<std::uint8_t const>& data, std::string_view address);
 
     /// Sets a callback function that is called when a connection is successfully established.
     [[nodiscard]] Connection
-    OnConnected(std::function<void(const std::unique_ptr<Error>&)>&& callback);
+    onConnected(std::function<void(const std::unique_ptr<Error>&)>&& callback);
 
     /// Sets a callback function that is called when a data packet is received.
     [[nodiscard]] Connection
-    OnRead(std::function<void(const ArrayView<std::uint8_t>&, const std::unique_ptr<Error>&)>&& callback);
+    onRead(std::function<void(const ArrayView<std::uint8_t>&, const std::unique_ptr<Error>&)>&& callback);
 
     /// Sets a callback function that is called when a data packet is received from the connection.
     [[nodiscard]] Connection
-    OnReadFrom(std::function<void(const ArrayView<std::uint8_t>&, std::string_view address, const std::unique_ptr<Error>&)>&& callback);
-
-private:
-    std::unique_ptr<detail::NativeUDPStream> nativeStream;
+    onReadFrom(std::function<void(const ArrayView<std::uint8_t>&, std::string_view address, const std::unique_ptr<Error>&)>&& callback);
 };
 
 } // namespace pomdog

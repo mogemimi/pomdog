@@ -10,7 +10,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail::win32 {
 
-std::unique_ptr<Error> PrepareNetworkService()
+std::unique_ptr<Error> prepareNetworkService()
 {
     WSADATA wsaData;
 
@@ -22,7 +22,7 @@ std::unique_ptr<Error> PrepareNetworkService()
     return nullptr;
 }
 
-std::unique_ptr<Error> ShutdownNetworkService()
+std::unique_ptr<Error> shutdownNetworkService()
 {
     const auto result = ::WSACleanup();
     if (result != 0) {

@@ -24,11 +24,11 @@ TEST_CASE("Ping Pong Server using UDP Connection", "[Network]")
     std::vector<std::string> serverLogs;
     std::vector<std::string> clientLogs;
 
-    auto [serverStream, serverErr] = UDPStream::Listen(executor.GetService(), "localhost:30088");
+    auto [serverStream, serverErr] = UDPStream::listen(executor.GetService(), "localhost:30088");
     REQUIRE(serverErr == nullptr);
     auto server = std::move(serverStream);
 
-    conn += server.OnConnected([&](const std::unique_ptr<Error>& err) {
+    conn += server.onConnected([&](const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
             WARN("Unable to listen client");
             serverLogs.push_back(err->toString());
@@ -38,7 +38,7 @@ TEST_CASE("Ping Pong Server using UDP Connection", "[Network]")
 
         serverLogs.push_back("server connected");
     });
-    conn += server.OnReadFrom([&](const ArrayView<uint8_t>& view, const std::string_view& address, const std::unique_ptr<Error>& err) {
+    conn += server.onReadFrom([&](const ArrayView<uint8_t>& view, const std::string_view& address, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
             WARN("Unable to read message");
             serverLogs.push_back(err->toString());
@@ -47,7 +47,7 @@ TEST_CASE("Ping Pong Server using UDP Connection", "[Network]")
         }
 
         serverLogs.push_back("server read");
-        auto text = std::string_view{reinterpret_cast<const char*>(view.GetData()), view.GetSize()};
+        auto text = std::string_view{reinterpret_cast<const char*>(view.data()), view.size()};
 
         if (text != "ping") {
             executor.ExitLoop();
@@ -56,18 +56,18 @@ TEST_CASE("Ping Pong Server using UDP Connection", "[Network]")
         REQUIRE(!address.empty());
 
         std::string_view s = "pong";
-        auto buf = ArrayView<char const>{s.data(), s.size()}.ViewAs<std::uint8_t const>();
-        server.WriteTo(buf, address);
+        auto buf = ArrayView<char const>{s.data(), s.size()}.viewAs<std::uint8_t const>();
+        [[maybe_unused]] auto unused = server.writeTo(buf, address);
 
-        server.Disconnect();
+        server.disconnect();
         serverLogs.push_back("server disconnected");
     });
 
-    auto [clientStream, clientErr] = UDPStream::Connect(executor.GetService(), "localhost:30088");
+    auto [clientStream, clientErr] = UDPStream::connect(executor.GetService(), "localhost:30088");
     REQUIRE(clientErr == nullptr);
     auto client = std::move(clientStream);
 
-    conn += client.OnConnected([&](const std::unique_ptr<Error>& err) {
+    conn += client.onConnected([&](const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
             WARN("Unable to connect server");
             clientLogs.push_back(err->toString());
@@ -77,9 +77,9 @@ TEST_CASE("Ping Pong Server using UDP Connection", "[Network]")
 
         clientLogs.push_back("client connected");
         std::string_view s = "ping";
-        client.Write(ArrayView<char const>{s.data(), s.size()}.ViewAs<std::uint8_t const>());
+        [[maybe_unused]] auto unused = client.write(ArrayView<char const>{s.data(), s.size()}.viewAs<std::uint8_t const>());
     });
-    conn += client.OnRead([&](const ArrayView<uint8_t>& view, const std::unique_ptr<Error>& err) {
+    conn += client.onRead([&](const ArrayView<uint8_t>& view, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
             WARN("Unable to read message");
             clientLogs.push_back(err->toString());
@@ -88,14 +88,14 @@ TEST_CASE("Ping Pong Server using UDP Connection", "[Network]")
         }
 
         clientLogs.push_back("client read");
-        auto text = std::string_view{reinterpret_cast<const char*>(view.GetData()), view.GetSize()};
+        auto text = std::string_view{reinterpret_cast<const char*>(view.data()), view.size()};
 
         if (text != "pong") {
             executor.ExitLoop();
         }
         REQUIRE(text == "pong");
 
-        client.Disconnect();
+        client.disconnect();
         clientLogs.push_back("client disconnected");
         executor.ExitLoop();
     });

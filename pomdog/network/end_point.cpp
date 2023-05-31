@@ -22,79 +22,79 @@ namespace pomdog::detail {
 
 EndPoint::EndPoint()
 {
-    std::memset(&address, 0, sizeof(address));
-    address.asV6.sin6_family = AF_INET6;
+    std::memset(&address_, 0, sizeof(address_));
+    address_.asV6.sin6_family = AF_INET6;
 }
 
-AddressFamily EndPoint::GetFamily() const noexcept
+AddressFamily EndPoint::getFamily() const noexcept
 {
-    if (address.asV6.sin6_family == AF_INET6) {
-        POMDOG_ASSERT(address.asV4.sin_family == AF_INET6);
+    if (address_.asV6.sin6_family == AF_INET6) {
+        POMDOG_ASSERT(address_.asV4.sin_family == AF_INET6);
         return AddressFamily::InterNetworkV6;
     }
-    POMDOG_ASSERT(address.asV4.sin_family == AF_INET);
-    POMDOG_ASSERT(address.asV6.sin6_family == AF_INET);
+    POMDOG_ASSERT(address_.asV4.sin_family == AF_INET);
+    POMDOG_ASSERT(address_.asV6.sin6_family == AF_INET);
 
     return AddressFamily::InterNetworkV4;
 }
 
-int EndPoint::GetPort() const noexcept
+int EndPoint::getPort() const noexcept
 {
-    if (this->GetFamily() == AddressFamily::InterNetworkV4) {
-        return ntohs(address.asV4.sin_port);
+    if (getFamily() == AddressFamily::InterNetworkV4) {
+        return ntohs(address_.asV4.sin_port);
     }
-    POMDOG_ASSERT(this->GetFamily() == AddressFamily::InterNetworkV6);
-    return ntohs(address.asV6.sin6_port);
+    POMDOG_ASSERT(getFamily() == AddressFamily::InterNetworkV6);
+    return ntohs(address_.asV6.sin6_port);
 }
 
-std::string EndPoint::ToString() const
+std::string EndPoint::toString() const
 {
-    if (this->GetFamily() == AddressFamily::InterNetworkV6) {
+    if (getFamily() == AddressFamily::InterNetworkV6) {
         std::array<char, INET6_ADDRSTRLEN> hostBuf;
-        ::inet_ntop(AF_INET6, &address.asV6.sin6_addr, hostBuf.data(), static_cast<socklen_t>(hostBuf.size()));
+        ::inet_ntop(AF_INET6, &address_.asV6.sin6_addr, hostBuf.data(), static_cast<socklen_t>(hostBuf.size()));
 
         // NOTE: IPv6 (e.g. "[host]:port")
         std::stringstream ss;
-        ss << "[" << hostBuf.data() << "]:" << ntohs(address.asV6.sin6_port);
+        ss << "[" << hostBuf.data() << "]:" << ntohs(address_.asV6.sin6_port);
         return ss.str();
     }
 
-    POMDOG_ASSERT(this->GetFamily() == AddressFamily::InterNetworkV4);
+    POMDOG_ASSERT(getFamily() == AddressFamily::InterNetworkV4);
     std::array<char, INET_ADDRSTRLEN> hostBuf;
-    ::inet_ntop(AF_INET, &address.asV4.sin_addr, hostBuf.data(), static_cast<socklen_t>(hostBuf.size()));
+    ::inet_ntop(AF_INET, &address_.asV4.sin_addr, hostBuf.data(), static_cast<socklen_t>(hostBuf.size()));
 
     // NOTE: IPv4 (e.g. "host:port")
     std::stringstream ss;
-    ss << hostBuf.data() << ":" << ntohs(address.asV4.sin_port);
+    ss << hostBuf.data() << ":" << ntohs(address_.asV4.sin_port);
     return ss.str();
 }
 
-EndPointAddressView EndPoint::GetAddressView() const noexcept
+EndPointAddressView EndPoint::getAddressView() const noexcept
 {
-    if (this->GetFamily() == AddressFamily::InterNetworkV4) {
+    if (getFamily() == AddressFamily::InterNetworkV4) {
         EndPointAddressView view;
-        view.data = reinterpret_cast<const ::sockaddr*>(&address.asV4);
-        view.size = sizeof(address.asV4);
+        view.data = reinterpret_cast<const ::sockaddr*>(&address_.asV4);
+        view.size = sizeof(address_.asV4);
         return view;
     }
-    POMDOG_ASSERT(this->GetFamily() == AddressFamily::InterNetworkV6);
+    POMDOG_ASSERT(getFamily() == AddressFamily::InterNetworkV6);
     EndPointAddressView view;
-    view.data = reinterpret_cast<const ::sockaddr*>(&address.asV6);
-    view.size = sizeof(address.asV6);
+    view.data = reinterpret_cast<const ::sockaddr*>(&address_.asV6);
+    view.size = sizeof(address_.asV6);
     return view;
 }
 
-EndPoint EndPoint::CreateFromAddressStorage(const ::sockaddr_storage& storage)
+EndPoint EndPoint::createFromAddressStorage(const ::sockaddr_storage& storage)
 {
     EndPoint endPoint;
-    std::memset(&endPoint.address, 0, sizeof(endPoint.address));
+    std::memset(&endPoint.address_, 0, sizeof(endPoint.address_));
 
     POMDOG_ASSERT(storage.ss_family == AF_INET || storage.ss_family == AF_INET6);
     if (storage.ss_family == AF_INET) {
-        endPoint.address.asV4 = *reinterpret_cast<const ::sockaddr_in*>(&storage);
+        endPoint.address_.asV4 = *reinterpret_cast<const ::sockaddr_in*>(&storage);
     }
     else if (storage.ss_family == AF_INET6) {
-        endPoint.address.asV6 = *reinterpret_cast<const ::sockaddr_in6*>(&storage);
+        endPoint.address_.asV6 = *reinterpret_cast<const ::sockaddr_in6*>(&storage);
     }
     return endPoint;
 }

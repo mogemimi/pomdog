@@ -240,7 +240,7 @@ GameHostCocoa::Impl::initialize(
         graphicsDevice);
 
     ioService_ = std::make_unique<IOService>();
-    if (auto err = ioService_->Initialize(clock_); err != nullptr) {
+    if (auto err = ioService_->initialize(clock_); err != nullptr) {
         return errors::wrap(std::move(err), "IOService::Initialize() failed.");
     }
     httpClient = std::make_unique<HTTPClient>(ioService_.get());
@@ -264,7 +264,7 @@ GameHostCocoa::Impl::~Impl()
 
     systemEventConnection.Disconnect();
     httpClient.reset();
-    if (auto err = ioService_->Shutdown(); err != nullptr) {
+    if (auto err = ioService_->shutdown(); err != nullptr) {
         Log::Warning("pomdog", err->toString());
     }
     ioService_.reset();
@@ -402,7 +402,7 @@ void GameHostCocoa::Impl::gameLoop()
 
     clock_->tick();
     doEvents();
-    ioService_->Step();
+    ioService_->step();
 
     if (exitRequest) {
         return;

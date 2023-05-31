@@ -25,7 +25,7 @@ namespace pomdog {
 UDPStream::UDPStream() = default;
 
 UDPStream::UDPStream(IOService* service)
-    : nativeStream(std::make_unique<detail::NativeUDPStream>(service))
+    : nativeStream_(std::make_unique<detail::NativeUDPStream>(service))
 {
 }
 
@@ -34,76 +34,77 @@ UDPStream::~UDPStream()
 }
 
 UDPStream::UDPStream(UDPStream&& other) = default;
+
 UDPStream& UDPStream::operator=(UDPStream&& other) = default;
 
 std::tuple<UDPStream, std::unique_ptr<Error>>
-UDPStream::Connect(IOService* service, std::string_view address)
+UDPStream::connect(IOService* service, std::string_view address)
 {
     POMDOG_ASSERT(service != nullptr);
 
     UDPStream stream{service};
-    POMDOG_ASSERT(stream.nativeStream != nullptr);
+    POMDOG_ASSERT(stream.nativeStream_ != nullptr);
 
-    const auto [family, host, port] = detail::AddressParser::TransformAddress(address);
+    const auto [family, host, port] = detail::AddressParser::transformAddress(address);
 
-    if (auto err = stream.nativeStream->Connect(host, port, std::chrono::seconds{5}); err != nullptr) {
+    if (auto err = stream.nativeStream_->connect(host, port, std::chrono::seconds{5}); err != nullptr) {
         return std::make_tuple(std::move(stream), std::move(err));
     }
     return std::make_tuple(std::move(stream), nullptr);
 }
 
 std::tuple<UDPStream, std::unique_ptr<Error>>
-UDPStream::Listen(IOService* service, std::string_view address)
+UDPStream::listen(IOService* service, std::string_view address)
 {
     POMDOG_ASSERT(service != nullptr);
 
     UDPStream stream{service};
-    POMDOG_ASSERT(stream.nativeStream != nullptr);
+    POMDOG_ASSERT(stream.nativeStream_ != nullptr);
 
-    const auto [family, host, port] = detail::AddressParser::TransformAddress(address);
+    const auto [family, host, port] = detail::AddressParser::transformAddress(address);
 
-    if (auto err = stream.nativeStream->Listen(host, port); err != nullptr) {
+    if (auto err = stream.nativeStream_->listen(host, port); err != nullptr) {
         return std::make_tuple(std::move(stream), std::move(err));
     }
     return std::make_tuple(std::move(stream), nullptr);
 }
 
-void UDPStream::Disconnect()
+void UDPStream::disconnect()
 {
-    POMDOG_ASSERT(nativeStream != nullptr);
-    nativeStream->Close();
+    POMDOG_ASSERT(nativeStream_ != nullptr);
+    nativeStream_->close();
 }
 
 std::unique_ptr<Error>
-UDPStream::Write(const ArrayView<std::uint8_t const>& data)
+UDPStream::write(const ArrayView<std::uint8_t const>& data)
 {
-    POMDOG_ASSERT(nativeStream != nullptr);
-    return nativeStream->Write(data);
+    POMDOG_ASSERT(nativeStream_ != nullptr);
+    return nativeStream_->write(data);
 }
 
 std::unique_ptr<Error>
-UDPStream::WriteTo(const ArrayView<std::uint8_t const>& data, std::string_view address)
+UDPStream::writeTo(const ArrayView<std::uint8_t const>& data, std::string_view address)
 {
-    POMDOG_ASSERT(nativeStream != nullptr);
-    return nativeStream->WriteTo(data, address);
+    POMDOG_ASSERT(nativeStream_ != nullptr);
+    return nativeStream_->writeTo(data, address);
 }
 
-Connection UDPStream::OnConnected(std::function<void(const std::unique_ptr<Error>&)>&& callback)
+Connection UDPStream::onConnected(std::function<void(const std::unique_ptr<Error>&)>&& callback)
 {
-    POMDOG_ASSERT(nativeStream != nullptr);
-    return nativeStream->OnConnected.Connect(std::move(callback));
+    POMDOG_ASSERT(nativeStream_ != nullptr);
+    return nativeStream_->onConnected.Connect(std::move(callback));
 }
 
-Connection UDPStream::OnRead(std::function<void(const ArrayView<std::uint8_t>&, const std::unique_ptr<Error>&)>&& callback)
+Connection UDPStream::onRead(std::function<void(const ArrayView<std::uint8_t>&, const std::unique_ptr<Error>&)>&& callback)
 {
-    POMDOG_ASSERT(nativeStream != nullptr);
-    return nativeStream->OnRead.Connect(std::move(callback));
+    POMDOG_ASSERT(nativeStream_ != nullptr);
+    return nativeStream_->onRead.Connect(std::move(callback));
 }
 
-Connection UDPStream::OnReadFrom(std::function<void(const ArrayView<std::uint8_t>&, std::string_view address, const std::unique_ptr<Error>&)>&& callback)
+Connection UDPStream::onReadFrom(std::function<void(const ArrayView<std::uint8_t>&, std::string_view address, const std::unique_ptr<Error>&)>&& callback)
 {
-    POMDOG_ASSERT(nativeStream != nullptr);
-    return nativeStream->OnReadFrom.Connect(std::move(callback));
+    POMDOG_ASSERT(nativeStream_ != nullptr);
+    return nativeStream_->onReadFrom.Connect(std::move(callback));
 }
 
 } // namespace pomdog

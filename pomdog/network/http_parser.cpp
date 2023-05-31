@@ -253,8 +253,8 @@ HTTPParser::Parse(const ArrayView<std::uint8_t>& view)
 
     if (response == nullptr) {
         const auto bufSize = rawData.size();
-        rawData.resize(bufSize + view.GetSize());
-        std::memcpy(rawData.data() + bufSize, view.GetData(), view.GetSize());
+        rawData.resize(bufSize + view.size());
+        std::memcpy(rawData.data() + bufSize, view.data(), view.size());
 
         if (IsResponseHeaderReadable(rawData)) {
             response = std::make_unique<HTTPResponse>();
@@ -274,10 +274,10 @@ HTTPParser::Parse(const ArrayView<std::uint8_t>& view)
     else {
         POMDOG_ASSERT(response != nullptr);
 
-        if (!view.IsEmpty()) {
+        if (!view.empty()) {
             const auto bufSize = rawData.size();
-            rawData.resize(bufSize + view.GetSize());
-            std::memcpy(rawData.data() + bufSize, view.GetData(), view.GetSize());
+            rawData.resize(bufSize + view.size());
+            std::memcpy(rawData.data() + bufSize, view.data(), view.size());
         }
     }
 

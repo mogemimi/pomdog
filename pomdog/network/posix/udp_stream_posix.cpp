@@ -39,106 +39,106 @@ constexpr int flags = 0;
 } // namespace
 
 UDPStreamPOSIX::UDPStreamPOSIX(IOService* serviceIn)
-    : service(serviceIn)
+    : service_(serviceIn)
 {
 }
 
 UDPStreamPOSIX::~UDPStreamPOSIX()
 {
-    if (blockingThread.joinable()) {
-        blockingThread.join();
+    if (blockingThread_.joinable()) {
+        blockingThread_.join();
     }
 
-    if (isSocketValid(this->descriptor)) {
-        ::close(this->descriptor);
-        this->descriptor = InvalidSocket;
+    if (isSocketValid(descriptor_)) {
+        ::close(descriptor_);
+        descriptor_ = InvalidSocket;
     }
 }
 
 std::unique_ptr<Error>
-UDPStreamPOSIX::Connect(std::string_view host, std::string_view port, const Duration& connectTimeout)
+UDPStreamPOSIX::connect(std::string_view host, std::string_view port, const Duration& connectTimeout)
 {
-    POMDOG_ASSERT(service != nullptr);
+    POMDOG_ASSERT(service_ != nullptr);
 
     // NOTE: A std::string_view doesn't provide a conversion to a const char* because it doesn't store a null-terminated string.
     const auto hostBuf = std::string{host};
     const auto portBuf = std::string{port};
 
     std::thread connectThread([this, hostBuf = std::move(hostBuf), portBuf = std::move(portBuf), connectTimeout = connectTimeout] {
-        auto [fd, err] = detail::ConnectSocketPOSIX(hostBuf, portBuf, SocketProtocol::UDP, connectTimeout);
+        auto [fd, err] = detail::connectSocketPOSIX(hostBuf, portBuf, SocketProtocol::UDP, connectTimeout);
 
         if (err != nullptr) {
             auto wrapped = errors::wrap(std::move(err), "couldn't connect to UDP socket on " + hostBuf + ":" + portBuf);
             std::shared_ptr<Error> shared = std::move(wrapped);
-            errorConn = service->ScheduleTask([this, err = std::move(shared)] {
-                this->OnConnected(err->clone());
-                this->errorConn.Disconnect();
+            errorConn_ = service_->scheduleTask([this, err = std::move(shared)] {
+                onConnected(err->clone());
+                errorConn_.Disconnect();
             });
             return;
         }
-        this->descriptor = fd;
+        descriptor_ = fd;
 
-        eventLoopConn = service->ScheduleTask([this] {
-            this->OnConnected(nullptr);
-            eventLoopConn.Disconnect();
-            eventLoopConn = service->ScheduleTask([this] { this->ReadEventLoop(); });
+        eventLoopConn_ = service_->scheduleTask([this] {
+            onConnected(nullptr);
+            eventLoopConn_.Disconnect();
+            eventLoopConn_ = service_->scheduleTask([this] { readEventLoop(); });
         });
     });
 
-    this->blockingThread = std::move(connectThread);
+    blockingThread_ = std::move(connectThread);
 
     return nullptr;
 }
 
 std::unique_ptr<Error>
-UDPStreamPOSIX::Listen(std::string_view host, std::string_view port)
+UDPStreamPOSIX::listen(std::string_view host, std::string_view port)
 {
-    POMDOG_ASSERT(service != nullptr);
+    POMDOG_ASSERT(service_ != nullptr);
 
     // NOTE: A std::string_view doesn't provide a conversion to a const char* because it doesn't store a null-terminated string.
     const auto hostBuf = std::string{host};
     const auto portBuf = std::string{port};
 
-    auto [fd, err] = detail::BindSocketPOSIX(hostBuf, portBuf, SocketProtocol::UDP);
+    auto [fd, err] = detail::bindSocketPOSIX(hostBuf, portBuf, SocketProtocol::UDP);
 
     if (err != nullptr) {
         std::shared_ptr<Error> shared = err->clone();
-        errorConn = service->ScheduleTask([this, err = std::move(shared)] {
-            this->OnConnected(err->clone());
-            this->errorConn.Disconnect();
+        errorConn_ = service_->scheduleTask([this, err = std::move(shared)] {
+            onConnected(err->clone());
+            errorConn_.Disconnect();
         });
         return std::move(err);
     }
-    this->descriptor = fd;
+    descriptor_ = fd;
 
-    eventLoopConn = service->ScheduleTask([this] {
-        this->OnConnected(nullptr);
-        eventLoopConn.Disconnect();
-        eventLoopConn = service->ScheduleTask([this] { this->ReadFromEventLoop(); });
+    eventLoopConn_ = service_->scheduleTask([this] {
+        onConnected(nullptr);
+        eventLoopConn_.Disconnect();
+        eventLoopConn_ = service_->scheduleTask([this] { readFromEventLoop(); });
     });
 
     return nullptr;
 }
 
-void UDPStreamPOSIX::Close()
+void UDPStreamPOSIX::close()
 {
-    this->eventLoopConn.Disconnect();
-    this->errorConn.Disconnect();
+    eventLoopConn_.Disconnect();
+    errorConn_.Disconnect();
 
-    if (isSocketValid(this->descriptor)) {
-        ::close(this->descriptor);
-        this->descriptor = InvalidSocket;
+    if (isSocketValid(descriptor_)) {
+        ::close(descriptor_);
+        descriptor_ = InvalidSocket;
     }
 }
 
 std::unique_ptr<Error>
-UDPStreamPOSIX::Write(const ArrayView<std::uint8_t const>& data)
+UDPStreamPOSIX::write(const ArrayView<std::uint8_t const>& data)
 {
-    POMDOG_ASSERT(isSocketValid(descriptor));
-    POMDOG_ASSERT(data.GetData() != nullptr);
-    POMDOG_ASSERT(data.GetSize() > 0);
+    POMDOG_ASSERT(isSocketValid(descriptor_));
+    POMDOG_ASSERT(data.data() != nullptr);
+    POMDOG_ASSERT(!data.empty());
 
-    auto result = ::send(this->descriptor, data.GetData(), data.GetSize(), flags);
+    auto result = ::send(descriptor_, data.data(), data.size(), flags);
 
     if (result == -1) {
         auto errorCode = detail::ToErrc(errno);
@@ -149,13 +149,13 @@ UDPStreamPOSIX::Write(const ArrayView<std::uint8_t const>& data)
 }
 
 std::unique_ptr<Error>
-UDPStreamPOSIX::WriteTo(const ArrayView<std::uint8_t const>& data, std::string_view address)
+UDPStreamPOSIX::writeTo(const ArrayView<std::uint8_t const>& data, std::string_view address)
 {
-    POMDOG_ASSERT(isSocketValid(this->descriptor));
-    POMDOG_ASSERT(data.GetData() != nullptr);
-    POMDOG_ASSERT(data.GetSize() > 0);
+    POMDOG_ASSERT(isSocketValid(descriptor_));
+    POMDOG_ASSERT(data.data() != nullptr);
+    POMDOG_ASSERT(!data.empty());
 
-    const auto [family, hostView, portView] = detail::AddressParser::TransformAddress(address);
+    const auto [family, hostView, portView] = detail::AddressParser::transformAddress(address);
     auto host = std::string{hostView};
     auto port = std::string{portView};
 
@@ -179,8 +179,12 @@ UDPStreamPOSIX::WriteTo(const ArrayView<std::uint8_t const>& data, std::string_v
 
     for (auto info = addrList.get(); info != nullptr; info = info->ai_next) {
         auto result = ::sendto(
-            this->descriptor, data.GetData(), data.GetSize(), flags,
-            info->ai_addr, static_cast<int>(info->ai_addrlen));
+            descriptor_,
+            data.data(),
+            data.size(),
+            flags,
+            info->ai_addr,
+            static_cast<int>(info->ai_addrlen));
 
         if (result == -1) {
             lastError = detail::ToErrc(errno);
@@ -197,19 +201,19 @@ UDPStreamPOSIX::WriteTo(const ArrayView<std::uint8_t const>& data, std::string_v
     return nullptr;
 }
 
-int UDPStreamPOSIX::GetHandle() const noexcept
+int UDPStreamPOSIX::getHandle() const noexcept
 {
-    return descriptor;
+    return descriptor_;
 }
 
-void UDPStreamPOSIX::ReadEventLoop()
+void UDPStreamPOSIX::readEventLoop()
 {
-    POMDOG_ASSERT(isSocketValid(descriptor));
+    POMDOG_ASSERT(isSocketValid(descriptor_));
 
     // NOTE: Read per 1 frame (= 1/60 seconds) for a packet up to 1024 bytes.
     std::array<std::uint8_t, 1024> buffer;
 
-    const auto readSize = ::recv(this->descriptor, buffer.data(), buffer.size(), flags);
+    const auto readSize = ::recv(descriptor_, buffer.data(), buffer.size(), flags);
     if (readSize == -1) {
         const auto errorCode = detail::ToErrc(errno);
         if (errorCode == std::errc::resource_unavailable_try_again || errorCode == std::errc::operation_would_block) {
@@ -217,7 +221,7 @@ void UDPStreamPOSIX::ReadEventLoop()
             return;
         }
 
-        this->OnRead({}, errors::makeIOError(errorCode, "read failed with error"));
+        onRead({}, errors::makeIOError(errorCode, "read failed with error"));
         return;
     }
 
@@ -229,12 +233,12 @@ void UDPStreamPOSIX::ReadEventLoop()
     // the read size will be 0 (meaning the "end-of-file").
     POMDOG_ASSERT(readSize >= 0);
     auto view = ArrayView<std::uint8_t>{buffer.data(), static_cast<std::size_t>(readSize)};
-    this->OnRead(std::move(view), nullptr);
+    onRead(std::move(view), nullptr);
 }
 
-void UDPStreamPOSIX::ReadFromEventLoop()
+void UDPStreamPOSIX::readFromEventLoop()
 {
-    POMDOG_ASSERT(isSocketValid(descriptor));
+    POMDOG_ASSERT(isSocketValid(descriptor_));
 
     // NOTE: Read per 1 frame (= 1/60 seconds) for a packet up to 1024 bytes.
     std::array<std::uint8_t, 1024> buffer;
@@ -243,8 +247,12 @@ void UDPStreamPOSIX::ReadFromEventLoop()
     socklen_t addrLen = sizeof(addrInfo);
 
     const auto readSize = ::recvfrom(
-        this->descriptor, buffer.data(), buffer.size(), flags,
-        reinterpret_cast<struct sockaddr*>(&addrInfo), &addrLen);
+        descriptor_,
+        buffer.data(),
+        buffer.size(),
+        flags,
+        reinterpret_cast<struct sockaddr*>(&addrInfo),
+        &addrLen);
 
     if (readSize == -1) {
         const auto errorCode = detail::ToErrc(errno);
@@ -253,7 +261,7 @@ void UDPStreamPOSIX::ReadFromEventLoop()
             return;
         }
 
-        this->OnReadFrom({}, "", errors::makeIOError(errorCode, "read failed with error"));
+        onReadFrom({}, "", errors::makeIOError(errorCode, "read failed with error"));
         return;
     }
 
@@ -264,9 +272,9 @@ void UDPStreamPOSIX::ReadFromEventLoop()
     // NOTE: When the peer socket has performed orderly shutdown,
     // the read size will be 0 (meaning the "end-of-file").
     POMDOG_ASSERT(readSize >= 0);
-    auto addr = EndPoint::CreateFromAddressStorage(addrInfo);
+    auto addr = EndPoint::createFromAddressStorage(addrInfo);
     auto view = ArrayView<std::uint8_t>{buffer.data(), static_cast<std::size_t>(readSize)};
-    this->OnReadFrom(std::move(view), addr.ToString(), nullptr);
+    onReadFrom(std::move(view), addr.toString(), nullptr);
 }
 
 } // namespace pomdog::detail

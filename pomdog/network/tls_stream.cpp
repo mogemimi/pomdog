@@ -15,7 +15,7 @@ namespace pomdog {
 TLSStream::TLSStream() = default;
 
 TLSStream::TLSStream(IOService* service)
-    : nativeStream(std::make_unique<detail::NativeTLSStream>(service))
+    : nativeStream_(std::make_unique<detail::NativeTLSStream>(service))
 {
 }
 
@@ -27,23 +27,23 @@ TLSStream::TLSStream(TLSStream&& other) = default;
 TLSStream& TLSStream::operator=(TLSStream&& other) = default;
 
 std::tuple<TLSStream, std::unique_ptr<Error>>
-TLSStream::Connect(IOService* service, std::string_view address)
+TLSStream::connect(IOService* service, std::string_view address)
 {
     POMDOG_ASSERT(service != nullptr);
 
     TLSStream stream{service};
-    POMDOG_ASSERT(stream.nativeStream != nullptr);
+    POMDOG_ASSERT(stream.nativeStream_ != nullptr);
 
-    const auto [family, host, port] = detail::AddressParser::TransformAddress(address);
+    const auto [family, host, port] = detail::AddressParser::transformAddress(address);
 
 #if defined(POMDOG_PLATFORM_EMSCRIPTEN)
-    if (auto err = stream.nativeStream->Connect(host, port, std::chrono::seconds{5}); err != nullptr) {
+    if (auto err = stream.nativeStream_->connect(host, port, std::chrono::seconds{5}); err != nullptr) {
         return std::make_tuple(std::move(stream), std::move(err));
     }
 #else
-    const auto certPEM = detail::GetEmbeddedCertificatePEM();
+    const auto certPEM = detail::getEmbeddedCertificatePEM();
 
-    if (auto err = stream.nativeStream->Connect(host, port, std::chrono::seconds{5}, certPEM); err != nullptr) {
+    if (auto err = stream.nativeStream_->connect(host, port, std::chrono::seconds{5}, certPEM); err != nullptr) {
         return std::make_tuple(std::move(stream), std::move(err));
     }
 #endif
@@ -51,7 +51,7 @@ TLSStream::Connect(IOService* service, std::string_view address)
 }
 
 std::tuple<TLSStream, std::unique_ptr<Error>>
-TLSStream::Connect(
+TLSStream::connect(
     IOService* service,
     std::string_view address,
     const Duration& timeout,
@@ -60,64 +60,64 @@ TLSStream::Connect(
     POMDOG_ASSERT(service != nullptr);
 
     TLSStream stream{service};
-    POMDOG_ASSERT(stream.nativeStream != nullptr);
+    POMDOG_ASSERT(stream.nativeStream_ != nullptr);
 
-    const auto [family, host, port] = detail::AddressParser::TransformAddress(address);
+    const auto [family, host, port] = detail::AddressParser::transformAddress(address);
 
 #if defined(POMDOG_PLATFORM_EMSCRIPTEN)
-    if (auto err = stream.nativeStream->Connect(host, port, timeout); err != nullptr) {
+    if (auto err = stream.nativeStream_->connect(host, port, timeout); err != nullptr) {
         return std::make_tuple(std::move(stream), std::move(err));
     }
 #else
-    if (auto err = stream.nativeStream->Connect(host, port, timeout, certPEM); err != nullptr) {
+    if (auto err = stream.nativeStream_->connect(host, port, timeout, certPEM); err != nullptr) {
         return std::make_tuple(std::move(stream), std::move(err));
     }
 #endif
     return std::make_tuple(std::move(stream), nullptr);
 }
 
-void TLSStream::Disconnect()
+void TLSStream::disconnect()
 {
-    POMDOG_ASSERT(nativeStream != nullptr);
-    nativeStream->Close();
+    POMDOG_ASSERT(nativeStream_ != nullptr);
+    nativeStream_->close();
 }
 
-std::unique_ptr<Error> TLSStream::Write(const ArrayView<std::uint8_t const>& data)
+std::unique_ptr<Error> TLSStream::write(const ArrayView<std::uint8_t const>& data)
 {
-    POMDOG_ASSERT(nativeStream != nullptr);
-    return nativeStream->Write(data);
+    POMDOG_ASSERT(nativeStream_ != nullptr);
+    return nativeStream_->write(data);
 }
 
-Connection TLSStream::OnConnected(std::function<void(const std::unique_ptr<Error>&)>&& callback)
+Connection TLSStream::onConnected(std::function<void(const std::unique_ptr<Error>&)>&& callback)
 {
-    POMDOG_ASSERT(nativeStream != nullptr);
-    return nativeStream->OnConnected.Connect(std::move(callback));
+    POMDOG_ASSERT(nativeStream_ != nullptr);
+    return nativeStream_->onConnected.Connect(std::move(callback));
 }
 
-Connection TLSStream::OnDisconnect(std::function<void()>&& callback)
+Connection TLSStream::onDisconnect(std::function<void()>&& callback)
 {
-    POMDOG_ASSERT(nativeStream != nullptr);
-    return nativeStream->OnDisconnect.Connect(std::move(callback));
+    POMDOG_ASSERT(nativeStream_ != nullptr);
+    return nativeStream_->onDisconnect.Connect(std::move(callback));
 }
 
-Connection TLSStream::OnRead(std::function<void(const ArrayView<std::uint8_t>&, const std::unique_ptr<Error>&)>&& callback)
+Connection TLSStream::onRead(std::function<void(const ArrayView<std::uint8_t>&, const std::unique_ptr<Error>&)>&& callback)
 {
-    POMDOG_ASSERT(nativeStream != nullptr);
-    return nativeStream->OnRead.Connect(std::move(callback));
+    POMDOG_ASSERT(nativeStream_ != nullptr);
+    return nativeStream_->onRead.Connect(std::move(callback));
 }
 
-bool TLSStream::IsConnected() const noexcept
+bool TLSStream::isConnected() const noexcept
 {
-    if (nativeStream == nullptr) {
+    if (nativeStream_ == nullptr) {
         return false;
     }
-    return nativeStream->IsConnected();
+    return nativeStream_->isConnected();
 }
 
-void TLSStream::SetTimeout(const Duration& timeout)
+void TLSStream::setTimeout(const Duration& timeout)
 {
-    POMDOG_ASSERT(nativeStream != nullptr);
-    return nativeStream->SetTimeout(timeout);
+    POMDOG_ASSERT(nativeStream_ != nullptr);
+    return nativeStream_->setTimeout(timeout);
 }
 
 } // namespace pomdog

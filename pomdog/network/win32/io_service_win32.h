@@ -12,8 +12,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail::win32 {
 
-[[nodiscard]] std::unique_ptr<Error> PrepareNetworkService();
+[[nodiscard]] std::unique_ptr<Error>
+prepareNetworkService();
 
-[[nodiscard]] std::unique_ptr<Error> ShutdownNetworkService();
+[[nodiscard]] std::unique_ptr<Error>
+shutdownNetworkService();
 
 } // namespace pomdog::detail::win32

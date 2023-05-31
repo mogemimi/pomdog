@@ -22,7 +22,7 @@ TLSStreamEmscripten::~TLSStreamEmscripten()
 }
 
 std::unique_ptr<Error>
-TLSStreamEmscripten::Connect(
+TLSStreamEmscripten::connect(
     [[maybe_unused]] std::string_view host,
     [[maybe_unused]] std::string_view port,
     [[maybe_unused]] const Duration& connectTimeoutIn)
@@ -31,25 +31,25 @@ TLSStreamEmscripten::Connect(
     return errors::make("not implemented yet");
 }
 
-void TLSStreamEmscripten::Close()
+void TLSStreamEmscripten::close()
 {
     // FIXME: Not implemented yet.
 }
 
 std::unique_ptr<Error>
-TLSStreamEmscripten::Write([[maybe_unused]] const ArrayView<std::uint8_t const>& data)
+TLSStreamEmscripten::write([[maybe_unused]] const ArrayView<std::uint8_t const>& data)
 {
     // FIXME: Not implemented yet.
     return errors::make("not implemented yet");
 }
 
-bool TLSStreamEmscripten::IsConnected() const noexcept
+bool TLSStreamEmscripten::isConnected() const noexcept
 {
     // FIXME: Not implemented yet.
     return false;
 }
 
-void TLSStreamEmscripten::SetTimeout([[maybe_unused]] const Duration& timeoutIn)
+void TLSStreamEmscripten::setTimeout([[maybe_unused]] const Duration& timeoutIn)
 {
     // FIXME: Not implemented yet.
 }

@@ -16,47 +16,47 @@ namespace pomdog {
 /// ArrayView represents a view into the contiguous sequence data held in a buffer.
 template <typename T>
 class POMDOG_EXPORT ArrayView final {
-    T* data = nullptr;
-    std::size_t size = 0;
+    T* data_ = nullptr;
+    std::size_t size_ = 0;
 
 public:
     ArrayView() = default;
 
     ArrayView(T* dataIn, size_t sizeIn)
-        : data(dataIn)
-        , size(sizeIn)
+        : data_(dataIn)
+        , size_(sizeIn)
     {
     }
 
     /// Returns a pointer to the first element of a view.
-    [[nodiscard]] T* GetData() const noexcept
+    [[nodiscard]] T* data() const noexcept
     {
-        return data;
+        return data_;
     }
 
     /// Returns the number of elements.
-    [[nodiscard]] std::size_t GetSize() const noexcept
+    [[nodiscard]] std::size_t size() const noexcept
     {
-        return size;
+        return size_;
     }
 
     /// Returns true if the array is empty, false otherwise.
-    [[nodiscard]] bool IsEmpty() const noexcept
+    [[nodiscard]] bool empty() const noexcept
     {
-        return size <= 0;
+        return size_ <= 0;
     }
 
     /// Gets the last element of a view.
-    [[nodiscard]] const T& GetBack() const
+    [[nodiscard]] const T& back() const
     {
         static_assert(!std::is_void_v<std::remove_const_t<T>>);
-        POMDOG_ASSERT(size > 0);
-        POMDOG_ASSERT(data != nullptr);
-        return data[size - 1];
+        POMDOG_ASSERT(size_ > 0);
+        POMDOG_ASSERT(data_ != nullptr);
+        return data_[size_ - 1];
     }
 
     template <typename R>
-    [[nodiscard]] ArrayView<R> ViewAs() noexcept
+    [[nodiscard]] ArrayView<R> viewAs() noexcept
     {
         static_assert(!std::is_same_v<T, R>);
         constexpr auto t = std::is_void_v<T> ? 1 : sizeof(T);
@@ -66,8 +66,8 @@ public:
         static_assert(t >= r);
         constexpr auto scale = (t / r);
         static_assert(scale > 0);
-        const auto s = size * scale;
-        ArrayView<R> view{reinterpret_cast<R*>(data), s};
+        const auto s = size_ * scale;
+        ArrayView<R> view{reinterpret_cast<R*>(data_), s};
         return view;
     }
 };

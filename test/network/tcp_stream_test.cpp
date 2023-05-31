@@ -29,7 +29,7 @@ TEST_CASE("TCP connection for HTTP client", "[Network]")
     fields.emplace("Host", hostName);
     fields.emplace("Connection", "close");
 
-    auto [streamResult, connectErr] = TCPStream::Connect(executor.GetService(), std::string{hostName} + ":" + port, std::chrono::seconds(5));
+    auto [streamResult, connectErr] = TCPStream::connect(executor.GetService(), std::string{hostName} + ":" + port, std::chrono::seconds(5));
     if (connectErr != nullptr) {
         WARN(connectErr->toString());
         return;
@@ -40,16 +40,16 @@ TEST_CASE("TCP connection for HTTP client", "[Network]")
     // code is a workaround that makes structured bindings captuable.
     auto stream = std::move(streamResult);
 
-    stream.SetTimeout(std::chrono::seconds{5});
+    stream.setTimeout(std::chrono::seconds{5});
 
-    conn += stream.OnConnected([&](const std::unique_ptr<Error>& err) {
+    conn += stream.onConnected([&](const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
             WARN("Unable to connect server");
             executor.ExitLoop();
             return;
         }
 
-        REQUIRE(stream.IsConnected());
+        REQUIRE(stream.isConnected());
 
         // NOTE: Write the GET request
         std::ostringstream ss;
@@ -62,33 +62,33 @@ TEST_CASE("TCP connection for HTTP client", "[Network]")
 
         std::string header = ss.str();
 
-        auto writeErr = stream.Write(ArrayView<char const>{header.data(), header.size()}.ViewAs<std::uint8_t const>());
+        auto writeErr = stream.write(ArrayView<char const>{header.data(), header.size()}.viewAs<std::uint8_t const>());
         REQUIRE(writeErr == nullptr);
     });
-    conn += stream.OnDisconnect([&] {
-        REQUIRE_FALSE(stream.IsConnected());
+    conn += stream.onDisconnect([&] {
+        REQUIRE_FALSE(stream.isConnected());
     });
-    conn += stream.OnRead([&](const ArrayView<std::uint8_t>& view, const std::unique_ptr<Error>& err) {
+    conn += stream.onRead([&](const ArrayView<std::uint8_t>& view, const std::unique_ptr<Error>& err) {
         if (err != nullptr) {
             WARN("Unable to connect server");
-            stream.Disconnect();
+            stream.disconnect();
             executor.ExitLoop();
             return;
         }
 
-        std::string_view text(reinterpret_cast<const char*>(view.GetData()), view.GetSize());
+        std::string_view text(reinterpret_cast<const char*>(view.data()), view.size());
 
         constexpr auto html = "HTTP/1.1 301 Moved Permanently\r\nLocation: http://www.google.com/";
         REQUIRE(StringHelper::HasPrefix(text, html));
 
-        REQUIRE(stream.IsConnected());
-        stream.Disconnect();
-        REQUIRE_FALSE(stream.IsConnected());
+        REQUIRE(stream.isConnected());
+        stream.disconnect();
+        REQUIRE_FALSE(stream.isConnected());
 
         executor.ExitLoop();
     });
 
     executor.RunLoop();
 
-    REQUIRE_FALSE(stream.IsConnected());
+    REQUIRE_FALSE(stream.isConnected());
 }

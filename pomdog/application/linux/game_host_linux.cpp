@@ -282,7 +282,7 @@ GameHostLinux::initialize(const gpu::PresentationParameters& presentationParamet
         graphicsDevice_);
 
     ioService_ = std::make_unique<IOService>();
-    if (auto err = ioService_->Initialize(clock_); err != nullptr) {
+    if (auto err = ioService_->initialize(clock_); err != nullptr) {
         return errors::wrap(std::move(err), "failed to initialize IOService");
     }
     httpClient_ = std::make_unique<HTTPClient>(ioService_.get());
@@ -293,7 +293,7 @@ GameHostLinux::initialize(const gpu::PresentationParameters& presentationParamet
 GameHostLinux::~GameHostLinux()
 {
     httpClient_.reset();
-    if (auto err = ioService_->Shutdown(); err != nullptr) {
+    if (auto err = ioService_->shutdown(); err != nullptr) {
         Log::Warning("pomdog", err->toString());
     }
     ioService_.reset();
@@ -378,7 +378,7 @@ void GameHostLinux::run(Game& game)
             gamepad_->EnumerateDevices();
         }
         gamepad_->PollEvents();
-        ioService_->Step();
+        ioService_->step();
 
         game.update();
         renderFrame(game);

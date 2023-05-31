@@ -15,7 +15,8 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::detail {
 namespace {
 
-bool isSocketValid(::SOCKET descriptor) noexcept
+[[nodiscard]] bool
+isSocketValid(::SOCKET descriptor) noexcept
 {
     return descriptor != INVALID_SOCKET;
 }
@@ -23,85 +24,85 @@ bool isSocketValid(::SOCKET descriptor) noexcept
 } // namespace
 
 TCPStreamWin32::TCPStreamWin32(IOService* serviceIn)
-    : service(serviceIn)
+    : service_(serviceIn)
 {
 }
 
 TCPStreamWin32::~TCPStreamWin32()
 {
-    if (blockingThread.joinable()) {
-        blockingThread.join();
+    if (blockingThread_.joinable()) {
+        blockingThread_.join();
     }
 
-    if (isSocketValid(this->descriptor)) {
-        ::closesocket(this->descriptor);
-        this->descriptor = INVALID_SOCKET;
+    if (isSocketValid(descriptor_)) {
+        ::closesocket(descriptor_);
+        descriptor_ = INVALID_SOCKET;
     }
 }
 
-void TCPStreamWin32::Close()
+void TCPStreamWin32::close()
 {
-    this->isConnected = false;
-    this->eventLoopConn.Disconnect();
-    this->errorConn.Disconnect();
+    isConnected_ = false;
+    eventLoopConn_.disconnect();
+    errorConn_.disconnect();
 
-    if (isSocketValid(this->descriptor)) {
-        ::closesocket(this->descriptor);
-        this->descriptor = INVALID_SOCKET;
+    if (isSocketValid(descriptor_)) {
+        ::closesocket(descriptor_);
+        descriptor_ = INVALID_SOCKET;
     }
 }
 
 std::unique_ptr<Error>
-TCPStreamWin32::Connect(std::string_view host, std::string_view port, const Duration& connectTimeout)
+TCPStreamWin32::connect(std::string_view host, std::string_view port, const Duration& connectTimeout)
 {
-    POMDOG_ASSERT(service != nullptr);
+    POMDOG_ASSERT(service_ != nullptr);
 
     // NOTE: A std::string_view doesn't provide a conversion to a const char* because it doesn't store a null-terminated string.
     const auto hostBuf = std::string{host};
     const auto portBuf = std::string{port};
 
     std::thread connectThread([this, hostBuf = std::move(hostBuf), portBuf = std::move(portBuf), connectTimeout = connectTimeout] {
-        auto [fd, err] = detail::ConnectSocketWin32(hostBuf, portBuf, SocketProtocol::TCP, connectTimeout);
+        auto [fd, err] = detail::connectSocketWin32(hostBuf, portBuf, SocketProtocol::TCP, connectTimeout);
 
         if (err != nullptr) {
             auto wrapped = errors::wrap(std::move(err), "couldn't connect to TCP socket on " + hostBuf + ":" + portBuf);
             std::shared_ptr<Error> shared = std::move(wrapped);
-            errorConn = service->ScheduleTask([this, err = std::move(shared)] {
-                this->OnConnected(err->Clone());
-                this->errorConn.Disconnect();
+            errorConn_ = service_->scheduleTask([this, err = std::move(shared)] {
+                onConnected(err->clone());
+                errorConn_.disconnect();
             });
             return;
         }
 
-        this->descriptor = fd;
-        this->isConnected = true;
+        descriptor_ = fd;
+        isConnected_ = true;
 
-        eventLoopConn = service->ScheduleTask([this] {
+        eventLoopConn_ = service_->scheduleTask([this] {
             // NOTE: Update timestamp of last connection
-            this->lastActiveTime = this->service->GetNowTime();
+            lastActiveTime_ = service_->getNowTime();
 
-            this->OnConnected(nullptr);
-            eventLoopConn.Disconnect();
-            eventLoopConn = service->ScheduleTask([this] { this->ReadEventLoop(); });
+            onConnected(nullptr);
+            eventLoopConn_.disconnect();
+            eventLoopConn_ = service_->scheduleTask([this] { readEventLoop(); });
         });
     });
 
-    this->blockingThread = std::move(connectThread);
+    blockingThread_ = std::move(connectThread);
 
     return nullptr;
 }
 
 std::unique_ptr<Error>
-TCPStreamWin32::Write(const ArrayView<std::uint8_t const>& data)
+TCPStreamWin32::write(const ArrayView<std::uint8_t const>& data)
 {
-    POMDOG_ASSERT(isSocketValid(descriptor));
-    POMDOG_ASSERT(data.GetData() != nullptr);
-    POMDOG_ASSERT(data.GetSize() > 0);
+    POMDOG_ASSERT(isSocketValid(descriptor_));
+    POMDOG_ASSERT(data.data() != nullptr);
+    POMDOG_ASSERT(data.size() > 0);
 
     auto result = ::send(
-        this->descriptor,
-        reinterpret_cast<const char*>(data.GetData()),
-        static_cast<int>(data.GetSize()),
+        descriptor_,
+        reinterpret_cast<const char*>(data.data()),
+        static_cast<int>(data.size()),
         0);
 
     if (result == SOCKET_ERROR) {
@@ -109,36 +110,37 @@ TCPStreamWin32::Write(const ArrayView<std::uint8_t const>& data)
     }
 
     // NOTE: Update timestamp of last read/write
-    this->lastActiveTime = service->GetNowTime();
+    lastActiveTime_ = service_->getNowTime();
 
     return nullptr;
 }
 
-bool TCPStreamWin32::IsConnected() const noexcept
+bool TCPStreamWin32::isConnected() const noexcept
 {
-    return this->isConnected;
+    return isConnected_;
 }
 
-void TCPStreamWin32::SetTimeout(const Duration& timeoutIn)
+void TCPStreamWin32::setTimeout(const Duration& timeoutIn)
 {
     POMDOG_ASSERT(timeoutIn >= std::remove_reference_t<decltype(timeoutIn)>::zero());
-    this->timeoutInterval = timeoutIn;
+    timeoutInterval_ = timeoutIn;
 }
 
-::SOCKET TCPStreamWin32::GetHandle() const noexcept
+::SOCKET
+TCPStreamWin32::getHandle() const noexcept
 {
-    return this->descriptor;
+    return descriptor_;
 }
 
-void TCPStreamWin32::ReadEventLoop()
+void TCPStreamWin32::readEventLoop()
 {
-    POMDOG_ASSERT(isSocketValid(descriptor));
+    POMDOG_ASSERT(isSocketValid(descriptor_));
 
-    if (timeoutInterval.has_value()) {
-        if ((service->GetNowTime() - lastActiveTime) > *timeoutInterval) {
-            this->OnRead({}, errors::make("timeout socket connection"));
-            this->Close();
-            this->OnDisconnect();
+    if (timeoutInterval_.has_value()) {
+        if ((service_->getNowTime() - lastActiveTime_) > *timeoutInterval_) {
+            onRead({}, errors::make("timeout socket connection"));
+            close();
+            onDisconnect();
             return;
         }
     }
@@ -146,7 +148,7 @@ void TCPStreamWin32::ReadEventLoop()
     // NOTE: Read per 1 frame (= 1/60 seconds) for a packet up to 2048 bytes.
     std::array<std::uint8_t, 2048> buffer;
 
-    const auto readSize = ::recv(this->descriptor, reinterpret_cast<char*>(buffer.data()), static_cast<int>(buffer.size()), 0);
+    const auto readSize = ::recv(descriptor_, reinterpret_cast<char*>(buffer.data()), static_cast<int>(buffer.size()), 0);
     if (readSize < 0) {
         const auto errorCode = ::WSAGetLastError();
         if (errorCode == WSAEWOULDBLOCK) {
@@ -154,22 +156,22 @@ void TCPStreamWin32::ReadEventLoop()
             return;
         }
 
-        this->OnRead({}, errors::make("read failed with error: " + std::to_string(errorCode)));
+        onRead({}, errors::make("read failed with error: " + std::to_string(errorCode)));
         return;
     }
 
     // NOTE: Update timestamp of last read/write
-    this->lastActiveTime = service->GetNowTime();
+    lastActiveTime_ = service_->getNowTime();
 
     POMDOG_ASSERT(readSize >= 0);
     auto view = ArrayView<std::uint8_t>{buffer.data(), static_cast<std::size_t>(readSize)};
-    this->OnRead(std::move(view), nullptr);
+    onRead(std::move(view), nullptr);
 
     if (readSize == 0) {
         // NOTE: When the peer socket has performed orderly shutdown,
         // the read size will be 0 (meaning the "end-of-file").
-        this->Close();
-        this->OnDisconnect();
+        close();
+        onDisconnect();
     }
 }
 

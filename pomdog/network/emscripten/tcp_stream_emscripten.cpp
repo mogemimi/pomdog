@@ -19,13 +19,13 @@ TCPStreamEmscripten::~TCPStreamEmscripten()
 {
 }
 
-void TCPStreamEmscripten::Close()
+void TCPStreamEmscripten::close()
 {
     // FIXME: Not implemented yet.
 }
 
 std::unique_ptr<Error>
-TCPStreamEmscripten::Connect(
+TCPStreamEmscripten::connect(
     [[maybe_unused]] std::string_view host,
     [[maybe_unused]] std::string_view port,
     [[maybe_unused]] const Duration& connectTimeout)
@@ -35,19 +35,19 @@ TCPStreamEmscripten::Connect(
 }
 
 std::unique_ptr<Error>
-TCPStreamEmscripten::Write([[maybe_unused]] const ArrayView<std::uint8_t const>& data)
+TCPStreamEmscripten::write([[maybe_unused]] const ArrayView<std::uint8_t const>& data)
 {
     // FIXME: Not implemented yet.
     return errors::make("not implemented yet");
 }
 
-bool TCPStreamEmscripten::IsConnected() const noexcept
+bool TCPStreamEmscripten::isConnected() const noexcept
 {
     // FIXME: Not implemented yet.
     return false;
 }
 
-void TCPStreamEmscripten::SetTimeout([[maybe_unused]] const Duration& timeoutIn)
+void TCPStreamEmscripten::setTimeout([[maybe_unused]] const Duration& timeoutIn)
 {
     // FIXME: Not implemented yet.
 }

@@ -26,7 +26,7 @@ namespace pomdog {
 TCPStream::TCPStream() = default;
 
 TCPStream::TCPStream(IOService* service)
-    : nativeStream(std::make_unique<detail::NativeTCPStream>(service))
+    : nativeStream_(std::make_unique<detail::NativeTCPStream>(service))
 {
 }
 
@@ -38,79 +38,79 @@ TCPStream::TCPStream(TCPStream&& other) = default;
 TCPStream& TCPStream::operator=(TCPStream&& other) = default;
 
 std::tuple<TCPStream, std::unique_ptr<Error>>
-TCPStream::Connect(IOService* service, std::string_view address)
+TCPStream::connect(IOService* service, std::string_view address)
 {
     POMDOG_ASSERT(service != nullptr);
 
     TCPStream stream{service};
-    POMDOG_ASSERT(stream.nativeStream != nullptr);
+    POMDOG_ASSERT(stream.nativeStream_ != nullptr);
 
-    const auto [family, host, port] = detail::AddressParser::TransformAddress(address);
+    const auto [family, host, port] = detail::AddressParser::transformAddress(address);
 
-    if (auto err = stream.nativeStream->Connect(host, port, std::chrono::seconds{5}); err != nullptr) {
+    if (auto err = stream.nativeStream_->connect(host, port, std::chrono::seconds{5}); err != nullptr) {
         return std::make_tuple(std::move(stream), std::move(err));
     }
     return std::make_tuple(std::move(stream), nullptr);
 }
 
 std::tuple<TCPStream, std::unique_ptr<Error>>
-TCPStream::Connect(IOService* service, std::string_view address, const Duration& timeout)
+TCPStream::connect(IOService* service, std::string_view address, const Duration& timeout)
 {
     POMDOG_ASSERT(service != nullptr);
 
     TCPStream stream{service};
-    POMDOG_ASSERT(stream.nativeStream != nullptr);
+    POMDOG_ASSERT(stream.nativeStream_ != nullptr);
 
-    const auto [family, host, port] = detail::AddressParser::TransformAddress(address);
+    const auto [family, host, port] = detail::AddressParser::transformAddress(address);
 
-    if (auto err = stream.nativeStream->Connect(host, port, timeout); err != nullptr) {
+    if (auto err = stream.nativeStream_->connect(host, port, timeout); err != nullptr) {
         return std::make_tuple(std::move(stream), std::move(err));
     }
     return std::make_tuple(std::move(stream), nullptr);
 }
 
-void TCPStream::Disconnect()
+void TCPStream::disconnect()
 {
-    POMDOG_ASSERT(nativeStream != nullptr);
-    nativeStream->Close();
+    POMDOG_ASSERT(nativeStream_ != nullptr);
+    nativeStream_->close();
 }
 
-Connection TCPStream::OnConnected(std::function<void(const std::unique_ptr<Error>&)>&& callback)
+Connection TCPStream::onConnected(std::function<void(const std::unique_ptr<Error>&)>&& callback)
 {
-    POMDOG_ASSERT(nativeStream != nullptr);
-    return nativeStream->OnConnected.Connect(std::move(callback));
+    POMDOG_ASSERT(nativeStream_ != nullptr);
+    return nativeStream_->onConnected.Connect(std::move(callback));
 }
 
-Connection TCPStream::OnDisconnect(std::function<void()>&& callback)
+Connection TCPStream::onDisconnect(std::function<void()>&& callback)
 {
-    POMDOG_ASSERT(nativeStream != nullptr);
-    return nativeStream->OnDisconnect.Connect(std::move(callback));
+    POMDOG_ASSERT(nativeStream_ != nullptr);
+    return nativeStream_->onDisconnect.Connect(std::move(callback));
 }
 
-Connection TCPStream::OnRead(std::function<void(const ArrayView<std::uint8_t>&, const std::unique_ptr<Error>&)>&& callback)
+Connection TCPStream::onRead(std::function<void(const ArrayView<std::uint8_t>&, const std::unique_ptr<Error>&)>&& callback)
 {
-    POMDOG_ASSERT(nativeStream != nullptr);
-    return nativeStream->OnRead.Connect(std::move(callback));
+    POMDOG_ASSERT(nativeStream_ != nullptr);
+    return nativeStream_->onRead.Connect(std::move(callback));
 }
 
-std::unique_ptr<Error> TCPStream::Write(const ArrayView<std::uint8_t const>& data)
+std::unique_ptr<Error> TCPStream::write(const ArrayView<std::uint8_t const>& data)
 {
-    POMDOG_ASSERT(nativeStream != nullptr);
-    return nativeStream->Write(data);
+    POMDOG_ASSERT(nativeStream_ != nullptr);
+    return nativeStream_->write(data);
 }
 
-bool TCPStream::IsConnected() const noexcept
+bool TCPStream::isConnected() const noexcept
 {
-    if (nativeStream == nullptr) {
+    if (nativeStream_ == nullptr) {
         return false;
     }
-    return nativeStream->IsConnected();
+    return nativeStream_->isConnected();
 }
 
-void TCPStream::SetTimeout(const Duration& timeout)
+void TCPStream::setTimeout(const Duration& timeout)
 {
-    POMDOG_ASSERT(nativeStream != nullptr);
-    nativeStream->SetTimeout(timeout);
+    POMDOG_ASSERT(nativeStream_ != nullptr);
+    nativeStream_->setTimeout(timeout);
 }
 
 } // namespace pomdog

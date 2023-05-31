@@ -2,6 +2,7 @@
 
 #include "pomdog/network/http_client.h"
 #include "pomdog/basic/conditional_compilation.h"
+#include "pomdog/memory/unsafe_ptr.h"
 #include "pomdog/network/array_view.h"
 #include "pomdog/network/http_method.h"
 #include "pomdog/network/http_parser.h"
@@ -32,8 +33,8 @@ struct URLParseResult final {
     std::string_view path;
 };
 
-std::tuple<URLParseResult, std::unique_ptr<Error>>
-ParseURL(std::string_view url)
+[[nodiscard]] std::tuple<URLParseResult, std::unique_ptr<Error>>
+parseURL(std::string_view url)
 {
     std::string_view source = url;
     URLParseResult result;
@@ -73,7 +74,8 @@ ParseURL(std::string_view url)
     return std::make_tuple(std::move(result), nullptr);
 }
 
-std::string CreateHeaderString(
+[[nodiscard]] std::string
+createHeaderString(
     HTTPMethod method,
     const URLParseResult& parsedURL,
     bool persistentConnection,
@@ -160,7 +162,8 @@ std::string CreateHeaderString(
     return ss.str();
 }
 
-std::string MakeSocketAddress(const URLParseResult& parsedURL)
+[[nodiscard]] std::string
+makeSocketAddress(const URLParseResult& parsedURL)
 {
     // NOTE: e.g. "https://example.com" to "example.com:443"
     std::ostringstream ss;
@@ -182,251 +185,242 @@ std::string MakeSocketAddress(const URLParseResult& parsedURL)
 
 class SessionKeeper final {
 public:
-    std::function<void()> UpdateSessions;
-    std::function<void(std::string&& address, TLSStream&& stream)> KeepAliveTLS;
-    std::function<void(std::string&& address, TCPStream&& stream)> KeepAliveTCP;
+    std::function<void()> updateSessions;
+    std::function<void(std::string&& address, TLSStream&& stream)> keepAliveTLS;
+    std::function<void(std::string&& address, TCPStream&& stream)> keepAliveTCP;
 };
 
-void KeepAlive(const std::shared_ptr<SessionKeeper>& keeper, std::string&& address, TLSStream&& stream)
+void keepAlive(const std::shared_ptr<SessionKeeper>& keeper, std::string&& address, TLSStream&& stream)
 {
     POMDOG_ASSERT(keeper != nullptr);
-    keeper->KeepAliveTLS(std::move(address), std::move(stream));
+    keeper->keepAliveTLS(std::move(address), std::move(stream));
 }
 
-void KeepAlive(const std::shared_ptr<SessionKeeper>& keeper, std::string&& address, TCPStream&& stream)
+void keepAlive(const std::shared_ptr<SessionKeeper>& keeper, std::string&& address, TCPStream&& stream)
 {
     POMDOG_ASSERT(keeper != nullptr);
-    keeper->KeepAliveTCP(std::move(address), std::move(stream));
+    keeper->keepAliveTCP(std::move(address), std::move(stream));
 }
 
 class Session {
 public:
     virtual ~Session() = default;
 
-    virtual bool IsCompleted() const noexcept = 0;
+    [[nodiscard]] virtual bool
+    isCompleted() const noexcept = 0;
 
-    virtual std::unique_ptr<Error> Abort() = 0;
+    [[nodiscard]] virtual std::unique_ptr<Error>
+    abort() = 0;
 
-    virtual const std::shared_ptr<HTTPRequest>& GetRequest() const = 0;
+    [[nodiscard]] virtual const std::shared_ptr<HTTPRequest>&
+    getRequest() const = 0;
 };
 
 template <class SocketStream>
 class HTTPSession final : public Session {
 private:
-    SocketStream stream;
-    detail::HTTPParser parser;
-    std::shared_ptr<HTTPRequest> request;
-    std::shared_ptr<SessionKeeper> keeper;
-    std::string socketAddress;
-    ScopedConnection connectedConn;
-    ScopedConnection disconnectConn;
-    ScopedConnection readConn;
-    bool isCompleted = false;
+    SocketStream stream_;
+    detail::HTTPParser parser_;
+    std::shared_ptr<HTTPRequest> request_;
+    std::shared_ptr<SessionKeeper> keeper_;
+    std::string socketAddress_;
+    ScopedConnection connectedConn_;
+    ScopedConnection disconnectConn_;
+    ScopedConnection readConn_;
+    bool isCompleted_ = false;
 
 public:
-    void CreateSession(
-        SocketStream&& stream,
-        const std::shared_ptr<HTTPRequest>& request,
-        const std::shared_ptr<SessionKeeper>& keeper,
-        std::string&& socketAddress);
-
-    bool IsCompleted() const noexcept override
+    void createSession(
+        SocketStream&& streamIn,
+        const std::shared_ptr<HTTPRequest>& requestIn,
+        const std::shared_ptr<SessionKeeper>& keeperIn,
+        std::string&& socketAddressIn)
     {
-        return isCompleted;
-    }
+        stream_ = std::move(streamIn);
+        request_ = requestIn;
+        keeper_ = keeperIn;
+        socketAddress_ = std::move(socketAddressIn);
 
-    std::unique_ptr<Error> Abort() override;
+        POMDOG_ASSERT(request_ != nullptr);
 
-    const std::shared_ptr<HTTPRequest>& GetRequest() const override
-    {
-        return request;
-    }
+        stream_.setTimeout(std::chrono::seconds{5});
 
-    void Complete(std::unique_ptr<HTTPResponse>&& response, std::unique_ptr<Error>&& err);
-};
-
-template <class SocketStream>
-void HTTPSession<SocketStream>::CreateSession(
-    SocketStream&& streamIn,
-    const std::shared_ptr<HTTPRequest>& requestIn,
-    const std::shared_ptr<SessionKeeper>& keeperIn,
-    std::string&& socketAddressIn)
-{
-    this->stream = std::move(streamIn);
-    this->request = requestIn;
-    this->keeper = keeperIn;
-    this->socketAddress = std::move(socketAddressIn);
-
-    POMDOG_ASSERT(request != nullptr);
-
-    stream.SetTimeout(std::chrono::seconds{5});
-
-    auto sendRequest = [this](const std::unique_ptr<Error>& connErr) {
-        if (connErr != nullptr) {
-            POMDOG_ASSERT(request != nullptr);
-            this->Complete(nullptr, errors::wrap(connErr->clone(), "HTTP request error"));
-            return;
-        }
-
-        POMDOG_ASSERT(request != nullptr);
-
-        auto [parsedURL, parseErr] = ParseURL(request->URL);
-        if (parseErr != nullptr) {
-            auto err = errors::wrap(std::move(parseErr), "invalid url " + request->URL);
-            KeepAlive(keeper, std::move(socketAddress), std::move(stream));
-            this->Complete(nullptr, std::move(err));
-            return;
-        }
-
-        std::optional<size_t> contentLength;
-        if (!request->Body.empty()) {
-            contentLength = request->Body.size();
-        }
-
-        std::string header = CreateHeaderString(
-            request->Method,
-            parsedURL,
-            request->PersistentConnection,
-            request->Headers,
-            contentLength);
-
-        // NOTE: Write the HTTP request
-        auto headerView = ArrayView<char const>{header.data(), header.size()};
-        if (auto err = stream.Write(headerView.ViewAs<std::uint8_t const>()); err != nullptr) {
-            this->Complete(nullptr, std::move(err));
-            stream.Disconnect();
-            return;
-        }
-
-        auto& body = request->Body;
-        if (!body.empty()) {
-            auto bodyView = ArrayView<char const>{body.data(), body.size()};
-            if (auto err = stream.Write(bodyView.ViewAs<std::uint8_t const>()); err != nullptr) {
-                this->Complete(nullptr, std::move(err));
-                stream.Disconnect();
+        auto sendRequest = [this](const std::unique_ptr<Error>& connErr) {
+            if (connErr != nullptr) {
+                POMDOG_ASSERT(request_ != nullptr);
+                complete(nullptr, errors::wrap(connErr->clone(), "HTTP request error"));
                 return;
             }
+
+            POMDOG_ASSERT(request_ != nullptr);
+
+            auto [parsedURL, parseErr] = parseURL(request_->URL);
+            if (parseErr != nullptr) {
+                auto err = errors::wrap(std::move(parseErr), "invalid url " + request_->URL);
+                keepAlive(keeper_, std::move(socketAddress_), std::move(stream_));
+                complete(nullptr, std::move(err));
+                return;
+            }
+
+            std::optional<size_t> contentLength;
+            if (!request_->Body.empty()) {
+                contentLength = request_->Body.size();
+            }
+
+            std::string header = createHeaderString(
+                request_->Method,
+                parsedURL,
+                request_->PersistentConnection,
+                request_->Headers,
+                contentLength);
+
+            // NOTE: Write the HTTP request
+            auto headerView = ArrayView<char const>{header.data(), header.size()};
+            if (auto err = stream_.write(headerView.viewAs<std::uint8_t const>()); err != nullptr) {
+                complete(nullptr, std::move(err));
+                stream_.disconnect();
+                return;
+            }
+
+            auto& body = request_->Body;
+            if (!body.empty()) {
+                auto bodyView = ArrayView<char const>{body.data(), body.size()};
+                if (auto err = stream_.write(bodyView.viewAs<std::uint8_t const>()); err != nullptr) {
+                    complete(nullptr, std::move(err));
+                    stream_.disconnect();
+                    return;
+                }
+            }
+        };
+
+        if (stream_.isConnected()) {
+            // NOTE: Already connected
+            sendRequest(nullptr);
+            POMDOG_ASSERT(!connectedConn_.IsConnected());
         }
-    };
-
-    if (stream.IsConnected()) {
-        // NOTE: Already connected
-        sendRequest(nullptr);
-        POMDOG_ASSERT(!connectedConn.IsConnected());
-    }
-    else {
-        connectedConn = stream.OnConnected(std::move(sendRequest));
-    }
-
-    readConn = stream.OnRead([this](const ArrayView<std::uint8_t>& view, const std::unique_ptr<Error>& readErr) {
-        if (readErr != nullptr) {
-            POMDOG_ASSERT(request != nullptr);
-            this->Complete(nullptr, errors::wrap(readErr->clone(), "HTTP request error"));
-            stream.Disconnect();
-            return;
+        else {
+            connectedConn_ = stream_.onConnected(std::move(sendRequest));
         }
 
-        auto [result, err] = parser.Parse(view);
-        if (err != nullptr) {
-            this->Complete(nullptr, std::move(err));
-            stream.Disconnect();
-            return;
-        }
+        readConn_ = stream_.onRead([this](const ArrayView<std::uint8_t>& view, const std::unique_ptr<Error>& readErr) {
+            if (readErr != nullptr) {
+                POMDOG_ASSERT(request_ != nullptr);
+                complete(nullptr, errors::wrap(readErr->clone(), "HTTP request error"));
+                stream_.disconnect();
+                return;
+            }
 
-        POMDOG_ASSERT(result != detail::HTTPParseResult::Error);
+            auto [result, err] = parser_.Parse(view);
+            if (err != nullptr) {
+                complete(nullptr, std::move(err));
+                stream_.disconnect();
+                return;
+            }
 
-        if (result == detail::HTTPParseResult::WouldBlock) {
-            return;
-        }
+            POMDOG_ASSERT(result != detail::HTTPParseResult::Error);
 
-        POMDOG_ASSERT(result == detail::HTTPParseResult::EndOfFile);
-        POMDOG_ASSERT(request != nullptr);
+            if (result == detail::HTTPParseResult::WouldBlock) {
+                return;
+            }
 
-        auto response = parser.GetResponse();
-        response->Request = std::move(request);
-        request = nullptr;
+            POMDOG_ASSERT(result == detail::HTTPParseResult::EndOfFile);
+            POMDOG_ASSERT(request_ != nullptr);
 
-        KeepAlive(keeper, std::move(socketAddress), std::move(stream));
-        this->Complete(std::move(response), nullptr);
-    });
+            auto response = parser_.GetResponse();
+            response->Request = std::move(request_);
+            request_ = nullptr;
 
-    disconnectConn = stream.OnDisconnect([this] {
-        POMDOG_ASSERT(request != nullptr);
-        this->Complete(nullptr, errors::make("HTTP request disconnect"));
-    });
-}
+            keepAlive(keeper_, std::move(socketAddress_), std::move(stream_));
+            complete(std::move(response), nullptr);
+        });
 
-template <class SocketStream>
-void HTTPSession<SocketStream>::Complete(std::unique_ptr<HTTPResponse>&& response, std::unique_ptr<Error>&& err)
-{
-    connectedConn.Disconnect();
-    disconnectConn.Disconnect();
-    readConn.Disconnect();
-
-    if (response != nullptr) {
-        POMDOG_ASSERT(request == nullptr);
-        POMDOG_ASSERT(response->Request != nullptr);
-        auto req = response->Request;
-        req->OnCompleted(std::move(response), std::move(err));
-        req->OnCompleted.Disconnect();
-    }
-    else {
-        POMDOG_ASSERT(request != nullptr);
-        request->OnCompleted(nullptr, std::move(err));
-        request->OnCompleted.Disconnect();
+        disconnectConn_ = stream_.onDisconnect([this] {
+            POMDOG_ASSERT(request_ != nullptr);
+            complete(nullptr, errors::make("HTTP request disconnect"));
+        });
     }
 
-    isCompleted = true;
-    keeper->UpdateSessions();
-}
+    bool isCompleted() const noexcept override
+    {
+        return isCompleted_;
+    }
 
-template <class SocketStream>
-std::unique_ptr<Error> HTTPSession<SocketStream>::Abort()
-{
-    if (isCompleted) {
+    std::unique_ptr<Error> abort() override
+    {
+        if (isCompleted_) {
+            return nullptr;
+        }
+
+        if (stream_.isConnected()) {
+            connectedConn_.Disconnect();
+            disconnectConn_.Disconnect();
+            readConn_.Disconnect();
+            stream_.disconnect();
+            complete(nullptr, errors::make("HTTP request abort"));
+            return nullptr;
+        }
+
+        connectedConn_ = stream_.onConnected([this](const std::unique_ptr<Error>& err) {
+            if (err != nullptr) {
+                POMDOG_ASSERT(request_ != nullptr);
+                complete(nullptr, errors::wrap(err->clone(), "HTTP request error"));
+                return;
+            }
+
+            keepAlive(keeper_, std::move(socketAddress_), std::move(stream_));
+            complete(nullptr, errors::make("HTTP request abort"));
+        });
+
+        readConn_.Disconnect();
+
+        disconnectConn_ = stream_.onDisconnect([this] {
+            POMDOG_ASSERT(request_ != nullptr);
+            complete(nullptr, errors::make("HTTP request disconnect"));
+        });
+
         return nullptr;
     }
 
-    if (stream.IsConnected()) {
-        connectedConn.Disconnect();
-        disconnectConn.Disconnect();
-        readConn.Disconnect();
-        stream.Disconnect();
-        this->Complete(nullptr, errors::make("HTTP request abort"));
-        return nullptr;
+    [[nodiscard]] const std::shared_ptr<HTTPRequest>&
+    getRequest() const override
+    {
+        return request_;
     }
 
-    connectedConn = stream.OnConnected([this](const std::unique_ptr<Error>& err) {
-        if (err != nullptr) {
-            POMDOG_ASSERT(request != nullptr);
-            this->Complete(nullptr, errors::wrap(err->clone(), "HTTP request error"));
-            return;
+    void complete(std::unique_ptr<HTTPResponse>&& response, std::unique_ptr<Error>&& err)
+    {
+        connectedConn_.Disconnect();
+        disconnectConn_.Disconnect();
+        readConn_.Disconnect();
+
+        if (response != nullptr) {
+            POMDOG_ASSERT(request_ == nullptr);
+            POMDOG_ASSERT(response->Request != nullptr);
+            auto req = response->Request;
+            req->OnCompleted(std::move(response), std::move(err));
+            req->OnCompleted.Disconnect();
+        }
+        else {
+            POMDOG_ASSERT(request_ != nullptr);
+            request_->OnCompleted(nullptr, std::move(err));
+            request_->OnCompleted.Disconnect();
         }
 
-        KeepAlive(keeper, std::move(socketAddress), std::move(stream));
-        this->Complete(nullptr, errors::make("HTTP request abort"));
-    });
-
-    readConn.Disconnect();
-
-    disconnectConn = stream.OnDisconnect([this] {
-        POMDOG_ASSERT(request != nullptr);
-        this->Complete(nullptr, errors::make("HTTP request disconnect"));
-    });
-
-    return nullptr;
-}
+        isCompleted_ = true;
+        keeper_->updateSessions();
+    }
+};
 
 } // namespace
 
 struct HTTPClient::Impl final {
-    IOService* service = nullptr;
-    std::vector<std::unique_ptr<Session>> sessions;
-    std::shared_ptr<SessionKeeper> sessionKeeper;
-    ScopedConnection updateConn;
+    unsafe_ptr<IOService> service_ = nullptr;
+    std::vector<std::unique_ptr<Session>> sessions_;
+    std::shared_ptr<SessionKeeper> sessionKeeper_;
+    ScopedConnection updateConn_;
 
-    std::unordered_map<std::string, TLSStream> tlsStreams;
-    std::unordered_map<std::string, TCPStream> tcpStreams;
+    std::unordered_map<std::string, TLSStream> tlsStreams_;
+    std::unordered_map<std::string, TCPStream> tcpStreams_;
 
     explicit Impl(IOService* service);
 
@@ -453,93 +447,93 @@ struct HTTPClient::Impl final {
 };
 
 HTTPClient::Impl::Impl(IOService* serviceIn)
-    : service(serviceIn)
+    : service_(serviceIn)
 {
-    sessionKeeper = std::make_shared<SessionKeeper>();
-    sessionKeeper->UpdateSessions = [this]() {
-        POMDOG_ASSERT(service != nullptr);
+    sessionKeeper_ = std::make_shared<SessionKeeper>();
+    sessionKeeper_->updateSessions = [this]() {
+        POMDOG_ASSERT(service_ != nullptr);
 
-        if (updateConn.IsConnected()) {
+        if (updateConn_.IsConnected()) {
             return;
         }
 
-        updateConn = service->ScheduleTask([this] {
-            updateConn.Disconnect();
+        updateConn_ = service_->scheduleTask([this] {
+            updateConn_.Disconnect();
 
-            sessions.erase(
-                std::remove_if(std::begin(sessions), std::end(sessions), [&](const auto& p) -> bool { return p->IsCompleted(); }),
-                std::end(sessions));
+            sessions_.erase(
+                std::remove_if(std::begin(sessions_), std::end(sessions_), [&](const auto& p) -> bool { return p->isCompleted(); }),
+                std::end(sessions_));
         });
     };
-    sessionKeeper->KeepAliveTLS = [this](std::string&& address, TLSStream&& stream) {
-        tlsStreams.emplace(std::move(address), std::move(stream));
+    sessionKeeper_->keepAliveTLS = [this](std::string&& address, TLSStream&& stream) {
+        tlsStreams_.emplace(std::move(address), std::move(stream));
     };
-    sessionKeeper->KeepAliveTCP = [this](std::string&& address, TCPStream&& stream) {
-        tcpStreams.emplace(std::move(address), std::move(stream));
+    sessionKeeper_->keepAliveTCP = [this](std::string&& address, TCPStream&& stream) {
+        tcpStreams_.emplace(std::move(address), std::move(stream));
     };
 }
 
 HTTPClient::Impl::~Impl()
 {
-    sessionKeeper->UpdateSessions = []() {};
-    sessionKeeper->KeepAliveTLS = [](std::string&&, TLSStream&&) {};
-    sessionKeeper->KeepAliveTCP = [](std::string&&, TCPStream&&) {};
+    sessionKeeper_->updateSessions = []() {};
+    sessionKeeper_->keepAliveTLS = [](std::string&&, TLSStream&&) {};
+    sessionKeeper_->keepAliveTCP = [](std::string&&, TCPStream&&) {};
 }
 
 std::unique_ptr<Error>
 HTTPClient::Impl::Do(const std::shared_ptr<HTTPRequest>& req)
 {
-    POMDOG_ASSERT(service != nullptr);
+    POMDOG_ASSERT(service_ != nullptr);
     POMDOG_ASSERT(req != nullptr);
 
-    auto [parsedURL, parseErr] = ParseURL(req->URL);
+    auto [parsedURL, parseErr] = parseURL(req->URL);
     if (parseErr != nullptr) {
         return errors::wrap(std::move(parseErr), "invalid url " + req->URL);
     }
 
-    auto socketAddress = MakeSocketAddress(parsedURL);
+    auto socketAddress = makeSocketAddress(parsedURL);
 
     if (parsedURL.protocolScheme == "https://") {
         auto session = std::make_unique<HTTPSession<TLSStream>>();
         TLSStream sessionStream;
 
-        if (auto kv = this->tlsStreams.find(socketAddress); kv != std::end(this->tlsStreams)) {
+        if (auto kv = tlsStreams_.find(socketAddress); kv != std::end(tlsStreams_)) {
             sessionStream = std::move(kv->second);
-            this->tlsStreams.erase(kv);
+            tlsStreams_.erase(kv);
         }
 
-        if (!sessionStream.IsConnected()) {
-            auto [stream, err] = TLSStream::Connect(service, socketAddress);
+        if (!sessionStream.isConnected()) {
+            auto [stream, err] = TLSStream::connect(service_, socketAddress);
             if (err != nullptr) {
                 return errors::wrap(std::move(err), "failed to connect to server");
             }
             sessionStream = std::move(stream);
         }
 
-        session->CreateSession(std::move(sessionStream), req, sessionKeeper, std::move(socketAddress));
+        session->createSession(std::move(sessionStream), req, sessionKeeper_, std::move(socketAddress));
 
-        this->sessions.emplace_back(std::move(session));
+        sessions_.emplace_back(std::move(session));
     }
     else if (parsedURL.protocolScheme == "http://") {
         auto session = std::make_unique<HTTPSession<TCPStream>>();
         TCPStream sessionStream;
 
-        if (auto kv = this->tcpStreams.find(socketAddress); kv != std::end(this->tcpStreams)) {
+        if (auto kv = tcpStreams_.find(socketAddress); kv != std::end(tcpStreams_)) {
             sessionStream = std::move(kv->second);
-            this->tcpStreams.erase(kv);
+            tcpStreams_.erase(kv);
         }
 
-        if (!sessionStream.IsConnected()) {
-            auto [stream, err] = TCPStream::Connect(service, socketAddress);
+        if (!sessionStream.isConnected()) {
+            auto [stream, err] = TCPStream::connect(service_, socketAddress);
             if (err != nullptr) {
                 return errors::wrap(std::move(err), "failed to connect to server");
             }
             sessionStream = std::move(stream);
         }
 
-        session->CreateSession(std::move(sessionStream), req, sessionKeeper, std::move(socketAddress));
+        session->createSession(std::move(sessionStream), req, sessionKeeper_, std::move(socketAddress));
 
-        this->sessions.emplace_back(std::move(session));
+        sessions_.emplace_back(std::move(session));
     }
     else {
         // error
@@ -554,7 +548,7 @@ HTTPClient::Impl::Get(
     const std::string& url,
     std::function<void(std::unique_ptr<HTTPResponse>&&, const std::unique_ptr<Error>&)>&& callback)
 {
-    POMDOG_ASSERT(service != nullptr);
+    POMDOG_ASSERT(service_ != nullptr);
 
     auto request = HTTPRequest::Create(HTTPMethod::Get, url);
     auto conn = request->OnCompleted.Connect(std::move(callback));
@@ -569,7 +563,7 @@ HTTPClient::Impl::Post(
     std::vector<char>&& body,
     std::function<void(std::unique_ptr<HTTPResponse>&&, const std::unique_ptr<Error>&)>&& callback)
 {
-    POMDOG_ASSERT(service != nullptr);
+    POMDOG_ASSERT(service_ != nullptr);
 
     auto request = HTTPRequest::Create(HTTPMethod::Post, url);
     request->AddHeader("Content-Type", contentType);
@@ -581,19 +575,23 @@ HTTPClient::Impl::Post(
 std::unique_ptr<Error>
 HTTPClient::Impl::CancelRequest(const std::shared_ptr<HTTPRequest>& req)
 {
-    POMDOG_ASSERT(service != nullptr);
+    POMDOG_ASSERT(service_ != nullptr);
     POMDOG_ASSERT(req != nullptr);
 
-    for (auto& session : sessions) {
-        if (session->IsCompleted()) {
+    std::unique_ptr<Error> abortErr;
+
+    for (auto& session : sessions_) {
+        if (session->isCompleted()) {
             continue;
         }
-        if (session->GetRequest() == req) {
-            session->Abort();
+        if (session->getRequest() == req) {
+            if (auto err = session->abort(); err != nullptr) {
+                abortErr = std::move(err);
+            }
         }
     }
 
-    return nullptr;
+    return abortErr;
 }
 
 HTTPClient::HTTPClient(IOService* serviceIn)

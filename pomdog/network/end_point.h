@@ -29,30 +29,34 @@ struct EndPointAddressView final {
 
 /// EndPoint represents the address of a network end point.
 class EndPoint final {
-public:
-    EndPoint();
-
-    /// Gets the address family.
-    [[nodiscard]] AddressFamily GetFamily() const noexcept;
-
-    /// Gets the port number of the endpoint.
-    [[nodiscard]] int GetPort() const noexcept;
-
-    /// Returns a string representation of the endpoint address.
-    [[nodiscard]] std::string ToString() const;
-
-    /// Gets a view of the endpoint address.
-    [[nodiscard]] EndPointAddressView GetAddressView() const noexcept;
-
-    /// Creates an endpoint from `sockaddr_storage` directly.
-    [[nodiscard]] static EndPoint
-    CreateFromAddressStorage(const ::sockaddr_storage& storage);
-
 private:
     union {
         ::sockaddr_in asV4;
         ::sockaddr_in6 asV6;
-    } address;
+    } address_;
+
+public:
+    EndPoint();
+
+    /// Gets the address family.
+    [[nodiscard]] AddressFamily
+    getFamily() const noexcept;
+
+    /// Gets the port number of the endpoint.
+    [[nodiscard]] int
+    getPort() const noexcept;
+
+    /// Returns a string representation of the endpoint address.
+    [[nodiscard]] std::string
+    toString() const;
+
+    /// Gets a view of the endpoint address.
+    [[nodiscard]] EndPointAddressView
+    getAddressView() const noexcept;
+
+    /// Creates an endpoint from `sockaddr_storage` directly.
+    [[nodiscard]] static EndPoint
+    createFromAddressStorage(const ::sockaddr_storage& storage);
 };
 
 } // namespace pomdog::detail

@@ -19,7 +19,8 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::detail {
 namespace {
 
-bool isSocketValid(::SOCKET descriptor) noexcept
+[[nodiscard]] bool
+isSocketValid(::SOCKET descriptor) noexcept
 {
     return descriptor != INVALID_SOCKET;
 }
@@ -29,107 +30,107 @@ constexpr int flags = 0;
 } // namespace
 
 UDPStreamWin32::UDPStreamWin32(IOService* serviceIn)
-    : service(serviceIn)
+    : service_(serviceIn)
 {
 }
 
 UDPStreamWin32::~UDPStreamWin32()
 {
-    if (blockingThread.joinable()) {
-        blockingThread.join();
+    if (blockingThread_.joinable()) {
+        blockingThread_.join();
     }
 
-    if (isSocketValid(this->descriptor)) {
-        ::closesocket(this->descriptor);
-        this->descriptor = INVALID_SOCKET;
+    if (isSocketValid(descriptor_)) {
+        ::closesocket(descriptor_);
+        descriptor_ = INVALID_SOCKET;
     }
 }
 
 std::unique_ptr<Error>
-UDPStreamWin32::Connect(std::string_view host, std::string_view port, const Duration& connectTimeout)
+UDPStreamWin32::connect(std::string_view host, std::string_view port, const Duration& connectTimeout)
 {
-    POMDOG_ASSERT(service != nullptr);
+    POMDOG_ASSERT(service_ != nullptr);
 
     // NOTE: A std::string_view doesn't provide a conversion to a const char* because it doesn't store a null-terminated string.
     const auto hostBuf = std::string{host};
     const auto portBuf = std::string{port};
 
     std::thread connectThread([this, hostBuf = std::move(hostBuf), portBuf = std::move(portBuf), connectTimeout = connectTimeout] {
-        auto [fd, err] = detail::ConnectSocketWin32(hostBuf, portBuf, SocketProtocol::UDP, connectTimeout);
+        auto [fd, err] = detail::connectSocketWin32(hostBuf, portBuf, SocketProtocol::UDP, connectTimeout);
 
         if (err != nullptr) {
             auto wrapped = errors::wrap(std::move(err), "couldn't connect to UDP socket on " + hostBuf + ":" + portBuf);
             std::shared_ptr<Error> shared = std::move(wrapped);
-            errorConn = service->ScheduleTask([this, err = std::move(shared)] {
-                this->OnConnected(err->Clone());
-                this->errorConn.Disconnect();
+            errorConn_ = service_->scheduleTask([this, err = std::move(shared)] {
+                onConnected(err->clone());
+                errorConn_.disconnect();
             });
             return;
         }
-        this->descriptor = fd;
+        descriptor_ = fd;
 
-        eventLoopConn = service->ScheduleTask([this] {
-            this->OnConnected(nullptr);
-            eventLoopConn.Disconnect();
-            eventLoopConn = service->ScheduleTask([this] { this->ReadEventLoop(); });
+        eventLoopConn_ = service_->scheduleTask([this] {
+            onConnected(nullptr);
+            eventLoopConn_.disconnect();
+            eventLoopConn_ = service_->scheduleTask([this] { readEventLoop(); });
         });
     });
 
-    this->blockingThread = std::move(connectThread);
+    blockingThread_ = std::move(connectThread);
 
     return nullptr;
 }
 
 std::unique_ptr<Error>
-UDPStreamWin32::Listen(std::string_view host, std::string_view port)
+UDPStreamWin32::listen(std::string_view host, std::string_view port)
 {
-    POMDOG_ASSERT(service != nullptr);
+    POMDOG_ASSERT(service_ != nullptr);
 
     // NOTE: A std::string_view doesn't provide a conversion to a const char* because it doesn't store a null-terminated string.
     const auto hostBuf = std::string{host};
     const auto portBuf = std::string{port};
 
-    auto [fd, err] = detail::BindSocketWin32(hostBuf, portBuf, SocketProtocol::UDP);
+    auto [fd, err] = detail::bindSocketWin32(hostBuf, portBuf, SocketProtocol::UDP);
 
     if (err != nullptr) {
         auto wrapped = errors::wrap(std::move(err), "couldn't listen to UDP socket on " + hostBuf + ":" + portBuf);
-        std::shared_ptr<Error> shared = wrapped->Clone();
-        errorConn = service->ScheduleTask([this, err = std::move(shared)] {
-            this->OnConnected(err->Clone());
-            this->errorConn.Disconnect();
+        std::shared_ptr<Error> shared = wrapped->clone();
+        errorConn_ = service_->scheduleTask([this, err = std::move(shared)] {
+            onConnected(err->clone());
+            errorConn_.disconnect();
         });
         return wrapped;
     }
-    this->descriptor = fd;
+    descriptor_ = fd;
 
-    eventLoopConn = service->ScheduleTask([this] {
-        this->OnConnected(nullptr);
-        eventLoopConn.Disconnect();
-        eventLoopConn = service->ScheduleTask([this] { this->ReadFromEventLoop(); });
+    eventLoopConn_ = service_->scheduleTask([this] {
+        onConnected(nullptr);
+        eventLoopConn_.disconnect();
+        eventLoopConn_ = service_->scheduleTask([this] { readFromEventLoop(); });
     });
 
     return nullptr;
 }
 
-void UDPStreamWin32::Close()
+void UDPStreamWin32::close()
 {
-    this->eventLoopConn.Disconnect();
-    this->errorConn.Disconnect();
+    eventLoopConn_.disconnect();
+    errorConn_.disconnect();
 
-    if (isSocketValid(this->descriptor)) {
-        ::closesocket(this->descriptor);
-        this->descriptor = INVALID_SOCKET;
+    if (isSocketValid(descriptor_)) {
+        ::closesocket(descriptor_);
+        descriptor_ = INVALID_SOCKET;
     }
 }
 
 std::unique_ptr<Error>
-UDPStreamWin32::Write(const ArrayView<std::uint8_t const>& data)
+UDPStreamWin32::write(const ArrayView<std::uint8_t const>& data)
 {
-    POMDOG_ASSERT(isSocketValid(descriptor));
-    POMDOG_ASSERT(data.GetData() != nullptr);
-    POMDOG_ASSERT(data.GetSize() > 0);
+    POMDOG_ASSERT(isSocketValid(descriptor_));
+    POMDOG_ASSERT(data.data() != nullptr);
+    POMDOG_ASSERT(data.size() > 0);
 
-    auto result = ::send(this->descriptor, reinterpret_cast<const char*>(data.GetData()), static_cast<int>(data.GetSize()), flags);
+    auto result = ::send(descriptor_, reinterpret_cast<const char*>(data.data()), static_cast<int>(data.size()), flags);
 
     if (result == SOCKET_ERROR) {
         return errors::make("send failed with error: " + std::to_string(::WSAGetLastError()));
@@ -139,13 +140,13 @@ UDPStreamWin32::Write(const ArrayView<std::uint8_t const>& data)
 }
 
 std::unique_ptr<Error>
-UDPStreamWin32::WriteTo(const ArrayView<std::uint8_t const>& data, std::string_view address)
+UDPStreamWin32::writeTo(const ArrayView<std::uint8_t const>& data, std::string_view address)
 {
-    POMDOG_ASSERT(isSocketValid(this->descriptor));
-    POMDOG_ASSERT(data.GetData() != nullptr);
-    POMDOG_ASSERT(data.GetSize() > 0);
+    POMDOG_ASSERT(isSocketValid(descriptor_));
+    POMDOG_ASSERT(data.data() != nullptr);
+    POMDOG_ASSERT(data.size() > 0);
 
-    const auto [family, hostView, portView] = detail::AddressParser::TransformAddress(address);
+    const auto [family, hostView, portView] = detail::AddressParser::transformAddress(address);
     auto host = std::string{hostView};
     auto port = std::string{portView};
 
@@ -169,8 +170,12 @@ UDPStreamWin32::WriteTo(const ArrayView<std::uint8_t const>& data, std::string_v
 
     for (auto info = addrList.get(); info != nullptr; info = info->ai_next) {
         auto result = ::sendto(
-            this->descriptor, reinterpret_cast<const char*>(data.GetData()), static_cast<int>(data.GetSize()), flags,
-            info->ai_addr, static_cast<int>(info->ai_addrlen));
+            descriptor_,
+            reinterpret_cast<const char*>(data.data()),
+            static_cast<int>(data.size()),
+            flags,
+            info->ai_addr,
+            static_cast<int>(info->ai_addrlen));
 
         if (result == SOCKET_ERROR) {
             lastError = ::WSAGetLastError();
@@ -187,19 +192,20 @@ UDPStreamWin32::WriteTo(const ArrayView<std::uint8_t const>& data, std::string_v
     return nullptr;
 }
 
-::SOCKET UDPStreamWin32::GetHandle() const noexcept
+::SOCKET
+UDPStreamWin32::getHandle() const noexcept
 {
-    return descriptor;
+    return descriptor_;
 }
 
-void UDPStreamWin32::ReadEventLoop()
+void UDPStreamWin32::readEventLoop()
 {
-    POMDOG_ASSERT(isSocketValid(descriptor));
+    POMDOG_ASSERT(isSocketValid(descriptor_));
 
     // NOTE: Read per 1 frame (= 1/60 seconds) for a packet up to 1024 bytes.
     std::array<std::uint8_t, 1024> buffer;
 
-    const auto readSize = ::recv(this->descriptor, reinterpret_cast<char*>(buffer.data()), static_cast<int>(buffer.size()), flags);
+    const auto readSize = ::recv(descriptor_, reinterpret_cast<char*>(buffer.data()), static_cast<int>(buffer.size()), flags);
     if (readSize < 0) {
         const auto errorCode = ::WSAGetLastError();
         if (errorCode == WSAEWOULDBLOCK) {
@@ -207,7 +213,7 @@ void UDPStreamWin32::ReadEventLoop()
             return;
         }
 
-        this->OnRead({}, errors::make("read failed with error: " + std::to_string(errorCode)));
+        onRead({}, errors::make("read failed with error: " + std::to_string(errorCode)));
         return;
     }
 
@@ -215,12 +221,12 @@ void UDPStreamWin32::ReadEventLoop()
     // the read size will be 0 (meaning the "end-of-file").
     POMDOG_ASSERT(readSize >= 0);
     auto view = ArrayView<std::uint8_t>{buffer.data(), static_cast<std::size_t>(readSize)};
-    this->OnRead(std::move(view), nullptr);
+    onRead(std::move(view), nullptr);
 }
 
-void UDPStreamWin32::ReadFromEventLoop()
+void UDPStreamWin32::readFromEventLoop()
 {
-    POMDOG_ASSERT(isSocketValid(descriptor));
+    POMDOG_ASSERT(isSocketValid(descriptor_));
 
     // NOTE: Read per 1 frame (= 1/60 seconds) for a packet up to 1024 bytes.
     std::array<std::uint8_t, 1024> buffer;
@@ -229,7 +235,7 @@ void UDPStreamWin32::ReadFromEventLoop()
     socklen_t addrLen = sizeof(addrInfo);
 
     const auto readSize = ::recvfrom(
-        this->descriptor, reinterpret_cast<char*>(buffer.data()), static_cast<int>(buffer.size()), flags,
+        descriptor_, reinterpret_cast<char*>(buffer.data()), static_cast<int>(buffer.size()), flags,
         reinterpret_cast<struct sockaddr*>(&addrInfo), &addrLen);
 
     if (readSize < 0) {
@@ -239,16 +245,16 @@ void UDPStreamWin32::ReadFromEventLoop()
             return;
         }
 
-        this->OnReadFrom({}, "", errors::make("read failed with error: " + std::to_string(errorCode)));
+        onReadFrom({}, "", errors::make("read failed with error: " + std::to_string(errorCode)));
         return;
     }
 
     // NOTE: When the peer socket has performed orderly shutdown,
     // the read size will be 0 (meaning the "end-of-file").
     POMDOG_ASSERT(readSize >= 0);
-    auto addr = EndPoint::CreateFromAddressStorage(addrInfo);
+    auto addr = EndPoint::createFromAddressStorage(addrInfo);
     auto view = ArrayView<std::uint8_t>{buffer.data(), static_cast<std::size_t>(readSize)};
-    this->OnReadFrom(std::move(view), addr.ToString(), nullptr);
+    onReadFrom(std::move(view), addr.toString(), nullptr);
 }
 
 } // namespace pomdog::detail

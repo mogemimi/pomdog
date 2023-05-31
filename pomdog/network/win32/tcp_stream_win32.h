@@ -29,6 +29,16 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::detail {
 
 class TCPStreamWin32 final {
+private:
+    std::thread blockingThread_;
+    IOService* service_ = nullptr;
+    ::SOCKET descriptor_ = INVALID_SOCKET;
+    ScopedConnection eventLoopConn_;
+    ScopedConnection errorConn_;
+    std::optional<Duration> timeoutInterval_;
+    TimePoint lastActiveTime_;
+    std::atomic<bool> isConnected_ = false;
+
 public:
     TCPStreamWin32() = delete;
 
@@ -44,45 +54,37 @@ public:
 
     /// Opens a TCP connection over TCP to a remote host.
     [[nodiscard]] std::unique_ptr<Error>
-    Connect(std::string_view host, std::string_view port, const Duration& timeout);
+    connect(std::string_view host, std::string_view port, const Duration& timeout);
 
     /// Closes the connection.
-    void Close();
+    void close();
 
     /// Writes data to the connection.
     [[nodiscard]] std::unique_ptr<Error>
-    Write(const ArrayView<std::uint8_t const>& data);
+    write(const ArrayView<std::uint8_t const>& data);
 
     /// @return True if the socket is connected to a remote host, false otherwise.
-    [[nodiscard]] bool IsConnected() const noexcept;
+    [[nodiscard]] bool
+    isConnected() const noexcept;
 
     /// Sets the interval to wait for socket activity.
-    void SetTimeout(const Duration& timeout);
+    void setTimeout(const Duration& timeout);
 
     /// Returns the native socket handle.
-    [[nodiscard]] ::SOCKET GetHandle() const noexcept;
+    [[nodiscard]] ::SOCKET
+    getHandle() const noexcept;
 
     /// Delegate that fires when a connection is successfully established.
-    Delegate<void(const std::unique_ptr<Error>&)> OnConnected;
+    Delegate<void(const std::unique_ptr<Error>&)> onConnected;
 
     /// Delegate that fires when a connection is disconnected.
-    Delegate<void()> OnDisconnect;
+    Delegate<void()> onDisconnect;
 
     /// Delegate that fires when a data packet is received.
-    Delegate<void(const ArrayView<std::uint8_t>&, const std::unique_ptr<Error>&)> OnRead;
+    Delegate<void(const ArrayView<std::uint8_t>&, const std::unique_ptr<Error>&)> onRead;
 
 private:
-    void ReadEventLoop();
-
-private:
-    std::thread blockingThread;
-    IOService* service = nullptr;
-    ::SOCKET descriptor = INVALID_SOCKET;
-    ScopedConnection eventLoopConn;
-    ScopedConnection errorConn;
-    std::optional<Duration> timeoutInterval;
-    TimePoint lastActiveTime;
-    std::atomic<bool> isConnected = false;
+    void readEventLoop();
 };
 
 } // namespace pomdog::detail

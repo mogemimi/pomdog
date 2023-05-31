@@ -21,6 +21,13 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::detail {
 
 class UDPStreamWin32 final {
+private:
+    std::thread blockingThread_;
+    IOService* service_ = nullptr;
+    ScopedConnection eventLoopConn_;
+    ScopedConnection errorConn_;
+    ::SOCKET descriptor_ = INVALID_SOCKET;
+
 public:
     UDPStreamWin32() = delete;
 
@@ -36,46 +43,40 @@ public:
 
     /// Opens a UDP connection over UDP to a remote host.
     [[nodiscard]] std::unique_ptr<Error>
-    Connect(std::string_view host, std::string_view port, const Duration& timeout);
+    connect(std::string_view host, std::string_view port, const Duration& timeout);
 
     /// Starts listening for incoming datagrams.
     [[nodiscard]] std::unique_ptr<Error>
-    Listen(std::string_view host, std::string_view port);
+    listen(std::string_view host, std::string_view port);
 
     /// Closes the connection.
-    void Close();
+    void close();
 
     /// Writes data to the connection.
     [[nodiscard]] std::unique_ptr<Error>
-    Write(const ArrayView<std::uint8_t const>& data);
+    write(const ArrayView<std::uint8_t const>& data);
 
     /// Writes data to address.
     [[nodiscard]] std::unique_ptr<Error>
-    WriteTo(const ArrayView<std::uint8_t const>& data, std::string_view address);
+    writeTo(const ArrayView<std::uint8_t const>& data, std::string_view address);
 
     /// Returns the native socket handle.
-    [[nodiscard]] ::SOCKET GetHandle() const noexcept;
+    [[nodiscard]] ::SOCKET
+    getHandle() const noexcept;
 
     /// Delegate that fires when a connection is successfully established.
-    Delegate<void(const std::unique_ptr<Error>&)> OnConnected;
+    Delegate<void(const std::unique_ptr<Error>&)> onConnected;
 
     /// Delegate that fires when a data packet is received.
-    Delegate<void(const ArrayView<std::uint8_t>&, const std::unique_ptr<Error>&)> OnRead;
+    Delegate<void(const ArrayView<std::uint8_t>&, const std::unique_ptr<Error>&)> onRead;
 
     /// Delegate that fires when a data packet is received from the connection.
-    Delegate<void(const ArrayView<std::uint8_t>& view, std::string_view address, const std::unique_ptr<Error>&)> OnReadFrom;
+    Delegate<void(const ArrayView<std::uint8_t>& view, std::string_view address, const std::unique_ptr<Error>&)> onReadFrom;
 
 private:
-    void ReadEventLoop();
+    void readEventLoop();
 
-    void ReadFromEventLoop();
-
-private:
-    std::thread blockingThread;
-    IOService* service = nullptr;
-    ScopedConnection eventLoopConn;
-    ScopedConnection errorConn;
-    ::SOCKET descriptor = INVALID_SOCKET;
+    void readFromEventLoop();
 };
 
 } // namespace pomdog::detail

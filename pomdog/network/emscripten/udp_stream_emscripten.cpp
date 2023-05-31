@@ -20,7 +20,7 @@ UDPStreamEmscripten::~UDPStreamEmscripten()
 }
 
 std::unique_ptr<Error>
-UDPStreamEmscripten::Connect(
+UDPStreamEmscripten::connect(
     [[maybe_unused]] std::string_view host,
     [[maybe_unused]] std::string_view port,
     [[maybe_unused]] const Duration& connectTimeout)
@@ -30,7 +30,7 @@ UDPStreamEmscripten::Connect(
 }
 
 std::unique_ptr<Error>
-UDPStreamEmscripten::Listen(
+UDPStreamEmscripten::listen(
     [[maybe_unused]] std::string_view host,
     [[maybe_unused]] std::string_view port)
 {
@@ -38,20 +38,20 @@ UDPStreamEmscripten::Listen(
     return errors::make("not implemented yet");
 }
 
-void UDPStreamEmscripten::Close()
+void UDPStreamEmscripten::close()
 {
     // FIXME: Not implemented yet.
 }
 
 std::unique_ptr<Error>
-UDPStreamEmscripten::Write([[maybe_unused]] const ArrayView<std::uint8_t const>& data)
+UDPStreamEmscripten::write([[maybe_unused]] const ArrayView<std::uint8_t const>& data)
 {
     // FIXME: Not implemented yet.
     return errors::make("not implemented yet");
 }
 
 std::unique_ptr<Error>
-UDPStreamEmscripten::WriteTo(
+UDPStreamEmscripten::writeTo(
     [[maybe_unused]] const ArrayView<std::uint8_t const>& data,
     [[maybe_unused]] std::string_view address)
 {

@@ -18,6 +18,6 @@ template class ArrayView<std::uint8_t const>;
 #endif
 
 [[nodiscard]] ArrayView<std::uint8_t const>
-GetEmbeddedCertificatePEM() noexcept;
+getEmbeddedCertificatePEM() noexcept;
 
 } // namespace pomdog::detail

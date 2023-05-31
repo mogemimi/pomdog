@@ -18,7 +18,8 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::detail {
 namespace {
 
-struct timeval ToTimeval(const Duration& d)
+[[nodiscard]] struct timeval
+toTimeval(const Duration& d) noexcept
 {
     struct timeval tv;
     const auto sec = std::chrono::duration_cast<std::chrono::seconds>(d);
@@ -31,7 +32,7 @@ struct timeval ToTimeval(const Duration& d)
 } // namespace
 
 std::tuple<int, std::unique_ptr<Error>>
-ConnectSocketPOSIX(
+connectSocketPOSIX(
     const std::string& host,
     const std::string& port,
     SocketProtocol protocol,
@@ -109,7 +110,7 @@ ConnectSocketPOSIX(
 #endif
                 FD_SET(descriptor, &waitSet);
 
-                auto connectTimeout = ToTimeval(connectTimeoutIn);
+                auto connectTimeout = toTimeval(connectTimeoutIn);
 
                 // NOTE: Wait for socket to be writable
                 result = ::select(descriptor + 1, nullptr, &waitSet, nullptr, &connectTimeout);
@@ -134,7 +135,7 @@ ConnectSocketPOSIX(
 }
 
 std::tuple<int, std::unique_ptr<Error>>
-BindSocketPOSIX(
+bindSocketPOSIX(
     const std::string& host,
     const std::string& port,
     SocketProtocol protocol)

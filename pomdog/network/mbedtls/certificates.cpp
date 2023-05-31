@@ -1415,10 +1415,11 @@ sbqjYAuG7ZoIapVon+Kz4ZNkfF6Tpt95LY2F45TPI11xzPKwTdb+mciUqXWi4w==
 
 } // namespace
 
-ArrayView<std::uint8_t const> GetEmbeddedCertificatePEM() noexcept
+[[nodiscard]] ArrayView<std::uint8_t const>
+getEmbeddedCertificatePEM() noexcept
 {
     ArrayView<char const> certPEM{CertificatePEMBlock, sizeof(CertificatePEMBlock)};
-    return certPEM.ViewAs<std::uint8_t const>();
+    return certPEM.viewAs<std::uint8_t const>();
 }
 
 } // namespace pomdog::detail

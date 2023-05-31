@@ -29,13 +29,13 @@ public:
 
         service_ = std::make_unique<IOService>();
 
-        auto err = service_->Initialize(clock_);
+        auto err = service_->initialize(clock_);
         REQUIRE(err == nullptr);
     }
 
     ~Executor()
     {
-        auto err = service_->Shutdown();
+        auto err = service_->shutdown();
         REQUIRE(err == nullptr);
     }
 
@@ -53,7 +53,7 @@ public:
     {
         while (!exitRequest_) {
             clock_->tick();
-            service_->Step();
+            service_->step();
 
             // NOTE: I want to suppress energy impact if possible.
             std::this_thread::sleep_for(std::chrono::milliseconds(1));

@@ -25,7 +25,7 @@ namespace pomdog {
 IOService::IOService() noexcept = default;
 
 std::unique_ptr<Error>
-IOService::Initialize(const std::shared_ptr<GameClock>& clock)
+IOService::initialize(const std::shared_ptr<GameClock>& clock)
 {
     POMDOG_ASSERT(clock != nullptr);
     clock_ = clock;
@@ -36,7 +36,7 @@ IOService::Initialize(const std::shared_ptr<GameClock>& clock)
     defined(POMDOG_PLATFORM_LINUX)
     // NOTE: nothing to do
 #elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
-    if (auto err = detail::win32::PrepareNetworkService(); err != nullptr) {
+    if (auto err = detail::win32::prepareNetworkService(); err != nullptr) {
         return err;
     }
 #else
@@ -45,7 +45,7 @@ IOService::Initialize(const std::shared_ptr<GameClock>& clock)
     return nullptr;
 }
 
-std::unique_ptr<Error> IOService::Shutdown()
+std::unique_ptr<Error> IOService::shutdown()
 {
 #if defined(POMDOG_PLATFORM_MACOSX) || \
     defined(POMDOG_PLATFORM_APPLE_IOS) || \
@@ -53,7 +53,7 @@ std::unique_ptr<Error> IOService::Shutdown()
     defined(POMDOG_PLATFORM_LINUX)
     // NOTE: nothing to do
 #elif defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
-    if (auto err = detail::win32::ShutdownNetworkService(); err != nullptr) {
+    if (auto err = detail::win32::shutdownNetworkService(); err != nullptr) {
         return err;
     }
 #else
@@ -62,17 +62,17 @@ std::unique_ptr<Error> IOService::Shutdown()
     return nullptr;
 }
 
-void IOService::Step()
+void IOService::step()
 {
     tasks_();
 }
 
-Connection IOService::ScheduleTask(std::function<void()>&& func)
+Connection IOService::scheduleTask(std::function<void()>&& func)
 {
     return tasks_.Connect(std::move(func));
 }
 
-TimePoint IOService::GetNowTime() const
+TimePoint IOService::getNowTime() const
 {
     POMDOG_ASSERT(clock_ != nullptr);
     return TimePoint{clock_->getTotalGameTime()};

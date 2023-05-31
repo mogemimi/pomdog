@@ -17,6 +17,10 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog {
 
 class POMDOG_EXPORT IOService final {
+private:
+    std::shared_ptr<GameClock> clock_;
+    Signal<void()> tasks_;
+
 public:
     IOService() noexcept;
 
@@ -24,20 +28,18 @@ public:
     IOService& operator=(const IOService&) = delete;
 
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(const std::shared_ptr<GameClock>& clock);
+    initialize(const std::shared_ptr<GameClock>& clock);
 
     [[nodiscard]] std::unique_ptr<Error>
-    Shutdown();
+    shutdown();
 
-    void Step();
+    void step();
 
-    Connection ScheduleTask(std::function<void()>&& func);
+    [[nodiscard]] Connection
+    scheduleTask(std::function<void()>&& func);
 
-    TimePoint GetNowTime() const;
-
-private:
-    std::shared_ptr<GameClock> clock_;
-    Signal<void()> tasks_;
+    [[nodiscard]] TimePoint
+    getNowTime() const;
 };
 
 } // namespace pomdog
