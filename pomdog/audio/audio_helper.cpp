@@ -7,7 +7,7 @@
 namespace pomdog::detail::AudioHelper {
 
 [[nodiscard]] std::size_t
-GetSamples(std::size_t sizeInBytes, int bitsPerSample, AudioChannels channels) noexcept
+getSamples(std::size_t sizeInBytes, int bitsPerSample, AudioChannels channels) noexcept
 {
     POMDOG_ASSERT(bitsPerSample >= 8);
     POMDOG_ASSERT(bitsPerSample == 8 || bitsPerSample == 16 || bitsPerSample == 24 || bitsPerSample == 32);
@@ -26,7 +26,7 @@ GetSamples(std::size_t sizeInBytes, int bitsPerSample, AudioChannels channels) n
 }
 
 [[nodiscard]] Duration
-GetSampleDuration(std::size_t samples, int sampleRate) noexcept
+getSampleDuration(std::size_t samples, int sampleRate) noexcept
 {
     POMDOG_ASSERT(sampleRate > 0);
     POMDOG_ASSERT(sampleRate >= 8000);

@@ -40,11 +40,11 @@ std::unique_ptr<Error> AudioClipTest::initialize()
     }
     else {
         constexpr bool isLooped = false;
-        std::tie(soundEffect1, err) = audioEngine->CreateSoundEffect(audioClip, isLooped);
+        std::tie(soundEffect1, err) = audioEngine->createSoundEffect(audioClip, isLooped);
         if (err != nullptr) {
             return errors::wrap(std::move(err), "failed to create sound effect");
         }
-        soundEffect1->SetVolume(1.0f);
+        soundEffect1->setVolume(1.0f);
     }
 
     // NOTE: Load .ogg audio file.
@@ -53,15 +53,15 @@ std::unique_ptr<Error> AudioClipTest::initialize()
     }
     else {
         constexpr bool isLooped = true;
-        std::tie(soundEffect2, err) = audioEngine->CreateSoundEffect(audioClip, isLooped);
+        std::tie(soundEffect2, err) = audioEngine->createSoundEffect(audioClip, isLooped);
         if (err != nullptr) {
             return errors::wrap(std::move(err), "failed to create sound effect");
         }
-        soundEffect2->SetVolume(1.0f);
+        soundEffect2->setVolume(1.0f);
     }
 
     // NOTE: Set main audio volume.
-    audioEngine->SetMainVolume(0.3f);
+    audioEngine->setMainVolume(0.3f);
 
     auto mouse = gameHost->getMouse();
     connect(mouse->ButtonDown, [this](MouseButtons mouseButton) {
@@ -83,15 +83,15 @@ std::unique_ptr<Error> AudioClipTest::initialize()
         }
 
         if (pos.x > 0) {
-            soundEffect1->Stop();
-            soundEffect1->Play();
+            soundEffect1->stop();
+            soundEffect1->play();
         }
         else {
-            if (soundEffect2->GetState() != SoundState::Playing) {
-                soundEffect2->Play();
+            if (soundEffect2->getState() != SoundState::Playing) {
+                soundEffect2->play();
             }
             else {
-                soundEffect2->Pause();
+                soundEffect2->pause();
             }
         }
     });
@@ -127,7 +127,7 @@ void AudioClipTest::draw()
 
     const auto width = static_cast<float>(viewport.width);
     spriteBatch->Begin(commandList, projectionMatrix);
-    if (soundEffect2->GetState() != SoundState::Playing) {
+    if (soundEffect2->getState() != SoundState::Playing) {
         spriteFont->Draw(*spriteBatch, "Click here to play BGM", Vector2{-width * 0.5f + 10.0f, 20.0f}, Color::createWhite(), 0.0f, Vector2{0.0f, 0.5f}, 1.0f);
     }
     else {

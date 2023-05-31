@@ -262,7 +262,7 @@ GameHostLinux::initialize(const gpu::PresentationParameters& presentationParamet
 
     // NOTE: Create audio engine.
     audioEngine_ = std::make_shared<openal::AudioEngineAL>();
-    if (auto err = audioEngine_->Initialize(); err != nullptr) {
+    if (auto err = audioEngine_->initialize(); err != nullptr) {
         return errors::wrap(std::move(err), "failed to initialize AudioEngineAL");
     }
 

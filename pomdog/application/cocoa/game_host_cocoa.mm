@@ -208,7 +208,7 @@ GameHostCocoa::Impl::initialize(
 
     // NOTE: Create audio engine.
     audioEngine = std::make_shared<AudioEngineAL>();
-    if (auto err = audioEngine->Initialize(); err != nullptr) {
+    if (auto err = audioEngine->initialize(); err != nullptr) {
         return errors::wrap(std::move(err), "AudioEngineAL::Initialize() failed.");
     }
 

@@ -16,14 +16,14 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::detail::xaudio2 {
 namespace {
 
-void BuildXAudio2Buffer(
+void buildXAudio2Buffer(
     const AudioClipXAudio2& audioClip,
     bool isLooped,
     XAUDIO2_BUFFER& bufferDesc) noexcept
 {
     bufferDesc.Flags = XAUDIO2_END_OF_STREAM;
-    bufferDesc.AudioBytes = static_cast<UINT32>(audioClip.GetSizeInBytes());
-    bufferDesc.pAudioData = audioClip.GetData();
+    bufferDesc.AudioBytes = static_cast<UINT32>(audioClip.getSizeInBytes());
+    bufferDesc.pAudioData = audioClip.getData();
     bufferDesc.PlayBegin = 0;
     bufferDesc.PlayLength = 0;
     bufferDesc.LoopBegin = 0;
@@ -42,151 +42,152 @@ SoundEffectXAudio2::SoundEffectXAudio2() noexcept = default;
 
 SoundEffectXAudio2::~SoundEffectXAudio2()
 {
-    if (sourceVoice != nullptr) {
-        this->Stop();
-        sourceVoice->DestroyVoice();
-        sourceVoice = nullptr;
+    if (sourceVoice_ != nullptr) {
+        stop();
+        sourceVoice_->DestroyVoice();
+        sourceVoice_ = nullptr;
     }
 
-    audioClip.reset();
+    audioClip_.reset();
 }
 
 std::unique_ptr<Error>
-SoundEffectXAudio2::Initialize(
+SoundEffectXAudio2::initialize(
     IXAudio2* xAudio2,
     const std::shared_ptr<AudioClipXAudio2>& audioClipIn,
     bool isLoopedIn) noexcept
 {
-    audioClip = audioClipIn;
-    isLooped = isLoopedIn;
+    audioClip_ = audioClipIn;
+    isLooped_ = isLoopedIn;
 
     POMDOG_ASSERT(xAudio2 != nullptr);
-    POMDOG_ASSERT(audioClip != nullptr);
-    POMDOG_ASSERT(audioClip->GetWaveFormat() != nullptr);
+    POMDOG_ASSERT(audioClip_ != nullptr);
+    POMDOG_ASSERT(audioClip_->getWaveFormat() != nullptr);
 
-    if (auto hr = xAudio2->CreateSourceVoice(&sourceVoice, audioClip->GetWaveFormat()); FAILED(hr)) {
+    if (auto hr = xAudio2->CreateSourceVoice(&sourceVoice_, audioClip_->getWaveFormat()); FAILED(hr)) {
         return errors::make("CreateSourceVoice() failed: " + std::to_string(hr));
     }
 
     XAUDIO2_BUFFER bufferDesc;
-    BuildXAudio2Buffer(*audioClip, isLooped, bufferDesc);
+    buildXAudio2Buffer(*audioClip_, isLooped_, bufferDesc);
 
-    if (auto hr = sourceVoice->SubmitSourceBuffer(&bufferDesc); FAILED(hr)) {
-        sourceVoice->DestroyVoice();
-        sourceVoice = nullptr;
+    if (auto hr = sourceVoice_->SubmitSourceBuffer(&bufferDesc); FAILED(hr)) {
+        sourceVoice_->DestroyVoice();
+        sourceVoice_ = nullptr;
         return errors::make("SubmitSourceBuffer() failed: " + std::to_string(hr));
     }
 
     return nullptr;
 }
 
-void SoundEffectXAudio2::Pause() noexcept
+void SoundEffectXAudio2::pause() noexcept
 {
-    if (this->state == SoundState::Paused) {
+    if (state_ == SoundState::Paused) {
         return;
     }
 
-    POMDOG_ASSERT(sourceVoice);
-    sourceVoice->Stop();
-    this->state = SoundState::Paused;
+    POMDOG_ASSERT(sourceVoice_);
+    sourceVoice_->Stop();
+    state_ = SoundState::Paused;
 }
 
-void SoundEffectXAudio2::Play() noexcept
+void SoundEffectXAudio2::play() noexcept
 {
-    if (this->state == SoundState::Playing) {
+    if (state_ == SoundState::Playing) {
         return;
     }
 
-    POMDOG_ASSERT(sourceVoice);
-    sourceVoice->Start();
-    this->state = SoundState::Playing;
+    POMDOG_ASSERT(sourceVoice_);
+    sourceVoice_->Start();
+    state_ = SoundState::Playing;
 }
 
-void SoundEffectXAudio2::Stop() noexcept
+void SoundEffectXAudio2::stop() noexcept
 {
-    if (this->state == SoundState::Stopped) {
+    if (state_ == SoundState::Stopped) {
         return;
     }
 
-    POMDOG_ASSERT(sourceVoice);
-    sourceVoice->Stop();
-    sourceVoice->FlushSourceBuffers();
+    POMDOG_ASSERT(sourceVoice_);
+    sourceVoice_->Stop();
+    sourceVoice_->FlushSourceBuffers();
 
     XAUDIO2_BUFFER bufferDesc;
-    BuildXAudio2Buffer(*audioClip, isLooped, bufferDesc);
+    buildXAudio2Buffer(*audioClip_, isLooped_, bufferDesc);
 
-    sourceVoice->SubmitSourceBuffer(&bufferDesc);
-    this->state = SoundState::Stopped;
+    sourceVoice_->SubmitSourceBuffer(&bufferDesc);
+    state_ = SoundState::Stopped;
 }
 
-void SoundEffectXAudio2::Apply3D(
+void SoundEffectXAudio2::apply3D(
     [[maybe_unused]] const AudioListener& listener,
     [[maybe_unused]] const AudioEmitter& emitter) noexcept
 {
     POMDOG_ASSERT(false);
 }
 
-bool SoundEffectXAudio2::IsLooped() const noexcept
+bool SoundEffectXAudio2::isLooped() const noexcept
 {
-    return this->isLooped;
+    return isLooped_;
 }
 
-void SoundEffectXAudio2::ExitLoop() noexcept
+void SoundEffectXAudio2::exitLoop() noexcept
 {
-    if (!this->isLooped) {
+    if (!isLooped_) {
         return;
     }
 
-    POMDOG_ASSERT(sourceVoice != nullptr);
-    sourceVoice->ExitLoop();
-    this->isLooped = false;
+    POMDOG_ASSERT(sourceVoice_ != nullptr);
+    sourceVoice_->ExitLoop();
+    isLooped_ = false;
 }
 
-SoundState SoundEffectXAudio2::GetState() const noexcept
+SoundState
+SoundEffectXAudio2::getState() const noexcept
 {
-    return state;
+    return state_;
 }
 
-float SoundEffectXAudio2::GetPitch() const noexcept
+float SoundEffectXAudio2::getPitch() const noexcept
 {
-    return pitch;
+    return pitch_;
 }
 
-void SoundEffectXAudio2::SetPitch(float pitchIn) noexcept
+void SoundEffectXAudio2::setPitch(float pitchIn) noexcept
 {
     POMDOG_ASSERT(!std::isnan(pitchIn));
     POMDOG_ASSERT(pitchIn >= -1.0f);
     POMDOG_ASSERT(pitchIn <= 1.0f);
 
-    this->pitch = pitchIn;
+    pitch_ = pitchIn;
 
     // NOTE: Convert from pitch to nativePitch:
     // +1.0f => 2.0f (up one octave)
     //  0.0f => 1.0f (normal)
     // -1.0f => 0.5f (down one octave)
 
-    auto nativePitch = std::pow(2.0f, pitch);
+    const auto nativePitch = std::pow(2.0f, pitch_);
 
-    POMDOG_ASSERT(sourceVoice != nullptr);
+    POMDOG_ASSERT(sourceVoice_ != nullptr);
     POMDOG_ASSERT(nativePitch >= 0.0f);
-    sourceVoice->SetFrequencyRatio(nativePitch);
+    sourceVoice_->SetFrequencyRatio(nativePitch);
 }
 
-float SoundEffectXAudio2::GetVolume() const noexcept
+float SoundEffectXAudio2::getVolume() const noexcept
 {
-    return volume;
+    return volume_;
 }
 
-void SoundEffectXAudio2::SetVolume(float volumeIn) noexcept
+void SoundEffectXAudio2::setVolume(float volumeIn) noexcept
 {
     POMDOG_ASSERT(volumeIn >= 0.0f);
     POMDOG_ASSERT(volumeIn <= 1.0f);
 
-    this->volume = volumeIn;
+    volume_ = volumeIn;
 
-    POMDOG_ASSERT(sourceVoice != nullptr);
-    POMDOG_ASSERT(volume >= 0.0f);
-    sourceVoice->SetVolume(volume);
+    POMDOG_ASSERT(sourceVoice_ != nullptr);
+    POMDOG_ASSERT(volume_ >= 0.0f);
+    sourceVoice_->SetVolume(volume_);
 }
 
 } // namespace pomdog::detail::xaudio2

@@ -8,11 +8,11 @@ namespace pomdog {
 
 class AudioEmitter final {
 public:
-    Vector3 Forward;
-    Vector3 Position;
-    Vector3 Up;
-    Vector3 Velocity;
-    float DopplerScale;
+    Vector3 forward;
+    Vector3 position;
+    Vector3 up;
+    Vector3 velocity;
+    float dopplerScale;
 };
 
 } // namespace pomdog

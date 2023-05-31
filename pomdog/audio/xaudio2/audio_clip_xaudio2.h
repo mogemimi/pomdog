@@ -22,10 +22,10 @@ namespace pomdog::detail::xaudio2 {
 
 class AudioClipXAudio2 final : public AudioClip {
 private:
-    std::vector<std::uint8_t> audioData;
-    ::WAVEFORMATEX waveFormat;
-    Duration sampleDuration = Duration::zero();
-    AudioChannels channels = AudioChannels::Mono;
+    std::vector<std::uint8_t> audioData_;
+    ::WAVEFORMATEX waveFormat_;
+    Duration sampleDuration_ = Duration::zero();
+    AudioChannels channels_ = AudioChannels::Mono;
 
 public:
     AudioClipXAudio2() noexcept;
@@ -35,7 +35,7 @@ public:
 
     /// Initializes the audio clip.
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(
+    initialize(
         const void* audioData,
         std::size_t sizeInBytes,
         int sampleRate,
@@ -44,31 +44,31 @@ public:
 
     /// Gets the length of the audio clip in seconds.
     [[nodiscard]] Duration
-    GetLength() const noexcept override;
+    getLength() const noexcept override;
 
     /// Gets the number of samples per second.
     [[nodiscard]] int
-    GetSampleRate() const noexcept override;
+    getSampleRate() const noexcept override;
 
     /// Gets the number of bits per sample.
     [[nodiscard]] int
-    GetBitsPerSample() const noexcept override;
+    getBitsPerSample() const noexcept override;
 
     /// Gets the number of channels in the audip clip.
     [[nodiscard]] AudioChannels
-    GetChannels() const noexcept override;
+    getChannels() const noexcept override;
 
     /// Gets the pointer of the WAVEFORMATEX.
     [[nodiscard]] const WAVEFORMATEX*
-    GetWaveFormat() const noexcept;
+    getWaveFormat() const noexcept;
 
     /// Gets the pointer of the audio data.
     [[nodiscard]] const std::uint8_t*
-    GetData() const noexcept;
+    getData() const noexcept;
 
     /// Gets the size of the audio data in bytes.
     [[nodiscard]] std::size_t
-    GetSizeInBytes() const noexcept;
+    getSizeInBytes() const noexcept;
 };
 
 } // namespace pomdog::detail::xaudio2

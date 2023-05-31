@@ -30,14 +30,14 @@ namespace {
 #if (_WIN32_WINNT >= 0x0602 /*_WIN32_WINNT_WIN8*/)
 
 struct AudioDeviceDetails final {
-    std::wstring DeviceID;
-    std::wstring DisplayName;
-    bool IsDefault = false;
-    bool IsEnabled = false;
+    std::wstring deviceID;
+    std::wstring displayName;
+    bool isDefault = false;
+    bool isEnabled = false;
 };
 
 [[nodiscard]] std::tuple<std::vector<AudioDeviceDetails>, std::unique_ptr<Error>>
-EnumerateAudioDevices() noexcept
+enumerateAudioDevices() noexcept
 {
     std::vector<AudioDeviceDetails> result;
 
@@ -141,21 +141,21 @@ EnumerateAudioDevices() noexcept
         deviceInfo->get_Name(name.GetAddressOf());
 
         AudioDeviceDetails deviceDetails;
-        deviceDetails.DeviceID = id.GetRawBuffer(nullptr);
-        deviceDetails.DisplayName = name.GetRawBuffer(nullptr);
-        deviceDetails.IsDefault = false;
-        deviceDetails.IsEnabled = false;
+        deviceDetails.deviceID = id.GetRawBuffer(nullptr);
+        deviceDetails.displayName = name.GetRawBuffer(nullptr);
+        deviceDetails.isDefault = false;
+        deviceDetails.isEnabled = false;
 
         {
             ::boolean isDefault = FALSE;
             if (SUCCEEDED(deviceInfo->get_IsDefault(&isDefault))) {
-                deviceDetails.IsDefault = (isDefault == TRUE);
+                deviceDetails.isDefault = (isDefault == TRUE);
             }
         }
         {
             ::boolean isEnabled = FALSE;
             if (SUCCEEDED(deviceInfo->get_IsEnabled(&isEnabled))) {
-                deviceDetails.IsEnabled = (isEnabled == TRUE);
+                deviceDetails.isEnabled = (isEnabled == TRUE);
             }
         }
 
@@ -163,8 +163,8 @@ EnumerateAudioDevices() noexcept
     }
 
     std::stable_sort(std::begin(result), std::end(result), [](const auto& a, const auto& b) {
-        int priorityA = (a.IsEnabled ? 100 : 0) + (a.IsDefault ? 10 : 0);
-        int priorityB = (b.IsEnabled ? 100 : 0) + (b.IsDefault ? 10 : 0);
+        int priorityA = (a.isEnabled ? 100 : 0) + (a.isDefault ? 10 : 0);
+        int priorityB = (b.isEnabled ? 100 : 0) + (b.isDefault ? 10 : 0);
         return priorityA > priorityB;
     });
 
@@ -178,7 +178,7 @@ EnumerateAudioDevices() noexcept
 AudioEngineXAudio2::AudioEngineXAudio2() noexcept = default;
 
 std::unique_ptr<Error>
-AudioEngineXAudio2::Initialize() noexcept
+AudioEngineXAudio2::initialize() noexcept
 {
     if (auto hr = ::CoInitializeEx(nullptr, COINIT_MULTITHREADED); FAILED(hr)) {
         return errors::make("CoInitializeEx() failed: " + std::to_string(hr));
@@ -191,7 +191,7 @@ AudioEngineXAudio2::Initialize() noexcept
     constexpr UINT32 flags = 0;
 #endif
 
-    if (auto hr = ::XAudio2Create(&xAudio2, flags, XAUDIO2_DEFAULT_PROCESSOR); FAILED(hr)) {
+    if (auto hr = ::XAudio2Create(&xAudio2_, flags, XAUDIO2_DEFAULT_PROCESSOR); FAILED(hr)) {
         ::CoUninitialize();
         return errors::make("XAudio2Create() failed: " + std::to_string(hr));
     }
@@ -206,14 +206,14 @@ AudioEngineXAudio2::Initialize() noexcept
         debugConfig.LogFunctionName = FALSE;
         debugConfig.LogTiming = FALSE;
 
-        POMDOG_ASSERT(xAudio2 != nullptr);
-        xAudio2->SetDebugConfiguration(&debugConfig, nullptr);
+        POMDOG_ASSERT(xAudio2_ != nullptr);
+        xAudio2_->SetDebugConfiguration(&debugConfig, nullptr);
     }
 #endif
 
-    auto [audioDevices, enumerateErr] = EnumerateAudioDevices();
+    auto [audioDevices, enumerateErr] = enumerateAudioDevices();
     if (enumerateErr != nullptr) {
-        xAudio2.Reset();
+        xAudio2_.Reset();
         ::CoUninitialize();
         return errors::wrap(std::move(enumerateErr), "EnumerateAudioDevices() failed.");
     }
@@ -231,8 +231,8 @@ AudioEngineXAudio2::Initialize() noexcept
     deviceID = audioDevices.front().DeviceID.data();
 #endif
 
-    const auto hr = xAudio2->CreateMasteringVoice(
-        &mainVoice,
+    const auto hr = xAudio2_->CreateMasteringVoice(
+        &mainVoice_,
         XAUDIO2_DEFAULT_CHANNELS,
         XAUDIO2_DEFAULT_SAMPLERATE,
         0,
@@ -241,7 +241,7 @@ AudioEngineXAudio2::Initialize() noexcept
         AudioCategory_GameEffects);
 
     if (FAILED(hr)) {
-        xAudio2.Reset();
+        xAudio2_.Reset();
         ::CoUninitialize();
         return errors::make("CreateMasteringVoice() failed: " + std::to_string(hr));
     }
@@ -251,19 +251,19 @@ AudioEngineXAudio2::Initialize() noexcept
 
 AudioEngineXAudio2::~AudioEngineXAudio2() noexcept
 {
-    if (mainVoice != nullptr) {
-        mainVoice->DestroyVoice();
-        mainVoice = nullptr;
+    if (mainVoice_ != nullptr) {
+        mainVoice_->DestroyVoice();
+        mainVoice_ = nullptr;
     }
 
-    if (xAudio2 != nullptr) {
-        xAudio2.Reset();
+    if (xAudio2_ != nullptr) {
+        xAudio2_.Reset();
         ::CoUninitialize();
     }
 }
 
 std::tuple<std::shared_ptr<AudioClip>, std::unique_ptr<Error>>
-AudioEngineXAudio2::CreateAudioClip(
+AudioEngineXAudio2::createAudioClip(
     const void* audioData,
     std::size_t sizeInBytes,
     int sampleRate,
@@ -272,7 +272,7 @@ AudioEngineXAudio2::CreateAudioClip(
 {
     auto audioClip = std::make_shared<AudioClipXAudio2>();
 
-    if (auto err = audioClip->Initialize(audioData, sizeInBytes, sampleRate, bitsPerSample, channels); err != nullptr) {
+    if (auto err = audioClip->initialize(audioData, sizeInBytes, sampleRate, bitsPerSample, channels); err != nullptr) {
         return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize AudioClipXAudio2"));
     }
 
@@ -280,7 +280,7 @@ AudioEngineXAudio2::CreateAudioClip(
 }
 
 std::tuple<std::shared_ptr<SoundEffect>, std::unique_ptr<Error>>
-AudioEngineXAudio2::CreateSoundEffect(
+AudioEngineXAudio2::createSoundEffect(
     const std::shared_ptr<AudioClip>& audioClip,
     bool isLooped) noexcept
 {
@@ -290,33 +290,34 @@ AudioEngineXAudio2::CreateSoundEffect(
     auto nativeAudioClip = std::static_pointer_cast<AudioClipXAudio2>(audioClip);
     auto soundEffect = std::make_shared<SoundEffectXAudio2>();
 
-    if (auto err = soundEffect->Initialize(xAudio2.Get(), nativeAudioClip, isLooped); err != nullptr) {
+    if (auto err = soundEffect->initialize(xAudio2_.Get(), nativeAudioClip, isLooped); err != nullptr) {
         return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize SoundEffectXAudio2"));
     }
 
     return std::make_tuple(std::move(soundEffect), nullptr);
 }
 
-float AudioEngineXAudio2::GetMainVolume() const noexcept
+float AudioEngineXAudio2::getMainVolume() const noexcept
 {
     float volume = 0.0f;
-    if (xAudio2 && mainVoice != nullptr) {
-        mainVoice->GetVolume(&volume);
+    if (xAudio2_ && mainVoice_ != nullptr) {
+        mainVoice_->GetVolume(&volume);
     }
     return volume;
 }
 
-void AudioEngineXAudio2::SetMainVolume(float volumeIn) noexcept
+void AudioEngineXAudio2::setMainVolume(float volumeIn) noexcept
 {
-    if (xAudio2 && mainVoice != nullptr) {
-        mainVoice->SetVolume(math::Saturate(volumeIn), XAUDIO2_COMMIT_NOW);
+    if (xAudio2_ && mainVoice_ != nullptr) {
+        mainVoice_->SetVolume(math::saturate(volumeIn), XAUDIO2_COMMIT_NOW);
     }
 }
 
-IXAudio2* AudioEngineXAudio2::GetXAudio2Engine() const noexcept
+IXAudio2*
+AudioEngineXAudio2::getXAudio2Engine() const noexcept
 {
-    POMDOG_ASSERT(xAudio2 != nullptr);
-    return xAudio2.Get();
+    POMDOG_ASSERT(xAudio2_ != nullptr);
+    return xAudio2_.Get();
 }
 
 } // namespace pomdog::detail::xaudio2

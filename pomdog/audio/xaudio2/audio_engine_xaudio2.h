@@ -19,8 +19,8 @@ namespace pomdog::detail::xaudio2 {
 
 class AudioEngineXAudio2 final : public AudioEngine {
 private:
-    Microsoft::WRL::ComPtr<IXAudio2> xAudio2;
-    IXAudio2MasteringVoice* mainVoice = nullptr;
+    Microsoft::WRL::ComPtr<IXAudio2> xAudio2_;
+    IXAudio2MasteringVoice* mainVoice_ = nullptr;
 
 public:
     AudioEngineXAudio2() noexcept;
@@ -29,11 +29,11 @@ public:
 
     /// Initializes the audio engine.
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize() noexcept;
+    initialize() noexcept;
 
     /// Creates an audio clip.
     [[nodiscard]] std::tuple<std::shared_ptr<AudioClip>, std::unique_ptr<Error>>
-    CreateAudioClip(
+    createAudioClip(
         const void* audioData,
         std::size_t sizeInBytes,
         int sampleRate,
@@ -42,21 +42,21 @@ public:
 
     /// Creates a sound effect.
     [[nodiscard]] std::tuple<std::shared_ptr<SoundEffect>, std::unique_ptr<Error>>
-    CreateSoundEffect(
+    createSoundEffect(
         const std::shared_ptr<AudioClip>& audioClip,
         bool isLooped) noexcept override;
 
     /// Gets the main volume that affects all sound effects.
     [[nodiscard]] float
-    GetMainVolume() const noexcept override;
+    getMainVolume() const noexcept override;
 
     /// Sets the main volume that affects all sound effects.
     void
-    SetMainVolume(float volume) noexcept override;
+    setMainVolume(float volume) noexcept override;
 
     /// Gets the pointer of the IXAudio2 object.
     [[nodiscard]] IXAudio2*
-    GetXAudio2Engine() const noexcept;
+    getXAudio2Engine() const noexcept;
 };
 
 } // namespace pomdog::detail::xaudio2

@@ -8,10 +8,10 @@ namespace pomdog {
 
 class AudioListener final {
 public:
-    Vector3 Forward;
-    Vector3 Position;
-    Vector3 Up;
-    Vector3 Velocity;
+    Vector3 forward;
+    Vector3 position;
+    Vector3 up;
+    Vector3 velocity;
 };
 
 } // namespace pomdog

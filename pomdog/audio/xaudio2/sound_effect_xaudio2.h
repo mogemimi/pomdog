@@ -23,13 +23,13 @@ class AudioClipXAudio2;
 
 class SoundEffectXAudio2 final : public SoundEffect {
 private:
-    std::shared_ptr<AudioClipXAudio2> audioClip;
-    IXAudio2SourceVoice* sourceVoice = nullptr;
+    std::shared_ptr<AudioClipXAudio2> audioClip_;
+    IXAudio2SourceVoice* sourceVoice_ = nullptr;
 
-    float pitch = 0.0f;
-    float volume = 1.0f;
-    SoundState state = SoundState::Stopped;
-    bool isLooped = false;
+    float pitch_ = 0.0f;
+    float volume_ = 1.0f;
+    SoundState state_ = SoundState::Stopped;
+    bool isLooped_ = false;
 
 public:
     SoundEffectXAudio2() noexcept;
@@ -41,54 +41,54 @@ public:
 
     /// Initializes the audio engine.
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(
+    initialize(
         IXAudio2* xAudio2,
         const std::shared_ptr<AudioClipXAudio2>& audioClip,
         bool isLooped) noexcept;
 
     /// Pauses the sound.
     void
-    Pause() noexcept override;
+    pause() noexcept override;
 
     /// Plays or resumes playing the sound.
     void
-    Play() noexcept override;
+    play() noexcept override;
 
     /// Stops playing the sound immediately.
     void
-    Stop() noexcept override;
+    stop() noexcept override;
 
     /// Applies 3D positioning to the sound.
     void
-    Apply3D(const AudioListener& listener, const AudioEmitter& emitter) noexcept override;
+    apply3D(const AudioListener& listener, const AudioEmitter& emitter) noexcept override;
 
     /// Returns true if the audio clip is looping, false otherwise.
     [[nodiscard]] bool
-    IsLooped() const noexcept override;
+    isLooped() const noexcept override;
 
     /// Stops looping the sound when it reaches the end of the sound.
     void
-    ExitLoop() noexcept override;
+    exitLoop() noexcept override;
 
     /// Gets the current state of the audio source.
     [[nodiscard]] SoundState
-    GetState() const noexcept override;
+    getState() const noexcept override;
 
     /// Gets the pitch of the audio source.
     [[nodiscard]] float
-    GetPitch() const noexcept override;
+    getPitch() const noexcept override;
 
     /// Sets the pitch of the audio source (-1.0 to 1.0).
     void
-    SetPitch(float pitch) noexcept override;
+    setPitch(float pitch) noexcept override;
 
     /// Gets the volume of the audio source.
     [[nodiscard]] float
-    GetVolume() const noexcept override;
+    getVolume() const noexcept override;
 
     /// Sets the volume of the audio source (0.0 to 1.0).
     void
-    SetVolume(float volume) noexcept override;
+    setVolume(float volume) noexcept override;
 };
 
 } // namespace pomdog::detail::xaudio2

@@ -21,7 +21,7 @@ public:
 
     /// Creates an audio clip.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<AudioClip>, std::unique_ptr<Error>>
-    CreateAudioClip(
+    createAudioClip(
         const void* audioData,
         std::size_t sizeInBytes,
         int sampleRate,
@@ -30,17 +30,17 @@ public:
 
     /// Creates a sound effect.
     [[nodiscard]] virtual std::tuple<std::shared_ptr<SoundEffect>, std::unique_ptr<Error>>
-    CreateSoundEffect(
+    createSoundEffect(
         const std::shared_ptr<AudioClip>& audioClip,
         bool isLooped) noexcept = 0;
 
     /// Gets the main volume that affects all sound effects.
     [[nodiscard]] virtual float
-    GetMainVolume() const noexcept = 0;
+    getMainVolume() const noexcept = 0;
 
     /// Sets the main volume that affects all sound effects.
     virtual void
-    SetMainVolume(float volume) noexcept = 0;
+    setMainVolume(float volume) noexcept = 0;
 };
 
 } // namespace pomdog

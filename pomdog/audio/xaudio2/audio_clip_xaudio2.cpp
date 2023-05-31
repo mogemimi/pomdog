@@ -14,7 +14,8 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::detail::xaudio2 {
 namespace {
 
-[[nodiscard]] int GetChannelCount(AudioChannels channels) noexcept
+[[nodiscard]] int
+getChannelCount(AudioChannels channels) noexcept
 {
     static_assert(static_cast<int>(AudioChannels::Mono) == 1);
     static_assert(static_cast<int>(AudioChannels::Stereo) == 2);
@@ -26,7 +27,7 @@ namespace {
 AudioClipXAudio2::AudioClipXAudio2() noexcept = default;
 
 std::unique_ptr<Error>
-AudioClipXAudio2::Initialize(
+AudioClipXAudio2::initialize(
     const void* audioDataIn,
     std::size_t sizeInBytes,
     int sampleRate,
@@ -36,65 +37,68 @@ AudioClipXAudio2::Initialize(
     POMDOG_ASSERT(audioDataIn != nullptr);
     POMDOG_ASSERT(sizeInBytes > 0);
 
-    this->channels = channelsIn;
+    channels_ = channelsIn;
 
-    this->audioData.resize(sizeInBytes);
-    std::memcpy(audioData.data(), audioDataIn, sizeInBytes);
+    audioData_.resize(sizeInBytes);
+    std::memcpy(audioData_.data(), audioDataIn, sizeInBytes);
 
-    const auto channelCount = GetChannelCount(this->channels);
+    const auto channelCount = getChannelCount(channels_);
     const auto blockAlign = channelCount * (bitsPerSample / 8);
 
-    this->waveFormat.wFormatTag = WAVE_FORMAT_PCM;
-    this->waveFormat.nChannels = static_cast<WORD>(channelCount);
-    this->waveFormat.nSamplesPerSec = sampleRate;
-    this->waveFormat.nAvgBytesPerSec = sampleRate * blockAlign;
-    this->waveFormat.nBlockAlign = static_cast<WORD>(blockAlign);
-    this->waveFormat.wBitsPerSample = static_cast<WORD>(bitsPerSample);
-    this->waveFormat.cbSize = 0;
+    waveFormat_.wFormatTag = WAVE_FORMAT_PCM;
+    waveFormat_.nChannels = static_cast<WORD>(channelCount);
+    waveFormat_.nSamplesPerSec = sampleRate;
+    waveFormat_.nAvgBytesPerSec = sampleRate * blockAlign;
+    waveFormat_.nBlockAlign = static_cast<WORD>(blockAlign);
+    waveFormat_.wBitsPerSample = static_cast<WORD>(bitsPerSample);
+    waveFormat_.cbSize = 0;
 
-    const auto samples = detail::AudioHelper::GetSamples(sizeInBytes, bitsPerSample, channels);
-    this->sampleDuration = detail::AudioHelper::GetSampleDuration(samples, sampleRate);
+    const auto samples = detail::AudioHelper::getSamples(sizeInBytes, bitsPerSample, channels_);
+    sampleDuration_ = detail::AudioHelper::getSampleDuration(samples, sampleRate);
 
     return nullptr;
 }
 
 Duration
-AudioClipXAudio2::GetLength() const noexcept
+AudioClipXAudio2::getLength() const noexcept
 {
-    return sampleDuration;
+    return sampleDuration_;
 }
 
-int AudioClipXAudio2::GetSampleRate() const noexcept
+int AudioClipXAudio2::getSampleRate() const noexcept
 {
-    return waveFormat.nSamplesPerSec;
+    return waveFormat_.nSamplesPerSec;
 }
 
-int AudioClipXAudio2::GetBitsPerSample() const noexcept
+int AudioClipXAudio2::getBitsPerSample() const noexcept
 {
-    return waveFormat.wBitsPerSample;
+    return waveFormat_.wBitsPerSample;
 }
 
 AudioChannels
-AudioClipXAudio2::GetChannels() const noexcept
+AudioClipXAudio2::getChannels() const noexcept
 {
-    return channels;
+    return channels_;
 }
 
-const WAVEFORMATEX* AudioClipXAudio2::GetWaveFormat() const noexcept
+const WAVEFORMATEX*
+AudioClipXAudio2::getWaveFormat() const noexcept
 {
-    return &waveFormat;
+    return &waveFormat_;
 }
 
-const std::uint8_t* AudioClipXAudio2::GetData() const noexcept
+const std::uint8_t*
+AudioClipXAudio2::getData() const noexcept
 {
-    POMDOG_ASSERT(!audioData.empty());
-    return audioData.data();
+    POMDOG_ASSERT(!audioData_.empty());
+    return audioData_.data();
 }
 
-std::size_t AudioClipXAudio2::GetSizeInBytes() const noexcept
+std::size_t
+AudioClipXAudio2::getSizeInBytes() const noexcept
 {
-    POMDOG_ASSERT(!audioData.empty());
-    return sizeof(std::uint8_t) * audioData.size();
+    POMDOG_ASSERT(!audioData_.empty());
+    return sizeof(std::uint8_t) * audioData_.size();
 }
 
 } // namespace pomdog::detail::xaudio2

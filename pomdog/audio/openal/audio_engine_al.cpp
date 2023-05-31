@@ -13,40 +13,39 @@ AudioEngineAL::AudioEngineAL() noexcept = default;
 
 AudioEngineAL::~AudioEngineAL() noexcept
 {
-    auto currentContext = alcGetCurrentContext();
-    if (currentContext == this->context) {
+    if (const auto currentContext = alcGetCurrentContext(); currentContext == context_) {
         alcMakeContextCurrent(nullptr);
     }
 
-    if (this->context) {
-        alcDestroyContext(this->context);
-        this->context = nullptr;
+    if (context_ != nullptr) {
+        alcDestroyContext(context_);
+        context_ = nullptr;
     }
 
-    if (this->device) {
-        alcCloseDevice(this->device);
-        this->device = nullptr;
+    if (device_ != nullptr) {
+        alcCloseDevice(device_);
+        device_ = nullptr;
     }
 }
 
 std::unique_ptr<Error>
-AudioEngineAL::Initialize() noexcept
+AudioEngineAL::initialize() noexcept
 {
     // NOTE: Select the preferred device.
-    this->device = alcOpenDevice(nullptr);
+    device_ = alcOpenDevice(nullptr);
 
-    if (this->device == nullptr) {
+    if (device_ == nullptr) {
         // NOTE: Do not use alGetError() before initializing the OpenAL context.
         return errors::make("alcOpenDevice() failed");
     }
 
-    POMDOG_ASSERT(device != nullptr);
-    this->context = alcCreateContext(this->device, nullptr);
-    if (this->context == nullptr) {
+    POMDOG_ASSERT(device_ != nullptr);
+    context_ = alcCreateContext(device_, nullptr);
+    if (context_ == nullptr) {
         return errors::make("alcCreateContext() failed");
     }
 
-    alcMakeContextCurrent(this->context);
+    alcMakeContextCurrent(context_);
     if (auto err = alGetError(); err != AL_NO_ERROR) {
         return MakeOpenALError(std::move(err), "alcMakeContextCurrent() failed.");
     }
@@ -55,7 +54,7 @@ AudioEngineAL::Initialize() noexcept
 }
 
 std::tuple<std::shared_ptr<AudioClip>, std::unique_ptr<Error>>
-AudioEngineAL::CreateAudioClip(
+AudioEngineAL::createAudioClip(
     const void* audioData,
     std::size_t sizeInBytes,
     int sampleRate,
@@ -64,7 +63,7 @@ AudioEngineAL::CreateAudioClip(
 {
     auto audioClip = std::make_shared<AudioClipAL>();
 
-    if (auto err = audioClip->Initialize(audioData, sizeInBytes, sampleRate, bitsPerSample, channels); err != nullptr) {
+    if (auto err = audioClip->initialize(audioData, sizeInBytes, sampleRate, bitsPerSample, channels); err != nullptr) {
         return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize AudioClipXAudio2"));
     }
 
@@ -72,7 +71,7 @@ AudioEngineAL::CreateAudioClip(
 }
 
 std::tuple<std::shared_ptr<SoundEffect>, std::unique_ptr<Error>>
-AudioEngineAL::CreateSoundEffect(
+AudioEngineAL::createSoundEffect(
     const std::shared_ptr<AudioClip>& audioClip,
     bool isLooped) noexcept
 {
@@ -82,14 +81,14 @@ AudioEngineAL::CreateSoundEffect(
     auto nativeAudioClip = std::static_pointer_cast<AudioClipAL>(audioClip);
     auto soundEffect = std::make_shared<SoundEffectAL>();
 
-    if (auto err = soundEffect->Initialize(nativeAudioClip, isLooped); err != nullptr) {
+    if (auto err = soundEffect->initialize(nativeAudioClip, isLooped); err != nullptr) {
         return std::make_tuple(nullptr, errors::wrap(std::move(err), "failed to initialize SoundEffectXAudio2"));
     }
 
     return std::make_tuple(std::move(soundEffect), nullptr);
 }
 
-float AudioEngineAL::GetMainVolume() const noexcept
+float AudioEngineAL::getMainVolume() const noexcept
 {
     float volume = 0.0f;
     alGetListenerf(AL_GAIN, &volume);
@@ -97,7 +96,7 @@ float AudioEngineAL::GetMainVolume() const noexcept
     return volume;
 }
 
-void AudioEngineAL::SetMainVolume(float volume) noexcept
+void AudioEngineAL::setMainVolume(float volume) noexcept
 {
     POMDOG_ASSERT(volume >= 0.0f);
     alListenerf(AL_GAIN, volume);

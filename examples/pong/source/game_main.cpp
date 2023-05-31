@@ -31,7 +31,7 @@ std::unique_ptr<Error> GameMain::initialize()
     window->setTitle("Pomdog Pong");
 
     // NOTE: Set main volume
-    audioEngine->SetMainVolume(0.4f);
+    audioEngine->setMainVolume(0.4f);
 
     std::unique_ptr<Error> err;
 
@@ -59,7 +59,7 @@ std::unique_ptr<Error> GameMain::initialize()
         return errors::wrap(std::move(loadErr), "failed to load audio clip");
     }
     else {
-        std::tie(soundEffect1, err) = audioEngine->CreateSoundEffect(audioClip, false);
+        std::tie(soundEffect1, err) = audioEngine->createSoundEffect(audioClip, false);
         if (err != nullptr) {
             return errors::wrap(std::move(err), "failed to create sound effect");
         }
@@ -69,7 +69,7 @@ std::unique_ptr<Error> GameMain::initialize()
         return errors::wrap(std::move(loadErr), "failed to load audio clip");
     }
     else {
-        std::tie(soundEffect2, err) = audioEngine->CreateSoundEffect(audioClip, false);
+        std::tie(soundEffect2, err) = audioEngine->createSoundEffect(audioClip, false);
         if (err != nullptr) {
             return errors::wrap(std::move(err), "failed to create sound effect");
         }
@@ -79,7 +79,7 @@ std::unique_ptr<Error> GameMain::initialize()
         return errors::wrap(std::move(loadErr), "failed to load audio clip");
     }
     else {
-        std::tie(soundEffect3, err) = audioEngine->CreateSoundEffect(audioClip, false);
+        std::tie(soundEffect3, err) = audioEngine->createSoundEffect(audioClip, false);
         if (err != nullptr) {
             return errors::wrap(std::move(err), "failed to create sound effect");
         }
@@ -262,8 +262,8 @@ void GameMain::update()
         flipflop = !flipflop;
         ball.velocity = math::normalize(Vector2{(flipflop ? -1.0f : 1.0f), distribution(random)}) * speed;
 
-        soundEffect2->Stop();
-        soundEffect2->Play();
+        soundEffect2->stop();
+        soundEffect2->play();
 
         pongScene = PongScenes::Playing;
         break;
@@ -306,20 +306,20 @@ void GameMain::update()
         const float offset = 70.0f;
         if (position.x >= (halfWidth + offset)) {
             player1.SetScore(player1.GetScore() + 1);
-            soundEffect3->Stop();
-            soundEffect3->Play();
+            soundEffect3->stop();
+            soundEffect3->play();
             pongScene = PongScenes::StartWaiting;
         }
         else if (position.x <= -(halfWidth + offset)) {
             player2.SetScore(player2.GetScore() + 1);
-            soundEffect3->Stop();
-            soundEffect3->Play();
+            soundEffect3->stop();
+            soundEffect3->play();
             pongScene = PongScenes::StartWaiting;
         }
 
         if (collision) {
-            soundEffect1->Stop();
-            soundEffect1->Play();
+            soundEffect1->stop();
+            soundEffect1->play();
         }
         break;
     }

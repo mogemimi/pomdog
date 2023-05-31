@@ -18,21 +18,21 @@ SoundEffectAL::SoundEffectAL() noexcept = default;
 
 SoundEffectAL::~SoundEffectAL() noexcept
 {
-    if (source != std::nullopt) {
-        alDeleteSources(1, &*source);
-        source = std::nullopt;
+    if (source_ != std::nullopt) {
+        alDeleteSources(1, &*source_);
+        source_ = std::nullopt;
     }
 }
 
 std::unique_ptr<Error>
-SoundEffectAL::Initialize(
+SoundEffectAL::initialize(
     const std::shared_ptr<AudioClipAL>& audioClipIn,
     bool isLoopedIn) noexcept
 {
-    this->audioClip = audioClipIn;
-    this->isLooped = isLoopedIn;
+    audioClip_ = audioClipIn;
+    isLooped_ = isLoopedIn;
 
-    source = [] {
+    source_ = [] {
         ALuint nativeSource;
         alGenSources(1, &nativeSource);
         return std::make_optional(nativeSource);
@@ -41,14 +41,14 @@ SoundEffectAL::Initialize(
         return MakeOpenALError(std::move(err), "alGenSources() failed.");
     }
 
-    POMDOG_ASSERT(source != std::nullopt);
-    alSourcei(source.value(), AL_BUFFER, static_cast<ALint>(audioClip->GetNativeBuffer()));
+    POMDOG_ASSERT(source_ != std::nullopt);
+    alSourcei(source_.value(), AL_BUFFER, static_cast<ALint>(audioClip_->getNativeBuffer()));
     if (auto err = alGetError(); err != AL_NO_ERROR) {
         return MakeOpenALError(std::move(err), "alSourcei(AL_BUFFER) failed.");
     }
 
-    POMDOG_ASSERT(source != std::nullopt);
-    alSourcei(source.value(), AL_LOOPING, (isLooped ? AL_TRUE : AL_FALSE));
+    POMDOG_ASSERT(source_ != std::nullopt);
+    alSourcei(source_.value(), AL_LOOPING, (isLooped_ ? AL_TRUE : AL_FALSE));
     if (auto err = alGetError(); err != AL_NO_ERROR) {
         return MakeOpenALError(std::move(err), "alSourcei(AL_LOOPING) failed.");
     }
@@ -56,77 +56,77 @@ SoundEffectAL::Initialize(
     return nullptr;
 }
 
-void SoundEffectAL::Pause() noexcept
+void SoundEffectAL::pause() noexcept
 {
-    if (this->state == SoundState::Paused) {
+    if (state_ == SoundState::Paused) {
         return;
     }
 
-    POMDOG_ASSERT(source != std::nullopt);
-    alSourcePause(source.value());
+    POMDOG_ASSERT(source_ != std::nullopt);
+    alSourcePause(source_.value());
     POMDOG_CHECK_ERROR_OPENAL("alSourcePause()");
-    this->state = SoundState::Paused;
+    state_ = SoundState::Paused;
 }
 
-void SoundEffectAL::Play() noexcept
+void SoundEffectAL::play() noexcept
 {
-    if (this->state == SoundState::Playing) {
+    if (state_ == SoundState::Playing) {
         return;
     }
 
-    POMDOG_ASSERT(source != std::nullopt);
-    alSourcePlay(source.value());
+    POMDOG_ASSERT(source_ != std::nullopt);
+    alSourcePlay(source_.value());
     POMDOG_CHECK_ERROR_OPENAL("alSourcePlay()");
-    this->state = SoundState::Playing;
+    state_ = SoundState::Playing;
 }
 
-void SoundEffectAL::Stop() noexcept
+void SoundEffectAL::stop() noexcept
 {
-    if (this->state == SoundState::Stopped) {
+    if (state_ == SoundState::Stopped) {
         return;
     }
 
-    POMDOG_ASSERT(source != std::nullopt);
-    alSourceStop(source.value());
+    POMDOG_ASSERT(source_ != std::nullopt);
+    alSourceStop(source_.value());
     POMDOG_CHECK_ERROR_OPENAL("alSourceStop()");
 
-    POMDOG_ASSERT(source != std::nullopt);
-    alSourceRewind(source.value());
+    POMDOG_ASSERT(source_ != std::nullopt);
+    alSourceRewind(source_.value());
     POMDOG_CHECK_ERROR_OPENAL("alSourceRewind()");
-    this->state = SoundState::Stopped;
+    state_ = SoundState::Stopped;
 }
 
-void SoundEffectAL::Apply3D(const AudioListener& listener, const AudioEmitter& emitter) noexcept
+void SoundEffectAL::apply3D(const AudioListener& listener, const AudioEmitter& emitter) noexcept
 {
     {
-        POMDOG_ASSERT(source != std::nullopt);
-        alSourcefv(source.value(), AL_POSITION, emitter.Position.data());
+        POMDOG_ASSERT(source_ != std::nullopt);
+        alSourcefv(source_.value(), AL_POSITION, emitter.position.data());
         POMDOG_CHECK_ERROR_OPENAL("alSourcefv(AL_POSITION)");
 
-        alSourcefv(source.value(), AL_VELOCITY, emitter.Velocity.data());
+        alSourcefv(source_.value(), AL_VELOCITY, emitter.velocity.data());
         POMDOG_CHECK_ERROR_OPENAL("alSourcefv(AL_VELOCITY)");
 
-        alSourcefv(source.value(), AL_DIRECTION, emitter.Forward.data());
+        alSourcefv(source_.value(), AL_DIRECTION, emitter.forward.data());
         POMDOG_CHECK_ERROR_OPENAL("alSourcefv(AL_DIRECTION)");
 
-        POMDOG_ASSERT(emitter.DopplerScale >= 0.0f);
-        alDopplerFactor(emitter.DopplerScale);
+        POMDOG_ASSERT(emitter.dopplerScale >= 0.0f);
+        alDopplerFactor(emitter.dopplerScale);
         POMDOG_CHECK_ERROR_OPENAL("alDopplerFactor()");
     }
     {
         std::array<ALfloat, 6> orientation{{
-            listener.Forward.x,
-            listener.Forward.y,
-            listener.Forward.z,
-            listener.Up.x,
-            listener.Up.y,
-            listener.Up.z,
+            listener.forward.x,
+            listener.forward.y,
+            listener.forward.z,
+            listener.up.x,
+            listener.up.y,
+            listener.up.z,
         }};
 
-        alListenerfv(AL_POSITION, listener.Position.data());
+        alListenerfv(AL_POSITION, listener.position.data());
         POMDOG_CHECK_ERROR_OPENAL("alListenerfv(AL_POSITION)");
 
-        alListenerfv(AL_VELOCITY, listener.Velocity.data());
+        alListenerfv(AL_VELOCITY, listener.velocity.data());
         POMDOG_CHECK_ERROR_OPENAL("alListenerfv(AL_VELOCITY)");
 
         alListenerfv(AL_ORIENTATION, orientation.data());
@@ -134,65 +134,65 @@ void SoundEffectAL::Apply3D(const AudioListener& listener, const AudioEmitter& e
     }
 }
 
-bool SoundEffectAL::IsLooped() const noexcept
+bool SoundEffectAL::isLooped() const noexcept
 {
-    return this->isLooped;
+    return isLooped_;
 }
 
-void SoundEffectAL::ExitLoop() noexcept
+void SoundEffectAL::exitLoop() noexcept
 {
-    if (!this->isLooped) {
+    if (!isLooped_) {
         return;
     }
 
-    POMDOG_ASSERT(source != std::nullopt);
-    alSourcei(source.value(), AL_LOOPING, AL_FALSE);
+    POMDOG_ASSERT(source_ != std::nullopt);
+    alSourcei(source_.value(), AL_LOOPING, AL_FALSE);
     POMDOG_CHECK_ERROR_OPENAL("alSourcei()");
-    this->isLooped = false;
+    isLooped_ = false;
 }
 
-SoundState SoundEffectAL::GetState() const noexcept
+SoundState SoundEffectAL::getState() const noexcept
 {
-    return state;
+    return state_;
 }
 
-float SoundEffectAL::GetPitch() const noexcept
+float SoundEffectAL::getPitch() const noexcept
 {
-    return pitch;
+    return pitch_;
 }
 
-void SoundEffectAL::SetPitch(float pitchIn) noexcept
+void SoundEffectAL::setPitch(float pitchIn) noexcept
 {
     POMDOG_ASSERT(pitchIn >= -1.0f);
     POMDOG_ASSERT(pitchIn <= 1.0f);
-    this->pitch = pitchIn;
+    pitch_ = pitchIn;
 
     // NOTE: Convert from pitch to nativePitch:
     //  0.0f => 1.0f
     // -1.0f => 0.5f
     // +1.0f => 1.5f
-    const auto nativePitch = 1.0f + (0.5f * pitch);
+    const auto nativePitch = 1.0f + (0.5f * pitch_);
 
-    POMDOG_ASSERT(source != std::nullopt);
+    POMDOG_ASSERT(source_ != std::nullopt);
     POMDOG_ASSERT(nativePitch > 0.0f);
-    alSourcef(source.value(), AL_PITCH, nativePitch);
+    alSourcef(source_.value(), AL_PITCH, nativePitch);
     POMDOG_CHECK_ERROR_OPENAL("alSourcef()");
 }
 
-float SoundEffectAL::GetVolume() const noexcept
+float SoundEffectAL::getVolume() const noexcept
 {
-    return volume;
+    return volume_;
 }
 
-void SoundEffectAL::SetVolume(float volumeIn) noexcept
+void SoundEffectAL::setVolume(float volumeIn) noexcept
 {
     POMDOG_ASSERT(volumeIn >= 0.0f);
     POMDOG_ASSERT(volumeIn <= 1.0f);
-    this->volume = volumeIn;
+    volume_ = volumeIn;
 
-    POMDOG_ASSERT(source != std::nullopt);
-    POMDOG_ASSERT(volume >= 0.0f);
-    alSourcef(source.value(), AL_GAIN, volume);
+    POMDOG_ASSERT(source_ != std::nullopt);
+    POMDOG_ASSERT(volume_ >= 0.0f);
+    alSourcef(source_.value(), AL_GAIN, volume_);
     POMDOG_CHECK_ERROR_OPENAL("alSourcef()");
 }
 

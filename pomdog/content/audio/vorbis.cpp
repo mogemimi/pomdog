@@ -87,7 +87,7 @@ Load(const std::shared_ptr<AudioEngine>& audioEngine, const std::string& filenam
     POMDOG_ASSERT(audioEngine != nullptr);
 
     // NOTE: Create audio clip.
-    auto [audioClip, audioClipErr] = audioEngine->CreateAudioClip(
+    auto [audioClip, audioClipErr] = audioEngine->createAudioClip(
         audioData.data(),
         audioData.size(),
         samplesPerSec,

@@ -219,7 +219,7 @@ Load(const std::shared_ptr<AudioEngine>& audioEngine, std::ifstream&& stream, st
     POMDOG_ASSERT(audioEngine != nullptr);
 
     // NOTE: Create audio clip.
-    auto [audioClip, audioClipErr] = audioEngine->CreateAudioClip(
+    auto [audioClip, audioClipErr] = audioEngine->createAudioClip(
         audioData.data(),
         audioData.size(),
         static_cast<int>(waveFormat.PCMFormat.SamplesPerSec),
