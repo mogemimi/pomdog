@@ -113,7 +113,7 @@ TCPStreamPOSIX::write(const ArrayView<std::uint8_t const>& data)
     auto result = ::send(descriptor_, data.data(), data.size(), flags);
 
     if (result == -1) {
-        auto errorCode = detail::ToErrc(errno);
+        const auto errorCode = detail::toErrc(errno);
         return errors::makeIOError(errorCode, "write failed with error");
     }
 
@@ -157,7 +157,7 @@ void TCPStreamPOSIX::readEventLoop()
 
     ssize_t readSize = ::recv(descriptor_, buffer.data(), buffer.size(), flags);
     if (readSize < 0) {
-        const auto errorCode = detail::ToErrc(errno);
+        const auto errorCode = detail::toErrc(errno);
         if (errorCode == std::errc::resource_unavailable_try_again || errorCode == std::errc::operation_would_block) {
             // NOTE: There is no data to be read yet
             return;

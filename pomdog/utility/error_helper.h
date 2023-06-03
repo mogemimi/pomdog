@@ -10,6 +10,6 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail {
 
-[[nodiscard]] std::errc ToErrc(int err) noexcept;
+[[nodiscard]] std::errc toErrc(int err) noexcept;
 
 } // namespace pomdog::detail

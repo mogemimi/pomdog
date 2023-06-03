@@ -4,7 +4,7 @@
 
 namespace pomdog::detail {
 
-std::errc ToErrc(int err) noexcept
+[[nodiscard]] std::errc toErrc(int err) noexcept
 {
     static_assert(std::errc::bad_address == static_cast<std::errc>(EFAULT));
     static_assert(std::errc::bad_file_descriptor == static_cast<std::errc>(EBADF));

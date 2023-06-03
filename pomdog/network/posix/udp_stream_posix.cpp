@@ -141,7 +141,7 @@ UDPStreamPOSIX::write(const ArrayView<std::uint8_t const>& data)
     auto result = ::send(descriptor_, data.data(), data.size(), flags);
 
     if (result == -1) {
-        auto errorCode = detail::ToErrc(errno);
+        const auto errorCode = detail::toErrc(errno);
         return errors::makeIOError(errorCode, "send failed with error");
     }
 
@@ -187,7 +187,7 @@ UDPStreamPOSIX::writeTo(const ArrayView<std::uint8_t const>& data, std::string_v
             static_cast<int>(info->ai_addrlen));
 
         if (result == -1) {
-            lastError = detail::ToErrc(errno);
+            lastError = detail::toErrc(errno);
             continue;
         }
         lastError = std::nullopt;
@@ -215,7 +215,7 @@ void UDPStreamPOSIX::readEventLoop()
 
     const auto readSize = ::recv(descriptor_, buffer.data(), buffer.size(), flags);
     if (readSize == -1) {
-        const auto errorCode = detail::ToErrc(errno);
+        const auto errorCode = detail::toErrc(errno);
         if (errorCode == std::errc::resource_unavailable_try_again || errorCode == std::errc::operation_would_block) {
             // NOTE: There is no data to be read yet
             return;
@@ -255,7 +255,7 @@ void UDPStreamPOSIX::readFromEventLoop()
         &addrLen);
 
     if (readSize == -1) {
-        const auto errorCode = detail::ToErrc(errno);
+        const auto errorCode = detail::toErrc(errno);
         if (errorCode == std::errc::resource_unavailable_try_again || errorCode == std::errc::operation_would_block) {
             // NOTE: There is no data to be read yet
             return;

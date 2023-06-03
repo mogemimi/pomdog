@@ -22,7 +22,7 @@ CreateNewDirectory(const std::string& path) noexcept
         return errors::make("path is empty");
     }
     if (::mkdir(path.data(), S_IRWXU) != 0) {
-        auto err = detail::ToErrc(errno);
+        const auto err = detail::toErrc(errno);
         return errors::makeIOError(err, "::mkdir() failed");
     }
     return nullptr;
@@ -47,7 +47,7 @@ CreateDirectories(const std::string& path) noexcept
         if (*iter == '/') {
             *iter = 0;
             if (::mkdir(tmp.data(), S_IRWXU) != 0) {
-                auto err = detail::ToErrc(errno);
+                const auto err = detail::toErrc(errno);
                 return errors::makeIOError(err, "::mkdir() failed");
             }
             *iter = '/';
@@ -55,7 +55,7 @@ CreateDirectories(const std::string& path) noexcept
     }
 
     if (::mkdir(tmp.data(), S_IRWXU) != 0) {
-        auto err = detail::ToErrc(errno);
+        const auto err = detail::toErrc(errno);
         return errors::makeIOError(err, "::mkdir() failed");
     }
     return nullptr;
@@ -82,7 +82,7 @@ GetFileSize(const std::string& path) noexcept
 {
     struct ::stat st;
     if (::stat(path.data(), &st) != 0) {
-        auto err = detail::ToErrc(errno);
+        const auto err = detail::toErrc(errno);
         return std::make_tuple(0, errors::makeIOError(err, "::stat() failed"));
     }
     return std::make_tuple(st.st_size, nullptr);
@@ -126,7 +126,7 @@ GetCurrentWorkingDirectory() noexcept
 {
     char dir[PATH_MAX];
     if (::getcwd(dir, sizeof(dir)) == nullptr) {
-        auto err = detail::ToErrc(errno);
+        const auto err = detail::toErrc(errno);
         return std::make_tuple("", errors::makeIOError(err, "::getcwd() failed"));
     }
     return std::make_tuple(dir, nullptr);

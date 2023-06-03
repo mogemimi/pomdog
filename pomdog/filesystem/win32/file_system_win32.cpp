@@ -53,7 +53,7 @@ GetFileSize(const std::string& path) noexcept
 {
     struct ::stat st;
     if (int result = ::stat(path.data(), &st); result != 0) {
-        auto err = detail::ToErrc(errno);
+        const auto err = detail::toErrc(errno);
         return std::make_tuple(0, errors::make(err, "::stat() failed"));
     }
     return std::make_tuple(st.st_size, nullptr);

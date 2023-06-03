@@ -75,25 +75,25 @@ connectSocketPOSIX(
         // NOTE: Create a SOCKET for connecting to server
         descriptor = ::socket(info->ai_family, info->ai_socktype, info->ai_protocol);
         if (descriptor < 0) {
-            socketLastError = detail::ToErrc(errno);
+            socketLastError = detail::toErrc(errno);
             continue;
         }
 
         // NOTE: Set non-blocking mode
         const int socketOpt = ::fcntl(descriptor, F_GETFL, 0);
         if (socketOpt < 0) {
-            socketLastError = detail::ToErrc(errno);
+            socketLastError = detail::toErrc(errno);
             continue;
         }
         if (::fcntl(descriptor, F_SETFL, socketOpt | O_NONBLOCK) < 0) {
-            socketLastError = detail::ToErrc(errno);
+            socketLastError = detail::toErrc(errno);
             continue;
         }
 
         // NOTE: Connect to server
         int result = ::connect(descriptor, info->ai_addr, static_cast<int>(info->ai_addrlen));
         if (result != 0) {
-            socketLastError = detail::ToErrc(errno);
+            socketLastError = detail::toErrc(errno);
 
             if (socketLastError == std::errc::operation_in_progress) {
                 fd_set waitSet;
@@ -178,25 +178,25 @@ bindSocketPOSIX(
         // NOTE: Create a SOCKET for connecting to server
         descriptor = ::socket(info->ai_family, info->ai_socktype, info->ai_protocol);
         if (descriptor < 0) {
-            socketLastError = detail::ToErrc(errno);
+            socketLastError = detail::toErrc(errno);
             continue;
         }
 
         // NOTE: Set non-blocking mode
         const int socketOpt = ::fcntl(descriptor, F_GETFL, 0);
         if (socketOpt < 0) {
-            socketLastError = detail::ToErrc(errno);
+            socketLastError = detail::toErrc(errno);
             continue;
         }
         if (::fcntl(descriptor, F_SETFL, socketOpt | O_NONBLOCK) < 0) {
-            socketLastError = detail::ToErrc(errno);
+            socketLastError = detail::toErrc(errno);
             continue;
         }
 
         // NOTE: Setup the listening socket
         int result = ::bind(descriptor, info->ai_addr, static_cast<int>(info->ai_addrlen));
         if (result != 0) {
-            socketLastError = detail::ToErrc(errno);
+            socketLastError = detail::toErrc(errno);
             ::close(descriptor);
             descriptor = -1;
             continue;
