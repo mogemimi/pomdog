@@ -17,12 +17,13 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail {
+namespace pomdog::detail::gamepad_mappings {
 namespace {
 
 #include "SDL_GameControllerDB.h"
 
-std::tuple<std::string, const char*> Parse(const char* source, char delimiter)
+[[nodiscard]] std::tuple<std::string, const char*>
+parse(const char* source, char delimiter)
 {
     std::string identifier;
     while (*source != 0) {
@@ -36,14 +37,14 @@ std::tuple<std::string, const char*> Parse(const char* source, char delimiter)
     return std::make_tuple(identifier, source);
 }
 
-void ParseMapping(const char* source, GamepadMappings& mappings, std::string& name)
+void parseMapping(const char* source, GamepadMappings& mappings, std::string& name)
 {
     std::string uuid;
     std::string key;
     std::string index;
 
-    std::tie(uuid, source) = Parse(source, ',');
-    std::tie(name, source) = Parse(source, ',');
+    std::tie(uuid, source) = parse(source, ',');
+    std::tie(name, source) = parse(source, ',');
 
     const std::unordered_map<std::string, std::tuple<ButtonKind, ThumbStickKind>> dict = {
         {"a", std::make_tuple(ButtonKind::A, ThumbStickKind::Invalid)},
@@ -70,8 +71,8 @@ void ParseMapping(const char* source, GamepadMappings& mappings, std::string& na
     };
 
     while (*source != 0) {
-        std::tie(key, source) = Parse(source, ':');
-        std::tie(index, source) = Parse(source, ',');
+        std::tie(key, source) = parse(source, ':');
+        std::tie(index, source) = parse(source, ',');
 
         auto kind = dict.find(key);
         if (kind == std::end(dict)) {
@@ -127,7 +128,8 @@ void ParseMapping(const char* source, GamepadMappings& mappings, std::string& na
     }
 }
 
-ButtonKind ToButtonIndex(int physicalIndex, GamepadButtonMappings mappings)
+[[nodiscard]] ButtonKind
+toButtonIndex(int physicalIndex, GamepadButtonMappings mappings)
 {
     if ((physicalIndex < 0) || (physicalIndex >= static_cast<int>(mappings.size()))) {
         return ButtonKind::Invalid;
@@ -140,14 +142,14 @@ ButtonKind ToButtonIndex(int physicalIndex, GamepadButtonMappings mappings)
 } // namespace
 
 [[nodiscard]] ButtonState*
-GetButton(GamepadState& state, const GamepadButtonMappings& mappings, int physicalIndex) noexcept
+getButton(GamepadState& state, const GamepadButtonMappings& mappings, int physicalIndex) noexcept
 {
-    const auto kind = ToButtonIndex(physicalIndex, mappings);
-    return GetButton(state, kind);
+    const auto kind = toButtonIndex(physicalIndex, mappings);
+    return getButton(state, kind);
 }
 
 [[nodiscard]] ButtonState*
-GetButton(GamepadState& state, ButtonKind kind) noexcept
+getButton(GamepadState& state, ButtonKind kind) noexcept
 {
     if (kind == ButtonKind::Invalid) {
         return nullptr;
@@ -155,25 +157,25 @@ GetButton(GamepadState& state, ButtonKind kind) noexcept
     const auto index = static_cast<int>(kind);
 
     std::array<ButtonState*, 19> buttons = {{
-        &state.Buttons.A,
-        &state.Buttons.B,
-        &state.Buttons.X,
-        &state.Buttons.Y,
-        &state.Buttons.LeftShoulder,
-        &state.Buttons.RightShoulder,
-        &state.Buttons.LeftTrigger,
-        &state.Buttons.RightTrigger,
-        &state.Buttons.LeftMenu,
-        &state.Buttons.RightMenu,
-        &state.Buttons.LeftStick,
-        &state.Buttons.RightStick,
-        &state.Buttons.Guide,
-        &state.Buttons.Extra1,
-        &state.Buttons.Extra2,
-        &state.DPad.Up,
-        &state.DPad.Down,
-        &state.DPad.Left,
-        &state.DPad.Right,
+        &state.buttons.a,
+        &state.buttons.b,
+        &state.buttons.x,
+        &state.buttons.y,
+        &state.buttons.leftShoulder,
+        &state.buttons.rightShoulder,
+        &state.buttons.leftTrigger,
+        &state.buttons.rightTrigger,
+        &state.buttons.leftMenu,
+        &state.buttons.rightMenu,
+        &state.buttons.leftStick,
+        &state.buttons.rightStick,
+        &state.buttons.guide,
+        &state.buttons.extra1,
+        &state.buttons.extra2,
+        &state.dpad.up,
+        &state.dpad.down,
+        &state.dpad.left,
+        &state.dpad.right,
     }};
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(index < static_cast<int>(buttons.size()));
@@ -181,7 +183,7 @@ GetButton(GamepadState& state, ButtonKind kind) noexcept
 }
 
 [[nodiscard]] float*
-GetThumbStick(GamepadState& state, ThumbStickKind kind) noexcept
+getThumbStick(GamepadState& state, ThumbStickKind kind) noexcept
 {
     if (kind == ThumbStickKind::Invalid) {
         return nullptr;
@@ -189,10 +191,10 @@ GetThumbStick(GamepadState& state, ThumbStickKind kind) noexcept
     const auto index = static_cast<int>(kind);
 
     std::array<float*, 4> axes = {{
-        &state.ThumbSticks.Left.x,
-        &state.ThumbSticks.Left.y,
-        &state.ThumbSticks.Right.x,
-        &state.ThumbSticks.Right.y,
+        &state.thumbSticks.left.x,
+        &state.thumbSticks.left.y,
+        &state.thumbSticks.right.x,
+        &state.thumbSticks.right.y,
     }};
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(index < static_cast<int>(axes.size()));
@@ -200,14 +202,14 @@ GetThumbStick(GamepadState& state, ThumbStickKind kind) noexcept
 }
 
 [[nodiscard]] bool*
-HasButton(GamepadCapabilities& caps, const GamepadButtonMappings& mappings, int physicalIndex) noexcept
+hasButton(GamepadCapabilities& caps, const GamepadButtonMappings& mappings, int physicalIndex) noexcept
 {
-    const auto kind = ToButtonIndex(physicalIndex, mappings);
-    return HasButton(caps, kind);
+    const auto kind = toButtonIndex(physicalIndex, mappings);
+    return hasButton(caps, kind);
 }
 
 [[nodiscard]] bool*
-HasButton(GamepadCapabilities& caps, ButtonKind kind) noexcept
+hasButton(GamepadCapabilities& caps, ButtonKind kind) noexcept
 {
     if (kind == ButtonKind::Invalid) {
         return nullptr;
@@ -215,21 +217,21 @@ HasButton(GamepadCapabilities& caps, ButtonKind kind) noexcept
     const auto index = static_cast<int>(kind);
 
     std::array<bool*, 19> buttons = {{
-        &caps.HasAButton,
-        &caps.HasBButton,
-        &caps.HasXButton,
-        &caps.HasYButton,
-        &caps.HasLeftShoulderButton,
-        &caps.HasRightShoulderButton,
-        &caps.HasLeftTrigger,
-        &caps.HasRightTrigger,
-        &caps.HasLeftMenuButton,
-        &caps.HasRightMenuButton,
-        &caps.HasLeftStickButton,
-        &caps.HasRightStickButton,
-        &caps.HasGuideButton,
-        &caps.HasExtra1Button,
-        &caps.HasExtra2Button,
+        &caps.hasAButton,
+        &caps.hasBButton,
+        &caps.hasXButton,
+        &caps.hasYButton,
+        &caps.hasLeftShoulderButton,
+        &caps.hasRightShoulderButton,
+        &caps.hasLeftTrigger,
+        &caps.hasRightTrigger,
+        &caps.hasLeftMenuButton,
+        &caps.hasRightMenuButton,
+        &caps.hasLeftStickButton,
+        &caps.hasRightStickButton,
+        &caps.hasGuideButton,
+        &caps.hasExtra1Button,
+        &caps.hasExtra2Button,
         nullptr, // DPad.Up
         nullptr, // DPad.Down
         nullptr, // DPad.Left
@@ -241,7 +243,7 @@ HasButton(GamepadCapabilities& caps, ButtonKind kind) noexcept
 }
 
 [[nodiscard]] bool*
-HasThumbStick(GamepadCapabilities& caps, ThumbStickKind kind) noexcept
+hasThumbStick(GamepadCapabilities& caps, ThumbStickKind kind) noexcept
 {
     if (kind == ThumbStickKind::Invalid) {
         return nullptr;
@@ -249,10 +251,10 @@ HasThumbStick(GamepadCapabilities& caps, ThumbStickKind kind) noexcept
     const auto index = static_cast<int>(kind);
 
     std::array<bool*, 4> axes = {{
-        &caps.HasLeftXThumbStick,
-        &caps.HasLeftYThumbStick,
-        &caps.HasRightXThumbStick,
-        &caps.HasRightYThumbStick,
+        &caps.hasLeftXThumbStick,
+        &caps.hasLeftYThumbStick,
+        &caps.hasRightXThumbStick,
+        &caps.hasRightYThumbStick,
     }};
     POMDOG_ASSERT(index >= 0);
     POMDOG_ASSERT(index < static_cast<int>(axes.size()));
@@ -260,13 +262,13 @@ HasThumbStick(GamepadCapabilities& caps, ThumbStickKind kind) noexcept
 }
 
 [[nodiscard]] std::tuple<GamepadMappings, std::string>
-GetMappings(const GamepadUUID& uuid) noexcept
+getMappings(const GamepadUUID& uuid) noexcept
 {
-    return GetMappings(uuid.ToString());
+    return getMappings(uuid.toString());
 }
 
 [[nodiscard]] std::tuple<GamepadMappings, std::string>
-GetMappings(const std::string& uuidString) noexcept
+getMappings(const std::string& uuidString) noexcept
 {
     GamepadMappings mappings;
 #if defined(POMDOG_PLATFORM_LINUX)
@@ -353,11 +355,11 @@ GetMappings(const std::string& uuidString) noexcept
                 axis.positiveTrigger = ButtonKind::Invalid;
                 axis.negativeTrigger = ButtonKind::Invalid;
             }
-            ParseMapping(m, mappings, deviceName);
+            parseMapping(m, mappings, deviceName);
             break;
         }
     }
     return std::make_tuple(mappings, deviceName);
 }
 
-} // namespace pomdog::detail
+} // namespace pomdog::detail::gamepad_mappings

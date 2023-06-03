@@ -24,7 +24,8 @@ public:
 
     virtual ~Mouse();
 
-    virtual MouseState GetState() const = 0;
+    [[nodiscard]] virtual MouseState
+    getState() const = 0;
 
     Signal<void(const Point2D& position)> Moved;
 

@@ -15,9 +15,11 @@ class POMDOG_EXPORT Gamepad {
 public:
     virtual ~Gamepad();
 
-    virtual GamepadCapabilities GetCapabilities(PlayerIndex index) const = 0;
+    [[nodiscard]] virtual GamepadCapabilities
+    getCapabilities(PlayerIndex index) const = 0;
 
-    virtual GamepadState GetState(PlayerIndex index) const = 0;
+    [[nodiscard]] virtual GamepadState
+    getState(PlayerIndex index) const = 0;
 
     Signal<void(PlayerIndex index, const GamepadCapabilities& caps)> Connected;
 

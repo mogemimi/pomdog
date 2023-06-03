@@ -6,16 +6,20 @@
 #include "pomdog/input/keys.h"
 #include "pomdog/logging/log.h"
 #include "pomdog/utility/scope_guard.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <X11/XKBlib.h>
 #include <X11/Xutil.h>
 #include <algorithm>
 #include <cstring>
 #include <map>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail::x11 {
 namespace {
 
-Keys TranslateKey(Display* display, unsigned int keyCode)
+[[nodiscard]] Keys
+translateKey(Display* display, unsigned int keyCode)
 {
     if (keyCode < 8 || keyCode > 255) {
         return Keys::Unknown;
@@ -262,7 +266,7 @@ Keys TranslateKey(Display* display, unsigned int keyCode)
     return Keys::Unknown;
 }
 
-void BuildKeyMap(Display* display, std::array<Keys, 256>& keys)
+void buildKeyMap(Display* display, std::array<Keys, 256>& keys)
 {
     std::fill(std::begin(keys), std::end(keys), Keys::Unknown);
 
@@ -350,12 +354,13 @@ void BuildKeyMap(Display* display, std::array<Keys, 256>& keys)
 
     for (unsigned int keyCode = 0; keyCode < keys.size(); ++keyCode) {
         if (keys[keyCode] == Keys::Unknown) {
-            keys[keyCode] = TranslateKey(display, keyCode);
+            keys[keyCode] = translateKey(display, keyCode);
         }
     }
 }
 
-Keys ToKeys(const std::array<Keys, 256>& keys, unsigned int keyCode)
+[[nodiscard]] Keys
+toKeys(const std::array<Keys, 256>& keys, unsigned int keyCode)
 {
     if (keyCode < 8 || keyCode > keys.size()) {
         return Keys::Unknown;
@@ -370,29 +375,29 @@ Keys ToKeys(const std::array<Keys, 256>& keys, unsigned int keyCode)
 KeyboardX11::KeyboardX11(::Display* display)
 {
     POMDOG_ASSERT(display != nullptr);
-    BuildKeyMap(display, mappedKeys);
+    buildKeyMap(display, mappedKeys_);
 }
 
-KeyboardState KeyboardX11::GetState() const
+KeyboardState KeyboardX11::getState() const
 {
-    return keyboardState;
+    return keyboardState_;
 }
 
-void KeyboardX11::HandleEvent(XEvent& event, ::XIC inputContext)
+void KeyboardX11::handleEvent(XEvent& event, ::XIC inputContext)
 {
     if (event.type != KeyPress && event.type != KeyRelease) {
         return;
     }
 
-    auto key = ToKeys(mappedKeys, event.xkey.keycode);
-    auto keyState = (event.type == KeyPress ? KeyState::Down : KeyState::Up);
+    const auto key = toKeys(mappedKeys_, event.xkey.keycode);
+    const auto keyState = (event.type == KeyPress ? KeyState::Down : KeyState::Up);
 
     if (key == Keys::Unknown) {
         return;
     }
 
-    bool isKeyDown = keyboardState.IsKeyDown(key);
-    keyboardState.SetKey(key, keyState);
+    const bool isKeyDown = keyboardState_.isKeyDown(key);
+    keyboardState_.setKey(key, keyState);
 
     switch (keyState) {
     case KeyState::Down:
@@ -443,7 +448,7 @@ void KeyboardX11::HandleEvent(XEvent& event, ::XIC inputContext)
 
 #if defined(POMDOG_DEBUG_BUILD) && !defined(NDEBUG)
     if (key == Keys::Unknown) {
-        Log::Internal(std::string("IsKeyDown: Unspecified key: ") +
+        Log::Internal(std::string("isKeyDown: Unspecified key: ") +
                       std::to_string(static_cast<int>(event.xkey.keycode)));
     }
 #endif

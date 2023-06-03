@@ -3,27 +3,32 @@
 #include "pomdog/input/x11/mouse_x11.h"
 #include "pomdog/input/mouse_buttons.h"
 #include "pomdog/utility/assert.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <optional>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail::x11 {
 namespace {
 
-ButtonState* GetButtonByIndex(MouseState& mouseState, unsigned int buttonIndex)
+[[nodiscard]] ButtonState*
+getButtonByIndex(MouseState& mouseState, unsigned int buttonIndex) noexcept
 {
     switch (buttonIndex) {
     case Button1:
-        return &mouseState.LeftButton;
+        return &mouseState.leftButton;
     case Button2:
-        return &mouseState.MiddleButton;
+        return &mouseState.middleButton;
     case Button3:
-        return &mouseState.RightButton;
+        return &mouseState.rightButton;
     default:
         break;
     }
     return nullptr;
 }
 
-std::optional<MouseButtons> ToMouseButtons(unsigned int buttonIndex)
+[[nodiscard]] std::optional<MouseButtons>
+toMouseButtons(unsigned int buttonIndex) noexcept
 {
     switch (buttonIndex) {
     case Button1:
@@ -40,39 +45,39 @@ std::optional<MouseButtons> ToMouseButtons(unsigned int buttonIndex)
 
 } // namespace
 
-MouseState MouseX11::GetState() const
+MouseState MouseX11::getState() const
 {
-    return mouseState;
+    return mouseState_;
 }
 
-void MouseX11::HandleEvent(XEvent& event)
+void MouseX11::handleEvent(XEvent& event)
 {
     switch (event.type) {
     case ButtonPress: {
-        if (auto button = GetButtonByIndex(mouseState, event.xbutton.button); button != nullptr) {
+        if (auto button = getButtonByIndex(mouseState_, event.xbutton.button); button != nullptr) {
             *button = ButtonState::Pressed;
 
-            auto mouseButton = ToMouseButtons(event.xbutton.button);
+            auto mouseButton = toMouseButtons(event.xbutton.button);
             POMDOG_ASSERT(mouseButton);
             Mouse::ButtonDown(*mouseButton);
         }
         else if (event.xbutton.button == Button4) {
-            const auto previousScrollWheel = mouseState.ScrollWheel;
-            mouseState.ScrollWheel += 1;
-            Mouse::ScrollWheel(mouseState.ScrollWheel - previousScrollWheel);
+            const auto previousScrollWheel = mouseState_.scrollWheel;
+            mouseState_.scrollWheel += 1;
+            Mouse::ScrollWheel(mouseState_.scrollWheel - previousScrollWheel);
         }
         else if (event.xbutton.button == Button5) {
-            const auto previousScrollWheel = mouseState.ScrollWheel;
-            mouseState.ScrollWheel -= 1;
-            Mouse::ScrollWheel(mouseState.ScrollWheel - previousScrollWheel);
+            const auto previousScrollWheel = mouseState_.scrollWheel;
+            mouseState_.scrollWheel -= 1;
+            Mouse::ScrollWheel(mouseState_.scrollWheel - previousScrollWheel);
         }
         break;
     }
     case ButtonRelease: {
-        if (auto button = GetButtonByIndex(mouseState, event.xbutton.button); button != nullptr) {
+        if (auto button = getButtonByIndex(mouseState_, event.xbutton.button); button != nullptr) {
             *button = ButtonState::Released;
 
-            auto mouseButton = ToMouseButtons(event.xbutton.button);
+            auto mouseButton = toMouseButtons(event.xbutton.button);
             POMDOG_ASSERT(mouseButton);
             Mouse::ButtonUp(*mouseButton);
         }
@@ -82,9 +87,9 @@ void MouseX11::HandleEvent(XEvent& event)
         break;
     }
     case MotionNotify: {
-        mouseState.Position.x = event.xmotion.x;
-        mouseState.Position.y = event.xmotion.y;
-        Mouse::Moved(mouseState.Position);
+        mouseState_.position.x = event.xmotion.x;
+        mouseState_.position.y = event.xmotion.y;
+        Mouse::Moved(mouseState_.position);
         break;
     }
     case LeaveNotify: {

@@ -328,8 +328,8 @@ void Skeletal2DTest::draw()
     commandList->setIndexBuffer(indexBuffer);
     commandList->drawIndexed(indexBuffer->getIndexCount(), 0);
 
-    auto mouse = gameHost->getMouse()->GetState();
-    if (mouse.RightButton == ButtonState::Pressed) {
+    const auto mouse = gameHost->getMouse()->getState();
+    if (mouse.rightButton == ButtonState::Pressed) {
         commandList->setPipelineState(pipelineStateWireframe);
         commandList->drawIndexed(indexBuffer->getIndexCount(), 0);
     }

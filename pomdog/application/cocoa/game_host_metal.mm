@@ -224,7 +224,7 @@ GameHostMetal::Impl::initialize(
 
     // NOTE: Create gamepad
     gamepad = std::make_shared<GamepadIOKit>();
-    if (auto err = gamepad->Initialize(eventQueue); err != nullptr) {
+    if (auto err = gamepad->initialize(eventQueue); err != nullptr) {
         return errors::wrap(std::move(err), "GamepadIOKit::Initialize() failed.");
     }
 
@@ -421,9 +421,9 @@ void GameHostMetal::Impl::processSystemEvents(const SystemEvent& event)
         POMDOG_ASSERT(keyboard);
         POMDOG_ASSERT(mouse);
         POMDOG_ASSERT(gamepad);
-        keyboard->HandleEvent(event);
-        mouse->HandleEvent(event);
-        gamepad->HandleEvent(event);
+        keyboard->handleEvent(event);
+        mouse->handleEvent(event);
+        gamepad->handleEvent(event);
         break;
     }
 }

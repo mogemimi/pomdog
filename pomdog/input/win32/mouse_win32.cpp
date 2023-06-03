@@ -8,64 +8,64 @@
 namespace pomdog::detail::win32 {
 
 MouseWin32::MouseWin32(HWND windowHandleIn)
-    : windowHandle(windowHandleIn)
+    : windowHandle_(windowHandleIn)
 {
-    POMDOG_ASSERT(windowHandle != nullptr);
+    POMDOG_ASSERT(windowHandle_ != nullptr);
 
     POINT cursorPos;
-    GetCursorPos(&cursorPos);
-    ScreenToClient(windowHandle, &cursorPos);
-    state.Position = Point2D{cursorPos.x, cursorPos.y};
+    ::GetCursorPos(&cursorPos);
+    ::ScreenToClient(windowHandle_, &cursorPos);
+    state_.position = Point2D{cursorPos.x, cursorPos.y};
 }
 
-void MouseWin32::HandleMessage(const SystemEvent& event)
+void MouseWin32::handleMessage(const SystemEvent& event)
 {
-    switch (event.Kind) {
+    switch (event.kind) {
     case SystemEventKind::MouseMovedEvent: {
-        const auto ev = std::get<MousePositionEvent>(event.Data);
-        previousState.Position = state.Position;
-        state.Position = ev.Position;
-        Mouse::Moved(state.Position);
+        const auto ev = std::get<MousePositionEvent>(event.data);
+        previousState_.position = state_.position;
+        state_.position = ev.position;
+        Mouse::Moved(state_.position);
         break;
     }
     case SystemEventKind::ScrollWheelEvent: {
-        const auto ev = std::get<ScrollWheelWin32Event>(event.Data);
-        previousState.ScrollWheel = state.ScrollWheel;
-        state.ScrollWheel += ev.ScrollingDeltaY;
-        Mouse::ScrollWheel(state.ScrollWheel - previousState.ScrollWheel);
+        const auto ev = std::get<ScrollWheelWin32Event>(event.data);
+        previousState_.scrollWheel = state_.scrollWheel;
+        state_.scrollWheel += ev.scrollingDeltaY;
+        Mouse::ScrollWheel(state_.scrollWheel - previousState_.scrollWheel);
         break;
     }
     case SystemEventKind::MouseButtonEvent: {
-        const auto ev = std::get<MouseButtonWin32Event>(event.Data);
-        switch (ev.Button) {
+        const auto ev = std::get<MouseButtonWin32Event>(event.data);
+        switch (ev.button) {
         case MouseButtons::Left:
-            previousState.LeftButton = state.LeftButton;
-            state.LeftButton = ev.State;
+            previousState_.leftButton = state_.leftButton;
+            state_.leftButton = ev.state;
             break;
         case MouseButtons::Right:
-            previousState.RightButton = state.RightButton;
-            state.RightButton = ev.State;
+            previousState_.rightButton = state_.rightButton;
+            state_.rightButton = ev.state;
             break;
         case MouseButtons::Middle:
-            previousState.MiddleButton = state.MiddleButton;
-            state.MiddleButton = ev.State;
+            previousState_.middleButton = state_.middleButton;
+            state_.middleButton = ev.state;
             break;
         case MouseButtons::XButton1:
-            previousState.XButton1 = state.XButton1;
-            state.XButton1 = ev.State;
+            previousState_.xButton1 = state_.xButton1;
+            state_.xButton1 = ev.state;
             break;
         case MouseButtons::XButton2:
-            previousState.XButton2 = state.XButton2;
-            state.XButton2 = ev.State;
+            previousState_.xButton2 = state_.xButton2;
+            state_.xButton2 = ev.state;
             break;
         }
 
-        switch (ev.State) {
+        switch (ev.state) {
         case ButtonState::Pressed:
-            Mouse::ButtonDown(ev.Button);
+            Mouse::ButtonDown(ev.button);
             break;
         case ButtonState::Released:
-            Mouse::ButtonUp(ev.Button);
+            Mouse::ButtonUp(ev.button);
             break;
         }
         break;
@@ -75,41 +75,42 @@ void MouseWin32::HandleMessage(const SystemEvent& event)
     }
 }
 
-MouseState MouseWin32::GetState() const
+MouseState
+MouseWin32::getState() const
 {
-    return state;
+    return state_;
 }
 
-void TranslateMouseEvent(HWND windowHandle, const RAWMOUSE& mouse, const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue) noexcept
+void translateMouseEvent(HWND windowHandle, const RAWMOUSE& mouse, const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue) noexcept
 {
     if (mouse.usFlags == MOUSE_MOVE_RELATIVE) {
         POINT cursorPos;
-        GetCursorPos(&cursorPos);
-        ScreenToClient(windowHandle, &cursorPos);
-        eventQueue->Enqueue(SystemEvent{
-            .Kind = SystemEventKind::MouseMovedEvent,
-            .Data = MousePositionEvent{
-                .Position = Point2D{cursorPos.x, cursorPos.y},
+        ::GetCursorPos(&cursorPos);
+        ::ScreenToClient(windowHandle, &cursorPos);
+        eventQueue->enqueue(SystemEvent{
+            .kind = SystemEventKind::MouseMovedEvent,
+            .data = MousePositionEvent{
+                .position = Point2D{cursorPos.x, cursorPos.y},
             },
         });
     }
     else if (mouse.usFlags & MOUSE_MOVE_ABSOLUTE) {
         POINT cursorPos;
-        GetCursorPos(&cursorPos);
-        ScreenToClient(windowHandle, &cursorPos);
-        eventQueue->Enqueue(SystemEvent{
-            .Kind = SystemEventKind::MouseMovedEvent,
-            .Data = MousePositionEvent{
-                .Position = Point2D{cursorPos.x, cursorPos.y},
+        ::GetCursorPos(&cursorPos);
+        ::ScreenToClient(windowHandle, &cursorPos);
+        eventQueue->enqueue(SystemEvent{
+            .kind = SystemEventKind::MouseMovedEvent,
+            .data = MousePositionEvent{
+                .position = Point2D{cursorPos.x, cursorPos.y},
             },
         });
     }
 
     if (mouse.usButtonFlags & RI_MOUSE_WHEEL) {
-        eventQueue->Enqueue(SystemEvent{
-            .Kind = SystemEventKind::ScrollWheelEvent,
-            .Data = ScrollWheelWin32Event{
-                .ScrollingDeltaY = *reinterpret_cast<const SHORT*>(&mouse.usButtonData),
+        eventQueue->enqueue(SystemEvent{
+            .kind = SystemEventKind::ScrollWheelEvent,
+            .data = ScrollWheelWin32Event{
+                .scrollingDeltaY = *reinterpret_cast<const SHORT*>(&mouse.usButtonData),
             },
         });
     }
@@ -120,96 +121,96 @@ void TranslateMouseEvent(HWND windowHandle, const RAWMOUSE& mouse, const std::sh
     //}
 
     if (mouse.usButtonFlags & RI_MOUSE_BUTTON_1_DOWN) {
-        eventQueue->Enqueue(SystemEvent{
-            .Kind = SystemEventKind::MouseButtonEvent,
-            .Data = MouseButtonWin32Event{
-                .Button = MouseButtons::Left,
-                .State = ButtonState::Pressed,
+        eventQueue->enqueue(SystemEvent{
+            .kind = SystemEventKind::MouseButtonEvent,
+            .data = MouseButtonWin32Event{
+                .button = MouseButtons::Left,
+                .state = ButtonState::Pressed,
             },
         });
     }
     else if (mouse.usButtonFlags & RI_MOUSE_BUTTON_1_UP) {
-        eventQueue->Enqueue(SystemEvent{
-            .Kind = SystemEventKind::MouseButtonEvent,
-            .Data = MouseButtonWin32Event{
-                .Button = MouseButtons::Left,
-                .State = ButtonState::Released,
+        eventQueue->enqueue(SystemEvent{
+            .kind = SystemEventKind::MouseButtonEvent,
+            .data = MouseButtonWin32Event{
+                .button = MouseButtons::Left,
+                .state = ButtonState::Released,
             },
         });
     }
 
     if (mouse.usButtonFlags & RI_MOUSE_BUTTON_2_DOWN) {
-        eventQueue->Enqueue(SystemEvent{
-            .Kind = SystemEventKind::MouseButtonEvent,
-            .Data = MouseButtonWin32Event{
-                .Button = MouseButtons::Right,
-                .State = ButtonState::Pressed,
+        eventQueue->enqueue(SystemEvent{
+            .kind = SystemEventKind::MouseButtonEvent,
+            .data = MouseButtonWin32Event{
+                .button = MouseButtons::Right,
+                .state = ButtonState::Pressed,
             },
         });
     }
     else if (mouse.usButtonFlags & RI_MOUSE_BUTTON_2_UP) {
-        eventQueue->Enqueue(SystemEvent{
-            .Kind = SystemEventKind::MouseButtonEvent,
-            .Data = MouseButtonWin32Event{
-                .Button = MouseButtons::Right,
-                .State = ButtonState::Released,
+        eventQueue->enqueue(SystemEvent{
+            .kind = SystemEventKind::MouseButtonEvent,
+            .data = MouseButtonWin32Event{
+                .button = MouseButtons::Right,
+                .state = ButtonState::Released,
             },
         });
     }
 
     if (mouse.usButtonFlags & RI_MOUSE_BUTTON_3_DOWN) {
-        eventQueue->Enqueue(SystemEvent{
-            .Kind = SystemEventKind::MouseButtonEvent,
-            .Data = MouseButtonWin32Event{
-                .Button = MouseButtons::Middle,
-                .State = ButtonState::Pressed,
+        eventQueue->enqueue(SystemEvent{
+            .kind = SystemEventKind::MouseButtonEvent,
+            .data = MouseButtonWin32Event{
+                .button = MouseButtons::Middle,
+                .state = ButtonState::Pressed,
             },
         });
     }
     else if (mouse.usButtonFlags & RI_MOUSE_BUTTON_3_UP) {
-        eventQueue->Enqueue(SystemEvent{
-            .Kind = SystemEventKind::MouseButtonEvent,
-            .Data = MouseButtonWin32Event{
-                .Button = MouseButtons::Middle,
-                .State = ButtonState::Released,
+        eventQueue->enqueue(SystemEvent{
+            .kind = SystemEventKind::MouseButtonEvent,
+            .data = MouseButtonWin32Event{
+                .button = MouseButtons::Middle,
+                .state = ButtonState::Released,
             },
         });
     }
 
     if (mouse.usButtonFlags & RI_MOUSE_BUTTON_4_DOWN) {
-        eventQueue->Enqueue(SystemEvent{
-            .Kind = SystemEventKind::MouseButtonEvent,
-            .Data = MouseButtonWin32Event{
-                .Button = MouseButtons::XButton1,
-                .State = ButtonState::Pressed,
+        eventQueue->enqueue(SystemEvent{
+            .kind = SystemEventKind::MouseButtonEvent,
+            .data = MouseButtonWin32Event{
+                .button = MouseButtons::XButton1,
+                .state = ButtonState::Pressed,
             },
         });
     }
     else if (mouse.usButtonFlags & RI_MOUSE_BUTTON_4_UP) {
-        eventQueue->Enqueue(SystemEvent{
-            .Kind = SystemEventKind::MouseButtonEvent,
-            .Data = MouseButtonWin32Event{
-                .Button = MouseButtons::XButton1,
-                .State = ButtonState::Released,
+        eventQueue->enqueue(SystemEvent{
+            .kind = SystemEventKind::MouseButtonEvent,
+            .data = MouseButtonWin32Event{
+                .button = MouseButtons::XButton1,
+                .state = ButtonState::Released,
             },
         });
     }
 
     if (mouse.usButtonFlags & RI_MOUSE_BUTTON_5_DOWN) {
-        eventQueue->Enqueue(SystemEvent{
-            .Kind = SystemEventKind::MouseButtonEvent,
-            .Data = MouseButtonWin32Event{
-                .Button = MouseButtons::XButton2,
-                .State = ButtonState::Pressed,
+        eventQueue->enqueue(SystemEvent{
+            .kind = SystemEventKind::MouseButtonEvent,
+            .data = MouseButtonWin32Event{
+                .button = MouseButtons::XButton2,
+                .state = ButtonState::Pressed,
             },
         });
     }
     else if (mouse.usButtonFlags & RI_MOUSE_BUTTON_5_UP) {
-        eventQueue->Enqueue(SystemEvent{
-            .Kind = SystemEventKind::MouseButtonEvent,
-            .Data = MouseButtonWin32Event{
-                .Button = MouseButtons::XButton2,
-                .State = ButtonState::Released,
+        eventQueue->enqueue(SystemEvent{
+            .kind = SystemEventKind::MouseButtonEvent,
+            .data = MouseButtonWin32Event{
+                .button = MouseButtons::XButton2,
+                .state = ButtonState::Released,
             },
         });
     }

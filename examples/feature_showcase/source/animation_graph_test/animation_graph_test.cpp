@@ -208,16 +208,16 @@ void AnimationGraphTest::update()
 {
     auto clock = gameHost->getClock();
 
-    auto mouse = gameHost->getMouse()->GetState();
-    if (mouse.LeftButton == ButtonState::Pressed) {
+    const auto mouse = gameHost->getMouse()->getState();
+    if (mouse.leftButton == ButtonState::Pressed) {
         const auto window = gameHost->getWindow();
         const auto clientBounds = window->getClientBounds();
 
-        const auto y = mouse.Position.y - (clientBounds.height / 2);
+        const auto y = mouse.position.y - (clientBounds.height / 2);
         const auto blendWeight = std::clamp(static_cast<float>(y) / 180.0f, 0.0f, 1.0f);
         animator->SetFloat("Run.Weight", blendWeight);
 
-        const auto x = mouse.Position.x - (clientBounds.width / 2);
+        const auto x = mouse.position.x - (clientBounds.width / 2);
         const auto playbackRate = std::clamp(static_cast<float>(x) / 100.0f, -2.0f, 2.0f);
         animator->SetPlaybackRate(playbackRate);
     }
@@ -331,8 +331,8 @@ void AnimationGraphTest::draw()
     commandList->setIndexBuffer(indexBuffer);
     commandList->drawIndexed(indexBuffer->getIndexCount(), 0);
 
-    auto mouse = gameHost->getMouse()->GetState();
-    if (mouse.RightButton == ButtonState::Pressed) {
+    const auto mouse = gameHost->getMouse()->getState();
+    if (mouse.rightButton == ButtonState::Pressed) {
         commandList->setPipelineState(pipelineStateWireframe);
         commandList->drawIndexed(indexBuffer->getIndexCount(), 0);
     }

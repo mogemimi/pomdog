@@ -15,8 +15,8 @@ struct GamepadState;
 
 namespace pomdog::detail::GamepadHelper {
 
-[[nodiscard]] int ToInt(PlayerIndex index) noexcept;
+[[nodiscard]] int toInt(PlayerIndex index) noexcept;
 
-void ClearState(GamepadState& state) noexcept;
+void clearState(GamepadState& state) noexcept;
 
 } // namespace pomdog::detail::GamepadHelper

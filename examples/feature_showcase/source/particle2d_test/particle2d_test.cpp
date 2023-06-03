@@ -167,8 +167,8 @@ std::unique_ptr<Error> Particle2DTest::initialize()
     auto mouse = gameHost->getMouse();
     connect(mouse->Moved, [this](const Point2D& mousePos) {
         const auto mouse = gameHost->getMouse();
-        const auto mouseState = mouse->GetState();
-        if (mouseState.LeftButton != ButtonState::Pressed) {
+        const auto mouseState = mouse->getState();
+        if (mouseState.leftButton != ButtonState::Pressed) {
             return;
         }
         const auto window = gameHost->getWindow();

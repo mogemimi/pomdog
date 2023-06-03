@@ -315,9 +315,9 @@ void MultiRenderTargetTest::update()
     auto time = static_cast<float>(gameHost->getClock()->getTotalGameTime().count());
     auto rotateY = math::TwoPi<float> * rotateSpeed * time;
 
-    auto mouse = gameHost->getMouse()->GetState();
-    if (mouse.LeftButton == ButtonState::Pressed) {
-        rotateY = -math::TwoPi<float> * (static_cast<float>(mouse.Position.x) / static_cast<float>(presentationParameters.backBufferWidth));
+    const auto mouse = gameHost->getMouse()->getState();
+    if (mouse.leftButton == ButtonState::Pressed) {
+        rotateY = -math::TwoPi<float> * (static_cast<float>(mouse.position.x) / static_cast<float>(presentationParameters.backBufferWidth));
     }
 
     auto modelMatrix = Matrix4x4::createTranslation(Vector3{-0.5f, -0.5f, -0.5f})

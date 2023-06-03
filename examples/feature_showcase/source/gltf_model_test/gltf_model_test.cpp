@@ -278,9 +278,9 @@ void GLTFModelTest::update()
     auto time = static_cast<float>(gameHost->getClock()->getTotalGameTime().count());
     auto rotateY = math::TwoPi<float> * rotateSpeed * time;
 
-    auto mouse = gameHost->getMouse()->GetState();
-    if (mouse.LeftButton == ButtonState::Pressed) {
-        rotateY = -math::TwoPi<float> * (static_cast<float>(mouse.Position.x) / static_cast<float>(presentationParameters.backBufferWidth));
+    const auto mouse = gameHost->getMouse()->getState();
+    if (mouse.leftButton == ButtonState::Pressed) {
+        rotateY = -math::TwoPi<float> * (static_cast<float>(mouse.position.x) / static_cast<float>(presentationParameters.backBufferWidth));
     }
 
     auto modelMatrix = Matrix4x4::createTranslation(Vector3{-0.5f, -0.5f, -0.5f})
@@ -311,7 +311,7 @@ void GLTFModelTest::draw()
     pass.viewport = viewport;
     pass.scissorRect = viewport.getBounds();
 
-    auto mouse = gameHost->getMouse()->GetState();
+    const auto mouse = gameHost->getMouse()->getState();
 
     commandList->reset();
     commandList->setRenderPass(std::move(pass));
@@ -319,7 +319,7 @@ void GLTFModelTest::draw()
     commandList->setConstantBuffer(1, worldConstantBuffer);
     commandList->setSamplerState(0, sampler);
     commandList->setTexture(0, texture);
-    if (mouse.RightButton == ButtonState::Pressed) {
+    if (mouse.rightButton == ButtonState::Pressed) {
         commandList->setVertexBuffer(0, vertexBuffer2);
         commandList->setPipelineState(pipelineState2);
     }

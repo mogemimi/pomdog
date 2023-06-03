@@ -226,9 +226,9 @@ void GameMain::update()
     updateMenuLayout();
 
     const auto mouse = gameHost->getMouse();
-    const auto mouseState = mouse->GetState();
+    const auto mouseState = mouse->getState();
     const auto clientBounds = window->getClientBounds();
-    auto position = mouseState.Position;
+    auto position = mouseState.position;
     position.y = clientBounds.height - position.y;
 
     if (subGame) {

@@ -2,20 +2,24 @@
 
 #pragma once
 
+#include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/input/backends/gamepad_mappings.h"
 #include "pomdog/input/gamepad.h"
 #include "pomdog/input/gamepad_capabilities.h"
 #include "pomdog/input/gamepad_state.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <array>
 #include <cstdint>
 #include <memory>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail::linux {
 
 struct ThumbStickInfo final {
-    std::int32_t Minimum = 0;
-    std::int32_t Range = 0;
-    std::int32_t InvertDirection = 1;
+    std::int32_t minimum = 0;
+    std::int32_t range = 0;
+    std::int32_t invertDirection = 1;
 };
 
 class GamepadDevice final {
@@ -30,31 +34,36 @@ public:
     PlayerIndex playerIndex;
 
 public:
-    bool Open(int deviceIndex);
+    [[nodiscard]] bool
+    open(int deviceIndex);
 
-    void Close();
+    void close();
 
-    bool HasFileDescriptor() const;
+    [[nodiscard]] bool
+    hasFileDescriptor() const;
 
-    bool PollEvents();
+    [[nodiscard]] bool
+    pollEvents();
 };
 
 class GamepadLinux final : public Gamepad {
+private:
+    std::array<GamepadDevice, 4> gamepads_;
+
 public:
     GamepadLinux() noexcept;
 
     ~GamepadLinux() override;
 
-    GamepadCapabilities GetCapabilities(PlayerIndex index) const override;
+    [[nodiscard]] GamepadCapabilities
+    getCapabilities(PlayerIndex index) const override;
 
-    GamepadState GetState(PlayerIndex index) const override;
+    [[nodiscard]] GamepadState
+    getState(PlayerIndex index) const override;
 
-    void EnumerateDevices();
+    void enumerateDevices();
 
-    void PollEvents();
-
-private:
-    std::array<GamepadDevice, 4> gamepads;
+    void pollEvents();
 };
 
 } // namespace pomdog::detail::linux

@@ -16,8 +16,11 @@ namespace pomdog {
 namespace {
 
 template <typename T>
-T SwapEndian(T u)
+[[nodiscard]] T swapEndian(T u) noexcept
 {
+    static_assert(std::is_fundamental_v<T>);
+    static_assert(std::is_integral_v<T>);
+
 #if defined(POMDOG_BYTEORDER_BIG_ENDIAN)
     return u;
 #else
@@ -36,24 +39,24 @@ T SwapEndian(T u)
 
 } // namespace
 
-std::string GamepadUUID::ToString() const
+std::string GamepadUUID::toString() const
 {
     std::array<std::uint16_t, 8> uuid;
     std::fill(std::begin(uuid), std::end(uuid), static_cast<std::uint16_t>(0));
-    if ((VendorID != 0) && (ProductID != 0)) {
-        uuid[0] = BusType;
+    if ((vendorID != 0) && (productID != 0)) {
+        uuid[0] = busType;
         uuid[1] = 0;
-        uuid[2] = VendorID;
+        uuid[2] = vendorID;
         uuid[3] = 0;
-        uuid[4] = ProductID;
+        uuid[4] = productID;
         uuid[5] = 0;
-        uuid[6] = VersionNumber;
+        uuid[6] = versionNumber;
         uuid[7] = 0;
     }
 
     std::string s;
     for (auto u : uuid) {
-        s += strings::format("%04x", SwapEndian(u));
+        s += strings::format("%04x", swapEndian(u));
     }
     return s;
 }

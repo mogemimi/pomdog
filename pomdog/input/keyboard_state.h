@@ -16,19 +16,19 @@ enum class KeyState : bool;
 enum class Keys : std::uint8_t;
 
 class POMDOG_EXPORT KeyboardState final {
-public:
-    KeyState operator[](Keys key) const;
-
-    bool IsKeyDown(Keys key) const;
-
-    bool IsKeyUp(Keys key) const;
-
-    void SetKey(Keys key, KeyState keyState);
-
-    void ClearAllKeys();
-
 private:
-    std::bitset<142> keyset;
+    std::bitset<142> keyset_;
+
+public:
+    [[nodiscard]] bool
+    isKeyDown(Keys key) const noexcept;
+
+    [[nodiscard]] bool
+    isKeyUp(Keys key) const noexcept;
+
+    void setKey(Keys key, KeyState keyState) noexcept;
+
+    void clearAllKeys() noexcept;
 };
 
 } // namespace pomdog

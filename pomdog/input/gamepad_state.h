@@ -9,10 +9,10 @@
 namespace pomdog {
 
 struct GamepadState final {
-    GamepadButtons Buttons;
-    GamepadThumbSticks ThumbSticks;
-    GamepadDPad DPad;
-    bool IsConnected = false;
+    GamepadButtons buttons;
+    GamepadThumbSticks thumbSticks;
+    GamepadDPad dpad;
+    bool isConnected = false;
 };
 
 } // namespace pomdog

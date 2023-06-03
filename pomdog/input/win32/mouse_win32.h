@@ -11,19 +11,20 @@
 namespace pomdog::detail::win32 {
 
 class MouseWin32 final : public Mouse {
+private:
+    HWND windowHandle_;
+    MouseState previousState_;
+    MouseState state_;
+
 public:
     explicit MouseWin32(HWND windowHandle);
 
-    MouseState GetState() const override;
+    [[nodiscard]] MouseState
+    getState() const override;
 
-    void HandleMessage(const SystemEvent& event);
-
-private:
-    HWND windowHandle;
-    MouseState previousState;
-    MouseState state;
+    void handleMessage(const SystemEvent& event);
 };
 
-void TranslateMouseEvent(HWND windowHandle, const RAWMOUSE& mouse, const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue) noexcept;
+void translateMouseEvent(HWND windowHandle, const RAWMOUSE& mouse, const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue) noexcept;
 
 } // namespace pomdog::detail::win32

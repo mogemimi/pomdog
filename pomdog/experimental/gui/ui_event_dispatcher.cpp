@@ -99,19 +99,19 @@ UIEventDispatcher::UIEventDispatcher(
 {
     keyDownConn = keyboard->KeyDown.connect([this](Keys key) {
         if (auto widget = focusedWidget.lock(); widget != nullptr) {
-            widget->OnKeyDown(keyboard->GetState(), key);
+            widget->OnKeyDown(keyboard->getState(), key);
         }
     });
 
     keyUpConn = keyboard->KeyUp.connect([this](Keys key) {
         if (auto widget = focusedWidget.lock(); widget != nullptr) {
-            widget->OnKeyUp(keyboard->GetState(), key);
+            widget->OnKeyUp(keyboard->getState(), key);
         }
     });
 
     textInputConn = keyboard->TextInput.connect([this](const std::string& text) {
         if (auto widget = focusedWidget.lock(); widget != nullptr) {
-            widget->OnTextInput(keyboard->GetState(), text);
+            widget->OnTextInput(keyboard->getState(), text);
         }
     });
 }
@@ -145,7 +145,7 @@ void UIEventDispatcher::ClearFocus(const std::shared_ptr<Widget>& widget)
 
 void UIEventDispatcher::Touch(const MouseState& mouseState, std::vector<std::shared_ptr<Widget>>& children)
 {
-    auto const position = mouseState.Position;
+    auto const position = mouseState.position;
 
     if (pointerState) {
         switch (pointerState->pointerPoint.Event) {
@@ -227,8 +227,8 @@ void UIEventDispatcher::Touch(const MouseState& mouseState, std::vector<std::sha
 
         if (wheelFocusChild != nullptr) {
             auto oldMouseWheelDelta = pointerState->pointerPoint.MouseWheelDelta;
-            pointerState->pointerPoint.MouseWheelDelta = mouseState.ScrollWheel - pointerState->PrevScrollWheel;
-            pointerState->PrevScrollWheel = mouseState.ScrollWheel;
+            pointerState->pointerPoint.MouseWheelDelta = mouseState.scrollWheel - pointerState->PrevScrollWheel;
+            pointerState->PrevScrollWheel = mouseState.scrollWheel;
 
             if (oldMouseWheelDelta != pointerState->pointerPoint.MouseWheelDelta) {
                 POMDOG_ASSERT(wheelFocusChild != nullptr);
@@ -254,7 +254,7 @@ void UIEventDispatcher::PointerEntered(
     pointerState->pointerPoint.Position = position;
     pointerState->pointerPoint.ID = 0;
     pointerState->pointerPoint.MouseWheelDelta = 0;
-    pointerState->PrevScrollWheel = mouseState.ScrollWheel;
+    pointerState->PrevScrollWheel = mouseState.scrollWheel;
 
     node->OnPointerEntered(pointerState->pointerPoint);
     if (node->GetCurrentCursor()) {
@@ -377,19 +377,19 @@ std::shared_ptr<Widget> UIEventDispatcher::GetFocusWidget() const
 std::optional<PointerMouseEvent>
 UIEventDispatcher::FindPointerMouseEvent(const MouseState& mouseState) const
 {
-    if (mouseState.LeftButton == ButtonState::Pressed) {
+    if (mouseState.leftButton == ButtonState::Pressed) {
         return PointerMouseEvent::LeftButtonPressed;
     }
-    else if (mouseState.RightButton == ButtonState::Pressed) {
+    else if (mouseState.rightButton == ButtonState::Pressed) {
         return PointerMouseEvent::RightButtonPressed;
     }
-    else if (mouseState.MiddleButton == ButtonState::Pressed) {
+    else if (mouseState.middleButton == ButtonState::Pressed) {
         return PointerMouseEvent::MiddleButtonPressed;
     }
-    else if (mouseState.XButton1 == ButtonState::Pressed) {
+    else if (mouseState.xButton1 == ButtonState::Pressed) {
         return PointerMouseEvent::XButton1Pressed;
     }
-    else if (mouseState.XButton2 == ButtonState::Pressed) {
+    else if (mouseState.xButton2 == ButtonState::Pressed) {
         return PointerMouseEvent::XButton2Pressed;
     }
     return std::nullopt;
@@ -403,15 +403,15 @@ UIEventDispatcher::CheckMouseButton(
     using pomdog::gui::PointerMouseEvent;
     switch (pointerMouseEvent) {
     case PointerMouseEvent::LeftButtonPressed:
-        return mouseState.LeftButton;
+        return mouseState.leftButton;
     case PointerMouseEvent::MiddleButtonPressed:
-        return mouseState.MiddleButton;
+        return mouseState.middleButton;
     case PointerMouseEvent::RightButtonPressed:
-        return mouseState.RightButton;
+        return mouseState.rightButton;
     case PointerMouseEvent::XButton1Pressed:
-        return mouseState.XButton1;
+        return mouseState.xButton1;
     case PointerMouseEvent::XButton2Pressed:
-        return mouseState.XButton2;
+        return mouseState.xButton2;
     case PointerMouseEvent::ScrollWheel:
         break;
     }

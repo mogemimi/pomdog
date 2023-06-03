@@ -52,7 +52,7 @@ void MoveCursor(
 
     cursorMoveInterval = Duration{-CursorMoveMarginInterval};
 
-    if (keys.IsKeyDown(Keys::LeftShift) || keys.IsKeyDown(Keys::RightShift)) {
+    if (keys.isKeyDown(Keys::LeftShift) || keys.isKeyDown(Keys::RightShift)) {
         if ((startSelectionPosition == std::nullopt) && (oldCursorPosition != *cursorPosition)) {
             startSelectionPosition = oldCursorPosition;
         }
@@ -498,7 +498,7 @@ void TextEdit::OnPointerPressed(const PointerPoint& pointerPoint)
         cursorPosition = i;
     }
 
-    if (latestKeys.IsKeyUp(Keys::LeftShift) && latestKeys.IsKeyUp(Keys::RightShift)) {
+    if (latestKeys.isKeyUp(Keys::LeftShift) && latestKeys.isKeyUp(Keys::RightShift)) {
         Deselect();
     }
 
@@ -524,7 +524,7 @@ void TextEdit::UpdateAnimation(const Duration& frameDuration)
 
     cursorMoveInterval += frameDuration;
     if (cursorMoveInterval.count() >= CursorMoveInterval) {
-        if (latestKeys.IsKeyDown(Keys::LeftArrow)) {
+        if (latestKeys.isKeyDown(Keys::LeftArrow)) {
             POMDOG_ASSERT(cursorPosition != std::nullopt);
             MoveCursor(
                 CursorMoveOperation::Left,
@@ -536,7 +536,7 @@ void TextEdit::UpdateAnimation(const Duration& frameDuration)
 
             cursorBlinkInterval = Duration::zero();
         }
-        if (latestKeys.IsKeyDown(Keys::RightArrow)) {
+        if (latestKeys.isKeyDown(Keys::RightArrow)) {
             POMDOG_ASSERT(cursorPosition != std::nullopt);
             MoveCursor(
                 CursorMoveOperation::Right,

@@ -12,15 +12,16 @@ class SystemEvent;
 namespace pomdog::detail::cocoa {
 
 class KeyboardCocoa final : public Keyboard {
+private:
+    KeyboardState state_;
+
 public:
     KeyboardCocoa();
 
-    KeyboardState GetState() const override;
+    [[nodiscard]] KeyboardState
+    getState() const override;
 
-    void HandleEvent(const SystemEvent& event);
-
-private:
-    KeyboardState state;
+    void handleEvent(const SystemEvent& event);
 };
 
 } // namespace pomdog::detail::cocoa

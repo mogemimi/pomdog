@@ -46,35 +46,38 @@ struct GamepadDevice final {
     PlayerIndex playerIndex;
     bool isXInputDevice;
 
-    bool Open(IDirectInput8* directInput, HWND windowHandle, const ::GUID& guidInstance);
+    [[nodiscard]] bool
+    open(IDirectInput8* directInput, HWND windowHandle, const ::GUID& guidInstance);
 
-    void Close();
+    void close();
 
-    void PollEvents();
+    void pollEvents();
 };
 
 class GamepadDirectInput final : public Gamepad {
+private:
+    std::array<GamepadDevice, 4> gamepads_;
+    HWND windowHandle_ = nullptr;
+    Microsoft::WRL::ComPtr<IDirectInput8> directInput_;
+    std::mutex mutex_;
+
 public:
     ~GamepadDirectInput();
 
     [[nodiscard]] std::unique_ptr<Error>
-    Initialize(HINSTANCE hInstance, HWND windowHandle) noexcept;
+    initialize(HINSTANCE hInstance, HWND windowHandle) noexcept;
 
-    GamepadCapabilities GetCapabilities(PlayerIndex index) const override;
+    [[nodiscard]] GamepadCapabilities
+    getCapabilities(PlayerIndex index) const override;
 
-    GamepadState GetState(PlayerIndex index) const override;
+    [[nodiscard]] GamepadState
+    getState(PlayerIndex index) const override;
 
-    void PollEvents();
+    void pollEvents();
 
-    void EnumerateDevices();
+    void enumerateDevices();
 
-    BOOL OnDeviceAttached(LPCDIDEVICEINSTANCE deviceInstance);
-
-private:
-    std::array<GamepadDevice, 4> gamepads;
-    HWND windowHandle = nullptr;
-    Microsoft::WRL::ComPtr<IDirectInput8> directInput;
-    std::mutex mutex;
+    BOOL onDeviceAttached(LPCDIDEVICEINSTANCE deviceInstance);
 };
 
 } // namespace pomdog::detail::directinput

@@ -16,24 +16,24 @@ namespace pomdog {
 class POMDOG_EXPORT MouseState final {
 public:
     /// Position of the mouse cursor
-    Point2D Position{0, 0};
+    Point2D position{0, 0};
 
-    std::int32_t ScrollWheel = 0;
+    std::int32_t scrollWheel = 0;
 
     /// Left mouse button
-    ButtonState LeftButton = ButtonState::Released;
+    ButtonState leftButton = ButtonState::Released;
 
     /// Middle mouse button
-    ButtonState MiddleButton = ButtonState::Released;
+    ButtonState middleButton = ButtonState::Released;
 
     /// Right mouse button
-    ButtonState RightButton = ButtonState::Released;
+    ButtonState rightButton = ButtonState::Released;
 
     /// First extended mouse button
-    ButtonState XButton1 = ButtonState::Released;
+    ButtonState xButton1 = ButtonState::Released;
 
     /// Second extended mouse button
-    ButtonState XButton2 = ButtonState::Released;
+    ButtonState xButton2 = ButtonState::Released;
 };
 
 } // namespace pomdog

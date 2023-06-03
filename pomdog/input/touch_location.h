@@ -14,9 +14,9 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog {
 
 struct TouchLocation final {
-    Point2D Position;
-    std::uint16_t Id;
-    TouchLocationState State = TouchLocationState::Invalid;
+    Point2D position;
+    std::uint16_t touchID;
+    TouchLocationState state = TouchLocationState::Invalid;
 };
 
 } // namespace pomdog

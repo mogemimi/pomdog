@@ -7,10 +7,10 @@
 namespace pomdog {
 
 struct GamepadDPad final {
-    ButtonState Down = ButtonState::Released;
-    ButtonState Up = ButtonState::Released;
-    ButtonState Left = ButtonState::Released;
-    ButtonState Right = ButtonState::Released;
+    ButtonState down = ButtonState::Released;
+    ButtonState up = ButtonState::Released;
+    ButtonState left = ButtonState::Released;
+    ButtonState right = ButtonState::Released;
 };
 
 } // namespace pomdog

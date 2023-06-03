@@ -350,7 +350,7 @@ void GameHostLinux::processEvent(::XEvent& event)
     }
     case KeyPress:
     case KeyRelease: {
-        keyboard_->HandleEvent(event, window_->getInputContext());
+        keyboard_->handleEvent(event, window_->getInputContext());
         break;
     }
     case ButtonPress:
@@ -358,7 +358,7 @@ void GameHostLinux::processEvent(::XEvent& event)
     case EnterNotify:
     case MotionNotify:
     case LeaveNotify: {
-        mouse_.HandleEvent(event);
+        mouse_.handleEvent(event);
         break;
     }
     default:
@@ -375,9 +375,9 @@ void GameHostLinux::run(Game& game)
         messagePump();
         constexpr int64_t gamepadDetectionInterval = 240;
         if (((clock_->getFrameNumber() % gamepadDetectionInterval) == 1) && (clock_->getFrameRate() >= 30.0f)) {
-            gamepad_->EnumerateDevices();
+            gamepad_->enumerateDevices();
         }
-        gamepad_->PollEvents();
+        gamepad_->pollEvents();
         ioService_->step();
 
         game.update();

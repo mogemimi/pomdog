@@ -24,7 +24,8 @@ public:
 
     virtual ~Keyboard();
 
-    virtual KeyboardState GetState() const = 0;
+    [[nodiscard]] virtual KeyboardState
+    getState() const = 0;
 
     Signal<void(Keys key)> KeyDown;
 

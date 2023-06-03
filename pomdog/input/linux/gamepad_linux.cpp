@@ -4,6 +4,8 @@
 #include "pomdog/input/backends/gamepad_helper.h"
 #include "pomdog/logging/log.h"
 #include "pomdog/utility/assert.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <errno.h>
 #include <fcntl.h>
 #include <linux/input.h>
@@ -11,29 +13,30 @@
 #include <algorithm>
 #include <cstring>
 #include <tuple>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail::linux {
 namespace {
 
-constexpr size_t BitCount(size_t n)
+[[nodiscard]] constexpr size_t bitCount(size_t n) noexcept
 {
     return (n / 8) + 1;
 }
 
 template <typename T>
-bool HasBit(const T& array, uint32_t bit)
+[[nodiscard]] bool hasBit(const T& array, uint32_t bit) noexcept
 {
     return ((1 << (bit % 8)) & array[bit / 8]) != 0;
 }
 
-float NormalizeAxisValue(int value, const ThumbStickInfo& info)
+[[nodiscard]] float normalizeAxisValue(int value, const ThumbStickInfo& info)
 {
-    return static_cast<float>(info.InvertDirection * ((value - info.Minimum) * 2 - info.Range)) / info.Range;
+    return static_cast<float>(info.invertDirection * ((value - info.minimum) * 2 - info.range)) / info.range;
 }
 
 } // namespace
 
-bool GamepadDevice::Open(int deviceIndex)
+bool GamepadDevice::open(int deviceIndex)
 {
     POMDOG_ASSERT(fd == -1);
 
@@ -48,22 +51,22 @@ bool GamepadDevice::Open(int deviceIndex)
 
     struct input_id inputId;
     if (::ioctl(fd, EVIOCGID, &inputId) < 0) {
-        Close();
+        close();
         return false;
     }
 
-    auto& uuid = caps.DeviceUUID;
-    uuid.BusType = static_cast<uint16_t>(inputId.bustype);
-    uuid.VendorID = static_cast<uint16_t>(inputId.vendor);
-    uuid.ProductID = static_cast<uint16_t>(inputId.product);
-    uuid.VersionNumber = static_cast<uint16_t>(inputId.version);
+    auto& uuid = caps.deviceUUID;
+    uuid.busType = static_cast<uint16_t>(inputId.bustype);
+    uuid.vendorID = static_cast<uint16_t>(inputId.vendor);
+    uuid.productID = static_cast<uint16_t>(inputId.product);
+    uuid.versionNumber = static_cast<uint16_t>(inputId.version);
 
     // TODO: Use udev-joystick-blacklist here
     // https://github.com/denilsonsa/udev-joystick-blacklist
 
-    std::array<std::uint8_t, BitCount(EV_MAX)> evBits;
-    std::array<std::uint8_t, BitCount(KEY_MAX)> keyBits;
-    std::array<std::uint8_t, BitCount(ABS_MAX)> absBits;
+    std::array<std::uint8_t, bitCount(EV_MAX)> evBits;
+    std::array<std::uint8_t, bitCount(KEY_MAX)> keyBits;
+    std::array<std::uint8_t, bitCount(ABS_MAX)> absBits;
 
     std::fill(std::begin(evBits), std::end(evBits), 0);
     std::fill(std::begin(keyBits), std::end(keyBits), 0);
@@ -72,26 +75,26 @@ bool GamepadDevice::Open(int deviceIndex)
     if ((ioctl(fd, EVIOCGBIT(0, evBits.size()), evBits.data()) < 0) ||
         (ioctl(fd, EVIOCGBIT(EV_KEY, keyBits.size()), keyBits.data()) < 0) ||
         (ioctl(fd, EVIOCGBIT(EV_ABS, absBits.size()), absBits.data()) < 0)) {
-        Close();
+        close();
         return false;
     }
 
-    if (!HasBit(evBits, EV_KEY) ||
-        !HasBit(evBits, EV_ABS) ||
-        !HasBit(absBits, ABS_X) ||
-        !HasBit(absBits, ABS_Y)) {
+    if (!hasBit(evBits, EV_KEY) ||
+        !hasBit(evBits, EV_ABS) ||
+        !hasBit(absBits, ABS_X) ||
+        !hasBit(absBits, ABS_Y)) {
         // The device is not a joystick or gamepad.
-        Close();
+        close();
         return false;
     }
 
-    std::tie(this->mappings, this->caps.Name) = GetMappings(uuid);
+    std::tie(this->mappings, this->caps.name) = gamepad_mappings::getMappings(uuid);
 
     int numOfButtons = 0;
     std::fill(std::begin(keyMap), std::end(keyMap), -1);
 
     for (int i = BTN_JOYSTICK; i < KEY_MAX; ++i) {
-        if (HasBit(keyBits, static_cast<uint32_t>(i))) {
+        if (hasBit(keyBits, static_cast<uint32_t>(i))) {
             const auto index = i - BTN_JOYSTICK;
             if ((index < 0) || (index >= static_cast<int>(keyMap.size()))) {
                 continue;
@@ -101,7 +104,7 @@ bool GamepadDevice::Open(int deviceIndex)
             POMDOG_ASSERT(numOfButtons >= 0);
             POMDOG_ASSERT(numOfButtons < static_cast<int>(mappings.buttons.size()));
 
-            if (auto hasButton = HasButton(caps, mappings.buttons, numOfButtons); hasButton != nullptr) {
+            if (auto hasButton = gamepad_mappings::hasButton(caps, mappings.buttons, numOfButtons); hasButton != nullptr) {
                 (*hasButton) = true;
             }
             ++numOfButtons;
@@ -112,7 +115,7 @@ bool GamepadDevice::Open(int deviceIndex)
     static_assert(ABS_RZ == 5, "");
 
     for (int i = ABS_X; i <= ABS_RZ; ++i) {
-        if (HasBit(absBits, i)) {
+        if (hasBit(absBits, i)) {
             struct input_absinfo absInfo;
             if (::ioctl(fd, EVIOCGABS(i), &absInfo) < 0) {
                 continue;
@@ -123,74 +126,74 @@ bool GamepadDevice::Open(int deviceIndex)
 
             const auto& mapper = mappings.axes[i];
 
-            if (auto hasThumbStick = HasThumbStick(caps, mapper.thumbStick); hasThumbStick != nullptr) {
+            if (auto hasThumbStick = gamepad_mappings::hasThumbStick(caps, mapper.thumbStick); hasThumbStick != nullptr) {
                 (*hasThumbStick) = true;
             }
-            if (auto hasButton = HasButton(caps, mapper.positiveTrigger); hasButton != nullptr) {
+            if (auto hasButton = gamepad_mappings::hasButton(caps, mapper.positiveTrigger); hasButton != nullptr) {
                 (*hasButton) = true;
             }
-            if (auto hasButton = HasButton(caps, mapper.negativeTrigger); hasButton != nullptr) {
+            if (auto hasButton = gamepad_mappings::hasButton(caps, mapper.negativeTrigger); hasButton != nullptr) {
                 (*hasButton) = true;
             }
 
             POMDOG_ASSERT(i >= 0);
             POMDOG_ASSERT(i < static_cast<int>(thumbStickInfos.size()));
             auto& info = thumbStickInfos[i];
-            info.Minimum = absInfo.minimum;
-            info.Range = std::max(1, absInfo.maximum - absInfo.minimum);
+            info.minimum = absInfo.minimum;
+            info.range = std::max(1, absInfo.maximum - absInfo.minimum);
 
             switch (mapper.thumbStick) {
             case ThumbStickKind::LeftStickY:
             case ThumbStickKind::RightStickY:
                 // Set to -1 to reverse the Y axis (vertical)
-                info.InvertDirection = -1;
+                info.invertDirection = -1;
                 break;
             default:
-                info.InvertDirection = 1;
+                info.invertDirection = 1;
                 break;
             }
         }
     }
 
-    if (caps.Name.empty()) {
+    if (caps.name.empty()) {
         std::array<char, 256> gamepadName;
         std::fill(std::begin(gamepadName), std::end(gamepadName), 0);
         if (::ioctl(fd, EVIOCGNAME(255), gamepadName.data()) < 0) {
-            Close();
+            close();
             return false;
         }
-        caps.Name = gamepadName.data();
+        caps.name = gamepadName.data();
     }
 
-    GamepadHelper::ClearState(state);
-    state.IsConnected = true;
+    // NOTE: gamepad is open.
+    GamepadHelper::clearState(state);
+    state.isConnected = true;
 
     this->deviceEventIndex = deviceIndex;
 
-    Log::Internal("Open gamepad: " + caps.Name + " at " + js);
     return true;
 }
 
-void GamepadDevice::Close()
+void GamepadDevice::close()
 {
     if (fd >= 0) {
         ::close(fd);
         fd = -1;
     }
 
-    GamepadHelper::ClearState(state);
-    state.IsConnected = false;
+    GamepadHelper::clearState(state);
+    state.isConnected = false;
 
     GamepadCapabilities emptyCaps;
     std::swap(caps, emptyCaps);
 }
 
-bool GamepadDevice::HasFileDescriptor() const
+bool GamepadDevice::hasFileDescriptor() const
 {
     return fd >= 0;
 }
 
-bool GamepadDevice::PollEvents()
+bool GamepadDevice::pollEvents()
 {
     for (;;) {
         struct input_event event;
@@ -198,7 +201,7 @@ bool GamepadDevice::PollEvents()
         errno = 0;
         if (::read(fd, &event, sizeof(event)) < 0) {
             if (errno == ENODEV) {
-                Log::Internal("Disconnect gamepad: " + caps.Name);
+                // NOTE: gamepad is disconnected.
                 return false;
             }
             break;
@@ -211,7 +214,7 @@ bool GamepadDevice::PollEvents()
                 break;
             }
             const auto buttonIndex = keyMap[physicalIndex];
-            if (auto button = GetButton(state, mappings.buttons, buttonIndex); button != nullptr) {
+            if (auto button = gamepad_mappings::getButton(state, mappings.buttons, buttonIndex); button != nullptr) {
                 (*button) = (event.value != 0) ? ButtonState::Pressed : ButtonState::Released;
             }
             break;
@@ -230,28 +233,28 @@ bool GamepadDevice::PollEvents()
                 const auto axis = code % 2;
                 if (event.value == 0) {
                     if (axis == 0) {
-                        state.DPad.Left = ButtonState::Released;
-                        state.DPad.Right = ButtonState::Released;
+                        state.dpad.left = ButtonState::Released;
+                        state.dpad.right = ButtonState::Released;
                     }
                     else {
-                        state.DPad.Up = ButtonState::Released;
-                        state.DPad.Down = ButtonState::Released;
+                        state.dpad.up = ButtonState::Released;
+                        state.dpad.down = ButtonState::Released;
                     }
                 }
                 else if (event.value > 0) {
                     if (axis == 0) {
-                        state.DPad.Right = ButtonState::Pressed;
+                        state.dpad.right = ButtonState::Pressed;
                     }
                     else {
-                        state.DPad.Down = ButtonState::Pressed;
+                        state.dpad.down = ButtonState::Pressed;
                     }
                 }
                 else if (event.value < 0) {
                     if (axis == 0) {
-                        state.DPad.Left = ButtonState::Pressed;
+                        state.dpad.left = ButtonState::Pressed;
                     }
                     else {
-                        state.DPad.Up = ButtonState::Pressed;
+                        state.dpad.up = ButtonState::Pressed;
                     }
                 }
                 break;
@@ -274,18 +277,18 @@ bool GamepadDevice::PollEvents()
 
                 const auto& mapper = mappings.axes[event.code];
 
-                if (auto thumbStick = GetThumbStick(state, mapper.thumbStick); thumbStick != nullptr) {
-                    (*thumbStick) = NormalizeAxisValue(event.value, thumbStickInfos[event.code]);
+                if (auto thumbStick = gamepad_mappings::getThumbStick(state, mapper.thumbStick); thumbStick != nullptr) {
+                    (*thumbStick) = normalizeAxisValue(event.value, thumbStickInfos[event.code]);
                 }
 
-                if (auto button = GetButton(state, mapper.positiveTrigger); button != nullptr) {
-                    const auto value = NormalizeAxisValue(event.value, thumbStickInfos[event.code]);
+                if (auto button = gamepad_mappings::getButton(state, mapper.positiveTrigger); button != nullptr) {
+                    const auto value = normalizeAxisValue(event.value, thumbStickInfos[event.code]);
                     constexpr float threshold = 0.05f;
                     (*button) = (value > threshold) ? ButtonState::Pressed : ButtonState::Released;
                 }
 
-                if (auto button = GetButton(state, mapper.negativeTrigger); button != nullptr) {
-                    const auto value = NormalizeAxisValue(event.value, thumbStickInfos[event.code]);
+                if (auto button = gamepad_mappings::getButton(state, mapper.negativeTrigger); button != nullptr) {
+                    const auto value = normalizeAxisValue(event.value, thumbStickInfos[event.code]);
                     constexpr float threshold = -0.05f;
                     (*button) = (value < threshold) ? ButtonState::Pressed : ButtonState::Released;
                 }
@@ -305,62 +308,63 @@ bool GamepadDevice::PollEvents()
 
 GamepadLinux::GamepadLinux() noexcept
 {
-    gamepads[0].playerIndex = PlayerIndex::One;
-    gamepads[1].playerIndex = PlayerIndex::Two;
-    gamepads[2].playerIndex = PlayerIndex::Three;
-    gamepads[3].playerIndex = PlayerIndex::Four;
+    gamepads_[0].playerIndex = PlayerIndex::One;
+    gamepads_[1].playerIndex = PlayerIndex::Two;
+    gamepads_[2].playerIndex = PlayerIndex::Three;
+    gamepads_[3].playerIndex = PlayerIndex::Four;
 }
 
 GamepadLinux::~GamepadLinux()
 {
-    for (auto& gamepad : gamepads) {
-        if (gamepad.HasFileDescriptor()) {
-            Log::Internal("Close gamepad: " + gamepad.caps.Name);
-            gamepad.Close();
+    for (auto& gamepad : gamepads_) {
+        if (gamepad.hasFileDescriptor()) {
+            gamepad.close();
         }
     }
 }
 
-GamepadCapabilities GamepadLinux::GetCapabilities(PlayerIndex playerIndex) const
+GamepadCapabilities
+GamepadLinux::getCapabilities(PlayerIndex playerIndex) const
 {
-    const auto index = GamepadHelper::ToInt(playerIndex);
+    const auto index = GamepadHelper::toInt(playerIndex);
     POMDOG_ASSERT(index >= 0);
-    POMDOG_ASSERT(index < static_cast<int>(gamepads.size()));
-    return gamepads[index].caps;
+    POMDOG_ASSERT(index < static_cast<int>(gamepads_.size()));
+    return gamepads_[index].caps;
 }
 
-GamepadState GamepadLinux::GetState(PlayerIndex playerIndex) const
+GamepadState
+GamepadLinux::getState(PlayerIndex playerIndex) const
 {
-    const auto index = GamepadHelper::ToInt(playerIndex);
+    const auto index = GamepadHelper::toInt(playerIndex);
     POMDOG_ASSERT(index >= 0);
-    POMDOG_ASSERT(index < static_cast<int>(gamepads.size()));
-    return gamepads[index].state;
+    POMDOG_ASSERT(index < static_cast<int>(gamepads_.size()));
+    return gamepads_[index].state;
 }
 
-void GamepadLinux::EnumerateDevices()
+void GamepadLinux::enumerateDevices()
 {
-    auto gamepad = std::begin(gamepads);
+    auto gamepad = std::begin(gamepads_);
 
     for (int i = 0; i < 32; i++) {
-        while ((gamepad != std::end(gamepads)) && gamepad->HasFileDescriptor()) {
+        while ((gamepad != std::end(gamepads_)) && gamepad->hasFileDescriptor()) {
             ++gamepad;
         }
-        if (gamepad == std::end(gamepads)) {
+        if (gamepad == std::end(gamepads_)) {
             break;
         }
 
-        auto iter = std::find_if(std::begin(gamepads), std::end(gamepads), [&](auto& dev) {
-            return (dev.HasFileDescriptor() && (dev.deviceEventIndex == i));
+        auto iter = std::find_if(std::begin(gamepads_), std::end(gamepads_), [&](auto& device) {
+            return (device.hasFileDescriptor() && (device.deviceEventIndex == i));
         });
-        if (iter != std::end(gamepads)) {
+        if (iter != std::end(gamepads_)) {
             // The device is already opened.
             continue;
         }
 
-        POMDOG_ASSERT(!gamepad->HasFileDescriptor());
+        POMDOG_ASSERT(!gamepad->hasFileDescriptor());
 
-        if (!gamepad->Open(i)) {
-            gamepad->Close();
+        if (!gamepad->open(i)) {
+            gamepad->close();
             continue;
         }
 
@@ -368,16 +372,16 @@ void GamepadLinux::EnumerateDevices()
     }
 }
 
-void GamepadLinux::PollEvents()
+void GamepadLinux::pollEvents()
 {
-    for (auto& gamepad : gamepads) {
-        if (!gamepad.HasFileDescriptor()) {
+    for (auto& gamepad : gamepads_) {
+        if (!gamepad.hasFileDescriptor()) {
             continue;
         }
 
-        if (!gamepad.PollEvents()) {
+        if (!gamepad.pollEvents()) {
             auto caps = gamepad.caps;
-            gamepad.Close();
+            gamepad.close();
             this->Disconnected(gamepad.playerIndex, caps);
         }
     }

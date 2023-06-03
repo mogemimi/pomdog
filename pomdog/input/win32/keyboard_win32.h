@@ -10,15 +10,16 @@
 namespace pomdog::detail::win32 {
 
 class KeyboardWin32 final : public Keyboard {
-public:
-    KeyboardState GetState() const override;
-
-    void HandleMessage(const SystemEvent& event);
-
 private:
-    KeyboardState keyboardState;
+    KeyboardState keyboardState_;
+
+public:
+    [[nodiscard]] KeyboardState
+    getState() const override;
+
+    void handleMessage(const SystemEvent& event);
 };
 
-void TranslateKeyboardEvent(const RAWKEYBOARD& keyboard, const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue) noexcept;
+void translateKeyboardEvent(const RAWKEYBOARD& keyboard, const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue) noexcept;
 
 } // namespace pomdog::detail::win32

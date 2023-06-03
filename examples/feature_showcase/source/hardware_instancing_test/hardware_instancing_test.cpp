@@ -170,10 +170,10 @@ std::unique_ptr<Error> HardwareInstancingTest::initialize()
 
         const auto window = gameHost->getWindow();
         const auto mouse = gameHost->getMouse();
-        const auto mouseState = mouse->GetState();
+        const auto mouseState = mouse->getState();
         const auto clientBounds = window->getClientBounds();
 
-        auto pos = mouseState.Position;
+        auto pos = mouseState.position;
         pos.x = pos.x - (clientBounds.width / 2);
         pos.y = -pos.y + (clientBounds.height / 2);
 

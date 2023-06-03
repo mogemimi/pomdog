@@ -13,7 +13,8 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog::detail::win32 {
 namespace {
 
-Keys TranslateKey(std::uint16_t keyCode) noexcept
+[[nodiscard]] Keys
+translateKey(std::uint16_t keyCode) noexcept
 {
     constexpr std::array<Keys, 228> keyTable = {
         Keys::Unknown,         // 0x01: VK_LBUTTON
@@ -254,32 +255,32 @@ Keys TranslateKey(std::uint16_t keyCode) noexcept
 
 } // namespace
 
-void KeyboardWin32::HandleMessage(const SystemEvent& event)
+void KeyboardWin32::handleMessage(const SystemEvent& event)
 {
-    switch (event.Kind) {
+    switch (event.kind) {
     case SystemEventKind::InputKeyEvent: {
-        const auto ev = std::get<InputKeyEvent>(event.Data);
+        const auto ev = std::get<InputKeyEvent>(event.data);
 
-        const bool isKeyDown = keyboardState.IsKeyDown(ev.Key);
-        keyboardState.SetKey(ev.Key, ev.State);
+        const bool isKeyDown = keyboardState_.isKeyDown(ev.key);
+        keyboardState_.setKey(ev.key, ev.state);
 
-        switch (ev.State) {
+        switch (ev.state) {
         case KeyState::Down:
             if (!isKeyDown) {
-                Keyboard::KeyDown(ev.Key);
+                Keyboard::KeyDown(ev.key);
             }
             break;
         case KeyState::Up:
             if (isKeyDown) {
-                Keyboard::KeyUp(ev.Key);
+                Keyboard::KeyUp(ev.key);
             }
             break;
         }
         break;
     }
     case SystemEventKind::InputTextEvent: {
-        const auto& ev = std::get<InputTextEvent>(event.Data);
-        Keyboard::TextInput(ev.Text);
+        const auto& ev = std::get<InputTextEvent>(event.data);
+        Keyboard::TextInput(ev.text);
         break;
     }
     default:
@@ -287,24 +288,25 @@ void KeyboardWin32::HandleMessage(const SystemEvent& event)
     }
 }
 
-KeyboardState KeyboardWin32::GetState() const
+KeyboardState
+KeyboardWin32::getState() const
 {
-    return keyboardState;
+    return keyboardState_;
 }
 
-void TranslateKeyboardEvent(const RAWKEYBOARD& keyboard, const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue) noexcept
+void translateKeyboardEvent(const RAWKEYBOARD& keyboard, const std::shared_ptr<EventQueue<SystemEvent>>& eventQueue) noexcept
 {
-    const auto key = TranslateKey(keyboard.VKey);
+    const auto key = translateKey(keyboard.VKey);
     if (key == Keys::Unknown) {
         return;
     }
 
     const auto keyState = (keyboard.Flags & RI_KEY_BREAK ? KeyState::Up : KeyState::Down);
-    eventQueue->Enqueue(SystemEvent{
-        .Kind = SystemEventKind::InputKeyEvent,
-        .Data = InputKeyEvent{
-            .State = keyState,
-            .Key = key,
+    eventQueue->enqueue(SystemEvent{
+        .kind = SystemEventKind::InputKeyEvent,
+        .data = InputKeyEvent{
+            .state = keyState,
+            .key = key,
         },
     });
 }

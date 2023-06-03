@@ -23,44 +23,36 @@ static_assert(static_cast<std::underlying_type_t<Keys>>(Keys::Quote) == 141);
 static_assert(std::is_same_v<std::underlying_type_t<Keys>, std::uint8_t>);
 static_assert(std::is_unsigned_v<std::underlying_type_t<Keys>>, "Keys is unsinged integer type.");
 
-KeyState KeyboardState::operator[](Keys key) const
+bool KeyboardState::isKeyDown(Keys key) const noexcept
 {
     using size_type = std::underlying_type<decltype(key)>::type;
-    POMDOG_ASSERT(static_cast<size_type>(key) < keyset.size());
+    POMDOG_ASSERT(static_cast<size_type>(key) < keyset_.size());
 
-    return keyset[static_cast<size_type>(key)] ? KeyState::Down : KeyState::Up;
+    return keyset_[static_cast<size_type>(key)];
 }
 
-bool KeyboardState::IsKeyDown(Keys key) const
+bool KeyboardState::isKeyUp(Keys key) const noexcept
 {
     using size_type = std::underlying_type<decltype(key)>::type;
-    POMDOG_ASSERT(static_cast<size_type>(key) < keyset.size());
+    POMDOG_ASSERT(static_cast<size_type>(key) < keyset_.size());
 
-    return keyset[static_cast<size_type>(key)];
+    return !keyset_[static_cast<size_type>(key)];
 }
 
-bool KeyboardState::IsKeyUp(Keys key) const
+void KeyboardState::setKey(Keys key, KeyState keyState) noexcept
 {
     using size_type = std::underlying_type<decltype(key)>::type;
-    POMDOG_ASSERT(static_cast<size_type>(key) < keyset.size());
-
-    return !keyset[static_cast<size_type>(key)];
-}
-
-void KeyboardState::SetKey(Keys key, KeyState keyState)
-{
-    using size_type = std::underlying_type<decltype(key)>::type;
-    POMDOG_ASSERT(static_cast<size_type>(key) < keyset.size());
+    POMDOG_ASSERT(static_cast<size_type>(key) < keyset_.size());
 
     static_assert(static_cast<bool>(KeyState::Down) == true, "");
 
-    keyset[static_cast<size_type>(key)] = (keyState == KeyState::Down);
+    keyset_[static_cast<size_type>(key)] = (keyState == KeyState::Down);
 }
 
-void KeyboardState::ClearAllKeys()
+void KeyboardState::clearAllKeys() noexcept
 {
-    keyset.reset();
-    POMDOG_ASSERT(keyset.none());
+    keyset_.reset();
+    POMDOG_ASSERT(keyset_.none());
 }
 
 } // namespace pomdog

@@ -37,7 +37,7 @@ void WidgetHierarchy::Touch(const MouseState& mouseState)
 {
     POMDOG_ASSERT(dispatcher);
     MouseState transposedeState = mouseState;
-    transposedeState.Position.y = (viewportHeight - transposedeState.Position.y);
+    transposedeState.position.y = (viewportHeight - transposedeState.position.y);
     dispatcher->Touch(transposedeState, children);
     Update();
 }

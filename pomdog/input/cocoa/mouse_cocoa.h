@@ -15,13 +15,14 @@ class MouseCocoa final : public Mouse {
 public:
     MouseCocoa();
 
-    MouseState GetState() const override;
+    [[nodiscard]] MouseState
+    getState() const override;
 
-    void HandleEvent(const SystemEvent& event);
+    void handleEvent(const SystemEvent& event);
 
 private:
-    MouseState state;
-    double scrollWheel;
+    MouseState state_;
+    double scrollWheel_ = 0.0;
 };
 
 } // namespace pomdog::detail::cocoa

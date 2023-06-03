@@ -62,28 +62,32 @@ struct GamepadMappings final {
     std::array<AxisMapper, 6> axes;
 };
 
-[[nodiscard]] ButtonState*
-GetButton(GamepadState& state, const GamepadButtonMappings& mappings, int index) noexcept;
+} // namespace pomdog::detail
+
+namespace pomdog::detail::gamepad_mappings {
 
 [[nodiscard]] ButtonState*
-GetButton(GamepadState& state, ButtonKind kind) noexcept;
+getButton(GamepadState& state, const GamepadButtonMappings& mappings, int index) noexcept;
+
+[[nodiscard]] ButtonState*
+getButton(GamepadState& state, ButtonKind kind) noexcept;
 
 [[nodiscard]] float*
-GetThumbStick(GamepadState& state, ThumbStickKind kind) noexcept;
+getThumbStick(GamepadState& state, ThumbStickKind kind) noexcept;
 
 [[nodiscard]] bool*
-HasButton(GamepadCapabilities& caps, const GamepadButtonMappings& mappings, int index) noexcept;
+hasButton(GamepadCapabilities& caps, const GamepadButtonMappings& mappings, int index) noexcept;
 
 [[nodiscard]] bool*
-HasButton(GamepadCapabilities& caps, ButtonKind kind) noexcept;
+hasButton(GamepadCapabilities& caps, ButtonKind kind) noexcept;
 
 [[nodiscard]] bool*
-HasThumbStick(GamepadCapabilities& caps, ThumbStickKind kind) noexcept;
+hasThumbStick(GamepadCapabilities& caps, ThumbStickKind kind) noexcept;
 
 [[nodiscard]] std::tuple<GamepadMappings, std::string>
-GetMappings(const GamepadUUID& uuid) noexcept;
+getMappings(const GamepadUUID& uuid) noexcept;
 
 [[nodiscard]] std::tuple<GamepadMappings, std::string>
-GetMappings(const std::string& uuid) noexcept;
+getMappings(const std::string& uuid) noexcept;
 
-} // namespace pomdog::detail
+} // namespace pomdog::detail::gamepad_mappings

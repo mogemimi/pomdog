@@ -51,9 +51,9 @@ void SpriteLineTest::update()
     const auto mouse = gameHost->getMouse();
     const auto window = gameHost->getWindow();
     const auto clientBounds = window->getClientBounds();
-    auto pos = mouse->GetState().Position;
+    auto pos = mouse->getState().position;
 
-    if (mouse->GetState().LeftButton == ButtonState::Pressed) {
+    if (mouse->getState().leftButton == ButtonState::Pressed) {
         pos.x = pos.x - (clientBounds.width / 2);
         pos.y = -pos.y + (clientBounds.height / 2);
 

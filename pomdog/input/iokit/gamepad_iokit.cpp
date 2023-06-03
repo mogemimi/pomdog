@@ -5,12 +5,15 @@
 #include "pomdog/logging/log.h"
 #include "pomdog/signals/event_queue.h"
 #include "pomdog/utility/assert.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <algorithm>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail::IOKit {
 namespace {
 
-void AppendDeviceMatching(CFMutableArrayRef matcher, uint32_t page, uint32_t usage)
+void appendDeviceMatching(CFMutableArrayRef matcher, uint32_t page, uint32_t usage)
 {
     auto result = CFDictionaryCreateMutable(
         kCFAllocatorDefault, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
@@ -31,29 +34,30 @@ void AppendDeviceMatching(CFMutableArrayRef matcher, uint32_t page, uint32_t usa
     CFRelease(result);
 }
 
-float NormalizeAxisValue(IOHIDValueRef valueRef, const ThumbStickInfo& info)
+[[nodiscard]] float
+normalizeAxisValue(IOHIDValueRef valueRef, const ThumbStickInfo& info)
 {
     const auto value = IOHIDValueGetIntegerValue(valueRef);
-    return static_cast<float>(info.InvertDirection * ((value - info.Minimum) * 2 - info.Range)) / info.Range;
+    return static_cast<float>(info.invertDirection * ((value - info.minimum) * 2 - info.range)) / info.range;
 }
 
 } // namespace
 
-void GamepadDevice::Close()
+void GamepadDevice::close()
 {
     if (device != nullptr) {
         IOHIDDeviceClose(device, kIOHIDOptionsTypeNone);
         device = nullptr;
     }
 
-    GamepadHelper::ClearState(state);
-    state.IsConnected = false;
+    GamepadHelper::clearState(state);
+    state.isConnected = false;
 
     GamepadCapabilities emptyCaps;
     std::swap(caps, emptyCaps);
 }
 
-void GamepadDevice::OnDeviceInput(IOReturn result, void* sender, IOHIDValueRef valueRef)
+void GamepadDevice::onDeviceInput(IOReturn result, void* sender, IOHIDValueRef valueRef)
 {
     const auto element = IOHIDValueGetElement(valueRef);
     const auto usagePage = IOHIDElementGetUsagePage(element);
@@ -62,7 +66,7 @@ void GamepadDevice::OnDeviceInput(IOReturn result, void* sender, IOHIDValueRef v
     switch (IOHIDElementGetType(element)) {
     case kIOHIDElementTypeInput_Button: {
         const auto buttonIndex = static_cast<int>(usage) - 1;
-        if (auto button = GetButton(state, mappings.buttons, buttonIndex); button != nullptr) {
+        if (auto button = gamepad_mappings::getButton(state, mappings.buttons, buttonIndex); button != nullptr) {
             (*button) = (IOHIDValueGetIntegerValue(valueRef) != 0)
                             ? ButtonState::Pressed
                             : ButtonState::Released;
@@ -87,18 +91,18 @@ void GamepadDevice::OnDeviceInput(IOReturn result, void* sender, IOHIDValueRef v
 
                 const auto& mapper = mappings.axes[axisIndex];
 
-                if (auto thumbStick = GetThumbStick(state, mapper.thumbStick); thumbStick != nullptr) {
-                    (*thumbStick) = NormalizeAxisValue(valueRef, thumbStickInfos[axisIndex]);
+                if (auto thumbStick = gamepad_mappings::getThumbStick(state, mapper.thumbStick); thumbStick != nullptr) {
+                    (*thumbStick) = normalizeAxisValue(valueRef, thumbStickInfos[axisIndex]);
                 }
 
-                if (auto button = GetButton(state, mapper.positiveTrigger); button != nullptr) {
-                    const auto value = NormalizeAxisValue(valueRef, thumbStickInfos[axisIndex]);
+                if (auto button = gamepad_mappings::getButton(state, mapper.positiveTrigger); button != nullptr) {
+                    const auto value = normalizeAxisValue(valueRef, thumbStickInfos[axisIndex]);
                     constexpr float threshold = 0.05f;
                     (*button) = (value > threshold) ? ButtonState::Pressed : ButtonState::Released;
                 }
 
-                if (auto button = GetButton(state, mapper.negativeTrigger); button != nullptr) {
-                    const auto value = NormalizeAxisValue(valueRef, thumbStickInfos[axisIndex]);
+                if (auto button = gamepad_mappings::getButton(state, mapper.negativeTrigger); button != nullptr) {
+                    const auto value = normalizeAxisValue(valueRef, thumbStickInfos[axisIndex]);
                     constexpr float threshold = -0.05f;
                     (*button) = (value < threshold) ? ButtonState::Pressed : ButtonState::Released;
                 }
@@ -106,39 +110,39 @@ void GamepadDevice::OnDeviceInput(IOReturn result, void* sender, IOHIDValueRef v
                 break;
             }
             case kHIDUsage_GD_Hatswitch: {
-                state.DPad.Up = ButtonState::Released;
-                state.DPad.Down = ButtonState::Released;
-                state.DPad.Left = ButtonState::Released;
-                state.DPad.Right = ButtonState::Released;
+                state.dpad.up = ButtonState::Released;
+                state.dpad.down = ButtonState::Released;
+                state.dpad.left = ButtonState::Released;
+                state.dpad.right = ButtonState::Released;
 
                 switch (IOHIDValueGetIntegerValue(valueRef)) {
                 case 0:
-                    state.DPad.Up = ButtonState::Pressed;
+                    state.dpad.up = ButtonState::Pressed;
                     break;
                 case 1:
-                    state.DPad.Up = ButtonState::Pressed;
-                    state.DPad.Right = ButtonState::Pressed;
+                    state.dpad.up = ButtonState::Pressed;
+                    state.dpad.right = ButtonState::Pressed;
                     break;
                 case 2:
-                    state.DPad.Right = ButtonState::Pressed;
+                    state.dpad.right = ButtonState::Pressed;
                     break;
                 case 3:
-                    state.DPad.Right = ButtonState::Pressed;
-                    state.DPad.Down = ButtonState::Pressed;
+                    state.dpad.right = ButtonState::Pressed;
+                    state.dpad.down = ButtonState::Pressed;
                     break;
                 case 4:
-                    state.DPad.Down = ButtonState::Pressed;
+                    state.dpad.down = ButtonState::Pressed;
                     break;
                 case 5:
-                    state.DPad.Down = ButtonState::Pressed;
-                    state.DPad.Left = ButtonState::Pressed;
+                    state.dpad.down = ButtonState::Pressed;
+                    state.dpad.left = ButtonState::Pressed;
                     break;
                 case 6:
-                    state.DPad.Left = ButtonState::Pressed;
+                    state.dpad.left = ButtonState::Pressed;
                     break;
                 case 7:
-                    state.DPad.Up = ButtonState::Pressed;
-                    state.DPad.Left = ButtonState::Pressed;
+                    state.dpad.up = ButtonState::Pressed;
+                    state.dpad.left = ButtonState::Pressed;
                     break;
                 default:
                     break;
@@ -178,17 +182,17 @@ void GamepadDevice::OnDeviceInput(IOReturn result, void* sender, IOHIDValueRef v
 GamepadIOKit::GamepadIOKit() = default;
 
 std::unique_ptr<Error>
-GamepadIOKit::Initialize(const std::shared_ptr<EventQueue<SystemEvent>>& eventQueueIn)
+GamepadIOKit::initialize(const std::shared_ptr<EventQueue<SystemEvent>>& eventQueueIn)
 {
-    eventQueue = eventQueueIn;
+    eventQueue_ = eventQueueIn;
 
-    gamepads[0].playerIndex = PlayerIndex::One;
-    gamepads[1].playerIndex = PlayerIndex::Two;
-    gamepads[2].playerIndex = PlayerIndex::Three;
-    gamepads[3].playerIndex = PlayerIndex::Four;
+    gamepads_[0].playerIndex = PlayerIndex::One;
+    gamepads_[1].playerIndex = PlayerIndex::Two;
+    gamepads_[2].playerIndex = PlayerIndex::Three;
+    gamepads_[3].playerIndex = PlayerIndex::Four;
 
-    hidManager = IOHIDManagerCreate(kCFAllocatorDefault, kIOHIDOptionsTypeNone);
-    if (hidManager == nullptr) {
+    hidManager_ = IOHIDManagerCreate(kCFAllocatorDefault, kIOHIDOptionsTypeNone);
+    if (hidManager_ == nullptr) {
         return errors::make("IOHIDManagerCreate() failed");
     }
 
@@ -197,77 +201,79 @@ GamepadIOKit::Initialize(const std::shared_ptr<EventQueue<SystemEvent>>& eventQu
         return errors::make("CFArrayCreateMutable() failed");
     }
 
-    AppendDeviceMatching(deviceMatcher, kHIDPage_GenericDesktop, kHIDUsage_GD_Joystick);
-    AppendDeviceMatching(deviceMatcher, kHIDPage_GenericDesktop, kHIDUsage_GD_GamePad);
+    appendDeviceMatching(deviceMatcher, kHIDPage_GenericDesktop, kHIDUsage_GD_Joystick);
+    appendDeviceMatching(deviceMatcher, kHIDPage_GenericDesktop, kHIDUsage_GD_GamePad);
 
-    IOHIDManagerSetDeviceMatchingMultiple(hidManager, deviceMatcher);
+    IOHIDManagerSetDeviceMatchingMultiple(hidManager_, deviceMatcher);
     CFRelease(deviceMatcher);
 
     IOHIDManagerRegisterDeviceMatchingCallback(
-        hidManager,
+        hidManager_,
         [](void* context, IOReturn result, void* sender, IOHIDDeviceRef device) {
             auto c = reinterpret_cast<GamepadIOKit*>(context);
             POMDOG_ASSERT(c != nullptr);
-            c->OnDeviceAttached(result, sender, device);
+            c->onDeviceAttached(result, sender, device);
         },
         this);
     IOHIDManagerRegisterDeviceRemovalCallback(
-        hidManager,
+        hidManager_,
         [](void* context, IOReturn result, void* sender, IOHIDDeviceRef device) {
             auto c = reinterpret_cast<GamepadIOKit*>(context);
             POMDOG_ASSERT(c != nullptr);
-            c->OnDeviceDetached(result, sender, device);
+            c->onDeviceDetached(result, sender, device);
         },
         this);
 
-    IOHIDManagerScheduleWithRunLoop(hidManager, CFRunLoopGetMain(), kCFRunLoopCommonModes);
-    IOHIDManagerOpen(hidManager, kIOHIDOptionsTypeNone);
+    IOHIDManagerScheduleWithRunLoop(hidManager_, CFRunLoopGetMain(), kCFRunLoopCommonModes);
+    IOHIDManagerOpen(hidManager_, kIOHIDOptionsTypeNone);
 
     return nullptr;
 }
 
 GamepadIOKit::~GamepadIOKit()
 {
-    for (auto& device : gamepads) {
-        device.Close();
+    for (auto& device : gamepads_) {
+        device.close();
     }
 
-    if (hidManager != nullptr) {
-        IOHIDManagerUnscheduleFromRunLoop(hidManager, CFRunLoopGetCurrent(), kCFRunLoopCommonModes);
-        IOHIDManagerClose(hidManager, kIOHIDOptionsTypeNone);
-        CFRelease(hidManager);
-        hidManager = nullptr;
+    if (hidManager_ != nullptr) {
+        IOHIDManagerUnscheduleFromRunLoop(hidManager_, CFRunLoopGetCurrent(), kCFRunLoopCommonModes);
+        IOHIDManagerClose(hidManager_, kIOHIDOptionsTypeNone);
+        CFRelease(hidManager_);
+        hidManager_ = nullptr;
     }
 }
 
-GamepadCapabilities GamepadIOKit::GetCapabilities(PlayerIndex playerIndex) const
+GamepadCapabilities
+GamepadIOKit::getCapabilities(PlayerIndex playerIndex) const
 {
-    const auto index = GamepadHelper::ToInt(playerIndex);
+    const auto index = GamepadHelper::toInt(playerIndex);
     POMDOG_ASSERT(index >= 0);
-    POMDOG_ASSERT(index < static_cast<int>(gamepads.size()));
-    return gamepads[index].caps;
+    POMDOG_ASSERT(index < static_cast<int>(gamepads_.size()));
+    return gamepads_[index].caps;
 }
 
-GamepadState GamepadIOKit::GetState(PlayerIndex playerIndex) const
+GamepadState
+GamepadIOKit::getState(PlayerIndex playerIndex) const
 {
-    const auto index = GamepadHelper::ToInt(playerIndex);
+    const auto index = GamepadHelper::toInt(playerIndex);
     POMDOG_ASSERT(index >= 0);
-    POMDOG_ASSERT(index < static_cast<int>(gamepads.size()));
-    return gamepads[index].state;
+    POMDOG_ASSERT(index < static_cast<int>(gamepads_.size()));
+    return gamepads_[index].state;
 }
 
-void GamepadIOKit::OnDeviceAttached(IOReturn result, void* sender, IOHIDDeviceRef device)
+void GamepadIOKit::onDeviceAttached(IOReturn result, void* sender, IOHIDDeviceRef device)
 {
-    auto gamepad = std::find_if(std::begin(gamepads), std::end(gamepads), [](GamepadDevice& a) {
+    const auto gamepad = std::find_if(std::begin(gamepads_), std::end(gamepads_), [](GamepadDevice& a) {
         return a.device == nullptr;
     });
-    if (gamepad == std::end(gamepads)) {
+    if (gamepad == std::end(gamepads_)) {
         return;
     }
 
-    GamepadHelper::ClearState(gamepad->state);
+    GamepadHelper::clearState(gamepad->state);
     gamepad->device = device;
-    gamepad->state.IsConnected = true;
+    gamepad->state.isConnected = true;
 
     std::int32_t vendor = 0;
     std::int32_t product = 0;
@@ -290,20 +296,20 @@ void GamepadIOKit::OnDeviceAttached(IOReturn result, void* sender, IOHIDDeviceRe
 
     constexpr std::uint16_t busUSB = 0x03;
 
-    auto& uuid = gamepad->caps.DeviceUUID;
-    uuid.BusType = busUSB;
-    uuid.VendorID = static_cast<uint16_t>(vendor);
-    uuid.ProductID = static_cast<uint16_t>(product);
-    uuid.VersionNumber = static_cast<uint16_t>(version);
+    auto& uuid = gamepad->caps.deviceUUID;
+    uuid.busType = busUSB;
+    uuid.vendorID = static_cast<uint16_t>(vendor);
+    uuid.productID = static_cast<uint16_t>(product);
+    uuid.versionNumber = static_cast<uint16_t>(version);
 
-    std::tie(gamepad->mappings, gamepad->caps.Name) = GetMappings(uuid);
-    if (gamepad->caps.Name.empty()) {
+    std::tie(gamepad->mappings, gamepad->caps.name) = gamepad_mappings::getMappings(uuid);
+    if (gamepad->caps.name.empty()) {
         auto productKey = reinterpret_cast<CFStringRef>(IOHIDDeviceGetProperty(device, CFSTR(kIOHIDProductKey)));
         if (productKey != nullptr) {
             std::array<char, 256> buffer;
             std::fill(std::begin(buffer), std::end(buffer), 0);
             CFStringGetCString(productKey, buffer.data(), buffer.size(), kCFStringEncodingUTF8);
-            gamepad->caps.Name = buffer.data();
+            gamepad->caps.name = buffer.data();
         }
     }
 
@@ -321,7 +327,7 @@ void GamepadIOKit::OnDeviceAttached(IOReturn result, void* sender, IOHIDDeviceRe
             switch (IOHIDElementGetType(element)) {
             case kIOHIDElementTypeInput_Button: {
                 const auto buttonIndex = static_cast<int>(usage) - 1;
-                if (auto hasButton = HasButton(gamepad->caps, gamepad->mappings.buttons, buttonIndex); hasButton != nullptr) {
+                if (auto hasButton = gamepad_mappings::hasButton(gamepad->caps, gamepad->mappings.buttons, buttonIndex); hasButton != nullptr) {
                     (*hasButton) = true;
                 }
                 break;
@@ -344,13 +350,13 @@ void GamepadIOKit::OnDeviceAttached(IOReturn result, void* sender, IOHIDDeviceRe
 
                         const auto& mapper = gamepad->mappings.axes[axisIndex];
 
-                        if (auto hasThumbStick = HasThumbStick(gamepad->caps, mapper.thumbStick); hasThumbStick != nullptr) {
+                        if (auto hasThumbStick = gamepad_mappings::hasThumbStick(gamepad->caps, mapper.thumbStick); hasThumbStick != nullptr) {
                             (*hasThumbStick) = true;
                         }
-                        if (auto hasButton = HasButton(gamepad->caps, mapper.positiveTrigger); hasButton != nullptr) {
+                        if (auto hasButton = gamepad_mappings::hasButton(gamepad->caps, mapper.positiveTrigger); hasButton != nullptr) {
                             (*hasButton) = true;
                         }
-                        if (auto hasButton = HasButton(gamepad->caps, mapper.negativeTrigger); hasButton != nullptr) {
+                        if (auto hasButton = gamepad_mappings::hasButton(gamepad->caps, mapper.negativeTrigger); hasButton != nullptr) {
                             (*hasButton) = true;
                         }
 
@@ -360,16 +366,16 @@ void GamepadIOKit::OnDeviceAttached(IOReturn result, void* sender, IOHIDDeviceRe
                         const auto minimum = static_cast<int32_t>(IOHIDElementGetLogicalMin(element));
                         const auto maximum = static_cast<int32_t>(IOHIDElementGetLogicalMax(element));
                         auto& info = gamepad->thumbStickInfos[axisIndex];
-                        info.Minimum = minimum;
-                        info.Range = std::max(1, maximum - minimum);
+                        info.minimum = minimum;
+                        info.range = std::max(1, maximum - minimum);
                         switch (mapper.thumbStick) {
                         case ThumbStickKind::LeftStickY:
                         case ThumbStickKind::RightStickY:
                             // Set to -1 to reverse the Y axis (vertical)
-                            info.InvertDirection = -1;
+                            info.invertDirection = -1;
                             break;
                         default:
-                            info.InvertDirection = 1;
+                            info.invertDirection = 1;
                             break;
                         }
                         break;
@@ -392,15 +398,13 @@ void GamepadIOKit::OnDeviceAttached(IOReturn result, void* sender, IOHIDDeviceRe
         CFRelease(elements);
     }
 
-    Log::Internal("Attached device: " + gamepad->caps.Name);
-
     SystemEvent event;
     event.kind = SystemEventKind::GamepadDisconnectedEvent;
     event.data = GamepadEvent{
         .playerIndex = gamepad->playerIndex,
         .capabilities = gamepad->caps,
     };
-    eventQueue->enqueue(std::move(event));
+    eventQueue_->enqueue(std::move(event));
 
     IOHIDDeviceOpen(device, kIOHIDOptionsTypeNone);
     IOHIDDeviceScheduleWithRunLoop(device, CFRunLoopGetCurrent(), kCFRunLoopCommonModes);
@@ -409,25 +413,23 @@ void GamepadIOKit::OnDeviceAttached(IOReturn result, void* sender, IOHIDDeviceRe
         [](void* context, IOReturn resultIn, void* senderIn, IOHIDValueRef value) {
             auto c = reinterpret_cast<GamepadDevice*>(context);
             POMDOG_ASSERT(c != nullptr);
-            c->OnDeviceInput(resultIn, senderIn, value);
+            c->onDeviceInput(resultIn, senderIn, value);
         },
         &(*gamepad));
 }
 
-void GamepadIOKit::OnDeviceDetached(IOReturn result, void* sender, IOHIDDeviceRef device)
+void GamepadIOKit::onDeviceDetached(IOReturn result, void* sender, IOHIDDeviceRef device)
 {
-    auto gamepad = std::find_if(std::begin(gamepads), std::end(gamepads), [&](GamepadDevice& a) {
+    auto gamepad = std::find_if(std::begin(gamepads_), std::end(gamepads_), [&](GamepadDevice& a) {
         return a.device == device;
     });
-    if (gamepad == std::end(gamepads)) {
-        Log::Internal("The device was not found");
+    if (gamepad == std::end(gamepads_)) {
+        // NOTE: The device was not found.
         return;
     }
 
-    Log::Internal("Detached device: " + gamepad->caps.Name);
-
     auto caps = gamepad->caps;
-    gamepad->Close();
+    gamepad->close();
 
     SystemEvent event;
     event.kind = SystemEventKind::GamepadDisconnectedEvent;
@@ -435,10 +437,10 @@ void GamepadIOKit::OnDeviceDetached(IOReturn result, void* sender, IOHIDDeviceRe
         .playerIndex = gamepad->playerIndex,
         .capabilities = std::move(caps),
     };
-    eventQueue->enqueue(std::move(event));
+    eventQueue_->enqueue(std::move(event));
 }
 
-void GamepadIOKit::HandleEvent(const SystemEvent& event)
+void GamepadIOKit::handleEvent(const SystemEvent& event)
 {
     switch (event.kind) {
     case SystemEventKind::GamepadConnectedEvent: {

@@ -13,12 +13,13 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 namespace pomdog {
 
 struct POMDOG_EXPORT GamepadUUID final {
-    std::uint16_t BusType = 0;
-    std::uint16_t VendorID = 0;
-    std::uint16_t ProductID = 0;
-    std::uint16_t VersionNumber = 0;
+    std::uint16_t busType = 0;
+    std::uint16_t vendorID = 0;
+    std::uint16_t productID = 0;
+    std::uint16_t versionNumber = 0;
 
-    std::string ToString() const;
+    [[nodiscard]] std::string
+    toString() const;
 };
 
 } // namespace pomdog

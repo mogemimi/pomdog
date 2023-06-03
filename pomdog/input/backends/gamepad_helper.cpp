@@ -6,36 +6,36 @@
 
 namespace pomdog::detail::GamepadHelper {
 
-[[nodiscard]] int ToInt(PlayerIndex index) noexcept
+[[nodiscard]] int toInt(PlayerIndex index) noexcept
 {
     POMDOG_ASSERT(static_cast<int>(index) >= 1);
     return static_cast<int>(index) - 1;
 }
 
-void ClearState(GamepadState& state) noexcept
+void clearState(GamepadState& state) noexcept
 {
-    state.Buttons.A = ButtonState::Released;
-    state.Buttons.B = ButtonState::Released;
-    state.Buttons.X = ButtonState::Released;
-    state.Buttons.Y = ButtonState::Released;
-    state.Buttons.LeftShoulder = ButtonState::Released;
-    state.Buttons.RightShoulder = ButtonState::Released;
-    state.Buttons.LeftTrigger = ButtonState::Released;
-    state.Buttons.RightTrigger = ButtonState::Released;
-    state.Buttons.LeftMenu = ButtonState::Released;
-    state.Buttons.RightMenu = ButtonState::Released;
-    state.Buttons.LeftStick = ButtonState::Released;
-    state.Buttons.RightStick = ButtonState::Released;
-    state.Buttons.Guide = ButtonState::Released;
-    state.Buttons.Extra1 = ButtonState::Released;
-    state.Buttons.Extra2 = ButtonState::Released;
-    state.DPad.Down = ButtonState::Released;
-    state.DPad.Up = ButtonState::Released;
-    state.DPad.Left = ButtonState::Released;
-    state.DPad.Right = ButtonState::Released;
-    state.ThumbSticks.Left = Vector2::createZero();
-    state.ThumbSticks.Right = Vector2::createZero();
-    state.IsConnected = false;
+    state.buttons.a = ButtonState::Released;
+    state.buttons.b = ButtonState::Released;
+    state.buttons.x = ButtonState::Released;
+    state.buttons.y = ButtonState::Released;
+    state.buttons.leftShoulder = ButtonState::Released;
+    state.buttons.rightShoulder = ButtonState::Released;
+    state.buttons.leftTrigger = ButtonState::Released;
+    state.buttons.rightTrigger = ButtonState::Released;
+    state.buttons.leftMenu = ButtonState::Released;
+    state.buttons.rightMenu = ButtonState::Released;
+    state.buttons.leftStick = ButtonState::Released;
+    state.buttons.rightStick = ButtonState::Released;
+    state.buttons.guide = ButtonState::Released;
+    state.buttons.extra1 = ButtonState::Released;
+    state.buttons.extra2 = ButtonState::Released;
+    state.dpad.down = ButtonState::Released;
+    state.dpad.up = ButtonState::Released;
+    state.dpad.left = ButtonState::Released;
+    state.dpad.right = ButtonState::Released;
+    state.thumbSticks.left = Vector2::createZero();
+    state.thumbSticks.right = Vector2::createZero();
+    state.isConnected = false;
 }
 
 } // namespace pomdog::detail::GamepadHelper

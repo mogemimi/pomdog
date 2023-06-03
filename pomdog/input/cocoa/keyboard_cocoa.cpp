@@ -9,20 +9,20 @@ namespace pomdog::detail::cocoa {
 
 KeyboardCocoa::KeyboardCocoa() = default;
 
-KeyboardState KeyboardCocoa::GetState() const
+KeyboardState KeyboardCocoa::getState() const
 {
-    return state;
+    return state_;
 }
 
-void KeyboardCocoa::HandleEvent(const SystemEvent& event)
+void KeyboardCocoa::handleEvent(const SystemEvent& event)
 {
     switch (event.kind) {
     case SystemEventKind::InputKeyEvent: {
         const auto ev = std::get<InputKeyEvent>(event.data);
         static_assert(sizeof(ev) <= 24);
-        bool isKeyDown = state.IsKeyDown(ev.key);
+        bool isKeyDown = state_.isKeyDown(ev.key);
 
-        state.SetKey(ev.key, ev.state);
+        state_.setKey(ev.key, ev.state);
 
         switch (ev.state) {
         case KeyState::Down:
