@@ -154,7 +154,7 @@ DrawingContext::DrawingContext(
     std::vector<TexturePacker::TextureAtlasGeneratorSource> sources;
     sources.reserve(svgFiles.size());
 
-    const auto svgDir = PathHelper::Normalize(PathHelper::Join(assets.GetContentDirectory(), "SVG"));
+    const auto svgDir = filepaths::normalize(filepaths::join(assets.GetContentDirectory(), "SVG"));
 
     constexpr int canvasWidth = 32;
     constexpr int canvasHeight = 32;
@@ -162,7 +162,7 @@ DrawingContext::DrawingContext(
     // Generating texture atlas from SVG image
     for (const auto& filename : svgFiles) {
         // NOTE: Load SVG texture.
-        auto filePath = PathHelper::Join(svgDir, filename);
+        auto filePath = filepaths::join(svgDir, filename);
 
         if (auto [res, err] = SVG::DecodeFile(filePath, canvasWidth, canvasHeight); err != nullptr) {
             Log::Verbose("failed to load texture: " + err->toString());

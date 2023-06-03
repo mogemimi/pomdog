@@ -273,7 +273,7 @@ GameHostLinux::initialize(const gpu::PresentationParameters& presentationParamet
     if (resourceDirErr != nullptr) {
         return errors::wrap(std::move(resourceDirErr), "FileSystem::GetResourceDirectoryPath() failed.");
     }
-    auto contentDirectory = PathHelper::Join(resourceDir, "content");
+    auto contentDirectory = filepaths::join(resourceDir, "content");
 
     // NOTE: Create asset manager.
     assetManager_ = std::make_shared<AssetManager>(

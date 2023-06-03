@@ -55,7 +55,7 @@ IncludeGLSLFilesRecursive(const std::string& path, std::set<std::string>& includ
     std::string text(start, end);
     input.close();
 
-    auto currentDirectory = PathHelper::GetDirectoryName(PathHelper::Normalize(path));
+    auto currentDirectory = filepaths::getDirectoryName(filepaths::normalize(path));
 
     auto copiedText = text;
     text.clear();
@@ -73,7 +73,7 @@ IncludeGLSLFilesRecursive(const std::string& path, std::set<std::string>& includ
             continue;
         }
 
-        auto includePath = PathHelper::Join(currentDirectory, match[1].str());
+        auto includePath = filepaths::join(currentDirectory, match[1].str());
         if (includes.find(includePath) == includes.end()) {
             includes.insert(includePath);
             auto result = IncludeGLSLFilesRecursive(includePath, includes);
@@ -477,8 +477,8 @@ Builder<Shader>::Build()
     const auto shaderLanguage = graphicsDevice->getSupportedLanguage();
     std::optional<std::string> currentDirectory;
     if (impl->shaderFilePath) {
-        currentDirectory = PathHelper::Normalize(
-            PathHelper::GetDirectoryName(*impl->shaderFilePath));
+        currentDirectory = filepaths::normalize(
+            filepaths::getDirectoryName(*impl->shaderFilePath));
     }
 
     switch (shaderLanguage) {

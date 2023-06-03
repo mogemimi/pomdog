@@ -111,7 +111,7 @@ GetResourceDirectoryPath() noexcept
     }
 
     std::string_view executablePath{buf.data(), static_cast<std::size_t>(size)};
-    std::string dir{PathHelper::GetDirectoryName(executablePath)};
+    std::string dir{filepaths::getDirectoryName(executablePath)};
     return std::make_tuple(std::move(dir), nullptr);
 }
 

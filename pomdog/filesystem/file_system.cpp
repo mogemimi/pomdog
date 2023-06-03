@@ -70,14 +70,14 @@ GetFileSize(const std::string& path) noexcept
 std::tuple<std::string, std::unique_ptr<Error>>
 GetCanonicalPath(const std::string& path) noexcept
 {
-    auto result = PathHelper::Normalize(path);
+    auto result = filepaths::normalize(path);
 
-    if (!PathHelper::IsAbsolute(result)) {
+    if (!filepaths::isAbsolute(result)) {
         auto [cwd, err] = FileSystem::GetCurrentWorkingDirectory();
         if (err != nullptr) {
             return std::make_tuple("", errors::wrap(std::move(err), "GetCurrentWorkingDirectory() failed"));
         }
-        result = PathHelper::Normalize(PathHelper::Join(cwd, result));
+        result = filepaths::normalize(filepaths::join(cwd, result));
     }
     return std::make_tuple(std::move(result), nullptr);
 }

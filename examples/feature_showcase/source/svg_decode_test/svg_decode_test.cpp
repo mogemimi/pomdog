@@ -52,7 +52,7 @@ std::unique_ptr<Error> SVGDecodeTest::initialize()
 
     for (auto& s : svgFiles) {
         // NOTE: Load SVG texture.
-        auto filePath = PathHelper::Normalize(PathHelper::Join(assets->GetContentDirectory(), s));
+        auto filePath = filepaths::normalize(filepaths::join(assets->GetContentDirectory(), s));
         constexpr int canvasWidth = 24;
         constexpr int canvasHeight = 24;
 

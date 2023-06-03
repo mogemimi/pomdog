@@ -43,9 +43,9 @@ std::unique_ptr<Error> Skinning2DTest::initialize()
         SpriteBatchPixelShaderMode::Default,
         *assets);
 
-    auto texturePath = PathHelper::Join(assets->GetContentDirectory(), "Skeletal2D/MaidGun/MaidGun.png");
-    auto textureAtlasPath = PathHelper::Join(assets->GetContentDirectory(), "Skeletal2D/MaidGun/MaidGun.atlas");
-    auto skeletonJSONPath = PathHelper::Join(assets->GetContentDirectory(), "Skeletal2D/MaidGun/MaidGun.json");
+    auto texturePath = filepaths::join(assets->GetContentDirectory(), "Skeletal2D/MaidGun/MaidGun.png");
+    auto textureAtlasPath = filepaths::join(assets->GetContentDirectory(), "Skeletal2D/MaidGun/MaidGun.atlas");
+    auto skeletonJSONPath = filepaths::join(assets->GetContentDirectory(), "Skeletal2D/MaidGun/MaidGun.json");
 
     // NOTE: Load texture file for skeletal animation model
     std::tie(texture, err) = assets->Load<gpu::Texture2D>(texturePath);

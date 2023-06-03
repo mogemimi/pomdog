@@ -47,11 +47,11 @@ std::shared_ptr<gpu::GraphicsDevice> AssetManager::getGraphicsDevice() const noe
 
 std::string AssetManager::GetAssetPath(const std::string& assetName) const noexcept
 {
-    if (PathHelper::IsAbsolute(assetName)) {
+    if (filepaths::isAbsolute(assetName)) {
         return assetName;
     }
 
-    return PathHelper::Join(contentDirectory, assetName);
+    return filepaths::join(contentDirectory, assetName);
 }
 
 } // namespace pomdog

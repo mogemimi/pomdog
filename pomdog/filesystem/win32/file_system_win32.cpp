@@ -73,7 +73,7 @@ GetLocalAppDataDirectoryPath() noexcept
     // FIXME: Change so that the user can specify any application name.
     constexpr auto productName = "pomdog";
 
-    auto result = PathHelper::Join(directory, productName);
+    auto result = filepaths::join(directory, productName);
     return std::make_tuple(std::move(result), nullptr);
 }
 
@@ -91,7 +91,7 @@ GetAppDataDirectoryPath() noexcept
     // FIXME: Change so that the user can specify any application name.
     constexpr auto productName = "pomdog";
 
-    auto result = PathHelper::Join(directory, productName);
+    auto result = filepaths::join(directory, productName);
     return std::make_tuple(std::move(result), nullptr);
 }
 

@@ -4,94 +4,94 @@
 #include "pomdog/utility/path_helper.h"
 #include <catch_amalgamated.hpp>
 
-namespace PathHelper = pomdog::PathHelper;
+namespace filepaths = pomdog::filepaths;
 
-TEST_CASE("PathHelper", "[PathHelper]")
+TEST_CASE("filepaths", "[filepaths]")
 {
-    SECTION("Join")
+    SECTION("join")
     {
-        REQUIRE(PathHelper::Join("", "") == "");
+        REQUIRE(filepaths::join("", "") == "");
 #if defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
-        REQUIRE(PathHelper::Join("Chirico", "Cuvie") == "Chirico\\Cuvie");
-        REQUIRE(PathHelper::Join("", "Cuvie") == "Cuvie");
-        REQUIRE(PathHelper::Join("Chirico", "") == "Chirico");
-        REQUIRE(PathHelper::Join("PS/Chirico", "Cuvie") == "PS/Chirico\\Cuvie");
-        REQUIRE(PathHelper::Join("Chirico", "Cuvie/AT") == "Chirico\\Cuvie/AT");
-        REQUIRE(PathHelper::Join("PS/Chirico", "Cuvie/AT") == "PS/Chirico\\Cuvie/AT");
+        REQUIRE(filepaths::join("Chirico", "Cuvie") == "Chirico\\Cuvie");
+        REQUIRE(filepaths::join("", "Cuvie") == "Cuvie");
+        REQUIRE(filepaths::join("Chirico", "") == "Chirico");
+        REQUIRE(filepaths::join("PS/Chirico", "Cuvie") == "PS/Chirico\\Cuvie");
+        REQUIRE(filepaths::join("Chirico", "Cuvie/AT") == "Chirico\\Cuvie/AT");
+        REQUIRE(filepaths::join("PS/Chirico", "Cuvie/AT") == "PS/Chirico\\Cuvie/AT");
 #else
-        REQUIRE(PathHelper::Join("Chirico", "Cuvie") == "Chirico/Cuvie");
-        REQUIRE(PathHelper::Join("", "Cuvie") == "Cuvie");
-        REQUIRE(PathHelper::Join("Chirico", "") == "Chirico");
-        REQUIRE(PathHelper::Join("PS/Chirico", "Cuvie") == "PS/Chirico/Cuvie");
-        REQUIRE(PathHelper::Join("Chirico", "Cuvie/AT") == "Chirico/Cuvie/AT");
-        REQUIRE(PathHelper::Join("PS/Chirico", "Cuvie/AT") == "PS/Chirico/Cuvie/AT");
+        REQUIRE(filepaths::join("Chirico", "Cuvie") == "Chirico/Cuvie");
+        REQUIRE(filepaths::join("", "Cuvie") == "Cuvie");
+        REQUIRE(filepaths::join("Chirico", "") == "Chirico");
+        REQUIRE(filepaths::join("PS/Chirico", "Cuvie") == "PS/Chirico/Cuvie");
+        REQUIRE(filepaths::join("Chirico", "Cuvie/AT") == "Chirico/Cuvie/AT");
+        REQUIRE(filepaths::join("PS/Chirico", "Cuvie/AT") == "PS/Chirico/Cuvie/AT");
 #endif
     }
-    SECTION("GetBaseName")
+    SECTION("getBaseName")
     {
-        REQUIRE(PathHelper::GetBaseName("Fiana") == "Fiana");
-        REQUIRE(PathHelper::GetBaseName("Phantam Lady/Fiana") == "Fiana");
-        REQUIRE(PathHelper::GetBaseName("Proto One/Phantam Lady/Fiana") == "Fiana");
-        REQUIRE(PathHelper::GetBaseName("PS/Proto One/Phantam Lady/Fiana") == "Fiana");
+        REQUIRE(filepaths::getBaseName("Fiana") == "Fiana");
+        REQUIRE(filepaths::getBaseName("Phantam Lady/Fiana") == "Fiana");
+        REQUIRE(filepaths::getBaseName("Proto One/Phantam Lady/Fiana") == "Fiana");
+        REQUIRE(filepaths::getBaseName("PS/Proto One/Phantam Lady/Fiana") == "Fiana");
     }
-    SECTION("GetDirectoryName")
+    SECTION("getDirectoryName")
     {
-        REQUIRE(PathHelper::GetDirectoryName("Fiana") == "");
-        REQUIRE(PathHelper::GetDirectoryName("Phantam Lady/Fiana") == "Phantam Lady");
-        REQUIRE(PathHelper::GetDirectoryName("Proto One/Phantam Lady/Fiana") == "Proto One/Phantam Lady");
-        REQUIRE(PathHelper::GetDirectoryName("PS/Proto One/Phantam Lady/Fiana") == "PS/Proto One/Phantam Lady");
+        REQUIRE(filepaths::getDirectoryName("Fiana") == "");
+        REQUIRE(filepaths::getDirectoryName("Phantam Lady/Fiana") == "Phantam Lady");
+        REQUIRE(filepaths::getDirectoryName("Proto One/Phantam Lady/Fiana") == "Proto One/Phantam Lady");
+        REQUIRE(filepaths::getDirectoryName("PS/Proto One/Phantam Lady/Fiana") == "PS/Proto One/Phantam Lady");
     }
-    SECTION("Split")
+    SECTION("split")
     {
-        auto result = PathHelper::Split("Fiana");
+        auto result = filepaths::split("Fiana");
         REQUIRE(std::get<0>(result) == "");
         REQUIRE(std::get<1>(result) == "Fiana");
 
-        result = PathHelper::Split("Phantam Lady/Fiana");
+        result = filepaths::split("Phantam Lady/Fiana");
         REQUIRE(std::get<0>(result) == "Phantam Lady");
         REQUIRE(std::get<1>(result) == "Fiana");
 
-        result = PathHelper::Split("Proto One/Phantam Lady/Fiana");
+        result = filepaths::split("Proto One/Phantam Lady/Fiana");
         REQUIRE(std::get<0>(result) == "Proto One/Phantam Lady");
         REQUIRE(std::get<1>(result) == "Fiana");
 
-        result = PathHelper::Split("PS/Proto One/Phantam Lady/Fiana");
+        result = filepaths::split("PS/Proto One/Phantam Lady/Fiana");
         REQUIRE(std::get<0>(result) == "PS/Proto One/Phantam Lady");
         REQUIRE(std::get<1>(result) == "Fiana");
 
-        result = PathHelper::Split("PS/Proto One/Phantam Lady/Fiana.sotai");
+        result = filepaths::split("PS/Proto One/Phantam Lady/Fiana.sotai");
         REQUIRE(std::get<0>(result) == "PS/Proto One/Phantam Lady");
         REQUIRE(std::get<1>(result) == "Fiana.sotai");
     }
-    SECTION("SplitExtension")
+    SECTION("splitExtension")
     {
-        auto result = PathHelper::SplitExtension("Fiana");
+        auto result = filepaths::splitExtension("Fiana");
         REQUIRE(std::get<0>(result) == "Fiana");
         REQUIRE(std::get<1>(result) == "");
 
-        result = PathHelper::SplitExtension("Phantam Lady.Fiana");
+        result = filepaths::splitExtension("Phantam Lady.Fiana");
         REQUIRE(std::get<0>(result) == "Phantam Lady");
         REQUIRE(std::get<1>(result) == "Fiana");
 
-        result = PathHelper::SplitExtension("Proto One/Phantam Lady.Fiana");
+        result = filepaths::splitExtension("Proto One/Phantam Lady.Fiana");
         REQUIRE(std::get<0>(result) == "Proto One/Phantam Lady");
         REQUIRE(std::get<1>(result) == "Fiana");
 
-        result = PathHelper::SplitExtension("PS/Proto One/Phantam Lady.Fiana");
+        result = filepaths::splitExtension("PS/Proto One/Phantam Lady.Fiana");
         REQUIRE(std::get<0>(result) == "PS/Proto One/Phantam Lady");
         REQUIRE(std::get<1>(result) == "Fiana");
 
-        result = PathHelper::SplitExtension("PS/Proto One/Phantam Lady.Fiana.sotai");
+        result = filepaths::splitExtension("PS/Proto One/Phantam Lady.Fiana.sotai");
         REQUIRE(std::get<0>(result) == "PS/Proto One/Phantam Lady.Fiana");
         REQUIRE(std::get<1>(result) == "sotai");
 
-        result = PathHelper::SplitExtension("PS.Proto One/Phantam Lady.Fiana.sotai");
+        result = filepaths::splitExtension("PS.Proto One/Phantam Lady.Fiana.sotai");
         REQUIRE(std::get<0>(result) == "PS.Proto One/Phantam Lady.Fiana");
         REQUIRE(std::get<1>(result) == "sotai");
     }
-    SECTION("Normalize")
+    SECTION("normalize")
     {
-        const auto normalize = PathHelper::Normalize;
+        const auto normalize = filepaths::normalize;
 #if defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
         // NOTE: Windows
         REQUIRE(normalize("") == "");
@@ -150,9 +150,9 @@ TEST_CASE("PathHelper", "[PathHelper]")
         REQUIRE(normalize("/usr/local/../local/bin/..") == "/usr/local");
 #endif
     }
-    SECTION("Relative")
+    SECTION("relative")
     {
-        const auto relative = PathHelper::Relative;
+        const auto relative = filepaths::relative;
 #if defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
         REQUIRE(relative("/usr/local/bin", "/usr/local/bin") == ".");
         REQUIRE(relative("/usr/local/bin/.", "/usr/local/bin") == ".");
@@ -207,50 +207,50 @@ TEST_CASE("PathHelper", "[PathHelper]")
         REQUIRE(relative("/usr/share/dict", "/usr/local/bin") == "../../share/dict");
 #endif
     }
-    SECTION("IsAbsolute")
+    SECTION("isAbsolute")
     {
-        REQUIRE(PathHelper::IsAbsolute("/"));
-        REQUIRE(PathHelper::IsAbsolute("/a/"));
-        REQUIRE(PathHelper::IsAbsolute("/a/b"));
-        REQUIRE(PathHelper::IsAbsolute("/abc"));
-        REQUIRE(PathHelper::IsAbsolute("/abc/"));
-        REQUIRE(!PathHelper::IsAbsolute(".."));
-        REQUIRE(!PathHelper::IsAbsolute("../"));
-        REQUIRE(!PathHelper::IsAbsolute("../a"));
-        REQUIRE(!PathHelper::IsAbsolute("../a/"));
-        REQUIRE(!PathHelper::IsAbsolute("a"));
-        REQUIRE(!PathHelper::IsAbsolute(""));
-        REQUIRE(!PathHelper::IsAbsolute("."));
-        REQUIRE(!PathHelper::IsAbsolute("./"));
-        REQUIRE(!PathHelper::IsAbsolute("./a"));
-        REQUIRE(!PathHelper::IsAbsolute("./a/"));
-        REQUIRE(!PathHelper::IsAbsolute("./a/b"));
+        REQUIRE(filepaths::isAbsolute("/"));
+        REQUIRE(filepaths::isAbsolute("/a/"));
+        REQUIRE(filepaths::isAbsolute("/a/b"));
+        REQUIRE(filepaths::isAbsolute("/abc"));
+        REQUIRE(filepaths::isAbsolute("/abc/"));
+        REQUIRE(!filepaths::isAbsolute(".."));
+        REQUIRE(!filepaths::isAbsolute("../"));
+        REQUIRE(!filepaths::isAbsolute("../a"));
+        REQUIRE(!filepaths::isAbsolute("../a/"));
+        REQUIRE(!filepaths::isAbsolute("a"));
+        REQUIRE(!filepaths::isAbsolute(""));
+        REQUIRE(!filepaths::isAbsolute("."));
+        REQUIRE(!filepaths::isAbsolute("./"));
+        REQUIRE(!filepaths::isAbsolute("./a"));
+        REQUIRE(!filepaths::isAbsolute("./a/"));
+        REQUIRE(!filepaths::isAbsolute("./a/b"));
 #if defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
-        REQUIRE(PathHelper::IsAbsolute("C:\\"));
-        REQUIRE(PathHelper::IsAbsolute("D:\\"));
-        REQUIRE(PathHelper::IsAbsolute("C:\\a"));
-        REQUIRE(PathHelper::IsAbsolute("C:\\a\\"));
-        REQUIRE(PathHelper::IsAbsolute("\\\\a"));
-        REQUIRE(PathHelper::IsAbsolute("\\\\a\\"));
-        REQUIRE(PathHelper::IsAbsolute("\\\\a\\b"));
-        REQUIRE(!PathHelper::IsAbsolute("..\\"));
-        REQUIRE(!PathHelper::IsAbsolute("..\\a"));
-        REQUIRE(!PathHelper::IsAbsolute("..\\a\\"));
-        REQUIRE(!PathHelper::IsAbsolute("..\\a\\b"));
-        REQUIRE(!PathHelper::IsAbsolute(".\\"));
-        REQUIRE(!PathHelper::IsAbsolute(".\\a"));
-        REQUIRE(!PathHelper::IsAbsolute(".\\a\\"));
-        REQUIRE(!PathHelper::IsAbsolute(".\\a\\b"));
+        REQUIRE(filepaths::isAbsolute("C:\\"));
+        REQUIRE(filepaths::isAbsolute("D:\\"));
+        REQUIRE(filepaths::isAbsolute("C:\\a"));
+        REQUIRE(filepaths::isAbsolute("C:\\a\\"));
+        REQUIRE(filepaths::isAbsolute("\\\\a"));
+        REQUIRE(filepaths::isAbsolute("\\\\a\\"));
+        REQUIRE(filepaths::isAbsolute("\\\\a\\b"));
+        REQUIRE(!filepaths::isAbsolute("..\\"));
+        REQUIRE(!filepaths::isAbsolute("..\\a"));
+        REQUIRE(!filepaths::isAbsolute("..\\a\\"));
+        REQUIRE(!filepaths::isAbsolute("..\\a\\b"));
+        REQUIRE(!filepaths::isAbsolute(".\\"));
+        REQUIRE(!filepaths::isAbsolute(".\\a"));
+        REQUIRE(!filepaths::isAbsolute(".\\a\\"));
+        REQUIRE(!filepaths::isAbsolute(".\\a\\b"));
 #endif
     }
-    SECTION("ToSlash")
+    SECTION("toSlash")
     {
-        REQUIRE(PathHelper::ToSlash("") == "");
-        REQUIRE(PathHelper::ToSlash("\\") == "/");
-        REQUIRE(PathHelper::ToSlash("\\\\") == "//");
-        REQUIRE(PathHelper::ToSlash("\\a\\b") == "/a/b");
-        REQUIRE(PathHelper::ToSlash("\\a\\b\\") == "/a/b/");
-        REQUIRE(PathHelper::ToSlash("a\\b") == "a/b");
-        REQUIRE(PathHelper::ToSlash("a\\b\\") == "a/b/");
+        REQUIRE(filepaths::toSlash("") == "");
+        REQUIRE(filepaths::toSlash("\\") == "/");
+        REQUIRE(filepaths::toSlash("\\\\") == "//");
+        REQUIRE(filepaths::toSlash("\\a\\b") == "/a/b");
+        REQUIRE(filepaths::toSlash("\\a\\b\\") == "/a/b/");
+        REQUIRE(filepaths::toSlash("a\\b") == "a/b");
+        REQUIRE(filepaths::toSlash("a\\b\\") == "a/b/");
     }
 }

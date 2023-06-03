@@ -42,9 +42,9 @@ std::unique_ptr<Error> Skeletal2DTest::initialize()
         SpriteBatchPixelShaderMode::Default,
         *assets);
 
-    auto texturePath = PathHelper::Join(assets->GetContentDirectory(), "Skeletal2D/MaidChan/skeleton.png");
-    auto textureAtlasPath = PathHelper::Join(assets->GetContentDirectory(), "Skeletal2D/MaidChan/skeleton.atlas");
-    auto skeletonJSONPath = PathHelper::Join(assets->GetContentDirectory(), "Skeletal2D/MaidChan/skeleton.json");
+    auto texturePath = filepaths::join(assets->GetContentDirectory(), "Skeletal2D/MaidChan/skeleton.png");
+    auto textureAtlasPath = filepaths::join(assets->GetContentDirectory(), "Skeletal2D/MaidChan/skeleton.atlas");
+    auto skeletonJSONPath = filepaths::join(assets->GetContentDirectory(), "Skeletal2D/MaidChan/skeleton.json");
 
     // NOTE: Load texture file for skeletal animation model
     std::tie(texture, err) = assets->Load<gpu::Texture2D>(texturePath);

@@ -75,7 +75,7 @@ public:
 
         std::string includePath;
         if (D3D_INCLUDE_LOCAL == includeType) {
-            includePath = PathHelper::Join(currentDirectory, pFileName);
+            includePath = filepaths::join(currentDirectory, pFileName);
         }
         else {
             includePath = pFileName;

@@ -13,7 +13,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <vector>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::PathHelper {
+namespace pomdog::filepaths {
 namespace {
 
 [[nodiscard]] std::string_view::size_type
@@ -145,7 +145,7 @@ public:
 } // namespace
 
 [[nodiscard]] std::string
-Join(std::string_view path1, std::string_view path2) noexcept
+join(std::string_view path1, std::string_view path2) noexcept
 {
     std::string result = std::string(path1);
 #if defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
@@ -168,7 +168,7 @@ Join(std::string_view path1, std::string_view path2) noexcept
 }
 
 [[nodiscard]] std::string_view
-GetBaseName(std::string_view path) noexcept
+getBaseName(std::string_view path) noexcept
 {
     const auto lastIndex = path.find_last_of('/');
     if (std::string_view::npos != lastIndex) {
@@ -178,7 +178,7 @@ GetBaseName(std::string_view path) noexcept
 }
 
 [[nodiscard]] std::string_view
-GetDirectoryName(std::string_view path) noexcept
+getDirectoryName(std::string_view path) noexcept
 {
     if (!path.empty() && path.back() == '/') {
         return path;
@@ -191,7 +191,7 @@ GetDirectoryName(std::string_view path) noexcept
 }
 
 [[nodiscard]] std::tuple<std::string_view, std::string_view>
-Split(std::string_view path) noexcept
+split(std::string_view path) noexcept
 {
     std::tuple<std::string_view, std::string_view> result;
     auto lastIndex = path.find_last_of('/');
@@ -206,7 +206,7 @@ Split(std::string_view path) noexcept
 }
 
 [[nodiscard]] std::tuple<std::string_view, std::string_view>
-SplitExtension(std::string_view path) noexcept
+splitExtension(std::string_view path) noexcept
 {
     std::tuple<std::string_view, std::string_view> result;
     auto lastIndex = path.find_last_of('.');
@@ -221,7 +221,7 @@ SplitExtension(std::string_view path) noexcept
 }
 
 [[nodiscard]] std::string
-Normalize(std::string_view path) noexcept
+normalize(std::string_view path) noexcept
 {
     std::vector<std::string_view> paths;
     auto iter = PathIterator::begin(path);
@@ -253,22 +253,22 @@ Normalize(std::string_view path) noexcept
             fullPath = current;
             continue;
         }
-        fullPath = PathHelper::Join(fullPath, current);
+        fullPath = filepaths::join(fullPath, current);
     }
     return fullPath;
 }
 
 [[nodiscard]] std::string
-ToSlash(std::string_view path) noexcept
+toSlash(std::string_view path) noexcept
 {
     return strings::replaceAll(path, "\\", "/");
 }
 
 [[nodiscard]] std::string
-Relative(std::string_view path, std::string_view start) noexcept
+relative(std::string_view path, std::string_view start) noexcept
 {
-    const auto fullPath = PathHelper::Normalize(path);
-    const auto fullPathStart = PathHelper::Normalize(start);
+    const auto fullPath = filepaths::normalize(path);
+    const auto fullPathStart = filepaths::normalize(start);
 
     auto iterL = PathIterator::begin(fullPath);
     auto iterR = PathIterator::begin(fullPathStart);
@@ -283,11 +283,11 @@ Relative(std::string_view path, std::string_view start) noexcept
 
     std::string result;
     while (iterR != PathIterator::end(fullPathStart)) {
-        result = PathHelper::Join(result, "..");
+        result = filepaths::join(result, "..");
         iterR = PathIterator::next(iterR);
     }
     while (iterL != PathIterator::end(fullPath)) {
-        result = PathHelper::Join(result, *iterL);
+        result = filepaths::join(result, *iterL);
         iterL = PathIterator::next(iterL);
     }
     if (result.empty()) {
@@ -297,7 +297,7 @@ Relative(std::string_view path, std::string_view start) noexcept
 }
 
 [[nodiscard]] bool
-IsAbsolute(std::string_view path) noexcept
+isAbsolute(std::string_view path) noexcept
 {
     // NOTE: See https://msdn.microsoft.com/en-us/library/bb773660.aspx
     if (path.empty()) {
@@ -319,4 +319,4 @@ IsAbsolute(std::string_view path) noexcept
     return false;
 }
 
-} // namespace pomdog::PathHelper
+} // namespace pomdog::filepaths

@@ -54,7 +54,7 @@ public:
 
         const auto filePath = GetAssetPath(assetName);
 
-        auto key = PathHelper::ToSlash(filePath);
+        auto key = filepaths::toSlash(filePath);
         if (auto iter = assets.find(key); iter != std::end(assets)) {
             auto& assetHolder = iter->second;
 

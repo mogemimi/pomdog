@@ -385,9 +385,9 @@ AssetLoader<SpriteFont>::operator()(AssetManager& assets, const std::string& fil
 
     std::vector<std::shared_ptr<gpu::Texture2D>> textures;
     {
-        auto directoryName = std::get<0>(PathHelper::Split(filePath));
+        auto directoryName = std::get<0>(filepaths::split(filePath));
         for (auto& page : pages) {
-            auto [texture, textureErr] = assets.Load<gpu::Texture2D>(PathHelper::Join(directoryName, page.Path));
+            auto [texture, textureErr] = assets.Load<gpu::Texture2D>(filepaths::join(directoryName, page.Path));
             if (textureErr != nullptr) {
                 auto err = errors::wrap(std::move(textureErr), "failed to load sprite font texture " + page.Path);
                 return std::make_tuple(nullptr, std::move(err));
