@@ -46,7 +46,7 @@ void BuildSpriteAnimationTracks(
     std::vector<std::unique_ptr<AnimationTrack>>& tracks)
 {
     for (auto& animationTrack : animationClip.SlotTracks) {
-        auto slotIndex = detail::crc32::ComputeCRC32(animationTrack.SlotName);
+        auto slotIndex = hash::computeCRC32(animationTrack.SlotName);
 
         if (animationTrack.AttachmentSamples.empty()) {
             continue;

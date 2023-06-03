@@ -8,7 +8,7 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <utility>
 POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
-namespace pomdog::detail::crc32 {
+namespace pomdog::hash {
 namespace {
 
 //
@@ -19,7 +19,8 @@ namespace {
 #if defined(POMDOG_CRC32_CREATE_CRC_TABLE)
 
 // if you need to make crc32 table:
-std::array<std::uint32_t, 256U> MakeCRCTable() noexcept
+[[nodiscard]] constexpr std::array<std::uint32_t, 256U>
+makeCRCTable() noexcept
 {
 #if defined(POMDOG_CRC32_MAKE_XOR_PATTERN_FROM_POLYNOMIAL)
     constexpr std::array<std::uint8_t, 14> p = {{0, 1, 2, 4, 5, 7, 8, 10, 11, 12, 16, 22, 23, 26}};
@@ -44,7 +45,7 @@ std::array<std::uint32_t, 256U> MakeCRCTable() noexcept
     return crctable;
 }
 
-const std::array<std::uint32_t, 256U> crctable = MakeCRCTable();
+constexpr std::array<std::uint32_t, 256U> crctable = makeCRCTable();
 
 #else  // POMDOG_CRC32_CREATE_CRC_TABLE
 
@@ -121,7 +122,7 @@ constexpr std::array<std::uint32_t, 256U> crctable = {{
 constexpr std::uint32_t InitValueCRC32 = 0xffffffffUL;
 constexpr std::uint32_t XorValueCRC32 = 0xffffffffUL;
 
-void UpdateChecksum(std::uint32_t& crcvalue, const std::uint8_t* data, std::size_t length) noexcept
+void updateChecksum(std::uint32_t& crcvalue, const std::uint8_t* data, std::size_t length) noexcept
 {
     std::uint32_t crc = crcvalue;
     while (length--) {
@@ -130,27 +131,28 @@ void UpdateChecksum(std::uint32_t& crcvalue, const std::uint8_t* data, std::size
     crcvalue = crc;
 }
 
-void FinishChecksum(std::uint32_t& crcvalue) noexcept
+void finishChecksum(std::uint32_t& crcvalue) noexcept
 {
     crcvalue ^= XorValueCRC32;
 }
 
-std::uint32_t BlockChecksum(const void* data, std::size_t length, std::uint32_t crc) noexcept
+[[nodiscard]] std::uint32_t
+blockChecksum(const std::uint8_t* data, std::size_t length, std::uint32_t crc) noexcept
 {
     if (data == nullptr || length <= 0) {
         return crc;
     }
-    UpdateChecksum(crc, reinterpret_cast<const std::uint8_t*>(data), length);
-    FinishChecksum(crc);
+    updateChecksum(crc, data, length);
+    finishChecksum(crc);
     return crc;
 }
 
 } // namespace
 
 [[nodiscard]] std::uint32_t
-ComputeCRC32(const void* data, std::size_t length) noexcept
+computeCRC32(const std::uint8_t* data, std::size_t length) noexcept
 {
-    return BlockChecksum(data, length, InitValueCRC32);
+    return blockChecksum(data, length, InitValueCRC32);
 }
 
-} // namespace pomdog::detail::crc32
+} // namespace pomdog::hash

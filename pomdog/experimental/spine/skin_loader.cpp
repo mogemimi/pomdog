@@ -98,7 +98,7 @@ CreateSlots(
 
         POMDOG_ASSERT(slotDesc.Joint);
         slot.JointIndex = slotDesc.Joint;
-        slot.HashID = detail::crc32::ComputeCRC32(slotDesc.Name);
+        slot.HashID = hash::computeCRC32(slotDesc.Name);
 
         slot.Color = Color::createWhite();
         slot.DrawOrder = drawOrder;
