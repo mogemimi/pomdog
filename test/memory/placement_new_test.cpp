@@ -1,8 +1,8 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
-#include "pomdog/memory/placement_new.h"
 #include "pomdog/memory/linear_allocator.h"
 #include "pomdog/memory/linear_page_allocator.h"
+#include "pomdog/memory/placement_new.h"
 #include <catch_amalgamated.hpp>
 #include <array>
 #include <cstdint>
