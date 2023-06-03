@@ -9,80 +9,80 @@ using namespace pomdog;
 
 TEST_CASE("FileSystem", "[FileSystem]")
 {
-    SECTION("IsDirectory")
+    SECTION("isDirectory")
     {
-        REQUIRE(FileSystem::IsDirectory("."));
+        REQUIRE(FileSystem::isDirectory("."));
 #if defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
-        REQUIRE(FileSystem::IsDirectory("C:/"));
+        REQUIRE(FileSystem::isDirectory("C:/"));
 #else
-        REQUIRE(FileSystem::IsDirectory("/"));
+        REQUIRE(FileSystem::isDirectory("/"));
 #endif
     }
-    SECTION("Exists")
+    SECTION("exists")
     {
-        REQUIRE(FileSystem::IsDirectory("."));
+        REQUIRE(FileSystem::isDirectory("."));
 #if defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
-        REQUIRE(FileSystem::Exists("C:/"));
+        REQUIRE(FileSystem::exists("C:/"));
 #else
-        REQUIRE(FileSystem::Exists("/"));
+        REQUIRE(FileSystem::exists("/"));
 #endif
     }
-    SECTION("GetLocalAppDataDirectoryPath")
+    SECTION("getLocalAppDataDirectoryPath")
     {
 #if defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
-        auto [dir, err] = FileSystem::GetLocalAppDataDirectoryPath();
+        auto [dir, err] = FileSystem::getLocalAppDataDirectoryPath();
         REQUIRE(err == nullptr);
         REQUIRE(!dir.empty());
 #elif defined(POMDOG_PLATFORM_MACOSX)
-        auto [dir, err] = FileSystem::GetLocalAppDataDirectoryPath();
+        auto [dir, err] = FileSystem::getLocalAppDataDirectoryPath();
         if (err == nullptr) {
             REQUIRE(!dir.empty());
         }
 #endif
     }
-    SECTION("GetAppDataDirectoryPath")
+    SECTION("getAppDataDirectoryPath")
     {
 #if defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
-        auto [dir, err] = FileSystem::GetAppDataDirectoryPath();
+        auto [dir, err] = FileSystem::getAppDataDirectoryPath();
         REQUIRE(err == nullptr);
         REQUIRE(!dir.empty());
 #elif defined(POMDOG_PLATFORM_MACOSX)
-        auto [dir, err] = FileSystem::GetAppDataDirectoryPath();
+        auto [dir, err] = FileSystem::getAppDataDirectoryPath();
         if (err == nullptr) {
             REQUIRE(!dir.empty());
         }
 #endif
     }
-    SECTION("GetResourceDirectoryPath")
+    SECTION("getResourceDirectoryPath")
     {
-        auto [dir, err] = FileSystem::GetResourceDirectoryPath();
+        auto [dir, err] = FileSystem::getResourceDirectoryPath();
         REQUIRE(err == nullptr);
         REQUIRE(!dir.empty());
     }
-    SECTION("GetTempDirectoryPath")
+    SECTION("getTempDirectoryPath")
     {
-        auto [dir, err] = FileSystem::GetTempDirectoryPath();
+        auto [dir, err] = FileSystem::getTempDirectoryPath();
         REQUIRE(err == nullptr);
         REQUIRE(!dir.empty());
     }
-    SECTION("GetCurrentWorkingDirectory")
+    SECTION("getCurrentWorkingDirectory")
     {
-        auto [dir, err] = FileSystem::GetCurrentWorkingDirectory();
+        auto [dir, err] = FileSystem::getCurrentWorkingDirectory();
         REQUIRE(err == nullptr);
         REQUIRE(!dir.empty());
     }
-    SECTION("GetFileSize")
+    SECTION("getFileSize")
     {
 #if defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
-        auto [size, err] = FileSystem::GetFileSize("C:\\Windows\\System32\\ntdll.dll");
+        auto [size, err] = FileSystem::getFileSize("C:\\Windows\\System32\\ntdll.dll");
         REQUIRE(err == nullptr);
         REQUIRE(size > 0);
 #endif
     }
-    SECTION("GetCanonicalPath")
+    SECTION("getCanonicalPath")
     {
 #if defined(POMDOG_PLATFORM_WIN32) || defined(POMDOG_PLATFORM_XBOX_ONE)
-        auto [dir, err] = FileSystem::GetCanonicalPath("./foo/./abc/../bar/");
+        auto [dir, err] = FileSystem::getCanonicalPath("./foo/./abc/../bar/");
         REQUIRE(err == nullptr);
         REQUIRE(strings::hasSuffix(dir, "\\foo\\bar"));
 #endif

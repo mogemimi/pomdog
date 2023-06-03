@@ -269,9 +269,9 @@ GameHostLinux::initialize(const gpu::PresentationParameters& presentationParamet
     keyboard_ = std::make_unique<x11::KeyboardX11>(x11Context_->Display);
     gamepad_ = std::make_unique<linux::GamepadLinux>();
 
-    auto [resourceDir, resourceDirErr] = FileSystem::GetResourceDirectoryPath();
+    auto [resourceDir, resourceDirErr] = FileSystem::getResourceDirectoryPath();
     if (resourceDirErr != nullptr) {
-        return errors::wrap(std::move(resourceDirErr), "FileSystem::GetResourceDirectoryPath() failed.");
+        return errors::wrap(std::move(resourceDirErr), "FileSystem::getResourceDirectoryPath() failed.");
     }
     auto contentDirectory = filepaths::join(resourceDir, "content");
 

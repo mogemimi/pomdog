@@ -729,7 +729,7 @@ ParseJSON(const char* json, std::size_t jsonLength, GLTF::Document& result) noex
 [[nodiscard]] std::tuple<std::shared_ptr<Document>, std::unique_ptr<Error>>
 Open(const std::string& filePath) noexcept
 {
-    auto [fileSize, sizeErr] = FileSystem::GetFileSize(filePath);
+    auto [fileSize, sizeErr] = FileSystem::getFileSize(filePath);
     if (sizeErr != nullptr) {
         auto err = errors::wrap(std::move(sizeErr), "failed to get file size, " + filePath);
         return std::make_tuple(nullptr, std::move(err));

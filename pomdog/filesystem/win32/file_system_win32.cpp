@@ -1,7 +1,6 @@
 // Copyright mogemimi. Distributed under the MIT license.
 
 #include "pomdog/filesystem/win32/file_system_win32.h"
-#include "pomdog/basic/conditional_compilation.h"
 #include "pomdog/platform/win32/prerequisites_win32.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/error_helper.h"
@@ -14,8 +13,8 @@ POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail::win32 {
 
-std::unique_ptr<Error>
-CreateNewDirectory(const std::string& path) noexcept
+[[nodiscard]] std::unique_ptr<Error>
+createNewDirectory(const std::string& path) noexcept
 {
     POMDOG_ASSERT(!path.empty());
     std::error_code err;
@@ -25,8 +24,8 @@ CreateNewDirectory(const std::string& path) noexcept
     return nullptr;
 }
 
-std::unique_ptr<Error>
-CreateDirectories(const std::string& path) noexcept
+[[nodiscard]] std::unique_ptr<Error>
+createDirectories(const std::string& path) noexcept
 {
     POMDOG_ASSERT(!path.empty());
     std::error_code err;
@@ -36,31 +35,33 @@ CreateDirectories(const std::string& path) noexcept
     return nullptr;
 }
 
-bool Exists(const std::string& path) noexcept
+[[nodiscard]] bool
+exists(const std::string& path) noexcept
 {
     POMDOG_ASSERT(!path.empty());
     return std::filesystem::exists(path);
 }
 
-bool IsDirectory(const std::string& path) noexcept
+[[nodiscard]] bool
+isDirectory(const std::string& path) noexcept
 {
     POMDOG_ASSERT(!path.empty());
     return std::filesystem::is_directory(path);
 }
 
-std::tuple<std::size_t, std::unique_ptr<Error>>
-GetFileSize(const std::string& path) noexcept
+[[nodiscard]] std::tuple<std::size_t, std::unique_ptr<Error>>
+getFileSize(const std::string& path) noexcept
 {
     struct ::stat st;
     if (int result = ::stat(path.data(), &st); result != 0) {
         const auto err = detail::toErrc(errno);
-        return std::make_tuple(0, errors::make(err, "::stat() failed"));
+        return std::make_tuple(0, errors::makeIOError(err, "::stat() failed"));
     }
     return std::make_tuple(st.st_size, nullptr);
 }
 
-std::tuple<std::string, std::unique_ptr<Error>>
-GetLocalAppDataDirectoryPath() noexcept
+[[nodiscard]] std::tuple<std::string, std::unique_ptr<Error>>
+getLocalAppDataDirectoryPath() noexcept
 {
     char directory[MAX_PATH];
     directory[MAX_PATH - 1] = '\0';
@@ -77,8 +78,8 @@ GetLocalAppDataDirectoryPath() noexcept
     return std::make_tuple(std::move(result), nullptr);
 }
 
-std::tuple<std::string, std::unique_ptr<Error>>
-GetAppDataDirectoryPath() noexcept
+[[nodiscard]] std::tuple<std::string, std::unique_ptr<Error>>
+getAppDataDirectoryPath() noexcept
 {
     char directory[MAX_PATH];
     directory[MAX_PATH - 1] = '\0';
@@ -95,22 +96,22 @@ GetAppDataDirectoryPath() noexcept
     return std::make_tuple(std::move(result), nullptr);
 }
 
-std::tuple<std::string, std::unique_ptr<Error>>
-GetResourceDirectoryPath() noexcept
+[[nodiscard]] std::tuple<std::string, std::unique_ptr<Error>>
+getResourceDirectoryPath() noexcept
 {
     auto currentDirectory = std::filesystem::current_path();
     return std::make_tuple(currentDirectory.string(), nullptr);
 }
 
-std::tuple<std::string, std::unique_ptr<Error>>
-GetTempDirectoryPath() noexcept
+[[nodiscard]] std::tuple<std::string, std::unique_ptr<Error>>
+getTempDirectoryPath() noexcept
 {
     auto path = std::filesystem::temp_directory_path();
     return std::make_tuple(path.string(), nullptr);
 }
 
-std::tuple<std::string, std::unique_ptr<Error>>
-GetCurrentWorkingDirectory() noexcept
+[[nodiscard]] std::tuple<std::string, std::unique_ptr<Error>>
+getCurrentWorkingDirectory() noexcept
 {
     char directory[MAX_PATH];
     directory[MAX_PATH - 1] = '\0';

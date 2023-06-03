@@ -31,7 +31,7 @@ AssetLoader<AudioClip>::operator()(AssetManager& assets, const std::string& file
         return std::make_tuple(nullptr, std::move(err));
     }
 
-    auto [byteLength, sizeErr] = FileSystem::GetFileSize(filePath);
+    auto [byteLength, sizeErr] = FileSystem::getFileSize(filePath);
     if (sizeErr != nullptr) {
         auto err = errors::wrap(std::move(sizeErr), "failed to get file size, " + filePath);
         return std::make_tuple(nullptr, std::move(err));

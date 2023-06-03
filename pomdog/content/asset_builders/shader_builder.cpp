@@ -41,7 +41,7 @@ using namespace pomdog::gpu::shader_compilers;
 [[nodiscard]] std::optional<std::string>
 IncludeGLSLFilesRecursive(const std::string& path, std::set<std::string>& includes)
 {
-    if (FileSystem::IsDirectory(path)) {
+    if (FileSystem::isDirectory(path)) {
         Log::Warning("pomdog", "error: " + path + "is directory, not text file.");
         return std::nullopt;
     }
@@ -137,7 +137,7 @@ Builder<Shader>::Impl::OpenStream(const std::string& filePath) const
         return std::make_tuple(std::move(stream), 0, std::move(err));
     }
 
-    auto [byteLength, sizeErr] = FileSystem::GetFileSize(filePath);
+    auto [byteLength, sizeErr] = FileSystem::getFileSize(filePath);
     if (sizeErr != nullptr) {
         auto err = errors::wrap(std::move(sizeErr), "failed to get file size, " + filePath);
         return std::make_tuple(std::move(stream), 0, std::move(err));

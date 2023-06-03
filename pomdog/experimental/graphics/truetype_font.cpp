@@ -59,7 +59,7 @@ TrueTypeFont::Impl::LoadFont(const std::string& filePath)
         return errors::make("cannot open the file, " + filePath);
     }
 
-    auto [byteLength, sizeErr] = FileSystem::GetFileSize(filePath);
+    auto [byteLength, sizeErr] = FileSystem::getFileSize(filePath);
     if (sizeErr != nullptr) {
         return errors::wrap(std::move(sizeErr), "failed to get file size, " + filePath);
     }

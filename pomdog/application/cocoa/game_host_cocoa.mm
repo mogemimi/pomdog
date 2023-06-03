@@ -227,9 +227,9 @@ GameHostCocoa::Impl::initialize(
     systemEventConnection = eventQueue->connect(
         [this](const SystemEvent& event) { processSystemEvents(event); });
 
-    auto [resourceDir, resourceDirErr] = FileSystem::GetResourceDirectoryPath();
+    auto [resourceDir, resourceDirErr] = FileSystem::getResourceDirectoryPath();
     if (resourceDirErr != nullptr) {
-        return errors::wrap(std::move(resourceDirErr), "FileSystem::GetResourceDirectoryPath() failed.");
+        return errors::wrap(std::move(resourceDirErr), "FileSystem::getResourceDirectoryPath() failed.");
     }
     auto contentDirectory = filepaths::join(resourceDir, "content");
 

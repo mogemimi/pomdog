@@ -428,9 +428,9 @@ GameHostWin32::Impl::initialize(
         return errors::wrap(std::move(err), "GamepadDirectInput::Initialize() failed");
     }
 
-    auto [resourceDir, resourceDirErr] = FileSystem::GetResourceDirectoryPath();
+    auto [resourceDir, resourceDirErr] = FileSystem::getResourceDirectoryPath();
     if (resourceDirErr != nullptr) {
-        return errors::wrap(std::move(resourceDirErr), "FileSystem::GetResourceDirectoryPath() failed");
+        return errors::wrap(std::move(resourceDirErr), "FileSystem::getResourceDirectoryPath() failed");
     }
     auto contentDirectory = filepaths::join(resourceDir, "content");
 

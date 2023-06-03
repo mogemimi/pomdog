@@ -17,27 +17,27 @@ namespace pomdog::FileSystem {
 
 /// Create a new directory with the specified path.
 [[nodiscard]] POMDOG_EXPORT std::unique_ptr<Error>
-CreateNewDirectory(const std::string& path) noexcept;
+createNewDirectory(const std::string& path) noexcept;
 
 /// Recursively create a new directory with the specified path.
 [[nodiscard]] POMDOG_EXPORT std::unique_ptr<Error>
-CreateDirectories(const std::string& path) noexcept;
+createDirectories(const std::string& path) noexcept;
 
 /// Returns true if the file exists, false otherwise.
 [[nodiscard]] POMDOG_EXPORT bool
-Exists(const std::string& path) noexcept;
+exists(const std::string& path) noexcept;
 
 /// Returns true if the file is directory, false otherwise.
 [[nodiscard]] POMDOG_EXPORT bool
-IsDirectory(const std::string& path) noexcept;
+isDirectory(const std::string& path) noexcept;
 
 /// Gets the size of the specified file.
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::size_t, std::unique_ptr<Error>>
-GetFileSize(const std::string& path) noexcept;
+getFileSize(const std::string& path) noexcept;
 
 /// Returns the canonical path that is both absolute and unique.
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::string, std::unique_ptr<Error>>
-GetCanonicalPath(const std::string& path) noexcept;
+getCanonicalPath(const std::string& path) noexcept;
 
 /// Gets the location of the "LocalAppData" directory.
 ///
@@ -45,7 +45,7 @@ GetCanonicalPath(const std::string& path) noexcept;
 /// - e.g. "<user name>/Local Settings/Applicaiton Data/Pomdog"
 /// - e.g. "C:/Users/<user name>/AppData/Local/Pomdog"
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::string, std::unique_ptr<Error>>
-GetLocalAppDataDirectoryPath() noexcept;
+getLocalAppDataDirectoryPath() noexcept;
 
 /// Gets the location of the "AppData" directory.
 ///
@@ -53,24 +53,24 @@ GetLocalAppDataDirectoryPath() noexcept;
 /// - e.g. "<user name>/Application Data/Pomdog"
 /// - e.g. "C:/Users/<user name>/AppData/Roaming/Pomdog"
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::string, std::unique_ptr<Error>>
-GetAppDataDirectoryPath() noexcept;
+getAppDataDirectoryPath() noexcept;
 
 /// Gets the resource directory.
 ///
 /// Windows:
 /// - e.g. "<current directory>"
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::string, std::unique_ptr<Error>>
-GetResourceDirectoryPath() noexcept;
+getResourceDirectoryPath() noexcept;
 
 /// Gets the temporary directory.
 ///
 /// Windows:
 /// - e.g. "C:/Users/<user name>/AppData/Local/Temp"
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::string, std::unique_ptr<Error>>
-GetTempDirectoryPath() noexcept;
+getTempDirectoryPath() noexcept;
 
 /// Gets the current working directory.
 [[nodiscard]] POMDOG_EXPORT std::tuple<std::string, std::unique_ptr<Error>>
-GetCurrentWorkingDirectory() noexcept;
+getCurrentWorkingDirectory() noexcept;
 
 } // namespace pomdog::FileSystem

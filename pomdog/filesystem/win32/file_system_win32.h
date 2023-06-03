@@ -15,42 +15,42 @@ namespace pomdog::detail::win32 {
 
 /// Create a new directory with the specified path.
 [[nodiscard]] std::unique_ptr<Error>
-CreateNewDirectory(const std::string& path) noexcept;
+createNewDirectory(const std::string& path) noexcept;
 
 /// Recursively create a new directory with the specified path.
 [[nodiscard]] std::unique_ptr<Error>
-CreateDirectories(const std::string& path) noexcept;
+createDirectories(const std::string& path) noexcept;
 
 /// Returns true if the file exists, false otherwise.
 [[nodiscard]] bool
-Exists(const std::string& path) noexcept;
+exists(const std::string& path) noexcept;
 
 /// Returns true if the file is directory, false otherwise.
 [[nodiscard]] bool
-IsDirectory(const std::string& path) noexcept;
+isDirectory(const std::string& path) noexcept;
 
 /// Gets the size of the specified file.
 [[nodiscard]] std::tuple<std::size_t, std::unique_ptr<Error>>
-GetFileSize(const std::string& path) noexcept;
+getFileSize(const std::string& path) noexcept;
 
 /// Gets the location of the "LocalAppData" directory.
 [[nodiscard]] std::tuple<std::string, std::unique_ptr<Error>>
-GetLocalAppDataDirectoryPath() noexcept;
+getLocalAppDataDirectoryPath() noexcept;
 
 /// Gets the location of the "AppData" directory.
 [[nodiscard]] std::tuple<std::string, std::unique_ptr<Error>>
-GetAppDataDirectoryPath() noexcept;
+getAppDataDirectoryPath() noexcept;
 
 /// Gets the resource directory.
 [[nodiscard]] std::tuple<std::string, std::unique_ptr<Error>>
-GetResourceDirectoryPath() noexcept;
+getResourceDirectoryPath() noexcept;
 
 /// Gets the temporary directory.
 [[nodiscard]] std::tuple<std::string, std::unique_ptr<Error>>
-GetTempDirectoryPath() noexcept;
+getTempDirectoryPath() noexcept;
 
 /// Gets the current working directory.
 [[nodiscard]] std::tuple<std::string, std::unique_ptr<Error>>
-GetCurrentWorkingDirectory() noexcept;
+getCurrentWorkingDirectory() noexcept;
 
 } // namespace pomdog::detail::win32

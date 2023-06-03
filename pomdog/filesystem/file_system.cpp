@@ -39,41 +39,43 @@ namespace PlatformFS = detail::emscripten;
 
 } // namespace
 
-std::unique_ptr<Error>
-CreateNewDirectory(const std::string& path) noexcept
+[[nodiscard]] std::unique_ptr<Error>
+createNewDirectory(const std::string& path) noexcept
 {
-    return PlatformFS::CreateNewDirectory(path);
+    return PlatformFS::createNewDirectory(path);
 }
 
-std::unique_ptr<Error>
-CreateDirectories(const std::string& path) noexcept
+[[nodiscard]] std::unique_ptr<Error>
+createDirectories(const std::string& path) noexcept
 {
-    return PlatformFS::CreateDirectories(path);
+    return PlatformFS::createDirectories(path);
 }
 
-bool Exists(const std::string& path) noexcept
+[[nodiscard]] bool
+exists(const std::string& path) noexcept
 {
-    return PlatformFS::Exists(path);
+    return PlatformFS::exists(path);
 }
 
-bool IsDirectory(const std::string& path) noexcept
+[[nodiscard]] bool
+isDirectory(const std::string& path) noexcept
 {
-    return PlatformFS::IsDirectory(path);
+    return PlatformFS::isDirectory(path);
 }
 
-std::tuple<std::size_t, std::unique_ptr<Error>>
-GetFileSize(const std::string& path) noexcept
+[[nodiscard]] std::tuple<std::size_t, std::unique_ptr<Error>>
+getFileSize(const std::string& path) noexcept
 {
-    return PlatformFS::GetFileSize(path);
+    return PlatformFS::getFileSize(path);
 }
 
-std::tuple<std::string, std::unique_ptr<Error>>
-GetCanonicalPath(const std::string& path) noexcept
+[[nodiscard]] std::tuple<std::string, std::unique_ptr<Error>>
+getCanonicalPath(const std::string& path) noexcept
 {
     auto result = filepaths::normalize(path);
 
     if (!filepaths::isAbsolute(result)) {
-        auto [cwd, err] = FileSystem::GetCurrentWorkingDirectory();
+        auto [cwd, err] = FileSystem::getCurrentWorkingDirectory();
         if (err != nullptr) {
             return std::make_tuple("", errors::wrap(std::move(err), "GetCurrentWorkingDirectory() failed"));
         }
@@ -82,34 +84,34 @@ GetCanonicalPath(const std::string& path) noexcept
     return std::make_tuple(std::move(result), nullptr);
 }
 
-std::tuple<std::string, std::unique_ptr<Error>>
-GetLocalAppDataDirectoryPath() noexcept
+[[nodiscard]] std::tuple<std::string, std::unique_ptr<Error>>
+getLocalAppDataDirectoryPath() noexcept
 {
-    return PlatformFS::GetLocalAppDataDirectoryPath();
+    return PlatformFS::getLocalAppDataDirectoryPath();
 }
 
-std::tuple<std::string, std::unique_ptr<Error>>
-GetAppDataDirectoryPath() noexcept
+[[nodiscard]] std::tuple<std::string, std::unique_ptr<Error>>
+getAppDataDirectoryPath() noexcept
 {
-    return PlatformFS::GetAppDataDirectoryPath();
+    return PlatformFS::getAppDataDirectoryPath();
 }
 
-std::tuple<std::string, std::unique_ptr<Error>>
-GetResourceDirectoryPath() noexcept
+[[nodiscard]] std::tuple<std::string, std::unique_ptr<Error>>
+getResourceDirectoryPath() noexcept
 {
-    return PlatformFS::GetResourceDirectoryPath();
+    return PlatformFS::getResourceDirectoryPath();
 }
 
-std::tuple<std::string, std::unique_ptr<Error>>
-GetTempDirectoryPath() noexcept
+[[nodiscard]] std::tuple<std::string, std::unique_ptr<Error>>
+getTempDirectoryPath() noexcept
 {
-    return PlatformFS::GetTempDirectoryPath();
+    return PlatformFS::getTempDirectoryPath();
 }
 
-std::tuple<std::string, std::unique_ptr<Error>>
-GetCurrentWorkingDirectory() noexcept
+[[nodiscard]] std::tuple<std::string, std::unique_ptr<Error>>
+getCurrentWorkingDirectory() noexcept
 {
-    return PlatformFS::GetCurrentWorkingDirectory();
+    return PlatformFS::getCurrentWorkingDirectory();
 }
 
 } // namespace pomdog::FileSystem

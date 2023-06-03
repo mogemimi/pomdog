@@ -3,27 +3,30 @@
 #include "pomdog/filesystem/apple/file_system_apple.h"
 #include "pomdog/utility/assert.h"
 #include "pomdog/utility/error_helper.h"
+
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_BEGIN
 #include <Foundation/Foundation.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <utility>
+POMDOG_SUPPRESS_WARNINGS_GENERATED_BY_STD_HEADERS_END
 
 namespace pomdog::detail::apple {
 namespace {
 
 [[nodiscard]] NSString*
-ToNSString(const std::string& s) noexcept
+toNSString(const std::string& s) noexcept
 {
     return [NSString stringWithUTF8String:s.data()];
 }
 
 } // namespace
 
-std::unique_ptr<Error>
-CreateNewDirectory(const std::string& path) noexcept
+[[nodiscard]] std::unique_ptr<Error>
+createNewDirectory(const std::string& path) noexcept
 {
     POMDOG_ASSERT(!path.empty());
-    auto url = [NSURL URLWithString:ToNSString(path)];
+    auto url = [NSURL URLWithString:toNSString(path)];
 
     NSError* error = nullptr;
 
@@ -41,11 +44,11 @@ CreateNewDirectory(const std::string& path) noexcept
     return nullptr;
 }
 
-std::unique_ptr<Error>
-CreateDirectories(const std::string& path) noexcept
+[[nodiscard]] std::unique_ptr<Error>
+createDirectories(const std::string& path) noexcept
 {
     POMDOG_ASSERT(!path.empty());
-    auto url = [NSURL URLWithString:ToNSString(path)];
+    auto url = [NSURL URLWithString:toNSString(path)];
 
     NSError* error = nullptr;
 
@@ -63,26 +66,28 @@ CreateDirectories(const std::string& path) noexcept
     return nullptr;
 }
 
-bool Exists(const std::string& path) noexcept
+[[nodiscard]] bool
+exists(const std::string& path) noexcept
 {
     POMDOG_ASSERT(!path.empty());
     BOOL exists = [[NSFileManager defaultManager]
-        fileExistsAtPath:ToNSString(path)];
+        fileExistsAtPath:toNSString(path)];
     return (exists == YES);
 }
 
-bool IsDirectory(const std::string& path) noexcept
+[[nodiscard]] bool
+isDirectory(const std::string& path) noexcept
 {
     POMDOG_ASSERT(!path.empty());
     BOOL isDirectory = NO;
     BOOL exists = [[NSFileManager defaultManager]
-        fileExistsAtPath:ToNSString(path)
+        fileExistsAtPath:toNSString(path)
              isDirectory:&isDirectory];
     return (exists == YES) && (isDirectory == YES);
 }
 
-std::tuple<std::size_t, std::unique_ptr<Error>>
-GetFileSize(const std::string& path) noexcept
+[[nodiscard]] std::tuple<std::size_t, std::unique_ptr<Error>>
+getFileSize(const std::string& path) noexcept
 {
     struct ::stat st;
     if (::stat(path.data(), &st) != 0) {
@@ -92,14 +97,14 @@ GetFileSize(const std::string& path) noexcept
     return std::make_tuple(st.st_size, nullptr);
 }
 
-std::tuple<std::string, std::unique_ptr<Error>>
-GetLocalAppDataDirectoryPath() noexcept
+[[nodiscard]] std::tuple<std::string, std::unique_ptr<Error>>
+getLocalAppDataDirectoryPath() noexcept
 {
-    return GetAppDataDirectoryPath();
+    return getAppDataDirectoryPath();
 }
 
-std::tuple<std::string, std::unique_ptr<Error>>
-GetAppDataDirectoryPath() noexcept
+[[nodiscard]] std::tuple<std::string, std::unique_ptr<Error>>
+getAppDataDirectoryPath() noexcept
 {
     NSFileManager* fileManager = [NSFileManager defaultManager];
     NSString* bundleID = [[NSBundle mainBundle] bundleIdentifier];
@@ -144,22 +149,22 @@ GetAppDataDirectoryPath() noexcept
     return std::make_tuple(std::move(appDataDirecotry), nullptr);
 }
 
-std::tuple<std::string, std::unique_ptr<Error>>
-GetResourceDirectoryPath() noexcept
+[[nodiscard]] std::tuple<std::string, std::unique_ptr<Error>>
+getResourceDirectoryPath() noexcept
 {
     std::string resourceDirectory = [[[NSBundle mainBundle] resourcePath] UTF8String];
     return std::make_tuple(std::move(resourceDirectory), nullptr);
 }
 
-std::tuple<std::string, std::unique_ptr<Error>>
-GetTempDirectoryPath() noexcept
+[[nodiscard]] std::tuple<std::string, std::unique_ptr<Error>>
+getTempDirectoryPath() noexcept
 {
     std::string tempDirectory = [NSTemporaryDirectory() UTF8String];
     return std::make_tuple(std::move(tempDirectory), nullptr);
 }
 
-std::tuple<std::string, std::unique_ptr<Error>>
-GetCurrentWorkingDirectory() noexcept
+[[nodiscard]] std::tuple<std::string, std::unique_ptr<Error>>
+getCurrentWorkingDirectory() noexcept
 {
     char dir[PATH_MAX];
     if (::getcwd(dir, sizeof(dir)) == nullptr) {

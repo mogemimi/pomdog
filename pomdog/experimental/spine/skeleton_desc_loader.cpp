@@ -820,7 +820,7 @@ SkeletonDescLoader::Load(const std::string& filePath)
         return std::make_tuple(SkeletonDesc{}, std::move(err));
     }
 
-    auto [byteLength, sizeErr] = FileSystem::GetFileSize(filePath);
+    auto [byteLength, sizeErr] = FileSystem::getFileSize(filePath);
     if (sizeErr != nullptr) {
         auto err = errors::wrap(std::move(sizeErr), "failed to get file size, " + filePath);
         return std::make_tuple(SkeletonDesc{}, std::move(err));

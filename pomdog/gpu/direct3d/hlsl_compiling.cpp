@@ -104,7 +104,7 @@ public:
             return E_FAIL;
         }
 
-        auto [size, err] = FileSystem::GetFileSize(includePath);
+        auto [size, err] = FileSystem::getFileSize(includePath);
         if (err != nullptr) {
             lastError = errors::make("failed to get file size: " + includePath);
             return E_FAIL;
